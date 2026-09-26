@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-21 19:23+0000\n"
+"POT-Creation-Date: 2026-09-26 10:21+0000\n"
 "PO-Revision-Date: 2026-07-27 16:55+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -116,6 +116,10 @@ msgid "%s file is %d MB in size. Last %d lines are:"
 msgstr "%s файл в %d MB размере.Последние %d строки:"
 
 #, python-format
+msgid "%s followers"
+msgstr ""
+
+#, python-format
 msgid "%s has been protected with google recaptcha v2. You can try to use API version."
 msgstr "%s защищено с учетом google recaptcha v2. Можно также попробовать применить API версию."
 
@@ -146,6 +150,14 @@ msgid ""
 msgstr ""
 "%s использует \"геоблокирующие\" меры, чтобы предотвратить доступ к услугам из-за рубежа.\n"
 " Страна-хозяйка: %s, ваша страна: %s"
+
+#, fuzzy, python-format
+msgid "%s viewers"
+msgstr "Наиболее просматриваемые"
+
+#, fuzzy, python-format
+msgid "%s views"
+msgstr "просмотров"
 
 #, python-format
 msgid "(%d YouTube channel(s) could not be read)"
@@ -271,21 +283,6 @@ msgstr ""
 msgid "12 hour format"
 msgstr "12 часовой формат"
 
-msgid "16:10 Letterbox"
-msgstr "16:10 Почтовый ящик"
-
-msgid "16:10 PanScan"
-msgstr "16:10 ПанСкан"
-
-msgid "16:9"
-msgstr "16:9"
-
-msgid "16:9 Letterbox"
-msgstr "16:9 Режим ящика"
-
-msgid "16:9 always"
-msgstr "16:9 всегда"
-
 msgid "2. Click the big green button on that page. A new tab opens with the captcha or the website's browser check."
 msgstr ""
 
@@ -294,12 +291,6 @@ msgstr "24 часовой формат"
 
 msgid "3. Solve it. The result goes back to the receiver by itself and the captcha window closes."
 msgstr ""
-
-msgid "4:3 Letterbox"
-msgstr "4:3 Режим ящика"
-
-msgid "4:3 PanScan"
-msgstr "4:3 Панорама"
 
 msgid "<font color=\"#FE642E\">REMEMBER:</font></b> E2iPlayer <b>IS ONLY</b> specialized Web browser. It does <b>NOT</b> host any materials!!!</font>"
 msgstr "<font color=\"#FE642E\">ПОМНИТЕ:</font></b> E2iPlayerr <b>ЭТО ТОЛЬКО</b> специализированный Веб-браузер. Он <b>НЕ</b> содержит никаких материалов!!!</font>"
@@ -438,6 +429,10 @@ msgstr "шоу"
 msgid "All streams"
 msgstr "Все потоки"
 
+#, fuzzy
+msgid "All time"
+msgstr "Все в одном"
+
 msgid "Allow VP9 codec:"
 msgstr "Допустимый VP9 кодек:"
 
@@ -471,6 +466,18 @@ msgstr "Другой прокси-сервер (1)"
 
 msgid "Alternative proxy server (2)"
 msgstr "Другой прокси-сервер (2)"
+
+#, fuzzy
+msgid "Alternative proxy server (3)"
+msgstr "Другой прокси-сервер (1)"
+
+#, fuzzy
+msgid "Alternative proxy server (4)"
+msgstr "Другой прокси-сервер (1)"
+
+#, fuzzy
+msgid "Alternative proxy server (5)"
+msgstr "Другой прокси-сервер (1)"
 
 #, python-format
 msgid ""
@@ -782,6 +789,10 @@ msgstr "Отключить прямой эфир при запуске плаг�
 msgid "Click"
 msgstr "Клик"
 
+#, python-format
+msgid "Clipped by: %s"
+msgstr ""
+
 msgid "Clips"
 msgstr "Клипы"
 
@@ -806,15 +817,18 @@ msgstr ""
 msgid "Columbia"
 msgstr "Колумбия"
 
+msgid "Combine pull request merges with their commit"
+msgstr ""
+
 msgid "Comedy"
 msgstr ""
 
-msgid "Commits"
+#, fuzzy
+msgid "Comments"
 msgstr "Фиксации"
 
-#, fuzzy
-msgid "Competitions"
-msgstr "Коллекции"
+msgid "Commits"
+msgstr "Фиксации"
 
 msgid "Concert"
 msgstr ""
@@ -877,6 +891,22 @@ msgid "Could not add the user link."
 msgstr "Не удалось добавить ссылку пользователя."
 
 #, fuzzy
+msgid "Could not load the wiki page."
+msgstr "Не удалось добавить ссылку пользователя."
+
+#, fuzzy
+msgid "Could not resolve host."
+msgstr "Провал в записи этого файла \"%s\"."
+
+#, fuzzy
+msgid "Could not resolve proxy."
+msgstr "Провал в записи этого файла \"%s\"."
+
+#, fuzzy
+msgid "Could not sort the user links."
+msgstr "Не удалось добавить ссылку пользователя."
+
+#, fuzzy
 msgid "Could not start the YouTube sign-in."
 msgstr "Не удалось добавить ссылку пользователя."
 
@@ -908,6 +938,10 @@ msgstr "Создать MKV"
 
 msgid "Create MKV with chapter marks from description"
 msgstr "Создать MKV с метками глав из описания"
+
+#, fuzzy
+msgid "Create debug logs"
+msgstr "Удалить лог файл"
 
 msgid "Create sidecar files (.txt/.jpg)"
 msgstr "Создать сопутствующие файлы (.txt/.jpg)"
@@ -1127,6 +1161,10 @@ msgstr "Режиссёры:"
 msgid "Directory \"%s\" does not exists."
 msgstr "Каталог \"%s\" не существует."
 
+#, fuzzy
+msgid "Directory browser"
+msgstr "Режиссёры"
+
 msgid "Disable"
 msgstr "Отключить"
 
@@ -1315,6 +1353,9 @@ msgstr "Загрузки"
 msgid "Downloads location"
 msgstr "Место загрузки"
 
+msgid "Draft"
+msgstr ""
+
 msgid "Drama"
 msgstr ""
 
@@ -1458,6 +1499,9 @@ msgstr "Aнглийские фильмы"
 #, fuzzy
 msgid "Enter"
 msgstr "по центру"
+
+msgid "Enter (confirm and close)"
+msgstr ""
 
 msgid "Enter a value"
 msgstr "Введите значение"
@@ -1626,6 +1670,10 @@ msgstr "Провал в получении \"%s\"."
 msgid "Fail to get captcha data."
 msgstr "Не удалось получить данные captcha."
 
+#, fuzzy
+msgid "Failed to connect to host."
+msgstr "Провал соединения с сервером \"%s\"."
+
 #, python-format
 msgid "Failed to connect to server \"%s\"."
 msgstr "Провал соединения с сервером \"%s\"."
@@ -1652,6 +1700,9 @@ msgstr "Не удалось получить категории"
 
 msgid "Failed to gzip."
 msgstr "Провал к gzip."
+
+msgid "Failed to initialize (unknown option or old curl version?)."
+msgstr ""
 
 msgid "Failed to load channels"
 msgstr "Не удалось загрузить каналы"
@@ -1708,6 +1759,12 @@ msgstr "Файл \"%s\" уже существует"
 msgid "File \"%s\" already exists!"
 msgstr "Файл \"%s\" уже существует!"
 
+msgid "File I/O error (write)."
+msgstr ""
+
+msgid "File I/O error."
+msgstr ""
+
 msgid "File Not Found."
 msgstr "Файл Не Найден."
 
@@ -1718,6 +1775,9 @@ msgstr "Файл [%s] добавлен в очередь загрузки."
 #, python-format
 msgid "File [%s] was added to downloading queue."
 msgstr "Файл [%s] добавлен в очередь загрузки."
+
+msgid "File browser"
+msgstr ""
 
 #, fuzzy
 msgid "File can not be downloaded. Download manager is not available."
@@ -1771,6 +1831,14 @@ msgstr "Первый видеоплеер без режима буферизац
 msgid "Fix jump target"
 msgstr ""
 
+#, fuzzy, python-format
+msgid "Folder \"%s\" can not be created."
+msgstr "Утилита \"%s\" не найдена."
+
+#, fuzzy, python-format
+msgid "Folder \"%s\" has been created."
+msgstr "Pin был изменен."
+
 msgid "Folder for cache data"
 msgstr "Папка для данных кэша"
 
@@ -1795,6 +1863,10 @@ msgstr "Нога & Лодыжка"
 
 msgid "For continuous playing, please press 8!"
 msgstr "Для непрерывного воспроизведения нажмите 8!"
+
+#, fuzzy
+msgid "For developers"
+msgstr "Разработчики:"
 
 msgid "Force internal skin: all E2iPlayer screens"
 msgstr ""
@@ -1833,11 +1905,19 @@ msgstr ""
 msgid "GSTplayer no IFD workarround"
 msgstr "GSTplayer без IFD обходной путь"
 
+#, fuzzy, python-format
+msgid "Game: %s"
+msgstr "Игры"
+
 msgid "Games"
 msgstr "Игры"
 
 msgid "General"
 msgstr "Общие"
+
+#, fuzzy
+msgid "Generic error code."
+msgstr "Unrar ошибка кода[%s]."
 
 msgid "Genre"
 msgstr "Жанр"
@@ -1858,9 +1938,6 @@ msgstr "Жанры:"
 msgid "German"
 msgstr "Немецкий"
 
-msgid "German proxy server url"
-msgstr "Немецкий прокси сервер url"
-
 #, fuzzy
 msgid "Get Cloudflare job"
 msgstr "Решение MyE2i Cloudflare"
@@ -1880,6 +1957,9 @@ msgstr "Ошибка с языками!"
 
 msgid "Get token failed!"
 msgstr "Получить токен не удалось!"
+
+msgid "GitHub API error"
+msgstr ""
 
 msgid "Global"
 msgstr "Глобальный"
@@ -1919,6 +1999,12 @@ msgstr "Группа с id[%s] не найдена."
 
 msgid "HLS/m3u8"
 msgstr "HLS/m3u8"
+
+msgid "HTTP/2 framing layer error."
+msgstr ""
+
+msgid "HTTP/2 stream error."
+msgstr ""
 
 #, python-format
 msgid "HTTPS connection error \"%s\"\n"
@@ -2063,6 +2149,30 @@ msgstr "Придать чёрную рамку при завершении ви�
 msgid "Input"
 msgstr "Ввод"
 
+#, fuzzy
+msgid "Install E2iPlayer"
+msgstr "Плеер %s"
+
+#, fuzzy
+msgid "Installed version"
+msgstr "Web интерфейс версия"
+
+#, fuzzy, python-format
+msgid "Installed: v%s"
+msgstr "Провал: %s"
+
+#, python-format
+msgid "Installed: v%s - %d commits behind %s"
+msgstr ""
+
+#, python-format
+msgid "Installed: v%s - no matching release tag (local build?)"
+msgstr ""
+
+#, python-format
+msgid "Installed: v%s - up to date"
+msgstr ""
+
 msgid "Interactive Learning Center(ILC)"
 msgstr "Интерактивный Учебный Центр(ILC)"
 
@@ -2089,13 +2199,9 @@ msgstr "Очевидно, что ваша текущая конфигураци�
 msgid "It seems that the host \"%s\" has crashed."
 msgstr "Очевидно, что хост \"%s\" отрубился."
 
-#, python-format
-msgid "It seems that the host \"%s\" has crashed. Do you want to report this problem?"
-msgstr "Очевидно, что хост \"%s\" отрубился. Вы хотите сообщить об этой проблеме?"
-
-#, python-format
-msgid "It seems that the subtitle's provider \"%s\" has crashed. Do you want to report this problem?"
-msgstr "Похоже, оператор субтитров \"%s\" дал сбой. Вы хотите сообщить об этой проблеме?"
+#, fuzzy, python-format
+msgid "It seems that the subtitle's provider \"%s\" has crashed."
+msgstr "Очевидно, что хост \"%s\" отрубился."
 
 #, python-format
 msgid ""
@@ -2213,6 +2319,10 @@ msgstr "Последняя ошибка исключения: '%s'"
 msgid "Last air date:"
 msgstr "Дата последнего выхода в эфир:"
 
+#, fuzzy
+msgid "Last day"
+msgstr "Список по дням"
+
 #, python-format
 msgid ""
 "Last error:\n"
@@ -2225,6 +2335,13 @@ msgstr ""
 msgid "Last error: \"%s\""
 msgstr "Последняя ошибка: \"%s\""
 
+msgid "Last month"
+msgstr ""
+
+#, fuzzy
+msgid "Last week"
+msgstr "через неделю"
+
 msgid "Lastest"
 msgstr "Новейший"
 
@@ -2233,9 +2350,6 @@ msgstr "Последние"
 
 msgid "Latest added"
 msgstr "Последние добавленные"
-
-msgid "Latest highlights"
-msgstr ""
 
 msgid "Latest update"
 msgstr "Последнее обновление"
@@ -2265,6 +2379,10 @@ msgstr "Обзор видео"
 
 msgid "Line Spacing"
 msgstr "Межстрочный Интервал"
+
+#, fuzzy
+msgid "Link"
+msgstr "Ссылки для"
 
 msgid "Link is not supported by the gstplayer. Please use the extelayer3 if available."
 msgstr "Ссылка не поддерживается gstplayer. Просим использовать extelayer3, если он имеется."
@@ -2305,6 +2423,10 @@ msgstr "Слушатели: %s"
 msgid "Live"
 msgstr "Live"
 
+#, fuzzy
+msgid "Live channels"
+msgstr "Автономные каналы"
+
 msgid "Live streams"
 msgstr "Прямые потоки"
 
@@ -2335,12 +2457,20 @@ msgstr "Загрузка не завершена."
 msgid "Loading watch data..."
 msgstr "Загрузка данных просмотра..."
 
+#, fuzzy
+msgid "Loading..."
+msgstr "Загрузка"
+
 msgid "LocalMedia"
 msgstr "МестныеМедиа"
 
 #, python-format
 msgid "Locale ID mismatched! %s <> %s"
 msgstr "Локальный ID не совпадает! %s <> %s"
+
+#, fuzzy
+msgid "Locality:"
+msgstr "Качество:"
 
 msgid "Localization"
 msgstr "Локализация"
@@ -2633,6 +2763,18 @@ msgstr "Нетфликс"
 msgid "Network failed %s."
 msgstr "Ошибка сети %s."
 
+#, fuzzy
+msgid "Network failure (receive)."
+msgstr "Ошибка сети %s."
+
+#, fuzzy
+msgid "Network failure (send)."
+msgstr "Ошибка сети %s."
+
+#, fuzzy
+msgid "Network failure."
+msgstr "Ошибка сети %s."
+
 msgid "New"
 msgstr "Новый"
 
@@ -2648,6 +2790,10 @@ msgstr "Новый реж"
 
 msgid "New icons will not be available."
 msgstr "Новые иконки не будут доступны."
+
+#, fuzzy
+msgid "New since installed version"
+msgstr "Web интерфейс версия"
 
 msgid "Newest Episodes"
 msgstr "Новейшие Эпизоды"
@@ -2698,6 +2844,9 @@ msgstr ""
 msgid "No materials waiting in the downloader queue"
 msgstr "Нет материалов, ожидающих в очереди загрузчика"
 
+msgid "No problems occurred."
+msgstr ""
+
 #, python-format
 msgid "No results found for: %s"
 msgstr "Результаты не найдены для: %s"
@@ -2717,6 +2866,9 @@ msgstr "Не найдено никаких прав на активы."
 msgid "No valid links available."
 msgstr "Ссылки недоступны."
 
+msgid "No valid urls"
+msgstr ""
+
 msgid "No video ID available"
 msgstr "Идентификатор видео недоступен"
 
@@ -2728,6 +2880,9 @@ msgstr ""
 
 msgid "Nothing has been downloaded yet."
 msgstr "Ещё ничего не загружено."
+
+msgid "Nothing open"
+msgstr ""
 
 msgid "Nothing to save - the debug log is not active."
 msgstr ""
@@ -2768,16 +2923,33 @@ msgstr "В Эфире"
 msgid "One link mode"
 msgstr "Режим одной ссылки"
 
+msgid "Only links can be moved to a group."
+msgstr ""
+
 msgid "Only music"
 msgstr "Только музыка"
 
+#, python-format
+msgid "Only the %d oldest new commits are shown"
+msgstr ""
+
 msgid "Only videos"
 msgstr "Только видео"
+
+msgid "Open issues"
+msgstr ""
+
+msgid "Open pull requests"
+msgstr ""
 
 msgid "Opening. Please wait..."
 msgstr "Начинается. Один момент..."
 
 msgid "Operation aborted!"
+msgstr "Операция свёрнута!"
+
+#, fuzzy
+msgid "Operation timed out."
 msgstr "Операция свёрнута!"
 
 msgid "Optional User-Agent (leave blank for default)"
@@ -2786,6 +2958,13 @@ msgstr "Дополнительный User-Agent (оставьте пустым �
 #, fuzzy
 msgid "Options"
 msgstr "Варианты видео"
+
+msgid "Options (select language, clear search history, settings)"
+msgstr ""
+
+#, fuzzy
+msgid "Order of user links:"
+msgstr "Добавить в ссылки пользователя"
 
 msgid "Order stays fixed - useful for T9 browsing."
 msgstr ""
@@ -2798,6 +2977,9 @@ msgstr "Другое"
 
 msgid "Others"
 msgstr "Другие"
+
+msgid "Out of memory."
+msgstr ""
 
 msgid "Own model"
 msgstr "Cвоя модель"
@@ -2823,11 +3005,23 @@ msgstr ""
 msgid "Page:"
 msgstr "Страница:"
 
+#, fuzzy
+msgid "Parse error."
+msgstr ""
+"Последняя ошибка:\n"
+"%s"
+
+msgid "Partial file - transfer ended early."
+msgstr ""
+
 msgid "Password"
 msgstr "Пароль"
 
 msgid "Password:"
 msgstr "Пароль:"
+
+msgid "Past premieres"
+msgstr ""
 
 #, python-format
 msgid "Paste \"%s\""
@@ -2967,9 +3161,6 @@ msgstr "Подкасты"
 msgid "Polish"
 msgstr "Польский"
 
-msgid "Polish proxy server url"
-msgstr "Польский прокси-сервер url"
-
 msgid "Popular"
 msgstr "Популярные"
 
@@ -3027,11 +3218,17 @@ msgstr "Программа"
 msgid "Program A-Z"
 msgstr "Программа А-Я"
 
+msgid "Program for file downloads (HTTP/FTP)"
+msgstr ""
+
 msgid "Programmes"
 msgstr "Программы"
 
 msgid "Promote item"
 msgstr "Продвижение пункта"
+
+msgid "Protocol errors."
+msgstr ""
 
 msgid "Published"
 msgstr "Опубликовано"
@@ -3085,6 +3282,9 @@ msgstr "Случайный выбор"
 msgid "Randomize a playlist"
 msgstr "Рандомизировать плейлист"
 
+msgid "Range request not supported (resume failed)."
+msgstr ""
+
 msgid "Ranking"
 msgstr "Рейтинг"
 
@@ -3101,8 +3301,15 @@ msgstr "Рейтинг %s"
 msgid "Rating:"
 msgstr "Рейтинг:"
 
+msgid "Read error."
+msgstr ""
+
 msgid "Reading binaries..."
 msgstr ""
+
+#, fuzzy
+msgid "Recent"
+msgstr "по центру"
 
 msgid "Recon"
 msgstr "Recon"
@@ -3117,6 +3324,10 @@ msgid "Refreshing"
 msgstr "Обновление"
 
 #, python-format
+msgid "Refusing to empty \"%s\" - it also holds \"%s\" (downloads, buffering, cache or config folder). Check the folder paths in the storage configuration."
+msgstr ""
+
+#, python-format
 msgid "Refusing to empty \"%s\" - this does not look like a dedicated cache/config folder. Check the folder paths in the storage configuration."
 msgstr ""
 
@@ -3125,6 +3336,10 @@ msgstr "Релиз"
 
 msgid "Released:"
 msgstr "Выпущенный:"
+
+#, fuzzy
+msgid "Releases"
+msgstr "Релиз"
 
 msgid "Relevance"
 msgstr "Актуальность"
@@ -3153,9 +3368,6 @@ msgstr "Удалить"
 msgid "Remove \"%s\" item"
 msgstr "Удалить \"%s\" элемент"
 
-msgid "Remove disabled services"
-msgstr "Удаление отключенных сервисов"
-
 msgid "Remove file"
 msgstr "Удалить файл"
 
@@ -3176,6 +3388,9 @@ msgstr "Переименовать"
 
 msgid "Rename file"
 msgstr "Переименовать файл"
+
+msgid "Reordering: UP/DOWN moves the row, OK saves, EXIT cancels."
+msgstr ""
 
 msgid "Reset State"
 msgstr "Состояние Cброса"
@@ -3228,14 +3443,18 @@ msgstr "Актуальность"
 msgid "Russian"
 msgstr "Русский"
 
-msgid "Russian proxy server url"
-msgstr "Российский прокси-сервер url"
-
 msgid "SOME.PORN sorting by :"
 msgstr "Сортировка SOME.PORN по:"
 
 msgid "SONGS"
 msgstr "ПЕСНИ"
+
+#, fuzzy
+msgid "SSL connect error."
+msgstr "Ошибка HTTPS соединения \"%s\"\n"
+
+msgid "SSL verification failure."
+msgstr ""
 
 msgid "STARTED"
 msgstr "НАЧАТЫЙ"
@@ -3446,7 +3665,17 @@ msgstr "Серии"
 msgid "Server"
 msgstr "Сервер"
 
+msgid "Server issued an error response (HTTP 4xx/5xx)."
+msgstr ""
+
+msgid "Server issued an error response."
+msgstr ""
+
 msgid "Server return 404 - Not Found."
+msgstr "Возврат сервера 404 - Не Найден."
+
+#, fuzzy
+msgid "Server returned nothing."
 msgstr "Возврат сервера 404 - Не Найден."
 
 #, python-format
@@ -3624,6 +3853,12 @@ msgstr ""
 msgid "Software decoding as"
 msgstr "Программное декодирование как"
 
+msgid "Solve Cloudflare, hCaptcha and reCAPTCHA with MyE2i"
+msgstr ""
+
+msgid "Solve Google reCAPTCHA v2 with My JDownloader"
+msgstr ""
+
 #, fuzzy
 msgid "Solver"
 msgstr "cеребристый"
@@ -3659,6 +3894,9 @@ msgstr "Сортировать по популярности"
 
 msgid "Sort by:"
 msgstr "Режим сортировки:"
+
+msgid "Sort the links now? The order of the lines in the file will change."
+msgstr ""
 
 msgid "Sort the list:"
 msgstr "Сортировать список:"
@@ -3988,9 +4226,6 @@ msgstr ""
 msgid "The debug log is not active."
 msgstr ""
 
-msgid "The default aspect ratio for the external player"
-msgstr "Пропорции по умолчанию для внешнего проигрывателя"
-
 msgid "The element already exists in User Links."
 msgstr "Элемент уже существует в пользовательских ссылках."
 
@@ -4162,6 +4397,9 @@ msgstr ""
 msgid "Today"
 msgstr "Сегодня"
 
+msgid "Too many redirects."
+msgstr ""
+
 msgid "Too many wrong codes - scan the QR code on the receiver screen instead."
 msgstr ""
 
@@ -4239,8 +4477,8 @@ msgstr "Тип: %s"
 msgid "UNKNOWN"
 msgstr "Неизвестно"
 
-msgid "Ukrainian proxy server url"
-msgstr "Украинский прокси-сервер url"
+msgid "URL malformed."
+msgstr ""
 
 msgid "Umount iso file"
 msgstr "Снятие iso файла"
@@ -4260,6 +4498,10 @@ msgstr "Неизвестные данные в элементе captcha!"
 #, python-format
 msgid "Unknown captcha form! Data: \"%s\""
 msgstr "Неизвестная форма captcha! Данные: \"%s\""
+
+#, fuzzy
+msgid "Unknown error code."
+msgstr "Неизвестная ошибка."
 
 msgid "Unknown error."
 msgstr "Неизвестная ошибка."
@@ -4286,6 +4528,9 @@ msgstr "Unrar ошибка кода[%s]."
 msgid "Unset watched"
 msgstr "Не установлено просмотрено"
 
+msgid "Unsupported protocol."
+msgstr ""
+
 #, python-format
 msgid "Unzip error code[%s]."
 msgstr "Unzip код ошибки[%s]."
@@ -4295,6 +4540,10 @@ msgid "Updates"
 msgstr "Дата загрузки"
 
 msgid "Upload date"
+msgstr "Дата загрузки"
+
+#, fuzzy
+msgid "Uploads"
 msgstr "Дата загрузки"
 
 msgid "Urllists player"
@@ -4356,6 +4605,10 @@ msgstr "Пользовательская ссылка обновлена."
 msgid "User links"
 msgstr "Пользовательские ссылки"
 
+#, fuzzy
+msgid "User links sorted."
+msgstr "Пользовательская ссылка удалена."
+
 msgid "User links stored in the ytlist.txt file."
 msgstr "Пользовательские ссылки хранятся в ytlist.txt файле."
 
@@ -4369,6 +4622,9 @@ msgstr "Имя пользователя"
 #, python-format
 msgid "Username in settings is different from %s"
 msgstr "Имя пользователя в настройках отличается от %s"
+
+msgid "Username/password authentication failure."
+msgstr ""
 
 msgid "Username:"
 msgstr "Имя пользователя:"
@@ -4414,6 +4670,10 @@ msgstr "Видео с DRM защитой."
 
 msgid "Videos"
 msgstr "Видео"
+
+#, fuzzy, python-format
+msgid "Videos %s"
+msgstr "видео: %s"
 
 #, python-format
 msgid "Videos count: %s"
@@ -4484,6 +4744,9 @@ msgstr ""
 
 msgid "Whole file must be downloaded to start playback!"
 msgstr "Для начала просмотра нужно загрузить весь файл целиком!"
+
+msgid "Wiki"
+msgstr ""
 
 msgid "With subtitles"
 msgstr "Субтитры, созданные с помощью ИИ"
@@ -4673,14 +4936,27 @@ msgstr "спустя три дня"
 msgid "all"
 msgstr "маленький"
 
+#, fuzzy
+msgid "alphabetical"
+msgstr "В алфавитном порядке"
+
 msgid "aqua"
 msgstr "аква"
+
+msgid "as in ytlist.txt"
+msgstr ""
 
 msgid "auto"
 msgstr "авто"
 
 #, python-format
 msgid "available until %s"
+msgstr ""
+
+msgid "back to host/group selection"
+msgstr ""
+
+msgid "back to the previous category / jump to the next page"
 msgstr ""
 
 msgid "black"
@@ -4705,6 +4981,9 @@ msgstr "по центру"
 msgid "changed"
 msgstr "Сохранить изменения?"
 
+msgid "close the editor - or stop manual reordering if it's active"
+msgstr ""
+
 msgid "cobalt"
 msgstr "кобальт"
 
@@ -4720,14 +4999,40 @@ msgstr ""
 msgid "default"
 msgstr "по умолчанию"
 
+#, fuzzy
+msgid "delete entered text"
+msgstr "Удалить историю поиска"
+
+#, fuzzy
+msgid "delete the selected entry"
+msgstr "Выберите этот каталог"
+
 msgid "direct link"
 msgstr "прямая ссылка"
+
+#, fuzzy
+msgid "direct number input"
+msgstr "прямая ссылка"
+
+#, fuzzy
+msgid "download the selected item"
+msgstr "Цвет отображаемого ресурса"
 
 msgid "downloads location"
 msgstr "местоположение загрузок"
 
 msgid "e-mail"
 msgstr "e-mail"
+
+msgid "edit the selected entry (same as BLUE) - or drop it while manually reordering"
+msgstr ""
+
+msgid "edit the selected entry (same as OK)"
+msgstr ""
+
+#, fuzzy
+msgid "enable / disable manual reordering"
+msgstr "Отключить переупорядочение"
 
 msgid "external eplayer3"
 msgstr "внешний eplayer3"
@@ -4756,20 +5061,14 @@ msgstr "из E2 параметров"
 msgid "fuchsia"
 msgstr "фуксия"
 
+msgid "go back / close"
+msgstr ""
+
 msgid "gray"
 msgstr "серый"
 
 msgid "green"
 msgstr "зеленый"
-
-msgid "hCaptcha already solved!"
-msgstr "hCaptcha уже решена!"
-
-msgid "hCaptcha not solved!"
-msgstr "hCaptcha не решена!"
-
-msgid "hCaptcha solved!"
-msgstr "hCaptcha решена!"
 
 msgid "hd"
 msgstr "hd"
@@ -4795,14 +5094,26 @@ msgstr "https источник"
 msgid "https - validate SSL certificates"
 msgstr "https - проверка SSL сертификатов"
 
+msgid "insert space"
+msgstr ""
+
 msgid "installed"
 msgstr ""
 
 msgid "internal"
 msgstr "внутренние"
 
+msgid "item actions (favorites, host-specific actions)"
+msgstr ""
+
 msgid "jersey"
 msgstr "джерси"
+
+msgid "jump to entries starting with that letter (if enabled in the settings)"
+msgstr ""
+
+msgid "jump to items starting with that letter, or launch a specific player directly"
+msgstr ""
 
 msgid "kernel reports"
 msgstr ""
@@ -4840,6 +5151,15 @@ msgstr "бордовый"
 msgid "medium"
 msgstr "средний"
 
+msgid "more options (this menu)"
+msgstr ""
+
+msgid "move cursor right/left"
+msgstr ""
+
+msgid "move the selection - or move it while manually reordering"
+msgstr ""
+
 msgid "movie metadata cache"
 msgstr ""
 
@@ -4876,6 +5196,13 @@ msgstr "оливковый"
 msgid "on"
 msgstr "Нет"
 
+#, fuzzy
+msgid "open / play the selected item"
+msgstr "Показать IPTVPlaye в меню плагинов"
+
+msgid "open the options menu - see below"
+msgstr ""
+
 msgid "or"
 msgstr "или"
 
@@ -4894,6 +5221,9 @@ msgstr "качество"
 msgid "red"
 msgstr "красный"
 
+msgid "refresh the current list"
+msgstr ""
+
 msgid "rootfs"
 msgstr "rootfs"
 
@@ -4902,6 +5232,9 @@ msgstr ""
 
 msgid "rtmp"
 msgstr "ртмп"
+
+msgid "save all changes to disk"
+msgstr ""
 
 msgid "saved"
 msgstr ""
@@ -4927,6 +5260,12 @@ msgstr "секунд"
 msgid "select to sign out"
 msgstr "Выбрать группу"
 
+msgid "show more details about the selected item"
+msgstr ""
+
+msgid "show this help"
+msgstr ""
+
 msgid "sign in (subscriptions, playlists, age-restricted videos)"
 msgstr ""
 
@@ -4942,6 +5281,9 @@ msgstr "маленький"
 msgid "standard"
 msgstr "стандарт"
 
+msgid "start auto-play (plays through the list automatically)"
+msgstr ""
+
 #, fuzzy
 msgid "status"
 msgstr "Статус:"
@@ -4949,6 +5291,9 @@ msgstr "Статус:"
 #, fuzzy
 msgid "subtitles cache"
 msgstr "Субтитры"
+
+msgid "switch between keyboard, suggestions and search history"
+msgstr ""
 
 msgid "teal"
 msgstr "аквамарин"
@@ -4968,6 +5313,9 @@ msgstr "вверх"
 #, fuzzy
 msgid "truncate the file"
 msgstr "Выбрать файл"
+
+msgid "type selected character / confirm selection"
+msgstr ""
 
 msgid "unknown"
 msgstr "неизвестно"
