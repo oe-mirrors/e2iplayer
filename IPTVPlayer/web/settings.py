@@ -1,22 +1,24 @@
 # -*- coding: utf-8 -*-
+# State of the web interface. There is one state for the box: every browser tab sees the same host
+# session and search. "Reset web interface" (Information page) puts everything back to these values.
 
-WebInterfaceVersion = '0.9'
-MaxLogLinesToShow = 1000
+WebInterfaceVersion = '1.0'
 excludedCFGs = ['fakeUpdate', 'fakeHostsList', 'fakExtMoviePlayerList']
-activeHost = {}
-activeHostsHTML = {}
-currItem = {}
-retObj = None
 
-configsHTML = {}
-tempLogsHTML = ''
-NewHostListShown = True
+# host session (webHost.py)
+activeHost = {}
+retObj = None
+currItem = {}
+hostView = {}
+
+# global search (webThreads.doGlobalSearch)
+GlobalSearchQuery = ''
+GlobalSearchResults = []
+GlobalSearchProgress = {'done': 0, 'total': 0}
+searchingInHost = None
+hostsWithNoSearchOption = []
 
 StopThreads = False
 
-hostsWithNoSearchOption = []
-GlobalSearchListShown = True
-GlobalSearchTypes = ["VIDEO"]
-GlobalSearchQuery = ''
-GlobalSearchResults = {}
-searchingInHost = None
+# the enigma2 session (plugin.py sessionstart) - needed to work off the main thread queue (webThreads.py)
+session = None

@@ -5,19 +5,10 @@ from . import settings
 import threading
 import inspect
 import ctypes
-import time
 
-from .webTools import getHostLogo, isActiveHostInitiated, initActiveHost, formGET, formSUBMITvalue, htmlEscape, isHostUsableFromWeb
+from .webTools import isHostUsableFromWeb, getHostTitle, hostLogoUrl, hostDisplayTitle
 
-from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import ConfigMenu
-import Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget
-
-from Plugins.Extensions.IPTVPlayer.components.ihost import RetHost, CUrlItem
-from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdmapi import IPTVDMApi, DMItem
-from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdownloadercreator import IsUrlDownloadable
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import GetHostsList, IsHostEnabled, SortHostsList, printDBG
-from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
-from Components.config import config
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import GetHostsList, SortHostsList, printExc
 
 ########################################################
 
@@ -26,419 +17,208 @@ def _async_raise(tid, exctype):
 	"""raises the exception, performs cleanup if needed"""
 	if not inspect.isclass(exctype):
 		raise TypeError("Only types can be raised (not instances)")
-	res = ctypes.pythonapi.PyThreadState_SetAsyncExc(tid, ctypes.py_object(exctype))
+	res = ctypes.pythonapi.PyThreadState_SetAsyncExc(ctypes.c_ulong(tid), ctypes.py_object(exctype))
 	if res == 0:
-		print('res=%d' % res)
 		raise ValueError("invalid thread id")
 	elif res != 1:
-		print('res=%d' % res)
 		# """if it returns a number greater than one, you're in trouble,
 		# and you should call it again with exc=NULL to revert the effect"""
-		ctypes.pythonapi.PyThreadState_SetAsyncExc(tid, 0)
+		ctypes.pythonapi.PyThreadState_SetAsyncExc(ctypes.c_ulong(tid), None)
 		raise SystemError("PyThreadState_SetAsyncExc failed")
 
 ########################################################
 
 
-class buildActiveHostsHTML(threading.Thread):
-	def __init__(self, args=[]):
-		''' Constructor. '''
+class WebThread(threading.Thread):
+	# a thread the web interface runs host code in. Messages a host would open on the TV land in
+	# self.e2iWebNotices instead (components/asynccall.py MainSessionWrapper)
+	def __init__(self, name):
 		threading.Thread.__init__(self)
-		self.name = 'buildActiveHostsHTML'
+		self.name = name
+		self.daemon = True
+		self.e2iWebNotices = []
+		# what asynccall.AsyncCall gives the GUI's worker threads: without it IsThreadTerminated() says
+		# "terminated" and pCommon's PyCurl requests are never sent
+		self._iptvplayer_ext = {'kill_lock': threading.Lock(), 'killable': True, 'terminated': False, 'iptv_execute': None}
+
+	def start(self):
+		startMainQueuePump()
+		threading.Thread.start(self)
+
+	def raise_exc(self, exctype):
+		"""raises the given exception type in the context of this thread"""
+		_async_raise(self.ident, exctype)
+
+	def terminate(self):
+		# like asynccall.AsyncCall.kill: a running PyCurl request stops at once (its progress callback asks
+		# IsThreadTerminated); code marked not killable ends by itself at SetThreadKillable(True)
+		with self._iptvplayer_ext['kill_lock']:
+			killable = self._iptvplayer_ext['killable']
+			self._iptvplayer_ext['terminated'] = True
+		if not killable:
+			return
+		execute = self._iptvplayer_ext.get('iptv_execute')
+		if execute is not None:
+			try:
+				execute.terminate()
+			except Exception:
+				printExc()
+		self.raise_exc(SystemExit)
+########################################################
+# Hosts hand work to the main thread (asynccall.DelegateToMainThread: external programs, the JS
+# interpreters, ...). The queue for that is only created and worked off by the E2iPlayer screen on the TV,
+# so without it a web action either gets nothing back or waits forever. The web interface creates the queue
+# itself when needed and works it off while its threads run and the screen does not.
+
+
+def ensureMainQueue():
+	# called in the main thread (web requests are handled by the enigma2 main loop)
+	from Plugins.Extensions.IPTVPlayer.components import asynccall
+	if asynccall.gMainFunctionsQueueTab[0] is None and settings.session is not None:
+		asynccall.gMainFunctionsQueueTab[0] = asynccall.CFunctionProxyQueue(settings.session)
+	return asynccall.gMainFunctionsQueueTab[0]
+
+
+_pump = {'running': False}
+
+
+def startMainQueuePump():
+	ensureMainQueue()
+	if not _pump['running']:
+		_pump['running'] = True
+		from twisted.internet import reactor
+		reactor.callLater(0.05, _pumpMainQueue)
+
+
+def _pumpMainQueue():
+	from twisted.internet import reactor
+	from .webTools import isThreadRunning
+	queue = ensureMainQueue()
+	# procFun set = the E2iPlayer screen is open and works the queue off with its own timer
+	if queue is not None and queue.procFun is None:
+		try:
+			queue.processQueue()
+		except Exception:
+			printExc()
+	if any(isThreadRunning(name) for name in ('doUseHostAction', 'doGlobalSearch')):
+		reactor.callLater(0.1, _pumpMainQueue)
+	else:
+		_pump['running'] = False
+########################################################
+
+
+class WebActionError(Exception):
+	# a message for the page, not a bug: no traceback in the debug log
+	pass
+
+
+class WebWorker(WebThread):
+	# runs fnc(*args); onDone(error, notices) is called at the end in this thread
+	def __init__(self, name, fnc, args, onDone):
+		WebThread.__init__(self, name)
+		self.fnc = fnc
 		self.args = args
-
-	def raise_exc(self, exctype):
-		"""raises the given exception type in the context of this thread"""
-		_async_raise(self.ident, exctype)
-
-	def terminate(self):
-		"""raises SystemExit in the context of the given thread, which should
-		cause the thread to exit silently (unless caught)"""
-		self.raise_exc(SystemExit)
+		self.onDone = onDone
 
 	def run(self):
-		for hostName in SortHostsList(GetHostsList()):
-			if hostName in ['localmedia', 'urllist']:  # those are local hosts, nothing to do via web interface
-				continue
-			if not IsHostEnabled(hostName):
-				continue
-			# column 1 containing logo and link if available
-			try:
-				_temp = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + hostName, globals(), locals(), ['gettytul'], 0)
-				title = _temp.gettytul()
-				_temp = None
-			except Exception:
-				continue  # we do NOT use broken hosts!!!
-
-			logo = getHostLogo(hostName)
-
-			if title[:4] == 'http' and logo == "":
-				try:
-					hostNameWithURLandLOGO = '<br><a href="./usehost?activeHost=%s" target="_blank"><font size="2" color="#58D3F7">%s</font></a>' % (hostName, '.'.join(title.replace('://', '.').replace('www.', '').split('.')[1:-1]))
-				except Exception:
-					hostNameWithURLandLOGO = '<br><a href="%s" target="_blank"><font size="2" color="#58D3F7">%s</font></a>' % (title, title)
-			elif title[:4] == 'http' and logo != "":
-				try:
-					hostNameWithURLandLOGO = '<a href="./usehost?activeHost=%s">%s</a><br><a href="%s" target="_blank"><font size="2" color="#58D3F7">%s</font></a>' % (hostName, logo, title, '.'.join(title.replace('://', '.').replace('www.', '').split('.')[1:-1]))
-				except Exception as e:
-					print(str(e))
-					hostNameWithURLandLOGO = '<a href="%s" target="_blank">%s</a><br><a href="%s" target="_blank"><font size="2" color="#58D3F7">%s</font></a>' % (title, logo, title, _('visit site'))
-			elif title[:4] != 'http' and logo != "":
-				hostNameWithURLandLOGO = '<a href="./usehost?activeHost=%s">%s</a><br><a href="%s" target="_blank"><font size="2" color="#58D3F7">%s</font></a>' % (hostName, logo, title, title)
-			else:
-				hostNameWithURLandLOGO = '<br><a>%s</a>' % (title)
-			# Column 2 TBD
-
-			# build table row
-			hostHTML = '<td align="center">%s</td>' % hostNameWithURLandLOGO
-			settings.activeHostsHTML[hostName] = hostHTML
+		error = ''
+		try:
+			self.fnc(*self.args)
+		except SystemExit:
+			error = 'cancelled'
+		except WebActionError as e:
+			error = str(e)
+		except Exception as e:
+			printExc()
+			error = str(e) or e.__class__.__name__
+		try:
+			self.onDone(error, self.e2iWebNotices)
+		except Exception:
+			printExc()
 ########################################################
 
 
-class buildtempLogsHTML(threading.Thread):
-	def __init__(self, DebugFileName):
-		''' Constructor. '''
-		threading.Thread.__init__(self)
-		self.name = 'buildtempLogsHTML'
-		self.DebugFileName = DebugFileName
-
-	def raise_exc(self, exctype):
-		"""raises the given exception type in the context of this thread"""
-		_async_raise(self.ident, exctype)
-
-	def terminate(self):
-		"""raises SystemExit in the context of the given thread, which should
-		cause the thread to exit silently (unless caught)"""
-		self.raise_exc(SystemExit)
-
-	def run(self):
-		with open(self.DebugFileName, 'r') as f:
-			last_bit = f.readlines()[-settings.MaxLogLinesToShow:]
-			for L in last_bit:
-				if L.find('E2iPlayerWidget.__init__') > 0:
-					LogText = ''  # FIXME
-				settings.tempLogsHTML += htmlEscape(L) + '<br>\n'
-########################################################
+def searchItemToDict(item, index):
+	from .webTools import cleanText, iconUrl
+	return {'i': index, 'type': item.type, 'name': cleanText(item.name), 'desc': cleanText(item.description, True)[:400],
+			'icon': iconUrl(item.iconimage, item.type)}
 
 
-class buildConfigsHTML(threading.Thread):
-	def __init__(self, args=[]):
-		''' Constructor. '''
-		threading.Thread.__init__(self)
-		self.name = 'buildConfigsHTML'
-		self.args = args
-
-	def raise_exc(self, exctype):
-		"""raises the given exception type in the context of this thread"""
-		_async_raise(self.ident, exctype)
-
-	def terminate(self):
-		"""raises SystemExit in the context of the given thread, which should
-		cause the thread to exit silently (unless caught)"""
-		self.raise_exc(SystemExit)
-	########################################################
-
-	def buildSettingsTable(self, List1, List2, exclList, direction):  # direction = '1>2'|'2>1'
-		def getCFGType(option):
-			cfgtype = ''
-			try:
-				CFGElements = option.doException()  # noqa: F841
-			except Exception as e:
-				cfgtype = str(e).split("'")[1]
-			return cfgtype
-		########################################################
-		if direction == '2>1':
-			tmpList = List1
-			List1 = List2
-			List2 = tmpList
-			tmpList = None
-		tableCFG = []
-		for itemL1 in List1:
-			if len(itemL1) < 2:
-				continue
-			if itemL1[0] in exclList:
-				continue
-			for itemL2 in List2:
-				if itemL2[1] == itemL1[1]:
-					if itemL2[0] in settings.excludedCFGs:
-						continue
-					if direction == '1>2':
-						confKey = itemL1
-						ConfName = itemL1[0]
-						ConfDesc = itemL2[0]
-					elif direction == '2>1':
-						confKey = itemL2
-						ConfName = itemL2[0]
-						ConfDesc = itemL1[0]
-					CFGtype = getCFGType(itemL1[1])
-					# print ConfName, '=' , CFGtype
-					if CFGtype in ['ConfigYesNo', 'ConfigOnOff', 'ConfigEnableDisable', 'ConfigBoolean']:
-						if int(confKey[1].getValue()) == 0:
-							CFGElements = '<input type="radio" name="cmd" value="ON:%s">%s</input>' % (ConfName, _('Yes'))
-							CFGElements += '<input type="radio" name="cmd" value="OFF:%s" checked="checked">%s</input>' % (ConfName, _('No'))
-						else:
-							CFGElements = '<input type="radio" name="cmd" value="ON:%s" checked="checked">%s</input>' % (ConfName, _('Yes'))
-							CFGElements += '<input type="radio" name="cmd" value="OFF:%s">%s</input>' % (ConfName, _('No'))
-					elif CFGtype in ['ConfigInteger']:
-						CFGElements = '<input type="number" name="%s" value="%d" />' % ('INT:' + ConfName, int(confKey[1].getValue()))
-					elif CFGtype in ['ConfigSelection']:
-						def getHTML(configElement, id):
-							res = ""
-							for v in configElement.choices:
-								descr = configElement.description[v]
-								if configElement.value == v:
-									checked = 'checked="checked" '
-								else:
-									checked = ''
-								res += '<input type="radio" name="' + htmlEscape(id) + '" ' + checked + 'value="' + htmlEscape(v) + '">' + htmlEscape(descr) + "</input></br>\n"
-							return res
-						CFGElements = getHTML(confKey[1], 'CFG:' + ConfName)
-					elif CFGtype in ["ConfigText", "ConfigDirectory"]:
-						CFGElements = '<input type="text" name="CFG:' + htmlEscape(ConfName) + '" value="' + htmlEscape(confKey[1].value) + '" /><br>\n'
-					else:
-						try:
-							CFGElements = confKey[1].getHTML('CFG:' + ConfName)
-						except Exception as e:
-							CFGElements = 'ERROR:%s' % str(e)
-					tableCFG.append([ConfName, ConfDesc, CFGElements])
-		return tableCFG
-	########################################################
-
-	def run(self):
-		usedCFG = []
-		# configs for hosts
-		for hostName in SortHostsList(GetHostsList()):
-			# column 1 containing logo and link if available
-			try:
-				_temp = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + hostName, globals(), locals(), ['gettytul'], 0)
-				title = _temp.gettytul()
-			except Exception:
-				continue  # we do NOT use broken hosts!!!
-			usedCFG.append("host%s" % hostName)
-
-			logo = getHostLogo(hostName)
-			if logo == "":
-				logo = title
-
-			if title[:4] == 'http':
-				hostNameWithURLandLOGO = '<a href="%s" target="_blank">%s</a>' % (title, logo)
-			else:
-				hostNameWithURLandLOGO = '<a>%s</a>' % (logo)
-			# Column 2 TBD
-
-			# Column 3 enable/disable host in GUI
-			if IsHostEnabled(hostName):
-				OnOffState = formSUBMITvalue([('cmd', 'OFF:host' + hostName)], _('Disable'))
-			else:
-				OnOffState = formSUBMITvalue([('cmd', 'ON:host' + hostName)], _('Enable'))
-
-			# Column 4 host configuration options
-			try:
-				_temp = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + hostName, globals(), locals(), ['GetConfigList'], 0)
-				OptionsList = _temp.GetConfigList()
-			except Exception:
-				OptionsList = []
-
-			# build table row
-			hostsCFG = '<tr>'
-			hostsCFG += '<td style="width:120px">%s</td>' % hostNameWithURLandLOGO
-			hostsCFG += '<td>%s</td>' % OnOffState
-			if len(OptionsList) == 0:
-				hostsCFG += '<td><a>%s</a></td>' % ""  # _('Host does not have configuration options')
-			else:
-				hostsCFG += '<td><table border="1" style="width:100%">'
-				for item in self.buildSettingsTable(List2=OptionsList, List1=list(config.plugins.iptvplayer.dict().items()), exclList=usedCFG, direction='2>1'):
-					usedCFG.append(item[0])
-					# print 'hostsCFG:',item[0], item[1],item[2]
-					if item[0] == 'fake_separator':
-						hostsCFG += '<tr><td colspan="2" align="center"><tt>%s</tt></td></tr>\n' % (item[1])
-					else:
-						hostsCFG += '<tr><td nowrap style="width:50%%"><tt>%s</tt></td><td>%s</td></tr>\n' % (item[1], formGET(item[2]))
-				hostsCFG += '</table></td>'
-			hostsCFG += '</tr>\n'
-			settings.configsHTML[hostName] = hostsCFG
-		# now configs for plugin
-		OptionsList = []
-		ConfigMenu.fillConfigList(OptionsList)
-		for item in self.buildSettingsTable(List1=list(config.plugins.iptvplayer.dict().items()), List2=OptionsList, exclList=usedCFG, direction='2>1'):
-			settings.configsHTML[item[1]] = '<tr><td><tt>%s</tt></td><td>%s</td></tr>\n' % (item[1], formGET(item[2]))
-########################################################
-
-
-class doUseHostAction(threading.Thread):
-	def __init__(self, key, arg, searchType):
-		''' Constructor. '''
-		threading.Thread.__init__(self)
-		self.name = 'doUseHostAction'
-		self.key = key
-		self.arg = arg
-		self.searchType = searchType
-
-	def raise_exc(self, exctype):
-		"""raises the given exception type in the context of this thread"""
-		_async_raise(self.ident, exctype)
-
-	def terminate(self):
-		"""raises SystemExit in the context of the given thread, which should
-		cause the thread to exit silently (unless caught)"""
-		self.raise_exc(SystemExit)
-
-	def run(self):
-		print("doUseHostAction received: '%s'='%s'" % (self.key, str(self.arg)))
-		if self.key == 'activeHost' and isActiveHostInitiated() is False:
-			initActiveHost(self.arg)
-		elif self.key == 'activeHost' and self.arg != settings.activeHost['Name']:
-			initActiveHost(self.arg)
-		elif self.key == 'cmd' and self.arg == 'RefreshList':
-			settings.retObj = settings.activeHost['Obj'].getCurrentList()
-			settings.activeHost['ListType'] = 'ListForItem'
-			settings.currItem = {}
-		elif self.key == 'DownloadURL' and self.arg.isdigit():
-			myID = int(self.arg)
-			url = settings.retObj.value[myID].url
-			if url != '' and IsUrlDownloadable(url):
-				titleOfMovie = settings.currItem['itemTitle'].replace('/', '-').replace(':', '-').replace('*', '-').replace('?', '-').replace('"', '-').replace('<', '-').replace('>', '-').replace('|', '-')
-				fullFilePath = config.plugins.iptvplayer.DownloadsDir.value + '/' + titleOfMovie + '.mp4'
-				if None is Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager:
-					printDBG('============webThreads.py Initialize Download Manager============')
-					Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager = IPTVDMApi(2, int(config.plugins.iptvplayer.IPTVDMMaxDownloadItem.value))
-				ret = Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager.addToDQueue(DMItem(url, fullFilePath))
-				# print ret
-		elif self.key == 'ResolveURL' and self.arg.isdigit():
-			myID = int(self.arg)
-			url = "NOVALIDURLS"
-			linkList = []
-			ret = settings.activeHost['Obj'].getResolvedURL(settings.retObj.value[myID].url)
-			if ret.status == RetHost.OK and isinstance(ret.value, list):
-				for item in ret.value:
-					if isinstance(item, CUrlItem):
-						item.urlNeedsResolve = 0  # protection from recursion
-						linkList.append(item)
-					elif isinstance(item, str):
-						linkList.append(CUrlItem(item, item, 0))
-					else:
-						print("selectResolvedVideoLinks: wrong resolved url type!")
-				settings.retObj = RetHost(RetHost.OK, value=linkList)
-			else:
-				print("selectResolvedVideoLinks: wrong status or value")
-
-		elif self.key == 'ListForItem' and self.arg.isdigit():
-			myID = int(self.arg)
-			settings.activeHost['selectedItemType'] = settings.retObj.value[myID].type
-			if settings.activeHost['selectedItemType'] in ['CATEGORY'] and getattr(settings.retObj.value[myID], 'pinLocked', False):
-				# the GUI asks for the PIN here - the web interface cannot, so the folder stays closed
-				print('doUseHostAction: PIN protected folder not opened from the web interface')
-			elif settings.activeHost['selectedItemType'] in ['CATEGORY']:
-				settings.activeHost['Status'] += '>' + settings.retObj.value[myID].name
-				settings.currItem = {}
-				settings.retObj = settings.activeHost['Obj'].getListForItem(myID, 0, settings.retObj.value[myID])
-				settings.activeHost['PathLevel'] += 1
-			elif settings.activeHost['selectedItemType'] in ['VIDEO']:
-				settings.currItem['itemTitle'] = settings.retObj.value[myID].name
-				try:
-					links = settings.retObj.value[myID].urlItems
-				except Exception as e:
-					print("ListForItem>urlItems exception:", str(e))
-					links = 'NOVALIDURLS'
-				try:
-					settings.retObj = settings.activeHost['Obj'].getLinksForVideo(myID, settings.retObj.value[myID])  # returns "NOT_IMPLEMENTED" when host is using curlitem
-				except Exception as e:
-					print("ListForItem>getLinksForVideo exception:", str(e))
-					settings.retObj = RetHost(RetHost.NOT_IMPLEMENTED, value=[])
-
-				if settings.retObj.status == RetHost.NOT_IMPLEMENTED and links != 'NOVALIDURLS':
-					print("getLinksForVideo not implemented, using CUrlItem")
-					tempUrls = []
-					iindex = 1
-					for link in links:
-						if link.name == '':
-							tempUrls.append(CUrlItem('link %d' % iindex, link.url, link.urlNeedsResolve))
-						else:
-							tempUrls.append(CUrlItem(link.name, link.url, link.urlNeedsResolve))
-						iindex += 1
-					settings.retObj = RetHost(RetHost.OK, value=tempUrls)
-				elif settings.retObj.status == RetHost.NOT_IMPLEMENTED:
-					settings.retObj = RetHost(RetHost.NOT_IMPLEMENTED, value=[(CUrlItem(_("No valid urls"), "fakeUrl", 0))])
-		elif self.key == 'ForSearch' and None is not self.arg and self.arg != '':
-			settings.retObj = settings.activeHost['Obj'].getSearchResults(self.arg, self.searchType)
-		elif self.key == 'activeHostSearchHistory' and self.arg != '':
-			initActiveHost(self.arg)
-			if isActiveHostInitiated():
-				settings.retObj = settings.activeHost['Obj'].getSearchResults(settings.GlobalSearchQuery, '')
-########################################################
-
-
-class doGlobalSearch(threading.Thread):
+class doGlobalSearch(WebThread):
 	def __init__(self):
-		''' Constructor. '''
-		threading.Thread.__init__(self)
-		self.name = 'doGlobalSearch'
+		WebThread.__init__(self, 'doGlobalSearch')
 		settings.searchingInHost = None
-		self.host = None
-		settings.GlobalSearchResults = {}
+		settings.GlobalSearchResults = []
+		settings.GlobalSearchProgress = {'done': 0, 'total': 0}
 		settings.StopThreads = False
-		print('doGlobalSearch:init')
-
-	def raise_exc(self, exctype):
-		"""raises the given exception type in the context of this thread"""
-		_async_raise(self.ident, exctype)
-
-	def terminate(self):
-		"""raises SystemExit in the context of the given thread, which should
-		cause the thread to exit silently (unless caught)"""
-		self.raise_exc(SystemExit)
+		self.host = None
 
 	def stopIfRequested(self):
 		if settings.StopThreads is True:
-			self.terminate()
+			raise SystemExit()
 
 	def run(self):
+		try:
+			self._run()
+		except SystemExit:
+			pass
+		except Exception:
+			printExc()
+		settings.searchingInHost = None
+
+	def _run(self):
 		if settings.GlobalSearchQuery == '':
-			print("End settings.GlobalSearchQuery is empty")
 			return
+		hosts = []
 		for hostName in SortHostsList(GetHostsList()):
-			self.stopIfRequested()
-			if hostName in ['localmedia', 'urllist']:  # those are local hosts, nothing to do via web interface
+			if hostName in ['localmedia', 'urllist', 'favourites', 'e2iplayerinfo', 'iptvplayerinfo']:  # nothing to search there
 				continue
 			elif hostName in ['seriesonline']:  # those hosts have issues wth global search, need more investigation
 				continue
 			elif not isHostUsableFromWeb(hostName):
 				continue
-			# print "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ---------------- %s ---------------- !!!!!!!!!!!!!!!!!!!!!!!!!" % hostName
-			try:
-				_temp = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + hostName, globals(), locals(), ['IPTVHost'], 0)
-			except Exception:
-				print("doGlobalSearch: Exception importing %s" % hostName)
-				continue
-			try:
-				self.host = _temp.IPTVHost()
-			except Exception as e:
-				print("doGlobalSearch: Exception initializing iptvhost for %s: %s" % (hostName, str(e)))
-				continue
-			# print "settings.GlobalSearchQuery=",settings.GlobalSearchQuery, 'hostName=', hostName
-			settings.searchingInHost = hostName
-			time.sleep(0.2)
-			try:
-				if self.host.isProtectedByPinCode():
-					continue  # PIN protected hosts are GUI only
-				self.host.getSupportedFavoritesTypes()
-				ret = self.host.getInitList()
-				searchTypes = self.host.getSearchTypes()
-			except Exception as e:
-				print("doGlobalSearch: Exception in getInitList for %s: %s" % (hostName, str(e)))
-				settings.hostsWithNoSearchOption.append(hostName)
-				continue
-			# one entry per host: the results of every search type of the host together
-			results = []
-			for searchType in (searchTypes if len(searchTypes) else [('', '')]):
-				try:
-					ret = self.host.getSearchResults(settings.GlobalSearchQuery, searchType[1])
-					if ret.value:
-						results.extend(ret.value)
-				except Exception as e:
-					print("doGlobalSearch: Exception in getSearchResults for %s: %s" % (hostName, str(e)))
-				self.stopIfRequested()
-			if results:
-				settings.GlobalSearchResults[hostName] = (None, results)
+			hosts.append(hostName)
+		settings.GlobalSearchProgress = {'done': 0, 'total': len(hosts)}
 
-		settings.searchingInHost = None
+		for hostName in hosts:
+			self.stopIfRequested()
+			settings.searchingInHost = hostDisplayTitle(getHostTitle(hostName) or hostName)
+			self._searchHost(hostName)
+			settings.GlobalSearchProgress['done'] += 1
+
+	def _searchHost(self, hostName):
+		try:
+			_temp = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + hostName, globals(), locals(), ['IPTVHost'], 0)
+			self.host = _temp.IPTVHost()
+		except Exception as e:
+			print("doGlobalSearch: Exception initializing iptvhost for %s: %s" % (hostName, str(e)))
+			return
+		try:
+			if self.host.isProtectedByPinCode():
+				return  # PIN protected hosts are GUI only
+			self.host.getSupportedFavoritesTypes()
+			self.host.getInitList()
+			searchTypes = self.host.getSearchTypes()
+		except SystemExit:
+			raise
+		except Exception as e:
+			print("doGlobalSearch: Exception in getInitList for %s: %s" % (hostName, str(e)))
+			settings.hostsWithNoSearchOption.append(hostName)
+			return
+		# one entry per host: the results of every search type of the host together
+		results = []
+		for searchType in (searchTypes if len(searchTypes) else [('', '')]):
+			try:
+				ret = self.host.getSearchResults(settings.GlobalSearchQuery, searchType[1])
+				if ret.value:
+					results.extend(ret.value)
+			except SystemExit:
+				raise
+			except Exception as e:
+				print("doGlobalSearch: Exception in getSearchResults for %s: %s" % (hostName, str(e)))
+			self.stopIfRequested()
+		items = [searchItemToDict(item, idx) for idx, item in enumerate(results) if item.type not in ('SEARCH', 'MARKER', 'MORE')]
+		if items:
+			settings.GlobalSearchResults.append({'host': hostName, 'title': hostDisplayTitle(getHostTitle(hostName) or hostName),
+												'logo': hostLogoUrl(hostName), 'searchType': searchTypes[0][1] if len(searchTypes) else '',
+												'items': items})

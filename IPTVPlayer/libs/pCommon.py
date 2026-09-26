@@ -841,7 +841,8 @@ class common:
             if fileHandler:
                 fileHandler.close()
 
-            if metadata['status_code'] == 200 and metadata['content-type'] == 'image/webp':
+            # metadata stays empty when the request was never sent (thread cancelled)
+            if metadata.get('status_code') == 200 and metadata.get('content-type') == 'image/webp':
                 new_name = params['save_to_file'].replace(".webp", ".jpg")
                 printDBG("Change extension of webp image: %s" % new_name)
                 try:

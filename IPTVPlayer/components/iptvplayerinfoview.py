@@ -147,6 +147,25 @@ def _strip_markup(text):
     return _MARKUP_RE.sub("", text)
 
 
+def aboutBlocks():
+    """(heading, text) pairs of the About page - the web interface shows them too."""
+    stamp = GetIPTVPlayerComitStamp()
+    version = "Oe-Mirrors Python3 Version Powered by openATV Team\n" \
+              + GetIPTVPlayerVersion() + (("  (" + stamp + ")") if stamp else "")
+    return [
+        (_("version"), version),
+        (_("www:"), "https://github.com/oe-mirrors/e2iplayer"),
+        (_("Developers:"), ", ".join([
+            'samsamsam', 'zdzislaw22', 'mamrot', 'MarcinO', 'skalita', 'atilaks',
+            'huball', 'matzg', 'tomashj291', 'a4tech', 'Blindspot76',
+            'Max (maxbambi)', '-=Mario=- (zadmario)', 'MohamedOS', 'Lululla (Belfagor2005)',
+            'jbleyel', 'Mr.X', 'and others',
+        ])),
+        (_("Testers:"), ", ".join(('Masta2002', 'Testing Community: Enigma2 users worldwide'))),
+        (_("Skinners:"), ", ".join(('stein17', 'and others'))),
+    ]
+
+
 class _SystemInfo(object):
     """Everything needed to gather + render the System page. No UI, so it
     can also be used headless at plugin start."""
@@ -555,24 +574,7 @@ class IPTVPlayerInfoView(_SystemInfo, Screen):
     def _buildAbout(self):
         hc = "\\c%08x" % _HEADING_COLOR   # heading colour (ScrollLabel markup)
         tc = "\\c%08x" % _TEXT_COLOR
-        stamp = GetIPTVPlayerComitStamp()
-
-        version = "Oe-Mirrors Python3 Version Powered by openATV Team\n" \
-                  + GetIPTVPlayerVersion() + (("  (" + stamp + ")") if stamp else "")
-
-        blocks = [
-            (_("version"), version),
-            (_("www:"), "https://github.com/oe-mirrors/e2iplayer"),
-            (_("Developers:"), ", ".join([
-                'samsamsam', 'zdzislaw22', 'mamrot', 'MarcinO', 'skalita', 'atilaks',
-                'huball', 'matzg', 'tomashj291', 'a4tech', 'Blindspot76',
-                'Max (maxbambi)', '-=Mario=- (zadmario)', 'MohamedOS', 'Lululla (Belfagor2005)',
-                'jbleyel', 'Mr.X', 'and others',
-            ])),
-            (_("Testers:"), ", ".join(('Masta2002', 'Testing Community: Enigma2 users worldwide'))),
-            (_("Skinners:"), ", ".join(('stein17', 'and others'))),
-        ]
-        return "\n\n".join("%s%s\n%s%s" % (hc, head, tc, body) for head, body in blocks)
+        return "\n\n".join("%s%s\n%s%s" % (hc, head, tc, body) for head, body in aboutBlocks())
 
     # -------------------------------------------------------------------- log
 
