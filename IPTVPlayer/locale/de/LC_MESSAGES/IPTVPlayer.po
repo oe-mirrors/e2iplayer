@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-26 10:21+0000\n"
-"PO-Revision-Date: 2026-09-21 21:31+0200\n"
+"PO-Revision-Date: 2026-09-26 12:32+0200\n"
 "Last-Translator: Masta2002\n"
 "Language-Team: oATV Team\n"
 "Language: de_DE\n"
@@ -114,7 +114,7 @@ msgstr "%s Datei ist %d MB groß. Letzte %d Zeilen sind:"
 
 #, python-format
 msgid "%s followers"
-msgstr ""
+msgstr "%s Follower"
 
 #, python-format
 msgid "%s has been protected with google recaptcha v2. You can try to use API version."
@@ -148,13 +148,13 @@ msgstr ""
 "%s verwendet „Geoblocking“-Maßnahmen, um zu verhindern, dass Sie aus dem Ausland auf die Dienste zugreifen.\n"
 "  Host-Land: %s, Ihr Land: %s"
 
-#, fuzzy, python-format
+#, python-format
 msgid "%s viewers"
-msgstr "Am häufigsten angesehen"
+msgstr "%s Zuschauer"
 
-#, fuzzy, python-format
+#, python-format
 msgid "%s views"
-msgstr "Ansichten"
+msgstr "%s Aufrufe"
 
 #, python-format
 msgid "(%d YouTube channel(s) could not be read)"
@@ -416,9 +416,8 @@ msgstr "Alle Shows"
 msgid "All streams"
 msgstr "Alle Streams"
 
-#, fuzzy
 msgid "All time"
-msgstr "Alle zusammen"
+msgstr "Gesamte Zeit"
 
 msgid "Allow VP9 codec:"
 msgstr "Erlaube VP9 Codec:"
@@ -453,17 +452,14 @@ msgstr "Alternativer Proxy Server (1)"
 msgid "Alternative proxy server (2)"
 msgstr "Alternativer Proxy Server (2)"
 
-#, fuzzy
 msgid "Alternative proxy server (3)"
-msgstr "Alternativer Proxy Server (1)"
+msgstr "Alternativer Proxy Server (3)"
 
-#, fuzzy
 msgid "Alternative proxy server (4)"
-msgstr "Alternativer Proxy Server (1)"
+msgstr "Alternativer Proxy Server (4)"
 
-#, fuzzy
 msgid "Alternative proxy server (5)"
-msgstr "Alternativer Proxy Server (1)"
+msgstr "Alternativer Proxy Server (5)"
 
 #, python-format
 msgid ""
@@ -772,7 +768,7 @@ msgstr "Klicken"
 
 #, python-format
 msgid "Clipped by: %s"
-msgstr ""
+msgstr "Geclippt von: %s"
 
 msgid "Clips"
 msgstr "Clips"
@@ -799,14 +795,13 @@ msgid "Columbia"
 msgstr "Columbia"
 
 msgid "Combine pull request merges with their commit"
-msgstr ""
+msgstr "Pull-Request-Merges mit ihrem Commit zusammenfassen"
 
 msgid "Comedy"
 msgstr "Komödie"
 
-#, fuzzy
 msgid "Comments"
-msgstr "Commits"
+msgstr "Kommentare"
 
 msgid "Commits"
 msgstr "Commits"
@@ -868,21 +863,17 @@ msgstr "Kopieren"
 msgid "Could not add the user link."
 msgstr "Der Benutzerlink konnte nicht hinzugefügt werden."
 
-#, fuzzy
 msgid "Could not load the wiki page."
-msgstr "Der Benutzerlink konnte nicht hinzugefügt werden."
+msgstr "Die Wiki-Seite konnte nicht geladen werden."
 
-#, fuzzy
 msgid "Could not resolve host."
-msgstr "Die Datei konnte nicht geschrieben werden."
+msgstr "Host konnte nicht aufgelöst werden."
 
-#, fuzzy
 msgid "Could not resolve proxy."
-msgstr "Test konnte nicht ausgeführt werden"
+msgstr "Proxy konnte nicht aufgelöst werden."
 
-#, fuzzy
 msgid "Could not sort the user links."
-msgstr "Der Benutzerlink konnte nicht hinzugefügt werden."
+msgstr "Die Benutzerlinks konnten nicht sortiert werden."
 
 msgid "Could not start the YouTube sign-in."
 msgstr "Die YouTube-Anmeldung konnte nicht gestartet werden."
@@ -914,11 +905,8 @@ msgstr "MKV erstellen"
 msgid "Create MKV with chapter marks from description"
 msgstr "Erstelle MKV mit Kapitelmarkierungen anhand der Beschreibung"
 
-#, fuzzy
 msgid "Create debug logs"
-msgstr ""
-"Debug-Log-Datei löschen?\n"
-"%s"
+msgstr "Debug-Logs erstellen"
 
 msgid "Create sidecar files (.txt/.jpg)"
 msgstr "Erstelle Sidecar-Dateien (.txt/.jpg)"
@@ -1128,9 +1116,8 @@ msgstr "Regisseure:"
 msgid "Directory \"%s\" does not exists."
 msgstr "Verzeichnis \"%s\" existiert nicht."
 
-#, fuzzy
 msgid "Directory browser"
-msgstr "Regisseure"
+msgstr "Verzeichnisauswahl"
 
 msgid "Disable"
 msgstr "Deaktivieren"
@@ -1317,7 +1304,7 @@ msgid "Downloads location"
 msgstr "Download-Verzeichnis"
 
 msgid "Draft"
-msgstr ""
+msgstr "Entwurf"
 
 msgid "Drama"
 msgstr "Drama"
@@ -1453,7 +1440,7 @@ msgid "Enter"
 msgstr "Enter"
 
 msgid "Enter (confirm and close)"
-msgstr ""
+msgstr "Enter (bestätigen und schließen)"
 
 msgid "Enter a value"
 msgstr "Wert eingeben"
@@ -1619,9 +1606,8 @@ msgstr "Holen von \"%s\" gescheitert."
 msgid "Fail to get captcha data."
 msgstr "Holen von Captcha Daten gescheitert."
 
-#, fuzzy
 msgid "Failed to connect to host."
-msgstr "Die Verbindung zum Server \"%s\" konnte nicht hergestellt werden."
+msgstr "Verbindung zum Host fehlgeschlagen."
 
 #, python-format
 msgid "Failed to connect to server \"%s\"."
@@ -1651,7 +1637,7 @@ msgid "Failed to gzip."
 msgstr "Gzip fehlgeschlagen."
 
 msgid "Failed to initialize (unknown option or old curl version?)."
-msgstr ""
+msgstr "Initialisierung fehlgeschlagen (unbekannte Option oder alte curl-Version?)."
 
 msgid "Failed to load channels"
 msgstr "Kanäle konnten nicht geladen werden"
@@ -1709,10 +1695,10 @@ msgid "File \"%s\" already exists!"
 msgstr "Datei \"%s\" existiert bereits!"
 
 msgid "File I/O error (write)."
-msgstr ""
+msgstr "Datei-E/A-Fehler (Schreiben)."
 
 msgid "File I/O error."
-msgstr ""
+msgstr "Datei-E/A-Fehler."
 
 msgid "File Not Found."
 msgstr "Datei nicht gefunden."
@@ -1726,7 +1712,7 @@ msgid "File [%s] was added to downloading queue."
 msgstr "Datei: [%s] zur Download-Warteschlange hinzugefügt."
 
 msgid "File browser"
-msgstr ""
+msgstr "Dateiauswahl"
 
 msgid "File can not be downloaded. Download manager is not available."
 msgstr "Die Datei kann nicht heruntergeladen werden. Der Download-Manager ist nicht verfügbar."
@@ -1778,13 +1764,13 @@ msgstr "Primärer Player ohne Puffermodus"
 msgid "Fix jump target"
 msgstr "Sprungziel fixieren"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Folder \"%s\" can not be created."
-msgstr "Dienstprogramm \"%s\" kann nicht gefunden werden."
+msgstr "Ordner \"%s\" kann nicht erstellt werden."
 
-#, fuzzy, python-format
+#, python-format
 msgid "Folder \"%s\" has been created."
-msgstr "PIN wurde geändert."
+msgstr "Ordner \"%s\" wurde erstellt."
 
 msgid "Folder for cache data"
 msgstr "Cache-Verzeichnis"
@@ -1810,9 +1796,8 @@ msgstr "Fuß & Knöchel"
 msgid "For continuous playing, please press 8!"
 msgstr "Für die fortlaufende Wiedergabe drücke bitte die 8!"
 
-#, fuzzy
 msgid "For developers"
-msgstr "Entwickler:"
+msgstr "Für Entwickler"
 
 msgid "Force internal skin: all E2iPlayer screens"
 msgstr "Erzwinge internen Skin: Alle E2iPlayer screens"
@@ -1850,9 +1835,9 @@ msgstr "GRÜN"
 msgid "GSTplayer no IFD workarround"
 msgstr "GSTplayer kein IFD-Workarround"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Game: %s"
-msgstr "Spiele"
+msgstr "Spiel: %s"
 
 msgid "Games"
 msgstr "Spiele"
@@ -1860,9 +1845,8 @@ msgstr "Spiele"
 msgid "General"
 msgstr "Allgemein"
 
-#, fuzzy
 msgid "Generic error code."
-msgstr "Unrar Fehler-Code[%s]."
+msgstr "Allgemeiner Fehlercode."
 
 msgid "Genre"
 msgstr "Genre"
@@ -1902,7 +1886,7 @@ msgid "Get token failed!"
 msgstr "Erhalten von Token fehlgeschlagen!"
 
 msgid "GitHub API error"
-msgstr ""
+msgstr "GitHub-API-Fehler"
 
 msgid "Global"
 msgstr "Global"
@@ -1944,10 +1928,10 @@ msgid "HLS/m3u8"
 msgstr "HLS/m3u8"
 
 msgid "HTTP/2 framing layer error."
-msgstr ""
+msgstr "HTTP/2-Fehler in der Framing-Schicht."
 
 msgid "HTTP/2 stream error."
-msgstr ""
+msgstr "HTTP/2-Stream-Fehler."
 
 #, python-format
 msgid "HTTPS connection error \"%s\"\n"
@@ -2089,29 +2073,27 @@ msgstr "Schwarzes Iframe am Wiedergabeende einfügen"
 msgid "Input"
 msgstr "Eingabe"
 
-#, fuzzy
 msgid "Install E2iPlayer"
-msgstr "E2iPlayer"
+msgstr "E2iPlayer installieren"
 
-#, fuzzy
 msgid "Installed version"
-msgstr "Web-Interface Version"
+msgstr "Installierte Version"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Installed: v%s"
-msgstr "installiert"
+msgstr "Installiert: v%s"
 
 #, python-format
 msgid "Installed: v%s - %d commits behind %s"
-msgstr ""
+msgstr "Installiert: v%s - %d Commits hinter %s"
 
 #, python-format
 msgid "Installed: v%s - no matching release tag (local build?)"
-msgstr ""
+msgstr "Installiert: v%s - kein passender Release-Tag (lokaler Build?)"
 
 #, python-format
 msgid "Installed: v%s - up to date"
-msgstr ""
+msgstr "Installiert: v%s - aktuell"
 
 msgid "Interactive Learning Center(ILC)"
 msgstr "Interaktives Lernzentrum (ILC)"
@@ -2139,9 +2121,9 @@ msgstr "Es sieht so aus, als ob Ihre aktuelle Konfiguration es nicht erlaubt, ei
 msgid "It seems that the host \"%s\" has crashed."
 msgstr "Der Host \"%s\" ist scheinbar abgestürzt."
 
-#, fuzzy, python-format
+#, python-format
 msgid "It seems that the subtitle's provider \"%s\" has crashed."
-msgstr "Der Host \"%s\" ist scheinbar abgestürzt."
+msgstr "Der Untertitel-Anbieter \"%s\" ist scheinbar abgestürzt."
 
 #, python-format
 msgid ""
@@ -2258,9 +2240,8 @@ msgstr "Letzter Ausnahmefehler: '%s'"
 msgid "Last air date:"
 msgstr "Letzte Ausstrahlung:"
 
-#, fuzzy
 msgid "Last day"
-msgstr "Liste nach Tag"
+msgstr "Letzter Tag"
 
 #, python-format
 msgid ""
@@ -2275,11 +2256,10 @@ msgid "Last error: \"%s\""
 msgstr "Letzter Fehler: \"%s\""
 
 msgid "Last month"
-msgstr ""
+msgstr "Letzter Monat"
 
-#, fuzzy
 msgid "Last week"
-msgstr "Nach einer Woche"
+msgstr "Letzte Woche"
 
 msgid "Lastest"
 msgstr "Neueste"
@@ -2317,9 +2297,8 @@ msgstr "Gelikte Videos"
 msgid "Line Spacing"
 msgstr "Untertitel Zeilenabstand"
 
-#, fuzzy
 msgid "Link"
-msgstr "Links für"
+msgstr "Link"
 
 msgid "Link is not supported by the gstplayer. Please use the extelayer3 if available."
 msgstr "Link wird nicht vom Gstplayer unterstützt. Bitte nutzen Sie Exteplayer3 falls vorhanden."
@@ -2359,9 +2338,8 @@ msgstr "Zuhörer: %s"
 msgid "Live"
 msgstr "Live"
 
-#, fuzzy
 msgid "Live channels"
-msgstr "Offline Kanäle"
+msgstr "Live-Kanäle"
 
 msgid "Live streams"
 msgstr "Live-Streams"
@@ -2393,9 +2371,8 @@ msgstr "Laden ist fehlgeschlagen."
 msgid "Loading watch data..."
 msgstr "Lade Watch daten..."
 
-#, fuzzy
 msgid "Loading..."
-msgstr "Laden"
+msgstr "Lade..."
 
 msgid "LocalMedia"
 msgstr "Lokale Medien"
@@ -2404,9 +2381,8 @@ msgstr "Lokale Medien"
 msgid "Locale ID mismatched! %s <> %s"
 msgstr "Locale ID nicht übereinstimmend! %s <> %s"
 
-#, fuzzy
 msgid "Locality:"
-msgstr "Qualität:"
+msgstr "Ort:"
 
 msgid "Localization"
 msgstr "Lokalisation"
@@ -2689,17 +2665,14 @@ msgstr "Netflix"
 msgid "Network failed %s."
 msgstr "Netzwerk fehlgeschlagen %s."
 
-#, fuzzy
 msgid "Network failure (receive)."
-msgstr "Netzwerk fehlgeschlagen %s."
+msgstr "Netzwerkfehler (Empfangen)."
 
-#, fuzzy
 msgid "Network failure (send)."
-msgstr "Netzwerk fehlgeschlagen %s."
+msgstr "Netzwerkfehler (Senden)."
 
-#, fuzzy
 msgid "Network failure."
-msgstr "Netzwerk fehlgeschlagen %s."
+msgstr "Netzwerkfehler."
 
 msgid "New"
 msgstr "Neu"
@@ -2716,9 +2689,8 @@ msgstr "Neuer Eintrag"
 msgid "New icons will not be available."
 msgstr "Neue Icons werden nicht verfügbar sein."
 
-#, fuzzy
 msgid "New since installed version"
-msgstr "Web-Interface Version"
+msgstr "Neu seit der installierten Version"
 
 msgid "Newest Episodes"
 msgstr "Neuste Episoden"
@@ -2770,7 +2742,7 @@ msgid "No materials waiting in the downloader queue"
 msgstr "Keine Materialien, die in der Downloaderwarteschlange warten"
 
 msgid "No problems occurred."
-msgstr ""
+msgstr "Keine Probleme aufgetreten."
 
 #, python-format
 msgid "No results found for: %s"
@@ -2792,7 +2764,7 @@ msgid "No valid links available."
 msgstr "Keine gültigen Links verfügbar."
 
 msgid "No valid urls"
-msgstr ""
+msgstr "Keine gültigen URLs"
 
 msgid "No video ID available"
 msgstr "Keine Video-ID verfügbar"
@@ -2807,7 +2779,7 @@ msgid "Nothing has been downloaded yet."
 msgstr "Es wurde noch nichts heruntergeladen."
 
 msgid "Nothing open"
-msgstr ""
+msgstr "Nichts offen"
 
 msgid "Nothing to save - the debug log is not active."
 msgstr "Nichts zu speichern - das Debug-Log ist nicht aktiv."
@@ -2847,23 +2819,23 @@ msgid "One link mode"
 msgstr "Einzellinkmodus"
 
 msgid "Only links can be moved to a group."
-msgstr ""
+msgstr "Nur Links können in eine Gruppe verschoben werden."
 
 msgid "Only music"
 msgstr "Nur Musik"
 
 #, python-format
 msgid "Only the %d oldest new commits are shown"
-msgstr ""
+msgstr "Es werden nur die %d ältesten neuen Commits angezeigt"
 
 msgid "Only videos"
 msgstr "Nur Videos"
 
 msgid "Open issues"
-msgstr ""
+msgstr "Offene Issues"
 
 msgid "Open pull requests"
-msgstr ""
+msgstr "Offene Pull-Requests"
 
 msgid "Opening. Please wait..."
 msgstr "Wird geöffnet. Bitte warten..."
@@ -2871,9 +2843,8 @@ msgstr "Wird geöffnet. Bitte warten..."
 msgid "Operation aborted!"
 msgstr "Operation abgebrochen!"
 
-#, fuzzy
 msgid "Operation timed out."
-msgstr "Operation abgebrochen!"
+msgstr "Zeitüberschreitung."
 
 msgid "Optional User-Agent (leave blank for default)"
 msgstr "Optionaler User-Agent (leer lassen für Standard)"
@@ -2882,11 +2853,10 @@ msgid "Options"
 msgstr "Optionen"
 
 msgid "Options (select language, clear search history, settings)"
-msgstr ""
+msgstr "Optionen (Sprache wählen, Suchverlauf löschen, Einstellungen)"
 
-#, fuzzy
 msgid "Order of user links:"
-msgstr "Zu den Benutzer-Links hinzufügen"
+msgstr "Reihenfolge der Benutzerlinks:"
 
 msgid "Order stays fixed - useful for T9 browsing."
 msgstr "Die Reihenfolge bleibt unverändert – nützlich beim Durchblättern mit T9."
@@ -2901,7 +2871,7 @@ msgid "Others"
 msgstr "Andere"
 
 msgid "Out of memory."
-msgstr ""
+msgstr "Nicht genügend Speicher."
 
 msgid "Own model"
 msgstr "Eigenes Model"
@@ -2927,14 +2897,11 @@ msgstr "Seite nicht gefunden - bitte prüfen Sie die Adresse."
 msgid "Page:"
 msgstr "Seite:"
 
-#, fuzzy
 msgid "Parse error."
-msgstr ""
-"Letzter Fehler:\n"
-"%s"
+msgstr "Parse-Fehler."
 
 msgid "Partial file - transfer ended early."
-msgstr ""
+msgstr "Unvollständige Datei - Übertragung vorzeitig beendet."
 
 msgid "Password"
 msgstr "Passwort"
@@ -2943,7 +2910,7 @@ msgid "Password:"
 msgstr "Passwort:"
 
 msgid "Past premieres"
-msgstr ""
+msgstr "Vergangene Premieren"
 
 #, python-format
 msgid "Paste \"%s\""
@@ -3140,7 +3107,7 @@ msgid "Program A-Z"
 msgstr "Sendungen A-Z"
 
 msgid "Program for file downloads (HTTP/FTP)"
-msgstr ""
+msgstr "Programm für Datei-Downloads (HTTP/FTP)"
 
 msgid "Programmes"
 msgstr "Sendungen"
@@ -3149,7 +3116,7 @@ msgid "Promote item"
 msgstr "Eintrag bevorzugen"
 
 msgid "Protocol errors."
-msgstr ""
+msgstr "Protokollfehler."
 
 msgid "Published"
 msgstr "Veröffentlicht"
@@ -3203,7 +3170,7 @@ msgid "Randomize a playlist"
 msgstr "Wiedergabeliste mischen"
 
 msgid "Range request not supported (resume failed)."
-msgstr ""
+msgstr "Range-Anfrage nicht unterstützt (Fortsetzen fehlgeschlagen)."
 
 msgid "Ranking"
 msgstr "Rangliste"
@@ -3222,14 +3189,13 @@ msgid "Rating:"
 msgstr "Bewertung:"
 
 msgid "Read error."
-msgstr ""
+msgstr "Lesefehler."
 
 msgid "Reading binaries..."
 msgstr "Lese Binärdateien..."
 
-#, fuzzy
 msgid "Recent"
-msgstr "zentriert"
+msgstr "Neueste"
 
 msgid "Recon"
 msgstr "Aufklärung"
@@ -3243,9 +3209,9 @@ msgstr "Erneuern"
 msgid "Refreshing"
 msgstr "Erneuern"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Refusing to empty \"%s\" - it also holds \"%s\" (downloads, buffering, cache or config folder). Check the folder paths in the storage configuration."
-msgstr "Das Leeren von \"%s\" wird verweigert - das sieht nicht nach einem eigenen Cache-/Konfigurationsverzeichnis aus. Prüfen Sie die Verzeichnispfade in der Speicher-Konfiguration."
+msgstr "Das Leeren von \"%s\" wird verweigert - darin liegt auch \"%s\" (Download-, Puffer-, Cache- oder Konfigurationsverzeichnis). Prüfen Sie die Verzeichnispfade in der Speicher-Konfiguration."
 
 #, python-format
 msgid "Refusing to empty \"%s\" - this does not look like a dedicated cache/config folder. Check the folder paths in the storage configuration."
@@ -3257,9 +3223,8 @@ msgstr "Veröffentlichung"
 msgid "Released:"
 msgstr "Veröffentlicht:"
 
-#, fuzzy
 msgid "Releases"
-msgstr "Veröffentlichung"
+msgstr "Releases"
 
 msgid "Relevance"
 msgstr "Relevanz"
@@ -3308,7 +3273,7 @@ msgid "Rename file"
 msgstr "Datei umbenennen"
 
 msgid "Reordering: UP/DOWN moves the row, OK saves, EXIT cancels."
-msgstr ""
+msgstr "Sortieren: HOCH/RUNTER verschiebt die Zeile, OK speichert, EXIT bricht ab."
 
 msgid "Reset State"
 msgstr "Status zurücksetzen"
@@ -3365,12 +3330,11 @@ msgstr "SOME.PORN, sortiert nach:"
 msgid "SONGS"
 msgstr "SONGS"
 
-#, fuzzy
 msgid "SSL connect error."
-msgstr "HTTPS-Verbindungsfehler \"%s\"\n"
+msgstr "SSL-Verbindungsfehler."
 
 msgid "SSL verification failure."
-msgstr ""
+msgstr "SSL-Überprüfung fehlgeschlagen."
 
 msgid "STARTED"
 msgstr "AKTIV"
@@ -3578,17 +3542,16 @@ msgid "Server"
 msgstr "Server"
 
 msgid "Server issued an error response (HTTP 4xx/5xx)."
-msgstr ""
+msgstr "Server hat mit einem Fehler geantwortet (HTTP 4xx/5xx)."
 
 msgid "Server issued an error response."
-msgstr ""
+msgstr "Server hat mit einem Fehler geantwortet."
 
 msgid "Server return 404 - Not Found."
 msgstr "Server-Antwort 404 - Nicht gefunden."
 
-#, fuzzy
 msgid "Server returned nothing."
-msgstr "Server-Antwort 404 - Nicht gefunden."
+msgstr "Server hat nichts zurückgegeben."
 
 #, python-format
 msgid ""
@@ -3756,10 +3719,10 @@ msgid "Software decoding as"
 msgstr "Softwaredekodierung als"
 
 msgid "Solve Cloudflare, hCaptcha and reCAPTCHA with MyE2i"
-msgstr ""
+msgstr "Cloudflare, hCaptcha und reCAPTCHA mit MyE2i lösen"
 
 msgid "Solve Google reCAPTCHA v2 with My JDownloader"
-msgstr ""
+msgstr "Google reCAPTCHA v2 mit My JDownloader lösen"
 
 msgid "Solver"
 msgstr "Löser"
@@ -3795,7 +3758,7 @@ msgid "Sort by:"
 msgstr "Sortieren nach:"
 
 msgid "Sort the links now? The order of the lines in the file will change."
-msgstr ""
+msgstr "Links jetzt sortieren? Die Reihenfolge der Zeilen in der Datei ändert sich dadurch."
 
 msgid "Sort the list:"
 msgstr "Sortiere Liste:"
@@ -4303,7 +4266,7 @@ msgid "Today"
 msgstr "Heute"
 
 msgid "Too many redirects."
-msgstr ""
+msgstr "Zu viele Weiterleitungen."
 
 msgid "Too many wrong codes - scan the QR code on the receiver screen instead."
 msgstr "Zu viele falsche Codes - scannen Sie stattdessen den QR-Code auf dem Receiver-Bildschirm."
@@ -4382,7 +4345,7 @@ msgid "UNKNOWN"
 msgstr "UNBEKANNT"
 
 msgid "URL malformed."
-msgstr ""
+msgstr "URL fehlerhaft."
 
 msgid "Umount iso file"
 msgstr "Iso-Datei aushängen"
@@ -4403,9 +4366,8 @@ msgstr "Unbekannte Daten im Captcha-Element!"
 msgid "Unknown captcha form! Data: \"%s\""
 msgstr "Unbekanntes Captcha Format! Daten: „%s“"
 
-#, fuzzy
 msgid "Unknown error code."
-msgstr "Unbekannter Fehler."
+msgstr "Unbekannter Fehlercode."
 
 msgid "Unknown error."
 msgstr "Unbekannter Fehler."
@@ -4433,7 +4395,7 @@ msgid "Unset watched"
 msgstr "Als gesehen entmarkieren"
 
 msgid "Unsupported protocol."
-msgstr ""
+msgstr "Nicht unterstütztes Protokoll."
 
 #, python-format
 msgid "Unzip error code[%s]."
@@ -4445,9 +4407,8 @@ msgstr "Updates"
 msgid "Upload date"
 msgstr "Upload Datum"
 
-#, fuzzy
 msgid "Uploads"
-msgstr "Upload Datum"
+msgstr "Uploads"
 
 msgid "Urllists player"
 msgstr "Urllists Player"
@@ -4507,9 +4468,8 @@ msgstr "Benutzerlink wurde aktualisiert."
 msgid "User links"
 msgstr "Benutzer-Links"
 
-#, fuzzy
 msgid "User links sorted."
-msgstr "Benutzerlink gelöscht."
+msgstr "Benutzerlinks sortiert."
 
 msgid "User links stored in the ytlist.txt file."
 msgstr "Benutzer-Links enthalten in der Datei ytlist.txt."
@@ -4526,7 +4486,7 @@ msgid "Username in settings is different from %s"
 msgstr "Der Benutzername in den Einstellungen unterscheidet sich von %s"
 
 msgid "Username/password authentication failure."
-msgstr ""
+msgstr "Anmeldung mit Benutzername/Passwort fehlgeschlagen."
 
 msgid "Username:"
 msgstr "Benutzername:"
@@ -4572,9 +4532,9 @@ msgstr "Inhalt ist DRM geschützt."
 msgid "Videos"
 msgstr "Videos"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Videos %s"
-msgstr "videos: %s"
+msgstr "Videos %s"
 
 #, python-format
 msgid "Videos count: %s"
@@ -4645,7 +4605,7 @@ msgid "Whole file must be downloaded to start playback!"
 msgstr "Die gesamte Datei muss heruntergeladen werden, um die Wiedergabe zu starten!"
 
 msgid "Wiki"
-msgstr ""
+msgstr "Wiki"
 
 msgid "With subtitles"
 msgstr "Mit Untertiteln"
@@ -4833,15 +4793,14 @@ msgstr "Nach drei Tagen"
 msgid "all"
 msgstr "alle"
 
-#, fuzzy
 msgid "alphabetical"
-msgstr "Alphabetisch"
+msgstr "alphabetisch"
 
 msgid "aqua"
 msgstr "aqua"
 
 msgid "as in ytlist.txt"
-msgstr ""
+msgstr "wie in ytlist.txt"
 
 msgid "auto"
 msgstr "auto"
@@ -4851,10 +4810,10 @@ msgid "available until %s"
 msgstr "verfügbar bis %s"
 
 msgid "back to host/group selection"
-msgstr ""
+msgstr "zurück zur Host-/Gruppenauswahl"
 
 msgid "back to the previous category / jump to the next page"
-msgstr ""
+msgstr "zurück zur vorherigen Kategorie / zur nächsten Seite springen"
 
 msgid "black"
 msgstr "schwarz"
@@ -4878,7 +4837,7 @@ msgid "changed"
 msgstr "geändert"
 
 msgid "close the editor - or stop manual reordering if it's active"
-msgstr ""
+msgstr "Editor schließen - oder manuelles Sortieren beenden, falls aktiv"
 
 msgid "cobalt"
 msgstr "Kobalt"
@@ -4895,24 +4854,20 @@ msgstr "Debug"
 msgid "default"
 msgstr "Standard"
 
-#, fuzzy
 msgid "delete entered text"
-msgstr "Eintrag löschen"
+msgstr "eingegebenen Text löschen"
 
-#, fuzzy
 msgid "delete the selected entry"
-msgstr "Bitte wähle einen Eintrag aus."
+msgstr "ausgewählten Eintrag löschen"
 
 msgid "direct link"
 msgstr "Direkt Link"
 
-#, fuzzy
 msgid "direct number input"
-msgstr "Direkt Link"
+msgstr "direkte Zahleneingabe"
 
-#, fuzzy
 msgid "download the selected item"
-msgstr "Heruntergeladene Einträge markieren"
+msgstr "ausgewählten Eintrag herunterladen"
 
 msgid "downloads location"
 msgstr "Download-Verzeichnis"
@@ -4921,14 +4876,13 @@ msgid "e-mail"
 msgstr "E-Mail"
 
 msgid "edit the selected entry (same as BLUE) - or drop it while manually reordering"
-msgstr ""
+msgstr "ausgewählten Eintrag bearbeiten (wie BLAU) - oder ihn beim manuellen Sortieren ablegen"
 
 msgid "edit the selected entry (same as OK)"
-msgstr ""
+msgstr "ausgewählten Eintrag bearbeiten (wie OK)"
 
-#, fuzzy
 msgid "enable / disable manual reordering"
-msgstr "Deaktiviere Sortiermodus"
+msgstr "manuelles Sortieren ein- / ausschalten"
 
 msgid "external eplayer3"
 msgstr "Externer Eplayer3"
@@ -4958,7 +4912,7 @@ msgid "fuchsia"
 msgstr "magenta"
 
 msgid "go back / close"
-msgstr ""
+msgstr "zurück / schließen"
 
 msgid "gray"
 msgstr "grau"
@@ -4991,7 +4945,7 @@ msgid "https - validate SSL certificates"
 msgstr "https - validiere SSL Zertifikate"
 
 msgid "insert space"
-msgstr ""
+msgstr "Leerzeichen einfügen"
 
 msgid "installed"
 msgstr "installiert"
@@ -5000,16 +4954,16 @@ msgid "internal"
 msgstr "interner"
 
 msgid "item actions (favorites, host-specific actions)"
-msgstr ""
+msgstr "Aktionen für den Eintrag (Favoriten, host-spezifische Aktionen)"
 
 msgid "jersey"
 msgstr "Jersey"
 
 msgid "jump to entries starting with that letter (if enabled in the settings)"
-msgstr ""
+msgstr "zu Einträgen mit diesem Anfangsbuchstaben springen (falls in den Einstellungen aktiviert)"
 
 msgid "jump to items starting with that letter, or launch a specific player directly"
-msgstr ""
+msgstr "zu Einträgen mit diesem Anfangsbuchstaben springen oder einen bestimmten Player direkt starten"
 
 msgid "kernel reports"
 msgstr "Kernel meldet"
@@ -5048,13 +5002,13 @@ msgid "medium"
 msgstr "mittel"
 
 msgid "more options (this menu)"
-msgstr ""
+msgstr "weitere Optionen (dieses Menü)"
 
 msgid "move cursor right/left"
-msgstr ""
+msgstr "Cursor nach rechts/links bewegen"
 
 msgid "move the selection - or move it while manually reordering"
-msgstr ""
+msgstr "Auswahl bewegen - oder den Eintrag beim manuellen Sortieren verschieben"
 
 msgid "movie metadata cache"
 msgstr "Film-Metadaten-Cache"
@@ -5089,12 +5043,11 @@ msgstr "olivgrün"
 msgid "on"
 msgstr "an"
 
-#, fuzzy
 msgid "open / play the selected item"
-msgstr "Movie Player Auswahlliste"
+msgstr "ausgewählten Eintrag öffnen / abspielen"
 
 msgid "open the options menu - see below"
-msgstr ""
+msgstr "Optionsmenü öffnen - siehe unten"
 
 msgid "or"
 msgstr "oder"
@@ -5115,7 +5068,7 @@ msgid "red"
 msgstr "rot"
 
 msgid "refresh the current list"
-msgstr ""
+msgstr "aktuelle Liste neu laden"
 
 msgid "rootfs"
 msgstr "rootfs"
@@ -5127,7 +5080,7 @@ msgid "rtmp"
 msgstr "rtmp"
 
 msgid "save all changes to disk"
-msgstr ""
+msgstr "alle Änderungen speichern"
 
 msgid "saved"
 msgstr "gespeichert"
@@ -5151,10 +5104,10 @@ msgid "select to sign out"
 msgstr "zum Abmelden auswählen"
 
 msgid "show more details about the selected item"
-msgstr ""
+msgstr "weitere Details zum ausgewählten Eintrag anzeigen"
 
 msgid "show this help"
-msgstr ""
+msgstr "diese Hilfe anzeigen"
 
 msgid "sign in (subscriptions, playlists, age-restricted videos)"
 msgstr "anmelden (Abonnements, Playlists, altersbeschränkte Videos)"
@@ -5172,7 +5125,7 @@ msgid "standard"
 msgstr "Standard"
 
 msgid "start auto-play (plays through the list automatically)"
-msgstr ""
+msgstr "Auto-Play starten (spielt die Liste automatisch ab)"
 
 msgid "status"
 msgstr "status"
@@ -5181,7 +5134,7 @@ msgid "subtitles cache"
 msgstr "Untertitel-Cache"
 
 msgid "switch between keyboard, suggestions and search history"
-msgstr ""
+msgstr "zwischen Tastatur, Vorschlägen und Suchverlauf wechseln"
 
 msgid "teal"
 msgstr "teal"
@@ -5202,7 +5155,7 @@ msgid "truncate the file"
 msgstr "Die Datei kürzen"
 
 msgid "type selected character / confirm selection"
-msgstr ""
+msgstr "ausgewähltes Zeichen eingeben / Auswahl bestätigen"
 
 msgid "unknown"
 msgstr "unbekannt"
