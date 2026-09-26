@@ -338,7 +338,9 @@ class DMHelper:
                     else:
                         headerOptions += ' -h "%s: %s" ' % (key, shellQuote(value))
                 elif key == 'http_proxy':
-                    proxyOptions += ' -e use_proxy=yes -e http_proxy="%s" -e https_proxy="%s" ' % (shellQuote(value), shellQuote(value))
+                    # hlsdl takes the proxy with -p; the wget "-e use_proxy=..." form it used to get
+                    # set the live playlist refresh delay to 0 (-e) and never used the proxy
+                    proxyOptions += ' -p "%s" ' % shellQuote(value)
 
         cmd = DMHelper.GET_HLSDL_PATH() + ' -q -f -b ' + userAgent + headerOptions + proxyOptions
         printDBG("getBaseHLSDLCmd return cmd[%s]" % cmd)
