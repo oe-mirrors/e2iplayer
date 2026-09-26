@@ -7,6 +7,7 @@ from Components.config import ConfigSelection, ConfigText, config, getConfigList
 # from Plugins.Extensions.IPTVPlayer.compat import urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import GetAlternativeProxyChoices, GetAlternativeProxyUrl
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import MergeDicts, printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
@@ -22,7 +23,7 @@ except Exception:
 TRAILER_LABEL = "Trailer"
 ALT_TITLE_REGEX = r'alt=[\'"]([^"^\']+?)[\'"]'
 # -------------------- config --------------------
-config.plugins.iptvplayer.aradramtv_proxy = ConfigSelection(default="None", choices=[("None", _("None")), ("proxy_1", _("Alternative proxy server (1)")), ("proxy_2", _("Alternative proxy server (2)"))])
+config.plugins.iptvplayer.aradramtv_proxy = ConfigSelection(default="None", choices=GetAlternativeProxyChoices())
 config.plugins.iptvplayer.aradramtv_alt_domain = ConfigText(default="", fixed_size=False)
 
 
@@ -58,12 +59,7 @@ class ARADrama(CBaseHostClass):
 
     # -------------------- net --------------------
     def getProxy(self):
-        proxy = config.plugins.iptvplayer.aradramtv_proxy.value
-        if proxy != "None":
-            if proxy == "proxy_1":
-                return config.plugins.iptvplayer.alternative_proxy1.value
-            return config.plugins.iptvplayer.alternative_proxy2.value
-        return None
+        return GetAlternativeProxyUrl(config.plugins.iptvplayer.aradramtv_proxy.value) or None
 
     def _withProxy(self, params):
         proxy = self.getProxy()

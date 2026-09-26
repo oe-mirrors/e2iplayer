@@ -5,6 +5,7 @@
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import GetAlternativeProxyChoices, GetAlternativeProxyList, GetAlternativeProxyUrl
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import CSelOneLink, printDBG, printExc, MergeDicts, readCFG
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist, getMPDLinksWithMeta
 from Plugins.Extensions.IPTVPlayer.libs import ph
@@ -17,7 +18,7 @@ from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
 ###################################################
 # FOREIGN import
 ###################################################
-from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, getConfigListEntry
+from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, getConfigListEntry, configfile
 from datetime import datetime, timedelta, date
 import re
 ###################################################
@@ -32,7 +33,11 @@ config.plugins.iptvplayer.tvpvod_premium = ConfigYesNo(default=False)
 config.plugins.iptvplayer.tvpvod_login = ConfigText(default=readCFG('tvpvod_login', ""), fixed_size=False)
 config.plugins.iptvplayer.tvpvod_password = ConfigText(default=readCFG('tvpvod_password', ""), fixed_size=False)
 
+config.plugins.iptvplayer.tvpvod_proxy = ConfigSelection(default="None", choices=GetAlternativeProxyChoices())
+# legacy: the old yes/no switch used the "Polish proxy server" of the main settings, which is gone -
+# both are only kept to move an existing setup over to one of the alternative proxies
 config.plugins.iptvplayer.tvpVodProxyEnable = ConfigYesNo(default=False)
+config.plugins.iptvplayer.proxyurl = ConfigText(default="http://user:pass@ip:port", fixed_size=False)  # NOSONAR
 config.plugins.iptvplayer.tvpVodDefaultformat = ConfigSelection(default="590000", choices=[("360000", "320x180"),
                                                                                                ("590000", "398x224"),
                                                                                                ("820000", "480x270"),
@@ -60,8 +65,43 @@ def GetConfigList():
     optionList.append(getConfigListEntry("Peferowany format wideo", config.plugins.iptvplayer.tvpVodPreferedformat))
     optionList.append(getConfigListEntry("Domyślna jakość wideo", config.plugins.iptvplayer.tvpVodDefaultformat))
     optionList.append(getConfigListEntry("Używaj domyślnej jakości wideo:", config.plugins.iptvplayer.tvpVodUseDF))
-    optionList.append(getConfigListEntry("Korzystaj z proxy?", config.plugins.iptvplayer.tvpVodProxyEnable))
+    optionList.append(getConfigListEntry(_("Use proxy server:"), config.plugins.iptvplayer.tvpvod_proxy))
     return optionList
+
+
+def _migrateLegacyProxy():
+    # the old proxy address goes into a free (or already identical) alternative proxy slot; when all
+    # slots hold other addresses it is dropped, the user has to pick one of them in the host settings
+    cp = config.plugins.iptvplayer
+    if not cp.tvpVodProxyEnable.value:
+        return
+    oldUrl = cp.proxyurl.value
+    if oldUrl and oldUrl != cp.proxyurl.default:
+        for slot, label, alt in GetAlternativeProxyList():
+            if alt.value in (oldUrl, alt.default, ""):
+                alt.value = oldUrl
+                alt.save()
+                cp.tvpvod_proxy.value = slot
+                cp.tvpvod_proxy.save()
+                printDBG("TvpVod: proxy setting moved to %s" % slot)
+                break
+        else:
+            printDBG("TvpVod: all alternative proxy slots are in use, the old proxy setting was dropped")
+    cp.tvpVodProxyEnable.value = False
+    cp.tvpVodProxyEnable.save()
+    cp.proxyurl.value = cp.proxyurl.default
+    cp.proxyurl.save()
+    configfile.save()
+
+
+try:
+    _migrateLegacyProxy()
+except Exception:
+    printExc()
+
+
+def GetProxyUrl():
+    return GetAlternativeProxyUrl(config.plugins.iptvplayer.tvpvod_proxy.value)
 ###################################################
 
 
@@ -108,7 +148,8 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
 
     def __init__(self):
         printDBG("TvpVod.__init__")
-        CBaseHostClass.__init__(self, {'history': 'TvpVod', 'cookie': 'tvpvod.cookie', 'proxyURL': config.plugins.iptvplayer.proxyurl.value, 'useProxy': config.plugins.iptvplayer.tvpVodProxyEnable.value})
+        proxyUrl = GetProxyUrl()
+        CBaseHostClass.__init__(self, {'history': 'TvpVod', 'cookie': 'tvpvod.cookie', 'proxyURL': proxyUrl, 'useProxy': proxyUrl != ''})
         self.defaultParams = {'with_metadata': True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE, 'header': TvpVod.HTTP_HEADERS}
 
         self.VOD_CAT_TAB += self.searchItems()
@@ -771,8 +812,9 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
                                 videoTab.extend(getDirectM3U8Playlist(url, checkExt=False, variantCheck=False))
                             else:
                                 meta = {'iptv_format': format}
-                                if config.plugins.iptvplayer.tvpVodProxyEnable.value:
-                                    meta['http_proxy'] = config.plugins.iptvplayer.proxyurl.value
+                                proxyUrl = GetProxyUrl()
+                                if proxyUrl:
+                                    meta['http_proxy'] = proxyUrl
                                 videoTab.append({'name': name, 'bitrate': str(item['totalBitrate']), 'url': self.up.decorateUrl(url, meta)})
                     return videoTab
 

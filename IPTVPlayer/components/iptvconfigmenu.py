@@ -87,7 +87,6 @@ config.plugins.iptvplayer.IPTVDMNotificationDuration = ConfigSelection(default="
 ])
 
 config.plugins.iptvplayer.sortuj = ConfigYesNo(default=True)
-config.plugins.iptvplayer.remove_diabled_hosts = ConfigYesNo(default=False)
 config.plugins.iptvplayer.IPTVWebIterface = ConfigYesNo(default=False)
 config.plugins.iptvplayer.plugin_autostart = ConfigYesNo(default=False)
 config.plugins.iptvplayer.plugin_autostart_method = ConfigSelection(default="wizard", choices=[("wizard", "wizard"), ("infobar", "infobar")])
@@ -223,12 +222,35 @@ config.plugins.iptvplayer.httpssslcertvalidation = ConfigYesNo(default=False)
 
 # PROXY - the default is a placeholder example the user overwrites; a proxy
 # URL is legitimately http as often as https, so S5332 does not apply here
-config.plugins.iptvplayer.proxyurl = ConfigText(default="http://user:pass@ip:port", fixed_size=False)  # NOSONAR
-config.plugins.iptvplayer.german_proxyurl = ConfigText(default="http://user:pass@ip:port", fixed_size=False)  # NOSONAR
-config.plugins.iptvplayer.russian_proxyurl = ConfigText(default="http://user:pass@ip:port", fixed_size=False)  # NOSONAR
-config.plugins.iptvplayer.ukrainian_proxyurl = ConfigText(default="http://user:pass@ip:port", fixed_size=False)  # NOSONAR
 config.plugins.iptvplayer.alternative_proxy1 = ConfigText(default="http://user:pass@ip:port", fixed_size=False)  # NOSONAR
 config.plugins.iptvplayer.alternative_proxy2 = ConfigText(default="http://user:pass@ip:port", fixed_size=False)  # NOSONAR
+config.plugins.iptvplayer.alternative_proxy3 = ConfigText(default="http://user:pass@ip:port", fixed_size=False)  # NOSONAR
+config.plugins.iptvplayer.alternative_proxy4 = ConfigText(default="http://user:pass@ip:port", fixed_size=False)  # NOSONAR
+config.plugins.iptvplayer.alternative_proxy5 = ConfigText(default="http://user:pass@ip:port", fixed_size=False)  # NOSONAR
+
+
+def GetAlternativeProxyList():
+    # (slot id, label, config) of every alternative proxy - the slot id is what a host's
+    # "Use proxy server:" option stores; kept as literals so the labels stay translatable
+    cp = config.plugins.iptvplayer
+    return [("proxy_1", _("Alternative proxy server (1)"), cp.alternative_proxy1),
+            ("proxy_2", _("Alternative proxy server (2)"), cp.alternative_proxy2),
+            ("proxy_3", _("Alternative proxy server (3)"), cp.alternative_proxy3),
+            ("proxy_4", _("Alternative proxy server (4)"), cp.alternative_proxy4),
+            ("proxy_5", _("Alternative proxy server (5)"), cp.alternative_proxy5)]
+
+
+def GetAlternativeProxyChoices():
+    # choices for a host's "Use proxy server:" ConfigSelection
+    return [("None", _("None"))] + [(slot, label) for slot, label, cfg in GetAlternativeProxyList()]
+
+
+def GetAlternativeProxyUrl(slot):
+    # the address of the chosen slot, '' for "None" or an unknown slot
+    for currSlot, label, cfg in GetAlternativeProxyList():
+        if currSlot == slot:
+            return cfg.value
+    return ''
 
 # config.plugins.iptvplayer.captcha_bypass_order = ConfigSelection(default="", choices=[("", _("Internal, then external")), ("free", _("Only free")), ("free_pay", _("External free, then paid")), ("pay", _("External paid"))])
 # config.plugins.iptvplayer.captcha_bypass_free = ConfigSelection(default="", choices=[("", _("None")), ("myjd", "MyJDownloader")])
@@ -258,7 +280,6 @@ config.plugins.iptvplayer.fakExtMoviePlayerList = ConfigSelection(default="fake"
 
 # hidden options
 # config.plugins.iptvplayer.hiddenAllVersionInUpdate = ConfigYesNo(default=False)
-config.plugins.iptvplayer.hidden_ext_player_def_aspect_ratio = ConfigSelection(default="-1", choices=[("-1", _("default")), ("0", _("4:3 Letterbox")), ("1", _("4:3 PanScan")), ("2", _("16:9")), ("3", _("16:9 always")), ("4", _("16:10 Letterbox")), ("5", _("16:10 PanScan")), ("6", _("16:9 Letterbox"))])
 
 config.plugins.iptvplayer.search_history_size = ConfigInteger(50, (0, 1000000))
 config.plugins.iptvplayer.enableT9MainList = ConfigYesNo(default=True)
@@ -567,7 +588,6 @@ class ConfigMenu(ConfigBaseWidget):
     @staticmethod
     def _fillService(list):
         list.append(getConfigListEntry(_("Services configuration"), config.plugins.iptvplayer.fakeHostsList))
-        list.append(getConfigListEntry(_("Remove disabled services"), config.plugins.iptvplayer.remove_diabled_hosts))
         list.append(getConfigListEntry(_("Allow watched flag to be set"), config.plugins.iptvplayer.favourites_use_watched_flag))
         if config.plugins.iptvplayer.favourites_use_watched_flag.value:
             list.append(getConfigListEntry("    " + _("The color of the viewed item"), config.plugins.iptvplayer.watched_item_color))
@@ -622,12 +642,8 @@ class ConfigMenu(ConfigBaseWidget):
 
     @staticmethod
     def _fillProxies(list):
-        list.append(getConfigListEntry(_("Alternative proxy server (1)"), config.plugins.iptvplayer.alternative_proxy1))
-        list.append(getConfigListEntry(_("Alternative proxy server (2)"), config.plugins.iptvplayer.alternative_proxy2))
-        list.append(getConfigListEntry(_("Polish proxy server url"), config.plugins.iptvplayer.proxyurl))
-        list.append(getConfigListEntry(_("German proxy server url"), config.plugins.iptvplayer.german_proxyurl))
-        list.append(getConfigListEntry(_("Russian proxy server url"), config.plugins.iptvplayer.russian_proxyurl))
-        list.append(getConfigListEntry(_("Ukrainian proxy server url"), config.plugins.iptvplayer.ukrainian_proxyurl))
+        for slot, label, cfg in GetAlternativeProxyList():
+            list.append(getConfigListEntry(label, cfg))
 
     @staticmethod
     def _fillStorage(list):
@@ -725,7 +741,6 @@ class ConfigMenu(ConfigBaseWidget):
         playersValues = [player.value for player in players]
         if 'exteplayer' in playersValues or 'extgstplayer' in playersValues or 'auto' in playersValues:
             list.append(getConfigListEntry(_("External movie player config"), config.plugins.iptvplayer.fakExtMoviePlayerList))
-        list.append(getConfigListEntry(_("The default aspect ratio for the external player"), config.plugins.iptvplayer.hidden_ext_player_def_aspect_ratio))
         list.append(getConfigListEntry(_("Write current title to file:"), config.plugins.iptvplayer.curr_title_file))
 
     @staticmethod

@@ -42,7 +42,6 @@ from datetime import timedelta
 from Screens.MessageBox import MessageBox
 from os import path as os_path, remove as os_remove, rename as os_rename
 from glob import escape as glob_escape, glob
-from re import match as re_match
 ###################################################
 
 #########################################################
@@ -301,65 +300,6 @@ class IPTVDMWidget(Screen):
             candidates.append(baseName + ext)
         return candidates
 
-    def _isSubtitleFile(self, fileName):
-        return os_path.splitext(fileName)[1].lower() in ['.srt', '.sub', '.txt', '.vtt']
-
-    def _looksLikeSubtitleFile(self, fileName):
-        try:
-            sts, reason = self._detectSubtitleFile(fileName)
-            return sts
-        except Exception:
-            printExc()
-        return False
-
-    def _detectSubtitleFile(self, fileName):
-        if not os_path.isfile(fileName):
-            return False, 'missing file'
-
-        ext = os_path.splitext(fileName)[1].lower()
-        if ext not in ['.srt', '.sub', '.txt', '.vtt']:
-            return False, 'unsupported extension'
-
-        try:
-            with open(fileName, 'rb') as f:
-                data = f.read(8192)
-        except Exception:
-            printExc()
-            return False, 'read error'
-
-        if not data:
-            return False, 'empty file'
-
-        try:
-            text = ensure_str(data)
-        except Exception:
-            try:
-                text = data.decode('utf-8', 'ignore')
-            except Exception:
-                printExc()
-                return False, 'decode error'
-
-        lines = [line.strip() for line in text.replace('\r', '\n').split('\n') if line.strip()]
-        if not lines:
-            return False, 'no text lines'
-
-        score = 0
-        for line in lines[:40]:
-            if '-->' in line:
-                score += 3
-            elif re_match(r'^\d+$', line):
-                score += 1
-            elif re_match(r'^\d{2}:\d{2}:\d{2}[,.]\d{1,3}', line):
-                score += 2
-            elif re_match(r'^\{\d+\}\{\d*\}', line):
-                score += 3
-            elif ext == '.vtt' and line.upper().startswith('WEBVTT'):
-                score += 3
-
-        if score >= 3:
-            return True, 'subtitle markers detected'
-        return False, 'no subtitle markers detected'
-
     def _removeRelatedFiles(self, fileName):
         removed = False
         baseName = os_path.splitext(fileName)[0]
@@ -410,19 +350,6 @@ class IPTVDMWidget(Screen):
                 printDBG('IPTVDMWidget._renameRelatedSidecarFiles renamed [%s] -> [%s]' % (oldSidecar, newSidecar))
             except Exception:
                 printExc()
-
-    def _getSidecarSubtitles(self, fileName):
-        subtitles = []
-        baseName = os_path.splitext(fileName)[0]
-        for ext in ['.srt', '.sub', '.txt', '.vtt']:
-            candidate = baseName + ext
-            if not os_path.isfile(candidate):
-                continue
-            if self._looksLikeSubtitleFile(candidate):
-                subtitles.append(candidate)
-            else:
-                printDBG('IPTVDMWidget._getSidecarSubtitles skip non subtitle file [%s]' % candidate)
-        return subtitles
 
     def _getExistingFilePath(self, fileName):
         fileName = ensure_str(fileName).replace('//', '/')
@@ -850,7 +777,6 @@ class IPTVDMWidget(Screen):
                 # when we watch we no need update sts
                 self.DM.setUpdateProgress(False)
                 player = ret[2]
-                subtitles = self._getSidecarSubtitles(playFileName)
                 if "mini" == player:
                     self.session.openWithCallback(self.leaveMoviePlayer, IPTVMiniMoviePlayer, playFileName, title)
                 elif player in ["exteplayer", "extgstplayer"]:
@@ -861,14 +787,10 @@ class IPTVDMWidget(Screen):
                         additionalParams['iframe_file_end'] = config.plugins.iptvplayer.clear_iframe_file.value
                         additionalParams['iframe_continue'] = False
 
-                    subtitleFile = None
-                    if len(subtitles):
-                        subtitleFile = subtitles[0]
-
                     if "exteplayer" == player:
-                        self.session.openWithCallback(self.leaveMoviePlayer, IPTVExtMoviePlayer, playFileName, title, subtitleFile, 'eplayer', additionalParams)
+                        self.session.openWithCallback(self.leaveMoviePlayer, IPTVExtMoviePlayer, playFileName, title, None, 'eplayer', additionalParams)
                     else:
-                        self.session.openWithCallback(self.leaveMoviePlayer, IPTVExtMoviePlayer, playFileName, title, subtitleFile, 'gstplayer', additionalParams)
+                        self.session.openWithCallback(self.leaveMoviePlayer, IPTVExtMoviePlayer, playFileName, title, None, 'gstplayer', additionalParams)
                 else:
                     self.session.openWithCallback(self.leaveMoviePlayer, IPTVStandardMoviePlayer, playFileName, title)
             elif ret[1] == "rename":  # add lululla 20250911
