@@ -1,24 +1,26 @@
-
-
 import os
 from Plugins.Extensions.WebInterface.WebChilds.Toplevel import addExternalChild
 from Tools.Directories import resolveFilename, SCOPE_PLUGINS
 
-from .webSite import StartPage, hostsPage, useHostPage, downloaderPage, settingsPage, logsPage, searchPage
+from .webSite import RootPage, StartPage, HostsPage, UseHostPage, DownloaderPage, SettingsPage, LogsPage, SearchPage
+from .webApi import ApiResource
 from twisted.web import static
 
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import GetPluginDir
 from . import settings
 
-IPTVwebRoot = static.File(GetPluginDir('web/').encode())  # webRoot = pluginDir to get access to icons and logos
+# only the pages, the JSON interface, the web assets and the plugin icons are served - not the plugin files
+IPTVwebRoot = RootPage()
 IPTVwebRoot.putChild(b"icons", static.File(GetPluginDir('icons/').encode()))
+IPTVwebRoot.putChild(b"assets", static.File(GetPluginDir('web/assets/').encode()))
+IPTVwebRoot.putChild(b"api", ApiResource())
 IPTVwebRoot.putChild(b"", StartPage())
-IPTVwebRoot.putChild(b"hosts", hostsPage())
-IPTVwebRoot.putChild(b"usehost", useHostPage())
-IPTVwebRoot.putChild(b"downloader", downloaderPage())
-IPTVwebRoot.putChild(b"settings", settingsPage())
-IPTVwebRoot.putChild(b"logs", logsPage())
-IPTVwebRoot.putChild(b"search", searchPage())
+IPTVwebRoot.putChild(b"hosts", HostsPage())
+IPTVwebRoot.putChild(b"usehost", UseHostPage())
+IPTVwebRoot.putChild(b"downloader", DownloaderPage())
+IPTVwebRoot.putChild(b"settings", SettingsPage())
+IPTVwebRoot.putChild(b"logs", LogsPage())
+IPTVwebRoot.putChild(b"search", SearchPage())
 
 
 # registration for old webinterface

@@ -1,481 +1,244 @@
 # -*- coding: utf-8 -*-
-# Local imports
+# HTML of the web interface pages. The pages are a frame: menu, a container and the texts the
+# script needs; assets/e2i.js fills them through the JSON interface (webApi.py).
 
+import json
 
 from . import settings
+from .webTools import htmlEscape, isActiveHostInitiated, hostDisplayTitle
 
-from .webTools import formSUBMITvalue, formSUBMITtext, formSUBMITtextWithOptions, formMultipleSearchesSUBMITtext, tableHorizontalRedLine, removeSpecialChars, htmlEscape, displayText, isThreadRunning, isActiveHostInitiated, setNewHostListShown, isCurrentItemSelected, isNewHostListShown
-from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
 from Plugins.Extensions.IPTVPlayer.version import IPTV_VERSION
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import GetHostsList, SortHostsList, GetHostsOrderList, getDebugMode, formatBytes
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
-
-# system imports
-import os
-from datetime import timedelta
+from Components.Language import language
 
 ########################################################
 
+# texts assets/e2i.js shows, translated on the box
+JS_TEXTS = [
+	'Loading data, please wait', 'Please wait', 'Cancel', 'Save', 'Saved', 'Error', 'Close', 'Yes', 'No', 'OK',
+	'Search', 'Search text', 'Search in all active hosts', 'Searching in %s', 'Searching, please wait',
+	'%d of %d hosts', 'No results.', 'Stop', 'Only exact matches', 'Folders', 'Videos', 'Music', 'All materials',
+	'Cancelling - waiting for the host to finish its current request', 'Back', 'Initial list', 'Reload list', 'Return to hosts list', 'Links for', 'Select', 'Watch', 'Add to downloader',
+	'Copy link', 'Link copied', 'Description', 'No host is open.', 'Open a host from the host list.',
+	'Filter', 'No hosts are enabled.', 'The whole plugin is protected by a PIN - hosts can only be used on the receiver.',
+	'Protected by PIN', 'entries', 'Open in host',
+	'Pause', 'Resume', 'Follow', 'Clear view', 'Only errors and warnings', 'Download log file', 'Delete log file',
+	'Delete the debug log file?', 'Debug file has been deleted', 'Debug option is disabled - nothing to display',
+	'Debug option set to console - nothing to display', 'Debug file does not exist yet, waiting for it',
+	'The log file was started again.', 'lines',
+	'Hosts', 'Enabled', 'Options', 'only on the receiver', 'The value must be between %d and %d.',
+	'The settings are protected by a PIN on the receiver - here they can only be viewed.',
+	'Filter settings', 'Nothing found.', '(unchanged - type a new one to change it)',
+	'Download manager is not initialized', 'Initialize Download Manager', 'Start', 'Manager status:', 'STARTED', 'STOPPED',
+	'Downloads', 'Archive', 'No materials waiting in the downloader queue', 'Nothing has been downloaded yet.',
+	'PENDING', 'DOWNLOADING', 'DOWNLOADED', 'ABORTED', 'DOWNLOAD ERROR', 'POSTPROCESSING',
+	'Stop download', 'Resume download', 'Download again', 'Delete', 'Remove from queue', 'Move to top', 'Delete the file %s?',
+	'Up to date', '%d commits behind %s', 'Installed version %s has no release tag (local build?)', 'Update check not possible',
+	'New since the installed version', 'Checking for updates',
+	'Web interface has been reset.', 'Still running:', 'Reading...',
+]
 
-def IncludeHEADER(extraMetas=''):
-	tempText = """
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<meta http-equiv="cache-control" content="no-cache" />
-	<meta http-equiv="pragma" content="no-cache" />
-	<meta http-equiv="expires" content="0">
-	%s
-	<title>E2iPlayer %s</title>
-  <style>
-    body {margin:0;}
 
-    .topbar {overflow: hidden; background-color: #333; position: fixed; top: 0; width: 100%%; }
-    .topbar a {float: left; display: block; color: #f2f2f2; text-align: center; padding: 14px 16px; text-decoration: none; font-size: 17px; }
-    .bottombar {overflow: hidden; background-color: #333; position: fixed; bottom: 0; width: 100%%; }
-    .bottombar a {float: left; display: block; color: #f2f2f2; text-align: center; padding: 12px 0px 12px 10px; text-decoration: none; font-size: 12px; }
-
-    .main {padding: 16px; margin-top: 40px; margin-bottom: 40px; }
-    p.DMlist {border: 2px solid red; border-radius: 5px; }
-
-    .lnkbtn{display: block;  background-color: lightgrey; border: 1px solid black; text-align: center; text-decoration: none; padding: 5px 0px 5px 0px;color: black;font-size: 13px;}
-    .lnkbtn:hover{background-color: #aaa;}
-    .lnkbtn:visited{color: black;}
-
-
-
-  </style>
-</head>
-""" % (extraMetas, IPTV_VERSION)
-	return tempText
-
+def jsTexts():
+	return dict((text, _(text)) for text in JS_TEXTS)
 ########################################################
 
 
-def IncludeMENU(MenuStatusMSG='', ShowCancelButton=False):
+def menu(pageId):
+	entries = [('info', '/iptvplayer/', _('Information')),
+			('hosts', '/iptvplayer/hosts', _('Hosts'))]
 	if isActiveHostInitiated():
-		tempText = """
-  <div class="topbar">
-    <a href="https://github.com/oe-mirrors/e2iplayer/" target="_blank"> <img border="0" alt="IPTVPlayer" src="./icons/HD/iptvlogo.png" width="60" height="24"></a>
-    <a href="/iptvplayer/usehost" >%s</a>
-    <a href="/iptvplayer/downloader" >%s</a>
-    <a href="/iptvplayer/logs" >%s</a>
-    <a href="/iptvplayer/?resetState=1" >%s</a>
-  </div>
-  <div class="bottombar">
-    <a href="https://github.com/oe-mirrors/e2iplayer/commits/python3/" target="_blank" >IPTVPlayer %s: <b><font color="#A9F5F2">%s</font></b></a>
-    <a>, %s: <b>%s</b></a/>
-  </div>
-""" % (_('Active host'), _('Download manager'), _('Logs'), _('Reset State'), _('version'), IPTV_VERSION, _('Web interface version'), settings.WebInterfaceVersion)
-	else:
-		tempText = """
-  <div class="topbar">
-    <a href="https://github.com/oe-mirrors/e2iplayer/" target="_blank"> <img border="0" alt="IPTVPlayer" src="./icons/HD/iptvlogo.png" width="60" height="24"></a>
-    <a href="/iptvplayer/" >%s</a>
-    <a href="/iptvplayer/hosts" ">%s</a>
-    <a href="/iptvplayer/search" ">%s</a>
-    <a href="/iptvplayer/downloader" >%s</a>
-    <a href="/iptvplayer/settings" >%s</a>
-    <a href="/iptvplayer/logs" >%s</a>
-    <a href="/iptvplayer/?resetState=1" >%s</a>
-  </div>
-  <div class="bottombar">
-    <a href="https://github.com/oe-mirrors/e2iplayer/commits/python3/" target="_blank" >E2iPlayer %s: <b><font color="#A9F5F2">%s</font></b></a>
-    <a>, %s: <b>%s</b></a/>
-  </div>
-""" % (_('Information'), _('Selected hosts'), _('Search'), _('Download manager'), _('Settings'), _('Logs'), _('Reset State'), _('version'), IPTV_VERSION, _('Web interface version'), settings.WebInterfaceVersion)
-	if MenuStatusMSG != '' and ShowCancelButton is True:
-		tempText += '<div class="main">%s<br></div>\n' % formSUBMITvalue([('cmd', 'stopThread')], _('Cancel'), input_text=MenuStatusMSG + '... ')
-	elif MenuStatusMSG != '':
-		tempText += '<div class="main">%s<br></div>\n' % MenuStatusMSG
-	return tempText
+		entries.append(('usehost', '/iptvplayer/usehost', '▶ ' + hostDisplayTitle(settings.activeHost.get('Title', ''))[:30]))
+	entries += [('search', '/iptvplayer/search', _('Search')),
+				('downloader', '/iptvplayer/downloader', _('Download manager')),
+				('settings', '/iptvplayer/settings', _('Settings')),
+				('logs', '/iptvplayer/logs', _('Logs'))]
+	links = []
+	for entryId, href, label in entries:
+		cls = []
+		if entryId == pageId:
+			cls.append('active')
+		if entryId == 'usehost':
+			cls.append('hostlink')
+		links.append('<a href="%s" class="%s">%s</a>' % (href, ' '.join(cls), htmlEscape(label)))
+	return """<header class="topbar">
+	<a class="brand" href="/iptvplayer/"><img src="/iptvplayer/icons/HD/iptvlogo.png" alt="E2iPlayer"></a>
+	<nav>%s</nav>
+	<span class="ver">E2iPlayer %s</span>
+	<button class="themebtn" id="themeToggle" type="button" title="%s" aria-label="%s">&#9788;</button>
+</header>""" % ('\n\t\t'.join(links), htmlEscape(IPTV_VERSION), htmlEscape(_('Light / dark design')), htmlEscape(_('Light / dark design')))
 
+
+def page(pageId, title, content):
+	config = {'page': pageId, 'version': IPTV_VERSION, 'txt': jsTexts()}
+	return """<!DOCTYPE html>
+<html lang="%(lang)s">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>E2iPlayer - %(title)s</title>
+	<link rel="stylesheet" href="/iptvplayer/assets/e2i.css?v=%(ver)s">
+	<script>(function () { var t = null; try { t = localStorage.getItem('e2i.theme'); } catch (e) {}
+		if (t !== 'light' && t !== 'dark') { t = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'; }
+		document.documentElement.setAttribute('data-theme', t); })();</script>
+</head>
+<body data-page="%(page)s">
+%(menu)s
+<main>
+%(content)s
+</main>
+<div id="toast"></div>
+<script>window.E2I = %(config)s;</script>
+<script src="/iptvplayer/assets/e2i.js?v=%(ver)s"></script>
+</body>
+</html>
+""" % {'lang': htmlEscape(language.getLanguage()[:2]), 'title': htmlEscape(title), 'ver': htmlEscape(IPTV_VERSION), 'page': pageId,
+		'menu': menu(pageId), 'content': content, 'config': json.dumps(config).replace('</', '<\\/')}
 ########################################################
 
 
-class Body():
-	def __init__(self):
-		pass
+def _kvSections(text):
+	# "--- Title ---" / "label|value" lines of the info view's system text as HTML
+	html = []
+	open_ = False
+	for line in text.split('\n'):
+		line = line.rstrip()
+		if not line:
+			continue
+		if line.startswith('---') and line.endswith('---'):
+			if open_:
+				html.append('</dl>')
+			html.append('<div class="kv-title">%s</div><dl class="kv">' % htmlEscape(line.strip('- ')))
+			open_ = True
+		elif '|' in line:
+			if not open_:
+				html.append('<dl class="kv">')
+				open_ = True
+			label, value = line.split('|', 1)
+			html.append('<dt>%s</dt><dd>%s</dd>' % (htmlEscape(label), htmlEscape(value)))
+	if open_:
+		html.append('</dl>')
+	return '\n'.join(html)
 
-	def StartPageContent(self, resetStatusMSG):
-		tempText = '<body bgcolor=\"#666666\" text=\"#FFFFFF\">\n'
-		tempText += '<form method="POST" action="--WEBBOT-SELF--">\n'
-		tempText += IncludeMENU()
-		tempText += '<div class="main">\n'
-		tempText += '<p align="left"><b>%s</b></p>' % _('<font color="#FE642E">REMEMBER:</font></b> E2iPlayer <b>IS ONLY</b> specialized Web browser. It does <b>NOT</b> host any materials!!!</font>')
-		tempText += '<p align="left">%s</p>' % resetStatusMSG
-		tempText += '</div></body>\n'
-		return tempText
-	########################################################
 
-	def logsPageContent(self, MenuStatusMSG, htmlError, DebugFileName, DBGFileContent):
-		tempText = '<body bgcolor=\"#666666\" text=\"#FFFFFF\">\n'
-		tempText += IncludeMENU(MenuStatusMSG)
-		tempText += '<div class="main">\n'
-		if htmlError == 'deleteLogOK':
-			tempText += '<p align="center"><b><font color="#ccE4C4">%s</font></b></p>' % _('Debug file has been deleted')
-		elif htmlError == 'deleteLogError':
-			tempText += '<p align="center"><b><font color="#FFE4C4">%s</font></b></p>' % _('Error during deletion of the debug file.')
-		elif htmlError == 'deleteLogNO':
-			tempText += '<p align="center"><b><font color="#ccE4C4">%s</font></b></p>' % _('Debug file does not exist - nothing to delete')
-		elif getDebugMode() == "":
-			tempText += '<p align="center"><b><font color="#FFE4C4">%s</font></b></p>' % _('Debug option is disabled - nothing to display')
-		elif getDebugMode() == 'console':
-			tempText += '<p align="center"><b><font color="#FFE4C4">%s</font></b></p>' % _('Debug option set to console - nothing to display')
-		elif DebugFileName == '':
-			tempText += '<p align="center"><b><font color="#FFE4C4">%s</font></b></p>' % _('Debug option set to debugfile, but file does not exist - nothing to display')
-		else:
-			tempText += '<table border="0"><td>%s</td>' % formSUBMITvalue([('cmd', 'downloadLog')], _("Download log file"))
-			try:
-				if os.path.getsize(DebugFileName) > 1000000:
-					LogDescr = _('%s file is %d MB in size. Last %d lines are:') % (DebugFileName, os.path.getsize(DebugFileName) / 1024 / 1024, settings.MaxLogLinesToShow)
-					tempText += '<td>%s</td>' % formSUBMITvalue([('cmd', 'deleteLog')], _("Delete log file"))
-				else:
-					LogDescr = _('%s file is %d KB in size. Last %d lines are:') % (DebugFileName, os.path.getsize(DebugFileName) / 1024, settings.MaxLogLinesToShow)
-			except Exception:
-				LogDescr = _('Last %d lines of the %s file are:') % (settings.MaxLogLinesToShow, DebugFileName)
-			tempText += '</table>\n'
-			tempText += '<p><b><font color="#FFE4C4">%s</font></b></p>' % LogDescr
-			tempText += '<table border="1: style="width:520px; table-layout: fixed"><td><tt><p><font size="2">'
-			tempText += settings.tempLogsHTML + '</font></p></tt></td></table>'  # <<< data from thread
-			if settings.tempLogsHTML != '' and not isThreadRunning('buildtempLogsHTML'):
-				settings.tempLogsHTML = ''
-			tempText += formSUBMITvalue([('cmd', 'downloadLog')], _("Download log file"))
-		tempText += '</div></body>\n'
-		return tempText
+WIKI_PAGES = [('Install E2iPlayer', 'Install'),
+			('Create debug logs', 'How-to-create-debug-logs'),
+			('Solve Cloudflare, hCaptcha and reCAPTCHA with MyE2i', 'Solve-Cloudflare-hCaptcha-reCAPTCHA-with-MyE2i'),
+			('Solve Google reCAPTCHA v2 with My JDownloader', 'Solve-Google-reCAPTCHA-v2')]
 
-	def settingsPageContent(self, MenuStatusMSG):
-		# usedCFG = []
-		tempText = '<body bgcolor=\"#666666\" text=\"#FFFFFF\">\n<div class="main">\n'
-		tempText += IncludeMENU(MenuStatusMSG)
-		# build hosts settings section
-		hostsCFG = '<br><table width="850px" border="1"><tbody>\n'
-		hostsCFG += '<tr><td align="center" colspan="3"><p><font size="5" color="#9FF781">%s</font></p></td></tr>\n' % _('Hosts settings')
-		for hostName in SortHostsList(GetHostsList()):
-			if hostName in settings.configsHTML.keys():
-				hostsCFG += settings.configsHTML[hostName]
-		hostsCFG += '</tbody></table>\n'
-		# build plugin global settings
-		pluginCFG = '<table width="850px" border="1"><tbody>\n'
-	# pluginCFG += '<tr><td align="center" colspan="2"><p><font size="5" color="#9FF781">%s</font></p></td></tr>\n' % _('Plugin global settings')
-		from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import ConfigMenu
-		OptionsList = []
-		ConfigMenu.fillConfigList(OptionsList)
-		for item in OptionsList:
-			if len(item) == 1:
-				pluginCFG += '<tr><td align="center" colspan="2"><p><font size="5" color="#9FF781">%s</font></p></td></tr>\n' % item[0]
-			else:
-				if item[0] in settings.configsHTML.keys():
-					pluginCFG += settings.configsHTML[item[0]]
-		pluginCFG += '</tbody></table>\n'
-		tempText += pluginCFG + '<p><br</p>\n' + hostsCFG + '</div></body>\n'
-		return tempText
-	########################################################
 
-	def hostsPageContent(self, MenuStatusMSG, ShowCancelButton):
-		tempText = '<body bgcolor=\"#666666\" text=\"#FFFFFF\">\n'
-		tempText += IncludeMENU(MenuStatusMSG, ShowCancelButton)
-		tempText += '<div class="main"><table border="0" cellspacing="50px"><tbody>\n<tr>'
-		columnIndex = 1
-		displayHostsList = SortHostsList(GetHostsList())
-		if 0 == len(GetHostsOrderList()):
-			try:
-				displayHostsList.sort(key=lambda t: tuple('.'.join(str(t[0]).replace('://', '.').replace('www.', '').split('.')[1:-1]).lower()))
-			except Exception as e:
-				print("Exception during sorting displayHostsList", str(e))
-		for hostName in displayHostsList:
-			if hostName in settings.activeHostsHTML.keys():
-				hostHTML = settings.activeHostsHTML[hostName]
-				tempText += hostHTML
-				# tempText += '<td><button type="button" disabled>%s</button> </td>' % _('Enter')
-				columnIndex += 1
-				if columnIndex > 4:
-					columnIndex = 1
-					tempText += '</tr>\n<tr>'
-		tempText += '</tr>'
-		tempText += '</tbody></table></div></body>\n'
-		return tempText
+def infoPage():
+	from Plugins.Extensions.IPTVPlayer.components.iptvplayerinfoview import aboutBlocks, _SystemInfo
+	about = []
+	for head, body in aboutBlocks():
+		body = htmlEscape(body).replace('\n', '<br>')
+		if body.startswith('https://'):
+			body = '<a href="%s" target="_blank" rel="noopener">%s</a>' % (body, body)
+		about.append('<dt>%s</dt><dd>%s</dd>' % (htmlEscape(head.rstrip(':')), body))
+	try:
+		systemHtml = _kvSections(_SystemInfo().buildSystemText(withBinaries=False))
+	except Exception as e:
+		systemHtml = '<p class="muted">%s</p>' % htmlEscape(str(e))
+	wiki = ''.join('<li><a href="https://github.com/oe-mirrors/e2iplayer/wiki/%s" target="_blank" rel="noopener">%s</a></li>'
+				% (page_, htmlEscape(_(title))) for title, page_ in WIKI_PAGES)
+	return """
+<h1>%(title)s</h1>
+<div class="grid">
+	<div class="card">
+		<h2>E2iPlayer</h2>
+		<dl class="kv">%(about)s</dl>
+		<p class="muted">%(remember)s</p>
+	</div>
+	<div class="card">
+		<h2>%(updates)s</h2>
+		<div id="updates" class="muted"><span class="spinner"></span> %(checking)s</div>
+	</div>
+	<div class="card">
+		<h2>%(system)s</h2>
+		%(systemHtml)s
+		<div class="kv-title">%(binaries)s</div>
+		<pre id="binaries" class="plain muted">%(reading)s</pre>
+	</div>
+	<div class="card">
+		<h2>%(help)s</h2>
+		<ul class="plain">%(wiki)s
+			<li><a href="https://github.com/oe-mirrors/e2iplayer/issues" target="_blank" rel="noopener">%(issues)s</a></li>
+			<li><a href="https://www.opena.tv/viewtopic.php?t=42312" target="_blank" rel="noopener">%(forum)s</a></li>
+		</ul>
+	</div>
+	<div class="card">
+		<h2>%(trouble)s</h2>
+		<p class="muted">%(resetText)s</p>
+		<button class="btn" id="resetBtn">%(reset)s</button>
+		<div id="resetResult" class="muted" style="margin-top:8px"></div>
+	</div>
+</div>
+""" % {'title': htmlEscape(_('Information')), 'about': '\n'.join(about),
+		'remember': htmlEscape(_('E2iPlayer is only a specialized web browser. It does not host any materials.')),
+		'updates': htmlEscape(_('Updates')), 'checking': htmlEscape(_('Checking for updates')),
+		'system': htmlEscape(_('System')), 'systemHtml': systemHtml, 'binaries': htmlEscape(_('Binaries')), 'reading': htmlEscape(_('Reading...')),
+		'help': htmlEscape(_('Help')), 'wiki': wiki, 'issues': htmlEscape(_('Report a problem (GitHub issues)')),
+		'forum': htmlEscape(_('Support forum (opena.tv)')),
+		'trouble': htmlEscape(_('Troubleshooting')), 'reset': htmlEscape(_('Reset web interface')),
+		'resetText': htmlEscape(_('Closes the host opened in the web interface, clears the search results and stops what the web interface '
+								'still runs in the background. Use it when a page keeps loading. Settings, downloads and the E2iPlayer '
+								'on the TV are not touched.'))}
+########################################################
 
-	########################################################
-	def downloaderPageContent(self, webDM, currList):
-		DM_status = ''
-		tempText = '<body bgcolor=\"#666666\" text=\"#FFFFFF\">\n'
-		tempText += IncludeMENU()
-		tempText += '<div class="main">\n'
-		if webDM is None:
-			tempText += '<table border="0" cellspacing="15px"><tbody>\n'
-			tempText += '<td><b><font color="#FFE4C4">%s</font></b></td>' % _('Download manager is not initialized')
-			tempText += '<td>' + formSUBMITvalue([('cmd', 'initDM')], _("Initialize Download Manager")) + '</td>'
-			tempText += '</tbody></table>\n'
-		else:
-			tempText += '<table border="0" cellspacing="15px"><tbody><tr>\n'
-			if not webDM.isRunning():
-				DM_status = _("STOPPED")
-				tempText += '<td>' + formSUBMITvalue([('cmd', 'stopDM')], _("Stop"), 'disabled style="background-color:#ff6400"') + '</td>'
-				tempText += '<td>' + formSUBMITvalue([('cmd', 'runDM')], _("Start"), 'style="background-color:#00FF00"') + '</td>'
-			else:
-				DM_status = _("STARTED")
-				tempText += '<td>' + formSUBMITvalue([('cmd', 'stopDM')], _("Stop"), 'style="background-color:#ff6400"') + '</td>'
-				tempText += '<td>' + formSUBMITvalue([('cmd', 'runDM')], _("Start"), 'disabled style="background-color:#00FF00"') + '</td>'
-				# tempText += '<td><b><font color="#ccE4C4">%s</font></b></td>' % _('Start')
-			tempText += '<td>' + formSUBMITvalue([('cmd', 'arvchiveDM')], _("Archive"), 'style="background-color:yellow"') + '</td>'
-			tempText += '<td>' + formSUBMITvalue([('cmd', 'downloadsDM')], _("Downloads"), 'style="background-color:#0080FF"') + '</td></tr>\n'
-			tempText += '<tr><td colspan="2">%s</td><td colspan="2">%s</td></tr>' % (_("Manager status:") + " ", DM_status)
-			tempText += '</tbody></table>\n'
 
-			# display the list of downloads
-			tempText += '<table  width="800px" cellspacing="5px"><tbody>\n'
-			for item in currList:
-				# Downloaded Size
-				info1 = formatBytes(item.downloadedSize)
+def hostsPage():
+	return """
+<div class="toolbar"><h1 style="margin:0">%s</h1><span class="spacer"></span>
+	<input type="search" id="hostFilter" placeholder="%s"></div>
+<div id="hostsMsg"></div>
+<div id="hosts" class="hostgrid"><div class="empty"><span class="spinner"></span></div></div>
+""" % (htmlEscape(_('Hosts')), htmlEscape(_('Filter')))
 
-				# File Size
-				if item.fileSize > 0:
-					info1 += "/" + formatBytes(item.fileSize)
 
-				elif item.totalFileDuration > 0 and item.downloadedFileDuration > 0:
-					totalDuration = item.totalFileDuration
-					downloadDuration = item.downloadedFileDuration
-					totalDuration = str(timedelta(seconds=totalDuration))
-					downloadDuration = str(timedelta(seconds=downloadDuration))
-					if totalDuration.startswith('0:'):
-						totalDuration = totalDuration[2:]
-					if downloadDuration.startswith('0:'):
-						downloadDuration = downloadDuration[2:]
-					info1 = "{0}/{1} ({2})".format(downloadDuration, totalDuration, info1)
+def useHostPage():
+	return '<div id="host"><div class="empty"><span class="spinner"></span></div></div>'
 
-				# Downloaded Procent
-				if item.downloadedProcent >= 0:
-					info1 += ", " + str(item.downloadedProcent) + "%"
 
-				# Download Speed
-				info2 = info1 + ", " + formatBytes(item.downloadedSpeed) + "/s"
+def searchPage():
+	return """
+<h1>%s</h1>
+<form id="searchForm" class="searchform card">
+	<input type="search" id="searchText" placeholder="%s" value="%s">
+	<button class="btn primary" type="submit">%s</button>
+	<button class="btn hidden" type="button" id="searchStop">%s</button>
+</form>
+<div id="searchStatus"></div>
+<div class="toolbar" id="searchFilters"></div>
+<div id="searchResults"></div>
+""" % (htmlEscape(_('Search in all active hosts')), htmlEscape(_('Search text')), htmlEscape(settings.GlobalSearchQuery),
+		htmlEscape(_('Search')), htmlEscape(_('Stop')))
 
-				try:
-					fileName = item.fileName.split('/')[-1]
-				except Exception:
-					fileName = item.fileName
-				if DMHelper.STS.WAITING == item.status:
-					status = _("PENDING")
-					icon = '<img border="0" src="./icons/iconwait1.png" width="64" height="64">'
-					info = ''
-					buttons = ''
-				elif DMHelper.STS.DOWNLOADING == item.status:
-					status = _("DOWNLOADING")
-					icon = '<img border="0" src="./icons/iconwait2.png" width="64" height="64">'
-					info = info2
-					buttons = '<table><tbody><tr><td>%s</td><td>%s</td></tr></tbody></table>' % (
-							formSUBMITvalue([('watchMovie', item.fileName)], _("Watch")),
-							formSUBMITvalue([('stopDownload', item.downloadIdx)], _("Stop download")))
 
-				elif DMHelper.STS.DOWNLOADED == item.status and item.url[:1] == '/':  # for Archive section
-					status = _("DOWNLOADED")
-					icon = '<img border="0" src="./icons/icondone.png" width="64" height="64">'
-					info = info1
-					buttons = '<table><tbody><tr><td>%s</td><td>%s</td></tr></tbody></table>' % (
-							formSUBMITvalue([('cmd', 'arvchiveDM'), ('cmd', 'watchMovie'), ('cmd', item.fileName)], _("Watch")),
-							formSUBMITvalue([('cmd', 'arvchiveDM'), ('cmd', 'deleteMovie'), ('cmd', item.fileName)], _("Delete")))
+def downloaderPage():
+	return """
+<div class="toolbar"><h1 style="margin:0">%s</h1><span class="spacer"></span><span id="dmStatus"></span></div>
+<div class="toolbar" id="dmToolbar"></div>
+<div id="dmList"><div class="empty"><span class="spinner"></span></div></div>
+""" % htmlEscape(_('Download manager'))
 
-				elif DMHelper.STS.DOWNLOADED == item.status:
-					status = _("DOWNLOADED")
-					icon = '<img border="0" src="./icons/icondone.png" width="64" height="64">'
-					info = info1
-					buttons = '<table><tbody><tr><td>%s</td><td>%s</td><td>%s</td></tr></tbody></table>' % (
-							formSUBMITvalue([('watchMovie', item.fileName)], _("Watch")),
-							formSUBMITvalue([('downloadAgain', item.downloadIdx)], _("Download again")),
-							formSUBMITvalue([('removeMovie', item.downloadIdx)], _("Delete")))
-				elif DMHelper.STS.INTERRUPTED == item.status:
-					status = _("ABORTED")
-					icon = '<img border="0" src="./icons/iconerror.png" width="64" height="64">'
-					info = info1
-					buttons = '<table><tbody><tr><td>%s</td><td>%s</td><td>%s</td></tr></tbody></table>' % (
-							formSUBMITvalue([('watchMovie', item.fileName)], _("Watch")),
-							formSUBMITvalue([('downloadAgain', item.downloadIdx)], _("Download again")),
-							formSUBMITvalue([('removeMovie', item.downloadIdx)], _("Delete")))
-				elif DMHelper.STS.ERROR == item.status:
-					status = _("DOWNLOAD ERROR")
-					icon = '<img border="0" src="./icons/iconwarning.png" width="64" height="64">'
-					info = ''
-					buttons = '<table><tbody><tr><td>%s</td><td>%s</td></tr></tbody></table>' % (
-							formSUBMITvalue([('downloadAgain', item.downloadIdx)], _("Download again")),
-							formSUBMITvalue([('removeMovie', item.downloadIdx)], _("Delete")))
-				elif item.status == 'INFO':
-					status = ''
-					icon = '<img border="0" src="./icons/iconwarning.png" width="64" height="64">'
-					info = ''
-					buttons = ''
-				else:
-					status = ''
-					icon = ''
-					info = ''
-					buttons = ''
-				tempText += tableHorizontalRedLine(colspan=3)
-				tempText += '<tr><td rowspan="4" align="center">%s</td><td colspan="2"><b>%s</b></td></tr>\n' % (icon, htmlEscape(fileName))
-				tempText += '<tr><td><div style="text-indent: 20px">%s</div></td></tr>\n' % htmlEscape(item.url)
-				tempText += '<tr><td>%s</td><td align="right">%s</td></tr>\n' % (info, status)
-				tempText += '<tr><td colspan="3" align="right">%s</td></tr>\n' % (buttons)
-			tempText += tableHorizontalRedLine(colspan=3)
-			tempText += '</tbody></table>\n'
-		tempText += '</div></body>\n'
-		return tempText
-	########################################################
 
-	def useHostSubMenu(self, isTop=True, LVL=1):
-		txt = '<table border="0" width="800px" cellspacing="5px"><tbody>\n'
-		txtWarning = '<tr><td colspan="4" align="center"><p><b><font size="2" color="#FE642E">%s</font></b><font size="2">%s</font></p></td></tr>\n' % (_('REMEMBER:') + ' ', _('first check if host works properly in GUI and web <b>BEFORE</b> reporting error in it !!!'))
-		if isTop:
-			txt += txtWarning
-		txt += '<tr><td><br></td>'
-		if isCurrentItemSelected():
-			txt += '<tr><td align="right">%s</td>' % formSUBMITvalue([('cmd', 'RefreshList')], _('Previous list'))
-		else:
-			if settings.activeHost['PathLevel'] <= 1:
-				txt += '<tr><td align="right">%s</td>' % formSUBMITvalue([('cmd', 'PreviousList')], _('Previous list'), 'disabled')
-			else:
-				txt += '<tr><td align="right">%s</td>' % formSUBMITvalue([('cmd', 'PreviousList')], _('Previous list'))
-			txt += '<td style="width:10px" align="right">%s</td>' % formSUBMITvalue([('cmd', 'RefreshList')], _('Reload list'))
-		txt += '<td style="width:10px" align="right">%s</td>' % formSUBMITvalue([('cmd', 'InitList')], _('Initial list'))
-		txt += '<td style="width:10px" align="right">%s</td></tr>' % formSUBMITvalue([('cmd', 'hosts')], _('Return to hosts list'))
-		if not isTop:
-			txt += txtWarning
-		txt += '</tbody></table><br>\n'
-		return txt
-	########################################################
+def settingsPage():
+	return """
+<div class="toolbar"><h1 style="margin:0">%s</h1><span class="spacer"></span>
+	<input type="search" id="settingsFilter" placeholder="%s"></div>
+<div id="settingsMsg"></div>
+<div id="settings"><div class="empty"><span class="spinner"></span></div></div>
+""" % (htmlEscape(_('Settings')), htmlEscape(_('Filter settings')))
 
-	def buildItemsListTable(self, item, index, allowedCategories=[], destinationURL=None):
-		iIndex = index
-		iName = removeSpecialChars(item.name)
-		iDescr = displayText(item.description)
-		iType = item.type
-		if len(allowedCategories) > 0 and iType not in allowedCategories:
-			return ''
-		ListType = 'ListForItem'
-		if iType == "CATEGORY":
-			iconSrc = './icons/CategoryItem.png'
-		elif iType == "SEARCH":
-			ListType = 'ForSearch'
-			iconSrc = './icons/SearchItem.png'
-		elif iType == "VIDEO":
-			ListType = 'ListForItem'
-			iconSrc = item.iconimage
-		elif iType == "AUDIO":
-			iconSrc = './icons/AudioItem.png'
-		else:
-			iconSrc = iType
-		txt = tableHorizontalRedLine(colspan=2)
-		txt += '<tr><td rowspan="2" style="width:64px"><img border="0" src="%s" width="64" height="64"></td>' % htmlEscape(iconSrc)
 
-		if iType == "SEARCH":
-			if len(settings.activeHost['SearchTypes']) == 0:
-				txt += '<td>%s</td></tr>\n' % formSUBMITtext(_(iName), ListType, 'style="color: #DBA901;background: none;border: none;text-decoration: underline"')
-			else:
-				txt += '<td>%s</td></tr>\n' % formMultipleSearchesSUBMITtext(settings.activeHost['SearchTypes'], ListType, 'style="color: #DBA901;background: none;border: none;text-decoration: underline"')
-		elif destinationURL is not None:
-			txt += '<td><a href="%s" class = "lnkbtn">%s</a></td></tr>' % (htmlEscape(destinationURL), htmlEscape(_(iName)))
-		else:
-			txt += '<td>%s</td></tr>' % formSUBMITvalue([(ListType, iIndex)], _(iName), 'style="color: #DBA901;background: none;border: none;text-decoration: underline"')
-		txt += '<tr><td style="text-indent: 40px">%s</td></tr>\n' % iDescr
-		return txt
-	########################################################
-
-	def buildUrlsTable(self, item, index):
-		iName = htmlEscape(removeSpecialChars(item.name))
-		iUrl = item.url  # .replace("ext://url/","") #to chyba sss zrobil do wymuszenia extplayera przyklad pierwszatv
-		# iurlNeedsResolve = int(item.urlNeedsResolve)
-		txt = tableHorizontalRedLine(colspan=3)
-		if iUrl in ['', 'fake', 'fakeUrl']:
-			txt += '<td colspan="2" align="center">%s</td></tr>' % (iName)
-		else:
-			if int(item.urlNeedsResolve) == 1:
-				txt += '<td>%s</td><td>%s</td></tr>\n' % (iName, formSUBMITvalue([('ResolveURL', index)], _('Select')))
-			else:
-				# txt += '<td>%s</td><td>%s</td>' % ( iName , formSUBMITvalue( [('DownloadURL' , index)], _('Download')) )
-				txt += '<td>%s</td><td><a href="/iptvplayer/usehost?DownloadURL=%d" class = "lnkbtn">%s</a></td>' % (iName, index, _('Add to downloader'))
-				txt += '<td> <a href="%s" target="_blank" class = "lnkbtn">%s</a></td></tr>' % (htmlEscape(iUrl), _('Watch'))
-		return txt
-	########################################################
-
-	def useHostPageContent(self, MenuStatusMSG, ShowCancelButton):
-		tempText = '<body bgcolor=\"#666666\" text=\"#FFFFFF\">\n'
-		tempText += IncludeMENU(MenuStatusMSG, ShowCancelButton)
-		tempText += '<div class="main">\n'
-		# Status table
-		if not isNewHostListShown() and not isThreadRunning('doUseHostAction') and 'Name' in list(settings.activeHost.keys()):
-			tempText += '<table border="0" cellspacing="5px"><tbody>\n'
-			tempText += '<tr>'
-			tempText += '<td align="right"><font color="#f0f0f0">%s</font></td><td><b><font color="#FFE4C4">%s</font></b></td>' % (_('host:'), htmlEscape(settings.activeHost['Name']))
-			tempText += '<td align="right"><font color="#f0f0f0">%s</font></td><td><b><font color="#FFE4C4">%s</font></b></td>' % (_('Title:'), htmlEscape(settings.activeHost['Title']))
-			# tempText += '</tr>\n'
-			# tempText += '<tr>'
-			tempText += '<td align="right"><font color="#f0f0f0">%s</font></td><td><b><font color="#FFE4C4">%s</font></b></td>' % (_('Level:'), settings.activeHost['PathLevel'])
-			tempText += '<td align="right"><font color="#f0f0f0">%s</font></td><td><b><font color="#FFE4C4">%s</font></b></td>' % (_('Path:'), htmlEscape(settings.activeHost['Status']))
-			tempText += '</tr>\n'
-			tempText += '</tbody></table>\n'
-			tempText += self.useHostSubMenu()  # Submenu table
-			# main list
-			if isCurrentItemSelected():
-				tempText += '<table border="0" cellspacing="15px"><tbody>\n'
-				tempText += '<tr><td colspan = "3" style="border: 1px solid blue;">%s "<b>%s</b>"</td></tr>\n' % (_('Links for'), htmlEscape(settings.currItem['itemTitle']))
-			else:
-				tempText += '<table border="0" width="800px" cellspacing="5px"><tbody>\n'
-			# if type(settings.retObj.value) is list:
-			index = 0
-			try:
-				if len(settings.retObj.value) > 0:
-					for item in settings.retObj.value:
-						if isCurrentItemSelected():
-							tempText += self.buildUrlsTable(item, index)
-						else:
-							tempText += self.buildItemsListTable(item, index)
-						index += 1
-			except Exception as e:
-				print('EXCEPTION in webParts:useHostPageContent - ', str(e))
-				tempText += tableHorizontalRedLine(colspan=3)
-				tempText += '<td colspan="3" align="center">%s %s</td></tr>' % (_('ERROR:'), str(e))
-				tempText += tableHorizontalRedLine(colspan=3)
-			tempText += '</tbody></table>\n'
-			# end main list
-			if index > 10:
-				tempText += '<tr><td><br></td>'
-				tempText += self.useHostSubMenu(isTop=False)  # Submenu table
-			setNewHostListShown(True)
-		tempText += '</div></body>\n'
-		return tempText
-	########################################################
-
-	def SearchPageContent(self, MenuStatusMSG, ShowCancelButton):
-		tempText = '<body bgcolor=\"#666666\" text=\"#FFFFFF\">\n'
-		tempText += IncludeMENU(MenuStatusMSG, ShowCancelButton)
-		tempText += '<div class="main">\n'
-		# Status table
-		if not isThreadRunning('doGlobalSearch'):
-			tempText += '<table border="0"><td>%s</td></table>' % formSUBMITtextWithOptions(_('Search in all active hosts'),
-											'GlobalSearch',
-											'style="color: #DBA901;background: none;border: none;text-decoration: underline"',
-											settings.GlobalSearchQuery, [
-												('ALL', '', _('All materials')),
-												('VIDEO', 'checked', _('Only videos')),
-												('AUDIO', '', _('Only music'))
-											])
-		if len(list(settings.GlobalSearchResults.keys())) > 0:
-			tempText += '<table border="0" width="800px" cellspacing="5px"><tbody>\n'
-			for key in settings.GlobalSearchResults.keys():
-				_tempHeader = '<tr><td colspan="2" align="left" style="color: #00A9d1;background: none;border: none;font-size:24px;">%s</td></tr>' % key
-				_tempBody = ''
-				index = 0
-				try:
-					for item in settings.GlobalSearchResults.get(key, None)[1]:
-						Totest = removeSpecialChars(item.name + item.description).lower()
-						if Totest.find(settings.GlobalSearchQuery.lower()) != -1:
-							_tempBody += self.buildItemsListTable(item, index, allowedCategories=settings.GlobalSearchTypes,
-											destinationURL='/iptvplayer/usehost?activeHostSearchHistory=%s' % key)
-						index += 1
-				except Exception as e:
-					print('EXCEPTION in webParts:useHostPageContent - ', str(e))
-					tempText += tableHorizontalRedLine(colspan=3)
-					tempText += '<td colspan="2" align="left">%s %s</td></tr>' % (_('ERROR:'), str(e))
-					tempText += tableHorizontalRedLine(colspan=3)
-				if _tempBody != '':
-					tempText += _tempHeader + _tempBody
-			tempText += '</tbody></table>\n'
-			settings.GlobalSearchListShown = True
-		return tempText
+def logsPage():
+	return """
+<div class="toolbar">
+	<h1 style="margin:0">%s</h1>
+	<span class="spacer"></span>
+	<span id="logInfo" class="muted"></span>
+</div>
+<div class="toolbar" id="logToolbar"></div>
+<div id="logMsg"></div>
+<div id="log" class="logbox"></div>
+""" % htmlEscape(_('Logs'))

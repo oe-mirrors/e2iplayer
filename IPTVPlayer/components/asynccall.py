@@ -278,13 +278,37 @@ class MainSessionWrapper(object):
         self.event = threading.Event()
         self.mainThreadIdx = mainThreadIdx
 
+    @staticmethod
+    def _webNotices():
+        # a host running for the web interface: its web worker thread collects the messages
+        # (web/webThreads.py) - a screen on the TV would wait for a remote control nobody holds
+        return getattr(threading.current_thread(), 'e2iWebNotices', None)
+
+    @staticmethod
+    def _addWebNotice(notices, args, kwargs):
+        screen = args[0] if args else None
+        screenName = getattr(screen, '__name__', str(screen))
+        text = args[1] if len(args) > 1 else kwargs.get('text', '')
+        if not isinstance(text, str):
+            text = ''
+        notices.append({'screen': screenName, 'text': text})
+        # MessageBox answers "no", anything else (captcha, choice box ...) counts as cancelled
+        return (False,) if screenName == 'MessageBox' else (None,)
+
     def open(self, *args, **kwargs):
+        notices = self._webNotices()
+        if notices is not None:
+            self._addWebNotice(notices, args, kwargs)
+            return
         DelegateToMainThread(self._open, self.mainThreadIdx)(*args, **kwargs)
 
     def _open(self, session, *args, **kwargs):
         session.open(*args, **kwargs)
 
     def waitForFinishOpen(self, *args, **kwargs):
+        notices = self._webNotices()
+        if notices is not None:
+            return self._addWebNotice(notices, args, kwargs)
         self.event.clear()
         tmpRet = DelegateToMainThread(self._waitForFinishOpen, self.mainThreadIdx)(*args, **kwargs)
         if tmpRet and tmpRet[0] == MainSessionWrapper.WAIT_RET:

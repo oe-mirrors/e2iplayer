@@ -154,6 +154,8 @@ def pinCallback(session, callbackFun, expectedPin, pin=None):
 def sessionstart(reason, **kwargs):
     if reason == 0 and 'session' in kwargs:
         try:
+            from Plugins.Extensions.IPTVPlayer.web import settings as webSettings
+            webSettings.session = kwargs['session']
             import Plugins.Extensions.IPTVPlayer.web.initiator  # noqa: F401
         except Exception as e:
             print("EXCEPTION initiating IPTVplayer WebComponent:", str(e))
