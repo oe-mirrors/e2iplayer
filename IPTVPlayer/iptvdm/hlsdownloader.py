@@ -4,17 +4,18 @@
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, iptv_system, eConnectCallback, GetNice, rm, E2PrioFix
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, iptv_system, eConnectCallback, rm
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import enum, strwithmeta
 from Plugins.Extensions.IPTVPlayer.iptvdm.basedownloader import BaseDownloader
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
-from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import ensureText, fsPath, shellQuote, SidecarMixin
+from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import ensureText, fsPath, shellQuote, executeConsoleCmd, terminateToolsOfFile, SidecarMixin
 ###################################################
 
 ###################################################
 # FOREIGN import
 ###################################################
 from Tools.BoundFunction import boundFunction
+from Components.config import config
 from enigma import eConsoleAppContainer
 from time import sleep
 import re
@@ -55,6 +56,11 @@ class HLSDownloader(BaseDownloader, SidecarMixin):
         self.downloadDuration = 0
         self.liveStream = False
         self.lastErrorCode = 0  # last non-zero "error_code" reported by hlsdl (e.g. expired/blocked CDN token)
+
+        # both are set by the download manager (allowFinalRename: a real download, not buffered
+        # playback; resumeExisting: "Continue downloading" on an interrupted item)
+        self.allowFinalRename = False
+        self.resumeExisting = False
 
         # ffmpeg postprocess support
         self.ffmpegPostEnabled = False
@@ -169,11 +175,7 @@ class HLSDownloader(BaseDownloader, SidecarMixin):
 
         self.console = eConsoleAppContainer()
         self.console_appClosed_conn = eConnectCallback(self.console.appClosed, self._cmdFinished)
-        if hasattr(self.console, "setNice"):
-            self.console.setNice(GetNice() + 2)
-            self.console.execute(cmd)
-        else:
-            self.console.execute(E2PrioFix(cmd))
+        executeConsoleCmd(self.console, cmd)
 
     def _finalizeSuccess(self, finalPath):
         self.filePath = ensureText(finalPath)
@@ -210,6 +212,33 @@ class HLSDownloader(BaseDownloader, SidecarMixin):
         self._finishDownloadFlow()
         return True
 
+    def _getResumeParams(self):
+        # Download manager downloads only. -R makes hlsdl keep a resume sidecar while it runs;
+        # without it an interrupted run would have nothing to continue from.
+        if not DMHelper.hlsdlSupportsResume():
+            self.resumeExisting = False
+            return ''
+        if self.resumeExisting and DMHelper.hasHlsdlResumeFile(self.filePath) and os.path.isfile(fsPath(self.filePath)):
+            printDBG("HLSDownloader resume existing file[%s]" % self.filePath)
+        else:
+            # a fresh start, also "Download again": a sidecar left by an earlier run must not
+            # turn it into a resume
+            self.resumeExisting = False
+            DMHelper.removeHlsdlResumeFiles(self.filePath)
+        return ' -R '
+
+    def _getLiveStartParams(self):
+        # Buffered playback: start a live stream this many seconds behind the live edge (hlsdl -s).
+        # "default" leaves hlsdl's own value (2 minutes); it has no effect on a VOD. Download
+        # manager recordings keep the default, the earlier part is wanted there.
+        try:
+            offset = str(config.plugins.iptvplayer.hlsdlLiveStartOffset.value)
+            if offset.isdigit():
+                return ' -s %s ' % offset
+        except Exception:
+            printExc()
+        return ''
+
     def start(self, url, filePath, params={}):
         """
         Owervrite start from BaseDownloader
@@ -241,6 +270,11 @@ class HLSDownloader(BaseDownloader, SidecarMixin):
         if 'iptv_m3u8_seg_download_retry' in meta:
             addParams += ' -w %s ' % shellQuote(meta['iptv_m3u8_seg_download_retry'])
 
+        if self.allowFinalRename:
+            addParams += self._getResumeParams()
+        else:
+            addParams += self._getLiveStartParams()
+
         if self.url.startswith("merge://"):
             try:
                 urlsKeys = self.url.split('merge://', 1)[1].split('|')
@@ -258,11 +292,7 @@ class HLSDownloader(BaseDownloader, SidecarMixin):
         self.console = eConsoleAppContainer()
         self.console_appClosed_conn = eConnectCallback(self.console.appClosed, self._cmdFinished)
         self.console_stderrAvail_conn = eConnectCallback(self.console.stderrAvail, self._dataAvail)
-        if hasattr(self.console, "setNice"):
-            self.console.setNice(GetNice() + 2)
-            self.console.execute(cmd)
-        else:
-            self.console.execute(E2PrioFix(cmd))
+        executeConsoleCmd(self.console, cmd)
 
         self.status = DMHelper.STS.DOWNLOADING
 
@@ -328,6 +358,8 @@ class HLSDownloader(BaseDownloader, SidecarMixin):
                     self.console.sendCtrlC()  # kill # produce zombies
                 elif hasattr(self.console, "kill"):
                     self.console.kill()  # kill produce zombies
+            # the signal above only reaches the shell around hlsdl / ffmpeg
+            terminateToolsOfFile(self.filePath)
             self._cmdFinished(-1, True)
             return BaseDownloader.CODE_OK
         return BaseDownloader.CODE_NOT_DOWNLOADING

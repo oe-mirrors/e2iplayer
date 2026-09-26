@@ -12,6 +12,7 @@ from Plugins.Extensions.IPTVPlayer.libs.pCommon import common
 from Tools.BoundFunction import boundFunction
 from enigma import eConsoleAppContainer
 import os
+import signal
 ###################################################
 
 try:
@@ -60,6 +61,50 @@ def fsPath(path):
     except Exception:
         pass
     return path
+
+
+def executeConsoleCmd(console, cmd):
+    # start a command line on an eConsoleAppContainer, niced
+    if hasattr(console, "setNice"):
+        console.setNice(GetNice() + 2)
+        console.execute(cmd)
+    else:
+        console.execute(E2PrioFix(cmd))
+
+
+def terminateToolsOfFile(filePath, tools=('hlsdl', 'wget', 'curl', 'ffmpeg')):
+    # Safety net for "Stop downloading". The download commands end in a redirect, so the console
+    # runs them through a shell and its sendCtrlC() only reaches that shell: hlsdl / wget / curl /
+    # ffmpeg can keep running and writing the file after the item shows "interrupted". So look
+    # for the tool by its command line - it names the output file - and end it directly.
+    killed = []
+    try:
+        needle = fsPath(filePath)
+        if not isinstance(needle, binary_type):
+            needle = needle.encode('utf-8', 'replace')
+        toolNames = [t if isinstance(t, binary_type) else t.encode('utf-8') for t in tools]
+        if not needle:
+            return killed
+        myPid = os.getpid()
+        for entry in os.listdir('/proc'):
+            if not entry.isdigit() or int(entry) == myPid:
+                continue
+            try:
+                with open('/proc/%s/cmdline' % entry, 'rb') as f:
+                    cmdline = f.read()
+            except Exception:
+                continue  # gone already, or not readable
+            if needle in cmdline and any(name in cmdline for name in toolNames):
+                try:
+                    os.kill(int(entry), signal.SIGTERM)
+                    killed.append(int(entry))
+                except Exception:
+                    pass
+    except Exception:
+        printExc()
+    if killed:
+        printDBG("terminateToolsOfFile ended pids %r for [%s]" % (killed, filePath))
+    return killed
 
 
 def shellQuote(value):
@@ -255,11 +300,7 @@ class SidecarMixin(object):
             self.sidecarConsole = eConsoleAppContainer()
             self.sidecarConsole_appClosed_conn = eConnectCallback(self.sidecarConsole.appClosed, boundFunction(self._imgSidecarFinished, jpgPath))
             self.sidecarConsole_stderrAvail_conn = eConnectCallback(self.sidecarConsole.stderrAvail, self._imgSidecarDataAvail)
-            if hasattr(self.sidecarConsole, "setNice"):
-                self.sidecarConsole.setNice(GetNice() + 2)
-                self.sidecarConsole.execute(cmd)
-            else:
-                self.sidecarConsole.execute(E2PrioFix(cmd))
+            executeConsoleCmd(self.sidecarConsole, cmd)
         except Exception:
             printExc("%s sidecar JPG start failed" % self.__class__.__name__)
             self._finishDownloadFlow()
