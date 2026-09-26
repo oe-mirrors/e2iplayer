@@ -20,5 +20,8 @@ hostsWithNoSearchOption = []
 
 StopThreads = False
 
+# a setting that needs a GUI restart was changed from the web interface
+restartPending = False
+
 # the enigma2 session (plugin.py sessionstart) - needed to work off the main thread queue (webThreads.py)
 session = None

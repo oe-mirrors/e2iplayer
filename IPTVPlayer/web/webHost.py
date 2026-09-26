@@ -11,7 +11,7 @@ from .webThreads import WebWorker, WebActionError
 from .webTools import initActiveHost, isActiveHostInitiated, isThreadRunning, stopRunningThread, cleanText, iconUrl, hostLogoUrl, hostDisplayTitle
 
 import Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget as iptvplayerwidget
-from Plugins.Extensions.IPTVPlayer.components.ihost import RetHost, CUrlItem, CDisplayListItem
+from Plugins.Extensions.IPTVPlayer.components.ihost import RetHost, CUrlItem, CDisplayListItem, CFavItem
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdmapi import IPTVDMApi, DMItem
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdownloadercreator import IsUrlDownloadable
@@ -21,6 +21,8 @@ from Components.config import config
 WORKER = 'doUseHostAction'
 FOLDER_TYPES = (CDisplayListItem.TYPE_CATEGORY,)
 LINK_TYPES = (CDisplayListItem.TYPE_VIDEO, CDisplayListItem.TYPE_AUDIO, CDisplayListItem.TYPE_PICTURE, CDisplayListItem.TYPE_DATA)
+PLAYABLE_TYPES = (CDisplayListItem.TYPE_VIDEO, CDisplayListItem.TYPE_AUDIO)
+HISTORY_TYPE_SEP = '|--TYPE--|'  # tools/iptvtools.py CSearchHistoryHelper.TYPE_SEP
 
 ########################################################
 
@@ -52,11 +54,28 @@ def _itemToDict(item, index):
 			'icon': iconUrl(item.iconimage, item.type), 'pin': bool(getattr(item, 'pinLocked', False))}
 
 
-def _linkToDict(link, index):
+def _linkToDict(link, index, playable):
 	url = str(link.url)
 	resolve = int(link.urlNeedsResolve) == 1
 	return {'i': index, 'name': cleanText(link.name) or url, 'url': url, 'resolve': resolve,
-			'watch': not resolve and url.startswith(('http://', 'https://'))}
+			'watch': not resolve and url.startswith(('http://', 'https://')), 'play': not resolve and playable}
+
+
+def _searchHistory():
+	# the host's own search history (newest first), as the GUI offers it
+	try:
+		history = settings.activeHost['Obj'].host.history
+	except Exception:
+		return []
+	entries = []
+	try:
+		for value in history.getHistoryList()[:15]:
+			pattern, _sep, searchType = value.partition(HISTORY_TYPE_SEP)
+			if pattern.strip():
+				entries.append({'pattern': pattern, 'type': searchType})
+	except Exception:
+		printExc()
+	return entries
 
 
 def getState():
@@ -69,15 +88,20 @@ def getState():
 		return state
 	host = settings.activeHost
 	items = _currentList()
+	playable = v['linksType'] in PLAYABLE_TYPES and settings.session is not None
 	state.update({
 		'host': {'name': host['Name'], 'title': hostDisplayTitle(host['Title']), 'logo': hostLogoUrl(host['Name'])},
 		'view': v['view'], 'path': v['path'],
 		'items': [_itemToDict(item, idx) for idx, item in enumerate(items)],
 		'searchTypes': [[cleanText(label), value] for label, value in (host.get('SearchTypes') or [])],
 		'hasSearch': any(item.type == CDisplayListItem.TYPE_SEARCH for item in items),
-		'links': [_linkToDict(link, idx) for idx, link in enumerate(v['links'])] if v['view'] == 'links' else [],
+		'links': [_linkToDict(link, idx, playable) for idx, link in enumerate(v['links'])] if v['view'] == 'links' else [],
 		'linksTitle': v['linksTitle'], 'article': v['article'] if v['view'] == 'article' else None,
+		'favTypes': list(host.get('SupportedTypes') or []),
+		'favPending': {'title': v['fav']['title'], 'groups': v['fav']['groups']} if v.get('fav') else None,
 	})
+	if state['hasSearch'] and not busy:
+		state['history'] = _searchHistory()
 	return state
 ########################################################
 
@@ -223,6 +247,124 @@ def _openSearch(hostName, pattern, searchType):
 	_search(pattern, searchType)
 
 
+def _favourite(index):
+	# like the GUI (iptvplayerwidget.handleFavouriteItemCallback): the host builds the favourite, the
+	# page then picks the group (favouriteAdd)
+	from Plugins.Extensions.IPTVPlayer.tools.iptvfavourites import IPTVFavourites
+	from Plugins.Extensions.IPTVPlayer.tools.iptvtools import GetFavouritesDir
+	items = _currentList()
+	if not 0 <= index < len(items):
+		raise WebActionError(_('The list has changed, please try again.'))
+	ret = settings.activeHost['Obj'].getFavouriteItem(index)
+	if ret.status != RetHost.OK or not isinstance(ret.value, list) or len(ret.value) != 1 or not isinstance(ret.value[0], CFavItem):
+		raise WebActionError(_('This entry cannot be added to the favourites.'))
+	favItem = ret.value[0]
+	if CFavItem.RESOLVER_SELF == favItem.resolver:
+		favItem.resolver = settings.activeHost['Name']
+	if '' == favItem.hostName:
+		favItem.hostName = settings.activeHost['Name']
+	favourites = IPTVFavourites(GetFavouritesDir())
+	if not favourites.load(groupsOnly=True):
+		raise WebActionError(favourites.getLastError())
+	groups = [[group['group_id'], cleanText(group.get('title', group['group_id']))] for group in favourites.getGroups()]
+	_view()['fav'] = {'item': favItem, 'title': cleanText(items[index].name), 'groups': groups}
+
+
+def _favouriteAdd(groupId, newGroup):
+	from Plugins.Extensions.IPTVPlayer.tools.iptvfavourites import IPTVFavourites
+	from Plugins.Extensions.IPTVPlayer.tools.iptvtools import GetFavouritesDir, IsValidFileName
+	v = _view()
+	fav = v.get('fav')
+	if not fav:
+		raise WebActionError(_('The list has changed, please try again.'))
+	favourites = IPTVFavourites(GetFavouritesDir())
+	if not favourites.load(groupsOnly=True):
+		raise WebActionError(favourites.getLastError())
+	groupTitle = ''
+	if newGroup:
+		# same rules as IPTVFavouritesAddNewGroupWidget
+		if not IsValidFileName(newGroup):
+			raise WebActionError(_("Name is not valid.\nPlease remove special characters."))
+		group = {'title': newGroup, 'group_id': newGroup.lower(), 'desc': ' '}
+		if not favourites.addGroup(group) or not favourites.save(True):
+			raise WebActionError(favourites.getLastError())
+		groupId, groupTitle = group['group_id'], newGroup
+	else:
+		for group in favourites.getGroups():
+			if group['group_id'] == groupId:
+				groupTitle = group.get('title', groupId)
+		if not groupTitle:
+			raise WebActionError(_('Please select a group of favourites.'))
+	if not (favourites.loadGroupItems(groupId, force=False) and favourites.addGroupItem(fav['item'], groupId) and favourites.saveGroupItems(groupId)):
+		raise WebActionError(favourites.getLastError())
+	v['fav'] = None
+	v['notices'].append(_('"%s" has been added to the favourites group "%s".') % (fav['title'], cleanText(groupTitle)))
+
+
+def playOnTv(index):
+	# runs in the main thread: opens E2iPlayer's own movie player on the TV, the same one and the same
+	# way the GUI does for a link without buffering (iptvplayerwidget.playVideo)
+	from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
+	from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import GetMoviePlayer
+	from Plugins.Extensions.IPTVPlayer.components.asynccall import gMainFunctionsQueueTab
+	from Plugins.Extensions.IPTVPlayer.tools.iptvtools import GetE2VideoMode, SetE2VideoMode
+	v = _view()
+	session = settings.session
+	if session is None:
+		return _('Playing on the TV is not possible (no enigma2 session).')
+	if v['view'] != 'links' or not 0 <= index < len(v['links']) or v['linksType'] not in PLAYABLE_TYPES:
+		return _('The list has changed, please try again.')
+	link = v['links'][index]
+	if int(link.urlNeedsResolve) == 1:
+		return _('Please select the link first.')
+	url = urlparser.decorateUrl(link.url)
+	protocol = url.meta.get('iptv_proto', '')
+	if protocol == '':
+		return _("Unknown protocol [%s]") % url
+	if protocol in ('f4m', 'uds'):
+		return _('This stream can only be played with buffering - please start it on the receiver.')
+	title = v['linksTitle'] or link.name
+	prevVideoMode = GetE2VideoMode()
+	params = {'defaul_videomode': prevVideoMode, 'host_name': settings.activeHost.get('Name', ''),
+			'external_sub_tracks': url.meta.get('external_sub_tracks', []), 'iptv_refresh_cmd': url.meta.get('iptv_refresh_cmd', '')}
+	if v['linksType'] == CDisplayListItem.TYPE_AUDIO:
+		params.update({'show_iframe': config.plugins.iptvplayer.show_iframe.value, 'iframe_file_start': config.plugins.iptvplayer.iframe_file.value,
+					'iframe_file_end': config.plugins.iptvplayer.clear_iframe_file.value, 'iframe_continue': False})
+	# with the E2iPlayer screen open on the TV the screen brings the live TV back itself
+	queue = gMainFunctionsQueueTab[0]
+	guiOpen = queue is not None and queue.procFun is not None
+	prevService = None if guiOpen else session.nav.getCurrentlyPlayingServiceReference()
+
+	def _closed(*args, **kwargs):
+		try:
+			if prevVideoMode and GetE2VideoMode() != prevVideoMode:
+				SetE2VideoMode(prevVideoMode)
+			if prevService is not None:
+				session.nav.playService(prevService)
+		except Exception:
+			printExc()
+
+	player = GetMoviePlayer(False, False).value
+	printDBG('[E2iPlayer web] play on TV [%s] player[%s]' % (title, player))
+	session.nav.stopService()
+	if player == 'mini':
+		from Plugins.Extensions.IPTVPlayer.components.iptvplayer import IPTVMiniMoviePlayer
+		session.openWithCallback(_closed, IPTVMiniMoviePlayer, url, title)
+	elif player == 'standard':
+		from Plugins.Extensions.IPTVPlayer.components.iptvplayer import IPTVStandardMoviePlayer
+		session.openWithCallback(_closed, IPTVStandardMoviePlayer, url, title)
+	else:
+		from Plugins.Extensions.IPTVPlayer.components.iptvextmovieplayer import IPTVExtMoviePlayer
+		if player == 'extgstplayer':
+			playerVal = 'gstplayer'
+			params.update({'download-buffer-path': '', 'ring-buffer-max-size': 0, 'buffer-duration': 18000, 'buffer-size': 10240})
+		else:
+			playerVal = 'eplayer'
+		session.openWithCallback(_closed, IPTVExtMoviePlayer, url, title, None, playerVal, params)
+	v['notices'] = [_('"%s" is playing on the TV.') % title]
+	return ''
+
+
 def _download(index):
 	from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
 	v = _view()
@@ -298,6 +440,8 @@ def doAction(params):
 		return _('Please wait, the previous action is still running.')
 	v['error'] = ''
 	v['notices'] = []
+	if action in ('item', 'back', 'home', 'refresh', 'search'):
+		v['fav'] = None  # a pending favourite belongs to the list it came from
 	if action == 'close':
 		initActiveHost(None)
 		settings.hostView = {}
@@ -313,9 +457,20 @@ def doAction(params):
 	if action == 'back' and v['view'] != 'list':
 		v['view'] = 'list'  # just the list below, nothing to ask the host
 		return ''
+	if action == 'play':
+		try:
+			return playOnTv(_toInt(params.get('index')))
+		except Exception as e:
+			printExc()
+			return str(e)
+	if action == 'favouriteCancel':
+		v['fav'] = None
+		return ''
 	actions = {'item': (_selectItem, _toInt(params.get('index'))),
 			'resolve': (_resolve, _toInt(params.get('index'))),
 			'download': (_download, _toInt(params.get('index'))),
+			'favourite': (_favourite, _toInt(params.get('index'))),
+			'favouriteAdd': (_favouriteAdd, str(params.get('group', '')), str(params.get('newGroup', '')).strip()),
 			'back': (_back,), 'home': (_home,), 'refresh': (_refresh,),
 			'search': (_search, str(params.get('pattern', '')).strip(), str(params.get('searchType', '')))}
 	if action not in actions:
