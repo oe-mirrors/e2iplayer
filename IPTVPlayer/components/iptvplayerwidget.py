@@ -195,16 +195,16 @@ class E2iPlayerWidget(Screen):
         <screen position="center,center" size="1280,%d" resolution="1280,720" backgroundColor="#34111112" flags="wfNoBorder">
                 %s
                 <widget name="headertext" position="320,70" zPosition="1" size="940,40" font="Regular; 20" transparent="1" halign="left" valign="center" backgroundColor="black" foregroundColor="#178ef5" borderWidth="1" borderColor="black" />
-                <widget name="statustext" position="410,230" zPosition="1" size="685,90" font="Regular;30" halign="left" valign="top" transparent="1" backgroundColor="black" foregroundColor="white" />
+                <widget name="statustext" position="320,230" zPosition="1" size="940,90" font="Regular;30" halign="center" valign="top" transparent="1" backgroundColor="black" foregroundColor="white" />
                 <widget name="list" position="320,110" zPosition="2" size="940,384" itemHeight="32" font="Regular;20" scrollbarMode="showOnDemand" scrollbarSliderBorderWidth="1" scrollbarForegroundColor="#1b5a91" scrollbarBorderColor="#00b6b6b6" enableWrapAround="1" transparent="1" foregroundColor="white" backgroundColor="black" foregroundColorSelected="white" backgroundColorSelected="#1b5a91" borderWidth="1" borderColor="black" />
                 <widget name="console" position="20,500" zPosition="1" size="1240,154" font="Regular;20" transparent="1" foregroundColor="white" backgroundColor="black" borderWidth="1" borderColor="black" halign="left" valign="center" />
                 <widget name="sequencer" position="0,0" zPosition="6" size="1280,%d" font="Regular;160" halign="center" valign="center" transparent="1" backgroundColor="#00000000" />
                 <widget name="cover" position="20,70" size="288,420" zPosition="3" alphatest="blend" />
-                <widget name="spinner"   zPosition="2" position="463,200" size="16,16" transparent="1" alphatest="blend" />
-                <widget name="spinner_1" zPosition="1" position="463,200" size="16,16" transparent="1" alphatest="blend" />
-                <widget name="spinner_2" zPosition="1" position="479,200" size="16,16" transparent="1" alphatest="blend" />
-                <widget name="spinner_3" zPosition="1" position="495,200" size="16,16" transparent="1" alphatest="blend" />
-                <widget name="spinner_4" zPosition="1" position="511,200" size="16,16" transparent="1" alphatest="blend" />
+                <widget name="spinner"   zPosition="2" position="758,200" size="16,16" transparent="1" alphatest="blend" />
+                <widget name="spinner_1" zPosition="1" position="758,200" size="16,16" transparent="1" alphatest="blend" />
+                <widget name="spinner_2" zPosition="1" position="774,200" size="16,16" transparent="1" alphatest="blend" />
+                <widget name="spinner_3" zPosition="1" position="790,200" size="16,16" transparent="1" alphatest="blend" />
+                <widget name="spinner_4" zPosition="1" position="806,200" size="16,16" transparent="1" alphatest="blend" />
                 <ePixmap pixmap="%s/smallshadowline.png" position="20,494" size="1240,2" zPosition="2" />
                 <!-- zPosition 2, above the header's own Title label (1) -
                      that label's black background now spans much wider

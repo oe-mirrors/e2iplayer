@@ -1745,7 +1745,7 @@ class IPTVExtMoviePlayer(Screen):
 
         # update data
         if self.playback['BufferFill'] > 0:
-            max = self.playback['Length'] * self.playback['BufferFill'] / 100000
+            max = self.playback['Length'] * self.playback['BufferFill'] // 100000
             if max > self.playback['Length']:
                 max = self.playback['Length']
             if max < self.playback['BufferCTime']:
@@ -1760,7 +1760,7 @@ class IPTVExtMoviePlayer(Screen):
             pos = 0
 
         self.playback['GoToSeekTime'] = pos
-        self["goToSeekLabel"].setText(str(timedelta(seconds=self.playback['GoToSeekTime'])))
+        self["goToSeekLabel"].setText(str(timedelta(seconds=int(self.playback['GoToSeekTime']))))
 
         # update position
         # convert time to width
@@ -1937,8 +1937,10 @@ class IPTVExtMoviePlayer(Screen):
             self.goToSeekRepeatCount += 1
 
         # not allow faster than (0.1 * playback length)
-        if self.goToSeekStep > (self.playback['Length'] / 10):
-            self.goToSeekStep = self.playback['Length'] / 10
+        # floor division: a py3 float step (e.g. 1535 / 10 = 153.5) made the
+        # seek label read "0:20:59.500000" while the key was held
+        if self.goToSeekStep > (self.playback['Length'] // 10):
+            self.goToSeekStep = self.playback['Length'] // 10
         if 0 >= self.goToSeekStep:
             self.goToSeekStep = 1
 
