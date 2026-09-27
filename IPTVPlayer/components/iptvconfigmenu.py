@@ -409,6 +409,7 @@ config.plugins.iptvplayer.extplayer_subtitle_box_height = ConfigInteger(240, (50
 config.plugins.iptvplayer.extplayer_infobanner_clockformat = ConfigSelection(default="", choices=[("", _("None")), ("24", _("24 hour format")), ("12", _("12 hour format"))])
 
 config.plugins.iptvplayer.GSTplayer_no_IFD = ConfigYesNo(default=False)
+config.plugins.iptvplayer.gstplayer_binary = ConfigSelection(default="auto", choices=[("auto", _("auto")), ("gstplayer2", "gstplayer2"), ("gstplayer", "gstplayer")])
 config.plugins.iptvplayer.extplayer_skin = ConfigSelection(default="default", choices=[("default", _("default")), ("black", _("black")), ("red", _("red")), ("blue", _("blue")), ("green", _("green")), ("black-white", _("black&white")), ("cobalt", _("cobalt")), ("jersey", _("jersey")), ("navy", _("navy")), ("line", _("line"))])
 
 
@@ -1230,7 +1231,7 @@ def GetAvailableMoviePlayers():
     availablePlayers = []
     if IsExecutable("/usr/bin/exteplayer3"):  # config.plugins.iptvplayer.exteplayer3path.value):
         availablePlayers.append('exteplayer')
-    if IsExecutable('/usr/bin/gstplayer'):
+    if IsExecutable('/usr/bin/gstplayer') or IsExecutable('/usr/bin/gstplayer2'):
         availablePlayers.append('extgstplayer')
     availablePlayers.append('mini')
     availablePlayers.append('standard')

@@ -79,13 +79,14 @@ _PROBE_SCRIPT = (
     'echo "@@rtmpdump";    ($T rtmpdump --help %s   || true) | grep -i rtmpdump | head -n 1; '
     'echo "@@exteplayer3"; ($T exteplayer3 %s       || true) | head -n 2; '
     'echo "@@gstplayer";   ($T gstplayer %s         || true) | head -n 2; '
+    'echo "@@gstplayer2";  ($T gstplayer2 %s        || true) | head -n 2; '
     'echo "@@duktape";     D=/tmp/.e2i_dukver.js; '
     '  printf "%%s" \'try{var v=Duktape.version;print(Math.floor(v/10000)+"."+(Math.floor(v/100)%%100)+"."+(v%%100))}catch(e){print("?")}\' > $D; '
     '  ($T duk $D %s || true) | head -n 1; rm -f $D; '
     'echo "@@quickjs";     ($T qjs --version %s     || true) | head -n 1; '
     'echo "@@deps";        (opkg list-installed 2>/dev/null | grep -i e2iplayer-deps || true); '
     'echo "@@end"\n'
-) % ((_P,) * 12)
+) % ((_P,) * 13)
 
 _PROBE_CACHE = None       # parsed binary block, reused for the whole session
 _PROBE_KEEPALIVE = None   # holds the iptv_system object until its callback fires
@@ -331,6 +332,7 @@ class _SystemInfo(object):
         out.append(row("quickjs", first("quickjs")))
         out.append(row("exteplayer3", ver_line("exteplayer3")))
         out.append(row("gstplayer", ver_line("gstplayer")))
+        out.append(row("gstplayer2", ver_line("gstplayer2")))
 
         out.append("")
         out.append("--- " + _("Python modules") + " ---")
