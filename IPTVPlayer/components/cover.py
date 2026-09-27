@@ -5,6 +5,7 @@
 ###################################################
 
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, eConnectCallback, GetIconDir
+from Plugins.Extensions.IPTVPlayer.components.asynccall import AsyncMethod
 
 ###################################################
 # FOREIGN import
@@ -13,7 +14,6 @@ from Tools.LoadPixmap import LoadPixmap
 from Components.Pixmap import Pixmap
 from enigma import ePicLoad, ePoint, eTimer
 import os
-import threading
 
 
 class Cover(Pixmap):
@@ -96,17 +96,16 @@ class Cover(Pixmap):
         if not ImageFileNeedsPreparing(sourceFile or filename):
             return self.decodeCover(sourceFile or filename, callBackFun, ident)
         printDBG("Cover.decodePreparedCover preparing %s%s" % (filename, (" from %s" % sourceFile) if sourceFile else ""))
-        thread = threading.Thread(target=PrepareImageFile, args=(filename, sourceFile))
-        thread.daemon = True
-        self.prepare = {'thread': thread, 'args': (filename, callBackFun, ident)}
         self.prepareTimer = eTimer()
         self.prepareTimer_conn = eConnectCallback(self.prepareTimer.timeout, self._checkPrepared)
-        thread.start()
+        # a plugin worker thread (AsyncMethod), not a bare threading.Thread: the ffmpeg fallback of convertWebp
+        # runs through iptv_execute, which needs the plugin's thread data (_iptvplayer_ext)
+        self.prepare = {'call': AsyncMethod(PrepareImageFile)(filename, sourceFile), 'args': (filename, callBackFun, ident)}
         self.prepareTimer.start(100)
         return True
 
     def _checkPrepared(self):
-        if self.prepare is None or self.prepare['thread'].is_alive():
+        if self.prepare is None or self.prepare['call'].isAlive():
             return
         filename, callBackFun, ident = self.prepare['args']
         self._stopPrepare()
