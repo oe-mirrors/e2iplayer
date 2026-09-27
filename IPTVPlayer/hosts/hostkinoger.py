@@ -27,6 +27,8 @@ class KinoGer(CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(self, {"history": "kinoger", "cookie": "kinoger.cookie"})
         self.HEADER = self.cm.getDefaultHeader()
+        # the site's anti-bot filter answers every full browser User-Agent with a JS verification page
+        self.HEADER["User-Agent"] = "Mozilla/5.0"
         self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
         self.DEFAULT_ICON_URL = gettytul() + "templates/kinoger/images/logo.png"
         self.MAIN_URL = gettytul()
@@ -113,8 +115,10 @@ class KinoGer(CBaseHostClass):
         sts, data = self.getPage(self.MAIN_URL)
         if not sts:
             return
-        data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'class="sidelinks', "</ul>")[0]
-        data = re.compile('href="([^"]+).*?/>([^<]+)', re.DOTALL).findall(data)
+        data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'class="sidelinks', "</ul>")
+        if not data:
+            return
+        data = re.compile('href="([^"]+).*?/>([^<]+)', re.DOTALL).findall(data[0])
         for url, title in data:
             if "erie" in title or url == "/":
                 continue

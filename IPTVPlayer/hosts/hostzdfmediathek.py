@@ -397,7 +397,7 @@ class ZDFmediathek(GenericFolderWatchedScraperMixin, CBaseHostClass):
             data = json_loads(data)['document']
             synopsis = self.cleanHtmlStr(data.get('beschreibung') or data.get('leadParagraph') or '')
             try:
-                for item in data['captions']:
+                for item in data.get('captions') or []:
                     if 'vtt' in item['format'] and self.cm.isValidUrl(item['uri']):
                         subTracks.append({'title': item['language'], 'url': item['uri'], 'lang': item['language'], 'format': 'vtt'})
             except Exception:
@@ -433,7 +433,7 @@ class ZDFmediathek(GenericFolderWatchedScraperMixin, CBaseHostClass):
                         elif type['name'] == 'm3u8':
                             tmpList = getDirectM3U8Playlist(strwithmeta(url, {'iptv_proto': 'm3u8'}), checkExt=False)
                             for tmpItem in tmpList:
-                                res = tmpItem['with']
+                                res = tmpItem.get('with', 0)
                                 if res == 0:
                                     continue
                                 if res > 300:

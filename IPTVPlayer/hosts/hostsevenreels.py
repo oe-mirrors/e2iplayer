@@ -181,9 +181,10 @@ class SevenReels(GenericFolderWatchedScraperMixin, CBaseHostClass):
             self.addVideo(params)
             count += 1
 
+        # only discover (total_pages) and search (totalPages) are paged; the
+        # recs/featured/top-reels endpoints ignore ?page= and have no page count
         totalPages = parsed.get('total_pages') or parsed.get('totalPages') or 0
-        hasMore = (page < totalPages) if totalPages else bool(count)
-        if count and hasMore:
+        if count and page < totalPages:
             params = dict(cItem)
             params.pop('isWatched', None)
             params.pop('isStarted', None)

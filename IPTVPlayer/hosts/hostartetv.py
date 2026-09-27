@@ -32,7 +32,8 @@ from datetime import timedelta
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.artetv_lang = ConfigSelection(default="de", choices=[("de", "Deutsch"), ("fr", u"Français"), ("en", "English"), ("es", u"Español"), ("pl", "Polski"), ("it", "Italiano")])
+ARTE_LANGS = [("de", "Deutsch"), ("fr", u"Français"), ("en", "English"), ("es", u"Español"), ("pl", "Polski"), ("it", "Italiano")]
+config.plugins.iptvplayer.artetv_lang = ConfigSelection(default="de", choices=ARTE_LANGS)
 config.plugins.iptvplayer.artetv_quality = ConfigYesNo(default=True)
 config.plugins.iptvplayer.artetv_audio = ConfigYesNo(default=False)
 
@@ -396,7 +397,8 @@ class ArteTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
         synopsis = self.cleanHtmlStr(_mdDesc or _md.get('subtitle') or '')
         onlyLang = config.plugins.iptvplayer.artetv_audio.value
         bestOnly = config.plugins.iptvplayer.artetv_quality.value
-        langName = dict(config.plugins.iptvplayer.artetv_lang.choices).get(self._lang(), '')
+        # not dict(ConfigSelection.choices): iterating Enigma2's choicesList gives the keys only
+        langName = dict(ARTE_LANGS).get(self._lang(), '')
 
         urlTab = []
         for stream in streams:

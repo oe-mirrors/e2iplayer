@@ -1,21 +1,20 @@
 # -*- coding: utf-8 -*-
 # Last Modified: 03.06.2025
+# 27.09.2026 - the site's GraphQL search answers only empty lists and the REST playlist search needs a
+# logged-in user: search types are now Videos + Channels (REST users?search, channel -> its videos).
 ###################################################
 # LOCAL import
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass, CDisplayListItem
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetDefaultLang, rm
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetDefaultLang
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
-from Plugins.Extensions.IPTVPlayer.libs import ph
 ###################################################
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 ###################################################
 # FOREIGN import
 ###################################################
-import re
 from datetime import timedelta
-import time
 from Components.config import config, ConfigSelection, getConfigListEntry
 ###################################################
 
@@ -59,7 +58,6 @@ class Dailymotion(CBaseHostClass):
 
         self.filterCache = {}
         self.apiData = {'client_type': 'androidapp', 'client_version': '4775', 'family_filter': 'false'}
-        self.authData = {'client_id': '', 'client_secret': '', 'visitor_id': '', 'traffic_segment': '', 'url': '', 'auth_url': '', 'grant_type': 'client_credentials', 'expires': 0, 'token': ''}
 
     def getLocale(self):
         locale = config.plugins.iptvplayer.dailymotion_localization.value
@@ -134,6 +132,8 @@ class Dailymotion(CBaseHostClass):
             mode_key = 'mode'
             if type == 'playlist':
                 type = 'playlist/%s/videos' % cItem['f_xid']
+            elif type == 'channel':
+                type = 'user/%s/videos' % cItem['f_xid']
             else:
                 args.insert(0, 'list=what-to-watch')
         elif 'tiles' == type:
@@ -172,99 +172,26 @@ class Dailymotion(CBaseHostClass):
             printExc()
         self.addNextPage(cItem, nextPage, page)
 
-    def getAuthToken(self):
-        if '' in (self.authData['client_id'], self.authData['client_secret'], self.authData['visitor_id'], self.authData['traffic_segment'], self.authData['url'], self.authData['auth_url'], self.authData['token']):
-            rm(self.COOKIE_FILE)
-
-            sts, data = self.cm.getPage(self.SITE_URL, self.defaultParams)
-            if not sts:
-                return ''
-
-            data = re.compile('''return m.*;var r=['"]([^"^']+?)['"],o=['"]([^"^']+?)['"].*,_=.*__API_ENDPOINT__[^"^']+?['"]([^"^']+?)['"].*,m=.*__AUTH_ENDPOINT__[^"^']+?['"]([^"^']+?)['"]''').findall(data)
-            for item in data:
-                self.authData['auth_url'] = item[3]
-                self.authData['url'] = item[2]
-                self.authData['client_secret'] = item[1]
-                self.authData['client_id'] = item[0]
-            self.authData['grant_type'] = 'client_credentials'
-
-        if self.authData.get('expires', 0) < int(time.time()):
-            params = dict(self.defaultParams)
-            params['header'] = dict(params['header'])
-            params['header']['Origin'] = self.SITE_URL[:-1]
-            params['header']['Referer'] = self.SITE_URL
-            cj = self.cm.getCookieItems(self.COOKIE_FILE)
-            self.authData['visitor_id'] = cj.get('v1st', '')
-            self.authData['traffic_segment'] = cj.get('ts', '')
-            post_data = {'client_id': self.authData['client_id'], 'client_secret': self.authData['client_secret'], 'grant_type': self.authData['grant_type'], 'visitor_id': self.authData['visitor_id'], 'traffic_segment': self.authData['traffic_segment']}
-            sts, data = self.cm.getPage(self.authData['auth_url'], params, post_data)
-            if not sts:
-                return ''
-
-            printDBG(data)
-            try:
-                data = json_loads(data)
-                self.authData['token'] = str(data['access_token'])
-                self.authData['expires'] = int(time.time()) + int(data['expires_in'])
-                return self.authData['token']
-            except Exception:
-                printExc()
-
-        return self.authData.get('token', '')
-
-    def getApiHeaders(self, cItem):
-        params = {}
-        params['header'] = {'User-Agent': self.HTTP_HEADER['User-Agent'], 'Accept-Encoding': 'gzip, deflate, br', 'Accept-Language': 'en-US,en;q=0.9,pl;q=0.8', 'Content-Type': 'application/json', 'Accept': '*/*'}
-        params['header']['Referer'] = self.SITE_URL
-        params['header']['Origin'] = self.SITE_URL[:-1]
-        params['header']['Authorization'] = 'Bearer %s' % self.getAuthToken()
-        params['raw_post_data'] = True
-        return params
-
-    def listSiteSeach(self, cItem):
-        printDBG("Dailymotion.listSiteSeach")
-        token = self.getAuthToken()
-        if token == '':
-            return
-
-        type = cItem['f_type']
+    def listChannels(self, cItem):
+        printDBG("Dailymotion.listChannels [%s]" % cItem)
         page = cItem.get('page', 1)
-
-        limits = {type: 20}
-        pages = {type: page}
-
-        params = self.getApiHeaders(cItem)
-        post_data = '{"operationName":"SEARCH_QUERY","variables":{"query":"%s","pageVideo":%d,"pageLive":%d,"pageChannel":%d,"pageCollection":%d,"limitVideo":%d,"limitLive":%d,"limitChannel":%d,"limitCollection":%d,"uri":"/search/%s/%s"},"query":"fragment METADATA_FRAGMENT on Neon { web(uri: $uri) { author description title metadatas { attributes { name content __typename } __typename } language { codeAlpha2 __typename } country { codeAlpha2 __typename } __typename } __typename } fragment LOCALIZATION_FRAGMENT on Localization { me { id country { codeAlpha2 name __typename } __typename } __typename } query SEARCH_QUERY($query: String!, $pageVideo: Int, $pageLive: Int, $pageChannel: Int, $pageCollection: Int, $limitVideo: Int, $limitLive: Int, $limitChannel: Int, $limitCollection: Int, $uri: String!) { views { id neon { id ...METADATA_FRAGMENT __typename } __typename } localization { ...LOCALIZATION_FRAGMENT __typename } search { lives(query: $query, first: $limitLive, page: $pageLive) { pageInfo { hasNextPage nextPage __typename } edges { node { id xid title thumbURLx240: thumbnailURL(size: \\"x240\\") thumbURLx360: thumbnailURL(size: \\"x360\\") __typename } __typename } __typename } videos(query: $query, first: $limitVideo, page: $pageVideo) { pageInfo { hasNextPage nextPage __typename } edges { node { id xid title channel { id displayName __typename } duration thumbURLx240: thumbnailURL(size: \\"x240\\") thumbURLx360: thumbnailURL(size: \\"x360\\") __typename } __typename } __typename } channels(query: $query, first: $limitChannel, page: $pageChannel) { pageInfo { hasNextPage nextPage __typename } edges { node { id xid name description displayName accountType logoURL(size: \\"x60\\") __typename } __typename } __typename } playlists: collections(query: $query, first: $limitCollection, page: $pageCollection) { pageInfo { hasNextPage nextPage __typename } edges { node { id xid name channel { id displayName __typename } description thumbURLx240: thumbnailURL(size: \\"x240\\") thumbURLx480: thumbnailURL(size: \\"x480\\") stats { videos { total __typename } __typename } __typename } __typename } __typename } topics(query: $query, first: 5, page: 1) { pageInfo { hasNextPage nextPage __typename } edges { node { id xid name isFollowed __typename } __typename } __typename } __typename } } "}'
-        post_data = post_data % (cItem['f_query'], pages.get('videos', 1), pages.get('lives', 1), pages.get('channels', 1), pages.get('playlists', 1), limits.get('videos', 0), limits.get('lives', 0), limits.get('channels', 0), limits.get('playlists', 0), urllib_quote(cItem['f_query']), cItem['f_type'])
-
-        sts, data = self.cm.getPage(self.authData['url'], params, post_data)
+        args = ['search={0}'.format(urllib_quote(cItem['f_query'])), 'limit={0}'.format(20), 'fields={0}'.format(urllib_quote('id,screenname,description,avatar_240_url,videos_total'))]
+        sts, data = self.cm.getPage(self.getApiUrl('users', page, args))
         if not sts:
             return
-
+        nextPage = False
         try:
-            data = json_loads(data)['data']['search'][type]
-            for item in data['edges']:
-                item = item['node']
-                if item['__typename'] == 'Collection':
-                    title = item['name'] + ' (%s)' % item['stats']['videos']['total']
-                    desc = []
-                    desc.append('%s: %s' % (item['channel']['__typename'], item['channel']['displayName']))
-                    if item.get('description'):
-                        desc.append(item['description'])
-                    params = {'good_for_fav': True, 'name': 'category', 'category': 'list_playlist', 'title': title, 'f_xid': item['xid'], 'icon': item['thumbURLx480'], 'desc': '[/br]'.join(desc)}
-                    self.addDir(params)
-                elif item['__typename'] == 'Channel':
-                    title = item['displayName']
-                    desc = [item['accountType']]
-                    if item.get('description'):
-                        desc.append(item['description'])
-                    params = {'good_for_fav': True, 'name': 'category', 'category': 'list_channel', 'title': item['displayName'], 'f_xid': item['xid'], 'f_name': item['name'], 'icon': item['logoURL'], 'desc': '[/br]'.join(desc)}
-                    self.addDir(params)
-            self.addNextPage(cItem, data['pageInfo']['hasNextPage'], data['pageInfo']['nextPage'])
+            data = json_loads(data)
+            nextPage = data.get('has_more', False)
+            for item in data.get('list') or []:
+                if not item.get('videos_total'):
+                    continue
+                params = {'good_for_fav': True, 'name': 'category', 'category': 'list_channel', 'title': '%s (%s)' % (item.get('screenname', ''), item['videos_total']),
+                          'f_xid': item['id'], 'icon': item.get('avatar_240_url', ''), 'desc': self.cleanHtmlStr(item.get('description') or '')}
+                self.addDir(params)
         except Exception:
             printExc()
-
-        printDBG(data)
+        self.addNextPage(cItem, nextPage, page)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("Dailymotion.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
@@ -275,10 +202,10 @@ class Dailymotion(CBaseHostClass):
             currItem['sort'] = 'relevance'
             self.listVideos(currItem, 'tiles')
         else:
-            currItem['category'] = 'site_seach'
-            currItem['f_type'] = searchType
+            # "channels" - also what a "playlists" search from the search history lands on now
+            currItem['category'] = 'list_channels'
             currItem['f_query'] = searchPattern
-            self.listSiteSeach(currItem)
+            self.listChannels(currItem)
 
     def getLinksForVideo(self, cItem):
         printDBG("Dailymotion.getLinksForVideo [%s]" % cItem)
@@ -321,12 +248,12 @@ class Dailymotion(CBaseHostClass):
         elif category == 'category':
             self.listVideos(self.currItem)
 
-        elif category == 'site_seach':
-            self.listSiteSeach(self.currItem)
+        elif category == 'list_channels':
+            self.listChannels(self.currItem)
         elif category == 'list_playlist':
             self.listVideos(self.currItem, 'playlist')
-        # elif category == 'list_channel':
-        #    self.listVideos(self.currItem, 'channel')
+        elif category == 'list_channel':
+            self.listVideos(self.currItem, 'channel')
 
     # SEARCH
         elif category in ["search", "search_next_page"]:
@@ -352,6 +279,5 @@ class IPTVHost(CHostBase):
         searchTypesOptions.append((_("Videos"), "videos"))
         # searchTypesOptions.append((_("Lives"),     "lives"))
         # searchTypesOptions.append((_("Topics"),    "topics"))
-        # searchTypesOptions.append((_("Channels"),  "channels"))
-        searchTypesOptions.append((_("Playlists"), "playlists"))
+        searchTypesOptions.append((_("Channels"), "channels"))
         return searchTypesOptions

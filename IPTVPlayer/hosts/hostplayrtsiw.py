@@ -96,6 +96,9 @@ class PlayRTSIW(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     def _icon(self, url):
         url = url or ''
+        if url.lower().endswith('.svg'):
+            # channel logos are SVG (not drawable on the box, and /scale/ answers 404): let the image service render a PNG
+            return 'https://il.srgssr.ch/images/?imageUrl=%s&format=png&width=480' % urllib_quote(url, safe='')
         if url and '/scale/' not in url and url.lower().rsplit('.', 1)[-1] not in ('png', 'jpg', 'jpeg', 'webp'):
             url += '/scale/width/480'
         return url

@@ -13,7 +13,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return "https://kkiste.study"
+    return "https://kkiste-io.ink"
 
 
 class KKisteAG(CBaseHostClass):
@@ -98,7 +98,8 @@ class KKisteAG(CBaseHostClass):
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, cItem.get("episode"), "</ul>")[0]
         data = re.findall('data-link="(h[^"]+)', data, re.DOTALL)
         for url in data:
-            if "meinecloud" in url or "player.php" in url:
+            # meinecloud.click player pages resolve through urlparser (parserMEINECLOUD), other player pages don't
+            if "player.php" in url or ("meinecloud" in url and "/movie/" not in url and "/serial/" not in url):
                 continue
             url = "https:" + url if url.startswith("//") else url
             urltab.append({"name": "Trailer" if "youtu" in url else self.up.getHostName(url).capitalize(), "url": strwithmeta(url, {"Referer": self.MAIN_URL}), "need_resolve": 1})
