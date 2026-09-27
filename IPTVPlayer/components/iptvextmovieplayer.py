@@ -60,6 +60,50 @@ import json
 
 ###################################################
 
+# gstplayer opens a file that is still downloading via ifd:// when it gets a
+# download timeout > 0; that URI handler comes from this GStreamer plugin
+GST_IFDSRC_PATHS = ['/usr/lib/gstreamer-1.0/libgstifdsrc.so', '/usr/lib64/gstreamer-1.0/libgstifdsrc.so']
+# GStreamer >= 1.14 finds a plugin only by gst_plugin_<file name>_get_desc
+# (gst_plugin_desc is static now); gst-ifdsrc builds declared as "plugin"
+# export gst_plugin_plugin_get_desc and get blacklisted
+GST_IFDSRC_SYMBOLS = (b'gst_plugin_ifdsrc_get_desc', b'gst_plugin_desc\x00')
+gstIfdSrcUsable = None
+
+
+def gstHasIfdSrc():
+    global gstIfdSrcUsable
+    if gstIfdSrcUsable is None:
+        gstIfdSrcUsable = False
+        for path in GST_IFDSRC_PATHS:
+            try:
+                with open(path, 'rb') as f:
+                    data = f.read()
+            except Exception:
+                continue
+            gstIfdSrcUsable = any(symbol in data for symbol in GST_IFDSRC_SYMBOLS)
+            printDBG("gstplayer: %s usable[%s]" % (path, gstIfdSrcUsable))
+            break
+    return gstIfdSrcUsable
+
+
+def GetGstPlayerPath(uri='', httpFields=None):
+    # gstplayer2 (oe-mirrors/iptvplayer-bin-components, also used by
+    # ServiceApp) has all of mx3L's fixes but a getopt command line;
+    # /usr/bin/gstplayer is the 2017 build with positional arguments
+    gst1 = '/usr/bin/gstplayer'
+    gst2 = '/usr/bin/gstplayer2'
+    choice = config.plugins.iptvplayer.gstplayer_binary.value
+    if choice == 'gstplayer' and IsExecutable(gst1):
+        return gst1
+    if not IsExecutable(gst2):
+        return gst1
+    if choice == 'auto' and httpFields and '.mpd' in uri.lower() and IsExecutable(gst1):
+        # gstplayer2 plays .mpd URIs through its own DASH pipeline,
+        # which does not send any http headers
+        printDBG("gstplayer: DASH uri with http headers, using %s" % gst1)
+        return gst1
+    return gst2
+
 
 class ExtPlayerCommandsDispatcher():
     def __init__(self, owner):
@@ -2107,7 +2151,9 @@ class IPTVExtMoviePlayer(Screen):
                     printDBG('GST_ERROR: %s, code %s\n' % (ensure_str(obj['msg']), obj['code']))
                     msgType = MessageBox.TYPE_ERROR
                     msgText += 'GST_ERROR: %s (code %s)\n' % (ensure_str(obj['msg']), obj['code'])
-                    if ensure_str(obj['msg']) == "No URI handler implemented for 'ifd'.":
+                    # 'ifd' from the replace() above for gstplayer builds that do not escape
+                    # their JSON, "ifd" from builds that do
+                    if ensure_str(obj['msg']) in ("No URI handler implemented for 'ifd'.", 'No URI handler implemented for "ifd".'):
                         msgText += _('Try to change extplayer or disable IFD in GSTplayer configuration')
                 elif "FF_ERROR" == key:
                     printDBG('FF_ERROR: %s, code %s\n' % (ensure_str(obj['msg']), obj['code']))
@@ -2385,43 +2431,71 @@ class IPTVExtMoviePlayer(Screen):
                 msg = _("Link is not supported by the gstplayer. Please use the extelayer3 if available.")
                 self.showMessage(msg, MessageBox.TYPE_ERROR)
 
-            gstplayerPath = '/usr/bin/gstplayer'
-            # 'export GST_DEBUG="*:6" &&' +
-            cmd = gstplayerPath + ' "%s"' % shellQuote(self.fileSRC)
-
             # active audio track
             audioTrackIdx = self.metaHandler.getAudioTrackIdx()
-            if config.plugins.iptvplayer.GSTplayer_no_IFD.value is False:
-                cmd += ' %d ' % audioTrackIdx
 
-            # file download timeout
+            # file download timeout, 0 keeps gstplayer away from ifd://
+            timeout = 0
             if None is not self.downloader and self.downloader.isDownloading():
-                timeout = self.gstAdditionalParams['file-download-timeout']
-            else:
-                timeout = 0
-            cmd += ' {0} '.format(timeout)
+                if config.plugins.iptvplayer.GSTplayer_no_IFD.value:
+                    printDBG("gstplayer: IFD disabled in the configuration")
+                elif not gstHasIfdSrc():
+                    printDBG("gstplayer: libgstifdsrc.so missing or not loadable, playing the buffer file without IFD")
+                else:
+                    timeout = self.gstAdditionalParams['file-download-timeout']
+            isLive = 1 if self.gstAdditionalParams['file-download-live'] else 0
 
-            # file download live
-            if self.gstAdditionalParams['file-download-live']:
-                cmd += ' {0} '.format(1)
-            else:
-                cmd += ' {0} '.format(0)
-
+            # http headers + proxy, gstplayer takes both as "key=value" fields
+            httpFields = []
             if "://" in self.fileSRC:
-                cmd += ' "%s" "%s"  "%s"  "%s" ' % (shellQuote(self.gstAdditionalParams['download-buffer-path']), shellQuote(self.gstAdditionalParams['ring-buffer-max-size']), shellQuote(self.gstAdditionalParams['buffer-duration']), shellQuote(self.gstAdditionalParams['buffer-size']))
                 tmp = strwithmeta(self.fileSRC)
                 url, httpParams = DMHelper.getDownloaderParamFromUrlWithMeta(tmp, True)
                 for key in httpParams:
-                    cmd += (' "%s=%s" ' % (key, shellQuote(httpParams[key])))
+                    httpFields.append((key, httpParams[key]))
                 if 'http_proxy' in tmp.meta:
                     tmp = tmp.meta['http_proxy']
                     if '://' in tmp:
                         if '@' in tmp:
                             tmp = re.search('([^:]+?://)([^:]+?):([^@]+?)@(.+?)$', tmp)
                             if tmp:
-                                cmd += (' "proxy=%s" "proxy-id=%s" "proxy-pw=%s" ' % (shellQuote(tmp.group(1) + tmp.group(4)), shellQuote(tmp.group(2)), shellQuote(tmp.group(3))))
+                                httpFields.extend([('proxy', tmp.group(1) + tmp.group(4)), ('proxy-id', tmp.group(2)), ('proxy-pw', tmp.group(3))])
                         else:
-                            cmd += (' "proxy=%s" ' % shellQuote(tmp))
+                            httpFields.append(('proxy', tmp))
+
+            gstplayerPath = GetGstPlayerPath(self.fileSRC, httpFields)
+            # 'export GST_DEBUG="*:6" &&' +
+            cmd = gstplayerPath + ' "%s"' % shellQuote(self.fileSRC)
+            if gstplayerPath.endswith('gstplayer2'):
+                # getopt command line; buffer options are only passed when set,
+                # gstplayer2 treats 0 as "turned off" and takes the ring buffer in KB
+                if audioTrackIdx >= 0:
+                    cmd += ' -i %d' % audioTrackIdx
+                if timeout > 0:
+                    cmd += ' -t %d -l %d' % (timeout, isLive)
+                if "://" in self.fileSRC:
+                    bufferPath = self.gstAdditionalParams['download-buffer-path']
+                    ringBufferMB = int(self.gstAdditionalParams['ring-buffer-max-size'])
+                    bufferDuration = int(self.gstAdditionalParams['buffer-duration'])
+                    bufferSize = int(self.gstAdditionalParams['buffer-size'])
+                    if bufferPath:
+                        cmd += ' -p "%s"' % shellQuote(bufferPath)
+                    if ringBufferMB > 0:
+                        cmd += ' -r %d' % (ringBufferMB * 1024)
+                    if bufferDuration > 0:
+                        cmd += ' -d %d' % bufferDuration
+                    if bufferSize > 0:
+                        cmd += ' -s %d' % bufferSize
+                    for key, value in httpFields:
+                        cmd += ' -H "%s=%s"' % (key, shellQuote(value))
+            else:
+                # positional command line of the original gstplayer
+                cmd += ' %d ' % audioTrackIdx
+                cmd += ' {0} '.format(timeout)
+                cmd += ' {0} '.format(isLive)
+                if "://" in self.fileSRC:
+                    cmd += ' "%s" "%s"  "%s"  "%s" ' % (shellQuote(self.gstAdditionalParams['download-buffer-path']), shellQuote(self.gstAdditionalParams['ring-buffer-max-size']), shellQuote(self.gstAdditionalParams['buffer-duration']), shellQuote(self.gstAdditionalParams['buffer-size']))
+                    for key, value in httpFields:
+                        cmd += (' "%s=%s" ' % (key, shellQuote(value)))
             cmd += " > /dev/null"
         else:
             exteplayer3path = "/usr/bin/exteplayer3"  # config.plugins.iptvplayer.exteplayer3path.value
