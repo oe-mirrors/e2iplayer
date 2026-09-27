@@ -75,7 +75,8 @@ class LocalMedia(CBaseHostClass):
     FILE_SYSTEMS = ['ext2', 'ext3', 'ext4', 'vfat', 'msdos', 'iso9660', 'nfs', 'jffs2', 'autofs', 'fuseblk', 'udf', 'cifs', 'ntfs']
     VIDEO_FILE_EXTENSIONS = ['avi', 'flv', 'mp4', 'ts', 'mov', 'wmv', 'mpeg', 'mpg', 'mkv', 'vob', 'divx', 'm2ts', 'evo']
     AUDIO_FILES_EXTENSIONS = ['mp3', 'm4a', 'ogg', 'wma', 'fla', 'wav', 'flac']
-    PICTURE_FILES_EXTENSIONS = ['jpg', 'jpeg', 'png']
+    # webp / avif: shown from a converted copy when the box's picture loader can't read them (IconMenager)
+    PICTURE_FILES_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'avif']
     M3U_FILES_EXTENSIONS = ['m3u']
     ISO_FILES_EXTENSIONS = ['iso']
 

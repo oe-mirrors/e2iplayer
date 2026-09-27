@@ -8,22 +8,6 @@
 from hashlib import md5
 import os
 
-try:
-    from enigma import getE2Flags
-    webPEnabled = getE2Flags() & 2
-except ImportError:
-    webPEnabled = False
-
-if not webPEnabled:
-    try:
-        from PIL import Image
-        hasPIL = True
-    except ImportError:
-        hasPIL = False
-else:
-    hasPIL = False
-
-
 from enigma import eTimer
 from Components.ActionMap import ActionMap
 from Components.ScrollLabel import ScrollLabel
@@ -41,6 +25,7 @@ from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdownloadercreator import Downloade
 from Plugins.Extensions.IPTVPlayer.components.cover import Cover3, Cover2, Cover
 from Plugins.Extensions.IPTVPlayer.components import skinchrome
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_binary
+from Plugins.Extensions.IPTVPlayer.libs.pCommon import DescribeImageFile
 
 
 class IPTVArticleView(Screen):
@@ -147,6 +132,8 @@ class IPTVArticleView(Screen):
         self.hostLogoPath = addParams.get('logo_path')
         self.downloadDir = addParams.get('download_dir')
         self.coverPath = None
+        # the red-X placeholder is on (or on its way) - a failing placeholder must not loop
+        self.coverError = False
 
         self["actions"] = ActionMap(['OkCancelActions', 'DirectionActions'],
         {
@@ -216,7 +203,9 @@ class IPTVArticleView(Screen):
             filename = md5(ensure_binary(self.cover['src'])).hexdigest() + '.jpg'
             self.coverPath = os.path.join(self.downloadDir, filename)
             if os.path.exists(self.coverPath):
-                if self["cover"].decodeCover(self.coverPath, self.decodePictureEnd, ' '):
+                # -1 = the loader could not start on the cached file (-1 is true in Python, so the old
+                # `if decodeCover(...)` never fell through to a new download)
+                if -1 != self["cover"].decodePreparedCover(self.coverPath, self.decodePictureEnd, ' '):
                     return
             self.coverPath = None
 
@@ -244,31 +233,54 @@ class IPTVArticleView(Screen):
     def downloaderEnd(self, status):
         if None is not self.cover['downloader']:
             if DMHelper.STS.DOWNLOADED == status:
-                if ".webp" in self.cover['src']:
-                    if hasPIL:
-                        file_path = self._getDownloadFilePath()
-                        try:
-                            img = Image.open(file_path)
-                            img.save(file_path, format="jpeg", quality=80)
-                            img.close()
-                        except Exception:
-                            printExc()
-                    elif not webPEnabled:
-                        return
-
-                if self["cover"].decodeCover(self._getDownloadFilePath(), self.decodePictureEnd, ' '):
+                filePath = self._getDownloadFilePath()
+                # gzip / WebP / AVIF by content, not only a ".webp" url - see Cover.decodePreparedCover
+                if -1 != self["cover"].decodePreparedCover(filePath, self.decodePictureEnd, ' '):
                     return
+                self.showCoverError("decoding can not be started, %s" % DescribeImageFile(filePath))
             else:
-                self.session.open(MessageBox, (_("Downloading file [%s] problem.") % self.cover['src']) + (" sts[%r]" % status), type=MessageBox.TYPE_ERROR, timeout=10)
+                self.showCoverError("download problem sts[%r]%s" % (status, self._downloaderError()))
         self.hideSpinner()
 
     def decodePictureEnd(self, ret={}):
         if None is ret.get('Pixmap', None):
-            self.session.open(MessageBox, _("Downloading file [%s] problem.") % self._getDownloadFilePath(), type=MessageBox.TYPE_ERROR, timeout=10)
+            fileName = ret.get('FileName', self._getDownloadFilePath())
+            if self.coverError:
+                self.showCoverError("placeholder can not be shown: %s" % fileName)
+                self.hideSpinner()
+                return
+            # before the removal below: the log says what the file really is (html page, AVIF, empty ...)
+            info = DescribeImageFile(fileName)
+            if self.coverPath and fileName == self.coverPath:
+                # a broken file in the cover cache would stay broken - the next INFO fetches it again
+                try:
+                    os.remove(fileName)
+                except Exception:
+                    printExc()
+            self.showCoverError("can not be shown, %s" % info)
         else:
             self["cover"].updatePixmap(ret.get('Pixmap', None), ret.get('FileName', self._getDownloadFilePath()))
             self["cover"].show()
         self.hideSpinner()
+
+    def _downloaderError(self):
+        # the tool's own error (e.g. wget "code[4] Network failure.") for the log line of the red X
+        try:
+            code, desc = self.cover['downloader'].getLastError()
+            if code is not None:
+                return " %s code[%r] %s" % (self.cover['downloader'].getName(), code, desc)
+        except Exception:
+            printExc()
+        return ''
+
+    def showCoverError(self, reason):
+        # the item has a cover but it failed (dead link, broken file, a format this box can't show):
+        # a red X in the cover area instead of an error box. No cover at all stays empty (loadCover).
+        printDBG("IPTVArticleView cover %s - url[%s]" % (reason, self.cover['src']))
+        if self.coverError:
+            return
+        self.coverError = True
+        self["cover"].decodeErrorCover(self.decodePictureEnd, ' ')
 
     def onEnd(self):
         if self.cover['downloader']:
