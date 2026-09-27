@@ -74,7 +74,7 @@ class ArteTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
         printDBG("ArteTV.__init__")
         CBaseHostClass.__init__(self, {'history': 'arte.tv', 'cookie': 'arte.tv.cookie'})
         self.MAIN_URL = 'https://www.arte.tv/'
-        self.DEFAULT_ICON_URL = 'https://www.arte.tv/static/livewebapp/images/apple-touch-icon.png'
+        self.DEFAULT_ICON_URL = 'https://static-cdn.arte.tv/replay/favicons/favicon-194x194.png'
         self.USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36'
         self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'application/json'}
 

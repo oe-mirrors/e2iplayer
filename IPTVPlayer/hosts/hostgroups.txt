@@ -43,7 +43,8 @@
   "moflixstream",
   "appletrailers",
   "cineb",
-  "sevenreels"
+  "sevenreels",
+  "moviebox"
  ],
  "cartoonsandanime": [
   "aniworld",
@@ -124,6 +125,7 @@
   "playrtsiw",
   "appletrailers",
   "sevenreels",
+  "moviebox",
   "orthobulletscom",
   "vumedicom"
  ],

@@ -93,6 +93,9 @@ class KinoKing(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 continue
             title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(attrs, r'data-title="([^"]*)"')[0])
             icon = self.cm.ph.getSearchGroups(attrs, r'data-img="([^"]*)"')[0]
+            if re.search(r'/t/p/[^/]+/?$', icon):
+                # a title without a poster carries the bare TMDb size path (.../t/p/w500) - that is no picture
+                icon = ""
             quality = self.cm.ph.getSearchGroups(attrs, r'data-quality="([^"]*)"')[0]
             cnt += 1
             params = dict(cItem)

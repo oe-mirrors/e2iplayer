@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 # Modified: 09.06.2026 - passata
+# 27.09.2026 - paging past page 2, seasons in order, movies/episodes are playable rows (no extra folder),
+# the player url goes straight to urlparser (parserVIXSRC), no "open in browser" dead end; Python 2 safe.
+# Default icon = the bundled PNG logo instead of the site's favicon.ico (red X on the box). Domain alta-definizione.beer.
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIconDir
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 
 ###################################################
@@ -29,13 +32,14 @@ def GetConfigList():
 
 
 def gettytul():
-    return "https://altadefinizione.ovh/"
+    return "https://alta-definizione.beer/"
 
 
 class Altadefinizione(CBaseHostClass):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {"history": "altadefinizione.ovh", "cookie": "altadefinizione.ovh.cookie"})
+        # named after the host, not the domain: search history and cookies survive the next domain move
+        CBaseHostClass.__init__(self, {"history": "altadefinizione01", "cookie": "altadefinizione01.cookie"})
 
         self.USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
         self.HEADER = {"User-Agent": self.USER_AGENT, "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"}
@@ -43,7 +47,8 @@ class Altadefinizione(CBaseHostClass):
         self.AJAX_HEADER.update({"X-Requested-With": "XMLHttpRequest"})
 
         self.MAIN_URL = gettytul()
-        self.DEFAULT_ICON_URL = self.MAIN_URL + "static/favicon.ico"
+        # the site only has a 16x16 favicon.ico, which the box can't draw (red X on the categories) - use our own logo
+        self.DEFAULT_ICON_URL = "file://" + GetIconDir("PlayerSelector/altadefinizione01135.png")
 
         self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
 
@@ -104,7 +109,8 @@ class Altadefinizione(CBaseHostClass):
                 desc = " | ".join(desc_parts) if desc_parts else title
 
                 params = dict(cItem)
-                params.update({"good_for_fav": True, "category": "explore_item", "title": self.cleanHtmlStr(title), "url": self.getFullUrl(url), "icon": self.getFullIconUrl(img_src), "desc": desc, "is_tv": is_tv})
+                params.pop("page", None)
+                params.update({"good_for_fav": True, "category": "explore_item" if is_tv else "video", "title": self.cleanHtmlStr(title), "url": self.getFullUrl(url), "icon": self.getFullIconUrl(img_src), "desc": desc, "is_tv": is_tv})
                 items.append(params)
 
         return items
@@ -115,13 +121,10 @@ class Altadefinizione(CBaseHostClass):
 
         url = cItem["url"]
         if page > 1:
-            if "?" in url:
-                if "page=" in url:
-                    url = re.sub(r"page=\d+", f"page={page}", url)
-                else:
-                    url += f"&page={page}"
+            if "page=" in url:
+                url = re.sub(r"page=\d+", "page=%d" % page, url)
             else:
-                url += f"?page={page}"
+                url += ("&" if "?" in url else "?") + "page=%d" % page
 
         sts, data = self.getPage(url)
         if not sts or not data:
@@ -130,22 +133,21 @@ class Altadefinizione(CBaseHostClass):
 
         self.setMainUrl(self.cm.meta["url"])
 
-        items = self.extractMoviesFromHTML(data, cItem)
+        for item in self.extractMoviesFromHTML(data, cItem)[:50]:
+            if item["is_tv"]:
+                self.addDir(item)
+            else:
+                self.addVideo(item)
 
-        for item in items[:50]:
-            self.addDir(item)
-
-        # Check for next page
-        next_match = re.search(r'<a href="([^"]*page=(\d+)[^"]*)"[^>]*class="page-link"[^>]*>(\d+|\»|Next)</a>', data, re.IGNORECASE)
-        if next_match:
-            next_page_num = int(next_match.group(2))
-            if 1 < next_page_num <= 20:
-                params = dict(cItem)
-                params.update({"title": "Pagina %d" % next_page_num, "page": next_page_num, "url": cItem["url"]})
-                self.addDir(params)
+        # next page: the pagination bar links every page ("<", 1, 3, 4 ...) - look for page + 1, not the first link
+        pages = [int(n) for n in re.findall(r'<a href="[^"]*[?&]page=(\d+)[^"]*"[^>]*class="page-link"', data)]
+        if page + 1 in pages:
+            params = dict(cItem)
+            params.update({"title": _("Next page"), "page": page + 1, "url": cItem["url"]})
+            self.addDir(params)
 
     def exploreItem(self, cItem):
-        """Handle TV series or movie"""
+        """series -> seasons; a movie (e.g. an old favourite of the former movie folder) -> its playable row"""
         printDBG("Altadefinizione.exploreItem - %s" % cItem["title"])
 
         cItem["prev_url"] = cItem["url"]
@@ -153,7 +155,9 @@ class Altadefinizione(CBaseHostClass):
         if cItem.get("is_tv", False) or "/tv-" in cItem.get("url", ""):
             self.getSeriesInfo(cItem)
         else:
-            self.getVideoPlayer(cItem)
+            params = dict(cItem)
+            params["category"] = "video"
+            self.addVideo(params)
 
     def getSeriesInfo(self, cItem):
         """Get series info - seasons and episodes from the page"""
@@ -164,168 +168,62 @@ class Altadefinizione(CBaseHostClass):
             printDBG("Failed to get series page")
             return
 
-        # Extract TMDB ID
-        tmdb_id = None
-        tmdb_id_match = re.search(r"var tmdbID\s*=\s*(\d+);", data)
-        if tmdb_id_match:
-            tmdb_id = tmdb_id_match.group(1)
-        else:
-            tmdb_id_match = re.search(r"/tv-(\d+)-", cItem["url"])
-            if tmdb_id_match:
-                tmdb_id = tmdb_id_match.group(1)
+        tmdb_id = self._tmdbId(data, cItem["url"])
 
-        # Extract seasons from dropdown
+        # seasons from the dropdown, in their real order (1, 2, 3 ... not set() order)
         season_items = re.findall(r'<span[^>]*data-season="(\d+)"[^>]*>Stagione\s*\d+</span>', data, re.IGNORECASE)
+        seasons = sorted(set(season_items), key=int)
 
-        if season_items:
-            for season_num in set(season_items):
-                # Extract episodes for this season
-                episodes = []
-                episode_group = re.search(r'<div class="episode-group" data-group-season="%s">(.*?)</div>' % season_num, data, re.DOTALL)
-                if episode_group:
-                    eps = re.findall(r'data-episode="%s-(\d+)"' % season_num, episode_group.group(1))
-                    episodes = [int(e) for e in eps]
-                else:
-                    eps = re.findall(r'data-episode="%s-(\d+)"' % season_num, data)
-                    episodes = [int(e) for e in eps]
-
-                if episodes:
-                    params = dict(cItem)
-                    params.update({"title": "Stagione %s" % season_num, "season": season_num, "tmdb_id": tmdb_id, "episodes": sorted(episodes), "category": "list_episodes", "icon": cItem.get("icon", self.DEFAULT_ICON_URL)})
-                    self.addDir(params)
-        else:
-            # No seasons, try to get player directly
-            self.getVideoPlayer(cItem)
-
-    def listEpisodes(self, cItem):
-        """List episodes for a specific season"""
-        printDBG("Altadefinizione.listEpisodes - Season: %s" % cItem.get("season"))
-
-        episodes = cItem.get("episodes", [])
-        season_num = cItem.get("season", 1)
-        tmdb_id = cItem.get("tmdb_id")
-
-        if episodes:
-            for ep_num in sorted(episodes):
+        for season_num in seasons:
+            episode_group = re.search(r'<div class="episode-group" data-group-season="%s">(.*?)</div>' % season_num, data, re.DOTALL)
+            eps = re.findall(r'data-episode="%s-(\d+)"' % season_num, episode_group.group(1) if episode_group else data)
+            episodes = sorted(set(int(e) for e in eps))
+            if episodes:
                 params = dict(cItem)
-                params.update({"title": "Episodio %d" % ep_num, "season": season_num, "episode": ep_num, "tmdb_id": tmdb_id, "category": "play_video", "icon": cItem.get("icon", self.DEFAULT_ICON_URL), "desc": "%s - Episodio %d" % (cItem.get("title", ""), ep_num)})
+                params.update({"title": "Stagione %s" % season_num, "season": season_num, "tmdb_id": tmdb_id, "episodes": episodes, "category": "list_episodes", "icon": cItem.get("icon", self.DEFAULT_ICON_URL)})
                 self.addDir(params)
 
-    def getVideoPlayer(self, cItem):
-        """Get video player URL and extract actual stream"""
-        printDBG("Altadefinizione.getVideoPlayer - %s" % cItem.get("url"))
+        if not seasons:
+            # no season list on the page: play it like a movie
+            params = dict(cItem)
+            params.update({"category": "video", "tmdb_id": tmdb_id})
+            self.addVideo(params)
+
+    def listEpisodes(self, cItem):
+        """episodes of a season, directly playable"""
+        printDBG("Altadefinizione.listEpisodes - Season: %s" % cItem.get("season"))
+
+        season_num = cItem.get("season", 1)
+        for ep_num in sorted(cItem.get("episodes", [])):
+            params = dict(cItem)
+            params.pop("episodes", None)
+            params.update({"good_for_fav": True, "title": "Episodio %d" % ep_num, "season": season_num, "episode": ep_num, "category": "video", "icon": cItem.get("icon", self.DEFAULT_ICON_URL), "desc": "%s - Stagione %s - Episodio %d" % (cItem.get("title", ""), season_num, ep_num)})
+            self.addVideo(params)
+
+    def _tmdbId(self, data, url=""):
+        match = re.search(r"var tmdbID\s*=\s*(\d+)\s*;", data)
+        if match:
+            return match.group(1)
+        match = re.search(r"/tv-(\d+)-", url)
+        return match.group(1) if match else None
+
+    def getPlayerUrl(self, cItem):
+        """vixsrc.to embed url of a movie / episode, or '' (the page's tmdbID + mediaType, like its own player script)"""
+        tmdb_id = cItem.get("tmdb_id")
+        season = cItem.get("season")
+        episode = cItem.get("episode")
+        if tmdb_id and season and episode:
+            return "https://vixsrc.to/tv/%s/%s/%s?lang=it" % (tmdb_id, season, episode)
 
         sts, data = self.getPage(cItem["url"])
         if not sts or not data:
-            printDBG("Failed to get page")
-            return
-
-        player_base = "https://vixsrc.to"
-
-        # Try to get TMDB ID from page
-        tmdb_id = cItem.get("tmdb_id")
-        if not tmdb_id:
-            tmdb_match = re.search(r"var tmdbID\s*=\s*(\d+);", data)
-            if tmdb_match:
-                tmdb_id = tmdb_match.group(1)
-
-        season = cItem.get("season")
-        episode = cItem.get("episode")
-
-        embed_url = None
-
-        if tmdb_id and season and episode:
-            embed_url = "%s/tv/%s/%s/%s?lang=it" % (player_base, tmdb_id, season, episode)
-        elif tmdb_id:
-            media_type = "movie"
+            return ""
+        tmdb_id = self._tmdbId(data)
+        if tmdb_id:
             media_match = re.search(r'var mediaType\s*=\s*"([^"]+)"', data)
-            if media_match:
-                media_type = media_match.group(1)
-            embed_url = "%s/%s/%s?lang=it" % (player_base, media_type, tmdb_id)
-        else:
-            iframe_match = re.search(r'<iframe[^>]+src="([^"]+vixsrc[^"]+)"', data, re.IGNORECASE)
-            if iframe_match:
-                embed_url = iframe_match.group(1)
-
-        if embed_url:
-            printDBG("Found VixSrc embed URL: %s" % embed_url)
-            stream_url = self.extractVixSrcStream(embed_url, cItem["url"])
-            if stream_url:
-                urlTab = [{"name": "VixSrc Stream", "url": strwithmeta(stream_url, {"Referer": embed_url}), "need_resolve": 0}]
-                params = dict(cItem)
-                params.update({"good_for_fav": False, "urls_tab": urlTab})
-                self.addVideo(params)
-            else:
-                if self.up.checkHostSupport(embed_url):
-                    urlTab = [{"name": "VixSrc Player", "url": strwithmeta(embed_url, {"Referer": cItem["url"]}), "need_resolve": 1}]
-                    params = dict(cItem)
-                    params.update({"good_for_fav": False, "urls_tab": urlTab})
-                    self.addVideo(params)
-                else:
-                    params = dict(cItem)
-                    params.update({"title": "Apri nel browser", "url": embed_url, "category": "external", "type": "url"})
-                    self.addDir(params)
-        else:
-            params = dict(cItem)
-            params.update({"title": "Apri nel browser", "url": cItem["url"], "category": "external", "type": "url"})
-            self.addDir(params)
-
-    def extractVixSrcStream(self, embed_url, referer):
-        """Extract m3u8 stream URL from VixSrc embed page"""
-        printDBG("Extracting stream from: %s" % embed_url)
-
-        try:
-            headers = dict(self.HEADER)
-            headers["Referer"] = referer
-            headers["Origin"] = "https://vixsrc.to"
-
-            params = dict(self.defaultParams)
-            params["header"] = headers
-
-            sts, data = self.getPage(embed_url, params)
-            if not sts or not data:
-                printDBG("Failed to get embed page")
-                return None
-
-            patterns = [
-                r'(https?://[^\s"\']+\.m3u8[^\s"\']*)',
-                r'file\s*:\s*["\']([^"\']+\.m3u8[^"\']*)',
-                r'src\s*:\s*["\']([^"\']+\.m3u8[^"\']*)',
-                r'url\s*:\s*["\']([^"\']+\.m3u8[^"\']*)',
-                r'"file"\s*:\s*"([^"]+\.m3u8[^"]*)"',
-                r'"url"\s*:\s*"([^"]+\.m3u8[^"]*)"',
-                r"(https?://[^\s]+vix-content\.net[^\s]+\.m3u8[^\s]*)",
-                r"(https?://[^\s]+\.vix-content\.net[^\s]+)",
-            ]
-
-            for pattern in patterns:
-                matches = re.findall(pattern, data, re.IGNORECASE)
-                if matches:
-                    stream_url = matches[0].strip()
-                    if stream_url.startswith("//"):
-                        stream_url = "https:" + stream_url
-                    printDBG("Found stream URL: %s" % stream_url)
-                    return stream_url
-
-            video_sources = re.findall(r'<source[^>]+src="([^"]+)"', data, re.IGNORECASE)
-            for src in video_sources:
-                if ".m3u8" in src or ".mp4" in src:
-                    printDBG("Found video source: %s" % src)
-                    return src
-
-            js_blocks = re.findall(r"<script[^>]*>([^<]+)</script>", data, re.DOTALL)
-            for js in js_blocks:
-                if "m3u8" in js.lower():
-                    url_match = re.search(r'(https?://[^\s"\']+\.m3u8[^\s"\']*)', js, re.IGNORECASE)
-                    if url_match:
-                        return url_match.group(1)
-
-            printDBG("No stream URL found in embed page")
-            return None
-
-        except Exception as e:
-            printDBG("Error extracting VixSrc stream: %s" % str(e))
-            return None
+            return "https://vixsrc.to/%s/%s?lang=it" % (media_match.group(1) if media_match else "movie", tmdb_id)
+        iframe_match = re.search(r'<iframe[^>]+src="([^"]+vixsrc[^"]+)"', data, re.IGNORECASE)
+        return iframe_match.group(1) if iframe_match else ""
 
     def getArticleContent(self, cItem):
         """Extract movie/TV info for the info panel"""
@@ -386,9 +284,13 @@ class Altadefinizione(CBaseHostClass):
         return retTab
 
     def getLinksForVideo(self, cItem):
-        if cItem.get("url") and 1 == self.up.checkHostSupport(cItem["url"]):
-            return self.up.getVideoLinkExt(cItem["url"])
-        return cItem.get("urls_tab", [])
+        printDBG("Altadefinizione.getLinksForVideo [%s]" % cItem.get("url"))
+        embed_url = self.getPlayerUrl(cItem)
+        if not embed_url:
+            SetIPTVPlayerLastHostError(_("No player found for this title."))
+            return []
+        # resolved by urlparser (parserVIXSRC: token playlist, audio/video variants)
+        return [{"name": "VixSrc", "url": strwithmeta(embed_url, {"Referer": cItem["url"]}), "need_resolve": 1}]
 
     def getVideoLinks(self, videoUrl):
         return self.up.getVideoLinkExt(videoUrl)
@@ -427,10 +329,11 @@ class Altadefinizione(CBaseHostClass):
                 self.exploreItem(self.currItem)
             elif category == "list_episodes":
                 self.listEpisodes(self.currItem)
-            elif category == "play_video":
-                self.getVideoPlayer(self.currItem)
-            elif category == "external":
-                self.addDir(self.currItem)
+            elif category in ("play_video", "video"):
+                # rows from before 27.09.2026 (episode folders, favourites) - now the playable row itself
+                params = dict(self.currItem)
+                params["category"] = "video"
+                self.addVideo(params)
             elif category in ["search", "search_next_page"]:
                 cItem = dict(self.currItem)
                 cItem.update({"search_item": False, "name": "category"})
@@ -452,4 +355,4 @@ class IPTVHost(CHostBase):
         CHostBase.__init__(self, Altadefinizione(), True, favouriteTypes=[])
 
     def withArticleContent(self, cItem):
-        return cItem.get("category", "") in ["explore_item", "list_episodes", "play_video"]
+        return cItem.get("category", "") in ["explore_item", "list_episodes", "play_video", "video"]
