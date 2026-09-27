@@ -15,6 +15,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, Ge
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdownloadercreator import DownloaderCreator
+from Plugins.Extensions.IPTVPlayer.libs.pCommon import DescribeImageFile
 ###################################################
 
 ###################################################
@@ -233,8 +234,8 @@ class IPTVPicturePlayerWidget(Screen):
         else:
             self.mainTimer_conn = eConnectCallback(self.mainTimer.timeout, self.updateDisplay)
             self.mainTimerInterval = 100  # by default 0,1s
-        # download
-        self.downloader = DownloaderCreator(self.url)
+        # download - a local picture (file://) is read where it is; a downloader for it only logged a traceback
+        self.downloader = None if self.url.startswith('file://') else DownloaderCreator(self.url)
 
         self.onClose.append(self.__onClose)
         self.onShow.append(self.doStart)
@@ -288,9 +289,14 @@ class IPTVPicturePlayerWidget(Screen):
         self._cleanedUp()
 
         if self.url.startswith('file://'):
-            self.filePath = self.url[7:]
             self["status"].setText(_("++"))
-            if -1 == self["picture"].decodeCover(self.filePath, self.decodePictureEnd, ' '):
+            # WebP / AVIF / gzip are converted in a copy (the buffering file, removed on close), the user's own
+            # picture stays as it is; anything else is decoded straight from it
+            if self.filePath:
+                ret = self["picture"].decodePreparedCover(self._getDownloadFilePath(), self.decodePictureEnd, ' ', self.url[7:])
+            else:
+                ret = self["picture"].decodeCover(self.url[7:], self.decodePictureEnd, ' ')
+            if -1 == ret:
                 self.decodePictureEnd()
         else:
             if self.downloader:
@@ -368,7 +374,9 @@ class IPTVPicturePlayerWidget(Screen):
             self.onEnd(False)
             if DMHelper.STS.DOWNLOADED == status:
                 self["status"].setText(_("++"))
-                if -1 == self["picture"].decodeCover(self._getDownloadFilePath(), self.decodePictureEnd, ' '):
+                # a downloaded picture: gzip / WebP / AVIF are made showable first (local file:// pictures are not
+                # touched, that conversion works in place)
+                if -1 == self["picture"].decodePreparedCover(self._getDownloadFilePath(), self.decodePictureEnd, ' '):
                     self.decodePictureEnd()
             else:
                 if 0 == self.refreshCount:
@@ -379,7 +387,9 @@ class IPTVPicturePlayerWidget(Screen):
         printDBG('IPTVPicturePlayerWidget.decodePictureEnd')
         if None is ret.get('Pixmap', None):
             if 0 == self.refreshCount:
-                self.session.openWithCallback(self.close, MessageBox, _("Decode file [%s] problem.") % self.filePath, type=MessageBox.TYPE_ERROR, timeout=10)
+                shownPath = self.url[7:] if self.url.startswith('file://') else self.filePath
+                printDBG("IPTVPicturePlayerWidget picture can not be shown, %s" % DescribeImageFile(ret.get('FileName', shownPath)))
+                self.session.openWithCallback(self.close, MessageBox, _("Decode file [%s] problem.") % shownPath, type=MessageBox.TYPE_ERROR, timeout=10)
         else:
             self.refreshCount += 1
             self["status"].hide()

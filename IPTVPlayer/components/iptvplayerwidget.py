@@ -38,7 +38,7 @@ from Plugins.Extensions.IPTVPlayer.components.configgroups import ConfigGroupsMe
 from Plugins.Extensions.IPTVPlayer.components.iptvfavouriteswidgets import IPTVFavouritesAddItemWidget, IPTVFavouritesMainWidget
 
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdownloadercreator import IsUrlDownloadable
-from Plugins.Extensions.IPTVPlayer.libs.pCommon import CParsingHelper
+from Plugins.Extensions.IPTVPlayer.libs.pCommon import CParsingHelper, DescribeImageFile
 from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
 from Plugins.Extensions.IPTVPlayer.tools.iptvfavourites import IPTVFavourites, getFavouritesIdentityKeys
 from Plugins.Extensions.IPTVPlayer.tools import iptvdownloaded
@@ -569,6 +569,9 @@ class E2iPlayerWidget(Screen):
         self.decodeCoverTimer = eTimer()
         self.decodeCoverTimer_conn = eConnectCallback(self.decodeCoverTimer.timeout, self.doStartCoverDecode)
         self.decodeCoverTimer_interval = 100
+        # a local (file://) picture the loader could not show: its red X is not in the IconMenager's failed list,
+        # so updateCover() needs to know which item asked for it
+        self.localCoverErrorIcon = None
 
         # delayed footer-keys timer - same debounce idea as decodeCoverTimer
         # above: onSelectionChanged()
@@ -1572,14 +1575,18 @@ class E2iPlayerWidget(Screen):
         if selItem and '' != selItem.iconimage:
             self.iconMenager.addToDQueue([selItem.iconimage])
             # check if we have this icon and get the path to this icon on disk
-            iconPath = self.iconMenager.getIconPathFromAAueue(selItem.iconimage)
-            printDBG('displayIcon -> getIconPathFromAAueue: %s' % selItem.iconimage)
+            iconPath = self.getCoverPath(selItem)
+            printDBG('displayIcon -> getCoverPath: %s' % selItem.iconimage)
             if '' != iconPath and not self["cover"].checkDecodeNeeded(iconPath):
                 self["cover"].show()
                 return
             else:
                 if doDecodeCover:
-                    self["cover"].decodeCover(iconPath, self.updateCover, "cover")
+                    if -1 == self["cover"].decodeCover(iconPath, self.updateCover, "cover") \
+                            and iconPath != Cover.getErrorCoverPath() and os_path.isfile(iconPath):
+                        # the picture loader does not even start on it (AVIF, TIFF, JPEG2000, html, empty ...)
+                        self.showCoverFailed(selItem.iconimage, iconPath)
+                        return
                 else:
                     self.decodeCoverTimer.start(self.decodeCoverTimer_interval, True)
         self["cover"].hide()
@@ -1599,9 +1606,10 @@ class E2iPlayerWidget(Screen):
                 selItem = self.getSelItem()
                 if selItem and '' != selItem.iconimage:
                     # check if we have this icon and get the path to this icon on disk
-                    iconPath = self.iconMenager.getIconPathFromAAueue(selItem.iconimage)
+                    iconPath = self.getCoverPath(selItem)
 
-                    if iconPath == retDict["FileName"]:
+                    if iconPath == retDict["FileName"] or (retDict["FileName"] == Cover.getErrorCoverPath()
+                                                           and selItem.iconimage == self.localCoverErrorIcon):
                         # now we are sure that we have right icon
                         updateIcon = True
                         self.decodeCoverTimer_interval = 100
@@ -1613,11 +1621,37 @@ class E2iPlayerWidget(Screen):
                 if None is not retDict["Pixmap"]:
                     self[retDict["Ident"]].updatePixmap(retDict["Pixmap"], retDict["FileName"])
                     self[retDict["Ident"]].show()
+                elif 'cover' == retDict["Ident"] and retDict["FileName"] != Cover.getErrorCoverPath():
+                    # decoded, but the picture loader could not make a picture of it
+                    self.showCoverFailed(self.getSelItem().iconimage, retDict["FileName"])
                 else:
                     self[retDict["Ident"]].hide()
         else:
             printDBG("updateCover retDict empty")
     # end updateCover(self, retDict):
+
+    def showCoverFailed(self, iconUrl, fileName):
+        # the picture loader can't show the file: red X, and the log says what the file is
+        info = "can not be shown, %s" % DescribeImageFile(fileName)
+        if iconUrl.startswith('file://'):
+            # a local picture is not downloaded (nothing to retry, nothing to remove from the cache)
+            printDBG("updateCover local picture %s" % info)
+            self.localCoverErrorIcon = iconUrl
+        else:
+            self.iconMenager.markIconFailed(iconUrl, info, removeFile=True)
+        ret = self["cover"].decodeErrorCover(self.updateCover, "cover")
+        if -1 == ret:
+            self["cover"].hide()
+        elif ret is False:
+            # the X is decoded already (the item before failed too) - there is no callback, just show it
+            self["cover"].show()
+
+    def getCoverPath(self, selItem):
+        # the item's picture on disk; a picture that exists at the source but failed (download error, not a
+        # picture, can't be decoded - IconMenager logs why) shows a red X. No picture at all stays empty.
+        if self.iconMenager.isIconFailed(selItem.iconimage):
+            return Cover.getErrorCoverPath()
+        return self.iconMenager.getIconPathFromAAueue(selItem.iconimage)
 
     def changeBottomPanel(self):
         self.displayIcon()
