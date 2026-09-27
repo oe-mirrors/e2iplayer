@@ -36,7 +36,8 @@ class Movie2kcx(CBaseHostClass):
     def listItems(self, cItem):
         printDBG("Movie2kcx.listItems |%s|" % cItem)
         page = cItem.get("page", 1)
-        sts, htm = self.getPage("%s?page=%s" % (cItem["url"], str(page)))
+        url = cItem["url"]
+        sts, htm = self.getPage("%s%spage=%s" % (url, "&" if "?" in url else "?", str(page)))
         if not sts:
             return
         data = self.cm.ph.getAllItemsBeetwenMarkers(htm, 'id="maincontent', '<div id="maincontent2">')

@@ -83,6 +83,9 @@ class AniWorld(CBaseHostClass):
         for item in data:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+)')[0])
             name = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, "<span>([^<]+)")[0])
+            if not name:
+                # no English title yet (e.g. an announced episode): the German one / "[Start: ...]" note
+                name = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, "<strong>([^<]+)")[0])
             ep = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '">([^<]+)</a>')[0])
             title = "{} - {}{}".format(cItem["title"], name, " - " + ep if ep else "")
             params = dict(cItem)

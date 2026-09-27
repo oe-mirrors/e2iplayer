@@ -397,6 +397,7 @@ class urlparser:
             "mdy48tn97.com": self.pp.parserJWPLAYER,
             "mdzsmutpcvykb.net": self.pp.parserJWPLAYER,
             "mediafire.com": self.pp.parserMEDIAFIRECOM,
+            "meinecloud.click": self.pp.parserMEINECLOUD,
             "mediasetplay.mediaset.it": self.pp.parserMEDIASET,
             "minochinos.com": self.pp.parserJWPLAYER,
             "mivalyo.com": self.pp.parserJWPLAYER,
@@ -2942,6 +2943,29 @@ class pageParser(CaptchaHelper):
         innerUrl = inner.group(1)
         innerUrl = "https:" + innerUrl if innerUrl.startswith("//") else innerUrl
         return self.parserVIDSRC(innerUrl)
+
+    def parserMEINECLOUD(self, baseUrl):  # add 270926
+        # meinecloud.click ("DeVideoSRC") player page -> its hoster embeds (libs/meinecloud.py) -> each resolved
+        printDBG("parserMEINECLOUD baseUrl[%s]" % baseUrl)
+        from Plugins.Extensions.IPTVPlayer.libs.meinecloud import MeineCloud
+        referer = strwithmeta(baseUrl).meta.get("Referer", "https://meinecloud.click/")
+        mc = MeineCloud(self.cm, {"header": self.cm.getDefaultHeader(browser="chrome")}, referer)
+        imdb = MeineCloud.imdbFromUrl(baseUrl)
+        episode = re.search(r"/(?:serial|tv)/tt\d+/(\d+)/(\d+)", baseUrl)
+        if episode:
+            embeds = mc.episodeLinks(imdb, episode.group(1), episode.group(2))
+        else:
+            embeds = mc.movieLinks(imdb)
+        up = urlparser()
+        urltab = []
+        for embed in embeds:
+            if up.checkHostSupport(embed) != 1:
+                continue
+            hoster = up.getHostName(embed, True)
+            for item in up.getVideoLinkExt(strwithmeta(embed, {"Referer": "https://meinecloud.click/"})):
+                item["name"] = "%s %s" % (hoster, item.get("name", ""))
+                urltab.append(item)
+        return urltab
 
     def parserGUPLOAD(self, baseUrl):
         printDBG("parserGUPLOAD baseUrl[%s]" % baseUrl)

@@ -14,6 +14,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
+from Plugins.Extensions.IPTVPlayer.libs.meinecloud import MeineCloud
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
 
@@ -230,14 +231,8 @@ class KinoKing(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
             for frame in embeds:
                 if "meinecloud.click" in frame and "/movie/" in frame:
-                    mts, mdata = self.cm.getPage(frame, {"header": self.HEADER})
-                    if mts and mdata:
-                        subs = []
-                        for sub in re.findall(r'data-link="([^"]+)"', mdata):
-                            if "meinecloud" in sub or "/vod/" in sub:
-                                continue
-                            subs.append(sub)
-                        self._appendHosterLinks(urltab, subs, "https://meinecloud.click/")
+                    subs = MeineCloud(self.cm, {"header": self.HEADER}, self.MAIN_URL).movieLinks(MeineCloud.imdbFromUrl(frame))
+                    self._appendHosterLinks(urltab, [sub for sub in subs if "/vod/" not in sub], "https://meinecloud.click/")
                 elif re.search(r'(?:vidsync|cinesrc)\.', frame):
                     printDBG("KinoKing: aggregator embed uebersprungen [%s]" % frame)
                 else:

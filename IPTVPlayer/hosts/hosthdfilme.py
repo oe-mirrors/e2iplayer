@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+# 27.09.2026 - meinecloud.click was rebuilt ("DeVideoSRC"): no data-link lists any more, the hoster
+# embeds come from its token API (libs/meinecloud.py) - movies and episodes; domain hdfilme.cafe.
 # 09.09.2026 - the meinecloud player now base64-encodes its data-link values, so the choice box
 # showed empty (unresolvable) entries; _decodeDataLink() decodes them back to //host/e/id before
 # they reach getHostName()/getVideoLinkExt().
@@ -15,14 +17,14 @@ import re
 from Components.config import config, ConfigYesNo, getConfigListEntry
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase, RetHost
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
-from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
+from Plugins.Extensions.IPTVPlayer.libs.meinecloud import MeineCloud
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhostmixin import WatchedFlagHostMixin
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
-from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import extractNum, formatSxxExx, stripLeadingSxxExx
+from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import extractNum, formatSxxExx
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
 
 config.plugins.iptvplayer.hdfilme_mkv = ConfigYesNo(default=True)
@@ -35,15 +37,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return "https://hdfilme.win/"
-
-
-def _parseLeadingSxEx(label):
-    """Detect a leading 'S1 E1' / 'S01E01' style tag inside a raw episode label; returns (seasonNum, episodeNum) or (None, None)."""
-    m = re.match(r"\s*S\s*(\d+)\s*E\s*(\d+)", label, re.IGNORECASE)
-    if m:
-        return int(m.group(1)), int(m.group(2))
-    return None, None
+    return "https://hdfilme.cafe/"
 
 
 def _decodeDataLink(raw):
@@ -186,67 +180,45 @@ class HDFilme(CBaseHostClass):
         if movieUrl:
             return "movie", movieUrl
         imdb = self.cm.ph.getSearchGroups(data, r"var imdb = '([^']+)'")[0]
-        if not imdb:
-            return None, None
-        sts, jdata = self.getPage("https://meinecloud.click/serials.php?task=check&id_imdb=%s" % imdb)
-        if not sts:
-            return None, None
-        try:
-            info = json_loads(jdata)
-        except Exception:
-            return None, None
-        if isinstance(info, dict) and info.get("exists") and info.get("player_url"):
-            return "series", info["player_url"]
-        fallbackUrl = self.cm.ph.getSearchGroups(data, r"iframe\.src = '([^']+)';")[0]
-        if fallbackUrl:
-            return "direct", fallbackUrl
+        if imdb:
+            return "series", imdb
         return None, None
 
-    def _buildEpisodesForSeason(self, seasonId, seasonNum, seriesName, url, icon, desc, blocksById):
+    def _meineCloud(self):
+        return MeineCloud(self.cm, self.defaultParams, self.MAIN_URL)
+
+    def _buildEpisodesForSeason(self, seasonId, seasonNum, seriesName, url, icon, desc, imdb, siteEpisodes):
         episodes = []
-        episodeMatches = re.findall(r'data-link="([^"]+)"[^>]*?data-label="([^"]+)"', blocksById.get(seasonId, ""))
-        for episodeIndex, (link, label) in enumerate(episodeMatches, start=1):
-            link = _decodeDataLink(link)
-            cleanLabelRaw = self.cleanHtmlStr(label)
+        for ep in siteEpisodes:
+            episodeNum = ep["episode"]
+            name = self.cleanHtmlStr(ep["title"])
+            # stable per-episode id (watched key) - the hoster embed url behind it may change
+            streamId = "mc:%s/%d/%d" % (imdb, seasonNum, episodeNum)
             if not IsMediaNamingNormalized():
-                # normalisation off: keep the site's raw episode label
-                episodeTitle = "%s - %s" % (seriesName, cleanLabelRaw) if seriesName else cleanLabelRaw
-                episodes.append({"type": "video", "url": url, "title": episodeTitle, "icon": icon, "desc": desc, "stream_url": link, "stream_type": "direct", "season_id": seasonId})
-                continue
-            embeddedSeason, embeddedEpisode = _parseLeadingSxEx(cleanLabelRaw)
-            seasonNumForTag = embeddedSeason if embeddedSeason is not None else seasonNum
-            episodeNum = embeddedEpisode if embeddedEpisode is not None else episodeIndex
-            epTag = formatSxxExx(seasonNumForTag, episodeNum)
-            rest = stripLeadingSxxExx(cleanLabelRaw).strip()
-            if seriesName:
-                episodeTitle = "%s - %s %s" % (seriesName, epTag, rest) if rest else "%s - %s" % (seriesName, epTag)
+                # normalisation off: the site's own episode label
+                label = "S%d E%d – %s" % (seasonNum, episodeNum, name) if name else "S%d E%d" % (seasonNum, episodeNum)
+                episodeTitle = "%s - %s" % (seriesName, label) if seriesName else label
             else:
-                episodeTitle = "%s %s" % (epTag, rest) if rest else epTag
-            episodes.append({"type": "video", "url": url, "title": episodeTitle, "icon": icon, "desc": desc, "stream_url": link, "stream_type": "direct", "season_id": seasonId})
+                epTag = formatSxxExx(seasonNum, episodeNum)
+                if seriesName:
+                    episodeTitle = "%s - %s %s" % (seriesName, epTag, name) if name else "%s - %s" % (seriesName, epTag)
+                else:
+                    episodeTitle = "%s %s" % (epTag, name) if name else epTag
+            episodes.append({"type": "video", "url": url, "title": episodeTitle, "icon": icon, "desc": self.cleanHtmlStr(ep["desc"]) or desc,
+                             "stream_url": streamId, "stream_type": "mc_episode", "mc_url": ep["url"], "season_id": seasonId})
         return episodes
 
-    def _loadSeriesCache(self, playerUrl, seriesName, seriesUrl, icon, desc):
-        """Fetch the meinecloud player page and (re)populate self.cacheSeasons.
+    def _loadSeriesCache(self, imdb, seriesName, seriesUrl, icon, desc):
+        """Ask meinecloud for the series' seasons + episodes and (re)populate self.cacheSeasons.
         Returns (seasons, seasonNumsById); seasons is [] on failure."""
         self.cacheSeasons = {}
         seasonNumsById = {}
-        sts, data = self.getPage(playerUrl)
-        if not sts:
-            return [], seasonNumsById
-        tabs = self.cm.ph.getDataBeetwenMarkers(data, 'class="_stabs"', 'class="_now"', False)[1]
-        seasons = re.findall(r'data-season="(\d+)"[^>]*>\s*(\S+)', tabs)
-        seasonBlocks = data.split('class="_season-eps')
-        del seasonBlocks[0]
-        blocksById = {}
-        for block in seasonBlocks:
-            blockId = self.cm.ph.getSearchGroups(block, r'data-season="(\d+)"')[0]
-            if blockId != "":
-                blocksById[blockId] = block
-        for seasonIndex, (seasonId, seasonLabelRaw) in enumerate(seasons, start=1):
-            seasonNumFromLabel = extractNum(self.cleanHtmlStr(seasonLabelRaw), 0)
-            seasonNum = seasonNumFromLabel if seasonNumFromLabel > 0 else seasonIndex
+        seasons = []
+        for seasonNum, siteEpisodes in self._meineCloud().seriesEpisodes(imdb):
+            seasonId = str(seasonNum)
+            seasons.append((seasonId, "S%d" % seasonNum))
             seasonNumsById[seasonId] = seasonNum
-            self.cacheSeasons[seasonId] = self._buildEpisodesForSeason(seasonId, seasonNum, seriesName, seriesUrl, icon, desc, blocksById)
+            self.cacheSeasons[seasonId] = self._buildEpisodesForSeason(seasonId, seasonNum, seriesName, seriesUrl, icon, desc, imdb, siteEpisodes)
         return seasons, seasonNumsById
 
     def listSeasons(self, cItem):
@@ -269,6 +241,7 @@ class HDFilme(CBaseHostClass):
         seriesName = self.cleanHtmlStr(cItem.get("title", "") or "")
         seasons, seasonNumsById = self._loadSeriesCache(target, seriesName, url, icon, desc)
         if not seasons:
+            SetIPTVPlayerLastHostError(_("No streams are available for this title yet."))
             return
         if len(seasons) == 1:
             self.listEpisodes(dict(cItem, season_id=seasons[0][0], series_name=seriesName))
@@ -374,18 +347,21 @@ class HDFilme(CBaseHostClass):
                 printExc("HDFilme getArticleContent for sidecar failed")
         sidecar = buildSidecarFromItem(cItem, sidecarEnabled, extraText)
 
-        if cItem.get("stream_type") == "movie":
-            sts, data = self.getPage(streamUrl, self.defaultParams)
-            if not sts:
-                return linksTab
-            data = [_decodeDataLink(x) for x in re.findall('data-link="([^"]+)', data, re.DOTALL)]
+        streamType = cItem.get("stream_type")
+        if streamType == "movie":
+            data = self._meineCloud().movieLinks(MeineCloud.imdbFromUrl(streamUrl))
+        elif streamType == "mc_episode":
+            imdb, season, episode = streamUrl[3:].split("/")
+            data = self._meineCloud().episodeLinks(imdb, season, episode) or [cItem.get("mc_url", "")]
         else:
             data = [_decodeDataLink(streamUrl)]
         for url in data:
-            if "meinecloud" in url or "player.php" in url:
+            if not url or "meinecloud" in url or "player.php" in url:
                 continue
             url = "https:" + url if url.startswith("//") else url
             linksTab.append({"name": self.up.getHostName(url).capitalize(), "url": strwithmeta(url, {"Referer": gettytul()}), "need_resolve": 1})
+        if not linksTab and streamType in ("movie", "mc_episode"):
+            SetIPTVPlayerLastHostError(_("No streams are available for this title yet."))
         return applySidecarToLinks(linksTab, sidecar)
 
     def getVideoLinks(self, videoUrl):

@@ -7,13 +7,13 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetCookieDir
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_urlencode
 ###################################################
 
 ###################################################
 # FOREIGN import
 ###################################################
 import re
-from urllib.parse import urlencode
 ###################################################
 
 ###################################################
@@ -153,8 +153,9 @@ class WebCameraApi(CBaseHostClass):
                         self.addVideo(params)
                         vidCount += 1
 
-                # check if next page is needed
-                if vidCount > 0:
+                # check if next page is needed - category pages now list all cameras at once and
+                # carry no ajax url / page size any more
+                if vidCount > 0 and cItem.get('more_url') and 'limit' in cItem.get('more_params', {}):
                     urlPrams = dict(cItem['more_params'])
                     urlPrams['page'] = page + 1
                     try:
@@ -170,7 +171,7 @@ class WebCameraApi(CBaseHostClass):
                     # urlPrams['columns'] = '12'
 
                     url = self.getFullUrl(cItem['more_url'])
-                    url += '?' + urlencode(urlPrams)
+                    url += '?' + urllib_urlencode(urlPrams)
                     getPageParams['header']['X-Requested-With'] = 'XMLHttpRequest'
                     sts, data = self.getPage(url, getPageParams)
 
