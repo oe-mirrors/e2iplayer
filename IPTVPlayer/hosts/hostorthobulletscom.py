@@ -3,7 +3,7 @@
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, rm
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
@@ -143,25 +143,23 @@ class OrthoBullets(CBaseHostClass):
             return
         self.setMainUrl(self.cm.meta['url'])
 
-        nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<div class=', '>', 'paging paging--right paging--padding'), ('</div', '>'))[1]
-        nextPage = self.cm.ph.getSearchGroups(nextPage, '''<a[^>]+?href=['"]([^'^"]+?)['"][^>]*?>%s</a>''' % (page + 1))[0]
+        # paging links are unquoted now: href=/video/list.aspx?c=7&amp;p=2
+        nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'group-items-list__bottom-paging'), ('</div', '>'))[1]
+        nextPage = self.cm.ph.getSearchGroups(nextPage, '''<a[^>]+?href=['"]?([^'"\\s>]+)['"]?[^>]*?>%s</a>''' % (page + 1))[0]
         nextPage = ph.clean_html(nextPage)
 
-        block = self.cm.ph.getAllItemsBeetwenNodes(data, '<div class="videos ">', '<div class="group-items-list__bottom-paging"', False)[0]
-        block = self.cm.ph.getAllItemsBeetwenNodes(block, '<a class="dashboard-item__link"', '</a>')
+        block = self.cm.ph.getDataBeetwenMarkers(data, '<div class="videos ', 'group-items-list__bottom-paging', False)[1]
+        block = block.split('dashboard-item--video')[1:]
 
         for videos in block:
-            title = self.cm.ph.getAllItemsBeetwenNodes(videos, '<div class="dashboard-item__title">', '</div>', False)
-            title = [cleanTitle.replace('\r\n                    ', '') for cleanTitle in title]
-            title = [cleanTitle.replace('\r\n                ', '') for cleanTitle in title]
-            title = title[0]
-            title = ph.clean_html(title)
-            videourl = self.MAIN_URL + self.cm.ph.getSearchGroups(videos, 'href="([^"]+?)"')[0]
-            imageurl = self.cm.ph.getAllItemsBeetwenNodes(videos, 'style="background-image: url(\'', ('\');">'), False)[1]
-            viddate = self.cm.ph.getAllItemsBeetwenNodes(videos, '<div class="dashboard-item__date">', '</div>', False)[0]
-            viddate = viddate.strip()
-            vidviews = self.cm.ph.getAllItemsBeetwenNodes(videos, '<div class="dashboard-item__views">', '</div>', False)[0]
-            vidviews = vidviews.strip()
+            title = ph.clean_html(self.cm.ph.getDataBeetwenNodes(videos, ('<div', '>', 'dashboard-item__title'), ('</div', '>'), False)[1])
+            videourl = self.cm.ph.getSearchGroups(videos, '''<a[^>]+?href=['"]([^'"]+?)['"]''')[0]
+            if not title or not videourl:
+                continue
+            videourl = self.getFullUrl(videourl)
+            imageurl = self.cm.ph.getSearchGroups(videos, '''background-image:\\s*url\\(['"]?([^'")]+)''')[0]
+            viddate = ph.clean_html(self.cm.ph.getDataBeetwenNodes(videos, ('<div', '>', 'dashboard-item__date'), ('</div', '>'), False)[1])
+            vidviews = ph.clean_html(self.cm.ph.getDataBeetwenNodes(videos, ('<div', '>', 'dashboard-item__views'), ('</div', '>'), False)[1])
             desc = '\\c00????00 Title: \\c00??????%s\\n \\c00????00Date: \\c00??????%s\\n \\c00????00Views: \\c00??????%s\\n' % (title, viddate, vidviews)
             params = dict(cItem)
             params.update({'good_for_fav': True, 'title': title, 'url': videourl, 'icon': imageurl, 'desc': desc})
@@ -191,6 +189,11 @@ class OrthoBullets(CBaseHostClass):
         self.setMainUrl(self.cm.meta['url'])
 
         url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0])
+        if not url:
+            # video pages redirect to the medbullets login without an account
+            if not self.loggedIn:
+                SetIPTVPlayerLastHostError(_('The host %s requires registration. \nPlease fill your login and password in the host configuration. Available under blue button.' % self.getMainUrl()))
+            return []
         return self.up.getVideoLinkExt(strwithmeta(url, {'Referer': self.cm.meta['url']}))
 
     def tryTologin(self):
