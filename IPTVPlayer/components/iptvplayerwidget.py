@@ -2677,6 +2677,10 @@ class E2iPlayerWidget(Screen):
                     return True
             elif "forbidden" == url.meta['iptv_buffering']:
                 return False
+            elif "remux" == url.meta['iptv_buffering']:
+                # the players cannot play the source container itself: the downloader repacks it
+                # while buffering (iptv_use_ffmpeg + ff_out_container), for every player
+                return True
         if "|" in url:
             return True
 
@@ -2775,6 +2779,9 @@ class E2iPlayerWidget(Screen):
                 return
 
             isBufferingMode = False if url.startswith('file://') else self.activePlayer.get('buffering', self.checkBuffering(url))
+            if not isBufferingMode and not url.startswith('file://') and "remux" == url.meta.get('iptv_buffering', ''):
+                # a player chosen "without buffering" for this host could not play it at all
+                isBufferingMode = True
             bufferingPath = config.plugins.iptvplayer.bufferingPath.value
             downloadingPath = config.plugins.iptvplayer.DownloadsDir.value
             destinationPath = downloadingPath if recorderMode else bufferingPath
@@ -2789,6 +2796,13 @@ class E2iPlayerWidget(Screen):
                     errorTab.append(_("Please set valid %s in the %s configuration.") % (_("downloads location") if recorderMode else _("buffering location"), 'E2iPlayer'))
                 else:
                     requiredSpace = 3 * 512 * 1024 * 1024  # 1,5 GB
+                    try:
+                        # a host that knows the size (e.g. a short clip) may ask for less, never for more
+                        hostSpace = int(url.meta.get('iptv_buffering_space', 0))
+                        if 0 < hostSpace < requiredSpace:
+                            requiredSpace = hostSpace
+                    except (TypeError, ValueError):
+                        printExc()
                     availableSpace = iptvtools_FreeSpace(destinationPath, requiredSpace=None, unitDiv=1)
                     if requiredSpace > availableSpace:
                         errorTab.append(_("There is no enough free space in the folder \"%s\".") % destinationPath)

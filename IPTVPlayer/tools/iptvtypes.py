@@ -30,7 +30,11 @@ def enum(**enums):
 # Force buffering settings, generally this field should
 # be used only to materials that we know that they do
 # not work without buffering, or vice versa
-#   "iptv_buffering":       "required" | "forbidden"
+#   "iptv_buffering":       "required" | "forbidden" | "remux"
+#   "remux": buffering for every player, the downloader repacks the stream
+#            (e.g. with iptv_use_ffmpeg + ff_out_container "mpegts")
+#   "iptv_buffering_space": bytes the stream needs in the buffering/downloads folder, when the
+#                           host knows it (short clip); only lowers the default 1.5 GB check
 
 #   "Host": http header field
 #   "User-Agent": http header field
