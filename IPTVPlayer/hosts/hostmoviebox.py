@@ -59,6 +59,8 @@ class MovieBox(GenericFolderWatchedScraperMixin, CBaseHostClass):
     ]
     # the favourite data of a title: what identifies it and is needed to open it again (see getFavouriteData)
     FAV_FIELDS = ("name", "category", "type", "url", "subjectId", "subjectType", "detailPath", "s_title", "season", "episode", "desc", "icon")
+    # tabId in the query of a "Categories" entry -> channelId of /subject/filter
+    FILTER_TAB_CHANNELS = {"2": 1, "5": 2}
     # devalue wrappers Nuxt puts around reactive values: ["Reactive", <index>]
     NUXT_WRAPPERS = ("Reactive", "ShallowReactive", "Ref", "ShallowRef", "EmptyRef", "EmptyShallowRef", "NuxtError")
 
@@ -80,7 +82,7 @@ class MovieBox(GenericFolderWatchedScraperMixin, CBaseHostClass):
         self.wfInitFolderCache()
         self.MAIN_CAT_TAB = [
             {"category": "list_sections", "title": _("Home / Sections")},
-            {"category": "list_filter_page", "title": _("Movies"), "page_url": "/web/film", "channel_id": 1},
+            {"category": "list_filter_page", "title": _("Movies"), "page_url": "/web/film", "channel_id": 1, "tab_id": "ONEROOM_MOVIE"},
             {"category": "list_filter_page", "title": _("TV Shows"), "page_url": "/newWeb/tv-series", "channel_id": 2},
             {"category": "list_filter_page", "title": _("Animation"), "page_url": "/newWeb/animated-series", "channel_id": 1006},
             {"category": "list_most_watched_tabs", "title": _("Most Watched")},
@@ -386,19 +388,37 @@ class MovieBox(GenericFolderWatchedScraperMixin, CBaseHostClass):
         sts, data = self.getPage(self.MAIN_URL + "/")
         if not sts:
             return
-        operatingList = self._nuxtFind(self._nuxtData(data), "operatingList") or []
+        self._addOperatingList(cItem, self._nuxtFind(self._nuxtData(data), "operatingList"))
+
+    def _sectionTitle(self, title):
+        # emoji in the site's section names ("💓Romance 💓") are empty boxes in the Enigma2 fonts
+        title = "".join(ch for ch in title if ord(ch) < 0x10000 and ch not in u"️‍")
+        title = re.sub(r"\s+", " ", title).strip()
+        if title.lower().startswith("banner"):
+            # "Banner_movie", "Banner_Africa": the slider at the top of the page
+            return _("Featured")
+        return title
+
+    def _addOperatingList(self, cItem, operatingList):
+        # the sections of a site page (home page, Movie tab) in the site's order
         seen = set()
-        for op in operatingList:
+        count = 0
+        for op in operatingList or []:
             if not isinstance(op, dict):
                 continue
             opType = str(op.get("type") or "")
-            title = str(op.get("title") or "").strip()
-            if not title or title in seen or opType in ("SPORT_LIVE", "CUSTOM", "FILTER"):
+            title = self._sectionTitle(str(op.get("title") or ""))
+            if not title or title in seen or opType in ("SPORT_LIVE", "CUSTOM"):
                 continue
             seen.add(title)
             params = dict(cItem)
             params.update({"title": title, "good_for_fav": True})
-            if opType in ("BANNER", "APPOINTMENT_LIST"):
+            if opType == "FILTER":
+                filters = self._categoryFilters(cItem, op.get("filters"))
+                if not filters:
+                    continue
+                params.update({"category": "list_section_categories", "_category_filters": filters, "good_for_fav": False})
+            elif opType in ("BANNER", "APPOINTMENT_LIST"):
                 if opType == "BANNER":
                     items = ((op.get("banner") or {}).get("items") or [])
                     subjects = [it.get("subject") for it in items if isinstance(it, dict)]
@@ -416,9 +436,38 @@ class MovieBox(GenericFolderWatchedScraperMixin, CBaseHostClass):
                     continue
                 params.update({"category": "list_ranking_content", "ranking_id": rankingId})
             self.addDir(params)
+            count += 1
+        return count
 
     def listSectionBanner(self, cItem):
         self._addSubjects(cItem, cItem.get("_banner_items", []))
+
+    def _categoryFilters(self, cItem, filters):
+        # "Categories" block: preset filters, query "type=/home/movieFilter&tabId=2&filterType={...json...}"
+        result = []
+        for entry in filters or []:
+            if not isinstance(entry, dict) or not entry.get("title"):
+                continue
+            query = parse_qs(str(entry.get("query") or ""))
+            try:
+                preset = json_loads((query.get("filterType") or ["{}"])[0])
+            except Exception:
+                printExc()
+                continue
+            if not isinstance(preset, dict):
+                continue
+            channelId = self.FILTER_TAB_CHANNELS.get((query.get("tabId") or [""])[0]) or cItem.get("channel_id") or 1
+            image = entry.get("image")
+            result.append({"title": self._sectionTitle(str(entry["title"])), "channel_id": channelId,
+                           "anim_filter": dict((str(k), str(v)) for k, v in preset.items() if v and str(v) != "All"),
+                           "icon": image.get("url", "") if isinstance(image, dict) else ""})
+        return result
+
+    def listSectionCategories(self, cItem):
+        for entry in cItem.get("_category_filters") or []:
+            params = {"name": "category", "category": "list_filter_page", "title": entry["title"], "channel_id": entry["channel_id"],
+                      "anim_filter": entry["anim_filter"], "_apply_filter": True, "icon": entry.get("icon", ""), "good_for_fav": True}
+            self.addDir(params)
 
     ###################################################
     # Movies / TV Shows / Animation with filters
@@ -439,10 +488,26 @@ class MovieBox(GenericFolderWatchedScraperMixin, CBaseHostClass):
             return
         if page == 1 and not cItem.get("_apply_filter"):
             self._addFilterEntry(cItem)
+            if cItem.get("tab_id") and self._addTabSections(cItem):
+                return
         data = self._api("/subject/filter", post=self._filterPost(cItem, page))
         self._addSubjects(cItem, data.get("items"))
         if (data.get("pager") or {}).get("hasMore"):
             self._addNextPage(cItem, page)
+
+    def _addTabSections(self, cItem):
+        # the site's Movie tab: Filter, then the sections ("Trending Movie", "Marvel Movies", ...) instead of one long list
+        data = self._api("/tab-operating", {"tabId": cItem["tab_id"], "host": self.MAIN_URL.split("//", 1)[-1]})
+        start = len(self.currList)
+        # the plain list of the channel stays reachable, right below the Filter entry
+        params = dict(cItem)
+        params.update({"title": _("All"), "_apply_filter": True, "good_for_fav": True})
+        params.pop("tab_id", None)
+        self.addDir(params)
+        if self._addOperatingList({"name": "category", "channel_id": cItem.get("channel_id")}, data.get("operatingList")):
+            return True
+        del self.currList[start:]
+        return False
 
     def _addFilterEntry(self, cItem):
         sts, data = self.getPage(self.MAIN_URL + cItem["page_url"])
@@ -893,12 +958,22 @@ class MovieBox(GenericFolderWatchedScraperMixin, CBaseHostClass):
                      "match_play_source": m.get("playSource") or [], "match_replay": m.get("replay") or [], "match_highlights": m.get("highlights") or [],
                      "match_cuts": m.get("cuts") or [], "match_status": status, "good_for_fav": False})
 
-    def _addSportVideo(self, cItem, title, url, referer=None, icon=None, needResolve=0):
+    def _addSportVideo(self, cItem, title, url, referer=None, icon=None, needResolve=0, remux=False, seconds=0):
         # no colour codes in a video title: the download manager names the file after it
         title = re.sub(r"\\c[0-9A-Fa-f]{8}", "", title).strip()
+        meta = {"Referer": referer or self.SPORT_URL, "User-Agent": self.USER_AGENT}
+        if remux:
+            # replay/highlight/cut mp4s: their avcC header (SPS/PPS twice, one PPS with a stray zero byte) stops
+            # exteplayer3 and the gstreamer sink of the OE-A images (sound only or nothing); repacked to MPEG-TS
+            # by ffmpeg while buffering they play everywhere
+            meta.update({"iptv_buffering": "remux", "iptv_use_ffmpeg": True, "ff_out_container": "mpegts"})
+            if seconds > 0:
+                # space for the buffer instead of the default 1.5 GB (boxes without HDD buffer in /tmp): 1 MB/s is
+                # more than any clip bitrate (480p ~2 Mbit/s), plus 32 MB
+                meta["iptv_buffering_space"] = (seconds + 32) * 1024 * 1024
         params = dict(cItem)
         params.update({"title": title, "type": "video", "need_resolve": needResolve, "good_for_fav": False,
-                       "url": strwithmeta(url, {"Referer": referer or self.SPORT_URL, "User-Agent": self.USER_AGENT}) if not needResolve else url})
+                       "url": strwithmeta(url, meta) if not needResolve else url})
         if icon:
             params["icon"] = icon
         self.addVideo(params)
@@ -937,12 +1012,12 @@ class MovieBox(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 self.addMarker({"title": "%s%s (%d)" % (Y, _("Match cuts"), len(clips)), "desc": ""})
             for clip in clips:
                 try:
-                    duration = int(clip.get("duration") or 0) // unit
+                    seconds = int(clip.get("duration") or 0)
                 except (TypeError, ValueError):
-                    duration = 0
+                    seconds = 0
                 cover = clip.get("cover")
-                self._addSportVideo(cItem, "%s%s (%d%s)" % (color, clip.get("title") or label, duration, "min" if unit == 60 else "s"), clip["path"],
-                                    icon=cover.get("url", "") if isinstance(cover, dict) else "")
+                self._addSportVideo(cItem, "%s%s (%d%s)" % (color, clip.get("title") or label, seconds // unit, "min" if unit == 60 else "s"), clip["path"],
+                                    icon=cover.get("url", "") if isinstance(cover, dict) else "", remux=True, seconds=seconds)
         if len(self.currList) == count:
             if cItem.get("match_status") == "MatchNotStart":
                 self.addMarker({"title": "%s%s" % (Y, _("Match not started yet")), "desc": ""})
@@ -974,6 +1049,7 @@ class MovieBox(GenericFolderWatchedScraperMixin, CBaseHostClass):
         handlers = {
             "list_sections": self.listSections,
             "list_section_banner": self.listSectionBanner,
+            "list_section_categories": self.listSectionCategories,
             "list_filter_page": self.listFilterPage,
             "list_most_watched_tabs": self.listMostWatchedTabs,
             "list_ranking_content": self.listRankingContent,
