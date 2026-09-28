@@ -1257,6 +1257,16 @@ def _GetFsTypeFromMounts(resolvedPath, mountsText):
     return fsType
 
 
+def _IsDiskBlockDevice(dev):
+    # the block device behind a device number is a disk (sda1, nvme0n1p1: HDD, SSD, USB stick), not the box's
+    # flash (mmcblk*, mtd*; ubifs has no block device at all)
+    try:
+        name = os.path.basename(os.path.realpath('/sys/dev/block/%d:%d' % (os.major(dev), os.minor(dev))))
+    except Exception:
+        return False
+    return name.startswith(('sd', 'nvme', 'hd'))
+
+
 def IsRealStoragePresent(path):
     # nearest existing ancestor on another device than "/" (an empty mount-point folder on flash is not storage)
     check = path.rstrip('/') or '/'
@@ -1266,7 +1276,9 @@ def IsRealStoragePresent(path):
             break
         check = parent
     try:
-        if os.stat(check).st_dev == os.stat('/').st_dev:
+        rootDev = os.stat('/').st_dev
+        # the device of "/" is the box's flash - unless the image itself runs from a disk (NeoBoot, USB boot)
+        if os.stat(check).st_dev == rootDev and not _IsDiskBlockDevice(rootDev):
             return False
     except Exception:
         return False

@@ -45,7 +45,7 @@ from Plugins.Extensions.IPTVPlayer.tools import iptvdownloaded
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import FreeSpace as iptvtools_FreeSpace, \
                                                           mkdirs as iptvtools_mkdirs, IsRealStoragePresent as iptvtools_IsRealStoragePresent, \
                                                           IsPathWritable as iptvtools_IsPathWritable, \
-                                                          IsSameDir as iptvtools_IsSameDir, \
+                                                          IsSameDir as iptvtools_IsSameDir, IsSameOrSubDir as iptvtools_IsSameOrSubDir, \
                                                           CleanOldFilesInDir as iptvtools_CleanOldFilesInDir, GetIPTVPlayerVersion, GetShortSystemInfo, \
                                                           printDBG, printExc, GetHostsList, IsHostEnabled, \
                                                           eConnectCallback, GetSkinsDir, GetIconDir, GetPluginDir, \
@@ -438,11 +438,34 @@ class E2iPlayerWidget(Screen):
         self.startupStorageSteps = []
         storagePathsRerouted = False
         pluginCacheDir = GetPluginDir('cache/')
+
+        # a folder rerouted at an earlier start (storage missing, e.g. the HDD was not mounted yet) goes back to where it
+        # was as soon as that storage is there again - unless another folder has been chosen in the meantime
+        for pathCfg, wantedCfg, fallbackDir in ((config.plugins.iptvplayer.CacheDir, config.plugins.iptvplayer.CacheDirWanted, pluginCacheDir),
+                                                (config.plugins.iptvplayer.bufferingPath, config.plugins.iptvplayer.bufferingPathWanted, config.plugins.iptvplayer.TmpDir.value)):
+            wantedDir = wantedCfg.value
+            if not wantedDir:
+                continue
+            if not iptvtools_IsSameDir(pathCfg.value, fallbackDir) and iptvtools_IsRealStoragePresent(pathCfg.value):
+                printDBG('Storage: [%s] was chosen after the reroute, [%s] is not restored' % (pathCfg.value, wantedDir))
+            elif iptvtools_IsRealStoragePresent(wantedDir):
+                printDBG('Storage: storage for [%s] is back -> restored (was [%s])' % (wantedDir, pathCfg.value))
+                pathCfg.value = wantedDir
+                pathCfg.save()
+            else:
+                continue
+            wantedCfg.value = ''
+            wantedCfg.save()
+            storagePathsRerouted = True
+
         if not iptvtools_IsSameDir(config.plugins.iptvplayer.CacheDir.value, pluginCacheDir) and not iptvtools_IsRealStoragePresent(config.plugins.iptvplayer.CacheDir.value):
             self.startupStorageSteps.append(lambda nextStep: self.session.openWithCallback(nextStep, MessageBox, _("No storage found for the cache folder. The cache folder will be switched to the plugin's own cache directory."), type=MessageBox.TYPE_INFO, timeout=10))
             if not os_path.exists(pluginCacheDir):
                 iptvtools_mkdirs(pluginCacheDir)
             printDBG('Storage: CacheDir [%s] has no real storage -> rerouted to plugin cache [%s]' % (config.plugins.iptvplayer.CacheDir.value, pluginCacheDir))
+            if not config.plugins.iptvplayer.CacheDirWanted.value:
+                config.plugins.iptvplayer.CacheDirWanted.value = config.plugins.iptvplayer.CacheDir.value
+                config.plugins.iptvplayer.CacheDirWanted.save()
             config.plugins.iptvplayer.CacheDir.value = pluginCacheDir
             config.plugins.iptvplayer.CacheDir.save()
             storagePathsRerouted = True
@@ -450,6 +473,10 @@ class E2iPlayerWidget(Screen):
         # bufferingPath is scratch space: silently fall back to TmpDir
         if not iptvtools_IsSameDir(config.plugins.iptvplayer.bufferingPath.value, config.plugins.iptvplayer.TmpDir.value) and not iptvtools_IsRealStoragePresent(config.plugins.iptvplayer.bufferingPath.value):
             printDBG('Storage: bufferingPath [%s] has no real storage -> rerouted to TmpDir [%s]' % (config.plugins.iptvplayer.bufferingPath.value, config.plugins.iptvplayer.TmpDir.value))
+            # a folder in RAM (/tmp or below) is no place to come back to
+            if not config.plugins.iptvplayer.bufferingPathWanted.value and not iptvtools_IsSameOrSubDir(config.plugins.iptvplayer.bufferingPath.value, '/tmp/'):
+                config.plugins.iptvplayer.bufferingPathWanted.value = config.plugins.iptvplayer.bufferingPath.value
+                config.plugins.iptvplayer.bufferingPathWanted.save()
             config.plugins.iptvplayer.bufferingPath.value = config.plugins.iptvplayer.TmpDir.value
             config.plugins.iptvplayer.bufferingPath.save()
             storagePathsRerouted = True
