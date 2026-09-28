@@ -12,6 +12,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, Ge
 from Plugins.Extensions.IPTVPlayer.components.iptvlist import IPTVListComponentBase, fitPixmapInBox
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components import skinchrome
+from Plugins.Extensions.IPTVPlayer.components.cover import PicLoadPara
 
 ###################################################
 
@@ -274,7 +275,6 @@ class IPTVMultipleImageSelectorWidget(Screen):
         self.column_index = 0
         self.row_index = 0
         self.picload = ePicLoad()
-        self.picload.setPara((self.iptv_image_width, self.iptv_image_height, 1, 1, False, 1, "#FF000000"))
         self.picload_conn = None
         # Images are decoded one at a time, and each next startDecode() is
         # kicked off from a timer (see __decodedCB()'s 100ms interval
@@ -323,6 +323,7 @@ class IPTVMultipleImageSelectorWidget(Screen):
             idx = len(self.iptv_images_data)
             self.awaitingDecode = True
             self.picload_conn = eConnectCallback(self.picload.PictureData, self.__decodedCB)
+            self.picload.setPara(PicLoadPara(self.iptv_image_width, self.iptv_image_height, self.iptv_images[idx]['path']))
             ret = self.picload.startDecode(self.iptv_images[idx]['path'])
             if ret != 0:
                 self.awaitingDecode = False

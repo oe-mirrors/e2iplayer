@@ -6,7 +6,7 @@
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, rm
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, rm, GetIconDir
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.components.captcha_helper import CaptchaHelper
 from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute
@@ -66,7 +66,8 @@ class Filman(CBaseHostClass, CaptchaHelper):
         CBaseHostClass.__init__(self, {"history": "Filman.online", "cookie": "filman.cookie"})
         self.USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
         self.MAIN_URL = "https://filman.cc/"
-        self.DEFAULT_ICON_URL = "https://filman.cc/public/dist/images/logo.png"
+        # the site logo sits behind Cloudflare too and is asked for before the check is solved (main menu): use the plugin's tile
+        self.DEFAULT_ICON_URL = "file://" + GetIconDir("PlayerSelector/filman135.png")
         self.HTTP_HEADER = {"User-Agent": self.USER_AGENT, "DNT": "1", "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8", "Accept-Encoding": "gzip, deflate", "Accept-Language": "pl,en-US;q=0.7,en;q=0.3", "Referer": self.getMainUrl(), "Origin": self.getMainUrl(), "Connection": "keep-alive", "Upgrade-Insecure-Requests": "1"}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
         self.AJAX_HEADER.update({"X-Requested-With": "XMLHttpRequest", "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8", "Accept": "application/json, text/javascript, */*; q=0.01"})
@@ -97,6 +98,25 @@ class Filman(CBaseHostClass, CaptchaHelper):
         baseUrl = self.cm.iriToUri(baseUrl)
         sts, data = self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         return sts, data
+
+    def getFullIconUrl(self, url, currUrl=None):
+        # the posters sit behind the same Cloudflare check as the pages: the icon download needs the site's
+        # cf_clearance cookie and the User-Agent that passed the check, otherwise it gets a 403
+        url = CBaseHostClass.getFullIconUrl(self, url, currUrl)
+        if not url.startswith("http"):
+            return url
+        meta = {"Referer": self.getMainUrl()}
+        cookieHeader = ""
+        try:
+            # getCookieHeader logs tracebacks for a cookie file that does not exist yet
+            if os.path.isfile(self.COOKIE_FILE):
+                cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE, ["cf_clearance"]).rstrip("; ")
+            if cookieHeader:
+                from Plugins.Extensions.IPTVPlayer.libs.botprotection import remembered_user_agent
+                meta.update({"User-Agent": remembered_user_agent(self.COOKIE_FILE) or self.USER_AGENT, "Cookie": cookieHeader})
+        except Exception:
+            printExc()
+        return strwithmeta(url, meta)
 
     def setMainUrl(self, url):
         if self.cm.isValidUrl(url):

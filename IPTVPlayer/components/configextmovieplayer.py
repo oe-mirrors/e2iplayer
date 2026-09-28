@@ -323,8 +323,6 @@ class ConfigExtMoviePlayer(ConfigBaseWidget, ConfigExtMoviePlayerBase):
             list.append(getConfigListEntry("    " + _("Radio iframe file"), config.plugins.iptvplayer.iframe_file))
         if config.plugins.iptvplayer.show_iframe.value or config.plugins.iptvplayer.use_clear_iframe.value:
             list.append(getConfigListEntry("    " + _("Black iframe file"), config.plugins.iptvplayer.clear_iframe_file))
-        list.append(getConfigListEntry(_("GSTplayer binary"), config.plugins.iptvplayer.gstplayer_binary))
-        list.append(getConfigListEntry(_("GSTplayer no IFD workarround"), config.plugins.iptvplayer.GSTplayer_no_IFD))
         self.list = list
         ConfigBaseWidget.runSetup(self)
 

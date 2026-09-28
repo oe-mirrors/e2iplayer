@@ -34,7 +34,7 @@ from Plugins.Extensions.IPTVPlayer.components import skinchrome
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import (
     printDBG, printExc, iptv_system, eConnectCallback, formatBytes, GetImageName,
     GetIPTVPlayerVersion, GetIPTVPlayerComitStamp, GetShortPythonVersion,
-    GetConfigDir, GetTmpDir,
+    GetConfigDir, GetTmpDir, GetGstIfdSrc,
 )
 try:
     from Plugins.Extensions.IPTVPlayer.tools.iptvtools import GetDebugLogPath
@@ -85,6 +85,7 @@ _PROBE_SCRIPT = (
     '  ($T duk $D %s || true) | head -n 1; rm -f $D; '
     'echo "@@quickjs";     ($T qjs --version %s     || true) | head -n 1; '
     'echo "@@deps";        (opkg list-installed 2>/dev/null | grep -i e2iplayer-deps || true); '
+    'echo "@@ifdsrc";      (opkg list-installed 2>/dev/null | grep "^gst-ifdsrc " || true); '
     'echo "@@end"\n'
 ) % ((_P,) * 13)
 
@@ -245,6 +246,14 @@ class _SystemInfo(object):
         except Exception:
             return _("not installed")
 
+    def _ifdsrcState(self, pkg):
+        # gstplayer only buffers via ifd:// when the plugin is loadable
+        path, usable = GetGstIfdSrc()
+        if not path:
+            return _("not installed")
+        version = pkg[0].split(" - ", 1)[-1] if pkg else _("installed")
+        return version if usable else "%s (%s)" % (version, _("not loadable"))
+
     def _pilVersion(self):
         try:
             import PIL
@@ -333,6 +342,7 @@ class _SystemInfo(object):
         out.append(row("exteplayer3", ver_line("exteplayer3")))
         out.append(row("gstplayer", ver_line("gstplayer")))
         out.append(row("gstplayer2", ver_line("gstplayer2")))
+        out.append(row("gst-ifdsrc", self._ifdsrcState(sections.get("ifdsrc") or [])))
 
         out.append("")
         out.append("--- " + _("Python modules") + " ---")

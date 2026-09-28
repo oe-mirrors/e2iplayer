@@ -64,6 +64,9 @@ config.plugins.iptvplayer.configMenuView = ConfigSelection(default="list", choic
 config.plugins.iptvplayer.NaszaSciezka = ConfigDirectory(default="/hdd/movie/")  # , fixed_size = False)
 config.plugins.iptvplayer.DownloadsDir = ConfigDirectory(default=config.plugins.iptvplayer.NaszaSciezka.value)  # , fixed_size = False)
 config.plugins.iptvplayer.bufferingPath = ConfigDirectory(default=config.plugins.iptvplayer.DownloadsDir.value)  # , fixed_size = False)
+# not shown: the folder CacheDir / bufferingPath had before a start without its storage rerouted it (see IPTVPlayerWidget)
+config.plugins.iptvplayer.CacheDirWanted = ConfigText(default="")
+config.plugins.iptvplayer.bufferingPathWanted = ConfigText(default="")
 config.plugins.iptvplayer.buforowanie = ConfigYesNo(default=False)
 config.plugins.iptvplayer.buforowanie_m3u8 = ConfigYesNo(default=True)
 config.plugins.iptvplayer.buforowanie_rtmp = ConfigYesNo(default=False)
@@ -408,8 +411,6 @@ config.plugins.iptvplayer.extplayer_subtitle_box_height = ConfigInteger(240, (50
 
 config.plugins.iptvplayer.extplayer_infobanner_clockformat = ConfigSelection(default="", choices=[("", _("None")), ("24", _("24 hour format")), ("12", _("12 hour format"))])
 
-config.plugins.iptvplayer.GSTplayer_no_IFD = ConfigYesNo(default=False)
-config.plugins.iptvplayer.gstplayer_binary = ConfigSelection(default="auto", choices=[("auto", _("auto")), ("gstplayer2", "gstplayer2"), ("gstplayer", "gstplayer")])
 config.plugins.iptvplayer.extplayer_skin = ConfigSelection(default="default", choices=[("default", _("default")), ("black", _("black")), ("red", _("red")), ("blue", _("blue")), ("green", _("green")), ("black-white", _("black&white")), ("cobalt", _("cobalt")), ("jersey", _("jersey")), ("navy", _("navy")), ("line", _("line"))])
 
 

@@ -18,7 +18,7 @@ from Plugins.Extensions.IPTVPlayer.components.cover import Cover3
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetSubtitlesDir, eConnectCallback, \
                                                           GetE2VideoAspectChoices, GetE2VideoAspect, SetE2VideoAspect, GetE2VideoPolicyChoices, \
                                                           GetE2VideoPolicy, SetE2VideoPolicy, GetDefaultLang, GetPolishSubEncoding, iptv_system, \
-                                                          GetE2AudioCodecMixOption, SetE2AudioCodecMixOption, CreateTmpFile, GetTmpDir, IsExecutable, MapUcharEncoding, \
+                                                          GetE2AudioCodecMixOption, SetE2AudioCodecMixOption, CreateTmpFile, GetTmpDir, IsExecutable, GetGstIfdSrc, GetGstPlayerPath, MapUcharEncoding, \
                                                           GetE2VideoModeChoices, GetE2VideoMode, SetE2VideoMode, GetPlayerSkinDir, GetNice, E2PrioFix
 from Plugins.Extensions.IPTVPlayer.tools.iptvsubtitles import IPTVSubtitlesHandler, IPTVEmbeddedSubtitlesHandler
 from Plugins.Extensions.IPTVPlayer.tools.iptvmoviemetadata import IPTVMovieMetaDataHandler
@@ -59,50 +59,6 @@ import time
 import json
 
 ###################################################
-
-# gstplayer opens a file that is still downloading via ifd:// when it gets a
-# download timeout > 0; that URI handler comes from this GStreamer plugin
-GST_IFDSRC_PATHS = ['/usr/lib/gstreamer-1.0/libgstifdsrc.so', '/usr/lib64/gstreamer-1.0/libgstifdsrc.so']
-# GStreamer >= 1.14 finds a plugin only by gst_plugin_<file name>_get_desc
-# (gst_plugin_desc is static now); gst-ifdsrc builds declared as "plugin"
-# export gst_plugin_plugin_get_desc and get blacklisted
-GST_IFDSRC_SYMBOLS = (b'gst_plugin_ifdsrc_get_desc', b'gst_plugin_desc\x00')
-gstIfdSrcUsable = None
-
-
-def gstHasIfdSrc():
-    global gstIfdSrcUsable
-    if gstIfdSrcUsable is None:
-        gstIfdSrcUsable = False
-        for path in GST_IFDSRC_PATHS:
-            try:
-                with open(path, 'rb') as f:
-                    data = f.read()
-            except Exception:
-                continue
-            gstIfdSrcUsable = any(symbol in data for symbol in GST_IFDSRC_SYMBOLS)
-            printDBG("gstplayer: %s usable[%s]" % (path, gstIfdSrcUsable))
-            break
-    return gstIfdSrcUsable
-
-
-def GetGstPlayerPath(uri='', httpFields=None):
-    # gstplayer2 (oe-mirrors/iptvplayer-bin-components, also used by
-    # ServiceApp) has all of mx3L's fixes but a getopt command line;
-    # /usr/bin/gstplayer is the 2017 build with positional arguments
-    gst1 = '/usr/bin/gstplayer'
-    gst2 = '/usr/bin/gstplayer2'
-    choice = config.plugins.iptvplayer.gstplayer_binary.value
-    if choice == 'gstplayer' and IsExecutable(gst1):
-        return gst1
-    if not IsExecutable(gst2):
-        return gst1
-    if choice == 'auto' and httpFields and '.mpd' in uri.lower() and IsExecutable(gst1):
-        # gstplayer2 plays .mpd URIs through its own DASH pipeline,
-        # which does not send any http headers
-        printDBG("gstplayer: DASH uri with http headers, using %s" % gst1)
-        return gst1
-    return gst2
 
 
 class ExtPlayerCommandsDispatcher():
@@ -2156,7 +2112,7 @@ class IPTVExtMoviePlayer(Screen):
                     # 'ifd' from the replace() above for gstplayer builds that do not escape
                     # their JSON, "ifd" from builds that do
                     if ensure_str(obj['msg']) in ("No URI handler implemented for 'ifd'.", 'No URI handler implemented for "ifd".'):
-                        msgText += _('Try to change extplayer or disable IFD in GSTplayer configuration')
+                        msgText += _('Try to change extplayer or reinstall gst-ifdsrc')
                 elif "FF_ERROR" == key:
                     printDBG('FF_ERROR: %s, code %s\n' % (ensure_str(obj['msg']), obj['code']))
                     msgType = MessageBox.TYPE_ERROR
@@ -2439,9 +2395,7 @@ class IPTVExtMoviePlayer(Screen):
             # file download timeout, 0 keeps gstplayer away from ifd://
             timeout = 0
             if None is not self.downloader and self.downloader.isDownloading():
-                if config.plugins.iptvplayer.GSTplayer_no_IFD.value:
-                    printDBG("gstplayer: IFD disabled in the configuration")
-                elif not gstHasIfdSrc():
+                if not GetGstIfdSrc()[1]:
                     printDBG("gstplayer: libgstifdsrc.so missing or not loadable, playing the buffer file without IFD")
                 else:
                     timeout = self.gstAdditionalParams['file-download-timeout']
@@ -2464,7 +2418,7 @@ class IPTVExtMoviePlayer(Screen):
                         else:
                             httpFields.append(('proxy', tmp))
 
-            gstplayerPath = GetGstPlayerPath(self.fileSRC, httpFields)
+            gstplayerPath = GetGstPlayerPath()
             # 'export GST_DEBUG="*:6" &&' +
             cmd = gstplayerPath + ' "%s"' % shellQuote(self.fileSRC)
             if gstplayerPath.endswith('gstplayer2'):
@@ -2612,6 +2566,11 @@ class IPTVExtMoviePlayer(Screen):
         self._setScaledIconPixmap('loopIcon', self.playback['loopIcons']['Off'])
         self._setScaledIconPixmap('logoIcon', self.playback['logoIcon'])
         self._setScaledIconPixmap('subSynchroIcon', self.subHandler['synchro']['icon'])
+        # at least the stream type until the player reports the video track ("v_c" overwrites it) -
+        # gstplayer2 reports none for a buffer file ffmpeg is still writing (merged audio/video)
+        streamType = self._getStreamTypeLabel()
+        if streamType and not self.playback['VideoTrack']:
+            self['videoInfo'].setText(streamType)
 
         # SET Video option
         videoOptions = ['aspect', 'policy', 'policy2']
