@@ -16,6 +16,19 @@ from enigma import ePicLoad, ePoint, eTimer
 import os
 
 
+def PicLoadPara(width, height, filename):
+    # ePicLoad.setPara values; the 8th turns on EXIF auto-orientation (older images ignore it). Only for
+    # files ePicLoad decodes as PNG/JPEG (same magic as its getFileType): for any other format OpenATV,
+    # OpenPLi, OpenViX and others crash in ePicLoad.getData with it on (EXIF info never allocated).
+    try:
+        with open(filename, 'rb') as f:
+            head = f.read(12)
+    except Exception:
+        head = b''
+    autoOrient = 12 == len(head) and (head[1:4] == b'PNG' or head[6:10] == b'JFIF' or head[:3] == b'\xff\xd8\xff')
+    return (width, height, 1, 1, False, 1, "#FF000000", autoOrient)
+
+
 class Cover(Pixmap):
     def __init__(self):
         printDBG("Cover.__init__ ---------------------------")
@@ -24,7 +37,6 @@ class Cover(Pixmap):
 
         self.currIcon = {}
         self.waitIcon = {}
-        self.paramsSet = False
 
         self.decoding = False
         self.picload_conn = eConnectCallback(self.picload.PictureData, self.decodeCallBack)
@@ -60,9 +72,6 @@ class Cover(Pixmap):
         # checking if decoding is needed
         self.waitIcon = {"CallBackFun": callBackFun, "FileName": filename, "Ident": ident}
         if filename != self.currIcon.get('FileName', ''):
-            if not self.paramsSet:
-                self.picload.setPara((self.instance.size().width(), self.instance.size().height(), 1, 1, False, 1, "#FF000000"))
-                self.paramsSet = True
             if not self.decoding:
                 printDBG("_______________start decodeCover")
                 self.decoding = True
@@ -70,6 +79,7 @@ class Cover(Pixmap):
                 self.currIcon = self.waitIcon
                 self.waitIcon = {}
                 if os.path.exists(filename):
+                    self.picload.setPara(PicLoadPara(self.instance.size().width(), self.instance.size().height(), filename))
                     ret = self.picload.startDecode(filename)
                 else:
                     printDBG("_______________decodeCover file not exists (%s)" % filename)
