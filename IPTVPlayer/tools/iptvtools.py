@@ -649,6 +649,51 @@ def IsExecutable(fpath):
     return False
 
 
+def GetGstPlayerPath():
+    # gstplayer2 (oe-mirrors/iptvplayer-bin-components, also used by
+    # ServiceApp) has all of mx3L's fixes but a getopt command line;
+    # /usr/bin/gstplayer is the 2017 build with positional arguments
+    if IsExecutable('/usr/bin/gstplayer2'):
+        return '/usr/bin/gstplayer2'
+    return '/usr/bin/gstplayer'
+
+
+# gstplayer opens a file that is still downloading via ifd:// when it gets a
+# download timeout > 0; that URI handler comes from this GStreamer plugin
+GST_IFDSRC_PATHS = ['/usr/lib/gstreamer-1.0/libgstifdsrc.so', '/usr/lib64/gstreamer-1.0/libgstifdsrc.so']
+# GStreamer >= 1.14 finds a plugin only by gst_plugin_<file name>_get_desc
+# (gst_plugin_desc is static now); gst-ifdsrc builds declared as "plugin"
+# export gst_plugin_plugin_get_desc and get blacklisted
+GST_IFDSRC_SYMBOLS = (b'gst_plugin_ifdsrc_get_desc', b'gst_plugin_desc\x00')
+gstIfdSrcCache = (None, None)
+
+
+def GetGstIfdSrc():
+    # (path, usable), path is '' when the plugin is not installed; the result
+    # is kept until the library is installed, removed or replaced
+    global gstIfdSrcCache
+    key, state = None, ('', False)
+    for path in GST_IFDSRC_PATHS:
+        try:
+            st = os.stat(path)
+        except Exception:
+            continue
+        key = (path, st.st_mtime, st.st_size)
+        break
+    if key == gstIfdSrcCache[0] and gstIfdSrcCache[1] is not None:
+        return gstIfdSrcCache[1]
+    if key:
+        try:
+            with open(key[0], 'rb') as f:
+                data = f.read()
+            state = (key[0], any(symbol in data for symbol in GST_IFDSRC_SYMBOLS))
+        except Exception:
+            state = (key[0], False)
+        printDBG("gstplayer: %s usable[%s]" % state)
+    gstIfdSrcCache = (key, state)
+    return state
+
+
 def Which(program):
     try:
         def is_exe(fpath):

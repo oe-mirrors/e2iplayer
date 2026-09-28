@@ -11,9 +11,10 @@
 from Plugins.Extensions.IPTVPlayer.components.cover import SimpleAnimatedCover, Cover
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components import skinchrome
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIconDir, eConnectCallback, GetNice, E2PrioFix
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIconDir, eConnectCallback, GetNice, E2PrioFix, GetGstPlayerPath
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
+from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import shellQuote
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdownloadercreator import DownloaderCreator
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import DescribeImageFile
 ###################################################
@@ -53,26 +54,37 @@ class IPTVSimpleAudioPlayer():
         self.uri = uri
         self.playMode = mode
 
-        gstplayerPath = '/usr/bin/gstplayer'
+        gstplayerPath = GetGstPlayerPath()
         # 'export GST_DEBUG="*:6" &&' +
-        cmd = gstplayerPath + ' "%s"' % self.uri
+        cmd = gstplayerPath + ' "%s"' % shellQuote(self.uri)
         if "://" in self.uri:
-            cmd += ' "%s" "%s"  "%s"  "%s" ' % (self.gstAdditionalParams['download-buffer-path'], self.gstAdditionalParams['ring-buffer-max-size'], self.gstAdditionalParams['buffer-duration'], self.gstAdditionalParams['buffer-size'])
+            # http headers + proxy, gstplayer takes both as "key=value" fields
+            httpFields = []
             tmp = strwithmeta(self.uri)
             url, httpParams = DMHelper.getDownloaderParamFromUrl(tmp)
             for key in httpParams:
-                cmd += (' "%s=%s" ' % (key, httpParams[key]))
+                httpFields.append((key, httpParams[key]))
             if 'http_proxy' in tmp.meta:
                 tmp = tmp.meta['http_proxy']
                 if '://' in tmp:
                     parsed = urlparse(tmp)
                     if parsed.username and parsed.password:
-                        cmd += (' "proxy=%s" "proxy-id=%s" "proxy-pw=%s" ' %
-                                (f"{parsed.scheme}://{parsed.hostname}", parsed.username, parsed.password))
+                        httpFields.extend([("proxy", "%s://%s" % (parsed.scheme, parsed.netloc.rsplit("@", 1)[-1])), ('proxy-id', parsed.username), ('proxy-pw', parsed.password)])
                     else:
-                        cmd += (' "proxy=%s" ' % tmp)
+                        httpFields.append(('proxy', tmp))
+            if gstplayerPath.endswith('gstplayer2'):
+                # getopt command line; no buffer options are set here and
+                # gstplayer2 keeps its defaults for those it does not get
+                for key, value in httpFields:
+                    cmd += ' -H "%s=%s"' % (key, shellQuote(value))
+            else:
+                # positional command line of the original gstplayer: audio track,
+                # download timeout and live come before the buffer options
+                cmd += ' -1 0 0 "%s" "%s" "%s" "%s" ' % (shellQuote(self.gstAdditionalParams['download-buffer-path']), self.gstAdditionalParams['ring-buffer-max-size'], self.gstAdditionalParams['buffer-duration'], self.gstAdditionalParams['buffer-size'])
+                for key, value in httpFields:
+                    cmd += ' "%s=%s" ' % (key, shellQuote(value))
         else:
-            cmd = 'exteplayer3 "%s"' % self.uri + " > /dev/null"
+            cmd = 'exteplayer3 "%s"' % shellQuote(self.uri) + " > /dev/null"
         self.console = eConsoleAppContainer()
         self.console_appClosed_conn = eConnectCallback(self.console.appClosed, self._playerFinished)
         printDBG("IPTVSimpleAudioPlayer.start cmd[%s]" % cmd)
