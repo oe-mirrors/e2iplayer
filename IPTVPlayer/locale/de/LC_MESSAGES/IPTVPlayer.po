@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-26 10:21+0000\n"
+"POT-Creation-Date: 2026-09-29 20:26+0000\n"
 "PO-Revision-Date: 2026-09-26 12:32+0200\n"
 "Last-Translator: Masta2002\n"
 "Language-Team: oATV Team\n"
@@ -61,6 +61,14 @@ msgstr "  • Nicht fixiert (Standard): Der Eintrag springt zurück an den Anfan
 msgid "\"%s\" Virtual Keyboard layout not available."
 msgstr "Das virtuelle \"%s\" Tastatur-Layout ist nicht vorhanden."
 
+#, fuzzy, python-format
+msgid "\"%s\" has been added to the favourites group \"%s\"."
+msgstr "Keine weiteren Favoriten-Gruppen vorhanden"
+
+#, python-format
+msgid "\"%s\" is playing on the TV."
+msgstr ""
+
 msgid "\"Web\" streams player"
 msgstr "\"Web\" Streams Player"
 
@@ -71,6 +79,10 @@ msgstr "%d Doppelte Einträge wurden entfernt."
 #, python-format
 msgid "%d duplicate entry removed."
 msgstr "%d Doppelte Eintragung entfernt."
+
+#, fuzzy, python-format
+msgid "%d videos"
+msgstr "Gelikte Videos"
 
 #, python-format
 msgid "%s - service overview"
@@ -103,14 +115,6 @@ msgstr "%s E-Mail"
 #, python-format
 msgid "%s episodes"
 msgstr "%s Episoden"
-
-#, python-format
-msgid "%s file is %d KB in size. Last %d lines are:"
-msgstr "%s Datei ist %d KB groß. Letzte %d Zeilen sind:"
-
-#, python-format
-msgid "%s file is %d MB in size. Last %d lines are:"
-msgstr "%s Datei ist %d MB groß. Letzte %d Zeilen sind:"
 
 #, python-format
 msgid "%s followers"
@@ -193,6 +197,9 @@ msgstr "----- DEBUG KONFIGURATION -----"
 msgid "----- DOWNLOADING CONFIGURATION -----"
 msgstr "----- DOWNLOAD KONFIGURATION -----"
 
+msgid "----- Debug -----"
+msgstr ""
+
 msgid "----- Global HostXXX Configuration -----"
 msgstr "----- Globale HostXXX Konfiguration -----"
 
@@ -266,14 +273,24 @@ msgstr "--Beliebige--"
 msgid "--Other--"
 msgstr "--Andere--"
 
+msgid "... and that the stream delivers video :"
+msgstr ""
+
 msgid "0-9"
 msgstr "0-9"
+
+msgid "1 minute"
+msgstr ""
 
 msgid "1. On a phone or PC in the same network, open the address shown in the captcha window (or scan its QR code) in a browser with the MyE2i extension installed. If it asks for a code, you find it in the title of the captcha window."
 msgstr "1. Öffnen Sie auf einem Handy oder PC im selben Netzwerk die im Captcha-Fenster angezeigte Adresse (oder scannen Sie den QR-Code) in einem Browser mit installierter MyE2i-Erweiterung. Wird ein Code verlangt, steht er im Titel des Captcha-Fensters."
 
 msgid "12 hour format"
 msgstr "12 Stunden-Format"
+
+#, fuzzy
+msgid "15 seconds"
+msgstr "Sekunden"
 
 msgid "2. Click the big green button on that page. A new tab opens with the captcha or the website's browser check."
 msgstr "2. Klicken Sie auf der Seite auf die große grüne Schaltfläche. Es öffnet sich ein neuer Tab mit dem Captcha oder der Browser-Prüfung der Webseite."
@@ -284,8 +301,16 @@ msgstr "24 Stunden-Format"
 msgid "3. Solve it. The result goes back to the receiver by itself and the captcha window closes."
 msgstr "3. Lösen Sie es. Das Ergebnis geht von selbst an den Receiver zurück und das Captcha-Fenster schließt sich."
 
-msgid "<font color=\"#FE642E\">REMEMBER:</font></b> E2iPlayer <b>IS ONLY</b> specialized Web browser. It does <b>NOT</b> host any materials!!!</font>"
-msgstr "<font color=\"#FE642E\">ERINNERUNG:</font></b> Der E2iPlayer <b>IST NUR</b> ein spezialisierter Browser. Es werden <b>KEINE</b> eigenen Materialien gehostet!!!</font>"
+#, fuzzy
+msgid "30 seconds"
+msgstr "Sekunden"
+
+#, fuzzy
+msgid "5 seconds"
+msgstr "Sekunden"
+
+msgid "A search is already running."
+msgstr ""
 
 msgid "A-Z"
 msgstr "A-Z"
@@ -298,6 +323,11 @@ msgstr "ABGEBROCHEN"
 
 msgid "AC3 downmix mode"
 msgstr "AC3 Downmix-Modus"
+
+msgid ""
+"ACCESS DENIED.\n"
+"THIS VIDEO IS DELETED OR NOT AVAILABLE TO YOUR REGION."
+msgstr ""
 
 msgid "ALBUMS"
 msgstr "ALBEN"
@@ -341,9 +371,6 @@ msgstr "Zugänge & API-Schlüssel"
 msgid "Action & Thriller"
 msgstr "Action & Thriller"
 
-msgid "Active host"
-msgstr "Aktiver Host"
-
 #, python-format
 msgid "Active: %s"
 msgstr "Aktive: %s"
@@ -382,9 +409,6 @@ msgstr "Neue Favoriten-Gruppe erstellen"
 msgid "Add to User Links"
 msgstr "Zu den Benutzer-Links hinzufügen"
 
-msgid "Add to downloader"
-msgstr "Zum Downloader hinzufügen"
-
 #, python-format
 msgid "Added by: %s, directory: %s"
 msgstr "Hinzugefügt von: %s, Verzeichnis: %s"
@@ -403,9 +427,6 @@ msgstr "Alle Kategorien"
 
 msgid "All in one"
 msgstr "Alle zusammen"
-
-msgid "All materials"
-msgstr "Alle Materialien"
 
 msgid "All results"
 msgstr "Alle Ergebnisse"
@@ -550,6 +571,9 @@ msgstr "Seitenverhältnis"
 msgid "At least one of plugin browser, extension list and main menu has to stay on, otherwise E2iPlayer could no longer be started."
 msgstr "Mindestens einer der Einträge Plugin-Browser, Erweiterungsliste und Hauptmenü muss eingeschaltet bleiben, sonst könnte E2iPlayer nicht mehr gestartet werden."
 
+msgid "At the live edge"
+msgstr ""
+
 msgid "Audio"
 msgstr "Audio"
 
@@ -604,6 +628,10 @@ msgstr "Balkan"
 
 msgid "Basic Science"
 msgstr "Grundlagenwissenschaft"
+
+#, fuzzy
+msgid "Being watched"
+msgstr "Als gesehen markieren"
 
 msgid "Best"
 msgstr "Am Besten"
@@ -660,6 +688,10 @@ msgstr "Umgehe Geoblocking für VOD (könnte illegal sein):"
 msgid "CME SAE"
 msgstr "CME SAE"
 
+#, python-format
+msgid "CUMLOUDER can only search its tags (e.g. milf, step sister, big tits) - there is no tag \"%s\"."
+msgstr ""
+
 msgid "Cache"
 msgstr "Cache"
 
@@ -678,6 +710,10 @@ msgstr ""
 "Rückgabedaten[%s]."
 
 msgid "Cancel"
+msgstr "Abbrechen"
+
+#, fuzzy
+msgid "Cancelled."
 msgstr "Abbrechen"
 
 msgid "Captcha"
@@ -734,6 +770,12 @@ msgstr "Kanal: %s"
 msgid "Channels"
 msgstr "Kanäle"
 
+msgid "Checking for updates"
+msgstr ""
+
+msgid "Checks every enabled site: menu, a list with videos and, in the full test, the stream link of one video."
+msgstr ""
+
 msgid "Children"
 msgstr "Kinder"
 
@@ -763,9 +805,6 @@ msgstr ""
 msgid "Clear the log file at plugin start"
 msgstr "Log-Datei beim Plugin-Start löschen"
 
-msgid "Click"
-msgstr "Klicken"
-
 #, python-format
 msgid "Clipped by: %s"
 msgstr "Geclippt von: %s"
@@ -775,6 +814,9 @@ msgstr "Clips"
 
 msgid "Close"
 msgstr "Schließen"
+
+msgid "Closes the host opened in the web interface, clears the search results and stops what the web interface still runs in the background. Use it when a page keeps loading. Settings, downloads and the E2iPlayer on the TV are not touched."
+msgstr ""
 
 msgid "Closing. Please wait..."
 msgstr "Wird geschlossen. Bitte warten..."
@@ -893,6 +935,9 @@ msgstr "Land / Store:"
 msgid "Country:"
 msgstr "Land:"
 
+msgid "Couples"
+msgstr ""
+
 msgid "Create Enigma2 .cuts chapter marks"
 msgstr "Erstelle Enigma2 .cuts Kapitelmarkierungen"
 
@@ -959,12 +1004,6 @@ msgstr "Datum"
 msgid "Debug file does not exist - nothing to delete"
 msgstr "Debug-Datei existiert nicht - nichts zu löschen"
 
-msgid "Debug file does not exist - nothing to download"
-msgstr "Debug-Datei existiert nicht - es gibt nichts zum Herunterladen"
-
-msgid "Debug file has been deleted"
-msgstr "Debug-Datei wurde gelöscht"
-
 msgid "Debug log"
 msgstr "Debug-Log"
 
@@ -973,12 +1012,6 @@ msgstr "Debug Log-Dateien"
 
 msgid "Debug option is disabled - nothing to display"
 msgstr "Debug-Option ist deaktiviert - nichts zum Anzeigen"
-
-msgid "Debug option set to console - nothing to display"
-msgstr "Debug-Option auf Konsole gesetzt - keine Anzeige möglich"
-
-msgid "Debug option set to debugfile, but file does not exist - nothing to display"
-msgstr "Debug-Option auf Debug-Datei gesetzt, aber Datei existiert nicht - nichts zum Anzeigen"
 
 msgid "Debug snapshot"
 msgstr "Debug-Snapshot"
@@ -1003,6 +1036,9 @@ msgstr "Fehler beim Entschlüsseln der Signatur"
 
 msgid "Default"
 msgstr "Standard"
+
+msgid "Default (2 minutes)"
+msgstr ""
 
 msgid "Default captcha bypass"
 msgstr "Standard-Captcha-Umgehung"
@@ -1061,9 +1097,6 @@ msgstr "Favoriten und Gesehen-Status jetzt löschen"
 msgid "Delete host order and groups now"
 msgstr "Host-Reihenfolge und Gruppen jetzt löschen"
 
-msgid "Delete log file"
-msgstr "Lösche Log-Datei"
-
 msgid "Delete movie metadata cache after (days, 0 = never)"
 msgstr "Film-Metadaten-Cache löschen nach (Tage, 0 = nie)"
 
@@ -1118,9 +1151,6 @@ msgstr "Verzeichnis \"%s\" existiert nicht."
 
 msgid "Directory browser"
 msgstr "Verzeichnisauswahl"
-
-msgid "Disable"
-msgstr "Deaktivieren"
 
 msgid "Disable all groups"
 msgstr "Deaktiviere alle Gruppen"
@@ -1221,9 +1251,6 @@ msgid ""
 msgstr ""
 "Download fehlgeschlagen.\n"
 "Status[%s]"
-
-msgid "Download log file"
-msgstr "Herunterladen von Log-Datei"
 
 msgid "Download manager"
 msgstr "Downloadverwaltung"
@@ -1334,17 +1361,21 @@ msgstr "E2iPlayer - Konfiguration"
 msgid "E2iPlayer auto start at Enigma2 start"
 msgstr "E2iPlayer startet automatisch beim Start von Enigma2"
 
+#, fuzzy
+msgid "E2iPlayer config folder"
+msgstr "E2iPlayer Downloader"
+
 msgid "E2iPlayer downloader"
 msgstr "E2iPlayer Downloader"
 
 msgid "E2iPlayer enable/disabled groups"
 msgstr "E2iPlayer aktivierte/deaktivierte Gruppen"
 
+msgid "E2iPlayer is only a specialized web browser. It does not host any materials."
+msgstr ""
+
 msgid "E2iPlayer virtual keyboard"
 msgstr "E2iPlayer Virtuelle Tastatur"
-
-msgid "ERROR:"
-msgstr "FEHLER:"
 
 msgid ""
 "ERROR: pipeline could not be constructed: no element \"playbin2\" \n"
@@ -1392,9 +1423,6 @@ msgstr "E-Mail"
 msgid "Empty title is not allowed."
 msgstr "Ein leerer Titel ist nicht zulässig."
 
-msgid "Enable"
-msgstr "Aktivieren"
-
 msgid "Enable all groups"
 msgstr "Aktiviere alle Gruppen"
 
@@ -1406,6 +1434,10 @@ msgstr "Aktiviere Sortiermodus"
 
 msgid "Enable reordering mode"
 msgstr "Aktiviere Sortiermodus"
+
+#, fuzzy
+msgid "Enabled hosts"
+msgstr "Zeige Service-Gruppen"
 
 #, python-format
 msgid ""
@@ -1477,6 +1509,10 @@ msgid "Entries: %d | Sort: %s | Status: %s | Jump target: %s"
 msgstr "Einträge: %d | Sortieren: %s | Status: %s | Sprungziel: %s"
 
 msgid "Episode"
+msgstr "Episode"
+
+#, fuzzy, python-format
+msgid "Episode %d"
 msgstr "Episode"
 
 msgid "Episodes"
@@ -1565,6 +1601,9 @@ msgstr "Fehler beim Schreiben der Datei \"%s\".\n"
 msgid "Ethical & Legal"
 msgstr "Ethisch & legal"
 
+msgid "Every enabled site: does the menu open, does a list show videos? Takes a few minutes."
+msgstr ""
+
 msgid "Exam Review"
 msgstr "Prüfungsrückblick"
 
@@ -1642,6 +1681,10 @@ msgstr "Initialisierung fehlgeschlagen (unbekannte Option oder alte curl-Version
 msgid "Failed to load channels"
 msgstr "Kanäle konnten nicht geladen werden"
 
+#, fuzzy
+msgid "Failed to load the match list"
+msgstr "Kanäle konnten nicht geladen werden"
+
 #, python-format
 msgid "Failed to log in user \"%s\". Please check your login and password."
 msgstr "Anmeldung von Benutzer \"%s\" fehlgeschlagen. Bitte überprüfen Sie Ihre Login Daten."
@@ -1703,6 +1746,10 @@ msgstr "Datei-E/A-Fehler."
 msgid "File Not Found."
 msgstr "Datei nicht gefunden."
 
+#, fuzzy, python-format
+msgid "File [%s] has been added to the downloading queue."
+msgstr "Datei: [%s] zur Download-Warteschlange hinzugefügt."
+
 #, python-format
 msgid "File [%s] is already in the downloading queue."
 msgstr "Die Datei [%s] befindet sich bereits in der Download-Warteschlange."
@@ -1743,11 +1790,21 @@ msgstr "Filme"
 msgid "Filmweb Suggestions"
 msgstr "Filmweb Vorschläge"
 
+msgid "Filter"
+msgstr ""
+
+#, fuzzy
+msgid "Filter settings"
+msgstr "E2iPlayer - Konfiguration"
+
 msgid "Find item"
 msgstr "Eintrag suchen"
 
 msgid "Find out more."
 msgstr "Mehr erfahren."
+
+msgid "Finished matches with a full replay, highlights or match cuts, newest first (usually a few days after the match)."
+msgstr ""
 
 msgid "First Page"
 msgstr "Erste Seite"
@@ -1793,6 +1850,9 @@ msgstr "Essen"
 msgid "Foot & Ankle"
 msgstr "Fuß & Knöchel"
 
+msgid "Football Live"
+msgstr ""
+
 msgid "For continuous playing, please press 8!"
 msgstr "Für die fortlaufende Wiedergabe drücke bitte die 8!"
 
@@ -1829,11 +1889,26 @@ msgstr "Vollständige Beschreibung geladen"
 msgid "Full description not available"
 msgstr "Keine vollständige Beschreibung verfügbar"
 
+msgid "Full test"
+msgstr ""
+
+msgid "Full test checks the INFO window :"
+msgstr ""
+
+msgid "Full test checks the next page :"
+msgstr ""
+
+msgid "Full test checks the search :"
+msgstr ""
+
+msgid "Full test checks the stream link :"
+msgstr ""
+
+msgid "Full test checks thumbnails :"
+msgstr ""
+
 msgid "GREEN"
 msgstr "GRÜN"
-
-msgid "GSTplayer no IFD workarround"
-msgstr "GSTplayer kein IFD-Workarround"
 
 #, python-format
 msgid "Game: %s"
@@ -1924,6 +1999,9 @@ msgstr "Links in Kategorien gliedern:"
 msgid "Group with id[%s] not found."
 msgstr "Gruppe mit ID [%s] wurde nicht gefunden."
 
+msgid "HIDDEN CAM SHOW IN PROGRESS. TRY AGAIN LATER!"
+msgstr ""
+
 msgid "HLS/m3u8"
 msgstr "HLS/m3u8"
 
@@ -1968,6 +2046,10 @@ msgstr "Suchverlauf."
 msgid "Home"
 msgstr "Home"
 
+#, fuzzy
+msgid "Home / Sections"
+msgstr "Abschnitt"
+
 msgid "Home page"
 msgstr "Startseite"
 
@@ -1989,11 +2071,16 @@ msgstr "Hosting \"%s\" unbekannt."
 msgid "Hosting: %s, %s"
 msgstr "Hosting: %s, %s"
 
+#, fuzzy
+msgid "Hosts"
+msgstr "Host"
+
 msgid "Hosts list type"
 msgstr "Hosts Listen Typ"
 
-msgid "Hosts settings"
-msgstr "Hosts Einstellungen"
+#, fuzzy
+msgid "Hot"
+msgstr "Host"
 
 msgid "How to solve a captcha:"
 msgstr "So lösen Sie ein Captcha:"
@@ -2015,6 +2102,19 @@ msgstr "IMDb Vorschläge"
 
 msgid "INFO"
 msgstr "INFO"
+
+#, python-format
+msgid "INFO %d rows"
+msgstr ""
+
+msgid "INFO list text"
+msgstr ""
+
+msgid "INFO opens no window"
+msgstr ""
+
+msgid "INFO window"
+msgstr ""
 
 msgid "INTERRUPTED"
 msgstr "UNTERBROCHEN"
@@ -2055,17 +2155,8 @@ msgstr "Information"
 msgid "Information about audio tracks not available."
 msgstr "Keine Informationen zu Tonspuren vorhanden."
 
-msgid "Initial list"
-msgstr "Grundliste"
-
-msgid "Initialize Download Manager"
-msgstr "Initialisiere Downloadverwaltung"
-
 msgid "Initialize web interface"
 msgstr "Initialisiere Web-Interface"
-
-msgid "Initiating data, please wait"
-msgstr "Initialisiere Daten, bitte warten"
 
 msgid "Inject black iframe at video playback finish"
 msgstr "Schwarzes Iframe am Wiedergabeende einfügen"
@@ -2102,6 +2193,10 @@ msgid "Invalid email."
 msgstr "Ungültige E-Mail."
 
 msgid "Invalid name."
+msgstr "Ungültiger Name."
+
+#, fuzzy
+msgid "Invalid value."
 msgstr "Ungültiger Name."
 
 msgid "Is this message displayed correctly?"
@@ -2226,10 +2321,6 @@ msgid "Last"
 msgstr "Letzte"
 
 #, python-format
-msgid "Last %d lines of the %s file are:"
-msgstr "Letzte %d Zeilen von der %s Datein sind:"
-
-#, python-format
 msgid "Last Exception error: \"%s\""
 msgstr "Letzter Ausnahmefehler: „%s“"
 
@@ -2258,6 +2349,10 @@ msgstr "Letzter Fehler: \"%s\""
 msgid "Last month"
 msgstr "Letzter Monat"
 
+#, fuzzy
+msgid "Last result"
+msgstr "Neueste"
+
 msgid "Last week"
 msgstr "Letzte Woche"
 
@@ -2273,6 +2368,10 @@ msgstr "Zuletzt hinzugefügt"
 msgid "Latest update"
 msgstr "Letzte Aktualisierung"
 
+#, fuzzy
+msgid "Latest updates"
+msgstr "Letzte Aktualisierung"
+
 msgid "Latest video"
 msgstr "Neuestes Video"
 
@@ -2285,11 +2384,14 @@ msgstr "Lateinamerikaner"
 msgid "Left"
 msgstr "Links"
 
-msgid "Level:"
-msgstr "Level:"
+msgid "Light / dark design"
+msgstr ""
 
 msgid "Lightgray"
 msgstr "Hellgrau"
+
+msgid "Like the quick test, plus the checks chosen in the host settings (Debug). Takes about 20-40 minutes."
+msgstr ""
 
 msgid "Liked videos"
 msgstr "Gelikte Videos"
@@ -2309,9 +2411,6 @@ msgstr "Link ist geschützt mit Google reCaptcha v2"
 msgid "Link protected with google recaptcha v2."
 msgstr "Link ist geschützt mit Google reCaptcha v2."
 
-msgid "Links for"
-msgstr "Links für"
-
 msgid "Links from all files without categories"
 msgstr "Links aus allen Dateien ohne Einteilung in Kategorien"
 
@@ -2321,6 +2420,10 @@ msgstr "Links aus der Datei %s"
 
 msgid "Lionsgate"
 msgstr "Lionsgate"
+
+#, fuzzy
+msgid "List"
+msgstr "Listenansicht"
 
 msgid "List by day"
 msgstr "Liste nach Tag"
@@ -2358,13 +2461,6 @@ msgstr "Laden"
 msgid "Loading %s failed due to following error:"
 msgstr "Laden von %s durch folgenden Fehler fehlgeschlagen:"
 
-msgid "Loading data, please wait"
-msgstr "Lade Daten, bitte warten"
-
-#, python-format
-msgid "Loading data, please wait (%d)"
-msgstr "Lade Daten, bitte warten (%d)"
-
 msgid "Loading failed."
 msgstr "Laden ist fehlgeschlagen."
 
@@ -2392,9 +2488,6 @@ msgstr "Log"
 
 msgid "Login"
 msgstr "Login"
-
-msgid "Login Protected."
-msgstr "Login Geschützt."
 
 msgid "Login failed!"
 msgstr "Login fehlgeschlagen!"
@@ -2482,6 +2575,13 @@ msgstr "Favoriten-Einträge markieren"
 msgid "Masrahyat"
 msgstr "Theaterstück"
 
+#, fuzzy
+msgid "Match cuts"
+msgstr "Treffer"
+
+msgid "Match not started yet"
+msgstr ""
+
 msgid "Matching entries"
 msgstr "Treffer"
 
@@ -2516,6 +2616,10 @@ msgstr "Sendung verpasst?"
 msgid "Missing API key - set it in Settings, Web streams, Windy Webcams"
 msgstr "API-Schlüssel fehlt - festlegen unter Einstellungen, Web-Streams, Windy Webcams"
 
+#, fuzzy
+msgid "Models"
+msgstr "Mehr Models"
+
 msgid "More"
 msgstr "Mehr"
 
@@ -2539,6 +2643,22 @@ msgstr "Mehr Ergebnisse"
 
 msgid "Most Popular"
 msgstr "Am populärsten"
+
+#, fuzzy
+msgid "Most Watched"
+msgstr "Am meisten bewertet"
+
+#, fuzzy
+msgid "Most commented"
+msgstr "Neueste"
+
+#, fuzzy
+msgid "Most discussed"
+msgstr "Am häufigsten angesehen"
+
+#, fuzzy
+msgid "Most favourited"
+msgstr "Am meisten bewertet"
 
 msgid "Most popular"
 msgstr "Am populärsten"
@@ -2728,6 +2848,14 @@ msgstr "Nein"
 msgid "No biography available"
 msgstr "Keine Biografie verfügbar"
 
+#, fuzzy
+msgid "No description available."
+msgstr "Keine vollständige Beschreibung verfügbar"
+
+#, fuzzy
+msgid "No host is open."
+msgstr "Nichts offen"
+
 msgid ""
 "No item to display. \n"
 "Press OK to refresh.\n"
@@ -2738,15 +2866,21 @@ msgstr ""
 msgid "No matching entries found."
 msgstr "Keine passenden Einträge gefunden."
 
-msgid "No materials waiting in the downloader queue"
-msgstr "Keine Materialien, die in der Downloaderwarteschlange warten"
+msgid "No player found for this title."
+msgstr ""
 
 msgid "No problems occurred."
 msgstr "Keine Probleme aufgetreten."
 
+msgid "No replays in these days"
+msgstr ""
+
 #, python-format
 msgid "No results found for: %s"
 msgstr "Keine Ergebnisse gefunden für: %s"
+
+msgid "No self-test result yet."
+msgstr ""
 
 msgid "No storage found for the cache folder. The cache folder will be switched to the plugin's own cache directory."
 msgstr "Kein Speicher für das Cache-Verzeichnis gefunden. Das Cache-Verzeichnis wird auf das plugineigene Cache-Verzeichnis umgestellt."
@@ -2754,17 +2888,30 @@ msgstr "Kein Speicher für das Cache-Verzeichnis gefunden. Das Cache-Verzeichnis
 msgid "No storage found for the downloads location. Where would you like to save your downloads?"
 msgstr "Kein Speicher für den Download-Ort gefunden. Wo möchten Sie Ihre Downloads speichern?"
 
+#, fuzzy
+msgid "No stream available"
+msgstr "Keine Biografie verfügbar"
+
+#, fuzzy
+msgid "No streams are available for this title yet."
+msgstr "Für diesen Host ist kein Suchverlauf verfügbar."
+
 msgid "No subtitle file found in the archive."
 msgstr "Keine Untertiteldatei im Archiv gefunden."
+
+#, fuzzy
+msgid "No subtitles available for this title."
+msgstr "Keine Untertiteldatei im Archiv gefunden."
+
+#, fuzzy, python-format
+msgid "No subtitles in %s. Available: %s"
+msgstr "Verwende Untertitel Parser Erweiterung, falls vorhanden"
 
 msgid "No valid entitlement found for asset."
 msgstr "Für den Vermögenswert wurde keine gültige Berechtigung gefunden."
 
 msgid "No valid links available."
 msgstr "Keine gültigen Links verfügbar."
-
-msgid "No valid urls"
-msgstr "Keine gültigen URLs"
 
 msgid "No video ID available"
 msgstr "Keine Video-ID verfügbar"
@@ -2775,8 +2922,15 @@ msgstr "Keine"
 msgid "Normalize item / file names (Show - SxxExx - Title)"
 msgstr "Element-/Dateinamen normalisieren (Anzeigen – SxxExx – Titel)"
 
-msgid "Nothing has been downloaded yet."
-msgstr "Es wurde noch nichts heruntergeladen."
+#, fuzzy
+msgid "Not available yet"
+msgstr "Inhalt nicht verfügbar"
+
+msgid "Not possible (no enigma2 session)."
+msgstr ""
+
+msgid "Nothing found. This site only finds Russian (Cyrillic) search terms."
+msgstr ""
 
 msgid "Nothing open"
 msgstr "Nichts offen"
@@ -2803,6 +2957,9 @@ msgstr "Anzahl der aufzubewahrenden rotierten Dateien"
 msgid "Number of rows"
 msgstr "Anzahl der Zeilen"
 
+msgid "OFFLINE"
+msgstr ""
+
 msgid "OK"
 msgstr "OK"
 
@@ -2812,24 +2969,31 @@ msgstr "OMDb API-Schlüssel"
 msgid "Offline channels"
 msgstr "Offline Kanäle"
 
+#, fuzzy
+msgid "Older days"
+msgstr "Nach einem Tag"
+
+msgid "Older replays"
+msgstr ""
+
 msgid "On Air"
 msgstr "Auf Sendung"
 
 msgid "One link mode"
 msgstr "Einzellinkmodus"
 
+msgid "Only files in the downloads folder can be deleted."
+msgstr ""
+
 msgid "Only links can be moved to a group."
 msgstr "Nur Links können in eine Gruppe verschoben werden."
-
-msgid "Only music"
-msgstr "Nur Musik"
 
 #, python-format
 msgid "Only the %d oldest new commits are shown"
 msgstr "Es werden nur die %d ältesten neuen Commits angezeigt"
 
-msgid "Only videos"
-msgstr "Nur Videos"
+msgid "Only the sites that failed in the last run, same checks."
+msgstr ""
 
 msgid "Open issues"
 msgstr "Offene Issues"
@@ -2891,6 +3055,14 @@ msgstr "PLAY"
 msgid "PREVIOUS/NEXT"
 msgstr "VORHERIGE/NÄCHSTE"
 
+#, fuzzy, python-format
+msgid "PRIVATE - wait %s seconds"
+msgstr "warte %s Sekunden"
+
+#, fuzzy
+msgid "PRIVATE - wait a few seconds"
+msgstr "warte %s Sekunden"
+
 msgid "Page not found - please check the address."
 msgstr "Seite nicht gefunden - bitte prüfen Sie die Adresse."
 
@@ -2921,9 +3093,6 @@ msgstr "Verzeichnis von xxxlist.txt :"
 
 msgid "Path to ytlist.txt, urllist.txt"
 msgstr "Verzeichnis von ytlist.txt, urllist.txt"
-
-msgid "Path:"
-msgstr "Verzeichnis:"
 
 msgid "Pathology"
 msgstr "Pathologie"
@@ -2973,11 +3142,11 @@ msgstr "Player Skin"
 msgid "Player data parsing error."
 msgstr "Player-Daten Parsing Fehler."
 
+msgid "Playing on the TV is not possible (no enigma2 session)."
+msgstr ""
+
 msgid "Playlist"
 msgstr "Playlist"
-
-msgid "Playlists"
-msgstr "Playlists"
 
 #, python-brace-format
 msgid ""
@@ -3003,6 +3172,13 @@ msgstr ""
 msgid "Please consider restart your Engima2 and agree to install the %s utlity when the %s will propose this."
 msgstr "Bitte erwägen Sie einen Neustart von Engima2 und stimmen Sie zu, das %s Dienstprogramm zu installieren, wenn %s dies vorschlägt."
 
+#, fuzzy
+msgid "Please enter a search text."
+msgstr "eingegebenen Text löschen"
+
+msgid "Please enter a valid link (http:// or https://)."
+msgstr ""
+
 msgid "Please make sure that the folder for cache data (set in the configuration) is writable."
 msgstr "Bitte stellen Sie sicher, dass das Verzeichnis für Cache-Daten (festgelegt in der Konfiguration) beschreibbar ist."
 
@@ -3016,7 +3192,15 @@ msgstr ""
 "Bitte besuchen Sie http://www.sport365.live/ um einige Werbeeinblendungen anzusehen.\n"
 "Dies könnte Ihr Problem lösen, falls die Wiedergabe ständig unterbrechen sollte."
 
+#, fuzzy
+msgid "Please select a group of favourites."
+msgstr "Neue Favoriten-Gruppe erstellen"
+
 msgid "Please select an entry."
+msgstr "Bitte wähle einen Eintrag aus."
+
+#, fuzzy
+msgid "Please select the link first."
 msgstr "Bitte wähle einen Eintrag aus."
 
 #, python-format
@@ -3040,6 +3224,9 @@ msgstr "Bitte warten - Initialisierungsdaten werden heruntergeladen."
 msgid "Please wait for initialization data."
 msgstr "Bitte warten Sie auf die Initialisierungsdaten."
 
+msgid "Please wait, the previous action is still running."
+msgstr ""
+
 msgid "Please wait..."
 msgstr "Bitte warten..."
 
@@ -3051,6 +3238,10 @@ msgstr "Polnisch"
 
 msgid "Popular"
 msgstr "Populär"
+
+#, fuzzy
+msgid "Pornstars"
+msgstr "Mehr Pornostars"
 
 msgid "Powerpoint Presentation"
 msgstr "PowerPoint Präsentation"
@@ -3085,14 +3276,12 @@ msgstr "Zurück"
 msgid "Previous Page"
 msgstr "Vorherige Seite"
 
-msgid "Previous list"
-msgstr "Vorherige Liste"
+#, fuzzy
+msgid "Previous days"
+msgstr "Vorherige Seite"
 
 msgid "Price:"
 msgstr "Preis:"
-
-msgid "Private Show."
-msgstr "Privatshow."
 
 msgid "Production:"
 msgstr "Produktion:"
@@ -3127,6 +3316,9 @@ msgstr "Python-Module"
 msgid "Quality:"
 msgstr "Qualität:"
 
+msgid "Quick test: menu and a list with videos"
+msgstr ""
+
 msgid "RAM buffer size [MB] for local files"
 msgstr "RAM-Puffer in [MB] für Lokale-Inhalte"
 
@@ -3138,9 +3330,6 @@ msgstr "AKTUELL"
 
 msgid "RED"
 msgstr "ROT"
-
-msgid "REMEMBER:"
-msgstr "ERINNERUNG:"
 
 msgid "REWIND"
 msgstr "ZURÜCKSPULEN"
@@ -3194,14 +3383,23 @@ msgstr "Lesefehler."
 msgid "Reading binaries..."
 msgstr "Lese Binärdateien..."
 
+#, fuzzy
+msgid "Reading..."
+msgstr "(wird gelesen...)"
+
 msgid "Recent"
 msgstr "Neueste"
 
-msgid "Recon"
+#, fuzzy
+msgid "Recently added"
+msgstr "Zuletzt hinzugefügt"
+
+#, fuzzy
+msgid "Recommended"
 msgstr "Aufklärung"
 
-msgid "Redirect"
-msgstr "Umleiten"
+msgid "Recon"
+msgstr "Aufklärung"
 
 msgid "Refresh"
 msgstr "Erneuern"
@@ -3228,9 +3426,6 @@ msgstr "Releases"
 
 msgid "Relevance"
 msgstr "Relevanz"
-
-msgid "Reload list"
-msgstr "Liste neu laden"
 
 msgid "Remaining:"
 msgstr "Verbleibend:"
@@ -3275,8 +3470,19 @@ msgstr "Datei umbenennen"
 msgid "Reordering: UP/DOWN moves the row, OK saves, EXIT cancels."
 msgstr "Sortieren: HOCH/RUNTER verschiebt die Zeile, OK speichert, EXIT bricht ab."
 
-msgid "Reset State"
-msgstr "Status zurücksetzen"
+msgid "Replay"
+msgstr ""
+
+#, fuzzy
+msgid "Replays & highlights"
+msgstr "Highlights"
+
+msgid "Report a problem (GitHub issues)"
+msgstr ""
+
+#, fuzzy
+msgid "Report file"
+msgstr "Datei löschen"
 
 msgid "Reset this list to its default layout?"
 msgstr "Diese Liste auf die Standardanordnung zurücksetzen?"
@@ -3286,6 +3492,10 @@ msgstr "Auf Standard zurücksetzen"
 
 msgid "Reset to saved order"
 msgstr "Auf gespeicherte Reihenfolge zurücksetzen"
+
+#, fuzzy
+msgid "Reset web interface"
+msgstr "Initialisiere Web-Interface"
 
 #, python-format
 msgid ""
@@ -3303,8 +3513,8 @@ msgstr ""
 "Das Auflösen von reCaptcha mit %s ist fehlgeschlagen!\n"
 "\n"
 
-msgid "Return to hosts list"
-msgstr "Zurück zur Hosts-Liste"
+msgid "Restart GUI"
+msgstr ""
 
 msgid "Reused entries move back to the top again."
 msgstr "Wiederverwendete Einträge werden wieder an den Anfang verschoben."
@@ -3350,6 +3560,10 @@ msgstr "Speichern"
 
 msgid "Save changes?"
 msgstr "Änderungen speichern?"
+
+#, fuzzy, python-format
+msgid "Save subtitles (%s)"
+msgstr "Untertitel für: %s"
 
 #, python-format
 msgid ""
@@ -3407,11 +3621,12 @@ msgstr "Suchverlauf gespeichert."
 msgid "Search history saved. %d duplicate entries removed."
 msgstr "Suchverlauf gespeichert. %d doppelte Einträge entfernt."
 
-msgid "Search in"
-msgstr "Suche in"
-
 msgid "Search in all active hosts"
 msgstr "Suche in allen aktiven Hosts"
+
+#, fuzzy
+msgid "Search next page"
+msgstr "Suchmodus"
 
 msgid "Search only in Movies"
 msgstr "Suche nur Filme"
@@ -3425,23 +3640,39 @@ msgstr "Suchergebnisse"
 msgid "Search results region:"
 msgstr "Region der Suchergebnisse:"
 
+#, fuzzy
+msgid "Search term :"
+msgstr "Suchmodus"
+
+#, fuzzy
+msgid "Search text"
+msgstr "Suchmodus"
+
 msgid "Search type"
 msgstr "Suchmodus"
 
+#, fuzzy
+msgid "Search: "
+msgstr "Suche"
+
 #, python-format
-msgid "Searching in %s, please wait (%d)"
-msgstr "Suche in %s, bitte warten (%d)"
+msgid "Search: %d of %d - now %s (%d found so far)"
+msgstr ""
 
 #, python-format
 msgid "Searching subtitles for \"%s\""
 msgstr "Suche Untertitel für \"%s\""
 
-#, python-format
-msgid "Searching, please wait (%d)"
-msgstr "Suche, bitte warten (%d)"
-
 msgid "Season"
 msgstr "Staffel"
+
+#, fuzzy, python-format
+msgid "Season %d"
+msgstr "Staffel %s"
+
+#, python-format
+msgid "Season %d (%d episodes)"
+msgstr ""
 
 #, python-format
 msgid "Season %s"
@@ -3458,9 +3689,6 @@ msgstr "Alternativer Player ohne Puffermodus"
 
 msgid "Section"
 msgstr "Abschnitt"
-
-msgid "Select"
-msgstr "Auswählen"
 
 #, python-format
 msgid "Select %s"
@@ -3520,11 +3748,14 @@ msgstr "Wähle Datei aus"
 msgid "Select video option"
 msgstr "Auswahl Video-Optionen"
 
-msgid "Selected hosts"
-msgstr "Ausgewählte Hosts"
-
 msgid "Selection"
 msgstr "Auswahl"
+
+msgid "Self-test"
+msgstr ""
+
+msgid "Self-test report :"
+msgstr ""
 
 msgid "Send"
 msgstr "Senden"
@@ -3673,6 +3904,10 @@ msgstr "Nur Audio in der ausgewählten Sprache anzeigen:"
 msgid "Show only best quality of streams:"
 msgstr "Nur Streams in bester Qualität anzeigen:"
 
+#, fuzzy
+msgid "Show results"
+msgstr "Suchergebnisse"
+
 msgid "Show search history"
 msgstr "Suchverlauf anzeigen"
 
@@ -3702,6 +3937,16 @@ msgstr "Simple Untertitel Downloader"
 
 msgid "Simplify the title and try again."
 msgstr "Vereinfachen Sie den Titel und versuchen es erneut."
+
+msgid "Site self-test"
+msgstr ""
+
+msgid "Site self-test in the main menu :"
+msgstr ""
+
+#, python-format
+msgid "Site self-test: %d of %d - now %s (%d failed so far)"
+msgstr ""
 
 msgid "Skin"
 msgstr "Skin"
@@ -3812,9 +4057,6 @@ msgstr "Stereo Downmix Modus für Softwaredekoder"
 msgid "Stop"
 msgstr "Stop"
 
-msgid "Stop download"
-msgstr "Download stoppen"
-
 msgid "Stop downloading"
 msgstr "Herunterladen anhalten"
 
@@ -3827,8 +4069,16 @@ msgstr "Wiedergabe stoppen?"
 msgid "Storage"
 msgstr "Speicher"
 
+#, fuzzy
+msgid "Stream link"
+msgstr "Wähle Link"
+
 msgid "Streamed"
 msgstr "Gestreamt"
+
+#, fuzzy
+msgid "Studios"
+msgstr "Audio"
 
 msgid "Study Plan"
 msgstr "Studienplan"
@@ -3923,11 +4173,23 @@ msgstr "Untertitel erfolgreich heruntergeladen. [%s], Umwandlung in UTF-8."
 msgid "Subtitles for: %s"
 msgstr "Untertitel für: %s"
 
+#, fuzzy, python-format
+msgid ""
+"Subtitles saved:\n"
+"%s"
+msgstr "Untertitel für: %s"
+
 msgid "Subtitles:"
 msgstr "Untertitel:"
 
 msgid "Summary:"
 msgstr "Zusammenfassung:"
+
+msgid "Support forum (opena.tv)"
+msgstr ""
+
+msgid "Support package"
+msgstr ""
 
 msgid "Surgical Approaches"
 msgstr "Chirurgische Ansätze"
@@ -3966,13 +4228,18 @@ msgstr ""
 "DIES IST EIN PREMIUM-VIDEO.\n"
 "ANMELDUNG ODER PREMIUM-ABONNEMENT ERFORDERLICH."
 
-msgid ""
-"THIS IS A PREMIUM VIDEO. \n"
-"LOGIN OR PREMIUM REQUIRED."
-msgstr "DIES IST EIN PREMIUM-VIDEO. ANMELDUNG ODER PREMIUM-ABONNEMENT ERFORDERLICH."
-
 msgid "THIS IS A PRIVATE VIDEO."
 msgstr "DIES IST EIN PRIVATES VIDEO."
+
+msgid ""
+"THIS LINK CONTAINS PHOTOS ONLY.\n"
+" PLEASE CHOOSE ANOTHER ONE!"
+msgstr ""
+
+msgid ""
+"THIS VIDEO HAS BEEN REMOVED DUE TO COPYRIGHT INFRINGEMENT.\n"
+" PLEASE CHOOSE ANOTHER ONE!"
+msgstr ""
 
 msgid ""
 "THIS VIDEO IS JUST A PREVIEW ON EXTERNAL STORAGE.\n"
@@ -3991,6 +4258,12 @@ msgstr ""
 msgid "TMDb Rating:"
 msgstr "TMDb Bewertung:"
 
+msgid "TODAY"
+msgstr ""
+
+msgid "TOMORROW"
+msgstr ""
+
 msgid "TV Series"
 msgstr "TV Serien"
 
@@ -4006,11 +4279,17 @@ msgstr "TV Kanäle"
 msgid "TV series"
 msgstr "TV Serien"
 
+msgid "Tags"
+msgstr ""
+
 msgid "Techniques"
 msgstr "Techniken"
 
 msgid "Temp"
 msgstr "Temp"
+
+msgid "Test the failed sites again"
+msgstr ""
 
 msgid "Testers:"
 msgstr "Tester:"
@@ -4024,6 +4303,9 @@ msgstr "Verzeichnis von ytlist.txt, urllist.txt:"
 #, python-format
 msgid "The %s utility is necessary here but it was not detected."
 msgstr "Das Dienstprogramm %s ist hier notwendig, wurde aber nicht erkannt."
+
+msgid "The 100 tags with the most videos"
+msgstr ""
 
 msgid ""
 "The 7reels / cineb resolvers 'VidEasy', 'VidCore/VidFast', 'VidLink' and 'Peachify' cannot decrypt their links on the receiver.\n"
@@ -4091,11 +4373,18 @@ msgstr ""
 msgid "The debug log is not active."
 msgstr "Das Debug-Log ist nicht aktiv."
 
+msgid "The download manager is stopped, start it on the download page."
+msgstr ""
+
 msgid "The element already exists in User Links."
 msgstr "Das Element ist bereits in „Benutzerlinks“ vorhanden."
 
 msgid "The feed of these channels could not be read - press OK to try again."
 msgstr "Der Feed dieser Kanäle konnte nicht gelesen werden - drücken Sie OK, um es erneut zu versuchen."
+
+#, python-format
+msgid "The host \"%s\" cannot be used from the web interface (disabled, unknown or protected by PIN)."
+msgstr ""
 
 #, python-format
 msgid ""
@@ -4113,8 +4402,30 @@ msgstr ""
 "Der Service %s benötigt ein Abonnement.\n"
 "Bitte füllen Sie Ihr Login und Passwort in der Host Konfiguration aus - zugänglich über die blaue Taste."
 
+msgid "The host asks for a captcha. It can only be solved on the receiver (or with MyE2i there)."
+msgstr ""
+
+#, fuzzy
+msgid "The host did not return a list."
+msgstr "weeb.tv hat keinen gültigen Stream zurückgegeben (Fehler %s)."
+
+#, python-format
+msgid "The host wanted to open a window on the TV (%s) - that only works on the receiver."
+msgstr ""
+
 msgid "The latest uploads of all YouTube channels in this group, newest first."
 msgstr "Die neuesten Uploads aller YouTube-Kanäle dieser Gruppe, die neuesten zuerst."
+
+#, fuzzy
+msgid "The link could not be resolved."
+msgstr "Der Benutzerlink konnte nicht gelöscht werden."
+
+msgid "The list has changed, please try again."
+msgstr ""
+
+#, fuzzy
+msgid "The model is offline or in a private show."
+msgstr "Dieses Video ist ein privates Video."
 
 msgid "The number of items in the search history"
 msgstr "Anzahl der Einträge im Suchverlauf"
@@ -4135,11 +4446,27 @@ msgstr "Die Anfrage hat keine gültige Länge."
 msgid "The same item already exists in this group."
 msgstr "Der gleiche Eintrag existiert bereits in dieser Gruppe."
 
+msgid "The settings are protected by a PIN, change them on the receiver."
+msgstr ""
+
+msgid "The site has no player for this video (it only shows a cam advert)."
+msgstr ""
+
+msgid "The site refuses all qualities of this video at the moment (HTTP 403). Try again later."
+msgstr ""
+
+msgid "The support package holds the versions, the system information, the enabled hosts and the end of the debug log in one text file for a problem report. Look through it before posting it - the log can contain addresses of the sites you opened."
+msgstr ""
+
 msgid "The user link could not be deleted."
 msgstr "Der Benutzerlink konnte nicht gelöscht werden."
 
 msgid "The user link could not be updated."
 msgstr "Der Benutzerlink konnte nicht aktualisiert werden."
+
+#, python-format
+msgid "The value must be between %d and %d."
+msgstr ""
 
 msgid "The website returned a server error for this request."
 msgstr "Die Website hat bei dieser Anfrage einen Serverfehler zurückgegeben."
@@ -4186,14 +4513,31 @@ msgstr "Dieser Inhalt ist in Ihrer Region nicht verfügbar."
 msgid "This content is only available in Switzerland."
 msgstr "Dieser Inhalt ist nur in der Schweiz verfügbar."
 
+#, fuzzy
+msgid "This entry cannot be added to the favourites."
+msgstr "Keine weiteren Favoriten-Gruppen vorhanden"
+
+#, fuzzy
+msgid "This entry cannot be opened."
+msgstr "Dienstprogramm \"%s\" kann nicht gefunden werden."
+
 msgid "This feed is empty, or the YouTube sign-in has expired - sign out and in again."
 msgstr "Dieser Feed ist leer, oder die YouTube-Anmeldung ist abgelaufen - melden Sie sich ab und wieder an."
+
+msgid "This folder is protected by a PIN, open it on the receiver."
+msgstr ""
 
 msgid "This host has been added already to this group."
 msgstr "Dieser Service wurde bereits zu dieser Gruppe hinzugefügt."
 
+msgid "This is only an advert for a paid clip (clips4sale), there is no free video."
+msgstr ""
+
 msgid "This model is offline."
 msgstr "Dieses Model ist offline."
+
+msgid "This option cannot be changed from the web interface."
+msgstr ""
 
 msgid "This page has no video (blog article)."
 msgstr "Diese Seite enthält kein Video (Blogartikel)."
@@ -4210,6 +4554,9 @@ msgstr "Diese Sitzung hat keinen Code - scannen Sie den QR-Code auf dem Receiver
 msgid "This show is private. Try again later!"
 msgstr "Diese Show ist Privat. Versuche es später nochmal!"
 
+msgid "This stream can only be played with buffering - please start it on the receiver."
+msgstr ""
+
 msgid "This video has been deleted."
 msgstr "Dieses Video wurde gelöscht."
 
@@ -4222,14 +4569,31 @@ msgstr "Dieses Video ist ein privates Video."
 msgid "This video is a private."
 msgstr "Dieses Video ist Privat."
 
+msgid "This video is only on hosters E2iPlayer cannot play."
+msgstr ""
+
+msgid "This video is only on the netu.tv player (pbtube.net), which E2iPlayer cannot play."
+msgstr ""
+
 msgid "This video requires you to sign in to a YouTube account."
 msgstr "Für dieses Video müssen Sie sich mit einem YouTube-Konto anmelden."
 
+msgid "This video was embedded from Pornhub and is no longer available there."
+msgstr ""
+
+#, fuzzy
+msgid "This video was embedded from xHamster and has been deleted there."
+msgstr "Dieses Video wurde gelöscht."
+
+#, fuzzy
+msgid "Thumbnails"
+msgstr "Lösche Vorschaubilder"
+
+msgid "Time"
+msgstr ""
+
 msgid "Tip! You can connect USB flash drive to fix this problem."
 msgstr "Tipp! Sie können ein USB-Stick anschließen, um das Problem zu beheben."
-
-msgid "Title:"
-msgstr "Titel:"
 
 #, python-format
 msgid ""
@@ -4319,7 +4683,11 @@ msgstr "Trending"
 msgid "Trending this week"
 msgstr "Trends dieser Woche"
 
-msgid "Try to change extplayer or disable IFD in GSTplayer configuration"
+msgid "Troubleshooting"
+msgstr ""
+
+#, fuzzy
+msgid "Try to change extplayer or reinstall gst-ifdsrc"
 msgstr "Versuche extplayer zu ändern oder IFD in der GSTplayer Konfiguration zu deaktivieren"
 
 msgid "Turkish Movies"
@@ -4335,6 +4703,10 @@ msgid "Tutorials"
 msgstr "Anleitungen"
 
 msgid "Type:"
+msgstr "Typ:"
+
+#, fuzzy
+msgid "Type: "
 msgstr "Typ:"
 
 #, python-format
@@ -4361,6 +4733,10 @@ msgstr "Universal"
 
 msgid "Unknow data in the captcha item!"
 msgstr "Unbekannte Daten im Captcha-Element!"
+
+#, fuzzy
+msgid "Unknown action."
+msgstr "Unbekannter Fehler."
 
 #, python-format
 msgid "Unknown captcha form! Data: \"%s\""
@@ -4400,6 +4776,9 @@ msgstr "Nicht unterstütztes Protokoll."
 #, python-format
 msgid "Unzip error code[%s]."
 msgstr "Unzip Fehler-Code[%s]."
+
+msgid "Upcoming"
+msgstr ""
 
 msgid "Updates"
 msgstr "Updates"
@@ -4564,18 +4943,11 @@ msgstr "Virtueller Tastatur-Typ"
 msgid "Waiting for the result ..."
 msgstr "Warte auf das Ergebnis ..."
 
-#, python-format
-msgid "Waiting search thread to stop, please wait (%d)"
-msgstr "Warte darauf, den Suchthread zu beenden, bitte warte (%d)"
-
 msgid "Walt Disney"
 msgstr "Walt Disney"
 
 msgid "Warner Bros"
 msgstr "Warner Bros"
-
-msgid "Watch"
-msgstr "Anschauen"
 
 msgid "Watch Videos Online"
 msgstr "Schaue Videos Online"
@@ -4585,15 +4957,6 @@ msgstr "Wiedergabeverlauf"
 
 msgid "Watch later"
 msgstr "Später ansehen"
-
-msgid "Web component has been reset and all threads are stopped. :)"
-msgstr "Die Webkomponente wurde zurückgesetzt und alle Threads werden gestoppt. :)"
-
-msgid "Web component has been reset, the following threads are still working:"
-msgstr "Webkomponente wurde zurückgesetzt, die folgenden Threads funktionieren noch:"
-
-msgid "Web interface version"
-msgstr "Web-Interface Version"
 
 msgid "What's happening?"
 msgstr "Was passiert gerade?"
@@ -4658,6 +5021,9 @@ msgstr "Xtream host (z.B. http://server:port)"
 msgid "YELLOW"
 msgstr "GELB"
 
+msgid "YESTERDAY"
+msgstr ""
+
 msgid "YP connected"
 msgstr "YP verbunden"
 
@@ -4688,9 +5054,6 @@ msgstr "Ja, in die Datei /home/root/logs/iptv.dbg"
 
 msgid "Yes, to file /tmp/iptv.dbg"
 msgstr "Ja, in die Datei /tmp/iptv.dbg"
-
-msgid "You are using old version of OpenWebif.<br> To go to E2iPlayer web Select the following link<br>"
-msgstr "Sie verwenden eine alte Version von OpenWebif.<br> Um zur E2iPlayer Seite zu gelangen, wählen Sie den folgenden Link<br>"
 
 msgid "You can disable HTTPS certificates validation in the E2iPlayer configuration to suppress this problem."
 msgstr "Sie können die Validierung von HTTPS-Zertifikaten in der E2iPlayer-Konfiguration deaktivieren, um dieses Problem zu beheben."
@@ -4759,6 +5122,9 @@ msgstr "[%s] ohne Pufferung"
 
 msgid "[HLS/M3U8] buffering"
 msgstr "[HLS/M3U8] puffern"
+
+msgid "[HLS/M3U8] live stream starts behind live"
+msgstr ""
 
 msgid "[HTTP] buffering"
 msgstr "[HTTP] puffern"
@@ -4890,11 +5256,12 @@ msgstr "Externer Eplayer3"
 msgid "external gstplayer"
 msgstr "Externer Gstplayer"
 
+#, fuzzy
+msgid "failed"
+msgstr "Bearbeitung ist fehlgeschlagen."
+
 msgid "file"
 msgstr "Datei"
-
-msgid "first check if host works properly in GUI and web <b>BEFORE</b> reporting error in it !!!"
-msgstr "Prüfen Sie zuerst, ob der Host in GUI und Web korrekt funktioniert <b>BEVOR</b> Sie Fehler melden !!!"
 
 msgid "fixed"
 msgstr "fixiert"
@@ -4926,6 +5293,9 @@ msgstr "HD"
 msgid "high"
 msgstr "hoch"
 
+msgid "hint: the site shows a next page link"
+msgstr ""
+
 msgid "horizontal"
 msgstr "horizontal"
 
@@ -4934,9 +5304,6 @@ msgstr "Host"
 
 msgid "host order and groups"
 msgstr "Host-Reihenfolge und Gruppen"
-
-msgid "host:"
-msgstr "Host:"
 
 msgid "https"
 msgstr "https"
@@ -5001,6 +5368,9 @@ msgstr "kastanienbraun"
 msgid "medium"
 msgstr "mittel"
 
+msgid "menu and list only"
+msgstr ""
+
 msgid "more options (this menu)"
 msgstr "weitere Optionen (dieses Menü)"
 
@@ -5022,6 +5392,31 @@ msgstr "navyblau"
 msgid "never"
 msgstr "nie"
 
+#, fuzzy
+msgid "next page"
+msgstr "Nächste Seite"
+
+msgid "next page = page 1"
+msgstr ""
+
+#, fuzzy
+msgid "next page empty"
+msgstr "Nächste Seite"
+
+#, fuzzy
+msgid "next page ok"
+msgstr "Nächste Seite"
+
+#, fuzzy
+msgid "no next page"
+msgstr "Nächste Seite"
+
+msgid "no stream link"
+msgstr ""
+
+msgid "no videos in the first lists"
+msgstr ""
+
 msgid "not available (the Python parser is used)"
 msgstr "nicht verfügbar (der Python-Parser wird verwendet)"
 
@@ -5030,6 +5425,9 @@ msgstr "nicht gefunden"
 
 msgid "not installed"
 msgstr "nicht installiert"
+
+msgid "not loadable"
+msgstr ""
 
 msgid "off"
 msgstr "aus"
@@ -5042,6 +5440,10 @@ msgstr "olivgrün"
 
 msgid "on"
 msgstr "an"
+
+#, fuzzy
+msgid "only on the receiver"
+msgstr "ausgewählten Eintrag herunterladen"
 
 msgid "open / play the selected item"
 msgstr "ausgewählten Eintrag öffnen / abspielen"
@@ -5091,8 +5493,31 @@ msgstr "im temporären Datenordner gespeichert"
 msgid "saved next to the downloaded video file"
 msgstr "neben der heruntergeladenen Videodatei gespeichert"
 
+#, fuzzy
+msgid "search"
+msgstr "Suche"
+
+#, fuzzy, python-format
+msgid "search %d"
+msgstr "Suche in"
+
+#, fuzzy
+msgid "search found nothing"
+msgstr "Server hat nichts zurückgegeben."
+
 msgid "search history"
 msgstr "Suchverlauf"
+
+msgid "search next page = page 1"
+msgstr ""
+
+#, fuzzy
+msgid "search next page empty"
+msgstr "Der Suchverlauf ist leer."
+
+#, fuzzy
+msgid "search next page ok"
+msgstr "Suchmodus"
 
 msgid "second"
 msgstr "Sekunde"
@@ -5130,6 +5555,42 @@ msgstr "Auto-Play starten (spielt die Liste automatisch ab)"
 msgid "status"
 msgstr "status"
 
+#, fuzzy
+msgid "stream data"
+msgstr "Gestreamt"
+
+msgid "stream data ok"
+msgstr ""
+
+msgid "stream data ok (HLS)"
+msgstr ""
+
+#, python-format
+msgid "stream is a web page, not video (HTTP %s)"
+msgstr ""
+
+#, fuzzy
+msgid "stream link"
+msgstr "Benutzer-Links"
+
+msgid "stream link ok"
+msgstr ""
+
+#, python-format
+msgid "stream not checked (%s)"
+msgstr ""
+
+msgid "stream not checked (HTTP 429, too many requests)"
+msgstr ""
+
+#, fuzzy, python-format
+msgid "stream: %s"
+msgstr "Alle Streams"
+
+#, python-format
+msgid "stream: no data (HTTP %s)"
+msgstr ""
+
 msgid "subtitles cache"
 msgstr "Untertitel-Cache"
 
@@ -5142,8 +5603,26 @@ msgstr "teal"
 msgid "the best"
 msgstr "die beste"
 
+#, fuzzy
+msgid "the menu has no lists"
+msgstr "Die Anfrage hat keine gültige Länge."
+
+msgid "the menu is empty"
+msgstr ""
+
 msgid "the worst"
 msgstr "die schlechteste"
+
+#, fuzzy
+msgid "thumbnails"
+msgstr "Lösche Vorschaubilder"
+
+#, fuzzy, python-format
+msgid "thumbnails %d/%d"
+msgstr "Lösche Vorschaubilder"
+
+msgid "thumbnails do not load"
+msgstr ""
 
 msgid "to top"
 msgstr "Nach oben"
@@ -5184,9 +5663,6 @@ msgstr "videos: %s"
 
 msgid "views"
 msgstr "Ansichten"
-
-msgid "visit site"
-msgstr "besuche Seite"
 
 #, python-format
 msgid "wait %s second"

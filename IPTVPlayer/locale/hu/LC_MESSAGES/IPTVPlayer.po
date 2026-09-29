@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-26 10:21+0000\n"
+"POT-Creation-Date: 2026-09-29 20:26+0000\n"
 "PO-Revision-Date: 2026-07-27 16:49+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -64,6 +64,14 @@ msgstr ""
 msgid "\"%s\" Virtual Keyboard layout not available."
 msgstr "„%s” Virtuális billentyűzetkiosztás nem érhető el."
 
+#, fuzzy, python-format
+msgid "\"%s\" has been added to the favourites group \"%s\"."
+msgstr "Nincsenek más kedvenc csoportok"
+
+#, python-format
+msgid "\"%s\" is playing on the TV."
+msgstr ""
+
 msgid "\"Web\" streams player"
 msgstr "„Web” stream lejátszó"
 
@@ -74,6 +82,10 @@ msgstr ""
 #, python-format
 msgid "%d duplicate entry removed."
 msgstr ""
+
+#, fuzzy, python-format
+msgid "%d videos"
+msgstr "Videók böngészése"
 
 #, python-format
 msgid "%s - service overview"
@@ -106,14 +118,6 @@ msgstr "%s e-mail"
 #, python-format
 msgid "%s episodes"
 msgstr "%s epizód"
-
-#, python-format
-msgid "%s file is %d KB in size. Last %d lines are:"
-msgstr "%s fájl mérete %d KB. Az utolsó %d sorok a következők:"
-
-#, python-format
-msgid "%s file is %d MB in size. Last %d lines are:"
-msgstr "A(z) %s fájl mérete %d MB. Az utolsó %d sor a következő:"
 
 #, python-format
 msgid "%s followers"
@@ -198,6 +202,9 @@ msgstr "----- PUFFER KONFIGURÁCIÓ -----"
 msgid "----- DOWNLOADING CONFIGURATION -----"
 msgstr "----- KONFIGURÁCIÓ LETÖLTÉSE -----"
 
+msgid "----- Debug -----"
+msgstr ""
+
 msgid "----- Global HostXXX Configuration -----"
 msgstr "----- Globális HostXXX konfiguráció -----"
 
@@ -274,7 +281,13 @@ msgstr "--Bármilyen--"
 msgid "--Other--"
 msgstr "--Más--"
 
+msgid "... and that the stream delivers video :"
+msgstr ""
+
 msgid "0-9"
+msgstr ""
+
+msgid "1 minute"
 msgstr ""
 
 msgid "1. On a phone or PC in the same network, open the address shown in the captcha window (or scan its QR code) in a browser with the MyE2i extension installed. If it asks for a code, you find it in the title of the captcha window."
@@ -282,6 +295,10 @@ msgstr ""
 
 msgid "12 hour format"
 msgstr "12 órás formátum"
+
+#, fuzzy
+msgid "15 seconds"
+msgstr "másodperc"
 
 msgid "2. Click the big green button on that page. A new tab opens with the captcha or the website's browser check."
 msgstr ""
@@ -292,8 +309,16 @@ msgstr "24 órás formátum"
 msgid "3. Solve it. The result goes back to the receiver by itself and the captcha window closes."
 msgstr ""
 
-msgid "<font color=\"#FE642E\">REMEMBER:</font></b> E2iPlayer <b>IS ONLY</b> specialized Web browser. It does <b>NOT</b> host any materials!!!</font>"
-msgstr "<font color=\"#FE642E\">NE FELEDJE:</font></b>E2iPlayer <b>CSAK</b> speciális webböngésző. <b>NEM</b> tartalmaz semmilyen anyagot!!!</font>"
+#, fuzzy
+msgid "30 seconds"
+msgstr "másodperc"
+
+#, fuzzy
+msgid "5 seconds"
+msgstr "másodperc"
+
+msgid "A search is already running."
+msgstr ""
 
 msgid "A-Z"
 msgstr "A-Z"
@@ -306,6 +331,11 @@ msgstr "MEGSZAKÍTVA"
 
 msgid "AC3 downmix mode"
 msgstr "AC3 lekeverési mód"
+
+msgid ""
+"ACCESS DENIED.\n"
+"THIS VIDEO IS DELETED OR NOT AVAILABLE TO YOUR REGION."
+msgstr ""
 
 msgid "ALBUMS"
 msgstr "ALBUMOK"
@@ -350,9 +380,6 @@ msgstr ""
 msgid "Action & Thriller"
 msgstr ""
 
-msgid "Active host"
-msgstr "Aktív host"
-
 #, python-format
 msgid "Active: %s"
 msgstr "Aktív: %s"
@@ -392,9 +419,6 @@ msgstr "Új kedvencek csoportjának hozzáadása"
 msgid "Add to User Links"
 msgstr "Hozzáadás a felhasználói hivatkozásokhoz"
 
-msgid "Add to downloader"
-msgstr "Hozzáadás a letöltőhöz"
-
 #, python-format
 msgid "Added by: %s, directory: %s"
 msgstr "Hozzáadta: %s, könyvtár: %s"
@@ -414,9 +438,6 @@ msgstr "Kategóriák"
 
 msgid "All in one"
 msgstr "Minden egyben"
-
-msgid "All materials"
-msgstr "Minden anyag"
 
 #, fuzzy
 msgid "All results"
@@ -568,6 +589,9 @@ msgstr "Vonatkozás"
 msgid "At least one of plugin browser, extension list and main menu has to stay on, otherwise E2iPlayer could no longer be started."
 msgstr ""
 
+msgid "At the live edge"
+msgstr ""
+
 msgid "Audio"
 msgstr "Hang"
 
@@ -624,6 +648,10 @@ msgstr "Balkán"
 
 msgid "Basic Science"
 msgstr "Alaptudomány"
+
+#, fuzzy
+msgid "Being watched"
+msgstr "Megfigyelt"
 
 msgid "Best"
 msgstr "Legjobb"
@@ -683,6 +711,10 @@ msgstr "Kerüld meg a geoblokkolást a VOD-ok esetében (ez illegális lehet):"
 msgid "CME SAE"
 msgstr "CME SAE"
 
+#, python-format
+msgid "CUMLOUDER can only search its tags (e.g. milf, step sister, big tits) - there is no tag \"%s\"."
+msgstr ""
+
 msgid "Cache"
 msgstr ""
 
@@ -701,6 +733,10 @@ msgstr ""
 "Visszatérési adat: [%s]."
 
 msgid "Cancel"
+msgstr "Mégsem"
+
+#, fuzzy
+msgid "Cancelled."
 msgstr "Mégsem"
 
 msgid "Captcha"
@@ -758,6 +794,12 @@ msgstr "Csatorna: %s"
 msgid "Channels"
 msgstr "Csatornák"
 
+msgid "Checking for updates"
+msgstr ""
+
+msgid "Checks every enabled site: menu, a list with videos and, in the full test, the stream link of one video."
+msgstr ""
+
 msgid "Children"
 msgstr "Gyermek"
 
@@ -788,9 +830,6 @@ msgstr "Naplófájl törlése"
 msgid "Clear the log file at plugin start"
 msgstr "Élő megjelenítés letiltása a bővítmény indításakor"
 
-msgid "Click"
-msgstr "Kattintás"
-
 #, python-format
 msgid "Clipped by: %s"
 msgstr ""
@@ -800,6 +839,9 @@ msgstr "Clips"
 
 msgid "Close"
 msgstr "Bezár"
+
+msgid "Closes the host opened in the web interface, clears the search results and stops what the web interface still runs in the background. Use it when a page keeps loading. Settings, downloads and the E2iPlayer on the TV are not touched."
+msgstr ""
 
 msgid "Closing. Please wait..."
 msgstr "Zárás. Kérjük, várjon..."
@@ -929,6 +971,9 @@ msgstr "Ország:"
 msgid "Country:"
 msgstr "Ország:"
 
+msgid "Couples"
+msgstr ""
+
 msgid "Create Enigma2 .cuts chapter marks"
 msgstr "Enigma2 .cuts fejezetjelölők létrehozása"
 
@@ -996,12 +1041,6 @@ msgstr "Dátum"
 msgid "Debug file does not exist - nothing to delete"
 msgstr "A hibakeresési fájl nem létezik - semmit sem kell törölni"
 
-msgid "Debug file does not exist - nothing to download"
-msgstr "A hibakeresési fájl nem létezik - semmit sem kell letölteni"
-
-msgid "Debug file has been deleted"
-msgstr "A hibakereső fájl törölve lett"
-
 #, fuzzy
 msgid "Debug log"
 msgstr "Hibakeresési naplók"
@@ -1011,12 +1050,6 @@ msgstr "Hibakeresési naplók"
 
 msgid "Debug option is disabled - nothing to display"
 msgstr "A hibakeresési opció le van tiltva - nincs mit megjeleníteni"
-
-msgid "Debug option set to console - nothing to display"
-msgstr "A hibakeresési lehetőség konzolra van beállítva - semmi sem jelenik meg"
-
-msgid "Debug option set to debugfile, but file does not exist - nothing to display"
-msgstr "A hibakeresési opció debugfile-re van állítva, de a fájl nem létezik - semmi sem jelenik meg"
 
 #, fuzzy
 msgid "Debug snapshot"
@@ -1042,6 +1075,9 @@ msgstr "Aláírások visszafejtésének hibája"
 
 msgid "Default"
 msgstr "Alapértelmezett"
+
+msgid "Default (2 minutes)"
+msgstr ""
 
 msgid "Default captcha bypass"
 msgstr "Alapértelmezett captcha megkerülése"
@@ -1104,9 +1140,6 @@ msgstr ""
 msgid "Delete host order and groups now"
 msgstr ""
 
-msgid "Delete log file"
-msgstr "Naplófájl törlése"
-
 msgid "Delete movie metadata cache after (days, 0 = never)"
 msgstr ""
 
@@ -1166,9 +1199,6 @@ msgstr "A(z) \"%s\" könyvtár nem létezik."
 #, fuzzy
 msgid "Directory browser"
 msgstr "Rendezők"
-
-msgid "Disable"
-msgstr "Letiltás"
 
 #, fuzzy
 msgid "Disable all groups"
@@ -1271,9 +1301,6 @@ msgid ""
 msgstr ""
 "A letöltés sikertelen.\n"
 "Állapot[%s]"
-
-msgid "Download log file"
-msgstr "Naplófájl letöltése"
 
 msgid "Download manager"
 msgstr "Letöltéskezelő"
@@ -1389,18 +1416,22 @@ msgstr "E2iPlayer - beállítások"
 msgid "E2iPlayer auto start at Enigma2 start"
 msgstr "Az E2iPlayer automatikus indítása az Enigma2 indításakor"
 
+#, fuzzy
+msgid "E2iPlayer config folder"
+msgstr "E2iPlayer letöltő"
+
 msgid "E2iPlayer downloader"
 msgstr "E2iPlayer letöltő"
 
 msgid "E2iPlayer enable/disabled groups"
 msgstr "E2iPlayer engedélyezett/letiltott csoportok"
 
+msgid "E2iPlayer is only a specialized web browser. It does not host any materials."
+msgstr ""
+
 #, fuzzy
 msgid "E2iPlayer virtual keyboard"
 msgstr "Virtuális billentyűzet"
-
-msgid "ERROR:"
-msgstr "HIBA:"
 
 msgid ""
 "ERROR: pipeline could not be constructed: no element \"playbin2\" \n"
@@ -1451,9 +1482,6 @@ msgstr "E-mail"
 msgid "Empty title is not allowed."
 msgstr ""
 
-msgid "Enable"
-msgstr "Engedélyezés"
-
 #, fuzzy
 msgid "Enable all groups"
 msgstr "Gazdacsoportok engedélyezése"
@@ -1466,6 +1494,10 @@ msgstr "Átrendezés engedélyezése"
 
 msgid "Enable reordering mode"
 msgstr "Átrendezési mód engedélyezése"
+
+#, fuzzy
+msgid "Enabled hosts"
+msgstr "Gazdacsoportok engedélyezése"
 
 #, python-format
 msgid ""
@@ -1540,6 +1572,10 @@ msgid "Entries: %d | Sort: %s | Status: %s | Jump target: %s"
 msgstr ""
 
 msgid "Episode"
+msgstr "Epizód"
+
+#, fuzzy, python-format
+msgid "Episode %d"
 msgstr "Epizód"
 
 msgid "Episodes"
@@ -1630,6 +1666,9 @@ msgstr "Hiba a(z) \"%s\" fájl írásakor.\n"
 msgid "Ethical & Legal"
 msgstr "Etikai és jogi"
 
+msgid "Every enabled site: does the menu open, does a list show videos? Takes a few minutes."
+msgstr ""
+
 msgid "Exam Review"
 msgstr "Vizsgafelülvizsgálat"
 
@@ -1709,6 +1748,10 @@ msgstr ""
 msgid "Failed to load channels"
 msgstr "Nem sikerült betölteni a csatornákat"
 
+#, fuzzy
+msgid "Failed to load the match list"
+msgstr "Nem sikerült betölteni a csatornákat"
+
 #, python-format
 msgid "Failed to log in user \"%s\". Please check your login and password."
 msgstr "Nem sikerült bejelentkezni a(z) \"%s\" felhasználónak. Kérjük, ellenőrizze a bejelentkezési adatait és jelszavát."
@@ -1771,6 +1814,10 @@ msgid "File Not Found."
 msgstr "Lejátszási lista fájl nem található."
 
 #, fuzzy, python-format
+msgid "File [%s] has been added to the downloading queue."
+msgstr "A(z) [%s] fájl hozzáadva a letöltési sorhoz."
+
+#, fuzzy, python-format
 msgid "File [%s] is already in the downloading queue."
 msgstr "A(z) [%s] fájl hozzáadva a letöltési sorhoz."
 
@@ -1812,10 +1859,20 @@ msgstr "Film"
 msgid "Filmweb Suggestions"
 msgstr "Filmweb-javaslatok"
 
+msgid "Filter"
+msgstr ""
+
+#, fuzzy
+msgid "Filter settings"
+msgstr "E2iPlayer - beállítások"
+
 msgid "Find item"
 msgstr ""
 
 msgid "Find out more."
+msgstr ""
+
+msgid "Finished matches with a full replay, highlights or match cuts, newest first (usually a few days after the match)."
 msgstr ""
 
 msgid "First Page"
@@ -1863,6 +1920,9 @@ msgstr ""
 msgid "Foot & Ankle"
 msgstr "Láb és boka"
 
+msgid "Football Live"
+msgstr ""
+
 msgid "For continuous playing, please press 8!"
 msgstr "Folyamatos lejátszáshoz nyomja meg a 8-at!"
 
@@ -1901,11 +1961,26 @@ msgstr "Teljes leírás betöltve"
 msgid "Full description not available"
 msgstr "A teljes leírás nem érhető el"
 
-msgid "GREEN"
+msgid "Full test"
 msgstr ""
 
-msgid "GSTplayer no IFD workarround"
-msgstr "GSTplayer nem rendelkezik IFD-megoldással"
+msgid "Full test checks the INFO window :"
+msgstr ""
+
+msgid "Full test checks the next page :"
+msgstr ""
+
+msgid "Full test checks the search :"
+msgstr ""
+
+msgid "Full test checks the stream link :"
+msgstr ""
+
+msgid "Full test checks thumbnails :"
+msgstr ""
+
+msgid "GREEN"
+msgstr ""
 
 #, fuzzy, python-format
 msgid "Game: %s"
@@ -1999,6 +2074,9 @@ msgstr "Csoportok linkje ebbe a kategóriába"
 msgid "Group with id[%s] not found."
 msgstr "A(z)[%s] azonosítójú csoport nem található."
 
+msgid "HIDDEN CAM SHOW IN PROGRESS. TRY AGAIN LATER!"
+msgstr ""
+
 msgid "HLS/m3u8"
 msgstr "HLS/m3u8"
 
@@ -2044,6 +2122,10 @@ msgstr "Keresési előzmények."
 msgid "Home"
 msgstr "Főoldal"
 
+#, fuzzy
+msgid "Home / Sections"
+msgstr "Kiválasztás"
+
 msgid "Home page"
 msgstr "Főoldal"
 
@@ -2065,12 +2147,15 @@ msgstr "A(z) \"%s\" host nem ismert."
 msgid "Hosting: %s, %s"
 msgstr "Tárhely: %s, %s"
 
+msgid "Hosts"
+msgstr ""
+
 #, fuzzy
 msgid "Hosts list type"
 msgstr "Hostok beállításai"
 
-msgid "Hosts settings"
-msgstr "Hostok beállításai"
+msgid "Hot"
+msgstr ""
 
 msgid "How to solve a captcha:"
 msgstr ""
@@ -2091,6 +2176,19 @@ msgid "IMDb Suggestions"
 msgstr "IMDb javaslatok"
 
 msgid "INFO"
+msgstr ""
+
+#, python-format
+msgid "INFO %d rows"
+msgstr ""
+
+msgid "INFO list text"
+msgstr ""
+
+msgid "INFO opens no window"
+msgstr ""
+
+msgid "INFO window"
 msgstr ""
 
 msgid "INTERRUPTED"
@@ -2133,17 +2231,8 @@ msgstr "Információ"
 msgid "Information about audio tracks not available."
 msgstr "A hangsávokkal kapcsolatos információk nem érhetők el."
 
-msgid "Initial list"
-msgstr "Kezdeti lista"
-
-msgid "Initialize Download Manager"
-msgstr "Letöltéskezelő inicializálása"
-
 msgid "Initialize web interface"
 msgstr "Webes felület inicializálása"
-
-msgid "Initiating data, please wait"
-msgstr "Adatok inicializálása, kérem várjon"
 
 msgid "Inject black iframe at video playback finish"
 msgstr "Fekete iframe beszúrása a videolejátszás befejezésekor"
@@ -2182,6 +2271,10 @@ msgid "Invalid email."
 msgstr "Érvénytelen email."
 
 msgid "Invalid name."
+msgstr "Érvénytelen név."
+
+#, fuzzy
+msgid "Invalid value."
 msgstr "Érvénytelen név."
 
 msgid "Is this message displayed correctly?"
@@ -2307,10 +2400,6 @@ msgid "Last"
 msgstr "Utolsó"
 
 #, python-format
-msgid "Last %d lines of the %s file are:"
-msgstr "Utolsó %d sor a %s fájlban a következők:"
-
-#, python-format
 msgid "Last Exception error: \"%s\""
 msgstr "Utolsó kivételhiba: „%s”"
 
@@ -2339,6 +2428,10 @@ msgid "Last month"
 msgstr ""
 
 #, fuzzy
+msgid "Last result"
+msgstr "Legfrissebb"
+
+#, fuzzy
 msgid "Last week"
 msgstr "egy hét után"
 
@@ -2355,6 +2448,10 @@ msgid "Latest update"
 msgstr "Legfrissebb frissítés"
 
 #, fuzzy
+msgid "Latest updates"
+msgstr "Legfrissebb frissítés"
+
+#, fuzzy
 msgid "Latest video"
 msgstr "Legújabb hozzáadott"
 
@@ -2367,11 +2464,14 @@ msgstr "Latin-amerikai"
 msgid "Left"
 msgstr ""
 
-msgid "Level:"
-msgstr "Szint:"
+msgid "Light / dark design"
+msgstr ""
 
 msgid "Lightgray"
 msgstr "Világosszürke"
+
+msgid "Like the quick test, plus the checks chosen in the host settings (Debug). Takes about 20-40 minutes."
+msgstr ""
 
 #, fuzzy
 msgid "Liked videos"
@@ -2393,9 +2493,6 @@ msgstr "A linket a Google ReCaptcha v2 védi"
 msgid "Link protected with google recaptcha v2."
 msgstr "A linket google recaptcha v2 védi."
 
-msgid "Links for"
-msgstr "Felhasználói linkek"
-
 msgid "Links from all files without categories"
 msgstr "Linkek minden kategóriák nélküli fájlból"
 
@@ -2405,6 +2502,10 @@ msgstr "Linkek a(z) %s fájlból"
 
 msgid "Lionsgate"
 msgstr "Lionsgate"
+
+#, fuzzy
+msgid "List"
+msgstr "Legnézettebb"
 
 msgid "List by day"
 msgstr "Napi lista"
@@ -2444,13 +2545,6 @@ msgstr "Betöltés"
 msgid "Loading %s failed due to following error:"
 msgstr "A(z) %s betöltése nem sikerült a következő hiba miatt:"
 
-msgid "Loading data, please wait"
-msgstr "Adatok betöltése, kérjük várjon"
-
-#, python-format
-msgid "Loading data, please wait (%d)"
-msgstr "Adatok betöltése folyamatban, kérjük várjon (%d)"
-
 msgid "Loading failed."
 msgstr "A betöltés sikertelen."
 
@@ -2481,9 +2575,6 @@ msgstr "Naplók"
 
 msgid "Login"
 msgstr "Belépés"
-
-msgid "Login Protected."
-msgstr "Bejelentkezés védett."
 
 msgid "Login failed!"
 msgstr "Bejelentkezés sikertelen!"
@@ -2575,6 +2666,13 @@ msgid "Masrahyat"
 msgstr "Masrahyat"
 
 #, fuzzy
+msgid "Match cuts"
+msgstr "Captcha-megoldó szolgáltatás"
+
+msgid "Match not started yet"
+msgstr ""
+
+#, fuzzy
 msgid "Matching entries"
 msgstr "Captcha-megoldó szolgáltatás"
 
@@ -2610,6 +2708,10 @@ msgstr "Lemaradtál a műsorról?"
 msgid "Missing API key - set it in Settings, Web streams, Windy Webcams"
 msgstr ""
 
+#, fuzzy
+msgid "Models"
+msgstr "További modellek"
+
 msgid "More"
 msgstr "Több"
 
@@ -2633,6 +2735,22 @@ msgstr "További találatok"
 
 msgid "Most Popular"
 msgstr "Legnépszerűbb"
+
+#, fuzzy
+msgid "Most Watched"
+msgstr "Legtöbbre értékelt"
+
+#, fuzzy
+msgid "Most commented"
+msgstr "Legfrissebb"
+
+#, fuzzy
+msgid "Most discussed"
+msgstr "Legnézettebb"
+
+#, fuzzy
+msgid "Most favourited"
+msgstr "Legtöbbre értékelt"
 
 msgid "Most popular"
 msgstr "Legnépszerűbb"
@@ -2830,6 +2948,13 @@ msgstr "Nem"
 msgid "No biography available"
 msgstr "Nincs elérhető életrajz"
 
+#, fuzzy
+msgid "No description available."
+msgstr "A teljes leírás nem érhető el"
+
+msgid "No host is open."
+msgstr ""
+
 msgid ""
 "No item to display. \n"
 "Press OK to refresh.\n"
@@ -2840,15 +2965,21 @@ msgstr ""
 msgid "No matching entries found."
 msgstr ""
 
-msgid "No materials waiting in the downloader queue"
-msgstr "Nincs semmi várakozó a letöltő várólistában"
+msgid "No player found for this title."
+msgstr ""
 
 msgid "No problems occurred."
+msgstr ""
+
+msgid "No replays in these days"
 msgstr ""
 
 #, python-format
 msgid "No results found for: %s"
 msgstr "Nincs találat a következőre: %s"
+
+msgid "No self-test result yet."
+msgstr ""
 
 msgid "No storage found for the cache folder. The cache folder will be switched to the plugin's own cache directory."
 msgstr ""
@@ -2856,17 +2987,29 @@ msgstr ""
 msgid "No storage found for the downloads location. Where would you like to save your downloads?"
 msgstr ""
 
+#, fuzzy
+msgid "No stream available"
+msgstr "Nincs elérhető életrajz"
+
+msgid "No streams are available for this title yet."
+msgstr ""
+
 msgid "No subtitle file found in the archive."
 msgstr "Nem található feliratfájl az archívumban."
+
+#, fuzzy
+msgid "No subtitles available for this title."
+msgstr "Nem található feliratfájl az archívumban."
+
+#, fuzzy, python-format
+msgid "No subtitles in %s. Available: %s"
+msgstr "Feliratozás bekapcsolása, ha elérhető"
 
 msgid "No valid entitlement found for asset."
 msgstr "Nem található érvényes jogosultság az eszközhöz."
 
 msgid "No valid links available."
 msgstr "Nincsenek érvényes linkek."
-
-msgid "No valid urls"
-msgstr ""
 
 msgid "No video ID available"
 msgstr "Nincs elérhető videóazonosító"
@@ -2877,8 +3020,15 @@ msgstr "Nincs"
 msgid "Normalize item / file names (Show - SxxExx - Title)"
 msgstr ""
 
-msgid "Nothing has been downloaded yet."
-msgstr "Még senki sem töltött le."
+#, fuzzy
+msgid "Not available yet"
+msgstr "A teljes leírás nem érhető el"
+
+msgid "Not possible (no enigma2 session)."
+msgstr ""
+
+msgid "Nothing found. This site only finds Russian (Cyrillic) search terms."
+msgstr ""
 
 msgid "Nothing open"
 msgstr ""
@@ -2907,6 +3057,9 @@ msgstr "Egyidejűleg letöltött fájlok száma"
 msgid "Number of rows"
 msgstr "Sorok száma"
 
+msgid "OFFLINE"
+msgstr ""
+
 msgid "OK"
 msgstr "OK"
 
@@ -2916,24 +3069,31 @@ msgstr "OMDb API-kulcs"
 msgid "Offline channels"
 msgstr "Offline csatornák"
 
+#, fuzzy
+msgid "Older days"
+msgstr "nap után"
+
+msgid "Older replays"
+msgstr ""
+
 msgid "On Air"
 msgstr "Közvetítés"
 
 msgid "One link mode"
 msgstr "Egykapcsolatos mód"
 
-msgid "Only links can be moved to a group."
+msgid "Only files in the downloads folder can be deleted."
 msgstr ""
 
-msgid "Only music"
-msgstr "Csak zene"
+msgid "Only links can be moved to a group."
+msgstr ""
 
 #, python-format
 msgid "Only the %d oldest new commits are shown"
 msgstr ""
 
-msgid "Only videos"
-msgstr "Csak videók"
+msgid "Only the sites that failed in the last run, same checks."
+msgstr ""
 
 msgid "Open issues"
 msgstr ""
@@ -2998,6 +3158,14 @@ msgstr ""
 msgid "PREVIOUS/NEXT"
 msgstr ""
 
+#, fuzzy, python-format
+msgid "PRIVATE - wait %s seconds"
+msgstr "várjon %s másodpercet"
+
+#, fuzzy
+msgid "PRIVATE - wait a few seconds"
+msgstr "várjon %s másodpercet"
+
 msgid "Page not found - please check the address."
 msgstr ""
 
@@ -3029,9 +3197,6 @@ msgstr "Az xxxlist.txt fájl elérési útja:"
 
 msgid "Path to ytlist.txt, urllist.txt"
 msgstr "A ytlist.txt, urllist.txt fájlok útvonala"
-
-msgid "Path:"
-msgstr "Útvonal:"
 
 msgid "Pathology"
 msgstr "Patológia"
@@ -3081,11 +3246,11 @@ msgstr "Lejátszó bőr"
 msgid "Player data parsing error."
 msgstr "Játékosadatok elemzési hibája."
 
+msgid "Playing on the TV is not possible (no enigma2 session)."
+msgstr ""
+
 msgid "Playlist"
 msgstr "Lejátszási lista"
-
-msgid "Playlists"
-msgstr "Játéklisták"
 
 #, python-brace-format
 msgid ""
@@ -3111,6 +3276,13 @@ msgstr ""
 msgid "Please consider restart your Engima2 and agree to install the %s utlity when the %s will propose this."
 msgstr "Kérjük, fontolja meg az Engima2 újraindítását, és egyezzen bele a %s segédprogram telepítésébe, amikor a %s ezt fel fogja ajánlani."
 
+#, fuzzy
+msgid "Please enter a search text."
+msgstr "Keresési előzmények törlése"
+
+msgid "Please enter a valid link (http:// or https://)."
+msgstr ""
+
 msgid "Please make sure that the folder for cache data (set in the configuration) is writable."
 msgstr "Ellenőrizze, hogy a gyorsítótár (cache) adatok mappája írható-e (beállítva a konfigurációban)."
 
@@ -3125,7 +3297,14 @@ msgstr ""
 "\n"
 "Ez megoldja a problémát, ha a lejátszás folyamatosan megszakad."
 
+#, fuzzy
+msgid "Please select a group of favourites."
+msgstr "Új kedvencek csoportjának hozzáadása"
+
 msgid "Please select an entry."
+msgstr ""
+
+msgid "Please select the link first."
 msgstr ""
 
 #, python-format
@@ -3149,6 +3328,9 @@ msgstr "Kérjük, várjon - inicializálási adatok letöltése folyamatban."
 msgid "Please wait for initialization data."
 msgstr "Kérjük, várjon az inicializálási adatokra."
 
+msgid "Please wait, the previous action is still running."
+msgstr ""
+
 #, fuzzy
 msgid "Please wait..."
 msgstr "Zárás. Kérjük, várjon..."
@@ -3161,6 +3343,10 @@ msgstr "Lengyelország"
 
 msgid "Popular"
 msgstr "Népszerű"
+
+#, fuzzy
+msgid "Pornstars"
+msgstr "További pornósztárok"
 
 msgid "Powerpoint Presentation"
 msgstr "PowerPoint bemutató"
@@ -3195,14 +3381,12 @@ msgstr "Előző"
 msgid "Previous Page"
 msgstr "Előző oldal"
 
-msgid "Previous list"
-msgstr "Előző lista"
+#, fuzzy
+msgid "Previous days"
+msgstr "Előző oldal"
 
 msgid "Price:"
 msgstr "Ár:"
-
-msgid "Private Show."
-msgstr "Privát műsor."
 
 msgid "Production:"
 msgstr "Gyártás:"
@@ -3237,6 +3421,9 @@ msgstr ""
 msgid "Quality:"
 msgstr "Minőség:"
 
+msgid "Quick test: menu and a list with videos"
+msgstr ""
+
 msgid "RAM buffer size [MB] for local files"
 msgstr "RAM puffer mérete [MB] a helyi fájlokhoz"
 
@@ -3249,9 +3436,6 @@ msgstr "FRISS"
 #, fuzzy
 msgid "RED"
 msgstr "MEGSZAKÍTVA"
-
-msgid "REMEMBER:"
-msgstr "EMLÉKEZIK:"
 
 msgid "REWIND"
 msgstr ""
@@ -3306,14 +3490,23 @@ msgid "Reading binaries..."
 msgstr ""
 
 #, fuzzy
+msgid "Reading..."
+msgstr "Felkapott"
+
+#, fuzzy
 msgid "Recent"
 msgstr "közép"
 
-msgid "Recon"
+#, fuzzy
+msgid "Recently added"
+msgstr "Legújabb hozzáadott"
+
+#, fuzzy
+msgid "Recommended"
 msgstr "Felderítés"
 
-msgid "Redirect"
-msgstr "Átirányítás"
+msgid "Recon"
+msgstr "Felderítés"
 
 msgid "Refresh"
 msgstr "Frissítés"
@@ -3341,9 +3534,6 @@ msgstr "Kiadás"
 
 msgid "Relevance"
 msgstr "Relevancia"
-
-msgid "Reload list"
-msgstr "Lista újratöltése"
 
 msgid "Remaining:"
 msgstr "Fennmaradó:"
@@ -3390,8 +3580,18 @@ msgstr "Fájl átnevezése"
 msgid "Reordering: UP/DOWN moves the row, OK saves, EXIT cancels."
 msgstr ""
 
-msgid "Reset State"
-msgstr "Állapot visszaállítása"
+msgid "Replay"
+msgstr ""
+
+msgid "Replays & highlights"
+msgstr ""
+
+msgid "Report a problem (GitHub issues)"
+msgstr ""
+
+#, fuzzy
+msgid "Report file"
+msgstr "Eltávolítás"
 
 msgid "Reset this list to its default layout?"
 msgstr ""
@@ -3402,6 +3602,10 @@ msgstr "Állapot visszaállítása"
 
 msgid "Reset to saved order"
 msgstr ""
+
+#, fuzzy
+msgid "Reset web interface"
+msgstr "Webes felület inicializálása"
 
 #, python-format
 msgid ""
@@ -3415,8 +3619,8 @@ msgid ""
 "\n"
 msgstr "A(z) %s feloldása reCaptcha-val sikertelen!\n"
 
-msgid "Return to hosts list"
-msgstr "Visszatérés a hostok listájához"
+msgid "Restart GUI"
+msgstr ""
 
 msgid "Reused entries move back to the top again."
 msgstr ""
@@ -3464,6 +3668,10 @@ msgstr "Mentés"
 
 msgid "Save changes?"
 msgstr "Változtatások mentése?"
+
+#, fuzzy, python-format
+msgid "Save subtitles (%s)"
+msgstr "Feliratok ehhez: %s"
 
 #, python-format
 msgid ""
@@ -3522,11 +3730,12 @@ msgstr "Keresési előzmények"
 msgid "Search history saved. %d duplicate entries removed."
 msgstr ""
 
-msgid "Search in"
-msgstr "Keresés típusa"
-
 msgid "Search in all active hosts"
 msgstr "Keresés az összes aktív hostok között"
+
+#, fuzzy
+msgid "Search next page"
+msgstr "Keresés típusa"
 
 msgid "Search only in Movies"
 msgstr "Keresés csak a Filmekben"
@@ -3541,23 +3750,39 @@ msgstr "Keresési eredmények"
 msgid "Search results region:"
 msgstr "Keresési eredmények"
 
+#, fuzzy
+msgid "Search term :"
+msgstr "Keresés típusa"
+
+#, fuzzy
+msgid "Search text"
+msgstr "Keresés típusa"
+
 msgid "Search type"
 msgstr "Keresés típusa"
 
+#, fuzzy
+msgid "Search: "
+msgstr "Keresés"
+
 #, python-format
-msgid "Searching in %s, please wait (%d)"
-msgstr "Keresés a következő helyen: %s, kérjük várjon (%d)"
+msgid "Search: %d of %d - now %s (%d found so far)"
+msgstr ""
 
 #, python-format
 msgid "Searching subtitles for \"%s\""
 msgstr "Feliratok keresése a következőhöz: „%s”"
 
-#, python-format
-msgid "Searching, please wait (%d)"
-msgstr "Keresés folyamatban, kérjük várjon (%d)"
-
 msgid "Season"
 msgstr "Évad"
+
+#, fuzzy, python-format
+msgid "Season %d"
+msgstr "%s. évad"
+
+#, python-format
+msgid "Season %d (%d episodes)"
+msgstr ""
 
 #, python-format
 msgid "Season %s"
@@ -3574,9 +3799,6 @@ msgstr "Második filmlejátszó pufferelési mód nélkül"
 
 #, fuzzy
 msgid "Section"
-msgstr "Kiválasztás"
-
-msgid "Select"
 msgstr "Kiválasztás"
 
 #, python-format
@@ -3638,11 +3860,14 @@ msgstr "Válassz fájlt"
 msgid "Select video option"
 msgstr "Videó opció kiválasztása"
 
-msgid "Selected hosts"
-msgstr "Kijelölt hostok"
-
 msgid "Selection"
 msgstr "Kiválasztás"
+
+msgid "Self-test"
+msgstr ""
+
+msgid "Self-test report :"
+msgstr ""
 
 msgid "Send"
 msgstr "Küldés"
@@ -3801,6 +4026,10 @@ msgid "Show only best quality of streams:"
 msgstr "Csak a legjobb minőségű streamek megjelenítése:"
 
 #, fuzzy
+msgid "Show results"
+msgstr "Keresési eredmények"
+
+#, fuzzy
 msgid "Show search history"
 msgstr "Keresési előzmények"
 
@@ -3831,6 +4060,16 @@ msgstr "Egyszerű felirat letöltő"
 
 msgid "Simplify the title and try again."
 msgstr "Egyszerűsítsd a címet, és próbáld újra."
+
+msgid "Site self-test"
+msgstr ""
+
+msgid "Site self-test in the main menu :"
+msgstr ""
+
+#, python-format
+msgid "Site self-test: %d of %d - now %s (%d failed so far)"
+msgstr ""
 
 msgid "Skin"
 msgstr "Kinézet"
@@ -3944,9 +4183,6 @@ msgstr "Sztereó lekeverési mód szoftveres dekóderhez"
 msgid "Stop"
 msgstr "Megállítás"
 
-msgid "Stop download"
-msgstr "Letöltés leállítása"
-
 msgid "Stop downloading"
 msgstr "Letöltés leállítása"
 
@@ -3959,8 +4195,16 @@ msgstr "Abbahagyni a játékot?"
 msgid "Storage"
 msgstr ""
 
+#, fuzzy
+msgid "Stream link"
+msgstr "Link kiválasztása"
+
 msgid "Streamed"
 msgstr "Streamelve"
+
+#, fuzzy
+msgid "Studios"
+msgstr "Hang"
 
 msgid "Study Plan"
 msgstr "Tanulmányi terv"
@@ -4055,11 +4299,23 @@ msgstr "A feliratok sikeresen letöltve. [%s], konvertálás UTF-8-ra."
 msgid "Subtitles for: %s"
 msgstr "Feliratok ehhez: %s"
 
+#, fuzzy, python-format
+msgid ""
+"Subtitles saved:\n"
+"%s"
+msgstr "Feliratok ehhez: %s"
+
 msgid "Subtitles:"
 msgstr "Feliratok:"
 
 msgid "Summary:"
 msgstr "Összefoglaló:"
+
+msgid "Support forum (opena.tv)"
+msgstr ""
+
+msgid "Support package"
+msgstr ""
 
 msgid "Surgical Approaches"
 msgstr "Sebészeti megközelítések"
@@ -4099,15 +4355,18 @@ msgstr ""
 "EZ EGY PRÉMIUM VIDEÓ.\n"
 "BEJELENTKEZÉS VAGY PRÉMIUM ELŐFIZETÉS SZÜKSÉGES."
 
-msgid ""
-"THIS IS A PREMIUM VIDEO. \n"
-"LOGIN OR PREMIUM REQUIRED."
-msgstr ""
-"EZ EGY PRÉMIUM VIDEÓ. \n"
-"BEJELENTKEZÉS VAGY PRÉMIUM ELŐFIZETÉS SZÜKSÉGES."
-
 msgid "THIS IS A PRIVATE VIDEO."
 msgstr "EZ EGY PRIVÁT VIDEÓ."
+
+msgid ""
+"THIS LINK CONTAINS PHOTOS ONLY.\n"
+" PLEASE CHOOSE ANOTHER ONE!"
+msgstr ""
+
+msgid ""
+"THIS VIDEO HAS BEEN REMOVED DUE TO COPYRIGHT INFRINGEMENT.\n"
+" PLEASE CHOOSE ANOTHER ONE!"
+msgstr ""
 
 msgid ""
 "THIS VIDEO IS JUST A PREVIEW ON EXTERNAL STORAGE.\n"
@@ -4126,6 +4385,12 @@ msgstr ""
 msgid "TMDb Rating:"
 msgstr "TMDb értékelés:"
 
+msgid "TODAY"
+msgstr ""
+
+msgid "TOMORROW"
+msgstr ""
+
 msgid "TV Series"
 msgstr "TV-sorozatok"
 
@@ -4141,10 +4406,16 @@ msgstr "TV-csatornák"
 msgid "TV series"
 msgstr "tévésorozatok"
 
+msgid "Tags"
+msgstr ""
+
 msgid "Techniques"
 msgstr "Technikák"
 
 msgid "Temp"
+msgstr ""
+
+msgid "Test the failed sites again"
 msgstr ""
 
 #, fuzzy
@@ -4161,6 +4432,9 @@ msgstr "A ytlist és urllist fájlok helye:"
 #, python-format
 msgid "The %s utility is necessary here but it was not detected."
 msgstr "A %s segédprogram szükséges itt, de a rendszer nem észlelte."
+
+msgid "The 100 tags with the most videos"
+msgstr ""
 
 msgid ""
 "The 7reels / cineb resolvers 'VidEasy', 'VidCore/VidFast', 'VidLink' and 'Peachify' cannot decrypt their links on the receiver.\n"
@@ -4221,10 +4495,17 @@ msgstr ""
 msgid "The debug log is not active."
 msgstr ""
 
+msgid "The download manager is stopped, start it on the download page."
+msgstr ""
+
 msgid "The element already exists in User Links."
 msgstr "Az elem már létezik a Felhasználói hivatkozások között."
 
 msgid "The feed of these channels could not be read - press OK to try again."
+msgstr ""
+
+#, python-format
+msgid "The host \"%s\" cannot be used from the web interface (disabled, unknown or protected by PIN)."
 msgstr ""
 
 #, python-format
@@ -4243,8 +4524,29 @@ msgstr ""
 "A(z) %s host előfizetést igényel.\n"
 "Kérjük, töltse ki a bejelentkezési adatait és jelszavát a host konfigurációjában - kék gomb alatt."
 
+msgid "The host asks for a captcha. It can only be solved on the receiver (or with MyE2i there)."
+msgstr ""
+
+msgid "The host did not return a list."
+msgstr ""
+
+#, python-format
+msgid "The host wanted to open a window on the TV (%s) - that only works on the receiver."
+msgstr ""
+
 msgid "The latest uploads of all YouTube channels in this group, newest first."
 msgstr ""
+
+#, fuzzy
+msgid "The link could not be resolved."
+msgstr "A felhasználói hivatkozást nem sikerült törölni."
+
+msgid "The list has changed, please try again."
+msgstr ""
+
+#, fuzzy
+msgid "The model is offline or in a private show."
+msgstr "Ez a videó egy privát videó."
 
 msgid "The number of items in the search history"
 msgstr "A keresési előzményekben szereplő elemek száma"
@@ -4265,11 +4567,27 @@ msgstr ""
 msgid "The same item already exists in this group."
 msgstr "Ugyanez az elem már létezik ebben a csoportban."
 
+msgid "The settings are protected by a PIN, change them on the receiver."
+msgstr ""
+
+msgid "The site has no player for this video (it only shows a cam advert)."
+msgstr ""
+
+msgid "The site refuses all qualities of this video at the moment (HTTP 403). Try again later."
+msgstr ""
+
+msgid "The support package holds the versions, the system information, the enabled hosts and the end of the debug log in one text file for a problem report. Look through it before posting it - the log can contain addresses of the sites you opened."
+msgstr ""
+
 msgid "The user link could not be deleted."
 msgstr "A felhasználói hivatkozást nem sikerült törölni."
 
 msgid "The user link could not be updated."
 msgstr "A felhasználói hivatkozást nem sikerült frissíteni."
+
+#, python-format
+msgid "The value must be between %d and %d."
+msgstr ""
 
 msgid "The website returned a server error for this request."
 msgstr ""
@@ -4321,14 +4639,31 @@ msgstr "%s azt írta: Ez az oldal jelenleg nem érhető el az Ön régiójában"
 msgid "This content is only available in Switzerland."
 msgstr ""
 
+#, fuzzy
+msgid "This entry cannot be added to the favourites."
+msgstr "Nincsenek más kedvenc csoportok"
+
+#, fuzzy
+msgid "This entry cannot be opened."
+msgstr "A(z) „%s” segédprogram nem található."
+
 msgid "This feed is empty, or the YouTube sign-in has expired - sign out and in again."
+msgstr ""
+
+msgid "This folder is protected by a PIN, open it on the receiver."
 msgstr ""
 
 msgid "This host has been added already to this group."
 msgstr "Ez a host már hozzá lett adva ehhez a csoporthoz."
 
+msgid "This is only an advert for a paid clip (clips4sale), there is no free video."
+msgstr ""
+
 msgid "This model is offline."
 msgstr "Ez a modell offline állapotban van."
+
+msgid "This option cannot be changed from the web interface."
+msgstr ""
 
 msgid "This page has no video (blog article)."
 msgstr ""
@@ -4346,6 +4681,9 @@ msgstr ""
 msgid "This show is private. Try again later!"
 msgstr "Ez a műsor zártkörű. Próbáld újra később!"
 
+msgid "This stream can only be played with buffering - please start it on the receiver."
+msgstr ""
+
 msgid "This video has been deleted."
 msgstr "Ezt a videót törölték."
 
@@ -4359,14 +4697,31 @@ msgstr "Ez a videó egy privát videó."
 msgid "This video is a private."
 msgstr "Ez a videó privát."
 
+msgid "This video is only on hosters E2iPlayer cannot play."
+msgstr ""
+
+msgid "This video is only on the netu.tv player (pbtube.net), which E2iPlayer cannot play."
+msgstr ""
+
 msgid "This video requires you to sign in to a YouTube account."
+msgstr ""
+
+msgid "This video was embedded from Pornhub and is no longer available there."
+msgstr ""
+
+#, fuzzy
+msgid "This video was embedded from xHamster and has been deleted there."
+msgstr "Ezt a videót törölték."
+
+#, fuzzy
+msgid "Thumbnails"
+msgstr "Indexképek eltávolítása"
+
+msgid "Time"
 msgstr ""
 
 msgid "Tip! You can connect USB flash drive to fix this problem."
 msgstr "Tipp! A probléma megoldásához csatlakoztathat USB flash meghajtót."
-
-msgid "Title:"
-msgstr "Cím:"
 
 #, python-format
 msgid ""
@@ -4447,7 +4802,11 @@ msgstr "Felkapott"
 msgid "Trending this week"
 msgstr "Felkapott"
 
-msgid "Try to change extplayer or disable IFD in GSTplayer configuration"
+msgid "Troubleshooting"
+msgstr ""
+
+#, fuzzy
+msgid "Try to change extplayer or reinstall gst-ifdsrc"
 msgstr "Próbáld meg módosítani az extplayert, vagy letiltani az IFD-t a GSTplayer konfigurációjában"
 
 msgid "Turkish Movies"
@@ -4463,6 +4822,10 @@ msgid "Tutorials"
 msgstr "Oktatóanyagok"
 
 msgid "Type:"
+msgstr "Típus:"
+
+#, fuzzy
+msgid "Type: "
 msgstr "Típus:"
 
 #, python-format
@@ -4489,6 +4852,10 @@ msgstr "Általános"
 
 msgid "Unknow data in the captcha item!"
 msgstr "Ismeretlen adat a captcha elemben!"
+
+#, fuzzy
+msgid "Unknown action."
+msgstr "Ismeretlen hiba."
 
 #, python-format
 msgid "Unknown captcha form! Data: \"%s\""
@@ -4529,6 +4896,9 @@ msgstr ""
 #, python-format
 msgid "Unzip error code[%s]."
 msgstr "Kicsomagoláskor hibakód: [%s]."
+
+msgid "Upcoming"
+msgstr ""
 
 #, fuzzy
 msgid "Updates"
@@ -4698,18 +5068,11 @@ msgstr "Virtuális billentyűzet típusa"
 msgid "Waiting for the result ..."
 msgstr ""
 
-#, python-format
-msgid "Waiting search thread to stop, please wait (%d)"
-msgstr "Várakozás a keresési szál leállítására, kérem várjon (%d)"
-
 msgid "Walt Disney"
 msgstr "Walt Disney"
 
 msgid "Warner Bros"
 msgstr "Warner Bros"
-
-msgid "Watch"
-msgstr "Figyelés"
 
 msgid "Watch Videos Online"
 msgstr "Videók online megtekintése"
@@ -4721,15 +5084,6 @@ msgstr "Keresési előzmények"
 #, fuzzy
 msgid "Watch later"
 msgstr "Figyelés"
-
-msgid "Web component has been reset and all threads are stopped. :)"
-msgstr "A webkomponens visszaállt és az összes szál leállt. :)"
-
-msgid "Web component has been reset, the following threads are still working:"
-msgstr "A webkomponens visszaállításra került, a következő szálak továbbra is működnek:"
-
-msgid "Web interface version"
-msgstr "Webes felület verziója"
 
 msgid "What's happening?"
 msgstr ""
@@ -4796,6 +5150,9 @@ msgstr "Xtream host (pl. http://server:port)"
 msgid "YELLOW"
 msgstr ""
 
+msgid "YESTERDAY"
+msgstr ""
+
 msgid "YP connected"
 msgstr "YP csatlakoztatva"
 
@@ -4826,9 +5183,6 @@ msgstr "Igen, a /home/root/logs/iptv.dbg fájlba"
 
 msgid "Yes, to file /tmp/iptv.dbg"
 msgstr "Igen, a /tmp/iptv.dbg fájlba"
-
-msgid "You are using old version of OpenWebif.<br> To go to E2iPlayer web Select the following link<br>"
-msgstr "Az OpenWebif régi verzióját használja.<br>Ugrás az E2iPlayer webre. Válassza ki a következő linket<br>"
 
 msgid "You can disable HTTPS certificates validation in the E2iPlayer configuration to suppress this problem."
 msgstr "A HTTPS tanúsítványok érvényesítését az E2iPlayer konfigurációban letilthatja a probléma letiltásához."
@@ -4897,6 +5251,9 @@ msgstr "[%s] pufferelés nélkül"
 
 msgid "[HLS/M3U8] buffering"
 msgstr "[HLS/M3U8] pufferelés"
+
+msgid "[HLS/M3U8] live stream starts behind live"
+msgstr ""
 
 msgid "[HTTP] buffering"
 msgstr "[HTTP] pufferelés"
@@ -5036,11 +5393,12 @@ msgstr "külső eplayer3"
 msgid "external gstplayer"
 msgstr "külső gstlejátszó"
 
+#, fuzzy
+msgid "failed"
+msgstr "A szerkesztés sikertelen."
+
 msgid "file"
 msgstr ""
-
-msgid "first check if host works properly in GUI and web <b>BEFORE</b> reporting error in it !!!"
-msgstr "először ellenőrizze, hogy a host megfelelően működik-e a GUI-ban és a web-en <b>MIELŐTT</b> jelenti a hibát!!!"
 
 msgid "fixed"
 msgstr ""
@@ -5072,6 +5430,9 @@ msgstr "hd"
 msgid "high"
 msgstr "magas"
 
+msgid "hint: the site shows a next page link"
+msgstr ""
+
 msgid "horizontal"
 msgstr "vízszintes"
 
@@ -5080,9 +5441,6 @@ msgstr "házigazda"
 
 msgid "host order and groups"
 msgstr ""
-
-msgid "host:"
-msgstr "host:"
 
 msgid "https"
 msgstr "https"
@@ -5147,6 +5505,9 @@ msgstr "gesztenyebarna"
 msgid "medium"
 msgstr "közepes"
 
+msgid "menu and list only"
+msgstr ""
+
 msgid "more options (this menu)"
 msgstr ""
 
@@ -5169,6 +5530,31 @@ msgstr "haditengerészet"
 msgid "never"
 msgstr ""
 
+#, fuzzy
+msgid "next page"
+msgstr "Következő oldal"
+
+msgid "next page = page 1"
+msgstr ""
+
+#, fuzzy
+msgid "next page empty"
+msgstr "Következő oldal"
+
+#, fuzzy
+msgid "next page ok"
+msgstr "Következő oldal"
+
+#, fuzzy
+msgid "no next page"
+msgstr "Következő oldal"
+
+msgid "no stream link"
+msgstr ""
+
+msgid "no videos in the first lists"
+msgstr ""
+
 msgid "not available (the Python parser is used)"
 msgstr ""
 
@@ -5176,6 +5562,9 @@ msgid "not found"
 msgstr ""
 
 msgid "not installed"
+msgstr ""
+
+msgid "not loadable"
 msgstr ""
 
 msgid "off"
@@ -5191,6 +5580,10 @@ msgstr "olajbogyó"
 #, fuzzy
 msgid "on"
 msgstr "Nincs"
+
+#, fuzzy
+msgid "only on the receiver"
+msgstr "A megtekintett elem színe"
 
 #, fuzzy
 msgid "open / play the selected item"
@@ -5243,8 +5636,31 @@ msgid "saved next to the downloaded video file"
 msgstr "Csatornanév hozzáadása a letöltött fájlhoz"
 
 #, fuzzy
+msgid "search"
+msgstr "Keresés"
+
+#, fuzzy, python-format
+msgid "search %d"
+msgstr "Keresés típusa"
+
+#, fuzzy
+msgid "search found nothing"
+msgstr "A szerver válasza: 404 - Nem található."
+
+#, fuzzy
 msgid "search history"
 msgstr "Keresési előzmények"
+
+msgid "search next page = page 1"
+msgstr ""
+
+#, fuzzy
+msgid "search next page empty"
+msgstr "A keresési előzmények üresek."
+
+#, fuzzy
+msgid "search next page ok"
+msgstr "Keresés típusa"
 
 msgid "second"
 msgstr "másodperc"
@@ -5285,6 +5701,42 @@ msgid "status"
 msgstr "Állapot:"
 
 #, fuzzy
+msgid "stream data"
+msgstr "Streamelve"
+
+msgid "stream data ok"
+msgstr ""
+
+msgid "stream data ok (HLS)"
+msgstr ""
+
+#, python-format
+msgid "stream is a web page, not video (HTTP %s)"
+msgstr ""
+
+#, fuzzy
+msgid "stream link"
+msgstr "Felhasználói linkek"
+
+msgid "stream link ok"
+msgstr ""
+
+#, python-format
+msgid "stream not checked (%s)"
+msgstr ""
+
+msgid "stream not checked (HTTP 429, too many requests)"
+msgstr ""
+
+#, fuzzy, python-format
+msgid "stream: %s"
+msgstr "Minden stream"
+
+#, python-format
+msgid "stream: no data (HTTP %s)"
+msgstr ""
+
+#, fuzzy
 msgid "subtitles cache"
 msgstr "Feliratok"
 
@@ -5297,8 +5749,25 @@ msgstr "böjti réce"
 msgid "the best"
 msgstr "legjobb"
 
+msgid "the menu has no lists"
+msgstr ""
+
+msgid "the menu is empty"
+msgstr ""
+
 msgid "the worst"
 msgstr "a legrosszabb"
+
+#, fuzzy
+msgid "thumbnails"
+msgstr "Indexképek eltávolítása"
+
+#, fuzzy, python-format
+msgid "thumbnails %d/%d"
+msgstr "Indexképek eltávolítása"
+
+msgid "thumbnails do not load"
+msgstr ""
 
 msgid "to top"
 msgstr ""
@@ -5341,9 +5810,6 @@ msgstr "videók: %s"
 
 msgid "views"
 msgstr "nézetek"
-
-msgid "visit site"
-msgstr "a honlap megtekintése"
 
 #, python-format
 msgid "wait %s second"
