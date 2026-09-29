@@ -791,7 +791,7 @@ class CHostBase(IHost):
         else:
             imageType = type
 
-        return CDisplayListItem(name=title,
+        hostItem = CDisplayListItem(name=title,
                                     description=description,
                                     type=type,
                                     urlItems=hostLinks,
@@ -802,6 +802,16 @@ class CHostBase(IHost):
                                     isGoodForFavourites=isGoodForFavourites,
                                     textColor=textColor,
                                     pinCode=pinCode, imageType=imageType)
+        # a pager entry's 'page' is the page it leads to: the header path takes the list's page from it, also after a
+        # jump, where counting the steps cannot know the page
+        if type == CDisplayListItem.TYPE_NEXT or imageType in (CDisplayListItem.TYPE_NEXT, CDisplayListItem.TYPE_FIRST,
+                                                               CDisplayListItem.TYPE_PREVIOUS, CDisplayListItem.TYPE_LAST):
+            try:
+                if int(cItem.get('page')) > 0:
+                    hostItem.listPage = int(cItem.get('page'))
+            except (TypeError, ValueError):
+                pass
+        return hostItem
     # end converItem
 
     def getSearchResults(self, searchpattern, searchType=None):

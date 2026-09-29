@@ -83,11 +83,21 @@ class IPTVPlayerNotificationList(object):
         # this flag will be checked without mutex
         # to less lock check
         self.empty = True
+        # progress of a long host call, shown in the loading line while the call runs (a notification
+        # only appears when a result arrives)
+        self.statusText = None
 
     def clearQueue(self):
         with self.mainLock:
             self.notificationsList = []
             self.empty = True
+
+    def setStatus(self, text):
+        self.statusText = text
+
+    def popStatus(self):
+        text, self.statusText = self.statusText, None
+        return text
 
     def isEmpty(self):
         try:

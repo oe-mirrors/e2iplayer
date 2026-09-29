@@ -81,6 +81,98 @@ from Plugins.Extensions.IPTVPlayer.__init__ import GRIDSUPPORT
 ######################################################
 gDownloadManager = None
 
+# list entries that only page through the list they sit in
+PAGER_TYPES = (CDisplayListItem.TYPE_NEXT, CDisplayListItem.TYPE_JUMP, CDisplayListItem.TYPE_FIRST,
+               CDisplayListItem.TYPE_PREVIOUS, CDisplayListItem.TYPE_LAST)
+
+
+class CategoryPathEntry(str):
+    # one step of the header path. A pager step (next page, jump, first page ...) adds no name of its own,
+    # it only changes the page shown at the end of the path: "Search results > Page: 12", not
+    # "Search results > Next page (x3) > Jump > Next page".
+    pagerKind = ''
+    item = None  # the pager entry chosen - hostxxx sets the page of a jump on it while it lists
+    page = None
+    last = False
+
+
+def PagerKind(item):
+    # the pager type of a list entry ('' when it is none): the generic hosts use the item type, hostxxx
+    # keeps TYPE_CATEGORY and marks its pager entries with the imageType
+    kind = getattr(item, 'type', '')
+    if kind not in PAGER_TYPES:
+        kind = getattr(item, 'imageType', '')
+    return kind if kind in PAGER_TYPES else ''
+
+
+def ListPage(entry, previousPage, items):
+    # (page number or None, last page) of a list that was just opened through entry; a list reached by
+    # paging that has no "Next page" entry any more is the last page
+    page = _ListPageNumber(entry, previousPage, items)
+    last = bool(getattr(entry, 'pagerKind', '')) and not any(PagerKind(item) == CDisplayListItem.TYPE_NEXT for item in items)
+    return page, last
+
+
+def _ListPageNumber(entry, previousPage, items):
+    nextPage = None
+    hasNext = False
+    for item in items:
+        if PagerKind(item) == CDisplayListItem.TYPE_NEXT:
+            hasNext = True
+            # hostxxx's "Next page" entry knows the page it leads to - also after a jump
+            nextPage = getattr(item, 'listPage', None)
+            break
+    if isinstance(nextPage, int) and 1 < nextPage:
+        return nextPage - 1
+    kind = getattr(entry, 'pagerKind', '')
+    if not kind:
+        return 1 if hasNext else None
+    target = getattr(getattr(entry, 'item', None), 'listPage', None)
+    if isinstance(target, int) and 0 < target:
+        return target
+    if kind == CDisplayListItem.TYPE_FIRST:
+        return 1
+    if previousPage and kind == CDisplayListItem.TYPE_NEXT:
+        return previousPage + 1
+    if previousPage and kind == CDisplayListItem.TYPE_PREVIOUS and 1 < previousPage:
+        return previousPage - 1
+    return None
+
+
+def CategoryPath(title, categoryList, pageLabel, lastLabel, maxLen=0):
+    # the header path: repeated names as "(xN)", pager steps left out, the current page at the end;
+    # maxLen > 0 shortens every longer name to maxLen characters
+    def _getCat(cat, num):
+        if '' == cat:
+            return ''
+        if 0 < maxLen < len(cat):
+            cat = cat[:maxLen - 1].rstrip() + '…'
+        cat = ' > ' + cat
+        if 1 < num:
+            cat += (' (x%d)' % num)
+        return cat
+
+    path = title
+    prevCat = ''
+    prevNum = 0
+    for cat in categoryList:
+        if getattr(cat, 'pagerKind', ''):
+            continue
+        if prevCat != cat:
+            path += _getCat(prevCat, prevNum)
+            prevCat = cat
+            prevNum = 1
+        else:
+            prevNum += 1
+    path += _getCat(prevCat, prevNum)
+    entry = categoryList[-1] if categoryList else None
+    page = getattr(entry, 'page', None)
+    if getattr(entry, 'last', False):
+        path += ' > %s %s' % (pageLabel, ('%s (%d)' % (lastLabel, page)) if page else lastLabel)
+    elif page:
+        path += ' > %s %d' % (pageLabel, page)
+    return path
+
 
 class E2iPlayerWidget(Screen):
     IPTV_VERSION = GetIPTVPlayerVersion()
@@ -1010,6 +1102,9 @@ class E2iPlayerWidget(Screen):
 
     def processProxyQueue(self):
         if None is not self.mainTimer:
+            status = GetIPTVNotify().popStatus()
+            if status and self.isInWorkThread():
+                self.setStatusTex(status)
             funName = asynccall.gMainFunctionsQueueTab[0].peekClientFunName()
             notifyObj = GetIPTVNotify()
             if funName is not None and notifyObj is not None and not notifyObj.isEmpty() and funName in ['showArticleContent', 'selectMainVideoLinks', 'selectResolvedVideoLinks', 'reloadList']:
@@ -2694,14 +2789,8 @@ class E2iPlayerWidget(Screen):
         # check flag forcing of the using/not using buffering
         if 'iptv_buffering' in url.meta:
             if "required" == url.meta['iptv_buffering']:
-                # iptv_buffering was set as required, this is done probably due to
-                # extra http headers needs, at now extgstplayer and exteplayer can handle this headers,
-                # so we skip forcing buffering for such links. at now this is temporary
-                # solution we need to add separate filed iptv_extraheaders_need!
-                if url.startswith("http") and self.getMoviePlayer(False, False).value in ['extgstplayer', 'exteplayer']:
-                    pass  # skip forcing buffering
-                else:
-                    return True
+                # the stream only plays through a downloader, e.g. HLS segments the players' demuxer refuses
+                return True
             elif "forbidden" == url.meta['iptv_buffering']:
                 return False
             elif "remux" == url.meta['iptv_buffering']:
@@ -2805,10 +2894,16 @@ class E2iPlayerWidget(Screen):
                 self.session.open(MessageBox, reaseon, type=MessageBox.TYPE_INFO, timeout=10)
                 return
 
-            isBufferingMode = False if url.startswith('file://') else self.activePlayer.get('buffering', self.checkBuffering(url))
-            if not isBufferingMode and not url.startswith('file://') and "remux" == url.meta.get('iptv_buffering', ''):
-                # a player chosen "without buffering" for this host could not play it at all
-                isBufferingMode = True
+            if url.startswith('file://'):
+                isBufferingMode = False
+            elif url.meta.get('iptv_buffering', '') in ('required', 'forbidden'):
+                # the stream itself demands it, this overrides the player chosen for the host
+                isBufferingMode = self.checkBuffering(url)
+            else:
+                isBufferingMode = self.activePlayer.get('buffering', self.checkBuffering(url))
+                if not isBufferingMode and "remux" == url.meta.get('iptv_buffering', ''):
+                    # a player chosen "without buffering" for this host could not play it at all
+                    isBufferingMode = True
             bufferingPath = config.plugins.iptvplayer.bufferingPath.value
             downloadingPath = config.plugins.iptvplayer.DownloadsDir.value
             destinationPath = downloadingPath if recorderMode else bufferingPath
@@ -2965,9 +3060,13 @@ class E2iPlayerWidget(Screen):
             if (type == 'ForItem' or type == 'ForSearch') and getattr(self.currItem, 'type', None) not in CDisplayListItem.NON_NAVIGATING_TYPES:
                 self.prevSelList.append(self.currSelIndex)
                 if type == 'ForSearch':
-                    self.categoryList.append(_("Search results"))
+                    self.categoryList.append(CategoryPathEntry(_("Search results")))
                 else:
-                    self.categoryList.append(self.currItem.name)
+                    entry = CategoryPathEntry(self.currItem.name)
+                    entry.pagerKind = PagerKind(self.currItem)
+                    if entry.pagerKind:
+                        entry.item = self.currItem
+                    self.categoryList.append(entry)
                 # new list, so select first index
                 self.nextSelIndex = 0
 
@@ -3199,7 +3298,10 @@ class E2iPlayerWidget(Screen):
         self._updateRowMarkers()
         self["list"].setList([(x,) for x in self.currList])
 
-        self["headertext"].setText(self.getCategoryPath())
+        if self.categoryList and isinstance(self.categoryList[-1], CategoryPathEntry):
+            previousPage = getattr(self.categoryList[-2], 'page', None) if 1 < len(self.categoryList) else None
+            self.categoryList[-1].page, self.categoryList[-1].last = ListPage(self.categoryList[-1], previousPage, self.currList)
+        self.setHeaderText()
         if len(self.currList) <= 0:
             disMessage = _("No item to display. \nPress OK to refresh.\n")
             if ret.message and ret.message != '':
@@ -3232,28 +3334,20 @@ class E2iPlayerWidget(Screen):
             self.autoPlaySequencerNext()
     # end reloadList(self, ret):
 
-    def getCategoryPath(self):
-        def _getCat(cat, num):
-            if '' == cat:
-                return ''
-            cat = ' > ' + cat
-            if 1 < num:
-                cat += (' (x%d)' % num)
-            return cat
+    def getCategoryPath(self, maxLen=0):
+        return CategoryPath(self.hostTitle, self.categoryList, _('Page:'), _('Last'), maxLen)
 
-        # str = self.hostName
-        str = self.hostTitle
-        prevCat = ''
-        prevNum = 0
-        for cat in self.categoryList:
-            if prevCat != cat:
-                str += _getCat(prevCat, prevNum)
-                prevCat = cat
-                prevNum = 1
-            else:
-                prevNum += 1
-        str += _getCat(prevCat, prevNum)
-        return str
+    def setHeaderText(self):
+        # the header is one line high: long names (a video title, a search phrase) are shortened until
+        # the path fits, measured on the label so it works with every skin
+        label = self["headertext"]
+        for maxLen in (0, 60, 40, 25, 15):
+            label.setText(self.getCategoryPath(maxLen))
+            try:
+                if label.instance.calculateSize().height() <= label.instance.size().height():
+                    break
+            except Exception:
+                break
 
     def getRefreshedCurrList(self):
         currSelIndex = self["list"].getCurrentIndex()
@@ -3266,7 +3360,7 @@ class E2iPlayerWidget(Screen):
         self.currList = []
         self.currItem = CDisplayListItem()
         self.favouritesCurrentGroupId = ''
-        self["headertext"].setText(self.getCategoryPath())
+        self.setHeaderText()
         self.requestListFromHost('Initial')
 
     def hideWindow(self):
