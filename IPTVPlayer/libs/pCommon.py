@@ -798,6 +798,9 @@ class common:
                 curlSession.setopt(pycurl.HTTPHEADER, customHeaders)
 
             curlSession.setopt(pycurl.ACCEPT_ENCODING, "")  # enable all supported built-in compressions
+            # ipv4_only: sites whose Cloudflare blocks IPv6 clients (curl resolves names itself, a socket-level
+            # IPv4 lookup does not reach it); set both ways, a session can be reused
+            curlSession.setopt(pycurl.IPRESOLVE, pycurl.IPRESOLVE_V4 if params.get('ipv4_only') else pycurl.IPRESOLVE_WHATEVER)
             if None is not params.get('ssl_protocol', None):
                 sslProtoVer = self.getPyCurlSSLProtocolVersion(params['ssl_protocol'])
                 if None is not sslProtoVer:
