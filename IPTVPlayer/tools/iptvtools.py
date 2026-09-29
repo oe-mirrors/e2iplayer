@@ -508,36 +508,62 @@ def _copyDirAtomically(src, dst):
     rmtree(src, ignore_errors=True)
 
 
-def _getMigratedDir(path, oldPath, moveDir, label):
-    # path, or oldPath while moving it there failed (an empty destination would hide the data; retried on the next start)
-    if os.path.isdir(path):
+# destinations checked this session (Get*Dir() runs on every request, the check below walks the folders)
+gCheckedStorageMigrations = set()
+
+
+def _dirHasFiles(path):
+    for _root, _dirs, files in os.walk(path):
+        if files:
+            return True
+    return False
+
+
+def _getMigratedDir(path, oldPaths, moveDir, label):
+    # path, or the old folder while moving it there failed (retried on the next start). A destination without a single
+    # file counts as missing: a start without the old storage (HDD not mounted yet, CacheDir rerouted) created it empty,
+    # and from then on it hid the data left behind in the old folder (e.g. all favourites gone after the update)
+    if path in gCheckedStorageMigrations and os.path.isdir(path):
         return path
-    useOldPath = False
+    useOldPath = None
     with _storageMigrationLock:
-        if not os.path.isdir(path):
-            if os.path.isdir(oldPath) and os.path.realpath(oldPath) != os.path.realpath(path):
+        if not os.path.isdir(path) or not _dirHasFiles(path):
+            realPath = os.path.realpath(path)
+            for oldPath in oldPaths:
+                if not os.path.isdir(oldPath) or os.path.realpath(oldPath) == realPath or not _dirHasFiles(oldPath):
+                    continue
                 if path not in gFailedStorageMigrations:
                     try:
                         mkdirs(config.plugins.iptvplayer.ConfigDir.value)
+                        if os.path.isdir(path):
+                            # holds no file (checked above), the rename needs the name free
+                            rmtree(path)
                         moveDir(oldPath, path)
                         printDBG('%s: migrated [%s] -> [%s]' % (label, oldPath, path))
                     except Exception:
                         printExc()
                         gFailedStorageMigrations.add(path)
                         printDBG('%s: migration FAILED [%s] -> [%s], data stays in the old folder until the next start' % (label, oldPath, path))
-                useOldPath = path in gFailedStorageMigrations
-            if not useOldPath and not os.path.isdir(path):
+                if path in gFailedStorageMigrations:
+                    useOldPath = oldPath
+                break
+            if useOldPath is None and not os.path.isdir(path):
                 mkdirs(path)
+        if useOldPath is None and os.path.isdir(path):
+            gCheckedStorageMigrations.add(path)
     if not os.path.isdir(path):
         _warnIfConfigDirNotCreatable(path)
-    return oldPath if useOldPath else path
+    return path if useOldPath is None else useOldPath
 
 
 def GetConfigSubDir(dirName, fileName=''):
-    # used to live under CacheDir: move once, so "Delete all cache files" cannot wipe it
+    # used to live under CacheDir: move once, so "Delete all cache files" cannot wipe it. Besides the current CacheDir
+    # also the one it was rerouted from and the default one: a CacheDir rerouted before CacheDirWanted existed lost its old path
     path = os.path.join(config.plugins.iptvplayer.ConfigDir.value, dirName)
-    oldPath = os.path.join(config.plugins.iptvplayer.CacheDir.value, dirName)
-    return os.path.join(_getMigratedDir(path, oldPath, _copyDirAtomically, 'GetConfigSubDir'), fileName)
+    oldPaths = [os.path.join(cacheDir, dirName) for cacheDir in (config.plugins.iptvplayer.CacheDir.value,
+                                                                 config.plugins.iptvplayer.CacheDirWanted.value,
+                                                                 config.plugins.iptvplayer.SciezkaCache.default) if cacheDir]
+    return os.path.join(_getMigratedDir(path, oldPaths, _copyDirAtomically, 'GetConfigSubDir'), fileName)
 
 
 def GetSearchHistoryDir(fileName=''):
@@ -552,10 +578,10 @@ def GetWatchedDir(fileName=''):
     # watched/started markers (<host>/.<hash>.iptvhash) live next to IPTVFavourites; carried over from
     # <CacheDir>/IPTVFavourites/IPTVWatched and <ConfigDir>/IPTVFavourites/IPTVWatched (a plain rename)
     path = os.path.join(config.plugins.iptvplayer.ConfigDir.value, 'IPTVWatched')
-    if not os.path.isdir(path):
+    if path not in gCheckedStorageMigrations or not os.path.isdir(path):
         # outside the lock: takes and releases it itself (a plain Lock is not reentrant)
         oldPath = os.path.join(GetFavouritesDir(''), 'IPTVWatched')
-        path = _getMigratedDir(path, oldPath, os.rename, 'GetWatchedDir')
+        path = _getMigratedDir(path, [oldPath], os.rename, 'GetWatchedDir')
     return os.path.join(path, fileName)
 
 
