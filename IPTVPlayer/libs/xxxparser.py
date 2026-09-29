@@ -26,11 +26,12 @@ try:
 except ImportError:
 	import simplejson as json
 try:
-	from urllib.parse import quote, unquote, urlencode
+	from urllib.parse import quote, unquote, urlencode, urlsplit, parse_qs
 	from urllib.request import urlopen
 except ImportError:
 	from urllib import quote, unquote, urlencode
 	from urllib2 import urlopen  # Python 2: urllib.urlopen() has no timeout argument
+	from urlparse import urlsplit, parse_qs
 from os.path import join
 from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute
 from Screens.MessageBox import MessageBox
@@ -1725,7 +1726,6 @@ class XXXParser:
 			# advertising/redirect wrapper and is not the old player JSON.
 			if '/out/' in url:
 				try:
-					from urllib.parse import urlsplit, parse_qs
 					query = parse_qs(urlsplit(url).query)
 					lparam = query.get('l', [''])[0]
 					if lparam:
