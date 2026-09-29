@@ -12,6 +12,10 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin
 from Plugins.Extensions.IPTVPlayer.libs.xxxparser import XXXParser, decodeHtml, decodeUrl
 from Plugins.Extensions.IPTVPlayer.components.e2ivkselector import GetVirtualKeyboard
+try:
+	from Plugins.Extensions.IPTVPlayer.components.e2ivkselector import GetNumericKeyboard
+except ImportError:  # E2iPlayer builds without the numeric keypad - full keyboard instead
+	GetNumericKeyboard = None
 from Plugins.Extensions.IPTVPlayer.components.searchhistoryeditor import SearchHistoryEditor
 from Plugins.Extensions.IPTVPlayer.libs.linklisteditor import openLinkListFileEditor
 from Plugins.Extensions.IPTVPlayer.components.asynccall import IsThreadTerminated
@@ -2973,7 +2977,12 @@ class Host(CBaseHostClass, XXXParser):
 			title = _("Enter page number (MAX PAGE: {})").format(max_page)
 		else:
 			title = _("Enter page number")
-		ret = self.sessionEx.waitForFinishOpen(GetVirtualKeyboard(), title=title, text="")
+		# None: no keypad in this E2iPlayer build, switched off, or the System keyboard selected
+		numKeyboard = GetNumericKeyboard() if GetNumericKeyboard is not None else None
+		if numKeyboard is not None:
+			ret = self.sessionEx.waitForFinishOpen(numKeyboard, title=title, text="", additionalParams={'min_value': 1})
+		else:
+			ret = self.sessionEx.waitForFinishOpen(GetVirtualKeyboard(), title=title, text="")
 		if isinstance(ret, tuple) and len(ret):
 			ret = ret[0]
 		try:

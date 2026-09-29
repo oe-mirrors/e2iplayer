@@ -110,6 +110,8 @@ config.plugins.iptvplayer.osk_background_color = ConfigSelection(default="", cho
 config.plugins.iptvplayer.osk_font_size_offset = ConfigSelectionNumber(min=-6, max=6, stepwidth=1, default=0, wraparound=False)
 config.plugins.iptvplayer.osk_searchfield_align = ConfigSelection(default="left", choices=[("left", _("Left")), ("right", _("Right"))])
 config.plugins.iptvplayer.osk_show_flags = ConfigYesNo(default=True)
+# digits-only keypad for page numbers and number settings - off = full keyboard / row input as before
+config.plugins.iptvplayer.osk_numpad = ConfigYesNo(default=True)
 
 
 def GetMoviePlayerName(player):
@@ -470,6 +472,8 @@ def GetOskOwnModelConfigList(indent=True):
 def GetOskConfigList():
     list = []
     list.append(getConfigListEntry(_("Virtual Keyboard type"), config.plugins.iptvplayer.osk_type))
+    if config.plugins.iptvplayer.osk_type.value in ('', 'own'):
+        list.append(getConfigListEntry('    ' + _("Numeric keypad for numbers"), config.plugins.iptvplayer.osk_numpad))
     if config.plugins.iptvplayer.osk_type.value == 'own':
         list.extend(GetOskOwnModelConfigList(indent=True))
     return list

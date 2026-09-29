@@ -31,3 +31,22 @@ def GetVirtualKeyboard(caps=None):
 
     from Screens.VirtualKeyBoard import VirtualKeyBoard
     return VirtualKeyBoard
+
+
+def GetNumericKeyboard():
+    # digits-only keypad for page numbers and ConfigInteger settings, opened
+    # like the full keyboard - title=, text=, additionalParams={'min_value':,
+    # 'max_value':} - returning the entered text, '' or None on EXIT.
+    # None instead of a screen class when it's switched off or the "System"
+    # keyboard is selected: the caller then does what it did before the
+    # keypad existed (full keyboard for a page number, number keys only in
+    # a settings row).
+    try:
+        cfg = config.plugins.iptvplayer
+        if cfg.osk_type.value not in ['own', ''] or not cfg.osk_numpad.value:
+            return None
+        from Plugins.Extensions.IPTVPlayer.components.e2inumpad import E2iNumericKeyBoard
+        return E2iNumericKeyBoard
+    except Exception:
+        printExc()
+    return None
