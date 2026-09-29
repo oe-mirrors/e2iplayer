@@ -4,6 +4,10 @@ import re
 import json
 
 from Plugins.Extensions.IPTVPlayer.components.e2ivkselector import GetVirtualKeyboard
+try:
+    from Plugins.Extensions.IPTVPlayer.components.e2ivkselector import GetNumericKeyboard
+except ImportError:  # E2iPlayer builds without the numeric keypad - full keyboard instead
+    GetNumericKeyboard = None
 from Plugins.Extensions.IPTVPlayer.components.asynccall import MainSessionWrapper
 from Components.config import ConfigSelection, config, getConfigListEntry, ConfigYesNo, ConfigText
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase, RetHost
@@ -167,7 +171,12 @@ class SerienStreamTo(CBaseHostClass):
         if current_page > max_page:
             current_page = max_page
         title = _("Jump to a selected page, max: {}").format(max_page) if max_page else _("Jump to a selected page")
-        ret = self.sessionEx.waitForFinishOpen(GetVirtualKeyboard(), title=title, text=str(current_page))
+        # None: no keypad in this E2iPlayer build, switched off, or the System keyboard selected
+        numKeyboard = GetNumericKeyboard() if GetNumericKeyboard is not None else None
+        if numKeyboard is not None:
+            ret = self.sessionEx.waitForFinishOpen(numKeyboard, title=title, text=str(current_page), additionalParams={'min_value': 1, 'max_value': max_page})
+        else:
+            ret = self.sessionEx.waitForFinishOpen(GetVirtualKeyboard(), title=title, text=str(current_page))
         if isinstance(ret, tuple) and len(ret):
             ret = ret[0]
         if not ret or not ret.strip():
