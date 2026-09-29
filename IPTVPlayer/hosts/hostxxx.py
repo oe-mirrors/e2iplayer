@@ -21131,7 +21131,7 @@ class Host(CBaseHostClass, XXXParser):
 			# no categories on the site, it is browsed by search; /now is left out,
 			# it is a feed of any VK video (not only adult content)
 			self.MAIN_URL = 'https://noodlemagazine.com'
-			for title, path in ((_('Popular'),'/popular/recent?sort_by=views&sort_order=desc'), (_('Most viewed'), '/popular/week?sort_by=views&sort_order=desc'), (_('Top'), '/popular/month?sort_by=views&sort_order=desc')):
+			for title, path in ((_('Popular'), '/popular/recent?sort_by=views&sort_order=desc'), (_('Most viewed'), '/popular/week?sort_by=views&sort_order=desc'), (_('Top'), '/popular/month?sort_by=views&sort_order=desc')):
 				valTab.append(CDisplayListItem(menuHeader(title), title, CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + path], 'NOODLEMAGAZINE-clips', siteLogo, None))
 			return searchItems(valTab, True)
 
@@ -25095,7 +25095,6 @@ class Host(CBaseHostClass, XXXParser):
 					next_page = self.MAIN_URL + '/' + next_page.lstrip('/')
 				valTab.append(self.getNextItem(self.cm.ph.getSearchGroups(next_page, r'/([0-9]+)/?$', 1, True)[0] or '2', next_page, 'LETSPORN-pornstar-content', 'Next'))
 			return valTab
-
 
 		if 'LETSPORN-categories' == name:
 			printDBG('LETSPORN categories')
