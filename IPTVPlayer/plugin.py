@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
-from Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget import E2iPlayerWidget
-from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import ConfigMenu, GetConfigExpectedPin, IsPluginBrowserEntryShown
-from Plugins.Extensions.IPTVPlayer.components.iptvpin import IPTVPinWidget
+# enigma2 imports this file at every start, also when the player is never
+# opened: only the options (iptvconfig) are loaded here, the screens and with
+# them the host framework are imported by the functions which open them
+from Plugins.Extensions.IPTVPlayer.components.iptvconfig import GetConfigExpectedPin, IsPluginBrowserEntryShown
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 
 from enigma import getDesktop
@@ -79,17 +80,20 @@ def startIPTVfromMenu(menuid, **kwargs):
 
 def mainSetup(session, **kwargs):
     if config.plugins.iptvplayer.configProtectedByPin.value:
+        from Plugins.Extensions.IPTVPlayer.components.iptvpin import IPTVPinWidget
         session.openWithCallback(boundFunction(pinCallback, session, runSetup, GetConfigExpectedPin()), IPTVPinWidget, title=_("Enter pin") + " - " + _("Configuration"))
     else:
         runSetup(session)
 
 
 def runSetup(session):
+    from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import ConfigMenu
     session.open(ConfigMenu)
 
 
 def main(session, **kwargs):
     if config.plugins.iptvplayer.pluginProtectedByPin.value:
+        from Plugins.Extensions.IPTVPlayer.components.iptvpin import IPTVPinWidget
         session.openWithCallback(boundFunction(pinCallback, session, runMain, ''), IPTVPinWidget, title=_("Enter pin") + " - " + _("E2iPlayer"))
     else:
         runMain(session)
@@ -104,6 +108,7 @@ class pluginAutostart(Screen):
     def onStart(self):
         self.onShow.remove(self.onStart)
         if config.plugins.iptvplayer.pluginProtectedByPin.value:
+            from Plugins.Extensions.IPTVPlayer.components.iptvpin import IPTVPinWidget
             self.session.openWithCallback(self.iptvPinCallback, IPTVPinWidget, title=_("Enter pin") + " - " + _("E2iPlayer"))
         else:
             runMain(self.session, self.iptvDoRunMain)
@@ -119,6 +124,7 @@ class pluginAutostart(Screen):
             runMain(self.session, self.iptvDoRunMain)
 
     def iptvDoRunMain(self, session):
+        from Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget import E2iPlayerWidget
         session.openWithCallback(self.iptvDoClose, E2iPlayerWidget)
 
     def iptvDoClose(self, *args, **kwargs):
@@ -126,6 +132,7 @@ class pluginAutostart(Screen):
 
 
 def doRunMain(session):
+    from Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget import E2iPlayerWidget
     session.open(E2iPlayerWidget)
 
 
