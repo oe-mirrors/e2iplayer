@@ -571,7 +571,7 @@ class _PlayerSelectorListMode:
         caps = {}
         virtualKeyboard = GetVirtualKeyboard(caps)
         if caps.get('has_additional_params'):
-            self.session.openWithCallback(self.searchCallback, virtualKeyboard, title=_("Search"), text='', additionalParams={})
+            self.session.openWithCallback(self.searchCallback, virtualKeyboard, title=_("Search"), text='', additionalParams={'is_search': True})
         else:
             self.session.openWithCallback(self.searchCallback, virtualKeyboard, title=_("Search"), text='')
 

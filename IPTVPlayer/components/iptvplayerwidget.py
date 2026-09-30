@@ -1445,7 +1445,7 @@ class E2iPlayerWidget(Screen):
         caps = {}
         virtualKeyboard = GetVirtualKeyboard(caps)
         if caps.get('has_additional_params'):
-            self.session.openWithCallback(self._findEntryCallback, virtualKeyboard, title=_("Find item"), text='', additionalParams={})
+            self.session.openWithCallback(self._findEntryCallback, virtualKeyboard, title=_("Find item"), text='', additionalParams={'is_search': True})
         else:
             self.session.openWithCallback(self._findEntryCallback, virtualKeyboard, title=_("Find item"), text='')
 
@@ -3160,7 +3160,10 @@ class E2iPlayerWidget(Screen):
         # to re-resolve live when "Default suggestions provider" / "Allow
         # host to override suggestions provider" change while the keyboard
         # is already open (e2ivk.py calls it again from its Settings-closed
-        # callback).
+        # callback). None: no suggestions ("Show suggestions" off, provider
+        # "None").
+        if not config.plugins.iptvplayer.osk_allow_suggestions.value:
+            return None
         suggestionsProvider = None
         try:
             if config.plugins.iptvplayer.osk_allow_host_suggestions.value and self.visible and not self.isInWorkThread():
@@ -3208,8 +3211,9 @@ class E2iPlayerWidget(Screen):
 
         if caps.get('has_additional_params'):
             try:
-                additionalParams = {}
-                if caps.get('has_suggestions') and config.plugins.iptvplayer.osk_allow_suggestions.value:
+                # is_search: the keyboard adds the text to its search history
+                additionalParams = {'is_search': True}
+                if caps.get('has_suggestions'):
                     suggestionsProvider = self._resolveSuggestionsProvider()
                     if suggestionsProvider:
                         from Plugins.Extensions.IPTVPlayer.components.e2ivksuggestion import AutocompleteSearch
