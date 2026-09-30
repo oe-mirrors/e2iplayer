@@ -58,7 +58,7 @@ def pluginAutostartSetup(reason, **kwargs):
 def doPluginAutostart():
     from Screens.InfoBar import InfoBar
     InfoBar.instance.onShow.remove(doPluginAutostart)
-    runMain(InfoBar.instance.session)
+    main(InfoBar.instance.session)  # asks for the pin like every other way in
 ######################################################
 
 ####################################################
@@ -103,12 +103,25 @@ class pluginAutostart(Screen):
 
     def onStart(self):
         self.onShow.remove(self.onStart)
-        runMain(self.session, self.iptvDoRunMain)
+        if config.plugins.iptvplayer.pluginProtectedByPin.value:
+            self.session.openWithCallback(self.iptvPinCallback, IPTVPinWidget, title=_("Enter pin") + " - " + _("E2iPlayer"))
+        else:
+            runMain(self.session, self.iptvDoRunMain)
+
+    def iptvPinCallback(self, pin=None):
+        # unlike pinCallback() this screen must always be closed, otherwise
+        # enigma2 would not go on with its start
+        if None is pin:
+            self.close()
+        elif pin != config.plugins.iptvplayer.pin.value:
+            self.session.openWithCallback(self.iptvDoClose, MessageBox, _("Pin incorrect!"), type=MessageBox.TYPE_INFO, timeout=5)
+        else:
+            runMain(self.session, self.iptvDoRunMain)
 
     def iptvDoRunMain(self, session):
         session.openWithCallback(self.iptvDoClose, E2iPlayerWidget)
 
-    def iptvDoClose(self, **kwargs):
+    def iptvDoClose(self, *args, **kwargs):
         self.close()
 
 
