@@ -435,7 +435,7 @@ class IPTVDMWidget(Screen):
         caps = {}
         virtualKeyboard = GetVirtualKeyboard(caps)
         if caps.get('has_additional_params'):
-            self.session.openWithCallback(self._findEntryCallback, virtualKeyboard, title=_("Find item"), text='', additionalParams={})
+            self.session.openWithCallback(self._findEntryCallback, virtualKeyboard, title=_("Find item"), text='', additionalParams={'is_search': True})
         else:
             self.session.openWithCallback(self._findEntryCallback, virtualKeyboard, title=_("Find item"), text='')
 

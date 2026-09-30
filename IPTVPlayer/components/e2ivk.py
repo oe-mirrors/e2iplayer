@@ -920,6 +920,9 @@ class E2iVirtualKeyBoard(Screen):
         # rather than cached once so toggling "Show search history" in
         # Settings takes effect immediately on the already-open keyboard.
         self._explicitSearchHistory = additionalParams.get('search_history')
+        # the text is a search entry: only then it is added to the search
+        # history - a password or a file name typed for a setting is not
+        self.isSearch = additionalParams.get('is_search', False)
 
         self.skin = self.prepareSkin()
 
@@ -1316,7 +1319,7 @@ class E2iVirtualKeyBoard(Screen):
             except Exception:
                 text = ''
                 printExc()
-            if text and config.plugins.iptvplayer.osk_allow_search_history.value:
+            if text and self.isSearch and config.plugins.iptvplayer.osk_allow_search_history.value:
                 try:
                     gVKSearchHistory.addHistoryItem(text)
                 except Exception:
@@ -1445,21 +1448,21 @@ class E2iVirtualKeyBoard(Screen):
         # Settings can restyle an already-open keyboard via
         # _applyLanguageIconLayout() instead of requiring a reopen.
         if self.isWQHD:
-            globeIconWH, globeOffsetY = 35, 19
+            globeIconWH = 35
             flagIconW, flagIconH = 80, 53
         elif self.fullHD:
-            globeIconWH, globeOffsetY = 26, 14
+            globeIconWH = 26
             flagIconW, flagIconH = 60, 40
         else:
-            globeIconWH, globeOffsetY = 26, 14
+            globeIconWH = 26
             flagIconW, flagIconH = 40, 27
 
         if config.plugins.iptvplayer.osk_show_flags.value:
             langIconW, langIconH = flagIconW, flagIconH
-            langIconOffsetY = (self._gridBH - flagIconH) // 2
         else:
             langIconW, langIconH = globeIconWH, globeIconWH
-            langIconOffsetY = globeOffsetY
+        # centred in the key's height
+        langIconOffsetY = (self._gridBH - langIconH) // 2
         # reserved width for the icon before key 56's "DE" text label starts;
         # was a flat 40 regardless of tier/icon, which the WQHD globe (35)
         # and any flag wider than 30px would already overflow
@@ -1739,9 +1742,10 @@ class E2iVirtualKeyBoard(Screen):
     def _refreshSuggestionsProvider(self):
         # right_list/right_header only exist when the keyboard was opened
         # with a provider already resolved (see prepareSkin()'s "if
-        # self.autocomplete:") - that layout can't be added live, so this
-        # only re-resolves WHICH provider is used, not whether the panel
-        # is shown at all
+        # self.autocomplete:") - that layout can't be added live. With one,
+        # the settings apply at once: another provider, or none ("Show
+        # suggestions" off / provider "None") - the panel is hidden then
+        # until a provider is chosen again
         if not self.suggestionsProviderFactory or not self.autocomplete:
             return
         try:
@@ -1749,14 +1753,17 @@ class E2iVirtualKeyBoard(Screen):
         except Exception:
             printExc()
             return
-        if not newProvider:
-            return
         self.autocomplete.term()
-        self.autocomplete = AutocompleteSearch(newProvider)
-        self['right_header'].setText(self.autocomplete.getProviderName())
         self['right_list'].setList([])
         self.pendingSuggestions = None
-        self.updateSuggestions()
+        if newProvider:
+            self.autocomplete = AutocompleteSearch(newProvider)
+            self['right_header'].setText(self.autocomplete.getProviderName())
+            self.isAutocompleteEnabled = True
+            self.updateSuggestions()
+        else:
+            self.setSuggestionVisible(False)
+            self.isAutocompleteEnabled = False
 
     def clearSearchHistoryConfirmed(self, ret=None):
         if not ret:
@@ -1941,15 +1948,20 @@ class E2iVirtualKeyBoard(Screen):
         else:
             return 0
 
+    def _isTextFieldActive(self):
+        # the marker is on the text field - not merely left there while a
+        # list has the focus
+        return self.focus == self.FOCUS_KEYBOARD and self.currentKeyId == 0
+
     def keyNumberGlobal(self, number):
-        if self.currentKeyId == 0:
+        if self._isTextFieldActive():
             try:
                 self["text"].number(number)
             except Exception:
                 printExc()
 
     def keyGotAscii(self):
-        if self.currentKeyId == 0:
+        if self._isTextFieldActive():
             try:
                 self["text"].handleAscii(getPrevAsciiCode())
             except Exception:
