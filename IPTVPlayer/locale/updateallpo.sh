@@ -11,6 +11,7 @@
 # Version: 1.1 - check for the gettext tools up front; drop the dead xml2po.py
 #                step; skip the po/mo rewrite when only the POT-Creation-Date
 #                header changed (avoids empty git diffs)
+#          1.2 - msgmerge --no-fuzzy-matching: no guessed (fuzzy) translations
 #
 localgsed="sed"
 findoptions=""
@@ -74,15 +75,15 @@ IFS=" "
 for lang in "${languages[@]}" ; do
 	if [[ -f $lang$FilePath$Plugin.po ]]; then 
 		printf "Updating existing translation file %s.po\n" $lang
-		msgmerge --backup=none --no-wrap -s -U $lang$FilePath$Plugin.po $Plugin.pot && touch $lang$FilePath$Plugin.po
+		msgmerge --backup=none --no-wrap --no-fuzzy-matching -s -U $lang$FilePath$Plugin.po $Plugin.pot && touch $lang$FilePath$Plugin.po
 		msgattrib --no-wrap --no-obsolete $lang$FilePath$Plugin.po -o $lang$FilePath$Plugin.po
 		msgfmt -o $lang$FilePath$Plugin.mo $lang$FilePath$Plugin.po
 	else
 		if [[ ! -d $lang$FilePath ]]; then
-			mkdir $lang$FilePath
+			mkdir -p $lang$FilePath
 		fi
 		printf "New file created: %s, please add it to github before commit\n" $lang$FilePath$Plugin.po
-		msginit -l $lang$FilePath$Plugin.po -o $lang$FilePath$Plugin.po -i $Plugin.pot --no-translator
+		msginit -l $lang -o $lang$FilePath$Plugin.po -i $Plugin.pot --no-translator
 		msgfmt -o $lang$FilePath$Plugin.mo $lang$FilePath$Plugin.po
 	fi
 done
