@@ -362,7 +362,8 @@ class IPTVExtMoviePlayer(Screen):
         # clamps a negative "center" offset to 0 and hides it, but skin
         # engines that don't (OpenViX/OpenBH) centre it at a negative
         # offset - infobar in the middle of the screen, left side cut off.
-        if 'resolution="' in skin:
+        self.skinUsesRefCanvas = 'resolution="' in skin
+        if self.skinUsesRefCanvas:
             screenW, screenH = REF_W, REF_H
             scaledBars = self.SCALED_BAR_IMAGES.get(os_path.basename(os_path.normpath(self.playerSkinFolder)))
         else:
@@ -649,6 +650,7 @@ class IPTVExtMoviePlayer(Screen):
 
         self.onClose.append(self.__onClose)
         self.onShow.append(self.onStart)
+        self.onLayoutFinish.append(self.fixWindowGeometry)
         # self.onLayoutFinish.append(self.onStart)
 
         self.console = None
@@ -2605,6 +2607,48 @@ class IPTVExtMoviePlayer(Screen):
 
         self.enableSubtitles()
 
+    def fixWindowGeometry(self):
+        # initGuiComponentsPos() places the infobar in real desktop pixels,
+        # so the window itself must cover exactly the desktop at 0,0.
+        #
+        # resolution="1280,720" is not honoured the same way everywhere:
+        # OpenATV scales every position=/size= (the window's own included),
+        # OpenHDF 7.5 (OpenPLi-style SkinContext, which turns position=/
+        # size= into final pixel tuples before the scale is applied) scales
+        # the fonts only. There the window stayed 1280x720 in the middle
+        # of a FHD desktop and clipped the infobar away, and the widgets
+        # kept their 1280x720 boxes with 1.5x fonts in them. A window that
+        # still has the reference size on a bigger desktop tells the two
+        # apart - the widgets are then scaled here instead.
+        try:
+            desktopW = getDesktop(0).size().width()
+            desktopH = getDesktop(0).size().height()
+            windowW = self.instance.size().width()
+            windowH = self.instance.size().height()
+            printDBG("IPTVExtMoviePlayer window %dx%d at %d,%d -> desktop %dx%d" % (windowW, windowH, self.instance.position().x(), self.instance.position().y(), desktopW, desktopH))
+            self.instance.move(ePoint(0, 0))
+            self.instance.resize(eSize(desktopW, desktopH))
+            if not self.skinUsesRefCanvas or (windowW, windowH) != (self.REF_W, self.REF_H) or (desktopW, desktopH) == (self.REF_W, self.REF_H):
+                return
+            scaleX = desktopW / float(self.REF_W)
+            scaleY = desktopH / float(self.REF_H)
+            printDBG("IPTVExtMoviePlayer skin engine did not scale the widgets - scaling them by %.2fx%.2f" % (scaleX, scaleY))
+            done = set()
+            for widget in list(self.values()) + list(getattr(self, 'renderer', [])) + list(getattr(self, 'additionalWidgets', [])):
+                instance = getattr(widget, 'instance', None)
+                if instance is None or id(widget) in done:
+                    continue
+                done.add(id(widget))
+                try:
+                    pos = instance.position()
+                    size = instance.size()
+                    instance.resize(eSize(int(size.width() * scaleX), int(size.height() * scaleY)))
+                    instance.move(ePoint(int(pos.x() * scaleX), int(pos.y() * scaleY)))
+                except Exception:
+                    printExc()
+        except Exception:
+            printExc()
+
     def initGuiComponentsPos(self):
         # playbackInfoBaner/goToSeekPointer - unlike
         # logoIcon/statusIcon/loopIcon/subSynchroIcon (_setScaledIconPixmap
@@ -2651,6 +2695,11 @@ class IPTVExtMoviePlayer(Screen):
 
         for elem in self.playbackInfoBar['guiElemNames']:
             self[elem].setPosition(self[elem].position[0] + offset_x, self[elem].position[1] + offset_y)
+        try:
+            for elem in ('playbackInfoBaner', 'progressBar', 'currTimeLabel'):
+                printDBG("IPTVExtMoviePlayer %s at %d,%d size %dx%d" % (elem, self[elem].instance.position().x(), self[elem].instance.position().y(), self[elem].instance.size().width(), self[elem].instance.size().height()))
+        except Exception:
+            printExc()
 
         # sub synchro elements
         # calculate offset
