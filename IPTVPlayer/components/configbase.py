@@ -11,6 +11,7 @@
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.components.iptvdirbrowser import IPTVDirectorySelectorWidget, IPTVFileSelectorWidget
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
+from Plugins.Extensions.IPTVPlayer.components.iptvconfig import ConfigIPTVFileSelection, COLORS_DEFINITONS  # noqa: F401  (COLORS_DEFINITONS: imported from here by hosts)
 from Plugins.Extensions.IPTVPlayer.components.e2ivkselector import GetVirtualKeyboard, GetNumericKeyboard
 from Plugins.Extensions.IPTVPlayer.components import skinchrome
 from Plugins.Extensions.IPTVPlayer.components.cover import Cover3
@@ -33,15 +34,6 @@ from Components.Sources.StaticText import StaticText
 from Tools.BoundFunction import boundFunction
 from Tools.LoadPixmap import LoadPixmap
 ###################################################
-COLORS_DEFINITONS = [("#000000", _("black")), ("#C0C0C0", _("silver")), ("#808080", _("gray")), ("#FFFFFF", _("white")), ("#800000", _("maroon")), ("#FF0000", _("red")), ("#800080", _("purple")), ("#FF00FF", _("fuchsia")),
-                     ("#008000", _("green")), ("#00FF00", _("lime")), ("#808000", _("olive")), ("#FFFF00", _("yellow")), ("#000080", _("navy")), ("#0000FF", _("blue")), ("#008080", _("teal")), ("#00FFFF", _("aqua"))]
-
-
-class ConfigIPTVFileSelection(ConfigDirectory):
-    def __init__(self, ignoreCase=True, fileMatch=None, default="", visible_width=60):
-        self.fileMatch = fileMatch
-        self.ignoreCase = ignoreCase
-        ConfigDirectory.__init__(self, default, visible_width)
 
 
 class ConfigBaseWidget(Screen, ConfigListScreen):
