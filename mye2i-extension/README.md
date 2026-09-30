@@ -289,3 +289,20 @@ Not automated: signing the Firefox `.xpi` at Mozilla (needs AMO API keys as secr
 The original extension is referenced in `IPTVPlayer/components/captchascriptwidget.py` /
 `recaptcha_mye2i_widget.py` (the "Please Open site: http://IP:PORT..." text) and in
 `IPTVPlayer/scripts/mye2iserver.py` (`UPDATE_URL` for the version hint, now pointing to the release above).
+
+---
+
+### 🙏 Credits
+
+**👨‍💻 Author:**
+
+- original Idea and Created by <a href="https://gitlab.com/e2i/e2iplayer">**SamSamSam**</a>
+
+Thanks to SamSamSam for the original MyE2i extension (up to 1.17) and the E2iPlayer it was made for! This
+version builds on that work. The original public version from SamSamSam is Closedsource now and only
+available for acquaintances and family
+
+** Special Thanks **
+- All contributors and testers
+- Open source community
+- Enigma2 developers
