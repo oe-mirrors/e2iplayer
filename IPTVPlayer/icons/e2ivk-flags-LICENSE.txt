@@ -1,0 +1,36 @@
+Flags in icons/HD/e2ivk/flags, icons/FHD/e2ivk/flags and icons/WQHD/e2ivk/flags
+==================================================================================
+
+The following flags were rendered from the SVGs of flag-icons
+(https://github.com/lipis/flag-icons, v7.5.0, flags/4x3) and styled like the
+other flags of the on-screen keyboard (gloss and edge):
+
+dv_MV fo_FO ha_NG hy_AM kk_KZ kl_GL km_KH ky_KG lo_LA mn_MN ne_NP ps_AF
+si_LK syr_SY tg_TJ tk_TM ur_PK uz_UZ wo_SN zh_HK zh_MO zh_SG
+dz_BT tzm_DZ ff_GN ku_IQ tzm_MA my_MM gn_PY so_SO
+
+sr_CS (Serbia and Montenegro) is a self-drawn tricolour (public-domain
+design) using flag-icons' colours.
+
+flag-icons licence:
+
+The MIT License (MIT)
+
+Copyright (c) 2013 Panayiotis Lipiridis
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

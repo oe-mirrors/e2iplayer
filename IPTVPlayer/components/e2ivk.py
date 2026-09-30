@@ -5,6 +5,9 @@
 #  $Id$
 #
 #
+import os
+import re
+
 from Screens.Screen import Screen
 from Screens.MessageBox import MessageBox
 from Components.ActionMap import NumberActionMap
@@ -169,8 +172,9 @@ class E2iVKSelectionList(IPTVListComponentBase):
         self.dotSize = max(int(round(self.font[2] * 16.0 / 30.0)), 12)
         self.dictPIX = {}
         # flag pixmaps are keyed by locale (e.g. 'de_DE'), lazily loaded on
-        # first use since only ~1/3 of the ~100 layout locales have one
+        # first use; flagNames = the files of flagsDir (see _getFlagName())
         self.flagPIX = {}
+        self.flagNames = None
         self.withRatioButton = withRatioButton
 
     def _nullPIX(self):
@@ -196,11 +200,34 @@ class E2iVKSelectionList(IPTVListComponentBase):
         if self.withRatioButton:
             self._nullPIX()
 
+    def _getFlagName(self, locale):
+        # flag file for a layout locale: the exact one, then without the
+        # script part (sr_Cyrl-CS -> sr_CS), then a flag of the same country
+        # (as_IN -> hi_IN = India), then of the same language, else
+        # missing.png (historic scripts without a country)
+        if self.flagNames is None:
+            try:
+                self.flagNames = sorted(os.listdir(GetIconDir(self.flagsDir)))
+            except Exception:
+                printExc()
+                self.flagNames = []
+        if locale + '.png' in self.flagNames:
+            return locale + '.png'
+        parts = re.split('[_-]', locale)
+        if len(parts) > 2 and '%s_%s.png' % (parts[0], parts[-1]) in self.flagNames:
+            return '%s_%s.png' % (parts[0], parts[-1])
+        if len(parts) > 1:
+            for name in self.flagNames:
+                if name.endswith('_%s.png' % parts[-1]):
+                    return name
+        for name in self.flagNames:
+            if name.startswith(parts[0] + '_'):
+                return name
+        return 'missing.png'
+
     def _getFlagPixmap(self, locale):
         if locale not in self.flagPIX:
-            path = GetIconDir('%s/%s.png' % (self.flagsDir, locale))
-            if not fileExists(path):
-                path = GetIconDir('%s/missing.png' % self.flagsDir)
+            path = GetIconDir('%s/%s' % (self.flagsDir, self._getFlagName(locale)))
             try:
                 self.flagPIX[locale] = LoadPixmap(cached=True, path=path)
             except Exception:
@@ -339,18 +366,312 @@ class E2iVirtualKeyBoard(Screen):
     SK_CTRL = 2
     SK_ALT = 4
     SK_CAPSLOCK = 8
+    # On-screen grid, 15 columns; a key spanning several columns repeats its
+    # id. ISO layout with 48 character keys, like a real keyboard: 63 is the
+    # key next to Enter (German #'), 44 the <> key next to the left Shift,
+    # Caps Lock (30) a single key. The .kle files map every Windows layout
+    # onto these ids by physical key.
     KEYIDMAP = [
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
         [16, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29],
-        [30, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 42],
+        [30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 63, 42, 42],
         [43, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 55],
         [56, 56, 57, 58, 59, 59, 59, 59, 59, 59, 59, 59, 60, 61, 62],
     ]
-    LEFT_KEYS = [1, 16, 30, 43, 56]
-    RIGHT_KEYS = [15, 29, 42, 55, 62]
-    ALL_VK_LAYOUTS = [('Albanian', 'sq_AL', '0000041c'), ('Arabic (101)', 'ar_SA', '00000401'), ('Arabic (102)', 'ar_SA', '00010401'), ('Arabic (102) AZERTY', 'ar_SA', '00020401'), ('Armenian Eastern', 'hy_AM', '0000042b'), ('Armenian Western', 'hy_AM', '0001042b'), ('Assamese - INSCRIPT', 'as_IN', '0000044d'), ('Azeri Cyrillic', 'az_Cyrl-AZ', '0000082c'), ('Azeri Latin', 'az_Latn-AZ', '0000042c'), ('Bashkir', 'ba_RU', '0000046d'), ('Belarusian', 'be_BY', '00000423'), ('Belgian (Comma)', 'fr_BE', '0001080c'), ('Belgian (Period)', 'nl_BE', '00000813'), ('Belgian French', 'fr_BE', '0000080c'), ('Bengali', 'bn_IN', '00000445'), ('Bengali - INSCRIPT', 'bn_IN', '00020445'), ('Bengali - INSCRIPT (Legacy)', 'bn_IN', '00010445'), ('Bosnian (Cyrillic)', 'bs_Cyrl-BA', '0000201a'), ('Bulgarian', 'bg_BG', '00030402'), ('Bulgarian (Latin)', 'bg_BG', '00010402'), ('Bulgarian (Phonetic Traditional)', 'bg_BG', '00040402'), ('Bulgarian (Phonetic)', 'bg_BG', '00020402'), ('Bulgarian (Typewriter)', 'bg_BG', '00000402'), ('Canadian French', 'en_CA', '00001009'), ('Canadian French (Legacy)', 'fr_CA', '00000c0c'), ('Canadian Multilingual Standard', 'en_CA', '00011009'), ('Chinese (Simplified) - US Keyboard', 'zh_CN', '00000804'), ('Chinese (Simplified, Singapore) - US Keyboard', 'zh_SG', '00001004'), ('Chinese (Traditional) - US Keyboard', 'zh_TW', '00000404'), ('Chinese (Traditional, Hong Kong S.A.R.) - US Keyboard', 'zh_HK', '00000c04'), ('Chinese (Traditional, Macao S.A.R.) - US Keyboard', 'zh_MO', '00001404'), ('Croatian', 'hr_HR', '0000041a'), ('Czech', 'cs_CZ', '00000405'), ('Czech (QWERTY)', 'cs_CZ', '00010405'), ('Czech Programmers', 'cs_CZ', '00020405'), ('Danish', 'da_DK', '00000406'), ('Devanagari - INSCRIPT', 'hi_IN', '00000439'), ('Divehi Phonetic', 'dv_MV', '00000465'), ('Divehi Typewriter', 'dv_MV', '00010465'), ('Dutch', 'nl_NL', '00000413'), ('Estonian', 'et_EE', '00000425'), ('Faeroese', 'fo_FO', '00000438'), ('Finnish', 'fi_FI', '0000040b'), ('Finnish with Sami', 'se_SE', '0001083b'), ('French', 'fr_FR', '0000040c'), ('Gaelic', 'en_IE', '00011809'), ('Georgian', 'ka_GE', '00000437'), ('Georgian (Ergonomic)', 'ka_GE', '00020437'), ('Georgian (QWERTY)', 'ka_GE', '00010437'), ('German', 'de_DE', '00000407'), ('German (IBM)', 'de_DE', '00010407'), ('Greek', 'el_GR', '00000408'), ('Greek (220)', 'el_GR', '00010408'), ('Greek (220) Latin', 'el_GR', '00030408'), ('Greek (319)', 'el_GR', '00020408'), ('Greek (319) Latin', 'el_GR', '00040408'), ('Greek Latin', 'el_GR', '00050408'), ('Greek Polytonic', 'el_GR', '00060408'), ('Greenlandic', 'kl_GL', '0000046f'), ('Gujarati', 'gu_IN', '00000447'), ('Hausa', 'ha_Latn-NG', '00000468'), ('Hebrew', 'he_IL', '0000040d'), ('Hindi Traditional', 'hi_IN', '00010439'), ('Hungarian', 'hu_HU', '0000040e'), ('Hungarian 101-key', 'hu_HU', '0001040e'), ('Icelandic', 'is_IS', '0000040f'), ('Igbo', 'ig_NG', '00000470'), ('Inuktitut - Latin', 'iu_Latn-CA', '0000085d'), ('Inuktitut - Naqittaut', 'iu_Cans-CA', '0001045d'), ('Irish', 'en_IE', '00001809'), ('Italian', 'it_IT', '00000410'), ('Italian (142)', 'it_IT', '00010410'), ('Japanese', 'ja_JP', '00000411'), ('Kannada', 'kn_IN', '0000044b'), ('Kazakh', 'kk_KZ', '0000043f'), ('Khmer', 'km_KH', '00000453'), ('Korean', 'ko_KR', '00000412'), ('Kyrgyz Cyrillic', 'ky_KG', '00000440'), ('Lao', 'lo_LA', '00000454'), ('Latin American', 'es_MX', '0000080a'), ('Latvian', 'lv_LV', '00000426'), ('Latvian (QWERTY)', 'lv_LV', '00010426'), ('Lithuanian', 'lt_LT', '00010427'), ('Lithuanian IBM', 'lt_LT', '00000427'), ('Lithuanian Standard', 'lt_LT', '00020427'), ('Luxembourgish', 'lb_LU', '0000046e'), ('Macedonian (FYROM)', 'mk_MK', '0000042f'), ('Macedonian (FYROM) - Standard', 'mk_MK', '0001042f'), ('Malayalam', 'ml_IN', '0000044c'), ('Maltese 47-Key', 'mt_MT', '0000043a'), ('Maltese 48-Key', 'mt_MT', '0001043a'), ('Maori', 'mi_NZ', '00000481'), ('Marathi', 'mr_IN', '0000044e'), ('Mongolian (Mongolian Script)', 'mn_Mong-CN', '00000850'), ('Mongolian Cyrillic', 'mn_MN', '00000450'), ('Nepali', 'ne_NP', '00000461'), ('Norwegian', 'nb_NO', '00000414'), ('Norwegian with Sami', 'se_NO', '0000043b'), ('Oriya', 'or_IN', '00000448'), ('Pashto (Afghanistan)', 'ps_AF', '00000463'), ('Persian', 'fa_IR', '00000429'), ('Polish (214)', 'pl_PL', '00010415'), ('Polish (Programmers)', 'pl_PL', '00000415'), ('Portuguese', 'pt_PT', '00000816'), ('Portuguese (Brazilian ABNT)', 'pt_BR', '00000416'), ('Portuguese (Brazilian ABNT2)', 'pt_BR', '00010416'), ('Punjabi', 'pa_IN', '00000446'), ('Romanian (Legacy)', 'ro_RO', '00000418'), ('Romanian (Programmers)', 'ro_RO', '00020418'), ('Romanian (Standard)', 'ro_RO', '00010418'), ('Russian', 'ru_RU', '00000419'), ('Russian (Typewriter)', 'ru_RU', '00010419'), ('Sami Extended Finland-Sweden', 'se_SE', '0002083b'), ('Sami Extended Norway', 'se_NO', '0001043b'), ('Serbian (Cyrillic)', 'sr_Cyrl-CS', '00000c1a'), ('Serbian (Latin)', 'sr_Latn-CS', '0000081a'), ('Sesotho sa Leboa', 'nso_ZA', '0000046c'), ('Setswana', 'tn_ZA', '00000432'), ('Sinhala', 'si_LK', '0000045b'), ('Sinhala - Wij 9', 'si_LK', '0001045b'), ('Slovak', 'sk_SK', '0000041b'), ('Slovak (QWERTY)', 'sk_SK', '0001041b'), ('Slovenian', 'sl_SI', '00000424'), ('Sorbian Extended', 'hsb_DE', '0001042e'), ('Sorbian Standard', 'hsb_DE', '0002042e'), ('Sorbian Standard (Legacy)', 'hsb_DE', '0000042e'), ('Spanish', 'es_ES', '0000040a'), ('Spanish Variation', 'es_ES', '0001040a'), ('Swedish', 'sv_SE', '0000041d'), ('Swedish with Sami', 'se_SE', '0000083b'), ('Swiss French', 'fr_CH', '0000100c'), ('Swiss German', 'de_CH', '00000807'), ('Syriac', 'syr_SY', '0000045a'), ('Syriac Phonetic', 'syr_SY', '0001045a'), ('Tajik', 'tg_Cyrl-TJ', '00000428'), ('Tamil', 'ta_IN', '00000449'), ('Tatar', 'tt_RU', '00000444'), ('Telugu', 'te_IN', '0000044a'), ('Thai Kedmanee', 'th_TH', '0000041e'), ('Thai Kedmanee (non-ShiftLock)', 'th_TH', '0002041e'), ('Thai Pattachote', 'th_TH', '0001041e'), ('Thai Pattachote (non-ShiftLock)', 'th_TH', '0003041e'), ('Tibetan (PRC)', 'bo_CN', '00000451'), ('Turkish F', 'tr_TR', '0001041f'), ('Turkish Q', 'tr_TR', '0000041f'), ('Turkmen', 'tk_TM', '00000442'), ('US', 'en_US', '00000409'), ('US English Table for IBM Arabic 238_L', 'en_US', '00050409'), ('Ukrainian', 'uk_UA', '00000422'), ('Ukrainian (Enhanced)', 'uk_UA', '00020422'), ('United Kingdom', 'en_GB', '00000809'), ('United Kingdom Extended', 'cy_GB', '00000452'), ('United States-Dvorak', 'en_US', '00010409'), ('United States-Dvorak for left hand', 'en_US', '00030409'), ('United States-Dvorak for right hand', 'en_US', '00040409'), ('United States-International', 'en_US', '00020409'), ('Urdu', 'ur_PK', '00000420'), ('Uyghur', 'ug_CN', '00010480'), ('Uyghur (Legacy)', 'ug_CN', '00000480'), ('Uzbek Cyrillic', 'uz_Cyrl-UZ', '00000843'), ('Vietnamese', 'vi_VN', '0000042a'), ('Wolof', 'wo_SN', '00000488'), ('Yakut', 'sah_RU', '00000485'), ('Yoruba', 'yo_NG', '0000046a')]
-    DEFAULT_VK_LAYOUT = {'layout': {2: {0: '`', 1: '~', 8: '`', 9: '~'}, 3: {0: '1', 1: '!', 6: '\xa1', 7: '\xb9', 8: '1', 9: '!', 14: '\xa1', 15: '\xb9'}, 4: {0: '2', 1: '@', 6: '\xb2', 8: '2', 9: '@', 14: '\xb2'}, 5: {0: '3', 1: '#', 6: '\xb3', 8: '3', 9: '#', 14: '\xb3'}, 6: {0: '4', 1: '$', 6: '\xa4', 7: '\xa3', 8: '4', 9: '$', 14: '\xa4', 15: '\xa3'}, 7: {0: '5', 1: '%', 6: '\\u20ac', 8: '5', 9: '%', 14: '\\u20ac'}, 8: {0: '6', 1: '^', 6: '\xbc', 8: '6', 9: '^', 14: '\xbc'}, 9: {0: '7', 1: '&', 6: '\xbd', 8: '7', 9: '&', 14: '\xbd'}, 10: {0: '8', 1: '*', 6: '\xbe', 8: '8', 9: '*', 14: '\xbe'}, 11: {0: '9', 1: '(', 6: '\\u2018', 8: '9', 9: '(', 14: '\\u2018'}, 12: {0: '0', 1: ')', 6: '\\u2019', 8: '0', 9: ')', 14: '\\u2019'}, 13: {0: '-', 1: '_', 6: '\xa5', 8: '-', 9: '_', 14: '\xa5'}, 14: {0: '=', 1: '+', 6: '\xd7', 7: '\xf7', 8: '=', 9: '+', 14: '\xd7', 15: '\xf7'}, 17: {0: 'q', 1: 'Q', 6: '\xe4', 7: '\xc4', 8: 'Q', 9: 'q', 14: '\xc4', 15: '\xe4'}, 18: {0: 'w', 1: 'W', 6: '\xe5', 7: '\xc5', 8: 'W', 9: 'w', 14: '\xc5', 15: '\xe5'}, 19: {0: 'e', 1: 'E', 6: '\xe9', 7: '\xc9', 8: 'E', 9: 'e', 14: '\xc9', 15: '\xe9'}, 20: {0: 'r', 1: 'R', 6: '\xae', 8: 'R', 9: 'r', 14: '\xae'}, 21: {0: 't', 1: 'T', 6: '\xfe', 7: '\xde', 8: 'T', 9: 't', 14: '\xde', 15: '\xfe'}, 22: {0: 'y', 1: 'Y', 6: '\xfc', 7: '\xdc', 8: 'Y', 9: 'y', 14: '\xdc', 15: '\xfc'}, 23: {0: 'u', 1: 'U', 6: '\xfa', 7: '\xda', 8: 'U', 9: 'u', 14: '\xda', 15: '\xfa'}, 24: {0: 'i', 1: 'I', 6: '\xed', 7: '\xcd', 8: 'I', 9: 'i', 14: '\xcd', 15: '\xed'}, 25: {0: 'o', 1: 'O', 6: '\xf3', 7: '\xd3', 8: 'O', 9: 'o', 14: '\xd3', 15: '\xf3'}, 26: {0: 'p', 1: 'P', 6: '\xf6', 7: '\xd6', 8: 'P', 9: 'p', 14: '\xd6', 15: '\xf6'}, 27: {0: '[', 1: '{', 2: '\x1b', 6: '\xab', 8: '[', 9: '{', 10: '\x1b', 14: '\xab'}, 28: {0: ']', 1: '}', 2: '\x1d', 6: '\xbb', 8: ']', 9: '}', 10: '\x1d', 14: '\xbb'}, 31: {0: 'a', 1: 'A', 6: '\xe1', 7: '\xc1', 8: 'A', 9: 'a', 14: '\xc1', 15: '\xe1'}, 32: {0: 's', 1: 'S', 6: '\xdf', 7: '\xa7', 8: 'S', 9: 's', 14: '\xa7', 15: '\xdf'}, 33: {0: 'd', 1: 'D', 6: '\xf0', 7: '\xd0', 8: 'D', 9: 'd', 14: '\xd0', 15: '\xf0'}, 34: {0: 'f', 1: 'F', 8: 'F', 9: 'f'}, 35: {0: 'g', 1: 'G', 8: 'G', 9: 'g'}, 36: {0: 'h', 1: 'H', 8: 'H', 9: 'h'}, 37: {0: 'j', 1: 'J', 8: 'J', 9: 'j'}, 38: {0: 'k', 1: 'K', 8: 'K', 9: 'k'}, 39: {0: 'l', 1: 'L', 6: '\xf8', 7: '\xd8', 8: 'L', 9: 'l', 14: '\xd8', 15: '\xf8'}, 40: {0: ';', 1: ':', 6: '\xb6', 7: '\xb0', 8: ';', 9: ':', 14: '\xb6', 15: '\xb0'}, 41: {0: "'", 1: '"', 6: '\xb4', 7: '\xa8', 8: "'", 9: '"', 14: '\xb4', 15: '\xa8'}, 44: {0: 'z', 1: 'Z', 6: '\xe6', 7: '\xc6', 8: 'Z', 9: 'z', 14: '\xc6', 15: '\xe6'}, 45: {0: 'x', 1: 'X', 8: 'X', 9: 'x'}, 46: {0: 'c', 1: 'C', 6: '\xa9', 7: '\xa2', 8: 'C', 9: 'c', 14: '\xa2', 15: '\xa9'}, 47: {0: 'v', 1: 'V', 8: 'V', 9: 'v'}, 48: {0: 'b', 1: 'B', 8: 'B', 9: 'b'}, 49: {0: 'n', 1: 'N', 6: '\xf1', 7: '\xd1', 8: 'N', 9: 'n', 14: '\xd1', 15: '\xf1'}, 50: {0: 'm', 1: 'M', 6: '\xb5', 8: 'M', 9: 'm', 14: '\xb5'}, 51: {0: ',', 1: '<', 6: '\xe7', 7: '\xc7'}, 52: {0: '.', 1: '>', 8: '.', 9: '>'}, 53: {0: '/', 1: '?', 6: '\xbf', 8: '/', 9: '?', 14: '\xbf'}, 54: {0: '\\', 1: '|', 2: '\x1c', 6: '\xac', 7: '\xa6', 8: '\\', 9: '|', 10: '\x1c', 14: '\xac', 15: '\xa6'}, 59: {0: ' ', 1: ' ', 2: ' ', 8: ' ', 9: ' ', 10: ' '}}, 'name': 'English (United States)', 'locale': 'en-US', 'id': '00020409', 'deadkeys': {'~': {'a': '\xe3', 'A': '\xc3', ' ': '~', 'O': '\xd5', 'N': '\xd1', 'o': '\xf5', 'n': '\xf1'}, '`': {'a': '\xe0', 'A': '\xc0', 'e': '\xe8', ' ': '`', 'i': '\xec', 'o': '\xf2', 'I': '\xcc', 'u': '\xf9', 'O': '\xd2', 'E': '\xc8', 'U': '\xd9'}, '"': {'a': '\xe4', 'A': '\xc4', 'e': '\xeb', ' ': '"', 'i': '\xef', 'o': '\xf6', 'I': '\xcf', 'u': '\xfc', 'O': '\xd6', 'y': '\xff', 'E': '\xcb', 'U': '\xdc'}, "'": {'a': '\xe1', 'A': '\xc1', 'c': '\xe7', 'e': '\xe9', ' ': "'", 'i': '\xed', 'C': '\xc7', 'o': '\xf3', 'I': '\xcd', 'u': '\xfa', 'O': '\xd3', 'y': '\xfd', 'E': '\xc9', 'U': '\xda', 'Y': '\xdd'}, '^': {'a': '\xe2', 'A': '\xc2', 'e': '\xea', ' ': '^', 'i': '\xee', 'o': '\xf4', 'I': '\xce', 'u': '\xfb', 'O': '\xd4', 'E': '\xca', 'U': '\xdb'}}, 'desc': 'United States-International'}
+    # every key id of the grid (0 = the input field)
+    KEY_IDS = sorted(set(keyId for row in KEYIDMAP for keyId in row))
+    # keys that type characters (labelled from the layout)
+    CHARACTER_KEYS = list(range(2, 15)) + list(range(17, 29)) + list(range(31, 42)) + [63] + list(range(44, 55)) + [59]
+    LEFT_KEYS = [row[0] for row in KEYIDMAP[1:]]
+    RIGHT_KEYS = [row[-1] for row in KEYIDMAP[1:]]
+    # (name, locale, Windows KLID) - every Windows keyboard layout
+    # (kbdlayout.info); the layouts are in IPTVPlayer/vk/<KLID>.kle
+    ALL_VK_LAYOUTS = [
+        ('ADLaM', 'ff_Adlm-GN', '00140c00'),
+        ('Albanian', 'sq_AL', '0000041c'),
+        ('Arabic (101)', 'ar_SA', '00000401'),
+        ('Arabic (101, Legacy)', 'ar_SA', '00030401'),
+        ('Arabic (102)', 'ar_SA', '00010401'),
+        ('Arabic (102) AZERTY', 'ar_SA', '00020401'),
+        ('Armenian Eastern (Legacy)', 'hy_AM', '0000042b'),
+        ('Armenian Phonetic', 'hy_AM', '0002042b'),
+        ('Armenian Typewriter', 'hy_AM', '0003042b'),
+        ('Armenian Western (Legacy)', 'hy_AM', '0001042b'),
+        ('Assamese - INSCRIPT', 'as_IN', '0000044d'),
+        ('Azerbaijani (Standard)', 'az_Latn-AZ', '0001042c'),
+        ('Azerbaijani Cyrillic', 'az_Cyrl-AZ', '0000082c'),
+        ('Azerbaijani Latin', 'az_Latn-AZ', '0000042c'),
+        ('Bangla', 'bn_IN', '00000445'),
+        ('Bangla - INSCRIPT', 'bn_IN', '00020445'),
+        ('Bangla - INSCRIPT (Legacy)', 'bn_IN', '00010445'),
+        ('Bashkir', 'ba_RU', '0000046d'),
+        ('Belarusian', 'be_BY', '00000423'),
+        ('Belgian (Comma)', 'fr_BE', '0001080c'),
+        ('Belgian (Period)', 'nl_BE', '00000813'),
+        ('Belgian French', 'fr_BE', '0000080c'),
+        ('Bosnian (Cyrillic)', 'bs_Cyrl-BA', '0000201a'),
+        ('Buginese', 'bug_Bugi-ID', '000b0c00'),
+        ('Bulgarian', 'bg_BG', '00030402'),
+        ('Bulgarian (Latin)', 'bg_BG', '00010402'),
+        ('Bulgarian (Phonetic Traditional)', 'bg_BG', '00040402'),
+        ('Bulgarian (Phonetic)', 'bg_BG', '00020402'),
+        ('Bulgarian (Typewriter)', 'bg_BG', '00000402'),
+        ('Canadian French', 'en_CA', '00001009'),
+        ('Canadian French (Legacy)', 'fr_CA', '00000c0c'),
+        ('Canadian Multilingual Standard', 'en_CA', '00011009'),
+        ('Central Atlas Tamazight', 'tzm_Latn-DZ', '0000085f'),
+        ('Central Kurdish', 'ku_Arab-IQ', '00000492'),
+        ('Cherokee Nation', 'chr_Cher-US', '0000045c'),
+        ('Cherokee Phonetic', 'chr_Cher-US', '0001045c'),
+        ('Chinese (Simplified) - US', 'zh_CN', '00000804'),
+        ('Chinese (Simplified, Singapore) - US', 'zh_SG', '00001004'),
+        ('Chinese (Traditional) - US', 'zh_TW', '00000404'),
+        ('Chinese (Traditional, Hong Kong S.A.R.) - US', 'zh_HK', '00000c04'),
+        ('Chinese (Traditional, Macao S.A.R.) - US', 'zh_MO', '00001404'),
+        ('Colemak', 'en_US', '00060409'),
+        ('Croatian', 'hr_HR', '0000041a'),
+        ('Czech', 'cs_CZ', '00000405'),
+        ('Czech (QWERTY)', 'cs_CZ', '00010405'),
+        ('Czech Programmers', 'cs_CZ', '00020405'),
+        ('Danish', 'da_DK', '00000406'),
+        ('Devanagari - INSCRIPT', 'hi_IN', '00000439'),
+        ('Divehi Phonetic', 'dv_MV', '00000465'),
+        ('Divehi Typewriter', 'dv_MV', '00010465'),
+        ('Dutch', 'nl_NL', '00000413'),
+        ('Dzongkha', 'dz_BT', '00000c51'),
+        ('English (India)', 'en_IN', '00004009'),
+        ('Estonian', 'et_EE', '00000425'),
+        ('Faeroese', 'fo_FO', '00000438'),
+        ('Finnish', 'fi_FI', '0000040b'),
+        ('Finnish with Sami', 'se_SE', '0001083b'),
+        ('French (Legacy, AZERTY)', 'fr_FR', '0000040c'),
+        ('French (Standard, AZERTY)', 'fr_FR', '0001040c'),
+        ('French (Standard, BÉPO)', 'fr_FR', '0002040c'),
+        ('Futhark', 'gem_Runr', '00120c00'),
+        ('Georgian (Ergonomic)', 'ka_GE', '00020437'),
+        ('Georgian (Legacy)', 'ka_GE', '00000437'),
+        ('Georgian (MES)', 'ka_GE', '00030437'),
+        ('Georgian (Old Alphabets)', 'ka_GE', '00040437'),
+        ('Georgian (QWERTY)', 'ka_GE', '00010437'),
+        ('German', 'de_DE', '00000407'),
+        ('German (IBM)', 'de_DE', '00010407'),
+        ('German Extended (E1)', 'de_DE', '00020407'),
+        ('German Extended (E2)', 'de_DE', '00030407'),
+        ('Gothic', 'got_Goth', '000c0c00'),
+        ('Greek', 'el_GR', '00000408'),
+        ('Greek (220)', 'el_GR', '00010408'),
+        ('Greek (220) Latin', 'el_GR', '00030408'),
+        ('Greek (319)', 'el_GR', '00020408'),
+        ('Greek (319) Latin', 'el_GR', '00040408'),
+        ('Greek Latin', 'el_GR', '00050408'),
+        ('Greek Polytonic', 'el_GR', '00060408'),
+        ('Greenlandic', 'kl_GL', '0000046f'),
+        ('Guarani', 'gn_PY', '00000474'),
+        ('Gujarati', 'gu_IN', '00000447'),
+        ('Hausa', 'ha_Latn-NG', '00000468'),
+        ('Hawaiian', 'haw_US', '00000475'),
+        ('Hebrew', 'he_IL', '0000040d'),
+        ('Hebrew (Standard)', 'he_IL', '0002040d'),
+        ('Hebrew (Standard, 2018)', 'he_IL', '0003040d'),
+        ('Hindi Traditional', 'hi_IN', '00010439'),
+        ('Hungarian', 'hu_HU', '0000040e'),
+        ('Hungarian 101-key', 'hu_HU', '0001040e'),
+        ('Icelandic', 'is_IS', '0000040f'),
+        ('Igbo', 'ig_NG', '00000470'),
+        ('Inuktitut - Latin', 'iu_Latn-CA', '0000085d'),
+        ('Inuktitut - Naqittaut', 'iu_Cans-CA', '0001045d'),
+        ('Inuktitut - Nattilik', 'iu_Cans-CA', '0002045d'),
+        ('Irish', 'en_IE', '00001809'),
+        ('Italian', 'it_IT', '00000410'),
+        ('Italian (142)', 'it_IT', '00010410'),
+        ('Japanese', 'ja_JP', '00000411'),
+        ('Javanese', 'jv_Java-ID', '00110c00'),
+        ('Kannada', 'kn_IN', '0000044b'),
+        ('Kazakh', 'kk_KZ', '0000043f'),
+        ('Khmer', 'km_KH', '00000453'),
+        ('Khmer (NIDA)', 'km_KH', '00010453'),
+        ('Korean', 'ko_KR', '00000412'),
+        ('Kyrgyz Cyrillic', 'ky_KG', '00000440'),
+        ('Lao', 'lo_LA', '00000454'),
+        ('Latin American', 'es_MX', '0000080a'),
+        ('Latvian', 'lv_LV', '00000426'),
+        ('Latvian (QWERTY)', 'lv_LV', '00010426'),
+        ('Latvian (Standard)', 'lv_LV', '00020426'),
+        ('Lisu (Basic)', 'lis_Lisu-CN', '00070c00'),
+        ('Lisu (Standard)', 'lis_Lisu-CN', '00080c00'),
+        ('Lithuanian', 'lt_LT', '00010427'),
+        ('Lithuanian IBM', 'lt_LT', '00000427'),
+        ('Lithuanian Standard', 'lt_LT', '00020427'),
+        ('Luxembourgish', 'lb_LU', '0000046e'),
+        ('Macedonian', 'mk_MK', '0000042f'),
+        ('Macedonian - Standard', 'mk_MK', '0001042f'),
+        ('Malayalam', 'ml_IN', '0000044c'),
+        ('Maltese 47-Key', 'mt_MT', '0000043a'),
+        ('Maltese 48-Key', 'mt_MT', '0001043a'),
+        ('Maori', 'mi_NZ', '00000481'),
+        ('Marathi', 'mr_IN', '0000044e'),
+        ('Mongolian (Mongolian Script)', 'mn_Mong-CN', '00000850'),
+        ('Mongolian Cyrillic', 'mn_MN', '00000450'),
+        ('Myanmar (Phonetic order)', 'my_MM', '00010c00'),
+        ('Myanmar (Visual order)', 'my_MM', '00130c00'),
+        ('Nepali', 'ne_NP', '00000461'),
+        ('New Tai Lue', 'khb_Talu-CN', '00020c00'),
+        ('Norwegian', 'nb_NO', '00000414'),
+        ('Norwegian with Sami', 'se_NO', '0000043b'),
+        ('NZ Aotearoa', 'en_NZ', '00001409'),
+        ('N’Ko', 'nqo_GN', '00090c00'),
+        ('Odia', 'or_IN', '00000448'),
+        ('Ogham', 'sga_Ogam-IE', '00040c00'),
+        ('Ol Chiki', 'sat_Olck-IN', '000d0c00'),
+        ('Old Italic', 'ett_Ital-IT', '000f0c00'),
+        ('Osage', 'osa_Osge-US', '00150c00'),
+        ('Osmanya', 'so_Osma-SO', '000e0c00'),
+        ('Pashto (Afghanistan)', 'ps_AF', '00000463'),
+        ('Persian', 'fa_IR', '00000429'),
+        ('Persian (Standard)', 'fa_IR', '00050429'),
+        ('Phags-pa', 'mn_Phag-CN', '000a0c00'),
+        ('Polish (214)', 'pl_PL', '00010415'),
+        ('Polish (Programmers)', 'pl_PL', '00000415'),
+        ('Portuguese', 'pt_PT', '00000816'),
+        ('Portuguese (Brazil ABNT)', 'pt_BR', '00000416'),
+        ('Portuguese (Brazil ABNT2)', 'pt_BR', '00010416'),
+        ('Punjabi', 'pa_IN', '00000446'),
+        ('Romanian (Legacy)', 'ro_RO', '00000418'),
+        ('Romanian (Programmers)', 'ro_RO', '00020418'),
+        ('Romanian (Standard)', 'ro_RO', '00010418'),
+        ('Russian', 'ru_RU', '00000419'),
+        ('Russian (Typewriter)', 'ru_RU', '00010419'),
+        ('Russian - Mnemonic', 'ru_RU', '00020419'),
+        ('Sakha', 'sah_RU', '00000485'),
+        ('Sami Extended Finland-Sweden', 'se_SE', '0002083b'),
+        ('Sami Extended Norway', 'se_NO', '0001043b'),
+        ('Scottish Gaelic', 'en_IE', '00011809'),
+        ('Serbian (Cyrillic)', 'sr_Cyrl-CS', '00000c1a'),
+        ('Serbian (Latin)', 'sr_Latn-CS', '0000081a'),
+        ('Sesotho sa Leboa', 'nso_ZA', '0000046c'),
+        ('Setswana', 'tn_ZA', '00000432'),
+        ('Sinhala', 'si_LK', '0000045b'),
+        ('Sinhala - Wij 9', 'si_LK', '0001045b'),
+        ('Slovak', 'sk_SK', '0000041b'),
+        ('Slovak (QWERTY)', 'sk_SK', '0001041b'),
+        ('Slovenian', 'sl_SI', '00000424'),
+        ('Sora', 'srb_Sora-IN', '00100c00'),
+        ('Sorbian Extended', 'hsb_DE', '0001042e'),
+        ('Sorbian Standard', 'hsb_DE', '0002042e'),
+        ('Sorbian Standard (Legacy)', 'hsb_DE', '0000042e'),
+        ('Spanish', 'es_ES', '0000040a'),
+        ('Spanish Variation', 'es_ES', '0001040a'),
+        ('Swedish', 'sv_SE', '0000041d'),
+        ('Swedish with Sami', 'se_SE', '0000083b'),
+        ('Swiss French', 'fr_CH', '0000100c'),
+        ('Swiss German', 'de_CH', '00000807'),
+        ('Syriac', 'syr_SY', '0000045a'),
+        ('Syriac Phonetic', 'syr_SY', '0001045a'),
+        ('Tai Le', 'tdd_Tale-CN', '00030c00'),
+        ('Tajik', 'tg_Cyrl-TJ', '00000428'),
+        ('Tamil', 'ta_IN', '00000449'),
+        ('Tamil 99', 'ta_IN', '00020449'),
+        ('Tamil Anjal', 'ta_IN', '00030449'),
+        ('Tatar', 'tt_RU', '00010444'),
+        ('Tatar (Legacy)', 'tt_RU', '00000444'),
+        ('Telugu', 'te_IN', '0000044a'),
+        ('Thai Kedmanee', 'th_TH', '0000041e'),
+        ('Thai Kedmanee (non-ShiftLock)', 'th_TH', '0002041e'),
+        ('Thai Pattachote', 'th_TH', '0001041e'),
+        ('Thai Pattachote (non-ShiftLock)', 'th_TH', '0003041e'),
+        ('Tibetan (PRC)', 'bo_CN', '00000451'),
+        ('Tibetan (PRC) - Updated', 'bo_CN', '00010451'),
+        ('Tifinagh (Basic)', 'tzm_Tfng-MA', '0000105f'),
+        ('Tifinagh (Extended)', 'tzm_Tfng-MA', '0001105f'),
+        ('Traditional Mongolian (MNS)', 'mn_Mong-CN', '00020850'),
+        ('Traditional Mongolian (Standard)', 'mn_Mong-CN', '00010850'),
+        ('Turkish F', 'tr_TR', '0001041f'),
+        ('Turkish Q', 'tr_TR', '0000041f'),
+        ('Turkmen', 'tk_TM', '00000442'),
+        ('Ukrainian', 'uk_UA', '00000422'),
+        ('Ukrainian (Enhanced)', 'uk_UA', '00020422'),
+        ('United Kingdom', 'en_GB', '00000809'),
+        ('United Kingdom Extended', 'cy_GB', '00000452'),
+        ('United States-Dvorak', 'en_US', '00010409'),
+        ('United States-Dvorak for left hand', 'en_US', '00030409'),
+        ('United States-Dvorak for right hand', 'en_US', '00040409'),
+        ('United States-International', 'en_US', '00020409'),
+        ('Urdu', 'ur_PK', '00000420'),
+        ('US', 'en_US', '00000409'),
+        ('US English Table for IBM Arabic 238_L', 'en_US', '00050409'),
+        ('Uyghur', 'ug_CN', '00010480'),
+        ('Uyghur (Legacy)', 'ug_CN', '00000480'),
+        ('Uzbek Cyrillic', 'uz_Cyrl-UZ', '00000843'),
+        ('Vietnamese', 'vi_VN', '0000042a'),
+        ('Wolof', 'wo_SN', '00000488'),
+        ('Yoruba', 'yo_NG', '0000046a'),
+    ]
+    # built-in layout (no file needed), same as vk/00020409.kle
+    DEFAULT_VK_LAYOUT = {
+        'id': '00020409',
+        'name': 'English (United States)',
+        'desc': 'United States-International',
+        'locale': 'en-US',
+        'layout': {
+            2: {0: '`', 1: '~', 8: '`', 9: '~'},
+            3: {0: '1', 1: '!', 6: '\xa1', 7: '\xb9', 8: '1', 9: '!', 14: '\xa1', 15: '\xb9'},
+            4: {0: '2', 1: '@', 6: '\xb2', 8: '2', 9: '@', 14: '\xb2'},
+            5: {0: '3', 1: '#', 6: '\xb3', 8: '3', 9: '#', 14: '\xb3'},
+            6: {0: '4', 1: '$', 6: '\xa4', 7: '\xa3', 8: '4', 9: '$', 14: '\xa4', 15: '\xa3'},
+            7: {0: '5', 1: '%', 6: '\u20ac', 8: '5', 9: '%', 14: '\u20ac'},
+            8: {0: '6', 1: '^', 6: '\xbc', 8: '6', 9: '^', 14: '\xbc'},
+            9: {0: '7', 1: '&', 6: '\xbd', 8: '7', 9: '&', 14: '\xbd'},
+            10: {0: '8', 1: '*', 6: '\xbe', 8: '8', 9: '*', 14: '\xbe'},
+            11: {0: '9', 1: '(', 6: '\u2018', 8: '9', 9: '(', 14: '\u2018'},
+            12: {0: '0', 1: ')', 6: '\u2019', 8: '0', 9: ')', 14: '\u2019'},
+            13: {0: '-', 1: '_', 6: '\xa5', 8: '-', 9: '_', 14: '\xa5'},
+            14: {0: '=', 1: '+', 6: '\xd7', 7: '\xf7', 8: '=', 9: '+', 14: '\xd7', 15: '\xf7'},
+            17: {0: 'q', 1: 'Q', 6: '\xe4', 7: '\xc4', 8: 'Q', 9: 'q', 14: '\xc4', 15: '\xe4'},
+            18: {0: 'w', 1: 'W', 6: '\xe5', 7: '\xc5', 8: 'W', 9: 'w', 14: '\xc5', 15: '\xe5'},
+            19: {0: 'e', 1: 'E', 6: '\xe9', 7: '\xc9', 8: 'E', 9: 'e', 14: '\xc9', 15: '\xe9'},
+            20: {0: 'r', 1: 'R', 6: '\xae', 8: 'R', 9: 'r', 14: '\xae'},
+            21: {0: 't', 1: 'T', 6: '\xfe', 7: '\xde', 8: 'T', 9: 't', 14: '\xde', 15: '\xfe'},
+            22: {0: 'y', 1: 'Y', 6: '\xfc', 7: '\xdc', 8: 'Y', 9: 'y', 14: '\xdc', 15: '\xfc'},
+            23: {0: 'u', 1: 'U', 6: '\xfa', 7: '\xda', 8: 'U', 9: 'u', 14: '\xda', 15: '\xfa'},
+            24: {0: 'i', 1: 'I', 6: '\xed', 7: '\xcd', 8: 'I', 9: 'i', 14: '\xcd', 15: '\xed'},
+            25: {0: 'o', 1: 'O', 6: '\xf3', 7: '\xd3', 8: 'O', 9: 'o', 14: '\xd3', 15: '\xf3'},
+            26: {0: 'p', 1: 'P', 6: '\xf6', 7: '\xd6', 8: 'P', 9: 'p', 14: '\xd6', 15: '\xf6'},
+            27: {0: '[', 1: '{', 2: '\x1b', 6: '\xab', 8: '[', 9: '{', 10: '\x1b', 14: '\xab'},
+            28: {0: ']', 1: '}', 2: '\x1d', 6: '\xbb', 8: ']', 9: '}', 10: '\x1d', 14: '\xbb'},
+            31: {0: 'a', 1: 'A', 6: '\xe1', 7: '\xc1', 8: 'A', 9: 'a', 14: '\xc1', 15: '\xe1'},
+            32: {0: 's', 1: 'S', 6: '\xdf', 7: '\xa7', 8: 'S', 9: 's', 14: '\xdf', 15: '\xa7'},
+            33: {0: 'd', 1: 'D', 6: '\xf0', 7: '\xd0', 8: 'D', 9: 'd', 14: '\xd0', 15: '\xf0'},
+            34: {0: 'f', 1: 'F', 8: 'F', 9: 'f'},
+            35: {0: 'g', 1: 'G', 8: 'G', 9: 'g'},
+            36: {0: 'h', 1: 'H', 8: 'H', 9: 'h'},
+            37: {0: 'j', 1: 'J', 8: 'J', 9: 'j'},
+            38: {0: 'k', 1: 'K', 8: 'K', 9: 'k'},
+            39: {0: 'l', 1: 'L', 6: '\xf8', 7: '\xd8', 8: 'L', 9: 'l', 14: '\xd8', 15: '\xf8'},
+            40: {0: ';', 1: ':', 6: '\xb6', 7: '\xb0', 8: ';', 9: ':', 14: '\xb6', 15: '\xb0'},
+            41: {0: "'", 1: '"', 6: '\xb4', 7: '\xa8', 8: "'", 9: '"', 14: '\xb4', 15: '\xa8'},
+            44: {0: '\\', 1: '|', 2: '\x1c', 8: '\\', 9: '|', 10: '\x1c'},
+            45: {0: 'z', 1: 'Z', 6: '\xe6', 7: '\xc6', 8: 'Z', 9: 'z', 14: '\xc6', 15: '\xe6'},
+            46: {0: 'x', 1: 'X', 8: 'X', 9: 'x'},
+            47: {0: 'c', 1: 'C', 6: '\xa9', 7: '\xa2', 8: 'C', 9: 'c', 14: '\xa9', 15: '\xa2'},
+            48: {0: 'v', 1: 'V', 8: 'V', 9: 'v'},
+            49: {0: 'b', 1: 'B', 8: 'B', 9: 'b'},
+            50: {0: 'n', 1: 'N', 6: '\xf1', 7: '\xd1', 8: 'N', 9: 'n', 14: '\xd1', 15: '\xf1'},
+            51: {0: 'm', 1: 'M', 6: '\xb5', 8: 'M', 9: 'm', 14: '\xb5'},
+            52: {0: ',', 1: '<', 6: '\xe7', 7: '\xc7', 8: ',', 9: '<', 14: '\xc7', 15: '\xe7'},
+            53: {0: '.', 1: '>', 8: '.', 9: '>'},
+            54: {0: '/', 1: '?', 6: '\xbf', 8: '/', 9: '?', 14: '\xbf'},
+            59: {0: ' ', 1: ' ', 2: ' ', 8: ' ', 9: ' ', 10: ' '},
+            63: {0: '\\', 1: '|', 2: '\x1c', 6: '\xac', 7: '\xa6', 8: '\\', 9: '|', 10: '\x1c', 14: '\xac', 15: '\xa6'},
+        },
+        'deadkeys': {
+            '"': {' ': '"', 'A': '\xc4', 'E': '\xcb', 'I': '\xcf', 'O': '\xd6', 'U': '\xdc', 'a': '\xe4', 'e': '\xeb', 'i': '\xef', 'o': '\xf6', 'u': '\xfc', 'y': '\xff'},
+            "'": {' ': "'", 'A': '\xc1', 'C': '\xc7', 'E': '\xc9', 'I': '\xcd', 'O': '\xd3', 'U': '\xda', 'Y': '\xdd', 'a': '\xe1', 'c': '\xe7', 'e': '\xe9', 'i': '\xed', 'o': '\xf3', 'u': '\xfa', 'y': '\xfd'},
+            '^': {' ': '^', 'A': '\xc2', 'E': '\xca', 'I': '\xce', 'O': '\xd4', 'U': '\xdb', 'a': '\xe2', 'e': '\xea', 'i': '\xee', 'o': '\xf4', 'u': '\xfb'},
+            '`': {' ': '`', 'A': '\xc0', 'E': '\xc8', 'I': '\xcc', 'O': '\xd2', 'U': '\xd9', 'a': '\xe0', 'e': '\xe8', 'i': '\xec', 'o': '\xf2', 'u': '\xf9'},
+            '~': {' ': '~', 'A': '\xc3', 'N': '\xd1', 'O': '\xd5', 'a': '\xe3', 'n': '\xf1', 'o': '\xf5'},
+        },
+    }
 
     def prepareSkin(self):
         # full screen
@@ -500,49 +821,32 @@ class E2iVirtualKeyBoard(Screen):
         _addPixmapWidget('k2_m', 0, 0, bw * 2, bh, 5)
         _addPixmapWidget('k3_m', 0, 0, bw * 8, bh, 5)
 
-        for i in range(0, 15):
-            _addButton(i + 1, x + bw * i, y + 10 + bh * 1, bw, bh, 1)
-        _addPixmapWidget('b', x + bw * 14 + (bw - backspaceIconW) / 2, y + 10 + bh * 1 + (bh - backspaceIconH) / 2, backspaceIconW, backspaceIconH, 3)  # backspace icon
+        def _keyBox(keyId):
+            # (x, y, w, h) of a key, from its cells in KEYIDMAP
+            for rowIdx, row in enumerate(self.KEYIDMAP):
+                if keyId in row:
+                    return x + bw * row.index(keyId), y + 10 + bh * rowIdx, bw * row.count(keyId), bh
 
-        _addButton(16, x, y + 10 + bh * 2, bw * 2, bh, 1)
-        for i in range(0, 14):
-            _addButton(i + 17, x + bw * (i + 2), y + 10 + bh * 2, bw, bh, 1)
+        # one button (pixmap + label) per key of the grid
+        for keyId in self.KEY_IDS[1:]:
+            _addButton(keyId, *_keyBox(keyId) + (1,))
 
-        _addButton(30, x, y + 10 + bh * 3, bw * 2, bh, 1)
-        for i in range(0, 13):
-            _addButton(i + 31, x + bw * (i + 2), y + 10 + bh * 3, bw, bh, 1)
-        _addButton(42, x + bw * 13, y + 10 + bh * 3, bw * 2, bh, 1)
-        _addPixmapWidget('vkey_delete', x + bw * 14 + (bw - deleteIconW) / 2, y + 10 + bh * 2 + (bh - deleteIconH) / 2, deleteIconW, deleteIconH, 3)  # Del key (29) icon
+        # icons centred on their keys: Backspace (15), Del (29), Left (61),
+        # Right (62) - these keys have no text label
+        for name, keyId, iconW, iconH in (('b', 15, backspaceIconW, backspaceIconH), ('vkey_delete', 29, deleteIconW, deleteIconH),
+                                          ('vkey_left', 61, arrowIconW, arrowIconH), ('vkey_right', 62, arrowIconW, arrowIconH)):
+            kx, ky, kw, kh = _keyBox(keyId)
+            _addPixmapWidget(name, kx + (kw - iconW) / 2, ky + (kh - iconH) / 2, iconW, iconH, 3)
 
-        _addButton(43, x, y + 10 + bh * 4, bw * 2, bh, 1)
-        for i in range(0, 13):
-            _addButton(i + 44, x + bw * (i + 2), y + 10 + bh * 4, bw, bh, 1)
-        _addButton(55, x + bw * 13, y + 10 + bh * 4, bw * 2, bh, 1)
+        kx, ky, kw, kh = _keyBox(56)
+        _addPixmapWidget('l', kx + 10, ky + langIconOffsetY, langIconW, langIconH, 3)  # language icon (flag or globe)
 
-        _addPixmapWidget('l', x + 10, y + 10 + bh * 5 + langIconOffsetY, langIconW, langIconH, 3)  # language icon (flag or globe)
-        _addButton(56, x, y + 10 + bh * 5, bw * 2, bh, 1)
-        _addButton(57, x + bw * 2, y + 10 + bh * 5, bw, bh, 1)
-        _addButton(58, x + bw * 3, y + 10 + bh * 5, bw, bh, 1)
-        _addButton(59, x + bw * 4, y + 10 + bh * 5, bw * 8, bh, 1)
-        _addButton(60, x + bw * 12, y + 10 + bh * 5, bw, bh, 1)
-        _addButton(61, x + bw * 13, y + 10 + bh * 5, bw, bh, 1)
-        _addButton(62, x + bw * 14, y + 10 + bh * 5, bw, bh, 1)
-        _addPixmapWidget('vkey_left', x + bw * 13 + (bw - arrowIconW) / 2, y + 10 + bh * 5 + (bh - arrowIconH) / 2, arrowIconW, arrowIconH, 3)  # left key (61) icon
-        _addPixmapWidget('vkey_right', x + bw * 14 + (bw - arrowIconW) / 2, y + 10 + bh * 5 + (bh - arrowIconH) / 2, arrowIconW, arrowIconH, 3)  # right key (62) icon
-
-        # Backspace
-        _addMarker('m_0', x + bw * 14 + 10, y + 10 + bh * 1 + (bh - 10), bw - 20, 3, 2, '#ed1c24')
-
-        # Shift
-        _addMarker('m_1', x + 10, y + 10 + bh * 4 + (bh - 10), bw * 2 - 20, 3, 2, '#3f48cc')
-        _addMarker('m_2', x + bw * 13 + 10, y + 10 + bh * 4 + (bh - 10), bw * 2 - 20, 3, 2, '#3f48cc')
-
-        # Alt
-        _addMarker('m_3', x + bw * 3 + 10, y + 10 + bh * 5 + (bh - 10), bw - 20, 3, 2, '#fff200')
-        _addMarker('m_4', x + bw * 12 + 10, y + 10 + bh * 5 + (bh - 10), bw - 20, 3, 2, '#fff200')
-
-        # Enter
-        _addMarker('m_5', x + bw * 13 + 10, y + 10 + bh * 3 + (bh - 10), bw * 2 - 20, 3, 2, '#22b14c')
+        # colour bars under the keys the colour buttons press: Backspace
+        # (RED), both Shift keys (BLUE), both Alt keys (YELLOW), Enter (GREEN)
+        for name, keyId, color in (('m_0', 15, '#ed1c24'), ('m_1', 43, '#3f48cc'), ('m_2', 55, '#3f48cc'),
+                                   ('m_3', 58, '#fff200'), ('m_4', 60, '#fff200'), ('m_5', 42, '#22b14c')):
+            kx, ky, kw, kh = _keyBox(keyId)
+            _addMarker(name, kx + 10, ky + (kh - 10), kw - 20, 3, 2, color)
 
         # Bottom bar: MENU/INFO hints on the left, then this keyboard's own
         # RED/GREEN/YELLOW/BLUE bindings (Backspace/Enter/AltGr/Shift).
@@ -708,7 +1012,7 @@ class E2iVirtualKeyBoard(Screen):
         for color in ('red', 'green', 'yellow', 'blue'):
             self.graphics['vk_%s' % color] = LoadPixmap(iconBase + '/%s.png' % color)
 
-        for i in range(0, 63):
+        for i in self.KEY_IDS:
             self[str(i)] = Cover3()
 
         for key in ['l', 'b', 'e_m', 'k_m', 'k2_m', 'k3_m', 'vkey_left', 'vkey_right', 'vkey_delete']:
@@ -737,16 +1041,18 @@ class E2iVirtualKeyBoard(Screen):
         self['vk_key_yellow'] = Label(_("AltGr"))
         self['vk_key_blue'] = Label(_("Shift"))
 
-        for i in range(1, 63):
+        for i in self.KEY_IDS[1:]:
             self['_%s' % i] = Label(" ")
 
         for m in range(6):
             self['m_%d' % m] = Label(" ")
 
-        self.graphicsMap = {'0': 'e', '1': 'k_s', '15': 'k_s', '29': 'k_s', '57': 'k_s', '58': 'k_s', '60': 'k_s', '61': 'k_s', '62': 'k_s', '59': 'k3',
-                            '16': 'k2_s', '30': 'k2_s', '42': 'k2_s', '43': 'k2_s', '55': 'k2_s', '56': 'k2_s'}
+        # key art: 'k' for character keys (default), 'k_s' / 'k2_s' for
+        # single / double width special keys, 'k3' the space bar
+        self.graphicsMap = {'0': 'e', '1': 'k_s', '15': 'k_s', '29': 'k_s', '30': 'k_s', '57': 'k_s', '58': 'k_s', '60': 'k_s', '61': 'k_s', '62': 'k_s', '59': 'k3',
+                            '16': 'k2_s', '42': 'k2_s', '43': 'k2_s', '55': 'k2_s', '56': 'k2_s'}
 
-        self.markerMap = {'0': 'e_m', '59': 'k3_m', '16': 'k2_m', '30': 'k2_m', '42': 'k2_m', '43': 'k2_m', '55': 'k2_m', '56': 'k2_m'}
+        self.markerMap = {'0': 'e_m', '59': 'k3_m', '16': 'k2_m', '42': 'k2_m', '43': 'k2_m', '55': 'k2_m', '56': 'k2_m'}
 
         self.header = title if title else _('Enter the text')
         self.startText = text
@@ -768,6 +1074,8 @@ class E2iVirtualKeyBoard(Screen):
         self.vkRequestedId = additionalParams.get('vk_layout_id', '')
         self.deadKey = ''
         self.focus = self.FOCUS_KEYBOARD
+        # suggestions that arrived while the suggestions list had the focus
+        self.pendingSuggestions = None
 
     @property
     def searchHistoryEnabled(self):
@@ -829,17 +1137,16 @@ class E2iVirtualKeyBoard(Screen):
             vkLayoutId = langMap.get(e2Locale, '')
 
             if vkLayoutId == '':
-                for item in self.ALL_VK_LAYOUTS:
-                    if e2Locale == item[1]:
-                        vkLayoutId = item[2]
-                        break
-
-            if vkLayoutId == '':
-                e2lang = GetDefaultLang() + '_'
-                for item in self.ALL_VK_LAYOUTS:
-                    if item[1].startswith(e2lang):
-                        vkLayoutId = item[2]
-                        break
+                # layouts of the locale, else of the language; the base
+                # layout (KLID 0000xxxx - "US" for en_US, not "Colemak" or
+                # "Dvorak", which sort before it) first
+                candidates = [item[2] for item in self.ALL_VK_LAYOUTS if e2Locale == item[1]]
+                if not candidates:
+                    e2lang = GetDefaultLang() + '_'
+                    candidates = [item[2] for item in self.ALL_VK_LAYOUTS if item[1].startswith(e2lang)]
+                candidates.sort(key=lambda layoutId: not layoutId.startswith('0000'))
+                if candidates:
+                    vkLayoutId = candidates[0]
 
         if not self.getKeyboardLayoutItem(vkLayoutId):
             vkLayoutId = self.DEFAULT_VK_LAYOUT['id']
@@ -859,7 +1166,7 @@ class E2iVirtualKeyBoard(Screen):
         self.onLayoutFinish.remove(self.setGraphics)
         self["text"].e2iTimeoutCallback = self.textUpdated
 
-        for i in range(0, 63):
+        for i in self.KEY_IDS:
             key = self.graphicsMap.get(str(i), 'k')
             self[str(i)].setPixmap(self.graphics[key])
 
@@ -1225,9 +1532,8 @@ class E2iVirtualKeyBoard(Screen):
         skinKey.setText(val)
 
     def updateKeysLabels(self):
-        for rangeItem in [(2, 14), (17, 28), (31, 41), (44, 54), (59, 59)]:
-            for keyid in range(rangeItem[0], rangeItem[1] + 1):
-                self.updateNormalKeyLabel(keyid)
+        for keyid in self.CHARACTER_KEYS:
+            self.updateNormalKeyLabel(keyid)
 
     def showSearchHistory(self):
         if self.searchHistoryEnabled:
@@ -1311,7 +1617,11 @@ class E2iVirtualKeyBoard(Screen):
                 self['right_list'].setSelectionState(False)
             elif self.focus == self.FOCUS_SEARCH_HISTORY:
                 self['left_list'].setSelectionState(False)
+            leftSuggestions = self.focus == self.FOCUS_SUGGESTIONS
             self.focus = focus
+            if leftSuggestions and self.pendingSuggestions is not None:
+                # an answer that came while the list had the focus
+                self.setSuggestions(self.pendingSuggestions, None)
 
     def keyRed(self):
         if self.focus == self.FOCUS_KEYBOARD:
@@ -1445,6 +1755,7 @@ class E2iVirtualKeyBoard(Screen):
         self.autocomplete = AutocompleteSearch(newProvider)
         self['right_header'].setText(self.autocomplete.getProviderName())
         self['right_list'].setList([])
+        self.pendingSuggestions = None
         self.updateSuggestions()
 
     def clearSearchHistoryConfirmed(self, ret=None):
@@ -1491,6 +1802,8 @@ class E2iVirtualKeyBoard(Screen):
             text = self['right_list' if self.focus == self.FOCUS_SUGGESTIONS else "left_list"].getCurrent()
             if text:
                 self.setText(text)
+                # belongs to the text before this one
+                self.pendingSuggestions = None
             self.currentKeyId = 0
             self.rowIdx = 0
             self.colIdx = 7
@@ -1585,7 +1898,11 @@ class E2iVirtualKeyBoard(Screen):
                 if self.currentKeyId in self.RIGHT_KEYS:
                     self.handleArrowKey(1, 0)
         elif self.focus == self.FOCUS_KEYBOARD:
-            if self.currentKeyId in self.RIGHT_KEYS or (self.currentKeyId == 0 and self['text'].currPos == len(self['text'].text)):
+            # len(getText()), not len(.text): the displayed text carries an
+            # extra cursor cell at its end (a space on OpenPLi, NBSP on
+            # openATV), so the cursor never "reached the end" and RIGHT did
+            # not leave the text field
+            if self.currentKeyId in self.RIGHT_KEYS or (self.currentKeyId == 0 and self['text'].currPos >= len(self._getText())):
                 if self.isSuggestionVisible:
                     self.switchToSuggestions()
                     return
@@ -1675,20 +1992,35 @@ class E2iVirtualKeyBoard(Screen):
         # else:
         #    self['text'].instance.setHAlign(0)
 
+    def _getText(self):
+        # the entered text (Input.text is what is displayed: it has an extra
+        # cursor cell at its end, so it is never empty)
+        try:
+            return self["text"].getText()
+        except Exception:
+            printExc()
+            return ''
+
     def updateSuggestions(self):
         if self.isAutocompleteEnabled:
-            if not self["text"].text:
+            text = self._getText()
+            if not text:
+                self.pendingSuggestions = None
                 self.setSuggestionVisible(False)
                 self['right_list'].setList([])
                 # self.autocomplete.stop()
             else:
                 self.autocomplete.start(self.setSuggestions)
-                self.autocomplete.set(self["text"].getText(), self.currentVKLayout['locale'])
+                self.autocomplete.set(text, self.currentVKLayout['locale'])
 
     def setSuggestions(self, list, stamp):
-        # we would not want to modify list when user
-        # is under selection item from it
-        if self.focus != self.FOCUS_SUGGESTIONS and self["text"].text:
+        if self.focus == self.FOCUS_SUGGESTIONS:
+            # we would not want to modify list when user is under selection
+            # item from it - shown when the focus leaves the list (setFocus())
+            self.pendingSuggestions = list
+            return
+        self.pendingSuggestions = None
+        if self._getText():
             if list:
                 self['right_list'].setList([(x,) for x in list])
             self.setSuggestionVisible(True if list else False)

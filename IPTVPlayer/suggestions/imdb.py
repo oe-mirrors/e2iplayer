@@ -7,6 +7,7 @@ from Plugins.Extensions.IPTVPlayer.libs.pCommon import common
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG
 
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 
 
 class SuggestionsProvider:
@@ -18,19 +19,22 @@ class SuggestionsProvider:
         return _("IMDb Suggestions")
 
     def getSuggestions(self, text, locale):
-        # Python 2 leftover: str has no .decode() in Python 3. Same effect
-        # (drop non-ASCII chars) via encode+decode instead.
-        text = text.encode('ascii', 'ignore').decode('ascii').lower()
+        text = text.strip().lower()
         if len(text) > 2:
-            text = text.replace(' ', '_')
-            url = 'https://v2.sg.media-imdb.com/suggests/titles/%s/%s.json' % (text[0], text)
+            # v3 API: plain JSON and any text (umlauts, other scripts). The
+            # text used to be cut down to its ASCII characters first, so
+            # "münchen" was looked up as "mnchen". The first path part is
+            # the query's first character ('x' works for everything else).
+            first = text[0] if text[0] in 'abcdefghijklmnopqrstuvwxyz0123456789' else 'x'
+            url = 'https://v3.sg.media-imdb.com/suggestion/%s/%s.json' % (first, urllib_quote(text))
             sts, data = self.cm.getPage(url)
             if sts:
-                retList = []
-                data = data[data.find('(') + 1:data.rfind(')')]
                 printDBG(data)
-                data = json.loads(data)['d']
-                for item in data:
-                    retList.append(ensure_str(item['l']))
+                retList = []
+                for item in json.loads(data).get('d', []):
+                    # titles only (ids tt...), no people - like the old
+                    # "suggests/titles" API
+                    if str(item.get('id', '')).startswith('tt') and item.get('l'):
+                        retList.append(ensure_str(item['l']))
                 return retList
         return None
