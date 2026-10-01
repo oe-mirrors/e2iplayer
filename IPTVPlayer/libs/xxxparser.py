@@ -6468,7 +6468,9 @@ class XXXParser:
 			sts, data = self.cm.getPage(url, self.defaultParams)
 			if not sts:
 				return ''
-			candidates = [c for c in self._mediaCandidates(data) if c[1].startswith('http')]
+			# a plain <source src="/contents/videos/...mp4"> (amateurporn.me since 10.2026) is relative to the page
+			candidates = [(c[0], urljoin(url, c[1])) for c in self._mediaCandidates(data)]
+			candidates = [c for c in candidates if c[1].startswith('http')]
 			if not candidates and 'This is premium video' not in data and '/embed/' not in url:
 				# a duplicate entry only embeds another (free) video of the same site
 				embedId = self.cm.ph.getSearchGroups(data, r'''<iframe[^>]+src=["']%s/embed/([0-9]+)''' % re.escape(parser), 1, True)[0]

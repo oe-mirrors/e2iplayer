@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# 01.10.2026 - domain hdfilme.ceo; the player iframe moved from meinecloud.click to devideosrc.co.
 # 27.09.2026 - meinecloud.click was rebuilt ("DeVideoSRC"): no data-link lists any more, the hoster
 # embeds come from its token API (libs/meinecloud.py) - movies and episodes; domain hdfilme.cafe.
 # 09.09.2026 - the meinecloud player now base64-encodes its data-link values, so the choice box
@@ -17,7 +18,7 @@ import re
 from Components.config import config, ConfigYesNo, getConfigListEntry
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase, RetHost
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
-from Plugins.Extensions.IPTVPlayer.libs.meinecloud import MeineCloud
+from Plugins.Extensions.IPTVPlayer.libs.meinecloud import MeineCloud, MOVIE_IFRAME_RE, isPlayerUrl
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
@@ -37,7 +38,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return "https://hdfilme.cafe/"
+    return "https://hdfilme.ceo/"
 
 
 def _decodeDataLink(raw):
@@ -159,7 +160,9 @@ class HDFilme(CBaseHostClass):
             if not title or not self.cm.isValidUrl(itemUrl):
                 continue
             desc = ""
-            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, 'data-src="([^"]+)')[0])
+            icon = self.cm.ph.getSearchGroups(item, 'data-src="([^"]+)')[0]
+            # titles without a poster carry the site's own placeholder text ("Erroe: wrong image")
+            icon = self.getFullIconUrl(icon) if icon.startswith(("/", "http")) else self.DEFAULT_ICON_URL
             duration = self.cm.ph.getSearchGroups(item, r'<span[^>]*>(\d+ min)</span>')
             year = self.cm.ph.getSearchGroups(item, r'<span[^>]*>(\d{4})</span>')
             if year:
@@ -176,7 +179,7 @@ class HDFilme(CBaseHostClass):
             self.addDir(params)
 
     def _resolveMeineCloud(self, data):
-        movieUrl = self.cm.ph.getSearchGroups(data, r'<iframe[^>]+src="(https://meinecloud\.click/movie/[^"]+)"')[0]
+        movieUrl = self.cm.ph.getSearchGroups(data, MOVIE_IFRAME_RE)[0]
         if movieUrl:
             return "movie", movieUrl
         imdb = self.cm.ph.getSearchGroups(data, r"var imdb = '([^']+)'")[0]
@@ -227,6 +230,10 @@ class HDFilme(CBaseHostClass):
         icon = cItem.get("icon", "") or self.DEFAULT_ICON_URL
         sts, data = self.getPage(url)
         if not sts:
+            return
+        if "Fatal error: Uncaught" in data[:2000]:
+            # some new titles only answer with a PHP error of the site itself
+            SetIPTVPlayerLastHostError(_("The website returned a server error for this request."))
             return
         desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, 'og:description" content="([^"]+)')[0])
         kind, target = self._resolveMeineCloud(data)
@@ -356,7 +363,7 @@ class HDFilme(CBaseHostClass):
         else:
             data = [_decodeDataLink(streamUrl)]
         for url in data:
-            if not url or "meinecloud" in url or "player.php" in url:
+            if not url or isPlayerUrl(url) or "player.php" in url:
                 continue
             url = "https:" + url if url.startswith("//") else url
             linksTab.append({"name": self.up.getHostName(url).capitalize(), "url": strwithmeta(url, {"Referer": gettytul()}), "need_resolve": 1})
