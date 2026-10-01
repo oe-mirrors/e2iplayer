@@ -15,7 +15,14 @@ from Components.config import config
 
 def Plugins(**kwargs):
     screenwidth = getDesktop(0).size().width()
-    iconFile = "icons/%s/iptvlogo.png" % ("FHD" if screenwidth and screenwidth == 1920 else "HD")
+    # same tiers as skinchrome.getIconBase(), kept inline so boot does not import skinchrome
+    if screenwidth >= 2560:
+        resolution = "WQHD"
+    elif screenwidth >= 1920:
+        resolution = "FHD"
+    else:
+        resolution = "HD"
+    iconFile = "icons/%s/iptvlogo.png" % resolution
     desc = _("Watch Videos Online")
     list = []
     if config.plugins.iptvplayer.plugin_autostart.value:
