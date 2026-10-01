@@ -10,7 +10,7 @@
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib2_urlopen, urllib2_Request, urllib2_URLError, urllib2_HTTPError
-from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import strDecode, ensure_str
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import strDecode, ensure_str, ensure_binary
 ###################################################
 
 ###################################################
@@ -26,6 +26,7 @@ try:
 except Exception:
     AddPopup = None
 from Screens.MessageBox import MessageBox
+from base64 import b64decode, b64encode, urlsafe_b64decode, urlsafe_b64encode
 from time import time
 from urllib.request import urlopen
 import traceback
@@ -95,6 +96,35 @@ def PrevDay(dt):
     return (dt - datetime.timedelta(days=1))
 
 ###################################################
+
+
+def _b64Pad(t):
+    t = ensure_str(t).strip()
+    return t + '=' * (-len(t) % 4)
+
+
+def b64Decode(t, binary=False):
+    r = b64decode(_b64Pad(t))
+    return r if binary else ensure_str(r)
+
+
+def b64Encode(b, strip=False):
+    r = ensure_str(b64encode(ensure_binary(b)))
+    if strip:
+        r = r.rstrip('=')
+    return r
+
+
+def b64urlEncode(b, strip=False):
+    r = ensure_str(urlsafe_b64encode(ensure_binary(b)))
+    if strip:
+        r = r.rstrip('=')
+    return r
+
+
+def b64urlDecode(t, binary=False):
+    r = urlsafe_b64decode(_b64Pad(t))
+    return r if binary else ensure_str(r)
 
 
 def GetNice(pid=None):
