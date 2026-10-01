@@ -44,6 +44,7 @@ class E2iNumericKeyBoard(Screen):
         # negative values, Clear otherwise; row 5 is a full-width OK bar
         self.keyRows = [['1', '2', '3'], ['4', '5', '6'], ['7', '8', '9'], ['sign' if self.allowNegative else 'clear', '0', 'back'], ['ok']]
 
+        self.vkTitle = title
         self.skin = self.__prepareSkin()
         Screen.__init__(self, session)
         self.skinName = skinchrome.forceInternalSkinName(["E2iNumericKeyBoard"])
@@ -110,9 +111,14 @@ class E2iNumericKeyBoard(Screen):
         key = self.KEY
         gridW = self.COLS * key
         # a +/- field also shows the blue footer key, one colour slot more
-        width = 640 if self.allowNegative else 520
+        baseWidth = 640 if self.allowNegative else 520
+        # the header title starts right of the logo slot (x=124) on one line: the window grows with a
+        # long title ("Jump to a selected page, max: 455") - about 12 px per character, capped
+        width = min(max(baseWidth, 12 * self._titleLen() + 150), 1000)
         gridX = (width - gridW) // 2
-        inputX, inputY, inputW, inputH = 40, 76, width - 80, 50
+        # the input box keeps its width and stays centred with the keys
+        inputW = baseWidth - 80
+        inputX, inputY, inputH = (width - inputW) // 2, 76, 50
         rangeY = inputY + inputH + 6
         gridY = rangeY + 34
         height = gridY + len(self.keyRows) * key + 16 + skinchrome.footer_height()
@@ -141,6 +147,16 @@ class E2iNumericKeyBoard(Screen):
         parts.append('</screen>')
         self._keyBase = keyBase
         return '\n'.join(parts)
+
+    def _titleLen(self):
+        # characters, not bytes (a UTF-8 bytes title counts umlauts once)
+        title = self.vkTitle or ""
+        try:
+            if isinstance(title, bytes):
+                title = title.decode("utf-8", "ignore")
+        except Exception:
+            pass
+        return len(title)
 
     def _keyName(self, rowIdx, colIdx):
         return "key_%d_%d" % (rowIdx, colIdx)
