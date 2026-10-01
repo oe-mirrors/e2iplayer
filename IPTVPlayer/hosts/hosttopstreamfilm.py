@@ -2,11 +2,12 @@
 # Last Modified: 14.06.2026 - Mr.X
 # 27.09.2026 - domain topstreamfilm.best; meinecloud.click embeds via its token API (libs/meinecloud.py),
 # series seasons/episodes from it too; items keep their page url (INFO), links live in their own key.
+# 01.10.2026 - the player iframe moved from meinecloud.click to devideosrc.co.
 import re
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
-from Plugins.Extensions.IPTVPlayer.libs.meinecloud import MeineCloud
+from Plugins.Extensions.IPTVPlayer.libs.meinecloud import MeineCloud, MOVIE_IFRAME_RE, isPlayerUrl
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
@@ -74,7 +75,7 @@ class TopStreamFilm(CBaseHostClass):
         if not sts:
             return
         desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, 'og:description" content="([^"]+)')[0])
-        movieUrl = self.cm.ph.getSearchGroups(data, r'<iframe[^>]+src="(https://meinecloud\.click/movie/[^"]+)"')[0]
+        movieUrl = self.cm.ph.getSearchGroups(data, MOVIE_IFRAME_RE)[0]
         if movieUrl:
             params = dict(cItem)
             params.update({"good_for_fav": True, "category": "video", "title": cItem["title"], "desc": desc, "mc_movie": MeineCloud.imdbFromUrl(movieUrl)})
@@ -151,7 +152,7 @@ class TopStreamFilm(CBaseHostClass):
             # favourites saved before 27.09.2026 carry the link list in "url"
             links = cItem.get("links") or (cItem["url"] if isinstance(cItem.get("url"), list) else [])
         for url in links:
-            if not url or "meinec" in url:
+            if not url or isPlayerUrl(url):
                 continue
             if url.startswith("//"):
                 url = "https:" + url

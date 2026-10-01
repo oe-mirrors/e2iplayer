@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # meinecloud.click ("DeVideoSRC") embed player, shared by the German hosts that iframe it
-# (hdfilme, topstreamfilm, kinoking). The player pages no longer carry data-link lists; the
+# (hdfilme, topstreamfilm, kinoking, kkiste, hdfilme-tv). 01.10.2026 - the sites now embed it as
+# devideosrc.co (same player and API); both domains are accepted, the API is asked on devideosrc.co.
+# The player pages no longer carry data-link lists; the
 # page ships a signed token and its JS asks the API for the hoster embeds:
 #   /movie/<imdb>              -> POST /api/embed-links {type:movie, id, token} -> {sources:[{name,url}]}
 #   /serial/<imdb>             -> POST /api/embed-links {type:tv, id, token}    -> {tv:{seasons:[{season_number, episodes:[{episode_number,title,description,url}]}]}}
@@ -18,7 +20,14 @@ import re
 
 ###################################################
 
-MAIN_URL = "https://meinecloud.click/"
+MAIN_URL = "https://devideosrc.co/"
+DOMAINS = ("devideosrc.co", "meinecloud.click")
+# <iframe src="..."> of a movie player page, on either domain
+MOVIE_IFRAME_RE = r'<iframe[^>]+src="(https://(?:devideosrc\.co|meinecloud\.click)/movie/[^"]+)"'
+
+
+def isPlayerUrl(url):
+    return any(domain in (url or "") for domain in DOMAINS)
 
 
 class MeineCloud(object):
@@ -59,7 +68,7 @@ class MeineCloud(object):
             url = (src or {}).get("url", "") if isinstance(src, dict) else ""
             if url.startswith("//"):
                 url = "https:" + url
-            if url.startswith("http") and "meinecloud" not in url and url not in out:
+            if url.startswith("http") and not isPlayerUrl(url) and url not in out:
                 out.append(url)
         return out
 

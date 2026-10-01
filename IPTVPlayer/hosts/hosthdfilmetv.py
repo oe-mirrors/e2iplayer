@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 # Last Modified: 14.03.2026
+# 01.10.2026 - domain hd-filme.blog; meinecloud/devideosrc player pages expand via its token API (libs/meinecloud.py)
 import re
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
+from Plugins.Extensions.IPTVPlayer.libs.meinecloud import MeineCloud, MAIN_URL as MC_URL, isPlayerUrl
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
@@ -14,7 +16,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return "https://hdfilme-tv.cc/"
+    return "https://hd-filme.blog/"
 
 
 class HDFilmeTV(CBaseHostClass):
@@ -97,16 +99,13 @@ class HDFilmeTV(CBaseHostClass):
             url = "https:" + url if url.startswith("//") else url
             if "/vod/" in url:
                 continue
-            if "meinecloud.click/movie/" in url:
-                # meinecloud is a mirror-list page, not a hoster - expand it to the
+            if isPlayerUrl(url) and "/movie/" in url:
+                # meinecloud/devideosrc is a mirror-list page, not a hoster - expand it to the
                 # real hoster embeds it links (voe / dr0pstream / mixdrop / ...)
-                mts, mdata = self.getPage(url)
-                if mts:
-                    for sub in re.findall(r'data-link="([^"]+)"', mdata):
-                        sub = "https:" + sub if sub.startswith("//") else sub
-                        if "meinecloud" in sub or "/vod/" in sub or not self.cm.isValidUrl(sub):
-                            continue
-                        urltab.append({"name": self.up.getHostName(sub).capitalize(), "url": strwithmeta(sub, {"Referer": "https://meinecloud.click/"}), "need_resolve": 1})
+                for sub in MeineCloud(self.cm, self.defaultParams, gettytul()).movieLinks(MeineCloud.imdbFromUrl(url)):
+                    if "/vod/" in sub or not self.cm.isValidUrl(sub):
+                        continue
+                    urltab.append({"name": self.up.getHostName(sub).capitalize(), "url": strwithmeta(sub, {"Referer": MC_URL}), "need_resolve": 1})
                 continue
             title = self.up.getHostName(url).capitalize()
             if "youtube" in url:

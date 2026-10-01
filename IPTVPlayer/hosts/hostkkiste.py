@@ -3,6 +3,7 @@
 import re
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
+from Plugins.Extensions.IPTVPlayer.libs.meinecloud import isPlayerUrl
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
@@ -98,8 +99,8 @@ class KKisteAG(CBaseHostClass):
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, cItem.get("episode"), "</ul>")[0]
         data = re.findall('data-link="(h[^"]+)', data, re.DOTALL)
         for url in data:
-            # meinecloud.click player pages resolve through urlparser (parserMEINECLOUD), other player pages don't
-            if "player.php" in url or ("meinecloud" in url and "/movie/" not in url and "/serial/" not in url):
+            # devideosrc.co / meinecloud.click player pages resolve through urlparser (parserMEINECLOUD), other player pages don't
+            if "player.php" in url or (isPlayerUrl(url) and "/movie/" not in url and "/serial/" not in url):
                 continue
             url = "https:" + url if url.startswith("//") else url
             urltab.append({"name": "Trailer" if "youtu" in url else self.up.getHostName(url).capitalize(), "url": strwithmeta(url, {"Referer": self.MAIN_URL}), "need_resolve": 1})

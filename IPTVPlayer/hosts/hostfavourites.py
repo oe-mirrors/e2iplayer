@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# 01.10.2026 - the "Newest videos (all YouTube channels)" row can be switched off in the host settings
 # Last Modified: 20.09.2026 - YouTube channels in a group: sort by newest upload + merged "newest videos" list,
 # folder watched/started marking, markers under the host's own watched folder name, origin host line
 ###################################################
@@ -25,10 +26,12 @@ except Exception:
 from binascii import hexlify
 import re
 import time
-from Components.config import config, ConfigInteger, getConfigListEntry
+from Components.config import config, ConfigInteger, ConfigYesNo, getConfigListEntry
 ###################################################
 
 
+# the "Newest videos (all YouTube channels)" row on top of a group with more than one YouTube channel
+config.plugins.iptvplayer.favourites_yt_newest_row = ConfigYesNo(default=True)
 # how many of the newest videos of every channel go into "Newest videos" of a favourites group (the feed has 15 per channel)
 config.plugins.iptvplayer.favourites_yt_newest_per_channel = ConfigInteger(3, (1, 15))
 
@@ -37,6 +40,7 @@ def GetConfigList():
     # "Allow watched flag to be set" / "The color of the viewed item" live in the global
     # E2iPlayer settings (components/iptvconfigmenu.py), only the YouTube list is set here
     optionList = []
+    optionList.append(getConfigListEntry(_("Show \"Newest videos\" of all YouTube channels in a group") + ":", config.plugins.iptvplayer.favourites_yt_newest_row))
     optionList.append(getConfigListEntry(_("Newest videos of a YouTube channel in a group") + ":", config.plugins.iptvplayer.favourites_yt_newest_per_channel))
     return optionList
 ###################################################
@@ -115,7 +119,7 @@ class Favourites(CBaseHostClass):
                 rows.append((params, addFun))
 
         ytChannels = [params for params, addFun in rows if self._isYtChannelParams(params)]
-        if len(ytChannels) > 1:
+        if len(ytChannels) > 1 and config.plugins.iptvplayer.favourites_yt_newest_row.value:
             self.addDir({'name': 'category', 'category': 'yt_newest', 'group_id': cItem['group_id'], 'title': _("Newest videos (all YouTube channels)"), 'desc': _("The latest uploads of all YouTube channels in this group, newest first."), 'icon': self.DEFAULT_ICON_URL})
         if ytChannels and self.isYtSorted(cItem['group_id']):
             try:

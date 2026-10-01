@@ -10,6 +10,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import clean_html
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 from Plugins.Extensions.IPTVPlayer.libs.xxxparser import XXXParser, decodeHtml, decodeUrl
 from Plugins.Extensions.IPTVPlayer.components.e2ivkselector import GetVirtualKeyboard
 try:
@@ -2745,6 +2746,11 @@ def fixListImages(items):
 	# URLs (pix-cdn77, pvvstream ...) then answer 403 and the list shows a red X; the meta (Referer) is kept
 	# lazy-load placeholders (data:image/gif...) are no picture at all (red X), and a space in a file name is sent raw
 	for item in items or []:
+		# Python 2: a unicode name/description (from json) crashes eLabel.setText of the list's bottom panel
+		for attr in ('name', 'description'):
+			value = getattr(item, attr, None)
+			if value is not None and not isinstance(value, str) and isinstance(value, basestring):
+				setattr(item, attr, ensure_str(value))
 		image = getattr(item, 'iconimage', '')
 		if not image:
 			continue
@@ -2753,6 +2759,16 @@ def fixListImages(items):
 		elif '&amp;' in image or ' ' in image:
 			item.iconimage = strwithmeta(('%s' % image).replace('&amp;', '&').replace(' ', '%20'), getattr(image, 'meta', {}))
 	return items
+
+
+def nextPageLast(items):
+	# "Next page" always as the last row of a list, the other pager rows (First Page, Jump, Previous ...) above it
+	if not isinstance(items, list):
+		return
+	nexts = [i for i in items if getattr(i, 'imageType', '') == 'NEXT']
+	for item in nexts:
+		items.remove(item)
+	items.extend(nexts)
 
 
 class _SelfTestSession(object):
@@ -2857,6 +2873,7 @@ class Host(CBaseHostClass, XXXParser):
 			self.currList[Index] = sel
 		self.addSiteNextPage(valTab, handler)
 		self.addPageItems(valTab, sel, url, page)
+		nextPageLast(valTab)
 		self.currList = valTab
 		printDBG('Host getListForItem end')
 		return self.currList
@@ -2869,6 +2886,7 @@ class Host(CBaseHostClass, XXXParser):
 		valTab = fixListImages(self.listsItems(-1, pattern, 'SEARCH'))
 		self.addSiteNextPage(valTab, self.searchListHandler(self.SEARCH_proc))
 		self.addPageItems(valTab, None, None, 1)
+		nextPageLast(valTab)
 		self.currList = valTab
 		printDBG("Host getSearchResults end")
 		return self.currList
@@ -20797,7 +20815,8 @@ class Host(CBaseHostClass, XXXParser):
 					continue
 				seen.add(phUrl)
 				phTime = self.cm.ph.getSearchGroups(item, r'(?s)class="[^"]*(?:duration|time)[^"]*"[^>]*>\s*(?:<[^>]+>\s*)*([0-9]+:[0-9:]+)', 1, True)[0]
-				valTab.append(CDisplayListItem(phTitle, ('[' + phTime + '] ' if phTime else '') + phTitle, CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], 0, checkhttps(phImage), None))
+				# amateurporn.me lists its thumbnails relative to the site (/contents/videos_screenshots/...)
+				valTab.append(CDisplayListItem(phTitle, ('[' + phTime + '] ' if phTime else '') + phTitle, CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], 0, urljoin(self.MAIN_URL + '/', checkhttps(phImage)), None))
 			pager = kvsNextPage(data, url)
 			if pager is not None:
 				if pager[1]:
@@ -23422,7 +23441,8 @@ class Host(CBaseHostClass, XXXParser):
 					for key in ('results', 'html', 'data', 'content'):
 						val = obj.get(key)
 						if isinstance(val, basestring) and val.strip():
-							responseData = val
+							# Python 2: json gives unicode - a unicode title/description crashes eLabel.setText (GUI restart)
+							responseData = ensure_str(val)
 							break
 			except Exception as e:
 				printDBG('EROTICMV V8 JSON parse exception: ' + str(e))
@@ -23442,9 +23462,9 @@ class Host(CBaseHostClass, XXXParser):
 				results = obj.get('results', []) if isinstance(obj, dict) else []
 				if isinstance(results, list) and results:
 					for result in results[:40]:
-						phUrl = str(result.get('link', '') or '').replace('\\/', '/') if isinstance(result, dict) else ''
-						phTitle = str(result.get('title', '') or result.get('post_title', '') or '').strip() if isinstance(result, dict) else ''
-						postType = str(result.get('post_type', '') or '').lower() if isinstance(result, dict) else ''
+						phUrl = ensure_str(result.get('link', '') or '').replace('\\/', '/') if isinstance(result, dict) else ''
+						phTitle = ensure_str(result.get('title', '') or result.get('post_title', '') or '').strip() if isinstance(result, dict) else ''
+						postType = ensure_str(result.get('post_type', '') or '').lower() if isinstance(result, dict) else ''
 						if phUrl.startswith('/'):
 							phUrl = self.MAIN_URL + phUrl
 						if not phUrl.startswith('http') or not phTitle:
@@ -23472,14 +23492,12 @@ class Host(CBaseHostClass, XXXParser):
 				if not phUrl.startswith('http') or not phTitle or phUrl in seen:
 					continue
 				seen.add(phUrl)
-				if '/actor/' in phUrl.lower():
+				if re.search(r'/(?:actor|category|tag|genre)s?/', phUrl.lower()):
 					items.append((phUrl, phTitle, CDisplayListItem.TYPE_CATEGORY))
-				elif '/video/' in phUrl.lower() or '/movie/' in phUrl.lower() or '/watch/' in phUrl.lower():
-					items.append((phUrl, phTitle, CDisplayListItem.TYPE_VIDEO))
 				else:
-					# Unknown result type: treat it as a category, never as a
-					# playable item. This avoids opening an unrelated list.
-					items.append((phUrl, phTitle, CDisplayListItem.TYPE_CATEGORY))
+					# a film's own page (https://eroticmv.com/<slug>/) - a video, as in the category lists;
+					# opened as a folder it only showed the page's "related" films
+					items.append((phUrl, phTitle, CDisplayListItem.TYPE_VIDEO))
 			printDBG('EROTICMV V9 parsed search items: ' + str(len(items)))
 			for phUrl, phTitle, itemType in items[:40]:
 				if itemType == CDisplayListItem.TYPE_CATEGORY:
