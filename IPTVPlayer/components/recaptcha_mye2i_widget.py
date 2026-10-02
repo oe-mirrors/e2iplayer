@@ -8,6 +8,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, rm
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.captchascriptwidget import CaptchaScriptWidgetBase
 from Plugins.Extensions.IPTVPlayer.libs.web_qr import make_qr_png
+from Plugins.Extensions.IPTVPlayer.libs.mye2i_launcher import getLauncherUrl
 from Plugins.Extensions.IPTVPlayer.components import skinchrome
 ###################################################
 
@@ -166,6 +167,8 @@ class UnCaptchaReCaptchaMyE2iWidget(CaptchaScriptWidgetBase):
             'pin_wrong': _("Wrong code."),
             'extension_outdated': _("Your MyE2i extension is outdated or unknown (v%s or newer needed). Please update:"),
             'extension_download': _("Download new version"),
+            'launcher_open': _("Open this page in %s"),
+            'launcher_open_own': _("Open this page in the chosen browser"),
             'job_cloudflare': _("Get Cloudflare job"),
             'job_cookies': _("Get cookies job"),
             'job_captcha': _("Get captcha job"),
@@ -221,14 +224,23 @@ class UnCaptchaReCaptchaMyE2iWidget(CaptchaScriptWidgetBase):
             self._removeQrFile()
 
     def startExecution(self):
-        captcha = {'siteKey': self.sitekey, 'sameOrigin': True, 'siteUrl': self.referer, 'contextUrl': '/'.join(self.referer.split('/')[:3]), 'boundToDomain': True, 'stoken': None, 'captchaType': self.captchaType, 'captchaAction': self.captchaAction, 'captchaData': self.captchaData, 'token': self.sessionToken, 'pin': self.sessionPin, 'i18n': self._serverTexts(), 'tmpDir': GetTmpDir()}
+        while is_port_in_use(self.ip_address, self.port):
+            self.port += 1
+        boxUrl = "http://%s:%s/%s" % (self.ip_address, self.port, ('?t=' + self.sessionToken) if self.sessionToken else '')  # NOSONAR - LAN-only mye2iserver.py has no TLS support
+
+        # The QR code holds the plain address (camera apps and Google Lens do not pass an
+        # intent:// address on); the start page offers the chosen browser as a link instead.
+        browser = config.plugins.iptvplayer.mye2i_browser
+        launcherUrl = getLauncherUrl(boxUrl, browser.value, config.plugins.iptvplayer.mye2i_launcher_uri.value)
+        if launcherUrl == boxUrl:
+            launcherUrl = ''
+        launcherName = browser.getText() if launcherUrl and browser.value != 'custom' else ''
+
+        captcha = {'siteKey': self.sitekey, 'sameOrigin': True, 'siteUrl': self.referer, 'contextUrl': '/'.join(self.referer.split('/')[:3]), 'boundToDomain': True, 'stoken': None, 'captchaType': self.captchaType, 'captchaAction': self.captchaAction, 'captchaData': self.captchaData, 'token': self.sessionToken, 'pin': self.sessionPin, 'i18n': self._serverTexts(), 'tmpDir': GetTmpDir(), 'closeStartPage': config.plugins.iptvplayer.mye2i_close_start_page.value, 'launcherUrl': launcherUrl, 'launcherName': launcherName}
         try:
             captcha = ensure_str(base64.b64encode(ensure_binary(json.dumps(captcha))))
         except Exception:
             printExc()
-
-        while is_port_in_use(self.ip_address, self.port):
-            self.port += 1
 
         cmd = GetPyScriptCmd('mye2iserver') + ' "%s" "%s" "%s"' % (captcha, self.ip_address, self.port)
 
@@ -237,7 +249,7 @@ class UnCaptchaReCaptchaMyE2iWidget(CaptchaScriptWidgetBase):
             # widget's box even at WQHD (_QR_SIZE=178 HD-reference * 2.0 =
             # 356px there) so Enigma2's scale="1" only ever downscales it,
             # never blows it up past its native resolution.
-            make_qr_png("http://%s:%s/%s" % (self.ip_address, self.port, ('?t=' + self.sessionToken) if self.sessionToken else ''), self._qrPath, scale=10, border=4)  # NOSONAR - LAN-only mye2iserver.py has no TLS support
+            make_qr_png(boxUrl, self._qrPath, scale=10, border=4)
             self["qrcode"].instance.setPixmap(LoadPixmap(self._qrPath))
             self["qrcode"].show()
         except Exception:

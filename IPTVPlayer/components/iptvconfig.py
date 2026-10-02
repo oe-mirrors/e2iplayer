@@ -84,6 +84,8 @@ config.plugins.iptvplayer.IPTVDMShowNotification = ConfigYesNo(default=True)
 # program for plain file downloads in the download manager; curl falls back
 # to wget when the box has no curl binary
 config.plugins.iptvplayer.http_downloader = ConfigSelection(default="wget", choices=[("wget", "wget"), ("curl", "curl")])
+# container of DASH (MPD) downloads, which ffmpeg muxes; a host may still set its own (ff_out_container)
+config.plugins.iptvplayer.dash_out_container = ConfigSelection(default="matroska", choices=[("matroska", "MKV"), ("mp4", "MP4"), ("mpegts", "TS")])
 # same seconds-choices pattern as extplayer_infobar_timeout above - 5s
 # matches the fixed duration IPTVDMNotification.showNotify() used before
 # this was configurable
@@ -272,15 +274,25 @@ def GetAlternativeProxyUrl(slot):
 # config.plugins.iptvplayer.captcha_bypass_order = ConfigSelection(default="", choices=[("", _("Internal, then external")), ("free", _("Only free")), ("free_pay", _("External free, then paid")), ("pay", _("External paid"))])
 # config.plugins.iptvplayer.captcha_bypass_free = ConfigSelection(default="", choices=[("", _("None")), ("myjd", "MyJDownloader")])
 # config.plugins.iptvplayer.captcha_bypass_pay = ConfigSelection(default="", choices=[("", _("None")), ("2captcha.com", "2captcha.com"), ("9kw.eu", "9kw.eu")])
-config.plugins.iptvplayer.captcha_bypass = ConfigSelection(default="", choices=[("", _("Auto")), ("mye2i", "MyE2i"), ("2captcha.com", "2captcha.com"), ("9kw.eu", "9kw.eu")])
+config.plugins.iptvplayer.captcha_bypass = ConfigSelection(default="", choices=[("", _("Auto")), ("mye2i", "MyE2i"), ("2captcha.com", "2captcha.com"), ("9kw.eu", "9kw.eu"), ("deathbycaptcha.com", "DeathByCaptcha")])
 
 # MyE2i: on = the address typed by hand needs a six-digit code (shown in the window title)
 # and the QR code carries a one-time key, so nobody else in the network can hand results
 # to the receiver; off = the plain address opens the page directly (the original behaviour)
 config.plugins.iptvplayer.mye2i_security = ConfigYesNo(default=False)
+# MyE2i: the browser the start page offers to open itself in on an Android phone (an
+# intent:// link, see libs/mye2i_launcher.py) - the camera app opens the QR code in the
+# default browser, mostly Chrome without extensions; "custom" = own launcher URI with {url} / {address}
+config.plugins.iptvplayer.mye2i_browser = ConfigSelection(default="", choices=[("", _("Default browser")), ("kiwi", "Kiwi Browser"), ("yandex", "Yandex Browser"), ("edge", "Microsoft Edge"), ("edge_canary", "Microsoft Edge Canary"), ("edge_beta", "Microsoft Edge Beta"), ("edge_dev", "Microsoft Edge Dev"), ("custom", _("Own launcher URI"))])
+config.plugins.iptvplayer.mye2i_launcher_uri = ConfigText(default="", fixed_size=False)
+# MyE2i: close the start page (the box's page with the button) once the result reached the box;
+# the tab with the captcha always closes itself
+config.plugins.iptvplayer.mye2i_close_start_page = ConfigYesNo(default=False)
 
 config.plugins.iptvplayer.api_key_9kweu = ConfigSecret(default="", fixed_size=False)
 config.plugins.iptvplayer.api_key_2captcha = ConfigSecret(default="", fixed_size=False)
+config.plugins.iptvplayer.deathbycaptcha_login = ConfigLogin(default="", fixed_size=False)
+config.plugins.iptvplayer.deathbycaptcha_password = ConfigSecret(default="", fixed_size=False)
 
 config.plugins.iptvplayer.myjd_login = ConfigLogin(default="", fixed_size=False)
 config.plugins.iptvplayer.myjd_password = ConfigSecret(default="", fixed_size=False)

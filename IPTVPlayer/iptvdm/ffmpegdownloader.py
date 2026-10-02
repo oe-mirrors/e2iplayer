@@ -40,6 +40,7 @@ from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import strDecode
 # FOREIGN import
 ###################################################
 from Tools.BoundFunction import boundFunction
+from Components.config import config
 from enigma import eConsoleAppContainer
 import re
 import datetime
@@ -197,7 +198,12 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
             cmdTab.extend(['-i', url])
 
         cmdTab.extend(mapOpts)
-        cmdTab.extend(['-c:v', 'copy', '-c:a', 'copy', '-f', self._outContainer(), self.filePath])
+        outContainer = self._outContainer()
+        cmdTab.extend(['-c:v', 'copy', '-c:a', 'copy'])
+        if outContainer in ('mp4', 'mov'):
+            # index at the start of the finished file, so players can seek in it right away
+            cmdTab.extend(['-movflags', '+faststart'])
+        cmdTab.extend(['-f', outContainer, self.filePath])
 
         self.fileCmdPath = self.filePath + '.iptv.cmd'
         rm(self.fileCmdPath)
@@ -361,8 +367,32 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
 
     def _outContainer(self):
         # the container passed to ffmpeg's -f; it also drives the final file
-        # extension (_fixFileExtension), so both must read it the same way
-        return str(strwithmeta(self.url).meta.get('ff_out_container', self.ffmpegOutputContener)).lower()
+        # extension (_fixFileExtension), so both must read it the same way.
+        # A host's ff_out_container wins; a DASH download in the download
+        # manager uses the configured format; everything else (also buffered
+        # playback, whose file the player holds under its name) Matroska
+        meta = strwithmeta(self.url).meta
+        if 'ff_out_container' in meta:
+            return str(meta['ff_out_container']).lower()
+        if self.allowFinalRename and self._isDashSource(meta):
+            try:
+                return str(config.plugins.iptvplayer.dash_out_container.value).lower()
+            except Exception:
+                printExc()
+        return self.ffmpegOutputContener
+
+    def _isDashSource(self, meta):
+        # MPD by proto or URL, also a merge:// whose audio/video parts are MPDs
+        if str(meta.get('iptv_proto', '')).lower() in ('mpd', 'dash'):
+            return True
+        url = str(self.url).lower()
+        if url.startswith('mpd://') or '.mpd' in url:
+            return True
+        if url.startswith('merge://'):
+            for key in str(self.url).split('merge://', 1)[1].split('|'):
+                if '.mpd' in str(meta.get(key, '')).lower():
+                    return True
+        return False
 
     def _looksComplete(self):
         # unknown duration (livestream / no header) -> nothing to compare against

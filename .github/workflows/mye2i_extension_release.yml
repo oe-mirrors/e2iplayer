@@ -94,6 +94,8 @@ jobs:
             CHANGES=$(git log --no-merges --pretty=format:'- %s (%h)' -n 15 -- mye2i-extension)
           fi
           {
+            echo "![Downloads](https://img.shields.io/github/downloads/${GITHUB_REPOSITORY}/${TAG}/total?color=blue&style=flat-square)"
+            echo
             echo "MyE2i browser extension **v${VERSION}** (commit ${GITHUB_SHA::7})."
             echo
             echo "- \`mye2iv3-${VERSION}.zip\`: unpack and load via chrome://extensions -> Developer mode -> Load unpacked."
@@ -121,6 +123,9 @@ jobs:
           MARKER: ${{ steps.marker.outputs.sha }}
         run: |
           {
+            # counts only the files uploaded since the last version: --clobber below replaces them
+            echo "![Downloads](https://img.shields.io/github/downloads/${GITHUB_REPOSITORY}/mye2i-extension/total?color=blue&style=flat-square)"
+            echo
             echo "Current MyE2i browser extension for E2iPlayer: **v${VERSION}** (commit ${GITHUB_SHA::7})."
             echo
             echo "The files in this release are replaced with every new extension version, so these download links never change. Older versions: releases named \`mye2i-extension-v<version>\`."
