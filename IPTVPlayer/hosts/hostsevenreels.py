@@ -188,7 +188,7 @@ class SevenReels(GenericFolderWatchedScraperMixin, CBaseHostClass):
             params = dict(cItem)
             params.pop('isWatched', None)
             params.pop('isStarted', None)
-            params.update({'good_for_fav': False, 'title': _('Next page'), 'page': page + 1, 'category': 'list_items', '_prev_ids': ids})
+            params.update({'good_for_fav': False, 'title': _('Next page'), 'page': page + 1, 'last_page': totalPages, 'category': 'list_items', '_prev_ids': ids})
             self.addDir(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):

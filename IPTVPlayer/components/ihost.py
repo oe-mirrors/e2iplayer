@@ -811,6 +811,16 @@ class CHostBase(IHost):
                     hostItem.listPage = int(cItem.get('page'))
             except (TypeError, ValueError):
                 pass
+        # a host that knows the highest page puts it in its "Next page" entry as 'last_page':
+        # "Next page (2/12)" in the list, "Page: 1/12" in the header path
+        if type == CDisplayListItem.TYPE_NEXT:
+            try:
+                lastPage = int(cItem.get('last_page'))
+                if isinstance(getattr(hostItem, 'listPage', None), int) and hostItem.listPage <= lastPage:
+                    hostItem.lastPage = lastPage
+                    hostItem.name = '%s (%d/%d)' % (hostItem.name, hostItem.listPage, lastPage)
+            except (TypeError, ValueError):
+                pass
         return hostItem
     # end converItem
 

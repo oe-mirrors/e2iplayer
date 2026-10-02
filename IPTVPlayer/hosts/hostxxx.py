@@ -3059,19 +3059,24 @@ class Host(CBaseHostClass, XXXParser):
 		template = None
 		if ('%s' % nxt.urlSeparateRequest).split('-')[0] not in NO_AUTO_JUMP:
 			template = pageUrlTemplate(url, nxt.urlItems[0] if nxt.urlItems else '', page)
+		try:
+			maxPage = int(maxPage) if maxPage and int(maxPage) > 1 else None
+		except (TypeError, ValueError):
+			maxPage = None
+		if not maxPage:
+			# the site's own "Last" entry, else the pager of the page just loaded - read on every list
+			lastPages = [i.listPage for i in valTab if getattr(i, 'imageType', '') == 'LAST' and isinstance(getattr(i, 'listPage', None), int)]
+			if lastPages:
+				maxPage = max(lastPages)
+			elif template and self.listPages:
+				pageUrl, data = max(self.listPages, key=lambda listPage: len(listPage[1]))
+				maxPage = findLastPage(template, '%s' % pageUrl, data, page)
+		if maxPage and maxPage > page:
+			# "Next page (2/12)" in the list, "Page: 1/12" in the header path; unknown highest page: as before
+			nxt.lastPage = maxPage
+			if nxt.name == _("Next page"):
+				nxt.name = '%s (%d/%d)' % (nxt.name, page + 1, maxPage)
 		if template:
-			try:
-				maxPage = int(maxPage) if maxPage and int(maxPage) > 1 else None
-			except (TypeError, ValueError):
-				maxPage = None
-			if not maxPage:
-				# the site's own "Last" entry, else the pager of the page just loaded - read on every list
-				lastPages = [i.listPage for i in valTab if getattr(i, 'imageType', '') == 'LAST' and isinstance(getattr(i, 'listPage', None), int)]
-				if lastPages:
-					maxPage = max(lastPages)
-				elif self.listPages:
-					pageUrl, data = max(self.listPages, key=lambda listPage: len(listPage[1]))
-					maxPage = findLastPage(template, '%s' % pageUrl, data, page)
 			title = _("Jump to a selected page, max: {}").format(maxPage) if maxPage else _("Jump to a selected page")
 			jump = CDisplayListItem(_("Jump"), title, CDisplayListItem.TYPE_CATEGORY, [template], nxt.urlSeparateRequest, '', maxPage, imageType="JUMP")
 			jump.pageTemplate, jump.pageSource, jump.firstItem = template, nxt, first
@@ -6134,10 +6139,15 @@ class Host(CBaseHostClass, XXXParser):
 			if not sts:
 				return valTab
 			data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li class="cat', '</li>')
+			seen = set(['/video?c=38'])  # HD is added as its own entry below
 			for item in data:
 				phTitle = self.cm.ph.getSearchGroups(item, '''alt=['"]([^"^']+?)['"]''', 1, True)[0]
 				phImage = self.cm.ph.getSearchGroups(item, '''data-thumb_url=['"]([^"^']+?)['"]''', 1, True)[0]
 				phUrl = self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''', 1, True)[0]
+				# the page lists the popular categories a second time
+				if not phUrl or phUrl in seen:
+					continue
+				seen.add(phUrl)
 				valTab.append(CDisplayListItem(phTitle, phTitle, CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + phUrl], 'pornhub-clips', phImage, None))
 			valTab.sort(key=lambda poz: poz.name)
 			valTab.insert(0, CDisplayListItem("--- HD ---", "HD", CDisplayListItem.TYPE_CATEGORY, ["https://www.pornhub.com/video?c=38"], 'pornhub-clips', siteLogo, None))
@@ -24299,44 +24309,6 @@ class Host(CBaseHostClass, XXXParser):
 			printDBG('ROOT URL: ' + root)
 			next_number = self.cm.ph.getSearchGroups(data, r'''pagination-item next">\s*<a[^>]+?href=["'][^"']*?/([0-9]+)/["']''', 1, True)[0]
 			prev = self.cm.ph.getSearchGroups(data, r'from.{,9}[:]([0-9]+?)["].+\n.+active', 1, True)[0]
-			if prev:
-				printDBG('PREVIOUS: ' + str(prev))
-			if 'search' in url:
-				Quiery = self.cm.ph.getSearchGroups(url, 'search[/]([A-Za-z0-9-]+)', 1, True)[0]
-				Quiery = Quiery.replace('-', '%20')
-				printDBG('Quiery: ' + Quiery)
-			try:
-				foundBlock, tmpData = self.cm.ph.getDataBeetwenMarkers(data, 'thumbs vgrid', '</section>', False)
-				if foundBlock:
-					data = tmpData
-				printDBG('TRY data: ' + data)
-			except Exception:
-				pass
-			data3 = data.split('data-fq-video-card')
-			for item in data3:
-				phUrl = self.cm.ph.getSearchGroups(item, r'href=["]([^"^@]+?)["]\st', 1, True)[0]
-				phTitle = self.cm.ph.getSearchGroups(item, r'title=["]([^"]+?)["]\s>', 1, True)[0]
-				if not phTitle:
-					phTitle = self.cm.ph.getSearchGroups(item, 'alt=["]([^ß]+?)["]', 1, True)[0]
-				phTitle = phTitle.replace('&mdash;', '--').replace('&#x1F44C;', ' -').replace('&#x1F975;', ' -').replace('&#x1F608;', '').replace('&#x1F32E;&#xFE0F;', '').replace('&#x1F351;', '').replace('&#x270C;', '').replace('&#x1F32D;', '').replace('&#x1F346;', '')
-				phImage = self.cm.ph.getSearchGroups(item, 'srcset=["]([^;]+?)["]', 1, True)[0]
-				if 'mp4' in phImage:
-					ImageID = self.cm.ph.getSearchGroups(phImage, '[/]([^a-z][0-9/].{,12})[/]', 1, True)[0]
-					phImage = "https://cdnstatic.w1mp.com/contents/videos_screenshots/%s/480x270/1.jpg" % (ImageID)
-				Time = self.cm.ph.getSearchGroups(item, r'[>]([0-9:\s]+)[\s]<', 1, True)[0].strip()
-				Views = self.cm.ph.getSearchGroups(item, r'>[\s]([0-9KHM.\sViews]+?)[\s]<', 1, True)[0].strip()
-				if Time:
-					valTab.append(CDisplayListItem(decodeHtml(phTitle), '[' + Time + '] ' + decodeHtml(phTitle) + '\n' + Views, CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], '', phImage, None))
-
-			if next_number:
-				printDBG('NEXT NUMBER: ' + str(next_number))
-				if 'search' in url:
-					next = 'https://w1mp.com/search/%s/%s/' % (Quiery.replace('%20', '-'), str(next_number))
-					printDBG('FULL NEXT SEARCH: ' + next)
-				else:
-					next = '%s%s/' % (root, str(next_number))
-					printDBG('FULL NEXT NORMAL: ' + next)
-				valTab.append(self.getNextItem(str(next_number), next, name, catUrl))
 			if prev:
 				printDBG('PREVIOUS: ' + str(prev))
 			if 'search' in url:
