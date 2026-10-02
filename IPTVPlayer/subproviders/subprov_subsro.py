@@ -1,26 +1,21 @@
 # -*- coding: utf-8 -*-
+# subs.ro: Romanian site (subtitles mostly in Romanian, some in English and other languages), the downloads are zip / rar archives
 ###################################################
 # LOCAL import
 ###################################################
-# from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.isubprovider import CSubProviderBase, CBaseSubProviderClass
-
+from Plugins.Extensions.IPTVPlayer.libs.subtitlesmatch import matchTitle, normalizeTitle, langCode, langSortKey, episodeFits, sortByRelease
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import (
     printDBG,
     printExc,
-    RemoveDisallowedFilenameChars,
-    GetSubtitlesDir,
+    GetDefaultLang,
 )
-from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_urlencode
 
 ###################################################
 # FOREIGN import
 ###################################################
 import re
-# import unicodedata
-# import base64
-# from os import listdir as os_listdir, path as os_path
-# from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, getConfigListEntry
 
 ###################################################
 # Config options for HOST
@@ -33,17 +28,21 @@ def GetConfigList():
 ###################################################
 
 
+# the site's flag names (flag-<name>-big.png) that langCode does not know
+SITE_LANGS = {'rom': 'ro', 'ung': 'hu'}
+
+
 class SubsRoProvider(CBaseSubProviderClass):
 
     def __init__(self, params={}):
+        params = dict(params)
         params['cookie'] = 'subsro.cookie'
         CBaseSubProviderClass.__init__(self, params)
 
-        self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.168 Safari/537.36'
+        self.USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36'
         self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'Referer': self.getMainUrl(), 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding': 'gzip, deflate'}
 
         self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
-        self.dInfo = params['discover_info']
 
     def getMainUrl(self):
         return 'https://subs.ro/'
@@ -51,144 +50,144 @@ class SubsRoProvider(CBaseSubProviderClass):
     def getMaxFileSize(self):
         return 1024 * 1024 * 10  # 10MB, max size of sub file to be download
 
-    def getFormQuery(self, data, marker, searchText):
-        query = {}
-        data = self.cm.ph.getDataBeetwenNodes(data, ('<form', '>', marker), ('</form', '>'), withNodes=True, caseSensitive=False)[1]
-        actionUrl = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''action=['"]([^'^"]+?)['"]''')[0])
-        data = re.compile('''(<input[^>]+?>)''', re.I).findall(data)
-        for item in data:
-            name = self.cm.ph.getSearchGroups(item, '''name=['"]([^'^"]+?)['"]''', ignoreCase=True)[0]
-            value = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''', ignoreCase=True)[0]
-            if '' != name:
-                query[name] = value
-        key = 'titlu-film'
-        if key in query:
-            query[key] = searchText
-        else:
-            query['search-text'] = searchText
-        return actionUrl, query
+    @staticmethod
+    def langOrder(lang):
+        # the user's language, Romanian (the site's own language), English, then by name
+        notDefault, notEnglish, name = langSortKey(lang, GetDefaultLang())
+        return (notDefault, lang != 'ro', notEnglish, name)
+
+    @staticmethod
+    def releaseFits(release, season, episode):
+        # 'Breaking Bad - Sezonul 2' is a season pack, 'Sezoanele 1-2' several seasons in one archive
+        m = re.search(r'(?i)\bsezoanele\s+(\d+)\s*-\s*(\d+)', release)
+        if m and season and int(m.group(1)) <= int(season) <= int(m.group(2)):
+            return True
+        return episodeFits(re.sub(r'(?i)\bsezonul\s+', 'Season ', release), season, episode)
 
     def getSearchList(self, cItem, nextCategory):
         printDBG("SubsRoProvider.getSearchList")
+        title, year, season, episode = self.wantedInfo()
+
+        # the search form carries a token, without it the search answers "He's dead, Jim!"
+        searchUrl = self.getFullUrl('/cautare')
+        sts, data = self.cm.getPage(searchUrl, self.defaultParams)
+        if not sts:
+            SetIPTVPlayerLastHostError(_('subs.ro does not answer.'))
+            return
+        antispam = self.cm.ph.getSearchGroups(data, r'''<input[^>]+?name=['"]antispam['"][^>]+?value=['"]([^'"]+?)['"]''')[0]
+        if antispam == '':
+            antispam = self.cm.ph.getSearchGroups(data, r'''<input[^>]+?value=['"]([^'"]+?)['"][^>]+?name=['"]antispam['"]''')[0]
 
         urlParams = dict(self.defaultParams)
-        urlParams['header'] = dict(urlParams['header'])
-
-        url = self.getFullUrl('/subtitrari')
-        sts, data = self.cm.getPage(url, urlParams)
+        urlParams['header'] = dict(self.HTTP_HEADER, **{'Referer': searchUrl, 'Accept': '*/*', 'X-Requested-With': 'XMLHttpRequest', 'HX-Request': 'true'})
+        query = {'antispam': antispam, 'type': 'subtitrari', 'titlu-film': title, 'external_id': '', 'versiune-film': '', 'limba': ''}
+        sts, data = self.cm.getPage(self.getFullUrl('/ajax/search'), urlParams, query)
         if not sts:
+            SetIPTVPlayerLastHostError(_('subs.ro does not answer.'))
+            return
+        if 'data-subtitle-result' not in data and 'dead, Jim' in data:
+            SetIPTVPlayerLastHostError(_('The site rejected the search request.'))
             return
 
-        actionUrl, query = self.getFormQuery(data, '', self.params['confirmed_title'])
-        if '?' in actionUrl:
-            actionUrl += '&'
-        else:
-            actionUrl += '?'
-        actionUrl += urllib_urlencode(query)
-
-        sts, data = self.cm.getPage(actionUrl, urlParams)
-        if not sts:
-            return
-
-        urlParams['header'].update({'Referer': actionUrl, 'Accept': '*/*', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'X-Requested-With': 'XMLHttpRequest'})
-        actionUrl, query = self.getFormQuery(data, 'search-subtitrari', self.params['confirmed_title'])
-        sts, data = self.cm.getPage(actionUrl, urlParams, query)
-        if not sts:
-            return
-
-        data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
-        for item in data:
-            url = self.cm.ph.getDataBeetwenNodes(item, ('<a', '>', 'details'), ('</a', '>'))[1]
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(url, '''href=['"]([^"^']+?)['"]''')[0])
+        results = []
+        for item in data.split('data-subtitle-result=')[1:]:
+            url = self.cm.ph.getSearchGroups(item, r'''href=['"]([^'"]*?/subtitrare/descarca/[^'"]+?)['"]''')[0]
             if url == '':
                 continue
+            subId = url.rstrip('/').rsplit('/', 1)[-1]
+            movie = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'''data-movie-name=['"]([^'"]+?)['"]''')[0])
+            # 'Breaking Bad - Sezonul 2' -> 'Breaking Bad'
+            name = re.sub(r'(?i)\s+-\s+sezo(?:nul|anele)\b.*$', '', movie)
+            release = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'''title=['"]Subtitrare\s+([^'"]+?)['"]''')[0])
+            if release.lower().startswith(name.lower()):
+                release = release[len(name):].strip(' -')
+            foundYear = self.cm.ph.getSearchGroups(item, r'''>\s*\((\d{4})\)\s*<''')[0]
+            siteLang = self.cm.ph.getSearchGroups(item, r'''flag\-([a-z]+?)\-big\.png''')[0]
+            lang = SITE_LANGS.get(siteLang) or langCode(siteLang) or siteLang
+            imdbid = self.cm.ph.getSearchGroups(item, r'''imdb\.com/title/(tt[0-9]+)''')[0]
 
-            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<h', '>', 'title'), ('</h', '>'), False)[1])
-            lang = self.cm.ph.getSearchGroups(item, r'flag\-([a-z]+?)\-big\.png')[0]
+            descTab = [release]
+            for label, marker in ((_('Translator: %s'), r'Traduc[^<]*?'), (_('Uploader: %s'), r'Uploader:')):
+                m = re.search(marker + r'</span>(.*?)</span>', item, re.S)
+                value = self.cleanHtmlStr(m.group(1)) if m else ''
+                if value != '':
+                    descTab.append(label % value)
+            downloads = self.cm.ph.getSearchGroups(item, r'''download\.svg[^>]+?>\s*<span[^>]*?>([0-9.,]+)<''')[0]
+            if downloads != '':
+                descTab.append(_('Downloads: %s') % downloads)
+            descTab.append(self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'leading-relaxed'), ('</div', '>'), False)[1]))
 
-            descTab = []
-            tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, '<p', '</p>')
-            for t in tmp:
-                t = self.cleanHtmlStr(t).replace(' , ', ', ').replace(' : ', ': ')
-                if t != '':
-                    descTab.append(t)
+            # alternative titles: 'Moromete Family: On the Edge of Time (Morometii 2)'
+            aliases = [name, name.split(' (', 1)[0]] + re.findall(r'\(([^)]+)\)', name)
+            results.append({'name': name, 'movie': movie, 'aliases': aliases, 'year': foundYear, 'key': imdbid or '%s|%s' % (normalizeTitle(name), foundYear),
+                            'sub_id': subId, 'url': self.getFullUrl(url), 'release': release, 'lang': lang, 'imdbid': imdbid,
+                            'page': self.getFullUrl('/subtitrare/%s' % url.split('/descarca/', 1)[-1]),
+                            'title': '[%s] %s%s%s' % (lang, name, ' (%s)' % foundYear if foundYear else '', ' ' + release if release else ''),
+                            'desc': '[/br]'.join(x for x in descTab if x)})
 
-            descTab.append(self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'sub-comment'), ('</div', '>'), False)[1]))
+        # the search is fuzzy ("Inception" brings "Soudain le vide" too): only the title that fits, when one fits
+        # a tv show: the year of the episode is not the year of the show
+        best = matchTitle(title, None if season else year, [(alias, r['year'], r['key']) for r in results for alias in r['aliases'] if alias])
+        if best is not None:
+            results = [r for r in results if r['key'] == best]
+        if season and episode:
+            # the season is often only in the movie name ('Breaking Bad - Sezonul 2'), not in the release text
+            fits = [r for r in results if self.releaseFits(r['movie'] + ' ' + r['release'], season, episode)]
+            if fits:
+                results = fits
 
-            params = dict(cItem)
-            params.update({'category': nextCategory, 'url': self.getFullUrl(url), 'title': self.cleanHtmlStr(title), 'lang': lang, 'desc': '[/br]'.join(descTab)})
-            params['title'] = ('[%s] ' % lang) + params['title']
-            self.addDir(params)
+        if not results:
+            SetIPTVPlayerLastHostError(_('No subtitles found.'))
+            return
+        byLang = {}
+        for r in results:
+            byLang.setdefault(r['lang'], []).append(r)
+        for lang in sorted(byLang, key=self.langOrder):
+            for r in sortByRelease(byLang[lang], self.releaseName(), 'release'):
+                params = dict(cItem)
+                params.update({'category': nextCategory, 'title': r['title'], 'url': r['url'], 'page': r['page'], 'lang': r['lang'],
+                               'sub_id': r['sub_id'], 'imdbid': r['imdbid'], 'desc': r['desc']})
+                self.addDir(params)
 
     def getSubtitlesList(self, cItem):
         printDBG("SubsRoProvider.getSubtitlesList")
 
-        sts, data = self.cm.getPage(cItem['url'], self.defaultParams)
-        if not sts:
-            return
-        imdbid = self.cm.ph.getSearchGroups(data, '/title/(tt[0-9]+?)[^0-9]')[0]
-        url = self.getFullUrl(self.cm.ph.getSearchGroups(data, 'href="([^"]*?/descarca/[^"]+?)"')[0])
-        subId = url.rsplit('/', 1)[-1]
-
-        try:
-            fps = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, 'FPS', '</p>', False)[1])
-            fps = float(self.cm.ph.getSearchGroups(fps, r'''([0-9\.]+)''')[0])
-        except Exception:
-            fps = 0
-            printExc()
+        # the frame rate is only on the details page
+        fps = 0
+        sts, data = self.cm.getPage(cItem['page'], self.defaultParams)
+        if sts:
+            try:
+                # <p ...>FPS</p> <p ...>23.976</p>
+                tmp = self.cm.ph.getSearchGroups(data, r'''>\s*FPS\s*</p>\s*<p[^>]*>\s*([0-9]+(?:\.[0-9]+)?)\s*<''')[0]
+                fps = float(tmp) if tmp else 0
+            except Exception:
+                printExc()
 
         urlParams = dict(self.defaultParams)
-        tmpDIR = self.downloadAndUnpack(url, urlParams, unpackToSubDir=True)
+        urlParams['header'] = dict(self.HTTP_HEADER, Referer=cItem['page'])
+        tmpDIR = self.downloadArchive(cItem['url'], urlParams)
         if None is tmpDIR:
             return
 
         cItem = dict(cItem)
-        cItem.update({'path': tmpDIR, 'fps': fps, 'imdbid': imdbid, 'sub_id': subId})
-        self.listDir(cItem)
+        cItem.update({'path': tmpDIR, 'fps': fps})
+        self.listArchiveFiles(cItem)
 
-    def listDir(self, cItem):
-        printDBG("SubsRoProvider.listDir")
+    def listArchiveFiles(self, cItem):
+        printDBG("SubsRoProvider.listArchiveFiles")
+        season, episode = self.wantedInfo()[2:]
         cItem = dict(cItem)
         cItem.update({'category': ''})
         self.listSupportedFilesFromPath(cItem, self.getSupportedFormats(all=True), dirCategory='list_dir')
         for item in self.currList:
             item['desc'] = cItem.get('path', '') + '/'
-
-    def _getFileName(self, title, lang, subId, imdbid, fps, ext):
-        title = RemoveDisallowedFilenameChars(title).replace('_', '.')
-        match = re.search(r'[^.]', title)
-        if match:
-            title = title[match.start():]
-
-        fileName = "{0}_{1}_0_{2}_{3}".format(title, lang, subId, imdbid)
-        if fps > 0:
-            fileName += '_fps{0}'.format(fps)
-        fileName = fileName + '.' + ext
-        return fileName
-
-    def downloadSubtitleFile(self, cItem):
-        printDBG("SubsceneComProvider.downloadSubtitleFile")
-        retData = {}
-        title = cItem['title']
-        lang = cItem['lang']
-        subId = cItem['sub_id']
-        imdbid = cItem['imdbid']
-        inFilePath = cItem['file_path']
-        ext = cItem.get('ext', 'srt')
-        fps = cItem.get('fps', 0)
-
-        outFileName = self._getFileName(title, lang, subId, imdbid, fps, ext)
-        outFileName = GetSubtitlesDir(outFileName)
-
-        printDBG(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-        printDBG(inFilePath)
-        printDBG(outFileName)
-        printDBG(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-
-        if self.converFileToUtf8(inFilePath, outFileName, lang):
-            retData = {'title': title, 'path': outFileName, 'lang': lang, 'imdbid': imdbid, 'sub_id': subId, 'fps': fps}
-
-        return retData
+            if item.get('type') != 'subtitle' and item.get('file_path', '').lower().endswith(('.zip', '.rar')):
+                item['category'] = 'unpack_archive'
+        # a season pack: the files of this episode, when it has them
+        if season and episode:
+            fits = [item for item in self.currList if item.get('type') != 'subtitle' or episodeFits(item['title'], season, episode)]
+            if any(item.get('type') == 'subtitle' for item in fits):
+                self.currList = fits
 
     def handleService(self, index, refresh=0):
         printDBG('handleService start')
@@ -201,11 +200,13 @@ class SubsRoProvider(CBaseSubProviderClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    # MAIN MENU
+        # MAIN MENU
         if name is None:
             self.getSearchList({'name': 'category'}, 'get_subtitles')
-        if category == 'list_dir':
-            self.listDir(self.currItem)
+        elif category == 'list_dir':
+            self.listArchiveFiles(self.currItem)
+        elif category == 'unpack_archive':
+            self.unpackInnerArchive(self.currItem)
         elif category == 'get_subtitles':
             self.getSubtitlesList(self.currItem)
 

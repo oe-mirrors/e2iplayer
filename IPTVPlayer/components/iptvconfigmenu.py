@@ -340,9 +340,9 @@ class ConfigMenu(ConfigBaseWidget):
         # list.append(getConfigListEntry(_("Captcha bypass free service"), config.plugins.iptvplayer.captcha_bypass_free))
         # list.append(getConfigListEntry(_("Captcha bypass paid service"), config.plugins.iptvplayer.captcha_bypass_pay))
         # if config.plugins.iptvplayer.captcha_bypass_pay.value == "9kw.eu":
-        list.append(getConfigListEntry("    " + _("%s API KEY") % 'https://9kw.eu/', config.plugins.iptvplayer.api_key_9kweu))
+        list.append(getConfigListEntry("    https://9kw.eu/ " + _("API Key"), config.plugins.iptvplayer.api_key_9kweu))
         # if config.plugins.iptvplayer.captcha_bypass_pay.value == "2captcha.com":
-        list.append(getConfigListEntry("    " + _("%s API KEY") % 'https://2captcha.com/', config.plugins.iptvplayer.api_key_2captcha))
+        list.append(getConfigListEntry("    https://2captcha.com/ " + _("API Key"), config.plugins.iptvplayer.api_key_2captcha))
         list.append(getConfigListEntry("    " + _("%s e-mail") % ('My JDownloader'), config.plugins.iptvplayer.myjd_login))
         list.append(getConfigListEntry("    " + _("%s password") % ('My JDownloader'), config.plugins.iptvplayer.myjd_password))
         list.append(getConfigListEntry("    " + _("%s device name") % ('My JDownloader'), config.plugins.iptvplayer.myjd_jdname))
@@ -350,12 +350,19 @@ class ConfigMenu(ConfigBaseWidget):
     @staticmethod
     def _fillSubtitles(list):
         list.append(getConfigListEntry(_("Use subtitles parser extension if available"), config.plugins.iptvplayer.useSubtitlesParserExtension))
-        list.append(getConfigListEntry("https://subsource.net/ " + _("API_KEY"), config.plugins.iptvplayer.subsourceapi))
+        list.append(getConfigListEntry("https://subsource.net/ " + _("API Key"), config.plugins.iptvplayer.subsourceapi))
         list.append(getConfigListEntry("https://subdl.com/ " + _("API Key"), config.plugins.iptvplayer.subdlapi))
+        list.append(getConfigListEntry("https://sub.wyzie.io/ " + _("API Key"), config.plugins.iptvplayer.wyzieapi))
         list.append(getConfigListEntry("https://opensubtitles.org/ " + _("login"), config.plugins.iptvplayer.opensuborg_login))
         list.append(getConfigListEntry("https://opensubtitles.org/ " + _("password"), config.plugins.iptvplayer.opensuborg_password))
         list.append(getConfigListEntry("https://napisy24.pl/ " + _("login"), config.plugins.iptvplayer.napisy24pl_login))
         list.append(getConfigListEntry("https://napisy24.pl/ " + _("password"), config.plugins.iptvplayer.napisy24pl_password))
+        list.append(getConfigListEntry("https://www.titulky.com/ " + _("login"), config.plugins.iptvplayer.titulky_login))
+        list.append(getConfigListEntry("https://www.titulky.com/ " + _("password"), config.plugins.iptvplayer.titulky_password))
+        list.append(getConfigListEntry("https://titlovi.com/ " + _("login"), config.plugins.iptvplayer.titlovi_login))
+        list.append(getConfigListEntry("https://titlovi.com/ " + _("password"), config.plugins.iptvplayer.titlovi_password))
+        list.append(getConfigListEntry("https://www.prijevodi-online.org/ " + _("login"), config.plugins.iptvplayer.prijevodi_login))
+        list.append(getConfigListEntry("https://www.prijevodi-online.org/ " + _("password"), config.plugins.iptvplayer.prijevodi_password))
 
     @staticmethod
     def _fillPlayers(list):

@@ -4,32 +4,25 @@
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.isubprovider import CSubProviderBase, CBaseSubProviderClass
-from Plugins.Extensions.IPTVPlayer.libs.pCommon import DecodeGzipped
 
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import (
     printDBG,
     printExc,
     GetDefaultLang,
     RemoveDisallowedFilenameChars,
-    GetSubtitlesDir,
     rm,
 )
 
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import hex_md5
+from Plugins.Extensions.IPTVPlayer.libs.subtitlesmatch import sortByRelease
 
 ###################################################
 # FOREIGN import
 ###################################################
+import gzip
 import re
+from xml.sax.saxutils import escape as xml_escape, unescape as xml_unescape
 from Components.config import config
-###################################################
-
-
-###################################################
-# E2 GUI COMMPONENTS
-###################################################
-# from Plugins.Extensions.IPTVPlayer.components.asynccall import MainSessionWrapper
-# from Screens.MessageBox import MessageBox
 ###################################################
 
 ###################################################
@@ -43,7 +36,107 @@ def GetConfigList():
 ###################################################
 
 
-class OpenSubOrgProvider(CBaseSubProviderClass):
+class OpenSubtitlesBase(CBaseSubProviderClass):
+    """What the OpenSubtitles providers (opensubtitlesorg, opensubtitlesorg3, opensubtitlesv3) share: the IMDb steps
+    title -> type -> season -> episode, and for the two opensubtitles.org ones the result items and the download
+    of the .gz files. Subclasses implement getLanguages(cItem, nextCategory)."""
+
+    def getMoviesTitles(self, cItem, nextCategory):
+        printDBG("%s.getMoviesTitles" % self.__class__.__name__)
+        # imdbGetMoviesByTitle drops "S02E05" / the year of the confirmed title itself
+        for item in self.imdbGetMoviesByTitle(self.params['confirmed_title'])[1]:
+            params = dict(cItem)
+            params.update(item)  # item = {'title', 'base_title', 'year', 'imdbid'}
+            params.update({'category': nextCategory})
+            self.addDir(params)
+
+    def getType(self, cItem, nextCategory):
+        # a series -> its seasons (the wanted one first), a movie -> the languages, then nextCategory
+        printDBG("%s.getType" % self.__class__.__name__)
+        imdbid = cItem['imdbid']
+        if self.getTypeFromThemoviedb(imdbid, cItem['title']) == 'series':
+            for item in self.imdbGetSeasons(imdbid, self.wantedInfo()[2])[1]:
+                params = dict(cItem)
+                params.update({'category': 'get_episodes', 'item_title': cItem['title'], 'season': item, 'title': _('Season %s') % item})
+                self.addDir(params)
+        else:
+            self.getLanguages(cItem, nextCategory)
+
+    def getEpisodes(self, cItem, nextCategory, numberedOnly=False):
+        printDBG("%s.getEpisodes" % self.__class__.__name__)
+        season = cItem['season']
+        for item in self.imdbGetEpisodesForSeason(cItem['imdbid'], season, self.wantedInfo()[3])[1]:
+            if numberedOnly and not item['episode'].isdigit():
+                continue
+            params = dict(cItem)
+            params.update(item)  # item = "episode_title", "episode", "eimdbid"
+            title = 's{0}e{1} {2}'.format(str(season).zfill(2), str(item['episode']).zfill(2), item['episode_title'])
+            params.update({'category': nextCategory, 'title': title})
+            self.addDir(params)
+
+    @staticmethod
+    def subtitleTitle(item, withLang=False, withTime=False):
+        # the list title of an opensubtitles.org result
+        title = (item.get('MovieReleaseName') or item.get('SubFileName') or item.get('MovieName') or '').strip()
+        ext = '.' + item.get('SubFormat', '')
+        if len(ext) > 1 and title.lower().endswith(ext.lower()):
+            title = title[:-len(ext)]
+        if withLang:
+            title = '[%s] %s' % (item.get('ISO639', ''), title)
+        cdMax = item.get('SubSumCD', '1')
+        if cdMax != '1':
+            title += ' CD[{0}/{1}]'.format(item.get('SubActualCD', '1'), cdMax)
+        if withTime and item.get('SubLastTS'):
+            title += ' [{0}]'.format(item['SubLastTS'])
+        return RemoveDisallowedFilenameChars(title)
+
+    def subtitleItem(self, item, subFormats, withLang=False, withTime=False):
+        # an opensubtitles.org result (XML-RPC or REST, same fields) -> list item, None when it is no usable file
+        link = item.get('SubDownloadLink', '')
+        if not (self.cm.isValidUrl(link) and link.endswith('.gz') and item.get('SubFormat', '') in subFormats):
+            return None
+        try:
+            fps = float(item.get('MovieFPS') or 0)
+        except (TypeError, ValueError):
+            fps = 0
+        return {'title': self.subtitleTitle(item, withLang, withTime), 'lang': item.get('ISO639', ''), 'sub_id': item.get('IDSubtitle', ''),
+                'imdbid': item.get('IDMovieImdb', ''), 'fps': fps, 'encoding': item.get('SubEncoding', ''), 'url': link}
+
+    def fetchSubtitleData(self, url):
+        # the subtitle file as bytes: the .gz from dl.opensubtitles.org unpacked, or None with self.lastDownloadError
+        self.lastDownloadError = ''
+        sts, data = self.downloadBinary(url, {'header': self.HTTP_HEADER})
+        if not sts or not data:
+            return None
+        if data[:2] == b'\x1f\x8b':
+            try:
+                data = gzip.decompress(data)
+            except Exception:
+                printExc()
+                self.lastDownloadError = _('Failed to gzip.')
+                return None
+        elif data.lstrip()[:15].lower().startswith((b'<!doctype', b'<html')):
+            # a web page instead of the file, e.g. when the download limit is reached
+            printDBG("%s.fetchSubtitleData not a subtitle file:\n%s" % (self.__class__.__name__, data[:500]))
+            self.lastDownloadError = _('The server did not return a subtitle file (download limit reached?).')
+            return None
+        if len(data) < 1024 and b'osdb.link/vip' in data.lower():
+            # the "Become OpenSubtitles.org VIP member" note instead of the subtitle
+            printDBG("%s.fetchSubtitleData VIP note instead of the subtitle" % self.__class__.__name__)
+            self.lastDownloadError = _('OpenSubtitles.org sent a "become VIP member" note instead of the subtitle (download limit reached?).')
+            return None
+        return data
+
+    def saveFetchedSubtitle(self, data, cItem):
+        # the downloaded file -> UTF-8 in the subtitles folder; the encoding the site reports is tried first
+        # (UTF-8 / ASCII are left to converFileToUtf8, which also drops a BOM)
+        encoding = (cItem.get('encoding') or '').strip().lower()
+        if encoding in ('utf-8', 'utf8', 'ascii', 'us-ascii'):
+            encoding = ''
+        return self.saveSubtitleData(data, cItem['title'], cItem['lang'], cItem.get('sub_id', ''), cItem.get('imdbid', ''), fps=cItem.get('fps', 0), encoding=encoding)
+
+
+class OpenSubOrgProvider(OpenSubtitlesBase):
     LANGUAGE_CACHE = []
 
     def __init__(self, params={}):
@@ -58,8 +151,7 @@ class OpenSubOrgProvider(CBaseSubProviderClass):
         self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.lastApiError = {'code': 0, 'message': ''}
         self.loginToken = ''
-
-        self.dInfo = params['discover_info']
+        self.lastDownloadError = ''
 
     def _resp2Json(self, data):
         retJson = []
@@ -112,9 +204,9 @@ class OpenSubOrgProvider(CBaseSubProviderClass):
                                 raise Exception("End not existing start tag [%s][%s]" % (tagName, tagsStack[-1]))
                             del tagsStack[-1]
                             if tagName == 'name':
-                                name = text
+                                name = self._unescape(text)
                             elif tagName == 'value':
-                                value = text
+                                value = self._unescape(text)
                             elif 'double' == tagName:
                                 text = float(text)
                             elif 'member' == tagName:
@@ -136,6 +228,12 @@ class OpenSubOrgProvider(CBaseSubProviderClass):
             raise Exception("Some tags have not been ended")
         return retJson
 
+    @staticmethod
+    def _unescape(text):
+        if isinstance(text, str):
+            return xml_unescape(text, {'&quot;': '"', '&apos;': "'"})
+        return text
+
     def _rpcMethodCall(self, method, paramsList=[]):
         requestData = "<methodCall><methodName>{0}</methodName><params>".format(method)
         for item in paramsList:
@@ -144,7 +242,7 @@ class OpenSubOrgProvider(CBaseSubProviderClass):
             if item.startswith('<'):
                 requestData += item
             else:
-                requestData += "<string>{0}</string>".format(item)
+                requestData += "<string>{0}</string>".format(xml_escape(item))
             requestData += "</value>"
             requestData += "</param>"
         requestData += "</params></methodCall>"
@@ -185,7 +283,7 @@ class OpenSubOrgProvider(CBaseSubProviderClass):
         if isinstance(item, float):
             param += '<double>{0}</double>'.format(item)
         elif isinstance(item, str):
-            param += '<string>{0}</string>'.format(item)
+            param += '<string>{0}</string>'.format(xml_escape(item))
         param += '</value>'
         return param
 
@@ -212,9 +310,9 @@ class OpenSubOrgProvider(CBaseSubProviderClass):
             if 'token' in data[0]:
                 self.loginToken = data[0]['token']
             else:
-                SetIPTVPlayerLastHostError(_('Get token failed!') + '\n' + _('Error message: \"%s\".\nError code: \"%s\".') % (self.lastApiError['code'], self.lastApiError['message']))
+                SetIPTVPlayerLastHostError(_('Get token failed!') + '\n' + _('Error message: \"%s\".\nError code: \"%s\".') % (self.lastApiError['message'], self.lastApiError['code']))
         else:
-            SetIPTVPlayerLastHostError(_('Login failed!') + '\n' + _('Error message: \"%s\".\nError code: \"%s\".') % (self.lastApiError['code'], self.lastApiError['message']))
+            SetIPTVPlayerLastHostError(_('Login failed!') + '\n' + _('Error message: \"%s\".\nError code: \"%s\".') % (self.lastApiError['message'], self.lastApiError['code']))
 
     def _getLanguages(self):
         lang = GetDefaultLang()
@@ -227,121 +325,49 @@ class OpenSubOrgProvider(CBaseSubProviderClass):
             try:
                 list = []
                 defaultLanguageItem = None
+                engLanguageItem = None
                 for item in data:
                     if 'LanguageName' in item and 'SubLanguageID' in item and 'ISO639' in item:
                         params = {'title': '{0} [{1}]'.format(item['LanguageName'], item['SubLanguageID']), 'lang': item['SubLanguageID']}
-                        if lang != item['ISO639']:
-                            list.append(params)
-                        else:
+                        if lang == item['ISO639']:
                             defaultLanguageItem = params
-                if None is not defaultLanguageItem:
-                    list.insert(0, defaultLanguageItem)
+                        elif 'en' == item['ISO639']:
+                            engLanguageItem = params
+                        else:
+                            list.append(params)
+                for params in (engLanguageItem, defaultLanguageItem):
+                    if None is not params:
+                        list.insert(0, params)
                 return list
             except Exception:
                 printExc()
         SetIPTVPlayerLastHostError(_('Get languages failed!'))
         return []
 
-    def _getSubtitleTitle(self, item):
-        title = item.get('MovieReleaseName', '')
-        if '' == title:
-            title = item.get('SubFileName', '')
-        if '' == title:
-            title = item.get('MovieName', '')
-
-        cdMax = item.get('SubSumCD', '1')
-        cd = item.get('SubActualCD', '1')
-        if cdMax != '1':
-            title += ' CD[{0}/{1}]'.format(cdMax, cd)
-
-        lastTime = item.get('SubLastTS', '')
-        if '' != lastTime:
-            title += ' [{0}]'.format(lastTime)
-
-        return RemoveDisallowedFilenameChars(title)
-
-    def _getFileName(self, subItem):
-        title = self._getSubtitleTitle(subItem).replace('_', '.').replace('.' + subItem['SubFormat'], '').replace(' ', '.')
-        match = re.search(r'[^.]', title)
-        if match:
-            title = title[match.start():]
-
-        fileName = "{0}_{1}_0_{2}_{3}".format(title, subItem['ISO639'], subItem['IDSubtitle'], subItem['IDMovieImdb'])
-        fileName = fileName + '.' + subItem['SubFormat']
-        return fileName
-
     def _searchSubtitle(self, cItem):
-        imdbid = cItem.get('eimdbid', cItem['imdbid'])
-        sublanguageid = cItem['lang']
-
-        subParams = [{'name': 'sublanguageid', 'value': sublanguageid}, {'name': 'imdbid', 'value': imdbid}]
+        # the episode has its own IMDb id, a movie the one of the title
+        subParams = [{'name': 'sublanguageid', 'value': cItem['lang']}, {'name': 'imdbid', 'value': cItem.get('eimdbid') or cItem['imdbid']}]
         params = [self.loginToken, self._getArraryParam(subParams)]
 
         sts, data = self._rpcMethodCall("SearchSubtitles", params)
         printDBG(">>>>>>>>>>>>>>>>>>>>>>>>>>>>> data[%s]" % data)
+        if not sts:
+            return []
         subFormats = self.getSupportedFormats()
-        if sts:
+        subList = []
+        for item in data:
+            # one odd result must not cost the others
             try:
-                list = []
-                for item in data:
-                    link = item.get('SubDownloadLink', '')
-                    if 'SubEncoding' in item and item.get('SubFormat', '') in subFormats and link.startswith('http') and link.endswith('.gz'):
-                        title = self._getSubtitleTitle(item)
-                        fileName = self._getFileName(item)
-                        list.append({'title': title, 'file_name': fileName, 'encoding': item['SubEncoding'], 'url': link})
-                return list
+                params = self.subtitleItem(item, subFormats, withTime=True)
             except Exception:
                 printExc()
-        return []
-
-    def getMoviesTitles(self, cItem, nextCategory):
-        printDBG("OpenSubOrgProvider.getMoviesTitles")
-        sts, tab = self.imdbGetMoviesByTitle(self.params['confirmed_title'])
-        if not sts:
-            return
-        printDBG(tab)
-        for item in tab:
-            params = dict(cItem)
-            params.update(item)  # item = {'title', 'imdbid'}
-            params.update({'category': nextCategory})
-            self.addDir(params)
-
-    def getType(self, cItem):
-        printDBG("OpenSubOrgProvider.getType")
-        imdbid = cItem['imdbid']
-        title = cItem['title']
-        type = self.getTypeFromThemoviedb(imdbid, title)
-        if type == 'series':
-            promSeason = self.dInfo.get('season')
-            sts, tab = self.imdbGetSeasons(imdbid, promSeason)
-            if not sts:
-                return
-            for item in tab:
-                params = dict(cItem)
-                params.update({'category': 'get_episodes', 'item_title': cItem['title'], 'season': item, 'title': _('Season %s') % item})
-                self.addDir(params)
-        elif type == 'movie':
-            self.getLanguages(cItem, 'get_subtitles')
-
-    def getEpisodes(self, cItem, nextCategory):
-        printDBG("OpenSubOrgProvider.getEpisodes")
-        imdbid = cItem['imdbid']
-        # itemTitle = cItem['item_title']
-        season = cItem['season']
-
-        promEpisode = self.dInfo.get('episode')
-        sts, tab = self.imdbGetEpisodesForSeason(imdbid, season, promEpisode)
-        if not sts:
-            return
-        for item in tab:
-            params = dict(cItem)
-            params.update(item)  # item = "episode_title", "episode", "eimdbid"
-            title = 's{0}e{1} {2}'.format(str(season).zfill(2), str(item['episode']).zfill(2), item['episode_title'])
-            params.update({'category': nextCategory, 'title': title})
-            self.addDir(params)
+                continue
+            if params is not None:
+                subList.append(params)
+        return subList
 
     def getLanguages(self, cItem, nextCategory):
-        printDBG("OpenSubOrgProvider.getEpisodes")
+        printDBG("OpenSubOrgProvider.getLanguages")
         if 0 == len(OpenSubOrgProvider.LANGUAGE_CACHE):
             OpenSubOrgProvider.LANGUAGE_CACHE = self._getLanguages()
 
@@ -354,56 +380,32 @@ class OpenSubOrgProvider(CBaseSubProviderClass):
 
     def getSubtitles(self, cItem):
         printDBG("OpenSubOrgProvider.getSubtitles")
-        list = self._searchSubtitle(cItem)
-        for item in list:
+        for item in sortByRelease(self._searchSubtitle(cItem), self.releaseName()):
             params = dict(cItem)
             params.update(item)
+            # the search language (SubLanguageID, e.g. "ger") becomes the ISO 639-1 code of the file
+            params.update({'lang': item['lang'] or cItem['lang'], 'imdbid': item['imdbid'] or cItem.get('eimdbid') or cItem['imdbid']})
             self.addSubtitle(params)
 
     def downloadSubtitleFile(self, cItem):
         printDBG("OpenSubOrgProvider.downloadSubtitleFile")
-        retData = {}
-        title = cItem['title']
-        fileName = cItem['file_name']
         url = cItem['url']
-        lang = cItem['lang']
-        encoding = cItem['encoding']
-        imdbid = cItem['imdbid']
-
-        urlParams = dict(self.defaultParams)
-        urlParams['max_data_size'] = self.getMaxFileSize()
-
-        sts, data = self.cm.getPage(url, urlParams)
-        if not sts:
-            SetIPTVPlayerLastHostError(_('Failed to download subtitle.'))
-            return retData
-
-        try:
-            data = DecodeGzipped(data)
-        except Exception:
-            printExc()
-            SetIPTVPlayerLastHostError(_('Failed to gzip.'))
-            return retData
-
-        try:
-            data = data.decode(encoding).encode('UTF-8')
-        except Exception:
-            printExc()
-            SetIPTVPlayerLastHostError(_('Failed to decode to UTF-8.'))
-            return retData
-
-        fileName = GetSubtitlesDir(fileName)
-        printDBG(">>")
-        printDBG(fileName)
-        printDBG("<<")
-        try:
-            with open(fileName, 'w') as f:
-                f.write(data)
-            retData = {'title': title, 'path': fileName, 'lang': lang, 'imdbid': imdbid}
-        except Exception:
-            SetIPTVPlayerLastHostError(_('Failed to write file "%s".') % fileName)
-            printExc()
-        return retData
+        # The link carries the session token (sid-...) of the search. With the token of an anonymous
+        # login it only gives a "Become VIP member" note instead of the subtitle, the link without it
+        # gives the file (anonymous download, limited per IP). A user login is tried with its token first.
+        urls = [url]
+        if '/sid-' in url:
+            stripped = re.sub(r'/sid-[^/]+', '', url)
+            urls = [url, stripped] if config.plugins.iptvplayer.opensuborg_login.value else [stripped]
+        data = None
+        for url in urls:
+            data = self.fetchSubtitleData(url)
+            if data is not None:
+                break
+        if data is None:
+            SetIPTVPlayerLastHostError(self.lastDownloadError or _('Failed to download subtitle.'))
+            return {}
+        return self.saveFetchedSubtitle(data, cItem)
 
     def handleService(self, index, refresh=0):
         printDBG('handleService start')
@@ -426,7 +428,7 @@ class OpenSubOrgProvider(CBaseSubProviderClass):
                 self.getMoviesTitles({'name': 'category'}, 'get_type')
         elif category == 'get_type':
             # take actions depending on the type
-            self.getType(self.currItem)
+            self.getType(self.currItem, 'get_subtitles')
         elif category == 'get_episodes':
             self.getEpisodes(self.currItem, 'get_languages')
         elif category == 'get_languages':

@@ -23,14 +23,16 @@ from os import remove as os_remove, path as os_path
 
 
 class IPTVSubtitlesHandler:
-    SUPPORTED_FORMATS = ['srt', 'vtt', 'mpl']
+    # srt/vtt/mpl plus the formats the Python fallback below reads (ASS/SSA, MicroDVD, SubViewer,
+    # TMPlayer, MPL2 in .sub/.txt) - the content decides, not the extension
+    SUPPORTED_FORMATS = ['srt', 'vtt', 'mpl', 'ass', 'ssa', 'sub', 'txt']
 
     @staticmethod
     def getSupportedFormats():
         printDBG("getSupportedFormats")
         if IsSubtitlesParserExtensionCanBeUsed():
             printDBG("getSupportedFormats after import")
-            return ['srt', 'vtt', 'mpl', 'ssa', 'smi', 'rt', 'txt', 'sub', 'dks', 'jss', 'psb', 'ttml']
+            return ['srt', 'vtt', 'mpl', 'ssa', 'ass', 'smi', 'rt', 'txt', 'sub', 'dks', 'jss', 'psb', 'ttml']
         printDBG("getSupportedFormats end")
         return IPTVSubtitlesHandler.SUPPORTED_FORMATS
 
@@ -136,15 +138,156 @@ class IPTVSubtitlesHandler:
     def _mplToAtoms(self, mplData):
         # Timings          : Sequential Time
         # Timing Precision : 100 Milliseconds (1/10th sec)
+        # an empty end ([10][]text) lasts until the next line, 5s at most - like MicroDVD
         subAtoms = []
         mplData = mplData.replace('\r\n', '\n').split('\n')
-        reObj = re.compile(r'^\[([0-9]+?)\]\[([0-9]+?)\](.+?)$')
+        reObj = re.compile(r'^\s*\[([0-9]+)\]\[([0-9]*)\](.+)$')
 
         for s in mplData:
             tmp = reObj.search(s)
             if None is not tmp:
-                subAtoms.append({'start': self._mplTc2ms(tmp.group(1)), 'end': self._mplTc2ms(tmp.group(2)), 'text': self._mplClearText(tmp.group(3))})
+                end = self._mplTc2ms(tmp.group(2)) if tmp.group(2) else -1
+                subAtoms.append({'start': self._mplTc2ms(tmp.group(1)), 'end': end, 'text': self._mplClearText(tmp.group(3))})
+        return self._fillOpenEnds(subAtoms)
+
+    @staticmethod
+    def _fillOpenEnds(subAtoms, maxDuration=5000):
+        # cues without an end time (-1) last until the next cue starts, maxDuration at most
+        for idx, atom in enumerate(subAtoms):
+            if atom['end'] < 0:
+                nextStart = subAtoms[idx + 1]['start'] if idx + 1 < len(subAtoms) else atom['start'] + maxDuration
+                atom['end'] = min(nextStart, atom['start'] + maxDuration)
+        return [a for a in subAtoms if a['end'] > a['start']]
+
+    @staticmethod
+    def _detectFormat(subText, ext):
+        # the content decides: a MicroDVD file saved as .srt is common enough
+        head = subText[:20000]
+        if re.search(r'(?im)^\s*\[script info\]|^dialogue:\s*[^,\n]*,\s*\d+:\d{2}:\d{2}', head):
+            return 'ass'
+        if re.search(r'(?m)^\s*\{\d+\}\{\d*\}', head):
+            return 'microdvd'
+        if re.search(r'(?m)^\s*\[\d+\]\[\d*\]', head):
+            return 'mpl'
+        if ' --> ' in head:
+            return 'srt'
+        if re.search(r'(?m)^\s*\d{1,2}:\d{2}:\d{2}[.,]\d{1,3}\s*,\s*\d{1,2}:\d{2}:\d{2}[.,]\d{1,3}\s*$', head):
+            return 'subviewer'
+        if re.search(r'(?m)^\s*\d{1,2}:\d{2}:\d{2}[:=]', head):
+            return 'tmplayer'
+        return 'srt' if ext in ('srt', 'vtt') else ''
+
+    @staticmethod
+    def _assTc2ms(time):
+        # H:MM:SS.cc
+        h, m, s = time.strip().split(':')
+        return int(round((int(h) * 3600 + int(m) * 60 + float(s)) * 1000))
+
+    def _assToAtoms(self, assText):
+        subAtoms = []
+        fields = ['layer', 'start', 'end', 'style', 'name', 'marginl', 'marginr', 'marginv', 'effect', 'text']
+        inEvents = False
+        for line in assText.replace('\r\n', '\n').split('\n'):
+            line = line.strip()
+            if line.startswith('['):
+                inEvents = line.lower() == '[events]'
+                continue
+            if not inEvents:
+                continue
+            if line.lower().startswith('format:'):
+                fields = [f.strip().lower() for f in line.split(':', 1)[1].split(',')]
+                continue
+            if not line.lower().startswith('dialogue:'):
+                continue
+            try:
+                values = line.split(':', 1)[1].split(',', len(fields) - 1)
+                item = dict(zip(fields, values))
+                text = item.get('text', '')
+                if re.search(r'\{[^}]*\\p[1-9]', text):
+                    continue  # vector drawing, no text
+                text = re.sub(r'\{[^}]*\}', '', text).replace('\\N', '\n').replace('\\n', '\n').replace('\\h', ' ')
+                text = '\n'.join(j.strip() for j in self._srtClearText(text).split('\n') if j.strip())
+                start, end = self._assTc2ms(item['start']), self._assTc2ms(item['end'])
+                if text and end > start:
+                    subAtoms.append({'start': start, 'end': end, 'text': text})
+            except Exception:
+                printExc("ASS line: %s" % line)
+        subAtoms.sort(key=lambda a: a['start'])
         return subAtoms
+
+    def _microDvdToAtoms(self, subText, fps):
+        # {start frame}{end frame}text|second line - an empty end frame lasts until the next line (max 5s).
+        # Like the C parser: a known fps (argument / file name) wins, else {1}{1}23.976 in the first line, else 23.976
+        subAtoms = []
+        fileFps = 0
+        reObj = re.compile(r'^\s*\{(\d+)\}\{(\d*)\}(.*)$')
+        for line in subText.replace('\r\n', '\n').split('\n'):
+            tmp = reObj.search(line)
+            if tmp is None:
+                continue
+            start, end, text = int(tmp.group(1)), tmp.group(2), tmp.group(3)
+            if not subAtoms and start <= 1 and re.match(r'^\d+(?:\.\d+)?$', text.strip()):
+                fileFps = float(text.strip())
+                continue
+            text = '\n'.join(j.strip() for j in self._mplClearText(text).split('\n') if j.strip())
+            if text:
+                subAtoms.append({'start': start, 'end': int(end) if end else -1, 'text': text})
+        fps = fps if fps > 0 else (fileFps or 23.976)
+        for atom in subAtoms:
+            atom['start'] = int(atom['start'] * 1000 / fps)
+            if atom['end'] >= 0:
+                atom['end'] = int(atom['end'] * 1000 / fps)
+        return self._fillOpenEnds(subAtoms)
+
+    def _subViewerToAtoms(self, subText):
+        # 00:00:01.00,00:00:04.00 then the text ([br] = new line) up to an empty line
+        subAtoms = []
+        reTime = re.compile(r'^\s*(\d{1,2}:\d{2}:\d{2}[.,]\d{1,3})\s*,\s*(\d{1,2}:\d{2}:\d{2}[.,]\d{1,3})\s*$')
+        lines = subText.replace('\r\n', '\n').split('\n')
+        idx = 0
+        while idx < len(lines):
+            tmp = reTime.search(lines[idx])
+            idx += 1
+            if tmp is None:
+                continue
+            textLines = []
+            while idx < len(lines) and lines[idx].strip() != '' and reTime.search(lines[idx]) is None:
+                textLines.append(lines[idx])
+                idx += 1
+            text = self._srtClearText('\n'.join(textLines).replace('[br]', '\n').replace('[BR]', '\n'))
+            text = '\n'.join(j.strip() for j in text.split('\n') if j.strip())
+            # .50 are hundredths here, not milliseconds like in SRT
+            start, end = self._assTc2ms(tmp.group(1).replace(',', '.')), self._assTc2ms(tmp.group(2).replace(',', '.'))
+            if text and end > start:
+                subAtoms.append({'start': start, 'end': end, 'text': text})
+        return subAtoms
+
+    def _tmPlayerToAtoms(self, subText):
+        # hh:mm:ss:text or hh:mm:ss=text, no end time: until the next line, at most 5s
+        subAtoms = []
+        reObj = re.compile(r'^\s*(\d{1,2}):(\d{2}):(\d{2})[:=](.*)$')
+        for line in subText.replace('\r\n', '\n').split('\n'):
+            tmp = reObj.search(line)
+            if tmp is None:
+                continue
+            text = '\n'.join(j.strip() for j in self._mplClearText(tmp.group(4)).split('\n') if j.strip())
+            start = (int(tmp.group(1)) * 3600 + int(tmp.group(2)) * 60 + int(tmp.group(3))) * 1000
+            if subAtoms and subAtoms[-1]['end'] > start:
+                subAtoms[-1]['end'] = max(subAtoms[-1]['start'] + 1, start)
+            if text:
+                subAtoms.append({'start': start, 'end': start + 5000, 'text': text})
+        return subAtoms
+
+    @staticmethod
+    def _fpsFromPath(filePath, fps=0):
+        # fps given by the caller, else _fps25.0 of the downloaded file name, else 0 (unknown)
+        if fps <= 0:
+            tmp = CParsingHelper.getSearchGroups(os_path.splitext(filePath)[0].upper() + '_', '_FPS([0-9.]+)_')[0]
+            try:
+                fps = float(tmp) if tmp else 0
+            except ValueError:
+                fps = 0
+        return fps
 
     # def _preparPails(self, scope):
 
@@ -249,14 +392,7 @@ class IPTVSubtitlesHandler:
         # try load subtitles using C-library
         try:
             if IsSubtitlesParserExtensionCanBeUsed():
-                try:
-                    if fps <= 0:
-                        filename, file_extension = os_path.splitext(filePath)
-                        tmp = CParsingHelper.getSearchGroups(filename.upper() + '_', '_FPS([0-9.]+)_')[0]
-                        if '' != tmp:
-                            fps = float(tmp)
-                except Exception:
-                    printExc()
+                fps = self._fpsFromPath(filePath, fps)
 
                 from Plugins.Extensions.IPTVPlayer.libs.iptvsubparser import _subparser as subparser
                 with io.open(filePath, 'r', encoding=encoding, errors='replace', newline='') as fp:
@@ -297,13 +433,12 @@ class IPTVSubtitlesHandler:
                         if self.saveCache and len(self.subAtoms):
                             self._saveToCache(filePath)
                     return True
-                else:
-                    return False
+                printDBG("OpenSubOrg.loadSubtitles C-parser failed, trying the Python parsers")
         except Exception:
             printExc()
-        return self._loadSubtitles(filePath, encoding)
+        return self._loadSubtitles(filePath, encoding, fps)
 
-    def _loadSubtitles(self, filePath, encoding):
+    def _loadSubtitles(self, filePath, encoding, fps=0):
         # printDBG("OpenSubOrg._loadSubtitles filePath[%s]" % filePath)
         self.saveCache = True
         self.subAtoms = []
@@ -312,17 +447,23 @@ class IPTVSubtitlesHandler:
         if not sts:
             try:
                 with io.open(filePath, 'r', encoding=encoding, errors='replace', newline='') as fp:
-                    subText = ensure_str(fp.read())
-                    if filePath.endswith('.srt'):
-                        self.subAtoms = self._srtToAtoms(subText)
-                        sts = True
-                    elif filePath.endswith('.vtt'):
-                        self.subAtoms = self._srtToAtoms(subText)
-                        sts = True
-                    elif filePath.endswith('.mpl'):
-                        self.subAtoms = self._mplToAtoms(subText)
-                        sts = True
-                    printDBG("OpenSubOrg._loadSubtitles loaded %s subs" % len(self.subAtoms))
+                    subText = ensure_str(fp.read().lstrip(u'\ufeff'))
+                fmt = self._detectFormat(subText, os_path.splitext(filePath)[1].lower().lstrip('.'))
+                if fmt == 'srt':
+                    self.subAtoms = self._srtToAtoms(subText)
+                elif fmt == 'mpl':
+                    self.subAtoms = self._mplToAtoms(subText)
+                elif fmt == 'ass':
+                    self.subAtoms = self._assToAtoms(subText)
+                elif fmt == 'microdvd':
+                    self.subAtoms = self._microDvdToAtoms(subText, self._fpsFromPath(filePath, fps))
+                elif fmt == 'subviewer':
+                    self.subAtoms = self._subViewerToAtoms(subText)
+                elif fmt == 'tmplayer':
+                    self.subAtoms = self._tmPlayerToAtoms(subText)
+                # a format we know but no usable cue in it is a failed load, not an empty track
+                sts = fmt != '' and len(self.subAtoms) > 0
+                printDBG("OpenSubOrg._loadSubtitles format[%s] loaded %s subs" % (fmt, len(self.subAtoms)))
             except Exception:
                 printExc('EXCEPTION in OpenSubOrg._loadSubtitles')
         else:
