@@ -8,7 +8,8 @@
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, GetIPTVNotify
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, CSelOneLink
-from Components.config import config, getConfigListEntry, ConfigYesNo, ConfigText
+from Components.config import config, getConfigListEntry, ConfigYesNo
+from Plugins.Extensions.IPTVPlayer.components.configsecret import ConfigLogin, ConfigSecret
 from Plugins.Extensions.IPTVPlayer.libs.youtubeparser import YouTubeParser
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs import ph
@@ -26,8 +27,8 @@ from Screens.MessageBox import MessageBox
 # Config options for HOST
 ####################################################
 config.plugins.iptvplayer.MusicBox_premium = ConfigYesNo(default=False)
-config.plugins.iptvplayer.MusicBox_login = ConfigText(default="", fixed_size=False)
-config.plugins.iptvplayer.api_key_youtube = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.MusicBox_login = ConfigLogin(default="", fixed_size=False)
+config.plugins.iptvplayer.api_key_youtube = ConfigSecret(default="", fixed_size=False)
 config.plugins.iptvplayer.api_key_warning = ConfigYesNo(default=True)
 
 ####################################################

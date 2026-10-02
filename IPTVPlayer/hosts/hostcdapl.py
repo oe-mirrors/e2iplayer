@@ -17,7 +17,8 @@ from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str, ens
 ###################################################
 # FOREIGN import
 ###################################################
-from Components.config import config, ConfigSelection, ConfigText, getConfigListEntry
+from Components.config import config, ConfigSelection, getConfigListEntry
+from Plugins.Extensions.IPTVPlayer.components.configsecret import ConfigLogin, ConfigSecret
 import re
 from binascii import hexlify
 from hashlib import md5
@@ -36,8 +37,8 @@ from Screens.MessageBox import MessageBox
 # Config options for HOST
 ###################################################
 config.plugins.iptvplayer.cda_searchsort = ConfigSelection(default="best", choices=[("best", "Najtrafniejsze"), ("date", "Najnowsze"), ("rate", "Najlepiej oceniane"), ("alf", "Alfabetycznie")])
-config.plugins.iptvplayer.cda_login = ConfigText(default="", fixed_size=False)
-config.plugins.iptvplayer.cda_password = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.cda_login = ConfigLogin(default="", fixed_size=False)
+config.plugins.iptvplayer.cda_password = ConfigSecret(default="", fixed_size=False)
 
 
 def GetConfigList():

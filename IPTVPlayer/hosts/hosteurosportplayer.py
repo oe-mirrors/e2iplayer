@@ -19,14 +19,15 @@ from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 import time
 from datetime import datetime, timedelta, timezone
 import operator
-from Components.config import config, ConfigText, getConfigListEntry
+from Components.config import config, getConfigListEntry
+from Plugins.Extensions.IPTVPlayer.components.configsecret import ConfigLogin, ConfigSecret
 ###################################################
 
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.eurosportplayer_login = ConfigText(default="", fixed_size=False)
-config.plugins.iptvplayer.eurosportplayer_password = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.eurosportplayer_login = ConfigLogin(default="", fixed_size=False)
+config.plugins.iptvplayer.eurosportplayer_password = ConfigSecret(default="", fixed_size=False)
 
 
 def GetConfigList():

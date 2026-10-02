@@ -19,6 +19,7 @@ from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
 # FOREIGN import
 ###################################################
 from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, getConfigListEntry, configfile
+from Plugins.Extensions.IPTVPlayer.components.configsecret import ConfigLogin, ConfigSecret
 from datetime import datetime, timedelta, date
 import re
 ###################################################
@@ -30,8 +31,8 @@ import re
 from Screens.MessageBox import MessageBox
 ###################################################
 config.plugins.iptvplayer.tvpvod_premium = ConfigYesNo(default=False)
-config.plugins.iptvplayer.tvpvod_login = ConfigText(default=readCFG('tvpvod_login', ""), fixed_size=False)
-config.plugins.iptvplayer.tvpvod_password = ConfigText(default=readCFG('tvpvod_password', ""), fixed_size=False)
+config.plugins.iptvplayer.tvpvod_login = ConfigLogin(default=readCFG('tvpvod_login', ""), fixed_size=False)
+config.plugins.iptvplayer.tvpvod_password = ConfigSecret(default=readCFG('tvpvod_password', ""), fixed_size=False)
 
 config.plugins.iptvplayer.tvpvod_proxy = ConfigSelection(default="None", choices=GetAlternativeProxyChoices())
 # legacy: the old yes/no switch used the "Polish proxy server" of the main settings, which is gone -

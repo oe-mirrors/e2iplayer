@@ -14,7 +14,8 @@ from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute
 ###################################################
 import re
 import json
-from Components.config import config, ConfigText, getConfigListEntry
+from Components.config import config, getConfigListEntry
+from Plugins.Extensions.IPTVPlayer.components.configsecret import ConfigLogin, ConfigSecret
 ###################################################
 
 ###################################################
@@ -26,8 +27,8 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.nuteczki_login = ConfigText(default="", fixed_size=False)
-config.plugins.iptvplayer.nuteczki_password = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.nuteczki_login = ConfigLogin(default="", fixed_size=False)
+config.plugins.iptvplayer.nuteczki_password = ConfigSecret(default="", fixed_size=False)
 
 
 def GetConfigList():

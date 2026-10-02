@@ -8,7 +8,8 @@ try:
 except ImportError:  # E2iPlayer builds without the numeric keypad - full keyboard instead
     GetNumericKeyboard = None
 from Plugins.Extensions.IPTVPlayer.components.asynccall import MainSessionWrapper
-from Components.config import ConfigSelection, config, getConfigListEntry, ConfigYesNo, ConfigText
+from Components.config import ConfigSelection, config, getConfigListEntry, ConfigYesNo
+from Plugins.Extensions.IPTVPlayer.components.configsecret import ConfigLogin, ConfigSecret
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase, RetHost
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMetaByImdbId
@@ -24,8 +25,8 @@ from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEna
 
 config.plugins.iptvplayer.serienstreamto_hosts = ConfigSelection(default="http://186.2.175.5/", choices=[("http://186.2.175.5/", "186.2.175.5"), ("https://serienstream.to/", "serienstream.to"), ("https://serienstream.cx/", "serienstream.cx")])  # NOSONAR
 config.plugins.iptvplayer.serienstreamto_uselogin = ConfigYesNo(default=False)
-config.plugins.iptvplayer.serienstreamto_login = ConfigText(default="", fixed_size=False)
-config.plugins.iptvplayer.serienstreamto_password = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.serienstreamto_login = ConfigLogin(default="", fixed_size=False)
+config.plugins.iptvplayer.serienstreamto_password = ConfigSecret(default="", fixed_size=False)
 config.plugins.iptvplayer.serienstreamto_mkv = ConfigYesNo(default=True)
 
 

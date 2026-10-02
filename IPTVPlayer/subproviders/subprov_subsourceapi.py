@@ -9,7 +9,8 @@ import os
 import zipfile
 import requests
 import re
-from Components.config import config, ConfigText, ConfigSubsection
+from Components.config import config, ConfigSubsection
+from Plugins.Extensions.IPTVPlayer.components.configsecret import ConfigSecret
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import (
     TranslateTXT as _,
     SetIPTVPlayerLastHostError,
@@ -33,7 +34,7 @@ if not hasattr(config.plugins, "iptvplayer"):
 
 # use the existing SubSource API key variable
 if not hasattr(config.plugins.iptvplayer, "subsourceapi"):
-    config.plugins.iptvplayer.subsourceapi = ConfigText(default="", fixed_size=False)
+    config.plugins.iptvplayer.subsourceapi = ConfigSecret(default="", fixed_size=False)
 
 
 def GetConfigList():

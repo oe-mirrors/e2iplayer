@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Last Modified: 22.06.2025
 import json
-from Components.config import ConfigText, config, getConfigListEntry
+from Components.config import config, getConfigListEntry
+from Plugins.Extensions.IPTVPlayer.components.configsecret import ConfigLogin, ConfigSecret
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import GetIPTVNotify, SetIPTVPlayerLastHostError, TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.libs.youtubeparser import YouTubeParser
@@ -11,8 +12,8 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import byteify, printDBG, pri
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Screens.MessageBox import MessageBox
 
-config.plugins.iptvplayer.maxtvgo_login = ConfigText(default="", fixed_size=False)
-config.plugins.iptvplayer.maxtvgo_password = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.maxtvgo_login = ConfigLogin(default="", fixed_size=False)
+config.plugins.iptvplayer.maxtvgo_password = ConfigSecret(default="", fixed_size=False)
 
 
 def GetConfigList():
