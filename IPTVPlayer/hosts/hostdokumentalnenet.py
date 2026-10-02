@@ -17,14 +17,15 @@ try:
     import json
 except Exception:
     import simplejson as json
-from Components.config import config, ConfigText, getConfigListEntry
+from Components.config import config, getConfigListEntry
+from Plugins.Extensions.IPTVPlayer.components.configsecret import ConfigLogin, ConfigSecret
 ###################################################
 
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.plusdede_login = ConfigText(default="", fixed_size=False)
-config.plugins.iptvplayer.plusdede_password = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.plusdede_login = ConfigLogin(default="", fixed_size=False)
+config.plugins.iptvplayer.plusdede_password = ConfigSecret(default="", fixed_size=False)
 
 
 def GetConfigList():

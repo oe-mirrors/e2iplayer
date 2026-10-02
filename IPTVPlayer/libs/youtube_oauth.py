@@ -22,9 +22,10 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import common
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_urlencode
-from Components.config import config, ConfigText, configfile
+from Components.config import config, configfile
+from Plugins.Extensions.IPTVPlayer.components.configsecret import ConfigSecret
 
-config.plugins.iptvplayer.youtube_oauth_refresh_token = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.youtube_oauth_refresh_token = ConfigSecret(default="", fixed_size=False)
 
 _CLIENT_ID = "861556708454-d6dlm3lh05idd8npek18k6be8ba3oc68.apps.googleusercontent.com"  # NOSONAR
 # public "installed app" OAuth credential for Google's TV/limited-input-device

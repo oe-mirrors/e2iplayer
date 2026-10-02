@@ -13,7 +13,8 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import hex_md5
 ###################################################
 # FOREIGN import
 ###################################################
-from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, getConfigListEntry
+from Components.config import config, ConfigSelection, ConfigYesNo, getConfigListEntry
+from Plugins.Extensions.IPTVPlayer.components.configsecret import ConfigLogin, ConfigSecret
 from hashlib import md5
 ############################################
 
@@ -22,8 +23,8 @@ from hashlib import md5
 ###################################################
 config.plugins.iptvplayer.filmontvcom_streamprotocol = ConfigSelection(default="rtmp", choices=[("rtmp", "rtmp"), ("rtsp", "rtsp"), ("hls", "HLS - m3u8")])
 config.plugins.iptvplayer.filmontvcom_premium = ConfigYesNo(default=False)
-config.plugins.iptvplayer.filmontvcom_login = ConfigText(default="", fixed_size=False)
-config.plugins.iptvplayer.filmontvcom_password = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.filmontvcom_login = ConfigLogin(default="", fixed_size=False)
+config.plugins.iptvplayer.filmontvcom_password = ConfigSecret(default="", fixed_size=False)
 
 
 def GetConfigList():

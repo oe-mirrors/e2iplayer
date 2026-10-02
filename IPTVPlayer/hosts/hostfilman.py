@@ -34,14 +34,15 @@ try:
 except Exception:
     import simplejson as json
 from Components.config import config, ConfigText, ConfigSelection, getConfigListEntry
+from Plugins.Extensions.IPTVPlayer.components.configsecret import ConfigLogin, ConfigSecret
 
 ###################################################
 
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.filman_login = ConfigText(default="", fixed_size=False)
-config.plugins.iptvplayer.filman_password = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.filman_login = ConfigLogin(default="", fixed_size=False)
+config.plugins.iptvplayer.filman_password = ConfigSecret(default="", fixed_size=False)
 config.plugins.iptvplayer.filman_cookie_phpsessid = ConfigText(default="", fixed_size=False)
 
 

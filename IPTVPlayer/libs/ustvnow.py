@@ -17,7 +17,8 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 ###################################################
 # FOREIGN import
 ###################################################
-from Components.config import config, ConfigYesNo, ConfigText, getConfigListEntry
+from Components.config import config, ConfigYesNo, getConfigListEntry
+from Plugins.Extensions.IPTVPlayer.components.configsecret import ConfigLogin, ConfigSecret
 from urllib.parse import urlencode
 from datetime import datetime, timedelta, timezone
 ############################################
@@ -32,8 +33,8 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.ustvnow_login = ConfigText(default="", fixed_size=False)
-config.plugins.iptvplayer.ustvnow_password = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.ustvnow_login = ConfigLogin(default="", fixed_size=False)
+config.plugins.iptvplayer.ustvnow_password = ConfigSecret(default="", fixed_size=False)
 config.plugins.iptvplayer.ustvnow_only_available = ConfigYesNo(default=True)
 config.plugins.iptvplayer.ustvnow_epg = ConfigYesNo(default=True)
 

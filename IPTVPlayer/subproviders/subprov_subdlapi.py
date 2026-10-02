@@ -3,7 +3,8 @@ import os
 import zipfile
 import requests
 import re
-from Components.config import config, ConfigText, ConfigSubsection
+from Components.config import config, ConfigSubsection
+from Plugins.Extensions.IPTVPlayer.components.configsecret import ConfigSecret
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.isubprovider import (
     CSubProviderBase,
@@ -28,7 +29,7 @@ DOWNLOAD_BASE = "https://dl.subdl.com/subtitle"
 if not hasattr(config.plugins, "iptvplayer"):
     config.plugins.iptvplayer = ConfigSubsection()
 if not hasattr(config.plugins.iptvplayer, "subdlapi"):
-    config.plugins.iptvplayer.subdlapi = ConfigText(default="", fixed_size=False)
+    config.plugins.iptvplayer.subdlapi = ConfigSecret(default="", fixed_size=False)
 
 
 def GetConfigList():

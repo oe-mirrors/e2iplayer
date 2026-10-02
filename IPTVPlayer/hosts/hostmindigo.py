@@ -25,7 +25,8 @@ from time import time
 import zlib
 import base64
 from hashlib import sha1, sha256
-from Components.config import config, ConfigText, getConfigListEntry
+from Components.config import config, getConfigListEntry
+from Plugins.Extensions.IPTVPlayer.components.configsecret import ConfigLogin, ConfigSecret
 ###################################################
 try:
     import cookielib
@@ -42,8 +43,8 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.mindigohu_login = ConfigText(default="", fixed_size=False)
-config.plugins.iptvplayer.mindigohu_password = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.mindigohu_login = ConfigLogin(default="", fixed_size=False)
+config.plugins.iptvplayer.mindigohu_password = ConfigSecret(default="", fixed_size=False)
 
 
 def GetConfigList():

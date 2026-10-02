@@ -20,6 +20,7 @@ from Plugins.Extensions.IPTVPlayer.__init__ import _
 ###################################################
 from Components.config import config, ConfigSubsection, ConfigSelection, ConfigDirectory, ConfigYesNo, ConfigOnOff, ConfigInteger, \
                               ConfigText, ConfigSelectionNumber
+from Plugins.Extensions.IPTVPlayer.components.configsecret import ConfigLogin, ConfigSecret
 ###################################################
 
 
@@ -161,22 +162,22 @@ config.plugins.iptvplayer.fakeAllConfigDelete = ConfigSelection(default="fake", 
 
 config.plugins.iptvplayer.ZablokujWMV = ConfigYesNo(default=True)
 
-config.plugins.iptvplayer.vkcom_login = ConfigText(default="", fixed_size=False)
-config.plugins.iptvplayer.vkcom_password = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.vkcom_login = ConfigLogin(default="", fixed_size=False)
+config.plugins.iptvplayer.vkcom_password = ConfigSecret(default="", fixed_size=False)
 
-config.plugins.iptvplayer.fichiercom_login = ConfigText(default="", fixed_size=False)
-config.plugins.iptvplayer.fichiercom_password = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.fichiercom_login = ConfigLogin(default="", fixed_size=False)
+config.plugins.iptvplayer.fichiercom_password = ConfigSecret(default="", fixed_size=False)
 
-config.plugins.iptvplayer.iptvplayer_login = ConfigText(default="", fixed_size=False)
-config.plugins.iptvplayer.iptvplayer_password = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.iptvplayer_login = ConfigLogin(default="", fixed_size=False)
+config.plugins.iptvplayer.iptvplayer_password = ConfigSecret(default="", fixed_size=False)
 
 config.plugins.iptvplayer.useSubtitlesParserExtension = ConfigYesNo(default=True)
-config.plugins.iptvplayer.subsourceapi = ConfigText(default="", fixed_size=False)
-config.plugins.iptvplayer.subdlapi = ConfigText(default="", fixed_size=False)
-config.plugins.iptvplayer.opensuborg_login = ConfigText(default="", fixed_size=False)
-config.plugins.iptvplayer.opensuborg_password = ConfigText(default="", fixed_size=False)
-config.plugins.iptvplayer.napisy24pl_login = ConfigText(default="", fixed_size=False)
-config.plugins.iptvplayer.napisy24pl_password = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.subsourceapi = ConfigSecret(default="", fixed_size=False)
+config.plugins.iptvplayer.subdlapi = ConfigSecret(default="", fixed_size=False)
+config.plugins.iptvplayer.opensuborg_login = ConfigLogin(default="", fixed_size=False)
+config.plugins.iptvplayer.opensuborg_password = ConfigSecret(default="", fixed_size=False)
+config.plugins.iptvplayer.napisy24pl_login = ConfigLogin(default="", fixed_size=False)
+config.plugins.iptvplayer.napisy24pl_password = ConfigSecret(default="", fixed_size=False)
 
 config.plugins.iptvplayer.debugprint = ConfigSelection(default="", choices=[("", _("No")), ("console", _("Yes, to console")),
                                                                             ("debugfile", _("Yes, to file /hdd/iptv.dbg")),
@@ -271,14 +272,14 @@ config.plugins.iptvplayer.captcha_bypass = ConfigSelection(default="", choices=[
 # to the receiver; off = the plain address opens the page directly (the original behaviour)
 config.plugins.iptvplayer.mye2i_security = ConfigYesNo(default=False)
 
-config.plugins.iptvplayer.api_key_9kweu = ConfigText(default="", fixed_size=False)
-config.plugins.iptvplayer.api_key_2captcha = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.api_key_9kweu = ConfigSecret(default="", fixed_size=False)
+config.plugins.iptvplayer.api_key_2captcha = ConfigSecret(default="", fixed_size=False)
 
-config.plugins.iptvplayer.myjd_login = ConfigText(default="", fixed_size=False)
-config.plugins.iptvplayer.myjd_password = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.myjd_login = ConfigLogin(default="", fixed_size=False)
+config.plugins.iptvplayer.myjd_password = ConfigSecret(default="", fixed_size=False)
 config.plugins.iptvplayer.myjd_jdname = ConfigText(default="", fixed_size=False)
 
-config.plugins.iptvplayer.api_key_youtube = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.api_key_youtube = ConfigSecret(default="", fixed_size=False)
 
 # Hosts lists
 config.plugins.iptvplayer.fakeHostsList = ConfigSelection(default="fake", choices=[("fake", "  ")])
@@ -313,8 +314,8 @@ config.plugins.iptvplayer.meta_tvmaze = ConfigYesNo(default=True)
 config.plugins.iptvplayer.meta_cinemeta = ConfigYesNo(default=True)
 config.plugins.iptvplayer.meta_omdb = ConfigYesNo(default=False)
 config.plugins.iptvplayer.meta_language = ConfigSelection(default="auto", choices=[("auto", _("Auto")), ("ar", _("Arabic")), ("cs", _("Czech")), ("de", _("German")), ("el", _("Greek")), ("en", _("English")), ("es", _("Spanish")), ("fr", _("French")), ("hu", _("Hungarian")), ("it", _("Italian")), ("nl", _("Dutch")), ("pl", _("Polish")), ("pt", _("Portuguese")), ("ru", _("Russian")), ("tr", _("Turkish")), ("uk", _("Ukrainian"))])
-config.plugins.iptvplayer.meta_tmdb_apikey = ConfigText(default="", fixed_size=False)
-config.plugins.iptvplayer.meta_omdb_apikey = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.meta_tmdb_apikey = ConfigSecret(default="", fixed_size=False)
+config.plugins.iptvplayer.meta_omdb_apikey = ConfigSecret(default="", fixed_size=False)
 config.plugins.iptvplayer.sidecar_enabled = ConfigYesNo(default=True)
 config.plugins.iptvplayer.normalize_media_names = ConfigYesNo(default=True)
 # OFF by default. The 7reels/cineb community-host resolvers VidEasy,

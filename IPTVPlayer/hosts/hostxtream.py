@@ -12,6 +12,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import common
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Components.config import config, ConfigText, getConfigListEntry
+from Plugins.Extensions.IPTVPlayer.components.configsecret import ConfigLogin, ConfigSecret
 import json
 import os
 
@@ -25,9 +26,9 @@ try:
     if not hasattr(config.plugins.iptvplayer, 'xtream_host'):
         config.plugins.iptvplayer.xtream_host = ConfigText(default="", fixed_size=False)
     if not hasattr(config.plugins.iptvplayer, 'xtream_username'):
-        config.plugins.iptvplayer.xtream_username = ConfigText(default="", fixed_size=False)
+        config.plugins.iptvplayer.xtream_username = ConfigLogin(default="", fixed_size=False)
     if not hasattr(config.plugins.iptvplayer, 'xtream_password'):
-        config.plugins.iptvplayer.xtream_password = ConfigText(default="", fixed_size=False)
+        config.plugins.iptvplayer.xtream_password = ConfigSecret(default="", fixed_size=False)
     if not hasattr(config.plugins.iptvplayer, 'xtream_useragent'):
         config.plugins.iptvplayer.xtream_useragent = ConfigText(default="", fixed_size=False)
 except Exception as e:

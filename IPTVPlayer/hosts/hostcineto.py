@@ -9,7 +9,8 @@ from Plugins.Extensions.IPTVPlayer.components.captcha_helper import CaptchaHelpe
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetDefaultLang, MergeDicts
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
-from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, getConfigListEntry
+from Components.config import config, ConfigSelection, ConfigYesNo, getConfigListEntry
+from Plugins.Extensions.IPTVPlayer.components.configsecret import ConfigSecret
 
 ###################################################
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus, urllib_urlencode
@@ -23,8 +24,8 @@ import re
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.api_key_9kweu = ConfigText(default="", fixed_size=False)
-config.plugins.iptvplayer.api_key_2captcha = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.api_key_9kweu = ConfigSecret(default="", fixed_size=False)
+config.plugins.iptvplayer.api_key_2captcha = ConfigSecret(default="", fixed_size=False)
 config.plugins.iptvplayer.cineto_bypassrecaptcha = ConfigSelection(default="mye2i", choices=[("mye2i", "MyE2i (solve on your phone/PC)"),
                                                                                             ("9kw.eu", "https://9kw.eu/"),
                                                                                             ("2captcha.com", "https://2captcha.com/")])

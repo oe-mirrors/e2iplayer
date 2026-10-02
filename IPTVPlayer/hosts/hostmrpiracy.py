@@ -22,7 +22,8 @@ try:
     import json
 except Exception:
     import simplejson as json
-from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, getConfigListEntry
+from Components.config import config, ConfigSelection, ConfigYesNo, getConfigListEntry
+from Plugins.Extensions.IPTVPlayer.components.configsecret import ConfigLogin, ConfigSecret
 from Plugins.Extensions.IPTVPlayer.libs.recaptcha_v2 import UnCaptchaReCaptcha as UnCaptchaReCaptcha_fallback
 ###################################################
 
@@ -36,11 +37,11 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.mrpiracy_login = ConfigText(default="", fixed_size=False)
-config.plugins.iptvplayer.mrpiracy_password = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.mrpiracy_login = ConfigLogin(default="", fixed_size=False)
+config.plugins.iptvplayer.mrpiracy_password = ConfigSecret(default="", fixed_size=False)
 
-config.plugins.iptvplayer.api_key_9kweu = ConfigText(default="", fixed_size=False)
-config.plugins.iptvplayer.api_key_2captcha = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.api_key_9kweu = ConfigSecret(default="", fixed_size=False)
+config.plugins.iptvplayer.api_key_2captcha = ConfigSecret(default="", fixed_size=False)
 config.plugins.iptvplayer.mrpiracy_linkcache = ConfigYesNo(default=True)
 config.plugins.iptvplayer.mrpiracy_bypassrecaptcha = ConfigSelection(default="None", choices=[("None", _("None")),
                                                                                                  ("9kw.eu", "https://9kw.eu/"),

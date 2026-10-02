@@ -18,7 +18,8 @@ try:
     import json
 except Exception:
     import simplejson as json
-from Components.config import config, ConfigText, getConfigListEntry
+from Components.config import config, getConfigListEntry
+from Plugins.Extensions.IPTVPlayer.components.configsecret import ConfigLogin, ConfigSecret
 ###################################################
 
 
@@ -31,8 +32,8 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.egybest_login = ConfigText(default="", fixed_size=False)
-config.plugins.iptvplayer.egybest_password = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.egybest_login = ConfigLogin(default="", fixed_size=False)
+config.plugins.iptvplayer.egybest_password = ConfigSecret(default="", fixed_size=False)
 
 
 def GetConfigList():

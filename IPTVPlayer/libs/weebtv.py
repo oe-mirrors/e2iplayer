@@ -11,7 +11,8 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 ###################################################
 # FOREIGN import
 ###################################################
-from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, getConfigListEntry
+from Components.config import config, ConfigSelection, ConfigYesNo, getConfigListEntry
+from Plugins.Extensions.IPTVPlayer.components.configsecret import ConfigLogin, ConfigSecret
 from urllib.parse import unquote_plus
 ############################################
 
@@ -26,8 +27,8 @@ from Screens.MessageBox import MessageBox
 # Config options for HOST
 ###################################################
 config.plugins.iptvplayer.weebtv_premium = ConfigYesNo(default=True)
-config.plugins.iptvplayer.weebtv_login = ConfigText(default="", fixed_size=False)
-config.plugins.iptvplayer.weebtv_password = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.weebtv_login = ConfigLogin(default="", fixed_size=False)
+config.plugins.iptvplayer.weebtv_password = ConfigSecret(default="", fixed_size=False)
 config.plugins.iptvplayer.weebtv_videoquality = ConfigSelection(default="1", choices=[("0", _("Low")), ("1", _("Standard")), ("2", _("High (or HD)"))])
 
 

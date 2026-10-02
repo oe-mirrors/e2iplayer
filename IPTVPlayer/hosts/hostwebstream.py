@@ -28,7 +28,8 @@ from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 # FOREIGN import
 ###################################################
 import re
-from Components.config import config, ConfigSelection, ConfigText, getConfigListEntry
+from Components.config import config, ConfigSelection, getConfigListEntry
+from Plugins.Extensions.IPTVPlayer.components.configsecret import ConfigSecret
 ############################################
 
 
@@ -36,7 +37,7 @@ from Components.config import config, ConfigSelection, ConfigText, getConfigList
 # Config options for HOST
 ###################################################
 # free key from https://api.windy.com/webcams - required, the listing API is authenticated
-config.plugins.iptvplayer.windy_api_key = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.windy_api_key = ConfigSecret(default="", fixed_size=False)
 config.plugins.iptvplayer.fake_separator = ConfigSelection(default=" ", choices=[(" ", " ")])
 
 

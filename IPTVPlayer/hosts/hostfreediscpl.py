@@ -8,12 +8,13 @@ from Plugins.Extensions.IPTVPlayer.libs import ph
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 import re
 from copy import deepcopy
-from Components.config import config, ConfigText, getConfigListEntry
+from Components.config import config, getConfigListEntry
+from Plugins.Extensions.IPTVPlayer.components.configsecret import ConfigLogin, ConfigSecret
 from Plugins.Extensions.IPTVPlayer.components.iptvmultipleinputbox import IPTVMultipleInputBox
 from Screens.MessageBox import MessageBox
 
-config.plugins.iptvplayer.freediscpl_login = ConfigText(default="", fixed_size=False)
-config.plugins.iptvplayer.freediscpl_password = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.freediscpl_login = ConfigLogin(default="", fixed_size=False)
+config.plugins.iptvplayer.freediscpl_password = ConfigSecret(default="", fixed_size=False)
 
 
 def GetConfigList():
