@@ -35,6 +35,26 @@ try:
     import pycurl
 except Exception:
     pass
+
+# Query/form fields that carry a credential (captcha services: 2captcha "key", 9kw "apikey",
+# DeathByCaptcha "password"). Their values never go into the debug log - users post it.
+_SECRET_FIELDS = ('key', 'apikey', 'api_key', 'password', 'passwd')
+_SECRET_FIELD_RE = re.compile(r'(?<![A-Za-z0-9_])(%s)=[^&\s\'"]+' % '|'.join(_SECRET_FIELDS), re.IGNORECASE)
+
+
+def maskSecrets(value):
+    """`value` (URL, form body, dict of params or post data) for the debug log, credentials as ***."""
+    if isinstance(value, dict):
+        return {k: '***' if str(k).lower() in _SECRET_FIELDS else maskSecrets(v) for k, v in value.items()}
+    if isinstance(value, (list, tuple)):
+        return type(value)(maskSecrets(v) for v in value)
+    if isinstance(value, bytes):
+        return _SECRET_FIELD_RE.sub(r'\1=***', value.decode('utf-8', 'replace'))
+    if isinstance(value, str):
+        return _SECRET_FIELD_RE.sub(r'\1=***', value)
+    return value
+
+
 try:
     from PIL import Image
 
@@ -755,7 +775,7 @@ class common:
             if 'User-Agent' not in headers:
                 headers['User-Agent'] = host
 
-            printDBG('pCommon - getPageWithPyCurl() -> params: ' + str(params))
+            printDBG('pCommon - getPageWithPyCurl() -> params: ' + str(maskSecrets(params)))
             printDBG('pCommon - getPageWithPyCurl() -> headers: ' + str(headers))
 
             if 'save_to_file' in params:
@@ -862,12 +882,12 @@ class common:
             proxy_gateway = params.get('proxy_gateway', '')
             if proxy_gateway != '':
                 pageUrl = proxy_gateway.format(quote_plus(pageUrl, ''))
-            printDBG("pageUrl: [%s]" % pageUrl)
+            printDBG("pageUrl: [%s]" % maskSecrets(pageUrl))
 
             curlSession.setopt(pycurl.URL, ensure_binary(pageUrl))
 
             if None is not post_data:
-                printDBG('pCommon - getPageWithPyCurl() -> post data: ' + str(post_data))
+                printDBG('pCommon - getPageWithPyCurl() -> post data: ' + str(maskSecrets(post_data)))
                 if params.get('raw_post_data', False):
                     curlSession.setopt(pycurl.POSTFIELDS, post_data)
                 elif params.get('multipart_post_data', False):
@@ -1484,7 +1504,7 @@ class common:
         if 'User-Agent' not in headers:
             headers['User-Agent'] = host
 
-        printDBG('pCommon - getURLRequestData() -> params: ' + str(params))
+        printDBG('pCommon - getURLRequestData() -> params: ' + str(maskSecrets(params)))
         printDBG('pCommon - getURLRequestData() -> headers: ' + str(headers))
 
         customOpeners = []
@@ -1551,16 +1571,16 @@ class common:
         proxy_gateway = params.get('proxy_gateway', '')
         if proxy_gateway != '':
             pageUrl = proxy_gateway.format(quote_plus(pageUrl, ''))
-        printDBG("pageUrl: [%s]" % pageUrl)
+        printDBG("pageUrl: [%s]" % maskSecrets(pageUrl))
         if '","' in pageUrl:  # points incorrectly formatted dict or list
             pageUrl = pageUrl.split('"', 1)[0]  # " is incorrect char for url, shouldn't be there so removing it and everything after it
-            printDBG("CORRECTED pageUrl: [%s]" % pageUrl)
+            printDBG("CORRECTED pageUrl: [%s]" % maskSecrets(pageUrl))
 
         # Encode URL with UTF-8 support for non-ASCII characters
         pageUrl = self.iriToUri(pageUrl)
 
         if None is not post_data:
-            printDBG('pCommon - getURLRequestData() -> post data: ' + str(post_data))
+            printDBG('pCommon - getURLRequestData() -> post data: ' + str(maskSecrets(post_data)))
             if params.get('raw_post_data', False):
                 dataPost = post_data
             elif params.get('multipart_post_data', False):

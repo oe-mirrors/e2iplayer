@@ -588,7 +588,7 @@ def translation_checks():
         try:
             request(base + '/?t=' + TOKEN)
             status, body, _loc = request(base + '/e2it.html')
-            href = re.search(r'<a href="([^"]*)" target="_blank"><button', body)
+            href = re.search(r'<button type="button" id="mye2i-solve" data-url="([^"]*)"', body)
             url = href.group(1).replace('&amp;', '&') if href else ''
             fragment = url.split('#', 1)[1] if '#' in url else ''
             params = dict(p.split('=', 1) for p in fragment.split('?', 1)[-1].split('&') if '=' in p)

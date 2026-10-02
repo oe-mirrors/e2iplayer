@@ -323,6 +323,7 @@ class ConfigMenu(ConfigBaseWidget):
         list.append(getConfigListEntry("    " + _("Show download manager after adding new item"), config.plugins.iptvplayer.IPTVDMShowAfterAdd))
         list.append(getConfigListEntry("    " + _("Number of downloaded files simultaneously"), config.plugins.iptvplayer.IPTVDMMaxDownloadItem))
         list.append(getConfigListEntry("    " + _("Program for file downloads (HTTP/FTP)"), config.plugins.iptvplayer.http_downloader))
+        list.append(getConfigListEntry("    " + _("File format of DASH (MPD) downloads"), config.plugins.iptvplayer.dash_out_container))
         list.append(getConfigListEntry("    " + _("Show download notification"), config.plugins.iptvplayer.IPTVDMShowNotification))
         if config.plugins.iptvplayer.IPTVDMShowNotification.value:
             list.append(getConfigListEntry("        " + _("Download notification duration"), config.plugins.iptvplayer.IPTVDMNotificationDuration))
@@ -335,6 +336,10 @@ class ConfigMenu(ConfigBaseWidget):
         list.append(getConfigListEntry("    ===== " + _("Solver").upper() + " =====",))
         list.append(getConfigListEntry("    " + _("Default captcha bypass"), config.plugins.iptvplayer.captcha_bypass))
         list.append(getConfigListEntry("    " + _("MyE2i extension: increase security"), config.plugins.iptvplayer.mye2i_security))
+        list.append(getConfigListEntry("    " + _("MyE2i: offer to open the page in (Android)"), config.plugins.iptvplayer.mye2i_browser))
+        if config.plugins.iptvplayer.mye2i_browser.value == "custom":
+            list.append(getConfigListEntry("        " + _("Launcher URI ({url} or {address} = address of the box)"), config.plugins.iptvplayer.mye2i_launcher_uri))
+        list.append(getConfigListEntry("    " + _("MyE2i: close the start page when done"), config.plugins.iptvplayer.mye2i_close_start_page))
         list.append(getConfigListEntry("    ===== " + _("Accounts & API keys").upper() + " =====",))
         # list.append(getConfigListEntry(_("Captcha solver order"), config.plugins.iptvplayer.captcha_bypass_order))
         # list.append(getConfigListEntry(_("Captcha bypass free service"), config.plugins.iptvplayer.captcha_bypass_free))
@@ -343,6 +348,8 @@ class ConfigMenu(ConfigBaseWidget):
         list.append(getConfigListEntry("    https://9kw.eu/ " + _("API Key"), config.plugins.iptvplayer.api_key_9kweu))
         # if config.plugins.iptvplayer.captcha_bypass_pay.value == "2captcha.com":
         list.append(getConfigListEntry("    https://2captcha.com/ " + _("API Key"), config.plugins.iptvplayer.api_key_2captcha))
+        list.append(getConfigListEntry("    https://deathbycaptcha.com/ " + _("login"), config.plugins.iptvplayer.deathbycaptcha_login))
+        list.append(getConfigListEntry("    https://deathbycaptcha.com/ " + _("password"), config.plugins.iptvplayer.deathbycaptcha_password))
         list.append(getConfigListEntry("    " + _("%s e-mail") % ('My JDownloader'), config.plugins.iptvplayer.myjd_login))
         list.append(getConfigListEntry("    " + _("%s password") % ('My JDownloader'), config.plugins.iptvplayer.myjd_password))
         list.append(getConfigListEntry("    " + _("%s device name") % ('My JDownloader'), config.plugins.iptvplayer.myjd_jdname))
@@ -765,6 +772,7 @@ class ConfigMenu(ConfigBaseWidget):
             config.plugins.iptvplayer.mark_favourite_items,
             config.plugins.iptvplayer.meta_tmdb,
             config.plugins.iptvplayer.meta_omdb,
+            config.plugins.iptvplayer.mye2i_browser,
             config.plugins.iptvplayer.storageExpertMode,
             config.plugins.iptvplayer.hostsListType,
             config.plugins.iptvplayer.skinforceallinternal,

@@ -7,6 +7,7 @@ from Plugins.Extensions.IPTVPlayer.libs.recaptcha_v2_2captcha import UnCaptchaRe
 from Plugins.Extensions.IPTVPlayer.libs.recaptcha_mye2i import UnCaptchaReCaptcha as UnCaptchaReCaptcha_mye2i
 from Plugins.Extensions.IPTVPlayer.libs.recaptcha_v2_myjd import UnCaptchaReCaptcha as UnCaptchaReCaptcha_myjd
 from Plugins.Extensions.IPTVPlayer.libs.recaptcha_v2 import UnCaptchaReCaptcha as UnCaptchaReCaptcha_fallback
+from Plugins.Extensions.IPTVPlayer.libs.captcha_deathbycaptcha import UnCaptchaReCaptcha as UnCaptchaReCaptcha_dbc
 
 from Plugins.Extensions.IPTVPlayer.libs.hcaptcha_2captcha import UnCaptchahCaptcha as UnCaptchahCaptcha_2captcha
 
@@ -51,6 +52,8 @@ class CaptchaHelper():
                     recaptcha = UnCaptchahCaptcha_2captcha()
                 else:
                     recaptcha = UnCaptchaReCaptcha_2captcha()
+            elif bypassCaptchaService == 'deathbycaptcha.com':
+                recaptcha = UnCaptchaReCaptcha_dbc()
             elif bypassCaptchaService == 'mye2i':
                 recaptcha = UnCaptchaReCaptcha_mye2i()
             elif config.plugins.iptvplayer.myjd_login.value != '' and config.plugins.iptvplayer.myjd_password.value != '':
@@ -60,6 +63,9 @@ class CaptchaHelper():
                 if isinstance(recaptcha, UnCaptchaReCaptcha_mye2i):
                     # only MyE2i can run score based reCAPTCHA (v3 / Enterprise, needs the action) and Turnstile with action/cdata
                     token = recaptcha.processCaptcha(sitekey, refUrl, captchaType, captchaAction, captchaData)
+                elif isinstance(recaptcha, UnCaptchaReCaptcha_dbc):
+                    # DeathByCaptcha: reCAPTCHA v2 / v3 (with the action) / Enterprise and Turnstile, no hCaptcha
+                    token = recaptcha.processCaptcha(sitekey, refUrl, captchaType, captchaAction)
                 else:
                     token = recaptcha.processCaptcha(sitekey, refUrl, captchaType)
             else:
