@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: E2iPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-02 19:34+0000\n"
+"POT-Creation-Date: 2026-10-02 22:49+0000\n"
 "PO-Revision-Date: 2026-09-27 08:11+0200\n"
 "Last-Translator: \n"
 "Language-Team: IPTVPlayer\n"
@@ -97,6 +97,14 @@ msgstr "%s - fournisseur de sous-titres"
 #, python-format
 msgid "%s buffering..."
 msgstr "%s mise en mémoire tampon..."
+
+#, python-format
+msgid "%s cannot solve this type of captcha."
+msgstr ""
+
+#, python-format
+msgid "%s could not solve the captcha."
+msgstr ""
 
 #, python-format
 msgid "%s device name"
@@ -1051,6 +1059,9 @@ msgstr "Défaut"
 msgid "Default (2 minutes)"
 msgstr "Par défaut (2 minutes)"
 
+msgid "Default browser"
+msgstr ""
+
 msgid "Default captcha bypass"
 msgstr "Contournement du captcha par défaut"
 
@@ -1802,6 +1813,9 @@ msgstr "Le fichier ne peut pas être téléchargé. Le gestionnaire de télécha
 msgid "File can not be downloaded. Protocol [%s] is unsupported"
 msgstr "Le fichier ne peut pas être téléchargé. Protocole[%s] n'est pas pris en charge"
 
+msgid "File format of DASH (MPD) downloads"
+msgstr ""
+
 #, python-format
 msgid "File might be corrupted (size: %d bytes)."
 msgstr "Le fichier est peut-être corrompu (taille: %d octets)."
@@ -2227,6 +2241,10 @@ msgstr "Installée: v%s - à jour"
 msgid "Interactive Learning Center(ILC)"
 msgstr "Interactive Learning Center (ILC)"
 
+#, python-format
+msgid "Invalid answer from %s."
+msgstr ""
+
 msgid "Invalid email."
 msgstr "E-mail non valide."
 
@@ -2421,6 +2439,10 @@ msgstr "Dernières vidéos des chaînes auxquelles vous êtes abonné."
 msgid "Latino"
 msgstr "Latino"
 
+#, python-brace-format
+msgid "Launcher URI ({url} or {address} = address of the box)"
+msgstr ""
+
 msgid "Left"
 msgstr "Gauche"
 
@@ -2544,6 +2566,9 @@ msgstr "Connexion requise"
 #, python-brace-format
 msgid "Login on {0} failed."
 msgstr "La connexion à {0} a échoué."
+
+msgid "Login or password is wrong."
+msgstr ""
 
 #, python-format
 msgid "Login to prijevodi-online.org failed: %s"
@@ -2801,6 +2826,12 @@ msgstr ""
 
 msgid "MyE2i script finished."
 msgstr "Script MyE2i terminé."
+
+msgid "MyE2i: close the start page when done"
+msgstr ""
+
+msgid "MyE2i: offer to open the page in (Android)"
+msgstr ""
 
 msgid ""
 "NO VIDEOS FOUND FOR NOW! \n"
@@ -3061,6 +3092,13 @@ msgstr "Issues ouvertes"
 msgid "Open pull requests"
 msgstr "Pull requests ouvertes"
 
+#, python-format
+msgid "Open this page in %s"
+msgstr ""
+
+msgid "Open this page in the chosen browser"
+msgstr ""
+
 msgid "OpenSubtitles.org sent a \"become VIP member\" note instead of the subtitle (download limit reached?)."
 msgstr ""
 
@@ -3103,6 +3141,9 @@ msgstr "Autres"
 
 msgid "Out of memory."
 msgstr "Mémoire insuffisante."
+
+msgid "Own launcher URI"
+msgstr ""
 
 msgid "Own model"
 msgstr "Modèle personnel"
@@ -3237,6 +3278,10 @@ msgstr "Veuillez saisir un texte de recherche."
 
 msgid "Please enter a valid link (http:// or https://)."
 msgstr "Veuillez saisir un lien valide (http:// ou https://)."
+
+#, python-format
+msgid "Please enter the %s login and password in the E2iPlayer settings (Captcha)."
+msgstr ""
 
 msgid "Please make sure that the folder for cache data (set in the configuration) is writable."
 msgstr "Veuillez vous assurer que le dossier des données de cache (défini dans la configuration) est inscriptible."
@@ -4395,6 +4440,12 @@ msgstr "Les chaînes YouTube de ce groupe n'ont aucune vidéo."
 msgid "The YouTube video ID is invalid."
 msgstr "L'ID vidéo YouTube n'est pas valide."
 
+msgid "The account is banned."
+msgstr ""
+
+msgid "The balance of the account is too low."
+msgstr ""
+
 msgid "The channel already exists in User Links."
 msgstr "La chaîne existe déjà dans les liens utilisateur."
 
@@ -4528,6 +4579,9 @@ msgid "The server did not send a subtitle file."
 msgstr ""
 
 msgid "The server limits the number of requests. Please try again in a few seconds."
+msgstr ""
+
+msgid "The service is overloaded. Please try again later."
 msgstr ""
 
 msgid "The settings are protected by a PIN, change them on the receiver."

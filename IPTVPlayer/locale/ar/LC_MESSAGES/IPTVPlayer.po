@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-02 19:34+0000\n"
+"POT-Creation-Date: 2026-10-02 22:49+0000\n"
 "PO-Revision-Date: 2026-08-30 08:38+0300\n"
 "Last-Translator: Mohamed Elsafty [angel_heart150@yahoo.com]\n"
 "Language-Team: \n"
@@ -98,6 +98,14 @@ msgstr "%s - مزود الترجمة"
 #, fuzzy, python-format
 msgid "%s buffering..."
 msgstr "[%s] مع التخزين المؤقت"
+
+#, python-format
+msgid "%s cannot solve this type of captcha."
+msgstr ""
+
+#, python-format
+msgid "%s could not solve the captcha."
+msgstr ""
 
 #, python-format
 msgid "%s device name"
@@ -1081,6 +1089,9 @@ msgstr "افتراضي"
 msgid "Default (2 minutes)"
 msgstr ""
 
+msgid "Default browser"
+msgstr ""
+
 msgid "Default captcha bypass"
 msgstr "تخطي الكابتشا الافتراضي"
 
@@ -1851,6 +1862,9 @@ msgstr "لا يمكن تحميل الملف. البروتوكول [%s] غير م
 msgid "File can not be downloaded. Protocol [%s] is unsupported"
 msgstr "لا يمكن تحميل الملف. البروتوكول [%s] غير مدعوم"
 
+msgid "File format of DASH (MPD) downloads"
+msgstr ""
+
 #, python-format
 msgid "File might be corrupted (size: %d bytes)."
 msgstr "قد يكون الملف تالفًا (الحجم: %d بايت)."
@@ -2284,6 +2298,10 @@ msgstr ""
 msgid "Interactive Learning Center(ILC)"
 msgstr "مركز التعلم التفاعلي (ILC)"
 
+#, python-format
+msgid "Invalid answer from %s."
+msgstr ""
+
 msgid "Invalid email."
 msgstr "البريد الإلكتروني غير صالح."
 
@@ -2482,6 +2500,10 @@ msgstr ""
 msgid "Latino"
 msgstr "لاتيني"
 
+#, python-brace-format
+msgid "Launcher URI ({url} or {address} = address of the box)"
+msgstr ""
+
 msgid "Left"
 msgstr "يسار"
 
@@ -2611,6 +2633,9 @@ msgstr "يتطلب تسجيل الدخول"
 #, python-brace-format
 msgid "Login on {0} failed."
 msgstr "فشل تسجيل الدخول على {0}."
+
+msgid "Login or password is wrong."
+msgstr ""
 
 #, python-format
 msgid "Login to prijevodi-online.org failed: %s"
@@ -2874,6 +2899,12 @@ msgstr ""
 
 msgid "MyE2i script finished."
 msgstr "انتهى تنفيذ سكربت MyE2i."
+
+msgid "MyE2i: close the start page when done"
+msgstr ""
+
+msgid "MyE2i: offer to open the page in (Android)"
+msgstr ""
 
 msgid ""
 "NO VIDEOS FOUND FOR NOW! \n"
@@ -3140,6 +3171,13 @@ msgstr ""
 msgid "Open pull requests"
 msgstr ""
 
+#, python-format
+msgid "Open this page in %s"
+msgstr ""
+
+msgid "Open this page in the chosen browser"
+msgstr ""
+
 msgid "OpenSubtitles.org sent a \"become VIP member\" note instead of the subtitle (download limit reached?)."
 msgstr ""
 
@@ -3183,6 +3221,9 @@ msgid "Others"
 msgstr "آخرون"
 
 msgid "Out of memory."
+msgstr ""
+
+msgid "Own launcher URI"
 msgstr ""
 
 msgid "Own model"
@@ -3321,6 +3362,10 @@ msgid "Please enter a search text."
 msgstr "حذف سجل البحث"
 
 msgid "Please enter a valid link (http:// or https://)."
+msgstr ""
+
+#, python-format
+msgid "Please enter the %s login and password in the E2iPlayer settings (Captcha)."
 msgstr ""
 
 msgid "Please make sure that the folder for cache data (set in the configuration) is writable."
@@ -4496,6 +4541,12 @@ msgstr ""
 msgid "The YouTube video ID is invalid."
 msgstr "معرّف الفيديو في YouTube غير صالح."
 
+msgid "The account is banned."
+msgstr ""
+
+msgid "The balance of the account is too low."
+msgstr ""
+
 msgid "The channel already exists in User Links."
 msgstr "العنصر موجود بالفعل في هذه المجموعة."
 
@@ -4627,6 +4678,9 @@ msgid "The server did not send a subtitle file."
 msgstr ""
 
 msgid "The server limits the number of requests. Please try again in a few seconds."
+msgstr ""
+
+msgid "The service is overloaded. Please try again later."
 msgstr ""
 
 msgid "The settings are protected by a PIN, change them on the receiver."

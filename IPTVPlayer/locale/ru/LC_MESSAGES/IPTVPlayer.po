@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-02 19:34+0000\n"
+"POT-Creation-Date: 2026-10-02 22:49+0000\n"
 "PO-Revision-Date: 2026-07-27 16:55+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -98,6 +98,14 @@ msgstr "%s - провайдер субтитров"
 #, fuzzy, python-format
 msgid "%s buffering..."
 msgstr "[%s] с буферизацией"
+
+#, python-format
+msgid "%s cannot solve this type of captcha."
+msgstr ""
+
+#, python-format
+msgid "%s could not solve the captcha."
+msgstr ""
 
 #, python-format
 msgid "%s device name"
@@ -1090,6 +1098,9 @@ msgstr "По умолчанию"
 msgid "Default (2 minutes)"
 msgstr ""
 
+msgid "Default browser"
+msgstr ""
+
 msgid "Default captcha bypass"
 msgstr "Обход капчи по умолчанию"
 
@@ -1869,6 +1880,9 @@ msgstr "Файл не скачиваем. Протокол [%s] не подде�
 msgid "File can not be downloaded. Protocol [%s] is unsupported"
 msgstr "Файл не скачиваем. Протокол [%s] не поддерживается"
 
+msgid "File format of DASH (MPD) downloads"
+msgstr ""
+
 #, python-format
 msgid "File might be corrupted (size: %d bytes)."
 msgstr "Файл может быть повреждён (размер: %d байт)."
@@ -2306,6 +2320,10 @@ msgstr ""
 msgid "Interactive Learning Center(ILC)"
 msgstr "Интерактивный Учебный Центр(ILC)"
 
+#, python-format
+msgid "Invalid answer from %s."
+msgstr ""
+
 msgid "Invalid email."
 msgstr "Неверный email."
 
@@ -2505,6 +2523,10 @@ msgstr ""
 msgid "Latino"
 msgstr "Латиноамериканец"
 
+#, python-brace-format
+msgid "Launcher URI ({url} or {address} = address of the box)"
+msgstr ""
+
 msgid "Left"
 msgstr ""
 
@@ -2635,6 +2657,9 @@ msgstr "Требуется логин"
 #, python-brace-format
 msgid "Login on {0} failed."
 msgstr "Ошибка входа в систему {0}."
+
+msgid "Login or password is wrong."
+msgstr ""
 
 #, python-format
 msgid "Login to prijevodi-online.org failed: %s"
@@ -2902,6 +2927,12 @@ msgstr ""
 msgid "MyE2i script finished."
 msgstr "Скрипт MyE2i завершен."
 
+msgid "MyE2i: close the start page when done"
+msgstr ""
+
+msgid "MyE2i: offer to open the page in (Android)"
+msgstr ""
+
 msgid ""
 "NO VIDEOS FOUND FOR NOW! \n"
 "CHECK BELOW ADVANCE SEARCH RESULTS!"
@@ -3168,6 +3199,13 @@ msgstr ""
 msgid "Open pull requests"
 msgstr ""
 
+#, python-format
+msgid "Open this page in %s"
+msgstr ""
+
+msgid "Open this page in the chosen browser"
+msgstr ""
+
 msgid "OpenSubtitles.org sent a \"become VIP member\" note instead of the subtitle (download limit reached?)."
 msgstr ""
 
@@ -3212,6 +3250,9 @@ msgid "Others"
 msgstr "Другие"
 
 msgid "Out of memory."
+msgstr ""
+
+msgid "Own launcher URI"
 msgstr ""
 
 msgid "Own model"
@@ -3350,6 +3391,10 @@ msgid "Please enter a search text."
 msgstr "Удалить историю поиска"
 
 msgid "Please enter a valid link (http:// or https://)."
+msgstr ""
+
+#, python-format
+msgid "Please enter the %s login and password in the E2iPlayer settings (Captcha)."
 msgstr ""
 
 msgid "Please make sure that the folder for cache data (set in the configuration) is writable."
@@ -4537,6 +4582,12 @@ msgstr ""
 msgid "The YouTube video ID is invalid."
 msgstr "YouTube видео ID недействителен."
 
+msgid "The account is banned."
+msgstr ""
+
+msgid "The balance of the account is too low."
+msgstr ""
+
 msgid "The channel already exists in User Links."
 msgstr "Канал уже существует в пользовательских ссылках."
 
@@ -4669,6 +4720,9 @@ msgid "The server did not send a subtitle file."
 msgstr ""
 
 msgid "The server limits the number of requests. Please try again in a few seconds."
+msgstr ""
+
+msgid "The service is overloaded. Please try again later."
 msgstr ""
 
 msgid "The settings are protected by a PIN, change them on the receiver."

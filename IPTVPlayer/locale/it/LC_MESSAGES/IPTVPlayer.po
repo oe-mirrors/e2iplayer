@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-02 19:34+0000\n"
+"POT-Creation-Date: 2026-10-02 22:49+0000\n"
 "PO-Revision-Date: 2026-09-27 08:11+0200\n"
 "Last-Translator: Lululla <ekekaz@gmail.com>\n"
 "Language-Team: lululla <ekekaz@gmail.com>\n"
@@ -100,6 +100,14 @@ msgstr "%s - provider di sottotitoli"
 #, python-format
 msgid "%s buffering..."
 msgstr "%s buffering..."
+
+#, python-format
+msgid "%s cannot solve this type of captcha."
+msgstr ""
+
+#, python-format
+msgid "%s could not solve the captcha."
+msgstr ""
 
 #, python-format
 msgid "%s device name"
@@ -1054,6 +1062,9 @@ msgstr "Predefinito"
 msgid "Default (2 minutes)"
 msgstr "Predefinito (2 minuti)"
 
+msgid "Default browser"
+msgstr ""
+
 msgid "Default captcha bypass"
 msgstr "Bypass captcha predefinito"
 
@@ -1805,6 +1816,9 @@ msgstr "Impossibile scaricare il file. Il download manager non è disponibile."
 msgid "File can not be downloaded. Protocol [%s] is unsupported"
 msgstr "Il file non può essere scaricato. Protocollo [%s] non supportato"
 
+msgid "File format of DASH (MPD) downloads"
+msgstr ""
+
 #, python-format
 msgid "File might be corrupted (size: %d bytes)."
 msgstr "Il file potrebbe essere danneggiato (dimensione: %d byte)."
@@ -2230,6 +2244,10 @@ msgstr "Installata: v%s - aggiornata"
 msgid "Interactive Learning Center(ILC)"
 msgstr "Centro di apprendimento interattivo (ILC)"
 
+#, python-format
+msgid "Invalid answer from %s."
+msgstr ""
+
 msgid "Invalid email."
 msgstr "Email non valida."
 
@@ -2424,6 +2442,10 @@ msgstr "Ultimi video dai canali a cui sei iscritto."
 msgid "Latino"
 msgstr "Latino"
 
+#, python-brace-format
+msgid "Launcher URI ({url} or {address} = address of the box)"
+msgstr ""
+
 msgid "Left"
 msgstr "Sinistra"
 
@@ -2547,6 +2569,9 @@ msgstr "Accesso necessario"
 #, python-brace-format
 msgid "Login on {0} failed."
 msgstr "Login in {0} non riuscito."
+
+msgid "Login or password is wrong."
+msgstr ""
 
 #, python-format
 msgid "Login to prijevodi-online.org failed: %s"
@@ -2804,6 +2829,12 @@ msgstr ""
 
 msgid "MyE2i script finished."
 msgstr "Esecuzione dello script JMyE2i terminata."
+
+msgid "MyE2i: close the start page when done"
+msgstr ""
+
+msgid "MyE2i: offer to open the page in (Android)"
+msgstr ""
 
 msgid ""
 "NO VIDEOS FOUND FOR NOW! \n"
@@ -3064,6 +3095,13 @@ msgstr "Issue aperte"
 msgid "Open pull requests"
 msgstr "Pull request aperte"
 
+#, python-format
+msgid "Open this page in %s"
+msgstr ""
+
+msgid "Open this page in the chosen browser"
+msgstr ""
+
 msgid "OpenSubtitles.org sent a \"become VIP member\" note instead of the subtitle (download limit reached?)."
 msgstr ""
 
@@ -3106,6 +3144,9 @@ msgstr "Altri"
 
 msgid "Out of memory."
 msgstr "Memoria esaurita."
+
+msgid "Own launcher URI"
+msgstr ""
 
 msgid "Own model"
 msgstr "Proprio modello"
@@ -3240,6 +3281,10 @@ msgstr "Inserisci un testo di ricerca."
 
 msgid "Please enter a valid link (http:// or https://)."
 msgstr "Inserisci un link valido (http:// o https://)."
+
+#, python-format
+msgid "Please enter the %s login and password in the E2iPlayer settings (Captcha)."
+msgstr ""
 
 msgid "Please make sure that the folder for cache data (set in the configuration) is writable."
 msgstr "Assicurati che la cartella per la cache (indicata nella configurazione) sia disponibile in scrittura."
@@ -4398,6 +4443,12 @@ msgstr "I canali YouTube di questo gruppo non hanno video."
 msgid "The YouTube video ID is invalid."
 msgstr "L'ID del video Youtube non è valido."
 
+msgid "The account is banned."
+msgstr ""
+
+msgid "The balance of the account is too low."
+msgstr ""
+
 msgid "The channel already exists in User Links."
 msgstr "Il canale esiste già nei Link utente."
 
@@ -4531,6 +4582,9 @@ msgid "The server did not send a subtitle file."
 msgstr ""
 
 msgid "The server limits the number of requests. Please try again in a few seconds."
+msgstr ""
+
+msgid "The service is overloaded. Please try again later."
 msgstr ""
 
 msgid "The settings are protected by a PIN, change them on the receiver."

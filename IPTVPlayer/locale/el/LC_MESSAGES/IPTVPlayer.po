@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-02 19:34+0000\n"
+"POT-Creation-Date: 2026-10-02 22:49+0000\n"
 "PO-Revision-Date: 2026-10-03 00:42+0300\n"
 "Last-Translator: \n"
 "Language-Team: giorbak\n"
@@ -99,6 +99,14 @@ msgstr "%s - πάροχος υποτίτλων"
 #, python-format
 msgid "%s buffering..."
 msgstr "%s σε προσωρινή αποθήκευση..."
+
+#, python-format
+msgid "%s cannot solve this type of captcha."
+msgstr ""
+
+#, python-format
+msgid "%s could not solve the captcha."
+msgstr ""
 
 #, python-format
 msgid "%s device name"
@@ -1054,6 +1062,9 @@ msgstr "Προεπιλογή"
 msgid "Default (2 minutes)"
 msgstr "Προεπιλογή (2 λεπτά)"
 
+msgid "Default browser"
+msgstr ""
+
 msgid "Default captcha bypass"
 msgstr "Προεπιλεγμένη παράκαμψη captcha"
 
@@ -1803,6 +1814,9 @@ msgstr "Δεν είναι δυνατή η λήψη του αρχείου. Η Δ�
 msgid "File can not be downloaded. Protocol [%s] is unsupported"
 msgstr "Δεν είναι δυνατή η λήψη του αρχείου. Το πρωτόκολλο [%s] δεν υποστηρίζεται"
 
+msgid "File format of DASH (MPD) downloads"
+msgstr ""
+
 #, python-format
 msgid "File might be corrupted (size: %d bytes)."
 msgstr "Το αρχείο ενδέχεται να είναι κατεστραμμένο (μέγεθος: %d bytes)."
@@ -2226,6 +2240,10 @@ msgstr "Εγκαταστάθηκε: v%s - ενημερωμένο"
 msgid "Interactive Learning Center(ILC)"
 msgstr "Κέντρο Διαδραστικής Μάθησης (ILC)"
 
+#, python-format
+msgid "Invalid answer from %s."
+msgstr ""
+
 msgid "Invalid email."
 msgstr "Μη έγκυρο email."
 
@@ -2418,6 +2436,10 @@ msgstr "Τελευταία βίντεο από τα κανάλια στα οπο
 msgid "Latino"
 msgstr "Λατινοαμερικάνικα"
 
+#, python-brace-format
+msgid "Launcher URI ({url} or {address} = address of the box)"
+msgstr ""
+
 msgid "Left"
 msgstr "Left"
 
@@ -2540,6 +2562,9 @@ msgstr "Απαιτείται σύνδεση"
 #, python-brace-format
 msgid "Login on {0} failed."
 msgstr "Η σύνδεση στο {0} απέτυχε."
+
+msgid "Login or password is wrong."
+msgstr ""
 
 #, python-format
 msgid "Login to prijevodi-online.org failed: %s"
@@ -2791,6 +2816,12 @@ msgstr ""
 
 msgid "MyE2i script finished."
 msgstr "Το script MyE2i ολοκληρώθηκε."
+
+msgid "MyE2i: close the start page when done"
+msgstr ""
+
+msgid "MyE2i: offer to open the page in (Android)"
+msgstr ""
 
 msgid ""
 "NO VIDEOS FOUND FOR NOW! \n"
@@ -3046,6 +3077,13 @@ msgstr "Ανοιχτά ζητήματα"
 msgid "Open pull requests"
 msgstr "Ανοιχτά pull requests"
 
+#, python-format
+msgid "Open this page in %s"
+msgstr ""
+
+msgid "Open this page in the chosen browser"
+msgstr ""
+
 msgid "OpenSubtitles.org sent a \"become VIP member\" note instead of the subtitle (download limit reached?)."
 msgstr "Το OpenSubtitles.org έστειλε μήνυμα \"γίνετε μέλος VIP\" αντί για τον υπότιτλο (συμπληρώθηκε το όριο λήψεων;)."
 
@@ -3088,6 +3126,9 @@ msgstr "Άλλα"
 
 msgid "Out of memory."
 msgstr "Η μνήμη εξαντλήθηκε."
+
+msgid "Own launcher URI"
+msgstr ""
 
 msgid "Own model"
 msgstr "Δικό σας μοντέλο"
@@ -3221,6 +3262,10 @@ msgstr "Παρακαλώ εισάγετε κείμενο αναζήτησης."
 
 msgid "Please enter a valid link (http:// or https://)."
 msgstr "Παρακαλώ εισάγετε έναν έγκυρο σύνδεσμο (http:// ή https://)."
+
+#, python-format
+msgid "Please enter the %s login and password in the E2iPlayer settings (Captcha)."
+msgstr ""
 
 msgid "Please make sure that the folder for cache data (set in the configuration) is writable."
 msgstr "Παρακαλώ βεβαιωθείτε ότι ο φάκελος για τα δεδομένα προσωρινής μνήμης (που έχει οριστεί στις ρυθμίσεις) είναι εγγράψιμος."
@@ -4373,6 +4418,12 @@ msgstr "Τα κανάλια YouTube αυτής της ομάδας δεν έχο
 msgid "The YouTube video ID is invalid."
 msgstr "Το ID βίντεο YouTube δεν είναι έγκυρο."
 
+msgid "The account is banned."
+msgstr ""
+
+msgid "The balance of the account is too low."
+msgstr ""
+
 msgid "The channel already exists in User Links."
 msgstr "Το κανάλι υπάρχει ήδη στους συνδέσμους χρήστη."
 
@@ -4506,6 +4557,9 @@ msgstr "Ο διακομιστής δεν έστειλε αρχείο υποτί�
 
 msgid "The server limits the number of requests. Please try again in a few seconds."
 msgstr "Ο διακομιστής περιορίζει τον αριθμό των αιτημάτων. Παρακαλώ δοκιμάστε ξανά σε λίγα δευτερόλεπτα."
+
+msgid "The service is overloaded. Please try again later."
+msgstr ""
 
 msgid "The settings are protected by a PIN, change them on the receiver."
 msgstr "Οι ρυθμίσεις προστατεύονται με PIN, αλλάξτε τις στον δέκτη."

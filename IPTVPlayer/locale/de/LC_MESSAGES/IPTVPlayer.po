@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-02 19:34+0000\n"
+"POT-Creation-Date: 2026-10-02 22:49+0000\n"
 "PO-Revision-Date: 2026-09-29 22:46+0200\n"
 "Last-Translator: Masta2002\n"
 "Language-Team: oATV Team\n"
@@ -96,6 +96,14 @@ msgstr "%s - Untertitel Anbieter"
 #, python-format
 msgid "%s buffering..."
 msgstr "[%s] Pufferung..."
+
+#, python-format
+msgid "%s cannot solve this type of captcha."
+msgstr ""
+
+#, python-format
+msgid "%s could not solve the captcha."
+msgstr ""
 
 #, python-format
 msgid "%s device name"
@@ -1051,6 +1059,9 @@ msgstr "Standard"
 msgid "Default (2 minutes)"
 msgstr "Standard (2 Minuten)"
 
+msgid "Default browser"
+msgstr ""
+
 msgid "Default captcha bypass"
 msgstr "Standard-Captcha-Umgehung"
 
@@ -1798,6 +1809,9 @@ msgstr "Die Datei kann nicht heruntergeladen werden. Der Download-Manager ist ni
 msgid "File can not be downloaded. Protocol [%s] is unsupported"
 msgstr "Datei kann nicht heruntergeladen werden. Protokoll [%s] wird nicht unterstützt"
 
+msgid "File format of DASH (MPD) downloads"
+msgstr ""
+
 #, python-format
 msgid "File might be corrupted (size: %d bytes)."
 msgstr "Die Datei ist möglicherweise beschädigt (Größe: %d Bytes)."
@@ -2221,6 +2235,10 @@ msgstr "Installiert: v%s - aktuell"
 msgid "Interactive Learning Center(ILC)"
 msgstr "Interaktives Lernzentrum (ILC)"
 
+#, python-format
+msgid "Invalid answer from %s."
+msgstr ""
+
 msgid "Invalid email."
 msgstr "Ungültige E-Mail."
 
@@ -2413,6 +2431,10 @@ msgstr "Neueste Videos von den Kanälen, die Sie abonniert haben."
 msgid "Latino"
 msgstr "Lateinamerikaner"
 
+#, python-brace-format
+msgid "Launcher URI ({url} or {address} = address of the box)"
+msgstr ""
+
 msgid "Left"
 msgstr "Links"
 
@@ -2535,6 +2557,9 @@ msgstr "Anmeldung erforderlich"
 #, python-brace-format
 msgid "Login on {0} failed."
 msgstr "Login in {0} fehlgeschlagen."
+
+msgid "Login or password is wrong."
+msgstr ""
 
 #, python-format
 msgid "Login to prijevodi-online.org failed: %s"
@@ -2786,6 +2811,12 @@ msgstr ""
 
 msgid "MyE2i script finished."
 msgstr "MyE2i Script beendet."
+
+msgid "MyE2i: close the start page when done"
+msgstr ""
+
+msgid "MyE2i: offer to open the page in (Android)"
+msgstr ""
 
 msgid ""
 "NO VIDEOS FOUND FOR NOW! \n"
@@ -3041,6 +3072,13 @@ msgstr "Offene Issues"
 msgid "Open pull requests"
 msgstr "Offene Pull-Requests"
 
+#, python-format
+msgid "Open this page in %s"
+msgstr ""
+
+msgid "Open this page in the chosen browser"
+msgstr ""
+
 msgid "OpenSubtitles.org sent a \"become VIP member\" note instead of the subtitle (download limit reached?)."
 msgstr "OpenSubtitles.org hat statt des Untertitels einen Hinweis \"VIP-Mitglied werden\" gesendet (Download-Limit erreicht?)."
 
@@ -3083,6 +3121,9 @@ msgstr "Andere"
 
 msgid "Out of memory."
 msgstr "Nicht genügend Speicher."
+
+msgid "Own launcher URI"
+msgstr ""
 
 msgid "Own model"
 msgstr "Eigenes Model"
@@ -3216,6 +3257,10 @@ msgstr "Bitte geben Sie einen Suchtext ein."
 
 msgid "Please enter a valid link (http:// or https://)."
 msgstr "Bitte geben Sie einen gültigen Link ein (http:// oder https://)."
+
+#, python-format
+msgid "Please enter the %s login and password in the E2iPlayer settings (Captcha)."
+msgstr ""
 
 msgid "Please make sure that the folder for cache data (set in the configuration) is writable."
 msgstr "Bitte stellen Sie sicher, dass das Verzeichnis für Cache-Daten (festgelegt in der Konfiguration) beschreibbar ist."
@@ -4368,6 +4413,12 @@ msgstr "Die YouTube-Kanäle dieser Gruppe haben keine Videos."
 msgid "The YouTube video ID is invalid."
 msgstr "Die Youtube Video-ID ist ungültig."
 
+msgid "The account is banned."
+msgstr ""
+
+msgid "The balance of the account is too low."
+msgstr ""
+
 msgid "The channel already exists in User Links."
 msgstr "Der Kanal ist bereits unter „Benutzerlinks“ vorhanden."
 
@@ -4501,6 +4552,9 @@ msgstr "Der Server hat keine Untertiteldatei gesendet."
 
 msgid "The server limits the number of requests. Please try again in a few seconds."
 msgstr "Der Server begrenzt die Anzahl der Anfragen. Bitte versuchen Sie es in ein paar Sekunden erneut."
+
+msgid "The service is overloaded. Please try again later."
+msgstr ""
 
 msgid "The settings are protected by a PIN, change them on the receiver."
 msgstr "Die Einstellungen sind durch eine PIN geschützt, ändern Sie sie auf dem Receiver."
