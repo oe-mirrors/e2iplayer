@@ -1393,13 +1393,13 @@ class E2iVirtualKeyBoard(Screen):
             if fileExists(filePath):
                 try:
                     from ast import literal_eval
-                    import codecs
+                    import io
                     try:
-                        with codecs.open(filePath, encoding='utf-16') as f:
+                        with io.open(filePath, encoding='utf-16', newline='') as f:
                             data = f.read()
                     except UnicodeDecodeError:
                         # some .kle files may have been saved/edited as plain UTF-8
-                        with codecs.open(filePath, encoding='utf-8') as f:
+                        with io.open(filePath, encoding='utf-8', newline='') as f:
                             data = f.read()
                     data = literal_eval(data)
                     if data['id'] != vkLayoutId:

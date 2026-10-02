@@ -23,7 +23,7 @@ from Components.Label import Label
 from Components.Sources.StaticText import StaticText
 from Components.ActionMap import ActionMap
 
-import codecs
+import io
 ###################################################
 
 
@@ -163,7 +163,7 @@ class IPTVSubSimpleDownloaderWidget(Screen):
         else:
             encoding = encoding.strip()
         try:
-            with codecs.open(self.downloader.getFullFileName(), 'r', encoding, 'replace') as fp:
+            with io.open(self.downloader.getFullFileName(), 'r', encoding=encoding, errors='replace', newline='') as fp:
                 subText = ensure_str(fp.read()).strip()
 
             ext = self.currItem.get('format', '')

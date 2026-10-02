@@ -19,7 +19,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 ###################################################
 from Components.config import config, ConfigYesNo, ConfigText, getConfigListEntry
 from urllib.parse import urlencode
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 ############################################
 
 ###################################################
@@ -156,7 +156,7 @@ class UstvnowApi:
                     break
 
         # calculate time difference from utcnow and the local system time reported by OS
-        OFFSET = datetime.now() - datetime.utcnow()
+        OFFSET = datetime.now() - datetime.now(timezone.utc).replace(tzinfo=None)
         if config.plugins.iptvplayer.ustvnow_epg.value:
             sts, data = self.cm.getPage(self.MAIN_URL + 'gtv/1/live/channelguide', self.defParams)
             if sts:

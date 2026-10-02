@@ -10,7 +10,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, by
 ###################################################
 # FOREIGN import
 ###################################################
-import codecs
+import io
 try:
     import json
 except Exception:
@@ -71,7 +71,7 @@ class IPTVMovieMetaDataHandler():
         sts = False
         try:
             try:
-                with codecs.open(self.filePath, 'r', self.ENCODING, 'replace') as fp:
+                with io.open(self.filePath, 'r', encoding=self.ENCODING, errors='replace', newline='') as fp:
                     data = byteify(json.loads(fp.read()))
                 if data != {}:
                     sts = True
@@ -93,7 +93,7 @@ class IPTVMovieMetaDataHandler():
         if force:
 
             try:
-                with codecs.open(self.filePath, 'w', self.ENCODING) as fp:
+                with io.open(self.filePath, 'w', encoding=self.ENCODING, newline='') as fp:
                     fp.write(json.dumps(self.data))
                 sts = True
             except Exception:

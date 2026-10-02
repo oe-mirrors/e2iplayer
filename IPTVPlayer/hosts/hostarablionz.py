@@ -460,7 +460,7 @@ class ArabLionzTV(CBaseHostClass):
             if year_match:
                 year = year_match.group(1)
                 # Split title around the year
-                parts = re.split(r'(\d{4})', title, 1)
+                parts = re.split(r'(\d{4})', title, maxsplit=1)
                 if len(parts) == 3:
                     before_year = parts[0].strip()
                     after_year = parts[2].strip()

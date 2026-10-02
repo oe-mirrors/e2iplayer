@@ -2,8 +2,7 @@
 # added: 18.08.2026 - Kamikaze24
 
 import os
-import codecs
-
+import io
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, getReorderOnReuseEnabled, setReorderOnReuseEnabled, findT9JumpIndex
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
@@ -90,7 +89,7 @@ def parseHistoryFile(path, reverseForDisplay=False):
         if not os.path.isfile(path):
             return entries
 
-        with codecs.open(path, 'r', 'utf-8', 'ignore') as f:
+        with io.open(path, 'r', encoding='utf-8', errors='ignore', newline='') as f:
             raw = f.read()
 
         raw = toUnicode(raw)
@@ -123,7 +122,7 @@ def writeHistoryFile(path, entries, reverseForWrite=False):
             entriesToWrite.reverse()
 
         tmpPath = path + '.tmp'
-        with codecs.open(tmpPath, 'w', 'utf-8', 'replace') as f:
+        with io.open(tmpPath, 'w', encoding='utf-8', errors='replace', newline='') as f:
             for entry in entriesToWrite:
                 f.write(entry.toLine() + u'\n')
 

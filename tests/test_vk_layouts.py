@@ -3,7 +3,7 @@
 Read from the source with ast, so no enigma2 is needed.
 """
 import ast
-import codecs
+import io
 import os
 import re
 
@@ -32,7 +32,7 @@ CHARACTER_KEYS = set(list(range(2, 15)) + list(range(17, 29)) + list(range(31, 4
 
 
 def _read_kle(layout_id):
-    with codecs.open(os.path.join(VK_DIR, "%s.kle" % layout_id), encoding="utf-16") as f:
+    with io.open(os.path.join(VK_DIR, "%s.kle" % layout_id), encoding="utf-16", newline='') as f:
         return ast.literal_eval(f.read())
 
 

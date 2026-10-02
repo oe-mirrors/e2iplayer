@@ -18,7 +18,7 @@ if not isPY2():
 ###################################################
 import re
 import random
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 try:
     import json
 except Exception:
@@ -73,7 +73,7 @@ class RTBFBE(CBaseHostClass):
 
         self.cacheChannels = []
 
-        self.OFFSET = datetime.now() - datetime.utcnow()
+        self.OFFSET = datetime.now() - datetime.now(timezone.utc).replace(tzinfo=None)
         seconds = self.OFFSET.seconds + self.OFFSET.days * 24 * 3600
         if ((seconds + 1) % 10) == 0:
             seconds += 1

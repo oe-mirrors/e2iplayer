@@ -14,7 +14,7 @@ from Plugins.Extensions.IPTVPlayer.__init__ import GRIDSUPPORT
 ###################################################
 # FOREIGN import
 ###################################################
-import codecs
+import io
 from os import unlink
 from os.path import isfile
 ###################################################
@@ -330,10 +330,10 @@ class IPTVHostsGroups:
 
     def _saveToFile(self, filePath, data, encoding='utf-8'):
         printDBG("IPTVHostsGroups._saveToFile filePath[%s]" % filePath)
-        with codecs.open(filePath, 'w', encoding, 'replace') as fp:
+        with io.open(filePath, 'w', encoding=encoding, errors='replace', newline='') as fp:
             fp.write(data)
 
     def _loadFromFile(self, filePath, encoding='utf-8'):
         printDBG("IPTVHostsGroups._loadFromFile filePath[%s]" % filePath)
-        with codecs.open(filePath, 'r', encoding, 'replace') as fp:
+        with io.open(filePath, 'r', encoding=encoding, errors='replace', newline='') as fp:
             return fp.read()

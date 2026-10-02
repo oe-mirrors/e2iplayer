@@ -36,6 +36,7 @@ import os
 import shutil
 import stat
 import codecs
+import io
 import datetime
 import threading
 from functools import cmp_to_key
@@ -1696,7 +1697,7 @@ def getReorderOnReuseEnabled(path):
     try:
         flagFile = path + '.mru'
         if os.path.isfile(flagFile):
-            with codecs.open(flagFile, 'r', 'utf-8', 'ignore') as f:
+            with io.open(flagFile, 'r', encoding='utf-8', errors='ignore', newline='') as f:
                 return f.read().strip() != '0'
     except Exception:
         printExc('getReorderOnReuseEnabled EXCEPTION')
@@ -1706,7 +1707,7 @@ def getReorderOnReuseEnabled(path):
 def setReorderOnReuseEnabled(path, enabled):
     try:
         flagFile = path + '.mru'
-        with codecs.open(flagFile, 'w', 'utf-8', 'replace') as f:
+        with io.open(flagFile, 'w', encoding='utf-8', errors='replace', newline='') as f:
             f.write(u'1' if enabled else u'0')
         return True
     except Exception:
@@ -1766,7 +1767,7 @@ class CSearchHistoryHelper():
             self.length = 0
             if os.path.isfile(self.PATH_FILE):
                 try:
-                    with codecs.open(self.PATH_FILE, 'r', 'utf-8', 'ignore') as file:
+                    with io.open(self.PATH_FILE, 'r', encoding='utf-8', errors='ignore', newline='') as file:
                         self.length = sum(1 for _line in file)
                 except Exception:
                     pass
@@ -1782,7 +1783,7 @@ class CSearchHistoryHelper():
 
         if os.path.isfile(self.PATH_FILE):
             try:
-                file = codecs.open(self.PATH_FILE, 'r', 'utf-8', 'ignore')
+                file = io.open(self.PATH_FILE, 'r', encoding='utf-8', errors='ignore', newline='')
                 for line in file:
                     value = line.replace('\n', '').strip()
                     if len(value) > 0:
@@ -1840,14 +1841,14 @@ class CSearchHistoryHelper():
                 # getHistoryList() reads it)
                 lines = []
                 if os.path.isfile(self.PATH_FILE):
-                    file = codecs.open(self.PATH_FILE, 'r', 'utf-8', 'ignore')
+                    file = io.open(self.PATH_FILE, 'r', encoding='utf-8', errors='ignore', newline='')
                     for line in file:
                         existing = line.replace('\n', '').strip()
                         if len(existing) > 0 and existing != value:
                             lines.append(existing)
                     file.close()
                 lines.append(value)
-                file = codecs.open(self.PATH_FILE, 'w', 'utf-8', 'replace')
+                file = io.open(self.PATH_FILE, 'w', encoding='utf-8', errors='replace', newline='')
                 for line in lines:
                     file.write(line + '\n')
                 file.close()
@@ -1898,7 +1899,7 @@ def ReadTextFile(filePath, encode='utf-8', errors='ignore'):
     sts, ret = False, ''
     if os.path.isfile(filePath):
         try:
-            file = codecs.open(filePath, 'r', encode, errors)
+            file = io.open(filePath, 'r', encoding=encode, errors=errors, newline='')
             ret = file.read().encode(encode, errors)
             file.close()
             if ret.startswith(codecs.BOM_UTF8):
@@ -1918,7 +1919,7 @@ def WriteTextFile(filePath, text, encode='utf-8', errors='ignore'):
     sts = False
     try:
         toSave = text  # if type('') == type(text) else text.decode('utf-8', errors)
-        file = codecs.open(filePath, 'w', encode, errors)
+        file = io.open(filePath, 'w', encoding=encode, errors=errors, newline='')
         file.write(toSave)
         file.close()
         sts = True
@@ -1952,7 +1953,7 @@ class CMoviePlayerPerHost():
             if not os.path.isfile(self.filePath):
                 sts = True
             else:
-                file = codecs.open(self.filePath, 'r', 'utf-8', 'ignore')
+                file = io.open(self.filePath, 'r', encoding='utf-8', errors='ignore', newline='')
                 ret = ensure_str(file.read(), encoding='utf-8', errors='ignore')
                 file.close()
                 activePlayer = {}
@@ -1978,7 +1979,7 @@ class CMoviePlayerPerHost():
                 data['buffering'] = self.activePlayer['buffering']
                 data['player'] = {'value': self.activePlayer['player'].value, 'text': self.activePlayer['player'].getText()}
                 data = json_dumps(ensure_str(data))
-                with codecs.open(self.filePath, 'w', 'utf-8', 'replace') as file:
+                with io.open(self.filePath, 'w', encoding='utf-8', errors='replace', newline='') as file:
                     file.write(data)
                 sts = True
         except Exception:
