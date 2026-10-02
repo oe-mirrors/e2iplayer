@@ -9,7 +9,7 @@ from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 ###################################################
 # FOREIGN import
 ###################################################
-import codecs
+import io
 import os
 from functools import cmp_to_key
 
@@ -39,7 +39,7 @@ class IPTVFileHost:
             printDBG('IPTVFileHost.addFile file does not exist [%s]' % filePath)
             return
         try:
-            with codecs.open(filePath, 'r', encoding, 'replace') as fp:
+            with io.open(filePath, 'r', encoding=encoding, errors='replace', newline='') as fp:
                 lineNum = 0
                 while True:
                     lineNum += 1

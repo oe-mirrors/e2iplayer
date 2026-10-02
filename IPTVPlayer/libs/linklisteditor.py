@@ -24,8 +24,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvchoicebox import IPTVChoiceBox
 ###################################################
 import re
 import os
-import codecs
-
+import io
 ###################################################
 
 ###################################################
@@ -617,7 +616,7 @@ class LinkListManager(object):
 
             # write a temp file and rename it, so a crash can't leave a half-written list
             tmpPath = path + ".tmp"
-            with codecs.open(tmpPath, "w", "utf-8") as f:
+            with io.open(tmpPath, "w", encoding="utf-8", newline='') as f:
                 for line in lines:
                     f.write(line + u"\n")
             os.rename(tmpPath, path)

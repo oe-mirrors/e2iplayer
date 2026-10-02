@@ -119,8 +119,8 @@ class TrailersApple(CBaseHostClass):
         rd = item.get('releaseDate')
         if isinstance(rd, (int, float)):
             try:
-                from datetime import datetime
-                desc.append(datetime.utcfromtimestamp(rd / 1000).strftime('%Y-%m-%d'))
+                from datetime import datetime, timezone
+                desc.append(datetime.fromtimestamp(rd / 1000, timezone.utc).strftime('%Y-%m-%d'))
             except Exception:
                 pass
         if item.get('rating', {}).get('displayName'):

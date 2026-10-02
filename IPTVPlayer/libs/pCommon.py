@@ -1404,14 +1404,13 @@ class common:
         dictRet.update({'sts': bRet, 'fsize': downDataSize, 'reason': '' if bRet else reason})
         return dictRet
 
-    def getUrllibSSLProtocolVersion(self, protocolName):
+    def getUrllibSSLMinimumVersion(self, protocolName):
+        # ssl_protocol is a lower bound (TLS 1.3 stays allowed), like pycurl's SSLVERSION
         if not isinstance(protocolName, str):
-            printDBG('getUrllibSSLProtocolVersion invalid ssl_protocol [%r]' % (protocolName,))
+            printDBG('getUrllibSSLMinimumVersion invalid ssl_protocol [%r]' % (protocolName,))
             return protocolName
         if protocolName == 'TLSv1_2':
-            return ssl.PROTOCOL_TLSv1_2
-        elif protocolName == 'TLSv1_1':
-            return ssl.PROTOCOL_TLSv1_1  # NOSONAR
+            return ssl.TLSVersion.TLSv1_2
         return None
 
     def getPyCurlSSLProtocolVersion(self, protocolName):
@@ -1420,8 +1419,6 @@ class common:
             return protocolName
         if protocolName == 'TLSv1_2':
             return pycurl.SSLVERSION_TLSv1_2
-        elif protocolName == 'TLSv1_1':
-            return pycurl.SSLVERSION_TLSv1_1
         return None
 
     def getURLRequestData(self, params={}, post_data=None):
@@ -1512,24 +1509,25 @@ class common:
             customOpeners.append(NoRedirection())
 
         if None is not params.get('ssl_protocol', None):
-            sslProtoVer = self.getUrllibSSLProtocolVersion(params['ssl_protocol'])
+            sslMinVer = self.getUrllibSSLMinimumVersion(params['ssl_protocol'])
         else:
-            sslProtoVer = None
+            sslMinVer = None
         # debug
         # customOpeners.append(urllib2.HTTPSHandler(debuglevel=1))
         # customOpeners.append(urllib2.HTTPHandler(debuglevel=1))
         if not IsHttpsCertValidationEnabled():
             try:
                 # unverified TLS is opt-in only, gated by the IsHttpsCertValidationEnabled() check above
-                if sslProtoVer is not None:
-                    ctx = ssl._create_unverified_context(sslProtoVer)  # NOSONAR
-                else:
-                    ctx = ssl._create_unverified_context()  # NOSONAR
+                ctx = ssl._create_unverified_context()  # NOSONAR
+                if sslMinVer is not None:
+                    ctx.minimum_version = sslMinVer
                 customOpeners.append(HTTPSHandler(context=ctx))
             except Exception:
                 pass
-        elif sslProtoVer is not None:
-            ctx = ssl.SSLContext(sslProtoVer)
+        elif sslMinVer is not None:
+            # verified like a request without ssl_protocol
+            ctx = ssl.create_default_context()
+            ctx.minimum_version = sslMinVer
             customOpeners.append(HTTPSHandler(context=ctx))
 
         # proxy support

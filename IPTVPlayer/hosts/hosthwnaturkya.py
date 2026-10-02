@@ -206,7 +206,7 @@ class HwnaTurkya(CBaseHostClass):
                             ep_num = int(ep_num_match.group(1))
                     episode_title_from_html = self.cm.ph.getSearchGroups(episode, r"title=['\"]([^\"^']+?)['\"]")[0]
                     if episode_title_from_html:
-                        title_parts = re.split(r"\s+الحلقة\s+", episode_title_from_html, 1)
+                        title_parts = re.split(r"\s+الحلقة\s+", episode_title_from_html, maxsplit=1)
                         if len(title_parts) > 1:
                             episode_title = "الحلقة %s" % title_parts[1]
                         else:
@@ -268,7 +268,7 @@ class HwnaTurkya(CBaseHostClass):
                     ep_num = int(ep_num_match.group(1))
             episode_title_from_html = self.cm.ph.getSearchGroups(episode, r"title=['\"]([^\"^']+?)['\"]")[0]
             if episode_title_from_html:
-                title_parts = re.split(r"\s+الحلقة\s+", episode_title_from_html, 1)
+                title_parts = re.split(r"\s+الحلقة\s+", episode_title_from_html, maxsplit=1)
                 if len(title_parts) > 1:
                     episode_title = "الحلقة %s" % title_parts[1]
                 else:

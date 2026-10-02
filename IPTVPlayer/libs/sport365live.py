@@ -27,7 +27,7 @@ from time import time
 from Plugins.Extensions.IPTVPlayer.libs.crypto.cipher.aes_cbc import AES_CBC
 from binascii import a2b_hex
 from hashlib import md5
-from datetime import datetime
+from datetime import datetime, timezone
 ############################################
 
 ###################################################
@@ -195,7 +195,7 @@ class Sport365LiveApi:
     def getMainCategories(self, cItem):
         printDBG("Sport365LiveApi.getMainCategories")
         channelsTab = []
-        dt = datetime.now() - datetime.utcnow()
+        dt = datetime.now() - datetime.now(timezone.utc).replace(tzinfo=None)
         OFFSET = (dt.microseconds + (dt.seconds + dt.days * 24 * 3600) * 10**6) / 10**6
         OFFSET /= 60
         if OFFSET % 10 == 9:

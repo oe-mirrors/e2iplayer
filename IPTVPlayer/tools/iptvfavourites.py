@@ -13,7 +13,7 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dump
 ###################################################
 # FOREIGN import
 ###################################################
-import codecs
+import io
 from os import listdir as os_listdir, path as os_path, remove as os_remove, stat as os_stat
 ###################################################
 
@@ -311,11 +311,11 @@ class IPTVFavourites:
         return ret
 
     def _saveToFile(self, filePath, data, encoding='utf-8'):
-        with codecs.open(filePath, 'w', encoding, 'replace') as fp:
+        with io.open(filePath, 'w', encoding=encoding, errors='replace', newline='') as fp:
             fp.write(data)
 
     def _loadFromFile(self, filePath, encoding='utf-8'):
-        with codecs.open(filePath, 'r', encoding, 'replace') as fp:
+        with io.open(filePath, 'r', encoding=encoding, errors='replace', newline='') as fp:
             return fp.read()
 
 

@@ -15,7 +15,7 @@ from Components.config import config, ConfigText
 import re
 import json
 import os
-import codecs
+import io
 import requests
 
 from urllib.parse import urlparse
@@ -761,7 +761,7 @@ class BtolatCom(CBaseHostClass):
         metadata_file = GetMovieMetaDataDir("botolat_%s.iptv" % title_safe)
         if not os.path.exists(metadata_file):
             try:
-                with codecs.open(metadata_file, "w", "utf-8", "replace") as fp:
+                with io.open(metadata_file, "w", encoding="utf-8", errors="replace", newline='') as fp:
                     fp.write("")  # ملف فارغ
                 printDBG("Created IPTV metadata file: %s" % metadata_file)
             except Exception as e:
@@ -780,7 +780,7 @@ class BtolatCom(CBaseHostClass):
         file_path = GetMovieMetaDataDir("botolat_%s.iptv" % safe_title)
         meta = {"host": "botolat", "title": title, "file_path": first_link}
         try:
-            with codecs.open(file_path, "w", "utf-8") as fp:
+            with io.open(file_path, "w", encoding="utf-8", newline='') as fp:
                 json.dump(meta, fp, ensure_ascii=False)
             printDBG("Created IPTV metadata file: %s" % file_path)
         except Exception as e:

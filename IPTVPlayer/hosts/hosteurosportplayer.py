@@ -17,7 +17,7 @@ from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 # FOREIGN import
 ###################################################
 import time
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import operator
 from Components.config import config, ConfigText, getConfigListEntry
 ###################################################
@@ -79,7 +79,7 @@ class EuroSportPlayer(CBaseHostClass):
         self.espTaxonomyNodes = {}
         self.espShows = {}
 
-        self.OFFSET = datetime.now() - datetime.utcnow()
+        self.OFFSET = datetime.now() - datetime.now(timezone.utc).replace(tzinfo=None)
         seconds = self.OFFSET.seconds + self.OFFSET.days * 24 * 3600
         if ((seconds + 1) % 10) == 0:
             seconds += 1
@@ -395,7 +395,7 @@ class EuroSportPlayer(CBaseHostClass):
 
     def listDays(self, cItem, nextCategory):
         printDBG("EuroSportPlayer.listDays [%s]" % cItem)
-        NOW = datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=None)
+        NOW = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=None)
 
         def _dataLabel(d):
             weekday = self.ABBREVIATED_DAYS_NAME_TAB[d.weekday()]

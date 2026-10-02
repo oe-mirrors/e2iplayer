@@ -16,7 +16,7 @@ from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 # FOREIGN import
 ###################################################
 import re
-import codecs
+import io
 import json
 from os import remove as os_remove, path as os_path
 ###################################################
@@ -209,7 +209,7 @@ class IPTVSubtitlesHandler:
         try:
             filePath = self._getCacheFileName(orgFilePath)
             if os_path.exists(filePath):
-                with codecs.open(filePath, 'r', encoding, 'replace') as fp:
+                with io.open(filePath, 'r', encoding=encoding, errors='replace', newline='') as fp:
                     self.subAtoms = byteify(json.loads(fp.read()))
                 if len(self.subAtoms):
                     sts = True
@@ -222,7 +222,7 @@ class IPTVSubtitlesHandler:
         try:
             if len(self.subAtoms):
                 filePath = self._getCacheFileName(orgFilePath)
-                with codecs.open(filePath, 'w', encoding) as fp:
+                with io.open(filePath, 'w', encoding=encoding, newline='') as fp:
                     fp.write(json.dumps(self.subAtoms))
                 printDBG("IPTVSubtitlesHandler._saveToCache orgFilePath[%s] --> cacheFile[%s]" % (orgFilePath, filePath))
             else:
@@ -259,7 +259,7 @@ class IPTVSubtitlesHandler:
                     printExc()
 
                 from Plugins.Extensions.IPTVPlayer.libs.iptvsubparser import _subparser as subparser
-                with codecs.open(filePath, 'r', encoding, 'replace') as fp:
+                with io.open(filePath, 'r', encoding=encoding, errors='replace', newline='') as fp:
                     subText = ensure_str(fp.read())
                 # if in subtitles will be line {1}{1}f_fps
                 # for example {1}{1}23.976 and we set microsecperframe = 0
@@ -311,7 +311,7 @@ class IPTVSubtitlesHandler:
         sts = self._loadFromCache(filePath)
         if not sts:
             try:
-                with codecs.open(filePath, 'r', encoding, 'replace') as fp:
+                with io.open(filePath, 'r', encoding=encoding, errors='replace', newline='') as fp:
                     subText = ensure_str(fp.read())
                     if filePath.endswith('.srt'):
                         self.subAtoms = self._srtToAtoms(subText)
