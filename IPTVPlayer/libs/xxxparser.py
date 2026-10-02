@@ -2074,18 +2074,49 @@ class XXXParser:
 
 		if parser == 'https://www.pornhub.com':
 			COOKIEFILE = join(GetCookieDir(), 'pornhub.cookie')
-			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
+			self.defaultParams = {'header': {'User-Agent': USER_AGENT, 'Referer': 'https://www.pornhub.com/'}, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
 			sts, data = self._getPage(url, self.defaultParams)
 			if not sts:
 				return ''
-			embedUrl = self.cm.ph.getSearchGroups(data, '''video:url".content=['"]([^"^']+?)['"]./>''', 1, True)[0]
-			printDBG('Embedded page: ' + embedUrl)
-			sts, data = self.get_Page(embedUrl)
-			if not sts:
-				return ''
-			printDBG('Embedded: ' + embedUrl)
-			videoUrl = self.cm.ph.getSearchGroups(data, '''true.+?hls.{13}['"]([^"^']+?)['"]''', 1, True)[0].replace(r"\/", "/")
-			printDBG('Video Link: ' + videoUrl)
+
+			def quality(item):
+				value = '%s' % item.get('quality', '')
+				return int(value) if value.isdigit() else int(item.get('height') or 0)
+
+			# the video page lists its streams in flashvars_<id>.mediaDefinitions: the MP4 files (behind
+			# get_media, needs the page's cookies) first - the HLS CDN hv-h.phncdn.com answers every Range
+			# request with 410, and exteplayer3 always sends one. Then HLS (other CDNs first), the embed page
+			# last - some videos refuse embedding, and its first "hls" was a random quality
+			videoUrl = ''
+			best = -1
+			flashvars = re.search(r'var\s+flashvars_[0-9]+\s*=\s*(\{.*?\});\s*\n', data, re.S)
+			try:
+				media = json.loads(flashvars.group(1)).get('mediaDefinitions') or [] if flashvars else []
+			except Exception:
+				printExc()
+				media = []
+			media = [item for item in media if isinstance(item, dict) and item.get('videoUrl')]
+			for item in [item for item in media if item.get('format') == 'mp4']:
+				sts, files = self._getPage(item['videoUrl'], self.defaultParams)
+				try:
+					files = json.loads(files) if sts else []
+				except Exception:
+					files = []
+				for mp4 in files if isinstance(files, list) else []:
+					if isinstance(mp4, dict) and mp4.get('videoUrl') and quality(mp4) > best:
+						videoUrl, best = mp4['videoUrl'], quality(mp4)
+			if not videoUrl:
+				hls = sorted([item for item in media if item.get('format') == 'hls'], key=lambda item: (quality(item), 'hv-h.' not in item['videoUrl']))
+				if hls:
+					videoUrl, best = hls[-1]['videoUrl'], quality(hls[-1])
+			if not videoUrl:
+				embedUrl = self.cm.ph.getSearchGroups(data, '''video:url".content=['"]([^"^']+?)['"]./>''', 1, True)[0]
+				printDBG('Embedded page: ' + embedUrl)
+				sts, data = self.get_Page(embedUrl)
+				if not sts:
+					return ''
+				videoUrl = self.cm.ph.getSearchGroups(data, '''true.+?hls.{13}['"]([^"^']+?)['"]''', 1, True)[0].replace(r"\/", "/")
+			printDBG('Video Link: %s (%sp)' % (videoUrl, best))
 			return urlparser.decorateUrl(videoUrl, {'Referer': 'https://www.pornhub.com/', 'User-Agent': USER_AGENT, 'Origin': 'https://www.pornhub.com'})
 
 		if parser == 'https://chaturbate.com':
@@ -6099,51 +6130,30 @@ class XXXParser:
 		# or throw, not on anything about the video itself. Moved here so this
 		# block always runs for spankbang.com regardless of that fallback.
 		if parser == 'https://beeg.com':
-			vid = url.rstrip('/').rsplit('/', 1)[-1]
+			vid = self.cm.ph.getSearchGroups(url, r'beeg\.com/-?0*([0-9]+)')[0] or url.rstrip('/').rsplit('/', 1)[-1]
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
-			self.HTTP_HEADER['Accept'] = 'application/json'
 			self.HTTP_HEADER['Referer'] = 'https://beeg.com/'
 			self.defaultParams = {'header': self.HTTP_HEADER, 'return_data': True}
-			sts, data = self.cm.getPage('https://store.externulls.com/facts/file/' + vid, self.defaultParams)
-			if not sts:
+			# the stream path comes from video/play_url/<id> (signed, short-lived) since the facts/file JSON
+			# lost its hls_resources; the master playlist lies on video.beeg.com
+			sts, data = self.cm.getPage('https://store.externulls.com/video/play_url/' + vid, self.defaultParams)
+			resource = data.strip().strip('"').replace('\\/', '/') if sts else ''
+			if not resource or '<' in resource or '{' in resource:
 				return ''
+			if resource.startswith('//'):
+				videoUrl = 'https:' + resource
+			elif resource.startswith('http'):
+				videoUrl = resource
+			else:
+				videoUrl = 'https://video.beeg.com/' + resource.lstrip('/')
 			try:
-				jdata = json.loads(data)
+				# the master also lists AV1 and HEVC variants: the best H.264 one, else the best of all
+				tmp = getDirectM3U8Playlist(strwithmeta(videoUrl, {'Referer': 'https://beeg.com/'}), checkContent=True, sortWithMaxBitrate=999999999)
+				avc = [item for item in tmp if 'avc1' in item.get('codecs', '')]
+				if avc or tmp:
+					videoUrl = (avc or tmp)[0]['url']
 			except Exception:
 				printExc()
-				return ''
-			hls = {}
-			fileNode = jdata.get('file') if isinstance(jdata, dict) else None
-			if isinstance(fileNode, dict) and isinstance(fileNode.get('hls_resources'), dict):
-				hls = fileNode['hls_resources']
-			if not hls:
-				facts = jdata.get('fc_facts') if isinstance(jdata, dict) else None
-				if facts and isinstance(facts, list) and isinstance(facts[0], dict):
-					hls = facts[0].get('hls_resources') or {}
-			resource = hls.get('fl_cdn_multi') or hls.get('fl_cdn_720') or hls.get('fl_cdn_1080') or hls.get('fl_cdn_480') or hls.get('fl_cdn_360')
-			videoUrl = ''
-			if resource:
-				resource = str(resource).strip()
-				if resource.startswith('//'):
-					videoUrl = 'https:' + resource
-				elif resource.startswith('http://') or resource.startswith('https://'):
-					videoUrl = resource
-				elif resource.startswith('/'):
-					videoUrl = 'https://video.externulls.com' + resource
-				else:
-					videoUrl = 'https://video.externulls.com/' + resource
-				if not videoUrl.split('?')[0].endswith('.m3u8'):
-					videoUrl += '.m3u8'
-			if not videoUrl:
-				return ''
-			if 'm3u8' in videoUrl:
-				try:
-					tmp = getDirectM3U8Playlist(videoUrl, checkContent=True, sortWithMaxBitrate=999999999)
-					for item in tmp:
-						videoUrl = item['url']
-						break
-				except Exception:
-					printExc()
 			return strwithmeta(videoUrl, {'Referer': 'https://beeg.com/'})
 
 		if parser == 'https://www.tokyomotion.net':

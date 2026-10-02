@@ -94,6 +94,7 @@ class CategoryPathEntry(str):
     item = None  # the pager entry chosen - hostxxx sets the page of a jump on it while it lists
     page = None
     last = False
+    lastPage = None  # the highest page of the list when the host knows it: "Page: 2/12"
 
 
 def PagerKind(item):
@@ -106,11 +107,16 @@ def PagerKind(item):
 
 
 def ListPage(entry, previousPage, items):
-    # (page number or None, last page) of a list that was just opened through entry; a list reached by
-    # paging that has no "Next page" entry any more is the last page
+    # (page number or None, last page, highest page or None) of a list that was just opened through entry;
+    # a list reached by paging that has no "Next page" entry any more is the last page. The highest page
+    # comes from the "Next page" entry (lastPage), set only by hosts that know it
     page = _ListPageNumber(entry, previousPage, items)
-    last = bool(getattr(entry, 'pagerKind', '')) and not any(PagerKind(item) == CDisplayListItem.TYPE_NEXT for item in items)
-    return page, last
+    nexts = [item for item in items if PagerKind(item) == CDisplayListItem.TYPE_NEXT]
+    last = bool(getattr(entry, 'pagerKind', '')) and not nexts
+    lastPage = getattr(nexts[0], 'lastPage', None) if nexts else None
+    if not (isinstance(lastPage, int) and page and page < lastPage):
+        lastPage = None
+    return page, last, lastPage
 
 
 def _ListPageNumber(entry, previousPage, items):
@@ -169,6 +175,8 @@ def CategoryPath(title, categoryList, pageLabel, lastLabel, maxLen=0):
     page = getattr(entry, 'page', None)
     if getattr(entry, 'last', False):
         path += ' > %s %s' % (pageLabel, ('%s (%d)' % (lastLabel, page)) if page else lastLabel)
+    elif page and getattr(entry, 'lastPage', None):
+        path += ' > %s %d/%d' % (pageLabel, page, entry.lastPage)
     elif page:
         path += ' > %s %d' % (pageLabel, page)
     return path
@@ -3304,7 +3312,7 @@ class E2iPlayerWidget(Screen):
 
         if self.categoryList and isinstance(self.categoryList[-1], CategoryPathEntry):
             previousPage = getattr(self.categoryList[-2], 'page', None) if 1 < len(self.categoryList) else None
-            self.categoryList[-1].page, self.categoryList[-1].last = ListPage(self.categoryList[-1], previousPage, self.currList)
+            self.categoryList[-1].page, self.categoryList[-1].last, self.categoryList[-1].lastPage = ListPage(self.categoryList[-1], previousPage, self.currList)
         self.setHeaderText()
         if len(self.currList) <= 0:
             disMessage = _("No item to display. \nPress OK to refresh.\n")
