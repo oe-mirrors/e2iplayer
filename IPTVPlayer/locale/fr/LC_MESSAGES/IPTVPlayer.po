@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: E2iPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-29 20:26+0000\n"
+"POT-Creation-Date: 2026-10-02 19:34+0000\n"
 "PO-Revision-Date: 2026-09-27 08:11+0200\n"
 "Last-Translator: \n"
 "Language-Team: IPTVPlayer\n"
@@ -95,10 +95,6 @@ msgid "%s - subtitles provider"
 msgstr "%s - fournisseur de sous-titres"
 
 #, python-format
-msgid "%s API KEY"
-msgstr "Clé API %s"
-
-#, python-format
 msgid "%s buffering..."
 msgstr "%s mise en mémoire tampon..."
 
@@ -123,12 +119,12 @@ msgid "%s followers"
 msgstr "%s abonnés"
 
 #, python-format
-msgid "%s has been protected with google recaptcha v2. You can try to use API version."
-msgstr "%s a été protégé avec google recaptcha v2. Vous pouvez essayer d’utiliser la version API."
-
-#, python-format
 msgid "%s password"
 msgstr "Mot de passe %s"
+
+#, python-format
+msgid "%s refused the download. Please set your login and password in the configuration."
+msgstr ""
 
 #, python-format
 msgid "%s returned %s: %s"
@@ -204,6 +200,9 @@ msgstr ""
 
 msgid "----- Global HostXXX Configuration -----"
 msgstr "----- Configuration globale HostXXX -----"
+
+msgid "----- METADATA PROVIDERS CONFIGURATION -----"
+msgstr ""
 
 msgid "----- PLAYERS & PLAYBACK CONFIGURATION -----"
 msgstr "----- CONFIGURATION DES LECTEURS ET DE LA LECTURE -----"
@@ -333,9 +332,6 @@ msgstr "ALBUMS"
 
 msgid "API Key"
 msgstr "Clé API"
-
-msgid "API_KEY"
-msgstr "API_KEY"
 
 msgid "ARTISTS"
 msgstr "ARTISTES"
@@ -481,6 +477,9 @@ msgstr "Serveur proxy alternatif (4)"
 msgid "Alternative proxy server (5)"
 msgstr "Serveur proxy alternatif (5)"
 
+msgid "An API key from subsource.net can be entered in the E2iPlayer settings (Subtitles)."
+msgstr ""
+
 #, python-format
 msgid ""
 "An error occurred when try to sign in the user \"%s.\n"
@@ -585,6 +584,10 @@ msgstr "Piste audio"
 msgid "Audio tracks"
 msgstr "Plages audio"
 
+#, python-format
+msgid "Author: %s"
+msgstr ""
+
 msgid "Auto"
 msgstr "Auto"
 
@@ -598,8 +601,8 @@ msgstr "Sélection automatique selon les paramètres"
 msgid "Auto start method"
 msgstr "Méthode de démarrage automatique"
 
-msgid "Auto-translate"
-msgstr "Auto-traduire"
+msgid "Auto-generated"
+msgstr ""
 
 msgid "Automatic"
 msgstr "Automatique"
@@ -678,8 +681,9 @@ msgstr "Budget:"
 msgid "Buffering location"
 msgstr "Emplacement de la mémoire tampon"
 
-msgid "By media title"
-msgstr "Par titre de médias"
+#, python-format
+msgid "By %s"
+msgstr ""
 
 msgid "Bypass geo-blocking for VODs (it may be illegal):"
 msgstr "Contourner le géoblocage pour VODs (il peut être illégal):"
@@ -729,6 +733,9 @@ msgstr ""
 
 msgid "Captcha solving service"
 msgstr "Service de résolution de Captcha"
+
+msgid "Captcha was not entered."
+msgstr ""
 
 #, python-format
 msgid "Carrying: %s | UP/DOWN=Move, OK=Drop"
@@ -978,6 +985,9 @@ msgstr "L'élément actuel n'est pas une chaîne."
 msgid "Cut"
 msgstr "Couper"
 
+msgid "Czech"
+msgstr ""
+
 msgid "DASH/mpd"
 msgstr "DASH/mpd"
 
@@ -992,6 +1002,9 @@ msgstr "EN TÉLÉCHARGEMENT"
 
 msgid "DRM protection detected."
 msgstr "Protection DRM détectée."
+
+msgid "Daily download limit reached - type the code"
+msgstr ""
 
 msgid "Darkgray"
 msgstr "Gris foncé"
@@ -1218,6 +1231,10 @@ msgstr "Télécharger"
 msgid "Download \"%s\" in to \"%s\" failed!"
 msgstr "Télécharger « %s » en « %s » a échoué!"
 
+#, python-format
+msgid "Download (ready in %d seconds)"
+msgstr ""
+
 msgid "Download again"
 msgstr "Télécharger à nouveau"
 
@@ -1314,6 +1331,9 @@ msgstr ""
 msgid "Downloading file [%s] problem."
 msgstr "Problème de téléchargement de fichier [%s]."
 
+msgid "Downloading from prijevodi-online.org needs a free account. Enter login and password in the E2iPlayer settings."
+msgstr ""
+
 #, python-format
 msgid ""
 "Downloading subtitles.\n"
@@ -1327,6 +1347,10 @@ msgstr "Téléchargements"
 
 msgid "Downloads location"
 msgstr "Emplacement des téléchargements"
+
+#, python-format
+msgid "Downloads: %s"
+msgstr ""
 
 msgid "Draft"
 msgstr "Brouillon"
@@ -1346,6 +1370,9 @@ msgstr "Durée:"
 #, python-format
 msgid "Duration: %s"
 msgstr "Durée: %s"
+
+msgid "Dutch"
+msgstr ""
 
 msgid "E2iPlayer"
 msgstr "E2iPlayer"
@@ -1520,6 +1547,10 @@ msgstr "Épisodes"
 msgid "Episodes:"
 msgstr "Épisodes:"
 
+#, python-format
+msgid "Episodes: %s"
+msgstr ""
+
 msgid "Error"
 msgstr "Erreur"
 
@@ -1662,14 +1693,21 @@ msgstr "Échec de la création du répertoire \"%s\"."
 msgid "Failed to create extraction directory."
 msgstr "Échec de la création du répertoire d'extraction."
 
-msgid "Failed to decode to UTF-8."
-msgstr "Échec du décodage en UTF-8."
-
 msgid "Failed to download subtitle."
 msgstr "Impossible de télécharger les sous-titres."
 
+msgid "Failed to download the subtitles."
+msgstr ""
+
 msgid "Failed to fetch categories"
 msgstr "Échec de la récupération des catégories"
+
+msgid "Failed to get the download link."
+msgstr ""
+
+#, python-format
+msgid "Failed to get the file list from %s."
+msgstr ""
 
 msgid "Failed to gzip."
 msgstr "Échec de gzip."
@@ -1691,9 +1729,6 @@ msgstr "Échec de la connexion de l'utilisateur \"%s\". Veuillez vérifier votre
 #, python-format
 msgid "Failed to open the file \"%s\"."
 msgstr "N'a pas réussi à ouvrir le fichier \"%s\"."
-
-msgid "Failed to page with subtitle link."
-msgstr "Échec à la page avec lien de sous-titre."
 
 #, python-format
 msgid "Failed to write file \"%s\"."
@@ -2019,6 +2054,9 @@ msgstr "Main"
 msgid "Health"
 msgstr "Santé"
 
+msgid "Hearing impaired"
+msgstr ""
+
 msgid "Help"
 msgstr "Aide"
 
@@ -2090,6 +2128,9 @@ msgstr "Hongrois"
 
 msgid "I am no robot"
 msgstr "Je ne suis pas un robot"
+
+msgid "IMDb"
+msgstr ""
 
 msgid "IMDb Rating:"
 msgstr "Note IMDb:"
@@ -2310,6 +2351,9 @@ msgstr "CHAÎNES EN DIRECT"
 msgid "Language"
 msgstr "Langue"
 
+msgid "Language of the details (TMDb, IMDb)"
+msgstr ""
+
 msgid "Language:"
 msgstr "Langue:"
 
@@ -2500,6 +2544,13 @@ msgstr "Connexion requise"
 #, python-brace-format
 msgid "Login on {0} failed."
 msgstr "La connexion à {0} a échoué."
+
+#, python-format
+msgid "Login to prijevodi-online.org failed: %s"
+msgstr ""
+
+msgid "Login to prijevodi-online.org failed: the site asks for a captcha, which E2iPlayer cannot solve. Series subtitles download without an account."
+msgstr ""
 
 #, python-format
 msgid ""
@@ -2777,6 +2828,9 @@ msgstr "Nécessite l'extension v1.18+. Ouvre la page dans ce navigateur, attend 
 msgid "Netflix"
 msgstr "Netflix"
 
+msgid "Network"
+msgstr ""
+
 #, python-format
 msgid "Network failed %s."
 msgstr "Échec du réseau %s."
@@ -2897,9 +2951,15 @@ msgstr "Aucun fichier de sous-titres trouvé dans l'archive."
 msgid "No subtitles available for this title."
 msgstr "Aucun fichier de sous-titres trouvé dans l'archive."
 
+msgid "No subtitles found."
+msgstr ""
+
 #, fuzzy, python-format
 msgid "No subtitles in %s. Available: %s"
 msgstr "Utiliser l'extension de l'analyseur de sous-titres si disponible"
+
+msgid "No title to search for."
+msgstr ""
 
 msgid "No valid entitlement found for asset."
 msgstr "Aucun droit valide n'a été trouvé pour l'actif."
@@ -2922,6 +2982,9 @@ msgstr "Contenu non disponible"
 
 msgid "Not possible (no enigma2 session)."
 msgstr "Impossible (pas de session enigma2)."
+
+msgid "Nothing found on subdl.com."
+msgstr ""
 
 msgid "Nothing found. This site only finds Russian (Cyrillic) search terms."
 msgstr ""
@@ -2951,14 +3014,17 @@ msgstr "Nombre de fichiers de rotation à conserver"
 msgid "Number of rows"
 msgstr "Nombre de lignes"
 
+msgid "Numeric keypad for numbers"
+msgstr ""
+
 msgid "OFFLINE"
 msgstr ""
 
 msgid "OK"
 msgstr "OK"
 
-msgid "OMDb API Key"
-msgstr "Clé API OMDb"
+msgid "OMDb API key (free at omdbapi.com)"
+msgstr ""
 
 msgid "Offline channels"
 msgstr "Canaux hors ligne"
@@ -2995,6 +3061,9 @@ msgstr "Issues ouvertes"
 msgid "Open pull requests"
 msgstr "Pull requests ouvertes"
 
+msgid "OpenSubtitles.org sent a \"become VIP member\" note instead of the subtitle (download limit reached?)."
+msgstr ""
+
 msgid "Opening. Please wait..."
 msgstr "Ouverture. Veuillez patienter....."
 
@@ -3021,6 +3090,10 @@ msgstr "L'ordre reste fixe - pratique pour la navigation T9."
 
 msgid "Original Title:"
 msgstr "Titre original:"
+
+#, python-format
+msgid "Original language: %s"
+msgstr ""
 
 msgid "Other"
 msgstr "Autre"
@@ -3155,13 +3228,6 @@ msgstr ""
 msgid "Please configure Xtream (blue button)"
 msgstr "Veuillez configurer Xtream (touche bleue)"
 
-msgid ""
-"Please configure your API Key in:\n"
-"Settings → IPTVPlayer → Subtitles → SubDL.com API Key"
-msgstr ""
-"Veuillez configurer votre clé API dans:\n"
-"Paramètres → IPTVPlayer → Sous-titres → SubDL.com API Key"
-
 #, python-format
 msgid "Please consider restart your Engima2 and agree to install the %s utlity when the %s will propose this."
 msgstr "Veuillez envisager de redémarrer Enigma2 et d'accepter l'installation de l'utilitaire %s lorsque %s vous le proposera."
@@ -3233,6 +3299,9 @@ msgstr "Populaires"
 #, fuzzy
 msgid "Pornstars"
 msgstr "Plus de pornstars"
+
+msgid "Portuguese"
+msgstr ""
 
 msgid "Powerpoint Presentation"
 msgstr "Présentation PowerPoint"
@@ -3355,6 +3424,9 @@ msgstr "Requête de plage non prise en charge (échec de la reprise)."
 msgid "Ranking"
 msgstr "Classement"
 
+msgid "Rated"
+msgstr ""
+
 msgid "Rated:"
 msgstr "Classé:"
 
@@ -3367,6 +3439,10 @@ msgstr "Évaluation: %s"
 
 msgid "Rating:"
 msgstr "Note:"
+
+#, python-format
+msgid "Rating: %s"
+msgstr ""
 
 msgid "Read error."
 msgstr "Erreur de lecture."
@@ -3407,6 +3483,9 @@ msgstr "Refus de vider \"%s\" - cela ne ressemble pas à un dossier de cache/con
 
 msgid "Release"
 msgstr "Sortie"
+
+msgid "Released"
+msgstr ""
 
 msgid "Released:"
 msgstr "Sortie:"
@@ -3591,9 +3670,6 @@ msgstr "L'historique de recherche est vide."
 msgid "Search History successfully deleted."
 msgstr "Historique de recherche supprimé avec succès."
 
-msgid "Search Movies and TV Series"
-msgstr "Recherche de films et de séries télévisées"
-
 msgid "Search history"
 msgstr "Historique de recherche"
 
@@ -3616,12 +3692,6 @@ msgstr "Recherche dans tous les hôtes actifs"
 #, fuzzy
 msgid "Search next page"
 msgstr "Texte de recherche"
-
-msgid "Search only in Movies"
-msgstr "Rechercher uniquement dans les films"
-
-msgid "Search only in TV Series"
-msgstr "Recherche uniquement dans les séries TV"
 
 msgid "Search results"
 msgstr "Résultats de recherche"
@@ -3668,6 +3738,10 @@ msgstr "Saison %s"
 
 msgid "Seasons:"
 msgstr "Saisons:"
+
+#, python-format
+msgid "Seasons: %s"
+msgstr ""
 
 msgid "Second movie player in buffering mode"
 msgstr "Deuxième lecteur de film en mode tampon"
@@ -3834,6 +3908,9 @@ msgstr "Épaule et coude"
 
 msgid "Show"
 msgstr "Émission"
+
+msgid "Show \"Newest videos\" of all YouTube channels in a group"
+msgstr ""
 
 msgid "Show & Comedy"
 msgstr "Émissions et comédie"
@@ -4008,8 +4085,17 @@ msgstr "Trié les canaux généraux les plus vus [en direct]"
 msgid "Sorted most viewed channels now [live]"
 msgstr "Trié les canaux actuellement les plus vus [en direct]"
 
+msgid "Source:"
+msgstr ""
+
+msgid "Spanish"
+msgstr ""
+
 msgid "Specialities"
 msgstr "Spécialités"
+
+msgid "Specials"
+msgstr ""
 
 msgid "Spine"
 msgstr "Colonne vertébrale"
@@ -4057,6 +4143,9 @@ msgstr "Arrêter la lecture"
 msgid "Storage"
 msgstr "Stockage"
 
+msgid "Story"
+msgstr ""
+
 #, fuzzy
 msgid "Stream link"
 msgstr "Sélectionnez un lien"
@@ -4070,27 +4159,6 @@ msgstr "Audio"
 
 msgid "Study Plan"
 msgstr "Plan d'études"
-
-msgid ""
-"SubDL Setup:\n"
-"\n"
-"1. Visit: subdl.com/panel/api\n"
-"2. Copy your API Key\n"
-"3. Go to: Settings → IPTVPlayer → Subtitles\n"
-"4. Paste the key in \"SubDL.com API Key\" field"
-msgstr ""
-"Configuration de SubDL:\n"
-"\n"
-"1. Visitez: subdl.com/panel/api\n"
-"2. Copiez votre clé API\n"
-"3. Allez dans: Paramètres → IPTVPlayer → Sous-titres\n"
-"4. Collez la clé dans le champ \"SubDL.com API Key\""
-
-msgid "SubDL.com API Key"
-msgstr "Clé API SubDL.com"
-
-msgid "SubDL: API Key Required"
-msgstr "SubDL: clé API requise"
 
 msgid "Subspecialities"
 msgstr "Sous-spécialités"
@@ -4170,6 +4238,10 @@ msgstr "Sous-titres pour: %s"
 msgid "Subtitles:"
 msgstr "Sous-titres:"
 
+#, python-format
+msgid "Subtitles: %s"
+msgstr ""
+
 msgid "Summary:"
 msgstr "Résumé:"
 
@@ -4243,6 +4315,9 @@ msgstr ""
 "CETTE VIDÉO EST INDISPONIBLE.\n"
 "RÉESSAYEZ PLUS TARD !"
 
+msgid "TMDb API key (free at themoviedb.org)"
+msgstr ""
+
 msgid "TMDb Rating:"
 msgstr "Note TMDb:"
 
@@ -4308,6 +4383,9 @@ msgstr ""
 "\n"
 "Laissez cette option désactivée si vous ne le souhaitez pas. Les autres résolveurs (AdRock/vidrock, VidNest, ...) ne sont pas concernés."
 
+msgid "The OpenSubtitles v3 server did not answer. Please try again later."
+msgstr ""
+
 msgid "The QR code leads to the wiki page with pictures and the extension download."
 msgstr "Le code QR mène à la page wiki avec des images et le téléchargement de l'extension."
 
@@ -4360,6 +4438,13 @@ msgstr ""
 
 msgid "The debug log is not active."
 msgstr "Le journal de débogage n'est pas actif."
+
+msgid "The download is not ready yet. Please try again in a few seconds."
+msgstr ""
+
+#, python-format
+msgid "The download is ready in %d seconds. Please try again then."
+msgstr ""
 
 msgid "The download manager is stopped, start it on the download page."
 msgstr "Le gestionnaire de téléchargement est arrêté, démarrez-le sur la page des téléchargements."
@@ -4417,6 +4502,10 @@ msgid "The number of items in the search history"
 msgstr "Le nombre d'éléments dans l'historique de recherche."
 
 #, python-format
+msgid "The page layout of %s has changed."
+msgstr ""
+
+#, python-format
 msgid ""
 "The playback buffer has been moved to the download manager.\n"
 "It will be saved in the file:\n"
@@ -4432,6 +4521,15 @@ msgstr "La requête n'a pas de longueur valide."
 msgid "The same item already exists in this group."
 msgstr "Le même élément existe déjà dans ce groupe."
 
+msgid "The server did not return a subtitle file (download limit reached?)."
+msgstr ""
+
+msgid "The server did not send a subtitle file."
+msgstr ""
+
+msgid "The server limits the number of requests. Please try again in a few seconds."
+msgstr ""
+
 msgid "The settings are protected by a PIN, change them on the receiver."
 msgstr "Les paramètres sont protégés par un PIN, modifiez-les sur le récepteur."
 
@@ -4439,6 +4537,9 @@ msgid "The site has no player for this video (it only shows a cam advert)."
 msgstr ""
 
 msgid "The site refuses all qualities of this video at the moment (HTTP 403). Try again later."
+msgstr ""
+
+msgid "The site rejected the search request."
 msgstr ""
 
 msgid "The support package holds the versions, the system information, the enabled hosts and the end of the debug log in one text file for a problem report. Look through it before posting it - the log can contain addresses of the sites you opened."
@@ -4541,6 +4642,9 @@ msgstr "Ce show est privé. Réessayez plus tard !"
 msgid "This stream can only be played with buffering - please start it on the receiver."
 msgstr "Ce flux ne peut être lu qu'avec mise en tampon - veuillez le démarrer sur le récepteur."
 
+msgid "This subtitle provider has subtitles for movies only."
+msgstr ""
+
 msgid "This video has been deleted."
 msgstr "Cette vidéo a été supprimée."
 
@@ -4580,6 +4684,28 @@ msgid "Tip! You can connect USB flash drive to fix this problem."
 msgstr "Astuce ! Vous pouvez connecter une clé USB pour résoudre ce problème."
 
 #, python-format
+msgid "Titlovi.com login failed (HTTP %s)."
+msgstr ""
+
+#, python-format
+msgid "Titlovi.com login failed for user \"%s\". Please check your login and password."
+msgstr ""
+
+msgid "Titlovi.com needs a free titlovi.com account. Enter login and password in the E2iPlayer settings."
+msgstr ""
+
+#, python-format
+msgid "Titlovi.com search failed (HTTP %s)."
+msgstr ""
+
+#, python-format
+msgid "Titlovi.com: API access is disabled for the account \"%s\". See titlovi.com/donacije."
+msgstr ""
+
+msgid "Titlovi.com: invalid server response."
+msgstr ""
+
+#, python-format
 msgid ""
 "To sign in to YouTube:\n"
 "\n"
@@ -4616,6 +4742,9 @@ msgstr "Aujourd'hui"
 msgid "Too many redirects."
 msgstr "Trop de redirections."
 
+msgid "Too many requests. Please try again later."
+msgstr ""
+
 msgid "Too many wrong codes - scan the QR code on the receiver screen instead."
 msgstr "Trop de codes erronés - scannez plutôt le code QR sur l'écran du récepteur."
 
@@ -4646,6 +4775,10 @@ msgstr "Bande-annonce"
 msgid "Translation:"
 msgstr "Traduction:"
 
+#, python-format
+msgid "Translator: %s"
+msgstr ""
+
 msgid "Transparent"
 msgstr "Transparent"
 
@@ -4673,6 +4806,9 @@ msgstr "Dépannage"
 #, fuzzy
 msgid "Try to change extplayer or reinstall gst-ifdsrc"
 msgstr "Essayez de changer d'extplayer ou de désactiver IFD dans la configuration de GSTplayer"
+
+msgid "Turkish"
+msgstr ""
 
 msgid "Turkish Movies"
 msgstr "Films turcs"
@@ -4703,6 +4839,9 @@ msgstr "INCONNU"
 msgid "URL malformed."
 msgstr "URL mal formée."
 
+msgid "Ukrainian"
+msgstr ""
+
 msgid "Umount iso file"
 msgstr "Umount fichier iso"
 
@@ -4730,10 +4869,6 @@ msgstr "Code d'erreur inconnu."
 
 msgid "Unknown error."
 msgstr "Erreur inconnue."
-
-#, python-format
-msgid "Unknown file extension \"%s\"."
-msgstr "Extension de fichier inconnue \"%s\"."
 
 #, python-format
 msgid "Unknown protocol [%s]"
@@ -4769,14 +4904,33 @@ msgstr "Mises à jour"
 msgid "Upload date"
 msgstr "Date de téléversement"
 
+#, python-format
+msgid "Uploader: %s"
+msgstr ""
+
 msgid "Uploads"
 msgstr "Envois"
 
 msgid "Urllists player"
 msgstr "Lecteur de urllists"
 
+msgid "Use Cinemeta (no key, English)"
+msgstr ""
+
 msgid "Use HLS streams (adaptive):"
 msgstr "Utiliser les flux HLS (adaptatifs):"
+
+msgid "Use IMDb (no key)"
+msgstr ""
+
+msgid "Use OMDb"
+msgstr ""
+
+msgid "Use TMDb"
+msgstr ""
+
+msgid "Use TVmaze for series (no key, English)"
+msgstr ""
 
 msgid "Use default video quality"
 msgstr "Utiliser la qualité vidéo par défaut"
@@ -4953,6 +5107,9 @@ msgstr "Tout le fichier doit être téléchargé pour commencer la lecture!"
 msgid "Wiki"
 msgstr "Wiki"
 
+msgid "With an API key from subdl.com (E2iPlayer settings, Subtitles) the official SubDL API is searched as well."
+msgstr ""
+
 msgid "With subtitles"
 msgstr "Avec des sous-titres"
 
@@ -4977,6 +5134,9 @@ msgstr "Longueur de clé API YouTube incorrecte"
 msgid "Wrong answer."
 msgstr "Mauvaise réponse."
 
+msgid "Wrong captcha code."
+msgstr ""
+
 msgid "Wrong code."
 msgstr "Code incorrect."
 
@@ -4994,6 +5154,16 @@ msgstr "URI incorrect"
 
 msgid "Wrong weeb.tv username or password."
 msgstr "Nom d'utilisateur ou mot de passe weeb.tv incorrect."
+
+#, python-format
+msgid "Wyzie Subs API key rejected: %s"
+msgstr ""
+
+msgid "Wyzie Subs needs an API key. You can get a free one at https://store.wyzie.io/redeem and enter it in the E2iPlayer configuration."
+msgstr ""
+
+msgid "Wyzie Subs: the daily request limit of the API key is reached."
+msgstr ""
 
 msgid "Xtream Live Stream"
 msgstr "Xtream Live Stream"
@@ -5090,6 +5260,10 @@ msgstr "Les recherches YouTube sont plus rapides si vous renseignez la clé API 
 
 msgid "Z-A"
 msgstr "Z-A"
+
+#, python-format
+msgid "[%s CD]"
+msgstr ""
 
 #, python-format
 msgid "[%s] - configuration"
@@ -5273,6 +5447,9 @@ msgstr "vert"
 msgid "hd"
 msgstr "hd"
 
+msgid "hearing impaired"
+msgstr ""
+
 msgid "high"
 msgstr "haut"
 
@@ -5339,6 +5516,9 @@ msgstr "login"
 msgid "low"
 msgstr "bas"
 
+msgid "machine translated"
+msgstr ""
+
 msgid "main"
 msgstr "principal"
 
@@ -5389,6 +5569,9 @@ msgstr "Page suivante"
 #, fuzzy
 msgid "next page ok"
 msgstr "Page suivante"
+
+msgid "no answer"
+msgstr ""
 
 #, fuzzy
 msgid "no next page"
@@ -5441,6 +5624,9 @@ msgstr "autres binaires"
 
 msgid "password"
 msgstr "mot de passe"
+
+msgid "prijevodi-online.org refused the download for this account."
+msgstr ""
 
 msgid "purple"
 msgstr "pourpre"
@@ -5500,6 +5686,9 @@ msgstr "L'historique de recherche est vide."
 #, fuzzy
 msgid "search next page ok"
 msgstr "Texte de recherche"
+
+msgid "season pack"
+msgstr ""
 
 msgid "second"
 msgstr "seconde"
@@ -5571,6 +5760,15 @@ msgstr "Tous les flux"
 
 #, python-format
 msgid "stream: no data (HTTP %s)"
+msgstr ""
+
+msgid "subs.ro does not answer."
+msgstr ""
+
+msgid "subsource.net does not answer."
+msgstr ""
+
+msgid "subtitles"
 msgstr ""
 
 msgid "subtitles cache"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-29 20:26+0000\n"
+"POT-Creation-Date: 2026-10-02 19:34+0000\n"
 "PO-Revision-Date: 2026-07-27 16:39+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -95,10 +95,6 @@ msgstr "%s - přehled služeb"
 msgid "%s - subtitles provider"
 msgstr "%s - poskytovatel titulků"
 
-#, python-format
-msgid "%s API KEY"
-msgstr "%s KLÍČ API"
-
 #, fuzzy, python-format
 msgid "%s buffering..."
 msgstr "[%s] s ukládáním do vyrovnávací paměti"
@@ -124,12 +120,12 @@ msgid "%s followers"
 msgstr ""
 
 #, python-format
-msgid "%s has been protected with google recaptcha v2. You can try to use API version."
-msgstr "%s byl chráněn pomocí Google Recaptcha v2. Můžete zkusit použít verzi rozhraní API."
-
-#, python-format
 msgid "%s password"
 msgstr "%s heslo"
+
+#, python-format
+msgid "%s refused the download. Please set your login and password in the configuration."
+msgstr ""
 
 #, python-format
 msgid "%s returned %s: %s"
@@ -207,6 +203,9 @@ msgstr ""
 
 msgid "----- Global HostXXX Configuration -----"
 msgstr "----- Globální konfigurace HostXXX -----"
+
+msgid "----- METADATA PROVIDERS CONFIGURATION -----"
+msgstr ""
 
 msgid "----- PLAYERS & PLAYBACK CONFIGURATION -----"
 msgstr "----- KONFIGURACE PŘEHRÁVAČŮ A PŘEHRÁVÁNÍ -----"
@@ -342,9 +341,6 @@ msgstr "ALBA"
 
 msgid "API Key"
 msgstr "Kľúč API"
-
-msgid "API_KEY"
-msgstr "Kľúč_API"
 
 msgid "ARTISTS"
 msgstr "UMĚLCI"
@@ -500,6 +496,9 @@ msgstr "Alternativní proxy server (1)"
 msgid "Alternative proxy server (5)"
 msgstr "Alternativní proxy server (1)"
 
+msgid "An API key from subsource.net can be entered in the E2iPlayer settings (Subtitles)."
+msgstr ""
+
 #, python-format
 msgid ""
 "An error occurred when try to sign in the user \"%s.\n"
@@ -605,6 +604,10 @@ msgstr "Zvukové stopy"
 msgid "Audio tracks"
 msgstr "Zvukové stopy"
 
+#, python-format
+msgid "Author: %s"
+msgstr ""
+
 msgid "Auto"
 msgstr "Automaticky"
 
@@ -618,8 +621,8 @@ msgstr "Automatický výběr na základě nastavení"
 msgid "Auto start method"
 msgstr "Metoda automatického spuštění"
 
-msgid "Auto-translate"
-msgstr "Automatický překlad"
+msgid "Auto-generated"
+msgstr ""
 
 #, fuzzy
 msgid "Automatic"
@@ -700,8 +703,9 @@ msgstr "Rozpočet:"
 msgid "Buffering location"
 msgstr "Umístění vyrovnávací paměti"
 
-msgid "By media title"
-msgstr "Podle názvu média"
+#, python-format
+msgid "By %s"
+msgstr ""
 
 msgid "Bypass geo-blocking for VODs (it may be illegal):"
 msgstr "Obejít geografické blokování pro VOD (může to být nezákonné):"
@@ -753,6 +757,9 @@ msgstr ""
 
 msgid "Captcha solving service"
 msgstr "Služba řešení Captcha"
+
+msgid "Captcha was not entered."
+msgstr ""
 
 #, python-format
 msgid "Carrying: %s | UP/DOWN=Move, OK=Drop"
@@ -1015,6 +1022,9 @@ msgstr "Aktuální položka není kanál."
 msgid "Cut"
 msgstr "Vyjmout"
 
+msgid "Czech"
+msgstr ""
+
 msgid "DASH/mpd"
 msgstr "DASH/mpd"
 
@@ -1029,6 +1039,9 @@ msgstr "STAHOVÁNÍ"
 
 msgid "DRM protection detected."
 msgstr "Byla detekována ochrana DRM."
+
+msgid "Daily download limit reached - type the code"
+msgstr ""
 
 msgid "Darkgray"
 msgstr "Tmavě šedá"
@@ -1268,6 +1281,10 @@ msgstr "Stáhnout"
 msgid "Download \"%s\" in to \"%s\" failed!"
 msgstr "Stažení souboru „%s“ do „%s“ se nezdařilo!"
 
+#, python-format
+msgid "Download (ready in %d seconds)"
+msgstr ""
+
 msgid "Download again"
 msgstr "Stáhnout znovu"
 
@@ -1366,6 +1383,9 @@ msgstr ""
 msgid "Downloading file [%s] problem."
 msgstr "Problém se stahováním souboru [%s]."
 
+msgid "Downloading from prijevodi-online.org needs a free account. Enter login and password in the E2iPlayer settings."
+msgstr ""
+
 #, python-format
 msgid ""
 "Downloading subtitles.\n"
@@ -1379,6 +1399,10 @@ msgstr "Stahování"
 
 msgid "Downloads location"
 msgstr "Umístění ke stažení"
+
+#, python-format
+msgid "Downloads: %s"
+msgstr ""
 
 msgid "Draft"
 msgstr ""
@@ -1399,6 +1423,9 @@ msgstr "Doba trvání:"
 #, python-format
 msgid "Duration: %s"
 msgstr "Trvání: %s"
+
+msgid "Dutch"
+msgstr ""
 
 #, fuzzy
 msgid "E2iPlayer"
@@ -1582,6 +1609,10 @@ msgstr "Epizody"
 msgid "Episodes:"
 msgstr "Epizody:"
 
+#, python-format
+msgid "Episodes: %s"
+msgstr ""
+
 msgid "Error"
 msgstr ""
 
@@ -1733,14 +1764,21 @@ msgstr "Nepodařilo se vytvořit adresář „%s“."
 msgid "Failed to create extraction directory."
 msgstr "Nepodařilo se vytvořit adresář pro rozbalení."
 
-msgid "Failed to decode to UTF-8."
-msgstr "Nepodařilo se dekódovat do UTF-8."
-
 msgid "Failed to download subtitle."
 msgstr "Stažení titulků se nezdařilo."
 
+msgid "Failed to download the subtitles."
+msgstr ""
+
 msgid "Failed to fetch categories"
 msgstr "Načtení kategorií se nezdařilo"
+
+msgid "Failed to get the download link."
+msgstr ""
+
+#, python-format
+msgid "Failed to get the file list from %s."
+msgstr ""
 
 msgid "Failed to gzip."
 msgstr "Nepodařilo se gzipovat."
@@ -1762,9 +1800,6 @@ msgstr "Přihlášení uživatele „%s“ se nezdařilo. Zkontrolujte prosím s
 #, python-format
 msgid "Failed to open the file \"%s\"."
 msgstr "Nepodařilo se otevřít soubor „%s“."
-
-msgid "Failed to page with subtitle link."
-msgstr "Nepodařilo se zobrazit stránku s odkazem na titulky."
 
 #, python-format
 msgid "Failed to write file \"%s\"."
@@ -2099,6 +2134,9 @@ msgstr "Straně"
 msgid "Health"
 msgstr ""
 
+msgid "Hearing impaired"
+msgstr ""
+
 msgid "Help"
 msgstr ""
 
@@ -2170,6 +2208,9 @@ msgid "Hungarian"
 msgstr "Madarština"
 
 msgid "I am no robot"
+msgstr ""
+
+msgid "IMDb"
 msgstr ""
 
 msgid "IMDb Rating:"
@@ -2396,6 +2437,9 @@ msgstr "ŽIVÉ KANÁLY"
 msgid "Language"
 msgstr "Jazyk"
 
+msgid "Language of the details (TMDb, IMDb)"
+msgstr ""
+
 msgid "Language:"
 msgstr "Jazyk:"
 
@@ -2596,6 +2640,13 @@ msgstr "Nutné přihlášení"
 #, python-brace-format
 msgid "Login on {0} failed."
 msgstr "Přihlášení na {0} se nezdařilo."
+
+#, python-format
+msgid "Login to prijevodi-online.org failed: %s"
+msgstr ""
+
+msgid "Login to prijevodi-online.org failed: the site asks for a captcha, which E2iPlayer cannot solve. Series subtitles download without an account."
+msgstr ""
 
 #, python-format
 msgid ""
@@ -2881,6 +2932,9 @@ msgstr ""
 msgid "Netflix"
 msgstr "Netflix"
 
+msgid "Network"
+msgstr ""
+
 #, python-format
 msgid "Network failed %s."
 msgstr "Selhala síť %s."
@@ -3004,9 +3058,15 @@ msgstr "V archivu nebyl nalezen žádný soubor s titulky."
 msgid "No subtitles available for this title."
 msgstr "V archivu nebyl nalezen žádný soubor s titulky."
 
+msgid "No subtitles found."
+msgstr ""
+
 #, fuzzy, python-format
 msgid "No subtitles in %s. Available: %s"
 msgstr "Použijte rozšíření analyzátoru titulků, pokud je k dispozici"
+
+msgid "No title to search for."
+msgstr ""
 
 msgid "No valid entitlement found for asset."
 msgstr "Pro aktivum nebyl nalezen žádný platný nárok."
@@ -3028,6 +3088,9 @@ msgid "Not available yet"
 msgstr "Úplný popis není k dispozici"
 
 msgid "Not possible (no enigma2 session)."
+msgstr ""
+
+msgid "Nothing found on subdl.com."
 msgstr ""
 
 msgid "Nothing found. This site only finds Russian (Cyrillic) search terms."
@@ -3060,14 +3123,17 @@ msgstr "Počet současně stažených souborů"
 msgid "Number of rows"
 msgstr "Počet řádků"
 
+msgid "Numeric keypad for numbers"
+msgstr ""
+
 msgid "OFFLINE"
 msgstr ""
 
 msgid "OK"
 msgstr "OK"
 
-msgid "OMDb API Key"
-msgstr "Klíč OMDb API"
+msgid "OMDb API key (free at omdbapi.com)"
+msgstr ""
 
 msgid "Offline channels"
 msgstr "Offline kanály"
@@ -3104,6 +3170,9 @@ msgstr ""
 msgid "Open pull requests"
 msgstr ""
 
+msgid "OpenSubtitles.org sent a \"become VIP member\" note instead of the subtitle (download limit reached?)."
+msgstr ""
+
 msgid "Opening. Please wait..."
 msgstr "Otevírání. Čekejte prosím..."
 
@@ -3133,6 +3202,10 @@ msgstr ""
 
 msgid "Original Title:"
 msgstr "Původní název:"
+
+#, python-format
+msgid "Original language: %s"
+msgstr ""
 
 msgid "Other"
 msgstr "Ostatní"
@@ -3270,13 +3343,6 @@ msgstr ""
 msgid "Please configure Xtream (blue button)"
 msgstr "Nakonfigurujte prosím Xtream (modré tlačítko)"
 
-msgid ""
-"Please configure your API Key in:\n"
-"Settings → IPTVPlayer → Subtitles → SubDL.com API Key"
-msgstr ""
-"Nakonfigurujte prosím svůj API klíč v:\n"
-"Nastavení → IPTVPlayer → Titulky → SubDL.com API klíč"
-
 #, python-format
 msgid "Please consider restart your Engima2 and agree to install the %s utlity when the %s will propose this."
 msgstr "Zvažte prosím restartování zařízení Engima2 a souhlaste s instalací nástroje %s, jakmile vás %s navrhne."
@@ -3351,6 +3417,9 @@ msgstr "Oblíbené"
 #, fuzzy
 msgid "Pornstars"
 msgstr "Další pornohvězdy"
+
+msgid "Portuguese"
+msgstr ""
 
 msgid "Powerpoint Presentation"
 msgstr "PowerPointová prezentace"
@@ -3474,6 +3543,9 @@ msgstr ""
 msgid "Ranking"
 msgstr "Žebříček"
 
+msgid "Rated"
+msgstr ""
+
 msgid "Rated:"
 msgstr "Hodnocení:"
 
@@ -3486,6 +3558,10 @@ msgstr "Hodnocení %s"
 
 msgid "Rating:"
 msgstr "Hodnocení:"
+
+#, python-format
+msgid "Rating: %s"
+msgstr ""
 
 msgid "Read error."
 msgstr ""
@@ -3528,6 +3604,9 @@ msgstr ""
 
 msgid "Release"
 msgstr "Uvolnění"
+
+msgid "Released"
+msgstr ""
 
 msgid "Released:"
 msgstr "Datum vydání:"
@@ -3717,9 +3796,6 @@ msgstr "Historie vyhledávání je prázdná."
 msgid "Search History successfully deleted."
 msgstr "Historie vyhledávání byla úspěšně smazána."
 
-msgid "Search Movies and TV Series"
-msgstr "Hledat filmy a televizní seriály"
-
 msgid "Search history"
 msgstr "Historie vyhledávání"
 
@@ -3744,12 +3820,6 @@ msgstr "Hledat ve všech aktivních hostitelích"
 #, fuzzy
 msgid "Search next page"
 msgstr "Typ vyhledávání"
-
-msgid "Search only in Movies"
-msgstr "Hledat pouze ve Filmech"
-
-msgid "Search only in TV Series"
-msgstr "Hledat pouze v televizních seriálech"
 
 msgid "Search results"
 msgstr "Výsledky vyhledávání"
@@ -3798,6 +3868,10 @@ msgstr "Sezóna %s"
 
 msgid "Seasons:"
 msgstr "Sezóny:"
+
+#, python-format
+msgid "Seasons: %s"
+msgstr ""
 
 msgid "Second movie player in buffering mode"
 msgstr "Druhý přehrávač videa v režimu načítání do vyrovnávací paměti"
@@ -3970,6 +4044,9 @@ msgstr "Rameno a loket"
 #, fuzzy
 msgid "Show"
 msgstr "Pořady"
+
+msgid "Show \"Newest videos\" of all YouTube channels in a group"
+msgstr ""
 
 msgid "Show & Comedy"
 msgstr ""
@@ -4154,8 +4231,17 @@ msgstr "Seřazeno nejsledovanější kanály obecně [živé]"
 msgid "Sorted most viewed channels now [live]"
 msgstr "Seřazené nejsledovanější kanály [živé]"
 
+msgid "Source:"
+msgstr ""
+
+msgid "Spanish"
+msgstr ""
+
 msgid "Specialities"
 msgstr "Speciality"
+
+msgid "Specials"
+msgstr ""
 
 msgid "Spine"
 msgstr "Páteř"
@@ -4203,6 +4289,9 @@ msgstr "Přestat hrát?"
 msgid "Storage"
 msgstr ""
 
+msgid "Story"
+msgstr ""
+
 #, fuzzy
 msgid "Stream link"
 msgstr "Vyberte odkaz"
@@ -4216,27 +4305,6 @@ msgstr "Audio"
 
 msgid "Study Plan"
 msgstr "Studijní plán"
-
-msgid ""
-"SubDL Setup:\n"
-"\n"
-"1. Visit: subdl.com/panel/api\n"
-"2. Copy your API Key\n"
-"3. Go to: Settings → IPTVPlayer → Subtitles\n"
-"4. Paste the key in \"SubDL.com API Key\" field"
-msgstr ""
-"Nastavení SubDL:\n"
-"\n"
-"1. Navštivte: subdl.com/panel/api\n"
-"2. Zkopírujte svůj API klíč\n"
-"3. Přejděte na: Nastavení → IPTVPlayer → Titulky\n"
-"4. Vložte klíč do pole „SubDL.com API Key“"
-
-msgid "SubDL.com API Key"
-msgstr "API klíč SubDL.com"
-
-msgid "SubDL: API Key Required"
-msgstr "SubDL: Vyžadován API klíč"
 
 msgid "Subspecialities"
 msgstr "Subspecializace"
@@ -4316,6 +4384,10 @@ msgstr "Titulky pro: %s"
 msgid "Subtitles:"
 msgstr "Titulky:"
 
+#, python-format
+msgid "Subtitles: %s"
+msgstr ""
+
 msgid "Summary:"
 msgstr "Souhrn:"
 
@@ -4389,6 +4461,9 @@ msgstr ""
 "TOTO VIDEO NENÍ DOSTUPNÉ.\n"
 "ZKUSTE TO POZDĚJI!"
 
+msgid "TMDb API key (free at themoviedb.org)"
+msgstr ""
+
 msgid "TMDb Rating:"
 msgstr "Hodnocení TMDb:"
 
@@ -4451,6 +4526,9 @@ msgid ""
 "Leave this OFF if you do not want that. The other resolvers (AdRock/vidrock, VidNest, ...) are not affected."
 msgstr ""
 
+msgid "The OpenSubtitles v3 server did not answer. Please try again later."
+msgstr ""
+
 msgid "The QR code leads to the wiki page with pictures and the extension download."
 msgstr ""
 
@@ -4500,6 +4578,13 @@ msgid ""
 msgstr ""
 
 msgid "The debug log is not active."
+msgstr ""
+
+msgid "The download is not ready yet. Please try again in a few seconds."
+msgstr ""
+
+#, python-format
+msgid "The download is ready in %d seconds. Please try again then."
 msgstr ""
 
 msgid "The download manager is stopped, start it on the download page."
@@ -4557,6 +4642,10 @@ msgid "The number of items in the search history"
 msgstr "Počet položek v historii vyhledávání"
 
 #, python-format
+msgid "The page layout of %s has changed."
+msgstr ""
+
+#, python-format
 msgid ""
 "The playback buffer has been moved to the download manager.\n"
 "It will be saved in the file:\n"
@@ -4572,6 +4661,15 @@ msgstr ""
 msgid "The same item already exists in this group."
 msgstr "Stejná položka již v této skupině existuje."
 
+msgid "The server did not return a subtitle file (download limit reached?)."
+msgstr ""
+
+msgid "The server did not send a subtitle file."
+msgstr ""
+
+msgid "The server limits the number of requests. Please try again in a few seconds."
+msgstr ""
+
 msgid "The settings are protected by a PIN, change them on the receiver."
 msgstr ""
 
@@ -4579,6 +4677,9 @@ msgid "The site has no player for this video (it only shows a cam advert)."
 msgstr ""
 
 msgid "The site refuses all qualities of this video at the moment (HTTP 403). Try again later."
+msgstr ""
+
+msgid "The site rejected the search request."
 msgstr ""
 
 msgid "The support package holds the versions, the system information, the enabled hosts and the end of the debug log in one text file for a problem report. Look through it before posting it - the log can contain addresses of the sites you opened."
@@ -4689,6 +4790,9 @@ msgstr "Tato show je soukromá. Zkuste to znovu později!"
 msgid "This stream can only be played with buffering - please start it on the receiver."
 msgstr ""
 
+msgid "This subtitle provider has subtitles for movies only."
+msgstr ""
+
 msgid "This video has been deleted."
 msgstr "Toto video bylo smazáno."
 
@@ -4729,6 +4833,28 @@ msgid "Tip! You can connect USB flash drive to fix this problem."
 msgstr "Tip! Tento problém můžete vyřešit připojením USB flash disku."
 
 #, python-format
+msgid "Titlovi.com login failed (HTTP %s)."
+msgstr ""
+
+#, python-format
+msgid "Titlovi.com login failed for user \"%s\". Please check your login and password."
+msgstr ""
+
+msgid "Titlovi.com needs a free titlovi.com account. Enter login and password in the E2iPlayer settings."
+msgstr ""
+
+#, python-format
+msgid "Titlovi.com search failed (HTTP %s)."
+msgstr ""
+
+#, python-format
+msgid "Titlovi.com: API access is disabled for the account \"%s\". See titlovi.com/donacije."
+msgstr ""
+
+msgid "Titlovi.com: invalid server response."
+msgstr ""
+
+#, python-format
 msgid ""
 "To sign in to YouTube:\n"
 "\n"
@@ -4753,6 +4879,9 @@ msgid "Today"
 msgstr "Dnes"
 
 msgid "Too many redirects."
+msgstr ""
+
+msgid "Too many requests. Please try again later."
 msgstr ""
 
 msgid "Too many wrong codes - scan the QR code on the receiver screen instead."
@@ -4785,6 +4914,10 @@ msgstr "Trailer"
 msgid "Translation:"
 msgstr "Překlad:"
 
+#, python-format
+msgid "Translator: %s"
+msgstr ""
+
 msgid "Transparent"
 msgstr "Průhledný"
 
@@ -4814,6 +4947,9 @@ msgstr ""
 msgid "Try to change extplayer or reinstall gst-ifdsrc"
 msgstr "Zkuste změnit extplayer nebo zakázat IFD v konfiguraci GSTplayeru"
 
+msgid "Turkish"
+msgstr ""
+
 msgid "Turkish Movies"
 msgstr "Turecké filmy"
 
@@ -4841,6 +4977,9 @@ msgid "UNKNOWN"
 msgstr "NEZNÁMÝ"
 
 msgid "URL malformed."
+msgstr ""
+
+msgid "Ukrainian"
 msgstr ""
 
 msgid "Umount iso file"
@@ -4872,10 +5011,6 @@ msgstr "Neznámá chyba."
 
 msgid "Unknown error."
 msgstr "Neznámá chyba."
-
-#, python-format
-msgid "Unknown file extension \"%s\"."
-msgstr "Neznámá přípona souboru \"%s\"."
 
 #, python-format
 msgid "Unknown protocol [%s]"
@@ -4912,6 +5047,10 @@ msgstr "Datum nahrání"
 msgid "Upload date"
 msgstr "Datum nahrání"
 
+#, python-format
+msgid "Uploader: %s"
+msgstr ""
+
 #, fuzzy
 msgid "Uploads"
 msgstr "Datum nahrání"
@@ -4919,7 +5058,22 @@ msgstr "Datum nahrání"
 msgid "Urllists player"
 msgstr "Přehrávač URL adres"
 
+msgid "Use Cinemeta (no key, English)"
+msgstr ""
+
 msgid "Use HLS streams (adaptive):"
+msgstr ""
+
+msgid "Use IMDb (no key)"
+msgstr ""
+
+msgid "Use OMDb"
+msgstr ""
+
+msgid "Use TMDb"
+msgstr ""
+
+msgid "Use TVmaze for series (no key, English)"
 msgstr ""
 
 msgid "Use default video quality"
@@ -5102,6 +5256,9 @@ msgstr "Pro spuštění přehrávání je nutné stáhnout celý soubor!"
 msgid "Wiki"
 msgstr ""
 
+msgid "With an API key from subdl.com (E2iPlayer settings, Subtitles) the official SubDL API is searched as well."
+msgstr ""
+
 msgid "With subtitles"
 msgstr "Hodiny titulků"
 
@@ -5126,6 +5283,9 @@ msgstr "Nesprávná délka klíče API YouTube"
 msgid "Wrong answer."
 msgstr "Špatná odpověď."
 
+msgid "Wrong captcha code."
+msgstr ""
+
 #, fuzzy
 msgid "Wrong code."
 msgstr "Špatné indexy."
@@ -5143,6 +5303,16 @@ msgid "Wrong uri."
 msgstr "Špatný URI."
 
 msgid "Wrong weeb.tv username or password."
+msgstr ""
+
+#, python-format
+msgid "Wyzie Subs API key rejected: %s"
+msgstr ""
+
+msgid "Wyzie Subs needs an API key. You can get a free one at https://store.wyzie.io/redeem and enter it in the E2iPlayer configuration."
+msgstr ""
+
+msgid "Wyzie Subs: the daily request limit of the API key is reached."
 msgstr ""
 
 msgid "Xtream Live Stream"
@@ -5239,6 +5409,10 @@ msgid "Youtube searches are quicker, if you fill API key in setting menu"
 msgstr "Vyhledávání na YouTube je rychlejší, pokud v nastavení vyplníte klíč API"
 
 msgid "Z-A"
+msgstr ""
+
+#, python-format
+msgid "[%s CD]"
 msgstr ""
 
 #, python-format
@@ -5431,6 +5605,9 @@ msgstr "zelená"
 msgid "hd"
 msgstr "vysoká kvalita"
 
+msgid "hearing impaired"
+msgstr ""
+
 msgid "high"
 msgstr "vysoké"
 
@@ -5497,6 +5674,9 @@ msgstr "přihlásit"
 msgid "low"
 msgstr "nízké"
 
+msgid "machine translated"
+msgstr ""
+
 msgid "main"
 msgstr "hlavní"
 
@@ -5548,6 +5728,9 @@ msgstr "Další stránka"
 #, fuzzy
 msgid "next page ok"
 msgstr "Další stránka"
+
+msgid "no answer"
+msgstr ""
 
 #, fuzzy
 msgid "no next page"
@@ -5604,6 +5787,9 @@ msgstr ""
 
 msgid "password"
 msgstr "heslo"
+
+msgid "prijevodi-online.org refused the download for this account."
+msgstr ""
 
 msgid "purple"
 msgstr "fialová"
@@ -5665,6 +5851,9 @@ msgstr "Historie vyhledávání je prázdná."
 #, fuzzy
 msgid "search next page ok"
 msgstr "Typ vyhledávání"
+
+msgid "season pack"
+msgstr ""
 
 msgid "second"
 msgstr "sekunda"
@@ -5738,6 +5927,15 @@ msgstr "Všechny streamy"
 
 #, python-format
 msgid "stream: no data (HTTP %s)"
+msgstr ""
+
+msgid "subs.ro does not answer."
+msgstr ""
+
+msgid "subsource.net does not answer."
+msgstr ""
+
+msgid "subtitles"
 msgstr ""
 
 #, fuzzy

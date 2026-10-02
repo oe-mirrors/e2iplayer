@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-29 20:26+0000\n"
+"POT-Creation-Date: 2026-10-02 19:34+0000\n"
 "PO-Revision-Date: 2026-07-27 16:49+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -95,10 +95,6 @@ msgstr "%s - szolgáltatás áttekintése"
 msgid "%s - subtitles provider"
 msgstr "%s - feliratszolgáltató"
 
-#, python-format
-msgid "%s API KEY"
-msgstr "%s API-kulcs"
-
 #, fuzzy, python-format
 msgid "%s buffering..."
 msgstr "[%s] puffereléssel"
@@ -124,12 +120,12 @@ msgid "%s followers"
 msgstr ""
 
 #, python-format
-msgid "%s has been protected with google recaptcha v2. You can try to use API version."
-msgstr "A(z) %s Google ReCAPTCHA v2-vel lett védve. Megpróbálhatja használni az API verziót."
-
-#, python-format
 msgid "%s password"
 msgstr "%s jelszó"
+
+#, python-format
+msgid "%s refused the download. Please set your login and password in the configuration."
+msgstr ""
 
 #, python-format
 msgid "%s returned %s: %s"
@@ -207,6 +203,9 @@ msgstr ""
 
 msgid "----- Global HostXXX Configuration -----"
 msgstr "----- Globális HostXXX konfiguráció -----"
+
+msgid "----- METADATA PROVIDERS CONFIGURATION -----"
+msgstr ""
 
 msgid "----- PLAYERS & PLAYBACK CONFIGURATION -----"
 msgstr "----- LEJÁTSZÓK ÉS LEJÁTSZÁSI KONFIGURÁCIÓ -----"
@@ -342,9 +341,6 @@ msgstr "ALBUMOK"
 
 msgid "API Key"
 msgstr "API Kulcs"
-
-msgid "API_KEY"
-msgstr "API_Kulcs"
 
 msgid "ARTISTS"
 msgstr "MŰVÉSZEK"
@@ -500,6 +496,9 @@ msgstr "Alternatív proxy szerver (1)"
 msgid "Alternative proxy server (5)"
 msgstr "Alternatív proxy szerver (1)"
 
+msgid "An API key from subsource.net can be entered in the E2iPlayer settings (Subtitles)."
+msgstr ""
+
 #, python-format
 msgid ""
 "An error occurred when try to sign in the user \"%s.\n"
@@ -605,6 +604,10 @@ msgstr "Hangsávok"
 msgid "Audio tracks"
 msgstr "Hangsávok"
 
+#, python-format
+msgid "Author: %s"
+msgstr ""
+
 msgid "Auto"
 msgstr "Automatikus"
 
@@ -618,8 +621,8 @@ msgstr "Automatikus kiválasztás a beállítások alapján"
 msgid "Auto start method"
 msgstr "Automatikus indítási módszer"
 
-msgid "Auto-translate"
-msgstr "Automatikus fordítás"
+msgid "Auto-generated"
+msgstr ""
 
 #, fuzzy
 msgid "Automatic"
@@ -702,8 +705,9 @@ msgstr "Költségkeret:"
 msgid "Buffering location"
 msgstr "Pufferelési hely"
 
-msgid "By media title"
-msgstr "Médiacím szerint"
+#, python-format
+msgid "By %s"
+msgstr ""
 
 msgid "Bypass geo-blocking for VODs (it may be illegal):"
 msgstr "Kerüld meg a geoblokkolást a VOD-ok esetében (ez illegális lehet):"
@@ -755,6 +759,9 @@ msgstr ""
 
 msgid "Captcha solving service"
 msgstr "Captcha-megoldó szolgáltatás"
+
+msgid "Captcha was not entered."
+msgstr ""
 
 #, python-format
 msgid "Carrying: %s | UP/DOWN=Move, OK=Drop"
@@ -1017,6 +1024,9 @@ msgstr "Az aktuális elem nem csatorna."
 msgid "Cut"
 msgstr "Kivág"
 
+msgid "Czech"
+msgstr ""
+
 msgid "DASH/mpd"
 msgstr "DASH/mpd"
 
@@ -1031,6 +1041,9 @@ msgstr "LETÖLTÉS"
 
 msgid "DRM protection detected."
 msgstr "DRM védelem észlelve."
+
+msgid "Daily download limit reached - type the code"
+msgstr ""
 
 msgid "Darkgray"
 msgstr "Sötétszürke"
@@ -1270,6 +1283,10 @@ msgstr "Letöltés"
 msgid "Download \"%s\" in to \"%s\" failed!"
 msgstr "„%s” letöltése a következőre: „%s” sikertelen!"
 
+#, python-format
+msgid "Download (ready in %d seconds)"
+msgstr ""
+
 msgid "Download again"
 msgstr "Töltse le újra"
 
@@ -1368,6 +1385,9 @@ msgstr ""
 msgid "Downloading file [%s] problem."
 msgstr "[%s] fájl letöltési problémája."
 
+msgid "Downloading from prijevodi-online.org needs a free account. Enter login and password in the E2iPlayer settings."
+msgstr ""
+
 #, python-format
 msgid ""
 "Downloading subtitles.\n"
@@ -1381,6 +1401,10 @@ msgstr "Letöltések"
 
 msgid "Downloads location"
 msgstr "Letöltések helye"
+
+#, python-format
+msgid "Downloads: %s"
+msgstr ""
 
 msgid "Draft"
 msgstr ""
@@ -1401,6 +1425,9 @@ msgstr "Időtartam:"
 #, python-format
 msgid "Duration: %s"
 msgstr "Időtartam: %s"
+
+msgid "Dutch"
+msgstr ""
 
 #, fuzzy
 msgid "E2iPlayer"
@@ -1584,6 +1611,10 @@ msgstr "Epizódok"
 msgid "Episodes:"
 msgstr "Epizódok:"
 
+#, python-format
+msgid "Episodes: %s"
+msgstr ""
+
 msgid "Error"
 msgstr ""
 
@@ -1730,14 +1761,21 @@ msgstr "Hiba a \"%s\" könyvtár létrehozásakor."
 msgid "Failed to create extraction directory."
 msgstr "Nem sikerült létrehozni a kinyerési könyvtárat."
 
-msgid "Failed to decode to UTF-8."
-msgstr "Nem sikerült UTF-8-ra dekódolni."
-
 msgid "Failed to download subtitle."
 msgstr "Nem sikerült letölteni a feliratot."
 
+msgid "Failed to download the subtitles."
+msgstr ""
+
 msgid "Failed to fetch categories"
 msgstr "Nem sikerült lekérni a kategóriákat"
+
+msgid "Failed to get the download link."
+msgstr ""
+
+#, python-format
+msgid "Failed to get the file list from %s."
+msgstr ""
 
 msgid "Failed to gzip."
 msgstr "Nem sikerült gzip-elni."
@@ -1759,9 +1797,6 @@ msgstr "Nem sikerült bejelentkezni a(z) \"%s\" felhasználónak. Kérjük, elle
 #, python-format
 msgid "Failed to open the file \"%s\"."
 msgstr "Hiba a \"%s\" fájl megnyitása közben."
-
-msgid "Failed to page with subtitle link."
-msgstr "Sikertelen oldalbetöltés felírat linkkel."
 
 #, python-format
 msgid "Failed to write file \"%s\"."
@@ -2096,6 +2131,9 @@ msgstr "Kéz"
 msgid "Health"
 msgstr ""
 
+msgid "Hearing impaired"
+msgstr ""
+
 msgid "Help"
 msgstr ""
 
@@ -2167,6 +2205,9 @@ msgid "Hungarian"
 msgstr "Magyar"
 
 msgid "I am no robot"
+msgstr ""
+
+msgid "IMDb"
 msgstr ""
 
 msgid "IMDb Rating:"
@@ -2393,6 +2434,9 @@ msgstr "ÉLŐ CSATORNÁK"
 msgid "Language"
 msgstr "Nyelv"
 
+msgid "Language of the details (TMDb, IMDb)"
+msgstr ""
+
 msgid "Language:"
 msgstr "Nyelv:"
 
@@ -2591,6 +2635,13 @@ msgstr "Bejelentkezés szükséges"
 #, python-brace-format
 msgid "Login on {0} failed."
 msgstr "Bejelentkezés a(z) {0} címen sikertelen."
+
+#, python-format
+msgid "Login to prijevodi-online.org failed: %s"
+msgstr ""
+
+msgid "Login to prijevodi-online.org failed: the site asks for a captcha, which E2iPlayer cannot solve. Series subtitles download without an account."
+msgstr ""
 
 #, python-format
 msgid ""
@@ -2876,6 +2927,9 @@ msgstr ""
 msgid "Netflix"
 msgstr "Netflix"
 
+msgid "Network"
+msgstr ""
+
 #, python-format
 msgid "Network failed %s."
 msgstr "Hálózati hiba: %s."
@@ -3001,9 +3055,15 @@ msgstr "Nem található feliratfájl az archívumban."
 msgid "No subtitles available for this title."
 msgstr "Nem található feliratfájl az archívumban."
 
+msgid "No subtitles found."
+msgstr ""
+
 #, fuzzy, python-format
 msgid "No subtitles in %s. Available: %s"
 msgstr "Feliratozás bekapcsolása, ha elérhető"
+
+msgid "No title to search for."
+msgstr ""
 
 msgid "No valid entitlement found for asset."
 msgstr "Nem található érvényes jogosultság az eszközhöz."
@@ -3025,6 +3085,9 @@ msgid "Not available yet"
 msgstr "A teljes leírás nem érhető el"
 
 msgid "Not possible (no enigma2 session)."
+msgstr ""
+
+msgid "Nothing found on subdl.com."
 msgstr ""
 
 msgid "Nothing found. This site only finds Russian (Cyrillic) search terms."
@@ -3057,14 +3120,17 @@ msgstr "Egyidejűleg letöltött fájlok száma"
 msgid "Number of rows"
 msgstr "Sorok száma"
 
+msgid "Numeric keypad for numbers"
+msgstr ""
+
 msgid "OFFLINE"
 msgstr ""
 
 msgid "OK"
 msgstr "OK"
 
-msgid "OMDb API Key"
-msgstr "OMDb API-kulcs"
+msgid "OMDb API key (free at omdbapi.com)"
+msgstr ""
 
 msgid "Offline channels"
 msgstr "Offline csatornák"
@@ -3101,6 +3167,9 @@ msgstr ""
 msgid "Open pull requests"
 msgstr ""
 
+msgid "OpenSubtitles.org sent a \"become VIP member\" note instead of the subtitle (download limit reached?)."
+msgstr ""
+
 msgid "Opening. Please wait..."
 msgstr "Megnyitás. Kérjük, várjon..."
 
@@ -3130,6 +3199,10 @@ msgstr ""
 
 msgid "Original Title:"
 msgstr "Eredeti cím:"
+
+#, python-format
+msgid "Original language: %s"
+msgstr ""
 
 msgid "Other"
 msgstr "Egyéb"
@@ -3265,13 +3338,6 @@ msgstr ""
 msgid "Please configure Xtream (blue button)"
 msgstr "Kérjük, konfigurálja az Xtream-et (kék gomb)"
 
-msgid ""
-"Please configure your API Key in:\n"
-"Settings → IPTVPlayer → Subtitles → SubDL.com API Key"
-msgstr ""
-"Kérjük, állítsa be az API-kulcsát itt:\n"
-"Beállítások → IPTVPlayer → Feliratok → SubDL.com API-kulcs"
-
 #, python-format
 msgid "Please consider restart your Engima2 and agree to install the %s utlity when the %s will propose this."
 msgstr "Kérjük, fontolja meg az Engima2 újraindítását, és egyezzen bele a %s segédprogram telepítésébe, amikor a %s ezt fel fogja ajánlani."
@@ -3347,6 +3413,9 @@ msgstr "Népszerű"
 #, fuzzy
 msgid "Pornstars"
 msgstr "További pornósztárok"
+
+msgid "Portuguese"
+msgstr ""
 
 msgid "Powerpoint Presentation"
 msgstr "PowerPoint bemutató"
@@ -3470,6 +3539,9 @@ msgstr ""
 msgid "Ranking"
 msgstr "Rangsor"
 
+msgid "Rated"
+msgstr ""
+
 msgid "Rated:"
 msgstr "Korhatár-besorolás:"
 
@@ -3482,6 +3554,10 @@ msgstr "Értékelés %s"
 
 msgid "Rating:"
 msgstr "Értékelés:"
+
+#, python-format
+msgid "Rating: %s"
+msgstr ""
 
 msgid "Read error."
 msgstr ""
@@ -3524,6 +3600,9 @@ msgstr ""
 
 msgid "Release"
 msgstr "Kiadás"
+
+msgid "Released"
+msgstr ""
 
 msgid "Released:"
 msgstr "Libéré:"
@@ -3709,9 +3788,6 @@ msgstr "A keresési előzmények üresek."
 msgid "Search History successfully deleted."
 msgstr "A keresési előzmények törlése sikeresen megtörtént."
 
-msgid "Search Movies and TV Series"
-msgstr "Keresés a Filmek és a TV sorozatokban"
-
 msgid "Search history"
 msgstr "Keresési előzmények"
 
@@ -3736,12 +3812,6 @@ msgstr "Keresés az összes aktív hostok között"
 #, fuzzy
 msgid "Search next page"
 msgstr "Keresés típusa"
-
-msgid "Search only in Movies"
-msgstr "Keresés csak a Filmekben"
-
-msgid "Search only in TV Series"
-msgstr "Keresés csak a TV sorozatokban"
 
 msgid "Search results"
 msgstr "Keresési eredmények"
@@ -3790,6 +3860,10 @@ msgstr "%s. évad"
 
 msgid "Seasons:"
 msgstr "Évadok:"
+
+#, python-format
+msgid "Seasons: %s"
+msgstr ""
 
 msgid "Second movie player in buffering mode"
 msgstr "Második filmlejátszó pufferelési módban"
@@ -3962,6 +4036,9 @@ msgstr "Váll és könyök"
 #, fuzzy
 msgid "Show"
 msgstr "Műsorok"
+
+msgid "Show \"Newest videos\" of all YouTube channels in a group"
+msgstr ""
 
 msgid "Show & Comedy"
 msgstr ""
@@ -4146,8 +4223,17 @@ msgstr "Legnézettebb csatornák rendezve általános [élő]"
 msgid "Sorted most viewed channels now [live]"
 msgstr "A legnézettebb csatornák rendezése most [élő]"
 
+msgid "Source:"
+msgstr ""
+
+msgid "Spanish"
+msgstr ""
+
 msgid "Specialities"
 msgstr "Specialitások"
+
+msgid "Specials"
+msgstr ""
 
 msgid "Spine"
 msgstr "Gerinc"
@@ -4195,6 +4281,9 @@ msgstr "Abbahagyni a játékot?"
 msgid "Storage"
 msgstr ""
 
+msgid "Story"
+msgstr ""
+
 #, fuzzy
 msgid "Stream link"
 msgstr "Link kiválasztása"
@@ -4208,27 +4297,6 @@ msgstr "Hang"
 
 msgid "Study Plan"
 msgstr "Tanulmányi terv"
-
-msgid ""
-"SubDL Setup:\n"
-"\n"
-"1. Visit: subdl.com/panel/api\n"
-"2. Copy your API Key\n"
-"3. Go to: Settings → IPTVPlayer → Subtitles\n"
-"4. Paste the key in \"SubDL.com API Key\" field"
-msgstr ""
-"SubDL beállítása:\n"
-"\n"
-"1. Látogass el ide: subdl.com/panel/api\n"
-"2. Másold ki az API-kulcsodat\n"
-"3. Menj ide: Beállítások → IPTVPlayer → Feliratok\n"
-"4. Illeszd be a kulcsot a „SubDL.com API-kulcs” mezőbe"
-
-msgid "SubDL.com API Key"
-msgstr "SubDL.com API-kulcs"
-
-msgid "SubDL: API Key Required"
-msgstr "SubDL: API-kulcs szükséges"
 
 msgid "Subspecialities"
 msgstr "Alspecialitások"
@@ -4308,6 +4376,10 @@ msgstr "Feliratok ehhez: %s"
 msgid "Subtitles:"
 msgstr "Feliratok:"
 
+#, python-format
+msgid "Subtitles: %s"
+msgstr ""
+
 msgid "Summary:"
 msgstr "Összefoglaló:"
 
@@ -4382,6 +4454,9 @@ msgstr ""
 "EZ A VIDEÓ NEM ELÉRHETŐ.\n"
 "PRÓBÁLD MEG KÉSŐBB!"
 
+msgid "TMDb API key (free at themoviedb.org)"
+msgstr ""
+
 msgid "TMDb Rating:"
 msgstr "TMDb értékelés:"
 
@@ -4444,6 +4519,9 @@ msgid ""
 "Leave this OFF if you do not want that. The other resolvers (AdRock/vidrock, VidNest, ...) are not affected."
 msgstr ""
 
+msgid "The OpenSubtitles v3 server did not answer. Please try again later."
+msgstr ""
+
 msgid "The QR code leads to the wiki page with pictures and the extension download."
 msgstr ""
 
@@ -4493,6 +4571,13 @@ msgid ""
 msgstr ""
 
 msgid "The debug log is not active."
+msgstr ""
+
+msgid "The download is not ready yet. Please try again in a few seconds."
+msgstr ""
+
+#, python-format
+msgid "The download is ready in %d seconds. Please try again then."
 msgstr ""
 
 msgid "The download manager is stopped, start it on the download page."
@@ -4552,6 +4637,10 @@ msgid "The number of items in the search history"
 msgstr "A keresési előzményekben szereplő elemek száma"
 
 #, python-format
+msgid "The page layout of %s has changed."
+msgstr ""
+
+#, python-format
 msgid ""
 "The playback buffer has been moved to the download manager.\n"
 "It will be saved in the file:\n"
@@ -4567,6 +4656,15 @@ msgstr ""
 msgid "The same item already exists in this group."
 msgstr "Ugyanez az elem már létezik ebben a csoportban."
 
+msgid "The server did not return a subtitle file (download limit reached?)."
+msgstr ""
+
+msgid "The server did not send a subtitle file."
+msgstr ""
+
+msgid "The server limits the number of requests. Please try again in a few seconds."
+msgstr ""
+
 msgid "The settings are protected by a PIN, change them on the receiver."
 msgstr ""
 
@@ -4574,6 +4672,9 @@ msgid "The site has no player for this video (it only shows a cam advert)."
 msgstr ""
 
 msgid "The site refuses all qualities of this video at the moment (HTTP 403). Try again later."
+msgstr ""
+
+msgid "The site rejected the search request."
 msgstr ""
 
 msgid "The support package holds the versions, the system information, the enabled hosts and the end of the debug log in one text file for a problem report. Look through it before posting it - the log can contain addresses of the sites you opened."
@@ -4684,6 +4785,9 @@ msgstr "Ez a műsor zártkörű. Próbáld újra később!"
 msgid "This stream can only be played with buffering - please start it on the receiver."
 msgstr ""
 
+msgid "This subtitle provider has subtitles for movies only."
+msgstr ""
+
 msgid "This video has been deleted."
 msgstr "Ezt a videót törölték."
 
@@ -4724,6 +4828,28 @@ msgid "Tip! You can connect USB flash drive to fix this problem."
 msgstr "Tipp! A probléma megoldásához csatlakoztathat USB flash meghajtót."
 
 #, python-format
+msgid "Titlovi.com login failed (HTTP %s)."
+msgstr ""
+
+#, python-format
+msgid "Titlovi.com login failed for user \"%s\". Please check your login and password."
+msgstr ""
+
+msgid "Titlovi.com needs a free titlovi.com account. Enter login and password in the E2iPlayer settings."
+msgstr ""
+
+#, python-format
+msgid "Titlovi.com search failed (HTTP %s)."
+msgstr ""
+
+#, python-format
+msgid "Titlovi.com: API access is disabled for the account \"%s\". See titlovi.com/donacije."
+msgstr ""
+
+msgid "Titlovi.com: invalid server response."
+msgstr ""
+
+#, python-format
 msgid ""
 "To sign in to YouTube:\n"
 "\n"
@@ -4748,6 +4874,9 @@ msgid "Today"
 msgstr "Ma"
 
 msgid "Too many redirects."
+msgstr ""
+
+msgid "Too many requests. Please try again later."
 msgstr ""
 
 msgid "Too many wrong codes - scan the QR code on the receiver screen instead."
@@ -4780,6 +4909,10 @@ msgstr "Előzetes"
 msgid "Translation:"
 msgstr "Fordítás:"
 
+#, python-format
+msgid "Translator: %s"
+msgstr ""
+
 msgid "Transparent"
 msgstr "Átlátszó"
 
@@ -4809,6 +4942,9 @@ msgstr ""
 msgid "Try to change extplayer or reinstall gst-ifdsrc"
 msgstr "Próbáld meg módosítani az extplayert, vagy letiltani az IFD-t a GSTplayer konfigurációjában"
 
+msgid "Turkish"
+msgstr ""
+
 msgid "Turkish Movies"
 msgstr "Török filmek"
 
@@ -4836,6 +4972,9 @@ msgid "UNKNOWN"
 msgstr "Ismeretlen"
 
 msgid "URL malformed."
+msgstr ""
+
+msgid "Ukrainian"
 msgstr ""
 
 msgid "Umount iso file"
@@ -4867,10 +5006,6 @@ msgstr "Ismeretlen hiba."
 
 msgid "Unknown error."
 msgstr "Ismeretlen hiba."
-
-#, python-format
-msgid "Unknown file extension \"%s\"."
-msgstr "Ismeretlen fájlkiterjesztés: „%s”."
 
 #, python-format
 msgid "Unknown protocol [%s]"
@@ -4907,6 +5042,10 @@ msgstr "Feltöltés dátuma"
 msgid "Upload date"
 msgstr "Feltöltés dátuma"
 
+#, python-format
+msgid "Uploader: %s"
+msgstr ""
+
 #, fuzzy
 msgid "Uploads"
 msgstr "Feltöltés dátuma"
@@ -4914,7 +5053,22 @@ msgstr "Feltöltés dátuma"
 msgid "Urllists player"
 msgstr "Urllists lejátszó"
 
+msgid "Use Cinemeta (no key, English)"
+msgstr ""
+
 msgid "Use HLS streams (adaptive):"
+msgstr ""
+
+msgid "Use IMDb (no key)"
+msgstr ""
+
+msgid "Use OMDb"
+msgstr ""
+
+msgid "Use TMDb"
+msgstr ""
+
+msgid "Use TVmaze for series (no key, English)"
 msgstr ""
 
 msgid "Use default video quality"
@@ -5097,6 +5251,9 @@ msgstr "A lejátszás megkezdéséhez a teljes fájlt le kell tölteni!"
 msgid "Wiki"
 msgstr ""
 
+msgid "With an API key from subdl.com (E2iPlayer settings, Subtitles) the official SubDL API is searched as well."
+msgstr ""
+
 msgid "With subtitles"
 msgstr "Feliratok az órához"
 
@@ -5122,6 +5279,9 @@ msgstr "Hibás Youtube API kulcshossz"
 msgid "Wrong answer."
 msgstr "Rossz válasz."
 
+msgid "Wrong captcha code."
+msgstr ""
+
 #, fuzzy
 msgid "Wrong code."
 msgstr "Hibás indexek."
@@ -5139,6 +5299,16 @@ msgid "Wrong uri."
 msgstr "Hibás uri."
 
 msgid "Wrong weeb.tv username or password."
+msgstr ""
+
+#, python-format
+msgid "Wyzie Subs API key rejected: %s"
+msgstr ""
+
+msgid "Wyzie Subs needs an API key. You can get a free one at https://store.wyzie.io/redeem and enter it in the E2iPlayer configuration."
+msgstr ""
+
+msgid "Wyzie Subs: the daily request limit of the API key is reached."
 msgstr ""
 
 msgid "Xtream Live Stream"
@@ -5235,6 +5405,10 @@ msgid "Youtube searches are quicker, if you fill API key in setting menu"
 msgstr "A YouTube-keresések gyorsabbak, ha kitöltöd az API-kulcsot a beállítások menüben"
 
 msgid "Z-A"
+msgstr ""
+
+#, python-format
+msgid "[%s CD]"
 msgstr ""
 
 #, python-format
@@ -5427,6 +5601,9 @@ msgstr "zöld"
 msgid "hd"
 msgstr "hd"
 
+msgid "hearing impaired"
+msgstr ""
+
 msgid "high"
 msgstr "magas"
 
@@ -5493,6 +5670,9 @@ msgstr "bejelentkezés"
 msgid "low"
 msgstr "alacsony"
 
+msgid "machine translated"
+msgstr ""
+
 msgid "main"
 msgstr "fő"
 
@@ -5544,6 +5724,9 @@ msgstr "Következő oldal"
 #, fuzzy
 msgid "next page ok"
 msgstr "Következő oldal"
+
+msgid "no answer"
+msgstr ""
 
 #, fuzzy
 msgid "no next page"
@@ -5600,6 +5783,9 @@ msgstr ""
 
 msgid "password"
 msgstr "jelszó"
+
+msgid "prijevodi-online.org refused the download for this account."
+msgstr ""
 
 msgid "purple"
 msgstr "lila"
@@ -5661,6 +5847,9 @@ msgstr "A keresési előzmények üresek."
 #, fuzzy
 msgid "search next page ok"
 msgstr "Keresés típusa"
+
+msgid "season pack"
+msgstr ""
 
 msgid "second"
 msgstr "másodperc"
@@ -5734,6 +5923,15 @@ msgstr "Minden stream"
 
 #, python-format
 msgid "stream: no data (HTTP %s)"
+msgstr ""
+
+msgid "subs.ro does not answer."
+msgstr ""
+
+msgid "subsource.net does not answer."
+msgstr ""
+
+msgid "subtitles"
 msgstr ""
 
 #, fuzzy
