@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-02 19:34+0000\n"
+"POT-Creation-Date: 2026-10-02 22:49+0000\n"
 "PO-Revision-Date: 2026-09-27 08:11+0200\n"
 "Last-Translator: damagic-pl\n"
 "Language-Team: IPTVPlayer\n"
@@ -97,6 +97,14 @@ msgstr "%s - dostawca napisów"
 #, python-format
 msgid "%s buffering..."
 msgstr "%s buforowanie..."
+
+#, python-format
+msgid "%s cannot solve this type of captcha."
+msgstr ""
+
+#, python-format
+msgid "%s could not solve the captcha."
+msgstr ""
 
 #, python-format
 msgid "%s device name"
@@ -1056,6 +1064,9 @@ msgstr "Domyślny"
 msgid "Default (2 minutes)"
 msgstr "Domyślnie (2 minuty)"
 
+msgid "Default browser"
+msgstr ""
+
 msgid "Default captcha bypass"
 msgstr "Domyślne obejście captcha"
 
@@ -1807,6 +1818,9 @@ msgstr "Nie można pobrać pliku. Menedżer pobierania jest niedostępny."
 msgid "File can not be downloaded. Protocol [%s] is unsupported"
 msgstr "Nie można pobrać pliku.Nieobsługiwany protokół [%s]"
 
+msgid "File format of DASH (MPD) downloads"
+msgstr ""
+
 #, python-format
 msgid "File might be corrupted (size: %d bytes)."
 msgstr "Plik może być uszkodzony (rozmiar: %d bajtów)."
@@ -2232,6 +2246,10 @@ msgstr "Zainstalowano: v%s - aktualna"
 msgid "Interactive Learning Center(ILC)"
 msgstr "Interaktywne centrum edukacyjne (ILC)"
 
+#, python-format
+msgid "Invalid answer from %s."
+msgstr ""
+
 msgid "Invalid email."
 msgstr "Nieprawidłowy email."
 
@@ -2426,6 +2444,10 @@ msgstr "Najnowsze filmy z subskrybowanych kanałów."
 msgid "Latino"
 msgstr "Latino"
 
+#, python-brace-format
+msgid "Launcher URI ({url} or {address} = address of the box)"
+msgstr ""
+
 msgid "Left"
 msgstr "Lewo"
 
@@ -2549,6 +2571,9 @@ msgstr "Wymagane logowanie"
 #, python-brace-format
 msgid "Login on {0} failed."
 msgstr "Logowanie do {0} nie powiodło się."
+
+msgid "Login or password is wrong."
+msgstr ""
 
 #, python-format
 msgid "Login to prijevodi-online.org failed: %s"
@@ -2806,6 +2831,12 @@ msgstr ""
 
 msgid "MyE2i script finished."
 msgstr "Skrypt MyE2i zakończony."
+
+msgid "MyE2i: close the start page when done"
+msgstr ""
+
+msgid "MyE2i: offer to open the page in (Android)"
+msgstr ""
 
 msgid ""
 "NO VIDEOS FOUND FOR NOW! \n"
@@ -3066,6 +3097,13 @@ msgstr "Otwarte zgłoszenia"
 msgid "Open pull requests"
 msgstr "Otwarte pull requesty"
 
+#, python-format
+msgid "Open this page in %s"
+msgstr ""
+
+msgid "Open this page in the chosen browser"
+msgstr ""
+
 msgid "OpenSubtitles.org sent a \"become VIP member\" note instead of the subtitle (download limit reached?)."
 msgstr ""
 
@@ -3108,6 +3146,9 @@ msgstr "Pozostałe"
 
 msgid "Out of memory."
 msgstr "Brak pamięci."
+
+msgid "Own launcher URI"
+msgstr ""
 
 msgid "Own model"
 msgstr "Własny model"
@@ -3242,6 +3283,10 @@ msgstr "Wpisz tekst wyszukiwania."
 
 msgid "Please enter a valid link (http:// or https://)."
 msgstr "Wpisz prawidłowy link (http:// lub https://)."
+
+#, python-format
+msgid "Please enter the %s login and password in the E2iPlayer settings (Captcha)."
+msgstr ""
 
 msgid "Please make sure that the folder for cache data (set in the configuration) is writable."
 msgstr "Proszę się upewnić, że można zapisywać do folderu cache wskazanego w konfiguracji."
@@ -4401,6 +4446,12 @@ msgstr "Kanały YouTube w tej grupie nie mają filmów."
 msgid "The YouTube video ID is invalid."
 msgstr "Identyfikator wideo YouTube jest nieprawidłowy."
 
+msgid "The account is banned."
+msgstr ""
+
+msgid "The balance of the account is too low."
+msgstr ""
+
 msgid "The channel already exists in User Links."
 msgstr "Ten kanał już istnieje w linkach użytkownika."
 
@@ -4534,6 +4585,9 @@ msgid "The server did not send a subtitle file."
 msgstr ""
 
 msgid "The server limits the number of requests. Please try again in a few seconds."
+msgstr ""
+
+msgid "The service is overloaded. Please try again later."
 msgstr ""
 
 msgid "The settings are protected by a PIN, change them on the receiver."
