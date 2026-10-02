@@ -26,6 +26,7 @@ def GetConfigList():
     return optionList
 ###################################################
 
+
 # titlovi.com's website search sits behind a Cloudflare challenge. The official Kodi add-on
 # service.subtitles.titlovi (v2.0.1, github.com/xbmc/repo-scripts branch matrix, main.py) uses this
 # API instead: it needs a (free) titlovi.com account - gettoken -> Token + UserId, then search.

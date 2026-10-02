@@ -88,7 +88,7 @@ class WyzieProvider(CBaseSubProviderClass):
     def search(self, cItem):
         # the key has to be in the query string (the API ignores an Authorization / X-API-Key header),
         # so it is in the debug log with the url
-        query ={'id': 'tt' + cItem['imdbid'], 'key': self.getApiKey()}
+        query = {'id': 'tt' + cItem['imdbid'], 'key': self.getApiKey()}
         if cItem.get('season') and cItem.get('episode'):
             query.update({'season': cItem['season'], 'episode': cItem['episode']})
         url = self.getFullUrl('/search?' + urllib.parse.urlencode(query))
