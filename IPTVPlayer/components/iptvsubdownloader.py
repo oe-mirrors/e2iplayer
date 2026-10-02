@@ -418,6 +418,8 @@ class IPTVSubDownloaderWidget(Screen):
             # Use the user-confirmed title for subtitle search
             params["confirmed_title"] = self.movieTitle
             params["movie_title"] = self.movieTitle
+            # the stream / file name as it came - release tags (1080p, BluRay, group) for ranking the subtitles
+            params["release_title"] = self.originalMovieTitle
             params["discover_info"] = self.discoverInfoFromTitle(self.movieTitle)
             self.host = _temp.IPTVSubProvider(params)
             if not isinstance(self.host, ISubProvider):
@@ -774,28 +776,30 @@ class IPTVSubDownloaderWidget(Screen):
             "title": "OpenSubtitles.org API",
             "sub_provider": "opensubtitlesorg",
         }
-        openSubtitles2 = {
-            "title": "OpenSubtitles.org WWW",
-            "sub_provider": "opensubtitlesorg2",
-        }
         openSubtitles3 = {
             "title": "OpenSubtitles.org REST",
             "sub_provider": "opensubtitlesorg3",
         }
-        napiprojektpl = {"title": "Napiprojekt.pl", "sub_provider": "napiprojektpl"}
-        podnapisinet = {"title": "Podnapisi.net", "sub_provider": "podnapisinet"}
-        titlovi = {"title": "Titlovi.com", "sub_provider": "titlovicom"}
-        subscene = {"title": "Subscene.com", "sub_provider": "subscenecom"}
-        youtube = {"title": "Youtube.com", "sub_provider": "youtubecom"}
-        popcornsubtitles = {
-            "title": "PopcornSubtitles.com",
-            "sub_provider": "popcornsubtitles",
+        openSubtitlesV3 = {
+            "title": "OpenSubtitles v3 (Stremio)",
+            "sub_provider": "opensubtitlesv3",
         }
-        subtitlesgr = {"title": "Subtitles.gr", "sub_provider": "subtitlesgr"}
+        subf2m = {"title": "Subf2m", "sub_provider": "subf2m"}
+        subtitlecat = {"title": "Subtitlecat", "sub_provider": "subtitlecat"}
+        ytssubs = {"title": "YTS Subs", "sub_provider": "ytssubs"}
+        moviesubtitles = {"title": "MovieSubtitles.org", "sub_provider": "moviesubtitles"}
+        indexsubtitle = {"title": "IndexSubtitle.cc", "sub_provider": "indexsubtitle"}
+        justsubtitles = {"title": "JustSubtitles.com", "sub_provider": "justsubtitles"}
+        wyzie = {"title": "Wyzie Subs", "sub_provider": "wyzie"}
+        subtitlesmora = {"title": "Subtitles Mora (archive.org)", "sub_provider": "subtitlesmora"}
+        titulky = {"title": "Titulky.com", "sub_provider": "titulky"}
+        napiprojektpl = {"title": "Napiprojekt.pl", "sub_provider": "napiprojektpl"}
+        titlovi = {"title": "Titlovi.com", "sub_provider": "titlovicom"}
+        youtube = {"title": "Youtube.com", "sub_provider": "youtubecom"}
         prijevodi = {"title": "Prijevodi-Online.org", "sub_provider": "prijevodi"}
         subsro = {"title": "Subs.ro", "sub_provider": "subsro"}
-        subsourceapi = {"title": "SubsourceAPI", "sub_provider": "subsourceapi"}
-        subdlapi = {"title": "SubDLAPI", "sub_provider": "subdlapi"}
+        subsourceapi = {"title": "SubSource.net", "sub_provider": "subsourceapi"}
+        subdlapi = {"title": "SubDL.com", "sub_provider": "subdlapi"}
 
         defaultLang = GetDefaultLang()
 
@@ -805,17 +809,8 @@ class IPTVSubDownloaderWidget(Screen):
         ):
             subProvidersList.append(youtube)
 
-        if (
-            "popcornsubtitles_url" in self.params["url_params"]
-            and "" != self.params["url_params"]["popcornsubtitles_url"]
-        ):
-            subProvidersList.append(popcornsubtitles)
-
         if "hr" == defaultLang:
             subProvidersList.append(prijevodi)
-
-        if "el" == defaultLang:
-            subProvidersList.append(subtitlesgr)
 
         if "ro" == defaultLang:
             subProvidersList.append(subsro)
@@ -825,22 +820,32 @@ class IPTVSubDownloaderWidget(Screen):
             if IsSubtitlesParserExtensionCanBeUsed():
                 subProvidersList.append(napiprojektpl)
 
-        subProvidersList.append(subsourceapi)
-        subProvidersList.append(subdlapi)
-        subProvidersList.append(openSubtitles2)
+        # Arabic only / Czech and Slovak only
+        if "ar" == defaultLang:
+            subProvidersList.append(subtitlesmora)
+
+        if defaultLang in ("cs", "sk"):
+            subProvidersList.append(titulky)
+
         subProvidersList.append(openSubtitles3)
         subProvidersList.append(openSubtitles)
-        subProvidersList.append(podnapisinet)
+        subProvidersList.append(openSubtitlesV3)
+        subProvidersList.append(subsourceapi)
+        subProvidersList.append(subdlapi)
+        subProvidersList.append(subf2m)
+        subProvidersList.append(subtitlecat)
+        subProvidersList.append(ytssubs)
+        subProvidersList.append(moviesubtitles)
+        subProvidersList.append(indexsubtitle)
+        subProvidersList.append(justsubtitles)
+        # needs an API key in the settings
+        subProvidersList.append(wyzie)
         subProvidersList.append(titlovi)
-        subProvidersList.append(subscene)
 
         if "pl" != defaultLang:
             subProvidersList.append(napisy24pl)
             if IsSubtitlesParserExtensionCanBeUsed():
                 subProvidersList.append(napiprojektpl)
-
-        if "el" != defaultLang:
-            subProvidersList.append(subtitlesgr)
 
         if "hr" != defaultLang:
             subProvidersList.append(prijevodi)

@@ -75,7 +75,7 @@ def GetConfigList():
         printExc()
 
     optionList.append(getConfigListEntry("-----------------Windy Webcams------------------", config.plugins.iptvplayer.fake_separator))
-    optionList.append(getConfigListEntry(_("%s API KEY") % 'https://api.windy.com/webcams', config.plugins.iptvplayer.windy_api_key))
+    optionList.append(getConfigListEntry('https://api.windy.com/webcams ' + _("API Key"), config.plugins.iptvplayer.windy_api_key))
 
     return optionList
 

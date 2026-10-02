@@ -1,21 +1,31 @@
 # -*- coding: utf-8 -*-
+# subdl.com: the titles, seasons, languages and subtitle lists come from the website (no key needed),
+# the official API (https://subdl.com/panel/api) is only asked with a key, when the website finds nothing.
+import json
 import os
-import zipfile
-import requests
 import re
-from Components.config import config, ConfigSubsection
-from Plugins.Extensions.IPTVPlayer.components.configsecret import ConfigSecret
-from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
+from Components.config import config
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.isubprovider import (
     CSubProviderBase,
     CBaseSubProviderClass,
 )
-from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import shellQuote
+from Plugins.Extensions.IPTVPlayer.libs.subtitlesmatch import (
+    SEASONS,
+    episodeFilters,
+    langCode,
+    langName,
+    langSortKey,
+    matchTitle,
+    normalizeTitle,
+    sortByEpisode,
+    sortByRelease,
+)
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus, urllib_urlencode
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import (
     printDBG,
     printExc,
-    RemoveDisallowedFilenameChars,
-    GetSubtitlesDir,
+    GetDefaultLang,
     E2ColoR,
 )
 
@@ -23,23 +33,16 @@ Y = E2ColoR("yellow")
 W = E2ColoR("white")
 L = E2ColoR("lime")
 C = E2ColoR("cyan")
-OR = E2ColoR("orange")
-BASE_URL = "https://api.subdl.com/api/v1"
-DOWNLOAD_BASE = "https://dl.subdl.com/subtitle"
-if not hasattr(config.plugins, "iptvplayer"):
-    config.plugins.iptvplayer = ConfigSubsection()
-if not hasattr(config.plugins.iptvplayer, "subdlapi"):
-    config.plugins.iptvplayer.subdlapi = ConfigSecret(default="", fixed_size=False)
+G = E2ColoR("green")
+API_URL = "https://api.subdl.com/api/v1/subtitles"
+DOWNLOAD_BASE = "https://dl.subdl.com"
+QUALITY_RE = re.compile(r"(BluRay|WEB-DL|WEBDL|HDTV|HDRip|DVDRip|BDRip|TVRip|CAM|WEBRip|REMUX)", re.I)
+QUALITY_ORDER = ("bluray", "bdrip", "remux", "web-dl", "webdl", "webrip", "hdtv", "hdrip", "dvdrip")
 
 
 def GetConfigList():
-    from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import (
-        TranslateTXT as _,
-    )
-
-    optionList = []
-    optionList.append(("subdlapi", _("SubDL.com API Key"), "text"))
-    return optionList
+    # the API key is in the E2iPlayer settings (Subtitles)
+    return []
 
 
 def get_subdl_api():
@@ -50,917 +53,351 @@ def get_subdl_api():
         return ""
 
 
-def build_headers():
-    return {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) IPTVPlayer"}
+def stripColors(text):
+    return re.sub(r"\\c[0-9A-Fa-f]{8}", "", text or "")
+
+
+def searchQuery(title):
+    # the sites' search does not like punctuation: "Mission: Impossible - Fallout" -> "Mission Impossible Fallout"
+    return " ".join(re.sub(r"[^\w\s]", " ", title or "", flags=re.U).split())
+
+
+def pickArchiveFile(path, exts, season, episode):
+    """the subtitle file of an unpacked archive to use: the wanted episode, otherwise real subtitle formats
+    before .txt / .sub; {'file_path', 'name', 'ext'} or None. Also used by subprov_subsourceapi."""
+    files = []
+    for root, _dirs, names in os.walk(path):
+        for name in names:
+            ext = name.rsplit(".", 1)[-1].lower()
+            if ext in exts:
+                files.append({"file_path": os.path.join(root, name), "name": name, "ext": ext})
+    files.sort(key=lambda f: (f["ext"] in ("txt", "sub"), f["name"].lower()))
+    files = sortByEpisode(files, season, episode, "name")
+    return files[0] if files else None
+
+
+def qualityOf(name):
+    match = QUALITY_RE.search(name or "")
+    if not match:
+        return ""
+    quality = match.group(1)
+    return {"webdl": "WEB-DL", "bluray": "BluRay", "remux": "REMUX"}.get(quality.lower(), quality)
+
+
+def qualityWeight(quality):
+    quality = (quality or "").lower()
+    return QUALITY_ORDER.index(quality) if quality in QUALITY_ORDER else len(QUALITY_ORDER)
 
 
 class SubDLAPIProvider(CBaseSubProviderClass):
     def __init__(self, params={}):
         CBaseSubProviderClass.__init__(self, params)
-        self.session = requests.Session()
-        self.session.headers.update(build_headers())
-        self.defaultParams = {"header": self.session.headers}
-        self.currList = []
-        self._build_id_cache = None
+        self.MAIN_URL = "https://subdl.com/"
+        self.HTTP_HEADER = self.cm.getDefaultHeader()
+        self.HTTP_HEADER.update({"Referer": self.MAIN_URL})
+        self.defaultParams = {"header": self.HTTP_HEADER}
+        self.searchTitle, self.searchYear, self.wantedSeason, self.wantedEpisode = self.wantedInfo()
+        self.pageCache = {}
+        self.apiCache = {}
 
-    def convert_to_utf8(self, filePath):
-        try:
-            with open(filePath, "rb") as f:
-                raw_data = f.read()
-            try:
-                raw_data.decode("utf-8")
-                printDBG("File is already UTF-8: %s" % filePath)
-                return
-            except UnicodeDecodeError:
-                printDBG("File is not UTF-8, attempting conversion from ANSI...")
-            encodings_to_try = [
-                "cp1256",
-                "windows-1256",
-                "iso-8859-6",
-                "cp1252",
-                "latin-1",
-            ]
-            decoded_content = None
-            for enc in encodings_to_try:
-                try:
-                    decoded_content = raw_data.decode(enc)
-                    printDBG(" Successfully decoded using encoding: %s" % enc)
-                    break
-                except (UnicodeDecodeError, LookupError):
-                    continue
-            if decoded_content:
-                with open(filePath, "w", encoding="utf-8") as f:
-                    f.write(decoded_content)
-                printDBG("Successfully converted %s to UTF-8" % filePath)
-            else:
-                printDBG("Could not decode file %s with common encodings." % filePath)
-        except Exception as e:
-            printDBG("Error converting file encoding: %s" % str(e))
-            printExc()
+    def getPageData(self, url):
+        if url in self.pageCache:
+            return self.pageCache[url]
+        sts, data = self.cm.getPage(url, dict(self.defaultParams))
+        if not sts:
+            return None
+        self.pageCache = {url: data}
+        return data
 
-    def cleanTitle(self, title, for_search=True):
-        if not for_search:
-            return title
-        text = re.sub(r"\\[cCpPbBuU][0-9A-Fa-f]{0,8}", "", title)
-        text = re.sub(r"[cC][0-9A-Fa-f]{6}", "", text)
-        text = re.sub(r"\s*[Ss](\d{1,2})\s*[Ee](\d{1,2})\s*", " ", text)
-        text = re.sub(r"\s*[Ss]eason\s*\d+\s*[Ee]pisode\s*\d+\s*", " ", text)
-        text = re.sub(r"\s*\d+x\d+\s*", " ", text)  # 1x01
-        text = re.sub(r"\s*[Ss]eason\s*\d+\s*", " ", text)  # Season 1
-        text = re.sub(r"\s*[Ee]pisode\s*\d+\s*", " ", text)  # Episode 1
-        for sep in ["|", "-", ":", "(", "[", "]"]:
-            if sep in text:
-                text = text.split(sep)[0]
-        text = re.sub(r"[^a-zA-Z0-9\s]", " ", text)
-        words = text.split()
-        clean = " ".join(words[:4]).strip()
-        return clean if clean else " ".join(words[:2]).strip()
-
-    def getMovieID(self, cItem):
-        printDBG("\n=== [SubDL] Searching ===")
-        raw_title = cItem.get("base_title", cItem.get("title", ""))
-        clean_title = self.cleanTitle(raw_title)
-        if not clean_title:
-            printDBG("No title provided")
-            return
-        search_url = "https://subdl.com/search/%s" % clean_title.replace(" ", "+")
-        printDBG("URL: %s" % search_url)
-        results_found = False
-        try:
-            response = self.session.get(search_url, timeout=20)
-            response.raise_for_status()
-            html = response.text
-            items_list = []
-            pattern = r'<a\s+href="/subtitle/(sd\d+)/([^"]+)".*?<h3[^>]*>(.*?)</h3>.*?bg-(tvColor|movieColor)[^>]*>(tv|movie)</div>.*?(\d+)\s+subtitles'
-            matches = re.findall(pattern, html, re.DOTALL | re.IGNORECASE)
-            for match in matches:
-                sd_id, slug, title_raw, color_class, media_type, subs_count = match
-                year_match = re.search(r"\((\d{4})\)", title_raw)
-                year = year_match.group(1) if year_match else ""
-                display_name = re.sub(r"\s*\(\d{4}\)\s*", "", title_raw).strip()
-                items_list.append(
-                    {
-                        "sd_id": sd_id,
-                        "slug": slug,
-                        "name": display_name,
-                        "year": year,
-                        "type": media_type.lower(),
-                        "subtitles_count": int(subs_count),
-                    }
-                )
-            if items_list:
-                results_found = True
-                items_list = sorted(
-                    items_list,
-                    key=lambda x: (
-                        0 if x.get("type") == "tv" else 1,
-                        -int(x.get("subtitles_count", 0)),
-                    ),
-                )
-                printDBG("Found %d results via HTML Parsing" % len(items_list))
-                for item in items_list:
-                    sd_id = item.get("sd_id", "")
-                    title = item.get("name", "Unknown")
-                    year_str = str(item.get("year", "")) or "N/A"
-                    subs_count = item.get("subtitles_count", 0)
-                    media_type = item.get("type", "movie")
-                    color_type = "orange" if media_type == "tv" else "cyan"
-                    type_display = "TV" if media_type == "tv" else "MOVIE"
-                    display_title = (
-                        "%s (%s%s%s) - [ %s%s%s ] - [ %s%s%s subtitles ]"
-                        % (
-                            title,
-                            Y,
-                            year_str,
-                            W,
-                            E2ColoR(color_type),
-                            type_display,
-                            W,
-                            L,
-                            subs_count,
-                            W,
-                        )
-                    )
-                    params_dir = dict(cItem)
-                    params_dir.update(
-                        {
-                            "title": display_title,
-                            "sd_id": sd_id,
-                            "slug": item.get("slug", ""),
-                            "year": year_str if year_str != "N/A" else "",
-                            "type": media_type,
-                            "category": "get_languages",
-                        }
-                    )
-                    self.addDir(params_dir)
-            else:
-                printDBG("No results found in new HTML structure")
-        except Exception as e:
-            printDBG("Scraping Error: %s" % str(e))
-            printExc()
-        if not results_found:
-            printDBG("Falling back to Official SubDL API...")
-            self._searchViaOfficialAPI(cItem)
-
-    def _searchViaOfficialAPI(self, cItem):
+    def getApiJson(self, query):
         API_KEY = get_subdl_api()
         if not API_KEY:
-            printDBG("Cannot fallback: No API Key configured")
-            return
-        raw_title = cItem.get("base_title", cItem.get("title", ""))
-        clean_title = self.cleanTitle(raw_title)
-        url = "https://api.subdl.com/api/v1/subtitles"
-        params = {"api_key": API_KEY, "query": clean_title, "subs_per_page": "30"}
+            return None
+        query = dict(query, api_key=API_KEY)
+        sts, data = self.cm.getPage(API_URL + "?" + urllib_urlencode(query), dict(self.defaultParams))
+        if not sts:
+            return None
         try:
-            resp = self.session.get(url, params=params, timeout=20)
-            resp.raise_for_status()
-            data = resp.json()
-            grouped = {}
-            for sub in data.get("subtitles", []):
-                sid = sub.get("sd_id") or sub.get("id")
-                if not sid:
-                    continue
-                if sid not in grouped:
-                    grouped[sid] = {
-                        "sd_id": sid,
-                        "slug": sub.get("slug", ""),
-                        "name": sub.get("release_name") or sub.get("name"),
-                        "year": sub.get("year", ""),
-                        "type": sub.get("type", "movie"),
-                        "subtitles_count": 0,
-                    }
-                grouped[sid]["subtitles_count"] += 1
-            for item in grouped.values():
-                sd_id = item["sd_id"]
-                if not str(sd_id).startswith("sd"):
-                    sd_id = "sd" + str(sd_id)
-                title = item.get("name", "Unknown")
-                year_str = str(item.get("year", "")) or "N/A"
-                subs_count = item.get("subtitles_count", 0)
-                media_type = item.get("type", "movie")
-                color_type = "orange" if media_type == "tv" else "cyan"
-                type_display = "TV" if media_type == "tv" else "MOVIE"
-                display_title = "%s (%s%s%s) - [ %s%s%s ] - [ %s%s%s subtitles ]" % (
-                    title,
-                    Y,
-                    year_str,
-                    W,
-                    E2ColoR(color_type),
-                    type_display,
-                    W,
-                    L,
-                    subs_count,
-                    W,
-                )
-                params_dir = dict(cItem)
-                params_dir.update(
-                    {
-                        "title": display_title,
-                        "sd_id": sd_id,
-                        "slug": item.get("slug", ""),
-                        "year": year_str if year_str != "N/A" else "",
-                        "type": media_type,
-                        "category": "get_languages",
-                    }
-                )
-                self.addDir(params_dir)
-        except Exception as e:
-            printDBG("API Fallback failed: %s" % str(e))
+            data = json.loads(data)
+        except Exception:
             printExc()
+            return None
+        if not data.get("status", True):
+            printDBG("SubDL API error: %s" % data.get("error", data.get("message", "")))
+            return None
+        return data
+
+    def addTitles(self, cItem, items):
+        # the best match first, then the same title / year, titles with subtitles before empty ones
+        # (subtitles_count None: not known, an API result)
+        best = matchTitle(self.searchTitle, self.searchYear, [(x["name"], x["year"], x["sd_id"]) for x in items])
+        wanted = normalizeTitle(self.searchTitle)
+        wantTv = bool(self.wantedSeason)
+
+        def key(x):
+            return (x["sd_id"] != best, x["subtitles_count"] == 0, normalizeTitle(x["name"]) != wanted,
+                    bool(self.searchYear) and x["year"] != str(self.searchYear), (x["media_type"] == "tv") != wantTv,
+                    -(x["subtitles_count"] or 0))
+
+        for item in sorted(items, key=key):
+            tv = item["media_type"] == "tv"
+            count = "?" if item["subtitles_count"] is None else item["subtitles_count"]
+            display_title = "%s (%s%s%s) - [ %s%s%s ] - [ %s%s%s %s ]" % (
+                item["name"], Y, item["year"] or "N/A", W, E2ColoR("orange" if tv else "cyan"), "TV" if tv else "MOVIE", W,
+                L, count, W, _("subtitles"))
+            params = dict(cItem)
+            params.update({"title": display_title, "sd_id": item["sd_id"], "slug": item["slug"], "year": item["year"],
+                           "media_type": item["media_type"], "category": "get_languages"})
+            self.addDir(params)
+
+    def getMovieID(self, cItem):
+        printDBG("SubDLAPIProvider.getMovieID title[%s] year[%s]" % (self.searchTitle, self.searchYear))
+        query = searchQuery(self.searchTitle)
+        if not query:
+            SetIPTVPlayerLastHostError(_("No title to search for."))
+            return
+        items = []
+        data = self.getPageData(self.getFullUrl("/search/%s" % urllib_quote_plus(query)))
+        if data:
+            pattern = r'<a\s+href="/subtitle/(sd\d+)/([^"/]+)".*?<h3[^>]*>(.*?)</h3>.*?bg-(?:tvColor|movieColor)[^>]*>(tv|movie)</div>.*?(\d+)\s+subtitles'
+            for sd_id, slug, title_raw, media_type, subs_count in re.findall(pattern, data, re.DOTALL | re.IGNORECASE):
+                title_raw = self.cleanHtmlStr(title_raw)
+                year_match = re.search(r"\((\d{4})\)", title_raw)
+                items.append({"sd_id": sd_id, "slug": slug, "name": re.sub(r"\s*\(\d{4}\)\s*", "", title_raw).strip(),
+                              "year": year_match.group(1) if year_match else "", "media_type": media_type.lower(),
+                              "subtitles_count": int(subs_count)})
+            printDBG("SubDLAPIProvider.getMovieID %d results from the website" % len(items))
+        if not items:
+            items = self._searchViaOfficialAPI(query)
+        if items:
+            self.addTitles(cItem, items)
+        elif get_subdl_api():
+            SetIPTVPlayerLastHostError(_("No subtitles found."))
+        else:
+            SetIPTVPlayerLastHostError(_("Nothing found on subdl.com.") + "\n" +
+                                       _("With an API key from subdl.com (E2iPlayer settings, Subtitles) the official SubDL API is searched as well."))
+
+    def _searchViaOfficialAPI(self, query):
+        data = self.getApiJson({"film_name": query, "subs_per_page": "30"})
+        if not data:
+            return []
+        items = []
+        for res in data.get("results") or []:
+            sd_id = str(res.get("sd_id") or "")
+            if not sd_id or not res.get("name"):
+                continue
+            items.append({"sd_id": sd_id if sd_id.startswith("sd") else "sd" + sd_id,
+                          "slug": res.get("slug") or re.sub(r"[^a-z0-9]+", "-", normalizeTitle(res["name"])).strip("-"),
+                          "name": res["name"], "year": str(res.get("year") or ""),
+                          "media_type": "tv" if res.get("type") == "tv" else "movie", "subtitles_count": None})
+        printDBG("SubDLAPIProvider._searchViaOfficialAPI %d results" % len(items))
+        return items
+
+    def getPageUrl(self, cItem):
+        url = self.getFullUrl("/subtitle/%s/%s" % (cItem["sd_id"], cItem["slug"]))
+        if cItem.get("season_slug"):
+            url += "/" + cItem["season_slug"]
+        return url
+
+    @staticmethod
+    def seasonNumber(season_slug, season_name):
+        # "Season 2" / "second-season" / "season-2" / "specials"; not the first digits of the name
+        # ("9-1-1 Season 3", "1923 - Season 1")
+        num = re.search(r"(?i)season\D*(\d+)", season_name or "") or re.search(r"(?i)season\D*(\d+)", season_slug or "")
+        if num:
+            return int(num.group(1))
+        first = (season_slug or "").split("-")[0].lower()
+        for idx, name in enumerate(SEASONS):
+            if name.lower() == first:
+                return idx
+        num = re.search(r"(\d+)", season_slug or "")
+        return int(num.group(1)) if num else 9999
 
     def getLanguages(self, cItem):
-        printDBG("\n=== [SubDL] Getting available languages ===")
-        sd_id = cItem.get("sd_id")
-        slug = cItem.get("slug")
-        if not sd_id or not slug:
-            printDBG("Missing sd_id or slug")
+        printDBG("SubDLAPIProvider.getLanguages")
+        if not cItem.get("sd_id") or not cItem.get("slug"):
             return
-        if cItem.get("season_slug"):
-            self._fetchLanguagesFromPage(cItem)
+        data = self.getPageData(self.getPageUrl(cItem))
+        if data and re.search(r'data-language="[^"]+"', data):
+            self._extractLanguagesFromHTML(data, cItem)
             return
-        url = "https://subdl.com/subtitle/%s/%s" % (sd_id, slug)
-        printDBG("Checking page: %s" % url)
-        try:
-            response = self.session.get(url, timeout=30)
-            response.raise_for_status()
-            html = response.text
-            has_languages = bool(re.search(r'data-language="[^"]+"', html))
-            if has_languages:
-                printDBG(
-                    "Subtitle page detected (has data-language), extracting languages..."
-                )
-                self._cached_html = html
-                self._cached_url = url
-                self._extractLanguagesFromHTML(html, cItem)
+        if data and not cItem.get("season_slug"):
+            season_pattern = r'<a\s+href="/subtitle/%s/%s/([^"]*(?:season|specials)[^"]*)"[^>]*>.*?<h3[^>]*>(.*?)</h3>' % (
+                re.escape(cItem["sd_id"]), re.escape(cItem["slug"]))
+            seasons = []
+            for season_slug, season_name in re.findall(season_pattern, data, re.DOTALL | re.IGNORECASE):
+                season_name = self.cleanHtmlStr(season_name)
+                if season_slug not in [s[1] for s in seasons]:
+                    seasons.append((self.seasonNumber(season_slug, season_name), season_slug, season_name))
+            if seasons:
+                # in season order, the season of the video first
+                seasons.sort(key=lambda s: (s[0] != self.wantedSeason, s[0]))
+                for _num, season_slug, season_name in seasons:
+                    params = dict(cItem)
+                    params.update({"season_slug": season_slug, "title": season_name, "category": "get_languages"})
+                    self.addDir(params)
                 return
-            season_pattern = (
-                r'<a\s+href="/subtitle/%s/%s/([^"]*(?:season|specials)[^"]*)"[^>]*>.*?<h3[^>]*>(.*?)</h3>'
-                % (re.escape(sd_id), re.escape(slug))
-            )
-            season_matches = re.findall(season_pattern, html, re.DOTALL | re.IGNORECASE)
-            if season_matches:
-                printDBG(
-                    "TV Show seasons page detected, extracting %d seasons..."
-                    % len(season_matches)
-                )
-                added_count = 0
-                for season_slug, season_name in season_matches:
-                    clean_name = season_name.strip()
-                    params_dir = dict(cItem)
-                    params_dir.update(
-                        {
-                            "season_slug": season_slug,
-                            "title": clean_name,
-                            "category": "get_languages",
-                        }
-                    )
-                    self.addDir(params_dir)
-                    added_count += 1
-                printDBG("Added %d seasons" % added_count)
-                return
-            printDBG("No languages or seasons found in HTML")
-            self._getLanguagesViaAPI(cItem)
-        except Exception as e:
-            printDBG("Page check error: %s" % str(e))
-            printExc()
-            self._getLanguagesViaAPI(cItem)
-
-    def _fetchLanguagesFromPage(self, cItem):
-        sd_id = cItem.get("sd_id")
-        slug = cItem.get("slug")
-        season_slug = cItem.get("season_slug")
-        url = "https://subdl.com/subtitle/%s/%s/%s" % (sd_id, slug, season_slug)
-        printDBG("Season Page URL: %s" % url)
-        try:
-            response = self.session.get(url, timeout=30)
-            response.raise_for_status()
-            html = response.text
-            self._cached_html = html
-            self._cached_url = url
-            self._extractLanguagesFromHTML(html, cItem)
-        except Exception as e:
-            printDBG("Season page error: %s" % str(e))
-            printExc()
-            self._getLanguagesViaAPI(cItem)
+        self._getLanguagesViaAPI(cItem)
+        if not self.currList:
+            SetIPTVPlayerLastHostError(_("No subtitles found."))
 
     def _extractLanguagesFromHTML(self, html, cItem):
         desc_parts = []
         h1_match = re.search(r"<h1[^>]*>(.*?)</h1>", html, re.DOTALL)
-        movie_title = ""
         if h1_match:
-            movie_title = re.sub(r"<[^>]+>", "", h1_match.group(1)).strip()
-        released = ""
-        released_match = re.search(r"Released:\s*([\d\-]+)", html)
-        if released_match:
-            released = released_match.group(1)
-        imdb = ""
-        imdb_match = re.search(r"IMDb:\s*([\d\.]+)", html)
-        if imdb_match:
-            imdb = imdb_match.group(1)
-        rated = ""
-        rated_match = re.search(r"Rated:\s*([^<\n]+)", html)
-        if rated_match:
-            rated = rated_match.group(1).strip()
-        network = ""
-        network_match = re.search(r"Network:\s*([^<\n]+)", html)
-        if network_match:
-            network = network_match.group(1).strip()
-        storyline = ""
-        story_match = re.search(
-            r"Storyline.*?</h2>\s*(?:<div[^>]*>.*?</div>\s*)?<p[^>]*>(.*?)</p>",
-            html,
-            re.DOTALL | re.IGNORECASE,
-        )
-        if story_match:
-            storyline = re.sub(r"<[^>]+>", "", story_match.group(1)).strip()
-        if movie_title:
-            desc_parts.append("%s%s%s" % (Y, movie_title, W))
+            desc_parts.append("%s%s%s" % (Y, self.cleanHtmlStr(h1_match.group(1)), W))
         info_line_parts = []
-        if released:
-            info_line_parts.append("%sReleased:%s %s" % (Y, W, released))
-        if imdb:
-            info_line_parts.append("%sIMDb:%s %s" % (Y, W, imdb))
-        if rated:
-            info_line_parts.append("%sRated:%s %s" % (Y, W, rated))
-        if network:
-            info_line_parts.append("%sNetwork:%s %s" % (Y, W, network))
+        for label, regex in ((_("Released"), r"Released:\s*([\d\-]+)"), (_("IMDb"), r"IMDb:\s*([\d\.]+)"),
+                             (_("Rated"), r"Rated:\s*([^<\n]+)"), (_("Network"), r"Network:\s*([^<\n]+)")):
+            match = re.search(regex, html)
+            if match:
+                info_line_parts.append("%s%s:%s %s" % (Y, label, W, match.group(1).strip()))
         if info_line_parts:
             desc_parts.append(" | ".join(info_line_parts))
-        if storyline:
-            desc_parts.append("%sStory :%s %s" % (Y, W, storyline))
-        full_desc = "\n".join(desc_parts) if desc_parts else ""
-        printDBG("Description extracted: %d chars" % len(full_desc))
-        if full_desc:
-            printDBG("Desc preview: %s" % full_desc[:200])
-        poster_url = ""
-        poster_match = re.search(
-            r'<img[^>]*src="(https://poster\.subdl\.com/poster/[^"]+)"', html
-        )
-        if poster_match:
-            poster_url = poster_match.group(1)
-        lang_pattern = r'data-language="([^"]+)"[^>]*data-language-name="([^"]+)"[^>]*style="[^"]*--rows:\s*(\d+)'
-        matches = re.findall(lang_pattern, html, re.IGNORECASE)
-        if not matches:
-            lang_pattern_alt = (
-                r'data-language="([^"]+)"[^>]*data-language-name="([^"]+)"'
-            )
-            matches = re.findall(lang_pattern_alt, html, re.IGNORECASE)
-            matches = [(code, name, "0") for code, name in matches]
-        if not matches:
-            printDBG("No languages found in HTML")
-            self._getLanguagesViaAPI(cItem)
-            return
-        added_count = 0
-        seen_langs = set()
-        for match in matches:
-            lang_code = match[0].lower()
-            lang_name = match[1].strip()
-            rows_count = match[2] if len(match) > 2 else "0"
-            if lang_code in seen_langs:
+        story_match = re.search(r"Storyline.*?</h2>\s*(?:<div[^>]*>.*?</div>\s*)?<p[^>]*>(.*?)</p>", html, re.DOTALL | re.IGNORECASE)
+        if story_match:
+            desc_parts.append("%s%s:%s %s" % (Y, _("Story"), W, self.cleanHtmlStr(story_match.group(1))))
+        full_desc = "\n".join(desc_parts)
+        poster_match = re.search(r'<img[^>]*src="(https://poster\.subdl\.com/poster/[^"]+)"', html)
+        # the IMDb link of this title, not a "tt" number of a related title somewhere on the page
+        imdb_match = re.search(r"imdb\.com/title/tt(\d+)", html)
+
+        matches = re.findall(r'data-language="([^"]+)"[^>]*data-language-name="([^"]+)"(?:[^>]*--rows:\s*(\d+))?', html, re.IGNORECASE)
+        langs = []
+        for key, lang_name, rows_count in matches:
+            key = key.lower()
+            if key in [x[0] for x in langs]:
                 continue
-            seen_langs.add(lang_code)
-            display_name = lang_name if lang_name else lang_code.capitalize()
-            title = r"%s \c00FFFF00[ %s ]\c00FFFFFF" % (display_name, str(rows_count))
-            params_dir = dict(cItem)
-            params_dir.update(
-                {
-                    "language": display_name,
-                    "language_code": lang_code,
-                    "category": "get_subtitles",
-                    "title": title,
-                    "desc": full_desc,
-                    "description": full_desc,
-                    "icon": poster_url if poster_url else "",
-                }
-            )
-            self.addDir(params_dir)
-            added_count += 1
-        printDBG("Added %d languages from HTML" % added_count)
+            lang_name = self.cleanHtmlStr(lang_name) or key.capitalize()
+            langs.append((key, lang_name, langCode(lang_name) or langCode(key) or key, rows_count))
+        # the user's language first, then English, then by name
+        langs.sort(key=lambda x: langSortKey(x[2], GetDefaultLang()))
+        for key, lang_name, lang, rows_count in langs:
+            params = dict(cItem)
+            params.update({"language": lang_name, "language_key": key, "lang": lang, "category": "get_subtitles",
+                           "title": r"%s \c00FFFF00[ %s ]\c00FFFFFF" % (lang_name, rows_count or "?"), "desc": full_desc,
+                           "icon": poster_match.group(1) if poster_match else "",
+                           "imdbid": imdb_match.group(1) if imdb_match else ""})
+            self.addDir(params)
+        printDBG("SubDLAPIProvider._extractLanguagesFromHTML %d languages" % len(langs))
+
+    def _apiQuery(self, cItem):
+        query = {"sd_id": cItem["sd_id"].replace("sd", ""), "subs_per_page": "30"}
+        season = self.seasonNumber(cItem["season_slug"], "") if cItem.get("season_slug") else 9999
+        if season != 9999:
+            query["season_number"] = str(season)
+        return query
+
+    def _apiSubLang(self, sub):
+        return langCode(sub.get("language") or "") or langCode(sub.get("lang") or "")
 
     def _getLanguagesViaAPI(self, cItem):
-        API_KEY = get_subdl_api()
-        if not API_KEY:
-            printDBG("Cannot fallback: No API Key")
+        query = self._apiQuery(cItem)
+        data = self.getApiJson(query)
+        if not data:
             return
-        sd_id = cItem.get("sd_id", "").replace("sd", "")
-        url = "https://api.subdl.com/api/v1/subtitles"
-        params = {"api_key": API_KEY, "sd_id": sd_id, "subs_per_page": "100"}
-        try:
-            resp = self.session.get(url, params=params, timeout=20)
-            resp.raise_for_status()
-            data = resp.json()
-            langs = {}
-            for sub in data.get("subtitles", []):
-                lang = (sub.get("language") or sub.get("lang") or "").lower()
-                if lang:
-                    langs[lang] = langs.get(lang, 0) + 1
-            for lang_code, count in langs.items():
-                title = r"%s \c00FFFF00[ %d ]\c00FFFFFF" % (
-                    lang_code.capitalize(),
-                    count,
-                )
-                params_dir = dict(cItem)
-                params_dir.update(
-                    {
-                        "language": lang_code.capitalize(),
-                        "language_code": lang_code,
-                        "category": "get_subtitles",
-                        "title": title,
-                    }
-                )
-                self.addDir(params_dir)
-            printDBG("Added %d languages via API fallback" % len(langs))
-        except Exception as e:
-            printDBG("API Language Fallback failed: %s" % str(e))
-            printExc()
+        # all languages in one answer: the subtitle list of a language is filtered from it
+        subs = data.get("subtitles") or []
+        self.apiCache[json.dumps(query, sort_keys=True)] = subs
+        langs = {}
+        for sub in subs:
+            lang = self._apiSubLang(sub)
+            if lang:
+                langs[lang] = langs.get(lang, 0) + 1
+        for lang in sorted(langs, key=lambda x: langSortKey(x, GetDefaultLang())):
+            params = dict(cItem)
+            params.update({"language": langName(lang), "language_key": "", "lang": lang, "category": "get_subtitles",
+                           "title": r"%s \c00FFFF00[ %d ]\c00FFFFFF" % (langName(lang), langs[lang])})
+            self.addDir(params)
+        printDBG("SubDLAPIProvider._getLanguagesViaAPI %d languages" % len(langs))
 
     def getSubtitles(self, cItem):
-        printDBG("\n=== [SubDL] Fetching subtitles list ===")
+        printDBG("SubDLAPIProvider.getSubtitles")
         subtitles = self._searchSubtitle(cItem)
+        if not subtitles:
+            SetIPTVPlayerLastHostError(_("No subtitles found."))
         for item in subtitles:
-            params = dict(cItem)
-            params.update(item)
-            self.addSubtitle(params)
+            self.addSubtitle(item)
+
+    def _subtitleItem(self, cItem, sub_id, release, author, download_url):
+        quality = qualityOf(release)
+        display = [cItem["lang"].upper()]
+        if quality:
+            display.append(Y + quality + W)
+        display.append(re.sub(r"(?i)\b(S\d{1,2}E\d{1,3}|season\s*\d+|episode\s*\d+)\b", lambda m: C + m.group(0) + W, release))
+        if author:
+            display.append(Y + "(%s)" % author + W)
+        params = dict(cItem)
+        params.update({"title": " | ".join(display), "release": release, "url": download_url, "sub_id": sub_id,
+                       "quality": quality, "desc": (_("Author: %s") % author) if author else cItem.get("desc", "")})
+        return params
 
     def _searchSubtitle(self, cItem):
-        printDBG("\n=== [SubDL] _searchSubtitle ===")
-        lang_code = (cItem.get("language_code") or "").lower()
+        key = cItem.get("language_key", "")
         outList = []
-        html = getattr(self, "_cached_html", None)
-
-        def get_quality_weight(q_str):
-            if not q_str:
-                return 99
-            q = q_str.lower()
-            if "bluray" in q or "bdrip" in q or "remux" in q:
-                return 1
-            if "web-dl" in q or "webdl" in q:
-                return 2
-            if "webrip" in q:
-                return 3
-            if "hdtv" in q:
-                return 4
-            if "hdrip" in q:
-                return 5
-            if "dvdrip" in q:
-                return 6
-            return 99
-
-        def color_season_episode(text):
-            if not text:
-                return text
-            COLOR_SE = C
-            RESET = W
-            text = re.sub(
-                r"(?i)\bS\s*0*(\d+)\s*E\s*0*(\d+)\b",
-                lambda m: COLOR_SE
-                + "S%02dE%02d" % (int(m.group(1)), int(m.group(2)))
-                + RESET,
-                text,
-            )
-            text = re.sub(
-                r"(?i)\bseason\s*0*(\d+)\b",
-                lambda m: COLOR_SE + m.group(0) + RESET,
-                text,
-            )
-            text = re.sub(
-                r"(?i)\bepisode\s*0*(\d+)\b",
-                lambda m: COLOR_SE + m.group(0) + RESET,
-                text,
-            )
-            text = re.sub(
-                r"(?i)\bS0*(\d+)\b",
-                lambda m: COLOR_SE + "S%02d" % int(m.group(1)) + RESET,
-                text,
-            )
-            text = re.sub(
-                r"(?i)\bE0*(\d+)\b",
-                lambda m: COLOR_SE + "E%02d" % int(m.group(1)) + RESET,
-                text,
-            )
-            return text
-
-        video_title = self.params.get("confirmed_title", "") or ""
-        wanted_ep = ""
-        ep_match = re.search(r"(?i)\bS(\d{1,2})\s*E(\d{1,2})\b", video_title)
-        if ep_match:
-            wanted_ep = "S%02dE%02d" % (int(ep_match.group(1)), int(ep_match.group(2)))
-            printDBG("Current episode: %s" % wanted_ep)
-
-        def is_episode_match(item):
-            if not wanted_ep:
-                return False
-            title_raw = item.get("title", "")
-            clean_title = re.sub(r"\\c[0-9A-Fa-f]{6,8}", "", title_raw)
-            clean_title = re.sub(r"\x1b\[[0-9;]*m", "", clean_title)  # ANSI codes
-            clean_upper = clean_title.upper()
-            if wanted_ep.upper() in clean_upper:
-                return True
-            season_only = wanted_ep[:3].upper()  # "S01"
-            if season_only in clean_upper:
-                other_eps = re.findall(r"S01E(\d+)", clean_upper)
-                if not other_eps:
-                    return True
-                elif wanted_ep[4:].lstrip("E") in other_eps:
-                    return True
-            return False
-
-        cached_url = getattr(self, "_cached_url", "")
-        expected_slug = cItem.get("season_slug", "")
-        if not html or (expected_slug and expected_slug not in cached_url):
-            printDBG("Cache miss, fetching fresh HTML...")
-            sd_id = cItem.get("sd_id")
-            slug = cItem.get("slug")
-            if expected_slug:
-                fetch_url = "https://subdl.com/subtitle/%s/%s/%s" % (
-                    sd_id,
-                    slug,
-                    expected_slug,
-                )
-            else:
-                fetch_url = "https://subdl.com/subtitle/%s/%s" % (sd_id, slug)
-            try:
-                resp = self.session.get(fetch_url, timeout=30)
-                resp.raise_for_status()
-                html = resp.text
-                self._cached_html = html
-                self._cached_url = fetch_url
-            except Exception as e:
-                printDBG("Failed to fetch HTML: %s" % str(e))
-                html = None
+        html = self.getPageData(self.getPageUrl(cItem)) if key else None
         if html:
-            try:
-                printDBG("Parsing subtitles from HTML for [%s]" % lang_code)
-                lang_section_pattern = (
-                    r'data-language="%s"[^>]*>(.*?)(?=data-language="|<div class="mt-4 flex select-none flex-col" data-ai-language|$)'
-                    % re.escape(lang_code)
-                )
-                section_match = re.search(
-                    lang_section_pattern, html, re.DOTALL | re.IGNORECASE
-                )
-                if section_match:
-                    section_html = section_match.group(1)
-                    row_blocks = re.findall(
-                        r'<li[^>]*data-row[^>]*data-id="(\d+)"[^>]*>(.*?)</li>',
-                        section_html,
-                        re.DOTALL | re.IGNORECASE,
-                    )
-                    printDBG(
-                        "Found %d raw row blocks for [%s]"
-                        % (len(row_blocks), lang_code)
-                    )
-                    for sub_id, block_html in row_blocks:
-                        title_match = re.search(
-                            r"<h4>(.*?)</h4>", block_html, re.DOTALL
-                        )
-                        clean_title = (
-                            title_match.group(1).strip() if title_match else "Unknown"
-                        )
-                        author = ""
-                        author_match = re.search(r'href="/u/([^"]+)"', block_html)
-                        if author_match:
-                            author = author_match.group(1).strip()
-                        download_url = ""
-                        dl_match = re.search(
-                            r'href="(https://dl\.subdl\.com/subtitle/[^"]+)"',
-                            block_html,
-                        )
-                        if dl_match:
-                            download_url = dl_match.group(1)
-                        if not download_url:
-                            continue
-                        quality = "Other"
-                        q_patterns = r"(BluRay|WEB-DL|WEBDL|HDTV|HDRip|DVDRip|BDRip|TVRip|CAM|WEBRip|REMUX)"
-                        q_match = re.search(q_patterns, clean_title, re.IGNORECASE)
-                        if q_match:
-                            quality = q_match.group(1)
-                            q_lower = quality.lower()
-                            if q_lower == "webdl":
-                                quality = "WEB-DL"
-                            elif q_lower == "bluray":
-                                quality = "BluRay"
-                            elif q_lower == "remux":
-                                quality = "REMUX"
-                        colored_quality = Y + quality + W if quality != "Other" else ""
-                        colored_author = Y + "(%s)" % author + W if author else ""
-                        colored_title = color_season_episode(clean_title)
-                        display_parts = [lang_code.upper()]
-                        if colored_quality:
-                            display_parts.append(colored_quality)
-                        display_parts.append(colored_title)
-                        if colored_author:
-                            display_parts.append(colored_author)
-                        title = " | ".join([x for x in display_parts if x])
-                        params_sub = dict(cItem)
-                        params_sub.update(
-                            {
-                                "title": title,
-                                "url": download_url,
-                                "subtitle_id": sub_id,
-                                "lang": lang_code,
-                                "category": "get_download",
-                                "quality": quality,
-                            }
-                        )
-                        outList.append(params_sub)
-                    printDBG(
-                        "Found %d subtitles via HTML for [%s]"
-                        % (len(outList), lang_code)
-                    )
-                else:
-                    printDBG("Language section not found in HTML for [%s]" % lang_code)
-            except Exception as e:
-                printDBG("HTML subtitle parsing failed: %s" % str(e))
-                printExc()
-                outList = []
-        if not outList:
-            printDBG("Falling back to API for subtitles")
-            API_KEY = get_subdl_api()
-            if not API_KEY:
-                return []
-            sd_id = cItem.get("sd_id", "").replace("sd", "")
-            url = "https://api.subdl.com/api/v1/subtitles"
-            params = {
-                "api_key": API_KEY,
-                "sd_id": sd_id,
-                "lang": lang_code,
-                "subs_per_page": "50",
-            }
-            season_slug = cItem.get("season_slug", "")
-            if season_slug and season_slug != "first-season":
-                s_match = re.search(r"(\d+)", season_slug)
-                if s_match:
-                    params["season"] = s_match.group(1)
-            try:
-                resp = self.session.get(url, params=params, timeout=30)
-                resp.raise_for_status()
-                data = resp.json()
-                for item in data.get("subtitles", []):
-                    item_lang = (item.get("language") or "").lower()
-                    if item_lang != lang_code:
+            section = re.search(r'data-language="%s"[^>]*>(.*?)(?=data-language="|data-ai-language|$)' % re.escape(key), html, re.DOTALL | re.IGNORECASE)
+            if section:
+                for sub_id, block in re.findall(r'<li[^>]*data-row[^>]*data-id="(\d+)"[^>]*>(.*?)</li>', section.group(1), re.DOTALL | re.IGNORECASE):
+                    dl_match = re.search(r'href="(https://dl\.subdl\.com/subtitle/[^"]+)"', block)
+                    if not dl_match:
                         continue
-                    sub_id = str(item.get("id", ""))
-                    raw_title = (
-                        item.get("release_name") or item.get("name") or lang_code
-                    )
-                    link = item.get("link", "")
-                    download_url = (
-                        "https://dl.subdl.com/subtitle/%s" % link if link else ""
-                    )
-                    quality = "Other"
-                    q_match = re.search(
-                        r"(BluRay|WEB-DL|WEBDL|HDTV|HDRip|DVDRip|BDRip|TVRip|CAM|WEBRip|REMUX)",
-                        raw_title,
-                        re.IGNORECASE,
-                    )
-                    if q_match:
-                        quality = q_match.group(1)
-                    colored_quality = Y + quality + W if quality != "Other" else ""
-                    display_parts = [lang_code.upper()]
-                    if colored_quality:
-                        display_parts.append(colored_quality)
-                    display_parts.append(raw_title)
-                    title = " | ".join([x for x in display_parts if x])
-                    params_sub = dict(cItem)
-                    params_sub.update(
-                        {
-                            "title": title,
-                            "subtitle_id": sub_id,
-                            "url": download_url,
-                            "lang": lang_code,
-                            "category": "get_download",
-                            "quality": quality,
-                        }
-                    )
-                    outList.append(params_sub)
-                printDBG("Found %d subtitles via API fallback" % len(outList))
-            except Exception as e:
-                printDBG("API subtitle fallback failed: %s" % str(e))
-                printExc()
-        if wanted_ep:
-            printDBG("Prioritizing subtitles for episode: %s" % wanted_ep)
-            outList.sort(
-                key=lambda x: (
-                    0 if is_episode_match(x) else 1,
-                    get_quality_weight(x.get("quality", "other")),
-                    -int(x.get("downloads", 0)),
-                )
-            )
-            match_count = 0
+                    title_match = re.search(r"<h4>(.*?)</h4>", block, re.DOTALL)
+                    author_match = re.search(r'href="/u/([^"]+)"', block)
+                    release = self.cleanHtmlStr(title_match.group(1)) if title_match else cItem["language"]
+                    outList.append(self._subtitleItem(cItem, sub_id, release, author_match.group(1) if author_match else "", dl_match.group(1)))
+            printDBG("SubDLAPIProvider._searchSubtitle %d subtitles from the website for [%s]" % (len(outList), key))
+        if not outList:
+            outList = self._searchSubtitleViaAPI(cItem)
+
+        # the release of the video first, then the wanted episode and the season packs, then by source quality
+        outList.sort(key=lambda x: qualityWeight(x.get("quality")))
+        outList = sortByRelease(outList, self.releaseName(), "release")
+        outList = sortByEpisode(outList, self.wantedSeason, self.wantedEpisode, "release")
+        if self.wantedSeason and self.wantedEpisode:
+            this_episode = episodeFilters(self.wantedSeason, self.wantedEpisode)[0]
             for item in outList:
-                if is_episode_match(item):
-                    item["title"] = r"\c0030FF30✅ \c00FFFFFF" + item["title"]
-                    match_count += 1
-            printDBG("  Found %d matching subtitles for %s" % (match_count, wanted_ep))
-        else:
-            outList.sort(key=lambda x: get_quality_weight(x.get("quality", "other")))
+                if this_episode.search(item["release"]):
+                    item["title"] = G + "* " + W + item["title"]
+        return outList
+
+    def _searchSubtitleViaAPI(self, cItem):
+        query = self._apiQuery(cItem)
+        subs = self.apiCache.get(json.dumps(query, sort_keys=True))
+        if subs is None:
+            # NOTE: the API takes upper-case codes (EN, DE, ...); its code for pt-br could not be verified
+            # (the language list is behind Cloudflare), so "pt-br" asks for "PT"
+            query["languages"] = cItem["lang"].split("-")[0].upper()
+            subs = (self.getApiJson(query) or {}).get("subtitles") or []
+        outList = []
+        for sub in subs:
+            link = sub.get("url") or sub.get("link") or ""
+            if self._apiSubLang(sub) != cItem["lang"] or not link:
+                continue
+            if not link.startswith("http"):
+                link = DOWNLOAD_BASE + ("" if link.startswith("/") else "/subtitle/") + link
+            sub_id = re.sub(r"\D", "", link.rsplit("/", 1)[-1].split("-")[-1])
+            outList.append(self._subtitleItem(cItem, sub_id, sub.get("release_name") or sub.get("name") or cItem["language"],
+                                              sub.get("author") or "", link))
+        printDBG("SubDLAPIProvider._searchSubtitleViaAPI %d subtitles" % len(outList))
         return outList
 
     def downloadSubtitleFile(self, cItem):
-        printDBG("\n=== [SubDL] Downloading subtitle ===")
-        sub_id = cItem.get("subtitle_id")
-        bucket_link = cItem.get("bucketLink")
-        direct_url = cItem.get("url") or cItem.get("link")
-        lang = cItem.get("lang", "en")
-        title = RemoveDisallowedFilenameChars(cItem.get("title", "subtitle"))
-        download_url = None
-        if direct_url:
-            if direct_url.startswith("http"):
-                download_url = direct_url
-            else:
-                download_url = "https://dl.subdl.com/subtitle/%s" % direct_url
-        elif bucket_link:
-            download_url = "https://dl.subdl.com/subtitle/%s" % bucket_link
-        elif sub_id:
-            sub_id = str(sub_id).replace(".zip", "")
-            download_url = "https://dl.subdl.com/subtitle/%s.zip" % sub_id
-        else:
-            printDBG("No valid download reference")
+        printDBG("SubDLAPIProvider.downloadSubtitleFile url[%s]" % cItem.get("url"))
+        if not cItem.get("url"):
             return {}
-        fileName = "%s-[SubDL].zip" % title
-        filePath = os.path.join(GetSubtitlesDir(), fileName)
-        printDBG("Downloading: %s" % download_url)
-        try:
-            headers = build_headers()
-            headers.update(
-                {"Referer": "https://subdl.com/", "Origin": "https://subdl.com"}
-            )
-            response = requests.get(
-                download_url,
-                headers=headers,
-                timeout=30,
-                stream=True,
-                allow_redirects=True,
-            )
-            if response.status_code != 200:
-                printDBG("HTTP ERROR: %s" % response.status_code)
-                return {}
-            with open(filePath, "wb") as f:
-                for chunk in response.iter_content(8192):
-                    if chunk:
-                        f.write(chunk)
-            printDBG("Download complete: %s" % filePath)
-            extracted_path = None
-            subtitles_dir = GetSubtitlesDir()
-            video_title = self.params.get("confirmed_title", "") or cItem.get(
-                "title", ""
-            )
-            printDBG("Raw video title: %s" % video_title)
-            wanted_episode = ""
-            patterns = [
-                # الأنماط القياسية
-                r"(?i)\bS(\d{1,2})\s*E(\d{1,2})\b",
-                r"(?i)\bS(\d{1,2})\s*-\s*E(\d{1,2})\b",
-                r"(?i)\bS(\d{1,2})\s+E(\d{1,2})\b",
-                r"(?i)\bS(\d{1,2})\s*EP(\d{1,2})\b",
-                r"(?i)\b(\d{1,2})x(\d{1,2})\b",
-                # الفرنسية: Saison 3 - Episode 4
-                r"(?i)saison\s*(\d{1,2})\s*[-–]?\s*episode\s*(\d{1,2})",
-                r"(?i)saison\s*(\d{1,2})\s+ep(?:isode)?\.?\s*(\d{1,2})",
-                # الألمانية: Staffel 3 - Folge 4
-                r"(?i)staffel\s*(\d{1,2})\s*[-–]?\s*(?:folge|episode)\s*(\d{1,2})",
-                # الإسبانية: Temporada 3 - Episodio 4
-                r"(?i)temporada\s*(\d{1,2})\s*[-–]?\s*episodio\s*(\d{1,2})",
-                # الإيطالية: Stagione 3 - Episodio 4
-                r"(?i)stagione\s*(\d{1,2})\s*[-–]?\s*episodio\s*(\d{1,2})",
-                # البرتغالية: Temporada 3 - Episódio 4
-                r"(?i)temporada\s*(\d{1,2})\s*[-–]?\s*epis[oó]dio\s*(\d{1,2})",
-                # التركية: Sezon 3 - Bölüm 4
-                r"(?i)sezon\s*(\d{1,2})\s*[-–]?\s*b[oö]l[uü]m\s*(\d{1,2})",
-                # أنماط عامة إضافية
-                r"(?i)season\s*(\d{1,2}).*?episode\s*(\d{1,2})",
-                r"(?i)series\s*(\d{1,2}).*?episode\s*(\d{1,2})",
-            ]
-            for pattern in patterns:
-                match = re.search(pattern, video_title)
-                if match:
-                    season_num = int(match.group(1))
-                    episode_num = int(match.group(2))
-                    wanted_episode = "S%02dE%02d" % (season_num, episode_num)
-                    printDBG(
-                        "Extracted season/episode: %s using pattern: %s"
-                        % (wanted_episode, pattern)
-                    )
-                    break
-            printDBG("Wanted episode: %s" % wanted_episode)
-            with open(filePath, "rb") as f:
-                header = f.read(8)
-            is_zip = header.startswith(b"PK")
-            is_rar = header.startswith(b"Rar!")
-            archive_list = []
-            if is_zip:
-                printDBG("ZIP archive detected")
-                with zipfile.ZipFile(filePath, "r") as zip_ref:
-                    archive_list = [
-                        x
-                        for x in zip_ref.namelist()
-                        if x.lower().endswith((".srt", ".ass", ".ssa", ".sub", ".txt"))
-                    ]
-                    selected_file = None
-                    if wanted_episode:
-                        for item in archive_list:
-                            upper_name = item.upper()
-                            if wanted_episode in upper_name:
-                                selected_file = item
-                                printDBG("Matched subtitle: %s" % item)
-                                break
-                    if not selected_file and archive_list:
-                        selected_file = archive_list[0]
-                        printDBG("Using first subtitle: %s" % selected_file)
-                    if selected_file:
-                        zip_ref.extract(selected_file, subtitles_dir)
-                        src_path = os.path.join(subtitles_dir, selected_file)
-                        final_filename = RemoveDisallowedFilenameChars(
-                            os.path.basename(selected_file)
-                        )
-                        extracted_path = os.path.join(subtitles_dir, final_filename)
-                        if src_path != extracted_path:
-                            if os.path.exists(extracted_path):
-                                os.remove(extracted_path)
-                            os.rename(src_path, extracted_path)
-            elif is_rar:
-                printDBG("RAR archive detected")
-                rar_extract_dir = os.path.join(subtitles_dir, "rar_extract_tmp")
-                if not os.path.exists(rar_extract_dir):
-                    os.mkdir(rar_extract_dir)
-                # the file name contains the release title from the subdl API - escaped for the shell
-                cmd = 'unrar e -o+ "%s" "%s/"' % (shellQuote(filePath), shellQuote(rar_extract_dir))
-                printDBG("Running: %s" % cmd)
-                os.system(cmd)
-                archive_list = []
-                for fname in os.listdir(rar_extract_dir):
-                    lower = fname.lower()
-                    if lower.endswith((".srt", ".ass", ".ssa", ".sub", ".txt")):
-                        archive_list.append(fname)
-                selected_file = None
-                if wanted_episode:
-                    for item in archive_list:
-                        upper_name = item.upper()
-                        if wanted_episode in upper_name:
-                            selected_file = item
-                            printDBG("Matched subtitle: %s" % item)
-                            break
-                if not selected_file and archive_list:
-                    selected_file = archive_list[0]
-                    printDBG("Using first subtitle: %s" % selected_file)
-                if selected_file:
-                    src_path = os.path.join(rar_extract_dir, selected_file)
-                    final_filename = RemoveDisallowedFilenameChars(
-                        os.path.basename(selected_file)
-                    )
-                    extracted_path = os.path.join(subtitles_dir, final_filename)
-                    if os.path.exists(extracted_path):
-                        os.remove(extracted_path)
-                    os.rename(src_path, extracted_path)
-                try:
-                    for f in os.listdir(rar_extract_dir):
-                        os.remove(os.path.join(rar_extract_dir, f))
-                    os.rmdir(rar_extract_dir)
-                except Exception:
-                    pass
-            else:
-                printDBG("Unknown archive type")
-                printDBG("Invalid header sample: %s" % repr(header))
-            if extracted_path and os.path.exists(extracted_path):
-                self.convert_to_utf8(extracted_path)
-            if os.path.exists(filePath):
-                os.remove(filePath)
-            if extracted_path and os.path.exists(extracted_path):
-                return {"title": title, "path": extracted_path, "lang": lang}
-            return {"title": title, "path": filePath, "lang": lang}
-        except Exception as e:
-            printDBG("Download error: %s" % str(e))
-            printExc()
-            if os.path.exists(filePath):
-                os.remove(filePath)
+        tmpDIR = self.downloadArchive(cItem["url"], {"header": dict(self.HTTP_HEADER)})
+        if tmpDIR is None:
             return {}
-
-    def extractSeasonEpisode(self, video_title):
-        if not video_title:
-            return ""
-        printDBG("Raw video title: %s" % video_title)
-        patterns = [
-            r"(?i)\bS\s*0*(\d{1,2})\s*E\s*0*(\d{1,2})\b",
-            r"(?i)\bS\s*0*(\d{1,2})\s*[- ]+\s*E\s*0*(\d{1,2})\b",
-            r"(?i)\bS\s*0*(\d{1,2})\s*EP\s*0*(\d{1,2})\b",
-            r"(?i)\b(\d{1,2})x(\d{1,2})\b",
-            r"(?i)season\s*(\d{1,2}).*?episode\s*(\d{1,2})",
-            r"(?i)staffel\s*(\d{1,2}).*?(?:episode|episoden|folge)\s*(\d{1,2})",
-            r"(?i)saison\s*(\d{1,2}).*?episode\s*(\d{1,2})",
-            r"(?i)stagione\s*(\d{1,2}).*?episodio\s*(\d{1,2})",
-        ]
-        for pattern in patterns:
-            match = re.search(pattern, video_title)
-            if match:
-                season = int(match.group(1))
-                episode = int(match.group(2))
-                result = "S%02dE%02d" % (season, episode)
-                printDBG(
-                    "Extracted season/episode: %s using pattern: %s" % (result, pattern)
-                )
-                return result
-        printDBG("Could not detect season/episode")
-        return ""
+        picked = pickArchiveFile(tmpDIR, self.getSupportedFormats(all=True), self.wantedSeason, self.wantedEpisode)
+        if not picked:
+            SetIPTVPlayerLastHostError(_("No subtitle file found in the archive."))
+            return {}
+        printDBG("SubDLAPIProvider.downloadSubtitleFile selected[%s]" % picked["name"])
+        item = dict(cItem, file_path=picked["file_path"], ext=picked["ext"],
+                    title=cItem.get("release") or stripColors(cItem.get("title", "subtitle")))
+        return CBaseSubProviderClass.downloadSubtitleFile(self, item)
 
     def handleService(self, index, refresh=0):
         printDBG("SubDLAPIProvider.handleService start")
@@ -970,53 +407,11 @@ class SubDLAPIProvider(CBaseSubProviderClass):
         printDBG("handleService: name[%s], category[%s]" % (name, category))
         self.currList = []
         if name is None:
-            API_KEY = get_subdl_api()
-            if not API_KEY:
-                printDBG("ERROR: No SubDL API key configured")
-                error_item = {
-                    "title": _("SubDL: API Key Required"),
-                    "desc": _(
-                        "Please configure your API Key in:\nSettings → IPTVPlayer → Subtitles → SubDL.com API Key"
-                    ),
-                    "category": "info_msg",
-                }
-                self.currList.append(error_item)
-                CBaseSubProviderClass.endHandleService(self, index, refresh)
-                return
-            search_title = self.params.get("confirmed_title", "")
-            search_year = self.params.get("year", "")
-            search_imdb = self.params.get("imdbid", "")
-            if search_title or search_imdb:
-                fake_item = {
-                    "name": "search_start",
-                    "base_title": search_title,
-                    "year": search_year,
-                    "imdbid": search_imdb,
-                    "category": "get_movieid",
-                }
-                self.getMovieID(fake_item)
-            else:
-                printDBG("No title or imdb_id provided for search")
-        elif category == "get_movieid":
-            self.getMovieID(self.currItem)
+            self.getMovieID({"name": "category"})
         elif category == "get_languages":
             self.getLanguages(self.currItem)
         elif category == "get_subtitles":
             self.getSubtitles(self.currItem)
-        elif category == "get_download":
-            self.downloadSubtitleFile(self.currItem)
-        elif category == "info_msg":
-            try:
-                if hasattr(self, "sessionEx") and self.sessionEx:
-                    self.sessionEx.openMsgBox(
-                        _(
-                            'SubDL Setup:\n\n1. Visit: subdl.com/panel/api\n2. Copy your API Key\n3. Go to: Settings → IPTVPlayer → Subtitles\n4. Paste the key in "SubDL.com API Key" field'
-                        ),
-                        10000,
-                    )
-            except Exception as e:
-                printDBG("Could not show info box: %s" % str(e))
-            CBaseSubProviderClass.endHandleService(self, index, refresh)
         CBaseSubProviderClass.endHandleService(self, index, refresh)
 
 

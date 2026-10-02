@@ -41,7 +41,7 @@ HEADER = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; rv:33.0) Gecko/20100101 Fi
 
 def GetConfigList():
     optionList = []
-    optionList.append(getConfigListEntry(_("%s API KEY") % 'https://youtube.com/', config.plugins.iptvplayer.api_key_youtube))
+    optionList.append(getConfigListEntry('https://youtube.com/ ' + _("API Key"), config.plugins.iptvplayer.api_key_youtube))
     optionList.append(getConfigListEntry(_("Show Youtube Api Key warnings"), config.plugins.iptvplayer.api_key_warning))
     optionList.append(getConfigListEntry("Użytkownik Last.fm", config.plugins.iptvplayer.MusicBox_premium))
     if config.plugins.iptvplayer.MusicBox_premium.value:

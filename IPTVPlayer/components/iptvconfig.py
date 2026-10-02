@@ -174,10 +174,17 @@ config.plugins.iptvplayer.iptvplayer_password = ConfigSecret(default="", fixed_s
 config.plugins.iptvplayer.useSubtitlesParserExtension = ConfigYesNo(default=True)
 config.plugins.iptvplayer.subsourceapi = ConfigSecret(default="", fixed_size=False)
 config.plugins.iptvplayer.subdlapi = ConfigSecret(default="", fixed_size=False)
+config.plugins.iptvplayer.wyzieapi = ConfigSecret(default="", fixed_size=False)
 config.plugins.iptvplayer.opensuborg_login = ConfigLogin(default="", fixed_size=False)
 config.plugins.iptvplayer.opensuborg_password = ConfigSecret(default="", fixed_size=False)
 config.plugins.iptvplayer.napisy24pl_login = ConfigLogin(default="", fixed_size=False)
 config.plugins.iptvplayer.napisy24pl_password = ConfigSecret(default="", fixed_size=False)
+config.plugins.iptvplayer.titulky_login = ConfigLogin(default="", fixed_size=False)
+config.plugins.iptvplayer.titulky_password = ConfigSecret(default="", fixed_size=False)
+config.plugins.iptvplayer.titlovi_login = ConfigLogin(default="", fixed_size=False)
+config.plugins.iptvplayer.titlovi_password = ConfigSecret(default="", fixed_size=False)
+config.plugins.iptvplayer.prijevodi_login = ConfigLogin(default="", fixed_size=False)
+config.plugins.iptvplayer.prijevodi_password = ConfigSecret(default="", fixed_size=False)
 
 config.plugins.iptvplayer.debugprint = ConfigSelection(default="", choices=[("", _("No")), ("console", _("Yes, to console")),
                                                                             ("debugfile", _("Yes, to file /hdd/iptv.dbg")),

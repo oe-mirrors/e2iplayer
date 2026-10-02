@@ -35,9 +35,9 @@ def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_("Captcha solving service"), config.plugins.iptvplayer.cineto_bypassrecaptcha))
     if config.plugins.iptvplayer.cineto_bypassrecaptcha.value == '9kw.eu':
-        optionList.append(getConfigListEntry(_("%s API KEY") % '    ', config.plugins.iptvplayer.api_key_9kweu))
+        optionList.append(getConfigListEntry('    ' + _("API Key"), config.plugins.iptvplayer.api_key_9kweu))
     elif config.plugins.iptvplayer.cineto_bypassrecaptcha.value == '2captcha.com':
-        optionList.append(getConfigListEntry(_("%s API KEY") % '    ', config.plugins.iptvplayer.api_key_2captcha))
+        optionList.append(getConfigListEntry('    ' + _("API Key"), config.plugins.iptvplayer.api_key_2captcha))
     return optionList
 ###################################################
 

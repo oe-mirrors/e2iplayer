@@ -1230,6 +1230,8 @@ class IPTVExtMoviePlayer(Screen):
                 score += 1
             elif re.match(r'^\d{2}:\d{2}:\d{2}[,.]\d{1,3}', line):
                 score += 2
+            elif re.match(r'^\d{1,2}:\d{2}:\d{2}[:=]', line):  # TMPlayer
+                score += 2
             elif re.match(r'^\{\d+\}\{\d*\}', line):
                 score += 3
             elif 'vtt' == ext and line.upper().startswith('WEBVTT'):

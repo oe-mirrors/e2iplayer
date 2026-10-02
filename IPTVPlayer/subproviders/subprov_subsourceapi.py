@@ -1,16 +1,14 @@
 # -*- coding: utf-8 -*-
 #########################################################
-# Subsource.net API subtitle provider for e2iplayer
-# Compatible with Python 2 and 3
+# Subsource.net subtitle provider for e2iplayer
 # Created By : popking (odem2014)
-# Last modified: 23/05/2026 - Mohamed Elsafty (angel_heart)
+#
+# With an API key (E2iPlayer settings) the official API (api.subsource.net/api/v1) is used, without one
+# the JSON API of the website (api.subsource.net/v1): search, subtitle lists, download token, archive.
 #########################################################
-import os
-import zipfile
-import requests
+import json
 import re
-from Components.config import config, ConfigSubsection
-from Plugins.Extensions.IPTVPlayer.components.configsecret import ConfigSecret
+from Components.config import config
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import (
     TranslateTXT as _,
     SetIPTVPlayerLastHostError,
@@ -19,172 +17,27 @@ from Plugins.Extensions.IPTVPlayer.components.isubprovider import (
     CSubProviderBase,
     CBaseSubProviderClass,
 )
+from Plugins.Extensions.IPTVPlayer.libs.subtitlesmatch import (
+    langCode,
+    langSortKey,
+    matchTitle,
+    normalizeTitle,
+    releaseScore,
+    sortByEpisode,
+    sortByRelease,
+)
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_urlencode
+from Plugins.Extensions.IPTVPlayer.subproviders.subprov_subdlapi import pickArchiveFile, searchQuery
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import (
     printDBG,
     printExc,
-    RemoveDisallowedFilenameChars,
-    GetSubtitlesDir,
+    GetDefaultLang,
 )
-
-#########################################################
-# CONFIGURATION (uses existing key)
-#########################################################
-if not hasattr(config.plugins, "iptvplayer"):
-    config.plugins.iptvplayer = ConfigSubsection()
-
-# use the existing SubSource API key variable
-if not hasattr(config.plugins.iptvplayer, "subsourceapi"):
-    config.plugins.iptvplayer.subsourceapi = ConfigSecret(default="", fixed_size=False)
 
 
 def GetConfigList():
-    optionList = []
-    return optionList
-
-
-def GetLanguageTab():
-    """
-    Complete language list from Subsource.net upload page
-    Format: [Display Name, ISO 639-1 code, ISO 639-2/3 code]
-    API search expects lowercase language names (e.g., "english" not "English")
-    """
-    tab = [
-        # A
-        ["Abkhazian", "ab", "abk"],
-        ["Afrikaans", "af", "afr"],
-        ["Albanian", "sq", "alb"],
-        ["Amharic", "am", "amh"],
-        ["Arabic", "ar", "ara"],
-        ["Aragonese", "an", "arg"],
-        ["Armenian", "hy", "arm"],
-        ["Assamese", "as", "asm"],
-        ["Asturian", "", "ast"],
-        ["Azerbaijani", "az", "aze"],
-        # B
-        ["Basque", "eu", "baq"],
-        ["Belarusian", "be", "bel"],
-        ["Bengali", "bn", "ben"],
-        ["Bosnian", "bs", "bos"],
-        ["BosnianLatin", "bs", "bos"],
-        ["Breton", "br", "bre"],
-        ["Brazilian", "pt", "pob"],  # Brazilian Portuguese
-        ["Bulgarian", "bg", "bul"],
-        ["Burmese", "my", "bur"],
-        # C
-        ["Catalan", "ca", "cat"],
-        ["Chinese", "zh", "chi"],
-        ["Chinese (Cantonese)", "zh", "yue"],
-        ["Chinese (Simplified)", "zh", "zhs"],
-        ["Chinese (Traditional)", "zh", "zht"],
-        ["Chinese Bilingual", "zh", "chi"],
-        ["Croatian", "hr", "hrv"],
-        ["Czech", "cs", "cze"],
-        # D
-        ["Danish", "da", "dan"],
-        ["Dari", "", "dar"],
-        ["Dutch", "nl", "dut"],
-        # E
-        ["English", "en", "eng"],
-        ["Esperanto", "eo", "epo"],  # Fixed: Espranto → Esperanto
-        ["Estonian", "et", "est"],
-        ["Extremaduran", "", "ext"],
-        # F
-        ["Farsi/Persian", "fa", "per"],
-        ["Filipino", "fil", "fil"],
-        ["Finnish", "fi", "fin"],
-        ["French", "fr", "fre"],
-        ["French (Canada)", "fr", "fre"],
-        ["French (France)", "fr", "fre"],
-        # G
-        ["Gaelic", "gd", "gla"],
-        ["Galician", "gl", "glg"],  # Fixed: Gaelician → Galician
-        ["Georgian", "ka", "geo"],
-        ["German", "de", "ger"],
-        ["Greek", "el", "ell"],
-        ["Greenlandic", "kl", "kal"],
-        # H
-        ["Hebrew", "he", "heb"],
-        ["Hindi", "hi", "hin"],
-        ["Hungarian", "hu", "hun"],
-        # I
-        ["Icelandic", "is", "ice"],
-        ["Igbo", "ig", "ibo"],
-        ["Indonesian", "id", "ind"],
-        ["Interlingua", "ia", "ina"],
-        ["Irish", "ga", "gle"],
-        ["Italian", "it", "ita"],
-        # J
-        ["Japanese", "ja", "jpn"],
-        # K
-        ["Kannada", "kn", "kan"],
-        ["Kazakh", "kk", "kaz"],
-        ["Khmer", "km", "khm"],
-        ["Korean", "ko", "kor"],
-        ["Kurdish", "ku", "kur"],
-        ["Kyrgyz", "ky", "kir"],
-        # L
-        ["Latvian", "lv", "lav"],
-        ["Lithuanian", "lt", "lit"],
-        ["Luxembourgish", "lb", "ltz"],
-        # M
-        ["Macedonian", "mk", "mac"],
-        ["Malay", "ms", "may"],
-        ["Malayalam", "ml", "mal"],
-        ["Manipuri", "mni", "mni"],
-        ["Marathi", "mr", "mar"],
-        ["Mongolian", "mn", "mon"],
-        ["Montenegrin", "", "cnr"],
-        # N
-        ["Navajo", "nv", "nav"],
-        ["Nepali", "ne", "nep"],
-        ["Northern Sami", "se", "sme"],  # Fixed: Northen → Northern
-        ["Norwegian", "no", "nor"],
-        # O
-        ["Occitan", "oc", "oci"],
-        ["Odia", "or", "ori"],
-        # P
-        ["Pashto", "ps", "pus"],
-        ["Polish", "pl", "pol"],
-        ["Portuguese", "pt", "por"],
-        # R
-        ["Romanian", "ro", "rum"],
-        ["Russian", "ru", "rus"],
-        # S
-        ["Santali", "sat", "sat"],  # Fixed: Santli → Santali
-        ["Serbian", "sr", "scc"],
-        ["Sindhi", "sd", "snd"],
-        ["Sinhala", "si", "sin"],  # Kept one: Sinhala/Sinhalese merged
-        ["Slovak", "sk", "slo"],
-        ["Slovenian", "sl", "slv"],
-        ["Somali", "so", "som"],
-        ["Sorbian", "", "wen"],
-        ["Spanish", "es", "spa"],
-        ["Spanish (Latin America)", "es", "spa"],
-        ["Spanish (Spain)", "es", "spa"],
-        ["Swahili", "sw", "swa"],
-        ["Swedish", "sv", "swe"],
-        ["Sylheti", "", "syl"],
-        ["Syriac", "syr", "syr"],
-        # T
-        ["Tagalog", "tl", "tgl"],
-        ["Tamil", "ta", "tam"],
-        ["Tatar", "tt", "tat"],
-        ["Telugu", "te", "tel"],
-        ["Tetum", "tet", "tet"],
-        ["Thai", "th", "tha"],
-        ["Toki Pona", "", "tok"],
-        ["Turkish", "tr", "tur"],
-        ["Turkmen", "tk", "tuk"],
-        # U
-        ["Ukrainian", "uk", "ukr"],
-        ["Urdu", "ur", "urd"],
-        ["Uzbek", "uz", "uzb"],
-        # V
-        ["Vietnamese", "vi", "vie"],
-        # W
-        ["Welsh", "cy", "wel"],
-    ]
-    return tab
+    # the API key is in the E2iPlayer settings (Subtitles)
+    return []
 
 
 def get_subsource_api():
@@ -196,15 +49,8 @@ def get_subsource_api():
         return ""
 
 
-#########################################################
-# BASE SETTINGS
-#########################################################
-BASE_URL = "https://api.subsource.net/api/v1"
-
-
-def build_headers():
-    """Return default API headers with X-API-Key"""
-    return {"X-API-Key": get_subsource_api()}
+API_URL = "https://api.subsource.net/api/v1/"  # official, with X-API-Key
+WEB_API_URL = "https://api.subsource.net/v1/"  # the website's own API, no key
 
 
 #########################################################
@@ -215,308 +61,263 @@ def build_headers():
 class SubsourceAPIProvider(CBaseSubProviderClass):
     def __init__(self, params={}):
         CBaseSubProviderClass.__init__(self, params)
-        self.session = requests.Session()
-        self.session.headers.update(build_headers())
-        self.defaultParams = {"header": self.session.headers}
-        self.dInfo = params.get("discover_info", {})
-        self.currList = []
+        self.MAIN_URL = "https://subsource.net/"
+        self.HTTP_HEADER = self.cm.getDefaultHeader()
+        self.HTTP_HEADER.update({"Accept": "application/json, text/plain, */*", "Origin": "https://subsource.net",
+                                 "Referer": self.MAIN_URL})
+        self.searchTitle, self.searchYear, self.wantedSeason, self.wantedEpisode = self.wantedInfo()
+        self.subsCache = {}
+        self.apiCache = {}
 
-    def getMoviesTitles(self, cItem, nextCategory):
-        printDBG("SubsourceAPIProvider.getMoviesTitles")
-        sts, tab = self.imdbGetMoviesByTitle(self.params["confirmed_title"])
+    def getJson(self, url, post_data=None, apiKey=""):
+        params = {"header": dict(self.HTTP_HEADER)}
+        if apiKey:
+            params["header"]["X-API-Key"] = apiKey
+        if post_data is not None:
+            params["header"]["Content-Type"] = "application/json"
+            params["raw_post_data"] = True
+            post_data = json.dumps(post_data)
+        sts, data = self.cm.getPage(url, params, post_data)
         if not sts:
-            return
-        printDBG(tab)
-        for item in tab:
-            params = dict(cItem)
-            params.update(item)  # item = {'title', 'imdbid'}
-            params.update({"category": nextCategory})
-            self.addDir(params)
-
-    def getMovieID(self, cItem):
-        printDBG("SubsourceAPIProvider.getMovieID (Integrated Smart Search)")
-        raw_title = cItem.get("base_title", cItem.get("title", ""))
-
-        text = re.sub(r"\\[cCpPbBuU][0-9A-Fa-f]{0,8}", "", raw_title)
-        text = re.sub(r"[cC][0-9A-Fa-f]{6}", "", text)
-        year_match = re.search(r"\b(19\d{2}|20\d{2})\b", text)
-        extracted_year = year_match.group() if year_match else ""
-        for sep in ["|", "-", ":", "(", "["]:
-            if sep in text:
-                text = text.split(sep)[0]
-        text = re.sub(r"[^a-zA-Z0-9\s]", " ", text)
-        words = text.split()
-        clean_title = " ".join(words[:5]).strip()
-        search_year = cItem.get("year", "") or extracted_year
-        if not clean_title:
-            return []
-        API_KEY = get_subsource_api()
-        headers = {
-            "X-API-Key": API_KEY,
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) IPTVPlayer",
-        }
-        url = "https://api.subsource.net/api/v1/movies/search"
-
-        def perform_search(query, year=None):
-            p = {"searchType": "text", "q": query, "type": "all"}
-            if year:
-                p["year"] = year
-            try:
-                printDBG("Requesting: q=[%s] year=[%s]" % (query, year or "None"))
-                res = requests.get(url, params=p, headers=headers, timeout=15)
-                res.raise_for_status()
-                return res.json()
-            except Exception:
-                return None
-
-        response_json = perform_search(clean_title, search_year)
-        if not (
-            response_json and response_json.get("success") and response_json.get("data")
-        ):
-            printDBG("No results with year, trying title only...")
-            response_json = perform_search(clean_title)
-        if not (
-            response_json and response_json.get("success") and response_json.get("data")
-        ):
-            short_title = " ".join(words[:3]).strip()
-            if short_title != clean_title:
-                printDBG(
-                    "Still no results, trying ultra-short title: [%s]" % short_title
-                )
-                response_json = perform_search(short_title)
-        if response_json and response_json.get("success") and response_json.get("data"):
-            for item in response_json["data"]:
-                movie_id = item.get("movieId")
-                title = item.get("title", "")
-                release_year = item.get("releaseYear", "")
-                sub_count = item.get("subtitleCount", 0)
-                display_title = "%s (%s) [%s subs]" % (title, release_year, sub_count)
-                params = dict(cItem)
-                params.update(item)
-                params.update(
-                    {
-                        "title": display_title,
-                        "movieId": movie_id,
-                        "category": "get_languages",
-                    }
-                )
-                self.addDir(params)
-
-    def getLanguages(self, cItem):
-        printDBG("\n=== [STEP 4] getLanguages - Filtered ===")
-        movie_id = cItem.get("movieId") or cItem.get("movie_id")
-        if not movie_id:
-            printDBG("❌ No movieId to fetch languages")
-            return
-        __api = "https://api.subsource.net/api/v1"
-        __getSub = __api + "/subtitles"
-        API_KEY = get_subsource_api()
-        headers = {"X-API-Key": API_KEY}
-        params_all = {
-            "movieId": movie_id,
-            "language": "",
-            "limit": 500,
-            "sort": "newest",
-        }
-        available_langs = {}
+            printDBG("SubsourceAPIProvider.getJson failed [%s]" % url)
+            return None
         try:
-            response = requests.get(
-                __getSub, params=params_all, headers=headers, timeout=30
-            )
-            response.raise_for_status()
-            json_data = response.json()
-            if json_data.get("success") and json_data.get("data"):
-                for item in json_data["data"]:
-                    lang_name = item.get("language", "")
-                    if lang_name:
-                        available_langs[lang_name.lower()] = lang_name
-                printDBG("Found %d unique languages" % len(available_langs))
-        except Exception as e:
-            printDBG("Could not fetch languages: %s" % str(e))
-            available_langs = None
-        langs = GetLanguageTab()
-        added_count = 0
-        for lang in langs:
-            lang_display = lang[0]
-            lang_code = lang[1]
-            if available_langs is not None:
-                if lang_display.lower() not in available_langs:
-                    continue
-            params = dict(cItem)
-            params.update(
-                {
-                    "language": lang_display,
-                    "lang": lang_code,
-                    "category": "get_subtitles",
-                    "title": lang_display,
-                }
-            )
-            self.addDir(params)
-            added_count += 1
-        printDBG("Added %d languages to menu" % added_count)
+            data = json.loads(data)
+        except Exception:
+            printExc()
+            return None
+        return data if isinstance(data, dict) else None
 
-    def getSubtitles(self, cItem):
-        printDBG("\n=== [STEP 5] getSubtitles ===")
-        list = self._searchSubtitle(cItem)
-        for item in list:
+    def releaseOf(self, releases):
+        """(title, other releases) of a subtitle: of several release names the one that fits the video best,
+        without any the searched title"""
+        if not isinstance(releases, (list, tuple)):
+            releases = [releases]
+        releases = [r.strip() for r in releases if isinstance(r, str) and r.strip()]
+        if not releases:
+            return ("%s (%s)" % (self.searchTitle, self.searchYear) if self.searchYear else self.searchTitle), []
+        wanted = self.releaseName()
+        best = max(releases, key=lambda r: releaseScore(r, wanted))  # the first one on a tie
+        return best, [r for r in releases if r != best]
+
+    def addTitles(self, cItem, items):
+        # items: (title, year, is series, item params); the best match first, then exact titles / the same year
+        best = matchTitle(self.searchTitle, self.searchYear, [(x[0], x[1], idx) for idx, x in enumerate(items)])
+        wanted = normalizeTitle(self.searchTitle)
+        order = sorted(range(len(items)), key=lambda idx: (idx != best, normalizeTitle(items[idx][0]) != wanted,
+                                                           bool(self.searchYear) and items[idx][1] != str(self.searchYear),
+                                                           items[idx][2] != bool(self.wantedSeason), idx))
+        for idx in order:
+            title, year, series, item = items[idx]
             params = dict(cItem)
             params.update(item)
-            self.addSubtitle(params)
+            params["title"] = "%s (%s)%s" % (title, year or "N/A", " [%s]" % _("TV series") if series else "")
+            self.addDir(params)
 
-    def _searchSubtitle(self, cItem):
-        printDBG("\n=== [STEP 6] _searchSubtitle ===")
-        __api = "https://api.subsource.net/api/v1"
-        __getSub = __api + "/subtitles"
-        API_KEY = get_subsource_api()
-        headers = {"X-API-Key": API_KEY}
-        lang_display = cItem.get("language", "English")
-        sublanguageid = lang_display.lower()
-        movie_id = cItem.get("movieId") or cItem.get("movie_id")
-        limit = 100
-        params2 = {
-            "movieId": movie_id,
-            "language": sublanguageid,
-            "limit": limit,
-            "sort": "newest",
-        }
-        printDBG(
-            "Searching subtitles: movieId=%s, language_api=%s"
-            % (movie_id, sublanguageid)
-        )
-        try:
-            response2 = requests.get(
-                __getSub, params=params2, headers=headers, timeout=30
-            )
-            response2.raise_for_status()
-            json_data2 = response2.json()
-            if not json_data2.get("success") or not json_data2.get("data"):
-                printDBG("❌ No subtitles found for language: %s" % sublanguageid)
+    #########################################################
+    # without key: the website's API
+    #########################################################
+    def webSearch(self, cItem):
+        query = searchQuery(self.searchTitle)
+        if not query:
+            return False
+        data = self.getJson(WEB_API_URL + "movie/search", {"query": query, "includeSeasons": True, "limit": 50})
+        if data is None:
+            return False
+        items = []
+        for res in data.get("results") or []:
+            link = (res.get("link") or "").strip("/")
+            if not link or not res.get("title"):
+                continue
+            series = res.get("type") == "tvseries"
+            item = {"web": True, "link": link.split("/", 1)[-1], "series": series, "seasons": res.get("seasons") or [],
+                    "icon": res.get("poster") or "", "category": "web_seasons" if series else "web_languages"}
+            items.append((res["title"], str(res.get("releaseYear") or ""), series, item))
+        printDBG("SubsourceAPIProvider.webSearch %d results" % len(items))
+        self.addTitles(cItem, items)
+        return True
+
+    def webSeasons(self, cItem):
+        def collect(entries):
+            # "/subtitles/breaking-bad/season=2" -> "breaking-bad/season-2"
+            found = []
+            for season in entries or []:
+                num = season.get("season") if isinstance(season, dict) else None
+                try:
+                    found.append((int(num), "%s/season-%s" % (cItem["link"], num)))
+                except (TypeError, ValueError):
+                    continue
+            return found
+
+        seasons = collect(cItem.get("seasons"))
+        if not seasons:
+            data = self.getJson(WEB_API_URL + "series/" + urllib_quote(cItem["link"]))
+            seasons = collect((data or {}).get("seasons"))
+        seasons.sort(key=lambda s: (s[0] != self.wantedSeason, s[0]))
+        for num, link in seasons:
+            params = dict(cItem)
+            params.update({"title": _("Season %s") % num if num else _("Specials"), "link": link, "category": "web_languages"})
+            self.addDir(params)
+        if not seasons:
+            SetIPTVPlayerLastHostError(_("No subtitles found."))
+
+    def webSubtitles(self, link):
+        if link not in self.subsCache:
+            data = self.getJson(WEB_API_URL + "subtitles/" + urllib_quote(link))
+            if data is None:
+                return None
+            self.subsCache = {link: data.get("subtitles") or []}
+        return self.subsCache[link]
+
+    def webLanguages(self, cItem):
+        subs = self.webSubtitles(cItem["link"])
+        langs = {}
+        for sub in subs or []:
+            key = sub.get("language") or ""
+            if key:
+                langs[key] = langs.get(key, 0) + 1
+        items = []
+        for key, count in langs.items():
+            lang = langCode(key.replace("_", " ")) or key
+            items.append((langSortKey(lang, GetDefaultLang()), -count, key, lang))
+        for _o, count, key, lang in sorted(items):
+            params = dict(cItem)
+            params.update({"title": "%s [%d]" % (key.replace("_", " ").title(), -count), "language_key": key, "lang": lang,
+                           "category": "web_subtitles"})
+            self.addDir(params)
+        if not items:
+            SetIPTVPlayerLastHostError(_("No subtitles found."))
+
+    def webSubtitlesList(self, cItem):
+        outList = []
+        for sub in self.webSubtitles(cItem["link"]) or []:
+            if sub.get("language") != cItem["language_key"] or not sub.get("link"):
+                continue
+            release, others = self.releaseOf(sub.get("release_info"))
+            desc = list(others)
+            if sub.get("uploader_displayname"):
+                desc.append(_("Author: %s") % sub["uploader_displayname"])
+            if sub.get("hearing_impaired"):
+                desc.append(_("Hearing impaired"))
+            if sub.get("caption") and sub["caption"].strip().lower() != "no caption":
+                desc.append(sub["caption"])
+            params = dict(cItem)
+            params.update({"title": "[%s] %s" % (cItem["lang"], release), "release": release, "sub_link": sub["link"],
+                           "sub_id": str(sub.get("id") or ""), "desc": "[/br]".join(desc)})
+            outList.append(params)
+        self.addSubtitles(outList)
+
+    def webDownloadUrl(self, cItem):
+        data = self.getJson(WEB_API_URL + "subtitle/" + urllib_quote(cItem["sub_link"]))
+        sub = (data or {}).get("subtitle") or {}
+        if not sub.get("download_token"):
+            return "", ""
+        imdb = re.search(r"tt(\d+)", json.dumps((data.get("movie") or {}).get("source_data") or {}))
+        return WEB_API_URL + "subtitle/download/" + sub["download_token"], imdb.group(1) if imdb else ""
+
+    #########################################################
+    # with key: the official API
+    #########################################################
+    def apiSearch(self, cItem, apiKey):
+        query = searchQuery(self.searchTitle)
+        data = None
+        for year in ([self.searchYear, ""] if self.searchYear else [""]):
+            query_params = {"searchType": "text", "q": query, "type": "all"}
+            if year:
+                query_params["year"] = year
+            data = self.getJson(API_URL + "movies/search?" + urllib_urlencode(query_params), apiKey=apiKey)
+            if data is None:
+                printDBG("SubsourceAPIProvider.apiSearch: no answer / key not accepted, using the website's API")
+                return False
+            if data.get("success") and data.get("data"):
+                break
+        if data is None or not data.get("success"):
+            return False
+        items = []
+        for res in data.get("data") or []:
+            if not res.get("movieId"):
+                continue
+            item = {"web": False, "movieId": res["movieId"], "category": "api_languages"}
+            items.append((res.get("title", ""), str(res.get("releaseYear") or ""), res.get("type") in ("tvseries", "series", "tv"), item))
+        self.addTitles(cItem, items)
+        return True
+
+    def apiSubtitles(self, movieId, apiKey, language=""):
+        # one request for all languages (cached), the list of one language is filtered from it
+        if movieId not in self.apiCache:
+            query = {"movieId": movieId, "limit": 500, "sort": "newest"}
+            data = self.getJson(API_URL + "subtitles?" + urllib_urlencode(query), apiKey=apiKey)
+            if not data or not data.get("success"):
                 return []
+            self.apiCache = {movieId: data.get("data") or []}
+        subs = self.apiCache[movieId]
+        if language:
+            subs = [sub for sub in subs if (sub.get("language") or "").lower() == language]
+        return subs
 
-            outList = []
-            for item in json_data2["data"]:
-                sub_id = item.get("subtitleId")
-                language = item.get("language", "")
-                uploader = ""
-                if item.get("contributors"):
-                    uploader = item["contributors"][0].get("displayname", "")
-                release_infos = item.get("releaseInfo", [])
-                commentary = item.get("commentary", "")
-                downloads = item.get("downloads", 0)
+    def apiLanguages(self, cItem, apiKey):
+        langs = {}
+        for sub in self.apiSubtitles(cItem["movieId"], apiKey):
+            key = (sub.get("language") or "").lower()
+            if key:
+                langs[key] = langs.get(key, 0) + 1
+        for key in sorted(langs, key=lambda k: (langSortKey(langCode(k.replace("_", " ")) or k, GetDefaultLang()), -langs[k])):
+            params = dict(cItem)
+            params.update({"title": "%s [%d]" % (key.replace("_", " ").title(), langs[key]), "language_key": key,
+                           "lang": langCode(key.replace("_", " ")) or key, "category": "api_subtitles"})
+            self.addDir(params)
+        if not langs:
+            SetIPTVPlayerLastHostError(_("No subtitles found."))
 
-                for rel in release_infos:
-                    params = dict(cItem)
-                    params.update(
-                        {
-                            "title": "%s | %s | %s"
-                            % (language.capitalize(), uploader, rel),
-                            "subtitleId": sub_id,
-                            "lang": language,
-                            "category": "get_download",
-                            "commentary": commentary,
-                            "downloads": downloads,
-                        }
-                    )
-                    outList.append(params)
-            printDBG("Found %d subtitle items" % len(outList))
+    def apiSubtitlesList(self, cItem, apiKey):
+        outList = []
+        for sub in self.apiSubtitles(cItem["movieId"], apiKey, cItem["language_key"]):
+            uploader = ((sub.get("contributors") or [{}])[0]).get("displayname", "")
+            # one entry per subtitle: the release name that fits the video best, the others in the description
+            release, others = self.releaseOf(sub.get("releaseInfo"))
+            desc = list(others)
+            if uploader:
+                desc.append(_("Author: %s") % uploader)
+            params = dict(cItem)
+            params.update({"title": "[%s] %s" % (cItem["lang"], release), "release": release, "sub_id": str(sub.get("subtitleId") or ""),
+                           "desc": "[/br]".join(desc)})
+            outList.append(params)
+        self.addSubtitles(outList)
 
-            return outList
-
-        except Exception as e:
-            printDBG("❌ Error fetching subtitles: %s" % str(e))
-            printExc()
-            return []
+    #########################################################
+    # common
+    #########################################################
+    def addSubtitles(self, outList):
+        outList = sortByRelease(outList, self.releaseName(), "release")
+        outList = sortByEpisode(outList, self.wantedSeason, self.wantedEpisode, "release")
+        for params in outList:
+            self.addSubtitle(params)
+        if not outList:
+            SetIPTVPlayerLastHostError(_("No subtitles found."))
 
     def downloadSubtitleFile(self, cItem):
-        printDBG("\n=== [STEP 7] downloadSubtitleFile ===")
-        sub_id = cItem.get("subtitleId")
-        lang = cItem.get("lang", "en")
-        title = RemoveDisallowedFilenameChars(cItem.get("title", "subtitle"))
-        API_KEY = get_subsource_api()
-        headers = {"X-API-Key": API_KEY}
-        __api = "https://api.subsource.net/api/v1"
-        __getSub = __api + "/subtitles"
-        __getSubdown = __getSub + "/" + str(sub_id) + "/download"
-        fileName = "%s-[SubSource].zip" % title
-        filePath = os.path.join(GetSubtitlesDir(), fileName)
-        printDBG("Downloading subtitle to %s" % filePath)
-        try:
-            response = requests.get(
-                __getSubdown,
-                headers=headers,
-                allow_redirects=True,
-                timeout=60,
-                stream=True,
-            )
-            response.raise_for_status()
-            with open(filePath, "wb") as f:
-                for chunk in response.iter_content(chunk_size=8192):
-                    if chunk:
-                        f.write(chunk)
-            printDBG("Download complete: %s" % filePath)
-            extracted_path = None
-            video_title = (
-                self.dInfo.get('season_episode', '') or
-                self.dInfo.get('episode_title', '') or
-                self.dInfo.get('title', '') or
-                self.params.get('confirmed_title', '') or
-                cItem.get('title', '')
-            )
-            printDBG("🎬 video_title = %s" % video_title)
-            wanted_episode = ''
-            episode_match = re.search(
-                r'(S\d+E\d+)',
-                video_title,
-                re.IGNORECASE
-            )
-            if episode_match:
-                wanted_episode = episode_match.group(1).upper()
-            else:
-                season_episode = re.search(
-                    r'(?:Season|Staffel|Saison|Series)\s*(\d+).*?(?:Episode|Episoden|Ep)\s*(\d+)',
-                    video_title,
-                    re.IGNORECASE
-                )
-                if season_episode:
-                    season_num = int(season_episode.group(1))
-                    episode_num = int(season_episode.group(2))
-                    wanted_episode = "S%02dE%02d" % (season_num, episode_num)
-            printDBG("Wanted episode: %s" % wanted_episode)
-            with zipfile.ZipFile(filePath, 'r') as zip_ref:
-                zip_list = [x for x in zip_ref.namelist()
-                            if x.lower().endswith(('.srt', '.ass', '.ssa', '.sub'))]
-                selected_file = None
-                if wanted_episode:
-                    for item in zip_list:
-                        if wanted_episode in item.upper():
-                            selected_file = item
-                            printDBG("Matched episode subtitle: %s" % item)
-                            break
-                if not selected_file and zip_list:
-                    selected_file = zip_list[0]
-                    printDBG("⚠️ No exact episode match, using first subtitle: %s" % selected_file)
-                if selected_file:
-                    zip_ref.extract(selected_file, GetSubtitlesDir())
-                    src_path = os.path.join(GetSubtitlesDir(), *selected_file.split('/'))
-                    clean_name = RemoveDisallowedFilenameChars(
-                        os.path.basename(selected_file)
-                    )
-                    extracted_path = os.path.join(GetSubtitlesDir(), clean_name)
-                    if src_path != extracted_path:
-                        os.rename(src_path, extracted_path)
-            if extracted_path:
-                retData = {"title": title, "path": extracted_path, "lang": lang}
-                printDBG("Extracted subtitle: %s" % extracted_path)
-            else:
-                retData = {"title": title, "path": filePath, "lang": lang}
-
-            return retData
-
-        except Exception as e:
-            printDBG("❌ Error downloading subtitle: %s" % str(e))
-            printExc()
-            SetIPTVPlayerLastHostError(_("Failed to download subtitle."))
+        printDBG("SubsourceAPIProvider.downloadSubtitleFile")
+        imdbid = ""
+        params = {"header": dict(self.HTTP_HEADER)}
+        if cItem.get("web"):
+            url, imdbid = self.webDownloadUrl(cItem)
+        else:
+            url = API_URL + "subtitles/%s/download" % cItem.get("sub_id")
+            params["header"]["X-API-Key"] = get_subsource_api()
+        if not url:
+            SetIPTVPlayerLastHostError(_("Failed to get the download link."))
             return {}
+        tmpDIR = self.downloadArchive(url, params)
+        if tmpDIR is None:
+            return {}
+        picked = pickArchiveFile(tmpDIR, self.getSupportedFormats(all=True), self.wantedSeason, self.wantedEpisode)
+        if not picked:
+            SetIPTVPlayerLastHostError(_("No subtitle file found in the archive."))
+            return {}
+        printDBG("SubsourceAPIProvider.downloadSubtitleFile selected[%s]" % picked["name"])
+        item = dict(cItem, file_path=picked["file_path"], ext=picked["ext"], imdbid=imdbid,
+                    title=cItem.get("release") or cItem.get("title", "subtitle"))
+        return CBaseSubProviderClass.downloadSubtitleFile(self, item)
 
     def handleService(self, index, refresh=0):
         printDBG("handleService start")
@@ -528,33 +329,28 @@ class SubsourceAPIProvider(CBaseSubProviderClass):
 
         printDBG("handleService: name[%s], category[%s] " % (name, category))
         self.currList = []
+        apiKey = get_subsource_api()
 
-        # === MAIN MENU ===
         if name is None:
-            API_KEY = config.plugins.iptvplayer.subsourceapi.value
-            if API_KEY != "":
-                search_title = self.params.get("confirmed_title", "")
-                search_year = self.params.get("year", "")
-                if search_title:
-                    fake_item = {
-                        "name": "search_start",
-                        "base_title": search_title,
-                        "year": search_year,
-                        "category": "get_movieid",
-                    }
-                    self.getMovieID(fake_item)
-                else:
-                    printDBG("No title provided for search")
-            else:
-                printDBG("No API key configured")
-        elif category == "get_movieid":
-            self.getMovieID(self.currItem)
-        elif category == "get_languages":
-            self.getLanguages(self.currItem)
-        elif category == "get_subtitles":
-            self.getSubtitles(self.currItem)
-        elif category == "get_download":
-            self.downloadSubtitleFile(self.currItem)
+            cItem = {"name": "category"}
+            if not self.searchTitle:
+                SetIPTVPlayerLastHostError(_("No title to search for."))
+            # an invalid / expired key: the website's API
+            elif not (apiKey and self.apiSearch(cItem, apiKey)) and not self.webSearch(cItem):
+                SetIPTVPlayerLastHostError(_("subsource.net does not answer.") + "\n" +
+                                           _("An API key from subsource.net can be entered in the E2iPlayer settings (Subtitles)."))
+            elif not self.currList:
+                SetIPTVPlayerLastHostError(_("No subtitles found."))
+        elif category == "web_seasons":
+            self.webSeasons(self.currItem)
+        elif category == "web_languages":
+            self.webLanguages(self.currItem)
+        elif category == "web_subtitles":
+            self.webSubtitlesList(self.currItem)
+        elif category == "api_languages":
+            self.apiLanguages(self.currItem, apiKey)
+        elif category == "api_subtitles":
+            self.apiSubtitlesList(self.currItem, apiKey)
 
         CBaseSubProviderClass.endHandleService(self, index, refresh)
 
