@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-02 19:34+0000\n"
-"PO-Revision-Date: 2026-09-30 00:46+0300\n"
+"PO-Revision-Date: 2026-10-03 00:42+0300\n"
 "Last-Translator: \n"
 "Language-Team: giorbak\n"
 "Language: el\n"
@@ -126,7 +126,7 @@ msgstr "%s - Κωδικός πρόσβασης"
 
 #, python-format
 msgid "%s refused the download. Please set your login and password in the configuration."
-msgstr ""
+msgstr "Το %s αρνήθηκε τη λήψη. Παρακαλώ ορίστε το όνομα χρήστη και τον κωδικό πρόσβασης στις ρυθμίσεις."
 
 #, python-format
 msgid "%s returned %s: %s"
@@ -204,7 +204,7 @@ msgid "----- Global HostXXX Configuration -----"
 msgstr "----- Γενικές ρυθμίσεις HostXXX -----"
 
 msgid "----- METADATA PROVIDERS CONFIGURATION -----"
-msgstr ""
+msgstr "----- ΡΥΘΜΙΣΕΙΣ ΠΑΡΟΧΩΝ ΜΕΤΑΔΕΔΟΜΕΝΩΝ -----"
 
 msgid "----- PLAYERS & PLAYBACK CONFIGURATION -----"
 msgstr "----- ΡΥΘΜΙΣΕΙΣ ΠΡΟΓΡΑΜΜΑΤΩΝ ΑΝΑΠΑΡΑΓΩΓΗΣ & ΑΝΑΠΑΡΑΓΩΓΗΣ -----"
@@ -482,7 +482,7 @@ msgid "Alternative proxy server (5)"
 msgstr "Εναλλακτικός διακομιστής μεσολάβησης (5)"
 
 msgid "An API key from subsource.net can be entered in the E2iPlayer settings (Subtitles)."
-msgstr ""
+msgstr "Ένα κλειδί API από το subsource.net μπορεί να εισαχθεί στις ρυθμίσεις του E2iPlayer (Υπότιτλοι)."
 
 #, python-format
 msgid ""
@@ -590,7 +590,7 @@ msgstr "Ηχητικά κομμάτια"
 
 #, python-format
 msgid "Author: %s"
-msgstr ""
+msgstr "Συγγραφέας: %s"
 
 msgid "Auto"
 msgstr "Αυτόματο"
@@ -606,7 +606,7 @@ msgid "Auto start method"
 msgstr "Μέθοδος αυτόματης εκκίνησης"
 
 msgid "Auto-generated"
-msgstr ""
+msgstr "Αυτόματη δημιουργία"
 
 msgid "Automatic"
 msgstr "Αυτόματο"
@@ -686,7 +686,7 @@ msgstr "Τοποθεσία προσωρινής αποθήκευσης"
 
 #, python-format
 msgid "By %s"
-msgstr ""
+msgstr "Από %s"
 
 msgid "Bypass geo-blocking for VODs (it may be illegal):"
 msgstr "Παράκαμψη γεω-αποκλεισμού για VOD (μπορεί να είναι παράνομο):"
@@ -738,7 +738,7 @@ msgid "Captcha solving service"
 msgstr "Υπηρεσία επίλυσης Captcha"
 
 msgid "Captcha was not entered."
-msgstr ""
+msgstr "Το captcha δεν εισήχθη."
 
 #, python-format
 msgid "Carrying: %s | UP/DOWN=Move, OK=Drop"
@@ -989,7 +989,7 @@ msgid "Cut"
 msgstr "Αποκοπή"
 
 msgid "Czech"
-msgstr ""
+msgstr "Τσέχικα"
 
 msgid "DASH/mpd"
 msgstr "DASH/mpd"
@@ -1007,7 +1007,7 @@ msgid "DRM protection detected."
 msgstr "Εντοπίστηκε προστασία DRM."
 
 msgid "Daily download limit reached - type the code"
-msgstr ""
+msgstr "Συμπληρώθηκε το ημερήσιο όριο λήψεων - πληκτρολογήστε τον κωδικό"
 
 msgid "Darkgray"
 msgstr "Σκούρο γκρι"
@@ -1236,7 +1236,7 @@ msgstr "Αποτυχία λήψης \"%s\" στο \"%s\"!"
 
 #, python-format
 msgid "Download (ready in %d seconds)"
-msgstr ""
+msgstr "Λήψη (έτοιμη σε %d δευτερόλεπτα)"
 
 msgid "Download again"
 msgstr "Λήψη ξανά"
@@ -1335,7 +1335,7 @@ msgid "Downloading file [%s] problem."
 msgstr "Πρόβλημα λήψης αρχείου [%s]."
 
 msgid "Downloading from prijevodi-online.org needs a free account. Enter login and password in the E2iPlayer settings."
-msgstr ""
+msgstr "Η λήψη από το prijevodi-online.org απαιτεί δωρεάν λογαριασμό. Εισάγετε το όνομα χρήστη και τον κωδικό πρόσβασης στις ρυθμίσεις του E2iPlayer."
 
 #, python-format
 msgid ""
@@ -1353,7 +1353,7 @@ msgstr "Τοποθεσία λήψεων"
 
 #, python-format
 msgid "Downloads: %s"
-msgstr ""
+msgstr "Λήψεις: %s"
 
 msgid "Draft"
 msgstr "Πρόχειρο"
@@ -1375,7 +1375,7 @@ msgid "Duration: %s"
 msgstr "Διάρκεια: %s"
 
 msgid "Dutch"
-msgstr ""
+msgstr "Ολλανδικά"
 
 msgid "E2iPlayer"
 msgstr "E2iPlayer"
@@ -1551,7 +1551,7 @@ msgstr "Επεισόδια:"
 
 #, python-format
 msgid "Episodes: %s"
-msgstr ""
+msgstr "Επεισόδια: %s"
 
 msgid "Error"
 msgstr "Σφάλμα"
@@ -1699,17 +1699,17 @@ msgid "Failed to download subtitle."
 msgstr "Αποτυχία λήψης υποτίτλου."
 
 msgid "Failed to download the subtitles."
-msgstr ""
+msgstr "Αποτυχία λήψης των υποτίτλων."
 
 msgid "Failed to fetch categories"
 msgstr "Αποτυχία ανάκτησης κατηγοριών"
 
 msgid "Failed to get the download link."
-msgstr ""
+msgstr "Αποτυχία λήψης του συνδέσμου λήψης."
 
 #, python-format
 msgid "Failed to get the file list from %s."
-msgstr ""
+msgstr "Αποτυχία λήψης της λίστας αρχείων από το %s."
 
 msgid "Failed to gzip."
 msgstr "Αποτυχία gzip."
@@ -2056,7 +2056,7 @@ msgid "Health"
 msgstr "Υγεία"
 
 msgid "Hearing impaired"
-msgstr ""
+msgstr "Άτομα με προβλήματα ακοής"
 
 msgid "Help"
 msgstr "Help"
@@ -2129,7 +2129,7 @@ msgid "I am no robot"
 msgstr "Δεν είμαι ρομπότ"
 
 msgid "IMDb"
-msgstr ""
+msgstr "IMDb"
 
 msgid "IMDb Rating:"
 msgstr "Βαθμολογία IMDb:"
@@ -2351,7 +2351,7 @@ msgid "Language"
 msgstr "Γλώσσα"
 
 msgid "Language of the details (TMDb, IMDb)"
-msgstr ""
+msgstr "Γλώσσα των λεπτομερειών (TMDb, IMDb)"
 
 msgid "Language:"
 msgstr "Γλώσσα:"
@@ -2543,10 +2543,10 @@ msgstr "Η σύνδεση στο {0} απέτυχε."
 
 #, python-format
 msgid "Login to prijevodi-online.org failed: %s"
-msgstr ""
+msgstr "Αποτυχία σύνδεσης στο prijevodi-online.org: %s"
 
 msgid "Login to prijevodi-online.org failed: the site asks for a captcha, which E2iPlayer cannot solve. Series subtitles download without an account."
-msgstr ""
+msgstr "Αποτυχία σύνδεσης στο prijevodi-online.org: ο ιστότοπος ζητά captcha, το οποίο το E2iPlayer δεν μπορεί να επιλύσει. Λήψη υποτίτλων σειρών χωρίς λογαριασμό."
 
 #, python-format
 msgid ""
@@ -2819,7 +2819,7 @@ msgid "Netflix"
 msgstr "Netflix"
 
 msgid "Network"
-msgstr ""
+msgstr "Δίκτυο"
 
 #, python-format
 msgid "Network failed %s."
@@ -2939,14 +2939,14 @@ msgid "No subtitles available for this title."
 msgstr "Δεν υπάρχουν διαθέσιμοι υπότιτλοι για αυτόν τον τίτλο."
 
 msgid "No subtitles found."
-msgstr ""
+msgstr "Δεν βρέθηκαν υπότιτλοι."
 
 #, python-format
 msgid "No subtitles in %s. Available: %s"
 msgstr "Δεν υπάρχουν υπότιτλοι στο %s. Διαθέσιμοι: %s"
 
 msgid "No title to search for."
-msgstr ""
+msgstr "Δεν υπάρχει τίτλος για αναζήτηση."
 
 msgid "No valid entitlement found for asset."
 msgstr "Δεν βρέθηκε έγκυρη εξουσιοδότηση για το περιεχόμενο."
@@ -2970,7 +2970,7 @@ msgid "Not possible (no enigma2 session)."
 msgstr "Δεν είναι δυνατό (δεν υπάρχει συνεδρία enigma2)."
 
 msgid "Nothing found on subdl.com."
-msgstr ""
+msgstr "Δεν βρέθηκε τίποτα στο subdl.com."
 
 msgid "Nothing found. This site only finds Russian (Cyrillic) search terms."
 msgstr "Δεν βρέθηκε τίποτα. Αυτός ο ιστότοπος βρίσκει μόνο ρωσικούς όρους αναζήτησης (Κυριλλικά)."
@@ -3001,7 +3001,7 @@ msgid "Number of rows"
 msgstr "Αριθμός σειρών"
 
 msgid "Numeric keypad for numbers"
-msgstr ""
+msgstr "Αριθμητικό πληκτρολόγιο για αριθμούς"
 
 msgid "OFFLINE"
 msgstr "ΕΚΤΟΣ ΣΥΝΔΕΣΗΣ"
@@ -3010,7 +3010,7 @@ msgid "OK"
 msgstr "ΕΝΤΑΞΕΙ"
 
 msgid "OMDb API key (free at omdbapi.com)"
-msgstr ""
+msgstr "Κλειδί API OMDb (δωρεάν στο omdbapi.com)"
 
 msgid "Offline channels"
 msgstr "Κανάλια εκτός σύνδεσης"
@@ -3047,7 +3047,7 @@ msgid "Open pull requests"
 msgstr "Ανοιχτά pull requests"
 
 msgid "OpenSubtitles.org sent a \"become VIP member\" note instead of the subtitle (download limit reached?)."
-msgstr ""
+msgstr "Το OpenSubtitles.org έστειλε μήνυμα \"γίνετε μέλος VIP\" αντί για τον υπότιτλο (συμπληρώθηκε το όριο λήψεων;)."
 
 msgid "Opening. Please wait..."
 msgstr "Άνοιγμα. Παρακαλώ περιμένετε..."
@@ -3078,7 +3078,7 @@ msgstr "Πρωτότυπος τίτλος:"
 
 #, python-format
 msgid "Original language: %s"
-msgstr ""
+msgstr "Αρχική γλώσσα: %s"
 
 msgid "Other"
 msgstr "Άλλο"
@@ -3284,7 +3284,7 @@ msgid "Pornstars"
 msgstr "Πορνοστάρ"
 
 msgid "Portuguese"
-msgstr ""
+msgstr "Πορτογαλικά"
 
 msgid "Powerpoint Presentation"
 msgstr "Παρουσίαση PowerPoint"
@@ -3407,7 +3407,7 @@ msgid "Ranking"
 msgstr "Κατάταξη"
 
 msgid "Rated"
-msgstr ""
+msgstr "Βαθμολογία"
 
 msgid "Rated:"
 msgstr "Καταλληλότητα:"
@@ -3424,7 +3424,7 @@ msgstr "Αξιολόγηση:"
 
 #, python-format
 msgid "Rating: %s"
-msgstr ""
+msgstr "Βαθμολογία: %s"
 
 msgid "Read error."
 msgstr "Σφάλμα ανάγνωσης."
@@ -3465,7 +3465,7 @@ msgid "Release"
 msgstr "Κυκλοφορία"
 
 msgid "Released"
-msgstr ""
+msgstr "Κυκλοφόρησε"
 
 msgid "Released:"
 msgstr "Κυκλοφόρησε:"
@@ -3716,7 +3716,7 @@ msgstr "Σεζόν:"
 
 #, python-format
 msgid "Seasons: %s"
-msgstr ""
+msgstr "Σεζόν: %s"
 
 msgid "Second movie player in buffering mode"
 msgstr "Δεύτερο πρόγραμμα αναπαραγωγής ταινιών με προσωρινή αποθήκευση"
@@ -3885,7 +3885,7 @@ msgid "Show"
 msgstr "Εκπομπή"
 
 msgid "Show \"Newest videos\" of all YouTube channels in a group"
-msgstr ""
+msgstr "Εμφάνιση \"Νεότερα βίντεο\" όλων των καναλιών YouTube μιας ομάδας"
 
 msgid "Show & Comedy"
 msgstr "Εκπομπές και Κωμωδία"
@@ -4060,16 +4060,16 @@ msgid "Sorted most viewed channels now [live]"
 msgstr "Ταξινομημένα πιο δημοφιλή κανάλια τώρα [ζωντανά]"
 
 msgid "Source:"
-msgstr ""
+msgstr "Πηγή:"
 
 msgid "Spanish"
-msgstr ""
+msgstr "Ισπανικά"
 
 msgid "Specialities"
 msgstr "Ειδικότητες"
 
 msgid "Specials"
-msgstr ""
+msgstr "Ειδικά"
 
 msgid "Spine"
 msgstr "Σπονδυλική στήλη"
@@ -4118,7 +4118,7 @@ msgid "Storage"
 msgstr "Αποθήκευση"
 
 msgid "Story"
-msgstr ""
+msgstr "Ιστορία"
 
 msgid "Stream link"
 msgstr "Σύνδεσμος ροής"
@@ -4214,7 +4214,7 @@ msgstr "Υπότιτλοι:"
 
 #, python-format
 msgid "Subtitles: %s"
-msgstr ""
+msgstr "Υπότιτλοι: %s"
 
 msgid "Summary:"
 msgstr "Περίληψη:"
@@ -4294,7 +4294,7 @@ msgstr ""
 "ΠΡΟΣΠΑΘΗΣΤΕ ΞΑΝΑ ΑΡΓΟΤΕΡΑ!"
 
 msgid "TMDb API key (free at themoviedb.org)"
-msgstr ""
+msgstr "Κλειδί API TMDb (δωρεάν στο themoviedb.org)"
 
 msgid "TMDb Rating:"
 msgstr "Βαθμολογία TMDb:"
@@ -4362,7 +4362,7 @@ msgstr ""
 "Αφήστε αυτή την επιλογή απενεργοποιημένη εάν δεν το επιθυμείτε. Οι άλλοι επιλυτές (AdRock/vidrock, VidNest, ...) δεν επηρεάζονται."
 
 msgid "The OpenSubtitles v3 server did not answer. Please try again later."
-msgstr ""
+msgstr "Ο διακομιστής OpenSubtitles v3 δεν απάντησε. Παρακαλώ δοκιμάστε ξανά αργότερα."
 
 msgid "The QR code leads to the wiki page with pictures and the extension download."
 msgstr "Ο κωδικός QR οδηγεί στη σελίδα wiki με εικόνες και τη λήψη της επέκτασης."
@@ -4418,11 +4418,11 @@ msgid "The debug log is not active."
 msgstr "Το αρχείο καταγραφής εντοπισμού σφαλμάτων δεν είναι ενεργό."
 
 msgid "The download is not ready yet. Please try again in a few seconds."
-msgstr ""
+msgstr "Η λήψη δεν είναι ακόμη έτοιμη. Παρακαλώ δοκιμάστε ξανά σε λίγα δευτερόλεπτα."
 
 #, python-format
 msgid "The download is ready in %d seconds. Please try again then."
-msgstr ""
+msgstr "Η λήψη είναι έτοιμη σε %d δευτερόλεπτα. Παρακαλώ δοκιμάστε ξανά τότε."
 
 msgid "The download manager is stopped, start it on the download page."
 msgstr "Η Διαχείριση λήψεων έχει σταματήσει, εκκινήστε την από τη σελίδα λήψεων."
@@ -4480,7 +4480,7 @@ msgstr "Αριθμός στοιχείων στο ιστορικό αναζήτη
 
 #, python-format
 msgid "The page layout of %s has changed."
-msgstr ""
+msgstr "Η διάταξη της σελίδας του %s έχει αλλάξει."
 
 #, python-format
 msgid ""
@@ -4499,13 +4499,13 @@ msgid "The same item already exists in this group."
 msgstr "Το ίδιο στοιχείο υπάρχει ήδη σε αυτή την ομάδα."
 
 msgid "The server did not return a subtitle file (download limit reached?)."
-msgstr ""
+msgstr "Ο διακομιστής δεν επέστρεψε αρχείο υποτίτλων (συμπληρώθηκε το όριο λήψεων;)."
 
 msgid "The server did not send a subtitle file."
-msgstr ""
+msgstr "Ο διακομιστής δεν έστειλε αρχείο υποτίτλων."
 
 msgid "The server limits the number of requests. Please try again in a few seconds."
-msgstr ""
+msgstr "Ο διακομιστής περιορίζει τον αριθμό των αιτημάτων. Παρακαλώ δοκιμάστε ξανά σε λίγα δευτερόλεπτα."
 
 msgid "The settings are protected by a PIN, change them on the receiver."
 msgstr "Οι ρυθμίσεις προστατεύονται με PIN, αλλάξτε τις στον δέκτη."
@@ -4517,7 +4517,7 @@ msgid "The site refuses all qualities of this video at the moment (HTTP 403). Tr
 msgstr "Ο ιστότοπος απορρίπτει προς το παρόν όλες τις ποιότητες αυτού του βίντεο (HTTP 403). Δοκιμάστε ξανά αργότερα."
 
 msgid "The site rejected the search request."
-msgstr ""
+msgstr "Ο ιστότοπος απέρριψε το αίτημα αναζήτησης."
 
 msgid "The support package holds the versions, the system information, the enabled hosts and the end of the debug log in one text file for a problem report. Look through it before posting it - the log can contain addresses of the sites you opened."
 msgstr "Το πακέτο υποστήριξης περιέχει τις εκδόσεις, τις πληροφορίες συστήματος, τα ενεργοποιημένους hosts και το τέλος του αρχείου καταγραφής εντοπισμού σφαλμάτων σε ένα αρχείο κειμένου για αναφορά προβλήματος. Ελέγξτε το πριν το δημοσιεύσετε - το αρχείο καταγραφής μπορεί να περιέχει διευθύνσεις των ιστότοπων που ανοίξατε."
@@ -4620,7 +4620,7 @@ msgid "This stream can only be played with buffering - please start it on the re
 msgstr "Αυτή η ροή μπορεί να αναπαραχθεί μόνο με προσωρινή αποθήκευση - παρακαλώ εκκινήστε την στον δέκτη."
 
 msgid "This subtitle provider has subtitles for movies only."
-msgstr ""
+msgstr "Αυτός ο πάροχος υποτίτλων διαθέτει υπότιτλους μόνο για ταινίες."
 
 msgid "This video has been deleted."
 msgstr "Αυτό το βίντεο έχει διαγραφεί."
@@ -4660,25 +4660,25 @@ msgstr "Συμβουλή! Μπορείτε να συνδέσετε ένα USB fl
 
 #, python-format
 msgid "Titlovi.com login failed (HTTP %s)."
-msgstr ""
+msgstr "Η σύνδεση στο Titlovi.com απέτυχε (HTTP %s)."
 
 #, python-format
 msgid "Titlovi.com login failed for user \"%s\". Please check your login and password."
-msgstr ""
+msgstr "Η σύνδεση στο Titlovi.com απέτυχε για τον χρήστη \"%s\". Παρακαλώ ελέγξτε το όνομα χρήστη και τον κωδικό πρόσβασης."
 
 msgid "Titlovi.com needs a free titlovi.com account. Enter login and password in the E2iPlayer settings."
-msgstr ""
+msgstr "Το Titlovi.com απαιτεί δωρεάν λογαριασμό στο titlovi.com. Εισάγετε το όνομα χρήστη και τον κωδικό πρόσβασης στις ρυθμίσεις του E2iPlayer."
 
 #, python-format
 msgid "Titlovi.com search failed (HTTP %s)."
-msgstr ""
+msgstr "Η αναζήτηση στο Titlovi.com απέτυχε (HTTP %s)."
 
 #, python-format
 msgid "Titlovi.com: API access is disabled for the account \"%s\". See titlovi.com/donacije."
-msgstr ""
+msgstr "Titlovi.com: Η πρόσβαση API είναι απενεργοποιημένη για τον λογαριασμό \"%s\". Δείτε το titlovi.com/donacije."
 
 msgid "Titlovi.com: invalid server response."
-msgstr ""
+msgstr "Titlovi.com: μη έγκυρη απόκριση διακομιστή."
 
 #, python-format
 msgid ""
@@ -4718,7 +4718,7 @@ msgid "Too many redirects."
 msgstr "Πάρα πολλές ανακατευθύνσεις."
 
 msgid "Too many requests. Please try again later."
-msgstr ""
+msgstr "Πάρα πολλά αιτήματα. Παρακαλώ δοκιμάστε ξανά αργότερα."
 
 msgid "Too many wrong codes - scan the QR code on the receiver screen instead."
 msgstr "Πάρα πολλοί λανθασμένοι κωδικοί - σαρώστε τον κωδικό QR στην οθόνη του δέκτη."
@@ -4752,7 +4752,7 @@ msgstr "Μετάφραση:"
 
 #, python-format
 msgid "Translator: %s"
-msgstr ""
+msgstr "Μεταφραστής: %s"
 
 msgid "Transparent"
 msgstr "Διαφανές"
@@ -4782,7 +4782,7 @@ msgid "Try to change extplayer or reinstall gst-ifdsrc"
 msgstr "Δοκιμάστε να αλλάξετε το extplayer ή να επανεγκαταστήσετε το gst-ifdsrc"
 
 msgid "Turkish"
-msgstr ""
+msgstr "Τουρκικά"
 
 msgid "Turkish Movies"
 msgstr "Τουρκικές ταινίες"
@@ -4813,7 +4813,7 @@ msgid "URL malformed."
 msgstr "Το URL δεν έχει έγκυρη μορφή."
 
 msgid "Ukrainian"
-msgstr ""
+msgstr "Ουκρανικά"
 
 msgid "Umount iso file"
 msgstr "Αποπροσάρτηση αρχείου iso"
@@ -4879,7 +4879,7 @@ msgstr "Ημερομηνία μεταφόρτωσης"
 
 #, python-format
 msgid "Uploader: %s"
-msgstr ""
+msgstr "Μεταφορτωτής: %s"
 
 msgid "Uploads"
 msgstr "Μεταφορτώσεις"
@@ -4888,22 +4888,22 @@ msgid "Urllists player"
 msgstr "Πρόγραμμα αναπαραγωγής urllists"
 
 msgid "Use Cinemeta (no key, English)"
-msgstr ""
+msgstr "Χρήση Cinemeta (χωρίς κλειδί, Αγγλικά)"
 
 msgid "Use HLS streams (adaptive):"
 msgstr "Χρήση ροών HLS (προσαρμοστικές):"
 
 msgid "Use IMDb (no key)"
-msgstr ""
+msgstr "Χρήση IMDb (χωρίς κλειδί)"
 
 msgid "Use OMDb"
-msgstr ""
+msgstr "Χρήση OMDb"
 
 msgid "Use TMDb"
-msgstr ""
+msgstr "Χρήση TMDb"
 
 msgid "Use TVmaze for series (no key, English)"
-msgstr ""
+msgstr "Χρήση TVmaze για σειρές (χωρίς κλειδί, Αγγλικά)"
 
 msgid "Use default video quality"
 msgstr "Χρήση προεπιλεγμένης ποιότητας βίντεο"
@@ -5081,7 +5081,7 @@ msgid "Wiki"
 msgstr "Wiki"
 
 msgid "With an API key from subdl.com (E2iPlayer settings, Subtitles) the official SubDL API is searched as well."
-msgstr ""
+msgstr "Με ένα κλειδί API από το subdl.com (ρυθμίσεις E2iPlayer, Υπότιτλοι) γίνεται αναζήτηση και στο επίσημο API του SubDL."
 
 msgid "With subtitles"
 msgstr "Με υπότιτλους"
@@ -5108,7 +5108,7 @@ msgid "Wrong answer."
 msgstr "Λάθος απάντηση."
 
 msgid "Wrong captcha code."
-msgstr ""
+msgstr "Λανθασμένος κωδικός captcha."
 
 msgid "Wrong code."
 msgstr "Λανθασμένος κωδικός."
@@ -5130,13 +5130,13 @@ msgstr "Λανθασμένο όνομα χρήστη ή κωδικός πρόσ�
 
 #, python-format
 msgid "Wyzie Subs API key rejected: %s"
-msgstr ""
+msgstr "Το κλειδί API του Wyzie Subs απορρίφθηκε: %s"
 
 msgid "Wyzie Subs needs an API key. You can get a free one at https://store.wyzie.io/redeem and enter it in the E2iPlayer configuration."
-msgstr ""
+msgstr "Το Wyzie Subs απαιτεί κλειδί API. Μπορείτε να αποκτήσετε ένα δωρεάν στο https://store.wyzie.io/redeem και να το εισάγετε στις ρυθμίσεις του E2iPlayer."
 
 msgid "Wyzie Subs: the daily request limit of the API key is reached."
-msgstr ""
+msgstr "Wyzie Subs: Συμπληρώθηκε το ημερήσιο όριο αιτημάτων του κλειδιού API."
 
 msgid "Xtream Live Stream"
 msgstr "Xtream Live Stream"
@@ -5236,7 +5236,7 @@ msgstr "Z-A"
 
 #, python-format
 msgid "[%s CD]"
-msgstr ""
+msgstr "[%s CD]"
 
 #, python-format
 msgid "[%s] - configuration"
@@ -5420,7 +5420,7 @@ msgid "hd"
 msgstr "hd"
 
 msgid "hearing impaired"
-msgstr ""
+msgstr "άτομα με προβλήματα ακοής"
 
 msgid "high"
 msgstr "υψηλό"
@@ -5489,7 +5489,7 @@ msgid "low"
 msgstr "χαμηλή"
 
 msgid "machine translated"
-msgstr ""
+msgstr "μηχανική μετάφραση"
 
 msgid "main"
 msgstr "κύριο"
@@ -5540,7 +5540,7 @@ msgid "next page ok"
 msgstr "η επόμενη σελίδα είναι εντάξει"
 
 msgid "no answer"
-msgstr ""
+msgstr "καμία απάντηση"
 
 msgid "no next page"
 msgstr "δεν υπάρχει επόμενη σελίδα"
@@ -5594,7 +5594,7 @@ msgid "password"
 msgstr "- Κωδικός πρόσβασης"
 
 msgid "prijevodi-online.org refused the download for this account."
-msgstr ""
+msgstr "Το prijevodi-online.org αρνήθηκε τη λήψη για αυτόν τον λογαριασμό."
 
 msgid "purple"
 msgstr "μοβ"
@@ -5652,7 +5652,7 @@ msgid "search next page ok"
 msgstr "η επόμενη σελίδα αναζήτησης είναι εντάξει"
 
 msgid "season pack"
-msgstr ""
+msgstr "πακέτο σεζόν"
 
 msgid "second"
 msgstr "δευτερόλεπτο"
@@ -5725,13 +5725,13 @@ msgid "stream: no data (HTTP %s)"
 msgstr "ροή: δεν υπάρχουν δεδομένα (HTTP %s)"
 
 msgid "subs.ro does not answer."
-msgstr ""
+msgstr "Το subs.ro δεν απαντά."
 
 msgid "subsource.net does not answer."
-msgstr ""
+msgstr "Το subsource.net δεν απαντά."
 
 msgid "subtitles"
-msgstr ""
+msgstr "υπότιτλοι"
 
 msgid "subtitles cache"
 msgstr "προσωρινή μνήμη υποτίτλων"
