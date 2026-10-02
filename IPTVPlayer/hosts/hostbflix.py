@@ -4,6 +4,7 @@ import re
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
+from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getArticleContent as getMetaArticleContent
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
@@ -43,9 +44,13 @@ class Bflix(CBaseHostClass):
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, 'src="([^"]+)')[0])
             title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'alt="([^"]+)')[0])
             desc = self.cleanHtmlStr(self.cm.ph.getAllItemsBeetwenMarkers(item, '<div class="start">', "</div>")[0])
+            # movies show the year there, series "SS 2 EP 2" instead
+            year = self.cm.ph.getSearchGroups(item, r'class="dot">\s*(\d{4})\s*<')[0]
+            isSeries = "serie" in url
             params = dict(cItem)
             params.update({"good_for_fav": True, "category": "video", "title": title, "url": url, "icon": icon, "desc": desc})
-            if "serie" in url:
+            params.update({"meta_type": "tv" if isSeries else "movie", "meta_title": title, "meta_year": year})
+            if isSeries:
                 params.update({"category": "list_seasons"})
                 self.addDir(params)
             else:
@@ -126,6 +131,10 @@ class Bflix(CBaseHostClass):
         cItem["url"] = "%ssearch?keyword=%s" % (self.MAIN_URL, urllib_quote_plus(searchPattern))
         self.listItems(cItem)
 
+    def getArticleContent(self, cItem):
+        printDBG("Bflix.getArticleContent [%s]" % cItem)
+        return getMetaArticleContent(cItem)
+
     def handleService(self, index, refresh=0, searchPattern="", searchType=""):
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
         name = self.currItem.get("name", "")
@@ -156,3 +165,6 @@ class Bflix(CBaseHostClass):
 class IPTVHost(CHostBase):
     def __init__(self):
         CHostBase.__init__(self, Bflix(), True, [])
+
+    def withArticleContent(self, cItem):
+        return "meta_title" in cItem

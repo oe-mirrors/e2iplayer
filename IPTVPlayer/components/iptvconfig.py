@@ -304,6 +304,17 @@ config.plugins.iptvplayer.mark_downloaded_items = ConfigYesNo(default=True)
 config.plugins.iptvplayer.downloaded_item_color = ConfigSelection(default="#00FF00", choices=COLORS_DEFINITONS)
 config.plugins.iptvplayer.mark_favourite_items = ConfigYesNo(default=True)
 config.plugins.iptvplayer.favourite_item_color = ConfigSelection(default="#00FFFF", choices=COLORS_DEFINITONS)
+# movie/series details on the info screen of hosts which support it (libs/moviemeta.py), asked in
+# the order TMDb, IMDb, TVmaze (series), Cinemeta, OMDb; TMDb and OMDb need the user's own free API
+# key, the others none; TMDb and IMDb texts come in meta_language where they have them
+config.plugins.iptvplayer.meta_tmdb = ConfigYesNo(default=True)
+config.plugins.iptvplayer.meta_imdb = ConfigYesNo(default=True)
+config.plugins.iptvplayer.meta_tvmaze = ConfigYesNo(default=True)
+config.plugins.iptvplayer.meta_cinemeta = ConfigYesNo(default=True)
+config.plugins.iptvplayer.meta_omdb = ConfigYesNo(default=False)
+config.plugins.iptvplayer.meta_language = ConfigSelection(default="auto", choices=[("auto", _("Auto")), ("ar", _("Arabic")), ("cs", _("Czech")), ("de", _("German")), ("el", _("Greek")), ("en", _("English")), ("es", _("Spanish")), ("fr", _("French")), ("hu", _("Hungarian")), ("it", _("Italian")), ("nl", _("Dutch")), ("pl", _("Polish")), ("pt", _("Portuguese")), ("ru", _("Russian")), ("tr", _("Turkish")), ("uk", _("Ukrainian"))])
+config.plugins.iptvplayer.meta_tmdb_apikey = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.meta_omdb_apikey = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.sidecar_enabled = ConfigYesNo(default=True)
 config.plugins.iptvplayer.normalize_media_names = ConfigYesNo(default=True)
 # OFF by default. The 7reels/cineb community-host resolvers VidEasy,
