@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Last Modified: 23.08.2026 - withArticleContent() now checks type for episodes, fixes wrong Info text on episode press, getSuggestionsProvider() added (forces Google search suggestions) - Kamikaze24
 import re
-import json
 
 from Plugins.Extensions.IPTVPlayer.components.e2ivkselector import GetVirtualKeyboard
 try:
@@ -12,6 +11,7 @@ from Plugins.Extensions.IPTVPlayer.components.asynccall import MainSessionWrappe
 from Components.config import ConfigSelection, config, getConfigListEntry, ConfigYesNo, ConfigText
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase, RetHost
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
+from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMetaByImdbId
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
@@ -26,7 +26,6 @@ config.plugins.iptvplayer.serienstreamto_hosts = ConfigSelection(default="http:/
 config.plugins.iptvplayer.serienstreamto_uselogin = ConfigYesNo(default=False)
 config.plugins.iptvplayer.serienstreamto_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.serienstreamto_password = ConfigText(default="", fixed_size=False)
-config.plugins.iptvplayer.serienstreamto_omdb_apikey = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.serienstreamto_mkv = ConfigYesNo(default=True)
 
 
@@ -37,7 +36,6 @@ def GetConfigList():
     optionList = [getConfigListEntry(_("Use login") + ":", config.plugins.iptvplayer.serienstreamto_uselogin),
                   getConfigListEntry(_("e-mail") + ":", config.plugins.iptvplayer.serienstreamto_login),
                   getConfigListEntry(_("password") + ":", config.plugins.iptvplayer.serienstreamto_password),
-                  getConfigListEntry(_("OMDb API Key") + ":", config.plugins.iptvplayer.serienstreamto_omdb_apikey),
                   getConfigListEntry(_("Create MKV") + ":", config.plugins.iptvplayer.serienstreamto_mkv)]
     optionList.append(getConfigListEntry(_("host") + ":", config.plugins.iptvplayer.serienstreamto_hosts))
     return optionList
@@ -219,42 +217,23 @@ class SerienStreamTo(CBaseHostClass):
         imdb_match = re.search(r"\b(tt\d{7,10})\b", data, re.IGNORECASE)
         return imdb_match.group(1) if imdb_match else ""
 
-    def getOMDbData(self, imdb_id):
-        if not imdb_id:
+    def getImdbMeta(self, imdb_id):
+        # details for the IMDb id from libs/moviemeta (IMDb and Cinemeta need no key, OMDb as set
+        # under "Metadata providers"): {"title", "plot", "poster", "info": {...}} or {}
+        if not imdb_id or not re.match(r"^tt\d{7,10}$", imdb_id):
             return {}
-        if not re.match(r"^tt\d{7,10}$", imdb_id):
-            return {}
-        cache_key = "omdb_%s" % imdb_id
-        if cache_key in self.imdb_cache:
-            return self.imdb_cache[cache_key]
-        api_key = config.plugins.iptvplayer.serienstreamto_omdb_apikey.value.strip()
-        if not api_key:
-            return {}
-        api_url = "http://www.omdbapi.com/?i=%s&apikey=%s" % (imdb_id, api_key)
-        printDBG("||OMDb: %s" % api_url)
-        params = dict(self.defaultParams)
-        params["header"] = dict(self.HEADER)
-        params["header"]["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
-        params["timeout"] = 8
-        try:
-            sts, data = self.cm.getPage(api_url, params)
-            if not sts or not data:
+        if imdb_id not in self.imdb_cache:
+            try:
+                self.imdb_cache[imdb_id] = getMetaByImdbId("tv", imdb_id)
+            except Exception:  # the lists must not fail because of the extra details
+                printExc()
                 return {}
-            j = json.loads(data)
-            if j.get("Response") != "True":
-                return {}
-            self.imdb_cache[cache_key] = j
-            return j
-        except Exception:
-            printExc("||OMDb EXCEPTION")
-            return {}
+        return self.imdb_cache[imdb_id]
 
     def getIMDBRating(self, imdb_id):
-        omdb = self.getOMDbData(imdb_id)
-        rating = omdb.get("imdbRating", "") if omdb else ""
-        if rating in ("", "N/A", None):
-            return "-"
-        return str(rating)
+        # "8.4" or "-"
+        rating = self.getImdbMeta(imdb_id).get("info", {}).get("imdb_rating", "")
+        return rating.split("/")[0] if rating else "-"
 
     def listItems(self, cItem):
         printDBG("SerienStreamTo.listItems |%s|" % cItem)
@@ -490,16 +469,15 @@ class SerienStreamTo(CBaseHostClass):
                         imdb_id = self.extractImdbId(pageData)
                         printDBG("||SIDECAR imdb id from item url: [%s]" % imdb_id)
                 if imdb_id:
-                    omdb = self.getOMDbData(imdb_id)
-                    printDBG("||SIDECAR OMDb: [%s]" % omdb)
-                    if omdb:
-                        if not imdb_rating or imdb_rating in ("-", "", "N/A"):
-                            imdb_rating = omdb.get("imdbRating", "")
-                        sidecarYear = omdb.get("Year", "")
-                        if not sidecarGenre:
-                            sidecarGenre = omdb.get("Genre", "")
+                    metaInfo = self.getImdbMeta(imdb_id).get("info", {})
+                    printDBG("||SIDECAR IMDb meta: [%s]" % metaInfo)
+                    if not imdb_rating or imdb_rating in ("-", "", "N/A"):
+                        imdb_rating = metaInfo.get("imdb_rating", "").split("/")[0]
+                    sidecarYear = metaInfo.get("year", "")
+                    if not sidecarGenre:
+                        sidecarGenre = metaInfo.get("genres", "")
             except Exception:
-                printExc("OMDb sidecar lookup failed")
+                printExc("IMDb sidecar lookup failed")
         else:
             if not sidecarTxt:
                 sidecarTxt = cItem.get("desc", "")
@@ -586,6 +564,7 @@ class SerienStreamTo(CBaseHostClass):
                 if sts2:
                     imdb_id = self.extractImdbId(data2)
         printDBG("IMDb DEBUG article id=[%s]" % imdb_id)
+        meta = self.getImdbMeta(imdb_id)
         imdb_rating = self.getIMDBRating(imdb_id) if imdb_id else "-"
         printDBG("IMDb DEBUG article rating=[%s]" % imdb_rating)
         if imdb_rating != "-":
@@ -609,7 +588,13 @@ class SerienStreamTo(CBaseHostClass):
                 val = re.findall('title="([^"]+)', value[0])
                 if val:
                     otherInfo[key] = ", ".join(val)
-        return [{"title": cItem["title"], "text": desc, "images": [{"title": "", "url": icon}], "other_info": otherInfo}]
+        # the site's German details stay, the metadata service fills in what the page lacks
+        # (year, age rating, seasons...); the same fields under another name are not doubled
+        sameAs = {"directors": "director", "cast": "actors", "genre": "genres"}
+        for key, value in meta.get("info", {}).items():
+            if key != "imdb_rating" and key not in otherInfo and sameAs.get(key) not in otherInfo:
+                otherInfo[key] = value
+        return [{"title": cItem["title"], "text": desc or meta.get("plot", ""), "images": [{"title": "", "url": icon}], "other_info": otherInfo}]
 
     def login(self):
         login = config.plugins.iptvplayer.serienstreamto_login.value.strip()

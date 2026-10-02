@@ -220,6 +220,22 @@ class ConfigMenu(ConfigBaseWidget):
         list.append(getConfigListEntry("http://1fichier.com/ " + _("password"), config.plugins.iptvplayer.fichiercom_password))
 
     @staticmethod
+    def _fillMetadata(list):
+        # libs/moviemeta.py: details on the info screen of hosts which support it, the
+        # services are asked in this order until one knows the title
+        cp = config.plugins.iptvplayer
+        list.append(getConfigListEntry(_("Language of the details (TMDb, IMDb)"), cp.meta_language))
+        list.append(getConfigListEntry(_("Use TMDb"), cp.meta_tmdb))
+        if cp.meta_tmdb.value:
+            list.append(getConfigListEntry("    " + _("TMDb API key (free at themoviedb.org)"), cp.meta_tmdb_apikey))
+        list.append(getConfigListEntry(_("Use IMDb (no key)"), cp.meta_imdb))
+        list.append(getConfigListEntry(_("Use TVmaze for series (no key, English)"), cp.meta_tvmaze))
+        list.append(getConfigListEntry(_("Use Cinemeta (no key, English)"), cp.meta_cinemeta))
+        list.append(getConfigListEntry(_("Use OMDb"), cp.meta_omdb))
+        if cp.meta_omdb.value:
+            list.append(getConfigListEntry("    " + _("OMDb API key (free at omdbapi.com)"), cp.meta_omdb_apikey))
+
+    @staticmethod
     def _fillSecurity(list):
         list.append(getConfigListEntry(_("Pin protection for plugin"), config.plugins.iptvplayer.pluginProtectedByPin))
         list.append(getConfigListEntry(_("Pin protection for configuration"), config.plugins.iptvplayer.configProtectedByPin))
@@ -385,6 +401,7 @@ class ConfigMenu(ConfigBaseWidget):
             ("basic", _("----- BASIC CONFIGURATION -----"), ConfigMenu._fillBasic),
             ("keyboard", _("----- VIRTUAL KEYBOARD & SEARCH CONFIGURATION -----"), ConfigMenu._fillKeyboard),
             ("service", _("----- SERVICE CONFIGURATION -----"), ConfigMenu._fillService),
+            ("metadata", _("----- METADATA PROVIDERS CONFIGURATION -----"), ConfigMenu._fillMetadata),
             ("security", _("----- SECURITY CONFIGURATION -----"), ConfigMenu._fillSecurity),
             ("skin", _("----- SKIN CONFIGURATION -----"), ConfigMenu._fillSkin),
             ("proxies", _("----- PROXIES CONFIGURATION -----"), ConfigMenu._fillProxies),
@@ -739,6 +756,8 @@ class ConfigMenu(ConfigBaseWidget):
             config.plugins.iptvplayer.favourites_use_watched_flag,
             config.plugins.iptvplayer.mark_downloaded_items,
             config.plugins.iptvplayer.mark_favourite_items,
+            config.plugins.iptvplayer.meta_tmdb,
+            config.plugins.iptvplayer.meta_omdb,
             config.plugins.iptvplayer.storageExpertMode,
             config.plugins.iptvplayer.hostsListType,
             config.plugins.iptvplayer.skinforceallinternal,

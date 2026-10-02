@@ -195,7 +195,7 @@ class ArticleContent:
     RICH_DESC_PARAMS = [
         "alternate_title", "original_title", "station", "price", "age_limit", "views", "status", "type", "first_air_date", "last_air_date", "seasons", "episodes", "country", "language", "duration", "quality", "subtitles", "year", "imdb_rating", "tmdb_rating",
         "released", "broadcast", "remaining", "rating", "rated", "genre", "genres", "category", "categories", "production", "director", "directors", "writer", "writers",
-        "creator", "creators", "cast", "actors", "stars", "awards", "budget", "translation"
+        "creator", "creators", "cast", "actors", "stars", "awards", "budget", "translation", "source"
     ]
     # labels here must be in english language
     # translation should be done before presentation using "locals" mechanism
@@ -241,7 +241,8 @@ class ArticleContent:
         "awards": "Awards:",
         "views": "Views:",
         "budget": "Budget:",
-        "translation": "Translation:"
+        "translation": "Translation:",
+        "source": "Source:"
     }
 
     def __init__(self, title='', text='', images=None, trailers=None, richDescParams=None, visualizer=None):
