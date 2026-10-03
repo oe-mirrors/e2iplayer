@@ -99,11 +99,11 @@ msgstr "[%s] Pufferung..."
 
 #, python-format
 msgid "%s cannot solve this type of captcha."
-msgstr ""
+msgstr "%s kann diesen Captcha-Typ nicht lösen."
 
 #, python-format
 msgid "%s could not solve the captcha."
-msgstr ""
+msgstr "%s konnte das Captcha nicht lösen."
 
 #, python-format
 msgid "%s device name"
@@ -1060,7 +1060,7 @@ msgid "Default (2 minutes)"
 msgstr "Standard (2 Minuten)"
 
 msgid "Default browser"
-msgstr ""
+msgstr "Standardbrowser"
 
 msgid "Default captcha bypass"
 msgstr "Standard-Captcha-Umgehung"
@@ -1810,7 +1810,7 @@ msgid "File can not be downloaded. Protocol [%s] is unsupported"
 msgstr "Datei kann nicht heruntergeladen werden. Protokoll [%s] wird nicht unterstützt"
 
 msgid "File format of DASH (MPD) downloads"
-msgstr ""
+msgstr "Dateiformat für DASH-Downloads (MPD)"
 
 #, python-format
 msgid "File might be corrupted (size: %d bytes)."
@@ -2237,7 +2237,7 @@ msgstr "Interaktives Lernzentrum (ILC)"
 
 #, python-format
 msgid "Invalid answer from %s."
-msgstr ""
+msgstr "Ungültige Antwort von %s."
 
 msgid "Invalid email."
 msgstr "Ungültige E-Mail."
@@ -2433,7 +2433,7 @@ msgstr "Lateinamerikaner"
 
 #, python-brace-format
 msgid "Launcher URI ({url} or {address} = address of the box)"
-msgstr ""
+msgstr "Launcher-URI ({url} oder {address} = Adresse der Box)"
 
 msgid "Left"
 msgstr "Links"
@@ -2559,7 +2559,7 @@ msgid "Login on {0} failed."
 msgstr "Login in {0} fehlgeschlagen."
 
 msgid "Login or password is wrong."
-msgstr ""
+msgstr "Login oder Passwort ist falsch."
 
 #, python-format
 msgid "Login to prijevodi-online.org failed: %s"
@@ -2813,10 +2813,10 @@ msgid "MyE2i script finished."
 msgstr "MyE2i Script beendet."
 
 msgid "MyE2i: close the start page when done"
-msgstr ""
+msgstr "MyE2i: Startseite nach Abschluss schließen"
 
 msgid "MyE2i: offer to open the page in (Android)"
-msgstr ""
+msgstr "MyE2i: Öffnen der Seite anbieten in (Android)"
 
 msgid ""
 "NO VIDEOS FOUND FOR NOW! \n"
@@ -3074,10 +3074,10 @@ msgstr "Offene Pull-Requests"
 
 #, python-format
 msgid "Open this page in %s"
-msgstr ""
+msgstr "Diese Seite in %s öffnen"
 
 msgid "Open this page in the chosen browser"
-msgstr ""
+msgstr "Diese Seite im gewählten Browser öffnen"
 
 msgid "OpenSubtitles.org sent a \"become VIP member\" note instead of the subtitle (download limit reached?)."
 msgstr "OpenSubtitles.org hat statt des Untertitels einen Hinweis \"VIP-Mitglied werden\" gesendet (Download-Limit erreicht?)."
@@ -3123,7 +3123,7 @@ msgid "Out of memory."
 msgstr "Nicht genügend Speicher."
 
 msgid "Own launcher URI"
-msgstr ""
+msgstr "Eigene Launcher-URI"
 
 msgid "Own model"
 msgstr "Eigenes Model"
@@ -3260,7 +3260,7 @@ msgstr "Bitte geben Sie einen gültigen Link ein (http:// oder https://)."
 
 #, python-format
 msgid "Please enter the %s login and password in the E2iPlayer settings (Captcha)."
-msgstr ""
+msgstr "Bitte tragen Sie Login und Passwort für %s in den E2iPlayer-Einstellungen (Captcha) ein."
 
 msgid "Please make sure that the folder for cache data (set in the configuration) is writable."
 msgstr "Bitte stellen Sie sicher, dass das Verzeichnis für Cache-Daten (festgelegt in der Konfiguration) beschreibbar ist."
@@ -4414,10 +4414,10 @@ msgid "The YouTube video ID is invalid."
 msgstr "Die Youtube Video-ID ist ungültig."
 
 msgid "The account is banned."
-msgstr ""
+msgstr "Das Konto ist gesperrt."
 
 msgid "The balance of the account is too low."
-msgstr ""
+msgstr "Das Guthaben des Kontos ist zu niedrig."
 
 msgid "The channel already exists in User Links."
 msgstr "Der Kanal ist bereits unter „Benutzerlinks“ vorhanden."
@@ -4554,7 +4554,7 @@ msgid "The server limits the number of requests. Please try again in a few secon
 msgstr "Der Server begrenzt die Anzahl der Anfragen. Bitte versuchen Sie es in ein paar Sekunden erneut."
 
 msgid "The service is overloaded. Please try again later."
-msgstr ""
+msgstr "Der Dienst ist überlastet. Bitte versuchen Sie es später erneut."
 
 msgid "The settings are protected by a PIN, change them on the receiver."
 msgstr "Die Einstellungen sind durch eine PIN geschützt, ändern Sie sie auf dem Receiver."
