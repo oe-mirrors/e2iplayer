@@ -46,7 +46,8 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import FreeSpace as iptvtools
                                                           mkdirs as iptvtools_mkdirs, IsRealStoragePresent as iptvtools_IsRealStoragePresent, \
                                                           IsPathWritable as iptvtools_IsPathWritable, \
                                                           IsSameDir as iptvtools_IsSameDir, IsSameOrSubDir as iptvtools_IsSameOrSubDir, \
-                                                          CleanOldFilesInDir as iptvtools_CleanOldFilesInDir, GetIPTVPlayerVersion, GetShortSystemInfo, \
+                                                          CleanOldFilesInDir as iptvtools_CleanOldFilesInDir, StartStorageMigrations as iptvtools_StartStorageMigrations, \
+                                                          GetIPTVPlayerVersion, GetShortSystemInfo, \
                                                           printDBG, printExc, GetHostsList, IsHostEnabled, \
                                                           eConnectCallback, GetSkinsDir, GetIconDir, GetPluginDir, \
                                                           SortHostsList, GetHostsOrderList, CSearchHistoryHelper, \
@@ -615,6 +616,8 @@ class E2iPlayerWidget(Screen):
         printDBG('Storage: effective folders CacheDir[%s] ConfigDir[%s] TmpDir[%s] DownloadsDir[%s] bufferingPath[%s]' % (
             config.plugins.iptvplayer.CacheDir.value, config.plugins.iptvplayer.ConfigDir.value, config.plugins.iptvplayer.TmpDir.value,
             config.plugins.iptvplayer.DownloadsDir.value, config.plugins.iptvplayer.bufferingPath.value))
+        # user data still in the old folders is moved in the background; until it is done the old folders are used
+        iptvtools_StartStorageMigrations()
 
         for cacheDirFunc, deleteAfterDays in (
             (GetCookieDir, config.plugins.iptvplayer.cookiesCacheDeleteAfterDays.value),

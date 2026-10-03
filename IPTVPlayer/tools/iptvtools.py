@@ -526,21 +526,135 @@ _storageMigrationLock = threading.Lock()
 gFailedStorageMigrations = set()
 
 
-def _copyDirAtomically(src, dst):
-    # copy to a temp sibling, rename atomically, then drop the source: a half-done copy never becomes the destination
-    tmpPath = dst + '.migrating'
-    rmtree(tmpPath, ignore_errors=True)
+def _syncDirInto(src, dst):
+    # makes dst a copy of src, copying only files that are missing or differ (size/mtime, copy2 keeps the mtime):
+    # a copy cut short (box switched off) goes on from where it stopped instead of starting again. Symlinked folders
+    # are not followed and only regular files are copied (a FIFO would block the copy for good). Returns the file count.
+    count = 0
+    srcFiles = set()
+    for root, _dirs, files in os.walk(src):
+        rel = os.path.relpath(root, src)
+        dstRoot = dst if rel == '.' else os.path.join(dst, rel)
+        if not os.path.isdir(dstRoot):
+            os.makedirs(dstRoot)
+        for name in files:
+            srcFile = os.path.join(root, name)
+            if not os.path.isfile(srcFile):
+                continue
+            dstFile = os.path.join(dstRoot, name)
+            srcFiles.add(os.path.normpath(dstFile))
+            count += 1
+            try:
+                srcStat, dstStat = os.stat(srcFile), os.stat(dstFile)
+                if srcStat.st_size == dstStat.st_size and int(srcStat.st_mtime) == int(dstStat.st_mtime):
+                    continue
+            except OSError:
+                pass
+            shutil.copy2(srcFile, dstFile)
+    # files deleted from src since an earlier, cut short copy must not come back
+    for root, _dirs, files in os.walk(dst):
+        for name in files:
+            dstFile = os.path.join(root, name)
+            if os.path.normpath(dstFile) not in srcFiles:
+                os.remove(dstFile)
+    return count
+
+
+def _dirSize(path):
+    # bytes the regular files below path take, each rounded up to whole 4 KiB blocks (thousands of tiny watched markers)
+    size = 0
+    for root, _dirs, files in os.walk(path):
+        for name in files:
+            try:
+                size += (os.stat(os.path.join(root, name)).st_size // 4096 + 1) * 4096
+            except OSError:
+                pass
+    return size
+
+
+def _checkFreeSpaceForCopy(src, tmpPath):
+    # the copy goes to the flash (/etc/enigma2): never fill it up, enigma2 could not save its settings anymore
+    st = os.statvfs(config.plugins.iptvplayer.ConfigDir.value)
+    free = st.f_bavail * st.f_frsize
+    needed = _dirSize(src) - (_dirSize(tmpPath) if os.path.isdir(tmpPath) else 0)
+    if needed + 8 * 1024 * 1024 > free:
+        raise IOError('not enough free space in [%s]: %d KiB needed, %d KiB free' % (config.plugins.iptvplayer.ConfigDir.value, needed // 1024, free // 1024))
+
+
+def _copyDirInBackground(path, oldPath, label):
+    # copies oldPath to <path>.migrating, the copy is switched to at the next start (_getMigratedDir). Until then this
+    # session keeps using oldPath everywhere: lists, helpers and hosts keep the folder they got for the whole session,
+    # switching while the plugin runs would make them write to a deleted folder. A copy cut short (box switched off)
+    # is continued at the next start; a failed one is deleted again, it must not keep space on the flash.
+    tmpPath = path + '.migrating'
+    donePath = tmpPath + '.complete'
+    failed = False
     try:
-        shutil.copytree(src, tmpPath)
-        os.rename(tmpPath, dst)
+        printDBG('%s: copying [%s] -> [%s] in the background ...' % (label, oldPath, tmpPath))
+        mkdirs(config.plugins.iptvplayer.ConfigDir.value)
+        _checkFreeSpaceForCopy(oldPath, tmpPath)
+        count = _syncDirInto(oldPath, tmpPath)
+        with open(donePath, 'w') as f:
+            f.write(oldPath)
+        printDBG('%s: copied [%s] -> [%s] (%d files), used from the next start on' % (label, oldPath, tmpPath, count))
     except Exception:
+        printExc()
+        failed = True
         rmtree(tmpPath, ignore_errors=True)
-        raise
-    rmtree(src, ignore_errors=True)
+        rm(donePath)
+        printDBG('%s: copy FAILED [%s] -> [%s], data stays in the old folder, retried at the next start' % (label, oldPath, tmpPath))
+    with _storageMigrationLock:
+        del gRunningStorageMigrations[path]
+        if failed:
+            gFailedStorageMigrations.add(path)
+        else:
+            gCopiedStorageMigrations[path] = oldPath
+
+
+def _switchToCopiedDir(path, oldPath, label):
+    # under the lock, before anyone got a folder for path this session: takes over what changed in oldPath since the
+    # background copy of an earlier session (only those files are copied, quick), renames the copy to path and moves
+    # oldPath aside to be deleted in the background. Returns False when it did not work, oldPath is used then.
+    tmpPath = path + '.migrating'
+    try:
+        count = _syncDirInto(oldPath, tmpPath)
+        if os.path.isdir(path):
+            # holds no file (checked before), the rename needs the name free
+            rmtree(path)
+        os.rename(tmpPath, path)
+    except Exception:
+        printExc()
+        # copied again in the background at the next start, the copy must not keep space on the flash meanwhile
+        rmtree(tmpPath, ignore_errors=True)
+        rm(tmpPath + '.complete')
+        printDBG('%s: switch FAILED [%s] -> [%s], data stays in the old folder until the next start' % (label, oldPath, path))
+        return False
+    rm(tmpPath + '.complete')
+    printDBG('%s: migrated [%s] -> [%s] (%d files)' % (label, oldPath, path, count))
+    # unique name: one left behind by a switched off box is deleted by StartStorageMigrations(), not here under the lock
+    retiredPath = '%s.migrated.%d' % (oldPath, int(time() * 1000))
+    try:
+        os.rename(oldPath, retiredPath)
+        _startThread(rmtree, retiredPath, True)
+    except Exception:
+        printExc()
+        rmtree(oldPath, ignore_errors=True)
+    return True
+
+
+def _startThread(target, *args):
+    thread = threading.Thread(target=target, args=args, name='E2iStorageMigration')
+    thread.daemon = True
+    thread.start()
 
 
 # destinations checked this session (Get*Dir() runs on every request, the check below walks the folders)
 gCheckedStorageMigrations = set()
+
+# destination -> old folder: copy running in the background right now / copied this session (switched to at the next
+# start); in both cases the old folder is used for the rest of the session
+gRunningStorageMigrations = {}
+gCopiedStorageMigrations = {}
 
 
 def _dirHasFiles(path):
@@ -550,51 +664,138 @@ def _dirHasFiles(path):
     return False
 
 
-def _getMigratedDir(path, oldPaths, moveDir, label):
-    # path, or the old folder while moving it there failed (retried on the next start). A destination without a single
-    # file counts as missing: a start without the old storage (HDD not mounted yet, CacheDir rerouted) created it empty,
-    # and from then on it hid the data left behind in the old folder (e.g. all favourites gone after the update)
+def _findDirToMigrate(path, oldPaths):
+    # the old folder whose data still has to move to path, None when there is nothing to move. A destination without
+    # a single file counts as missing: a start without the old storage (HDD not mounted yet, CacheDir rerouted) created
+    # it empty, and from then on it hid the data left behind in the old folder (e.g. all favourites gone after the update)
+    if os.path.isdir(path) and _dirHasFiles(path):
+        return None
+    realPath = os.path.realpath(path)
+    for oldPath in oldPaths:
+        if os.path.isdir(oldPath) and os.path.realpath(oldPath) != realPath and _dirHasFiles(oldPath):
+            return oldPath
+    return None
+
+
+def _readCopiedFrom(donePath):
+    # the folder a finished background copy was made from, '' when there is no finished copy
+    try:
+        with open(donePath) as f:
+            return f.read().strip()
+    except Exception:
+        return ''
+
+
+def _getMigratedDir(path, oldPaths, label, copy):
+    # path, or the old folder while its data is not moved yet. copy: the old folder is on another file system (cache
+    # on the HDD -> flash), the copy runs in the background and is switched to at the next start (_copyDirInBackground);
+    # copying it in the GUI thread hung the box for minutes. Otherwise a plain rename, done right away.
     if path in gCheckedStorageMigrations and os.path.isdir(path):
         return path
     useOldPath = None
     with _storageMigrationLock:
-        if not os.path.isdir(path) or not _dirHasFiles(path):
-            realPath = os.path.realpath(path)
-            for oldPath in oldPaths:
-                if not os.path.isdir(oldPath) or os.path.realpath(oldPath) == realPath or not _dirHasFiles(oldPath):
-                    continue
-                if path not in gFailedStorageMigrations:
+        useOldPath = gRunningStorageMigrations.get(path) or gCopiedStorageMigrations.get(path)
+        if useOldPath is not None:
+            return useOldPath
+        tmpPath = path + '.migrating'
+        donePath = tmpPath + '.complete'
+        oldPath = _findDirToMigrate(path, oldPaths)
+        if oldPath is None:
+            if os.path.isdir(path) and _dirHasFiles(path):
+                # left over (box switched off right after a switch, or another copy won), not needed: free the flash
+                if os.path.exists(tmpPath):
+                    rmtree(tmpPath, ignore_errors=True)
+                rm(donePath)
+            elif os.path.isdir(tmpPath) and _readCopiedFrom(donePath):
+                srcPath = _readCopiedFrom(donePath)
+                if os.path.isdir(srcPath):
+                    # still there but emptied since ("Delete favourites", ...): the copy must not bring it back
+                    rmtree(tmpPath, ignore_errors=True)
+                    rm(donePath)
+                elif os.path.isdir(os.path.dirname(srcPath)):
+                    # gone with the cache ("Delete all cache files", another image sharing the HDD moved it already):
+                    # the complete copy of it is used. Not while the storage it was on is missing (HDD not mounted
+                    # yet), the copy would then hide what was changed there after it was made
                     try:
-                        mkdirs(config.plugins.iptvplayer.ConfigDir.value)
                         if os.path.isdir(path):
-                            # holds no file (checked above), the rename needs the name free
                             rmtree(path)
-                        moveDir(oldPath, path)
-                        printDBG('%s: migrated [%s] -> [%s]' % (label, oldPath, path))
+                        os.rename(tmpPath, path)
+                        rm(donePath)
+                        printDBG('%s: old folder gone, its copy [%s] is used' % (label, tmpPath))
                     except Exception:
                         printExc()
-                        gFailedStorageMigrations.add(path)
-                        printDBG('%s: migration FAILED [%s] -> [%s], data stays in the old folder until the next start' % (label, oldPath, path))
-                if path in gFailedStorageMigrations:
-                    useOldPath = oldPath
-                break
-            if useOldPath is None and not os.path.isdir(path):
+            if not os.path.isdir(path):
                 mkdirs(path)
-        if useOldPath is None and os.path.isdir(path):
-            gCheckedStorageMigrations.add(path)
+            if os.path.isdir(path):
+                gCheckedStorageMigrations.add(path)
+        elif path in gFailedStorageMigrations:
+            useOldPath = oldPath
+        elif not copy:
+            try:
+                mkdirs(config.plugins.iptvplayer.ConfigDir.value)
+                if os.path.isdir(path):
+                    # holds no file (checked above), the rename needs the name free
+                    rmtree(path)
+                os.rename(oldPath, path)
+                printDBG('%s: migrated [%s] -> [%s]' % (label, oldPath, path))
+                gCheckedStorageMigrations.add(path)
+            except Exception:
+                printExc()
+                gFailedStorageMigrations.add(path)
+                printDBG('%s: migration FAILED [%s] -> [%s], data stays in the old folder until the next start' % (label, oldPath, path))
+                useOldPath = oldPath
+        elif os.path.isfile(donePath) and os.path.isdir(tmpPath):
+            if _switchToCopiedDir(path, oldPath, label):
+                gCheckedStorageMigrations.add(path)
+            else:
+                gFailedStorageMigrations.add(path)
+                useOldPath = oldPath
+        else:
+            rm(donePath)
+            gRunningStorageMigrations[path] = oldPath
+            _startThread(_copyDirInBackground, path, oldPath, label)
+            useOldPath = oldPath
+    if useOldPath is not None:
+        return useOldPath
     if not os.path.isdir(path):
         _warnIfConfigDirNotCreatable(path)
-    return path if useOldPath is None else useOldPath
+    return path
+
+
+def StartStorageMigrations():
+    # at plugin start, in a worker thread (looking into the old folders may wait for the HDD to spin up): switches to
+    # the copies made in the last session before the first list asks for a folder, starts the copies still needed,
+    # deletes old folders a switched off box left behind
+    def _migrate():
+        for getDir in (GetHostOrderDir, GetSearchHistoryDir, GetMoviePlayerPerHostDir, GetFavouritesDir, GetWatchedDir):
+            try:
+                getDir()
+            except Exception:
+                printExc()
+        for cacheDir in set(os.path.dirname(oldPath) for oldPath in _configSubDirOldPaths('')):
+            try:
+                names = os.listdir(cacheDir) if os.path.isdir(cacheDir) else []
+            except Exception:
+                names = []
+            for name in names:
+                if name.split('.migrated.')[0] in ('hostorder', 'SearchHistory', 'MoviePlayer', 'IPTVFavourites', 'hostxxx') and \
+                        '.migrated.' in name and os.path.isdir(os.path.join(cacheDir, name)):
+                    rmtree(os.path.join(cacheDir, name), ignore_errors=True)
+    _startThread(_migrate)
+
+
+def _configSubDirOldPaths(dirName):
+    # besides the current CacheDir also the one it was rerouted from and the default one: a CacheDir rerouted
+    # before CacheDirWanted existed lost its old path
+    return [os.path.join(cacheDir, dirName) for cacheDir in (config.plugins.iptvplayer.CacheDir.value,
+                                                             config.plugins.iptvplayer.CacheDirWanted.value,
+                                                             config.plugins.iptvplayer.SciezkaCache.default) if cacheDir]
 
 
 def GetConfigSubDir(dirName, fileName=''):
-    # used to live under CacheDir: move once, so "Delete all cache files" cannot wipe it. Besides the current CacheDir
-    # also the one it was rerouted from and the default one: a CacheDir rerouted before CacheDirWanted existed lost its old path
+    # used to live under CacheDir: move once, so "Delete all cache files" cannot wipe it
     path = os.path.join(config.plugins.iptvplayer.ConfigDir.value, dirName)
-    oldPaths = [os.path.join(cacheDir, dirName) for cacheDir in (config.plugins.iptvplayer.CacheDir.value,
-                                                                 config.plugins.iptvplayer.CacheDirWanted.value,
-                                                                 config.plugins.iptvplayer.SciezkaCache.default) if cacheDir]
-    return os.path.join(_getMigratedDir(path, oldPaths, _copyDirAtomically, 'GetConfigSubDir'), fileName)
+    return os.path.join(_getMigratedDir(path, _configSubDirOldPaths(dirName), 'GetConfigSubDir', True), fileName)
 
 
 def GetSearchHistoryDir(fileName=''):
@@ -611,8 +812,13 @@ def GetWatchedDir(fileName=''):
     path = os.path.join(config.plugins.iptvplayer.ConfigDir.value, 'IPTVWatched')
     if path not in gCheckedStorageMigrations or not os.path.isdir(path):
         # outside the lock: takes and releases it itself (a plain Lock is not reentrant)
-        oldPath = os.path.join(GetFavouritesDir(''), 'IPTVWatched')
-        path = _getMigratedDir(path, [oldPath], os.rename, 'GetWatchedDir')
+        favDir = GetFavouritesDir('')
+        oldPath = os.path.join(favDir, 'IPTVWatched')
+        if not IsSameDir(favDir, os.path.join(config.plugins.iptvplayer.ConfigDir.value, 'IPTVFavourites')):
+            # the favourites are still used from the old folder (copied in the background, or moving them failed):
+            # the markers stay there with them and are carried over together (a rename to the flash would fail anyway)
+            return os.path.join(oldPath, fileName)
+        path = _getMigratedDir(path, [oldPath], 'GetWatchedDir', False)
     return os.path.join(path, fileName)
 
 
