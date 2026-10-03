@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-02 22:49+0000\n"
-"PO-Revision-Date: 2026-10-03 00:42+0300\n"
+"PO-Revision-Date: 2026-10-03 14:58+0300\n"
 "Last-Translator: \n"
 "Language-Team: giorbak\n"
 "Language: el\n"
@@ -102,11 +102,11 @@ msgstr "%s σε προσωρινή αποθήκευση..."
 
 #, python-format
 msgid "%s cannot solve this type of captcha."
-msgstr ""
+msgstr "Το %s δεν μπορεί να επιλύσει αυτόν τον τύπο captcha."
 
 #, python-format
 msgid "%s could not solve the captcha."
-msgstr ""
+msgstr "Το %s δεν μπόρεσε να επιλύσει το captcha."
 
 #, python-format
 msgid "%s device name"
@@ -294,7 +294,7 @@ msgid "1 minute"
 msgstr "1 λεπτό"
 
 msgid "1. On a phone or PC in the same network, open the address shown in the captcha window (or scan its QR code) in a browser with the MyE2i extension installed. If it asks for a code, you find it in the title of the captcha window."
-msgstr "1. Σε ένα τηλέφωνο ή υπολογιστή στο ίδιο δίκτυο, ανοίξτε σε ένα πρόγραμμα περιήγησης τη διεύθυνση που εμφανίζεται στο παράθυρο captcha (ή σαρώστε τον κωδικό QR), με εγκατεστημένη την επέκταση MyE2i. Εάν σας ζητηθεί κωδικός, θα τον βρείτε στον τίτλο του παραθύρου captcha."
+msgstr "1. Σε ένα τηλέφωνο ή PC στο ίδιο δίκτυο, ανοίξτε σε έναν περιηγητή τη διεύθυνση που εμφανίζεται στο παράθυρο captcha (ή σαρώστε τον κωδικό QR), με εγκατεστημένη την επέκταση MyE2i. Εάν σας ζητηθεί κωδικός, θα τον βρείτε στον τίτλο του παραθύρου captcha."
 
 msgid "12 hour format"
 msgstr "Μορφή 12 ωρών"
@@ -303,7 +303,7 @@ msgid "15 seconds"
 msgstr "15 δευτερόλεπτα"
 
 msgid "2. Click the big green button on that page. A new tab opens with the captcha or the website's browser check."
-msgstr "2. Πατήστε το μεγάλο πράσινο κουμπί σε αυτή τη σελίδα. Θα ανοίξει μια νέα καρτέλα με το captcha ή τον έλεγχο προγράμματος περιήγησης του ιστότοπου."
+msgstr "2. Πατήστε το μεγάλο πράσινο κουμπί σε αυτή τη σελίδα. Θα ανοίξει μια νέα καρτέλα με το captcha ή τον έλεγχο περιηγητή του ιστότοπου."
 
 msgid "24 hour format"
 msgstr "Μορφή 24 ωρών"
@@ -579,7 +579,7 @@ msgid "Aspect"
 msgstr "Αναλογία"
 
 msgid "At least one of plugin browser, extension list and main menu has to stay on, otherwise E2iPlayer could no longer be started."
-msgstr "Πρέπει να παραμένει ενεργοποιημένο τουλάχιστον ένα από την περιήγηση πρόσθετων, τη λίστα επεκτάσεων και το κύριο μενού. Διαφορετικά, το E2iPlayer δεν θα μπορεί πλέον να εκκινηθεί."
+msgstr "Πρέπει να παραμένει ενεργοποιημένο τουλάχιστον ένα από τον περιηγητή πρόσθετων, τη λίστα επεκτάσεων και το κύριο μενού, διαφορετικά το E2iPlayer δεν θα μπορεί πλέον να εκκινηθεί."
 
 msgid "At the live edge"
 msgstr "Στο ζωντανό σημείο"
@@ -1063,7 +1063,7 @@ msgid "Default (2 minutes)"
 msgstr "Προεπιλογή (2 λεπτά)"
 
 msgid "Default browser"
-msgstr ""
+msgstr "Προεπιλεγμένος περιηγητής"
 
 msgid "Default captcha bypass"
 msgstr "Προεπιλεγμένη παράκαμψη captcha"
@@ -1175,7 +1175,7 @@ msgid "Directory \"%s\" does not exists."
 msgstr "Ο κατάλογος \"%s\" δεν υπάρχει."
 
 msgid "Directory browser"
-msgstr "Περιήγηση καταλόγου"
+msgstr "Περιηγητής καταλόγων"
 
 msgid "Disable all groups"
 msgstr "Απενεργοποίηση όλων των ομάδων"
@@ -1410,7 +1410,7 @@ msgid "E2iPlayer enable/disabled groups"
 msgstr "Ενεργοποίηση/Απενεργοποίηση ομάδων E2iPlayer"
 
 msgid "E2iPlayer is only a specialized web browser. It does not host any materials."
-msgstr "Το E2iPlayer είναι απλώς ένα εξειδικευμένο πρόγραμμα περιήγησης ιστού. Δεν φιλοξενεί κανένα υλικό."
+msgstr "Το E2iPlayer είναι απλώς ένας εξειδικευμένος περιηγητής ιστού. Δεν φιλοξενεί κανένα υλικό."
 
 msgid "E2iPlayer virtual keyboard"
 msgstr "Εικονικό πληκτρολόγιο E2iPlayer"
@@ -1805,7 +1805,7 @@ msgid "File [%s] was added to downloading queue."
 msgstr "Το αρχείο [%s] προστέθηκε στην ουρά λήψεων."
 
 msgid "File browser"
-msgstr "Περιήγηση αρχείων"
+msgstr "Περιηγητής αρχείων"
 
 msgid "File can not be downloaded. Download manager is not available."
 msgstr "Δεν είναι δυνατή η λήψη του αρχείου. Η Διαχείριση λήψεων δεν είναι διαθέσιμη."
@@ -1815,7 +1815,7 @@ msgid "File can not be downloaded. Protocol [%s] is unsupported"
 msgstr "Δεν είναι δυνατή η λήψη του αρχείου. Το πρωτόκολλο [%s] δεν υποστηρίζεται"
 
 msgid "File format of DASH (MPD) downloads"
-msgstr ""
+msgstr "Μορφή αρχείων λήψεων DASH (MPD)"
 
 #, python-format
 msgid "File might be corrupted (size: %d bytes)."
@@ -2242,7 +2242,7 @@ msgstr "Κέντρο Διαδραστικής Μάθησης (ILC)"
 
 #, python-format
 msgid "Invalid answer from %s."
-msgstr ""
+msgstr "Μη έγκυρη απάντηση από το %s."
 
 msgid "Invalid email."
 msgstr "Μη έγκυρο email."
@@ -2438,7 +2438,7 @@ msgstr "Λατινοαμερικάνικα"
 
 #, python-brace-format
 msgid "Launcher URI ({url} or {address} = address of the box)"
-msgstr ""
+msgstr "URI εκκίνησης ({url} ή {address} = διεύθυνση του δέκτη)"
 
 msgid "Left"
 msgstr "Left"
@@ -2564,7 +2564,7 @@ msgid "Login on {0} failed."
 msgstr "Η σύνδεση στο {0} απέτυχε."
 
 msgid "Login or password is wrong."
-msgstr ""
+msgstr "Το όνομα χρήστη ή ο κωδικός πρόσβασης είναι λανθασμένος."
 
 #, python-format
 msgid "Login to prijevodi-online.org failed: %s"
@@ -2792,7 +2792,7 @@ msgid "MyE2i Cloudflare solution"
 msgstr "Λύση MyE2i Cloudflare"
 
 msgid "MyE2i browser check solution"
-msgstr "Λύση ελέγχου προγράμματος περιήγησης MyE2i"
+msgstr "Λύση ελέγχου περιηγητή MyE2i"
 
 msgid "MyE2i debug snapshot received - see the debug log."
 msgstr "Ελήφθη στιγμιότυπο εντοπισμού σφαλμάτων MyE2i - δείτε το αρχείο καταγραφής εντοπισμού σφαλμάτων."
@@ -2818,10 +2818,10 @@ msgid "MyE2i script finished."
 msgstr "Το script MyE2i ολοκληρώθηκε."
 
 msgid "MyE2i: close the start page when done"
-msgstr ""
+msgstr "MyE2i: κλείσιμο της αρχικής σελίδας όταν ολοκληρωθεί"
 
 msgid "MyE2i: offer to open the page in (Android)"
-msgstr ""
+msgstr "MyE2i: πρόταση για άνοιγμα της σελίδας στο (Android)"
 
 msgid ""
 "NO VIDEOS FOUND FOR NOW! \n"
@@ -2844,7 +2844,7 @@ msgid "Name:"
 msgstr "Όνομα:"
 
 msgid "Needs extension v1.18+. Opens the page in this browser, waits until it is fully rendered (Cloudflare challenge included, solve it if it shows up) and sends the rendered HTML, the fetch/XHR calls and the cookie names to the box debug log."
-msgstr "Απαιτείται επέκταση v1.18+. Ανοίγει τη σελίδα σε αυτό το πρόγραμμα περιήγησης, περιμένει μέχρι να φορτωθεί πλήρως (συμπεριλαμβανομένης της πρόκλησης Cloudflare, λύστε την εάν εμφανιστεί) και στέλνει το HTML που αποδόθηκε, τις κλήσεις fetch/XHR και τα ονόματα των cookies στο αρχείο καταγραφής εντοπισμού σφαλμάτων του δέκτη."
+msgstr "Απαιτείται επέκταση v1.18+. Ανοίγει τη σελίδα σε αυτόν τον περιηγητή, περιμένει μέχρι να φορτωθεί πλήρως (συμπεριλαμβανομένης της πρόκλησης Cloudflare, λύστε την εάν εμφανιστεί) και στέλνει το HTML που αποδόθηκε, τις κλήσεις fetch/XHR και τα ονόματα των cookies στο αρχείο καταγραφής εντοπισμού σφαλμάτων του δέκτη."
 
 msgid "Netflix"
 msgstr "Netflix"
@@ -3079,10 +3079,10 @@ msgstr "Ανοιχτά pull requests"
 
 #, python-format
 msgid "Open this page in %s"
-msgstr ""
+msgstr "Άνοιγμα αυτής της σελίδας στο %s"
 
 msgid "Open this page in the chosen browser"
-msgstr ""
+msgstr "Άνοιγμα αυτής της σελίδας στον επιλεγμένο περιηγητή"
 
 msgid "OpenSubtitles.org sent a \"become VIP member\" note instead of the subtitle (download limit reached?)."
 msgstr "Το OpenSubtitles.org έστειλε μήνυμα \"γίνετε μέλος VIP\" αντί για τον υπότιτλο (συμπληρώθηκε το όριο λήψεων;)."
@@ -3128,7 +3128,7 @@ msgid "Out of memory."
 msgstr "Η μνήμη εξαντλήθηκε."
 
 msgid "Own launcher URI"
-msgstr ""
+msgstr "URI δικής σας εκκίνησης"
 
 msgid "Own model"
 msgstr "Δικό σας μοντέλο"
@@ -3248,7 +3248,7 @@ msgid ""
 msgstr ""
 "Παρακαλώ ανοίξτε τον ιστότοπο:\n"
 "http://{0}:{1}\n"
-"σε πρόγραμμα περιήγησης ιστού με εγκατεστημένη την επέκταση MyE2i"
+"σε περιηγητή ιστού με εγκατεστημένη την επέκταση MyE2i"
 
 msgid "Please configure Xtream (blue button)"
 msgstr "Παρακαλώ ρυθμίστε το Xtream (μπλε κουμπί)"
@@ -3265,7 +3265,7 @@ msgstr "Παρακαλώ εισάγετε έναν έγκυρο σύνδεσμο
 
 #, python-format
 msgid "Please enter the %s login and password in the E2iPlayer settings (Captcha)."
-msgstr ""
+msgstr "Εισάγετε το όνομα χρήστη και τον κωδικό πρόσβασης του %s στις ρυθμίσεις του E2iPlayer (Captcha)."
 
 msgid "Please make sure that the folder for cache data (set in the configuration) is writable."
 msgstr "Παρακαλώ βεβαιωθείτε ότι ο φάκελος για τα δεδομένα προσωρινής μνήμης (που έχει οριστεί στις ρυθμίσεις) είναι εγγράψιμος."
@@ -3945,7 +3945,7 @@ msgid "Show IPTVPlayer in main menu"
 msgstr "Εμφάνιση IPTVPlayer στο κύριο μενού"
 
 msgid "Show IPTVPlayer in plugin browser"
-msgstr "Εμφάνιση IPTVPlayer στην περιήγηση πρόσθετων"
+msgstr "Εμφάνιση IPTVPlayer στον περιηγητή πρόσθετων"
 
 msgid "Show Profiles in ZBIORNIK MINI :"
 msgstr "Εμφάνιση προφίλ στο ZBIORNIK MINI:"
@@ -4419,10 +4419,10 @@ msgid "The YouTube video ID is invalid."
 msgstr "Το ID βίντεο YouTube δεν είναι έγκυρο."
 
 msgid "The account is banned."
-msgstr ""
+msgstr "Ο λογαριασμός έχει αποκλειστεί."
 
 msgid "The balance of the account is too low."
-msgstr ""
+msgstr "Το υπόλοιπο του λογαριασμού είναι πολύ χαμηλό."
 
 msgid "The channel already exists in User Links."
 msgstr "Το κανάλι υπάρχει ήδη στους συνδέσμους χρήστη."
@@ -4559,7 +4559,7 @@ msgid "The server limits the number of requests. Please try again in a few secon
 msgstr "Ο διακομιστής περιορίζει τον αριθμό των αιτημάτων. Παρακαλώ δοκιμάστε ξανά σε λίγα δευτερόλεπτα."
 
 msgid "The service is overloaded. Please try again later."
-msgstr ""
+msgstr "Η υπηρεσία είναι υπερφορτωμένη. Παρακαλώ δοκιμάστε ξανά αργότερα."
 
 msgid "The settings are protected by a PIN, change them on the receiver."
 msgstr "Οι ρυθμίσεις προστατεύονται με PIN, αλλάξτε τις στον δέκτη."
