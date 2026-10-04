@@ -6,6 +6,7 @@ from http.client import IncompleteRead
 import http.cookiejar
 from io import BytesIO, StringIO
 import os
+import random
 import re
 from shutil import move
 import shutil
@@ -13,7 +14,7 @@ import time
 import unicodedata
 import zlib
 from urllib.error import HTTPError, URLError
-from urllib.parse import quote_plus, unquote, urlencode, urljoin, urlparse, urlunparse
+from urllib.parse import quote_plus, unquote, unquote_plus, urlencode, urljoin, urlparse, urlunparse
 from urllib.request import addinfourl, BaseHandler, build_opener, HTTPCookieProcessor, HTTPHandler, HTTPRedirectHandler, HTTPSHandler, ProxyHandler, Request, urlopen
 
 from Components.config import config, configfile, ConfigText
@@ -374,19 +375,78 @@ class CParsingHelper:
         return ph.clean_html(str)
 
 
+# browser versions for all User-Agents below - only change them here
+CHROME_VERSION = '154'  # also Edge and Android Chrome
+FIREFOX_VERSION = '157'
+OPERA_VERSION = '136'
+OPERA_CHROME_VERSION = '152'  # Opera ships an older Chromium than Chrome
+SAFARI_VERSION = '27.0'  # also iOS / iPadOS
+SAFARI_IOS_UA_VERSION = '18_7'  # since Safari 26 the iOS version in the UA is frozen
+SAMSUNG_VERSION = '30.0'
+SAMSUNG_CHROME_VERSION = '143'
+VLC_VERSION = '3.0.24'
+
+_CHROME = 'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/%s.0.0.0' % CHROME_VERSION
+_FIREFOX = 'rv:%s.0) Gecko/20100101 Firefox/%s.0' % (FIREFOX_VERSION, FIREFOX_VERSION)
+_SAFARI_IOS = 'OS %s like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/%s Mobile/15E148 Safari/604.1' % (SAFARI_IOS_UA_VERSION, SAFARI_VERSION)
+_MAG = 'Mozilla/5.0 (QtEmbedded; U; Linux; C) AppleWebKit/533.3 (KHTML, like Gecko) %s stbapp ver: 2 rev: 250 Safari/533.3'
+
+
 class common:
-    HOST = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36'
+    HOST = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) %s Safari/537.36' % _CHROME
     HEADER = None
     ph = CParsingHelper
+    # every User-Agent can be asked for by its name, e.g. getDefaultHeader(browser='android')
+    USER_AGENTS = {
+        'chrome': HOST,
+        'chrome_mac': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) %s Safari/537.36' % _CHROME,
+        'chrome_linux': 'Mozilla/5.0 (X11; Linux x86_64) %s Safari/537.36' % _CHROME,
+        'firefox': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; %s' % _FIREFOX,
+        'firefox_mac': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; %s' % _FIREFOX,
+        'firefox_linux': 'Mozilla/5.0 (X11; Linux x86_64; %s' % _FIREFOX,
+        'edge': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) %s Safari/537.36 Edg/%s.0.0.0' % (_CHROME, CHROME_VERSION),
+        'opera': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/%s.0.0.0 Safari/537.36 OPR/%s.0.0.0' % (OPERA_CHROME_VERSION, OPERA_VERSION),
+        'safari': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/%s Safari/605.1.15' % SAFARI_VERSION,
+        'iphone': 'Mozilla/5.0 (iPhone; CPU iPhone %s' % _SAFARI_IOS,
+        'ipad': 'Mozilla/5.0 (iPad; CPU %s' % _SAFARI_IOS,
+        'android': 'Mozilla/5.0 (Linux; Android 10; K) %s Mobile Safari/537.36' % _CHROME,
+        'samsung': 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/%s Chrome/%s.0.0.0 Mobile Safari/537.36' % (SAMSUNG_VERSION, SAMSUNG_CHROME_VERSION),
+        # media player, for IPTV/m3u servers and CDNs that only let players through
+        'vlc': 'VLC/%s LibVLC/%s' % (VLC_VERSION, VLC_VERSION),
+        # MAG set-top boxes (Stalker portals)
+        'mag200': _MAG % 'MAG200',
+        'mag250': _MAG % 'MAG250',
+        'mag254': _MAG % 'MAG254',
+        'mag322': _MAG % 'MAG322',
+        'mag352': _MAG % 'MAG352',
+        'mag540': _MAG % 'MAG540',
+    }
+    # randomUA=True picks from the group; without it a group name gives its first entry
+    USER_AGENT_GROUPS = {
+        'chrome': ['chrome', 'chrome_mac', 'chrome_linux'],
+        'firefox': ['firefox', 'firefox_mac', 'firefox_linux'],
+        'desktop': ['chrome', 'chrome_mac', 'chrome_linux', 'firefox', 'firefox_mac', 'firefox_linux', 'edge', 'opera', 'safari'],
+        'mobile': ['iphone', 'android', 'samsung', 'ipad'],
+        'mag': ['mag250', 'mag200', 'mag254', 'mag322', 'mag352', 'mag540'],
+    }
+    USER_AGENT_ALIASES = {'iphone_3_0': 'iphone', 'qt': 'mag'}
 
     @staticmethod
-    def getDefaultHeader(browser='firefox'):
-        if browser == 'firefox':
-            ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:156.0) Gecko/20100101 Firefox/156.0'
-        elif browser in ('iphone', 'iphone_3_0'):
-            ua = 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.1 Mobile/15E148 Safari/604.1'
-        else:
-            ua = common.HOST
+    def getDefaultUserAgent(browser='chrome', randomUA=False):
+        # unknown names (also 'Firefox' with a capital F) keep getting the Chrome UA like before;
+        # randomUA picks a new UA on every call, so call it once per host and reuse the header -
+        # Cloudflare's cf_clearance and many session cookies only stay valid for the same UA
+        browser = common.USER_AGENT_ALIASES.get(browser, browser)
+        group = common.USER_AGENT_GROUPS.get(browser)
+        if randomUA and group:
+            browser = random.choice(group)
+        elif group and browser not in common.USER_AGENTS:
+            browser = group[0]
+        return common.USER_AGENTS.get(browser, common.HOST)
+
+    @staticmethod
+    def getDefaultHeader(browser='firefox', randomUA=False):
+        ua = common.getDefaultUserAgent(browser, randomUA)
         HTTP_HEADER = {'User-Agent': ua, 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding': 'gzip, deflate', 'DNT': 1}
         return dict(HTTP_HEADER)
 
@@ -467,6 +527,28 @@ class common:
         _query = []
         _process(_query, query, '')
         return _query
+
+    @staticmethod
+    def buildURLWithParams(url='http://fake/', Query=None, MultiQuery=None):  # NOSONAR
+        # adds or replaces query parameters; the other parameters stay byte for byte (repeated keys, empty
+        # values, their own encoding), as does the #fragment; a list value gives a repeated key
+        if not Query:
+            return url
+        try:
+            if MultiQuery:
+                newParams = common.buildHTTPQuery(Query)
+            else:
+                newParams = list(Query.items()) if isinstance(Query, dict) else list(Query)
+            newKeys = set(str(param[0]) for param in newParams)
+            parsedUrl = urlparse(url)
+            query = [part for part in parsedUrl.query.split('&') if part and unquote_plus(part.split('=', 1)[0]) not in newKeys]
+            newQuery = urlencode(newParams, doseq=True)
+            if newQuery:
+                query.append(newQuery)
+            return urlunparse(parsedUrl._replace(query='&'.join(query)))
+        except Exception:
+            printExc()
+            return url
 
     def __init__(self, proxyURL='', useProxy=False, useMozillaCookieJar=True):
         self.proxyURL = proxyURL
