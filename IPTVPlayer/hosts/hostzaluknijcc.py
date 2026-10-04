@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 21.09.2026 - damagic
+# Last Modified: 04.10.2026 - damagic
 ###################################################
 import re
 import json
@@ -10,7 +10,6 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
-from Components.config import config, ConfigText, getConfigListEntry
 
 try:
     import json
@@ -32,12 +31,10 @@ class Zaluknij(CBaseHostClass):
         CBaseHostClass.__init__(
             self, {"history": "Zaluknij", "cookie": "Zaluknij.cookie"}
         )
-        config.plugins.iptvplayer.cloudflare_user = ConfigText(
-            default="Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0",
-            fixed_size=False
-        )
-        self.HEADER = self.cm.getDefaultHeader(browser="chrome")
-        self.HEADER["User-Agent"] = config.plugins.iptvplayer.cloudflare_user.value
+        self.cacheLinks = {}
+        self.cacheDescriptions = {}
+        self.cacheDetails = {}
+        self._setupUserAgent()
         self.defaultParams = {
             "header": self.HEADER,
             "use_cookie": True,
@@ -50,9 +47,6 @@ class Zaluknij(CBaseHostClass):
         self.DEFAULT_ICON_URL = self.fixIconUrl(
             self.MAIN_URL + "public/dist/images/lgbt.png", self.MAIN_URL
         )
-        self.cacheLinks = {}
-        self.cacheDescriptions = {}
-        self.cacheDetails = {}
         self.MENU = [
             {
                 "category": "list_items",
@@ -90,13 +84,56 @@ class Zaluknij(CBaseHostClass):
             },
         ] + self.searchItems()
 
+    # ------------------------------------------------------------------
+    #  User-Agent - MyE2i generuje cf_clearance dla UA z "Edg/..." (edge),
+    #  więc każdy request (getPage + miniaturki) musi używać DOKŁADNIE
+    #  tego samego UA, inaczej Cloudflare zwraca 403.
+    # ------------------------------------------------------------------
+    def _setupUserAgent(self):
+        get_ua = getattr(self.cm, "getDefaultUserAgent", None)
+        if callable(get_ua):
+            try:
+                self.USER_AGENT = get_ua("edge")
+            except Exception:
+                try:
+                    self.USER_AGENT = get_ua()
+                except Exception:
+                    self.USER_AGENT = self._fallbackUA()
+        else:
+            self.USER_AGENT = self._fallbackUA()
+        self.HEADER = self.cm.getDefaultHeader(browser="chrome")
+        self.HEADER["User-Agent"] = self.USER_AGENT
+        if isinstance(getattr(self, "defaultParams", None), dict):
+            self.defaultParams["header"] = self.HEADER
+
+    @staticmethod
+    def _fallbackUA():
+        return (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/154.0.0.0 Safari/537.36 Edg/154.0.0.0"
+        )
+
     def getPage(self, baseUrl, addParams=None, post_data=None):
         if addParams is None:
             addParams = dict(self.defaultParams)
         baseUrl = self.cm.iriToUri(baseUrl)
-        sts, data = self.cm.getPageCFProtection(baseUrl, addParams, post_data)
-        if data.meta.get("cf_user", self.HEADER["User-Agent"]) != self.HEADER["User-Agent"]:
-            self.__init__()
+        try:
+            sts, data = self.cm.getPageCFProtection(baseUrl, addParams, post_data)
+        except Exception:
+            printExc()
+            return False, strwithmeta("")
+        # Zsynchronizuj nasz UA z UA, którego faktycznie użył pCommon/MyE2i,
+        # żeby miniaturki nie dostawały 403 (cf_clearance jest powiązany z UA).
+        try:
+            cf_user = data.meta.get("cf_user", "")
+        except Exception:
+            cf_user = ""
+        if cf_user and cf_user != self.HEADER.get("User-Agent"):
+            self.USER_AGENT = cf_user
+            self.HEADER["User-Agent"] = cf_user
+            if isinstance(getattr(self, "defaultParams", None), dict):
+                self.defaultParams["header"] = self.HEADER
         return sts, data
 
     def fixIconUrl(self, icon_url, referer=None):
@@ -110,7 +147,7 @@ class Zaluknij(CBaseHostClass):
             icon_url,
             {
                 "Referer": referer if referer else self.MAIN_URL,
-                "User-Agent": self.HEADER["User-Agent"],
+                "User-Agent": self.HEADER.get("User-Agent", self.USER_AGENT),
                 "Cookie": "cf_clearance=%s" % cf if cf else "",
             },
         )
@@ -499,104 +536,120 @@ class Zaluknij(CBaseHostClass):
 
     def getLinksForVideo(self, cItem):
         printDBG("Zaluknij.getLinksForVideo [%s]" % cItem)
-        cacheKey = cItem["url"]
+        cacheKey = cItem.get("url", "")
+        if not cacheKey:
+            return []
         cacheTab = self.cacheLinks.get(cacheKey, [])
         if len(cacheTab):
             return cacheTab
         retTab = []
-        url = cItem["url"]
-        sts, data = self.getPage(url)
-        if not sts:
+        url = cacheKey
+        try:
+            sts, data = self.getPage(url)
+        except Exception:
+            printExc()
             return []
-        desc = self.cm.ph.getSearchGroups(data, r'<p\s+class="description">([^<]+)')
-        if desc:
-            self.cacheDescriptions[url] = self.cleanHtmlStr(desc[0])
-        link_list_div = ""
-        link_list_parts = self.cm.ph.getDataBeetwenNodes(
-            data, ("<div", ">", "link-list"), ("</div", ">")
-        )
-        if link_list_parts and len(link_list_parts) > 1:
-            link_list_div = link_list_parts[1]
-        if not link_list_div:
-            link_list_div = data
-        table_parts = self.cm.ph.getDataBeetwenNodes(
-            link_list_div, ("<table", ">"), ("</table", ">")
-        )
-        if table_parts and len(table_parts) > 1:
-            table = table_parts[1]
-            rows = self.cm.ph.getAllItemsBeetwenNodes(
-                table, ("<tr", ">"), ("</tr", ">")
+        if not sts:
+            printDBG("Zaluknij.getLinksForVideo - getPage failed for %s" % url)
+            return []
+        try:
+            desc = self.cm.ph.getSearchGroups(data, r'<p\s+class="description">([^<]+)')
+            if desc:
+                self.cacheDescriptions[url] = self.cleanHtmlStr(desc[0])
+            link_list_div = ""
+            link_list_parts = self.cm.ph.getDataBeetwenNodes(
+                data, ("<div", ">", "link-list"), ("</div", ">")
             )
-            for row in rows:
-                if "<th" in row:
-                    continue
-                cells = self.cm.ph.getAllItemsBeetwenNodes(
-                    row, ("<td", ">"), ("</td", ">")
-                )
-                if len(cells) < 2:
-                    continue
-                player_url = ""
-                version = ""
-                quality = ""
-                for idx, cell in enumerate(cells):
-                    if "link-to-video" in cell:
-                        iframe_match = re.search(
-                            r"""data-iframe=['"]([^"^']+?)['"]""", cell
-                        )
-                        if iframe_match:
-                            try:
-                                decoded = base64.b64decode(
-                                    iframe_match.group(1)
-                                ).decode("utf-8")
-                                iframe_data = json.loads(decoded)
-                                player_url = iframe_data.get("src", "")
-                            except Exception as e:
-                                printDBG("iframe decode error: %s" % str(e))
-                        if not player_url:
-                            href_match = re.search(r"""href=['"]([^"^']+?)['"]""", cell)
-                            if href_match:
-                                player_url = href_match.group(1)
-                    elif idx == 2:
-                        version = self.cleanHtmlStr(cell)
-                    elif idx == 3:
-                        quality = self.cleanHtmlStr(cell)
-                if not player_url:
-                    continue
-                if player_url and not player_url.startswith("http"):
-                    player_url = self.getFullUrl(player_url)
-                hostname = self.up.getHostName(player_url)
-                name = hostname.split(".")[0] if "." in hostname else hostname
-                if version and version not in ["", "Wersja"]:
-                    name += " [%s" % version
-                    if quality and quality not in ["", "Jakość"]:
-                        name += " / %s" % quality
-                    name += "]"
-                elif quality and quality not in ["", "Jakość"]:
-                    name += " [%s]" % quality
-                retTab.append(
-                    {
-                        "name": name,
-                        "url": strwithmeta(player_url, {"Referer": url}),
-                        "need_resolve": 1,
-                    }
-                )
-        if not retTab:
-            data_links = self.cm.ph.getAllItemsBeetwenMarkers(
-                data, 'link-to-video">', "None"
+            if link_list_parts and len(link_list_parts) > 1:
+                link_list_div = link_list_parts[1]
+            if not link_list_div:
+                link_list_div = data
+            table_parts = self.cm.ph.getDataBeetwenNodes(
+                link_list_div, ("<table", ">"), ("</table", ">")
             )
-            for item in data_links:
-                url_match = re.search(r'href="([^"]+)', item)
-                if url_match:
-                    video_url = url_match.group(1)
-                    hostname = self.up.getHostName(video_url)
-                    short_name = hostname.split(".")[0] if "." in hostname else hostname
+            if table_parts and len(table_parts) > 1:
+                table = table_parts[1]
+                rows = self.cm.ph.getAllItemsBeetwenNodes(
+                    table, ("<tr", ">"), ("</tr", ">")
+                )
+                for row in rows:
+                    if "<th" in row:
+                        continue
+                    cells = self.cm.ph.getAllItemsBeetwenNodes(
+                        row, ("<td", ">"), ("</td", ">")
+                    )
+                    if len(cells) < 2:
+                        continue
+                    player_url = ""
+                    version = ""
+                    quality = ""
+                    for idx, cell in enumerate(cells):
+                        if "link-to-video" in cell:
+                            iframe_match = re.search(
+                                r"""data-iframe=['"]([^"^']+?)['"]""", cell
+                            )
+                            if iframe_match:
+                                try:
+                                    decoded = base64.b64decode(
+                                        iframe_match.group(1)
+                                    ).decode("utf-8")
+                                    iframe_data = json.loads(decoded)
+                                    player_url = iframe_data.get("src", "")
+                                except Exception as e:
+                                    printDBG("iframe decode error: %s" % str(e))
+                            if not player_url:
+                                href_match = re.search(
+                                    r"""href=['"]([^"^']+?)['"]""", cell
+                                )
+                                if href_match:
+                                    player_url = href_match.group(1)
+                        elif idx == 2:
+                            version = self.cleanHtmlStr(cell)
+                        elif idx == 3:
+                            quality = self.cleanHtmlStr(cell)
+                    if not player_url:
+                        continue
+                    if player_url and not player_url.startswith("http"):
+                        player_url = self.getFullUrl(player_url)
+                    hostname = self.up.getHostName(player_url)
+                    name = hostname.split(".")[0] if "." in hostname else hostname
+                    if version and version not in ["", "Wersja"]:
+                        name += " [%s" % version
+                        if quality and quality not in ["", "Jakość"]:
+                            name += " / %s" % quality
+                        name += "]"
+                    elif quality and quality not in ["", "Jakość"]:
+                        name += " [%s]" % quality
                     retTab.append(
                         {
-                            "name": short_name.capitalize(),
-                            "url": strwithmeta(video_url, {"Referer": gettytul()}),
+                            "name": name,
+                            "url": strwithmeta(player_url, {"Referer": url}),
                             "need_resolve": 1,
                         }
                     )
+            if not retTab:
+                data_links = self.cm.ph.getAllItemsBeetwenMarkers(
+                    data, 'link-to-video">', "None"
+                )
+                for item in data_links:
+                    url_match = re.search(r'href="([^"]+)', item)
+                    if url_match:
+                        video_url = url_match.group(1)
+                        hostname = self.up.getHostName(video_url)
+                        short_name = (
+                            hostname.split(".")[0] if "." in hostname else hostname
+                        )
+                        retTab.append(
+                            {
+                                "name": short_name.capitalize(),
+                                "url": strwithmeta(
+                                    video_url, {"Referer": gettytul()}
+                                ),
+                                "need_resolve": 1,
+                            }
+                        )
+        except Exception:
+            printExc()
         if len(retTab):
             self.cacheLinks[cacheKey] = retTab
         return retTab
