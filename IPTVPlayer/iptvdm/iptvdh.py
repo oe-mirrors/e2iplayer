@@ -274,17 +274,19 @@ class DMHelper:
 
     @staticmethod
     def getDownloaderParamFromUrlWithMeta(url, httpHeadersOnly=False):
-        printDBG("DMHelper.getDownloaderParamFromUrlWithMeta url[%s], url.meta[%r]" % (url, url.meta))
+        # DownloaderCreator also gets plain str urls (article covers, picture player)
+        meta = getattr(url, 'meta', None) or {}
+        printDBG("DMHelper.getDownloaderParamFromUrlWithMeta url[%s], url.meta[%r]" % (url, meta))
         downloaderParams = {}
-        for key in url.meta:
+        for key in meta:
             if key in DMHelper.HANDLED_HTTP_HEADER_PARAMS:
-                downloaderParams[key] = url.meta[key]
+                downloaderParams[key] = meta[key]
             elif key == 'http_proxy':
-                downloaderParams[key] = url.meta[key]
+                downloaderParams[key] = meta[key]
         if not httpHeadersOnly:
             for key in DMHelper.IPTV_DOWNLOADER_PARAMS:
-                if key in url.meta:
-                    downloaderParams[key] = url.meta[key]
+                if key in meta:
+                    downloaderParams[key] = meta[key]
         return url, downloaderParams
 
     @staticmethod

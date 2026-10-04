@@ -1,22 +1,31 @@
 # -*- coding: utf-8 -*-
-# Last modified: 24/05/2026 - M.Esafty (angel_heart)
-# typical import for a standard host
-###################################################
-# LOCAL import
-###################################################
-# localization library
-from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
-
-# host main class
-from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
-
-# tools - write on log, write exception infos and merge dicts
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, E2ColoR
-
-###################################################
-from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
+# Last Modified: 03.10.2026 - rework for we.3isq.cam (b.3isq.cam redirects there; Cloudflare, cleared via
+#   pCommon getPageCFProtection / MyE2i)
+#   - menus from the site's current navigation: latest episodes, recently added, most viewed, all series,
+#     movies, search - all with First page / Jump / Next page (the site's "page/N/" and "?offset=N" pagers)
+#   - movies and episodes are VIDEO rows keyed on their page url; the server list of "<page>/see/"
+#     (ul#watch, data-watch) is read in getLinksForVideo and handed to urlparser
+#   - series -> episodes (ascending); watched flag (series:/video: page-path keys), downloaded flag,
+#     favourites, name normalisation ("Title (Year)", "Show - SxxExx"), sidecar, INFO via moviemeta +
+#     the site's story/poster/fields; no blocking retry loops, no colour codes in titles
+#   - posters carry the cf_clearance cookie + User-Agent (getFullIconUrl); default icon = bundled logo
+import os
 import re
-import time
+
+from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
+from Plugins.Extensions.IPTVPlayer.libs.botprotection import remembered_user_agent
+from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
+from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_unquote
+from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
+from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIconDir
+from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
+from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
+from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
 
 
 def GetConfigList():
@@ -24,472 +33,362 @@ def GetConfigList():
 
 
 def gettytul():
-    return "https://b.3isq.cam/"  # main url of host
+    return "https://we.3isq.cam/"
 
 
-class Q3isk(CBaseHostClass):
+COLOR_CODE_RE = re.compile(r"\\c[0-9A-Fa-f]{8}")
+# Arabic ordinals used in season labels ("الموسم الثاني")
+SEASON_ORDINALS = [
+    ("الحادي عشر", 11), ("الثاني عشر", 12), ("الثالث عشر", 13), ("الرابع عشر", 14), ("الخامس عشر", 15),
+    ("الأولى", 1), ("الاولى", 1), ("الأول", 1), ("الاول", 1), ("الثانية", 2), ("الثاني", 2), ("الثانى", 2),
+    ("الثالث", 3), ("الرابع", 4), ("الخامس", 5), ("السادس", 6), ("السابع", 7), ("الثامن", 8),
+    ("التاسع", 9), ("العاشر", 10),
+]
+SEASON_WORD_RE = re.compile(r"الموسم\s*(\d+|%s)" % "|".join(o[0] for o in SEASON_ORDINALS))
+EPISODE_RE = re.compile(r"^(.*?)\s*الحلقة\s*(\d+)")
+YEAR_RE = re.compile(r"(?:^|\s)((?:19|20)\d{2})(?=\s|$)")
+JUNK_RE = re.compile(r"(?:^|\s)(?:مترجم|مترجمة|مدبلج|مدبلجة|اون لاين|أون لاين|مشاهدة|وتحميل|فيلم|مسلسل|كامل|كاملة|HD)(?=\s|$)")
+# "<div class="tax"><span>الأنواع : </span><a>..</a>" blocks -> INFO keys
+TAX_FIELDS = {"الأنواع": "genres", "الممثلين": "actors", "السنة": "year", "اللغة": "language", "الحالة": "status", "التصنيفات": "category"}
+
+
+def _stripColors(text):
+    return COLOR_CODE_RE.sub("", text or "")
+
+
+def _seasonNum(text):
+    m = SEASON_WORD_RE.search(text or "")
+    if not m:
+        return 0
+    val = m.group(1)
+    return int(val) if val.isdigit() else dict(SEASON_ORDINALS).get(val, 0)
+
+
+def _clean(text):
+    text = JUNK_RE.sub(" ", JUNK_RE.sub(" ", text or ""))
+    return re.sub(r"\s+", " ", text).strip(" -:|")
+
+
+class Q3isk(GenericFolderWatchedScraperMixin, CBaseHostClass):
+
+    FAV_FIELDS = ("name", "category", "type", "url", "title", "icon", "desc", "s_title", "s_season", "s_episode",
+                  "meta_type", "meta_title", "meta_year")
+
     def __init__(self):
         CBaseHostClass.__init__(self, {"history": "q3isk", "cookie": "q3isk.cookie"})
         self.MAIN_URL = gettytul()
-        self.SEARCH_URL = self.MAIN_URL + "?s="
-        self.DEFAULT_ICON_URL = "https://3d.q9w8e7.shop/wp-content/themes/QisatEishq/UI//Assets/img/logo.webp"
+        # the site's logo sits behind the Cloudflare check too: the main menu is drawn before any page
+        # request has stored a cf_clearance cookie, so its download got a 403 - the bundled logo instead
+        self.DEFAULT_ICON_URL = "file://" + GetIconDir("PlayerSelector/q3isk135.png")
         self.HEADER = self.cm.getDefaultHeader(browser="chrome")
-        self.defaultParams = {
-            "header": self.HEADER,
-            "use_cookie": True,
-            "load_cookie": True,
-            "save_cookie": True,
-            "cookiefile": self.COOKIE_FILE,
-        }
+        self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
+        self.MENU = [
+            {"category": "list_items", "title": _("Latest episodes"), "url": self.getFullUrl("/آخر-الحلقات-hfgrtjf/")},
+            {"category": "list_items", "title": _("Recently added"), "url": self.getFullUrl("/last/")},
+            {"category": "list_items", "title": _("Most viewed"), "url": self.getFullUrl("/views/")},
+            {"category": "list_items", "title": _("Series"), "url": self.getFullUrl("/series/"), "pager": "offset"},
+            {"category": "list_items", "title": _("Movies"), "url": self.getFullUrl("/movies/")},
+        ] + self.searchItems()
+        self.watchedHelper = IPTVWatchedHelper("q3isk")
+        self.wfInitFolderCache()
 
+    ###################################################
+    # helpers
+    ###################################################
     def getPage(self, baseUrl, addParams=None, post_data=None):
-        """
-        Unified getPage() for Q3isk
-        - Handles Unicode / Arabic URLs safely
-        - Preserves cookies between requests
-        - Integrates Cloudflare protection
-        - Retries automatically up to 3 times
-        """
-        # --- Normalize URL safely (for Arabic / UTF-8 URLs)
-        try:
-            if not isinstance(baseUrl, str):
-                baseUrl = str(baseUrl)
-            if any(ord(c) > 127 for c in baseUrl):
-                baseUrl = urllib_quote_plus(baseUrl, safe=":/?&=%")
-        except Exception as e:
-            printDBG("[Q3isk] URL normalization failed: %s" % str(e))
-        # --- Prepare request parameters
         if addParams is None:
             addParams = dict(self.defaultParams)
-        else:
-            tmp = dict(self.defaultParams)
-            tmp.update(addParams)
-            addParams = tmp
-        # --- Always attach Cloudflare parameters
-        addParams["cloudflare_params"] = {
-            "cookie_file": self.COOKIE_FILE,
-            "User-Agent": self.HEADER.get("User-Agent", "Mozilla/5.0"),
-        }
-        # --- Ensure cookie persistence
-        addParams["use_cookie"] = True
-        addParams["save_cookie"] = True
-        addParams["load_cookie"] = True
-        addParams["cookiefile"] = self.COOKIE_FILE
-        # --- Retry logic
-        max_retries = 3
-        for attempt in range(1, max_retries + 1):
-            try:
-                sts, data = self.cm.getPageCFProtection(baseUrl, addParams, post_data)
-                if sts and data:
-                    return sts, data
-            except Exception as e:
-                printDBG("[Q3isk] getPage attempt %d failed: %s" % (attempt, str(e)))
-            time.sleep(1.5)
-        printDBG("[Q3isk] getPage failed after %d retries: %s" % (max_retries, baseUrl))
-        return False, ""
+        addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.HEADER.get("User-Agent")}
+        return self.cm.getPageCFProtection(self._canonUrl(baseUrl), addParams, post_data)
 
-    ###################################################
-    # MAIN MENU
-    ###################################################
-    def listMainMenu(self, cItem):
-        printDBG("Q3isk.listMainMenu")
-        MAIN_CAT_TAB = [
-            {
-                "category": "list_movies",
-                "title": "Movies",
-                "url": self.getFullUrl("category/افلام-تركية-مترجمة/"),
-            },
-            {"category": "series_categories", "title": "Series"},
-        ] + self.searchItems()
-        self.listsTab(MAIN_CAT_TAB, cItem)
-        self.SERIES_CAT_TAB = [
-            {
-                "category": "list_series",
-                "title": "Full Series",
-                "url": self.getFullUrl("جميع-المسلسلات-2d7ig/"),
-            },
-            {
-                "category": "list_movies",
-                "title": "Last Added Episodes",
-                "url": self.getFullUrl("آخر-الحلقات-hfgrtjf/"),
-            },
-        ]
+    def getFullUrl(self, url, currUrl=None):
+        # menu urls are written in Arabic - one ASCII (percent-encoded) form for everything
+        return self._quote(CBaseHostClass.getFullUrl(self, url, currUrl))
 
-    def listSeriesCategories(self, cItem):
-        printDBG("Q3isk.listSeriesCategories")
-        self.listsTab(self.SERIES_CAT_TAB, cItem)
+    @staticmethod
+    def _quote(url):
+        try:
+            return urllib_quote(urllib_unquote(url.replace("&amp;", "&").replace("&#038;", "&")), safe=":/?&=#+,;@%")
+        except Exception:
+            printExc()
+        return url
 
-    def exploreItems(self, cItem):
-        printDBG("Q3isk.exploreItems >>> %s" % cItem)
-        url = cItem["url"]
-        printDBG("url.exploreItems >>> %s" % url)
-        sts, data = self.getPage(url)
-        printDBG("data.exploreItems >>> %s" % data)
-        if not sts or not data:
-            printDBG("exploreItems: failed to load page")
-            return
-        ###################################################
-        # MAIN INFO BLOCK (Story + Cast)
-        ###################################################
-        info_desc = ""
-        work_title = ""
-        main_info_block = self.cm.ph.getDataBeetwenMarkers(data, '<div class="story">', '<div style="clear', True)[1]
-        if main_info_block:
-            work_title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, "<h1>", "</h1>", False)[1])
-            # --- Story ---
-            story = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(main_info_block, '<div class="story">', "</div>", False)[1])
-            tax_info = {}
-            all_tax_blocks = re.findall(r'<div class="tax">(.*?)</div>', main_info_block, re.S)
-            label_map = {
-                "الممثلين": "Cast",
-                "السنة": "Year",
-                "اللغة": "Lang",
-                "التصنيفات": "Category",
-                "الأنواع": "Type",
-            }
-            for tax_block in all_tax_blocks:
-                label_match = re.search(r"<span>([^<]+)</span>", tax_block)
-                if not label_match:
-                    continue
-                label_ar = label_match.group(1).strip().replace(":", "").strip()
-                values = re.findall(r">([^<]+)</a>", tax_block)
-                values = [self.cleanHtmlStr(v) for v in values if v.strip()]
-                if label_ar in label_map:
-                    tax_info[label_map[label_ar]] = ", ".join(values)
-            field_order = ["Category", "Lang", "Year", "Type", "Cast"]
-            info_parts = []
-            for key in field_order:
-                if key in tax_info and tax_info[key]:
-                    info_parts.append(f"{E2ColoR('yellow')}{key}:{E2ColoR('white')} {tax_info[key]}")
-            if info_parts:
-                info_desc = " | ".join(info_parts)
-            if story:
-                info_desc += f"\n{E2ColoR('yellow')}Story:{E2ColoR('white')} {story}"
-        ###################################################
-        # MAIN SERVERS BLOCK
-        ###################################################
-        main_block = self.cm.ph.getDataBeetwenMarkers(data, '<ul id="watch">', "</ul>", True)[1]
-        printDBG("main_block.exploreItems >>> %s" % main_block)
-        ###################################################
-        # PARSE ITEMS CORRECTLY
-        ###################################################
-        items = self.cm.ph.getAllItemsBeetwenMarkers(main_block, "<li", "</li>")
-        if not items:
-            printDBG("exploreItems: no <li> items found!")
-            return
-        printDBG("exploreItems: Found %d items" % len(items))
-        for item in items:
-            printDBG("ITEM >>> %s" % item)
-            # --- VIDEO URL ---
-            video_url = self.cm.ph.getSearchGroups(item, r'data-watch="([^"]+)"')[0]
-            if not video_url:
-                continue
-            video_url = self.getFullUrl(video_url)
-            # --- TITLE ---
-            server_name = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, "<em>", "</em>", False)[1])
-            if not server_name:
-                server_name = _("Server")
-            if work_title:
-                video_title = f"{E2ColoR('yellow')}{work_title}{E2ColoR('white')} - [{server_name}]"
-            else:
-                video_title = server_name
-            params = dict(cItem)
-            params.update(
-                {
-                    "title": video_title,
-                    "url": video_url,
-                    "desc": info_desc,
-                    "type": "video",
-                    "category": "video",
-                }
-            )
-            self.addVideo(params)
-        printDBG("exploreItems: completed parsing servers")
-
-    def listSeriesUnits(self, cItem):
-        printDBG("Q3isk.listSeriesUnits >>> %s" % cItem)
-        sts, data = self.getPage(cItem["url"])
-        if not sts or not data:
-            printDBG("listSeriesUnits: failed to load page")
-            return
-        ###################################################
-        # MAIN SERIES BLOCK
-        ###################################################
-        main_block = self.cm.ph.getDataBeetwenMarkers(data, '<div class="Small--Box">', '<div class="pagination">', True)[1]
-        if not main_block:
-            printDBG("listSeriesUnits: No main_block found")
-            return
-        ###################################################
-        # PARSE ITEMS CORRECTLY
-        ###################################################
-        items = self.cm.ph.getAllItemsBeetwenMarkers(main_block, '<div class="Small--Box">', "</a>")
-        printDBG("listSeriesUnits: Found %d items" % len(items))
-        for item in items:
-            # URL
-            url = self.cm.ph.getSearchGroups(item, r'href="([^"]+)"')[0]
-            if not url:
-                continue
-            url = self.getFullUrl(url)
-            # POSTER
-            icon = self.cm.ph.getSearchGroups(item, r'data-src="([^"]+)"')[0]
-            icon = self.getFullUrl(icon)
-            # TITLE
-            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<div class="title">', "</div>", False)[1])
-            title = title.replace("اون لاين", "")
-            # DESCRIPTION
-            desc = "%sClick to view episodes%s" % (E2ColoR("yellow"), E2ColoR("white"))
-            params = dict(cItem)
-            params.update(
-                {
-                    "title": "%s%s%s" % (E2ColoR("yellow"), title, E2ColoR("white")),
-                    "url": url,
-                    "icon": icon,
-                    "desc": desc,
-                    "category": "list_series_episodes",
-                }
-            )
-            self.addDir(params)
-        ###################################################
-        # PAGINATION FIX (KRMZY STYLE)
-        ###################################################
-        pagination = self.cm.ph.getDataBeetwenMarkers(data, '<div class="pagination">', "</ul>", True)[1]
-        nextPage = self.cm.ph.getSearchGroups(pagination, r'<a[^>]+class="next page-numbers"[^>]+href="([^"]+)"')[0]
-        if nextPage:
-            nextPage = self.getFullUrl(nextPage)
-            printDBG("Next page found: %s" % nextPage)
-            params = dict(cItem)
-            params.update({"title": "Next Page >>", "url": nextPage})
-            self.addDir(params)
-        else:
-            printDBG("No next page found")
-
-    def listSeriesEpisodes(self, cItem):
-        printDBG("Q3isk.listSeriesEpisodes >>> %s" % cItem)
-        sts, data = self.getPage(cItem["url"])
-        if not sts or not data:
-            printDBG("listSeriesEpisodes: failed to load page")
-            return
-        ###################################################
-        # MAIN INFO BLOCK (Story + Cast)
-        ###################################################
-        main_info_block = self.cm.ph.getDataBeetwenMarkers(data, '<div class="story">', '<div style="clear', True)[1]
-        if main_info_block:
-            # --- Poster ---
-            info_icon = self.cm.ph.getSearchGroups(data, r'<img[^>]+data-src="([^"]+)"')[0]
-            info_icon = self.getFullUrl(info_icon)
-            # --- Title ---
-            info_title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, "<h1>", "</h1>", False)[1])
-            # --- Story ---
-            story = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(main_info_block, '<div class="story">', "</div>", False)[1])
-            tax_info = {}
-            all_tax_blocks = re.findall(r'<div class="tax">(.*?)</div>', main_info_block, re.S)
-            label_map = {
-                "الممثلين": "Cast",
-                "السنة": "Year",
-                "اللغة": "Lang",
-                "التصنيفات": "Category",
-                "الأنواع": "Type",
-            }
-            for tax_block in all_tax_blocks:
-                label_match = re.search(r"<span>([^<]+)</span>", tax_block)
-                if not label_match:
-                    continue
-                label_ar = label_match.group(1).strip().replace(":", "").strip()
-                values = re.findall(r">([^<]+)</a>", tax_block)
-                values = [self.cleanHtmlStr(v) for v in values if v.strip()]
-                values_str = ", ".join(values)
-                if label_ar in label_map:
-                    tax_info[label_map[label_ar]] = values_str
-            field_order = ["Category", "Lang", "Year", "Type", "Cast"]
-            info_parts = []
-            for key in field_order:
-                if key in tax_info and tax_info[key]:
-                    info_parts.append(f"{E2ColoR('yellow')}{key}:{E2ColoR('white')} {tax_info[key]}")
-            if info_parts:
-                info_desc = " | ".join(info_parts)
-            else:
-                info_desc = ""
-            if story:
-                info_desc += f"\n{E2ColoR('yellow')}Story:{E2ColoR('white')} {story}"
-            marker_params = {
-                "title": f"{E2ColoR('lime')}{info_title}{E2ColoR('white')}",
-                "desc": info_desc,
-                "icon": info_icon,
-                "type": "marker",
-                "good_for_fav": False,
-            }
-            self.addMarker(marker_params)
-        items = re.findall(r'(<div class="Small--Box">.*?</a>)', data, re.S | re.I)
-        if not items:
-            printDBG("listSeriesEpisodes: Trying regex fallback for episodes")
-            items = re.findall(
-                r'(<a[^>]+class="[^"]*recent--block[^"]*"[^>]*>.*?</a>)',
-                data,
-                re.S | re.I,
-            )
-        if not items:
-            sample = re.sub(r"\s+", " ", data[:1500])
-            printDBG("CRITICAL: No episodes found! Page sample: %s" % sample)
-            return
-        printDBG("listSeriesEpisodes: Found %d episodes via direct search" % len(items))
-        items.reverse()  # oldest → newest
-        for item in items:
-            url_match = re.search(r'href="([^"]+)"', item)
-            if not url_match:
-                continue
-            url = url_match.group(1)
-            if not url.endswith("see/"):
-                url = url + "see/"
-            url = self.getFullUrl(url)
-            icon = ""
-            icon_match = re.search(r'data-src="([^"]+)"', item)
-            if icon_match:
-                icon = icon_match.group(1)
-            else:
-                icon_match = re.search(r'src="([^"]+)"', item)
-                if icon_match:
-                    icon = icon_match.group(1)
-            icon = self.getFullUrl(icon)
-            title = ""
-            title_match = re.search(r'<div class="title">([^<]+)</div>', item)
-            if title_match:
-                title = title_match.group(1)
-            else:
-                title_match = re.search(r'title="([^"]+)"', item)
-                if title_match:
-                    title = title_match.group(1)
-            title = self.cleanHtmlStr(title).replace("اون لاين", "").strip()
-            if not title:
-                title = _("Episode")
-            colored_title = f"{E2ColoR('yellow')}{title}{E2ColoR('white')}"
-            params = dict(cItem)
-            params.update(
-                {
-                    "title": colored_title,
-                    "url": url,
-                    "icon": icon,
-                    "category": "explore_item",
-                }
-            )
-            self.addDir(params)
-
-    def listMoviesUnits(self, cItem):
-        printDBG("Q3isk.listMoviesUnits >>> %s" % cItem)
-        sts, data = self.getPage(cItem["url"])
-        if not sts or not data:
-            printDBG("listMoviesUnits: failed to load page")
-            return
-        ###################################################
-        # MAIN SERIES BLOCK
-        ###################################################
-        main_block = self.cm.ph.getDataBeetwenMarkers(data, '<div class="Small--Box">', '<div class="pagination">', True)[1]
-        if not main_block:
-            printDBG("listMoviesUnits: No main_block found")
-            return
-        ###################################################
-        # PARSE ITEMS CORRECTLY
-        ###################################################
-        items = self.cm.ph.getAllItemsBeetwenMarkers(main_block, '<div class="Small--Box">', "</a>")
-        printDBG("listMoviesUnits: Found %d items" % len(items))
-        for item in items:
-            # URL
-            url = self.cm.ph.getSearchGroups(item, r'href="([^"]+)"')[0]
-            url = url + "see/"
-            if not url:
-                continue
-            url = self.getFullUrl(url)
-            # POSTER
-            icon = self.cm.ph.getSearchGroups(item, r'data-src="([^"]+)"')[0]
-            icon = self.getFullUrl(icon)
-            # TITLE
-            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<div class="title">', "</div>", False)[1])
-            title = title.replace("اون لاين", "")
-            desc = "%sClick to view episodes%s" % (E2ColoR("yellow"), E2ColoR("white"))
-            params = dict(cItem)
-            params.update(
-                {
-                    "title": "%s%s%s" % (E2ColoR("yellow"), title, E2ColoR("white")),
-                    "url": url,
-                    "icon": icon,
-                    "desc": desc,
-                    "category": "explore_item",
-                }
-            )
-            self.addDir(params)
-        ###################################################
-        # PAGINATION FIX (KRMZY STYLE)
-        ###################################################
-        pagination = self.cm.ph.getDataBeetwenMarkers(data, '<div class="pagination">', "</ul>", True)[1]
-        nextPage = self.cm.ph.getSearchGroups(pagination, r'<a[^>]+class="next page-numbers"[^>]+href="([^"]+)"')[0]
-        if nextPage:
-            nextPage = self.getFullUrl(nextPage)
-            printDBG("Next page found: %s" % nextPage)
-            params = dict(cItem)
-            params.update({"title": "Next Page >>", "url": nextPage})
-            self.addDir(params)
-        else:
-            printDBG("No next page found")
-
-    ###################################################
-    # GET LINKS FOR VIDEO
-    ###################################################
-    def getLinksForVideo(self, cItem):
-        printDBG("Q3isk.getLinksForVideo [%s]" % cItem)
-        url = cItem.get("url", "")
+    def _canonUrl(self, url):
+        url = (url or "").strip()
         if not url:
-            return []
-        return [
-            {
-                "name": "Q3isk - %s" % cItem.get("title", ""),
-                "url": url,
-                "need_resolve": 1,
-            }
-        ]
+            return ""
+        if not url.startswith("http"):
+            url = CBaseHostClass.getFullUrl(self, url)
+        return self._quote(url)
 
-    def getVideoLinks(self, url):
-        printDBG("Q3isk.getVideoLinks [%s]" % url)
-        urlTab = []
-        if self.cm.isValidUrl(url):
-            return self.up.getVideoLinkExt(url)
-        return urlTab
+    def _path(self, url):
+        # domain independent identity of a page (the site moves between *.3isq.cam sub-domains)
+        url = urllib_unquote(self._canonUrl(url))
+        return re.sub(r"^https?://[^/]+", "", url).rstrip("/").lower()
+
+    def _icon(self, url):
+        url = (url or "").strip()
+        return self.getFullIconUrl(url) if url else ""
+
+    def getFullIconUrl(self, url, currUrl=None):
+        # the posters sit behind the same Cloudflare check as the pages: the icon download needs the
+        # site's cf_clearance cookie and the User-Agent that passed the check, otherwise it gets a 403.
+        # The meta is attached here because the host base runs every icon through getFullIconUrl again
+        # (getFullUrl returns a plain str); covers on foreign domains stay plain
+        url = CBaseHostClass.getFullIconUrl(self, url, currUrl)
+        if not url.startswith("http"):
+            return url
+        domain = self.up.getDomain(url).lower()
+        if domain != "3isq.cam" and not domain.endswith(".3isq.cam"):
+            return url
+        meta = {"Referer": self.MAIN_URL}
+        try:
+            # getCookieHeader logs tracebacks for a cookie file that does not exist yet
+            cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE, ["cf_clearance"]).rstrip("; ") if os.path.isfile(self.COOKIE_FILE) else ""
+            if cookieHeader:
+                meta.update({"User-Agent": remembered_user_agent(self.COOKIE_FILE) or self.HEADER.get("User-Agent"), "Cookie": cookieHeader})
+        except Exception:
+            printExc()
+        return strwithmeta(url, meta)
+
+    def getFavouriteData(self, cItem):
+        try:
+            if cItem.get("category") in ("q3_video", "q3_series"):
+                return json_dumps(dict((key, cItem[key]) for key in self.FAV_FIELDS if key in cItem))
+        except Exception:
+            printExc()
+        return CBaseHostClass.getFavouriteData(self, cItem)
 
     ###################################################
-    # SEARCH
+    # watched flag
     ###################################################
+    def _getWatchedKeyForItem(self, cItem):
+        try:
+            if not isinstance(cItem, dict):
+                return ""
+            prefix = {"q3_video": "video", "q3_series": "series"}.get(cItem.get("category", ""), "")
+            path = self._path(cItem.get("url", "")) if prefix else ""
+            return "%s:%s" % (prefix, path) if path else ""
+        except Exception:
+            printExc()
+        return ""
+
+    ###################################################
+    # lists
+    ###################################################
+    def _episodeParams(self, label, url, icon, desc, normalize, fallbackShow="", episode=""):
+        m = EPISODE_RE.search(label)
+        show = _clean(m.group(1)) if m else ""
+        episode = episode or (m.group(2) if m else "")
+        season = _seasonNum(show) or 1
+        show = _clean(SEASON_WORD_RE.sub(" ", show)) or fallbackShow or _clean(label)
+        if normalize and episode:
+            title = "%s - %s" % (show, formatSxxExx(season, episode))
+        else:
+            title = label
+        return {"name": "category", "good_for_fav": True, "category": "q3_video", "title": title, "url": url, "icon": icon, "desc": desc,
+                "s_title": show, "s_season": season, "s_episode": str(int(episode)) if episode else "", "meta_type": "tv", "meta_title": show}
+
+    def _movieParams(self, label, url, icon, desc, normalize):
+        title = _clean(label) or label
+        year = YEAR_RE.search(title)
+        year = year.group(1) if year else ""
+        metaTitle = _clean(YEAR_RE.sub(" ", title)) or title
+        dispTitle = label
+        if normalize:
+            dispTitle = "%s (%s)" % (metaTitle, year) if year else metaTitle
+        return {"name": "category", "good_for_fav": True, "category": "q3_video", "title": dispTitle, "url": url, "icon": icon, "desc": desc,
+                "meta_type": "movie", "meta_title": metaTitle, "meta_year": year}
+
+    def _boxes(self, data):
+        # (url, label, icon, episode number) of the <div class="Small--Box"> cards
+        out = []
+        seen = set()
+        for item in self.cm.ph.getAllItemsBeetwenNodes(data, ("<div", ">", "Small--Box"), ("</a", ">")):
+            href = self.cm.ph.getSearchGroups(item, r'<a[^>]+href="([^"]+)"')[0]
+            if not href:
+                continue
+            url = self._canonUrl(href)
+            if url in seen:
+                continue
+            seen.add(url)
+            label = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'(?s)<div class="title">(.*?)</div>')[0])
+            if not label:
+                label = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'title="([^"]+)"')[0])
+            label = re.sub(r"\s*(?:اون لاين|أون لاين)\s*$", "", label).strip()
+            if not label:
+                continue
+            number = self.cm.ph.getSearchGroups(item, r'<div class="number">.*?<em>\s*(\d+)\s*</em>')[0]
+            icon = self.cm.ph.getSearchGroups(item, r'<img[^>]+?(?:data-src|src)="([^"]+)"')[0]
+            out.append((url, label, self._icon(icon), number))
+        return out
+
+    def listItems(self, cItem):
+        page = cItem.get("page", 1)
+        baseUrl = cItem.get("base_url") or self._canonUrl(cItem["url"])
+        pageTpl = cItem.get("page_tpl") or self._pageTpl(baseUrl, cItem.get("pager", ""))
+        url = baseUrl if page <= 1 else pageTpl.format(page=page)
+        printDBG("Q3isk.listItems [%s]" % url)
+        sts, data = self.getPage(url)
+        if not sts:
+            return
+        block = self.cm.ph.getDataBeetwenNodes(data, ("<div", ">", 'id="MainFiltar"'), ("<div", ">", 'class="pagination"'), False)[1] or data
+        normalize = IsMediaNamingNormalized()
+        boxes = self._boxes(block)
+        for url, label, icon, number in boxes:
+            path = self._path(url)
+            if path.startswith("/series/"):
+                show = _clean(label) or label
+                self.addDir({"name": "category", "good_for_fav": True, "category": "q3_series", "title": show if normalize else label, "url": url,
+                             "icon": icon, "s_title": show, "meta_type": "tv", "meta_title": show})
+            elif number or "الحلقة" in label:
+                self.addVideo(self._episodeParams(label, url, icon, "", normalize, episode=number))
+            else:
+                self.addVideo(self._movieParams(label, url, icon, "", normalize))
+
+        pager = self.cm.ph.getDataBeetwenNodes(data, ("<div", ">", 'class="pagination"'), ("</ul", ">"), False)[1]
+        lastPage = max([int(n) for n in re.findall(r'class="page-numbers"[^>]*>\s*(\d+)\s*<', pager)] + [page])
+        hasNext = bool(boxes) and ("next page-numbers" in pager or lastPage > page)
+        listItem = dict(cItem)
+        listItem.update({"category": "list_items", "base_url": baseUrl, "url": baseUrl, "page_tpl": pageTpl})
+        addPagingItems(self, listItem, page, hasNext, lastPage, pageTpl)
+
+    @staticmethod
+    def _pageTpl(baseUrl, pager):
+        if pager == "offset":
+            return baseUrl.split("?", 1)[0] + "?offset={page}"
+        base, sep, query = baseUrl.partition("?")
+        if not base.endswith("/"):
+            base += "/"
+        return base + "page/{page}/" + sep + query
+
+    def listEpisodes(self, cItem):
+        printDBG("Q3isk.listEpisodes [%s]" % cItem.get("url", ""))
+        sts, data = self.getPage(cItem["url"])
+        if not sts:
+            return
+        block = self.cm.ph.getDataBeetwenNodes(data, ("<div", ">", 'id="MainFiltar"'), ("<footer", ">"), False)[1] or data
+        normalize = IsMediaNamingNormalized()
+        show = cItem.get("s_title", "") or cItem.get("title", "")
+        episodes = []
+        for url, label, icon, number in self._boxes(block):
+            if self._path(url).startswith("/series/"):
+                continue
+            params = self._episodeParams(label, url, icon or cItem.get("icon", ""), cItem.get("desc", ""), normalize, show, number)
+            params.update({"s_title": show, "meta_title": cItem.get("meta_title", show)})
+            if normalize and params["s_episode"]:
+                params["title"] = "%s - %s" % (show, formatSxxExx(params["s_season"], params["s_episode"]))
+            episodes.append(params)
+        if not episodes:
+            SetIPTVPlayerLastHostError(_("No episodes found."))
+        # the site lists the newest first
+        episodes.sort(key=lambda p: int(p["s_episode"]) if p["s_episode"] else 0)
+        for params in episodes:
+            self.addVideo(params)
+
     def listSearchResult(self, cItem, searchPattern, searchType):
-        printDBG("Q3isk.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
+        printDBG("Q3isk.listSearchResult [%s]" % searchPattern)
         cItem = dict(cItem)
-        cItem["url"] = self.SEARCH_URL + urllib_quote_plus(searchPattern)
-        self.listMoviesUnits(cItem)
+        query = urllib_quote(searchPattern.strip(), safe="")
+        baseUrl = self.getFullUrl("/?s=%s" % query)
+        cItem.update({"category": "list_items", "url": baseUrl, "base_url": baseUrl, "page_tpl": self.MAIN_URL + "page/{page}/?s=" + query, "page": 1})
+        self.listItems(cItem)
 
+    ###################################################
+    # links
+    ###################################################
+    def _siteInfo(self, data):
+        story = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'(?s)<div class="story">(.*?)</div>')[0])
+        story = re.sub(r"^.*?(?:الاصلي|الأصلي)\s*3isq\.\s*", "", story).strip()
+        poster = self.cm.ph.getSearchGroups(data, r'<meta property="og:image" content="([^"]+)"')[0]
+        info = {}
+        for block in self.cm.ph.getAllItemsBeetwenNodes(data, ("<div", ">", 'class="tax"'), ("</div", ">"), False):
+            label = self.cleanHtmlStr(self.cm.ph.getSearchGroups(block, r"<span>([^<]+)</span>")[0]).replace(":", "").strip()
+            values = [self.cleanHtmlStr(v) for v in re.findall(r"(?s)<a[^>]*>(.*?)</a>", block)]
+            values = ", ".join(v for v in values if v)
+            if label in TAX_FIELDS and values:
+                info[TAX_FIELDS[label]] = values
+        return story, self._icon(poster) if poster else "", info
+
+    def getLinksForVideo(self, cItem):
+        pageUrl = self._canonUrl(cItem.get("url", ""))
+        printDBG("Q3isk.getLinksForVideo [%s]" % pageUrl)
+        if not pageUrl:
+            return []
+        watchUrl = pageUrl if pageUrl.rstrip("/").endswith("/see") else pageUrl.rstrip("/") + "/see/"
+        sts, data = self.getPage(watchUrl)
+        if not sts:
+            return []
+        story = self._siteInfo(data)[0]
+        block = self.cm.ph.getDataBeetwenMarkers(data, '<ul id="watch">', "</ul>", False)[1]
+        urltab = []
+        seen = set()
+        for item in self.cm.ph.getAllItemsBeetwenMarkers(block, "<li", "</li>"):
+            url = self.cm.ph.getSearchGroups(item, r'data-watch="([^"]+)"')[0].replace("&amp;", "&").strip()
+            if url.startswith("//"):
+                url = "https:" + url
+            if not self.cm.isValidUrl(url) or url in seen:
+                continue
+            seen.add(url)
+            name = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, "<em>", "</em>", False)[1]) or self.up.getHostName(url)
+            urltab.append({"name": name, "url": url, "need_resolve": 1})
+        if not urltab:
+            SetIPTVPlayerLastHostError(_("No stream available"))
+            return []
+        return applySidecarToLinks(urltab, buildSidecarFromItem(dict(cItem, desc=_stripColors(cItem.get("desc", ""))), IsSidecarEnabled(), story))
+
+    def getVideoLinks(self, videoUrl):
+        printDBG("Q3isk.getVideoLinks [%s]" % videoUrl)
+        if self.cm.isValidUrl(videoUrl):
+            sidecar = sidecarFromUrlMeta(videoUrl, IsSidecarEnabled())
+            return decorateResolvedLinkItems(self.up.getVideoLinkExt(videoUrl), sidecar)
+        return []
+
+    ###################################################
+    # INFO
+    ###################################################
+    def getArticleContent(self, cItem):
+        printDBG("Q3isk.getArticleContent [%s]" % cItem.get("url", ""))
+        story, poster, info = "", "", {}
+        sts, data = self.getPage(cItem.get("url", ""))
+        if sts:
+            story, poster, info = self._siteInfo(data)
+        year = cItem.get("meta_year", "") or info.get("year", "")
+        meta = {}
+        if cItem.get("meta_type") and cItem.get("meta_title"):
+            try:
+                meta = getMeta(cItem["meta_type"], cItem["meta_title"], year)
+            except Exception:
+                printExc()
+        info.update(meta.get("info", {}))
+        plot = meta.get("plot", "")
+        text = plot or story or _stripColors(cItem.get("desc", ""))
+        if plot and story and story != plot:
+            text = "%s[/br][/br]%s" % (plot, story)
+        icon = meta.get("poster") or poster or cItem.get("icon", "")
+        return [{"title": cItem.get("title", ""), "text": text, "images": [{"title": "", "url": icon}] if icon else [], "other_info": info}]
+
+    ###################################################
+    # service
+    ###################################################
     def handleService(self, index, refresh=0, searchPattern="", searchType=""):
-        printDBG("Q3isk.handleService start")
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
+        if isJumpItem(self.currItem):
+            self.currItem = jumpTarget(self, self.currItem)
         name = self.currItem.get("name", "")
         category = self.currItem.get("category", "")
-        printDBG("handleService: >> name[%s], category[%s] " % (name, category))
+        printDBG("Q3isk.handleService name[%s] category[%s]" % (name, category))
         self.currList = []
-        # MAIN MENU
         if name is None:
-            self.listMainMenu({"name": "category"})
-        elif category == "series_categories":
-            self.listSeriesCategories(self.currItem)
-        elif category == "movies_categories":
-            self.listMoviesCategories(self.currItem)
-        elif category == "list_series":
-            self.listSeriesUnits(self.currItem)
-        elif category == "list_movies":
-            self.listMoviesUnits(self.currItem)
-        elif category == "explore_item":
-            self.exploreItems(self.currItem)
-        elif category == "list_series_episodes":
-            self.listSeriesEpisodes(self.currItem)
-        # SEARCH
+            self.listsTab(self.MENU, {"name": "category"})
+        elif category == "list_items":
+            self.listItems(self.currItem)
+        elif category == "q3_series":
+            self.listEpisodes(self.currItem)
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({"search_item": False, "name": "category"})
             self.listSearchResult(cItem, searchPattern, searchType)
-        # HISTORY SEARCH
         elif category == "search_history":
             self.listsHistory({"name": "history", "category": "search"}, "desc")
         else:
@@ -497,11 +396,13 @@ class Q3isk(CBaseHostClass):
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
-class IPTVHost(CHostBase):
+class IPTVHost(GenericFolderWatchedHostMixin, CHostBase):
+
     def __init__(self):
         CHostBase.__init__(self, Q3isk(), True, [])
+        self.cachedRet = None
+        self.refreshAfterWatchedFlagChange = False
+        self.watchedHelper = IPTVWatchedHelper("q3isk")
 
     def withArticleContent(self, cItem):
-        if "video" == cItem.get("type", "") or "explore_item" == cItem.get("category", ""):
-            return True
-        return False
+        return cItem.get("category", "") in ("q3_video", "q3_series")

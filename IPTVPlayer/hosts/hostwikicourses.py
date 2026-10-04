@@ -1,30 +1,25 @@
 # -*- coding: utf-8 -*-
-# Last modified: 16/11/2025 - popking (odem2014)
-# typical import for a standard host
-###################################################
-# LOCAL import
-###################################################
-# localization library
-from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
-# host main class
-from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
-# tools - write on log, write exception infos and merge dicts
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, MergeDicts, E2ColoR
-# add metadata to url
-from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
-# library for json (instead of standard json.loads and json.dumps)
-from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
-# read informations in m3u8
-from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
-###################################################
-from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin
-from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
-###################################################
-# FOREIGN import
-###################################################
+# Last Modified: 03.10.2026 - brought to the current host standard
+#   (WikiCourses, www.wikicourses.net - Arabic video courses - originally by popking (odem2014))
+#   - no f-strings (Python 2), no sleeping 3x retry wrapper, no colour codes; categories ->
+#     sub-categories -> courses -> lessons, search + search history (the site has no paging)
+#   - lessons are VIDEO rows keyed on their lesson page, the MP4 is read from the page in
+#     getLinksForVideo (it used to be the row url, so the download marker followed the file)
+#   - watched flag (course -> lessons), favourites, sidecar, INFO (course description / lesson
+#     duration and size - no moviemeta, these are courses), name normalisation
+#     ("Course - S01Exx - Lesson")
 import re
-import time
-###################################################
+
+from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus, urllib_unquote
+from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
+from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
+from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
+from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
 
 
 def GetConfigList():
@@ -32,596 +27,247 @@ def GetConfigList():
 
 
 def gettytul():
-    return 'https://www.wikicourses.net/'  # main url of host
+    return "https://www.wikicourses.net/"
 
 
-class WikiCourses(CBaseHostClass):
+class WikiCourses(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history': 'wikicourses', 'cookie': 'wikicourses.cookie'})
+        CBaseHostClass.__init__(self, {"history": "wikicourses", "cookie": "wikicourses.cookie"})
         self.MAIN_URL = gettytul()
-        self.SEARCH_URL = self.MAIN_URL + 'search?q='
         self.DEFAULT_ICON_URL = "https://raw.githubusercontent.com/oe-mirrors/e2iplayer/gh-pages/Thumbnails/wikicourses.png"
-        self.HEADER = self.cm.getDefaultHeader(browser='chrome')
-        self.defaultParams = {
-            'header': self.HEADER,
-            'use_cookie': True,
-            'load_cookie': True,
-            'save_cookie': True,
-            'cookiefile': self.COOKIE_FILE
-        }
+        self.HEADER = self.cm.getDefaultHeader(browser="chrome")
+        self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
+        self.watchedHelper = IPTVWatchedHelper("wikicourses")
+        self.wfInitFolderCache()
 
+    ###################################################
+    # helpers
+    ###################################################
     def getPage(self, baseUrl, addParams=None, post_data=None):
-        """
-        Unified getPage() for WikiCourses
-        - Handles Unicode / Arabic URLs safely
-        - Preserves cookies between requests
-        - Integrates Cloudflare protection
-        - Retries automatically up to 3 times
-        """
-
-        # --- Normalize URL safely (for Arabic / UTF-8 URLs)
-        try:
-            if not isinstance(baseUrl, str):
-                baseUrl = str(baseUrl)
-            if any(ord(c) > 127 for c in baseUrl):
-                baseUrl = urllib_quote_plus(baseUrl, safe=':/?&=%')
-        except Exception as e:
-            printDBG('[WikiCourses] URL normalization failed: %s' % str(e))
-
-        # --- Prepare request parameters
         if addParams is None:
             addParams = dict(self.defaultParams)
-        else:
-            tmp = dict(self.defaultParams)
-            tmp.update(addParams)
-            addParams = tmp
+        return self.cm.getPage(self._canonUrl(baseUrl), addParams, post_data)
 
-        # --- Always attach Cloudflare parameters
-        addParams['cloudflare_params'] = {
-            'cookie_file': self.COOKIE_FILE,
-            'User-Agent': self.HEADER.get('User-Agent', 'Mozilla/5.0')
-        }
+    def _canonUrl(self, url):
+        url = (url or "").replace("&amp;", "&").strip()
+        if not url:
+            return ""
+        if url.startswith("//"):
+            url = "https:" + url
+        url = self.getFullUrl(url)
+        try:
+            url = urllib_quote(urllib_unquote(url), safe=":/?&=#+,;@%")
+        except Exception:
+            printExc()
+        return url
 
-        # --- Ensure cookie persistence
-        addParams['use_cookie'] = True
-        addParams['save_cookie'] = True
-        addParams['load_cookie'] = True
-        addParams['cookiefile'] = self.COOKIE_FILE
-
-        # --- Retry logic
-        max_retries = 3
-        for attempt in range(1, max_retries + 1):
-            try:
-                sts, data = self.cm.getPageCFProtection(baseUrl, addParams, post_data)
-                if sts and data:
-                    return sts, data
-            except Exception as e:
-                printDBG('[WikiCourses] getPage attempt %d failed: %s' % (attempt, str(e)))
-
-            time.sleep(1.5)
-
-        printDBG('[WikiCourses] getPage failed after %d retries: %s' % (max_retries, baseUrl))
-        return False, ''
+    @staticmethod
+    def _path(url):
+        try:
+            return urllib_unquote(re.sub(r"^https?://[^/]+", "", url or "")).strip("/")
+        except Exception:
+            return url or ""
 
     ###################################################
-    # MAIN MENU
+    # watched flag
     ###################################################
+    def _getWatchedKeyForItem(self, cItem):
+        try:
+            if not isinstance(cItem, dict):
+                return ""
+            kind = {"wc_course": "course", "wc_lesson": "lesson"}.get(cItem.get("category", ""), "")
+            path = self._path(cItem.get("url", ""))
+            return "%s:%s" % (kind, path) if kind and path else ""
+        except Exception:
+            printExc()
+        return ""
 
+    ###################################################
+    # lists
+    ###################################################
     def listMainMenu(self, cItem):
-        printDBG('WikiCourses.listMainMenu')
-        MAIN_CAT_TAB = [
-            {'category': 'main_categories', 'title': 'Courses'},
-        ]
-        self.listsTab(MAIN_CAT_TAB, cItem)
+        self.addDir({"name": "category", "category": "wc_categories", "good_for_fav": True, "title": _("Categories"), "url": self.getFullUrl("categories/")})
+        self.listsTab(self.searchItems(), cItem)
 
-        # Define subcategories for each folder
-
-        self.SERIES_CAT_TAB = [
-            {'category': 'list_course', 'title': 'Course Type', 'url': self.getFullUrl('categories/')},
-        ]
-
-    def listSeriesCategories(self, cItem):
-        printDBG('WikiCourses.listMoviesCategories')
-        self.listsTab(self.SERIES_CAT_TAB, cItem)
-
-    def listCourseType(self, cItem):
-        printDBG('WikiCourses.listCourseType >>> %s' % cItem)
-
-        sts, data = self.getPage(cItem['url'])
-        if not sts or not data:
-            printDBG('listCourseType: failed to load page')
+    def listCategories(self, cItem):
+        sts, data = self.getPage(cItem["url"])
+        if not sts:
             return
-
-        ###################################################
-        # MAIN SERIES BLOCK (DO NOT CHANGE)
-        ###################################################
-        main_block = self.cm.ph.getDataBeetwenMarkers(
-            data,
-            '<div class="category-box">',
-            '</section>',
-            True
-        )[1]
-
-        if not main_block:
-            printDBG('listCourseType: No main_block found')
-            return
-
-        ###################################################
-        # PARSE ITEMS
-        ###################################################
-        items = self.cm.ph.getAllItemsBeetwenMarkers(
-            main_block,
-            '<div class="category-box">',
-            '</a>'
-        )
-
-        printDBG('listCourseType: Found %d items' % len(items))
-
-        for item in items:
-
-            ##########################################
-            # TITLE
-            ##########################################
-            title = self.cleanHtmlStr(
-                self.cm.ph.getDataBeetwenMarkers(item, '<h3', '</h3>', False)[1]
-            )
-
-            ##########################################
-            # DESCRIPTION  (YOUR REQUEST)
-            ##########################################
-            desc = self.cleanHtmlStr(
-                self.cm.ph.getDataBeetwenMarkers(
-                    item,
-                    '<p class="light-text fs-6">',
-                    '</p>',
-                    False
-                )[1]
-            )
-
-            ##########################################
-            # IMAGE
-            ##########################################
-            icon = self.cm.ph.getSearchGroups(
-                item,
-                r'data-src="([^"]+)"'
-            )[0]
-            icon = self.getFullUrl(icon)
-
-            ##########################################
-            # URL  - last <a ...>
-            ##########################################
-            url = self.cm.ph.getSearchGroups(
-                item,
-                r'<a[^>]+href="([^"]+)"'
-            )[0]
-            url = self.getFullUrl(url)
-
-            ##########################################
-            # COLOR DESC
-            ##########################################
-            full_desc = f"{E2ColoR('yellow')}{desc}{E2ColoR('white')}"
-
-            ##########################################
-            # ADD
-            ##########################################
-            params = dict(cItem)
-            params.update({
-                'title': title,
-                'url': url,
-                'icon': icon,
-                'desc': full_desc,
-                'category': 'list_courseid'
-            })
-            self.addDir(params)
-
-        if len(items) == 0:
-            printDBG('listCourseType: No category-box items found')
-
-    def listCourseId(self, cItem):
-        printDBG('WikiCourses.listCourseId >>> %s' % cItem)
-
-        sts, data = self.getPage(cItem['url'])
-        if not sts or not data:
-            printDBG('listCourseId: failed to load page')
-            return
-
-        ###################################################
-        # MAIN SERIES BLOCK (DO NOT CHANGE)
-        ###################################################
-        main_block = self.cm.ph.getDataBeetwenMarkers(
-            data,
-            '<div class="sub-category-box',
-            '</section>',
-            True
-        )[1]
-
-        if not main_block:
-            printDBG('listCourseId: No main_block found')
-            return
-
-        ###################################################
-        # PARSE ITEMS
-        ###################################################
-        items = self.cm.ph.getAllItemsBeetwenMarkers(main_block, '<div class="sub-category-box', '</a>')
-        items1 = self.cm.ph.getAllItemsBeetwenMarkers(main_block, '<div class="sub-category-box', '</a>')[0]
-        printDBG('items1.listCourseId >>> %s' % items1)
-        printDBG('listCourseId: Found %d items' % len(items))
-
-        for item in items:
-            title = self.cleanHtmlStr(
-                self.cm.ph.getDataBeetwenMarkers(item, '<h3 class="fs-6 text-dark mt-2 fw-bold">', '</h3>', False)[1])
-
-            ##########################################
-            # DESCRIPTION -> <p class="mb-0 mt-2 light-text">
-            ##########################################
-            desc = self.cleanHtmlStr(
-                self.cm.ph.getDataBeetwenMarkers(
-                    item,
-                    '<p class="mb-0 mt-2 light-text">',
-                    '</p>',
-                    False
-                )[1]
-            )
-
-            ##########################################
-            # COURSE COUNT  -> <span class="light-text d-block mt-2 text-dark">
-            ##########################################
-            course_count = self.cleanHtmlStr(
-                self.cm.ph.getDataBeetwenMarkers(
-                    item,
-                    '<span class="light-text d-block mt-2 text-dark">',
-                    '</span>',
-                    False
-                )[1]
-            )
-
-            ##########################################
-            # IMAGE
-            ##########################################
-            icon = self.cm.ph.getSearchGroups(
-                item,
-                r'data-src="([^"]+)"'
-            )[0]
-            icon = self.getFullUrl(icon)
-
-            ##########################################
-            # URL  -> SECOND <a ... href="...">
-            ##########################################
-            url = self.cm.ph.getSearchGroups(
-                item,
-                r'<a[^>]+href="([^"]+)"'
-            )[0]
-            url = self.getFullUrl(url)
-
-            ##########################################
-            # COLOR DESC + COURSE COUNT
-            ##########################################
-            full_desc = (
-                f"{E2ColoR('yellow')}{desc}{E2ColoR('white')}\n"
-                f"{E2ColoR('green')}{course_count}{E2ColoR('white')}"
-            )
-
-            ##########################################
-            # ADD DIRECTORY
-            ##########################################
-            params = dict(cItem)
-            params.update({
-                'title': title,
-                'url': url,
-                'icon': icon,
-                'desc': full_desc,
-                'category': 'list_series'
-            })
-            self.addDir(params)
-
-        if len(items) == 0:
-            printDBG('listCourseType: No category-box items found')
-
-    def listSeriesUnits(self, cItem):
-        printDBG('WikiCourses.listSeriesUnits >>> %s' % cItem)
-
-        sts, data = self.getPage(cItem['url'])
-        if not sts or not data:
-            printDBG('listSeriesUnits: failed to load page')
-            return
-
-        ###################################################
-        # MAIN SERIES BLOCK
-        ###################################################
-        main_block = self.cm.ph.getDataBeetwenMarkers(data, '<section', '</section>', True)[1]
-        if not main_block:
-            printDBG('listSeriesUnits: No main_block found')
-            return
-
-        ###################################################
-        # PARSE SERIES ITEMS
-        ###################################################
-        items = self.cm.ph.getAllItemsBeetwenMarkers(main_block, '<div class="course-box', '<i class="fas fa-user')
-        # items1 = self.cm.ph.getAllItemsBeetwenMarkers(main_block, '<div class="course-box', '<i class="fas fa-user')[0]
-        # printDBG('items1.listSeriesUnits >>> %s' % items1)
-        printDBG('listSeriesUnits: Found %d items' % len(items))
-
-        for item in items:
-            # --- URL ---
-            # extract only the FIRST <a ...> block
-            first_a = self.cm.ph.getDataBeetwenMarkers(item, '<a ', '</a>', False)[1]
-
-            # --- URL ---
-            url = self.cm.ph.getSearchGroups(first_a, r'href="([^"]+)"')[0]
-            if not url:
+        for item in re.findall(r'<div class="category-box">(.*?)</a>', data, re.S):
+            url = self.cm.ph.getSearchGroups(item, r'<a href="([^"]+)"')[0]
+            title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r"(?s)<h3[^>]*>(.*?)</h3>")[0])
+            if not url or not title:
                 continue
-            url = self.getFullUrl(url)
+            self.addDir({"name": "category", "category": "wc_subcategories", "good_for_fav": True, "title": title, "url": self._canonUrl(url),
+                         "icon": self._canonUrl(self.cm.ph.getSearchGroups(item, r'data-src="([^"]+)"')[0]),
+                         "desc": self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'(?s)<p class="light-text[^"]*">(.*?)</p>')[0])})
 
-            # --- TITLE ---
-            title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(first_a, r'title="([^"]+)"')[0])
-            if not title:
-                title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(first_a, '<h3', '</h3>', False)[1])
-
-            # --- IMAGE ---
-            icon = self.cm.ph.getSearchGroups(first_a, r'data-src="([^"]+)"')[0]
-            icon = self.getFullUrl(icon)
-
-            # --- DESCRIPTION ---
-            desc = f"{E2ColoR('yellow')}Click to view episodes{E2ColoR('white')}"
-
-            # --- ADD ITEM ---
-            params = dict(cItem)
-            params.update({
-                'title': title,
-                'url': url,
-                'icon': icon,
-                'desc': desc,
-                'category': 'list_series_episodes'
-            })
-            self.addDir(params)
-
-        if len(items) == 0:
-            printDBG('listSeriesUnits: No <article> items found')
-
-    def listSeriesEpisodes(self, cItem):
-        printDBG('WikiCourses.listSeriesEpisodes >>> %s' % cItem)
-
-        sts, data = self.getPage(cItem['url'])
-        if not sts or not data:
-            printDBG('listSeriesEpisodes: failed to load page')
+    def listSubCategories(self, cItem):
+        sts, data = self.getPage(cItem["url"])
+        if not sts:
             return
+        for item in re.findall(r'<div class="sub-category-box(.*?)</a>', data, re.S):
+            url = self.cm.ph.getSearchGroups(item, r'<a[^>]+href="([^"]+)"')[0]
+            title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r"(?s)<h3[^>]*>(.*?)</h3>")[0])
+            if not url or not title:
+                continue
+            desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'(?s)<p class="mb-0 mt-2 light-text">(.*?)</p>')[0])
+            count = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'(?s)<span class="light-text d-block[^"]*">(.*?)</span>')[0])
+            self.addDir({"name": "category", "category": "wc_courses", "good_for_fav": True, "title": title, "url": self._canonUrl(url),
+                         "icon": self._canonUrl(self.cm.ph.getSearchGroups(item, r'data-src="([^"]+)"')[0]),
+                         "desc": " | ".join([x for x in (count, desc) if x])})
 
-        ###################################################
-        # EPISODE LIST BLOCK
-        ###################################################
-        main_block = self.cm.ph.getDataBeetwenMarkers(
-            data,
-            '<div class="playlist-videos">',
-            '</section>',
-            True
-        )[1]
-
-        if not main_block:
-            printDBG('listSeriesEpisodes: No main_block found')
+    def listCourses(self, cItem):
+        sts, data = self.getPage(cItem["url"])
+        if not sts:
             return
+        self._listCourseBoxes(data)
 
-        items = self.cm.ph.getAllItemsBeetwenMarkers(main_block, '<a', '</a>')
-        items1 = self.cm.ph.getAllItemsBeetwenMarkers(main_block, '<a', '</a>')[0]
-        printDBG('items1.listSeriesEpisodes >>> %s' % items1)
-        printDBG('listSeriesEpisodes: Found %d episode items' % len(items))
+    def _listCourseBoxes(self, data):
+        seen = set()
+        for item in re.findall(r'<div class="course-box[^"]*">(.*?)</a>', data, re.S):
+            m = re.search(r'<a href="([^"]+)"\s+title="([^"]*)"', item)
+            if not m or "/course/" not in m.group(1):
+                continue
+            url = self._canonUrl(m.group(1))
+            if url in seen:
+                continue
+            seen.add(url)
+            videos = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r"(?s)<span>(\d+)</span>\s*<span>")[0])
+            lang = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'(?s)class="course-language[^"]*">(.*?)</div>')[0])
+            self.addDir({"name": "category", "category": "wc_course", "good_for_fav": True, "title": self.cleanHtmlStr(m.group(2)), "url": url,
+                         "icon": self._canonUrl(self.cm.ph.getSearchGroups(item, r'data-src="([^"]+)"')[0]),
+                         "desc": " | ".join([x for x in ((_("videos: %s") % videos) if videos else "", lang) if x])})
 
-        if not items:
-            printDBG('listSeriesEpisodes: No episode items found')
+    def listLessons(self, cItem):
+        sts, data = self.getPage(cItem["url"])
+        if not sts:
             return
-
-        ###################################################
-        # PARSE EPISODES
-        ###################################################
-        for item in items:
-
-            ##########################################
-            # Episode URL
-            ##########################################
+        course = cItem.get("title", "")
+        story = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'<meta property="og:description" content="([^"]*)"')[0])
+        block = self.cm.ph.getDataBeetwenMarkers(data, '<div class="playlist-videos">', "</section>", False)[1]
+        normalize = IsMediaNamingNormalized()
+        seen = set()
+        lessons = []
+        for item in re.findall(r"<a(.*?)</a>", block, re.S):
             url = self.cm.ph.getSearchGroups(item, r'href="([^"]+)"')[0]
             if not url:
                 continue
-            url = self.getFullUrl(url)
+            url = self._canonUrl(url)
+            if url in seen:
+                continue
+            seen.add(url)
+            num = self.cm.ph.getSearchGroups(item, r'<span class="primary-clr fw-bold">\s*(\d+)\s*<')[0]
+            name = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'(?s)<p class="m-0">(.*?)</p>')[0])
+            duration = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'(?s)fa-clock"></i>\s*<span>(.*?)</span>')[0])
+            if normalize and num:
+                lesson = re.sub(r"^\d+\s*[.\-_)]\s*", "", name) or name
+                title = "%s - %s - %s" % (course, formatSxxExx(1, num), lesson)
+            else:
+                title = ("%s. %s" % (num, name)) if num and not name.startswith(num) else (name or course)
+            lessons.append((int(num) if num else 0, {"name": "category", "category": "wc_lesson", "good_for_fav": True, "title": title, "url": url, "icon": cItem.get("icon", ""),
+                           "desc": " | ".join([x for x in (duration, story) if x]), "course_url": cItem["url"], "duration": duration}))
+        lessons.sort(key=lambda x: x[0])  # the site sorts the lessons as text (1, 10, 11, 2 ...)
+        for _num, params in lessons:
+            self.addVideo(params)
+        if not seen:
+            self.addMarker({"title": _("No stream available"), "desc": story})
 
-            ##########################################
-            # Episode Number  <span class="primary-clr fw-bold">1</span>
-            ##########################################
-            ep_num_raw = self.cleanHtmlStr(
-                self.cm.ph.getDataBeetwenMarkers(item, '<span', '</span>', False)[1]
-            )
-            ep_num = ep_num_raw.replace('class="primary-clr fw-bold">', '')
-            printDBG('ep_num.listSeriesEpisodes >>> %s' % ep_num)
-
-            if not ep_num.isdigit():
-                ep_num = ""   # safe fallback
-
-            ##########################################
-            # Episode Title  <p class="m-0"> … </p>
-            ##########################################
-            title = self.cleanHtmlStr(
-                self.cm.ph.getDataBeetwenMarkers(item, '<p class="m-0">', '</p>', False)[1]
-            )
-
-            # Merge number + title
-            if ep_num:
-                title = f"{ep_num}. {title}"
-
-            ##########################################
-            # Duration  <i class="far fa-clock"></i><span>8:36</span>
-            ##########################################
-            duration = self.cleanHtmlStr(
-                self.cm.ph.getDataBeetwenMarkers(item, '<i class="far fa-clock"></i>', '</div>', False)[1]
-            )
-            printDBG('duration1.listSeriesEpisodes >>> %s' % duration)
-
-            if not duration:
-                duration = "غير متاح"
-
-            ##########################################
-            # Poster
-            ##########################################
-            icon = cItem.get('icon', '')
-
-            ##########################################
-            # Desc
-            ##########################################
-            desc = f"المدة: {duration}"
-
-            params = dict(cItem)
-            params.update({
-                'title': title,
-                'url': url,
-                'icon': icon,
-                'desc': desc,
-                'category': 'explore_item'
-            })
-            self.addDir(params)
-
-    def exploreItems(self, cItem):
-        printDBG('WikiCourses.exploreItems >>> %s' % cItem)
-        url = cItem['url']
-        printDBG('url.exploreItems >>> %s' % url)
-
-        sts, data = self.getPage(url)
-        if not sts or not data:
-            printDBG('exploreItems: failed to load page')
-            return
-
-        # Extract main block (DO NOT CHANGE start/end markers)
-        main_block = self.cm.ph.getDataBeetwenMarkers(
-            data,
-            '<div class="playlist-content',
-            '<div class=" col-lg-4',
-            True
-        )[1]
-        printDBG('main_block.exploreItems >>> %s' % main_block)
-
-        if not main_block:
-            printDBG('exploreItems: No main_block found')
-            return
-
-        ##############################################
-        # EXTRACT VIDEO URL  (decode HTML entities!)
-        ##############################################
-        raw_video_url = self.cm.ph.getSearchGroups(
-            main_block,
-            r'<source[^>]+src="([^"]+)"'
-        )[0]
-
-        # Convert &amp; → &
-        video_url = self.getFullUrl(raw_video_url.replace('&amp;', '&'))
-        printDBG('video_url.exploreItems >>> %s' % video_url)
-
-        ##############################################
-        # EXTRACT VIDEO NAME/TITLE
-        ##############################################
-        name = self.cleanHtmlStr(
-            self.cm.ph.getDataBeetwenMarkers(
-                main_block,
-                '<p class="my-2 fw-bold">',
-                '</p>',
-                False
-            )[1]
-        )
-        printDBG('video_name.exploreItems >>> %s' % name)
-
-        ##############################################
-        # EXTRACT DURATION (المدة)
-        ##############################################
-        duration = self.cleanHtmlStr(
-            self.cm.ph.getDataBeetwenMarkers(
-                main_block,
-                '<span>المدة:</span>',
-                '</h5>',
-                False
-            )[1]
-        )
-
-        ##############################################
-        # EXTRACT SIZE (الحجم)
-        ##############################################
-        size = self.cleanHtmlStr(
-            self.cm.ph.getDataBeetwenMarkers(
-                main_block,
-                '<span>الحجم:</span>',
-                '</h5>',
-                False
-            )[1]
-        )
-
-        ##############################################
-        # BUILD DESC
-        ##############################################
-        desc = "المدة: %s | الحجم: %s" % (duration, size)
-
-        ##############################################
-        # ADD VIDEO ENTRY  (NO COLORS)
-        ##############################################
-        params = dict(cItem)
-        params.update({
-            'title': name,
-            'url': video_url,
-            'desc': desc,
-            'category': 'video',
-            'type': 'video',
-        })
-        self.addVideo(params)
+    def listSearchResult(self, cItem, searchPattern, searchType):
+        sts, data = self.getPage(self.getFullUrl("search?q=%s" % urllib_quote_plus(searchPattern)))
+        if sts:
+            self._listCourseBoxes(data)
 
     ###################################################
-    # GET LINKS FOR VIDEO
+    # links
     ###################################################
+    def _lessonInfo(self, data):
+        block = self.cm.ph.getDataBeetwenMarkers(data, '<div class="playlist-content', '<div class=" col-lg-4', False)[1] or data
+        video = self.cm.ph.getSearchGroups(block, r'<source[^>]+src="([^"]+)"')[0]
+        # (duration, size) - the site labels them "المدة" / "الحجم"
+        fields = [self.cleanHtmlStr(self.cm.ph.getSearchGroups(block, r"(?s)<span>%s:</span>\s*<span>(.*?)</span>" % label)[0]) for label in ("المدة", "الحجم")]
+        return self._canonUrl(video) if video else "", fields
+
     def getLinksForVideo(self, cItem):
-        printDBG('WikiCourses.getLinksForVideo [%s]' % cItem)
-        url = cItem.get('url', '')
-        if not url:
+        printDBG("WikiCourses.getLinksForVideo [%s]" % cItem.get("url", ""))
+        url = cItem.get("url", "")
+        if re.search(r"\.(mp4|m4v|webm)(\?|$)", url):  # an old favourite with the file itself
+            video = url
+        else:
+            sts, data = self.getPage(url)
+            # some lesson pages of old courses are gone (HTTP 404)
+            video = self._lessonInfo(data)[0] if sts else ""
+        if not video:
+            SetIPTVPlayerLastHostError(_("Content not available"))
             return []
-        return [{'name': 'WikiCourses - %s' % cItem.get('title', ''), 'url': url, 'need_resolve': 0}]
+        links = [{"name": "WikiCourses MP4", "url": strwithmeta(video, {"User-Agent": self.HEADER["User-Agent"], "Referer": self.MAIN_URL}), "need_resolve": 0}]
+        return applySidecarToLinks(links, buildSidecarFromItem(cItem, IsSidecarEnabled()))
 
-    def getVideoLinks(self, url):
-        printDBG("WikiCourses.getVideoLinks [%s]" % url)
-        urlTab = []
-        if self.cm.isValidUrl(url):
-            return self.up.getVideoLinkExt(url)
-        return urlTab
+    ###################################################
+    # INFO
+    ###################################################
+    def getArticleContent(self, cItem):
+        printDBG("WikiCourses.getArticleContent [%s]" % cItem.get("url", ""))
+        info, text, icon, size = {}, "", cItem.get("icon", ""), ""
+        if cItem.get("category") == "wc_lesson":
+            sts, data = self.getPage(cItem.get("url", ""))
+            if sts:
+                duration, size = self._lessonInfo(data)[1]
+                if duration:
+                    info["duration"] = duration
+                if size:
+                    size = "%s %s" % (_("Size:"), size)
+            courseUrl = cItem.get("course_url", "")
+        else:
+            courseUrl = cItem.get("url", "")
+        if courseUrl:
+            sts, data = self.getPage(courseUrl)
+            if sts:
+                text = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'<meta property="og:description" content="([^"]*)"')[0])
+                icon = self._canonUrl(self.cm.ph.getSearchGroups(data, r'<meta property="og:image" content="([^"]+)"')[0]) or icon
+        text = text or cItem.get("desc", "")
+        if size:
+            text = "%s[/br][/br]%s" % (size, text) if text else size
+        return [{"title": cItem.get("title", ""), "text": text, "images": [{"title": "", "url": icon}] if icon else [], "other_info": info}]
 
-    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
-        printDBG('WikiCourses.handleService start')
-
+    ###################################################
+    # service
+    ###################################################
+    def handleService(self, index, refresh=0, searchPattern="", searchType=""):
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
-
-        name = self.currItem.get("name", '')
-        category = self.currItem.get("category", '')
-
-        printDBG("handleService: >> name[%s], category[%s] " % (name, category))
+        name = self.currItem.get("name", "")
+        category = self.currItem.get("category", "")
+        printDBG("WikiCourses.handleService name[%s] category[%s]" % (name, category))
         self.currList = []
-
-        # MAIN MENU
         if name is None:
-            self.listMainMenu({'name': 'category'})
-        elif category == 'main_categories':
-            self.listSeriesCategories(self.currItem)
-        elif category == 'list_course':
-            self.listCourseType(self.currItem)
-        elif category == 'list_courseid':
-            self.listCourseId(self.currItem)
-        elif category == 'list_series':
-            self.listSeriesUnits(self.currItem)
-        elif category == 'explore_item':
-            self.exploreItems(self.currItem)
-        elif category == 'list_series_episodes':
-            self.listSeriesEpisodes(self.currItem)
+            self.listMainMenu({"name": "category"})
+        elif category == "wc_categories":
+            self.listCategories(self.currItem)
+        elif category == "wc_subcategories":
+            self.listSubCategories(self.currItem)
+        elif category == "wc_courses":
+            self.listCourses(self.currItem)
+        elif category == "wc_course":
+            self.listLessons(self.currItem)
+        elif category in ["search", "search_next_page"]:
+            cItem = dict(self.currItem)
+            cItem.update({"search_item": False, "name": "category"})
+            self.listSearchResult(cItem, searchPattern, searchType)
+        elif category == "search_history":
+            self.listsHistory({"name": "history", "category": "search"}, "desc")
         else:
             printExc()
-
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
-class IPTVHost(CHostBase):
+class IPTVHost(GenericFolderWatchedHostMixin, CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, WikiCourses(), True, [])
+        self.cachedRet = None
+        self.refreshAfterWatchedFlagChange = False
+        self.watchedHelper = IPTVWatchedHelper("wikicourses")
 
     def withArticleContent(self, cItem):
-        if 'video' == cItem.get('type', '') or 'explore_item' == cItem.get('category', ''):
-            return True
-        return False
+        return cItem.get("category", "") in ("wc_course", "wc_lesson")

@@ -1,633 +1,513 @@
 # -*- coding: utf-8 -*-
 # Original File from: 01/12/2025 - popking (odem2014)
-# Last modified: 04/04/2026 - Mohamed Elsafty (angel_heart)
-###################################################
-# LOCAL import
-###################################################
-# localization library
-from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
-
-# host main class
-from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
-
-# tools - write on log, write exception infos and merge dicts
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, MergeDicts, E2ColoR
-
-# add metadata to url
-from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
-
-# library for json (instead of standard json.loads and json.dumps)
-from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
-
-# read informations in m3u8
-from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
-from Plugins.Extensions.IPTVPlayer.libs import ph
-
-###################################################
-from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin
-from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus, urllib_quote
-from Components.config import ConfigSelection, ConfigText, config, getConfigListEntry
-
-###################################################
-# FOREIGN import
+# Previous change: 04/04/2026 - Mohamed Elsafty (angel_heart)
+# Last Modified: 03.10.2026 - revived for topcinema.vip (topcima.online 301s there)
+#   - menus checked against the live site: "Arabic plays" slug fixed (مسرحيات-عربية), the dead
+#     "Turkish 2" series category and the download-only "complated series" page dropped
+#   - movies, plays, shows and episodes are VIDEO rows keyed on their page url; the hoster
+#     embeds of the /watch/ page are fetched in getLinksForVideo (duplicates removed, equal
+#     hoster names numbered, no colour codes) and resolved by urlparser
+#   - series categories / search: one folder per show+season (episode page or /series/ page)
+#     -> season list when the show has several seasons -> episodes (ascending)
+#   - movie collections (/assemblies/) -> the movies of the collection
+#   - paging via iptvpaging (First page / Jump / Next page with the last page number)
+#   - watched flag, downloaded flag (canonical page url), name normalisation ("Title (Year)",
+#     "Show - SxxExx"), sidecar, INFO via moviemeta + the site's story/poster/fields, favourites
 ###################################################
 import re
 
-###################################################
-# Constants
-C = E2ColoR("cyan")
-L = E2ColoR("lime")
-O = E2ColoR("orange")
-R = E2ColoR("red")
-W = E2ColoR("white")
-Y = E2ColoR("yellow")
-###################################################
+from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
+from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus, urllib_unquote
+from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
+from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
+from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, E2ColoR
+from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
+from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
+from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
+
+
+def GetConfigList():
+    return []
 
 
 def gettytul():
-    return "https://topcima.online"  # main url of host
+    return "https://topcinema.vip/"
 
 
-class TopCinema(CBaseHostClass):
+# Enigma2 colour codes ("\c00RRGGBB") - only for the list description, never in sidecar / INFO text
+COLOR_CODE_RE = re.compile(r"\\c[0-9A-Fa-f]{8}")
+
+
+def _stripColors(text):
+    return COLOR_CODE_RE.sub("", text or "")
+
+
+# Arabic ordinals used in season labels ("الموسم الثاني"), compound ones first
+SEASON_ORDINALS = [
+    ("الحادي عشر", 11), ("الثاني عشر", 12), ("الثالث عشر", 13), ("الرابع عشر", 14), ("الخامس عشر", 15),
+    ("الأولى", 1), ("الاولى", 1), ("الاولي", 1), ("الأول", 1), ("الاول", 1), ("الثانية", 2), ("الثاني", 2), ("الثانى", 2),
+    ("الثالثة", 3), ("الثالث", 3), ("الرابعة", 4), ("الرابع", 4), ("الخامسة", 5), ("الخامس", 5), ("السادسة", 6), ("السادس", 6),
+    ("السابعة", 7), ("السابع", 7), ("الثامنة", 8), ("الثامن", 8), ("التاسعة", 9), ("التاسع", 9), ("العاشرة", 10), ("العاشر", 10),
+]
+SEASON_RE = re.compile(r"(?:^|\s)(?:الموسم|الجزء|ج)\s*(\d+|%s)(?=\s|$)" % "|".join(o[0] for o in SEASON_ORDINALS))
+EPISODE_RE = re.compile(r"(?:^|\s)(?:الحلقة|حلقة)\s*(\d+)(.*)$")
+# leading content-type words of the site titles ("فيلم X", "مسلسل X", "انمي فيلم X" ...)
+PREFIX_RE = re.compile(r"^(?:(?:فيلم|مسلسل|برنامج|عرض|انمي|سلسلة افلام|سلاسل افلام)\s+)+")
+# site words that do not belong into a title / file name
+JUNK_RE = re.compile(r"(?:^|\s)(?:مترجم|مترجمة|اون لاين|أون لاين|مشاهدة|كامل|كاملة|والاخير|والاخيرة|والأخيرة|HD|hd)(?=\s|$)")
+# episode-name suffixes that are only the episode number spelled out ("الحلقة 30 الثلاثون والاخيرة")
+EP_ORDINAL_RE = re.compile(r"^(?:ال(?:اولي|اولى|أولى|ثاني|ثانية|ثالث|ثالثة|رابع|رابعة|خامس|خامسة|سادس|سادسة|سابع|سابعة|ثامن|ثامنة|تاسع|تاسعة|عاشر|عاشرة|حادي|حادية|عشرون|ثلاثون|اربعون|أربعون|خمسون|ستون|سبعون|ثمانون|تسعون|مائة|مئة))(?:\s|$)")
+YEAR_RE = re.compile(r"\(?\s*(?<![\d.])((?:19|20)\d{2})(?![\d.])\s*\)?")
+DUB_WORD = "مدبلج"
+# left-to-right / right-to-left marks the site puts in front of some episode names
+BIDI_MARKS = ("\xe2\x80\x8e", "\xe2\x80\x8f") if isPY2() else (u"‎", u"‏")
+# "<span>نوع الفيلم : </span> <a>..</a>" fields of a title page -> INFO keys
+INFO_FIELDS = (("genres", ("نوع",)), ("year", ("تاريخ", "السنة")), ("language", ("لغة",)), ("quality", ("جودة",)),
+               ("country", ("الدولة", "البلد")), ("duration", ("مدة",)), ("director", ("المخرج",)), ("actors", ("بطولة", "الممثلين")))
+
+
+class TopCinema(GenericFolderWatchedScraperMixin, CBaseHostClass):
+
     def __init__(self):
-        # init global variables for this class
-        CBaseHostClass.__init__(self, {"history": "topcinema", "cookie": "topcinema.cookie"})  # names for history and cookie files in cache
-        self.ph = ph
-        # vars default values
-        # various urls
+        CBaseHostClass.__init__(self, {"history": "topcinema", "cookie": "topcinema.cookie"})
         self.MAIN_URL = gettytul()
-        self.SEARCH_URL = self.MAIN_URL + "?s="
-        # url for default icon
         self.DEFAULT_ICON_URL = "https://raw.githubusercontent.com/oe-mirrors/e2iplayer/gh-pages/Thumbnails/topcinema.png"
-        # default header and http params
         self.HEADER = self.cm.getDefaultHeader(browser="chrome")
-        self.AJAX_HEADER = self.HEADER
-        self.AJAX_HEADER.update({"X-Requested-With": "XMLHttpRequest", "Sec-Fetch-Mode": "cors", "Sec-Fetch-Dest": "empty", "Sec-Fetch-Site": "same-origin"})
         self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
-
-    def getPage(self, base_url, add_params=None, post_data=None):
-        if add_params is None:
-            add_params = dict(self.defaultParams)
-        base_url = self._fixUrl(base_url)
-        add_params["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.HEADER.get("User-Agent")}
-        return self.cm.getPageCFProtection(base_url, add_params, post_data)
-
-    def listMainMenu(self, cItem):
-        # items of main menu
-        printDBG("TopCinema.listMainMenu")
-        # Define main categories statically like FilmPalast does
-        self.MAIN_CAT_TAB = [
-            {"category": "movies_folder", "title": "Movies"},
-            {"category": "series_folder", "title": "Series"},
-            {"category": "list_items", "title": "TV Shows", "url": self.getFullUrl("/category/%d8%a8%d8%b1%d8%a7%d9%85%d8%ac-%d8%aa%d9%84%d9%81%d8%b2%d9%8a%d9%88%d9%86%d9%8a%d8%a9/")},
-            {"category": "list_items", "title": "Arabic plays", "url": self.getFullUrl("/category/%d9%85%d8%b3%d8%b1%d8%ad%d9%8a%d8%a7%d8%aa-%d8%b9%d8%b1%d8%a8%d9%8a%d9%87/")},
-            {"category": "list_items", "title": "WWE Shows", "url": self.getFullUrl("/category/%d9%85%d8%b5%d8%a7%d8%b1%d8%b9%d9%87/")},
-            {"category": "list_items", "title": "Newly added", "url": self.getFullUrl("/last/")},
+        cat = self._catUrl
+        self.MENU = [
+            {"category": "tc_folder", "title": _("Movies"), "tc_folder": "movies"},
+            {"category": "tc_folder", "title": _("Series"), "tc_folder": "series"},
+            {"category": "list_items", "title": _("TV Shows"), "url": cat("برامج-تلفزيونية"), "tc_mode": "series"},
+            {"category": "list_items", "title": _("Arabic plays"), "url": cat("مسرحيات-عربية")},
+            {"category": "list_items", "title": _("WWE shows"), "url": cat("مصارعه")},
+            {"category": "list_items", "title": _("Recently added"), "url": self.getFullUrl("last/"), "tc_mode": "last"},
         ] + self.searchItems()
-        # Define subcategories for each folder
-        self.MOVIES_CAT_TAB = [
-            {"category": "list_items", "title": "Arabic", "url": self.getFullUrl("/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d8%b9%d8%b1%d8%a8%d9%8a/")},
-            {"category": "list_items", "title": "English", "url": self.getFullUrl("/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d8%a7%d8%ac%d9%86%d8%a8%d9%8a/")},
-            {"category": "list_items", "title": "English Dubbed", "url": self.getFullUrl("/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d8%a7%d8%ac%d9%86%d8%a8%d9%8a%d8%a9-%d9%85%d8%af%d8%a8%d9%84%d8%ac%d8%a9/")},
-            {"category": "list_items", "title": "Turkish", "url": self.getFullUrl("/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d8%aa%d8%b1%d9%83%d9%8a%d8%a9/")},
-            {"category": "list_items", "title": "Asian", "url": self.getFullUrl("/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d8%a7%d8%b3%d9%8a%d9%88%d9%8a%d8%a9/")},
-            {"category": "list_items", "title": "Indian", "url": self.getFullUrl("/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d9%87%d9%86%d8%af%d9%89/")},
-            {"category": "list_items", "title": "Netfilx", "url": self.getFullUrl("/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-netfilx/")},
-            {"category": "list_items", "title": "Anime", "url": self.getFullUrl("/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d8%a7%d9%86%d9%85%d9%8a/")},
-            {"category": "list_items", "title": "Cartoon", "url": self.getFullUrl("/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d9%83%d8%b1%d8%aa%d9%88%d9%86/")},
-            {"category": "list_items", "title": "Dubbed", "url": self.getFullUrl("/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d9%85%d8%af%d8%a8%d9%84%d8%ac%d8%a9/")},
-            {"category": "list_items", "title": "Classic", "url": self.getFullUrl("/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d9%83%d9%84%d8%a7%d8%b3%d9%8a%d9%83%d9%8a%d9%87/")},
-            {"category": "list_items", "title": "Documentry", "url": self.getFullUrl("/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d9%88%d8%ab%d8%a7%d8%a6%d9%82%d9%8a%d8%a9/")},
-            {"category": "list_items", "title": "Top Rating IMDB", "url": self.getFullUrl("/imdb/")},
-            {"category": "list_items", "title": "Movies Series", "url": self.getFullUrl("/assemblies/")},
-        ]
-        self.SERIES_CAT_TAB = [
-            {"category": "series", "title": "Arabic", "url": self.getFullUrl("/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%b9%d8%b1%d8%a8%d9%8a/")},
-            {"category": "series", "title": "English", "url": self.getFullUrl("/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%a7%d8%ac%d9%86%d8%a8%d9%8a/")},
-            {"category": "series", "title": "Turkish", "url": self.getFullUrl("/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%aa%d8%b1%d9%83%d9%8a%d8%a9/")},
-            {"category": "series", "title": "Turkish 2", "url": self.getFullUrl("/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%aa%d8%b1%d9%83%d9%8a%d9%87/")},
-            {"category": "series", "title": "Asian", "url": self.getFullUrl("/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%a7%d8%b3%d9%8a%d9%88%d9%8a%d8%a9/")},
-            {"category": "series", "title": "Indian", "url": self.getFullUrl("/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d9%87%d9%86%d8%af%d9%8a%d8%a9/")},
-            {"category": "series", "title": "Korian", "url": self.getFullUrl("/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d9%83%d9%88%d8%b1%d9%8a%d9%87/")},
-            {"category": "series", "title": "Latin", "url": self.getFullUrl("/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d9%84%d8%a7%d8%aa%d9%8a%d9%86%d9%8a%d8%a9/")},
-            {"category": "series", "title": "Netfilx", "url": self.getFullUrl("/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-netfilx/")},
-            {"category": "series", "title": "Ramadan 2026", "url": self.getFullUrl("/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%b1%d9%85%d8%b6%d8%a7%d9%86-2026/")},
-            {"category": "series", "title": "Anime", "url": self.getFullUrl("/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%a7%d9%86%d9%85%d9%8a/")},
-            {"category": "series", "title": "Cartoon", "url": self.getFullUrl("/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d9%83%d8%b1%d8%aa%d9%88%d9%86/")},
-            {"category": "series", "title": "Top Rating IMDB", "url": self.getFullUrl("/top-rating-imdb-series/")},
-            {"category": "series", "title": "Complated Series", "url": self.getFullUrl("/complated-series/")},
-        ]
-        # Display main categories
-        self.listsTab(self.MAIN_CAT_TAB, cItem)
+        self.FOLDERS = {
+            "movies": [
+                {"title": _("Arabic"), "url": cat("افلام-عربي")},
+                {"title": _("English"), "url": cat("افلام-اجنبي")},
+                {"title": _("English dubbed"), "url": cat("افلام-اجنبية-مدبلجة")},
+                {"title": _("Turkish"), "url": cat("افلام-تركية")},
+                {"title": _("Asian"), "url": cat("افلام-اسيوية")},
+                {"title": _("Indian"), "url": cat("افلام-هندى")},
+                {"title": "Netflix", "url": cat("افلام-netfilx")},
+                {"title": _("Anime"), "url": cat("افلام-انمي")},
+                {"title": _("Cartoons"), "url": cat("افلام-كرتون")},
+                {"title": _("Dubbed"), "url": cat("افلام-مدبلجة")},
+                {"title": _("Classic"), "url": cat("افلام-كلاسيكيه")},
+                {"title": _("Documentary"), "url": cat("افلام-وثائقية")},
+                {"title": _("Top IMDb"), "url": self.getFullUrl("imdb/")},
+                {"title": _("Movie collections"), "url": self.getFullUrl("assemblies/")},
+            ],
+            "series": [
+                {"title": _("Arabic"), "url": cat("مسلسلات-عربي")},
+                {"title": _("English"), "url": cat("مسلسلات-اجنبي")},
+                {"title": _("Turkish"), "url": cat("مسلسلات-تركية")},
+                {"title": _("Asian"), "url": cat("مسلسلات-اسيوية")},
+                {"title": _("Indian"), "url": cat("مسلسلات-هندية")},
+                {"title": _("Korean"), "url": cat("مسلسلات-كوريه")},
+                {"title": _("Latino"), "url": cat("مسلسلات-لاتينية")},
+                {"title": "Netflix", "url": cat("مسلسلات-netfilx")},
+                {"title": _("Ramadan") + " 2026", "url": cat("مسلسلات-رمضان-2026")},
+                {"title": _("Anime"), "url": cat("مسلسلات-انمي")},
+                {"title": _("Cartoons"), "url": cat("مسلسلات-كرتون")},
+                {"title": _("Top IMDb"), "url": self.getFullUrl("top-rating-imdb-series/")},
+            ],
+        }
+        self.watchedHelper = IPTVWatchedHelper("topcinema")
+        self.wfInitFolderCache()
 
-    def listMoviesFolder(self, cItem):
-        printDBG("TopCinema.listMoviesFolder")
-        self.listsTab(self.MOVIES_CAT_TAB, cItem)
+    ###################################################
+    # helpers
+    ###################################################
+    def _catUrl(self, slug):
+        return self._canonUrl(self.getFullUrl("category/%s/" % slug))
 
-    def listSeriesFolder(self, cItem):
-        printDBG("TopCinema.listSeriesFolder")
-        self.listsTab(self.SERIES_CAT_TAB, cItem)
+    def getPage(self, baseUrl, addParams=None, post_data=None):
+        if addParams is None:
+            addParams = dict(self.defaultParams)
+        addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.HEADER.get("User-Agent")}
+        return self.cm.getPageCFProtection(self._canonUrl(baseUrl), addParams, post_data)
 
-    def _cleanTitle(self, title):
-        if not title:
+    def _canonUrl(self, url):
+        # the site links the same page raw-Arabic or percent-encoded (lower case) - one ASCII
+        # form for requests, the watched / downloaded markers and favourites
+        url = (url or "").replace("&amp;", "&").replace("&#038;", "&").strip()
+        if not url:
             return ""
-        title = self.cleanHtmlStr(title)
-        words_to_remove = ["مترجم اون لاين", "مشاهدة", "مسلسل", "فيلم", "برنامج", "عرض"]
-        for word in words_to_remove:
-            title = title.replace(word, "")
-        return title.strip()
-
-    def _fixUrl(self, url):
-        if url:
-            url = self.getFullUrl(url)
-            if any(ord(c) > 127 for c in url):
-                return urllib_quote(url.encode("utf-8"), safe=":/%?&=+@#,")
+        url = self.getFullUrl(url)
+        try:
+            url = urllib_quote(urllib_unquote(url), safe=":/?&=#+,;@%")
+        except Exception:
+            printExc()
         return url
 
+    def _icon(self, block):
+        icon = self.cm.ph.getSearchGroups(block, r'data-src="([^"]+)"')[0]
+        if not icon:
+            icon = self.cm.ph.getSearchGroups(block, r'<img[^>]+src="(http[^"]+)"')[0]
+        return self._canonUrl(icon) if icon else ""
+
+    @staticmethod
+    def _clean(text):
+        for mark in BIDI_MARKS:
+            text = (text or "").replace(mark, "")
+        text = PREFIX_RE.sub("", (text or "").strip())
+        text = JUNK_RE.sub(" ", text)
+        return re.sub(r"\s+", " ", text).strip(" -:|")
+
+    @staticmethod
+    def _splitYear(title):
+        # "Verity 2026" / "انستونا ( 2022 )" -> ("Verity", "2026"); a date like 22.06.2026 is no year
+        years = list(YEAR_RE.finditer(title or ""))
+        if not years:
+            return title, ""
+        m = years[-1]
+        rest = re.sub(r"\s+", " ", (title[:m.start()] + " " + title[m.end():])).strip(" -:|")
+        return (rest or title), m.group(1)
+
+    def _parseEpisode(self, raw):
+        # "مسلسل Red Queen الموسم الثاني الحلقة 6 والاخيرة مترجمة" -> show "Red Queen", season 2, episode 6
+        text = self._clean(raw)
+        m = EPISODE_RE.search(text)
+        if not m:
+            return None
+        head, epNum, rest = text[:m.start()].strip(), m.group(1), m.group(2).strip(" -:|")
+        show, season = self._splitSeason(head)
+        if rest and EP_ORDINAL_RE.search(rest):
+            rest = ""
+        return {"show": show, "season": season, "episode": epNum, "name": rest, "head": self.cleanHtmlStr(re.split(r"\s(?:الحلقة|حلقة)\s*\d", raw)[0])}
+
+    def _splitSeason(self, title):
+        # "Reacher الموسم الرابع" -> ("Reacher", 4); no season label -> (title, 1)
+        title = self._clean(title)
+        season = 1
+        m = SEASON_RE.search(title)
+        if m:
+            val = m.group(1)
+            season = int(val) if val.isdigit() else dict(SEASON_ORDINALS).get(val, 1)
+            title = (title[:m.start()] + " " + title[m.end():]).strip()
+        return re.sub(r"\s+", " ", title).strip(" -:|"), season
+
+    @staticmethod
+    def _metaTitle(title):
+        return re.sub(r"\s+", " ", (title or "").replace(DUB_WORD, " ")).strip()
+
+    def _pageTpl(self, url):
+        base = re.sub(r"/page/\d+/?", "/", url.split("?")[0])
+        if not base.endswith("/"):
+            base += "/"
+        return base + "page/{page}/"
+
+    @staticmethod
+    def _lastPage(pagination, page):
+        pagination = pagination.replace("&#038;", "&").replace("&amp;", "&")
+        nums = [int(x) for x in re.findall(r"(?:/page/|[?&]page=)(\d+)", pagination)]
+        return max(nums + [page])
+
+    ###################################################
+    # watched flag
+    ###################################################
+    def _getWatchedKeyForItem(self, cItem):
+        try:
+            if not isinstance(cItem, dict) or cItem.get("category", "") not in ("tc_video", "tc_series"):
+                return ""
+            path = urllib_unquote(self._canonUrl(cItem.get("url", ""))).split("://", 1)[-1].split("/", 1)[-1].strip("/")
+            if not path:
+                return ""
+            return "%s:%s" % ("video" if cItem["category"] == "tc_video" else "folder", path)
+        except Exception:
+            printExc()
+        return ""
+
+    ###################################################
+    # lists
+    ###################################################
+    def listFolder(self, cItem):
+        for item in self.FOLDERS.get(cItem.get("tc_folder", ""), []):
+            params = {"name": "category", "category": "list_items", "good_for_fav": True, "title": item["title"], "url": item["url"]}
+            if cItem.get("tc_folder") == "series":
+                params["tc_mode"] = "series"
+            self.addDir(params)
+
+    def _itemDesc(self, block):
+        fields = ((_("Genre"), "genre"), (_("Quality"), "quality"), (_("Year"), "meta-year"), (_("IMDb"), "imdbRating"), (_("Runtime"), "meta-runtime"))
+        parts = []
+        for label, cls in fields:
+            val = self.cleanHtmlStr(self.cm.ph.getSearchGroups(block, r'(?s)<li class="%s">(.*?)</li>' % cls)[0])
+            if val:
+                parts.append("%s%s:%s %s" % (E2ColoR("yellow"), label, E2ColoR("white"), val))
+        return " | ".join(parts)
+
     def listItems(self, cItem):
-        printDBG("TopCinema.listItems [%s]" % cItem)
-        sts, data = self.getPage(cItem["url"])
-        if not sts:
-            return
-        tmp = self.cm.ph.getDataBeetwenMarkers(data, '<main class="site-inner', "</main>", True)[1]
-        items = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<div class="Small--Box', "</a>", True)
-        for m in items:
-            url = self.cm.ph.getSearchGroups(m, r"href=[\"']([^\"']+)[\"']")[0]
-            if not url:
-                continue
-            url = self._fixUrl(url)
-            raw_title = self.cm.ph.getSearchGroups(m, r"title=[\"']([^\"']+)[\"']")[0]
-            title = self._cleanTitle(raw_title)
-            poster = self.cm.ph.getSearchGroups(m, r"data-src=[\"']([^\"']+)[\"']")[0]
-            if not poster:
-                poster = self.cm.ph.getSearchGroups(m, r"src=[\"']([^\"']+)[\"']")[0]
-            if not poster:
-                poster = "https://topcima.online/wp-content/uploads/2025/10/block-1.png"
-            poster = self._fixUrl(poster)
-            category = self.cleanHtmlStr(self.cm.ph.getSearchGroups(m, r"<li class=\"category\">([^<]+)</li>")[0])
-            ##############################################################
-            # Extraction of Metadata for Description
-            ##############################################################
-            genre = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(m, '<li class="genre">', "</li>")[1])
-            quality = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(m, '<li class="quality">', "</li>")[1])
-            runtime = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(m, '<li class="meta-runtime">', "</li>")[1])
-            year = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(m, '<li class="meta-year">', "</li>")[1])
-            imdb = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(m, '<li class="imdbRating">', "</li>")[1])
-            desc_list = []
-            if genre:
-                desc_list.append("{}Genre:{} {}".format(Y, W, genre))
-            if quality:
-                desc_list.append("{}Quality:{} {}".format(Y, W, quality))
-            if year:
-                desc_list.append("{}Year:{} {}".format(Y, W, year))
-            if imdb:
-                desc_list.append("{}Imdb Rating:{} {}".format(Y, W, imdb))
-            if runtime:
-                desc_list.append("{}Runtime:{} {}".format(Y, W, runtime))
-            separator = " {}|{} ".format(C, W)
-            final_desc = separator.join(desc_list)
-            params = {
-                "category": "movie_details",
-                "title": title,
-                "url": url,
-                "icon": poster,
-                "desc": final_desc,
-                "good_for_fav": True,
-            }
-            self.addDir(params)
-        # === PAGINATION ===
-        pagination = self.cm.ph.getDataBeetwenMarkers(data, '<div class="pagination">', "</div>", True)[1]
-        next_page = self.cm.ph.getSearchGroups(pagination, r"<a[^>]+class=\"[^\"]*next[^\"]*\"[^>]+href=\"([^\"]+)\"")[0]
-        if not next_page:
-            next_page = self.cm.ph.getSearchGroups(pagination, r"<a[^>]+href=\"([^\"]+)\"[^>]*>[^<]*?(?:Next|←|»|&laquo;|التالي)[^<]*?</a>")[0]
-        if next_page:
-            next_url = self.getFullUrl(next_page).replace("&amp;", "&").replace("&#038;", "&")
-            next_p_num = self.cm.ph.getSearchGroups(next_url, r"[pP]age[=/](\d+)")[0]
-            display_num = " [ " + next_p_num + " ]" if next_p_num else ""
-            params = dict(cItem)
-            params.update({"title": L + _("Next Page »»»") + W + display_num, "url": next_url, "category": "list_items"})
-            self.addDir(params)
-
-    def showMovieDetails(self, cItem):
-        printDBG("TopCinema.showMovieDetails [%s]" % cItem)
-        url = cItem.get("url", "")
-        if not url:
-            return
-        sts, data = self.getPage(url)
-        if not sts or not data:
-            return
-        story = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<div class="story clearfix">', "</div>", False)[1])
-        meta_parts = []
-        info_part = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="RightTaxContent">', "</ul>", False)[1]
-        if info_part:
-            info_items = re.findall(r"<li[^>]*>(.*?)</li>", info_part, re.S)
-            for item in info_items:
-                label = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, "<span>", "</span>", False)[1]).replace(":", "").strip()
-                values = self.cm.ph.getAllItemsBeetwenMarkers(item, "<a", "</a>")
-                clean_values = [self.cleanHtmlStr(v) for v in values if self.cleanHtmlStr(v)]
-                value = ", ".join(clean_values)
-                if not label or not value:
-                    continue
-                key = ""
-                if any(x in label for x in ["تصنيف", "قسم"]):
-                    key = "{}Category:{}".format(Y, W)
-                elif "نوع" in label:
-                    key = "{}Genre:{}".format(Y, W)
-                elif "جودة" in label:
-                    key = "{}Quality:{}".format(Y, W)
-                elif any(x in label for x in ["تاريخ", "السنة"]):
-                    key = "{}Year:{}".format(Y, W)
-                elif "لغة" in label:
-                    key = "{}Language:{}".format(Y, W)
-                elif any(x in label for x in ["الدولة", "البلد"]):
-                    key = "{}Country:{}".format(Y, W)
-                elif "مدة" in label:
-                    key = "{}Runtime:{}".format(Y, W)
-                elif "بطولة" in label:
-                    key = "{}Stars:{}".format(Y, W)
-                if key and value:
-                    meta_parts.append("{} {}".format(key, value))
-        separator = " {}|{} ".format(C, W)
-        one_line_info = separator.join(meta_parts)
-        if story:
-            full_desc = "{}\n{}Story:{} {}".format(one_line_info, L, W, story)
-        else:
-            full_desc = one_line_info
-        params = {"category": "explore_item", "title": "{}".format(cItem.get("title", "")), "url": url, "icon": cItem.get("icon", ""), "desc": full_desc, "good_for_fav": True, "type": "category"}
-        self.addDir(params)
-
-    def listSeriesItems(self, cItem):
-        printDBG("TopCinema.listSeriesItems [%s]" % cItem)
-        sts, data = self.getPage(cItem["url"])
-        if not sts or not data:
-            return
-        ############################################################
-        # Extract series block (All episodes)
-        ############################################################
-        tmp = self.cm.ph.getDataBeetwenMarkers(data, '<div class="BlocksHolder', '<script type="speculationrules', True)[1]
-        data_items = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<div class="Small--Box', "</a>", True)
-        if not data_items:
-            # fallback if needed
-            parts = tmp.split('<div class="Small--Box')
-            data_items = ['<div class="Small--Box' + p for p in parts[1:]]
-        for m in data_items:
-            ############################################################
-            # URL
-            ############################################################
-            url = self.cm.ph.getSearchGroups(m, r"href=[\"']([^\"']+)[\"']")[0]
-            if not url:
-                continue
-            ############################################################
-            # Title
-            ############################################################
-            raw_title = self.cm.ph.getSearchGroups(m, r"title=[\"']([^\"']+)[\"']")[0]
-            title = self.cleanHtmlStr(raw_title)
-            title = self._cleanTitle(raw_title)
-            ############################################################
-            # Episode number
-            ############################################################
-            episode = self.cm.ph.getSearchGroups(m, r"<span>الحلقة</span>\s*<em>(\d+)</em>")[0]
-            ##############################################################
-            # Extraction of Metadata for Description
-            ##############################################################
-            genre = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(m, '<li class="genre">', "</li>")[1])
-            quality = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(m, '<li class="quality">', "</li>")[1])
-            runtime = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(m, '<li class="meta-runtime">', "</li>")[1])
-            year = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(m, '<li class="meta-year">', "</li>")[1])
-            imdb = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(m, '<li class="imdbRating">', "</li>")[1])
-            desc_list = []
-            if genre:
-                desc_list.append("{}Genre:{} {}".format(Y, W, genre))
-            if quality:
-                desc_list.append("{}Quality:{} {}".format(Y, W, quality))
-            if year:
-                desc_list.append("{}Year:{} {}".format(Y, W, year))
-            if imdb:
-                desc_list.append("{}Imdb Rating:{} {}".format(Y, W, imdb))
-            if runtime:
-                desc_list.append("{}Runtime:{} {}".format(Y, W, runtime))
-            final_desc = " | ".join(desc_list)
-            ############################################################
-            # Icon (data-src preferred)
-            ############################################################
-            pureicon = self.cm.ph.getSearchGroups(m, r"data-src=[\"']([^\"']+)[\"']")[0]
-            if not pureicon:
-                pureicon = self.cm.ph.getSearchGroups(m, r"src=[\"']([^\"']+)[\"']")[0]
-            # Fallback icon
-            if not pureicon:
-                pureicon = "https://topcima.online/wp-content/uploads/2025/10/block-1.png"
-            icon = pureicon.strip()
-            ############################################################
-            # Category
-            ############################################################
-            category = self.cm.ph.getSearchGroups(m, r"<li class=\"category\">([^<]+)</li>")[0]
-            ############################################################
-            # Build params
-            ############################################################
-            params = {
-                "category": "show_seasons",
-                "title": title,
-                "good_for_fav": True,
-                "url": url,
-                "icon": self._fixUrl(icon),
-                "episode": episode,
-                "desc": final_desc,
-                "category_name": category,
-            }
-            printDBG(str(params))
-            self.addDir(params)
-        # === PAGINATION HANDLING ===
-        pagination = self.cm.ph.getDataBeetwenMarkers(data, '<div class="pagination">', "</div>", True)[1]
-        next_page = self.cm.ph.getSearchGroups(pagination, r"<a[^>]+class=\"[^\"]*next[^\"]*\"[^>]+href=\"([^\"]+)\"")[0]
-        if not next_page:
-            next_page = self.cm.ph.getSearchGroups(pagination, r"<a[^>]+href=\"([^\"]+)\"[^>]*>[^<]*?(?:Next|←|»|&laquo;|التالي)[^<]*?</a>")[0]
-        if next_page:
-            next_url = self.getFullUrl(next_page).replace("&amp;", "&").replace("&#038;", "&")
-            next_p_num = self.cm.ph.getSearchGroups(next_url, r"[pP]age[=/](\d+)")[0]
-            display_num = " [ " + next_p_num + " ]" if next_p_num else ""
-            params = dict(cItem)
-            params.update({"title": L + _("Next Page »»»") + W + display_num, "url": next_url, "category": cItem.get("category", "list_items")})
-            self.addDir(params)
-
-    def exploreItems(self, cItem):
-        printDBG("TopCinema.exploreItems [%s]" % cItem)
+        printDBG("TopCinema.listItems [%s]" % cItem.get("url", ""))
         url = cItem["url"]
-        item_title = cItem.get("title", "")
-        url = url.replace("//watch", "/watch")
-        if "/watch" not in url:
-            test_url = url.rstrip("/") + "/watch"
-        else:
-            test_url = url
-        sts, data = self.getPage(test_url)
+        sts, data = self.getPage(url)
         if not sts:
             return
-        if "data-watch" not in data and "series-movies" not in data:
-            printDBG("Fallback → loading original URL")
-            sts, data = self.getPage(url)
-            if not sts:
-                return
-        ##########################################################
-        # Check for Movie Collections / Assembly sets
-        ##########################################################
-        if "series-movies" in data:
-            printDBG("Detected Series/Assembly page")
-            series_block = self.cm.ph.getDataBeetwenMarkers(data, '<section class="series-movies"', "</section>")[1]
-            items = self.cm.ph.getAllItemsBeetwenMarkers(series_block, '<div class="Small--Box"', "</a>")
-            for item in items:
-                url = self.cm.ph.getSearchGroups(item, r"""href=["']([^"']+)["']""")[0]
-                title = self.cm.ph.getSearchGroups(item, r"""title=["']([^"']+)["']""")[0]
-                icon = self.cm.ph.getSearchGroups(item, r"""data-src=["']([^"']+)["']""")[0]
-                if not icon:
-                    icon = self.cm.ph.getSearchGroups(item, r"""src=["']([^"']+)["']""")[0]
-                if not url:
-                    continue
-                params = MergeDicts(cItem, {"title": self.cleanHtmlStr(title), "url": self.getFullUrl(url), "icon": self._fixUrl(icon), "type": "category", "category": "explore_item"})
-                self.addDir(params)
-            return
-        ##########################################################
-        # Extract Hosts (Format: Movie Title + Server Name)
-        ##########################################################
-        server_block = self.cm.ph.getDataBeetwenMarkers(data, '<ul id="watch"', "</ul>", False)[1]
-        printDBG("server_block >>> %s" % server_block)
-        items = self.cm.ph.getAllItemsBeetwenMarkers(server_block, "<li", "</li>")
-        for item in items:
-            video_url = self.cm.ph.getSearchGroups(item, r"data-watch=\"([^\"]+)\"")[0]
-            if not video_url:
+        page = cItem.get("page", 1)
+        mode = cItem.get("tc_mode", "")
+        if "/assemblies/" in url and "/assemblies/page/" not in url and url.rstrip("/") != self.getFullUrl("assemblies").rstrip("/"):
+            # one collection page: only its own movies, not the "other collections" tab
+            data = self.cm.ph.getDataBeetwenMarkers(data, 'id="series-movies"', "</section>", False)[1]
+        else:
+            data = self.cm.ph.getDataBeetwenMarkers(data, '<main class="site-inner', "</main>", False)[1] or data
+        normalize = IsMediaNamingNormalized()
+        seen, seenSeasons = set(), set()
+        for item in self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="Small--Box', "</a>"):
+            itemUrl = self._canonUrl(self.cm.ph.getSearchGroups(item, r'<a[^>]+href="([^"]+)"')[0])
+            if not itemUrl or itemUrl in seen:
                 continue
-            server_name = self.cm.ph.getSearchGroups(item, r"<span[^>]*>([^<]+)</span>")[0]
-            server_name = self.cleanHtmlStr(server_name) or "Server"
-            final_title = "{} Server - {}{}{}".format(item_title, Y, server_name, W)
-            printDBG("Server: %s -> %s" % (final_title, video_url))
-            params = MergeDicts(cItem, {"title": final_title, "url": video_url, "type": "video", "category": "video", "need_resolve": 1})
+            seen.add(itemUrl)
+            rawTitle = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'<a[^>]+title="([^"]+)"')[0])
+            if not rawTitle:
+                rawTitle = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'(?s)<h3[^>]*>(.*?)</h3>')[0])
+            if not rawTitle:
+                continue
+            year = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'(?s)<li class="meta-year">(.*?)</li>')[0])
+            params = {"name": "category", "good_for_fav": True, "url": itemUrl, "icon": self._icon(item), "desc": self._itemDesc(item)}
+            if "/assemblies/" in itemUrl:
+                params.update({"category": "list_items", "title": self._clean(rawTitle) if normalize else rawTitle})
+                self.addDir(params)
+                continue
+            if "/series/" in itemUrl:
+                show, season = self._splitSeason(rawTitle)
+                hasSeason = bool(SEASON_RE.search(self._clean(rawTitle)))
+                params.update({"category": "tc_series", "title": ("%s - %s" % (show, formatSxxExx(season)) if hasSeason else show) if normalize else rawTitle,
+                               "s_title": show, "s_season": season, "tc_season": hasSeason,
+                               "meta_type": "tv", "meta_title": self._metaTitle(show), "meta_year": year})
+                self.addDir(params)
+                continue
+            ep = self._parseEpisode(rawTitle) if EPISODE_RE.search(rawTitle) else None
+            if ep and mode != "last":
+                # one folder per show+season - its episode page lists the season's episodes
+                key = (ep["show"], ep["season"])
+                if key in seenSeasons:
+                    continue
+                seenSeasons.add(key)
+                params.update({"category": "tc_series", "title": "%s - %s" % (ep["show"], formatSxxExx(ep["season"])) if normalize else ep["head"],
+                               "s_title": ep["show"], "s_season": ep["season"], "tc_season": False,
+                               "meta_type": "tv", "meta_title": self._metaTitle(ep["show"]), "meta_year": year})
+                self.addDir(params)
+                continue
+            if ep:
+                params.update(self._episodeParams(ep, rawTitle, normalize))
+                params.update({"meta_title": self._metaTitle(ep["show"]), "meta_year": year})
+                self.addVideo(params)
+                continue
+            clean = self._clean(rawTitle)
+            metaTitle, titleYear = self._splitYear(clean)
+            year = titleYear or year
+            if normalize:
+                title = "%s (%s)" % (metaTitle, year) if year else clean
+            else:
+                title = rawTitle
+            params.update({"category": "tc_video", "title": title, "meta_type": "movie", "meta_title": self._metaTitle(metaTitle), "meta_year": year})
             self.addVideo(params)
 
-    def showSeasons(self, cItem):
-        printDBG("TopCinema.showSeasons >>> %s" % cItem)
-        sts, data = self.getPage(cItem["url"])
-        if not sts or not data:
+        if not seen:
             return
-        ############################################################
-        # Extract seasons block
-        ############################################################
-        tmp = self.cm.ph.getDataBeetwenMarkers(data, '<section class="allseasonss', "</section>", False)[1]
-        if not tmp:
-            tmp = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="Blocks--List', "</ul>", False)[1]
-        printDBG("tmp.showSeasons >>> %s" % tmp)
-        # Each season is one <div class="Small--Box"> ... </a>
-        seasons = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<div class="Small--Box', "</a>", True)
-        for s in seasons:
-            ############################################################
-            # URL
-            ############################################################
-            url = self.cm.ph.getSearchGroups(s, r"href=\"([^\"]+)\"")[0]
-            if not url:
-                continue
-            ############################################################
-            # Title from <h2>
-            ############################################################
-            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(s, "<h2>", "</h2>", False)[1])
-            if not title:
-                title = self.cm.ph.getSearchGroups(s, r"title=\"([^\"]+)\"")[0]
-            title = self._cleanTitle(title)
-            ############################################################
-            # Icon: Prefer data-src, fallback to src
-            ############################################################
-            icon = self.cm.ph.getSearchGroups(s, r"data-src=\"([^\"]+)\"")[0]
-            if not icon:
-                icon = self.cm.ph.getSearchGroups(s, r"src=\"([^\"]+)\"")[0]
-            icon = self._fixUrl(icon)
-            ############################################################
-            # Add the season entry
-            ############################################################
-            params = dict(cItem)
-            params.update({"title": title, "good_for_fav": True, "url": self.getFullUrl(url), "icon": icon, "category": "show_episodes"})
-            printDBG("season.params >>> %s" % params)
-            self.addDir(params)
+        pagination = self.cm.ph.getDataBeetwenMarkers(data, 'class="pagination', "</div>", False)[1]
+        hasNext = "next page-numbers" in pagination
+        tpl = cItem.get("tc_tpl") or self._pageTpl(url)
+        cItem = dict(cItem, tc_tpl=tpl)
+        if cItem.get("category") != "list_items":
+            # search: the pager rows must list the pages, not search again
+            cItem.update({"category": "list_items", "search_item": False})
+        addPagingItems(self, cItem, page, hasNext, self._lastPage(pagination, page), tpl)
 
-    def showEpisodes(self, cItem):
-        printDBG("TopCinema.showEpisodes >>> %s" % cItem)
+    def _episodeParams(self, ep, rawTitle, normalize):
+        if normalize:
+            title = "%s - %s" % (ep["show"], formatSxxExx(ep["season"], ep["episode"]))
+            if ep["name"]:
+                title = "%s - %s" % (title, ep["name"])
+            if DUB_WORD in rawTitle:
+                title = "%s %s" % (title, DUB_WORD)
+        else:
+            title = rawTitle
+        return {"category": "tc_video", "title": title, "s_title": ep["show"], "s_season": ep["season"], "s_episode": ep["episode"], "meta_type": "tv"}
+
+    def listSeries(self, cItem):
+        # show / season / episode page: several seasons -> season folders, else its episodes
+        printDBG("TopCinema.listSeries [%s]" % cItem.get("url", ""))
         sts, data = self.getPage(cItem["url"])
-        if not sts or not data:
+        if not sts:
             return
-        info_part = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="RightTaxContent">', "</ul>", False)[1]
-        info_items = re.findall(r"<li[^>]*>(.*?)</li>", info_part, re.S)
-        meta_data = []
-        for item in info_items:
-            label = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, "<span>", "</span>", False)[1]).replace(":", "").strip()
-            values = self.cm.ph.getAllItemsBeetwenMarkers(item, "<a", "</a>")
-            clean_values = [self.cleanHtmlStr(v) for v in values if self.cleanHtmlStr(v)]
-            value = ", ".join(clean_values)
-            if not label or not value:
+        normalize = IsMediaNamingNormalized()
+        show = cItem.get("s_title", "") or self._splitSeason(cItem.get("title", ""))[0]
+        if not cItem.get("tc_season"):
+            block = self.cm.ph.getDataBeetwenMarkers(data, '<section class="allseasonss', "</section>", False)[1]
+            seasons = []
+            for item in self.cm.ph.getAllItemsBeetwenMarkers(block, '<div class="Small--Box', "</a>"):
+                url = self._canonUrl(self.cm.ph.getSearchGroups(item, r'<a[^>]+href="([^"]+)"')[0])
+                if not url or url in [s["url"] for s in seasons]:
+                    continue
+                label = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'<a[^>]+title="([^"]+)"')[0])
+                num = self.cm.ph.getSearchGroups(item, r'(?s)class="epnum">\s*<span>[^<]*</span>\s*(\d+)')[0]
+                season = int(num) if num else self._splitSeason(label)[1]
+                seasons.append({"name": "category", "category": "tc_series", "good_for_fav": True, "url": url, "icon": self._icon(item) or cItem.get("icon", ""),
+                                "title": "%s - %s" % (show, formatSxxExx(season)) if normalize else label, "desc": cItem.get("desc", ""),
+                                "s_title": show, "s_season": season, "tc_season": True,
+                                "meta_type": "tv", "meta_title": cItem.get("meta_title", ""), "meta_year": cItem.get("meta_year", "")})
+            if len(seasons) > 1:
+                seasons.sort(key=lambda s: s["s_season"])
+                for params in seasons:
+                    self.addDir(params)
+                return
+        block = self.cm.ph.getDataBeetwenMarkers(data, '<section class="allepcont', "</section>", False)[1]
+        episodes, seen, seenEpisodes = [], set(), set()
+        for item in self.cm.ph.getAllItemsBeetwenMarkers(block, "<a ", "</a>"):
+            url = self._canonUrl(self.cm.ph.getSearchGroups(item, r'href="([^"]+)"')[0])
+            if not url or url in seen:
                 continue
-            key = ""
-            if any(x in label for x in ["تصنيف", "قسم"]):
-                key = "Category"
-            elif "نوع" in label:
-                key = "Genre"
-            elif "جودة" in label:
-                key = "Quality"
-            elif any(x in label for x in ["تاريخ", "السنة"]):
-                key = "Year"
-            elif "لغة" in label:
-                key = "Lang"
-            elif any(x in label for x in ["الدولة", "البلد"]):
-                key = "Country"
-            if key:
-                meta_data.append("{}{}:{} {}".format(Y, key, W, value))
-        imdb = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<div class="imdbRating">', "</div>", False)[1])
-        if imdb:
-            meta_data.append("{}IMDb:{} {}".format(Y, W, imdb))
-        raw_story = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<div class="story clearfix">', "</div>", False)[1])
-        separator = " {}|{} ".format(C, W)
-        one_line_info = separator.join(meta_data)
-        final_desc = "{}\n{}Story:{} {}".format(one_line_info, L, W, raw_story)
-        tmp = self.cm.ph.getDataBeetwenMarkers(data, '<section class="allepcont', "</section>", True)[1]
-        data_items = self.cm.ph.getAllItemsBeetwenMarkers(tmp, "<a ", "</a>", True)
-        data_items.reverse()
-        for ep in data_items:
-            pureurl = self.cm.ph.getSearchGroups(ep, r"href=\"([^\"]+)\"")[0]
-            if not pureurl:
+            seen.add(url)
+            rawTitle = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'(?s)<h2>(.*?)</h2>')[0]) or self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'title="([^"]+)"')[0])
+            ep = self._parseEpisode(rawTitle) or {"show": show, "season": cItem.get("s_season", 1), "name": "", "head": rawTitle,
+                                                  "episode": self.cm.ph.getSearchGroups(item, r'(?s)class="epnum">\s*<span>[^<]*</span>\s*(\d+)')[0]}
+            if not ep["episode"]:
                 continue
-            raw_title = self.cm.ph.getDataBeetwenMarkers(ep, "<h2>", "</h2>", False)[1].strip()
-            title = self._cleanTitle(raw_title)
-            icon = self.cm.ph.getSearchGroups(ep, r"data-src=\"([^\"]+)\"")[0] or self.cm.ph.getSearchGroups(ep, r"src=\"([^\"]+)\"")[0]
-            icon = self._fixUrl(icon)
-            full_url = self._fixUrl(pureurl)
-            params = {
-                "category": "explore_item",
-                "title": title,
-                "desc": final_desc,
-                "icon": icon,
-                "url": full_url,
-                "good_for_fav": True,
-            }
-            self.addDir(params)
+            # the folder knows show + season better than a single (sometimes shortened) episode label
+            ep["show"] = show or ep["show"]
+            if cItem.get("tc_season") or not ep.get("season"):
+                ep["season"] = cItem.get("s_season", ep.get("season", 1))
+            params = {"name": "category", "good_for_fav": True, "url": url, "icon": self._icon(item) or cItem.get("icon", ""), "desc": cItem.get("desc", ""),
+                      "meta_title": cItem.get("meta_title", ""), "meta_year": cItem.get("meta_year", "")}
+            params.update(self._episodeParams(ep, rawTitle, normalize))
+            # the site sometimes has two posts of one episode - keep the first (newest) of them
+            epKey = (params["s_season"], int(params["s_episode"]), DUB_WORD in rawTitle)
+            if epKey in seenEpisodes:
+                continue
+            seenEpisodes.add(epKey)
+            episodes.append(params)
+        episodes.sort(key=lambda p: (p["s_season"], int(p["s_episode"])))
+        for params in episodes:
+            self.addVideo(params)
 
-    def listSearchResult(self, cItem, search_pattern, search_type):
-        printDBG("TopCinema.listSearchResult cItem[%s], search_pattern[%s]" % (cItem, search_pattern))
+    def listSearchResult(self, cItem, searchPattern, searchType):
+        printDBG("TopCinema.listSearchResult [%s]" % searchPattern)
+        query = urllib_quote_plus(searchPattern)
         cItem = dict(cItem)
-        if "url" not in cItem or not cItem["url"]:
-            cItem["url"] = self.getFullUrl("?s=") + urllib_quote_plus(search_pattern)
+        cItem.update({"url": self.getFullUrl("?s=%s" % query), "tc_tpl": self.getFullUrl("?s=%s&page={page}" % query), "tc_mode": "", "page": 1})
         self.listItems(cItem)
 
-    def getFavouriteData(self, cItem):
-        printDBG("TopCinema.getFavouriteData")
-        return json_dumps(cItem)
-
-    def getLinksForFavourite(self, fav_data):
-        printDBG("TopCinema.getLinksForFavourite")
-        links = []
-        try:
-            cItem = json_loads(fav_data)
-            links = self.getLinksForVideo(cItem)
-        except Exception:
-            printExc()
-        return links
-
-    def setInitListFromFavouriteItem(self, fav_data):
-        printDBG("TopCinema.setInitListFromFavouriteItem")
-        try:
-            cItem = json_loads(fav_data)
-        except Exception:
-            cItem = {}
-            printExc()
-        return cItem
-
     ###################################################
-    # GET LINKS FOR VIDEO
+    # links
     ###################################################
-
-    def getLinksForVideo(self, cItem):
-        printDBG("TopCinema.getLinksForVideo [%s]" % cItem)
-        url = cItem.get("url", "")
-        if not url:
-            return []
-        return [{"name": "TopCinema - %s" % cItem.get("title", ""), "url": url, "need_resolve": 1}]
-
-    def getVideoLinks(self, url):
-        printDBG("TopCinema.getVideoLinks [%s]" % url)
-        urlTab = []
-        if self.cm.isValidUrl(url):
-            return self.up.getVideoLinkExt(url)
-        return urlTab
-
-    def getArticleContent(self, cItem):
-        printDBG("TopCinema.getArticleContent [%s]" % cItem)
-        url = cItem.get("url", "")
-        if not url:
-            return []
-        sts, data = self.getPage(url)
-        if not sts or not data:
-            return []
-        title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<h1 class="title">', "</h1>", False)[1])
-        if not title:
-            title = cItem.get("title", "")
+    def _siteInfo(self, data):
         story = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<div class="story clearfix">', "</div>", False)[1])
-        icon = self.cm.ph.getSearchGroups(data, r"<div class=\"Poster\">.*?<img[^>]+src=\"([^\"]+)\"")[0]
-        if not icon:
-            icon = cItem.get("icon", "")
-        images = [{"title": "", "url": self._fixUrl(icon)}] if icon else []
-        otherInfo = {}
-        info_part = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="RightTaxContent">', "</ul>", False)[1]
-        info_items = re.findall(r"<li[^>]*>(.*?)</li>", info_part, re.S)
-        for item in info_items:
-            label = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, "<span>", "</span>", False)[1]).replace(":", "").strip()
-            values = self.cm.ph.getAllItemsBeetwenMarkers(item, "<a", "</a>")
-            clean_values = [self.cleanHtmlStr(v) for v in values if self.cleanHtmlStr(v)]
-            value = ", ".join(clean_values)
+        if not story:
+            story = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'<meta property="og:description" content="([^"]*)"')[0])
+        poster = self.cm.ph.getSearchGroups(data, r'(?s)<div class="image">.*?data-src="([^"]+)"')[0]
+        info = {}
+        block = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="RightTaxContent">', "</ul>", False)[1]
+        for item in re.findall(r"(?s)<li[^>]*>(.*?)</li>", block):
+            label = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r"(?s)<span>(.*?)</span>")[0])
+            values = [self.cleanHtmlStr(v) for v in re.findall(r"(?s)<a[^>]*>(.*?)</a>", item)]
+            value = ", ".join([v for v in values if v][:6])
             if not label or not value:
                 continue
-            if any(x in label for x in ["تصنيف", "قسم"]):
-                otherInfo["category"] = value
-            elif "نوع" in label:
-                otherInfo["genre"] = value
-            elif "لغة" in label:
-                otherInfo["language"] = value
-            elif any(x in label for x in ["الدولة", "البلد", "دولة"]):
-                otherInfo["country"] = value
-            elif any(x in label for x in ["تاريخ", "السنة", "موعد", "صدور"]):
-                otherInfo["year"] = value
-            elif "جودة" in label:
-                otherInfo["quality"] = value
-            elif any(x in label for x in ["بطولة", "الممثلين"]):
-                otherInfo["stars"] = value
-            elif "عدد" in label:
-                otherInfo["seasons"] = value
-        return [{"title": self.cleanHtmlStr(title), "text": story, "images": images, "other_info": otherInfo}]
+            for key, words in INFO_FIELDS:
+                if key not in info and any(w in label for w in words):
+                    info[key] = value
+                    break
+        rating = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'(?s)<div class="imdbR[^"]*">(.*?)</div>')[0])
+        if rating:
+            info["rating"] = rating
+        return story, poster, info
 
-    def handleService(self, index, refresh=0, search_pattern="", search_type=""):
-        printDBG("TopCinema.handleService start")
-        CBaseHostClass.handleService(self, index, refresh, search_pattern, search_type)
+    def getLinksForVideo(self, cItem):
+        printDBG("TopCinema.getLinksForVideo [%s]" % cItem.get("url", ""))
+        pageUrl = self._canonUrl(cItem.get("url", ""))
+        if not pageUrl:
+            return []
+        sts, data = self.getPage(pageUrl.rstrip("/") + "/watch/")
+        if not sts or "data-watch" not in data:
+            sts, data = self.getPage(pageUrl)
+            if not sts:
+                return []
+        story = self._siteInfo(data)[0]
+        block = self.cm.ph.getDataBeetwenMarkers(data, '<ul id="watch"', "</ul>", False)[1] or data
+        servers, seen = [], set()
+        for item in self.cm.ph.getAllItemsBeetwenMarkers(block, "<li", "</li>"):
+            url = self.cm.ph.getSearchGroups(item, r'data-watch="([^"]+)"')[0].replace("&amp;", "&").strip()
+            if url.startswith("//"):
+                url = "https:" + url
+            if not self.cm.isValidUrl(url) or url in seen:
+                continue
+            seen.add(url)
+            name = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'<span[^>]*>([^<]+)</span>')[0]) or self.up.getHostName(url)
+            servers.append((name, url))
+        counts = {}
+        for name, url in servers:
+            counts[name] = counts.get(name, 0) + 1
+        numbers = {}
+        urltab = []
+        for name, url in servers:
+            if counts[name] > 1:
+                numbers[name] = numbers.get(name, 0) + 1
+                name = "%s %d" % (name, numbers[name])
+            urltab.append({"name": name, "url": strwithmeta(url, {"Referer": self.MAIN_URL}), "need_resolve": 1})
+        return applySidecarToLinks(urltab, buildSidecarFromItem(dict(cItem, desc=_stripColors(cItem.get("desc", ""))), IsSidecarEnabled(), story))
+
+    def getVideoLinks(self, videoUrl):
+        printDBG("TopCinema.getVideoLinks [%s]" % videoUrl)
+        if self.cm.isValidUrl(videoUrl):
+            sidecar = sidecarFromUrlMeta(videoUrl, IsSidecarEnabled())
+            return decorateResolvedLinkItems(self.up.getVideoLinkExt(videoUrl), sidecar)
+        return []
+
+    ###################################################
+    # INFO
+    ###################################################
+    def getArticleContent(self, cItem):
+        printDBG("TopCinema.getArticleContent [%s]" % cItem.get("url", ""))
+        meta = {}
+        if cItem.get("meta_type") and cItem.get("meta_title"):
+            try:
+                meta = getMeta(cItem["meta_type"], cItem["meta_title"], cItem.get("meta_year", ""))
+            except Exception:
+                printExc()
+        story, poster, info = "", "", {}
+        sts, data = self.getPage(cItem.get("url", ""))
+        if sts:
+            story, poster, info = self._siteInfo(data)
+        info.update(meta.get("info", {}))
+        plot = meta.get("plot", "")
+        text = plot or story or _stripColors(cItem.get("desc", ""))
+        if plot and story and story != plot:
+            text = "%s[/br][/br]%s" % (plot, story)
+        icon = meta.get("poster") or poster or cItem.get("icon", "")
+        return [{"title": cItem.get("title", ""), "text": text, "images": [{"title": "", "url": icon}] if icon else [], "other_info": info}]
+
+    ###################################################
+    # service
+    ###################################################
+    def handleService(self, index, refresh=0, searchPattern="", searchType=""):
+        CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
+        if isJumpItem(self.currItem):
+            self.currItem = jumpTarget(self, self.currItem)
         name = self.currItem.get("name", "")
         category = self.currItem.get("category", "")
-        printDBG("handleService: >> name[%s], category[%s] " % (name, category))
+        printDBG("TopCinema.handleService name[%s] category[%s]" % (name, category))
         self.currList = []
-        # MAIN MENU
         if name is None:
-            self.listMainMenu({"name": "category"})
+            self.listsTab(self.MENU, {"name": "category"})
+        elif category == "tc_folder":
+            self.listFolder(self.currItem)
         elif category == "list_items":
             self.listItems(self.currItem)
-        elif category == "series":
-            self.listSeriesItems(self.currItem)
-        # FOLDERS
-        elif category == "movies_folder":
-            self.listMoviesFolder(self.currItem)
-        elif category == "series_folder":
-            self.listSeriesFolder(self.currItem)
-        elif category == "explore_item":
-            self.exploreItems(self.currItem)
-        elif category == "movie_details":
-            self.showMovieDetails(self.currItem)
-        elif category == "show_seasons":
-            self.showSeasons(self.currItem)
-        elif category == "show_episodes":
-            self.showEpisodes(self.currItem)
-        # SEARCH
+        elif category == "tc_series":
+            self.listSeries(self.currItem)
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({"search_item": False, "name": "category"})
-            self.listSearchResult(cItem, search_pattern, search_type)
-        # HISTORY SEARCH
+            self.listSearchResult(cItem, searchPattern, searchType)
         elif category == "search_history":
             self.listsHistory({"name": "history", "category": "search"}, "desc")
         else:
@@ -635,11 +515,13 @@ class TopCinema(CBaseHostClass):
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
-class IPTVHost(CHostBase):
+class IPTVHost(GenericFolderWatchedHostMixin, CHostBase):
+
     def __init__(self):
         CHostBase.__init__(self, TopCinema(), True, [])
+        self.cachedRet = None
+        self.refreshAfterWatchedFlagChange = False
+        self.watchedHelper = IPTVWatchedHelper("topcinema")
 
     def withArticleContent(self, cItem):
-        if "video" == cItem.get("type", "") or "explore_item" == cItem.get("category", ""):
-            return True
-        return False
+        return cItem.get("category", "") in ("tc_video", "tc_series")

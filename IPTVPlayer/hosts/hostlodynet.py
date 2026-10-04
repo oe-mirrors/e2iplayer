@@ -1,1830 +1,612 @@
 # -*- coding: utf-8 -*-
-# Last modified: 09/05/2026
-# Lodynet Host By Mohamed Elsafty (angel_heart)
-###################################################
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetCookieDir
-from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
-from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
-from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
-from datetime import datetime
-import urllib
+# Last Modified: 03.10.2026 - brought to the current host standard
+#   Lodynet host originally by Mohamed Elsafty (angel_heart)
+#   - lodynet.watch redirects to lodynet.top: the main menu follows the redirect and takes the
+#     live domain; the "load more" API (RequestExpansion.php) is read from the page's own
+#     GetExpansion() code (lodynet.watch answers it with "null") - fallback lodynet.top
+#   - one list function for every listing (sections, series, seasons, tags, years, actors):
+#     page 1 = the HTML page, page n = the expansion API (indicator n); "Recently added" pages
+#     with /page/n/; pager rows via iptvpaging (First page / Jump / Next page)
+#   - main menu read live from the site's navigation (static fallback)
+#   - network only through self.cm (no requests module), Python 2.7 + 3 (no f-strings)
+#   - movies / episodes / clips are VIDEO rows keyed on their page url; the hoster embeds
+#     (PostData.ServersWatch) are read in getLinksForVideo; "Lody Plus" premium servers
+#     (no embed, subscription only) are hidden, ViD LO (vidlo.us, 404 for every signed embed)
+#     dropped; every other server incl. "Megamx" (megamax) goes to urlparser
+#   - watched flag (post:/cat: slugs, series -> season -> episode), downloaded flag,
+#     favourites, sidecar, name normalisation ("Title (Year)", "Show - SxxExx"), INFO via
+#     moviemeta + the site's story/poster/cast/genres
 import re
-import time
-import requests
-import json
-import html
 
-try:
-    from urllib.parse import quote_plus, quote  # Python 3
-except ImportError:
-    from urllib import quote_plus, quote  # Python 2
+from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
+from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
+from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus, urllib_unquote
+from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
+from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, E2ColoR, b64Decode
+from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
+from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
+from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
 
 
-#################################################
+def GetConfigList():
+    return []
+
+
 def gettytul():
-    return "https://lodynet.watch"
+    return "https://lodynet.watch/"
 
 
-class Lodynet(CBaseHostClass):
+# lodynet.watch only redirects - the site itself lives here (updated from the redirect)
+SITE_URL = "https://lodynet.top/"
+API_PATH = "wp-content/themes/Lodynet2020/Api/"
+DOMAIN_RE = re.compile(r"^https?://(?:www\.)?lodynet\.[a-z]+/", re.I)
+# Enigma2 colour codes ("\c00RRGGBB") - only for the list description, never in sidecar / INFO text
+COLOR_CODE_RE = re.compile(r"\\c[0-9A-Fa-f]{8}")
+EXPANSION_RE = re.compile(r"GetExpansion\(\s*(\d+)\s*,\s*'([^']+)'\s*,\s*'([^']+)'\s*\)")
+ITEM_RE = re.compile(r'(?s)<div class="ItemNewly">\s*<a title="([^"]*)" href="([^"]+)"[^>]*>(.*?)</a>')
+
+# Arabic ordinals used in season labels ("الموسم الثاني"), compound ones first
+SEASON_ORDINALS = [
+    ("الحادي عشر", 11), ("الثاني عشر", 12), ("الثالث عشر", 13), ("الرابع عشر", 14), ("الخامس عشر", 15),
+    ("الأولى", 1), ("الاولى", 1), ("الأول", 1), ("الاول", 1), ("الثانية", 2), ("الثاني", 2), ("الثانى", 2),
+    ("الثالثة", 3), ("الثالث", 3), ("الرابعة", 4), ("الرابع", 4), ("الخامسة", 5), ("الخامس", 5), ("السادسة", 6), ("السادس", 6),
+    ("السابعة", 7), ("السابع", 7), ("الثامنة", 8), ("الثامن", 8), ("التاسعة", 9), ("التاسع", 9), ("العاشرة", 10), ("العاشر", 10),
+]
+ORDINAL_ALT = "|".join(o[0] for o in SEASON_ORDINALS)
+# "الموسم 2" / "الموسم الثاني" anywhere; "الموسم الأول لمسلسل X" (season folders) at the start
+SEASON_RE = re.compile(r"(?:^|\s)(?:ال)?موسم\s*(\d+|%s)(?=\s|$)" % ORDINAL_ALT)
+SEASON_HEAD_RE = re.compile(r"^(?:ال)?موسم\s*(\d+|%s)\s+(?:ل|من\s+)?(?:ال)?مسلسل\s+" % ORDINAL_ALT)
+EPISODE_RE = re.compile(r"(?:^|\s)(?:ال)?حلقة\s*(?:رقم\s*)?(\d+)")
+YEAR_RE = re.compile(r"(?:^|\s|\()((?:19|20)\d\d)(?=\s|\)|$)")
+# leading "مشاهدة فيلم / الفيلم الهندي / مسلسل ..." and site words that do not belong into a title / file name
+LEAD_RE = re.compile(r"^(?:مشاهدة\s+)?(?:ال)?(?:فيلم|مسلسل|برنامج|انمي|أنمي)\s+(?:ال(?:هندي|تركي|كوري|صيني|باكستاني|تايلندي|اجنبي|أجنبي|ياباني|اسيوي|آسيوي)\s+)?")
+JUNK_RE = re.compile(r"(?:^|\s)(?:مترجم|مترجمة|مترجم للعربية|اون لاين|أون لاين|مشاهدة|كامل|كاملة|كاملا|بجودة عالية|عربي|والأخيرة|الأخيرة|الاخيرة|والاخيرة|HD|hd|Hd)(?=\s|$)")
+JUNK_TAIL_RE = re.compile(r"\s+(?:بجودة\s+\S+.*|مترجم\s+عربي.*)$")
+MOVIE_WORDS = ("فيلم",)
+SERIES_WORDS = ("مسلسل", "موسم", "برنامج")
+# hoster ids of the site: 116413 = ViD LO (vidlo.us, dead); "Lody Plus" (subscription) has no embed and is skipped in _servers
+DEAD_SERVER_IDS = ("116413",)
+DEAD_SERVER_HOSTS = ("vidlo.us", "viidshar.com", "govad.xyz", "vadbam.net")
+
+
+def _staticMenu():
+    # used when the live navigation can not be read
+    return [
+        (_("Indian TV series"), "category/مسلسلات-هنديه/"),
+        (_("Indian series (dubbed)"), "dubbed-indian-series-p5/"),
+        (_("Indian Movies"), "category/افلام-هندية/"),
+        (_("Turkish Series"), "category/مسلسلات-تركي/"),
+        (_("Turkish series (dubbed)"), "dubbed-turkish-series-g/"),
+        (_("Korean TV series"), "korean-series-b/"),
+        (_("Foreign movies"), "category/افلام-اجنبية-مترجمة-a/"),
+        (_("Shows and concerts"), "category/البرامج-و-حفلات-tv/"),
+    ]
+
+
+def _stripColors(text):
+    return COLOR_CODE_RE.sub("", text or "")
+
+
+def _seasonNum(val):
+    if not val:
+        return 0
+    return int(val) if val.isdigit() else dict(SEASON_ORDINALS).get(val, 0)
+
+
+class Lodynet(GenericFolderWatchedScraperMixin, CBaseHostClass):
+
     def __init__(self):
-        params = {
-            "history": "lodynet.history",
-            "cookie": "lodynet.cookie",
-            "history_store_type": False,
-        }
-        CBaseHostClass.__init__(self, params)
-        self.MAIN_URL = "https://lodynet.watch"
-        self.DEFAULT_ICON_URL = (
-            "https://lodynet.watch/wp-content/themes/Lodynet2020/Img/Logo.webp"
-        )
-        self.USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36"
+        CBaseHostClass.__init__(self, {"history": "lodynet.history", "cookie": "lodynet.cookie"})
+        self.MAIN_URL = SITE_URL
+        self.DEFAULT_ICON_URL = SITE_URL + "wp-content/themes/Lodynet2020/Img/Logo.webp"
+        self.HEADER = self.cm.getDefaultHeader(browser="chrome")
+        self.HEADER.update({"Accept-Language": "ar,en-US;q=0.7,en;q=0.3"})
+        self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
+        self.apiBase = ""
+        self.watchedHelper = IPTVWatchedHelper("lodynet")
+        self.wfInitFolderCache()
 
-    # ==========================================================================================
-    def searchItems(self):
-        if self._historyLenTextFunction:
-            return [
-                {
-                    "category": "search",
-                    "title": "بحث",
-                    "search_item": True,
-                },
-                {
-                    "category": "search_history",
-                    "title": "سجل البحث",
-                    "desc": "تاريخ العبارات التي تم البحث عنها.",
-                },
-                {
-                    "category": "delete_history",
-                    "title": "حذف سجل البحث",
-                    "desc": self._historyLenTextFunction,
-                },
-            ]
-        else:
-            return []
+    ###################################################
+    # helpers
+    ###################################################
+    def getPage(self, baseUrl, addParams=None, post_data=None):
+        if addParams is None:
+            addParams = dict(self.defaultParams)
+        return self.cm.getPage(self._canonUrl(baseUrl), addParams, post_data)
 
-    # ==========================================================================================
-    def getPage(self, url, params={}, post_data=None):
-        HTTP_HEADER = {
-            "User-Agent": self.USER_AGENT,
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-            "Accept-Language": "ar,en-US;q=0.7,en;q=0.3",
-            "Accept-Encoding": "gzip, deflate",
-            "Referer": self.MAIN_URL,
-        }
-        params.update({"header": HTTP_HEADER})
-        url = self.encodeUrl(url)
-        return self.cm.getPage(url, params, post_data)
-
-    # ==========================================================================================
-    def getFullUrl(self, url):
+    def _canonUrl(self, url):
+        # one form for requests, the downloaded marker and favourites: the live domain, percent-encoded,
+        # with the trailing slash the site redirects to
+        url = ensure_str(url or "").replace("&amp;", "&").replace("\\/", "/").strip()
         if not url:
-            return self.DEFAULT_ICON_URL
-        if url.startswith("//"):
-            url = "https:" + url
-        elif url.startswith("/"):
-            url = self.MAIN_URL + url
-        elif not url.startswith("http"):
-            url = self.MAIN_URL + "/" + url
-        if any(
-            ext in url.lower() for ext in [".jpg", ".jpeg", ".png", ".webp", ".gif"]
-        ):
-            if not url.startswith("http"):
-                return self.DEFAULT_ICON_URL
-        url = self.encodeUrl(url)
-        return url
-
-    # ==========================================================================================
-    def cleanHtmlStr(self, data):
-        data = data.replace("&nbsp;", " ")
-        data = data.replace("&quot;", '"')
-        data = re.sub(r"\s+", " ", data)
-        return data.strip()
-
-    # ==========================================================================================
-    def encodeUrl(self, url):
+            return ""
+        if not url.startswith("http"):
+            url = self.MAIN_URL + url.lstrip("/")
+        url = DOMAIN_RE.sub(self.MAIN_URL, url)
         try:
-            if isinstance(url, str):
-                parts = re.match(r"^(https?://)(.*)$", url)
-                if parts:
-                    base, rest = parts.groups()
-                    rest_encoded = quote(rest, safe="/:%#?=&")
-                    return base + rest_encoded
-            return url
+            url = urllib_quote(urllib_unquote(url), safe=":/?&=#+,;@%")
         except Exception:
             printExc()
-            return url
+        if "?" not in url and "#" not in url and not url.endswith("/") and not re.search(r"\.(?:php|jpe?g|png|webp|gif)$", url, re.I):
+            url += "/"
+        return url
 
-    # ==========================================================================================
-    def listsTab(self, tab, cItem):
-        for item in tab:
-            params = dict(cItem)
-            params.update(item)
-            self.addDir(params)
+    def _iconUrl(self, url):
+        url = ensure_str(url or "").replace("\\/", "/").strip()
+        if not url:
+            return ""
+        if not url.startswith("http"):
+            url = self.MAIN_URL + url.lstrip("/")
+        url = DOMAIN_RE.sub(self.MAIN_URL, url)
+        try:
+            url = urllib_quote(urllib_unquote(url), safe=":/?&=#+,;@%")
+        except Exception:
+            printExc()
+        return url
 
-    # ==========================================================================================
+    @staticmethod
+    def _slug(url):
+        # last path element of a content url, decoded - stable across domains, encodings and pages
+        path = re.sub(r"^https?://[^/]+", "", ensure_str(url or "")).split("?")[0].split("#")[0].strip("/")
+        return urllib_unquote(path).lower()
+
+    def _setDomain(self, finalUrl):
+        m = DOMAIN_RE.match(ensure_str(finalUrl or ""))
+        if m and m.group(0).lower() != "https://lodynet.watch/" and m.group(0) != self.MAIN_URL:
+            printDBG("Lodynet: live domain %s" % m.group(0))
+            self.MAIN_URL = m.group(0)
+            self.apiBase = ""
+
+    def _readApiBase(self, data):
+        base = self.cm.ph.getSearchGroups(data, r"""['"](https?://[^'"]+/Api/)RequestExpansion\.php['"]""")[0]
+        if base:
+            self.apiBase = base
+
+    def _api(self, name):
+        return (self.apiBase or (self.MAIN_URL + API_PATH)) + name
+
+    def _clean(self, text):
+        text = re.sub(r"\s+", " ", self.cleanHtmlStr(text or "")).strip()
+        text = LEAD_RE.sub("", text)
+        text = JUNK_TAIL_RE.sub("", text)
+        text = JUNK_RE.sub(" ", text)
+        return re.sub(r"\s+", " ", text).strip(" -:|")
+
+    def _parseTitle(self, title, epHint=""):
+        # site label -> {"kind": movie|episode|series|other, "show", "season", "episode", "year", "name"}
+        raw = re.sub(r"\s+", " ", self.cleanHtmlStr(title or "")).strip()
+        info = {"kind": "other", "show": "", "season": 0, "episode": "", "year": "", "name": raw}
+        work = raw
+        m = SEASON_HEAD_RE.match(work)
+        season = 0
+        if m:
+            season = _seasonNum(m.group(1))
+            work = work[m.end():]
+        isSeries = any(w in raw for w in SERIES_WORDS)
+        isMovie = not isSeries and any(w in raw for w in MOVIE_WORDS)
+        m = EPISODE_RE.search(work)
+        # the cover's episode badge also sits on movies (part number) - only trusted for non-movies
+        hint = str(epHint) if epHint and str(epHint) != "0" and not isMovie else ""
+        episode = m.group(1) if m else hint
+        if m:
+            work = work[:m.start()]
+        m = SEASON_RE.search(work)
+        if m:
+            season = season or _seasonNum(m.group(1))
+            work = (work[:m.start()] + " " + work[m.end():]).strip()
+        work = self._clean(work)
+        year = ""
+        m = None
+        for m in YEAR_RE.finditer(work):
+            pass
+        if m:
+            year = m.group(1)
+            if isMovie and m.start() > 0:
+                work = work[:m.start()].strip(" -(") or work
+            elif isMovie:
+                work = work[m.end():].strip(" -)") or work
+            elif isSeries or episode:
+                work = (work[:m.start()] + " " + work[m.end():]).strip(" -()")
+        work = re.sub(r"\s+", " ", work).strip(" -:|")
+        info.update({"show": work, "season": season or 1, "episode": episode, "year": year, "name": work})
+        if episode:
+            info["kind"] = "episode"
+        elif isSeries:
+            info["kind"] = "series"
+        elif isMovie:
+            info["kind"] = "movie"
+        return info
+
+    @staticmethod
+    def _metaTitle(show):
+        # the Latin part of a mixed Arabic/Latin name finds more on TMDb/IMDb ("حياة الآخرين Baskaların Hayatı")
+        latin = re.findall(r"[A-Za-z0-9][\w'.:&!?-]*(?:\s+[A-Za-z0-9][\w'.:&!?-]*)*", show or "")
+        latin = [x for x in latin if re.search(r"[A-Za-z]{2}", x)]
+        best = max(latin, key=len) if latin else ""
+        return best if len(best) >= 3 else (show or "")
+
+    ###################################################
+    # watched flag
+    ###################################################
+    def _getWatchedKeyForItem(self, cItem):
+        try:
+            if not isinstance(cItem, dict):
+                return ""
+            category = cItem.get("category", "")
+            if category == "lody_video":
+                slug = self._slug(cItem.get("url", ""))
+                return "post:%s" % slug if slug else ""
+            if category == "list_items" and cItem.get("lody_kind", "") == "series":
+                slug = self._slug(cItem.get("url", ""))
+                return "cat:%s" % slug if slug else ""
+        except Exception:
+            printExc()
+        return ""
+
+    ###################################################
+    # menus
+    ###################################################
     def listMainMenu(self, cItem):
         printDBG("Lodynet.listMainMenu")
-        MAIN_CAT_TAB = [
-            {"category": "sub_menu", "title": "مسلسلات", "mode": "10", "sub_mode": 0},
-            {"category": "sub_menu", "title": "أفلام", "mode": "10", "sub_mode": 1},
-            {
-                "category": "list_items",
-                "title": "برامج و حفلات",
-                "url": "/category/البرامج-و-حفلات-tv/",
-            },
-            {"category": "sub_menu", "title": "أغاني", "mode": "10", "sub_mode": 2},
-            {
-                "category": "list_items",
-                "title": "المضاف حديثاً",
-                "url": "/",
-                "sub_mode": "newly",
-            },
-            {
-                "category": "list_actors",
-                "title": "الممثلين",
-                "url": "/all_actors/",
-                "sub_mode": "/all_actors/",
-            },
-        ]
-        self.listsTab(MAIN_CAT_TAB, cItem)
-        search_items = self.searchItems()
-        for item in search_items:
+        params = dict(self.defaultParams)
+        sts, data = self.cm.getPage(gettytul(), params)
+        if sts:
+            self._setDomain(self.cm.meta.get("url", ""))
+        else:
+            sts, data = self.getPage(self.MAIN_URL)
+        sections = self._parseNavigation(data) if sts else []
+        self.addDir({"name": "category", "category": "list_items", "title": _("Recently added"), "url": self.MAIN_URL,
+                     "lody_mode": "newly", "good_for_fav": True})
+        if sections:
+            for title, url, children in sections:
+                if children:
+                    self.addDir({"name": "category", "category": "lody_menu", "title": title, "url": url, "lody_children": children, "good_for_fav": False})
+                else:
+                    self.addDir({"name": "category", "category": "list_items", "title": title, "url": url, "good_for_fav": True})
+        else:
+            for title, url in _staticMenu():
+                self.addDir({"name": "category", "category": "list_items", "title": title, "url": self._canonUrl(url), "good_for_fav": True})
+        self.addDir({"name": "category", "category": "list_items", "title": _("Actors"), "url": self._canonUrl("all_actors/"), "good_for_fav": True})
+        for item in self.searchItems():
             params = dict(cItem)
             params.update(item)
             self.addDir(params)
 
-    # ==========================================================================================
-    def listSubMenu(self, cItem):
-        printDBG("Lodynet.listSubMenu")
-        gnr = cItem.get("sub_mode", "")
-        SUB_CAT_TAB = []
-        if gnr == 0:
-            SUB_CAT_TAB = [
-                {
-                    "category": "list_items",
-                    "title": "مسلسلات هندية",
-                    "url": "/category/مسلسلات-هندية-مترجمة/",
-                },
-                {
-                    "category": "list_items",
-                    "title": "مسلسلات هندية مدبلجة",
-                    "url": "/dubbed-indian-series-p5/",
-                },
-                {
-                    "category": "list_items",
-                    "title": "مسلسلات ويب هندية",
-                    "url": "/category/مسلسل-ويب-هندية/",
-                },
-                {
-                    "category": "list_items",
-                    "title": "مسلسلات هندية 2020",
-                    "url": "/release-year/مسلسلات-هندية-2020-a/",
-                },
-                {
-                    "category": "list_items",
-                    "title": "مسلسلات هندية 2019",
-                    "url": "/release-year/مسلسلات-هندية-2019/",
-                },
-                {
-                    "category": "list_items",
-                    "title": "مسلسلات هندية 2018",
-                    "url": "/release-year/مسلسلات-هندية-2018/",
-                },
-                {
-                    "category": "list_items",
-                    "title": "مسلسلات تركية",
-                    "url": "/category/مسلسلات-تركي/",
-                },
-                {
-                    "category": "list_items",
-                    "title": "مسلسلات تركية مدبلجة",
-                    "url": "/dubbed-turkish-series-g/",
-                },
-                {
-                    "category": "list_items",
-                    "title": "مسلسلات كورية",
-                    "url": "/korean-series-b/",
-                },
-                {
-                    "category": "list_items",
-                    "title": "مسلسلات صينية",
-                    "url": "/category/مسلسلات-صينية-مترجمة/",
-                },
-                {
-                    "category": "list_items",
-                    "title": "مسلسلات تايلاندية",
-                    "url": "/مشاهدة-مسلسلات-تايلندية/",
-                },
-                {
-                    "category": "list_items",
-                    "title": "مسلسلات باكستانية",
-                    "url": "/category/المسلسلات-باكستانية/",
-                },
-                {
-                    "category": "list_items",
-                    "title": "مسلسلات آسيوية حديثة",
-                    "url": "/tag/new-asia/",
-                },
-                {
-                    "category": "list_items",
-                    "title": "مسلسلات مكسيكية",
-                    "url": "/category/مسلسلات-مكسيكية-a/",
-                },
-                {
-                    "category": "list_items",
-                    "title": "مسلسلات أجنبية",
-                    "url": "/category/مسلسلات-اجنبية/",
-                },
-            ]
-        elif gnr == 1:
-            SUB_CAT_TAB = [
-                {
-                    "category": "list_items",
-                    "title": "افلام هندية",
-                    "url": "/category/افلام-هندية/",
-                },
-                {
-                    "category": "list_items",
-                    "title": "أفلام هندية مدبلجة",
-                    "url": "/category/أفلام-هندية-مدبلجة/",
-                },
-                {
-                    "category": "list_items",
-                    "title": "افلام هندية جنوبية",
-                    "url": "/tag/الافلام-الهندية-الجنوبية/",
-                },
-                {
-                    "category": "list_items",
-                    "title": "أفلام هندي 2025",
-                    "url": "/release-year/أفلام-هندي-2025/",
-                },
-                {
-                    "category": "list_items",
-                    "title": "أفلام هندي 2024",
-                    "url": "/release-year/أفلام-هندي-2024/",
-                },
-                {
-                    "category": "list_items",
-                    "title": "أفلام هندي 2023",
-                    "url": "/release-year/أفلام-هندية-2023/",
-                },
-                {
-                    "category": "list_items",
-                    "title": "أفلام هندي 2021",
-                    "url": "/release-year/movies-hindi-2021/",
-                },
-                {
-                    "category": "list_items",
-                    "title": "أفلام هندي 2020",
-                    "url": "/release-year/افلام-هندي-2020-a/",
-                },
-                {
-                    "category": "list_items",
-                    "title": "افلام هندي 2019",
-                    "url": "/release-year/افلام-هندي-2019/",
-                },
-                {
-                    "category": "list_items",
-                    "title": "افلام هندي 2018",
-                    "url": "/release-year/افلام-هندي-2018/",
-                },
-                {
-                    "category": "list_items",
-                    "title": "افلام هندي 2017",
-                    "url": "/release-year/افلام-هندي-2017/",
-                },
-                {
-                    "category": "list_items",
-                    "title": "افلام هندي 2016",
-                    "url": "/release-year/2016/",
-                },
-                {
-                    "category": "list_items",
-                    "title": "افلام هندية 4K",
-                    "url": "/tag/افلام-هندية-مترجمة-بجودة-4k/",
-                },
-                {
-                    "category": "list_items",
-                    "title": "أميتاب باتشان",
-                    "url": "/actor/أميتاب-باتشان/",
-                },
-                {
-                    "category": "list_items",
-                    "title": "اعمال شاروخان",
-                    "url": "/actor/شاه-روخ-خان-a/",
-                },
-                {
-                    "category": "list_items",
-                    "title": "أعمال سلمان خان",
-                    "url": "/actor/سلمان-خان-a/",
-                },
-                {
-                    "category": "list_items",
-                    "title": "أعمال عامر خان",
-                    "url": "/actor/عامر-خان-a/",
-                },
-                {
-                    "category": "list_items",
-                    "title": "أعمال شاهد كابور",
-                    "url": "/actor/شاهيد-كابور/",
-                },
-                {
-                    "category": "list_items",
-                    "title": "أعمال رانبير كابور",
-                    "url": "/actor/رانبير-كابور/",
-                },
-                {
-                    "category": "list_items",
-                    "title": "أعمال ديبيكا بادكون",
-                    "url": "/actor/ديبيكا-بادكون/",
-                },
-                {
-                    "category": "list_items",
-                    "title": "أعمال جينيفر ونجت",
-                    "url": "/actor/جينيفر-ونجت/",
-                },
-                {
-                    "category": "list_items",
-                    "title": "أعمال هريتيك روشان",
-                    "url": "/actor/هريتيك-روشان/",
-                },
-                {
-                    "category": "list_items",
-                    "title": "أعمال اكشاي كومار",
-                    "url": "/actor/اكشاي-كومار/",
-                },
-                {
-                    "category": "list_items",
-                    "title": "أعمال تابسي بانو",
-                    "url": "/actor/تابسي-بانو/",
-                },
-                {
-                    "category": "list_items",
-                    "title": "أعمال سانجاي دوت",
-                    "url": "/actor/سانجاي-دوت-a/",
-                },
-                {
-                    "category": "list_items",
-                    "title": "ترجمات احمد بشير",
-                    "url": "/tag/جميع-الأفلام-في-هذا-القسم-من-ترجمة-أحمد/",
-                },
-                {
-                    "category": "list_items",
-                    "title": "افلام تركية مترجم",
-                    "url": "/category/افلام-تركية-مترجم/",
-                },
-                {
-                    "category": "list_items",
-                    "title": "افلام باكستانية",
-                    "url": "/tag/افلام-باكستانية-مترجمة/",
-                },
-                {
-                    "category": "list_items",
-                    "title": "افلام اسيوية",
-                    "url": "/category/افلام-اسيوية-a/",
-                },
-                {
-                    "category": "list_items",
-                    "title": "افلام اجنبي",
-                    "url": "/category/افلام-اجنبية-مترجمة-a/",
-                },
-                {"category": "list_items", "title": "انيمي", "url": "/category/انيمي/"},
-            ]
-        elif gnr == 2:
-            SUB_CAT_TAB = [
-                {
-                    "category": "list_items",
-                    "title": "أغاني المسلسلات",
-                    "url": "/category/اغاني/اغاني-المسلسلات-الهندية/",
-                },
-                {
-                    "category": "list_items",
-                    "title": "تصاميم مسلسلات هندية",
-                    "url": "/category/تصاميم-مسلسلات-هندية/",
-                },
-                {
-                    "category": "list_items",
-                    "title": "أغاني الأفلام",
-                    "url": "/category/اغاني-الافلام/",
-                },
-                {
-                    "category": "list_items",
-                    "title": "اغاني هندية mp3",
-                    "url": "/category/اغاني/اغاني-هندية-mp3/",
-                },
-            ]
-        self.listsTab(SUB_CAT_TAB, cItem)
+    def _parseNavigation(self, data):
+        # [(title, url, [(title, url), ...]), ...] from <ul class="FirstFormMenu">
+        nav = self.cm.ph.getDataBeetwenMarkers(data, 'class="FirstFormMenu"', 'class="IndexContainer"', False)[1] or \
+            self.cm.ph.getDataBeetwenMarkers(data, 'class="FirstFormMenu"', '</nav>', False)[1]
+        sections = []
+        for chunk in nav.split('class="FirstItemsMenu"')[1:]:
+            links = []
+            for href, title in re.findall(r'<a[^>]+href="([^"]*)"[^>]*>(.*?)</a>', chunk, re.S):
+                title = self.cleanHtmlStr(title).replace("⌵", "").replace("〱", "").strip()
+                if not title:
+                    continue
+                if href.strip() in ("", "#") or "contact" in href:
+                    links.append((title, ""))
+                else:
+                    links.append((title, self._canonUrl(href)))
+            if not links:
+                continue
+            topTitle, topUrl = links[0]
+            if topUrl and self._slug(topUrl) == "":
+                continue  # "الرئيسية" (home)
+            children = [(t, u) for t, u in links[1:] if u]
+            if not topUrl and not children:
+                continue
+            if topUrl and children:
+                children.insert(0, (_("All"), topUrl))
+            sections.append((topTitle, topUrl, children))
+        return sections
 
-    # ==========================================================================================
+    def listMenuSection(self, cItem):
+        for title, url in cItem.get("lody_children", []):
+            self.addDir({"name": "category", "category": "list_items", "title": title, "url": url, "good_for_fav": True})
+
+    ###################################################
+    # lists
+    ###################################################
+    def _itemFromEntry(self, title, url, icon, ribbon="", date="", epHint=""):
+        url = self._canonUrl(url)
+        title = re.sub(r"\s+", " ", self.cleanHtmlStr(title)).strip()
+        if not title or not url:
+            return None
+        fields = ((_("Type"), self.cleanHtmlStr(ribbon), "yellow"), (_("Added"), (date or "")[:10], "cyan"))
+        desc = " | ".join(["%s%s:%s %s" % (E2ColoR(color), label, E2ColoR("white"), value) for label, value, color in fields if value])
+        params = {"name": "category", "good_for_fav": True, "url": url, "icon": self._iconUrl(icon), "desc": desc}
+        path = self._slug(url)
+        if "/" in path:
+            # a listing (category/ = series, season or section; actor/, tag/, release-year/ ...) - posts are one path element
+            info = self._parseTitle(title)
+            kind = "actor" if path.startswith("actor/") else ("series" if info["kind"] in ("series", "episode") else "section")
+            params.update({"category": "list_items", "title": title, "lody_kind": kind})
+            if kind == "series":
+                params.update({"s_title": info["show"], "s_season": info["season"], "meta_type": "tv",
+                               "meta_title": self._metaTitle(info["show"]), "meta_year": info["year"]})
+            return params
+        info = self._parseTitle(title, epHint)
+        normalize = IsMediaNamingNormalized()
+        dispTitle = title
+        if info["kind"] == "episode":
+            if normalize and info["show"]:
+                dispTitle = "%s - %s" % (info["show"], formatSxxExx(info["season"], info["episode"]))
+            params.update({"s_title": info["show"], "s_season": info["season"], "s_episode": info["episode"], "meta_type": "tv",
+                           "meta_title": self._metaTitle(info["show"]), "meta_year": info["year"]})
+        elif info["kind"] == "movie":
+            if normalize and info["name"]:
+                dispTitle = "%s (%s)" % (info["name"], info["year"]) if info["year"] else info["name"]
+                if "مدبلج" in title and "مدبلج" not in dispTitle:
+                    dispTitle += " مدبلج"  # the dubbed release next to the subtitled one
+            params.update({"meta_type": "movie", "meta_title": self._metaTitle(info["name"]), "meta_year": info["year"]})
+        elif normalize:
+            dispTitle = self._clean(title) or title
+        params.update({"category": "lody_video", "title": dispTitle, "raw_title": title})
+        return params
+
+    def _addEntry(self, params):
+        if params is None:
+            return False
+        if params["category"] == "lody_video":
+            self.addVideo(params)
+        else:
+            self.addDir(params)
+        return True
+
+    def _expansionPage(self, cItem, page):
+        # page >= 2 of a listing through the site's "load more" API; returns (items added, has next)
+        expType, expId, first = cItem.get("exp_type", ""), cItem.get("exp_id", ""), int(cItem.get("exp_first", 2) or 2)
+        if not expType or not self.apiBase:
+            # a jump / favourite without the page-1 data: read it once
+            sts, data = self.getPage(cItem["url"])
+            if not sts:
+                return 0, False
+            self._readApiBase(data)
+            m = EXPANSION_RE.search(data)
+            if not m:
+                return 0, False
+            first, expType, expId = int(m.group(1)), m.group(2), m.group(3)
+        params = dict(self.defaultParams)
+        params["header"] = dict(self.HEADER, Referer=self._canonUrl(cItem["url"]), Origin=self.MAIN_URL.rstrip("/"))
+        params["header"]["X-Requested-With"] = "XMLHttpRequest"
+        postData = {"indicator": str(first + page - 2), "type": expType, "id": expId}
+        sts, data = self.cm.getPage(self._api("RequestExpansion.php"), params, postData)
+        if not sts:
+            return 0, False
+        try:
+            js = json_loads(data)
+        except Exception:
+            printExc()
+            js = None
+        if not isinstance(js, dict):
+            printDBG("Lodynet: expansion API answered %r" % (data or "")[:100])
+            return 0, False
+        count = 0
+        for item in js.get("Items") or []:
+            if not isinstance(item, dict):
+                continue
+            entry = self._itemFromEntry(ensure_str(item.get("name", "")), ensure_str(item.get("url", "")), ensure_str(item.get("cover", "")),
+                                        ensure_str(item.get("ribbon", "")), ensure_str(item.get("Date", "")), item.get("episode", ""))
+            count += 1 if self._addEntry(entry) else 0
+        return count, bool(js.get("Recall")) and count > 0
+
     def listItems(self, cItem):
-        printDBG("Lodynet.listItems [%s]" % cItem)
-        url = cItem.get("url", "")
-        page = cItem.get("page", 1)
-        if not url.startswith("http"):
-            url = self.getFullUrl(url)
-        if page > 1:
-            if "/page/" in url:
-                url = re.sub(r"/page/\d+", "/page/%d" % page, url)
-            else:
-                url = url.rstrip("/") + "/page/%d" % page
-        sts, data = self.getPage(url)
-        if not sts:
-            return
-        items = re.findall(
-            r'<div class="ItemNewly">(.*?)</div>\s*</a>\s*</div>', data, re.S
-        )
-        for item in items:
-            title = re.search(r'title="([^"]+)"', item)
-            link = re.search(r'href="([^"]+)"', item)
-            img = re.search(r'data-src="([^"]*)"', item)
-            if not title or not link:
-                continue
-            title = title.group(1).strip()
-            item_url = self.getFullUrl(link.group(1))
-            icon = (
-                self.getFullUrl(img.group(1))
-                if img and img.group(1)
-                else self.DEFAULT_ICON_URL
-            )
-            desc = self.extractDescFromNewly(item)
-            if self.determineContentType(title, item_url) == "series":
-                self.addDir(
-                    {
-                        "category": "list_episodes",
-                        "title": title,
-                        "url": item_url,
-                        "desc": desc,
-                        "icon": icon,
-                        "good_for_fav": True,
-                    }
-                )
-            else:
-                self.addVideo(
-                    {
-                        "title": title,
-                        "url": item_url,
-                        "desc": desc,
-                        "icon": icon,
-                        "good_for_fav": True,
-                    }
-                )
-        if cItem.get("sub_mode") == "newly" and items:
-            next_page = page + 1
-            next_url = self.MAIN_URL + "/page/%d/" % next_page
-            self.addDir(
-                {
-                    "category": "list_items",
-                    "title": "\\c00FFFF00 الصفحة التالية (%d)" % next_page,
-                    "url": next_url,
-                    "icon": "",
-                    "page": next_page,
-                    "desc": "\\c00????00 الانتقال إلى الصفحة " + str(next_page),
-                    "sub_mode": "newly",
-                }
-            )
-            return
-        more = re.search(
-            r"GetExpansion\(\s*(\d+)\s*,\s*'([^']+)'\s*,\s*'([^']+)'\s*\)", data
-        )
-        if more:
-            indicator = more.group(1)
-            exp_type = more.group(2)
-            exp_id = more.group(3)
-            self.addDir(
-                {
-                    "category": "load_more",
-                    "title": "\\c00FFFF00 عرض المزيد",
-                    "is_expansion": True,
-                    "indicator": indicator,
-                    "exp_type": exp_type,
-                    "exp_id": exp_id,
-                    "url": url,
-                }
-            )
-            printDBG(
-                "Expansion button added: indicator=%s type=%s id=%s"
-                % (indicator, exp_type, exp_id)
-            )
-
-    # ==========================================================================================
-    def listEpisodes(self, cItem):
-        printDBG("Lodynet.listEpisodes [%s]" % cItem)
-        url = self.getFullUrl(cItem.get("url", ""))
-        sts, data = self.getPage(url)
-        if not sts:
-            return
-        items_added = 0
-        blocks = re.findall(
-            r'(<div class="ItemNewly">.*?</div>\s*</a>\s*</div>)', data, re.S
-        )
-        for block in blocks:
-            title = re.search(r'title="([^"]+)"', block)
-            link = re.search(r'href="([^"]+)"', block)
-            img = re.search(r'data-src="([^"]*)"', block)
-            if not title or not link:
-                continue
-            icon = (
-                self.getFullUrl(img.group(1))
-                if img and img.group(1)
-                else self.DEFAULT_ICON_URL
-            )
-            self.addVideo(
-                {
-                    "title": title.group(1).strip(),
-                    "url": self.getFullUrl(link.group(1)),
-                    "desc": self.extractDescFromNewly(block),
-                    "icon": icon,
-                    "good_for_fav": True,
-                }
-            )
-            items_added += 1
-        more = re.search(
-            r"GetExpansion\(\s*(\d+)\s*,\s*'([^']+)'\s*,\s*'([^']+)'\s*\)", data
-        )
-        if more and items_added >= 10:
-            indicator = more.group(1)
-            exp_type = more.group(2)
-            exp_id = more.group(3)
-            self.addDir(
-                {
-                    "category": "load_more",
-                    "title": "\\c00FFFF00 عرض المزيد من الحلقات",
-                    "is_expansion": True,
-                    "is_episodes": True,
-                    "indicator": indicator,
-                    "exp_type": exp_type,
-                    "exp_id": exp_id,
-                    "url": url,
-                    "icon": self.DEFAULT_ICON_URL,
-                }
-            )
-            printDBG(
-                "Expansion button added for episodes: indicator=%s type=%s id=%s"
-                % (indicator, exp_type, exp_id)
-            )
-            return
-
-    # ==========================================================================================
-    def loadMore(self, cItem):
-        printDBG("Lodynet.loadMore [%s]" % cItem)
-        if cItem.get("is_expansion"):
-            API_URL = (
-                self.MAIN_URL
-                + "/wp-content/themes/Lodynet2020/Api/RequestExpansion.php"
-            )
-            post_data = {
-                "indicator": cItem.get("indicator", ""),
-                "type": cItem.get("exp_type", ""),
-                "id": cItem.get("exp_id", ""),
-            }
-            params = {
-                "header": {
-                    "X-Requested-With": "XMLHttpRequest",
-                    "Referer": self.MAIN_URL,
-                    "User-Agent": self.USER_AGENT,
-                }
-            }
-            sts, data = self.cm.getPage(API_URL, params, post_data)
+        url = re.sub(r"[?&]page=\d+$", "", cItem.get("url", "") or self.MAIN_URL)
+        page = int(cItem.get("page", 1) or 1)
+        printDBG("Lodynet.listItems [%s] page %d" % (url, page))
+        cItem = dict(cItem, url=url, category="list_items")
+        if cItem.get("lody_mode") == "newly":
+            tpl = self.MAIN_URL + "page/{page}/"
+            sts, data = self.getPage(tpl.format(page=page) if page > 1 else self.MAIN_URL)
             if not sts:
                 return
-            try:
-                js_data = json.loads(data)
-                if "Items" in js_data and js_data["Items"]:
-                    if cItem.get("is_actors"):
-                        for item in js_data["Items"]:
-                            title = item.get("name", "").strip()
-                            url_path = item.get("url", "")
-                            if not title or not url_path:
-                                continue
-                            if url_path.startswith("http"):
-                                full_url = url_path
-                            else:
-                                full_url = self.MAIN_URL + (
-                                    url_path
-                                    if url_path.startswith("/")
-                                    else "/" + url_path
-                                )
-                            icon = item.get("cover", "")
-                            icon = (
-                                self.getFullUrl(icon) if icon else self.DEFAULT_ICON_URL
-                            )
-                            desc_parts = []
-                            if item.get("ribbon"):
-                                desc_parts.append(
-                                    "\\c00????00 النوع: \\c00????FF"
-                                    + item.get("ribbon")
-                                )
-                            if item.get("Date"):
-                                desc_parts.append(
-                                    "\\c00????00 وقت النشر: \\c00????FF"
-                                    + self.getTimeAgo(item.get("Date"))
-                                )
-                            if item.get("episode"):
-                                desc_parts.append(
-                                    "\\c00????00 الحلقة: \\c00????FF"
-                                    + str(item.get("episode"))
-                                )
-                            full_desc = "\\n".join(desc_parts) if desc_parts else ""
-                            self.addDir(
-                                {
-                                    "category": "list_actor_movies",
-                                    "title": title,
-                                    "url": full_url,
-                                    "icon": icon,
-                                    "desc": full_desc,
-                                    "good_for_fav": True,
-                                }
-                            )
-                    else:
-                        for item in js_data["Items"]:
-                            title = item.get("name", "").strip()
-                            url_path = item.get("url", "")
-                            if not title or not url_path:
-                                continue
-                            if url_path.startswith("http"):
-                                full_url = url_path
-                            else:
-                                full_url = self.MAIN_URL + (
-                                    url_path
-                                    if url_path.startswith("/")
-                                    else "/" + url_path
-                                )
-                            icon = item.get("cover", "")
-                            icon = (
-                                self.getFullUrl(icon) if icon else self.DEFAULT_ICON_URL
-                            )
-                            desc_parts = []
-                            if item.get("ribbon"):
-                                desc_parts.append(
-                                    "\\c00????00 النوع: \\c00????FF"
-                                    + item.get("ribbon")
-                                )
-                            if item.get("Date"):
-                                desc_parts.append(
-                                    "\\c00????00 وقت النشر: \\c00????FF"
-                                    + self.getTimeAgo(item.get("Date"))
-                                )
-                            if item.get("episode"):
-                                desc_parts.append(
-                                    "\\c00????00 الحلقة: \\c00????FF"
-                                    + str(item.get("episode"))
-                                )
-                            full_desc = "\\n".join(desc_parts) if desc_parts else ""
-                            params = {
-                                "title": title,
-                                "url": full_url,
-                                "icon": icon,
-                                "desc": full_desc,
-                                "good_for_fav": True,
-                            }
-                            if cItem.get("is_episodes"):
-                                self.addVideo(params)
-                            else:
-                                if (
-                                    self.determineContentType(title, full_url)
-                                    == "series"
-                                ):
-                                    params["category"] = "list_episodes"
-                                    self.addDir(params)
-                                else:
-                                    self.addVideo(params)
-                    if js_data.get("Recall") is True and js_data.get("Items"):
-                        new_indicator = str(int(cItem.get("indicator", "0")) + 1)
-                        self.addDir(
-                            {
-                                "category": "load_more",
-                                "title": "\\c00FFFF00 عرض المزيد",
-                                "is_expansion": True,
-                                "is_actors": cItem.get("is_actors", False),
-                                "is_episodes": cItem.get("is_episodes", False),
-                                "indicator": new_indicator,
-                                "exp_type": cItem.get("exp_type"),
-                                "exp_id": cItem.get("exp_id"),
-                                "url": cItem.get("url"),
-                                "icon": self.DEFAULT_ICON_URL,
-                            }
-                        )
-            except Exception as e:
-                printDBG("Error in loadMore Expansion: %s" % str(e))
-                printExc()
+            area = self.cm.ph.getDataBeetwenMarkers(data, 'id="AreaNewly"', 'id="PaginationNewly"', False)[1] or data
+            count = 0
+            for title, href, body in ITEM_RE.findall(area):
+                count += 1 if self._addEntryFromHtml(title, href, body) else 0
+            addPagingItems(self, cItem, page, count > 0 and "NextPaginationNewly" in data, 0, tpl)
             return
-
-    # ==========================================================================================
-    def determineContentType(self, title, url=""):
-        title_lower = title.lower()
-        url_lower = url.lower() if url else ""
-        printDBG("=== determineContentType DEBUG ===")
-        printDBG(f"Title: {title}")
-        printDBG(f"URL: {url}")
-        printDBG(f"Title Lower: {title_lower}")
-        printDBG(f"URL Lower: {url_lower}")
-        if "/actor/" in url_lower:
-            result = "actor"
-            printDBG(f"Actor URL pattern detected: {result}")
-            return result
-        if any(x in title_lower for x in ["ممثل", "نجم", "ممثلة", "فنان", "فنانة"]):
-            if "/actor/" in url_lower or any(
-                x in url_lower for x in ["/actors/", "/celebrity/"]
-            ):
-                result = "actor"
-                printDBG(f"Actor title + URL detected: {result}")
-                return result
-        episode_keywords = [
-            "حلقة",
-            "الحلقة",
-            "episode",
-            "الحلقة الأخيرة",
-            "حلقة جديدة",
-            "اعلان",
-        ]
-        series_keywords = [
-            "مسلسل",
-            "المسلسل",
-            "series",
-            "مسلسلات",
-            "المسلسلات",
-            "season",
-            "موسم",
-            "الموسم",
-            "سلسلة",
-            "برنامج",
-        ]
-        movie_keywords = [
-            "فيلم",
-            "الفيلم",
-            "movie",
-            "film",
-            "أفلام",
-            "الأفلام",
-            "أغنية",
-            "اغنية",
-            "أغاني",
-            "اغاني",
-            "كليب",
-            "كلب",
-            "تصميم",
-            "تصاميم",
-            "مقطع",
-            "مقاطع",
-        ]
-        if any(
-            keyword in url_lower
-            for keyword in [
-                "/اغاني/",
-                "/أغاني/",
-                "/music/",
-                "/songs/",
-                "/تصاميم-",
-                "/design/",
-            ]
-        ):
-            result = "movie"
-            printDBG(f"Music/Design section detected: {result}")
-            return result
-        if any(
-            keyword in title_lower
-            for keyword in [
-                "أغنية",
-                "اغنية",
-                "أغاني",
-                "اغاني",
-                "music",
-                "كليب",
-                "كلب",
-                "تصميم",
-                "تصاميم",
-            ]
-        ):
-            result = "movie"
-            printDBG(f"Music/Design title detected: {result}")
-            return result
-        for keyword in episode_keywords:
-            if keyword in title_lower:
-                result = "episode"
-                printDBG(f"Episode keyword '{keyword}' detected: {result}")
-                return result
-        for keyword in series_keywords:
-            if keyword in title_lower:
-                result = "series"
-                printDBG(f"Series keyword '{keyword}' detected: {result}")
-                return result
-        for keyword in movie_keywords:
-            if keyword in title_lower:
-                result = "movie"
-                printDBG(f"Movie keyword '{keyword}' detected: {result}")
-                return result
-        if re.search(r"(season|موسم|s)\s*\d+", title_lower):
-            result = "series"
-            printDBG(f"Season pattern detected: {result}")
-            return result
-        if any(
-            keyword in url_lower
-            for keyword in ["/series/", "/مسلسلات/", "/مسلسل/", "/seasons/"]
-        ):
-            result = "series"
-            printDBG(f"Series URL pattern detected: {result}")
-            return result
-        if any(
-            keyword in url_lower
-            for keyword in ["/movies/", "/أفلام/", "/فيلم/", "/film/"]
-        ):
-            result = "movie"
-            printDBG(f"Movie URL pattern detected: {result}")
-            return result
-        if any(
-            keyword in url_lower
-            for keyword in [
-                "/category/مسلسلات-اجنبية",
-                "/category/",
-                "/series-",
-                "/مسلسل-",
-            ]
-        ) and not any(
-            keyword in url_lower
-            for keyword in ["/افلام/", "/movies/", "/أغاني/", "/music/"]
-        ):
-            result = "series"
-            printDBG(f"Foreign series section detected: {result}")
-            return result
-        if "/أفلام" in url_lower or "/movies" in url_lower:
-            result = "movie"
-            printDBG(f"Movies section detected: {result}")
-            return result
-        result = "movie"
-        printDBG(f"Default result: {result}")
-        return result
-
-    # ==========================================================================================
-    def getTimeAgo(self, date_str):
-        try:
-            dt = datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")
-            elapsed = int(time.time() - time.mktime(dt.timetuple()))
-        except Exception:
-            return date_str
-        if elapsed < 60:
-            return "قبل ثواني"
-        units = [
-            (31207680, "سنة", "سنتين", "سنوات"),
-            (2600640, "شهر", "شهرين", "أشهر"),
-            (604800, "أسبوع", "أسبوعين", "أسابيع"),
-            (86400, "يوم", "يومان", "أيام"),
-            (3600, "ساعة", "ساعتين", "ساعات"),
-            (60, "دقيقة", "دقيقتين", "دقائق"),
-        ]
-        for seconds, one, two, many in units:
-            if elapsed >= seconds:
-                value = int(round(float(elapsed) / seconds))
-                if value == 1:
-                    return "قبل %s واحدة" % one
-                elif value == 2:
-                    return "قبل (2) %s" % two
-                elif value < 11:
-                    return "قبل %s %s" % (value, many)
-                else:
-                    return "قبل %s %s" % (value, one)
-        return "قبل ثواني"
-
-    # ==========================================================================================
-    def extractDescFromNewly(self, html_block):
-        desc_parts = []
-        type_match = re.search(r'NewlyRibbon">([^<]+)</div>', html_block)
-        if type_match:
-            desc_parts.append(
-                "\\c00????00 النوع: \\c00????FF" + type_match.group(1).strip()
-            )
-        time_match = re.search(r'NewlyTimeAgo[^>]*data-date="([^"]+)"', html_block)
-        if time_match:
-            ago = self.getTimeAgo(time_match.group(1).strip())
-            desc_parts.append("\\c00????00 وقت النشر: \\c00????FF" + ago)
-        episode_match = re.search(r"NewlyEpNumber[^>]*>.*?(\d+)</div>", html_block)
-        if episode_match:
-            desc_parts.append(
-                "\\c00????00 الحلقة: \\c00????FF" + episode_match.group(1).strip()
-            )
-        summary_match = re.search(
-            r'class="NewlySummary"[^>]*>([^<]+)</div>', html_block
-        )
-        if summary_match:
-            desc_parts.append(
-                "\\c00????00 الملخص: \\c00FFFFFF" + summary_match.group(1).strip()
-            )
-        return "\n".join(desc_parts) if desc_parts else "\\c00????00 محتوى مضاف حديثاً"
-
-    # ==========================================================================================
-    def getLinksForVideo(self, cItem):
-        printDBG("### ENTER getLinksForVideo ###")
-        url = cItem.get("url", "")
-        sts, data = self.getPage(url)
-        if not sts:
-            return []
-        if isinstance(data, bytes):
-            data = data.decode("utf-8", "ignore")
-        links = []
-        referer = url
-        is_unavailable = "IframeFailingTitle" in data or "غير متوفرة حالياً" in data
-        tokens = {}
-        token_match = re.search(r"window\.PageData\s*=\s*(\{.*?\});", data, re.DOTALL)
-        if token_match:
-            page_data = token_match.group(1)
-            plus_token = re.search(r'"TokenPlus1"\s*:\s*"([^"]+)"', page_data)
-            vidlo_token = re.search(r'"TokenVidlo"\s*:\s*"([^"]+)"', page_data)
-            if plus_token:
-                tokens["plus1"] = plus_token.group(1)
-            if vidlo_token:
-                tokens["vidlo"] = vidlo_token.group(1)
-        servers_matches = re.findall(
-            r'\{\s*"Name"\s*:\s*"([^"]+)"\s*,\s*"Embed"\s*:\s*"([^"]*)"\s*,\s*"Id"\s*:\s*(\d+)\s*,\s*"Encrypted"\s*:\s*(true|false)\s*\}',
-            data,
-        )
-        available_count = 0
-        if servers_matches:
-            import base64
-
-            for name, embed, server_id, encrypted in servers_matches:
-                if embed and encrypted == "false":
-                    try:
-                        decoded_url = base64.b64decode(embed).decode("utf-8")
-                        if decoded_url.startswith("http"):
-                            if server_id == "73" and tokens.get("plus1"):
-                                decoded_url += tokens["plus1"]
-                            elif server_id == "116413" and tokens.get("vidlo"):
-                                decoded_url += tokens["vidlo"]
-                            display_name = (
-                                "\\c0000FF00" + name.strip()
-                                if any(
-                                    g.lower() in name.lower()
-                                    for g in ["vid lo", "vinovo", "ok.ru"]
-                                )
-                                else name.strip()
-                            )
-                            links.append(
-                                {
-                                    "name": " " + display_name,
-                                    "url": strwithmeta(
-                                        decoded_url, {"Referer": referer}
-                                    ),
-                                    "need_resolve": 1,
-                                }
-                            )
-                            available_count += 1
-                    except Exception as e:
-                        printDBG("Base64 Error: %s" % str(e))
-                elif encrypted == "true" and not embed:
-                    links.append(
-                        {
-                            "name": "\\c00FFFF00🔒 " + name.strip(),
-                            "url": "",
-                            "desc": "\\c00FF0000هذا السيرفر يتطلب اشتراكاً في الموقع",
-                            "icon": self.DEFAULT_ICON_URL,
-                            "is_locked": True,
-                        }
-                    )
-        if not links:
-            servers_old = re.findall(
-                r'<button[^>]+id="ServerWatch(\d+)"[^>]*>([^<]+)</button>', data
-            )
-            post_id = re.search(r"SwitchServer\(this,\s*\d+,\s*(\d+)\)", data)
-            if servers_old and post_id:
-                api_url = (
-                    self.MAIN_URL
-                    + "/wp-content/themes/Lodynet2020/Api/RequestServerEmbed.php"
-                )
-                for server_id, server_name in servers_old:
-                    links.append(
-                        {
-                            "name": " " + server_name.strip(),
-                            "url": strwithmeta(
-                                api_url,
-                                {
-                                    "post_data": {
-                                        "PostID": post_id.group(1),
-                                        "ServerID": server_id,
-                                    },
-                                    "Referer": referer,
-                                },
-                            ),
-                            "need_resolve": 1,
-                        }
-                    )
-        if is_unavailable and available_count == 0:
-            printDBG("No free links available for this episode")
-        printDBG(
-            "Final result: %d links (%d free, %d locked)"
-            % (len(links), available_count, len(links) - available_count)
-        )
-        return links
-
-    # ==========================================================================================
-    def getVideoLinks(self, videoUrl):
-        printDBG("Lodynet.getVideoLinks [%s]" % videoUrl)
-        videoUrlStr = str(videoUrl)
-        if "ok.ru" in videoUrlStr:
-            printDBG(
-                "Direct OK.ru URL detected in getVideoLinks, using custom resolver"
-            )
-            return self.getOkRuLinks(videoUrlStr)
-        if hasattr(videoUrl, "meta"):
-            post_data = videoUrl.meta.get("post_data")
-            if post_data:
-                printDBG("Found POST data: %s" % str(post_data))
-                return self.processAPIRequest(
-                    str(videoUrl),
-                    post_data,
-                    videoUrl.meta.get("Referer", self.MAIN_URL),
-                )
-        if any(
-            x in videoUrlStr
-            for x in ["vidlo.us", "viidshar.com", "govad.xyz", "vadbam.net"]
-        ):
-            return self.getVidloDirectLinks(videoUrlStr)
-        if videoUrlStr.endswith(".mp4"):
-            return [{"name": "Direct MP4", "url": videoUrlStr}]
-        headers = {"User-Agent": self.USER_AGENT, "Referer": self.MAIN_URL}
-        url_with_meta = strwithmeta(videoUrlStr, headers)
-        return self.up.getVideoLinkExt(url_with_meta)
-
-    # ==========================================================================================
-    def getOkRuLinks(self, baseUrl):
-        printDBG("========= getOkRuLinks baseUrl[%r]" % baseUrl)
-        # ===================== HTTP headers setup =====================
-        HTTP_HEADER = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36",
-            "Accept": "*/*",
-            "Accept-Language": "en-US,en;q=0.9,ar;q=0.8",
-            "Accept-Encoding": "gzip, deflate",
-            "Content-Type": "application/json",
-            "Referer": baseUrl,
-            "Origin": "https://ok.ru",
-            "Sec-Fetch-Dest": "empty",
-            "Sec-Fetch-Mode": "cors",
-            "Sec-Fetch-Site": "same-origin",
-            "Connection": "keep-alive",
-        }
-        # ===================== Fetch the video page =====================
-        sts, pageData = self.cm.getPage(baseUrl, {"header": HTTP_HEADER})
-        if not sts:
-            return []  # Changed from False to [] for safe list handling
-        urlsTab = []
-        # Extract 'data-options' attribute from the page
-        data_options_match = re.search(r'data-options="([^"]+)"', pageData)
-        if not data_options_match:
-            printDBG("========= No data-options found!")
-            return []
-        data_options_str = html.unescape(data_options_match.group(1))
-        # Parse metadata from flashvars
-        try:
-            # Replaced json_loads with json.loads
-            data_options = json.loads(data_options_str)
-            flashvars = data_options.get("flashvars", {})
-            metadata_str = flashvars.get("metadata", "")
-            metadata_str = (
-                metadata_str.replace('\\"', '"')
-                .replace("\\\\", "\\")
-                .replace("\\u0026", "&")
-            )
-            metadata = json.loads(metadata_str)
-        except Exception as e:
-            printDBG("========= Failed to parse metadata JSON: %s" % e)
-            return []
-        all_links = []
-        # ===================== Extract MP4 video links =====================
-        if "videos" in metadata:
-            for video in metadata["videos"]:
-                url = video.get("url", "")
-                if not url or ("okcdn.ru" not in url and "vkuser.net" not in url):
-                    continue
-                url = url.replace("\\u0026", "&")
-                q = video.get("name") or video.get("type") or ""
-                quality_map = {
-                    "mobile": "144p",
-                    "lowest": "144p",
-                    "low": "360p",
-                    "sd": "480p",
-                    "hd": "720p",
-                    "full": "1080p",
-                    "4k": "2160p",
-                }
-                q_str = quality_map.get(q, q)
-                quality_val = re.sub(r"\D", "", q_str)
-                display_quality = {
-                    "2160": "4K [2160p]",
-                    "1080": "FULL HD [1080p]",
-                    "720": "HD [720p]",
-                    "480": "SD [480p]",
-                    "360": "LOW [360p]",
-                    "240": "[240p]",
-                    "144": "[144p]",
-                }.get(quality_val, q_str)
-                bitrate = video.get("bitrate") or "unknown"
-                res = video.get("res") or video.get("resolution") or "unknown"
-                codecs = video.get("codecs") or "avc1,mp4a"
-                display = (
-                    f"{display_quality} - MP4 - bitrate: {bitrate} res: {res} {codecs}"
-                )
-                all_links.append(
-                    {
-                        "name": display,
-                        "url": strwithmeta(
-                            url,
-                            {
-                                "Referer": baseUrl,
-                                "User-Agent": HTTP_HEADER["User-Agent"],
-                            },
-                        ),
-                        "quality_val": quality_val,
-                        "is_hls": False,
-                        "is_dash": False,
-                    }
-                )
-        # ===================== Extract HLS (m3u8) links =====================
-        if "ondemandHls" in metadata:
-            hls_url = metadata["ondemandHls"].replace("\\u0026", "&")
-            hls_url2 = strwithmeta(
-                hls_url,
-                {
-                    "iptv_proto": "m3u8",
-                    "Referer": baseUrl,
-                    "User-Agent": HTTP_HEADER["User-Agent"],
-                },
-            )
-            hls_links = getDirectM3U8Playlist(hls_url2, checkContent=False)
-            for link in hls_links:
-                raw = link.get("name", "")
-                bitrate = re.search(r"bitrate:\s*(\d+)", raw)
-                bitrate = bitrate.group(1) if bitrate else "unknown"
-                res = re.search(r"res:\s*(\d+x\d+)", raw)
-                res = res.group(1) if res else "unknown"
-                # Infer quality from resolution height
-                quality_val = 0
-                if "x" in res:
-                    try:
-                        quality_val = int(res.split("x")[1])
-                    except Exception:
-                        quality_val = 0
-                if quality_val >= 1080:
-                    q_disp = "FULL HD [1080p]"
-                elif quality_val >= 720:
-                    q_disp = "HD [720p]"
-                elif quality_val >= 480:
-                    q_disp = "SD [480p]"
-                elif quality_val >= 360:
-                    q_disp = "LOW [360p]"
-                elif quality_val >= 240:
-                    q_disp = "LOW [240p]"
-                else:
-                    q_disp = "[144p]"
-                display = f"{q_disp} - HLS - bitrate: {bitrate} res: {res} avc1,mp4a"
-                all_links.append(
-                    {
-                        "name": display,
-                        "url": link["url"],
-                        "quality_val": quality_val,
-                        "is_hls": True,
-                        "is_dash": False,
-                    }
-                )
-        # ===================== Extract DASH links =====================
-        if "ondemandDash" in metadata:
-            dash_url = metadata["ondemandDash"].replace("\\u0026", "&")
-            all_links.append(
-                {
-                    "name": "DASH (Adaptive)",
-                    "url": strwithmeta(
-                        dash_url,
-                        {
-                            "iptv_proto": "mpd",
-                            "Referer": baseUrl,
-                            "User-Agent": HTTP_HEADER["User-Agent"],
-                        },
-                    ),
-                    "quality_val": "0",
-                    "is_hls": False,
-                    "is_dash": True,
-                }
-            )
-        # ===================== Standardize MP4 name and infer resolution/bitrate =====================
-        for item in all_links:
-            if not item.get("is_hls", False) and not item.get("is_dash", False):
-                qv = (
-                    int(item["quality_val"])
-                    if str(item["quality_val"]).isdigit()
-                    else 0
-                )
-                # Infer resolution from quality_val
-                if "res" not in item["name"] or "unknown" in item["name"]:
-                    if qv == 2160:
-                        res = "3840x2160"
-                    elif qv == 1080:
-                        res = "1920x1080"
-                    elif qv == 720:
-                        res = "1280x720"
-                    elif qv == 480:
-                        res = "854x480"
-                    elif qv == 360:
-                        res = "640x360"
-                    elif qv == 240:
-                        res = "426x240"
-                    elif qv == 144:
-                        res = "256x144"
-                    else:
-                        res = "unknown"
-                else:
-                    res = "unknown"
-                # Infer approximate bitrate
-                if "bitrate: unknown" in item["name"]:
-                    if qv == 2160:
-                        bitrate = "8000000"
-                    elif qv == 1080:
-                        bitrate = "5000000"
-                    elif qv == 720:
-                        bitrate = "2500000"
-                    elif qv == 480:
-                        bitrate = "1200000"
-                    elif qv == 360:
-                        bitrate = "800000"
-                    elif qv == 240:
-                        bitrate = "500000"
-                    elif qv == 144:
-                        bitrate = "300000"
-                    else:
-                        bitrate = "500000"
-                else:
-                    bitrate = "unknown"
-                # Rebuild display name
-                item["name"] = (
-                    f"{item['name'].split(' - ')[0]} - MP4 - bitrate: {bitrate} res: {res} avc1,mp4a"
-                )
-
-        # ===================== Sort links by quality descending =====================
-        def sort_key(item):
-            qv = str(item.get("quality_val", "0"))
-            q = int(qv) if qv.isdigit() else 0
-            return q
-
-        all_links.sort(key=sort_key, reverse=True)
-        urlsTab = [{"name": x["name"], "url": x["url"]} for x in all_links]
-        printDBG("========= parserOKRU extracted %d links" % len(urlsTab))
-        for u in urlsTab:
-            printDBG("========= - %s: %s" % (u["name"], u["url"]))
-        return urlsTab
-
-    # ==========================================================================================
-    def processAPIRequest(self, api_url, post_data, referer):
-        """معالجة طلبات API للسيرفرات"""
-        printDBG("processAPIRequest")
-        printDBG("API URL: %s" % api_url)
-        printDBG("POST Data: %s" % str(post_data))
-        printDBG("Referer: %s" % referer)
-        headers = {
-            "User-Agent": self.USER_AGENT,
-            "X-Requested-With": "XMLHttpRequest",
-            "Referer": referer,
-            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-        }
-        try:
-            printDBG("Sending POST request to API...")
-            response = requests.post(
-                api_url, data=post_data, headers=headers, timeout=30
-            )
-            response_text = response.text.strip()
-            printDBG("API Response: %s" % response_text)
-            printDBG("Response length: %d chars" % len(response_text))
-            printDBG("Response starts with: %s" % response_text[:100])
-            if response_text and response_text.startswith("http"):
-                embed_url = response_text
-                printDBG("Success! Embed URL: %s" % embed_url)
-                if "ok.ru" in embed_url:
-                    printDBG("Detected OK.ru, using enhanced resolver")
-                    return self.getOkRuLinks(embed_url)
-                elif any(
-                    domain in embed_url
-                    for domain in [
-                        "hglink.to",
-                        "davioad.com",
-                        "haxloppd.com",
-                        "jaw",
-                        "jawcloud",
-                        "streamhls.to",
-                    ]
-                ):
-                    headers = {"User-Agent": self.USER_AGENT, "Referer": embed_url}
-                    url_with_meta = strwithmeta(embed_url, headers)
-                    return self.up.getVideoLinkExt(url_with_meta)
-                elif "larhu.com" in embed_url:
-                    headers = {"User-Agent": self.USER_AGENT, "Referer": embed_url}
-                    url_with_meta = strwithmeta(embed_url, headers)
-                    return self.up.getVideoLinkExt(url_with_meta)
-                elif any(
-                    domain in embed_url
-                    for domain in [
-                        "vidlo",
-                        "viidshar",
-                        "govad",
-                        "vadbam",
-                        "dood",
-                        "fembed",
-                        "uqload",
-                        "vidoza",
-                    ]
-                ):
-                    return self.getVidloDirectLinks(embed_url)
-                else:
-                    headers = {"User-Agent": self.USER_AGENT, "Referer": api_url}
-                    url_with_meta = strwithmeta(embed_url, headers)
-                    return self.up.getVideoLinkExt(url_with_meta)
-            else:
-                printDBG("API returned empty or invalid response")
-                return []
-        except Exception as e:
-            printDBG("Error in processAPIRequest: %s" % str(e))
-            return []
-
-    # ==========================================================================================
-    def listActors(self, cItem):
-        printDBG("Lodynet.listActors [%s]" % cItem)
-        url = cItem.get("url", "")
-        if not url.startswith("http"):
-            url = self.getFullUrl(url)
-        page = cItem.get("page", 1)
+        tpl = url + ("&" if "?" in url else "?") + "page={page}"
         if page > 1:
-            if "/page/" in url:
-                url = re.sub(r"/page/\d+", "/page/%d" % page, url)
-            else:
-                url = url.rstrip("/") + "/page/%d" % page
+            hasNext = self._expansionPage(cItem, page)[1]
+            addPagingItems(self, cItem, page, hasNext, 0 if hasNext else page, tpl)
+            return
         sts, data = self.getPage(url)
         if not sts:
             return
-        items = re.findall(
-            r'<div class="ItemNewly">.*?<a title="([^"]+)".*?href="([^"]+)".*?data-src="([^"]*)"',
-            data,
-            re.S,
-        )
-        for title, item_url, img in items:
-            if any(
-                x in str(value)
-                for value in [title, item_url, img]
-                for x in ["+ CategoryItem.", "CategoryItem."]
-            ):
-                continue
-            full_url = self.getFullUrl(item_url)
-            icon = self.getFullUrl(img) if img else self.DEFAULT_ICON_URL
-            self.addDir(
-                {
-                    "category": "list_actor_movies",
-                    "title": title.strip(),
-                    "url": full_url,
-                    "icon": icon,
-                    "good_for_fav": True,
-                }
-            )
-        more = re.search(
-            r"GetExpansion\(\s*(\d+)\s*,\s*'([^']+)'\s*,\s*'([^']+)'\s*\)", data
-        )
-        if more:
-            indicator = more.group(1)
-            exp_type = more.group(2)
-            exp_id = more.group(3)
-            self.addDir(
-                {
-                    "category": "load_more",
-                    "title": "\\c00FFFF00 عرض المزيد من الممثلين",
-                    "is_expansion": True,
-                    "is_actors": True,
-                    "indicator": indicator,
-                    "exp_type": exp_type,
-                    "exp_id": exp_id,
-                    "url": url,
-                    "icon": self.DEFAULT_ICON_URL,
-                }
-            )
-            printDBG("Expansion button added for actors: indicator=%s" % indicator)
+        self._readApiBase(data)
+        count = 0
+        for title, href, body in ITEM_RE.findall(data):
+            count += 1 if self._addEntryFromHtml(title, href, body) else 0
+        m = EXPANSION_RE.search(data)
+        if m and count:
+            cItem.update({"exp_first": int(m.group(1)), "exp_type": m.group(2), "exp_id": m.group(3)})
+        addPagingItems(self, cItem, 1, bool(m) and count > 0, 0, tpl)
 
-    # ==========================================================================================
-    def listActorMovies(self, cItem):
-        printDBG("Lodynet.listActorMovies [%s]" % cItem)
-        url = self.getFullUrl(cItem.get("url", ""))
-        sts, data = self.getPage(url)
-        if not sts:
-            return
-        items_added = 0
-        blocks = re.findall(
-            r'(<div class="ItemNewly">.*?</div>\s*</a>\s*</div>)', data, re.S
-        )
-        for block in blocks:
-            title = re.search(r'title="([^"]+)"', block)
-            link = re.search(r'href="([^"]+)"', block)
-            img = re.search(r'data-src="([^"]*)"', block)
-            if not title or not link:
-                continue
-            icon = (
-                self.getFullUrl(img.group(1))
-                if img and img.group(1)
-                else self.DEFAULT_ICON_URL
-            )
-            full_url = self.getFullUrl(link.group(1))
-            self.addVideo(
-                {
-                    "title": title.group(1).strip(),
-                    "url": full_url,
-                    "desc": self.extractDescFromNewly(block),
-                    "icon": icon,
-                    "good_for_fav": True,
-                }
-            )
-            items_added += 1
-        more = re.search(
-            r"GetExpansion\(\s*(\d+)\s*,\s*'([^']+)'\s*,\s*'([^']+)'\s*\)", data
-        )
-        if more and items_added >= 10:
-            indicator = more.group(1)
-            exp_type = more.group(2)
-            exp_id = more.group(3)
-            self.addDir(
-                {
-                    "category": "load_more",
-                    "title": "\\c00FFFF00 عرض المزيد من الأعمال",
-                    "is_expansion": True,
-                    "is_actors": True,
-                    "indicator": indicator,
-                    "exp_type": exp_type,
-                    "exp_id": exp_id,
-                    "url": url,
-                    "icon": self.DEFAULT_ICON_URL,
-                }
-            )
-            printDBG(
-                "Expansion button added for actor movies: indicator=%s" % indicator
-            )
+    def _addEntryFromHtml(self, title, href, body):
+        if "CategoryItem" in href or "CategoryItem" in title:
+            return False  # the JS template of the "load more" code
+        icon = self.cm.ph.getSearchGroups(body, r'data-src="([^"]*)"')[0]
+        ribbon = self.cm.ph.getSearchGroups(body, r'NewlyRibbon">([^<]+)<')[0]
+        date = self.cm.ph.getSearchGroups(body, r'data-date="([^"]+)"')[0]
+        epHint = self.cm.ph.getSearchGroups(body, r'(?s)NewlyEpNumber[^>]*>.*?(\d+)\s*</div>')[0]
+        return self._addEntry(self._itemFromEntry(title, href, icon, ribbon, date, epHint))
 
-    # ==========================================================================================
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("Lodynet.listSearchResult [%s]" % searchPattern)
         if not searchPattern:
             return
-        search_url = (
-            self.MAIN_URL
-            + "/wp-content/themes/Lodynet2020/Api/RequestSearch.php?value="
-            + quote_plus(searchPattern)
-        )
-        printDBG("Search URL: %s" % search_url)
-        headers = {
-            "User-Agent": self.USER_AGENT,
-            "X-Requested-With": "XMLHttpRequest",
-            "Referer": self.MAIN_URL,
-            "Accept": "application/json, text/javascript, */*; q=0.01",
-        }
+        if not self.apiBase:
+            sts, data = self.getPage(self.MAIN_URL)
+            if sts:
+                self._readApiBase(data)
+        params = dict(self.defaultParams)
+        params["header"] = dict(self.HEADER, Referer=self.MAIN_URL, Accept="application/json, text/javascript, */*; q=0.01")
+        params["header"]["X-Requested-With"] = "XMLHttpRequest"
+        sts, data = self.cm.getPage(self._api("RequestSearch.php?value=%s" % urllib_quote_plus(searchPattern)), params)
+        if not sts:
+            return
         try:
-            response = requests.get(search_url, headers=headers, timeout=30)
-            response_text = response.text
-            printDBG("Search API Response: %s" % response_text)
-            if response_text and response_text.strip():
-                try:
-                    data = json.loads(response_text)
-                    if isinstance(data, list) and len(data) >= 2:
-                        search_results = data[1]
-                        if isinstance(search_results, list) and search_results:
-                            printDBG("تم العثور على %d نتيجة بحث" % len(search_results))
-                            for item in search_results:
-                                if not isinstance(item, dict):
-                                    continue
-                                title = item.get("Title", "")
-                                item_url = item.get("Url", "")
-                                category = item.get("Category", "")
-                                cover = item.get("Cover", "")
-                                if not title or not item_url:
-                                    continue
-                                try:
-                                    if "\\u" in title:
-                                        title = title.encode("utf-8").decode(
-                                            "unicode_escape"
-                                        )
-                                    elif "&#x" in title:
-                                        title = html.unescape(title)
-                                except Exception:
-                                    pass
-                                if item_url.startswith("http"):
-                                    full_url = item_url
-                                else:
-                                    try:
-                                        decoded_url = urllib.parse.unquote(item_url)
-                                        if decoded_url.startswith("/"):
-                                            full_url = self.MAIN_URL + decoded_url
-                                        else:
-                                            full_url = self.MAIN_URL + "/" + decoded_url
-                                    except Exception:
-                                        full_url = self.MAIN_URL + "/" + item_url
-                                icon = self.DEFAULT_ICON_URL
-                                if cover:
-                                    try:
-                                        if "\\/" in cover:
-                                            cover = cover.replace("\\/", "/")
-                                        icon = self.getFullUrl(cover)
-                                    except Exception:
-                                        icon = self.DEFAULT_ICON_URL
-                                desc_parts = []
-                                if category:
-                                    desc_parts.append(
-                                        "\\c00????00القسم: \\c00????FF" + category
-                                    )
-                                desc = (
-                                    "\n".join(desc_parts) if desc_parts else "نتيجة بحث"
-                                )
-                                is_actor = False
-                                if "/actor/" in full_url.lower():
-                                    is_actor = True
-                                if category and any(
-                                    x in category.lower()
-                                    for x in [
-                                        "ممثل",
-                                        "نجم",
-                                        "ممثلة",
-                                        "actor",
-                                        "actress",
-                                        "star",
-                                    ]
-                                ):
-                                    is_actor = True
-                                if any(
-                                    x in title.lower()
-                                    for x in ["خان", "كابور", "باتشان", "شاه", "راي"]
-                                ):
-                                    if "/actor/" in full_url.lower():
-                                        is_actor = True
-                                if is_actor:
-                                    self.addDir(
-                                        {
-                                            "category": "list_actor_movies",
-                                            "title": title.strip(),
-                                            "url": full_url,
-                                            "desc": desc,
-                                            "icon": icon,
-                                            "good_for_fav": True,
-                                        }
-                                    )
-                                    printDBG("Added actor as folder: %s" % title)
-                                else:
-                                    content_type = self.determineContentType(
-                                        title, full_url
-                                    )
-                                    if content_type == "series":
-                                        self.addDir(
-                                            {
-                                                "category": "list_episodes",
-                                                "title": title.strip(),
-                                                "url": full_url,
-                                                "desc": desc,
-                                                "icon": icon,
-                                                "good_for_fav": True,
-                                            }
-                                        )
-                                    else:
-                                        self.addVideo(
-                                            {
-                                                "title": title.strip(),
-                                                "url": full_url,
-                                                "desc": desc,
-                                                "icon": icon,
-                                                "good_for_fav": True,
-                                            }
-                                        )
-                        else:
-                            self.addDir(
-                                {
-                                    "category": "search",
-                                    "title": "\\c00FF0000لم يتم العثور على نتائج",
-                                    "url": "",
-                                    "desc": "لم يتم العثور على أي نتائج للبحث: "
-                                    + searchPattern,
-                                }
-                            )
-                    else:
-                        self.addDir(
-                            {
-                                "category": "search",
-                                "title": "\\c00FF0000خطأ في تنسيق البيانات",
-                                "url": "",
-                                "desc": "استجابة غير متوقعة من خادم البحث",
-                            }
-                        )
-                except Exception as e:
-                    printDBG("Error parsing search JSON: %s" % str(e))
-                    printDBG("Raw response: " + response_text)
-                    self.addDir(
-                        {
-                            "category": "search",
-                            "title": "\\c00FF0000خطأ في تحليل النتائج",
-                            "url": "",
-                            "desc": "تعذر تحليل نتائج البحث: " + str(e),
-                        }
-                    )
-            else:
-                self.addDir(
-                    {
-                        "category": "search",
-                        "title": "\\c00FF0000استجابة فارغة من الخادم",
-                        "url": "",
-                        "desc": "لم يستجب خادم البحث للطلب",
-                    }
-                )
-        except Exception as e:
-            printDBG("Error in search: %s" % str(e))
-            self.addDir(
-                {
-                    "category": "search",
-                    "title": "\\c00FF0000خطأ في البحث",
-                    "url": "",
-                    "desc": "حدث خطأ أثناء البحث: " + str(e),
-                }
-            )
+            js = json_loads(data)
+        except Exception:
+            printExc()
+            return
+        results = js[1] if isinstance(js, list) and len(js) > 1 and isinstance(js[1], list) else []
+        for item in results:
+            if not isinstance(item, dict):
+                continue
+            entry = self._itemFromEntry(ensure_str(item.get("Title", "")), ensure_str(item.get("Url", "")), ensure_str(item.get("Cover", "")),
+                                        ensure_str(item.get("Category", "")))
+            if entry is not None and entry["category"] == "list_items" and self._slug(entry["url"]).startswith("actor/"):
+                entry["lody_kind"] = "actor"
+            self._addEntry(entry)
 
-    # ==========================================================================================
+    ###################################################
+    # links
+    ###################################################
+    def _servers(self, data):
+        # [(name, id, embed url)] of the free servers in "PostData.ServersWatch"
+        servers = []
+        block = self.cm.ph.getSearchGroups(data, r"(?s)ServersWatch\s*:\s*(\[.*?\])\s*,\s*\n")[0] or data
+        for obj in re.findall(r'\{[^{}]*"Name"[^{}]*\}', block):
+            try:
+                js = json_loads(obj)
+            except Exception:
+                continue
+            name = ensure_str(js.get("Name", "")).strip()
+            sid = str(js.get("Id", ""))
+            embed = ensure_str(js.get("Embed", "") or "")
+            if not embed or js.get("Encrypted"):
+                printDBG("Lodynet: skip subscription server %s" % name)
+                continue
+            try:
+                url = b64Decode(embed).strip().replace("&amp;", "&")
+            except Exception:
+                printExc()
+                continue
+            if not url.startswith("http"):
+                continue
+            if sid in DEAD_SERVER_IDS or any(h in url for h in DEAD_SERVER_HOSTS):
+                printDBG("Lodynet: skip dead server %s [%s]" % (name, url))
+                continue
+            servers.append((name, sid, url))
+        return servers
+
+    def _siteInfo(self, data):
+        details = self.cm.ph.getDataBeetwenMarkers(data, 'id="ContentDetails"', '</p>', False)[1]
+        cast = [self.cleanHtmlStr(a) for a in re.findall(r'class="ActorsDetails"[^>]*>([^<]+)<', details)]
+        genres = [self.cleanHtmlStr(g) for g in re.findall(r'class="GenresDetails"[^>]*>([^<]+)<', details)]
+        story = details.split('class="TitleDetails"')[0]
+        story = re.sub(r"<br\s*/?>", "\n", story)
+        lines = [self.cleanHtmlStr(x) for x in story.split("\n")]
+        story = " ".join([x for x in lines if x and x not in ("قصة الفيلم", "قصة المسلسل", "القصة")]).strip()
+        story = story.split("قراءة المزيد")[0].strip()
+        if not story:
+            story = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'<meta (?:property="og:description"|name="description") content="([^"]*)"')[0])
+        poster = self.cm.ph.getSearchGroups(data, r'<meta property="og:image" content="([^"]+)"')[0]
+        return story, poster, cast, genres
+
+    def getLinksForVideo(self, cItem):
+        printDBG("Lodynet.getLinksForVideo [%s]" % cItem.get("url", ""))
+        pageUrl = self._canonUrl(cItem.get("url", ""))
+        sts, data = self.getPage(pageUrl)
+        if not sts:
+            return []
+        story = self._siteInfo(data)[0]
+        urltab = []
+        names = {}
+        for name, _sid, url in self._servers(data):
+            # the site's server names hide the hoster ("Upnshare" = voe.sx, "Playersb" = mixdrop)
+            host = re.sub(r"^www\.", "", self.up.getDomain(url) or "")
+            if host and host.split(".")[0].lower() not in name.lower().replace(" ", ""):
+                name = "%s [%s]" % (name, host)
+            names[name] = names.get(name, 0) + 1
+            label = name if names[name] == 1 else "%s (%d)" % (name, names[name])
+            urltab.append({"name": label, "url": strwithmeta(url, {"Referer": self.MAIN_URL, "User-Agent": self.HEADER.get("User-Agent")}), "need_resolve": 1})
+        if not urltab:
+            printDBG("Lodynet: no free server on [%s]" % pageUrl)
+            if "ServersWatch" in data:
+                SetIPTVPlayerLastHostError(_("Lodynet offers this video only on its subscription servers (Lody Plus / VIP) for now - the free servers usually follow later."))
+        return applySidecarToLinks(urltab, buildSidecarFromItem(dict(cItem, desc=_stripColors(cItem.get("desc", ""))), IsSidecarEnabled(), story))
+
+    def getVideoLinks(self, videoUrl):
+        printDBG("Lodynet.getVideoLinks [%s]" % videoUrl)
+        if not self.cm.isValidUrl(videoUrl):
+            return []
+        sidecar = sidecarFromUrlMeta(videoUrl, IsSidecarEnabled())
+        return decorateResolvedLinkItems(self.up.getVideoLinkExt(videoUrl), sidecar)
+
+    ###################################################
+    # INFO
+    ###################################################
     def getArticleContent(self, cItem):
-        printDBG("Lodynet.getArticleContent [%s]" % cItem)
-        retTab = []
-        url = cItem.get("url", "")
-        sts, data = self.getPage(url)
-        if not sts:
-            return []
-        title = cItem.get("title", "")
-        icon = cItem.get("icon", self.DEFAULT_ICON_URL)
-        summary = ""
-        content_block = self.cm.ph.getDataBeetwenMarkers(
-            data, '<div id="ContentDetails"', "</div>", False
-        )[1]
-        if content_block:
-            if "ملخص أحداث الحلقة" in content_block:
-                summary = content_block.split("ملخص أحداث الحلقة")[-1]
-            elif "تبدأ الحلقة" in content_block:
-                summary = "تبدأ الحلقة" + content_block.split("تبدأ الحلقة")[-1]
-            else:
-                summary = self.cm.ph.getDataBeetwenMarkers(
-                    content_block, "<p>", "</p>", False
-                )[1]
-        if summary:
-            summary = summary.split("قراءة المزيد")[0]
-            summary = re.sub(r"<[^>]+>", "", summary)
-            summary = (
-                summary.replace("&#8211;", "-")
-                .replace("&#8220;", '"')
-                .replace("&#8221;", '"')
-                .replace("&nbsp;", " ")
-            )
-            summary = summary.strip()
-        old_desc = cItem.get("desc", "")
-        final_text = ""
-        if summary:
-            final_text = "\\c0000FF00 الملخص: \\n\\c00FFFFFF" + summary
-            if old_desc:
-                final_text = old_desc + "\\n-------------------\\n" + final_text
-        else:
-            final_text = old_desc if old_desc else "لا يوجد ملخص متاح حالياً."
-        if title:
-            retTab.append(
-                {
-                    "title": title,
-                    "text": final_text,
-                    "images": [{"title": "", "url": icon}],
-                    "other_info": {},
-                }
-            )
-        return retTab
+        printDBG("Lodynet.getArticleContent [%s]" % cItem.get("url", ""))
+        story, poster, info = "", "", {}
+        sts, data = self.getPage(cItem.get("url", ""))
+        if sts:
+            story, poster, cast, genres = self._siteInfo(data)
+            if cast:
+                info["actors"] = ", ".join(cast[:8])
+            if genres:
+                info["genres"] = ", ".join(genres[:6])
+        if cItem.get("meta_year"):
+            info["year"] = cItem["meta_year"]
+        meta = {}
+        if cItem.get("meta_type") and cItem.get("meta_title"):
+            try:
+                meta = getMeta(cItem["meta_type"], cItem["meta_title"], cItem.get("meta_year", "")) or {}
+            except Exception:
+                printExc()
+        info.update(meta.get("info", {}))
+        plot = meta.get("plot", "")
+        text = plot or story or _stripColors(cItem.get("desc", ""))
+        if plot and story and story != plot:
+            text = "%s[/br][/br]%s" % (plot, story)
+        icon = meta.get("poster") or poster or cItem.get("icon", "")
+        return [{"title": cItem.get("title", ""), "text": text, "images": [{"title": "", "url": icon}] if icon else [], "other_info": info}]
 
-    # ==========================================================================================
-    def getVidloDirectLinks(self, baseUrl):
-        printDBG("getVidloDirectLinks [%s]" % baseUrl)
-        COOKIE_FILE = GetCookieDir("vidlo.cookie")
-        HTTP_HEADER = {
-            "User-Agent": self.USER_AGENT,
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
-            "Accept-Language": "en-US,en;q=0.9,ar;q=0.8",
-            "Referer": "https://www.vidlo.us/",
-            "Origin": "https://www.vidlo.us",
-            "Sec-Fetch-Dest": "document",
-            "Sec-Fetch-Mode": "navigate",
-            "Sec-Fetch-Site": "same-origin",
-        }
-        params = {
-            "header": HTTP_HEADER,
-            "use_cookie": True,
-            "save_cookie": True,
-            "load_cookie": True,
-            "cookiefile": COOKIE_FILE,
-            "return_data": True,
-            "follow_redirects": True,
-        }
-        sts, data = self.cm.getPage(baseUrl, params)
-        if not sts:
-            printDBG("Failed to load Vidlo page")
-            return []
-        video_urls = []
-        sources_match = re.search(r"sources\s*:\s*\[(.*?)\]", data, re.DOTALL)
-        if sources_match:
-            sources_content = sources_match.group(1)
-            files = re.findall(
-                r'file\s*:\s*"([^"]+)"(?:\s*,\s*label\s*:\s*"([^"]+)")?',
-                sources_content,
-            )
-            for file_url, label in files:
-                if not file_url.startswith("http"):
-                    continue
-                if label:
-                    quality = label.replace("p", "").strip()
-                    if "720" in quality or "hd" in quality.lower():
-                        display_q = "HD [720p]"
-                    elif "576" in quality:
-                        display_q = "SD [576p]"
-                    elif "384" in quality:
-                        display_q = "LOW [384p]"
-                    elif "m3u8" in file_url:
-                        display_q = "HLS Master"
-                    else:
-                        display_q = label
-                else:
-                    display_q = "MP4" if ".mp4" in file_url else "HLS"
-                meta = {
-                    "Referer": "https://www.vidlo.us/",
-                    "Origin": "https://www.vidlo.us",
-                    "User-Agent": HTTP_HEADER["User-Agent"],
-                    "Accept": "*/*",
-                }
-                if ".m3u8" in file_url:
-                    meta["iptv_proto"] = "m3u8"
-                video_urls.append(
-                    {"name": display_q, "url": strwithmeta(file_url, meta)}
-                )
-        priority = {"HD [720p]": 1, "SD [576p]": 2, "LOW [384p]": 3, "HLS Master": 4}
-        video_urls.sort(key=lambda x: priority.get(x["name"], 99))
-        printDBG("Vidlo Extracted %d links" % len(video_urls))
-        return video_urls
-
-    # ==========================================================================================
+    ###################################################
+    # service
+    ###################################################
     def handleService(self, index, refresh=0, searchPattern="", searchType=""):
-        printDBG("Lodynet.handleService start")
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
+        if isJumpItem(self.currItem):
+            self.currItem = jumpTarget(self, self.currItem)
         name = self.currItem.get("name", "")
         category = self.currItem.get("category", "")
-        printDBG("handleService: || name[%s], category[%s]" % (name, category))
+        printDBG("Lodynet.handleService name[%s] category[%s]" % (name, category))
         self.currList = []
         if name is None:
             self.listMainMenu({"name": "category"})
-        elif category == "sub_menu":
-            self.listSubMenu(self.currItem)
-        elif category == "list_items":
+        elif category == "lody_menu":
+            self.listMenuSection(self.currItem)
+        elif category in ("list_items", "list_episodes", "list_actors", "list_actor_movies"):
+            # the last three: favourites of the old host version
             self.listItems(self.currItem)
-        elif category == "list_episodes":
-            self.listEpisodes(self.currItem)
-        elif category == "load_more":
-            self.loadMore(self.currItem)
-        elif category == "list_actors":
-            self.listActors(self.currItem)
-        elif category == "list_actor_movies":
-            self.listActorMovies(self.currItem)
-        elif category == "search":
-            self.listSearchResult(self.currItem, searchPattern, searchType)
+        elif category in ["search", "search_next_page"]:
+            cItem = dict(self.currItem)
+            cItem.update({"search_item": False, "name": "category"})
+            self.listSearchResult(cItem, searchPattern, searchType)
         elif category == "search_history":
-            self.listsHistory({"category": "search", "name": "history"})
-        elif category == "delete_history":
-            self.delHistory(self.sessionEx)
-
-    # ==========================================================================================
-    def listsHistory(
-        self,
-        baseItem={"name": "history", "category": "search"},
-        desc_key="plot",
-        desc_base=("النوع: "),
-    ):
-        list = self.history.getHistoryList()
-        for histItem in list:
-            plot = ""
-            try:
-                if type(histItem) is type({}):
-                    pattern = histItem.get("pattern", "")
-                    search_type = histItem.get("type", "")
-                    if "" != search_type:
-                        plot = desc_base + search_type
-                else:
-                    pattern = histItem
-                    search_type = None
-                params = dict(baseItem)
-                params.update(
-                    {"title": pattern, "search_type": search_type, desc_key: plot}
-                )
-                self.addDir(params)
-            except Exception:
-                printExc()
-
-    def start(self, cItem):
-        return self.handleService(cItem)
+            self.listsHistory({"name": "history", "category": "search"}, "desc")
+        else:
+            printExc()
+        CBaseHostClass.endHandleService(self, index, refresh)
 
 
-# ==========================================================================================
-class IPTVHost(CHostBase):
+class IPTVHost(GenericFolderWatchedHostMixin, CHostBase):
+
     def __init__(self):
         CHostBase.__init__(self, Lodynet(), True, [])
+        self.cachedRet = None
+        self.refreshAfterWatchedFlagChange = False
+        self.watchedHelper = IPTVWatchedHelper("lodynet")
 
     def withArticleContent(self, cItem):
-        if "video" == cItem.get("type", "") or "list_episodes" == cItem.get(
-            "category", ""
-        ):
-            return True
-        return False
+        return cItem.get("category", "") == "lody_video" or (cItem.get("category", "") == "list_items" and cItem.get("lody_kind", "") == "series")

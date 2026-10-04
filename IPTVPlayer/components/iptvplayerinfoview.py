@@ -76,6 +76,8 @@ _PROBE_SCRIPT = (
     'echo "@@ffmpeg";      ($T ffmpeg -version %s   || true) | head -n 1; '
     'echo "@@wget";        ($T wget --version %s    || true) | head -n 1; '
     'echo "@@curl";        ($T curl --version %s    || true) | head -n 1; '
+    'echo "@@curlimp";     C=$(w curl-impersonate); [ "$C" = "-" ] && [ -x /usr/local/bin/curl-impersonate ] && C=/usr/local/bin/curl-impersonate; '
+    '  [ "$C" != "-" ] && ($T "$C" --version %s || true) | head -n 1; echo "$C"; '
     'echo "@@rtmpdump";    ($T rtmpdump --help %s   || true) | grep -i rtmpdump | head -n 1; '
     'echo "@@exteplayer3"; ($T exteplayer3 %s       || true) | head -n 2; '
     'echo "@@gstplayer";   ($T gstplayer %s         || true) | head -n 2; '
@@ -87,7 +89,7 @@ _PROBE_SCRIPT = (
     'echo "@@deps";        (opkg list-installed 2>/dev/null | grep -i e2iplayer-deps || true); '
     'echo "@@ifdsrc";      (opkg list-installed 2>/dev/null | grep "^gst-ifdsrc " || true); '
     'echo "@@end"\n'
-) % ((_P,) * 13)
+) % ((_P,) * 14)
 
 _PROBE_CACHE = None       # parsed binary block, reused for the whole session
 _PROBE_KEEPALIVE = None   # holds the iptv_system object until its callback fires
@@ -275,6 +277,19 @@ class _SystemInfo(object):
         except Exception:
             return _("loaded (no version)")
 
+    def _impersonateState(self):
+        # sites this session loads with Chrome's fingerprint (pCommon) and the profile that works - '' when none yet
+        try:
+            from Plugins.Extensions.IPTVPlayer.libs import pCommon, curlimpersonate
+            domains = sorted(pCommon._impersonateDomains.copy())  # copy(): worker threads may add meanwhile
+            if not domains:
+                return ""
+            profile = curlimpersonate._state.get("profile") or curlimpersonate.PROFILES[0]
+            return "%s: %s" % (profile, ", ".join(domains))
+        except Exception:
+            printExc()
+            return ""
+
     # --------------------------------------------------------- rendering
 
     def _parseProbe(self, data):
@@ -321,12 +336,25 @@ class _SystemInfo(object):
         def row(name, value):
             return "%s|%s" % (name, value)
 
+        def curlimp_val():
+            # "curl 8.22.0-IMPERSONATE (arm-...) libcurl/8.22.0-IMPERSONATE BoringSSL ..." + the path (or "-")
+            v = sections.get("curlimp") or []
+            path = v[-1] if v else "-"
+            if not path or path == "-":
+                return _("not installed")
+            ver = v[0].split(" (", 1)[0] if len(v) > 1 else ""
+            return "%s (%s)" % (ver, path) if ver else "%s (%s)" % (_("installed"), path)
+
         out = ["--- e2iplayer-deps ---"]
         out.append(row("hlsdl", first("hlsdl")))
         out.append(row("_subparser", self._subparserVersion()))
         out.append(row("cmdwrap", banner("cmdwrap")))
         out.append(row("lsdir", lsdir_val()))
         out.append(row("f4mdump", banner("f4mdump")))
+        out.append(row("curl-impersonate", curlimp_val()))
+        imp = self._impersonateState()
+        if imp:
+            out.append(row("  " + _("as Chrome this session"), imp))
         deps = sections.get("deps") or []
         if deps:
             out.append(row("deps pkg", deps[0]))

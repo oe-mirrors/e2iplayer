@@ -747,6 +747,12 @@ class E2iPlayerWidget(Screen):
         # whenever a fresh mirror list is fetched from the host.
         self._currentLinkOptions = None
         self._resolvingLinkItem = None
+        # keys of the mirrors chosen / failed to resolve since the host was opened (the
+        # list is fetched anew each time): the picker shows them with a check badge and
+        # dimmed text / red with the error badge. Cleared in loadHost(). See _linkMarkKeys().
+        self._usedLinkUrls = set()
+        self._failedLinkUrls = set()
+        self._currentLinkVideoKey = ''
         # Auto playing sequencer
         self.autoPlaySeqStarted = False
         self.autoPlaySeqTimer = eTimer()
@@ -804,8 +810,9 @@ class E2iPlayerWidget(Screen):
         try:
             if self["list"].visible:
                 item = self.getSelItem()
-                self.downloadable = self.isDownloadableType(item.type)
-                if self.downloadable and item and item.urlItems and item.urlItems[0].url.startswith('file://'):  # workaround for LocalMedia
+                # empty list (e.g. host group selector open): nothing selected
+                self.downloadable = item is not None and self.isDownloadableType(item.type)
+                if self.downloadable and item.urlItems and item.urlItems[0].url.startswith('file://'):  # workaround for LocalMedia
                     self.downloadable = False
         except Exception:
             printExc()
@@ -2215,13 +2222,16 @@ class E2iPlayerWidget(Screen):
             # reopen the full mirror list (instead of dead-ending on "no valid links")
             # so they can see it highlighted and try another one
             resolvingLink.failed = True
+            self._failedLinkUrls.update(self._linkMarkKeys(resolvingLink))
             message = _("No valid links available.")
             lastErrorMsg = GetIPTVPlayerLastHostError()
             if '' != lastErrorMsg:
                 message += "\n" + _('Last error: "%s"') % lastErrorMsg
             self.session.openWithCallback(self._reopenLinkPickerAfterFailure, MessageBox, message, type=MessageBox.TYPE_INFO, timeout=10)
             return
-        self.selectLinkForCurrVideo(linkList)
+        # the qualities of this mirror: their marks are kept apart from another mirror's "720p" etc.
+        parentKey = self._linkMarkKeys(resolvingLink)[1] if resolvingLink is not None else ''
+        self.selectLinkForCurrVideo(linkList, parentKey)
 
     def _reopenLinkPickerAfterFailure(self, ret=None):
         self.selectLinkForCurrVideo(self._currentLinkOptions)
@@ -2614,6 +2624,9 @@ class E2iPlayerWidget(Screen):
 
     def loadHost(self, ret=None):
         self.hostFavTypes = []
+        # used / failed link marks only live as long as the host stays open
+        self._usedLinkUrls = set()
+        self._failedLinkUrls = set()
         try:
             _temp = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + self.hostName, globals(), locals(), ['IPTVHost'], 0)
             self.host = _temp.IPTVHost()
@@ -2685,7 +2698,7 @@ class E2iPlayerWidget(Screen):
         self.getInitialList()
     # end selectHostCallback(self, ret):
 
-    def selectLinkForCurrVideo(self, customUrlItems=None):
+    def selectLinkForCurrVideo(self, customUrlItems=None, parentLinkKey=''):
         if not self.visible and not (self.autoPlaySeqStarted and
            config.plugins.iptvplayer.autoplay_start_delay.value == 0):
             self.setStatusTex("")
@@ -2696,6 +2709,8 @@ class E2iPlayerWidget(Screen):
                              CDisplayListItem.TYPE_PICTURE, CDisplayListItem.TYPE_DATA]:
             printDBG("Incorrect item type[%s]" % item.type)
             return
+        # mirror list: the video title; quality list of a resolved mirror: that mirror's key
+        self._currentLinkVideoKey = parentLinkKey or item.name
 
         if None is customUrlItems:
             links = item.urlItems
@@ -2726,7 +2741,9 @@ class E2iPlayerWidget(Screen):
         options = []
         for link in links:
             printDBG("selectLinkForCurrVideo: |%s| |%s|" % (link.name, link.url))
-            options.append(IPTVChoiceBoxItem(link.name, "", link, failed=link.failed))
+            keys = self._linkMarkKeys(link)
+            options.append(IPTVChoiceBoxItem(link.name, "", link, failed=link.failed or not self._failedLinkUrls.isdisjoint(keys),
+                                             used=not self._usedLinkUrls.isdisjoint(keys)))
 
         openChoiceBox(self.session, {'width': 600, 'height': self._getLinkPickerHeight(len(options)), 'current_idx': 0, 'title': _("Select link"), 'options': options, 'list_class': IPTVLinkChoiceBoxList, 'chrome': True, 'footerMargin': 136}, self.selectLinksCallback)
 
@@ -2772,6 +2789,19 @@ class E2iPlayerWidget(Screen):
         itemH, scale = skinchrome.tierRowHeight(35, 40, 55)
         return int(numItems * itemH / scale) + 146
 
+    def _linkMarkKeys(self, link):
+        # a mirror is recognised again by its url, or - for hosts whose links carry a fresh
+        # token on every fetch (e.g. shahid44u /m/<hash>) - by video title + mirror name
+        # (+ its position among mirrors of the same name). The url key carries the name too:
+        # hosts that list several mirrors under one url (data in the name / meta) keep them apart
+        same = 0
+        for other in self._currentLinkOptions or []:
+            if other is link:
+                break
+            if other.name == link.name:
+                same += 1
+        return ["%s\t%s" % (link.url, link.name), "%s\t%s#%d" % (self._currentLinkVideoKey, link.name, same)]
+
     def selectLinksCallback(self, retArg):
         if retArg is None:
             # user cancelled the picker without trying any link - there's nothing
@@ -2780,6 +2810,8 @@ class E2iPlayerWidget(Screen):
         if isinstance(retArg, IPTVChoiceBoxItem) and isinstance(retArg.privateData, CUrlItem):
             link = retArg.privateData
             videoUrl = link.url
+            # remembered for this session: the picker marks the mirrors already chosen
+            self._usedLinkUrls.update(self._linkMarkKeys(link))
             if isinstance(videoUrl, str) and len(videoUrl) > 3:
                 # check if we need to resolve this URL (strict '1' check, same as the
                 # original ChoiceBox-based code - some hosts store this as a string,
@@ -3439,8 +3471,9 @@ class E2iPlayerWidget(Screen):
             else:
                 currSelIndex = -1
             try:
-                hRet = self.host.getCustomActions(currSelIndex)
-                if hRet.status == RetHost.OK and len(hRet.value):
+                # no host loaded yet (group / host selector still open)
+                hRet = self.host.getCustomActions(currSelIndex) if self.host is not None else None
+                if hRet is not None and hRet.status == RetHost.OK and len(hRet.value):
                     for item in hRet.value:
                         if isinstance(item, IPTVChoiceBoxItem):
                             options.append(item)

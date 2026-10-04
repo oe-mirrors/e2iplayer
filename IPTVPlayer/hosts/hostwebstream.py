@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 05.09.2026
+# Last Modified: 03.10.2026 - sport365.live, ustvnow.com and the Teledunet code removed (dead);
+#   nhl24all.ir on the v4 stateshot API; weeb.tv account hint; favourites on the playable rows
+#   (the source APIs are created on demand, a favourite opens without its list); getLinksForVideo
+#   alias for the harness
 ###################################################
 # LOCAL import
 ###################################################
@@ -8,15 +11,12 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostC
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetHostsOrderList
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist, getF4MLinksWithMeta
-from Plugins.Extensions.IPTVPlayer.libs.teledunet import TeledunetParser
 from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
 from Plugins.Extensions.IPTVPlayer.libs.filmonapi import FilmOnComApi, GetConfigList as FilmOn_GetConfigList
 from Plugins.Extensions.IPTVPlayer.libs.webcamera import WebCameraApi
 from Plugins.Extensions.IPTVPlayer.libs.weebtv import WeebTvApi, GetConfigList as WeebTv_GetConfigList
-from Plugins.Extensions.IPTVPlayer.libs.ustvnow import UstvnowApi, GetConfigList as Ustvnow_GetConfigList
 from Plugins.Extensions.IPTVPlayer.libs.meteopl import MeteoPLApi, GetConfigList as MeteoPL_GetConfigList
 from Plugins.Extensions.IPTVPlayer.libs.skylinewebcamscom import WkylinewebcamsComApi, GetConfigList as WkylinewebcamsCom_GetConfigList
-from Plugins.Extensions.IPTVPlayer.libs.sport365live import Sport365LiveApi
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.djingcom import DjingComApi
 ###################################################
@@ -62,12 +62,6 @@ def GetConfigList():
     except Exception:
         printExc()
 
-    optionList.append(getConfigListEntry("----------------ustvnow.com-----------------", config.plugins.iptvplayer.fake_separator))
-    try:
-        optionList.extend(Ustvnow_GetConfigList())
-    except Exception:
-        printExc()
-
     optionList.append(getConfigListEntry("-------------SkyLineWebCams.com-------------", config.plugins.iptvplayer.fake_separator))
     try:
         optionList.extend(WkylinewebcamsCom_GetConfigList())
@@ -92,15 +86,13 @@ class WebStreamHost(CBaseHostClass):
     MAIN_URL = None
     MAIN_GROUPED_TAB = [{'alias_id': 'weeb.tv', 'name': 'weeb.tv', 'title': 'https://weeb.tv/', 'url': '', 'icon': 'https://static.weeb.tv/images/weebtv1.png'},
                         {'alias_id': 'meteo.pl', 'name': 'meteo.pl', 'title': 'https://meteo.pl/', 'url': 'https://meteo.pl/', 'icon': 'https://www.meteo.pl/img/napis_glowny_pl_2.png'},
-                        {'alias_id': 'webcamera.pl', 'name': 'webcamera.pl', 'title': 'https://webcamera.pl/', 'url': 'https://www.webcamera.pl/', 'icon': 'https://static.webcamera.pl/webcamera/img/loader-min.png'},
+                        {'alias_id': 'webcamera.pl', 'name': 'webcamera.pl', 'title': 'https://webcamera.pl/', 'url': 'https://www.webcamera.pl/', 'icon': 'https://www.webcamera.pl/images/logo_mobile.png'},
                         {'alias_id': 'skylinewebcams.com', 'name': 'skylinewebcams.com', 'title': 'https://skylinewebcams.com/', 'url': 'https://www.skylinewebcams.com/', 'icon': 'https://cdn.skylinewebcams.com/skylinewebcams.png'},
                         {'alias_id': 'filmon.com', 'name': 'filmon_groups', 'title': 'https://filmon.com/', 'url': 'https://www.filmon.com/', 'icon': 'https://static.filmon.com/theme/img/filmon_tv_logo_white.png'},
-                        {'alias_id': 'ustvnow.com', 'name': 'ustvnow', 'title': 'https://ustvnow.com/', 'url': 'https://www.ustvnow.com/', 'icon': 'https://2.bp.blogspot.com/-SVJ4uZ2-zPc/UBAZGxREYRI/AAAAAAAAAKo/lpbo8OFLISU/s1600/ustvnow.png'},
-                        {'alias_id': 'sport365.live', 'name': 'sport365.live', 'title': 'https://sport365.live/', 'url': 'https://www.sport365.live/', 'icon': 'https://www.sport365.live/assets/48x48px.png'},
-                        {'alias_id': 'djing.com', 'name': 'djing.com', 'title': 'https://djing.com/', 'url': 'https://djing.com/', 'icon': 'https://www.djing.com/newimages/content/c01.jpg'},
-                        {'alias_id': 'nhl24all.ir', 'name': 'nhl24all.ir', 'title': 'https://nhl24all.ir/', 'url': 'https://api.nhl24all.ir/api/v3/stateshot', 'icon': 'https://nhl24all.ir/favicon.ico'},
-                        {'alias_id': 'livemass.net', 'name': 'livemass.net', 'title': 'https://livemass.net/', 'url': 'https://livemass.net/locations/index.html', 'icon': 'https://livemass.net/images/logo.png'},
-                        {'alias_id': 'windy.com', 'name': 'windy_root', 'title': 'https://www.windy.com/webcams/', 'url': '', 'icon': 'https://www.windy.com/favicon.ico'},
+                        {'alias_id': 'djing.com', 'name': 'djing.com', 'title': 'https://djing.com/', 'url': 'https://djing.com/', 'icon': 'https://djing.com/img/logoog2048.png'},
+                        {'alias_id': 'nhl24all.ir', 'name': 'nhl24all.ir', 'title': 'https://nhl24all.ir/', 'url': 'https://api.nhl24all.ir/api/v4/stateshot', 'icon': 'https://upload.wikimedia.org/wikipedia/en/thumb/3/3a/05_NHL_Shield.svg/250px-05_NHL_Shield.svg.png'},
+                        {'alias_id': 'livemass.net', 'name': 'livemass.net', 'title': 'https://livemass.net/', 'url': 'https://livemass.net/locations/index.html', 'icon': 'https://livemass.net/images/live/iconclr@2x.png'},
+                        {'alias_id': 'windy.com', 'name': 'windy_root', 'title': 'https://www.windy.com/webcams/', 'url': '', 'icon': 'https://img.windy.com/albums/icons/logo-full.png?w=180'},
                         {'alias_id': 'iptv-org', 'name': 'iptvorg_root', 'title': 'https://github.com/iptv-org/iptv', 'url': '', 'icon': 'https://avatars.githubusercontent.com/u/64318809'},
                         {'alias_id': 'freecasthub', 'name': 'freecasthub_root', 'title': 'https://github.com/freecasthub/public-iptv', 'url': '', 'icon': 'https://avatars.githubusercontent.com/u/193939969'},
                         {'alias_id': 'internet-radio-hq', 'name': 'radiohq_list', 'title': 'https://github.com/Pulham/Internet-Radio-HQ-URL-playlists',
@@ -116,12 +108,21 @@ class WebStreamHost(CBaseHostClass):
 
         self.filmOnApi = None
         self.webCameraApi = None
-        self.ustvnowApi = None
         self.meteoPLApi = None
-        self.sport365LiveApi = None
         self.wkylinewebcamsComApi = None
         self.weebTvApi = None
         self.djingComApi = None
+
+    # only the source rows of the main menu show the globe; the source APIs build their rows from dict(cItem),
+    # so without this every category / video below would inherit it (also favourites stored that way)
+    MAIN_MENU_IMAGE_TYPE = 'WWW'
+
+    @classmethod
+    def _dropMainMenuImageType(cls, item):
+        if isinstance(item, dict) and item.get('image_type') == cls.MAIN_MENU_IMAGE_TYPE:
+            item = dict(item)
+            item.pop('image_type', None)
+        return item
 
     def addItem(self, params):
         self.currList.append(params)
@@ -210,6 +211,9 @@ class WebStreamHost(CBaseHostClass):
         printDBG('getWeebTvList start')
         if None is self.weebTvApi:
             self.weebTvApi = WeebTvApi()
+        if '' == config.plugins.iptvplayer.weebtv_login.value.strip():
+            # anonymous /api/setPlayer answers -3 for every channel - say so before the user tries
+            self.addMarker({'title': _('weeb.tv streams need a weeb.tv account - enter the login in the host configuration (Web streams, WeebTV)')})
         if '' == url:
             tmpList = self.weebTvApi.getCategoriesList()
             for item in tmpList:
@@ -243,22 +247,9 @@ class WebStreamHost(CBaseHostClass):
 
     def getWebCameraLink(self, cItem):
         printDBG("getWebCameraLink start")
+        if None is self.webCameraApi:
+            self.webCameraApi = WebCameraApi()  # a favourite opened before the list
         return self.webCameraApi.getVideoLink(cItem)
-
-    #############################################################
-    def getUstvnowList(self, cItem):
-        printDBG("getUstvnowList start")
-        if None is self.ustvnowApi:
-            self.ustvnowApi = UstvnowApi()
-        tmpList = self.ustvnowApi.getChannelsList(cItem)
-        for item in tmpList:
-            self.addVideo(item)
-
-    def getUstvnowLink(self, cItem):
-        printDBG("getUstvnowLink start")
-        urlsTab = self.ustvnowApi.getVideoLink(cItem)
-        return urlsTab
-    #############################################################
 
     ########################################################
     def getDjingComList(self, cItem):
@@ -276,6 +267,8 @@ class WebStreamHost(CBaseHostClass):
 
     def getDjingComLink(self, cItem):
         printDBG("getDjingComLink start")
+        if None is self.djingComApi:
+            self.djingComApi = DjingComApi()
         urlsTab = self.djingComApi.getVideoLink(cItem)
         return urlsTab
 
@@ -289,6 +282,8 @@ class WebStreamHost(CBaseHostClass):
 
     def getMeteoPLLink(self, cItem):
         printDBG("getMeteoPLLink start")
+        if None is self.meteoPLApi:
+            self.meteoPLApi = MeteoPLApi()
         urlsTab = self.meteoPLApi.getVideoLink(cItem)
         return urlsTab
 
@@ -305,29 +300,21 @@ class WebStreamHost(CBaseHostClass):
 
     def getWkylinewebcamsComLink(self, cItem):
         printDBG("getWkylinewebcamsComLink start")
+        if None is self.wkylinewebcamsComApi:
+            self.wkylinewebcamsComApi = WkylinewebcamsComApi()
         urlsTab = self.wkylinewebcamsComApi.getVideoLink(cItem)
         return urlsTab
 
-    def getSport365LiveList(self, cItem):
-        printDBG("getSport365LiveList start")
-        if None is self.sport365LiveApi:
-            self.sport365LiveApi = Sport365LiveApi()
-        tmpList = self.sport365LiveApi.getChannelsList(cItem)
-        for item in tmpList:
-            self.currList.append(item)
-
-    def getSport365LiveLink(self, cItem):
-        printDBG("getSport365LiveLink start")
-        urlsTab = self.sport365LiveApi.getVideoLink(cItem)
-        return urlsTab
-
-    # nhl24all.ir (ex nhl66.ir) - api.nhl24all.ir/api/v3/stateshot lists media_events;
+    # nhl24all.ir (ex nhl66.ir) - api.nhl24all.ir/api/v4/stateshot lists media_events (v3 is 404 since
+    # autumn 2026; anonymous callers only get the "free.vod.sportsnet" flavor);
     # api.nhl24all.ir/api/v2/generate_stream_info -> the HLS master url
     NHL24ALL_API = 'https://api.nhl24all.ir'
 
     def getNhl24AllList(self, url):
         printDBG("getNhl24AllList start")
-        sts, data = self.cm.getPage(url or (self.NHL24ALL_API + '/api/v3/stateshot'), {'header': {'Referer': 'https://nhl24all.ir/', 'Origin': 'https://nhl24all.ir'}})
+        if '/api/v3/' in (url or ''):
+            url = ''  # old favourite / order entry
+        sts, data = self.cm.getPage(url or (self.NHL24ALL_API + '/api/v4/stateshot'), {'header': {'Referer': 'https://nhl24all.ir/', 'Origin': 'https://nhl24all.ir'}})
         if not sts:
             return
         try:
@@ -352,7 +339,8 @@ class WebStreamHost(CBaseHostClass):
             when = (game.get('start_datetime') or me.get('datetime') or '').replace('T', ' ').replace('Z', ' GMT')
             base = ' - '.join(x for x in (matchup, when, me.get('title', '')) if x)
             desc = me.get('description', '') or base
-            live = game.get('status', '') not in ('F', 'FINAL', '')
+            # S = scheduled, F = final - anything else is running
+            live = game.get('status', '') not in ('F', 'FINAL', 'S', '')
             for fl in flavorsByEvent.get(me.get('id'), []):
                 # "premium.*" flavors need a paid-account token generate_stream_info
                 # doesn't have for an anonymous caller (verified: always 401s) -
@@ -362,7 +350,7 @@ class WebStreamHost(CBaseHostClass):
                 title = base + (' [%s]' % fl.get('name', fl.get('id', '')))
                 if live:
                     title = '[LIVE] ' + title
-                params = {'name': 'nhl24all.ir', 'title': title, 'desc': desc,
+                params = {'name': 'nhl24all.ir', 'title': title, 'desc': desc, 'good_for_fav': False,
                           'url': 'nhl24all:%s:%s' % (me.get('id'), fl.get('id', '')),
                           'icon': self.currItem.get('icon', '')}
                 self.addVideo(params)
@@ -663,21 +651,13 @@ class WebStreamHost(CBaseHostClass):
         url = cItem.get('url', '')
         printDBG("WebStreamHost.getLinksForItem name[%s] url[%s]" % (name, url))
 
-        if 'teledunet' in url:
-            newUrl = TeledunetParser().get_rtmp_params(url)
-            return [{'name': 'Własny link', 'url': newUrl}] if newUrl else []
-
         urlList = None
-        if name == 'sport365.live':
-            urlList = self.getSport365LiveLink(cItem)
-        elif 'weeb.tv' in name:
+        if 'weeb.tv' in name:
             url = self.getWeebTvLink(url)
         elif name == 'filmon_channel':
             urlList = self.getFilmOnLink(channelID=url)
         elif name == 'djing.com':
             urlList = self.getDjingComLink(cItem)
-        elif name == 'ustvnow':
-            urlList = self.getUstvnowLink(cItem)
         elif name == 'meteo.pl':
             urlList = self.getMeteoPLLink(cItem)
         elif name == 'skylinewebcams.com':
@@ -712,6 +692,19 @@ class WebStreamHost(CBaseHostClass):
             retlist.append({'name': 'Link', 'url': url})
         return retlist
 
+    def getLinksForVideo(self, cItem):
+        # same entry point as the other CBaseHostClass hosts (used by the test harness)
+        return self.getLinksForItem(cItem)
+
+    def addVideo(self, params):
+        # live channels / webcams / radio rows are favourites unless the source says otherwise
+        params.setdefault('good_for_fav', True)
+        CBaseHostClass.addVideo(self, params)
+
+    def addAudio(self, params):
+        params.setdefault('good_for_fav', True)
+        CBaseHostClass.addAudio(self, params)
+
     def getLinksForFavourite(self, favData):
         try:
             cItem = json_loads(favData)
@@ -722,7 +715,7 @@ class WebStreamHost(CBaseHostClass):
 
     def setInitListFromFavouriteItem(self, favData):
         try:
-            self.currList.append(json_loads(favData))
+            self.currList.append(self._dropMainMenuImageType(json_loads(favData)))
         except Exception:
             printExc()
             return False
@@ -735,15 +728,13 @@ class WebStreamHost(CBaseHostClass):
         url = self.currItem.get("url", '')
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s]" % (name))
         self.currList = []
+        if name is not None:
+            self.currItem = self._dropMainMenuImageType(self.currItem)
 
         if name is None:
-            self.listsMainMenu(self.MAIN_GROUPED_TAB, {'image_type': "WWW"})
-        elif name == "sport365.live":
-            self.getSport365LiveList(self.currItem)
+            self.listsMainMenu(self.MAIN_GROUPED_TAB, {'image_type': self.MAIN_MENU_IMAGE_TYPE})
         elif name == "djing.com":
             self.getDjingComList(self.currItem)
-        elif name == 'ustvnow':
-            self.getUstvnowList(self.currItem)
         elif name == 'meteo.pl':
             self.getMeteoPLList(self.currItem)
         elif name == 'skylinewebcams.com':
@@ -779,6 +770,8 @@ class WebStreamHost(CBaseHostClass):
         elif name == 'radiohq_list':
             self.getRadioHqList(url)
 
+        if name is not None:
+            self.currList = [self._dropMainMenuImageType(item) for item in self.currList]
         CBaseHostClass.endHandleService(self, index, refresh)
 
 

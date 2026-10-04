@@ -356,11 +356,17 @@ class IPTVLinkChoiceBoxList(IPTVRadioButtonList):
     # LinkItem.png is the purpose-built icon for this exact screen;
     # GlobItem.png stays for the generic web/link CDisplayListItem.TYPE_WWW
     # use elsewhere
+    # A mirror already chosen in this session (item.used, see the widget's
+    # _usedLinkUrls) gets CheckBadge.png and a dimmed "visited" text colour;
+    # failed keeps priority (red + error badge).
     LINK_ICON_FILENAME = 'LinkItem.png'
+    CHECK_BADGE_FILENAME = 'CheckBadge.png'
+    USED_TEXT_COLOR = "#A0A0A0"
 
     def __init__(self):
         IPTVRadioButtonList.__init__(self)
         self.linkIconPIX = None
+        self.checkBadgePIX = None
 
     def onCreate(self):
         IPTVRadioButtonList.onCreate(self)
@@ -368,20 +374,26 @@ class IPTVLinkChoiceBoxList(IPTVRadioButtonList):
             self.linkIconPIX = LoadPixmap(cached=True, path=GetIconDir(self.LINK_ICON_FILENAME))
         except Exception:
             self.linkIconPIX = None
+        try:
+            self.checkBadgePIX = LoadPixmap(cached=True, path=GetIconDir(self.CHECK_BADGE_FILENAME))
+        except Exception:
+            self.checkBadgePIX = None
 
     def onDestroy(self):
         IPTVRadioButtonList.onDestroy(self)
         self.linkIconPIX = None
+        self.checkBadgePIX = None
 
     def buildEntry(self, item):
         width = self.l.getItemSize().width()
         height = self.l.getItemSize().height()
         failed = getattr(item, 'failed', False)
+        used = not failed and getattr(item, 'used', False)
         textX = self.ICON_X + self.ICON_W + 5
         textArgs = (eListboxPythonMultiContent.TYPE_TEXT, textX, 0, width - textX, height, 1, RT_HALIGN_LEFT | RT_VALIGN_CENTER, item.name)
-        if failed:
+        if failed or used:
             try:
-                textArgs = textArgs + (parseColor(self.FAILED_TEXT_COLOR).argb(),)
+                textArgs = textArgs + (parseColor(self.FAILED_TEXT_COLOR if failed else self.USED_TEXT_COLOR).argb(),)
             except Exception:
                 pass
         res = [None, textArgs]
@@ -391,6 +403,9 @@ class IPTVLinkChoiceBoxList(IPTVRadioButtonList):
         if failed and self.errorBadgePIX is not None:
             x, y, w, h = fitPixmapInBox(self.errorBadgePIX, self.BADGE_X, self.BADGE_Y, self.BADGE_W, self.BADGE_H)
             res.append(MultiContentEntryPixmapAlphaBlend(pos=(x, y), size=(w, h), png=self.errorBadgePIX, flags=BT_SCALE))
+        elif used and self.checkBadgePIX is not None:
+            x, y, w, h = fitPixmapInBox(self.checkBadgePIX, self.BADGE_X, self.BADGE_Y, self.BADGE_W, self.BADGE_H)
+            res.append(MultiContentEntryPixmapAlphaBlend(pos=(x, y), size=(w, h), png=self.checkBadgePIX, flags=BT_SCALE))
         return res
 
 

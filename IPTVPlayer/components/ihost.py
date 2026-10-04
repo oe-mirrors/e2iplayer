@@ -511,8 +511,11 @@ class CHostBase(IHost):
     def getFavouriteItem(self, Index=0):
         retCode = RetHost.ERROR
         retlist = []
-        if not self.isValidIndex(Index, self.favouriteTypes):
-            RetHost(retCode, value=retlist)
+        if not self.isValidIndex(Index):
+            return RetHost(retCode, value=retlist)
+        # folder rows a host marks with good_for_fav are favourites too
+        if not self.host.currList[Index].get('good_for_fav', False) and not self.isValidIndex(Index, self.favouriteTypes):
+            return RetHost(retCode, value=retlist)
 
         cItem = self.host.currList[Index]
         data = self.host.getFavouriteData(cItem)
@@ -692,7 +695,8 @@ class CHostBase(IHost):
     def setSearchPattern(self):
         try:
             list = self.host.getCurrList()
-            if 'history' == list[self.currIndex]['name']:
+            # rows without "name" are normal (many hosts) - only search history rows matter here
+            if 'history' == list[self.currIndex].get('name'):
                 pattern = list[self.currIndex]['title']
                 searchtype = list[self.currIndex]['search_type']
                 try:

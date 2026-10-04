@@ -1,35 +1,36 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 22.01.2026
-###################################################
-# LOCAL import
-###################################################
-from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
-from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, E2ColoR, CSearchHistoryHelper, GetMovieMetaDataDir
-from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
-from Components.config import config, ConfigText
-
-###################################################
-# FOREIGN import
-###################################################
+# Last Modified: 03.10.2026 - revived for the redesigned btolat.com (football clips / highlights)
+#   - one card parser for all video lists (/videos "card xrow video" + LoadMore API, league/team pages
+#     "categoryNewsCard", player pages "vcard xrow video"); relative "video/<id>" links; date from
+#     data-date or the image path; "?p=" paging (First page / Jump / Next page) and LoadMore paging
+#   - /leagues: new panel / tcard / acard layout -> league (all videos, top scorers, teams) -> team
+#     (videos, squad) -> player videos; professionals without one request per player
+#   - search: POST /api/data/search JSON through self.cm (the old /news/Search is gone; no "requests")
+#   - links: YouTube (urlparser), Twitter/X syndication JSON (direct MP4/HLS), vortexvisionworks
+#     /player/ embeds (HLS with Referer/Origin as strwithmeta meta); "blockedvideos" iframes are read
+#     through the video's /embed/ page (still plays), only when that has no stream either -> "removed"
+#     message instead of an empty list; no more botolat_<title>.iptv junk files
+#   - watched flag (video:<id>), downloaded flag (stable /video/<id> page url), favourites, sidecar,
+#     name normalisation "Title (YYYY-MM-DD)", INFO from the video / player / team page
 import re
-import json
-import os
-import io
-import requests
+import time
 
-from urllib.parse import urlparse
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
+from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
+from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
+from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
+from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
+from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
 
-###################################################
-Y = E2ColoR("yellow")
-W = E2ColoR("white")
-DD = E2ColoR("dodgerblue")
-CY = E2ColoR("cyan")
-G = E2ColoR("green")
-R = E2ColoR("red")
+# start of one video card in any of the site's list layouts
+CARD_RE = re.compile(r'<(?:div|article)\s+class="(?:card xrow video|vcard xrow video|categoryNewsCard)[^"]*"[^>]*>')
+VIDEO_CATS = ("bt_video",)
 
 
-###################################################
 def GetConfigList():
     return []
 
@@ -38,978 +39,511 @@ def gettytul():
     return "https://www.btolat.com/"
 
 
-class BtolatCom(CBaseHostClass):
+class BtolatCom(GenericFolderWatchedScraperMixin, CBaseHostClass):
+
+    FAV_FIELDS = ("name", "category", "type", "url", "title", "raw_title", "icon", "desc", "date", "league", "duration")
+
     def __init__(self):
         CBaseHostClass.__init__(self, {"history": "btolat.com", "cookie": "btolat.com.cookie"})
-        config.plugins.iptvplayer.btolat_user = ConfigText(default="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36", fixed_size=False)
-        self.USER_AGENT = config.plugins.iptvplayer.btolat_user.value
-        self.MAIN_URL = "https://www.btolat.com/"
+        self.MAIN_URL = gettytul()
         self.DEFAULT_ICON_URL = "https://i.ibb.co/RkbWVvBZ/botolat.png"
-        self.HTTP_HEADER = {"User-Agent": self.USER_AGENT, "DNT": "1", "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8", "Accept-Encoding": "gzip, deflate", "Accept-Language": "ar,en-US;q=0.7,en;q=0.3", "Referer": self.getMainUrl(), "Origin": self.getMainUrl()}
-        self.history = CSearchHistoryHelper("btolat")
-        self.defaultParams = {"header": self.HTTP_HEADER, "with_metadata": True, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
-        self.cacheLeagues = {}
-        self.cacheVideos = {}
+        self.HEADER = self.cm.getDefaultHeader(browser="chrome")
+        self.HEADER.update({"Accept-Language": "ar,en-US;q=0.7,en;q=0.3", "Referer": self.MAIN_URL})
+        self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
+        self.MENU = [
+            {"category": "bt_loadmore", "title": _("Latest videos"), "url": self.getFullUrl("/videos")},
+            {"category": "bt_leagues", "title": _("Leagues"), "url": self.getFullUrl("/leagues")},
+            {"category": "bt_professionals", "title": _("Professionals"), "url": self.getFullUrl("/professionals/video")},
+        ] + self.searchItems()
+        self.watchedHelper = IPTVWatchedHelper("botolat")
+        self.wfInitFolderCache()
+        self._twitterBlocked = False
 
-    def getPage(self, baseUrl, addParams={}, post_data=None):
-        if addParams == {}:
+    ###################################################
+    # helpers
+    ###################################################
+    def getPage(self, baseUrl, addParams=None, post_data=None):
+        if addParams is None:
             addParams = dict(self.defaultParams)
-        baseUrl = self.cm.iriToUri(baseUrl)
-        sts, data = self.cm.getPage(baseUrl, addParams, post_data)
-        return sts, data
+        return self.cm.getPage(self.cm.iriToUri(baseUrl), addParams, post_data)
 
-    def getFullIconUrl(self, url):
-        url = self.getFullUrl(url)
-        if url == "":
-            return ""
-        cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE)
-        return strwithmeta(url, {"Cookie": cookieHeader, "User-Agent": self.USER_AGENT})
+    def getFullIconUrl(self, url, currUrl=None):
+        url = (url or "").strip()
+        if url.startswith("//"):
+            url = "https:" + url
+        return CBaseHostClass.getFullIconUrl(self, url, currUrl) if url else ""
 
-    def setMainUrl(self, url):
-        if self.cm.isValidUrl(url):
-            self.MAIN_URL = self.cm.getBaseUrl(url)
+    def _videoUrl(self, vid):
+        return self.MAIN_URL + "video/" + vid
 
-    def listMainMenu(self, cItem):
-        printDBG("BtolatCom.listMainMenu")
-        MAIN_CAT_TAB = [
-            {"category": "list_videos", "title": "أحدث الفيديوهات", "url": self.getFullUrl("/video")},
-            {"category": "list_leagues", "title": "البطولات والدوريات", "url": self.getFullUrl("/leagues")},
-            {"category": "list_top_scorers", "title": "الهدافين", "url": self.getFullUrl("/leagues")},
-            {"category": "list_professionals", "title": "المحترفين", "url": self.getFullUrl("/professionals/video")},
-            {"category": "list_players", "title": "قائمة اللاعبين وأهدافهم", "url": self.getFullUrl("/leagues")},
-            {"category": "search", "title": _("Search"), "search_item": True},
-            {"category": "search_history", "title": _("Search history")},
-            {"category": "delete_history", "title": _("Delete search history")},
-        ]
-        self.listsTab(MAIN_CAT_TAB, cItem)
+    @staticmethod
+    def _videoId(url):
+        m = re.search(r"(?:^|/)video/(\d+)", url or "")
+        return m.group(1) if m else ""
+
+    @staticmethod
+    def _date(rawDate, icon):
+        # data-date "9/16/2026 12:12:00 AM" (M/D/Y, "1/1/0001" = unset) or the image path /2026/9/16/video/
+        m = re.match(r"\s*(\d{1,2})/(\d{1,2})/(\d{4})", rawDate or "")
+        if m and m.group(3) != "0001":
+            return "%s-%02d-%02d" % (m.group(3), int(m.group(1)), int(m.group(2)))
+        m = re.search(r"/(\d{4})/(\d{1,2})/(\d{1,2})/(?:video|news)/", icon or "")
+        if m:
+            return "%s-%02d-%02d" % (m.group(1), int(m.group(2)), int(m.group(3)))
+        return ""
+
+    def _title(self, title, date):
+        if IsMediaNamingNormalized() and date and date not in title:
+            return "%s (%s)" % (title, date)
+        return title
+
+    def _addVideoRow(self, title, vid, icon, date, league="", duration=""):
+        desc = " | ".join(x for x in (league, date, duration) if x)
+        self.addVideo({"name": "category", "good_for_fav": True, "category": "bt_video", "title": self._title(title, date), "raw_title": title,
+                       "url": self._videoUrl(vid), "icon": self.getFullIconUrl(icon), "desc": desc, "date": date, "league": league, "duration": duration})
+
+    def _parseCards(self, data):
+        # -> number of video rows added, last card's (data-val, data-date) for the LoadMore API
+        starts = [m.start() for m in CARD_RE.finditer(data)] + [len(data)]
+        seen = set()
+        last = ("", "")
+        for idx in range(len(starts) - 1):
+            block = data[starts[idx]:starts[idx + 1]]
+            vid = self.cm.ph.getSearchGroups(block, r"""href=['"](?:https?://[^/'"]+)?/?video/(\d+)""")[0]
+            if not vid:
+                continue
+            head = self.cm.ph.getSearchGroups(block, r"^(<[^>]+>)")[0]
+            last = (self.cm.ph.getSearchGroups(head, r'data-val="(\d+)"')[0] or vid, self.cm.ph.getSearchGroups(head, r'data-date="([^"]*)"')[0])
+            if vid in seen:
+                continue
+            seen.add(vid)
+            title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(block, r"(?s)<h3[^>]*>(.*?)</h3>")[0])
+            if not title:
+                title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(block, r'(?s)<div class="info">\s*<b>(.*?)</b>')[0])
+            if not title:
+                title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(block, r'alt="([^"]+)"')[0])
+            if not title:
+                continue
+            icon = self.cm.ph.getSearchGroups(block, r'data-(?:src|original)="([^"]+)"')[0]
+            league = self.cleanHtmlStr(self.cm.ph.getSearchGroups(block, r'(?s)<a[^>]+class="(?:category|categoryTag|badge)"[^>]*>(.*?)</a>')[0])
+            duration = self.cleanHtmlStr(self.cm.ph.getSearchGroups(block, r'<span class="dur num">\s*(\d+:\d+(?::\d+)?)\s*</span>')[0])
+            self._addVideoRow(title, vid, icon, self._date(last[1], icon), league, duration)
+        return len(seen), last
+
+    def getFavouriteData(self, cItem):
+        try:
+            if cItem.get("category") in VIDEO_CATS:
+                return json_dumps(dict((key, cItem[key]) for key in self.FAV_FIELDS if key in cItem))
+        except Exception:
+            printExc()
+        return CBaseHostClass.getFavouriteData(self, cItem)
+
+    ###################################################
+    # watched flag
+    ###################################################
+    def _getWatchedKeyForItem(self, cItem):
+        try:
+            if isinstance(cItem, dict) and cItem.get("category", "") in VIDEO_CATS:
+                vid = self._videoId(cItem.get("url", ""))
+                return ("video:%s" % vid) if vid else ""
+        except Exception:
+            printExc()
+        return ""
+
+    ###################################################
+    # lists
+    ###################################################
+    def listLoadMore(self, cItem):
+        # /videos (+ POST /api/video/LoadMore/0 with the last card's id for the next pages)
+        page = cItem.get("page", 1)
+        printDBG("BtolatCom.listLoadMore page[%s]" % page)
+        if page <= 1:
+            sts, data = self.getPage(cItem["url"])
+        else:
+            params = dict(self.defaultParams)
+            params["header"] = dict(self.HEADER, **{"X-Requested-With": "XMLHttpRequest"})
+            sts, data = self.getPage(self.getFullUrl("/api/video/LoadMore/0"), params, {"lastRowId": cItem.get("last_row_id", ""), "lasRowDate": cItem.get("last_row_date", "")})
+            if sts:
+                try:
+                    data = (json_loads(data) or {}).get("html", "") or ""
+                except Exception:
+                    printExc()
+                    data = ""
+        if not sts:
+            return
+        count, last = self._parseCards(data)
+        listItem = dict(cItem)
+        listItem.update({"category": "bt_loadmore"})
+        addPagingItems(self, listItem, page, bool(count and last[0]), 0, "", {"last_row_id": last[0], "last_row_date": last[1]})
+
+    def listPaged(self, cItem):
+        # league / team / player video pages with "?p=N"
+        page = cItem.get("page", 1)
+        baseUrl = cItem.get("base_url") or cItem["url"].split("?")[0]
+        url = baseUrl if page <= 1 else "%s?p=%d" % (baseUrl, page)
+        printDBG("BtolatCom.listPaged [%s]" % url)
+        sts, data = self.getPage(url)
+        if not sts:
+            return
+        count = self._parseCards(data)[0]
+        hasNext = bool(count) and 'class="next-page"' in data
+        listItem = dict(cItem)
+        listItem.update({"category": "bt_paged", "base_url": baseUrl, "url": baseUrl})
+        addPagingItems(self, listItem, page, hasNext, 0, baseUrl + "?p={page}")
 
     def listLeagues(self, cItem):
         printDBG("BtolatCom.listLeagues")
         sts, data = self.getPage(cItem["url"])
         if not sts:
             return
-        # ===== Get all "mostLeagues" blocks =====
-        blocks = re.findall(r'(<div\s+class="mostLeagues[^"]*"[^>]*>.*?</div>)', data, re.DOTALL | re.IGNORECASE)
-        for b in blocks:
-            title = self.cm.ph.getSearchGroups(b, r"<h[12][^>]*>(.*?)</h[12]>")[0]
-            if not title:
+        seen = set()
+        for panel in data.split('<div class="panel')[1:]:
+            head = self.cleanHtmlStr(self.cm.ph.getSearchGroups(panel, r'(?s)<h2 class="panel-title"[^>]*>(.*?)</h2>')[0])
+            cards = re.findall(r'(?s)<a\s+[^>]*class="[tea]card"[^>]*>.*?</a>', panel)
+            if not cards:
                 continue
-            title_clean = self.cleanHtmlStr(title)
-            # ===== Section marker =====
-            if "أهم البطولات" in title_clean:
-                self.addMarker({"title": Y + "========== *  أهم البطولات  * ==========" + W})
-            elif "كل البطولات" in title_clean:
-                self.addMarker({"title": CY + "========== *  كل البطولات  * ==========" + W})
-            else:
-                continue
-            # ===== Extract leagues under each marker =====
-            leagues = re.findall(r'<a[^>]+class="[^"]*leagueBox[^"]*"[^>]*>.*?</a>', b, re.DOTALL | re.IGNORECASE)
-            printDBG("BtolatCom.listLeagues [%s] leagues found: %d" % (title_clean, len(leagues)))
-            for item in leagues:
-                url = self.cm.ph.getSearchGroups(item, r'href="([^"]+)"')[0]
-                icon = self.cm.ph.getSearchGroups(item, r'<img[^>]+src="([^"]+)"')[0]
-                title = self.cm.ph.getSearchGroups(item, r"<h3>(.*?)</h3>")[0]
-                if not url or not title:
+            if head:
+                self.addMarker({"title": head, "desc": ""})
+            for card in cards:
+                href = self.cm.ph.getSearchGroups(card, r'href="(/league/\d+/[^"]+)"')[0]
+                title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(card, r'(?s)<span class="label">(.*?)</span>')[0])
+                if not href or not title or href in seen:
                     continue
-                full_url = self.getFullUrl(url.replace("/league/", "/league/videos/"))
-                params = dict(cItem)
-                params.update({"good_for_fav": True, "category": "list_league_videos", "title": self.cleanHtmlStr(title), "url": full_url, "icon": self.getFullIconUrl(icon), "team_url": self.getFullUrl(url)})
-                self.addDir(params)
+                seen.add(href)
+                icon = self.cm.ph.getSearchGroups(card, r'<img[^>]+src="([^"]+)"')[0]
+                self.addDir({"name": "category", "good_for_fav": True, "category": "bt_league", "title": title,
+                             "url": self.getFullUrl(href), "icon": self.getFullIconUrl(icon)})
 
-    def listLeagueVideos(self, cItem):
-        printDBG("BtolatCom.listLeagueVideos [%s]" % cItem)
-        page = cItem.get("page", 1)
+    def listLeague(self, cItem):
+        # /league/<id>/<slug> -> all videos, top scorers, the league's teams
         url = cItem["url"]
-        if page > 1:
-            if "?" in url:
-                url += "&p=" + str(page)
-            else:
-                url += "?p=" + str(page)
-        sts, data = self.getPage(url)
+        m = re.search(r"/league/(?:[a-z]+/)?(\d+)/([^/?#]+)", url)
+        if not m:
+            return
+        lid, slug = m.group(1), m.group(2)
+        videos = self.getFullUrl("/league/videos/%s/%s" % (lid, slug))
+        base = {"name": "category", "good_for_fav": True, "icon": cItem.get("icon", "")}
+        self.addDir(dict(base, category="bt_paged", title=_("All videos"), url=videos, base_url=videos))
+        self.addDir(dict(base, category="bt_scorers", title=_("Top scorers"), url=self.getFullUrl("/league/topscores/%s/%s" % (lid, slug)), league_id=lid))
+        sts, data = self.getPage(videos)
         if not sts:
             return
-        # ----- 1) Add "All videos" folder for the league -----
-        params_all_videos = dict(cItem)
-        params_all_videos.update({"category": "list_all_league_videos", "title": Y + "جميع الفيديوهات" + W, "url": url})  # all league videos
-        self.addDir(params_all_videos)
-        # ----- 2) Add a marker under "All videos" folder -----
-        params_marker = dict(cItem)
-        params_marker.update({"category": "none", "title": CY + "========== الأندية والفرق ==========" + W})
-        self.addMarker(params_marker)
-        # ----- 3) Add teams folders under the marker -----
-        teams_block = re.search(r'<div class="importantTeams[^"]*">(.*?)</div>\s*</div>', data, re.DOTALL)
-        if teams_block:
-            teams = re.findall(r'<a href="([^"]+)" class="importantTeam">.*?<img src="([^"]+)"[^>]*>.*?<h3>(.*?)</h3>', teams_block.group(1), re.DOTALL)
-            for team_url, team_icon, team_name in teams:
-                params = dict(cItem)
-                params.update({"good_for_fav": True, "category": "list_league_team_videos", "title": self.cleanHtmlStr(team_name), "url": self.getFullUrl(team_url), "team_url": self.getFullUrl(team_url), "icon": self.getFullIconUrl(team_icon)})  # team videos handler
-                self.addDir(params)
+        block = self.cm.ph.getDataBeetwenMarkers(data, 'class="importantTeams', '<div class="clearfix', False)[1]
+        teams = re.findall(r'(?s)<a href="(/team/\d+/[^"]+)" class="importantTeam">.*?<img[^>]+src="([^"]+)".*?<h3>(.*?)</h3>', block)
+        if teams:
+            self.addMarker({"title": _("Teams"), "desc": ""})
+        for href, icon, name in teams:
+            self.addDir({"name": "category", "good_for_fav": True, "category": "bt_team", "title": self.cleanHtmlStr(name),
+                         "url": self.getFullUrl(href), "icon": self.getFullIconUrl(icon)})
 
-    def listLeagueTeamVideos(self, cItem):
-        printDBG("BtolatCom.listLeagueTeamVideos [%s]" % cItem)
-        page = cItem.get("page", 1)
-        url = cItem["url"]
-        # Convert team URL to its videos page
-        videos_url = url.replace("/team/", "/team/videos/") if "/team/" in url else url
-        if page > 1:
-            videos_url += "&p=" + str(page) if "?" in videos_url else "?p=" + str(page)
-        sts, data = self.getPage(videos_url)
-        if not sts:
+    def listTeam(self, cItem):
+        m = re.search(r"/team/(?:[a-z]+/)?(\d+)/([^/?#]+)", cItem["url"])
+        if not m:
             return
-        # ----- 1) Search for team videos -----
-        blocks = re.findall(r'<div class="categoryNewsCard">.*?</div>', data, re.DOTALL)
-        if blocks:
-            for b in blocks:
-                # Video URL
-                video_url = self.cm.ph.getSearchGroups(b, r'<a[^>]+href=[\'"](/video/[^\'"]+)[\'"]')
-                if not video_url:
-                    continue
-                video_url = video_url[0]
-                # Video title
-                title = self.cm.ph.getSearchGroups(b, r"<h3[^>]*>(.*?)</h3>")
-                if not title:
-                    continue
-                title = self.cleanHtmlStr(title[0])
-                # Video icon
-                icon = self.cm.ph.getSearchGroups(b, r'data-original=[\'"]([^\'"]+)[\'"]')
-                if not icon:
-                    icon = self.cm.ph.getSearchGroups(b, r'src=[\'"]([^\'"]+)[\'"]')
-                icon = icon[0] if icon else ""
-                # League / category name
-                cat = self.cm.ph.getSearchGroups(b, r'<a\s+class="categoryTag"[^>]*>(.*?)</a>')
-                cat_name = self.cleanHtmlStr(cat[0]) if cat else ""
-                # ---------- Extract image URL first ----------
-                icon = self.cm.ph.getSearchGroups(b, r'data-original=[\'"]([^\'"]+)[\'"]')
-                if not icon:
-                    icon = self.cm.ph.getSearchGroups(b, r'src=[\'"]([^\'"]+)[\'"]')
-                icon = icon[0] if icon else ""
-                # ---------- Extract date from image URL ----------
-                video_date = ""
-                if icon:
-                    date_m = re.search(r"/(\d{4})/(\d{1,2})/(\d{1,2})/video/", icon)
-                    if date_m:
-                        video_date = "%s-%s-%s" % (date_m.group(1), date_m.group(2), date_m.group(3))
-                # Video description (category + date)
-                if cat_name and video_date:
-                    desc = cat_name + "\n" + CY + video_date + W
-                elif video_date:
-                    desc = CY + video_date + W
-                else:
-                    desc = cat_name or title
-                params = dict(cItem)
-                params.update({"good_for_fav": True, "title": title, "url": self.getFullUrl(video_url), "icon": self.getFullIconUrl(icon), "desc": Y + desc + W})
-                self.addVideo(params)
-        else:
-            # ----- 2) If no videos found, add a marker -----
-            params_marker = dict(cItem)
-            params_marker.update({"category": "none", "title": CY + "لا يوجد بيانات حاليا" + W})
-            self.addMarker(params_marker)
-        # ===== pagination =====
-        if 'class="next-page"' in data:
-            params = dict(cItem)
-            params.update({"title": Y + "Next Page المزيد من الفيديوهات" + " ▶▶▶" + W, "page": page + 1, "url": cItem["url"], "category": "list_league_team_videos"})
-            self.addDir(params)
+        base = {"name": "category", "good_for_fav": True, "icon": cItem.get("icon", ""), "team_url": cItem["url"]}
+        videos = self.getFullUrl("/team/videos/%s/%s" % m.groups())
+        self.addDir(dict(base, category="bt_paged", title="%s - %s" % (cItem.get("title", ""), _("Videos")), url=videos, base_url=videos))
+        self.addDir(dict(base, category="bt_squad", title="%s - %s" % (cItem.get("title", ""), _("Squad")), url=self.getFullUrl("/team/squad/%s/%s" % m.groups())))
 
-    def listAllLeagueVideos(self, cItem):
-        printDBG("BtolatCom.listAllLeagueVideos [%s]" % cItem)
-        page = cItem.get("page", 1)
-        url = cItem["url"]
-        if page > 1:
-            url += "&p=" + str(page) if "?" in url else "?p=" + str(page)
-        sts, data = self.getPage(url)
-        if not sts:
+    def _playerDir(self, href, name, icon, desc=""):
+        m = re.search(r"/player/(?:[a-z]+/)?(\d+)/([^/?#\"]+)", href)
+        if not m:
             return
-        # ===== Extract all videos (same as listLeagueVideos) =====
-        blocks = re.findall(r'<div class="categoryNewsCard">.*?</div>', data, re.DOTALL)
-        printDBG("BtolatCom.listAllLeagueVideos found [%d] items" % len(blocks))
-        for b in blocks:
-            # Video URL
-            video_url = self.cm.ph.getSearchGroups(b, r'<a[^>]+href=[\'"](/video/[^\'"]+)[\'"]')
-            # Video title
-            title = self.cm.ph.getSearchGroups(b, r"<h3[^>]*>(.*?)</h3>")
-            # Video icon
-            icon = self.cm.ph.getSearchGroups(b, r'data-original=[\'"]([^\'"]+)[\'"]')
-            if not icon:
-                icon = self.cm.ph.getSearchGroups(b, r'src=[\'"]([^\'"]+)[\'"]')
-            if not video_url or not title:
-                printDBG("BtolatCom.listAllLeagueVideos skip item (no data)")
-                continue
-            video_url = video_url[0]
-            title = self.cleanHtmlStr(title[0])
-            icon = icon[0] if icon else ""
-            # League / category name
-            cat = self.cm.ph.getSearchGroups(b, r'<a\s+class="categoryTag"[^>]*>(.*?)</a>')
-            cat_name = self.cleanHtmlStr(cat[0]) if cat else ""
-            # Extract date from image URL
-            date_m = re.search(r"https://img\.btolat\.com/(\d+)/(\d+)/(\d+)/video/", b)
-            video_date = "%s-%s-%s" % (date_m.group(1), date_m.group(2), date_m.group(3))
-            # Video description: category + date
-            if cat_name and video_date:
-                desc = cat_name + "\n" + CY + video_date + W
-            elif video_date:
-                desc = CY + video_date + W
-            else:
-                desc = cat_name or title
-            params = dict(cItem)
-            params.update({"good_for_fav": True, "title": title, "url": self.getFullUrl(video_url), "icon": self.getFullIconUrl(icon), "desc": Y + desc + W})
-            self.addVideo(params)
-        # ===== pagination =====
-        if 'class="next-page"' in data:
-            params = dict(cItem)
-            params.update({"title": Y + "Next Page المزيد من الفيديوهات" + " ▶▶▶" + W, "page": page + 1, "url": url, "category": "list_all_league_videos"})
-            self.addDir(params)
+        videos = self.getFullUrl("/player/videos/%s/%s" % m.groups())
+        self.addDir({"name": "category", "good_for_fav": True, "category": "bt_paged", "title": name, "url": videos, "base_url": videos,
+                     "player_url": self.getFullUrl("/player/%s/%s" % m.groups()), "icon": self.getFullIconUrl(icon), "desc": desc})
 
-    def listTopScorersMenu(self, cItem):
-        printDBG("BtolatCom.listTopScorersMenu [%s]" % cItem)
+    def listSquad(self, cItem):
         sts, data = self.getPage(cItem["url"])
         if not sts:
             return
-        # Extract leagues / competitions
-        leagues = re.findall(r'<a[^>]+class="[^"]*leagueBox[^"]*"[^>]*>.*?</a>', data, re.DOTALL | re.IGNORECASE)
-        for item in leagues:
-            url = self.cm.ph.getSearchGroups(item, r'href="([^"]+)"')[0]
-            icon = self.cm.ph.getSearchGroups(item, r'<img[^>]+src="([^"]+)"')[0]
-            title = self.cm.ph.getSearchGroups(item, r"<h3>(.*?)</h3>")[0]
-            if not url or not title:
+        block = self.cm.ph.getSearchGroups(data, r"(?s)<table[^>]+squadTable[^>]*>(.*?)</table>")[0]
+        for row in re.findall(r"(?s)<tr>(.*?)</tr>", block):
+            m = re.search(r'(?s)<a href="([^"]+/player/[^"]+)"[^>]*>\s*<img[^>]+src="([^"]+)"[^>]*>(.*?)</a>', row)
+            if not m:
                 continue
-            params = dict(cItem)
-            params.update({"good_for_fav": True, "category": "list_league_top_scorers", "title": self.cleanHtmlStr(title), "url": self.getFullUrl(url.replace("/league/", "/league/topscores/")), "icon": self.getFullIconUrl(icon), "league_id": self.cm.ph.getSearchGroups(url, r"/league/(\d+)")[0]})  # Scorers page URL  # Extract league ID
-            self.addDir(params)
+            name = self.cleanHtmlStr(m.group(3))
+            number = self.cleanHtmlStr(self.cm.ph.getSearchGroups(row, r"(?s)<i[^>]*>(.*?)</i>")[0])
+            cols = [self.cleanHtmlStr(c) for c in re.findall(r"(?s)<span>(.*?)</span>", row)]
+            desc = " | ".join(x for x in ([("#" + number) if number else ""] + cols) if x)
+            self._playerDir(m.group(1), name, m.group(2), desc)
 
-    def listLeagueTopScorers(self, cItem):
-        printDBG("BtolatCom.listLeagueTopScorers [%s]" % cItem)
+    def listScorers(self, cItem):
         page = cItem.get("page", 1)
-        last_pos = cItem.get("last_position", 0)
-        league_id = cItem.get("league_id", "")
-        if page == 1:
-            url = cItem["url"]
-            sts, data = self.getPage(url)
-            if not sts:
-                return
-            # ====== No top scorers table ======
-            if "لا يوجد جدول هدافين" in data:
-                self.addMarker({"title": Y + "لا يوجد هدافين لهذه البطولة" + W, "icon": cItem.get("icon", "")})
-                return
+        lid = cItem.get("league_id", "")
+        if page <= 1:
+            sts, data = self.getPage(cItem["url"])
         else:
-            # url = f'https://www.btolat.com/league/TopScoresLoadMore/{league_id}/aa'
-            url = "https://www.btolat.com/league/TopScoresLoadMore/%s/aa" % league_id
-            post_data = {"Id": league_id, "lastPosition": last_pos}
-            sts, data = self.getPage(url, post_data=post_data)
-            if not sts:
-                return
-            try:
-                data_json = json.loads(data)
-            except Exception:
-                return
-            if not data_json.get("success", True):
-                printDBG("No more top scorers (success = false)")
-                return
-            data = data_json.get("html", "")
-        # ===== Extract players + images =====
-        players = re.findall(
-            r'<tr\s+data-position="(\d+)">.*?'  # position / rank
-            r'<a href="(/player/[^"]+)">.*?'  # player profile link
-            r'<img[^>]+src="([^"]+)".*?'  # player image
-            r"<b>([^<]+)</b>.*?"  # player name
-            r"</a>.*?"
-            r'<a href="(/team/[^"]+)">.*?'  # team link
-            r'<img[^>]+src="([^"]+)".*?'  # team logo
-            r"<b>([^<]+)</b>.*?"  # team name
-            r"</a>.*?"
-            r"<span>(\d+)</span>",  # goals count
-            data,
-            re.DOTALL | re.IGNORECASE,
-        )
-        if not players:
-            if page == 1:
-                self.addMarker({"title": Y + "لا يوجد هدافين لهذه البطولة" + W, "icon": cItem.get("icon", "")})
-            return
-        for pos, player_url, player_img, player_name, team_url, team_img, team_name, goals in players:
-            player_url_full = self.getFullUrl(player_url)
-            img_url = self.getFullIconUrl(player_img.strip())
-            title = "%s- P| %s - %s - (%s %sهدف%s)" % (pos, player_name.strip(), team_name.strip(), goals, Y, W)
-            params = {"good_for_fav": True, "category": "list_player_videos", "title": title, "url": player_url_full, "icon": img_url, "page": 1}
-            self.addDir(params)
-        # ===== Load more button =====
-        last_position = int(players[-1][0])
-        params = dict(cItem)
-        params.update({"title": Y + "Next Page المزيد من الهدافين" + " ▶▶▶" + W, "page": page + 1, "last_position": last_position, "league_id": league_id, "url": cItem["url"], "category": "list_league_top_scorers"})
-        self.addDir(params)
-
-    def listProfessionals(self, cItem):
-        printDBG("BtolatCom.listProfessionals")
-        url = cItem["url"]
-        sts, data = self.getPage(url)
-        if not sts:
-            return
-        # Add professionals videos link
-        params = dict(cItem)
-        params.update(
-            {
-                "good_for_fav": True,
-                "category": "list_player_videos",
-                "title": Y + "فيديوهات كل المحترفين" + W,
-                "url": self.getFullUrl("/professionals/video"),
-            }
-        )
-        self.addDir(params)
-        params = dict(cItem)
-        params.update(
-            {
-                "category": "none",
-                "title": CY + "========== المحترفين المصريين ==========" + W,
-            }
-        )
-        self.addMarker(params)
-        # Extract players
-        player_links = re.findall(r'<a[^>]+href="(/player/\d+/[^"]+)"[^>]*class="importantTeam"[^>]*>.*?' r'<img[^>]+src="([^"]+)"[^>]*>.*?' r"<h3>(.*?)</h3>", data, re.DOTALL | re.IGNORECASE)
-        for player_url, player_icon, player_name in player_links:
-            player_url_full = self.getFullUrl(player_url)
-            sts, player_data = self.getPage(player_url_full)
-            if not sts:
-                desc = ""
-            else:
-                info_block = re.search(r'<div class="info col-sm-12 col-md-6">(.*?)</div>', player_data, re.DOTALL)
-                if info_block:
-                    info_html = info_block.group(1)
-                    job_title = re.search(r'<span itemprop="jobTitle"[^>]*>(.*?)</span>', info_html)
-                    team = re.search(r'<li[^>]*itemprop="memberOf"[^>]*>.*?<span itemprop="name"><a[^>]*>(.*?)</a></span>', info_html, re.DOTALL)
-                    birth_place = re.search(r'<li[^>]*itemprop="address"[^>]*>.*?<span itemprop="addressCountry">(.*?)</span>', info_html, re.DOTALL)
-                    nationality = re.search(r'الجنسيه\s*:\s*<span itemprop="nationality">(.*?)</span>', info_html, re.DOTALL)
-                    birth_date = re.search(r'<span><time itemprop="birthDate"[^>]*>(.*?)</time></span>', info_html, re.DOTALL)
-                    age = re.search(r"السن\s*:\s*<span>(.*?)</span>", info_html, re.DOTALL)
-                    height = re.search(r'<span itemprop="height">(.*?)</span>', info_html, re.DOTALL)
-                    weight = re.search(r'<span itemprop="weight">(.*?)</span>', info_html, re.DOTALL)
-                    # Build description with yellow color
-                    desc = " {}المركز:{} {} | {}الفريق:{} {} | {}محل الميلاد:{} {} | {}الجنسية:{} {} | {}تاريخ الميلاد:{} {} | {}العمر:{} {} | {}الطول:{} {} | {}الوزن:{} {}".format(Y, W, job_title.group(1).strip() if job_title else "", Y, W, team.group(1).strip() if team else "", Y, W, birth_place.group(1).strip() if birth_place else "", Y, W, nationality.group(1).strip() if nationality else "", Y, W, birth_date.group(1).strip() if birth_date else "", Y, W, age.group(1).strip() if age else "", Y, W, height.group(1).strip() if height else "", Y, W, weight.group(1).strip() if weight else "")
-                else:
-                    desc = ""
-            params = dict(cItem)
-            params.update({"good_for_fav": True, "category": "list_player_videos", "title": self.cleanHtmlStr(player_name), "url": player_url_full, "icon": self.getFullIconUrl(player_icon), "desc": desc})
-            self.addDir(params)
-
-    def listPlayerVideos(self, cItem):
-        printDBG("BtolatCom.listPlayerVideos")
-        page = cItem.get("page", 1)
-        base_url = cItem["url"]
-        # ======================================================
-        # ============ Professionals section ==================
-        # ======================================================
-        if "/professionals/video" in base_url:
-            if page == 1:
-                url = base_url
-                sts, data = self.getPage(url)
-                if not sts:
-                    return
-                blocks = re.findall(r'(<div\s+class="card xrow video"[^>]*>.*?</div>)', data, re.DOTALL | re.IGNORECASE)
-                last_row_id = re.search(r'data-val="(\d+)"', blocks[-1]).group(1) if blocks else ""
-                last_row_date = re.search(r'data-date="([^"]+)"', blocks[-1]).group(1) if blocks else ""
-            else:
-                url = "https://www.btolat.com/api/video/LoadMore/0"
-                post_data = {"lastRowId": cItem.get("last_row_id", ""), "lasRowDate": cItem.get("last_row_date", "")}
-                sts, data = self.getPage(url, post_data=post_data)
-                if not sts:
-                    return
-                data = json.loads(data)
-                blocks = re.findall(r'(<div\s+class="card xrow video"[^>]*>.*?</div>)', data["html"], re.DOTALL | re.IGNORECASE)
-                last_row_id = re.search(r'data-val="(\d+)"', blocks[-1]).group(1) if blocks else ""
-                last_row_date = re.search(r'data-date="([^"]+)"', blocks[-1]).group(1) if blocks else ""
-            for block in blocks:
-                vid = re.search(r'href=[\'"](/video/\d+)[\'"]', block)
-                img = re.search(r'data-src="([^"]+)"', block)
-                title = re.search(r"<h3>(.*?)</h3>", block, re.DOTALL)
-                cat = re.search(r'<a\s+href="[^"]+"\s+class="category">(.*?)</a>', block, re.DOTALL)
-                date_m = re.search(r'data-date="([^"]+)"', block)
-                if not vid or not title:
-                    continue
-                video_href = vid.group(1)
-                img_url = img.group(1) if img else ""
-                name = self.cleanHtmlStr(title.group(1))
-                cat_name = self.cleanHtmlStr(cat.group(1)) if cat else ""
-                video_date = ""
-                if date_m:
-                    raw_date = date_m.group(1).strip()  # Raw date (example: 12/13/2025)
-                    try:
-                        m, d, y = raw_date.split("/")
-                        video_date = "%s-%s-%s" % (d.zfill(2), m.zfill(2), y)
-                    except Exception:
-                        video_date = raw_date
-                # Description = league + date
-                if cat_name and video_date:
-                    desc = cat_name + "\n" + CY + video_date + W
-                elif video_date:
-                    desc = CY + video_date + W
-                else:
-                    desc = cat_name or name
-                params = {"good_for_fav": True, "category": "video", "title": name, "url": self.getFullUrl(video_href), "icon": self.getFullIconUrl(img_url), "desc": Y + desc + W}
-                self.addVideo(params)
-            # ===== Manual load more button =====
-            if len(blocks) > 0:
-                params = dict(cItem)
-                params.update({"title": Y + "Next Page المزيد من الفيديوهات" + " ▶▶▶" + W, "page": page + 1, "last_row_id": last_row_id, "last_row_date": last_row_date, "url": base_url, "category": "list_player_videos"})
-                self.addDir(params)
-        # ======================================================
-        # ================== Other players ====================
-        # ======================================================
-        else:
-            if page == 1:
-                url = base_url
-                sts, data = self.getPage(url)
-                if not sts:
-                    return
-                # ===== Check if videos tab exists =====
-                videos_tab = self.cm.ph.getSearchGroups(data, r'href="(/player/videos/[^"]+)"')[0]
-                if not videos_tab:
-                    params = {"title": Y + "لا يوجد فيديوهات متاحة لهذا اللاعب حاليا" + W, "type": "marker", "icon": cItem.get("icon", "")}
-                    self.addMarker(params)
-                    return
-                # ===== Videos exist → auto redirect =====
-                base_url = self.getFullUrl(videos_tab)
-                url = base_url
-            else:
-                # Convert link to /player/videos/...
-                if "/player/videos/" not in base_url:
-                    base_url = base_url.replace("/player/", "/player/videos/")
-                url = base_url + "?p=" + str(page)
-            sts, data = self.getPage(url)
-            if not sts:
-                return
-            printDBG("========== PLAYER VIDEOS PAGE ==========")
-            printDBG("URL: %s" % url)
-            printDBG("========== END PAGE ==========")
-            blocks = re.findall(r'(<div\s+class="categoryNewsCard[^"]*"[^>]*>.*?</div>)', data, re.DOTALL | re.IGNORECASE)
-            printDBG("BtolatCom.listPlayerVideos VIDEO blocks found: %d" % len(blocks))
-            for block in blocks:
-                vid = re.search(r'href=[\'"](/video/\d+)[\'"]', block)
-                img = re.search(r'data-original="([^"]+)"', block)
-                title = re.search(r"<h3>(.*?)</h3>", block, re.DOTALL)
-                cat = re.search(r'<a\s+class="categoryTag"[^>]*>(.*?)</a>', block, re.DOTALL)
-                if not vid or not title:
-                    continue
-                video_href = vid.group(1)
-                img_url = img.group(1) if img else ""
-                name = self.cleanHtmlStr(title.group(1))
-                name = self.cleanHtmlStr(title.group(1))
-                cat_name = self.cleanHtmlStr(cat.group(1)) if cat else ""
-                # ===== Extract date from image URL =====
-                video_date = ""
-                if img:
-                    m = re.search(r"/(\d{4})/(\d{1,2})/(\d{1,2})/video/", img.group(1))
-                    if m:
-                        video_date = "%s-%s-%s" % (m.group(1), m.group(2), m.group(3))
-                # ===== Two-line description =====
-                if cat_name and video_date:
-                    desc = cat_name + "\n" + CY + video_date + W
-                elif video_date:
-                    desc = CY + video_date + W
-                else:
-                    desc = cat_name or name
-                params = {"good_for_fav": True, "category": "video", "title": name, "url": self.getFullUrl(video_href), "icon": self.getFullIconUrl(img_url), "desc": Y + desc + W}
-                self.addVideo(params)
-            # ===== Manual load more button =====
-            if len(blocks) > 0 and "التالى" in data:
-                params = dict(cItem)
-                params.update({"title": Y + "Next Page المزيد من الفيديوهات" + W, "page": page + 1, "url": base_url, "category": "list_player_videos"})
-                self.addDir(params)
-
-    def listVideos(self, cItem):
-        printDBG("BtolatCom.listVideos [%s]" % cItem)
-        page = cItem.get("page", 1)
-        url = cItem["url"]
-        if page == 1:
-            sts, data = self.getPage(url)
-            if not sts:
-                return
-            blocks = re.findall(r'(<div\s+class="card xrow video"[^>]*>.*?</div>)', data, re.DOTALL | re.IGNORECASE)
-        else:
-            url = "https://www.btolat.com/api/video/LoadMore/0"
-            post_data = {"lastRowId": cItem.get("last_row_id", ""), "lasRowDate": cItem.get("last_row_date", "")}
-            sts, data = self.getPage(url, post_data=post_data)
-            if not sts:
-                return
-            data = json.loads(data)
-            blocks = re.findall(r'(<div\s+class="card xrow video"[^>]*>.*?</div>)', data["html"], re.DOTALL | re.IGNORECASE)
-        for block in blocks:
-            vid = re.search(r'href=[\'"](/video/\d+)[\'"]', block)
-            img = re.search(r'data-src="([^"]+)"', block)
-            title = re.search(r"<h3>(.*?)</h3>", block, re.DOTALL)
-            cat = re.search(r'<a\s+href="[^"]+"\s+class="category">(.*?)</a>', block, re.DOTALL)
-            date_m = re.search(r'data-date="([^"]+)"', block)
-            if not vid or not title:
-                continue
-            video_href = vid.group(1)
-            img_url = img.group(1) if img else ""
-            name = self.cleanHtmlStr(title.group(1))
-            cat_name = self.cleanHtmlStr(cat.group(1)) if cat else ""
-            video_date = date_m.group(1).replace("/", "-") if date_m else ""  # Convert 12/17/2025 → 12-17-2025
-            # Description = league + date (two lines)
-            if cat_name and video_date:
-                desc = cat_name + "\n" + CY + video_date + W
-            elif video_date:
-                desc = CY + video_date + W
-            else:
-                desc = cat_name or name
-            params = {"good_for_fav": True, "category": "video", "title": name, "url": self.getFullUrl(video_href), "icon": self.getFullIconUrl(img_url), "desc": Y + desc + W}
-            self.addVideo(params)
-        # ===== Manual load more button =====
-        if len(blocks) > 0:
-            params = dict(cItem)
-            params.update({"title": Y + "Next Page المزيد من الفيديوهات" + W, "page": page + 1, "last_row_id": blocks[-1].split('data-val="')[1].split('"')[0], "last_row_date": blocks[-1].split('data-date="')[1].split('"')[0], "url": cItem.get("url", "/video"), "category": "list_videos"})
-            self.addDir(params)
-
-    def listPlayersMenu(self, cItem):
-        """
-        قائمة الدوريات (مدخل مسار: الدوريات → الفرق → اللاعبين → فيديوهات اللاعب)
-        """
-        printDBG("BtolatCom.listPlayersMenu [%s]" % cItem)
-        cItem = dict(cItem)
-        cItem["url"] = "https://www.btolat.com/leagues"
-        sts, data = self.getPage(cItem["url"])
-        if not sts:
-            return
-        # ----- Add marker under leagues / competitions folder -----
-        params_marker = dict(cItem)
-        params_marker.update({"category": "none", "title": CY + "========== البطولات والدوريات ==========" + W})
-        self.addMarker(params_marker)
-        leagues = re.findall(r'<a[^>]+class="[^"]*leagueBox[^"]*"[^>]*>.*?</a>', data, re.DOTALL | re.IGNORECASE)
-        for item in leagues:
-            url = self.cm.ph.getSearchGroups(item, r'href="([^"]+)"')[0]
-            icon = self.cm.ph.getSearchGroups(item, r'<img[^>]+src="([^"]+)"')[0]
-            title = self.cm.ph.getSearchGroups(item, r"<h3>(.*?)</h3>")[0]
-            if not url or not title:
-                continue
-            params = dict(cItem)
-            params.update({"good_for_fav": True, "category": "list_league_teams", "title": self.cleanHtmlStr(title), "url": self.getFullUrl(url), "icon": self.getFullIconUrl(icon)})
-            self.addDir(params)
-
-    def listLeagueTeams(self, cItem):
-        """
-        جلب الفرق في الدوري
-        """
-        printDBG("BtolatCom.listLeagueTeams [%s]" % cItem)
-        sts, data = self.getPage(cItem["url"])
-        if not sts:
-            return
-        # ----- Add marker under teams / clubs folder -----
-        params_marker = dict(cItem)
-        params_marker.update({"category": "none", "title": Y + "========== الأندية والفرق ==========" + W})
-        self.addMarker(params_marker)
-        block = re.search(r'<div class="importantTeams row">(.*?)</div>\s*</div>', data, re.DOTALL)
-        if not block:
-            printDBG("importantTeams block not found")
-            return
-        teams = re.findall(r'<a[^>]+href="(/team/[^"]+)"[^>]*class="importantTeam"[^>]*>.*?<img[^>]+src="([^"]+)".*?>.*?<h3>(.*?)</h3>', block.group(1), re.DOTALL | re.IGNORECASE)
-        if not teams:
-            printDBG("No teams found inside importantTeams")
-            return
-        for team_url, team_icon, team_name in teams:
-            params = dict(cItem)
-            params.update({"category": "list_team_players", "title": self.cleanHtmlStr(team_name), "url": self.getFullUrl(team_url), "team_url": self.getFullUrl(team_url), "icon": self.getFullIconUrl(team_icon)})
-            self.addDir(params)
-
-    def listTeamPlayers(self, cItem):
-        printDBG("BtolatCom.listTeamPlayers [%s]" % cItem)
-        team_url = cItem.get("team_url") or cItem.get("url")
-        if "/team/squad/" not in team_url:
-            team_url = team_url.replace("/team/", "/team/squad/")
-        sts, data = self.getPage(team_url)
-        if not sts:
-            return
-        # Extract players table
-        block = re.search(r"<table[^>]+squadTable[^>]*>(.*?)</table>", data, re.DOTALL | re.IGNORECASE)
-        if not block:
-            printDBG("squadTable not found")
-            return
-        players_rows = re.findall(r"<tr>(.*?)</tr>", block.group(1), re.DOTALL | re.IGNORECASE)
-        for row in players_rows:
-            # Link, image and name
-            match = re.search(r'<a href="([^"]+)".*?<img src="([^"]+)".*?>([^<]+)</a>', row, re.DOTALL | re.IGNORECASE)
-            if not match:
-                continue
-            player_url = match.group(1).strip()
-            player_icon = match.group(2).strip()
-            player_name = match.group(3).strip()
-            # Shirt number
-            match_number = re.search(r"<i.*?>([^<]+)</i>", row)
-            player_number = match_number.group(1).strip() if match_number else ""
-            # Position, nationality, birth date
-            match_td = re.findall(r"<td>.*?<span>([^<]+)</span>", row, re.DOTALL)
-            player_pos = match_td[0].strip() if len(match_td) > 0 else ""
-            player_nat = match_td[1].strip() if len(match_td) > 1 else ""
-            player_birth = match_td[2].strip() if len(match_td) > 2 else ""
-            # Description shown on hover with colors
-            desc = "{}الاسم:{} {} | {}رقم القميص:{} {} | {}المركز:{} {} | {}الجنسية:{} {} | {}تاريخ الميلاد:{} {}".format(Y, W, player_name, Y, W, player_number, Y, W, player_pos, Y, W, player_nat, Y, W, player_birth)
-            params = dict(cItem)
-            params.update({"good_for_fav": True, "category": "list_player_videos", "title": self.cleanHtmlStr(player_name), "url": self.getFullUrl(player_url), "icon": self.getFullIconUrl(player_icon), "desc": desc})
-            self.addDir(params)
-
-    def getLinksForVideo(self, cItem):
-        printDBG("BtolatCom.getLinksForVideo [%s]" % cItem)
-        videoLinks = []
-        url = cItem.get("url", "").strip()
-        if not url:
-            return videoLinks
-        # 1) Get page
-        sts, data = self.getPage(url)
-        if not sts:
-            return videoLinks
-        # ===============================
-        # 2) YouTube
-        # ===============================
-        m = re.search(r'https?://(?:www\.)?youtube\.com/embed/([^\?&"\']+)', data)
-        if m:
-            youtube_id = m.group(1)
-            # Use YouTube host to resolve multiple qualities
-            videoLinks.append({"name": "YouTube", "url": "https://www.youtube.com/watch?v=%s" % youtube_id, "need_resolve": 1})
-        # ===============================
-        # 3) Twitter / X via JSON endpoint
-        # ===============================
-        tweet_id = None
-        # Try to extract tweet_id from any format
-        for pattern in [r"https?://(?:www\.)?(?:twitter|x)\.com/[^/]+/status/(\d+)", r'data-tweet-id=["\'](\d+)["\']', r'embed/Tweet\.html[^"\']+id=(\d+)']:
-            m = re.search(pattern, data)
-            if m:
-                tweet_id = m.group(1)
-                break
-        if tweet_id:
-            printDBG("BtolatCom.getLinksForVideo - Twitter id: %s" % tweet_id)
-            tweet_features = "tfw_video_hls_dynamic_manifests_15082:true_bitrate"
-            json_url = ("https://cdn.syndication.twimg.com/tweet-result?" "id=%s&lang=ar&token=4ufmaqlvqaj&features=%s") % (tweet_id, tweet_features)
-            sts, jdata = self.getPage(json_url)
+            sts, data = self.getPage(self.getFullUrl("/league/TopScoresLoadMore/%s/aa" % lid), None, {"Id": lid, "lastPosition": cItem.get("last_position", 0)})
             if sts:
                 try:
-                    jres = json.loads(jdata)
-                    temp_links = []
-                    hls_link = None
-                    for media in jres.get("mediaDetails", []):
-                        if media.get("type") == "video":
-                            variants = media.get("video_info", {}).get("variants", [])
-                            used = set()
-                            for v in variants:
-                                url = v.get("url")
-                                if not url or url in used:
-                                    continue
-                                used.add(url)
-                                if "m3u8" in url:
-                                    # Store HLS to be added last
-                                    hls_link = {"name": "Twitter HLS", "url": url, "need_resolve": 0}
-                                else:
-                                    bitrate = v.get("bitrate", 0)
-                                    if bitrate >= 8000000:
-                                        name = "Twitter MP4 1080P"
-                                    elif bitrate >= 2000000:
-                                        name = "Twitter MP4 720P"
-                                    elif bitrate >= 800000:
-                                        name = "Twitter MP4 480P"
-                                    else:
-                                        name = "Twitter MP4 %d" % (bitrate // 1000)
-                                    temp_links.append({"name": name, "url": url, "need_resolve": 0, "bitrate": bitrate})
-                    # Sort MP4 from highest to lowest quality
-                    temp_links.sort(key=lambda x: x.get("bitrate", 0), reverse=True)
-                    # Remove bitrate key after sorting
-                    for l in temp_links:
-                        l.pop("bitrate", None)
-                    videoLinks.extend(temp_links)
-                    # Add HLS at the end
-                    if hls_link:
-                        videoLinks.append(hls_link)
-                except Exception as e:
-                    printDBG("BtolatCom.getLinksForVideo - Twitter JSON parse error: %s" % str(e))
-        # ===============================
-        # 4) vortexvisionworks / videohatkora via embed page
-        # ===============================
-        if not videoLinks:
-            embed_url = None
-            m = re.search(r'<iframe[^>]+src=["\']([^"\']+embed[^"\']+)["\']', data)
-            if m:
-                embed_url = m.group(1)
-                if embed_url.startswith("//"):
-                    embed_url = "https:" + embed_url
-                elif embed_url.startswith("/"):
-                    embed_url = self.MAIN_URL + embed_url
-            if embed_url:
-                printDBG("BtolatCom embed url: %s" % embed_url)
-                # Define headers
-                parsed = urlparse(embed_url)
-                embed_headers = dict(self.defaultParams.get("header", {}))
-                embed_headers["Referer"] = embed_url
-                embed_headers["Origin"] = "%s://%s" % (parsed.scheme, parsed.netloc)
-                sts, embed_data = self.getPage(embed_url, {"header": embed_headers})
-                if sts:
-                    try:
-                        # Search only for the main HLS URL
-                        hls_match = re.search(r"hls\s*:\s*['\"](//[^'\"]+\.m3u8[^'\"]*)['\"]", embed_data)
-                        if hls_match:
-                            link = hls_match.group(1)
-                            if link.startswith("//"):
-                                link = "https:" + link
-                            elif link.startswith("/"):
-                                link = self.MAIN_URL + link
-                            # Base URL
-                            base_link = link
-                            # Modify URL for other qualities
-                            link_360 = base_link.replace("0.m3u8", "360p.m3u8")
-                            link_720 = base_link.replace("0.m3u8", "720p.m3u8")
-                            videoLinks.append({"name": "720p - Vortexvisionworks", "url": link_720, "need_resolve": 0, "headers": {"User-Agent": self.USER_AGENT, "Referer": embed_url, "Origin": embed_headers["Origin"], "Accept": "*/*", "Accept-Language": "en-US,en;q=0.5", "Accept-Encoding": "gzip, deflate", "Connection": "keep-alive"}})
-                            videoLinks.append({"name": "360p - Vortexvisionworks", "url": link_360, "need_resolve": 0, "headers": {"User-Agent": self.USER_AGENT, "Referer": embed_url, "Origin": embed_headers["Origin"], "Accept": "*/*", "Accept-Language": "en-US,en;q=0.5", "Accept-Encoding": "gzip, deflate", "Connection": "keep-alive"}})
-                    except Exception as e:
-                        printDBG("Btolat embed HLS parse error: %s" % str(e))
-        # ===============================
-        # 5) Auto-create empty metadata file to prevent FileNotFoundError
-        # ===============================
-        title_safe = cItem.get("title", "video").replace("/", "_")
-        metadata_file = GetMovieMetaDataDir("botolat_%s.iptv" % title_safe)
-        if not os.path.exists(metadata_file):
-            try:
-                with io.open(metadata_file, "w", encoding="utf-8", errors="replace", newline='') as fp:
-                    fp.write("")  # ملف فارغ
-                printDBG("Created IPTV metadata file: %s" % metadata_file)
-            except Exception as e:
-                printDBG("Failed to create IPTV metadata file: %s | %s" % (metadata_file, str(e)))
-        if videoLinks:
-            self.saveIPTVMeta(cItem.get("title", "video"), videoLinks)
-        return videoLinks
-
-    def saveIPTVMeta(self, title, videoLinks):
-        # Take the first valid link
-        if not videoLinks:
-            return
-        first_link = videoLinks[0]["url"]
-        # File path
-        safe_title = title.replace("/", "_").replace("\\", "_")
-        file_path = GetMovieMetaDataDir("botolat_%s.iptv" % safe_title)
-        meta = {"host": "botolat", "title": title, "file_path": first_link}
-        try:
-            with io.open(file_path, "w", encoding="utf-8", newline='') as fp:
-                json.dump(meta, fp, ensure_ascii=False)
-            printDBG("Created IPTV metadata file: %s" % file_path)
-        except Exception as e:
-            printDBG("Error creating IPTV metadata file: %s" % str(e))
-
-    def getTwitterVideoLinks(self, tweet_id):
-        printDBG("BtolatCom.getTwitterVideoLinks id[%s]" % tweet_id)
-        linksTab = []
-        api = "https://cdn.syndication.twimg.com/tweet-result?id=%s&lang=ar" % tweet_id
-        sts, data = self.getPage(api)
+                    js = json_loads(data) or {}
+                    data = js.get("html", "") if js.get("success") else ""
+                except Exception:
+                    printExc()
+                    data = ""
         if not sts:
-            return linksTab
-        try:
-            j = json.loads(data)
-        except Exception:
-            printDBG("Twitter JSON load error")
-            return linksTab
-        videos = []
-
-        def findVideos(obj):
-            if isinstance(obj, dict):
-                if obj.get("type") == "video" and "video_info" in obj:
-                    variants = obj["video_info"].get("variants", [])
-                    for v in variants:
-                        url = v.get("url", "")
-                        ctype = v.get("content_type", "")
-                        bitrate = v.get("bitrate", 0)
-                        if url.startswith("http"):
-                            videos.append((url, ctype, bitrate))
-                for v in obj.values():
-                    findVideos(v)
-            elif isinstance(obj, list):
-                for i in obj:
-                    findVideos(i)
-
-        findVideos(j)
-        used = set()
-        for url, ctype, bitrate in videos:
-            if url in used:
+            return
+        last = 0
+        for pos, row in re.findall(r'(?s)<tr data-position="(\d+)">(.*?)</tr>', data):
+            m = re.search(r'(?s)<a href="(/player/[^"]+)">\s*<img[^>]+src="([^"]+)".*?<b>(.*?)</b>', row)
+            if not m:
                 continue
-            used.add(url)
-            if "mpegURL" in ctype or url.endswith(".m3u8"):
-                name = "Twitter HLS"
-            else:
-                name = "Twitter %s" % (str(int(bitrate / 1000)) + "kbps" if bitrate else "MP4")
-            linksTab.append({"name": name, "url": url, "need_resolve": 0})
-        printDBG("BtolatCom.getTwitterVideoLinks found links: %d" % len(linksTab))
-        return linksTab
+            team = self.cleanHtmlStr(self.cm.ph.getSearchGroups(row, r'(?s)<a href="/team/[^"]+">.*?<b>(.*?)</b>')[0])
+            goals = self.cm.ph.getSearchGroups(row, r"<span>\s*(\d+)\s*</span>")[0]
+            name = self.cleanHtmlStr(m.group(3))
+            title = "%s. %s" % (pos, name) + (" - %s" % team if team else "") + (" (%s %s)" % (goals, _("goals")) if goals else "")
+            self._playerDir(m.group(1), title, m.group(2), team)
+            last = int(pos)
+        total = int(self.cm.ph.getSearchGroups(data, r'data-total="(\d+)"')[0] or cItem.get("total", 0) or 0)
+        if last and (not total or last < total):
+            listItem = dict(cItem)
+            addPagingItems(self, listItem, page, True, 0, "", {"last_position": last, "total": total})
 
-    def getVideoLinks(self, baseUrl):
-        printDBG("BtolatCom.getVideoLinks [%s]" % baseUrl)
-        baseUrl = strwithmeta(baseUrl)
-        urlTab = []
-        # If YouTube link
-        if "youtube.com" in baseUrl or "youtu.be" in baseUrl:
-            printDBG("BtolatCom.getVideoLinks - YouTube link detected: %s" % baseUrl)
-            return self.up.getVideoLinkExt(baseUrl)
-        # If Twitter link
-        elif "twitter.com" in baseUrl or "platform.twitter.com" in baseUrl:
-            printDBG("BtolatCom.getVideoLinks - Twitter link detected: %s" % baseUrl)
-            urlTab.append({"name": "Twitter", "url": baseUrl, "need_resolve": 1})
-            return urlTab
-        # If direct link
-        elif baseUrl.endswith((".mp4", ".m3u8", ".webm", ".flv")):
-            printDBG("BtolatCom.getVideoLinks - Direct video link detected: %s" % baseUrl)
-            # Extract headers from baseUrl if present
-            headers = {}
-            if hasattr(baseUrl, "meta") and baseUrl.meta:
-                headers = baseUrl.meta.get("headers", {})
-            # Set link name based on source
-            name = "مباشر"
-            if "vortexvisionworks.com" in baseUrl:
-                name = "Vortex Vision HLS"
-            elif "videohatkora.com" in baseUrl:
-                name = "Video Hatkora HLS"
-            elif "gooforkoora.com" in baseUrl:
-                name = "Goofor Koora HLS"
-            elif "btolat.com" in baseUrl:
-                name = "Btolat HLS"
-            # Add default headers if missing
-            headers = {}
-            if hasattr(baseUrl, "meta") and baseUrl.meta:
-                headers = dict(baseUrl.meta.get("headers", {}))
-            if not headers:
-                headers = {"User-Agent": self.USER_AGENT, "Accept": "*/*", "Accept-Language": "en-US,en;q=0.5", "Accept-Encoding": "gzip, deflate", "Connection": "keep-alive"}
-            urlTab.append({"name": name, "url": str(baseUrl), "headers": headers})
-            return urlTab
-        return urlTab
+    def listProfessionals(self, cItem):
+        sts, data = self.getPage(cItem["url"])
+        if not sts:
+            return
+        block = self.cm.ph.getDataBeetwenMarkers(data, 'id="carouselContainer"', "</section>", False)[1] or data
+        for href, icon, name in re.findall(r'(?s)<a href="(/player/\d+/[^"]+)" class="importantTeam">\s*<img[^>]+src="([^"]+)"[^>]*>\s*<h3>(.*?)</h3>', block):
+            self._playerDir(href, self.cleanHtmlStr(name), icon)
+        # the site's "more" button for this list loads the general video feed - only the first page here
+        self._parseCards(data)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
-        printDBG("BtolatCom.listSearchResult")
-        url = "https://www.btolat.com/news/Search"
-        post_data = {"word": searchPattern}
-        headers = {"User-Agent": self.USER_AGENT, "Content-Type": "application/json; charset=utf-8", "Accept": "*/*", "Origin": self.MAIN_URL, "Referer": self.MAIN_URL, "X-Requested-With": "XMLHttpRequest"}
-        found = False
+        printDBG("BtolatCom.listSearchResult [%s]" % searchPattern)
+        params = dict(self.defaultParams)
+        params["header"] = dict(self.HEADER, **{"Content-Type": "application/json; charset=utf-8", "Accept": "application/json, */*", "X-Requested-With": "XMLHttpRequest"})
+        params["raw_post_data"] = True
+        sts, data = self.getPage(self.getFullUrl("/api/data/search"), params, json_dumps({"word": searchPattern.strip()}))
+        if not sts:
+            return
         try:
-            response = requests.post(url, headers=headers, json=post_data, timeout=15)
-            if response.status_code != 200:
-                printDBG("Search HTTP Error: %s" % response.status_code)
-                return
-            data = response.json()
-            for item in data:
-                seName = item.get("SeName", "")
-                if not seName.startswith("video/"):
-                    continue
-                found = True
-                title = self.cleanHtmlStr(item.get("Title", ""))
-                img = self.getFullIconUrl(item.get("FullSizeImageUrl", ""))
-                video_url = self.getFullUrl(seName)
-                post_since = self.cleanHtmlStr(item.get("PostSince", ""))
-                desc = Y + "Published since (نُشر منذ): " + W + post_since if post_since else ""
-                params = {"good_for_fav": True, "category": "video", "title": title, "url": video_url, "icon": img, "desc": desc}
-                self.addVideo(params)
-            # ✅ If no videos found
-            if not found:
-                params = dict(cItem)
-                params.update({"category": "none", "title": Y + "لا توجد نتائج فيديو حاليا" + W})
-                self.addMarker(params)
-        except Exception as e:
-            printDBG("Search Exception: %s" % str(e))
+            items = json_loads(data) or []
+        except Exception:
+            printExc()
+            return
+        for item in items if isinstance(items, list) else []:
+            if not isinstance(item, dict):
+                continue
+            vid = self.cm.ph.getSearchGroups(item.get("SeName", "") or "", r"^video/(\d+)")[0]
+            title = self.cleanHtmlStr(item.get("Title", "") or "")
+            if not vid or not title:
+                continue
+            icon = item.get("FullSizeImageUrl", "") or ""
+            date = self._date("", icon)
+            ms = self.cm.ph.getSearchGroups(str(item.get("CreatedOn", "")), r"Date\((\d+)\)")[0]
+            if ms:
+                try:
+                    date = time.strftime("%Y-%m-%d", time.gmtime(int(ms) // 1000 + 3 * 3600))
+                except Exception:
+                    printExc()
+            self._addVideoRow(title, vid, icon, date)
 
-    def getArticleContent(self, cItem):
-        printDBG("BtolatCom.getArticleContent [%s]" % cItem)
-        retTab = []
-        url = cItem.get("url", "")
-        if not url:
-            return retTab
+    ###################################################
+    # links
+    ###################################################
+    def getLinksForVideo(self, cItem):
+        printDBG("BtolatCom.getLinksForVideo [%s]" % cItem.get("url", ""))
+        url = cItem.get("url", "").strip()
         sts, data = self.getPage(url)
         if not sts:
-            return retTab
-        icon = cItem.get("icon", "")
-        title = cItem.get("title", "")
-        # ===== Video state =====
-        if cItem.get("category") == "video":
-            player_url = self.cm.ph.getSearchGroups(data, r'<a href="(/player/[^"]+)"[^>]*>')[0].strip() or ""
-            if player_url:
-                return self.getArticleContent({"url": self.getFullUrl(player_url), "icon": icon, "title": title})
-        # ===== Team / club state =====
-        if cItem.get("category") == "list_league_team_videos":
-            team_url = cItem.get("team_url", "") or cItem.get("url", "")
-            if team_url:
-                sts, team_data = self.getPage(team_url)
-                if sts and team_data:
-                    team_block = self.cm.ph.getDataBeetwenMarkers(team_data, '<div class="teamCard"', "</div>", True)[1]
-                    # Coach
-                    coach = self.cm.ph.getSearchGroups(team_block, r'(?s)المدير الفني.*?<span[^>]*itemprop="name"[^>]*>([^<]+)</span>')
-                    coach_name = coach[0].strip() if coach else ""
-                    # Trophies
-                    trophies_block = self.cm.ph.getDataBeetwenMarkers(team_data, "<h2>البطولات التي يشارك فيها", "</div>")[1] if "<h2>البطولات التي يشارك فيها" in team_data else ""
-                    trophies = re.findall(r"(?s)<h3>.*?<span>([^<]+)</span>", trophies_block)
-                    trophies_text = "\n".join([t.strip() for t in trophies]) if trophies else ""
-                    fields = [("اسم الفريق", self.cm.ph.getSearchGroups(team_block, r'<h2[^>]*itemprop="name"[^>]*>([^<]+)</h2>')), ("تاريخ التأسيس", self.cm.ph.getSearchGroups(team_block, r'تاريخ التأسيس.*?<span[^>]*itemprop="foundingDate"[^>]*>([^<]+)</span>')), ("المدير الفني", [coach_name]), ("البلد", self.cm.ph.getSearchGroups(team_block, r'البلد.*?<span[^>]*itemprop="addressCountry"[^>]*>([^<]+)</span>')), ("الملعب", self.cm.ph.getSearchGroups(team_block, r'الملعب.*?<span[^>]*itemprop="name"[^>]*>([^<]+)</span>')), ("البطولات", [trophies_text])]  # trophies displayed one per line
-                    final_text = ""
-                    for label, match_list in fields:
-                        value = match_list[0].strip() if match_list else ""
-                        if value:
-                            final_text += "{}{}: {}{}\n".format(Y, label, W, value)
-                    if not final_text:
-                        final_text = CY + "لم يتم العثور على معلومات الفريق." + W
-                    retTab.append({"title": fields[0][1][0].strip() if fields[0][1] else title, "text": final_text.strip(), "images": [{"title": fields[0][1][0].strip() if fields[0][1] else title, "url": icon}], "other_info": {}})
-                    return retTab
-        # ===== Normal player state =====
-        info_block = self.cm.ph.getDataBeetwenMarkers(data, '<div class="info', "</ul>")[1] if data else ""
-        fields = [
-            ("الاسم", self.cm.ph.getSearchGroups(data, r'<h2[^>]*itemprop="name"[^>]*>([^<]+)')),
-            ("المركز", self.cm.ph.getSearchGroups(data, r'itemprop="jobTitle"[^>]*>([^<]+)')),
-            ("الفريق", self.cm.ph.getSearchGroups(self.cm.ph.getDataBeetwenMarkers(info_block, 'itemprop="memberOf"', "</li>")[1] if info_block else "", r"<a[^>]*>([^<]+)</a>")),
-            ("الجنسية", self.cm.ph.getSearchGroups(info_block, r"الجنسيه.*?<span[^>]*>([^<]+)</span>") if info_block else []),
-            ("محل الميلاد", self.cm.ph.getSearchGroups(info_block, r'itemprop="addressCountry"[^>]*>([^<]+)</') if info_block else []),
-            ("تاريخ الميلاد", self.cm.ph.getSearchGroups(info_block, r'itemprop="birthDate"[^>]*>([^<]+)</time>') if info_block else []),
-            ("العمر", self.cm.ph.getSearchGroups(info_block, r"السن.*?<span[^>]*>([^<]+)</span>") if info_block else []),
-            ("الطول", self.cm.ph.getSearchGroups(info_block, r'itemprop="height"[^>]*>([^<]+)</span>') if info_block else []),
-            ("الوزن", self.cm.ph.getSearchGroups(info_block, r'itemprop="weight"[^>]*>([^<]+)</span>') if info_block else []),
-        ]
-        final_text = ""
-        for label, match_list in fields:
-            value = match_list[0].strip() if match_list else ""
-            if value:
-                final_text += "{}{}: {}{}\n".format(Y, label, W, value)
-        if not final_text:
-            final_text = CY + "لم يتم العثور على معلومات اللاعب." + W
-        retTab.append({"title": fields[0][1][0].strip() if fields[0][1] else title, "text": final_text.strip(), "images": [{"title": fields[0][1][0].strip() if fields[0][1] else title, "url": icon}], "other_info": {}})
-        return retTab
+            return []
+        links = []
+        blocked = False
+        self._twitterBlocked = False
+        # YouTube
+        for ytid in re.findall(r"youtube(?:-nocookie)?\.com/embed/([A-Za-z0-9_-]{11})", data):
+            link = "https://www.youtube.com/watch?v=%s" % ytid
+            if link not in [x["url"] for x in links]:
+                links.append({"name": "YouTube", "url": link, "need_resolve": 1})
+        # Twitter / X (blockquote + widgets.js) -> syndication JSON
+        tweet = self.cm.ph.getSearchGroups(data, r"(?:twitter|x)\.com/[^/\"'\s]+/status/(\d+)")[0]
+        if tweet:
+            links.extend(self._twitterLinks(tweet))
+        # vortexvisionworks embeds: the page often shows "/player/blockedvideos/<id>" ("Video Removed")
+        # while the same video's "/embed/<id>" page (the JSON-LD embedURL) still plays - only when that
+        # one has no stream either the video is really gone
+        for embed in re.findall(r"""<iframe[^>]+src=["']((?:https?:)?//[^"']*vortexvisionworks\.com/[^"']+)["']""", data):
+            embed = embed if embed.startswith("http") else "https:" + embed
+            isBlocked = "/blockedvideos/" in embed
+            if isBlocked:
+                embed = embed.replace("/player/blockedvideos/", "/embed/")
+            found = self._vortexLinks(embed)
+            blocked = blocked or (isBlocked and not found)
+            links.extend(found)
+        # any other hoster iframe urlparser knows
+        if not links:
+            for embed in re.findall(r"""<iframe[^>]+src=["']((?:https?:)?//[^"']+)["']""", data):
+                embed = embed if embed.startswith("http") else "https:" + embed
+                if "googletagmanager" in embed or "vortexvisionworks" in embed:
+                    continue
+                if self.up.checkHostSupport(embed) == 1:
+                    links.append({"name": self.up.getDomain(embed), "url": strwithmeta(embed, {"Referer": self.MAIN_URL}), "need_resolve": 1})
+        if not links:
+            if blocked:
+                msg = _("This video has been deleted.")
+            elif self._twitterBlocked:
+                msg = _("This content is not available in your region.")
+            else:
+                msg = _("No stream available")
+            SetIPTVPlayerLastHostError(msg)
+            return []
+        story = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'<meta property="og:description" content="([^"]*)"')[0])
+        return applySidecarToLinks(links, buildSidecarFromItem(cItem, IsSidecarEnabled(), story))
 
+    def _twitterLinks(self, tweetId):
+        jsonUrl = "https://cdn.syndication.twimg.com/tweet-result?id=%s&lang=ar&token=4ufmaqlvqaj" % tweetId
+        sts, data = self.getPage(jsonUrl)
+        if not sts:
+            return []
+        try:
+            js = json_loads(data) or {}
+        except Exception:
+            printExc()
+            return []
+        mp4, hls = [], []
+        for media in js.get("mediaDetails", []) or []:
+            if media.get("type") not in ("video", "animated_gif"):
+                continue
+            for var in (media.get("video_info", {}) or {}).get("variants", []) or []:
+                vurl = var.get("url", "") or ""
+                if not vurl or vurl in [x["url"] for x in mp4 + hls]:
+                    continue
+                if "mpegURL" in (var.get("content_type", "") or "") or ".m3u8" in vurl:
+                    hls.append({"name": "Twitter HLS", "url": vurl, "need_resolve": 0})
+                else:
+                    height = self.cm.ph.getSearchGroups(vurl, r"/\d+x(\d+)/")[0]
+                    name = ("Twitter %sp" % height) if height else ("Twitter %dk" % ((var.get("bitrate", 0) or 0) // 1000))
+                    mp4.append({"name": name, "url": vurl, "need_resolve": 0, "_br": var.get("bitrate", 0) or 0})
+        mp4.sort(key=lambda x: x.get("_br", 0), reverse=True)
+        for item in mp4:
+            item.pop("_br", None)
+        # region-locked media (beIN, FIFA ...) answers 403 outside the rights region - one look at the
+        # small HLS playlist tells it from the box's own location
+        if hls:
+            sts, _data = self.getPage(hls[0]["url"])
+            if not sts:
+                self._twitterBlocked = True
+                return []
+        return mp4 + hls
+
+    def _vortexLinks(self, embed):
+        origin = re.sub(r"^(https?://[^/]+).*$", r"\1", embed)
+        params = dict(self.defaultParams)
+        params["header"] = dict(self.HEADER, Referer=self.MAIN_URL)
+        sts, data = self.getPage(embed, params)
+        if not sts:
+            return []
+        links = []
+        for src in re.findall(r"""["']((?:https?:)?//[^"']+\.m3u8[^"']*)["']""", data):
+            src = src if src.startswith("http") else "https:" + src
+            if re.match(r"https?://(?:localhost|127\.)", src) or src in [str(x["url"]) for x in links]:
+                # the player's commented-out debug source points to localhost
+                continue
+            links.append({"name": "Vortex HLS" if not links else "Vortex HLS %d" % (len(links) + 1),
+                          "url": strwithmeta(src, {"User-Agent": self.HEADER.get("User-Agent"), "Referer": embed, "Origin": origin}), "need_resolve": 0})
+        return links
+
+    def getVideoLinks(self, videoUrl):
+        printDBG("BtolatCom.getVideoLinks [%s]" % videoUrl)
+        if self.cm.isValidUrl(videoUrl):
+            sidecar = sidecarFromUrlMeta(videoUrl, IsSidecarEnabled())
+            return decorateResolvedLinkItems(self.up.getVideoLinkExt(videoUrl), sidecar)
+        return []
+
+    ###################################################
+    # INFO
+    ###################################################
+    def getArticleContent(self, cItem):
+        printDBG("BtolatCom.getArticleContent [%s]" % cItem.get("url", ""))
+        category = cItem.get("category", "")
+        title = cItem.get("raw_title") or cItem.get("title", "")
+        icon = cItem.get("icon", "")
+        info = {}
+        text = ""
+        if category in VIDEO_CATS:
+            sts, data = self.getPage(cItem.get("url", ""))
+            if sts:
+                text = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'<meta property="og:description" content="([^"]*)"')[0])
+                icon = self.cm.ph.getSearchGroups(data, r'<meta property="og:image" content="([^"]+)"')[0] or icon
+                published = self.cm.ph.getSearchGroups(data, r'datePublished"\s+content="(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2})', 2)
+                if published[0]:
+                    info["released"] = "%s %s" % (published[0], published[1])
+            if cItem.get("league"):
+                info["genre"] = cItem["league"]
+            if cItem.get("duration"):
+                info["duration"] = cItem["duration"]
+            if "released" not in info and cItem.get("date"):
+                info["released"] = cItem["date"]
+        elif category == "bt_team":
+            sts, data = self.getPage(cItem.get("url", ""))
+            if sts:
+                card = self.cm.ph.getDataBeetwenMarkers(data, 'class="teamCard"', "</h2>\n", False)[1] or data
+                # only ArticleContent.RICH_DESC_PARAMS keys are shown: founding year -> "year", the stadium goes into the text
+                for key, rx in (("year", r'itemprop="foundingDate"[^>]*>([^<]+)<'), ("director", r'(?s)itemprop="coach".*?itemprop="name">([^<]+)<'),
+                                ("country", r'itemprop="addressCountry">([^<]+)<')):
+                    val = self.cleanHtmlStr(self.cm.ph.getSearchGroups(card, rx)[0])
+                    if val:
+                        info[key] = val
+                lines = []
+                stadium = self.cleanHtmlStr(self.cm.ph.getSearchGroups(card, r'(?s)الملعب\s*<span itemprop="name">([^<]+)<')[0])
+                if stadium:
+                    lines.append("%s %s" % (_("Stadium:"), stadium))
+                leagues = [self.cleanHtmlStr(x) for x in re.findall(r'(?s)<h3><a href="/league/[^"]+"><i[^>]*></i><span>(.*?)</span>', data)]
+                if leagues:
+                    lines.append("%s: %s" % (_("Competitions"), "، ".join(leagues)))
+                text = "[/br]".join(lines)
+        else:
+            sts, data = self.getPage(cItem.get("player_url") or cItem.get("url", ""))
+            if sts:
+                block = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="player-info', "</ul>", False)[1]
+                lines = []
+                for label, value in re.findall(r"(?s)<li>\s*([^<:]+?)\s*:\s*<span>(.*?)</span>", block):
+                    value = self.cleanHtmlStr(value)
+                    if value:
+                        lines.append("%s: %s" % (self.cleanHtmlStr(label), value))
+                text = "[/br]".join(lines)
+                pic = self.cm.ph.getSearchGroups(data, r'<meta property="og:image" content="([^"]+)"')[0]
+                if pic and "logo" not in pic:
+                    icon = pic
+        if not text:
+            text = cItem.get("desc", "")
+        return [{"title": self.cleanHtmlStr(title), "text": text, "images": [{"title": "", "url": self.getFullIconUrl(icon)}] if icon else [], "other_info": info}]
+
+    ###################################################
+    # service
+    ###################################################
     def handleService(self, index, refresh=0, searchPattern="", searchType=""):
-        printDBG("BtolatCom.handleService start")
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
+        if isJumpItem(self.currItem):
+            self.currItem = jumpTarget(self, self.currItem)
         name = self.currItem.get("name", "")
         category = self.currItem.get("category", "")
-        mode = self.currItem.get("mode", "")
-        printDBG("handleService: |||| name[%s], category[%s] " % (name, category))
+        printDBG("BtolatCom.handleService name[%s] category[%s]" % (name, category))
         self.currList = []
-        # MAIN MENU
-        if name is None and category == "":
-            self.listMainMenu({"name": "category"})
-        # AllLeague PATH
-        elif category == "list_videos":
-            self.listVideos(self.currItem)
-        elif category == "list_leagues":
+        if name is None:
+            self.listsTab(self.MENU, {"name": "category"})
+        elif category == "bt_loadmore":
+            self.listLoadMore(self.currItem)
+        elif category == "bt_paged":
+            self.listPaged(self.currItem)
+        elif category == "bt_leagues":
             self.listLeagues(self.currItem)
-        elif category == "list_league_videos":
-            self.listLeagueVideos(self.currItem)
-        elif category == "list_league_team_videos":
-            self.listLeagueTeamVideos(self.currItem)
-        elif category == "list_all_league_videos":
-            self.listAllLeagueVideos(self.currItem)
-        # TopScorers PATH
-        elif category == "list_top_scorers":
-            self.listTopScorersMenu(self.currItem)
-        elif category == "list_league_top_scorers":
-            self.listLeagueTopScorers(self.currItem)
-        # Professionals PATH
-        elif category == "list_professionals":
+        elif category == "bt_league":
+            self.listLeague(self.currItem)
+        elif category == "bt_team":
+            self.listTeam(self.currItem)
+        elif category == "bt_squad":
+            self.listSquad(self.currItem)
+        elif category == "bt_scorers":
+            self.listScorers(self.currItem)
+        elif category == "bt_professionals":
             self.listProfessionals(self.currItem)
-        # PLAYERS PATH
-        elif category == "list_players":
-            self.listPlayersMenu(self.currItem)
-        elif category == "list_league_teams":
-            self.listLeagueTeams(self.currItem)
-        elif category == "list_team_players":
-            self.listTeamPlayers(self.currItem)
-        elif category == "list_player_videos":
-            self.listPlayerVideos(self.currItem)
-        # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({"search_item": False, "name": "category"})
             self.listSearchResult(cItem, searchPattern, searchType)
-        # SEARCH HISTORY
         elif category == "search_history":
             self.listsHistory({"name": "history", "category": "search"}, "desc")
         else:
@@ -1017,18 +551,15 @@ class BtolatCom(CBaseHostClass):
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
-class IPTVHost(CHostBase):
+class IPTVHost(GenericFolderWatchedHostMixin, CHostBase):
     def __init__(self):
         CHostBase.__init__(self, BtolatCom(), True, [])
+        self.cachedRet = None
+        self.refreshAfterWatchedFlagChange = False
+        self.watchedHelper = IPTVWatchedHelper("botolat")
 
     def withArticleContent(self, cItem):
-        if cItem.get("type") == "video":
+        category = cItem.get("category", "")
+        if category in VIDEO_CATS or category == "bt_team":
             return True
-        url = cItem.get("url", "")
-        if "/player/" in url:
-            return True
-        if "/team/" in url:
-            return True
-        if "/players/" in url:
-            return True
-        return False
+        return category == "bt_paged" and bool(cItem.get("player_url"))
