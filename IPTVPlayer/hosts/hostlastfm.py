@@ -39,7 +39,7 @@ class LastFM(GenericFolderWatchedScraperMixin, CBaseHostClass):
         CBaseHostClass.__init__(self, {"history": "lastfm", "cookie": "lastfm.cookie"})
         self.MAIN_URL = "https://www.last.fm/"
         self.DEFAULT_ICON_URL = "https://www.last.fm/static/images/lastfm_avatar_twitter.52a5d69a85ac.png"
-        self.HEADER = {"User-Agent": self.cm.getDefaultUserAgent(), "Accept":"application/json, text/javascript, */*; q=0.01",
+        self.HEADER = {"User-Agent": self.cm.getDefaultUserAgent(), "Accept": "application/json, text/javascript, */*; q=0.01",
                        "X-Requested-With": "XMLHttpRequest", "Referer": self.MAIN_URL}
         self.defaultParams = {"header": self.HEADER}
         self.watchedHelper = IPTVWatchedHelper("lastfm")
