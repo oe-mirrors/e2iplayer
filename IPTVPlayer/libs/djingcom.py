@@ -36,7 +36,8 @@ class DjingComApi(CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(self)
         self.MAIN_URL = 'https://www.djing.com/'
-        self.DEFAULT_ICON_URL = 'https://www.djing.com/newimages/content/c01.jpg'
+        # newimages/content/c01.jpg is gone - the relaunched SPA answers it with its html page (soft 404)
+        self.DEFAULT_ICON_URL = 'https://djing.com/img/logoog2048.png'
         self.HTTP_HEADER = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate'}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})

@@ -32,7 +32,9 @@ class WebCameraApi(CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(self)
         self.MAIN_URL = 'https://www.webcamera.pl/'
-        self.DEFAULT_ICON_URL = 'https://static.webcamera.pl/webcamera/img/loader-min.png'
+        # loader-min.png is the site's lazy-load placeholder, not a picture of anything
+        self.LOADER_ICON = 'loader-min.png'
+        self.DEFAULT_ICON_URL = 'https://www.webcamera.pl/images/logo_mobile.png'
         self.HEADER = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:21.0) Gecko/20100101 Firefox/21.0', 'Referer': self.getMainUrl(), 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
@@ -40,6 +42,7 @@ class WebCameraApi(CBaseHostClass):
         self.COOKIE_FILE = GetCookieDir('webcamerapl')
         self.defaultParams = {'with_metadata': True, 'header': self.HEADER, 'save_cookie': True, 'load_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.cacheList = {}
+        self.webcameraSubCats = {}
 
     def getFullIconUrl(self, url, baseUrl=None):
         return CBaseHostClass.getFullIconUrl(self, url, baseUrl)
@@ -56,8 +59,19 @@ class WebCameraApi(CBaseHostClass):
 
     def addDefaultIcons(self):
         for idx in range(len(self.currList)):
-            if '' == self.currList[idx].get('icon', ''):
+            if '' == self.currList[idx].get('icon', '') or self.LOADER_ICON in self.currList[idx].get('icon', ''):
                 self.currList[idx]['icon'] = self.getDefaulIcon()
+
+    def _getItemIcon(self, item):
+        # thumbnails are <picture><source srcset=...><img src="...webp"> (older pages: data-src / .jpg);
+        # the lazy-load placeholder loader-min.png does not count
+        for pattern in (r'''data\-src=['"]([^'^"]+?)['"]''',
+                        r'''<img[^>]+?src=['"]([^'^"]+?\.(?:jpe?g|png|webp|gif)(?:\?[^'^"]*?)?)['"]''',
+                        r'''srcset=['"]([^'^"\s]+?\.(?:jpe?g|png|webp|gif)(?:\?[^'^"\s]*?)?)[\s'"]'''):
+            icon = self.cm.ph.getSearchGroups(item, pattern)[0]
+            if icon and self.LOADER_ICON not in icon:
+                return self.getFullIconUrl(icon)
+        return ''
 
     def getList(self, cItem):
         printDBG("WebCameraApi.getChannelsList")
@@ -80,11 +94,13 @@ class WebCameraApi(CBaseHostClass):
                     catUrl = self.getFullUrl(self.cm.ph.getSearchGroups(item, """href=['"]([^'^"]+?)['"]""")[0])
                     if catUrl == '' or '#' in catUrl:
                         continue
+                    if '/moje-konto' in catUrl or '/premium' in catUrl:
+                        continue  # account / premium shop links of the site menu, not camera lists
                     info = ' [' + catUrl.split(',')[-1] + ']'
                     catTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<a', '</a>')[1])
                     if 'Wszystkie' in catTitle:
                         catTitle = catTitle + info
-                    catIcon = self.getFullUrl('images/logo_mobile.png')
+                    catIcon = self._getItemIcon(item) or self.DEFAULT_ICON_URL
 
                     subCats = []
                     item = self.cm.ph.getAllItemsBeetwenMarkers(item.split('<ul', 1)[-1], '<li', '</li>')
@@ -143,13 +159,11 @@ class WebCameraApi(CBaseHostClass):
                         if limiter in item:
                             title = self.cleanHtmlStr(item.split(limiter)[0])
                             desc = self.cleanHtmlStr(item.split(limiter)[-1])
-                        icon = self.cm.ph.getSearchGroups(item, r"""data\-src=['"]([^'^"]+?)['"]""")[0]
-                        if icon == '':
-                            icon = self.cm.ph.getSearchGroups(item, r"""src=['"]([^'^"]+?\.jpg[^'^"]*?)['"]""")[0]
+                        icon = self._getItemIcon(item)
                         if 'instagramie' in title:
                             continue
                         params = dict(cItem)
-                        params.update({'title': title, 'url': self.getFullUrl(url), 'icon': self.getFullIconUrl(icon), 'desc': desc})
+                        params.update({'title': title, 'url': self.getFullUrl(url), 'icon': icon, 'desc': desc})
                         self.addVideo(params)
                         vidCount += 1
 

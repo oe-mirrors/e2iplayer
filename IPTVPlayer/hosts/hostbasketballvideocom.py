@@ -1,10 +1,28 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 11.07.2026 - Panda555
-import re
-from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
+# Basketball-Video (basketball-video.com) - NBA / WNBA / EuroLeague / College full game replays
+# Site: uCoz catalogue like nfl-video.com (navigation groups, "?pageN" / "/<cat>-N" paging, /search/ needs the cookie)
+# Game page: "Server #N XX" buttons -> link pages (nbaontv.com, nhlgamestoday.com, ...) with one hoster <iframe>
+#   (ok.ru, vidara, ...), older games embed the hoster <iframe> directly. Resolved lazily in getVideoLinks.
+#   Listing, search, link pages and INFO: tools/ucozcatalog.py
+# Last Modified: 03.10.2026 - rebuild: basketball-video.com only (NFL-Video has its own host, MLBLive and
+#   FullRaces are behind a Cloudflare challenge), watched flag, name normalisation, sidecar, search, INFO
+###################################################
+# LOCAL import
+###################################################
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsMediaNamingNormalized
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
+from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
+from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
+from Plugins.Extensions.IPTVPlayer.tools.ucozcatalog import UcozCatalogMixin, DATE_RE, DATE_NUM_RE
+###################################################
+# FOREIGN import
+###################################################
+import re
+###################################################
+
+LABEL_RE = r'\bFull (?:Game|Show)(?: Replays?)?(?:\s*(?:&amp;|&|and)\s*Highlights)?\b'
 
 
 def GetConfigList():
@@ -15,105 +33,117 @@ def gettytul():
     return 'https://basketball-video.com/'
 
 
-class BasketballVideo(CBaseHostClass):
+class BasketballVideo(UcozCatalogMixin, GenericFolderWatchedScraperMixin, CBaseHostClass):
+    # navigation entries that answer 404 on the site
+    UCOZ_DEAD_NAV = ('/wnba-video', '/videos/nba_news_tv_show/nba_tv_show/46', '/content-policy-dcma')
 
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'basketball-video.com', 'cookie': 'basketball-video.cookie'})
-        self.DEFAULT_ICON_URL = gettytul() + '_pu/75/37346371.png'
         self.MAIN_URL = 'https://basketball-video.com/'
-        self.HEADER = self.cm.getDefaultHeader(browser="chrome")
-        self.defaultParams = {'with_metadata': True, "header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
-        self.MENU = [
-            {'category': 'sub_menu', 'title': 'Basketball-Video', 'url': 'https://basketball-video.com/', 'desc': 'https://basketball-video.com/'},
-            {'category': 'sub_menu', 'title': 'MLBLive', 'url': 'https://mlblive.net/', 'desc': 'https://mlblive.net/'},
-            {'category': 'sub_menu', 'title': 'NFL-Video', 'url': 'https://nfl-video.com/', 'desc': 'https://nfl-video.com/'},
-            {'category': 'sub_menu', 'title': 'FullRaces', 'url': 'https://fullraces.com/', 'desc': 'https://fullraces.com/'}]
+        self.DEFAULT_ICON_URL = self.MAIN_URL + '_pu/75/37346371.png'
+        self.HEADER = self.cm.getDefaultHeader(browser='chrome')
+        self.defaultParams = {'header': self.HEADER, 'with_metadata': True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.watchedHelper = IPTVWatchedHelper('basketballvideocom')
+        self.wfInitFolderCache()
 
     def getPage(self, url, addParams=None, post_data=None):
         if addParams is None:
             addParams = dict(self.defaultParams)
         return self.cm.getPage(url, addParams, post_data)
 
-    def listSubMenu(self, cItem):
-        printDBG("BasketballVideo.listSubMenu [%s]" % cItem)
-        sts, data = self.getPage(cItem['url'])
-        if not sts:
-            return []
-        cUrl = data.meta['url']
-        self.setMainUrl(cUrl)
-        data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<nav', '</nav')
-        data = re.compile(r'a href="([^"]+)"\s*?>([^<]+)', re.DOTALL).findall(data[0] if data else '')
-        for url, title in data:
-            params = dict(cItem)
-            params.update({'category': 'list_items', 'title': title, 'url': self.getFullUrl(url)})
-            self.addDir(params)
-
-    def listItems(self, cItem):
-        printDBG("BasketballVideo.listItems")
-        url = cItem['url']
-        sts, data = self.getPage(url)
-        if not sts:
-            return []
-        nextPage = self.cm.ph.getSearchGroups(data, 'swchItem" href="([^"]+)')[0]
-        data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'class="poster">', 'block_elem"')
-        for item in data:
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'href="([^"]+)')[0])
-            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<h3', '>'), ('</h3', '>'), False)[1])
-            icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'img src="([^"]+)')[0])
-            desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'short_descr'), ('</div', '>'), False)[1]).replace('&nbsp;', ' ')
-            params = dict(cItem)
-            params.update({'good_for_fav': True, 'title': title, 'url': url, 'icon': icon, 'desc': desc})
-            self.addVideo(params)
-        if nextPage:
-            params = dict(cItem)
-            params.update({'title': _("Next page"), 'url': self.MAIN_URL[:-1] + nextPage})
-            self.addDir(params)
-
-    def getLinksForVideo(self, cItem):
-        printDBG("BasketballVideo.getLinksForVideo [%s]" % cItem)
-        urltab = []
-        sts, data = self.getPage(cItem['url'])
-        if not sts:
-            return []
-        data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'class="fullstory block_elem"', 'class="full_info block_elem"')
-        if not data:
-            return urltab
-        data = re.compile(r'''(?:src|href)=['"]([^'^"]+?)['"]\s(?:width|rel)''', re.DOTALL).findall(data[0])
-        for url in data:
-            url = 'https:' + url if url.startswith('//') else url
-            if any(d in url for d in ("gamesontvtoday.com", "nfl-video.com", "guidedesgemmes.com", "nhlgamestoday.com")):
-                sts, d = self.getPage(url)
-                if not sts:
-                    continue
-                url = self.cm.ph.getSearchGroups(d, 'src="([^"]+)" w')[0]
-                url = "https:" + url if url.startswith("//") else url
-            urltab.append({"name": self.up.getHostName(url).capitalize(), "url": strwithmeta(url, {"Referer": cItem['url']}), "need_resolve": 1})
-        return urltab
-
-    def getVideoLinks(self, url):
-        printDBG("BasketballVideo.getVideoLinks [%s]" % url)
-        if self.cm.isValidUrl(url):
-            return self.up.getVideoLinkExt(url)
-        return []
-
-    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
-        CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
-        name = self.currItem.get("name", '')
-        category = self.currItem.get("category", '')
-        printDBG("handleService start\nhandleService: name[%s], category[%s] " % (name, category))
-        self.currList = []
-        if name is None:
-            self.listsTab(self.MENU, {"name": "category"})
-        elif category == 'sub_menu':
-            self.listSubMenu(self.currItem)
-        elif category == 'list_items':
-            self.listItems(self.currItem)
-        else:
+    def _normTitle(self, title):
+        # "Knicks vs. Spurs - NBA Finals - Game 5 - Full Game Replay - June 13, 2026" -> "Knicks vs. Spurs - NBA Finals - Game 5 (2026-06-13)"
+        # "Pistons vs Heat Full Game Replay March 19, 2025 NBA" -> "Pistons vs. Heat - NBA (2025-03-19)"
+        if not IsMediaNamingNormalized():
+            return title
+        try:
+            date = self._parseDate(title)
+            out = re.sub(r'\s*\|\s*', ' - ', title)
+            out = re.sub(DATE_RE, ' - ', out, flags=re.I)
+            out = re.sub(DATE_NUM_RE, ' - ', out)
+            out = re.sub(LABEL_RE, ' - ', out, flags=re.I)
+            out = re.sub(r'\bvs\.?(?=\s)', 'vs.', out)
+            keep = []
+            for p in out.split(' - '):
+                p = p.strip(' ,:-')
+                if p and p.lower() not in [k.lower() for k in keep]:
+                    keep.append(p)
+            out = ' - '.join(keep) or title
+            if date:
+                out = '%s (%s)' % (out, date)
+            return out
+        except Exception:
             printExc()
-        CBaseHostClass.endHandleService(self, index, refresh)
+        return title
+
+    ###################################################
+    # links
+    ###################################################
+    def getLinksForVideo(self, cItem):
+        printDBG("BasketballVideo.getLinksForVideo [%s]" % cItem['url'])
+        sts, data = self.getPage(cItem['url'])
+        if not sts:
+            return []
+        body = self._gameBody(data)
+        urlTab = []
+        seen = set()
+
+        def addLink(url, name):
+            url = url.replace('&amp;', '&')
+            if url.startswith('//'):
+                url = 'https:' + url
+            url = self.getFullUrl(url)
+            if not self.cm.isValidUrl(url) or url in seen:
+                return
+            seen.add(url)
+            urlTab.append({'name': name or self.up.getHostName(url), 'url': strwithmeta(url, {'Referer': cItem['url']}), 'need_resolve': 1})
+
+        # day pages (Summer League, ...): a table "Matchup | OK | Filemoon" with one "Watch" button per hoster column
+        for table in re.findall(r'<table[^>]+class="nhl-box".*?</table>', body, re.S):
+            columns = []
+            for row in re.findall(r'<tr[^>]*>(.*?)</tr>', table, re.S):
+                cells = re.findall(r'<td[^>]*>(.*?)</td>', row, re.S)
+                if 'nhl-game' not in row:
+                    if 'href=' not in row and len(cells) > 1:
+                        columns = [self.cleanHtmlStr(c) for c in cells]
+                    continue
+                game = self.cleanHtmlStr(cells[0]) if cells else ''
+                for idx, cell in enumerate(cells[1:], 1):
+                    column = columns[idx] if idx < len(columns) else ''
+                    for url in re.findall(r'<a[^>]+href="([^"]+)"', cell):
+                        addLink(url, ' - '.join([x for x in (game, column) if x]))
+        body = re.sub(r'<table[^>]+class="nhl-box".*?</table>', '', body, flags=re.S)
+
+        label = ''
+        # walk the page in order: a short paragraph ("Server #2 (FM)", "Baskonia vs Olimpia Milan") names
+        # the following buttons / players
+        # (no zero-width re.split - Python 2.7 does not split on empty matches)
+        for chunk in re.sub(r'(<p[\s>])', r'<!--split-->\1', body).split('<!--split-->'):
+            para = self.cm.ph.getDataBeetwenNodes(chunk, ('<p', '>'), ('</p', '>'), False)[1]
+            if para and '<br' not in para:
+                heading = self.cleanHtmlStr(re.sub(r'<a[^>]+>.*?</a>', '', para, flags=re.S))
+                if self._isLabel(heading):
+                    label = heading
+            anchors = re.findall(r'<a[^>]+class="su-button[^"]*"[^>]+href="([^"]+)"[^>]*>(.*?)</a>', chunk, re.S)
+            frames = re.findall(r'<iframe[^>]+src="([^"]+)"', chunk, re.I)
+            for url, text in anchors:
+                text = self.cleanHtmlStr(text)
+                if text.lower() == 'watch':
+                    text = ''
+                addLink(url, ' - '.join([x for x in (label, text) if x]))
+            for url in frames:
+                host = self.up.getHostName('https:' + url if url.startswith('//') else url)
+                addLink(url, ' - '.join([x for x in (label, host) if x]))
+        return self._finishLinks(cItem, urlTab)
 
 
-class IPTVHost(CHostBase):
+class IPTVHost(GenericFolderWatchedHostMixin, CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, BasketballVideo(), True, [])
+        self.cachedRet = None
+        self.refreshAfterWatchedFlagChange = False
+        self.watchedHelper = IPTVWatchedHelper('basketballvideocom')
+
+    def withArticleContent(self, cItem):
+        return cItem.get('type') == 'video'

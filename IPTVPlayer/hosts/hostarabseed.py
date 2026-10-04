@@ -1,32 +1,35 @@
 # -*- coding: utf-8 -*-
-# Last modified: 13/10/2025 - popking (odem2014)
-# Last updated:  03/10/2026 - M.Elsafty (angel_heart)
-###################################################
-# LOCAL import
-###################################################
-# localization library
-from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
-from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import (
-    printDBG,
-    printExc,
-    MergeDicts,
-    E2ColoR,
-)
-from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
-from Plugins.Extensions.IPTVPlayer.libs.e2ijson import (
-    loads as json_loads,
-    dumps as json_dumps,
-)
-from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
+# Last Modified: 03.10.2026 - rewrite for the current m.myseed.pics layout and the current host standard
+#   (earlier versions: popking (odem2014), M.Elsafty (angel_heart))
+#   - menus read the site's current category paths (the old "-14"/"-7"/"-2" slugs only redirect now);
+#     movies, songs, plays, WWE: VIDEO rows; series lists ("latest episodes"): episode VIDEO rows;
+#     "seasons" (packs) lists: series folders -> seasons (/selary/ pages) -> episodes
+#   - VIDEO rows are keyed on the stable details page url; the servers are read in getLinksForVideo from
+#     the /watch/ page (1 GET) + one get__quality__servers POST per further quality - no per-server AJAX
+#     storm and no sleeps; servers without a link on the page are asked for (get__watch__server) only
+#     when the user picks them, in getVideoLinks
+#   - own "MySeed" server: /vids.php?t=.. -> d.myseed.tv player gateway -> MP4 (needs the gateway Referer);
+#     the other servers go to urlparser (need_resolve=1, "/vid/?id=<base64>" unwrapped)
+#   - getVideoLinks restored (PR #660 had removed it - every hoster link crashed in getResolvedURL)
+#   - watched flag (series -> season -> episode), downloaded flag, favourites, sidecar,
+#     name normalisation ("Title (Year)", "Show - SxxExx"), INFO via moviemeta + the site's story/fields,
+#     First/Jump/Next paging, search + history; no colour codes in video titles
 import re
-import base64
-import json
 
-try:
-    from urllib.parse import urlencode, quote
-except ImportError:
-    from urllib import urlencode, quote
+from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
+from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
+from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, getMetaByImdbId
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus, urllib_unquote, urllib_urlencode
+from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
+from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, E2ColoR, b64Decode
+from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
+from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
+from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
 
 
 def GetConfigList():
@@ -34,1728 +37,594 @@ def GetConfigList():
 
 
 def gettytul():
-    return "https://m.myseed.pics/"  # M.elsafty.20261003
+    return "https://m.myseed.pics/"
 
 
-class MySeed(CBaseHostClass):
+# Enigma2 colour codes ("\c00RRGGBB") - only for the list description, never in titles / sidecar / INFO text
+COLOR_CODE_RE = re.compile(r"\\c[0-9A-Fa-f]{8}")
+# Arabic ordinals of season labels ("الموسم الثاني"), compound ones first
+SEASON_ORDINALS = [
+    ("الحادي عشر", 11), ("الثاني عشر", 12), ("الثالث عشر", 13), ("الرابع عشر", 14), ("الخامس عشر", 15),
+    ("السادس عشر", 16), ("السابع عشر", 17), ("الثامن عشر", 18), ("التاسع عشر", 19), ("العشرون", 20),
+    ("الأولى", 1), ("الاولى", 1), ("الأول", 1), ("الاول", 1), ("الثانية", 2), ("الثاني", 2), ("الثانى", 2),
+    ("الثالثة", 3), ("الثالث", 3), ("الرابعة", 4), ("الرابع", 4), ("الخامسة", 5), ("الخامس", 5),
+    ("السادسة", 6), ("السادس", 6), ("السابعة", 7), ("السابع", 7), ("الثامنة", 8), ("الثامن", 8),
+    ("التاسعة", 9), ("التاسع", 9), ("العاشرة", 10), ("العاشر", 10),
+]
+SEASON_RE = re.compile(r"(?:^|\s)(?:الموسم|موسم)\s*(\d+|%s)(?=\s|$)" % "|".join(o[0] for o in SEASON_ORDINALS))
+EPISODE_RE = re.compile(r"(?:^|\s)(?:الحلقة|حلقة)\s*(\d+)")
+PREFIX_RE = re.compile(r"^(?:فيلم|افلام|أفلام|مسلسل|انمي|أنمي|برنامج|عرض|مسرحية|اغنية|أغنية|كليب)\s+")
+# site words that do not belong into a title / file name
+JUNK_RE = re.compile(r"(?:^|\s)(?:مترجم|مترجمة|اون لاين|أون لاين|مشاهدة|كامل|كاملة|بجودة عالية|HD)(?=\s|$)")
+DUB_RE = re.compile(r"(?:^|\s)(?:مدبلج|مدبلجة)(?=\s|$)")
+DUB_WORD = "مدبلج"
+YEAR_RE = re.compile(r"(?:^|\s|\()((?:19|20)\d{2})\)?\s*$")
+# "<span>سنة العرض : </span>" rows of a details page -> INFO keys
+INFO_FIELDS = (("نوع العرض", "genres"), ("سنة العرض", "year"), ("لغة العرض", "language"), ("جودة العرض", "quality"),
+               ("بلد العرض", "country"), ("تصنيف العرض", "category"), ("مدة العرض", "duration"))
+SEARCH_PAGE_SIZE = 24
+# the site's former own players, still linked by old titles: redirect to other sites / ad pages now
+DEAD_HOSTS_RE = re.compile(r"^https?://(?:[^/]+\.)?(?:arabseed\.me|reviewrate\.net|reviewtech\.me)/", re.I)
+# fields that identify a row (the description carries the changing rating)
+FAV_FIELDS = ("name", "category", "type", "url", "title", "icon", "s_title", "s_season", "s_episode", "s_term",
+              "meta_type", "meta_title", "meta_year")
+
+
+def _stripColors(text):
+    return COLOR_CODE_RE.sub("", text or "")
+
+
+class MySeed(GenericFolderWatchedScraperMixin, CBaseHostClass):
+
     def __init__(self):
-        CBaseHostClass.__init__(
-            self, {"history": "MySeed", "cookie": "MySeed.cookie"}
-        )  # names for history and cookie files in cache
-        self.urlencode = urlencode
+        CBaseHostClass.__init__(self, {"history": "MySeed", "cookie": "MySeed.cookie"})
         self.MAIN_URL = gettytul()
-        self.SEARCH_URL = "https://m.myseed.pics/search"
         self.DEFAULT_ICON_URL = "https://m.myseed.pics/lgo222.png"
         self.HEADER = self.cm.getDefaultHeader(browser="chrome")
-        self.defaultParams = {
-            "header": self.HEADER,
-            "use_cookie": True,
-            "load_cookie": True,
-            "save_cookie": True,
-            "cookiefile": self.COOKIE_FILE,
-        }
+        self.AJAX_HEADER = dict(self.HEADER)
+        self.AJAX_HEADER.update({"X-Requested-With": "XMLHttpRequest", "Accept": "application/json, text/javascript, */*; q=0.01",
+                                 "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8", "Origin": self.MAIN_URL.rstrip("/")})
+        self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
+        self.watchedHelper = IPTVWatchedHelper("arabseed")
+        self.wfInitFolderCache()
 
-    def getPage(self, base_url, add_params=None, post_data=None):
-        if any(ord(c) > 127 for c in base_url):
-            base_url = urllib_quote_plus(base_url, safe="://")
-        if add_params is None:
-            add_params = dict(self.defaultParams)
-        add_params["cloudflare_params"] = {
-            "cookie_file": self.COOKIE_FILE,
-            "User-Agent": self.HEADER.get("User-Agent"),
-        }
-        return self.cm.getPageCFProtection(base_url, add_params, post_data)
+        def cat(path):
+            return self.getFullUrl("category/" + path)
 
-    def listMainMenu(self, cItem):
-        printDBG("MySeed.listMainMenu")
+        movies = [(_("Foreign movies"), "foreign-movies/"), (_("Arabic Movies"), "arabic-movies/"), (_("Netflix movies"), "netflix/netflix-movies/"),
+                  (_("Indian Movies"), "indian-movies/"), (_("Turkish Movies"), "turkish-movies/"), (_("Asian movies"), "asian-movies/"),
+                  (_("Classic movies"), "افلام-كلاسيكيه/"), (_("Dubbed movies"), "dubbed-movies/"), (_("Animated movies"), "animation-movies/")]
+        series = [(_("Foreign series"), "foreign-series/"), (_("Arabic Series"), "arabic-series/"), (_("Egyptian series"), "مسلسلات-مصريه/"),
+                  (_("Netflix series"), "netflix/netflix-series/"), (_("Turkish Series"), "turkish-series/"), (_("Indian TV series"), "مسلسلات-هندية/"),
+                  (_("Korean TV series"), "مسلسلات-كوريه/"), (_("Dubbed series"), "dubbed-series/"), (_("Animated series"), "cartoon-series/"),
+                  (_("TV Shows"), "برامج-تلفزيونية/")]
+        ramadan = [("%s %s" % (_("Ramadan"), year), path) for year, path in (
+            ("2026", "ramadan-series-2026/"), ("2025", "ramadan-series-2025/"), ("2024", "ramadan-series-2024/"),
+            ("2023", "ramadan-series-2023/"), ("2022", "مسلسلات-رمضان-2022/"), ("2021", "مسلسلات-رمضان-2021/"),
+            ("2020", "مسلسلات-رمضان-2020-hd/"), ("2019", "مسلسلات-رمضان-2019/"))]
+        other = [(_("Wrestling"), "wwe-shows/"), (_("Arabic songs"), "arabic-songs/"), (_("Arabic plays"), "مسرحيات-عربي/")]
+
+        def tab(entries, suffix=""):
+            return [{"category": "list_items", "good_for_fav": True, "title": t, "url": cat(p + suffix)} for t, p in entries]
+
+        self.SUB_TABS = {
+            "movies_folder": tab(movies),
+            "series_folder": tab(series),
+            "series_packs_folder": tab(series, "packs/") + tab(ramadan, "packs/"),
+            "ramadan_folder": tab(ramadan),
+            "other_folder": tab(other),
+        }
         self.MAIN_CAT_TAB = [
-            {"category": "movies_folder", "title": "الافلام"},
-            {"category": "series_folder", "title": "المسلسلات"},
-            {"category": "ramadan_folder", "title": "رمضان"},
-            {"category": "anime_folder", "title": "انمي"},
-            {
-                "category": "series_packs_folder",
-                "title": "مواسم مسلسلات - برامج - أنمي",
-            },
-            {"category": "other_folder", "title": "اخري"},
+            {"category": "list_items", "good_for_fav": True, "title": _("Recently added"), "url": self.getFullUrl("recently/")},
+            {"category": "list_items", "good_for_fav": True, "title": _("Most viewed"), "url": self.getFullUrl("trend/")},
+            {"category": "movies_folder", "title": _("Movies")},
+            {"category": "series_folder", "title": _("Series - latest episodes")},
+            {"category": "series_packs_folder", "title": _("Series - seasons")},
+            {"category": "ramadan_folder", "title": _("Ramadan")},
+            {"category": "other_folder", "title": _("Other")},
         ] + self.searchItems()
-        self.MOVIES_CAT_TAB = [
-            {
-                "category": "list_items",
-                "title": "افلام عربي",
-                "url": self.getFullUrl("/category/arabic-movies-14/"),
-            },
-            {
-                "category": "list_items",
-                "title": "افلام اجنبي",
-                "url": self.getFullUrl("/category/foreign-movies-14/"),
-            },
-            {
-                "category": "list_items",
-                "title": "افلام Netfilx",
-                "url": self.getFullUrl("/category/netflix/netflix-movies/"),
-            },
-            {
-                "category": "list_items",
-                "title": "افلام هندى",
-                "url": self.getFullUrl("/category/indian-movies-2/"),
-            },
-            {
-                "category": "list_items",
-                "title": "افلام تركية",
-                "url": self.getFullUrl("/category/turkish-movies/"),
-            },
-            {
-                "category": "list_items",
-                "title": "افلام اسيوية",
-                "url": self.getFullUrl("/category/asian-movies-2/"),
-            },
-            {
-                "category": "list_items",
-                "title": "افلام كلاسيكيه",
-                "url": self.getFullUrl("/category/افلام-كلاسيكيه/"),
-            },
-            {
-                "category": "list_items",
-                "title": "افلام مدبلجة",
-                "url": self.getFullUrl("/category/dubbed-movies/"),
-            },
-        ]
-        self.SERIES_CAT_TAB = [
-            {
-                "category": "series",
-                "title": "مسلسلات عربية",
-                "url": self.getFullUrl("/category/arabic-series-14/"),
-            },
-            {
-                "category": "series",
-                "title": "مسلسلات مصرية",
-                "url": self.getFullUrl("/category/مسلسلات-مصريه/"),
-            },
-            {
-                "category": "series",
-                "title": "مسلسلات اجنبية",
-                "url": self.getFullUrl("/category/foreign-series-7/"),
-            },
-            {
-                "category": "series",
-                "title": "مسلسلات Netfilx",
-                "url": self.getFullUrl("/category/netflix/netflix-series/"),
-            },
-            {
-                "category": "series",
-                "title": "مسلسلات تركية",
-                "url": self.getFullUrl("/category/turkish-series-2/"),
-            },
-            {
-                "category": "series",
-                "title": "مسلسلات هندية",
-                "url": self.getFullUrl("/category/مسلسلات-هندية/"),
-            },
-            {
-                "category": "series",
-                "title": "مسلسلات كورية",
-                "url": self.getFullUrl("/category/مسلسلات-كوريه/"),
-            },
-            {
-                "category": "series",
-                "title": "مسلسلات مدبلجة",
-                "url": self.getFullUrl("/category/dubbed-series/"),
-            },
-            {
-                "category": "series",
-                "title": "مسلسلات كرتون",
-                "url": self.getFullUrl("/category/cartoon-series/"),
-            },
-        ]
-        self.SERIES_PACKS_CAT_TAB = [
-            {
-                "category": "series_packs",
-                "title": "مواسم مسلسلات عربية",
-                "url": self.getFullUrl("/category/arabic-series-14/packs/"),
-            },
-            {
-                "category": "series_packs",
-                "title": "مواسم مسلسلات مصرية",
-                "url": self.getFullUrl("/category/مسلسلات-مصريه/packs/"),
-            },
-            {
-                "category": "series_packs",
-                "title": "مواسم مسلسلات اجنبية",
-                "url": self.getFullUrl("/category/foreign-series-7/packs/"),
-            },
-            {
-                "category": "series_packs",
-                "title": "مواسم مسلسلات تركية",
-                "url": self.getFullUrl("/category/turkish-series-2/packs/"),
-            },
-            {
-                "category": "series_packs",
-                "title": "مواسم مسلسلات هندية",
-                "url": self.getFullUrl("/category/مسلسلات-هندية/packs/"),
-            },
-            {
-                "category": "series_packs",
-                "title": "مواسم مسلسلات كورية",
-                "url": self.getFullUrl("/category/مسلسلات-كوريه/packs/"),
-            },
-            {
-                "category": "series_packs",
-                "title": "مواسم مسلسلات مدبلجة",
-                "url": self.getFullUrl("/category/dubbed-series/packs/"),
-            },
-            {
-                "category": "series_packs",
-                "title": "مواسم مسلسلات رمضان 2026",
-                "url": self.getFullUrl(
-                    "/category/مسلسلات-رمضان/ramadan-series-2026-1/packs/"
-                ),
-            },
-            {
-                "category": "series_packs",
-                "title": "مواسم مسلسلات رمضان 2025",
-                "url": self.getFullUrl(
-                    "/category/مسلسلات-رمضان-1/ramadan-series-2025/packs/"
-                ),
-            },
-            {
-                "category": "series_packs",
-                "title": "مواسم مسلسلات رمضان 2024",
-                "url": self.getFullUrl(
-                    "/category/مسلسلات-رمضان-1/ramadan-series-2024/packs/"
-                ),
-            },
-            {
-                "category": "series_packs",
-                "title": "مواسم مسلسلات رمضان 2023",
-                "url": self.getFullUrl(
-                    "/category/مسلسلات-رمضان-1/ramadan-series-2023/packs/"
-                ),
-            },
-            {
-                "category": "series_packs",
-                "title": "مواسم مسلسلات رمضان 2022",
-                "url": self.getFullUrl(
-                    "/category/مسلسلات-رمضان-1/مسلسلات-رمضان-2022/packs/"
-                ),
-            },
-            {
-                "category": "series_packs",
-                "title": "مواسم مسلسلات رمضان 2021",
-                "url": self.getFullUrl(
-                    "/category/مسلسلات-رمضان-1/مسلسلات-رمضان-2021/packs/"
-                ),
-            },
-            {
-                "category": "series_packs",
-                "title": "مواسم مسلسلات رمضان 2020",
-                "url": self.getFullUrl(
-                    "/category/مسلسلات-رمضان-1/مسلسلات-رمضان-2020-hd/packs/"
-                ),
-            },
-            {
-                "category": "series_packs",
-                "title": "مواسم مسلسلات رمضان 2019",
-                "url": self.getFullUrl(
-                    "/category/مسلسلات-رمضان-1/مسلسلات-رمضان-2019/packs/"
-                ),
-            },
-            {
-                "category": "series_packs",
-                "title": "مواسم برامج تليفزيونية",
-                "url": self.getFullUrl("/category/برامج-تلفزيونية/packs/"),
-            },
-            {
-                "category": "series_packs",
-                "title": "مواسم مسلسلات كرتون",
-                "url": self.getFullUrl("/category/cartoon-series/packs/"),
-            },
-        ]
-        self.RAMADAN_CAT_TAB = [
-            {
-                "category": "series",
-                "title": "مسلسلات رمضان 2026",
-                "url": self.getFullUrl(
-                    "/category/مسلسلات-رمضان-1/ramadan-series-2026/"
-                ),
-            },
-            {
-                "category": "series",
-                "title": "مسلسلات رمضان 2025",
-                "url": self.getFullUrl(
-                    "/category/مسلسلات-رمضان-1/ramadan-series-2025/"
-                ),
-            },
-            {
-                "category": "series",
-                "title": "مسلسلات رمضان 2024",
-                "url": self.getFullUrl(
-                    "/category/مسلسلات-رمضان-1/ramadan-series-2024/"
-                ),
-            },
-            {
-                "category": "series",
-                "title": "مسلسلات رمضان 2023",
-                "url": self.getFullUrl(
-                    "/category/مسلسلات-رمضان-1/ramadan-series-2023/"
-                ),
-            },
-            {
-                "category": "series",
-                "title": "مسلسلات رمضان 2022",
-                "url": self.getFullUrl("/category/مسلسلات-رمضان-1/مسلسلات-رمضان-2022/"),
-            },
-            {
-                "category": "series",
-                "title": "مسلسلات رمضان 2021",
-                "url": self.getFullUrl("/category/مسلسلات-رمضان-1/مسلسلات-رمضان-2021/"),
-            },
-            {
-                "category": "series",
-                "title": "مسلسلات رمضان 2020",
-                "url": self.getFullUrl(
-                    "/category/مسلسلات-رمضان-1/مسلسلات-رمضان-2020-hd/"
-                ),
-            },
-            {
-                "category": "series",
-                "title": "مسلسلات رمضان 2019",
-                "url": self.getFullUrl("/category/مسلسلات-رمضان-1/مسلسلات-رمضان-2019/"),
-            },
-        ]
-        self.ANIME_CAT_TAB = [
-            {
-                "category": "list_items",
-                "title": "افلام انيميشن",
-                "url": self.getFullUrl("/category/animation-movies/"),
-            },
-            {
-                "category": "series",
-                "title": "مسلسلات كرتون",
-                "url": self.getFullUrl("/category/cartoon-series/"),
-            },
-        ]
-        self.OTHER_CAT_TAB = [
-            {
-                "category": "list_items",
-                "title": "اغاني عربي",
-                "url": self.getFullUrl("/category/اغاني-عربي/"),
-            },
-            {
-                "category": "list_items",
-                "title": "مصارعه",
-                "url": self.getFullUrl("/category/wwe-shows-1/"),
-            },
-            {
-                "category": "list_items",
-                "title": "برامج تلفزيونية",
-                "url": self.getFullUrl("/category/برامج-تلفزيونية/"),
-            },
-            {
-                "category": "list_items",
-                "title": "مسرحيات عربيه",
-                "url": self.getFullUrl("/category/مسرحيات-عربي/"),
-            },
-        ]
-        self.listsTab(self.MAIN_CAT_TAB, cItem)
 
-    def listMoviesFolder(self, cItem):
-        printDBG("MySeed.listMoviesFolder")
-        self.listsTab(self.MOVIES_CAT_TAB, cItem)
+    ###################################################
+    # helpers
+    ###################################################
+    def getPage(self, baseUrl, addParams=None, post_data=None):
+        if addParams is None:
+            addParams = dict(self.defaultParams)
+        addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.HEADER.get("User-Agent")}
+        return self.cm.getPageCFProtection(self._canonUrl(baseUrl), addParams, post_data)
 
-    def listSeriesFolder(self, cItem):
-        printDBG("MySeed.listSeriesFolder")
-        self.listsTab(self.SERIES_CAT_TAB, cItem)
+    def _ajax(self, endpoint, postData, referer):
+        params = dict(self.defaultParams)
+        params["header"] = dict(self.AJAX_HEADER, Referer=referer)
+        sts, data = self.getPage(self.getFullUrl(endpoint + "/"), params, postData)
+        if not sts:
+            return {}
+        try:
+            ret = json_loads(data)
+            return ret if isinstance(ret, dict) else {}
+        except Exception:
+            printDBG("MySeed._ajax %s: no JSON" % endpoint)
+        return {}
 
-    def listSeriesPacksFolder(self, cItem):
-        printDBG("MySeed.listSeriesPacksFolder")
-        self.listsTab(self.SERIES_PACKS_CAT_TAB, cItem)
+    def _canonUrl(self, url):
+        # the site links the same page raw-Arabic or percent-encoded (lower case) - one ASCII form for
+        # requests, the watched/downloaded markers and favourites
+        url = (url or "").replace("&amp;", "&").strip()
+        if not url:
+            return ""
+        url = self.getFullUrl(url)
+        try:
+            url = urllib_quote(urllib_unquote(url), safe=":/?&=#+,;@%")
+        except Exception:
+            printExc()
+        return url
 
-    def listRamadanFolder(self, cItem):
-        printDBG("MySeed.listRamadanFolder")
-        self.listsTab(self.RAMADAN_CAT_TAB, cItem)
+    def _pageUrl(self, url):
+        # details page of a title (old favourites / links point to its "watch/" page)
+        url = self._canonUrl(url)
+        if url.endswith("/watch/"):
+            url = url[:-len("watch/")]
+        return url
 
-    def listAnimeFolder(self, cItem):
-        printDBG("MySeed.listAnimeFolder")
-        self.listsTab(self.ANIME_CAT_TAB, cItem)
+    @staticmethod
+    def _seasonNum(text):
+        m = SEASON_RE.search(text or "")
+        if not m:
+            return 0
+        val = m.group(1)
+        return int(val) if val.isdigit() else dict(SEASON_ORDINALS).get(val, 0)
 
-    def listOtherFolder(self, cItem):
-        printDBG("MySeed.listOtherFolder")
-        self.listsTab(self.OTHER_CAT_TAB, cItem)
+    def _parseTitle(self, title):
+        # "مسلسل X الموسم الثاني الحلقة 3 الثالثة مترجمة" -> {"name": "X", "season": 2, "episode": "3", "year": "", "dub": False}
+        # "فيلم Y 2026 مترجم" -> {"name": "Y", "year": "2026", ...}
+        text = self.cleanHtmlStr(title)
+        dub = bool(DUB_RE.search(text))
+        text = DUB_RE.sub(" ", text)
+        text = PREFIX_RE.sub("", text.strip())
+        ret = {"name": "", "season": 0, "episode": "", "year": "", "dub": dub}
+        m = EPISODE_RE.search(text)
+        if m:
+            ret["episode"] = m.group(1)
+            text = text[:m.start()]
+        ret["season"] = self._seasonNum(text)
+        m = SEASON_RE.search(text)
+        if m:
+            text = text[:m.start()]
+        text = re.sub(r"\s+", " ", JUNK_RE.sub(" ", text)).strip(" -:|")
+        m = YEAR_RE.search(text)
+        if m and not ret["episode"]:
+            ret["year"] = m.group(1)
+            text = text[:m.start()].strip(" -:|(")
+        ret["name"] = text or self.cleanHtmlStr(title)
+        return ret
 
-    def getLinksForVideo(self, cItem):
-        printDBG("MySeed.getLinksForVideo %s" % cItem)
-        url = cItem.get("url", "")
-        title = cItem.get("title", "")
-        need_resolve = cItem.get("need_resolve", 1)
-        common_headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36",
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-            "Accept-Encoding": "gzip, deflate",
-            "DNT": "1",
-        }
-        # ===== YouTube / IMDB Direct =====
-        if "youtube.com" in url or "youtu.be" in url:
-            headers = {
-                "User-Agent": common_headers["User-Agent"],
-                "Referer": "https://www.youtube.com/",
-            }
-            return [
-                {"name": "YouTube", "url": strwithmeta(url, headers), "need_resolve": 1}
-            ]
-        if "imdb.com/video/" in url:
-            imdb_links = self.getIMDBTrailer(url)
-            if imdb_links:
-                return imdb_links
-            return []
-        # MySeed Direct Server
-        if "reviewrate.net" in url and "/embed-" in url:
-            printDBG("MySeed: Parsing reviewrate embed page")
-            headers = dict(common_headers)
-            headers["Referer"] = "https://m.myseed.pics/"
-            headers["Origin"] = "https://m.myseed.pics"
-            sts, data = self.cm.getPage(url, {"header": headers})
-            if sts and data:
-                patterns = [
-                    r"""https?://[^"' ]+\.m3u8[^"' ]*""",
-                    r"""https?://[^"' ]+\.mp4[^"' ]*""",
-                    r"""file\s*:\s*["']([^"']+)["']""",
-                    r"""source\s+src=["']([^"']+)["']""",
-                ]
-                found = []
-                for pattern in patterns:
-                    matches = re.findall(pattern, data, re.I)
-                    for video_url in matches:
-                        if not video_url:
-                            continue
-                        if not video_url.startswith("http"):
-                            continue
-                        if video_url in found:
-                            continue
-                        found.append(video_url)
-                        printDBG("MySeed: Found video URL >>> %s" % video_url)
-                        video_headers = {
-                            "User-Agent": common_headers["User-Agent"],
-                            "Referer": "https://m.myseed.pics/",
-                            "Origin": "https://m.myseed.pics",
-                        }
-                        return [
-                            {
-                                "name": "سيرفر ماي سيد",
-                                "url": strwithmeta(video_url, video_headers),
-                                "need_resolve": 0,
-                            }
-                        ]
-            printDBG("MySeed: No direct link found, returning embed")
-            return [
-                {
-                    "name": "سيرفر ماي سيد",
-                    "url": strwithmeta(url, headers),
-                    "need_resolve": 1,
-                }
-            ]
-        # External Servers
-        if need_resolve == 1:
-            printDBG("MySeed: Resolving external server: %s" % url)
-            domain_match = re.search(r"https?://([^/]+)", url)
-            stream_domain = domain_match.group(1) if domain_match else ""
-            dynamic_headers = {
-                "User-Agent": common_headers["User-Agent"],
-                "Referer": "https://%s/" % stream_domain if stream_domain else url,
-                "Origin": "https://%s" % stream_domain if stream_domain else "",
-            }
-            try:
-                linksTab = self.up.getVideoLinkExt(url)
-                if linksTab and isinstance(linksTab, list):
-                    fixed_links = []
-                    for link in linksTab:
-                        if not isinstance(link, dict):
-                            link = {"url": link, "name": title}
-                        fixed_link = dict(link)
-                        video_url = fixed_link.get("url", "")
-                        if video_url:
-                            fixed_link["url"] = strwithmeta(video_url, headers)
-                        fixed_links.append(fixed_link)
-                    printDBG("MySeed: External server resolved OK")
-                    return fixed_links
-            except Exception as e:
-                printDBG("MySeed.getVideoLinkExt error: %s" % str(e))
-            return [
-                {
-                    "name": title,
-                    "url": strwithmeta(url, dynamic_headers),
-                    "need_resolve": 1,
-                }
-            ]
-        # Direct
-        return [
-            {"name": title, "url": strwithmeta(url, common_headers), "need_resolve": 0}
-        ]
+    def _displayName(self, info, kind):
+        name = info["name"]
+        if kind == "episode":
+            name = "%s - %s" % (name, formatSxxExx(info["season"] or 1, info["episode"]))
+        elif kind == "season" and info["season"]:
+            name = "%s - %s" % (name, formatSxxExx(info["season"]))
+        elif kind == "movie" and info["year"]:
+            name = "%s (%s)" % (name, info["year"])
+        if info["dub"]:
+            name = "%s %s" % (name, DUB_WORD)
+        return name
 
+    def _field(self, item, cls):
+        return self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'(?s)<div class="%s[^"]*">(.*?)</div>' % cls)[0])
+
+    def _parseItems(self, data):
+        # the boxes of a category / packs / search page (not the side widgets)
+        start = data.find('id="ajax__area"')
+        if start < 0:
+            start = data.find('class="series__list')
+        block = data[start:] if start >= 0 else data
+        end = block.find('class="paginate"')
+        if end >= 0:
+            block = block[:end]
+        items = []
+        for chunk in block.split('<li class="box__xs__')[1:]:
+            m = re.search(r'<a href="([^"]+)"[^>]*?title="([^"]*)"', chunk)
+            if not m:
+                continue
+            url = self._pageUrl(m.group(1))
+            title = self.cleanHtmlStr(m.group(2)) or self.cleanHtmlStr(self.cm.ph.getSearchGroups(chunk, r"(?s)<h3[^>]*>(.*?)</h3>")[0])
+            if not url or not title:
+                continue
+            story = self.cm.ph.getSearchGroups(chunk, r'(?s)<p class="(?:hide__md|story)">(.*?)</p>')[0]
+            dots = [self.cleanHtmlStr(x) for x in re.findall(r"<span>([^<]+)</span>", self.cm.ph.getDataBeetwenMarkers(chunk, 'class="dots__info"', "</ul>", False)[1])]
+            bottom = [self.cleanHtmlStr(x) for x in re.findall(r"<li>([^<]+)</li>", self.cm.ph.getDataBeetwenMarkers(chunk, 'class="bottom__ul"', "</ul>", False)[1])]
+            items.append({
+                "url": url, "title": title, "story": self.cleanHtmlStr(story),
+                "icon": self._canonUrl(self.cm.ph.getSearchGroups(chunk, r'data-src="([^"]+)"')[0]),
+                "genre": self._field(chunk, "__genre") or (bottom[1] if len(bottom) > 1 else ""),
+                "quality": self._field(chunk, "__quality") or (bottom[0] if bottom else ""),
+                "rating": self._field(chunk, "post__ratings"),
+                "section": self._field(chunk, "post__category"),
+                "year": dots[0] if dots and re.match(r"^\d{4}$", dots[0]) else "",
+                "country": dots[1] if len(dots) > 1 else "",
+                "is_series": "/selary/" in url,
+                "is_episode": "is__episode" in chunk[:300] or bool(EPISODE_RE.search(title)),
+            })
+        return items
+
+    def _desc(self, it):
+        fields = ((_("Rating"), it.get("rating"), "green"), (_("Quality"), it.get("quality"), "yellow"), (_("Year"), it.get("year"), "cyan"),
+                  (_("Genres"), it.get("genre"), "magenta"), (_("Category"), it.get("section"), "white"), (_("Country"), it.get("country"), "white"))
+        desc = " | ".join(["%s%s:%s %s" % (E2ColoR(color), label, E2ColoR("white"), value) for label, value, color in fields if value])
+        if it.get("story"):
+            desc = ("%s\n%s" % (desc, it["story"])) if desc else it["story"]
+        return desc
+
+    ###################################################
+    # watched flag
+    ###################################################
+    def _getWatchedKeyForItem(self, cItem):
+        try:
+            if not isinstance(cItem, dict):
+                return ""
+            category = cItem.get("category", "")
+            if category == "as_video":
+                return "video:%s" % self._pageUrl(cItem.get("url", ""))
+            if category == "as_series":
+                return "series:%s" % self._pageUrl(cItem.get("url", ""))
+            if category == "as_season":
+                term = cItem.get("s_term", "")
+                return ("season:%s" % term) if term else ("season:%s" % self._pageUrl(cItem.get("url", "")))
+        except Exception:
+            printExc()
+        return ""
+
+    ###################################################
+    # lists
+    ###################################################
     def listItems(self, cItem):
-        printDBG("MySeed.listItems [%s]" % cItem)
-        sts, data = self.getPage(cItem["url"])
-        if not sts or not data:
+        page = cItem.get("page", 1)
+        word = cItem.get("search_word", "")
+        if word:
+            # the search list is built from search_word + page; the template only enables "Jump"
+            pageUrlTpl = self.getFullUrl("find/?word=%s&type=&page_number={page}" % urllib_quote_plus(word))
+            url = pageUrlTpl.format(page=page)
+        else:
+            base = re.sub(r"page/\d+/?$", "", self._canonUrl(cItem.get("base_url") or cItem.get("url", "")))
+            url = base if page <= 1 else "%spage/%d/" % (base, page)
+            pageUrlTpl = base + "page/{page}/"
+        printDBG("MySeed.listItems [%s]" % url)
+        sts, data = self.getPage(url)
+        if not sts:
             return
-        data_items = re.findall(
-            r'<li[^>]*class="[^"]*box__xs__2[^"]*"[^>]*>(.*?)</li>', data, re.S
-        )
-        printDBG("Items found: %s" % len(data_items))
-        for m in data_items:
-            title = self.cm.ph.getSearchGroups(m, r'title=[\'"]([^\'"]+)[\'"]')[0] or ""
-            pureurl = (
-                self.cm.ph.getSearchGroups(m, r'href=[\'"]([^\'"]+)[\'"]')[0] or ""
-            )
-            pureicon = (
-                self.cm.ph.getSearchGroups(m, r'data-src=[\'"]([^\'"]+)[\'"]')[0] or ""
-            )
-            url = ""
-            if pureurl and "/" in pureurl:
-                baseurl, filenameurl = pureurl.rsplit("/", 1)
-                url = baseurl + "/" + urllib_quote_plus(filenameurl) + "watch/"
-            icon = ""
-            if pureicon and "/" in pureicon:
-                baseicon, filenameicon = pureicon.rsplit("/", 1)
-                icon = baseicon + "/" + urllib_quote_plus(filenameicon)
-            genre = self.cleanHtmlStr(
-                self.cm.ph.getDataBeetwenMarkers(
-                    m, '<div class="__genre hide__md">', "</div>", False
-                )[1]
-            ).strip()
-            quality = self.cleanHtmlStr(
-                self.cm.ph.getDataBeetwenMarkers(
-                    m, '<div class="__quality hide__md">', "</div>", False
-                )[1]
-            ).strip()
-            Ratings = self.cleanHtmlStr(
-                self.cm.ph.getDataBeetwenMarkers(
-                    m, '<div class="post__ratings">', "</div>", False
-                )[1]
-            ).strip()
-            story = self.cleanHtmlStr(
-                self.cm.ph.getDataBeetwenMarkers(m, "<p>", "</p>", False)[1]
-            ).strip()
-            line1_parts = []
-            line2_parts = []
-            if genre:
-                line1_parts.append(
-                    f"{E2ColoR('yellow')}Genre:{E2ColoR('white')} {genre}"
-                )
-            if quality:
-                q_color = "white"
-                if re.search(r"4K|1080|HD|BluRay", quality, re.I):
-                    q_color = "green"
-                elif re.search(r"720|HDRip|WEB", quality, re.I):
-                    q_color = "orange"
-                elif re.search(r"CAM|TS|HDCAM", quality, re.I):
-                    q_color = "red"
-                line1_parts.append(
-                    f"{E2ColoR('yellow')}Quality:{E2ColoR('white')} {E2ColoR(q_color)}{quality}{E2ColoR('white')}"
-                )
-            if Ratings:
-                rate_match = re.search(r"(\d+(\.\d+)?)", Ratings)
-                rate_color = "white"
-                if rate_match:
-                    rate_value = float(rate_match.group(1))
-                    if rate_value >= 7:
-                        rate_color = "green"
-                    elif rate_value >= 5:
-                        rate_color = "orange"
-                    else:
-                        rate_color = "red"
-                line1_parts.append(
-                    f"{E2ColoR('yellow')}Ratings:{E2ColoR('white')} {E2ColoR(rate_color)}{Ratings}{E2ColoR('white')}"
-                )
-            if story:
-                line2_parts.append(
-                    f"{E2ColoR('yellow')}Story:{E2ColoR('white')} {story}"
-                )
-            desc = " | ".join(line1_parts)
-            if line2_parts:
-                desc += "\n" + " ".join(line2_parts)
-            clean_title = self.clean_title_prefix(
-                title, sub_mode=0, url=cItem.get("url", "")
-            )
-            colored_title = self.colorizeTitle(clean_title)
-            params = {
-                "category": "explore_item",
-                "title": colored_title,
-                "icon": icon,
-                "url": url,
-                "desc": desc,
-            }
-            self.addDir(params)
-        pagination = self.cm.ph.getDataBeetwenMarkers(
-            data, '<div class="paginate">', "</div>", False
-        )[1]
-        next_page = self.cm.ph.getSearchGroups(
-            pagination, r'<a[^>]+class="next page-numbers"[^>]+href="([^"]+)"'
-        )[0]
-        if next_page:
-            next_page = self.getFullUrl(next_page)
-            printDBG("NEXT PAGE FOUND >>> %s" % next_page)
-            params = dict(cItem)
-            params.update(
-                {
-                    "title": "Next Page ▶",
-                    "url": next_page,
-                    "category": "list_items",
-                }
-            )
-            self.addDir(params)
+        normalize = IsMediaNamingNormalized()
+        seen = set()
+        for it in self._parseItems(data):
+            if it["url"] in seen:
+                continue
+            seen.add(it["url"])
+            info = self._parseTitle(it["title"])
+            year = it["year"] or info["year"]
+            params = {"name": "category", "good_for_fav": True, "url": it["url"], "icon": it["icon"], "desc": self._desc(it)}
+            if it["is_series"]:
+                params.update({"category": "as_series", "title": self._displayName(info, "season") if normalize else it["title"],
+                               "s_title": info["name"], "s_season": info["season"],
+                               "meta_type": "tv", "meta_title": info["name"], "meta_year": year})
+                self.addDir(params)
+                continue
+            params["category"] = "as_video"
+            if it["is_episode"]:
+                params.update({"title": self._displayName(info, "episode") if normalize else it["title"],
+                               "s_title": info["name"], "s_season": info["season"] or 1, "s_episode": info["episode"],
+                               "meta_type": "tv", "meta_title": info["name"], "meta_year": ""})
+            else:
+                params["title"] = self._displayName(dict(info, year=year), "movie") if normalize else it["title"]
+                if self.cleanHtmlStr(it["title"]).startswith(("فيلم", "افلام", "أفلام")):
+                    params.update({"meta_type": "movie", "meta_title": info["name"], "meta_year": year})
+            self.addVideo(params)
 
-    def listSeriesItems(self, cItem):
-        printDBG("MySeed.listSeriesItems ----------")
+        if word:
+            hasNext, lastPage = len(seen) >= SEARCH_PAGE_SIZE, 0
+        else:
+            pager = self.cm.ph.getDataBeetwenMarkers(data, 'class="paginate"', "</ul>", False)[1]
+            hasNext = 'class="next page-numbers"' in pager
+            pages = [int(x) for x in re.findall(r"/page/(\d+)/", pager)]
+            lastPage = max(pages + [page]) if pages else 0
+        if seen or page > 1:
+            params = dict(cItem)
+            params.update({"category": "list_items", "base_url": "" if word else re.sub(r"page/\{page\}/$", "", pageUrlTpl)})
+            addPagingItems(self, params, page, hasNext and bool(seen), lastPage, pageUrlTpl)
+
+    def _seasonsOf(self, data):
+        block = self.cm.ph.getDataBeetwenMarkers(data, 'id="seasons__list"', "</ul>", False)[1]
+        ret = []
+        for li in re.findall(r"(?s)<li[^>]*data-term=.*?</li>", block):
+            term = self.cm.ph.getSearchGroups(li, r'data-term="(\d+)"')[0]
+            url = self.cm.ph.getSearchGroups(li, r'data-url="([^"]+)"')[0]
+            name = self.cleanHtmlStr(self.cm.ph.getSearchGroups(li, r"<span>([^<]+)</span>")[0])
+            if term and url:
+                ret.append({"term": term, "url": self._canonUrl(url), "name": name, "selected": 'class="selected"' in li})
+        return ret
+
+    def listSeries(self, cItem):
+        printDBG("MySeed.listSeries [%s]" % cItem.get("url", ""))
         sts, data = self.getPage(cItem["url"])
         if not sts:
             return
-        data_items = self.cm.ph.getAllItemsBeetwenMarkers(
-            data, '<li class="box__xs__2', "</li>"
-        )
-        for m in data_items:
-            title = self.cm.ph.getSearchGroups(m, r'title=[\'"]([^\'"]+)[\'"]')[0]
-            pureurl = self.cm.ph.getSearchGroups(m, r'href=[\'"]([^\'"]+)[\'"]')[0]
-            pureicon = self.cm.ph.getSearchGroups(m, r'data-src=[\'"]([^\'"]+)[\'"]')[0]
-            if pureurl:
-                baseurl, filenameurl = pureurl.rsplit("/", 1)
-                fixedfilenameurl = urllib_quote_plus(filenameurl)
-                url = baseurl + "/" + fixedfilenameurl + "watch/"
-            else:
-                url = ""
-            if pureicon:
-                baseicon, filenameicon = pureicon.rsplit("/", 1)
-                fixedfilenameicon = urllib_quote_plus(filenameicon)
-                icon = baseicon + "/" + fixedfilenameicon
-            else:
-                icon = ""
-            genre = self.cleanHtmlStr(
-                self.cm.ph.getDataBeetwenMarkers(
-                    m, '<div class="__genre hide__md">', "</div>", False
-                )[1]
-            ).strip()
-            quality = self.cleanHtmlStr(
-                self.cm.ph.getDataBeetwenMarkers(
-                    m, '<div class="__quality hide__md">', "</div>", False
-                )[1]
-            ).strip()
-            Ratings = self.cleanHtmlStr(
-                self.cm.ph.getDataBeetwenMarkers(
-                    m, '<div class="post__ratings">', "</div>", False
-                )[1]
-            ).strip()
-            story = self.cleanHtmlStr(
-                self.cm.ph.getDataBeetwenMarkers(m, "<p>", "</p>", False)[1]
-            ).strip()
-            first_line_parts = []
-            if genre:
-                first_line_parts.append(
-                    f"{E2ColoR('yellow')}Genre:{E2ColoR('white')} {genre}"
-                )
-            if quality:
-                q_color = "white"
-                if re.search(r"4K|1080|HD|BluRay", quality, re.I):
-                    q_color = "green"
-                elif re.search(r"720|HDRip|WEB", quality, re.I):
-                    q_color = "orange"
-                elif re.search(r"CAM|TS|HDCAM", quality, re.I):
-                    q_color = "red"
-                first_line_parts.append(
-                    f"{E2ColoR('yellow')}Quality:{E2ColoR('white')} "
-                    f"{E2ColoR(q_color)}{quality}{E2ColoR('white')}"
-                )
-            if Ratings:
-                rate_match = re.search(r"(\d+(\.\d+)?)", Ratings)
-                rate_color = "white"
-                rate_text = Ratings
-                if rate_match:
-                    rate_value = float(rate_match.group(1))
-                    if rate_value >= 7:
-                        rate_color = "green"
-                    elif rate_value >= 5:
-                        rate_color = "orange"
-                    else:
-                        rate_color = "red"
-                first_line_parts.append(
-                    f"{E2ColoR('yellow')}Ratings:{E2ColoR('white')} "
-                    f"{E2ColoR(rate_color)}{rate_text}{E2ColoR('white')}"
-                )
-            line1 = " | ".join(first_line_parts)
-            line2 = ""
-            if story:
-                line2 = f"{E2ColoR('yellow')}Story:{E2ColoR('white')} {story}"
-            desc = line1
-            if line2:
-                desc += "\n" + line2
-            clean_title = self.clean_title_prefix(
-                title, sub_mode=1, url=cItem.get("url", "")
-            )
-            colored_title = self.colorizeTitle(clean_title)
-            params = {
-                "category": "explore_item",
-                "title": colored_title,
-                "icon": icon,
-                "url": url,
-                "desc": desc,
-            }
-            printDBG(str(params))
-            self.addDir(params)
-        pagination = self.cm.ph.getDataBeetwenMarkers(
-            data, '<div class="paginate">', "</div>", False
-        )[1]
-        next_page = self.cm.ph.getSearchGroups(
-            pagination, r'<a[^>]+class="next page-numbers"[^>]+href="([^"]+)"'
-        )[0]
-        if next_page:
-            next_page = self.getFullUrl(next_page)
-            printDBG("NEXT PAGE FOUND >>> %s" % next_page)
+        seasons = self._seasonsOf(data)
+        if len(seasons) <= 1:
+            term = seasons[0]["term"] if seasons else ""
+            self._addEpisodes(cItem, data, cItem.get("s_season") or (self._seasonNum(seasons[0]["name"]) if seasons else 0) or 1, term)
+            return
+        normalize = IsMediaNamingNormalized()
+        show = cItem.get("s_title") or self._parseTitle(cItem.get("title", ""))["name"]
+        for idx, s in enumerate(seasons):
+            num = self._seasonNum(s["name"]) or (idx + 1)
             params = dict(cItem)
-            params.update(
-                {
-                    "title": "Next Page ▶",
-                    "url": next_page,
-                    "category": "series",
-                }
-            )
+            params.update({"category": "as_season", "good_for_fav": True, "url": s["url"], "s_term": s["term"], "s_title": show, "s_season": num,
+                           "title": ("%s - %s" % (show, formatSxxExx(num))) if normalize else (s["name"] or cItem.get("title", ""))})
             self.addDir(params)
 
-    def exploreItems(self, cItem):
-        printDBG("MySeed.exploreItems >>> %s" % cItem)
-        import time
-
-        url = cItem.get("url")
-        sts, data = self.cm.getPage(url)
-        if not sts or not data:
+    def listSeason(self, cItem):
+        printDBG("MySeed.listSeason [%s]" % cItem.get("url", ""))
+        sts, data = self.getPage(cItem["url"])
+        if not sts:
             return
-        post_id = (
-            self.cm.ph.getSearchGroups(data, r'post_id["\']?\s*[:=]\s*["\']?(\d+)')[0]
-            or self.cm.ph.getSearchGroups(data, r'psot_id["\']?\s*[:=]\s*["\']?(\d+)')[
-                0
-            ]
-        )
-        csrf_token = self.cm.ph.getSearchGroups(
-            data, r'csrf__token["\']?\s*[:=]\s*["\']([^"\']+)'
-        )[0]
-        if not post_id or not csrf_token:
-            printDBG("Missing post_id or csrf_token")
-            return
-        printDBG("post_id: %s, csrf_token: %s" % (post_id, csrf_token))
-        available_qualities = ["1080", "720", "480"]
-        qual_block = self.cm.ph.getDataBeetwenMarkers(
-            data, "quality__options", "</div>", False
-        )[1]
-        if qual_block:
-            quals = re.findall(r'data-qu="(\d+)"', qual_block)
-            if quals:
-                available_qualities = sorted(list(set(quals)), reverse=True)
-        ajax_url = self.MAIN_URL.rstrip("/") + "/get__watch__server/"
-        referer = url
-        results = []
+        self._addEpisodes(cItem, data, cItem.get("s_season") or 1, cItem.get("s_term", ""))
 
-        def fetch_server_link(quality, srv_idx):
-            try:
-                post_data = {
-                    "post_id": post_id,
-                    "quality": quality,
-                    "server": str(srv_idx),
-                    "csrf_token": csrf_token,
-                }
-                headers = {
-                    "X-Requested-With": "XMLHttpRequest",
-                    "Referer": referer,
-                    "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-                    "User-Agent": self.HEADER.get("User-Agent", "Mozilla/5.0"),
-                }
-                params = dict(self.defaultParams)
-                params["header"] = headers
-                params["timeout"] = 3
-                params["connect_timeout"] = 1
-                sts, response = self.cm.getPage(ajax_url, params, post_data)
-                if sts and response and response.strip():
-                    res = json_loads(response.strip())
-                    if res.get("type") == "success" and res.get("server"):
-                        video_url = res["server"]
-                        enc_match = re.search(
-                            r"(?:url=|id=)([A-Za-z0-9+/=]+)", video_url
-                        )
-                        if enc_match:
-                            try:
-                                encoded = enc_match.group(1)
-                                padding = 4 - len(encoded) % 4
-                                if padding != 4:
-                                    encoded += "=" * padding
-                                video_url = base64.b64decode(encoded).decode("utf-8")
-                            except Exception:
-                                pass
-                        if video_url and video_url.startswith("http"):
-                            domain = re.search(r"https?://([^/]+)", video_url)
-                            domain = domain.group(1) if domain else "unknown"
-                            if srv_idx == 0:
-                                server_name = "سيرفر ماي سيد"
-                            else:
-                                server_name = f"سيرفر {srv_idx} - {domain.capitalize()}"
-                            server_colored = (
-                                f"{E2ColoR('cyan')}{server_name}{E2ColoR('white')}"
-                            )
-                            quality_colored = self.colorizeQuality(quality)
-                            label = f"{server_colored} [{quality_colored}]"
-                            sort_value = (
-                                10000 + int(quality) * 10
-                                if srv_idx == 0
-                                else int(quality) * 10 + (5 - srv_idx)
-                            )
-                            return {
-                                "name": label,
-                                "url": video_url,
-                                "need_resolve": 1,
-                                "sort": sort_value,
-                                "header": {
-                                    "Referer": "https://" + domain + "/",
-                                    "User-Agent": self.HEADER.get(
-                                        "User-Agent", "Mozilla/5.0"
-                                    ),
-                                    "Origin": "https://" + domain,
-                                },
-                            }
-            except Exception as e:
-                printDBG("fetch_server_link error: %s" % str(e))
-            return None
-
-        for quality in available_qualities:
-            result = fetch_server_link(quality, 0)
-            if result:
-                results.append(result)
-                printDBG("Added: %s" % result["name"])
-        for srv_idx in range(1, 6):
-            for quality in available_qualities:
-                result = fetch_server_link(quality, srv_idx)
-                if result:
-                    results.append(result)
-                    printDBG("Added: %s" % result["name"])
-                time.sleep(0.05)
-        results.sort(key=lambda x: x.get("sort", 0), reverse=True)
-        for item in results:
-            item.pop("sort", None)
-            original_title = cItem.get("title", "عنوان غير متاح")
-            plain_title = re.sub(r"\\c00[0-9A-F]{6}", "", original_title)
-            clean_title = self.clean_title_prefix(
-                plain_title, sub_mode=-1, url=cItem.get("url", "")
-            )
-            colored_clean_title = self.colorizeTitle(clean_title)
-            final_title = f"{colored_clean_title} {E2ColoR('white')}| {item['name']}"
-            icon = (
-                cItem.get("icon", "") or cItem.get("Icon", "") or self.DEFAULT_ICON_URL
-            )
-            self.addVideo(
-                {
-                    "title": final_title,
-                    "url": item["url"],
-                    "icon": icon,
-                    "type": "video",
-                    "need_resolve": item["need_resolve"],
-                    "header": item.get("header", {}),
-                }
-            )
-        printDBG("MySeed.exploreItems <<< done - Found %d links" % len(results))
-
-    def exploreSeriesItems(self, cItem):
-        printDBG("MySeed.exploreSeriesItems >>> %s" % cItem)
-        url = cItem.get("url")
-        if not url:
-            return
-        sts, data = self.getPage(url)
-        if not sts or not data:
-            printDBG("[MySeed] Failed to load episode page: %s" % url)
-            return
-
-        def extract_first(patterns, data_src):
-            for p in patterns:
-                try:
-                    v = self.cm.ph.getSearchGroups(data_src, p)[0]
-                    if v:
-                        return v.strip()
-                except Exception:
-                    continue
-            return ""
-
-        token = extract_first(
-            [
-                r"csrf__token['\"]:\s*['\"]([^'\"]+)",
-                r"csrf_token['\"]:\s*['\"]([^'\"]+)",
-                r"name=['\"]csrf-token['\"]\s+content=['\"]([^'\"]+)",
-            ],
-            data,
-        )
-        post_id = extract_first(
-            [
-                r"psot_id['\"]:\s*'([^']+)'",
-                r"post_id['\"]:\s*['\"]([^'\"]+)",
-                r"post_id\s*:\s*'([^']+)'",
-            ],
-            data,
-        )
-        if not token or not post_id:
-            printDBG(
-                "[MySeed] Missing required POST params (csrf_token or post_id/psot_id)"
-            )
-            return
-        post_url = "https://m.myseed.pics/get__watch__server/"
-        servers = [0, 1, 2, 3, 4]
-        qualities = [480, 720, 1080]
-        for server in servers:
-            for quality in qualities:
-                payload = {
-                    "post_id": post_id,
-                    "quality": str(quality),
-                    "server": str(server),
-                    "csrf_token": token,
-                }
-                headers = {
-                    "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-                    "X-Requested-With": "XMLHttpRequest",
-                    "Referer": url,
-                }
-                sts2, response = self.cm.getPage(
-                    post_url,
-                    {"header": headers, "raw_post_data": True},
-                    self.urlencode(payload),
-                )
-                if not sts2 or not response:
-                    continue
-                try:
-                    result = json_loads(response)
-                except Exception as e:
-                    printDBG("JSON decode error (series): %s" % str(e))
-                    continue
-                if result.get("type") != "success":
-                    continue
-                link = result.get("server", "")
-                if not link:
-                    continue
-                server_name = self.cm.ph.getSearchGroups(link, r"https?://([^/]+)/")[0]
-                if server_name in ["m.reviewrate.net", "m.reviewtech.me"]:
-                    server_name = "MySeed"
-                if not server_name:
-                    server_name = "server%d" % server
-                colored_server = self.colorizeServer(server_name, quality)
-                colored_title = self.colorizeTitle(cItem.get("title", "Episode"))
-                params_video = MergeDicts(
-                    cItem,
-                    {
-                        "title": f"{colored_title} - {colored_server}",
-                        "url": link,
-                        "type": "video",
-                        "category": "video",
-                        "need_resolve": 1,
-                        "icon": cItem.get("icon", ""),
-                    },
-                )
-                self.addVideo(params_video)
+    def _addEpisodes(self, cItem, data, season, term):
+        block = self.cm.ph.getDataBeetwenMarkers(data, 'class="episodes__list', "</ul>", False)[1]
+        if 'load__more__episodes' in data and term:
+            # long seasons: the rest comes in pages of the season__episodes call (not seen on the site so far)
+            token = self.cm.ph.getSearchGroups(data, r"""csrf__token['"]\s*:\s*["']([^"']+)""")[0]
+            for _i in range(10):
+                ret = self._ajax("season__episodes", {"season_id": term, "offset": str(block.count("epi__num")), "csrf_token": token}, cItem["url"])
+                if ret.get("type") != "success" or not ret.get("html"):
+                    break
+                block += ret["html"]
+                if not ret.get("hasmore"):
+                    break
+        normalize = IsMediaNamingNormalized()
+        show = cItem.get("s_title") or self._parseTitle(cItem.get("title", ""))["name"]
+        seen = set()
+        for href, label in re.findall(r'(?s)<a href="([^"]+)"[^>]*>(.*?)</a>', block):
+            url = self._pageUrl(href)
+            epNum = self.cm.ph.getSearchGroups(label, r"<b>(\d+)</b>")[0]
+            if not url or url in seen:
+                continue
+            seen.add(url)
+            raw = self.cleanHtmlStr(label) or show
+            raw = re.sub(r"(الحلقة)(\d)", r"\1 \2", raw)
+            title = ("%s - %s" % (show, formatSxxExx(season, epNum))) if (normalize and epNum) else raw
+            self.addVideo({"name": "category", "category": "as_video", "good_for_fav": True, "title": title, "url": url,
+                           "icon": cItem.get("icon", ""), "desc": _stripColors(cItem.get("desc", "")),
+                           "s_title": show, "s_season": season, "s_episode": epNum,
+                           "meta_type": "tv", "meta_title": cItem.get("meta_title") or show, "meta_year": cItem.get("meta_year", "")})
 
     def listSearchResult(self, cItem, searchPattern, searchType):
-        printDBG(
-            "MySeed.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]"
-            % (cItem, searchPattern, searchType)
-        )
-        page = cItem.get("page", 1)
+        printDBG("MySeed.listSearchResult [%s]" % searchPattern)
         cItem = dict(cItem)
-        cItem["search_pattern"] = searchPattern
-        cItem["page"] = page
-        cItem["url"] = (
-            self.getFullUrl("find/?word=")
-            + urllib_quote_plus(searchPattern)
-            + "&type&page_number="
-            + str(page)
-        )
-        self.listSearchItems(cItem)
+        cItem.update({"search_word": searchPattern, "page": 1, "category": "list_items"})
+        self.listItems(cItem)
 
-    def listSearchItems(self, cItem):
-        printDBG("MySeed.listSearchItems [%s]" % cItem)
-        sts, data = self.getPage(cItem["url"])
-        if not sts:
-            return
-        tmp = self.cm.ph.getDataBeetwenMarkers(
-            data, '<div class="series__list">', '<div class="paginate">', False
-        )[1]
-        printDBG("tmp.listSearchItems [%s]" % tmp)
-        data_items = self.cm.ph.getAllItemsBeetwenMarkers(
-            tmp, '<li class="box__xs__2', "</li>"
-        )
-        printDBG("data_items.listSearchItems [%s]" % data_items)
-        for m in data_items:
-            title = self.cm.ph.getSearchGroups(m, r'title=[\'"]([^\'"]+)[\'"]')[0]
-            pureurl = self.cm.ph.getSearchGroups(m, r'href=[\'"]([^\'"]+)[\'"]')[0]
-            pureicon = self.cm.ph.getSearchGroups(m, r'data-src=[\'"]([^\'"]+)[\'"]')[0]
-            if pureurl:
-                baseurl, filenameurl = pureurl.rsplit("/", 1)
-                fixedfilenameurl = urllib_quote_plus(filenameurl)
-                url = baseurl + "/" + fixedfilenameurl + "watch/"
-            else:
-                url = ""
-            if pureicon:
-                baseicon, filenameicon = pureicon.rsplit("/", 1)
-                fixedfilenameicon = urllib_quote_plus(filenameicon)
-                icon = baseicon + "/" + fixedfilenameicon
-            else:
-                icon = ""
-            genre = self.cleanHtmlStr(
-                self.cm.ph.getDataBeetwenMarkers(
-                    m, '<div class="__genre hide__md">', "</div>", False
-                )[1]
-            ).strip()
-            quality = self.cleanHtmlStr(
-                self.cm.ph.getDataBeetwenMarkers(
-                    m, '<div class="__quality hide__md">', "</div>", False
-                )[1]
-            ).strip()
-            section = self.cleanHtmlStr(
-                self.cm.ph.getDataBeetwenMarkers(
-                    m, '<div class="post__category hide__md">', "</div>", False
-                )[1]
-            ).strip()
-            story = self.cleanHtmlStr(
-                self.cm.ph.getDataBeetwenMarkers(m, "<p>", "</p>", False)[1]
-            ).strip()
-            line1_parts = []
-            line2_parts = []
-            if genre:
-                line1_parts.append(
-                    f"{E2ColoR('yellow')}Genre:{E2ColoR('white')} {genre}"
-                )
-            if quality:
-                q_color = "white"
-                if re.search(r"4K|1080|HD|BluRay", quality, re.I):
-                    q_color = "green"
-                elif re.search(r"720|HDRip|WEB", quality, re.I):
-                    q_color = "orange"
-                elif re.search(r"CAM|TS|HDCAM", quality, re.I):
-                    q_color = "red"
-                line1_parts.append(
-                    f"{E2ColoR('yellow')}Quality:{E2ColoR('white')} "
-                    f"{E2ColoR(q_color)}{quality}{E2ColoR('white')}"
-                )
-            if section:
-                line1_parts.append(
-                    f"{E2ColoR('yellow')}Section:{E2ColoR('white')} {section}"
-                )
-            if story:
-                line2_parts.append(
-                    f"{E2ColoR('yellow')}Story:{E2ColoR('white')} {story}"
-                )
-            desc = " | ".join(line1_parts)
-            if line2_parts:
-                desc += "\n" + " ".join(line2_parts)
-            clean_title = self.clean_title_prefix(
-                title, sub_mode=-1, url=cItem.get("url", "")
-            )
-            colored_title = self.colorizeTitle(clean_title)
-            params = {
-                "category": "explore_item",
-                "title": colored_title,
-                "icon": icon,
-                "url": url,
-                "desc": desc,
-            }
-            printDBG(str(params))
-            self.addDir(params)
-        page = cItem.get("page", 1)
-        next_page = page + 1
-        if len(data_items) > 0:
-            params = dict(cItem)
-            params.update(
-                {
-                    "title": _("Next Page") + " ▶",
-                    "page": next_page,
-                }
-            )
-            self.addDir(params)
+    ###################################################
+    # links
+    ###################################################
+    def _serverName(self, url, srvIdx):
+        if "vids.php" in url:
+            return "MySeed"
+        host = self.cm.ph.getSearchGroups(url, r"https?://(?:www\.)?([^/]+)")[0]
+        return host or ("%s %s" % (_("Server"), srvIdx))
 
-    def getFavouriteData(self, cItem):
-        printDBG("MySeed.getFavouriteData")
-        return json_dumps(cItem)
-
-    def getLinksForFavourite(self, fav_data):
-        printDBG("MySeed.getLinksForFavourite")
-        links = []
-        try:
-            cItem = json_loads(fav_data)
-            links = self.getLinksForVideo(cItem)
-        except Exception:
-            printExc()
-        return links
-
-    def setInitListFromFavouriteItem(self, fav_data):
-        printDBG("MySeed.setInitListFromFavouriteItem")
-        try:
-            cItem = json_loads(fav_data)
-        except Exception:
-            cItem = {}
-            printExc()
-        return cItem
-
-    def listSeriesPacks(self, cItem):
-        printDBG("MySeed.listSeriesPacks >>> %s" % cItem)
-        url = cItem.get("url", "").strip()
-        if not url:
-            return
-        sts, data = self.getPage(url)
-        if not sts or not data:
-            printDBG("[MySeed] Failed to load packs page: %s" % url)
-            return
-        token = self.cm.ph.getSearchGroups(data, r"csrf__token['\"]:\s*[\"']([^\"']+)")[
-            0
-        ]
-        if not token:
-            token = self.cm.ph.getSearchGroups(
-                data, r"csrf_token['\"]:\s*[\"']([^\"']+)"
-            )[0]
-        ajax_area = self.cm.ph.getDataBeetwenMarkers(
-            data,
-            '<div class="movie__blocks" id="ajax__area">',
-            "</div></section>",
-            False,
-        )[1]
-        if not ajax_area:
-            ajax_area = data
-        items = re.findall(
-            r'(<li class="box__xs__1.*?)(?=<li class="box__xs__1|\Z)',
-            ajax_area,
-            re.DOTALL,
-        )
-        printDBG("Found %d items in packs page" % len(items))
-        for item in items:
-            link_tag = self.cm.ph.getDataBeetwenMarkers(item, '<a href="', ">", False)[
-                1
-            ]
-            href = (
-                self.cm.ph.getSearchGroups(link_tag, r'^([^"]+)')[0].strip()
-                if link_tag
-                else ""
-            )
-            title = self.cm.ph.getSearchGroups(item, r'title="([^"]+)"')[0].strip()
-            if not title:
-                title = self.cm.ph.getSearchGroups(
-                    item, r'<div class="title___"[^>]*>([^<]+)</div>'
-                )[0].strip()
-            icon = self.cm.ph.getSearchGroups(item, r'data-src="([^"]+)"')[0].strip()
-            if not icon:
-                icon = self.cm.ph.getSearchGroups(item, r'src="([^"]+)"')[0].strip()
-            if not href or not title:
-                continue
-            href = quote(href, safe=":/?&=%")
-            icon = quote(icon, safe=":/?&=%") if icon else self.DEFAULT_ICON_URL
-            bottom_ul = self.cm.ph.getDataBeetwenMarkers(
-                item, '<ul class="bottom__ul">', "</ul>", False
-            )[1]
-            bottom_items = (
-                self.cm.ph.getAllItemsBeetwenMarkers(bottom_ul, "<li>", "</li>")
-                if bottom_ul
-                else []
-            )
-            quality = (
-                self.cleanHtmlStr(bottom_items[0]) if len(bottom_items) > 0 else ""
-            )
-            genre = self.cleanHtmlStr(bottom_items[1]) if len(bottom_items) > 1 else ""
-            dots_info = self.cm.ph.getDataBeetwenMarkers(
-                item, '<ul class="dots__info">', "</ul>", False
-            )[1]
-            dot_spans = (
-                self.cm.ph.getAllItemsBeetwenMarkers(dots_info, "<span>", "</span>")
-                if dots_info
-                else []
-            )
-            year = self.cleanHtmlStr(dot_spans[0]) if len(dot_spans) > 0 else ""
-            country = self.cleanHtmlStr(dot_spans[1]) if len(dot_spans) > 1 else ""
-            story = self.cm.ph.getSearchGroups(item, r'<p class="story">([^<]+)</p>')[
-                0
-            ].strip()
-            desc_parts = []
-            if quality:
-                q_color = (
-                    "green"
-                    if re.search(r"4K|1080|BluRay|FHD", quality, re.I)
-                    else (
-                        "orange"
-                        if re.search(r"720|WEB|HDRip", quality, re.I)
-                        else "white"
-                    )
-                )
-                desc_parts.append(
-                    f"{E2ColoR('yellow')}Quality:{E2ColoR('white')} {E2ColoR(q_color)}{quality}{E2ColoR('white')}"
-                )
-            if genre:
-                desc_parts.append(
-                    f"{E2ColoR('yellow')}Genre:{E2ColoR('white')} {genre}"
-                )
-            if year:
-                desc_parts.append(f"{E2ColoR('yellow')}Year:{E2ColoR('white')} {year}")
-            if country:
-                desc_parts.append(
-                    f"{E2ColoR('yellow')}Country:{E2ColoR('white')} {country}"
-                )
-            desc = " | ".join(desc_parts)
-            if story:
-                desc += f"\n{E2ColoR('yellow')}Story:{E2ColoR('white')} {story[:200]}{'...' if len(story) > 200 else ''}"
-            clean_title = self.clean_title_prefix(
-                title, sub_mode=2, url=cItem.get("url", "")
-            )
-            colored_title = self.colorizeTitle(clean_title)
-            params = dict(cItem)
-            params.update(
-                {
-                    "category": "series_seasons_list",
-                    "title": colored_title,
-                    "url": href,
-                    "icon": icon,
-                    "desc": desc,
-                    "csrf_token": token,
-                }
-            )
-            self.addDir(params)
-            printDBG(f"✓ Added: {title[:50]}...")
-        next_match = re.search(
-            r'<a[^>]+class="next page-numbers"[^>]+href="([^"]+)"', data
-        )
-        if next_match:
-            next_page = next_match.group(1).strip()
-            if "arabseed.show" in next_page:
-                next_page = next_page.replace("arabseed.show", "m.asd.ink")
-            if next_page.startswith("//"):
-                next_page = "https:" + next_page
-            elif next_page.startswith("/"):
-                next_page = self.MAIN_URL.rstrip("/") + next_page
-            params = dict(cItem)
-            params.update(
-                {
-                    "title": _("Next Page »»»"),
-                    "url": next_page,
-                    "category": "series_packs",
-                }
-            )
-            self.addDir(params)
-            printDBG("Next page: %s" % next_page)
-        printDBG("MySeed.listSeriesPacks <<< done")
-
-    def listSeasons(self, cItem):
-        printDBG("MySeed.listSeasons >>> %s" % cItem)
-        url = cItem.get("url")
-        csrf_token = cItem.get("csrf_token", "")
-        if not url or not csrf_token:
-            printDBG("[MySeed] Missing params in listSeasons")
-            return
-        sts, data = self.getPage(url)
-        if not sts or not data:
-            printDBG("[MySeed] Failed to load series page")
-            return
-        trailer_url = self.cm.ph.getSearchGroups(data, r'data-iframe="([^"]+)"')[0]
-        if trailer_url:
-            if "youtube.com/embed/" in trailer_url:
-                trailer_url = trailer_url.replace(
-                    "youtube.com/embed/", "youtube.com/watch?v="
-                )
-            elif "imdb.com/video/" in trailer_url:
-                pass
-            params = dict(cItem)
-            params.update(
-                {
-                    "title": f"{E2ColoR('lime')}TRAILER{E2ColoR('white')}",
-                    "url": trailer_url,
-                    "type": "video",
-                    "need_resolve": 1,
-                }
-            )
-            self.addVideo(params)
-        printDBG("[MySeed] trailer_url = %s" % trailer_url)
-        seasons_block = self.cm.ph.getDataBeetwenMarkers(
-            data, 'id="seasons__list"', "</div></div>", False
-        )[1]
-        if seasons_block:
-            season_items = self.cm.ph.getAllItemsBeetwenMarkers(
-                seasons_block, "<li", "</li>"
-            )
-            for s in season_items:
-                season_id = self.cm.ph.getSearchGroups(s, r'data-term="([^"]+)"')[0]
-                title = self.cm.ph.getSearchGroups(s, r"<span>([^<]+)</span>")[0]
-                if not season_id or not title:
-                    continue
-                params = dict(cItem)
-                params.update(
-                    {
-                        "category": "series_episodes_list",
-                        "title": title.strip(),
-                        "url": url,
-                        "season_id": season_id,
-                        "csrf_token": csrf_token,
-                    }
-                )
-                self.addDir(params)
-            printDBG("MySeed.listSeasons <<< done with seasons")
-        else:
-            printDBG("[MySeed] No seasons found → trying direct episodes")
-            episodes_block = self.cm.ph.getDataBeetwenMarkers(
-                data, '<ul class="episodes__list', "</ul>", False
-            )[1]
-            if episodes_block:
-                episodes = self.cm.ph.getAllItemsBeetwenMarkers(
-                    episodes_block, "<li", "</li>"
-                )
-                episodes.reverse()
-                for ep in episodes:
-                    ep_url = self.cm.ph.getSearchGroups(ep, r'href="([^"]+)"')[0]
-                    if not ep_url:
-                        continue
-                    ep_num = self.cm.ph.getSearchGroups(ep, r"<b>(\d+)</b>")[0]
-                    title = "الحلقة %s" % ep_num if ep_num else "حلقة"
-                    params = dict(cItem)
-                    params.update(
-                        {
-                            "title": title,
-                            "url": ep_url + "watch/",
-                            "type": "video",
-                            "category": "explore_episodes",
-                        }
-                    )
-                    self.addDir(params)
-                printDBG("MySeed.listSeasons <<< done with direct episodes")
-                return
-            promo_url = self.cm.ph.getSearchGroups(
-                data,
-                r'<div class="watch__and__download.*?<a href="([^"]+/watch/)"',
-            )[0]
-            if promo_url:
-                printDBG("[MySeed] Single promo episode detected")
-                params = dict(cItem)
-                params.update(
-                    {
-                        "title": f"{E2ColoR('yellow')}برومو المسلسل{E2ColoR('white')}",
-                        "url": promo_url,
-                        "type": "video",
-                        "category": "explore_episodes",
-                    }
-                )
-                self.addDir(params)
-                return
-            printDBG("[MySeed] No episodes found at all")
-
-    def getIMDBTrailer(self, url):
-        printDBG("IMDB resolver start >>> %s" % url)
-        links = []
-        vid = self.cm.ph.getSearchGroups(url, r"(vi\d+)")[0]
-        if not vid:
-            printDBG("IMDB: video id not found")
-            return []
-        embed_url = "https://www.imdb.com/video/embed/%s/" % vid
-        printDBG("IMDB embed URL >>> %s" % embed_url)
-        sts, data = self.cm.getPage(embed_url)
-        if not sts:
-            printDBG("IMDB: failed to load embed page")
-            return []
-        json_data = self.cm.ph.getSearchGroups(
-            data, r'<script id="__NEXT_DATA__" type="application/json">(.*?)</script>'
-        )[0]
-        if not json_data:
-            printDBG("IMDB: __NEXT_DATA__ not found")
-            return []
-        json_data = json.loads(json_data)
-        try:
-            videoData = json_data["props"]["pageProps"].get("videoEmbedPlaybackData")
-            if not videoData:
-                printDBG("IMDB: videoEmbedPlaybackData not found")
-                return []
-            qualities = []
-            for item in videoData.get("playbackURLs", []):
-                mime = item.get("videoMimeType", "").lower()
-                url = item.get("url")
-                if not url:
-                    continue
-                if mime != "mp4":
-                    continue
-                display = item.get("displayName", {})
-                quality_txt = display.get("value", "")
-                try:
-                    quality = int(quality_txt.replace("p", "").strip())
-                except Exception:
-                    continue
-                qualities.append(
-                    {
-                        "q": quality,
-                        "name": "IMDb %dp" % quality,
-                        "url": url,
-                        "need_resolve": 0,
-                    }
-                )
-            qualities.sort(key=lambda x: x["q"], reverse=True)
-            for q in qualities:
-                links.append({"name": q["name"], "url": q["url"], "need_resolve": 0})
-        except Exception as e:
-            printDBG("IMDB extraction error: %s" % e)
-        return links
-
-    def listEpisodes(self, cItem):
-        printDBG("MySeed.listEpisodes >>> %s" % cItem)
-        url = cItem.get("url")
-        season_id = cItem.get("season_id", "")
-        csrf_token = cItem.get("csrf_token", "")
-        if not url or not season_id or not csrf_token:
-            printDBG("[MySeed] Missing required params")
-            return
-        sts, page_data = self.getPage(url)
-        if sts:
-            selected_season = self.cm.ph.getSearchGroups(
-                page_data, r'<li[^>]+class="selected"[^>]+data-term="(\d+)"'
-            )[0]
-            if selected_season == season_id:
-                printDBG("[MySeed] First season detected")
-                episodes = self.cm.ph.getAllItemsBeetwenMarkers(
-                    page_data, "<li", "</li>"
-                )
-                episodes.reverse()
-                count = 0
-                for ep in episodes:
-                    ep_num = self.cm.ph.getSearchGroups(
-                        ep, r"الحلقة[^0-9]*<b>(\d+)</b>"
-                    )[0]
-                    if not ep_num:
-                        continue
-                    ep_url = self.cm.ph.getSearchGroups(ep, r'href="([^"]+)"')[0]
-                    if not ep_url:
-                        continue
-                    ep_url += "watch/"
-                    title = "الحلقة %s" % ep_num
-                    icon = self.cm.ph.getSearchGroups(ep, r'data-src="([^"]+)"')[
-                        0
-                    ] or cItem.get("icon", "")
-                    params = dict(cItem)
-                    params.update(
-                        {
-                            "category": "explore_episodes",
-                            "type": "video",
-                            "title": title,
-                            "url": ep_url,
-                            "icon": icon,
-                        }
-                    )
-                    self.addDir(params)
-                    count += 1
-                printDBG("Found %d episodes (first season clean)" % count)
-                printDBG("MySeed.listEpisodes <<< done (first season)")
-                return
-        post_url = self.getFullUrl("/season__episodes/")
-        post_data = {"season_id": season_id, "csrf_token": csrf_token}
-        headers = {
-            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-            "X-Requested-With": "XMLHttpRequest",
-            "Referer": url,
-        }
-        sts, response = self.cm.getPage(post_url, {"header": headers}, post_data)
-        if not sts:
-            return
-        try:
-            result = json_loads(response)
-        except Exception:
-            return
-        if result.get("type") != "success":
-            return
-        html = result.get("html", "")
-        episodes = self.cm.ph.getAllItemsBeetwenMarkers(html, "<li", "</li>")
-        episodes.reverse()
-        count = 0
-        for ep in episodes:
-            ep_num = self.cm.ph.getSearchGroups(ep, r"الحلقة[^0-9]*<b>(\d+)</b>")[0]
-            if not ep_num:
-                continue
-            ep_url = self.cm.ph.getSearchGroups(ep, r'href="([^"]+)"')[0]
-            if not ep_url:
-                continue
-            ep_url += "watch/"
-            title = "الحلقة %s" % ep_num
-            icon = self.cm.ph.getSearchGroups(ep, r'data-src="([^"]+)"')[
-                0
-            ] or cItem.get("icon", "")
-            params = dict(cItem)
-            params.update(
-                {
-                    "category": "explore_episodes",
-                    "type": "video",
-                    "title": title,
-                    "url": ep_url,
-                    "icon": icon,
-                }
-            )
-            self.addDir(params)
-            count += 1
-        printDBG("Found %d episodes (ajax clean)" % count)
-        printDBG("MySeed.listEpisodes <<< done (ajax)")
-
-    def colorizeTitle(self, title):
-        """
-        Detects movie title and year in different formats and colorizes both.
-        Handles: 2025, (2025), ( 2025 ), - 2025, [2025]
-        """
-        if not title:
-            return title
-        match = re.search(r"(.+?)\s*(?:\(|\[|-)?\s*(\d{4})\s*(?:\)|\])?$", title)
-        if match:
-            movie_title = match.group(1).strip()
-            movie_year = match.group(2).strip()
-            return (
-                f"{E2ColoR('yellow')}{movie_title} "
-                f"{E2ColoR('cyan')}{movie_year}{E2ColoR('white')}"
-            )
-        else:
-            return f"{E2ColoR('yellow')}{title}{E2ColoR('white')}"
-
-    def colorizeQuality(self, quality):
-        """
-        Detect quality level and assign colors
-        """
-        q_color = "white"
-        if re.search(r"4K|1080|BluRay", quality, re.I):
-            q_color = "green"
-        elif re.search(r"720|HDRip|WEB", quality, re.I):
-            q_color = "yellow"
-        elif re.search(r"CAM|TS|HDCAM", quality, re.I):
-            q_color = "red"
-        return f"{E2ColoR(q_color)}{quality if quality else 'N/A'}{E2ColoR('white')}"
-
-    def colorizeServer(self, name, quality):
-        """
-        Combine server name + quality with colorized labels
-        """
-        q_colored = self.colorizeQuality(str(quality))
-        return f"{E2ColoR('cyan')}{name}{E2ColoR('white')} [{q_colored}]"
-
-    def clean_title_prefix(self, title, sub_mode=-1, url=""):
-        """
-        تنظيف العناوين من البادئات: فيلم، مسلسل، برنامج، أنمي، أغنية، مسرحية
-        """
-        if not title:
-            return title
-        title = title.strip()
-        is_anime_content = False
-        if sub_mode == 4:
-            is_anime_content = True
-        elif url and any(
-            kw in url.lower() for kw in ["cartoon", "anime", "انمي", "كرتون"]
-        ):
-            is_anime_content = True
-        is_program_content = False
-        if sub_mode == 5:
-            is_program_content = True
-        elif url and any(kw in url.lower() for kw in ["program", "برامج", "برنامج"]):
-            is_program_content = True
-        prefixes_to_remove = []
-        prefixes_to_remove.extend(
-            [
-                (r"فيلم\s+", True),
-                (r"افلام\s+", True),
-                (r"أفلام\s+", True),
-            ]
-        )
-        if not is_anime_content:
-            prefixes_to_remove.append((r"مسلسل\s+", True))
-        if is_program_content or sub_mode in [2, 3, 5]:
-            prefixes_to_remove.extend(
-                [
-                    (r"برنامج\s+", True),
-                    (r"برامج\s+", True),
-                ]
-            )
-        if is_anime_content:
-            prefixes_to_remove.extend(
-                [
-                    (r"انمي\s+", True),
-                    (r"أنمي\s+", True),
-                    (r"انمي\:\s+", True),
-                    (r"أنمي\:\s+", True),
-                ]
-            )
-        prefixes_to_remove.extend(
-            [
-                (r"أغنية\s+", True),
-                (r"اغنية\s+", True),
-                (r"اغاني\s+", True),
-                (r"أغاني\s+", True),
-                (r"مسرحية\s+", True),
-                (r"مسرحيات\s+", True),
-            ]
-        )
-        for pattern, condition in prefixes_to_remove:
-            if condition and re.match(pattern, title, re.I | re.UNICODE):
-                title = re.sub(pattern, "", title, flags=re.I | re.UNICODE)
-                break
-        return title.strip()
-
-    def getArticleContent(self, cItem):
-        printDBG("MySeed.getArticleContent [%s]" % cItem)
-        retList = []
-        url = cItem.get("url", "")
-        if not url:
-            return retList
-        base_url = url.replace("/watch/", "/").replace("/download/", "/")
-        sts, data = self.getPage(base_url)
-        if not sts or not data:
-            sts, data = self.getPage(url)
-            if not sts or not data:
-                return retList
-        title = self.cm.ph.getSearchGroups(
-            data, r'<h1 class="post__name"[^>]*>([^<]+)</h1>'
-        )[0]
-        title = (
-            self.cleanHtmlStr(title).strip()
-            if title
-            else self.cleanHtmlStr(
-                re.sub(r"\\c00[0-9A-F]{6}", "", cItem.get("title", ""))
-            )
-        )
-        poster = cItem.get("icon", "").strip()
-        if not poster:
-            poster = self.cm.ph.getSearchGroups(
-                data, r'<img[^>]+class="poster-img"[^>]+src="([^"]+)"'
-            )[0]
-        if not poster:
-            poster = self.cm.ph.getSearchGroups(
-                data, r'<meta[^>]+property="og:image"[^>]+content="([^"]+)"'
-            )[0]
-        poster = poster.split(" ")[0].split(",")[0].strip()
-        poster = self.getFullUrl(poster)
-        if poster.startswith("//"):
-            poster = "https:" + poster
-        story_block = self.cm.ph.getDataBeetwenMarkers(
-            data, '<div class="post__story', "</div>", False
-        )[1]
-        story = (
-            self.cm.ph.getSearchGroups(story_block, r"<p[^>]*>(.*?)</p>")[0]
-            if story_block
-            else ""
-        )
-        story = self.cleanHtmlStr(story).strip()
-        facts = self.cm.ph.getDataBeetwenMarkers(
-            data, "as-r6-command__facts", "</div>", False
-        )[1]
-        full = facts + data
-        year = self.cm.ph.getSearchGroups(full, r"السنة</small><b>([^<]+)</b>")[0]
-        duration = self.cm.ph.getSearchGroups(full, r"المدة</small><b>([^<]+)</b>")[0]
-        quality = self.cm.ph.getSearchGroups(full, r"الجودة</small><b>([^<]+)</b>")[0]
-        country = self.cm.ph.getSearchGroups(full, r"البلد</small><b>([^<]+)</b>")[0]
-        language = self.cm.ph.getSearchGroups(data, r"لغة العرض.*?<a[^>]*>([^<]+)</a>")[
-            0
-        ]
-        added_date = self.cm.ph.getSearchGroups(
-            data, r'تاريخ الاضافة.*?<span class="as-info-value">([^<]+)</span>'
-        )[0]
-        genres = ", ".join(
-            list(dict.fromkeys(re.findall(r'/genre/[^"]+/">([^<]+)</a>', data)))
-        )
-        imdb_rating = self.cm.ph.getSearchGroups(
-            data, r'<div class="rate__txt">([^<]+)</div>'
-        )[0]
-        persons_block = self.cm.ph.getDataBeetwenMarkers(
-            data, '<ul class="persons__list', "</ul>", False
-        )[1]
-        actors, directors, writers = [], [], []
-        if persons_block:
-            items = self.cm.ph.getAllItemsBeetwenMarkers(persons_block, "<li", "</li>")
-            for it in items:
-                name = self.cleanHtmlStr(
-                    self.cm.ph.getSearchGroups(it, r'<h3 class="name">([^<]+)</h3>')[0]
-                ).strip()
-                role = self.cleanHtmlStr(
-                    self.cm.ph.getSearchGroups(
-                        it, r'<span class="role">([^<]+)</span>'
-                    )[0]
-                ).strip()
-                if not name:
-                    continue
-                if "ممثل" in role:
-                    actors.append(name)
-                elif "مخرج" in role:
-                    directors.append(name)
-                elif "كاتب" in role:
-                    writers.append(name)
-        richDesc = {}
-        if year:
-            richDesc["year"] = year.strip()
-        if duration:
-            richDesc["duration"] = duration.strip()
-        if quality:
-            richDesc["quality"] = quality.strip()
-        if country:
-            richDesc["country"] = country.strip()
-        if language:
-            richDesc["language"] = language.strip()
-        if added_date:
-            richDesc["released"] = added_date.strip()
-        if genres:
-            richDesc["genres"] = genres
-        if imdb_rating:
-            richDesc["imdb_rating"] = imdb_rating.strip()
-        if actors:
-            richDesc["actors"] = ", ".join(list(dict.fromkeys(actors))[:10])
-        if directors:
-            richDesc["directors"] = ", ".join(list(dict.fromkeys(directors)))
-        if writers:
-            richDesc["writers"] = ", ".join(list(dict.fromkeys(writers)))
-        images_list = []
-        if poster:
+    def _unwrap(self, link):
+        # "/vid/?id=<base64 of the hoster url>" -> hoster url; "/vids.php?t=.." -> full url (own server)
+        link = (link or "").replace("&amp;", "&").strip()
+        if not link:
+            return ""
+        enc = self.cm.ph.getSearchGroups(link, r"/vid/\?(?:id|url)=([A-Za-z0-9+/=_-]+)")[0]
+        if enc:
             try:
-                images_list.append(
-                    {
-                        "url": strwithmeta(
-                            poster,
-                            {
-                                "Referer": self.MAIN_URL,
-                                "User-Agent": self.HEADER.get("User-Agent"),
-                            },
-                        )
-                    }
-                )
+                link = b64Decode(urllib_unquote(enc))
             except Exception:
-                images_list.append({"url": poster})
-        retList.append(
-            {
-                "title": title,
-                "text": story,
-                "images": images_list,
-                "other_info": richDesc,
-            }
-        )
-        return retList
+                printExc()
+                return ""
+        return self.getFullUrl(link)
 
+    def getLinksForVideo(self, cItem):
+        pageUrl = self._pageUrl(cItem.get("url", ""))
+        watchUrl = pageUrl + "watch/"
+        printDBG("MySeed.getLinksForVideo [%s]" % watchUrl)
+        sts, data = self.getPage(watchUrl)
+        if not sts:
+            return []
+        token = self.cm.ph.getSearchGroups(data, r"""csrf__token['"]\s*:\s*["']([^"']+)""")[0]
+        postId = self.cm.ph.getSearchGroups(data, r"""psot_id['"]\s*:\s*["']?(\d+)""")[0]
+
+        def parseServers(html, quality, firstLink=""):
+            ret = []
+            for li in re.findall(r"(?s)<li[^>]+data-server=.*?>", html):
+                srv = self.cm.ph.getSearchGroups(li, r'data-server="(\d+)"')[0]
+                qu = self.cm.ph.getSearchGroups(li, r'data-qu="(\d+)"')[0] or quality
+                link = self.cm.ph.getSearchGroups(li, r'data-link="([^"]+)"')[0]
+                if not link and srv == "0" and firstLink:
+                    link = firstLink
+                ret.append((int(qu or 0), int(srv or 0), self._unwrap(link)))
+            return ret
+
+        servers = parseServers(self.cm.ph.getDataBeetwenMarkers(data, 'class="servers__list', "</ul>", False)[1], "")
+        qualities = re.findall(r'data-quality="(\d+)"', data)
+        done = set(q for q, _s, _l in servers)
+        for quality in qualities:
+            if int(quality) in done or not (token and postId):
+                continue
+            ret = self._ajax("get__quality__servers", {"post_id": postId, "quality": quality, "csrf_token": token}, watchUrl)
+            if ret.get("type") == "success":
+                servers.extend(parseServers(ret.get("html", ""), quality, ret.get("server", "")))
+                done.add(int(quality))
+
+        servers.sort(key=lambda x: (-x[0], x[1]))
+        urlTab = []
+        names = {}
+        for quality, srv, link in servers:
+            if DEAD_HOSTS_RE.search(link):
+                continue
+            if link:
+                url = strwithmeta(link, {"Referer": watchUrl, "User-Agent": self.HEADER.get("User-Agent")})
+            elif token and postId:
+                # no link on the page: asked for when the user picks it (getVideoLinks)
+                url = strwithmeta(self.getFullUrl("get__watch__server/?" + urllib_urlencode({"post_id": postId, "quality": quality, "server": srv, "csrf_token": token})),
+                                  {"Referer": watchUrl})
+            else:
+                continue
+            name = "%s %sp" % (self._serverName(link, srv) if link else ("%s %d" % (_("Server"), srv)), quality) if quality else self._serverName(link, srv)
+            names[name] = names.get(name, 0) + 1
+            if names[name] > 1:
+                name = "%s (%d)" % (name, names[name])
+            urlTab.append({"name": name, "url": url, "need_resolve": 1})
+        story = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'(?s)<div class="post__story[^"]*">(.*?)</div>')[0])
+        return applySidecarToLinks(urlTab, buildSidecarFromItem(dict(cItem, desc=_stripColors(cItem.get("desc", ""))), IsSidecarEnabled(), story))
+
+    def _resolveOwnServer(self, url):
+        # /vids.php?t=.. -> <iframe> d.myseed.tv/player-gateway.php -> <video><source src=".mp4|.m3u8">
+        referer = getattr(url, "meta", {}).get("Referer", self.MAIN_URL)
+        params = dict(self.defaultParams)
+        params["header"] = dict(self.HEADER, Referer=referer)
+        sts, data = self.getPage(url, params)
+        if not sts:
+            return []
+        gateway = self.cm.ph.getSearchGroups(data, r'<iframe[^>]+src="([^"]+)"')[0].replace("&amp;", "&")
+        if gateway:
+            gateway = self.getFullUrl(gateway)
+            params["header"] = dict(self.HEADER, Referer=self.MAIN_URL)
+            sts, data = self.cm.getPage(gateway, params)
+            if not sts:
+                return []
+        else:
+            gateway = url
+        origin = self.cm.ph.getSearchGroups(gateway, r"(https?://[^/]+)")[0] or self.MAIN_URL.rstrip("/")
+        meta = {"Referer": origin + "/", "Origin": origin, "User-Agent": self.HEADER.get("User-Agent")}
+        links = []
+        for src in re.findall(r"<source[^>]+>", data):
+            video = self.cm.ph.getSearchGroups(src, r'src="([^"]+)"')[0].replace("&amp;", "&")
+            if not self.cm.isValidUrl(video):
+                continue
+            if ".m3u8" in video:
+                links.extend(getDirectM3U8Playlist(strwithmeta(video, meta), checkContent=True, sortWithMaxBitrate=999999999))
+            else:
+                label = self.cm.ph.getSearchGroups(src, r'(?:label|size|res)="([^"]+)"')[0]
+                links.append({"name": "MySeed %s" % label if label else "MySeed MP4", "url": strwithmeta(video, meta)})
+        return links
+
+    def getVideoLinks(self, videoUrl):
+        printDBG("MySeed.getVideoLinks [%s]" % videoUrl)
+        sidecar = sidecarFromUrlMeta(videoUrl, IsSidecarEnabled())
+        url = videoUrl
+        if "/get__watch__server/?" in url:
+            query = url.split("?", 1)[1]
+            post = dict((k, urllib_unquote(v)) for k, v in re.findall(r"([^&=]+)=([^&]*)", query))
+            referer = getattr(videoUrl, "meta", {}).get("Referer", self.MAIN_URL)
+            ret = self._ajax("get__watch__server", post, referer)
+            if ret.get("type") != "success" and ret.get("message") == "unauthorized request":
+                # the token expired - one retry with a fresh one from the watch page
+                sts, data = self.getPage(referer)
+                post["csrf_token"] = self.cm.ph.getSearchGroups(data, r"""csrf__token['"]\s*:\s*["']([^"']+)""")[0] if sts else ""
+                ret = self._ajax("get__watch__server", post, referer) if post["csrf_token"] else {}
+            link = self._unwrap(ret.get("server", "")) if ret.get("type") == "success" else ""
+            if not link or DEAD_HOSTS_RE.search(link):
+                return []
+            url = strwithmeta(link, {"Referer": referer, "User-Agent": self.HEADER.get("User-Agent")})
+        elif "/vid/?" in url:
+            url = strwithmeta(self._unwrap(url), getattr(videoUrl, "meta", {}))
+        if not self.cm.isValidUrl(url):
+            return []
+        if "vids.php" in url:
+            links = self._resolveOwnServer(url)
+        else:
+            links = self.up.getVideoLinkExt(url)
+        return decorateResolvedLinkItems(links, sidecar)
+
+    ###################################################
+    # INFO
+    ###################################################
+    def getArticleContent(self, cItem):
+        printDBG("MySeed.getArticleContent [%s]" % cItem.get("url", ""))
+        story, poster, info, imdbId, pageTitle = "", "", {}, "", ""
+        sts, data = self.getPage(self._pageUrl(cItem.get("url", "")))
+        if sts:
+            pageTitle = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'(?s)<h1 class="post__name"[^>]*>(.*?)</h1>')[0])
+            story = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'(?s)<div class="post__story[^"]*">(.*?)</div>')[0])
+            poster = self.cm.ph.getSearchGroups(data, r'<meta property="og:image" content="([^"]+)"')[0]
+            imdbId = self.cm.ph.getSearchGroups(data, r"imdb\.com/title/(tt\d+)")[0]
+            area = self.cm.ph.getDataBeetwenMarkers(data, 'class="info__area__ul', 'class="watch__and__download', False)[1] or data
+            for li in area.split('<div class="title__kit">')[1:]:
+                label = self.cleanHtmlStr(self.cm.ph.getSearchGroups(li, r"<span>([^<]+)</span>")[0])
+                for word, key in INFO_FIELDS:
+                    if word in label:
+                        values = [self.cleanHtmlStr(v) for v in re.findall(r"<a[^>]*>([^<]+)</a>", li.split("</ul>")[0])]
+                        if values:
+                            info[key] = ", ".join(values[:6])
+            persons = {"ممثل": [], "مخرج": [], "كاتب": []}
+            for name, role in re.findall(r'<h3 class="name">([^<]+)</h3>\s*<span class="role">([^<]+)</span>', data):
+                for word in persons:
+                    if word in role and len(persons[word]) < 8:
+                        persons[word].append(self.cleanHtmlStr(name))
+            for word, key in (("ممثل", "actors"), ("مخرج", "directors"), ("كاتب", "writers")):
+                if persons[word]:
+                    info[key] = ", ".join(persons[word])
+        meta = {}
+        mediaType = cItem.get("meta_type", "")
+        if not mediaType and pageTitle.startswith(("فيلم", "مسلسل")):
+            mediaType = "movie" if pageTitle.startswith("فيلم") else "tv"
+        try:
+            if mediaType and imdbId:
+                meta = getMetaByImdbId(mediaType, imdbId)
+            if not meta and mediaType:
+                parsed = self._parseTitle(pageTitle or cItem.get("title", ""))
+                meta = getMeta(mediaType, cItem.get("meta_title") or parsed["name"], cItem.get("meta_year") or info.get("year", "") or parsed["year"])
+        except Exception:
+            printExc()
+        meta = meta or {}
+        info.update(meta.get("info", {}))
+        plot = meta.get("plot", "")
+        text = plot or story or _stripColors(cItem.get("desc", ""))
+        if plot and story and story != plot:
+            text = "%s[/br][/br]%s" % (story, plot)
+        icon = poster or meta.get("poster") or cItem.get("icon", "")
+        return [{"title": _stripColors(cItem.get("title", "")) or pageTitle, "text": text, "images": [{"title": "", "url": icon}] if icon else [], "other_info": info}]
+
+    ###################################################
+    # favourites
+    ###################################################
+    def getFavouriteData(self, cItem):
+        try:
+            if cItem.get("category") in ("as_video", "as_series", "as_season", "list_items"):
+                return json_dumps(dict((key, cItem[key]) for key in FAV_FIELDS + ("base_url",) if key in cItem))
+        except Exception:
+            printExc()
+        return CBaseHostClass.getFavouriteData(self, cItem)
+
+    ###################################################
+    # service
+    ###################################################
     def handleService(self, index, refresh=0, searchPattern="", searchType=""):
-        printDBG("MySeed.handleService start")
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
+        if isJumpItem(self.currItem):
+            self.currItem = jumpTarget(self, self.currItem)
         name = self.currItem.get("name", "")
         category = self.currItem.get("category", "")
-        printDBG("handleService: >> name[%s], category[%s] " % (name, category))
+        printDBG("MySeed.handleService name[%s] category[%s]" % (name, category))
         self.currList = []
         if name is None:
-            self.listMainMenu({"name": "category"})
-        elif category == "list_items":
+            self.listsTab(self.MAIN_CAT_TAB, {"name": "category"})
+        elif category in self.SUB_TABS:
+            self.listsTab(self.SUB_TABS[category], self.currItem)
+        elif category in ("list_items", "series", "series_packs"):
             self.listItems(self.currItem)
-        elif category == "series":
-            self.listSeriesItems(self.currItem)
-        elif category == "movies_folder":
-            self.listMoviesFolder(self.currItem)
-        elif category == "series_folder":
-            self.listSeriesFolder(self.currItem)
-        elif category == "series_packs_folder":
-            self.listSeriesPacksFolder(self.currItem)
-        elif category == "series_packs":
-            self.listSeriesPacks(self.currItem)
-        elif category == "series_seasons_list":
-            self.listSeasons(self.currItem)
-        elif category == "series_episodes_list":
-            self.listEpisodes(self.currItem)
-        elif category == "explore_episodes":
-            self.exploreSeriesItems(self.currItem)
-        elif category == "ramadan_folder":
-            self.listRamadanFolder(self.currItem)
-        elif category == "anime_folder":
-            self.listAnimeFolder(self.currItem)
-        elif category == "other_folder":
-            self.listOtherFolder(self.currItem)
-        elif category == "explore_item":
-            self.exploreItems(self.currItem)
+        elif category in ("as_series", "series_seasons_list"):
+            self.listSeries(self.currItem)
+        elif category == "as_season":
+            self.listSeason(self.currItem)
+        elif category in ("explore_item", "explore_episodes"):
+            # favourites of the old host version: one playable row for the title
+            params = dict(self.currItem)
+            params.update({"category": "as_video", "url": self._pageUrl(params.get("url", "")), "title": _stripColors(params.get("title", ""))})
+            self.addVideo(params)
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({"search_item": False, "name": "category"})
@@ -1767,13 +636,13 @@ class MySeed(CBaseHostClass):
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
-class IPTVHost(CHostBase):
+class IPTVHost(GenericFolderWatchedHostMixin, CHostBase):
+
     def __init__(self):
         CHostBase.__init__(self, MySeed(), True, [])
+        self.cachedRet = None
+        self.refreshAfterWatchedFlagChange = False
+        self.watchedHelper = IPTVWatchedHelper("arabseed")
 
     def withArticleContent(self, cItem):
-        if "video" == cItem.get("type", "") or "explore_item" == cItem.get(
-            "category", ""
-        ):
-            return True
-        return False
+        return cItem.get("category", "") in ("as_video", "as_series", "as_season")

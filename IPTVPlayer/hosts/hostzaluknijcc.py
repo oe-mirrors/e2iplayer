@@ -1,958 +1,539 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026 - damagic
+# Last Modified: 04.10.2026 - zaluknij.cc rework (Polish movies and series)
+#   - Cloudflare: every request goes through getPageCFProtection (MyE2i solves the browser check, the
+#     solving User-Agent is remembered next to the cookie jar); the UA pCommon really used is taken
+#     over for the posters, which need the same UA + cf_clearance (damagic)
+#   - movies: sort orders, genres, years, versions (Lektor, Napisy PL ...); series: new episodes,
+#     recently added, popular, most viewed, all; kids; search (movies + series with description)
+#   - First page / Jump / Next page on every list (?page=N), long seasons paged by 100 episodes
+#   - title from <div class="title">, alt or title attribute, "S01 E04" meta line (damagic)
+#   - movies and episodes are VIDEO rows keyed on their page url; series -> seasons (when more than
+#     one) -> episodes (ascending)
+#   - links: the hosting table of the page (version / quality in the name) -> urlparser
+#   - watched flag, downloaded flag, favourites (old favourites keep working), name normalisation
+#     ("Title (Year)", "Show - SxxExx"), sidecar, INFO via moviemeta + the site's fields
 ###################################################
 import re
 import json
 import base64
-import time
+
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
-from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
-from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
+from Plugins.Extensions.IPTVPlayer.libs.botprotection import remembered_user_agent
+from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
+from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
+from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
+from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, E2ColoR
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
-
-try:
-    import json
-except Exception:
-    import simplejson as json
-
-# Regex patterns used across multiple methods
-RE_DESCRIPTION_PARAGRAPH = r'<p\s+class="description">([^<]+)'
-RE_META_DESCRIPTION = r'<meta\s+name="description"\s+content="([^"]+)'
-RE_NEXT_PAGE = r"""href=['"]([^"']+)["'](?: data-pagenumber='\d+'>|>)Nast"""
-RE_ITEM_TITLE = r'title="([^"]+)'
-RE_ITEM_HREF = r'href="([^"]+)'
-RE_ITEM_IMAGE = r'src="([^"]+)'
-RE_META_LINE = r'<span class="meta-line">(S\d+\s*E\d+)</span>'
-RE_META_LINE_ANY = r'<span\s+class="meta-line">([^<]+)</span>'
-RE_DIV_TITLE_BLOCK = r'<div\s+class="title">(.*?)</div>'
-RE_YEAR_SUP = r'<sup><a href="[^"]+">(\d{4})</a></sup>'
-RE_YEAR_CLASS = r'class="year">(\d{4})'
-RE_YEAR_PRODUCTION = r'<li>Rok\s+Produkcji:</li>\s*<li>(\d{4})</li>'
-RE_GENRE_ITEMPROP = r'<li itemprop="genre"><a href="[^"]+">([^<]+)</a></li>'
-RE_IFRAME_DATA = r"""data-iframe=['"]([^"^']+?)['"]"""
-RE_HREF_LINK = r"""href=['"]([^"^']+?)['"]"""
-RE_EPISODE_LINK = r'href="([^"]+)">\W(s\d+e\d+)'
-RE_CLEAN_TITLE = r"\s*\[\]\s*"
-RE_DESCRIPTION_FALLBACK = r'class="description">([^<]+)'
-RE_ALT_TITLE = r'alt="([^"]+)'
-RE_DIV_TITLE = r'<div\s+class="title">([^<]+)'
+from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
+from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
 
 
 def GetConfigList():
-    """Return configuration options for the plugin."""
-    optionList = []
-    return optionList
+    return []
 
 
 def gettytul():
-    """Return the base URL for the Zaluknij service."""
     return "https://zaluknij.cc/"
 
 
-class Zaluknij(CBaseHostClass):
-    """
-    Parser for Zaluknij.cc video hosting service.
+COLOR_CODE_RE = re.compile(r"\\c[0-9A-Fa-f]{8}")
+TILE_RE = re.compile(r'(?s)<a href="(https?://[^"]+/(?:film|serial-online)/[^"]+)"([^>]*)>(.*?)</a>')
+EPISODE_RE = re.compile(r'<a href="([^"]+)">\s*\[s(\d+)e(\d+)[^\]]*\]\s*([^<]*)</a>', re.I)
+# episode pages: /serial-online/<slug>/<id>/odcinek-4, daily shows /odcinki-1862-1868
+EPISODE_URL_RE = re.compile(r"/serial-online/[^/]+/\d+/odcin", re.I)
+META_LINE_RE = r'<span\s+class="meta-line">([^<]+)</span>'
+SXXEXX_RE = re.compile(r"S\s*(\d+)\s*E\s*(\d+)", re.I)
+PAGING_KEYS = ("base_url", "page_tpl")
+EPISODES_PER_PAGE = 100
+# categories of the rows the INFO view / favourites / watched flag know (list_items, list_episodes and
+# list_episodes_direct are also the categories of the favourites saved by the old host)
+VIDEO_CATEGORIES = ("zal_video", "list_items", "list_episodes_direct")
+SERIES_CATEGORIES = ("list_episodes", "zal_season")
 
-    Features:
-    - Browse movies by premiere, new links, and ratings
-    - Browse TV series with episode listing
-    - Search functionality with POST/GET fallback
-    - Cloudflare protection handling
-    - Multiple video quality and version support
-    """
+
+def _stripColors(text):
+    return COLOR_CODE_RE.sub("", text or "")
+
+
+def _titleParts(title):
+    return [p.strip() for p in (title or "").split(" / ") if p.strip()]
+
+
+def _shortTitle(title):
+    # "Zanim koszulka wyschnie / Until the T-shirt Dries / ..." -> the Polish title for episode rows
+    parts = _titleParts(title)
+    return parts[0] if parts else (title or "").strip()
+
+
+def _isLatin(text):
+    try:
+        text = text.decode("utf-8") if isinstance(text, bytes) else text
+        return all(ord(c) < 0x2E80 for c in text)  # no CJK / kana / hangul
+    except Exception:
+        return False
+
+
+def _metaTitle(title):
+    # the original title (after " / ") finds more on TMDb / IMDb than the Polish one - the first one
+    # in Latin script ("Snowball Earth / スノウボールアース" -> "Snowball Earth")
+    parts = _titleParts(title)
+    others = [p for p in parts[1:] if _isLatin(p)]
+    return others[0] if others else (parts[0] if parts else "")
+
+
+class Zaluknij(GenericFolderWatchedScraperMixin, CBaseHostClass):
+
+    FAV_FIELDS = ("name", "category", "type", "url", "title", "icon", "s_title", "s_season", "s_episode",
+                  "meta_type", "meta_title", "meta_year")
 
     def __init__(self):
-        """Initialize the parser with default settings and menu structure."""
-        CBaseHostClass.__init__(
-            self, {"history": "Zaluknij", "cookie": "Zaluknij.cookie"}
-        )
-        # Caches - inicjalizowane przed _setupUserAgent, żeby ewentualne
-        # wywołania pomocnicze miały do nich dostęp.
-        self.cacheLinks = {}
-        self.cacheDescriptions = {}
-        self.cacheDetails = {}
-        self.cacheQuickDescs = {}
-        # User-Agent + HEADER - wydzielone, bo MyE2i generuje cf_clearance
-        # dla konkretnego UA (z "Edg/..."), więc wszystkie żądania i miniaturki
-        # muszą używać tego samego UA, inaczej Cloudflare zwraca 403.
-        self._setupUserAgent()
-        self.defaultParams = {
-            "header": self.HEADER,
-            "use_cookie": True,
-            "load_cookie": True,
-            "save_cookie": True,
-            "cookiefile": self.COOKIE_FILE,
-            "with_metadata": True,
-        }
+        CBaseHostClass.__init__(self, {"history": "Zaluknij", "cookie": "Zaluknij.cookie"})
         self.MAIN_URL = gettytul()
-        self.DEFAULT_ICON_URL = self.fixIconUrl(
-            self.MAIN_URL + "public/dist/images/lgbt.png", self.MAIN_URL
-        )
-        self.MENU = [
-            {
-                "category": "list_items",
-                "title": "Filmy Premiery",
-                "url": self.getFullUrl("filmy-online/sort:premiere/"),
-            },
-            {
-                "category": "list_items",
-                "title": "Filmy Nowe Linki",
-                "url": self.getFullUrl("filmy-online/sort:link/"),
-            },
-            {
-                "category": "list_items",
-                "title": "Filmy Oceny na Zaluknij",
-                "url": self.getFullUrl("filmy-online/sort:rate/"),
-            },
-            {
-                "category": "list_items",
-                "title": "Seriale",
-                "url": self.getFullUrl(
-                    "seriale-online/index?url=seriale-online%2Findex"
-                    "&sort=recent_series&page=1"
-                ),
-            },
-            {
-                "category": "list_episodes_direct",
-                "title": "Seriale Nowe Odcinki",
-                "url": self.getFullUrl(
-                    "seriale-online/index?url=seriale-online%2Findex"
-                    "&sort=latest_episodes&page=1"
-                ),
-            },
-            {
-                "category": "list_items",
-                "title": "Dla dzieci",
-                "url": self.getFullUrl("dla-dzieci/"),
-            },
-        ] + self.searchItems()
-
-    # ------------------------------------------------------------------
-    #  User-Agent
-    #
-    #  MyE2i generuje cf_clearance dla UA z "Edg/..." (edge), więc każdy
-    #  request (getPage + miniaturki) musi używać DOKŁADNIE tego samego
-    #  UA, inaczej Cloudflare zwraca 403. Nie polegamy na config
-    #  plugins.iptvplayer.cloudflare_user, bo tam UA może być inny.
-    # ------------------------------------------------------------------
-    def _setupUserAgent(self):
-        """Ustawia self.USER_AGENT i self.HEADER zgodnie z nowym pCommon."""
-        get_ua = getattr(self.cm, "getDefaultUserAgent", None)
-        if callable(get_ua):
-            try:
-                self.USER_AGENT = get_ua("edge")
-            except Exception:
-                try:
-                    self.USER_AGENT = get_ua()
-                except Exception:
-                    self.USER_AGENT = self._fallbackUA()
-        else:
-            self.USER_AGENT = self._fallbackUA()
         self.HEADER = self.cm.getDefaultHeader(browser="chrome")
-        self.HEADER["User-Agent"] = self.USER_AGENT
-        # Jeśli defaultParams już istnieje (np. po ponownym _setupUserAgent),
-        # zsynchronizuj z nim HEADER.
-        if isinstance(getattr(self, "defaultParams", None), dict):
-            self.defaultParams["header"] = self.HEADER
+        # the UA that solved the browser check replaces this one after the first page (see getPage)
+        self.HEADER["User-Agent"] = self.cm.getDefaultUserAgent("edge")
+        self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True,
+                              "cookiefile": self.COOKIE_FILE, "with_metadata": True}
+        self.cacheLinks = {}
+        movies = self.getFullUrl("filmy-online/")
+        series = self.getFullUrl("seriale-online/index?url=seriale-online%2Findex&sort={sort}&page=1")
+        self.MOVIES_MENU = [
+            {"category": "list_items", "title": _("Recently added"), "url": movies + "sort:date/"},
+            {"category": "list_items", "title": _("Latest"), "url": movies + "sort:premiere/"},
+            {"category": "list_items", "title": _("New links"), "url": movies + "sort:link/"},
+            {"category": "list_items", "title": _("Most viewed"), "url": movies + "sort:view/"},
+            {"category": "list_items", "title": _("Top rated"), "url": movies + "sort:rate/"},
+            {"category": "zal_filter", "title": _("Genres"), "url": movies, "filter": "category"},
+            {"category": "zal_filter", "title": _("Year"), "url": movies, "filter": "year"},
+            {"category": "zal_filter", "title": _("Version"), "url": movies, "filter": "version"},
+        ]
+        self.SERIES_MENU = [
+            {"category": "list_episodes_direct", "title": _("New episodes"), "url": series.format(sort="latest_episodes")},
+            {"category": "list_items", "title": _("Recently added"), "url": series.format(sort="recent_series")},
+            {"category": "list_items", "title": _("Popular"), "url": series.format(sort="popular_series")},
+            {"category": "list_items", "title": _("Most viewed"), "url": series.format(sort="most_viewed_recently")},
+            {"category": "list_items", "title": _("All"), "url": series.format(sort="all_series")},
+        ]
+        self.MENU = [
+            {"category": "zal_menu", "title": _("Movies"), "sub_menu": "movies"},
+            {"category": "zal_menu", "title": _("Series"), "sub_menu": "series"},
+            {"category": "list_episodes_direct", "title": _("New episodes"), "url": series.format(sort="latest_episodes")},
+            {"category": "list_items", "title": _("Kids"), "url": self.getFullUrl("dla-dzieci/")},
+        ] + self.searchItems()
+        self.watchedHelper = IPTVWatchedHelper("zaluknijcc")
+        self.wfInitFolderCache()
 
-    @staticmethod
-    def _fallbackUA():
-        """Awaryjny UA gdy pCommon nie ma getDefaultUserAgent."""
-        return (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/154.0.0.0 Safari/537.36 Edg/154.0.0.0"
-        )
-
+    ###################################################
+    # helpers
+    ###################################################
     def getPage(self, baseUrl, addParams=None, post_data=None):
-        """
-        Fetch page content with Cloudflare protection support.
-
-        Args:
-            baseUrl: The URL to fetch
-            addParams: Additional parameters for the request
-            post_data: POST data if using POST method
-
-        Returns:
-            Tuple of (status, response_data)
-        """
         if addParams is None:
             addParams = dict(self.defaultParams)
-        baseUrl = self.cm.iriToUri(baseUrl)
+        sts, data = self.cm.getPageCFProtection(self.cm.iriToUri(baseUrl), addParams, post_data)
+        # cf_clearance is bound to the UA that solved the check - the posters (fixIconUrl) need it too
         try:
-            sts, data = self.cm.getPageCFProtection(baseUrl, addParams, post_data)
+            cfUser = data.meta.get("cf_user", "")
         except Exception:
-            printExc()
-            return False, strwithmeta("")
-        # Zsynchronizuj nasz UA z UA, którego faktycznie użył pCommon/MyE2i.
-        # Bez tego miniaturki (fixIconUrl) dostają 403, bo cf_clearance
-        # jest ważny tylko dla UA, dla którego został wygenerowany.
-        try:
-            cf_user = data.meta.get("cf_user", "")
-        except Exception:
-            cf_user = ""
-        if cf_user and cf_user != self.HEADER.get("User-Agent"):
-            self.USER_AGENT = cf_user
-            self.HEADER["User-Agent"] = cf_user
-            if isinstance(getattr(self, "defaultParams", None), dict):
-                self.defaultParams["header"] = self.HEADER
+            cfUser = ""
+        if cfUser and cfUser != self.HEADER.get("User-Agent"):
+            self.HEADER["User-Agent"] = cfUser
         return sts, data
 
-    def fixIconUrl(self, icon_url, referer=None):
-        """
-        Fix icon URL with proper metadata and Cloudflare cookies.
-
-        Args:
-            icon_url: Raw icon URL from the page
-            referer: Referer URL for the request header
-
-        Returns:
-            strwithmeta object with proper headers
-        """
-        if not icon_url:
+    def fixIconUrl(self, iconUrl, referer=None):
+        if not iconUrl:
             return ""
-        if "thumb" in icon_url:
-            icon_url = icon_url.replace("thumb", "big")
-        icon_url = self.getFullUrl(icon_url)
+        iconUrl = self.getFullIconUrl(iconUrl.replace("/thumb/", "/big/"))
         cf = self.cm.getCookieItem(self.COOKIE_FILE, "cf_clearance")
-        return strwithmeta(
-            icon_url,
-            {
-                "Referer": referer if referer else self.MAIN_URL,
-                "User-Agent": self.HEADER.get("User-Agent", self.USER_AGENT),
-                "Cookie": "cf_clearance=%s" % cf if cf else "",
-            },
-        )
+        # the UA that solved the check (remembered across restarts), else the current one
+        meta = {"Referer": referer or self.MAIN_URL, "User-Agent": remembered_user_agent(self.COOKIE_FILE) or self.HEADER["User-Agent"]}
+        if cf:
+            meta["Cookie"] = "cf_clearance=%s" % cf
+        return strwithmeta(iconUrl, meta)
 
-    def _extractTitleFromTile(self, item):
-        """
-        Wyciąga tytuł z kafelka (aktualny i stary HTML Zaluknij).
+    def getDefaulIcon(self, cItem=None):
+        # the site's image sits behind the same Cloudflare check as the pages: built when a row is shown
+        # (with the current cf_clearance), none before the check was solved (was an HTTP 403 per row)
+        if not self.cm.getCookieItem(self.COOKIE_FILE, "cf_clearance"):
+            return ""
+        return self.fixIconUrl(self.MAIN_URL + "public/dist/images/lgbt.png", self.MAIN_URL)
 
-        Kolejność:
-          1) <div class="title">Tytuł<br><span class="meta-line">S17 E04</span></div>
-          2) alt="..." w <img>
-          3) title="..." na <a> (stary format)
+    def _path(self, url):
+        return re.sub(r"^https?://[^/]+", "", url or "").split("#")[0].rstrip("/").lower()
 
-        Returns:
-            Krotka (title, meta) gdzie meta to "S17 E04" lub "".
-        """
-        title = ""
-        meta = ""
+    def getFavouriteData(self, cItem):
+        try:
+            if cItem.get("category") in VIDEO_CATEGORIES + SERIES_CATEGORIES:
+                return json_dumps(dict((key, cItem[key]) for key in self.FAV_FIELDS if key in cItem))
+        except Exception:
+            printExc()
+        return CBaseHostClass.getFavouriteData(self, cItem)
 
-        # 1) nowy format - blok <div class="title">...</div>
-        title_div = re.search(RE_DIV_TITLE_BLOCK, item, re.DOTALL)
-        if title_div:
-            raw = title_div.group(1)
-            meta_m = re.search(RE_META_LINE_ANY, raw)
-            if meta_m:
-                meta = self.cleanHtmlStr(meta_m.group(1)).strip()
-            # usuń meta-line i <br>, zostaw sam tytuł
-            raw = re.sub(
-                r'<span\s+class="meta-line">.*?</span>',
-                '', raw, flags=re.DOTALL
-            )
-            raw = re.sub(r'<br\s*/?>', ' ', raw)
-            title = self.cleanHtmlStr(raw).strip()
-
-        # 2) alt="..." w <img>
+    def _tileTitle(self, attrs, block):
+        # (title, meta line) of a tile - <div class="title">Title<br><span class="meta-line">S01 E04</span></div>,
+        # else the alt of the poster, else the title attribute of the link (damagic)
+        meta = self.cleanHtmlStr(self.cm.ph.getSearchGroups(block, META_LINE_RE)[0])
+        title = self.cm.ph.getSearchGroups(block, r'(?s)<div\s+class="title">(.*?)</div>')[0]
+        title = self.cleanHtmlStr(re.sub(r'(?s)<span\s+class="meta-line">.*?</span>', "", title).replace("<br>", " "))
         if not title:
-            alt_m = re.search(RE_ALT_TITLE, item)
-            if alt_m:
-                title = self.cleanHtmlStr(alt_m.group(1)).strip()
-
-        # 3) stary format title="..." na <a>
+            title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(block, r'<img[^>]+alt="([^"]+)"')[0])
         if not title:
-            title_m = re.search(RE_ITEM_TITLE, item)
-            if title_m:
-                title = self.cleanHtmlStr(title_m.group(1)).strip()
-
-        # dodatkowo meta, jeśli nie znaleziono w bloku title
-        if not meta:
-            meta_m = re.search(RE_META_LINE_ANY, item)
-            if meta_m:
-                meta = self.cleanHtmlStr(meta_m.group(1)).strip()
-
+            title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(attrs, r'title="([^"]+)"')[0])
         return title, meta
 
-    def getQuickDescription(self, url):
-        """
-        Get a short description for a video from cache or fetch it.
+    def _desc(self, fields, plot=""):
+        desc = " | ".join(["%s%s:%s %s" % (E2ColoR(color), label, E2ColoR("white"), value) for label, value, color in fields if value])
+        if plot:
+            desc = "%s[/br]%s" % (desc, plot) if desc else plot
+        return desc
 
-        Args:
-            url: The video page URL
-
-        Returns:
-            Description text string (max 200 characters)
-        """
-        if url in self.cacheQuickDescs:
-            return self.cacheQuickDescs[url]
+    ###################################################
+    # watched flag
+    ###################################################
+    def _getWatchedKeyForItem(self, cItem):
         try:
-            sts, data = self.getPage(url)
-            if not sts:
-                self.cacheQuickDescs[url] = ""
+            if not isinstance(cItem, dict):
                 return ""
-            # Try to extract description from paragraph tag
-            desc = self.cm.ph.getSearchGroups(
-                data, RE_DESCRIPTION_PARAGRAPH
-            )
-            # Fallback to meta description tag
-            if not desc:
-                desc = self.cm.ph.getSearchGroups(
-                    data, RE_META_DESCRIPTION
-                )
-            if desc:
-                desc_text = self.cleanHtmlStr(desc[0]).strip()
-                if len(desc_text) > 200:
-                    desc_text = desc_text[:200] + "..."
-            else:
-                desc_text = ""
-            self.cacheQuickDescs[url] = desc_text
-            self.cacheDescriptions[url] = desc_text
-            return desc_text
-        except Exception as e:
-            printDBG("getQuickDescription error: %s" % str(e))
-            self.cacheQuickDescs[url] = ""
-            return ""
+            path = self._path(cItem.get("url", ""))
+            if not path:
+                return ""
+            category = cItem.get("category", "")
+            if cItem.get("type") == "video" and ("/film/" in path or EPISODE_URL_RE.search(path)):
+                return "video:%s" % path
+            if category == "list_episodes":
+                return "series:%s" % path
+            if category == "zal_season":
+                return "season:%s#s%s" % (path, cItem.get("s_season", ""))
+        except Exception:
+            printExc()
+        return ""
 
-    def extractMovieDetails(self, data):
-        """
-        Extract movie metadata from the page HTML.
+    ###################################################
+    # lists
+    ###################################################
+    def listMenu(self, cItem):
+        menu = self.MOVIES_MENU if cItem.get("sub_menu") == "movies" else self.SERIES_MENU
+        self.listsTab(menu, {"name": "category"})
 
-        Parses year, categories, versions and quality information
-        from the movie details page.
-
-        Args:
-            data: HTML content of the movie page
-
-        Returns:
-            Dictionary with keys: categories, version, quality, year
-        """
-        details = {"categories": [], "version": "", "quality": "", "year": ""}
-        # Extract release year from superscript link (movies)
-        year = self.cm.ph.getSearchGroups(data, RE_YEAR_SUP)
-        printDBG("extractMovieDetails RE_YEAR_SUP result: %s" % str(year))
-        if year and year[0].isdigit():
-            details["year"] = year[0]
-        else:
-            # Extract year from production info (series)
-            year = self.cm.ph.getSearchGroups(data, RE_YEAR_PRODUCTION)
-            printDBG("extractMovieDetails RE_YEAR_PRODUCTION result: %s" % str(year))
-            if year:
-                details["year"] = year[0]
-        printDBG("extractMovieDetails final year: %s" % details["year"])
-        # Extract genre categories using itemprop attribute
-        categories = re.findall(RE_GENRE_ITEMPROP, data)
-        if categories:
-            details["categories"] = categories
-        # Parse the versions table for quality and version info
-        table_parts = self.cm.ph.getDataBeetwenNodes(
-            data, ("<table", ">"), ("</table", ">")
-        )
-        if table_parts and len(table_parts) > 1:
-            table = table_parts[1]
-            rows = self.cm.ph.getAllItemsBeetwenNodes(
-                table, ("<tr", ">"), ("</tr", ">")
-            )
-            versions = set()
-            qualities = set()
-            for row in rows:
-                # Skip header rows
-                if "<th" in row:
-                    continue
-                cells = self.cm.ph.getAllItemsBeetwenNodes(
-                    row, ("<td", ">"), ("</td", ">")
-                )
-                if len(cells) >= 4:
-                    # Check if cell contains video link
-                    if "link-to-video" in cells[1]:
-                        if len(cells) > 2:
-                            version = self.cleanHtmlStr(cells[2])
-                            if version and version not in ["", "Wersja"]:
-                                versions.add(version)
-                        if len(cells) > 3:
-                            quality = self.cleanHtmlStr(cells[3])
-                            if quality and quality not in ["", "Jakość"]:
-                                qualities.add(quality)
-            if versions:
-                details["version"] = ", ".join(sorted(versions))
-            if qualities:
-                details["quality"] = ", ".join(sorted(qualities))
-        return details
-
-    def getArticleContent(self, cItem):
-        """
-        Build article content with movie details and description.
-
-        Used for displaying detailed information about a movie.
-
-        Args:
-            cItem: Current item dictionary with url, title, icon
-
-        Returns:
-            List of dictionaries with title, text, images and other_info
-        """
-        printDBG("Zaluknij.getArticleContent [%s]" % cItem)
-        url = cItem.get("url", "")
-        title = cItem.get("title", "")
-        icon = cItem.get("icon", self.DEFAULT_ICON_URL)
-        if not url:
-            return []
-        details = {}
-        if url in self.cacheDetails:
-            details = self.cacheDetails[url]
-            desc = self.cacheDescriptions.get(url, "")
-        else:
-            sts, data = self.getPage(url)
-            if sts:
-                # Extract description from the page
-                desc = self.cm.ph.getSearchGroups(
-                    data, RE_DESCRIPTION_PARAGRAPH
-                )
-                if not desc:
-                    desc = self.cm.ph.getSearchGroups(
-                        data, RE_META_DESCRIPTION
-                    )
-                if desc:
-                    desc_text = self.cleanHtmlStr(desc[0])
-                    self.cacheDescriptions[url] = desc_text
-                else:
-                    desc_text = ""
-                details = self.extractMovieDetails(data)
-                self.cacheDetails[url] = details
-            else:
-                desc_text = ""
-        # Build the display text with all available metadata
-        text_parts = []
-        text_parts.append(title)
-        text_parts.append("")
-        if details.get("year"):
-            text_parts.append("Rok: %s" % details["year"])
-        if details.get("categories"):
-            text_parts.append("Kategoria: %s" % ", ".join(details["categories"]))
-        if details.get("version"):
-            text_parts.append("Wersja: %s" % details["version"])
-        if details.get("quality"):
-            text_parts.append("Jakość: %s" % details["quality"])
-        desc_text = self.cacheDescriptions.get(url, "")
-        if desc_text:
-            text_parts.append("")
-            text_parts.append("Opis:")
-            text_parts.append(desc_text)
-        if not desc_text and not details:
-            text_parts.append("")
-            text_parts.append("Brak opisu i szczegółów")
-        final_text = "\n".join(text_parts)
-        return [
-            {
-                "title": title,
-                "text": final_text,
-                "images": [{"title": "", "url": icon}],
-                "other_info": {"custom_items_list": []},
-            }
-        ]
-
-    def listItems(self, cItem, isSearch=False):
-        """
-        List movies and series from a category page with descriptions.
-
-        Parses the page for video items and adds them with quick descriptions
-        to improve user experience when browsing content.
-
-        Args:
-            cItem: Current item with url to parse
-            isSearch: Flag indicating if this is a search result
-        """
-        printDBG("Zaluknij.listItems |%s| isSearch=%s" % (cItem, isSearch))
-        sts, htm = self.getPage(cItem["url"])
-        if not sts:
-            printDBG("Zaluknij.listItems - failed to get page after retries")
-            return
-        # Find next page link if available
-        nextPage = self.cm.ph.getSearchGroups(htm, RE_NEXT_PAGE)
-        if nextPage:
-            nextPage = nextPage[0]
-        # Extract video items from the page using multiple patterns
-        data = self.cm.ph.getAllItemsBeetwenMarkers(
-            htm, 'role="listitem', "</a>"
-        ) or self.cm.ph.getAllItemsBeetwenMarkers(htm, 'class="col-sm-4">', "</a>")
-        for item in data:
-            url = self.cm.ph.getSearchGroups(item, RE_ITEM_HREF)
-            if not url:
-                continue
-            url = url[0]
-            # Extract and fix thumbnail icon
-            icon = self.cm.ph.getSearchGroups(item, RE_ITEM_IMAGE)
-            if icon:
-                icon = self.fixIconUrl(icon[0], cItem["url"])
-                if isSearch:
-                    icon = self.fixIconUrl(icon)
-            else:
-                icon = self.DEFAULT_ICON_URL
-            # Extract title using new parser (handles current and legacy HTML)
-            title, meta_line = self._extractTitleFromTile(item)
-            if not title:
-                title = "Brak tytułu"
-            title = re.sub(RE_CLEAN_TITLE, "", title)
-            # Determine if this is a series and add episode info if available
-            is_serial = "serial" in url.lower()
-            if is_serial:
-                if meta_line:
-                    title = "%s [%s]" % (title, meta_line)
-            else:
-                year = self.cm.ph.getSearchGroups(item, RE_YEAR_CLASS)
-                if year:
-                    year = year[0]
-                    if not isSearch:
-                        title = "%s (%s)" % (title, year)
-            title = re.sub(RE_CLEAN_TITLE, "", title)
-            title = title.strip()
-            # Get quick description for the item
-            quick_desc = self.getQuickDescription(url)
-            # Also try to extract description directly from the item HTML
-            if not quick_desc:
-                item_desc = self.cm.ph.getSearchGroups(
-                    item, r'<p[^>]*>([^<]+)</p>'
-                )
-                if item_desc:
-                    quick_desc = self.cleanHtmlStr(item_desc[0]).strip()
-                    if len(quick_desc) > 200:
-                        quick_desc = quick_desc[:200] + "..."
-            # Prepare item parameters with description
-            params = dict(cItem)
-            params.update(
-                {
-                    "good_for_fav": True,
-                    "category": "video",
-                    "title": title.replace("amp;", ""),
-                    "url": url,
-                    "icon": icon,
-                    "desc": quick_desc,
-                }
-            )
-            if is_serial:
-                params.update({"category": "list_episodes"})
-                self.addDir(params)
-            else:
-                self.addVideo(params)
-        # Add next page navigation if available
-        if nextPage:
-            params = dict(cItem)
-            next_url = cItem["url"].split("?")[0] + nextPage.replace("amp;", "")
-            params.update(
-                {"good_for_fav": False, "title": _("Next page"), "url": next_url}
-            )
-            self.addDir(params)
-
-    def listEpisodes(self, cItem):
-        """
-        List all episodes for a TV series.
-
-        Extracts season and episode numbers from the series page
-        and adds them as individual video items.
-
-        Args:
-            cItem: Current item with series URL
-        """
-        printDBG("Zaluknij.listEpisodes")
-        icon = cItem["icon"]
+    def listFilter(self, cItem):
         sts, data = self.getPage(cItem["url"])
         if not sts:
             return
-        # Get series description if available
-        desc = self.cm.ph.getSearchGroups(data, RE_DESCRIPTION_FALLBACK)
-        if desc:
-            desc = desc[0]
-        else:
-            desc = ""
-        # Find all episode links with season/episode patterns
-        episodes = re.findall(RE_EPISODE_LINK, data, re.DOTALL)
-        for url, episode_num in episodes:
-            params = dict(cItem)
-            title = cItem["title"]
-            title = re.sub(RE_CLEAN_TITLE, "", title)
-            title = title.strip()
-            params.update(
-                {
-                    "good_for_fav": True,
-                    "title": "%s [%s]" % (title, episode_num.upper()),
-                    "url": self.getFullUrl(url),
-                    "icon": icon,
-                    "desc": desc,
-                }
-            )
+        kind = cItem.get("filter", "")
+        block = self.cm.ph.getDataBeetwenMarkers(data, 'id="filter-%s"' % kind, "</ul>", False)[1]
+        for fid, label in re.findall(r'(?s)<li data-id="([^"]+)"[^>]*>\s*<a[^>]*>([^<]+)</a>', block):
+            label = self.cleanHtmlStr(label)
+            if not label:
+                continue
+            params = stripPagerKeys(dict(cItem), PAGING_KEYS)
+            params.update({"name": "category", "category": "list_items", "title": label, "good_for_fav": True,
+                           "url": "%s%s:%s/" % (cItem["url"], kind, fid)})
+            params.pop("filter", None)
+            self.addDir(params)
+
+    def _paging(self, data, baseUrl, page):
+        # (url template with "{page}", last page, has a next page) from the "Następna" / "Ostatnia" links
+        def absolute(href):
+            href = href.replace("&amp;", "&")
+            if href.startswith("?"):
+                return baseUrl.split("?")[0] + href
+            return self.getFullUrl(href)
+
+        nextUrl = self.cm.ph.getSearchGroups(data, r"""href=['"]([^'"]+)['"][^>]*>\s*Nast""")[0]
+        lastUrl = self.cm.ph.getSearchGroups(data, r"""href=['"]([^'"]+)['"][^>]*>\s*Ostat""")[0]
+        lastPage = int(self.cm.ph.getSearchGroups(lastUrl, r"page=(\d+)")[0] or 0)
+        tpl = ""
+        for href in (nextUrl, lastUrl):
+            if href and re.search(r"page=\d+", href):
+                tpl = re.sub(r"page=\d+", "page={page}", absolute(href).replace("{", "{{").replace("}", "}}"), 1)
+                break
+        hasNext = bool(nextUrl) or lastPage > page
+        return tpl, lastPage, hasNext
+
+    def _addTile(self, url, attrs, block, normalize):
+        title, metaLine = self._tileTitle(attrs, block)
+        if not title:
+            return False
+        icon = self.cm.ph.getSearchGroups(block, r'<img[^>]+src="([^"]+)"')[0]
+        icon = self.fixIconUrl(icon) if icon else self.getDefaulIcon()
+        year = self.cm.ph.getSearchGroups(block, r'<div class="year">\s*(\d{4})\s*<')[0]
+        plot = self.cleanHtmlStr(self.cm.ph.getSearchGroups(block, r'(?s)<div class="description[^"]*">(.*?)</div>')[0])
+        params = {"name": "category", "good_for_fav": True, "url": url, "icon": icon}
+        if "/film/" in url:
+            year = year or self.cm.ph.getSearchGroups(url, r"-((?:19|20)\d{2})/?$")[0]
+            rating = self.cm.ph.getSearchGroups(block, r'<div class="rate">([\d.]+)<')[0]
+            views = self.cm.ph.getSearchGroups(block, r'<div class="views" title="([\d\s]+)')[0].strip()
+            fields = ((_("Year"), year, "cyan"), (_("Rating"), "%s/5" % rating if rating.strip("0.") else "", "green"), (_("Views"), views, "yellow"))
+            params.update({"category": "zal_video", "title": "%s (%s)" % (title, year) if year else title,
+                           "desc": self._desc(fields, plot), "meta_type": "movie", "meta_title": _metaTitle(title), "meta_year": year})
             self.addVideo(params)
+        elif EPISODE_URL_RE.search(url):
+            numbers = SXXEXX_RE.search(metaLine)
+            show = _shortTitle(title)
+            added = self.cleanHtmlStr(self.cm.ph.getSearchGroups(block, r'(?s)<div class="year">(.*?)</div>')[0]).replace("Dodano:", "").strip()
+            if numbers:
+                season, episode = int(numbers.group(1)), int(numbers.group(2))
+                dispTitle = "%s - %s" % (show, formatSxxExx(season, episode) if normalize else metaLine)
+                params.update({"s_season": season, "s_episode": episode})
+            else:
+                dispTitle = show
+            params.update({"category": "zal_video", "title": dispTitle, "desc": self._desc(((_("Added"), added, "cyan"),), title),
+                           "s_title": show, "meta_type": "tv", "meta_title": _metaTitle(title), "meta_year": ""})
+            self.addVideo(params)
+        else:
+            views = self.cm.ph.getSearchGroups(block, r"Odsłony\s*(\d+)")[0]
+            params.update({"category": "list_episodes", "title": title, "desc": self._desc(((_("Views"), views, "yellow"),), plot),
+                           "s_title": title, "meta_type": "tv", "meta_title": _metaTitle(title), "meta_year": ""})
+            self.addDir(params)
+        return True
 
-    def listEpisodesDirect(self, cItem):
-        """
-        List latest episodes directly with pagination support.
-
-        Similar to listItems but specifically for new episodes
-        with season/episode metadata in the title.
-
-        Args:
-            cItem: Current item with episodes listing URL
-        """
-        printDBG("Zaluknij.listEpisodesDirect |%s|" % cItem)
-        sts, htm = self.getPage(cItem["url"])
+    def listItems(self, cItem):
+        page = cItem.get("page", 1)
+        baseUrl = cItem.get("base_url") or cItem["url"]
+        tpl = cItem.get("page_tpl", "")
+        url = baseUrl if page <= 1 or not tpl else tpl.format(page=page)
+        printDBG("Zaluknij.listItems [%s]" % url)
+        sts, data = self.getPage(url)
         if not sts:
             return
-        # Find next page link
-        nextPage = self.cm.ph.getSearchGroups(htm, RE_NEXT_PAGE)
-        if nextPage:
-            nextPage = nextPage[0]
-        # Extract video items from the page
-        data = self.cm.ph.getAllItemsBeetwenMarkers(
-            htm, 'role="listitem', "</a>"
-        ) or self.cm.ph.getAllItemsBeetwenMarkers(htm, 'class="col-sm-4">', "</a>")
-        for item in data:
-            url = self.cm.ph.getSearchGroups(item, RE_ITEM_HREF)
-            if not url:
-                continue
-            url = url[0]
-            icon = self.cm.ph.getSearchGroups(item, RE_ITEM_IMAGE)
-            if icon:
-                icon = self.fixIconUrl(icon[0], cItem["url"])
-            else:
-                icon = self.DEFAULT_ICON_URL
-            # Extract title using new parser
-            title, meta_line = self._extractTitleFromTile(item)
-            if not title:
-                title = "Brak tytułu"
-            # Get only the Polish title (before first slash if multiple titles)
-            if "/" in title:
-                title = title.split("/")[0].strip()
-            title = re.sub(RE_CLEAN_TITLE, "", title)
-            # Add season/episode info if available
-            if meta_line:
-                title = "%s [%s]" % (title, meta_line)
-            title = re.sub(RE_CLEAN_TITLE, "", title)
-            title = title.strip()
-            quick_desc = self.getQuickDescription(url)
-            params = dict(cItem)
-            params.update(
-                {
-                    "good_for_fav": True,
-                    "category": "video",
-                    "title": title.replace("amp;", ""),
-                    "url": url,
-                    "icon": icon,
-                    "desc": quick_desc,
-                }
-            )
-            self.addVideo(params)
-        # Add next page if available
-        if nextPage:
-            params = dict(cItem)
-            next_url = cItem["url"].split("?")[0] + nextPage.replace("amp;", "")
-            params.update(
-                {"good_for_fav": False, "title": _("Next page"), "url": next_url}
-            )
+        content = data[data.find('role="list"'):] if 'role="list"' in data else data
+        normalize = IsMediaNamingNormalized()
+        seen = set()
+        for tileUrl, attrs, block in TILE_RE.findall(content):
+            if tileUrl not in seen and self._addTile(tileUrl, attrs, block, normalize):
+                seen.add(tileUrl)
+        pageTpl, lastPage, hasNext = self._paging(data, baseUrl, page)
+        pageTpl = pageTpl or tpl
+        listItem = dict(cItem)
+        listItem.update({"base_url": baseUrl, "url": baseUrl, "page_tpl": pageTpl})
+        addPagingItems(self, listItem, page, hasNext and bool(seen) and bool(pageTpl), lastPage, pageTpl)
+
+    def _seasons(self, data):
+        # {season: [(episode, url, name)]} from the episode list of a series page
+        seasons = {}
+        block = self.cm.ph.getDataBeetwenMarkers(data, 'id="episode-list"', "<hr>", False)[1] or data
+        for url, season, episode, name in EPISODE_RE.findall(block):
+            season, episode = int(season), int(episode)
+            if url not in [e[1] for e in seasons.get(season, [])]:
+                seasons.setdefault(season, []).append((episode, url, self.cleanHtmlStr(name)))
+        return seasons
+
+    def listSeries(self, cItem):
+        printDBG("Zaluknij.listSeries [%s]" % cItem.get("url", ""))
+        sts, data = self.getPage(cItem["url"])
+        if not sts:
+            return
+        seasons = self._seasons(data)
+        if not seasons:
+            SetIPTVPlayerLastHostError(_("No stream available"))
+            return
+        if len(seasons) == 1:
+            season = list(seasons)[0]
+            self.listEpisodes(dict(cItem, s_season=season), seasons[season])
+            return
+        for season in sorted(seasons):
+            params = stripPagerKeys(dict(cItem), PAGING_KEYS)
+            params.update({"name": "category", "good_for_fav": True, "category": "zal_season", "s_season": season,
+                           "title": "%s %d" % (_("Season"), season), "desc": "%s: %d" % (_("Episodes"), len(seasons[season]))})
             self.addDir(params)
+
+    def listEpisodes(self, cItem, episodes=None):
+        printDBG("Zaluknij.listEpisodes [%s]" % cItem.get("url", ""))
+        season = cItem.get("s_season", 1)
+        if episodes is None:
+            sts, data = self.getPage(cItem["url"])
+            if not sts:
+                return
+            episodes = self._seasons(data).get(season, [])
+        episodes = sorted(episodes)
+        # long running soaps have thousands of episodes in one season - 100 per page
+        page = cItem.get("page", 1)
+        lastPage = (len(episodes) + EPISODES_PER_PAGE - 1) // EPISODES_PER_PAGE
+        normalize = IsMediaNamingNormalized()
+        show = _shortTitle(cItem.get("s_title", "") or cItem.get("title", ""))
+        for episode, url, name in episodes[(page - 1) * EPISODES_PER_PAGE:page * EPISODES_PER_PAGE]:
+            if normalize:
+                title = "%s - %s" % (show, formatSxxExx(season, episode))
+            else:
+                title = " - ".join(x for x in (show, "S%02d E%02d" % (season, episode), name) if x)
+            params = stripPagerKeys(dict(cItem), PAGING_KEYS)
+            params.update({"name": "category", "good_for_fav": True, "category": "zal_video", "title": title, "url": url,
+                           "s_title": show, "s_season": season, "s_episode": episode, "meta_type": "tv"})
+            self.addVideo(params)
+        if lastPage > 1:
+            # the page lives in cItem["page"] - the template keeps the series url unchanged
+            listItem = dict(cItem, s_season=season, category="zal_season")
+            addPagingItems(self, listItem, page, page < lastPage, lastPage, cItem["url"].replace("{", "{{").replace("}", "}}"))
 
     def listSearchResult(self, cItem, searchPattern, searchType):
-        """
-        Handle search functionality with POST and GET fallback.
-
-        Displays search results with descriptions for better user experience.
-        First attempts POST search, falls back to GET if POST fails.
-
-        Args:
-            cItem: Current item context
-            searchPattern: The search query string
-            searchType: Type of search being performed
-        """
-        printDBG(
-            "Zaluknij.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]"
-            % (cItem, searchPattern, searchType)
-        )
-        cItem = dict(cItem)
-        search_url = "%sszukaj" % gettytul()
-        post_data = "phrase=%s" % urllib_quote(searchPattern)
-        printDBG("Zaluknij.listSearchResult - using POST to: %s" % search_url)
-        sts, htm = self.getPage(search_url, post_data=post_data)
+        printDBG("Zaluknij.listSearchResult [%s]" % searchPattern)
+        sts, data = self.getPage(self.getFullUrl("wyszukiwarka?phrase=%s" % urllib_quote_plus(searchPattern.strip())))
         if not sts:
-            printDBG("Zaluknij.listSearchResult - POST failed, trying GET fallback")
-            cItem["url"] = "%swyszukiwarka?phrase=%s" % (
-                gettytul(),
-                urllib_quote(searchPattern),
-            )
-            self.listItems(cItem, isSearch=True)
             return
-        # Parse search results same as regular listing
-        nextPage = self.cm.ph.getSearchGroups(htm, RE_NEXT_PAGE)
-        if nextPage:
-            nextPage = nextPage[0]
-        data = self.cm.ph.getAllItemsBeetwenMarkers(
-            htm, 'role="listitem', "</a>"
-        ) or self.cm.ph.getAllItemsBeetwenMarkers(htm, 'class="col-sm-4">', "</a>")
-        for item in data:
-            url = self.cm.ph.getSearchGroups(item, RE_ITEM_HREF)
-            if not url:
+        content = self.cm.ph.getDataBeetwenMarkers(data, 'id="advanced-search"', "<footer", False)[1] or data
+        normalize = IsMediaNamingNormalized()
+        seen = set()
+        for tileUrl, attrs, block in TILE_RE.findall(content):
+            if tileUrl not in seen and self._addTile(tileUrl, attrs, block, normalize):
+                seen.add(tileUrl)
+
+    ###################################################
+    # links
+    ###################################################
+    def _siteInfo(self, data):
+        # (story, poster, {INFO fields}) of a movie / series / episode page
+        story = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'(?s)<p class="description">(.*?)</p>')[0])
+        if not story:
+            story = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'<meta\s+name="description"\s+content="([^"]+)"')[0])
+        poster = self.cm.ph.getSearchGroups(data, r'(?s)id="single-poster".*?<img src="([^"]+)"')[0]
+        info = {}
+        info["year"] = (self.cm.ph.getSearchGroups(data, r'<sup><a href="[^"]+">(\d{4})</a></sup>')[0] or
+                        self.cm.ph.getSearchGroups(data, r"<li>Rok\s+Produkcji:</li>\s*<li>(\d{4})</li>")[0])
+        info["genres"] = ", ".join(self.cleanHtmlStr(g) for g in re.findall(r'(?s)<li itemprop="genre">\s*<a href="[^"]+">([^<]+)</a>', data))
+        info["views"] = self.cm.ph.getSearchGroups(data, r"<li>Odsłony\s*:</li>\s*<li>(\d+)</li>")[0]
+        rating = self.cm.ph.getSearchGroups(data, r'itemprop="ratingValue">([\d.]+)<')[0]
+        if rating.strip("0."):
+            info["rating"] = "%s/5" % rating
+        versions, qualities = [], []
+        for _url, version, quality in self._linkRows(data):
+            if version and version not in versions:
+                versions.append(version)
+            if quality and quality not in qualities:
+                qualities.append(quality)
+        info["translation"] = ", ".join(versions)
+        info["quality"] = ", ".join(qualities)
+        return story, poster, dict((k, v) for k, v in info.items() if v)
+
+    def _linkRows(self, data):
+        # [(player url, version, quality)] from the hosting table
+        rows = []
+        table = self.cm.ph.getDataBeetwenNodes(data, ("<table", ">"), ("</table", ">"), False)[1]
+        for row in self.cm.ph.getAllItemsBeetwenNodes(table, ("<tr", ">"), ("</tr", ">")):
+            cells = self.cm.ph.getAllItemsBeetwenNodes(row, ("<td", ">"), ("</td", ">"))
+            if "<th" in row or len(cells) < 2:
                 continue
-            url = url[0]
-            icon = self.cm.ph.getSearchGroups(item, RE_ITEM_IMAGE)
-            if icon:
-                icon = self.fixIconUrl(icon[0], cItem["url"])
-                icon = self.fixIconUrl(icon)
-            else:
-                icon = self.DEFAULT_ICON_URL
-            # Extract title using new parser
-            title, meta_line = self._extractTitleFromTile(item)
-            if not title:
-                title = "Brak tytułu"
-            title = re.sub(RE_CLEAN_TITLE, "", title)
-            is_serial = "serial" in url.lower()
-            if is_serial and meta_line:
-                title = "%s [%s]" % (title, meta_line)
-            title = re.sub(RE_CLEAN_TITLE, "", title)
-            title = title.strip()
-            # Get description for search results
-            quick_desc = self.getQuickDescription(url)
-            if not quick_desc:
-                # Try to get description from search result snippet
-                item_desc = self.cm.ph.getSearchGroups(
-                    item, r'<p[^>]*>([^<]+)</p>'
-                )
-                if item_desc:
-                    quick_desc = self.cleanHtmlStr(item_desc[0]).strip()
-                    if len(quick_desc) > 200:
-                        quick_desc = quick_desc[:200] + "..."
-            params = dict(cItem)
-            params.update(
-                {
-                    "good_for_fav": True,
-                    "category": "video",
-                    "title": title.replace("amp;", ""),
-                    "url": url,
-                    "icon": icon,
-                    "desc": quick_desc,
-                }
-            )
-            if is_serial:
-                params.update({"category": "list_episodes"})
-                self.addDir(params)
-            else:
-                self.addVideo(params)
-        if nextPage:
-            params = dict(cItem)
-            next_url = "%sszukaj?page=%s" % (gettytul(), nextPage)
-            params.update(
-                {"good_for_fav": False, "title": _("Next page"), "url": next_url}
-            )
-            self.addDir(params)
+            playerUrl, version, quality = "", "", ""
+            for idx, cell in enumerate(cells):
+                if "link-to-video" in cell:
+                    # data-iframe = base64 JSON {"src": embed url}, href = the hoster's page
+                    frame = self.cm.ph.getSearchGroups(cell, r"""data-iframe=['"]([^'"]+)['"]""")[0]
+                    if frame:
+                        try:
+                            playerUrl = json.loads(base64.b64decode(frame).decode("utf-8")).get("src", "")
+                        except Exception:
+                            printExc()
+                    if not playerUrl:
+                        playerUrl = self.cm.ph.getSearchGroups(cell, r"""href=['"]([^'"]+)['"]""")[0]
+                elif idx == 2:
+                    version = self.cleanHtmlStr(cell)
+                elif idx == 3:
+                    quality = self.cleanHtmlStr(cell)
+            if playerUrl:
+                rows.append((self.getFullUrl(playerUrl), version, quality))
+        return rows
 
     def getLinksForVideo(self, cItem):
-        """
-        Extract video playback links from the movie/episode page.
-
-        Handles both iframe-embedded links (base64 encoded JSON)
-        and direct href links with version and quality metadata.
-
-        Args:
-            cItem: Current item with video page URL
-
-        Returns:
-            List of dictionaries with name, url and need_resolve flag
-        """
-        printDBG("Zaluknij.getLinksForVideo [%s]" % cItem)
-        cacheKey = cItem.get("url", "")
-        if not cacheKey:
-            return []
-        cacheTab = self.cacheLinks.get(cacheKey, [])
-        if len(cacheTab):
-            return cacheTab
-        retTab = []
-        url = cacheKey
-        # getPage już ma try/except i zwraca (False, strwithmeta(""))
-        # przy wyjątku, ale dla pewności owinąć całość w try/except,
-        # żeby AsyncCall nie kończył się pustą listą bez loga.
-        try:
-            sts, data = self.getPage(url)
-        except Exception:
-            printExc()
-            return []
+        url = cItem.get("url", "")
+        printDBG("Zaluknij.getLinksForVideo [%s]" % url)
+        if self.cacheLinks.get(url):
+            return self.cacheLinks[url]
+        sts, data = self.getPage(url)
         if not sts:
-            printDBG("Zaluknij.getLinksForVideo - getPage failed for %s" % url)
             return []
+        urltab, seen = [], set()
+        for playerUrl, version, quality in self._linkRows(data):
+            if playerUrl in seen or not self.cm.isValidUrl(playerUrl):
+                continue
+            seen.add(playerUrl)
+            host = self.up.getHostName(playerUrl)
+            label = " / ".join(x for x in (version, quality) if x)
+            urltab.append({"name": "%s [%s]" % (host, label) if label else host, "url": strwithmeta(playerUrl, {"Referer": url}), "need_resolve": 1})
+        if not urltab:
+            SetIPTVPlayerLastHostError(_("No stream available"))
+            return []
+        story = self._siteInfo(data)[0]
+        urltab = applySidecarToLinks(urltab, buildSidecarFromItem(dict(cItem, desc=_stripColors(cItem.get("desc", ""))), IsSidecarEnabled(), story))
+        self.cacheLinks[url] = urltab
+        return urltab
+
+    def getVideoLinks(self, videoUrl):
+        printDBG("Zaluknij.getVideoLinks [%s]" % videoUrl)
+        if self.cm.isValidUrl(videoUrl):
+            sidecar = sidecarFromUrlMeta(videoUrl, IsSidecarEnabled())
+            return decorateResolvedLinkItems(self.up.getVideoLinkExt(videoUrl), sidecar)
+        return []
+
+    ###################################################
+    # INFO
+    ###################################################
+    def getArticleContent(self, cItem):
+        printDBG("Zaluknij.getArticleContent [%s]" % cItem.get("url", ""))
+        story, poster, info = "", "", {}
+        sts, data = self.getPage(cItem.get("url", ""))
+        if sts:
+            story, poster, info = self._siteInfo(data)
+        meta = {}
+        mediaType = cItem.get("meta_type", "") or ("tv" if "/serial-online/" in cItem.get("url", "") else "movie")
+        # old favourites have no meta_title: the title without " (Year)" / " [S01 E04]"
+        metaTitle = cItem.get("meta_title", "") or _metaTitle(re.sub(r"\s*[(\[][^)\]]*[)\]]$", "", cItem.get("s_title", "") or cItem.get("title", "")))
         try:
-            # Cache the description for later use
-            desc = self.cm.ph.getSearchGroups(data, RE_DESCRIPTION_PARAGRAPH)
-            if desc:
-                self.cacheDescriptions[url] = self.cleanHtmlStr(desc[0])
-            # Find the link list container
-            link_list_div = ""
-            link_list_parts = self.cm.ph.getDataBeetwenNodes(
-                data, ("<div", ">", "link-list"), ("</div", ">")
-            )
-            if link_list_parts and len(link_list_parts) > 1:
-                link_list_div = link_list_parts[1]
-            if not link_list_div:
-                link_list_div = data
-            # Parse the versions table for video links
-            table_parts = self.cm.ph.getDataBeetwenNodes(
-                link_list_div, ("<table", ">"), ("</table", ">")
-            )
-            if table_parts and len(table_parts) > 1:
-                table = table_parts[1]
-                rows = self.cm.ph.getAllItemsBeetwenNodes(
-                    table, ("<tr", ">"), ("</tr", ">")
-                )
-                for row in rows:
-                    if "<th" in row:
-                        continue
-                    cells = self.cm.ph.getAllItemsBeetwenNodes(
-                        row, ("<td", ">"), ("</td", ">")
-                    )
-                    if len(cells) < 2:
-                        continue
-                    player_url = ""
-                    version = ""
-                    quality = ""
-                    for idx, cell in enumerate(cells):
-                        if "link-to-video" in cell:
-                            # Try to decode base64 encoded iframe data
-                            iframe_match = re.search(RE_IFRAME_DATA, cell)
-                            if iframe_match:
-                                try:
-                                    decoded = base64.b64decode(
-                                        iframe_match.group(1)
-                                    ).decode("utf-8")
-                                    iframe_data = json.loads(decoded)
-                                    player_url = iframe_data.get("src", "")
-                                except Exception as e:
-                                    printDBG("iframe decode error: %s" % str(e))
-                            # Fallback to direct href link
-                            if not player_url:
-                                href_match = re.search(RE_HREF_LINK, cell)
-                                if href_match:
-                                    player_url = href_match.group(1)
-                        elif idx == 2:
-                            version = self.cleanHtmlStr(cell)
-                        elif idx == 3:
-                            quality = self.cleanHtmlStr(cell)
-                    if not player_url:
-                        continue
-                    if player_url and not player_url.startswith("http"):
-                        player_url = self.getFullUrl(player_url)
-                    # Build descriptive name with version and quality info
-                    hostname = self.up.getHostName(player_url)
-                    name = hostname.split(".")[0] if "." in hostname else hostname
-                    if version and version not in ["", "Wersja"]:
-                        name += " [%s" % version
-                        if quality and quality not in ["", "Jakość"]:
-                            name += " / %s" % quality
-                        name += "]"
-                    elif quality and quality not in ["", "Jakość"]:
-                        name += " [%s]" % quality
-                    retTab.append(
-                        {
-                            "name": name,
-                            "url": strwithmeta(player_url, {"Referer": url}),
-                            "need_resolve": 1,
-                        }
-                    )
-            # Fallback: look for direct links if table parsing failed
-            if not retTab:
-                data_links = self.cm.ph.getAllItemsBeetwenMarkers(
-                    data, 'link-to-video">', "None"
-                )
-                for item in data_links:
-                    url_match = re.search(r'href="([^"]+)', item)
-                    if url_match:
-                        video_url = url_match.group(1)
-                        hostname = self.up.getHostName(video_url)
-                        short_name = (
-                            hostname.split(".")[0] if "." in hostname else hostname
-                        )
-                        retTab.append(
-                            {
-                                "name": short_name.capitalize(),
-                                "url": strwithmeta(
-                                    video_url, {"Referer": gettytul()}
-                                ),
-                                "need_resolve": 1,
-                            }
-                        )
+            if metaTitle:
+                meta = getMeta(mediaType, metaTitle, cItem.get("meta_year", "") or info.get("year", ""))
         except Exception:
             printExc()
-        if len(retTab):
-            self.cacheLinks[cacheKey] = retTab
-        return retTab
+        info.update(meta.get("info", {}))
+        plot = meta.get("plot", "")
+        text = story or plot or _stripColors(cItem.get("desc", ""))
+        if plot and story and story != plot:
+            text = "%s[/br][/br]%s" % (story, plot)
+        icon = meta.get("poster") or (self.fixIconUrl(poster) if poster else cItem.get("icon", ""))
+        return [{"title": cItem.get("title", ""), "text": text, "images": [{"title": "", "url": icon}] if icon else [], "other_info": info}]
 
-    def getVideoLinks(self, url):
-        """
-        Resolve video URL and mark cached links as used.
-
-        Args:
-            url: The video URL to resolve
-
-        Returns:
-            Resolved video link from the appropriate parser
-        """
-        printDBG("Zaluknij.getVideourls [%s]" % url)
-        url = strwithmeta(url)
-        # Mark used links with asterisks in cache
-        if len(self.cacheLinks.keys()):
-            for key in self.cacheLinks:
-                for idx in range(len(self.cacheLinks[key])):
-                    if url in self.cacheLinks[key][idx]["url"]:
-                        if not self.cacheLinks[key][idx]["name"].startswith("*"):
-                            self.cacheLinks[key][idx]["name"] = (
-                                "*" + self.cacheLinks[key][idx]["name"] + "*"
-                            )
-                        break
-        return self.up.getVideoLinkExt(url)
-
+    ###################################################
+    # service
+    ###################################################
     def handleService(self, index, refresh=0, searchPattern="", searchType=""):
-        """
-        Main service handler - routes requests to appropriate methods.
-
-        Handles menu navigation, item listing, episode listing,
-        search functionality and search history.
-
-        Args:
-            index: Current menu index
-            refresh: Refresh flag
-            searchPattern: Search query string
-            searchType: Type of search
-        """
-        printDBG("handleService start")
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
+        if isJumpItem(self.currItem):
+            self.currItem = jumpTarget(self, self.currItem)
         name = self.currItem.get("name", "")
         category = self.currItem.get("category", "")
-        printDBG(
-            "handleService: |||||||||||||||||||||||||||||||||||| "
-            "name[%s], category[%s] " % (name, category)
-        )
+        printDBG("Zaluknij.handleService name[%s] category[%s]" % (name, category))
         self.currList = []
-        # Route to appropriate handler based on category
         if name is None:
             self.listsTab(self.MENU, {"name": "category"})
-        elif category == "list_items":
-            self.listItems(self.currItem, isSearch=False)
+        elif category == "zal_menu":
+            self.listMenu(self.currItem)
+        elif category == "zal_filter":
+            self.listFilter(self.currItem)
+        elif category in ("list_items", "list_episodes_direct"):
+            self.listItems(self.currItem)
         elif category == "list_episodes":
+            self.listSeries(self.currItem)
+        elif category == "zal_season":
             self.listEpisodes(self.currItem)
-        elif category == "list_episodes_direct":
-            self.listEpisodesDirect(self.currItem)
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({"search_item": False, "name": "category"})
             self.listSearchResult(cItem, searchPattern, searchType)
         elif category == "search_history":
-            self.listsHistory(
-                {"name": "history", "category": "search"}, "desc")
+            self.listsHistory({"name": "history", "category": "search"}, "desc")
         else:
             printExc()
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
-class IPTVHost(CHostBase):
-    """IPTVPlayer host class for Zaluknij.cc integration."""
+class IPTVHost(GenericFolderWatchedHostMixin, CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, Zaluknij(), True, [])
+        self.cachedRet = None
+        self.refreshAfterWatchedFlagChange = False
+        self.watchedHelper = IPTVWatchedHelper("zaluknijcc")
 
     def withArticleContent(self, cItem):
-        """Enable article content display for detailed descriptions."""
-        return True
+        return cItem.get("type") == "video" or cItem.get("category", "") in SERIES_CATEGORIES

@@ -1,895 +1,563 @@
 # -*- coding: utf-8 -*-
-# Last modified: 08/04/2026
-# Brstej Host (Modified By Mohamed Elsafty)
-###################################################
-# LOCAL import
-###################################################
-from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
-from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, E2ColoR, CSearchHistoryHelper
-from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
-from Plugins.Extensions.IPTVPlayer.libs.jsunpack import get_packed_data
-from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus
-from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
+# Last Modified: 03.10.2026 - revived for the redesigned hd1.brstej.com (Brstej / Prestige)
+#   Rewrite against the current site (based on the host by Mohamed Elsafty):
+#   - categories read live from the site menu (no hard-coded yearly slugs), Ramadan seasons grouped;
+#     "Latest additions" (new-videos.php), all series (moslslat.php), search via search.php
+#   - lists parse the new card markup (pmc / pcg / pln / prs / psd cards); a category with series
+#     gets a "series of this category" folder; paging via iptvpaging (First / Jump / Next (n/last))
+#   - series1.php?id=N -> seasons -> episodes; movies and episodes are VIDEO rows keyed on their
+#     watch.php?vid= page; the hoster embeds (play.php) are fetched in getLinksForVideo
+#   - film77 / vood78 / hd-vk / hdupNNN embeds unpacked here (no form + sleep any more),
+#     everything else (ok.ru, vk ...) goes to urlparser
+#   - watched flag (video:/series:/season: keys), downloaded flag, favourites, sidecar,
+#     name normalisation ("Title (Year)", "Show - SxxExx"), INFO via moviemeta + the site's story
 import re
-import json
-import time
-import os
 
-try:
-    from urlparse import urlparse, parse_qs, urljoin  # Python2
-except ImportError:
-    from urllib.parse import urlparse, parse_qs, urljoin  # Python3
-###################################################
-Y = E2ColoR("yellow")
-W = E2ColoR("white")
-G = E2ColoR("green")
-R = E2ColoR("red")
+from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
+from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
+from Plugins.Extensions.IPTVPlayer.libs.jsunpack import get_packed_data
+from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus
+from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
+from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
+from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
+from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
+from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
 
 
-###################################################
+def GetConfigList():
+    # no host settings - the BLUE button (host settings) needs the function anyway
+    return []
+
+
 def gettytul():
-    return "https://hd1.brstej.com"
+    return "https://hd1.brstej.com/"
 
 
-class Brstej(CBaseHostClass):
+# Arabic ordinals used in season labels ("الموسم الثاني"), compound ones first
+SEASON_ORDINALS = [
+    ("الحادي عشر", 11), ("الثاني عشر", 12), ("الثالث عشر", 13), ("الرابع عشر", 14), ("الخامس عشر", 15),
+    ("الأولى", 1), ("الاولى", 1), ("الأول", 1), ("الاول", 1), ("الثانية", 2), ("الثاني", 2), ("الثانى", 2),
+    ("الثالثة", 3), ("الثالث", 3), ("الرابعة", 4), ("الرابع", 4), ("الخامسة", 5), ("الخامس", 5), ("السادسة", 6),
+    ("السادس", 6), ("السابعة", 7), ("السابع", 7), ("الثامنة", 8), ("الثامن", 8), ("التاسعة", 9), ("التاسع", 9),
+    ("العاشرة", 10), ("العاشر", 10),
+]
+SEASON_RE = re.compile(r"(?:^|\s)(?:الموسم|الجزء)\s*(\d+|%s)(?=\s|$)" % "|".join(o[0] for o in SEASON_ORDINALS))
+EPISODE_RE = re.compile(r"(?:^|\s)(?:الحلقة|حلقة)\s*(\d+)")
+YEAR_RE = re.compile(r"(?:^|\s)\(?((?:19|20)\d{2})\)?(?=\s|$)")
+# site words that do not belong into a title / file name (only removed when normalising)
+JUNK_RE = re.compile(r"(?:^|\s)(?:مشاهدة|فيلم|مسلسل|مترجم|مترجمة|اون لاين|أون لاين|اونلاين|كامل|كاملة|بجودة عالية|HD|FHD|HDTV|WEB-DL)(?=\s|$)", re.I)
+DUB_WORD = "مدبلج"
+# embeds unpacked by the host itself (packed JWPlayer pages), anything else -> urlparser
+PACKED_EMBED_RE = re.compile(r"https?://(?:[^/]+\.)?(?:film77\.xyz|vood78\.xyz|hd-vk\.com|hdup\d*\.com)/", re.I)
+CARD_RE = re.compile(r'(?s)<article class="(?:pmc|pln|prs|psd)-card">.*?</article>|<div class="thumbnail pcg-card">.*?</li>|<a class="pcg-series-card".*?</a>')
+
+
+class Brstej(GenericFolderWatchedScraperMixin, CBaseHostClass):
+    FAV_FIELDS = ("name", "category", "type", "url", "title", "icon", "desc", "menu_key", "s_title", "s_season", "s_episode",
+                  "season_num", "meta_type", "meta_title", "meta_year")
+
     def __init__(self):
-        CBaseHostClass.__init__(self, {"cookie": "brstej.cookie", "use_cookie": True, "load_cookie": True, "save_cookie": True})
-        self.MAIN_URL = "https://hd1.brstej.com"
+        CBaseHostClass.__init__(self, {"history": "brstej", "cookie": "brstej.cookie"})
+        self.MAIN_URL = gettytul()
         self.DEFAULT_ICON_URL = "https://hd1.brstej.com/22.png"
-        self.HEADER = self.cm.getDefaultHeader()
-        self.HEADER.update({"X-Requested-With": "XMLHttpRequest"})
-        self.AJAX_HEADER = self.HEADER.copy()
-        self.history = CSearchHistoryHelper("brstej")
+        self.HEADER = self.cm.getDefaultHeader(browser="chrome")
         self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
+        self.menuCache = None
+        self.watchedHelper = IPTVWatchedHelper("brstej")
+        self.wfInitFolderCache()
 
+    ###################################################
+    # helpers
+    ###################################################
     def getPage(self, baseUrl, addParams=None, post_data=None):
-        if any(ord(c) > 127 for c in baseUrl):
-            baseUrl = urllib_quote_plus(baseUrl, safe="://")
         if addParams is None:
             addParams = dict(self.defaultParams)
         addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.HEADER.get("User-Agent")}
-        return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
+        return self.cm.getPageCFProtection(self._canonUrl(baseUrl), addParams, post_data)
 
-    def getFullIconUrl(self, url):
-        if url.startswith("//"):
-            url = "https:" + url
-        return CBaseHostClass.getFullIconUrl(self, url)
+    def _canonUrl(self, url):
+        # absolute, ASCII, and the current page names (the old ones only answer with a 301)
+        url = (url or "").replace("&amp;", "&").strip()
+        if not url:
+            return ""
+        url = self.getFullUrl(url)
+        url = re.sub(r"/category(?:818)?\.php", "/cat03.php", url)
+        url = re.sub(r"/cat67\.php", "/cat03.php", url)
+        url = re.sub(r"/newvideos?\.php", "/new-videos.php", url)
+        url = url.replace("/moslsalat.php", "/moslslat.php").replace("/view-serie.php", "/series1.php")
+        url = url.split("#", 1)[0]
+        try:
+            if any(ord(c) > 127 for c in url):
+                url = urllib_quote(url, safe=":/?&=%#+,;@")
+        except Exception:
+            printExc()
+        return url
+
+    @staticmethod
+    def _pageTpl(url):
+        url = re.sub(r"([?&])page=\d+&?", r"\1", url).rstrip("?&")
+        return url + ("&" if "?" in url else "?") + "page={page}"
+
+    @staticmethod
+    def _vid(url):
+        m = re.search(r"[?&]vid=([^&#]+)", url or "")
+        return m.group(1) if m else ""
+
+    @staticmethod
+    def _seriesId(url):
+        m = re.search(r"(?:series1|view-serie)\.php\?id=(\d+)", url or "")
+        return m.group(1) if m else ""
+
+    @staticmethod
+    def _clean(text):
+        text = JUNK_RE.sub(" ", text or "")
+        return re.sub(r"\s+", " ", text).strip(" -:|")
+
+    @staticmethod
+    def _seasonNum(val):
+        return int(val) if val.isdigit() else dict(SEASON_ORDINALS).get(val, 1)
+
+    def _splitShow(self, label):
+        # "مسلسل X الموسم الثاني الحلقة 5 الخامسة مترجمة" -> ("X", 2, "5"); no episode -> ("", 0, "")
+        m = EPISODE_RE.search(label or "")
+        if not m:
+            return "", 0, ""
+        show = self._clean(label[:m.start()])
+        season = 1
+        s = SEASON_RE.search(show)
+        if s:
+            season = self._seasonNum(s.group(1))
+            show = (show[:s.start()] + " " + show[s.end():]).strip()
+        return re.sub(r"\s+", " ", show).strip(" -:|"), season, m.group(1)
+
+    def _splitMovie(self, label):
+        # "مشاهدة فيلم Union County 2026 مترجم اون لاين HD" -> ("Union County", "2026")
+        title = self._clean(label)
+        year = ""
+        m = None
+        for m in YEAR_RE.finditer(title):
+            pass
+        if m and m.start() > 0:
+            year = m.group(1)
+            title = (title[:m.start()] + " " + title[m.end():]).strip()
+        return re.sub(r"\s+", " ", title).strip(" -:|"), year
+
+    @staticmethod
+    def _metaTitle(title):
+        return re.sub(r"\s+", " ", (title or "").replace(DUB_WORD, " ")).strip()
+
+    ###################################################
+    # watched flag / favourites
+    ###################################################
+    def _getWatchedKeyForItem(self, cItem):
+        try:
+            if not isinstance(cItem, dict):
+                return ""
+            category = cItem.get("category", "")
+            url = cItem.get("url", "")
+            if category == "brstej_video":
+                vid = self._vid(url)
+                return ("video:%s" % vid) if vid else ""
+            if category in ("brstej_series", "brstej_season"):
+                sid = self._seriesId(url)
+                if not sid:
+                    return ""
+                if category == "brstej_season":
+                    return "season:%s:%s" % (sid, cItem.get("season_num", 1))
+                return "series:%s" % sid
+        except Exception:
+            printExc()
+        return ""
+
+    def getFavouriteData(self, cItem):
+        try:
+            if cItem.get("category", "") in ("brstej_video", "brstej_series", "brstej_season", "list_items", "brstej_submenu"):
+                return json_dumps(dict((key, cItem[key]) for key in self.FAV_FIELDS if key in cItem))
+        except Exception:
+            printExc()
+        return CBaseHostClass.getFavouriteData(self, cItem)
+
+    ###################################################
+    # menus
+    ###################################################
+    def _loadMenu(self):
+        # [(title, url, [(title, url), ...]), ...] from the site's side menu
+        if self.menuCache is not None:
+            return self.menuCache
+        menu = []
+        sts, data = self.getPage(self.getFullUrl("/home03"))
+        if not sts:
+            return menu
+        block = self.cm.ph.getSearchGroups(data, r'(?s)<ul class="psm-categories">(.*?)<details')[0]
+        if not block:
+            block = self.cm.ph.getSearchGroups(data, r'(?s)<ul class="psm-categories">(.*)</ul>')[0]
+        for m in re.finditer(r'(?s)<li class="sub_ca"[^>]*>\s*<a href="([^"]+)"[^>]*>\s*<b>(.*?)</b>.*?</a>(.*?)(?=<li class="sub_ca"[^>]*>\s*<a href="[^"]+"[^>]*>\s*<b>|$)', block):
+            title = self.cleanHtmlStr(m.group(2))
+            url = self._canonUrl(m.group(1))
+            if not title or not url:
+                continue
+            children = []
+            for curl, ctitle in re.findall(r'<a href="([^"]+)"[^>]*>([^<]+)</a>', m.group(3)):
+                ctitle = self.cleanHtmlStr(ctitle)
+                if ctitle:
+                    children.append((ctitle, self._canonUrl(curl)))
+            menu.append((title, url, children))
+        if menu:
+            self.menuCache = menu
+        return menu
 
     def listMainMenu(self, cItem):
         printDBG("Brstej.listMainMenu")
-        self.MAIN_CAT_TAB = [
-            {"category": "movies_folder", "title": "الافلام"},
-            {"category": "series_folder", "title": "مسلسلات برستيج"},
-            {"category": "series_packs_folder", "title": "مسلسلات كاملة"},
-            {"category": "list_items", "title": "برامج تلفزيونية", "url": self.getFullUrl("/category.php?cat=tv4-2024")},
-            {"category": "list_items", "title": "أخر الاضافات", "url": self.getFullUrl("/newvideo.php")},
-            {"category": "search", "title": _("Search"), "search_item": True},
-            {"category": "search_history", "title": _("Search history")},
-            {"category": "delete_history", "title": _("Delete search history")},
-        ]
-        self.MOVIES_CAT_TAB = [
-            {"category": "list_items", "title": "افلام عربية", "url": self.getFullUrl("/category.php?cat=aflam02-2024")},
-            {"category": "list_items", "title": "افلام اجنبية", "url": self.getFullUrl("/category.php?cat=aflamajnby3-2024")},
-            {"category": "list_items", "title": "افلام تركية", "url": self.getFullUrl("/category.php?cat=turkish3-movies2024")},
-            {"category": "list_items", "title": "افلام هندية", "url": self.getFullUrl("/category.php?cat=hindi1-moviess")},
-            {"category": "list_items", "title": "افلام انمي", "url": self.getFullUrl("/category.php?cat=anime1")},
-        ]
-        self.SERIES_CAT_TAB = [
-            {"category": "list_items", "title": "مسلسلات كاملة", "url": self.getFullUrl("/moslslat.php")},
-            {"category": "list_items", "title": "مسلسلات مصرية 2026", "url": self.getFullUrl("/category.php?cat=eg8-2025")},
-            {"category": "list_items", "title": "مسلسلات شامية 2026", "url": self.getFullUrl("/category.php?cat=syy5-2025")},
-            {"category": "list_items", "title": "مسلسلات عربية 2026", "url": self.getFullUrl("/category.php?cat=arab8-2025")},
-            {"category": "list_items", "title": "مسلسلات خليجية 2026", "url": self.getFullUrl("/category.php?cat=5a7-2024")},
-            {"category": "list_items", "title": "مسلسلات تركية 2026", "url": self.getFullUrl("/category.php?cat=ty9-2025")},
-            {"category": "list_items", "title": "مسلسلات رمضان 2026", "url": self.getFullUrl("/category.php?cat=ramdan2026")},
-            {"category": "list_items", "title": "مسلسلات رمضان 2025", "url": self.getFullUrl("/category.php?cat=ramadan2-2025")},
-            {"category": "list_items", "title": "مسلسلات رمضان 2024", "url": self.getFullUrl("/category.php?cat=ramdan1-2024")},
-            {"category": "list_items", "title": "مسلسلات رمضان 2023", "url": self.getFullUrl("/category.php?cat=ramda1-2023")},
-            {"category": "list_items", "title": "مسلسلات رمضان 2022", "url": self.getFullUrl("/category.php?cat=rm42-2022")},
-            {"category": "list_items", "title": "مسلسلات 2021", "url": self.getFullUrl("/category.php?cat=rmdan31-2021")},
-            {"category": "list_items", "title": "مسلسلات اجنبية", "url": self.getFullUrl("/category.php?cat=english1-2025")},
-            {"category": "list_items", "title": "مسلسلات هندية", "url": self.getFullUrl("/category.php?cat=2ind2-2025")},
-            {"category": "list_items", "title": "مسلسلات اسيوية", "url": self.getFullUrl("/category.php?cat=asia")},
-            {"category": "list_items", "title": "مسلسلات انمي", "url": self.getFullUrl("/category.php?cat=anmei")},
-            {"category": "list_items", "title": "حلقات التجهيز", "url": self.getFullUrl("/category.php?cat=wait")},
-        ]
-        self.listsTab(self.MAIN_CAT_TAB, cItem)
-
-    def listMoviesFolder(self, cItem):
-        printDBG("Brstej.listMoviesFolder")
-        self.listsTab(self.MOVIES_CAT_TAB, cItem)
-
-    def listSeriesFolder(self, cItem):
-        printDBG("Brstej.listSeriesFolder")
-        self.listsTab(self.SERIES_CAT_TAB, cItem)
-
-    def listSeriesPacks(self, cItem):
-        printDBG("Brstej.listSeriesPacks")
-        url = self.getFullUrl("/category818.php")
-        sts, data = self.getPage(url)
-        if not sts:
-            return
-        images_map = {}
-        img_blocks = re.findall(r'(<div class="pm-thumb-fix pm-thumb-234">.*?<img[^>]+>.*?</div>)', data, re.S)
-        for ib in img_blocks:
-            title = self.cm.ph.getSearchGroups(ib, r'alt="([^"]+)"')[0].strip()
-            icon = self.cm.ph.getSearchGroups(ib, r'src="([^"]+)"')[0]
-            if title and icon:
-                images_map[title] = self.getFullIconUrl(icon)
-        printDBG("IMAGES MAP: %s" % images_map)
-        main_blocks = re.findall(r'(<li[^>]*class="sub_ca"[^>]*>.*?<b>.*?</b>.*?<ul[^>]*dropdown-menu[^>]*>.*?</ul>.*?</li>)', data, re.S)
-        printDBG("MAIN BLOCKS COUNT = %d" % len(main_blocks))
-        for block in main_blocks:
-            main_title = self.cm.ph.getSearchGroups(block, r"<b>([^<]+)</b>")[0].strip()
-            main_url = self.cm.ph.getSearchGroups(block, r'<a[^>]+href="([^"]+)"')[0]
-            if not main_title or not main_url:
+        self.addDir({"name": "category", "good_for_fav": True, "category": "list_items", "title": _("Recently added"), "url": self.getFullUrl("/new-videos.php")})
+        self.addDir({"name": "category", "good_for_fav": True, "category": "list_items", "title": _("All series"), "url": self.getFullUrl("/moslslat.php")})
+        ramadan = False
+        for title, url, children in self._loadMenu():
+            if "رمضان" in title and not children:
+                ramadan = True
                 continue
-            if main_title in ["افلام", "مسلسلات برستيج"]:
-                continue
-            if main_title == "مسلسلات عربية 2026":
-                main_title = "مسلسلات خليجية 2026"
-            elif main_title == "برامج ومنوعات تلفزيونية":
-                main_title = "مسلسلات شامية 2026"
-            icon = images_map.get(main_title)
-            params = {"good_for_fav": True, "category": "sub_series_packs", "title": main_title, "url": self.getFullUrl(main_url), "raw_block": block}
-            if icon:
-                params["icon"] = icon
-            self.addDir(params)
-
-    def listSubSeriesPacks(self, cItem):
-        printDBG("Brstej.listSubSeriesPacks")
-        block = cItem.get("raw_block", "")
-        printDBG("BLOCK ====> %s" % block[:500])
-        if not block:
-            printDBG("NO raw_block")
-            return
-        sub_menu = self.cm.ph.getDataBeetwenMarkers(block, ("<ul", "dropdown-menu"), ("</ul>", ">"), True)[1]
-        printDBG("SUBMENU ====> %s" % sub_menu[:500])
-        if not sub_menu:
-            printDBG("NO sub_menu")
-            return
-        links = re.findall(r'<a[^>]+href="([^"]+)"[^>]*>(.*?)</a>', sub_menu, re.S)
-        printDBG("SUB ITEMS COUNT = %d" % len(links))
-        for url, title in links:
-            title = self.cleanHtmlStr(title)
-            if url and title:
-                self.addDir({"good_for_fav": True, "category": "list_items", "title": title, "url": self.getFullUrl(url)})
-
-    def listSeriesPacksFolder(self, cItem):
-        printDBG("Brstej.listSeriesPacksFolder")
-        self.listSeriesPacks(cItem)
-
-    def listItems(self, cItem, nextCategory="explore_item"):
-        printDBG("Brstej.listItems cItem[%s]" % (cItem))
-        page = cItem.get("page", 1)
-        url = cItem.get("url", "")
-        is_movies_section = cItem.get("is_movies_section")
-        if is_movies_section is None:
-            is_movies_section = False
-            parent_title = cItem.get("title", "")
-            parent_url = cItem.get("url", "")
-            if "فيلم" in parent_title or "افلام" in parent_title:
-                is_movies_section = True
-            if "/movie" in parent_url or "film" in parent_url:
-                is_movies_section = True
-            if "moslslat.php" in parent_url:
-                is_movies_section = False
-        base_url = url
-        if page > 1:
-            if "newvideo.php" in base_url:
-                url = self.getFullUrl("/newvideos.php")
-                url += "?page=%d" % page
-            elif "category.php" in base_url:
-                url = base_url.replace("category.php", "category818.php")
-                if "?" in url:
-                    url += "&page=%d" % page
-                else:
-                    url += "?page=%d" % page
+            if children:
+                self.addDir({"name": "category", "good_for_fav": True, "category": "brstej_submenu", "title": title, "url": url, "menu_key": url})
             else:
-                if "?" in base_url:
-                    url = base_url + "&page=%d" % page
-                else:
-                    url = base_url + "?page=%d" % page
-        sts, data = self.getPage(url)
-        if not sts:
-            return
-        if "لا توجد اى ملفات" in data:
-            msg = "عذراً- لا توجد اى ملفات بهذا التصنيف حالياً"
-            params = {"good_for_fav": False, "title": Y + msg + W, "type": "marker"}
-            self.addMarker(params)
-            return
-        if "moslslat.php" in url:
-            items = re.findall(r'(<li[^>]*class="col-xs-6[^"]*"[^>]*>.*?</li>)', data, re.S)
-            for item in items:
-                url_match = re.search(r"""href=["']([^"']+view-serie\.php\?id=\d+)["']""", item)
-                title_match = re.search(r"""title=["']([^"']+)["']""", item)
-                img_match = re.search(r"""<img[^>]+src=["']([^"']+?)["']""", item)
-                if not url_match or not title_match:
-                    continue
-                item_url = self.getFullUrl(url_match.group(1).strip())
-                title = self.cleanTitle(title_match.group(1))
-                icon = img_match.group(1).strip() if img_match else ""
-                if title and item_url:
-                    params = {"good_for_fav": True, "category": "explore_item", "title": title, "url": item_url}
-                    if icon:
-                        params["icon"] = self.getFullIconUrl(icon)
-                    self.addDir(params)
-            pagination = self.cm.ph.getDataBeetwenMarkers(data, ("<div", 'class="col-md-12 text-center"'), ("</div", ">"), True)[1]
-            if pagination:
-                pages = []
-                for link in self.cm.ph.getAllItemsBeetwenMarkers(pagination, ("<a", "href="), ("</a", ">")):
-                    page_num = self.cm.ph.getSearchGroups(link, "page=([0-9]+)")[0]
-                    if page_num:
-                        pages.append(int(page_num))
-                if pages and max(pages) > page:
-                    pages_left = max(pages) - page
-                    self.addDir({"good_for_fav": False, "title": Y + _("Next Page") + " ▶▶▶" + W, "desc": Y + _("There are %d more pages in this section") % pages_left + W, "page": page + 1, "url": cItem.get("url", ""), "category": cItem.get("category", ""), "is_movies_section": False})
-            return
-        grid = self.cm.ph.getDataBeetwenMarkers(data, ("<ul", 'id="pm-grid"'), ("</ul>", ">"), False)[1]
-        if not grid:
-            grid = self.cm.ph.getDataBeetwenMarkers(data, ("<ul", 'class="row pm-ul-browse-videos'), ("</ul>", ">"), False)[1]
-        if not grid:
-            printDBG("Brstej.listItems: لم يتم العثور على قائمة العناصر (pm-grid)")
-            return
-        tmp = re.findall(r'<li[^>]*class="col-xs-6[^"]*"[^>]*>.*?</li>', grid, re.S)
-        seen_titles = set()
-        for item in tmp:
-            icon = self.cm.ph.getSearchGroups(item, r"""data-echo=['"]([^"^']+?)['"]""")[0].strip()
-            if not icon:
-                icon = self.cm.ph.getSearchGroups(item, r"""src=['"]([^"^']+?)['"]""")[0].strip()
-            if icon.startswith("data:image"):
-                icon = ""
-            title = self.cm.ph.getDataBeetwenNodes(item, ("<h3", ">"), ("</h3", ">"), False)[1]
-            title = self.cleanTitle(title)
-            title = re.sub(r"\s*(الحلقة|حلقة|ep|episode).*$", "", title, flags=re.I).strip()
-            if title in seen_titles:
-                continue
-            seen_titles.add(title)
-            thumb_block = self.cm.ph.getDataBeetwenMarkers(item, ("<div", 'class="pm-video-thumb"'), ("</div", ">"), False)[1]
-            url = self.cm.ph.getSearchGroups(thumb_block, r"""href=["']([^"']*watch\.php\?vid=[^"']+)["']""", 1, True)[0].strip()
-            if not url:
-                url = self.cm.ph.getSearchGroups(item, r"""href=["']([^"']+watch\.php[^\s"']+)["']""", 1, True)[0].strip()
-            if not url or not title or url == "#":
-                continue
-            duration = self.cm.ph.getSearchGroups(item, r"""<span[^>]*class=["']pm-label-duration["'][^>]*>([^<]+)""")[0].strip()
-            quality = ""
-            ribon_match = re.search(r'<div[^>]*class=["\']ribon["\'][^>]*>.*?<span[^>]*class=["\']hot["\'][^>]*>.*?<span[^>]*class=["\']after["\'][^>]*>.*?</span>\s*([^<>\s].*?)\s*<span[^>]*class=["\']before["\']', item, re.S)
-            if ribon_match:
-                quality = ribon_match.group(1).strip()
-            desc_parts = []
-            if quality:
-                desc_parts.append(Y + "Quality: %s" % quality + W)
-            if duration:
-                desc_parts.append(Y + "Duration: %s" % duration + W)
-            desc = " | ".join(desc_parts) if desc_parts else ""
-            params = {"good_for_fav": True, "category": nextCategory, "title": title, "url": self.getFullUrl(url), "desc": desc}
-            if icon and not icon.startswith("data:image"):
-                params["icon"] = self.getFullIconUrl(icon)
-            if "فيلم" in title:
-                params["type"] = "FILM"
-                self.addVideo(params)
-            else:
-                self.addDir(params)
-        tmp = self.cm.ph.getDataBeetwenMarkers(data, ("<div", 'class="col-md-12 text-center"'), ("</div", ">"), True)[1]
-        if tmp:
-            pagination_links = self.cm.ph.getAllItemsBeetwenMarkers(tmp, ("<a", "href="), ("</a", ">"))
-            if pagination_links:
-                pages = []
-                for link in pagination_links:
-                    page_num = self.cm.ph.getSearchGroups(link, "page=([0-9]+)")[0]
-                    if page_num:
-                        pages.append(int(page_num))
-                if pages and max(pages) > page:
-                    pages_left = max(pages) - page
-                    next_title = Y + _("Next Page") + " ▶▶▶" + W
-                    next_desc = Y + _("There are %d more pages in this section") % pages_left + W
-                    params = dict(cItem)
-                    params.update({"good_for_fav": True, "title": next_title, "desc": next_desc, "page": page + 1, "url": cItem.get("url", ""), "is_movies_section": is_movies_section})
-                    self.addDir(params)
+                self.addDir({"name": "category", "good_for_fav": True, "category": "list_items", "title": title, "url": url})
+        if ramadan:
+            self.addDir({"name": "category", "good_for_fav": True, "category": "brstej_submenu", "title": _("Ramadan series"), "url": self.getFullUrl("/cat03.php"), "menu_key": "ramadan"})
+        self.listsTab(self.searchItems(), {"name": "category"})
 
-    def exploreItems(self, cItem):
-        printDBG("Brstej.exploreItems cItem[%s]" % (cItem))
-        url = cItem["url"]
-        if "view-serie.php" in url:
-            url = url.replace("view-serie.php", "series1.php")
-        sts, data = self.getPage(url)
-        if not sts:
-            return
-        desc = ""
-        desc_match = re.search(r'<div[^>]+class=["\']pm-video-description["\'][^>]*>.*?<div[^>]+class=["\']txtv show-more-height["\'][^>]*>(.*?)</div>', data, re.S)
-        if desc_match:
-            desc_html = desc_match.group(1)
-            desc = self.cleanHtmlStr(desc_html).replace("\n", " ").strip()
-        seasons_box = self.cm.ph.getDataBeetwenMarkers(data, ("<div", 'class="SeasonsBox"'), ("</div", ">"), False)[1]
-        if seasons_box:
-            season_items = re.findall(r'<li[^>]*data-serie=["\']([^"\']+?)["\'][^>]*>([^<]+)</li>', seasons_box, re.S)
-            if season_items:
-                for season_id, season_title in season_items:
-                    season_title = self.cleanHtmlStr(season_title)
-                    if season_title:
-                        params = dict(cItem)
-                        params.update({"good_for_fav": True, "category": "list_season_episodes", "title": season_title, "season_id": season_id, "url": url, "desc": desc})
-                        self.addDir(params)
-                return
-        grid = self.cm.ph.getDataBeetwenMarkers(data, ("<ul", 'id="pm-grid"'), ("</ul>", ">"), False)[1]
-        if not grid:
-            grid = self.cm.ph.getDataBeetwenMarkers(data, ("<ul", 'class="row pm-ul-browse-videos'), ("</ul>", ">"), False)[1]
-        if not grid:
-            return
-        items = re.findall(r'<li[^>]*class="col-xs-6[^"]*"[^>]*>.*?</li>', grid, re.S)
-        for item in items:
-            url_match = re.search(r"""href=["']([^"']+)["']""", item)
-            title_match = re.search(r"""title=["']([^"']+)["']""", item)
-            img_match = re.search(r"""src=["']([^"']+?)["']""", item)
-            if not url_match or not title_match:
-                continue
-            item_url = self.getFullUrl(url_match.group(1).strip())
-            title = self.cleanTitle(title_match.group(1))
-            icon = img_match.group(1).strip() if img_match else ""
-            if not item_url or not title or item_url == "#" or "javascript:" in item_url:
-                continue
-            params = {"good_for_fav": True, "title": title, "url": item_url, "desc": desc}
-            if icon:
-                params["icon"] = self.getFullIconUrl(icon)
-            if "الحلقة" in title:
-                params["type"] = "Episode"
-                self.addVideo(params)
-            elif "فيلم" in title:
-                params["type"] = "FILM"
-                self.addVideo(params)
-            else:
-                params["category"] = "explore_item"
-                params["type"] = "category"
-                self.addDir(params)
-
-    def listSeasonEpisodes(self, cItem):
-        """عرض حلقات موسم معين"""
-        printDBG("Brstej.listSeasonEpisodes cItem[%s]" % (cItem))
-        season_id = cItem.get("season_id", "")
-        url = cItem["url"]
-        serie_icon = cItem.get("icon")
-        sts, data = self.getPage(url)
-        if not sts:
-            return
-        seasons_blocks = re.findall(r'<div[^>]+class="SeasonsEpisodes"[^>]+data-serie="(\d+)"[^>]*>(.*?)</div>', data, re.S)
-        if not seasons_blocks:
-            printDBG("No SeasonsEpisodes blocks found")
-            return
-        episodes_section = ""
-        for s_id, s_html in seasons_blocks:
-            if s_id == season_id:
-                episodes_section = s_html
+    def listSubMenu(self, cItem):
+        printDBG("Brstej.listSubMenu [%s]" % cItem.get("menu_key", ""))
+        key = cItem.get("menu_key", "")
+        entries = []
+        for title, url, children in self._loadMenu():
+            if key == "ramadan":
+                if "رمضان" in title and not children:
+                    entries.append((title, url))
+            elif url == key:
+                entries = [(_("All"), url)] + children
                 break
-        if not episodes_section:
-            printDBG("Season %s not found" % season_id)
+        if key == "ramadan":
+            entries.sort(key=lambda e: e[0], reverse=True)
+        for title, url in entries:
+            self.addDir({"name": "category", "good_for_fav": True, "category": "list_items", "title": title, "url": url})
+
+    ###################################################
+    # lists
+    ###################################################
+    def _videoParams(self, label, url, icon, desc, isMovie, normalize):
+        params = {"name": "category", "good_for_fav": True, "category": "brstej_video", "url": url, "icon": icon, "desc": desc, "title": label}
+        show, season, episode = self._splitShow(label)
+        if show and episode:
+            params.update({"s_title": show, "s_season": season, "s_episode": episode,
+                           "meta_type": "tv", "meta_title": self._metaTitle(show), "meta_year": ""})
+            if normalize:
+                params["title"] = "%s - %s" % (show, formatSxxExx(season, episode))
+        elif isMovie or "فيلم" in label:
+            title, year = self._splitMovie(label)
+            if title:
+                params.update({"meta_type": "movie", "meta_title": self._metaTitle(title), "meta_year": year})
+                if normalize:
+                    params["title"] = ("%s (%s)" % (title, year)) if year else title
+        elif normalize:
+            params["title"] = self._clean(label) or label
+        return params
+
+    def _parseCards(self, data, seen, normalize):
+        for card in CARD_RE.findall(data):
+            href = self.cm.ph.getSearchGroups(card, r'href="([^"]*(?:watch\.php\?vid=|series1\.php\?id=)[^"]+)"')[0]
+            url = self._canonUrl(href)
+            if not url or url in seen:
+                continue
+            seen.add(url)
+            label = self.cleanHtmlStr(self.cm.ph.getSearchGroups(card, r'(?s)<h[34][^>]*>(.*?)</h[34]>')[0])
+            if not label:
+                label = self.cleanHtmlStr(self.cm.ph.getSearchGroups(card, r'title="([^"]+)"')[0])
+            if not label:
+                continue
+            icon = self.cm.ph.getSearchGroups(card, r'<img[^>]+src="([^"]+)"')[0]
+            icon = self.getFullIconUrl(icon) if icon and not icon.startswith("data:") else ""
+            if "series1.php" in url:
+                show = self._clean(label)
+                s = SEASON_RE.search(show)
+                season = self._seasonNum(s.group(1)) if s else 0
+                if s:
+                    show = (show[:s.start()] + " " + show[s.end():]).strip()
+                self.addDir({"name": "category", "good_for_fav": True, "category": "brstej_series", "title": label, "url": url, "icon": icon,
+                             "s_title": show or label, "s_season": season, "meta_type": "tv", "meta_title": self._metaTitle(show or label), "meta_year": ""})
+                continue
+            fields = []
+            duration = self.cleanHtmlStr(self.cm.ph.getSearchGroups(card, r'(?s)<span class="(?:pmc|pln|prs)-duration"[^>]*>(.*?)</span>')[0] or
+                                         self.cm.ph.getSearchGroups(card, r'(?s)<span class="pm-label-duration"[^>]*>(.*?)</span>')[0])
+            if duration:
+                fields.append("%s: %s" % (_("Duration"), duration))
+            category = self.cleanHtmlStr(self.cm.ph.getSearchGroups(card, r'(?s)class="(?:pmc-category-link|pln-category)"[^>]*>(.*?)</a>')[0])
+            if category:
+                fields.append(category)
+            self.addVideo(self._videoParams(label, url, icon, " | ".join(fields), "pmc-card" in card, normalize))
+
+    def _lastPage(self, data, page):
+        # (hasNext, lastPage) from the pagination block of the page
+        block = self.cm.ph.getSearchGroups(data, r'(?s)(<nav class="[a-z]+-(?:pagination|pages)".*?</nav>)')[0]
+        pages = [int(p) for p in re.findall(r"[?&](?:amp;)?page=(\d+)", block)]
+        lastPage = max(pages) if pages else 0
+        return lastPage > page, (lastPage if lastPage >= page else 0)
+
+    def listItems(self, cItem):
+        printDBG("Brstej.listItems [%s] page[%s]" % (cItem.get("url", ""), cItem.get("page", 1)))
+        page = int(cItem.get("page", 1) or 1)
+        url = self._canonUrl(cItem.get("url", ""))
+        sts, data = self.getPage(url)
+        if not sts:
             return
-        episodes = re.findall(r'<a[^>]+href=["\']([^"\']+?)["\'][^>]*title=["\']([^"\']+?)["\']', episodes_section, re.S)
-        if not episodes:
+        # the movies landing page (one row per sub category) -> its full, paged list
+        allUrl = self.cm.ph.getSearchGroups(data, r'<a class="pmc-all" href="([^"]+)"')[0]
+        if allUrl and "pmc-pagination" not in data:
+            url = self._canonUrl(allUrl)
+            sts, data = self.getPage(url)
+            if not sts:
+                return
+        normalize = IsMediaNamingNormalized()
+        # a series category page: "series of the category" folder + the episodes grid only
+        # (the featured / series panels above it repeat the same videos)
+        if 'id="pm-grid"' in data:
+            if page == 1 and "pcg-series-panel" in data and "type=series" not in url:
+                allSeries = self.cm.ph.getSearchGroups(data, r'<a class="pcg-view-all" href="([^"]+)"')[0]
+                if allSeries:
+                    title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'(?s)id="pcg-series-title">(.*?)</h2>')[0]) or _("Series")
+                    self.addDir({"name": "category", "good_for_fav": True, "category": "list_items", "title": title,
+                                 "url": self._canonUrl(allSeries), "icon": cItem.get("icon", "")})
+            data = self.cm.ph.getSearchGroups(data, r'(?s)(<ul[^>]+id="pm-grid".*?</ul>)')[0] + self.cm.ph.getSearchGroups(data, r'(?s)(<nav class="pcg-pagination".*?</nav>)')[0]
+        seen = set()
+        before = len(self.currList)
+        self._parseCards(data, seen, normalize)
+        if len(self.currList) == before:
             return
-        episodes.reverse()
-        for episode_url, episode_title in episodes:
-            episode_url = self.getFullUrl(episode_url.strip())
-            episode_title = self.cleanHtmlStr(episode_title)
-            if episode_url and episode_title:
-                params = {"good_for_fav": True, "title": episode_title, "url": episode_url, "type": "Episode"}
-                if serie_icon:
-                    params["icon"] = serie_icon
+        hasNext, lastPage = self._lastPage(data, page)
+        addPagingItems(self, cItem, page, hasNext, lastPage, self._pageTpl(url))
+
+    def listSeries(self, cItem):
+        printDBG("Brstej.listSeries [%s]" % cItem.get("url", ""))
+        sts, data = self.getPage(cItem.get("url", ""))
+        if not sts:
+            return
+        seasons = re.findall(r'(?s)<section class="pds-season" id="pds-season-(\d+)"[^>]*>(.*?)</section>', data)
+        if len(seasons) > 1 and cItem.get("category") != "brstej_season":
+            for num, body in seasons:
+                title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(body, r'(?s)<h3>(.*?)</h3>')[0]) or ("%s %s" % (_("Season"), num))
+                count = self.cleanHtmlStr(self.cm.ph.getSearchGroups(body, r'(?s)</h3>\s*<span>(.*?)</span>')[0])
+                params = dict(cItem)
+                params.update({"good_for_fav": True, "category": "brstej_season", "title": title, "season_num": int(num), "desc": count})
+                self.addDir(params)
+            return
+        wanted = str(cItem.get("season_num", "")) if cItem.get("category") == "brstej_season" else ""
+        show = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'(?s)<h1 id="pds-title">(.*?)</h1>')[0]) or cItem.get("title", "")
+        showClean = self._clean(show)
+        s = SEASON_RE.search(showClean)
+        nameSeason = 0
+        if s:
+            nameSeason = self._seasonNum(s.group(1))
+            showClean = (showClean[:s.start()] + " " + showClean[s.end():]).strip()
+        showClean = re.sub(r"\s+", " ", showClean) or show
+        normalize = IsMediaNamingNormalized()
+        seen = set()
+        for num, body in seasons:
+            if wanted and num != wanted:
+                continue
+            # a single section "الموسم 1" of a series whose name carries the season ("X الموسم 3")
+            season = nameSeason if (nameSeason and len(seasons) == 1) else int(num)
+            for art in re.findall(r'(?s)<article class="pds-episode".*?</article>', body):
+                m = re.search(r'(?s)<h4><a href="([^"]+)"([^>]*)>(.*?)</a>', art)
+                if not m:
+                    continue
+                url = self._canonUrl(m.group(1))
+                if not url or url in seen:
+                    continue
+                seen.add(url)
+                full = self.cleanHtmlStr(self.cm.ph.getSearchGroups(m.group(2), r'title="([^"]+)"')[0])
+                label = self.cleanHtmlStr(m.group(3))
+                epNum = self.cm.ph.getSearchGroups(label, r"(\d+)")[0] or self._splitShow(full)[2]
+                icon = self.cm.ph.getSearchGroups(art, r'<img[^>]+src="([^"]+)"')[0]
+                params = {"name": "category", "good_for_fav": True, "category": "brstej_video", "url": url,
+                          "icon": self.getFullIconUrl(icon) if icon else cItem.get("icon", ""), "desc": label,
+                          "title": full or label, "s_title": showClean, "s_season": season, "s_episode": epNum,
+                          "meta_type": "tv", "meta_title": self._metaTitle(showClean), "meta_year": ""}
+                if normalize and epNum:
+                    params["title"] = "%s - %s" % (showClean, formatSxxExx(season, epNum))
                 self.addVideo(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
-        printDBG("Brstej.listSearchResult |%s|" % searchPattern)
-        url = self.getFullUrl("/ajax-search.php")
-        custom_headers = {
-            "Referer": "https://hd1.brstej.com/",
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36",
-            "Accept": "text/html, */*; q=0.01",
-            "Accept-Encoding": "gzip, deflate, br",
-            "Accept-Language": "en,ar;q=0.9",
-            "X-Requested-With": "XMLHttpRequest",
-            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-            "Origin": "https://hd1.brstej.com",
-            "Sec-Fetch-Dest": "empty",
-            "Sec-Fetch-Mode": "cors",
-            "Sec-Fetch-Site": "same-origin",
-        }
-        post_data = {"queryString": searchPattern}
-        addParams = dict(self.defaultParams)
-        if "header" in addParams:
-            addParams["header"].update(custom_headers)
-        else:
-            addParams["header"] = custom_headers
-        addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": custom_headers["User-Agent"]}
-        sts, data = self.getPage(url, addParams=addParams, post_data=post_data)
-        if not sts or not data:
-            printDBG("Brstej.listSearchResult - No data received")
-            return
-        items = re.findall(r'<li[^>]*data-video-id=["\']([^"\']+)["\'][^>]*>.*?<a[^>]+href=["\']([^"\']+)["\'][^>]*>([^<]+)</a>', data, re.S | re.I)
-        if not items:
-            printDBG("Brstej.listSearchResult - No items found")
-            printDBG("Response: %s..." % data[:500])
-            return
-        added = set()
-        for vid, item_url, title in items:
-            title = self.cleanTitle(title.strip())
-            item_url = self.getFullUrl(item_url.strip())
-            if not title or not item_url or item_url in added:
-                continue
-            added.add(item_url)
-            icon = ""
-            desc = ""
-            sts_vid, vid_data = self.getPage(item_url)
-            if sts_vid and vid_data:
-                og_image = re.search(r'<meta[^>]+property=["\']og:image["\'][^>]+content=["\']([^"\']+)["\']', vid_data, re.I)
-                if og_image:
-                    icon = self.getFullIconUrl(og_image.group(1).strip())
-                else:
-                    thumb_match = re.search(r'<img[^>]+src=[\'"]([^\'"]*thumbs/[^\'"]+)[\'"]', vid_data, re.I)
-                    if thumb_match:
-                        icon = self.getFullIconUrl(thumb_match.group(1).strip())
-                duration = ""
-                dur_match = re.search(r'<span[^>]*class=["\']pm-label-duration["\'][^>]*>([^<]+)', vid_data, re.I)
-                if dur_match:
-                    duration = dur_match.group(1).strip()
-                quality = ""
-                ribon_match = re.search(r'<div[^>]*class=["\']ribon["\'][^>]*>.*?<span[^>]*class=["\']hot["\'][^>]*>.*?<span[^>]*class=["\']after["\'][^>]*>([^<>]+?)\s*<span[^>]*class=["\']before["\']', vid_data, re.S | re.I)
-                if ribon_match:
-                    quality = ribon_match.group(1).strip()
-                desc_parts = []
-                if quality:
-                    desc_parts.append(Y + "Quality: %s" % quality + W)
-                if duration:
-                    desc_parts.append(Y + "Duration: %s" % duration + W)
-                desc = " | ".join(desc_parts)
-                title_lower = title.lower()
-                url_lower = item_url.lower()
-                if re.search(r"\bفيلم\b|movie\b|film\b", title_lower, re.I) and not re.search(r"مسلسل|حلقة", title_lower, re.I):
-                    is_series = False
-                elif re.search(r"مسلسل|حلقة|season|episode|part\s*\d+", title_lower, re.I):
-                    is_series = True
-                elif re.search(r"series|season|episode", url_lower, re.I):
-                    is_series = True
-                else:
-                    seasons_block = re.search(r'<div[^>]*id=["\']?seasons[^"\'>]*["\']?[^>]*>.*?</div>', vid_data, re.S | re.I)
-                    if not seasons_block:
-                        seasons_block = re.search(r'<div[^>]*class=["\'][^"\']*SeasonsEpisodes[^"\']*["\'][^>]*>(?:(?!<div[^>]*class=["\']similar|recommended|also|قد-يعجبك).)*?</div>', vid_data, re.S | re.I)
-                    is_series = bool(seasons_block)
-            else:
-                title_lower = title.lower()
-                if re.search(r"مسلسل|حلقة|season|episode|part\s*\d+", title_lower, re.I):
-                    is_series = True
-                else:
-                    is_series = False
-            params = {
-                "good_for_fav": True,
-                "title": title,
-                "url": item_url,
-                "icon": icon,
-                "desc": desc,
-            }
-            if is_series:
-                params.update({"category": "explore_item", "type": "category"})
-                self.addDir(params)
-            else:
-                params.update({"type": "video"})
-                self.addVideo(params)
+        printDBG("Brstej.listSearchResult [%s]" % searchPattern)
+        cItem = dict(cItem)
+        cItem.update({"category": "list_items", "page": 1, "url": self.getFullUrl("/search.php?keywords=%s" % urllib_quote_plus(searchPattern))})
+        self.listItems(cItem)
 
+    ###################################################
+    # links
+    ###################################################
     def getLinksForVideo(self, cItem):
-        printDBG("Brstej.getLinksForVideo [%s]" % (cItem))
-        linksTab = []
-        url = cItem.get("url", "").strip()
-        if "watch.php" in url:
-            url = url.replace("watch.php", "play.php")
-        printDBG("Final play URL: %s" % url)
-        sts, data = self.getPage(url)
-        if not sts:
-            printDBG("Failed to fetch page")
+        printDBG("Brstej.getLinksForVideo [%s]" % cItem.get("url", ""))
+        vid = self._vid(cItem.get("url", ""))
+        if not vid:
             return []
-        servers = re.findall(r"(<button[^>]+watchButton[^>]*>.*?</button>)", data, re.S)
-        if servers:
-            printDBG("Found %d server buttons" % len(servers))
-            for i, server in enumerate(servers):
-                server_name = self.cm.ph.cleanHtmlStr(server)
-                if not server_name or "fa-play" in server_name:
-                    server_name = "سيرفر %d" % (i + 1)
-                embed_url = self.cm.ph.getSearchGroups(server, r"""data-embed-url=['"]([^"^']+?)['"]""")[0].strip()
-                if embed_url:
-                    try:
-                        host = re.search(r"https?://([^/]+)/?", embed_url).group(1).lower()
-                        host = host.replace("www.", "")
-                        parts = host.split(".")
-                        if len(parts) >= 2:
-                            server_tag = parts[-2]
-                        else:
-                            server_tag = host
-                    except Exception:
-                        server_tag = ""
-                    if server_tag:
-                        final_name = "%s [ %s ]" % (server_name, server_tag)
-                    else:
-                        final_name = server_name
-                    printDBG("Add server: %s - %s" % (final_name, embed_url))
-                    linksTab.append({"name": final_name, "url": embed_url, "need_resolve": 1})
-                else:
-                    printDBG("No embed URL found for server: %s" % server_name)
-            printDBG("Returning %d servers from WatchServers" % len(linksTab))
-        if not linksTab:
-            printDBG("No server buttons found. Searching for iframe...")
-            iframe_url = self.cm.ph.getSearchGroups(data, r"""<iframe[^>]+src=['"]([^"^']+?)['"]""")[0].strip()
-            if iframe_url and "embed" in iframe_url:
+        watchUrl = self.getFullUrl("/watch.php?vid=%s" % vid)
+        params = dict(self.defaultParams)
+        params["header"] = dict(self.HEADER, Referer=watchUrl)
+        sts, data = self.getPage(self.getFullUrl("/play.php?vid=%s" % vid), params)
+        if not sts:
+            return []
+        if "watchButton" not in data:
+            # merged duplicates: play.php?vid=old answers with a 301 to the watch page of the new vid
+            newVid = self.cm.ph.getSearchGroups(data, r"play\.php\?vid=([^\"'&#]+)")[0]
+            if newVid and newVid != vid:
+                sts, data = self.getPage(self.getFullUrl("/play.php?vid=%s" % newVid), params)
+                if not sts:
+                    return []
+        urltab = []
+        seen = set()
+        for button in re.findall(r"(?s)<button[^>]+watchButton[^>]*>.*?</button>", data):
+            embed = self.cm.ph.getSearchGroups(button, r'data-embed-url="([^"]+)"')[0].strip()
+            if embed.startswith("//"):
+                embed = "https:" + embed
+            if not self.cm.isValidUrl(embed) or embed in seen:
+                continue
+            seen.add(embed)
+            name = self.cleanHtmlStr(button) or ("%s %d" % (_("Server"), len(urltab) + 1))
+            host = self.cm.ph.getSearchGroups(embed, r"https?://(?:www\.)?([^/]+)")[0].split(".")
+            tag = host[-2] if len(host) >= 2 else ""
+            urltab.append({"name": ("%s [%s]" % (name, tag)) if tag else name, "url": strwithmeta(embed, {"Referer": self.MAIN_URL}), "need_resolve": 1})
+        if not urltab:
+            embed = self.cm.ph.getSearchGroups(data, r'<iframe[^>]+src="([^"]+)"')[0].strip()
+            if self.cm.isValidUrl(embed):
+                urltab.append({"name": "%s 1" % _("Server"), "url": strwithmeta(embed, {"Referer": self.MAIN_URL}), "need_resolve": 1})
+        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled()))
+
+    def _resolvePackedEmbed(self, embedUrl):
+        # film77 / vood78 / hd-vk / hdupNNN: JWPlayer setup inside eval(function(p,a,c,k,e,d)...)
+        urltab = []
+        origin = self.cm.ph.getSearchGroups(embedUrl, r"(https?://[^/]+)")[0]
+        params = dict(self.defaultParams)
+        params["header"] = dict(self.HEADER, Referer=self.MAIN_URL)
+        sts, data = self.getPage(embedUrl, params)
+        if not sts:
+            return urltab
+        try:
+            unpacked = get_packed_data(data)
+        except Exception:
+            printExc()
+            unpacked = ""
+        script = (unpacked or "") + data
+        meta = {"Referer": origin + "/", "Origin": origin, "User-Agent": self.HEADER.get("User-Agent")}
+        subtitles = []
+        for sub, label in re.findall(r'file\s*:\s*"([^"]+\.(?:vtt|srt)[^"]*)"[^}]*?label\s*:\s*"([^"]*)"', script):
+            sub = sub.replace("\\/", "/")
+            if self.cm.isValidUrl(sub) and "thumbnails" not in sub:
+                subtitles.append({"title": label or "ar", "url": sub, "lang": "ar", "format": "vtt" if ".vtt" in sub else "srt"})
+        if subtitles:
+            meta["external_sub_tracks"] = subtitles
+        seen = set()
+        for url in re.findall(r'["\'](https?://[^"\']+?\.(?:m3u8|mp4)(?:\?[^"\']*)?)["\']', script):
+            url = url.replace("\\/", "/")
+            if url in seen:
+                continue
+            seen.add(url)
+            if ".m3u8" in url:
+                hlsMeta = dict(meta, iptv_proto="m3u8")
+                variants = []
                 try:
-                    host = re.search(r"https?://([^/]+)/?", iframe_url).group(1).lower()
-                    host = host.replace("www.", "")
-                    parts = host.split(".")
-                    if len(parts) >= 2:
-                        server_tag = parts[-2]
-                    else:
-                        server_tag = host
+                    variants = getDirectM3U8Playlist(strwithmeta(url, hlsMeta), checkExt=False, checkContent=True, sortWithMaxBitrate=99999999)
                 except Exception:
-                    server_tag = ""
-                if server_tag:
-                    name = "السيرفر الافتراضي [ %s ]" % server_tag
+                    printExc()
+                if variants:
+                    urltab.extend(variants)
                 else:
-                    name = "السيرفر الافتراضي"
-                printDBG("Found iframe URL: %s" % iframe_url)
-                linksTab.append({"name": name, "url": iframe_url, "need_resolve": 1})
+                    urltab.append({"name": "HLS", "url": strwithmeta(url, hlsMeta), "need_resolve": 0})
             else:
-                printDBG("No valid iframe found")
-        if not linksTab:
-            printDBG("No video links found at all")
-            linksTab.append({"name": "الفيديو غير متوفر حاليًا", "url": "", "need_resolve": 0})
-        printDBG("Final linksTab: %s" % linksTab)
-        return linksTab
+                urltab.append({"name": "MP4", "url": strwithmeta(url, dict(meta)), "need_resolve": 0})
+        return urltab
 
     def getVideoLinks(self, videoUrl):
-        printDBG("Brstej.getVideoLinks -> %s" % videoUrl)
-        if "hdup20.com" in videoUrl or "hdup.com" in videoUrl:
-            return self._getHDUPLinks(videoUrl)
-        elif "film77.xyz" in videoUrl or "vood78.xyz" in videoUrl:
-            return self._getFilm77Links(videoUrl)
-        elif "hd-vk.com" in videoUrl:
-            return self._getHDVKLinks(videoUrl)
-        elif "vk.com" in videoUrl:
-            return self._getVKLinks(videoUrl)
-        return self.up.getVideoLinkExt(videoUrl)
-
-    def _getHDUPLinks(self, embed_url):
-        def manual_unpack(p, a, c, k, e=None, d=None):
-            def baseN(num, b):
-                digits = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                res = ""
-                while num > 0:
-                    res = digits[num % b] + res
-                    num //= b
-                return res or "0"
-
-            for i in range(len(k) - 1, -1, -1):
-                if k[i]:
-                    p = re.sub(r"\b%s\b" % baseN(i, a), k[i], p)
-            return p
-
-        def localGetDomain(url):
-            parsed_uri = urlparse(url)
-            return "{uri.scheme}://{uri.netloc}/".format(uri=parsed_uri)
-
-        urlTab = []
-        try:
-            printDBG("HDUP extractor start -> %s" % embed_url)
-            headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36", "Referer": "https://hd1.brstej.com/"}
-            params = dict(self.defaultParams)
-            params.update({"header": headers, "use_cookie": True, "load_cookie": True, "save_cookie": True})
-            sts, html = self.getPage(embed_url, params)
-            if not sts:
-                return []
-            if "<form" in html:
-                data = {}
-                action = re.search(r'action\s*=\s*[\'"]([^\'"]+)', html)
-                post_url = action.group(1) if action else embed_url
-                if post_url.startswith("/"):
-                    post_url = localGetDomain(embed_url)[:-1] + post_url
-                fields = re.findall(r'type=["\']?(?:hidden|submit)[\'"]?[^>]*name=["\']([^"\']+)["\'][^>]*value=["\']([^"\']*)["\']', html)
-                for name, value in fields:
-                    data[name] = value
-                if data.get("file_code") == "":
-                    mediaid = embed_url.rstrip(".html").split("/")[-1].split("-")[-1]
-                    data["file_code"] = mediaid
-                printDBG("HDUP: Waiting 6 seconds for bypass...")
-                time.sleep(6)
-                sts, html = self.getPage(post_url, params, post_data=data)
-                if not sts:
-                    return []
-            packed_match = re.search(r"eval\(function\(p,a,c,k,e,d\).+?\}\('(.+?)',(\d+),(\d+),'(.+?)'\.split\('\|'\)", html, re.S)
-            if packed_match:
-                p, a, c, k = packed_match.groups()
-                html = manual_unpack(p, int(a), int(c), k.split("|"))
-            links = re.findall(r'["\'](https?://[^"\']+\.(?:m3u8|mp4)[^"\']*)["\']', html)
-            for url in links:
-                url = url.replace("\\/", "/")
-                meta = {"Referer": embed_url, "User-Agent": headers["User-Agent"]}
-                if ".m3u8" in url:
-                    try:
-                        urlTab.extend(getDirectM3U8Playlist(strwithmeta(url, meta)))
-                    except Exception:
-                        urlTab.append({"name": "HDUP m3u8", "url": strwithmeta(url, meta)})
-                else:
-                    urlTab.append({"name": "HDUP MP4", "url": strwithmeta(url, meta)})
-        except Exception as e:
-            printDBG("HDUP error: %s" % str(e))
-        return urlTab
-
-    def _resolveXShared(self, embed_url):
-        def manual_unpack(p, a, c, k, e=None, d=None):
-            def baseN(num, b):
-                digits = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                res = ""
-                while num > 0:
-                    res = digits[num % b] + res
-                    num //= b
-                return res or "0"
-
-            for i in range(len(k) - 1, -1, -1):
-                if k[i]:
-                    p = re.sub(r"\b%s\b" % baseN(i, a), k[i], p)
-            return p
-
-        def localGetDomain(url):
-            parsed_uri = urlparse(url)
-            return "{uri.scheme}://{uri.netloc}/".format(uri=parsed_uri)
-
-        urlTab = []
-        try:
-            headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36", "Referer": "https://hd1.brstej.com/"}
-            params = dict(self.defaultParams)
-            params.update({"header": headers, "use_cookie": True, "load_cookie": True, "save_cookie": True})
-            sts, html = self.getPage(embed_url, params)
-            if not sts:
-                return []
-            if "<form" in html:
-                printDBG("XShared: Form detected, processing...")
-                data = {}
-                action = re.search(r'action=["\']([^"\']+)["\']', html)
-                post_url = action.group(1) if action else embed_url
-                if post_url.startswith("/"):
-                    post_url = localGetDomain(embed_url)[:-1] + post_url
-                fields = re.findall(r'type=["\']?(?:hidden|submit)[\'"]?[^>]*name=["\']([^"\']+)["\'][^>]*value=["\']([^"\']*)["\']', html)
-                for name, value in fields:
-                    data[name] = value
-                if data.get("file_code") == "":
-                    mediaid = embed_url.rstrip(".html").split("/")[-1].split("-")[-1]
-                    data["file_code"] = mediaid
-                printDBG("XShared: Waiting 6 seconds...")
-                time.sleep(6)
-                sts, html = self.getPage(post_url, params, post_data=data)
-                if not sts:
-                    return []
-            if "function(p,a,c,k,e,d)" in html:
-                packed = re.search(r"eval\(function\(p,a,c,k,e,d\).+?\}\('(.+?)',(\d+),(\d+),'(.+?)'\.split\('\|'\)", html, re.S)
-                if packed:
-                    p, a, c, k = packed.groups()
-                    html = manual_unpack(p, int(a), int(c), k.split("|"))
-            links = re.findall(r'["\'](https?://[^"\']+\.(?:m3u8|mp4)[^"\']*)["\']', html)
-            for url in links:
-                url = url.replace("\\/", "/")
-                meta = {"User-Agent": headers["User-Agent"], "Referer": embed_url}
-                if ".m3u8" in url:
-                    try:
-                        urlTab.extend(getDirectM3U8Playlist(strwithmeta(url, meta)))
-                    except Exception:
-                        urlTab.append({"name": "Direct m3u8", "url": strwithmeta(url, meta)})
-                else:
-                    urlTab.append({"name": "Direct MP4", "url": strwithmeta(url, meta)})
-        except Exception as e:
-            printDBG("XShared Error: %s" % str(e))
-        return urlTab
-
-    def _getVKLinks(self, url):
-        printDBG("Trying VK extractor v4 (flexible parser)")
+        printDBG("Brstej.getVideoLinks [%s]" % videoUrl)
+        if not self.cm.isValidUrl(videoUrl):
+            return []
+        sidecar = sidecarFromUrlMeta(videoUrl, IsSidecarEnabled())
         links = []
-        try:
-            headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)", "Referer": "https://vk.com/"}
-            params = dict(self.defaultParams)
-            params["header"] = headers
-            sts, data = self.getPage(url, params)
-            if not sts or not data:
-                return links
-            try:
-                if isinstance(data, bytes):
-                    data = data.decode("cp1251", "ignore")
-            except Exception:
-                pass
-            files_block = re.search(r'"files"\s*:\s*\{(.*?)\}', data, re.S)
-            if not files_block:
-                printDBG("VK: files block not found (dump first 3000 chars)")
-                printDBG(data[:3000])
-                return links
-            files_data = files_block.group(1)
-            items = re.findall(r'"([^"]+)"\s*:\s*"([^"]+)"', files_data)
-            for k, v in items:
-                if not v.startswith("http"):
-                    continue
-                if k.lower() == "hls_fmp4":
-                    continue
-                video_url = v.replace("\\/", "/")
-                if k.startswith("mp4_"):
-                    name = "MP4 " + k.replace("mp4_", "")
-                elif k.lower() == "hls":
-                    name = "HLS (Adaptive)"
-                elif "hls" in k.lower():
-                    name = k.upper()
-                else:
-                    name = k.upper()
-                links.append({"name": "VK " + name, "url": strwithmeta(video_url, {"Referer": "https://vk.com/", "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}), "need_resolve": 0})
-            printDBG("VK links found: %s" % links)
-        except Exception as e:
-            printExc("VK extractor error: %s" % e)
-        return links
+        if PACKED_EMBED_RE.match(videoUrl):
+            links = self._resolvePackedEmbed(videoUrl)
+        if not links:
+            links = self.up.getVideoLinkExt(videoUrl)
+        return decorateResolvedLinkItems(links, sidecar)
 
-    def _getFilm77Links(self, embed_url):
-        urlTab = []
-        main_cookie = self.defaultParams.get("cookiefile", self.COOKIE_FILE)
-        try:
-            user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
-            referer = "https://rty1.film77.xyz/"
-            params = dict(self.defaultParams)
-            params.update({"header": {"User-Agent": user_agent, "Referer": "https://hd1.brstej.com/"}, "cookiefile": main_cookie})
-            sts, html = self.getPage(embed_url, params)
-            if not sts:
-                return []
-            packed_match = re.search(r"eval\(function\(p,a,c,k,e,d\).+?\}\('(.+?)',(\d+),(\d+),'(.+?)'\.split\('\|'\)", html, re.S)
-            if packed_match:
-                p, a, c, k = packed_match.groups()
-
-                def js_unpack(p, a, c, k):
-                    def baseN(num, b):
-                        digits = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                        res = ""
-                        while num > 0:
-                            res = digits[num % b] + res
-                            num //= b
-                        return res or "0"
-
-                    for i in range(int(c) - 1, -1, -1):
-                        if k[i]:
-                            p = re.sub(r"\b%s\b" % baseN(i, int(a)), k[i], p)
-                    return p
-
-                decoded_js = js_unpack(p, a, c, k.split("|"))
-            else:
-                decoded_js = html
-            links = re.findall(r'["\'](https?://[^"\']+\.m3u8[^"\']*)["\']', decoded_js)
-            for url in links:
-                url = url.replace("\\/", "/")
-                video_meta = {"Referer": referer, "Origin": "https://rty1.film77.xyz", "User-Agent": user_agent, "iptv_proto": "m3u8", "iptv_m3u8_key_referer": referer, "allow_unverified_ssl": True}
-                urlTab.append({"name": "Film77 (Server 2)", "url": strwithmeta(url, video_meta), "need_resolve": 0})
-        except Exception as e:
-            printExc("Film77 error: %s" % e)
-        return urlTab
-
-    def _getHDVKLinks(self, embed_url):
-        printDBG("HD-VK extractor -> %s" % embed_url)
-        urlTab = []
-        try:
-            headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)", "Referer": "https://ss.hd-vk.com/"}
-            params = dict(self.defaultParams)
-            params["header"] = headers
-            sts, html = self.getPage(embed_url, params)
-            if not sts or not html:
-                return urlTab
-
-            def js_unpack(p, a, c, k):
-                def baseN(num, base):
-                    digits = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                    res = ""
-                    while num > 0:
-                        res = digits[num % base] + res
-                        num //= base
-                    return res or "0"
-
-                for i in range(c - 1, -1, -1):
-                    if k[i]:
-                        p = re.sub(r"\b%s\b" % baseN(i, a), k[i], p)
-                return p
-
-            decoded_js = html
-            packed_match = re.search(r"eval\(function\(p,a,c,k,e,d\).+?\}\('(.+?)',(\d+),(\d+),'(.+?)'\.split\('\|'\)", html, re.S)
-            if packed_match:
-                p, a, c, k = packed_match.groups()
-                decoded_js = js_unpack(p, int(a), int(c), k.split("|"))
-            links = re.findall(r'[\'"](https?://[^\'"]+?\.m3u8[^\'"]*)[\'"]', decoded_js)
-            for url in links:
-                url = url.replace("\\/", "/").replace("\\", "")
-                query = ""
-                if "?" in url:
-                    query = url[url.find("?"):]
-                if "master.m3u8" in url:
-                    sts, data = self.getPage(url, params)
-                    if sts:
-                        sub_links = re.findall(r"RESOLUTION=(\d+x\d+).*?\n(.*?\.m3u8)", data)
-                        for res, sub_url in sub_links:
-                            if not sub_url.startswith("http"):
-                                sub_url = urljoin(url, sub_url)
-                            if "?" not in sub_url:
-                                sub_url += query
-                            urlTab.append({"name": "HD-VK HLS %s" % res, "url": strwithmeta(sub_url, {"Referer": embed_url, "User-Agent": headers["User-Agent"]}), "need_resolve": 0})
-                urlTab.append({"name": "HD-VK HLS (Auto)", "url": strwithmeta(url, {"Referer": embed_url, "User-Agent": headers["User-Agent"]}), "need_resolve": 0})
-        except Exception as e:
-            printDBG("HD-VK error: %s" % str(e))
-        return urlTab
-
+    ###################################################
+    # INFO
+    ###################################################
     def getArticleContent(self, cItem):
-        """استخراج القصة من صفحة الفيديو"""
-        printDBG("Brstej.getArticleContent [%s]" % cItem)
-        retTab = []
-        url = cItem.get("url", "").strip()
-        if not url:
-            return []
-        if "watch.php" in url:
-            url = url.replace("watch.php", "play.php")
-        sts, data = self.getPage(url)
-        if not sts:
-            return []
-        title = cItem.get("title", "")
-        icon = cItem.get("icon", self.DEFAULT_ICON_URL)
-        old_desc = cItem.get("desc", "")
-        story = ""
-        desc_block = self.cm.ph.getDataBeetwenMarkers(data, ("<div", 'class="pm-video-description"'), ("</div", ">"), False)[1]
-        if desc_block:
-            h2_content = self.cm.ph.getDataBeetwenMarkers(desc_block, ("<h2", ">"), ("</h2", ">"), False)[1]
-            if h2_content:
-                story = self.cm.ph.cleanHtmlStr(h2_content)
+        printDBG("Brstej.getArticleContent [%s]" % cItem.get("url", ""))
+        meta = {}
+        if cItem.get("meta_type") and cItem.get("meta_title"):
+            try:
+                meta = getMeta(cItem["meta_type"], cItem["meta_title"], cItem.get("meta_year", ""))
+            except Exception:
+                printExc()
+        story, poster, info = "", "", {}
+        sts, data = self.getPage(cItem.get("url", ""))
+        if sts:
+            poster = self.cm.ph.getSearchGroups(data, r'<meta property="og:image" content="([^"]+)"')[0]
+            if "pds-hero" in data:
+                story = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'(?s)<p class="pds-description">(.*?)</p>')[0])
+                hero = self.cm.ph.getSearchGroups(data, r'(?s)<section class="pds-hero"(.*?)</section>')[0]
+                if not poster:
+                    poster = self.cm.ph.getSearchGroups(hero, r'<img[^>]+src="([^"]+)"')[0]
+                genre = self.cleanHtmlStr(self.cm.ph.getSearchGroups(hero, r'(?s)class="pds-category"[^>]*>(.*?)</a>')[0])
+                if genre:
+                    info["genres"] = genre
+                extra = [self.cleanHtmlStr(x) for x in re.findall(r'(?s)<span>(.*?)</span>', self.cm.ph.getSearchGroups(hero, r'(?s)<div class="pds-meta">(.*?)</div>')[0])]
+                if extra:
+                    info["episodes"] = ", ".join([x for x in extra if x])
             else:
-                p_match = re.search(r"<p[^>]*>(.*?)</p>", desc_block, re.S)
-                if p_match:
-                    story = self.cm.ph.cleanHtmlStr(p_match.group(1))
-        final_text = ""
-        if story.strip():
-            story_colored = "\\c0000FF00 القصة: \\n\\c00FFFFFF" + story.strip()
-            if old_desc:
-                clean_old_desc = old_desc.replace(Y, "\\c00FFFF00").replace(W, "\\c00FFFFFF")
-                final_text = story_colored + "\\n\\c00FFFFFF-------------------\\n" + clean_old_desc
-            else:
-                final_text = story_colored
-        else:
-            final_text = old_desc if old_desc else "\\c00FF0000لا يوجد قصة متاحة حالياً."
-        retTab.append({"title": title, "text": final_text, "images": [{"title": "", "url": icon}], "other_info": {}})
-        return retTab
+                story = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'(?s)<div id="pwr-description-copy"[^>]*>(.*?)</div>')[0])
+                duration = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'(?s)<span class="pwu-duration"[^>]*>(.*?)</span>')[0])
+                if duration:
+                    info["duration"] = duration
+                cats = self.cm.ph.getSearchGroups(data, r'(?s)<dt>الأقسام</dt>\s*<dd>(.*?)</dd>')[0]
+                genres = [self.cleanHtmlStr(g) for g in re.findall(r"(?s)<a[^>]*>(.*?)</a>", cats)]
+                if genres:
+                    info["genres"] = ", ".join([g for g in genres if g])
+            if not story:
+                story = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'<meta name="description" content="([^"]*)"')[0])
+        if cItem.get("meta_year"):
+            info["year"] = cItem["meta_year"]
+        info.update(meta.get("info", {}))
+        plot = meta.get("plot", "")
+        text = plot or story or cItem.get("desc", "")
+        if plot and story and story != plot:
+            text = "%s[/br][/br]%s" % (plot, story)
+        icon = meta.get("poster") or (self.getFullIconUrl(poster) if poster else "") or cItem.get("icon", "")
+        return [{"title": cItem.get("title", ""), "text": text, "images": [{"title": "", "url": icon}] if icon else [], "other_info": info}]
 
-    def cleanTitle(self, title):
-        title = self.cleanHtmlStr(title)
-        remove_words = ["مشاهدة", "اونلاين HD", "اون لاين HD", "اونلاين", "اون لاين"]
-        for w in remove_words:
-            title = title.replace(w, "")
-        title = re.sub(r"\s+", " ", title)
-        return title.strip()
-
+    ###################################################
+    # service
+    ###################################################
     def handleService(self, index, refresh=0, searchPattern="", searchType=""):
-        printDBG(">>> Brstej.handleService BEGIN <<<")
-        printDBG(">>> self.currItem = %s" % str(self.currItem))
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
+        if isJumpItem(self.currItem):
+            self.currItem = jumpTarget(self, self.currItem)
         name = self.currItem.get("name", "")
         category = self.currItem.get("category", "")
-        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s]" % (name, category))
+        printDBG("Brstej.handleService name[%s] category[%s]" % (name, category))
         self.currList = []
         if name is None:
             self.listMainMenu({"name": "category"})
-        elif category == "":
-            self.listMainMenu(self.currItem)
+        elif category == "brstej_submenu":
+            self.listSubMenu(self.currItem)
         elif category == "list_items":
             self.listItems(self.currItem)
-        elif category == "explore_item":
-            self.exploreItems(self.currItem)
-        elif category == "list_season_episodes":
-            self.listSeasonEpisodes(self.currItem)
-        elif category == "movies_folder":
-            self.listMoviesFolder(self.currItem)
-        elif category == "series_folder":
-            self.listSeriesFolder(self.currItem)
-        elif category == "series_packs_folder":
-            self.listSeriesPacksFolder(self.currItem)
-        elif category == "series_packs":
-            self.listSeriesPacks(self.currItem)
-        elif category == "sub_series_packs":
-            self.listSubSeriesPacks(self.currItem)
+        elif category in ("brstej_series", "brstej_season", "explore_item"):
+            # explore_item: favourites of the old host (series pages)
+            self.listSeries(self.currItem)
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({"search_item": False, "name": "category"})
@@ -901,11 +569,13 @@ class Brstej(CBaseHostClass):
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
-class IPTVHost(CHostBase):
+class IPTVHost(GenericFolderWatchedHostMixin, CHostBase):
+
     def __init__(self):
         CHostBase.__init__(self, Brstej(), True, [])
+        self.cachedRet = None
+        self.refreshAfterWatchedFlagChange = False
+        self.watchedHelper = IPTVWatchedHelper("brstej")
 
     def withArticleContent(self, cItem):
-        if "video" == cItem.get("type", "") or "explore_item" == cItem.get("category", ""):
-            return True
-        return False
+        return cItem.get("category", "") in ("brstej_video", "brstej_series", "brstej_season")

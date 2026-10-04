@@ -2321,16 +2321,29 @@ def GetVersionNum(ver):
         return 0
 
 
+# the optional native _subparser.so is checked once per session (it is called for every subtitle
+# load), the config switch still on every call
+_subParserExtensionState = []
+
+
 def IsSubtitlesParserExtensionCanBeUsed():
     try:
-        if config.plugins.iptvplayer.useSubtitlesParserExtension.value:
-            from Plugins.Extensions.IPTVPlayer.libs.iptvsubparser import _subparser as subparser
-            if '' != subparser.version():
-                printDBG('Subtitles Parser Extension available')
-                return True
+        if not config.plugins.iptvplayer.useSubtitlesParserExtension.value:
+            return False
     except Exception:
-        printExc('WARNING - Subtitles Parser Extension NOT available')
-    return False
+        return False
+    if not _subParserExtensionState:
+        available = False
+        try:
+            from Plugins.Extensions.IPTVPlayer.libs.iptvsubparser import _subparser as subparser
+            available = '' != subparser.version()
+            printDBG('Subtitles Parser Extension available' if available else 'Subtitles Parser Extension has no version - using the Python parser')
+        except ImportError:
+            printDBG('Subtitles Parser Extension not installed - using the Python parser')
+        except Exception:
+            printExc('WARNING - Subtitles Parser Extension NOT available')
+        _subParserExtensionState.append(available)
+    return _subParserExtensionState[0]
 
 
 def IsBrokenDriver(filePath):

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 2026-07-26 - Updated to resolve renamed video files (.mp4 -> .mkv and similar) for play/remove actions, extend archive video detection, ignore non-subtitle sidecar text files,  and delete related sidecar files with immediate list refresh on remove. - Kamikaze24
+# Last Modified: 03.10.2026 - Archive no longer lists .jpg/.txt sidecars as extra copies of their video; LRM prefix for RTL file names in the list.
+# 2026-07-26 - Updated to resolve renamed video files (.mp4 -> .mkv and similar) for play/remove actions, extend archive video detection, ignore non-subtitle sidecar text files,  and delete related sidecar files with immediate list refresh on remove. - Kamikaze24
 #
 #  IPTV download manager UI
 #
@@ -41,13 +42,33 @@ from Tools.LoadPixmap import LoadPixmap
 from datetime import timedelta
 from Screens.MessageBox import MessageBox
 from os import path as os_path, remove as os_remove, rename as os_rename
-from glob import escape as glob_escape, glob
+from glob import glob
+try:
+    from glob import escape as glob_escape
+except ImportError:  # Python 2.7 has no glob.escape
+    import re as _re
+
+    def glob_escape(pathname):
+        drive, path = os_path.splitdrive(pathname)
+        return drive + _re.sub(r'([*?[])', r'[\1]', path)
 ###################################################
 
 #########################################################
 #                    GLOBALS
 #########################################################
 gIPTVDM_listChanged = False
+
+# U+200E LEFT-TO-RIGHT MARK (utf-8 bytes on py2, where list texts are utf-8 str)
+LRM = u"‎" if isinstance("", type(u"")) else "\xe2\x80\x8e"
+
+
+def ltrDisplayText(text):
+    # Display only (never the real file name): a name starting with an RTL
+    # character (e.g. "<arabic title>.mp4") makes enigma2's bidi pick an RTL
+    # paragraph direction and shows it as "mp4.<arabic title>". A leading LRM
+    # forces LTR paragraph direction; the Arabic run itself still renders RTL.
+    text = ensure_str(text)
+    return (LRM + text) if text else text
 
 
 class IPTVDMWidget(Screen):
@@ -208,6 +229,9 @@ class IPTVDMWidget(Screen):
         self.mainTimer.start(500)
 
         self.localFiles = []
+        self.tmpList = []
+        self.tmpSeen = set()
+        self.tmpData = ''
         self.console = eConsoleAppContainer()
         self.console_appClosed_conn = eConnectCallback(self.console.appClosed, self.refreshFinished)
         self.console_stderrAvail_conn = eConnectCallback(self.console.stderrAvail, self.refreshNewData)
@@ -226,6 +250,7 @@ class IPTVDMWidget(Screen):
         self.tmpList.sort(key=lambda x: x.fileName.lower())
         self.localFiles = self.tmpList
         self.tmpList = []
+        self.tmpSeen = set()
         self.tmpData = ''
         self.underRefreshing = False
         self.reloadList(True)
@@ -262,6 +287,10 @@ class IPTVDMWidget(Screen):
                     break
             if skip:
                 continue
+            # never list the same file twice in one scan
+            if fileName in self.tmpSeen:
+                continue
+            self.tmpSeen.add(fileName)
 
             listItem = DMItemBase(url=fileName, fileName=fileName)
             try:
@@ -273,6 +302,12 @@ class IPTVDMWidget(Screen):
             self.tmpList.append(listItem)
 
     def _getArchiveFilePath(self, fileName):
+        # Only real video files become Archive entries. This used to map any
+        # non-video name onto a video with the same base name (baseName +
+        # VIDEO_FILE_EXTENSIONS), so the poster/description sidecars
+        # "x.jpg"/"x.txt" written next to every download were each turned
+        # into a second/third "x.mp4" row - the video itself is listed by
+        # lsdir anyway, so that substitution could only ever add duplicates.
         fileName = ensure_str(fileName).strip()
         if fileName.startswith('.'):
             return None
@@ -280,15 +315,6 @@ class IPTVDMWidget(Screen):
         fullPath = os_path.join(config.plugins.iptvplayer.DownloadsDir.value, fileName)
         if self._isVideoFile(fullPath):
             return fullPath
-
-        baseName, ext = os_path.splitext(fullPath)
-        if ext.lower() in self.VIDEO_FILE_EXTENSIONS:
-            return None
-
-        for candidate in self._getPossibleVideoFiles(baseName):
-            if os_path.exists(candidate):
-                printDBG("IPTVDMWidget._getArchiveFilePath substitute [%s] -> [%s]" % (fullPath, candidate))
-                return candidate
         return None
 
     def _isVideoFile(self, fileName):
@@ -364,7 +390,7 @@ class IPTVDMWidget(Screen):
                     return candidate
 
         try:
-            matches = glob(baseName + '.*')
+            matches = glob(glob_escape(baseName) + '.*')
             for candidate in matches:
                 if self._isVideoFile(candidate):
                     printDBG("IPTVDMWidget._getExistingFilePath glob substitute [%s] -> [%s]" % (fileName, candidate))
@@ -456,7 +482,7 @@ class IPTVDMWidget(Screen):
         if len(matches) == 1:
             self["downloadlist"].setCurrentIndex(matches[0][1])
             return
-        choiceItems = [IPTVChoiceBoxItem(name=name, privateData=idx) for name, idx in matches]
+        choiceItems = [IPTVChoiceBoxItem(name=ltrDisplayText(name), privateData=idx) for name, idx in matches]
         height = self._getActionListHeight(len(choiceItems))
         openChoiceBox(self.session, {'width': 600, 'height': height, 'current_idx': 0, 'title': _("Matching entries"), 'options': choiceItems, 'list_class': IPTVPlayerSelectOptionChoiceBoxList, 'chrome': True}, self._findEntryResultCallback)
 
@@ -649,6 +675,7 @@ class IPTVDMWidget(Screen):
             if not self.underRefreshing:
                 self.underRefreshing = True
                 self.tmpList = []
+                self.tmpSeen = set()
                 self.tmpData = ''
                 cmd = '%s "%s" rl r' % ("/usr/bin/lsdir", shellQuote(config.plugins.iptvplayer.DownloadsDir.value))
                 printDBG("cmd[%s]" % cmd)
@@ -991,7 +1018,7 @@ class IPTVDMWidget(Screen):
 #        res.append((eListboxPythonMultiContent.TYPE_TEXT, 45, self.fonts[0][2] + self.fonts[1][2], width - 45 - 240, self.fonts[2][2], 2, RT_HALIGN_LEFT | RT_VALIGN_CENTER, info))
 #        res.append((eListboxPythonMultiContent.TYPE_PIXMAP_ALPHABLEND, 3, 1, 64, 64, self.dictPIX.get(item.status, None)))
 
-        return (self.dictPIX.get(item.status, None), fileName, item.url, info, status)
+        return (self.dictPIX.get(item.status, None), ltrDisplayText(fileName), item.url, info, status)
 
     def buildEnties(self, items):
         listItems = []

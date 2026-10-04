@@ -29,12 +29,14 @@ class IPTVChoiceBoxItem:
                  description="",
                  privateData=None,
                  type=TYPE_NONE,
-                 failed=False):
+                 failed=False,
+                 used=False):
         self.name = name
         self.description = description
         self.type = type
         self.privateData = privateData
         self.failed = failed
+        self.used = used  # link picker: this mirror was already chosen in this session
 
 
 class IPTVChoiceBoxWidget(Screen):
