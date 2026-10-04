@@ -723,7 +723,7 @@ class common:
     def clearCookie(self, cookiefile, leaveNames=[], removeNames=None, ignoreDiscard=True, ignoreExpires=False):
         if not os.path.isfile(cookiefile):
             # nothing saved yet for this host - nothing to clear (was logged as an exception)
-            return
+            return True
         try:
             toRemove = []
             if self.usePyCurl():
@@ -790,7 +790,7 @@ class common:
         if IsMainThread():
             msg1 = _('It is not allowed to call getURLRequestData from main thread.')
             msg2 = _('You should never perform block I/O operations in the __init__.')
-            GetIPTVNotify().push(r'\s'.join([msg1, msg2]), 'error', 40)
+            GetIPTVNotify().push(' '.join([msg1, msg2]), 'error', 40)
             raise Exception("Wrong usage!")
 
         # work on our own copy - the code below mutates params (return_data,
@@ -1328,7 +1328,7 @@ class common:
         if IsMainThread():
             msg1 = _('It is not allowed to call getURLRequestData from main thread.')
             msg2 = _('You should never perform block I/O operations in the __init__.')
-            GetIPTVNotify().push(r'\s'.join([msg1, msg2]), 'error', 40)
+            GetIPTVNotify().push(' '.join([msg1, msg2]), 'error', 40)
             return False
 
         if 'header' in params:
@@ -1937,7 +1937,7 @@ class common:
         if IsMainThread():
             msg1 = _('It is not allowed to call getURLRequestData from main thread.')
             msg2 = _('You should never perform block I/O operations in the __init__.')
-            GetIPTVNotify().push(r'\s'.join([msg1, msg2]), 'error', 40)
+            GetIPTVNotify().push(' '.join([msg1, msg2]), 'error', 40)
             raise Exception("Wrong usage!")
 
         # our own copy - the cookie block below does params['use_cookie'] = True

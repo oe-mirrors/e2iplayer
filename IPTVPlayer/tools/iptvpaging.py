@@ -99,7 +99,8 @@ def isJumpItem(cItem):
 
 
 def jumpTarget(host, cItem):
-    """asks for the page number, returns the item to list that page with (category = the list's own)"""
+    """asks for the page number, returns the item to list that page with (category = the list's own);
+    EXIT / an empty answer lists the current page again (the jump row already opened a list level)"""
     maxPage = _toInt(cItem.get("max_page"), 0)
     current = max(1, _toInt(cItem.get("current_page"), 1))
     title = _("Jump to a selected page, max: {}").format(maxPage) if maxPage else _("Jump to a selected page")
@@ -130,5 +131,4 @@ def jumpTarget(host, cItem):
     if url:
         target["url"] = url
     printDBG("iptvpaging: jump %d -> %d [%s]" % (current, page, target.get("url", "")))
-    host.currItem = target
     return target

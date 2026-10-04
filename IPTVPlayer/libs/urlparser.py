@@ -124,11 +124,12 @@ def cryptoJSAesDecrypt(encrypted, passphrase):
     # CryptoJS.AES.decrypt(<JSON {ct, iv, s}>, passphrase): OpenSSL EVP_BytesToKey (MD5) -> AES-256-CBC, PKCS#7;
     # the plain text, None when the passphrase does not fit
     try:
-        salt, password, keyIv, prev = unhexlify(encrypted["s"]), ensure_binary(passphrase), b"", b""
-        while len(keyIv) < 32:
+        # only the 32 key bytes are derived - the IV comes with the data
+        salt, password, key, prev = unhexlify(encrypted["s"]), ensure_binary(passphrase), b"", b""
+        while len(key) < 32:
             prev = md5(prev + password + salt).digest()
-            keyIv += prev
-        decrypter = pyaes.Decrypter(pyaes.AESModeOfOperationCBC(keyIv[:32], unhexlify(encrypted["iv"])))
+            key += prev
+        decrypter = pyaes.Decrypter(pyaes.AESModeOfOperationCBC(key[:32], unhexlify(encrypted["iv"])))
         plain = decrypter.feed(base64.b64decode(encrypted["ct"]))
         return ensure_str(plain + decrypter.feed())
     except Exception:
@@ -1124,7 +1125,7 @@ class pageParser(CaptchaHelper):
         query = ("?h=%s" % videoHash) if videoHash else ""
         playerUrl = "https://player.vimeo.com/video/%s%s" % (videoId, query)
 
-        config = None
+        playerConfig = None
         sts, data = self.cm.getPage(playerUrl, {"header": HTTP_HEADER})
         if sts:
             start = data.find("window.playerConfig")
@@ -1132,23 +1133,25 @@ class pageParser(CaptchaHelper):
             if start > -1:
                 try:
                     from json import JSONDecoder
+                    # raw_decode only finds where the object ends; json_loads parses it the plugin's way
+                    # (utf-8 str on Python 2)
                     end = JSONDecoder().raw_decode(data, start)[1]
-                    config = json_loads(data[start:end])
+                    playerConfig = json_loads(data[start:end])
                 except Exception:
                     printExc()
-        if not isinstance(config, dict):
+        if not isinstance(playerConfig, dict):
             sts, data = self.cm.getPage("https://player.vimeo.com/video/%s/config%s" % (videoId, query), {"header": HTTP_HEADER})
             try:
-                config = json_loads(data) if sts else None
+                playerConfig = json_loads(data) if sts else None
             except Exception:
-                config = None
-        if not isinstance(config, dict) or not isinstance(config.get("request"), dict):
+                playerConfig = None
+        if not isinstance(playerConfig, dict) or not isinstance(playerConfig.get("request"), dict):
             SetIPTVPlayerLastHostError(_("Vimeo: this video is private, removed or may only be played on the site that embeds it."))
             return []
 
         playerHeader = {"Referer": "https://player.vimeo.com/", "Origin": "https://player.vimeo.com", "User-Agent": HTTP_HEADER["User-Agent"]}
         subTracks = []
-        for track in config["request"].get("text_tracks") or []:
+        for track in playerConfig["request"].get("text_tracks") or []:
             subUrl = track.get("url", "")
             if subUrl.startswith("/"):
                 subUrl = "https://player.vimeo.com" + subUrl
@@ -1156,7 +1159,7 @@ class pageParser(CaptchaHelper):
                 subTracks.append({"title": track.get("label") or track.get("lang", ""), "url": subUrl, "lang": track.get("lang", ""), "format": "vtt"})
 
         urlTab = []
-        files = config["request"].get("files") or {}
+        files = playerConfig["request"].get("files") or {}
         for item in sorted(files.get("progressive") or [], key=lambda x: int(x.get("height", 0) or 0), reverse=True):
             if item.get("url"):
                 meta = dict(playerHeader)
@@ -2038,6 +2041,7 @@ class pageParser(CaptchaHelper):
             return []
         host = "https://%s" % urlparser.getDomain(baseUrl, True)
         if "/d/" in baseUrl:
+            # /d/ links were rewritten to /e/ above - this only happens when the mirror redirects back to a /d/ page
             url = self.cm.ph.getSearchGroups(data, 'iframe src="([^"]+)')[0]
             baseUrl = host + url
             sts, data = self.cm.getPage(baseUrl, urlParams)
@@ -2211,7 +2215,7 @@ class pageParser(CaptchaHelper):
         COOKIE_FILE = self.COOKIE_PATH + "vinovo.cookie"
         HTTP_HEADER = self.cm.getDefaultHeader(browser="chrome")
         params = {"header": HTTP_HEADER, "use_cookie": True, "save_cookie": True, "load_cookie": False, "cookiefile": COOKIE_FILE}
-        pageUrl = re.sub(r"/(?:d|v|f)/", "/e/", baseUrl.split("?")[0], 1)
+        pageUrl = re.sub(r"/(?:d|v|f)/", "/e/", baseUrl.split("?")[0], count=1)
         sts, data = self.cm.getPage(pageUrl, params)
         if not sts:
             return []
@@ -3091,14 +3095,14 @@ class pageParser(CaptchaHelper):
         if "cybervynx.com" in baseUrl:
             baseUrl = baseUrl.replace("cybervynx.com", "guxhag.com")
         if "savefiles.com/" in baseUrl or "streamhls.to/" in baseUrl:
-            # add 041026: streamhls.to is savefiles too - its /e/ page is only a click-to-play form
+            # add 041026: streamhls.to is savefiles too - its /e/ page is only a click-to-play form;
+            # download links /d/<id>_n play as /<id> (only the quality suffix right after the id goes)
             baseUrl = baseUrl.replace("/v/", "/").replace("/e/", "/")
+            baseUrl = re.sub(r"/d/([0-9a-zA-Z]+)(?:_n)?", r"/\1", baseUrl, count=1)
         if "savefiles.com/" in baseUrl or "streamhls.to/" in baseUrl or "abstream.to/" in baseUrl:
             # add 041026: these pages bind the stream token to the client IP and their CDNs (s*.savefiles.com,
             # *.streambucket.xyz) are IPv4 only - a page fetched over IPv6 gives a playlist that answers 403
             urlParams["ipv4_only"] = True
-            if "/d/" in baseUrl:
-                baseUrl = baseUrl.replace("/d/", "/").replace("_n", "")
         if "1vid.xyz/" in baseUrl:
             # add 041026: same IP binding (i=<IPv6 /64> instead of i=<IPv4 /16>), *.1vid.online is IPv4 only -> 404
             urlParams["ipv4_only"] = True
@@ -3161,12 +3165,11 @@ class pageParser(CaptchaHelper):
             url = url.group(1)
             url = "https:" + url if url.startswith("//") else url
             url = urlparser.decorateUrl(url, {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": host, "Origin": host[:-1], "external_sub_tracks": subTracks})
-            # fix 041026: the same CDN family (*.acek-cdn.com, *.premilkyway.com, *.cdn-centaurus.com: "/hls2/...&i=0.4&sp=500")
-            # also serves fastvid.cam, hlswish.com and vidhideplus.com - exteplayer3 showed no picture on every one of them
+            # fix 041026: StreamHG HLS and the same CDN family (*.acek-cdn.com, *.premilkyway.com, *.cdn-centaurus.com:
+            # "/hls2/...&i=0.4&sp=500", also behind fastvid.cam, hlswish.com and vidhideplus.com): exteplayer3 fails on
+            # it on the box ("Invalid data found when processing input" or no picture) while gstplayer and hlsdl play
+            # it; the playlist and the TS segments are clean, ffmpeg 8.1 (schannel) on a PC plays it too
             if ".m3u8" in url and ("hglamioz.com" in host or ("/hls2/" in url and re.search(r"[?&]sp=500(?:&|$)", url))):
-                # 041026: StreamHG HLS (*.premilkyway.com, *.cdn-centaurus.com ...): exteplayer3 fails on it on the box
-                # ("Invalid data found when processing input" or no picture) while gstplayer and hlsdl play it;
-                # the playlist and the TS segments are clean, ffmpeg 8.1 (schannel) on a PC plays it too
                 url.meta["iptv_buffering"] = "required"
             if ".m3u8" in url:
                 urltab.extend(getDirectM3U8Playlist(url, sortWithMaxBitrate=99999999))
@@ -4930,7 +4933,7 @@ class pageParser(CaptchaHelper):
         printDBG("parserYANDEXDISK baseUrl[%s]" % baseUrl)
         HTTP_HEADER = self.cm.getDefaultHeader()
         api = "https://cloud-api.yandex.net/v1/disk/public/resources"
-        publicKey = urllib_quote(strwithmeta(baseUrl).split("?")[0].split("#")[0], safe="")
+        publicKey = urllib_quote(baseUrl.split("?")[0].split("#")[0], safe="")
         sts, data = self.cm.getPage("%s?public_key=%s&limit=200" % (api, publicKey), {"header": HTTP_HEADER})
         if not sts:
             return []
