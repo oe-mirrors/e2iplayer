@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-02 22:49+0000\n"
+"POT-Creation-Date: 2026-10-04 21:08+0000\n"
 "PO-Revision-Date: 2026-03-13 15:06+0300\n"
 "Last-Translator: audi06_19 <audi06_19@hotmail.com>\n"
 "Language-Team: Turkish\n"
@@ -77,6 +77,18 @@ msgstr ""
 msgid "%d duplicate entry removed."
 msgstr ""
 
+#, python-format
+msgid "%d parts"
+msgstr ""
+
+#, python-format
+msgid "%d programmes"
+msgstr ""
+
+#, python-format
+msgid "%d recitations"
+msgstr ""
+
 #, fuzzy, python-format
 msgid "%d videos"
 msgstr "Videolara gözat"
@@ -126,7 +138,23 @@ msgid "%s password"
 msgstr "%s parola"
 
 #, python-format
+msgid "%s plays"
+msgstr ""
+
+#, python-format
+msgid "%s posts"
+msgstr ""
+
+#, python-format
+msgid "%s recitations"
+msgstr ""
+
+#, python-format
 msgid "%s refused the download. Please set your login and password in the configuration."
+msgstr ""
+
+#, python-format
+msgid "%s refused the request (Cloudflare check, HTTP %s). This host needs curl-impersonate on the receiver."
 msgstr ""
 
 #, python-format
@@ -142,8 +170,16 @@ msgid "%s subtitles download - how to"
 msgstr "%s altyazı indirme - nasıl yapılır"
 
 #, python-format
+msgid "%s talks"
+msgstr ""
+
+#, python-format
 msgid "%s timeout."
 msgstr "%s zaman aşımı."
+
+#, python-format
+msgid "%s uploads"
+msgstr ""
 
 #, python-format
 msgid ""
@@ -281,9 +317,6 @@ msgstr "Bölümler"
 msgid "--All--"
 msgstr ""
 
-msgid "--Any--"
-msgstr ""
-
 #, fuzzy
 msgid "--Other--"
 msgstr "Diğer"
@@ -319,6 +352,9 @@ msgstr ""
 #, fuzzy
 msgid "30 seconds"
 msgstr "saniye"
+
+msgid "4K movies"
+msgstr ""
 
 #, fuzzy
 msgid "5 seconds"
@@ -378,18 +414,30 @@ msgstr "Erişim reddedildi. Lütfen parolayı kontrol edin."
 msgid "Accessible"
 msgstr "Erişim Yasak"
 
+#, python-format
+msgid "Account %d - name (optional):"
+msgstr ""
+
+#, python-format
+msgid "Account %d - password:"
+msgstr ""
+
+#, python-format
+msgid "Account %d - server (http://host:port or get.php link):"
+msgstr ""
+
+#, python-format
+msgid "Account %d - user name:"
+msgstr ""
+
 msgid "Accounts & API keys"
+msgstr ""
+
+msgid "Action"
 msgstr ""
 
 msgid "Action & Thriller"
 msgstr ""
-
-#, python-format
-msgid "Active: %s"
-msgstr "Etkin: %s"
-
-msgid "Actor profile and Works"
-msgstr "Oyuncu profili ve çalışmaları"
 
 msgid "Actors"
 msgstr "Oyuncular"
@@ -426,19 +474,43 @@ msgstr "Yeni favori grubu ekle"
 msgid "Add to User Links"
 msgstr "Bağlantı önbelleğini kullan"
 
+msgid "Added"
+msgstr ""
+
 #, python-format
 msgid "Added by: %s, directory: %s"
 msgstr "Ekleyen: %s, dizin: %s"
 
+msgid "Adhan"
+msgstr ""
+
+msgid "Adventure"
+msgstr ""
+
+msgid "African series"
+msgstr ""
+
 #, fuzzy
 msgid "Age limit:"
 msgstr "Anime listesi"
+
+msgid "Aired"
+msgstr ""
+
+msgid "Aired this week"
+msgstr ""
+
+msgid "Airing now"
+msgstr ""
 
 msgid "All"
 msgstr "Tümü"
 
 msgid "All Sports"
 msgstr "Tüm Sporlar"
+
+msgid "All audiobooks"
+msgstr ""
 
 #, fuzzy
 msgid "All categories"
@@ -447,13 +519,28 @@ msgstr "Kategoriler"
 msgid "All in one"
 msgstr "Hepsi bir arada"
 
+msgid "All movies"
+msgstr ""
+
+msgid "All programmes"
+msgstr ""
+
 #, fuzzy
 msgid "All results"
 msgstr "Daha fazla sonuç"
 
+msgid "All seasons"
+msgstr ""
+
+msgid "All series"
+msgstr ""
+
 #, fuzzy
 msgid "All shows"
 msgstr "şovlar"
+
+msgid "All stations"
+msgstr ""
 
 msgid "All streams"
 msgstr "Tüm akışlar"
@@ -461,6 +548,12 @@ msgstr "Tüm akışlar"
 #, fuzzy
 msgid "All time"
 msgstr "Hepsi bir arada"
+
+msgid "All titles A-Z"
+msgstr ""
+
+msgid "All videos"
+msgstr ""
 
 msgid "Allow VP9 codec:"
 msgstr "VP9 kodeğine izin ver:"
@@ -513,12 +606,6 @@ msgid "An API key from subsource.net can be entered in the E2iPlayer settings (S
 msgstr ""
 
 #, python-format
-msgid ""
-"An error occurred when try to sign in the user \"%s.\n"
-"Please check your login credentials and try again later...\""
-msgstr ""
-
-#, python-format
 msgid "An error occurred while loading a subtitle from [%s]."
 msgstr ""
 
@@ -529,12 +616,24 @@ msgstr ""
 msgid "Anatomy"
 msgstr ""
 
+msgid "Animals"
+msgstr ""
+
+msgid "Animated movies"
+msgstr ""
+
+msgid "Animated series"
+msgstr ""
+
 #, fuzzy
 msgid "Animation"
 msgstr "Bilgi"
 
 msgid "Anime"
 msgstr "Anime"
+
+msgid "Anime A-Z"
+msgstr ""
 
 msgid "Anime Movies"
 msgstr "Anime Filmleri"
@@ -545,11 +644,23 @@ msgstr "Anime Dizileri"
 msgid "Anime TV series"
 msgstr "Anime TV dizileri"
 
+msgid "Anime genres"
+msgstr ""
+
 msgid "Anime list"
 msgstr "Anime listesi"
 
 msgid "Anime movies"
 msgstr "Anime filmleri"
+
+msgid "Anime movies A-Z"
+msgstr ""
+
+msgid "Anime series (dubbed)"
+msgstr ""
+
+msgid "Anime series A-Z"
+msgstr ""
 
 msgid "Answer"
 msgstr "Yanıt"
@@ -575,6 +686,12 @@ msgstr "Arap Dizileri"
 msgid "Arabic movies"
 msgstr "Arap filmleri"
 
+msgid "Arabic plays"
+msgstr ""
+
+msgid "Arabic songs"
+msgstr ""
+
 msgid "Archive"
 msgstr "Arşiv"
 
@@ -589,6 +706,25 @@ msgstr "Arama geçmişini silmek istediğinize emin misiniz?"
 msgid "Are you sure you want to reset all settings to their default values?"
 msgstr "Arama geçmişini silmek istediğinize emin misiniz?"
 
+msgid "Art"
+msgstr ""
+
+msgid "Articles"
+msgstr ""
+
+msgid "Artist"
+msgstr ""
+
+#, python-format
+msgid "Artist \"%s\" not found on Last.fm - the exact artist name is needed."
+msgstr ""
+
+msgid "Artists"
+msgstr ""
+
+msgid "Asian"
+msgstr ""
+
 #, fuzzy
 msgid "Asian TV series"
 msgstr "Anime TV dizileri"
@@ -596,6 +732,9 @@ msgstr "Anime TV dizileri"
 #, fuzzy
 msgid "Asian movies"
 msgstr "Anime filmleri"
+
+msgid "Asian series (dubbed)"
+msgstr ""
 
 msgid "Aspect"
 msgstr "En-boy oranı"
@@ -606,11 +745,20 @@ msgstr ""
 msgid "At the live edge"
 msgstr ""
 
+msgid "Atheer radio (Arabic)"
+msgstr ""
+
 msgid "Audio"
 msgstr "Ses"
 
 msgid "Audio buffer size [KB]"
 msgstr "Ses tampon boyutu [KB]"
+
+msgid "Audio description"
+msgstr ""
+
+msgid "Audio programme"
+msgstr ""
 
 #, fuzzy
 msgid "Audio track"
@@ -621,6 +769,9 @@ msgstr "Ses parçaları"
 
 #, python-format
 msgid "Author: %s"
+msgstr ""
+
+msgid "Authors"
 msgstr ""
 
 msgid "Auto"
@@ -646,8 +797,17 @@ msgstr "Otomatik"
 msgid "Automatically turn on external subtitles"
 msgstr "Harici altyazıları otomatik aç"
 
+msgid "Automotive"
+msgstr ""
+
 msgid "Autoplay start delay"
 msgstr "Otomatik oynatma başlama gecikmesi"
+
+msgid "Autumn"
+msgstr ""
+
+msgid "Available worldwide"
+msgstr ""
 
 msgid "Awards:"
 msgstr ""
@@ -675,12 +835,24 @@ msgstr "İzlendi olarak işaretle"
 msgid "Best"
 msgstr ""
 
+msgid "Best Pinkbike videos"
+msgstr ""
+
+msgid "Best movies"
+msgstr ""
+
+msgid "Best series"
+msgstr ""
+
 msgid "Binaries"
 msgstr ""
 
 #, fuzzy
 msgid "Bing Suggestions"
 msgstr "Google Önerileri"
+
+msgid "Biography"
+msgstr ""
 
 #, python-format
 msgid "Bitrate: %s"
@@ -698,6 +870,9 @@ msgstr ""
 #, fuzzy
 msgid "Board Review"
 msgstr "Önizleme"
+
+msgid "Books"
+msgstr ""
 
 msgid "Box"
 msgstr ""
@@ -720,6 +895,9 @@ msgstr ""
 
 msgid "Buffering location"
 msgstr "Tampon konumu"
+
+msgid "Business"
+msgstr ""
 
 #, python-format
 msgid "By %s"
@@ -778,14 +956,40 @@ msgstr ""
 msgid "Carrying: %s | UP/DOWN=Move, OK=Drop"
 msgstr ""
 
+msgid "Cartoon genres"
+msgstr ""
+
+msgid "Cartoon series (dubbed)"
+msgstr ""
+
 msgid "Cartoons"
 msgstr "Çizgi filmler"
+
+msgid "Cartoons A-Z"
+msgstr ""
 
 #, fuzzy
 msgid "Cartoons and anime"
 msgstr "Çizgi filmler"
 
+msgid "Cartoons and series"
+msgstr ""
+
 msgid "Cast:"
+msgstr ""
+
+msgid "Catch-up"
+msgstr ""
+
+#, python-format
+msgid "Catch-up (%d channels)"
+msgstr ""
+
+msgid "Catch-up (timeshift.php)"
+msgstr ""
+
+#, python-format
+msgid "Catch-up: %d days"
 msgstr ""
 
 msgid "Categories"
@@ -794,6 +998,9 @@ msgstr "Kategoriler"
 #, fuzzy
 msgid "Categories:"
 msgstr "Kategoriler"
+
+msgid "Category"
+msgstr ""
 
 #, fuzzy
 msgid "Category:"
@@ -828,6 +1035,12 @@ msgstr "Çocuk"
 msgid "Children & Family"
 msgstr "Çocuk"
 
+msgid "Chinese"
+msgstr ""
+
+msgid "Chinese anime"
+msgstr ""
+
 #, fuzzy
 msgid "Cinema History"
 msgstr "Arama geçmişi"
@@ -835,6 +1048,12 @@ msgstr "Arama geçmişi"
 #, fuzzy
 msgid "Cinema movies"
 msgstr "Anime filmleri"
+
+msgid "Classic"
+msgstr ""
+
+msgid "Classic movies"
+msgstr ""
 
 msgid "Clear"
 msgstr "Temizle"
@@ -868,6 +1087,9 @@ msgstr ""
 msgid "Closing. Please wait..."
 msgstr "Kapanıyor. Lütfen bekleyin..."
 
+msgid "Clubs and athletes"
+msgstr ""
+
 msgid "Code"
 msgstr ""
 
@@ -881,9 +1103,6 @@ msgstr "Koleksiyonlar"
 msgid "Colored text in titles and descriptions"
 msgstr ""
 
-msgid "Columbia"
-msgstr ""
-
 msgid "Combine pull request merges with their commit"
 msgstr ""
 
@@ -894,6 +1113,18 @@ msgid "Comments"
 msgstr ""
 
 msgid "Commits"
+msgstr ""
+
+msgid "Competitions"
+msgstr ""
+
+msgid "Complete Quran"
+msgstr ""
+
+msgid "Complete series"
+msgstr ""
+
+msgid "Completed"
 msgstr ""
 
 msgid "Concert"
@@ -941,6 +1172,10 @@ msgstr "Sunucu bağlantısı başarısız oldu!"
 msgid "Connection to the weeb.tv server failed."
 msgstr "Sunucu bağlantısı başarısız oldu!"
 
+#, python-format
+msgid "Connections: %s of %s"
+msgstr ""
+
 #, fuzzy
 msgid "Content not available"
 msgstr "Geçerli bağlantı yok."
@@ -950,6 +1185,9 @@ msgstr ""
 
 msgid "Continue downloading"
 msgstr "İndirmeye devam et"
+
+msgid "Cooking"
+msgstr ""
 
 msgid "Copy"
 msgstr "Kopyala"
@@ -1018,6 +1256,9 @@ msgstr ""
 msgid "Creators:"
 msgstr "Oyuncular"
 
+msgid "Crime"
+msgstr ""
+
 msgid "Critical Error - cookie can't be saved!"
 msgstr ""
 
@@ -1025,6 +1266,9 @@ msgid "Critical Error – Content-Encoding gzip cannot be handled!"
 msgstr ""
 
 msgid "Culture"
+msgstr ""
+
+msgid "Culture and lifestyle"
 msgstr ""
 
 msgid "Culture and pop"
@@ -1198,18 +1442,23 @@ msgstr "Altyazı parçası seç"
 msgid "Delete thumbnails cache now"
 msgstr ""
 
+msgid "Denmark"
+msgstr ""
+
 msgid "Description:"
 msgstr "Açıklama:"
 
 msgid "Detail/expert mode"
 msgstr ""
 
+msgid "Detective"
+msgstr ""
+
 msgid "Developers:"
 msgstr ""
 
-#, fuzzy
-msgid "Direct"
-msgstr "Yönlendir"
+msgid "Digital programmes"
+msgstr ""
 
 #, fuzzy
 msgid "Director:"
@@ -1260,6 +1509,9 @@ msgstr "Devre dışı servisleri kaldır"
 msgid "Discovery"
 msgstr ""
 
+msgid "Disney cartoon movies (Egyptian dub)"
+msgstr ""
+
 #, fuzzy
 msgid "Display language:"
 msgstr "Dil seç"
@@ -1290,12 +1542,18 @@ msgstr ""
 msgid "Documentaries"
 msgstr "Belgeseller"
 
+msgid "Documentaries A-Z"
+msgstr ""
+
 msgid "Documentary"
 msgstr "Belgesel"
 
 #, fuzzy
 msgid "Documentary Movies"
 msgstr "Belgeseller"
+
+msgid "Documentary series"
+msgstr ""
 
 msgid "Done - the result was sent to the box, you can close this page."
 msgstr ""
@@ -1421,6 +1679,21 @@ msgstr ""
 msgid "Drama"
 msgstr ""
 
+msgid "Dramas (Asian)"
+msgstr ""
+
+msgid "Dubbed"
+msgstr ""
+
+msgid "Dubbed anime"
+msgstr ""
+
+msgid "Dubbed movies"
+msgstr ""
+
+msgid "Dubbed series"
+msgstr ""
+
 #, fuzzy
 msgid "DuckDuckGo Suggestions"
 msgstr "Google Önerileri"
@@ -1437,6 +1710,9 @@ msgid "Duration: %s"
 msgstr "Süre:"
 
 msgid "Dutch"
+msgstr ""
+
+msgid "E-mail (free TBN GO account):"
 msgstr ""
 
 #, fuzzy
@@ -1478,6 +1754,9 @@ msgstr ""
 msgid "EXIT"
 msgstr ""
 
+msgid "Economy"
+msgstr ""
+
 msgid "Edit"
 msgstr ""
 
@@ -1512,7 +1791,13 @@ msgstr "Giriş başarısız."
 msgid "Edit, sort and delete search history entries"
 msgstr "Arama geçmişini silmek istediğinize emin misiniz?"
 
+msgid "Education"
+msgstr ""
+
 msgid "Educational Animation"
+msgstr ""
+
+msgid "Egyptian series"
 msgstr ""
 
 msgid "Email"
@@ -1538,6 +1823,9 @@ msgstr "Yeniden sıralama modunu etkinleştir"
 msgid "Enabled hosts"
 msgstr "Host gruplarını etkinleştir"
 
+msgid "Encrypted stream list - not supported"
+msgstr ""
+
 #, python-format
 msgid ""
 "Encryption function body extraction failed!\n"
@@ -1554,20 +1842,24 @@ msgid "English"
 msgstr "İngilizce"
 
 #, fuzzy
-msgid "English Movies"
-msgstr "Anime Filmleri"
-
-#, fuzzy
-msgid "English Series"
-msgstr "Anime Dizileri"
-
-#, fuzzy
 msgid "English TV series"
 msgstr "Anime TV dizileri"
+
+msgid "English dubbed"
+msgstr ""
 
 #, fuzzy
 msgid "English movies"
 msgstr "Anime filmleri"
+
+msgid "English movies (dubbed)"
+msgstr ""
+
+msgid "English series (dubbed)"
+msgstr ""
+
+msgid "English subbed"
+msgstr ""
 
 #, fuzzy
 msgid "Enter"
@@ -1604,6 +1896,9 @@ msgstr ""
 msgid "Enter the text"
 msgstr "Metni girin"
 
+msgid "Entertainment"
+msgstr ""
+
 msgid "Entitlement parsing error."
 msgstr ""
 
@@ -1627,6 +1922,9 @@ msgstr "Bölümler"
 
 #, python-format
 msgid "Episodes: %s"
+msgstr ""
+
+msgid "Epochs"
 msgstr ""
 
 msgid "Error"
@@ -1782,9 +2080,6 @@ msgstr "Altyazı indirilemedi."
 msgid "Failed to download the subtitles."
 msgstr ""
 
-msgid "Failed to fetch categories"
-msgstr ""
-
 msgid "Failed to get the download link."
 msgstr ""
 
@@ -1797,10 +2092,6 @@ msgstr ""
 
 msgid "Failed to initialize (unknown option or old curl version?)."
 msgstr ""
-
-#, fuzzy
-msgid "Failed to load channels"
-msgstr "Altyazı indirilemedi."
 
 #, fuzzy
 msgid "Failed to load the match list"
@@ -1825,6 +2116,15 @@ msgstr ""
 #, fuzzy, python-format
 msgid "Failed: %s"
 msgstr "Etkin: %s"
+
+msgid "Family"
+msgstr ""
+
+msgid "Fantasy"
+msgstr ""
+
+msgid "Fashion"
+msgstr ""
 
 msgid "Fatal error: consoleWrite failed!"
 msgstr ""
@@ -1904,12 +2204,18 @@ msgstr "Dosya adı başarıyla değiştirildi!"
 msgid "Files"
 msgstr ""
 
+msgid "Filler"
+msgstr ""
+
 msgid "Film"
 msgstr "Film"
 
 #, fuzzy
 msgid "Films"
 msgstr "Film"
+
+msgid "Films by genre"
+msgstr ""
 
 #, fuzzy
 msgid "Filmweb Suggestions"
@@ -1939,6 +2245,9 @@ msgstr "Sonraki Sayfa"
 msgid "First air date:"
 msgstr "Sonraki Sayfa"
 
+msgid "First aired"
+msgstr ""
+
 msgid "First movie player in buffering mode"
 msgstr ""
 
@@ -1965,6 +2274,9 @@ msgstr "Önbellek verileri klasörü"
 
 msgid "Folder for temporary data"
 msgstr "Geçici veriler klasörü"
+
+msgid "Followers"
+msgstr ""
 
 msgid "Following host are broken or additional python modules are needed."
 msgstr ""
@@ -1993,9 +2305,18 @@ msgstr ""
 msgid "Force internal skin: main screen only"
 msgstr ""
 
+msgid "Foreign movies"
+msgstr ""
+
+msgid "Foreign series"
+msgstr ""
+
 #, fuzzy
 msgid "Format 'wmv' blocked in configuration."
 msgstr "Servis yapılandırması"
+
+msgid "Formations"
+msgstr ""
 
 msgid "Fotka.pl stream :"
 msgstr ""
@@ -2048,6 +2369,9 @@ msgstr "Oyunlar"
 msgid "Games"
 msgstr "Oyunlar"
 
+msgid "Gaming"
+msgstr ""
+
 msgid "General"
 msgstr "Genel"
 
@@ -2078,9 +2402,6 @@ msgstr "Almanca"
 
 msgid "Get Cloudflare job"
 msgstr ""
-
-msgid "Get EPG"
-msgstr "EPG al"
 
 msgid "Get captcha job"
 msgstr ""
@@ -2136,7 +2457,13 @@ msgstr ""
 msgid "Group with id[%s] not found."
 msgstr ""
 
+msgid "Groups"
+msgstr ""
+
 msgid "HIDDEN CAM SHOW IN PROGRESS. TRY AGAIN LATER!"
+msgstr ""
+
+msgid "HLS with subtitles"
 msgstr ""
 
 msgid "HLS/m3u8"
@@ -2166,6 +2493,9 @@ msgstr ""
 
 #, python-format
 msgid "Hide \"%s\" group"
+msgstr ""
+
+msgid "Hide titles only available in Sweden"
 msgstr ""
 
 msgid "Hide/Active Group"
@@ -2277,6 +2607,9 @@ msgstr "Simge boyutu"
 msgid "Image"
 msgstr ""
 
+msgid "Indian"
+msgstr ""
+
 #, fuzzy
 msgid "Indian Movies"
 msgstr "Anime Filmleri"
@@ -2288,6 +2621,12 @@ msgstr "Anime TV dizileri"
 #, fuzzy
 msgid "Indian movies"
 msgstr "Anime filmleri"
+
+msgid "Indian movies (dubbed)"
+msgstr ""
+
+msgid "Indian series (dubbed)"
+msgstr ""
 
 msgid "Industry"
 msgstr ""
@@ -2340,6 +2679,12 @@ msgstr ""
 msgid "Interactive Learning Center(ILC)"
 msgstr ""
 
+msgid "Intervention"
+msgstr ""
+
+msgid "Interviews"
+msgstr ""
+
 #, python-format
 msgid "Invalid answer from %s."
 msgstr ""
@@ -2353,6 +2698,9 @@ msgstr "Geçersiz ad."
 #, fuzzy
 msgid "Invalid value."
 msgstr "Geçersiz ad."
+
+msgid "Investigations"
+msgstr ""
 
 msgid "Is this message displayed correctly?"
 msgstr ""
@@ -2416,6 +2764,15 @@ msgstr ""
 msgid "JS cache"
 msgstr ""
 
+msgid "Japanese"
+msgstr ""
+
+msgid "Japanese dramas"
+msgstr ""
+
+msgid "Japanese films"
+msgstr ""
+
 msgid "Jobs & Positions"
 msgstr ""
 
@@ -2440,6 +2797,12 @@ msgstr ""
 msgid "Keep temporary JS scripts"
 msgstr ""
 
+msgid "Kids"
+msgstr ""
+
+msgid "Kinds"
+msgstr ""
+
 #, fuzzy
 msgid "Knee & Sports"
 msgstr "Tüm Sporlar"
@@ -2450,17 +2813,29 @@ msgstr ""
 msgid "Knowledge & Nature"
 msgstr ""
 
+msgid "Korean"
+msgstr ""
+
 #, fuzzy
 msgid "Korean TV series"
 msgstr "TV dizileri"
+
+msgid "Korean anime"
+msgstr ""
+
+msgid "Korean dramas"
+msgstr ""
+
+msgid "Korean films"
+msgstr ""
+
+msgid "Korean movies"
+msgstr ""
 
 msgid "LATEST"
 msgstr ""
 
 msgid "LEFT/RIGHT at start/end of text - alternative way to switch panels"
-msgstr ""
-
-msgid "LIVE CHANNELS"
 msgstr ""
 
 msgid "Language"
@@ -2487,6 +2862,9 @@ msgstr ""
 msgid "Last air date:"
 msgstr "Son eklenenler"
 
+msgid "Last chance"
+msgstr ""
+
 #, fuzzy
 msgid "Last day"
 msgstr "Güne göre listele"
@@ -2512,6 +2890,16 @@ msgstr "En son"
 msgid "Last week"
 msgstr "bir hafta sonra"
 
+msgid "Last.fm charts and tag pages are behind a browser check, only the radio stations can be used."
+msgstr ""
+
+#, python-format
+msgid "Last.fm user \"%s\" not found."
+msgstr ""
+
+msgid "Last.fm user name:"
+msgstr ""
+
 #, fuzzy
 msgid "Lastest"
 msgstr "En son"
@@ -2521,6 +2909,27 @@ msgstr "En son"
 
 msgid "Latest added"
 msgstr "Son eklenenler"
+
+msgid "Latest anime episodes"
+msgstr ""
+
+msgid "Latest cartoon episodes"
+msgstr ""
+
+msgid "Latest dubbed episodes"
+msgstr ""
+
+msgid "Latest episodes"
+msgstr ""
+
+msgid "Latest episodes (airing)"
+msgstr ""
+
+msgid "Latest episodes (finished series)"
+msgstr ""
+
+msgid "Latest highlights"
+msgstr ""
 
 #, fuzzy
 msgid "Latest update"
@@ -2534,7 +2943,16 @@ msgstr "Son eklenenler"
 msgid "Latest video"
 msgstr "Son eklenenler"
 
+msgid "Latest videos"
+msgstr ""
+
 msgid "Latest videos from the channels you are subscribed to."
+msgstr ""
+
+msgid "Latin American series"
+msgstr ""
+
+msgid "Latin American series (dubbed)"
 msgstr ""
 
 #, fuzzy
@@ -2545,7 +2963,28 @@ msgstr "Puan"
 msgid "Launcher URI ({url} or {address} = address of the box)"
 msgstr ""
 
+msgid "Law"
+msgstr ""
+
+msgid "League and cup matches"
+msgstr ""
+
+msgid "Leagues"
+msgstr ""
+
+msgid "Leagues, clubs and events"
+msgstr ""
+
+msgid "Lecturers"
+msgstr ""
+
 msgid "Left"
+msgstr ""
+
+msgid "Library"
+msgstr ""
+
+msgid "Lifestyle"
 msgstr ""
 
 msgid "Light / dark design"
@@ -2586,18 +3025,12 @@ msgstr ""
 msgid "Links from the file %s"
 msgstr ""
 
-msgid "Lionsgate"
-msgstr ""
-
 #, fuzzy
 msgid "List"
 msgstr "En çok görüntülenen"
 
 msgid "List by day"
 msgstr "Güne göre listele"
-
-msgid "List only channels with subscription"
-msgstr ""
 
 #, fuzzy
 msgid "List view"
@@ -2614,8 +3047,28 @@ msgstr "Canlı"
 msgid "Live channels"
 msgstr "TV kanalları"
 
+msgid "Live radio"
+msgstr ""
+
+#, python-format
+msgid "Live stream of the %s channel"
+msgstr ""
+
+msgid "Live stream on YouTube"
+msgstr ""
+
+#, python-format
+msgid "Live stream starts %s"
+msgstr ""
+
 msgid "Live streams"
 msgstr "Canlı akışlar"
+
+msgid "Live streams by day"
+msgstr ""
+
+msgid "Live-action series episodes"
+msgstr ""
 
 msgid "Load"
 msgstr "Yükle"
@@ -2657,6 +3110,9 @@ msgstr "Kalite:"
 
 msgid "Localization"
 msgstr "Yerelleştirme"
+
+msgid "Lodynet offers this video only on its subscription servers (Lody Plus / VIP) for now - the free servers usually follow later."
+msgstr ""
 
 #, fuzzy
 msgid "Log"
@@ -2739,6 +3195,9 @@ msgstr ""
 msgid "MOVING"
 msgstr ""
 
+msgid "MP3Quran live radio"
+msgstr ""
+
 msgid "Main"
 msgstr "Ana"
 
@@ -2759,9 +3218,6 @@ msgstr ""
 msgid "Mark favourite items"
 msgstr "Favorileri düzenle"
 
-msgid "Masrahyat"
-msgstr ""
-
 #, fuzzy
 msgid "Match cuts"
 msgstr "Captcha çözme servisi"
@@ -2769,13 +3225,12 @@ msgstr "Captcha çözme servisi"
 msgid "Match not started yet"
 msgstr ""
 
+msgid "Matches of the national teams"
+msgstr ""
+
 #, fuzzy
 msgid "Matching entries"
 msgstr "Captcha çözme servisi"
-
-#, python-format
-msgid "Max connections: %s"
-msgstr ""
 
 msgid "Max items per page"
 msgstr "Sayfa başına en fazla öğe"
@@ -2794,8 +3249,17 @@ msgstr ""
 msgid "Meetings"
 msgstr "Ayarlar"
 
+msgid "Members"
+msgstr ""
+
 msgid "Menu"
 msgstr "Menü"
+
+msgid "Military"
+msgstr ""
+
+msgid "Mini series"
+msgstr ""
 
 msgid "Missed"
 msgstr ""
@@ -2804,6 +3268,15 @@ msgid "Missed the show?"
 msgstr ""
 
 msgid "Missing API key - set it in Settings, Web streams, Windy Webcams"
+msgstr ""
+
+msgid "Mix"
+msgstr ""
+
+msgid "MixDrop: this file is not available as a video stream (deleted or download only)."
+msgstr ""
+
+msgid "Mixes"
 msgstr ""
 
 #, fuzzy
@@ -2854,6 +3327,12 @@ msgstr "En çok görüntülenen"
 msgid "Most favourited"
 msgstr "En yüksek puanlı"
 
+msgid "Most listened anasheed"
+msgstr ""
+
+msgid "Most listened recitations"
+msgstr ""
+
 msgid "Most popular"
 msgstr "En popüler"
 
@@ -2866,6 +3345,12 @@ msgstr "En güncel"
 
 msgid "Most viewed"
 msgstr "En çok görüntülenen"
+
+msgid "Most viewed movies"
+msgstr ""
+
+msgid "Most viewed series"
+msgstr ""
 
 #, python-format
 msgid ""
@@ -2883,6 +3368,9 @@ msgstr "Giriş başarısız."
 
 msgid "Movie"
 msgstr "Film"
+
+msgid "Movie collections"
+msgstr ""
 
 #, fuzzy
 msgid "Movie player selection list"
@@ -2907,6 +3395,9 @@ msgstr ""
 msgid "Moving playback buffer to the download manager failed with the following error \"%s\""
 msgstr ""
 
+msgid "Munshids"
+msgstr ""
+
 msgid "Music"
 msgstr "Müzik"
 
@@ -2920,6 +3411,9 @@ msgstr "Oynatma listesi"
 #, fuzzy
 msgid "My subscriptions"
 msgstr "Açıklama:"
+
+msgid "MyE2i (solve on your phone/PC)"
+msgstr ""
 
 msgid "MyE2i - how to solve a captcha"
 msgstr ""
@@ -2976,8 +3470,11 @@ msgstr "Ad:"
 msgid "Needs extension v1.18+. Opens the page in this browser, waits until it is fully rendered (Cloudflare challenge included, solve it if it shows up) and sends the rendered HTML, the fetch/XHR calls and the cookie names to the box debug log."
 msgstr ""
 
-msgid "Netflix"
-msgstr "Netflix"
+msgid "Netflix movies"
+msgstr ""
+
+msgid "Netflix series"
+msgstr ""
 
 msgid "Network"
 msgstr ""
@@ -3009,7 +3506,13 @@ msgstr ""
 msgid "New entry"
 msgstr ""
 
+msgid "New episodes"
+msgstr ""
+
 msgid "New icons will not be available."
+msgstr ""
+
+msgid "New links"
 msgstr ""
 
 msgid "New since installed version"
@@ -3035,15 +3538,11 @@ msgstr ""
 msgid "News Feed"
 msgstr "Haberler"
 
+msgid "News Poland"
+msgstr ""
+
 msgid "Next"
 msgstr "Sonraki"
-
-msgid "Next Page"
-msgstr "Sonraki Sayfa"
-
-#, fuzzy
-msgid "Next Page »»»"
-msgstr "Sonraki Sayfa"
 
 msgid "Next page"
 msgstr "Sonraki sayfa"
@@ -3051,12 +3550,24 @@ msgstr "Sonraki sayfa"
 msgid "No"
 msgstr "Hayır"
 
-msgid "No biography available"
-msgstr "Biyografi yok"
+msgid "No YouTube video found for this track."
+msgstr ""
 
 #, fuzzy
 msgid "No description available."
 msgstr "Geçerli bağlantı yok."
+
+msgid "No episodes available yet."
+msgstr ""
+
+msgid "No episodes found."
+msgstr ""
+
+msgid "No free player available for this title."
+msgstr ""
+
+msgid "No free videos or live streams here at the moment."
+msgstr ""
 
 msgid "No host is open."
 msgstr ""
@@ -3066,6 +3577,9 @@ msgid ""
 "Press OK to refresh.\n"
 msgstr ""
 
+msgid "No items found"
+msgstr ""
+
 msgid "No matching entries found."
 msgstr ""
 
@@ -3073,6 +3587,9 @@ msgid "No player found for this title."
 msgstr ""
 
 msgid "No problems occurred."
+msgstr ""
+
+msgid "No programme guide for this channel."
 msgstr ""
 
 msgid "No replays in these days"
@@ -3137,6 +3654,9 @@ msgstr "Geçerli bağlantı yok."
 msgid "Not possible (no enigma2 session)."
 msgstr ""
 
+msgid "Nothing available here at the moment (only upcoming broadcasts)."
+msgstr ""
+
 msgid "Nothing found on subdl.com."
 msgstr ""
 
@@ -3198,6 +3718,10 @@ msgstr "Yayında"
 msgid "One link mode"
 msgstr ""
 
+#, python-format
+msgid "Only available in %s"
+msgstr ""
+
 msgid "Only files in the downloads folder can be deleted."
 msgstr ""
 
@@ -3209,6 +3733,10 @@ msgid "Only the %d oldest new commits are shown"
 msgstr ""
 
 msgid "Only the sites that failed in the last run, same checks."
+msgstr ""
+
+#, python-format
+msgid "Only unsupported hosters available: %s"
 msgstr ""
 
 msgid "Open issues"
@@ -3237,9 +3765,6 @@ msgstr "İşlem iptal edildi!"
 msgid "Operation timed out."
 msgstr "İşlem iptal edildi!"
 
-msgid "Optional User-Agent (leave blank for default)"
-msgstr ""
-
 #, fuzzy
 msgid "Options"
 msgstr "Video seçenekleri"
@@ -3261,8 +3786,23 @@ msgstr ""
 msgid "Original language: %s"
 msgstr ""
 
+msgid "Original title"
+msgstr ""
+
+msgid "Original version"
+msgstr ""
+
 msgid "Other"
 msgstr "Diğer"
+
+msgid "Other dramas (Chinese, Thai, ...)"
+msgstr ""
+
+msgid "Other films"
+msgstr ""
+
+msgid "Other seasons"
+msgstr ""
 
 msgid "Others"
 msgstr "Diğerleri"
@@ -3305,7 +3845,13 @@ msgstr ""
 msgid "Page:"
 msgstr ""
 
+msgid "Paid content"
+msgstr ""
+
 msgid "Parse error."
+msgstr ""
+
+msgid "Part"
 msgstr ""
 
 msgid "Partial file - transfer ended early."
@@ -3336,10 +3882,19 @@ msgstr ""
 msgid "Pathology Rounds"
 msgstr ""
 
+msgid "Patriotism"
+msgstr ""
+
 msgid "Pediatrics"
 msgstr ""
 
+msgid "People"
+msgstr ""
+
 msgid "Persons"
+msgstr ""
+
+msgid "Philosophy"
 msgstr ""
 
 msgid "Physical Exam"
@@ -3384,6 +3939,12 @@ msgstr ""
 msgid "Playlist"
 msgstr "Oynatma listesi"
 
+msgid "Playlists"
+msgstr ""
+
+msgid "Plays"
+msgstr ""
+
 #, python-brace-format
 msgid ""
 "Please Open site:\n"
@@ -3413,11 +3974,6 @@ msgid "Please make sure that the folder for cache data (set in the configuration
 msgstr ""
 
 msgid "Please register and set login and password in the host configuration, to solve this problems permanently."
-msgstr ""
-
-msgid ""
-"Please remember to visit http://www.sport365.live/ and watch a few advertisements.\n"
-"This will fix problem, if your playback is constantly interrupted."
 msgstr ""
 
 #, fuzzy
@@ -3461,11 +4017,50 @@ msgstr "Kapanıyor. Lütfen bekleyin..."
 msgid "Podcasts"
 msgstr "Podcastler"
 
+msgid "Podcasts by category"
+msgstr ""
+
+msgid "Podcasts by station"
+msgstr ""
+
+msgid "Poland"
+msgstr ""
+
 msgid "Polish"
 msgstr "Lehçe"
 
+msgid "Polish dubbing"
+msgstr ""
+
+msgid "Polish films"
+msgstr ""
+
+msgid "Polish subtitles"
+msgstr ""
+
+msgid "Polish voice-over"
+msgstr ""
+
+msgid "Politics"
+msgstr ""
+
 msgid "Popular"
 msgstr "Popüler"
+
+msgid "Popular episodes"
+msgstr ""
+
+msgid "Popular movies"
+msgstr ""
+
+msgid "Popular series"
+msgstr ""
+
+msgid "Popular sports"
+msgstr ""
+
+msgid "Popularity"
+msgstr ""
 
 #, fuzzy
 msgid "Pornstars"
@@ -3480,6 +4075,9 @@ msgstr ""
 #, fuzzy
 msgid "Practice Management"
 msgstr "Servis yönetimi"
+
+msgid "Prefer MP4 over HLS:"
+msgstr ""
 
 #, fuzzy
 msgid "Prefered format"
@@ -3506,9 +4104,6 @@ msgstr ""
 msgid "Preview"
 msgstr "Önizleme"
 
-msgid "Previous"
-msgstr "Önceki"
-
 msgid "Previous Page"
 msgstr "Önceki Sayfa"
 
@@ -3519,10 +4114,16 @@ msgstr "Önceki Sayfa"
 msgid "Price:"
 msgstr ""
 
+msgid "Pro wrestling"
+msgstr ""
+
 msgid "Production:"
 msgstr ""
 
 msgid "Professional Networks"
+msgstr ""
+
+msgid "Professionals"
 msgstr ""
 
 msgid "Program"
@@ -3535,9 +4136,18 @@ msgstr "Program"
 msgid "Program for file downloads (HTTP/FTP)"
 msgstr ""
 
+msgid "Programme archive (last 7 days)"
+msgstr ""
+
+msgid "Programme archive:"
+msgstr ""
+
 #, fuzzy
 msgid "Programmes"
 msgstr "Programlar"
+
+msgid "Programmes of the last days of the channels with an archive"
+msgstr ""
 
 #, fuzzy
 msgid "Promote item"
@@ -3551,6 +4161,9 @@ msgid "Published"
 msgstr "Lehçe"
 
 msgid "Python modules"
+msgstr ""
+
+msgid "Quality"
 msgstr ""
 
 msgid "Quality:"
@@ -3582,13 +4195,19 @@ msgstr "Radyo"
 msgid "Radio iframe file"
 msgstr "Dosyayı yeniden adlandır"
 
+msgid "Radio station - live stream"
+msgstr ""
+
 msgid "Radio stations"
 msgstr ""
 
 msgid "Radiology Rounds"
 msgstr ""
 
-msgid "Ramadan 2025"
+msgid "Ramadan"
+msgstr ""
+
+msgid "Ramadan series"
 msgstr ""
 
 msgid "Random"
@@ -3626,6 +4245,9 @@ msgstr "Puan:"
 msgid "Rating: %s"
 msgstr ""
 
+msgid "Read by"
+msgstr ""
+
 msgid "Read error."
 msgstr ""
 
@@ -3644,6 +4266,9 @@ msgstr "orta"
 msgid "Recently added"
 msgstr "Son eklenenler"
 
+msgid "Reciters"
+msgstr ""
+
 #, fuzzy
 msgid "Recommended"
 msgstr "saniye"
@@ -3651,6 +4276,9 @@ msgstr "saniye"
 #, fuzzy
 msgid "Recon"
 msgstr "saniye"
+
+msgid "Referee"
+msgstr ""
 
 msgid "Refresh"
 msgstr "Yenile"
@@ -3664,6 +4292,9 @@ msgstr ""
 
 #, python-format
 msgid "Refusing to empty \"%s\" - this does not look like a dedicated cache/config folder. Check the folder paths in the storage configuration."
+msgstr ""
+
+msgid "Regions"
 msgstr ""
 
 msgid "Release"
@@ -3683,6 +4314,9 @@ msgstr "Yayın"
 #, fuzzy
 msgid "Relevance"
 msgstr "Yayın"
+
+msgid "Religion"
+msgstr ""
 
 #, fuzzy
 msgid "Remaining:"
@@ -3787,6 +4421,12 @@ msgstr ""
 msgid "Romance"
 msgstr "Yayın"
 
+msgid "Round"
+msgstr ""
+
+msgid "Runtime"
+msgstr ""
+
 msgid "Russian"
 msgstr "Rusça"
 
@@ -3830,6 +4470,9 @@ msgstr ""
 msgid "Schedule"
 msgstr "Takvim"
 
+msgid "Sci-Fi"
+msgstr ""
+
 msgid "Sci-Fi & Fantasy"
 msgstr ""
 
@@ -3854,6 +4497,9 @@ msgstr "Arama geçmişi boş."
 msgid "Search History successfully deleted."
 msgstr "Arama geçmişi başarıyla silindi."
 
+msgid "Search for an artist (exact name) or a Last.fm user"
+msgstr ""
+
 msgid "Search history"
 msgstr "Arama geçmişi"
 
@@ -3874,6 +4520,9 @@ msgstr ""
 
 msgid "Search in all active hosts"
 msgstr "Tüm etkin hostlarda ara"
+
+msgid "Search is not available right now."
+msgstr ""
 
 #, fuzzy
 msgid "Search next page"
@@ -3924,6 +4573,9 @@ msgstr ""
 msgid "Season %s"
 msgstr "Sezon"
 
+msgid "Seasons"
+msgstr ""
+
 #, fuzzy
 msgid "Seasons:"
 msgstr "Sezon"
@@ -3941,6 +4593,9 @@ msgstr ""
 #, fuzzy
 msgid "Section"
 msgstr "İşlem seç"
+
+msgid "Sections"
+msgstr ""
 
 #, fuzzy, python-format
 msgid "Select %s"
@@ -4026,6 +4681,24 @@ msgstr ""
 msgid "Series"
 msgstr "Diziler"
 
+msgid "Series - latest episodes"
+msgstr ""
+
+msgid "Series - seasons"
+msgstr ""
+
+msgid "Series A-Z"
+msgstr ""
+
+msgid "Series by genre"
+msgstr ""
+
+msgid "Series by year"
+msgstr ""
+
+msgid "Series genres"
+msgstr ""
+
 msgid "Server"
 msgstr "Sunucu"
 
@@ -4039,6 +4712,9 @@ msgid "Server return 404 - Not Found."
 msgstr ""
 
 msgid "Server returned nothing."
+msgstr ""
+
+msgid "Server, user name and password in the host configuration. The server field also takes a get.php link."
 msgstr ""
 
 #, python-format
@@ -4065,9 +4741,6 @@ msgstr "Etkin video oynatıcıyı ayarla"
 
 msgid "Set file name"
 msgstr "Dosya adı ayarla"
-
-msgid "Set host, username, password in host config"
-msgstr ""
 
 #, fuzzy
 msgid "Set own configuration pin code"
@@ -4191,6 +4864,12 @@ msgstr "Şovlar"
 msgid "Shows A-Z"
 msgstr "Şovlar"
 
+msgid "Shows and concerts"
+msgstr ""
+
+msgid "Shows with new episodes"
+msgstr ""
+
 msgid "Sign-in was not completed."
 msgstr ""
 
@@ -4198,6 +4877,12 @@ msgid "Signed in to YouTube."
 msgstr ""
 
 msgid "Signed out of YouTube."
+msgstr ""
+
+msgid "Similar artists"
+msgstr ""
+
+msgid "Similar artists mix"
 msgstr ""
 
 msgid "Simple list"
@@ -4218,6 +4903,9 @@ msgstr ""
 
 #, python-format
 msgid "Site self-test: %d of %d - now %s (%d failed so far)"
+msgstr ""
+
+msgid "Size:"
 msgstr ""
 
 msgid "Skin"
@@ -4312,8 +5000,20 @@ msgstr ""
 msgid "Spine"
 msgstr ""
 
+msgid "Spoken subtitles"
+msgstr ""
+
 msgid "Sport"
 msgstr "Spor"
+
+msgid "Spring"
+msgstr ""
+
+msgid "Squad"
+msgstr ""
+
+msgid "Stadium:"
+msgstr ""
 
 msgid "Standard"
 msgstr "Standart"
@@ -4375,6 +5075,12 @@ msgstr "Ses"
 msgid "Study Plan"
 msgstr ""
 
+msgid "Subbed anime"
+msgstr ""
+
+msgid "Subscribers"
+msgstr ""
+
 #, fuzzy
 msgid "Subspecialities"
 msgstr "Kaliteler"
@@ -4406,6 +5112,9 @@ msgstr "Altyazı yazı rengi"
 msgid "Subtitle font size"
 msgstr "Altyazı yazı boyutu"
 
+msgid "Subtitle languages"
+msgstr ""
+
 msgid "Subtitle line height"
 msgstr "Altyazı satır yüksekliği"
 
@@ -4434,6 +5143,9 @@ msgstr "Altyazılar"
 msgid "Subtitles \"%s\" downloaded correctly."
 msgstr "%s altyazı indirme - nasıl yapılır"
 
+msgid "Subtitles by Islam El-Gizawy"
+msgstr ""
+
 msgid "Subtitles conversion to UTF-8 failed."
 msgstr ""
 
@@ -4459,13 +5171,16 @@ msgstr "Altyazılar"
 msgid "Subtitles: %s"
 msgstr ""
 
-msgid "Summary:"
+msgid "Summer"
 msgstr ""
 
 msgid "Support forum (opena.tv)"
 msgstr ""
 
 msgid "Support package"
+msgstr ""
+
+msgid "Surahs"
 msgstr ""
 
 msgid "Surgical Approaches"
@@ -4478,6 +5193,9 @@ msgid "Surgical Complications"
 msgstr ""
 
 msgid "Surgical Techniques"
+msgstr ""
+
+msgid "Sweden"
 msgstr ""
 
 msgid "Swedish"
@@ -4494,6 +5212,11 @@ msgid "System language"
 msgstr "Dil seç"
 
 msgid "T9 letter jump in lists"
+msgstr ""
+
+msgid ""
+"TBN GO needs a free account to play programmes.\n"
+"Register on https://tbngo.pl/ and enter the e-mail and password in the host settings."
 msgstr ""
 
 msgid "THE PAGE YOU ARE LOOKING FOR IS NOT FOUND."
@@ -4555,10 +5278,28 @@ msgstr "TV kanalları"
 msgid "TV series"
 msgstr "TV dizileri"
 
+msgid "Tadabor"
+msgstr ""
+
+msgid "Tafsir (Arabic)"
+msgstr ""
+
 msgid "Tags"
 msgstr ""
 
+msgid "Taiwanese"
+msgstr ""
+
+msgid "Talk shows"
+msgstr ""
+
+msgid "Teams"
+msgstr ""
+
 msgid "Techniques"
+msgstr ""
+
+msgid "Technology"
 msgstr ""
 
 msgid "Temp"
@@ -4576,6 +5317,9 @@ msgid "Text field alignment"
 msgstr "Dosya adı ayarla"
 
 msgid "Text files ytlist and urllist are in:"
+msgstr ""
+
+msgid "Thai"
 msgstr ""
 
 #, python-format
@@ -4599,6 +5343,9 @@ msgstr ""
 msgid "The QR code leads to the wiki page with pictures and the extension download."
 msgstr ""
 
+msgid "The Xtream account of this entry is not configured (any more)."
+msgstr ""
+
 msgid "The YouTube channels of this group have no videos."
 msgstr ""
 
@@ -4609,6 +5356,9 @@ msgid "The account is banned."
 msgstr ""
 
 msgid "The balance of the account is too low."
+msgstr ""
+
+msgid "The best short films on the internet, handpicked by Vimeo staff"
 msgstr ""
 
 msgid "The channel already exists in User Links."
@@ -4704,6 +5454,9 @@ msgstr " Bu video özeldir."
 msgid "The list has changed, please try again."
 msgstr ""
 
+msgid "The live stream is not available at the moment."
+msgstr ""
+
 #, fuzzy
 msgid "The model is offline or in a private show."
 msgstr " Bu video özeldir."
@@ -4721,6 +5474,9 @@ msgid ""
 "The playback buffer has been moved to the download manager.\n"
 "It will be saved in the file:\n"
 "\"%s\""
+msgstr ""
+
+msgid "The recordings of this page were on the site's old media server, which is offline."
 msgstr ""
 
 msgid "The request has no valid length."
@@ -4753,6 +5509,12 @@ msgstr ""
 msgid "The site rejected the search request."
 msgstr ""
 
+msgid "The site's browser check could not be passed."
+msgstr ""
+
+msgid "The site's catalogue could not be loaded."
+msgstr ""
+
 msgid "The support package holds the versions, the system information, the enabled hosts and the end of the debug log in one text file for a problem report. Look through it before posting it - the log can contain addresses of the sites you opened."
 msgstr ""
 
@@ -4767,11 +5529,19 @@ msgstr ""
 msgid "The value must be between %d and %d."
 msgstr ""
 
-msgid "The website returned a server error for this request."
+msgid "The video could not be resolved (it may be private, ended or not available in your country)."
 msgstr ""
 
-#, python-format
-msgid "There are %d more pages in this section"
+msgid "The video file of this title is not available on the server (HTTP 403)."
+msgstr ""
+
+msgid "The video has been removed."
+msgstr ""
+
+msgid "The video player of this site (hdvbua.pro) does not offer this title in your country (licence area, mainly Ukraine)."
+msgstr ""
+
+msgid "The website returned a server error for this request."
 msgstr ""
 
 msgid "There are no other favorite groups"
@@ -4789,6 +5559,9 @@ msgid "There is no free space on the drive [%s]."
 msgstr ""
 
 msgid "There is no hosts in this group."
+msgstr ""
+
+msgid "This article has no free video."
 msgstr ""
 
 msgid "This channel does not exist."
@@ -4814,10 +5587,16 @@ msgstr "%s dedi ki: Bu sayfa şu anda bölgenizde kullanılamıyor"
 msgid "This content is only available in Switzerland."
 msgstr ""
 
+msgid "This content needs a login - not supported."
+msgstr ""
+
 msgid "This entry cannot be added to the favourites."
 msgstr ""
 
 msgid "This entry cannot be opened."
+msgstr ""
+
+msgid "This episode is not available in this version (SUB/DUB) on this server. Try another one."
 msgstr ""
 
 msgid "This feed is empty, or the YouTube sign-in has expired - sign out and in again."
@@ -4832,6 +5611,12 @@ msgstr ""
 msgid "This is only an advert for a paid clip (clips4sale), there is no free video."
 msgstr ""
 
+msgid "This is paid content of PZPN+, it needs a purchase on the website."
+msgstr ""
+
+msgid "This mix is only available with a Mixcloud Select subscription."
+msgstr ""
+
 msgid "This model is offline."
 msgstr ""
 
@@ -4841,16 +5626,25 @@ msgstr ""
 msgid "This page has no video (blog article)."
 msgstr ""
 
+msgid "This player is not available any more - reload the links."
+msgstr ""
+
 msgid "This room is currently offline or unavailable."
 msgstr ""
 
 msgid "This room is offline. Try again later!"
 msgstr ""
 
+msgid "This section is no longer on the main page."
+msgstr ""
+
 msgid "This session has no code - scan the QR code on the receiver screen."
 msgstr ""
 
 msgid "This show is private. Try again later!"
+msgstr ""
+
+msgid "This source is offline at the moment. Try another source of the channel."
 msgstr ""
 
 msgid "This stream can only be played with buffering - please start it on the receiver."
@@ -4880,6 +5674,9 @@ msgstr ""
 msgid "This video is only on the netu.tv player (pbtube.net), which E2iPlayer cannot play."
 msgstr ""
 
+msgid "This video needs a paid ororo.tv subscription."
+msgstr ""
+
 msgid "This video requires you to sign in to a YouTube account."
 msgstr ""
 
@@ -4890,6 +5687,9 @@ msgstr ""
 msgid "This video was embedded from xHamster and has been deleted there."
 msgstr " Bu video özeldir."
 
+msgid "Thriller"
+msgstr ""
+
 #, fuzzy
 msgid "Thumbnails"
 msgstr "Küçük resimleri kaldır"
@@ -4898,6 +5698,9 @@ msgid "Time"
 msgstr ""
 
 msgid "Tip! You can connect USB flash drive to fix this problem."
+msgstr ""
+
+msgid "Titles"
 msgstr ""
 
 #, python-format
@@ -4944,6 +5747,9 @@ msgstr ""
 msgid "Today"
 msgstr "Bugün"
 
+msgid "Tomorrow"
+msgstr ""
+
 msgid "Too many redirects."
 msgstr ""
 
@@ -4956,23 +5762,59 @@ msgstr ""
 msgid "Top"
 msgstr "En üst"
 
+msgid "Top 10"
+msgstr ""
+
 msgid "Top IMDb"
+msgstr ""
+
+msgid "Top airing"
 msgstr ""
 
 msgid "Top in your country"
 msgstr ""
 
+msgid "Top leagues and clubs"
+msgstr ""
+
 msgid "Top rated"
 msgstr "En yüksek puanlı"
+
+msgid "Top rated movies"
+msgstr ""
+
+msgid "Top rated series"
+msgstr ""
+
+msgid "Top scorers"
+msgstr ""
 
 #, fuzzy
 msgid "Top series"
 msgstr "TV dizileri"
 
+msgid "Top stations"
+msgstr ""
+
+msgid "Top tracks"
+msgstr ""
+
+msgid "Top upcoming"
+msgstr ""
+
 msgid "Top-IMDB"
 msgstr ""
 
+msgid "Topics"
+msgstr ""
+
 msgid "Total size:"
+msgstr ""
+
+msgid "Tourism"
+msgstr ""
+
+msgid "Tracklist"
 msgstr ""
 
 msgid "Trailer"
@@ -4998,16 +5840,15 @@ msgstr ""
 msgid "Treatment Consult"
 msgstr ""
 
-#, fuzzy
-msgid "Trend"
-msgstr "Trend olanlar"
-
 msgid "Trending"
 msgstr "Trend olanlar"
 
 #, fuzzy
 msgid "Trending this week"
 msgstr "Trend olanlar"
+
+msgid "Trial"
+msgstr ""
 
 msgid "Troubleshooting"
 msgstr ""
@@ -5030,8 +5871,17 @@ msgstr "TV Dizileri"
 msgid "Turkish TV series"
 msgstr "TV dizileri"
 
+msgid "Turkish movies (dubbed)"
+msgstr ""
+
+msgid "Turkish series (dubbed)"
+msgstr ""
+
 msgid "Tutorials"
 msgstr "Eğitimler"
+
+msgid "Type"
+msgstr ""
 
 #, fuzzy
 msgid "Type:"
@@ -5044,6 +5894,9 @@ msgstr "Tür: "
 #, fuzzy, python-format
 msgid "Type: %s"
 msgstr "Tür: "
+
+msgid "Types"
+msgstr ""
 
 msgid "UNKNOWN"
 msgstr "BİLİNMİYOR"
@@ -5063,9 +5916,6 @@ msgstr "Arama geçmişi boş."
 
 msgid "Unfix jump target"
 msgstr ""
-
-msgid "Universal"
-msgstr "Evrensel"
 
 msgid "Unknow data in the captcha item!"
 msgstr ""
@@ -5110,6 +5960,9 @@ msgstr ""
 
 #, python-format
 msgid "Unzip error code[%s]."
+msgstr ""
+
+msgid "Upbringing"
 msgstr ""
 
 msgid "Upcoming"
@@ -5189,6 +6042,9 @@ msgstr ""
 msgid "Use the best quality :"
 msgstr ""
 
+msgid "User"
+msgstr ""
+
 msgid "User defined"
 msgstr "Kullanıcı tanımlı"
 
@@ -5219,12 +6075,12 @@ msgstr "Bağlantı önbelleğini kullan"
 msgid "User links stored in the ytlist.txt file."
 msgstr ""
 
+msgid "User-Agent (leave empty for the default):"
+msgstr ""
+
 #, fuzzy, python-format
 msgid "User-Links: %d"
 msgstr "Bağlantı önbelleğini kullan"
-
-msgid "Username"
-msgstr "Kullanıcı adı"
 
 #, python-format
 msgid "Username in settings is different from %s"
@@ -5236,6 +6092,9 @@ msgstr ""
 msgid "Username:"
 msgstr "Kullanıcı adı:"
 
+msgid "Users"
+msgstr ""
+
 msgid ""
 "Using this host in your country can be illegal.\n"
 "Do you want to continue at your own risk?"
@@ -5245,14 +6104,26 @@ msgstr ""
 msgid "Utility \"%s\" can not be found."
 msgstr ""
 
+msgid "VAVOO did not hand out a session signature. Try again later."
+msgstr ""
+
+msgid "Venue"
+msgstr ""
+
 msgid "Verify"
 msgstr "Doğrula"
+
+msgid "Version"
+msgstr ""
 
 msgid "Video"
 msgstr "Video"
 
 msgid "Video buffer size [MB]"
 msgstr "Video tampon boyutu [MB]"
+
+msgid "Video library"
+msgstr ""
 
 msgid "Video mode"
 msgstr "Video modu"
@@ -5269,6 +6140,9 @@ msgid "Video policy"
 msgstr "Video seçenekleri"
 
 msgid "Video policy for 4:3"
+msgstr ""
+
+msgid "Video recitations"
 msgstr ""
 
 #, fuzzy
@@ -5301,6 +6175,18 @@ msgstr "Görüntüleme"
 msgid "Views:"
 msgstr "Görüntüleme:"
 
+msgid "Vimeo does not offer this list to anonymous users in your region."
+msgstr ""
+
+msgid "Vimeo live event: the live transmission (while on air) and the past transmissions."
+msgstr ""
+
+msgid "Vimeo playlist with the recordings of this page."
+msgstr ""
+
+msgid "Vimeo: this video is private, removed or may only be played on the site that embeds it."
+msgstr ""
+
 msgid "Virtual Keyboard"
 msgstr "Sanal Klavye"
 
@@ -5308,13 +6194,16 @@ msgstr "Sanal Klavye"
 msgid "Virtual Keyboard type"
 msgstr "Sanal Klavye"
 
+msgid "Voice-over"
+msgstr ""
+
+msgid "WWE shows"
+msgstr ""
+
 msgid "Waiting for the result ..."
 msgstr ""
 
-msgid "Walt Disney"
-msgstr ""
-
-msgid "Warner Bros"
+msgid "War"
 msgstr ""
 
 msgid "Watch Videos Online"
@@ -5328,6 +6217,9 @@ msgstr "Arama geçmişi"
 msgid "Watch later"
 msgstr "İzle"
 
+msgid "Western"
+msgstr ""
+
 msgid "What's happening?"
 msgstr ""
 
@@ -5340,13 +6232,22 @@ msgstr ""
 msgid "Wiki"
 msgstr ""
 
+msgid "Winter"
+msgstr ""
+
 msgid "With an API key from subdl.com (E2iPlayer settings, Subtitles) the official SubDL API is searched as well."
 msgstr ""
 
 msgid "With subtitles"
 msgstr "Altyazılı"
 
-msgid "Work of this actor"
+msgid "World"
+msgstr ""
+
+msgid "Wrestling"
+msgstr ""
+
+msgid "Wrestling shows"
 msgstr ""
 
 msgid "Write current title to file:"
@@ -5399,13 +6300,6 @@ msgstr ""
 msgid "Wyzie Subs: the daily request limit of the API key is reached."
 msgstr ""
 
-#, fuzzy
-msgid "Xtream Live Stream"
-msgstr "Canlı akışlar"
-
-msgid "Xtream host (e.g. http://server:port)"
-msgstr ""
-
 msgid "YELLOW"
 msgstr ""
 
@@ -5444,6 +6338,9 @@ msgstr ""
 msgid "Yes, to file /tmp/iptv.dbg"
 msgstr ""
 
+msgid "Yesterday"
+msgstr ""
+
 msgid "You can disable HTTPS certificates validation in the E2iPlayer configuration to suppress this problem."
 msgstr ""
 
@@ -5463,7 +6360,7 @@ msgstr ""
 msgid "You do not have a premium account. Starting a sponsored broadcast."
 msgstr ""
 
-msgid "You need to enter email and password in configuration."
+msgid "You have reached the play limit for this mix."
 msgstr ""
 
 msgid "You should never perform block I/O operations in the __init__."
@@ -5557,8 +6454,14 @@ msgstr "küçük"
 msgid "alphabetical"
 msgstr "Alfabetik olarak"
 
+msgid "anime-odcinki.pl shows this title only to logged-in users."
+msgstr ""
+
 msgid "aqua"
 msgstr "akuamarin"
+
+msgid "as Chrome this session"
+msgstr ""
 
 msgid "as in ytlist.txt"
 msgstr ""
@@ -5681,6 +6584,9 @@ msgstr "fuşya"
 msgid "go back / close"
 msgstr ""
 
+msgid "goals"
+msgstr ""
+
 msgid "gray"
 msgstr "gri"
 
@@ -5795,6 +6701,9 @@ msgstr "IPTVPlayer'ı uzantı listesinde göster"
 
 msgid "navy"
 msgstr "lacivert"
+
+msgid "netu/hqq: the player check failed, try again later."
+msgstr ""
 
 msgid "never"
 msgstr ""
@@ -5965,6 +6874,9 @@ msgstr "gümüş"
 msgid "small"
 msgstr "küçük"
 
+msgid "sources"
+msgstr ""
+
 msgid "standard"
 msgstr "standart"
 
@@ -6108,6 +7020,9 @@ msgid "weeb.tv did not return a valid stream (error %s)."
 msgstr ""
 
 msgid "weeb.tv did not return a valid stream for this channel."
+msgstr ""
+
+msgid "weeb.tv streams need a weeb.tv account - enter the login in the host configuration (Web streams, WeebTV)"
 msgstr ""
 
 msgid "white"
