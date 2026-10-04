@@ -8,6 +8,13 @@ LOGIN_PLACEHOLDER = 'xxxxx'
 SECRET_PLACEHOLDER = '*****'
 
 
+def _charCount(value):
+    # characters, not bytes: on Python 2 the value is utf-8 str ("ä" would give two stars)
+    if isinstance(value, bytes):
+        return len(value.decode('utf-8', 'ignore'))
+    return len(value)
+
+
 def _shown(multi, text):
     # ConfigText.getMulti: (type, text, marks) - and (type, text) for a read-only entry on some images
     multi = list(multi)
@@ -27,7 +34,7 @@ class ConfigSecret(ConfigPassword):
     def getMulti(self, selected):
         # ConfigPassword.getMulti shows the text while the row is selected - this one never does
         multi = ConfigText.getMulti(self, selected)
-        return _shown(multi, '*' * len(self.value) if self.value else SECRET_PLACEHOLDER)
+        return _shown(multi, '*' * _charCount(self.value) if self.value else SECRET_PLACEHOLDER)
 
 
 class ConfigLogin(ConfigText):

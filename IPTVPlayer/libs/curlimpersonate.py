@@ -95,17 +95,32 @@ def getProfiles():
     return list(PROFILES)
 
 
+def _headerText(value):
+    """a header name / value as the native str: utf-8 bytes on Python 2 (str() fails on non-ASCII unicode),
+    text on Python 3 (str() would turn bytes into "b'...'")"""
+    if isinstance(value, str):
+        return value
+    if isinstance(value, bytes):  # Python 3 only - on Python 2 bytes is str
+        return value.decode('utf-8', 'replace')
+    try:
+        if isinstance(value, unicode):  # noqa: F821 - Python 2 only
+            return value.encode('utf-8')
+    except NameError:
+        pass
+    return str(value)
+
+
 def filterHeaders(headers):
     """the caller's headers as "Name: value" lines for -H, without the ones the browser sends itself"""
     out = []
     for key, value in (headers or {}).items():
-        name = str(key).strip()
+        name = _headerText(key).strip()
         lname = name.lower()
         if not name or lname in DROPPED_HEADERS or lname.startswith(DROPPED_HEADER_PREFIXES):
             continue
         if value is None:
             continue
-        value = str(value)
+        value = _headerText(value)
         if '\r' in value or '\n' in value or '\r' in name or '\n' in name or ':' in name:
             continue  # would inject another header line
         if value == '':
@@ -142,7 +157,7 @@ def prepareCookieFile(src, dst):
 
 def normalizeCookieFile(path):
     """make the cookie file curl wrote (-c) readable by every MozillaCookieJar: curl marks HttpOnly
-    cookies with a "#HttpOnly_" domain prefix (a comment line for Python < 3.13.16 and py2, so e.g.
+    cookies with a "#HttpOnly_" domain prefix (a comment line for Python < 3.10 and py2, so e.g.
     cf_clearance got lost) and writes 0 as "expires" of session cookies (= expired for Python)"""
     try:
         with open(path, 'rb') as f:
@@ -330,12 +345,17 @@ def _runToFile(args, shouldAbort=None, stderrPath=''):
         except OSError as e:
             raise ImpersonateUnavailable('%s: %s' % (args[0], e))
         stop = None
-        while proc.poll() is None:
-            if shouldAbort is not None and shouldAbort():
-                stop = 'abort'
-                _kill(proc)
-                break
-            time.sleep(0.1)
+        try:
+            while proc.poll() is None:
+                if shouldAbort is not None and shouldAbort():
+                    stop = 'abort'
+                    _kill(proc)
+                    break
+                time.sleep(0.1)
+        except BaseException:
+            _kill(proc)
+            proc.wait()
+            raise
         return proc.wait(), b'', stop
     finally:
         devnull.close()
@@ -358,21 +378,27 @@ def _run(args, maxDataSize=-1, shouldAbort=None, stderrPath=''):
         size = 0
         stop = None
         fd = proc.stdout.fileno()
-        while True:
-            # os.read returns what is there (no waiting for a full buffer); curl writes the
-            # (flushed) -D header file before the first body byte, so even max_data_size 0
-            # reads once to be sure the final response's headers are complete
-            chunk = os.read(fd, 65536)
-            if not chunk:
-                break
-            chunks.append(chunk)
-            size += len(chunk)
-            if shouldAbort is not None and shouldAbort():
-                stop = 'abort'
-                break
-            if 0 <= maxDataSize <= size:
-                stop = 'limit'
-                break
+        try:
+            while True:
+                # os.read returns what is there (no waiting for a full buffer); curl writes the
+                # (flushed) -D header file before the first body byte, so even max_data_size 0
+                # reads once to be sure the final response's headers are complete
+                chunk = os.read(fd, 65536)
+                if not chunk:
+                    break
+                chunks.append(chunk)
+                size += len(chunk)
+                if shouldAbort is not None and shouldAbort():
+                    stop = 'abort'
+                    break
+                if 0 <= maxDataSize <= size:
+                    stop = 'limit'
+                    break
+        except BaseException:
+            # no curl left running (and no zombie) when reading fails
+            _kill(proc)
+            proc.wait()
+            raise
         body = b''.join(chunks)
         if maxDataSize >= 0:
             body = body[:maxDataSize]
@@ -456,5 +482,6 @@ def fetch(binary, url, tmpDir, headers=None, cookieFile='', loadCookie=False, sa
             normalizeCookieFile(cookieFile)
         return result
     finally:
-        for path in (base, headerFile, stderrFile, cookieIn, dataFile):
+        # the cookie copy by name: prepareCookieFile may have failed half-way (cookieIn still '')
+        for path in (base, headerFile, stderrFile, base + '.cookie', dataFile):
             _remove(path)

@@ -141,6 +141,12 @@ def test_filter_headers_drops_browser_headers(ci):
                                     "Cookie: a=1", "Content-Type: application/json", "Sec-Fetch-Mode: cors", "Empty;"])
 
 
+def test_filter_headers_bytes_and_numbers(ci):
+    # bytes (e.g. a header built with ensure_binary) are sent as text, not as "b'...'"
+    lines = ci.filterHeaders({b"X-Token": b"\xc3\xa4bc", "X-Count": 5})
+    assert sorted(lines) == ["X-Count: 5", "X-Token: äbc"]
+
+
 def test_build_args(ci):
     args = ci.buildArgs("/usr/bin/curl-impersonate", "chrome150", "https://a.example/x?q='\"", {"User-Agent": "u", "Referer": "r"},
                         cookieIn="/tmp/in", cookieOut="/tmp/jar", cookieString="cf=1", dataFile="/tmp/post",
