@@ -32,7 +32,13 @@ from Components.config import config, ConfigText, getConfigListEntry
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvmultipleinputbox import IPTVMultipleInputBox
 from Screens.MessageBox import MessageBox
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 ###################################################
+
+
+def _zdec(data):
+    # the obfuscated urls/keys are zlib-packed: zlib.decompress gives bytes on py3
+    return ensure_str(zlib.decompress(data))
 
 
 def gettytul():
@@ -162,26 +168,26 @@ class MindigTVHU(CBaseHostClass):
         self.HEADER = self.cm.getDefaultHeader()
         self.MAIN_URL = "https://www.mindigtv.hu/"
 
-        self.MINDIG_URL = zlib.decompress(base64.b64decode(
+        self.MINDIG_URL = _zdec(base64.b64decode(
             "eJzLKCkpsNLXTyzI1MvNzEvJTC8p00ssKCguSS0q1stN1S8z0jfUzyjVT87PK0nNK9EHAK6lEV8="))
-        self.MINDIG_CHANNEL_URL = self.MINDIG_URL + zlib.decompress(base64.b64decode(
+        self.MINDIG_CHANNEL_URL = self.MINDIG_URL + _zdec(base64.b64decode(
             "eJxLqoxPzs8rSc0r0XfOSMzLS83RyyrOzwMAbS4JBg=="))
-        self.MINDIG_MEDIA_URL = self.MINDIG_URL + zlib.decompress(base64.b64decode(
+        self.MINDIG_MEDIA_URL = self.MINDIG_URL + _zdec(base64.b64decode(
             "eJwrLilKTcwtjk+qjE/OSMzLS83Rr67Vz8gp1ssqzs8DALz9C/c="))
-        self.MINDIG_EPG_URL = self.MINDIG_URL + zlib.decompress(base64.b64decode(
+        self.MINDIG_EPG_URL = self.MINDIG_URL + _zdec(base64.b64decode(
             "eJwrzsgvL45PqoxPzkjMy0vN0a+uBSK9rOL8PACamArd"))
 
-        self.HBBTV_URL = zlib.decompress(base64.b64decode(
+        self.HBBTV_URL = _zdec(base64.b64decode(
             "eJzLKCkpsNLXz0hKKinTTSzWS87Py0tNLslNTclM1Mso1QcAwhsLwg=="))
-        self.HBBTV_MEDIA_URL = self.HBBTV_URL + zlib.decompress(base64.b64decode(
+        self.HBBTV_MEDIA_URL = self.HBBTV_URL + _zdec(base64.b64decode(
             "eJxLzNBPTy0pLilKTcwtLcrRK8gosM9Msa2uBQB/MAnP"))
-        self.HBBTV_CHANNEL_URL = self.HBBTV_URL + zlib.decompress(base64.b64decode(
+        self.HBBTV_CHANNEL_URL = self.HBBTV_URL + _zdec(base64.b64decode(
             "eJxLzNDPSSzNS85ILdIHAB1SBHo="))
-        self.HBBTV_HD_URL = self.HBBTV_URL + zlib.decompress(base64.b64decode(
+        self.HBBTV_HD_URL = self.HBBTV_URL + _zdec(base64.b64decode(
             "eJxLzNDPyU+Pz0jRz8xLSa3QK8goAABGSAcj"))
-        self.HBBTV_RADIO_URL = self.HBBTV_URL + zlib.decompress(base64.b64decode(
+        self.HBBTV_RADIO_URL = self.HBBTV_URL + _zdec(base64.b64decode(
             "eJxLzNAvSkzJzNfPzEtJrdAryCgAAD8uBsU="))
-        self.HBBTV_MTVA_URL = self.HBBTV_URL + zlib.decompress(base64.b64decode(
+        self.HBBTV_MTVA_URL = self.HBBTV_URL + _zdec(base64.b64decode(
             "eJzLLSlL1M9JLM1Lzkgt0s/MS0mt0CvIKAAAbGkI9w=="))
 
         self.MINDIG_HEADER = dict(self.HEADER)

@@ -337,39 +337,29 @@ class CParsingHelper:
             return True, data[match1.end(0): (match1.end(0) + match2.start(0))]
 
     @staticmethod
+    def _markerFlags(withMarkers, caseSensitive):
+        # ph.find/findall/rfind/rfindall flags for the getDataBeetwen... / getAllItemsBeetwen... wrappers
+        flags = ph.START_E | ph.END_E if withMarkers else 0
+        return flags if caseSensitive else flags | ph.IGNORECASE
+
+    @staticmethod
     def getDataBeetwenMarkers(data, marker1, marker2, withMarkers=True, caseSensitive=True):
-        flags = 0
-        if withMarkers:
-            flags |= ph.START_E | ph.END_E
-        if not caseSensitive:
-            flags |= ph.IGNORECASE
+        flags = CParsingHelper._markerFlags(withMarkers, caseSensitive)
         return ph.find(data, marker1, marker2, flags)
 
     @staticmethod
     def getAllItemsBeetwenMarkers(data, marker1, marker2, withMarkers=True, caseSensitive=True):
-        flags = 0
-        if withMarkers:
-            flags |= ph.START_E | ph.END_E
-        if not caseSensitive:
-            flags |= ph.IGNORECASE
+        flags = CParsingHelper._markerFlags(withMarkers, caseSensitive)
         return ph.findall(data, marker1, marker2, flags)
 
     @staticmethod
     def rgetAllItemsBeetwenMarkers(data, marker1, marker2, withMarkers=True, caseSensitive=True):
-        flags = 0
-        if withMarkers:
-            flags |= ph.START_E | ph.END_E
-        if not caseSensitive:
-            flags |= ph.IGNORECASE
+        flags = CParsingHelper._markerFlags(withMarkers, caseSensitive)
         return ph.rfindall(data, marker1, marker2, flags)
 
     @staticmethod
     def rgetDataBeetwenMarkers2(data, marker1, marker2, withMarkers=True, caseSensitive=True):
-        flags = 0
-        if withMarkers:
-            flags |= ph.START_E | ph.END_E
-        if not caseSensitive:
-            flags |= ph.IGNORECASE
+        flags = CParsingHelper._markerFlags(withMarkers, caseSensitive)
         return ph.rfind(data, marker1, marker2, flags)
 
     @staticmethod
@@ -390,38 +380,22 @@ class CParsingHelper:
 
     @staticmethod
     def getDataBeetwenNodes(data, node1, node2, withNodes=True, caseSensitive=True):
-        flags = 0
-        if withNodes:
-            flags |= ph.START_E | ph.END_E
-        if not caseSensitive:
-            flags |= ph.IGNORECASE
+        flags = CParsingHelper._markerFlags(withNodes, caseSensitive)
         return ph.find(data, node1, node2, flags)
 
     @staticmethod
     def getAllItemsBeetwenNodes(data, node1, node2, withNodes=True, numNodes=-1, caseSensitive=True):
-        flags = 0
-        if withNodes:
-            flags |= ph.START_E | ph.END_E
-        if not caseSensitive:
-            flags |= ph.IGNORECASE
+        flags = CParsingHelper._markerFlags(withNodes, caseSensitive)
         return ph.findall(data, node1, node2, flags, limits=numNodes)
 
     @staticmethod
     def rgetDataBeetwenNodes(data, node1, node2, withNodes=True, caseSensitive=True):
-        flags = 0
-        if withNodes:
-            flags |= ph.START_E | ph.END_E
-        if not caseSensitive:
-            flags |= ph.IGNORECASE
+        flags = CParsingHelper._markerFlags(withNodes, caseSensitive)
         return ph.rfind(data, node1, node2, flags)
 
     @staticmethod
     def rgetAllItemsBeetwenNodes(data, node1, node2, withNodes=True, numNodes=-1, caseSensitive=True):
-        flags = 0
-        if withNodes:
-            flags |= ph.START_E | ph.END_E
-        if not caseSensitive:
-            flags |= ph.IGNORECASE
+        flags = CParsingHelper._markerFlags(withNodes, caseSensitive)
         return ph.rfindall(data, node1, node2, flags, limits=numNodes)
 
     # this method is useful only for developers
@@ -434,7 +408,7 @@ class CParsingHelper:
 
     @staticmethod
     def getNormalizeStr(txt, idx=None):
-        POLISH_CHARACTERS = {'ą': 'a', 'ć': 'c', 'ę': 'ę', 'ł': 'l', 'ń': 'n', 'ó': 'o', 'ś': 's', 'ż': 'z', 'ź': 'z',
+        POLISH_CHARACTERS = {'ą': 'a', 'ć': 'c', 'ę': 'e', 'ł': 'l', 'ń': 'n', 'ó': 'o', 'ś': 's', 'ż': 'z', 'ź': 'z',
                              'Ą': 'A', 'Ć': 'C', 'Ę': 'E', 'Ł': 'L', 'Ń': 'N', 'Ó': 'O', 'Ś': 'S', 'Ż': 'Z', 'Ź': 'Z',
                              'á': 'a', 'é': 'e', 'í': 'i', 'ñ': 'n', 'ú': 'u', 'ü': 'u',
                              'Á': 'A', 'É': 'E', 'Í': 'I', 'Ñ': 'N', 'Ú': 'U', 'Ü': 'U',

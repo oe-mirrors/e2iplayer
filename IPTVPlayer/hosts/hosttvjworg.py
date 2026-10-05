@@ -78,11 +78,6 @@ class TVJWORG(CBaseHostClass):
             url = url.replace('https://', 'http://')  # NOSONAR - deliberate scheme match to a non-https MAIN_URL
         return url
 
-    def cleanHtmlStr(self, data):
-        data = data.replace('&nbsp;', ' ')
-        data = data.replace('&nbsp', ' ')
-        return CBaseHostClass.cleanHtmlStr(data)
-
     def listsTab(self, tab, cItem, type='dir'):
         printDBG("TVJWORG.listsTab")
         for item in tab:
