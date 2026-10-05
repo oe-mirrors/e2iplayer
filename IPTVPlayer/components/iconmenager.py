@@ -13,7 +13,6 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import mkdirs, \
                       RemoveAllDirsIconsFromPath, GetIconsFilesFromDir, GetNewIconsDirName, \
                       GetIconsDirs, RemoveIconsDirByPath, MergeDicts, GetCookieDir
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
-from Plugins.Extensions.IPTVPlayer.libs import ph
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_binary
 
 ###################################################
@@ -411,9 +410,6 @@ class IconMenager:
                     img_url = self.cm.ph.getSearchGroups(img_url, r'<img[^>]+?src="([^"]+?\.(:?jpe?g|png)(?:\?[^"]+?)?)"')[0]
                 if img_url.startswith('/'):
                     img_url = urljoin(baseUrl, img_url)
-            elif '7tv.de' == domain:
-                data = ph.find(data, ('<meta', '>', 'thumbnail_image_url'))[1]
-                img_url = ph.getattr(data, 'content')
             if not self.cm.isValidUrl(img_url):
                 self.lastError = 'no picture url found on the page, got %r' % img_url
                 return False

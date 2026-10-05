@@ -385,7 +385,6 @@ class urlparser:
             "megamax.me": self.pp.parserMEGAMAX,  # add 031026
             "megatuktuk.store": self.pp.parserMEGAMAX,  # add 031026
             "meinecloud.click": self.pp.parserMEINECLOUD,
-            "mediasetplay.mediaset.it": self.pp.parserMEDIASET,
             "mfw09.org": self.pp.parserBYSE,
             "miiiixdrop.net": self.pp.parserMIXDROP,
             "miiixdrop.net": self.pp.parserMIXDROP,
@@ -1826,32 +1825,6 @@ class pageParser(CaptchaHelper):
             msg = clean_html(self.cm.ph.getDataBeetwenNodes(data, ("<div", ">", "box-message"), ("</div", ">"), False)[1])
             SetIPTVPlayerLastHostError(msg)
         return False
-
-    def parserMEDIASET(self, baseUrl):  # Need test
-        printDBG("parserMEDIASET baseUrl[%r]" % baseUrl)
-        guid = ph.search(baseUrl, r"""https?://(?:(?:www|static3)\.)?mediasetplay\.mediaset\.it/(?:(?:video|on-demand)/(?:[^/]+/)+[^/]+_|player/index\.html\?.*?\bprogramGuid=)([0-9A-Z]{16})""")[0]
-        if not guid:
-            return
-        tp_path = "PR1GhC/media/guid/2702976343/" + guid
-        uniqueUrls = set()
-        retTab = []
-        for asset_type in ("SD", "HD"):
-            for f in ("MPEG4",):
-                url = "https://link.theplatform.%s/s/%s?mbr=true&formats=%s&assetTypes=%s" % ("eu", tp_path, f, asset_type)
-                sts, data = self.cm.getPage(url, post_data={"format": "SMIL"})
-                if not sts:
-                    continue
-                if "GeoLocationBlocked" in data:
-                    SetIPTVPlayerLastHostError(ph.getattr(data, "abstract"))
-                tmp = ph.findall(data, "<video", ">")
-                for item in tmp:
-                    url = ph.getattr(item, "src")
-                    if not self.cm.isValidUrl(url):
-                        continue
-                    if url not in uniqueUrls:
-                        uniqueUrls.add(url)
-                        retTab.append({"name": "%s - %s" % (f, asset_type), "url": url})
-        return retTab
 
     def parserVIDMOLYME(self, baseUrl):  # fix 150126
         printDBG("parserVIDMOLYME baseUrl[%r]" % baseUrl)

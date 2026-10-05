@@ -20,7 +20,16 @@ IFRAME_SRC_URI_RE = re.compile(r"""<iframe[^>]+?src=(['"])([^>]*?)(?:\1)""", re.
 IMAGE_SRC_URI_RE = re.compile(r"""<img[^>]+?src=(['"])([^>]*?\.(?:jpe?g|png)(?:\?[^\1]*?)?)(?:\1)""", re.I)
 A_HREF_URI_RE = re.compile(r"""<a[^>]+?href=(['"])([^>]*?)(?:\1)""", re.I)
 STRIP_HTML_COMMENT_RE = re.compile(r"<!--[\s\S]*?-->")
-RE_TAGS = re.compile(r"(<br\s*/?>|</p>\s*<p[^>]*>|<[^>]+>)", re.I)
+# a real tag: "<" directly followed by a letter, "/", "!" or "?" (so text like "1 < 2" stays); quoted
+# attribute values may contain ">"
+RE_TAGS = re.compile(r"""</?[a-zA-Z!?](?:"[^"]*"|'[^']*'|[^'">])*>""")
+SCRIPT_STYLE_RE = re.compile(r"<(script|style)\b[^>]*>[\s\S]*?</\1\s*>", re.I)
+CDATA_RE = re.compile(r"<!\[CDATA\[([\s\S]*?)\]\]>")
+TAG_NAME_RE = re.compile(r"</?\s*([a-zA-Z0-9]+)")
+ZERO_WIDTH_RE = re.compile(u"[\u200b\u200c\u200d\u2060\ufeff]")  # zero-width space/non-joiner/joiner, word joiner, BOM
+# tags that separate words: replaced by a space, all others (b, i, span, a ...) by nothing
+SEPARATOR_TAGS = frozenset(("br", "p", "div", "li", "ul", "ol", "dd", "dt", "dl", "td", "th", "tr", "table", "h1", "h2", "h3",
+                            "h4", "h5", "h6", "option", "section", "article", "header", "footer", "blockquote", "title", "hr"))
 # add short aliases
 IFRAME = IFRAME_SRC_URI_RE
 IMG = IMAGE_SRC_URI_RE
@@ -31,6 +40,39 @@ except ImportError:
     from HTMLParser import HTMLParser
 
     unescape = HTMLParser().unescape
+
+
+# getattr / all / any / none / strip_doubles are module API used as ph.getattr(...) etc. by the youtube
+# extractor and hosts - not dead code, even though nothing in this file calls them (they were removed
+# by mistake in #353 and restored)
+def getattr(data, attrName, flags=0):
+    if flags & IGNORECASE:
+        sData = data.lower()
+        m = "%s=" % attrName.lower()
+    else:
+        sData = data
+        m = "%s=" % attrName
+    sidx = 0
+    while True:
+        sidx = sData.find(m, sidx)
+        if sidx == -1:
+            return ""
+        # the name must follow whitespace ("id" must not match inside "data-id")
+        if sidx > 0 and data[sidx - 1] in ("\t", " ", "\n", "\r"):
+            break
+        sidx += len(m)
+    sidx += len(m)
+    if sidx >= len(data):
+        return ""
+    z = data[sidx]
+    if z not in ('"', "'"):
+        return ""
+    eidx = sidx + 1
+    while eidx < len(data):
+        if data[eidx] == z:
+            return data[sidx + 1:eidx]
+        eidx += 1
+    return ""
 
 
 def search(data, pattern, flags=0, limits=-1):
@@ -62,6 +104,24 @@ def search(data, pattern, flags=0, limits=-1):
             value = ""
         tab.append(value)
     return tab
+
+
+def all(tab, data, start, end):
+    for it in tab:
+        if data.find(it, start, end) == -1:
+            return False
+    return True
+
+
+def any(tab, data, start, end):
+    for it in tab:
+        if data.find(it, start, end) != -1:
+            return True
+    return False
+
+
+def none(tab, data, start, end):
+    return not any(tab, data, start, end)
 
 
 def check(arg1, arg2=None):
@@ -210,16 +270,33 @@ def rfind(data, start, end=("",), flags=START_E | END_E):
         return False, ""
 
 
+def strip_doubles(data, pattern):
+    while -1 < data.find(pattern + pattern) and "" != pattern:
+        data = data.replace(pattern + pattern, pattern)
+    return data
+
+
+def _tagReplacement(match):
+    name = TAG_NAME_RE.match(match.group(0))
+    return " " if name and name.group(1).lower() in SEPARATOR_TAGS else ""
+
+
 def clean_html(html):
     if not html:
         return ""
-    html = RE_TAGS.sub(lambda m: "\n" if m.group(1).lower().startswith(("<br", "</p")) else "", html)
-    html = html.replace("\n", " ")
+    if isinstance(html, bytes) and not isPY2():
+        html = ensure_str(html)
+    html = CDATA_RE.sub(r"\1", html)
+    html = STRIP_HTML_COMMENT_RE.sub("", html)
+    html = SCRIPT_STYLE_RE.sub(" ", html)
+    html = RE_TAGS.sub(_tagReplacement, html)
     for _ in range(2):
         prev = html
         html = unescape(html)
         if html == prev:
             break
+    if not isPY2():
+        html = ZERO_WIDTH_RE.sub("", html)
     html = re.sub(r"\s+", " ", html)
     if isPY2():
         return ensure_str(html.strip())
