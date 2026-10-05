@@ -11,6 +11,8 @@
 #     everything else (ok.ru, vk ...) goes to urlparser
 #   - watched flag (video:/series:/season: keys), downloaded flag, favourites, sidecar,
 #     name normalisation ("Title (Year)", "Show - SxxExx"), INFO via moviemeta + the site's story
+# 05.10.2026 - "No items found" marker, episode / label of search hits, INFO shows
+#   the upload date and keeps the site's categories / duration (moviemeta no longer overwrites them)
 import re
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
@@ -297,6 +299,13 @@ class Brstej(GenericFolderWatchedScraperMixin, CBaseHostClass):
             category = self.cleanHtmlStr(self.cm.ph.getSearchGroups(card, r'(?s)class="(?:pmc-category-link|pln-category)"[^>]*>(.*?)</a>')[0])
             if category:
                 fields.append(category)
+            # search hits (prs cards): episode number and the site's badge
+            episode = self.cleanHtmlStr(self.cm.ph.getSearchGroups(card, r'(?s)<span class="prs-episode"[^>]*>(.*?)</span>')[0])
+            if episode:
+                fields.append("%s: %s" % (_("Episode"), episode))
+            badge = self.cleanHtmlStr(self.cm.ph.getSearchGroups(card, r'(?s)<span class="prs-label"[^>]*>(.*?)</span>')[0])
+            if badge:
+                fields.append(badge)
             self.addVideo(self._videoParams(label, url, icon, " | ".join(fields), "pmc-card" in card, normalize))
 
     def _lastPage(self, data, page):
@@ -335,6 +344,9 @@ class Brstej(GenericFolderWatchedScraperMixin, CBaseHostClass):
         before = len(self.currList)
         self._parseCards(data, seen, normalize)
         if len(self.currList) == before:
+            if not self.currList:
+                # empty category / page or no search hits: a marker instead of an empty list
+                self.addMarker({"title": _("No items found"), "desc": ""})
             return
         hasNext, lastPage = self._lastPage(data, page)
         addPagingItems(self, cItem, page, hasNext, lastPage, self._pageTpl(url))
@@ -388,6 +400,8 @@ class Brstej(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 if normalize and epNum:
                     params["title"] = "%s - %s" % (showClean, formatSxxExx(season, epNum))
                 self.addVideo(params)
+        if not self.currList:
+            self.addMarker({"title": _("No items found"), "desc": ""})
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("Brstej.listSearchResult [%s]" % searchPattern)
@@ -513,7 +527,7 @@ class Brstej(GenericFolderWatchedScraperMixin, CBaseHostClass):
                     poster = self.cm.ph.getSearchGroups(hero, r'<img[^>]+src="([^"]+)"')[0]
                 genre = self.cleanHtmlStr(self.cm.ph.getSearchGroups(hero, r'(?s)class="pds-category"[^>]*>(.*?)</a>')[0])
                 if genre:
-                    info["genres"] = genre
+                    info["categories"] = genre
                 extra = [self.cleanHtmlStr(x) for x in re.findall(r'(?s)<span>(.*?)</span>', self.cm.ph.getSearchGroups(hero, r'(?s)<div class="pds-meta">(.*?)</div>')[0])]
                 if extra:
                     info["episodes"] = ", ".join([x for x in extra if x])
@@ -524,13 +538,22 @@ class Brstej(GenericFolderWatchedScraperMixin, CBaseHostClass):
                     info["duration"] = duration
                 cats = self.cm.ph.getSearchGroups(data, r'(?s)<dt>الأقسام</dt>\s*<dd>(.*?)</dd>')[0]
                 genres = [self.cleanHtmlStr(g) for g in re.findall(r"(?s)<a[^>]*>(.*?)</a>", cats)]
-                if genres:
-                    info["genres"] = ", ".join([g for g in genres if g])
+                if any(genres):
+                    info["categories"] = ", ".join([g for g in genres if g])
+                # upload date: <time datetime="2026-05-20T02:42:51+0300">أضيفت منذ 4 شهور</time>
+                added = self.cm.ph.getSearchGroups(data, r'<time[^>]+datetime="(\d{4}-\d{2}-\d{2})')[0] or \
+                    self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'(?s)<time[^>]*>(.*?)</time>')[0])
+                if added:
+                    info["broadcast"] = added
             if not story:
                 story = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'<meta name="description" content="([^"]*)"')[0])
+        # the site's own values (this video's duration, its categories) win over the moviemeta ones,
+        # the moviemeta genres stay as a separate line
+        siteInfo, info = info, {}
         if cItem.get("meta_year"):
             info["year"] = cItem["meta_year"]
         info.update(meta.get("info", {}))
+        info.update(siteInfo)
         plot = meta.get("plot", "")
         text = plot or story or cItem.get("desc", "")
         if plot and story and story != plot:
