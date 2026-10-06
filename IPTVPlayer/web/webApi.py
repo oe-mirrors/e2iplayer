@@ -334,7 +334,11 @@ def apiSettingsSet(req, params):
 		return {'ok': False, 'error': str(e)}
 	if name in RESTART_OPTIONS:
 		settings.restartPending = True
-	return {'ok': True, 'restart': name in RESTART_OPTIONS}
+	warning = ''
+	if kind == 'text':
+		from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import GetNoStorageWarning
+		warning = GetNoStorageWarning(element, element.value)
+	return {'ok': True, 'restart': name in RESTART_OPTIONS, 'warning': warning}
 
 
 def apiRestart(req, params):
