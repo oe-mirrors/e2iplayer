@@ -256,7 +256,7 @@ class KreskowkaZonePL(CBaseHostClass):
                     tmp = self.cm.ph.getSearchGroups(data, '''<a[^>]+?href="([^>\s]+?)"[>\s]''')[0]
                 if tmp == '':
                     tmp = self.cleanHtmlStr(data)
-                if not self.cm.isValidUrl(tmp) and 1 <> self.up.checkHostSupport(tmp) and retry:
+                if not self.cm.isValidUrl(tmp) and 1 < > self.up.checkHostSupport(tmp) and retry:
                     sts, tmp = self.cm.getPage(self.getFullUrl('images/statystyki.gif'), self.defaultParams)
                 else:
                     videoUrl = tmp
