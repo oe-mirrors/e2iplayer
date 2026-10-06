@@ -1078,6 +1078,8 @@ class E2iPlayerWidget(Screen):
                         self.spinnerTimer.start(self.spinnerTimer_interval, True)
                         return
                 elif not self.workThread.isFinished():
+                    # marks the spot in the debug log: the host's traceback is right above this line
+                    printDBG('=' * 60 + '\nEXCEPTION ABOVE - host "%s" crashed\n' % self.hostName + '=' * 60)
                     if self.hostName not in GetHostsList(fromList=True, fromHostFolder=False):
                         message = _('It seems that the host "%s" has crashed.') % self.hostName
                         message += _('\nThis host is not integral part of the E2iPlayer plugin.\nIt is not supported by E2iPlayer team.')

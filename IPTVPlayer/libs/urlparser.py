@@ -141,41 +141,82 @@ class urlparser:
         self.cm = common()
         self.pp = pageParser()
         self.hostMap = {
+            "0gomovies.beer": self.pp.parserHQQ,  # add 061026
+            "19turanosephantasia.com": self.pp.parserVOESX,  # add 061026
             "1azayf9w.xyz": self.pp.parserBYSE,
             "1fichier.com": self.pp.parser1FICHIERCOM,
             "1vid.xyz": self.pp.parserJWPLAYER,
+            "20demidistance9elongations.com": self.pp.parserVOESX,  # add 061026
             "222i8x.lol": self.pp.parserBYSE,
             "26efp.com": self.pp.parserJWPLAYER,
+            "30sensualizeexpression.com": self.pp.parserVOESX,  # add 061026
+            "321naturelikefurfuroid.com": self.pp.parserVOESX,  # add 061026
+            "35volitantplimsoles5.com": self.pp.parserVOESX,  # add 061026
             "360.yandex.ru": self.pp.parserYANDEXDISK,
+            "449unceremoniousnasoseptal.com": self.pp.parserVOESX,  # add 061026
             "4yftwvrdz7.sbs": self.pp.parserJWPLAYER,
+            "6sfkrspw4u.sbs": self.pp.parserJWPLAYER,  # add 061026
             "71stream.one": self.pp.parserR2EMBED,  # add 031026
+            "732eg54de642sa.sbs": self.pp.parserJWPLAYER,  # add 061026
+            "745mingiestblissfully.com": self.pp.parserVOESX,  # add 061026
             "81u6xl9d.xyz": self.pp.parserBYSE,
             "8mhlloqo.fun": self.pp.parserBYSE,
             "96ar.com": self.pp.parserBYSE,
             # a
+            "abkrzkr.sbs": self.pp.parserJWPLAYER,  # add 061026
+            "abkrzkz.sbs": self.pp.parserJWPLAYER,  # add 061026
             "abstream.to": self.pp.parserJWPLAYER,  # add 041026
             "abysscdn.com": self.pp.parserABYSS,
             "abyssplayer.com": self.pp.parserABYSS,
             "adblocktape.wiki": self.pp.parserSTREAMTAPE,
+            "adrianmissionminute.com": self.pp.parserVOESX,  # add 061026
+            "advertape.net": self.pp.parserSTREAMTAPE,  # add 061026
+            "advtpe.com": self.pp.parserSTREAMTAPE,  # add 061026
             "agbsb.com": self.pp.parserSTREAMUP,
             "aiavh.com": self.pp.parserJWPLAYER,
+            "ajmidyad.sbs": self.pp.parserJWPLAYER,  # add 061026
+            "ajmidyadfihayh.sbs": self.pp.parserJWPLAYER,  # add 061026
+            "alhayabambi.sbs": self.pp.parserJWPLAYER,  # add 061026
             "aliez.me": self.pp.parserJWPLAYER,
+            "alions.pro": self.pp.parserJWPLAYER,  # add 061026
             "all3do.com": self.pp.parserDOOD,
+            "alleneconomicmatter.com": self.pp.parserVOESX,  # add 061026
             "anafast.cyou": self.pp.parserJWPLAYER,
+            "anafast.online": self.pp.parserJWPLAYER,  # add 061026
+            "anafast.org": self.pp.parserJWPLAYER,  # add 061026
+            "anafasts.com": self.pp.parserJWPLAYER,  # add 061026
             "anaplayer.online": self.pp.parserALBAPLAYER,  # add 031026 (w.anaplayer.online/albaplayer/<slug>/)
             "anime4low.sbs": self.pp.parserJWPLAYER,
+            "anime7u.com": self.pp.parserJWPLAYER,  # add 061026
+            "animeshqip.uns.bio": self.pp.parserSBS,  # add 061026
+            "ankrzkz.sbs": self.pp.parserJWPLAYER,  # add 061026
+            "ankrznm.sbs": self.pp.parserJWPLAYER,  # add 061026
+            "ano.cx": self.pp.parserSTREAMUP,  # add 061026
+            "anonmp4.art": self.pp.parserANONMP4,  # add 061026
             "anonmp4.help": self.pp.parserANONMP4,
+            "antecoxalbobbing1010.com": self.pp.parserVOESX,  # add 061026
             "antiadtape.com": self.pp.parserSTREAMTAPE,
+            "apinchcaseation.com": self.pp.parserVOESX,  # add 061026
             "arabveturk.com": self.pp.parserJWPLAYER,
             "archive.org": self.pp.parserARCHIVEORG,
             "ashortl.ink": self.pp.parserVIDMOLYME,
+            "asianembed.cam": self.pp.parserSBS,  # add 061026
+            "asjp1j93c1.sbs": self.pp.parserJWPLAYER,  # add 061026
             "asnwish.com": self.pp.parserJWPLAYER,
+            "atabkhha.sbs": self.pp.parserJWPLAYER,  # add 061026
+            "atabknha.sbs": self.pp.parserJWPLAYER,  # add 061026
+            "atabknhk.sbs": self.pp.parserJWPLAYER,  # add 061026
+            "atabknhs.sbs": self.pp.parserJWPLAYER,  # add 061026
+            "audaciousdefaulthouse.com": self.pp.parserVOESX,  # add 061026
+            "availedsmallest.com": self.pp.parserVOESX,  # add 061026
             "awish.pro": self.pp.parserJWPLAYER,
+            "azipcdn.com": self.pp.parserJWPLAYER,  # add 061026
             # b
             "bbc.co.uk": self.pp.parserBBC,
             "bestwish.lol": self.pp.parserJWPLAYER,
             "bf0skv.org": self.pp.parserBYSE,
             "bgwp.cc": self.pp.parserJWPLAYER,
+            "bigclatterhomesguideservice.com": self.pp.parserVOESX,  # add 061026
             "bigshare.io": self.pp.parserJWPLAYER,
             "bigwarp.art": self.pp.parserJWPLAYER,
             "bigwarp.cc": self.pp.parserJWPLAYER,
@@ -183,8 +224,14 @@ class urlparser:
             "bigwarp.pro": self.pp.parserJWPLAYER,
             "bigwings.io": self.pp.parserJWPLAYER,
             "bingezove.com": self.pp.parserJWPLAYER,
+            "boonlessbestselling244.com": self.pp.parserVOESX,  # add 061026
             "boosteradx.online": self.pp.parserBYSE,
+            "bradleyviewdoctor.com": self.pp.parserVOESX,  # add 061026
+            "brightmindwave.com": self.pp.parserHQQ,  # add 061026
+            "brittneystandardwestern.com": self.pp.parserVOESX,  # add 061026
+            "brucevotewithin.com": self.pp.parserVOESX,  # add 061026
             "btg549.filmoviplex.com": self.pp.parserABYSS,
+            "bullstream.xyz": self.pp.parserSTREAMEMBED,  # add 061026
             "byse.sx": self.pp.parserBYSE,
             "bysebuho.com": self.pp.parserBYSE,
             "bysedikamoum.com": self.pp.parserBYSE,
@@ -204,23 +251,39 @@ class urlparser:
             # c
             "c1z39.com": self.pp.parserBYSE,
             "callistanise.com": self.pp.parserJWPLAYER,
+            "caseyimpactstation.com": self.pp.parserVOESX,  # add 061026
+            "casthq.to": self.pp.parserJWPLAYER,  # add 061026
             "cavanhabg.com": self.pp.parserJWPLAYER,
+            "cd189tryo7.sbs": self.pp.parserJWPLAYER,  # add 061026
             "cda.pl": self.pp.parserCDA,
             "cdn1.site": self.pp.parserJWPLAYER,
             "cdnplus.sbs": self.pp.parserJWPLAYER,  # add 031026
             "cdnplus.space": self.pp.parserJWPLAYER,
             "cdnwish.com": self.pp.parserJWPLAYER,
+            "charlestoughrace.com": self.pp.parserVOESX,  # add 061026
+            "christopheruntilpoint.com": self.pp.parserVOESX,  # add 061026
+            "chromotypic.com": self.pp.parserVOESX,  # add 061026
             "chuckle-tube.com": self.pp.parserVOESX,
+            "cilootv.store": self.pp.parserJWPLAYER,  # add 061026
+            "cimanow.upns.online": self.pp.parserSBS,  # add 061026
+            "cindyeyefinal.com": self.pp.parserVOESX,  # add 061026
             "cinegrab.com": self.pp.parserBYSE,
+            "cinemathek.online": self.pp.parserJWPLAYER,  # add 061026
             "cloud.mail.ru": self.pp.parserCOUDMAILRU,
             "cloudorchestranova.com": self.pp.parserVIDSRC,
             "coflix.upn.one": self.pp.parserSBS,
+            "coolciima.online": self.pp.parserJWPLAYER,  # add 061026
+            "counterclockwisejacky.com": self.pp.parserVOESX,  # add 061026
             "coverapi.store": self.pp.parserCOVERAPI,
+            "crownmakermacaronicism.com": self.pp.parserVOESX,  # add 061026
+            "crystaltreatmenteast.com": self.pp.parserVOESX,  # add 061026
             "csst.online": self.pp.parserSST,
+            "cyamidpulverulence530.com": self.pp.parserVOESX,  # add 061026
             "cybervynx.com": self.pp.parserJWPLAYER,
             # d
             "d0000d.com": self.pp.parserDOOD,
             "d000d.com": self.pp.parserDOOD,
+            "d00ds.site": self.pp.parserJWPLAYER,  # add 061026
             "d0o0d.com": self.pp.parserDOOD,
             "d-s.io": self.pp.parserDOOD,
             "dailymotion.com": self.pp.parserDAILYMOTION,
@@ -230,12 +293,18 @@ class urlparser:
             "devideosrc.co": self.pp.parserMEINECLOUD,
             "dhcplay.com": self.pp.parserJWPLAYER,
             "dhtpre.com": self.pp.parserJWPLAYER,
+            "dianaavoidthey.com": self.pp.parserVOESX,  # add 061026
+            "diananatureforeign.com": self.pp.parserVOESX,  # add 061026
             "dingtezuni.com": self.pp.parserJWPLAYER,
+            "dinisglows.com": self.pp.parserJWPLAYER,  # add 061026
             "dintezuvio.com": self.pp.parserJWPLAYER,
             "disk.yandex.com": self.pp.parserYANDEXDISK,
             "disk.yandex.ru": self.pp.parserYANDEXDISK,
+            "disneycdn.net": self.pp.parserSBS,  # add 061026
+            "dlions.pro": self.pp.parserJWPLAYER,  # add 061026
             "do0od.com": self.pp.parserDOOD,
             "do7go.com": self.pp.parserDOOD,
+            "donaldlineelse.com": self.pp.parserVOESX,  # add 061026
             "dood.cx": self.pp.parserDOOD,
             "dood.la": self.pp.parserDOOD,
             "dood.li": self.pp.parserDOOD,
@@ -250,6 +319,7 @@ class urlparser:
             "dood.work": self.pp.parserDOOD,
             "dood.ws": self.pp.parserDOOD,
             "dood.yt": self.pp.parserDOOD,
+            "doodporn.xyz": self.pp.parserJWPLAYER,  # add 061026
             "doods.pro": self.pp.parserDOOD,
             "doods.to": self.pp.parserVEEV,
             "doodcdn.io": self.pp.parserDOOD,
@@ -270,29 +340,49 @@ class urlparser:
             "ds2video.com": self.pp.parserDOOD,
             "dsvplay.com": self.pp.parserDOOD,
             "dumbalag.com": self.pp.parserJWPLAYER,
+            "dwish.pro": self.pp.parserJWPLAYER,  # add 061026
+            "dzo.vidplayer.live": self.pp.parserSBS,  # add 061026
             # e
+            "e4xb5c2xnz.sbs": self.pp.parserJWPLAYER,  # add 061026
             "earnvids.xyz": self.pp.parserJWPLAYER,  # add 031026
             "eb8gfmjn71.sbs": self.pp.parserJWPLAYER,
             "ebd.cda.pl": self.pp.parserCDA,
             "edbrdl7pab.sbs": self.pp.parserJWPLAYER,
+            "edwardarriveoften.com": self.pp.parserVOESX,  # add 061026
+            "eghjrutf.sbs": self.pp.parserJWPLAYER,  # add 061026
+            "eghzrutw.sbs": self.pp.parserJWPLAYER,  # add 061026
+            "egsyxurh.sbs": self.pp.parserJWPLAYER,  # add 061026
+            "egsyxutd.sbs": self.pp.parserJWPLAYER,  # add 061026
             "egtpgrvh.sbs": self.pp.parserJWPLAYER,
+            "ellenpoliticalfollow.com": self.pp.parserVOESX,  # add 061026
+            "embedplay.upns.ink": self.pp.parserSBS,  # add 061026
             "embedplayabyss.top": self.pp.parserABYSS,
+            "embedplayapiupn.upns.xyz": self.pp.parserSBS,  # add 061026
             "embedplaybyse.top": self.pp.parserBYSE,
             "embedwish.com": self.pp.parserJWPLAYER,
             "emturbovid.com": self.pp.parserJWPLAYER,
             "en.embedz.net": self.pp.parserJWPLAYER,
+            "erikcoldperson.com": self.pp.parserVOESX,  # add 061026
+            "eugenemakedraw.com": self.pp.parserVOESX,  # add 061026
             # f
             "f16px.com": self.pp.parserBYSE,
             "f51rm.com": self.pp.parserBYSE,
             "fastream.to": self.pp.parserJWPLAYER,
             "fastvid.cam": self.pp.parserJWPLAYER,  # add 041026
             "fdewsdc.sbs": self.pp.parserJWPLAYER,
+            "figeterpiazine.com": self.pp.parserVOESX,  # add 061026
+            "file-upload.com": self.pp.parserJWPLAYER,  # add 061026
+            "file-upload.in": self.pp.parserJWPLAYER,  # add 061026
             "filecloud.io": self.pp.parserFILECLOUDIO,
+            "filedecrypt.link": self.pp.parserSBS,  # add 061026
             "filefactory.com": self.pp.parserFILEFACTORYCOM,
+            "filelions.co": self.pp.parserJWPLAYER,  # add 061026
+            "filelions.com": self.pp.parserJWPLAYER,  # add 061026
             "filelions.live": self.pp.parserJWPLAYER,
             "filelions.online": self.pp.parserJWPLAYER,
             "filelions.site": self.pp.parserJWPLAYER,
             "filelions.to": self.pp.parserJWPLAYER,
+            "filelions.xyz": self.pp.parserJWPLAYER,  # add 061026
             "filemoon.art": self.pp.parserBYSE,
             "filemoon.eu": self.pp.parserBYSE,
             "filemoon.in": self.pp.parserBYSE,
@@ -304,18 +394,28 @@ class urlparser:
             "fileone.tv": self.pp.parserFILEONETV,
             "file-upload.org": self.pp.parserJWPLAYER,
             "filma365.strp2p.site": self.pp.parserSBS,
+            "filmi9.upns.xyz": self.pp.parserSBS,  # add 061026
+            "firestream.site": self.pp.parserFIRESTREAM,  # add 061026
             "firestream.to": self.pp.parserFIRESTREAM,
+            "fittingcentermondaysunday.com": self.pp.parserVOESX,  # add 061026
             "fiuosba.com": self.pp.parserSTREAMUP,  # add 041026 - strmup mirror (mlblive)
             "flaswish.com": self.pp.parserJWPLAYER,
+            "flimmer.rpmvip.com": self.pp.parserSBS,  # add 061026
             "flyf.lat": self.pp.parserFLYFILE,
             "flyfile.app": self.pp.parserFLYFILE,
             "forafile.com": self.pp.parserJWPLAYER,
+            "fraudclatterflyingcar.com": self.pp.parserVOESX,  # add 061026
             "freedisc.pl": self.pp.parserFREEDISC,
             "fsdcmo.sbs": self.pp.parserJWPLAYER,
             "fsst.online": self.pp.parserSST,
             "furher.in": self.pp.parserBYSE,
+            "fviplions.com": self.pp.parserJWPLAYER,  # add 061026
             # g
+            "gamoneinterrupted.com": self.pp.parserVOESX,  # add 061026
+            "garylargeavailable.com": self.pp.parserVOESX,  # add 061026
             "gbsagbo.com": self.pp.parserSTREAMUP,
+            "generatesnitrosate.com": self.pp.parserVOESX,  # add 061026
+            "gettapeads.com": self.pp.parserSTREAMTAPE,  # add 061026
             "ghbrisk.com": self.pp.parserJWPLAYER,
             "goodstream.one": self.pp.parserJWPLAYER,
             "goodstream.uno": self.pp.parserJWPLAYER,
@@ -324,34 +424,81 @@ class urlparser:
             "google.com": self.pp.parserGOOGLE,
             "govid.live": self.pp.parserGOVID,  # add 031026
             "govid.site": self.pp.parserJWPLAYER,
+            "graceaddresscommunity.com": self.pp.parserVOESX,  # add 061026
+            "gradehgplus.com": self.pp.parserJWPLAYER,  # add 061026
+            "greaseball6eventual20.com": self.pp.parserVOESX,  # add 061026
             "gscdn.cam": self.pp.parserJWPLAYER,
+            "gsfomqu.sbs": self.pp.parserJWPLAYER,  # add 061026
             "gsfqzmqu.sbs": self.pp.parserJWPLAYER,
+            "guidon40hyporadius9.com": self.pp.parserVOESX,  # add 061026
+            "gupload.site": self.pp.parserGUPLOAD,  # add 061026
             "gupload.xyz": self.pp.parserGUPLOAD,
+            "guxhag.com": self.pp.parserJWPLAYER,  # add 061026
             # h
+            "hailindihg.com": self.pp.parserJWPLAYER,  # add 061026
             "haxloppd.com": self.pp.parserJWPLAYER,
+            "hayaatieadhab.sbs": self.pp.parserJWPLAYER,  # add 061026
             "hd1.hdup20.com": self.pp.parserJWPLAYER,
             "hdbestvd.online": self.pp.parserJWPLAYER,
             "hdup400.com": self.pp.parserJWPLAYER,  # add 031026 (s1.hdup400.com via the parent domain)
+            "heatherdiscussionwhen.com": self.pp.parserVOESX,  # add 061026
             "hexload.com": self.pp.parserHEXLOAD,
             "hexupload.net": self.pp.parserHEXLOAD,
+            "hgbazooka.com": self.pp.parserJWPLAYER,  # add 061026
             "hgcloud.to": self.pp.parserJWPLAYER,
             "hglink.to": self.pp.parserJWPLAYER,
             "hgplaycdn.com": self.pp.parserJWPLAYER,
             "hlsflast.com": self.pp.parserJWPLAYER,
             "hlsplayer.org": self.pp.parserJWPLAYER,
             "hlswish.com": self.pp.parserJWPLAYER,
+            "housecardsummerbutton.com": self.pp.parserVOESX,  # add 061026
             "hqq.ac": self.pp.parserHQQ,
             "hqq.to": self.pp.parserHQQ,
             "hqq.tv": self.pp.parserHQQ,
             "hydraxcdn.biz": self.pp.parserABYSS,
             # i
+            "ianrequireadult.com": self.pp.parserVOESX,  # add 061026
+            "incvideo1.online": self.pp.parserSST,  # add 061026
             "iplayerhls.com": self.pp.parserJWPLAYER,
+            "isbfga.online": self.pp.parserSTREAMUP,  # add 061026
+            "isbfga.space": self.pp.parserSTREAMUP,  # add 061026
+            "isbfga.store": self.pp.parserSTREAMUP,  # add 061026
             # j
+            "jamesbornmain.com": self.pp.parserVOESX,  # add 061026
+            "jamessoundcost.com": self.pp.parserVOESX,  # add 061026
+            "jamiesamewalk.com": self.pp.parserVOESX,  # add 061026
+            "jasminetesttry.com": self.pp.parserVOESX,  # add 061026
+            "javggvideo.xyz": self.pp.parserJWPLAYER,  # add 061026
+            "javlion.xyz": self.pp.parserJWPLAYER,  # add 061026
+            "javplaya.com": self.pp.parserJWPLAYER,  # add 061026
             "javsw.me": self.pp.parserJWPLAYER,
+            "jayservicestuff.com": self.pp.parserVOESX,  # add 061026
+            "jeanprofessorcentral.com": self.pp.parserVOESX,  # add 061026
+            "jefferycontrolmodel.com": self.pp.parserVOESX,  # add 061026
+            "jennifercertaindevelopment.com": self.pp.parserVOESX,  # add 061026
+            "jennifereconomicgive.com": self.pp.parserVOESX,  # add 061026
+            "jeremyparticipantanything.com": self.pp.parserVOESX,  # add 061026
+            "jessicachoosemake.com": self.pp.parserVOESX,  # add 061026
+            "jessicayeahcatch.com": self.pp.parserVOESX,  # add 061026
+            "jilliandescribecompany.com": self.pp.parserVOESX,  # add 061026
             "jodwish.com": self.pp.parserJWPLAYER,
+            "johnalwayssame.com": self.pp.parserVOESX,  # add 061026
+            "johnbeyondnation.com": self.pp.parserVOESX,  # add 061026
+            "johnfullwonder.com": self.pp.parserVOESX,  # add 061026
+            "jonathansociallike.com": self.pp.parserVOESX,  # add 061026
+            "josephseveralconcern.com": self.pp.parserVOESX,  # add 061026
+            "juliewomanwish.com": self.pp.parserVOESX,  # add 061026
             "justupload.io": self.pp.parserJWPLAYER,
             # k
+            "katherineschoolphone.com": self.pp.parserVOESX,  # add 061026
+            "kathleenmemberhistory.com": self.pp.parserVOESX,  # add 061026
+            "katomen.online": self.pp.parserJWPLAYER,  # add 061026
+            "katomen.store": self.pp.parserJWPLAYER,  # add 061026
+            "kellywhatcould.com": self.pp.parserVOESX,  # add 061026
+            "kennethofficialitem.com": self.pp.parserVOESX,  # add 061026
             "kerapoxy.cc": self.pp.parserBYSE,
+            "khadhnayad.sbs": self.pp.parserJWPLAYER,  # add 061026
+            "kharabnahs.sbs": self.pp.parserJWPLAYER,  # add 061026
             "kinoger.be": self.pp.parserJWPLAYER,
             "kinoger.embed4me.vip": self.pp.parserSBS,
             "kinoger.seekplays.pro": self.pp.parserSBS,
@@ -359,22 +506,41 @@ class urlparser:
             "kinoger.pw": self.pp.parserSTREAMUP,
             "kinoger.re": self.pp.parserSBS,
             "kinoger.ru": self.pp.parserVOESX,
+            "klcams.com": self.pp.parserBYSE,  # add 061026
+            "kory.4meplayer.pro": self.pp.parserSBS,  # add 061026
             "kravaxxa.com": self.pp.parserJWPLAYER,
+            "kristiesoundsimply.com": self.pp.parserVOESX,  # add 061026
             # l
             "l1afav.net": self.pp.parserBYSE,
+            "lancewhosedifficult.com": self.pp.parserVOESX,  # add 061026
+            "launchreliantcleaverriver.com": self.pp.parserVOESX,  # add 061026
+            "lauradaydo.com": self.pp.parserVOESX,  # add 061026
+            "lisatrialidea.com": self.pp.parserVOESX,  # add 061026
             "lolololo.store": self.pp.parserSBS,  # add 031026 (Streamp2p "#id" player, not the earnvids lolololu.website)
             "lolololu.website": self.pp.parserJWPLAYER,
+            "lookmovie2.skin": self.pp.parserJWPLAYER,  # add 061026
+            "loriwithinfamily.com": self.pp.parserVOESX,  # add 061026
+            "lukecomparetwo.com": self.pp.parserVOESX,  # add 061026
+            "lukesitturn.com": self.pp.parserVOESX,  # add 061026
             "lulu.st": self.pp.parserJWPLAYER,
             "lulust.com": self.pp.parserJWPLAYER,
             "lulustream.com": self.pp.parserJWPLAYER,
             "luluvid.com": self.pp.parserJWPLAYER,
             "luluvdo.com": self.pp.parserJWPLAYER,
             "luluvdoo.com": self.pp.parserJWPLAYER,
+            "luluvido.com": self.pp.parserJWPLAYER,  # add 061026
+            "lumiawatch.top": self.pp.parserJWPLAYER,  # add 061026
             # m
             "m1xdrop.bz": self.pp.parserMIXDROP,  # add 041026
             "m1xdrop.click": self.pp.parserMIXDROP,
             "m1xdrop.com": self.pp.parserMIXDROP,
             "m1xdrop.net": self.pp.parserMIXDROP,
+            "ma2d.store": self.pp.parserJWPLAYER,  # add 061026
+            "mariatheserepublican.com": self.pp.parserVOESX,  # add 061026
+            "marissasharecareer.com": self.pp.parserVOESX,  # add 061026
+            "matriculant401merited.com": self.pp.parserVOESX,  # add 061026
+            "matthewhotelscience.com": self.pp.parserVOESX,  # add 061026
+            "maxfinishseveral.com": self.pp.parserVOESX,  # add 061026
             "md3b0j6hj.com": self.pp.parserMIXDROP,
             "mdbekjwqa.pw": self.pp.parserMIXDROP,
             "mdfx9dc8n.net": self.pp.parserMIXDROP,
@@ -385,10 +551,13 @@ class urlparser:
             "megamax.me": self.pp.parserMEGAMAX,  # add 031026
             "megatuktuk.store": self.pp.parserMEGAMAX,  # add 031026
             "meinecloud.click": self.pp.parserMEINECLOUD,
+            "metagnathtuggers.com": self.pp.parserVOESX,  # add 061026
             "mfw09.org": self.pp.parserBYSE,
+            "michaelapplysome.com": self.pp.parserVOESX,  # add 061026
             "miiiixdrop.net": self.pp.parserMIXDROP,
             "miiixdrop.net": self.pp.parserMIXDROP,
             "miixdrop.net": self.pp.parserMIXDROP,
+            "mikaylaarealike.com": self.pp.parserVOESX,  # add 061026
             "minochinos.com": self.pp.parserJWPLAYER,
             "mivalyo.com": self.pp.parserJWPLAYER,
             "mixdrp.click": self.pp.parserMIXDROP,
@@ -417,13 +586,16 @@ class urlparser:
             "mixdrop.top": self.pp.parserMIXDROP,
             "mixdrop.vc": self.pp.parserMIXDROP,
             "mixdropjmk.pw": self.pp.parserMIXDROP,
+            "mlions.pro": self.pp.parserJWPLAYER,  # add 061026
             "moflix-stream.click": self.pp.parserJWPLAYER,
             "moflix-stream.fans": self.pp.parserJWPLAYER,
             "moflix-stream.link": self.pp.parserBYSE,
             "moflix.rpmplay.xyz": self.pp.parserSBS,
             "moflix.upns.xyz": self.pp.parserSBS,
+            "mohahhda.site": self.pp.parserJWPLAYER,  # add 061026
             "moonmov.pro": self.pp.parserBYSE,
             "morencius.com": self.pp.parserJWPLAYER,
+            "motvy55.store": self.pp.parserJWPLAYER,  # add 061026
             "movearnpre.com": self.pp.parserJWPLAYER,
             "moviesapi.club": self.pp.parserVIDSRC,
             "moviesapi.to": self.pp.parserVIDSRC,
@@ -431,16 +603,21 @@ class urlparser:
             "mp4plus.cyou": self.pp.parserJWPLAYER,
             "mp4plus.org": self.pp.parserJWPLAYER,
             "mp4upload.com": self.pp.parserJWPLAYER,
+            "mwish.pro": self.pp.parserJWPLAYER,  # add 061026
             "mxdrop.sx": self.pp.parserMIXDROP,
             "mxdrop.to": self.pp.parserMIXDROP,
             "mxdrop.top": self.pp.parserMIXDROP,
             "mysportzfy.com": self.pp.parserJWPLAYER,
             "myvidplay.com": self.pp.parserDOOD,
             # n
+            "nathanfromsubject.com": self.pp.parserVOESX,  # add 061026
+            "ncdn22.xyz": self.pp.parserHQQ,  # add 061026
+            "nectareousoverelate.com": self.pp.parserVOESX,  # add 061026
             "netu.ac": self.pp.parserHQQ,
             "netu.filmoviplex.com": self.pp.parserHQQ,
             "netu.to": self.pp.parserHQQ,
             "netu.tv": self.pp.parserHQQ,
+            "nonesnanking.com": self.pp.parserVOESX,  # add 061026
             "nova.upn.one": self.pp.parserSBS,
             # o
             "obeywish.com": self.pp.parserJWPLAYER,
@@ -450,9 +627,15 @@ class urlparser:
             "ogladaj.me": self.pp.parserVOESX,  # add 041026
             "ok.ru": self.pp.parserOKRU,
             "okhd.site": self.pp.parserJWPLAYER,  # add 031026 (mp4./mp5.okhd.site via the parent domain)
+            "ougbas.xyz": self.pp.parserSTREAMUP,  # add 061026
+            "oyohd.one": self.pp.parserHQQ,  # add 061026
             # p
+            "pamelachangemission.com": self.pp.parserVOESX,  # add 061026
+            "paulkitchendark.com": self.pp.parserVOESX,  # add 061026
             "peachify.top": self.pp.parserPEACHIFY,
             "peytonepre.com": self.pp.parserJWPLAYER,
+            "playembed.online": self.pp.parserJWPLAYER,  # add 061026
+            "player.sorozatok.me": self.pp.parserHQQ,  # add 061026
             "player.upn.one": self.pp.parserSBS,
             "playerwish.com": self.pp.parserJWPLAYER,
             "playmate.to": self.pp.parserPLAYMATE,
@@ -462,32 +645,58 @@ class urlparser:
             "pqham.com": self.pp.parserJWPLAYER,
             # r
             "rapid-cloud.co": self.pp.parserVIDCLOUD,
+            "realfinanceblogcenter.com": self.pp.parserVOESX,  # add 061026
+            "rebeccaneverbase.com": self.pp.parserVOESX,  # add 061026
+            "reputationsheriffkennethsand.com": self.pp.parserVOESX,  # add 061026
+            "richardsignfish.com": self.pp.parserVOESX,  # add 061026
+            "roberteachfinal.com": self.pp.parserVOESX,  # add 061026
+            "robertordercharacter.com": self.pp.parserVOESX,  # add 061026
+            "robertplacespace.com": self.pp.parserVOESX,  # add 061026
             "rubystm.com": self.pp.parserJWPLAYER,
+            "rubystream.xyz": self.pp.parserJWPLAYER,  # add 061026
+            "rubyvid.com": self.pp.parserJWPLAYER,  # add 061026
             "rubyvidhub.com": self.pp.parserJWPLAYER,
             "rty1.film77.xyz": self.pp.parserJWPLAYER,
             "ryderjet.com": self.pp.parserJWPLAYER,
             # s
             "s3taku.pro": self.pp.parserJWPLAYER,
+            "sandratableother.com": self.pp.parserVOESX,  # add 061026
+            "sandrataxeight.com": self.pp.parserVOESX,  # add 061026
             "savefiles.com": self.pp.parserJWPLAYER,
             "sb1254w9megshle.org": self.pp.parserBYSE,
+            "scatch176duplicities.com": self.pp.parserVOESX,  # add 061026
             "scloud.online": self.pp.parserSTREAMTAPE,
+            "securecdn.shop": self.pp.parserSBS,  # add 061026
+            "secvideo1.online": self.pp.parserSST,  # add 061026
             "seekplayer.vip": self.pp.parserSBS,
             "sendvid.com": self.pp.parserJWPLAYER,
+            "sethniceletter.com": self.pp.parserVOESX,  # add 061026
             "sfastwish.com": self.pp.parserJWPLAYER,
+            "shannonpersonalcost.com": self.pp.parserVOESX,  # add 061026
             "share4max.com": self.pp.parserMEGAMAX,  # add 031026
             "sharevideo.pl": self.pp.parserSHAREVIDEO,
             "shavetape.cash": self.pp.parserSTREAMTAPE,
             "shiid4u.upn.one": self.pp.parserSBS,
             "short.icu": self.pp.parserABYSS,
+            "simpulumlamerop.com": self.pp.parserVOESX,  # add 061026
             "smdfs40r.skin": self.pp.parserBYSE,
+            "smoki.cc": self.pp.parserVOESX,  # add 061026
             "smoothpre.com": self.pp.parserJWPLAYER,
             "soundcloud.com": self.pp.parserSOUNDCLOUDCOM,
             "sportsonline.si": self.pp.parserJWPLAYER,
             "sportsonline.to": self.pp.parserJWPLAYER,
+            "srbe84.vidplayer.live": self.pp.parserSBS,  # add 061026
+            "sruby.xyz": self.pp.parserJWPLAYER,  # add 061026
             "ss.hd-vk.com": self.pp.parserJWPLAYER,
             "stape.fun": self.pp.parserSTREAMTAPE,
+            "stbhg.click": self.pp.parserJWPLAYER,  # add 061026
             "stbnetu.xyz": self.pp.parserHQQ,
+            "stbturbo.xyz": self.pp.parserJWPLAYER,  # add 061026
+            "stevenfamilyedge.com": self.pp.parserVOESX,  # add 061026
+            "stevenimaginelittle.com": self.pp.parserVOESX,  # add 061026
             "stmix.io": self.pp.parserSTREAMUP,
+            "stmruby.com": self.pp.parserJWPLAYER,  # add 061026
+            "strawberriesporail.com": self.pp.parserVOESX,  # add 061026
             "strcloud.club": self.pp.parserSTREAMTAPE,
             "strcloud.link": self.pp.parserSTREAMTAPE,
             "streamable.com": self.pp.parserSTREAMABLE,
@@ -509,15 +718,27 @@ class urlparser:
             "streamtape.site": self.pp.parserSTREAMTAPE,
             "streamtape.to": self.pp.parserSTREAMTAPE,
             "streamtape.xyz": self.pp.parserSTREAMTAPE,
+            "streamtapeadblock.art": self.pp.parserSTREAMTAPE,  # add 061026
+            "streamtapeadblockuser.xyz": self.pp.parserSTREAMTAPE,  # add 061026
+            "streamup.cc": self.pp.parserSTREAMUP,  # add 061026
             "streamup.ws": self.pp.parserSTREAMUP,
             "streamvid.su": self.pp.parserJWPLAYER,
+            "streamwish.com": self.pp.parserJWPLAYER,  # add 061026
             "streamwish.fun": self.pp.parserJWPLAYER,
+            "streamwish.site": self.pp.parserJWPLAYER,  # add 061026
             "streamwish.to": self.pp.parserJWPLAYER,
             "strmup.cc": self.pp.parserSTREAMUP,
             "strmup.to": self.pp.parserSTREAMUP,
+            "strmwis.xyz": self.pp.parserJWPLAYER,  # add 061026
             "strp2p.site": self.pp.parserSBS,
             "strtape.cloud": self.pp.parserSTREAMTAPE,
+            "strtape.site": self.pp.parserSTREAMTAPE,  # add 061026
+            "strtapeadblock.me": self.pp.parserSTREAMTAPE,  # add 061026
             "strtpe.link": self.pp.parserSTREAMTAPE,
+            "strwish.com": self.pp.parserJWPLAYER,  # add 061026
+            "strwish.xyz": self.pp.parserJWPLAYER,  # add 061026
+            "sufbgao.space": self.pp.parserSTREAMUP,  # add 061026
+            "sufbgao.xyz": self.pp.parserSTREAMUP,  # add 061026
             "supervideo.cc": self.pp.parserJWPLAYER,
             "supervideo.tv": self.pp.parserJWPLAYER,
             "swdyu.com": self.pp.parserJWPLAYER,
@@ -525,41 +746,86 @@ class urlparser:
             "swiftplayers.com": self.pp.parserJWPLAYER,
             "swishsrv.com": self.pp.parserJWPLAYER,
             # t
+            "t1.p2pplay.pro": self.pp.parserSBS,  # add 061026
             "tapeadsenjoyer.com": self.pp.parserSTREAMTAPE,
             "tapeadvertisement.com": self.pp.parserSTREAMTAPE,
             "tapeblocker.com": self.pp.parserSTREAMTAPE,
             "tapewithadblock.org": self.pp.parserSTREAMTAPE,
+            "taylorplayer.com": self.pp.parserJWPLAYER,  # add 061026
+            "techradar.ink": self.pp.parserJWPLAYER,  # add 061026
+            "telyn610zoanthropy.com": self.pp.parserVOESX,  # add 061026
             "tenstream.net": self.pp.parserJWPLAYER,
+            "teresapoliticallearn.com": self.pp.parserVOESX,  # add 061026
+            "thebesthosterv.com": self.pp.parserSTREAMUP,  # add 061026
+            "timberwoodanotia.com": self.pp.parserVOESX,  # add 061026
+            "timmaybealready.com": self.pp.parserVOESX,  # add 061026
+            "tinycat-voe-fashion.com": self.pp.parserVOESX,  # add 061026
+            "toddpartneranimal.com": self.pp.parserVOESX,  # add 061026
+            "toxitabellaeatrebates306.com": self.pp.parserVOESX,  # add 061026
+            "tpead.net": self.pp.parserSTREAMTAPE,  # add 061026
+            "tracylocalschool.com": self.pp.parserVOESX,  # add 061026
+            "trgsfjll.sbs": self.pp.parserJWPLAYER,  # add 061026
+            "tryzendm.com": self.pp.parserJWPLAYER,  # add 061026
+            "tuborstb.co": self.pp.parserJWPLAYER,  # add 061026
+            "tuktuk.rpmvid.com": self.pp.parserSBS,  # add 061026
             "tuktuk.upns.one": self.pp.parserSBS,
+            "tuktukcimamulti.buzz": self.pp.parserJWPLAYER,  # add 061026
+            "tuktukcinema.store": self.pp.parserJWPLAYER,  # add 061026
+            "turbovidhls.com": self.pp.parserJWPLAYER,  # add 061026
             "turboviplay.com": self.pp.parserJWPLAYER,
             "tusfiles.com": self.pp.parserUSERSCLOUDCOM,
             "tusfiles.net": self.pp.parserUSERSCLOUDCOM,
             "tvp.pl": self.pp.parserTVP,
             # u
+            "uasopt.com": self.pp.parserJWPLAYER,  # add 061026
             "ult4vid.one": self.pp.parserR2EMBED,  # add 031026
+            "ultra.rpmvid.site": self.pp.parserSBS,  # add 061026
             "ultrastream.online": self.pp.parserSBS,
+            "un-block-voe.net": self.pp.parserVOESX,  # add 061026
             "up4fun.top": self.pp.parserJWPLAYER,
             "up4stream.com": self.pp.parserJWPLAYER,
+            "updown.cam": self.pp.parserJWPLAYER,  # add 061026
             "updown.icu": self.pp.parserJWPLAYER,
+            "updown.sbs": self.pp.parserJWPLAYER,  # add 061026
             "upn.one": self.pp.parserSBS,  # add 031026 (lodynet.upn.one and other subdomains via the parent domain)
             "upns.live": self.pp.parserSBS,  # add 031026 (lodynet.upns.live)
+            "uptodatefinishconferenceroom.com": self.pp.parserVOESX,  # add 061026
             "upzone.cc": self.pp.parserUPZONECC,
             "uqload.bz": self.pp.parserJWPLAYER,
+            "uqload.co": self.pp.parserJWPLAYER,  # add 061026
             "uqload.com": self.pp.parserJWPLAYER,
             "uqload.cx": self.pp.parserJWPLAYER,
             "uqload.io": self.pp.parserJWPLAYER,
             "uqload.is": self.pp.parserJWPLAYER,  # add 031026
             "uqload.net": self.pp.parserJWPLAYER,
+            "uqload.org": self.pp.parserJWPLAYER,  # add 061026
+            "uqload.to": self.pp.parserJWPLAYER,  # add 061026
             "uqload.vc": self.pp.parserJWPLAYER,
             "uqload.ws": self.pp.parserJWPLAYER,
             "uqloads.xyz": self.pp.parserJWPLAYER,
             "userscloud.com": self.pp.parserUSERSCLOUDCOM,
             # v
+            "v-o-e-unblock.com": self.pp.parserVOESX,  # add 061026
             "v.turkvearab.com": self.pp.parserJWPLAYER,
+            "valeronevijao.com": self.pp.parserVOESX,  # add 061026
+            "veev.pro": self.pp.parserVEEV,  # add 061026
             "veev.to": self.pp.parserVEEV,
+            "vfaststream.com": self.pp.parserSTREAMUP,  # add 061026
             "vide0.net": self.pp.parserDOOD,
+            "videoland.cfd": self.pp.parserSBS,  # add 061026
+            "videoland.sbs": self.pp.parserJWPLAYER,  # add 061026
+            "videoshar.uns.bio": self.pp.parserSBS,  # add 061026
+            "viderea.online": self.pp.parserSTREAMUP,  # add 061026
+            "vidhide.com": self.pp.parserJWPLAYER,  # add 061026
+            "vidhide.fun": self.pp.parserJWPLAYER,  # add 061026
+            "vidhidefast.com": self.pp.parserJWPLAYER,  # add 061026
             "vidhideplus.com": self.pp.parserJWPLAYER,
+            "vidhidepre.com": self.pp.parserJWPLAYER,  # add 061026
+            "vidhidepro.com": self.pp.parserJWPLAYER,  # add 061026
             "vidhidevip.com": self.pp.parserJWPLAYER,  # add 031026
+            "vidmoly.cam": self.pp.parserHQQ,  # add 061026
+            "vidmoviesb.xyz": self.pp.parserJWPLAYER,  # add 061026
+            "vidnest.live": self.pp.parserJWPLAYER,  # add 061026
             "vidoba.org": self.pp.parserJWPLAYER,
             "vidply.com": self.pp.parserDOOD,
             "vidcore.io": self.pp.parserVIDCORE,
@@ -574,7 +840,11 @@ class urlparser:
             "vidaraa.cc": self.pp.parserSTREAMUP,
             "vidarax.cc": self.pp.parserSTREAMUP,
             "vidavaca.net": self.pp.parserSTREAMUP,
+            "vidroba.com": self.pp.parserJWPLAYER,  # add 061026
+            "vidspeed.cc": self.pp.parserJWPLAYER,  # add 061026
             "vidspeed.org": self.pp.parserJWPLAYER,
+            "vidspeeds.com": self.pp.parserJWPLAYER,  # add 061026
+            "vidspeeds.org": self.pp.parserJWPLAYER,  # add 061026
             "vidvara.biz": self.pp.parserSTREAMUP,
             "vidara.so": self.pp.parserSTREAMUP,
             "vidara.to": self.pp.parserSTREAMUP,
@@ -627,10 +897,31 @@ class urlparser:
             "vidtube.one": self.pp.parserJWPLAYER,
             "vidtube.pro": self.pp.parserJWPLAYER,
             "vidup.to": self.pp.parserVIDCORE,
+            "vidvara.fit": self.pp.parserSTREAMUP,  # add 061026
+            "vidvara.lol": self.pp.parserSTREAMUP,  # add 061026
+            "vidvara.online": self.pp.parserSTREAMUP,  # add 061026
+            "vidvara.site": self.pp.parserSTREAMUP,  # add 061026
+            "vidwara.art": self.pp.parserSTREAMUP,  # add 061026
+            "vidwara.biz": self.pp.parserSTREAMUP,  # add 061026
+            "vidwara.cc": self.pp.parserSTREAMUP,  # add 061026
+            "vidwara.fit": self.pp.parserSTREAMUP,  # add 061026
+            "vidwara.site": self.pp.parserSTREAMUP,  # add 061026
+            "vidzy.cc": self.pp.parserJWPLAYER,  # add 061026
+            "viewdara.com": self.pp.parserSTREAMUP,  # add 061026
             "vimeo.com": self.pp.parserVIMEO,
             "vixeo.io": self.pp.parserVIXEO,
             "vixsrc.to": self.pp.parserVIXSRC,
             "vk.ru": self.pp.parserVK,
+            "voe-un-block.com": self.pp.parserVOESX,  # add 061026
+            "voe-unblock.com": self.pp.parserVOESX,  # add 061026
+            "voe-unblock.net": self.pp.parserVOESX,  # add 061026
+            "voeun-block.net": self.pp.parserVOESX,  # add 061026
+            "voeunbl0ck.com": self.pp.parserVOESX,  # add 061026
+            "voeunblck.com": self.pp.parserVOESX,  # add 061026
+            "voeunblk.com": self.pp.parserVOESX,  # add 061026
+            "voeunblock.com": self.pp.parserVOESX,  # add 061026
+            "volvovideo.top": self.pp.parserJWPLAYER,  # add 061026
+            "vsonic.click": self.pp.parserVIDSONIC,  # add 061026
             "vsrc.su": self.pp.parserVIDSRC,
             "vsembed.ru": self.pp.parserVIDSRC,
             "vsembed.su": self.pp.parserVIDSRC,
@@ -644,33 +935,44 @@ class urlparser:
             "vrra.top": self.pp.parserVRRATOP,
             "vrrstream.ru": self.pp.parserVRRATOP,
             "vsports.pt": self.pp.parserJWPLAYER,
+            "vtbe.net": self.pp.parserJWPLAYER,  # add 061026
             "vtbe.to": self.pp.parserJWPLAYER,
+            "vtplay.net": self.pp.parserJWPLAYER,  # add 061026
             "vtube.network": self.pp.parserJWPLAYER,
             "vtube.to": self.pp.parserJWPLAYER,
             "vvide0.com": self.pp.parserDOOD,
             # w
+            "w1tv.xyz": self.pp.parserSBS,  # add 061026
             "waaw.ac": self.pp.parserHQQ,
             "waaw.to": self.pp.parserHQQ,
             "waaw.tv": self.pp.parserHQQ,
+            "walterprettytheir.com": self.pp.parserVOESX,  # add 061026
             "wasuytm.store": self.pp.parserSBS,
+            "watch.brstream.cc": self.pp.parserSTREAMEMBED,  # add 061026
             "watch.ezplayer.me": self.pp.parserSBS,
             "watch.gxplayer.xyz": self.pp.parserSTREAMEMBED,
+            "watch.streamcasthub.store": self.pp.parserSBS,  # add 061026
             "watchadsontape.com": self.pp.parserSTREAMTAPE,
             "wavehd.com": self.pp.parserJWPLAYER,
             "webcamera.mobi": self.pp.parserWEBCAMERAPL,
             "webcamera.pl": self.pp.parserWEBCAMERAPL,
             "wishembed.pro": self.pp.parserJWPLAYER,
+            "wishfast.top": self.pp.parserJWPLAYER,  # add 061026
             "wishonly.site": self.pp.parserJWPLAYER,
+            "wolfdyslectic.com": self.pp.parserVOESX,  # add 061026
             "wrzucaj.pl": self.pp.parserSST,
             # x
             "xcoic.com": self.pp.parserBYSE,
             # y
             "yadi.sk": self.pp.parserYANDEXDISK,
+            "yadmalik.sbs": self.pp.parserJWPLAYER,  # add 061026
+            "yodelswartlike.com": self.pp.parserVOESX,  # add 061026
             "younetu.com": self.pp.parserHQQ,
             "yourupload.com": self.pp.parserJWPLAYER,
             "youtu.be": self.pp.parserYOUTUBE,
             "youtube-nocookie.com": self.pp.parserYOUTUBE,
             "youtube.com": self.pp.parserYOUTUBE,
+            "yucache.net": self.pp.parserJWPLAYER,  # add 061026
             # z
             "z1ekv717.fun": self.pp.parserBYSE
         }
@@ -824,6 +1126,38 @@ class urlparser:
         except Exception:
             printExc()
         return False
+
+
+# add 061026: rotating-domain families, after ResolveURL (Gujal00) streamwish.py / filelions.py.
+# StreamWish domains are often DMCA-blocked or gone, the same file id plays on the current mirrors;
+# dhcplay / hglink / hgcloud links belong to a second mirror group
+STREAMWISH_DOMAINS = frozenset((
+    "streamwish.com", "streamwish.to", "ajmidyad.sbs", "khadhnayad.sbs", "yadmalik.sbs", "hayaatieadhab.sbs", "kharabnahs.sbs",
+    "atabkhha.sbs", "atabknha.sbs", "atabknhk.sbs", "atabknhs.sbs", "abkrzkr.sbs", "abkrzkz.sbs", "wishembed.pro", "mwish.pro",
+    "strmwis.xyz", "awish.pro", "dwish.pro", "vidmoviesb.xyz", "embedwish.com", "cilootv.store", "uqloads.xyz",
+    "tuktukcinema.store", "doodporn.xyz", "ankrzkz.sbs", "volvovideo.top", "streamwish.site", "wishfast.top", "ankrznm.sbs",
+    "sfastwish.com", "eghjrutf.sbs", "eghzrutw.sbs", "guxhag.com", "playembed.online", "egsyxurh.sbs", "egtpgrvh.sbs",
+    "flaswish.com", "obeywish.com", "cdnwish.com", "javsw.me", "cinemathek.online", "trgsfjll.sbs", "fsdcmo.sbs",
+    "hailindihg.com", "anime4low.sbs", "mohahhda.site", "ma2d.store", "dancima.shop", "swhoi.com", "gsfqzmqu.sbs",
+    "jodwish.com", "swdyu.com", "strwish.com", "asnwish.com", "kravaxxa.com", "wishonly.site", "playerwish.com",
+    "katomen.store", "hlswish.com", "streamwish.fun", "swishsrv.com", "iplayerhls.com", "hlsflast.com", "4yftwvrdz7.sbs",
+    "ghbrisk.com", "hgbazooka.com", "eb8gfmjn71.sbs", "cybervynx.com", "edbrdl7pab.sbs", "stbhg.click", "dhcplay.com",
+    "strwish.xyz", "gradehgplus.com", "tryzendm.com", "hglink.to", "dumbalag.com", "haxloppd.com", "davioad.com",
+    "uasopt.com", "hgcloud.to",
+))
+STREAMWISH_MIRRORS = ("hglamioz.com", "hgplaycdn.com", "niramirus.com", "playnixes.com", "medixiru.com")
+STREAMWISH_MIRRORS_HG = ("hanerix.com", "audinifer.com", "vibuxer.com")
+STREAMWISH_HG_DOMAINS = frozenset(("dhcplay.com", "hglink.to", "hgcloud.to"))
+# FileLions / VidHide domains that no longer serve the player; the files play on callistanise.com
+FILELIONS_DEAD_DOMAINS = frozenset((
+    "filelions.com", "filelions.to", "ajmidyadfihayh.sbs", "alhayabambi.sbs", "vidhideplus.com", "azipcdn.com", "mlions.pro",
+    "alions.pro", "dlions.pro", "mivalyo.com", "vidhidefast.com", "filelions.live", "motvy55.store", "filelions.xyz",
+    "lumiawatch.top", "filelions.online", "fviplions.com", "egsyxutd.sbs", "filelions.site", "filelions.co", "vidhidepre.com",
+    "vidhidepro.com", "vidhidevip.com", "e4xb5c2xnz.sbs", "taylorplayer.com", "ryderjet.com", "techradar.ink", "anime7u.com",
+    "coolciima.online", "gsfomqu.sbs", "bingezove.com", "katomen.online", "vidhide.fun", "6sfkrspw4u.sbs", "dingtezuni.com",
+    "dinisglows.com", "dintezuvio.com",
+))
+FILELIONS_LIVE_HOST = "callistanise.com"
 
 
 class pageParser(CaptchaHelper):
@@ -1852,9 +2186,10 @@ class pageParser(CaptchaHelper):
         return urltab
 
     def parserVOESX(self, baseUrl):
-        def voe_decode(ct):
+        def voe_decode(ct, lut=None):
             txt = "".join(chr((ord(i) - 52) % 26 + 65) if 65 <= ord(i) <= 90 else chr((ord(i) - 84) % 26 + 97) if 97 <= ord(i) <= 122 else i for i in ct)
-            lut = [r"#&", r"%?", r"\*~", r"~@", r"\^\^", r"!!", r"@$"]
+            if not lut:
+                lut = [r"#&", r"%?", r"\*~", r"~@", r"\^\^", r"!!", r"@$"]
             for pattern in lut:
                 txt = re.sub(pattern, "_", txt)
             txt = "".join(txt.split("_"))
@@ -1873,13 +2208,41 @@ class pageParser(CaptchaHelper):
 
         printDBG("parserVOESX baseUrl[%r]" % baseUrl)
         sts, data = self.cm.getPage(baseUrl)
-        if not sts:
-            return False
-        if "const currentUrl" in data:
-            url = ph.search(data, r"""window.location.href\s*=\s*['"]([^"^']+?)['"]""")[0]
-            sts, data = self.cm.getPage(url)
+        if not sts or not any(marker in data for marker in ("const currentUrl", "application/json", '";function', "hls")):
+            # add 061026: VOE drops its rotation domains quickly (gone, or parked with a "Redirecting..." page);
+            # the file id still plays via voe.sx
+            fileId = ph.search(baseUrl, r"//[^/]+/(?:e/)?([0-9A-Za-z]+)")[0]
+            if not fileId or "//voe.sx/" in baseUrl:
+                return False
+            printDBG("parserVOESX %s gone or no VOE page -> voe.sx" % urlparser.getDomain(baseUrl))
+            sts, data = self.cm.getPage("https://voe.sx/e/%s" % fileId)
             if not sts:
                 return False
+        pageUrl = self.cm.meta.get("url", baseUrl)
+        # fix 061026: the redirect page can lead to another redirect page (after ResolveURL voesx.py)
+        for _hop in range(5):
+            if "const currentUrl" not in data:
+                break
+            nextUrl = ph.search(data, r"""window.location.href\s*=\s*['"]([^"^']+?)['"]""")[0]
+            if not nextUrl:
+                break
+            pageUrl = nextUrl
+            sts, data = self.cm.getPage(pageUrl)
+            if not sts:
+                return False
+        if "<title>404" in data:
+            SetIPTVPlayerLastHostError(_("The video has been removed."))
+            return []
+        # add 061026: the junk strings of the decoder change with VOE's player script, which lists them
+        # (['@$','^^',...]); the built-in list stays the fallback
+        lut = None
+        script = ph.search(data, r"""json">\["[^"]+"]</script>\s*<script\s*src="([^"]+)""")[0]
+        if script:
+            stsS, dataS = self.cm.getPage(urljoin(pageUrl, script))
+            table = ph.search(dataS, r"""(\[(?:'\W{2}'[,\]]){1,9})""")[0] if stsS else ""
+            if table:
+                lut = [re.escape(x) for x in table[2:-2].split("','")]
+                printDBG("parserVOESX junk table from the player script: %s" % table)
         r = re.search(r"""['"]?hls['"]?\s*?:\s*?['"]([^'^"]+?)['"]""", data)
         if r:
             hlsUrl = ensure_str(base64.b64decode(r.group(1)))
@@ -1895,9 +2258,12 @@ class pageParser(CaptchaHelper):
                 r = re.search(r"""application/json">[^>]"([^"]+)""", data)
             urltab = []
             if r:
-                r = voe_decode(ensure_str(r.group(1)))
+                payload = ensure_str(r.group(1))
+                r = voe_decode(payload, lut)
+                if not r and lut:
+                    r = voe_decode(payload)
                 if r:
-                    subtitles = [{"title": "", "lang": x.get("label"), "url": "https://{0}{1}".format(baseUrl.split("/")[2], x.get("file"))} for x in r.get("captions") if x.get("kind") == "captions"]
+                    subtitles = [{"title": "", "lang": x.get("label"), "url": urljoin(pageUrl, x.get("file"))} for x in r.get("captions", []) if x.get("kind") == "captions"]
                     key_list = ["source", "file", "direct_access_url"]
                     for key in key_list:
                         if key in r:
@@ -3061,12 +3427,30 @@ class pageParser(CaptchaHelper):
         HTTP_HEADER = self.cm.getDefaultHeader()
         HTTP_HEADER["Referer"] = baseUrl.meta.get("Referer", urlparser.getDomain(baseUrl, False))
         urlParams = {"header": HTTP_HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": COOKIE_FILE}
-        if "hglink.to" in baseUrl or "hgcloud.to" in baseUrl:
-            baseUrl = baseUrl.replace("hglink.to", "hglamioz.com").replace("hgcloud.to", "hglamioz.com")
-            # fix 041026: hglamioz answers 404 to /e/<id>/<file name> (hgcloud.to/e/upbzgcmz0a1o/Ali-kara.S01E03.mp4), /e/<id> plays
-            baseUrl = re.sub(r"(/e/[0-9a-zA-Z]+)/[^/?#]+$", r"\1", baseUrl)
-        if "cybervynx.com" in baseUrl:
-            baseUrl = baseUrl.replace("cybervynx.com", "guxhag.com")
+        hostOnly = re.sub(r"^www\.", "", urlparse(baseUrl).netloc.lower())
+        mirrorData = None
+        if hostOnly in STREAMWISH_DOMAINS:
+            # add 061026 (after ResolveURL streamwish.py): the file plays as /e/<id> on the current mirrors;
+            # the first one with a player wins, the original link stays the last resort.
+            # hglamioz answers 404 to /e/<id>/<file name> (hgcloud.to/e/upbzgcmz0a1o/Ali-kara.S01E03.mp4), so only the id is kept
+            # the mirrors are equivalent and a removed file answers 200 without a player on all of them,
+            # so only 3 are tried (2 of the own group, 1 of the other) to keep a dead link from taking 8 requests
+            fileId = ph.search(baseUrl, r"//[^/]+/(?:e/|f/|d/|v/)?([0-9a-zA-Z]+)(?:[/?#.]|$)")[0]
+            if hostOnly in STREAMWISH_HG_DOMAINS:
+                mirrors = STREAMWISH_MIRRORS_HG[:2] + STREAMWISH_MIRRORS[:1]
+            else:
+                mirrors = STREAMWISH_MIRRORS[:2] + STREAMWISH_MIRRORS_HG[:1]
+            for mirror in mirrors if fileId else ():
+                mirrorUrl = "https://%s/e/%s" % (mirror, fileId)
+                stsM, dataM = self.cm.getPage(mirrorUrl, urlParams)
+                if stsM and "p,a,c,k,e" in dataM:
+                    printDBG("parserJWPLAYER StreamWish %s -> %s" % (hostOnly, mirror))
+                    baseUrl = strwithmeta(mirrorUrl, baseUrl.meta)
+                    mirrorData = dataM
+                    break
+        elif hostOnly in FILELIONS_DEAD_DOMAINS:
+            # add 061026 (after ResolveURL filelions.py): dead FileLions / VidHide domains, same path on the live host
+            baseUrl = strwithmeta(baseUrl.replace(urlparse(baseUrl).netloc, FILELIONS_LIVE_HOST, 1), baseUrl.meta)
         if "savefiles.com/" in baseUrl or "streamhls.to/" in baseUrl:
             # add 041026: streamhls.to is savefiles too - its /e/ page is only a click-to-play form;
             # download links /d/<id>_n play as /<id> (only the quality suffix right after the id goes)
@@ -3079,8 +3463,6 @@ class pageParser(CaptchaHelper):
         if "1vid.xyz/" in baseUrl:
             # add 041026: same IP binding (i=<IPv6 /64> instead of i=<IPv4 /16>), *.1vid.online is IPv4 only -> 404
             urlParams["ipv4_only"] = True
-        if "streamwish.to" in baseUrl:
-            baseUrl = baseUrl.replace("streamwish.to", "hglamioz.com")
         if "rubyvidhub.com" in baseUrl or "rubystm.com" in baseUrl or "streamruby" in baseUrl:
             HTTP_HEADER.pop("Referer", None)  # embed is refused ("restricted for this domain") whenever a Referer is sent
         if "dropload." in baseUrl:
@@ -3089,7 +3471,10 @@ class pageParser(CaptchaHelper):
         if "uqload." in baseUrl and "/e/" in baseUrl:
             # add 031026: uqload /e/<id> is only a click-to-play form (its POST answers with the site's demo clip)
             baseUrl = re.sub(r"(uqload\.[a-z]+)/e/([0-9a-zA-Z]+).*", r"\1/embed-\2.html", baseUrl)
-        sts, data = self.cm.getPage(baseUrl, urlParams)
+        if mirrorData:
+            sts, data = True, mirrorData  # StreamWish mirror page fetched above
+        else:
+            sts, data = self.cm.getPage(baseUrl, urlParams)
         if sts and "embed restricted for this domain" in data and HTTP_HEADER.pop("Referer", None):
             # 041026: domain-locked embed (luluvdo ...) - the embedding site is not on the allow list,
             # but a request without any Referer is accepted

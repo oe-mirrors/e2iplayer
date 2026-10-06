@@ -800,6 +800,7 @@ class IPTVSubDownloaderWidget(Screen):
         subsro = {"title": "Subs.ro", "sub_provider": "subsro"}
         subsourceapi = {"title": "SubSource.net", "sub_provider": "subsourceapi"}
         subdlapi = {"title": "SubDL.com", "sub_provider": "subdlapi"}
+        openSubtitlesCom = {"title": "OpenSubtitles.com API", "sub_provider": "opensubtitlescom"}
 
         defaultLang = GetDefaultLang()
 
@@ -839,6 +840,7 @@ class IPTVSubDownloaderWidget(Screen):
         subProvidersList.append(indexsubtitle)
         subProvidersList.append(justsubtitles)
         # needs an API key in the settings
+        subProvidersList.append(openSubtitlesCom)
         subProvidersList.append(wyzie)
         subProvidersList.append(titlovi)
 

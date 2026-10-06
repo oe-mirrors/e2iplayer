@@ -13,6 +13,9 @@
 #     name normalisation ("Title (Year)", "Show - SxxExx"), INFO via moviemeta + the site's story
 # 05.10.2026 - "No items found" marker, episode / label of search hits, INFO shows
 #   the upload date and keeps the site's categories / duration (moviemeta no longer overwrites them)
+# 06.10.2026 - Ramadan 2021 / 2022 (filed by the site under "Brstej series") go to "Ramadan series",
+#   INFO asks only TMDb / TVmaze for Arabic-only titles (faster, no unrelated IMDb hits), then retries
+#   without a season subtitle / number ("المداح 2 - ...", "المداح 3" -> "المداح")
 import re
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
@@ -20,7 +23,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.jsunpack import get_packed_data
-from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
+from Plugins.Extensions.IPTVPlayer.libs.moviemeta import LATIN_ONLY, getMeta, isLatinTitle
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus
@@ -57,6 +60,8 @@ JUNK_RE = re.compile(r"(?:^|\s)(?:مشاهدة|فيلم|مسلسل|مترجم|م
 DUB_WORD = "مدبلج"
 # embeds unpacked by the host itself (packed JWPlayer pages), anything else -> urlparser
 PACKED_EMBED_RE = re.compile(r"https?://(?:[^/]+\.)?(?:film77\.xyz|vood78\.xyz|hd-vk\.com|hdup\d*\.com)/", re.I)
+# Ramadan categories by their slug too: the site files 2021 / 2022 under "Brstej series", 2021 without "رمضان"
+RAMADAN_SLUG_RE = re.compile(r"[?&]cat=ra?ma?d?a?n?\d", re.I)
 CARD_RE = re.compile(r'(?s)<article class="(?:pmc|pln|prs|psd)-card">.*?</article>|<div class="thumbnail pcg-card">.*?</li>|<a class="pcg-series-card".*?</a>')
 
 
@@ -193,6 +198,7 @@ class Brstej(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if self.menuCache is not None:
             return self.menuCache
         menu = []
+        ramadan = []
         sts, data = self.getPage(self.getFullUrl("/home03"))
         if not sts:
             return menu
@@ -207,12 +213,26 @@ class Brstej(GenericFolderWatchedScraperMixin, CBaseHostClass):
             children = []
             for curl, ctitle in re.findall(r'<a href="([^"]+)"[^>]*>([^<]+)</a>', m.group(3)):
                 ctitle = self.cleanHtmlStr(ctitle)
-                if ctitle:
-                    children.append((ctitle, self._canonUrl(curl)))
+                if not ctitle:
+                    continue
+                curl = self._canonUrl(curl)
+                if self._isRamadan(ctitle, curl):
+                    # a Ramadan season inside another menu -> the "Ramadan series" folder
+                    if "رمضان" not in ctitle:
+                        year = self.cm.ph.getSearchGroups(ctitle, r"((?:19|20)\d{2})")[0]
+                        ctitle = ("مسلسلات رمضان %s" % year) if year else ctitle
+                    ramadan.append((ctitle, curl, []))
+                else:
+                    children.append((ctitle, curl))
             menu.append((title, url, children))
+        menu.extend(ramadan)
         if menu:
             self.menuCache = menu
         return menu
+
+    @staticmethod
+    def _isRamadan(title, url):
+        return "رمضان" in title or bool(RAMADAN_SLUG_RE.search(url or ""))
 
     def listMainMenu(self, cItem):
         printDBG("Brstej.listMainMenu")
@@ -220,7 +240,7 @@ class Brstej(GenericFolderWatchedScraperMixin, CBaseHostClass):
         self.addDir({"name": "category", "good_for_fav": True, "category": "list_items", "title": _("All series"), "url": self.getFullUrl("/moslslat.php")})
         ramadan = False
         for title, url, children in self._loadMenu():
-            if "رمضان" in title and not children:
+            if self._isRamadan(title, url) and not children:
                 ramadan = True
                 continue
             if children:
@@ -237,7 +257,7 @@ class Brstej(GenericFolderWatchedScraperMixin, CBaseHostClass):
         entries = []
         for title, url, children in self._loadMenu():
             if key == "ramadan":
-                if "رمضان" in title and not children:
+                if self._isRamadan(title, url) and not children:
                     entries.append((title, url))
             elif url == key:
                 entries = [(_("All"), url)] + children
@@ -511,9 +531,22 @@ class Brstej(GenericFolderWatchedScraperMixin, CBaseHostClass):
     def getArticleContent(self, cItem):
         printDBG("Brstej.getArticleContent [%s]" % cItem.get("url", ""))
         meta = {}
+        # Arabic-only titles (Ramadan / Arabic series): only TMDb (translated titles) and TVmaze (alternative
+        # names) can find them, IMDb / Cinemeta / OMDb only made INFO slow and gave unrelated hits
         if cItem.get("meta_type") and cItem.get("meta_title"):
+            skip = () if isLatinTitle(cItem["meta_title"]) else LATIN_ONLY
             try:
-                meta = getMeta(cItem["meta_type"], cItem["meta_title"], cItem.get("meta_year", ""))
+                title = cItem["meta_title"]
+                meta = getMeta(cItem["meta_type"], title, cItem.get("meta_year", ""), skip)
+                if not meta and skip:
+                    # "المداح 2 - اسطورة الوادي" / "المداح 3": a later season with its own subtitle / number,
+                    # the show is the part before (TVmaze knows "المداح" only)
+                    tried = [title]
+                    base = title.split(" - ", 1)[0].strip()
+                    for alt in (base, re.sub(r"\s+\d{1,2}$", "", base)):
+                        if alt and alt not in tried and not meta:
+                            tried.append(alt)
+                            meta = getMeta(cItem["meta_type"], alt, cItem.get("meta_year", ""), skip)
             except Exception:
                 printExc()
         story, poster, info = "", "", {}

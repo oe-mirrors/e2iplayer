@@ -19,7 +19,8 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, Ge
                                                           GetE2VideoAspectChoices, GetE2VideoAspect, SetE2VideoAspect, GetE2VideoPolicyChoices, \
                                                           GetE2VideoPolicy, SetE2VideoPolicy, GetDefaultLang, GetPolishSubEncoding, iptv_system, \
                                                           GetE2AudioCodecMixOption, SetE2AudioCodecMixOption, CreateTmpFile, GetTmpDir, IsExecutable, GetGstIfdSrc, GetGstPlayerPath, MapUcharEncoding, \
-                                                          GetE2VideoModeChoices, GetE2VideoMode, SetE2VideoMode, GetPlayerSkinDir, GetNice, E2PrioFix
+                                                          GetE2VideoModeChoices, GetE2VideoMode, SetE2VideoMode, GetPlayerSkinDir, GetNice, E2PrioFix, \
+                                                          StripColorCodes
 from Plugins.Extensions.IPTVPlayer.tools.iptvsubtitles import IPTVSubtitlesHandler, IPTVEmbeddedSubtitlesHandler
 from Plugins.Extensions.IPTVPlayer.tools.iptvmoviemetadata import IPTVMovieMetaDataHandler
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
@@ -2297,10 +2298,12 @@ class IPTVExtMoviePlayer(Screen):
             url = strwithmeta(self.downloader.getUrl())
         else:
             url = strwithmeta(self.fileSRC)
+        # colour codes of the list title would end up in the subtitle search and the subtitle file name
+        movieTitle = StripColorCodes(self.title)
         if 0 == len(simpleTracksTab):
-            self.openChild(boundFunction(self.childClosed, self.downloadSubCallback), IPTVSubDownloaderWidget, {'duration_sec': self.playback['Length'], 'movie_url': url, 'movie_title': self.title})
+            self.openChild(boundFunction(self.childClosed, self.downloadSubCallback), IPTVSubDownloaderWidget, {'duration_sec': self.playback['Length'], 'movie_url': url, 'movie_title': movieTitle})
         else:
-            self.openChild(boundFunction(self.childClosed, self.downloadSubCallback), IPTVSubSimpleDownloaderWidget, {'movie_url': url, 'movie_title': self.title, 'sub_list': simpleTracksTab})
+            self.openChild(boundFunction(self.childClosed, self.downloadSubCallback), IPTVSubSimpleDownloaderWidget, {'movie_url': url, 'movie_title': movieTitle, 'sub_list': simpleTracksTab})
 
     def downloadSubCallback(self, ret=None):
         if None is not ret:

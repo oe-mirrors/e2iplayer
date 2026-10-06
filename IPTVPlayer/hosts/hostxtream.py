@@ -20,11 +20,22 @@
 #   - watched flag for movies / episodes / seasons / series, download marker, favourites, sidecar and
 #     "Title (Year)" / "Show - SxxExx - Name" naming; rows carry xtream://<account id>/... instead of the stream
 #     URL, so no password ends up in favourites, marker files or the debug log
+# Last Modified: 05.10.2026 - more accounts from playlists.txt in the X-Streamity format (one get.php line per
+#   account, " #Name"): <ConfigDir>/IPTVAccounts/playlists.txt always, the X-Streamity plugin's file with the
+#   option; read only, listed after the slots without a status request each
+#   - "Show adult content" (default off): without it streams flagged is_adult, categories named "xxx", "adult",
+#     "18+" ... and streams named "xxx", "porn", "18+" ... are left out
+#   - "Title (Year)" naming also drops short tags in front like "NF - ", "AMZ - ", "4K - "
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
 from Plugins.Extensions.IPTVPlayer.components.configsecret import ConfigLogin, ConfigSecret
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, b64Decode
+try:
+    from Plugins.Extensions.IPTVPlayer.tools.iptvtools import registerLogSecret
+except ImportError:  # an older plugin without it: the host still runs
+    def registerLogSecret(*values):
+        pass
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx, parseSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
@@ -35,9 +46,10 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dump
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urlparse, parse_qsl
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str, ensure_binary
-from Components.config import config, ConfigText, getConfigListEntry
+from Components.config import config, ConfigText, ConfigYesNo, getConfigListEntry
 import calendar
 import hashlib
+import os
 import re
 import time
 
@@ -57,6 +69,9 @@ for _slot in range(1, MAX_ACCOUNTS + 1):
     setattr(config.plugins.iptvplayer, _cfgName('xtream_username', _slot), ConfigLogin(default='', fixed_size=False))
     setattr(config.plugins.iptvplayer, _cfgName('xtream_password', _slot), ConfigSecret(default='', fixed_size=False))
 config.plugins.iptvplayer.xtream_useragent = ConfigText(default='', fixed_size=False)
+config.plugins.iptvplayer.xtream_xstreamity = ConfigYesNo(default=True)
+config.plugins.iptvplayer.xtream_adult = ConfigYesNo(default=False)
+FILE_SLOT = 101  # accounts from the playlists.txt files
 
 
 def _cfg(base, slot):
@@ -71,6 +86,8 @@ def GetConfigList():
         optionList.append(getConfigListEntry(_("Account %d - user name:") % slot, _cfg('xtream_username', slot)))
         optionList.append(getConfigListEntry(_("Account %d - password:") % slot, _cfg('xtream_password', slot)))
     optionList.append(getConfigListEntry(_("User-Agent (leave empty for the default):"), config.plugins.iptvplayer.xtream_useragent))
+    optionList.append(getConfigListEntry(_("Also use the accounts of X-Streamity (%s)") % pluginFile(), config.plugins.iptvplayer.xtream_xstreamity))
+    optionList.append(getConfigListEntry(_("Show adult content"), config.plugins.iptvplayer.xtream_adult))
     return optionList
 
 
@@ -97,41 +114,32 @@ KIND_ACTIONS = {'live': ('get_live_categories', 'get_live_streams'),
 ITEM_KINDS = {'xt_live': 'live', 'xt_movie': 'movie', 'xt_series': 'series', 'xt_season': 'season', 'xt_episode': 'episode',
               'xt_timeshift': 'timeshift', 'xt_archive_days': 'archive'}
 
+# -- name / value helpers: the same code in hostxtream.py and hoststalker.py - change both copies the same
+#    way; each host runs on its own
 # Arabic-Indic and Persian (extended) digits -> ASCII, for the local search
 _DIGIT_MAP = dict([(0x0660 + _i, 0x30 + _i) for _i in range(10)] + [(0x06F0 + _i, 0x30 + _i) for _i in range(10)])
 # country / language tags panels put in front of names: "|EN| ", "[DE] ", "|AR-HD| " always, bare "AR - " / "EN| " only
 # for the usual language codes (a real title like "SAS: Red Notice" stays)
 _PREFIX_TAG_RE = re.compile(r'^\s*[\|\[\(]\s*[A-Z0-9]{2,4}(?:[\s\-/+][A-Z0-9]{1,4})?\s*[\|\]\)]\s*[\-:]?\s*')
 _PREFIX_LANG_RE = re.compile(r'^\s*(?:AR|EN|DE|FR|IT|ES|TR|NL|PL|PT|RU|UK|US|IN|PK|FA|IR|KU|AL|GR|RO|BG|HU|CZ|SE|NO|DK|FI|EX|MULTI|4K|VOD)\s*(?:\||\s-\s|-\s)\s*')
+# any short provider / quality tag in capitals before " - ": "NF - ", "AMZ - ", "D+ - ", "4K - " (with the spaced hyphen
+# only, so "Spider-Man" stays); at least one letter or "+", so "300 - Rise of an Empire" / "1917 - ..." stay
+_PREFIX_SHORT_RE = re.compile(r'^\s*(?=[A-Z0-9+]*[A-Z+])[A-Z0-9+]{2,4}\s+-\s+(?=\S)')
+# adult categories / entries by name, for panels without an adult flag: "xxx" / "XXX" only (the film "xXx" stays),
+# "adult" only in category / genre names and not in "Young Adult" / "Adult Swim", "18+" not inside a number ("Movies 2018+")
+_ADULT_XXX_RE = re.compile(r'(?:^|[^A-Za-z0-9])(?:xxx|XXX)(?:[^A-Za-z0-9]|$)')
+_ADULT_NAME_RE = re.compile(r'(?:^|[^a-z0-9])(?:porno?|18\s*\+|\+\s*18)(?:[^a-z0-9]|$)', re.I)
+_ADULT_CAT_RE = re.compile(r'(?:^|[^a-z0-9])(?<!young )adults?(?!\s*swim)(?:[^a-z0-9]|$)', re.I)
 _TRAILING_YEAR_RE = re.compile(r'\s*(?:\(\s*((?:19|20)\d{2})\s*\)|\[\s*((?:19|20)\d{2})\s*\]|-\s*((?:19|20)\d{2}))\s*$')
 
 
-def _toUnicode(text):
-    try:
-        if text is None:
-            return u''
-        if isinstance(text, bytes) and not isinstance(text, type(u'')):
-            return text.decode('utf-8', 'ignore')
-        if not isinstance(text, type(u'')):
-            text = '%s' % text
-            if isinstance(text, bytes):
-                return text.decode('utf-8', 'ignore')
-        return text
-    except Exception:
-        return u''
-
-
-def _normSearchText(text):
-    text = _toUnicode(text).translate(_DIGIT_MAP).lower()
-    return u' '.join(text.split())
-
-
 def _str(value):
-    # panel values: str, int, None, sometimes [] for "empty"
+    # panel / portal values: str, int, None, sometimes [] or {} for "empty"
     if value is None or isinstance(value, (list, dict)):
         return ''
     try:
-        return ensure_str(value).strip() if not isinstance(value, (int, float)) else ('%s' % value)
+        # numbers as text, also py2 long (big ids / timestamps on 32 bit boxes)
+        return ensure_str(value).strip() if isinstance(value, (bytes, type(u''))) else ('%s' % value)
     except Exception:
         return ''
 
@@ -147,29 +155,28 @@ def _dict(value):
     return value if isinstance(value, dict) else {}
 
 
-def _md5(text):
-    return hashlib.md5(ensure_binary(text)).hexdigest()
-
-
 def _quote(value):
     return urllib_quote(ensure_str(value), safe='')
 
 
-def _b64Text(value):
-    value = _str(value)
-    if value == '':
-        return ''
+def _normSearchText(text):
+    # unicode on py2 too: the digit map and lower() need it for Arabic / Cyrillic names
+    text = _str(text)
     try:
-        return b64Decode(value).strip()
+        if isinstance(text, bytes):
+            text = text.decode('utf-8', 'ignore')
+        text = text.translate(_DIGIT_MAP)
     except Exception:
-        return value  # some panels send plain text
+        pass
+    return u' '.join(text.lower().split())
 
 
 def _cleanName(name):
-    # "|EN| Movie Name (2020)" -> ("Movie Name", "2020"); only used when the naming normalisation is on
+    # "|EN| Movie Name (2020)" -> ("Movie Name", "2020"): the list title with the naming normalisation, always
+    # the title for libs/moviemeta and the show name of the episodes
     name = _str(name)
     for _i in range(2):
-        newName = _PREFIX_LANG_RE.sub('', _PREFIX_TAG_RE.sub('', name))
+        newName = _PREFIX_SHORT_RE.sub('', _PREFIX_LANG_RE.sub('', _PREFIX_TAG_RE.sub('', name)))
         if newName == name or not newName.strip():
             break
         name = newName
@@ -181,12 +188,31 @@ def _cleanName(name):
     return re.sub(r'\s{2,}', ' ', name).strip(' -|'), year
 
 
+def _isAdultName(name, category=False):
+    name = _str(name)
+    return bool(_ADULT_XXX_RE.search(name) or _ADULT_NAME_RE.search(name) or (category and _ADULT_CAT_RE.search(name)))
+
+
 def _yearOf(*values):
     for value in values:
         m = re.search(r'\b((?:19|20)\d{2})\b', _str(value))
         if m:
             return m.group(1)
     return ''
+
+
+def _md5(text):
+    return hashlib.md5(ensure_binary(text)).hexdigest()
+
+
+def _b64Text(value):
+    value = _str(value)
+    if value == '':
+        return ''
+    try:
+        return b64Decode(value).strip()
+    except Exception:
+        return value  # some panels send plain text
 
 
 def parseAccountInput(hostText, user='', pwd=''):
@@ -215,6 +241,111 @@ def parseAccountInput(hostText, user='', pwd=''):
     except Exception:
         printExc()
     return '', user, pwd
+
+
+# X-Streamity's playlists.txt: one line per account, "#" in front switches it off
+#   http://host:port/get.php?username=U&password=P&type=m3u_plus&output=ts #Name
+ACCOUNTS_PLUGIN = ('XStreamity', '/etc/enigma2/xstreamity/', 'playlists.txt')
+# -- account files: the same code in hostxtream.py and hoststalker.py up to "-- end of the shared part"
+#    (change both copies the same way); read only, never written back. Files: our own folder
+#    <ConfigDir>/IPTVAccounts/ (the plugin's file can be copied there as it is, also without the plugin) and,
+#    with the option, the plugin's own file: its playlist_file setting, else location + playlist_name, from the
+#    running config when the plugin is loaded, else /etc/enigma2/settings, else its default.
+E2_SETTINGS = '/etc/enigma2/settings'
+ACCOUNTS_DIR = 'IPTVAccounts'
+_ACCOUNT_LINES_CACHE = {}
+
+
+def ownFile():
+    # <ConfigDir>/IPTVAccounts/<the plugin's file name>; the folder is made so the user finds it
+    try:
+        configDir = config.plugins.iptvplayer.ConfigDir.value
+        if not configDir or not isinstance(configDir, (str, type(u''))):
+            return ''
+        path = os.path.join(configDir, ACCOUNTS_DIR)
+        if not os.path.isdir(path):
+            os.makedirs(path)
+        return os.path.join(path, ACCOUNTS_PLUGIN[2])
+    except Exception:
+        printExc()
+    return ''
+
+
+def _pluginSetting(name):
+    # the plugin's value: running config first (current after changes in its setup), then the settings file
+    try:
+        section = getattr(config.plugins, ACCOUNTS_PLUGIN[0], None)
+        value = getattr(getattr(section, name, None), 'value', None) if section is not None else None
+        if value and isinstance(value, (str, type(u''))):
+            return ensure_str(value)
+    except Exception:
+        pass  # plugin not loaded: older ConfigSubsection raise KeyError for an unknown name (every list)
+    key = 'config.plugins.%s.%s=' % (ACCOUNTS_PLUGIN[0], name)
+    for line in _accountLines(E2_SETTINGS):
+        if line.startswith(key):
+            return line[len(key):].strip()
+    return ''
+
+
+def pluginFile():
+    path = _pluginSetting('playlist_file')
+    if not path or not path.lower().endswith('.txt'):
+        path = os.path.join(_pluginSetting('location') or ACCOUNTS_PLUGIN[1],
+                            os.path.basename(_pluginSetting('playlist_name') or ACCOUNTS_PLUGIN[2]))
+    return path
+
+
+def _accountFiles(withPlugin):
+    files = [path for path in (ownFile(),) if path]
+    if withPlugin:
+        path = pluginFile()
+        if not files or os.path.normpath(path) != os.path.normpath(files[0]):
+            files.append(path)
+    return files
+
+
+def _accountLines(path):
+    # read again only when the file changed (the host asks for its accounts on every list); native str lines
+    # (utf-8 bytes on py2, so they mix with the host's other strings)
+    try:
+        if path and os.path.isfile(path):
+            st = os.stat(path)
+            key = (st.st_mtime, st.st_size)
+            entry = _ACCOUNT_LINES_CACHE.get(path)
+            if entry and entry[0] == key:
+                return entry[1]
+            with open(path, 'rb') as f:
+                # utf-8-sig: a file saved by Windows Notepad starts with a BOM, its first account was lost
+                lines = [ensure_str(line).strip() for line in f.read().decode('utf-8-sig', 'ignore').splitlines()]
+            _ACCOUNT_LINES_CACHE[path] = (key, lines)
+            return lines
+    except Exception:
+        printExc()
+    return []
+
+
+def _splitMark(text, mark):
+    return text.split(mark, 1) if mark in text else (text, '')
+# -- end of the shared part
+
+
+def readXtreamAccounts(withPlugin=True):
+    """[{'name', 'url', 'user', 'pwd', 'file'}] - url is the line's get.php address (server part for the host)"""
+    accounts = []
+    for path in _accountFiles(withPlugin):
+        for line in _accountLines(path):
+            if not line.startswith(('http://', 'https://')):
+                continue
+            url, name = _splitMark(line, ' #')
+            url = url.strip()
+            try:
+                query = dict(parse_qsl(urlparse(url).query, keep_blank_values=True))
+            except Exception:
+                continue
+            user, pwd = query.get('username', '').strip(), query.get('password', '').strip()
+            if user and pwd:
+                accounts.append({'name': name.strip(), 'url': url, 'user': user, 'pwd': pwd, 'file': path})
+    return accounts
 
 
 class XtreamApiHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
@@ -247,6 +378,19 @@ class XtreamApiHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
                              'id': _md5('%s|%s' % (host, user))[:12],
                              # memory cache only: changes with the password, so a corrected password is used at once
                              'ck': _md5('%s|%s|%s' % (host, user, pwd))})
+        # playlists.txt in our own folder and (option) the X-Streamity plugin's file, after the slots
+        known = set(acc['id'] for acc in accounts)
+        for idx, entry in enumerate(readXtreamAccounts(config.plugins.iptvplayer.xtream_xstreamity.value)):
+            host, user, pwd = parseAccountInput(entry['url'], entry['user'], entry['pwd'])
+            accId = _md5('%s|%s' % (host, user))[:12]
+            if not (host and user and pwd) or accId in known:
+                continue
+            known.add(accId)
+            accounts.append({'slot': FILE_SLOT + idx, 'name': entry['name'] or re.sub(r'^https?://', '', host), 'host': host, 'user': user,
+                             'pwd': pwd, 'ua': ua, 'id': accId, 'ck': _md5('%s|%s|%s' % (host, user, pwd)), 'file': entry['file']})
+        # the stream urls (/live/<user>/<password>/...) also go into the player / downloader log lines
+        for acc in accounts:
+            registerLogSecret(acc['user'], acc['pwd'])
         return accounts
 
     def getAccount(self, cItem):
@@ -259,9 +403,10 @@ class XtreamApiHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 return acc
         if matches:
             return matches[0]
-        # the server address changed (new domain of the provider): the slot the item came from
+        # the server address changed (new domain of the provider): the slot the item came from (own slots only,
+        # the position of a file entry is no identity)
         for acc in accounts:
-            if acc['slot'] == slot:
+            if acc['slot'] == slot and slot <= MAX_ACCOUNTS:
                 printDBG('Xtream: account %s not found, using slot %d' % (accId, slot))
                 return acc
         if not accId and accounts:
@@ -421,13 +566,14 @@ class XtreamApiHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
         accounts = self.getAccounts()
         if not accounts:
             self.addMarker({'title': _("Please configure Xtream (blue button)"),
-                            'desc': _("Server, user name and password in the host configuration. The server field also takes a get.php link.")})
+                            'desc': _("Server, user name and password in the host configuration. The server field also takes a get.php link. More accounts: %s with one get.php link per line (X-Streamity format).") % ownFile()})
             return
         if len(accounts) == 1:
             self.listAccount(self.accParams(accounts[0], {'name': 'category'}))
             return
         for acc in accounts:
-            _ok, status = self.accountStatus(acc)
+            # the status is one request per account: only for the own slots, a long playlists.txt opens at once
+            status = acc['file'] if acc.get('file') else self.accountStatus(acc)[1]
             self.addDir(self.accParams(acc, {'name': 'category', 'category': 'xt_account', 'title': acc['name'], 'desc': '%s[/br]%s' % (acc['host'], status)}))
 
     def listAccount(self, cItem):
@@ -464,19 +610,33 @@ class XtreamApiHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
         params = dict(base)
         params.update({'title': _("All"), 'cat_id': '', 'url': 'xtream://%s/%s/cat/' % (acc['id'], kind)})
         self.addDir(params)
+        adultCats = self.adultCategories(acc, kind)
         for cat in data:
             cat = _dict(cat)
             title = _str(cat.get('category_name'))
             catId = _str(cat.get('category_id'))
-            if not title or not catId:
+            if not title or not catId or catId in adultCats:
                 continue
             params = dict(base)
             params.update({'title': title, 'cat_id': catId, 'url': 'xtream://%s/%s/cat/%s' % (acc['id'], kind, _quote(catId))})
             self.addDir(params)
 
+    def adultCategories(self, acc, kind):
+        # ids of the categories hidden without "Show adult content" (by name, the panels flag only streams)
+        if config.plugins.iptvplayer.xtream_adult.value:
+            return set()
+        return set(_str(_dict(cat).get('category_id')) for cat in (self.apiList(acc, KIND_ACTIONS[kind][0]) or [])
+                   if _isAdultName(_dict(cat).get('category_name'), True))
+
     def getStreams(self, acc, kind, catId=''):
         extra = (('category_id', catId),) if catId else None
-        return self.apiList(acc, KIND_ACTIONS[kind][1], extra)
+        data = self.apiList(acc, KIND_ACTIONS[kind][1], extra)
+        if data is None or config.plugins.iptvplayer.xtream_adult.value:
+            return data
+        # without "Show adult content": streams flagged is_adult, in an adult category or with an adult name
+        adultCats = self.adultCategories(acc, kind)
+        return [elm for elm in data if not (_int(_dict(elm).get('is_adult'), 0) == 1 or _str(_dict(elm).get('category_id')) in adultCats or
+                                            _isAdultName(_dict(elm).get('name')))]
 
     def listStreams(self, cItem):
         acc = self.getAccount(cItem)
@@ -764,7 +924,13 @@ class XtreamApiHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
         words = _normSearchText(searchPattern).split()
         if not words:
             return
-        accounts = [self.getAccount(cItem)] if cItem.get('acc_id') else self.getAccounts()
+        if cItem.get('acc_id'):
+            accounts = [self.getAccount(cItem)]
+        else:
+            # without an account (global search): the own slots, else the first file accounts - every account is
+            # one download of its full list, a long playlists.txt would block for minutes
+            accounts = self.getAccounts()
+            accounts = [acc for acc in accounts if not acc.get('file')] or accounts[:MAX_ACCOUNTS]
         page = max(1, _int(cItem.get('page', 1), 1))
         found = []
         for acc in accounts:
@@ -849,8 +1015,9 @@ class XtreamApiHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     def _moviemeta(self, mediaType, title, year):
         try:
-            from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
-            return getMeta(mediaType, title, year) or {}
+            from Plugins.Extensions.IPTVPlayer.libs.moviemeta import LATIN_ONLY, getMeta, isLatinTitle
+            # Arabic-only titles: only to the providers that know them (TMDb / TVmaze)
+            return getMeta(mediaType, title, year, skip=() if isLatinTitle(title) else LATIN_ONLY) or {}
         except Exception:
             printExc()
         return {}
@@ -988,6 +1155,9 @@ class XtreamApiHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
             self.listsHistory(base, 'desc', _("Type: "))
         else:
             printExc()
+        if not self.currList and name is not None and category.startswith(('xt_', 'search')) and category != 'search_history':
+            # a panel without movies / series in a category, an empty search: a marker instead of an empty list
+            self.addMarker({'title': _("No items found")})
         CBaseHostClass.endHandleService(self, index, refresh)
 
 

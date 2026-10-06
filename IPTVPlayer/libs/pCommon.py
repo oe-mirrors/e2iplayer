@@ -38,10 +38,17 @@ try:
 except Exception:
     pass
 
-# Query/form fields that carry a credential (captcha services: 2captcha "key", 9kw "apikey",
-# DeathByCaptcha "password"). Their values never go into the debug log - users post it.
-_SECRET_FIELDS = ('key', 'apikey', 'api_key', 'password', 'passwd')
-_SECRET_FIELD_RE = re.compile(r'(?<![A-Za-z0-9_])(%s)=[^&\s\'"]+' % '|'.join(_SECRET_FIELDS), re.IGNORECASE)
+# Query/form fields and headers that carry a credential (captcha services: 2captcha "key", 9kw "apikey",
+# DeathByCaptcha "password"; the "Api-Key" / "Authorization: Bearer ..." headers of APIs such as
+# opensubtitles.com). Their values never go into the debug log - users post it.
+_SECRET_FIELDS = ('key', 'apikey', 'api_key', 'api-key', 'password', 'passwd', 'authorization',
+                  # Stalker / MAG portals (hoststalker.py): the box identity in the query and the "mac=" cookie
+                  'mac', 'sn', 'device_id', 'device_id2', 'signature', 'metrics')
+_SECRET_FIELD_RE = re.compile(r'(?<![A-Za-z0-9_])(%s)=[^&;\s\'"]+' % '|'.join(_SECRET_FIELDS), re.IGNORECASE)
+# the same fields in a JSON body ('{"username": "me", "password": "x"}' sent as raw_post_data)
+_SECRET_JSON_RE = re.compile(r'("(?:%s)"\s*:\s*)"(?:[^"\\]|\\.)*"' % '|'.join(_SECRET_FIELDS), re.IGNORECASE)
+# a header line in a command line (curl-impersonate: "-H Api-Key: x -H Authorization: Bearer y")
+_SECRET_HEADER_RE = re.compile(r'(?<![A-Za-z0-9_-])((?:api-key|authorization)\s*:\s*)(?:(?:bearer|basic)\s+)?[^\s\'"]+', re.IGNORECASE)
 
 
 # curl-impersonate (libs/curlimpersonate.py): hosts whose Cloudflare let a request with Chrome's
@@ -88,9 +95,10 @@ def maskSecrets(value):
     if isinstance(value, (list, tuple)):
         return type(value)(maskSecrets(v) for v in value)
     if isinstance(value, bytes):
-        return _SECRET_FIELD_RE.sub(r'\1=***', value.decode('utf-8', 'replace'))
+        value = value.decode('utf-8', 'replace')
     if isinstance(value, str):
-        return _SECRET_FIELD_RE.sub(r'\1=***', value)
+        value = _SECRET_FIELD_RE.sub(r'\1=***', value)
+        return _SECRET_HEADER_RE.sub(r'\1***', _SECRET_JSON_RE.sub(r'\1"***"', value))
     return value
 
 
@@ -926,7 +934,7 @@ class common:
                 headers['User-Agent'] = host
 
             printDBG('pCommon - getPageWithPyCurl() -> params: ' + str(maskSecrets(params)))
-            printDBG('pCommon - getPageWithPyCurl() -> headers: ' + str(headers))
+            printDBG('pCommon - getPageWithPyCurl() -> headers: ' + str(maskSecrets(headers)))
 
             if 'save_to_file' in params:
                 fileHandler = open(params['save_to_file'], "wb")
@@ -1148,7 +1156,7 @@ class common:
 
         SetThreadKillable(True)
 
-        printDBG('pCommon - getPageWithPyCurl() return -> \nsts: %s\nmetadata: %s\n' % (sts, metadata))
+        printDBG('pCommon - getPageWithPyCurl() return -> \nsts: %s\nmetadata: %s\n' % (sts, maskSecrets(metadata)))
         if params.get('with_metadata', False):
             out_data = strwithmeta(out_data, metadata)
 
@@ -1171,8 +1179,27 @@ class common:
                         # JPEG can't hold an alpha channel - a webp with
                         # transparency (RGBA/LA/P) would raise "cannot write
                         # mode RGBA as JPEG"
-                        img = img.convert('RGB')
-                    img.save(output_path, format="png" if png else "jpeg", quality=80)
+                        if img.mode in ('RGBA', 'LA', 'PA') or 'transparency' in img.info:
+                            img = img.convert('RGBA')
+                            if img.split()[-1].getextrema()[0] < 255:
+                                # really transparent (mostly logos, small): PNG keeps it, the covers
+                                # blend it on the skin (alphatest="blend"); ePicLoad goes by the
+                                # first bytes, so the .jpg name of the icon cache does not matter
+                                try:
+                                    img.save(output_path, format="png")
+                                    png = True
+                                except Exception:
+                                    printDBG("PCommon.convertWebp PNG not written, flattened JPEG instead")
+                                    if os.path.exists(output_path):
+                                        os.remove(output_path)
+                            if not png:
+                                # flattened on black: a plain convert('RGB') keeps the colour stored under
+                                # the transparent pixels (often white), so a white logo vanished on white
+                                img = Image.alpha_composite(Image.new('RGBA', img.size, (0, 0, 0, 255)), img)
+                        if not png:
+                            img = img.convert('RGB')
+                    if not os.path.exists(output_path):
+                        img.save(output_path, format="png" if png else "jpeg", quality=80)
                     img.close()
                     os.remove(file_path)
                     move(output_path, file_path)
@@ -1181,6 +1208,11 @@ class common:
                 except Exception:
                     # e.g. AVIF with a Pillow built without libavif - ffmpeg (libdav1d) may still read it
                     printDBG("PCommon.convertWebp Pillow can't read %s, trying ffmpeg" % file_path)
+                    try:
+                        if os.path.exists(output_path):
+                            os.remove(output_path)  # half-written by Pillow - without ffmpeg it stayed behind
+                    except Exception:
+                        printExc()
 
             if IsExecutable('ffmpeg'):
                 # local import: downloaderhelpers itself imports this module
@@ -1338,7 +1370,7 @@ class common:
         pageUrl = self.iriToUri(pageUrl)
 
         printDBG('pCommon - %s() -> params: %s' % (caller, maskSecrets(params)))
-        printDBG('pCommon - %s() -> headers: %s' % (caller, headers))
+        printDBG('pCommon - %s() -> headers: %s' % (caller, maskSecrets(headers)))
         printDBG("pageUrl: [%s]" % maskSecrets(pageUrl))
 
         metadata = self.meta
@@ -1946,7 +1978,7 @@ class common:
             headers['User-Agent'] = host
 
         printDBG('pCommon - getURLRequestData() -> params: ' + str(maskSecrets(params)))
-        printDBG('pCommon - getURLRequestData() -> headers: ' + str(headers))
+        printDBG('pCommon - getURLRequestData() -> headers: ' + str(maskSecrets(headers)))
 
         customOpeners = []
         # cookie support

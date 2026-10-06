@@ -112,8 +112,11 @@
   "tbngopl",
   "pzpnpluspl",
   "drdk",
-  "xtream",
   "alarabiya"
+ ],
+ "iptv": [
+  "xtream",
+  "stalker"
  ],
  "documentary": [
   "dokumentalnenet",
@@ -330,6 +333,7 @@
   "faselhdcom",
   "cimaclub",
   "akoam",
+  "akwamold",
   "shahiidanimenet",
   "aljazeera",
   "mp3quran",
