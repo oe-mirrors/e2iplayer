@@ -22,6 +22,11 @@ from skin import parseColor
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 from Screens.MessageBox import MessageBox
 from Plugins.Extensions.IPTVPlayer.components.searchhistoryeditor import SearchHistoryEditor
+from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
+import re
+
+# icon urls scraped from JSON inside a page instead of decoding it: "https:\/\/x\/a.jpg?w=1&h=2"
+ICON_JSON_ESCAPE_RE = re.compile(r'\\u([0-9a-fA-F]{4})')
 
 
 class CUrlItem:
@@ -731,7 +736,21 @@ class CHostBase(IHost):
     def getDefaulIcon(self, cItem):
         return self.host.getDefaulIcon(cItem)
 
+    @staticmethod
+    def cleanIconUrl(url):
+        # JSON escapes and stray quotes a host copied along with the icon url
+        if not isinstance(url, str) or not url:
+            return url
+        clean = url.strip().strip('"\'')
+        if '\\' in clean:
+            # json_loads instead of chr(): py2 chr() only takes 0-255
+            clean = ICON_JSON_ESCAPE_RE.sub(lambda m: ensure_str(json_loads('"%s"' % m.group(0))), clean.replace('\\/', '/'))
+        if clean == url:
+            return url
+        return strwithmeta(clean, url.meta) if isinstance(url, strwithmeta) else clean
+
     def getFullIconUrl(self, url, currUrl=None):
+        url = self.cleanIconUrl(url)
         if currUrl is not None:
             return self.host.getFullIconUrl(url, currUrl)
         else:

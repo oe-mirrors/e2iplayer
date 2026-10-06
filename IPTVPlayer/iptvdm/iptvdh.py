@@ -203,17 +203,20 @@ class DMHelper:
         printDBG("DMHelper::makeUnikalFileName(%s, %s, %s) baseName: %s" % (fileName, withTmpFileName, addDateToFileName, baseName))
 
         if not addDateToFileName:
+            # the number goes before the extension ("Name 2.mp4"), so the copies sort next to the first file
+            # (it was a prefix: "2. Name.mp4")
+            name, ext = os.path.splitext(baseName)
             tries = 10
             for idx in range(tries):
                 if idx > 0:
-                    uniqueID = str(idx + 1) + '. '
+                    uniqueID = ' ' + str(idx + 1)
                 else:
                     uniqueID = ''
-                newFileName = os.path.dirname(fileName) + os.sep + uniqueID + baseName
+                newFileName = os.path.dirname(fileName) + os.sep + name + uniqueID + ext
                 if fileExists(newFileName):
                     continue
                 if withTmpFileName:
-                    tmpFileName = os.path.dirname(fileName) + os.sep + "." + uniqueID + baseName
+                    tmpFileName = os.path.dirname(fileName) + os.sep + "." + name + uniqueID + ext
                     if fileExists(tmpFileName):
                         continue
                     return newFileName, tmpFileName

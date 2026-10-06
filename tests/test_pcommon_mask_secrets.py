@@ -8,7 +8,7 @@ import re
 import pytest
 
 SOURCE = os.path.join(os.path.dirname(__file__), "..", "IPTVPlayer", "libs", "pCommon.py")
-NAMES = ("_SECRET_FIELDS", "_SECRET_FIELD_RE", "maskSecrets")
+NAMES = ("_SECRET_FIELDS", "_SECRET_FIELD_RE", "_SECRET_JSON_RE", "_SECRET_HEADER_RE", "maskSecrets")
 
 
 @pytest.fixture(scope="module")

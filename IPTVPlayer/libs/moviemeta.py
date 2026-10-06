@@ -15,6 +15,7 @@
 #
 # A host puts meta_type ("movie" or "tv"), meta_title and meta_year into its
 # items and returns getArticleContent(cItem) from its own getArticleContent().
+# For titles in Arabic only a host passes skip=LATIN_ONLY to getMeta() (see isLatinTitle()).
 
 import os
 import re
@@ -44,7 +45,20 @@ CERT_COUNTRY = {"en": "US", "ar": "EG", "cs": "CZ", "el": "GR", "uk": "UA"}
 
 
 def _cleanTitle(title):
-    return re.sub(r"[\W_]+", "", (title or "").lower(), flags=re.UNICODE)
+    title = re.sub(r"[\W_]+", "", (title or "").lower(), flags=re.UNICODE)
+    # Arabic spelling variants the sites mix: alef with hamza / madda -> alef, teh marbuta -> heh, alef maksura -> yeh
+    return re.sub(u"[أإآ]", u"ا", title).replace(u"ة", u"ه").replace(u"ى", u"ي")
+
+
+def isLatinTitle(title):
+    # False for titles in Arabic (or another script) only: IMDb, Cinemeta and OMDb search English titles
+    # and answer those with unrelated hits, a host can leave them out (getMeta skip=LATIN_ONLY).
+    # A title of digits only ("1917", "2012") counts as Latin.
+    letters = re.sub(r"[\W\d_]+", "", title or "", flags=re.UNICODE)
+    return not letters or bool(re.search(r"[A-Za-z]", letters))
+
+
+LATIN_ONLY = ("IMDb", "Cinemeta", "OMDb")
 
 
 def _names(items, limit=3, key="name"):
@@ -367,6 +381,17 @@ class _TVmaze(object):
             return None
         shows = [r.get("show") for r in data if isinstance(r, dict) and r.get("show")] if isinstance(data, list) else []
         hit = _pickResult(shows, title, year, ("name",), "premiered", strict=True)
+        if not hit and shows and not isLatinTitle(title):
+            # an Arabic title finds the show through its alternative names ("المداح" -> "Al Maddah"):
+            # the best two hits are checked against their akas
+            for show in shows[:2]:
+                akas = _getJson(TVMAZE_API_URL + "shows/%s/akas" % show.get("id"))
+                if akas is None:
+                    return None
+                names = [{"name": a.get("name")} for a in akas if isinstance(a, dict)] if isinstance(akas, list) else []
+                if _pickResult(names, title, "", ("name",), "", strict=True):
+                    hit = show
+                    break
         if not hit:
             return {}
         show = _getJson(TVMAZE_API_URL + "shows/%s?embed[]=cast&embed[]=crew&embed[]=seasons" % hit["id"])
@@ -506,13 +531,14 @@ def _getProviders(mediaType):
     return providers
 
 
-def getMeta(mediaType, title, year=""):
+def getMeta(mediaType, title, year="", skip=()):
     # {"title", "plot", "poster", "info": {ArticleContent.RICH_DESC_PARAMS key: text}} or {}
+    # skip: provider names left out for this title, e.g. LATIN_ONLY for an Arabic title
     title = (title or "").strip()
     year = str(year or "").strip()[:4]
     if mediaType not in ("movie", "tv") or not title:
         return {}
-    providers = _getProviders(mediaType)
+    providers = [p for p in _getProviders(mediaType) if p.NAME not in skip]
     if not providers:
         return {}  # all switched off or no API keys
     if not year.isdigit():

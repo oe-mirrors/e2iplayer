@@ -3,8 +3,8 @@
 #   Rewrite against the current site (same "O2 CMS" layout as before):
 #   - lists /movies, /series, /shows (+ section/category filters read live from the page),
 #     /recent and /search?q=..; First page / Jump / Next page (?page=N, last page from the pager,
-#     "Next page" only with rel="next"); /mix (rar/zip albums) and
-#     /old (the archive on another domain) left out - nothing playable there
+#     "Next page" only with rel="next"); /mix (rar/zip albums) left out - nothing playable there;
+#     the /old archive is its own host (hostakwamold)
 #   - movies, TV shows and episodes are VIDEO rows keyed on their page url; the direct
 #     downet.net MP4 links (signed, valid ~1 day) are fetched in getLinksForVideo from the
 #     /watch/<id>/... page of each quality tab - no hoster embeds, need_resolve 0

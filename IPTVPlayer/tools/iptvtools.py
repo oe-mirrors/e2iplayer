@@ -9,7 +9,7 @@
 # LOCAL import
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
-from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib2_urlopen, urllib2_Request, urllib2_URLError, urllib2_HTTPError
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib2_urlopen, urllib2_Request, urllib2_URLError, urllib2_HTTPError, urllib_quote
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import strDecode, ensure_str, ensure_binary
 ###################################################
 
@@ -1188,12 +1188,49 @@ def _enforceDebugLogLimit(path):
         pass
 
 
+# Credentials a host knows (an IPTV account's password, a portal's MAC) that also end up in lines the host does
+# not write itself - stream urls like /live/<user>/<password>/1.m3u8 in the downloader / player lines. A host
+# registers them once, printDBG then masks them in every line (only as a whole word, so a short password does
+# not mask parts of other words). Users post their debug log.
+_g_log_secrets = set()
+_g_log_secrets_re = [None]
+
+
+def registerLogSecret(*values):
+    changed = False
+    for value in values:
+        try:
+            value = ensure_str(value).strip() if value else ''
+        except Exception:
+            continue
+        if len(value) < 3 or value in _g_log_secrets:
+            continue
+        for form in set([value, value.lower(), value.upper(), urllib_quote(value, safe='')]):
+            _g_log_secrets.add(form)
+        changed = True
+    if changed:
+        # longest first, so "user%40x" is masked before "user"
+        alternatives = '|'.join(re.escape(s) for s in sorted(_g_log_secrets, key=len, reverse=True))
+        _g_log_secrets_re[0] = re.compile(r'(?<![A-Za-z0-9])(?:%s)(?![A-Za-z0-9])' % alternatives)
+
+
+def maskLogSecrets(text):
+    regex = _g_log_secrets_re[0]
+    if regex is None:
+        return text
+    try:
+        return regex.sub('***', text if isinstance(text, str) else str(text))
+    except Exception:
+        return text
+
+
 def printDBG(DBGtxt, writeMode='a'):
     global _g_dbg_calls
     DBG = getDebugMode()
     if DBG == '':
         return
-    elif DBG == 'console':
+    DBGtxt = maskLogSecrets(DBGtxt)
+    if DBG == 'console':
         print(DBGtxt)
     else:
         if DBG == 'debugfile':
@@ -2731,3 +2768,11 @@ def E2ColoR(color):
         return COLORS_DEFINITIONS.get(color, '') if config.plugins.iptvplayer.use_colors.value else ''
     except AttributeError:
         return ''
+
+
+COLOR_CODE_RE = re.compile(r'\\c[0-9a-fA-F]{8}')
+
+
+def StripColorCodes(text):
+    # the \cAARRGGBB codes of E2ColoR, for places that need the plain text (searches, file names)
+    return COLOR_CODE_RE.sub('', text or '')
