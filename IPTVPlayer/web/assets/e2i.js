@@ -689,6 +689,10 @@
 			if (!r.ok) { toast(r.error || t('Error'), true); }
 			else {
 				if (r.restart) { showRestartHint(); }
+				if (r.warning) {
+					var hint = notice(r.warning, 'warn', function () { hint.remove(); });
+					$('settingsMsg').appendChild(hint);
+				}
 				toast(t('Saved'));
 				if (rowNode) { rowNode.classList.add('saved'); setTimeout(function () { rowNode.classList.remove('saved'); }, 800); }
 			}

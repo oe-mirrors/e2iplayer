@@ -12,7 +12,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, \
                                                           IsExecutable, CFakeMoviePlayerOption, GetCookieDir, GetJSCacheDir, \
                                                           GetSubtitlesDir, GetMovieMetaDataDir, RemoveDirContents, RemoveAllDirsIconsFromPath, \
                                                           GetSearchHistoryDir, GetFavouritesDir, GetWatchedDir, GetMoviePlayerPerHostDir, GetHostOrderDir, IsPathSafeToWipe, \
-                                                          IsSameDir, IsSameOrSubDir
+                                                          IsSameDir, IsSameOrSubDir, IsRealStoragePresent, FreeSpace, formatBytes, GetPluginDir
 from Plugins.Extensions.IPTVPlayer.components.configbase import ConfigBaseWidget
 from Plugins.Extensions.IPTVPlayer.components.confighost import ConfigHostsMenu
 from Plugins.Extensions.IPTVPlayer.components.iptvdirbrowser import IPTVDirectorySelectorWidget
@@ -24,6 +24,8 @@ from .iptvpin import IPTVPinWidget
 ###################################################
 # FOREIGN import
 ###################################################
+from os import path as os_path
+
 from Screens.MessageBox import MessageBox
 
 from Components.ActionMap import ActionMap
@@ -46,6 +48,24 @@ from Plugins.Extensions.IPTVPlayer.components.iptvconfig import GetMoviePlayerNa
 
 
 ###################################################
+
+
+def GetNoStorageWarning(cfgItem, path):
+    # same check as the start of E2iPlayer (IPTVPlayerWidget), which would silently switch such a folder back -
+    # e.g. /media/hdd without a mounted HDD is only an empty folder in a tiny tmpfs; '' when the folder is fine
+    cp = config.plugins.iptvplayer
+    if cfgItem is cp.bufferingPath:
+        fallbackDir = cp.TmpDir.value
+    elif cfgItem is cp.CacheDir:
+        fallbackDir = GetPluginDir('cache/')
+    else:
+        return ''
+    if IsSameDir(path, fallbackDir) or IsRealStoragePresent(path):
+        return ''
+    printDBG('Storage: chosen folder [%s] has no real storage, it will be switched back to [%s] at the next start' % (path, fallbackDir))
+    # a path typed in the web interface may not exist yet - FreeSpace() would log a traceback for it
+    freeSpace = FreeSpace(path, requiredSpace=None, unitDiv=1) if os_path.isdir(path) else 0
+    return _('There is no storage device under "%s" (%s free). E2iPlayer will switch this folder back to "%s" at the next start.\nPlease choose a folder on a mounted HDD or USB stick.') % (path, formatBytes(freeSpace), fallbackDir)
 
 
 def GetOskOwnModelConfigList(indent=True):
@@ -617,6 +637,9 @@ class ConfigMenu(ConfigBaseWidget):
             def SetDirPathCallBack(curIndex, newPath):
                 if None is not newPath:
                     self["config"].list[curIndex][1].value = newPath
+                    warning = GetNoStorageWarning(self["config"].list[curIndex][1], newPath)
+                    if warning:
+                        self.session.open(MessageBox, warning, type=MessageBox.TYPE_WARNING)
             self.session.openWithCallback(boundFunction(SetDirPathCallBack, curIndex), IPTVDirectorySelectorWidget, currDir=currItem.value, title=_("Select directory"))
         elif config.plugins.iptvplayer.fakePin == currItem:
             self.changePin(start=True)
