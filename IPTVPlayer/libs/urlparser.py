@@ -32,7 +32,7 @@ from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_unquote, urllib_urlencode
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import parse_qs, urljoin, urlparse
 from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute, js_execute_ext
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import CSelOneLink, GetCookieDir, GetDefaultLang, GetJSScriptFile, GetPluginDir, b64urlEncode, printDBG, printExc, rm
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import CSelOneLink, GetCookieDir, GetDefaultLang, GetJSScriptFile, GetPluginDir, GetTmpDir, b64urlEncode, printDBG, printExc, rm
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 
 if not isPY2():
@@ -159,7 +159,9 @@ class urlparser:
             "71stream.one": self.pp.parserR2EMBED,  # add 031026
             "732eg54de642sa.sbs": self.pp.parserJWPLAYER,  # add 061026
             "745mingiestblissfully.com": self.pp.parserVOESX,  # add 061026
+            "74k.io": self.pp.parserJWPLAYER,  # add 071026 (74k.io/e/<id>, packed StreamWish player, xtapes)
             "81u6xl9d.xyz": self.pp.parserBYSE,
+            "88z.io": self.pp.parserSBS,  # add 071026 (88z.io/#<id>, xtapes)
             "8mhlloqo.fun": self.pp.parserBYSE,
             "96ar.com": self.pp.parserBYSE,
             # a
@@ -208,6 +210,7 @@ class urlparser:
             "atabknhk.sbs": self.pp.parserJWPLAYER,  # add 061026
             "atabknhs.sbs": self.pp.parserJWPLAYER,  # add 061026
             "audaciousdefaulthouse.com": self.pp.parserVOESX,  # add 061026
+            "audinifer.com": self.pp.parserJWPLAYER,  # add 061026 (StreamWish mirror, e.g. pornbusy)
             "availedsmallest.com": self.pp.parserVOESX,  # add 061026
             "awish.pro": self.pp.parserJWPLAYER,
             "azipcdn.com": self.pp.parserJWPLAYER,  # add 061026
@@ -436,6 +439,7 @@ class urlparser:
             "guxhag.com": self.pp.parserJWPLAYER,  # add 061026
             # h
             "hailindihg.com": self.pp.parserJWPLAYER,  # add 061026
+            "hanerix.com": self.pp.parserJWPLAYER,  # add 061026 (StreamWish mirror, e.g. pornbusy)
             "haxloppd.com": self.pp.parserJWPLAYER,
             "hayaatieadhab.sbs": self.pp.parserJWPLAYER,  # add 061026
             "hd1.hdup20.com": self.pp.parserJWPLAYER,
@@ -446,6 +450,7 @@ class urlparser:
             "hexupload.net": self.pp.parserHEXLOAD,
             "hgbazooka.com": self.pp.parserJWPLAYER,  # add 061026
             "hgcloud.to": self.pp.parserJWPLAYER,
+            "hglamioz.com": self.pp.parserJWPLAYER,  # add 061026 (StreamWish mirror, e.g. pornbusy)
             "hglink.to": self.pp.parserJWPLAYER,
             "hgplaycdn.com": self.pp.parserJWPLAYER,
             "hlsflast.com": self.pp.parserJWPLAYER,
@@ -516,6 +521,7 @@ class urlparser:
             "launchreliantcleaverriver.com": self.pp.parserVOESX,  # add 061026
             "lauradaydo.com": self.pp.parserVOESX,  # add 061026
             "lisatrialidea.com": self.pp.parserVOESX,  # add 061026
+            "loadvid.com": self.pp.parserLOADVID,  # add 071026 (cdn.loadvid.com, pornbusy)
             "lolololo.store": self.pp.parserSBS,  # add 031026 (Streamp2p "#id" player, not the earnvids lolololu.website)
             "lolololu.website": self.pp.parserJWPLAYER,
             "lookmovie2.skin": self.pp.parserJWPLAYER,  # add 061026
@@ -530,6 +536,7 @@ class urlparser:
             "luluvdoo.com": self.pp.parserJWPLAYER,
             "luluvido.com": self.pp.parserJWPLAYER,  # add 061026
             "lumiawatch.top": self.pp.parserJWPLAYER,  # add 061026
+            "luvstream.cc": self.pp.parserJWPLAYER,  # add 071026 (watchxxxfree)
             # m
             "m1xdrop.bz": self.pp.parserMIXDROP,  # add 041026
             "m1xdrop.click": self.pp.parserMIXDROP,
@@ -547,6 +554,7 @@ class urlparser:
             "mdy48tn97.com": self.pp.parserMIXDROP,
             "mdzsmutpcvykb.net": self.pp.parserMIXDROP,
             "mediafire.com": self.pp.parserMEDIAFIRECOM,
+            "medixiru.com": self.pp.parserJWPLAYER,  # add 061026 (StreamWish mirror, e.g. pornbusy)
             "megamax.cam": self.pp.parserMEGAMAX,  # add 031026
             "megamax.me": self.pp.parserMEGAMAX,  # add 031026
             "megatuktuk.store": self.pp.parserMEGAMAX,  # add 031026
@@ -619,6 +627,7 @@ class urlparser:
             "netu.tv": self.pp.parserHQQ,
             "nonesnanking.com": self.pp.parserVOESX,  # add 061026
             "nova.upn.one": self.pp.parserSBS,
+            "niramirus.com": self.pp.parserJWPLAYER,  # add 061026 (StreamWish mirror, e.g. pornbusy)
             # o
             "obeywish.com": self.pp.parserJWPLAYER,
             "odnoklassniki.ru": self.pp.parserOKRU,
@@ -640,6 +649,7 @@ class urlparser:
             "playerwish.com": self.pp.parserJWPLAYER,
             "playmate.to": self.pp.parserPLAYMATE,
             "playmogo.com": self.pp.parserDOOD,
+            "playnixes.com": self.pp.parserJWPLAYER,  # add 061026 (StreamWish mirror, e.g. pornbusy)
             "polsatsport.pl": self.pp.parserJWPLAYER,
             "poophq.com": self.pp.parserVEEV,
             "pqham.com": self.pp.parserJWPLAYER,
@@ -787,6 +797,7 @@ class urlparser:
             "updown.cam": self.pp.parserJWPLAYER,  # add 061026
             "updown.icu": self.pp.parserJWPLAYER,
             "updown.sbs": self.pp.parserJWPLAYER,  # add 061026
+            "upload18.org": self.pp.parserUPLOAD18,  # add 071026 (pornbusy)
             "upn.one": self.pp.parserSBS,  # add 031026 (lodynet.upn.one and other subdomains via the parent domain)
             "upns.live": self.pp.parserSBS,  # add 031026 (lodynet.upns.live)
             "uptodatefinishconferenceroom.com": self.pp.parserVOESX,  # add 061026
@@ -828,6 +839,7 @@ class urlparser:
             "vidnest.live": self.pp.parserJWPLAYER,  # add 061026
             "vidoba.org": self.pp.parserJWPLAYER,
             "vidply.com": self.pp.parserDOOD,
+            "vibuxer.com": self.pp.parserJWPLAYER,  # add 061026 (StreamWish mirror, e.g. pornbusy)
             "vidcore.io": self.pp.parserVIDCORE,
             "vidcore.net": self.pp.parserVIDCORE,
             "vidfast.pro": self.pp.parserVIDCORE,
@@ -2355,7 +2367,7 @@ class pageParser(CaptchaHelper):
         printDBG("parserDOOD baseUrl [%s]" % baseUrl)
         HTTP_HEADER = self.cm.getDefaultHeader()
         urlParams = {"header": HTTP_HEADER}
-        urls = ["all3do.com", "d0000d.com", "d000d.com", "d0o0d.com", "d-s.io", "do0od.com", "dooodster.com", "doodstream.com", "doply.net", "dooood.com", "do7go.com", "ds2play.com", "ds2video.com", "dood.cx", "dood.la", "dood.li", "dood.pm", "dood.re", "dood.sh", "dood.so", "dood.stream", "dood.to", "dood.watch", "dood.work", "dood.wf", "dood.ws", "dood.yt", "doods.pro", "doodcdn.io", "vide0.net", "vidply.com", "vvide0.com", "playmogo.com"]
+        urls = ["all3do.com", "d0000d.com", "d000d.com", "d0o0d.com", "d-s.io", "do0od.com", "dooodster.com", "doodstream.com", "doply.net", "dooood.com", "do7go.com", "ds2play.com", "ds2video.com", "dsvplay.com", "dood.cx", "dood.la", "dood.li", "dood.pm", "dood.re", "dood.sh", "dood.so", "dood.stream", "dood.to", "dood.watch", "dood.work", "dood.wf", "dood.ws", "dood.yt", "doods.pro", "doodcdn.io", "vide0.net", "vidply.com", "vvide0.com", "playmogo.com"]
         baseUrl = baseUrl.replace("/w/", "/e/")  # watch page -> embed page
         # fix 041026: the /d/ download page now says "Video not found" while /e/<same id> still plays (ds2play/playmogo)
         baseUrl = re.sub(r"(https?://[^/]+)/d/", r"\1/e/", baseUrl)
@@ -3394,6 +3406,67 @@ class pageParser(CaptchaHelper):
             src = "https:" + src
         return [{"name": "MP4", "url": urlparser.decorateUrl(src, {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": url})}]
 
+    def parserLOADVID(self, baseUrl):  # add 071026
+        # cdn.loadvid.com/videos/play/<hash>: a protected video (isProtected) gets its HLS playlist only as the answer to
+        # POST /videos/resolve-token {token, hash} - there is no URL for it. It is saved as a local file: hlsdl reads a
+        # playlist path without "://" from disk (the segments are absolute URLs). The segments are TS named *.png,
+        # which exteplayer3's ffmpeg refuses -> buffer only
+        printDBG("parserLOADVID baseUrl[%s]" % baseUrl)
+        HTTP_HEADER = self.cm.getDefaultHeader(browser="chrome")
+        HTTP_HEADER["Referer"] = baseUrl.meta.get("Referer", "https://cdn.loadvid.com/")
+        sts, data = self.cm.getPage(baseUrl, {"header": HTTP_HEADER})
+        if not sts:
+            return []
+        meta = {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": "https://cdn.loadvid.com/"}
+        videoUrl = ph.search(data, r"""videoUrl\s*:\s*['"]([^'"]*)['"]""")[0].replace("\\/", "/")
+        if videoUrl.startswith("http"):
+            # an unprotected video names its file directly
+            return [{"name": "MP4" if ".mp4" in videoUrl else "HLS", "url": urlparser.decorateUrl(videoUrl, meta)}]
+        videoHash = ph.search(data, r"""videoHash\s*:\s*['"]([^'"]+)['"]""")[0]
+        token = ph.search(data, r"""videoToken\s*:\s*['"]([^'"]+)['"]""")[0]
+        if not videoHash or not token:
+            if "videoHash" not in data:
+                SetIPTVPlayerLastHostError(_("The video has been removed."))
+            return []
+        header = dict(HTTP_HEADER)
+        header.update({"Content-Type": "application/json", "Accept": "application/vnd.apple.mpegurl,*/*", "Origin": "https://cdn.loadvid.com", "Referer": str(baseUrl)})
+        csrf = ph.search(data, r"""name=["']csrf-token["']\s+content=["']([^"']+)["']""")[0]
+        if csrf:
+            header["X-CSRF-TOKEN"] = csrf
+        sts, playlist = self.cm.getPage("https://cdn.loadvid.com/videos/resolve-token", {"header": header, "raw_post_data": True}, json_dumps({"token": token, "hash": videoHash}))
+        if not sts or "#EXTM3U" not in playlist:
+            return []
+        path = GetTmpDir("loadvid_%s.m3u8" % re.sub(r"[^0-9A-Za-z]", "", videoHash))
+        try:
+            with open(path, "w") as f:
+                f.write(playlist)
+        except Exception:
+            printExc()
+            return []
+        meta.update({"iptv_proto": "m3u8", "iptv_buffering": "required"})
+        return [{"name": "HLS", "url": urlparser.decorateUrl(path, meta)}]
+
+    def parserUPLOAD18(self, baseUrl):  # add 071026
+        # upload18.org/play/index/<id>: the page names the HLS playlist in window.PLAYER_CONFIG ("m3u8", a helvid.com
+        # link without extension, signed for the client IP); the playlist is a media playlist with TS segments
+        printDBG("parserUPLOAD18 baseUrl[%s]" % baseUrl)
+        HTTP_HEADER = self.cm.getDefaultHeader(browser="chrome")
+        HTTP_HEADER["Referer"] = baseUrl.meta.get("Referer", "https://upload18.org/")
+        sts, data = self.cm.getPage(baseUrl, {"header": HTTP_HEADER})
+        if not sts:
+            return []
+        if "<title>Video not found" in data or "File was deleted" in data:
+            SetIPTVPlayerLastHostError(_("The video has been removed."))
+            return []
+        playlist = ph.search(data, re.compile(r"""window\.PLAYER_CONFIG\s*=\s*\{.*?["']m3u8["']\s*:\s*["']([^"']+)["']""", re.S))[0]
+        if not playlist:
+            return []
+        playlist = playlist.replace("\\/", "/").replace("\\u0026", "&")
+        # the segments have no file extension (helvid.com/s/<hex>?...): exteplayer3's ffmpeg refuses them ("Invalid data
+        # found when processing input", box log 10.2026), hlsdl fetches them -> buffer
+        meta = {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": "https://upload18.org/", "iptv_proto": "m3u8", "iptv_buffering": "required"}
+        return [{"name": "HLS", "url": urlparser.decorateUrl(playlist, meta)}]
+
     def parserJWPLAYER(self, baseUrl):  # update 170126
         def jw_hidden(html, url):
             domain = urlparser.getDomain(url, False)[:-1]
@@ -3520,7 +3593,7 @@ class pageParser(CaptchaHelper):
                 src = src.replace(r"\/", "/")
                 subTracks.append({"title": "", "url": "https:" + src if src.startswith("//") else src, "lang": label})
         if url:
-            url = url.group(1)
+            url = url.group(1).replace("&amp;", "&")  # fix 071026: <source src="...?md5=..&amp;expires=.."> (luvstream.cc)
             url = "https:" + url if url.startswith("//") else url
             url = urlparser.decorateUrl(url, {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": host, "Origin": host[:-1], "external_sub_tracks": subTracks})
             # fix 041026: StreamHG HLS and the same CDN family (*.acek-cdn.com, *.premilkyway.com, *.cdn-centaurus.com:
