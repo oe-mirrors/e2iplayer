@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-04 21:08+0000\n"
+"POT-Creation-Date: 2026-10-07 21:05+0000\n"
 "PO-Revision-Date: 2026-02-02 21:43+0100\n"
 "Last-Translator: Snoete\n"
 "Language-Team: \n"
@@ -106,6 +106,14 @@ msgstr "%s - zender overzicht"
 #, python-format
 msgid "%s - subtitles provider"
 msgstr "%s - ondertitel provider"
+
+#, python-format
+msgid "%s blocks the connection of the receiver (HTTP 403). It only plays with curl-impersonate installed on the receiver - otherwise please choose another server."
+msgstr ""
+
+#, python-format
+msgid "%s blocks the connection of the receiver (HTTP 403). Please choose another server."
+msgstr ""
 
 #, fuzzy, python-format
 msgid "%s buffering..."
@@ -222,9 +230,6 @@ msgstr "++"
 
 msgid "--"
 msgstr "--"
-
-msgid "-- OK --"
-msgstr "-- OK --"
 
 msgid "----- BASIC CONFIGURATION -----"
 msgstr "----- BASIS -----"
@@ -578,6 +583,14 @@ msgstr "Bekeken markering toestaan"
 msgid "Alphabetically"
 msgstr "Alfabetisch"
 
+#, python-format
+msgid "Also use the accounts of X-Streamity (%s)"
+msgstr ""
+
+#, python-format
+msgid "Also use the portals of EStalker (%s)"
+msgstr ""
+
 msgid "AltGr"
 msgstr ""
 
@@ -616,6 +629,9 @@ msgstr "Het laden van de ondertiteling van [%s] is mislukt."
 #, python-format
 msgid "An error occurred while writing into: %s"
 msgstr "Het schrijven naar: %s is mislukt"
+
+msgid "An opensubtitles.com account (login and password in the E2iPlayer settings) raises the limit."
+msgstr ""
 
 msgid "Anatomy"
 msgstr "Anatomie"
@@ -882,9 +898,6 @@ msgstr "Podcasts"
 msgid "Browse by genre"
 msgstr ""
 
-msgid "Browse videos"
-msgstr "Door video's bladeren"
-
 msgid "Browse youtube trending feeds"
 msgstr "YouTube trending feeds bekijken"
 
@@ -900,9 +913,6 @@ msgstr ""
 #, python-format
 msgid "By %s"
 msgstr ""
-
-msgid "Bypass geo-blocking for VODs (it may be illegal):"
-msgstr "Geo-blocking omzeilen voor Video On Demand (kan illegaal zijn):"
 
 msgid "CME SAE"
 msgstr "CME SAE"
@@ -1467,6 +1477,9 @@ msgstr "Developers:"
 msgid "Digital programmes"
 msgstr ""
 
+msgid "Direct"
+msgstr ""
+
 #, fuzzy
 msgid "Director:"
 msgstr "Regisseurs"
@@ -1561,10 +1574,6 @@ msgstr ""
 
 msgid "Download"
 msgstr "Download"
-
-#, python-format
-msgid "Download \"%s\" in to \"%s\" failed!"
-msgstr "Download \"%s\" naar \"%s\" mislukt!"
 
 #, python-format
 msgid "Download (ready in %d seconds)"
@@ -1819,9 +1828,6 @@ msgstr "Educatieve Animatie"
 msgid "Egyptian series"
 msgstr ""
 
-msgid "Email"
-msgstr "Email"
-
 msgid "Empty title is not allowed."
 msgstr ""
 
@@ -1901,13 +1907,6 @@ msgstr "Nieuwe PIN invoeren"
 msgid "Enter old pin"
 msgstr "Oude PIN invoeren"
 
-#, fuzzy
-msgid "Enter page number"
-msgstr "Voer een waarde in"
-
-msgid "Enter page number (MAX PAGE: {})"
-msgstr ""
-
 msgid "Enter pin"
 msgstr "PIN invoeren"
 
@@ -1962,9 +1961,6 @@ msgid ""
 msgstr ""
 "Foutcode: %s\n"
 "Foutmelding: %s"
-
-msgid "Error communicating with the server."
-msgstr "Verbinden met de server mislukt."
 
 #, fuzzy
 msgid "Error deleting favorite item."
@@ -2033,6 +2029,12 @@ msgstr "Fout tijdens schrijven bestand \"%s\".\n"
 msgid "Ethical & Legal"
 msgstr "Ethisch & juridisch"
 
+msgid "European movies"
+msgstr ""
+
+msgid "Events"
+msgstr ""
+
 msgid "Every enabled site: does the menu open, does a list show videos? Takes a few minutes."
 msgstr ""
 
@@ -2041,6 +2043,9 @@ msgstr "Examenbeoordeling"
 
 msgid "Exception occurs"
 msgstr "Uitzondering"
+
+msgid "Exclusive"
+msgstr ""
 
 msgid "Exit"
 msgstr "Afsluiten"
@@ -2333,6 +2338,9 @@ msgstr "Interne Skin forceren"
 msgid "Foreign movies"
 msgstr ""
 
+msgid "Foreign parts only"
+msgstr ""
+
 msgid "Foreign series"
 msgstr ""
 
@@ -2344,9 +2352,6 @@ msgstr ""
 
 msgid "Fotka.pl stream :"
 msgstr ""
-
-msgid "Free"
-msgstr "Vrij"
 
 msgid "Free IPTV list"
 msgstr "Gratis IPTV overzicht"
@@ -2557,6 +2562,10 @@ msgid "Host"
 msgstr ""
 
 #, python-format
+msgid "Host: %s"
+msgstr ""
+
+#, python-format
 msgid "Hosting \"%s\" not supported."
 msgstr "Hosten van \"%s\" wordt niet ondersteund."
 
@@ -2618,6 +2627,9 @@ msgstr ""
 
 msgid "INTERRUPTED"
 msgstr "ONDERBROKEN"
+
+msgid "IPTV Portals"
+msgstr ""
 
 msgid "Icon type"
 msgstr "Icon type"
@@ -2858,9 +2870,6 @@ msgstr ""
 msgid "Korean movies"
 msgstr ""
 
-msgid "LATEST"
-msgstr "ACTUEEL"
-
 msgid "LEFT/RIGHT at start/end of text - alternative way to switch panels"
 msgstr ""
 
@@ -2884,6 +2893,10 @@ msgstr "Laatste Exception error: \"%s\""
 #, python-format
 msgid "Last Exception error: '%s'"
 msgstr "Laatste Exception error: '%s'"
+
+#, python-format
+msgid "Last Modified: %s"
+msgstr ""
 
 #, fuzzy
 msgid "Last air date:"
@@ -3141,20 +3154,11 @@ msgstr ""
 msgid "Log"
 msgstr "Log-bestanden"
 
-msgid "Login"
-msgstr "Inloggen"
-
 msgid "Login failed!"
 msgstr "Aanmelden mislukt!"
 
 msgid "Login failed."
 msgstr "Aanmelden mislukt."
-
-msgid "Login failed. Invalid email or password."
-msgstr "Aanmelden mislukt. Ongeldige email of wachtwoord."
-
-msgid "Login needed"
-msgstr "Aanmelden noodzakelijk"
 
 #, python-brace-format
 msgid "Login on {0} failed."
@@ -3526,9 +3530,6 @@ msgstr "Geen netwerkverbinding %s."
 msgid "New"
 msgstr "Nieuw"
 
-msgid "New cartoon"
-msgstr "Nieuwe cartoons"
-
 msgid "New dir"
 msgstr "Nieuwe map"
 
@@ -3564,9 +3565,6 @@ msgstr "Nieuws"
 msgid "News (tagesschau)"
 msgstr ""
 
-msgid "News Feed"
-msgstr "Nieuws Feed"
-
 msgid "News Poland"
 msgstr ""
 
@@ -3580,6 +3578,9 @@ msgid "No"
 msgstr "Nee"
 
 msgid "No YouTube video found for this track."
+msgstr ""
+
+msgid "No channels with an archive on this portal."
 msgstr ""
 
 #, fuzzy
@@ -3621,6 +3622,9 @@ msgid "No problems occurred."
 msgstr ""
 
 msgid "No programme guide for this channel."
+msgstr ""
+
+msgid "No recorded programmes on this day."
 msgstr ""
 
 msgid "No replays in these days"
@@ -3783,6 +3787,17 @@ msgstr ""
 msgid "Open this page in the chosen browser"
 msgstr ""
 
+#, python-format
+msgid "OpenSubtitles.com login failed for user \"%s\". Please check your login and password."
+msgstr ""
+
+msgid "OpenSubtitles.com needs an API key. Create a free API consumer at https://www.opensubtitles.com/consumers and enter its key in the E2iPlayer settings (Subtitles)."
+msgstr ""
+
+#, python-format
+msgid "OpenSubtitles.com rejected the request (HTTP %s). Please check the API key in the E2iPlayer settings."
+msgstr ""
+
 msgid "OpenSubtitles.org sent a \"become VIP member\" note instead of the subtitle (download limit reached?)."
 msgstr ""
 
@@ -3891,9 +3906,6 @@ msgstr ""
 msgid "Partial file - transfer ended early."
 msgstr ""
 
-msgid "Password"
-msgstr "Wachtwoord"
-
 msgid "Password:"
 msgstr "Wachtwoord:"
 
@@ -3991,6 +4003,9 @@ msgstr ""
 
 msgid "Please configure Xtream (blue button)"
 msgstr "A.u.b. Xtream configureren (Blauwe knop)"
+
+msgid "Please configure the Stalker portal (blue button)"
+msgstr ""
 
 #, python-format
 msgid "Please consider restart your Engima2 and agree to install the %s utlity when the %s will propose this."
@@ -4103,6 +4118,26 @@ msgstr ""
 msgid "Pornstars"
 msgstr "Meer resultaten"
 
+#, python-format
+msgid "Portal %d - %s (optional, from the MAG box):"
+msgstr ""
+
+#, python-format
+msgid "Portal %d - MAC address (00:1A:79:...):"
+msgstr ""
+
+#, python-format
+msgid "Portal %d - name (optional):"
+msgstr ""
+
+#, python-format
+msgid "Portal %d - portal URL (http://host:port/c/):"
+msgstr ""
+
+#, python-format
+msgid "Portal URL and MAC address in the host configuration, as the provider gives them out. More portals: %s in the EStalker format (portal URL, then its MAC addresses, one per line)."
+msgstr ""
+
 msgid "Portuguese"
 msgstr ""
 
@@ -4132,9 +4167,6 @@ msgstr "Premium"
 
 msgid "Premium user"
 msgstr "Premium gebruiker"
-
-msgid "Preview"
-msgstr "Preview"
 
 msgid "Previous Page"
 msgstr "Vorige pagina"
@@ -4192,6 +4224,9 @@ msgstr "Pools"
 msgid "Python modules"
 msgstr ""
 
+msgid "Python was not found on the receiver."
+msgstr ""
+
 msgid "Quality"
 msgstr ""
 
@@ -4206,9 +4241,6 @@ msgstr "RAM-buffergrootte [MB] voor lokale bestanden"
 
 msgid "RAM buffer size [MB] for network protocols"
 msgstr "RAM-buffergrootte [MB] voor netwerk protocollen"
-
-msgid "RECENT"
-msgstr "RECENT"
 
 #, fuzzy
 msgid "RED"
@@ -4499,9 +4531,6 @@ msgid ""
 "%s"
 msgstr ""
 
-msgid "Schedule"
-msgstr "Schema"
-
 msgid "Sci-Fi"
 msgstr ""
 
@@ -4747,7 +4776,8 @@ msgstr "Server antwoord 404 - Not Found."
 msgid "Server returned nothing."
 msgstr "Server antwoord 404 - Not Found."
 
-msgid "Server, user name and password in the host configuration. The server field also takes a get.php link."
+#, python-format
+msgid "Server, user name and password in the host configuration. The server field also takes a get.php link. More accounts: %s with one get.php link per line (X-Streamity format)."
 msgstr ""
 
 #, python-format
@@ -4803,6 +4833,9 @@ msgstr ""
 msgid "Short Movies"
 msgstr "Korte films"
 
+msgid "Short series"
+msgstr ""
+
 msgid "Shorts"
 msgstr "Shorts"
 
@@ -4839,6 +4872,9 @@ msgstr "Profielen in ZBIORNIK MINI tonen:"
 
 msgid "Show Youtube Api Key warnings"
 msgstr "Youtube Api Key waarschuwingen tonen"
+
+msgid "Show adult content"
+msgstr ""
 
 msgid "Show all channels"
 msgstr "Alle zenders tonen"
@@ -4984,14 +5020,8 @@ msgstr "Sorteer op:"
 msgid "Sort alphabetically"
 msgstr "Alfabetisch sorteren"
 
-msgid "Sort by alphabet"
-msgstr "Sorteer op alfabet"
-
 msgid "Sort by name"
 msgstr "Sorteer op naam"
-
-msgid "Sort by popularity"
-msgstr "Sorteer of populariteit"
 
 msgid "Sort by:"
 msgstr "Sorteer op:"
@@ -5019,9 +5049,6 @@ msgstr ""
 
 msgid "Spanish"
 msgstr ""
-
-msgid "Specialities"
-msgstr "Specialiteiten"
 
 msgid "Specials"
 msgstr ""
@@ -5095,6 +5122,9 @@ msgid "Stream link"
 msgstr "Kies een link"
 
 msgid "Streamed"
+msgstr ""
+
+msgid "Streaming platforms"
 msgstr ""
 
 #, fuzzy
@@ -5371,7 +5401,13 @@ msgstr ""
 msgid "The OpenSubtitles v3 server did not answer. Please try again later."
 msgstr ""
 
+msgid "The OpenSubtitles.com server did not answer. Please try again later."
+msgstr ""
+
 msgid "The QR code leads to the wiki page with pictures and the extension download."
+msgstr ""
+
+msgid "The Stalker portal of this entry is not configured (any more)."
 msgstr ""
 
 msgid "The Xtream account of this entry is not configured (any more)."
@@ -5417,6 +5453,9 @@ msgstr "De kleur van het bekeken item"
 msgid "The connection limit for your weeb.tv account has been reached."
 msgstr ""
 
+msgid "The daily download limit is reached."
+msgstr ""
+
 msgid "The data is too large."
 msgstr ""
 
@@ -5452,6 +5491,13 @@ msgstr "Hetzelfde item bestaat al in deze groep."
 msgid "The feed of these channels could not be read - press OK to try again."
 msgstr ""
 
+msgid "The helper process ended unexpectedly."
+msgstr ""
+
+#, python-format
+msgid "The helper script %s is missing."
+msgstr ""
+
 #, python-format
 msgid "The host \"%s\" cannot be used from the web interface (disabled, unknown or protected by PIN)."
 msgstr ""
@@ -5462,14 +5508,6 @@ msgid ""
 "Please fill your login and password in the host configuration. Available under blue button."
 msgstr ""
 "Voor de host %s is registratie verplicht. \n"
-"A.u.b. uw gebruikersnaam en wachtwoord in de host configuratie invullen. Beschikbaar onder de blauwe knop."
-
-#, python-format
-msgid ""
-"The host %s requires subscription.\n"
-"Please fill your login and password in the host configuration - available under blue button."
-msgstr ""
-"Voor de host %s is een subscriptie verplicht. \n"
 "A.u.b. uw gebruikersnaam en wachtwoord in de host configuratie invullen. Beschikbaar onder de blauwe knop."
 
 msgid "The host asks for a captcha. It can only be solved on the receiver (or with MyE2i there)."
@@ -5515,6 +5553,9 @@ msgstr ""
 "De afspeel buffer is verplaatst naar de download manager.\n"
 "En zal worden bewaard in het bestand:\n"
 "\"%s\""
+
+msgid "The portal did not hand out a link for this entry."
+msgstr ""
 
 msgid "The recordings of this page were on the site's old media server, which is offline."
 msgstr ""
@@ -5601,6 +5642,12 @@ msgstr "Er is niet genoeg ruimte op de schijf [%s]."
 msgid "There is no hosts in this group."
 msgstr "Er zijn geen hosts in deze groep."
 
+#, python-format
+msgid ""
+"There is no storage device under \"%s\" (%s free). E2iPlayer will switch this folder back to \"%s\" at the next start.\n"
+"Please choose a folder on a mounted HDD or USB stick."
+msgstr ""
+
 msgid "This article has no free video."
 msgstr ""
 
@@ -5640,6 +5687,9 @@ msgstr "Er zijn geen andere groepen met favorieten"
 #, fuzzy
 msgid "This entry cannot be opened."
 msgstr "Programma \"%s\" is niet gevonden."
+
+msgid "This entry is only an advert, there is no video."
+msgstr ""
 
 msgid "This episode is not available in this version (SUB/DUB) on this server. Try another one."
 msgstr ""
@@ -5959,16 +6009,9 @@ msgstr "Dit is niet mogelijk. De zoekgeschiedenis is leeg."
 msgid "Unfix jump target"
 msgstr ""
 
-msgid "Unknow data in the captcha item!"
-msgstr "Onbekende data in het captcha item!"
-
 #, fuzzy
 msgid "Unknown action."
 msgstr "Onbekende fout."
-
-#, python-format
-msgid "Unknown captcha form! Data: \"%s\""
-msgstr "Onbekend captcha formaat! Data: \"%s\""
 
 #, fuzzy
 msgid "Unknown error code."
@@ -6050,9 +6093,6 @@ msgstr "Gebruik default video kwaliteit"
 msgid "Use default video quality:"
 msgstr "Gebruik default video kwaliteit:"
 
-msgid "Use links cache"
-msgstr "Gebruik cache voor links"
-
 #, fuzzy
 msgid "Use login"
 msgstr "aanmelden"
@@ -6119,10 +6159,6 @@ msgstr ""
 msgid "User-Links: %d"
 msgstr "Mijn links"
 
-#, python-format
-msgid "Username in settings is different from %s"
-msgstr "Gebruikersnaam in de instellingen wijkt af van %s"
-
 msgid "Username/password authentication failure."
 msgstr ""
 
@@ -6131,13 +6167,6 @@ msgstr "Gebruikersnaam:"
 
 msgid "Users"
 msgstr ""
-
-msgid ""
-"Using this host in your country can be illegal.\n"
-"Do you want to continue at your own risk?"
-msgstr ""
-"In uw land is het gebruiken van deze host mogelijk illegaal.\n"
-"Wilt u doorgaan op uw eigen risico?"
 
 #, python-format
 msgid "Utility \"%s\" can not be found."
@@ -6153,6 +6182,10 @@ msgid "Verify"
 msgstr "Verifiëren"
 
 msgid "Version"
+msgstr ""
+
+#, python-format
+msgid "Version: %s"
 msgstr ""
 
 msgid "Video"
@@ -6192,10 +6225,6 @@ msgstr "Video's"
 #, fuzzy, python-format
 msgid "Videos %s"
 msgstr "video's: %s"
-
-#, python-format
-msgid "Videos count: %s"
-msgstr "Aantal video's: %s"
 
 msgid "Videos you have liked."
 msgstr ""
@@ -6253,6 +6282,9 @@ msgstr "Zoek geschiedenis"
 msgid "Watch later"
 msgstr "Kijken"
 
+msgid "Watch online"
+msgstr ""
+
 msgid "Western"
 msgstr ""
 
@@ -6301,9 +6333,6 @@ msgstr "Forum beoordeling"
 
 msgid "Wrong Youtube Api Key length"
 msgstr "Verkeerde lengte van de Youtube Api Key"
-
-msgid "Wrong answer."
-msgstr "Verkeerde antwoord."
 
 msgid "Wrong captcha code."
 msgstr ""
@@ -6551,6 +6580,10 @@ msgstr ""
 msgid "could not run the probe"
 msgstr ""
 
+#, python-format
+msgid "curl-impersonate is not installed on the receiver (%s). This stream only plays with it."
+msgstr ""
+
 msgid "debug"
 msgstr ""
 
@@ -6564,6 +6597,12 @@ msgstr "Zoek geschiedenis verwijderen"
 #, fuzzy
 msgid "delete the selected entry"
 msgstr "Kies de map"
+
+msgid "device ID"
+msgstr ""
+
+msgid "device ID 2"
+msgstr ""
 
 msgid "direct link"
 msgstr "directe link"
@@ -6898,6 +6937,9 @@ msgstr "seconden"
 msgid "select to sign out"
 msgstr "Kies een groep"
 
+msgid "serial number"
+msgstr ""
+
 msgid "show more details about the selected item"
 msgstr ""
 
@@ -6905,6 +6947,9 @@ msgid "show this help"
 msgstr ""
 
 msgid "sign in (subscriptions, playlists, age-restricted videos)"
+msgstr ""
+
+msgid "signature"
 msgstr ""
 
 msgid "signed in"
