@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-04 21:08+0000\n"
+"POT-Creation-Date: 2026-10-07 21:05+0000\n"
 "PO-Revision-Date: 2026-10-05 01:16+0300\n"
 "Last-Translator: \n"
 "Language-Team: giorbak\n"
@@ -107,6 +107,14 @@ msgstr "%s - επισκόπηση υπηρεσίας"
 #, python-format
 msgid "%s - subtitles provider"
 msgstr "%s - πάροχος υποτίτλων"
+
+#, python-format
+msgid "%s blocks the connection of the receiver (HTTP 403). It only plays with curl-impersonate installed on the receiver - otherwise please choose another server."
+msgstr ""
+
+#, python-format
+msgid "%s blocks the connection of the receiver (HTTP 403). Please choose another server."
+msgstr ""
 
 #, python-format
 msgid "%s buffering..."
@@ -222,9 +230,6 @@ msgstr "++"
 
 msgid "--"
 msgstr "--"
-
-msgid "-- OK --"
-msgstr "-- ΕΝΤΑΞΕΙ --"
 
 msgid "----- BASIC CONFIGURATION -----"
 msgstr "----- ΒΑΣΙΚΕΣ ΡΥΘΜΙΣΕΙΣ -----"
@@ -558,6 +563,14 @@ msgstr "Επιτρέπεται η ρύθμιση της ένδειξης προ�
 msgid "Alphabetically"
 msgstr "Αλφαβητικά"
 
+#, python-format
+msgid "Also use the accounts of X-Streamity (%s)"
+msgstr ""
+
+#, python-format
+msgid "Also use the portals of EStalker (%s)"
+msgstr ""
+
 msgid "AltGr"
 msgstr "AltGr"
 
@@ -592,6 +605,9 @@ msgstr "Προέκυψε σφάλμα κατά τη φόρτωση υποτίτ�
 #, python-format
 msgid "An error occurred while writing into: %s"
 msgstr "Προέκυψε σφάλμα κατά την εγγραφή στο: %s"
+
+msgid "An opensubtitles.com account (login and password in the E2iPlayer settings) raises the limit."
+msgstr ""
 
 msgid "Anatomy"
 msgstr "Ανατομία"
@@ -853,9 +869,6 @@ msgstr "Μετάδοση:"
 msgid "Browse by genre"
 msgstr "Περιήγηση κατά είδος"
 
-msgid "Browse videos"
-msgstr "Περιήγηση βίντεο"
-
 msgid "Browse youtube trending feeds"
 msgstr "Περιήγηση στις δημοφιλείς ροές του youtube"
 
@@ -871,9 +884,6 @@ msgstr "Επιχειρήσεις"
 #, python-format
 msgid "By %s"
 msgstr "Από %s"
-
-msgid "Bypass geo-blocking for VODs (it may be illegal):"
-msgstr "Παράκαμψη γεω-αποκλεισμού για VOD (μπορεί να είναι παράνομο):"
 
 msgid "CME SAE"
 msgstr "CME SAE"
@@ -1409,6 +1419,9 @@ msgstr "Προγραμματιστές:"
 msgid "Digital programmes"
 msgstr "Ψηφιακά προγράμματα"
 
+msgid "Direct"
+msgstr ""
+
 msgid "Director:"
 msgstr "Σκηνοθέτης:"
 
@@ -1497,10 +1510,6 @@ msgstr "Ολοκληρώθηκε - το αποτέλεσμα στάλθηκε σ
 
 msgid "Download"
 msgstr "Λήψη"
-
-#, python-format
-msgid "Download \"%s\" in to \"%s\" failed!"
-msgstr "Αποτυχία λήψης \"%s\" στο \"%s\"!"
 
 #, python-format
 msgid "Download (ready in %d seconds)"
@@ -1739,9 +1748,6 @@ msgstr "Εκπαιδευτικό κινούμενο σχέδιο"
 msgid "Egyptian series"
 msgstr "Αιγυπτιακές σειρές"
 
-msgid "Email"
-msgstr "Email"
-
 msgid "Empty title is not allowed."
 msgstr "Δεν επιτρέπεται κενός τίτλος."
 
@@ -1818,12 +1824,6 @@ msgstr "Εισαγωγή νέου pin"
 msgid "Enter old pin"
 msgstr "Εισαγωγή παλαιού pin"
 
-msgid "Enter page number"
-msgstr "Εισαγωγή αριθμού σελίδας"
-
-msgid "Enter page number (MAX PAGE: {})"
-msgstr "Εισαγωγή αριθμού σελίδας (ΜΕΓΙΣΤΗ ΣΕΛΙΔΑ: {})"
-
 msgid "Enter pin"
 msgstr "Εισαγωγή pin"
 
@@ -1877,9 +1877,6 @@ msgid ""
 msgstr ""
 "Κωδικός σφάλματος: %s\n"
 "Μήνυμα σφάλματος: %s"
-
-msgid "Error communicating with the server."
-msgstr "Σφάλμα επικοινωνίας με τον διακομιστή."
 
 msgid "Error deleting favorite item."
 msgstr "Σφάλμα διαγραφής στοιχείου αγαπημένων."
@@ -1943,6 +1940,12 @@ msgstr "Σφάλμα εγγραφής του αρχείου \"%s\".\n"
 msgid "Ethical & Legal"
 msgstr "Ηθικά & Νομικά"
 
+msgid "European movies"
+msgstr ""
+
+msgid "Events"
+msgstr ""
+
 msgid "Every enabled site: does the menu open, does a list show videos? Takes a few minutes."
 msgstr "Κάθε ενεργοποιημένο ιστότοπο: ανοίγει το μενού, εμφανίζεται λίστα με βίντεο; Χρειάζονται λίγα λεπτά."
 
@@ -1951,6 +1954,9 @@ msgstr "Ανασκόπηση εξετάσεων"
 
 msgid "Exception occurs"
 msgstr "Παρουσιάστηκε εξαίρεση"
+
+msgid "Exclusive"
+msgstr ""
 
 msgid "Exit"
 msgstr "Έξοδος"
@@ -2230,6 +2236,9 @@ msgstr "Επιβολή εσωτερικού θέματος: μόνο η κύρι
 msgid "Foreign movies"
 msgstr "Ξένες ταινίες"
 
+msgid "Foreign parts only"
+msgstr ""
+
 msgid "Foreign series"
 msgstr "Ξένες σειρές"
 
@@ -2241,9 +2250,6 @@ msgstr "Σχηματισμοί"
 
 msgid "Fotka.pl stream :"
 msgstr "Ροή Fotka.pl:"
-
-msgid "Free"
-msgstr "Δωρεάν"
 
 msgid "Free IPTV list"
 msgstr "Δωρεάν λίστα IPTV"
@@ -2442,6 +2448,10 @@ msgid "Host"
 msgstr "Host"
 
 #, python-format
+msgid "Host: %s"
+msgstr ""
+
+#, python-format
 msgid "Hosting \"%s\" not supported."
 msgstr "Ο hosting \"%s\" δεν υποστηρίζεται."
 
@@ -2501,6 +2511,9 @@ msgstr "Παράθυρο INFO"
 
 msgid "INTERRUPTED"
 msgstr "ΔΙΑΚΟΠΗΚΕ"
+
+msgid "IPTV Portals"
+msgstr ""
 
 msgid "Icon type"
 msgstr "Τύπος εικονιδίου"
@@ -2736,9 +2749,6 @@ msgstr "Κορεατικές ταινίες"
 msgid "Korean movies"
 msgstr "Κορεατικές ταινίες"
 
-msgid "LATEST"
-msgstr "ΤΕΛΕΥΤΑΙΑ"
-
 msgid "LEFT/RIGHT at start/end of text - alternative way to switch panels"
 msgstr "LEFT/RIGHT στην αρχή/τέλος του κειμένου - εναλλακτικός τρόπος εναλλαγής πάνελ"
 
@@ -2761,6 +2771,10 @@ msgstr "Τελευταίο σφάλμα εξαίρεσης: \"%s\""
 #, python-format
 msgid "Last Exception error: '%s'"
 msgstr "Τελευταίο σφάλμα εξαίρεσης: '%s'"
+
+#, python-format
+msgid "Last Modified: %s"
+msgstr ""
 
 msgid "Last air date:"
 msgstr "Τελευταία ημερομηνία προβολής:"
@@ -3002,20 +3016,11 @@ msgstr "Το Lodynet προσφέρει προς το παρόν αυτό το �
 msgid "Log"
 msgstr "Καταγραφή"
 
-msgid "Login"
-msgstr "Σύνδεση"
-
 msgid "Login failed!"
 msgstr "Η σύνδεση απέτυχε!"
 
 msgid "Login failed."
 msgstr "Η σύνδεση απέτυχε."
-
-msgid "Login failed. Invalid email or password."
-msgstr "Η σύνδεση απέτυχε. Μη έγκυρο email ή κωδικός πρόσβασης."
-
-msgid "Login needed"
-msgstr "Απαιτείται σύνδεση"
 
 #, python-brace-format
 msgid "Login on {0} failed."
@@ -3367,9 +3372,6 @@ msgstr "Αποτυχία δικτύου."
 msgid "New"
 msgstr "Νέα"
 
-msgid "New cartoon"
-msgstr "Νέα κινούμενα σχέδια"
-
 msgid "New dir"
 msgstr "Νέος κατάλογος"
 
@@ -3403,9 +3405,6 @@ msgstr "Ειδήσεις"
 msgid "News (tagesschau)"
 msgstr "Ειδήσεις (tagesschau)"
 
-msgid "News Feed"
-msgstr "Ροή ειδήσεων"
-
 msgid "News Poland"
 msgstr "Ειδήσεις Πολωνίας"
 
@@ -3420,6 +3419,9 @@ msgstr "Όχι"
 
 msgid "No YouTube video found for this track."
 msgstr "Δεν βρέθηκε βίντεο στο YouTube για αυτό το κομμάτι."
+
+msgid "No channels with an archive on this portal."
+msgstr ""
 
 msgid "No description available."
 msgstr "Δεν υπάρχει διαθέσιμη περιγραφή."
@@ -3460,6 +3462,9 @@ msgstr "Δεν παρουσιάστηκαν προβλήματα."
 
 msgid "No programme guide for this channel."
 msgstr "Δεν υπάρχει οδηγός προγράμματος για αυτό το κανάλι."
+
+msgid "No recorded programmes on this day."
+msgstr ""
 
 msgid "No replays in these days"
 msgstr "Δεν υπάρχουν επαναλήψεις για αυτές τις ημέρες"
@@ -3615,6 +3620,17 @@ msgstr "Άνοιγμα αυτής της σελίδας στο %s"
 msgid "Open this page in the chosen browser"
 msgstr "Άνοιγμα αυτής της σελίδας στον επιλεγμένο περιηγητή"
 
+#, python-format
+msgid "OpenSubtitles.com login failed for user \"%s\". Please check your login and password."
+msgstr ""
+
+msgid "OpenSubtitles.com needs an API key. Create a free API consumer at https://www.opensubtitles.com/consumers and enter its key in the E2iPlayer settings (Subtitles)."
+msgstr ""
+
+#, python-format
+msgid "OpenSubtitles.com rejected the request (HTTP %s). Please check the API key in the E2iPlayer settings."
+msgstr ""
+
 msgid "OpenSubtitles.org sent a \"become VIP member\" note instead of the subtitle (download limit reached?)."
 msgstr "Το OpenSubtitles.org έστειλε μήνυμα \"γίνετε μέλος VIP\" αντί για τον υπότιτλο (συμπληρώθηκε το όριο λήψεων;)."
 
@@ -3716,9 +3732,6 @@ msgstr "Μέρος"
 msgid "Partial file - transfer ended early."
 msgstr "Μερικό αρχείο - η μεταφορά ολοκληρώθηκε πρόωρα."
 
-msgid "Password"
-msgstr "Κωδικός πρόσβασης"
-
 msgid "Password:"
 msgstr "Κωδικός πρόσβασης:"
 
@@ -3816,6 +3829,9 @@ msgstr ""
 
 msgid "Please configure Xtream (blue button)"
 msgstr "Παρακαλώ ρυθμίστε το Xtream (μπλε κουμπί)"
+
+msgid "Please configure the Stalker portal (blue button)"
+msgstr ""
 
 #, python-format
 msgid "Please consider restart your Engima2 and agree to install the %s utlity when the %s will propose this."
@@ -3924,6 +3940,26 @@ msgstr "Δημοτικότητα"
 msgid "Pornstars"
 msgstr "Πορνοστάρ"
 
+#, python-format
+msgid "Portal %d - %s (optional, from the MAG box):"
+msgstr ""
+
+#, python-format
+msgid "Portal %d - MAC address (00:1A:79:...):"
+msgstr ""
+
+#, python-format
+msgid "Portal %d - name (optional):"
+msgstr ""
+
+#, python-format
+msgid "Portal %d - portal URL (http://host:port/c/):"
+msgstr ""
+
+#, python-format
+msgid "Portal URL and MAC address in the host configuration, as the provider gives them out. More portals: %s in the EStalker format (portal URL, then its MAC addresses, one per line)."
+msgstr ""
+
 msgid "Portuguese"
 msgstr "Πορτογαλικά"
 
@@ -3953,9 +3989,6 @@ msgstr "Premium"
 
 msgid "Premium user"
 msgstr "Premium χρήστης"
-
-msgid "Preview"
-msgstr "Προεπισκόπηση"
 
 msgid "Previous Page"
 msgstr "Προηγούμενη σελίδα"
@@ -4011,6 +4044,9 @@ msgstr "Δημοσιεύθηκε"
 msgid "Python modules"
 msgstr "Μονάδες Python"
 
+msgid "Python was not found on the receiver."
+msgstr ""
+
 msgid "Quality"
 msgstr "Ποιότητα"
 
@@ -4025,9 +4061,6 @@ msgstr "Μέγεθος προσωρινής αποθήκευσης RAM [MB] γι
 
 msgid "RAM buffer size [MB] for network protocols"
 msgstr "Μέγεθος προσωρινής αποθήκευσης RAM [MB] για πρωτόκολλα δικτύου"
-
-msgid "RECENT"
-msgstr "ΠΡΟΣΦΑΤΑ"
 
 msgid "RED"
 msgstr "RED"
@@ -4305,9 +4338,6 @@ msgstr ""
 "Αποθηκεύτηκε στο:\n"
 "%s"
 
-msgid "Schedule"
-msgstr "Πρόγραμμα"
-
 msgid "Sci-Fi"
 msgstr "Sci-Fi"
 
@@ -4540,8 +4570,9 @@ msgstr "Ο διακομιστής επέστρεψε 404 - Δεν βρέθηκε
 msgid "Server returned nothing."
 msgstr "Ο διακομιστής δεν επέστρεψε τίποτα."
 
-msgid "Server, user name and password in the host configuration. The server field also takes a get.php link."
-msgstr "Διακομιστής, όνομα χρήστη και κωδικός πρόσβασης στις ρυθμίσεις του host. Το πεδίο διακομιστή δέχεται επίσης σύνδεσμο get.php."
+#, python-format
+msgid "Server, user name and password in the host configuration. The server field also takes a get.php link. More accounts: %s with one get.php link per line (X-Streamity format)."
+msgstr ""
 
 #, python-format
 msgid ""
@@ -4594,6 +4625,9 @@ msgstr "Shift"
 msgid "Short Movies"
 msgstr "Ταινίες μικρού μήκους"
 
+msgid "Short series"
+msgstr ""
+
 msgid "Shorts"
 msgstr "Σύντομα βίντεο"
 
@@ -4626,6 +4660,9 @@ msgstr "Εμφάνιση προφίλ στο ZBIORNIK MINI:"
 
 msgid "Show Youtube Api Key warnings"
 msgstr "Εμφάνιση προειδοποιήσεων κλειδιού Api Youtube"
+
+msgid "Show adult content"
+msgstr ""
 
 msgid "Show all channels"
 msgstr "Εμφάνιση όλων των καναλιών"
@@ -4763,14 +4800,8 @@ msgstr "Ταξινόμηση Z-A"
 msgid "Sort alphabetically"
 msgstr "Ταξινόμηση αλφαβητικά"
 
-msgid "Sort by alphabet"
-msgstr "Ταξινόμηση κατά αλφάβητο"
-
 msgid "Sort by name"
 msgstr "Ταξινόμηση κατά όνομα"
-
-msgid "Sort by popularity"
-msgstr "Ταξινόμηση κατά δημοτικότητα"
 
 msgid "Sort by:"
 msgstr "Ταξινόμηση κατά:"
@@ -4798,9 +4829,6 @@ msgstr "Πηγή:"
 
 msgid "Spanish"
 msgstr "Ισπανικά"
-
-msgid "Specialities"
-msgstr "Ειδικότητες"
 
 msgid "Specials"
 msgstr "Ειδικά"
@@ -4871,6 +4899,9 @@ msgstr "Σύνδεσμος ροής"
 
 msgid "Streamed"
 msgstr "Μεταδόθηκε"
+
+msgid "Streaming platforms"
+msgstr ""
 
 msgid "Studios"
 msgstr "Στούντιο"
@@ -5156,8 +5187,14 @@ msgstr ""
 msgid "The OpenSubtitles v3 server did not answer. Please try again later."
 msgstr "Ο διακομιστής OpenSubtitles v3 δεν απάντησε. Παρακαλώ δοκιμάστε ξανά αργότερα."
 
+msgid "The OpenSubtitles.com server did not answer. Please try again later."
+msgstr ""
+
 msgid "The QR code leads to the wiki page with pictures and the extension download."
 msgstr "Ο κωδικός QR οδηγεί στη σελίδα wiki με εικόνες και τη λήψη της επέκτασης."
+
+msgid "The Stalker portal of this entry is not configured (any more)."
+msgstr ""
 
 msgid "The Xtream account of this entry is not configured (any more)."
 msgstr "Ο λογαριασμός Xtream αυτής της καταχώρισης δεν είναι πλέον ρυθμισμένος."
@@ -5198,6 +5235,9 @@ msgstr "Χρώμα του προβαλλόμενου στοιχείου"
 msgid "The connection limit for your weeb.tv account has been reached."
 msgstr "Έχει επιτευχθεί το όριο συνδέσεων για τον λογαριασμό σας στο weeb.tv."
 
+msgid "The daily download limit is reached."
+msgstr ""
+
 msgid "The data is too large."
 msgstr "Τα δεδομένα είναι πολύ μεγάλα."
 
@@ -5237,6 +5277,13 @@ msgstr "Το στοιχείο υπάρχει ήδη στους συνδέσμο�
 msgid "The feed of these channels could not be read - press OK to try again."
 msgstr "Δεν ήταν δυνατή η ανάγνωση της ροής αυτών των καναλιών - πατήστε OK για να δοκιμάσετε ξανά."
 
+msgid "The helper process ended unexpectedly."
+msgstr ""
+
+#, python-format
+msgid "The helper script %s is missing."
+msgstr ""
+
 #, python-format
 msgid "The host \"%s\" cannot be used from the web interface (disabled, unknown or protected by PIN)."
 msgstr "Ο host \"%s\" δεν μπορεί να χρησιμοποιηθεί από το περιβάλλον ιστού (απενεργοποιημένο, άγνωστο ή προστατευμένο με PIN)."
@@ -5248,14 +5295,6 @@ msgid ""
 msgstr ""
 "Ο host %s απαιτεί εγγραφή.\n"
 "Παρακαλώ συμπληρώστε το όνομα χρήστη και τον κωδικό πρόσβασης στη ρύθμιση του host. Διαθέσιμο με το μπλε κουμπί."
-
-#, python-format
-msgid ""
-"The host %s requires subscription.\n"
-"Please fill your login and password in the host configuration - available under blue button."
-msgstr ""
-"Ο host %s απαιτεί συνδρομή.\n"
-"Παρακαλώ συμπληρώστε το όνομα χρήστη και τον κωδικό πρόσβασης στη ρύθμιση του host - διαθέσιμο με το μπλε κουμπί."
 
 msgid "The host asks for a captcha. It can only be solved on the receiver (or with MyE2i there)."
 msgstr "Ο host ζητά captcha. Μπορεί να λυθεί μόνο στον δέκτη (ή με το MyE2i εκεί)."
@@ -5298,6 +5337,9 @@ msgstr ""
 "Η προσωρινή αποθήκευση αναπαραγωγής έχει μεταφερθεί στη Διαχείριση λήψεων.\n"
 "Θα αποθηκευτεί στο αρχείο:\n"
 "\"%s\""
+
+msgid "The portal did not hand out a link for this entry."
+msgstr ""
 
 msgid "The recordings of this page were on the site's old media server, which is offline."
 msgstr "Οι εγγραφές αυτής της σελίδας βρίσκονταν στον παλιό διακομιστή πολυμέσων του ιστότοπου, ο οποίος είναι εκτός σύνδεσης."
@@ -5383,6 +5425,12 @@ msgstr "Δεν υπάρχει ελεύθερος χώρος στο δίσκο [%
 msgid "There is no hosts in this group."
 msgstr "Δεν υπάρχουν hosts σε αυτή την ομάδα."
 
+#, python-format
+msgid ""
+"There is no storage device under \"%s\" (%s free). E2iPlayer will switch this folder back to \"%s\" at the next start.\n"
+"Please choose a folder on a mounted HDD or USB stick."
+msgstr ""
+
 msgid "This article has no free video."
 msgstr "Αυτό το άρθρο δεν διαθέτει δωρεάν βίντεο."
 
@@ -5415,6 +5463,9 @@ msgstr "Αυτή η καταχώριση δεν μπορεί να προστεθ
 
 msgid "This entry cannot be opened."
 msgstr "Αυτή η καταχώριση δεν μπορεί να ανοίξει."
+
+msgid "This entry is only an advert, there is no video."
+msgstr ""
 
 msgid "This episode is not available in this version (SUB/DUB) on this server. Try another one."
 msgstr "Αυτό το επεισόδιο δεν είναι διαθέσιμο σε αυτή την έκδοση (SUB/DUB) σε αυτόν τον διακομιστή. Δοκιμάστε κάποιον άλλο."
@@ -5735,15 +5786,8 @@ msgstr "Αδυναμία συμμόρφωσης. Το ιστορικό αναζ�
 msgid "Unfix jump target"
 msgstr "Αναίρεση διόρθωσης προορισμού μετάβασης"
 
-msgid "Unknow data in the captcha item!"
-msgstr "Άγνωστα δεδομένα στο στοιχείο captcha!"
-
 msgid "Unknown action."
 msgstr "Άγνωστη ενέργεια."
-
-#, python-format
-msgid "Unknown captcha form! Data: \"%s\""
-msgstr "Άγνωστη φόρμα captcha! Δεδομένα: \"%s\""
 
 msgid "Unknown error code."
 msgstr "Άγνωστος κωδικός σφάλματος."
@@ -5822,9 +5866,6 @@ msgstr "Χρήση προεπιλεγμένης ποιότητας βίντεο"
 msgid "Use default video quality:"
 msgstr "Χρήση προεπιλεγμένης ποιότητας βίντεο:"
 
-msgid "Use links cache"
-msgstr "Χρήση προσωρινής μνήμης συνδέσμων"
-
 msgid "Use login"
 msgstr "Χρήση σύνδεσης"
 
@@ -5884,10 +5925,6 @@ msgstr "User-Agent (αφήστε κενό για την προεπιλογή):"
 msgid "User-Links: %d"
 msgstr "Σύνδεσμοι χρήστη: %d"
 
-#, python-format
-msgid "Username in settings is different from %s"
-msgstr "Το όνομα χρήστη στις ρυθμίσεις είναι διαφορετικό από το %s"
-
 msgid "Username/password authentication failure."
 msgstr "Αποτυχία ελέγχου ταυτότητας με όνομα χρήστη/κωδικό πρόσβασης."
 
@@ -5896,13 +5933,6 @@ msgstr "Όνομα χρήστη:"
 
 msgid "Users"
 msgstr "Χρήστες"
-
-msgid ""
-"Using this host in your country can be illegal.\n"
-"Do you want to continue at your own risk?"
-msgstr ""
-"Η χρήση αυτού του host στη χώρα σας μπορεί να είναι παράνομη.\n"
-"Θέλετε να συνεχίσετε με δική σας ευθύνη;"
 
 #, python-format
 msgid "Utility \"%s\" can not be found."
@@ -5919,6 +5949,10 @@ msgstr "Επαλήθευση"
 
 msgid "Version"
 msgstr "Έκδοση"
+
+#, python-format
+msgid "Version: %s"
+msgstr ""
 
 msgid "Video"
 msgstr "Βίντεο"
@@ -5956,10 +5990,6 @@ msgstr "Βίντεο"
 #, python-format
 msgid "Videos %s"
 msgstr "Βίντεο %s"
-
-#, python-format
-msgid "Videos count: %s"
-msgstr "Αριθμός βίντεο: %s"
 
 msgid "Videos you have liked."
 msgstr "Βίντεο που σας αρέσουν."
@@ -6015,6 +6045,9 @@ msgstr "Ιστορικό προβολής"
 msgid "Watch later"
 msgstr "Προβολή αργότερα"
 
+msgid "Watch online"
+msgstr ""
+
 msgid "Western"
 msgstr "Γουέστερν"
 
@@ -6062,9 +6095,6 @@ msgstr "Επιθεώρηση για εξετάσεις γραπτών δοκιμ
 
 msgid "Wrong Youtube Api Key length"
 msgstr "Λάθος μήκος κλειδιού Api Youtube"
-
-msgid "Wrong answer."
-msgstr "Λάθος απάντηση."
 
 msgid "Wrong captcha code."
 msgstr "Λανθασμένος κωδικός captcha."
@@ -6306,6 +6336,10 @@ msgstr "προσωρινή μνήμη cookies"
 msgid "could not run the probe"
 msgstr "δεν ήταν δυνατή η εκτέλεση του ελέγχου"
 
+#, python-format
+msgid "curl-impersonate is not installed on the receiver (%s). This stream only plays with it."
+msgstr ""
+
 msgid "debug"
 msgstr "εντοπισμός σφαλμάτων"
 
@@ -6317,6 +6351,12 @@ msgstr "διαγραφή του εισαγόμενου κειμένου"
 
 msgid "delete the selected entry"
 msgstr "διαγραφή της επιλεγμένης καταχώρισης"
+
+msgid "device ID"
+msgstr ""
+
+msgid "device ID 2"
+msgstr ""
 
 msgid "direct link"
 msgstr "απευθείας σύνδεσμος"
@@ -6631,6 +6671,9 @@ msgstr "δευτερόλεπτα"
 msgid "select to sign out"
 msgstr "επιλέξτε για αποσύνδεση"
 
+msgid "serial number"
+msgstr ""
+
 msgid "show more details about the selected item"
 msgstr "εμφάνιση περισσότερων λεπτομερειών για το επιλεγμένο στοιχείο"
 
@@ -6639,6 +6682,9 @@ msgstr "εμφάνιση αυτής της βοήθειας"
 
 msgid "sign in (subscriptions, playlists, age-restricted videos)"
 msgstr "σύνδεση (εγγραφές, λίστες αναπαραγωγής, βίντεο με περιορισμό ηλικίας)"
+
+msgid "signature"
+msgstr ""
 
 msgid "signed in"
 msgstr "σε σύνδεση"

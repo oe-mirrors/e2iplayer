@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-04 21:08+0000\n"
+"POT-Creation-Date: 2026-10-07 21:05+0000\n"
 "PO-Revision-Date: 2026-07-27 16:28+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -106,6 +106,14 @@ msgstr "%s - prehľad služieb"
 #, python-format
 msgid "%s - subtitles provider"
 msgstr "%s - poskytovateľ titulkov"
+
+#, python-format
+msgid "%s blocks the connection of the receiver (HTTP 403). It only plays with curl-impersonate installed on the receiver - otherwise please choose another server."
+msgstr ""
+
+#, python-format
+msgid "%s blocks the connection of the receiver (HTTP 403). Please choose another server."
+msgstr ""
 
 #, fuzzy, python-format
 msgid "%s buffering..."
@@ -222,9 +230,6 @@ msgstr "++"
 
 msgid "--"
 msgstr "--"
-
-msgid "-- OK --"
-msgstr "-- Dobre --"
 
 msgid "----- BASIC CONFIGURATION -----"
 msgstr "----- ZÁKLADNÁ KONFIGURÁCIA -----"
@@ -570,6 +575,14 @@ msgstr "Povoliť nastavenie sledovaného príznaku"
 msgid "Alphabetically"
 msgstr "Abecedne"
 
+#, python-format
+msgid "Also use the accounts of X-Streamity (%s)"
+msgstr ""
+
+#, python-format
+msgid "Also use the portals of EStalker (%s)"
+msgstr ""
+
 msgid "AltGr"
 msgstr ""
 
@@ -607,6 +620,9 @@ msgstr "Pri načítavaní titulkov z [%s] sa vyskytla chyba."
 #, python-format
 msgid "An error occurred while writing into: %s"
 msgstr "Pri zápise do: %s"
+
+msgid "An opensubtitles.com account (login and password in the E2iPlayer settings) raises the limit."
+msgstr ""
 
 msgid "Anatomy"
 msgstr "Anatómia"
@@ -872,9 +888,6 @@ msgstr "Vysielanie:"
 msgid "Browse by genre"
 msgstr ""
 
-msgid "Browse videos"
-msgstr "Prehliadanie videí"
-
 msgid "Browse youtube trending feeds"
 msgstr "Prehliadanie populárnych informačných kanálov na youtube"
 
@@ -890,9 +903,6 @@ msgstr ""
 #, python-format
 msgid "By %s"
 msgstr ""
-
-msgid "Bypass geo-blocking for VODs (it may be illegal):"
-msgstr "Obídenie geografického blokovania videí na vyžiadanie (môže byť nezákonné):"
 
 msgid "CME SAE"
 msgstr "CME SAE"
@@ -1453,6 +1463,9 @@ msgstr "Vývojári:"
 msgid "Digital programmes"
 msgstr ""
 
+msgid "Direct"
+msgstr ""
+
 msgid "Director:"
 msgstr "Režisér:"
 
@@ -1544,10 +1557,6 @@ msgstr ""
 
 msgid "Download"
 msgstr "Stiahnuť"
-
-#, python-format
-msgid "Download \"%s\" in to \"%s\" failed!"
-msgstr "Stiahnutie súboru „%s“ do „%s“ zlyhalo!"
 
 #, python-format
 msgid "Download (ready in %d seconds)"
@@ -1796,9 +1805,6 @@ msgstr "Vzdelávacia animácia"
 msgid "Egyptian series"
 msgstr ""
 
-msgid "Email"
-msgstr "E-mail"
-
 msgid "Empty title is not allowed."
 msgstr ""
 
@@ -1878,12 +1884,6 @@ msgstr "Zadajte nový PIN kód"
 msgid "Enter old pin"
 msgstr "Zadajte starý špendlík"
 
-msgid "Enter page number"
-msgstr "Zadajte číslo stránky"
-
-msgid "Enter page number (MAX PAGE: {})"
-msgstr "Zadajte číslo stránky (MAX. STRANA: {})"
-
 msgid "Enter pin"
 msgstr "Zadajte PIN kód"
 
@@ -1937,9 +1937,6 @@ msgid ""
 msgstr ""
 "Kód chyby: %s\n"
 "Chybové hlásenie: %s"
-
-msgid "Error communicating with the server."
-msgstr "Chyba pri komunikácii so serverom."
 
 msgid "Error deleting favorite item."
 msgstr "Chyba pri odstraňovaní obľúbenej položky."
@@ -2005,6 +2002,12 @@ msgstr "Chyba pri zápise súboru: %s\n"
 msgid "Ethical & Legal"
 msgstr "Etické a právne"
 
+msgid "European movies"
+msgstr ""
+
+msgid "Events"
+msgstr ""
+
 msgid "Every enabled site: does the menu open, does a list show videos? Takes a few minutes."
 msgstr ""
 
@@ -2013,6 +2016,9 @@ msgstr "Prehľad skúšky"
 
 msgid "Exception occurs"
 msgstr "Výnimka sa vyskytuje"
+
+msgid "Exclusive"
+msgstr ""
 
 msgid "Exit"
 msgstr "Ukončiť"
@@ -2300,6 +2306,9 @@ msgstr "Vynútiť vnútorný povrch"
 msgid "Foreign movies"
 msgstr ""
 
+msgid "Foreign parts only"
+msgstr ""
+
 msgid "Foreign series"
 msgstr ""
 
@@ -2311,9 +2320,6 @@ msgstr ""
 
 msgid "Fotka.pl stream :"
 msgstr "Fotka.pl stream :"
-
-msgid "Free"
-msgstr "Zadarmo"
 
 msgid "Free IPTV list"
 msgstr "Zoznam bezplatných IPTV"
@@ -2517,6 +2523,10 @@ msgid "Host"
 msgstr ""
 
 #, python-format
+msgid "Host: %s"
+msgstr ""
+
+#, python-format
 msgid "Hosting \"%s\" not supported."
 msgstr "Hosting \"%s\" nie je podporovaný."
 
@@ -2577,6 +2587,9 @@ msgstr ""
 
 msgid "INTERRUPTED"
 msgstr "PRERUŠENÉ"
+
+msgid "IPTV Portals"
+msgstr ""
 
 msgid "Icon type"
 msgstr "Typ ikony"
@@ -2818,9 +2831,6 @@ msgstr ""
 msgid "Korean movies"
 msgstr ""
 
-msgid "LATEST"
-msgstr "NAJNOVŠIE"
-
 msgid "LEFT/RIGHT at start/end of text - alternative way to switch panels"
 msgstr ""
 
@@ -2843,6 +2853,10 @@ msgstr "Posledná chyba výnimky: „%s“"
 #, python-format
 msgid "Last Exception error: '%s'"
 msgstr "Posledná chyba výnimky: '%s'"
+
+#, python-format
+msgid "Last Modified: %s"
+msgstr ""
 
 msgid "Last air date:"
 msgstr "Dátum posledného vysielania:"
@@ -3097,20 +3111,11 @@ msgstr ""
 msgid "Log"
 msgstr "Logy"
 
-msgid "Login"
-msgstr "Prihlásenie"
-
 msgid "Login failed!"
 msgstr "Prihlásenie zlyhalo!"
 
 msgid "Login failed."
 msgstr "Prihlásenie zlyhalo."
-
-msgid "Login failed. Invalid email or password."
-msgstr "Prihlásenie zlyhalo. Neplatný e-mail alebo heslo."
-
-msgid "Login needed"
-msgstr "Je vyžadované prihlásenie"
 
 #, python-brace-format
 msgid "Login on {0} failed."
@@ -3482,9 +3487,6 @@ msgstr "Sieť zlyhala %s."
 msgid "New"
 msgstr "Nový"
 
-msgid "New cartoon"
-msgstr "Nový kreslený film"
-
 msgid "New dir"
 msgstr "Nový adresár"
 
@@ -3520,9 +3522,6 @@ msgstr "Aktuality"
 msgid "News (tagesschau)"
 msgstr ""
 
-msgid "News Feed"
-msgstr "Novinky"
-
 msgid "News Poland"
 msgstr ""
 
@@ -3536,6 +3535,9 @@ msgid "No"
 msgstr "Nie"
 
 msgid "No YouTube video found for this track."
+msgstr ""
+
+msgid "No channels with an archive on this portal."
 msgstr ""
 
 #, fuzzy
@@ -3577,6 +3579,9 @@ msgid "No problems occurred."
 msgstr ""
 
 msgid "No programme guide for this channel."
+msgstr ""
+
+msgid "No recorded programmes on this day."
 msgstr ""
 
 msgid "No replays in these days"
@@ -3739,6 +3744,17 @@ msgstr ""
 msgid "Open this page in the chosen browser"
 msgstr ""
 
+#, python-format
+msgid "OpenSubtitles.com login failed for user \"%s\". Please check your login and password."
+msgstr ""
+
+msgid "OpenSubtitles.com needs an API key. Create a free API consumer at https://www.opensubtitles.com/consumers and enter its key in the E2iPlayer settings (Subtitles)."
+msgstr ""
+
+#, python-format
+msgid "OpenSubtitles.com rejected the request (HTTP %s). Please check the API key in the E2iPlayer settings."
+msgstr ""
+
 msgid "OpenSubtitles.org sent a \"become VIP member\" note instead of the subtitle (download limit reached?)."
 msgstr ""
 
@@ -3847,9 +3863,6 @@ msgstr ""
 msgid "Partial file - transfer ended early."
 msgstr ""
 
-msgid "Password"
-msgstr "Heslo"
-
 msgid "Password:"
 msgstr "Heslo:"
 
@@ -3947,6 +3960,9 @@ msgstr ""
 
 msgid "Please configure Xtream (blue button)"
 msgstr "Prosím, nakonfigurujte Xtream (modré tlačidlo)"
+
+msgid "Please configure the Stalker portal (blue button)"
+msgstr ""
 
 #, python-format
 msgid "Please consider restart your Engima2 and agree to install the %s utlity when the %s will propose this."
@@ -4060,6 +4076,26 @@ msgstr ""
 msgid "Pornstars"
 msgstr "Viac pornohviezd"
 
+#, python-format
+msgid "Portal %d - %s (optional, from the MAG box):"
+msgstr ""
+
+#, python-format
+msgid "Portal %d - MAC address (00:1A:79:...):"
+msgstr ""
+
+#, python-format
+msgid "Portal %d - name (optional):"
+msgstr ""
+
+#, python-format
+msgid "Portal %d - portal URL (http://host:port/c/):"
+msgstr ""
+
+#, python-format
+msgid "Portal URL and MAC address in the host configuration, as the provider gives them out. More portals: %s in the EStalker format (portal URL, then its MAC addresses, one per line)."
+msgstr ""
+
 msgid "Portuguese"
 msgstr ""
 
@@ -4089,9 +4125,6 @@ msgstr "Premium"
 
 msgid "Premium user"
 msgstr "Prémiový používateľ"
-
-msgid "Preview"
-msgstr "Náhľad"
 
 msgid "Previous Page"
 msgstr "Predošlá stránka"
@@ -4148,6 +4181,9 @@ msgstr "Zverejnené"
 msgid "Python modules"
 msgstr ""
 
+msgid "Python was not found on the receiver."
+msgstr ""
+
 msgid "Quality"
 msgstr ""
 
@@ -4162,9 +4198,6 @@ msgstr "Veľkosť vyrovnávacej pamäte RAM [MB] pre lokálne súbory"
 
 msgid "RAM buffer size [MB] for network protocols"
 msgstr "Veľkosť vyrovnávacej pamäte RAM [MB] pre sieťové protokoly"
-
-msgid "RECENT"
-msgstr "NEDÁVNO"
 
 #, fuzzy
 msgid "RED"
@@ -4453,9 +4486,6 @@ msgid ""
 "%s"
 msgstr ""
 
-msgid "Schedule"
-msgstr "Naplánovať"
-
 msgid "Sci-Fi"
 msgstr ""
 
@@ -4699,7 +4729,8 @@ msgstr "Návrat servera 404 - Nenašiel sa."
 msgid "Server returned nothing."
 msgstr "Návrat servera 404 - Nenašiel sa."
 
-msgid "Server, user name and password in the host configuration. The server field also takes a get.php link."
+#, python-format
+msgid "Server, user name and password in the host configuration. The server field also takes a get.php link. More accounts: %s with one get.php link per line (X-Streamity format)."
 msgstr ""
 
 #, python-format
@@ -4755,6 +4786,9 @@ msgstr ""
 msgid "Short Movies"
 msgstr "Krátke filmy"
 
+msgid "Short series"
+msgstr ""
+
 msgid "Shorts"
 msgstr "Šortky"
 
@@ -4791,6 +4825,9 @@ msgstr "Zobraziť profily v ZBIORNIK MINI :"
 
 msgid "Show Youtube Api Key warnings"
 msgstr "Zobraziť upozornenia kľúča API YouTube"
+
+msgid "Show adult content"
+msgstr ""
 
 msgid "Show all channels"
 msgstr "Zobraziť všetky kanály"
@@ -4936,14 +4973,8 @@ msgstr "Zoradiť podľa:"
 msgid "Sort alphabetically"
 msgstr "Zoradiť podľa abecedy"
 
-msgid "Sort by alphabet"
-msgstr "Zoradiť podľa abecedy"
-
 msgid "Sort by name"
 msgstr "Zoradiť podľa _Názov"
-
-msgid "Sort by popularity"
-msgstr "Zoradiť podľa obľúbenosti"
 
 msgid "Sort by:"
 msgstr "Zoradiť podľa:"
@@ -4971,9 +5002,6 @@ msgstr ""
 
 msgid "Spanish"
 msgstr ""
-
-msgid "Specialities"
-msgstr "Špecializácie"
 
 msgid "Specials"
 msgstr ""
@@ -5045,6 +5073,9 @@ msgstr "Vybrať prepojenie"
 
 msgid "Streamed"
 msgstr "Streamované"
+
+msgid "Streaming platforms"
+msgstr ""
 
 #, fuzzy
 msgid "Studios"
@@ -5320,7 +5351,13 @@ msgstr ""
 msgid "The OpenSubtitles v3 server did not answer. Please try again later."
 msgstr ""
 
+msgid "The OpenSubtitles.com server did not answer. Please try again later."
+msgstr ""
+
 msgid "The QR code leads to the wiki page with pictures and the extension download."
+msgstr ""
+
+msgid "The Stalker portal of this entry is not configured (any more)."
 msgstr ""
 
 msgid "The Xtream account of this entry is not configured (any more)."
@@ -5365,6 +5402,9 @@ msgstr "Farba zobrazenej položky"
 msgid "The connection limit for your weeb.tv account has been reached."
 msgstr ""
 
+msgid "The daily download limit is reached."
+msgstr ""
+
 msgid "The data is too large."
 msgstr ""
 
@@ -5399,6 +5439,13 @@ msgstr "Prvok už existuje v Používateľských odkazoch."
 msgid "The feed of these channels could not be read - press OK to try again."
 msgstr ""
 
+msgid "The helper process ended unexpectedly."
+msgstr ""
+
+#, python-format
+msgid "The helper script %s is missing."
+msgstr ""
+
 #, python-format
 msgid "The host \"%s\" cannot be used from the web interface (disabled, unknown or protected by PIN)."
 msgstr ""
@@ -5410,14 +5457,6 @@ msgid ""
 msgstr ""
 "Hostiteľský %s vyžaduje registráciu. \n"
 "Vyplňte svoje prihlasovacie meno a heslo v konfigurácii hostiteľa. K dispozícii pod modrým tlačidlom."
-
-#, python-format
-msgid ""
-"The host %s requires subscription.\n"
-"Please fill your login and password in the host configuration - available under blue button."
-msgstr ""
-"Hostiteľský %s vyžaduje predplatné.\n"
-"Vyplňte svoje prihlasovacie meno a heslo v konfigurácii hostiteľa - k dispozícii pod modrým tlačidlom."
 
 msgid "The host asks for a captcha. It can only be solved on the receiver (or with MyE2i there)."
 msgstr ""
@@ -5462,6 +5501,9 @@ msgstr ""
 "Vyrovnávacia pamäť prehrávania bola presunutá do správcu preberania.\n"
 "Uloží sa do súboru:\n"
 "\"%s\""
+
+msgid "The portal did not hand out a link for this entry."
+msgstr ""
 
 msgid "The recordings of this page were on the site's old media server, which is offline."
 msgstr ""
@@ -5547,6 +5589,12 @@ msgstr "Na jednotke nie je žiadne voľné miesto [%s]."
 msgid "There is no hosts in this group."
 msgstr "V tejto skupine nie sú žiadni hostitelia."
 
+#, python-format
+msgid ""
+"There is no storage device under \"%s\" (%s free). E2iPlayer will switch this folder back to \"%s\" at the next start.\n"
+"Please choose a folder on a mounted HDD or USB stick."
+msgstr ""
+
 msgid "This article has no free video."
 msgstr ""
 
@@ -5586,6 +5634,9 @@ msgstr "Neexistujú žiadne iné obľúbené skupiny"
 #, fuzzy
 msgid "This entry cannot be opened."
 msgstr "Pomôcka \"%s\" sa nedá nájsť."
+
+msgid "This entry is only an advert, there is no video."
+msgstr ""
 
 msgid "This episode is not available in this version (SUB/DUB) on this server. Try another one."
 msgstr ""
@@ -5903,16 +5954,9 @@ msgstr "Nedá sa splniť požiadavky. História vyhľadávania je prázdna."
 msgid "Unfix jump target"
 msgstr ""
 
-msgid "Unknow data in the captcha item!"
-msgstr "Neznáme údaje v položke captcha!"
-
 #, fuzzy
 msgid "Unknown action."
 msgstr "Neznáma chyba."
-
-#, python-format
-msgid "Unknown captcha form! Data: \"%s\""
-msgstr "Neznámy formulár captcha! Dáta: „%s“"
 
 #, fuzzy
 msgid "Unknown error code."
@@ -5994,9 +6038,6 @@ msgstr "Použitie predvolenej kvality videa"
 msgid "Use default video quality:"
 msgstr "Použite predvolenú kvalitu videa:"
 
-msgid "Use links cache"
-msgstr "Používanie vyrovnávacej pamäte odkazov"
-
 msgid "Use login"
 msgstr "Použiť prihlásenie"
 
@@ -6058,10 +6099,6 @@ msgstr ""
 msgid "User-Links: %d"
 msgstr "Používateľské odkazy: %d"
 
-#, python-format
-msgid "Username in settings is different from %s"
-msgstr "Používateľské meno v nastaveniach sa líši od %s"
-
 msgid "Username/password authentication failure."
 msgstr ""
 
@@ -6070,13 +6107,6 @@ msgstr "Používateľské meno:"
 
 msgid "Users"
 msgstr ""
-
-msgid ""
-"Using this host in your country can be illegal.\n"
-"Do you want to continue at your own risk?"
-msgstr ""
-"Používanie tohto hostiteľa vo vašej krajine môže byť nezákonné.\n"
-"Chcete pokračovať na vlastné riziko?"
 
 #, python-format
 msgid "Utility \"%s\" can not be found."
@@ -6092,6 +6122,10 @@ msgid "Verify"
 msgstr "Over"
 
 msgid "Version"
+msgstr ""
+
+#, python-format
+msgid "Version: %s"
 msgstr ""
 
 msgid "Video"
@@ -6131,10 +6165,6 @@ msgstr "Videá"
 #, fuzzy, python-format
 msgid "Videos %s"
 msgstr "videá: %s"
-
-#, python-format
-msgid "Videos count: %s"
-msgstr "Počet videí: %s"
 
 msgid "Videos you have liked."
 msgstr ""
@@ -6192,6 +6222,9 @@ msgstr "História vyhľadávania"
 msgid "Watch later"
 msgstr "Sleduj"
 
+msgid "Watch online"
+msgstr ""
+
 msgid "Western"
 msgstr ""
 
@@ -6239,9 +6272,6 @@ msgstr "Preskúmanie písomných fór"
 
 msgid "Wrong Youtube Api Key length"
 msgstr "Nesprávna dĺžka kľúča rozhrania API služby YouTube"
-
-msgid "Wrong answer."
-msgstr "Nesprávna odpoveď."
 
 msgid "Wrong captcha code."
 msgstr ""
@@ -6487,6 +6517,10 @@ msgstr ""
 msgid "could not run the probe"
 msgstr ""
 
+#, python-format
+msgid "curl-impersonate is not installed on the receiver (%s). This stream only plays with it."
+msgstr ""
+
 msgid "debug"
 msgstr ""
 
@@ -6500,6 +6534,12 @@ msgstr "Odstrániť históriu vyhľadávania"
 #, fuzzy
 msgid "delete the selected entry"
 msgstr "Vyberte tento adresár"
+
+msgid "device ID"
+msgstr ""
+
+msgid "device ID 2"
+msgstr ""
 
 msgid "direct link"
 msgstr "priamy odkaz"
@@ -6834,6 +6874,9 @@ msgstr "sekunda"
 msgid "select to sign out"
 msgstr "Vyberte skupinu"
 
+msgid "serial number"
+msgstr ""
+
 msgid "show more details about the selected item"
 msgstr ""
 
@@ -6841,6 +6884,9 @@ msgid "show this help"
 msgstr ""
 
 msgid "sign in (subscriptions, playlists, age-restricted videos)"
+msgstr ""
+
+msgid "signature"
 msgstr ""
 
 msgid "signed in"

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-04 21:08+0000\n"
+"POT-Creation-Date: 2026-10-07 21:05+0000\n"
 "PO-Revision-Date: 2026-10-05 20:00+0200\n"
 "Last-Translator: damagic-pl\n"
 "Language-Team: IPTVPlayer\n"
@@ -105,6 +105,14 @@ msgstr "%s - przegląd usług"
 #, python-format
 msgid "%s - subtitles provider"
 msgstr "%s - dostawca napisów"
+
+#, python-format
+msgid "%s blocks the connection of the receiver (HTTP 403). It only plays with curl-impersonate installed on the receiver - otherwise please choose another server."
+msgstr ""
+
+#, python-format
+msgid "%s blocks the connection of the receiver (HTTP 403). Please choose another server."
+msgstr ""
 
 #, python-format
 msgid "%s buffering..."
@@ -220,9 +228,6 @@ msgstr "++"
 
 msgid "--"
 msgstr "--"
-
-msgid "-- OK --"
-msgstr "-- OK --"
 
 msgid "----- BASIC CONFIGURATION -----"
 msgstr "----- USTAWIENIA PODSTAWOWE -----"
@@ -561,6 +566,14 @@ msgstr "Pozwól na oznaczaczanie materiałów jako obejrzane"
 msgid "Alphabetically"
 msgstr "Alfabetycznie"
 
+#, python-format
+msgid "Also use the accounts of X-Streamity (%s)"
+msgstr ""
+
+#, python-format
+msgid "Also use the portals of EStalker (%s)"
+msgstr ""
+
 msgid "AltGr"
 msgstr "AltGr"
 
@@ -595,6 +608,9 @@ msgstr "Wystąpił błąd podczas wczytywania napisów z [%s]."
 #, python-format
 msgid "An error occurred while writing into: %s"
 msgstr "Wystąpił problem podczas zapisu do: %s"
+
+msgid "An opensubtitles.com account (login and password in the E2iPlayer settings) raises the limit."
+msgstr ""
 
 msgid "Anatomy"
 msgstr "Anatomia"
@@ -856,9 +872,6 @@ msgstr "Emisja:"
 msgid "Browse by genre"
 msgstr "Przeglądaj według gatunku"
 
-msgid "Browse videos"
-msgstr "Przeglądaj wideo"
-
 msgid "Browse youtube trending feeds"
 msgstr "Przeglądaj wiodące trendy YouTube"
 
@@ -874,9 +887,6 @@ msgstr "Biznes"
 #, python-format
 msgid "By %s"
 msgstr "Autor: %s"
-
-msgid "Bypass geo-blocking for VODs (it may be illegal):"
-msgstr "Obejdź zabezpieczenie po IP w VOD (może być nielegalne):"
 
 msgid "CME SAE"
 msgstr "CME SAE"
@@ -1412,6 +1422,9 @@ msgstr "Programiści:"
 msgid "Digital programmes"
 msgstr "Programy cyfrowe"
 
+msgid "Direct"
+msgstr ""
+
 msgid "Director:"
 msgstr "Reżyser:"
 
@@ -1500,10 +1513,6 @@ msgstr "Gotowe – wynik został wysłany do odbiornika, możesz zamknąć tę s
 
 msgid "Download"
 msgstr "Pobierz"
-
-#, python-format
-msgid "Download \"%s\" in to \"%s\" failed!"
-msgstr "Pobieranie \"%s\" do \"%s\" nie powiodło się!"
 
 #, python-format
 msgid "Download (ready in %d seconds)"
@@ -1742,9 +1751,6 @@ msgstr "Animacja edukacyjna"
 msgid "Egyptian series"
 msgstr "Seriale egipskie"
 
-msgid "Email"
-msgstr "Email"
-
 msgid "Empty title is not allowed."
 msgstr "Pusty tytuł jest niedozwolony."
 
@@ -1821,12 +1827,6 @@ msgstr "Wprowadź nowy kod PIN"
 msgid "Enter old pin"
 msgstr "Wprowadź stary kod PIN"
 
-msgid "Enter page number"
-msgstr "Wpisz numer strony"
-
-msgid "Enter page number (MAX PAGE: {})"
-msgstr "Wpisz numer strony (MAKS. STRONA: {})"
-
 msgid "Enter pin"
 msgstr "Wprowadź kod PIN"
 
@@ -1880,9 +1880,6 @@ msgid ""
 msgstr ""
 "Kod błędu: %s\n"
 "Komunikat błędu: %s"
-
-msgid "Error communicating with the server."
-msgstr "Błąd komunikacji z serwerem."
 
 msgid "Error deleting favorite item."
 msgstr "Błąd usuwania elementu ulubionych."
@@ -1946,6 +1943,12 @@ msgstr "Bład zapisu pliku \"%s\".\n"
 msgid "Ethical & Legal"
 msgstr "Etyczne i prawne"
 
+msgid "European movies"
+msgstr ""
+
+msgid "Events"
+msgstr ""
+
 msgid "Every enabled site: does the menu open, does a list show videos? Takes a few minutes."
 msgstr "Każda włączona strona: czy menu się otwiera, czy lista pokazuje filmy? Trwa kilka minut."
 
@@ -1954,6 +1957,9 @@ msgstr "Przegląd egzaminu"
 
 msgid "Exception occurs"
 msgstr "Wystąpił wyjątek"
+
+msgid "Exclusive"
+msgstr ""
 
 msgid "Exit"
 msgstr "Wyjdź"
@@ -2233,6 +2239,9 @@ msgstr "Wymuś wewnętrzną skórę: tylko ekran główny"
 msgid "Foreign movies"
 msgstr "Filmy zagraniczne"
 
+msgid "Foreign parts only"
+msgstr ""
+
 msgid "Foreign series"
 msgstr "Seriale zagraniczne"
 
@@ -2244,9 +2253,6 @@ msgstr "Formacje"
 
 msgid "Fotka.pl stream :"
 msgstr "Strumień Fotka.pl :"
-
-msgid "Free"
-msgstr "Darmowe"
 
 msgid "Free IPTV list"
 msgstr "Darmowa lista IPTV"
@@ -2445,6 +2451,10 @@ msgid "Host"
 msgstr "Host"
 
 #, python-format
+msgid "Host: %s"
+msgstr ""
+
+#, python-format
 msgid "Hosting \"%s\" not supported."
 msgstr "Hosting \"%s\" jest nieobsługiwany."
 
@@ -2504,6 +2514,9 @@ msgstr "Okno INFO"
 
 msgid "INTERRUPTED"
 msgstr "PRZERWANY"
+
+msgid "IPTV Portals"
+msgstr ""
 
 msgid "Icon type"
 msgstr "Typ ikon"
@@ -2739,9 +2752,6 @@ msgstr "Filmy koreańskie"
 msgid "Korean movies"
 msgstr "Filmy koreańskie"
 
-msgid "LATEST"
-msgstr "NAJNOWSZY"
-
 msgid "LEFT/RIGHT at start/end of text - alternative way to switch panels"
 msgstr "LEWO/PRAWO na początku/końcu tekstu - alternatywny sposób przełączania paneli"
 
@@ -2764,6 +2774,10 @@ msgstr "Ostatni błąd wyjątku: \"%s\""
 #, python-format
 msgid "Last Exception error: '%s'"
 msgstr "Ostatni błąd wyjątku: '%s'"
+
+#, python-format
+msgid "Last Modified: %s"
+msgstr ""
 
 msgid "Last air date:"
 msgstr "Data ostatniej emisji:"
@@ -3005,20 +3019,11 @@ msgstr "Lodynet udostępnia na razie ten film tylko na serwerach subskrypcyjnych
 msgid "Log"
 msgstr "Log"
 
-msgid "Login"
-msgstr "Login"
-
 msgid "Login failed!"
 msgstr "Logowanie nieudane!"
 
 msgid "Login failed."
 msgstr "Logowanie nieudane."
-
-msgid "Login failed. Invalid email or password."
-msgstr "Logowanie nie powiodło się. Nieprawidłowy e-mail lub hasło."
-
-msgid "Login needed"
-msgstr "Wymagane logowanie"
 
 #, python-brace-format
 msgid "Login on {0} failed."
@@ -3370,9 +3375,6 @@ msgstr "Błąd sieci."
 msgid "New"
 msgstr "Nowe"
 
-msgid "New cartoon"
-msgstr "Nowe kreskówki"
-
 msgid "New dir"
 msgstr "Nowy folder"
 
@@ -3406,9 +3408,6 @@ msgstr "Nowości"
 msgid "News (tagesschau)"
 msgstr "Wiadomości (tagesschau)"
 
-msgid "News Feed"
-msgstr "Nowości"
-
 msgid "News Poland"
 msgstr "Wiadomości Polska"
 
@@ -3423,6 +3422,9 @@ msgstr "Nie"
 
 msgid "No YouTube video found for this track."
 msgstr "Nie znaleziono filmu YouTube dla tego utworu."
+
+msgid "No channels with an archive on this portal."
+msgstr ""
 
 msgid "No description available."
 msgstr "Brak opisu."
@@ -3463,6 +3465,9 @@ msgstr "Nie wystąpiły żadne problemy."
 
 msgid "No programme guide for this channel."
 msgstr "Brak przewodnika po programach dla tego kanału."
+
+msgid "No recorded programmes on this day."
+msgstr ""
 
 msgid "No replays in these days"
 msgstr "Brak powtórek w tych dniach"
@@ -3618,6 +3623,17 @@ msgstr "Otwórz tę stronę w %s"
 msgid "Open this page in the chosen browser"
 msgstr "Otwórz tę stronę w wybranej przeglądarce"
 
+#, python-format
+msgid "OpenSubtitles.com login failed for user \"%s\". Please check your login and password."
+msgstr ""
+
+msgid "OpenSubtitles.com needs an API key. Create a free API consumer at https://www.opensubtitles.com/consumers and enter its key in the E2iPlayer settings (Subtitles)."
+msgstr ""
+
+#, python-format
+msgid "OpenSubtitles.com rejected the request (HTTP %s). Please check the API key in the E2iPlayer settings."
+msgstr ""
+
 msgid "OpenSubtitles.org sent a \"become VIP member\" note instead of the subtitle (download limit reached?)."
 msgstr "OpenSubtitles.org zamiast napisów przesłał komunikat \"zostań członkiem VIP\" (osiągnięto limit pobrań?)."
 
@@ -3719,9 +3735,6 @@ msgstr "Część"
 msgid "Partial file - transfer ended early."
 msgstr "Niekompletny plik - transfer zakończył się przedwcześnie."
 
-msgid "Password"
-msgstr "Hasło"
-
 msgid "Password:"
 msgstr "Hasło:"
 
@@ -3819,6 +3832,9 @@ msgstr ""
 
 msgid "Please configure Xtream (blue button)"
 msgstr "Skonfiguruj Xtream (niebieski przycisk)"
+
+msgid "Please configure the Stalker portal (blue button)"
+msgstr ""
 
 #, python-format
 msgid "Please consider restart your Engima2 and agree to install the %s utlity when the %s will propose this."
@@ -3927,6 +3943,26 @@ msgstr "Popularność"
 msgid "Pornstars"
 msgstr "Gwiazdy porno"
 
+#, python-format
+msgid "Portal %d - %s (optional, from the MAG box):"
+msgstr ""
+
+#, python-format
+msgid "Portal %d - MAC address (00:1A:79:...):"
+msgstr ""
+
+#, python-format
+msgid "Portal %d - name (optional):"
+msgstr ""
+
+#, python-format
+msgid "Portal %d - portal URL (http://host:port/c/):"
+msgstr ""
+
+#, python-format
+msgid "Portal URL and MAC address in the host configuration, as the provider gives them out. More portals: %s in the EStalker format (portal URL, then its MAC addresses, one per line)."
+msgstr ""
+
 msgid "Portuguese"
 msgstr "Portugalski"
 
@@ -3956,9 +3992,6 @@ msgstr "Premium"
 
 msgid "Premium user"
 msgstr "Użytkownik Premium"
-
-msgid "Preview"
-msgstr "Zapowiedź"
 
 msgid "Previous Page"
 msgstr "Poprzednia strona"
@@ -4014,6 +4047,9 @@ msgstr "Opublikowano"
 msgid "Python modules"
 msgstr "Moduły Python"
 
+msgid "Python was not found on the receiver."
+msgstr ""
+
 msgid "Quality"
 msgstr "Jakość"
 
@@ -4028,9 +4064,6 @@ msgstr "Rozmiar bufora w RAM dla plików lokalnych"
 
 msgid "RAM buffer size [MB] for network protocols"
 msgstr "Rozmiar bufora w RAM dla plików online"
-
-msgid "RECENT"
-msgstr "Najnowszy"
 
 msgid "RED"
 msgstr "CZERWONY"
@@ -4308,9 +4341,6 @@ msgstr ""
 "Zapisano w:\n"
 "%s"
 
-msgid "Schedule"
-msgstr "Harmonogram"
-
 msgid "Sci-Fi"
 msgstr "Sci-Fi"
 
@@ -4543,8 +4573,9 @@ msgstr "Serwer zwrócił błąd \"404 - Not Found\"."
 msgid "Server returned nothing."
 msgstr "Serwer nic nie zwrócił."
 
-msgid "Server, user name and password in the host configuration. The server field also takes a get.php link."
-msgstr "Serwer, nazwa użytkownika i hasło w konfiguracji hosta. Pole serwera przyjmuje też link get.php."
+#, python-format
+msgid "Server, user name and password in the host configuration. The server field also takes a get.php link. More accounts: %s with one get.php link per line (X-Streamity format)."
+msgstr ""
 
 #, python-format
 msgid ""
@@ -4597,6 +4628,9 @@ msgstr "Shift"
 msgid "Short Movies"
 msgstr "Filmy krótkometrażowe"
 
+msgid "Short series"
+msgstr ""
+
 msgid "Shorts"
 msgstr "Shorts"
 
@@ -4629,6 +4663,9 @@ msgstr "Pokaż profile w ZBIORNIK MINI :"
 
 msgid "Show Youtube Api Key warnings"
 msgstr "Pokaż ostrzeżenia klucza API YouTube"
+
+msgid "Show adult content"
+msgstr ""
 
 msgid "Show all channels"
 msgstr "Pokazać wszystkie kanały"
@@ -4766,14 +4803,8 @@ msgstr "Sortuj Z-A"
 msgid "Sort alphabetically"
 msgstr "Sortuj alfabetycznie"
 
-msgid "Sort by alphabet"
-msgstr "Sortuj alfabetycznie"
-
 msgid "Sort by name"
 msgstr "Sortuj według nazwy"
-
-msgid "Sort by popularity"
-msgstr "Sortuj według popularności"
 
 msgid "Sort by:"
 msgstr "Sortuj według:"
@@ -4802,9 +4833,6 @@ msgstr "Źródło:"
 
 msgid "Spanish"
 msgstr "Hiszpański"
-
-msgid "Specialities"
-msgstr "Specjalności"
 
 msgid "Specials"
 msgstr "Specjalne"
@@ -4875,6 +4903,9 @@ msgstr "Link do strumienia"
 
 msgid "Streamed"
 msgstr "Transmitowane"
+
+msgid "Streaming platforms"
+msgstr ""
 
 msgid "Studios"
 msgstr "Studia"
@@ -5160,8 +5191,14 @@ msgstr ""
 msgid "The OpenSubtitles v3 server did not answer. Please try again later."
 msgstr "Serwer OpenSubtitles v3 nie odpowiedział. Spróbuj ponownie później."
 
+msgid "The OpenSubtitles.com server did not answer. Please try again later."
+msgstr ""
+
 msgid "The QR code leads to the wiki page with pictures and the extension download."
 msgstr "Kod QR prowadzi do strony wiki ze zdjęciami i pobraniem rozszerzenia."
+
+msgid "The Stalker portal of this entry is not configured (any more)."
+msgstr ""
 
 msgid "The Xtream account of this entry is not configured (any more)."
 msgstr "Konto Xtream tego wpisu nie jest (już) skonfigurowane."
@@ -5202,6 +5239,9 @@ msgstr "Kolor elementu oznaczonego jako obejrzane"
 msgid "The connection limit for your weeb.tv account has been reached."
 msgstr "Osiągnięto limit połączeń dla Twojego konta weeb.tv."
 
+msgid "The daily download limit is reached."
+msgstr ""
+
 msgid "The data is too large."
 msgstr "Dane są zbyt duże."
 
@@ -5241,6 +5281,13 @@ msgstr "Ten element już istnieje w linkach użytkownika."
 msgid "The feed of these channels could not be read - press OK to try again."
 msgstr "Nie udało się odczytać kanału tych kanałów - naciśnij OK, aby spróbować ponownie."
 
+msgid "The helper process ended unexpectedly."
+msgstr ""
+
+#, python-format
+msgid "The helper script %s is missing."
+msgstr ""
+
 #, python-format
 msgid "The host \"%s\" cannot be used from the web interface (disabled, unknown or protected by PIN)."
 msgstr "Hosta \"%s\" nie można użyć z interfejsu WWW (wyłączony, nieznany lub chroniony kodem PIN)."
@@ -5252,14 +5299,6 @@ msgid ""
 msgstr ""
 "Host %s wymaga rejestracji. \n"
 "Wprowasź login i hasło w konfiguracji hosta dostępnej po naciśnięciu niebieskiego przycisku."
-
-#, python-format
-msgid ""
-"The host %s requires subscription.\n"
-"Please fill your login and password in the host configuration - available under blue button."
-msgstr ""
-"Host %s wymaga subskrypcji.\n"
-"Wpisz login i hasło w konfiguracji hosta dostępnej po naciśnięciu przycisku niebieskigo."
 
 msgid "The host asks for a captcha. It can only be solved on the receiver (or with MyE2i there)."
 msgstr "Host wymaga rozwiązania captcha. Można to zrobić tylko na odbiorniku (lub tam za pomocą MyE2i)."
@@ -5302,6 +5341,9 @@ msgstr ""
 "Bufor odtwarzanego materiału został przeniesiony do menadżera pobierania.\n"
 "Zostanie on zapisany w pliku:\n"
 "\"%s\""
+
+msgid "The portal did not hand out a link for this entry."
+msgstr ""
 
 msgid "The recordings of this page were on the site's old media server, which is offline."
 msgstr "Nagrania z tej strony znajdowały się na starym serwerze multimediów serwisu, który jest offline."
@@ -5387,6 +5429,12 @@ msgstr "Nie ma wolnego miejsca na dysku [%s]."
 msgid "There is no hosts in this group."
 msgstr "Ta grupa jest pusta."
 
+#, python-format
+msgid ""
+"There is no storage device under \"%s\" (%s free). E2iPlayer will switch this folder back to \"%s\" at the next start.\n"
+"Please choose a folder on a mounted HDD or USB stick."
+msgstr ""
+
 msgid "This article has no free video."
 msgstr "Ten artykuł nie ma darmowego wideo."
 
@@ -5419,6 +5467,9 @@ msgstr "Tego wpisu nie można dodać do ulubionych."
 
 msgid "This entry cannot be opened."
 msgstr "Tego wpisu nie można otworzyć."
+
+msgid "This entry is only an advert, there is no video."
+msgstr ""
 
 msgid "This episode is not available in this version (SUB/DUB) on this server. Try another one."
 msgstr "Ten odcinek nie jest dostępny w tej wersji (SUB/DUB) na tym serwerze. Wybierz inny."
@@ -5739,15 +5790,8 @@ msgstr "Nie można spełnić. Historia wyszukiwania jest pusta."
 msgid "Unfix jump target"
 msgstr "Odepnij cel skoku"
 
-msgid "Unknow data in the captcha item!"
-msgstr "Nieznane dane w elemencie captcha!"
-
 msgid "Unknown action."
 msgstr "Nieznana akcja."
-
-#, python-format
-msgid "Unknown captcha form! Data: \"%s\""
-msgstr "Nieznana forma captcha! Dane: \"%s\""
 
 msgid "Unknown error code."
 msgstr "Nieznany kod błędu."
@@ -5826,9 +5870,6 @@ msgstr "Użyj domyślnej jakości wideo"
 msgid "Use default video quality:"
 msgstr "Użyć domyślnego formatu wideo:"
 
-msgid "Use links cache"
-msgstr "Użyj pamięci podręcznej linków"
-
 msgid "Use login"
 msgstr "Użyj logowania"
 
@@ -5888,10 +5929,6 @@ msgstr "User-Agent (pozostaw puste dla domyślnego):"
 msgid "User-Links: %d"
 msgstr "Linki użytkownika: %d"
 
-#, python-format
-msgid "Username in settings is different from %s"
-msgstr "Nazwa użytkownika w ustawieniach różni się od %s"
-
 msgid "Username/password authentication failure."
 msgstr "Błąd uwierzytelniania nazwą użytkownika/hasłem."
 
@@ -5900,14 +5937,6 @@ msgstr "Nazwa użytkownika:"
 
 msgid "Users"
 msgstr "Użytkownicy"
-
-msgid ""
-"Using this host in your country can be illegal.\n"
-"Do you want to continue at your own risk?"
-msgstr ""
-"Korzystanie z tego hosta w Twoim kraju \n"
-"może być nielegalne.\n"
-"Czy chcesz kontynuować na własne ryzyko ?"
 
 #, python-format
 msgid "Utility \"%s\" can not be found."
@@ -5924,6 +5953,10 @@ msgstr "Weryfikuj"
 
 msgid "Version"
 msgstr "Wersja"
+
+#, python-format
+msgid "Version: %s"
+msgstr ""
 
 msgid "Video"
 msgstr "Wideo"
@@ -5961,10 +5994,6 @@ msgstr "Wideo"
 #, python-format
 msgid "Videos %s"
 msgstr "Filmy %s"
-
-#, python-format
-msgid "Videos count: %s"
-msgstr "Ilość wideo: %s"
 
 msgid "Videos you have liked."
 msgstr "Filmy, które Ci się podobały."
@@ -6020,6 +6049,9 @@ msgstr "Historia oglądania"
 msgid "Watch later"
 msgstr "Do obejrzenia"
 
+msgid "Watch online"
+msgstr ""
+
 msgid "Western"
 msgstr "Western"
 
@@ -6067,9 +6099,6 @@ msgstr "Recenzja pisemnych tablic"
 
 msgid "Wrong Youtube Api Key length"
 msgstr "Niepoprawna długość klucza API YouTube"
-
-msgid "Wrong answer."
-msgstr "Zła odpowiedź."
 
 msgid "Wrong captcha code."
 msgstr "Błędny kod captcha."
@@ -6313,6 +6342,10 @@ msgstr "pamięć podręczna ciasteczek"
 msgid "could not run the probe"
 msgstr "nie udało się uruchomić testu"
 
+#, python-format
+msgid "curl-impersonate is not installed on the receiver (%s). This stream only plays with it."
+msgstr ""
+
 msgid "debug"
 msgstr "debug"
 
@@ -6324,6 +6357,12 @@ msgstr "usuń wprowadzony tekst"
 
 msgid "delete the selected entry"
 msgstr "usuń wybrany wpis"
+
+msgid "device ID"
+msgstr ""
+
+msgid "device ID 2"
+msgstr ""
 
 msgid "direct link"
 msgstr "link bezpośredni"
@@ -6638,6 +6677,9 @@ msgstr "sekund"
 msgid "select to sign out"
 msgstr "wybierz, aby się wylogować"
 
+msgid "serial number"
+msgstr ""
+
 msgid "show more details about the selected item"
 msgstr "pokaż więcej szczegółów o wybranym elemencie"
 
@@ -6646,6 +6688,9 @@ msgstr "pokaż tę pomoc"
 
 msgid "sign in (subscriptions, playlists, age-restricted videos)"
 msgstr "zaloguj się (subskrypcje, playlisty, filmy z ograniczeniem wiekowym)"
+
+msgid "signature"
+msgstr ""
 
 msgid "signed in"
 msgstr "zalogowano"
