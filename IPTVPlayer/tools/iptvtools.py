@@ -136,7 +136,9 @@ def GetNice(pid=None):
     try:
         with open(filePath, 'r') as f:
             data = f.read()
-            data = data.split(' ')[19]
+            # field 19 is nice (field 20 is num_threads); comm (field 2) may contain
+            # spaces, so count from the closing ')' where field 3 (state) starts
+            data = data.rsplit(')', 1)[1].split()[16]
             nice = int(data)
     except Exception:
         printExc()
