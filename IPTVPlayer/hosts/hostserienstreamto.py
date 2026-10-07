@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 23.08.2026 - withArticleContent() now checks type for episodes, fixes wrong Info text on episode press, getSuggestionsProvider() added (forces Google search suggestions) - Kamikaze24
+# Last Modified: 02.10.2026
+# 23.08.2026 - withArticleContent() now checks type for episodes, fixes wrong Info text on episode press, getSuggestionsProvider() added (forces Google search suggestions) - Kamikaze24
 import re
 
 from Plugins.Extensions.IPTVPlayer.components.e2ivkselector import GetVirtualKeyboard

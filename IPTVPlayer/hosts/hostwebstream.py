@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 03.10.2026 - sport365.live, ustvnow.com and the Teledunet code removed (dead);
+# Last Modified: 04.10.2026
+# 03.10.2026 - sport365.live, ustvnow.com and the Teledunet code removed (dead);
 #   nhl24all.ir on the v4 stateshot API; weeb.tv account hint; favourites on the playable rows
 #   (the source APIs are created on demand, a favourite opens without its list); getLinksForVideo
 #   alias for the harness

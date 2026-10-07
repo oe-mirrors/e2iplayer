@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 07.10.2026
 # original file from: 14/11/2025 - popking (odem2014)
-# Last modified: 24/09/2026 - Mohamed Elsafty (angel_heart)
+# 24.09.2026 - Mohamed Elsafty (angel_heart)
 # Modified for new domain: https://w1.qrmzi.cyou/ with Movies & Series sections
 ###################################################
 # LOCAL import

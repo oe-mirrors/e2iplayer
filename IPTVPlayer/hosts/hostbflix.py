@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 26.12.2025 - fixed pycurl for py3 version - by Mr.X
+# Last Modified: 02.10.2026
+# 26.12.2025 - fixed pycurl for py3 version - by Mr.X
 import re
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase

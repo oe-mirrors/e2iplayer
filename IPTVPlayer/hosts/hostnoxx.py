@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 03.10.2026 - new host for noxx.gg (noxx.to), free TV series (English, TMDb catalogue)
+# Last Modified: 04.10.2026
+# 03.10.2026 - new host for noxx.gg (noxx.to), free TV series (English, TMDb catalogue)
 #   Every visit first lands on /verify: a cookie check (token in the page, POST /verified -> PHPSESSID,
 #   valid ~2 hours) that is passed here automatically, no captcha. Browse / genres / years / sort /
 #   search through the JSON endpoint /api/load-more-browse, "Aired this week" from /timeline,

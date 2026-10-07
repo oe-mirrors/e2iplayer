@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 03.10.2026 - revived for the current alooytvNN domain (AlooyTV host created by Dr HYTHAM MAHMOUD)
+# Last Modified: 04.10.2026
+# 03.10.2026 - revived for the current alooytvNN domain (AlooyTV host created by Dr HYTHAM MAHMOUD)
 #   - the old domains redirect to the link hub fitnur.com/alooytv: the site domain is read from the hub
 #     (never the hub itself), an own "Alternative domain" first; config keys renamed to alooytv_*
 #   - categories read live from the site menu; "Latest series", search; First Page / Jump / Next page

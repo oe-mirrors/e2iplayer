@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026 - new host for moviesjoytv.org (Moviesjoy - movies and TV series, English)
+# Last Modified: 04.10.2026
+# 04.10.2026 - new host for moviesjoytv.org (Moviesjoy - movies and TV series, English)
 #   - WordPress "fmovie" theme (assets and player on ghostplayer.store); lists: movies, TV series,
 #     top IMDb, genres, countries, search - First page / Jump / Next page from the site's pager
 #   - movies: the page's Servers config holds the embed urls (vidsrc); series: the seasons and

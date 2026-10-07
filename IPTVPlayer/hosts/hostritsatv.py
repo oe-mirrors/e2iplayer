@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 05.09.2026
 # RitsaTV (ritsatv.ru) - genre-organized live TV channel directory (CinemaPress-based).
 # Playback: the real player is the <iframe id="cinemapress-cdn"> (the page also
 # has EPG / chat / social iframes). Its ?file= is one of ~6 recurring shapes:

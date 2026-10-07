@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 03.10.2026 - revived for cimanow.cc (the site dropped its "hide_my_HTML_" obfuscation)
+# Last Modified: 04.10.2026
+# 03.10.2026 - revived for cimanow.cc (the site dropped its "hide_my_HTML_" obfuscation)
 #   Rewrite against the plain-HTML site (same markup as before: <section aria-label="posts">,
 #   <article aria-label="post">, aria-label="title|year|ribbon|tab", <ul aria-label="pagination">):
 #   - categories, "Latest" (/الاحدث/) and search (/search/<q>/) with First page / Jump / Next page

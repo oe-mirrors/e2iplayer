@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 24.08.2026 - Added PHP iframe HLS link extraction, fixed crash on video open - Blindspot
+# Last Modified: 24.08.2026
+# 24.08.2026 - Added PHP iframe HLS link extraction, fixed crash on video open - Blindspot
 ###################################################
 HOST_VERSION = "1.7"
 ###################################################

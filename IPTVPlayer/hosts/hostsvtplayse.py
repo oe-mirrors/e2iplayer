@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 03.10.2026 - rewrite for the current SVT Play APIs:
+# Last Modified: 04.10.2026
+# 03.10.2026 - rewrite for the current SVT Play APIs:
 #   contento GraphQL (api.svt.se/contento/graphql, plain POST queries - the GET
 #   variant is CDN-cached unreliably), video.svt.se/video/<svtId> for streams +
 #   WebVTT subtitles, live channels (ch-svt1 ...), A-Ö, categories, search.

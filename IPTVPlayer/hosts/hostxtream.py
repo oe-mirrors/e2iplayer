@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 06.10.2026
 # hostxtream.py - Xtream Codes IPTV accounts (player_api.php)
-# Last modified: 17/10/2025 - popking (odem2014): live channels
-# Last Modified: 03.10.2026 - live + movies + series + catch-up for up to 3 accounts
+# 17.10.2025 - popking (odem2014): live channels
+# 03.10.2026 - live + movies + series + catch-up for up to 3 accounts
 #   - up to 3 account slots (name / server / user / password, ConfigLogin + ConfigSecret); the server field also
 #     takes a pasted get.php / M3U link (http://host:port/get.php?username=..&password=..) and is normalised
 #     (missing scheme, trailing slash, default port, get.php / player_api.php path)
@@ -20,7 +21,7 @@
 #   - watched flag for movies / episodes / seasons / series, download marker, favourites, sidecar and
 #     "Title (Year)" / "Show - SxxExx - Name" naming; rows carry xtream://<account id>/... instead of the stream
 #     URL, so no password ends up in favourites, marker files or the debug log
-# Last Modified: 05.10.2026 - more accounts from playlists.txt in the X-Streamity format (one get.php line per
+# 05.10.2026 - more accounts from playlists.txt in the X-Streamity format (one get.php line per
 #   account, " #Name"): <ConfigDir>/IPTVAccounts/playlists.txt always, the X-Streamity plugin's file with the
 #   option; read only, listed after the slots without a status request each
 #   - "Show adult content" (default off): without it streams flagged is_adult, categories named "xxx", "adult",

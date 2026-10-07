@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 04.10.2026
 # Wolne Lektury (wolnelektury.pl) - free Polish e-library of the Fundacja Nowoczesna Polska; this host
 # plays its audiobooks (classic Polish and world literature read by actors).
-# Last Modified: 03.10.2026 - revival + rewrite on the public JSON API: /api/audiobooks/ (all books with
+# 03.10.2026 - revival + rewrite on the public JSON API: /api/audiobooks/ (all books with
 #   audio, grouped locally by author / epoch / genre / kind, local search), /api/books/<slug>/ ("media":
 #   MP3 + OGG per chapter, "children" for multi-part works) + watched flag (chapters and books) /
 #   downloaded flag / sidecar / INFO from the book data / favourites.

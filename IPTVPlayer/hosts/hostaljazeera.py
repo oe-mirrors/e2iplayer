@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 04.10.2026
 # Al Jazeera - live channels and the programme archive of ajnet.me (Arabic) / aljazeera.com (English).
 # Both sites run the same WordPress GraphQL API (/graphql?wp-site=aja|aje, GET with persisted
 # operation names); an episode carries its Brightcove video id, played through the Brightcove
 # playback API (policy key read from the site's player script).
-# Last Modified: 03.10.2026 - new host: live, programmes, episodes, programme-name search, watched flag,
+# 03.10.2026 - new host: live, programmes, episodes, programme-name search, watched flag,
 #   favourites (rows keep their site), First page / Jump / Next page, sidecar, name normalisation
 import re
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 03.10.2026 - new host for NASA+ (plus.nasa.gov)
+# Last Modified: 04.10.2026
+# 03.10.2026 - new host for NASA+ (plus.nasa.gov)
 #   The site is WordPress: everything comes from its public REST API
 #   (/wp-json/wp/v2/video with series / topic taxonomies and ?search=, the video's
 #   meta "video-url" is a plain HLS master on nasaplus.akamaized.net; a few entries only

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 11.01.2026 - Mr.X - Site Fix
+# Last Modified: 24.09.2026
+# 11.01.2026 - Mr.X - Site Fix
 import json
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase

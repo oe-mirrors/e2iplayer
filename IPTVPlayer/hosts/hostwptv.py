@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 04.10.2026
 # WP Wideo (wideo.wp.pl, formerly wp.tv) - video programmes of Wirtualna Polska
 # Programmes: the "/<slug>-<id>vc" cycles of the site navigation; their episodes come from
 #   /frontendparts/video-cycle-episodes-load-more?cycleId=<id>&offset=N&limit=24 (HTML teasers + hasMore).
 # Episode page (kobieta.wp.pl/..., wiadomosci.wp.pl/... "-<id>v"): WPP_VIDEO_EMBED -> get.wp.tv/?mid=<mid>
 #   -> https://wideo.wp.pl/player/mid,<mid>,embed.json -> MP4 HQ/LQ + HLS.
 # Search: /szukaj?q=<words>&s=newest&p=<page>.
-# Last Modified: 03.10.2026 - rewrite for wideo.wp.pl: programmes, search, watched flag, naming, sidecar, INFO
+# 03.10.2026 - rewrite for wideo.wp.pl: programmes, search, watched flag, naming, sidecar, INFO
 ###################################################
 # LOCAL import
 ###################################################

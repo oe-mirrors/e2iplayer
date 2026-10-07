@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 03.10.2026 - revival for the redesigned anime-odcinki.pl ("VOD Dashboard", Cloudflare):
+# Last Modified: 04.10.2026
+# 03.10.2026 - revival for the redesigned anime-odcinki.pl ("VOD Dashboard", Cloudflare):
 #   catalogue from the hex encoded JSON of /anime-lista/ (series / movies A-Z, airing now), latest
 #   episodes via admin-ajax ao_get_latest_episodes (First page / Next page), genre / season / search pages
 #   (anime-card lists, First page / Jump / Next page over .../strona/N/), episode list from the series page (base64 data-url), hoster iframes from the reversed

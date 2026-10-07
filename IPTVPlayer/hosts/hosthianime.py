@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 03.10.2026 - new host for hianime.lol (HiAnime / Aniwatch / Zoro successor, anime with
+# Last Modified: 04.10.2026
+# 03.10.2026 - new host for hianime.lol (HiAnime / Aniwatch / Zoro successor, anime with
 #   English SUB and DUB). The site is a React app on top of the "sankavollerei" anime API (JSON, partly
 #   zlib + base64url packed in "_encsankaa"): home lists, categories, genres, types, search, anime info
 #   with IMDb / AniList mapping, seasons and episode lists. Playback goes through the same keyless embed

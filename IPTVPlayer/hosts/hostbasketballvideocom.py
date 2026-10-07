@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 04.10.2026
 # Basketball-Video (basketball-video.com) - NBA / WNBA / EuroLeague / College full game replays
 # Site: uCoz catalogue like nfl-video.com (navigation groups, "?pageN" / "/<cat>-N" paging, /search/ needs the cookie)
 # Game page: "Server #N XX" buttons -> link pages (nbaontv.com, nhlgamestoday.com, ...) with one hoster <iframe>
 #   (ok.ru, vidara, ...), older games embed the hoster <iframe> directly. Resolved lazily in getVideoLinks.
 #   Listing, search, link pages and INFO: tools/ucozcatalog.py
-# Last Modified: 03.10.2026 - rebuild: basketball-video.com only (NFL-Video has its own host, MLBLive and
+# 03.10.2026 - rebuild: basketball-video.com only (NFL-Video has its own host, MLBLive and
 #   FullRaces are behind a Cloudflare challenge), watched flag, name normalisation, sidecar, search, INFO
 ###################################################
 # LOCAL import

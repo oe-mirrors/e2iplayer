@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 22.06.2025
+# Last Modified: 22.02.2026
 import json
 from Components.config import config, getConfigListEntry
 from Plugins.Extensions.IPTVPlayer.components.configsecret import ConfigLogin, ConfigSecret

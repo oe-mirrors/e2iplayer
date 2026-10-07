@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 27.09.2026
 # SRG SSR (SRF / RTS / RSI / RTR)
 # Rewritten for the il.srgssr.ch integrationlayer 2.0 JSON API
-# Last Modified: 28.08.2026
 ###################################################
 # LOCAL import
 ###################################################

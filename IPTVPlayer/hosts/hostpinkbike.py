@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 04.10.2026
 # Pinkbike (pinkbike.com) - mountain bike videos: newest, best of today/week/month/all time,
 #   the site's video categories (produced videos, quick clips, non-biking, ...) and the video search.
 # The site sits behind Cloudflare that only lets Chrome's TLS fingerprint through -> pages via
 #   curl-impersonate (no cookie needed). The MP4 files on ev1.pinkbike.org are open to every client.
-# Last Modified: 03.10.2026 - revived from Backup and rewritten for the current site: categories from
+# 03.10.2026 - revived from Backup and rewritten for the current site: categories from
 #   the site, real next page, watched flag, downloaded marker, name normalisation, sidecar, INFO,
 #   favourites, search + history, curl-impersonate for the Cloudflare check
 ###################################################

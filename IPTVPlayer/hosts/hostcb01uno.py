@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 05.05.2026 - update to current url - Masta2002
+# Last Modified: 05.05.2026
+# 05.05.2026 - update to current url - Masta2002
 import json
 import re
 

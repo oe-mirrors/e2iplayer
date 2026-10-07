@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 03.10.2026 - revived for mycima.poker (mycima.boo -> .band -> ... -> .poker)
+# Last Modified: 04.10.2026
+# 03.10.2026 - revived for mycima.poker (mycima.boo -> .band -> ... -> .poker)
 #   Rewrite against the current site (WeCima theme; the wecima host went to Backup, this is the
 #   one MyCima/WeCima host left):
 #   - lists from the "Grid--WecimaPosts" cards; paging via tools/iptvpaging (First page / Jump /

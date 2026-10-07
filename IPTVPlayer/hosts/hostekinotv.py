@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 03.10.2026 - ekino-tv.pl moved to ekino.ws: movies (latest / genres / years /
+# Last Modified: 04.10.2026
+# 03.10.2026 - ekino-tv.pl moved to ekino.ws: movies (latest / genres / years /
 #   version), series (sections of /serie/, A-Z catalogue -> seasons -> episodes), search
 #   (movies + series), players via /watch/f/<host>/<id> (session bound ids, Cloudflare Turnstile
 #   after some plays -> CaptchaHelper "cf_re" + /watch/verify.php) -> play.ekino.link iframe ->

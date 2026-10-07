@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 04.10.2026
 # ArabSciences (arabsciences.com) - Arabic documentaries (dubbed / subtitled), mostly 2011-2021.
 # WordPress: categories, posts and search come from the REST API (/wp-json/wp/v2/). A post embeds
 # its video as YouTube / Dailymotion / ok.ru / Google Drive iframes (resolved by urlparser) or as
 # arabsciences.com/embed/<youtube id>/; VideoPress embeds are private now and skipped. Posts
 # without a playable embed (plain articles) are left out of the lists.
-# Last Modified: 03.10.2026 - new host: latest, categories, search, watched flag, favourites,
+# 03.10.2026 - new host: latest, categories, search, watched flag, favourites,
 #   First page / Jump / Next page (page count from X-WP-TotalPages), sidecar
 import re
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase

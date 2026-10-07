@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 03.10.2026 - revival + rewrite for the redesigned dmdamedia.hu
+# Last Modified: 04.10.2026
+# 03.10.2026 - revival + rewrite for the redesigned dmdamedia.hu
 #   ("movie-card" grids with First page / Jump / Next page, /kategoria/<slug> lists, POST /search,
 #    seasons via POST /epizod_betoltes, ?a=<provider> switches the player <iframe>:
 #    Filemoon = byse embed, Videa) + watched flag / downloaded flag / name normalisation /

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 03.10.2026 - new host for eneyida.tv, Ukrainian dubbed films, series, cartoons and anime
+# Last Modified: 04.10.2026
+# 03.10.2026 - new host for eneyida.tv, Ukrainian dubbed films, series, cartoons and anime
 #   (DLE site): category / genre / year lists with paging, search, title page (year, genres, country, cast,
 #   duration, description). Playback through the HDVB-UA player (hdvbua.pro/embed, the same as uaserials):
 #   films = one HLS url, series = Playerjs JSON season -> translation -> episode, every translation of an

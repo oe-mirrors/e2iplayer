@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 04.10.2026
 # Meczyki.pl (meczyki.pl/skroty-meczow) - Polish sport portal, section "Skroty meczow": the latest football
 #   match highlights (all leagues or per country / competition category), every match links to its official
 #   YouTube highlight video(s)
 # Site: Nuxt 3 app, the server-rendered pages carry the data in the __NUXT_DATA__ payload (devalue format),
 #   the JSON API behind it (api.meczyki.pl) needs a login token - so only the 32 newest matches per category
 #   are reachable (no paging); the highlight page of a match carries the YouTube ids (resolved via urlparser)
-# Last Modified: 03.10.2026 - rewritten for the new site: watched flag, name normalisation, sidecar, INFO
+# 03.10.2026 - rewritten for the new site: watched flag, name normalisation, sidecar, INFO
 ###################################################
 # LOCAL import
 ###################################################

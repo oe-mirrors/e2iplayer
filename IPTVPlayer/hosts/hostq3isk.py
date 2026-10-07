@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 03.10.2026 - rework for we.3isq.cam (b.3isq.cam redirects there; Cloudflare, cleared via
+# Last Modified: 04.10.2026
+# 03.10.2026 - rework for we.3isq.cam (b.3isq.cam redirects there; Cloudflare, cleared via
 #   pCommon getPageCFProtection / MyE2i)
 #   - menus from the site's current navigation: latest episodes, recently added, most viewed, all series,
 #     movies, search - all with First page / Jump / Next page (the site's "page/N/" and "?offset=N" pagers)

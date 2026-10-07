@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 04.10.2026
 # Al Arabiya (alarabiya.net) - the live channels (Al Arabiya, Al Hadath, Al Arabiya English, Business,
 #   Programmes, FM), the programme archive and the video sections of the site, plus the video search.
 # The site sits behind Cloudflare that only lets Chrome's TLS fingerprint through (and challenges every
@@ -6,7 +7,7 @@
 #   (openapi.alarabiya.net, which also lists a programme or a section page by page) via curl-impersonate.
 #   The live HLS (live.alarabiya.net) and the VOD files (vid.alarabiya.net, MP4 + HLS) are open to every
 #   client that sends a User-Agent.
-# Last Modified: 03.10.2026 - new host: live, programmes, video sections, search + history, watched flag,
+# 03.10.2026 - new host: live, programmes, video sections, search + history, watched flag,
 #   downloaded marker, name normalisation "Programme - Title (YYYY-MM-DD)", sidecar, INFO, favourites
 ###################################################
 # LOCAL import

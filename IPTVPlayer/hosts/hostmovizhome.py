@@ -1,7 +1,7 @@
 # # -*- coding: utf-8 -*-
+# Last Modified: 24.09.2026
 # # MovizHome plugin for oe-mirrors IPTVPlayer
 # # Author : MohamedOS (Modified By Mohamed Elsafty)
-# # Last modified: 24/09/2026
 # # Description: A plugin to access MovizHome website content
 # ###############################################################
 # # LOCAL import

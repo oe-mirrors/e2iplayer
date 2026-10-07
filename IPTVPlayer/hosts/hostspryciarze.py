@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 04.10.2026
 # Spryciarze.pl - Polish how-to video guides (computers, cooking, DIY, hobby, sport, beauty, ...).
-# Last Modified: 03.10.2026 - revival + rewrite for the current site: category tree from /kategorie
+# 03.10.2026 - revival + rewrite for the current site: category tree from /kategorie
 #   (www + the komputery/kulinaria/kobieta/sport sub-domains), "card" grids with "/page:N" pagination,
 #   search /szukaj/<phrase>/film/page:N, player.spryciarze.pl/embed/<slug> = own MP4 ("mediaFiles")
 #   or a YouTube embed + watched flag / downloaded flag / sidecar / favourites.

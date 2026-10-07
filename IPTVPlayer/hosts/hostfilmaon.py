@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 07.12.2025 - Mr.X
+# Last Modified: 18.06.2026
+# 07.12.2025 - Mr.X
 import re
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase

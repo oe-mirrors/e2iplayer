@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 03.10.2026 - revived for akwam.ss (old ak.sv was down in Sept 2026)
+# Last Modified: 06.10.2026
+# 03.10.2026 - revived for akwam.ss (old ak.sv was down in Sept 2026)
 #   Rewrite against the current site (same "O2 CMS" layout as before):
 #   - lists /movies, /series, /shows (+ section/category filters read live from the page),
 #     /recent and /search?q=..; First page / Jump / Next page (?page=N, last page from the pager,

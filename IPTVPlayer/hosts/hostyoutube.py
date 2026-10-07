@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 06.08.2026 - Centralized watched helper integration incl. favourite hash sync, Custom menu action handling (mark/unmark watched) added - Kamikaze24
+# Last Modified: 24.09.2026
+# 06.08.2026 - Centralized watched helper integration incl. favourite hash sync, Custom menu action handling (mark/unmark watched) added - Kamikaze24
 ###################################################
 # LOCAL import
 ###################################################

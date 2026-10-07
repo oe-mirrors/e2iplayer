@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 06.10.2026
 # hoststalker.py - Stalker / Ministra middleware portals (MAG set-top box API, portal URL + MAC address)
-# Last Modified: 05.10.2026 - first version
+# 05.10.2026 - first version
 #   - up to 3 portal slots (name / portal URL / MAC, the MAC as ConfigSecret); the portal field takes the address
 #     the provider gives out (http://host:port/c/, .../stalker_portal/c/, portal.php or load.php links)
 #   - the API end point is found by trying portal.php / server/load.php / stalker_portal/server/load.php with a

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 03.10.2026 - revived for the current shahiid-anime.net (bare domain, WordPress theme
+# Last Modified: 04.10.2026
+# 03.10.2026 - revived for the current shahiid-anime.net (bare domain, WordPress theme
 #   "shahiidanime-220px"): uniform "one-poster" archives for series / films / dubbed / latest episodes,
 #   /series/<slug>/ -> /seasons/?serie=<id> season list, season pages list the episodes; First page /
 #   Jump / Next page over .../page/N/ and ?epp=N (pager rows keep the season's watched key),

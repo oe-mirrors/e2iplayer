@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 04.10.2026
 # Laczy nas pilka - Biblioteka Pilkarstwa Polskiego (laczynaspilka.pl/biblioteka) - the PZPN football library:
 #   matches of the Polish national teams (and cup finals, league classics) with highlights, full halves and
 #   goal clips, the "Wideoteka" collections and the PZPN TV programmes ("Kulisy spotkania", ...)
 # Site: Angular app on top of the public BPP REST API (bus20-api-bpp.laczynaspilka.pl/api/bpp/v1/), clips are
 #   CUTV videos, HLS on cdn.laczynaspilka.pl/pz/<subpath>; search through search-prod.laczynaspilka.pl
-# Last Modified: 03.10.2026 - new host: watched flag, name normalisation, sidecar, INFO
+# 03.10.2026 - new host: watched flag, name normalisation, sidecar, INFO
 ###################################################
 # LOCAL import
 ###################################################

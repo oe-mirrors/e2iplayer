@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 03.10.2026 - rewrite of the MOHAMED_OS host for the current site (b.txcima.com, "CimaclubBlocks"
+# Last Modified: 04.10.2026
+# 03.10.2026 - rewrite of the MOHAMED_OS host for the current site (b.txcima.com, "CimaclubBlocks"
 #   card grids with "?page=N" paging, /series/<slug>/ = flat episode list, <post>/watch/ = server list with the
 #   embeds in data-url) + paging (First page / Jump / Next page with the last page) / watched flag / downloaded
 #   flag / name normalisation / sidecar / moviemeta INFO / favourites.

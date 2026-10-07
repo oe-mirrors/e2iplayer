@@ -5,7 +5,9 @@
 #  $Id$
 #  Page Punkte weiter ausseinander - 132
 #  Version dazu gebaut , skin 14 , 227-229
+import io
 import os
+import re
 from Screens.Screen import Screen
 from Components.ActionMap import ActionMap, HelpableActionMap
 from enigma import ePoint, getDesktop, eListboxPythonMultiContent, RT_HALIGN_LEFT, RT_VALIGN_CENTER, BT_SCALE
@@ -24,7 +26,7 @@ from Plugins.Extensions.IPTVPlayer.components.cover import Cover3
 from Plugins.Extensions.IPTVPlayer.components.iptvchoicebox import IPTVChoiceBoxWidget, IPTVChoiceBoxItem, openChoiceBox
 from Plugins.Extensions.IPTVPlayer.components.iptvlist import IPTVRadioButtonList, fitPixmapInBox, IPTVPlayerSelectorContextMenuChoiceBoxList
 from Plugins.Extensions.IPTVPlayer.components import skinchrome
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIPTVPlayerVersion, GetIconDir, GetLogoDir, GetAvailableIconSize, GetHostOrderDir
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIPTVPlayerVersion, GetIconDir, GetLogoDir, GetAvailableIconSize, GetHostOrderDir, GetPluginDir
 from Plugins.Extensions.IPTVPlayer.__init__ import _, GRIDSUPPORT
 
 
@@ -104,10 +106,16 @@ _GRID_TEMPLATES = """<templates>
 # below), everything else about the screen is shared too (see
 # _buildPlayerSelectorSkin() below). List mode never needs GRIDSUPPORT's
 # newer skin engine at all - only the icon-grid mode does.
+#
+# The heights leave room for the "hostinfo" line between grid and
+# statustext without losing an icon row: eListbox's grid mode fits
+# (height + spacing) / (cell + spacing) rows, which gives the same row
+# count for all three cell sizes (145/165/180, spacing 20) as the old
+# 460/705/940 did - 2/2/2 at HD, 4/3/3 at FHD, 5/5/4 at WQHD.
 _PLAYER_SELECTOR_GRID_GEOM = {
-    'HD': ("20,104", "980,460"),
-    'FHD': ("30,150", "1470,705"),
-    'WQHD': ("40,200", "1960,940"),
+    'HD': ("20,104", "980,430"),
+    'FHD': ("30,150", "1470,660"),
+    'WQHD': ("40,200", "1960,905"),
 }
 
 
@@ -184,6 +192,7 @@ def _buildPlayerSelectorSkin(gridWidgetXML):
             <screen name="PlayerSelectorWidget" position="center,center" size="1020,676" title="E2iPlayer" backgroundColor="#34111112" flags="wfNoBorder">
                 %s
                 %s
+                <widget name="hostinfo" position="20,537" size="980,30" font="Regular;17" valign="center" halign="center" backgroundColor="black" foregroundColor="#b6b6b6" transparent="1" />
                 <widget name="statustext" position="20,570" size="980,30" font="Regular;20" valign="center" halign="center" backgroundColor="black" foregroundColor="white" transparent="1" />
                 <widget name="categorytext" position="20,70" size="980,30" font="Regular;20" valign="center" halign="center" backgroundColor="black" foregroundColor="white" transparent="1" />
                 %s
@@ -195,6 +204,7 @@ def _buildPlayerSelectorSkin(gridWidgetXML):
             <screen name="PlayerSelectorWidget" position="center,center" size="1530,1014" title="E2iPlayer" backgroundColor="#34111112" flags="wfNoBorder">
                 %s
                 %s
+                <widget name="hostinfo" position="30,813" size="1470,45" font="Regular;26" valign="center" halign="center" backgroundColor="black" foregroundColor="#b6b6b6" transparent="1" />
                 <widget name="statustext" position="30,860" size="1470,45" font="Regular;30" valign="center" halign="center" backgroundColor="black" foregroundColor="white" transparent="1" />
                 <widget name="categorytext" position="30,100" size="1470,45" font="Regular;30" valign="center" halign="center" backgroundColor="black" foregroundColor="white" transparent="1" />
                 %s
@@ -206,7 +216,8 @@ def _buildPlayerSelectorSkin(gridWidgetXML):
             <screen name="PlayerSelectorWidget" position="center,center" size="2040,1352" title="E2iPlayer" backgroundColor="#34111112" flags="wfNoBorder">
                 %s
                 %s
-                <widget name="statustext" position="40,1147" size="1960,60" font="Regular;40" valign="center" halign="center" backgroundColor="black" foregroundColor="white" transparent="1" />
+                <widget name="hostinfo" position="40,1107" size="1960,46" font="Regular;34" valign="center" halign="center" backgroundColor="black" foregroundColor="#b6b6b6" transparent="1" />
+                <widget name="statustext" position="40,1155" size="1960,60" font="Regular;40" valign="center" halign="center" backgroundColor="black" foregroundColor="white" transparent="1" />
                 <widget name="categorytext" position="40,133" size="1960,60" font="Regular;40" valign="center" halign="center" backgroundColor="black" foregroundColor="white" transparent="1" />
                 %s
                 %s
@@ -253,6 +264,46 @@ def _getPlayerSelectorLogoPath(key):
     if not os.path.isfile(logoPath):
         logoPath = GetLogoDir(key + 'logo.png')
     return logoPath
+
+
+_HOST_INFO_CACHE = {}
+# "# Last Modified: 07.10.2026 - ...", also dd/mm/yyyy and yyyy-mm-dd
+_HOST_LAST_MODIFIED_RE = re.compile(r'#\s*Last\s*Modified\s*:?\s*(\d{1,4})[./-](\d{1,2})[./-](\d{2,4})', re.IGNORECASE)
+# "# Version: x" header line, or hostxxx's own class attribute XXXversion = "..."
+_HOST_VERSION_RE = re.compile(r'''^[ \t]*(?:#[ \t]*Version[ \t]*:|XXXversion[ \t]*=)[ \t]*['"]?([0-9][0-9A-Za-z.\-]*)''', re.MULTILINE | re.IGNORECASE)
+
+
+def _getHostInfoText(key):
+    # "Host: <key>, Last Modified: dd.mm.yyyy[, Version: x]" for the line
+    # above the host URL, read from the host file's own header comment.
+    # Read lazily on selection and cached per session; empty for groups,
+    # "config" and hosts installed as .pyc only (no comments to read).
+    if key in _HOST_INFO_CACHE:
+        return _HOST_INFO_CACHE[key]
+    text = ""
+    try:
+        path = GetPluginDir('hosts/host%s.py' % key)
+        if os.path.isfile(path):
+            with io.open(path, 'r', encoding='utf-8', errors='ignore') as f:
+                data = f.read()
+            parts = []
+            match = _HOST_LAST_MODIFIED_RE.search(data)
+            if match:
+                day, month, year = match.groups()
+                if len(day) == 4:
+                    day, year = year, day
+                if len(year) == 2:
+                    year = '20' + year
+                parts.append(_("Last Modified: %s") % ('%02d.%02d.%s' % (int(day), int(month), year)))
+            match = _HOST_VERSION_RE.search(data)
+            if match:
+                parts.append(_("Version: %s") % match.group(1))
+            if parts:
+                text = ", ".join([_("Host: %s") % key] + parts)
+    except Exception:
+        printExc()
+    _HOST_INFO_CACHE[key] = text
+    return text
 
 
 def _moveListElement(lst, from_index, to_index):
@@ -508,6 +559,7 @@ class _PlayerSelectorListMode:
                 self.reInitDisplayList()
             return
         self["statustext"].setText(self.currList[idx][0])
+        self["hostinfo"].setText(_getHostInfoText(self.currList[idx][1]))
 
     def setSelectionImage(self, move):
         if self.simpleListMode:
@@ -841,6 +893,7 @@ class _PlayerSelectorListMode:
         self["grid"].onSelectionChanged.append(self.selectionChanged)
 
         self["statustext"] = Label(self.currList[0][0] if self.currList else "")
+        self["hostinfo"] = Label("")
         self["categorytext"] = Label(groupDisplayName if groupDisplayName else "")
 
         self["actions"] = HelpableActionMap(self, ["OkCancelActions", "MenuActions", "ColorActions", "DirectionActions", "NavigationActions"], {
@@ -963,6 +1016,7 @@ if GRIDSUPPORT:
             self["grid"].onSelectionChanged.append(self.selectionChanged)
 
             self["statustext"] = Label(self.currList[0][0] if self.currList else "")
+            self["hostinfo"] = Label("")
             self["categorytext"] = Label(groupDisplayName if groupDisplayName else "")
 
             self["actions"] = HelpableActionMap(self, ["OkCancelActions", "MenuActions", "ColorActions", "DirectionActions", "NavigationActions"], {
@@ -1435,7 +1489,7 @@ else:
             offsetCoverX = 25
             # stack the page-dot pagination markers and the focused item's
             # name (statustext) below the header without overlapping:
-            # divider line -> dots -> statustext -> grid.
+            # divider line -> dots -> hostinfo -> statustext -> grid.
             # radio_button_on/off.png is a 32x32 user-designed icon now
             # (was a native 16x16 file before) - plain ePixmap/Pixmap
             # widgets in this codebase never scale their pixmap content to
@@ -1454,8 +1508,13 @@ else:
             # accounted for here so the marker frame doesn't overlap
             # statustext.
             markerPadding = 45
+            # host info line (Last Modified/Version) between the dots and
+            # statustext - same order as the GRIDSUPPORT skins: info above
+            # the URL
+            hostInfoH = int(round(24 * scale))
             pageItemStartY = headerHeight + int(round(6 * scale))
-            statusTextY = pageItemStartY + pageItemSize + int(round(4 * scale))
+            hostInfoY = pageItemStartY + pageItemSize + int(round(4 * scale))
+            statusTextY = hostInfoY + hostInfoH
             offsetCoverY = statusTextY + statusTextH + markerPadding // 2 + int(round(6 * scale))
 
             # image size
@@ -1571,16 +1630,19 @@ else:
 
             windowHeight = offsetCoverY + tmpY * numOfRow + offsetCoverX - disHeight + footerHeight
             statusFont = int(round(20 * scale))
+            hostInfoFont = int(round(17 * scale))
 
             skin = """
             <screen name="PlayerSelectorWidget" position="center,center" size="%d,%d" backgroundColor="#34111112" flags="wfNoBorder">
                 %s
+                <widget name="hostinfo" position="10,%d" zPosition="1" size="%d,%d" font="Regular;%d" foregroundColor="#b6b6b6" halign="center" valign="center" transparent="1"/>
                 <widget name="statustext" position="10,%d" zPosition="1" size="%d,%d" font="Regular;%d" halign="center" valign="center" transparent="1"/>
                 <widget name="marker" zPosition="2" position="%d,%d" size="%d,%d" transparent="1" alphatest="blend" />
                 <widget name="page_marker" zPosition="3" position="%d,%d" size="%d,%d" transparent="1" alphatest="blend" />
                 """ % (
             windowWidth, windowHeight,
             skinchrome.build_header(scale=scale, iconBase=chromeIconBase),
+            hostInfoY, windowWidth - 20, hostInfoH, hostInfoFont,
             statusTextY, windowWidth - 20, statusTextH, statusFont,
             offsetMarkerX, offsetMarkerY,  # first marker position
             markerWidth, markerHeight,    # marker size
@@ -1650,6 +1712,7 @@ else:
                     self[strIndex] = Cover3()
 
             self["statustext"] = Label(self.currList[0][0])
+            self["hostinfo"] = Label("")
 
             self.onLayoutFinish.append(self.onStart)
             self.visible = True
@@ -1883,6 +1946,7 @@ else:
 
             self["marker"].instance.move(ePoint(x, y))
             self["statustext"].setText(self.currList[new_idx][0])
+            self["hostinfo"].setText(_getHostInfoText(self.currList[new_idx][1]))
             return
 
         def getSelectedItem(self):

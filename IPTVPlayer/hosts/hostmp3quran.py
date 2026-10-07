@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 04.10.2026
 # MP3Quran.net - Quran recitations, radios, videos, tafsir and tadabor.
 # Everything comes from the public mp3quran.net API v3 (21 languages); the
 # "Atheer radio" categories come from its api_2 endpoint (Arabic only).

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 01.10.2026
 # 01.10.2026 - the "Newest videos (all YouTube channels)" row can be switched off in the host settings
-# Last Modified: 20.09.2026 - YouTube channels in a group: sort by newest upload + merged "newest videos" list,
+# 20.09.2026 - YouTube channels in a group: sort by newest upload + merged "newest videos" list,
 # folder watched/started marking, markers under the host's own watched folder name, origin host line
 ###################################################
 # LOCAL import

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 03.10.2026 - brought to the current host standard
+# Last Modified: 04.10.2026
+# 03.10.2026 - brought to the current host standard
 #   (HwnaTurkya, Turkish series/movies with Arabic subtitles/dubbing - originally by Mohamed Elsafty)
 #   - no sleeping 3x retry wrapper, no start-up domain probe; the AJAX header is a copy (the
 #     X-Requested-With header no longer leaks into every request), the caller's params are not mutated

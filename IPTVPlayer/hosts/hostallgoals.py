@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 04.10.2026
 # Allgoals (archiwum.allgoals.in) - archive of Polish sports TV recordings 1991-today (football, F1, MotoGP,
 #   ski jumping, volleyball, ...) of the allgoals.in forum (the forum itself is login-only)
 # Site: one static page per year, dates as <h3>, each recording is a button with "Link 1..N" (= parts) to
 #   multiup.io; the multiup mirror page lists the file hosters -> the streamable ones go to urlparser
 #   (streamtape, mixdrop, filemoon, ...). Pure download hosters (mega, nitroflare, send.now, ...) are skipped.
-# Last Modified: 03.10.2026 - new host: watched flag, name normalisation, sidecar, INFO
+# 03.10.2026 - new host: watched flag, name normalisation, sidecar, INFO
 ###################################################
 # LOCAL import
 ###################################################

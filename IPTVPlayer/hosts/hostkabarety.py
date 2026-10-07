@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 03.10.2026 - revived for kabaret.tworzymyhistorie.pl (https, old PHP layout still in place):
+# Last Modified: 04.10.2026
+# 03.10.2026 - revived for kabaret.tworzymyhistorie.pl (https, old PHP layout still in place):
 #   "Lista NOS" chart, popular / all cabarets from /kabarety/, per-cabaret sketch list through
 #   index/exec/load.php?tod=skecze_lista (needs the session cookie + the cabaret page as Referer;
 #   First page / Jump / Next page, 99 per page),

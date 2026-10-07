@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 24.01.2026
 # Python3 version
-# Last Modified: 24.01.2026 - WhiteWolf
+# 24.01.2026 - WhiteWolf
 ###################################################
 HOST_VERSION = "1.2"
 ###################################################

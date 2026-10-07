@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 04.10.2026
 # PZPN+ (pzpnplus.pl) - the digital platform of the Polish football federation: free live streams and
 #   replays of Betclic 2. Liga, Ekstraliga Kobiet, STS Puchar Polski, youth national teams, highlights,
 #   magazines and archive matches; team / league pages
 # Site: React app of the BetterMedia OTT platform (api-2e87.bettermedia.tv, tenant pzpnplus.pl): anonymous
 #   sign-in token, the menu rows come from the web configuration (Screens -> LIST components = media lists),
 #   streams via Media/GetMediaPlayInfo (MUX / internal HLS). Only free content - paid items get a message.
-# Last Modified: 03.10.2026 - new host: watched flag, name normalisation, sidecar, INFO
+# 03.10.2026 - new host: watched flag, name normalisation, sidecar, INFO
 ###################################################
 # LOCAL import
 ###################################################
