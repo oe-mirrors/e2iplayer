@@ -1574,6 +1574,8 @@ class IPTVExtMoviePlayer(Screen):
             self.extPlayerCmddDispatcher.stop()
 
     def setPlaybackLength(self, newLength):
+        # fix 071026: eSlider.setRange() only takes int - a float length from a downloader crashed enigma2
+        newLength = int(newLength)
         self.playback['Length'] = newLength
         self['progressBar'].range = (0, newLength)
         self['bufferingCBar'].range = (0, newLength)
