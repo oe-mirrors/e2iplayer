@@ -57,7 +57,21 @@
   "ninateka",
   "drdk",
   "serijebalkan",
-  "moviesjoytv"
+  "moviesjoytv",
+  "aflamtop",
+  "cimacity",
+  "shoffree",
+  "kirmalk",
+  "asia2tv",
+  "asia4arabs",
+  "moviztime",
+  "shooflive",
+  "cpasmieux",
+  "moiflix",
+  "movix",
+  "wiflix",
+  "primewire",
+  "uhdhub"
  ],
  "cartoonsandanime": [
   "aniworld",
@@ -66,7 +80,10 @@
   "bajeczkiorg",
   "watchcartoononline",
   "stardima",
-  "hianime"
+  "hianime",
+  "ristoanime",
+  "arabictoons",
+  "jetanimes"
  ],
  "sport": [
   "webstream",
@@ -83,7 +100,8 @@
   "meczykipl",
   "mlblive",
   "fullraces",
-  "pinkbike"
+  "pinkbike",
+  "timstreams"
  ],
  "live": [
   "webstream",
@@ -101,7 +119,8 @@
   "tbngopl",
   "pzpnpluspl",
   "drdk",
-  "alarabiya"
+  "alarabiya",
+  "timstreams"
  ],
  "iptv": [
   "xtream",
@@ -213,7 +232,9 @@
   "mlblive",
   "fullraces",
   "pinkbike",
-  "moviesjoytv"
+  "moviesjoytv",
+  "primewire",
+  "uhdhub"
  ],
  "german": [
   "youtube",
@@ -252,7 +273,12 @@
   "rtbfbe",
   "artetv",
   "dailymotion",
-  "playrtsiw"
+  "playrtsiw",
+  "cpasmieux",
+  "moiflix",
+  "movix",
+  "wiflix",
+  "jetanimes"
  ],
  "russian": [
   "youtube",
@@ -315,7 +341,17 @@
   "taxielcima",
   "stardima",
   "asharq",
-  "alarabiya"
+  "alarabiya",
+  "aflamtop",
+  "cimacity",
+  "shoffree",
+  "kirmalk",
+  "asia2tv",
+  "asia4arabs",
+  "ristoanime",
+  "arabictoons",
+  "moviztime",
+  "shooflive"
  ],
  "greek": [
   "youtube",

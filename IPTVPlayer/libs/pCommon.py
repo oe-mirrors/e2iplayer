@@ -1116,7 +1116,11 @@ class common:
                     out_data = ""
 
                 out_data, metadata = self.handleCharset(params, out_data, metadata)
-                if metadata['status_code'] != 200:
+                if params.get('no_redirection', False) and 300 <= metadata['status_code'] < 400:
+                    # fix 071026: a redirect the caller asked not to follow is an answer (target in
+                    # meta['location']) - the urllib path (NoRedirection) and curl-impersonate already say True
+                    sts = True
+                elif metadata['status_code'] != 200:
                     ignoreCodeRanges = params.get('ignore_http_code_ranges', [(404, 404), (500, 500)])
                     for ignoreCodeRange in ignoreCodeRanges:
                         if metadata['status_code'] >= ignoreCodeRange[0] and metadata['status_code'] <= ignoreCodeRange[1]:

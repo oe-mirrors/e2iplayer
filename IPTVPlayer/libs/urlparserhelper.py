@@ -3,6 +3,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, CS
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import CParsingHelper, common
 from Plugins.Extensions.IPTVPlayer.libs import m3u8
+from Plugins.Extensions.IPTVPlayer.libs import curlimpersonate  # add 071026
 from binascii import hexlify
 import ast
 import re
@@ -597,6 +598,67 @@ def getDirectM3U8Playlist(M3U8Url, checkExt=True, variantCheck=True, cookieParam
     return retPlaylists
 
 
+def getImpersonateM3U8Playlist(M3U8Url, sortWithMaxBitrate=-1):
+    # add 071026: for CDNs that answer 403 to every OpenSSL client (Python, pycurl, hlsdl, the players' ffmpeg),
+    # e.g. vidzy.cc. The master is read through curl-impersonate and every link gets the meta that makes
+    # iptvdownloadercreator pick ImpersonateHLSDownloader (segments through curl-impersonate as well) and forces
+    # buffering. [] when the binary is missing or the request fails. nginx-vod masters with separate audio
+    # renditions (index-a2.m3u8 ...) get one link per language: index-v1-a2.m3u8 is video 1 muxed with audio 2.
+    if not curlimpersonate.getImpersonateBinary():
+        return []
+    cm = common()
+    meta = dict(strwithmeta(M3U8Url).meta)
+    params, postData = cm.getParamsFromUrlWithMeta(M3U8Url)
+    params['with_metadata'] = True
+    retPlaylists = []
+    try:
+        # getPageImpersonate without params['impersonate']: the CDN is not registered as an impersonate domain,
+        # so getDirectM3U8Playlist keeps failing for it (its links would go to hlsdl and get 403 again)
+        result = cm.getPageImpersonate(M3U8Url, params, postData)
+        if not result:
+            return []
+        sts, data = result
+        if not sts or '#EXTM3U' not in data:
+            printDBG("getImpersonateM3U8Playlist playlist request failed [%s]" % M3U8Url)
+            return []
+        finalUrl = getattr(data, 'meta', {}).get('url', '') or M3U8Url
+        meta.update({'iptv_proto': 'm3u8', 'iptv_impersonate_hls': True, 'iptv_buffering': 'required', 'iptv_format': 'ts'})
+        meta.pop('iptv_m3u8_custom_base_link', None)
+        m3u8Obj = m3u8.inits(data, finalUrl)
+        if not m3u8Obj.is_variant:
+            if len(m3u8Obj.segments):
+                retPlaylists.append({'name': 'm3u8', 'url': strwithmeta(M3U8Url, meta), 'bitrate': 0, 'width': 0, 'height': 0})
+            return retPlaylists
+        for playlist in m3u8Obj.playlists:
+            uri = playlist.absolute_uri
+            bitrate = playlist.stream_info.bandwidth or 0
+            width, height = playlist.stream_info.resolution or (0, 0)
+            name = 'bitrate: %s res: %dx%d' % (bitrate, width, height)  # like getDirectM3U8Playlist
+            item = {'bitrate': bitrate, 'width': width, 'height': height, 'with': width, 'heigth': height}
+            muxed = re.search(r'-v\d+-a(\d+)\.m3u8', uri)
+            audios = []
+            for audio in playlist.alt_audio_streams:
+                match = re.search(r'-a(\d+)\.m3u8', audio.absolute_uri or '')
+                if match:
+                    audios.append((match.group(1), audio))
+            if muxed and len(audios) > 1:
+                for number, audio in audios:
+                    audioItem = dict(item)
+                    audioItem['name'] = '[%s] %s' % (_hlsAudioLabel(audio), name)
+                    audioItem['url'] = strwithmeta(uri[:muxed.start(1)] + number + uri[muxed.end(1):], dict(meta, iptv_bitrate=bitrate))
+                    retPlaylists.append(audioItem)
+            else:
+                item['name'] = name
+                item['url'] = strwithmeta(uri, dict(meta, iptv_bitrate=bitrate))
+                retPlaylists.append(item)
+        if sortWithMaxBitrate > -1:
+            # best bitrate up to the maximum first; stable, so the languages keep the master's order (default first)
+            retPlaylists.sort(key=lambda item: (int(item['bitrate']) > sortWithMaxBitrate, -int(item['bitrate'])))
+    except Exception:
+        printExc()
+    return retPlaylists
+
+
 # ffmpeg >= 7.1.1 (exteplayer3) opens an HLS stream only when every segment url has one of these extensions
 # (hls demuxer option allowed_segment_extensions, "Invalid data found when processing input" otherwise)
 FFMPEG_HLS_SEGMENT_EXTS = ('3gp', 'aac', 'avi', 'ac3', 'eac3', 'flac', 'mkv', 'm3u8', 'm4a', 'm4s', 'm4v', 'mpg', 'mov', 'mp2',
@@ -626,12 +688,47 @@ def requireDownloaderForDisguisedHls(links):
     path = segUrl.split('?', 1)[0].split('#', 1)[0].rsplit('/', 1)[-1]
     ext = path.rsplit('.', 1)[-1].lower() if '.' in path else ''
     if segUrl and ext not in FFMPEG_HLS_SEGMENT_EXTS:
-        printDBG("requireDownloaderForDisguisedHls segment [%s] -> iptv_buffering required" % path)
+        # fix 071026: a real image header in front of the MPEG-TS data (timstreams/grandemx: WEBP segments on an
+        # image CDN, box log 07.10. #4) - hlsdl writes it into the buffer file and no player opens it; the
+        # curl-impersonate helper cuts it off (VOD and live)
+        imageHead = bool(curlimpersonate.getImpersonateBinary()) and _hasImageHeadBeforeTs(cm, segUrl, params)
+        printDBG("requireDownloaderForDisguisedHls segment [%s] image head[%s] -> iptv_buffering required" % (path, imageHead))
         for item in links:
             itemMeta = dict(getattr(item['url'], 'meta', {}))
             itemMeta['iptv_buffering'] = 'required'
+            if imageHead:
+                itemMeta['iptv_impersonate_hls'] = True
             item['url'] = strwithmeta(item['url'], itemMeta)
     return links
+
+
+def _hasImageHeadBeforeTs(cm, segUrl, params):
+    # the first 2 KB of the segment: an image signature, then three TS sync bytes 188 apart
+    params = dict(params)
+    params['header'] = dict(params.get('header', {}), Range='bytes=0-2047')
+    params['return_data'] = False
+    response = None
+    try:
+        # an HTTP error comes as (False, the still open HTTPError): closed below as well
+        sts, response = cm.getPage(segUrl, params)
+        if not sts:
+            return False
+        head = response.read(2048)
+    except Exception:
+        printExc()
+        return False
+    finally:
+        try:
+            if hasattr(response, 'close'):
+                response.close()
+        except Exception:
+            printExc()
+    if not (head[:4] == b'RIFF' or head[:8] == b'\x89PNG\r\n\x1a\n' or head[:3] == b'\xff\xd8\xff' or head[:4] == b'GIF8'):
+        return False
+    for offset in range(1, len(head) - 376):
+        if head[offset:offset + 1] == b'\x47' and head[offset + 188:offset + 189] == b'\x47' and head[offset + 376:offset + 377] == b'\x47':
+            return True
+    return False
 
 
 def getF4MLinksWithMeta(manifestUrl, checkExt=True, cookieParams={}, sortWithMaxBitrate=-1):

@@ -17,6 +17,7 @@ from Plugins.Extensions.IPTVPlayer.iptvdm.rtmpdownloader import RtmpDownloader
 from Plugins.Extensions.IPTVPlayer.iptvdm.f4mdownloader import F4mDownloader
 from Plugins.Extensions.IPTVPlayer.iptvdm.mergedownloader import MergeDownloader
 from Plugins.Extensions.IPTVPlayer.iptvdm.ffmpegdownloader import FFMPEGDownloader
+from Plugins.Extensions.IPTVPlayer.iptvdm.impersonatehlsdownloader import ImpersonateHLSDownloader  # add 071026
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
 ###################################################
 
@@ -161,6 +162,20 @@ def DownloaderCreator(url, forDownload=False):
             mergeNeedsFFmpeg = any((IsHlsLikeUrl(u) or '.mpd' in u.lower()) for u in compUrls)
     except Exception:
         printExc()
+
+    #################################################
+    # add 071026: HLS whose CDN answers 403 to every OpenSSL
+    # client (hlsdl, ffmpeg, wget) - only curl-impersonate
+    # gets the playlist and the segments. Set by
+    # urlparserhelper.getImpersonateM3U8Playlist, for
+    # buffered playback and real downloads alike.
+    #################################################
+    if urlMeta.get('iptv_impersonate_hls', False):
+        printDBG("DownloaderCreator: iptv_impersonate_hls -> ImpersonateHLSDownloader")
+        try:
+            return ImpersonateHLSDownloader()
+        except Exception:
+            printExc()
 
     #################################################
     # A real Download Manager download of a YouTube merge://
