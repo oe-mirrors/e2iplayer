@@ -7,7 +7,7 @@ from gettext import bindtextdomain, dgettext, gettext
 try:
     from enigma import eListbox
     from Components.SystemInfo import BoxInfo
-    GRIDSUPPORT = eListbox.orGrid is not None and BoxInfo.getItem("distro") in ("openatv",)
+    GRIDSUPPORT = eListbox.orGrid is not None and BoxInfo.getItem("distro") in ("openatv", "egami", "pure2")
 except AttributeError:
     GRIDSUPPORT = False
 
