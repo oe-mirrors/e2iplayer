@@ -3176,8 +3176,8 @@ class E2iPlayerWidget(Screen):
             self.searchPattern = ''
         if searchTypes:
             # dormant in practice: every real host that ever sets
-            # `possibleTypesOfSearch` (hosturllist.py/hostipla.py/
-            # hosttvjworg.py) initializes its own options list to an
+            # `possibleTypesOfSearch` (hosturllist.py/hosttvjworg.py)
+            # initializes its own options list to an
             # always-empty `[]` - hosturllist.py even still has its
             # intended real entries ("Filmy"/"Seriale") commented out -
             # so this branch never actually fires today, but it's real,

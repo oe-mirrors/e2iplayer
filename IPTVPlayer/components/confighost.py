@@ -96,7 +96,6 @@ class ConfigHostsMenu(ConfigBaseWidget):
     def __init__(self, session, listOfHostsNames):
         printDBG("ConfigHostsMenu.__init__ ")
         self.list = []
-        self.privacePoliceWorningList = []
         self.hostsConfigsAvailableList = []
         self.listOfHostsNames = []
         self.orgListOfHostsNames = SortHostsList(listOfHostsNames)
@@ -248,14 +247,9 @@ class ConfigHostsMenu(ConfigBaseWidget):
             ConfigBaseWidget.keyRight(self)
 
     def changedEntry(self):
-        if self["config"].getCurrent()[1] in self.privacePoliceWorningList and self["config"].getCurrent()[1].value:
-            message = _('Using this host in your country can be illegal.\nDo you want to continue at your own risk?')
-            self.session.openWithCallback(boundFunction(self.privatePoliceWorningCallback, self["config"].getCurrent()[1]), MessageBox, text=message, type=MessageBox.TYPE_YESNO)
-
-    def privatePoliceWorningCallback(self, configEntry=None, arg=None):
-        if not arg:
-            if configEntry is not None:
-                configEntry.value = False
+        # the host on/off list has no sub options: keep ConfigBaseWidget.changedEntry() (sub option
+        # rebuild) out of it (this used to hold the legal warning of the ipla host, now in Backup)
+        pass
 
     def __preparHostsConfigs(self, listOfHostsNames):
         '''
@@ -269,8 +263,6 @@ class ConfigHostsMenu(ConfigBaseWidget):
             try:
                 optionEntry = getattr(config.plugins.iptvplayer, 'host' + hostName)
                 self.list.append(getConfigListEntry(hostName, optionEntry))
-                if hostName in ['ipla']:
-                    self.privacePoliceWorningList.append(optionEntry)
                 self.hostsConfigsAvailableList.append(True)
                 self.listOfHostsNames.append(hostName)
             except Exception:

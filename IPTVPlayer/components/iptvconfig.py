@@ -464,8 +464,7 @@ gListOfHostsNames = GetHostsList()
 for hostName in gListOfHostsNames:
     try:
         # as default all hosts are enabled
-        enabledByDefault = hostName not in ['ipla']
-        setattr(config.plugins.iptvplayer, 'host' + hostName, ConfigIPTVHostOnOff(default=enabledByDefault))
+        setattr(config.plugins.iptvplayer, 'host' + hostName, ConfigIPTVHostOnOff(default=True))
     except Exception:
         printExc(hostName)
 
