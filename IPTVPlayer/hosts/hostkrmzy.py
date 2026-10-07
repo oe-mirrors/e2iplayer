@@ -619,7 +619,9 @@ class Krmzy(CBaseHostClass):
             % (cItem, searchPattern, searchType)
         )
         cItem = dict(cItem)
-        cItem["url"] = self.SEARCH_URL + urllib_quote_plus(searchPattern)
+        encoded_pattern = urllib_quote_plus(searchPattern)
+        search_url = self.getFullUrl("search/") + encoded_pattern + "/"
+        cItem["url"] = search_url
         cItem["is_search"] = True
         self.listContentUnits(cItem)
 
