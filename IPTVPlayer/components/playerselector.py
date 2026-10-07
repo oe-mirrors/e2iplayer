@@ -8,6 +8,7 @@
 import io
 import os
 import re
+import sys
 from Screens.Screen import Screen
 from Components.ActionMap import ActionMap, HelpableActionMap
 from enigma import ePoint, getDesktop, eListboxPythonMultiContent, RT_HALIGN_LEFT, RT_VALIGN_CENTER, BT_SCALE
@@ -111,7 +112,9 @@ _GRID_TEMPLATES = """<templates>
 # statustext without losing an icon row: eListbox's grid mode fits
 # (height + spacing) / (cell + spacing) rows, which gives the same row
 # count for all three cell sizes (145/165/180, spacing 20) as the old
-# 460/705/940 did - 2/2/2 at HD, 4/3/3 at FHD, 5/5/4 at WQHD.
+# 460/705/940 did - 2/2/2 at HD, 4/3/3 at FHD, 5/5/4 at WQHD. "List
+# view" (rows 56/64/90) shows one row less at HD and FHD (7, 10), the
+# same 10 at WQHD.
 _PLAYER_SELECTOR_GRID_GEOM = {
     'HD': ("20,104", "980,430"),
     'FHD': ("30,150", "1470,660"),
@@ -192,7 +195,7 @@ def _buildPlayerSelectorSkin(gridWidgetXML):
             <screen name="PlayerSelectorWidget" position="center,center" size="1020,676" title="E2iPlayer" backgroundColor="#34111112" flags="wfNoBorder">
                 %s
                 %s
-                <widget name="hostinfo" position="20,537" size="980,30" font="Regular;17" valign="center" halign="center" backgroundColor="black" foregroundColor="#b6b6b6" transparent="1" />
+                <widget name="hostinfo" position="20,537" size="980,30" font="Regular;17" valign="center" halign="center" backgroundColor="black" foregroundColor="#b6b6b6" noWrap="1" transparent="1" />
                 <widget name="statustext" position="20,570" size="980,30" font="Regular;20" valign="center" halign="center" backgroundColor="black" foregroundColor="white" transparent="1" />
                 <widget name="categorytext" position="20,70" size="980,30" font="Regular;20" valign="center" halign="center" backgroundColor="black" foregroundColor="white" transparent="1" />
                 %s
@@ -204,7 +207,7 @@ def _buildPlayerSelectorSkin(gridWidgetXML):
             <screen name="PlayerSelectorWidget" position="center,center" size="1530,1014" title="E2iPlayer" backgroundColor="#34111112" flags="wfNoBorder">
                 %s
                 %s
-                <widget name="hostinfo" position="30,813" size="1470,45" font="Regular;26" valign="center" halign="center" backgroundColor="black" foregroundColor="#b6b6b6" transparent="1" />
+                <widget name="hostinfo" position="30,813" size="1470,45" font="Regular;26" valign="center" halign="center" backgroundColor="black" foregroundColor="#b6b6b6" noWrap="1" transparent="1" />
                 <widget name="statustext" position="30,860" size="1470,45" font="Regular;30" valign="center" halign="center" backgroundColor="black" foregroundColor="white" transparent="1" />
                 <widget name="categorytext" position="30,100" size="1470,45" font="Regular;30" valign="center" halign="center" backgroundColor="black" foregroundColor="white" transparent="1" />
                 %s
@@ -216,7 +219,7 @@ def _buildPlayerSelectorSkin(gridWidgetXML):
             <screen name="PlayerSelectorWidget" position="center,center" size="2040,1352" title="E2iPlayer" backgroundColor="#34111112" flags="wfNoBorder">
                 %s
                 %s
-                <widget name="hostinfo" position="40,1107" size="1960,46" font="Regular;34" valign="center" halign="center" backgroundColor="black" foregroundColor="#b6b6b6" transparent="1" />
+                <widget name="hostinfo" position="40,1107" size="1960,46" font="Regular;34" valign="center" halign="center" backgroundColor="black" foregroundColor="#b6b6b6" noWrap="1" transparent="1" />
                 <widget name="statustext" position="40,1155" size="1960,60" font="Regular;40" valign="center" halign="center" backgroundColor="black" foregroundColor="white" transparent="1" />
                 <widget name="categorytext" position="40,133" size="1960,60" font="Regular;40" valign="center" halign="center" backgroundColor="black" foregroundColor="white" transparent="1" />
                 %s
@@ -267,27 +270,27 @@ def _getPlayerSelectorLogoPath(key):
 
 
 _HOST_INFO_CACHE = {}
-# "# Last Modified: 07.10.2026 - ...", also dd/mm/yyyy and yyyy-mm-dd
+# "# Last Modified: 07.10.2026" (line 2 of every host), hosts from other
+# sources may still use dd/mm/yyyy or yyyy-mm-dd
 _HOST_LAST_MODIFIED_RE = re.compile(r'#\s*Last\s*Modified\s*:?\s*(\d{1,4})[./-](\d{1,2})[./-](\d{2,4})', re.IGNORECASE)
-# "# Version: x" header line, or hostxxx's own class attribute XXXversion = "..."
-_HOST_VERSION_RE = re.compile(r'''^[ \t]*(?:#[ \t]*Version[ \t]*:|XXXversion[ \t]*=)[ \t]*['"]?([0-9][0-9A-Za-z.\-]*)''', re.MULTILINE | re.IGNORECASE)
 
 
 def _getHostInfoText(key):
     # "Host: <key>, Last Modified: dd.mm.yyyy[, Version: x]" for the line
-    # above the host URL, read from the host file's own header comment.
-    # Read lazily on selection and cached per session; empty for groups,
-    # "config" and hosts installed as .pyc only (no comments to read).
+    # above the host URL. The date comes from the header of the host file
+    # (only its start is read - hostxxx alone is 1.5 MB), the version from
+    # hostxxx's Host.XXXversion of the module E2iPlayerWidget already
+    # imported for gettytul(). Cached per session; empty for groups and
+    # "config".
     if key in _HOST_INFO_CACHE:
         return _HOST_INFO_CACHE[key]
     text = ""
     try:
+        parts = []
         path = GetPluginDir('hosts/host%s.py' % key)
         if os.path.isfile(path):
             with io.open(path, 'r', encoding='utf-8', errors='ignore') as f:
-                data = f.read()
-            parts = []
-            match = _HOST_LAST_MODIFIED_RE.search(data)
+                match = _HOST_LAST_MODIFIED_RE.search(f.read(4096))
             if match:
                 day, month, year = match.groups()
                 if len(day) == 4:
@@ -295,11 +298,11 @@ def _getHostInfoText(key):
                 if len(year) == 2:
                     year = '20' + year
                 parts.append(_("Last Modified: %s") % ('%02d.%02d.%s' % (int(day), int(month), year)))
-            match = _HOST_VERSION_RE.search(data)
-            if match:
-                parts.append(_("Version: %s") % match.group(1))
-            if parts:
-                text = ", ".join([_("Host: %s") % key] + parts)
+        version = getattr(getattr(sys.modules.get('Plugins.Extensions.IPTVPlayer.hosts.host' + key), 'Host', None), 'XXXversion', None)
+        if version:
+            parts.append(_("Version: %s") % version)
+        if parts:
+            text = ", ".join([_("Host: %s") % key] + parts)
     except Exception:
         printExc()
     _HOST_INFO_CACHE[key] = text
@@ -1635,7 +1638,7 @@ else:
             skin = """
             <screen name="PlayerSelectorWidget" position="center,center" size="%d,%d" backgroundColor="#34111112" flags="wfNoBorder">
                 %s
-                <widget name="hostinfo" position="10,%d" zPosition="1" size="%d,%d" font="Regular;%d" foregroundColor="#b6b6b6" halign="center" valign="center" transparent="1"/>
+                <widget name="hostinfo" position="10,%d" zPosition="1" size="%d,%d" font="Regular;%d" foregroundColor="#b6b6b6" halign="center" valign="center" noWrap="1" transparent="1" />
                 <widget name="statustext" position="10,%d" zPosition="1" size="%d,%d" font="Regular;%d" halign="center" valign="center" transparent="1"/>
                 <widget name="marker" zPosition="2" position="%d,%d" size="%d,%d" transparent="1" alphatest="blend" />
                 <widget name="page_marker" zPosition="3" position="%d,%d" size="%d,%d" transparent="1" alphatest="blend" />
