@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 03.10.2026 - revival for the current christusvincit-tv.pl (PHP-Fusion pages)
+# Last Modified: 04.10.2026
+# 03.10.2026 - revival for the current christusvincit-tv.pl (PHP-Fusion pages)
 #   The own Kaltura media servers (mediaserwer3/mediaserver4) are gone; the recordings are
 #   Vimeo showcases / Vimeo live events and a YouTube live embed. Main page sections + side
 #   panels (favourites find a section again by its caption), article categories (cat_id 1-3) and

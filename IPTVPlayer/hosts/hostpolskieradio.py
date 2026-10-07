@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 03.10.2026 - Polskie Radio (polskieradio.pl), new host
+# Last Modified: 04.10.2026
+# 03.10.2026 - Polskie Radio (polskieradio.pl), new host
 #   Live: the antennas of player.polskieradio.pl (Jedynka, Dwojka, Trojka, Czworka, PR24, Chopin, ...),
 #   stream urls from apipr.polskieradio.pl/api/stacje (HLS like the web player, plus the Icecast/Shoutcast MP3).
 #   Programme archive: apipr.polskieradio.pl/api/mainschedule (last 7 days, broadcasts that have a recording).

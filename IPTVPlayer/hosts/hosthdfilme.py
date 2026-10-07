@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 01.10.2026
 # 01.10.2026 - domain hdfilme.ceo; the player iframe moved from meinecloud.click to devideosrc.co.
 # 27.09.2026 - meinecloud.click was rebuilt ("DeVideoSRC"): no data-link lists any more, the hoster
 # embeds come from its token API (libs/meinecloud.py) - movies and episodes; domain hdfilme.cafe.
 # 09.09.2026 - the meinecloud player now base64-encodes its data-link values, so the choice box
 # showed empty (unresolvable) entries; _decodeDataLink() decodes them back to //host/e/id before
 # they reach getHostName()/getVideoLinkExt().
-# Last Modified: 05.09.2026 - added "Create MKV" option (config.plugins.iptvplayer.hdfilme_mkv),
+# 05.09.2026 - added "Create MKV" option (config.plugins.iptvplayer.hdfilme_mkv),
 # mirroring hostfilmpalast.py's MKV toggle: GetConfigList() now exposes it and getVideoLinks()
 # passes it straight through to decorateResolvedLinkItems(), which already wires the correct
 # postprocess meta for WgetDownloader to remux to mkv after the download finishes - same as

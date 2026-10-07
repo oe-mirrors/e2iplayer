@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 02.09.2026 - rewrite for the redesigned kinoking.cc
+# Last Modified: 01.10.2026
+# 02.09.2026 - rewrite for the redesigned kinoking.cc
 #   (Tailwind "fav-data-source" cards; movie.php server picker via ?id=..&link=<key>
 #    -> per-server <iframe> embed; series.php?id=..&season=.. -> inline
 #    allEpisodesData JSON with video_links) + watched flag / sidecar / name norm.

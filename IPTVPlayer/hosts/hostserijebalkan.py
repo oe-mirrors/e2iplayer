@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026 - new host for serijebalkan.com (Serije Balkan - movies and series with
+# Last Modified: 04.10.2026
+# 04.10.2026 - new host for serijebalkan.com (Serije Balkan - movies and series with
 #   Serbian / Croatian / Bosnian subtitles)
 #   - the site is a Next.js app: the whole catalogue (~24000 movies and series) comes from one JSON
 #     (/api/search-data, ~2 MB gzip) that the site filters in the browser - it is loaded once, kept in

@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 04.10.2026
 # Vimeo (vimeo.com) - Staff Picks, the categories with their curated channels and groups, the videos of
 # a channel / group / user, search.
-# Last Modified: 03.10.2026 - revival + rewrite: vimeo.com serves no browsable HTML any more. Lists come
+# 03.10.2026 - revival + rewrite: vimeo.com serves no browsable HTML any more. Lists come
 #   from the "simple API" (vimeo.com/api/v2/channel|group|<user>/videos.json - 3 pages of 20) and from
 #   api.vimeo.com (categories, channels and groups of a category, search) with the anonymous "jwt" of
 #   vimeo.com/_rv/viewer. Search and the video lists of api.vimeo.com are "restricted in your region"

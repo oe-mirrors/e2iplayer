@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 03.10.2026 - new host for BanBye (banbye.com, Polish video platform)
+# Last Modified: 04.10.2026
+# 03.10.2026 - new host for BanBye (banbye.com, Polish video platform)
 #   Everything comes from the public JSON API on api.banbye.com:
 #   /videos?sort=new|views&category=<key>&channelId=<id>&limit&offset, /channels?sort=subscriptionsCount,
 #   /search?query=&entity=all, /videos/<id> (INFO). The stream is asked for with

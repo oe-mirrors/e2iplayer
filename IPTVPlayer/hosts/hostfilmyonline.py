@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026 - new host for filmyonline.cc (Polish movies and series; MTDb 4 site,
+# Last Modified: 04.10.2026
+# 04.10.2026 - new host for filmyonline.cc (Polish movies and series; MTDb 4 site,
 #   filmyonline.pl is only a parked domain)
 #   - Cloudflare: every request goes through getPageCFProtection (MyE2i solves the browser check, the
 #     solving User-Agent is remembered next to the cookie jar)

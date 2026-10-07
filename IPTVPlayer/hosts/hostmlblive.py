@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 04.10.2026
 # MLBLive (mlblive.net) - MLB full game replays, World Series, World Baseball Classic, MLB TV shows
 # Site: uCoz catalogue like basketball-video.com / nfl-video.com (navigation groups, "?pageN" paging, /search/),
 #   behind Cloudflare that only lets Chrome's TLS fingerprint through -> every page via curl-impersonate
 # Game page: "Server #N" headings with the hoster <iframe> (ok.ru, vidara, filemoon, ...) or "Watch" buttons
 #   to link pages of the site (mlblive.net/01-NNN) with one hoster <iframe>. Resolved lazily in getVideoLinks.
 #   Listing, search, links and INFO: tools/ucozcatalog.py
-# Last Modified: 03.10.2026 - new host (was a sub-menu of basketball-video.com): watched flag, name
+# 03.10.2026 - new host (was a sub-menu of basketball-video.com): watched flag, name
 #   normalisation, sidecar, search, INFO, curl-impersonate for the Cloudflare check
 ###################################################
 # LOCAL import

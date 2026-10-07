@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 03.10.2026 - current standard (cimalina host created by Dr HYTHAM MAHMOUD)
+# Last Modified: 04.10.2026
+# 03.10.2026 - current standard (cimalina host created by Dr HYTHAM MAHMOUD)
 #   - domain: cema-lin.shop (2.cema-lin.shop is a parked cPanel page now), own "Alternative domain" first
 #   - movie / series categories read live from the site menu, collections (/assemblies/), search;
 #     First Page / Jump / Next page (n/last) from the WordPress pager

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026 - new host for m4ustream.com (the new domain of StreamM4u)
+# Last Modified: 04.10.2026
+# 04.10.2026 - new host for m4ustream.com (the new domain of StreamM4u)
 #   - Cloudflare: every page and ajax request goes through getPageCFProtection (MyE2i solves the
 #     browser check, the solving User-Agent is remembered next to the cookie jar)
 #   - movies, TV series, best movies / TV shows, genres, years and search, with First page / Jump /

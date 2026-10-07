@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 03.10.2026 - revived for tv10.egydead.live (c4u1r.sbs only redirects there)
+# Last Modified: 04.10.2026
+# 03.10.2026 - revived for tv10.egydead.live (c4u1r.sbs only redirects there)
 #   Rewrite against the current site:
 #   - one list parser for all sections; the kind of a row comes from its url: /serie/ = series
 #     (-> seasons), /season/ = season (-> episodes), /assembly/ = film collection (-> films),

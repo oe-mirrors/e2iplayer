@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 03.10.2026 - revived for the relaunched watchcartoononline.com
+# Last Modified: 04.10.2026
+# 03.10.2026 - revived for the relaunched watchcartoononline.com
 #   (new PHP site: /detail/<id> + /detail-dubbed/<id> series pages with the whole
 #    episode list as inline "let playlist = [...]" JSON; /data-video/?v=<embed> gives
 #    the own CDN tokens (SD/HD/FHD) -> <server>/getvid?evid=.. redirects to a media node;

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 03.10.2026 - new host for virpe.cc (Polish TV series, shows and films, Elxis CMS)
+# Last Modified: 04.10.2026
+# 03.10.2026 - new host for virpe.cc (Polish TV series, shows and films, Elxis CMS)
 #   Main page: "Ostatnio dodane" (latest episodes), a poster grid of series and the per-channel series
 #   lists (TVP / Polsat / TVN / entertainment / foreign / programmes / archive); category pages are
 #   <li class="sectiontableentry"> lists with an Elxis pager ("Dalej"); film sections; GET search.

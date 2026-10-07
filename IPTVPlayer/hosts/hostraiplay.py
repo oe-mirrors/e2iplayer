@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 09.08.2025 - Lululla - fix for increase getThumbnailUrl2 - sport page show poster - events theatre added
+# Last Modified: 09.09.2026
+# 09.08.2025 - Lululla - fix for increase getThumbnailUrl2 - sport page show poster - events theatre added
 ###################################################
 # LOCAL import
 ###################################################

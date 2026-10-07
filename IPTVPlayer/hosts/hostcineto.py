@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 03.10.2026 - brought to the current host standard
+# Last Modified: 04.10.2026
+# 03.10.2026 - brought to the current host standard
 #   - covers from cine.to/public/cover/<8-digit id>.jpg (s.cine.to is gone -> 502)
 #   - INFO: site plot/genres/director/cast/rating merged with libs/moviemeta (the site's
 #     ids are not reliable IMDb ids, so the lookup goes by title + year)

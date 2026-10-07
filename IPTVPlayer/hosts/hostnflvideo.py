@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 04.10.2026
 # NFL Video (nfl-video.com) - NFL / College Football full game replays, condensed games, Super Bowls
 # Site: uCoz catalogue (seasons / teams from the side navigation, "?pageN" paging, /search/ needs the ucz_h cookie)
 # Game page: "Server #N XX" buttons -> link pages (nhlgamestoday.com, nbaontv.com, ...) with one hoster <iframe>
 #   (ok.ru, odysee, vidara, ...), older games embed the hoster <iframe> directly. Resolved lazily in getVideoLinks.
 #   Link pages, favourites and handleService: tools/ucozcatalog.py (listing / paging / links of this site differ)
-# Last Modified: 03.10.2026 - rewrite: watched flag, name normalisation, sidecar, search, INFO, paging (First / Jump / Next)
+# 03.10.2026 - rewrite: watched flag, name normalisation, sidecar, search, INFO, paging (First / Jump / Next)
 ###################################################
 # LOCAL import
 ###################################################

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 04.10.2026
 # Based on the preparatory work of odem2014
-# Last Modified: 03.10.2026 - new domain shaahiied4u.net (shahid4uu.day is dead, shed4u1.com is
+# 03.10.2026 - new domain shaahiied4u.net (shahid4uu.day is dead, shed4u1.com is
 #   parked; shaiid4u.co / shhaiid4u.net redirect here): "show-card" grids, ?page=N with rel="next" (First page /
 #   Jump / Next page, also for the episodes of a season - no blocking loop over all pages),
 #   /series/ -> /season/ -> /episode/ pages, the /watch/ page (needs the title page as Referer)

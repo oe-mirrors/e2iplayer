@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 04.10.2026
 # TBN GO (tbngo.pl) - free platform of the Christian channel TBN Polska
 # Live: /get-live-hls -> HLS of the TBN Polska channel (no account needed).
 # VOD: /api/v2/videos (programmes), /api/v2/categories (category -> programmes), /api/v2/vod/<id> (episodes).
 #   Playback needs a free TBN GO account: POST /login {email, password} -> token,
 #   POST /api/v2/vod/<id>/playback {episodeNumber} with "Authorization: Bearer <token>" -> playbackUrl + subtitles.
-# Last Modified: 03.10.2026 - new host: live, categories, programmes/episodes, login, watched flag, naming, sidecar, INFO
+# 03.10.2026 - new host: live, categories, programmes/episodes, login, watched flag, naming, sidecar, INFO
 ###################################################
 # LOCAL import
 ###################################################

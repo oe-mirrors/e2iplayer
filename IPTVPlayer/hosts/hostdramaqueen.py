@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 03.10.2026 - DramaQueen.pl: Asian dramas and films with Polish subtitles (fansub group).
+# Last Modified: 04.10.2026
+# 03.10.2026 - DramaQueen.pl: Asian dramas and films with Polish subtitles (fansub group).
 #   The site's pages sit behind a login wall, its WordPress REST API (wp-json/wp/v2) is public: title lists
 #   per country (Korean / Japanese / other dramas and films) newest first, recently updated, A-Z, genres
 #   (tags), title search; a drama page carries its episodes as toggle sections with "DQ-Player" links

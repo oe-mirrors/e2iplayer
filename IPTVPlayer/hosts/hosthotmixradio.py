@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 03.10.2026 - Hotmix Radio (hotmixradio.com), new host
+# Last Modified: 04.10.2026
+# 03.10.2026 - Hotmix Radio (hotmixradio.com), new host
 #   ~70 themed web radio stations (Icecast MP3) from the Next.js home page data (one request, cached):
 #   all stations, categories (Chill out, Party Time, Time Travel, ...), search (station name, description,
 #   categories).

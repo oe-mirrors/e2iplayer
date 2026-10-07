@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 04.10.2026
 # Assabile (assabile.com) - Quran recitations, anasheed, adhan and Islamic lessons.
 # Site languages are sub-domains (www = English, ar, fr, es, tr), all with the same markup.
 #   person lists:  /quran, /quran/<country>, /anasheed, /lesson  (12 per page, /page:N)
@@ -7,7 +8,7 @@
 #   lecturer:      /<person>/series (video, <source> mp4 per episode page), /<person>/series-audio (direct mp3)
 #   tracks:        <a class="link-media" href="#<id>">: recitation -> /ajax/getrcita-link-<id>,
 #                  nasheed (has data-title) -> /ajax/getsnng-link-<id>; both answer with the plain mp3 url
-# Last Modified: 03.10.2026 - new host: reciters, surahs, anasheed, adhan, lessons, search, watched flag,
+# 03.10.2026 - new host: reciters, surahs, anasheed, adhan, lessons, search, watched flag,
 #   favourites, First page / Jump / Next page, sidecar, name normalisation "Person - Track"
 import re
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase

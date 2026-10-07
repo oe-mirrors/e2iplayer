@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 03.10.2026 - new host for Philizz (philizz.nl, Dutch DJ video megamixes)
+# Last Modified: 04.10.2026
+# 03.10.2026 - new host for Philizz (philizz.nl, Dutch DJ video megamixes)
 #   Static html pages (windows-1252) per series: Yearmix, Decademix, Heroes of the Zer00s,
 #   Back to the 80s / 90s, Holland in de Mix, Mashups, Powermix, Tropical Summer.
 #   Every mix is a "DialogTitle" table with a video.js <source> MP4 on philizzmedia.nl, an MP3

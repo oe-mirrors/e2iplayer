@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 04.10.2026
 # FullRaces (fullraces.com) - Formula 1 (sessions, archive 2000-2018), NASCAR, IndyCar, WSBK, WRC, F2, F3,
 #   Formula E, F1 Academy and MotoGP ("Other") full race replays
 # Site: uCoz catalogue like basketball-video.com / nfl-video.com (navigation groups, "?pageN" paging, /search/),
@@ -6,7 +7,7 @@
 # Race page: a player block with one button per source (ok.ru, Dailymotion parts, filemoon/byse) and/or
 #   headings with hoster <iframe>s and "Part N" buttons (Dailymotion, vidara, ...). Resolved lazily in getVideoLinks.
 #   Listing, search, links and INFO: tools/ucozcatalog.py
-# Last Modified: 03.10.2026 - new host (was a sub-menu of basketball-video.com): watched flag, name
+# 03.10.2026 - new host (was a sub-menu of basketball-video.com): watched flag, name
 #   normalisation, sidecar, search, INFO, curl-impersonate for the Cloudflare check
 ###################################################
 # LOCAL import

@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 04.10.2026
 # TVN24 (tvn24.pl) - Polish news portal: the free video clips embedded in the news articles
 # Sections (Najnowsze, Polska, Swiat, Biznes, regions ...) are paged with /<section>/s-N, search = the site's search
 # box (/_i/y/f/search-results/<words>) plus the tag page /tagi/<slug> when one exists; an article page carries
 # the clip as "playlistUrl" (/_e/p/playlist/cue/...) -> JSON with movie.video.sources (HLS with a separate audio
 # rendition, sometimes MP4). TVN24+ (live channels, programmes, podcasts) is subscription + DRM only and is not listed.
-# Last Modified: 03.10.2026 - rewrite for the new site: sections, regions, search, watched flag, sidecar, INFO
+# 03.10.2026 - rewrite for the new site: sections, regions, search, watched flag, sidecar, INFO
 ###################################################
 # LOCAL import
 ###################################################

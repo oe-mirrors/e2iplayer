@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 03.10.2026 - brought to the current host standard
+# Last Modified: 04.10.2026
+# 03.10.2026 - brought to the current host standard
 #   (WikiCourses, www.wikicourses.net - Arabic video courses - originally by popking (odem2014))
 #   - no f-strings (Python 2), no sleeping 3x retry wrapper, no colour codes; categories ->
 #     sub-categories -> courses -> lessons, search + search history (the site has no paging)

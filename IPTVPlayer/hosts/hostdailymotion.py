@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 03.06.2025
+# Last Modified: 27.09.2026
 # 27.09.2026 - the site's GraphQL search answers only empty lists and the REST playlist search needs a
 # logged-in user: search types are now Videos + Channels (REST users?search, channel -> its videos).
 ###################################################

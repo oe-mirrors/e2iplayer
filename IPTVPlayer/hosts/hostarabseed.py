@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 03.10.2026 - rewrite for the current m.myseed.pics layout and the current host standard
+# Last Modified: 04.10.2026
+# 03.10.2026 - rewrite for the current m.myseed.pics layout and the current host standard
 #   (earlier versions: popking (odem2014), M.Elsafty (angel_heart))
 #   - menus read the site's current category paths (the old "-14"/"-7"/"-2" slugs only redirect now);
 #     movies, songs, plays, WWE: VIDEO rows; series lists ("latest episodes"): episode VIDEO rows;

@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 04.10.2026
 # DR TV (dr.dk/drtv) - the streaming service of Danmarks Radio: live channels (DR1, DR2, DR Ramasjang,
 # TV Avisen), series, films, documentaries, the "Gensyn" archive, live sport, search.
-# Last Modified: 03.10.2026 - revival + rewrite for the Massive "AXIS" platform the site runs on now:
+# 03.10.2026 - revival + rewrite for the Massive "AXIS" platform the site runs on now:
 #   JSON API production.dr-massive.com/api (page?path=..., lists/<id>, items/<id>, items/<id>/children,
 #   search with an anonymous token from authorization/anonymous-sso), streams from
 #   account/items/<id>/videos (plain HLS, geo-restricted titles are only playable from Denmark -> message,

@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 04.10.2026
 # Ninateka (ninateka.pl) - Polish films, documentaries, theatre, concerts, talks and animation
 # of the Narodowy Instytut Audiowizualny / Filmoteka Narodowa.
-# Last Modified: 03.10.2026 - revival + rewrite for the Redge (RGP) platform the site runs on now:
+# 03.10.2026 - revival + rewrite for the Redge (RGP) platform the site runs on now:
 #   JSON API under /api (sections of the home page, categories, vods, serials -> seasons -> episodes,
 #   search), streams from /api/products/<id>/videos/playlist (plain HLS from redcdn, DRM-only titles
 #   such as the audiobooks -> message) + watched flag / downloaded flag / name normalisation /

@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 04.10.2026
 # Original File from: 08/04/2026 - Mohamed Elsafty (angel_heart)
 # RadioE.ct.ws Host for IPTVPlayer - STABLE GIST VERSION
 # Uses separate maps for reliability + improved RSS parsing
-# Last Modified: 03.10.2026 - host standard
+# 03.10.2026 - host standard
 #   - radioe.ct.ws sits behind a JS cookie challenge and its icons / jingles are gone (404):
 #     default icon is the repo's PlayerSelector logo (raw GitHub), radioe.ct.ws images fall back to it,
 #     episodes whose audio lives there are left out, dead station-cover host ignored

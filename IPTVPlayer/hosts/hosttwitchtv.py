@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 23.09.2026
+# Last Modified: 24.09.2026
 #
 # Revived against Twitch's current web GraphQL API (gql.twitch.tv), used
 # anonymously with the public web Client-ID:

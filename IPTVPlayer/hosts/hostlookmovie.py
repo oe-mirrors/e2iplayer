@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 03.10.2026 - new host for lookmovie2.to (www.lookmovie2.to)
+# Last Modified: 04.10.2026
+# 03.10.2026 - new host for lookmovie2.to (www.lookmovie2.to)
 #   English movies and TV shows. Lists: /movies[/page/N], /movies/genre/<g>[/page/N], /shows (latest episodes),
 #   /shows/filter (latest shows), /shows/genre/<g>, search /movies/search/?q= + /shows/search/?q=.
 #   Streams: the /movies/play/<slug> and /shows/play/<slug> pages carry a short-lived hash/expires pair,

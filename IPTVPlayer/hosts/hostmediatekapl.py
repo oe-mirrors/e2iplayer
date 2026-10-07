@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 04.10.2026
 # mediateka.pl - audio portal of the ZPR Media group (Radio ESKA, ESKA2, ESKA Rock, VOX, vibe fm, Radio Super Express)
 # Radio: the brands of https://mediateka.pl/radio/ ("?stream_uid=ra-..."); front-api.grupazprmedia.pl
 #   /radios/v1/radio_station_details/<uid>/ -> site_uid, /radios/v1/radio_stations/<site_uid>/ -> all streams of the
 #   brand (regional + theme stations) with stream_ic (Icecast AAC) and stream_url (HLS).
 # Podcasts: the podcast cards of /podcasty/; a podcast page carries its latest episodes as JSON
 #   (<script id="ao-..." type="application/json">) with HLS audio (cache.stream.smcdn.pl).
-# Last Modified: 03.10.2026 - new host: radio stations, podcasts, watched flag (podcast episodes), sidecar, INFO
+# 03.10.2026 - new host: radio stations, podcasts, watched flag (podcast episodes), sidecar, INFO
 ###################################################
 # LOCAL import
 ###################################################

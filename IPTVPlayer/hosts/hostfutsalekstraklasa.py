@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 04.10.2026
 # Futsal Ekstraklasa TV (tv.futsalekstraklasa.pl) - official video service of the Polish futsal league:
 #   match highlights per season/round, magazine, interviews, statements, press conferences, team pages
 # Site: plain HTML, menu = header links, every section has season links (and the highlights section
 #   round links), a video tile links to /player/<id>/<slug>.html which carries a direct MP4 <source>
-# Last Modified: 03.10.2026 - new host: watched flag, name normalisation, sidecar, INFO
+# 03.10.2026 - new host: watched flag, name normalisation, sidecar, INFO
 ###################################################
 # LOCAL import
 ###################################################

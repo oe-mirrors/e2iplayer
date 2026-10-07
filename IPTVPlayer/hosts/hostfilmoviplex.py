@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 03.10.2026 - revival + rewrite for the current filmoviplex.com
+# Last Modified: 04.10.2026
+# 03.10.2026 - revival + rewrite for the current filmoviplex.com
 #   (WordPress "cbp-rfgrid" cards with FILM/SERIJA badge; First page / Jump / Next page over ".../page/N";
 #    movie players as loadEmbed('/embed.php?vid=<base64 url>') / plain embed url;
 #    series episodes as inline window.DB_EPISODES {season: {episode: <base64 url>}})

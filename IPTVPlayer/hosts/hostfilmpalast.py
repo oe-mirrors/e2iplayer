@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 23.08.2026 - getSuggestionsProvider() added (forces Google search suggestions) - Kamikaze24
+# Last Modified: 23.08.2026
+# 23.08.2026 - getSuggestionsProvider() added (forces Google search suggestions) - Kamikaze24
 ###################################################
 # LOCAL import
 ###################################################
