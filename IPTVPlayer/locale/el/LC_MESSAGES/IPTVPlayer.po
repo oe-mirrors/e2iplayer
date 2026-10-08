@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-07 21:05+0000\n"
+"POT-Creation-Date: 2026-10-08 20:17+0000\n"
 "PO-Revision-Date: 2026-10-05 01:16+0300\n"
 "Last-Translator: \n"
 "Language-Team: giorbak\n"
@@ -263,6 +263,9 @@ msgstr "----- ΡΥΘΜΙΣΕΙΣ ΔΙΑΚΟΜΙΣΤΩΝ ΜΕΣΟΛΑΒΗΣΗΣ -
 
 msgid "----- Porn Site Configuration -----"
 msgstr "----- Ρυθμίσεις ιστοσελίδων για ενήλικες -----"
+
+msgid "----- SCREENSAVER CONFIGURATION -----"
+msgstr ""
 
 msgid "----- SECURITY CONFIGURATION -----"
 msgstr "----- ΡΥΘΜΙΣΕΙΣ ΑΣΦΑΛΕΙΑΣ -----"
@@ -850,6 +853,9 @@ msgstr "Μαύρο"
 
 msgid "Black iframe file"
 msgstr "Αρχείο iframe μαύρου χρώματος"
+
+msgid "Black screensaver"
+msgstr ""
 
 msgid "Block wmv files"
 msgstr "Αποκλεισμός αρχείων wmv"
@@ -2141,9 +2147,6 @@ msgstr "Αρχεία"
 msgid "Filler"
 msgstr "Επεισόδια πλήρωσης"
 
-msgid "Film"
-msgstr "Ταινία"
-
 msgid "Films"
 msgstr "Ταινίες"
 
@@ -2413,6 +2416,9 @@ msgstr "Help"
 #, python-format
 msgid "Hide \"%s\" group"
 msgstr "Απόκρυψη ομάδας \"%s\""
+
+msgid "Hide the menu (live TV visible)"
+msgstr ""
 
 msgid "Hide titles only available in Sweden"
 msgstr "Απόκρυψη τίτλων που είναι διαθέσιμοι μόνο στη Σουηδία"
@@ -3519,6 +3525,9 @@ msgstr "Καμία"
 msgid "Normalize item / file names (Show - SxxExx - Title)"
 msgstr "Κανονικοποίηση ονομάτων στοιχείων / αρχείων (Εκπομπή - SxxExx - Τίτλος)"
 
+msgid "Not available in your country (geo-blocking)."
+msgstr ""
+
 msgid "Not available yet"
 msgstr "Δεν είναι ακόμη διαθέσιμο"
 
@@ -3570,6 +3579,9 @@ msgstr "ΕΝΤΑΞΕΙ"
 
 msgid "OMDb API key (free at omdbapi.com)"
 msgstr "Κλειδί API OMDb (δωρεάν στο omdbapi.com)"
+
+msgid "Off"
+msgstr ""
 
 msgid "Offline channels"
 msgstr "Κανάλια εκτός σύνδεσης"
@@ -3783,6 +3795,9 @@ msgstr "Προστασία pin για τις ρυθμίσεις"
 
 msgid "Pin protection for plugin"
 msgstr "Προστασία pin για το πρόσθετο"
+
+msgid "Pin protection for this host"
+msgstr ""
 
 #, python-format
 msgid "Play with [%s] player"
@@ -4192,6 +4207,9 @@ msgstr "Θρησκεία"
 msgid "Remaining:"
 msgstr "Απομένουν:"
 
+msgid "Remember a host's pin until E2iPlayer is closed"
+msgstr ""
+
 msgid "Remember last search entry"
 msgstr "Απομνημόνευση τελευταίας καταχώρησης αναζήτησης"
 
@@ -4347,6 +4365,12 @@ msgstr "Επιστημονική φαντασία & Φαντασία"
 msgid "Science"
 msgstr "Επιστήμη"
 
+msgid "Screensaver during audio playback"
+msgstr ""
+
+msgid "Screensaver in E2iPlayer menus"
+msgstr ""
+
 #, python-format
 msgid ""
 "Script execution failed.\n"
@@ -4400,6 +4424,9 @@ msgstr "Αποτελέσματα αναζήτησης"
 
 msgid "Search results region:"
 msgstr "Περιοχή αποτελεσμάτων αναζήτησης:"
+
+msgid "Search string must have at least 4 characters."
+msgstr ""
 
 msgid "Search term :"
 msgstr "Όρος αναζήτησης:"
@@ -4582,10 +4609,6 @@ msgstr ""
 "Η υπηρεσία %s απαιτεί εγγραφή.\n"
 "Παρακαλώ συμπληρώστε το όνομα χρήστη και τον κωδικό πρόσβασης στη ρύθμιση του %s."
 
-#, python-format
-msgid "Service [%s] has no additional settings."
-msgstr "Η υπηρεσία [%s] δεν έχει πρόσθετες ρυθμίσεις."
-
 msgid "Service icon size"
 msgstr "Μέγεθος εικονιδίου υπηρεσίας"
 
@@ -4615,6 +4638,10 @@ msgstr "Ορισμός ως προβληθέν"
 
 msgid "Settings"
 msgstr "Ρυθμίσεις"
+
+#, python-format
+msgid "Settings of service [%s] cannot be opened."
+msgstr ""
 
 msgid "Settings screen layout"
 msgstr "Διάταξη οθόνης ρυθμίσεων"
@@ -5306,6 +5333,9 @@ msgstr "Ο host δεν επέστρεψε λίστα."
 msgid "The host wanted to open a window on the TV (%s) - that only works on the receiver."
 msgstr "Ο host προσπάθησε να ανοίξει ένα παράθυρο στην TV (%s) - αυτό λειτουργεί μόνο στον δέκτη."
 
+msgid "The hoster sends an advert redirect instead of the video at the moment. Try another hoster."
+msgstr ""
+
 msgid "The latest uploads of all YouTube channels in this group, newest first."
 msgstr "Οι τελευταίες μεταφορτώσεις όλων των καναλιών YouTube αυτής της ομάδας, με τις νεότερες πρώτες."
 
@@ -5425,6 +5455,12 @@ msgstr "Δεν υπάρχει ελεύθερος χώρος στο δίσκο [%
 msgid "There is no hosts in this group."
 msgstr "Δεν υπάρχουν hosts σε αυτή την ομάδα."
 
+msgid "There is no next item in this list."
+msgstr ""
+
+msgid "There is no previous item in this list."
+msgstr ""
+
 #, python-format
 msgid ""
 "There is no storage device under \"%s\" (%s free). E2iPlayer will switch this folder back to \"%s\" at the next start.\n"
@@ -5465,6 +5501,9 @@ msgid "This entry cannot be opened."
 msgstr "Αυτή η καταχώριση δεν μπορεί να ανοίξει."
 
 msgid "This entry is only an advert, there is no video."
+msgstr ""
+
+msgid "This entry is protected by a PIN, open it on the receiver."
 msgstr ""
 
 msgid "This episode is not available in this version (SUB/DUB) on this server. Try another one."
@@ -5963,6 +6002,9 @@ msgstr "Μέγεθος προσωρινής αποθήκευσης βίντεο 
 msgid "Video library"
 msgstr "Βιβλιοθήκη βίντεο"
 
+msgid "Video link not found."
+msgstr ""
+
 msgid "Video mode"
 msgstr "Λειτουργία βίντεο"
 
@@ -6057,6 +6099,9 @@ msgstr "Τι συμβαίνει;"
 msgid "When the maximum is reached"
 msgstr "Όταν επιτευχθεί το μέγιστο"
 
+msgid "While live TV is running"
+msgstr ""
+
 msgid "Whole file must be downloaded to start playback!"
 msgstr "Πρέπει να ληφθεί ολόκληρο το αρχείο για να ξεκινήσει η αναπαραγωγή!"
 
@@ -6074,6 +6119,9 @@ msgstr "Με υπότιτλους"
 
 msgid "World"
 msgstr "Κόσμος"
+
+msgid "Worldwide"
+msgstr ""
 
 msgid "Wrestling"
 msgstr "Πάλη"
@@ -6210,6 +6258,10 @@ msgstr "Η επέκταση MyE2i είναι παλαιά ή άγνωστη (α�
 
 msgid "Your search entry"
 msgstr "Η αναζήτησή σας"
+
+#, python-format
+msgid "Youth protection: only available between %s and %s."
+msgstr ""
 
 msgid "Youtube Suggestions"
 msgstr "Προτάσεις Youtube"
@@ -6510,6 +6562,9 @@ msgstr "μέτριο"
 
 msgid "menu and list only"
 msgstr "μόνο μενού και λίστα"
+
+msgid "minutes"
+msgstr ""
 
 msgid "more options (this menu)"
 msgstr "περισσότερες επιλογές (αυτό το μενού)"
