@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 01.10.2026
+# Last Modified: 08.10.2026
+# 08.10.2026 - favourites of a PIN protected host ask for the host's PIN
 # 01.10.2026 - the "Newest videos (all YouTube channels)" row can be switched off in the host settings
 # 20.09.2026 - YouTube channels in a group: sort by newest upload + merged "newest videos" list,
 # folder watched/started marking, markers under the host's own watched folder name, origin host line
@@ -12,6 +13,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, Ge
 from Plugins.Extensions.IPTVPlayer.tools.iptvfavourites import IPTVFavourites
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
 from Plugins.Extensions.IPTVPlayer.components.iptvchoicebox import IPTVChoiceBoxItem
+from Plugins.Extensions.IPTVPlayer.components.iptvhostpin import IsHostPinProtected
 from Plugins.Extensions.IPTVPlayer.libs.crypto.hash.md5Hash import MD5
 from Plugins.Extensions.IPTVPlayer.libs import ytchannelfeed
 ###################################################
@@ -121,7 +123,7 @@ class Favourites(CBaseHostClass):
 
         ytChannels = [params for params, addFun in rows if self._isYtChannelParams(params)]
         if len(ytChannels) > 1 and config.plugins.iptvplayer.favourites_yt_newest_row.value:
-            self.addDir({'name': 'category', 'category': 'yt_newest', 'group_id': cItem['group_id'], 'title': _("Newest videos (all YouTube channels)"), 'desc': _("The latest uploads of all YouTube channels in this group, newest first."), 'icon': self.DEFAULT_ICON_URL})
+            self.addDir(self._addPinLock({'name': 'category', 'category': 'yt_newest', 'group_id': cItem['group_id'], 'title': _("Newest videos (all YouTube channels)"), 'desc': _("The latest uploads of all YouTube channels in this group, newest first."), 'icon': self.DEFAULT_ICON_URL}, 'youtube'))
         if ytChannels and self.isYtSorted(cItem['group_id']):
             try:
                 self._annotateYtChannels(rows)
@@ -129,7 +131,14 @@ class Favourites(CBaseHostClass):
                 printExc()
         for params, addFun in rows:
             params['desc'] = self._addHostLine(params['host'], params['desc'])
-            addFun(params)
+            addFun(self._addPinLock(params, params['host']))
+
+    @staticmethod
+    def _addPinLock(params, hostName):
+        # a favourite of a PIN protected host asks for the host's PIN on OK (the right PIN unlocks the host)
+        if IsHostPinProtected(hostName):
+            params.update({'pin_locked': True, 'pin_host': hostName})
+        return params
 
     def _addHostLine(self, hostName, desc):
         # the host a favourite comes from, first line of its description

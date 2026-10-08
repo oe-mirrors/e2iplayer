@@ -261,10 +261,12 @@ class ConfigMenu(ConfigBaseWidget):
         list.append(getConfigListEntry(_("Pin protection for configuration"), config.plugins.iptvplayer.configProtectedByPin))
         if config.plugins.iptvplayer.configProtectedByPin.value:
             list.append(getConfigListEntry("    " + _("Use own pin for configuration"), config.plugins.iptvplayer.configOwnPin))
-        if config.plugins.iptvplayer.pluginProtectedByPin.value or (config.plugins.iptvplayer.configProtectedByPin.value and not config.plugins.iptvplayer.configOwnPin.value):
-            list.append(getConfigListEntry(_("Set pin code"), config.plugins.iptvplayer.fakePin))
+        # the player pin: also the pin of every protected host without an own one
+        list.append(getConfigListEntry(_("Set pin code"), config.plugins.iptvplayer.fakePin))
         if config.plugins.iptvplayer.configProtectedByPin.value and config.plugins.iptvplayer.configOwnPin.value:
             list.append(getConfigListEntry("    " + _("Set own configuration pin code"), config.plugins.iptvplayer.fakeConfigPin))
+        # the PIN protection of a host itself is set in that host's settings
+        list.append(getConfigListEntry(_("Remember a host's pin until E2iPlayer is closed"), config.plugins.iptvplayer.host_pin_remember))
         list.append(getConfigListEntry(_("https - validate SSL certificates"), config.plugins.iptvplayer.httpssslcertvalidation))
         list.append(getConfigListEntry(_("Allow external link-decryption service (enc-dec.app)"), config.plugins.iptvplayer.allow_external_resolve))
 
@@ -414,6 +416,14 @@ class ConfigMenu(ConfigBaseWidget):
         list.append(getConfigListEntry(_("Write current title to file:"), config.plugins.iptvplayer.curr_title_file))
 
     @staticmethod
+    def _fillScreensaver(list):
+        # E2iPlayerWidget (menus, every E2iPlayer screen except the players) and IPTVExtMoviePlayer (audio only)
+        list.append(getConfigListEntry(_("Screensaver in E2iPlayer menus"), config.plugins.iptvplayer.screensaver_menu))
+        if config.plugins.iptvplayer.screensaver_menu.value != "0":
+            list.append(getConfigListEntry("    " + _("While live TV is running"), config.plugins.iptvplayer.screensaver_menu_mode))
+        list.append(getConfigListEntry(_("Screensaver during audio playback"), config.plugins.iptvplayer.screensaver_audio))
+
+    @staticmethod
     def _fillDebug(list):
         list.append(getConfigListEntry(_("Debug logs"), config.plugins.iptvplayer.debugprint))
         if config.plugins.iptvplayer.debugprint.value != "":
@@ -448,6 +458,7 @@ class ConfigMenu(ConfigBaseWidget):
             ("captcha", _("----- CAPTCHA CONFIGURATION -----"), ConfigMenu._fillCaptcha),
             ("subtitles", _("----- SUBTITLES CONFIGURATION -----"), ConfigMenu._fillSubtitles),
             ("players", _("----- PLAYERS & PLAYBACK CONFIGURATION -----"), ConfigMenu._fillPlayers),
+            ("screensaver", _("----- SCREENSAVER CONFIGURATION -----"), ConfigMenu._fillScreensaver),
             ("debug", _("----- DEBUG CONFIGURATION -----"), ConfigMenu._fillDebug),
         )
 
@@ -805,7 +816,8 @@ class ConfigMenu(ConfigBaseWidget):
             config.plugins.iptvplayer.IPTVDMShowNotification,
             config.plugins.iptvplayer.debugprint,
             config.plugins.iptvplayer.debug_max_size,
-            config.plugins.iptvplayer.debug_on_limit
+            config.plugins.iptvplayer.debug_on_limit,
+            config.plugins.iptvplayer.screensaver_menu
             # config.plugins.iptvplayer.captcha_bypass_free,
             # config.plugins.iptvplayer.captcha_bypass_pay
         ]
@@ -850,8 +862,7 @@ class ConfigMenu(ConfigBaseWidget):
         # plugin pin - see GetConfigExpectedPin() for how the two coexist
         # at check time. Unlike changePin(), the very first own-pin set
         # skips the old-pin step (there is nothing to confirm against yet),
-        # same convention hostxxx's own PIN uses (_xxxOwnPinConfigured() in
-        # hosts/hostxxx.py).
+        # same convention as the host PINs (iptvhostpin.HandleHostPinAction()).
         alreadySet = 4 == len(config.plugins.iptvplayer.configPincode.value) and config.plugins.iptvplayer.configOwnPin.value
         if True is start:
             if alreadySet:
@@ -878,7 +889,7 @@ class ConfigMenu(ConfigBaseWidget):
                     # configOwnPin is already True here - this row (like
                     # the "Use own pin" toggle it depends on) is only
                     # reachable once it's switched on, same gating as
-                    # hostxxx's "Set own pin" row.
+                    # the host PINs' "Set own pin" row.
                     config.plugins.iptvplayer.configPincode.value = pin
                     config.plugins.iptvplayer.configPincode.save()
                     configfile.save()

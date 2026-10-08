@@ -41,6 +41,10 @@
         <key id="KEY_MENU"     mapto="menu"         flags="m" />
         <key id="KEY_8"        mapto="loop"         flags="m" />
         <key id="KEY_RECORD"   mapto="record"       flags="m" />
+        <key id="KEY_CHANNELUP"   mapto="zap_next" flags="m" />
+        <key id="KEY_CHANNELDOWN" mapto="zap_prev" flags="m" />
+        <key id="KEY_NEXT"        mapto="zap_next" flags="m" />
+        <key id="KEY_PREVIOUS"    mapto="zap_prev" flags="m" />
     </map>
     <map context="E2iPlayerVKActions">
         <key id="KEY_ENTER" mapto="ok_repeat"    flags="r" />

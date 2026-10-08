@@ -5,6 +5,23 @@
   "urllist",
   "e2iplayerinfo"
  ],
+ "worldwide": [
+  "youtube",
+  "dailymotion",
+  "twitchtv",
+  "vimeo",
+  "ted",
+  "nasaplus",
+  "ihavenotv",
+  "appletrailers",
+  "pinkbike",
+  "shoutcast",
+  "mytuner",
+  "mixcloud",
+  "hotmixradio",
+  "lastfm",
+  "musicbox"
+ ],
  "moviesandseries": [
   "ekinotv",
   "cdahd",

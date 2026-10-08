@@ -233,11 +233,12 @@ config.plugins.iptvplayer.configProtectedByPin = ConfigYesNo(default=False)
 config.plugins.iptvplayer.pluginProtectedByPin = ConfigYesNo(default=False)
 # Own, separate pin for the configuration screens instead of sharing the
 # plugin-start pin above - same "own pin instead of the shared one" pattern
-# already used by hostxxx's own PIN (config.plugins.iptvplayer.xxxownpin/
-# xxxpincode in hosts/hostxxx.py).
+# as the PIN of every host (components/iptvhostpin.py).
 config.plugins.iptvplayer.configOwnPin = ConfigYesNo(default=False)
 config.plugins.iptvplayer.fakeConfigPin = ConfigSelection(default="fake", choices=[("fake", "****")])
 config.plugins.iptvplayer.configPincode = ConfigText(default="0000", fixed_size=False)
+# a PIN protected host (iptvhostpin.py): its right PIN counts until E2iPlayer is closed, or it is asked every time
+config.plugins.iptvplayer.host_pin_remember = ConfigYesNo(default=True)
 
 config.plugins.iptvplayer.httpssslcertvalidation = ConfigYesNo(default=False)
 
@@ -373,8 +374,8 @@ def IsSidecarEnabled():
 def GetConfigExpectedPin():
     # '' means "no own pin configured" - checkPin() in iptvplayerwidget.py
     # (and pinCallback() in plugin.py) already fall back to the shared
-    # config.plugins.iptvplayer.pin in that case, same convention hostxxx's
-    # own getPinCode() uses for its own PIN.
+    # config.plugins.iptvplayer.pin in that case, same convention as the
+    # host PINs (iptvhostpin.GetHostPinCode()).
     if config.plugins.iptvplayer.configOwnPin.value and 4 == len(config.plugins.iptvplayer.configPincode.value):
         return config.plugins.iptvplayer.configPincode.value
     return ''
@@ -398,6 +399,12 @@ config.plugins.iptvplayer.use_clear_iframe = ConfigYesNo(default=False)
 config.plugins.iptvplayer.show_iframe = ConfigYesNo(default=True)
 config.plugins.iptvplayer.iframe_file = ConfigIPTVFileSelection(fileMatch=r"^.*\.mvi$", default="/usr/share/enigma2/radio.mvi")
 config.plugins.iptvplayer.clear_iframe_file = ConfigIPTVFileSelection(fileMatch=r"^.*\.mvi$", default="/usr/share/enigma2/black.mvi")
+# screensaver (iptvscreensaver.py: moving logo/cover, title and clock on black) after this many seconds without a key:
+# audio = audio-only playback in the external player; menu = every E2iPlayer screen except the players, where
+# "hide" only hides the E2iPlayer windows while live TV runs behind them (the black screensaver without live TV)
+config.plugins.iptvplayer.screensaver_audio = ConfigSelection(default="60", choices=[("0", _("Off")), ("30", _("30 seconds")), ("60", _("1 minute")), ("120", "2 " + _("minutes")), ("300", "5 " + _("minutes"))])
+config.plugins.iptvplayer.screensaver_menu = ConfigSelection(default="300", choices=[("0", _("Off")), ("60", _("1 minute")), ("120", "2 " + _("minutes")), ("300", "5 " + _("minutes")), ("600", "10 " + _("minutes")), ("900", "15 " + _("minutes"))])
+config.plugins.iptvplayer.screensaver_menu_mode = ConfigSelection(default="hide", choices=[("hide", _("Hide the menu (live TV visible)")), ("black", _("Black screensaver"))])
 
 config.plugins.iptvplayer.remember_last_position = ConfigYesNo(default=False)
 config.plugins.iptvplayer.remember_last_position_time = ConfigInteger(0, (0, 99))

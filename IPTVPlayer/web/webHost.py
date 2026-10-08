@@ -154,10 +154,14 @@ def _selectItem(index):
 		v['path'].append(cleanText(item.name))
 	elif item.type == CDisplayListItem.TYPE_MORE:
 		_setList(obj.getMoreForItem(index))
-	elif item.type in LINK_TYPES:
-		_loadLinks(obj, index, item)
-	elif item.type == CDisplayListItem.TYPE_ARTICLE:
-		_loadArticle(obj, index, item)
+	elif item.type in LINK_TYPES or item.type == CDisplayListItem.TYPE_ARTICLE:
+		# e.g. a favourite of a PIN protected host - the web interface cannot ask for the PIN
+		if getattr(item, 'pinLocked', False):
+			raise WebActionError(_('This entry is protected by a PIN, open it on the receiver.'))
+		if item.type == CDisplayListItem.TYPE_ARTICLE:
+			_loadArticle(obj, index, item)
+		else:
+			_loadLinks(obj, index, item)
 	else:
 		raise WebActionError(_('This entry cannot be opened.'))
 
