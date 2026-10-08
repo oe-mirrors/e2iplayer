@@ -1,5 +1,10 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 01.10.2026
+# Last Modified: 07.10.2026
+# 07.10.2026 - "no valid links" on every movie: the page now lazy-loads the "custom" DeVideoSRC player
+# (<iframe src="about:blank" data-src="https://devideosrc.co/custom/movie/<imdb>">), the old movie iframe
+# pattern found nothing, so movies had no player url (fixed in libs/meinecloud.py). Also: First/Jump/Next
+# paging (lists + search), "Title (Year)" names, episodes keyed on their own url (download marker),
+# INFO via moviemeta (IMDb id of the player) merged with the site's fields.
 # 01.10.2026 - domain hdfilme.ceo; the player iframe moved from meinecloud.click to devideosrc.co.
 # 27.09.2026 - meinecloud.click was rebuilt ("DeVideoSRC"): no data-link lists any more, the hoster
 # embeds come from its token API (libs/meinecloud.py) - movies and episodes; domain hdfilme.cafe.
@@ -20,7 +25,9 @@ from Components.config import config, ConfigYesNo, getConfigListEntry
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase, RetHost
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.libs.meinecloud import MeineCloud, MOVIE_IFRAME_RE, isPlayerUrl
+from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, getMetaByImdbId
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
+from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
@@ -64,6 +71,14 @@ def _trimTrailingDashPart(title):
     return re.split(r"\s+[–—]\s*", title, maxsplit=1)[0].strip()
 
 
+PAGING_KEYS = ("base_url", "page_tpl")
+
+
+def _pageUrl(url):
+    # an episode row's url is the series page + "#s<season>e<episode>" (its own download / favourite key)
+    return (url or "").split("#")[0]
+
+
 class HDFilme(CBaseHostClass):
 
     def __init__(self):
@@ -78,7 +93,7 @@ class HDFilme(CBaseHostClass):
             {"category": "list_items", "title": _("New"), "url": self.getFullUrl("filme1/")},
             {"category": "list_items", "title": _("Cinema movies"), "url": self.getFullUrl("kinofilme/")},
             {"category": "list_items", "title": _("Series"), "url": self.getFullUrl("serien/")},
-            {"category": "list_genres", "title": "Genres"}] + self.searchItems()
+            {"category": "list_genres", "title": _("Genres")}] + self.searchItems()
 
     def getPage(self, baseUrl, addParams=None, post_data=None):
         if addParams is None:
@@ -92,7 +107,9 @@ class HDFilme(CBaseHostClass):
             itemType = cItem.get("type", "")
             category = cItem.get("category", "")
             if itemType in ["video", "audio"]:
-                url = str(cItem.get("url", "") or "").strip()
+                # episodes: the series url + the stable "mc:<imdb>/<s>/<e>" id (keys from before the
+                # "#s1e2" episode urls stay valid)
+                url = _pageUrl(str(cItem.get("url", "") or "").strip())
                 seasonId = str(cItem.get("season_id", "") or "").strip()
                 streamUrl = str(cItem.get("stream_url", "") or "").strip()
                 # only episodes (which share the series url) need the stream_url to stay unique;
@@ -119,7 +136,7 @@ class HDFilme(CBaseHostClass):
             return ""
 
     def _buildSeasonItem(self, seasonId):
-        return {"category": "list_episodes", "url": self.currItem.get("url", ""), "season_id": seasonId}
+        return {"category": "list_episodes", "url": _pageUrl(self.currItem.get("url", "")), "season_id": seasonId}
 
     def _propagateEpisodeWatchedState(self, item):
         """Recompute the season-parent and series-parent watched state for an episode-ish item
@@ -128,7 +145,7 @@ class HDFilme(CBaseHostClass):
             if not isinstance(item, dict):
                 return
             seasonId = str(item.get("season_id", "") or "").strip()
-            url = str(item.get("url", "") or self.currItem.get("url", "") or "").strip()
+            url = _pageUrl(str(item.get("url", "") or self.currItem.get("url", "") or "").strip())
             if seasonId == "" or url == "":
                 return
             seasonEpisodes = self.cacheSeasons.get(seasonId, [])
@@ -140,19 +157,31 @@ class HDFilme(CBaseHostClass):
         except Exception:
             printExc()
 
+    def _lastPage(self, data):
+        # highest page number of the pager: <a href=".../page/1405/">1405</a>, <span>3</span> (current),
+        # search: <a onclick="javascript:list_submit(3)" ...>3</a>
+        block = self.cm.ph.getDataBeetwenMarkers(data, 'class="pages"', "</div>", False)[1]
+        nums = [int(n) for n in re.findall(r"(?:>|list_submit\()(\d+)(?:<|\))", block)]
+        return max(nums) if nums else 0
+
     def listItems(self, cItem):
         printDBG("HDFilme.listItems |%s|" % cItem)
-        sts, data = self.getPage(cItem["url"])
+        page = int(cItem.get("page", 1) or 1)
+        baseUrl = cItem.get("base_url") or cItem["url"]
+        tpl = cItem.get("page_tpl", "")
+        if not tpl:
+            # category lists: <list>/page/<n>/
+            tpl = re.sub(r"/page/\d+/?$", "/", baseUrl).rstrip("/").replace("{", "{{").replace("}", "}}") + "/page/{page}/"
+        sts, data = self.getPage(baseUrl if page <= 1 else tpl.format(page=page))
         if not sts:
             return
         if "Fatal error: Uncaught" in data[:2000]:
             SetIPTVPlayerLastHostError(_("The website returned a server error for this request."))
             return
-        nextPage = re.findall('nav_ext">.*?next">.*?href="([^"]+)', data, re.DOTALL)
-        items = self.cm.ph.getAllItemsBeetwenMarkers(data, 'class="item relative', 'class="absolute')
-        if not items:
-            items = self.cm.ph.getAllItemsBeetwenMarkers(data, 'class="pages">', "<svg")
-        for item in items:
+        normalize = IsMediaNamingNormalized()
+        isSeriesList = "/serien" in baseUrl
+        count = 0
+        for item in self.cm.ph.getAllItemsBeetwenMarkers(data, 'class="item relative', 'class="absolute'):
             itemUrl = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+)')[0])
             title = self.cm.ph.getSearchGroups(item, 'title="([^"]+)')[0]
             if not title:
@@ -160,24 +189,23 @@ class HDFilme(CBaseHostClass):
             title = _trimTrailingDashPart(self.cleanHtmlStr(title))
             if not title or not self.cm.isValidUrl(itemUrl):
                 continue
-            desc = ""
             icon = self.cm.ph.getSearchGroups(item, 'data-src="([^"]+)')[0]
             # titles without a poster carry the site's own placeholder text ("Erroe: wrong image")
             icon = self.getFullIconUrl(icon) if icon.startswith(("/", "http")) else self.DEFAULT_ICON_URL
-            duration = self.cm.ph.getSearchGroups(item, r'<span[^>]*>(\d+ min)</span>')
-            year = self.cm.ph.getSearchGroups(item, r'<span[^>]*>(\d{4})</span>')
-            if year:
-                desc += "Jahr: %s \n" % year[0]
-            if duration:
-                desc += "Dauer: %s" % duration[0]
-            params = dict(cItem)
-            params.update({"good_for_fav": True, "category": "list_seasons", "title": title, "url": itemUrl, "icon": icon, "desc": desc})
+            duration = self.cm.ph.getSearchGroups(item, r'<span[^>]*>(\d+ min)</span>')[0]
+            year = self.cm.ph.getSearchGroups(item, r'<span[^>]*>(\d{4})</span>')[0]
+            desc = "\n".join("%s: %s" % (label, value) for label, value in ((_("Year"), year), (_("Duration"), duration)) if value)
+            # series show the year of their first season - no "(Year)" for them (it would end up in every episode name)
+            dispTitle = "%s (%s)" % (title, year) if (normalize and year and not isSeriesList) else title
+            params = stripPagerKeys(dict(cItem), PAGING_KEYS)
+            params.update({"good_for_fav": True, "category": "list_seasons", "title": dispTitle, "s_title": title, "url": itemUrl, "icon": icon,
+                           "desc": desc, "meta_type": "tv" if isSeriesList else "", "meta_title": title, "meta_year": year})
             self.watchedHelper.updateHostItemFlag(self, params, self._getWatchedKeyForItem)
             self.addDir(params)
-        if nextPage:
-            params = dict(cItem)
-            params.update({"good_for_fav": False, "title": _("Next page"), "url": self.getFullUrl(nextPage[0])})
-            self.addDir(params)
+            count += 1
+        lastPage = self._lastPage(data)
+        listItem = dict(cItem, base_url=baseUrl, url=baseUrl, page_tpl=tpl)
+        addPagingItems(self, listItem, page, bool(count) and page < lastPage, lastPage, tpl)
 
     def _resolveMeineCloud(self, data):
         movieUrl = self.cm.ph.getSearchGroups(data, MOVIE_IFRAME_RE)[0]
@@ -208,8 +236,10 @@ class HDFilme(CBaseHostClass):
                     episodeTitle = "%s - %s %s" % (seriesName, epTag, name) if name else "%s - %s" % (seriesName, epTag)
                 else:
                     episodeTitle = "%s %s" % (epTag, name) if name else epTag
-            episodes.append({"type": "video", "url": url, "title": episodeTitle, "icon": icon, "desc": self.cleanHtmlStr(ep["desc"]) or desc,
-                             "stream_url": streamId, "stream_type": "mc_episode", "mc_url": ep["url"], "season_id": seasonId})
+            # own url per episode: the download marker and the favourite identity are keyed on it
+            episodes.append({"type": "video", "url": "%s#s%de%d" % (_pageUrl(url), seasonNum, episodeNum), "title": episodeTitle, "icon": icon,
+                             "desc": self.cleanHtmlStr(ep["desc"]) or desc, "stream_url": streamId, "stream_type": "mc_episode", "mc_url": ep["url"],
+                             "season_id": seasonId, "good_for_fav": True, "s_title": seriesName, "meta_type": "tv", "meta_title": seriesName, "imdb": imdb})
         return episodes
 
     def _loadSeriesCache(self, imdb, seriesName, seriesUrl, icon, desc):
@@ -238,15 +268,19 @@ class HDFilme(CBaseHostClass):
             return
         desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, 'og:description" content="([^"]+)')[0])
         kind, target = self._resolveMeineCloud(data)
+        if kind is None:
+            SetIPTVPlayerLastHostError(_("No streams are available for this title yet."))
+            return
         if kind != "series":
-            params = dict(cItem)
+            params = stripPagerKeys(dict(cItem), PAGING_KEYS)
             params.pop("isWatched", None)
             params.pop("isStarted", None)
-            params.update({"good_for_fav": True, "category": "video", "title": cItem["title"], "url": self.getFullUrl(url), "icon": icon, "desc": desc, "stream_url": target, "stream_type": kind or ""})
+            params.update({"good_for_fav": True, "category": "video", "title": cItem["title"], "url": self.getFullUrl(url), "icon": icon, "desc": desc,
+                           "stream_url": target, "stream_type": kind, "meta_type": "movie", "imdb": MeineCloud.imdbFromUrl(target)})
             self.watchedHelper.updateHostItemFlag(self, params, self._getWatchedKeyForItem)
             self.addVideo(params)
             return
-        seriesName = self.cleanHtmlStr(cItem.get("title", "") or "")
+        seriesName = self.cleanHtmlStr(cItem.get("s_title", "") or cItem.get("title", "") or "")
         seasons, seasonNumsById = self._loadSeriesCache(target, seriesName, url, icon, desc)
         if not seasons:
             SetIPTVPlayerLastHostError(_("No streams are available for this title yet."))
@@ -260,10 +294,11 @@ class HDFilme(CBaseHostClass):
             episodes = self.cacheSeasons.get(seasonId, [])
             seasonTag = formatSxxExx(seasonNum) if IsMediaNamingNormalized() else (_("Season") + " %d" % extractNum(seasonNum, 0))
             title = "%s - %s" % (seriesName, seasonTag) if seriesName else seasonTag
-            params = dict(cItem)
+            params = stripPagerKeys(dict(cItem), PAGING_KEYS)
             params.pop("isWatched", None)
             params.pop("isStarted", None)
-            params.update({"good_for_fav": True, "category": "list_episodes", "title": title, "url": url, "icon": icon, "desc": desc, "season_id": seasonId, "series_name": seriesName})
+            params.update({"good_for_fav": True, "category": "list_episodes", "title": title, "url": url, "icon": icon, "desc": desc, "season_id": seasonId,
+                           "series_name": seriesName, "s_title": seriesName, "meta_type": "tv", "meta_title": seriesName, "imdb": target})
             if episodes:
                 self.watchedHelper.updateParentWatchedState(params, episodes, self._getWatchedKeyForItem)
             else:
@@ -287,10 +322,10 @@ class HDFilme(CBaseHostClass):
     def _rebuildSeasonCache(self, cItem):
         """cacheSeasons is only filled while browsing a series live; rebuild it when a season
         node is reopened from favourites/history (empty cache) so its episodes show up."""
-        seriesUrl = cItem.get("url", "") or self.currItem.get("url", "")
+        seriesUrl = _pageUrl(cItem.get("url", "") or self.currItem.get("url", ""))
         if not seriesUrl:
             return
-        seriesName = cItem.get("series_name", "")
+        seriesName = cItem.get("series_name", "") or cItem.get("s_title", "")
         if not seriesName:
             seriesName = re.sub(r"\s*-\s*S\d+(?:E\d+)?\s*$", "", self.cleanHtmlStr(cItem.get("title", "") or ""))
         sts, data = self.getPage(seriesUrl)
@@ -328,9 +363,10 @@ class HDFilme(CBaseHostClass):
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("HDFilme.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
-        cItem = dict(cItem)
-        cItem["url"] = self.getFullUrl("?story=%s&do=search&subaction=search" % urllib_quote_plus(searchPattern))
-        self.listItems(cItem)
+        story = urllib_quote_plus(searchPattern).replace("{", "{{").replace("}", "}}")
+        url = self.getFullUrl("index.php?do=search&subaction=search&search_start={page}&story=%s" % story)
+        # the pager rows open as an ordinary list (no search pattern needed)
+        self.listItems(dict(cItem, category="list_items", url=url.format(page=1), base_url=url.format(page=1), page_tpl=url))
 
     def getLinksForVideo(self, cItem):
         printDBG("HDFilme.getLinksForVideo [%s]" % cItem)
@@ -383,28 +419,52 @@ class HDFilme(CBaseHostClass):
     def getArticleContent(self, cItem):
         printDBG("HDFilme.getArticleContent [%s]" % cItem)
         otherInfo = {}
-        sts, data = self.getPage(cItem["url"])
-        if not sts:
-            return []
-        desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, 'og:description" content="([^"]+)')[0]) or cItem.get("desc", "")
-        actors = self.cm.ph.getAllItemsBeetwenMarkers(data, "Schauspieler:", "</li>")
-        if actors:
-            names = re.findall('>([^<]+)</a>', actors[0], re.DOTALL)
-            if names:
-                otherInfo["actors"] = ", ".join(names)
-        released = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'<span[^>]*>(\d{4})</span>')[0])
-        if released:
-            otherInfo["released"] = released
-        duration = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r"(\d+ min)")[0])
-        if duration:
-            otherInfo["duration"] = duration
-        title = cItem["title"]
-        icon = cItem.get("icon", self.DEFAULT_ICON_URL)
-        return [{"title": self.cleanHtmlStr(title), "text": self.cleanHtmlStr(desc), "images": [{"url": self.getFullUrl(icon)}], "other_info": otherInfo}]
+        story = ""
+        imdb = cItem.get("imdb", "")
+        mediaType = cItem.get("meta_type", "")
+        sts, data = self.getPage(_pageUrl(cItem["url"]))
+        if sts:
+            story = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, 'og:description" content="([^"]+)')[0])
+            actors = self.cm.ph.getAllItemsBeetwenMarkers(data, "Schauspieler:", "</li>")
+            if actors:
+                names = re.findall('>([^<]+)</a>', actors[0], re.DOTALL)
+                if names:
+                    otherInfo["actors"] = ", ".join(names)
+            released = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'<span[^>]*>(\d{4})</span>')[0])
+            if released:
+                otherInfo["released"] = released
+            duration = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r"(\d+ min)")[0])
+            if duration:
+                otherInfo["duration"] = duration
+            kind, target = self._resolveMeineCloud(data)
+            if kind:
+                mediaType = mediaType or ("tv" if kind == "series" else "movie")
+                imdb = imdb or (target if kind == "series" else MeineCloud.imdbFromUrl(target))
+        mediaType = mediaType or "movie"
+        meta = {}
+        try:
+            if imdb:
+                meta = getMetaByImdbId(mediaType, imdb)
+            metaTitle = cItem.get("meta_title", "") or cItem.get("s_title", "")
+            if not meta and metaTitle:
+                meta = getMeta(mediaType, metaTitle, cItem.get("meta_year", "") or otherInfo.get("released", ""))
+        except Exception:
+            printExc()
+        info = dict(meta.get("info", {}))
+        info.update(otherInfo)  # the site's own fields win (German cast names, running time of this cut)
+        plot = meta.get("plot", "")
+        # an episode row carries its own description (from the player API)
+        text = (cItem.get("desc", "") if cItem.get("stream_type") == "mc_episode" else "") or story or plot or cItem.get("desc", "")
+        if plot and text != plot and cItem.get("stream_type") != "mc_episode":
+            text = "%s[/br][/br]%s" % (text, plot) if text else plot
+        icon = cItem.get("icon", "") or meta.get("poster", "") or self.DEFAULT_ICON_URL
+        return [{"title": self.cleanHtmlStr(cItem.get("title", "")), "text": self.cleanHtmlStr(text), "images": [{"title": "", "url": self.getFullIconUrl(icon)}], "other_info": info}]
 
     def handleService(self, index, refresh=0, searchPattern="", searchType=""):
         printDBG("handleService start")
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
+        if isJumpItem(self.currItem):
+            self.currItem = jumpTarget(self, self.currItem)
         name = self.currItem.get("name", "")
         category = self.currItem.get("category", "")
         printDBG("handleService: name[%s], category[%s]" % (name, category))

@@ -1,22 +1,29 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 27.09.2026
+# Last Modified: 08.10.2026
 # ARTE
 # Rewritten for the api-cdn.arte.tv "emac v4" JSON API + player v2 config
+# 07.10.2026 - INFO (programme/collection details, moviemeta for
+# films and series), First/Jump/Next paging, own url per video (download marker),
+# SxxExx from the episode info, all pages of a series, default user agent.
 # 05.09.2026 - stamp iptv_format='mkv' alongside iptv_use_ffmpeg/
 # ff_out_container on split audio/video HLS renditions, so the download manager
 # shows .mkv immediately instead of .mp4 needing a rename.
 # 31.08.2026 - split audio/video HLS renditions (merge://) are muxed
 # with ffmpeg (iptv_use_ffmpeg, matroska container) instead of hlsdl, which only
 # re-packages segments and produced unplayable files.
+# 08.10.2026 - episode titles without the doubled "Staffel 1 (1/8)", a message for youth-protected
+# (night slot only) and geo-blocked videos instead of an empty link list.
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import normalizeMediathekTitle
+from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
+from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
@@ -28,6 +35,7 @@ from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 ###################################################
 from Components.config import config, ConfigYesNo, ConfigSelection, getConfigListEntry
 from datetime import timedelta
+import re
 ###################################################
 
 ###################################################
@@ -76,7 +84,7 @@ class ArteTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
         CBaseHostClass.__init__(self, {'history': 'arte.tv', 'cookie': 'arte.tv.cookie'})
         self.MAIN_URL = 'https://www.arte.tv/'
         self.DEFAULT_ICON_URL = 'https://static-cdn.arte.tv/replay/favicons/favicon-194x194.png'
-        self.USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36'
+        self.USER_AGENT = self.cm.getDefaultUserAgent()
         self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'application/json'}
 
         self.watchedHelper = IPTVWatchedHelper('artetv')
@@ -172,6 +180,10 @@ class ArteTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
         ei = item.get('episodeInfo')
         if isinstance(ei, str) and ei.strip():
             parts.append(self.cleanHtmlStr(ei))
+        else:
+            season, episode = self._seasonEpisode(item)
+            if season and episode:
+                parts.append('%s %s, %s %s' % (_('Season'), season, _('Episode'), episode))
         for key in ('teaserText', 'shortDescription'):
             val = item.get(key)
             if isinstance(val, str) and val.strip():
@@ -181,6 +193,47 @@ class ArteTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if avail:
             parts.append(self.cleanHtmlStr(avail))
         return '[/br]'.join(parts)
+
+    @staticmethod
+    def _seasonEpisode(item):
+        # episodeInfo is {"season": 1, "episode": 3, ...} for series episodes (a text on old data)
+        ei = item.get('episodeInfo')
+        if isinstance(ei, dict):
+            try:
+                return int(ei.get('season') or 0), int(ei.get('episode') or 0)
+            except (TypeError, ValueError):
+                pass
+        return 0, 0
+
+    @staticmethod
+    def _isFilm(item):
+        genre = item.get('genre') or {}
+        return not item.get('episodeInfo') and (genre.get('deeplink') == 'arte://emac/CIN' or str(genre.get('id', '')) == '2')
+
+    @staticmethod
+    def _pageTpl(link):
+        # a zone content url with "page=N" -> template for iptvpaging ("page={page}")
+        if not link or not re.search(r'[?&]page=\d+', link):
+            return ''
+        return re.sub(r'([?&]page=)\d+', r'\g<1>{page}', link)
+
+    def _addPaging(self, cItem, pag, nextUrl=''):
+        links = pag.get('links') or {}
+        nextUrl = links.get('next') or nextUrl
+        tpl = self._pageTpl(links.get('first') or links.get('next') or nextUrl)
+        try:
+            page = int(pag.get('page') or 1)
+            lastPage = int(pag.get('pages') or 0)
+        except (TypeError, ValueError):
+            page, lastPage = 1, 0
+        if not tpl and nextUrl:
+            # no page number in the url: plain "Next page"
+            params = stripPagerKeys(dict(cItem))
+            params.update({'title': _('Next page'), 'url': nextUrl, 'page': page + 1, 'good_for_fav': False})
+            self.addDir(params)
+            return
+        if tpl:
+            addPagingItems(self, cItem, page, bool(nextUrl), lastPage, tpl)
 
     ###################################################
     def _zoneData(self, zoneOrContent):
@@ -203,24 +256,39 @@ class ArteTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 return
             if code in ('EXTERNAL', 'PAGE') or not pid:
                 return
-            params = dict(cItem)
-            params.pop('page', None)
-            params.pop('zone_url', None)
-            params.pop('season_code', None)
+            params = stripPagerKeys(dict(cItem), ('zone_url', 'zone_items', 'zone_next', 'season_code',
+                                                  'meta_type', 'meta_title', 'live', 'program_id', 'f_url'))
             params.update({'title': title, 'icon': self._img(item), 'desc': self._desc(item), 'good_for_fav': True})
             if kind.get('isCollection') or code in ('TV_SERIES', 'TOPIC', 'COLLECTION') or str(pid).startswith('RC-'):
+                if pid == cItem.get('col_id'):
+                    return  # a collection lists itself in its "collection_content" zone
                 params.update({'category': 'list_collection', 'col_id': pid, 'url': self._api('collections/%s' % pid)})
+                if code == 'TV_SERIES':
+                    params.update({'meta_type': 'tv', 'meta_title': self.cleanHtmlStr(item.get('title') or '')})
                 self.addDir(params)
             else:
-                params.update({'program_id': pid, 'f_url': item.get('url', '')})
+                # the programme page as the row's own url: the download marker is keyed on it
+                # (the watched key stays the programme id)
+                pageUrl = item.get('url') or 'https://www.arte.tv/%s/videos/%s/' % (self._lang(), pid)
+                params.update({'program_id': pid, 'f_url': item.get('url', ''), 'url': pageUrl})
                 if code in ('LIVESTREAM',) or item.get('livestreamRights'):
                     params['live'] = True
                 else:
                     epInfo = item.get('episodeInfo') or ''
-                    params['title'] = normalizeMediathekTitle(
-                        title, sxeHint=epInfo if isinstance(epInfo, str) else '',
-                        date=item.get('firstBroadcastDate') or item.get('availableFrom') or '',
-                        isMovie=not epInfo)
+                    season, episode = self._seasonEpisode(item)
+                    if season and episode:
+                        # "Red Light (3/10)" -> "Red Light - S01E03", "Twin Peaks - Staffel 1 (1/8) - Das Geheimnis
+                        # von Twin Peaks" -> "Twin Peaks - S01E01 - Das Geheimnis von Twin Peaks"
+                        plain = re.sub(r'\s*(?:-\s*)?(?:\b(?:Staffel|Saison|Season)\s+\d+\s*)?\(\d+/\d+\)', '', title).strip(' -') or title
+                        named = normalizeMediathekTitle(plain, sxeHint='S%02dE%02d' % (season, episode))
+                        params['title'] = named if named != plain else title
+                    else:
+                        params['title'] = normalizeMediathekTitle(
+                            title, sxeHint=epInfo if isinstance(epInfo, str) else '',
+                            date=item.get('firstBroadcastDate') or item.get('availableFrom') or '',
+                            isMovie=not epInfo)
+                    if self._isFilm(item):
+                        params.update({'meta_type': 'movie', 'meta_title': self.cleanHtmlStr(item.get('title') or '')})
                 self.addVideo(params)
         except Exception:
             printExc()
@@ -235,6 +303,7 @@ class ArteTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
         sub = self.cleanHtmlStr(meta.get('subtitle') or '')
         params = dict(cItem)
         params.update({'title': 'ARTE Live' + (' - %s' % prog if prog else ''), 'program_id': 'LIVE', 'live': True,
+                       'url': 'https://www.arte.tv/%s/live/' % self._lang(),
                        'desc': '[/br]'.join([x for x in (prog, sub) if x]), 'good_for_fav': True, 'icon': ''})
         self.addVideo(params)
         # today's schedule + live concert zones
@@ -291,14 +360,15 @@ class ArteTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
         for z in contentZones:
             title = self.cleanHtmlStr(z.get('title') or '') or _('Section')
             items, pag = self._zoneData(z)
-            params = dict(cItem)
-            params.pop('page', None)
+            params = stripPagerKeys(dict(cItem))
             params.update({'title': title, 'good_for_fav': False, 'icon': self._img(items[0]) if items else ''})
             links = pag.get('links') or {}
             link = links.get('first') or links.get('self') or ''
             if link:
                 params.update({'category': 'list_zone', 'url': link})
             else:
+                # inline zone without an own endpoint: the items travel with the row, no url of its own
+                params.pop('url', None)
                 params.update({'category': 'list_zone_inline', 'zone_items': items, 'zone_next': links.get('next') or ''})
             self.addDir(params)
 
@@ -313,52 +383,61 @@ class ArteTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
         items, pag = self._zoneData(zoneOrContent)
         for it in items:
             self._addItem(cItem, it)
-        nextUrl = (pag.get('links') or {}).get('next') or ''
-        if nextUrl:
-            params = dict(cItem)
-            params.update({'category': 'list_zone', 'title': _('Next page'), 'url': nextUrl, 'good_for_fav': False})
-            self.addDir(params)
+        # the pager rows open zone content urls - list_zone, also below a page / inline zone
+        pagerItem = dict(cItem, category='list_zone')
+        pagerItem.pop('zone_items', None)
+        pagerItem.pop('zone_next', None)
+        self._addPaging(pagerItem, pag)
 
     def listZoneInline(self, cItem):
         for it in cItem.get('zone_items', []):
             self._addItem(cItem, it)
         nextUrl = cItem.get('zone_next') or ''
         if nextUrl:
-            params = dict(cItem)
-            params.pop('zone_items', None)
-            params.pop('zone_next', None)
-            params.update({'category': 'list_zone', 'title': _('Next page'), 'url': nextUrl, 'good_for_fav': False})
-            self.addDir(params)
+            pagerItem = dict(cItem, category='list_zone')
+            pagerItem.pop('zone_items', None)
+            pagerItem.pop('zone_next', None)
+            self._addPaging(pagerItem, {}, nextUrl)
 
     def listCollection(self, cItem):
         printDBG('ArteTV.listCollection [%s]' % cItem['url'])
         data = self._json(cItem['url'])
         if not data:
             return
-        zones = [z for z in (data.get('zones') or []) if isinstance(z, dict) and self._zoneData(z)[0]]
+        # "collection_content" holds only the collection itself (its INFO data)
+        zones = [z for z in (data.get('zones') or []) if isinstance(z, dict) and self._zoneData(z)[0]
+                 and not (z.get('code') or '').startswith('collection_content')]
         seasons = [z for z in zones if 'subcollection' in (z.get('code') or '')]
         videos = [z for z in zones if 'subcollection' not in (z.get('code') or '')]
 
         if len(seasons) > 1:
             for z in seasons:
-                items = self._zoneData(z)[0]
-                params = dict(cItem)
-                params.pop('page', None)
-                params.update({'category': 'list_zone_inline', 'title': self.cleanHtmlStr(z.get('title') or _('Season')), 'zone_items': items, 'good_for_fav': False, 'icon': self._img(items[0]) if items else '',
+                items, pag = self._zoneData(z)
+                params = stripPagerKeys(dict(cItem), ('meta_type', 'meta_title'))
+                params.update({'title': self.cleanHtmlStr(z.get('title') or _('Season')), 'good_for_fav': False, 'icon': self._img(items[0]) if items else '',
                                'col_id': cItem.get('col_id', ''), 'season_code': z.get('code') or self.cleanHtmlStr(z.get('title') or '')})
+                links = pag.get('links') or {}
+                if links.get('next') and links.get('first'):
+                    # a season with more than one page: list it from its endpoint (paging)
+                    params.update({'category': 'list_zone', 'url': links['first']})
+                else:
+                    params.update({'category': 'list_zone_inline', 'zone_items': items, 'zone_next': ''})
                 self.addDir(params)
             return
 
-        for z in (seasons + videos):
+        zones = seasons + videos
+        if len(zones) == 1:
+            self._listZoneItems(cItem, zones[0])
+            return
+        for z in zones:
             for it in self._zoneData(z)[0]:
                 self._addItem(cItem, it)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("ArteTV.listSearchResult [%s]" % searchPattern)
-        page = cItem.get('page', 1)
-        if page > 1 and cItem.get('url'):
-            data = self._json(cItem['url'])
-            zone = data
+        if cItem.get('url'):
+            # a pager row: the url of the result page
+            zone = self._json(cItem['url'])
         else:
             data = self._json(self._api('pages/SEARCH?query=%s' % urllib_quote(searchPattern)))
             zone = None
@@ -371,11 +450,7 @@ class ArteTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
         items, pag = self._zoneData(zone)
         for it in items:
             self._addItem(cItem, it)
-        nextUrl = (pag.get('links') or {}).get('next') or ''
-        if nextUrl:
-            params = dict(cItem)
-            params.update({'title': _('Next page'), 'url': nextUrl, 'page': page + 1})
-            self.addDir(params)
+        self._addPaging(cItem, pag)
 
     ###################################################
     def getLinksForVideo(self, cItem):
@@ -389,6 +464,13 @@ class ArteTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
         attrs = (data.get('data') or {}).get('attributes') or data.get('attributes') or {}
         streams = attrs.get('streams') or []
         if not streams:
+            # youth protection (e.g. Twin Peaks season 2): the streams only come inside the night slot
+            restr = attrs.get('restriction') or {}
+            slot = restr.get('timeSlot') or {}
+            if len(slot.get('startDate') or '') >= 16 and len(slot.get('endDate') or '') >= 16:
+                SetIPTVPlayerLastHostError(_('Youth protection: only available between %s and %s.') % (slot['startDate'][11:16], slot['endDate'][11:16]))
+            elif (restr.get('geoblocking') or {}).get('restrictedArea'):
+                SetIPTVPlayerLastHostError(_('Not available in your country (geo-blocking).'))
             return []
         live = bool(attrs.get('live'))
         _md = attrs.get('metadata') or {}
@@ -451,9 +533,94 @@ class ArteTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return urlTab
 
     ###################################################
+    # INFO
+    ###################################################
+    CREDIT_KEYS = {'REA': 'director', 'SCE': 'writer', 'ACT': 'actors', 'PRD': 'production', 'COUNTRY': 'country'}
+    INFO_TWINS = {'directors': 'director', 'writers': 'writer', 'cast': 'actors'}
+
+    def _contentItem(self, data, codePrefix):
+        for z in ((data or {}).get('zones') or []):
+            if isinstance(z, dict) and (z.get('code') or '').startswith(codePrefix):
+                items = self._zoneData(z)[0]
+                if items and isinstance(items[0], dict):
+                    return items[0]
+        return {}
+
+    def _siteInfo(self, prog):
+        info = {}
+        year = ''
+        for credit in (prog.get('credits') or []):
+            if not isinstance(credit, dict):
+                continue
+            values = [self.cleanHtmlStr(v) for v in (credit.get('values') or []) if v]
+            if not values:
+                continue
+            code = credit.get('code') or ''
+            if code == 'PRODUCTION_YEAR':
+                year = values[0][:4]
+                info['year'] = year
+            elif code in self.CREDIT_KEYS:
+                info[self.CREDIT_KEYS[code]] = ', '.join(values[:6])
+        if prog.get('durationLabel'):
+            info['duration'] = self.cleanHtmlStr(prog['durationLabel'])
+        genre = (prog.get('genre') or {}).get('label') or ''
+        if genre:
+            info['genre'] = self.cleanHtmlStr(genre)
+        try:
+            if int(prog.get('ageRating') or 0) > 0:
+                info['age_limit'] = '%s+' % int(prog['ageRating'])
+        except (TypeError, ValueError):
+            pass
+        bcast = prog.get('firstBroadcastDate') or ''
+        if isinstance(bcast, str) and len(bcast) >= 10:
+            info['broadcast'] = bcast[:10]
+        end = (prog.get('availability') or {}).get('end') or ''
+        if isinstance(end, str) and len(end) >= 10:
+            info['remaining'] = _('available until %s') % end[:10]
+        return info, year
+
+    def getArticleContent(self, cItem):
+        printDBG('ArteTV.getArticleContent [%s]' % cItem.get('program_id', cItem.get('col_id', '')))
+        text, icon, info, year = cItem.get('desc', ''), cItem.get('icon', ''), {}, ''
+        prog = {}
+        pid = cItem.get('program_id', '')
+        if cItem.get('type') == 'video' and pid and pid != 'LIVE':
+            prog = self._contentItem(self._json(self._api('programs/%s' % pid)), 'program_content')
+        elif cItem.get('category') == 'list_collection' and cItem.get('url'):
+            prog = self._contentItem(self._json(cItem['url']), 'collection_content')
+        if prog:
+            desc = prog.get('fullDescription') or prog.get('description') or prog.get('shortDescription') or ''
+            if desc:
+                parts = [self.cleanHtmlStr(x) for x in re.split(r'<br\s*/?>', desc, flags=re.I)]
+                text = '[/br]'.join([x for x in parts if x])
+            info, year = self._siteInfo(prog)
+        meta = {}
+        if cItem.get('meta_type') and cItem.get('meta_title'):
+            try:
+                # a film's year must match (the title search also finds other films of the same name)
+                meta = getMeta(cItem['meta_type'], cItem['meta_title'], year,
+                               maxYearDiff=1 if cItem['meta_type'] == 'movie' else None)
+            except Exception:
+                printExc()
+        # the site's German/French texts first, the service adds ratings, poster and missing fields
+        # (not the plural twin of a field the site already has); the site's genre is only the
+        # ARTE section ("Filme"), the service's genres are the real ones
+        metaInfo = meta.get('info') or {}
+        if metaInfo.get('genres'):
+            info.pop('genre', None)
+        for key, value in metaInfo.items():
+            if key not in info and self.INFO_TWINS.get(key, '') not in info:
+                info[key] = value
+        text = text or meta.get('plot', '')
+        icon = meta.get('poster') or icon
+        return [{'title': cItem.get('title', ''), 'text': text, 'images': [{'title': '', 'url': icon}] if icon else [], 'other_info': info}]
+
+    ###################################################
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('ArteTV.handleService start')
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
+        if isJumpItem(self.currItem):
+            self.currItem = jumpTarget(self, self.currItem)
         name = self.currItem.get("name", None)
         category = self.currItem.get("category", '')
         printDBG("ArteTV.handleService: name[%s] category[%s]" % (name, category))
@@ -497,3 +664,6 @@ class IPTVHost(GenericFolderWatchedHostMixin, CHostBase):
         self.cachedRet = None
         self.refreshAfterWatchedFlagChange = False
         self.watchedHelper = IPTVWatchedHelper('artetv')
+
+    def withArticleContent(self, cItem):
+        return cItem.get('type') == 'video' or cItem.get('category') == 'list_collection'

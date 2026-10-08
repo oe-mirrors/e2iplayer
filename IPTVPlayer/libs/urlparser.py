@@ -3735,7 +3735,19 @@ class pageParser(CaptchaHelper):
             # it; the playlist and the TS segments are clean, ffmpeg 8.1 (schannel) on a PC plays it too
             if ".m3u8" in url and ("hglamioz.com" in host or ("/hls2/" in url and re.search(r"[?&]sp=500(?:&|$)", url))):
                 url.meta["iptv_buffering"] = "required"
-            if ".m3u8" in url:
+            if ".m3u8" in url and "serversicuro." in url:
+                # fix 081026: the supervideo CDN (*.serversicuro.cc) answers part of the playlist requests with an
+                # ad redirect (.../zokvisitor/...), a "Loading..." JS page or 429 instead of the playlist - handed on
+                # unchecked, exteplayer3 fails with "Invalid data" and hlsdl with code 1; a few tries mostly get it
+                for _try in range(3):
+                    links = getDirectM3U8Playlist(url, checkContent=True, sortWithMaxBitrate=99999999)
+                    if links:
+                        urltab.extend(links)
+                        break
+                    GetIPTVSleep().Sleep(2)
+                else:
+                    SetIPTVPlayerLastHostError(_("The hoster sends an advert redirect instead of the video at the moment. Try another hoster."))
+            elif ".m3u8" in url:
                 urltab.extend(getDirectM3U8Playlist(url, sortWithMaxBitrate=99999999))
             elif ".mpd" in url:
                 urltab.extend(getMPDLinksWithMeta(url))
@@ -4372,13 +4384,36 @@ class pageParser(CaptchaHelper):
         if not sts:
             return []
         urltab = []
+        cfg = {}
         match = re.search(r"""decodePayload.*?['\"]([A-Za-z0-9+/=]+)['\"]""", data)
         if match:
-            data = base64.b64decode(match.group(1)).decode()
-            url = json_loads(data.split("|", 1)[1]).get("videoUrl")
-            if url:
-                url = urlparser.decorateUrl(url, {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": host, "Origin": host[:-1]})
-                urltab.extend(getDirectM3U8Playlist(url, sortWithMaxBitrate=99999999))
+            try:
+                cfg = json_loads(ensure_str(base64.b64decode(match.group(1))).split("|", 1)[1])
+            except Exception:
+                printExc()
+        else:
+            # fix 071026: decodePayload is gone - the player config is now _dp('<id>~<base64>'), the bytes XORed with a key
+            # that the page assembles as _p=['G7#k','P!2q',...];return _p[0]+_p[1]+... ; videoUrl = .../hls/<id>/720p.m3u8
+            # whose MPEG-TS segments are disguised as .jpg (image/jpeg) -> hlsdl buffering via requireDownloaderForDisguisedHls
+            keyMatch = re.search(r"""_p\s*=\s*\[([^\]]+)\]\s*;\s*return\s+_p\[0\]""", data)
+            key = "".join(re.findall(r"""['"]([^'"]*)['"]""", keyMatch.group(1))) if keyMatch else "G7#kP!2qZxV9mRwL"
+            match = re.search(r"""_dp\(\s*['"][0-9a-f]*~([A-Za-z0-9+/=\\]+)['"]\s*\)""", data)
+            if match and key:
+                try:
+                    raw = bytearray(base64.b64decode(match.group(1).replace("\\/", "/")))
+                    keyBytes = bytearray(ensure_binary(key))
+                    cfg = json_loads(ensure_str(bytes(bytearray(c ^ keyBytes[i % len(keyBytes)] for i, c in enumerate(raw)))))
+                except Exception:
+                    printExc()
+        url = (cfg.get("videoUrl") or "") if isinstance(cfg, dict) else ""
+        if not url:
+            if "File removed" in data or "File not found" in data or "Video not found" in data:
+                SetIPTVPlayerLastHostError(_("The video has been removed."))
+            else:
+                SetIPTVPlayerLastHostError(_("Video link not found."))
+            return []
+        url = urlparser.decorateUrl(urljoin(host, url), {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": host, "Origin": host[:-1]})
+        urltab.extend(requireDownloaderForDisguisedHls(getDirectM3U8Playlist(url, checkContent=True, sortWithMaxBitrate=99999999)))
         return urltab
 
     def parserSTREAMCASH(self, baseUrl):  # add 031026 - streamcash.to /watch/<id> (fenixsite), goodstream.vip/embed/<id> (bajeczki): same player

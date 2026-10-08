@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 02.09.2026
+# Last Modified: 08.10.2026
 # ORF ON (on.orf.at, ehemals ORF TVthek)
 # API: https://api-tvthek.orf.at/api/v4.3/  (HTTP-Basic-Auth, oeffentliche Credentials)
+# 07.10.2026 - INFO (episode/profile details, moviemeta for films),
+# First/Jump/Next paging, own url per video (download marker), "Show - SxxExx" /
+# "Title (Year)", start page highlights, default user agent.
+# 08.10.2026 - link names "QXB 1800k 1280x720 [Deutsch]" instead of "bitrate: ... res: 0x0".
 ###################################################
 # LOCAL import
 ###################################################
@@ -11,6 +15,8 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import normalizeMediathekTitle
+from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
+from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
@@ -22,6 +28,7 @@ from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 ###################################################
 from Components.config import config, ConfigYesNo, getConfigListEntry
 from datetime import datetime, timedelta
+import re
 ###################################################
 
 config.plugins.iptvplayer.orfon_bestonly = ConfigYesNo(default=True)
@@ -49,7 +56,7 @@ class ORFON(GenericFolderWatchedScraperMixin, CBaseHostClass):
         self.MAIN_URL = 'https://on.orf.at/'
         self.DEFAULT_ICON_URL = 'https://on.orf.at/img/OON-Share-Image.jpg'
         self.HTTP_HEADER = {
-            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36',
+            'User-Agent': self.cm.getDefaultUserAgent(),
             'Authorization': self.API_AUTH,
             'Accept': 'application/json',
         }
@@ -195,8 +202,7 @@ class ORFON(GenericFolderWatchedScraperMixin, CBaseHostClass):
             title = self.cleanHtmlStr(item.get('title') or item.get('headline') or '')
             if not title:
                 return
-            params = dict(cItem)
-            params.pop('page', None)
+            params = stripPagerKeys(dict(cItem), ('meta_type', 'meta_title', 'meta_year'))
             params.update({'title': title, 'icon': self._img(item), 'desc': self._desc(item), 'good_for_fav': True})
 
             episodesHref = self._link(item, 'episodes')
@@ -204,11 +210,15 @@ class ORFON(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
             if self._isVideo(item):
                 eid = item.get('id') or ''
-                params.update({'category': 'play', 'ep_id': eid, 'ep_url': self._abs(selfHref) if selfHref else ''})
+                epUrl = self._abs(selfHref) if selfHref else ''
+                # own url per video (download marker); the watched key stays the episode id
+                ownUrl = item.get('share_body') or epUrl or ('%s/episode/%s' % (self.API, eid) if eid else '')
+                params.update({'category': 'play', 'ep_id': eid, 'ep_url': epUrl, 'url': ownUrl})
                 if not params.get('live'):
-                    profile = self.cleanHtmlStr(((item.get('_embedded') or {}).get('profile') or {}).get('title') or '')
-                    base = '%s - %s' % (profile, title) if profile and profile.lower() not in title.lower() else title
-                    params['title'] = normalizeMediathekTitle(base, date=item.get('date') or item.get('episode_date') or '', sxeHint=title)
+                    params['title'] = self._mediaTitle(item, title)
+                    year = str(item.get('production_year') or '')
+                    if item.get('genre_title') == 'Film':
+                        params.update({'meta_type': 'movie', 'meta_title': title, 'meta_year': year})
                 self.addVideo(params)
             elif episodesHref:
                 params.update({'category': 'list_url', 'url': self._abs(episodesHref)})
@@ -223,18 +233,58 @@ class ORFON(GenericFolderWatchedScraperMixin, CBaseHostClass):
         except Exception:
             printExc()
 
+    def _mediaTitle(self, item, title):
+        # "Soko Kitzbuehel (8/15): Schoepfung" + "Staffel 17" -> "Soko Kitzbuehel - S17E08 - Schoepfung";
+        # films "Title (Year)"; otherwise the dated label - only with media naming normalisation on
+        profile = self.cleanHtmlStr(((item.get('_embedded') or {}).get('profile') or {}).get('title') or '')
+        base = '%s - %s' % (profile, title) if profile and profile.lower() not in title.lower() else title
+        m = re.match(r'^(.+?)\s*\((\d+)/\d+\)\s*:?\s*(.*)$', title)
+        s = re.search(r'Staffel\s*(\d+)', item.get('sub_headline') or '', re.I)
+        if m and s:
+            plain = '%s - %s' % (m.group(1), m.group(3)) if m.group(3) else m.group(1)
+            named = normalizeMediathekTitle(plain, sxeHint='S%02dE%02d' % (int(s.group(1)), int(m.group(2))))
+            if named != plain:
+                return named
+        year = str(item.get('production_year') or '')
+        if item.get('genre_title') == 'Film' and year.isdigit():
+            return normalizeMediathekTitle(title, year=year, isMovie=True)
+        return normalizeMediathekTitle(base, date=item.get('date') or item.get('episode_date') or '', sxeHint=title)
+
+    @staticmethod
+    def _unwrap(item):
+        # start page highlights: {"_embedded": {"video_item": {"_embedded": {"item": {...episode...}}}}}
+        for key in ('video_item', 'item'):
+            if isinstance(item, dict) and not item.get('title') and isinstance((item.get('_embedded') or {}).get(key), dict):
+                item = item['_embedded'][key]
+        return item
+
+    def _addPaging(self, cItem, data):
+        # HAL lists: page / pages / _links.next ("...?page=N&limit=50"); search-partial: page_count / next
+        nxt = self._abs(self._nextHref(data)) if isinstance(data, dict) else ''
+        try:
+            page = int(data.get('page') or 0)
+            lastPage = int(data.get('pages') or data.get('page_count') or 0)
+        except (AttributeError, TypeError, ValueError):
+            page, lastPage = 0, 0
+        if not page:
+            m = re.search(r'[?&]page=(\d+)', cItem.get('url', '') or '')
+            page = int(m.group(1)) if m else 1
+        tplSrc = nxt or cItem.get('url', '') or ''
+        if re.search(r'[?&]page=\d+', tplSrc):
+            addPagingItems(self, cItem, page, bool(nxt), lastPage, re.sub(r'([?&]page=)\d+', r'\g<1>{page}', tplSrc))
+        elif nxt:
+            params = stripPagerKeys(dict(cItem))
+            params.update({'title': _('Next page'), 'url': nxt, 'page': page + 1, 'good_for_fav': False})
+            self.addDir(params)
+
     ###################################################
     def listUrl(self, cItem):
         data = self._json(cItem['url'])
         if data is None:
             return
         for it in self._items(data):
-            self._addItem(cItem, it)
-        nxt = self._nextHref(data)
-        if nxt:
-            params = dict(cItem)
-            params.update({'title': _('Next page'), 'url': self._abs(nxt), 'good_for_fav': False})
-            self.addDir(params)
+            self._addItem(cItem, self._unwrap(it))
+        self._addPaging(cItem, data)
 
     def listStart(self, cItem):
         data = self._json('/page/start')
@@ -300,23 +350,19 @@ class ORFON(GenericFolderWatchedScraperMixin, CBaseHostClass):
             params = dict(cItem)
             params.pop('page', None)
             params.update({'category': 'play', 'live': True, 'ep_id': it.get('id') or '',
-                           'ep_url': self._abs(selfHref), 'icon': self._img(it), 'good_for_fav': True,
+                           'ep_url': self._abs(selfHref), 'url': self._abs(selfHref), 'icon': self._img(it), 'good_for_fav': True,
                            'title': '%s - %s' % (chName, prog) if prog else chName,
                            'desc': self._desc(it)})
             self.addVideo(params)
 
     def listSearch(self, cItem, searchPattern, searchType):
-        page = cItem.get('page', 1)
-        if page > 1 and cItem.get('url'):
+        if cItem.get('url'):
+            # "All results" and its pager rows
             data = self._json(cItem['url'])
             if data:
                 for it in self._items(data):
-                    self._addItem(cItem, it)
-                nxt = self._nextHref(data)
-                if nxt:
-                    params = dict(cItem)
-                    params.update({'title': _('Next page'), 'url': self._abs(nxt), 'page': page + 1})
-                    self.addDir(params)
+                    self._addItem(cItem, self._unwrap(it))
+                self._addPaging(cItem, data)
             return
         data = self._json('/search/%s' % urllib_quote_plus(searchPattern))
         if not isinstance(data, dict):
@@ -332,7 +378,7 @@ class ORFON(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 params = dict(cItem)
                 params.update({'title': _('All results') + ' (%s)' % info['total'],
                                'url': '%s/search-partial/%s/%s?limit=%d' % (self.API, key, urllib_quote_plus(searchPattern), self.LIMIT),
-                               'page': 2, 'good_for_fav': False})
+                               'good_for_fav': False})
                 self.addDir(params)
 
     ###################################################
@@ -412,6 +458,19 @@ class ORFON(GenericFolderWatchedScraperMixin, CBaseHostClass):
             if 'QX' in name.upper() and not live:
                 for it in getDirectM3U8Playlist(strwithmeta(surl, {'iptv_proto': 'm3u8'}), checkExt=False, checkContent=True):
                     it['need_resolve'] = 0
+                    # "QXB 1800k 1280x720 [Deutsch]" (QXB/QXA variants share bitrates) instead of the generic
+                    # "bitrate: 1800000 res: 0x0" label
+                    parts = [name]
+                    try:
+                        parts.append('%dk' % (int(it.get('bitrate')) // 1000))
+                    except (TypeError, ValueError):
+                        pass
+                    if it.get('width') and it.get('height'):
+                        parts.append('%dx%d' % (it['width'], it['height']))
+                    audio = re.match(r'(\[[^\]]+\])', it.get('name', ''))
+                    if audio:
+                        parts.append(audio.group(1))
+                    it['name'] = ' '.join(parts)
                     it['url'] = self.up.decorateUrl(it['url'], meta)
                     urlTab.append(it)
                 continue
@@ -431,9 +490,63 @@ class ORFON(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return urlTab
 
     ###################################################
+    # INFO
+    ###################################################
+    def _text(self, value):
+        lines = [self.cleanHtmlStr(x) for x in str(value or '').split('\n')]
+        return '[/br]'.join([x for x in lines if x])
+
+    def getArticleContent(self, cItem):
+        printDBG('ORFON.getArticleContent [%s]' % cItem.get('ep_url', cItem.get('url', '')))
+        text, icon, info = cItem.get('desc', ''), cItem.get('icon', ''), {}
+        if cItem.get('type') == 'video':
+            url = cItem.get('ep_url') or ('%s/episode/%s' % (self.API, cItem['ep_id']) if cItem.get('ep_id') else '')
+            data = self._json(url) if url else None
+            if isinstance(data, dict):
+                text = self._text(data.get('description') or data.get('teaser_text')) or text
+                try:
+                    secs = int(data.get('duration_seconds') or 0)
+                    if secs > 0:
+                        info['duration'] = str(timedelta(seconds=secs))
+                except (TypeError, ValueError):
+                    pass
+                for key, field in (('station', 'main_channel_name'), ('genre', 'genre_title'), ('year', 'production_year'),
+                                   ('country', 'production_country'), ('age_limit', 'age_classification')):
+                    if data.get(field):
+                        info[key] = self.cleanHtmlStr(str(data[field]))
+                for key, field in (('broadcast', 'date'), ('remaining', 'killdate')):
+                    value = str(data.get(field) or '')
+                    if len(value) >= 10:
+                        info[key] = value[:10] if key == 'broadcast' else _('available until %s') % value[:10]
+        elif '/profile/' in cItem.get('url', ''):
+            data = self._json(re.sub(r'/episodes(\?.*)?$', '', cItem['url']))
+            if isinstance(data, dict):
+                text = self._text(data.get('description') or data.get('sub_headline')) or text
+                if data.get('online_episode_count'):
+                    info['episodes'] = str(data['online_episode_count'])
+        meta = {}
+        if cItem.get('meta_type') and cItem.get('meta_title'):
+            try:
+                # the year must match: the title search also finds other films of the same name
+                meta = getMeta(cItem['meta_type'], cItem['meta_title'], cItem.get('meta_year', ''), maxYearDiff=1)
+            except Exception:
+                printExc()
+        # the site's German texts first, the service adds ratings, cast and the poster
+        metaInfo = meta.get('info') or {}
+        if metaInfo.get('genres'):
+            info.pop('genre', None)
+        for key, value in metaInfo.items():
+            info.setdefault(key, value)
+        text = text or meta.get('plot', '')
+        icon = meta.get('poster') or icon
+        return [{'title': cItem.get('title', ''), 'text': text, 'images': [{'title': '', 'url': icon}] if icon else [], 'other_info': info}]
+
+    ###################################################
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('ORFON.handleService start')
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
+        if isJumpItem(self.currItem):
+            self.currItem = jumpTarget(self, self.currItem)
         name = self.currItem.get("name", None)
         category = self.currItem.get("category", '')
         printDBG("ORFON.handleService: name[%s] category[%s]" % (name, category))
@@ -477,3 +590,6 @@ class IPTVHost(GenericFolderWatchedHostMixin, CHostBase):
         self.cachedRet = None
         self.refreshAfterWatchedFlagChange = False
         self.watchedHelper = IPTVWatchedHelper('orfon')
+
+    def withArticleContent(self, cItem):
+        return cItem.get('type') == 'video' or (cItem.get('category') == 'list_url' and '/profile/' in cItem.get('url', ''))

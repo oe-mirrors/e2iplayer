@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 27.09.2026
+# Last Modified: 07.10.2026
+# 07.10.2026 - INFO (document details, moviemeta for films and
+# series), First/Jump/Next paging (A-Z, search), "Show - SxxExx" / "Title (Year)"
+# from the season/episode numbers and production year, watched key per season
+# cluster, default user agent, search term url-quoted.
 ###################################################
 # LOCAL import
 ###################################################
@@ -9,6 +13,8 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import normalizeMediathekTitle
+from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
+from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
@@ -23,6 +29,7 @@ from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
 ###################################################
 from Components.config import config, ConfigSelection, ConfigYesNo, getConfigListEntry
 from datetime import datetime, timedelta
+import re
 import time
 if not isPY2():
     from functools import cmp_to_key
@@ -56,11 +63,6 @@ def gettytul():
 
 
 class ZDFmediathek(GenericFolderWatchedScraperMixin, CBaseHostClass):
-    HOST = 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.2.18) Gecko/20110621 Mandriva Linux/1.9.2.18-0.1mdv2010.2 (2010.2) Firefox/3.6.18'
-    HEADER = {'User-Agent': HOST, 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'}
-    AJAX_HEADER = dict(HEADER)
-    AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Connection': 'keep-alive', 'Pragma': 'no-cache', 'Cache-Control': 'no-cache'})
-
     MAIN_URL = 'https://www.zdf.de/'
     MAIN_API_URL = 'https://zdf-prod-futura.zdf.de/'
     ZDF_API_URL = 'https://api.zdf.de/'
@@ -98,6 +100,7 @@ class ZDFmediathek(GenericFolderWatchedScraperMixin, CBaseHostClass):
         printDBG("ZDFmediathek.__init__")
         CBaseHostClass.__init__(self, {'history': 'ZDFmediathek.tv', 'cookie': 'zdfde.cookie'})
         self.DEFAULT_ICON_URL = 'https://brandguide.zdf.de/pictures/447/2f865620700065672dbce9582f77ad83569beb7f/ZDF_DE_Logo_02.png'
+        self.HEADER = {'User-Agent': self.cm.getDefaultUserAgent(), 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'}
 
         # NOTE: MAIN_CAT_TAB is a class attribute - build a fresh instance list,
         # otherwise "+=" mutates the shared class list on every re-instantiation
@@ -130,6 +133,9 @@ class ZDFmediathek(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 return ''
             if cItem.get('search_item') or cItem.get('name') == 'history':
                 return ''
+            if cItem.get('category', '') == 'list_content' and cItem.get('content_key'):
+                # a season cluster of a programme ("Staffel 25 - alle verfuegbaren Folgen")
+                return cItem['content_key']
             if cItem.get('category', '') in self.WF_SKIP_CATEGORIES:
                 return ''
             url = self.wfNormalizeUrlKey(cItem.get('url', ''))
@@ -138,9 +144,9 @@ class ZDFmediathek(GenericFolderWatchedScraperMixin, CBaseHostClass):
             printExc()
         return ''
 
-    def getPage(self, url, params={}, post_data=None):
-        HTTP_HEADER = dict(self.HEADER)
-        params.update({'header': HTTP_HEADER})
+    def getPage(self, url, params=None, post_data=None):
+        params = dict(params or {})
+        params['header'] = dict(self.HEADER)
 
         sts, data = self.cm.getPage(url, params, post_data)
         if sts and None is data:
@@ -239,7 +245,11 @@ class ZDFmediathek(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 elif 'teaserLivevideo' == item['type']:
                     title = _('Live')
                 params = dict(cItem)
+                for key in ('content_key', 'meta_type', 'meta_title', 'meta_year', 'zdf_type'):
+                    params.pop(key, None)
                 params.update({'category': 'list_content', 'title': title, 'content': tab})
+                if cItem.get('category') == 'list_cluster' and cItem.get('url') and item.get('name'):
+                    params['content_key'] = 'folder:%s#%s' % (self.wfNormalizeUrlKey(cItem['url']), self.cleanHtmlStr(item['name']))
                 self.addDir(params)
 
     def listContent(self, cItem):
@@ -259,10 +269,14 @@ class ZDFmediathek(GenericFolderWatchedScraperMixin, CBaseHostClass):
             title = self.cleanHtmlStr(item["titel"])
             descTab = [self.cleanHtmlStr(item.get(k, '')) for k in ('headline', 'channel', 'beschreibung')]
             descTab = [x for x in descTab if x]
+            nodePath = item.get('structureNodePath') or ''
             if item['type'] in ['brand', 'category', 'topic']:
-                params = {'name': 'category', 'category': 'list_cluster', 'title': title, 'url': self.getFullUrl(item.get('url', '')), 'desc': ' | '.join(descTab), 'icon': self.getIconUrl(icon), 'id': item.get('id', ''), 'sharing_url': item.get('sharingUrl', ''), 'good_for_fav': True}
+                params = {'name': 'category', 'category': 'list_cluster', 'title': title, 'url': self.getFullUrl(item.get('url', '')), 'desc': ' | '.join(descTab), 'icon': self.getIconUrl(icon), 'id': item.get('id', ''), 'sharing_url': item.get('sharingUrl', ''), 'good_for_fav': True,
+                          'zdf_type': item['type']}
                 if not params['url']:
                     return
+                if item['type'] == 'brand' and nodePath.startswith('/zdf/serien/'):
+                    params.update({'meta_type': 'tv', 'meta_title': title})
                 self.addDir(params)
             elif item['type'] in ["video", "livevideo"]:
                 if 'length' in item and item.get('length'):
@@ -275,13 +289,58 @@ class ZDFmediathek(GenericFolderWatchedScraperMixin, CBaseHostClass):
                     return
                 if item['type'] == 'livevideo':
                     params['live'] = True
+                    if params['id']:
+                        # all channels share the day's "live-tv" url: the channel's own document
+                        # (favourite / download marker identity)
+                        params['url'] = self.DOCUMENT_API_URL % params['id']
                 else:
-                    params['title'] = normalizeMediathekTitle(
-                        title, date=item.get('editorialDate') or item.get('airtimeBegin') or item.get('onlineDate') or '',
-                        sxeHint='%s %s' % (self.cleanHtmlStr(item.get('headline', '') or ''), title))
+                    params['title'] = self._mediaTitle(item, title)
+                    if '/filme/' in nodePath and not item.get('seasonNumber'):
+                        params.update({'meta_type': 'movie', 'meta_title': self.cleanHtmlStr(item.get('brandTitle') or '') or self._stripPartNo(title),
+                                       'meta_year': self._productionYear(item)})
                 self.addVideo(params)
         except Exception:
             printExc()
+
+    @staticmethod
+    def _stripPartNo(title):
+        # "Die Rebellin (1/3)" -> "Die Rebellin"
+        return re.sub(r'\s*\(\d+/\d+\)\s*$', '', title) or title
+
+    @staticmethod
+    def _productionYear(item):
+        year = str((((item.get('contentAttributes') or {}).get('productionYear') or {}).get('title')) or '').strip()
+        return year[:4] if year[:4].isdigit() else ''
+
+    @staticmethod
+    def _isoDate(value):
+        # "05.10.2026 20:15" -> "2026-10-05" (what normalizeMediathekTitle expects)
+        m = re.match(r'(\d{2})\.(\d{2})\.(\d{4})', str(value or ''))
+        return '%s-%s-%s' % (m.group(3), m.group(2), m.group(1)) if m else str(value or '')
+
+    def _mediaTitle(self, item, title):
+        # "Show - SxxExx - Episode" for numbered episodes, "Title (Year)" for films,
+        # "Title (date)" otherwise - only with media naming normalisation on
+        show = self.cleanHtmlStr(item.get('brandTitle') or item.get('headline') or '')
+        try:
+            season, episode = int(item.get('seasonNumber') or 0), int(item.get('episodeNumber') or 0)
+        except (TypeError, ValueError):
+            season, episode = 0, 0
+        # documentary series number their "seasons" by year (2026): those get the date instead
+        if season and episode and show and season < 1900:
+            # "Tatort: Das Opfer" -> "Tatort - SxxExx - Das Opfer"
+            rest = re.sub(r'^%s\s*[:|-]\s*' % re.escape(show), '', title, flags=re.I).strip()
+            base = '%s - %s' % (show, rest) if rest and rest.lower() != show.lower() else show
+            named = normalizeMediathekTitle(base, sxeHint='S%02dE%02d' % (season, episode))
+            return named if named != base else title
+        year = self._productionYear(item)
+        if year and '/filme/' in (item.get('structureNodePath') or ''):
+            return normalizeMediathekTitle(title, year=year, isMovie=True)
+        attrDate = ((item.get('contentAttributes') or {}).get('editorialDate') or {}).get('title')
+        date = item.get('editorialDate') or attrDate or item.get('airtimeBegin') or item.get('onlineDate') or ''
+        return normalizeMediathekTitle(
+            title, date=self._isoDate(date),
+            sxeHint='%s %s' % (self.cleanHtmlStr(item.get('headline', '') or ''), title))
 
     def listMissedDate(self, cItem):
         printDBG("listMissedDate")
@@ -320,13 +379,12 @@ class ZDFmediathek(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     def listBrands(self, cItem):
         printDBG('listBrands')
-        page = cItem.get('page', 0)
-        if page == 0:
+        if cItem.get('url'):
+            url = cItem['url']  # a pager row
+        else:
             letter = cItem.get('letter', 'A')
             query = '0' if letter == '0-9' else letter
             url = self.SEARCH_API_URL % (urllib_quote(query), 'brand')
-        else:
-            url = cItem['url']
         kids = bool(cItem.get('f_kids'))
         sts, data = self.getPage(url)
         if not sts:
@@ -339,32 +397,45 @@ class ZDFmediathek(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 if kids and item.get('channel') != 'KI.KA' and '/kinder/' not in (item.get('sharingUrl') or ''):
                     continue
                 self._addItem(cItem, item)
-            if data.get('nextPage'):
-                params = dict(cItem)
-                params.update({'title': _('Next page'), 'url': self.getFullUrl(data['nextPageUrl']), 'page': page + 1})
-                self.addDir(params)
+            self._addPaging(cItem, data)
         except Exception:
             printExc()
 
+    def _addPaging(self, cItem, data):
+        # search answers: nextPage / nextPageUrl ("...&page=N") / totalResultsCount
+        nextUrl = self.getFullUrl(data.get('nextPageUrl') or '') if data.get('nextPage') else ''
+        tplSrc = nextUrl or cItem.get('url', '')
+        if not re.search(r'[?&]page=\d+', tplSrc):
+            tplSrc = ''
+        tpl = re.sub(r'([?&]page=)\d+', r'\g<1>{page}', tplSrc) if tplSrc else ''
+        m = re.search(r'[?&]page=(\d+)', cItem.get('url', '') or '')
+        page = int(m.group(1)) if m else 1
+        lastPage = 0
+        try:
+            perPage = len(data.get('results') or [])
+            total = int(data.get('totalResultsCount') or 0)
+            if nextUrl and perPage and total:
+                lastPage = (total + perPage - 1) // perPage
+        except (TypeError, ValueError):
+            pass
+        if tpl:
+            addPagingItems(self, cItem, page, bool(nextUrl), lastPage, tpl)
+
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("ZDFmediathek.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
-        page = cItem.get('page', 0)
-        if page == 0:
-            url = self.SEARCH_API_URL % (searchPattern, 'episode')
+        if cItem.get('url'):
+            url = cItem['url']  # a pager row
         else:
-            url = cItem['url']
+            url = self.SEARCH_API_URL % (urllib_quote(searchPattern), 'episode')
 
         sts, data = self.getPage(url)
         if not sts:
             return
         try:
             data = json_loads(data)
-            for item in data['results']:
+            for item in data.get('results') or []:
                 self._addItem(cItem, item)
-            if data['nextPage']:
-                params = dict(cItem)
-                params.update({'title': _('Next page'), 'url': self.getFullUrl(data['nextPageUrl']), 'page': page + 1})
-                self.addDir(params)
+            self._addPaging(cItem, data)
         except Exception:
             printExc()
 
@@ -512,9 +583,68 @@ class ZDFmediathek(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
         return urlTab
 
+    ###################################################
+    # INFO
+    ###################################################
+    def getArticleContent(self, cItem):
+        printDBG('ZDFmediathek.getArticleContent [%s]' % cItem.get('url', ''))
+        text, icon, info = cItem.get('desc', ''), cItem.get('icon', ''), {}
+        url = cItem.get('url', '')
+        if cItem.get('type') == 'video' and cItem.get('id') and '/mediathekV2/document/' not in url:
+            url = self.DOCUMENT_API_URL % cItem['id']
+        doc = {}
+        if '/mediathekV2/document/' in url:
+            sts, data = self.getPage(url)
+            if sts:
+                try:
+                    data = json_loads(data)
+                    doc = data.get('document') or {}
+                    if not doc.get('beschreibung') and data.get('shortText'):
+                        doc = dict(doc, beschreibung=(data['shortText'] or {}).get('text') or '')
+                except Exception:
+                    printExc()
+        if doc:
+            desc = self.cleanHtmlStr(doc.get('beschreibung') or doc.get('leadParagraph') or '')
+            text = desc or text
+            try:
+                if int(doc.get('length') or 0) > 0:
+                    info['duration'] = str(timedelta(seconds=int(doc['length'])))
+            except (TypeError, ValueError):
+                pass
+            if doc.get('channel'):
+                info['station'] = self.cleanHtmlStr(doc['channel'])
+            fsk = str(doc.get('fsk') or '')
+            m = re.search(r'(\d+)', fsk)
+            if m and m.group(1) != '0':
+                info['age_limit'] = '%s+' % m.group(1)
+            airtime = self._isoDate(doc.get('airtime') or '')
+            if re.match(r'\d{4}-\d{2}-\d{2}', airtime):
+                info['broadcast'] = airtime
+            avail = self._isoDate(doc.get('timetolive') or '')
+            if re.match(r'\d{4}-\d{2}-\d{2}', avail):
+                info['remaining'] = _('available until %s') % avail[:10]
+        meta = {}
+        if cItem.get('meta_type') and cItem.get('meta_title'):
+            try:
+                # the year must match: the title search also finds other films of the same name
+                # (German TV film "Die Rebellin" 2008 -> "Rebelle" 2012)
+                meta = getMeta(cItem['meta_type'], cItem['meta_title'], cItem.get('meta_year', ''), maxYearDiff=1)
+            except Exception:
+                printExc()
+        if cItem.get('meta_year'):
+            info.setdefault('year', cItem['meta_year'])
+        # the site's German texts first, the service adds ratings, cast and the poster
+        for key, value in (meta.get('info') or {}).items():
+            info.setdefault(key, value)
+        text = text or meta.get('plot', '')
+        icon = meta.get('poster') or icon
+        return [{'title': cItem.get('title', ''), 'text': text, 'images': [{'title': '', 'url': icon}] if icon else [], 'other_info': info}]
+
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('ZDFmediathek.handleService start')
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
+        if isJumpItem(self.currItem):
+            self.currItem = jumpTarget(self, self.currItem)
         name = self.currItem.get("name", None)
         category = self.currItem.get("category", '')
         printDBG("ZDFmediathek.handleService: ---------> name[%s], category[%s] " % (name, category))
@@ -561,3 +691,6 @@ class IPTVHost(GenericFolderWatchedHostMixin, CHostBase):
         self.cachedRet = None
         self.refreshAfterWatchedFlagChange = False
         self.watchedHelper = IPTVWatchedHelper('zdfmediathek')
+
+    def withArticleContent(self, cItem):
+        return cItem.get('type') == 'video' or (cItem.get('category') == 'list_cluster' and cItem.get('zdf_type') == 'brand')

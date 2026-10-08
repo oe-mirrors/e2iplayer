@@ -1,18 +1,24 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 27.09.2026
+# Last Modified: 08.10.2026
 # SRG SSR (SRF / RTS / RSI / RTR)
 # Rewritten for the il.srgssr.ch integrationlayer 2.0 JSON API
+# 07.10.2026 - INFO (media details, moviemeta for films), First/Next
+# paging, own url per media (download marker), watched flag for podcast episodes,
+# new portal logos, default user agent.
+# 08.10.2026 - default icon from the own tile (upload.wikimedia.org answered with HTTP 429).
 ###################################################
 # LOCAL import
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIconDir
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import normalizeMediathekTitle
+from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, stripPagerKeys
+from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks
-from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 import re
@@ -39,16 +45,20 @@ class PlayRTSIW(GenericFolderWatchedScraperMixin, CBaseHostClass):
     TOKEN_URL = 'https://tp.srgssr.ch/akahd/token?acl='
 
     BU = [
-        ('srf', 'SRF', 'https://www.srf.ch/play/static/img/srg/srf/playsrf_logo.png'),
-        ('rts', 'RTS', 'https://www.rts.ch/play/static/img/srg/rts/playrts_logo.png'),
-        ('rsi', 'RSI', 'https://www.rsi.ch/play/static/img/srg/rsi/playrsi_logo.png'),
-        ('rtr', 'RTR', 'https://www.rtr.ch/play/static/img/srg/rtr/playrtr_logo.png'),
+        ('srf', 'SRF', 'https://www.srf.ch/play/v3/images/appIcons/srf/play-srf_384x384.png'),
+        ('rts', 'RTS', 'https://www.rts.ch/play/v3/images/appIcons/rts/play-rts_384x384.png'),
+        ('rsi', 'RSI', 'https://www.rsi.ch/play/v3/images/appIcons/rsi/play-rsi_384x384.png'),
+        ('rtr', 'RTR', 'https://www.rtr.ch/play/v3/images/appIcons/rtr/play-rtr_384x384.png'),
     ]
+    # show names the portals use for their feature films (show "Film", title "<<Vortex>> - French drama")
+    FILM_SHOWS = ('film', 'films', 'spielfilm', 'cinema')
 
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'PlayRTSIW', 'cookie': 'srgssr.cookie'})
-        self.DEFAULT_ICON_URL = 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/SRG_SSR_2011_logo.svg/1200px-SRG_SSR_2011_logo.svg.png'
-        self.HTTP_HEADER = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36', 'Accept': 'application/json'}
+        # Wikimedia only serves its standard thumbnail widths (1200px answers 400)
+        # the own tile: upload.wikimedia.org answers hotlinked thumbnails with HTTP 429
+        self.DEFAULT_ICON_URL = 'file://' + GetIconDir('PlayerSelector/playrtsiw135.png')
+        self.HTTP_HEADER = {'User-Agent': self.cm.getDefaultUserAgent(), 'Accept': 'application/json'}
 
         self.watchedHelper = IPTVWatchedHelper('srgssr')
         self.wfInitFolderCache()
@@ -63,7 +73,11 @@ class PlayRTSIW(GenericFolderWatchedScraperMixin, CBaseHostClass):
             itemType = cItem.get('type', '')
             if itemType in ('video', 'audio'):
                 urn = str(cItem.get('urn', '') or '').strip()
-                return 'media:%s' % urn if urn else ''
+                if urn:
+                    return 'media:%s' % urn
+                # podcast episodes (RSS) have no urn, only their file
+                direct = str(cItem.get('direct_url', '') or '').strip()
+                return 'media:url:%s' % direct if direct else ''
             if itemType in ('more', 'marker'):
                 return ''
             if cItem.get('search_item') or cItem.get('name') == 'history':
@@ -71,7 +85,8 @@ class PlayRTSIW(GenericFolderWatchedScraperMixin, CBaseHostClass):
             if cItem.get('category', '') in ('list_portal', 'list_radio', 'list_portals',
                                              'search', 'search_next_page', 'search_history'):
                 return ''
-            url = self.wfNormalizeUrlKey(cItem.get('url', ''))
+            # "next=N" only pages the list (page 2 keys like page 1)
+            url = self.wfNormalizeUrlKey(re.sub(r'([?&])next=[^&]*&?', r'\1', cItem.get('url', '') or '').rstrip('?&'))
             return 'folder:%s' % url if url else ''
         except Exception:
             printExc()
@@ -122,7 +137,11 @@ class PlayRTSIW(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 return
             title = self.cleanHtmlStr(media.get('title') or '')
             show = self.cleanHtmlStr((media.get('show') or {}).get('title') or '')
-            if show and show.lower() not in title.lower():
+            isAudio = str(media.get('mediaType') or '').upper() == 'AUDIO'
+            isFilm = show.lower() in self.FILM_SHOWS and not isAudio
+            # a film with media naming on: no "Film - " show prefix (and no broadcast date below)
+            filmName = isFilm and IsMediaNamingNormalized()
+            if show and show.lower() not in title.lower() and not filmName:
                 title = '%s - %s' % (show, title)
             descTab = []
             dur = self._fmtDur(media.get('duration'))
@@ -138,15 +157,24 @@ class PlayRTSIW(GenericFolderWatchedScraperMixin, CBaseHostClass):
             if block:
                 title = '%s [%s]' % (title, 'GEO' if 'GEOBLOCK' in block else block)
                 descTab.insert(0, _('This content is not available in your region.') if 'GEOBLOCK' in block else block)
-            params = dict(cItem)
-            params.pop('page', None)
-            params.update({'good_for_fav': True, 'title': title or urn, 'urn': urn,
+            params = stripPagerKeys(dict(cItem), ('base_url', 'meta_type', 'meta_title', 'live', 'direct_url'))
+            # the media's own Play page as the row url: the download marker is keyed on it
+            # (the watched key stays the urn)
+            parts = urn.split(':')
+            bu = parts[1] if len(parts) > 2 else (cItem.get('bu') or 'srf')
+            ownUrl = 'https://www.%s.ch/play/%s/-/%s/-?urn=%s' % (bu, 'radio' if isAudio else 'tv', 'audio' if isAudio else 'video', urn)
+            params.update({'good_for_fav': True, 'title': title or urn, 'urn': urn, 'url': ownUrl,
                            'icon': self._icon(media.get('imageUrl')), 'desc': '[/br]'.join(descTab)})
             if str(media.get('type') or '').upper() in ('LIVESTREAM', 'SCHEDULED_LIVESTREAM'):
                 params['live'] = True
             else:
-                params['title'] = normalizeMediathekTitle(params['title'], date=media.get('date') or '', sxeHint=title)
-            if str(media.get('mediaType') or '').upper() == 'AUDIO':
+                if not filmName:
+                    params['title'] = normalizeMediathekTitle(params['title'], date=media.get('date') or '', sxeHint=title)
+                if isFilm:
+                    # "<<Vortex>> - French drama" (French quotation marks) -> "Vortex"
+                    m = re.search(u'\u00ab([^\u00bb]+)\u00bb', media.get('title') or '')
+                    params.update({'meta_type': 'movie', 'meta_title': self.cleanHtmlStr(m.group(1) if m else (media.get('title') or ''))})
+            if isAudio:
                 self.addAudio(params)
             else:
                 self.addVideo(params)
@@ -159,11 +187,14 @@ class PlayRTSIW(GenericFolderWatchedScraperMixin, CBaseHostClass):
             return
         for m in (data.get(key) or data.get('mediaList') or []):
             self._addMedia(cItem, m)
-        nextUrl = data.get('next') or ''
-        if nextUrl:
-            params = dict(cItem)
-            params.update({'title': _('Next page'), 'url': nextUrl, 'good_for_fav': False})
-            self.addDir(params)
+        self._addPaging(cItem, data.get('next') or '')
+
+    def _addPaging(self, cItem, nextUrl, baseUrl=''):
+        # the integration layer pages with an opaque "next" link (page index or offset): First page + Next page
+        page = int(cItem.get('page') or 1)
+        baseUrl = cItem.get('base_url') or baseUrl or cItem.get('url', '')
+        pagerItem = dict(cItem, url=baseUrl, base_url=baseUrl)
+        addPagingItems(self, pagerItem, page, bool(nextUrl), nextParams={'url': nextUrl} if nextUrl else None)
 
     ###################################################
     def listPortals(self, cItem):
@@ -231,10 +262,9 @@ class PlayRTSIW(GenericFolderWatchedScraperMixin, CBaseHostClass):
             dur = re.search(r'<itunes:duration>([^<]+)</itunes:duration>', item)
             pub = re.search(r'<pubDate>([^<]+)</pubDate>', item)
             desc = re.search(r'<description>(?:<!\[CDATA\[)?(.*?)(?:\]\]>)?</description>', item, re.S)
-            params = dict(cItem)
-            params.pop('page', None)
+            params = stripPagerKeys(dict(cItem), ('base_url',))
             params.update({'good_for_fav': True, 'title': self.cleanHtmlStr(title.group(1)) if title else cItem.get('title', ''),
-                           'direct_url': url, 'urn': '',
+                           'direct_url': url, 'url': url, 'urn': '',
                            'desc': '[/br]'.join([x for x in (
                                ', '.join([y for y in ((dur.group(1) if dur else ''), (pub.group(1)[:16] if pub else '')) if y]),
                                self.cleanHtmlStr(desc.group(1)) if desc else '') if x])})
@@ -249,8 +279,7 @@ class PlayRTSIW(GenericFolderWatchedScraperMixin, CBaseHostClass):
             tid = t.get('id') or ''
             if not tid:
                 continue
-            params = dict(cItem)
-            params.pop('page', None)
+            params = stripPagerKeys(dict(cItem), ('base_url',))
             params.update({'category': 'list_media', 'title': self.cleanHtmlStr(t.get('title') or ''),
                            'icon': self._icon(t.get('imageUrl')), 'desc': self.cleanHtmlStr(t.get('lead') or ''),
                            'url': self.IL + '%s/mediaList/video/latestByTopic/%s?pageSize=40' % (bu, tid)})
@@ -271,8 +300,7 @@ class PlayRTSIW(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 desc.append(_('%s episodes') % show['numberOfEpisodes'])
             if show.get('lead') or show.get('description'):
                 desc.append(self.cleanHtmlStr(show.get('lead') or show.get('description')))
-            params = dict(cItem)
-            params.pop('page', None)
+            params = stripPagerKeys(dict(cItem), ('base_url',))
             params.update({'title': self.cleanHtmlStr(show.get('title') or ''),
                            'icon': self._icon(show.get('imageUrl')), 'desc': '[/br]'.join(desc)})
             if radio:
@@ -283,17 +311,12 @@ class PlayRTSIW(GenericFolderWatchedScraperMixin, CBaseHostClass):
             else:
                 params.update({'category': 'list_media', 'url': self.IL + '%s/mediaList/video/latest/byShow/%s?pageSize=40' % (bu, sid)})
             self.addDir(params)
-        nextUrl = data.get('next') or ''
-        if nextUrl:
-            params = dict(cItem)
-            params.update({'title': _('Next page'), 'url': nextUrl, 'good_for_fav': False})
-            self.addDir(params)
+        self._addPaging(cItem, data.get('next') or '')
 
     def listSearchResult(self, cItem, searchPattern, searchType):
-        bu = (searchType or 'srf').lower()
+        bu = (searchType or cItem.get('bu') or 'srf').lower()
         q = urllib_quote(searchPattern)
-        page = cItem.get('page', 0)
-        if page == 0:
+        if not cItem.get('url'):
             data = self._json(self.IL + '%s/searchResultShowList?q=%s' % (bu, q))
             if data:
                 for show in (data.get('searchResultShowList') or data.get('showList') or []):
@@ -307,17 +330,13 @@ class PlayRTSIW(GenericFolderWatchedScraperMixin, CBaseHostClass):
                     self.addDir(params)
             url = self.IL + '%s/searchResultMediaList?q=%s&pageSize=40' % (bu, q)
         else:
-            url = cItem['url']
+            url = cItem['url']  # a pager row
         data = self._json(url)
         if not data:
             return
         for m in (data.get('searchResultMediaList') or data.get('mediaList') or []):
             self._addMedia(dict(cItem, bu=bu), m)
-        nextUrl = data.get('next') or ''
-        if nextUrl:
-            params = dict(cItem)
-            params.update({'title': _('Next page'), 'url': nextUrl, 'page': page + 1})
-            self.addDir(params)
+        self._addPaging(dict(cItem, bu=bu), data.get('next') or '', url)
 
     ###################################################
     def _akamaiToken(self, url):
@@ -372,7 +391,8 @@ class PlayRTSIW(GenericFolderWatchedScraperMixin, CBaseHostClass):
         subTracks = []
         for sub in (chapter.get('subtitleList') or []):
             surl = sub.get('url') or ''
-            if surl:
+            # the same track also comes as TTML (hbbtv.xml): the player reads VTT/SRT only
+            if surl and (sub.get('format') or 'VTT').upper() in ('VTT', 'SRT'):
                 subTracks.append({'title': sub.get('locale') or sub.get('language') or '', 'url': surl,
                                   'lang': sub.get('locale') or 'de', 'format': (sub.get('format') or '').lower() or 'vtt'})
 
@@ -420,6 +440,53 @@ class PlayRTSIW(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return urlTab
 
     ###################################################
+    # INFO
+    ###################################################
+    def getArticleContent(self, cItem):
+        printDBG('PlayRTSIW.getArticleContent [%s]' % cItem.get('urn', ''))
+        text, icon, info = cItem.get('desc', ''), cItem.get('icon', ''), {}
+        urn = cItem.get('urn', '')
+        chapter, show = {}, {}
+        if urn:
+            data = self._json(self.IL + 'mediaComposition/byUrn/%s.json?onlyChapters=true&vector=portalplay' % urn) or {}
+            show = data.get('show') or {}
+            for ch in (data.get('chapterList') or []):
+                if ch.get('urn') == urn or not chapter:
+                    chapter = ch
+            if chapter:
+                parts = [self.cleanHtmlStr(chapter.get(k) or '') for k in ('lead', 'description')]
+                parts = [x for i, x in enumerate(parts) if x and x not in parts[:i]]
+                text = '[/br]'.join(parts) or text
+                if len(text) < 20:
+                    # live streams and short news clips: the show's text
+                    showText = self.cleanHtmlStr(show.get('lead') or show.get('description') or '')
+                    text = '[/br]'.join([x for x in (text, showText) if x])
+                dur = self._fmtDur(chapter.get('duration'))
+                if dur:
+                    info['duration'] = dur
+                if (chapter.get('date') or '')[:10]:
+                    info['broadcast'] = chapter['date'][:10]
+                if (chapter.get('validTo') or '')[:10]:
+                    info['remaining'] = _('available until %s') % chapter['validTo'][:10]
+                channel = (data.get('channel') or {}).get('title') or ''
+                if channel:
+                    info['station'] = self.cleanHtmlStr(channel)
+                if show.get('title'):
+                    info['category'] = self.cleanHtmlStr(show['title'])
+        meta = {}
+        if cItem.get('meta_type') and cItem.get('meta_title'):
+            try:
+                meta = getMeta(cItem['meta_type'], cItem['meta_title'])
+            except Exception:
+                printExc()
+        # the site's texts first, the service adds ratings, cast, year and the poster
+        for key, value in (meta.get('info') or {}).items():
+            info.setdefault(key, value)
+        text = text or meta.get('plot', '')
+        icon = meta.get('poster') or icon
+        return [{'title': cItem.get('title', ''), 'text': text, 'images': [{'title': '', 'url': icon}] if icon else [], 'other_info': info}]
+
+    ###################################################
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('PlayRTSIW.handleService start')
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
@@ -463,6 +530,9 @@ class IPTVHost(GenericFolderWatchedHostMixin, CHostBase):
         self.cachedRet = None
         self.refreshAfterWatchedFlagChange = False
         self.watchedHelper = IPTVWatchedHelper('srgssr')
+
+    def withArticleContent(self, cItem):
+        return cItem.get('type') in ('video', 'audio')
 
     def getSearchTypes(self):
         return [('SRF', 'srf'), ('RTS', 'rts'), ('RSI', 'rsi'), ('RTR', 'rtr')]
