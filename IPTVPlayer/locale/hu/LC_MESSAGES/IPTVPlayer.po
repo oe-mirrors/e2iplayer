@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-07 21:05+0000\n"
+"POT-Creation-Date: 2026-10-08 20:17+0000\n"
 "PO-Revision-Date: 2026-07-27 16:49+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -264,6 +264,9 @@ msgstr "----- PROXY KONFIGURÁCIÓ -----"
 
 msgid "----- Porn Site Configuration -----"
 msgstr "----- Pornóoldal konfiguráció -----"
+
+msgid "----- SCREENSAVER CONFIGURATION -----"
+msgstr ""
 
 msgid "----- SECURITY CONFIGURATION -----"
 msgstr "----- BIZTONSÁGI KONFIGURÁCIÓ -----"
@@ -869,6 +872,9 @@ msgstr "Fekete"
 
 msgid "Black iframe file"
 msgstr "Fekete iframe fájl"
+
+msgid "Black screensaver"
+msgstr ""
 
 msgid "Block wmv files"
 msgstr "Wmv fájlok blokkolása"
@@ -2209,9 +2215,6 @@ msgstr ""
 msgid "Filler"
 msgstr ""
 
-msgid "Film"
-msgstr "Film"
-
 #, fuzzy
 msgid "Films"
 msgstr "Film"
@@ -2489,6 +2492,9 @@ msgstr ""
 #, python-format
 msgid "Hide \"%s\" group"
 msgstr "„%s” csoport elrejtése"
+
+msgid "Hide the menu (live TV visible)"
+msgstr ""
 
 msgid "Hide titles only available in Sweden"
 msgstr ""
@@ -3636,6 +3642,9 @@ msgstr "Nincs"
 msgid "Normalize item / file names (Show - SxxExx - Title)"
 msgstr ""
 
+msgid "Not available in your country (geo-blocking)."
+msgstr ""
+
 #, fuzzy
 msgid "Not available yet"
 msgstr "A teljes leírás nem érhető el"
@@ -3689,6 +3698,9 @@ msgid "OK"
 msgstr "OK"
 
 msgid "OMDb API key (free at omdbapi.com)"
+msgstr ""
+
+msgid "Off"
 msgstr ""
 
 msgid "Offline channels"
@@ -3909,6 +3921,9 @@ msgstr "Konfigurációs tűvédelem"
 
 msgid "Pin protection for plugin"
 msgstr "Bővítmény PIN-védelme"
+
+msgid "Pin protection for this host"
+msgstr ""
 
 #, python-format
 msgid "Play with [%s] player"
@@ -4329,6 +4344,9 @@ msgstr ""
 msgid "Remaining:"
 msgstr "Fennmaradó:"
 
+msgid "Remember a host's pin until E2iPlayer is closed"
+msgstr ""
+
 #, fuzzy
 msgid "Remember last search entry"
 msgstr "Emlékezz az utolsó megtekintett pozícióra"
@@ -4485,6 +4503,12 @@ msgstr ""
 msgid "Science"
 msgstr "Tudomány"
 
+msgid "Screensaver during audio playback"
+msgstr ""
+
+msgid "Screensaver in E2iPlayer menus"
+msgstr ""
+
 #, fuzzy, python-format
 msgid ""
 "Script execution failed.\n"
@@ -4543,6 +4567,9 @@ msgstr "Keresési eredmények"
 #, fuzzy
 msgid "Search results region:"
 msgstr "Keresési eredmények"
+
+msgid "Search string must have at least 4 characters."
+msgstr ""
 
 #, fuzzy
 msgid "Search term :"
@@ -4731,10 +4758,6 @@ msgstr ""
 "A(z) %s szolgáltatás regisztrációt igényel. \n"
 "Kérjük, adja meg bejelentkezési nevét és jelszavát az %s konfigurációjában."
 
-#, python-format
-msgid "Service [%s] has no additional settings."
-msgstr "A(z) [%s] szolgáltatásnak nincsenek további beállításai."
-
 msgid "Service icon size"
 msgstr "Szolgáltatás ikon mérete"
 
@@ -4766,6 +4789,10 @@ msgstr "Megfigyelt"
 
 msgid "Settings"
 msgstr "Beállítások"
+
+#, python-format
+msgid "Settings of service [%s] cannot be opened."
+msgstr ""
 
 msgid "Settings screen layout"
 msgstr ""
@@ -5459,6 +5486,9 @@ msgstr ""
 msgid "The host wanted to open a window on the TV (%s) - that only works on the receiver."
 msgstr ""
 
+msgid "The hoster sends an advert redirect instead of the video at the moment. Try another hoster."
+msgstr ""
+
 msgid "The latest uploads of all YouTube channels in this group, newest first."
 msgstr ""
 
@@ -5580,6 +5610,12 @@ msgstr "Nincs szabad hely a(z) [%s] meghajtón."
 msgid "There is no hosts in this group."
 msgstr "Ebben a csoportban nincs host kiszolgáló."
 
+msgid "There is no next item in this list."
+msgstr ""
+
+msgid "There is no previous item in this list."
+msgstr ""
+
 #, python-format
 msgid ""
 "There is no storage device under \"%s\" (%s free). E2iPlayer will switch this folder back to \"%s\" at the next start.\n"
@@ -5627,6 +5663,9 @@ msgid "This entry cannot be opened."
 msgstr "A(z) „%s” segédprogram nem található."
 
 msgid "This entry is only an advert, there is no video."
+msgstr ""
+
+msgid "This entry is protected by a PIN, open it on the receiver."
 msgstr ""
 
 msgid "This episode is not available in this version (SUB/DUB) on this server. Try another one."
@@ -6128,6 +6167,9 @@ msgstr "Videópuffer mérete [MB]"
 msgid "Video library"
 msgstr ""
 
+msgid "Video link not found."
+msgstr ""
+
 msgid "Video mode"
 msgstr "Videó mód"
 
@@ -6225,6 +6267,9 @@ msgstr ""
 msgid "When the maximum is reached"
 msgstr ""
 
+msgid "While live TV is running"
+msgstr ""
+
 msgid "Whole file must be downloaded to start playback!"
 msgstr "A lejátszás megkezdéséhez a teljes fájlt le kell tölteni!"
 
@@ -6241,6 +6286,9 @@ msgid "With subtitles"
 msgstr "Feliratok az órához"
 
 msgid "World"
+msgstr ""
+
+msgid "Worldwide"
 msgstr ""
 
 msgid "Wrestling"
@@ -6379,6 +6427,10 @@ msgstr ""
 
 msgid "Your search entry"
 msgstr "A keresési bejegyzésed"
+
+#, python-format
+msgid "Youth protection: only available between %s and %s."
+msgstr ""
 
 msgid "Youtube Suggestions"
 msgstr "Youtube-javaslatok"
@@ -6687,6 +6739,9 @@ msgid "medium"
 msgstr "közepes"
 
 msgid "menu and list only"
+msgstr ""
+
+msgid "minutes"
 msgstr ""
 
 msgid "more options (this menu)"

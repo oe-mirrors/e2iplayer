@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-07 21:05+0000\n"
+"POT-Creation-Date: 2026-10-08 20:17+0000\n"
 "PO-Revision-Date: 2026-10-05 20:00+0200\n"
 "Last-Translator: damagic-pl\n"
 "Language-Team: IPTVPlayer\n"
@@ -261,6 +261,9 @@ msgstr "----- USTAWIENIA PROXY -----"
 
 msgid "----- Porn Site Configuration -----"
 msgstr "----- Ustawienia stron porno -----"
+
+msgid "----- SCREENSAVER CONFIGURATION -----"
+msgstr ""
 
 msgid "----- SECURITY CONFIGURATION -----"
 msgstr "----- SECURITY CONFIGURATION -----"
@@ -853,6 +856,9 @@ msgstr "Czarne"
 
 msgid "Black iframe file"
 msgstr "Plik czyszczącej ramki iframe"
+
+msgid "Black screensaver"
+msgstr ""
 
 msgid "Block wmv files"
 msgstr "Blokować pliki wmv"
@@ -2144,9 +2150,6 @@ msgstr "Pliki"
 msgid "Filler"
 msgstr "Filler"
 
-msgid "Film"
-msgstr "Film"
-
 msgid "Films"
 msgstr "Filmy"
 
@@ -2416,6 +2419,9 @@ msgstr "Pomoc"
 #, python-format
 msgid "Hide \"%s\" group"
 msgstr "Ukry \"%s\" grupę"
+
+msgid "Hide the menu (live TV visible)"
+msgstr ""
 
 msgid "Hide titles only available in Sweden"
 msgstr "Ukryj tytuły dostępne tylko w Szwecji"
@@ -3522,6 +3528,9 @@ msgstr "Brak"
 msgid "Normalize item / file names (Show - SxxExx - Title)"
 msgstr "Normalizuj nazwy pozycji / plików (Serial - SxxExx - Tytuł)"
 
+msgid "Not available in your country (geo-blocking)."
+msgstr ""
+
 msgid "Not available yet"
 msgstr "Jeszcze niedostępne"
 
@@ -3573,6 +3582,9 @@ msgstr "OK"
 
 msgid "OMDb API key (free at omdbapi.com)"
 msgstr "Klucz API OMDb (darmowy na omdbapi.com)"
+
+msgid "Off"
+msgstr ""
 
 msgid "Offline channels"
 msgstr "Kanały nie nadawane"
@@ -3786,6 +3798,9 @@ msgstr "Chronić konfigurację kodem PIN"
 
 msgid "Pin protection for plugin"
 msgstr "Chroń wtyczkę kodem PIN"
+
+msgid "Pin protection for this host"
+msgstr ""
 
 #, python-format
 msgid "Play with [%s] player"
@@ -4195,6 +4210,9 @@ msgstr "Religia"
 msgid "Remaining:"
 msgstr "Pozostało:"
 
+msgid "Remember a host's pin until E2iPlayer is closed"
+msgstr ""
+
 msgid "Remember last search entry"
 msgstr "Zapamiętaj ostatni wpis wyszukiwania"
 
@@ -4350,6 +4368,12 @@ msgstr "Sci-Fi i fantasy"
 msgid "Science"
 msgstr "Nauka"
 
+msgid "Screensaver during audio playback"
+msgstr ""
+
+msgid "Screensaver in E2iPlayer menus"
+msgstr ""
+
 #, python-format
 msgid ""
 "Script execution failed.\n"
@@ -4403,6 +4427,9 @@ msgstr "Wyniki wyszukiwania"
 
 msgid "Search results region:"
 msgstr "Region wyników wyszukiwania:"
+
+msgid "Search string must have at least 4 characters."
+msgstr ""
 
 msgid "Search term :"
 msgstr "Szukana fraza :"
@@ -4585,10 +4612,6 @@ msgstr ""
 "Serwis %s wymaga zalogowania.\n"
 "Proszę wprowadzić login i hasło w konfiguracji %s."
 
-#, python-format
-msgid "Service [%s] has no additional settings."
-msgstr "Host [%s] nie ma dodatkowych ustawień."
-
 msgid "Service icon size"
 msgstr "Rozmiar ikon"
 
@@ -4618,6 +4641,10 @@ msgstr "Zaznacz jako oglądany"
 
 msgid "Settings"
 msgstr "Ustawienia"
+
+#, python-format
+msgid "Settings of service [%s] cannot be opened."
+msgstr ""
 
 msgid "Settings screen layout"
 msgstr "Układ ekranu ustawień"
@@ -5310,6 +5337,9 @@ msgstr "Host nie zwrócił listy."
 msgid "The host wanted to open a window on the TV (%s) - that only works on the receiver."
 msgstr "Host chciał otworzyć okno na telewizorze (%s) - działa to tylko na odbiorniku."
 
+msgid "The hoster sends an advert redirect instead of the video at the moment. Try another hoster."
+msgstr ""
+
 msgid "The latest uploads of all YouTube channels in this group, newest first."
 msgstr "Najnowsze filmy wszystkich kanałów YouTube w tej grupie, od najnowszych."
 
@@ -5429,6 +5459,12 @@ msgstr "Nie ma wolnego miejsca na dysku [%s]."
 msgid "There is no hosts in this group."
 msgstr "Ta grupa jest pusta."
 
+msgid "There is no next item in this list."
+msgstr ""
+
+msgid "There is no previous item in this list."
+msgstr ""
+
 #, python-format
 msgid ""
 "There is no storage device under \"%s\" (%s free). E2iPlayer will switch this folder back to \"%s\" at the next start.\n"
@@ -5469,6 +5505,9 @@ msgid "This entry cannot be opened."
 msgstr "Tego wpisu nie można otworzyć."
 
 msgid "This entry is only an advert, there is no video."
+msgstr ""
+
+msgid "This entry is protected by a PIN, open it on the receiver."
 msgstr ""
 
 msgid "This episode is not available in this version (SUB/DUB) on this server. Try another one."
@@ -5967,6 +6006,9 @@ msgstr "Rozmiar bufora wideo w [MB]"
 msgid "Video library"
 msgstr "Biblioteka wideo"
 
+msgid "Video link not found."
+msgstr ""
+
 msgid "Video mode"
 msgstr "Tryb Obrazu"
 
@@ -6061,6 +6103,9 @@ msgstr "Co się dzieje?"
 msgid "When the maximum is reached"
 msgstr "Po osiągnięciu maksimum"
 
+msgid "While live TV is running"
+msgstr ""
+
 msgid "Whole file must be downloaded to start playback!"
 msgstr "Cały plik musi być pobrany, aby rozpocząć odtwarzanie!"
 
@@ -6078,6 +6123,9 @@ msgstr "Z napisami"
 
 msgid "World"
 msgstr "Świat"
+
+msgid "Worldwide"
+msgstr ""
 
 msgid "Wrestling"
 msgstr "Wrestling"
@@ -6216,6 +6264,10 @@ msgstr "Twoje rozszerzenie MyE2i jest nieaktualne lub nieznane (wymagana wersja 
 
 msgid "Your search entry"
 msgstr "Wprowadź wzorzec wyszukiwania"
+
+#, python-format
+msgid "Youth protection: only available between %s and %s."
+msgstr ""
 
 msgid "Youtube Suggestions"
 msgstr "Sugestie YouTube"
@@ -6516,6 +6568,9 @@ msgstr "średnia"
 
 msgid "menu and list only"
 msgstr "tylko menu i lista"
+
+msgid "minutes"
+msgstr ""
 
 msgid "more options (this menu)"
 msgstr "więcej opcji (to menu)"

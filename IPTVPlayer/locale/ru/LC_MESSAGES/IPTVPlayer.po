@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-07 21:05+0000\n"
+"POT-Creation-Date: 2026-10-08 20:17+0000\n"
 "PO-Revision-Date: 2026-07-27 16:55+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -264,6 +264,9 @@ msgstr "----- КОНФИГУРАЦИЯ ПРОКСИ -----"
 
 msgid "----- Porn Site Configuration -----"
 msgstr "----- Конфигурация порносайта -----"
+
+msgid "----- SCREENSAVER CONFIGURATION -----"
+msgstr ""
 
 msgid "----- SECURITY CONFIGURATION -----"
 msgstr "----- КОНФИГУРАЦИЯ БЕЗОПАСНОСТИ -----"
@@ -869,6 +872,9 @@ msgstr "Черный"
 
 msgid "Black iframe file"
 msgstr "Чёрный iframe файл"
+
+msgid "Black screensaver"
+msgstr ""
 
 msgid "Block wmv files"
 msgstr "Блок wmv файлов"
@@ -2207,9 +2213,6 @@ msgstr ""
 msgid "Filler"
 msgstr ""
 
-msgid "Film"
-msgstr "Фильм"
-
 #, fuzzy
 msgid "Films"
 msgstr "Фильм"
@@ -2487,6 +2490,9 @@ msgstr ""
 #, python-format
 msgid "Hide \"%s\" group"
 msgstr "Скрыть \"%s\" группу"
+
+msgid "Hide the menu (live TV visible)"
+msgstr ""
 
 msgid "Hide titles only available in Sweden"
 msgstr ""
@@ -3637,6 +3643,9 @@ msgstr "Нет"
 msgid "Normalize item / file names (Show - SxxExx - Title)"
 msgstr ""
 
+msgid "Not available in your country (geo-blocking)."
+msgstr ""
+
 #, fuzzy
 msgid "Not available yet"
 msgstr "Полное описание недоступно"
@@ -3690,6 +3699,9 @@ msgid "OK"
 msgstr "OK"
 
 msgid "OMDb API key (free at omdbapi.com)"
+msgstr ""
+
+msgid "Off"
 msgstr ""
 
 msgid "Offline channels"
@@ -3912,6 +3924,9 @@ msgstr "Pin защита настроек"
 
 msgid "Pin protection for plugin"
 msgstr "Pin защита плагина"
+
+msgid "Pin protection for this host"
+msgstr ""
 
 #, python-format
 msgid "Play with [%s] player"
@@ -4333,6 +4348,9 @@ msgstr ""
 msgid "Remaining:"
 msgstr "Оставшийся:"
 
+msgid "Remember a host's pin until E2iPlayer is closed"
+msgstr ""
+
 #, fuzzy
 msgid "Remember last search entry"
 msgstr "Запомнить последнюю просмотренную позицию"
@@ -4493,6 +4511,12 @@ msgstr ""
 msgid "Science"
 msgstr "Наука"
 
+msgid "Screensaver during audio playback"
+msgstr ""
+
+msgid "Screensaver in E2iPlayer menus"
+msgstr ""
+
 #, fuzzy, python-format
 msgid ""
 "Script execution failed.\n"
@@ -4551,6 +4575,9 @@ msgstr "Результаты поиска"
 #, fuzzy
 msgid "Search results region:"
 msgstr "Результаты поиска"
+
+msgid "Search string must have at least 4 characters."
+msgstr ""
 
 #, fuzzy
 msgid "Search term :"
@@ -4739,10 +4766,6 @@ msgstr ""
 "Сервис %s требует регистрации. \n"
 "Пожалуйста, заполните свой логин и пароль в %s конфигурации."
 
-#, python-format
-msgid "Service [%s] has no additional settings."
-msgstr "Сервис [%s] не имеет дополнительных настроек."
-
 msgid "Service icon size"
 msgstr "Размер иконки сервиса"
 
@@ -4774,6 +4797,10 @@ msgstr "Смотровой набор"
 
 msgid "Settings"
 msgstr "Настройки"
+
+#, python-format
+msgid "Settings of service [%s] cannot be opened."
+msgstr ""
 
 msgid "Settings screen layout"
 msgstr ""
@@ -5466,6 +5493,9 @@ msgstr ""
 msgid "The host wanted to open a window on the TV (%s) - that only works on the receiver."
 msgstr ""
 
+msgid "The hoster sends an advert redirect instead of the video at the moment. Try another hoster."
+msgstr ""
+
 msgid "The latest uploads of all YouTube channels in this group, newest first."
 msgstr ""
 
@@ -5587,6 +5617,12 @@ msgstr "На диске [%s] нет свободного места."
 msgid "There is no hosts in this group."
 msgstr "В этой группе нет хостов."
 
+msgid "There is no next item in this list."
+msgstr ""
+
+msgid "There is no previous item in this list."
+msgstr ""
+
 #, python-format
 msgid ""
 "There is no storage device under \"%s\" (%s free). E2iPlayer will switch this folder back to \"%s\" at the next start.\n"
@@ -5634,6 +5670,9 @@ msgid "This entry cannot be opened."
 msgstr "Утилита \"%s\" не найдена."
 
 msgid "This entry is only an advert, there is no video."
+msgstr ""
+
+msgid "This entry is protected by a PIN, open it on the receiver."
 msgstr ""
 
 msgid "This episode is not available in this version (SUB/DUB) on this server. Try another one."
@@ -6135,6 +6174,9 @@ msgstr "Размер видеобуфера [МБ]"
 msgid "Video library"
 msgstr ""
 
+msgid "Video link not found."
+msgstr ""
+
 msgid "Video mode"
 msgstr "Видео режим"
 
@@ -6232,6 +6274,9 @@ msgstr ""
 msgid "When the maximum is reached"
 msgstr ""
 
+msgid "While live TV is running"
+msgstr ""
+
 msgid "Whole file must be downloaded to start playback!"
 msgstr "Для начала просмотра нужно загрузить весь файл целиком!"
 
@@ -6248,6 +6293,9 @@ msgid "With subtitles"
 msgstr "Субтитры, созданные с помощью ИИ"
 
 msgid "World"
+msgstr ""
+
+msgid "Worldwide"
 msgstr ""
 
 msgid "Wrestling"
@@ -6386,6 +6434,10 @@ msgstr ""
 
 msgid "Your search entry"
 msgstr "Запись поиска"
+
+#, python-format
+msgid "Youth protection: only available between %s and %s."
+msgstr ""
 
 msgid "Youtube Suggestions"
 msgstr "Предложения Youtube"
@@ -6694,6 +6746,9 @@ msgid "medium"
 msgstr "средний"
 
 msgid "menu and list only"
+msgstr ""
+
+msgid "minutes"
 msgstr ""
 
 msgid "more options (this menu)"
