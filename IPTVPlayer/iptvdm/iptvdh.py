@@ -111,6 +111,13 @@ class DMHelper:
     # so an interrupted run can be continued instead of started over
     HLSDL_RESUME_SUFFIX = '.hlsdl.resume'
     _hlsdlResumeSupported = None
+    _hlsdlHelpText = None
+
+    @staticmethod
+    def hlsdlVersionInHelp(helpText):
+        # (major, minor) from the "hlsdl vX.Y" line of the usage text, (0, 0) when missing
+        match = re.search(r'hlsdl v(\d+)\.(\d+)', helpText or '')
+        return (int(match.group(1)), int(match.group(2))) if match else (0, 0)
 
     @staticmethod
     def hlsdlResumeInHelp(helpText):
@@ -118,8 +125,7 @@ class DMHelper:
         # plugin relies on) and the -R option listed
         try:
             text = helpText or ''
-            match = re.search(r'hlsdl v(\d+)\.(\d+)', text)
-            if match is None or (int(match.group(1)), int(match.group(2))) < (0, 31):
+            if DMHelper.hlsdlVersionInHelp(text) < (0, 31):
                 return False
             return re.search(r'^-R \.\.\. ', text, re.MULTILINE) is not None
         except Exception:
@@ -127,25 +133,36 @@ class DMHelper:
             return False
 
     @staticmethod
-    def hlsdlSupportsResume():
+    def hlsdlHelpText():
         # Probed once per run: hlsdl without arguments only prints its usage text and exits.
-        # A build without -R must never be handed the option (it aborts with the usage text),
-        # so any doubt means "not supported" and the old behaviour (start over) stays.
-        if DMHelper._hlsdlResumeSupported is None:
-            supported = False
+        if DMHelper._hlsdlHelpText is None:
+            text = ''
             try:
                 path = DMHelper.GET_HLSDL_PATH()
                 if os.path.isfile(path):
                     pipe = os.popen(path + ' 2>&1 </dev/null')
                     try:
-                        supported = DMHelper.hlsdlResumeInHelp(pipe.read())
+                        text = pipe.read()
                     finally:
                         pipe.close()
             except Exception:
                 printExc()
-            DMHelper._hlsdlResumeSupported = supported
-            printDBG("DMHelper.hlsdlSupportsResume [%r]" % supported)
+            DMHelper._hlsdlHelpText = text
+        return DMHelper._hlsdlHelpText
+
+    @staticmethod
+    def hlsdlSupportsResume():
+        # A build without -R must never be handed the option (it aborts with the usage text),
+        # so any doubt means "not supported" and the old behaviour (start over) stays.
+        if DMHelper._hlsdlResumeSupported is None:
+            DMHelper._hlsdlResumeSupported = DMHelper.hlsdlResumeInHelp(DMHelper.hlsdlHelpText())
+            printDBG("DMHelper.hlsdlSupportsResume [%r]" % DMHelper._hlsdlResumeSupported)
         return DMHelper._hlsdlResumeSupported
+
+    @staticmethod
+    def hlsdlCutsImageHeads():
+        # hlsdl 0.34+ cuts an image head (PNG/JPEG/GIF/WEBP) off disguised MPEG-TS segments itself
+        return DMHelper.hlsdlVersionInHelp(DMHelper.hlsdlHelpText()) >= (0, 34)
 
     @staticmethod
     def _hlsdlResumeFiles(filePath):

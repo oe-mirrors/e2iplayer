@@ -312,6 +312,9 @@ class E2iPlayerBufferingWidget(Screen):
 
         if 'save_buffer' == ret:
             self.moveToDownloadManager()
+        elif ret in ['zap_next', 'zap_prev']:
+            # CH+/CH- in the player: stop buffering, the list starts the next/previous item
+            self.iptvDoClose()
         elif ret in ['key_exit', None]:
             if DMHelper.STS.DOWNLOADING == self.downloader.getStatus():
                 self.lastSize = self.downloader.getLocalFileSize(True)

@@ -610,6 +610,15 @@ class IPTVExtMoviePlayer(Screen):
         self.iframeParams['iframe_file_end'] = additionalParams.get('iframe_file_end', '')
         self.iframeParams['iframe_continue'] = additionalParams.get('iframe_continue', False)
 
+        # CH+/CH- (and >|/|<) close the player with 'zap_next'/'zap_prev', the list (E2iPlayerWidget.zapToItem)
+        # then starts the next/previous playable item; only set by the list, not for the download manager
+        self.zapEnabled = additionalParams.get('zap_enabled', False)
+
+        # screensaver over audio-only playback (iptvscreensaver.py), see _screenSaverWanted()
+        from Plugins.Extensions.IPTVPlayer.components.iptvscreensaver import IPTVAudioScreenSaver
+        self.screenSaverAudioItem = additionalParams.get('audio_item', False)
+        self.screenSaver = IPTVAudioScreenSaver(self, [additionalParams.get('cover_path', ''), additionalParams.get('logo_path', '')])
+
         printDBG('IPTVExtMoviePlayer.__init__ lastPosition[%r]' % self.lastPosition)
 
         self.extPlayerCmddDispatcher = ExtPlayerCommandsDispatcher(self)
@@ -647,6 +656,8 @@ class IPTVExtMoviePlayer(Screen):
                 'menu': self.key_menu,
                 'loop': self.key_loop,
                 'record': self.key_record,
+                'zap_next': self.key_zap_next,
+                'zap_prev': self.key_zap_prev,
             }, -1)
 
         self.onClose.append(self.__onClose)
@@ -1559,6 +1570,7 @@ class IPTVExtMoviePlayer(Screen):
                 if self.isClosing and None is not callback:
                     continue  # skip message with callback
                 else:
+                    self.screenSaver.deactivate()
                     self.session.openWithCallback(boundFunction(self.messageClosedCallback, callback), MessageBox, text=message, type=type)
             return
 
@@ -1857,6 +1869,33 @@ class IPTVExtMoviePlayer(Screen):
             self.key_stop("save_buffer")
             return
         return 0
+
+    def key_zap_next(self):
+        self.doZap("zap_next")
+
+    def key_zap_prev(self):
+        self.doZap("zap_prev")
+
+    def doZap(self, sts):
+        if self.zapEnabled and not self.isClosing:
+            self.key_stop(sts)
+
+    # audio screensaver (IPTVAudioScreenSaver): wanted while audio-only playback runs and nothing is open above
+    def _screenSaverWanted(self):
+        if not self.isStarted or self.isClosing or self.childWindowsCount > 0 or self.underMessage:
+            return False
+        if self.screenSaverAudioItem:
+            return True
+        # exteplayer3 reports the video track ("v_c") of every stream that has one; an audio track and no video
+        # track is a radio/music stream. gstplayer is left out: it does not always report the video track.
+        return 'eplayer' == self.player and bool(self.playback['AudioTrack']) and not self.playback['VideoTrack']
+
+    def _screenSaverTimeText(self):
+        currTime = self['currTimeLabel'].getText()
+        length = self.playback.get('Length') or 0
+        if length > 0:
+            return "%s / %s" % (currTime, self['lengthTimeLabel'].getText())
+        return currTime
 
     def goSubKey(self, direction, state='press'):
         if not self.subHandler['enabled'] or None is self.metaHandler.getSubtitleTrack():
@@ -2159,6 +2198,7 @@ class IPTVExtMoviePlayer(Screen):
     def __onClose(self):
         printDBG(">>>>>>>>>>>>>>>>>>>>>> __onClose")
         self.isClosing = True
+        self.screenSaver.close()
         if None is not self.workconsole:
             self.workconsole.kill()
         self.workconsole = None
@@ -2238,9 +2278,11 @@ class IPTVExtMoviePlayer(Screen):
     def onStartPlayer(self):
         self.isStarted = True
         self.showPlaybackInfoBar()
+        self.screenSaver.start()
 
     def onLeavePlayer(self):
         printDBG("IPTVExtMoviePlayer.onLeavePlayer")
+        self.screenSaver.stop()
         if self.waitCloseFix['waiting'] and None is not self.waitCloseFix['timer']:
             self.waitCloseFix['timer'].stop()
         self.updateInfoTimer.stop()
@@ -2286,6 +2328,7 @@ class IPTVExtMoviePlayer(Screen):
 
     def openChild(self, *args, **kwargs):
         self.childWindowsCount += 1
+        self.screenSaver.deactivate()
         self.session.openWithCallback(*args, **kwargs)
 
     def childClosed(self, callback, *args):

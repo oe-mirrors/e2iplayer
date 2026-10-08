@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 07.10.2026
+# Last Modified: 08.10.2026
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.ihost import IHost, CDisplayListItem, RetHost, CUrlItem, CBaseHostClass, ArticleContent
 from Plugins.Extensions.IPTVPlayer.libs import ph
@@ -42,7 +42,7 @@ try:
 except ImportError:
 	from urllib import urlencode, urlopen, unquote, quote
 	from urlparse import urlparse, parse_qs
-from Components.config import config, ConfigSelection, ConfigYesNo, getConfigListEntry, ConfigDirectory, ConfigText, configfile
+from Components.config import config, ConfigSelection, ConfigYesNo, getConfigListEntry, ConfigDirectory, ConfigText
 from Screens.MessageBox import MessageBox
 from Tools.Directories import resolveFilename, SCOPE_PLUGINS
 from time import time as time_time, sleep, strftime, localtime
@@ -63,13 +63,7 @@ yellow, cyan, magenta = r'\c00????00', r'\c0000????', r'\c00??00??'
 # Config options for HOST
 ###################################################
 config.plugins.iptvplayer.xxx4k = ConfigYesNo(default=True)
-config.plugins.iptvplayer.xxxwymagajpin = ConfigYesNo(default=True)
-config.plugins.iptvplayer.xxxownpin = ConfigYesNo(default=False)
-config.plugins.iptvplayer.xxxpincode = ConfigText(default="0000", fixed_size=False)
-# OK-only "action row" for the config screen (see HandleConfigAction below);
-# the single choice is never really selected, the value carries no meaning -
-# same pattern as hostyoutube.py's account sign-in/out row.
-config.plugins.iptvplayer.xxx_pin_action = ConfigSelection(default="fake", choices=[("fake", "  ")])
+# the PIN settings (xxxwymagajpin/xxxownpin/xxxpincode before) are the per-host PIN of components/iptvhostpin.py now
 config.plugins.iptvplayer.xxxlist = ConfigDirectory(default="/hdd/")
 config.plugins.iptvplayer.xxxsortuj = ConfigYesNo(default=True)
 config.plugins.iptvplayer.xxxsearch = ConfigYesNo(default=True)
@@ -918,74 +912,9 @@ for key, (_url, name, search) in chain(SITEDATA.items(), SITEDATA_CAMS.items(), 
 	setattr(config.plugins.iptvplayer, cfg, cfgItem)
 
 
-def _xxxOwnPinConfigured():
-	return config.plugins.iptvplayer.xxxownpin.value and 4 == len(config.plugins.iptvplayer.xxxpincode.value)
-
-
-def HandleConfigAction(session, action, callback=None):
-	# Called by components/confighost.py when the OK-only "Set/change own
-	# PIN" row in GetConfigList() is selected. Mirrors changePin() in
-	# components/iptvconfigmenu.py (old pin -> new pin -> confirm), just
-	# built from nested closures instead of Screen instance state, since
-	# this is a module-level function without a persistent self.
-	def _finish():
-		if callable(callback):
-			try:
-				callback()
-			except Exception:
-				printExc()
-
-	if action != "xxx_set_own_pin":
-		return
-
-	from Plugins.Extensions.IPTVPlayer.components.iptvpin import IPTVPinWidget
-
-	state = {'newPin': None}
-
-	def askNew(ret=None):
-		session.openWithCallback(confirmNew, IPTVPinWidget, title=_("Enter new pin") + " - HostXXX")
-
-	def confirmNew(pin=None):
-		if pin is None:
-			_finish()
-			return
-		state['newPin'] = pin
-		session.openWithCallback(saveNew, IPTVPinWidget, title=_("Confirm new pin") + " - HostXXX")
-
-	def saveNew(pin=None):
-		if pin is not None and pin == state['newPin']:
-			config.plugins.iptvplayer.xxxpincode.value = pin
-			config.plugins.iptvplayer.xxxpincode.save()
-			config.plugins.iptvplayer.xxxownpin.value = True
-			config.plugins.iptvplayer.xxxownpin.save()
-			configfile.save()
-			session.open(MessageBox, _("Pin has been changed."), type=MessageBox.TYPE_INFO, timeout=5)
-		else:
-			session.open(MessageBox, _("Confirmation error."), type=MessageBox.TYPE_INFO, timeout=5)
-		_finish()
-
-	def checkOld(pin=None):
-		if pin is not None and pin == config.plugins.iptvplayer.xxxpincode.value:
-			askNew()
-		else:
-			session.open(MessageBox, _("Pin incorrect!"), type=MessageBox.TYPE_INFO, timeout=5)
-			_finish()
-
-	if _xxxOwnPinConfigured():
-		session.openWithCallback(checkOld, IPTVPinWidget, title=_("Enter old pin") + " - HostXXX")
-	else:
-		askNew()
-
-
 def GetConfigList():
 	optionList = []
 	optionList.append(getConfigListEntry(_("----- Global HostXXX Configuration -----"),))
-	optionList.append(getConfigListEntry(_("Pin protection for plugin") + " :", config.plugins.iptvplayer.xxxwymagajpin))
-	optionList.append(getConfigListEntry(_("Use own pin instead of the player pin") + " :", config.plugins.iptvplayer.xxxownpin))
-	if config.plugins.iptvplayer.xxxownpin.value:
-		pinActionEntry = getConfigListEntry(_("Change own pin") if _xxxOwnPinConfigured() else _("Set own pin"), config.plugins.iptvplayer.xxx_pin_action)
-		pinActionEntry[1].iptv_host_action = "xxx_set_own_pin"
-		optionList.append(pinActionEntry)
 	optionList.append(getConfigListEntry(_("Show global search :"), config.plugins.iptvplayer.xxxsearch))
 	optionList.append(getConfigListEntry(_("Global Search mode :"), config.plugins.iptvplayer.xxxsearchmode))
 	optionList.append(getConfigListEntry(_("Playback UHD :"), config.plugins.iptvplayer.xxx4k))
@@ -2603,14 +2532,6 @@ class IPTVHost(IHost):
 		self.currList = []
 		self.prevList = []
 		printDBG("init end")
-
-	def isProtectedByPinCode(self):
-		return config.plugins.iptvplayer.xxxwymagajpin.value
-
-	def getPinCode(self):
-		if config.plugins.iptvplayer.xxxownpin.value and 4 == len(config.plugins.iptvplayer.xxxpincode.value):
-			return config.plugins.iptvplayer.xxxpincode.value
-		return ''
 
 	def getLogoPath(self):
 		return RetHost(RetHost.OK, value=[self.PATH_TO_LOGO])

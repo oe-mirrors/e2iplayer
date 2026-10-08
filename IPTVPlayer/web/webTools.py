@@ -135,11 +135,12 @@ def initActiveHost(hostName):
 
 # PIN settings are never changed from the web interface
 _WEB_LOCKED_CONFIG_NAMES = ('pin', 'fakePin', 'pluginProtectedByPin', 'configProtectedByPin', 'configOwnPin', 'configPincode',
-                            'fakeConfigPin', 'xxxownpin', 'xxxpincode', 'xxxwymagajpin', 'xxx_pin_action')
+                            'fakeConfigPin', 'host_pin_remember')
 
 
 def isLockedConfigName(name):
-	return name in _WEB_LOCKED_CONFIG_NAMES or name in settings.excludedCFGs
+	# pinhost*: the PIN protection of every host (components/iptvhostpin.py)
+	return name in _WEB_LOCKED_CONFIG_NAMES or name.startswith('pinhost') or name in settings.excludedCFGs
 
 
 def getEditableConfigNames():

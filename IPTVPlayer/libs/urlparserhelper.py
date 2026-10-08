@@ -689,10 +689,11 @@ def requireDownloaderForDisguisedHls(links):
     ext = path.rsplit('.', 1)[-1].lower() if '.' in path else ''
     if segUrl and ext not in FFMPEG_HLS_SEGMENT_EXTS:
         # fix 071026: a real image header in front of the MPEG-TS data (timstreams/grandemx: WEBP segments on an
-        # image CDN, box log 07.10. #4) - hlsdl writes it into the buffer file and no player opens it; the
-        # curl-impersonate helper cuts it off (VOD and live)
-        imageHead = bool(curlimpersonate.getImpersonateBinary()) and _hasImageHeadBeforeTs(cm, segUrl, params)
-        printDBG("requireDownloaderForDisguisedHls segment [%s] image head[%s] -> iptv_buffering required" % (path, imageHead))
+        # image CDN, box log 07.10. #4) - hlsdl before 0.34 writes it into the buffer file and no player opens
+        # it; the curl-impersonate helper cuts it off (VOD and live). hlsdl 0.34+ cuts it off itself.
+        hlsdlCuts = _hlsdlCutsImageHeads()
+        imageHead = not hlsdlCuts and bool(curlimpersonate.getImpersonateBinary()) and _hasImageHeadBeforeTs(cm, segUrl, params)
+        printDBG("requireDownloaderForDisguisedHls segment [%s] hlsdl cuts image heads[%s] impersonate[%s] -> iptv_buffering required" % (path, hlsdlCuts, imageHead))
         for item in links:
             itemMeta = dict(getattr(item['url'], 'meta', {}))
             itemMeta['iptv_buffering'] = 'required'
@@ -700,6 +701,15 @@ def requireDownloaderForDisguisedHls(links):
                 itemMeta['iptv_impersonate_hls'] = True
             item['url'] = strwithmeta(item['url'], itemMeta)
     return links
+
+
+def _hlsdlCutsImageHeads():
+    try:
+        from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
+        return DMHelper.hlsdlCutsImageHeads()
+    except Exception:
+        printExc()
+        return False
 
 
 def _hasImageHeadBeforeTs(cm, segUrl, params):

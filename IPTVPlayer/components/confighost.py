@@ -10,6 +10,7 @@
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, IsHostEnabled, SaveHostsOrderList, SortHostsList
 from Plugins.Extensions.IPTVPlayer.components.configbase import ConfigBaseWidget
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
+from Plugins.Extensions.IPTVPlayer.components.iptvhostpin import AskHostPin, GetHostPinConfigList, HandleHostPinAction, HostNeedsPin, HOST_PIN_ACTION
 ###################################################
 
 ###################################################
@@ -44,7 +45,10 @@ class ConfigHostMenu(ConfigBaseWidget):
         self.setTitle("E2iPlayer " + (_("[%s] - configuration") % self.hostName))
 
     def runSetup(self):
-        self.list = self.host.GetConfigList()
+        # the host's own settings, then the PIN protection every host has
+        getConfigList = getattr(self.host, 'GetConfigList', None)
+        self.list = list(getConfigList()) if callable(getConfigList) else []
+        self.list.extend(GetHostPinConfigList(self.hostName))
         ConfigBaseWidget.runSetup(self)
 
     def keyOK(self):
@@ -61,6 +65,9 @@ class ConfigHostMenu(ConfigBaseWidget):
             printExc()
             currItem = None
         action = getattr(currItem, "iptv_host_action", "") if currItem is not None else ""
+        if action == HOST_PIN_ACTION:
+            HandleHostPinAction(self.session, self.hostName, boundFunction(self._afterConfigAction))
+            return
         if action:
             handler = getattr(self.host, "HandleConfigAction", None)
             if callable(handler):
@@ -170,20 +177,21 @@ class ConfigHostsMenu(ConfigBaseWidget):
         if curIndex < len(self.listOfHostsNames):
             hostName = self.listOfHostsNames[curIndex]
             if self.hostsConfigsAvailableList[curIndex] and IsHostEnabled(hostName):
-                addConf = False
+                # every host has settings: at least its PIN protection
                 try:
-                    self.host = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + hostName, globals(), locals(), ['GetConfigList'], 0)
-                    if (len(self.host.GetConfigList()) < 1):
-                        printDBG('ConfigMenu host "%s" does not have additional configs' % hostName)
-                    else:
-                        self.session.open(ConfigHostMenu, hostName=hostName)
-                        addConf = True
+                    __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + hostName, globals(), locals(), ['GetConfigList'], 0)
                 except Exception:
-                    printExc('ConfigMenu host "%s" does not have method GetConfigList' % hostName)
-                if not addConf:
+                    printExc('ConfigMenu host "%s" cannot be loaded' % hostName)
                     self.hostsConfigsAvailableList[curIndex] = False
                     self.onSelectionChanged()
-                    self.session.open(MessageBox, _("Service [%s] has no additional settings.") % hostName, type=MessageBox.TYPE_INFO, timeout=5)
+                    self.session.open(MessageBox, _("Settings of service [%s] cannot be opened.") % hostName, type=MessageBox.TYPE_INFO, timeout=5)
+                    return
+                openSettings = boundFunction(self.session.open, ConfigHostMenu, hostName=hostName)
+                if HostNeedsPin(hostName):
+                    # a protected host's settings (also the protection itself) only with its PIN
+                    AskHostPin(self.session, hostName, openSettings)
+                else:
+                    openSettings()
         else:
             ConfigBaseWidget.keyOK(self)
 

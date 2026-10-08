@@ -58,6 +58,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import FreeSpace as iptvtools
                                                           GetEnabledHostsList, SaveHostsOrderList, formatBytes, getExcMSG, \
                                                           findT9JumpIndex
 from Plugins.Extensions.IPTVPlayer.tools.iptvhostgroups import IPTVHostsGroups
+from Plugins.Extensions.IPTVPlayer.components.iptvhostpin import AskHostPin, ClearUnlockedHosts, HostNeedsPin, IsHostUnlocked
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvbuffui import E2iPlayerBufferingWidget
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdmapi import IPTVDMApi, DMItem
 
@@ -755,6 +756,12 @@ class E2iPlayerWidget(Screen):
         self._currentLinkVideoKey = ''
         # Auto playing sequencer
         self.autoPlaySeqStarted = False
+        # zapToItem() direction waiting for the MarkItemAsViewed answer (leaveMoviePlayer)
+        self.pendingZapDirection = 0
+        # a zapped item is starting while live TV is off (restoreLiveAfterZap)
+        self.zapLivePending = False
+        # idle screensaver over every E2iPlayer screen (iptvscreensaver.py), started in onStart()
+        self.menuScreenSaver = None
         self.autoPlaySeqTimer = eTimer()
         self.autoPlaySeqTimer_conn = eConnectCallback(self.autoPlaySeqTimer.timeout, self.autoPlaySeqTimerCallBack)
         self.autoPlaySeqTimerValue = 0
@@ -978,6 +985,11 @@ class E2iPlayerWidget(Screen):
         printDBG("E2iPlayerWidget.__del__")
 
     def __onClose(self):
+        # a PIN protected host asks again on the next start
+        ClearUnlockedHosts()
+        if self.menuScreenSaver is not None:
+            self.menuScreenSaver.close()
+            self.menuScreenSaver = None
         self.session.nav.playService(self.currentService)
         self["list"].disconnectSelChanged(self.onSelectionChanged)
         if None is not self.checkUpdateConsole:
@@ -1243,10 +1255,10 @@ class E2iPlayerWidget(Screen):
             options.append((_('Reverse a playlist'), "ReversePlayableItems"))
 
         self._hostActions = []
+        # every host has settings: at least its PIN protection
+        options.append((_("Configure host"), "HostConfig"))
         try:
-            host = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + self.hostName, globals(), locals(), ['GetConfigList'], 0)
-            if (len(host.GetConfigList()) > 0):
-                options.append((_("Configure host"), "HostConfig"))
+            host = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + self.hostName, globals(), locals(), ['GetHostActions'], 0)
             if hasattr(host, 'GetHostActions'):
                 self._hostActions = host.GetHostActions()
                 for i, action in enumerate(self._hostActions):
@@ -1314,7 +1326,7 @@ class E2iPlayerWidget(Screen):
                     self.hideWindow()
 
             while idx < len(self.currList):
-                if self.currList[idx].type in [CDisplayListItem.TYPE_VIDEO, CDisplayListItem.TYPE_AUDIO, CDisplayListItem.TYPE_PICTURE, CDisplayListItem.TYPE_MORE]:
+                if self.currList[idx].type in [CDisplayListItem.TYPE_VIDEO, CDisplayListItem.TYPE_AUDIO, CDisplayListItem.TYPE_PICTURE, CDisplayListItem.TYPE_MORE] and not self._itemNeedsPin(self.currList[idx]):
                     break
                 else:
                     idx += 1
@@ -1854,6 +1866,10 @@ class E2iPlayerWidget(Screen):
                 item = None
             if None is not item:
                 self.stopAutoPlaySequencer()
+                if self._itemNeedsPin(item):
+                    # the article of a favourite comes from its (locked) host
+                    AskHostPin(self.session, item.pinHost, self.info_pressed)
+                    return
                 self.currSelIndex = currSelIndex = self["list"].getCurrentIndex()
                 self.requestListFromHost('ForArticleContent', currSelIndex)
     # end info_pressed(self):
@@ -2032,13 +2048,14 @@ class E2iPlayerWidget(Screen):
         if eventFrom != 'green':
             self.recorderMode = False
 
-        if 'sequencer' != eventFrom:
+        # 'zap': CH+/CH- in the player (zapToItem) - a running sequencer goes on from the new item
+        if eventFrom not in ('sequencer', 'zap'):
             self.stopAutoPlaySequencer()
 
-        if self.visible or 'sequencer' == eventFrom:
+        if self.visible or eventFrom in ('sequencer', 'zap'):
             sel = None
             try:
-                if len(self.currList) > 0 and (not self["list"].getVisible() and 'sequencer' != eventFrom):
+                if len(self.currList) > 0 and (not self["list"].getVisible() and eventFrom not in ('sequencer', 'zap')):
                     printDBG("ok_pressed -> ignored /\\")
                     return
             except Exception:
@@ -2071,6 +2088,10 @@ class E2iPlayerWidget(Screen):
                 currSelIndex = self["list"].getCurrentIndex()
                 # remember only prev categories
                 if item.type in [CDisplayListItem.TYPE_VIDEO, CDisplayListItem.TYPE_AUDIO, CDisplayListItem.TYPE_PICTURE, CDisplayListItem.TYPE_DATA]:
+                    if self._itemNeedsPin(item):
+                        # zap and sequencer skip such items, so only OK/GREEN get here
+                        AskHostPin(self.session, item.pinHost, boundFunction(self.ok_pressed, eventFrom, useAlternativePlayer))
+                        return
                     if CDisplayListItem.TYPE_AUDIO == item.type:
                         self.bufferSize = config.plugins.iptvplayer.requestedAudioBuffSize.value * 1024
                     else:
@@ -2104,7 +2125,12 @@ class E2iPlayerWidget(Screen):
                         except Exception:
                             printExc()
 
-                    if item.pinLocked:
+                    if self._itemNeedsPin(item):
+                        AskHostPin(self.session, item.pinHost, boundFunction(self.requestListFromHost, 'ForItem', currSelIndex, ''))
+                    elif getattr(item, 'pinHost', ''):
+                        # favourite of an unlocked host
+                        self.requestListFromHost('ForItem', currSelIndex, '')
+                    elif item.pinLocked:
                         from Plugins.Extensions.IPTVPlayer.components.iptvpin import IPTVPinWidget
                         pinTitle = _("Enter pin") + (" - " + item.name if getattr(item, 'name', '') else '')
                         self.session.openWithCallback(boundFunction(self.checkDirPin, self.requestListFromHost, 'ForItem', currSelIndex, '', item.pinCode), IPTVPinWidget, title=pinTitle)
@@ -2149,6 +2175,12 @@ class E2iPlayerWidget(Screen):
                 if lastItem.type == CDisplayListItem.TYPE_NEXT:
                     self.currSelIndex = len(self.currList) - 1
                     self.requestListFromHost('ForItem', self.currSelIndex, '')
+
+    @staticmethod
+    def _itemNeedsPin(item):
+        # a favourite of a PIN protected host that was not unlocked yet in this E2iPlayer session
+        pinHost = getattr(item, 'pinHost', '')
+        return bool(pinHost) and HostNeedsPin(pinHost)
 
     def checkDirPin(self, callbackFun, arg1, arg2, arg3, pinCode, pin=None):
         if pin is not None:
@@ -2263,6 +2295,12 @@ class E2iPlayerWidget(Screen):
         self.onShow.remove(self.onStart)
         # self.onLayoutFinish.remove(self.onStart)
         self.setTitle('E2iPlayer ' + GetIPTVPlayerVersion())
+        try:
+            from Plugins.Extensions.IPTVPlayer.components.iptvscreensaver import IPTVMenuScreenSaver
+            self.menuScreenSaver = IPTVMenuScreenSaver(self.session, self, self.getScreenSaverInfo)
+            self.menuScreenSaver.start()
+        except Exception:
+            printExc()
         self.loadSpinner()
         self.hideSpinner()
         if self._usingBuiltinSkin:
@@ -2607,12 +2645,10 @@ class E2iPlayerWidget(Screen):
             self.loadHost()
 
     def checkPin(self, callbackFun, failCallBackFun, pin=None, expectedPin=''):
-        # expectedPin lets a host (loadHost() below) check against its own
-        # PIN instead of the global player one - same fallback as
-        # checkDirPin()'s custom pinCode: an invalid (non-4-digit) value
-        # means "use the global player PIN", which is also what every
-        # other caller of checkPin() gets by leaving expectedPin at its
-        # default ''.
+        # expectedPin: an own PIN (the configuration's) instead of the global
+        # player one - same fallback as checkDirPin()'s custom pinCode: an
+        # invalid (non-4-digit) value means "use the global player PIN".
+        # A host's PIN is asked by iptvhostpin.AskHostPin (loadHost() below).
         if pin is not None:
             if 4 != len(expectedPin):
                 expectedPin = config.plugins.iptvplayer.pin.value
@@ -2646,21 +2682,15 @@ class E2iPlayerWidget(Screen):
             return
 
         try:
-            protectedByPin = self.host.isProtectedByPinCode()
+            protectedByPin = self.host.isProtectedByPinCode() and not IsHostUnlocked(self.hostName)
         except Exception:
-            protected = False  # should never happen
+            printExc()
+            protectedByPin = False
 
         if protectedByPin:
-            from .iptvpin import IPTVPinWidget
-            try:
-                hostPinCode = self.host.getPinCode()
-            except Exception:
-                hostPinCode = ''
-
-            def _checkHostPin(pin=None):
-                self.checkPin(self.loadHostData, self.selectHost, pin, expectedPin=hostPinCode)
-
-            self.session.openWithCallback(_checkHostPin, IPTVPinWidget, title=_("Enter pin") + " - " + (self.hostTitle or self.hostName))
+            # the right PIN unlocks the host until E2iPlayer is closed (also its favourites); a wrong one shows
+            # "Pin incorrect!" and goes back to the host selection, like leaving the PIN dialog
+            AskHostPin(self.session, self.hostName, self.loadHostData, onWrong=self.selectHost, onCancel=self.selectHost)
         else:
             self.loadHostData()
 
@@ -2731,6 +2761,7 @@ class E2iPlayerWidget(Screen):
                 lastExcMSG = getExcMSG(True)
                 if lastExcMSG != '':
                     message += "\n" + _("Last Exception error: '%s'") % lastExcMSG
+                self.restoreLiveAfterZap()
                 self.session.open(MessageBox, message, type=MessageBox.TYPE_INFO, timeout=10)
             return
         elif 1 == numOfLinks or self.autoPlaySeqStarted:
@@ -3025,6 +3056,16 @@ class E2iPlayerWidget(Screen):
                 self.prevVideoMode = GetE2VideoMode()
                 printDBG("Current video mode [%s]" % self.prevVideoMode)
                 gstAdditionalParams = {'defaul_videomode': self.prevVideoMode, 'host_name': self.hostName, 'external_sub_tracks': url.meta.get('external_sub_tracks', []), 'iptv_refresh_cmd': url.meta.get('iptv_refresh_cmd', '')}  # default_player_videooptions
+                # CH+/CH- in the player -> leaveMoviePlayer('zap_next'/'zap_prev'); cover/logo for its screensaver
+                gstAdditionalParams['zap_enabled'] = True
+                gstAdditionalParams['audio_item'] = self.currItem.type == CDisplayListItem.TYPE_AUDIO
+                gstAdditionalParams['logo_path'] = self.hostLogoPath or ''
+                try:
+                    iconUrl = self.currItem.iconimage
+                    if iconUrl and not self.iconMenager.isIconFailed(iconUrl):  # no red X, the logo instead
+                        gstAdditionalParams['cover_path'] = self.iconMenager.getIconPathFromAAueue(iconUrl)
+                except Exception:
+                    printExc()
                 if self.currItem.type == CDisplayListItem.TYPE_AUDIO:
                     gstAdditionalParams['show_iframe'] = config.plugins.iptvplayer.show_iframe.value
                     gstAdditionalParams['iframe_file_start'] = config.plugins.iptvplayer.iframe_file.value
@@ -3032,6 +3073,7 @@ class E2iPlayerWidget(Screen):
                     gstAdditionalParams['iframe_continue'] = False
 
                 self.writeCurrentTitleToFile(titleOfMovie)
+                self.zapLivePending = False
                 if isBufferingMode:
                     self.session.nav.stopService()
                     player = self.activePlayer.get('player', self.getMoviePlayer(True, self.useAlternativePlayer))
@@ -3057,6 +3099,7 @@ class E2iPlayerWidget(Screen):
         else:
             # There was problem in resolving direct link for video
             if not self.checkAutoPlaySequencer():
+                self.restoreLiveAfterZap()
                 self.session.open(MessageBox, _("No valid links available."), type=MessageBox.TYPE_INFO, timeout=10)
     # end playVideo(self, ret):
 
@@ -3068,25 +3111,64 @@ class E2iPlayerWidget(Screen):
             printDBG("Restore previus video mode")
             SetE2VideoMode(self.prevVideoMode)
 
+        # CH+/CH- in the player: go on with the next/previous playable item of this list
+        zapDirection = {'zap_next': 1, 'zap_prev': -1}.get(answer, 0)
         try:
-            if answer is not None:
+            if answer is not None and not zapDirection:
                 self.stopAutoPlaySequencer()
         except Exception:
             printExc()
 
-        if not config.plugins.iptvplayer.disable_live.value and not self.autoPlaySeqStarted:
+        if not config.plugins.iptvplayer.disable_live.value and not self.autoPlaySeqStarted and not zapDirection:
             self.session.nav.playService(self.currentService)
 
         if lastPosition is not None and clipLength is not None and clipLength > 0:
             try:
                 if config.plugins.iptvplayer.favourites_use_watched_flag.value and (lastPosition * 100 / clipLength) > 95 and hasattr(self.host, 'markItemAsViewed'):
                     currSelIndex = self["list"].getCurrentIndex()
+                    self.pendingZapDirection = zapDirection
                     self.requestListFromHost('MarkItemAsViewed', currSelIndex)
                     return
             except Exception:
                 printExc()
 
-        self.checkAutoPlaySequencer()
+        if zapDirection:
+            self.zapToItem(zapDirection)
+        else:
+            self.checkAutoPlaySequencer()
+
+    def getScreenSaverInfo(self):
+        # title and pictures of the black menu screensaver: the open host, else E2iPlayer itself
+        e2iLogo = skinchrome.getIconBase() + '/iptvlogo.png'
+        if self.hostName:
+            return self.hostTitle or self.hostName, [self.hostLogoPath or '', e2iLogo]
+        return 'E2iPlayer', [e2iLogo]
+
+    def zapToItem(self, direction):
+        idx = self.getSelIndex()
+        if -1 != idx:
+            idx += direction
+            while 0 <= idx < len(self.currList):
+                if self.currList[idx].type in [CDisplayListItem.TYPE_VIDEO, CDisplayListItem.TYPE_AUDIO] and not self._itemNeedsPin(self.currList[idx]):
+                    self["list"].moveToIndex(idx)
+                    # live TV stays off between the items; restoreLiveAfterZap() if this one does not start
+                    self.zapLivePending = True
+                    self.ok_pressed('zap')
+                    return
+                idx += direction
+        # first/last playable item of the list: back to the list as after a normal stop
+        if not self.stopAutoPlaySequencer() and not config.plugins.iptvplayer.disable_live.value:
+            self.session.nav.playService(self.currentService)
+        self.showWindow()
+        message = _("There is no next item in this list.") if direction > 0 else _("There is no previous item in this list.")
+        self.session.open(MessageBox, message, type=MessageBox.TYPE_INFO, timeout=5)
+
+    def restoreLiveAfterZap(self):
+        # the zapped item did not start (no valid link, link selection left): live TV back as after a normal stop
+        if self.zapLivePending:
+            self.zapLivePending = False
+            if not self.autoPlaySeqStarted and not config.plugins.iptvplayer.disable_live.value:
+                self.session.nav.playService(self.currentService)
 
     def leavePicturePlayer(self, answer=None, lastPosition=None, *args, **kwargs):
         self.checkAutoPlaySequencer()
@@ -3419,6 +3501,7 @@ class E2iPlayerWidget(Screen):
     def showWindow(self):
         self.visible = True
         self.show()
+        self.restoreLiveAfterZap()
 
     def createSummary(self):
         return IPTVPlayerLCDScreen
@@ -3671,7 +3754,11 @@ class E2iPlayerWidget(Screen):
         printDBG("E2iPlayerWidget.handleMarkItemAsViewedCallback")
         self.setStatusTex("")
         self["list"].show()
-        if ret.status == RetHost.OK and isinstance(ret.value, list) and 1 == len(ret.value) and 'refresh' in ret.value:
+        zapDirection, self.pendingZapDirection = self.pendingZapDirection, 0
+        if zapDirection:
+            # the watched marker shows when the list is loaded again; a refresh now would lose the zap
+            self.zapToItem(zapDirection)
+        elif ret.status == RetHost.OK and isinstance(ret.value, list) and 1 == len(ret.value) and 'refresh' in ret.value:
            self.getRefreshedCurrList()
         elif ret.status == RetHost.ERROR and isinstance(ret.value, list) and 1 == len(ret.value) and isinstance(ret.value[0], str):
            self.session.open(MessageBox, ret.value[0], type=MessageBox.TYPE_ERROR)

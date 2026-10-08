@@ -7,8 +7,8 @@ from gettext import bindtextdomain, dgettext, gettext
 try:
     from enigma import eListbox
     from Components.SystemInfo import BoxInfo
-    GRIDSUPPORT = eListbox.orGrid is not None and BoxInfo.getItem("distro") in ("openatv",)
-except AttributeError:
+    GRIDSUPPORT = eListbox.orGrid is not None and BoxInfo.getItem("distro") in ("openatv", "egami", "pure2")
+except (AttributeError, ImportError):  # no grid listbox, or an image without BoxInfo
     GRIDSUPPORT = False
 
 PluginLanguageDomain = "IPTVPlayer"

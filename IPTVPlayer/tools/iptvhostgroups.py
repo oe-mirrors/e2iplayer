@@ -27,9 +27,10 @@ class IPTVHostsGroups:
         self.GROUPS_FILE = GetMigratedHostOrderFile('iptvplayerhostsgroups.json')
 
         # groups
-        self.PREDEFINED_GROUPS = ["userdefined", "moviesandseries", "cartoonsandanime", "music", "sport", "live", "iptv", "documentary", "science",
+        self.PREDEFINED_GROUPS = ["userdefined", "worldwide", "moviesandseries", "cartoonsandanime", "music", "sport", "live", "iptv", "documentary", "science",
                                   "polish", "english", "german", "french", "russian", "hungarian", "arabic", "greek", "latino", "italian", "swedish", "balkans", "others", "all"]
         self.PREDEFINED_GROUPS_TITLES = {"userdefined": _("User defined"),
+                                         "worldwide": _("Worldwide"),
                                          "moviesandseries": _("Movies and series"),
                                          "cartoonsandanime": _("Cartoons and anime"),
                                          "music": _("Music"),
