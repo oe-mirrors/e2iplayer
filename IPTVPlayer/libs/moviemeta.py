@@ -531,9 +531,19 @@ def _getProviders(mediaType):
     return providers
 
 
-def getMeta(mediaType, title, year="", skip=()):
+def _yearFits(meta, year, maxYearDiff):
+    # a result without a year is accepted
+    try:
+        return abs(int(str((meta.get("info") or {}).get("year") or "")[:4]) - int(year)) <= maxYearDiff
+    except ValueError:
+        return True
+
+
+def getMeta(mediaType, title, year="", skip=(), maxYearDiff=None):
     # {"title", "plot", "poster", "info": {ArticleContent.RICH_DESC_PARAMS key: text}} or {}
     # skip: provider names left out for this title, e.g. LATIN_ONLY for an Arabic title
+    # maxYearDiff: the title search also answers for another film of the same name - with a known
+    # year, a result further off than this many years is no match and the next service is asked
     title = (title or "").strip()
     year = str(year or "").strip()[:4]
     if mediaType not in ("movie", "tv") or not title:
@@ -543,7 +553,14 @@ def getMeta(mediaType, title, year="", skip=()):
         return {}  # all switched off or no API keys
     if not year.isdigit():
         year = ""
-    return _lookup(providers, "|".join((mediaType, _cleanTitle(title), year)), lambda p: p.find(mediaType, title, year))
+    what = "|".join((mediaType, _cleanTitle(title), year))
+    accept = None
+    if year and maxYearDiff is not None:
+        what += "|%d" % maxYearDiff
+
+        def accept(meta):
+            return _yearFits(meta, year, maxYearDiff)
+    return _lookup(providers, what, lambda p: p.find(mediaType, title, year), accept)
 
 
 def getMetaByImdbId(mediaType, imdbId):
@@ -557,9 +574,9 @@ def getMetaByImdbId(mediaType, imdbId):
     return _lookup(providers, "|".join((mediaType, imdbId)), lambda p: p.findById(mediaType, imdbId))
 
 
-def _lookup(providers, what, find):
-    # first non-empty answer of the providers, cached; the cache key holds the provider
-    # chain, so other settings do not get old answers
+def _lookup(providers, what, find, accept=None):
+    # first non-empty answer of the providers that accept() takes, cached; the cache key holds
+    # the provider chain, so other settings do not get old answers
     chain = ",".join(p.NAME + (":" + p.lang if hasattr(p, "lang") else "") for p in providers)
     key = chain + "|" + what
     meta = gCache.get(key)
@@ -572,6 +589,8 @@ def _lookup(providers, what, find):
         except Exception:
             printExc()
             meta = None
+        if meta and accept is not None and not accept(meta):
+            meta = {}  # an answer, just for another title
         if meta:
             gCache.put(key, meta, CACHE_TTL)
             return meta
