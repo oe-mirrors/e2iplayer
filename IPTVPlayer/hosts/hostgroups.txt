@@ -2,6 +2,10 @@
  "userdefined": [
   "favourites",
   "localmedia",
+  "youtube",
+  "webstream",
+  "dailymotion",
+  "twitchtv",
   "urllist",
   "e2iplayerinfo"
  ],
@@ -86,7 +90,6 @@
   "jetanimes"
  ],
  "sport": [
-  "webstream",
   "footyroom",
   "goals",
   "basketballvideocom",
@@ -104,10 +107,6 @@
   "timstreams"
  ],
  "live": [
-  "webstream",
-  "youtube",
-  "dailymotion",
-  "twitchtv",
   "ritsatv",
   "aljazeera",
   "asharq",
@@ -128,7 +127,6 @@
  ],
  "documentary": [
   "dokumentalnenet",
-  "dailymotion",
   "orthobulletscom",
   "aljazeera",
   "arabsciences",
@@ -143,7 +141,6 @@
   "alarabiya"
  ],
  "science": [
-  "dailymotion",
   "dokumentalnenet",
   "orthobulletscom",
   "arabsciences",
@@ -152,10 +149,8 @@
   "ihavenotv"
  ],
  "polish": [
-  "youtube",
   "cdahd",
   "filmyonline",
-  "webstream",
   "ekinotv",
   "cdapl",
   "zaluknijcc",
@@ -165,7 +160,6 @@
   "freediscpl",
   "tvjworg",
   "artetv",
-  "dailymotion",
   "tvgrypl",
   "maxtvgo",
   "wpolscepl",
@@ -199,17 +193,13 @@
   "polskieradio"
  ],
  "english": [
-  "youtube",
   "m4ustream",
-  "twitchtv",
-  "webstream",
   "filmclub",
   "artetv",
   "bflix",
   "retroflix",
   "cineto",
   "cineb",
-  "dailymotion",
   "playrtsiw",
   "appletrailers",
   "sevenreels",
@@ -237,9 +227,6 @@
   "uhdhub"
  ],
  "german": [
-  "youtube",
-  "twitchtv",
-  "webstream",
   "ardmediathek",
   "zdfmediathek",
   "orfon",
@@ -250,7 +237,6 @@
   "cineto",
   "kinoking",
   "filmpalast",
-  "dailymotion",
   "playrtsiw",
   "kkiste",
   "kinoger",
@@ -267,12 +253,10 @@
   "vavooto"
  ],
  "french": [
-  "youtube",
   "xalaflix",
   "coflix",
   "rtbfbe",
   "artetv",
-  "dailymotion",
   "playrtsiw",
   "cpasmieux",
   "moiflix",
@@ -281,14 +265,11 @@
   "jetanimes"
  ],
  "russian": [
-  "youtube",
-  "dailymotion",
   "ritsatv",
   "uaserials",
   "eneyida"
  ],
  "hungarian": [
-  "youtube",
   "filmvilag",
   "pannonrtv",
   "videa",
@@ -298,12 +279,9 @@
   "mindigtv",
   "streamstat",
   "idokep",
-  "dailymotion",
   "dmdamedia"
  ],
  "arabic": [
-  "youtube",
-  "webstream",
   "aflaam",
   "brstej",
   "cimanow",
@@ -326,7 +304,6 @@
   "tuktukcam",
   "shahid44u",
   "radioe",
-  "dailymotion",
   "wikicourses",
   "faselhdcom",
   "cimaclub",
@@ -354,43 +331,33 @@
   "shooflive"
  ],
  "greek": [
-  "youtube",
   "dailymotion"
  ],
  "latino": [
-  "youtube",
   "artetv",
   "dailymotion"
  ],
  "italian": [
-  "youtube",
   "guardaserie",
   "altadefinizione01",
   "cb01uno",
-  "dailymotion",
   "playrtsiw",
   "raiplay"
  ],
  "swedish": [
-  "youtube",
-  "dailymotion",
   "svtplayse"
  ],
  "balkans": [
-  "youtube",
   "filmehdnet",
   "filma365",
   "filmaon",
-  "dailymotion",
   "filmoviplex",
   "fenixsite",
   "serijebalkan"
  ],
  "music": [
-  "youtube",
   "musicmp3ru",
   "musicbox",
-  "dailymotion",
   "shoutcast",
   "radioe",
   "radiostacja",
@@ -407,9 +374,7 @@
   "e2iplayerinfo",
   "localmedia",
   "urllist",
-  "youtube",
   "cdapl",
-  "dailymotion",
   "tvjworg",
   "kijknl",
   "rtbfbe",
