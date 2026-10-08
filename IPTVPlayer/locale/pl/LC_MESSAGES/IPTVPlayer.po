@@ -108,11 +108,11 @@ msgstr "%s - dostawca napisów"
 
 #, python-format
 msgid "%s blocks the connection of the receiver (HTTP 403). It only plays with curl-impersonate installed on the receiver - otherwise please choose another server."
-msgstr ""
+msgstr "%s blokuje połączenie odbiornika (HTTP 403). Odtwarzanie działa tylko z curl-impersonate zainstalowanym na odbiorniku - w przeciwnym razie wybierz inny serwer."
 
 #, python-format
 msgid "%s blocks the connection of the receiver (HTTP 403). Please choose another server."
-msgstr ""
+msgstr "%s blokuje połączenie odbiornika (HTTP 403). Wybierz inny serwer."
 
 #, python-format
 msgid "%s buffering..."
@@ -263,7 +263,7 @@ msgid "----- Porn Site Configuration -----"
 msgstr "----- Ustawienia stron porno -----"
 
 msgid "----- SCREENSAVER CONFIGURATION -----"
-msgstr ""
+msgstr "----- KONFIGURACJA WYGASZACZA EKRANU -----"
 
 msgid "----- SECURITY CONFIGURATION -----"
 msgstr "----- SECURITY CONFIGURATION -----"
@@ -571,11 +571,11 @@ msgstr "Alfabetycznie"
 
 #, python-format
 msgid "Also use the accounts of X-Streamity (%s)"
-msgstr ""
+msgstr "Używaj także kont z X-Streamity (%s)"
 
 #, python-format
 msgid "Also use the portals of EStalker (%s)"
-msgstr ""
+msgstr "Używaj także portali z EStalker (%s)"
 
 msgid "AltGr"
 msgstr "AltGr"
@@ -613,7 +613,7 @@ msgid "An error occurred while writing into: %s"
 msgstr "Wystąpił problem podczas zapisu do: %s"
 
 msgid "An opensubtitles.com account (login and password in the E2iPlayer settings) raises the limit."
-msgstr ""
+msgstr "Konto opensubtitles.com (login i hasło w ustawieniach E2iPlayer) zwiększa limit."
 
 msgid "Anatomy"
 msgstr "Anatomia"
@@ -858,7 +858,7 @@ msgid "Black iframe file"
 msgstr "Plik czyszczącej ramki iframe"
 
 msgid "Black screensaver"
-msgstr ""
+msgstr "Czarny wygaszacz ekranu"
 
 msgid "Block wmv files"
 msgstr "Blokować pliki wmv"
@@ -1429,7 +1429,7 @@ msgid "Digital programmes"
 msgstr "Programy cyfrowe"
 
 msgid "Direct"
-msgstr ""
+msgstr "Bezpośredni"
 
 msgid "Director:"
 msgstr "Reżyser:"
@@ -1950,10 +1950,10 @@ msgid "Ethical & Legal"
 msgstr "Etyczne i prawne"
 
 msgid "European movies"
-msgstr ""
+msgstr "Filmy europejskie"
 
 msgid "Events"
-msgstr ""
+msgstr "Wydarzenia"
 
 msgid "Every enabled site: does the menu open, does a list show videos? Takes a few minutes."
 msgstr "Każda włączona strona: czy menu się otwiera, czy lista pokazuje filmy? Trwa kilka minut."
@@ -1965,7 +1965,7 @@ msgid "Exception occurs"
 msgstr "Wystąpił wyjątek"
 
 msgid "Exclusive"
-msgstr ""
+msgstr "Na wyłączność"
 
 msgid "Exit"
 msgstr "Wyjdź"
@@ -2243,7 +2243,7 @@ msgid "Foreign movies"
 msgstr "Filmy zagraniczne"
 
 msgid "Foreign parts only"
-msgstr ""
+msgstr "Tylko fragmenty obcojęzyczne"
 
 msgid "Foreign series"
 msgstr "Seriale zagraniczne"
@@ -2421,7 +2421,7 @@ msgid "Hide \"%s\" group"
 msgstr "Ukry \"%s\" grupę"
 
 msgid "Hide the menu (live TV visible)"
-msgstr ""
+msgstr "Ukryj menu (widoczna telewizja na żywo)"
 
 msgid "Hide titles only available in Sweden"
 msgstr "Ukryj tytuły dostępne tylko w Szwecji"
@@ -2458,7 +2458,7 @@ msgstr "Host"
 
 #, python-format
 msgid "Host: %s"
-msgstr ""
+msgstr "Host: %s"
 
 #, python-format
 msgid "Hosting \"%s\" not supported."
@@ -2522,7 +2522,7 @@ msgid "INTERRUPTED"
 msgstr "PRZERWANY"
 
 msgid "IPTV Portals"
-msgstr ""
+msgstr "Portale IPTV"
 
 msgid "Icon type"
 msgstr "Typ ikon"
@@ -2783,7 +2783,7 @@ msgstr "Ostatni błąd wyjątku: '%s'"
 
 #, python-format
 msgid "Last Modified: %s"
-msgstr ""
+msgstr "Ostatnia modyfikacja: %s"
 
 msgid "Last air date:"
 msgstr "Data ostatniej emisji:"
@@ -3430,7 +3430,7 @@ msgid "No YouTube video found for this track."
 msgstr "Nie znaleziono filmu YouTube dla tego utworu."
 
 msgid "No channels with an archive on this portal."
-msgstr ""
+msgstr "Brak kanałów z archiwum na tym portalu."
 
 msgid "No description available."
 msgstr "Brak opisu."
@@ -3473,7 +3473,7 @@ msgid "No programme guide for this channel."
 msgstr "Brak przewodnika po programach dla tego kanału."
 
 msgid "No recorded programmes on this day."
-msgstr ""
+msgstr "Brak nagranych programów w tym dniu."
 
 msgid "No replays in these days"
 msgstr "Brak powtórek w tych dniach"
@@ -3529,7 +3529,7 @@ msgid "Normalize item / file names (Show - SxxExx - Title)"
 msgstr "Normalizuj nazwy pozycji / plików (Serial - SxxExx - Tytuł)"
 
 msgid "Not available in your country (geo-blocking)."
-msgstr ""
+msgstr "Niedostępne w Twoim kraju (blokada regionalna)."
 
 msgid "Not available yet"
 msgstr "Jeszcze niedostępne"
@@ -3584,7 +3584,7 @@ msgid "OMDb API key (free at omdbapi.com)"
 msgstr "Klucz API OMDb (darmowy na omdbapi.com)"
 
 msgid "Off"
-msgstr ""
+msgstr "Wyłączony"
 
 msgid "Offline channels"
 msgstr "Kanały nie nadawane"
@@ -3637,14 +3637,14 @@ msgstr "Otwórz tę stronę w wybranej przeglądarce"
 
 #, python-format
 msgid "OpenSubtitles.com login failed for user \"%s\". Please check your login and password."
-msgstr ""
+msgstr "Logowanie do OpenSubtitles.com dla użytkownika \"%s\" nie powiodło się. Sprawdź login i hasło."
 
 msgid "OpenSubtitles.com needs an API key. Create a free API consumer at https://www.opensubtitles.com/consumers and enter its key in the E2iPlayer settings (Subtitles)."
-msgstr ""
+msgstr "OpenSubtitles.com wymaga klucza API. Utwórz darmowego konsumenta API na https://www.opensubtitles.com/consumers i wpisz jego klucz w ustawieniach E2iPlayer (Napisy)."
 
 #, python-format
 msgid "OpenSubtitles.com rejected the request (HTTP %s). Please check the API key in the E2iPlayer settings."
-msgstr ""
+msgstr "OpenSubtitles.com odrzucił żądanie (HTTP %s). Sprawdź klucz API w ustawieniach E2iPlayer."
 
 msgid "OpenSubtitles.org sent a \"become VIP member\" note instead of the subtitle (download limit reached?)."
 msgstr "OpenSubtitles.org zamiast napisów przesłał komunikat \"zostań członkiem VIP\" (osiągnięto limit pobrań?)."
@@ -3800,7 +3800,7 @@ msgid "Pin protection for plugin"
 msgstr "Chroń wtyczkę kodem PIN"
 
 msgid "Pin protection for this host"
-msgstr ""
+msgstr "Ochrona kodem PIN dla tego hosta"
 
 #, python-format
 msgid "Play with [%s] player"
@@ -3849,7 +3849,7 @@ msgid "Please configure Xtream (blue button)"
 msgstr "Skonfiguruj Xtream (niebieski przycisk)"
 
 msgid "Please configure the Stalker portal (blue button)"
-msgstr ""
+msgstr "Skonfiguruj portal Stalker (niebieski przycisk)"
 
 #, python-format
 msgid "Please consider restart your Engima2 and agree to install the %s utlity when the %s will propose this."
@@ -3960,23 +3960,23 @@ msgstr "Gwiazdy porno"
 
 #, python-format
 msgid "Portal %d - %s (optional, from the MAG box):"
-msgstr ""
+msgstr "Portal %d - %s (opcjonalnie, z dekodera MAG):"
 
 #, python-format
 msgid "Portal %d - MAC address (00:1A:79:...):"
-msgstr ""
+msgstr "Portal %d - adres MAC (00:1A:79:...):"
 
 #, python-format
 msgid "Portal %d - name (optional):"
-msgstr ""
+msgstr "Portal %d - nazwa (opcjonalnie):"
 
 #, python-format
 msgid "Portal %d - portal URL (http://host:port/c/):"
-msgstr ""
+msgstr "Portal %d - URL portalu (http://host:port/c/):"
 
 #, python-format
 msgid "Portal URL and MAC address in the host configuration, as the provider gives them out. More portals: %s in the EStalker format (portal URL, then its MAC addresses, one per line)."
-msgstr ""
+msgstr "URL portalu i adres MAC w konfiguracji hosta, tak jak podaje je dostawca. Więcej portali: %s w formacie EStalker (URL portalu, a następnie jego adresy MAC, po jednym w wierszu)."
 
 msgid "Portuguese"
 msgstr "Portugalski"
@@ -4063,7 +4063,7 @@ msgid "Python modules"
 msgstr "Moduły Python"
 
 msgid "Python was not found on the receiver."
-msgstr ""
+msgstr "Nie znaleziono Pythona na odbiorniku."
 
 msgid "Quality"
 msgstr "Jakość"
@@ -4211,7 +4211,7 @@ msgid "Remaining:"
 msgstr "Pozostało:"
 
 msgid "Remember a host's pin until E2iPlayer is closed"
-msgstr ""
+msgstr "Zapamiętaj kod PIN hosta do zamknięcia E2iPlayer"
 
 msgid "Remember last search entry"
 msgstr "Zapamiętaj ostatni wpis wyszukiwania"
@@ -4369,10 +4369,10 @@ msgid "Science"
 msgstr "Nauka"
 
 msgid "Screensaver during audio playback"
-msgstr ""
+msgstr "Wygaszacz ekranu podczas odtwarzania audio"
 
 msgid "Screensaver in E2iPlayer menus"
-msgstr ""
+msgstr "Wygaszacz ekranu w menu E2iPlayer"
 
 #, python-format
 msgid ""
@@ -4429,7 +4429,7 @@ msgid "Search results region:"
 msgstr "Region wyników wyszukiwania:"
 
 msgid "Search string must have at least 4 characters."
-msgstr ""
+msgstr "Szukana fraza musi mieć co najmniej 4 znaki."
 
 msgid "Search term :"
 msgstr "Szukana fraza :"
@@ -4602,7 +4602,7 @@ msgstr "Serwer nic nie zwrócił."
 
 #, python-format
 msgid "Server, user name and password in the host configuration. The server field also takes a get.php link. More accounts: %s with one get.php link per line (X-Streamity format)."
-msgstr ""
+msgstr "Serwer, nazwa użytkownika i hasło w konfiguracji hosta. Pole serwera przyjmuje także link get.php. Więcej kont: %s z jednym linkiem get.php w wierszu (format X-Streamity)."
 
 #, python-format
 msgid ""
@@ -4644,7 +4644,7 @@ msgstr "Ustawienia"
 
 #, python-format
 msgid "Settings of service [%s] cannot be opened."
-msgstr ""
+msgstr "Nie można otworzyć ustawień serwisu [%s]."
 
 msgid "Settings screen layout"
 msgstr "Układ ekranu ustawień"
@@ -4656,7 +4656,7 @@ msgid "Short Movies"
 msgstr "Filmy krótkometrażowe"
 
 msgid "Short series"
-msgstr ""
+msgstr "Krótkie seriale"
 
 msgid "Shorts"
 msgstr "Shorts"
@@ -4692,7 +4692,7 @@ msgid "Show Youtube Api Key warnings"
 msgstr "Pokaż ostrzeżenia klucza API YouTube"
 
 msgid "Show adult content"
-msgstr ""
+msgstr "Pokaż treści dla dorosłych"
 
 msgid "Show all channels"
 msgstr "Pokazać wszystkie kanały"
@@ -4932,7 +4932,7 @@ msgid "Streamed"
 msgstr "Transmitowane"
 
 msgid "Streaming platforms"
-msgstr ""
+msgstr "Platformy streamingowe"
 
 msgid "Studios"
 msgstr "Studia"
@@ -5219,13 +5219,13 @@ msgid "The OpenSubtitles v3 server did not answer. Please try again later."
 msgstr "Serwer OpenSubtitles v3 nie odpowiedział. Spróbuj ponownie później."
 
 msgid "The OpenSubtitles.com server did not answer. Please try again later."
-msgstr ""
+msgstr "Serwer OpenSubtitles.com nie odpowiedział. Spróbuj ponownie później."
 
 msgid "The QR code leads to the wiki page with pictures and the extension download."
 msgstr "Kod QR prowadzi do strony wiki ze zdjęciami i pobraniem rozszerzenia."
 
 msgid "The Stalker portal of this entry is not configured (any more)."
-msgstr ""
+msgstr "Portal Stalker tej pozycji nie jest (już) skonfigurowany."
 
 msgid "The Xtream account of this entry is not configured (any more)."
 msgstr "Konto Xtream tego wpisu nie jest (już) skonfigurowane."
@@ -5267,7 +5267,7 @@ msgid "The connection limit for your weeb.tv account has been reached."
 msgstr "Osiągnięto limit połączeń dla Twojego konta weeb.tv."
 
 msgid "The daily download limit is reached."
-msgstr ""
+msgstr "Osiągnięto dzienny limit pobrań."
 
 msgid "The data is too large."
 msgstr "Dane są zbyt duże."
@@ -5309,11 +5309,11 @@ msgid "The feed of these channels could not be read - press OK to try again."
 msgstr "Nie udało się odczytać kanału tych kanałów - naciśnij OK, aby spróbować ponownie."
 
 msgid "The helper process ended unexpectedly."
-msgstr ""
+msgstr "Proces pomocniczy zakończył się nieoczekiwanie."
 
 #, python-format
 msgid "The helper script %s is missing."
-msgstr ""
+msgstr "Brak skryptu pomocniczego %s."
 
 #, python-format
 msgid "The host \"%s\" cannot be used from the web interface (disabled, unknown or protected by PIN)."
@@ -5338,7 +5338,7 @@ msgid "The host wanted to open a window on the TV (%s) - that only works on the 
 msgstr "Host chciał otworzyć okno na telewizorze (%s) - działa to tylko na odbiorniku."
 
 msgid "The hoster sends an advert redirect instead of the video at the moment. Try another hoster."
-msgstr ""
+msgstr "Hosting wysyła obecnie przekierowanie do reklamy zamiast wideo. Spróbuj innego hostingu."
 
 msgid "The latest uploads of all YouTube channels in this group, newest first."
 msgstr "Najnowsze filmy wszystkich kanałów YouTube w tej grupie, od najnowszych."
@@ -5373,7 +5373,7 @@ msgstr ""
 "\"%s\""
 
 msgid "The portal did not hand out a link for this entry."
-msgstr ""
+msgstr "Portal nie udostępnił linku dla tej pozycji."
 
 msgid "The recordings of this page were on the site's old media server, which is offline."
 msgstr "Nagrania z tej strony znajdowały się na starym serwerze multimediów serwisu, który jest offline."
@@ -5460,16 +5460,18 @@ msgid "There is no hosts in this group."
 msgstr "Ta grupa jest pusta."
 
 msgid "There is no next item in this list."
-msgstr ""
+msgstr "Na tej liście nie ma następnej pozycji."
 
 msgid "There is no previous item in this list."
-msgstr ""
+msgstr "Na tej liście nie ma poprzedniej pozycji."
 
 #, python-format
 msgid ""
 "There is no storage device under \"%s\" (%s free). E2iPlayer will switch this folder back to \"%s\" at the next start.\n"
 "Please choose a folder on a mounted HDD or USB stick."
 msgstr ""
+"Pod \"%s\" nie ma nośnika danych (%s wolnego). E2iPlayer przy następnym uruchomieniu przełączy ten folder z powrotem na \"%s\".\n"
+"Wybierz folder na zamontowanym dysku HDD lub pendrive USB."
 
 msgid "This article has no free video."
 msgstr "Ten artykuł nie ma darmowego wideo."
@@ -5505,10 +5507,10 @@ msgid "This entry cannot be opened."
 msgstr "Tego wpisu nie można otworzyć."
 
 msgid "This entry is only an advert, there is no video."
-msgstr ""
+msgstr "Ta pozycja jest tylko reklamą, nie ma w niej wideo."
 
 msgid "This entry is protected by a PIN, open it on the receiver."
-msgstr ""
+msgstr "Ta pozycja jest chroniona kodem PIN, otwórz ją na odbiorniku."
 
 msgid "This episode is not available in this version (SUB/DUB) on this server. Try another one."
 msgstr "Ten odcinek nie jest dostępny w tej wersji (SUB/DUB) na tym serwerze. Wybierz inny."
@@ -5995,7 +5997,7 @@ msgstr "Wersja"
 
 #, python-format
 msgid "Version: %s"
-msgstr ""
+msgstr "Wersja: %s"
 
 msgid "Video"
 msgstr "Wideo"
@@ -6007,7 +6009,7 @@ msgid "Video library"
 msgstr "Biblioteka wideo"
 
 msgid "Video link not found."
-msgstr ""
+msgstr "Nie znaleziono linku do wideo."
 
 msgid "Video mode"
 msgstr "Tryb Obrazu"
@@ -6092,7 +6094,7 @@ msgid "Watch later"
 msgstr "Do obejrzenia"
 
 msgid "Watch online"
-msgstr ""
+msgstr "Oglądaj online"
 
 msgid "Western"
 msgstr "Western"
@@ -6104,7 +6106,7 @@ msgid "When the maximum is reached"
 msgstr "Po osiągnięciu maksimum"
 
 msgid "While live TV is running"
-msgstr ""
+msgstr "Podczas oglądania telewizji na żywo"
 
 msgid "Whole file must be downloaded to start playback!"
 msgstr "Cały plik musi być pobrany, aby rozpocząć odtwarzanie!"
@@ -6125,7 +6127,7 @@ msgid "World"
 msgstr "Świat"
 
 msgid "Worldwide"
-msgstr ""
+msgstr "Cały świat"
 
 msgid "Wrestling"
 msgstr "Wrestling"
@@ -6267,7 +6269,7 @@ msgstr "Wprowadź wzorzec wyszukiwania"
 
 #, python-format
 msgid "Youth protection: only available between %s and %s."
-msgstr ""
+msgstr "Ochrona małoletnich: dostępne tylko między %s a %s."
 
 msgid "Youtube Suggestions"
 msgstr "Sugestie YouTube"
@@ -6396,7 +6398,7 @@ msgstr "nie udało się uruchomić testu"
 
 #, python-format
 msgid "curl-impersonate is not installed on the receiver (%s). This stream only plays with it."
-msgstr ""
+msgstr "curl-impersonate nie jest zainstalowany na odbiorniku (%s). Ten strumień działa tylko z nim."
 
 msgid "debug"
 msgstr "debug"
@@ -6411,10 +6413,10 @@ msgid "delete the selected entry"
 msgstr "usuń wybrany wpis"
 
 msgid "device ID"
-msgstr ""
+msgstr "ID urządzenia"
 
 msgid "device ID 2"
-msgstr ""
+msgstr "ID urządzenia 2"
 
 msgid "direct link"
 msgstr "link bezpośredni"
@@ -6570,7 +6572,7 @@ msgid "menu and list only"
 msgstr "tylko menu i lista"
 
 msgid "minutes"
-msgstr ""
+msgstr "min"
 
 msgid "more options (this menu)"
 msgstr "więcej opcji (to menu)"
@@ -6733,7 +6735,7 @@ msgid "select to sign out"
 msgstr "wybierz, aby się wylogować"
 
 msgid "serial number"
-msgstr ""
+msgstr "numer seryjny"
 
 msgid "show more details about the selected item"
 msgstr "pokaż więcej szczegółów o wybranym elemencie"
@@ -6745,7 +6747,7 @@ msgid "sign in (subscriptions, playlists, age-restricted videos)"
 msgstr "zaloguj się (subskrypcje, playlisty, filmy z ograniczeniem wiekowym)"
 
 msgid "signature"
-msgstr ""
+msgstr "sygnatura"
 
 msgid "signed in"
 msgstr "zalogowano"

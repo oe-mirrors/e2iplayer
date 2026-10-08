@@ -1,3 +1,4 @@
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
@@ -10,6 +11,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.9\n"
 
 #, python-format
@@ -42,17 +44,17 @@ msgid ""
 "https://github.com/oe-mirrors/e2iplayer/issues"
 msgstr ""
 "\n"
-"Sorunu buradan da bildirebilirsin: \n"
+"Sorunu buradan da bildirebilirsiniz: \n"
 "https://github.com/oe-mirrors/e2iplayer/issues"
 
 msgid "  • Fixed: order never changes - useful for browsing by letter jump (0-9)."
-msgstr ""
+msgstr "  • Sabit: sıra hiç değişmez - harf atlamasıyla (0-9) gezinmek için kullanışlıdır."
 
 msgid "  • Sorting or reordering fixes this automatically, so your order stays."
-msgstr ""
+msgstr "  • Sıralama veya yeniden düzenleme bunu otomatik olarak sabitler, böylece sıranız korunur."
 
 msgid "  • Unfixed (default): the entry jumps back to the top of the list."
-msgstr ""
+msgstr "  • Sabit değil (varsayılan): giriş listenin başına geri atlar."
 
 #, python-format
 msgid "\"%s\" Virtual Keyboard layout not available."
@@ -60,42 +62,42 @@ msgstr "\"%s\" Sanal Klavye düzeni kullanılamıyor."
 
 #, python-format
 msgid "\"%s\" has been added to the favourites group \"%s\"."
-msgstr ""
+msgstr "\"%s\", \"%s\" favori grubuna eklendi."
 
 #, python-format
 msgid "\"%s\" is playing on the TV."
-msgstr ""
+msgstr "\"%s\" TV'de oynatılıyor."
 
 msgid "\"Web\" streams player"
-msgstr "\"Web\" akış oynatıcısı"
+msgstr "\"Web\" yayın oynatıcısı"
 
 #, python-format
 msgid "%d duplicate entries removed."
-msgstr ""
+msgstr "%d yinelenen giriş kaldırıldı."
 
 #, python-format
 msgid "%d duplicate entry removed."
-msgstr ""
+msgstr "%d yinelenen giriş kaldırıldı."
 
 #, python-format
 msgid "%d parts"
-msgstr ""
+msgstr "%d bölüm"
 
 #, python-format
 msgid "%d programmes"
-msgstr ""
+msgstr "%d program"
 
 #, python-format
 msgid "%d recitations"
-msgstr ""
+msgstr "%d tilavet"
 
-#, fuzzy, python-format
+#, python-format
 msgid "%d videos"
-msgstr "Videolara gözat"
+msgstr "%d video"
 
 #, python-format
 msgid "%s - service overview"
-msgstr "%s - servis genel görünümü"
+msgstr "%s - hizmete genel bakış"
 
 #, python-format
 msgid "%s - subtitles provider"
@@ -103,23 +105,23 @@ msgstr "%s - altyazı sağlayıcısı"
 
 #, python-format
 msgid "%s blocks the connection of the receiver (HTTP 403). It only plays with curl-impersonate installed on the receiver - otherwise please choose another server."
-msgstr ""
+msgstr "%s alıcının bağlantısını engelliyor (HTTP 403). Yalnızca alıcıda curl-impersonate kuruluysa oynatılır - aksi halde lütfen başka bir sunucu seçin."
 
 #, python-format
 msgid "%s blocks the connection of the receiver (HTTP 403). Please choose another server."
-msgstr ""
+msgstr "%s alıcının bağlantısını engelliyor (HTTP 403). Lütfen başka bir sunucu seçin."
 
 #, python-format
 msgid "%s buffering..."
-msgstr ""
+msgstr "%s arabelleğe alınıyor..."
 
 #, python-format
 msgid "%s cannot solve this type of captcha."
-msgstr ""
+msgstr "%s bu tür captcha'yı çözemiyor."
 
 #, python-format
 msgid "%s could not solve the captcha."
-msgstr ""
+msgstr "%s captcha'yı çözemedi."
 
 #, python-format
 msgid "%s device name"
@@ -139,39 +141,39 @@ msgstr "%s bölüm"
 
 #, python-format
 msgid "%s followers"
-msgstr ""
+msgstr "%s takipçi"
 
 #, python-format
 msgid "%s password"
-msgstr "%s parola"
+msgstr "%s şifresi"
 
 #, python-format
 msgid "%s plays"
-msgstr ""
+msgstr "%s oynatma"
 
 #, python-format
 msgid "%s posts"
-msgstr ""
+msgstr "%s gönderi"
 
 #, python-format
 msgid "%s recitations"
-msgstr ""
+msgstr "%s tilavet"
 
 #, python-format
 msgid "%s refused the download. Please set your login and password in the configuration."
-msgstr ""
+msgstr "%s indirmeyi reddetti. Lütfen yapılandırmada kullanıcı adınızı ve şifrenizi ayarlayın."
 
 #, python-format
 msgid "%s refused the request (Cloudflare check, HTTP %s). This host needs curl-impersonate on the receiver."
-msgstr ""
+msgstr "%s isteği reddetti (Cloudflare denetimi, HTTP %s). Bu host, alıcıda curl-impersonate gerektiriyor."
 
 #, python-format
 msgid "%s returned %s: %s"
-msgstr "%s şu sonucu döndürdü %s: %s"
+msgstr "%s, %s döndürdü: %s"
 
 #, python-format
 msgid "%s services configuration"
-msgstr "%s servis yapılandırması"
+msgstr "%s hizmetleri yapılandırması"
 
 #, python-format
 msgid "%s subtitles download - how to"
@@ -179,7 +181,7 @@ msgstr "%s altyazı indirme - nasıl yapılır"
 
 #, python-format
 msgid "%s talks"
-msgstr ""
+msgstr "%s konuşma"
 
 #, python-format
 msgid "%s timeout."
@@ -187,37 +189,36 @@ msgstr "%s zaman aşımı."
 
 #, python-format
 msgid "%s uploads"
-msgstr ""
+msgstr "%s yükleme"
 
 #, python-format
 msgid ""
 "%s uses \"geo-blocking\" measures to prevent you from accessing the services from abroad.\n"
 " Host country: %s, your country: %s"
 msgstr ""
-"%s, yurt dışından hizmete erişimi engellemek için \"coğrafi engelleme\" kullanıyor.\n"
-" Sunucu ülkesi: %s, sizin ülkeniz: %s"
+"%s, yurt dışından hizmetlere erişmenizi engellemek için \"coğrafi engelleme\" kullanıyor.\n"
+" Hizmetin ülkesi: %s, sizin ülkeniz: %s"
 
-#, fuzzy, python-format
+#, python-format
 msgid "%s viewers"
-msgstr "En çok görüntülenen"
+msgstr "%s izleyici"
 
-#, fuzzy, python-format
+#, python-format
 msgid "%s views"
-msgstr "görüntülenme"
+msgstr "%s görüntülenme"
 
 #, python-format
 msgid "(%d YouTube channel(s) could not be read)"
-msgstr ""
+msgstr "(%d YouTube kanalı okunamadı)"
 
 msgid "(no videos found)"
-msgstr ""
+msgstr "(video bulunamadı)"
 
 msgid "(nothing here yet)"
-msgstr ""
+msgstr "(burada henüz bir şey yok)"
 
-#, fuzzy
 msgid "(reading...)"
-msgstr "Trend olanlar"
+msgstr "(okunuyor...)"
 
 msgid "++"
 msgstr "++"
@@ -229,45 +230,43 @@ msgid "----- BASIC CONFIGURATION -----"
 msgstr "----- TEMEL YAPILANDIRMA -----"
 
 msgid "----- BUFFERING CONFIGURATION -----"
-msgstr "----- TAMPON YAPILANDIRMASI -----"
+msgstr "----- ARABELLEK YAPILANDIRMASI -----"
 
 msgid "----- CAPTCHA CONFIGURATION -----"
 msgstr "----- CAPTCHA YAPILANDIRMASI -----"
 
-#, fuzzy
 msgid "----- DEBUG CONFIGURATION -----"
-msgstr "----- TAMPON YAPILANDIRMASI -----"
+msgstr "----- HATA AYIKLAMA YAPILANDIRMASI -----"
 
 msgid "----- DOWNLOADING CONFIGURATION -----"
 msgstr "----- İNDİRME YAPILANDIRMASI -----"
 
 msgid "----- Debug -----"
-msgstr ""
+msgstr "----- Hata ayıklama -----"
 
 msgid "----- Global HostXXX Configuration -----"
 msgstr "----- Genel HostXXX Yapılandırması -----"
 
 msgid "----- METADATA PROVIDERS CONFIGURATION -----"
-msgstr ""
+msgstr "----- META VERİ SAĞLAYICILARI YAPILANDIRMASI -----"
 
 msgid "----- PLAYERS & PLAYBACK CONFIGURATION -----"
 msgstr "----- OYNATICI VE OYNATIM YAPILANDIRMASI -----"
 
 msgid "----- PROXIES CONFIGURATION -----"
-msgstr "----- VEKİL SUNUCU YAPILANDIRMASI -----"
+msgstr "----- PROXY YAPILANDIRMASI -----"
 
-#, fuzzy
 msgid "----- Porn Site Configuration -----"
-msgstr "----- Genel HostXXX Yapılandırması -----"
+msgstr "----- Porno Sitesi Yapılandırması -----"
 
 msgid "----- SCREENSAVER CONFIGURATION -----"
-msgstr ""
+msgstr "----- EKRAN KORUYUCU YAPILANDIRMASI -----"
 
 msgid "----- SECURITY CONFIGURATION -----"
 msgstr "----- GÜVENLİK YAPILANDIRMASI -----"
 
 msgid "----- SERVICE CONFIGURATION -----"
-msgstr "----- SERVİS YAPILANDIRMASI -----"
+msgstr "----- HİZMET YAPILANDIRMASI -----"
 
 msgid "----- SKIN CONFIGURATION -----"
 msgstr "----- ARAYÜZ YAPILANDIRMASI -----"
@@ -278,28 +277,23 @@ msgstr "----- DEPOLAMA YAPILANDIRMASI -----"
 msgid "----- SUBTITLES CONFIGURATION -----"
 msgstr "----- ALTYAZI YAPILANDIRMASI -----"
 
-#, fuzzy
 msgid "----- Show or hide Anime / Hentai -----"
-msgstr "----------  Canlı Kameralar  ----------"
+msgstr "----- Anime / Hentai göster veya gizle -----"
 
-#, fuzzy
 msgid "----- Show or hide Live Cams -----"
-msgstr "----------  Canlı Kameralar  ----------"
+msgstr "----- Canlı Kameraları göster veya gizle -----"
 
 msgid "----- Show or hide Porn Sites -----"
-msgstr ""
+msgstr "----- Porno Sitelerini göster veya gizle -----"
 
-#, fuzzy
 msgid "----- VIRTUAL KEYBOARD & SEARCH CONFIGURATION -----"
-msgstr "----- TEMEL YAPILANDIRMA -----"
+msgstr "----- SANAL KLAVYE VE ARAMA YAPILANDIRMASI -----"
 
-#, fuzzy
 msgid "----- XXXList Configuration -----"
-msgstr "----- Genel HostXXX Yapılandırması -----"
+msgstr "----- XXXList Yapılandırması -----"
 
-#, fuzzy
 msgid "----------  Anime / Hentai  ----------"
-msgstr "----------  Canlı Kameralar  ----------"
+msgstr "----------  Anime / Hentai  ----------"
 
 msgid "----------  Live Cams  ----------"
 msgstr "----------  Canlı Kameralar  ----------"
@@ -307,69 +301,63 @@ msgstr "----------  Canlı Kameralar  ----------"
 msgid "----------  Other  ----------"
 msgstr "----------  Diğer  ----------"
 
-#, fuzzy
 msgid "----------  Porn Sites  ----------"
-msgstr "----------  Diğer  ----------"
+msgstr "----------  Porno Siteleri  ----------"
 
-#, fuzzy, python-format
+#, python-format
 msgid "----------  Search \"%s\"  ----------"
-msgstr "----------  Diğer  ----------"
+msgstr "----------  \"%s\" ara  ----------"
 
 msgid "----------------- External exteplayer3 options -----------------"
-msgstr ""
+msgstr "----------------- Harici exteplayer3 seçenekleri -----------------"
 
-#, fuzzy
 msgid "--All Episodes--"
-msgstr "Bölümler"
+msgstr "--Tüm Bölümler--"
 
 msgid "--All--"
-msgstr ""
+msgstr "--Tümü--"
 
-#, fuzzy
 msgid "--Other--"
-msgstr "Diğer"
+msgstr "--Diğer--"
 
 msgid "... and that the stream delivers video :"
-msgstr ""
+msgstr "... ve yayının video ilettiğini :"
 
 msgid "0-9"
-msgstr ""
+msgstr "0-9"
 
 msgid "1 minute"
-msgstr ""
+msgstr "1 dakika"
 
 msgid "1. On a phone or PC in the same network, open the address shown in the captcha window (or scan its QR code) in a browser with the MyE2i extension installed. If it asks for a code, you find it in the title of the captcha window."
-msgstr ""
+msgstr "1. Aynı ağdaki bir telefonda veya bilgisayarda, captcha penceresinde gösterilen adresi MyE2i eklentisi kurulu bir tarayıcıda açın (veya QR kodunu tarayın). Kod sorulursa, onu captcha penceresinin başlığında bulabilirsiniz."
 
 msgid "12 hour format"
 msgstr "12 saat biçimi"
 
-#, fuzzy
 msgid "15 seconds"
-msgstr "saniye"
+msgstr "15 saniye"
 
 msgid "2. Click the big green button on that page. A new tab opens with the captcha or the website's browser check."
-msgstr ""
+msgstr "2. O sayfadaki büyük yeşil düğmeye tıklayın. Captcha veya web sitesinin tarayıcı denetimiyle yeni bir sekme açılır."
 
 msgid "24 hour format"
 msgstr "24 saat biçimi"
 
 msgid "3. Solve it. The result goes back to the receiver by itself and the captcha window closes."
-msgstr ""
+msgstr "3. Çözün. Sonuç kendiliğinden alıcıya geri gönderilir ve captcha penceresi kapanır."
 
-#, fuzzy
 msgid "30 seconds"
-msgstr "saniye"
+msgstr "30 saniye"
 
 msgid "4K movies"
-msgstr ""
+msgstr "4K filmler"
 
-#, fuzzy
 msgid "5 seconds"
-msgstr "saniye"
+msgstr "5 saniye"
 
 msgid "A search is already running."
-msgstr ""
+msgstr "Zaten bir arama çalışıyor."
 
 msgid "A-Z"
 msgstr "A-Z"
@@ -387,80 +375,79 @@ msgid ""
 "ACCESS DENIED.\n"
 "THIS VIDEO IS DELETED OR NOT AVAILABLE TO YOUR REGION."
 msgstr ""
+"ERİŞİM REDDEDİLDİ.\n"
+"BU VİDEO SİLİNMİŞ VEYA BÖLGENİZDE KULLANILAMIYOR."
 
 msgid "ALBUMS"
 msgstr "ALBÜMLER"
 
 msgid "API Key"
-msgstr ""
+msgstr "API Anahtarı"
 
 msgid "ARTISTS"
 msgstr "SANATÇILAR"
 
 msgid "ATTENTION!"
-msgstr ""
+msgstr "DİKKAT!"
 
 msgid "Aborted"
-msgstr ""
+msgstr "İptal edildi"
 
 msgid "About"
-msgstr ""
+msgstr "Hakkında"
 
 msgid "Accept"
 msgstr "Kabul Et"
 
 msgid "Access Forbidden"
-msgstr "Erişim Yasak"
+msgstr "Erişim Yasaklandı"
 
 msgid "Access denied - open the page with the QR code or the code shown on the receiver screen."
-msgstr ""
+msgstr "Erişim reddedildi - sayfayı QR koduyla veya alıcı ekranında gösterilen kodla açın."
 
 msgid "Access denied. Please check password."
-msgstr "Erişim reddedildi. Lütfen parolayı kontrol edin."
+msgstr "Erişim reddedildi. Lütfen şifreyi kontrol edin."
 
-#, fuzzy
 msgid "Accessible"
-msgstr "Erişim Yasak"
+msgstr "Erişilebilir"
 
 #, python-format
 msgid "Account %d - name (optional):"
-msgstr ""
+msgstr "Hesap %d - ad (isteğe bağlı):"
 
 #, python-format
 msgid "Account %d - password:"
-msgstr ""
+msgstr "Hesap %d - şifre:"
 
 #, python-format
 msgid "Account %d - server (http://host:port or get.php link):"
-msgstr ""
+msgstr "Hesap %d - sunucu (http://host:port veya get.php bağlantısı):"
 
 #, python-format
 msgid "Account %d - user name:"
-msgstr ""
+msgstr "Hesap %d - kullanıcı adı:"
 
 msgid "Accounts & API keys"
-msgstr ""
+msgstr "Hesaplar ve API anahtarları"
 
 msgid "Action"
-msgstr ""
+msgstr "Aksiyon"
 
 msgid "Action & Thriller"
-msgstr ""
+msgstr "Aksiyon ve Gerilim"
 
 msgid "Actors"
 msgstr "Oyuncular"
 
-#, fuzzy
 msgid "Actors:"
-msgstr "Oyuncular"
+msgstr "Oyuncular:"
 
-#, fuzzy
 msgid "Add channel name to downloaded file"
-msgstr "İndiriciye ekle"
+msgstr "İndirilen dosyaya kanal adını ekle"
 
 #, python-format
 msgid "Add host %s to group"
-msgstr "%s hostunu gruba ekle"
+msgstr "%s host'unu gruba ekle"
 
 msgid "Add item to favorites"
 msgstr "Öğeyi favorilere ekle"
@@ -468,9 +455,8 @@ msgstr "Öğeyi favorilere ekle"
 msgid "Add item to group"
 msgstr "Öğeyi gruba ekle"
 
-#, fuzzy
 msgid "Add new entry"
-msgstr "Yeni grup ekle"
+msgstr "Yeni giriş ekle"
 
 msgid "Add new group"
 msgstr "Yeni grup ekle"
@@ -478,38 +464,36 @@ msgstr "Yeni grup ekle"
 msgid "Add new group of favorites"
 msgstr "Yeni favori grubu ekle"
 
-#, fuzzy
 msgid "Add to User Links"
-msgstr "Bağlantı önbelleğini kullan"
+msgstr "Kullanıcı Bağlantılarına ekle"
 
 msgid "Added"
-msgstr ""
+msgstr "Eklendi"
 
 #, python-format
 msgid "Added by: %s, directory: %s"
-msgstr "Ekleyen: %s, dizin: %s"
+msgstr "Ekleyen: %s, klasör: %s"
 
 msgid "Adhan"
-msgstr ""
+msgstr "Ezan"
 
 msgid "Adventure"
-msgstr ""
+msgstr "Macera"
 
 msgid "African series"
-msgstr ""
+msgstr "Afrika dizileri"
 
-#, fuzzy
 msgid "Age limit:"
-msgstr "Anime listesi"
+msgstr "Yaş sınırı:"
 
 msgid "Aired"
-msgstr ""
+msgstr "Yayınlandı"
 
 msgid "Aired this week"
-msgstr ""
+msgstr "Bu hafta yayınlananlar"
 
 msgid "Airing now"
-msgstr ""
+msgstr "Şimdi yayında"
 
 msgid "All"
 msgstr "Tümü"
@@ -518,50 +502,46 @@ msgid "All Sports"
 msgstr "Tüm Sporlar"
 
 msgid "All audiobooks"
-msgstr ""
+msgstr "Tüm sesli kitaplar"
 
-#, fuzzy
 msgid "All categories"
-msgstr "Kategoriler"
+msgstr "Tüm kategoriler"
 
 msgid "All in one"
 msgstr "Hepsi bir arada"
 
 msgid "All movies"
-msgstr ""
+msgstr "Tüm filmler"
 
 msgid "All programmes"
-msgstr ""
+msgstr "Tüm programlar"
 
-#, fuzzy
 msgid "All results"
-msgstr "Daha fazla sonuç"
+msgstr "Tüm sonuçlar"
 
 msgid "All seasons"
-msgstr ""
+msgstr "Tüm sezonlar"
 
 msgid "All series"
-msgstr ""
+msgstr "Tüm diziler"
 
-#, fuzzy
 msgid "All shows"
-msgstr "şovlar"
+msgstr "Tüm programlar"
 
 msgid "All stations"
-msgstr ""
+msgstr "Tüm istasyonlar"
 
 msgid "All streams"
-msgstr "Tüm akışlar"
+msgstr "Tüm yayınlar"
 
-#, fuzzy
 msgid "All time"
-msgstr "Hepsi bir arada"
+msgstr "Tüm zamanlar"
 
 msgid "All titles A-Z"
-msgstr ""
+msgstr "Tüm başlıklar A-Z"
 
 msgid "All videos"
-msgstr ""
+msgstr "Tüm videolar"
 
 msgid "Allow VP9 codec:"
 msgstr "VP9 kodeğine izin ver:"
@@ -570,11 +550,10 @@ msgid "Allow dash format:"
 msgstr "DASH biçimine izin ver:"
 
 msgid "Allow external link-decryption service (enc-dec.app)"
-msgstr ""
+msgstr "Harici bağlantı şifre çözme hizmetine izin ver (enc-dec.app)"
 
-#, fuzzy
 msgid "Allow host to override suggestions provider"
-msgstr "Varsayılan öneri sağlayıcısı"
+msgstr "Host'un öneri sağlayıcısını geçersiz kılmasına izin ver"
 
 msgid "Allow watched flag to be set"
 msgstr "İzlendi işaretinin ayarlanmasına izin ver"
@@ -584,18 +563,17 @@ msgstr "Alfabetik olarak"
 
 #, python-format
 msgid "Also use the accounts of X-Streamity (%s)"
-msgstr ""
+msgstr "X-Streamity hesaplarını da kullan (%s)"
 
 #, python-format
 msgid "Also use the portals of EStalker (%s)"
-msgstr ""
+msgstr "EStalker portallarını da kullan (%s)"
 
 msgid "AltGr"
-msgstr ""
+msgstr "AltGr"
 
-#, fuzzy
 msgid "Alternate Title:"
-msgstr "Alternatif alan adı:"
+msgstr "Alternatif Başlık:"
 
 msgid "Alternative domain:"
 msgstr "Alternatif alan adı:"
@@ -606,53 +584,49 @@ msgstr "Alternatif proxy sunucusu (1)"
 msgid "Alternative proxy server (2)"
 msgstr "Alternatif proxy sunucusu (2)"
 
-#, fuzzy
 msgid "Alternative proxy server (3)"
-msgstr "Alternatif proxy sunucusu (1)"
+msgstr "Alternatif proxy sunucusu (3)"
 
-#, fuzzy
 msgid "Alternative proxy server (4)"
-msgstr "Alternatif proxy sunucusu (1)"
+msgstr "Alternatif proxy sunucusu (4)"
 
-#, fuzzy
 msgid "Alternative proxy server (5)"
-msgstr "Alternatif proxy sunucusu (1)"
+msgstr "Alternatif proxy sunucusu (5)"
 
 msgid "An API key from subsource.net can be entered in the E2iPlayer settings (Subtitles)."
-msgstr ""
+msgstr "subsource.net'ten alınan bir API anahtarı E2iPlayer ayarlarına (Altyazılar) girilebilir."
 
 #, python-format
 msgid "An error occurred while loading a subtitle from [%s]."
-msgstr ""
+msgstr "[%s] üzerinden altyazı yüklenirken bir hata oluştu."
 
 #, python-format
 msgid "An error occurred while writing into: %s"
-msgstr ""
+msgstr "Şuraya yazılırken bir hata oluştu: %s"
 
 msgid "An opensubtitles.com account (login and password in the E2iPlayer settings) raises the limit."
-msgstr ""
+msgstr "Bir opensubtitles.com hesabı (E2iPlayer ayarlarında kullanıcı adı ve şifre) sınırı yükseltir."
 
 msgid "Anatomy"
-msgstr ""
+msgstr "Anatomi"
 
 msgid "Animals"
-msgstr ""
+msgstr "Hayvanlar"
 
 msgid "Animated movies"
-msgstr ""
+msgstr "Animasyon filmler"
 
 msgid "Animated series"
-msgstr ""
+msgstr "Animasyon diziler"
 
-#, fuzzy
 msgid "Animation"
-msgstr "Bilgi"
+msgstr "Animasyon"
 
 msgid "Anime"
 msgstr "Anime"
 
 msgid "Anime A-Z"
-msgstr ""
+msgstr "Anime A-Z"
 
 msgid "Anime Movies"
 msgstr "Anime Filmleri"
@@ -664,7 +638,7 @@ msgid "Anime TV series"
 msgstr "Anime TV dizileri"
 
 msgid "Anime genres"
-msgstr ""
+msgstr "Anime türleri"
 
 msgid "Anime list"
 msgstr "Anime listesi"
@@ -673,25 +647,25 @@ msgid "Anime movies"
 msgstr "Anime filmleri"
 
 msgid "Anime movies A-Z"
-msgstr ""
+msgstr "Anime filmleri A-Z"
 
 msgid "Anime series (dubbed)"
-msgstr ""
+msgstr "Anime dizileri (dublajlı)"
 
 msgid "Anime series A-Z"
-msgstr ""
+msgstr "Anime dizileri A-Z"
 
 msgid "Answer"
 msgstr "Yanıt"
 
 msgid "Any"
-msgstr "Herhangi biri"
+msgstr "Herhangi"
 
 msgid "Apply"
 msgstr "Uygula"
 
 msgid "Approaches"
-msgstr ""
+msgstr "Yaklaşımlar"
 
 msgid "Arabic"
 msgstr "Arapça"
@@ -706,99 +680,95 @@ msgid "Arabic movies"
 msgstr "Arap filmleri"
 
 msgid "Arabic plays"
-msgstr ""
+msgstr "Arapça tiyatro oyunları"
 
 msgid "Arabic songs"
-msgstr ""
+msgstr "Arapça şarkılar"
 
 msgid "Archive"
 msgstr "Arşiv"
 
 msgid "Are you sure you want to delete search history?"
-msgstr "Arama geçmişini silmek istediğinize emin misiniz?"
+msgstr "Arama geçmişini silmek istediğinizden emin misiniz?"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Are you sure you want to remove file \"%s\"?"
-msgstr "Arama geçmişini silmek istediğinize emin misiniz?"
+msgstr "\"%s\" dosyasını kaldırmak istediğinizden emin misiniz?"
 
-#, fuzzy
 msgid "Are you sure you want to reset all settings to their default values?"
-msgstr "Arama geçmişini silmek istediğinize emin misiniz?"
+msgstr "Tüm ayarları varsayılan değerlerine sıfırlamak istediğinizden emin misiniz?"
 
 msgid "Art"
-msgstr ""
+msgstr "Sanat"
 
 msgid "Articles"
-msgstr ""
+msgstr "Makaleler"
 
 msgid "Artist"
-msgstr ""
+msgstr "Sanatçı"
 
 #, python-format
 msgid "Artist \"%s\" not found on Last.fm - the exact artist name is needed."
-msgstr ""
+msgstr "\"%s\" sanatçısı Last.fm'de bulunamadı - sanatçının tam adı gereklidir."
 
 msgid "Artists"
-msgstr ""
+msgstr "Sanatçılar"
 
 msgid "Asian"
-msgstr ""
+msgstr "Asya"
 
-#, fuzzy
 msgid "Asian TV series"
-msgstr "Anime TV dizileri"
+msgstr "Asya TV dizileri"
 
-#, fuzzy
 msgid "Asian movies"
-msgstr "Anime filmleri"
+msgstr "Asya filmleri"
 
 msgid "Asian series (dubbed)"
-msgstr ""
+msgstr "Asya dizileri (dublajlı)"
 
 msgid "Aspect"
 msgstr "En-boy oranı"
 
 msgid "At least one of plugin browser, extension list and main menu has to stay on, otherwise E2iPlayer could no longer be started."
-msgstr ""
+msgstr "Eklenti tarayıcısı, uzantı listesi ve ana menüden en az biri açık kalmalıdır, aksi halde E2iPlayer artık başlatılamaz."
 
 msgid "At the live edge"
-msgstr ""
+msgstr "Canlı yayının ucunda"
 
 msgid "Atheer radio (Arabic)"
-msgstr ""
+msgstr "Atheer radyo (Arapça)"
 
 msgid "Audio"
 msgstr "Ses"
 
 msgid "Audio buffer size [KB]"
-msgstr "Ses tampon boyutu [KB]"
+msgstr "Ses arabelleği boyutu [KB]"
 
 msgid "Audio description"
-msgstr ""
+msgstr "Sesli betimleme"
 
 msgid "Audio programme"
-msgstr ""
+msgstr "Ses programı"
 
-#, fuzzy
 msgid "Audio track"
-msgstr "Ses parçaları"
+msgstr "Ses parçası"
 
 msgid "Audio tracks"
 msgstr "Ses parçaları"
 
 #, python-format
 msgid "Author: %s"
-msgstr ""
+msgstr "Yazar: %s"
 
 msgid "Authors"
-msgstr ""
+msgstr "Yazarlar"
 
 msgid "Auto"
 msgstr "Otomatik"
 
 #, python-format
 msgid "Auto refresh: %s"
-msgstr ""
+msgstr "Otomatik yenileme: %s"
 
 msgid "Auto selection based on the settings"
 msgstr "Ayarlara göre otomatik seçim"
@@ -807,9 +777,8 @@ msgid "Auto start method"
 msgstr "Otomatik başlatma yöntemi"
 
 msgid "Auto-generated"
-msgstr ""
+msgstr "Otomatik oluşturuldu"
 
-#, fuzzy
 msgid "Automatic"
 msgstr "Otomatik"
 
@@ -817,124 +786,119 @@ msgid "Automatically turn on external subtitles"
 msgstr "Harici altyazıları otomatik aç"
 
 msgid "Automotive"
-msgstr ""
+msgstr "Otomotiv"
 
 msgid "Autoplay start delay"
 msgstr "Otomatik oynatma başlama gecikmesi"
 
 msgid "Autumn"
-msgstr ""
+msgstr "Sonbahar"
 
 msgid "Available worldwide"
-msgstr ""
+msgstr "Dünya genelinde kullanılabilir"
 
 msgid "Awards:"
-msgstr ""
+msgstr "Ödüller:"
 
 msgid "BLUE"
-msgstr ""
+msgstr "MAVİ"
 
 msgid "Background color"
 msgstr "Arka plan rengi"
 
 msgid "Backspace"
-msgstr ""
+msgstr "Geri sil"
 
 msgid "Balkans"
-msgstr ""
+msgstr "Balkanlar"
 
-#, fuzzy
 msgid "Basic Science"
-msgstr "Bilim"
+msgstr "Temel Bilimler"
 
-#, fuzzy
 msgid "Being watched"
-msgstr "İzlendi olarak işaretle"
+msgstr "İzleniyor"
 
 msgid "Best"
-msgstr ""
+msgstr "En iyi"
 
 msgid "Best Pinkbike videos"
-msgstr ""
+msgstr "En iyi Pinkbike videoları"
 
 msgid "Best movies"
-msgstr ""
+msgstr "En iyi filmler"
 
 msgid "Best series"
-msgstr ""
+msgstr "En iyi diziler"
 
 msgid "Binaries"
-msgstr ""
+msgstr "İkili dosyalar"
 
-#, fuzzy
 msgid "Bing Suggestions"
-msgstr "Google Önerileri"
+msgstr "Bing Önerileri"
 
 msgid "Biography"
-msgstr ""
+msgstr "Biyografi"
 
 #, python-format
 msgid "Bitrate: %s"
-msgstr ""
+msgstr "Bit hızı: %s"
 
 msgid "Black"
 msgstr "Siyah"
 
 msgid "Black iframe file"
-msgstr ""
+msgstr "Siyah iframe dosyası"
 
 msgid "Black screensaver"
-msgstr ""
+msgstr "Siyah ekran koruyucu"
 
 msgid "Block wmv files"
-msgstr ""
+msgstr "wmv dosyalarını engelle"
 
-#, fuzzy
 msgid "Board Review"
-msgstr "Önizleme"
+msgstr "Kurul Tekrarı"
 
 msgid "Books"
-msgstr ""
+msgstr "Kitaplar"
 
 msgid "Box"
-msgstr ""
+msgstr "Alıcı"
 
-#, fuzzy
 msgid "Broadcast:"
-msgstr "Podcastler"
+msgstr "Yayın:"
 
 msgid "Browse by genre"
-msgstr ""
+msgstr "Türe göre göz at"
 
 msgid "Browse youtube trending feeds"
-msgstr ""
+msgstr "YouTube trend akışlarına göz at"
 
 msgid "Budget:"
-msgstr ""
+msgstr "Bütçe:"
 
 msgid "Buffering location"
-msgstr "Tampon konumu"
+msgstr "Arabellek konumu"
 
 msgid "Business"
-msgstr ""
+msgstr "İş dünyası"
 
 #, python-format
 msgid "By %s"
-msgstr ""
+msgstr "%s tarafından"
 
 msgid "CME SAE"
-msgstr ""
+msgstr "CME SAE"
 
 #, python-format
 msgid "CUMLOUDER can only search its tags (e.g. milf, step sister, big tits) - there is no tag \"%s\"."
-msgstr ""
+msgstr "CUMLOUDER yalnızca kendi etiketlerinde arama yapabilir (ör. milf, step sister, big tits) - \"%s\" diye bir etiket yok."
 
 msgid "Cache"
-msgstr ""
+msgstr "Önbellek"
 
 #, python-format
 msgid "Cache folder \"%s\" could not be created. Some data (cookies, subtitles, ...) may not be saved."
-msgstr ""
+msgstr "Önbellek klasörü \"%s\" oluşturulamadı. Bazı veriler (çerezler, altyazılar, ...) kaydedilemeyebilir."
 
 #, python-format
 msgid ""
@@ -942,154 +906,152 @@ msgid ""
 "Return code[%s].\n"
 "Return data[%s]."
 msgstr ""
+"Bağlama noktaları alınamıyor - mount komutu başarısız oldu.\n"
+"Dönüş kodu[%s].\n"
+"Dönüş verisi[%s]."
 
 msgid "Cancel"
 msgstr "İptal"
 
-#, fuzzy
 msgid "Cancelled."
-msgstr "İptal"
+msgstr "İptal edildi."
 
 msgid "Captcha"
 msgstr "Captcha"
 
-#, fuzzy
 msgid "Captcha error:"
-msgstr "Captcha"
+msgstr "Captcha hatası:"
 
 msgid ""
 "Captcha solved.\n"
 "Waiting for notification."
 msgstr ""
+"Captcha çözüldü.\n"
+"Bildirim bekleniyor."
 
 msgid "Captcha solving service"
-msgstr "Captcha çözme servisi"
+msgstr "Captcha çözme hizmeti"
 
 msgid "Captcha was not entered."
-msgstr ""
+msgstr "Captcha girilmedi."
 
 #, python-format
 msgid "Carrying: %s | UP/DOWN=Move, OK=Drop"
-msgstr ""
+msgstr "Taşınan: %s | YUKARI/AŞAĞI=Taşı, OK=Bırak"
 
 msgid "Cartoon genres"
-msgstr ""
+msgstr "Çizgi film türleri"
 
 msgid "Cartoon series (dubbed)"
-msgstr ""
+msgstr "Çizgi diziler (dublajlı)"
 
 msgid "Cartoons"
 msgstr "Çizgi filmler"
 
 msgid "Cartoons A-Z"
-msgstr ""
+msgstr "Çizgi filmler A-Z"
 
-#, fuzzy
 msgid "Cartoons and anime"
-msgstr "Çizgi filmler"
+msgstr "Çizgi filmler ve anime"
 
 msgid "Cartoons and series"
-msgstr ""
+msgstr "Çizgi filmler ve diziler"
 
 msgid "Cast:"
-msgstr ""
+msgstr "Oyuncular:"
 
 msgid "Catch-up"
-msgstr ""
+msgstr "Geriye dönük izleme"
 
 #, python-format
 msgid "Catch-up (%d channels)"
-msgstr ""
+msgstr "Geriye dönük izleme (%d kanal)"
 
 msgid "Catch-up (timeshift.php)"
-msgstr ""
+msgstr "Geriye dönük izleme (timeshift.php)"
 
 #, python-format
 msgid "Catch-up: %d days"
-msgstr ""
+msgstr "Geriye dönük izleme: %d gün"
 
 msgid "Categories"
 msgstr "Kategoriler"
 
-#, fuzzy
 msgid "Categories:"
-msgstr "Kategoriler"
+msgstr "Kategoriler:"
 
 msgid "Category"
-msgstr ""
+msgstr "Kategori"
 
-#, fuzzy
 msgid "Category:"
-msgstr "Kategoriler"
+msgstr "Kategori:"
 
 msgid "Change active movie player"
-msgstr "Etkin video oynatıcıyı değiştir"
+msgstr "Etkin film oynatıcısını değiştir"
 
 msgid "Change own pin"
-msgstr ""
+msgstr "Kendi PIN'ini değiştir"
 
 msgid "Channel"
 msgstr "Kanal"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Channel: %s"
-msgstr "Kanallar"
+msgstr "Kanal: %s"
 
 msgid "Channels"
 msgstr "Kanallar"
 
 msgid "Checking for updates"
-msgstr ""
+msgstr "Güncellemeler denetleniyor"
 
 msgid "Checks every enabled site: menu, a list with videos and, in the full test, the stream link of one video."
-msgstr ""
+msgstr "Etkin her siteyi denetler: menü, videolu bir liste ve tam testte bir videonun yayın bağlantısı."
 
 msgid "Children"
-msgstr "Çocuk"
+msgstr "Çocuklar"
 
-#, fuzzy
 msgid "Children & Family"
-msgstr "Çocuk"
+msgstr "Çocuk ve Aile"
 
 msgid "Chinese"
-msgstr ""
+msgstr "Çince"
 
 msgid "Chinese anime"
-msgstr ""
+msgstr "Çin animesi"
 
-#, fuzzy
 msgid "Cinema History"
-msgstr "Arama geçmişi"
+msgstr "Sinema Tarihi"
 
-#, fuzzy
 msgid "Cinema movies"
-msgstr "Anime filmleri"
+msgstr "Sinema filmleri"
 
 msgid "Classic"
-msgstr ""
+msgstr "Klasik"
 
 msgid "Classic movies"
-msgstr ""
+msgstr "Klasik filmler"
 
 msgid "Clear"
 msgstr "Temizle"
 
-#, fuzzy
 msgid "Clear log"
-msgstr "Temizle"
+msgstr "Günlüğü temizle"
 
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Clear the debug log file?\n"
 "%s"
-msgstr "Günlük dosyasını sil"
+msgstr ""
+"Hata ayıklama günlük dosyası temizlensin mi?\n"
+"%s"
 
 msgid "Clear the log file at plugin start"
-msgstr ""
+msgstr "Eklenti başlangıcında günlük dosyasını temizle"
 
 #, python-format
 msgid "Clipped by: %s"
-msgstr ""
+msgstr "Kesiti alan: %s"
 
 msgid "Clips"
 msgstr "Klipler"
@@ -1098,136 +1060,131 @@ msgid "Close"
 msgstr "Kapat"
 
 msgid "Closes the host opened in the web interface, clears the search results and stops what the web interface still runs in the background. Use it when a page keeps loading. Settings, downloads and the E2iPlayer on the TV are not touched."
-msgstr ""
+msgstr "Web arayüzünde açılan host'u kapatır, arama sonuçlarını temizler ve web arayüzünün arka planda hâlâ çalıştırdıklarını durdurur. Bir sayfa yüklenmeye devam ettiğinde kullanın. Ayarlar, indirmeler ve TV'deki E2iPlayer etkilenmez."
 
 msgid "Closing. Please wait..."
 msgstr "Kapanıyor. Lütfen bekleyin..."
 
 msgid "Clubs and athletes"
-msgstr ""
+msgstr "Kulüpler ve sporcular"
 
 msgid "Code"
-msgstr ""
+msgstr "Kod"
 
-#, fuzzy
 msgid "Collected streams only"
-msgstr "Tüm akışlar"
+msgstr "Yalnızca toplanan yayınlar"
 
 msgid "Collections"
 msgstr "Koleksiyonlar"
 
 msgid "Colored text in titles and descriptions"
-msgstr ""
+msgstr "Başlık ve açıklamalarda renkli metin"
 
 msgid "Combine pull request merges with their commit"
-msgstr ""
+msgstr "Pull request birleştirmelerini commit'leriyle birleştir"
 
 msgid "Comedy"
-msgstr ""
+msgstr "Komedi"
 
 msgid "Comments"
-msgstr ""
+msgstr "Yorumlar"
 
 msgid "Commits"
-msgstr ""
+msgstr "Commit'ler"
 
 msgid "Competitions"
-msgstr ""
+msgstr "Yarışmalar"
 
 msgid "Complete Quran"
-msgstr ""
+msgstr "Kur'an'ın tamamı"
 
 msgid "Complete series"
-msgstr ""
+msgstr "Tamamlanmış diziler"
 
 msgid "Completed"
-msgstr ""
+msgstr "Tamamlandı"
 
 msgid "Concert"
-msgstr ""
+msgstr "Konser"
 
-#, fuzzy
 msgid "Config"
-msgstr "Hostu yapılandır"
+msgstr "Yapılandırma"
 
 #, python-format
 msgid "Config folder \"%s\" could not be created. Some data (host order, search history, favourites, movie player preferences, ...) may not be saved."
-msgstr ""
+msgstr "Yapılandırma klasörü \"%s\" oluşturulamadı. Bazı veriler (host sırası, arama geçmişi, favoriler, film oynatıcı tercihleri, ...) kaydedilemeyebilir."
 
 msgid "Configuration"
 msgstr "Yapılandırma"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Configuration [%s] service"
-msgstr "Yapılandırma"
+msgstr "[%s] hizmet yapılandırması"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Configure %s"
-msgstr "Hostu yapılandır"
+msgstr "%s yapılandır"
 
 msgid "Configure host"
-msgstr "Hostu yapılandır"
+msgstr "Host'u yapılandır"
 
 msgid "Configuring an external movie player"
-msgstr "Harici video oynatıcı yapılandırılıyor"
+msgstr "Harici film oynatıcısı yapılandırılıyor"
 
 msgid "Confirm new pin"
-msgstr "Yeni pini onayla"
+msgstr "Yeni PIN'i onayla"
 
 msgid "Confirm the title of the movie"
-msgstr ""
+msgstr "Filmin başlığını onaylayın"
 
-#, fuzzy
 msgid "Confirmation error."
-msgstr "Yapılandırma"
+msgstr "Onay hatası."
 
 msgid "Connection to server failed!"
 msgstr "Sunucu bağlantısı başarısız oldu!"
 
-#, fuzzy
 msgid "Connection to the weeb.tv server failed."
-msgstr "Sunucu bağlantısı başarısız oldu!"
+msgstr "weeb.tv sunucusuna bağlantı başarısız oldu."
 
 #, python-format
 msgid "Connections: %s of %s"
-msgstr ""
+msgstr "Bağlantılar: %s / %s"
 
-#, fuzzy
 msgid "Content not available"
-msgstr "Geçerli bağlantı yok."
+msgstr "İçerik kullanılamıyor"
 
 msgid "Continue"
-msgstr ""
+msgstr "Devam"
 
 msgid "Continue downloading"
 msgstr "İndirmeye devam et"
 
 msgid "Cooking"
-msgstr ""
+msgstr "Yemek"
 
 msgid "Copy"
 msgstr "Kopyala"
 
 msgid "Could not add the user link."
-msgstr ""
+msgstr "Kullanıcı bağlantısı eklenemedi."
 
 msgid "Could not load the wiki page."
-msgstr ""
+msgstr "Wiki sayfası yüklenemedi."
 
 msgid "Could not resolve host."
-msgstr ""
+msgstr "Host çözümlenemedi."
 
 msgid "Could not resolve proxy."
-msgstr ""
+msgstr "Proxy çözümlenemedi."
 
 msgid "Could not sort the user links."
-msgstr ""
+msgstr "Kullanıcı bağlantıları sıralanamadı."
 
 msgid "Could not start the YouTube sign-in."
-msgstr ""
+msgstr "YouTube oturum açma başlatılamadı."
 
 msgid "Could not write the file."
-msgstr ""
+msgstr "Dosya yazılamadı."
 
 msgid "Countries"
 msgstr "Ülkeler"
@@ -1235,69 +1192,65 @@ msgstr "Ülkeler"
 msgid "Country"
 msgstr "Ülke"
 
-#, fuzzy
 msgid "Country / store:"
-msgstr "Ülke"
+msgstr "Ülke / mağaza:"
 
-#, fuzzy
 msgid "Country:"
-msgstr "Ülke"
+msgstr "Ülke:"
 
 msgid "Couples"
-msgstr ""
+msgstr "Çiftler"
 
 msgid "Create Enigma2 .cuts chapter marks"
-msgstr ""
+msgstr "Enigma2 .cuts bölüm işaretleri oluştur"
 
 msgid "Create LCD/VFD summary screen"
 msgstr "LCD/VFD özet ekranı oluştur"
 
 msgid "Create MKV"
-msgstr ""
+msgstr "MKV oluştur"
 
 msgid "Create MKV with chapter marks from description"
-msgstr ""
+msgstr "Açıklamadaki bölüm işaretleriyle MKV oluştur"
 
-#, fuzzy
 msgid "Create debug logs"
-msgstr "Günlük dosyasını sil"
+msgstr "Hata ayıklama günlükleri oluştur"
 
 msgid "Create sidecar files (.txt/.jpg)"
-msgstr ""
+msgstr "Yan dosyalar oluştur (.txt/.jpg)"
 
 msgid "Creator:"
-msgstr ""
+msgstr "Yaratıcı:"
 
-#, fuzzy
 msgid "Creators:"
-msgstr "Oyuncular"
+msgstr "Yaratıcılar:"
 
 msgid "Crime"
-msgstr ""
+msgstr "Suç"
 
 msgid "Critical Error - cookie can't be saved!"
-msgstr ""
+msgstr "Kritik Hata - çerez kaydedilemiyor!"
 
 msgid "Critical Error – Content-Encoding gzip cannot be handled!"
-msgstr ""
+msgstr "Kritik Hata – Content-Encoding gzip işlenemiyor!"
 
 msgid "Culture"
-msgstr ""
+msgstr "Kültür"
 
 msgid "Culture and lifestyle"
-msgstr ""
+msgstr "Kültür ve yaşam tarzı"
 
 msgid "Culture and pop"
-msgstr ""
+msgstr "Kültür ve pop"
 
 msgid "Current item is not a channel."
-msgstr ""
+msgstr "Geçerli öğe bir kanal değil."
 
 msgid "Cut"
 msgstr "Kes"
 
 msgid "Czech"
-msgstr ""
+msgstr "Çekçe"
 
 msgid "DASH/mpd"
 msgstr "DASH/mpd"
@@ -1315,287 +1268,267 @@ msgid "DRM protection detected."
 msgstr "DRM koruması algılandı."
 
 msgid "Daily download limit reached - type the code"
-msgstr ""
+msgstr "Günlük indirme sınırına ulaşıldı - kodu yazın"
 
 msgid "Darkgray"
 msgstr "Koyu gri"
 
 msgid "Date"
-msgstr ""
+msgstr "Tarih"
 
 msgid "Debug file does not exist - nothing to delete"
-msgstr ""
+msgstr "Hata ayıklama dosyası yok - silinecek bir şey yok"
 
 msgid "Debug log"
-msgstr ""
+msgstr "Hata ayıklama günlüğü"
 
 msgid "Debug logs"
-msgstr ""
+msgstr "Hata ayıklama günlükleri"
 
 msgid "Debug option is disabled - nothing to display"
-msgstr ""
+msgstr "Hata ayıklama seçeneği devre dışı - gösterilecek bir şey yok"
 
 msgid "Debug snapshot"
-msgstr ""
+msgstr "Hata ayıklama anlık görüntüsü"
 
 msgid "Debug snapshot (for site development)"
-msgstr ""
+msgstr "Hata ayıklama anlık görüntüsü (site geliştirme için)"
 
 #, python-format
 msgid "Debug snapshot: \"%s\" received by the box"
-msgstr ""
+msgstr "Hata ayıklama anlık görüntüsü: \"%s\" alıcı tarafından alındı"
 
 #, python-format
 msgid "Debug snapshot: sending \"%s\" failed"
-msgstr ""
+msgstr "Hata ayıklama anlık görüntüsü: \"%s\" gönderilemedi"
 
 #, python-format
 msgid "Decode file [%s] problem."
-msgstr ""
+msgstr "[%s] dosyasının kodunu çözme sorunu."
 
 msgid "Decrypt Signatures Error"
-msgstr ""
+msgstr "İmza Şifre Çözme Hatası"
 
 msgid "Default"
 msgstr "Varsayılan"
 
 msgid "Default (2 minutes)"
-msgstr ""
+msgstr "Varsayılan (2 dakika)"
 
 msgid "Default browser"
-msgstr ""
+msgstr "Varsayılan tarayıcı"
 
 msgid "Default captcha bypass"
-msgstr ""
+msgstr "Varsayılan captcha atlatma"
 
 msgid "Default suggestions provider"
 msgstr "Varsayılan öneri sağlayıcısı"
 
 msgid "Default video aspect ratio"
-msgstr ""
+msgstr "Varsayılan video en boy oranı"
 
 msgid "Default video policy for 16:9"
-msgstr ""
+msgstr "16:9 için varsayılan video politikası"
 
 msgid "Default video policy for 4:3"
-msgstr ""
+msgstr "4:3 için varsayılan video politikası"
 
 msgid "Default video quality"
-msgstr ""
+msgstr "Varsayılan video kalitesi"
 
 msgid "Default video quality:"
-msgstr ""
+msgstr "Varsayılan video kalitesi:"
 
 msgid "Defaults"
 msgstr "Varsayılanlar"
 
-#, fuzzy
 msgid "Definitely remove from favorites?"
-msgstr "Favorilerden kaldır"
+msgstr "Favorilerden kesinlikle kaldırılsın mı?"
 
 msgid "Delete"
 msgstr "Sil"
 
 msgid "Delete JS cache after (days, 0 = never)"
-msgstr ""
+msgstr "JS önbelleğini şu süreden sonra sil (gün, 0 = asla)"
 
-#, fuzzy
 msgid "Delete JS cache now"
-msgstr "Arama geçmişini sil"
+msgstr "JS önbelleğini şimdi sil"
 
-#, fuzzy
 msgid "Delete all cache files now"
-msgstr "Günlük dosyasını sil"
+msgstr "Tüm önbellek dosyalarını şimdi sil"
 
-#, fuzzy
 msgid "Delete all config files now"
-msgstr "Günlük dosyasını sil"
+msgstr "Tüm yapılandırma dosyalarını şimdi sil"
 
 msgid "Delete cookies cache after (days, 0 = never)"
-msgstr ""
+msgstr "Çerez önbelleğini şu süreden sonra sil (gün, 0 = asla)"
 
 msgid "Delete cookies cache now"
-msgstr ""
+msgstr "Çerez önbelleğini şimdi sil"
 
-#, fuzzy
 msgid "Delete entry"
-msgstr "Arama geçmişini sil"
+msgstr "Girişi sil"
 
 msgid "Delete favourites and watched status now"
-msgstr ""
+msgstr "Favorileri ve izlenme durumunu şimdi sil"
 
 msgid "Delete host order and groups now"
-msgstr ""
+msgstr "Host sırasını ve gruplarını şimdi sil"
 
 msgid "Delete movie metadata cache after (days, 0 = never)"
-msgstr ""
+msgstr "Film meta veri önbelleğini şu süreden sonra sil (gün, 0 = asla)"
 
 msgid "Delete movie metadata cache now"
-msgstr ""
+msgstr "Film meta veri önbelleğini şimdi sil"
 
-#, fuzzy
 msgid "Delete movie player preferences now"
-msgstr "Video oynatıcı seç"
+msgstr "Film oynatıcı tercihlerini şimdi sil"
 
-#, fuzzy
 msgid "Delete now"
-msgstr "Sil"
+msgstr "Şimdi sil"
 
 msgid "Delete search history"
 msgstr "Arama geçmişini sil"
 
-#, fuzzy
 msgid "Delete search history now"
-msgstr "Arama geçmişini sil"
+msgstr "Arama geçmişini şimdi sil"
 
 msgid "Delete subtitles cache after (days, 0 = never)"
-msgstr ""
+msgstr "Altyazı önbelleğini şu süreden sonra sil (gün, 0 = asla)"
 
-#, fuzzy
 msgid "Delete subtitles cache now"
-msgstr "Altyazı parçası seç"
+msgstr "Altyazı önbelleğini şimdi sil"
 
 msgid "Delete thumbnails cache now"
-msgstr ""
+msgstr "Küçük resim önbelleğini şimdi sil"
 
 msgid "Denmark"
-msgstr ""
+msgstr "Danimarka"
 
 msgid "Description:"
 msgstr "Açıklama:"
 
 msgid "Detail/expert mode"
-msgstr ""
+msgstr "Ayrıntı/uzman modu"
 
 msgid "Detective"
-msgstr ""
+msgstr "Polisiye"
 
 msgid "Developers:"
-msgstr ""
+msgstr "Geliştiriciler:"
 
 msgid "Digital programmes"
-msgstr ""
+msgstr "Dijital programlar"
 
 msgid "Direct"
-msgstr ""
+msgstr "Doğrudan"
 
-#, fuzzy
 msgid "Director:"
-msgstr "Oyuncular"
+msgstr "Yönetmen:"
 
-#, fuzzy
 msgid "Directors"
-msgstr "Oyuncular"
+msgstr "Yönetmenler"
 
-#, fuzzy
 msgid "Directors:"
-msgstr "Oyuncular"
+msgstr "Yönetmenler:"
 
 #, python-format
 msgid "Directory \"%s\" does not exists."
-msgstr ""
+msgstr "\"%s\" klasörü mevcut değil."
 
-#, fuzzy
 msgid "Directory browser"
-msgstr "Oyuncular"
+msgstr "Klasör tarayıcısı"
 
-#, fuzzy
 msgid "Disable all groups"
-msgstr "Host gruplarını etkinleştir"
+msgstr "Tüm grupları devre dışı bırak"
 
 msgid "Disable live at plugin start"
-msgstr ""
+msgstr "Eklenti başlangıcında canlı yayını devre dışı bırak"
 
-#, fuzzy
 msgid "Disable not used services"
-msgstr "Devre dışı servisleri kaldır"
+msgstr "Kullanılmayan hizmetleri devre dışı bırak"
 
-#, fuzzy
 msgid "Disable reordering"
-msgstr "Yeniden sıralamayı etkinleştir"
+msgstr "Yeniden sıralamayı devre dışı bırak"
 
-#, fuzzy
 msgid "Disable reordering mode"
-msgstr "Yeniden sıralama modunu etkinleştir"
+msgstr "Yeniden sıralama modunu devre dışı bırak"
 
 msgid "Disable/Enable groups"
-msgstr ""
+msgstr "Grupları devre dışı bırak/etkinleştir"
 
-#, fuzzy
 msgid "Disable/Enable services"
-msgstr "Devre dışı servisleri kaldır"
+msgstr "Hizmetleri devre dışı bırak/etkinleştir"
 
 msgid "Discovery"
-msgstr ""
+msgstr "Keşif"
 
 msgid "Disney cartoon movies (Egyptian dub)"
-msgstr ""
+msgstr "Disney çizgi filmleri (Mısır dublajı)"
 
-#, fuzzy
 msgid "Display language:"
-msgstr "Dil seç"
+msgstr "Görüntüleme dili:"
 
 msgid "Display thumbnails"
 msgstr "Küçük resimleri göster"
 
 msgid "Do you really want to delete ALL cache data now? This includes cookies, subtitles, movie metadata and thumbnails, and cannot be undone."
-msgstr ""
+msgstr "TÜM önbellek verilerini şimdi silmek istiyor musunuz? Bu, çerezleri, altyazıları, film meta verilerini ve küçük resimleri kapsar ve geri alınamaz."
 
 msgid "Do you really want to delete ALL config data now? This is real user data, not just cache - it includes favourites, watched status, search history, movie player preferences and host order/groups, and cannot be undone."
-msgstr ""
+msgstr "TÜM yapılandırma verilerini şimdi silmek istiyor musunuz? Bunlar yalnızca önbellek değil, gerçek kullanıcı verileridir - favorileri, izlenme durumunu, arama geçmişini, film oynatıcı tercihlerini ve host sırasını/gruplarını kapsar ve geri alınamaz."
 
 msgid "Do you really want to delete ALL favourites and watched status now? This is real user data, not just cache, and cannot be undone."
-msgstr ""
+msgstr "TÜM favorileri ve izlenme durumunu şimdi silmek istiyor musunuz? Bunlar yalnızca önbellek değil, gerçek kullanıcı verileridir ve geri alınamaz."
 
-#, fuzzy, python-format
+#, python-format
 msgid "Do you really want to delete the %s now?"
-msgstr "Arama geçmişini silmek istediğinize emin misiniz?"
+msgstr "%s şimdi silinsin mi?"
 
-#, fuzzy
 msgid "Do you really want to delete the thumbnails cache now?"
-msgstr "Arama geçmişini silmek istediğinize emin misiniz?"
+msgstr "Küçük resim önbelleğini şimdi silmek istiyor musunuz?"
 
 msgid "Do you want to finish?"
-msgstr ""
+msgstr "Bitirmek istiyor musunuz?"
 
 msgid "Documentaries"
 msgstr "Belgeseller"
 
 msgid "Documentaries A-Z"
-msgstr ""
+msgstr "Belgeseller A-Z"
 
 msgid "Documentary"
 msgstr "Belgesel"
 
-#, fuzzy
 msgid "Documentary Movies"
-msgstr "Belgeseller"
+msgstr "Belgesel Filmler"
 
 msgid "Documentary series"
-msgstr ""
+msgstr "Belgesel diziler"
 
 msgid "Done - the result was sent to the box, you can close this page."
-msgstr ""
+msgstr "Tamam - sonuç alıcıya gönderildi, bu sayfayı kapatabilirsiniz."
 
 msgid "Download"
 msgstr "İndir"
 
 #, python-format
 msgid "Download (ready in %d seconds)"
-msgstr ""
+msgstr "İndir (%d saniye içinde hazır)"
 
 msgid "Download again"
 msgstr "Tekrar indir"
 
-#, fuzzy
 msgid "Download already exists"
-msgstr "Tekrar indir"
+msgstr "İndirme zaten mevcut"
 
 #, python-format
 msgid ""
 "Download can not be started.\n"
 " Incorrect address ('%r')."
 msgstr ""
+"İndirme başlatılamıyor.\n"
+" Hatalı adres ('%r')."
 
 #, python-format
 msgid ""
@@ -1603,38 +1536,38 @@ msgid ""
 "Downloader %s not working correctly.\n"
 "Status[%s]"
 msgstr ""
+"İndirme başlatılamıyor.\n"
+"İndirici %s düzgün çalışmıyor.\n"
+"Durum[%s]"
 
 #, python-format
 msgid ""
 "Download failed.\n"
 "Status[%s]"
 msgstr ""
+"İndirme başarısız oldu.\n"
+"Durum[%s]"
 
 msgid "Download manager"
 msgstr "İndirme yöneticisi"
 
-#, fuzzy
 msgid "Download manager is not initialized"
-msgstr "İndirme yöneticisi"
+msgstr "İndirme yöneticisi başlatılmadı"
 
-#, fuzzy
 msgid "Download new version"
-msgstr "İndirme yöneticisi"
+msgstr "Yeni sürümü indir"
 
-#, fuzzy
 msgid "Download notification duration"
-msgstr "İndirme konumu"
+msgstr "İndirme bildirimi süresi"
 
-#, fuzzy
 msgid "Download subtiles failed."
-msgstr "Günlük dosyasını indir"
+msgstr "Altyazılar indirilemedi."
 
-#, fuzzy
 msgid "Download suggested"
-msgstr "İndirilenler"
+msgstr "Önerilenleri indir"
 
 msgid "Downloaded file is too small or corrupted."
-msgstr ""
+msgstr "İndirilen dosya çok küçük veya bozuk."
 
 msgid "Downloading"
 msgstr "İndiriliyor"
@@ -1645,12 +1578,17 @@ msgid ""
 " Downloader %s does not work properly.\n"
 "Status[%s]"
 msgstr ""
+"İndirme başlatılamıyor.\n"
+" İndirici %s düzgün çalışmıyor.\n"
+"Durum[%s]"
 
 #, python-format
 msgid ""
 "Downloading can not be started.\n"
 " The address ('%r') is incorrect."
 msgstr ""
+"İndirme başlatılamıyor.\n"
+" Adres ('%r') hatalı."
 
 #, python-format
 msgid ""
@@ -1658,25 +1596,32 @@ msgid ""
 " Downloader [%s] not working properly.\n"
 " Status[%s]"
 msgstr ""
+"İndirme başlatılamıyor.\n"
+" İndirici [%s] düzgün çalışmıyor.\n"
+" Durum[%s]"
 
 #, python-format
 msgid ""
 "Downloading cannot be started.\n"
 " Invalid URI[%s]."
 msgstr ""
+"İndirme başlatılamıyor.\n"
+" Geçersiz URI[%s]."
 
 #, python-format
 msgid "Downloading file [%s] problem."
-msgstr ""
+msgstr "[%s] dosyasını indirme sorunu."
 
 msgid "Downloading from prijevodi-online.org needs a free account. Enter login and password in the E2iPlayer settings."
-msgstr ""
+msgstr "prijevodi-online.org'dan indirmek için ücretsiz bir hesap gerekir. E2iPlayer ayarlarına kullanıcı adı ve şifreyi girin."
 
 #, python-format
 msgid ""
 "Downloading subtitles.\n"
 " ('%r')."
 msgstr ""
+"Altyazılar indiriliyor.\n"
+" ('%r')."
 
 msgid "Downloads"
 msgstr "İndirilenler"
@@ -1686,141 +1631,129 @@ msgstr "İndirme konumu"
 
 #, python-format
 msgid "Downloads: %s"
-msgstr ""
+msgstr "İndirmeler: %s"
 
 msgid "Draft"
-msgstr ""
+msgstr "Taslak"
 
 msgid "Drama"
-msgstr ""
+msgstr "Dram"
 
 msgid "Dramas (Asian)"
-msgstr ""
+msgstr "Diziler (Asya)"
 
 msgid "Dubbed"
-msgstr ""
+msgstr "Dublajlı"
 
 msgid "Dubbed anime"
-msgstr ""
+msgstr "Dublajlı anime"
 
 msgid "Dubbed movies"
-msgstr ""
+msgstr "Dublajlı filmler"
 
 msgid "Dubbed series"
-msgstr ""
+msgstr "Dublajlı diziler"
 
-#, fuzzy
 msgid "DuckDuckGo Suggestions"
-msgstr "Google Önerileri"
+msgstr "DuckDuckGo Önerileri"
 
 msgid "Duration"
 msgstr "Süre"
 
-#, fuzzy
 msgid "Duration:"
 msgstr "Süre:"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Duration: %s"
-msgstr "Süre:"
+msgstr "Süre: %s"
 
 msgid "Dutch"
-msgstr ""
+msgstr "Felemenkçe"
 
 msgid "E-mail (free TBN GO account):"
-msgstr ""
+msgstr "E-posta (ücretsiz TBN GO hesabı):"
 
-#, fuzzy
 msgid "E2iPlayer"
-msgstr "E2iPlayer - ayarlar"
+msgstr "E2iPlayer"
 
-#, fuzzy
 msgid "E2iPlayer - keyboard settings"
-msgstr "E2iPlayer - ayarlar"
+msgstr "E2iPlayer - klavye ayarları"
 
 msgid "E2iPlayer - settings"
 msgstr "E2iPlayer - ayarlar"
 
 msgid "E2iPlayer auto start at Enigma2 start"
-msgstr "Enigma2 başlarken E2iPlayer otomatik açılsın"
+msgstr "Enigma2 başlarken E2iPlayer otomatik başlasın"
 
-#, fuzzy
 msgid "E2iPlayer config folder"
-msgstr "E2iPlayer indirici"
+msgstr "E2iPlayer yapılandırma klasörü"
 
 msgid "E2iPlayer downloader"
 msgstr "E2iPlayer indirici"
 
 msgid "E2iPlayer enable/disabled groups"
-msgstr ""
+msgstr "E2iPlayer etkin/devre dışı gruplar"
 
 msgid "E2iPlayer is only a specialized web browser. It does not host any materials."
-msgstr ""
+msgstr "E2iPlayer yalnızca özelleştirilmiş bir web tarayıcısıdır. Hiçbir materyal barındırmaz."
 
-#, fuzzy
 msgid "E2iPlayer virtual keyboard"
-msgstr "Sanal Klavye"
+msgstr "E2iPlayer sanal klavye"
 
 msgid ""
 "ERROR: pipeline could not be constructed: no element \"playbin2\" \n"
 "Please check if gstreamer plugins are available in your system."
 msgstr ""
+"HATA: pipeline oluşturulamadı: \"playbin2\" öğesi yok \n"
+"Lütfen sisteminizde gstreamer eklentilerinin mevcut olup olmadığını kontrol edin."
 
 msgid "EXIT"
-msgstr ""
+msgstr "ÇIKIŞ"
 
 msgid "Economy"
-msgstr ""
+msgstr "Ekonomi"
 
 msgid "Edit"
-msgstr ""
+msgstr "Düzenle"
 
-#, fuzzy
 msgid "Edit User Links"
-msgstr "Bağlantı önbelleğini kullan"
+msgstr "Kullanıcı Bağlantılarını düzenle"
 
-#, fuzzy
 msgid "Edit failed."
-msgstr "Giriş başarısız."
+msgstr "Düzenleme başarısız oldu."
 
-#, fuzzy
 msgid "Edit favorite group"
-msgstr "Favori grupları"
+msgstr "Favori grubunu düzenle"
 
-#, fuzzy
 msgid "Edit favorite item"
-msgstr "Favorileri düzenle"
+msgstr "Favori öğesini düzenle"
 
 msgid "Edit favorites"
 msgstr "Favorileri düzenle"
 
-#, fuzzy
 msgid "Edit search history"
-msgstr "Arama geçmişini sil"
+msgstr "Arama geçmişini düzenle"
 
-#, fuzzy
 msgid "Edit title"
-msgstr "Giriş başarısız."
+msgstr "Başlığı düzenle"
 
-#, fuzzy
 msgid "Edit, sort and delete search history entries"
-msgstr "Arama geçmişini silmek istediğinize emin misiniz?"
+msgstr "Arama geçmişi girişlerini düzenle, sırala ve sil"
 
 msgid "Education"
-msgstr ""
+msgstr "Eğitim"
 
 msgid "Educational Animation"
-msgstr ""
+msgstr "Eğitici Animasyon"
 
 msgid "Egyptian series"
-msgstr ""
+msgstr "Mısır dizileri"
 
 msgid "Empty title is not allowed."
-msgstr ""
+msgstr "Boş başlığa izin verilmiyor."
 
-#, fuzzy
 msgid "Enable all groups"
-msgstr "Host gruplarını etkinleştir"
+msgstr "Tüm grupları etkinleştir"
 
 msgid "Enable hosts groups"
 msgstr "Host gruplarını etkinleştir"
@@ -1831,54 +1764,54 @@ msgstr "Yeniden sıralamayı etkinleştir"
 msgid "Enable reordering mode"
 msgstr "Yeniden sıralama modunu etkinleştir"
 
-#, fuzzy
 msgid "Enabled hosts"
-msgstr "Host gruplarını etkinleştir"
+msgstr "Etkin host'lar"
 
 msgid "Encrypted stream list - not supported"
-msgstr ""
+msgstr "Şifreli yayın listesi - desteklenmiyor"
 
 #, python-format
 msgid ""
 "Encryption function body extraction failed!\n"
 "Please report the problem to %s"
 msgstr ""
+"Şifreleme fonksiyonu gövdesi çıkarılamadı!\n"
+"Lütfen sorunu %s adresine bildirin"
 
 #, python-format
 msgid ""
 "Encryption function name extraction failed!\n"
 "Please report the problem to %s"
 msgstr ""
+"Şifreleme fonksiyonu adı çıkarılamadı!\n"
+"Lütfen sorunu %s adresine bildirin"
 
 msgid "English"
 msgstr "İngilizce"
 
-#, fuzzy
 msgid "English TV series"
-msgstr "Anime TV dizileri"
+msgstr "İngilizce TV dizileri"
 
 msgid "English dubbed"
-msgstr ""
+msgstr "İngilizce dublajlı"
 
-#, fuzzy
 msgid "English movies"
-msgstr "Anime filmleri"
+msgstr "İngilizce filmler"
 
 msgid "English movies (dubbed)"
-msgstr ""
+msgstr "İngilizce filmler (dublajlı)"
 
 msgid "English series (dubbed)"
-msgstr ""
+msgstr "İngilizce diziler (dublajlı)"
 
 msgid "English subbed"
-msgstr ""
+msgstr "İngilizce altyazılı"
 
-#, fuzzy
 msgid "Enter"
-msgstr "orta"
+msgstr "Enter"
 
 msgid "Enter (confirm and close)"
-msgstr ""
+msgstr "Enter (onayla ve kapat)"
 
 msgid "Enter a value"
 msgstr "Bir değer girin"
@@ -1887,91 +1820,93 @@ msgid "Enter name"
 msgstr "Ad girin"
 
 msgid "Enter new pin"
-msgstr "Yeni pin girin"
+msgstr "Yeni PIN girin"
 
 msgid "Enter old pin"
-msgstr "Eski pini girin"
+msgstr "Eski PIN'i girin"
 
 msgid "Enter pin"
-msgstr "Pin girin"
+msgstr "PIN girin"
 
 msgid "Enter the code shown in the title of the window on your receiver's screen (or scan the QR code shown there - no code needed then):"
-msgstr ""
+msgstr "Alıcınızın ekranındaki pencerenin başlığında gösterilen kodu girin (veya orada gösterilen QR kodunu tarayın - o zaman kod gerekmez):"
 
 msgid "Enter the text"
 msgstr "Metni girin"
 
 msgid "Entertainment"
-msgstr ""
+msgstr "Eğlence"
 
 msgid "Entitlement parsing error."
-msgstr ""
+msgstr "Yetki ayrıştırma hatası."
 
 #, python-format
 msgid "Entries: %d | Sort: %s | Status: %s | Jump target: %s"
-msgstr ""
+msgstr "Girişler: %d | Sıralama: %s | Durum: %s | Atlama hedefi: %s"
 
 msgid "Episode"
 msgstr "Bölüm"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Episode %d"
-msgstr "Bölüm"
+msgstr "Bölüm %d"
 
 msgid "Episodes"
 msgstr "Bölümler"
 
-#, fuzzy
 msgid "Episodes:"
-msgstr "Bölümler"
+msgstr "Bölümler:"
 
 #, python-format
 msgid "Episodes: %s"
-msgstr ""
+msgstr "Bölümler: %s"
 
 msgid "Epochs"
-msgstr ""
+msgstr "Dönemler"
 
 msgid "Error"
-msgstr ""
+msgstr "Hata"
 
 #, python-format
 msgid "Error code: %s\n"
-msgstr ""
+msgstr "Hata kodu: %s\n"
 
 #, python-format
 msgid ""
 "Error code: %s\n"
 "Error message: %s"
 msgstr ""
+"Hata kodu: %s\n"
+"Hata mesajı: %s"
 
 msgid "Error deleting favorite item."
-msgstr ""
+msgstr "Favori öğesi silinirken hata oluştu."
 
 #, python-format
 msgid "Error deleting file \"%s\".\n"
-msgstr ""
+msgstr "\"%s\" dosyası silinirken hata oluştu.\n"
 
 msgid "Error during deletion of the debug file."
-msgstr ""
+msgstr "Hata ayıklama dosyası silinirken hata oluştu."
 
-#, fuzzy, python-format
+#, python-format
 msgid "Error getting file name: %s"
-msgstr "Dosya adı ayarla"
+msgstr "Dosya adı alınırken hata oluştu: %s"
 
-#, fuzzy
 msgid "Error loading favorites."
-msgstr "Favorileri düzenle"
+msgstr "Favoriler yüklenirken hata oluştu."
 
 #, python-format
 msgid ""
 "Error message: \"%s\".\n"
 "Error code: \"%s\"."
 msgstr ""
+"Hata mesajı: \"%s\".\n"
+"Hata kodu: \"%s\"."
 
 #, python-format
 msgid "Error message: %s\n"
-msgstr ""
+msgstr "Hata mesajı: %s\n"
 
 msgid "Error occurs"
 msgstr "Hata oluştu"
@@ -1979,174 +1914,163 @@ msgstr "Hata oluştu"
 msgid "Error occurs during download."
 msgstr "İndirme sırasında hata oluştu."
 
-#, fuzzy
 msgid "Error occurs:"
-msgstr "Hata oluştu"
+msgstr "Hata oluştu:"
 
 #, python-format
 msgid "Error reading file \"%s\".\n"
-msgstr ""
+msgstr "\"%s\" dosyası okunurken hata oluştu.\n"
 
 #, python-format
 msgid "Error renaming file: %s"
-msgstr ""
+msgstr "Dosya yeniden adlandırılırken hata oluştu: %s"
 
-#, fuzzy
 msgid "Error saving favorites."
-msgstr "Favorileri düzenle"
+msgstr "Favoriler kaydedilirken hata oluştu."
 
 msgid "Error while loading watch data"
-msgstr ""
+msgstr "İzleme verileri yüklenirken hata oluştu"
 
-#, fuzzy
 msgid "Error while saving."
-msgstr "Favorileri düzenle"
+msgstr "Kaydedilirken hata oluştu."
 
 #, python-format
 msgid "Error writing file \"%s\".\n"
-msgstr ""
+msgstr "\"%s\" dosyası yazılırken hata oluştu.\n"
 
 msgid "Ethical & Legal"
-msgstr ""
+msgstr "Etik ve Hukuk"
 
 msgid "European movies"
-msgstr ""
+msgstr "Avrupa filmleri"
 
 msgid "Events"
-msgstr ""
+msgstr "Etkinlikler"
 
 msgid "Every enabled site: does the menu open, does a list show videos? Takes a few minutes."
-msgstr ""
+msgstr "Etkin her site: menü açılıyor mu, bir liste video gösteriyor mu? Birkaç dakika sürer."
 
 msgid "Exam Review"
-msgstr ""
+msgstr "Sınav Tekrarı"
 
-#, fuzzy
 msgid "Exception occurs"
-msgstr "Hata oluştu"
+msgstr "İstisna oluştu"
 
 msgid "Exclusive"
-msgstr ""
+msgstr "Özel"
 
 msgid "Exit"
 msgstr "Çıkış"
 
 #, python-format
 msgid "Expiry: %s"
-msgstr ""
+msgstr "Bitiş: %s"
 
 msgid "Extended"
-msgstr ""
+msgstr "Genişletilmiş"
 
-#, fuzzy
 msgid "External movie player config"
-msgstr "harici eplayer3"
+msgstr "Harici film oynatıcı yapılandırması"
 
 msgid "Extracted subtitle file is empty or missing."
-msgstr ""
+msgstr "Çıkarılan altyazı dosyası boş veya eksik."
 
 msgid "FAILED"
 msgstr "BAŞARISIZ"
 
 msgid "FAST FORWARD"
-msgstr ""
+msgstr "HIZLI İLERİ"
 
 msgid "FREE"
 msgstr "ÜCRETSİZ"
 
 msgid "FUCKER sorting by :"
-msgstr ""
+msgstr "FUCKER sıralama ölçütü :"
 
 #, python-format
 msgid "Fail to get \"%s\"."
-msgstr ""
+msgstr "\"%s\" alınamadı."
 
-#, fuzzy
 msgid "Fail to get captcha data."
-msgstr "Önbellek verileri klasörü"
+msgstr "Captcha verileri alınamadı."
 
-#, fuzzy
 msgid "Failed to connect to host."
-msgstr "UTF-8'e dönüştürme başarısız oldu."
+msgstr "Host'a bağlanılamadı."
 
-#, fuzzy, python-format
+#, python-format
 msgid "Failed to connect to server \"%s\"."
-msgstr "UTF-8'e dönüştürme başarısız oldu."
+msgstr "\"%s\" sunucusuna bağlanılamadı."
 
-#, fuzzy, python-format
+#, python-format
 msgid "Failed to convert the file \"%s\" to UTF-8."
-msgstr "UTF-8'e dönüştürme başarısız oldu."
+msgstr "\"%s\" dosyası UTF-8'e dönüştürülemedi."
 
-#, fuzzy, python-format
+#, python-format
 msgid "Failed to create directory \"%s\"."
-msgstr "Dizini seç"
+msgstr "\"%s\" klasörü oluşturulamadı."
 
-#, fuzzy
 msgid "Failed to create extraction directory."
-msgstr "Dizini seç"
+msgstr "Çıkarma klasörü oluşturulamadı."
 
 msgid "Failed to download subtitle."
 msgstr "Altyazı indirilemedi."
 
 msgid "Failed to download the subtitles."
-msgstr ""
+msgstr "Altyazılar indirilemedi."
 
 msgid "Failed to get the download link."
-msgstr ""
+msgstr "İndirme bağlantısı alınamadı."
 
 #, python-format
 msgid "Failed to get the file list from %s."
-msgstr ""
+msgstr "%s üzerinden dosya listesi alınamadı."
 
 msgid "Failed to gzip."
-msgstr ""
+msgstr "gzip başarısız oldu."
 
 msgid "Failed to initialize (unknown option or old curl version?)."
-msgstr ""
+msgstr "Başlatılamadı (bilinmeyen seçenek veya eski curl sürümü?)."
 
-#, fuzzy
 msgid "Failed to load the match list"
-msgstr "Altyazı indirilemedi."
+msgstr "Maç listesi yüklenemedi"
 
 #, python-format
 msgid "Failed to log in user \"%s\". Please check your login and password."
-msgstr ""
+msgstr "\"%s\" kullanıcısı giriş yapamadı. Lütfen kullanıcı adınızı ve şifrenizi kontrol edin."
 
-#, fuzzy, python-format
+#, python-format
 msgid "Failed to open the file \"%s\"."
-msgstr "Altyazı indirilemedi."
+msgstr "\"%s\" dosyası açılamadı."
 
 #, python-format
 msgid "Failed to write file \"%s\"."
-msgstr ""
+msgstr "\"%s\" dosyası yazılamadı."
 
 #, python-format
 msgid "Failed to write the file \"%s\"."
-msgstr ""
+msgstr "\"%s\" dosyası yazılamadı."
 
-#, fuzzy, python-format
+#, python-format
 msgid "Failed: %s"
-msgstr "Etkin: %s"
+msgstr "Başarısız: %s"
 
 msgid "Family"
-msgstr ""
+msgstr "Aile"
 
 msgid "Fantasy"
-msgstr ""
+msgstr "Fantastik"
 
 msgid "Fashion"
-msgstr ""
+msgstr "Moda"
 
 msgid "Fatal error: consoleWrite failed!"
-msgstr ""
+msgstr "Kritik hata: consoleWrite başarısız oldu!"
 
-#, fuzzy
 msgid "Favorite group not found."
-msgstr "Favori grupları"
+msgstr "Favori grubu bulunamadı."
 
-#, fuzzy
 msgid "Favorite item not found."
-msgstr "Favori grupları"
+msgstr "Favori öğe bulunamadı."
 
 msgid "Favorites"
 msgstr "Favoriler"
@@ -2155,56 +2079,56 @@ msgid "Favorites groups"
 msgstr "Favori grupları"
 
 msgid "Favorites manager"
-msgstr "Favori yöneticisi"
+msgstr "Favoriler yöneticisi"
 
 msgid "Featured"
-msgstr ""
+msgstr "Öne çıkanlar"
 
 #, python-format
 msgid "File \"%s\" already exists"
-msgstr ""
+msgstr "\"%s\" dosyası zaten mevcut"
 
 #, python-format
 msgid "File \"%s\" already exists!"
-msgstr ""
+msgstr "\"%s\" dosyası zaten mevcut!"
 
 msgid "File I/O error (write)."
-msgstr ""
+msgstr "Dosya G/Ç hatası (yazma)."
 
 msgid "File I/O error."
-msgstr ""
+msgstr "Dosya G/Ç hatası."
 
 msgid "File Not Found."
-msgstr ""
+msgstr "Dosya bulunamadı."
 
-#, fuzzy, python-format
+#, python-format
 msgid "File [%s] has been added to the downloading queue."
-msgstr "Altyazı indirilemedi."
+msgstr "[%s] dosyası indirme kuyruğuna eklendi."
 
-#, fuzzy, python-format
+#, python-format
 msgid "File [%s] is already in the downloading queue."
-msgstr "Altyazı indirilemedi."
+msgstr "[%s] dosyası zaten indirme kuyruğunda."
 
-#, fuzzy, python-format
+#, python-format
 msgid "File [%s] was added to downloading queue."
-msgstr "Altyazı indirilemedi."
+msgstr "[%s] dosyası indirme kuyruğuna eklendi."
 
 msgid "File browser"
-msgstr ""
+msgstr "Dosya tarayıcısı"
 
 msgid "File can not be downloaded. Download manager is not available."
-msgstr ""
+msgstr "Dosya indirilemiyor. İndirme yöneticisi kullanılamıyor."
 
 #, python-format
 msgid "File can not be downloaded. Protocol [%s] is unsupported"
-msgstr ""
+msgstr "Dosya indirilemiyor. [%s] protokolü desteklenmiyor"
 
 msgid "File format of DASH (MPD) downloads"
-msgstr ""
+msgstr "DASH (MPD) indirmelerinin dosya biçimi"
 
 #, python-format
 msgid "File might be corrupted (size: %d bytes)."
-msgstr ""
+msgstr "Dosya bozuk olabilir (boyut: %d bayt)."
 
 msgid "File name cannot be empty!"
 msgstr "Dosya adı boş olamaz!"
@@ -2213,124 +2137,117 @@ msgid "File renamed successfully!"
 msgstr "Dosya adı başarıyla değiştirildi!"
 
 msgid "Files"
-msgstr ""
+msgstr "Dosyalar"
 
 msgid "Filler"
-msgstr ""
+msgstr "Dolgu bölüm"
 
-#, fuzzy
 msgid "Films"
-msgstr "Film"
+msgstr "Filmler"
 
 msgid "Films by genre"
-msgstr ""
+msgstr "Türe göre filmler"
 
-#, fuzzy
 msgid "Filmweb Suggestions"
-msgstr "Google Önerileri"
+msgstr "Filmweb önerileri"
 
 msgid "Filter"
-msgstr ""
+msgstr "Filtre"
 
-#, fuzzy
 msgid "Filter settings"
-msgstr "E2iPlayer - ayarlar"
+msgstr "Filtre ayarları"
 
 msgid "Find item"
-msgstr ""
+msgstr "Öğe bul"
 
 msgid "Find out more."
-msgstr ""
+msgstr "Daha fazla bilgi edinin."
 
 msgid "Finished matches with a full replay, highlights or match cuts, newest first (usually a few days after the match)."
-msgstr ""
+msgstr "Tam tekrarı, özetleri veya maç kesitleri olan bitmiş maçlar, en yeniler önce (genellikle maçtan birkaç gün sonra)."
 
-#, fuzzy
 msgid "First Page"
-msgstr "Sonraki Sayfa"
+msgstr "İlk sayfa"
 
-#, fuzzy
 msgid "First air date:"
-msgstr "Sonraki Sayfa"
+msgstr "İlk yayın tarihi:"
 
 msgid "First aired"
-msgstr ""
+msgstr "İlk yayın"
 
 msgid "First movie player in buffering mode"
-msgstr ""
+msgstr "Arabellek modunda birinci film oynatıcı"
 
 msgid "First movie player without buffering mode"
-msgstr ""
+msgstr "Arabellek modu olmadan birinci film oynatıcı"
 
 msgid "Fix jump target"
-msgstr ""
+msgstr "Atlama hedefini sabitle"
 
 #, python-format
 msgid "Folder \"%s\" can not be created."
-msgstr ""
+msgstr "\"%s\" klasörü oluşturulamıyor."
 
-#, fuzzy, python-format
+#, python-format
 msgid "Folder \"%s\" has been created."
-msgstr "Pin değiştirildi."
+msgstr "\"%s\" klasörü oluşturuldu."
 
 msgid "Folder for cache data"
-msgstr "Önbellek verileri klasörü"
+msgstr "Önbellek verileri için klasör"
 
-#, fuzzy
 msgid "Folder for config data"
-msgstr "Önbellek verileri klasörü"
+msgstr "Yapılandırma verileri klasörü"
 
 msgid "Folder for temporary data"
-msgstr "Geçici veriler klasörü"
+msgstr "Geçici veriler için klasör"
 
 msgid "Followers"
-msgstr ""
+msgstr "Takipçiler"
 
 msgid "Following host are broken or additional python modules are needed."
-msgstr ""
+msgstr "Aşağıdaki host'lar bozuk veya ek python modülleri gerekiyor."
 
 msgid "Font size offset"
-msgstr ""
+msgstr "Yazı boyutu farkı"
 
 msgid "Food"
-msgstr ""
+msgstr "Yemek"
 
 msgid "Foot & Ankle"
-msgstr ""
+msgstr "Ayak ve ayak bileği"
 
 msgid "Football Live"
-msgstr ""
+msgstr "Canlı futbol"
 
 msgid "For continuous playing, please press 8!"
-msgstr ""
+msgstr "Sürekli oynatma için lütfen 8'e basın!"
 
 msgid "For developers"
-msgstr ""
+msgstr "Geliştiriciler için"
 
 msgid "Force internal skin: all E2iPlayer screens"
-msgstr ""
+msgstr "Dahili görünümü zorla: tüm E2iPlayer ekranları"
 
 msgid "Force internal skin: main screen only"
-msgstr ""
+msgstr "Dahili görünümü zorla: yalnızca ana ekran"
 
 msgid "Foreign movies"
-msgstr ""
+msgstr "Yabancı filmler"
 
 msgid "Foreign parts only"
-msgstr ""
+msgstr "Yalnızca yabancı dildeki kısımlar"
 
 msgid "Foreign series"
-msgstr ""
+msgstr "Yabancı diziler"
 
-#, fuzzy
 msgid "Format 'wmv' blocked in configuration."
-msgstr "Servis yapılandırması"
+msgstr "'wmv' biçimi yapılandırmada engellendi."
 
 msgid "Formations"
-msgstr ""
+msgstr "Kadrolar"
 
 msgid "Fotka.pl stream :"
-msgstr ""
+msgstr "Fotka.pl yayını :"
 
 msgid "Free IPTV list"
 msgstr "Ücretsiz IPTV listesi"
@@ -2341,186 +2258,177 @@ msgstr "Fransızca"
 msgid "From E2 settings"
 msgstr "E2 ayarlarından"
 
-#, fuzzy
 msgid "Full description loaded"
-msgstr "Geçerli bağlantı yok."
+msgstr "Tam açıklama yüklendi"
 
-#, fuzzy
 msgid "Full description not available"
-msgstr "Geçerli bağlantı yok."
+msgstr "Tam açıklama mevcut değil"
 
 msgid "Full test"
-msgstr ""
+msgstr "Tam test"
 
 msgid "Full test checks the INFO window :"
-msgstr ""
+msgstr "Tam test INFO penceresini kontrol eder :"
 
 msgid "Full test checks the next page :"
-msgstr ""
+msgstr "Tam test sonraki sayfayı kontrol eder :"
 
 msgid "Full test checks the search :"
-msgstr ""
+msgstr "Tam test aramayı kontrol eder :"
 
 msgid "Full test checks the stream link :"
-msgstr ""
+msgstr "Tam test yayın bağlantısını kontrol eder :"
 
 msgid "Full test checks thumbnails :"
-msgstr ""
+msgstr "Tam test küçük resimleri kontrol eder :"
 
 msgid "GREEN"
-msgstr ""
+msgstr "YEŞİL"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Game: %s"
-msgstr "Oyunlar"
+msgstr "Oyun: %s"
 
 msgid "Games"
 msgstr "Oyunlar"
 
 msgid "Gaming"
-msgstr ""
+msgstr "Oyun"
 
 msgid "General"
 msgstr "Genel"
 
 msgid "Generic error code."
-msgstr ""
+msgstr "Genel hata kodu."
 
-#, fuzzy
 msgid "Genre"
-msgstr "Tür:"
+msgstr "Tür"
 
-#, fuzzy
 msgid "Genre:"
 msgstr "Tür:"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Genre: %s"
-msgstr "Tür:"
+msgstr "Tür: %s"
 
 msgid "Genres"
 msgstr "Türler"
 
-#, fuzzy
 msgid "Genres:"
-msgstr "Türler"
+msgstr "Türler:"
 
 msgid "German"
 msgstr "Almanca"
 
 msgid "Get Cloudflare job"
-msgstr ""
+msgstr "Cloudflare görevini al"
 
 msgid "Get captcha job"
-msgstr ""
+msgstr "Captcha görevini al"
 
 msgid "Get cookies job"
-msgstr ""
+msgstr "Çerez görevini al"
 
-#, fuzzy
 msgid "Get languages failed!"
-msgstr "Dil seç"
+msgstr "Diller alınamadı!"
 
-#, fuzzy
 msgid "Get token failed!"
-msgstr "Giriş başarısız!"
+msgstr "Token alınamadı!"
 
 msgid "GitHub API error"
-msgstr ""
+msgstr "GitHub API hatası"
 
-#, fuzzy
 msgid "Global"
-msgstr "kobalt"
+msgstr "Genel"
 
 msgid "Global Search mode :"
-msgstr ""
+msgstr "Genel arama modu :"
 
 msgid "Go to the host configuration available under blue button."
-msgstr ""
+msgstr "Mavi tuş altındaki host yapılandırmasına gidin."
 
 msgid "Google Suggestions"
 msgstr "Google Önerileri"
 
 msgid "Google account"
-msgstr ""
+msgstr "Google hesabı"
 
 msgid "Graphic services selector"
-msgstr "Grafik servis seçici"
+msgstr "Grafik hizmet seçici"
 
 msgid "Greek"
 msgstr "Yunanca"
 
 #, python-format
 msgid "Group \"%s\" already exists."
-msgstr ""
+msgstr "\"%s\" grubu zaten mevcut."
 
-#, fuzzy, python-format
+#, python-format
 msgid "Group %d"
-msgstr "Gruplar"
+msgstr "Grup %d"
 
 msgid "Group links into categories:"
-msgstr ""
+msgstr "Bağlantıları kategorilere grupla:"
 
 #, python-format
 msgid "Group with id[%s] not found."
-msgstr ""
+msgstr "id[%s] olan grup bulunamadı."
 
 msgid "Groups"
-msgstr ""
+msgstr "Gruplar"
 
 msgid "HIDDEN CAM SHOW IN PROGRESS. TRY AGAIN LATER!"
-msgstr ""
+msgstr "GİZLİ KAMERA ŞOVU DEVAM EDİYOR. DAHA SONRA TEKRAR DENEYİN!"
 
 msgid "HLS with subtitles"
-msgstr ""
+msgstr "Altyazılı HLS"
 
 msgid "HLS/m3u8"
-msgstr ""
+msgstr "HLS/m3u8"
 
 msgid "HTTP/2 framing layer error."
-msgstr ""
+msgstr "HTTP/2 çerçeveleme katmanı hatası."
 
 msgid "HTTP/2 stream error."
-msgstr ""
+msgstr "HTTP/2 akış hatası."
 
 #, python-format
 msgid "HTTPS connection error \"%s\"\n"
-msgstr ""
+msgstr "HTTPS bağlantı hatası \"%s\"\n"
 
 msgid "Hand"
 msgstr "El"
 
 msgid "Health"
-msgstr ""
+msgstr "Sağlık"
 
 msgid "Hearing impaired"
-msgstr ""
+msgstr "İşitme engelliler için"
 
 msgid "Help"
-msgstr ""
+msgstr "Yardım"
 
 #, python-format
 msgid "Hide \"%s\" group"
-msgstr ""
+msgstr "\"%s\" grubunu gizle"
 
 msgid "Hide the menu (live TV visible)"
-msgstr ""
+msgstr "Menüyü gizle (canlı TV görünür)"
 
 msgid "Hide titles only available in Sweden"
-msgstr ""
+msgstr "Yalnızca İsveç'te mevcut olan başlıkları gizle"
 
 msgid "Hide/Active Group"
-msgstr ""
+msgstr "Grubu gizle/etkinleştir"
 
 msgid "High (or HD)"
-msgstr ""
+msgstr "Yüksek (veya HD)"
 
 msgid "Highlights"
-msgstr ""
+msgstr "Özetler"
 
-#, fuzzy
 msgid "History"
-msgstr "Arama geçmişi"
+msgstr "Geçmiş"
 
 msgid "History of searched phrases."
 msgstr "Aranan ifadelerin geçmişi."
@@ -2528,126 +2436,118 @@ msgstr "Aranan ifadelerin geçmişi."
 msgid "Home"
 msgstr "Ana Sayfa"
 
-#, fuzzy
 msgid "Home / Sections"
-msgstr "İşlem seç"
+msgstr "Ana sayfa / Bölümler"
 
 msgid "Home page"
 msgstr "Ana sayfa"
 
 msgid "Horror"
-msgstr ""
+msgstr "Korku"
 
 msgid "Host"
-msgstr ""
+msgstr "Host"
 
 #, python-format
 msgid "Host: %s"
-msgstr ""
+msgstr "Host: %s"
 
 #, python-format
 msgid "Hosting \"%s\" not supported."
-msgstr ""
+msgstr "\"%s\" barındırma hizmeti desteklenmiyor."
 
 #, python-format
 msgid "Hosting \"%s\" unknown."
-msgstr ""
+msgstr "\"%s\" barındırma hizmeti bilinmiyor."
 
 #, python-format
 msgid "Hosting: %s, %s"
-msgstr ""
+msgstr "Barındırma: %s, %s"
 
 msgid "Hosts"
-msgstr ""
+msgstr "Host'lar"
 
-#, fuzzy
 msgid "Hosts list type"
-msgstr "Host ayarları"
+msgstr "Host listesi türü"
 
 msgid "Hot"
-msgstr ""
+msgstr "Popüler"
 
 msgid "How to solve a captcha:"
-msgstr ""
+msgstr "Captcha nasıl çözülür:"
 
-#, fuzzy
 msgid "Humanitarian"
-msgstr "Macarca"
+msgstr "İnsani yardım"
 
 msgid "Hungarian"
 msgstr "Macarca"
 
 msgid "I am no robot"
-msgstr ""
+msgstr "Ben robot değilim"
 
 msgid "IMDb"
-msgstr ""
+msgstr "IMDb"
 
-#, fuzzy
 msgid "IMDb Rating:"
-msgstr "Puan:"
+msgstr "IMDb puanı:"
 
 msgid "IMDb Suggestions"
 msgstr "IMDb Önerileri"
 
 msgid "INFO"
-msgstr ""
+msgstr "INFO"
 
 #, python-format
 msgid "INFO %d rows"
-msgstr ""
+msgstr "INFO %d satır"
 
 msgid "INFO list text"
-msgstr ""
+msgstr "INFO liste metni"
 
 msgid "INFO opens no window"
-msgstr ""
+msgstr "INFO pencere açmaz"
 
 msgid "INFO window"
-msgstr ""
+msgstr "INFO penceresi"
 
 msgid "INTERRUPTED"
 msgstr "KESİLDİ"
 
 msgid "IPTV Portals"
-msgstr ""
+msgstr "IPTV portalları"
 
 msgid "Icon type"
 msgstr "Simge türü"
 
-#, fuzzy
 msgid "Icons quality"
-msgstr "kalite"
+msgstr "Simge kalitesi"
 
 msgid "Icons size"
 msgstr "Simge boyutu"
 
 msgid "Image"
-msgstr ""
+msgstr "Görüntü"
 
 msgid "Indian"
-msgstr ""
+msgstr "Hint"
 
-#, fuzzy
 msgid "Indian Movies"
-msgstr "Anime Filmleri"
+msgstr "Hint filmleri"
 
-#, fuzzy
 msgid "Indian TV series"
-msgstr "Anime TV dizileri"
+msgstr "Hint TV dizileri"
 
-#, fuzzy
 msgid "Indian movies"
-msgstr "Anime filmleri"
+msgstr "Hint filmleri"
 
 msgid "Indian movies (dubbed)"
-msgstr ""
+msgstr "Hint filmleri (dublajlı)"
 
 msgid "Indian series (dubbed)"
-msgstr ""
+msgstr "Hint dizileri (dublajlı)"
 
 msgid "Industry"
-msgstr ""
+msgstr "Endüstri"
 
 msgid "Info"
 msgstr "Bilgi"
@@ -2659,53 +2559,51 @@ msgid "Information"
 msgstr "Bilgi"
 
 msgid "Information about audio tracks not available."
-msgstr ""
+msgstr "Ses parçaları hakkında bilgi mevcut değil."
 
-#, fuzzy
 msgid "Initialize web interface"
-msgstr "İndirme Yöneticisini Başlat"
+msgstr "Web arayüzünü başlat"
 
 msgid "Inject black iframe at video playback finish"
-msgstr ""
+msgstr "Video oynatma bitiminde siyah kare ekle"
 
 msgid "Input"
-msgstr "Giriş"
+msgstr "Veri girişi"
 
-#, fuzzy
 msgid "Install E2iPlayer"
-msgstr "E2iPlayer - ayarlar"
+msgstr "E2iPlayer'ı yükle"
 
 msgid "Installed version"
-msgstr ""
+msgstr "Yüklü sürüm"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Installed: v%s"
-msgstr "Etkin: %s"
+msgstr "Yüklü: v%s"
 
 #, python-format
 msgid "Installed: v%s - %d commits behind %s"
-msgstr ""
+msgstr "Yüklü: v%s - %d commit %s gerisinde"
 
 #, python-format
 msgid "Installed: v%s - no matching release tag (local build?)"
-msgstr ""
+msgstr "Yüklü: v%s - eşleşen sürüm etiketi yok (yerel derleme?)"
 
 #, python-format
 msgid "Installed: v%s - up to date"
-msgstr ""
+msgstr "Yüklü: v%s - güncel"
 
 msgid "Interactive Learning Center(ILC)"
-msgstr ""
+msgstr "Etkileşimli Öğrenme Merkezi (ILC)"
 
 msgid "Intervention"
-msgstr ""
+msgstr "Müdahale"
 
 msgid "Interviews"
-msgstr ""
+msgstr "Röportajlar"
 
 #, python-format
 msgid "Invalid answer from %s."
-msgstr ""
+msgstr "%s kaynağından geçersiz yanıt."
 
 msgid "Invalid email."
 msgstr "Geçersiz e-posta."
@@ -2713,33 +2611,32 @@ msgstr "Geçersiz e-posta."
 msgid "Invalid name."
 msgstr "Geçersiz ad."
 
-#, fuzzy
 msgid "Invalid value."
-msgstr "Geçersiz ad."
+msgstr "Geçersiz değer."
 
 msgid "Investigations"
-msgstr ""
+msgstr "Araştırmalar"
 
 msgid "Is this message displayed correctly?"
-msgstr ""
+msgstr "Bu mesaj doğru görüntüleniyor mu?"
 
 msgid "It is not allowed to call getURLRequestData from main thread."
-msgstr ""
+msgstr "getURLRequestData'nın ana iş parçacığından çağrılmasına izin verilmez."
 
 msgid "It looks like some kind of protection. Try again later."
-msgstr ""
+msgstr "Bir tür koruma gibi görünüyor. Daha sonra tekrar deneyin."
 
 #, python-format
 msgid "It looks like your current configuration do not allow to connect to the https://%s/.\n"
-msgstr ""
+msgstr "Mevcut yapılandırmanız https://%s/ adresine bağlanmaya izin vermiyor gibi görünüyor.\n"
 
 #, python-format
 msgid "It seems that the host \"%s\" has crashed."
-msgstr ""
+msgstr "\"%s\" host'u çökmüş gibi görünüyor."
 
 #, python-format
 msgid "It seems that the subtitle's provider \"%s\" has crashed."
-msgstr ""
+msgstr "\"%s\" altyazı sağlayıcısı çökmüş gibi görünüyor."
 
 #, python-format
 msgid ""
@@ -2748,180 +2645,180 @@ msgid ""
 "STS: %s\n"
 "ERROR CODE: %r"
 msgstr ""
+"\"%s\" video oynatıcısı düzgün çalışmıyor gibi görünüyor.\n"
+"\n"
+"STS: %s\n"
+"HATA KODU: %r"
 
 msgid "It seems that unrar utility is not installed."
-msgstr ""
+msgstr "unrar aracı yüklü değil gibi görünüyor."
 
 msgid "It seems that unzip utility is not installed."
-msgstr ""
+msgstr "unzip aracı yüklü değil gibi görünüyor."
 
 msgid "Italian"
 msgstr "İtalyanca"
 
 #, python-format
 msgid "Item idx[%d] not found in group[%s]."
-msgstr ""
+msgstr "idx[%d] öğesi grup[%s] içinde bulunamadı."
 
 #, python-format
 msgid "Items in group \"%s\""
-msgstr ""
+msgstr "\"%s\" grubundaki öğeler"
 
-#, fuzzy
 msgid "JDownloader script execution"
-msgstr "İndirme konumu"
+msgstr "JDownloader betiği çalıştırma"
 
 #, python-format
 msgid ""
 "JDownloader script execution failed.\n"
 "Error code: %s\n"
 msgstr ""
+"JDownloader betiği çalıştırılamadı.\n"
+"Hata kodu: %s\n"
 
 msgid "JDownloader script finished."
-msgstr ""
+msgstr "JDownloader betiği tamamlandı."
 
 msgid "JS cache"
-msgstr ""
+msgstr "JS önbelleği"
 
 msgid "Japanese"
-msgstr ""
+msgstr "Japonca"
 
 msgid "Japanese dramas"
-msgstr ""
+msgstr "Japon dramaları"
 
 msgid "Japanese films"
-msgstr ""
+msgstr "Japon filmleri"
 
 msgid "Jobs & Positions"
-msgstr ""
+msgstr "İşler ve pozisyonlar"
 
 msgid "Journal Club"
-msgstr ""
+msgstr "Makale kulübü"
 
 msgid "Jump"
-msgstr ""
+msgstr "Atla"
 
 msgid "Jump target was fixed so the sort order is preserved."
-msgstr ""
+msgstr "Sıralama korunsun diye atlama hedefi sabitlendi."
 
 msgid "Jump to a selected page"
-msgstr ""
+msgstr "Seçilen sayfaya atla"
 
 msgid "Jump to a selected page, max: {}"
-msgstr ""
+msgstr "Seçilen sayfaya atla, en fazla: {}"
 
 msgid "Keep FFmpeg command files (.iptv.cmd)"
-msgstr ""
+msgstr "FFmpeg komut dosyalarını sakla (.iptv.cmd)"
 
 msgid "Keep temporary JS scripts"
-msgstr ""
+msgstr "Geçici JS betiklerini sakla"
 
 msgid "Kids"
-msgstr ""
+msgstr "Çocuklar"
 
 msgid "Kinds"
-msgstr ""
+msgstr "Türler"
 
-#, fuzzy
 msgid "Knee & Sports"
-msgstr "Tüm Sporlar"
+msgstr "Diz ve spor"
 
 msgid "Knowledge"
-msgstr ""
+msgstr "Bilgi"
 
 msgid "Knowledge & Nature"
-msgstr ""
+msgstr "Bilgi ve doğa"
 
 msgid "Korean"
-msgstr ""
+msgstr "Korece"
 
-#, fuzzy
 msgid "Korean TV series"
-msgstr "TV dizileri"
+msgstr "Kore TV dizileri"
 
 msgid "Korean anime"
-msgstr ""
+msgstr "Kore animeleri"
 
 msgid "Korean dramas"
-msgstr ""
+msgstr "Kore dramaları"
 
 msgid "Korean films"
-msgstr ""
+msgstr "Kore filmleri"
 
 msgid "Korean movies"
-msgstr ""
+msgstr "Kore filmleri"
 
 msgid "LEFT/RIGHT at start/end of text - alternative way to switch panels"
-msgstr ""
+msgstr "Metnin başında/sonunda SOL/SAĞ - panel değiştirmenin alternatif yolu"
 
 msgid "Language"
 msgstr "Dil"
 
 msgid "Language of the details (TMDb, IMDb)"
-msgstr ""
+msgstr "Ayrıntıların dili (TMDb, IMDb)"
 
 msgid "Language:"
 msgstr "Dil:"
 
 msgid "Last"
-msgstr ""
+msgstr "Son"
 
 #, python-format
 msgid "Last Exception error: \"%s\""
-msgstr ""
+msgstr "Son istisna hatası: \"%s\""
 
 #, python-format
 msgid "Last Exception error: '%s'"
-msgstr ""
+msgstr "Son istisna hatası: '%s'"
 
 #, python-format
 msgid "Last Modified: %s"
-msgstr ""
+msgstr "Son değişiklik: %s"
 
-#, fuzzy
 msgid "Last air date:"
-msgstr "Son eklenenler"
+msgstr "Son yayın tarihi:"
 
 msgid "Last chance"
-msgstr ""
+msgstr "Son şans"
 
-#, fuzzy
 msgid "Last day"
-msgstr "Güne göre listele"
+msgstr "Son gün"
 
 #, python-format
 msgid ""
 "Last error:\n"
 "%s"
 msgstr ""
+"Son hata:\n"
+"%s"
 
 #, python-format
 msgid "Last error: \"%s\""
-msgstr ""
+msgstr "Son hata: \"%s\""
 
 msgid "Last month"
-msgstr ""
+msgstr "Geçen ay"
 
-#, fuzzy
 msgid "Last result"
-msgstr "En son"
+msgstr "Son sonuç"
 
-#, fuzzy
 msgid "Last week"
-msgstr "bir hafta sonra"
+msgstr "Geçen hafta"
 
 msgid "Last.fm charts and tag pages are behind a browser check, only the radio stations can be used."
-msgstr ""
+msgstr "Last.fm listeleri ve etiket sayfaları bir tarayıcı kontrolünün arkasında, yalnızca radyo istasyonları kullanılabilir."
 
 #, python-format
 msgid "Last.fm user \"%s\" not found."
-msgstr ""
+msgstr "Last.fm kullanıcısı \"%s\" bulunamadı."
 
 msgid "Last.fm user name:"
-msgstr ""
+msgstr "Last.fm kullanıcı adı:"
 
-#, fuzzy
 msgid "Lastest"
-msgstr "En son"
+msgstr "En yeniler"
 
 msgid "Latest"
 msgstr "En son"
@@ -2930,212 +2827,195 @@ msgid "Latest added"
 msgstr "Son eklenenler"
 
 msgid "Latest anime episodes"
-msgstr ""
+msgstr "En yeni anime bölümleri"
 
 msgid "Latest cartoon episodes"
-msgstr ""
+msgstr "En yeni çizgi film bölümleri"
 
 msgid "Latest dubbed episodes"
-msgstr ""
+msgstr "En yeni dublajlı bölümler"
 
 msgid "Latest episodes"
-msgstr ""
+msgstr "En yeni bölümler"
 
 msgid "Latest episodes (airing)"
-msgstr ""
+msgstr "En yeni bölümler (yayında)"
 
 msgid "Latest episodes (finished series)"
-msgstr ""
+msgstr "En yeni bölümler (biten diziler)"
 
 msgid "Latest highlights"
-msgstr ""
+msgstr "En yeni özetler"
 
-#, fuzzy
 msgid "Latest update"
-msgstr "Son eklenenler"
+msgstr "Son güncelleme"
 
-#, fuzzy
 msgid "Latest updates"
-msgstr "Son eklenenler"
+msgstr "Son güncellemeler"
 
-#, fuzzy
 msgid "Latest video"
-msgstr "Son eklenenler"
+msgstr "En yeni video"
 
 msgid "Latest videos"
-msgstr ""
+msgstr "En yeni videolar"
 
 msgid "Latest videos from the channels you are subscribed to."
-msgstr ""
+msgstr "Abone olduğunuz kanallardan en yeni videolar."
 
 msgid "Latin American series"
-msgstr ""
+msgstr "Latin Amerika dizileri"
 
 msgid "Latin American series (dubbed)"
-msgstr ""
+msgstr "Latin Amerika dizileri (dublajlı)"
 
-#, fuzzy
 msgid "Latino"
-msgstr "Puan"
+msgstr "Latino"
 
 #, python-brace-format
 msgid "Launcher URI ({url} or {address} = address of the box)"
-msgstr ""
+msgstr "Başlatıcı URI ({url} veya {address} = alıcının adresi)"
 
 msgid "Law"
-msgstr ""
+msgstr "Hukuk"
 
 msgid "League and cup matches"
-msgstr ""
+msgstr "Lig ve kupa maçları"
 
 msgid "Leagues"
-msgstr ""
+msgstr "Ligler"
 
 msgid "Leagues, clubs and events"
-msgstr ""
+msgstr "Ligler, kulüpler ve etkinlikler"
 
 msgid "Lecturers"
-msgstr ""
+msgstr "Öğretim görevlileri"
 
 msgid "Left"
-msgstr ""
+msgstr "Sol"
 
 msgid "Library"
-msgstr ""
+msgstr "Kitaplık"
 
 msgid "Lifestyle"
-msgstr ""
+msgstr "Yaşam tarzı"
 
 msgid "Light / dark design"
-msgstr ""
+msgstr "Açık / koyu tasarım"
 
-#, fuzzy
 msgid "Lightgray"
-msgstr "gri"
+msgstr "Açık gri"
 
 msgid "Like the quick test, plus the checks chosen in the host settings (Debug). Takes about 20-40 minutes."
-msgstr ""
+msgstr "Hızlı test gibi, artı host ayarlarında (Debug) seçilen kontroller. Yaklaşık 20-40 dakika sürer."
 
-#, fuzzy
 msgid "Liked videos"
-msgstr "Videolara gözat"
+msgstr "Beğenilen videolar"
 
 msgid "Line Spacing"
 msgstr "Satır Aralığı"
 
-#, fuzzy
 msgid "Link"
-msgstr "Şunun bağlantıları"
+msgstr "Bağlantı"
 
 msgid "Link is not supported by the gstplayer. Please use the extelayer3 if available."
-msgstr ""
+msgstr "Bağlantı gstplayer tarafından desteklenmiyor. Varsa lütfen extelayer3 kullanın."
 
 msgid "Link protected with Google ReCaptcha v2"
-msgstr ""
+msgstr "Bağlantı Google ReCaptcha v2 ile korunuyor"
 
-#, fuzzy
 msgid "Link protected with google recaptcha v2."
-msgstr "%s, Google reCAPTCHA v2 ile korunuyor. API sürümünü kullanmayı deneyebilirsin."
+msgstr "Bağlantı google recaptcha v2 ile korunuyor."
 
 msgid "Links from all files without categories"
-msgstr ""
+msgstr "Kategorisiz tüm dosyalardaki bağlantılar"
 
 #, python-format
 msgid "Links from the file %s"
-msgstr ""
+msgstr "%s dosyasındaki bağlantılar"
 
-#, fuzzy
 msgid "List"
-msgstr "En çok görüntülenen"
+msgstr "Liste"
 
 msgid "List by day"
 msgstr "Güne göre listele"
 
-#, fuzzy
 msgid "List view"
-msgstr "En çok görüntülenen"
+msgstr "Liste görünümü"
 
 #, python-format
 msgid "Listeners: %s"
-msgstr ""
+msgstr "Dinleyiciler: %s"
 
 msgid "Live"
 msgstr "Canlı"
 
-#, fuzzy
 msgid "Live channels"
-msgstr "TV kanalları"
+msgstr "Canlı kanallar"
 
 msgid "Live radio"
-msgstr ""
+msgstr "Canlı radyo"
 
 #, python-format
 msgid "Live stream of the %s channel"
-msgstr ""
+msgstr "%s kanalının canlı yayını"
 
 msgid "Live stream on YouTube"
-msgstr ""
+msgstr "YouTube'da canlı yayın"
 
 #, python-format
 msgid "Live stream starts %s"
-msgstr ""
+msgstr "Canlı yayın başlangıcı %s"
 
 msgid "Live streams"
-msgstr "Canlı akışlar"
+msgstr "Canlı yayınlar"
 
 msgid "Live streams by day"
-msgstr ""
+msgstr "Güne göre canlı yayınlar"
 
 msgid "Live-action series episodes"
-msgstr ""
+msgstr "Live-action dizi bölümleri"
 
 msgid "Load"
 msgstr "Yükle"
 
 #, python-format
 msgid "Load of the Virtual Keyboard layout \"%s\" failed due to the following error: \"%s\""
-msgstr ""
+msgstr "\"%s\" sanal klavye düzeni şu hata nedeniyle yüklenemedi: \"%s\""
 
 msgid "Loading"
 msgstr "Yükleniyor"
 
 #, python-format
 msgid "Loading %s failed due to following error:"
-msgstr ""
+msgstr "%s şu hata nedeniyle yüklenemedi:"
 
-#, fuzzy
 msgid "Loading failed."
-msgstr "Giriş başarısız."
+msgstr "Yükleme başarısız."
 
-#, fuzzy
 msgid "Loading watch data..."
-msgstr "Önbellek verileri klasörü"
+msgstr "İzleme verileri yükleniyor..."
 
-#, fuzzy
 msgid "Loading..."
-msgstr "Yükleniyor"
+msgstr "Yükleniyor..."
 
-#, fuzzy
 msgid "LocalMedia"
-msgstr "Yerelleştirme"
+msgstr "LocalMedia"
 
 #, python-format
 msgid "Locale ID mismatched! %s <> %s"
-msgstr ""
+msgstr "Yerel ayar kimliği uyuşmuyor! %s <> %s"
 
-#, fuzzy
 msgid "Locality:"
-msgstr "Kalite:"
+msgstr "Konum:"
 
 msgid "Localization"
 msgstr "Yerelleştirme"
 
 msgid "Lodynet offers this video only on its subscription servers (Lody Plus / VIP) for now - the free servers usually follow later."
-msgstr ""
+msgstr "Lodynet bu videoyu şimdilik yalnızca abonelik sunucularında (Lody Plus / VIP) sunuyor - ücretsiz sunucular genellikle daha sonra gelir."
 
-#, fuzzy
 msgid "Log"
-msgstr "Günlükler"
+msgstr "Günlük"
 
 msgid "Login failed!"
 msgstr "Giriş başarısız!"
@@ -3143,35 +3023,36 @@ msgstr "Giriş başarısız!"
 msgid "Login failed."
 msgstr "Giriş başarısız."
 
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Login on {0} failed."
-msgstr "Giriş başarısız."
+msgstr "{0} üzerinde giriş başarısız."
 
 msgid "Login or password is wrong."
-msgstr ""
+msgstr "Kullanıcı adı veya şifre yanlış."
 
 #, python-format
 msgid "Login to prijevodi-online.org failed: %s"
-msgstr ""
+msgstr "prijevodi-online.org girişi başarısız: %s"
 
 msgid "Login to prijevodi-online.org failed: the site asks for a captcha, which E2iPlayer cannot solve. Series subtitles download without an account."
-msgstr ""
+msgstr "prijevodi-online.org girişi başarısız: site, E2iPlayer'ın çözemediği bir captcha istiyor. Dizi altyazıları hesap olmadan indirilir."
 
 #, python-format
 msgid ""
 "Login user \"%s\" to https://vk.com/ failed!\n"
 "Please check your login data in the IPTVPlayer configuration."
 msgstr ""
+"\"%s\" kullanıcısının https://vk.com/ girişi başarısız!\n"
+"Lütfen IPTVPlayer yapılandırmasındaki giriş bilgilerinizi kontrol edin."
 
 msgid "Logs"
 msgstr "Günlükler"
 
-#, fuzzy
 msgid "Long list"
-msgstr "Anime listesi"
+msgstr "Uzun liste"
 
 msgid "Longest"
-msgstr ""
+msgstr "En uzun"
 
 msgid "Low"
 msgstr "Düşük"
@@ -3180,140 +3061,129 @@ msgid "MENU"
 msgstr "MENÜ"
 
 msgid "MENU → Add new entry: type a new search term to add to the history."
-msgstr ""
+msgstr "MENU → Yeni giriş ekle: geçmişe eklemek için yeni bir arama terimi yazın."
 
 msgid "MENU → Enable/Disable reordering: same as GREEN (pick up/move/drop with OK, UP/DOWN)."
-msgstr ""
+msgstr "MENU → Yeniden sıralamayı etkinleştir/devre dışı bırak: YEŞİL ile aynı (OK, YUKARI/AŞAĞI ile al/taşı/bırak)."
 
 msgid "MENU → Fix/Unfix jump target: sets what happens when an entry is reused elsewhere."
-msgstr ""
+msgstr "MENU → Atlama hedefini sabitle/çöz: bir giriş başka yerde tekrar kullanıldığında ne olacağını belirler."
 
 msgid "MENU → Reset to saved order: undo unsaved changes, reload from disk."
-msgstr ""
+msgstr "MENU → Kayıtlı sıraya sıfırla: kaydedilmemiş değişiklikleri geri al, diskten yeniden yükle."
 
 msgid "MENU → Sort A-Z / Sort Z-A: sort all entries alphabetically."
-msgstr ""
+msgstr "MENU → A-Z sırala / Z-A sırala: tüm girişleri alfabetik sırala."
 
-#, fuzzy
 msgid "MENU=Options"
-msgstr "Video seçenekleri"
+msgstr "MENU=Seçenekler"
 
 #, python-format
 msgid "MOVE: %s"
-msgstr ""
+msgstr "TAŞI: %s"
 
 msgid "MOVING"
-msgstr ""
+msgstr "TAŞINIYOR"
 
 msgid "MP3Quran live radio"
-msgstr ""
+msgstr "MP3Quran canlı radyo"
 
 msgid "Main"
-msgstr "Ana"
+msgstr "Ana sayfa"
 
 msgid "Main menu"
 msgstr "Ana menü"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Make directory [%s]"
-msgstr "Dizin seç"
+msgstr "[%s] klasörünü oluştur"
 
 msgid "Manager status:"
 msgstr "Yönetici durumu:"
 
 msgid "Mark downloaded items"
-msgstr ""
+msgstr "İndirilen öğeleri işaretle"
 
-#, fuzzy
 msgid "Mark favourite items"
-msgstr "Favorileri düzenle"
+msgstr "Favori öğeleri işaretle"
 
-#, fuzzy
 msgid "Match cuts"
-msgstr "Captcha çözme servisi"
+msgstr "Maç kesitleri"
 
 msgid "Match not started yet"
-msgstr ""
+msgstr "Maç henüz başlamadı"
 
 msgid "Matches of the national teams"
-msgstr ""
+msgstr "Milli takım maçları"
 
-#, fuzzy
 msgid "Matching entries"
-msgstr "Captcha çözme servisi"
+msgstr "Eşleşen girişler"
 
 msgid "Max items per page"
 msgstr "Sayfa başına en fazla öğe"
 
 msgid "Max number of parallel downloads has been reached."
-msgstr ""
+msgstr "En fazla paralel indirme sayısına ulaşıldı."
 
-#, fuzzy
 msgid "Maximum log file size"
-msgstr "Dosya boyutunu göster"
+msgstr "En fazla günlük dosyası boyutu"
 
 msgid "Medtryx Marketing"
-msgstr ""
+msgstr "Medtryx Marketing"
 
-#, fuzzy
 msgid "Meetings"
-msgstr "Ayarlar"
+msgstr "Toplantılar"
 
 msgid "Members"
-msgstr ""
+msgstr "Üyeler"
 
 msgid "Menu"
 msgstr "Menü"
 
 msgid "Military"
-msgstr ""
+msgstr "Askeri"
 
 msgid "Mini series"
-msgstr ""
+msgstr "Mini diziler"
 
 msgid "Missed"
-msgstr ""
+msgstr "Kaçırılanlar"
 
 msgid "Missed the show?"
-msgstr ""
+msgstr "Programı kaçırdınız mı?"
 
 msgid "Missing API key - set it in Settings, Web streams, Windy Webcams"
-msgstr ""
+msgstr "API anahtarı eksik - Ayarlar, Web yayınları, Windy Webcams altında ayarlayın"
 
 msgid "Mix"
-msgstr ""
+msgstr "Karışık"
 
 msgid "MixDrop: this file is not available as a video stream (deleted or download only)."
-msgstr ""
+msgstr "MixDrop: bu dosya video yayını olarak mevcut değil (silinmiş veya yalnızca indirilebilir)."
 
 msgid "Mixes"
-msgstr ""
+msgstr "Karışımlar"
 
-#, fuzzy
 msgid "Models"
-msgstr "Sıralama modu"
+msgstr "Modeller"
 
 msgid "More"
 msgstr "Daha fazla"
 
-#, fuzzy
 msgid "More Categories"
-msgstr "Kategoriler"
+msgstr "Daha fazla kategori"
 
-#, fuzzy
 msgid "More Channels"
-msgstr "Kanallar"
+msgstr "Daha fazla kanal"
 
-#, fuzzy
 msgid "More Models"
-msgstr "Sıralama modu"
+msgstr "Daha fazla model"
 
-#, fuzzy
 msgid "More Pornstars"
-msgstr "Daha fazla sonuç"
+msgstr "Daha fazla porno yıldızı"
 
 msgid "More important"
-msgstr ""
+msgstr "Daha önemli"
 
 msgid "More results"
 msgstr "Daha fazla sonuç"
@@ -3321,46 +3191,41 @@ msgstr "Daha fazla sonuç"
 msgid "Most Popular"
 msgstr "En Popüler"
 
-#, fuzzy
 msgid "Most Watched"
-msgstr "En yüksek puanlı"
+msgstr "En çok izlenenler"
 
-#, fuzzy
 msgid "Most commented"
-msgstr "En güncel"
+msgstr "En çok yorumlananlar"
 
-#, fuzzy
 msgid "Most discussed"
-msgstr "En çok görüntülenen"
+msgstr "En çok tartışılanlar"
 
-#, fuzzy
 msgid "Most favourited"
-msgstr "En yüksek puanlı"
+msgstr "En çok favorilenenler"
 
 msgid "Most listened anasheed"
-msgstr ""
+msgstr "En çok dinlenen neşideler"
 
 msgid "Most listened recitations"
-msgstr ""
+msgstr "En çok dinlenen tilavetler"
 
 msgid "Most popular"
 msgstr "En popüler"
 
-#, fuzzy
 msgid "Most rated"
-msgstr "En yüksek puanlı"
+msgstr "En çok oylananlar"
 
 msgid "Most recent"
-msgstr "En güncel"
+msgstr "En yeni"
 
 msgid "Most viewed"
 msgstr "En çok görüntülenen"
 
 msgid "Most viewed movies"
-msgstr ""
+msgstr "En çok izlenen filmler"
 
 msgid "Most viewed series"
-msgstr ""
+msgstr "En çok izlenen diziler"
 
 #, python-format
 msgid ""
@@ -3368,103 +3233,104 @@ msgid ""
 "Return code[%s].\n"
 "Return data[%s]."
 msgstr ""
+"ISO dosyası [%s], [%s] üzerine bağlanamadı.\n"
+"Dönüş kodu[%s].\n"
+"Dönüş verisi[%s]."
 
 msgid "Move"
-msgstr ""
+msgstr "Taşı"
 
-#, fuzzy
 msgid "Move failed."
-msgstr "Giriş başarısız."
+msgstr "Taşıma başarısız."
 
 msgid "Movie"
 msgstr "Film"
 
 msgid "Movie collections"
-msgstr ""
+msgstr "Film koleksiyonları"
 
-#, fuzzy
 msgid "Movie player selection list"
-msgstr "IPTVPlayer'ı uzantı listesinde göster"
+msgstr "Film oynatıcı seçim listesi"
 
 msgid "Movies"
 msgstr "Filmler"
 
-#, fuzzy
 msgid "Movies and series"
-msgstr "Devre dışı servisleri kaldır"
+msgstr "Filmler ve diziler"
 
-#, fuzzy
 msgid "Movies genres"
-msgstr "Filmler"
+msgstr "Film türleri"
 
 #, python-format
 msgid "Moving file from \"%s\" to \"%s\" failed.\n"
-msgstr ""
+msgstr "Dosya \"%s\" konumundan \"%s\" konumuna taşınamadı.\n"
 
 #, python-format
 msgid "Moving playback buffer to the download manager failed with the following error \"%s\""
-msgstr ""
+msgstr "Oynatma arabelleği indirme yöneticisine taşınamadı, hata: \"%s\""
 
 msgid "Munshids"
-msgstr ""
+msgstr "Münşitler"
 
 msgid "Music"
 msgstr "Müzik"
 
 msgid "My JDownloader reCAPTCHA v2 solution"
-msgstr ""
+msgstr "My JDownloader reCAPTCHA v2 çözümü"
 
-#, fuzzy
 msgid "My list"
-msgstr "Oynatma listesi"
+msgstr "Listem"
 
-#, fuzzy
 msgid "My subscriptions"
-msgstr "Açıklama:"
+msgstr "Aboneliklerim"
 
 msgid "MyE2i (solve on your phone/PC)"
-msgstr ""
+msgstr "MyE2i (telefonunuzda/PC'nizde çözün)"
 
 msgid "MyE2i - how to solve a captcha"
-msgstr ""
+msgstr "MyE2i - captcha nasıl çözülür"
 
 msgid "MyE2i Cloudflare solution"
-msgstr ""
+msgstr "MyE2i Cloudflare çözümü"
 
 msgid "MyE2i browser check solution"
-msgstr ""
+msgstr "MyE2i tarayıcı kontrolü çözümü"
 
 msgid "MyE2i debug snapshot received - see the debug log."
-msgstr ""
+msgstr "MyE2i hata ayıklama anlık görüntüsü alındı - hata ayıklama günlüğüne bakın."
 
 msgid "MyE2i extension is outdated - please update it."
-msgstr ""
+msgstr "MyE2i eklentisi güncel değil - lütfen güncelleyin."
 
 msgid "MyE2i extension: increase security"
-msgstr ""
+msgstr "MyE2i eklentisi: güvenliği artır"
 
 msgid "MyE2i reCAPTCHA solution"
-msgstr ""
+msgstr "MyE2i reCAPTCHA çözümü"
 
 #, python-format
 msgid ""
 "MyE2i script execution failed.\n"
 "Error code: %s\n"
 msgstr ""
+"MyE2i betiği çalıştırılamadı.\n"
+"Hata kodu: %s\n"
 
 msgid "MyE2i script finished."
-msgstr ""
+msgstr "MyE2i betiği tamamlandı."
 
 msgid "MyE2i: close the start page when done"
-msgstr ""
+msgstr "MyE2i: bitince başlangıç sayfasını kapat"
 
 msgid "MyE2i: offer to open the page in (Android)"
-msgstr ""
+msgstr "MyE2i: sayfayı şurada açmayı öner (Android)"
 
 msgid ""
 "NO VIDEOS FOUND FOR NOW! \n"
 "CHECK BELOW ADVANCE SEARCH RESULTS!"
 msgstr ""
+"ŞU AN İÇİN VİDEO BULUNAMADI! \n"
+"AŞAĞIDAKİ GELİŞMİŞ ARAMA SONUÇLARINA BAKIN!"
 
 msgid "Name cannot be empty."
 msgstr "Ad boş olamaz."
@@ -3473,75 +3339,75 @@ msgid ""
 "Name is not valid.\n"
 "Please remove special characters."
 msgstr ""
+"Ad geçerli değil.\n"
+"Lütfen özel karakterleri kaldırın."
 
 msgid "Name:"
 msgstr "Ad:"
 
 msgid "Needs extension v1.18+. Opens the page in this browser, waits until it is fully rendered (Cloudflare challenge included, solve it if it shows up) and sends the rendered HTML, the fetch/XHR calls and the cookie names to the box debug log."
-msgstr ""
+msgstr "Eklenti v1.18+ gerektirir. Sayfayı bu tarayıcıda açar, tamamen işlenene kadar bekler (Cloudflare doğrulaması dahil, çıkarsa çözün) ve işlenmiş HTML'yi, fetch/XHR çağrılarını ve çerez adlarını alıcının hata ayıklama günlüğüne gönderir."
 
 msgid "Netflix movies"
-msgstr ""
+msgstr "Netflix filmleri"
 
 msgid "Netflix series"
-msgstr ""
+msgstr "Netflix dizileri"
 
 msgid "Network"
-msgstr ""
+msgstr "Ağ"
 
 #, python-format
 msgid "Network failed %s."
-msgstr ""
+msgstr "Ağ hatası %s."
 
 msgid "Network failure (receive)."
-msgstr ""
+msgstr "Ağ hatası (alma)."
 
 msgid "Network failure (send)."
-msgstr ""
+msgstr "Ağ hatası (gönderme)."
 
-#, fuzzy
 msgid "Network failure."
-msgstr "Giriş başarısız!"
+msgstr "Ağ hatası."
 
 msgid "New"
 msgstr "Yeni"
 
 msgid "New dir"
-msgstr ""
+msgstr "Yeni klasör"
 
 msgid "New entry"
-msgstr ""
+msgstr "Yeni giriş"
 
 msgid "New episodes"
-msgstr ""
+msgstr "Yeni bölümler"
 
 msgid "New icons will not be available."
-msgstr ""
+msgstr "Yeni simgeler kullanılamayacak."
 
 msgid "New links"
-msgstr ""
+msgstr "Yeni bağlantılar"
 
 msgid "New since installed version"
-msgstr ""
+msgstr "Yüklü sürümden bu yana yeni"
 
-#, fuzzy
 msgid "Newest Episodes"
-msgstr "Bölümler"
+msgstr "En yeni bölümler"
 
 msgid "Newest videos (all YouTube channels)"
-msgstr ""
+msgstr "En yeni videolar (tüm YouTube kanalları)"
 
 msgid "Newest videos of a YouTube channel in a group"
-msgstr ""
+msgstr "Bir gruptaki YouTube kanalının en yeni videoları"
 
 msgid "News"
 msgstr "Haberler"
 
 msgid "News (tagesschau)"
-msgstr ""
+msgstr "Haberler (tagesschau)"
 
 msgid "News Poland"
-msgstr ""
+msgstr "Polonya haberleri"
 
 msgid "Next"
 msgstr "Sonraki"
@@ -3553,232 +3419,227 @@ msgid "No"
 msgstr "Hayır"
 
 msgid "No YouTube video found for this track."
-msgstr ""
+msgstr "Bu parça için YouTube videosu bulunamadı."
 
 msgid "No channels with an archive on this portal."
-msgstr ""
+msgstr "Bu portalda arşivi olan kanal yok."
 
-#, fuzzy
 msgid "No description available."
-msgstr "Geçerli bağlantı yok."
+msgstr "Açıklama mevcut değil."
 
 msgid "No episodes available yet."
-msgstr ""
+msgstr "Henüz bölüm mevcut değil."
 
 msgid "No episodes found."
-msgstr ""
+msgstr "Bölüm bulunamadı."
 
 msgid "No free player available for this title."
-msgstr ""
+msgstr "Bu başlık için ücretsiz oynatıcı mevcut değil."
 
 msgid "No free videos or live streams here at the moment."
-msgstr ""
+msgstr "Şu anda burada ücretsiz video veya canlı yayın yok."
 
 msgid "No host is open."
-msgstr ""
+msgstr "Açık host yok."
 
 msgid ""
 "No item to display. \n"
 "Press OK to refresh.\n"
 msgstr ""
+"Gösterilecek öğe yok. \n"
+"Yenilemek için OK'e basın.\n"
 
 msgid "No items found"
-msgstr ""
+msgstr "Öğe bulunamadı"
 
 msgid "No matching entries found."
-msgstr ""
+msgstr "Eşleşen giriş bulunamadı."
 
 msgid "No player found for this title."
-msgstr ""
+msgstr "Bu başlık için oynatıcı bulunamadı."
 
 msgid "No problems occurred."
-msgstr ""
+msgstr "Herhangi bir sorun oluşmadı."
 
 msgid "No programme guide for this channel."
-msgstr ""
+msgstr "Bu kanal için yayın akışı yok."
 
 msgid "No recorded programmes on this day."
-msgstr ""
+msgstr "Bu gün için kayıtlı program yok."
 
 msgid "No replays in these days"
-msgstr ""
+msgstr "Bu günlerde tekrar yok"
 
 #, python-format
 msgid "No results found for: %s"
-msgstr ""
+msgstr "Şunun için sonuç bulunamadı: %s"
 
 msgid "No self-test result yet."
-msgstr ""
+msgstr "Henüz kendi kendine test sonucu yok."
 
 msgid "No storage found for the cache folder. The cache folder will be switched to the plugin's own cache directory."
-msgstr ""
+msgstr "Önbellek klasörü için depolama bulunamadı. Önbellek klasörü eklentinin kendi önbellek klasörüne geçirilecek."
 
 msgid "No storage found for the downloads location. Where would you like to save your downloads?"
-msgstr ""
+msgstr "İndirme konumu için depolama bulunamadı. İndirmelerinizi nereye kaydetmek istersiniz?"
 
-#, fuzzy
 msgid "No stream available"
-msgstr "Biyografi yok"
+msgstr "Yayın mevcut değil"
 
 msgid "No streams are available for this title yet."
-msgstr ""
+msgstr "Bu başlık için henüz yayın mevcut değil."
 
 msgid "No subtitle file found in the archive."
-msgstr ""
+msgstr "Arşivde altyazı dosyası bulunamadı."
 
 msgid "No subtitles available for this title."
-msgstr ""
+msgstr "Bu başlık için altyazı mevcut değil."
 
 msgid "No subtitles found."
-msgstr ""
+msgstr "Altyazı bulunamadı."
 
 #, python-format
 msgid "No subtitles in %s. Available: %s"
-msgstr ""
+msgstr "%s dilinde altyazı yok. Mevcut: %s"
 
 msgid "No title to search for."
-msgstr ""
+msgstr "Aranacak başlık yok."
 
 msgid "No valid entitlement found for asset."
-msgstr ""
+msgstr "İçerik için geçerli bir erişim hakkı bulunamadı."
 
 msgid "No valid links available."
 msgstr "Geçerli bağlantı yok."
 
-#, fuzzy
 msgid "No video ID available"
-msgstr "Geçerli bağlantı yok."
+msgstr "Video kimliği mevcut değil"
 
 msgid "None"
 msgstr "Yok"
 
 msgid "Normalize item / file names (Show - SxxExx - Title)"
-msgstr ""
+msgstr "Öğe / dosya adlarını normalleştir (Dizi - SxxExx - Başlık)"
 
 msgid "Not available in your country (geo-blocking)."
-msgstr ""
+msgstr "Ülkenizde mevcut değil (coğrafi engelleme)."
 
-#, fuzzy
 msgid "Not available yet"
-msgstr "Geçerli bağlantı yok."
+msgstr "Henüz mevcut değil"
 
 msgid "Not possible (no enigma2 session)."
-msgstr ""
+msgstr "Mümkün değil (enigma2 oturumu yok)."
 
 msgid "Nothing available here at the moment (only upcoming broadcasts)."
-msgstr ""
+msgstr "Şu anda burada mevcut bir şey yok (yalnızca yaklaşan yayınlar)."
 
 msgid "Nothing found on subdl.com."
-msgstr ""
+msgstr "subdl.com üzerinde hiçbir şey bulunamadı."
 
 msgid "Nothing found. This site only finds Russian (Cyrillic) search terms."
-msgstr ""
+msgstr "Hiçbir şey bulunamadı. Bu site yalnızca Rusça (Kiril) arama terimlerini bulur."
 
 msgid "Nothing open"
-msgstr ""
+msgstr "Açık bir şey yok"
 
 msgid "Nothing to save - the debug log is not active."
-msgstr ""
+msgstr "Kaydedilecek bir şey yok - hata ayıklama günlüğü etkin değil."
 
-#, fuzzy
 msgid "Now"
-msgstr "Hayır"
+msgstr "Şimdi"
 
 msgid "Number of columns"
 msgstr "Sütun sayısı"
 
 msgid "Number of downloaded files simultaneously"
-msgstr ""
+msgstr "Aynı anda indirilen dosya sayısı"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Number of items in search history: %d"
-msgstr "Arama geçmişini sil"
+msgstr "Arama geçmişindeki öğe sayısı: %d"
 
 msgid "Number of rotated files to keep"
-msgstr ""
+msgstr "Saklanacak döndürülmüş dosya sayısı"
 
 msgid "Number of rows"
 msgstr "Satır sayısı"
 
 msgid "Numeric keypad for numbers"
-msgstr ""
+msgstr "Sayılar için sayısal tuş takımı"
 
 msgid "OFFLINE"
-msgstr ""
+msgstr "ÇEVRİMDIŞI"
 
 msgid "OK"
 msgstr "Tamam"
 
 msgid "OMDb API key (free at omdbapi.com)"
-msgstr ""
+msgstr "OMDb API anahtarı (omdbapi.com'da ücretsiz)"
 
 msgid "Off"
-msgstr ""
+msgstr "Kapalı"
 
-#, fuzzy
 msgid "Offline channels"
-msgstr "TV kanalları"
+msgstr "Çevrimdışı kanallar"
 
-#, fuzzy
 msgid "Older days"
-msgstr "bir gün sonra"
+msgstr "Daha eski günler"
 
 msgid "Older replays"
-msgstr ""
+msgstr "Daha eski tekrarlar"
 
 msgid "On Air"
 msgstr "Yayında"
 
 msgid "One link mode"
-msgstr ""
+msgstr "Tek bağlantı modu"
 
 #, python-format
 msgid "Only available in %s"
-msgstr ""
+msgstr "Yalnızca %s içinde mevcut"
 
 msgid "Only files in the downloads folder can be deleted."
-msgstr ""
+msgstr "Yalnızca indirme klasöründeki dosyalar silinebilir."
 
 msgid "Only links can be moved to a group."
-msgstr ""
+msgstr "Bir gruba yalnızca bağlantılar taşınabilir."
 
 #, python-format
 msgid "Only the %d oldest new commits are shown"
-msgstr ""
+msgstr "Yalnızca en eski %d yeni commit gösteriliyor"
 
 msgid "Only the sites that failed in the last run, same checks."
-msgstr ""
+msgstr "Yalnızca son çalıştırmada başarısız olan siteler, aynı kontroller."
 
 #, python-format
 msgid "Only unsupported hosters available: %s"
-msgstr ""
+msgstr "Yalnızca desteklenmeyen hoster'lar mevcut: %s"
 
 msgid "Open issues"
-msgstr ""
+msgstr "Açık sorunlar"
 
 msgid "Open pull requests"
-msgstr ""
+msgstr "Açık pull request'ler"
 
 #, python-format
 msgid "Open this page in %s"
-msgstr ""
+msgstr "Bu sayfayı %s içinde aç"
 
 msgid "Open this page in the chosen browser"
-msgstr ""
+msgstr "Bu sayfayı seçilen tarayıcıda aç"
 
 #, python-format
 msgid "OpenSubtitles.com login failed for user \"%s\". Please check your login and password."
-msgstr ""
+msgstr "OpenSubtitles.com girişi \"%s\" kullanıcısı için başarısız. Lütfen kullanıcı adınızı ve şifrenizi kontrol edin."
 
 msgid "OpenSubtitles.com needs an API key. Create a free API consumer at https://www.opensubtitles.com/consumers and enter its key in the E2iPlayer settings (Subtitles)."
-msgstr ""
+msgstr "OpenSubtitles.com bir API anahtarı gerektirir. https://www.opensubtitles.com/consumers adresinde ücretsiz bir API consumer oluşturun ve anahtarını E2iPlayer ayarlarına (Altyazılar) girin."
 
 #, python-format
 msgid "OpenSubtitles.com rejected the request (HTTP %s). Please check the API key in the E2iPlayer settings."
-msgstr ""
+msgstr "OpenSubtitles.com isteği reddetti (HTTP %s). Lütfen E2iPlayer ayarlarındaki API anahtarını kontrol edin."
 
 msgid "OpenSubtitles.org sent a \"become VIP member\" note instead of the subtitle (download limit reached?)."
-msgstr ""
+msgstr "OpenSubtitles.org altyazı yerine bir \"VIP üye olun\" notu gönderdi (indirme sınırına ulaşıldı mı?)."
 
 msgid "Opening. Please wait..."
 msgstr "Açılıyor. Lütfen bekleyin..."
@@ -3786,189 +3647,185 @@ msgstr "Açılıyor. Lütfen bekleyin..."
 msgid "Operation aborted!"
 msgstr "İşlem iptal edildi!"
 
-#, fuzzy
 msgid "Operation timed out."
-msgstr "İşlem iptal edildi!"
+msgstr "İşlem zaman aşımına uğradı."
 
-#, fuzzy
 msgid "Options"
-msgstr "Video seçenekleri"
+msgstr "Seçenekler"
 
 msgid "Options (select language, clear search history, settings)"
-msgstr ""
+msgstr "Seçenekler (dil seçimi, arama geçmişini temizle, ayarlar)"
 
-#, fuzzy
 msgid "Order of user links:"
-msgstr "Bağlantı önbelleğini kullan"
+msgstr "Kullanıcı bağlantılarının sırası:"
 
 msgid "Order stays fixed - useful for T9 browsing."
-msgstr ""
+msgstr "Sıra sabit kalır - T9 ile gezinme için kullanışlı."
 
 msgid "Original Title:"
-msgstr ""
+msgstr "Orijinal başlık:"
 
 #, python-format
 msgid "Original language: %s"
-msgstr ""
+msgstr "Orijinal dil: %s"
 
 msgid "Original title"
-msgstr ""
+msgstr "Orijinal başlık"
 
 msgid "Original version"
-msgstr ""
+msgstr "Orijinal sürüm"
 
 msgid "Other"
 msgstr "Diğer"
 
 msgid "Other dramas (Chinese, Thai, ...)"
-msgstr ""
+msgstr "Diğer dramalar (Çin, Tayland, ...)"
 
 msgid "Other films"
-msgstr ""
+msgstr "Diğer filmler"
 
 msgid "Other seasons"
-msgstr ""
+msgstr "Diğer sezonlar"
 
 msgid "Others"
 msgstr "Diğerleri"
 
 msgid "Out of memory."
-msgstr ""
+msgstr "Bellek yetersiz."
 
 msgid "Own launcher URI"
-msgstr ""
+msgstr "Özel başlatıcı URI"
 
 msgid "Own model"
-msgstr ""
+msgstr "Özel model"
 
 msgid "PAGE UP/PAGE DOWN"
-msgstr ""
+msgstr "SAYFA YUKARI/SAYFA AŞAĞI"
 
 msgid "PAY"
-msgstr ""
+msgstr "ÜCRETLİ"
 
 msgid "PENDING"
-msgstr ""
+msgstr "BEKLEMEDE"
 
 msgid "PLAY"
-msgstr ""
+msgstr "OYNAT"
 
 msgid "PREVIOUS/NEXT"
-msgstr ""
+msgstr "ÖNCEKİ/SONRAKİ"
 
-#, fuzzy, python-format
+#, python-format
 msgid "PRIVATE - wait %s seconds"
-msgstr "saniye"
+msgstr "ÖZEL - %s saniye bekleyin"
 
-#, fuzzy
 msgid "PRIVATE - wait a few seconds"
-msgstr "saniye"
+msgstr "ÖZEL - birkaç saniye bekleyin"
 
 msgid "Page not found - please check the address."
-msgstr ""
+msgstr "Sayfa bulunamadı - lütfen adresi kontrol edin."
 
 msgid "Page:"
-msgstr ""
+msgstr "Sayfa:"
 
 msgid "Paid content"
-msgstr ""
+msgstr "Ücretli içerik"
 
 msgid "Parse error."
-msgstr ""
+msgstr "Ayrıştırma hatası."
 
 msgid "Part"
-msgstr ""
+msgstr "Bölüm"
 
 msgid "Partial file - transfer ended early."
-msgstr ""
+msgstr "Kısmi dosya - aktarım erken sona erdi."
 
 msgid "Password:"
-msgstr "Parola:"
+msgstr "Şifre:"
 
 msgid "Past premieres"
-msgstr ""
+msgstr "Geçmiş galalar"
 
 #, python-format
 msgid "Paste \"%s\""
-msgstr ""
+msgstr "\"%s\" yapıştır"
 
 msgid "Path to xxxlist.txt :"
-msgstr ""
+msgstr "xxxlist.txt yolu :"
 
 msgid "Path to ytlist.txt, urllist.txt"
-msgstr ""
+msgstr "ytlist.txt, urllist.txt yolu"
 
 msgid "Pathology"
-msgstr ""
+msgstr "Patoloji"
 
 msgid "Pathology Rounds"
-msgstr ""
+msgstr "Patoloji vizitleri"
 
 msgid "Patriotism"
-msgstr ""
+msgstr "Vatanseverlik"
 
 msgid "Pediatrics"
-msgstr ""
+msgstr "Pediatri"
 
 msgid "People"
-msgstr ""
+msgstr "Kişiler"
 
 msgid "Persons"
-msgstr ""
+msgstr "Kişiler"
 
 msgid "Philosophy"
-msgstr ""
+msgstr "Felsefe"
 
 msgid "Physical Exam"
-msgstr ""
+msgstr "Fizik muayene"
 
 msgid "Pin has been changed."
-msgstr "Pin değiştirildi."
+msgstr "PIN değiştirildi."
 
 msgid "Pin incorrect!"
-msgstr "Pin yanlış!"
+msgstr "PIN yanlış!"
 
 msgid "Pin protection for configuration"
-msgstr ""
+msgstr "Yapılandırma için PIN koruması"
 
 msgid "Pin protection for plugin"
-msgstr ""
+msgstr "Eklenti için PIN koruması"
 
 msgid "Pin protection for this host"
-msgstr ""
+msgstr "Bu host için PIN koruması"
 
 #, python-format
 msgid "Play with [%s] player"
-msgstr ""
+msgstr "[%s] oynatıcısıyla oynat"
 
 msgid "Playback UHD :"
-msgstr ""
+msgstr "UHD oynatma :"
 
 #, python-format
 msgid "Player %s"
-msgstr ""
+msgstr "Oynatıcı %s"
 
 #, python-format
 msgid "Player %s: %s"
-msgstr ""
+msgstr "Oynatıcı %s: %s"
 
 msgid "Player Skin"
-msgstr ""
+msgstr "Oynatıcı görünümü"
 
 msgid "Player data parsing error."
-msgstr ""
+msgstr "Oynatıcı verisi ayrıştırma hatası."
 
 msgid "Playing on the TV is not possible (no enigma2 session)."
-msgstr ""
+msgstr "TV'de oynatma mümkün değil (enigma2 oturumu yok)."
 
 msgid "Playlist"
 msgstr "Oynatma listesi"
 
 msgid "Playlists"
-msgstr ""
+msgstr "Oynatma listeleri"
 
 msgid "Plays"
-msgstr ""
+msgstr "Oynatmalar"
 
 #, python-brace-format
 msgid ""
@@ -3976,354 +3833,336 @@ msgid ""
 "http://{0}:{1}\n"
 "in a web browser with the MyE2i extension installed"
 msgstr ""
+"Lütfen şu siteyi açın:\n"
+"http://{0}:{1}\n"
+"MyE2i uzantısı yüklü bir web tarayıcısında"
 
 msgid "Please configure Xtream (blue button)"
-msgstr ""
+msgstr "Lütfen Xtream'i yapılandırın (mavi tuş)"
 
 msgid "Please configure the Stalker portal (blue button)"
-msgstr ""
+msgstr "Lütfen Stalker portalını yapılandırın (mavi tuş)"
 
 #, python-format
 msgid "Please consider restart your Engima2 and agree to install the %s utlity when the %s will propose this."
-msgstr ""
+msgstr "Lütfen Enigma2'yi yeniden başlatmayı düşünün ve %s yardımcı programının kurulumunu %s önerdiğinde onaylayın."
 
-#, fuzzy
 msgid "Please enter a search text."
-msgstr "Arama geçmişini sil"
+msgstr "Lütfen bir arama metni girin."
 
 msgid "Please enter a valid link (http:// or https://)."
-msgstr ""
+msgstr "Lütfen geçerli bir bağlantı girin (http:// veya https://)."
 
 #, python-format
 msgid "Please enter the %s login and password in the E2iPlayer settings (Captcha)."
-msgstr ""
+msgstr "Lütfen %s kullanıcı adını ve şifresini E2iPlayer ayarlarına girin (Captcha)."
 
 msgid "Please make sure that the folder for cache data (set in the configuration) is writable."
-msgstr ""
+msgstr "Lütfen önbellek verileri klasörünün (yapılandırmada ayarlanan) yazılabilir olduğundan emin olun."
 
 msgid "Please register and set login and password in the host configuration, to solve this problems permanently."
-msgstr ""
+msgstr "Bu sorunu kalıcı olarak çözmek için lütfen kayıt olun ve host yapılandırmasında kullanıcı adı ile şifreyi ayarlayın."
 
-#, fuzzy
 msgid "Please select a group of favourites."
-msgstr "Yeni favori grubu ekle"
+msgstr "Lütfen bir favori grubu seçin."
 
 msgid "Please select an entry."
-msgstr ""
+msgstr "Lütfen bir giriş seçin."
 
 msgid "Please select the link first."
-msgstr ""
+msgstr "Lütfen önce bağlantıyı seçin."
 
-#, fuzzy, python-format
+#, python-format
 msgid "Please set valid %s in the %s configuration."
-msgstr "%s servis yapılandırması"
+msgstr "Lütfen %s yapılandırmasında geçerli %s ayarlayın."
 
 msgid "Please solve to continue downloads with:"
-msgstr ""
+msgstr "İndirmelere devam etmek için lütfen şununla çözün:"
 
 #, python-format
 msgid "Please visit \"%s\" and confirm that you are human."
-msgstr ""
+msgstr "Lütfen \"%s\" adresini ziyaret edin ve insan olduğunuzu onaylayın."
 
 #, python-format
 msgid "Please visit %s to learn how to redirect this task to the external device."
-msgstr ""
+msgstr "Bu görevi harici cihaza nasıl yönlendireceğinizi öğrenmek için lütfen %s adresini ziyaret edin."
 
 msgid "Please wait - downloading initialization data."
-msgstr ""
+msgstr "Lütfen bekleyin - başlatma verileri indiriliyor."
 
 msgid "Please wait for initialization data."
-msgstr ""
+msgstr "Lütfen başlatma verilerini bekleyin."
 
 msgid "Please wait, the previous action is still running."
-msgstr ""
+msgstr "Lütfen bekleyin, önceki işlem hâlâ sürüyor."
 
-#, fuzzy
 msgid "Please wait..."
-msgstr "Kapanıyor. Lütfen bekleyin..."
+msgstr "Lütfen bekleyin..."
 
 msgid "Podcasts"
 msgstr "Podcastler"
 
 msgid "Podcasts by category"
-msgstr ""
+msgstr "Kategoriye göre podcast'ler"
 
 msgid "Podcasts by station"
-msgstr ""
+msgstr "İstasyona göre podcast'ler"
 
 msgid "Poland"
-msgstr ""
+msgstr "Polonya"
 
 msgid "Polish"
 msgstr "Lehçe"
 
 msgid "Polish dubbing"
-msgstr ""
+msgstr "Lehçe dublaj"
 
 msgid "Polish films"
-msgstr ""
+msgstr "Polonya filmleri"
 
 msgid "Polish subtitles"
-msgstr ""
+msgstr "Lehçe altyazı"
 
 msgid "Polish voice-over"
-msgstr ""
+msgstr "Lehçe seslendirme"
 
 msgid "Politics"
-msgstr ""
+msgstr "Siyaset"
 
 msgid "Popular"
 msgstr "Popüler"
 
 msgid "Popular episodes"
-msgstr ""
+msgstr "Popüler bölümler"
 
 msgid "Popular movies"
-msgstr ""
+msgstr "Popüler filmler"
 
 msgid "Popular series"
-msgstr ""
+msgstr "Popüler diziler"
 
 msgid "Popular sports"
-msgstr ""
+msgstr "Popüler sporlar"
 
 msgid "Popularity"
-msgstr ""
+msgstr "Popülerlik"
 
-#, fuzzy
 msgid "Pornstars"
-msgstr "Daha fazla sonuç"
+msgstr "Porno yıldızları"
 
 #, python-format
 msgid "Portal %d - %s (optional, from the MAG box):"
-msgstr ""
+msgstr "Portal %d - %s (isteğe bağlı, MAG kutusundan):"
 
 #, python-format
 msgid "Portal %d - MAC address (00:1A:79:...):"
-msgstr ""
+msgstr "Portal %d - MAC adresi (00:1A:79:...):"
 
 #, python-format
 msgid "Portal %d - name (optional):"
-msgstr ""
+msgstr "Portal %d - ad (isteğe bağlı):"
 
 #, python-format
 msgid "Portal %d - portal URL (http://host:port/c/):"
-msgstr ""
+msgstr "Portal %d - portal URL'si (http://host:port/c/):"
 
 #, python-format
 msgid "Portal URL and MAC address in the host configuration, as the provider gives them out. More portals: %s in the EStalker format (portal URL, then its MAC addresses, one per line)."
-msgstr ""
+msgstr "Portal URL'si ve MAC adresi, sağlayıcının verdiği şekilde host yapılandırmasına girilir. Daha fazla portal: EStalker biçiminde %s (portal URL'si, ardından MAC adresleri, her satıra bir tane)."
 
 msgid "Portuguese"
-msgstr ""
+msgstr "Portekizce"
 
 msgid "Powerpoint Presentation"
-msgstr ""
+msgstr "Powerpoint sunumu"
 
-#, fuzzy
 msgid "Practice Management"
-msgstr "Servis yönetimi"
+msgstr "Muayenehane yönetimi"
 
 msgid "Prefer MP4 over HLS:"
-msgstr ""
+msgstr "HLS yerine MP4 tercih et:"
 
-#, fuzzy
 msgid "Prefered format"
-msgstr "Tercih edilen bit hızı"
+msgstr "Tercih edilen biçim"
 
-#, fuzzy
 msgid "Prefered quality"
 msgstr "Tercih edilen kalite"
 
-#, fuzzy
 msgid "Preferred streaming protocol"
-msgstr "Tercih edilen bit hızı"
+msgstr "Tercih edilen yayın protokolü"
 
-#, fuzzy
 msgid "Preferred video quality:"
-msgstr "Tercih edilen kalite"
+msgstr "Tercih edilen video kalitesi:"
 
 msgid "Premium"
-msgstr ""
+msgstr "Premium"
 
 msgid "Premium user"
-msgstr ""
+msgstr "Premium kullanıcı"
 
 msgid "Previous Page"
 msgstr "Önceki Sayfa"
 
-#, fuzzy
 msgid "Previous days"
-msgstr "Önceki Sayfa"
+msgstr "Önceki günler"
 
 msgid "Price:"
-msgstr ""
+msgstr "Fiyat:"
 
 msgid "Pro wrestling"
-msgstr ""
+msgstr "Profesyonel güreş"
 
 msgid "Production:"
-msgstr ""
+msgstr "Yapım:"
 
 msgid "Professional Networks"
-msgstr ""
+msgstr "Profesyonel ağlar"
 
 msgid "Professionals"
-msgstr ""
+msgstr "Profesyoneller"
 
 msgid "Program"
 msgstr "Program"
 
-#, fuzzy
 msgid "Program A-Z"
-msgstr "Program"
+msgstr "Programlar A-Z"
 
 msgid "Program for file downloads (HTTP/FTP)"
-msgstr ""
+msgstr "Dosya indirme programı (HTTP/FTP)"
 
 msgid "Programme archive (last 7 days)"
-msgstr ""
+msgstr "Program arşivi (son 7 gün)"
 
 msgid "Programme archive:"
-msgstr ""
+msgstr "Program arşivi:"
 
-#, fuzzy
 msgid "Programmes"
 msgstr "Programlar"
 
 msgid "Programmes of the last days of the channels with an archive"
-msgstr ""
+msgstr "Arşivi olan kanalların son günlerdeki programları"
 
-#, fuzzy
 msgid "Promote item"
-msgstr "Öğeyi kaldır"
+msgstr "Öğeyi yukarı taşı"
 
 msgid "Protocol errors."
-msgstr ""
+msgstr "Protokol hataları."
 
-#, fuzzy
 msgid "Published"
-msgstr "Lehçe"
+msgstr "Yayınlandı"
 
 msgid "Python modules"
-msgstr ""
+msgstr "Python modülleri"
 
 msgid "Python was not found on the receiver."
-msgstr ""
+msgstr "Alıcıda Python bulunamadı."
 
 msgid "Quality"
-msgstr ""
+msgstr "Kalite"
 
 msgid "Quality:"
 msgstr "Kalite:"
 
 msgid "Quick test: menu and a list with videos"
-msgstr ""
+msgstr "Hızlı test: menü ve videolu bir liste"
 
 msgid "RAM buffer size [MB] for local files"
-msgstr ""
+msgstr "Yerel dosyalar için RAM arabellek boyutu [MB]"
 
 msgid "RAM buffer size [MB] for network protocols"
-msgstr ""
+msgstr "Ağ protokolleri için RAM arabellek boyutu [MB]"
 
-#, fuzzy
 msgid "RED"
-msgstr "İPTAL EDİLDİ"
+msgstr "KIRMIZI"
 
 msgid "REWIND"
-msgstr ""
+msgstr "GERİ SAR"
 
 msgid "Radio"
 msgstr "Radyo"
 
-#, fuzzy
 msgid "Radio iframe file"
-msgstr "Dosyayı yeniden adlandır"
+msgstr "Radyo iframe dosyası"
 
 msgid "Radio station - live stream"
-msgstr ""
+msgstr "Radyo istasyonu - canlı yayın"
 
 msgid "Radio stations"
-msgstr ""
+msgstr "Radyo istasyonları"
 
 msgid "Radiology Rounds"
-msgstr ""
+msgstr "Radyoloji vizitleri"
 
 msgid "Ramadan"
-msgstr ""
+msgstr "Ramazan"
 
 msgid "Ramadan series"
-msgstr ""
+msgstr "Ramazan dizileri"
 
 msgid "Random"
 msgstr "Rastgele"
 
 msgid "Random selection"
-msgstr ""
+msgstr "Rastgele seçim"
 
 msgid "Randomize a playlist"
-msgstr ""
+msgstr "Oynatma listesini karıştır"
 
 msgid "Range request not supported (resume failed)."
-msgstr ""
+msgstr "Aralık isteği desteklenmiyor (devam ettirme başarısız)."
 
 msgid "Ranking"
 msgstr "Sıralama"
 
 msgid "Rated"
-msgstr ""
+msgstr "Puanlanan"
 
 msgid "Rated:"
-msgstr ""
+msgstr "Puan:"
 
 msgid "Rating"
 msgstr "Puan"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Rating %s"
-msgstr "Puan"
+msgstr "Puan %s"
 
 msgid "Rating:"
 msgstr "Puan:"
 
 #, python-format
 msgid "Rating: %s"
-msgstr ""
+msgstr "Puan: %s"
 
 msgid "Read by"
-msgstr ""
+msgstr "Okuyan"
 
 msgid "Read error."
-msgstr ""
+msgstr "Okuma hatası."
 
 msgid "Reading binaries..."
-msgstr ""
+msgstr "İkili dosyalar okunuyor..."
 
-#, fuzzy
 msgid "Reading..."
-msgstr "Trend olanlar"
+msgstr "Okunuyor..."
 
-#, fuzzy
 msgid "Recent"
-msgstr "orta"
+msgstr "Son"
 
-#, fuzzy
 msgid "Recently added"
 msgstr "Son eklenenler"
 
 msgid "Reciters"
-msgstr ""
+msgstr "Kâriler"
 
-#, fuzzy
 msgid "Recommended"
-msgstr "saniye"
+msgstr "Önerilen"
 
-#, fuzzy
 msgid "Recon"
-msgstr "saniye"
+msgstr "Keşif"
 
 msgid "Referee"
-msgstr ""
+msgstr "Hakem"
 
 msgid "Refresh"
 msgstr "Yenile"
@@ -4333,50 +4172,44 @@ msgstr "Yenileniyor"
 
 #, python-format
 msgid "Refusing to empty \"%s\" - it also holds \"%s\" (downloads, buffering, cache or config folder). Check the folder paths in the storage configuration."
-msgstr ""
+msgstr "\"%s\" boşaltılmıyor - içinde \"%s\" de bulunuyor (indirme, arabellek, önbellek veya yapılandırma klasörü). Depolama yapılandırmasındaki klasör yollarını kontrol edin."
 
 #, python-format
 msgid "Refusing to empty \"%s\" - this does not look like a dedicated cache/config folder. Check the folder paths in the storage configuration."
-msgstr ""
+msgstr "\"%s\" boşaltılmıyor - bu, ayrılmış bir önbellek/yapılandırma klasörüne benzemiyor. Depolama yapılandırmasındaki klasör yollarını kontrol edin."
 
 msgid "Regions"
-msgstr ""
+msgstr "Bölgeler"
 
 msgid "Release"
-msgstr "Yayın"
+msgstr "Yayınlanma"
 
 msgid "Released"
-msgstr ""
+msgstr "Yayın tarihi"
 
-#, fuzzy
 msgid "Released:"
-msgstr "Yayın"
+msgstr "Yayın tarihi:"
 
-#, fuzzy
 msgid "Releases"
-msgstr "Yayın"
+msgstr "Yayınlar"
 
-#, fuzzy
 msgid "Relevance"
-msgstr "Yayın"
+msgstr "İlgi düzeyi"
 
 msgid "Religion"
-msgstr ""
+msgstr "Din"
 
-#, fuzzy
 msgid "Remaining:"
-msgstr "Puan:"
+msgstr "Kalan:"
 
 msgid "Remember a host's pin until E2iPlayer is closed"
-msgstr ""
+msgstr "Bir host'un PIN'ini E2iPlayer kapanana kadar hatırla"
 
-#, fuzzy
 msgid "Remember last search entry"
-msgstr "Son izlenen konumu hatırla"
+msgstr "Son arama girişini hatırla"
 
-#, fuzzy
 msgid "Remember last search history selection"
-msgstr "Son izlenen konumu hatırla"
+msgstr "Arama geçmişindeki son seçimi hatırla"
 
 msgid "Remember last watched position"
 msgstr "Son izlenen konumu hatırla"
@@ -4384,9 +4217,9 @@ msgstr "Son izlenen konumu hatırla"
 msgid "Remove"
 msgstr "Kaldır"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Remove \"%s\" item"
-msgstr "Öğeyi kaldır"
+msgstr "\"%s\" öğesini kaldır"
 
 msgid "Remove file"
 msgstr "Dosyayı kaldır"
@@ -4410,85 +4243,86 @@ msgid "Rename file"
 msgstr "Dosyayı yeniden adlandır"
 
 msgid "Reordering: UP/DOWN moves the row, OK saves, EXIT cancels."
-msgstr ""
+msgstr "Yeniden sıralama: YUKARI/AŞAĞI satırı taşır, OK kaydeder, EXIT iptal eder."
 
 msgid "Replay"
-msgstr ""
+msgstr "Tekrar"
 
 msgid "Replays & highlights"
-msgstr ""
+msgstr "Tekrarlar ve özetler"
 
 msgid "Report a problem (GitHub issues)"
-msgstr ""
+msgstr "Sorun bildir (GitHub issues)"
 
-#, fuzzy
 msgid "Report file"
-msgstr "Dosyayı kaldır"
+msgstr "Rapor dosyası"
 
 msgid "Reset this list to its default layout?"
-msgstr ""
+msgstr "Bu liste varsayılan düzenine sıfırlansın mı?"
 
 msgid "Reset to defaults"
-msgstr ""
+msgstr "Varsayılanlara sıfırla"
 
 msgid "Reset to saved order"
-msgstr ""
+msgstr "Kayıtlı sıraya sıfırla"
 
-#, fuzzy
 msgid "Reset web interface"
-msgstr "İndirme Yöneticisini Başlat"
+msgstr "Web arayüzünü sıfırla"
 
 #, python-format
 msgid ""
 "Resolving hCaptcha with %s failed!\n"
 "\n"
 msgstr ""
+"hCaptcha %s ile çözülemedi!\n"
+"\n"
 
 #, python-format
 msgid ""
 "Resolving reCaptcha with %s failed!\n"
 "\n"
 msgstr ""
+"reCaptcha %s ile çözülemedi!\n"
+"\n"
 
 msgid "Restart GUI"
-msgstr ""
+msgstr "Arayüzü yeniden başlat"
 
 msgid "Reused entries move back to the top again."
-msgstr ""
+msgstr "Yeniden kullanılan girişler tekrar en üste taşınır."
 
 msgid "Reverse a playlist"
-msgstr ""
+msgstr "Oynatma listesini ters çevir"
 
 msgid "Reverting to unsorted order will discard unsaved changes. Continue?"
-msgstr ""
+msgstr "Sıralanmamış düzene dönmek kaydedilmemiş değişiklikleri siler. Devam edilsin mi?"
 
 msgid "Right"
-msgstr ""
+msgstr "Sağ"
 
-#, fuzzy
 msgid "Romance"
-msgstr "Yayın"
+msgstr "Romantik"
 
 msgid "Round"
-msgstr ""
+msgstr "Tur"
 
 msgid "Runtime"
-msgstr ""
+msgstr "Süre"
 
 msgid "Russian"
 msgstr "Rusça"
 
 msgid "SOME.PORN sorting by :"
-msgstr ""
+msgstr "SOME.PORN sıralama ölçütü :"
 
 msgid "SONGS"
-msgstr ""
+msgstr "ŞARKILAR"
 
 msgid "SSL connect error."
-msgstr ""
+msgstr "SSL bağlantı hatası."
 
 msgid "SSL verification failure."
-msgstr ""
+msgstr "SSL doğrulama hatası."
 
 msgid "STARTED"
 msgstr "BAŞLADI"
@@ -4497,7 +4331,7 @@ msgid "STOPPED"
 msgstr "DURDURULDU"
 
 msgid "Safe search (restricted mode):"
-msgstr ""
+msgstr "Güvenli arama (kısıtlı mod):"
 
 msgid "Save"
 msgstr "Kaydet"
@@ -4505,39 +4339,43 @@ msgstr "Kaydet"
 msgid "Save changes?"
 msgstr "Değişiklikler kaydedilsin mi?"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Save subtitles (%s)"
-msgstr "Altyazı yazı boyutu"
+msgstr "Altyazıyı kaydet (%s)"
 
 #, python-format
 msgid ""
 "Saved to:\n"
 "%s"
 msgstr ""
+"Kaydedildi:\n"
+"%s"
 
 msgid "Sci-Fi"
-msgstr ""
+msgstr "Bilim kurgu"
 
 msgid "Sci-Fi & Fantasy"
-msgstr ""
+msgstr "Bilim kurgu ve fantastik"
 
 msgid "Science"
 msgstr "Bilim"
 
 msgid "Screensaver during audio playback"
-msgstr ""
+msgstr "Ses oynatma sırasında ekran koruyucu"
 
 msgid "Screensaver in E2iPlayer menus"
-msgstr ""
+msgstr "E2iPlayer menülerinde ekran koruyucu"
 
 #, python-format
 msgid ""
 "Script execution failed.\n"
 "Error code: %s\n"
 msgstr ""
+"Betik çalıştırılamadı.\n"
+"Hata kodu: %s\n"
 
 msgid "Script finished."
-msgstr ""
+msgstr "Betik tamamlandı."
 
 msgid "Search"
 msgstr "Ara"
@@ -4549,111 +4387,102 @@ msgid "Search History successfully deleted."
 msgstr "Arama geçmişi başarıyla silindi."
 
 msgid "Search for an artist (exact name) or a Last.fm user"
-msgstr ""
+msgstr "Sanatçı (tam ad) veya Last.fm kullanıcısı ara"
 
 msgid "Search history"
 msgstr "Arama geçmişi"
 
-#, fuzzy
 msgid "Search history - options"
-msgstr "Arama geçmişi"
+msgstr "Arama geçmişi - seçenekler"
 
 msgid "Search history is not available for this host."
-msgstr ""
+msgstr "Bu host için arama geçmişi kullanılamıyor."
 
-#, fuzzy
 msgid "Search history saved."
-msgstr "Arama geçmişi"
+msgstr "Arama geçmişi kaydedildi."
 
 #, python-format
 msgid "Search history saved. %d duplicate entries removed."
-msgstr ""
+msgstr "Arama geçmişi kaydedildi. %d yinelenen giriş kaldırıldı."
 
 msgid "Search in all active hosts"
-msgstr "Tüm etkin hostlarda ara"
+msgstr "Tüm etkin host'larda ara"
 
 msgid "Search is not available right now."
-msgstr ""
+msgstr "Arama şu anda kullanılamıyor."
 
-#, fuzzy
 msgid "Search next page"
-msgstr "Arama türü"
+msgstr "Sonraki sayfada ara"
 
 msgid "Search results"
 msgstr "Arama sonuçları"
 
-#, fuzzy
 msgid "Search results region:"
-msgstr "Arama sonuçları"
+msgstr "Arama sonuçları bölgesi:"
 
 msgid "Search string must have at least 4 characters."
-msgstr ""
+msgstr "Arama metni en az 4 karakter olmalıdır."
 
-#, fuzzy
 msgid "Search term :"
-msgstr "Arama türü"
+msgstr "Arama terimi :"
 
-#, fuzzy
 msgid "Search text"
-msgstr "Arama türü"
+msgstr "Arama metni"
 
 msgid "Search type"
 msgstr "Arama türü"
 
-#, fuzzy
 msgid "Search: "
-msgstr "Ara"
+msgstr "Arama: "
 
 #, python-format
 msgid "Search: %d of %d - now %s (%d found so far)"
-msgstr ""
+msgstr "Arama: %d / %d - şu an %s (şimdiye kadar %d bulundu)"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Searching subtitles for \"%s\""
-msgstr "Altyazı dosyası seç"
+msgstr "\"%s\" için altyazı aranıyor"
 
 msgid "Season"
 msgstr "Sezon"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Season %d"
-msgstr "Sezon"
+msgstr "Sezon %d"
 
 #, python-format
 msgid "Season %d (%d episodes)"
-msgstr ""
+msgstr "Sezon %d (%d bölüm)"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Season %s"
-msgstr "Sezon"
+msgstr "Sezon %s"
 
 msgid "Seasons"
-msgstr ""
+msgstr "Sezonlar"
 
-#, fuzzy
 msgid "Seasons:"
-msgstr "Sezon"
+msgstr "Sezonlar:"
 
 #, python-format
 msgid "Seasons: %s"
-msgstr ""
+msgstr "Sezonlar: %s"
 
 msgid "Second movie player in buffering mode"
-msgstr ""
+msgstr "Arabellek modunda ikinci film oynatıcı"
 
 msgid "Second movie player without buffering mode"
-msgstr ""
+msgstr "Arabellek modu olmadan ikinci film oynatıcı"
 
-#, fuzzy
 msgid "Section"
-msgstr "İşlem seç"
+msgstr "Bölüm"
 
 msgid "Sections"
-msgstr ""
+msgstr "Bölümler"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Select %s"
-msgstr "Seç"
+msgstr "%s seçin"
 
 msgid "Select action"
 msgstr "İşlem seç"
@@ -4662,14 +4491,13 @@ msgid "Select audio track"
 msgstr "Ses parçası seç"
 
 msgid "Select best available quality"
-msgstr ""
+msgstr "Mevcut en iyi kaliteyi seç"
 
 msgid "Select directory"
-msgstr "Dizin seç"
+msgstr "Klasör seç"
 
-#, fuzzy
 msgid "Select favorite group"
-msgstr "Favori grupları"
+msgstr "Favori grubu seçin"
 
 msgid "Select group"
 msgstr "Grup seç"
@@ -4686,16 +4514,14 @@ msgstr "Video oynatıcı seç"
 msgid "Select option"
 msgstr "Seçenek seç"
 
-#, fuzzy
 msgid "Select pictures"
-msgstr "Dizin seç"
+msgstr "Resim seçin"
 
 msgid "Select subtitles file"
 msgstr "Altyazı dosyası seç"
 
-#, fuzzy
 msgid "Select subtitles provider:"
-msgstr "Altyazı dosyası seç"
+msgstr "Altyazı sağlayıcısı seçin:"
 
 msgid "Select subtitles to download"
 msgstr "İndirilecek altyazıyı seç"
@@ -4704,105 +4530,103 @@ msgid "Select subtitles track"
 msgstr "Altyazı parçası seç"
 
 msgid "Select the directory"
-msgstr "Dizini seç"
+msgstr "Klasörü seç"
 
 msgid "Select the file"
 msgstr "Dosyayı seç"
 
-#, fuzzy
 msgid "Select video option"
-msgstr "Seçenek seç"
+msgstr "Video seçeneği seçin"
 
-#, fuzzy
 msgid "Selection"
-msgstr "İşlem seç"
+msgstr "Seçim"
 
 msgid "Self-test"
-msgstr ""
+msgstr "Kendi kendine test"
 
 msgid "Self-test report :"
-msgstr ""
+msgstr "Kendi kendine test raporu :"
 
 msgid "Send"
 msgstr "Gönder"
 
 msgid "Send data to enc-dec.app on every link resolve?"
-msgstr ""
+msgstr "Her bağlantı çözümlemesinde enc-dec.app'e veri gönderilsin mi?"
 
 msgid "Sending the result to the box failed."
-msgstr ""
+msgstr "Sonuç alıcıya gönderilemedi."
 
 msgid "Series"
 msgstr "Diziler"
 
 msgid "Series - latest episodes"
-msgstr ""
+msgstr "Diziler - son bölümler"
 
 msgid "Series - seasons"
-msgstr ""
+msgstr "Diziler - sezonlar"
 
 msgid "Series A-Z"
-msgstr ""
+msgstr "Diziler A-Z"
 
 msgid "Series by genre"
-msgstr ""
+msgstr "Türe göre diziler"
 
 msgid "Series by year"
-msgstr ""
+msgstr "Yıla göre diziler"
 
 msgid "Series genres"
-msgstr ""
+msgstr "Dizi türleri"
 
 msgid "Server"
 msgstr "Sunucu"
 
 msgid "Server issued an error response (HTTP 4xx/5xx)."
-msgstr ""
+msgstr "Sunucu bir hata yanıtı döndürdü (HTTP 4xx/5xx)."
 
 msgid "Server issued an error response."
-msgstr ""
+msgstr "Sunucu bir hata yanıtı döndürdü."
 
 msgid "Server return 404 - Not Found."
-msgstr ""
+msgstr "Sunucu 404 döndürdü - Bulunamadı."
 
 msgid "Server returned nothing."
-msgstr ""
+msgstr "Sunucu hiçbir şey döndürmedi."
 
 #, python-format
 msgid "Server, user name and password in the host configuration. The server field also takes a get.php link. More accounts: %s with one get.php link per line (X-Streamity format)."
-msgstr ""
+msgstr "Sunucu, kullanıcı adı ve şifre host yapılandırmasına girilir. Sunucu alanı bir get.php bağlantısı da kabul eder. Daha fazla hesap: her satıra bir get.php bağlantısı olacak şekilde %s (X-Streamity biçimi)."
 
 #, python-format
 msgid ""
 "Service %s requires registration. \n"
 "Please fill your login and password in the %s configuration."
 msgstr ""
+"%s hizmeti kayıt gerektiriyor. \n"
+"Lütfen kullanıcı adınızı ve şifrenizi %s yapılandırmasına girin."
 
 msgid "Service icon size"
-msgstr "Servis simgesi boyutu"
+msgstr "Hizmet simgesi boyutu"
 
 msgid "Services configuration"
-msgstr "Servis yapılandırması"
+msgstr "Hizmet yapılandırması"
 
 msgid "Services management"
-msgstr "Servis yönetimi"
+msgstr "Hizmet yönetimi"
 
 msgid "Set active movie player"
 msgstr "Etkin video oynatıcıyı ayarla"
 
 msgid "Set file name"
-msgstr "Dosya adı ayarla"
+msgstr "Dosya adını ayarla"
 
-#, fuzzy
 msgid "Set own configuration pin code"
-msgstr "Servis yapılandırması"
+msgstr "Yapılandırma için kendi PIN kodunu ayarla"
 
-#, fuzzy
 msgid "Set own pin"
-msgstr "Pin kodu ayarla"
+msgstr "Kendi PIN'ini ayarla"
 
 msgid "Set pin code"
-msgstr "Pin kodu ayarla"
+msgstr "PIN kodunu ayarla"
 
 msgid "Set watched"
 msgstr "İzlendi olarak işaretle"
@@ -4812,108 +4636,97 @@ msgstr "Ayarlar"
 
 #, python-format
 msgid "Settings of service [%s] cannot be opened."
-msgstr ""
+msgstr "[%s] hizmetinin ayarları açılamıyor."
 
 msgid "Settings screen layout"
-msgstr ""
+msgstr "Ayarlar ekranı düzeni"
 
 msgid "Shift"
-msgstr ""
+msgstr "Shift"
 
-#, fuzzy
 msgid "Short Movies"
-msgstr "Sıralama modu"
+msgstr "Kısa filmler"
 
 msgid "Short series"
-msgstr ""
+msgstr "Kısa diziler"
 
-#, fuzzy
 msgid "Shorts"
-msgstr "Tüm Sporlar"
+msgstr "Shorts"
 
 msgid "Shoulder & Elbow"
-msgstr ""
+msgstr "Omuz ve dirsek"
 
-#, fuzzy
 msgid "Show"
-msgstr "Şovlar"
+msgstr "Göster"
 
 msgid "Show \"Newest videos\" of all YouTube channels in a group"
-msgstr ""
+msgstr "Bir gruptaki tüm YouTube kanallarının \"En yeni videolar\"ını göster"
 
 msgid "Show & Comedy"
-msgstr ""
+msgstr "Şov ve komedi"
 
-#, fuzzy
 msgid "Show E2iPlayer settings in system menu"
-msgstr "IPTVPlayer'ı ana menüde göster"
+msgstr "E2iPlayer ayarlarını sistem menüsünde göster"
 
-#, fuzzy
 msgid "Show IPTVPlayer in extension list (blue button)"
-msgstr "IPTVPlayer'ı uzantı listesinde göster"
+msgstr "IPTVPlayer'ı eklenti listesinde göster (mavi tuş)"
 
 msgid "Show IPTVPlayer in main menu"
 msgstr "IPTVPlayer'ı ana menüde göster"
 
-#, fuzzy
 msgid "Show IPTVPlayer in plugin browser"
-msgstr "IPTVPlayer'ı ana menüde göster"
+msgstr "IPTVPlayer'ı eklenti tarayıcısında göster"
 
 msgid "Show Profiles in ZBIORNIK MINI :"
-msgstr ""
+msgstr "ZBIORNIK MINI'de profilleri göster :"
 
 msgid "Show Youtube Api Key warnings"
-msgstr ""
+msgstr "YouTube API anahtarı uyarılarını göster"
 
 msgid "Show adult content"
-msgstr ""
+msgstr "Yetişkin içeriği göster"
 
 msgid "Show all channels"
 msgstr "Tüm kanalları göster"
 
 msgid "Show clock in header"
-msgstr ""
+msgstr "Başlıkta saati göster"
 
 msgid "Show download manager after adding new item"
 msgstr "Yeni öğe ekledikten sonra indirme yöneticisini göster"
 
-#, fuzzy
 msgid "Show download notification"
-msgstr "indirme konumu"
+msgstr "İndirme bildirimini göster"
 
 msgid "Show file size"
 msgstr "Dosya boyutunu göster"
 
-#, fuzzy
 msgid "Show flags"
-msgstr "Dosya boyutunu göster"
+msgstr "Bayrakları göster"
 
 msgid "Show global search :"
-msgstr ""
+msgstr "Genel aramayı göster :"
 
 msgid "Show hiddens catalogs"
-msgstr ""
+msgstr "Gizli dizinleri göster"
 
-#, fuzzy
 msgid "Show hiddens files"
-msgstr "Dosya boyutunu göster"
+msgstr "Gizli dosyaları göster"
 
 msgid "Show iframe during audio playback"
-msgstr ""
+msgstr "Ses oynatma sırasında iframe göster"
 
 msgid "Show only audio in selected language:"
-msgstr ""
+msgstr "Yalnızca seçilen dildeki sesi göster:"
 
 msgid "Show only best quality of streams:"
-msgstr ""
+msgstr "Yayınların yalnızca en iyi kalitesini göster:"
 
-#, fuzzy
 msgid "Show results"
-msgstr "Arama sonuçları"
+msgstr "Sonuçları göster"
 
-#, fuzzy
 msgid "Show search history"
-msgstr "Arama geçmişi"
+msgstr "Arama geçmişini göster"
 
 msgid "Show suggestions"
 msgstr "Önerileri göster"
@@ -4921,96 +4734,90 @@ msgstr "Önerileri göster"
 msgid "Shows"
 msgstr "Şovlar"
 
-#, fuzzy
 msgid "Shows A-Z"
-msgstr "Şovlar"
+msgstr "Programlar A-Z"
 
 msgid "Shows and concerts"
-msgstr ""
+msgstr "Şovlar ve konserler"
 
 msgid "Shows with new episodes"
-msgstr ""
+msgstr "Yeni bölümü olan programlar"
 
 msgid "Sign-in was not completed."
-msgstr ""
+msgstr "Oturum açma tamamlanmadı."
 
 msgid "Signed in to YouTube."
-msgstr ""
+msgstr "YouTube'da oturum açıldı."
 
 msgid "Signed out of YouTube."
-msgstr ""
+msgstr "YouTube oturumu kapatıldı."
 
 msgid "Similar artists"
-msgstr ""
+msgstr "Benzer sanatçılar"
 
 msgid "Similar artists mix"
-msgstr ""
+msgstr "Benzer sanatçılar karışımı"
 
 msgid "Simple list"
 msgstr "Basit liste"
 
-#, fuzzy
 msgid "Simple subtitles downloader"
-msgstr "İndirilecek altyazıyı seç"
+msgstr "Basit altyazı indirici"
 
 msgid "Simplify the title and try again."
-msgstr ""
+msgstr "Başlığı sadeleştirip tekrar deneyin."
 
 msgid "Site self-test"
-msgstr ""
+msgstr "Site kendi kendine testi"
 
 msgid "Site self-test in the main menu :"
-msgstr ""
+msgstr "Ana menüde site kendi kendine testi :"
 
 #, python-format
 msgid "Site self-test: %d of %d - now %s (%d failed so far)"
-msgstr ""
+msgstr "Site kendi kendine testi: %d / %d - şu an %s (şimdiye kadar %d başarısız)"
 
 msgid "Size:"
-msgstr ""
+msgstr "Boyut:"
 
 msgid "Skin"
-msgstr "Arayüz"
+msgstr "Görünüm"
 
 msgid "Skinners:"
-msgstr ""
+msgstr "Görünüm tasarımcıları:"
 
 msgid "Skip video shorter than [min]"
 msgstr "[dk] değerinden kısa videoları atla"
 
 msgid "Society"
-msgstr ""
+msgstr "Toplum"
 
 msgid "Software decoding as"
-msgstr ""
+msgstr "Yazılımsal kod çözme olarak"
 
 msgid "Solve Cloudflare, hCaptcha and reCAPTCHA with MyE2i"
-msgstr ""
+msgstr "Cloudflare, hCaptcha ve reCAPTCHA'yı MyE2i ile çöz"
 
 msgid "Solve Google reCAPTCHA v2 with My JDownloader"
-msgstr ""
+msgstr "Google reCAPTCHA v2'yi My JDownloader ile çöz"
 
-#, fuzzy
 msgid "Solver"
-msgstr "gümüş"
+msgstr "Çözücü"
 
-#, fuzzy
 msgid "Some changes will be applied only after movie player restart."
-msgstr "Bazı ayarlar ancak arayüz yeniden başlatıldıktan sonra uygulanır."
+msgstr "Bazı değişiklikler ancak film oynatıcı yeniden başlatıldıktan sonra uygulanacaktır."
 
 msgid "Some settings will be applied only after GUI restart."
 msgstr "Bazı ayarlar ancak arayüz yeniden başlatıldıktan sonra uygulanır."
 
-#, fuzzy
 msgid "Sort A-Z"
-msgstr "Program"
+msgstr "A-Z sırala"
 
 msgid "Sort Myfreecams :"
-msgstr ""
+msgstr "Myfreecams sıralaması :"
 
-#, fuzzy
 msgid "Sort Z-A"
-msgstr "Şuna göre sırala:"
+msgstr "Z-A sırala"
 
 msgid "Sort alphabetically"
 msgstr "Alfabetik sırala"
@@ -5019,80 +4826,77 @@ msgid "Sort by name"
 msgstr "Ada göre sırala"
 
 msgid "Sort by:"
-msgstr "Şuna göre sırala:"
+msgstr "Sıralama ölçütü:"
 
 msgid "Sort the links now? The order of the lines in the file will change."
-msgstr ""
+msgstr "Bağlantılar şimdi sıralansın mı? Dosyadaki satırların sırası değişecek."
 
 msgid "Sort the list:"
-msgstr ""
+msgstr "Listeyi sırala:"
 
 msgid "Sort xxxlist :"
-msgstr ""
+msgstr "xxxlist sıralaması :"
 
 msgid "Sorted channels A-Z [live]"
-msgstr ""
+msgstr "Kanallar A-Z sıralı [canlı]"
 
 msgid "Sorted most viewed channels general [live]"
-msgstr ""
+msgstr "Genel olarak en çok izlenen kanallar sıralı [canlı]"
 
 msgid "Sorted most viewed channels now [live]"
-msgstr ""
+msgstr "Şu an en çok izlenen kanallar sıralı [canlı]"
 
 msgid "Source:"
-msgstr ""
+msgstr "Kaynak:"
 
 msgid "Spanish"
-msgstr ""
+msgstr "İspanyolca"
 
 msgid "Specials"
-msgstr ""
+msgstr "Özel bölümler"
 
 msgid "Spine"
-msgstr ""
+msgstr "Omurga"
 
 msgid "Spoken subtitles"
-msgstr ""
+msgstr "Sesli altyazılar"
 
 msgid "Sport"
 msgstr "Spor"
 
 msgid "Spring"
-msgstr ""
+msgstr "İlkbahar"
 
 msgid "Squad"
-msgstr ""
+msgstr "Kadro"
 
 msgid "Stadium:"
-msgstr ""
+msgstr "Stadyum:"
 
 msgid "Standard"
 msgstr "Standart"
 
-#, fuzzy
 msgid "Stars:"
-msgstr "Başlat"
+msgstr "Oyuncular:"
 
 msgid "Start"
 msgstr "Başlat"
 
-#, fuzzy
 msgid "Start download manager per default"
-msgstr "Yeni öğe ekledikten sonra indirme yöneticisini göster"
+msgstr "İndirme yöneticisini varsayılan olarak başlat"
 
-#, fuzzy
 msgid "Station:"
-msgstr "Süre:"
+msgstr "İstasyon:"
 
 msgid "Status:"
-msgstr ""
+msgstr "Durum:"
 
 #, python-format
 msgid "Status: %s"
-msgstr ""
+msgstr "Durum: %s"
 
 msgid "Stereo downmix mode for software decoder"
-msgstr ""
+msgstr "Yazılımsal kod çözücü için stereo downmix modu"
 
 msgid "Stop"
 msgstr "Durdur"
@@ -5101,43 +4905,40 @@ msgid "Stop downloading"
 msgstr "İndirmeyi durdur"
 
 msgid "Stop playback with buffer save"
-msgstr "Oynatmayı durdur ve tamponu kaydet"
+msgstr "Oynatmayı durdur ve arabelleği kaydet"
 
 msgid "Stop playing?"
 msgstr "Oynatma durdurulsun mu?"
 
 msgid "Storage"
-msgstr ""
+msgstr "Depolama"
 
 msgid "Story"
-msgstr ""
+msgstr "Hikâye"
 
-#, fuzzy
 msgid "Stream link"
-msgstr "Bağlantı seç"
+msgstr "Yayın bağlantısı"
 
 msgid "Streamed"
-msgstr ""
+msgstr "Yayınlanan"
 
 msgid "Streaming platforms"
-msgstr ""
+msgstr "Yayın platformları"
 
-#, fuzzy
 msgid "Studios"
-msgstr "Ses"
+msgstr "Stüdyolar"
 
 msgid "Study Plan"
-msgstr ""
+msgstr "Çalışma planı"
 
 msgid "Subbed anime"
-msgstr ""
+msgstr "Altyazılı anime"
 
 msgid "Subscribers"
-msgstr ""
+msgstr "Aboneler"
 
-#, fuzzy
 msgid "Subspecialities"
-msgstr "Kaliteler"
+msgstr "Yan dallar"
 
 msgid "Subtitle background"
 msgstr "Altyazı arka planı"
@@ -5167,7 +4968,7 @@ msgid "Subtitle font size"
 msgstr "Altyazı yazı boyutu"
 
 msgid "Subtitle languages"
-msgstr ""
+msgstr "Altyazı dilleri"
 
 msgid "Subtitle line height"
 msgstr "Altyazı satır yüksekliği"
@@ -5193,64 +4994,65 @@ msgstr "Altyazı dikey hizalama"
 msgid "Subtitles"
 msgstr "Altyazılar"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Subtitles \"%s\" downloaded correctly."
-msgstr "%s altyazı indirme - nasıl yapılır"
+msgstr "\"%s\" altyazısı başarıyla indirildi."
 
 msgid "Subtitles by Islam El-Gizawy"
-msgstr ""
+msgstr "Altyazılar: Islam El-Gizawy"
 
 msgid "Subtitles conversion to UTF-8 failed."
-msgstr ""
+msgstr "Altyazının UTF-8'e dönüştürülmesi başarısız oldu."
 
 #, python-format
 msgid "Subtitles downloaded successfully. [%s], conversion to UTF-8."
-msgstr ""
+msgstr "Altyazı başarıyla indirildi. [%s], UTF-8'e dönüştürme."
 
-#, fuzzy, python-format
+#, python-format
 msgid "Subtitles for: %s"
-msgstr "Altyazı yazı boyutu"
+msgstr "Altyazı: %s"
 
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Subtitles saved:\n"
 "%s"
-msgstr "Altyazı yazı boyutu"
+msgstr ""
+"Altyazı kaydedildi:\n"
+"%s"
 
-#, fuzzy
 msgid "Subtitles:"
-msgstr "Altyazılar"
+msgstr "Altyazılar:"
 
 #, python-format
 msgid "Subtitles: %s"
-msgstr ""
+msgstr "Altyazılar: %s"
 
 msgid "Summer"
-msgstr ""
+msgstr "Yaz"
 
 msgid "Support forum (opena.tv)"
-msgstr ""
+msgstr "Destek forumu (opena.tv)"
 
 msgid "Support package"
-msgstr ""
+msgstr "Destek paketi"
 
 msgid "Surahs"
-msgstr ""
+msgstr "Sureler"
 
 msgid "Surgical Approaches"
-msgstr ""
+msgstr "Cerrahi yaklaşımlar"
 
 msgid "Surgical Cases"
-msgstr ""
+msgstr "Cerrahi vakalar"
 
 msgid "Surgical Complications"
-msgstr ""
+msgstr "Cerrahi komplikasyonlar"
 
 msgid "Surgical Techniques"
-msgstr ""
+msgstr "Cerrahi teknikler"
 
 msgid "Sweden"
-msgstr ""
+msgstr "İsveç"
 
 msgid "Swedish"
 msgstr "İsveççe"
@@ -5261,61 +5063,71 @@ msgstr "Eşitle"
 msgid "System"
 msgstr "Sistem"
 
-#, fuzzy
 msgid "System language"
-msgstr "Dil seç"
+msgstr "Sistem dili"
 
 msgid "T9 letter jump in lists"
-msgstr ""
+msgstr "Listelerde T9 harf atlama"
 
 msgid ""
 "TBN GO needs a free account to play programmes.\n"
 "Register on https://tbngo.pl/ and enter the e-mail and password in the host settings."
 msgstr ""
+"TBN GO programları oynatmak için ücretsiz bir hesap gerektirir.\n"
+"https://tbngo.pl/ adresinde kayıt olun ve e-posta ile şifreyi host ayarlarına girin."
 
 msgid "THE PAGE YOU ARE LOOKING FOR IS NOT FOUND."
-msgstr ""
+msgstr "ARADIĞINIZ SAYFA BULUNAMADI."
 
 msgid ""
 "THIS IS A PREMIUM VIDEO.\n"
 "LOGIN OR PREMIUM REQUIRED."
 msgstr ""
+"BU BİR PREMIUM VİDEO.\n"
+"GİRİŞ VEYA PREMIUM GEREKLİ."
 
 msgid "THIS IS A PRIVATE VIDEO."
-msgstr ""
+msgstr "BU ÖZEL BİR VİDEO."
 
 msgid ""
 "THIS LINK CONTAINS PHOTOS ONLY.\n"
 " PLEASE CHOOSE ANOTHER ONE!"
 msgstr ""
+"BU BAĞLANTI YALNIZCA FOTOĞRAF İÇERİYOR.\n"
+" LÜTFEN BAŞKA BİR TANE SEÇİN!"
 
 msgid ""
 "THIS VIDEO HAS BEEN REMOVED DUE TO COPYRIGHT INFRINGEMENT.\n"
 " PLEASE CHOOSE ANOTHER ONE!"
 msgstr ""
+"BU VİDEO TELİF HAKKI İHLALİ NEDENİYLE KALDIRILDI.\n"
+" LÜTFEN BAŞKA BİR TANE SEÇİN!"
 
 msgid ""
 "THIS VIDEO IS JUST A PREVIEW ON EXTERNAL STORAGE.\n"
 "VIEWING IT HERE IS NOT SUPPORTED."
 msgstr ""
+"BU VİDEO HARİCİ DEPOLAMADA YALNIZCA BİR ÖNİZLEMEDİR.\n"
+"BURADA İZLENMESİ DESTEKLENMİYOR."
 
 msgid ""
 "THIS VIDEO IS UNAVAILABLE.\n"
 "TRY AGAIN LATER!"
 msgstr ""
+"BU VİDEO KULLANILAMIYOR.\n"
+"DAHA SONRA TEKRAR DENEYİN!"
 
 msgid "TMDb API key (free at themoviedb.org)"
-msgstr ""
+msgstr "TMDb API anahtarı (themoviedb.org'da ücretsiz)"
 
-#, fuzzy
 msgid "TMDb Rating:"
-msgstr "Puan:"
+msgstr "TMDb puanı:"
 
 msgid "TODAY"
-msgstr ""
+msgstr "BUGÜN"
 
 msgid "TOMORROW"
-msgstr ""
+msgstr "YARIN"
 
 msgid "TV Series"
 msgstr "TV Dizileri"
@@ -5333,55 +5145,53 @@ msgid "TV series"
 msgstr "TV dizileri"
 
 msgid "Tadabor"
-msgstr ""
+msgstr "Tedebbür"
 
 msgid "Tafsir (Arabic)"
-msgstr ""
+msgstr "Tefsir (Arapça)"
 
 msgid "Tags"
-msgstr ""
+msgstr "Etiketler"
 
 msgid "Taiwanese"
-msgstr ""
+msgstr "Tayvanca"
 
 msgid "Talk shows"
-msgstr ""
+msgstr "Talk şovlar"
 
 msgid "Teams"
-msgstr ""
+msgstr "Takımlar"
 
 msgid "Techniques"
-msgstr ""
+msgstr "Teknikler"
 
 msgid "Technology"
-msgstr ""
+msgstr "Teknoloji"
 
 msgid "Temp"
-msgstr ""
+msgstr "Geçici"
 
 msgid "Test the failed sites again"
-msgstr ""
+msgstr "Başarısız siteleri tekrar test et"
 
-#, fuzzy
 msgid "Testers:"
-msgstr "Filtreler"
+msgstr "Test edenler:"
 
-#, fuzzy
 msgid "Text field alignment"
-msgstr "Dosya adı ayarla"
+msgstr "Metin alanı hizalaması"
 
 msgid "Text files ytlist and urllist are in:"
-msgstr ""
+msgstr "ytlist ve urllist metin dosyalarının konumu:"
 
 msgid "Thai"
-msgstr ""
+msgstr "Tayca"
 
 #, python-format
 msgid "The %s utility is necessary here but it was not detected."
-msgstr ""
+msgstr "Burada %s yardımcı programı gerekli ancak algılanmadı."
 
 msgid "The 100 tags with the most videos"
-msgstr ""
+msgstr "En çok videoya sahip 100 etiket"
 
 msgid ""
 "The 7reels / cineb resolvers 'VidEasy', 'VidCore/VidFast', 'VidLink' and 'Peachify' cannot decrypt their links on the receiver.\n"
@@ -5390,151 +5200,158 @@ msgid ""
 "\n"
 "Leave this OFF if you do not want that. The other resolvers (AdRock/vidrock, VidNest, ...) are not affected."
 msgstr ""
+"7reels / cineb çözümleyicileri 'VidEasy', 'VidCore/VidFast', 'VidLink' ve 'Peachify' bağlantılarının şifresini alıcıda çözemez.\n"
+"\n"
+"Bu seçenek AÇIK olduğunda, bunlardan birini her açtığınızda E2iPlayer sitenin şifreli yayın belirtecini - açtığınız film veya bölümün TMDb kimliğini içerir - üçüncü taraf web hizmeti enc-dec.app'e (özel bir kişi tarafından işletilir) gönderir. Bu sunucu her oynatmada kimliği ve IP adresinizi görür. Başka hiçbir şey iletilmez ve yalnızca bu dört çözümleyici için kullanılır.\n"
+"\n"
+"Bunu istemiyorsanız KAPALI bırakın. Diğer çözümleyiciler (AdRock/vidrock, VidNest, ...) etkilenmez."
 
 msgid "The OpenSubtitles v3 server did not answer. Please try again later."
-msgstr ""
+msgstr "OpenSubtitles v3 sunucusu yanıt vermedi. Lütfen daha sonra tekrar deneyin."
 
 msgid "The OpenSubtitles.com server did not answer. Please try again later."
-msgstr ""
+msgstr "OpenSubtitles.com sunucusu yanıt vermedi. Lütfen daha sonra tekrar deneyin."
 
 msgid "The QR code leads to the wiki page with pictures and the extension download."
-msgstr ""
+msgstr "QR kodu, resimli wiki sayfasına ve uzantı indirmesine yönlendirir."
 
 msgid "The Stalker portal of this entry is not configured (any more)."
-msgstr ""
+msgstr "Bu girişin Stalker portalı yapılandırılmamış (artık)."
 
 msgid "The Xtream account of this entry is not configured (any more)."
-msgstr ""
+msgstr "Bu girişin Xtream hesabı yapılandırılmamış (artık)."
 
 msgid "The YouTube channels of this group have no videos."
-msgstr ""
+msgstr "Bu gruptaki YouTube kanallarında video yok."
 
 msgid "The YouTube video ID is invalid."
-msgstr ""
+msgstr "YouTube video kimliği geçersiz."
 
 msgid "The account is banned."
-msgstr ""
+msgstr "Hesap yasaklandı."
 
 msgid "The balance of the account is too low."
-msgstr ""
+msgstr "Hesap bakiyesi çok düşük."
 
 msgid "The best short films on the internet, handpicked by Vimeo staff"
-msgstr ""
+msgstr "İnternetteki en iyi kısa filmler, Vimeo ekibi tarafından seçildi"
 
 msgid "The channel already exists in User Links."
-msgstr ""
+msgstr "Kanal Kullanıcı Bağlantıları'nda zaten mevcut."
 
 msgid "The color of the current version"
-msgstr ""
+msgstr "Geçerli sürümün rengi"
 
-#, fuzzy
 msgid "The color of the downloaded item"
-msgstr "İndiriciye ekle"
+msgstr "İndirilen öğenin rengi"
 
-#, fuzzy
 msgid "The color of the favourite item"
-msgstr "Favorileri düzenle"
+msgstr "Favori öğenin rengi"
 
 msgid "The color of the started item"
-msgstr ""
+msgstr "Başlatılan öğenin rengi"
 
 msgid "The color of the viewed item"
-msgstr ""
+msgstr "İzlenen öğenin rengi"
 
 msgid "The connection limit for your weeb.tv account has been reached."
-msgstr ""
+msgstr "weeb.tv hesabınızın bağlantı sınırına ulaşıldı."
 
 msgid "The daily download limit is reached."
-msgstr ""
+msgstr "Günlük indirme sınırına ulaşıldı."
 
 msgid "The data is too large."
-msgstr ""
+msgstr "Veri çok büyük."
 
 #, python-format
 msgid ""
 "The debug log file is empty:\n"
 "%s"
 msgstr ""
+"Hata ayıklama günlük dosyası boş:\n"
+"%s"
 
 msgid ""
 "The debug log is disabled or set to console output.\n"
 "\n"
 "Enable it in the E2iPlayer configuration (Debug -> log to file) and reproduce the problem, then come back here."
 msgstr ""
+"Hata ayıklama günlüğü devre dışı veya konsol çıktısına ayarlı.\n"
+"\n"
+"E2iPlayer yapılandırmasında etkinleştirin (Debug -> log to file) ve sorunu yeniden oluşturun, ardından buraya geri dönün."
 
 msgid "The debug log is not active."
-msgstr ""
+msgstr "Hata ayıklama günlüğü etkin değil."
 
 msgid "The download is not ready yet. Please try again in a few seconds."
-msgstr ""
+msgstr "İndirme henüz hazır değil. Lütfen birkaç saniye sonra tekrar deneyin."
 
 #, python-format
 msgid "The download is ready in %d seconds. Please try again then."
-msgstr ""
+msgstr "İndirme %d saniye içinde hazır olacak. Lütfen o zaman tekrar deneyin."
 
 msgid "The download manager is stopped, start it on the download page."
-msgstr ""
+msgstr "İndirme yöneticisi durduruldu, indirme sayfasından başlatın."
 
 msgid "The element already exists in User Links."
-msgstr ""
+msgstr "Öğe Kullanıcı Bağlantıları'nda zaten mevcut."
 
 msgid "The feed of these channels could not be read - press OK to try again."
-msgstr ""
+msgstr "Bu kanalların akışı okunamadı - tekrar denemek için OK'a basın."
 
 msgid "The helper process ended unexpectedly."
-msgstr ""
+msgstr "Yardımcı işlem beklenmedik şekilde sonlandı."
 
 #, python-format
 msgid "The helper script %s is missing."
-msgstr ""
+msgstr "%s yardımcı betiği eksik."
 
 #, python-format
 msgid "The host \"%s\" cannot be used from the web interface (disabled, unknown or protected by PIN)."
-msgstr ""
+msgstr "\"%s\" host'u web arayüzünden kullanılamaz (devre dışı, bilinmiyor veya PIN ile korumalı)."
 
 #, python-format
 msgid ""
 "The host %s requires registration. \n"
 "Please fill your login and password in the host configuration. Available under blue button."
 msgstr ""
+"%s host'u kayıt gerektiriyor. \n"
+"Lütfen kullanıcı adınızı ve şifrenizi host yapılandırmasına girin. Mavi tuşun altında bulunur."
 
 msgid "The host asks for a captcha. It can only be solved on the receiver (or with MyE2i there)."
-msgstr ""
+msgstr "Host bir captcha istiyor. Bu yalnızca alıcıda (veya oradaki MyE2i ile) çözülebilir."
 
 msgid "The host did not return a list."
-msgstr ""
+msgstr "Host bir liste döndürmedi."
 
 #, python-format
 msgid "The host wanted to open a window on the TV (%s) - that only works on the receiver."
-msgstr ""
+msgstr "Host TV'de bir pencere açmak istedi (%s) - bu yalnızca alıcıda çalışır."
 
 msgid "The hoster sends an advert redirect instead of the video at the moment. Try another hoster."
-msgstr ""
+msgstr "Hoster şu anda video yerine bir reklam yönlendirmesi gönderiyor. Başka bir hoster deneyin."
 
 msgid "The latest uploads of all YouTube channels in this group, newest first."
-msgstr ""
+msgstr "Bu gruptaki tüm YouTube kanallarının son yüklemeleri, en yenisi önce."
 
-#, fuzzy
 msgid "The link could not be resolved."
-msgstr " Bu video özeldir."
+msgstr "Bağlantı çözümlenemedi."
 
 msgid "The list has changed, please try again."
-msgstr ""
+msgstr "Liste değişti, lütfen tekrar deneyin."
 
 msgid "The live stream is not available at the moment."
-msgstr ""
+msgstr "Canlı yayın şu anda kullanılamıyor."
 
-#, fuzzy
 msgid "The model is offline or in a private show."
-msgstr " Bu video özeldir."
+msgstr "Model çevrimdışı veya özel bir gösteride."
 
-#, fuzzy
 msgid "The number of items in the search history"
-msgstr "Arama geçmişini silmek istediğinize emin misiniz?"
+msgstr "Arama geçmişindeki öğe sayısı"
 
 #, python-format
 msgid "The page layout of %s has changed."
-msgstr ""
+msgstr "%s sayfa düzeni değişti."
 
 #, python-format
 msgid ""
@@ -5542,276 +5359,273 @@ msgid ""
 "It will be saved in the file:\n"
 "\"%s\""
 msgstr ""
+"Oynatma arabelleği indirme yöneticisine taşındı.\n"
+"Şu dosyaya kaydedilecek:\n"
+"\"%s\""
 
 msgid "The portal did not hand out a link for this entry."
-msgstr ""
+msgstr "Portal bu giriş için bir bağlantı vermedi."
 
 msgid "The recordings of this page were on the site's old media server, which is offline."
-msgstr ""
+msgstr "Bu sayfanın kayıtları sitenin artık çevrimdışı olan eski medya sunucusundaydı."
 
 msgid "The request has no valid length."
-msgstr ""
+msgstr "İsteğin geçerli bir uzunluğu yok."
 
 msgid "The same item already exists in this group."
-msgstr ""
+msgstr "Aynı öğe bu grupta zaten mevcut."
 
 msgid "The server did not return a subtitle file (download limit reached?)."
-msgstr ""
+msgstr "Sunucu bir altyazı dosyası döndürmedi (indirme sınırına ulaşıldı mı?)."
 
 msgid "The server did not send a subtitle file."
-msgstr ""
+msgstr "Sunucu bir altyazı dosyası göndermedi."
 
 msgid "The server limits the number of requests. Please try again in a few seconds."
-msgstr ""
+msgstr "Sunucu istek sayısını sınırlıyor. Lütfen birkaç saniye sonra tekrar deneyin."
 
 msgid "The service is overloaded. Please try again later."
-msgstr ""
+msgstr "Hizmet aşırı yüklü. Lütfen daha sonra tekrar deneyin."
 
 msgid "The settings are protected by a PIN, change them on the receiver."
-msgstr ""
+msgstr "Ayarlar PIN ile korumalı, alıcıda değiştirin."
 
 msgid "The site has no player for this video (it only shows a cam advert)."
-msgstr ""
+msgstr "Sitenin bu video için oynatıcısı yok (yalnızca bir kamera reklamı gösteriyor)."
 
 msgid "The site refuses all qualities of this video at the moment (HTTP 403). Try again later."
-msgstr ""
+msgstr "Site şu anda bu videonun tüm kalitelerini reddediyor (HTTP 403). Daha sonra tekrar deneyin."
 
 msgid "The site rejected the search request."
-msgstr ""
+msgstr "Site arama isteğini reddetti."
 
 msgid "The site's browser check could not be passed."
-msgstr ""
+msgstr "Sitenin tarayıcı denetimi geçilemedi."
 
 msgid "The site's catalogue could not be loaded."
-msgstr ""
+msgstr "Sitenin kataloğu yüklenemedi."
 
 msgid "The support package holds the versions, the system information, the enabled hosts and the end of the debug log in one text file for a problem report. Look through it before posting it - the log can contain addresses of the sites you opened."
-msgstr ""
+msgstr "Destek paketi, sorun raporu için sürümleri, sistem bilgilerini, etkin host'ları ve hata ayıklama günlüğünün sonunu tek bir metin dosyasında toplar. Paylaşmadan önce gözden geçirin - günlük, açtığınız sitelerin adreslerini içerebilir."
 
-#, fuzzy
 msgid "The user link could not be deleted."
-msgstr " Bu video özeldir."
+msgstr "Kullanıcı bağlantısı silinemedi."
 
 msgid "The user link could not be updated."
-msgstr ""
+msgstr "Kullanıcı bağlantısı güncellenemedi."
 
 #, python-format
 msgid "The value must be between %d and %d."
-msgstr ""
+msgstr "Değer %d ile %d arasında olmalıdır."
 
 msgid "The video could not be resolved (it may be private, ended or not available in your country)."
-msgstr ""
+msgstr "Video çözümlenemedi (özel, sona ermiş veya ülkenizde kullanılamıyor olabilir)."
 
 msgid "The video file of this title is not available on the server (HTTP 403)."
-msgstr ""
+msgstr "Bu başlığın video dosyası sunucuda mevcut değil (HTTP 403)."
 
 msgid "The video has been removed."
-msgstr ""
+msgstr "Video kaldırıldı."
 
 msgid "The video player of this site (hdvbua.pro) does not offer this title in your country (licence area, mainly Ukraine)."
-msgstr ""
+msgstr "Bu sitenin video oynatıcısı (hdvbua.pro) bu başlığı ülkenizde sunmuyor (lisans bölgesi, ağırlıklı olarak Ukrayna)."
 
 msgid "The website returned a server error for this request."
-msgstr ""
+msgstr "Web sitesi bu istek için bir sunucu hatası döndürdü."
 
 msgid "There are no other favorite groups"
-msgstr ""
+msgstr "Başka favori grubu yok"
 
 msgid "There are unsaved changes. Save now?"
-msgstr ""
+msgstr "Kaydedilmemiş değişiklikler var. Şimdi kaydedilsin mi?"
 
 #, python-format
 msgid "There is no enough free space in the folder \"%s\"."
-msgstr ""
+msgstr "\"%s\" klasöründe yeterli boş alan yok."
 
 #, python-format
 msgid "There is no free space on the drive [%s]."
-msgstr ""
+msgstr "[%s] sürücüsünde boş alan yok."
 
 msgid "There is no hosts in this group."
-msgstr ""
+msgstr "Bu grupta host yok."
 
 msgid "There is no next item in this list."
-msgstr ""
+msgstr "Bu listede sonraki öğe yok."
 
 msgid "There is no previous item in this list."
-msgstr ""
+msgstr "Bu listede önceki öğe yok."
 
 #, python-format
 msgid ""
 "There is no storage device under \"%s\" (%s free). E2iPlayer will switch this folder back to \"%s\" at the next start.\n"
 "Please choose a folder on a mounted HDD or USB stick."
 msgstr ""
+"\"%s\" altında depolama aygıtı yok (%s boş). E2iPlayer bir sonraki başlangıçta bu klasörü \"%s\" olarak geri değiştirecek.\n"
+"Lütfen bağlı bir HDD veya USB bellekte bir klasör seçin."
 
 msgid "This article has no free video."
-msgstr ""
+msgstr "Bu makalede ücretsiz video yok."
 
 msgid "This channel does not exist."
-msgstr ""
+msgstr "Bu kanal mevcut değil."
 
 msgid "This channel is currently offline."
-msgstr ""
+msgstr "Bu kanal şu anda çevrimdışı."
 
-#, fuzzy
 msgid "This channel is not available in your country (geo-blocking)."
-msgstr "%s dedi ki: Bu sayfa şu anda bölgenizde kullanılamıyor"
+msgstr "Bu kanal ülkenizde kullanılamıyor (coğrafi engelleme)."
 
 msgid "This channel is temporarily unavailable. Please try again later."
-msgstr ""
+msgstr "Bu kanal geçici olarak kullanılamıyor. Lütfen daha sonra tekrar deneyin."
 
 msgid "This channel requires a premium account, or the free connection limit has been reached. Enter your weeb.tv login data in the host configuration."
-msgstr ""
+msgstr "Bu kanal premium hesap gerektiriyor veya ücretsiz bağlantı sınırına ulaşıldı. weeb.tv giriş bilgilerinizi host yapılandırmasına girin."
 
-#, fuzzy
 msgid "This content is not available in your region."
-msgstr "%s dedi ki: Bu sayfa şu anda bölgenizde kullanılamıyor"
+msgstr "Bu içerik bölgenizde kullanılamıyor."
 
 msgid "This content is only available in Switzerland."
-msgstr ""
+msgstr "Bu içerik yalnızca İsviçre'de kullanılabilir."
 
 msgid "This content needs a login - not supported."
-msgstr ""
+msgstr "Bu içerik giriş yapmayı gerektiriyor - desteklenmiyor."
 
 msgid "This entry cannot be added to the favourites."
-msgstr ""
+msgstr "Bu giriş favorilere eklenemez."
 
 msgid "This entry cannot be opened."
-msgstr ""
+msgstr "Bu giriş açılamıyor."
 
 msgid "This entry is only an advert, there is no video."
-msgstr ""
+msgstr "Bu giriş yalnızca bir reklam, video yok."
 
 msgid "This entry is protected by a PIN, open it on the receiver."
-msgstr ""
+msgstr "Bu giriş PIN ile korumalı, alıcıda açın."
 
 msgid "This episode is not available in this version (SUB/DUB) on this server. Try another one."
-msgstr ""
+msgstr "Bu bölüm bu sunucuda bu sürümde (SUB/DUB) mevcut değil. Başka birini deneyin."
 
 msgid "This feed is empty, or the YouTube sign-in has expired - sign out and in again."
-msgstr ""
+msgstr "Bu akış boş veya YouTube oturumunun süresi doldu - oturumu kapatıp tekrar açın."
 
 msgid "This folder is protected by a PIN, open it on the receiver."
-msgstr ""
+msgstr "Bu klasör PIN ile korumalı, alıcıda açın."
 
 msgid "This host has been added already to this group."
-msgstr ""
+msgstr "Bu host bu gruba zaten eklenmiş."
 
 msgid "This is only an advert for a paid clip (clips4sale), there is no free video."
-msgstr ""
+msgstr "Bu yalnızca ücretli bir klibin (clips4sale) reklamı, ücretsiz video yok."
 
 msgid "This is paid content of PZPN+, it needs a purchase on the website."
-msgstr ""
+msgstr "Bu PZPN+'nın ücretli içeriğidir, web sitesinde satın alma gerektirir."
 
 msgid "This mix is only available with a Mixcloud Select subscription."
-msgstr ""
+msgstr "Bu mix yalnızca Mixcloud Select aboneliğiyle kullanılabilir."
 
 msgid "This model is offline."
-msgstr ""
+msgstr "Bu model çevrimdışı."
 
 msgid "This option cannot be changed from the web interface."
-msgstr ""
+msgstr "Bu seçenek web arayüzünden değiştirilemez."
 
 msgid "This page has no video (blog article)."
-msgstr ""
+msgstr "Bu sayfada video yok (blog yazısı)."
 
 msgid "This player is not available any more - reload the links."
-msgstr ""
+msgstr "Bu oynatıcı artık kullanılamıyor - bağlantıları yeniden yükleyin."
 
 msgid "This room is currently offline or unavailable."
-msgstr ""
+msgstr "Bu oda şu anda çevrimdışı veya kullanılamıyor."
 
 msgid "This room is offline. Try again later!"
-msgstr ""
+msgstr "Bu oda çevrimdışı. Daha sonra tekrar deneyin!"
 
 msgid "This section is no longer on the main page."
-msgstr ""
+msgstr "Bu bölüm artık ana sayfada değil."
 
 msgid "This session has no code - scan the QR code on the receiver screen."
-msgstr ""
+msgstr "Bu oturumun kodu yok - alıcı ekranındaki QR kodunu tarayın."
 
 msgid "This show is private. Try again later!"
-msgstr ""
+msgstr "Bu gösteri özel. Daha sonra tekrar deneyin!"
 
 msgid "This source is offline at the moment. Try another source of the channel."
-msgstr ""
+msgstr "Bu kaynak şu anda çevrimdışı. Kanalın başka bir kaynağını deneyin."
 
 msgid "This stream can only be played with buffering - please start it on the receiver."
-msgstr ""
+msgstr "Bu yayın yalnızca arabelleğe alma ile oynatılabilir - lütfen alıcıda başlatın."
 
 msgid "This subtitle provider has subtitles for movies only."
-msgstr ""
+msgstr "Bu altyazı sağlayıcısında yalnızca filmler için altyazı var."
 
-#, fuzzy
 msgid "This video has been deleted."
-msgstr " Bu video özeldir."
+msgstr "Bu video silindi."
 
-#, fuzzy
 msgid "This video is Premium-only content."
-msgstr "Bu video özeldir."
+msgstr "Bu video yalnızca Premium içeriktir."
 
-#, fuzzy
 msgid "This video is a private video."
-msgstr " Bu video özeldir."
+msgstr "Bu video özel bir videodur."
 
 msgid "This video is a private."
-msgstr "Bu video özeldir."
+msgstr "Bu video gizlidir."
 
 msgid "This video is only on hosters E2iPlayer cannot play."
-msgstr ""
+msgstr "Bu video yalnızca E2iPlayer'ın oynatamadığı hoster'larda bulunuyor."
 
 msgid "This video is only on the netu.tv player (pbtube.net), which E2iPlayer cannot play."
-msgstr ""
+msgstr "Bu video yalnızca E2iPlayer'ın oynatamadığı netu.tv oynatıcısında (pbtube.net) bulunuyor."
 
 msgid "This video needs a paid ororo.tv subscription."
-msgstr ""
+msgstr "Bu video ücretli bir ororo.tv aboneliği gerektiriyor."
 
 msgid "This video requires you to sign in to a YouTube account."
-msgstr ""
+msgstr "Bu video için bir YouTube hesabında oturum açmanız gerekiyor."
 
 msgid "This video was embedded from Pornhub and is no longer available there."
-msgstr ""
+msgstr "Bu video Pornhub'dan gömülmüştü ve orada artık mevcut değil."
 
-#, fuzzy
 msgid "This video was embedded from xHamster and has been deleted there."
-msgstr " Bu video özeldir."
+msgstr "Bu video xHamster'dan gömülmüştü ve orada silinmiş."
 
 msgid "Thriller"
-msgstr ""
+msgstr "Gerilim"
 
-#, fuzzy
 msgid "Thumbnails"
-msgstr "Küçük resimleri kaldır"
+msgstr "Küçük resimler"
 
 msgid "Time"
-msgstr ""
+msgstr "Zaman"
 
 msgid "Tip! You can connect USB flash drive to fix this problem."
-msgstr ""
+msgstr "İpucu! Bu sorunu gidermek için bir USB bellek bağlayabilirsiniz."
 
 msgid "Titles"
-msgstr ""
+msgstr "Başlıklar"
 
 #, python-format
 msgid "Titlovi.com login failed (HTTP %s)."
-msgstr ""
+msgstr "Titlovi.com girişi başarısız (HTTP %s)."
 
 #, python-format
 msgid "Titlovi.com login failed for user \"%s\". Please check your login and password."
-msgstr ""
+msgstr "\"%s\" kullanıcısı için Titlovi.com girişi başarısız. Lütfen kullanıcı adınızı ve şifrenizi kontrol edin."
 
 msgid "Titlovi.com needs a free titlovi.com account. Enter login and password in the E2iPlayer settings."
-msgstr ""
+msgstr "Titlovi.com ücretsiz bir titlovi.com hesabı gerektirir. Kullanıcı adı ve şifreyi E2iPlayer ayarlarına girin."
 
 #, python-format
 msgid "Titlovi.com search failed (HTTP %s)."
-msgstr ""
+msgstr "Titlovi.com araması başarısız (HTTP %s)."
 
 #, python-format
 msgid "Titlovi.com: API access is disabled for the account \"%s\". See titlovi.com/donacije."
-msgstr ""
+msgstr "Titlovi.com: \"%s\" hesabı için API erişimi devre dışı. Bkz. titlovi.com/donacije."
 
 msgid "Titlovi.com: invalid server response."
-msgstr ""
+msgstr "Titlovi.com: geçersiz sunucu yanıtı."
 
 #, python-format
 msgid ""
@@ -5826,380 +5640,367 @@ msgid ""
 "\n"
 "3. Approve the access, then select OK here."
 msgstr ""
+"YouTube'da oturum açmak için:\n"
+"\n"
+"1. Bir telefonda veya bilgisayarda şunu açın:\n"
+"     %s\n"
+"\n"
+"2. Bu kodu girin:\n"
+"\n"
+"     %s\n"
+"\n"
+"3. Erişimi onaylayın, ardından burada OK'u seçin."
 
 msgid ""
 "To watch videos from https://vk.com/ you need to login.\n"
 "Please fill your login and password in the IPTVPlayer configuration."
 msgstr ""
+"https://vk.com/ videolarını izlemek için giriş yapmanız gerekir.\n"
+"Lütfen kullanıcı adınızı ve şifrenizi IPTVPlayer yapılandırmasına girin."
 
 msgid "Today"
 msgstr "Bugün"
 
 msgid "Tomorrow"
-msgstr ""
+msgstr "Yarın"
 
 msgid "Too many redirects."
-msgstr ""
+msgstr "Çok fazla yönlendirme."
 
 msgid "Too many requests. Please try again later."
-msgstr ""
+msgstr "Çok fazla istek. Lütfen daha sonra tekrar deneyin."
 
 msgid "Too many wrong codes - scan the QR code on the receiver screen instead."
-msgstr ""
+msgstr "Çok fazla yanlış kod - bunun yerine alıcı ekranındaki QR kodunu tarayın."
 
 msgid "Top"
-msgstr "En üst"
+msgstr "En iyiler"
 
 msgid "Top 10"
-msgstr ""
+msgstr "Top 10"
 
 msgid "Top IMDb"
-msgstr ""
+msgstr "IMDb'de en iyiler"
 
 msgid "Top airing"
-msgstr ""
+msgstr "En popüler yayındakiler"
 
 msgid "Top in your country"
-msgstr ""
+msgstr "Ülkenizde en popüler"
 
 msgid "Top leagues and clubs"
-msgstr ""
+msgstr "En iyi ligler ve kulüpler"
 
 msgid "Top rated"
 msgstr "En yüksek puanlı"
 
 msgid "Top rated movies"
-msgstr ""
+msgstr "En yüksek puanlı filmler"
 
 msgid "Top rated series"
-msgstr ""
+msgstr "En yüksek puanlı diziler"
 
 msgid "Top scorers"
-msgstr ""
+msgstr "Gol krallığı"
 
-#, fuzzy
 msgid "Top series"
-msgstr "TV dizileri"
+msgstr "En iyi diziler"
 
 msgid "Top stations"
-msgstr ""
+msgstr "En iyi istasyonlar"
 
 msgid "Top tracks"
-msgstr ""
+msgstr "En iyi parçalar"
 
 msgid "Top upcoming"
-msgstr ""
+msgstr "En çok beklenen yakında çıkacaklar"
 
 msgid "Top-IMDB"
-msgstr ""
+msgstr "Top-IMDB"
 
 msgid "Topics"
-msgstr ""
+msgstr "Konular"
 
 msgid "Total size:"
-msgstr ""
+msgstr "Toplam boyut:"
 
 msgid "Tourism"
-msgstr ""
+msgstr "Turizm"
 
 msgid "Tracklist"
-msgstr ""
+msgstr "Parça listesi"
 
 msgid "Trailer"
 msgstr "Fragman"
 
-#, fuzzy
 msgid "Translation:"
-msgstr "Süre:"
+msgstr "Çeviri:"
 
 #, python-format
 msgid "Translator: %s"
-msgstr ""
+msgstr "Çevirmen: %s"
 
 msgid "Transparent"
 msgstr "Şeffaf"
 
 msgid "Trauma"
-msgstr ""
+msgstr "Travma"
 
 msgid "Travel"
-msgstr ""
+msgstr "Seyahat"
 
 msgid "Treatment Consult"
-msgstr ""
+msgstr "Tedavi danışmanlığı"
 
 msgid "Trending"
 msgstr "Trend olanlar"
 
-#, fuzzy
 msgid "Trending this week"
-msgstr "Trend olanlar"
+msgstr "Bu hafta trend olanlar"
 
 msgid "Trial"
-msgstr ""
+msgstr "Deneme"
 
 msgid "Troubleshooting"
-msgstr ""
+msgstr "Sorun giderme"
 
 msgid "Try to change extplayer or reinstall gst-ifdsrc"
-msgstr ""
+msgstr "extplayer'ı değiştirmeyi veya gst-ifdsrc'yi yeniden kurmayı deneyin"
 
 msgid "Turkish"
-msgstr ""
+msgstr "Türkçe"
 
-#, fuzzy
 msgid "Turkish Movies"
-msgstr "Arap Filmleri"
+msgstr "Türk filmleri"
 
-#, fuzzy
 msgid "Turkish Series"
-msgstr "TV Dizileri"
+msgstr "Türk dizileri"
 
-#, fuzzy
 msgid "Turkish TV series"
-msgstr "TV dizileri"
+msgstr "Türk TV dizileri"
 
 msgid "Turkish movies (dubbed)"
-msgstr ""
+msgstr "Türk filmleri (dublajlı)"
 
 msgid "Turkish series (dubbed)"
-msgstr ""
+msgstr "Türk dizileri (dublajlı)"
 
 msgid "Tutorials"
 msgstr "Eğitimler"
 
 msgid "Type"
-msgstr ""
+msgstr "Tür"
 
-#, fuzzy
 msgid "Type:"
-msgstr "Tür: "
+msgstr "Tür:"
 
-#, fuzzy
 msgid "Type: "
 msgstr "Tür: "
 
-#, fuzzy, python-format
+#, python-format
 msgid "Type: %s"
-msgstr "Tür: "
+msgstr "Tür: %s"
 
 msgid "Types"
-msgstr ""
+msgstr "Türler"
 
 msgid "UNKNOWN"
 msgstr "BİLİNMİYOR"
 
 msgid "URL malformed."
-msgstr ""
+msgstr "URL hatalı biçimlendirilmiş."
 
 msgid "Ukrainian"
-msgstr ""
+msgstr "Ukraynaca"
 
 msgid "Umount iso file"
-msgstr ""
+msgstr "ISO dosyasının bağlantısını kaldır"
 
-#, fuzzy
 msgid "Unable to comply. Search History is empty."
-msgstr "Arama geçmişi boş."
+msgstr "İşlem yapılamıyor. Arama geçmişi boş."
 
 msgid "Unfix jump target"
-msgstr ""
+msgstr "Atlama hedefinin sabitlemesini kaldır"
 
-#, fuzzy
 msgid "Unknown action."
-msgstr "Bilinmeyen hata."
+msgstr "Bilinmeyen işlem."
 
-#, fuzzy
 msgid "Unknown error code."
-msgstr "Bilinmeyen hata."
+msgstr "Bilinmeyen hata kodu."
 
 msgid "Unknown error."
 msgstr "Bilinmeyen hata."
 
 #, python-format
 msgid "Unknown protocol [%s]"
-msgstr ""
+msgstr "Bilinmeyen protokol [%s]"
 
-#, fuzzy
 msgid "Unknown server response."
-msgstr "Bilinmeyen hata."
+msgstr "Bilinmeyen sunucu yanıtı."
 
 #, python-format
 msgid "Unknown subtitle parser for format \"%s\"."
-msgstr ""
+msgstr "\"%s\" biçimi için bilinmeyen altyazı ayrıştırıcısı."
 
 #, python-format
 msgid "Unrar error code[%s]."
-msgstr ""
+msgstr "Unrar hata kodu[%s]."
 
-#, fuzzy
 msgid "Unset watched"
-msgstr "İzlendi olarak işaretle"
+msgstr "İzlendi işaretini kaldır"
 
 msgid "Unsupported protocol."
-msgstr ""
+msgstr "Desteklenmeyen protokol."
 
 #, python-format
 msgid "Unzip error code[%s]."
-msgstr ""
+msgstr "Unzip hata kodu[%s]."
 
 msgid "Upbringing"
-msgstr ""
+msgstr "Çocuk yetiştirme"
 
 msgid "Upcoming"
-msgstr ""
+msgstr "Yakında"
 
-#, fuzzy
 msgid "Updates"
-msgstr "Yükleme tarihi"
+msgstr "Güncellemeler"
 
 msgid "Upload date"
 msgstr "Yükleme tarihi"
 
 #, python-format
 msgid "Uploader: %s"
-msgstr ""
+msgstr "Yükleyen: %s"
 
-#, fuzzy
 msgid "Uploads"
-msgstr "Yükleme tarihi"
+msgstr "Yüklemeler"
 
-#, fuzzy
 msgid "Urllists player"
-msgstr "harici gstplayer"
+msgstr "Urllists oynatıcısı"
 
 msgid "Use Cinemeta (no key, English)"
-msgstr ""
+msgstr "Cinemeta kullan (anahtarsız, İngilizce)"
 
 msgid "Use HLS streams (adaptive):"
-msgstr ""
+msgstr "HLS yayınlarını kullan (uyarlanabilir):"
 
 msgid "Use IMDb (no key)"
-msgstr ""
+msgstr "IMDb kullan (anahtarsız)"
 
 msgid "Use OMDb"
-msgstr ""
+msgstr "OMDb kullan"
 
 msgid "Use TMDb"
-msgstr ""
+msgstr "TMDb kullan"
 
 msgid "Use TVmaze for series (no key, English)"
-msgstr ""
+msgstr "Diziler için TVmaze kullan (anahtarsız, İngilizce)"
 
 msgid "Use default video quality"
-msgstr ""
+msgstr "Varsayılan video kalitesini kullan"
 
 msgid "Use default video quality:"
-msgstr ""
+msgstr "Varsayılan video kalitesini kullan:"
 
-#, fuzzy
 msgid "Use login"
-msgstr "giriş"
+msgstr "Giriş kullan"
 
-#, fuzzy
 msgid "Use own pin for configuration"
-msgstr "%s servis yapılandırması"
+msgstr "Yapılandırma için ayrı PIN kullan"
 
 msgid "Use own pin instead of the player pin"
-msgstr ""
+msgstr "Oynatıcı PIN'i yerine ayrı PIN kullan"
 
-#, fuzzy
 msgid "Use proxy server:"
-msgstr "Alternatif proxy sunucusu (1)"
+msgstr "Proxy sunucusu kullan:"
 
 #, python-format
 msgid "Use software decoder for the %s"
-msgstr ""
+msgstr "%s için yazılım kod çözücüsünü kullan"
 
 msgid "Use subtitles parser extension if available"
-msgstr ""
+msgstr "Varsa altyazı ayrıştırıcı uzantısını kullan"
 
 msgid "Use the PyCurl for HTTP(S) requests"
-msgstr ""
+msgstr "HTTP(S) istekleri için PyCurl kullan"
 
 msgid "Use the best quality :"
-msgstr ""
+msgstr "En iyi kaliteyi kullan :"
 
 msgid "User"
-msgstr ""
+msgstr "Kullanıcı"
 
 msgid "User defined"
 msgstr "Kullanıcı tanımlı"
 
-#, fuzzy
 msgid "User files"
-msgstr "Kullanıcı tanımlı"
+msgstr "Kullanıcı dosyaları"
 
-#, fuzzy
 msgid "User link added."
-msgstr "Bağlantı önbelleğini kullan"
+msgstr "Kullanıcı bağlantısı eklendi."
 
-#, fuzzy
 msgid "User link deleted."
-msgstr "Bağlantı önbelleğini kullan"
+msgstr "Kullanıcı bağlantısı silindi."
 
-#, fuzzy
 msgid "User link updated."
-msgstr "Bağlantı önbelleğini kullan"
+msgstr "Kullanıcı bağlantısı güncellendi."
 
-#, fuzzy
 msgid "User links"
-msgstr "Bağlantı önbelleğini kullan"
+msgstr "Kullanıcı bağlantıları"
 
-#, fuzzy
 msgid "User links sorted."
-msgstr "Bağlantı önbelleğini kullan"
+msgstr "Kullanıcı bağlantıları sıralandı."
 
 msgid "User links stored in the ytlist.txt file."
-msgstr ""
+msgstr "Kullanıcı bağlantıları ytlist.txt dosyasında saklanır."
 
 msgid "User-Agent (leave empty for the default):"
-msgstr ""
+msgstr "User-Agent (varsayılan için boş bırakın):"
 
-#, fuzzy, python-format
+#, python-format
 msgid "User-Links: %d"
-msgstr "Bağlantı önbelleğini kullan"
+msgstr "Kullanıcı bağlantıları: %d"
 
 msgid "Username/password authentication failure."
-msgstr ""
+msgstr "Kullanıcı adı/şifre doğrulaması başarısız."
 
 msgid "Username:"
 msgstr "Kullanıcı adı:"
 
 msgid "Users"
-msgstr ""
+msgstr "Kullanıcılar"
 
 #, python-format
 msgid "Utility \"%s\" can not be found."
-msgstr ""
+msgstr "\"%s\" aracı bulunamadı."
 
 msgid "VAVOO did not hand out a session signature. Try again later."
-msgstr ""
+msgstr "VAVOO bir oturum imzası vermedi. Daha sonra tekrar deneyin."
 
 msgid "Venue"
-msgstr ""
+msgstr "Stadyum"
 
 msgid "Verify"
 msgstr "Doğrula"
 
 msgid "Version"
-msgstr ""
+msgstr "Sürüm"
 
 #, python-format
 msgid "Version: %s"
-msgstr ""
+msgstr "Sürüm: %s"
 
 msgid "Video"
 msgstr "Video"
 
 msgid "Video buffer size [MB]"
-msgstr "Video tampon boyutu [MB]"
+msgstr "Video arabellek boyutu [MB]"
 
 msgid "Video library"
-msgstr ""
+msgstr "Video kitaplığı"
 
 msgid "Video link not found."
-msgstr ""
+msgstr "Video bağlantısı bulunamadı."
 
 msgid "Video mode"
 msgstr "Video modu"
@@ -6207,314 +6008,306 @@ msgstr "Video modu"
 msgid "Video options"
 msgstr "Video seçenekleri"
 
-#, fuzzy
 msgid "Video player OSD clock format"
-msgstr "Bilgi çubuğu saat biçimi"
+msgstr "Video oynatıcı OSD saat biçimi"
 
-#, fuzzy
 msgid "Video policy"
-msgstr "Video seçenekleri"
+msgstr "Video politikası"
 
 msgid "Video policy for 4:3"
-msgstr ""
+msgstr "4:3 için video politikası"
 
 msgid "Video recitations"
-msgstr ""
+msgstr "Video tilavetler"
 
-#, fuzzy
 msgid "Video with DRM protection."
-msgstr "DRM koruması algılandı."
+msgstr "DRM korumalı video."
 
 msgid "Videos"
 msgstr "Videolar"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Videos %s"
-msgstr "Videolar"
+msgstr "Videolar %s"
 
 msgid "Videos you have liked."
-msgstr ""
+msgstr "Beğendiğiniz videolar."
 
 msgid "Videos you have recently watched."
-msgstr ""
+msgstr "Son izlediğiniz videolar."
 
 msgid "View count"
-msgstr "Görüntüleme sayısı"
+msgstr "Görüntülenme sayısı"
 
 msgid "Views"
-msgstr "Görüntüleme"
+msgstr "Görüntülenme"
 
 msgid "Views:"
-msgstr "Görüntüleme:"
+msgstr "Görüntülenme:"
 
 msgid "Vimeo does not offer this list to anonymous users in your region."
-msgstr ""
+msgstr "Vimeo bu listeyi bölgenizdeki anonim kullanıcılara sunmuyor."
 
 msgid "Vimeo live event: the live transmission (while on air) and the past transmissions."
-msgstr ""
+msgstr "Vimeo canlı etkinliği: canlı yayın (yayındayken) ve geçmiş yayınlar."
 
 msgid "Vimeo playlist with the recordings of this page."
-msgstr ""
+msgstr "Bu sayfanın kayıtlarını içeren Vimeo oynatma listesi."
 
 msgid "Vimeo: this video is private, removed or may only be played on the site that embeds it."
-msgstr ""
+msgstr "Vimeo: bu video özel, kaldırılmış veya yalnızca onu gömen sitede oynatılabilir."
 
 msgid "Virtual Keyboard"
 msgstr "Sanal Klavye"
 
-#, fuzzy
 msgid "Virtual Keyboard type"
-msgstr "Sanal Klavye"
+msgstr "Sanal klavye türü"
 
 msgid "Voice-over"
-msgstr ""
+msgstr "Seslendirme"
 
 msgid "WWE shows"
-msgstr ""
+msgstr "WWE şovları"
 
 msgid "Waiting for the result ..."
-msgstr ""
+msgstr "Sonuç bekleniyor ..."
 
 msgid "War"
-msgstr ""
+msgstr "Savaş"
 
 msgid "Watch Videos Online"
-msgstr ""
+msgstr "Çevrimiçi video izle"
 
-#, fuzzy
 msgid "Watch history"
-msgstr "Arama geçmişi"
+msgstr "İzleme geçmişi"
 
-#, fuzzy
 msgid "Watch later"
-msgstr "İzle"
+msgstr "Daha sonra izle"
 
 msgid "Watch online"
-msgstr ""
+msgstr "Çevrimiçi izle"
 
 msgid "Western"
-msgstr ""
+msgstr "Western"
 
 msgid "What's happening?"
-msgstr ""
+msgstr "Neler oluyor?"
 
 msgid "When the maximum is reached"
-msgstr ""
+msgstr "Maksimuma ulaşıldığında"
 
 msgid "While live TV is running"
-msgstr ""
+msgstr "Canlı TV çalışırken"
 
 msgid "Whole file must be downloaded to start playback!"
-msgstr ""
+msgstr "Oynatmayı başlatmak için dosyanın tamamı indirilmelidir!"
 
 msgid "Wiki"
-msgstr ""
+msgstr "Wiki"
 
 msgid "Winter"
-msgstr ""
+msgstr "Kış"
 
 msgid "With an API key from subdl.com (E2iPlayer settings, Subtitles) the official SubDL API is searched as well."
-msgstr ""
+msgstr "subdl.com'dan alınan bir API anahtarıyla (E2iPlayer ayarları, Altyazılar) resmi SubDL API'sinde de arama yapılır."
 
 msgid "With subtitles"
 msgstr "Altyazılı"
 
 msgid "World"
-msgstr ""
+msgstr "Dünya"
 
 msgid "Worldwide"
-msgstr ""
+msgstr "Dünya çapında"
 
 msgid "Wrestling"
-msgstr ""
+msgstr "Güreş"
 
 msgid "Wrestling shows"
-msgstr ""
+msgstr "Güreş şovları"
 
 msgid "Write current title to file:"
-msgstr ""
+msgstr "Geçerli başlığı dosyaya yaz:"
 
 msgid "Writer:"
-msgstr ""
+msgstr "Yazar:"
 
-#, fuzzy
 msgid "Writers:"
-msgstr "Filtreler"
+msgstr "Yazarlar:"
 
 msgid "Written Boards Review"
-msgstr ""
+msgstr "Yazılı kurul sınavı tekrarı"
 
 msgid "Wrong Youtube Api Key length"
-msgstr ""
+msgstr "Yanlış YouTube API anahtarı uzunluğu"
 
 msgid "Wrong captcha code."
-msgstr ""
+msgstr "Yanlış captcha kodu."
 
 msgid "Wrong code."
-msgstr ""
+msgstr "Yanlış kod."
 
 msgid "Wrong format of rar archive."
-msgstr ""
+msgstr "Yanlış rar arşivi biçimi."
 
 msgid "Wrong format of zip archive."
-msgstr ""
+msgstr "Yanlış zip arşivi biçimi."
 
 msgid "Wrong indexes."
-msgstr ""
+msgstr "Yanlış dizinler."
 
 msgid "Wrong uri."
-msgstr ""
+msgstr "Yanlış URI."
 
 msgid "Wrong weeb.tv username or password."
-msgstr ""
+msgstr "Yanlış weeb.tv kullanıcı adı veya şifresi."
 
 #, python-format
 msgid "Wyzie Subs API key rejected: %s"
-msgstr ""
+msgstr "Wyzie Subs API anahtarı reddedildi: %s"
 
 msgid "Wyzie Subs needs an API key. You can get a free one at https://store.wyzie.io/redeem and enter it in the E2iPlayer configuration."
-msgstr ""
+msgstr "Wyzie Subs bir API anahtarı gerektirir. https://store.wyzie.io/redeem adresinden ücretsiz bir anahtar alıp E2iPlayer yapılandırmasına girebilirsiniz."
 
 msgid "Wyzie Subs: the daily request limit of the API key is reached."
-msgstr ""
+msgstr "Wyzie Subs: API anahtarının günlük istek sınırına ulaşıldı."
 
 msgid "YELLOW"
-msgstr ""
+msgstr "SARI"
 
 msgid "YESTERDAY"
-msgstr ""
+msgstr "DÜN"
 
 msgid "YP connected"
-msgstr ""
+msgstr "YP bağlı"
 
 msgid "Year"
 msgstr "Yıl"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Year %s"
-msgstr "Yıl: "
+msgstr "Yıl %s"
 
-#, fuzzy
 msgid "Year:"
-msgstr "Yıl: "
+msgstr "Yıl:"
 
 msgid "Yes"
 msgstr "Evet"
 
 msgid "Yes + Global Search"
-msgstr ""
+msgstr "Evet + Genel arama"
 
 msgid "Yes, to console"
-msgstr ""
+msgstr "Evet, konsola"
 
 msgid "Yes, to file /hdd/iptv.dbg"
-msgstr ""
+msgstr "Evet, /hdd/iptv.dbg dosyasına"
 
 msgid "Yes, to file /home/root/logs/iptv.dbg"
-msgstr ""
+msgstr "Evet, /home/root/logs/iptv.dbg dosyasına"
 
 msgid "Yes, to file /tmp/iptv.dbg"
-msgstr ""
+msgstr "Evet, /tmp/iptv.dbg dosyasına"
 
 msgid "Yesterday"
-msgstr ""
+msgstr "Dün"
 
 msgid "You can disable HTTPS certificates validation in the E2iPlayer configuration to suppress this problem."
-msgstr ""
+msgstr "Bu sorunu bastırmak için E2iPlayer yapılandırmasında HTTPS sertifika doğrulamasını devre dışı bırakabilirsiniz."
 
 msgid "You can enable PyCurl in the E2iPlayer configuration to fix this problem."
-msgstr ""
+msgstr "Bu sorunu gidermek için E2iPlayer yapılandırmasında PyCurl'ü etkinleştirebilirsiniz."
 
 msgid "You can install PyCurl package with TLS 1.3 support from the feed to fix this problem."
-msgstr ""
+msgstr "Bu sorunu gidermek için feed'den TLS 1.3 destekli PyCurl paketini kurabilirsiniz."
 
 #, python-format
 msgid "You can use \"%s\" or \"%s\" services for automatic solution."
-msgstr ""
+msgstr "Otomatik çözüm için \"%s\" veya \"%s\" hizmetlerini kullanabilirsiniz."
 
 msgid "You can use external eplayer to start playback faster."
-msgstr ""
+msgstr "Oynatmayı daha hızlı başlatmak için harici eplayer'ı kullanabilirsiniz."
 
 msgid "You do not have a premium account. Starting a sponsored broadcast."
-msgstr ""
+msgstr "Premium hesabınız yok. Sponsorlu yayın başlatılıyor."
 
 msgid "You have reached the play limit for this mix."
-msgstr ""
+msgstr "Bu mix için oynatma sınırına ulaştınız."
 
 msgid "You should never perform block I/O operations in the __init__."
-msgstr ""
+msgstr "__init__ içinde asla engelleyici G/Ç işlemleri yapmamalısınız."
 
 msgid "YouTube User Links Editor"
-msgstr ""
+msgstr "YouTube kullanıcı bağlantıları düzenleyicisi"
 
 msgid "YouTube channels: original order"
-msgstr ""
+msgstr "YouTube kanalları: orijinal sıra"
 
 msgid "YouTube channels: sort by newest upload"
-msgstr ""
+msgstr "YouTube kanalları: en yeni yüklemeye göre sırala"
 
 msgid "Your 'Watch later' playlist."
-msgstr ""
+msgstr "'Daha sonra izle' oynatma listeniz."
 
 #, python-format
 msgid "Your MyE2i extension is outdated or unknown (v%s or newer needed). Please update:"
-msgstr ""
+msgstr "MyE2i uzantınız eski veya bilinmiyor (v%s veya daha yenisi gerekli). Lütfen güncelleyin:"
 
 msgid "Your search entry"
-msgstr "Arama girdiniz"
+msgstr "Arama girişiniz"
 
 #, python-format
 msgid "Youth protection: only available between %s and %s."
-msgstr ""
+msgstr "Gençlik koruması: yalnızca %s ile %s arasında kullanılabilir."
 
 msgid "Youtube Suggestions"
 msgstr "Youtube Önerileri"
 
 msgid "Youtube searches are quicker, if you fill API key in setting menu"
-msgstr ""
+msgstr "Ayarlar menüsüne API anahtarı girerseniz YouTube aramaları daha hızlı olur"
 
 msgid "Z-A"
-msgstr ""
+msgstr "Z-A"
 
 #, python-format
 msgid "[%s CD]"
-msgstr ""
+msgstr "[%s CD]"
 
-#, fuzzy, python-format
+#, python-format
 msgid "[%s] - configuration"
-msgstr "%s servis yapılandırması"
+msgstr "[%s] - yapılandırma"
 
 #, python-format
 msgid "[%s] with buffering"
-msgstr ""
+msgstr "[%s] arabellekli"
 
 #, python-format
 msgid "[%s] without buffering"
-msgstr ""
+msgstr "[%s] arabelleksiz"
 
 msgid "[HLS/M3U8] buffering"
-msgstr ""
+msgstr "[HLS/M3U8] arabelleğe alma"
 
 msgid "[HLS/M3U8] live stream starts behind live"
-msgstr ""
+msgstr "[HLS/M3U8] canlı yayın canlının gerisinden başlar"
 
 msgid "[HTTP] buffering"
-msgstr ""
+msgstr "[HTTP] arabelleğe alma"
 
 msgid "[Logged-in-only]"
-msgstr ""
+msgstr "[Yalnızca giriş yapanlar]"
 
 msgid "[RTMP] buffering (rtmpdump required)"
-msgstr ""
+msgstr "[RTMP] arabelleğe alma (rtmpdump gerekli)"
 
 msgid "[en]"
-msgstr ""
+msgstr "[en]"
 
 msgid "[pl]"
-msgstr ""
+msgstr "[pl]"
 
 msgid "_checkStatus except error"
-msgstr ""
+msgstr "_checkStatus except error"
 
 msgid "after a week"
 msgstr "bir hafta sonra"
@@ -6528,38 +6321,36 @@ msgstr "bir gün sonra"
 msgid "after three days"
 msgstr "üç gün sonra"
 
-#, fuzzy
 msgid "all"
-msgstr "küçük"
+msgstr "tümü"
 
-#, fuzzy
 msgid "alphabetical"
-msgstr "Alfabetik olarak"
+msgstr "alfabetik"
 
 msgid "anime-odcinki.pl shows this title only to logged-in users."
-msgstr ""
+msgstr "anime-odcinki.pl bu başlığı yalnızca giriş yapmış kullanıcılara gösterir."
 
 msgid "aqua"
-msgstr "akuamarin"
+msgstr "camgöbeği"
 
 msgid "as Chrome this session"
-msgstr ""
+msgstr "bu oturumda Chrome olarak"
 
 msgid "as in ytlist.txt"
-msgstr ""
+msgstr "ytlist.txt'deki gibi"
 
 msgid "auto"
 msgstr "otomatik"
 
 #, python-format
 msgid "available until %s"
-msgstr ""
+msgstr "%s tarihine kadar mevcut"
 
 msgid "back to host/group selection"
-msgstr ""
+msgstr "host/grup seçimine geri dön"
 
 msgid "back to the previous category / jump to the next page"
-msgstr ""
+msgstr "önceki kategoriye dön / sonraki sayfaya atla"
 
 msgid "black"
 msgstr "siyah"
@@ -6574,60 +6365,56 @@ msgid "bottom"
 msgstr "alt"
 
 msgid "buffering location"
-msgstr "tampon konumu"
+msgstr "arabellek konumu"
 
 msgid "center"
 msgstr "orta"
 
-#, fuzzy
 msgid "changed"
-msgstr "Değişiklikler kaydedilsin mi?"
+msgstr "değiştirildi"
 
 msgid "close the editor - or stop manual reordering if it's active"
-msgstr ""
+msgstr "düzenleyiciyi kapat - veya etkinse elle sıralamayı durdur"
 
 msgid "cobalt"
 msgstr "kobalt"
 
 msgid "cookies cache"
-msgstr ""
+msgstr "çerez önbelleği"
 
 msgid "could not run the probe"
-msgstr ""
+msgstr "test çalıştırılamadı"
 
 #, python-format
 msgid "curl-impersonate is not installed on the receiver (%s). This stream only plays with it."
-msgstr ""
+msgstr "curl-impersonate alıcıda kurulu değil (%s). Bu yayın yalnızca onunla oynatılır."
 
 msgid "debug"
-msgstr ""
+msgstr "hata ayıklama"
 
 msgid "default"
 msgstr "varsayılan"
 
-#, fuzzy
 msgid "delete entered text"
-msgstr "Arama geçmişini sil"
+msgstr "girilen metni sil"
 
-#, fuzzy
 msgid "delete the selected entry"
-msgstr "Dizini seç"
+msgstr "seçili girişi sil"
 
 msgid "device ID"
-msgstr ""
+msgstr "cihaz kimliği"
 
 msgid "device ID 2"
-msgstr ""
+msgstr "cihaz kimliği 2"
 
 msgid "direct link"
 msgstr "doğrudan bağlantı"
 
-#, fuzzy
 msgid "direct number input"
-msgstr "doğrudan bağlantı"
+msgstr "doğrudan numara girişi"
 
 msgid "download the selected item"
-msgstr ""
+msgstr "seçili öğeyi indir"
 
 msgid "downloads location"
 msgstr "indirme konumu"
@@ -6636,14 +6423,13 @@ msgid "e-mail"
 msgstr "e-posta"
 
 msgid "edit the selected entry (same as BLUE) - or drop it while manually reordering"
-msgstr ""
+msgstr "seçili girişi düzenle (MAVİ ile aynı) - veya elle sıralama sırasında bırak"
 
 msgid "edit the selected entry (same as OK)"
-msgstr ""
+msgstr "seçili girişi düzenle (OK ile aynı)"
 
-#, fuzzy
 msgid "enable / disable manual reordering"
-msgstr "Yeniden sıralamayı etkinleştir"
+msgstr "elle sıralamayı etkinleştir / devre dışı bırak"
 
 msgid "external eplayer3"
 msgstr "harici eplayer3"
@@ -6651,21 +6437,20 @@ msgstr "harici eplayer3"
 msgid "external gstplayer"
 msgstr "harici gstplayer"
 
-#, fuzzy
 msgid "failed"
-msgstr "Giriş başarısız."
+msgstr "başarısız"
 
 msgid "file"
-msgstr ""
+msgstr "dosya"
 
 msgid "fixed"
-msgstr ""
+msgstr "sabit"
 
 msgid "format"
 msgstr "biçim"
 
 msgid "free"
-msgstr ""
+msgstr "boş"
 
 msgid "from E2 settings"
 msgstr "E2 ayarlarından"
@@ -6674,10 +6459,10 @@ msgid "fuchsia"
 msgstr "fuşya"
 
 msgid "go back / close"
-msgstr ""
+msgstr "geri git / kapat"
 
 msgid "goals"
-msgstr ""
+msgstr "goller"
 
 msgid "gray"
 msgstr "gri"
@@ -6689,13 +6474,13 @@ msgid "hd"
 msgstr "hd"
 
 msgid "hearing impaired"
-msgstr ""
+msgstr "işitme engelli"
 
 msgid "high"
 msgstr "yüksek"
 
 msgid "hint: the site shows a next page link"
-msgstr ""
+msgstr "ipucu: site bir sonraki sayfa bağlantısı gösteriyor"
 
 msgid "horizontal"
 msgstr "yatay"
@@ -6704,7 +6489,7 @@ msgid "host"
 msgstr "host"
 
 msgid "host order and groups"
-msgstr ""
+msgstr "host sırası ve gruplar"
 
 msgid "https"
 msgstr "https"
@@ -6713,28 +6498,28 @@ msgid "https - validate SSL certificates"
 msgstr "https - SSL sertifikalarını doğrula"
 
 msgid "insert space"
-msgstr ""
+msgstr "boşluk ekle"
 
 msgid "installed"
-msgstr ""
+msgstr "kurulu"
 
 msgid "internal"
 msgstr "dahili"
 
 msgid "item actions (favorites, host-specific actions)"
-msgstr ""
+msgstr "öğe işlemleri (favoriler, host'a özel işlemler)"
 
 msgid "jersey"
-msgstr ""
+msgstr "forma"
 
 msgid "jump to entries starting with that letter (if enabled in the settings)"
-msgstr ""
+msgstr "o harfle başlayan girişlere atla (ayarlarda etkinse)"
 
 msgid "jump to items starting with that letter, or launch a specific player directly"
-msgstr ""
+msgstr "o harfle başlayan öğelere atla veya belirli bir oynatıcıyı doğrudan başlat"
 
 msgid "kernel reports"
-msgstr ""
+msgstr "çekirdek raporları"
 
 msgid "large"
 msgstr "büyük"
@@ -6749,7 +6534,7 @@ msgid "line"
 msgstr "satır"
 
 msgid "loaded (no version)"
-msgstr ""
+msgstr "yüklendi (sürüm yok)"
 
 msgid "login"
 msgstr "giriş"
@@ -6758,125 +6543,118 @@ msgid "low"
 msgstr "düşük"
 
 msgid "machine translated"
-msgstr ""
+msgstr "makine çevirisi"
 
 msgid "main"
 msgstr "ana"
 
 msgid "manual"
-msgstr ""
+msgstr "elle"
 
 msgid "maroon"
-msgstr ""
+msgstr "bordo"
 
 msgid "medium"
 msgstr "orta"
 
 msgid "menu and list only"
-msgstr ""
+msgstr "yalnızca menü ve liste"
 
 msgid "minutes"
-msgstr ""
+msgstr "dakika"
 
 msgid "more options (this menu)"
-msgstr ""
+msgstr "diğer seçenekler (bu menü)"
 
 msgid "move cursor right/left"
-msgstr ""
+msgstr "imleci sağa/sola taşı"
 
 msgid "move the selection - or move it while manually reordering"
-msgstr ""
+msgstr "seçimi taşı - veya elle sıralama sırasında öğeyi taşı"
 
 msgid "movie metadata cache"
-msgstr ""
+msgstr "film meta verisi önbelleği"
 
-#, fuzzy
 msgid "movie player preferences"
-msgstr "IPTVPlayer'ı uzantı listesinde göster"
+msgstr "film oynatıcı tercihleri"
 
 msgid "navy"
 msgstr "lacivert"
 
 msgid "netu/hqq: the player check failed, try again later."
-msgstr ""
+msgstr "netu/hqq: oynatıcı kontrolü başarısız, daha sonra tekrar deneyin."
 
 msgid "never"
-msgstr ""
+msgstr "asla"
 
-#, fuzzy
 msgid "next page"
-msgstr "Sonraki sayfa"
+msgstr "sonraki sayfa"
 
 msgid "next page = page 1"
-msgstr ""
+msgstr "sonraki sayfa = sayfa 1"
 
-#, fuzzy
 msgid "next page empty"
-msgstr "Sonraki sayfa"
+msgstr "sonraki sayfa boş"
 
-#, fuzzy
 msgid "next page ok"
-msgstr "Sonraki sayfa"
+msgstr "sonraki sayfa tamam"
 
 msgid "no answer"
-msgstr ""
+msgstr "yanıt yok"
 
-#, fuzzy
 msgid "no next page"
-msgstr "Sonraki sayfa"
+msgstr "sonraki sayfa yok"
 
 msgid "no stream link"
-msgstr ""
+msgstr "yayın bağlantısı yok"
 
 msgid "no videos in the first lists"
-msgstr ""
+msgstr "ilk listelerde video yok"
 
 msgid "not available (the Python parser is used)"
-msgstr ""
+msgstr "mevcut değil (Python ayrıştırıcısı kullanılıyor)"
 
 msgid "not found"
-msgstr ""
+msgstr "bulunamadı"
 
 msgid "not installed"
-msgstr ""
+msgstr "kurulu değil"
 
 msgid "not loadable"
-msgstr ""
+msgstr "yüklenemiyor"
 
 msgid "off"
-msgstr ""
+msgstr "kapalı"
 
 msgid "off / console"
-msgstr ""
+msgstr "kapalı / konsol"
 
 msgid "olive"
 msgstr "zeytin"
 
-#, fuzzy
 msgid "on"
-msgstr "Yok"
+msgstr "açık"
 
 msgid "only on the receiver"
-msgstr ""
+msgstr "yalnızca alıcıda"
 
-#, fuzzy
 msgid "open / play the selected item"
-msgstr "IPTVPlayer'ı uzantı listesinde göster"
+msgstr "seçili öğeyi aç / oynat"
 
 msgid "open the options menu - see below"
-msgstr ""
+msgstr "seçenekler menüsünü aç - aşağıya bakın"
 
 msgid "or"
 msgstr "veya"
 
 msgid "other binaries"
-msgstr ""
+msgstr "diğer ikili dosyalar"
 
 msgid "password"
-msgstr "parola"
+msgstr "şifre"
 
 msgid "prijevodi-online.org refused the download for this account."
-msgstr ""
+msgstr "prijevodi-online.org bu hesap için indirmeyi reddetti."
 
 msgid "purple"
 msgstr "mor"
@@ -6888,58 +6666,53 @@ msgid "red"
 msgstr "kırmızı"
 
 msgid "refresh the current list"
-msgstr ""
+msgstr "geçerli listeyi yenile"
 
 msgid "rootfs"
-msgstr ""
+msgstr "rootfs"
 
 msgid "rotate (keep the old one as iptv-<date>.dbg)"
-msgstr ""
+msgstr "döndür (eskisini iptv-<date>.dbg olarak sakla)"
 
 msgid "rtmp"
 msgstr "rtmp"
 
 msgid "save all changes to disk"
-msgstr ""
+msgstr "tüm değişiklikleri diske kaydet"
 
 msgid "saved"
-msgstr ""
+msgstr "kaydedildi"
 
 msgid "saved in the temporary data folder"
-msgstr ""
+msgstr "geçici veri klasörüne kaydedildi"
 
-#, fuzzy
 msgid "saved next to the downloaded video file"
-msgstr "İndiriciye ekle"
+msgstr "indirilen video dosyasının yanına kaydedildi"
 
-#, fuzzy
 msgid "search"
-msgstr "Ara"
+msgstr "arama"
 
-#, fuzzy, python-format
+#, python-format
 msgid "search %d"
-msgstr "Ara"
+msgstr "arama %d"
 
 msgid "search found nothing"
-msgstr ""
+msgstr "arama sonuç bulamadı"
 
-#, fuzzy
 msgid "search history"
-msgstr "Arama geçmişi"
+msgstr "arama geçmişi"
 
 msgid "search next page = page 1"
-msgstr ""
+msgstr "arama sonraki sayfa = sayfa 1"
 
-#, fuzzy
 msgid "search next page empty"
-msgstr "Arama geçmişi boş."
+msgstr "arama sonraki sayfa boş"
 
-#, fuzzy
 msgid "search next page ok"
-msgstr "Arama türü"
+msgstr "arama sonraki sayfa tamam"
 
 msgid "season pack"
-msgstr ""
+msgstr "sezon paketi"
 
 msgid "second"
 msgstr "saniye"
@@ -6947,27 +6720,26 @@ msgstr "saniye"
 msgid "seconds"
 msgstr "saniye"
 
-#, fuzzy
 msgid "select to sign out"
-msgstr "Grup seç"
+msgstr "oturumu kapatmak için seçin"
 
 msgid "serial number"
-msgstr ""
+msgstr "seri numarası"
 
 msgid "show more details about the selected item"
-msgstr ""
+msgstr "seçili öğe hakkında daha fazla ayrıntı göster"
 
 msgid "show this help"
-msgstr ""
+msgstr "bu yardımı göster"
 
 msgid "sign in (subscriptions, playlists, age-restricted videos)"
-msgstr ""
+msgstr "oturum aç (abonelikler, oynatma listeleri, yaş kısıtlamalı videolar)"
 
 msgid "signature"
-msgstr ""
+msgstr "imza"
 
 msgid "signed in"
-msgstr ""
+msgstr "oturum açıldı"
 
 msgid "silver"
 msgstr "gümüş"
@@ -6976,118 +6748,114 @@ msgid "small"
 msgstr "küçük"
 
 msgid "sources"
-msgstr ""
+msgstr "kaynaklar"
 
 msgid "standard"
 msgstr "standart"
 
 msgid "start auto-play (plays through the list automatically)"
-msgstr ""
+msgstr "otomatik oynatmayı başlat (listeyi otomatik olarak sırayla oynatır)"
 
 msgid "status"
-msgstr ""
+msgstr "durum"
 
 msgid "stream data"
-msgstr ""
+msgstr "yayın verisi"
 
 msgid "stream data ok"
-msgstr ""
+msgstr "yayın verisi tamam"
 
 msgid "stream data ok (HLS)"
-msgstr ""
+msgstr "yayın verisi tamam (HLS)"
 
 #, python-format
 msgid "stream is a web page, not video (HTTP %s)"
-msgstr ""
+msgstr "yayın bir web sayfası, video değil (HTTP %s)"
 
-#, fuzzy
 msgid "stream link"
-msgstr "Bağlantı önbelleğini kullan"
+msgstr "yayın bağlantısı"
 
 msgid "stream link ok"
-msgstr ""
+msgstr "yayın bağlantısı tamam"
 
 #, python-format
 msgid "stream not checked (%s)"
-msgstr ""
+msgstr "yayın kontrol edilmedi (%s)"
 
 msgid "stream not checked (HTTP 429, too many requests)"
-msgstr ""
+msgstr "yayın kontrol edilmedi (HTTP 429, çok fazla istek)"
 
-#, fuzzy, python-format
+#, python-format
 msgid "stream: %s"
-msgstr "Tüm akışlar"
+msgstr "yayın: %s"
 
 #, python-format
 msgid "stream: no data (HTTP %s)"
-msgstr ""
+msgstr "yayın: veri yok (HTTP %s)"
 
 msgid "subs.ro does not answer."
-msgstr ""
+msgstr "subs.ro yanıt vermiyor."
 
 msgid "subsource.net does not answer."
-msgstr ""
+msgstr "subsource.net yanıt vermiyor."
 
 msgid "subtitles"
-msgstr ""
+msgstr "altyazılar"
 
-#, fuzzy
 msgid "subtitles cache"
-msgstr "Altyazılar"
+msgstr "altyazı önbelleği"
 
 msgid "switch between keyboard, suggestions and search history"
-msgstr ""
+msgstr "klavye, öneriler ve arama geçmişi arasında geçiş yap"
 
 msgid "teal"
-msgstr "camgöbeği"
+msgstr "koyu camgöbeği"
 
 msgid "the best"
 msgstr "en iyi"
 
 msgid "the menu has no lists"
-msgstr ""
+msgstr "menüde liste yok"
 
 msgid "the menu is empty"
-msgstr ""
+msgstr "menü boş"
 
 msgid "the worst"
 msgstr "en kötü"
 
-#, fuzzy
 msgid "thumbnails"
-msgstr "Küçük resimleri kaldır"
+msgstr "küçük resimler"
 
-#, fuzzy, python-format
+#, python-format
 msgid "thumbnails %d/%d"
-msgstr "Küçük resimleri kaldır"
+msgstr "küçük resimler %d/%d"
 
 msgid "thumbnails do not load"
-msgstr ""
+msgstr "küçük resimler yüklenmiyor"
 
 msgid "to top"
-msgstr ""
+msgstr "başa"
 
 msgid "top"
 msgstr "üst"
 
-#, fuzzy
 msgid "truncate the file"
-msgstr "Dosyayı seç"
+msgstr "dosyayı kırp"
 
 msgid "type selected character / confirm selection"
-msgstr ""
+msgstr "seçili karakteri yaz / seçimi onayla"
 
 msgid "unknown"
 msgstr "bilinmiyor"
 
 msgid "unlimited"
-msgstr ""
+msgstr "sınırsız"
 
 msgid "unsorted"
-msgstr ""
+msgstr "sıralanmamış"
 
 msgid "upzone.cc: free transfer limit reached - PREMIUM account required."
-msgstr ""
+msgstr "upzone.cc: ücretsiz aktarım sınırına ulaşıldı - PREMIUM hesap gerekli."
 
 msgid "version"
 msgstr "sürüm"
@@ -7098,33 +6866,33 @@ msgstr "dikey"
 msgid "very high"
 msgstr "çok yüksek"
 
-#, fuzzy, python-format
+#, python-format
 msgid "videos: %s"
-msgstr "Videolar"
+msgstr "videolar: %s"
 
 msgid "views"
 msgstr "görüntülenme"
 
-#, fuzzy, python-format
+#, python-format
 msgid "wait %s second"
-msgstr "saniye"
+msgstr "%s saniye bekleyin"
 
-#, fuzzy, python-format
+#, python-format
 msgid "wait %s seconds"
-msgstr "saniye"
+msgstr "%s saniye bekleyin"
 
 msgid "wants you to solve a captcha. Only after solving this captcha, you are allowed to continue with your downloads. E2iPlayer is not able to auto-solve these captchas, so we need to pass the captcha to you."
-msgstr ""
+msgstr "bir captcha çözmenizi istiyor. Ancak bu captcha'yı çözdükten sonra indirmelerinize devam edebilirsiniz. E2iPlayer bu captcha'ları otomatik çözemediği için captcha'yı size iletmemiz gerekiyor."
 
 #, python-format
 msgid "weeb.tv did not return a valid stream (error %s)."
-msgstr ""
+msgstr "weeb.tv geçerli bir yayın döndürmedi (hata %s)."
 
 msgid "weeb.tv did not return a valid stream for this channel."
-msgstr ""
+msgstr "weeb.tv bu kanal için geçerli bir yayın döndürmedi."
 
 msgid "weeb.tv streams need a weeb.tv account - enter the login in the host configuration (Web streams, WeebTV)"
-msgstr ""
+msgstr "weeb.tv yayınları bir weeb.tv hesabı gerektirir - giriş bilgilerini host yapılandırmasına girin (Web streams, WeebTV)"
 
 msgid "white"
 msgstr "beyaz"

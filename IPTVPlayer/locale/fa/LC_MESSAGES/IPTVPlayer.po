@@ -1,3 +1,4 @@
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
@@ -10,884 +11,896 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Poedit 2.0.1\n"
 "X-Poedit-Basepath: .\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
 "X-Poedit-SearchPath-0: ../plugin\n"
 
 #, python-format
 msgid "\tDisk space available: %s"
-msgstr ""
+msgstr "\tفضای دیسک موجود: %s"
 
 #, python-format
 msgid "\tDisk space required: %s"
-msgstr ""
+msgstr "\tفضای دیسک مورد نیاز: %s"
 
 msgid ""
 "\n"
 "Make sure you are using the latest version of the plugin."
 msgstr ""
+"\n"
+"مطمئن شوید که از آخرین نسخهٔ افزونه استفاده می‌کنید."
 
 msgid ""
 "\n"
 "This host is not integral part of the E2iPlayer plugin.\n"
 "It is not supported by E2iPlayer team."
 msgstr ""
+"\n"
+"این میزبان بخشی از افزونهٔ E2iPlayer نیست.\n"
+"تیم E2iPlayer از آن پشتیبانی نمی‌کند."
 
 msgid ""
 "\n"
 "You can also report problem here: \n"
 "https://github.com/oe-mirrors/e2iplayer/issues"
 msgstr ""
+"\n"
+"همچنین می‌توانید مشکل را اینجا گزارش دهید: \n"
+"https://github.com/oe-mirrors/e2iplayer/issues"
 
 msgid "  • Fixed: order never changes - useful for browsing by letter jump (0-9)."
-msgstr ""
+msgstr "  • ثابت: ترتیب هرگز تغییر نمی‌کند - مناسب برای مرور با پرش حرفی (0-9)."
 
 msgid "  • Sorting or reordering fixes this automatically, so your order stays."
-msgstr ""
+msgstr "  • مرتب‌سازی یا تغییر ترتیب این را به‌طور خودکار ثابت می‌کند، بنابراین ترتیب شما حفظ می‌شود."
 
 msgid "  • Unfixed (default): the entry jumps back to the top of the list."
-msgstr ""
+msgstr "  • غیرثابت (پیش‌فرض): مورد به بالای فهرست برمی‌گردد."
 
 #, python-format
 msgid "\"%s\" Virtual Keyboard layout not available."
-msgstr ""
+msgstr "چیدمان صفحه‌کلید مجازی «%s» در دسترس نیست."
 
 #, python-format
 msgid "\"%s\" has been added to the favourites group \"%s\"."
-msgstr ""
+msgstr "«%s» به گروه علاقه‌مندی‌های «%s» افزوده شد."
 
 #, python-format
 msgid "\"%s\" is playing on the TV."
-msgstr ""
+msgstr "«%s» در حال پخش روی تلویزیون است."
 
 msgid "\"Web\" streams player"
-msgstr ""
+msgstr "پخش‌کنندهٔ جریان‌های «وب»"
 
 #, python-format
 msgid "%d duplicate entries removed."
-msgstr ""
+msgstr "%d مورد تکراری حذف شد."
 
 #, python-format
 msgid "%d duplicate entry removed."
-msgstr ""
+msgstr "%d مورد تکراری حذف شد."
 
 #, python-format
 msgid "%d parts"
-msgstr ""
+msgstr "%d بخش"
 
 #, python-format
 msgid "%d programmes"
-msgstr ""
+msgstr "%d برنامه"
 
 #, python-format
 msgid "%d recitations"
-msgstr ""
+msgstr "%d تلاوت"
 
 #, python-format
 msgid "%d videos"
-msgstr ""
+msgstr "%d ویدیو"
 
 #, python-format
 msgid "%s - service overview"
-msgstr ""
+msgstr "%s - نمای کلی سرویس"
 
 #, python-format
 msgid "%s - subtitles provider"
-msgstr ""
+msgstr "%s - ارائه‌دهندهٔ زیرنویس"
 
 #, python-format
 msgid "%s blocks the connection of the receiver (HTTP 403). It only plays with curl-impersonate installed on the receiver - otherwise please choose another server."
-msgstr ""
+msgstr "%s اتصال گیرنده را مسدود می‌کند (HTTP 403). پخش فقط با نصب curl-impersonate روی گیرنده ممکن است - در غیر این صورت لطفاً سرور دیگری انتخاب کنید."
 
 #, python-format
 msgid "%s blocks the connection of the receiver (HTTP 403). Please choose another server."
-msgstr ""
+msgstr "%s اتصال گیرنده را مسدود می‌کند (HTTP 403). لطفاً سرور دیگری انتخاب کنید."
 
 #, python-format
 msgid "%s buffering..."
-msgstr ""
+msgstr "%s در حال بافر..."
 
 #, python-format
 msgid "%s cannot solve this type of captcha."
-msgstr ""
+msgstr "%s نمی‌تواند این نوع کپچا را حل کند."
 
 #, python-format
 msgid "%s could not solve the captcha."
-msgstr ""
+msgstr "%s نتوانست کپچا را حل کند."
 
 #, python-format
 msgid "%s device name"
-msgstr ""
+msgstr "نام دستگاه %s"
 
 #, python-format
 msgid "%s download manager"
-msgstr ""
+msgstr "مدیریت دانلود %s"
 
 #, python-format
 msgid "%s e-mail"
-msgstr ""
+msgstr "ایمیل %s"
 
 #, python-format
 msgid "%s episodes"
-msgstr ""
+msgstr "%s قسمت"
 
 #, python-format
 msgid "%s followers"
-msgstr ""
+msgstr "%s دنبال‌کننده"
 
 #, python-format
 msgid "%s password"
-msgstr ""
+msgstr "رمز عبور %s"
 
 #, python-format
 msgid "%s plays"
-msgstr ""
+msgstr "%s بار پخش"
 
 #, python-format
 msgid "%s posts"
-msgstr ""
+msgstr "%s پست"
 
 #, python-format
 msgid "%s recitations"
-msgstr ""
+msgstr "%s تلاوت"
 
 #, python-format
 msgid "%s refused the download. Please set your login and password in the configuration."
-msgstr ""
+msgstr "%s دانلود را رد کرد. لطفاً نام کاربری و رمز عبور خود را در تنظیمات وارد کنید."
 
 #, python-format
 msgid "%s refused the request (Cloudflare check, HTTP %s). This host needs curl-impersonate on the receiver."
-msgstr ""
+msgstr "%s درخواست را رد کرد (بررسی Cloudflare، HTTP %s). این میزبان به curl-impersonate روی گیرنده نیاز دارد."
 
 #, python-format
 msgid "%s returned %s: %s"
-msgstr ""
+msgstr "%s پاسخ %s داد: %s"
 
 #, python-format
 msgid "%s services configuration"
-msgstr ""
+msgstr "تنظیمات سرویس‌های %s"
 
 #, python-format
 msgid "%s subtitles download - how to"
-msgstr ""
+msgstr "راهنمای دانلود زیرنویس از %s"
 
 #, python-format
 msgid "%s talks"
-msgstr ""
+msgstr "%s سخنرانی"
 
 #, python-format
 msgid "%s timeout."
-msgstr ""
+msgstr "مهلت %s به پایان رسید."
 
 #, python-format
 msgid "%s uploads"
-msgstr ""
+msgstr "%s بارگذاری"
 
 #, python-format
 msgid ""
 "%s uses \"geo-blocking\" measures to prevent you from accessing the services from abroad.\n"
 " Host country: %s, your country: %s"
 msgstr ""
+"%s از «محدودیت جغرافیایی» برای جلوگیری از دسترسی شما از خارج کشور استفاده می‌کند.\n"
+" کشور میزبان: %s، کشور شما: %s"
 
 #, python-format
 msgid "%s viewers"
-msgstr ""
+msgstr "%s بیننده"
 
 #, python-format
 msgid "%s views"
-msgstr ""
+msgstr "%s بازدید"
 
 #, python-format
 msgid "(%d YouTube channel(s) could not be read)"
-msgstr ""
+msgstr "(%d کانال YouTube قابل خواندن نبود)"
 
 msgid "(no videos found)"
-msgstr ""
+msgstr "(ویدیویی یافت نشد)"
 
 msgid "(nothing here yet)"
-msgstr ""
+msgstr "(هنوز چیزی اینجا نیست)"
 
 msgid "(reading...)"
-msgstr ""
+msgstr "(در حال خواندن...)"
 
 msgid "++"
-msgstr ""
+msgstr "++"
 
 msgid "--"
-msgstr ""
+msgstr "--"
 
 msgid "----- BASIC CONFIGURATION -----"
-msgstr ""
+msgstr "----- تنظیمات پایه -----"
 
 msgid "----- BUFFERING CONFIGURATION -----"
-msgstr ""
+msgstr "----- تنظیمات بافر -----"
 
 msgid "----- CAPTCHA CONFIGURATION -----"
-msgstr ""
+msgstr "----- تنظیمات کپچا -----"
 
 msgid "----- DEBUG CONFIGURATION -----"
-msgstr ""
+msgstr "----- تنظیمات اشکال‌زدایی -----"
 
 msgid "----- DOWNLOADING CONFIGURATION -----"
-msgstr ""
+msgstr "----- تنظیمات دانلود -----"
 
 msgid "----- Debug -----"
-msgstr ""
+msgstr "----- اشکال‌زدایی -----"
 
 msgid "----- Global HostXXX Configuration -----"
-msgstr ""
+msgstr "----- تنظیمات کلی HostXXX -----"
 
 msgid "----- METADATA PROVIDERS CONFIGURATION -----"
-msgstr ""
+msgstr "----- تنظیمات ارائه‌دهندگان فراداده -----"
 
 msgid "----- PLAYERS & PLAYBACK CONFIGURATION -----"
-msgstr ""
+msgstr "----- تنظیمات پخش‌کننده‌ها و پخش -----"
 
 msgid "----- PROXIES CONFIGURATION -----"
-msgstr ""
+msgstr "----- تنظیمات پراکسی -----"
 
 msgid "----- Porn Site Configuration -----"
-msgstr ""
+msgstr "----- تنظیمات سایت‌های پورن -----"
 
 msgid "----- SCREENSAVER CONFIGURATION -----"
-msgstr ""
+msgstr "----- تنظیمات محافظ صفحه -----"
 
 msgid "----- SECURITY CONFIGURATION -----"
-msgstr ""
+msgstr "----- تنظیمات امنیتی -----"
 
 msgid "----- SERVICE CONFIGURATION -----"
-msgstr ""
+msgstr "----- تنظیمات سرویس -----"
 
 msgid "----- SKIN CONFIGURATION -----"
-msgstr ""
+msgstr "----- تنظیمات پوسته -----"
 
 msgid "----- STORAGE CONFIGURATION -----"
-msgstr ""
+msgstr "----- تنظیمات ذخیره‌سازی -----"
 
 msgid "----- SUBTITLES CONFIGURATION -----"
-msgstr ""
+msgstr "----- تنظیمات زیرنویس -----"
 
 msgid "----- Show or hide Anime / Hentai -----"
-msgstr ""
+msgstr "----- نمایش یا پنهان کردن انیمه / هنتای -----"
 
 msgid "----- Show or hide Live Cams -----"
-msgstr ""
+msgstr "----- نمایش یا پنهان کردن دوربین‌های زنده -----"
 
 msgid "----- Show or hide Porn Sites -----"
-msgstr ""
+msgstr "----- نمایش یا پنهان کردن سایت‌های پورن -----"
 
 msgid "----- VIRTUAL KEYBOARD & SEARCH CONFIGURATION -----"
-msgstr ""
+msgstr "----- تنظیمات صفحه‌کلید مجازی و جستجو -----"
 
 msgid "----- XXXList Configuration -----"
-msgstr ""
+msgstr "----- تنظیمات XXXList -----"
 
 msgid "----------  Anime / Hentai  ----------"
-msgstr ""
+msgstr "----------  انیمه / هنتای  ----------"
 
 msgid "----------  Live Cams  ----------"
-msgstr ""
+msgstr "----------  دوربین‌های زنده  ----------"
 
 msgid "----------  Other  ----------"
-msgstr ""
+msgstr "----------  سایر  ----------"
 
 msgid "----------  Porn Sites  ----------"
-msgstr ""
+msgstr "----------  سایت‌های پورن  ----------"
 
 #, python-format
 msgid "----------  Search \"%s\"  ----------"
-msgstr ""
+msgstr "----------  جستجوی «%s»  ----------"
 
 msgid "----------------- External exteplayer3 options -----------------"
-msgstr ""
+msgstr "----------------- گزینه‌های exteplayer3 خارجی -----------------"
 
 msgid "--All Episodes--"
-msgstr ""
+msgstr "--همهٔ قسمت‌ها--"
 
 msgid "--All--"
-msgstr ""
+msgstr "--همه--"
 
 msgid "--Other--"
-msgstr ""
+msgstr "--سایر--"
 
 msgid "... and that the stream delivers video :"
-msgstr ""
+msgstr "... و اینکه جریان، ویدیو ارسال می‌کند :"
 
 msgid "0-9"
-msgstr ""
+msgstr "0-9"
 
 msgid "1 minute"
-msgstr ""
+msgstr "1 دقیقه"
 
 msgid "1. On a phone or PC in the same network, open the address shown in the captcha window (or scan its QR code) in a browser with the MyE2i extension installed. If it asks for a code, you find it in the title of the captcha window."
-msgstr ""
+msgstr "1. روی گوشی یا رایانه‌ای در همان شبکه، نشانی نمایش‌داده‌شده در پنجرهٔ کپچا را (یا با اسکن کد QR آن) در مرورگری که افزونهٔ MyE2i روی آن نصب است باز کنید. اگر کدی خواسته شد، آن را در عنوان پنجرهٔ کپچا می‌یابید."
 
 msgid "12 hour format"
-msgstr ""
+msgstr "قالب 12 ساعته"
 
 msgid "15 seconds"
-msgstr ""
+msgstr "15 ثانیه"
 
 msgid "2. Click the big green button on that page. A new tab opens with the captcha or the website's browser check."
-msgstr ""
+msgstr "2. روی دکمهٔ سبز بزرگ در آن صفحه کلیک کنید. یک زبانهٔ جدید با کپچا یا بررسی مرورگر وب‌سایت باز می‌شود."
 
 msgid "24 hour format"
-msgstr ""
+msgstr "قالب 24 ساعته"
 
 msgid "3. Solve it. The result goes back to the receiver by itself and the captcha window closes."
-msgstr ""
+msgstr "3. آن را حل کنید. نتیجه خودبه‌خود به گیرنده بازمی‌گردد و پنجرهٔ کپچا بسته می‌شود."
 
 msgid "30 seconds"
-msgstr ""
+msgstr "30 ثانیه"
 
 msgid "4K movies"
-msgstr ""
+msgstr "فیلم‌های 4K"
 
 msgid "5 seconds"
-msgstr ""
+msgstr "5 ثانیه"
 
 msgid "A search is already running."
-msgstr ""
+msgstr "یک جستجو در حال اجراست."
 
 msgid "A-Z"
-msgstr ""
+msgstr "A-Z"
 
 msgid "AAC downmix mode"
-msgstr ""
+msgstr "حالت داون‌میکس AAC"
 
 msgid "ABORTED"
-msgstr ""
+msgstr "لغو شد"
 
 msgid "AC3 downmix mode"
-msgstr ""
+msgstr "حالت داون‌میکس AC3"
 
 msgid ""
 "ACCESS DENIED.\n"
 "THIS VIDEO IS DELETED OR NOT AVAILABLE TO YOUR REGION."
 msgstr ""
+"دسترسی رد شد.\n"
+"این ویدیو حذف شده یا در منطقهٔ شما در دسترس نیست."
 
 msgid "ALBUMS"
-msgstr ""
+msgstr "آلبوم‌ها"
 
 msgid "API Key"
-msgstr ""
+msgstr "کلید API"
 
 msgid "ARTISTS"
-msgstr ""
+msgstr "هنرمندان"
 
 msgid "ATTENTION!"
-msgstr ""
+msgstr "توجه!"
 
 msgid "Aborted"
-msgstr ""
+msgstr "لغو شد"
 
 msgid "About"
-msgstr ""
+msgstr "درباره"
 
 msgid "Accept"
-msgstr ""
+msgstr "پذیرفتن"
 
 msgid "Access Forbidden"
-msgstr ""
+msgstr "دسترسی ممنوع"
 
 msgid "Access denied - open the page with the QR code or the code shown on the receiver screen."
-msgstr ""
+msgstr "دسترسی رد شد - صفحه را با کد QR یا کدی که روی صفحهٔ گیرنده نمایش داده می‌شود باز کنید."
 
 msgid "Access denied. Please check password."
-msgstr ""
+msgstr "دسترسی رد شد. لطفاً رمز عبور را بررسی کنید."
 
 msgid "Accessible"
-msgstr ""
+msgstr "در دسترس"
 
 #, python-format
 msgid "Account %d - name (optional):"
-msgstr ""
+msgstr "حساب %d - نام (اختیاری):"
 
 #, python-format
 msgid "Account %d - password:"
-msgstr ""
+msgstr "حساب %d - رمز عبور:"
 
 #, python-format
 msgid "Account %d - server (http://host:port or get.php link):"
-msgstr ""
+msgstr "حساب %d - سرور (http://host:port یا پیوند get.php):"
 
 #, python-format
 msgid "Account %d - user name:"
-msgstr ""
+msgstr "حساب %d - نام کاربری:"
 
 msgid "Accounts & API keys"
-msgstr ""
+msgstr "حساب‌ها و کلیدهای API"
 
 msgid "Action"
-msgstr ""
+msgstr "اکشن"
 
 msgid "Action & Thriller"
-msgstr ""
+msgstr "اکشن و هیجانی"
 
 msgid "Actors"
-msgstr ""
+msgstr "بازیگران"
 
 msgid "Actors:"
-msgstr ""
+msgstr "بازیگران:"
 
 msgid "Add channel name to downloaded file"
-msgstr ""
+msgstr "افزودن نام کانال به فایل دانلودشده"
 
 #, python-format
 msgid "Add host %s to group"
-msgstr ""
+msgstr "افزودن میزبان %s به گروه"
 
 msgid "Add item to favorites"
-msgstr ""
+msgstr "افزودن مورد به علاقه‌مندی‌ها"
 
 msgid "Add item to group"
-msgstr ""
+msgstr "افزودن مورد به گروه"
 
 msgid "Add new entry"
-msgstr ""
+msgstr "افزودن مورد جدید"
 
 msgid "Add new group"
-msgstr ""
+msgstr "افزودن گروه جدید"
 
 msgid "Add new group of favorites"
-msgstr ""
+msgstr "افزودن گروه جدید علاقه‌مندی‌ها"
 
 msgid "Add to User Links"
-msgstr ""
+msgstr "افزودن به پیوندهای کاربر"
 
 msgid "Added"
-msgstr ""
+msgstr "افزوده شد"
 
 #, python-format
 msgid "Added by: %s, directory: %s"
-msgstr ""
+msgstr "افزوده‌شده توسط: %s، پوشه: %s"
 
 msgid "Adhan"
-msgstr ""
+msgstr "اذان"
 
 msgid "Adventure"
-msgstr ""
+msgstr "ماجراجویی"
 
 msgid "African series"
-msgstr ""
+msgstr "سریال‌های آفریقایی"
 
 msgid "Age limit:"
-msgstr ""
+msgstr "محدودیت سنی:"
 
 msgid "Aired"
-msgstr ""
+msgstr "پخش‌شده"
 
 msgid "Aired this week"
-msgstr ""
+msgstr "پخش‌شده در این هفته"
 
 msgid "Airing now"
-msgstr ""
+msgstr "در حال پخش"
 
 msgid "All"
 msgstr "همه"
 
 msgid "All Sports"
-msgstr ""
+msgstr "همهٔ ورزش‌ها"
 
 msgid "All audiobooks"
-msgstr ""
+msgstr "همهٔ کتاب‌های صوتی"
 
 msgid "All categories"
-msgstr ""
+msgstr "همهٔ دسته‌ها"
 
 msgid "All in one"
-msgstr ""
+msgstr "همه در یک"
 
 msgid "All movies"
-msgstr ""
+msgstr "همهٔ فیلم‌ها"
 
 msgid "All programmes"
-msgstr ""
+msgstr "همهٔ برنامه‌ها"
 
 msgid "All results"
-msgstr ""
+msgstr "همهٔ نتایج"
 
 msgid "All seasons"
-msgstr ""
+msgstr "همهٔ فصل‌ها"
 
 msgid "All series"
-msgstr ""
+msgstr "همهٔ سریال‌ها"
 
 msgid "All shows"
-msgstr ""
+msgstr "همهٔ نمایش‌ها"
 
 msgid "All stations"
-msgstr ""
+msgstr "همهٔ ایستگاه‌ها"
 
 msgid "All streams"
-msgstr ""
+msgstr "همهٔ جریان‌ها"
 
 msgid "All time"
-msgstr ""
+msgstr "همهٔ زمان‌ها"
 
 msgid "All titles A-Z"
-msgstr ""
+msgstr "همهٔ عنوان‌ها A-Z"
 
 msgid "All videos"
-msgstr ""
+msgstr "همهٔ ویدیوها"
 
 msgid "Allow VP9 codec:"
-msgstr ""
+msgstr "اجازهٔ کدک VP9:"
 
 msgid "Allow dash format:"
-msgstr ""
+msgstr "اجازهٔ قالب dash:"
 
 msgid "Allow external link-decryption service (enc-dec.app)"
-msgstr ""
+msgstr "اجازهٔ سرویس خارجی رمزگشایی پیوند (enc-dec.app)"
 
 msgid "Allow host to override suggestions provider"
-msgstr ""
+msgstr "اجازه به میزبان برای جایگزینی ارائه‌دهندهٔ پیشنهادها"
 
 msgid "Allow watched flag to be set"
-msgstr ""
+msgstr "اجازهٔ علامت‌گذاری به‌عنوان دیده‌شده"
 
 msgid "Alphabetically"
-msgstr ""
+msgstr "الفبایی"
 
 #, python-format
 msgid "Also use the accounts of X-Streamity (%s)"
-msgstr ""
+msgstr "استفاده از حساب‌های X-Streamity نیز (%s)"
 
 #, python-format
 msgid "Also use the portals of EStalker (%s)"
-msgstr ""
+msgstr "استفاده از پورتال‌های EStalker نیز (%s)"
 
 msgid "AltGr"
-msgstr ""
+msgstr "AltGr"
 
 msgid "Alternate Title:"
-msgstr ""
+msgstr "عنوان جایگزین:"
 
 msgid "Alternative domain:"
-msgstr ""
+msgstr "دامنهٔ جایگزین:"
 
 msgid "Alternative proxy server (1)"
-msgstr ""
+msgstr "سرور پراکسی جایگزین (1)"
 
 msgid "Alternative proxy server (2)"
-msgstr ""
+msgstr "سرور پراکسی جایگزین (2)"
 
 msgid "Alternative proxy server (3)"
-msgstr ""
+msgstr "سرور پراکسی جایگزین (3)"
 
 msgid "Alternative proxy server (4)"
-msgstr ""
+msgstr "سرور پراکسی جایگزین (4)"
 
 msgid "Alternative proxy server (5)"
-msgstr ""
+msgstr "سرور پراکسی جایگزین (5)"
 
 msgid "An API key from subsource.net can be entered in the E2iPlayer settings (Subtitles)."
-msgstr ""
+msgstr "یک کلید API از subsource.net را می‌توان در تنظیمات E2iPlayer (زیرنویس) وارد کرد."
 
 #, python-format
 msgid "An error occurred while loading a subtitle from [%s]."
-msgstr ""
+msgstr "هنگام بارگیری زیرنویس از [%s] خطایی رخ داد."
 
 #, python-format
 msgid "An error occurred while writing into: %s"
-msgstr ""
+msgstr "هنگام نوشتن در %s خطایی رخ داد"
 
 msgid "An opensubtitles.com account (login and password in the E2iPlayer settings) raises the limit."
-msgstr ""
+msgstr "یک حساب opensubtitles.com (نام کاربری و رمز عبور در تنظیمات E2iPlayer) محدودیت را افزایش می‌دهد."
 
 msgid "Anatomy"
-msgstr ""
+msgstr "آناتومی"
 
 msgid "Animals"
-msgstr ""
+msgstr "حیوانات"
 
 msgid "Animated movies"
-msgstr ""
+msgstr "فیلم‌های انیمیشنی"
 
 msgid "Animated series"
-msgstr ""
+msgstr "سریال‌های انیمیشنی"
 
 msgid "Animation"
-msgstr ""
+msgstr "انیمیشن"
 
 msgid "Anime"
-msgstr ""
+msgstr "انیمه"
 
 msgid "Anime A-Z"
-msgstr ""
+msgstr "انیمه A-Z"
 
 msgid "Anime Movies"
-msgstr ""
+msgstr "فیلم‌های انیمه"
 
 msgid "Anime Series"
-msgstr ""
+msgstr "سریال‌های انیمه"
 
 msgid "Anime TV series"
-msgstr ""
+msgstr "سریال‌های تلویزیونی انیمه"
 
 msgid "Anime genres"
-msgstr ""
+msgstr "ژانرهای انیمه"
 
 msgid "Anime list"
-msgstr ""
+msgstr "فهرست انیمه"
 
 msgid "Anime movies"
-msgstr ""
+msgstr "فیلم‌های انیمه"
 
 msgid "Anime movies A-Z"
-msgstr ""
+msgstr "فیلم‌های انیمه A-Z"
 
 msgid "Anime series (dubbed)"
-msgstr ""
+msgstr "سریال‌های انیمه (دوبله)"
 
 msgid "Anime series A-Z"
-msgstr ""
+msgstr "سریال‌های انیمه A-Z"
 
 msgid "Answer"
-msgstr ""
+msgstr "پاسخ"
 
 msgid "Any"
-msgstr ""
+msgstr "هر"
 
 msgid "Apply"
-msgstr ""
+msgstr "اعمال"
 
 msgid "Approaches"
-msgstr ""
+msgstr "رویکردها"
 
 msgid "Arabic"
-msgstr ""
+msgstr "عربی"
 
 msgid "Arabic Movies"
-msgstr ""
+msgstr "فیلم‌های عربی"
 
 msgid "Arabic Series"
-msgstr ""
+msgstr "سریال‌های عربی"
 
 msgid "Arabic movies"
-msgstr ""
+msgstr "فیلم‌های عربی"
 
 msgid "Arabic plays"
-msgstr ""
+msgstr "نمایش‌های عربی"
 
 msgid "Arabic songs"
-msgstr ""
+msgstr "ترانه‌های عربی"
 
 msgid "Archive"
-msgstr ""
+msgstr "آرشیو"
 
 msgid "Are you sure you want to delete search history?"
-msgstr ""
+msgstr "آیا مطمئن هستید که می‌خواهید تاریخچهٔ جستجو را حذف کنید؟"
 
 #, python-format
 msgid "Are you sure you want to remove file \"%s\"?"
-msgstr ""
+msgstr "آیا مطمئن هستید که می‌خواهید فایل «%s» را حذف کنید؟"
 
 msgid "Are you sure you want to reset all settings to their default values?"
-msgstr ""
+msgstr "آیا مطمئن هستید که می‌خواهید همهٔ تنظیمات را به مقادیر پیش‌فرض بازگردانید؟"
 
 msgid "Art"
-msgstr ""
+msgstr "هنر"
 
 msgid "Articles"
-msgstr ""
+msgstr "مقاله‌ها"
 
 msgid "Artist"
-msgstr ""
+msgstr "هنرمند"
 
 #, python-format
 msgid "Artist \"%s\" not found on Last.fm - the exact artist name is needed."
-msgstr ""
+msgstr "هنرمند «%s» در Last.fm یافت نشد - نام دقیق هنرمند لازم است."
 
 msgid "Artists"
-msgstr ""
+msgstr "هنرمندان"
 
 msgid "Asian"
-msgstr ""
+msgstr "آسیایی"
 
 msgid "Asian TV series"
-msgstr ""
+msgstr "سریال‌های تلویزیونی آسیایی"
 
 msgid "Asian movies"
-msgstr ""
+msgstr "فیلم‌های آسیایی"
 
 msgid "Asian series (dubbed)"
-msgstr ""
+msgstr "سریال‌های آسیایی (دوبله)"
 
 msgid "Aspect"
-msgstr ""
+msgstr "نسبت تصویر"
 
 msgid "At least one of plugin browser, extension list and main menu has to stay on, otherwise E2iPlayer could no longer be started."
-msgstr ""
+msgstr "دست‌کم یکی از مرورگر افزونه‌ها، فهرست افزونه‌ها و منوی اصلی باید فعال بماند، وگرنه دیگر نمی‌توان E2iPlayer را اجرا کرد."
 
 msgid "At the live edge"
-msgstr ""
+msgstr "در لبهٔ پخش زنده"
 
 msgid "Atheer radio (Arabic)"
-msgstr ""
+msgstr "رادیو Atheer (عربی)"
 
 msgid "Audio"
-msgstr ""
+msgstr "صدا"
 
 msgid "Audio buffer size [KB]"
-msgstr ""
+msgstr "اندازهٔ بافر صدا [KB]"
 
 msgid "Audio description"
-msgstr ""
+msgstr "توصیف صوتی"
 
 msgid "Audio programme"
-msgstr ""
+msgstr "برنامهٔ صوتی"
 
 msgid "Audio track"
-msgstr ""
+msgstr "تراک صوتی"
 
 msgid "Audio tracks"
-msgstr ""
+msgstr "تراک‌های صوتی"
 
 #, python-format
 msgid "Author: %s"
-msgstr ""
+msgstr "نویسنده: %s"
 
 msgid "Authors"
-msgstr ""
+msgstr "نویسندگان"
 
 msgid "Auto"
-msgstr ""
+msgstr "خودکار"
 
 #, python-format
 msgid "Auto refresh: %s"
-msgstr ""
+msgstr "به‌روزرسانی خودکار: %s"
 
 msgid "Auto selection based on the settings"
-msgstr ""
+msgstr "انتخاب خودکار بر اساس تنظیمات"
 
 msgid "Auto start method"
-msgstr ""
+msgstr "روش شروع خودکار"
 
 msgid "Auto-generated"
-msgstr ""
+msgstr "تولید خودکار"
 
 msgid "Automatic"
-msgstr ""
+msgstr "خودکار"
 
 msgid "Automatically turn on external subtitles"
-msgstr ""
+msgstr "روشن کردن خودکار زیرنویس خارجی"
 
 msgid "Automotive"
-msgstr ""
+msgstr "خودرو"
 
 msgid "Autoplay start delay"
-msgstr ""
+msgstr "تأخیر شروع پخش خودکار"
 
 msgid "Autumn"
-msgstr ""
+msgstr "پاییز"
 
 msgid "Available worldwide"
-msgstr ""
+msgstr "در دسترس در سراسر جهان"
 
 msgid "Awards:"
-msgstr ""
+msgstr "جوایز:"
 
 msgid "BLUE"
-msgstr ""
+msgstr "آبی"
 
 msgid "Background color"
-msgstr ""
+msgstr "رنگ پس‌زمینه"
 
 msgid "Backspace"
-msgstr ""
+msgstr "پاک‌کردن به عقب"
 
 msgid "Balkans"
-msgstr ""
+msgstr "بالکان"
 
 msgid "Basic Science"
-msgstr ""
+msgstr "علوم پایه"
 
 msgid "Being watched"
-msgstr ""
+msgstr "در حال تماشا"
 
 msgid "Best"
-msgstr ""
+msgstr "بهترین"
 
 msgid "Best Pinkbike videos"
-msgstr ""
+msgstr "بهترین ویدیوهای Pinkbike"
 
 msgid "Best movies"
-msgstr ""
+msgstr "بهترین فیلم‌ها"
 
 msgid "Best series"
-msgstr ""
+msgstr "بهترین سریال‌ها"
 
 msgid "Binaries"
-msgstr ""
+msgstr "فایل‌های اجرایی"
 
 msgid "Bing Suggestions"
-msgstr ""
+msgstr "پیشنهادهای Bing"
 
 msgid "Biography"
-msgstr ""
+msgstr "زندگی‌نامه"
 
 #, python-format
 msgid "Bitrate: %s"
-msgstr ""
+msgstr "نرخ بیت: %s"
 
 msgid "Black"
-msgstr ""
+msgstr "سیاه"
 
 msgid "Black iframe file"
-msgstr ""
+msgstr "فایل iframe سیاه"
 
 msgid "Black screensaver"
-msgstr ""
+msgstr "محافظ صفحهٔ سیاه"
 
 msgid "Block wmv files"
-msgstr ""
+msgstr "مسدود کردن فایل‌های wmv"
 
 msgid "Board Review"
-msgstr ""
+msgstr "مرور بورد"
 
 msgid "Books"
-msgstr ""
+msgstr "کتاب‌ها"
 
 msgid "Box"
-msgstr ""
+msgstr "گیرنده"
 
 msgid "Broadcast:"
-msgstr ""
+msgstr "پخش:"
 
 msgid "Browse by genre"
-msgstr ""
+msgstr "مرور بر اساس ژانر"
 
 msgid "Browse youtube trending feeds"
-msgstr ""
+msgstr "مرور فیدهای پرطرفدار YouTube"
 
 msgid "Budget:"
-msgstr ""
+msgstr "بودجه:"
 
 msgid "Buffering location"
-msgstr ""
+msgstr "محل بافر"
 
 msgid "Business"
-msgstr ""
+msgstr "کسب‌وکار"
 
 #, python-format
 msgid "By %s"
-msgstr ""
+msgstr "توسط %s"
 
 msgid "CME SAE"
-msgstr ""
+msgstr "CME SAE"
 
 #, python-format
 msgid "CUMLOUDER can only search its tags (e.g. milf, step sister, big tits) - there is no tag \"%s\"."
-msgstr ""
+msgstr "CUMLOUDER فقط می‌تواند برچسب‌های خود را جستجو کند (مثلاً milf، step sister، big tits) - برچسب «%s» وجود ندارد."
 
 msgid "Cache"
-msgstr ""
+msgstr "حافظهٔ نهان"
 
 #, python-format
 msgid "Cache folder \"%s\" could not be created. Some data (cookies, subtitles, ...) may not be saved."
-msgstr ""
+msgstr "پوشهٔ حافظهٔ نهان «%s» ایجاد نشد. برخی داده‌ها (کوکی‌ها، زیرنویس‌ها، ...) ممکن است ذخیره نشوند."
 
 #, python-format
 msgid ""
@@ -895,620 +908,629 @@ msgid ""
 "Return code[%s].\n"
 "Return data[%s]."
 msgstr ""
+"دریافت نقاط اتصال ممکن نیست - فرمان mount ناموفق بود.\n"
+"کد بازگشتی[%s].\n"
+"داده‌های بازگشتی[%s]."
 
 msgid "Cancel"
-msgstr ""
+msgstr "لغو"
 
 msgid "Cancelled."
-msgstr ""
+msgstr "لغو شد."
 
 msgid "Captcha"
-msgstr ""
+msgstr "کپچا"
 
 msgid "Captcha error:"
-msgstr ""
+msgstr "خطای کپچا:"
 
 msgid ""
 "Captcha solved.\n"
 "Waiting for notification."
 msgstr ""
+"کپچا حل شد.\n"
+"در انتظار اعلان."
 
 msgid "Captcha solving service"
-msgstr ""
+msgstr "سرویس حل کپچا"
 
 msgid "Captcha was not entered."
-msgstr ""
+msgstr "کپچا وارد نشد."
 
 #, python-format
 msgid "Carrying: %s | UP/DOWN=Move, OK=Drop"
-msgstr ""
+msgstr "در حال جابه‌جایی: %s | بالا/پایین=انتقال، OK=رها کردن"
 
 msgid "Cartoon genres"
-msgstr ""
+msgstr "ژانرهای کارتون"
 
 msgid "Cartoon series (dubbed)"
-msgstr ""
+msgstr "سریال‌های کارتونی (دوبله)"
 
 msgid "Cartoons"
-msgstr ""
+msgstr "کارتون‌ها"
 
 msgid "Cartoons A-Z"
-msgstr ""
+msgstr "کارتون‌ها A-Z"
 
 msgid "Cartoons and anime"
-msgstr ""
+msgstr "کارتون و انیمه"
 
 msgid "Cartoons and series"
-msgstr ""
+msgstr "کارتون و سریال"
 
 msgid "Cast:"
-msgstr ""
+msgstr "بازیگران:"
 
 msgid "Catch-up"
-msgstr ""
+msgstr "پخش مجدد"
 
 #, python-format
 msgid "Catch-up (%d channels)"
-msgstr ""
+msgstr "پخش مجدد (%d کانال)"
 
 msgid "Catch-up (timeshift.php)"
-msgstr ""
+msgstr "پخش مجدد (timeshift.php)"
 
 #, python-format
 msgid "Catch-up: %d days"
-msgstr ""
+msgstr "پخش مجدد: %d روز"
 
 msgid "Categories"
-msgstr ""
+msgstr "دسته‌ها"
 
 msgid "Categories:"
-msgstr ""
+msgstr "دسته‌ها:"
 
 msgid "Category"
-msgstr ""
+msgstr "دسته"
 
 msgid "Category:"
-msgstr ""
+msgstr "دسته:"
 
 msgid "Change active movie player"
-msgstr ""
+msgstr "تغییر پخش‌کنندهٔ فعال فیلم"
 
 msgid "Change own pin"
-msgstr ""
+msgstr "تغییر PIN شخصی"
 
 msgid "Channel"
-msgstr ""
+msgstr "کانال"
 
 #, python-format
 msgid "Channel: %s"
-msgstr ""
+msgstr "کانال: %s"
 
 msgid "Channels"
-msgstr ""
+msgstr "کانال‌ها"
 
 msgid "Checking for updates"
-msgstr ""
+msgstr "در حال بررسی به‌روزرسانی‌ها"
 
 msgid "Checks every enabled site: menu, a list with videos and, in the full test, the stream link of one video."
-msgstr ""
+msgstr "هر سایت فعال را بررسی می‌کند: منو، یک فهرست ویدیو و در آزمون کامل، پیوند جریان یک ویدیو."
 
 msgid "Children"
-msgstr ""
+msgstr "کودکان"
 
 msgid "Children & Family"
-msgstr ""
+msgstr "کودک و خانواده"
 
 msgid "Chinese"
-msgstr ""
+msgstr "چینی"
 
 msgid "Chinese anime"
-msgstr ""
+msgstr "انیمهٔ چینی"
 
 msgid "Cinema History"
-msgstr ""
+msgstr "تاریخ سینما"
 
 msgid "Cinema movies"
-msgstr ""
+msgstr "فیلم‌های سینمایی"
 
 msgid "Classic"
-msgstr ""
+msgstr "کلاسیک"
 
 msgid "Classic movies"
-msgstr ""
+msgstr "فیلم‌های کلاسیک"
 
 msgid "Clear"
-msgstr ""
+msgstr "پاک کردن"
 
 msgid "Clear log"
-msgstr ""
+msgstr "پاک کردن گزارش"
 
 #, python-format
 msgid ""
 "Clear the debug log file?\n"
 "%s"
 msgstr ""
+"فایل گزارش اشکال‌زدایی پاک شود؟\n"
+"%s"
 
 msgid "Clear the log file at plugin start"
-msgstr ""
+msgstr "پاک کردن فایل گزارش هنگام شروع افزونه"
 
 #, python-format
 msgid "Clipped by: %s"
-msgstr ""
+msgstr "برش‌داده‌شده توسط: %s"
 
 msgid "Clips"
-msgstr ""
+msgstr "کلیپ‌ها"
 
 msgid "Close"
-msgstr ""
+msgstr "بستن"
 
 msgid "Closes the host opened in the web interface, clears the search results and stops what the web interface still runs in the background. Use it when a page keeps loading. Settings, downloads and the E2iPlayer on the TV are not touched."
-msgstr ""
+msgstr "میزبان بازشده در رابط وب را می‌بندد، نتایج جستجو را پاک می‌کند و آنچه رابط وب هنوز در پس‌زمینه اجرا می‌کند را متوقف می‌کند. وقتی صفحه‌ای مدام در حال بارگیری است از آن استفاده کنید. تنظیمات، دانلودها و E2iPlayer روی تلویزیون تغییری نمی‌کنند."
 
 msgid "Closing. Please wait..."
-msgstr ""
+msgstr "در حال بستن. لطفاً صبر کنید..."
 
 msgid "Clubs and athletes"
-msgstr ""
+msgstr "باشگاه‌ها و ورزشکاران"
 
 msgid "Code"
-msgstr ""
+msgstr "کد"
 
 msgid "Collected streams only"
-msgstr ""
+msgstr "فقط جریان‌های جمع‌آوری‌شده"
 
 msgid "Collections"
-msgstr ""
+msgstr "مجموعه‌ها"
 
 msgid "Colored text in titles and descriptions"
-msgstr ""
+msgstr "متن رنگی در عنوان‌ها و توضیحات"
 
 msgid "Combine pull request merges with their commit"
-msgstr ""
+msgstr "ادغام merge های pull request با commit مربوطه"
 
 msgid "Comedy"
-msgstr ""
+msgstr "کمدی"
 
 msgid "Comments"
-msgstr ""
+msgstr "نظرها"
 
 msgid "Commits"
-msgstr ""
+msgstr "Commit ها"
 
 msgid "Competitions"
-msgstr ""
+msgstr "مسابقات"
 
 msgid "Complete Quran"
-msgstr ""
+msgstr "قرآن کامل"
 
 msgid "Complete series"
-msgstr ""
+msgstr "سریال‌های کامل"
 
 msgid "Completed"
-msgstr ""
+msgstr "تکمیل‌شده"
 
 msgid "Concert"
-msgstr ""
+msgstr "کنسرت"
 
 msgid "Config"
-msgstr ""
+msgstr "تنظیمات"
 
 #, python-format
 msgid "Config folder \"%s\" could not be created. Some data (host order, search history, favourites, movie player preferences, ...) may not be saved."
-msgstr ""
+msgstr "پوشهٔ پیکربندی «%s» ایجاد نشد. برخی داده‌ها (ترتیب میزبان‌ها، تاریخچهٔ جستجو، علاقه‌مندی‌ها، ترجیحات پخش‌کنندهٔ فیلم، ...) ممکن است ذخیره نشوند."
 
 msgid "Configuration"
-msgstr ""
+msgstr "تنظیمات"
 
 #, python-format
 msgid "Configuration [%s] service"
-msgstr ""
+msgstr "تنظیمات سرویس [%s]"
 
 #, python-format
 msgid "Configure %s"
-msgstr ""
+msgstr "تنظیم %s"
 
 msgid "Configure host"
-msgstr ""
+msgstr "تنظیم میزبان"
 
 msgid "Configuring an external movie player"
-msgstr ""
+msgstr "تنظیم پخش‌کنندهٔ خارجی فیلم"
 
 msgid "Confirm new pin"
-msgstr ""
+msgstr "تأیید PIN جدید"
 
 msgid "Confirm the title of the movie"
-msgstr ""
+msgstr "عنوان فیلم را تأیید کنید"
 
 msgid "Confirmation error."
-msgstr ""
+msgstr "خطای تأیید."
 
 msgid "Connection to server failed!"
-msgstr ""
+msgstr "اتصال به سرور ناموفق بود!"
 
 msgid "Connection to the weeb.tv server failed."
-msgstr ""
+msgstr "اتصال به سرور weeb.tv ناموفق بود."
 
 #, python-format
 msgid "Connections: %s of %s"
-msgstr ""
+msgstr "اتصال‌ها: %s از %s"
 
 msgid "Content not available"
-msgstr ""
+msgstr "محتوا در دسترس نیست"
 
 msgid "Continue"
-msgstr ""
+msgstr "ادامه"
 
 msgid "Continue downloading"
-msgstr ""
+msgstr "ادامهٔ دانلود"
 
 msgid "Cooking"
-msgstr ""
+msgstr "آشپزی"
 
 msgid "Copy"
-msgstr ""
+msgstr "کپی"
 
 msgid "Could not add the user link."
-msgstr ""
+msgstr "افزودن پیوند کاربر ممکن نشد."
 
 msgid "Could not load the wiki page."
-msgstr ""
+msgstr "بارگیری صفحهٔ ویکی ممکن نشد."
 
 msgid "Could not resolve host."
-msgstr ""
+msgstr "میزبان شناسایی نشد."
 
 msgid "Could not resolve proxy."
-msgstr ""
+msgstr "پراکسی شناسایی نشد."
 
 msgid "Could not sort the user links."
-msgstr ""
+msgstr "مرتب‌سازی پیوندهای کاربر ممکن نشد."
 
 msgid "Could not start the YouTube sign-in."
-msgstr ""
+msgstr "شروع ورود به YouTube ممکن نشد."
 
 msgid "Could not write the file."
-msgstr ""
+msgstr "نوشتن فایل ممکن نشد."
 
 msgid "Countries"
-msgstr ""
+msgstr "کشورها"
 
 msgid "Country"
-msgstr ""
+msgstr "کشور"
 
 msgid "Country / store:"
-msgstr ""
+msgstr "کشور / فروشگاه:"
 
 msgid "Country:"
-msgstr ""
+msgstr "کشور:"
 
 msgid "Couples"
-msgstr ""
+msgstr "زوج‌ها"
 
 msgid "Create Enigma2 .cuts chapter marks"
-msgstr ""
+msgstr "ایجاد نشانه‌های فصل .cuts برای Enigma2"
 
 msgid "Create LCD/VFD summary screen"
-msgstr ""
+msgstr "ایجاد صفحهٔ خلاصه LCD/VFD"
 
 msgid "Create MKV"
-msgstr ""
+msgstr "ایجاد MKV"
 
 msgid "Create MKV with chapter marks from description"
-msgstr ""
+msgstr "ایجاد MKV با نشانه‌های فصل از توضیحات"
 
 msgid "Create debug logs"
-msgstr ""
+msgstr "ایجاد گزارش‌های اشکال‌زدایی"
 
 msgid "Create sidecar files (.txt/.jpg)"
-msgstr ""
+msgstr "ایجاد فایل‌های همراه (.txt/.jpg)"
 
 msgid "Creator:"
-msgstr ""
+msgstr "سازنده:"
 
 msgid "Creators:"
-msgstr ""
+msgstr "سازندگان:"
 
 msgid "Crime"
-msgstr ""
+msgstr "جنایی"
 
 msgid "Critical Error - cookie can't be saved!"
-msgstr ""
+msgstr "خطای بحرانی - کوکی ذخیره نمی‌شود!"
 
 msgid "Critical Error – Content-Encoding gzip cannot be handled!"
-msgstr ""
+msgstr "خطای بحرانی – Content-Encoding gzip قابل پردازش نیست!"
 
 msgid "Culture"
-msgstr ""
+msgstr "فرهنگ"
 
 msgid "Culture and lifestyle"
-msgstr ""
+msgstr "فرهنگ و سبک زندگی"
 
 msgid "Culture and pop"
-msgstr ""
+msgstr "فرهنگ و پاپ"
 
 msgid "Current item is not a channel."
-msgstr ""
+msgstr "مورد فعلی یک کانال نیست."
 
 msgid "Cut"
-msgstr ""
+msgstr "برش"
 
 msgid "Czech"
-msgstr ""
+msgstr "چکی"
 
 msgid "DASH/mpd"
-msgstr ""
+msgstr "DASH/mpd"
 
 msgid "DOWNLOAD ERROR"
-msgstr ""
+msgstr "خطای دانلود"
 
 msgid "DOWNLOADED"
-msgstr ""
+msgstr "دانلود شد"
 
 msgid "DOWNLOADING"
-msgstr ""
+msgstr "در حال دانلود"
 
 msgid "DRM protection detected."
-msgstr ""
+msgstr "محافظت DRM شناسایی شد."
 
 msgid "Daily download limit reached - type the code"
-msgstr ""
+msgstr "سقف دانلود روزانه پر شد - کد را وارد کنید"
 
 msgid "Darkgray"
-msgstr ""
+msgstr "خاکستری تیره"
 
 msgid "Date"
-msgstr ""
+msgstr "تاریخ"
 
 msgid "Debug file does not exist - nothing to delete"
-msgstr ""
+msgstr "فایل اشکال‌زدایی وجود ندارد - چیزی برای حذف نیست"
 
 msgid "Debug log"
-msgstr ""
+msgstr "گزارش اشکال‌زدایی"
 
 msgid "Debug logs"
-msgstr ""
+msgstr "گزارش‌های اشکال‌زدایی"
 
 msgid "Debug option is disabled - nothing to display"
-msgstr ""
+msgstr "گزینهٔ اشکال‌زدایی غیرفعال است - چیزی برای نمایش نیست"
 
 msgid "Debug snapshot"
-msgstr ""
+msgstr "عکس‌فوری اشکال‌زدایی"
 
 msgid "Debug snapshot (for site development)"
-msgstr ""
+msgstr "عکس‌فوری اشکال‌زدایی (برای توسعهٔ سایت)"
 
 #, python-format
 msgid "Debug snapshot: \"%s\" received by the box"
-msgstr ""
+msgstr "عکس‌فوری اشکال‌زدایی: «%s» توسط گیرنده دریافت شد"
 
 #, python-format
 msgid "Debug snapshot: sending \"%s\" failed"
-msgstr ""
+msgstr "عکس‌فوری اشکال‌زدایی: ارسال «%s» ناموفق بود"
 
 #, python-format
 msgid "Decode file [%s] problem."
-msgstr ""
+msgstr "مشکل در رمزگشایی فایل [%s]."
 
 msgid "Decrypt Signatures Error"
-msgstr ""
+msgstr "خطای رمزگشایی امضاها"
 
 msgid "Default"
-msgstr ""
+msgstr "پیش‌فرض"
 
 msgid "Default (2 minutes)"
-msgstr ""
+msgstr "پیش‌فرض (2 دقیقه)"
 
 msgid "Default browser"
-msgstr ""
+msgstr "مرورگر پیش‌فرض"
 
 msgid "Default captcha bypass"
-msgstr ""
+msgstr "دور زدن پیش‌فرض کپچا"
 
 msgid "Default suggestions provider"
-msgstr ""
+msgstr "ارائه‌دهندهٔ پیش‌فرض پیشنهادها"
 
 msgid "Default video aspect ratio"
-msgstr ""
+msgstr "نسبت تصویر پیش‌فرض ویدیو"
 
 msgid "Default video policy for 16:9"
-msgstr ""
+msgstr "سیاست پیش‌فرض ویدیو برای 16:9"
 
 msgid "Default video policy for 4:3"
-msgstr ""
+msgstr "سیاست پیش‌فرض ویدیو برای 4:3"
 
 msgid "Default video quality"
-msgstr ""
+msgstr "کیفیت پیش‌فرض ویدیو"
 
 msgid "Default video quality:"
-msgstr ""
+msgstr "کیفیت پیش‌فرض ویدیو:"
 
 msgid "Defaults"
-msgstr ""
+msgstr "پیش‌فرض‌ها"
 
 msgid "Definitely remove from favorites?"
-msgstr ""
+msgstr "واقعاً از علاقه‌مندی‌ها حذف شود؟"
 
 msgid "Delete"
-msgstr ""
+msgstr "حذف"
 
 msgid "Delete JS cache after (days, 0 = never)"
-msgstr ""
+msgstr "حذف حافظهٔ نهان JS پس از (روز، 0 = هرگز)"
 
 msgid "Delete JS cache now"
-msgstr ""
+msgstr "حذف حافظهٔ نهان JS اکنون"
 
 msgid "Delete all cache files now"
-msgstr ""
+msgstr "حذف همهٔ فایل‌های حافظهٔ نهان اکنون"
 
 msgid "Delete all config files now"
-msgstr ""
+msgstr "حذف همهٔ فایل‌های پیکربندی اکنون"
 
 msgid "Delete cookies cache after (days, 0 = never)"
-msgstr ""
+msgstr "حذف حافظهٔ نهان کوکی‌ها پس از (روز، 0 = هرگز)"
 
 msgid "Delete cookies cache now"
-msgstr ""
+msgstr "حذف حافظهٔ نهان کوکی‌ها اکنون"
 
 msgid "Delete entry"
-msgstr ""
+msgstr "حذف مورد"
 
 msgid "Delete favourites and watched status now"
-msgstr ""
+msgstr "حذف علاقه‌مندی‌ها و وضعیت تماشا اکنون"
 
 msgid "Delete host order and groups now"
-msgstr ""
+msgstr "حذف ترتیب میزبان‌ها و گروه‌ها اکنون"
 
 msgid "Delete movie metadata cache after (days, 0 = never)"
-msgstr ""
+msgstr "حذف حافظهٔ نهان فرادادهٔ فیلم پس از (روز، 0 = هرگز)"
 
 msgid "Delete movie metadata cache now"
-msgstr ""
+msgstr "حذف حافظهٔ نهان فرادادهٔ فیلم اکنون"
 
 msgid "Delete movie player preferences now"
-msgstr ""
+msgstr "حذف ترجیحات پخش‌کنندهٔ فیلم اکنون"
 
 msgid "Delete now"
-msgstr ""
+msgstr "حذف اکنون"
 
 msgid "Delete search history"
-msgstr ""
+msgstr "حذف تاریخچهٔ جستجو"
 
 msgid "Delete search history now"
-msgstr ""
+msgstr "حذف تاریخچهٔ جستجو اکنون"
 
 msgid "Delete subtitles cache after (days, 0 = never)"
-msgstr ""
+msgstr "حذف حافظهٔ نهان زیرنویس پس از (روز، 0 = هرگز)"
 
 msgid "Delete subtitles cache now"
-msgstr ""
+msgstr "حذف حافظهٔ نهان زیرنویس اکنون"
 
 msgid "Delete thumbnails cache now"
-msgstr ""
+msgstr "حذف حافظهٔ نهان تصاویر بندانگشتی اکنون"
 
 msgid "Denmark"
-msgstr ""
+msgstr "دانمارک"
 
 msgid "Description:"
-msgstr ""
+msgstr "توضیحات:"
 
 msgid "Detail/expert mode"
-msgstr ""
+msgstr "حالت جزئیات/پیشرفته"
 
 msgid "Detective"
-msgstr ""
+msgstr "کارآگاهی"
 
 msgid "Developers:"
-msgstr ""
+msgstr "توسعه‌دهندگان:"
 
 msgid "Digital programmes"
-msgstr ""
+msgstr "برنامه‌های دیجیتال"
 
 msgid "Direct"
-msgstr ""
+msgstr "مستقیم"
 
 msgid "Director:"
-msgstr ""
+msgstr "کارگردان:"
 
 msgid "Directors"
-msgstr ""
+msgstr "کارگردانان"
 
 msgid "Directors:"
-msgstr ""
+msgstr "کارگردانان:"
 
 #, python-format
 msgid "Directory \"%s\" does not exists."
-msgstr ""
+msgstr "پوشهٔ «%s» وجود ندارد."
 
 msgid "Directory browser"
-msgstr ""
+msgstr "مرورگر پوشه‌ها"
 
 msgid "Disable all groups"
-msgstr ""
+msgstr "غیرفعال کردن همهٔ گروه‌ها"
 
 msgid "Disable live at plugin start"
-msgstr ""
+msgstr "غیرفعال کردن پخش زنده هنگام شروع افزونه"
 
 msgid "Disable not used services"
-msgstr ""
+msgstr "غیرفعال کردن سرویس‌های استفاده‌نشده"
 
 msgid "Disable reordering"
-msgstr ""
+msgstr "غیرفعال کردن تغییر ترتیب"
 
 msgid "Disable reordering mode"
-msgstr ""
+msgstr "غیرفعال کردن حالت تغییر ترتیب"
 
 msgid "Disable/Enable groups"
-msgstr ""
+msgstr "غیرفعال/فعال کردن گروه‌ها"
 
 msgid "Disable/Enable services"
-msgstr ""
+msgstr "غیرفعال/فعال کردن سرویس‌ها"
 
 msgid "Discovery"
-msgstr ""
+msgstr "اکتشاف"
 
 msgid "Disney cartoon movies (Egyptian dub)"
-msgstr ""
+msgstr "فیلم‌های کارتونی دیزنی (دوبلهٔ مصری)"
 
 msgid "Display language:"
-msgstr ""
+msgstr "زبان نمایش:"
 
 msgid "Display thumbnails"
-msgstr ""
+msgstr "نمایش تصاویر بندانگشتی"
 
 msgid "Do you really want to delete ALL cache data now? This includes cookies, subtitles, movie metadata and thumbnails, and cannot be undone."
-msgstr ""
+msgstr "آیا واقعاً می‌خواهید همهٔ داده‌های حافظهٔ نهان را اکنون حذف کنید؟ این شامل کوکی‌ها، زیرنویس‌ها، فرادادهٔ فیلم و تصاویر بندانگشتی است و قابل بازگشت نیست."
 
 msgid "Do you really want to delete ALL config data now? This is real user data, not just cache - it includes favourites, watched status, search history, movie player preferences and host order/groups, and cannot be undone."
-msgstr ""
+msgstr "آیا واقعاً می‌خواهید همهٔ داده‌های پیکربندی را اکنون حذف کنید؟ این‌ها داده‌های واقعی کاربر هستند، نه فقط حافظهٔ نهان - شامل علاقه‌مندی‌ها، وضعیت تماشا، تاریخچهٔ جستجو، ترجیحات پخش‌کنندهٔ فیلم و ترتیب/گروه‌های میزبان‌ها، و قابل بازگشت نیست."
 
 msgid "Do you really want to delete ALL favourites and watched status now? This is real user data, not just cache, and cannot be undone."
-msgstr ""
+msgstr "آیا واقعاً می‌خواهید اکنون همه علاقه‌مندی‌ها و وضعیت تماشا را حذف کنید؟ این‌ها داده‌های واقعی کاربر هستند، نه فقط حافظهٔ نهان، و قابل بازگشت نیستند."
 
 #, python-format
 msgid "Do you really want to delete the %s now?"
-msgstr ""
+msgstr "آیا واقعاً می‌خواهید اکنون %s را حذف کنید؟"
 
 msgid "Do you really want to delete the thumbnails cache now?"
-msgstr ""
+msgstr "آیا واقعاً می‌خواهید اکنون حافظهٔ نهان تصاویر بندانگشتی را حذف کنید؟"
 
 msgid "Do you want to finish?"
-msgstr ""
+msgstr "آیا می‌خواهید به پایان برسانید؟"
 
 msgid "Documentaries"
-msgstr ""
+msgstr "مستندها"
 
 msgid "Documentaries A-Z"
-msgstr ""
+msgstr "مستندها A-Z"
 
 msgid "Documentary"
-msgstr ""
+msgstr "مستند"
 
 msgid "Documentary Movies"
-msgstr ""
+msgstr "فیلم‌های مستند"
 
 msgid "Documentary series"
-msgstr ""
+msgstr "سریال‌های مستند"
 
 msgid "Done - the result was sent to the box, you can close this page."
-msgstr ""
+msgstr "انجام شد - نتیجه به گیرنده ارسال شد، می‌توانید این صفحه را ببندید."
 
 msgid "Download"
-msgstr ""
+msgstr "دانلود"
 
 #, python-format
 msgid "Download (ready in %d seconds)"
-msgstr ""
+msgstr "دانلود (آماده تا %d ثانیه دیگر)"
 
 msgid "Download again"
-msgstr ""
+msgstr "دانلود دوباره"
 
 msgid "Download already exists"
-msgstr ""
+msgstr "دانلود از قبل وجود دارد"
 
 #, python-format
 msgid ""
 "Download can not be started.\n"
 " Incorrect address ('%r')."
 msgstr ""
+"دانلود را نمی‌توان آغاز کرد.\n"
+" نشانی نادرست است ('%r')."
 
 #, python-format
 msgid ""
@@ -1516,36 +1538,41 @@ msgid ""
 "Downloader %s not working correctly.\n"
 "Status[%s]"
 msgstr ""
+"دانلود را نمی‌توان آغاز کرد.\n"
+"دانلودکننده %s به‌درستی کار نمی‌کند.\n"
+"وضعیت[%s]"
 
 #, python-format
 msgid ""
 "Download failed.\n"
 "Status[%s]"
 msgstr ""
+"دانلود ناموفق بود.\n"
+"وضعیت[%s]"
 
 msgid "Download manager"
-msgstr ""
+msgstr "مدیریت دانلود"
 
 msgid "Download manager is not initialized"
-msgstr ""
+msgstr "مدیریت دانلود راه‌اندازی نشده است"
 
 msgid "Download new version"
-msgstr ""
+msgstr "دانلود نسخه جدید"
 
 msgid "Download notification duration"
-msgstr ""
+msgstr "مدت نمایش اعلان دانلود"
 
 msgid "Download subtiles failed."
-msgstr ""
+msgstr "دانلود زیرنویس ناموفق بود."
 
 msgid "Download suggested"
-msgstr ""
+msgstr "دانلود پیشنهاد می‌شود"
 
 msgid "Downloaded file is too small or corrupted."
-msgstr ""
+msgstr "فایل دانلودشده بیش از حد کوچک یا خراب است."
 
 msgid "Downloading"
-msgstr ""
+msgstr "در حال دانلود"
 
 #, python-format
 msgid ""
@@ -1553,12 +1580,17 @@ msgid ""
 " Downloader %s does not work properly.\n"
 "Status[%s]"
 msgstr ""
+"دانلود را نمی‌توان آغاز کرد.\n"
+" دانلودکننده %s به‌درستی کار نمی‌کند.\n"
+"وضعیت[%s]"
 
 #, python-format
 msgid ""
 "Downloading can not be started.\n"
 " The address ('%r') is incorrect."
 msgstr ""
+"دانلود را نمی‌توان آغاز کرد.\n"
+" نشانی ('%r') نادرست است."
 
 #, python-format
 msgid ""
@@ -1566,1030 +1598,1047 @@ msgid ""
 " Downloader [%s] not working properly.\n"
 " Status[%s]"
 msgstr ""
+"دانلود را نمی‌توان آغاز کرد.\n"
+" دانلودکننده [%s] به‌درستی کار نمی‌کند.\n"
+" وضعیت[%s]"
 
 #, python-format
 msgid ""
 "Downloading cannot be started.\n"
 " Invalid URI[%s]."
 msgstr ""
+"دانلود را نمی‌توان آغاز کرد.\n"
+" URI نامعتبر[%s]."
 
 #, python-format
 msgid "Downloading file [%s] problem."
-msgstr ""
+msgstr "مشکل در دانلود فایل [%s]."
 
 msgid "Downloading from prijevodi-online.org needs a free account. Enter login and password in the E2iPlayer settings."
-msgstr ""
+msgstr "دانلود از prijevodi-online.org به یک حساب رایگان نیاز دارد. نام کاربری و رمز عبور را در تنظیمات E2iPlayer وارد کنید."
 
 #, python-format
 msgid ""
 "Downloading subtitles.\n"
 " ('%r')."
 msgstr ""
+"در حال دانلود زیرنویس‌ها.\n"
+" ('%r')."
 
 msgid "Downloads"
-msgstr ""
+msgstr "دانلودها"
 
 msgid "Downloads location"
-msgstr ""
+msgstr "محل دانلودها"
 
 #, python-format
 msgid "Downloads: %s"
-msgstr ""
+msgstr "دانلودها: %s"
 
 msgid "Draft"
-msgstr ""
+msgstr "پیش‌نویس"
 
 msgid "Drama"
-msgstr ""
+msgstr "درام"
 
 msgid "Dramas (Asian)"
-msgstr ""
+msgstr "درام‌ها (آسیایی)"
 
 msgid "Dubbed"
-msgstr ""
+msgstr "دوبله‌شده"
 
 msgid "Dubbed anime"
-msgstr ""
+msgstr "انیمه دوبله‌شده"
 
 msgid "Dubbed movies"
-msgstr ""
+msgstr "فیلم‌های دوبله‌شده"
 
 msgid "Dubbed series"
-msgstr ""
+msgstr "سریال‌های دوبله‌شده"
 
 msgid "DuckDuckGo Suggestions"
-msgstr ""
+msgstr "پیشنهادهای DuckDuckGo"
 
 msgid "Duration"
-msgstr ""
+msgstr "مدت"
 
 msgid "Duration:"
-msgstr ""
+msgstr "مدت:"
 
 #, python-format
 msgid "Duration: %s"
-msgstr ""
+msgstr "مدت: %s"
 
 msgid "Dutch"
-msgstr ""
+msgstr "هلندی"
 
 msgid "E-mail (free TBN GO account):"
-msgstr ""
+msgstr "ایمیل (حساب رایگان TBN GO):"
 
 msgid "E2iPlayer"
-msgstr ""
+msgstr "E2iPlayer"
 
 msgid "E2iPlayer - keyboard settings"
-msgstr ""
+msgstr "E2iPlayer - تنظیمات صفحه‌کلید"
 
 msgid "E2iPlayer - settings"
-msgstr ""
+msgstr "E2iPlayer - تنظیمات"
 
 msgid "E2iPlayer auto start at Enigma2 start"
-msgstr ""
+msgstr "اجرای خودکار E2iPlayer هنگام شروع Enigma2"
 
 msgid "E2iPlayer config folder"
-msgstr ""
+msgstr "پوشه پیکربندی E2iPlayer"
 
 msgid "E2iPlayer downloader"
-msgstr ""
+msgstr "دانلودکننده E2iPlayer"
 
 msgid "E2iPlayer enable/disabled groups"
-msgstr ""
+msgstr "گروه‌های فعال/غیرفعال E2iPlayer"
 
 msgid "E2iPlayer is only a specialized web browser. It does not host any materials."
-msgstr ""
+msgstr "E2iPlayer فقط یک مرورگر وب تخصصی است و هیچ محتوایی را میزبانی نمی‌کند."
 
 msgid "E2iPlayer virtual keyboard"
-msgstr ""
+msgstr "صفحه‌کلید مجازی E2iPlayer"
 
 msgid ""
 "ERROR: pipeline could not be constructed: no element \"playbin2\" \n"
 "Please check if gstreamer plugins are available in your system."
 msgstr ""
+"خطا: pipeline ساخته نشد: عنصر \"playbin2\" وجود ندارد \n"
+"لطفاً بررسی کنید که افزونه‌های gstreamer در سیستم شما موجود باشند."
 
 msgid "EXIT"
-msgstr ""
+msgstr "خروج"
 
 msgid "Economy"
-msgstr ""
+msgstr "اقتصاد"
 
 msgid "Edit"
-msgstr ""
+msgstr "ویرایش"
 
 msgid "Edit User Links"
-msgstr ""
+msgstr "ویرایش پیوندهای کاربر"
 
 msgid "Edit failed."
-msgstr ""
+msgstr "ویرایش ناموفق بود."
 
 msgid "Edit favorite group"
-msgstr ""
+msgstr "ویرایش گروه علاقه‌مندی"
 
 msgid "Edit favorite item"
-msgstr ""
+msgstr "ویرایش مورد علاقه‌مندی"
 
 msgid "Edit favorites"
-msgstr ""
+msgstr "ویرایش علاقه‌مندی‌ها"
 
 msgid "Edit search history"
-msgstr ""
+msgstr "ویرایش تاریخچه جستجو"
 
 msgid "Edit title"
-msgstr ""
+msgstr "ویرایش عنوان"
 
 msgid "Edit, sort and delete search history entries"
-msgstr ""
+msgstr "ویرایش، مرتب‌سازی و حذف موارد تاریخچه جستجو"
 
 msgid "Education"
-msgstr ""
+msgstr "آموزش"
 
 msgid "Educational Animation"
-msgstr ""
+msgstr "انیمیشن آموزشی"
 
 msgid "Egyptian series"
-msgstr ""
+msgstr "سریال‌های مصری"
 
 msgid "Empty title is not allowed."
-msgstr ""
+msgstr "عنوان خالی مجاز نیست."
 
 msgid "Enable all groups"
-msgstr ""
+msgstr "فعال‌سازی همه گروه‌ها"
 
 msgid "Enable hosts groups"
-msgstr ""
+msgstr "فعال‌سازی گروه‌های میزبان"
 
 msgid "Enable reordering"
-msgstr ""
+msgstr "فعال‌سازی تغییر ترتیب"
 
 msgid "Enable reordering mode"
-msgstr ""
+msgstr "فعال‌سازی حالت تغییر ترتیب"
 
 msgid "Enabled hosts"
-msgstr ""
+msgstr "میزبان‌های فعال"
 
 msgid "Encrypted stream list - not supported"
-msgstr ""
+msgstr "فهرست جریان رمزگذاری‌شده - پشتیبانی نمی‌شود"
 
 #, python-format
 msgid ""
 "Encryption function body extraction failed!\n"
 "Please report the problem to %s"
 msgstr ""
+"استخراج بدنه تابع رمزگذاری ناموفق بود!\n"
+"لطفاً مشکل را به %s گزارش دهید"
 
 #, python-format
 msgid ""
 "Encryption function name extraction failed!\n"
 "Please report the problem to %s"
 msgstr ""
+"استخراج نام تابع رمزگذاری ناموفق بود!\n"
+"لطفاً مشکل را به %s گزارش دهید"
 
 msgid "English"
-msgstr ""
+msgstr "انگلیسی"
 
 msgid "English TV series"
-msgstr ""
+msgstr "سریال‌های تلویزیونی انگلیسی"
 
 msgid "English dubbed"
-msgstr ""
+msgstr "دوبله انگلیسی"
 
 msgid "English movies"
-msgstr ""
+msgstr "فیلم‌های انگلیسی"
 
 msgid "English movies (dubbed)"
-msgstr ""
+msgstr "فیلم‌های انگلیسی (دوبله‌شده)"
 
 msgid "English series (dubbed)"
-msgstr ""
+msgstr "سریال‌های انگلیسی (دوبله‌شده)"
 
 msgid "English subbed"
-msgstr ""
+msgstr "زیرنویس انگلیسی"
 
 msgid "Enter"
-msgstr ""
+msgstr "ورود"
 
 msgid "Enter (confirm and close)"
-msgstr ""
+msgstr "Enter (تأیید و بستن)"
 
 msgid "Enter a value"
-msgstr ""
+msgstr "یک مقدار وارد کنید"
 
 msgid "Enter name"
-msgstr ""
+msgstr "نام را وارد کنید"
 
 msgid "Enter new pin"
-msgstr ""
+msgstr "PIN جدید را وارد کنید"
 
 msgid "Enter old pin"
-msgstr ""
+msgstr "PIN قدیمی را وارد کنید"
 
 msgid "Enter pin"
-msgstr ""
+msgstr "PIN را وارد کنید"
 
 msgid "Enter the code shown in the title of the window on your receiver's screen (or scan the QR code shown there - no code needed then):"
-msgstr ""
+msgstr "کدی را که در عنوان پنجره روی صفحه گیرنده شما نمایش داده شده وارد کنید (یا کد QR نمایش‌داده‌شده در آنجا را اسکن کنید - در این صورت به کد نیازی نیست):"
 
 msgid "Enter the text"
-msgstr ""
+msgstr "متن را وارد کنید"
 
 msgid "Entertainment"
-msgstr ""
+msgstr "سرگرمی"
 
 msgid "Entitlement parsing error."
-msgstr ""
+msgstr "خطا در تجزیه مجوز دسترسی."
 
 #, python-format
 msgid "Entries: %d | Sort: %s | Status: %s | Jump target: %s"
-msgstr ""
+msgstr "موارد: %d | مرتب‌سازی: %s | وضعیت: %s | مقصد پرش: %s"
 
 msgid "Episode"
-msgstr ""
+msgstr "قسمت"
 
 #, python-format
 msgid "Episode %d"
-msgstr ""
+msgstr "قسمت %d"
 
 msgid "Episodes"
-msgstr ""
+msgstr "قسمت‌ها"
 
 msgid "Episodes:"
-msgstr ""
+msgstr "قسمت‌ها:"
 
 #, python-format
 msgid "Episodes: %s"
-msgstr ""
+msgstr "قسمت‌ها: %s"
 
 msgid "Epochs"
-msgstr ""
+msgstr "دوره‌ها"
 
 msgid "Error"
-msgstr ""
+msgstr "خطا"
 
 #, python-format
 msgid "Error code: %s\n"
-msgstr ""
+msgstr "کد خطا: %s\n"
 
 #, python-format
 msgid ""
 "Error code: %s\n"
 "Error message: %s"
 msgstr ""
+"کد خطا: %s\n"
+"پیام خطا: %s"
 
 msgid "Error deleting favorite item."
-msgstr ""
+msgstr "خطا در حذف مورد علاقه‌مندی."
 
 #, python-format
 msgid "Error deleting file \"%s\".\n"
-msgstr ""
+msgstr "خطا در حذف فایل \"%s\".\n"
 
 msgid "Error during deletion of the debug file."
-msgstr ""
+msgstr "خطا هنگام حذف فایل اشکال‌زدایی."
 
 #, python-format
 msgid "Error getting file name: %s"
-msgstr ""
+msgstr "خطا در دریافت نام فایل: %s"
 
 msgid "Error loading favorites."
-msgstr ""
+msgstr "خطا در بارگذاری علاقه‌مندی‌ها."
 
 #, python-format
 msgid ""
 "Error message: \"%s\".\n"
 "Error code: \"%s\"."
 msgstr ""
+"پیام خطا: \"%s\".\n"
+"کد خطا: \"%s\"."
 
 #, python-format
 msgid "Error message: %s\n"
-msgstr ""
+msgstr "پیام خطا: %s\n"
 
 msgid "Error occurs"
-msgstr ""
+msgstr "خطایی رخ داد"
 
 msgid "Error occurs during download."
-msgstr ""
+msgstr "هنگام دانلود خطایی رخ داد."
 
 msgid "Error occurs:"
-msgstr ""
+msgstr "خطایی رخ داد:"
 
 #, python-format
 msgid "Error reading file \"%s\".\n"
-msgstr ""
+msgstr "خطا در خواندن فایل \"%s\".\n"
 
 #, python-format
 msgid "Error renaming file: %s"
-msgstr ""
+msgstr "خطا در تغییر نام فایل: %s"
 
 msgid "Error saving favorites."
-msgstr ""
+msgstr "خطا در ذخیره علاقه‌مندی‌ها."
 
 msgid "Error while loading watch data"
-msgstr ""
+msgstr "خطا هنگام بارگذاری داده‌های تماشا"
 
 msgid "Error while saving."
-msgstr ""
+msgstr "خطا هنگام ذخیره‌سازی."
 
 #, python-format
 msgid "Error writing file \"%s\".\n"
-msgstr ""
+msgstr "خطا در نوشتن فایل \"%s\".\n"
 
 msgid "Ethical & Legal"
-msgstr ""
+msgstr "اخلاقی و حقوقی"
 
 msgid "European movies"
-msgstr ""
+msgstr "فیلم‌های اروپایی"
 
 msgid "Events"
-msgstr ""
+msgstr "رویدادها"
 
 msgid "Every enabled site: does the menu open, does a list show videos? Takes a few minutes."
-msgstr ""
+msgstr "هر سایت فعال: آیا منو باز می‌شود، آیا فهرستی ویدیو نشان می‌دهد؟ چند دقیقه طول می‌کشد."
 
 msgid "Exam Review"
-msgstr ""
+msgstr "مرور امتحان"
 
 msgid "Exception occurs"
-msgstr ""
+msgstr "استثنایی رخ داد"
 
 msgid "Exclusive"
-msgstr ""
+msgstr "اختصاصی"
 
 msgid "Exit"
-msgstr ""
+msgstr "خروج"
 
 #, python-format
 msgid "Expiry: %s"
-msgstr ""
+msgstr "انقضا: %s"
 
 msgid "Extended"
-msgstr ""
+msgstr "گسترده"
 
 msgid "External movie player config"
-msgstr ""
+msgstr "تنظیمات پخش‌کننده خارجی فیلم"
 
 msgid "Extracted subtitle file is empty or missing."
-msgstr ""
+msgstr "فایل زیرنویس استخراج‌شده خالی است یا وجود ندارد."
 
 msgid "FAILED"
-msgstr ""
+msgstr "ناموفق"
 
 msgid "FAST FORWARD"
-msgstr ""
+msgstr "جلو بردن سریع"
 
 msgid "FREE"
-msgstr ""
+msgstr "رایگان"
 
 msgid "FUCKER sorting by :"
-msgstr ""
+msgstr "مرتب‌سازی FUCKER بر اساس :"
 
 #, python-format
 msgid "Fail to get \"%s\"."
-msgstr ""
+msgstr "دریافت \"%s\" ناموفق بود."
 
 msgid "Fail to get captcha data."
-msgstr ""
+msgstr "دریافت داده‌های captcha ناموفق بود."
 
 msgid "Failed to connect to host."
-msgstr ""
+msgstr "اتصال به میزبان ناموفق بود."
 
 #, python-format
 msgid "Failed to connect to server \"%s\"."
-msgstr ""
+msgstr "اتصال به سرور \"%s\" ناموفق بود."
 
 #, python-format
 msgid "Failed to convert the file \"%s\" to UTF-8."
-msgstr ""
+msgstr "تبدیل فایل \"%s\" به UTF-8 ناموفق بود."
 
 #, python-format
 msgid "Failed to create directory \"%s\"."
-msgstr ""
+msgstr "ایجاد پوشه \"%s\" ناموفق بود."
 
 msgid "Failed to create extraction directory."
-msgstr ""
+msgstr "ایجاد پوشه استخراج ناموفق بود."
 
 msgid "Failed to download subtitle."
-msgstr ""
+msgstr "دانلود زیرنویس ناموفق بود."
 
 msgid "Failed to download the subtitles."
-msgstr ""
+msgstr "دانلود زیرنویس‌ها ناموفق بود."
 
 msgid "Failed to get the download link."
-msgstr ""
+msgstr "دریافت پیوند دانلود ناموفق بود."
 
 #, python-format
 msgid "Failed to get the file list from %s."
-msgstr ""
+msgstr "دریافت فهرست فایل‌ها از %s ناموفق بود."
 
 msgid "Failed to gzip."
-msgstr ""
+msgstr "فشرده‌سازی gzip ناموفق بود."
 
 msgid "Failed to initialize (unknown option or old curl version?)."
-msgstr ""
+msgstr "راه‌اندازی ناموفق بود (گزینه ناشناخته یا نسخه قدیمی curl؟)."
 
 msgid "Failed to load the match list"
-msgstr ""
+msgstr "بارگذاری فهرست مسابقات ناموفق بود"
 
 #, python-format
 msgid "Failed to log in user \"%s\". Please check your login and password."
-msgstr ""
+msgstr "ورود کاربر \"%s\" ناموفق بود. لطفاً نام کاربری و رمز عبور خود را بررسی کنید."
 
 #, python-format
 msgid "Failed to open the file \"%s\"."
-msgstr ""
+msgstr "باز کردن فایل \"%s\" ناموفق بود."
 
 #, python-format
 msgid "Failed to write file \"%s\"."
-msgstr ""
+msgstr "نوشتن فایل \"%s\" ناموفق بود."
 
 #, python-format
 msgid "Failed to write the file \"%s\"."
-msgstr ""
+msgstr "نوشتن فایل \"%s\" ناموفق بود."
 
 #, python-format
 msgid "Failed: %s"
-msgstr ""
+msgstr "ناموفق: %s"
 
 msgid "Family"
-msgstr ""
+msgstr "خانوادگی"
 
 msgid "Fantasy"
-msgstr ""
+msgstr "فانتزی"
 
 msgid "Fashion"
-msgstr ""
+msgstr "مد"
 
 msgid "Fatal error: consoleWrite failed!"
-msgstr ""
+msgstr "خطای مهلک: consoleWrite ناموفق بود!"
 
 msgid "Favorite group not found."
-msgstr ""
+msgstr "گروه علاقه‌مندی یافت نشد."
 
 msgid "Favorite item not found."
-msgstr ""
+msgstr "مورد علاقه‌مندی یافت نشد."
 
 msgid "Favorites"
-msgstr ""
+msgstr "علاقه‌مندی‌ها"
 
 msgid "Favorites groups"
-msgstr ""
+msgstr "گروه‌های علاقه‌مندی"
 
 msgid "Favorites manager"
-msgstr ""
+msgstr "مدیریت علاقه‌مندی‌ها"
 
 msgid "Featured"
-msgstr ""
+msgstr "ویژه"
 
 #, python-format
 msgid "File \"%s\" already exists"
-msgstr ""
+msgstr "فایل \"%s\" از قبل وجود دارد"
 
 #, python-format
 msgid "File \"%s\" already exists!"
-msgstr ""
+msgstr "فایل \"%s\" از قبل وجود دارد!"
 
 msgid "File I/O error (write)."
-msgstr ""
+msgstr "خطای ورودی/خروجی فایل (نوشتن)."
 
 msgid "File I/O error."
-msgstr ""
+msgstr "خطای ورودی/خروجی فایل."
 
 msgid "File Not Found."
-msgstr ""
+msgstr "فایل یافت نشد."
 
 #, python-format
 msgid "File [%s] has been added to the downloading queue."
-msgstr ""
+msgstr "فایل [%s] به صف دانلود افزوده شد."
 
 #, python-format
 msgid "File [%s] is already in the downloading queue."
-msgstr ""
+msgstr "فایل [%s] از قبل در صف دانلود است."
 
 #, python-format
 msgid "File [%s] was added to downloading queue."
-msgstr ""
+msgstr "فایل [%s] به صف دانلود افزوده شد."
 
 msgid "File browser"
-msgstr ""
+msgstr "مرورگر فایل"
 
 msgid "File can not be downloaded. Download manager is not available."
-msgstr ""
+msgstr "فایل قابل دانلود نیست. مدیریت دانلود در دسترس نیست."
 
 #, python-format
 msgid "File can not be downloaded. Protocol [%s] is unsupported"
-msgstr ""
+msgstr "فایل قابل دانلود نیست. پروتکل [%s] پشتیبانی نمی‌شود"
 
 msgid "File format of DASH (MPD) downloads"
-msgstr ""
+msgstr "قالب فایل دانلودهای DASH (MPD)"
 
 #, python-format
 msgid "File might be corrupted (size: %d bytes)."
-msgstr ""
+msgstr "ممکن است فایل خراب باشد (اندازه: %d بایت)."
 
 msgid "File name cannot be empty!"
-msgstr ""
+msgstr "نام فایل نمی‌تواند خالی باشد!"
 
 msgid "File renamed successfully!"
-msgstr ""
+msgstr "نام فایل با موفقیت تغییر کرد!"
 
 msgid "Files"
-msgstr ""
+msgstr "فایل‌ها"
 
 msgid "Filler"
-msgstr ""
+msgstr "قسمت فرعی"
 
 msgid "Films"
-msgstr ""
+msgstr "فیلم‌ها"
 
 msgid "Films by genre"
-msgstr ""
+msgstr "فیلم‌ها بر اساس ژانر"
 
 msgid "Filmweb Suggestions"
-msgstr ""
+msgstr "پیشنهادهای Filmweb"
 
 msgid "Filter"
-msgstr ""
+msgstr "فیلتر"
 
 msgid "Filter settings"
-msgstr ""
+msgstr "تنظیمات فیلتر"
 
 msgid "Find item"
-msgstr ""
+msgstr "یافتن مورد"
 
 msgid "Find out more."
-msgstr ""
+msgstr "بیشتر بدانید."
 
 msgid "Finished matches with a full replay, highlights or match cuts, newest first (usually a few days after the match)."
-msgstr ""
+msgstr "مسابقات پایان‌یافته با بازپخش کامل، خلاصه یا برش‌های مسابقه، جدیدترین‌ها اول (معمولاً چند روز پس از مسابقه)."
 
 msgid "First Page"
-msgstr ""
+msgstr "صفحه اول"
 
 msgid "First air date:"
-msgstr ""
+msgstr "تاریخ اولین پخش:"
 
 msgid "First aired"
-msgstr ""
+msgstr "اولین پخش"
 
 msgid "First movie player in buffering mode"
-msgstr ""
+msgstr "پخش‌کننده اول فیلم در حالت بافر"
 
 msgid "First movie player without buffering mode"
-msgstr ""
+msgstr "پخش‌کننده اول فیلم بدون حالت بافر"
 
 msgid "Fix jump target"
-msgstr ""
+msgstr "اصلاح مقصد پرش"
 
 #, python-format
 msgid "Folder \"%s\" can not be created."
-msgstr ""
+msgstr "پوشه \"%s\" قابل ایجاد نیست."
 
 #, python-format
 msgid "Folder \"%s\" has been created."
-msgstr ""
+msgstr "پوشه \"%s\" ایجاد شد."
 
 msgid "Folder for cache data"
-msgstr ""
+msgstr "پوشه داده‌های حافظهٔ نهان"
 
 msgid "Folder for config data"
-msgstr ""
+msgstr "پوشه داده‌های پیکربندی"
 
 msgid "Folder for temporary data"
-msgstr ""
+msgstr "پوشه داده‌های موقت"
 
 msgid "Followers"
-msgstr ""
+msgstr "دنبال‌کنندگان"
 
 msgid "Following host are broken or additional python modules are needed."
-msgstr ""
+msgstr "میزبان‌های زیر خراب هستند یا به ماژول‌های python اضافی نیاز دارند."
 
 msgid "Font size offset"
-msgstr ""
+msgstr "تغییر اندازه قلم"
 
 msgid "Food"
-msgstr ""
+msgstr "غذا"
 
 msgid "Foot & Ankle"
-msgstr ""
+msgstr "پا و مچ پا"
 
 msgid "Football Live"
-msgstr ""
+msgstr "فوتبال زنده"
 
 msgid "For continuous playing, please press 8!"
-msgstr ""
+msgstr "برای پخش پیوسته، لطفاً 8 را فشار دهید!"
 
 msgid "For developers"
-msgstr ""
+msgstr "برای توسعه‌دهندگان"
 
 msgid "Force internal skin: all E2iPlayer screens"
-msgstr ""
+msgstr "اجبار پوسته داخلی: همه صفحه‌های E2iPlayer"
 
 msgid "Force internal skin: main screen only"
-msgstr ""
+msgstr "اجبار پوسته داخلی: فقط صفحه اصلی"
 
 msgid "Foreign movies"
-msgstr ""
+msgstr "فیلم‌های خارجی"
 
 msgid "Foreign parts only"
-msgstr ""
+msgstr "فقط بخش‌های خارجی"
 
 msgid "Foreign series"
-msgstr ""
+msgstr "سریال‌های خارجی"
 
 msgid "Format 'wmv' blocked in configuration."
-msgstr ""
+msgstr "قالب 'wmv' در تنظیمات مسدود شده است."
 
 msgid "Formations"
-msgstr ""
+msgstr "ترکیب‌ها"
 
 msgid "Fotka.pl stream :"
-msgstr ""
+msgstr "جریان Fotka.pl :"
 
 msgid "Free IPTV list"
-msgstr ""
+msgstr "فهرست IPTV رایگان"
 
 msgid "French"
-msgstr ""
+msgstr "فرانسوی"
 
 msgid "From E2 settings"
-msgstr ""
+msgstr "از تنظیمات E2"
 
 msgid "Full description loaded"
-msgstr ""
+msgstr "توضیحات کامل بارگذاری شد"
 
 msgid "Full description not available"
-msgstr ""
+msgstr "توضیحات کامل در دسترس نیست"
 
 msgid "Full test"
-msgstr ""
+msgstr "آزمون کامل"
 
 msgid "Full test checks the INFO window :"
-msgstr ""
+msgstr "آزمون کامل پنجره INFO را بررسی می‌کند :"
 
 msgid "Full test checks the next page :"
-msgstr ""
+msgstr "آزمون کامل صفحه بعد را بررسی می‌کند :"
 
 msgid "Full test checks the search :"
-msgstr ""
+msgstr "آزمون کامل جستجو را بررسی می‌کند :"
 
 msgid "Full test checks the stream link :"
-msgstr ""
+msgstr "آزمون کامل پیوند جریان را بررسی می‌کند :"
 
 msgid "Full test checks thumbnails :"
-msgstr ""
+msgstr "آزمون کامل تصاویر بندانگشتی را بررسی می‌کند :"
 
 msgid "GREEN"
-msgstr ""
+msgstr "سبز"
 
 #, python-format
 msgid "Game: %s"
-msgstr ""
+msgstr "بازی: %s"
 
 msgid "Games"
-msgstr ""
+msgstr "بازی‌ها"
 
 msgid "Gaming"
-msgstr ""
+msgstr "بازی"
 
 msgid "General"
-msgstr ""
+msgstr "عمومی"
 
 msgid "Generic error code."
-msgstr ""
+msgstr "کد خطای عمومی."
 
 msgid "Genre"
-msgstr ""
+msgstr "ژانر"
 
 msgid "Genre:"
-msgstr ""
+msgstr "ژانر:"
 
 #, python-format
 msgid "Genre: %s"
-msgstr ""
+msgstr "ژانر: %s"
 
 msgid "Genres"
-msgstr ""
+msgstr "ژانرها"
 
 msgid "Genres:"
-msgstr ""
+msgstr "ژانرها:"
 
 msgid "German"
-msgstr ""
+msgstr "آلمانی"
 
 msgid "Get Cloudflare job"
-msgstr ""
+msgstr "کار دریافت Cloudflare"
 
 msgid "Get captcha job"
-msgstr ""
+msgstr "کار دریافت captcha"
 
 msgid "Get cookies job"
-msgstr ""
+msgstr "کار دریافت کوکی‌ها"
 
 msgid "Get languages failed!"
-msgstr ""
+msgstr "دریافت زبان‌ها ناموفق بود!"
 
 msgid "Get token failed!"
-msgstr ""
+msgstr "دریافت توکن ناموفق بود!"
 
 msgid "GitHub API error"
-msgstr ""
+msgstr "خطای API گیت‌هاب"
 
 msgid "Global"
-msgstr ""
+msgstr "سراسری"
 
 msgid "Global Search mode :"
-msgstr ""
+msgstr "حالت جستجوی سراسری :"
 
 msgid "Go to the host configuration available under blue button."
-msgstr ""
+msgstr "به تنظیمات میزبان که زیر دکمه آبی در دسترس است بروید."
 
 msgid "Google Suggestions"
-msgstr ""
+msgstr "پیشنهادهای Google"
 
 msgid "Google account"
-msgstr ""
+msgstr "حساب Google"
 
 msgid "Graphic services selector"
-msgstr ""
+msgstr "انتخابگر سرویس‌های گرافیکی"
 
 msgid "Greek"
-msgstr ""
+msgstr "یونانی"
 
 #, python-format
 msgid "Group \"%s\" already exists."
-msgstr ""
+msgstr "گروه \"%s\" از قبل وجود دارد."
 
 #, python-format
 msgid "Group %d"
-msgstr ""
+msgstr "گروه %d"
 
 msgid "Group links into categories:"
-msgstr ""
+msgstr "دسته‌بندی پیوندها:"
 
 #, python-format
 msgid "Group with id[%s] not found."
-msgstr ""
+msgstr "گروه با id[%s] یافت نشد."
 
 msgid "Groups"
-msgstr ""
+msgstr "گروه‌ها"
 
 msgid "HIDDEN CAM SHOW IN PROGRESS. TRY AGAIN LATER!"
-msgstr ""
+msgstr "نمایش دوربین مخفی در جریان است. بعداً دوباره امتحان کنید!"
 
 msgid "HLS with subtitles"
-msgstr ""
+msgstr "HLS با زیرنویس"
 
 msgid "HLS/m3u8"
-msgstr ""
+msgstr "HLS/m3u8"
 
 msgid "HTTP/2 framing layer error."
-msgstr ""
+msgstr "خطای لایه قاب‌بندی HTTP/2."
 
 msgid "HTTP/2 stream error."
-msgstr ""
+msgstr "خطای جریان HTTP/2."
 
 #, python-format
 msgid "HTTPS connection error \"%s\"\n"
-msgstr ""
+msgstr "خطای اتصال HTTPS \"%s\"\n"
 
 msgid "Hand"
-msgstr ""
+msgstr "دست"
 
 msgid "Health"
-msgstr ""
+msgstr "سلامت"
 
 msgid "Hearing impaired"
-msgstr ""
+msgstr "ویژه ناشنوایان"
 
 msgid "Help"
-msgstr ""
+msgstr "راهنما"
 
 #, python-format
 msgid "Hide \"%s\" group"
-msgstr ""
+msgstr "پنهان کردن گروه \"%s\""
 
 msgid "Hide the menu (live TV visible)"
-msgstr ""
+msgstr "پنهان کردن منو (تلویزیون زنده نمایان)"
 
 msgid "Hide titles only available in Sweden"
-msgstr ""
+msgstr "پنهان کردن عناوینی که فقط در سوئد در دسترس هستند"
 
 msgid "Hide/Active Group"
-msgstr ""
+msgstr "پنهان/فعال کردن گروه"
 
 msgid "High (or HD)"
-msgstr ""
+msgstr "بالا (یا HD)"
 
 msgid "Highlights"
-msgstr ""
+msgstr "خلاصه‌ها"
 
 msgid "History"
-msgstr ""
+msgstr "تاریخچه"
 
 msgid "History of searched phrases."
-msgstr ""
+msgstr "تاریخچه عبارت‌های جستجوشده."
 
 msgid "Home"
-msgstr ""
+msgstr "خانه"
 
 msgid "Home / Sections"
-msgstr ""
+msgstr "خانه / بخش‌ها"
 
 msgid "Home page"
-msgstr ""
+msgstr "صفحه اصلی"
 
 msgid "Horror"
-msgstr ""
+msgstr "ترسناک"
 
 msgid "Host"
-msgstr ""
+msgstr "میزبان"
 
 #, python-format
 msgid "Host: %s"
-msgstr ""
+msgstr "میزبان: %s"
 
 #, python-format
 msgid "Hosting \"%s\" not supported."
-msgstr ""
+msgstr "سرویس میزبانی \"%s\" پشتیبانی نمی‌شود."
 
 #, python-format
 msgid "Hosting \"%s\" unknown."
-msgstr ""
+msgstr "سرویس میزبانی \"%s\" ناشناخته است."
 
 #, python-format
 msgid "Hosting: %s, %s"
-msgstr ""
+msgstr "میزبانی: %s، %s"
 
 msgid "Hosts"
-msgstr ""
+msgstr "میزبان‌ها"
 
 msgid "Hosts list type"
-msgstr ""
+msgstr "نوع فهرست میزبان‌ها"
 
 msgid "Hot"
-msgstr ""
+msgstr "داغ"
 
 msgid "How to solve a captcha:"
-msgstr ""
+msgstr "نحوه حل captcha:"
 
 msgid "Humanitarian"
-msgstr ""
+msgstr "بشردوستانه"
 
 msgid "Hungarian"
-msgstr ""
+msgstr "مجاری"
 
 msgid "I am no robot"
-msgstr ""
+msgstr "من ربات نیستم"
 
 msgid "IMDb"
-msgstr ""
+msgstr "IMDb"
 
 msgid "IMDb Rating:"
-msgstr ""
+msgstr "امتیاز IMDb:"
 
 msgid "IMDb Suggestions"
-msgstr ""
+msgstr "پیشنهادهای IMDb"
 
 msgid "INFO"
-msgstr ""
+msgstr "INFO"
 
 #, python-format
 msgid "INFO %d rows"
-msgstr ""
+msgstr "INFO %d سطر"
 
 msgid "INFO list text"
-msgstr ""
+msgstr "متن فهرست INFO"
 
 msgid "INFO opens no window"
-msgstr ""
+msgstr "INFO پنجره‌ای باز نمی‌کند"
 
 msgid "INFO window"
-msgstr ""
+msgstr "پنجره INFO"
 
 msgid "INTERRUPTED"
-msgstr ""
+msgstr "متوقف‌شده"
 
 msgid "IPTV Portals"
-msgstr ""
+msgstr "پورتال‌های IPTV"
 
 msgid "Icon type"
-msgstr ""
+msgstr "نوع آیکون"
 
 msgid "Icons quality"
-msgstr ""
+msgstr "کیفیت آیکون‌ها"
 
 msgid "Icons size"
-msgstr ""
+msgstr "اندازه آیکون‌ها"
 
 msgid "Image"
-msgstr ""
+msgstr "تصویر"
 
 msgid "Indian"
-msgstr ""
+msgstr "هندی"
 
 msgid "Indian Movies"
-msgstr ""
+msgstr "فیلم‌های هندی"
 
 msgid "Indian TV series"
-msgstr ""
+msgstr "سریال‌های تلویزیونی هندی"
 
 msgid "Indian movies"
-msgstr ""
+msgstr "فیلم‌های هندی"
 
 msgid "Indian movies (dubbed)"
-msgstr ""
+msgstr "فیلم‌های هندی (دوبله‌شده)"
 
 msgid "Indian series (dubbed)"
-msgstr ""
+msgstr "سریال‌های هندی (دوبله‌شده)"
 
 msgid "Industry"
-msgstr ""
+msgstr "صنعت"
 
 msgid "Info"
-msgstr ""
+msgstr "اطلاعات"
 
 msgid "Info bar timeout"
-msgstr ""
+msgstr "مهلت نمایش نوار اطلاعات"
 
 msgid "Information"
-msgstr ""
+msgstr "اطلاعات"
 
 msgid "Information about audio tracks not available."
-msgstr ""
+msgstr "اطلاعات مربوط به ترک‌های صوتی در دسترس نیست."
 
 msgid "Initialize web interface"
-msgstr ""
+msgstr "راه‌اندازی رابط وب"
 
 msgid "Inject black iframe at video playback finish"
-msgstr ""
+msgstr "درج فریم سیاه در پایان پخش ویدیو"
 
 msgid "Input"
-msgstr ""
+msgstr "ورودی"
 
 msgid "Install E2iPlayer"
-msgstr ""
+msgstr "نصب E2iPlayer"
 
 msgid "Installed version"
-msgstr ""
+msgstr "نسخه نصب‌شده"
 
 #, python-format
 msgid "Installed: v%s"
-msgstr ""
+msgstr "نصب‌شده: v%s"
 
 #, python-format
 msgid "Installed: v%s - %d commits behind %s"
-msgstr ""
+msgstr "نصب‌شده: v%s - %d کامیت عقب‌تر از %s"
 
 #, python-format
 msgid "Installed: v%s - no matching release tag (local build?)"
-msgstr ""
+msgstr "نصب‌شده: v%s - برچسب انتشار منطبقی وجود ندارد (ساخت محلی؟)"
 
 #, python-format
 msgid "Installed: v%s - up to date"
-msgstr ""
+msgstr "نصب‌شده: v%s - به‌روز است"
 
 msgid "Interactive Learning Center(ILC)"
-msgstr ""
+msgstr "مرکز یادگیری تعاملی (ILC)"
 
 msgid "Intervention"
-msgstr ""
+msgstr "مداخله"
 
 msgid "Interviews"
-msgstr ""
+msgstr "مصاحبه‌ها"
 
 #, python-format
 msgid "Invalid answer from %s."
-msgstr ""
+msgstr "پاسخ نامعتبر از %s."
 
 msgid "Invalid email."
-msgstr ""
+msgstr "ایمیل نامعتبر است."
 
 msgid "Invalid name."
-msgstr ""
+msgstr "نام نامعتبر است."
 
 msgid "Invalid value."
-msgstr ""
+msgstr "مقدار نامعتبر است."
 
 msgid "Investigations"
-msgstr ""
+msgstr "تحقیقات"
 
 msgid "Is this message displayed correctly?"
-msgstr ""
+msgstr "آیا این پیام به‌درستی نمایش داده می‌شود؟"
 
 msgid "It is not allowed to call getURLRequestData from main thread."
-msgstr ""
+msgstr "فراخوانی getURLRequestData از رشته اصلی مجاز نیست."
 
 msgid "It looks like some kind of protection. Try again later."
-msgstr ""
+msgstr "به نظر می‌رسد نوعی محافظت وجود دارد. بعداً دوباره امتحان کنید."
 
 #, python-format
 msgid "It looks like your current configuration do not allow to connect to the https://%s/.\n"
-msgstr ""
+msgstr "به نظر می‌رسد پیکربندی فعلی شما اجازه اتصال به https://%s/ را نمی‌دهد.\n"
 
 #, python-format
 msgid "It seems that the host \"%s\" has crashed."
-msgstr ""
+msgstr "به نظر می‌رسد میزبان \"%s\" از کار افتاده است."
 
 #, python-format
 msgid "It seems that the subtitle's provider \"%s\" has crashed."
-msgstr ""
+msgstr "به نظر می‌رسد ارائه‌دهنده زیرنویس \"%s\" از کار افتاده است."
 
 #, python-format
 msgid ""
@@ -2598,577 +2647,587 @@ msgid ""
 "STS: %s\n"
 "ERROR CODE: %r"
 msgstr ""
+"به نظر می‌رسد پخش‌کننده ویدیو \"%s\" به‌درستی کار نمی‌کند.\n"
+"\n"
+"STS: %s\n"
+"کد خطا: %r"
 
 msgid "It seems that unrar utility is not installed."
-msgstr ""
+msgstr "به نظر می‌رسد ابزار unrar نصب نشده است."
 
 msgid "It seems that unzip utility is not installed."
-msgstr ""
+msgstr "به نظر می‌رسد ابزار unzip نصب نشده است."
 
 msgid "Italian"
-msgstr ""
+msgstr "ایتالیایی"
 
 #, python-format
 msgid "Item idx[%d] not found in group[%s]."
-msgstr ""
+msgstr "مورد idx[%d] در گروه[%s] یافت نشد."
 
 #, python-format
 msgid "Items in group \"%s\""
-msgstr ""
+msgstr "موارد گروه \"%s\""
 
 msgid "JDownloader script execution"
-msgstr ""
+msgstr "اجرای اسکریپت JDownloader"
 
 #, python-format
 msgid ""
 "JDownloader script execution failed.\n"
 "Error code: %s\n"
 msgstr ""
+"اجرای اسکریپت JDownloader ناموفق بود.\n"
+"کد خطا: %s\n"
 
 msgid "JDownloader script finished."
-msgstr ""
+msgstr "اسکریپت JDownloader به پایان رسید."
 
 msgid "JS cache"
-msgstr ""
+msgstr "حافظهٔ نهان JS"
 
 msgid "Japanese"
-msgstr ""
+msgstr "ژاپنی"
 
 msgid "Japanese dramas"
-msgstr ""
+msgstr "درام‌های ژاپنی"
 
 msgid "Japanese films"
-msgstr ""
+msgstr "فیلم‌های ژاپنی"
 
 msgid "Jobs & Positions"
-msgstr ""
+msgstr "مشاغل و موقعیت‌ها"
 
 msgid "Journal Club"
-msgstr ""
+msgstr "باشگاه مجله"
 
 msgid "Jump"
-msgstr ""
+msgstr "پرش"
 
 msgid "Jump target was fixed so the sort order is preserved."
-msgstr ""
+msgstr "مقصد پرش اصلاح شد تا ترتیب مرتب‌سازی حفظ شود."
 
 msgid "Jump to a selected page"
-msgstr ""
+msgstr "پرش به صفحه انتخاب‌شده"
 
 msgid "Jump to a selected page, max: {}"
-msgstr ""
+msgstr "پرش به صفحه انتخاب‌شده، حداکثر: {}"
 
 msgid "Keep FFmpeg command files (.iptv.cmd)"
-msgstr ""
+msgstr "نگه داشتن فایل‌های فرمان FFmpeg (.iptv.cmd)"
 
 msgid "Keep temporary JS scripts"
-msgstr ""
+msgstr "نگه داشتن اسکریپت‌های موقت JS"
 
 msgid "Kids"
-msgstr ""
+msgstr "کودکان"
 
 msgid "Kinds"
-msgstr ""
+msgstr "انواع"
 
 msgid "Knee & Sports"
-msgstr ""
+msgstr "زانو و ورزش"
 
 msgid "Knowledge"
-msgstr ""
+msgstr "دانش"
 
 msgid "Knowledge & Nature"
-msgstr ""
+msgstr "دانش و طبیعت"
 
 msgid "Korean"
-msgstr ""
+msgstr "کره‌ای"
 
 msgid "Korean TV series"
-msgstr ""
+msgstr "سریال‌های تلویزیونی کره‌ای"
 
 msgid "Korean anime"
-msgstr ""
+msgstr "انیمه کره‌ای"
 
 msgid "Korean dramas"
-msgstr ""
+msgstr "درام‌های کره‌ای"
 
 msgid "Korean films"
-msgstr ""
+msgstr "فیلم‌های کره‌ای"
 
 msgid "Korean movies"
-msgstr ""
+msgstr "فیلم‌های کره‌ای"
 
 msgid "LEFT/RIGHT at start/end of text - alternative way to switch panels"
-msgstr ""
+msgstr "چپ/راست در ابتدا/انتهای متن - روش جایگزین برای جابه‌جایی بین پنل‌ها"
 
 msgid "Language"
-msgstr ""
+msgstr "زبان"
 
 msgid "Language of the details (TMDb, IMDb)"
-msgstr ""
+msgstr "زبان جزئیات (TMDb، IMDb)"
 
 msgid "Language:"
-msgstr ""
+msgstr "زبان:"
 
 msgid "Last"
-msgstr ""
+msgstr "آخرین"
 
 #, python-format
 msgid "Last Exception error: \"%s\""
-msgstr ""
+msgstr "آخرین خطای استثنا: \"%s\""
 
 #, python-format
 msgid "Last Exception error: '%s'"
-msgstr ""
+msgstr "آخرین خطای استثنا: '%s'"
 
 #, python-format
 msgid "Last Modified: %s"
-msgstr ""
+msgstr "آخرین تغییر: %s"
 
 msgid "Last air date:"
-msgstr ""
+msgstr "تاریخ آخرین پخش:"
 
 msgid "Last chance"
-msgstr ""
+msgstr "آخرین فرصت"
 
 msgid "Last day"
-msgstr ""
+msgstr "روز گذشته"
 
 #, python-format
 msgid ""
 "Last error:\n"
 "%s"
 msgstr ""
+"آخرین خطا:\n"
+"%s"
 
 #, python-format
 msgid "Last error: \"%s\""
-msgstr ""
+msgstr "آخرین خطا: \"%s\""
 
 msgid "Last month"
-msgstr ""
+msgstr "ماه گذشته"
 
 msgid "Last result"
-msgstr ""
+msgstr "آخرین نتیجه"
 
 msgid "Last week"
-msgstr ""
+msgstr "هفته گذشته"
 
 msgid "Last.fm charts and tag pages are behind a browser check, only the radio stations can be used."
-msgstr ""
+msgstr "نمودارها و صفحه‌های برچسب Last.fm پشت بررسی مرورگر هستند، فقط ایستگاه‌های رادیویی قابل استفاده‌اند."
 
 #, python-format
 msgid "Last.fm user \"%s\" not found."
-msgstr ""
+msgstr "کاربر Last.fm \"%s\" یافت نشد."
 
 msgid "Last.fm user name:"
-msgstr ""
+msgstr "نام کاربری Last.fm:"
 
 msgid "Lastest"
-msgstr ""
+msgstr "جدیدترین"
 
 msgid "Latest"
-msgstr ""
+msgstr "جدیدترین"
 
 msgid "Latest added"
-msgstr ""
+msgstr "آخرین افزوده‌ها"
 
 msgid "Latest anime episodes"
-msgstr ""
+msgstr "جدیدترین قسمت‌های انیمه"
 
 msgid "Latest cartoon episodes"
-msgstr ""
+msgstr "جدیدترین قسمت‌های کارتون"
 
 msgid "Latest dubbed episodes"
-msgstr ""
+msgstr "جدیدترین قسمت‌های دوبله‌شده"
 
 msgid "Latest episodes"
-msgstr ""
+msgstr "جدیدترین قسمت‌ها"
 
 msgid "Latest episodes (airing)"
-msgstr ""
+msgstr "جدیدترین قسمت‌ها (در حال پخش)"
 
 msgid "Latest episodes (finished series)"
-msgstr ""
+msgstr "جدیدترین قسمت‌ها (سریال‌های پایان‌یافته)"
 
 msgid "Latest highlights"
-msgstr ""
+msgstr "جدیدترین خلاصه‌ها"
 
 msgid "Latest update"
-msgstr ""
+msgstr "آخرین به‌روزرسانی"
 
 msgid "Latest updates"
-msgstr ""
+msgstr "آخرین به‌روزرسانی‌ها"
 
 msgid "Latest video"
-msgstr ""
+msgstr "جدیدترین ویدیو"
 
 msgid "Latest videos"
-msgstr ""
+msgstr "جدیدترین ویدیوها"
 
 msgid "Latest videos from the channels you are subscribed to."
-msgstr ""
+msgstr "جدیدترین ویدیوهای کانال‌هایی که مشترک آن‌ها هستید."
 
 msgid "Latin American series"
-msgstr ""
+msgstr "سریال‌های آمریکای لاتین"
 
 msgid "Latin American series (dubbed)"
-msgstr ""
+msgstr "سریال‌های آمریکای لاتین (دوبله‌شده)"
 
 msgid "Latino"
-msgstr ""
+msgstr "لاتین"
 
 #, python-brace-format
 msgid "Launcher URI ({url} or {address} = address of the box)"
-msgstr ""
+msgstr "URI اجراکننده ({url} یا {address} = نشانی گیرنده)"
 
 msgid "Law"
-msgstr ""
+msgstr "حقوق"
 
 msgid "League and cup matches"
-msgstr ""
+msgstr "مسابقات لیگ و جام"
 
 msgid "Leagues"
-msgstr ""
+msgstr "لیگ‌ها"
 
 msgid "Leagues, clubs and events"
-msgstr ""
+msgstr "لیگ‌ها، باشگاه‌ها و رویدادها"
 
 msgid "Lecturers"
-msgstr ""
+msgstr "مدرسان"
 
 msgid "Left"
-msgstr ""
+msgstr "چپ"
 
 msgid "Library"
-msgstr ""
+msgstr "کتابخانه"
 
 msgid "Lifestyle"
-msgstr ""
+msgstr "سبک زندگی"
 
 msgid "Light / dark design"
-msgstr ""
+msgstr "طراحی روشن / تیره"
 
 msgid "Lightgray"
-msgstr ""
+msgstr "خاکستری روشن"
 
 msgid "Like the quick test, plus the checks chosen in the host settings (Debug). Takes about 20-40 minutes."
-msgstr ""
+msgstr "مانند آزمون سریع، به‌علاوه بررسی‌های انتخاب‌شده در تنظیمات میزبان (Debug). حدود 20-40 دقیقه طول می‌کشد."
 
 msgid "Liked videos"
-msgstr ""
+msgstr "ویدیوهای پسندیده‌شده"
 
 msgid "Line Spacing"
-msgstr ""
+msgstr "فاصله خطوط"
 
 msgid "Link"
-msgstr ""
+msgstr "پیوند"
 
 msgid "Link is not supported by the gstplayer. Please use the extelayer3 if available."
-msgstr ""
+msgstr "این پیوند توسط gstplayer پشتیبانی نمی‌شود. لطفاً در صورت وجود از extelayer3 استفاده کنید."
 
 msgid "Link protected with Google ReCaptcha v2"
-msgstr ""
+msgstr "پیوند با Google ReCaptcha v2 محافظت شده است"
 
 msgid "Link protected with google recaptcha v2."
-msgstr ""
+msgstr "پیوند با google recaptcha v2 محافظت شده است."
 
 msgid "Links from all files without categories"
-msgstr ""
+msgstr "پیوندهای همه فایل‌ها بدون دسته‌بندی"
 
 #, python-format
 msgid "Links from the file %s"
-msgstr ""
+msgstr "پیوندهای فایل %s"
 
 msgid "List"
-msgstr ""
+msgstr "فهرست"
 
 msgid "List by day"
-msgstr ""
+msgstr "فهرست بر اساس روز"
 
 msgid "List view"
-msgstr ""
+msgstr "نمای فهرست"
 
 #, python-format
 msgid "Listeners: %s"
-msgstr ""
+msgstr "شنوندگان: %s"
 
 msgid "Live"
-msgstr ""
+msgstr "زنده"
 
 msgid "Live channels"
-msgstr ""
+msgstr "کانال‌های زنده"
 
 msgid "Live radio"
-msgstr ""
+msgstr "رادیوی زنده"
 
 #, python-format
 msgid "Live stream of the %s channel"
-msgstr ""
+msgstr "پخش زنده کانال %s"
 
 msgid "Live stream on YouTube"
-msgstr ""
+msgstr "پخش زنده در YouTube"
 
 #, python-format
 msgid "Live stream starts %s"
-msgstr ""
+msgstr "پخش زنده %s آغاز می‌شود"
 
 msgid "Live streams"
-msgstr ""
+msgstr "پخش‌های زنده"
 
 msgid "Live streams by day"
-msgstr ""
+msgstr "پخش‌های زنده بر اساس روز"
 
 msgid "Live-action series episodes"
-msgstr ""
+msgstr "قسمت‌های سریال‌های لایو اکشن"
 
 msgid "Load"
-msgstr ""
+msgstr "بارگذاری"
 
 #, python-format
 msgid "Load of the Virtual Keyboard layout \"%s\" failed due to the following error: \"%s\""
-msgstr ""
+msgstr "بارگذاری چیدمان صفحه‌کلید مجازی \"%s\" به دلیل خطای زیر ناموفق بود: \"%s\""
 
 msgid "Loading"
-msgstr ""
+msgstr "در حال بارگذاری"
 
 #, python-format
 msgid "Loading %s failed due to following error:"
-msgstr ""
+msgstr "بارگذاری %s به دلیل خطای زیر ناموفق بود:"
 
 msgid "Loading failed."
-msgstr ""
+msgstr "بارگذاری ناموفق بود."
 
 msgid "Loading watch data..."
-msgstr ""
+msgstr "در حال بارگذاری داده‌های تماشا..."
 
 msgid "Loading..."
-msgstr ""
+msgstr "در حال بارگذاری..."
 
 msgid "LocalMedia"
-msgstr ""
+msgstr "LocalMedia"
 
 #, python-format
 msgid "Locale ID mismatched! %s <> %s"
-msgstr ""
+msgstr "شناسه زبان مطابقت ندارد! %s <> %s"
 
 msgid "Locality:"
-msgstr ""
+msgstr "محل:"
 
 msgid "Localization"
-msgstr ""
+msgstr "بومی‌سازی"
 
 msgid "Lodynet offers this video only on its subscription servers (Lody Plus / VIP) for now - the free servers usually follow later."
-msgstr ""
+msgstr "Lodynet فعلاً این ویدیو را فقط روی سرورهای اشتراکی خود (Lody Plus / VIP) ارائه می‌دهد - سرورهای رایگان معمولاً بعداً اضافه می‌شوند."
 
 msgid "Log"
-msgstr ""
+msgstr "گزارش"
 
 msgid "Login failed!"
-msgstr ""
+msgstr "ورود ناموفق بود!"
 
 msgid "Login failed."
-msgstr ""
+msgstr "ورود ناموفق بود."
 
 #, python-brace-format
 msgid "Login on {0} failed."
-msgstr ""
+msgstr "ورود به {0} ناموفق بود."
 
 msgid "Login or password is wrong."
-msgstr ""
+msgstr "نام کاربری یا رمز عبور اشتباه است."
 
 #, python-format
 msgid "Login to prijevodi-online.org failed: %s"
-msgstr ""
+msgstr "ورود به prijevodi-online.org ناموفق بود: %s"
 
 msgid "Login to prijevodi-online.org failed: the site asks for a captcha, which E2iPlayer cannot solve. Series subtitles download without an account."
-msgstr ""
+msgstr "ورود به prijevodi-online.org ناموفق بود: سایت کپچا درخواست می‌کند که E2iPlayer نمی‌تواند آن را حل کند. زیرنویس سریال‌ها بدون حساب کاربری دانلود می‌شوند."
 
 #, python-format
 msgid ""
 "Login user \"%s\" to https://vk.com/ failed!\n"
 "Please check your login data in the IPTVPlayer configuration."
 msgstr ""
+"ورود کاربر \"%s\" به https://vk.com/ ناموفق بود!\n"
+"لطفاً اطلاعات ورود خود را در تنظیمات IPTVPlayer بررسی کنید."
 
 msgid "Logs"
-msgstr ""
+msgstr "گزارش‌ها"
 
 msgid "Long list"
-msgstr ""
+msgstr "فهرست بلند"
 
 msgid "Longest"
-msgstr ""
+msgstr "طولانی‌ترین"
 
 msgid "Low"
-msgstr ""
+msgstr "پایین"
 
 msgid "MENU"
-msgstr ""
+msgstr "MENU"
 
 msgid "MENU → Add new entry: type a new search term to add to the history."
-msgstr ""
+msgstr "MENU → افزودن مورد جدید: یک عبارت جستجوی جدید برای افزودن به تاریخچه وارد کنید."
 
 msgid "MENU → Enable/Disable reordering: same as GREEN (pick up/move/drop with OK, UP/DOWN)."
-msgstr ""
+msgstr "MENU → فعال/غیرفعال کردن مرتب‌سازی دستی: مانند دکمه سبز (برداشتن/جابجایی/رها کردن با OK و UP/DOWN)."
 
 msgid "MENU → Fix/Unfix jump target: sets what happens when an entry is reused elsewhere."
-msgstr ""
+msgstr "MENU → ثابت/آزاد کردن مقصد پرش: تعیین می‌کند وقتی یک مورد در جای دیگری دوباره استفاده شود چه اتفاقی بیفتد."
 
 msgid "MENU → Reset to saved order: undo unsaved changes, reload from disk."
-msgstr ""
+msgstr "MENU → بازگشت به ترتیب ذخیره‌شده: لغو تغییرات ذخیره‌نشده و بارگذاری دوباره از دیسک."
 
 msgid "MENU → Sort A-Z / Sort Z-A: sort all entries alphabetically."
-msgstr ""
+msgstr "MENU → مرتب‌سازی A-Z / Z-A: همه موارد را به ترتیب الفبا مرتب می‌کند."
 
 msgid "MENU=Options"
-msgstr ""
+msgstr "MENU=گزینه‌ها"
 
 #, python-format
 msgid "MOVE: %s"
-msgstr ""
+msgstr "جابجایی: %s"
 
 msgid "MOVING"
-msgstr ""
+msgstr "در حال جابجایی"
 
 msgid "MP3Quran live radio"
-msgstr ""
+msgstr "رادیوی زنده MP3Quran"
 
 msgid "Main"
-msgstr ""
+msgstr "اصلی"
 
 msgid "Main menu"
-msgstr ""
+msgstr "منوی اصلی"
 
 #, python-format
 msgid "Make directory [%s]"
-msgstr ""
+msgstr "ایجاد پوشه [%s]"
 
 msgid "Manager status:"
-msgstr ""
+msgstr "وضعیت مدیر:"
 
 msgid "Mark downloaded items"
-msgstr ""
+msgstr "علامت‌گذاری موارد دانلودشده"
 
 msgid "Mark favourite items"
-msgstr ""
+msgstr "علامت‌گذاری موارد علاقه‌مندی"
 
 msgid "Match cuts"
-msgstr ""
+msgstr "خلاصه مسابقه"
 
 msgid "Match not started yet"
-msgstr ""
+msgstr "مسابقه هنوز شروع نشده است"
 
 msgid "Matches of the national teams"
-msgstr ""
+msgstr "مسابقات تیم‌های ملی"
 
 msgid "Matching entries"
-msgstr ""
+msgstr "موارد منطبق"
 
 msgid "Max items per page"
-msgstr ""
+msgstr "حداکثر تعداد موارد در هر صفحه"
 
 msgid "Max number of parallel downloads has been reached."
-msgstr ""
+msgstr "به حداکثر تعداد دانلودهای همزمان رسیده‌اید."
 
 msgid "Maximum log file size"
-msgstr ""
+msgstr "حداکثر اندازه فایل گزارش"
 
 msgid "Medtryx Marketing"
-msgstr ""
+msgstr "Medtryx Marketing"
 
 msgid "Meetings"
-msgstr ""
+msgstr "جلسات"
 
 msgid "Members"
-msgstr ""
+msgstr "اعضا"
 
 msgid "Menu"
-msgstr ""
+msgstr "منو"
 
 msgid "Military"
-msgstr ""
+msgstr "نظامی"
 
 msgid "Mini series"
-msgstr ""
+msgstr "مینی‌سریال"
 
 msgid "Missed"
-msgstr ""
+msgstr "از دست رفته"
 
 msgid "Missed the show?"
-msgstr ""
+msgstr "برنامه را از دست دادید؟"
 
 msgid "Missing API key - set it in Settings, Web streams, Windy Webcams"
-msgstr ""
+msgstr "کلید API وجود ندارد - آن را در تنظیمات، Web streams، Windy Webcams وارد کنید"
 
 msgid "Mix"
-msgstr ""
+msgstr "میکس"
 
 msgid "MixDrop: this file is not available as a video stream (deleted or download only)."
-msgstr ""
+msgstr "MixDrop: این فایل به صورت پخش ویدیویی در دسترس نیست (حذف شده یا فقط قابل دانلود)."
 
 msgid "Mixes"
-msgstr ""
+msgstr "میکس‌ها"
 
 msgid "Models"
-msgstr ""
+msgstr "مدل‌ها"
 
 msgid "More"
-msgstr ""
+msgstr "بیشتر"
 
 msgid "More Categories"
-msgstr ""
+msgstr "دسته‌های بیشتر"
 
 msgid "More Channels"
-msgstr ""
+msgstr "کانال‌های بیشتر"
 
 msgid "More Models"
-msgstr ""
+msgstr "مدل‌های بیشتر"
 
 msgid "More Pornstars"
-msgstr ""
+msgstr "پورن‌استارهای بیشتر"
 
 msgid "More important"
-msgstr ""
+msgstr "مهم‌تر"
 
 msgid "More results"
-msgstr ""
+msgstr "نتایج بیشتر"
 
 msgid "Most Popular"
-msgstr ""
+msgstr "محبوب‌ترین"
 
 msgid "Most Watched"
-msgstr ""
+msgstr "پربیننده‌ترین"
 
 msgid "Most commented"
-msgstr ""
+msgstr "بیشترین نظر"
 
 msgid "Most discussed"
-msgstr ""
+msgstr "پربحث‌ترین"
 
 msgid "Most favourited"
-msgstr ""
+msgstr "بیشترین علاقه‌مندی"
 
 msgid "Most listened anasheed"
-msgstr ""
+msgstr "پرشنونده‌ترین اناشید"
 
 msgid "Most listened recitations"
-msgstr ""
+msgstr "پرشنونده‌ترین تلاوت‌ها"
 
 msgid "Most popular"
-msgstr ""
+msgstr "محبوب‌ترین"
 
 msgid "Most rated"
-msgstr ""
+msgstr "بیشترین امتیاز"
 
 msgid "Most recent"
-msgstr ""
+msgstr "جدیدترین"
 
 msgid "Most viewed"
-msgstr ""
+msgstr "پربازدیدترین"
 
 msgid "Most viewed movies"
-msgstr ""
+msgstr "پربازدیدترین فیلم‌ها"
 
 msgid "Most viewed series"
-msgstr ""
+msgstr "پربازدیدترین سریال‌ها"
 
 #, python-format
 msgid ""
@@ -3176,588 +3235,599 @@ msgid ""
 "Return code[%s].\n"
 "Return data[%s]."
 msgstr ""
+"اتصال فایل ISO [%s] روی [%s] ناموفق بود.\n"
+"کد بازگشتی[%s].\n"
+"داده بازگشتی[%s]."
 
 msgid "Move"
-msgstr ""
+msgstr "جابجایی"
 
 msgid "Move failed."
-msgstr ""
+msgstr "جابجایی ناموفق بود."
 
 msgid "Movie"
-msgstr ""
+msgstr "فیلم"
 
 msgid "Movie collections"
-msgstr ""
+msgstr "مجموعه‌های فیلم"
 
 msgid "Movie player selection list"
-msgstr ""
+msgstr "فهرست انتخاب پخش‌کننده فیلم"
 
 msgid "Movies"
-msgstr ""
+msgstr "فیلم‌ها"
 
 msgid "Movies and series"
-msgstr ""
+msgstr "فیلم‌ها و سریال‌ها"
 
 msgid "Movies genres"
-msgstr ""
+msgstr "ژانرهای فیلم"
 
 #, python-format
 msgid "Moving file from \"%s\" to \"%s\" failed.\n"
-msgstr ""
+msgstr "انتقال فایل از \"%s\" به \"%s\" ناموفق بود.\n"
 
 #, python-format
 msgid "Moving playback buffer to the download manager failed with the following error \"%s\""
-msgstr ""
+msgstr "انتقال بافر پخش به مدیریت دانلود با خطای زیر ناموفق بود \"%s\""
 
 msgid "Munshids"
-msgstr ""
+msgstr "منشدها"
 
 msgid "Music"
-msgstr ""
+msgstr "موسیقی"
 
 msgid "My JDownloader reCAPTCHA v2 solution"
-msgstr ""
+msgstr "حل reCAPTCHA v2 با My JDownloader"
 
 msgid "My list"
-msgstr ""
+msgstr "فهرست من"
 
 msgid "My subscriptions"
-msgstr ""
+msgstr "اشتراک‌های من"
 
 msgid "MyE2i (solve on your phone/PC)"
-msgstr ""
+msgstr "MyE2i (حل روی گوشی/رایانه شما)"
 
 msgid "MyE2i - how to solve a captcha"
-msgstr ""
+msgstr "MyE2i - نحوه حل کپچا"
 
 msgid "MyE2i Cloudflare solution"
-msgstr ""
+msgstr "حل Cloudflare با MyE2i"
 
 msgid "MyE2i browser check solution"
-msgstr ""
+msgstr "حل بررسی مرورگر با MyE2i"
 
 msgid "MyE2i debug snapshot received - see the debug log."
-msgstr ""
+msgstr "تصویر اشکال‌زدایی MyE2i دریافت شد - گزارش اشکال‌زدایی را ببینید."
 
 msgid "MyE2i extension is outdated - please update it."
-msgstr ""
+msgstr "افزونه MyE2i قدیمی است - لطفاً آن را به‌روزرسانی کنید."
 
 msgid "MyE2i extension: increase security"
-msgstr ""
+msgstr "افزونه MyE2i: افزایش امنیت"
 
 msgid "MyE2i reCAPTCHA solution"
-msgstr ""
+msgstr "حل reCAPTCHA با MyE2i"
 
 #, python-format
 msgid ""
 "MyE2i script execution failed.\n"
 "Error code: %s\n"
 msgstr ""
+"اجرای اسکریپت MyE2i ناموفق بود.\n"
+"کد خطا: %s\n"
 
 msgid "MyE2i script finished."
-msgstr ""
+msgstr "اسکریپت MyE2i به پایان رسید."
 
 msgid "MyE2i: close the start page when done"
-msgstr ""
+msgstr "MyE2i: بستن صفحه شروع پس از اتمام"
 
 msgid "MyE2i: offer to open the page in (Android)"
-msgstr ""
+msgstr "MyE2i: پیشنهاد باز کردن صفحه در (Android)"
 
 msgid ""
 "NO VIDEOS FOUND FOR NOW! \n"
 "CHECK BELOW ADVANCE SEARCH RESULTS!"
 msgstr ""
+"فعلاً هیچ ویدیویی پیدا نشد! \n"
+"نتایج جستجوی پیشرفته زیر را بررسی کنید!"
 
 msgid "Name cannot be empty."
-msgstr ""
+msgstr "نام نمی‌تواند خالی باشد."
 
 msgid ""
 "Name is not valid.\n"
 "Please remove special characters."
 msgstr ""
+"نام معتبر نیست.\n"
+"لطفاً نویسه‌های ویژه را حذف کنید."
 
 msgid "Name:"
-msgstr ""
+msgstr "نام:"
 
 msgid "Needs extension v1.18+. Opens the page in this browser, waits until it is fully rendered (Cloudflare challenge included, solve it if it shows up) and sends the rendered HTML, the fetch/XHR calls and the cookie names to the box debug log."
-msgstr ""
+msgstr "به افزونه نسخه v1.18+ نیاز دارد. صفحه را در این مرورگر باز می‌کند، صبر می‌کند تا کاملاً بارگذاری شود (شامل چالش Cloudflare؛ اگر نمایش داده شد آن را حل کنید) و HTML نهایی، درخواست‌های fetch/XHR و نام کوکی‌ها را به گزارش اشکال‌زدایی گیرنده می‌فرستد."
 
 msgid "Netflix movies"
-msgstr ""
+msgstr "فیلم‌های Netflix"
 
 msgid "Netflix series"
-msgstr ""
+msgstr "سریال‌های Netflix"
 
 msgid "Network"
-msgstr ""
+msgstr "شبکه"
 
 #, python-format
 msgid "Network failed %s."
-msgstr ""
+msgstr "خطای شبکه %s."
 
 msgid "Network failure (receive)."
-msgstr ""
+msgstr "خطای شبکه (دریافت)."
 
 msgid "Network failure (send)."
-msgstr ""
+msgstr "خطای شبکه (ارسال)."
 
 msgid "Network failure."
-msgstr ""
+msgstr "خطای شبکه."
 
 msgid "New"
-msgstr ""
+msgstr "جدید"
 
 msgid "New dir"
-msgstr ""
+msgstr "پوشه جدید"
 
 msgid "New entry"
-msgstr ""
+msgstr "مورد جدید"
 
 msgid "New episodes"
-msgstr ""
+msgstr "قسمت‌های جدید"
 
 msgid "New icons will not be available."
-msgstr ""
+msgstr "آیکون‌های جدید در دسترس نخواهند بود."
 
 msgid "New links"
-msgstr ""
+msgstr "پیوندهای جدید"
 
 msgid "New since installed version"
-msgstr ""
+msgstr "جدید از نسخه نصب‌شده"
 
 msgid "Newest Episodes"
-msgstr ""
+msgstr "جدیدترین قسمت‌ها"
 
 msgid "Newest videos (all YouTube channels)"
-msgstr ""
+msgstr "جدیدترین ویدیوها (همه کانال‌های YouTube)"
 
 msgid "Newest videos of a YouTube channel in a group"
-msgstr ""
+msgstr "جدیدترین ویدیوهای یک کانال YouTube در یک گروه"
 
 msgid "News"
-msgstr ""
+msgstr "اخبار"
 
 msgid "News (tagesschau)"
-msgstr ""
+msgstr "اخبار (tagesschau)"
 
 msgid "News Poland"
-msgstr ""
+msgstr "اخبار لهستان"
 
 msgid "Next"
-msgstr ""
+msgstr "بعدی"
 
 msgid "Next page"
-msgstr ""
+msgstr "صفحه بعد"
 
 msgid "No"
-msgstr ""
+msgstr "خیر"
 
 msgid "No YouTube video found for this track."
-msgstr ""
+msgstr "هیچ ویدیوی YouTube برای این قطعه پیدا نشد."
 
 msgid "No channels with an archive on this portal."
-msgstr ""
+msgstr "هیچ کانالی با آرشیو در این پورتال وجود ندارد."
 
 msgid "No description available."
-msgstr ""
+msgstr "توضیحی در دسترس نیست."
 
 msgid "No episodes available yet."
-msgstr ""
+msgstr "هنوز قسمتی در دسترس نیست."
 
 msgid "No episodes found."
-msgstr ""
+msgstr "هیچ قسمتی پیدا نشد."
 
 msgid "No free player available for this title."
-msgstr ""
+msgstr "هیچ پخش‌کننده رایگانی برای این عنوان در دسترس نیست."
 
 msgid "No free videos or live streams here at the moment."
-msgstr ""
+msgstr "در حال حاضر هیچ ویدیو یا پخش زنده رایگانی اینجا نیست."
 
 msgid "No host is open."
-msgstr ""
+msgstr "هیچ میزبانی باز نیست."
 
 msgid ""
 "No item to display. \n"
 "Press OK to refresh.\n"
 msgstr ""
+"موردی برای نمایش وجود ندارد. \n"
+"برای تازه‌سازی OK را فشار دهید.\n"
 
 msgid "No items found"
-msgstr ""
+msgstr "موردی پیدا نشد"
 
 msgid "No matching entries found."
-msgstr ""
+msgstr "هیچ مورد منطبقی پیدا نشد."
 
 msgid "No player found for this title."
-msgstr ""
+msgstr "هیچ پخش‌کننده‌ای برای این عنوان پیدا نشد."
 
 msgid "No problems occurred."
-msgstr ""
+msgstr "هیچ مشکلی رخ نداد."
 
 msgid "No programme guide for this channel."
-msgstr ""
+msgstr "راهنمای برنامه برای این کانال وجود ندارد."
 
 msgid "No recorded programmes on this day."
-msgstr ""
+msgstr "در این روز برنامه ضبط‌شده‌ای وجود ندارد."
 
 msgid "No replays in these days"
-msgstr ""
+msgstr "در این روزها پخش مجددی وجود ندارد"
 
 #, python-format
 msgid "No results found for: %s"
-msgstr ""
+msgstr "نتیجه‌ای پیدا نشد برای: %s"
 
 msgid "No self-test result yet."
-msgstr ""
+msgstr "هنوز نتیجه خودآزمایی وجود ندارد."
 
 msgid "No storage found for the cache folder. The cache folder will be switched to the plugin's own cache directory."
-msgstr ""
+msgstr "هیچ حافظه‌ای برای پوشه حافظهٔ نهان پیدا نشد. پوشه حافظهٔ نهان به پوشه حافظهٔ نهان خود افزونه تغییر می‌کند."
 
 msgid "No storage found for the downloads location. Where would you like to save your downloads?"
-msgstr ""
+msgstr "هیچ حافظه‌ای برای محل دانلودها پیدا نشد. دانلودهای خود را کجا ذخیره کنیم؟"
 
 msgid "No stream available"
-msgstr ""
+msgstr "هیچ پخشی در دسترس نیست"
 
 msgid "No streams are available for this title yet."
-msgstr ""
+msgstr "هنوز هیچ پخشی برای این عنوان در دسترس نیست."
 
 msgid "No subtitle file found in the archive."
-msgstr ""
+msgstr "هیچ فایل زیرنویسی در آرشیو پیدا نشد."
 
 msgid "No subtitles available for this title."
-msgstr ""
+msgstr "هیچ زیرنویسی برای این عنوان در دسترس نیست."
 
 msgid "No subtitles found."
-msgstr ""
+msgstr "هیچ زیرنویسی پیدا نشد."
 
 #, python-format
 msgid "No subtitles in %s. Available: %s"
-msgstr ""
+msgstr "زیرنویسی به زبان %s وجود ندارد. موجود: %s"
 
 msgid "No title to search for."
-msgstr ""
+msgstr "عنوانی برای جستجو وجود ندارد."
 
 msgid "No valid entitlement found for asset."
-msgstr ""
+msgstr "هیچ مجوز معتبری برای این محتوا پیدا نشد."
 
 msgid "No valid links available."
-msgstr ""
+msgstr "هیچ پیوند معتبری در دسترس نیست."
 
 msgid "No video ID available"
-msgstr ""
+msgstr "شناسه ویدیو در دسترس نیست"
 
 msgid "None"
-msgstr ""
+msgstr "هیچ‌کدام"
 
 msgid "Normalize item / file names (Show - SxxExx - Title)"
-msgstr ""
+msgstr "یکسان‌سازی نام موارد / فایل‌ها (Show - SxxExx - Title)"
 
 msgid "Not available in your country (geo-blocking)."
-msgstr ""
+msgstr "در کشور شما در دسترس نیست (محدودیت جغرافیایی)."
 
 msgid "Not available yet"
-msgstr ""
+msgstr "هنوز در دسترس نیست"
 
 msgid "Not possible (no enigma2 session)."
-msgstr ""
+msgstr "امکان‌پذیر نیست (نشست enigma2 وجود ندارد)."
 
 msgid "Nothing available here at the moment (only upcoming broadcasts)."
-msgstr ""
+msgstr "در حال حاضر چیزی اینجا در دسترس نیست (فقط پخش‌های آینده)."
 
 msgid "Nothing found on subdl.com."
-msgstr ""
+msgstr "چیزی در subdl.com پیدا نشد."
 
 msgid "Nothing found. This site only finds Russian (Cyrillic) search terms."
-msgstr ""
+msgstr "چیزی پیدا نشد. این سایت فقط عبارات جستجوی روسی (سیریلیک) را پیدا می‌کند."
 
 msgid "Nothing open"
-msgstr ""
+msgstr "چیزی باز نیست"
 
 msgid "Nothing to save - the debug log is not active."
-msgstr ""
+msgstr "چیزی برای ذخیره نیست - گزارش اشکال‌زدایی فعال نیست."
 
 msgid "Now"
-msgstr ""
+msgstr "اکنون"
 
 msgid "Number of columns"
-msgstr ""
+msgstr "تعداد ستون‌ها"
 
 msgid "Number of downloaded files simultaneously"
-msgstr ""
+msgstr "تعداد فایل‌های دانلود همزمان"
 
 #, python-format
 msgid "Number of items in search history: %d"
-msgstr ""
+msgstr "تعداد موارد در تاریخچه جستجو: %d"
 
 msgid "Number of rotated files to keep"
-msgstr ""
+msgstr "تعداد فایل‌های چرخشی برای نگهداری"
 
 msgid "Number of rows"
-msgstr ""
+msgstr "تعداد ردیف‌ها"
 
 msgid "Numeric keypad for numbers"
-msgstr ""
+msgstr "صفحه‌کلید عددی برای اعداد"
 
 msgid "OFFLINE"
-msgstr ""
+msgstr "آفلاین"
 
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 msgid "OMDb API key (free at omdbapi.com)"
-msgstr ""
+msgstr "کلید API سایت OMDb (رایگان در omdbapi.com)"
 
 msgid "Off"
-msgstr ""
+msgstr "خاموش"
 
 msgid "Offline channels"
-msgstr ""
+msgstr "کانال‌های آفلاین"
 
 msgid "Older days"
-msgstr ""
+msgstr "روزهای قدیمی‌تر"
 
 msgid "Older replays"
-msgstr ""
+msgstr "پخش‌های مجدد قدیمی‌تر"
 
 msgid "On Air"
-msgstr ""
+msgstr "روی آنتن"
 
 msgid "One link mode"
-msgstr ""
+msgstr "حالت تک‌پیوند"
 
 #, python-format
 msgid "Only available in %s"
-msgstr ""
+msgstr "فقط در %s در دسترس است"
 
 msgid "Only files in the downloads folder can be deleted."
-msgstr ""
+msgstr "فقط فایل‌های داخل پوشه دانلودها قابل حذف هستند."
 
 msgid "Only links can be moved to a group."
-msgstr ""
+msgstr "فقط پیوندها را می‌توان به یک گروه منتقل کرد."
 
 #, python-format
 msgid "Only the %d oldest new commits are shown"
-msgstr ""
+msgstr "فقط %d کامیت جدیدِ قدیمی‌تر نمایش داده می‌شوند"
 
 msgid "Only the sites that failed in the last run, same checks."
-msgstr ""
+msgstr "فقط سایت‌هایی که در اجرای قبلی ناموفق بودند، با همان بررسی‌ها."
 
 #, python-format
 msgid "Only unsupported hosters available: %s"
-msgstr ""
+msgstr "فقط میزبان‌های پشتیبانی‌نشده در دسترس هستند: %s"
 
 msgid "Open issues"
-msgstr ""
+msgstr "مشکلات باز"
 
 msgid "Open pull requests"
-msgstr ""
+msgstr "درخواست‌های ادغام باز"
 
 #, python-format
 msgid "Open this page in %s"
-msgstr ""
+msgstr "باز کردن این صفحه در %s"
 
 msgid "Open this page in the chosen browser"
-msgstr ""
+msgstr "باز کردن این صفحه در مرورگر انتخاب‌شده"
 
 #, python-format
 msgid "OpenSubtitles.com login failed for user \"%s\". Please check your login and password."
-msgstr ""
+msgstr "ورود به OpenSubtitles.com برای کاربر \"%s\" ناموفق بود. لطفاً نام کاربری و رمز عبور خود را بررسی کنید."
 
 msgid "OpenSubtitles.com needs an API key. Create a free API consumer at https://www.opensubtitles.com/consumers and enter its key in the E2iPlayer settings (Subtitles)."
-msgstr ""
+msgstr "OpenSubtitles.com به کلید API نیاز دارد. یک API consumer رایگان در https://www.opensubtitles.com/consumers بسازید و کلید آن را در تنظیمات E2iPlayer (زیرنویس‌ها) وارد کنید."
 
 #, python-format
 msgid "OpenSubtitles.com rejected the request (HTTP %s). Please check the API key in the E2iPlayer settings."
-msgstr ""
+msgstr "OpenSubtitles.com درخواست را رد کرد (HTTP %s). لطفاً کلید API را در تنظیمات E2iPlayer بررسی کنید."
 
 msgid "OpenSubtitles.org sent a \"become VIP member\" note instead of the subtitle (download limit reached?)."
-msgstr ""
+msgstr "OpenSubtitles.org به جای زیرنویس پیام \"عضو VIP شوید\" فرستاد (محدودیت دانلود پر شده است؟)."
 
 msgid "Opening. Please wait..."
-msgstr ""
+msgstr "در حال باز کردن. لطفاً صبر کنید..."
 
 msgid "Operation aborted!"
-msgstr ""
+msgstr "عملیات لغو شد!"
 
 msgid "Operation timed out."
-msgstr ""
+msgstr "زمان عملیات به پایان رسید."
 
 msgid "Options"
-msgstr ""
+msgstr "گزینه‌ها"
 
 msgid "Options (select language, clear search history, settings)"
-msgstr ""
+msgstr "گزینه‌ها (انتخاب زبان، پاک کردن تاریخچه جستجو، تنظیمات)"
 
 msgid "Order of user links:"
-msgstr ""
+msgstr "ترتیب پیوندهای کاربر:"
 
 msgid "Order stays fixed - useful for T9 browsing."
-msgstr ""
+msgstr "ترتیب ثابت می‌ماند - مناسب برای مرور با T9."
 
 msgid "Original Title:"
-msgstr ""
+msgstr "عنوان اصلی:"
 
 #, python-format
 msgid "Original language: %s"
-msgstr ""
+msgstr "زبان اصلی: %s"
 
 msgid "Original title"
-msgstr ""
+msgstr "عنوان اصلی"
 
 msgid "Original version"
-msgstr ""
+msgstr "نسخه اصلی"
 
 msgid "Other"
-msgstr ""
+msgstr "دیگر"
 
 msgid "Other dramas (Chinese, Thai, ...)"
-msgstr ""
+msgstr "درام‌های دیگر (چینی، تایلندی، ...)"
 
 msgid "Other films"
-msgstr ""
+msgstr "فیلم‌های دیگر"
 
 msgid "Other seasons"
-msgstr ""
+msgstr "فصل‌های دیگر"
 
 msgid "Others"
-msgstr ""
+msgstr "سایر"
 
 msgid "Out of memory."
-msgstr ""
+msgstr "حافظه کافی نیست."
 
 msgid "Own launcher URI"
-msgstr ""
+msgstr "URI اجراکننده دلخواه"
 
 msgid "Own model"
-msgstr ""
+msgstr "مدل دلخواه"
 
 msgid "PAGE UP/PAGE DOWN"
-msgstr ""
+msgstr "PAGE UP/PAGE DOWN"
 
 msgid "PAY"
-msgstr ""
+msgstr "پولی"
 
 msgid "PENDING"
-msgstr ""
+msgstr "در انتظار"
 
 msgid "PLAY"
-msgstr ""
+msgstr "پخش"
 
 msgid "PREVIOUS/NEXT"
-msgstr ""
+msgstr "PREVIOUS/NEXT"
 
 #, python-format
 msgid "PRIVATE - wait %s seconds"
-msgstr ""
+msgstr "خصوصی - %s ثانیه صبر کنید"
 
 msgid "PRIVATE - wait a few seconds"
-msgstr ""
+msgstr "خصوصی - چند ثانیه صبر کنید"
 
 msgid "Page not found - please check the address."
-msgstr ""
+msgstr "صفحه پیدا نشد - لطفاً نشانی را بررسی کنید."
 
 msgid "Page:"
-msgstr ""
+msgstr "صفحه:"
 
 msgid "Paid content"
-msgstr ""
+msgstr "محتوای پولی"
 
 msgid "Parse error."
-msgstr ""
+msgstr "خطای تجزیه."
 
 msgid "Part"
-msgstr ""
+msgstr "بخش"
 
 msgid "Partial file - transfer ended early."
-msgstr ""
+msgstr "فایل ناقص - انتقال زودتر از موعد پایان یافت."
 
 msgid "Password:"
-msgstr ""
+msgstr "رمز عبور:"
 
 msgid "Past premieres"
-msgstr ""
+msgstr "اکران‌های گذشته"
 
 #, python-format
 msgid "Paste \"%s\""
-msgstr ""
+msgstr "چسباندن \"%s\""
 
 msgid "Path to xxxlist.txt :"
-msgstr ""
+msgstr "مسیر xxxlist.txt :"
 
 msgid "Path to ytlist.txt, urllist.txt"
-msgstr ""
+msgstr "مسیر ytlist.txt، urllist.txt"
 
 msgid "Pathology"
-msgstr ""
+msgstr "آسیب‌شناسی"
 
 msgid "Pathology Rounds"
-msgstr ""
+msgstr "راندهای آسیب‌شناسی"
 
 msgid "Patriotism"
-msgstr ""
+msgstr "میهن‌دوستی"
 
 msgid "Pediatrics"
-msgstr ""
+msgstr "کودکان"
 
 msgid "People"
-msgstr ""
+msgstr "افراد"
 
 msgid "Persons"
-msgstr ""
+msgstr "اشخاص"
 
 msgid "Philosophy"
-msgstr ""
+msgstr "فلسفه"
 
 msgid "Physical Exam"
-msgstr ""
+msgstr "معاینه بالینی"
 
 msgid "Pin has been changed."
-msgstr ""
+msgstr "PIN تغییر کرد."
 
 msgid "Pin incorrect!"
-msgstr ""
+msgstr "PIN نادرست است!"
 
 msgid "Pin protection for configuration"
-msgstr ""
+msgstr "محافظت با PIN برای تنظیمات"
 
 msgid "Pin protection for plugin"
-msgstr ""
+msgstr "محافظت با PIN برای افزونه"
 
 msgid "Pin protection for this host"
-msgstr ""
+msgstr "محافظت با PIN برای این میزبان"
 
 #, python-format
 msgid "Play with [%s] player"
-msgstr ""
+msgstr "پخش با پخش‌کننده [%s]"
 
 msgid "Playback UHD :"
-msgstr ""
+msgstr "پخش UHD :"
 
 #, python-format
 msgid "Player %s"
-msgstr ""
+msgstr "پخش‌کننده %s"
 
 #, python-format
 msgid "Player %s: %s"
-msgstr ""
+msgstr "پخش‌کننده %s: %s"
 
 msgid "Player Skin"
-msgstr ""
+msgstr "پوسته پخش‌کننده"
 
 msgid "Player data parsing error."
-msgstr ""
+msgstr "خطا در تجزیه داده‌های پخش‌کننده."
 
 msgid "Playing on the TV is not possible (no enigma2 session)."
-msgstr ""
+msgstr "پخش روی تلویزیون امکان‌پذیر نیست (نشست enigma2 وجود ندارد)."
 
 msgid "Playlist"
-msgstr ""
+msgstr "فهرست پخش"
 
 msgid "Playlists"
-msgstr ""
+msgstr "فهرست‌های پخش"
 
 msgid "Plays"
-msgstr ""
+msgstr "پخش‌ها"
 
 #, python-brace-format
 msgid ""
@@ -3765,1338 +3835,1365 @@ msgid ""
 "http://{0}:{1}\n"
 "in a web browser with the MyE2i extension installed"
 msgstr ""
+"لطفاً سایت زیر را باز کنید:\n"
+"http://{0}:{1}\n"
+"در مرورگری که افزونه MyE2i روی آن نصب است"
 
 msgid "Please configure Xtream (blue button)"
-msgstr ""
+msgstr "لطفاً Xtream را پیکربندی کنید (دکمه آبی)"
 
 msgid "Please configure the Stalker portal (blue button)"
-msgstr ""
+msgstr "لطفاً پورتال Stalker را پیکربندی کنید (دکمه آبی)"
 
 #, python-format
 msgid "Please consider restart your Engima2 and agree to install the %s utlity when the %s will propose this."
-msgstr ""
+msgstr "لطفاً Enigma2 را دوباره راه‌اندازی کنید و نصب ابزار %s را هنگامی که %s آن را پیشنهاد داد بپذیرید."
 
 msgid "Please enter a search text."
-msgstr ""
+msgstr "لطفاً متن جستجو را وارد کنید."
 
 msgid "Please enter a valid link (http:// or https://)."
-msgstr ""
+msgstr "لطفاً یک پیوند معتبر وارد کنید (http:// یا https://)."
 
 #, python-format
 msgid "Please enter the %s login and password in the E2iPlayer settings (Captcha)."
-msgstr ""
+msgstr "لطفاً نام کاربری و رمز عبور %s را در تنظیمات E2iPlayer (Captcha) وارد کنید."
 
 msgid "Please make sure that the folder for cache data (set in the configuration) is writable."
-msgstr ""
+msgstr "لطفاً مطمئن شوید پوشه داده‌های حافظهٔ نهان (تعیین‌شده در تنظیمات) قابل نوشتن است."
 
 msgid "Please register and set login and password in the host configuration, to solve this problems permanently."
-msgstr ""
+msgstr "برای رفع دائمی این مشکل، لطفاً ثبت‌نام کنید و نام کاربری و رمز عبور را در تنظیمات میزبان وارد کنید."
 
 msgid "Please select a group of favourites."
-msgstr ""
+msgstr "لطفاً یک گروه علاقه‌مندی‌ها را انتخاب کنید."
 
 msgid "Please select an entry."
-msgstr ""
+msgstr "لطفاً یک مورد را انتخاب کنید."
 
 msgid "Please select the link first."
-msgstr ""
+msgstr "لطفاً ابتدا پیوند را انتخاب کنید."
 
 #, python-format
 msgid "Please set valid %s in the %s configuration."
-msgstr ""
+msgstr "لطفاً %s معتبر را در تنظیمات %s وارد کنید."
 
 msgid "Please solve to continue downloads with:"
-msgstr ""
+msgstr "لطفاً برای ادامه دانلودها حل کنید با:"
 
 #, python-format
 msgid "Please visit \"%s\" and confirm that you are human."
-msgstr ""
+msgstr "لطفاً به \"%s\" بروید و تأیید کنید که انسان هستید."
 
 #, python-format
 msgid "Please visit %s to learn how to redirect this task to the external device."
-msgstr ""
+msgstr "لطفاً برای آشنایی با نحوه انتقال این کار به دستگاه خارجی به %s مراجعه کنید."
 
 msgid "Please wait - downloading initialization data."
-msgstr ""
+msgstr "لطفاً صبر کنید - در حال دانلود داده‌های راه‌اندازی."
 
 msgid "Please wait for initialization data."
-msgstr ""
+msgstr "لطفاً منتظر داده‌های راه‌اندازی بمانید."
 
 msgid "Please wait, the previous action is still running."
-msgstr ""
+msgstr "لطفاً صبر کنید، عملیات قبلی هنوز در حال اجراست."
 
 msgid "Please wait..."
-msgstr ""
+msgstr "لطفاً صبر کنید..."
 
 msgid "Podcasts"
-msgstr ""
+msgstr "پادکست‌ها"
 
 msgid "Podcasts by category"
-msgstr ""
+msgstr "پادکست‌ها بر اساس دسته"
 
 msgid "Podcasts by station"
-msgstr ""
+msgstr "پادکست‌ها بر اساس ایستگاه"
 
 msgid "Poland"
-msgstr ""
+msgstr "لهستان"
 
 msgid "Polish"
-msgstr ""
+msgstr "لهستانی"
 
 msgid "Polish dubbing"
-msgstr ""
+msgstr "دوبله لهستانی"
 
 msgid "Polish films"
-msgstr ""
+msgstr "فیلم‌های لهستانی"
 
 msgid "Polish subtitles"
-msgstr ""
+msgstr "زیرنویس لهستانی"
 
 msgid "Polish voice-over"
-msgstr ""
+msgstr "صداگذاری لهستانی"
 
 msgid "Politics"
-msgstr ""
+msgstr "سیاست"
 
 msgid "Popular"
-msgstr ""
+msgstr "محبوب"
 
 msgid "Popular episodes"
-msgstr ""
+msgstr "قسمت‌های محبوب"
 
 msgid "Popular movies"
-msgstr ""
+msgstr "فیلم‌های محبوب"
 
 msgid "Popular series"
-msgstr ""
+msgstr "سریال‌های محبوب"
 
 msgid "Popular sports"
-msgstr ""
+msgstr "ورزش‌های محبوب"
 
 msgid "Popularity"
-msgstr ""
+msgstr "محبوبیت"
 
 msgid "Pornstars"
-msgstr ""
+msgstr "پورن‌استارها"
 
 #, python-format
 msgid "Portal %d - %s (optional, from the MAG box):"
-msgstr ""
+msgstr "پورتال %d - %s (اختیاری، از گیرنده MAG):"
 
 #, python-format
 msgid "Portal %d - MAC address (00:1A:79:...):"
-msgstr ""
+msgstr "پورتال %d - آدرس MAC (00:1A:79:...):"
 
 #, python-format
 msgid "Portal %d - name (optional):"
-msgstr ""
+msgstr "پورتال %d - نام (اختیاری):"
 
 #, python-format
 msgid "Portal %d - portal URL (http://host:port/c/):"
-msgstr ""
+msgstr "پورتال %d - URL پورتال (http://host:port/c/):"
 
 #, python-format
 msgid "Portal URL and MAC address in the host configuration, as the provider gives them out. More portals: %s in the EStalker format (portal URL, then its MAC addresses, one per line)."
-msgstr ""
+msgstr "URL پورتال و آدرس MAC را همان‌طور که ارائه‌دهنده می‌دهد در تنظیمات میزبان وارد کنید. پورتال‌های بیشتر: %s در قالب EStalker (URL پورتال، سپس آدرس‌های MAC آن، هر کدام در یک خط)."
 
 msgid "Portuguese"
-msgstr ""
+msgstr "پرتغالی"
 
 msgid "Powerpoint Presentation"
-msgstr ""
+msgstr "ارائه Powerpoint"
 
 msgid "Practice Management"
-msgstr ""
+msgstr "مدیریت مطب"
 
 msgid "Prefer MP4 over HLS:"
-msgstr ""
+msgstr "ترجیح MP4 به HLS:"
 
 msgid "Prefered format"
-msgstr ""
+msgstr "قالب ترجیحی"
 
 msgid "Prefered quality"
-msgstr ""
+msgstr "کیفیت ترجیحی"
 
 msgid "Preferred streaming protocol"
-msgstr ""
+msgstr "پروتکل پخش ترجیحی"
 
 msgid "Preferred video quality:"
-msgstr ""
+msgstr "کیفیت ویدیوی ترجیحی:"
 
 msgid "Premium"
-msgstr ""
+msgstr "پریمیوم"
 
 msgid "Premium user"
-msgstr ""
+msgstr "کاربر پریمیوم"
 
 msgid "Previous Page"
-msgstr ""
+msgstr "صفحه قبل"
 
 msgid "Previous days"
-msgstr ""
+msgstr "روزهای قبل"
 
 msgid "Price:"
-msgstr ""
+msgstr "قیمت:"
 
 msgid "Pro wrestling"
-msgstr ""
+msgstr "کشتی حرفه‌ای"
 
 msgid "Production:"
-msgstr ""
+msgstr "تولید:"
 
 msgid "Professional Networks"
-msgstr ""
+msgstr "شبکه‌های حرفه‌ای"
 
 msgid "Professionals"
-msgstr ""
+msgstr "حرفه‌ای‌ها"
 
 msgid "Program"
-msgstr ""
+msgstr "برنامه"
 
 msgid "Program A-Z"
-msgstr ""
+msgstr "برنامه‌ها A-Z"
 
 msgid "Program for file downloads (HTTP/FTP)"
-msgstr ""
+msgstr "برنامه دانلود فایل (HTTP/FTP)"
 
 msgid "Programme archive (last 7 days)"
-msgstr ""
+msgstr "آرشیو برنامه‌ها (7 روز گذشته)"
 
 msgid "Programme archive:"
-msgstr ""
+msgstr "آرشیو برنامه‌ها:"
 
 msgid "Programmes"
-msgstr ""
+msgstr "برنامه‌ها"
 
 msgid "Programmes of the last days of the channels with an archive"
-msgstr ""
+msgstr "برنامه‌های روزهای اخیر کانال‌های دارای آرشیو"
 
 msgid "Promote item"
-msgstr ""
+msgstr "انتقال مورد به بالا"
 
 msgid "Protocol errors."
-msgstr ""
+msgstr "خطاهای پروتکل."
 
 msgid "Published"
-msgstr ""
+msgstr "منتشرشده"
 
 msgid "Python modules"
-msgstr ""
+msgstr "ماژول‌های Python"
 
 msgid "Python was not found on the receiver."
-msgstr ""
+msgstr "Python روی گیرنده پیدا نشد."
 
 msgid "Quality"
-msgstr ""
+msgstr "کیفیت"
 
 msgid "Quality:"
-msgstr ""
+msgstr "کیفیت:"
 
 msgid "Quick test: menu and a list with videos"
-msgstr ""
+msgstr "آزمون سریع: منو و یک فهرست ویدیو"
 
 msgid "RAM buffer size [MB] for local files"
-msgstr ""
+msgstr "اندازه بافر RAM [MB] برای فایل‌های محلی"
 
 msgid "RAM buffer size [MB] for network protocols"
-msgstr ""
+msgstr "اندازه بافر RAM [MB] برای پروتکل‌های شبکه"
 
 msgid "RED"
-msgstr ""
+msgstr "قرمز"
 
 msgid "REWIND"
-msgstr ""
+msgstr "عقب"
 
 msgid "Radio"
-msgstr ""
+msgstr "رادیو"
 
 msgid "Radio iframe file"
-msgstr ""
+msgstr "فایل iframe رادیو"
 
 msgid "Radio station - live stream"
-msgstr ""
+msgstr "ایستگاه رادیویی - پخش زنده"
 
 msgid "Radio stations"
-msgstr ""
+msgstr "ایستگاه‌های رادیویی"
 
 msgid "Radiology Rounds"
-msgstr ""
+msgstr "راندهای رادیولوژی"
 
 msgid "Ramadan"
-msgstr ""
+msgstr "رمضان"
 
 msgid "Ramadan series"
-msgstr ""
+msgstr "سریال‌های رمضان"
 
 msgid "Random"
-msgstr ""
+msgstr "تصادفی"
 
 msgid "Random selection"
-msgstr ""
+msgstr "انتخاب تصادفی"
 
 msgid "Randomize a playlist"
-msgstr ""
+msgstr "تصادفی کردن فهرست پخش"
 
 msgid "Range request not supported (resume failed)."
-msgstr ""
+msgstr "درخواست بازه پشتیبانی نمی‌شود (ادامه دانلود ناموفق بود)."
 
 msgid "Ranking"
-msgstr ""
+msgstr "رتبه‌بندی"
 
 msgid "Rated"
-msgstr ""
+msgstr "امتیازدار"
 
 msgid "Rated:"
-msgstr ""
+msgstr "رده سنی:"
 
 msgid "Rating"
-msgstr ""
+msgstr "امتیاز"
 
 #, python-format
 msgid "Rating %s"
-msgstr ""
+msgstr "امتیاز %s"
 
 msgid "Rating:"
-msgstr ""
+msgstr "امتیاز:"
 
 #, python-format
 msgid "Rating: %s"
-msgstr ""
+msgstr "امتیاز: %s"
 
 msgid "Read by"
-msgstr ""
+msgstr "با صدای"
 
 msgid "Read error."
-msgstr ""
+msgstr "خطای خواندن."
 
 msgid "Reading binaries..."
-msgstr ""
+msgstr "در حال خواندن فایل‌های اجرایی..."
 
 msgid "Reading..."
-msgstr ""
+msgstr "در حال خواندن..."
 
 msgid "Recent"
-msgstr ""
+msgstr "اخیر"
 
 msgid "Recently added"
-msgstr ""
+msgstr "تازه افزوده‌شده"
 
 msgid "Reciters"
-msgstr ""
+msgstr "قاریان"
 
 msgid "Recommended"
-msgstr ""
+msgstr "پیشنهادی"
 
 msgid "Recon"
-msgstr ""
+msgstr "شناسایی"
 
 msgid "Referee"
-msgstr ""
+msgstr "داور"
 
 msgid "Refresh"
-msgstr ""
+msgstr "تازه‌سازی"
 
 msgid "Refreshing"
-msgstr ""
+msgstr "در حال تازه‌سازی"
 
 #, python-format
 msgid "Refusing to empty \"%s\" - it also holds \"%s\" (downloads, buffering, cache or config folder). Check the folder paths in the storage configuration."
-msgstr ""
+msgstr "خالی کردن \"%s\" انجام نشد - این پوشه \"%s\" را نیز در بر دارد (پوشه دانلودها، بافر، حافظهٔ نهان یا پیکربندی). مسیر پوشه‌ها را در تنظیمات حافظه بررسی کنید."
 
 #, python-format
 msgid "Refusing to empty \"%s\" - this does not look like a dedicated cache/config folder. Check the folder paths in the storage configuration."
-msgstr ""
+msgstr "خالی کردن \"%s\" انجام نشد - به نظر نمی‌رسد این یک پوشه اختصاصی حافظهٔ نهان/پیکربندی باشد. مسیر پوشه‌ها را در تنظیمات حافظه بررسی کنید."
 
 msgid "Regions"
-msgstr ""
+msgstr "مناطق"
 
 msgid "Release"
-msgstr ""
+msgstr "انتشار"
 
 msgid "Released"
-msgstr ""
+msgstr "منتشرشده"
 
 msgid "Released:"
-msgstr ""
+msgstr "تاریخ انتشار:"
 
 msgid "Releases"
-msgstr ""
+msgstr "انتشارها"
 
 msgid "Relevance"
-msgstr ""
+msgstr "مرتبط‌ترین"
 
 msgid "Religion"
-msgstr ""
+msgstr "دین"
 
 msgid "Remaining:"
-msgstr ""
+msgstr "باقی‌مانده:"
 
 msgid "Remember a host's pin until E2iPlayer is closed"
-msgstr ""
+msgstr "به خاطر سپردن PIN میزبان تا زمان بستن E2iPlayer"
 
 msgid "Remember last search entry"
-msgstr ""
+msgstr "به خاطر سپردن آخرین عبارت جستجو"
 
 msgid "Remember last search history selection"
-msgstr ""
+msgstr "به خاطر سپردن آخرین انتخاب از تاریخچه جستجو"
 
 msgid "Remember last watched position"
-msgstr ""
+msgstr "به خاطر سپردن آخرین موقعیت تماشا"
 
 msgid "Remove"
-msgstr ""
+msgstr "حذف"
 
 #, python-format
 msgid "Remove \"%s\" item"
-msgstr ""
+msgstr "حذف مورد \"%s\""
 
 msgid "Remove file"
-msgstr ""
+msgstr "حذف فایل"
 
 msgid "Remove from favorites"
-msgstr ""
+msgstr "حذف از علاقه‌مندی‌ها"
 
 msgid "Remove group"
-msgstr ""
+msgstr "حذف گروه"
 
 msgid "Remove item"
-msgstr ""
+msgstr "حذف مورد"
 
 msgid "Remove thumbnails"
-msgstr ""
+msgstr "حذف تصاویر بندانگشتی"
 
 msgid "Rename"
-msgstr ""
+msgstr "تغییر نام"
 
 msgid "Rename file"
-msgstr ""
+msgstr "تغییر نام فایل"
 
 msgid "Reordering: UP/DOWN moves the row, OK saves, EXIT cancels."
-msgstr ""
+msgstr "مرتب‌سازی دستی: UP/DOWN ردیف را جابجا می‌کند، OK ذخیره می‌کند، EXIT لغو می‌کند."
 
 msgid "Replay"
-msgstr ""
+msgstr "پخش مجدد"
 
 msgid "Replays & highlights"
-msgstr ""
+msgstr "پخش مجدد و خلاصه‌ها"
 
 msgid "Report a problem (GitHub issues)"
-msgstr ""
+msgstr "گزارش مشکل (GitHub issues)"
 
 msgid "Report file"
-msgstr ""
+msgstr "فایل گزارش"
 
 msgid "Reset this list to its default layout?"
-msgstr ""
+msgstr "این فهرست به چیدمان پیش‌فرض بازنشانی شود؟"
 
 msgid "Reset to defaults"
-msgstr ""
+msgstr "بازنشانی به پیش‌فرض"
 
 msgid "Reset to saved order"
-msgstr ""
+msgstr "بازگشت به ترتیب ذخیره‌شده"
 
 msgid "Reset web interface"
-msgstr ""
+msgstr "بازنشانی رابط وب"
 
 #, python-format
 msgid ""
 "Resolving hCaptcha with %s failed!\n"
 "\n"
 msgstr ""
+"حل hCaptcha با %s ناموفق بود!\n"
+"\n"
 
 #, python-format
 msgid ""
 "Resolving reCaptcha with %s failed!\n"
 "\n"
 msgstr ""
+"حل reCaptcha با %s ناموفق بود!\n"
+"\n"
 
 msgid "Restart GUI"
-msgstr ""
+msgstr "راه‌اندازی مجدد رابط کاربری"
 
 msgid "Reused entries move back to the top again."
-msgstr ""
+msgstr "موارد استفاده‌شده دوباره به بالا منتقل می‌شوند."
 
 msgid "Reverse a playlist"
-msgstr ""
+msgstr "معکوس کردن فهرست پخش"
 
 msgid "Reverting to unsorted order will discard unsaved changes. Continue?"
-msgstr ""
+msgstr "بازگشت به ترتیب مرتب‌نشده تغییرات ذخیره‌نشده را از بین می‌برد. ادامه می‌دهید؟"
 
 msgid "Right"
-msgstr ""
+msgstr "راست"
 
 msgid "Romance"
-msgstr ""
+msgstr "عاشقانه"
 
 msgid "Round"
-msgstr ""
+msgstr "دور"
 
 msgid "Runtime"
-msgstr ""
+msgstr "مدت زمان"
 
 msgid "Russian"
-msgstr ""
+msgstr "روسی"
 
 msgid "SOME.PORN sorting by :"
-msgstr ""
+msgstr "مرتب‌سازی SOME.PORN بر اساس :"
 
 msgid "SONGS"
-msgstr ""
+msgstr "آهنگ‌ها"
 
 msgid "SSL connect error."
-msgstr ""
+msgstr "خطای اتصال SSL."
 
 msgid "SSL verification failure."
-msgstr ""
+msgstr "خطای تأیید SSL."
 
 msgid "STARTED"
-msgstr ""
+msgstr "شروع شد"
 
 msgid "STOPPED"
-msgstr ""
+msgstr "متوقف شد"
 
 msgid "Safe search (restricted mode):"
-msgstr ""
+msgstr "جستجوی امن (حالت محدود):"
 
 msgid "Save"
-msgstr ""
+msgstr "ذخیره"
 
 msgid "Save changes?"
-msgstr ""
+msgstr "تغییرات ذخیره شود؟"
 
 #, python-format
 msgid "Save subtitles (%s)"
-msgstr ""
+msgstr "ذخیره زیرنویس (%s)"
 
 #, python-format
 msgid ""
 "Saved to:\n"
 "%s"
 msgstr ""
+"ذخیره شد در:\n"
+"%s"
 
 msgid "Sci-Fi"
-msgstr ""
+msgstr "علمی-تخیلی"
 
 msgid "Sci-Fi & Fantasy"
-msgstr ""
+msgstr "علمی-تخیلی و فانتزی"
 
 msgid "Science"
-msgstr ""
+msgstr "علم"
 
 msgid "Screensaver during audio playback"
-msgstr ""
+msgstr "محافظ صفحه هنگام پخش صدا"
 
 msgid "Screensaver in E2iPlayer menus"
-msgstr ""
+msgstr "محافظ صفحه در منوهای E2iPlayer"
 
 #, python-format
 msgid ""
 "Script execution failed.\n"
 "Error code: %s\n"
 msgstr ""
+"اجرای اسکریپت ناموفق بود.\n"
+"کد خطا: %s\n"
 
 msgid "Script finished."
-msgstr ""
+msgstr "اسکریپت به پایان رسید."
 
 msgid "Search"
-msgstr ""
+msgstr "جستجو"
 
 msgid "Search History is empty."
-msgstr ""
+msgstr "تاریخچه جستجو خالی است."
 
 msgid "Search History successfully deleted."
-msgstr ""
+msgstr "تاریخچه جستجو با موفقیت حذف شد."
 
 msgid "Search for an artist (exact name) or a Last.fm user"
-msgstr ""
+msgstr "جستجوی یک هنرمند (نام دقیق) یا یک کاربر Last.fm"
 
 msgid "Search history"
-msgstr ""
+msgstr "تاریخچه جستجو"
 
 msgid "Search history - options"
-msgstr ""
+msgstr "تاریخچه جستجو - گزینه‌ها"
 
 msgid "Search history is not available for this host."
-msgstr ""
+msgstr "تاریخچه جستجو برای این میزبان در دسترس نیست."
 
 msgid "Search history saved."
-msgstr ""
+msgstr "تاریخچه جستجو ذخیره شد."
 
 #, python-format
 msgid "Search history saved. %d duplicate entries removed."
-msgstr ""
+msgstr "تاریخچه جستجو ذخیره شد. %d مورد تکراری حذف شد."
 
 msgid "Search in all active hosts"
-msgstr ""
+msgstr "جستجو در همه میزبان‌های فعال"
 
 msgid "Search is not available right now."
-msgstr ""
+msgstr "جستجو در حال حاضر در دسترس نیست."
 
 msgid "Search next page"
-msgstr ""
+msgstr "جستجوی صفحه بعد"
 
 msgid "Search results"
-msgstr ""
+msgstr "نتایج جستجو"
 
 msgid "Search results region:"
-msgstr ""
+msgstr "منطقه نتایج جستجو:"
 
 msgid "Search string must have at least 4 characters."
-msgstr ""
+msgstr "عبارت جستجو باید دست‌کم 4 نویسه داشته باشد."
 
 msgid "Search term :"
-msgstr ""
+msgstr "عبارت جستجو :"
 
 msgid "Search text"
-msgstr ""
+msgstr "متن جستجو"
 
 msgid "Search type"
-msgstr ""
+msgstr "نوع جستجو"
 
 msgid "Search: "
-msgstr ""
+msgstr "جستجو: "
 
 #, python-format
 msgid "Search: %d of %d - now %s (%d found so far)"
-msgstr ""
+msgstr "جستجو: %d از %d - اکنون %s (تاکنون %d مورد یافت شد)"
 
 #, python-format
 msgid "Searching subtitles for \"%s\""
-msgstr ""
+msgstr "در حال جستجوی زیرنویس برای «%s»"
 
 msgid "Season"
-msgstr ""
+msgstr "فصل"
 
 #, python-format
 msgid "Season %d"
-msgstr ""
+msgstr "فصل %d"
 
 #, python-format
 msgid "Season %d (%d episodes)"
-msgstr ""
+msgstr "فصل %d (%d قسمت)"
 
 #, python-format
 msgid "Season %s"
-msgstr ""
+msgstr "فصل %s"
 
 msgid "Seasons"
-msgstr ""
+msgstr "فصل‌ها"
 
 msgid "Seasons:"
-msgstr ""
+msgstr "فصل‌ها:"
 
 #, python-format
 msgid "Seasons: %s"
-msgstr ""
+msgstr "فصل‌ها: %s"
 
 msgid "Second movie player in buffering mode"
-msgstr ""
+msgstr "پخش‌کننده دوم فیلم در حالت بافر"
 
 msgid "Second movie player without buffering mode"
-msgstr ""
+msgstr "پخش‌کننده دوم فیلم بدون حالت بافر"
 
 msgid "Section"
-msgstr ""
+msgstr "بخش"
 
 msgid "Sections"
-msgstr ""
+msgstr "بخش‌ها"
 
 #, python-format
 msgid "Select %s"
-msgstr ""
+msgstr "انتخاب %s"
 
 msgid "Select action"
-msgstr ""
+msgstr "انتخاب عملیات"
 
 msgid "Select audio track"
-msgstr ""
+msgstr "انتخاب ترک صوتی"
 
 msgid "Select best available quality"
-msgstr ""
+msgstr "انتخاب بهترین کیفیت موجود"
 
 msgid "Select directory"
-msgstr ""
+msgstr "انتخاب پوشه"
 
 msgid "Select favorite group"
-msgstr ""
+msgstr "انتخاب گروه علاقه‌مندی‌ها"
 
 msgid "Select group"
-msgstr ""
+msgstr "انتخاب گروه"
 
 msgid "Select language"
-msgstr ""
+msgstr "انتخاب زبان"
 
 msgid "Select link"
-msgstr ""
+msgstr "انتخاب پیوند"
 
 msgid "Select movie player"
-msgstr ""
+msgstr "انتخاب پخش‌کننده فیلم"
 
 msgid "Select option"
-msgstr ""
+msgstr "انتخاب گزینه"
 
 msgid "Select pictures"
-msgstr ""
+msgstr "انتخاب تصاویر"
 
 msgid "Select subtitles file"
-msgstr ""
+msgstr "انتخاب فایل زیرنویس"
 
 msgid "Select subtitles provider:"
-msgstr ""
+msgstr "انتخاب ارائه‌دهنده زیرنویس:"
 
 msgid "Select subtitles to download"
-msgstr ""
+msgstr "انتخاب زیرنویس برای دانلود"
 
 msgid "Select subtitles track"
-msgstr ""
+msgstr "انتخاب ترک زیرنویس"
 
 msgid "Select the directory"
-msgstr ""
+msgstr "پوشه را انتخاب کنید"
 
 msgid "Select the file"
-msgstr ""
+msgstr "فایل را انتخاب کنید"
 
 msgid "Select video option"
-msgstr ""
+msgstr "انتخاب گزینه ویدیو"
 
 msgid "Selection"
-msgstr ""
+msgstr "انتخاب"
 
 msgid "Self-test"
-msgstr ""
+msgstr "خودآزمایی"
 
 msgid "Self-test report :"
-msgstr ""
+msgstr "گزارش خودآزمایی :"
 
 msgid "Send"
-msgstr ""
+msgstr "ارسال"
 
 msgid "Send data to enc-dec.app on every link resolve?"
-msgstr ""
+msgstr "در هر بار استخراج پیوند، داده‌ها به enc-dec.app ارسال شود؟"
 
 msgid "Sending the result to the box failed."
-msgstr ""
+msgstr "ارسال نتیجه به گیرنده ناموفق بود."
 
 msgid "Series"
-msgstr ""
+msgstr "سریال‌ها"
 
 msgid "Series - latest episodes"
-msgstr ""
+msgstr "سریال‌ها - آخرین قسمت‌ها"
 
 msgid "Series - seasons"
-msgstr ""
+msgstr "سریال‌ها - فصل‌ها"
 
 msgid "Series A-Z"
-msgstr ""
+msgstr "سریال‌ها A-Z"
 
 msgid "Series by genre"
-msgstr ""
+msgstr "سریال‌ها بر اساس ژانر"
 
 msgid "Series by year"
-msgstr ""
+msgstr "سریال‌ها بر اساس سال"
 
 msgid "Series genres"
-msgstr ""
+msgstr "ژانرهای سریال"
 
 msgid "Server"
-msgstr ""
+msgstr "سرور"
 
 msgid "Server issued an error response (HTTP 4xx/5xx)."
-msgstr ""
+msgstr "سرور پاسخ خطا داد (HTTP 4xx/5xx)."
 
 msgid "Server issued an error response."
-msgstr ""
+msgstr "سرور پاسخ خطا داد."
 
 msgid "Server return 404 - Not Found."
-msgstr ""
+msgstr "سرور خطای 404 برگرداند - یافت نشد."
 
 msgid "Server returned nothing."
-msgstr ""
+msgstr "سرور چیزی برنگرداند."
 
 #, python-format
 msgid "Server, user name and password in the host configuration. The server field also takes a get.php link. More accounts: %s with one get.php link per line (X-Streamity format)."
-msgstr ""
+msgstr "سرور، نام کاربری و رمز عبور در تنظیمات میزبان. فیلد سرور یک پیوند get.php را نیز می‌پذیرد. حساب‌های بیشتر: %s با یک پیوند get.php در هر خط (قالب X-Streamity)."
 
 #, python-format
 msgid ""
 "Service %s requires registration. \n"
 "Please fill your login and password in the %s configuration."
 msgstr ""
+"سرویس %s نیاز به ثبت‌نام دارد. \n"
+"لطفاً نام کاربری و رمز عبور خود را در تنظیمات %s وارد کنید."
 
 msgid "Service icon size"
-msgstr ""
+msgstr "اندازه آیکون سرویس"
 
 msgid "Services configuration"
-msgstr ""
+msgstr "تنظیمات سرویس‌ها"
 
 msgid "Services management"
-msgstr ""
+msgstr "مدیریت سرویس‌ها"
 
 msgid "Set active movie player"
-msgstr ""
+msgstr "تنظیم پخش‌کننده فعال فیلم"
 
 msgid "Set file name"
-msgstr ""
+msgstr "تنظیم نام فایل"
 
 msgid "Set own configuration pin code"
-msgstr ""
+msgstr "تنظیم کد PIN اختصاصی برای تنظیمات"
 
 msgid "Set own pin"
-msgstr ""
+msgstr "تنظیم PIN اختصاصی"
 
 msgid "Set pin code"
-msgstr ""
+msgstr "تنظیم کد PIN"
 
 msgid "Set watched"
-msgstr ""
+msgstr "علامت‌گذاری به‌عنوان دیده‌شده"
 
 msgid "Settings"
-msgstr ""
+msgstr "تنظیمات"
 
 #, python-format
 msgid "Settings of service [%s] cannot be opened."
-msgstr ""
+msgstr "تنظیمات سرویس [%s] باز نمی‌شود."
 
 msgid "Settings screen layout"
-msgstr ""
+msgstr "چیدمان صفحه تنظیمات"
 
 msgid "Shift"
-msgstr ""
+msgstr "Shift"
 
 msgid "Short Movies"
-msgstr ""
+msgstr "فیلم‌های کوتاه"
 
 msgid "Short series"
-msgstr ""
+msgstr "سریال‌های کوتاه"
 
 msgid "Shorts"
-msgstr ""
+msgstr "Shorts"
 
 msgid "Shoulder & Elbow"
-msgstr ""
+msgstr "شانه و آرنج"
 
 msgid "Show"
-msgstr ""
+msgstr "نمایش"
 
 msgid "Show \"Newest videos\" of all YouTube channels in a group"
-msgstr ""
+msgstr "نمایش «جدیدترین ویدیوها» از همه کانال‌های YouTube در یک گروه"
 
 msgid "Show & Comedy"
-msgstr ""
+msgstr "شو و کمدی"
 
 msgid "Show E2iPlayer settings in system menu"
-msgstr ""
+msgstr "نمایش تنظیمات E2iPlayer در منوی سیستم"
 
 msgid "Show IPTVPlayer in extension list (blue button)"
-msgstr ""
+msgstr "نمایش IPTVPlayer در فهرست افزونه‌ها (دکمه آبی)"
 
 msgid "Show IPTVPlayer in main menu"
-msgstr ""
+msgstr "نمایش IPTVPlayer در منوی اصلی"
 
 msgid "Show IPTVPlayer in plugin browser"
-msgstr ""
+msgstr "نمایش IPTVPlayer در مرورگر افزونه‌ها"
 
 msgid "Show Profiles in ZBIORNIK MINI :"
-msgstr ""
+msgstr "نمایش پروفایل‌ها در ZBIORNIK MINI :"
 
 msgid "Show Youtube Api Key warnings"
-msgstr ""
+msgstr "نمایش هشدارهای کلید API یوتیوب (Youtube)"
 
 msgid "Show adult content"
-msgstr ""
+msgstr "نمایش محتوای بزرگسالان"
 
 msgid "Show all channels"
-msgstr ""
+msgstr "نمایش همه کانال‌ها"
 
 msgid "Show clock in header"
-msgstr ""
+msgstr "نمایش ساعت در سربرگ"
 
 msgid "Show download manager after adding new item"
-msgstr ""
+msgstr "نمایش مدیریت دانلود پس از افزودن مورد جدید"
 
 msgid "Show download notification"
-msgstr ""
+msgstr "نمایش اعلان دانلود"
 
 msgid "Show file size"
-msgstr ""
+msgstr "نمایش اندازه فایل"
 
 msgid "Show flags"
-msgstr ""
+msgstr "نمایش پرچم‌ها"
 
 msgid "Show global search :"
-msgstr ""
+msgstr "نمایش جستجوی سراسری :"
 
 msgid "Show hiddens catalogs"
-msgstr ""
+msgstr "نمایش پوشه‌های پنهان"
 
 msgid "Show hiddens files"
-msgstr ""
+msgstr "نمایش فایل‌های پنهان"
 
 msgid "Show iframe during audio playback"
-msgstr ""
+msgstr "نمایش iframe هنگام پخش صدا"
 
 msgid "Show only audio in selected language:"
-msgstr ""
+msgstr "فقط صدا به زبان انتخاب‌شده نمایش داده شود:"
 
 msgid "Show only best quality of streams:"
-msgstr ""
+msgstr "فقط بهترین کیفیت جریان‌ها نمایش داده شود:"
 
 msgid "Show results"
-msgstr ""
+msgstr "نمایش نتایج"
 
 msgid "Show search history"
-msgstr ""
+msgstr "نمایش تاریخچه جستجو"
 
 msgid "Show suggestions"
-msgstr ""
+msgstr "نمایش پیشنهادها"
 
 msgid "Shows"
-msgstr ""
+msgstr "برنامه‌ها"
 
 msgid "Shows A-Z"
-msgstr ""
+msgstr "برنامه‌ها A-Z"
 
 msgid "Shows and concerts"
-msgstr ""
+msgstr "برنامه‌ها و کنسرت‌ها"
 
 msgid "Shows with new episodes"
-msgstr ""
+msgstr "برنامه‌های دارای قسمت جدید"
 
 msgid "Sign-in was not completed."
-msgstr ""
+msgstr "ورود تکمیل نشد."
 
 msgid "Signed in to YouTube."
-msgstr ""
+msgstr "به YouTube وارد شدید."
 
 msgid "Signed out of YouTube."
-msgstr ""
+msgstr "از YouTube خارج شدید."
 
 msgid "Similar artists"
-msgstr ""
+msgstr "هنرمندان مشابه"
 
 msgid "Similar artists mix"
-msgstr ""
+msgstr "میکس هنرمندان مشابه"
 
 msgid "Simple list"
-msgstr ""
+msgstr "فهرست ساده"
 
 msgid "Simple subtitles downloader"
-msgstr ""
+msgstr "دانلودکننده ساده زیرنویس"
 
 msgid "Simplify the title and try again."
-msgstr ""
+msgstr "عنوان را ساده‌تر کنید و دوباره تلاش کنید."
 
 msgid "Site self-test"
-msgstr ""
+msgstr "خودآزمایی سایت"
 
 msgid "Site self-test in the main menu :"
-msgstr ""
+msgstr "خودآزمایی سایت در منوی اصلی :"
 
 #, python-format
 msgid "Site self-test: %d of %d - now %s (%d failed so far)"
-msgstr ""
+msgstr "خودآزمایی سایت: %d از %d - اکنون %s (تاکنون %d مورد ناموفق)"
 
 msgid "Size:"
-msgstr ""
+msgstr "اندازه:"
 
 msgid "Skin"
-msgstr ""
+msgstr "پوسته"
 
 msgid "Skinners:"
-msgstr ""
+msgstr "طراحان پوسته:"
 
 msgid "Skip video shorter than [min]"
-msgstr ""
+msgstr "رد کردن ویدیوهای کوتاه‌تر از [دقیقه]"
 
 msgid "Society"
-msgstr ""
+msgstr "جامعه"
 
 msgid "Software decoding as"
-msgstr ""
+msgstr "رمزگشایی نرم‌افزاری به‌صورت"
 
 msgid "Solve Cloudflare, hCaptcha and reCAPTCHA with MyE2i"
-msgstr ""
+msgstr "حل Cloudflare، hCaptcha و reCAPTCHA با MyE2i"
 
 msgid "Solve Google reCAPTCHA v2 with My JDownloader"
-msgstr ""
+msgstr "حل Google reCAPTCHA v2 با My JDownloader"
 
 msgid "Solver"
-msgstr ""
+msgstr "حل‌کننده"
 
 msgid "Some changes will be applied only after movie player restart."
-msgstr ""
+msgstr "برخی تغییرات فقط پس از راه‌اندازی مجدد پخش‌کننده فیلم اعمال می‌شوند."
 
 msgid "Some settings will be applied only after GUI restart."
-msgstr ""
+msgstr "برخی تنظیمات فقط پس از راه‌اندازی مجدد رابط کاربری اعمال می‌شوند."
 
 msgid "Sort A-Z"
-msgstr ""
+msgstr "مرتب‌سازی A-Z"
 
 msgid "Sort Myfreecams :"
-msgstr ""
+msgstr "مرتب‌سازی Myfreecams :"
 
 msgid "Sort Z-A"
-msgstr ""
+msgstr "مرتب‌سازی Z-A"
 
 msgid "Sort alphabetically"
-msgstr ""
+msgstr "مرتب‌سازی الفبایی"
 
 msgid "Sort by name"
-msgstr ""
+msgstr "مرتب‌سازی بر اساس نام"
 
 msgid "Sort by:"
-msgstr ""
+msgstr "مرتب‌سازی بر اساس:"
 
 msgid "Sort the links now? The order of the lines in the file will change."
-msgstr ""
+msgstr "پیوندها اکنون مرتب شوند؟ ترتیب خطوط در فایل تغییر خواهد کرد."
 
 msgid "Sort the list:"
-msgstr ""
+msgstr "مرتب‌سازی فهرست:"
 
 msgid "Sort xxxlist :"
-msgstr ""
+msgstr "مرتب‌سازی xxxlist :"
 
 msgid "Sorted channels A-Z [live]"
-msgstr ""
+msgstr "کانال‌های مرتب‌شده A-Z [زنده]"
 
 msgid "Sorted most viewed channels general [live]"
-msgstr ""
+msgstr "پربازدیدترین کانال‌ها به‌طور کلی [زنده]"
 
 msgid "Sorted most viewed channels now [live]"
-msgstr ""
+msgstr "پربازدیدترین کانال‌ها در حال حاضر [زنده]"
 
 msgid "Source:"
-msgstr ""
+msgstr "منبع:"
 
 msgid "Spanish"
-msgstr ""
+msgstr "اسپانیایی"
 
 msgid "Specials"
-msgstr ""
+msgstr "ویژه‌ها"
 
 msgid "Spine"
-msgstr ""
+msgstr "ستون فقرات"
 
 msgid "Spoken subtitles"
-msgstr ""
+msgstr "زیرنویس گفتاری"
 
 msgid "Sport"
-msgstr ""
+msgstr "ورزش"
 
 msgid "Spring"
-msgstr ""
+msgstr "بهار"
 
 msgid "Squad"
-msgstr ""
+msgstr "ترکیب تیم"
 
 msgid "Stadium:"
-msgstr ""
+msgstr "ورزشگاه:"
 
 msgid "Standard"
-msgstr ""
+msgstr "استاندارد"
 
 msgid "Stars:"
-msgstr ""
+msgstr "بازیگران:"
 
 msgid "Start"
-msgstr ""
+msgstr "شروع"
 
 msgid "Start download manager per default"
-msgstr ""
+msgstr "شروع پیش‌فرض مدیریت دانلود"
 
 msgid "Station:"
-msgstr ""
+msgstr "ایستگاه:"
 
 msgid "Status:"
-msgstr ""
+msgstr "وضعیت:"
 
 #, python-format
 msgid "Status: %s"
-msgstr ""
+msgstr "وضعیت: %s"
 
 msgid "Stereo downmix mode for software decoder"
-msgstr ""
+msgstr "حالت downmix استریو برای رمزگشای نرم‌افزاری"
 
 msgid "Stop"
-msgstr ""
+msgstr "توقف"
 
 msgid "Stop downloading"
-msgstr ""
+msgstr "توقف دانلود"
 
 msgid "Stop playback with buffer save"
-msgstr ""
+msgstr "توقف پخش با ذخیره بافر"
 
 msgid "Stop playing?"
-msgstr ""
+msgstr "پخش متوقف شود؟"
 
 msgid "Storage"
-msgstr ""
+msgstr "فضای ذخیره‌سازی"
 
 msgid "Story"
-msgstr ""
+msgstr "داستان"
 
 msgid "Stream link"
-msgstr ""
+msgstr "پیوند جریان"
 
 msgid "Streamed"
-msgstr ""
+msgstr "پخش‌شده"
 
 msgid "Streaming platforms"
-msgstr ""
+msgstr "پلتفرم‌های پخش آنلاین"
 
 msgid "Studios"
-msgstr ""
+msgstr "استودیوها"
 
 msgid "Study Plan"
-msgstr ""
+msgstr "برنامه مطالعه"
 
 msgid "Subbed anime"
-msgstr ""
+msgstr "انیمه زیرنویس‌دار"
 
 msgid "Subscribers"
-msgstr ""
+msgstr "مشترکان"
 
 msgid "Subspecialities"
-msgstr ""
+msgstr "فوق‌تخصص‌ها"
 
 msgid "Subtitle background"
-msgstr ""
+msgstr "پس‌زمینه زیرنویس"
 
 msgid "Subtitle border color"
-msgstr ""
+msgstr "رنگ حاشیه زیرنویس"
 
 msgid "Subtitle border enabled"
-msgstr ""
+msgstr "حاشیه زیرنویس فعال"
 
 msgid "Subtitle border width"
-msgstr ""
+msgstr "ضخامت حاشیه زیرنویس"
 
 msgid "Subtitle box height"
-msgstr ""
+msgstr "ارتفاع کادر زیرنویس"
 
 msgid "Subtitle box position"
-msgstr ""
+msgstr "موقعیت کادر زیرنویس"
 
 msgid "Subtitle font"
-msgstr ""
+msgstr "قلم زیرنویس"
 
 msgid "Subtitle font color"
-msgstr ""
+msgstr "رنگ قلم زیرنویس"
 
 msgid "Subtitle font size"
-msgstr ""
+msgstr "اندازه قلم زیرنویس"
 
 msgid "Subtitle languages"
-msgstr ""
+msgstr "زبان‌های زیرنویس"
 
 msgid "Subtitle line height"
-msgstr ""
+msgstr "ارتفاع خط زیرنویس"
 
 msgid "Subtitle line wrapping"
-msgstr ""
+msgstr "شکستن خط زیرنویس"
 
 msgid "Subtitle shadow X offset"
-msgstr ""
+msgstr "فاصله X سایه زیرنویس"
 
 msgid "Subtitle shadow Y offset"
-msgstr ""
+msgstr "فاصله Y سایه زیرنویس"
 
 msgid "Subtitle shadow color"
-msgstr ""
+msgstr "رنگ سایه زیرنویس"
 
 msgid "Subtitle shadow enabled"
-msgstr ""
+msgstr "سایه زیرنویس فعال"
 
 msgid "Subtitle vertical alignment"
-msgstr ""
+msgstr "تراز عمودی زیرنویس"
 
 msgid "Subtitles"
-msgstr ""
+msgstr "زیرنویس‌ها"
 
 #, python-format
 msgid "Subtitles \"%s\" downloaded correctly."
-msgstr ""
+msgstr "زیرنویس «%s» با موفقیت دانلود شد."
 
 msgid "Subtitles by Islam El-Gizawy"
-msgstr ""
+msgstr "زیرنویس توسط Islam El-Gizawy"
 
 msgid "Subtitles conversion to UTF-8 failed."
-msgstr ""
+msgstr "تبدیل زیرنویس به UTF-8 ناموفق بود."
 
 #, python-format
 msgid "Subtitles downloaded successfully. [%s], conversion to UTF-8."
-msgstr ""
+msgstr "زیرنویس با موفقیت دانلود شد. [%s]، تبدیل به UTF-8."
 
 #, python-format
 msgid "Subtitles for: %s"
-msgstr ""
+msgstr "زیرنویس برای: %s"
 
 #, python-format
 msgid ""
 "Subtitles saved:\n"
 "%s"
 msgstr ""
+"زیرنویس ذخیره شد:\n"
+"%s"
 
 msgid "Subtitles:"
-msgstr ""
+msgstr "زیرنویس‌ها:"
 
 #, python-format
 msgid "Subtitles: %s"
-msgstr ""
+msgstr "زیرنویس‌ها: %s"
 
 msgid "Summer"
-msgstr ""
+msgstr "تابستان"
 
 msgid "Support forum (opena.tv)"
-msgstr ""
+msgstr "انجمن پشتیبانی (opena.tv)"
 
 msgid "Support package"
-msgstr ""
+msgstr "بسته پشتیبانی"
 
 msgid "Surahs"
-msgstr ""
+msgstr "سوره‌ها"
 
 msgid "Surgical Approaches"
-msgstr ""
+msgstr "رویکردهای جراحی"
 
 msgid "Surgical Cases"
-msgstr ""
+msgstr "موارد جراحی"
 
 msgid "Surgical Complications"
-msgstr ""
+msgstr "عوارض جراحی"
 
 msgid "Surgical Techniques"
-msgstr ""
+msgstr "تکنیک‌های جراحی"
 
 msgid "Sweden"
-msgstr ""
+msgstr "سوئد"
 
 msgid "Swedish"
-msgstr ""
+msgstr "سوئدی"
 
 msgid "Synchronize"
-msgstr ""
+msgstr "همگام‌سازی"
 
 msgid "System"
-msgstr ""
+msgstr "سیستم"
 
 msgid "System language"
-msgstr ""
+msgstr "زبان سیستم"
 
 msgid "T9 letter jump in lists"
-msgstr ""
+msgstr "پرش حرفی T9 در فهرست‌ها"
 
 msgid ""
 "TBN GO needs a free account to play programmes.\n"
 "Register on https://tbngo.pl/ and enter the e-mail and password in the host settings."
 msgstr ""
+"TBN GO برای پخش برنامه‌ها به یک حساب رایگان نیاز دارد.\n"
+"در https://tbngo.pl/ ثبت‌نام کنید و ایمیل و رمز عبور را در تنظیمات میزبان وارد کنید."
 
 msgid "THE PAGE YOU ARE LOOKING FOR IS NOT FOUND."
-msgstr ""
+msgstr "صفحه‌ای که به دنبال آن هستید یافت نشد."
 
 msgid ""
 "THIS IS A PREMIUM VIDEO.\n"
 "LOGIN OR PREMIUM REQUIRED."
 msgstr ""
+"این یک ویدیوی پریمیوم است.\n"
+"ورود یا حساب پریمیوم لازم است."
 
 msgid "THIS IS A PRIVATE VIDEO."
-msgstr ""
+msgstr "این یک ویدیوی خصوصی است."
 
 msgid ""
 "THIS LINK CONTAINS PHOTOS ONLY.\n"
 " PLEASE CHOOSE ANOTHER ONE!"
 msgstr ""
+"این پیوند فقط شامل عکس است.\n"
+" لطفاً پیوند دیگری انتخاب کنید!"
 
 msgid ""
 "THIS VIDEO HAS BEEN REMOVED DUE TO COPYRIGHT INFRINGEMENT.\n"
 " PLEASE CHOOSE ANOTHER ONE!"
 msgstr ""
+"این ویدیو به دلیل نقض حق نشر حذف شده است.\n"
+" لطفاً مورد دیگری انتخاب کنید!"
 
 msgid ""
 "THIS VIDEO IS JUST A PREVIEW ON EXTERNAL STORAGE.\n"
 "VIEWING IT HERE IS NOT SUPPORTED."
 msgstr ""
+"این ویدیو فقط یک پیش‌نمایش در فضای ذخیره‌سازی خارجی است.\n"
+"مشاهده آن در اینجا پشتیبانی نمی‌شود."
 
 msgid ""
 "THIS VIDEO IS UNAVAILABLE.\n"
 "TRY AGAIN LATER!"
 msgstr ""
+"این ویدیو در دسترس نیست.\n"
+"بعداً دوباره تلاش کنید!"
 
 msgid "TMDb API key (free at themoviedb.org)"
-msgstr ""
+msgstr "کلید API سایت TMDb (رایگان در themoviedb.org)"
 
 msgid "TMDb Rating:"
-msgstr ""
+msgstr "امتیاز TMDb:"
 
 msgid "TODAY"
-msgstr ""
+msgstr "امروز"
 
 msgid "TOMORROW"
-msgstr ""
+msgstr "فردا"
 
 msgid "TV Series"
-msgstr ""
+msgstr "سریال‌های تلویزیونی"
 
 msgid "TV Show"
-msgstr ""
+msgstr "برنامه تلویزیونی"
 
 msgid "TV Shows"
-msgstr ""
+msgstr "برنامه‌های تلویزیونی"
 
 msgid "TV channels"
-msgstr ""
+msgstr "کانال‌های تلویزیونی"
 
 msgid "TV series"
-msgstr ""
+msgstr "سریال‌های تلویزیونی"
 
 msgid "Tadabor"
-msgstr ""
+msgstr "تدبر"
 
 msgid "Tafsir (Arabic)"
-msgstr ""
+msgstr "تفسیر (عربی)"
 
 msgid "Tags"
-msgstr ""
+msgstr "برچسب‌ها"
 
 msgid "Taiwanese"
-msgstr ""
+msgstr "تایوانی"
 
 msgid "Talk shows"
-msgstr ""
+msgstr "گفتگومحور"
 
 msgid "Teams"
-msgstr ""
+msgstr "تیم‌ها"
 
 msgid "Techniques"
-msgstr ""
+msgstr "تکنیک‌ها"
 
 msgid "Technology"
-msgstr ""
+msgstr "فناوری"
 
 msgid "Temp"
-msgstr ""
+msgstr "موقت"
 
 msgid "Test the failed sites again"
-msgstr ""
+msgstr "آزمایش دوباره سایت‌های ناموفق"
 
 msgid "Testers:"
-msgstr ""
+msgstr "آزمایش‌کنندگان:"
 
 msgid "Text field alignment"
-msgstr ""
+msgstr "تراز فیلد متن"
 
 msgid "Text files ytlist and urllist are in:"
-msgstr ""
+msgstr "فایل‌های متنی ytlist و urllist در این مسیر هستند:"
 
 msgid "Thai"
-msgstr ""
+msgstr "تایلندی"
 
 #, python-format
 msgid "The %s utility is necessary here but it was not detected."
-msgstr ""
+msgstr "ابزار %s در اینجا لازم است اما شناسایی نشد."
 
 msgid "The 100 tags with the most videos"
-msgstr ""
+msgstr "100 برچسب با بیشترین ویدیو"
 
 msgid ""
 "The 7reels / cineb resolvers 'VidEasy', 'VidCore/VidFast', 'VidLink' and 'Peachify' cannot decrypt their links on the receiver.\n"
@@ -5105,146 +5202,158 @@ msgid ""
 "\n"
 "Leave this OFF if you do not want that. The other resolvers (AdRock/vidrock, VidNest, ...) are not affected."
 msgstr ""
+"استخراج‌کننده‌های 7reels / cineb یعنی 'VidEasy'، 'VidCore/VidFast'، 'VidLink' و 'Peachify' نمی‌توانند پیوندهای خود را روی گیرنده رمزگشایی کنند.\n"
+"\n"
+"با روشن بودن این گزینه، هر بار که یکی از آن‌ها را باز می‌کنید، E2iPlayer توکن رمزشده جریان سایت را - که شامل شناسه TMDb فیلم یا قسمتی است که باز می‌کنید - به سرویس وب شخص ثالث enc-dec.app (که توسط یک شخص حقیقی اداره می‌شود) ارسال می‌کند. آن سرور در هر پخش، شناسه و نشانی IP شما را می‌بیند. هیچ چیز دیگری ارسال نمی‌شود و این فقط برای همین چهار استخراج‌کننده استفاده می‌شود.\n"
+"\n"
+"اگر این را نمی‌خواهید، آن را خاموش بگذارید. سایر استخراج‌کننده‌ها (AdRock/vidrock، VidNest، ...) تحت تأثیر قرار نمی‌گیرند."
 
 msgid "The OpenSubtitles v3 server did not answer. Please try again later."
-msgstr ""
+msgstr "سرور OpenSubtitles v3 پاسخ نداد. لطفاً بعداً دوباره تلاش کنید."
 
 msgid "The OpenSubtitles.com server did not answer. Please try again later."
-msgstr ""
+msgstr "سرور OpenSubtitles.com پاسخ نداد. لطفاً بعداً دوباره تلاش کنید."
 
 msgid "The QR code leads to the wiki page with pictures and the extension download."
-msgstr ""
+msgstr "کد QR به صفحه ویکی همراه با تصاویر و دانلود افزونه هدایت می‌کند."
 
 msgid "The Stalker portal of this entry is not configured (any more)."
-msgstr ""
+msgstr "پورتال Stalker این مورد (دیگر) پیکربندی نشده است."
 
 msgid "The Xtream account of this entry is not configured (any more)."
-msgstr ""
+msgstr "حساب Xtream این مورد (دیگر) پیکربندی نشده است."
 
 msgid "The YouTube channels of this group have no videos."
-msgstr ""
+msgstr "کانال‌های YouTube این گروه ویدیویی ندارند."
 
 msgid "The YouTube video ID is invalid."
-msgstr ""
+msgstr "شناسه ویدیوی YouTube نامعتبر است."
 
 msgid "The account is banned."
-msgstr ""
+msgstr "حساب مسدود شده است."
 
 msgid "The balance of the account is too low."
-msgstr ""
+msgstr "موجودی حساب خیلی کم است."
 
 msgid "The best short films on the internet, handpicked by Vimeo staff"
-msgstr ""
+msgstr "بهترین فیلم‌های کوتاه اینترنت، دست‌چین‌شده توسط کارکنان Vimeo"
 
 msgid "The channel already exists in User Links."
-msgstr ""
+msgstr "این کانال از قبل در پیوندهای کاربر وجود دارد."
 
 msgid "The color of the current version"
-msgstr ""
+msgstr "رنگ نسخه فعلی"
 
 msgid "The color of the downloaded item"
-msgstr ""
+msgstr "رنگ مورد دانلودشده"
 
 msgid "The color of the favourite item"
-msgstr ""
+msgstr "رنگ مورد علاقه‌مندی"
 
 msgid "The color of the started item"
-msgstr ""
+msgstr "رنگ مورد شروع‌شده"
 
 msgid "The color of the viewed item"
-msgstr ""
+msgstr "رنگ مورد دیده‌شده"
 
 msgid "The connection limit for your weeb.tv account has been reached."
-msgstr ""
+msgstr "محدودیت اتصال حساب weeb.tv شما به پایان رسیده است."
 
 msgid "The daily download limit is reached."
-msgstr ""
+msgstr "محدودیت دانلود روزانه به پایان رسیده است."
 
 msgid "The data is too large."
-msgstr ""
+msgstr "داده‌ها خیلی بزرگ هستند."
 
 #, python-format
 msgid ""
 "The debug log file is empty:\n"
 "%s"
 msgstr ""
+"فایل گزارش اشکال‌زدایی خالی است:\n"
+"%s"
 
 msgid ""
 "The debug log is disabled or set to console output.\n"
 "\n"
 "Enable it in the E2iPlayer configuration (Debug -> log to file) and reproduce the problem, then come back here."
 msgstr ""
+"گزارش اشکال‌زدایی غیرفعال است یا روی خروجی کنسول تنظیم شده است.\n"
+"\n"
+"آن را در تنظیمات E2iPlayer فعال کنید (Debug -> log to file)، مشکل را دوباره ایجاد کنید و سپس به اینجا برگردید."
 
 msgid "The debug log is not active."
-msgstr ""
+msgstr "گزارش اشکال‌زدایی فعال نیست."
 
 msgid "The download is not ready yet. Please try again in a few seconds."
-msgstr ""
+msgstr "دانلود هنوز آماده نیست. لطفاً چند ثانیه دیگر دوباره تلاش کنید."
 
 #, python-format
 msgid "The download is ready in %d seconds. Please try again then."
-msgstr ""
+msgstr "دانلود تا %d ثانیه دیگر آماده می‌شود. لطفاً آن زمان دوباره تلاش کنید."
 
 msgid "The download manager is stopped, start it on the download page."
-msgstr ""
+msgstr "مدیریت دانلود متوقف است، آن را در صفحه دانلود شروع کنید."
 
 msgid "The element already exists in User Links."
-msgstr ""
+msgstr "این مورد از قبل در پیوندهای کاربر وجود دارد."
 
 msgid "The feed of these channels could not be read - press OK to try again."
-msgstr ""
+msgstr "فید این کانال‌ها خوانده نشد - برای تلاش دوباره OK را فشار دهید."
 
 msgid "The helper process ended unexpectedly."
-msgstr ""
+msgstr "فرایند کمکی به‌طور غیرمنتظره پایان یافت."
 
 #, python-format
 msgid "The helper script %s is missing."
-msgstr ""
+msgstr "اسکریپت کمکی %s وجود ندارد."
 
 #, python-format
 msgid "The host \"%s\" cannot be used from the web interface (disabled, unknown or protected by PIN)."
-msgstr ""
+msgstr "میزبان «%s» از رابط وب قابل استفاده نیست (غیرفعال، ناشناخته یا محافظت‌شده با PIN)."
 
 #, python-format
 msgid ""
 "The host %s requires registration. \n"
 "Please fill your login and password in the host configuration. Available under blue button."
 msgstr ""
+"میزبان %s نیاز به ثبت‌نام دارد. \n"
+"لطفاً نام کاربری و رمز عبور خود را در تنظیمات میزبان وارد کنید. از طریق دکمه آبی در دسترس است."
 
 msgid "The host asks for a captcha. It can only be solved on the receiver (or with MyE2i there)."
-msgstr ""
+msgstr "میزبان کپچا درخواست می‌کند. فقط روی گیرنده (یا با MyE2i در آنجا) قابل حل است."
 
 msgid "The host did not return a list."
-msgstr ""
+msgstr "میزبان فهرستی برنگرداند."
 
 #, python-format
 msgid "The host wanted to open a window on the TV (%s) - that only works on the receiver."
-msgstr ""
+msgstr "میزبان می‌خواست پنجره‌ای روی تلویزیون باز کند (%s) - این فقط روی گیرنده کار می‌کند."
 
 msgid "The hoster sends an advert redirect instead of the video at the moment. Try another hoster."
-msgstr ""
+msgstr "این میزبان در حال حاضر به‌جای ویدیو به تبلیغ هدایت می‌کند. میزبان دیگری را امتحان کنید."
 
 msgid "The latest uploads of all YouTube channels in this group, newest first."
-msgstr ""
+msgstr "آخرین آپلودهای همه کانال‌های YouTube این گروه، جدیدترین در ابتدا."
 
 msgid "The link could not be resolved."
-msgstr ""
+msgstr "پیوند قابل استخراج نبود."
 
 msgid "The list has changed, please try again."
-msgstr ""
+msgstr "فهرست تغییر کرده است، لطفاً دوباره تلاش کنید."
 
 msgid "The live stream is not available at the moment."
-msgstr ""
+msgstr "پخش زنده در حال حاضر در دسترس نیست."
 
 msgid "The model is offline or in a private show."
-msgstr ""
+msgstr "مدل آفلاین است یا در نمایش خصوصی است."
 
 msgid "The number of items in the search history"
-msgstr ""
+msgstr "تعداد موارد در تاریخچه جستجو"
 
 #, python-format
 msgid "The page layout of %s has changed."
-msgstr ""
+msgstr "چیدمان صفحه %s تغییر کرده است."
 
 #, python-format
 msgid ""
@@ -5252,268 +5361,273 @@ msgid ""
 "It will be saved in the file:\n"
 "\"%s\""
 msgstr ""
+"بافر پخش به مدیریت دانلود منتقل شد.\n"
+"در این فایل ذخیره خواهد شد:\n"
+"«%s»"
 
 msgid "The portal did not hand out a link for this entry."
-msgstr ""
+msgstr "پورتال برای این مورد پیوندی ارائه نداد."
 
 msgid "The recordings of this page were on the site's old media server, which is offline."
-msgstr ""
+msgstr "ضبط‌های این صفحه روی سرور رسانه قدیمی سایت بودند که آفلاین است."
 
 msgid "The request has no valid length."
-msgstr ""
+msgstr "درخواست طول معتبری ندارد."
 
 msgid "The same item already exists in this group."
-msgstr ""
+msgstr "همین مورد از قبل در این گروه وجود دارد."
 
 msgid "The server did not return a subtitle file (download limit reached?)."
-msgstr ""
+msgstr "سرور فایل زیرنویسی برنگرداند (محدودیت دانلود به پایان رسیده؟)."
 
 msgid "The server did not send a subtitle file."
-msgstr ""
+msgstr "سرور فایل زیرنویسی ارسال نکرد."
 
 msgid "The server limits the number of requests. Please try again in a few seconds."
-msgstr ""
+msgstr "سرور تعداد درخواست‌ها را محدود می‌کند. لطفاً چند ثانیه دیگر دوباره تلاش کنید."
 
 msgid "The service is overloaded. Please try again later."
-msgstr ""
+msgstr "سرویس بیش از حد شلوغ است. لطفاً بعداً دوباره تلاش کنید."
 
 msgid "The settings are protected by a PIN, change them on the receiver."
-msgstr ""
+msgstr "تنظیمات با PIN محافظت شده‌اند، آن‌ها را روی گیرنده تغییر دهید."
 
 msgid "The site has no player for this video (it only shows a cam advert)."
-msgstr ""
+msgstr "سایت برای این ویدیو پخش‌کننده‌ای ندارد (فقط یک تبلیغ وب‌کم نشان می‌دهد)."
 
 msgid "The site refuses all qualities of this video at the moment (HTTP 403). Try again later."
-msgstr ""
+msgstr "سایت در حال حاضر همه کیفیت‌های این ویدیو را رد می‌کند (HTTP 403). بعداً دوباره تلاش کنید."
 
 msgid "The site rejected the search request."
-msgstr ""
+msgstr "سایت درخواست جستجو را رد کرد."
 
 msgid "The site's browser check could not be passed."
-msgstr ""
+msgstr "بررسی مرورگر سایت با موفقیت پشت سر گذاشته نشد."
 
 msgid "The site's catalogue could not be loaded."
-msgstr ""
+msgstr "کاتالوگ سایت بارگذاری نشد."
 
 msgid "The support package holds the versions, the system information, the enabled hosts and the end of the debug log in one text file for a problem report. Look through it before posting it - the log can contain addresses of the sites you opened."
-msgstr ""
+msgstr "بسته پشتیبانی شامل نسخه‌ها، اطلاعات سیستم، میزبان‌های فعال و انتهای گزارش اشکال‌زدایی در یک فایل متنی برای گزارش مشکل است. پیش از ارسال آن را بررسی کنید - گزارش ممکن است شامل نشانی سایت‌هایی باشد که باز کرده‌اید."
 
 msgid "The user link could not be deleted."
-msgstr ""
+msgstr "پیوند کاربر حذف نشد."
 
 msgid "The user link could not be updated."
-msgstr ""
+msgstr "پیوند کاربر به‌روزرسانی نشد."
 
 #, python-format
 msgid "The value must be between %d and %d."
-msgstr ""
+msgstr "مقدار باید بین %d و %d باشد."
 
 msgid "The video could not be resolved (it may be private, ended or not available in your country)."
-msgstr ""
+msgstr "ویدیو قابل استخراج نبود (ممکن است خصوصی، پایان‌یافته یا در کشور شما در دسترس نباشد)."
 
 msgid "The video file of this title is not available on the server (HTTP 403)."
-msgstr ""
+msgstr "فایل ویدیوی این عنوان روی سرور در دسترس نیست (HTTP 403)."
 
 msgid "The video has been removed."
-msgstr ""
+msgstr "ویدیو حذف شده است."
 
 msgid "The video player of this site (hdvbua.pro) does not offer this title in your country (licence area, mainly Ukraine)."
-msgstr ""
+msgstr "پخش‌کننده ویدیوی این سایت (hdvbua.pro) این عنوان را در کشور شما ارائه نمی‌دهد (منطقه مجوز، عمدتاً اوکراین)."
 
 msgid "The website returned a server error for this request."
-msgstr ""
+msgstr "وب‌سایت برای این درخواست خطای سرور برگرداند."
 
 msgid "There are no other favorite groups"
-msgstr ""
+msgstr "گروه علاقه‌مندی دیگری وجود ندارد"
 
 msgid "There are unsaved changes. Save now?"
-msgstr ""
+msgstr "تغییرات ذخیره‌نشده وجود دارد. اکنون ذخیره شود؟"
 
 #, python-format
 msgid "There is no enough free space in the folder \"%s\"."
-msgstr ""
+msgstr "فضای خالی کافی در پوشه «%s» وجود ندارد."
 
 #, python-format
 msgid "There is no free space on the drive [%s]."
-msgstr ""
+msgstr "فضای خالی روی درایو [%s] وجود ندارد."
 
 msgid "There is no hosts in this group."
-msgstr ""
+msgstr "هیچ میزبانی در این گروه وجود ندارد."
 
 msgid "There is no next item in this list."
-msgstr ""
+msgstr "مورد بعدی در این فهرست وجود ندارد."
 
 msgid "There is no previous item in this list."
-msgstr ""
+msgstr "مورد قبلی در این فهرست وجود ندارد."
 
 #, python-format
 msgid ""
 "There is no storage device under \"%s\" (%s free). E2iPlayer will switch this folder back to \"%s\" at the next start.\n"
 "Please choose a folder on a mounted HDD or USB stick."
 msgstr ""
+"هیچ دستگاه ذخیره‌سازی در «%s» وجود ندارد (%s آزاد). E2iPlayer در اجرای بعدی این پوشه را به «%s» برمی‌گرداند.\n"
+"لطفاً پوشه‌ای روی یک HDD یا فلش USB متصل انتخاب کنید."
 
 msgid "This article has no free video."
-msgstr ""
+msgstr "این مقاله ویدیوی رایگان ندارد."
 
 msgid "This channel does not exist."
-msgstr ""
+msgstr "این کانال وجود ندارد."
 
 msgid "This channel is currently offline."
-msgstr ""
+msgstr "این کانال در حال حاضر آفلاین است."
 
 msgid "This channel is not available in your country (geo-blocking)."
-msgstr ""
+msgstr "این کانال در کشور شما در دسترس نیست (محدودیت جغرافیایی)."
 
 msgid "This channel is temporarily unavailable. Please try again later."
-msgstr ""
+msgstr "این کانال موقتاً در دسترس نیست. لطفاً بعداً دوباره تلاش کنید."
 
 msgid "This channel requires a premium account, or the free connection limit has been reached. Enter your weeb.tv login data in the host configuration."
-msgstr ""
+msgstr "این کانال به حساب پریمیوم نیاز دارد یا محدودیت اتصال رایگان به پایان رسیده است. اطلاعات ورود weeb.tv خود را در تنظیمات میزبان وارد کنید."
 
 msgid "This content is not available in your region."
-msgstr ""
+msgstr "این محتوا در منطقه شما در دسترس نیست."
 
 msgid "This content is only available in Switzerland."
-msgstr ""
+msgstr "این محتوا فقط در سوئیس در دسترس است."
 
 msgid "This content needs a login - not supported."
-msgstr ""
+msgstr "این محتوا نیاز به ورود دارد - پشتیبانی نمی‌شود."
 
 msgid "This entry cannot be added to the favourites."
-msgstr ""
+msgstr "این مورد را نمی‌توان به علاقه‌مندی‌ها افزود."
 
 msgid "This entry cannot be opened."
-msgstr ""
+msgstr "این مورد باز نمی‌شود."
 
 msgid "This entry is only an advert, there is no video."
-msgstr ""
+msgstr "این مورد فقط یک تبلیغ است، ویدیویی وجود ندارد."
 
 msgid "This entry is protected by a PIN, open it on the receiver."
-msgstr ""
+msgstr "این مورد با PIN محافظت شده است، آن را روی گیرنده باز کنید."
 
 msgid "This episode is not available in this version (SUB/DUB) on this server. Try another one."
-msgstr ""
+msgstr "این قسمت در این نسخه (SUB/DUB) روی این سرور در دسترس نیست. سرور دیگری را امتحان کنید."
 
 msgid "This feed is empty, or the YouTube sign-in has expired - sign out and in again."
-msgstr ""
+msgstr "این فید خالی است یا ورود به YouTube منقضی شده است - خارج شوید و دوباره وارد شوید."
 
 msgid "This folder is protected by a PIN, open it on the receiver."
-msgstr ""
+msgstr "این پوشه با PIN محافظت شده است، آن را روی گیرنده باز کنید."
 
 msgid "This host has been added already to this group."
-msgstr ""
+msgstr "این میزبان قبلاً به این گروه اضافه شده است."
 
 msgid "This is only an advert for a paid clip (clips4sale), there is no free video."
-msgstr ""
+msgstr "این فقط تبلیغ یک کلیپ پولی (clips4sale) است، ویدیوی رایگانی وجود ندارد."
 
 msgid "This is paid content of PZPN+, it needs a purchase on the website."
-msgstr ""
+msgstr "این محتوای پولی PZPN+ است و نیاز به خرید در وب‌سایت دارد."
 
 msgid "This mix is only available with a Mixcloud Select subscription."
-msgstr ""
+msgstr "این میکس فقط با اشتراک Mixcloud Select در دسترس است."
 
 msgid "This model is offline."
-msgstr ""
+msgstr "این مدل آفلاین است."
 
 msgid "This option cannot be changed from the web interface."
-msgstr ""
+msgstr "این گزینه از رابط وب قابل تغییر نیست."
 
 msgid "This page has no video (blog article)."
-msgstr ""
+msgstr "این صفحه ویدیو ندارد (مقاله وبلاگ)."
 
 msgid "This player is not available any more - reload the links."
-msgstr ""
+msgstr "این پخش‌کننده دیگر در دسترس نیست - پیوندها را دوباره بارگذاری کنید."
 
 msgid "This room is currently offline or unavailable."
-msgstr ""
+msgstr "این اتاق در حال حاضر آفلاین یا غیرقابل دسترس است."
 
 msgid "This room is offline. Try again later!"
-msgstr ""
+msgstr "این اتاق آفلاین است. بعداً دوباره تلاش کنید!"
 
 msgid "This section is no longer on the main page."
-msgstr ""
+msgstr "این بخش دیگر در صفحه اصلی نیست."
 
 msgid "This session has no code - scan the QR code on the receiver screen."
-msgstr ""
+msgstr "این نشست کدی ندارد - کد QR روی صفحه گیرنده را اسکن کنید."
 
 msgid "This show is private. Try again later!"
-msgstr ""
+msgstr "این نمایش خصوصی است. بعداً دوباره تلاش کنید!"
 
 msgid "This source is offline at the moment. Try another source of the channel."
-msgstr ""
+msgstr "این منبع در حال حاضر آفلاین است. منبع دیگری از کانال را امتحان کنید."
 
 msgid "This stream can only be played with buffering - please start it on the receiver."
-msgstr ""
+msgstr "این جریان فقط با بافر قابل پخش است - لطفاً آن را روی گیرنده شروع کنید."
 
 msgid "This subtitle provider has subtitles for movies only."
-msgstr ""
+msgstr "این ارائه‌دهنده زیرنویس فقط برای فیلم‌ها زیرنویس دارد."
 
 msgid "This video has been deleted."
-msgstr ""
+msgstr "این ویدیو حذف شده است."
 
 msgid "This video is Premium-only content."
-msgstr ""
+msgstr "این ویدیو محتوای مخصوص پریمیوم است."
 
 msgid "This video is a private video."
-msgstr ""
+msgstr "این ویدیو یک ویدیوی خصوصی است."
 
 msgid "This video is a private."
-msgstr ""
+msgstr "این ویدیو خصوصی است."
 
 msgid "This video is only on hosters E2iPlayer cannot play."
-msgstr ""
+msgstr "این ویدیو فقط روی میزبان‌هایی است که E2iPlayer نمی‌تواند پخش کند."
 
 msgid "This video is only on the netu.tv player (pbtube.net), which E2iPlayer cannot play."
-msgstr ""
+msgstr "این ویدیو فقط روی پخش‌کننده netu.tv (pbtube.net) است که E2iPlayer نمی‌تواند آن را پخش کند."
 
 msgid "This video needs a paid ororo.tv subscription."
-msgstr ""
+msgstr "این ویدیو به اشتراک پولی ororo.tv نیاز دارد."
 
 msgid "This video requires you to sign in to a YouTube account."
-msgstr ""
+msgstr "برای این ویدیو باید به یک حساب YouTube وارد شوید."
 
 msgid "This video was embedded from Pornhub and is no longer available there."
-msgstr ""
+msgstr "این ویدیو از Pornhub جاسازی شده بود و دیگر در آنجا در دسترس نیست."
 
 msgid "This video was embedded from xHamster and has been deleted there."
-msgstr ""
+msgstr "این ویدیو از xHamster جاسازی شده بود و در آنجا حذف شده است."
 
 msgid "Thriller"
-msgstr ""
+msgstr "هیجان‌انگیز"
 
 msgid "Thumbnails"
-msgstr ""
+msgstr "تصاویر بندانگشتی"
 
 msgid "Time"
-msgstr ""
+msgstr "زمان"
 
 msgid "Tip! You can connect USB flash drive to fix this problem."
-msgstr ""
+msgstr "نکته! برای رفع این مشکل می‌توانید یک فلش USB متصل کنید."
 
 msgid "Titles"
-msgstr ""
+msgstr "عناوین"
 
 #, python-format
 msgid "Titlovi.com login failed (HTTP %s)."
-msgstr ""
+msgstr "ورود به Titlovi.com ناموفق بود (HTTP %s)."
 
 #, python-format
 msgid "Titlovi.com login failed for user \"%s\". Please check your login and password."
-msgstr ""
+msgstr "ورود به Titlovi.com برای کاربر «%s» ناموفق بود. لطفاً نام کاربری و رمز عبور خود را بررسی کنید."
 
 msgid "Titlovi.com needs a free titlovi.com account. Enter login and password in the E2iPlayer settings."
-msgstr ""
+msgstr "Titlovi.com به یک حساب رایگان titlovi.com نیاز دارد. نام کاربری و رمز عبور را در تنظیمات E2iPlayer وارد کنید."
 
 #, python-format
 msgid "Titlovi.com search failed (HTTP %s)."
-msgstr ""
+msgstr "جستجو در Titlovi.com ناموفق بود (HTTP %s)."
 
 #, python-format
 msgid "Titlovi.com: API access is disabled for the account \"%s\". See titlovi.com/donacije."
-msgstr ""
+msgstr "Titlovi.com: دسترسی API برای حساب «%s» غیرفعال است. به titlovi.com/donacije مراجعه کنید."
 
 msgid "Titlovi.com: invalid server response."
-msgstr ""
+msgstr "Titlovi.com: پاسخ نامعتبر سرور."
 
 #, python-format
 msgid ""
@@ -5528,1254 +5642,1265 @@ msgid ""
 "\n"
 "3. Approve the access, then select OK here."
 msgstr ""
+"برای ورود به YouTube:\n"
+"\n"
+"1. در تلفن یا رایانه این آدرس را باز کنید:\n"
+"     %s\n"
+"\n"
+"2. این کد را وارد کنید:\n"
+"\n"
+"     %s\n"
+"\n"
+"3. دسترسی را تأیید کنید، سپس در اینجا OK را انتخاب کنید."
 
 msgid ""
 "To watch videos from https://vk.com/ you need to login.\n"
 "Please fill your login and password in the IPTVPlayer configuration."
 msgstr ""
+"برای تماشای ویدیوهای https://vk.com/ باید وارد شوید.\n"
+"لطفاً نام کاربری و رمز عبور خود را در تنظیمات IPTVPlayer وارد کنید."
 
 msgid "Today"
-msgstr ""
+msgstr "امروز"
 
 msgid "Tomorrow"
-msgstr ""
+msgstr "فردا"
 
 msgid "Too many redirects."
-msgstr ""
+msgstr "تعداد تغییر مسیرها بیش از حد است."
 
 msgid "Too many requests. Please try again later."
-msgstr ""
+msgstr "درخواست‌ها بیش از حد است. لطفاً بعداً دوباره تلاش کنید."
 
 msgid "Too many wrong codes - scan the QR code on the receiver screen instead."
-msgstr ""
+msgstr "کدهای اشتباه بیش از حد - به‌جای آن کد QR روی صفحه گیرنده را اسکن کنید."
 
 msgid "Top"
-msgstr ""
+msgstr "برترین‌ها"
 
 msgid "Top 10"
-msgstr ""
+msgstr "10 برتر"
 
 msgid "Top IMDb"
-msgstr ""
+msgstr "برترین‌های IMDb"
 
 msgid "Top airing"
-msgstr ""
+msgstr "برترین‌های در حال پخش"
 
 msgid "Top in your country"
-msgstr ""
+msgstr "برترین‌ها در کشور شما"
 
 msgid "Top leagues and clubs"
-msgstr ""
+msgstr "لیگ‌ها و باشگاه‌های برتر"
 
 msgid "Top rated"
-msgstr ""
+msgstr "بالاترین امتیاز"
 
 msgid "Top rated movies"
-msgstr ""
+msgstr "فیلم‌های با بالاترین امتیاز"
 
 msgid "Top rated series"
-msgstr ""
+msgstr "سریال‌های با بالاترین امتیاز"
 
 msgid "Top scorers"
-msgstr ""
+msgstr "بهترین گلزنان"
 
 msgid "Top series"
-msgstr ""
+msgstr "سریال‌های برتر"
 
 msgid "Top stations"
-msgstr ""
+msgstr "ایستگاه‌های برتر"
 
 msgid "Top tracks"
-msgstr ""
+msgstr "قطعه‌های برتر"
 
 msgid "Top upcoming"
-msgstr ""
+msgstr "برترین‌های آینده"
 
 msgid "Top-IMDB"
-msgstr ""
+msgstr "برترین‌های IMDB"
 
 msgid "Topics"
-msgstr ""
+msgstr "موضوعات"
 
 msgid "Total size:"
-msgstr ""
+msgstr "اندازه کل:"
 
 msgid "Tourism"
-msgstr ""
+msgstr "گردشگری"
 
 msgid "Tracklist"
-msgstr ""
+msgstr "فهرست قطعات"
 
 msgid "Trailer"
-msgstr ""
+msgstr "تریلر"
 
 msgid "Translation:"
-msgstr ""
+msgstr "ترجمه:"
 
 #, python-format
 msgid "Translator: %s"
-msgstr ""
+msgstr "مترجم: %s"
 
 msgid "Transparent"
-msgstr ""
+msgstr "شفاف"
 
 msgid "Trauma"
-msgstr ""
+msgstr "تروما"
 
 msgid "Travel"
-msgstr ""
+msgstr "سفر"
 
 msgid "Treatment Consult"
-msgstr ""
+msgstr "مشاوره درمان"
 
 msgid "Trending"
-msgstr ""
+msgstr "پرطرفدار"
 
 msgid "Trending this week"
-msgstr ""
+msgstr "پرطرفدار این هفته"
 
 msgid "Trial"
-msgstr ""
+msgstr "آزمایشی"
 
 msgid "Troubleshooting"
-msgstr ""
+msgstr "عیب‌یابی"
 
 msgid "Try to change extplayer or reinstall gst-ifdsrc"
-msgstr ""
+msgstr "extplayer را تغییر دهید یا gst-ifdsrc را دوباره نصب کنید"
 
 msgid "Turkish"
-msgstr ""
+msgstr "ترکی"
 
 msgid "Turkish Movies"
-msgstr ""
+msgstr "فیلم‌های ترکی"
 
 msgid "Turkish Series"
-msgstr ""
+msgstr "سریال‌های ترکی"
 
 msgid "Turkish TV series"
-msgstr ""
+msgstr "سریال‌های تلویزیونی ترکی"
 
 msgid "Turkish movies (dubbed)"
-msgstr ""
+msgstr "فیلم‌های ترکی (دوبله)"
 
 msgid "Turkish series (dubbed)"
-msgstr ""
+msgstr "سریال‌های ترکی (دوبله)"
 
 msgid "Tutorials"
-msgstr ""
+msgstr "آموزش‌ها"
 
 msgid "Type"
-msgstr ""
+msgstr "نوع"
 
 msgid "Type:"
-msgstr ""
+msgstr "نوع:"
 
 msgid "Type: "
-msgstr ""
+msgstr "نوع: "
 
 #, python-format
 msgid "Type: %s"
-msgstr ""
+msgstr "نوع: %s"
 
 msgid "Types"
-msgstr ""
+msgstr "انواع"
 
 msgid "UNKNOWN"
-msgstr ""
+msgstr "ناشناخته"
 
 msgid "URL malformed."
-msgstr ""
+msgstr "URL نادرست است."
 
 msgid "Ukrainian"
-msgstr ""
+msgstr "اوکراینی"
 
 msgid "Umount iso file"
-msgstr ""
+msgstr "جدا کردن فایل iso"
 
 msgid "Unable to comply. Search History is empty."
-msgstr ""
+msgstr "امکان انجام نیست. تاریخچه جستجو خالی است."
 
 msgid "Unfix jump target"
-msgstr ""
+msgstr "لغو تثبیت مقصد پرش"
 
 msgid "Unknown action."
-msgstr ""
+msgstr "عملیات ناشناخته."
 
 msgid "Unknown error code."
-msgstr ""
+msgstr "کد خطای ناشناخته."
 
 msgid "Unknown error."
-msgstr ""
+msgstr "خطای ناشناخته."
 
 #, python-format
 msgid "Unknown protocol [%s]"
-msgstr ""
+msgstr "پروتکل ناشناخته [%s]"
 
 msgid "Unknown server response."
-msgstr ""
+msgstr "پاسخ ناشناخته سرور."
 
 #, python-format
 msgid "Unknown subtitle parser for format \"%s\"."
-msgstr ""
+msgstr "تجزیه‌گر زیرنویس برای قالب «%s» ناشناخته است."
 
 #, python-format
 msgid "Unrar error code[%s]."
-msgstr ""
+msgstr "کد خطای Unrar [%s]."
 
 msgid "Unset watched"
-msgstr ""
+msgstr "حذف علامت دیده‌شده"
 
 msgid "Unsupported protocol."
-msgstr ""
+msgstr "پروتکل پشتیبانی‌نشده."
 
 #, python-format
 msgid "Unzip error code[%s]."
-msgstr ""
+msgstr "کد خطای Unzip [%s]."
 
 msgid "Upbringing"
-msgstr ""
+msgstr "تربیت"
 
 msgid "Upcoming"
-msgstr ""
+msgstr "به‌زودی"
 
 msgid "Updates"
-msgstr ""
+msgstr "به‌روزرسانی‌ها"
 
 msgid "Upload date"
-msgstr ""
+msgstr "تاریخ آپلود"
 
 #, python-format
 msgid "Uploader: %s"
-msgstr ""
+msgstr "آپلودکننده: %s"
 
 msgid "Uploads"
-msgstr ""
+msgstr "آپلودها"
 
 msgid "Urllists player"
-msgstr ""
+msgstr "پخش‌کننده Urllists"
 
 msgid "Use Cinemeta (no key, English)"
-msgstr ""
+msgstr "استفاده از Cinemeta (بدون کلید، انگلیسی)"
 
 msgid "Use HLS streams (adaptive):"
-msgstr ""
+msgstr "استفاده از جریان‌های HLS (تطبیقی):"
 
 msgid "Use IMDb (no key)"
-msgstr ""
+msgstr "استفاده از IMDb (بدون کلید)"
 
 msgid "Use OMDb"
-msgstr ""
+msgstr "استفاده از OMDb"
 
 msgid "Use TMDb"
-msgstr ""
+msgstr "استفاده از TMDb"
 
 msgid "Use TVmaze for series (no key, English)"
-msgstr ""
+msgstr "استفاده از TVmaze برای سریال‌ها (بدون کلید، انگلیسی)"
 
 msgid "Use default video quality"
-msgstr ""
+msgstr "استفاده از کیفیت پیش‌فرض ویدیو"
 
 msgid "Use default video quality:"
-msgstr ""
+msgstr "استفاده از کیفیت پیش‌فرض ویدیو:"
 
 msgid "Use login"
-msgstr ""
+msgstr "استفاده از ورود"
 
 msgid "Use own pin for configuration"
-msgstr ""
+msgstr "استفاده از PIN اختصاصی برای تنظیمات"
 
 msgid "Use own pin instead of the player pin"
-msgstr ""
+msgstr "استفاده از PIN اختصاصی به‌جای PIN پخش‌کننده"
 
 msgid "Use proxy server:"
-msgstr ""
+msgstr "استفاده از سرور پروکسی:"
 
 #, python-format
 msgid "Use software decoder for the %s"
-msgstr ""
+msgstr "استفاده از رمزگشای نرم‌افزاری برای %s"
 
 msgid "Use subtitles parser extension if available"
-msgstr ""
+msgstr "استفاده از افزونه تجزیه‌گر زیرنویس در صورت وجود"
 
 msgid "Use the PyCurl for HTTP(S) requests"
-msgstr ""
+msgstr "استفاده از PyCurl برای درخواست‌های HTTP(S)"
 
 msgid "Use the best quality :"
-msgstr ""
+msgstr "استفاده از بهترین کیفیت :"
 
 msgid "User"
-msgstr ""
+msgstr "کاربر"
 
 msgid "User defined"
-msgstr ""
+msgstr "تعریف‌شده توسط کاربر"
 
 msgid "User files"
-msgstr ""
+msgstr "فایل‌های کاربر"
 
 msgid "User link added."
-msgstr ""
+msgstr "پیوند کاربر افزوده شد."
 
 msgid "User link deleted."
-msgstr ""
+msgstr "پیوند کاربر حذف شد."
 
 msgid "User link updated."
-msgstr ""
+msgstr "پیوند کاربر به‌روزرسانی شد."
 
 msgid "User links"
-msgstr ""
+msgstr "پیوندهای کاربر"
 
 msgid "User links sorted."
-msgstr ""
+msgstr "پیوندهای کاربر مرتب شدند."
 
 msgid "User links stored in the ytlist.txt file."
-msgstr ""
+msgstr "پیوندهای کاربر در فایل ytlist.txt ذخیره شدند."
 
 msgid "User-Agent (leave empty for the default):"
-msgstr ""
+msgstr "User-Agent (برای پیش‌فرض خالی بگذارید):"
 
 #, python-format
 msgid "User-Links: %d"
-msgstr ""
+msgstr "پیوندهای کاربر: %d"
 
 msgid "Username/password authentication failure."
-msgstr ""
+msgstr "احراز هویت با نام کاربری/رمز عبور ناموفق بود."
 
 msgid "Username:"
-msgstr ""
+msgstr "نام کاربری:"
 
 msgid "Users"
-msgstr ""
+msgstr "کاربران"
 
 #, python-format
 msgid "Utility \"%s\" can not be found."
-msgstr ""
+msgstr "ابزار «%s» یافت نشد."
 
 msgid "VAVOO did not hand out a session signature. Try again later."
-msgstr ""
+msgstr "VAVOO امضای نشست ارائه نکرد. بعداً دوباره تلاش کنید."
 
 msgid "Venue"
-msgstr ""
+msgstr "محل برگزاری"
 
 msgid "Verify"
-msgstr ""
+msgstr "تأیید"
 
 msgid "Version"
-msgstr ""
+msgstr "نسخه"
 
 #, python-format
 msgid "Version: %s"
-msgstr ""
+msgstr "نسخه: %s"
 
 msgid "Video"
-msgstr ""
+msgstr "ویدیو"
 
 msgid "Video buffer size [MB]"
-msgstr ""
+msgstr "اندازه بافر ویدیو [MB]"
 
 msgid "Video library"
-msgstr ""
+msgstr "کتابخانه ویدیو"
 
 msgid "Video link not found."
-msgstr ""
+msgstr "پیوند ویدیو یافت نشد."
 
 msgid "Video mode"
-msgstr ""
+msgstr "حالت ویدیو"
 
 msgid "Video options"
-msgstr ""
+msgstr "گزینه‌های ویدیو"
 
 msgid "Video player OSD clock format"
-msgstr ""
+msgstr "قالب ساعت OSD پخش‌کننده ویدیو"
 
 msgid "Video policy"
-msgstr ""
+msgstr "سیاست نمایش ویدیو"
 
 msgid "Video policy for 4:3"
-msgstr ""
+msgstr "سیاست نمایش ویدیو برای 4:3"
 
 msgid "Video recitations"
-msgstr ""
+msgstr "تلاوت‌های ویدیویی"
 
 msgid "Video with DRM protection."
-msgstr ""
+msgstr "ویدیو دارای محافظت DRM است."
 
 msgid "Videos"
-msgstr ""
+msgstr "ویدیوها"
 
 #, python-format
 msgid "Videos %s"
-msgstr ""
+msgstr "ویدیوها %s"
 
 msgid "Videos you have liked."
-msgstr ""
+msgstr "ویدیوهایی که پسندیده‌اید."
 
 msgid "Videos you have recently watched."
-msgstr ""
+msgstr "ویدیوهایی که اخیراً تماشا کرده‌اید."
 
 msgid "View count"
-msgstr ""
+msgstr "تعداد بازدید"
 
 msgid "Views"
-msgstr ""
+msgstr "بازدیدها"
 
 msgid "Views:"
-msgstr ""
+msgstr "بازدیدها:"
 
 msgid "Vimeo does not offer this list to anonymous users in your region."
-msgstr ""
+msgstr "Vimeo این فهرست را در منطقه شما به کاربران ناشناس ارائه نمی‌دهد."
 
 msgid "Vimeo live event: the live transmission (while on air) and the past transmissions."
-msgstr ""
+msgstr "رویداد زنده Vimeo: پخش زنده (در زمان پخش) و پخش‌های گذشته."
 
 msgid "Vimeo playlist with the recordings of this page."
-msgstr ""
+msgstr "فهرست پخش Vimeo با ضبط‌های این صفحه."
 
 msgid "Vimeo: this video is private, removed or may only be played on the site that embeds it."
-msgstr ""
+msgstr "Vimeo: این ویدیو خصوصی است، حذف شده یا فقط در سایتی که آن را جاسازی کرده قابل پخش است."
 
 msgid "Virtual Keyboard"
-msgstr ""
+msgstr "صفحه‌کلید مجازی"
 
 msgid "Virtual Keyboard type"
-msgstr ""
+msgstr "نوع صفحه‌کلید مجازی"
 
 msgid "Voice-over"
-msgstr ""
+msgstr "صداگذاری"
 
 msgid "WWE shows"
-msgstr ""
+msgstr "برنامه‌های WWE"
 
 msgid "Waiting for the result ..."
-msgstr ""
+msgstr "در انتظار نتیجه ..."
 
 msgid "War"
-msgstr ""
+msgstr "جنگی"
 
 msgid "Watch Videos Online"
-msgstr ""
+msgstr "تماشای آنلاین ویدیوها"
 
 msgid "Watch history"
-msgstr ""
+msgstr "تاریخچه تماشا"
 
 msgid "Watch later"
-msgstr ""
+msgstr "بعداً تماشا کنید"
 
 msgid "Watch online"
-msgstr ""
+msgstr "تماشای آنلاین"
 
 msgid "Western"
-msgstr ""
+msgstr "وسترن"
 
 msgid "What's happening?"
-msgstr ""
+msgstr "چه خبر است؟"
 
 msgid "When the maximum is reached"
-msgstr ""
+msgstr "هنگام رسیدن به حداکثر"
 
 msgid "While live TV is running"
-msgstr ""
+msgstr "هنگام پخش تلویزیون زنده"
 
 msgid "Whole file must be downloaded to start playback!"
-msgstr ""
+msgstr "برای شروع پخش باید کل فایل دانلود شود!"
 
 msgid "Wiki"
-msgstr ""
+msgstr "ویکی"
 
 msgid "Winter"
-msgstr ""
+msgstr "زمستان"
 
 msgid "With an API key from subdl.com (E2iPlayer settings, Subtitles) the official SubDL API is searched as well."
-msgstr ""
+msgstr "با یک کلید API از subdl.com (تنظیمات E2iPlayer، زیرنویس‌ها) در API رسمی SubDL نیز جستجو می‌شود."
 
 msgid "With subtitles"
-msgstr ""
+msgstr "با زیرنویس"
 
 msgid "World"
-msgstr ""
+msgstr "جهان"
 
 msgid "Worldwide"
-msgstr ""
+msgstr "سراسر جهان"
 
 msgid "Wrestling"
-msgstr ""
+msgstr "کشتی"
 
 msgid "Wrestling shows"
-msgstr ""
+msgstr "برنامه‌های کشتی"
 
 msgid "Write current title to file:"
-msgstr ""
+msgstr "نوشتن عنوان فعلی در فایل:"
 
 msgid "Writer:"
-msgstr ""
+msgstr "نویسنده:"
 
 msgid "Writers:"
-msgstr ""
+msgstr "نویسندگان:"
 
 msgid "Written Boards Review"
-msgstr ""
+msgstr "مرور تابلوهای نوشتاری"
 
 msgid "Wrong Youtube Api Key length"
-msgstr ""
+msgstr "طول کلید API یوتیوب نادرست است"
 
 msgid "Wrong captcha code."
-msgstr ""
+msgstr "کد کپچا نادرست است."
 
 msgid "Wrong code."
-msgstr ""
+msgstr "کد نادرست است."
 
 msgid "Wrong format of rar archive."
-msgstr ""
+msgstr "قالب آرشیو rar نادرست است."
 
 msgid "Wrong format of zip archive."
-msgstr ""
+msgstr "قالب آرشیو zip نادرست است."
 
 msgid "Wrong indexes."
-msgstr ""
+msgstr "اندیس‌های نادرست."
 
 msgid "Wrong uri."
-msgstr ""
+msgstr "uri نادرست."
 
 msgid "Wrong weeb.tv username or password."
-msgstr ""
+msgstr "نام کاربری یا رمز عبور weeb.tv نادرست است."
 
 #, python-format
 msgid "Wyzie Subs API key rejected: %s"
-msgstr ""
+msgstr "کلید API برای Wyzie Subs رد شد: %s"
 
 msgid "Wyzie Subs needs an API key. You can get a free one at https://store.wyzie.io/redeem and enter it in the E2iPlayer configuration."
-msgstr ""
+msgstr "Wyzie Subs به یک کلید API نیاز دارد. می‌توانید یک کلید رایگان از https://store.wyzie.io/redeem دریافت کرده و آن را در تنظیمات E2iPlayer وارد کنید."
 
 msgid "Wyzie Subs: the daily request limit of the API key is reached."
-msgstr ""
+msgstr "Wyzie Subs: سقف درخواست روزانه کلید API به پایان رسیده است."
 
 msgid "YELLOW"
-msgstr ""
+msgstr "زرد"
 
 msgid "YESTERDAY"
-msgstr ""
+msgstr "دیروز"
 
 msgid "YP connected"
-msgstr ""
+msgstr "YP متصل شد"
 
 msgid "Year"
-msgstr ""
+msgstr "سال"
 
 #, python-format
 msgid "Year %s"
-msgstr ""
+msgstr "سال %s"
 
 msgid "Year:"
-msgstr ""
+msgstr "سال:"
 
 msgid "Yes"
-msgstr ""
+msgstr "بله"
 
 msgid "Yes + Global Search"
-msgstr ""
+msgstr "بله + جستجوی سراسری"
 
 msgid "Yes, to console"
-msgstr ""
+msgstr "بله، به کنسول"
 
 msgid "Yes, to file /hdd/iptv.dbg"
-msgstr ""
+msgstr "بله، به فایل /hdd/iptv.dbg"
 
 msgid "Yes, to file /home/root/logs/iptv.dbg"
-msgstr ""
+msgstr "بله، به فایل /home/root/logs/iptv.dbg"
 
 msgid "Yes, to file /tmp/iptv.dbg"
-msgstr ""
+msgstr "بله، به فایل /tmp/iptv.dbg"
 
 msgid "Yesterday"
-msgstr ""
+msgstr "دیروز"
 
 msgid "You can disable HTTPS certificates validation in the E2iPlayer configuration to suppress this problem."
-msgstr ""
+msgstr "برای رفع این مشکل می‌توانید اعتبارسنجی گواهی‌های HTTPS را در تنظیمات E2iPlayer غیرفعال کنید."
 
 msgid "You can enable PyCurl in the E2iPlayer configuration to fix this problem."
-msgstr ""
+msgstr "برای رفع این مشکل می‌توانید PyCurl را در تنظیمات E2iPlayer فعال کنید."
 
 msgid "You can install PyCurl package with TLS 1.3 support from the feed to fix this problem."
-msgstr ""
+msgstr "برای رفع این مشکل می‌توانید بسته PyCurl با پشتیبانی از TLS 1.3 را از فید نصب کنید."
 
 #, python-format
 msgid "You can use \"%s\" or \"%s\" services for automatic solution."
-msgstr ""
+msgstr "برای حل خودکار می‌توانید از سرویس‌های «%s» یا «%s» استفاده کنید."
 
 msgid "You can use external eplayer to start playback faster."
-msgstr ""
+msgstr "برای شروع سریع‌تر پخش می‌توانید از eplayer خارجی استفاده کنید."
 
 msgid "You do not have a premium account. Starting a sponsored broadcast."
-msgstr ""
+msgstr "شما حساب پریمیوم ندارید. پخش تبلیغاتی آغاز می‌شود."
 
 msgid "You have reached the play limit for this mix."
-msgstr ""
+msgstr "به سقف پخش این میکس رسیده‌اید."
 
 msgid "You should never perform block I/O operations in the __init__."
-msgstr ""
+msgstr "هرگز نباید عملیات I/O مسدودکننده را در __init__ انجام دهید."
 
 msgid "YouTube User Links Editor"
-msgstr ""
+msgstr "ویرایشگر پیوندهای کاربر YouTube"
 
 msgid "YouTube channels: original order"
-msgstr ""
+msgstr "کانال‌های YouTube: ترتیب اصلی"
 
 msgid "YouTube channels: sort by newest upload"
-msgstr ""
+msgstr "کانال‌های YouTube: مرتب‌سازی بر اساس جدیدترین بارگذاری"
 
 msgid "Your 'Watch later' playlist."
-msgstr ""
+msgstr "فهرست پخش ویدیوهایی که برای تماشا در زمانی دیگر ذخیره کرده‌اید."
 
 #, python-format
 msgid "Your MyE2i extension is outdated or unknown (v%s or newer needed). Please update:"
-msgstr ""
+msgstr "افزونه MyE2i شما قدیمی یا ناشناخته است (نسخه v%s یا جدیدتر لازم است). لطفاً به‌روزرسانی کنید:"
 
 msgid "Your search entry"
-msgstr ""
+msgstr "عبارت جستجوی شما"
 
 #, python-format
 msgid "Youth protection: only available between %s and %s."
-msgstr ""
+msgstr "حفاظت از نوجوانان: فقط بین %s و %s در دسترس است."
 
 msgid "Youtube Suggestions"
-msgstr ""
+msgstr "پیشنهادهای YouTube"
 
 msgid "Youtube searches are quicker, if you fill API key in setting menu"
-msgstr ""
+msgstr "اگر کلید API را در منوی تنظیمات وارد کنید، جستجوهای YouTube سریع‌تر انجام می‌شود"
 
 msgid "Z-A"
-msgstr ""
+msgstr "Z-A"
 
 #, python-format
 msgid "[%s CD]"
-msgstr ""
+msgstr "[%s CD]"
 
 #, python-format
 msgid "[%s] - configuration"
-msgstr ""
+msgstr "[%s] - تنظیمات"
 
 #, python-format
 msgid "[%s] with buffering"
-msgstr ""
+msgstr "[%s] با بافر"
 
 #, python-format
 msgid "[%s] without buffering"
-msgstr ""
+msgstr "[%s] بدون بافر"
 
 msgid "[HLS/M3U8] buffering"
-msgstr ""
+msgstr "[HLS/M3U8] بافر"
 
 msgid "[HLS/M3U8] live stream starts behind live"
-msgstr ""
+msgstr "[HLS/M3U8] پخش زنده کمی عقب‌تر از زمان واقعی شروع می‌شود"
 
 msgid "[HTTP] buffering"
-msgstr ""
+msgstr "[HTTP] بافر"
 
 msgid "[Logged-in-only]"
-msgstr ""
+msgstr "[فقط برای کاربران واردشده]"
 
 msgid "[RTMP] buffering (rtmpdump required)"
-msgstr ""
+msgstr "[RTMP] بافر (rtmpdump لازم است)"
 
 msgid "[en]"
-msgstr ""
+msgstr "[en]"
 
 msgid "[pl]"
-msgstr ""
+msgstr "[pl]"
 
 msgid "_checkStatus except error"
-msgstr ""
+msgstr "_checkStatus except error"
 
 msgid "after a week"
-msgstr ""
+msgstr "پس از یک هفته"
 
 msgid "after closing"
-msgstr ""
+msgstr "پس از بستن"
 
 msgid "after day"
-msgstr ""
+msgstr "پس از یک روز"
 
 msgid "after three days"
-msgstr ""
+msgstr "پس از سه روز"
 
-#, fuzzy
 msgid "all"
 msgstr "همه"
 
 msgid "alphabetical"
-msgstr ""
+msgstr "الفبایی"
 
 msgid "anime-odcinki.pl shows this title only to logged-in users."
-msgstr ""
+msgstr "anime-odcinki.pl این عنوان را فقط به کاربران واردشده نشان می‌دهد."
 
 msgid "aqua"
-msgstr ""
+msgstr "آبی روشن"
 
 msgid "as Chrome this session"
-msgstr ""
+msgstr "به‌عنوان Chrome در این نشست"
 
 msgid "as in ytlist.txt"
-msgstr ""
+msgstr "مطابق ytlist.txt"
 
 msgid "auto"
-msgstr ""
+msgstr "خودکار"
 
 #, python-format
 msgid "available until %s"
-msgstr ""
+msgstr "در دسترس تا %s"
 
 msgid "back to host/group selection"
-msgstr ""
+msgstr "بازگشت به انتخاب میزبان/گروه"
 
 msgid "back to the previous category / jump to the next page"
-msgstr ""
+msgstr "بازگشت به دسته قبلی / رفتن به صفحه بعد"
 
 msgid "black"
-msgstr ""
+msgstr "سیاه"
 
 msgid "black&white"
-msgstr ""
+msgstr "سیاه و سفید"
 
 msgid "blue"
-msgstr ""
+msgstr "آبی"
 
 msgid "bottom"
-msgstr ""
+msgstr "پایین"
 
 msgid "buffering location"
-msgstr ""
+msgstr "محل بافر"
 
 msgid "center"
-msgstr ""
+msgstr "وسط"
 
 msgid "changed"
-msgstr ""
+msgstr "تغییر کرد"
 
 msgid "close the editor - or stop manual reordering if it's active"
-msgstr ""
+msgstr "بستن ویرایشگر - یا توقف مرتب‌سازی دستی در صورت فعال بودن"
 
 msgid "cobalt"
-msgstr ""
+msgstr "کبالتی"
 
 msgid "cookies cache"
-msgstr ""
+msgstr "حافظهٔ نهان کوکی‌ها"
 
 msgid "could not run the probe"
-msgstr ""
+msgstr "اجرای بررسی ممکن نشد"
 
 #, python-format
 msgid "curl-impersonate is not installed on the receiver (%s). This stream only plays with it."
-msgstr ""
+msgstr "curl-impersonate روی گیرنده نصب نیست (%s). این جریان فقط با آن پخش می‌شود."
 
 msgid "debug"
-msgstr ""
+msgstr "اشکال‌زدایی"
 
 msgid "default"
-msgstr ""
+msgstr "پیش‌فرض"
 
 msgid "delete entered text"
-msgstr ""
+msgstr "حذف متن واردشده"
 
 msgid "delete the selected entry"
-msgstr ""
+msgstr "حذف مورد انتخاب‌شده"
 
 msgid "device ID"
-msgstr ""
+msgstr "شناسه دستگاه"
 
 msgid "device ID 2"
-msgstr ""
+msgstr "شناسه دستگاه 2"
 
 msgid "direct link"
-msgstr ""
+msgstr "پیوند مستقیم"
 
 msgid "direct number input"
-msgstr ""
+msgstr "ورود مستقیم عدد"
 
 msgid "download the selected item"
-msgstr ""
+msgstr "دانلود مورد انتخاب‌شده"
 
 msgid "downloads location"
-msgstr ""
+msgstr "محل دانلودها"
 
 msgid "e-mail"
-msgstr ""
+msgstr "ایمیل"
 
 msgid "edit the selected entry (same as BLUE) - or drop it while manually reordering"
-msgstr ""
+msgstr "ویرایش مورد انتخاب‌شده (مانند آبی) - یا رها کردن آن هنگام مرتب‌سازی دستی"
 
 msgid "edit the selected entry (same as OK)"
-msgstr ""
+msgstr "ویرایش مورد انتخاب‌شده (مانند OK)"
 
 msgid "enable / disable manual reordering"
-msgstr ""
+msgstr "فعال / غیرفعال کردن مرتب‌سازی دستی"
 
 msgid "external eplayer3"
-msgstr ""
+msgstr "eplayer3 خارجی"
 
 msgid "external gstplayer"
-msgstr ""
+msgstr "gstplayer خارجی"
 
 msgid "failed"
-msgstr ""
+msgstr "ناموفق"
 
 msgid "file"
-msgstr ""
+msgstr "فایل"
 
 msgid "fixed"
-msgstr ""
+msgstr "ثابت"
 
 msgid "format"
-msgstr ""
+msgstr "قالب"
 
 msgid "free"
-msgstr ""
+msgstr "رایگان"
 
 msgid "from E2 settings"
-msgstr ""
+msgstr "از تنظیمات E2"
 
 msgid "fuchsia"
-msgstr ""
+msgstr "سرخابی"
 
 msgid "go back / close"
-msgstr ""
+msgstr "بازگشت / بستن"
 
 msgid "goals"
-msgstr ""
+msgstr "گل‌ها"
 
 msgid "gray"
-msgstr ""
+msgstr "خاکستری"
 
 msgid "green"
-msgstr ""
+msgstr "سبز"
 
 msgid "hd"
-msgstr ""
+msgstr "hd"
 
 msgid "hearing impaired"
-msgstr ""
+msgstr "ناشنوایان"
 
 msgid "high"
-msgstr ""
+msgstr "بالا"
 
 msgid "hint: the site shows a next page link"
-msgstr ""
+msgstr "راهنما: سایت پیوند صفحه بعد را نشان می‌دهد"
 
 msgid "horizontal"
-msgstr ""
+msgstr "افقی"
 
 msgid "host"
-msgstr ""
+msgstr "میزبان"
 
 msgid "host order and groups"
-msgstr ""
+msgstr "ترتیب میزبان‌ها و گروه‌ها"
 
 msgid "https"
-msgstr ""
+msgstr "https"
 
 msgid "https - validate SSL certificates"
-msgstr ""
+msgstr "https - اعتبارسنجی گواهی‌های SSL"
 
 msgid "insert space"
-msgstr ""
+msgstr "درج فاصله"
 
 msgid "installed"
-msgstr ""
+msgstr "نصب‌شده"
 
 msgid "internal"
-msgstr ""
+msgstr "داخلی"
 
 msgid "item actions (favorites, host-specific actions)"
-msgstr ""
+msgstr "عملیات مورد (علاقه‌مندی‌ها، عملیات ویژه میزبان)"
 
 msgid "jersey"
-msgstr ""
+msgstr "پیراهن"
 
 msgid "jump to entries starting with that letter (if enabled in the settings)"
-msgstr ""
+msgstr "رفتن به مواردی که با آن حرف شروع می‌شوند (در صورت فعال بودن در تنظیمات)"
 
 msgid "jump to items starting with that letter, or launch a specific player directly"
-msgstr ""
+msgstr "رفتن به مواردی که با آن حرف شروع می‌شوند، یا اجرای مستقیم یک پخش‌کننده مشخص"
 
 msgid "kernel reports"
-msgstr ""
+msgstr "گزارش‌های کرنل"
 
 msgid "large"
-msgstr ""
+msgstr "بزرگ"
 
 msgid "leave movie player..."
-msgstr ""
+msgstr "خروج از پخش‌کننده فیلم..."
 
 msgid "lime"
-msgstr ""
+msgstr "سبز لیمویی"
 
 msgid "line"
-msgstr ""
+msgstr "خط"
 
 msgid "loaded (no version)"
-msgstr ""
+msgstr "بارگذاری شد (بدون نسخه)"
 
 msgid "login"
-msgstr ""
+msgstr "ورود"
 
 msgid "low"
-msgstr ""
+msgstr "پایین"
 
 msgid "machine translated"
-msgstr ""
+msgstr "ترجمه ماشینی"
 
 msgid "main"
-msgstr ""
+msgstr "اصلی"
 
 msgid "manual"
-msgstr ""
+msgstr "دستی"
 
 msgid "maroon"
-msgstr ""
+msgstr "زرشکی"
 
 msgid "medium"
-msgstr ""
+msgstr "متوسط"
 
 msgid "menu and list only"
-msgstr ""
+msgstr "فقط منو و فهرست"
 
 msgid "minutes"
-msgstr ""
+msgstr "دقیقه"
 
 msgid "more options (this menu)"
-msgstr ""
+msgstr "گزینه‌های بیشتر (این منو)"
 
 msgid "move cursor right/left"
-msgstr ""
+msgstr "جابه‌جایی مکان‌نما به راست/چپ"
 
 msgid "move the selection - or move it while manually reordering"
-msgstr ""
+msgstr "جابه‌جایی انتخاب - یا جابه‌جا کردن آن هنگام مرتب‌سازی دستی"
 
 msgid "movie metadata cache"
-msgstr ""
+msgstr "حافظهٔ نهان فراداده فیلم"
 
 msgid "movie player preferences"
-msgstr ""
+msgstr "ترجیحات پخش‌کننده فیلم"
 
 msgid "navy"
-msgstr ""
+msgstr "سرمه‌ای"
 
 msgid "netu/hqq: the player check failed, try again later."
-msgstr ""
+msgstr "netu/hqq: بررسی پخش‌کننده ناموفق بود، بعداً دوباره تلاش کنید."
 
 msgid "never"
-msgstr ""
+msgstr "هرگز"
 
 msgid "next page"
-msgstr ""
+msgstr "صفحه بعد"
 
 msgid "next page = page 1"
-msgstr ""
+msgstr "صفحه بعد = صفحه 1"
 
 msgid "next page empty"
-msgstr ""
+msgstr "صفحه بعد خالی است"
 
 msgid "next page ok"
-msgstr ""
+msgstr "صفحه بعد درست است"
 
 msgid "no answer"
-msgstr ""
+msgstr "بدون پاسخ"
 
 msgid "no next page"
-msgstr ""
+msgstr "صفحه بعدی وجود ندارد"
 
 msgid "no stream link"
-msgstr ""
+msgstr "پیوند جریان وجود ندارد"
 
 msgid "no videos in the first lists"
-msgstr ""
+msgstr "هیچ ویدیویی در فهرست‌های اول نیست"
 
 msgid "not available (the Python parser is used)"
-msgstr ""
+msgstr "در دسترس نیست (از تجزیه‌گر Python استفاده می‌شود)"
 
 msgid "not found"
-msgstr ""
+msgstr "یافت نشد"
 
 msgid "not installed"
-msgstr ""
+msgstr "نصب نشده"
 
 msgid "not loadable"
-msgstr ""
+msgstr "قابل بارگذاری نیست"
 
 msgid "off"
-msgstr ""
+msgstr "خاموش"
 
 msgid "off / console"
-msgstr ""
+msgstr "خاموش / کنسول"
 
 msgid "olive"
-msgstr ""
+msgstr "زیتونی"
 
 msgid "on"
-msgstr ""
+msgstr "روشن"
 
 msgid "only on the receiver"
-msgstr ""
+msgstr "فقط روی گیرنده"
 
 msgid "open / play the selected item"
-msgstr ""
+msgstr "باز کردن / پخش مورد انتخاب‌شده"
 
 msgid "open the options menu - see below"
-msgstr ""
+msgstr "باز کردن منوی گزینه‌ها - پایین را ببینید"
 
 msgid "or"
-msgstr ""
+msgstr "یا"
 
 msgid "other binaries"
-msgstr ""
+msgstr "سایر فایل‌های اجرایی"
 
 msgid "password"
-msgstr ""
+msgstr "رمز عبور"
 
 msgid "prijevodi-online.org refused the download for this account."
-msgstr ""
+msgstr "prijevodi-online.org دانلود را برای این حساب رد کرد."
 
 msgid "purple"
-msgstr ""
+msgstr "بنفش"
 
 msgid "quality"
-msgstr ""
+msgstr "کیفیت"
 
 msgid "red"
-msgstr ""
+msgstr "قرمز"
 
 msgid "refresh the current list"
-msgstr ""
+msgstr "تازه‌سازی فهرست فعلی"
 
 msgid "rootfs"
-msgstr ""
+msgstr "rootfs"
 
 msgid "rotate (keep the old one as iptv-<date>.dbg)"
-msgstr ""
+msgstr "چرخش (نگه‌داشتن فایل قدیمی به‌صورت iptv-<date>.dbg)"
 
 msgid "rtmp"
-msgstr ""
+msgstr "rtmp"
 
 msgid "save all changes to disk"
-msgstr ""
+msgstr "ذخیره همه تغییرات روی دیسک"
 
 msgid "saved"
-msgstr ""
+msgstr "ذخیره شد"
 
 msgid "saved in the temporary data folder"
-msgstr ""
+msgstr "در پوشه داده‌های موقت ذخیره می‌شود"
 
 msgid "saved next to the downloaded video file"
-msgstr ""
+msgstr "کنار فایل ویدیوی دانلودشده ذخیره می‌شود"
 
 msgid "search"
-msgstr ""
+msgstr "جستجو"
 
 #, python-format
 msgid "search %d"
-msgstr ""
+msgstr "جستجو %d"
 
 msgid "search found nothing"
-msgstr ""
+msgstr "جستجو نتیجه‌ای نداشت"
 
 msgid "search history"
-msgstr ""
+msgstr "تاریخچه جستجو"
 
 msgid "search next page = page 1"
-msgstr ""
+msgstr "صفحه بعد جستجو = صفحه 1"
 
 msgid "search next page empty"
-msgstr ""
+msgstr "صفحه بعد جستجو خالی است"
 
 msgid "search next page ok"
-msgstr ""
+msgstr "صفحه بعد جستجو درست است"
 
 msgid "season pack"
-msgstr ""
+msgstr "بسته فصل"
 
 msgid "second"
-msgstr ""
+msgstr "ثانیه"
 
 msgid "seconds"
-msgstr ""
+msgstr "ثانیه"
 
 msgid "select to sign out"
-msgstr ""
+msgstr "برای خروج انتخاب کنید"
 
 msgid "serial number"
-msgstr ""
+msgstr "شماره سریال"
 
 msgid "show more details about the selected item"
-msgstr ""
+msgstr "نمایش جزئیات بیشتر درباره مورد انتخاب‌شده"
 
 msgid "show this help"
-msgstr ""
+msgstr "نمایش این راهنما"
 
 msgid "sign in (subscriptions, playlists, age-restricted videos)"
-msgstr ""
+msgstr "ورود (اشتراک‌ها، فهرست‌های پخش، ویدیوهای دارای محدودیت سنی)"
 
 msgid "signature"
-msgstr ""
+msgstr "امضا"
 
 msgid "signed in"
-msgstr ""
+msgstr "وارد شده"
 
 msgid "silver"
-msgstr ""
+msgstr "نقره‌ای"
 
 msgid "small"
-msgstr ""
+msgstr "کوچک"
 
 msgid "sources"
-msgstr ""
+msgstr "منابع"
 
 msgid "standard"
-msgstr ""
+msgstr "استاندارد"
 
 msgid "start auto-play (plays through the list automatically)"
-msgstr ""
+msgstr "شروع پخش خودکار (فهرست را به‌طور خودکار پخش می‌کند)"
 
 msgid "status"
-msgstr ""
+msgstr "وضعیت"
 
 msgid "stream data"
-msgstr ""
+msgstr "داده‌های جریان"
 
 msgid "stream data ok"
-msgstr ""
+msgstr "داده‌های جریان درست است"
 
 msgid "stream data ok (HLS)"
-msgstr ""
+msgstr "داده‌های جریان درست است (HLS)"
 
 #, python-format
 msgid "stream is a web page, not video (HTTP %s)"
-msgstr ""
+msgstr "جریان یک صفحه وب است، نه ویدیو (HTTP %s)"
 
 msgid "stream link"
-msgstr ""
+msgstr "پیوند جریان"
 
 msgid "stream link ok"
-msgstr ""
+msgstr "پیوند جریان درست است"
 
 #, python-format
 msgid "stream not checked (%s)"
-msgstr ""
+msgstr "جریان بررسی نشد (%s)"
 
 msgid "stream not checked (HTTP 429, too many requests)"
-msgstr ""
+msgstr "جریان بررسی نشد (HTTP 429، درخواست‌های بیش از حد)"
 
 #, python-format
 msgid "stream: %s"
-msgstr ""
+msgstr "جریان: %s"
 
 #, python-format
 msgid "stream: no data (HTTP %s)"
-msgstr ""
+msgstr "جریان: بدون داده (HTTP %s)"
 
 msgid "subs.ro does not answer."
-msgstr ""
+msgstr "subs.ro پاسخ نمی‌دهد."
 
 msgid "subsource.net does not answer."
-msgstr ""
+msgstr "subsource.net پاسخ نمی‌دهد."
 
 msgid "subtitles"
-msgstr ""
+msgstr "زیرنویس‌ها"
 
 msgid "subtitles cache"
-msgstr ""
+msgstr "حافظهٔ نهان زیرنویس‌ها"
 
 msgid "switch between keyboard, suggestions and search history"
-msgstr ""
+msgstr "جابه‌جایی بین صفحه‌کلید، پیشنهادها و تاریخچه جستجو"
 
 msgid "teal"
-msgstr ""
+msgstr "سبزآبی"
 
 msgid "the best"
-msgstr ""
+msgstr "بهترین"
 
 msgid "the menu has no lists"
-msgstr ""
+msgstr "منو هیچ فهرستی ندارد"
 
 msgid "the menu is empty"
-msgstr ""
+msgstr "منو خالی است"
 
 msgid "the worst"
-msgstr ""
+msgstr "بدترین"
 
 msgid "thumbnails"
-msgstr ""
+msgstr "تصاویر بندانگشتی"
 
 #, python-format
 msgid "thumbnails %d/%d"
-msgstr ""
+msgstr "تصاویر بندانگشتی %d/%d"
 
 msgid "thumbnails do not load"
-msgstr ""
+msgstr "تصاویر بندانگشتی بارگذاری نمی‌شوند"
 
 msgid "to top"
-msgstr ""
+msgstr "به بالا"
 
 msgid "top"
-msgstr ""
+msgstr "بالا"
 
 msgid "truncate the file"
-msgstr ""
+msgstr "خالی کردن فایل"
 
 msgid "type selected character / confirm selection"
-msgstr ""
+msgstr "تایپ نویسه انتخاب‌شده / تأیید انتخاب"
 
 msgid "unknown"
-msgstr ""
+msgstr "ناشناخته"
 
 msgid "unlimited"
-msgstr ""
+msgstr "نامحدود"
 
 msgid "unsorted"
-msgstr ""
+msgstr "مرتب‌نشده"
 
 msgid "upzone.cc: free transfer limit reached - PREMIUM account required."
-msgstr ""
+msgstr "upzone.cc: سقف انتقال رایگان به پایان رسید - حساب PREMIUM لازم است."
 
 msgid "version"
-msgstr ""
+msgstr "نسخه"
 
 msgid "vertical"
-msgstr ""
+msgstr "عمودی"
 
 msgid "very high"
-msgstr ""
+msgstr "خیلی بالا"
 
 #, python-format
 msgid "videos: %s"
-msgstr ""
+msgstr "ویدیوها: %s"
 
 msgid "views"
-msgstr ""
+msgstr "بازدید"
 
 #, python-format
 msgid "wait %s second"
-msgstr ""
+msgstr "%s ثانیه صبر کنید"
 
 #, python-format
 msgid "wait %s seconds"
-msgstr ""
+msgstr "%s ثانیه صبر کنید"
 
 msgid "wants you to solve a captcha. Only after solving this captcha, you are allowed to continue with your downloads. E2iPlayer is not able to auto-solve these captchas, so we need to pass the captcha to you."
-msgstr ""
+msgstr "از شما می‌خواهد یک کپچا را حل کنید. فقط پس از حل این کپچا می‌توانید دانلودهای خود را ادامه دهید. E2iPlayer قادر به حل خودکار این کپچاها نیست، بنابراین کپچا را به شما می‌سپاریم."
 
 #, python-format
 msgid "weeb.tv did not return a valid stream (error %s)."
-msgstr ""
+msgstr "weeb.tv جریان معتبری برنگرداند (خطای %s)."
 
 msgid "weeb.tv did not return a valid stream for this channel."
-msgstr ""
+msgstr "weeb.tv برای این کانال جریان معتبری برنگرداند."
 
 msgid "weeb.tv streams need a weeb.tv account - enter the login in the host configuration (Web streams, WeebTV)"
-msgstr ""
+msgstr "جریان‌های weeb.tv به حساب weeb.tv نیاز دارند - اطلاعات ورود را در تنظیمات میزبان وارد کنید (Web streams، WeebTV)"
 
 msgid "white"
-msgstr ""
+msgstr "سفید"
 
 msgid "www:"
-msgstr ""
+msgstr "www:"
 
 msgid "yellow"
-msgstr ""
+msgstr "زرد"
