@@ -1,27 +1,32 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 27.09.2026
+# Last Modified: 08.10.2026
 # 09.08.2025 - Codermik (codermik@tuta.io)
+# Orthobullets (orthobullets.com) - orthopaedic video library. The lists are public, every video page
+# needs a (free) Medbullets account: without one only videos with a YouTube cover play (the YouTube video).
+# 08.10.2026 - paging (First page / Jump / Next page with the last page), watched flag, download marker,
+#   favourites of the category lists, INFO (date, views, topic, authors), sidecar, YouTube videos without
+#   an account, login only when a video is opened (once more when the session has expired), no colour codes,
+#   current user agent
 ###################################################
 # LOCAL import
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, rm
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, rm, GetIconDir
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
-from Plugins.Extensions.IPTVPlayer.libs import ph
+from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
+from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
+from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin
-
 ###################################################
 
 ###################################################
 # FOREIGN import
 ###################################################
 import re
-try:
-    import json
-except Exception:
-    import simplejson as json
 from Components.config import config, getConfigListEntry
 from Plugins.Extensions.IPTVPlayer.components.configsecret import ConfigLogin, ConfigSecret
 ###################################################
@@ -52,24 +57,25 @@ def gettytul():
     return 'https://orthobullets.com/'
 
 
-class OrthoBullets(CBaseHostClass):
+class OrthoBullets(GenericFolderWatchedScraperMixin, CBaseHostClass):
+    PAGE_SIZE = 50  # videos per list page of the site
 
     def __init__(self):
         printDBG("..:: E2iStream ::..   __init__(self):")
         CBaseHostClass.__init__(self, {'history': 'orthobullets.com', 'cookie': 'orthobullets.com.cookie'})
 
-        self.USER_AGENT = 'Mozilla/5.0'
-        self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html'}
-        self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'})
+        self.USER_AGENT = self.cm.getDefaultUserAgent()
+        self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'}
 
         self.MAIN_URL = 'https://www.orthobullets.com/'
-        self.DEFAULT_ICON_URL = 'https://pic.accessify.com/thumbnails/777x423/o/orthobullets.com.png'
+        self.DEFAULT_ICON_URL = 'file://' + GetIconDir('PlayerSelector/orthobulletscom135.png')
 
         self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.loggedIn = None
         self.login = ''
         self.password = ''
+        self.watchedHelper = IPTVWatchedHelper('orthobulletscom')
+        self.wfInitFolderCache()
 
         self.MAIN_CAT_TAB = [
                             {'category': 'categories', 'title': _('Categories'), 'url': self.MAIN_URL, 'icon': self.DEFAULT_ICON_URL},
@@ -121,9 +127,12 @@ class OrthoBullets(CBaseHostClass):
                                     {'category': 'list_speciality', 'title': _('Approaches'), 'url': self.MAIN_URL + 'video/list.aspx?s=12'},
                                     {'category': 'list_speciality', 'title': _('General'), 'url': self.MAIN_URL + 'video/list.aspx?s=13'},
                                 ]
+        # the category lists are static urls: favourites reopen them as they are
+        for item in self.CATEGORIES_TAB + self.SPECIALITY_TAB:
+            item['good_for_fav'] = True
 
-    def getPage(self, baseUrl, addParams={}, post_data=None):
-        if addParams == {}:
+    def getPage(self, baseUrl, addParams=None, post_data=None):
+        if addParams is None:
             addParams = dict(self.defaultParams)
 
         def _getFullUrl(url):
@@ -134,134 +143,195 @@ class OrthoBullets(CBaseHostClass):
         addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
 
+    @staticmethod
+    def _baseListUrl(url):
+        # the list url without its page parameter ("...list.aspx?c=7&p=3" -> "...list.aspx?c=7")
+        url = re.sub(r'([?&])p=\d+(&|$)', lambda m: m.group(1) if m.group(2) else '', url)
+        return url.rstrip('?&')
+
+    @staticmethod
+    def _videoId(url):
+        return re.search(r'[?&]id=(\d+)', url or '')
+
     def listItems(self, cItem):
         printDBG("..:: E2iStream ::.. -  listItems(self, cItem): [%s]" % cItem)
-        i = 0
+        try:
+            page = max(1, int(cItem.get('page', 1) or 1))
+        except (TypeError, ValueError):
+            page = 1
+        baseUrl = self._baseListUrl(cItem['url'])
+        pageUrlTpl = baseUrl + ('&' if '?' in baseUrl else '?') + 'p={page}'
+        url = pageUrlTpl.format(page=page) if page > 1 else baseUrl
 
-        page = cItem.get('page', 1)
-
-        sts, data = self.getPage(cItem['url'])
+        sts, data = self.getPage(url)
         if not sts:
             return
-        self.setMainUrl(self.cm.meta['url'])
-
-        # paging links are unquoted now: href=/video/list.aspx?c=7&amp;p=2
-        nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'group-items-list__bottom-paging'), ('</div', '>'))[1]
-        nextPage = self.cm.ph.getSearchGroups(nextPage, '''<a[^>]+?href=['"]?([^'"\\s>]+)['"]?[^>]*?>%s</a>''' % (page + 1))[0]
-        nextPage = ph.clean_html(nextPage)
 
         block = self.cm.ph.getDataBeetwenMarkers(data, '<div class="videos ', 'group-items-list__bottom-paging', False)[1]
-        block = block.split('dashboard-item--video')[1:]
+        for video in block.split('dashboard-item--video')[1:]:
+            self._addVideoRow(video)
 
-        for videos in block:
-            title = ph.clean_html(self.cm.ph.getDataBeetwenNodes(videos, ('<div', '>', 'dashboard-item__title'), ('</div', '>'), False)[1])
-            videourl = self.cm.ph.getSearchGroups(videos, '''<a[^>]+?href=['"]([^'"]+?)['"]''')[0]
-            if not title or not videourl:
-                continue
-            videourl = self.getFullUrl(videourl)
-            imageurl = self.cm.ph.getSearchGroups(videos, '''background-image:\\s*url\\(['"]?([^'")]+)''')[0]
-            viddate = ph.clean_html(self.cm.ph.getDataBeetwenNodes(videos, ('<div', '>', 'dashboard-item__date'), ('</div', '>'), False)[1])
-            vidviews = ph.clean_html(self.cm.ph.getDataBeetwenNodes(videos, ('<div', '>', 'dashboard-item__views'), ('</div', '>'), False)[1])
-            desc = '\\c00????00 Title: \\c00??????%s\\n \\c00????00Date: \\c00??????%s\\n \\c00????00Views: \\c00??????%s\\n' % (title, viddate, vidviews)
-            params = dict(cItem)
-            params.update({'good_for_fav': True, 'title': title, 'url': videourl, 'icon': imageurl, 'desc': desc})
-            self.addVideo(params)
+        total = self.cm.ph.getSearchGroups(data, r'''([0-9][0-9,.]*)\s+matches\s+found''')[0]
+        try:
+            lastPage = (int(re.sub(r'[,.]', '', total)) + self.PAGE_SIZE - 1) // self.PAGE_SIZE
+        except ValueError:
+            lastPage = 0
+        hasNext = page < lastPage if lastPage else ('p=%d' % (page + 1)) in data
+        addPagingItems(self, cItem, page, hasNext, lastPage, pageUrlTpl)
 
-        if nextPage:
-            params = dict(cItem)
-            params.update({'good_for_fav': False, 'title': _("Next page"), 'page': page + 1, 'url': self.getFullUrl(nextPage)})
-            self.addDir(params)
+    def _addVideoRow(self, video):
+        title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(video, ('<div', '>', 'dashboard-item__title'), ('</div', '>'), False)[1])
+        videoUrl = self.cm.ph.getSearchGroups(video, '''<a[^>]+?href=['"]([^'"]+?)['"]''')[0]
+        if not title or not videoUrl:
+            return
+        videoUrl = self.getFullUrl(videoUrl.replace('&amp;', '&'))
+        icon = self.cm.ph.getSearchGroups(video, r'''background-image:\s*url\(['"]?([^'")]+)''')[0].replace('&amp;', '&')
+        if icon.startswith('//'):
+            icon = 'https:' + icon
+        date = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(video, ('<div', '>', 'dashboard-item__date'), ('</div', '>'), False)[1])
+        views = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(video, ('<div', '>', 'dashboard-item__views'), ('</div', '>'), False)[1])
+        authors = [self.cleanHtmlStr(x) for x in self.cm.ph.getAllItemsBeetwenNodes(video, ('<div', '>', 'user-profile-popup'), ('</div', '>'), False)]
+        authors = [x for x in authors if x]
+        topic = ' '.join([self.cleanHtmlStr(x) for x in self.cm.ph.getAllItemsBeetwenNodes(video, ('<span', '>', 'dashboardBreadcrumbs-link'), ('</span', '>'), False)])
+        ytId = self.cm.ph.getSearchGroups(icon, r'(?:img\.youtube\.com|i\.ytimg\.com)/vi/([A-Za-z0-9_-]{11})/')[0]
+        desc = ' | '.join([x for x in (date, views, topic) if x])
+        if authors:
+            desc += '[/br]' + ', '.join(authors)
+        self.addVideo({'name': 'category', 'category': 'video', 'good_for_fav': True, 'title': title, 'url': videoUrl, 'icon': icon,
+                       'desc': desc, 'date': date, 'views': views, 'topic': topic, 'authors': ', '.join(authors), 'yt_id': ytId})
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("OrthoBullets.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
-        self.tryTologin()
-
         cItem = dict(cItem)
-        cItem['url'] = self.getFullUrl('/video/list?search=') + urllib_quote(searchPattern)
+        cItem['url'] = self.getFullUrl('/video/list.aspx?search=') + urllib_quote(searchPattern)
         cItem['category'] = 'list_items'
         self.listItems(cItem)
 
     def getLinksForVideo(self, cItem):
         printDBG("OrthoBullets.getLinksForVideo [%s]" % cItem)
-        self.tryTologin()
+        urlTab = []
+        for _attempt in range(2):
+            if not self.tryTologin():
+                break
+            sts, data = self.getPage(cItem['url'])
+            if not sts:
+                break
+            if not self._isSiteUrl(self.cm.meta.get('url', '')):
+                # redirected to the medbullets login: the session has expired, log in once more
+                self.loggedIn = None
+                continue
+            frames = re.findall(r'''<iframe[^>]+?src=['"]([^"']+?)['"]''', data, re.I)
+            frames = [self.getFullUrl(x.replace('&amp;', '&')) for x in frames]
+            players = [x for x in frames if re.search(r'vimeo|youtu|wistia|jwplayer|brightcove|vidyard', x, re.I)]
+            for url in (players or frames)[:1]:
+                urlTab = self.up.getVideoLinkExt(strwithmeta(url, {'Referer': self.cm.meta['url']}))
+            break
+        if not urlTab and cItem.get('yt_id'):
+            # the YouTube cover of the list is the video itself - it plays without an account
+            urlTab = [{'name': 'YouTube', 'url': 'https://www.youtube.com/watch?v=' + cItem['yt_id'], 'need_resolve': 1}]
+        if not urlTab:
+            if self.loggedIn:
+                SetIPTVPlayerLastHostError(_("Content not available"))
+            else:
+                SetIPTVPlayerLastHostError(_('The host %s requires registration. \nPlease fill your login and password in the host configuration. Available under blue button.') % 'orthobullets.com')
+            return []
+        return applySidecarToLinks(urlTab, buildSidecarFromItem(cItem, IsSidecarEnabled()))
 
-        sts, data = self.getPage(cItem['url'])
+    def getVideoLinks(self, videoUrl):
+        printDBG("OrthoBullets.getVideoLinks [%s]" % videoUrl)
+        sidecar = sidecarFromUrlMeta(videoUrl, IsSidecarEnabled())
+        return decorateResolvedLinkItems(self.up.getVideoLinkExt(videoUrl), sidecar)
+
+    def getArticleContent(self, cItem):
+        other = {}
+        if cItem.get('date'):
+            other['released'] = cItem['date']
+        if cItem.get('views'):
+            other['views'] = cItem['views']
+        if cItem.get('topic'):
+            other['category'] = cItem['topic']
+        if cItem.get('authors'):
+            other['creators'] = cItem['authors']
+        icon = cItem.get('icon', '')
+        images = [{'title': '', 'url': icon}] if icon.startswith('http') else []
+        return [{'title': cItem.get('title', ''), 'text': cItem.get('desc', '').replace('[/br]', '\n') or cItem.get('title', ''),
+                 'images': images, 'other_info': other}]
+
+    def _getWatchedKeyForItem(self, cItem):
+        try:
+            if not isinstance(cItem, dict):
+                return ''
+            if cItem.get('type') == 'video' or cItem.get('category') == 'video':
+                m = self._videoId(cItem.get('url', ''))
+                return 'video:%s' % m.group(1) if m else ''
+            if cItem.get('category') in ('list_categories', 'list_speciality'):
+                url = self._baseListUrl(cItem.get('url', ''))
+                return 'folder:%s' % re.sub(r'^https?://[^/]+', '', url) if url else ''
+        except Exception:
+            printExc()
+        return ''
+
+    def _isSiteUrl(self, url):
+        # the host itself, not a medbullets login url that only carries orthobullets.com in its return url
+        domain = self.cm.getBaseUrl(url or '', True).lower()
+        return domain == 'orthobullets.com' or domain.endswith('.orthobullets.com')
+
+    def _getFormData(self, data, cUrl):
+        # the first form of the page: (action url, its named input / button values); ('', {}) without a form
+        sts, data = self.cm.ph.getDataBeetwenNodes(data, ('<form', '>'), ('</form', '>'))
         if not sts:
-            return []
-        self.setMainUrl(self.cm.meta['url'])
-
-        url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0])
-        if not url:
-            # video pages redirect to the medbullets login without an account
-            if not self.loggedIn:
-                SetIPTVPlayerLastHostError(_('The host %s requires registration. \nPlease fill your login and password in the host configuration. Available under blue button.' % self.getMainUrl()))
-            return []
-        return self.up.getVideoLinkExt(strwithmeta(url, {'Referer': self.cm.meta['url']}))
+            return '', {}
+        action = self.cm.ph.getSearchGroups(data, '''action=['"]([^'^"]+?)['"]''')[0].replace('&amp;', '&')
+        actionUrl = urljoin(cUrl, action) if action else cUrl
+        post_data = {}
+        inputData = self.cm.ph.getAllItemsBeetwenMarkers(data, '<input', '>')
+        inputData.extend(self.cm.ph.getAllItemsBeetwenMarkers(data, '<button', '>'))
+        for item in inputData:
+            name = self.cm.ph.getSearchGroups(item, '''name=['"]([^'^"]+?)['"]''')[0]
+            if name:
+                post_data[name] = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''')[0].replace('&amp;', '&')
+        return actionUrl, post_data
 
     def tryTologin(self):
         printDBG('tryTologin start')
         if None is self.loggedIn or self.login != config.plugins.iptvplayer.orthobulletscom_login.value or\
-            self.password != config.plugins.iptvplayer.orthobulletscom_password.value:
+                self.password != config.plugins.iptvplayer.orthobulletscom_password.value:
 
             self.login = config.plugins.iptvplayer.orthobulletscom_login.value
             self.password = config.plugins.iptvplayer.orthobulletscom_password.value
 
-            rm(self.COOKIE_FILE)
-
             self.loggedIn = False
 
+            # the lists are public: without an account nothing is asked here, a video tells the user
             if '' == self.login.strip() or '' == self.password.strip():
-                self.sessionEx.open(MessageBox, _('The host %s requires registration. \nPlease fill your login and password in the host configuration. Available under blue button.' % self.getMainUrl()), type=MessageBox.TYPE_ERROR, timeout=10)
                 return False
 
+            rm(self.COOKIE_FILE)
+
+            # orthobullets.com/login redirects to the login form of accounts.medbullets.com
             sts, data = self.getPage(self.getFullUrl('/login'))
             if not sts:
+                self.loggedIn = None  # no answer: try again with the next video
                 return False
             cUrl = self.cm.meta['url']
 
-            sts, data = self.cm.ph.getDataBeetwenNodes(data, ('<form', '>'), ('</form', '>'))
-            if not sts:
-                return False
-            actionUrl = self.cm.getFullUrl(self.cm.ph.getSearchGroups(data, '''action=['"]([^'^"]+?)['"]''')[0], self.cm.getBaseUrl(cUrl))
-            if actionUrl == '':
-                actionUrl = cUrl
-
-            post_data = {}
-            inputData = self.cm.ph.getAllItemsBeetwenMarkers(data, '<input', '>')
-            inputData.extend(self.cm.ph.getAllItemsBeetwenMarkers(data, '<button', '>'))
-            for item in inputData:
-                name = self.cm.ph.getSearchGroups(item, '''name=['"]([^'^"]+?)['"]''')[0]
-                value = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''')[0].replace('&amp;', '&')
-                post_data[name] = value
-
-            post_data.update({'Username': self.login, 'Password': self.password})
-
-            httpParams = dict(self.defaultParams)
-            httpParams['header'] = dict(httpParams['header'])
-            httpParams['header']['Referer'] = cUrl
-            sts, data = self.cm.getPage(actionUrl, httpParams, post_data)
-            if sts:
-                cUrl = self.cm.meta['url']
-                sts, data = self.cm.ph.getDataBeetwenNodes(data, ('<form', '>'), ('</form', '>'))
-                if not sts:
-                    return False
-                actionUrl = self.cm.getFullUrl(self.cm.ph.getSearchGroups(data, '''action=['"]([^'^"]+?)['"]''')[0], self.cm.getBaseUrl(cUrl))
-                if actionUrl == '':
-                    actionUrl = cUrl
-
-                post_data = {}
-                inputData = self.cm.ph.getAllItemsBeetwenMarkers(data, '<input', '>')
-                inputData.extend(self.cm.ph.getAllItemsBeetwenMarkers(data, '<button', '>'))
-                for item in inputData:
-                    name = self.cm.ph.getSearchGroups(item, '''name=['"]([^'^"]+?)['"]''')[0]
-                    value = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''')[0].replace('&amp;', '&')
-                    post_data[name] = value
-
-                httpParams['header']['Referer'] = cUrl
+            actionUrl, post_data = self._getFormData(data, cUrl)
+            if actionUrl:
+                post_data.update({'Username': self.login, 'Password': self.password, 'RememberLogin': 'true'})
+                httpParams = dict(self.defaultParams)
+                httpParams['header'] = dict(httpParams['header'], Referer=cUrl)
                 sts, data = self.cm.getPage(actionUrl, httpParams, post_data)
-                if sts and '/logout' in data and self.cm.getBaseUrl(self.getMainUrl(), True) in self.cm.getBaseUrl(self.cm.meta['url'], True):
-                    printDBG('tryTologin OK')
-                    self.loggedIn = True
+                if sts:
+                    # response_mode=form_post: the callback page posts the tokens back to orthobullets.com/signin-oidc
+                    # (a wrong password shows the login form again, its second post fails the check below)
+                    cUrl = self.cm.meta['url']
+                    actionUrl, post_data = self._getFormData(data, cUrl)
+                    if actionUrl:
+                        httpParams['header']['Referer'] = cUrl
+                        sts, data = self.cm.getPage(actionUrl, httpParams, post_data)
+                        if sts and '/logout' in data and self._isSiteUrl(self.cm.meta['url']):
+                            printDBG('tryTologin OK')
+                            self.loggedIn = True
 
             if not self.loggedIn:
                 self.sessionEx.open(MessageBox, _('Login failed.'), type=MessageBox.TYPE_ERROR, timeout=10)
@@ -272,8 +342,8 @@ class OrthoBullets(CBaseHostClass):
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
 
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
-
-        self.tryTologin()
+        if isJumpItem(self.currItem):
+            self.currItem = jumpTarget(self, self.currItem)
 
         name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
@@ -288,16 +358,10 @@ class OrthoBullets(CBaseHostClass):
         if name is None:
             self.listsTab(self.MAIN_CAT_TAB, self.currItem)
         elif category == 'categories':
-            printDBG("handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):   Category = %s" % category)
             self.listsTab(self.CATEGORIES_TAB, self.currItem)
         elif category == 'subspeciality':
-            printDBG("handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):   Category = %s" % category)
             self.listsTab(self.SPECIALITY_TAB, self.currItem)
-        elif category == 'list_items':
-            self.listItems(self.currItem)
-        elif category == 'list_categories':
-            self.listItems(self.currItem)
-        elif category == 'list_speciality':
+        elif category in ('list_items', 'list_categories', 'list_speciality'):
             self.listItems(self.currItem)
 
         # Searching / Search History
@@ -314,7 +378,13 @@ class OrthoBullets(CBaseHostClass):
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
-class IPTVHost(CHostBase):
+class IPTVHost(GenericFolderWatchedHostMixin, CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, OrthoBullets(), True, favouriteTypes=[])
+        self.cachedRet = None
+        self.refreshAfterWatchedFlagChange = False
+        self.watchedHelper = IPTVWatchedHelper('orthobulletscom')
+
+    def withArticleContent(self, cItem):
+        return cItem.get('type') == 'video'

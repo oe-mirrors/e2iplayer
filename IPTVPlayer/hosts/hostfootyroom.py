@@ -1,11 +1,37 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 09.09.2026
+# Last Modified: 08.10.2026
 # footyroom Host (Created By Dr HYTHAM MAHMOUD)
-import re
-import json
-
+# FootyRoom (footyroom.co) - football highlights: latest, countries -> competitions -> matches, search.
+#   Lists come from the site's own infinite-scroll endpoint /posts-pagelet?page=N (&stageTree=<competition id>,
+#   &q=<search>), 24 matches a page, 404 after the last one. A match page carries its videos in DataStore.media
+#   (YouTube, Dailymotion, ... -> urlparser) and the match data (venue, referee, round) in DataStore.match.
+# 08.10.2026 - host standard: watched flag (country -> competition -> match), favourites (country/competition/
+#   match rows reopen on their own), INFO from the match page, sidecar, download marker on the match url, date in
+#   the name (naming option), search, First/Jump/Next page from the site instead of fetching up to 12 pages ahead,
+#   kick-off times in the box's time zone (the site gives UTC)
+###################################################
+# LOCAL import
+###################################################
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import SetIPTVPlayerLastHostError, TranslateTXT as _
+from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, decorateResolvedLinkItems, sidecarFromUrlMeta
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
+from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import normalizeMediathekTitle
+from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
+from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedHostMixin, GenericFolderWatchedScraperMixin
+from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
+###################################################
+# FOREIGN import
+###################################################
+import calendar
+import re
+import time
+###################################################
+
+PER_PAGE = 24
 
 
 def GetConfigList():
@@ -16,9 +42,7 @@ def gettytul():
     return "FootyRoom"
 
 
-class FootyRoom(CBaseHostClass):
-    MATCHES_PER_PAGE = 34  # عدد الملخصات في كل صفحة من البلجن
-    MAX_PAGES_TO_FETCH = 12  # أقصى عدد صفحات نجلبها من الموقع (12 صفحة = ~240 مباراة)
+class FootyRoom(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     def __init__(self):
         CBaseHostClass.__init__(self, {"history": "footyroom.co", "cookie": "footyroom.co.cookie"})
@@ -27,353 +51,265 @@ class FootyRoom(CBaseHostClass):
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser="chrome")
         self.HTTP_HEADER.update({"Referer": self.MAIN_URL})
         self.defaultParams = {"header": self.HTTP_HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
-        self._countriesCache = None
-        self._matchesCache = {}  # key: base_url → value: list of all matches
+        self.watchedHelper = IPTVWatchedHelper("footyroom")
+        self.wfInitFolderCache()
 
-    def _t(self, s):
-        """Clean HTML text"""
-        if not s:
-            return ""
-        try:
-            s = s.replace("\n", " ").replace("\r", " ").replace("\t", " ")
-            s = re.sub(r"(?is)<[^>]+>", " ", s)
-            s = " ".join(s.split()).strip()
-            try:
-                from six.moves.html_parser import HTMLParser
-
-                s = HTMLParser().unescape(s)
-            except Exception:
-                try:
-                    import html
-
-                    s = html.unescape(s)
-                except Exception:
-                    pass
-            return s.strip()
-        except Exception:
-            return ""
-
-    def _getPage(self, url, addParams=None, post_data=None):
-        try:
-            params = dict(self.defaultParams)
-            if addParams:
-                params.update(addParams)
-                if "header" in addParams and "header" in params:
-                    hdr = dict(self.defaultParams.get("header", {}))
-                    hdr.update(addParams.get("header", {}))
-                    params["header"] = hdr
-            return self.cm.getPage(url, params, post_data)
-        except Exception:
-            printExc()
-        return False, ""
+    def getPage(self, url, addParams=None, post_data=None):
+        if addParams is None:
+            addParams = dict(self.defaultParams)
+        return self.cm.getPage(url, addParams, post_data)
 
     def _absoluteUrl(self, url):
-        if not url:
+        url = (url or "").strip()
+        if not url or url.startswith("javascript:"):
             return ""
-        url = url.strip()
-        if url.startswith("javascript:"):
-            return ""
-        if url.startswith("//"):
-            return "https:" + url
-        if url.startswith("https://"):
-            return url
         return self.getFullUrl(url)
 
-    def _addPageParam(self, url, page):
-        """Add ?page=X to URL"""
-        if page <= 1:
-            return url
-        sep = "&" if "?" in url else "?"
-        return url + sep + "page=%d" % page
+    @staticmethod
+    def _localTime(utcDate):
+        # "2026-10-08T00:30" / "2026-10-08 00:30" in UTC -> "2026-10-08 02:30" in the box's time zone
+        try:
+            t = calendar.timegm(time.strptime(utcDate[:16].replace("T", " "), "%Y-%m-%d %H:%M"))
+            return time.strftime("%Y-%m-%d %H:%M", time.localtime(t))
+        except Exception:
+            return utcDate[:16]
 
-    def _parseAllLeaguesMenu(self, data):
-        """Parse leagues dropdown from main page"""
+    ###################################################
+    # watched flag
+    ###################################################
+    def _getWatchedKeyForItem(self, cItem):
+        try:
+            if not isinstance(cItem, dict) or cItem.get("search_item") or cItem.get("name") == "history":
+                return ""
+            if cItem.get("type") == "video":
+                matchId = self.cm.ph.getSearchGroups(cItem.get("url", ""), r"/matches/(\d+)")[0]
+                return "video:match:%s" % matchId if matchId else ""
+            if cItem.get("category") == "list_matches" and cItem.get("stage_id"):
+                return "folder:competition:%s" % cItem["stage_id"]
+            if cItem.get("category") == "list_competitions" and cItem.get("title"):
+                return "folder:country:%s" % cItem["title"]
+        except Exception:
+            printExc()
+        return ""
+
+    ###################################################
+    # menus
+    ###################################################
+    def _parseCountries(self, data):
+        """the "All leagues" menu of the main page: [(country, [(competition, url), ...]), ...]"""
         out = []
         try:
-            nav = self.cm.ph.getDataBeetwenMarkers(data, '<nav class="dropdown-nav all-leagues', "</nav>", withMarkers=True)[1]
-            if not nav:
-                nav = data
-            uls = self.cm.ph.getAllItemsBeetwenMarkers(nav, '<ul class="all-leagues-section', "</ul>", withMarkers=True)
-            for ul in uls:
-                header = self.cm.ph.getDataBeetwenMarkers(ul, '<li class="all-leagues-header', "</li>", withMarkers=True)[1]
-                country = self._t(header)
-                if not country:
-                    continue
+            nav = self.cm.ph.getDataBeetwenMarkers(data, '<nav class="dropdown-nav all-leagues', "</nav>")[1] or data
+            for ul in self.cm.ph.getAllItemsBeetwenMarkers(nav, '<ul class="all-leagues-section', "</ul>"):
+                country = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(ul, '<li class="all-leagues-header', "</li>")[1])
                 comps = []
-                links = self.cm.ph.getAllItemsBeetwenMarkers(ul, "<a ", "</a>", withMarkers=True)
-                for a in links:
-                    href = self.cm.ph.getSearchGroups(a, r"""href=['"]([^'"]+)['"]""")[0]
-                    title = self._t(a)
-                    href = self._absoluteUrl(href)
-                    if not href or not title:
-                        continue
-                    if "/competitions/" in href:
-                        comps.append({"title": title, "url": href})
-                if comps:
-                    out.append({"title": country, "comps": comps})
+                for href, title in re.findall(r"""<a[^>]+href=['"]([^'"]+/competitions/\d+[^'"]*)['"][^>]*>(.*?)</a>""", ul, re.S):
+                    title = self.cleanHtmlStr(title)
+                    if title:
+                        comps.append((title, self._absoluteUrl(href)))
+                if country and comps:
+                    out.append((country, comps))
         except Exception:
             printExc()
         return out
 
-    def _getCountries(self, force=False):
-        """Get or retrieve cached countries list"""
-        if (not force) and self._countriesCache is not None:
-            return self._countriesCache
-        sts, data = self._getPage(self.MAIN_URL, {"header": {"Referer": self.MAIN_URL}})
-        if not sts:
-            self._countriesCache = []
-            return self._countriesCache
-        self._countriesCache = self._parseAllLeaguesMenu(data) or []
-        printDBG("FootyRoom._getCountries: countries=%d" % len(self._countriesCache))
-        return self._countriesCache
-
-    # ---------------------------------------------------------
-    # استخراج المباريات من صفحة واحدة
-    # ---------------------------------------------------------
-    def _extractMatchesFromPage(self, data):
-        """
-        Extract matches from single page HTML
-        Returns: list of {'title':..., 'url':..., 'icon':...}
-        """
-        matches = []
-        added = set()
-        # 1) Card grid (الأفضل: thumbnails من YouTube)
-        card_blocks = re.findall(r'(?is)<div[^>]+class=["\'][^"\']*\bcard\b[^"\']*["\'][^>]*>(.*?)</div>\s*</div>\s*</div>', data)
-        if not card_blocks:
-            card_blocks = re.findall(r'(?is)<div[^>]+class=["\'][^"\']*\bcard-image\b[^"\']*["\'][^>]*>(.*?)</div>', data)
-        for blk in card_blocks:
-            href = re.search(r'(?is)href=["\'](https?://[^"\']+/matches/[^"\']+/review[^"\']*)["\']', blk)
-            if not href:
-                href = re.search(r'(?is)href=["\']([^"\']+/matches/[^"\']+/review[^"\']*)["\']', blk)
-            if not href:
-                continue
-            url = self._absoluteUrl(href.group(1))
-            url_norm = url.split("?")[0].split("#")[0].strip()
-            if not url_norm or url_norm in added:
-                continue
-            img = re.search(r'(?is)<img[^>]+src=["\']([^"\']+)["\']', blk)
-            icon = self._absoluteUrl(img.group(1)) if img else self.DEFAULT_ICON_URL
-            title = ""
-            t = re.search(r'(?is)class=["\'][^"\']*\bnot-spoiler\b[^"\']*["\'][^>]*>(.*?)</a>', blk)
-            if t:
-                title = self._t(t.group(1))
-            if not title:
-                t = re.search(r'(?is)class=["\'][^"\']*\bspoiler\b[^"\']*["\'][^>]*>(.*?)</a>', blk)
-                if t:
-                    title = self._t(t.group(1))
-            if not title:
-                try:
-                    slug = url_norm.split("/matches/")[-1].replace("/review", "")
-                    slug = re.sub(r"^\d+/", "", slug)
-                    title = slug.replace("-", " ").strip()
-                except Exception:
-                    title = "Match"
-            added.add(url_norm)
-            matches.append({"title": title or "Match", "url": url_norm, "icon": icon})
-        if matches:
-            return matches
-        # 2) Fallback: tournament-guide-match (قد لا يحتوي صور)
-        match_blocks = re.findall(r'(?is)<div[^>]*class=["\']tournament-guide-match[^"\']*["\'][^>]*>(.*?)</div>\s*</div>', data)
-        for block in match_blocks:
-            href_match = re.search(r'(?is)href=[\'"]([^\'"]*?/matches[^\'"]*?/review[^\'"]*?)[\'"]', block)
-            if not href_match:
-                continue
-            href = self._absoluteUrl(href_match.group(1))
-            if not href:
-                continue
-            href_norm = href.split("?")[0].split("#")[0].strip()
-            if href_norm in added:
-                continue
-            added.add(href_norm)
-            teams = re.findall(r'(?is)<div[^>]*class=["\']tournament-guide-team[^"\']*["\'][^>]*>(.*?)</div>', block)
-            if len(teams) >= 2:
-                team1 = self._t(teams[0]).strip()
-                team2 = self._t(teams[1]).strip()
-                title = (team1 + " vs " + team2).strip() if team1 and team2 else ""
-            else:
-                title = ""
-            if not title:
-                try:
-                    slug = href_norm.split("/matches/")[-1].replace("/review", "")
-                    slug = re.sub(r"^\d+/", "", slug)
-                    title = slug.replace("-", " ").strip()
-                except Exception:
-                    title = "Match"
-            matches.append({"title": title or "Match", "url": href_norm, "icon": self.DEFAULT_ICON_URL})
-        return matches
-
-    # ---------------------------------------------------------
-    # جلب جميع المباريات من البطولة (صفحات متعددة)
-    # ---------------------------------------------------------
-    def _loadAllMatchesForCompetition(self, base_url):
-        """
-        جلب جميع المباريات لبطولة معينة عن طريق:
-        1. جلب ?page=1, ?page=2, ?page=3... حتى MAX_PAGES_TO_FETCH
-        2. التوقف إذا لم تعد تأتي مباريات جديدة
-        Returns: list of all matches
-        """
-        all_matches = []
-        added_urls = set()
-        for page_num in range(1, self.MAX_PAGES_TO_FETCH + 1):
-            url = self._addPageParam(base_url, page_num)
-            printDBG("FootyRoom: Fetching page %d: %s" % (page_num, url))
-            sts, data = self._getPage(url, {"header": {"Referer": self.MAIN_URL}})
-            if not sts or not data:
-                printDBG("FootyRoom: Failed to fetch page %d" % page_num)
-                break
-            page_matches = self._extractMatchesFromPage(data)
-            if not page_matches:
-                printDBG("FootyRoom: No matches found on page %d, stopping" % page_num)
-                break
-            # نضيف المباريات الجديدة فقط
-            new_count = 0
-            for match in page_matches:
-                url_key = match["url"]
-                if url_key not in added_urls:
-                    added_urls.add(url_key)
-                    all_matches.append(match)
-                    new_count += 1
-            printDBG("FootyRoom: Page %d → got %d matches, %d new, total now: %d" % (page_num, len(page_matches), new_count, len(all_matches)))
-            # إذا لم نحصل على مباريات جديدة → توقف
-            if new_count == 0:
-                printDBG("FootyRoom: No new matches on page %d, stopping" % page_num)
-                break
-            # إذا جمعنا عدد كافي للـ pagination (مثلاً 100+)، يمكن التوقف
-            # لكن نترك الخيار لجلب كل شيء حتى MAX_PAGES
-            # إذا تريد توقف بدري: uncomment السطر التالي
-            # if len(all_matches) >= 100:
-            #     break
-        printDBG("FootyRoom: Total matches collected: %d" % len(all_matches))
-        return all_matches
-
-    # ----------------- MENUS -----------------
-    def listMainMenu(self, cItem):
-        """عرض الدول مباشرة"""
-        self.currList = []
-        countries = self._getCountries(force=True)
-        for idx, item in enumerate(countries):
-            self.addDir({"name": "category", "title": item.get("title", ""), "category": "list_competitions", "country_idx": str(idx), "icon": self.DEFAULT_ICON_URL})
+    def listMain(self, cItem):
+        params = dict(cItem)
+        params.update({"good_for_fav": True, "category": "list_matches", "title": _("Latest highlights")})
+        self.addDir(params)
+        sts, data = self.getPage(self.getMainUrl())
+        if sts:
+            for country, comps in self._parseCountries(data):
+                params = dict(cItem)
+                # the competitions travel with the row, so a favourite reopens without the main page
+                params.update({"good_for_fav": True, "category": "list_competitions", "title": country, "comps": comps})
+                self.addDir(params)
+        self.listsTab(self.searchItems(), cItem)
 
     def listCompetitions(self, cItem):
-        """عرض البطولات لدولة معينة"""
-        self.currList = []
-        countries = self._getCountries(force=True)
-        try:
-            idx = int(str(cItem.get("country_idx", "-1")).strip())
-        except Exception:
-            idx = -1
-        comps = []
-        if 0 <= idx < len(countries):
-            comps = countries[idx].get("comps", []) or []
-        printDBG("FootyRoom.listCompetitions: country=%s comps=%d" % (cItem.get("title", ""), len(comps)))
-        for comp in comps:
-            title = (comp.get("title") or "").strip() or "Competition"
-            url = (comp.get("url") or "").strip()
-            if not url:
+        for title, url in cItem.get("comps", []):
+            stageId = self.cm.ph.getSearchGroups(url, r"/competitions/(\d+)")[0]
+            if not stageId:
                 continue
-            self.addDir({"name": "category", "title": title, "category": "list_matches", "url": url, "page": 1, "icon": self.DEFAULT_ICON_URL})
-
-    def listMatches(self, cItem):
-        """
-        عرض المباريات (34 في كل صفحة) + Next page
-        يجلب جميع المباريات من الموقع ويخزنها في الكاش
-        """
-        self.currList = []
-        page = int(cItem.get("page", 1))
-        base_url = cItem["url"]
-        # نفحص هل المباريات موجودة في الكاش
-        cache_key = base_url
-        if cache_key not in self._matchesCache:
-            printDBG("FootyRoom: Loading ALL matches for: %s" % base_url)
-            all_matches = self._loadAllMatchesForCompetition(base_url)
-            self._matchesCache[cache_key] = all_matches
-            printDBG("FootyRoom: Cached %d matches for %s" % (len(all_matches), cache_key))
-        else:
-            all_matches = self._matchesCache[cache_key]
-            printDBG("FootyRoom: Using cached %d matches for %s" % (len(all_matches), cache_key))
-        # حساب النطاق للصفحة الحالية
-        total_matches = len(all_matches)
-        start_idx = (page - 1) * self.MATCHES_PER_PAGE
-        end_idx = start_idx + self.MATCHES_PER_PAGE
-        page_matches = all_matches[start_idx:end_idx]
-        printDBG("FootyRoom: Showing page %d: matches %d-%d of %d total" % (page, start_idx + 1, min(end_idx, total_matches), total_matches))
-        # عرض المباريات
-        for match in page_matches:
-            self.addVideo({"name": "video", "title": match.get("title", ""), "url": match.get("url", ""), "icon": match.get("icon", self.DEFAULT_ICON_URL)})
-        # عرض Next page إذا يوجد مباريات أكثر
-        if end_idx < total_matches:
-            params = dict(cItem)
-            params.update({"title": "Next page", "category": "list_matches", "page": page + 1})
+            params = stripPagerKeys(dict(cItem), ("comps",))
+            params.update({"good_for_fav": True, "category": "list_matches", "title": title, "url": url, "stage_id": stageId})
             self.addDir(params)
 
-    # ----------------- VIDEO LINKS -----------------
-    def getLinksForVideo(self, cItem):
-        """Extract video links from DataStore.media"""
-        urlTab = []
-        sts, data = self._getPage(cItem["url"], {"header": {"Referer": self.MAIN_URL}})
-        if not sts:
-            return urlTab
-        # 1) Parse DataStore.media JSON
-        m = re.search(r"DataStore\.media\s*=\s*(\[.*?\]);", data, re.DOTALL)
-        if m:
-            try:
-                media_json = json.loads(m.group(1))
-                for item in media_json:
-                    src = (item.get("source") or "").strip()
-                    title = (item.get("title") or "Video").strip()
-                    provider = (item.get("provider") or "Unknown").strip()
-                    if not src or "photo-resources" in src or ".jpg" in src or ".png" in src:
-                        continue
-                    if "youtube.com" in src or "youtu.be" in src:
-                        vid = re.search(r"(?:youtu\.be/|youtube\.com/(?:embed/|watch\?v=))([A-Za-z0-9_-]{11})", src)
-                        if vid:
-                            src = "https://www.youtube.com/watch?v=" + vid.group(1)
-                    if src:
-                        urlTab.append({"name": provider + ": " + title[:50], "url": src, "need_resolve": 1})
-            except Exception:
-                printExc()
-        # 2) Fallback: JSON-LD
-        if not urlTab:
-            ld = re.search(r'<script type="application/ld\+json">(.*?)</script>', data, re.DOTALL | re.IGNORECASE)
-            if ld:
-                try:
-                    ld_data = json.loads(ld.group(1))
-                    embed = ld_data.get("embedUrl", "")
-                    if embed and "youtube" in embed:
-                        urlTab.append({"name": "YouTube", "url": embed.replace("/embed/", "/watch?v="), "need_resolve": 1})
-                except Exception:
-                    printExc()
-        return urlTab
+    ###################################################
+    # matches
+    ###################################################
+    def _pageletUrl(self, cItem, page):
+        url = self.getFullUrl("/posts-pagelet?page=%s" % page)
+        if cItem.get("stage_id"):
+            url += "&stageTree=%s" % cItem["stage_id"]
+        if cItem.get("search_pattern"):
+            url += "&q=%s" % urllib_quote_plus(cItem["search_pattern"])
+        return url
 
-    def getVideoLinks(self, url):
-        """Resolve video URL via urlparser"""
+    def listMatches(self, cItem):
         try:
-            return self.up.getVideoLinkExt(url)
+            page = max(1, int(cItem.get("page", 1) or 1))
+        except (TypeError, ValueError):
+            page = 1
+        url = self._pageletUrl(cItem, page)
+        printDBG("FootyRoom.listMatches [%s]" % url)
+        sts, data = self.getPage(url)
+        if not sts:
+            return
+        count = 0
+        for card in data.split('class="col-xs-12 col-ms-6 col-md-4 card card--match"')[1:]:
+            url = self._absoluteUrl(self.cm.ph.getSearchGroups(card, r"""href=['"]([^'"]*/matches/\d+/[^'"]*)['"]""")[0]).split("?")[0]
+            if not url:
+                continue
+            count += 1
+            # the title without the score (the site's "no spoilers" label), the score is in INFO
+            title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(card, r'class="not-spoiler"[^>]*>(.*?)</a>')[0])
+            title = title or self.cleanHtmlStr(self.cm.ph.getSearchGroups(card, r'class="spoiler"[^>]*>(.*?)</a>')[0])
+            title = title or url.split("/matches/")[-1].split("/")[1].replace("-", " ")
+            icon = self._absoluteUrl(self.cm.ph.getSearchGroups(card, r'<img[^>]+src="([^"]+)"')[0])
+            competition = self.cleanHtmlStr(self.cm.ph.getSearchGroups(card, r'class="card-category"[^>]*>(.*?)</a>')[0])
+            date = self.cm.ph.getSearchGroups(card, r'date="(\d{4}-\d\d-\d\d)T(\d\d:\d\d)', 2)
+            date = self._localTime("%s %s" % tuple(date)) if date[0] else ""
+            views = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(card, ("<div", ">", "views-count"), ("</div", ">"), False)[1])
+            descTab = [x for x in (date, competition) if x]
+            if views:
+                descTab.append(_("%s views") % views)
+            params = stripPagerKeys(dict(cItem), ("comps", "search_pattern", "stage_id"))
+            params.update({"good_for_fav": True, "category": "video", "title": normalizeMediathekTitle(title, date=date[:10]), "raw_title": title,
+                           "url": url, "icon": icon or self.DEFAULT_ICON_URL, "date": date, "competition": competition, "desc": " | ".join(descTab)})
+            self.addVideo(params)
+        tpl = self._pageletUrl(cItem, "{page}")
+        addPagingItems(self, cItem, page, count >= PER_PAGE, 0, tpl)
+
+    def listSearchResult(self, cItem, searchPattern, searchType):
+        printDBG("FootyRoom.listSearchResult [%s]" % searchPattern)
+        cItem = dict(cItem)
+        cItem.update({"category": "list_matches", "search_pattern": searchPattern})
+        self.listMatches(cItem)
+
+    ###################################################
+    # links
+    ###################################################
+    def _media(self, data):
+        try:
+            media = json_loads(self.cm.ph.getSearchGroups(data, r"DataStore\.media\s*=\s*(\[.*?\]);?[ \t]*\n")[0] or "[]")
+            return media if isinstance(media, list) else []
         except Exception:
             printExc()
         return []
 
-    # ----------------- DISPATCHER -----------------
+    def getLinksForVideo(self, cItem):
+        printDBG("FootyRoom.getLinksForVideo [%s]" % cItem["url"])
+        urlTab = []
+        sts, data = self.getPage(cItem["url"])
+        if not sts:
+            return urlTab
+        for item in self._media(data):
+            if not isinstance(item, dict):
+                continue
+            src = (item.get("source") or "").strip()
+            if not src or "photo-resources" in src or re.search(r"\.(?:jpe?g|png|gif|webp)(?:\?|$)", src, re.I):
+                continue
+            vid = self.cm.ph.getSearchGroups(src, r"(?:youtu\.be/|youtube\.com/(?:embed/|watch\?v=|shorts/))([A-Za-z0-9_-]{11})")[0]
+            if vid:
+                src = "https://www.youtube.com/watch?v=" + vid
+            name = "%s: %s" % ((item.get("provider") or self.up.getHostName(src)).strip(), (item.get("title") or "Video").strip()[:50])
+            urlTab.append({"name": name, "url": self._absoluteUrl(src), "need_resolve": 1})
+        if not urlTab:
+            # older match pages: only the JSON-LD embed
+            embed = self.cm.ph.getSearchGroups(data, r'"embedUrl"\s*:\s*"([^"]+)"')[0].replace("\\/", "/")
+            if embed:
+                urlTab.append({"name": self.up.getHostName(embed), "url": embed.replace("/embed/", "/watch?v=") if "youtube" in embed else embed, "need_resolve": 1})
+        if not urlTab:
+            SetIPTVPlayerLastHostError(_("No streams are available for this title yet."))
+        return applySidecarToLinks(urlTab, buildSidecarFromItem(cItem, IsSidecarEnabled()))
+
+    def getVideoLinks(self, url):
+        printDBG("FootyRoom.getVideoLinks [%s]" % url)
+        sidecar = sidecarFromUrlMeta(url, IsSidecarEnabled())
+        if 0 > self.up.checkHostSupport(url):
+            SetIPTVPlayerLastHostError(_("Hosting \"%s\" not supported.") % self.up.getHostName(url))
+            return []
+        return decorateResolvedLinkItems(self.up.getVideoLinkExt(url), sidecar)
+
+    ###################################################
+    # INFO
+    ###################################################
+    def getArticleContent(self, cItem):
+        printDBG("FootyRoom.getArticleContent [%s]" % cItem.get("url", ""))
+        title = cItem.get("raw_title") or cItem.get("title", "")
+        text = cItem.get("desc", "")
+        icon = cItem.get("icon", "")
+        other = {}
+        if cItem.get("date"):
+            other["released"] = cItem["date"]
+        if cItem.get("competition"):
+            other["category"] = cItem["competition"]
+        sts, data = self.getPage(cItem["url"])
+        if sts:
+            title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'<meta property="og:title" content="([^"]+)"')[0]) or title
+            text = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'<meta property="og:description" content="([^"]+)"')[0]) or text
+            icon = self.cm.ph.getSearchGroups(data, r'<meta property="og:image" content="([^"]+)"')[0] or icon
+            try:
+                match = json_loads(self.cm.ph.getSearchGroups(data, r"DataStore\.match\s*=\s*(\{.*?\});?[ \t]*\n")[0] or "{}")
+            except Exception:
+                printExc()
+                match = {}
+            if isinstance(match, dict) and match:
+                lines = [text] if text else []
+                home = (match.get("homeTeam") or {}).get("name", "")
+                away = (match.get("awayTeam") or {}).get("name", "")
+                if home and away and match.get("homeScore") is not None:
+                    score = "%s %s - %s %s" % (home, match.get("homeScore"), match.get("awayScore"), away)
+                    if match.get("homeScoreHT") is not None:
+                        score += " (%s - %s)" % (match.get("homeScoreHT"), match.get("awayScoreHT"))
+                    lines.append(score)
+                for label, key in ((_("Venue"), "venueName"), (_("Referee"), "refereeName"), (_("Round"), "round")):
+                    if match.get(key):
+                        lines.append("%s: %s" % (label, match[key]))
+                text = "[/br]".join(lines)
+                if match.get("stage") and "category" in other:
+                    other["category"] = "%s - %s" % (other["category"], match["stage"])
+                dt = match.get("datetime") or {}
+                date = (dt.get("date") or "")[:16]
+                if date:
+                    # {"date": "2026-10-08 00:30:00.000000", "timezone": "+00:00"}
+                    other["released"] = self._localTime(date) if dt.get("timezone", "+00:00") in ("+00:00", "UTC", "Z") else date
+        return [{"title": self.cleanHtmlStr(title), "text": text, "images": [{"title": "", "url": icon}] if icon else [], "other_info": other}]
+
+    ###################################################
     def handleService(self, index, refresh=0, searchPattern="", searchType=""):
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
+        if isJumpItem(self.currItem):
+            self.currItem = jumpTarget(self, self.currItem)
+        name = self.currItem.get("name", "")
+        category = self.currItem.get("category", "")
+        printDBG("FootyRoom.handleService: name[%s] category[%s]" % (name, category))
         self.currList = []
-        try:
-            name = (self.currItem.get("name", "") or "").strip()
-            category = (self.currItem.get("category", "") or "").strip()
-            printDBG("FootyRoom.handleService: name[%s] category[%s]" % (name, category))
-            if name == "":
-                self.listMainMenu(self.currItem)
-            elif category == "list_competitions":
-                self.listCompetitions(self.currItem)
-            elif category == "list_matches":
-                self.listMatches(self.currItem)
-            else:
-                self.listMainMenu(self.currItem)
-        except Exception:
+        if name is None:
+            self.listMain({"name": "category"})
+        elif category == "list_competitions":
+            self.listCompetitions(self.currItem)
+        elif category == "list_matches":
+            self.listMatches(self.currItem)
+        elif category in ("search", "search_next_page"):
+            cItem = dict(self.currItem)
+            cItem.update({"search_item": False, "name": "category"})
+            self.listSearchResult(cItem, searchPattern, searchType)
+        elif category == "search_history":
+            self.listsHistory({"name": "history", "category": "search"}, "desc")
+        else:
             printExc()
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
-class IPTVHost(CHostBase):
+class IPTVHost(GenericFolderWatchedHostMixin, CHostBase):
+
     def __init__(self):
         CHostBase.__init__(self, FootyRoom(), True, [])
+        self.cachedRet = None
+        self.refreshAfterWatchedFlagChange = False
+        self.watchedHelper = IPTVWatchedHelper("footyroom")
+
+    def withArticleContent(self, cItem):
+        return cItem.get("type") == "video"

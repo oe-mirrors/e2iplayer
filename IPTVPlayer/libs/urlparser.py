@@ -755,6 +755,7 @@ class urlparser:
             "sufbgao.xyz": self.pp.parserSTREAMUP,  # add 061026
             "supervideo.cc": self.pp.parserJWPLAYER,
             "supervideo.tv": self.pp.parserJWPLAYER,
+            "maxstream.video": self.pp.parserMAXSTREAM,
             "swdyu.com": self.pp.parserJWPLAYER,
             "swhoi.com": self.pp.parserJWPLAYER,
             "swiftplayers.com": self.pp.parserJWPLAYER,
@@ -3754,6 +3755,38 @@ class pageParser(CaptchaHelper):
             else:
                 urltab.append({"name": "MP4", "url": url})
         return urltab
+
+    def parserMAXSTREAM(self, baseUrl):  # add 091026
+        # maxstream.video sits behind a Cloudflare check (MyE2i). The /uprots/<one-time token>/<id> links of the
+        # uprot.net link protector (cb01) redirect to the player page, a video.js player with
+        # sources: [{src: ".../master.m3u8"}] (packed on some pages); a used or expired token answers
+        # "Error (131) File id error"
+        printDBG("parserMAXSTREAM baseUrl[%s]" % baseUrl)
+        HTTP_HEADER = self.cm.getDefaultHeader()
+        HTTP_HEADER["Referer"] = baseUrl.meta.get("Referer", "https://maxstream.video/") if isinstance(baseUrl, strwithmeta) else "https://maxstream.video/"
+        params = {"header": HTTP_HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": GetCookieDir("maxstream.video.cookie")}
+        sts, data = self.getPageCF(str(baseUrl), params)
+        if not sts:
+            return []
+        # the User-Agent that passed the Cloudflare check: the stream is fetched with the same one
+        userAgent = (getattr(data, "meta", None) or {}).get("cf_user") or HTTP_HEADER["User-Agent"]
+        if "File id error" in data:
+            SetIPTVPlayerLastHostError(_("The link has expired. Please open the video again."))
+            return []
+        if "File is no longer available" in data or "File Not Found" in data:
+            SetIPTVPlayerLastHostError(_("The video has been removed."))
+            return []
+        if "function(p,a,c,k,e" in data:
+            data += get_packed_data(data)
+        url = ph.search(data, r"""sources\s*:\s*\[\s*\{\s*src\s*:\s*["']([^"']+)""")[0] or \
+            ph.search(data, r"""["']((?:https?:)?//[^"']+?\.(?:m3u8|mp4)(?:\?[^"']*)?)["']""")[0]
+        if not url:
+            return []
+        url = "https:" + url if url.startswith("//") else url
+        url = urlparser.decorateUrl(url, {"User-Agent": userAgent, "Referer": "https://maxstream.video/"})
+        if ".m3u8" in url:
+            return getDirectM3U8Playlist(url, checkContent=True, sortWithMaxBitrate=99999999)
+        return [{"name": "MP4", "url": url}]
 
     def parserOKRU(self, baseUrl):  # Fix 061225
         printDBG("parserOKRU baseUrl[%s]" % baseUrl)

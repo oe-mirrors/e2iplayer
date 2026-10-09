@@ -25,7 +25,8 @@ class SuggestionsProvider:
         # ie/oe=utf-8: without them Google answers some languages (ru, ar,
         # el, tr, ...) in a legacy Windows code page, depending on the
         # User-Agent; gl is the country (it was the language code)
-        url = 'https://suggestqueries.google.com/complete/search?output=firefox&ie=utf-8&oe=utf-8&hl=%s&gl=%s%s&q=%s' % (lang, country, '&ds=yt' if self.forYouyube else '', urllib_quote(text))
+        # client=firefox: "output=firefox" answers HTTP 400 since 2026-10 (box log 09.10.2026), same JSON reply
+        url = 'https://suggestqueries.google.com/complete/search?client=firefox&ie=utf-8&oe=utf-8&hl=%s&gl=%s%s&q=%s' % (lang, country, '&ds=yt' if self.forYouyube else '', urllib_quote(text))
         sts, data = self.cm.getPage(url)
         if sts:
             retList = []

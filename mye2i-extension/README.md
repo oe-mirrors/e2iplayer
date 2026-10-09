@@ -1,4 +1,4 @@
-# MyE2iV3 - browser extension for E2iPlayer (v1.18)
+# MyE2iV3 - browser extension for E2iPlayer (v1.19)
 
 MyE2iV3 lets a real browser solve what the receiver cannot: Cloudflare challenges, other
 browser checks (DDoS-Guard, Anubis, ...) and captchas (reCAPTCHA, hCaptcha, Turnstile). The
@@ -57,6 +57,13 @@ Akamai error pages) -> MyE2i is not started at all, because a browser check woul
 named (`KIND_CAPTCHA`); whether the cookie mode helps there depends on the site setting a cookie
 after solving. Only tested against local imitations of DDoS-Guard and Anubis, never against a real
 site.
+
+Since v1.19 the image captcha of the uprot.net link protector (`upcaptcha-form`, cb01's MaxStream
+links) counts as a check page too: the cookie mode waits until it has been solved instead of sending
+the cookies of the unsolved page after 3 s (a box log of 09.10.2026 showed the cookies leaving before
+anyone could solve it). The cookie-mode result also carries `links`: the targets of the links that hold a
+button on the settled page (at most 20), taken before the page is wiped. uprot opens its one-time
+CONTINUE link only once per solved captcha, so the host takes it from there instead of asking again.
 
 ### More captcha types
 

@@ -1,19 +1,25 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026
+# Last Modified: 09.10.2026
 # VAVOO.TO: IPTV live channels per country (logic of the Kodi "vavoo" addon).
 # - signature: POST www.vavoo.tv/api/app/ping (anonymous app ping) -> addonSig, valid ~15 min
 # - channel lists: POST vavoo.to/mediahubmx-catalog.json (filter group = country, paged by cursor)
 # - play: POST vavoo.to/mediahubmx-resolve.json with the channel url -> HLS url
 # The same channel comes in several variants (".b", ".c", ".s" sources, HD/HD+/backup): one row per channel,
 # the variants are its links. Live TV only: no watched flag, no movie metadata.
+# 08.10.2026 - local paging (100 channels per page) for long letter lists and the search (no cut at 300),
+#   countries over 100 channels split by letter, letter folders reopen from favourites, sidecar
+# 09.10.2026 - vavoo.to reset the box's TLS connection: one more try as Chrome (curl-impersonate)
 ###################################################
 # LOCAL import
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, b64Decode
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 ###################################################
 # FOREIGN import
@@ -43,13 +49,14 @@ class VavooTo(CBaseHostClass):
     CLIENT_VERSION = '3.0.2'
     APP_VERSION = '3.1.20'
     CACHE_TIME = 600
-    LETTER_LIMIT = 150
+    LETTER_LIMIT = 100  # a country with more channels is split by first letter
+    PAGE_SIZE = 100  # local paging of a long letter list / search result
     FALLBACK_GROUPS = ['Albania', 'Arabia', 'Balkans', 'Bulgaria', 'Croatia', 'France', 'Germany', 'Italy', 'Netherlands',
                        'Poland', 'Portugal', 'Romania', 'Russia', 'Spain', 'Turkey', 'United Kingdom']
     # variant markers that do not make a different channel
     VARIANT_RE = re.compile(r'\s*(\(BACK ?UP[^)]*\)|\bF?HD\+?|\bUHD\b|\bRAW\b|\bHEVC\b|\b(?:1080|720)P?\b|\[[^\]]*\])', re.I)
     SOURCE_RE = re.compile(r'\s+\.([a-z0-9])$', re.I)
-    FAV_FIELDS = ('name', 'category', 'type', 'title', 'group', 'links', 'icon', 'url')
+    FAV_FIELDS = ('name', 'category', 'type', 'title', 'group', 'letter', 'search_pattern', 'links', 'icon', 'url')
 
     def __init__(self):
         printDBG("VavooTo.__init__")
@@ -72,7 +79,14 @@ class VavooTo(CBaseHostClass):
             if not sig:
                 return None
             header['mediahubmx-signature'] = sig
-        sts, data = self.cm.getPage(url, {'header': header, 'raw_post_data': True}, json_dumps(body))
+        params = {'header': header, 'raw_post_data': True}
+        sts, data = self.cm.getPage(url, params, json_dumps(body))
+        if not sts and (getattr(data, 'meta', None) or {}).get('pycurl_error'):
+            # box log 09.10.2026: vavoo.to reset the box's TLS connection ("Connection reset by peer") while the
+            # PC got the list - once more as Chrome (curl-impersonate: Chrome's TLS fingerprint and User-Agent, the
+            # other headers incl. the signature stay; the catalog answers any User-Agent)
+            printDBG('VavooTo._post: %s - retrying with curl-impersonate' % str(data.meta['pycurl_error']))
+            sts, data = self.cm.getPage(url, dict(params, impersonate=True), json_dumps(body))
         if not sts or not data:
             return None
         try:
@@ -220,6 +234,20 @@ class VavooTo(CBaseHostClass):
             params.update({'category': 'list_group', 'title': g, 'group': g, 'good_for_fav': True})
             self.addDir(params)
 
+    def _addChannelPage(self, cItem, channels):
+        # local paging: the API hands out the whole country / search at once
+        try:
+            page = max(1, int(cItem.get('page', 1) or 1))
+        except (TypeError, ValueError):
+            page = 1
+        lastPage = max(1, (len(channels) + self.PAGE_SIZE - 1) // self.PAGE_SIZE)
+        page = min(page, lastPage)
+        for ch in channels[(page - 1) * self.PAGE_SIZE:page * self.PAGE_SIZE]:
+            self._addChannel(cItem, ch)
+        if lastPage > 1:
+            # the page lives in 'page' only; the template (without "{page}") just enables "Jump"
+            addPagingItems(self, cItem, page, page < lastPage, lastPage, self.CATALOG_URL)
+
     def listGroup(self, cItem):
         channels = self._fetchGroup(cItem['group'])
         if not channels:
@@ -228,9 +256,7 @@ class VavooTo(CBaseHostClass):
             return
         if len(channels) <= self.LETTER_LIMIT or cItem.get('letter'):
             letter = cItem.get('letter', '')
-            for ch in channels:
-                if not letter or self._letterOf(ch['title']) == letter:
-                    self._addChannel(cItem, ch)
+            self._addChannelPage(cItem, [ch for ch in channels if not letter or self._letterOf(ch['title']) == letter])
             return
         counts = {}
         for ch in channels:
@@ -248,17 +274,19 @@ class VavooTo(CBaseHostClass):
             return c
         return '#'
 
-    def listSearch(self, cItem, searchPattern, searchType):
-        pattern = searchPattern.strip()
+    def listSearch(self, cItem):
+        pattern = cItem.get('search_pattern', '').strip()
         if not pattern:
             return
         # an empty group filter searches all countries in one (cursor paged) list; Germany first
         channels = sorted(self._fetchGroup('', pattern), key=lambda ch: (ch['group'] != 'Germany', ch['group']))
-        for ch in channels[:300]:
-            params = dict(ch)
+        rows = []
+        for ch in channels:
+            row = dict(ch)
             if ch['group'] != 'Germany':
-                params['title'] = '%s [%s]' % (ch['title'], ch['group'])
-            self._addChannel(cItem, params)
+                row['title'] = '%s [%s]' % (ch['title'], ch['group'])
+            rows.append(row)
+        self._addChannelPage(cItem, rows)
         if not channels:
             SetIPTVPlayerLastHostError(_('No matching entries found.'))
 
@@ -275,11 +303,12 @@ class VavooTo(CBaseHostClass):
             if not lk.get('url'):
                 continue
             urlTab.append({'name': '%d. %s' % (idx + 1, lk.get('name') or 'VAVOO'), 'url': lk['url'], 'need_resolve': 1})
-        return urlTab
+        return applySidecarToLinks(urlTab, buildSidecarFromItem(cItem, IsSidecarEnabled()))
 
     def getVideoLinks(self, url):
         printDBG("VavooTo.getVideoLinks [%s]" % url)
-        data = self._post(self.RESOLVE_URL, {'language': 'de', 'region': 'AT', 'url': url, 'clientVersion': self.CLIENT_VERSION})
+        sidecar = sidecarFromUrlMeta(url, IsSidecarEnabled())
+        data = self._post(self.RESOLVE_URL, {'language': 'de', 'region': 'AT', 'url': str(url), 'clientVersion': self.CLIENT_VERSION})
         urlTab = []
         for it in (data if isinstance(data, list) else []):
             u = (it or {}).get('url') if isinstance(it, dict) else ''
@@ -291,7 +320,7 @@ class VavooTo(CBaseHostClass):
             urlTab.append({'name': 'VAVOO', 'url': strwithmeta(u, meta), 'need_resolve': 0})
         if not urlTab:
             SetIPTVPlayerLastHostError(_('This source is offline at the moment. Try another source of the channel.'))
-        return urlTab
+        return decorateResolvedLinkItems(urlTab, sidecar)
 
     def getArticleContent(self, cItem):
         # country, number of sources and the EPG lines (now / next) of the catalog
@@ -300,7 +329,9 @@ class VavooTo(CBaseHostClass):
             other['country'] = cItem['group']
         if cItem.get('links'):
             other['source'] = '%d %s' % (len(cItem['links']), _('sources'))
-        text = cItem.get('desc', '').split('[/br]', 1)[1] if '[/br]' in cItem.get('desc', '') else ''
+        desc = cItem.get('desc', '')
+        # EPG lines when the catalog has them, otherwise the "country | n sources" line
+        text = desc.split('[/br]', 1)[1] if '[/br]' in desc else (desc or cItem.get('title', ''))
         return [{'title': cItem.get('title', ''), 'text': text, 'images': [], 'other_info': other}]
 
     def getFavouriteData(self, cItem):
@@ -315,6 +346,8 @@ class VavooTo(CBaseHostClass):
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('VavooTo.handleService start')
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
+        if isJumpItem(self.currItem):
+            self.currItem = jumpTarget(self, self.currItem)
         name = self.currItem.get("name", None)
         category = self.currItem.get("category", '')
         printDBG("VavooTo.handleService: name[%s] category[%s]" % (name, category))
@@ -326,10 +359,10 @@ class VavooTo(CBaseHostClass):
             self.listsTab(self.searchItems(), {'name': 'category'})
         elif category in ('list_group', 'list_letter'):
             self.listGroup(self.currItem)
+        elif category == 'list_search':
+            self.listSearch(self.currItem)
         elif category in ("search", "search_next_page"):
-            cItem = dict(self.currItem)
-            cItem.update({'search_item': False, 'name': 'category'})
-            self.listSearch(cItem, searchPattern, searchType)
+            self.listSearch({'name': 'category', 'category': 'list_search', 'search_pattern': searchPattern})
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

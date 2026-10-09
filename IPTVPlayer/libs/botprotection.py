@@ -128,7 +128,9 @@ def detect(status=0, headers=None, body='', url=''):
         return Protection('PerimeterX / HUMAN', KIND_COOKIE_GATE, 'px-captcha')
 
     # --- interactive captchas without an automatic mode -------------------
-    marker = has('geetest', 'arkoselabs', 'funcaptcha', 'frc-captcha', 'friendlycaptcha', 'smartcaptcha.yandex', 'mcaptcha', 'keycaptcha', 'altcha')
+    # upcaptcha-form: the image captcha of the uprot.net link protector (cb01 MaxStream links)
+    marker = has('geetest', 'arkoselabs', 'funcaptcha', 'frc-captcha', 'friendlycaptcha', 'smartcaptcha.yandex', 'mcaptcha', 'keycaptcha', 'altcha',
+                 'upcaptcha-form')
     if marker:
         return Protection('Captcha (%s)' % marker, KIND_CAPTCHA, marker)
     if 'google.com/sorry' in url or has('/sorry/index', 'unusual traffic from your computer'):
