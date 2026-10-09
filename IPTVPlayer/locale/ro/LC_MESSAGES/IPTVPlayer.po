@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-09 19:42+0000\n"
+"POT-Creation-Date: 2026-10-09 20:23+0000\n"
 "PO-Revision-Date: 2026-10-08 20:17+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Romanian\n"
@@ -141,6 +141,10 @@ msgstr "%s episoade"
 #, python-format
 msgid "%s followers"
 msgstr "%s urmăritori"
+
+#, python-format
+msgid "%s needs a free account. Enter login and password in the host configuration."
+msgstr ""
 
 #, python-format
 msgid "%s password"
@@ -284,6 +288,9 @@ msgstr "----- Afișare sau ascundere Live Cams -----"
 
 msgid "----- Show or hide Porn Sites -----"
 msgstr "----- Afișare sau ascundere site-uri porno -----"
+
+msgid "----- TORRENT CONFIGURATION -----"
+msgstr ""
 
 msgid "----- VIRTUAL KEYBOARD & SEARCH CONFIGURATION -----"
 msgstr "----- CONFIGURARE TASTATURĂ VIRTUALĂ ȘI CĂUTARE -----"
@@ -553,6 +560,9 @@ msgstr "Permiteți serviciul extern de decriptare a linkurilor (enc-dec.app)"
 
 msgid "Allow host to override suggestions provider"
 msgstr "Permiteți hostului să înlocuiască furnizorul de sugestii"
+
+msgid "Allow upload to other peers (seeding)"
+msgstr ""
 
 msgid "Allow watched flag to be set"
 msgstr "Permiteți setarea marcajului de vizionat"
@@ -904,9 +914,21 @@ msgstr "CUMLOUDER poate căuta doar în etichetele sale (de ex. milf, step siste
 msgid "Cache"
 msgstr "Cache"
 
+msgid "Cache folder"
+msgstr ""
+
 #, python-format
 msgid "Cache folder \"%s\" could not be created. Some data (cookies, subtitles, ...) may not be saved."
 msgstr "Folderul cache \"%s\" nu a putut fi creat. Este posibil ca unele date (cookie-uri, subtitrări, ...) să nu fie salvate."
+
+msgid "Cache location"
+msgstr ""
+
+msgid "Cache size in RAM"
+msgstr ""
+
+msgid "Cache size on disk"
+msgstr ""
 
 #, python-format
 msgid ""
@@ -1028,6 +1050,9 @@ msgstr "Chineză"
 msgid "Chinese anime"
 msgstr "Anime chinezesc"
 
+msgid "Choose the TorrServer binary"
+msgstr ""
+
 msgid "Cinema History"
 msgstr "Istoria cinematografiei"
 
@@ -1066,6 +1091,9 @@ msgstr "Clipuri"
 
 msgid "Close"
 msgstr "Închidere"
+
+msgid "Close an unused torrent after"
+msgstr ""
 
 msgid "Closes the host opened in the web interface, clears the search results and stops what the web interface still runs in the background. Use it when a page keeps loading. Settings, downloads and the E2iPlayer on the TV are not touched."
 msgstr "Închide hostul deschis în interfața web, golește rezultatele căutării și oprește ceea ce interfața web încă rulează în fundal. Utilizați această opțiune când o pagină se încarcă la nesfârșit. Setările, descărcările și E2iPlayer de pe televizor nu sunt afectate."
@@ -1157,6 +1185,9 @@ msgstr "Conectarea la server a eșuat!"
 msgid "Connection to the weeb.tv server failed."
 msgstr "Conectarea la serverul weeb.tv a eșuat."
 
+msgid "Connections per torrent"
+msgstr ""
+
 #, python-format
 msgid "Connections: %s of %s"
 msgstr "Conexiuni: %s din %s"
@@ -1175,6 +1206,9 @@ msgstr "Gătit"
 
 msgid "Copy"
 msgstr "Copiere"
+
+msgid "Copy it to /usr/bin/TorrServer (or a folder on HDD/USB) and make it executable (chmod 755)."
+msgstr ""
 
 msgid "Could not add the user link."
 msgstr "Linkul utilizatorului nu a putut fi adăugat."
@@ -1268,6 +1302,9 @@ msgstr "Cehă"
 
 msgid "DASH/mpd"
 msgstr "DASH/mpd"
+
+msgid "DLNA server of TorrServer"
+msgstr ""
 
 msgid "DOWNLOAD ERROR"
 msgstr "EROARE LA DESCĂRCARE"
@@ -1416,6 +1453,9 @@ msgstr "Ștergeți cache-ul de subtitrări după (zile, 0 = niciodată)"
 msgid "Delete subtitles cache now"
 msgstr "Ștergeți acum cache-ul de subtitrări"
 
+msgid "Delete the cache when the torrent is closed"
+msgstr ""
+
 msgid "Delete thumbnails cache now"
 msgstr "Ștergeți acum cache-ul de miniaturi"
 
@@ -1530,6 +1570,10 @@ msgid "Download"
 msgstr "Descărcare"
 
 #, python-format
+msgid "Download \"%s\" (for this receiver) from %s"
+msgstr ""
+
+#, python-format
 msgid "Download (ready in %d seconds)"
 msgstr "Descărcare (gata în %d secunde)"
 
@@ -1577,11 +1621,18 @@ msgstr "Descărcați versiunea nouă"
 msgid "Download notification duration"
 msgstr "Durata notificării de descărcare"
 
+msgid "Download speed limit"
+msgstr ""
+
 msgid "Download subtiles failed."
 msgstr "Descărcarea subtitrărilor a eșuat."
 
 msgid "Download suggested"
 msgstr "Descărcare recomandată"
+
+#, python-format
+msgid "Download the Linux file for the CPU of this receiver from %s"
+msgstr ""
 
 msgid "Downloaded file is too small or corrupted."
 msgstr "Fișierul descărcat este prea mic sau corupt."
@@ -1783,6 +1834,9 @@ msgstr "Activați modul de reordonare"
 
 msgid "Enabled hosts"
 msgstr "Hosturi activate"
+
+msgid "Encrypted connections only"
+msgstr ""
 
 msgid "Encrypted stream list - not supported"
 msgstr "Listă de streamuri criptată - neacceptată"
@@ -2159,6 +2213,9 @@ msgstr "Fișierul a fost redenumit cu succes!"
 msgid "Files"
 msgstr "Fișiere"
 
+msgid "Fill cache before playback"
+msgstr ""
+
 msgid "Filler"
 msgstr "Episoade de umplutură"
 
@@ -2220,6 +2277,9 @@ msgstr "Folder pentru datele de configurare"
 
 msgid "Folder for temporary data"
 msgstr "Folder pentru datele temporare"
+
+msgid "Folder on HDD / USB"
+msgstr ""
 
 msgid "Followers"
 msgstr "Urmăritori"
@@ -2898,6 +2958,9 @@ msgstr "Cele mai noi videoclipuri"
 msgid "Latest videos from the channels you are subscribed to."
 msgstr "Cele mai noi videoclipuri de pe canalele la care sunteți abonat."
 
+msgid "Latin American movies"
+msgstr ""
+
 msgid "Latin American series"
 msgstr "Seriale latino-americane"
 
@@ -3059,6 +3122,9 @@ msgstr "Autentificarea a eșuat!"
 msgid "Login failed."
 msgstr "Autentificarea a eșuat."
 
+msgid "Login needed"
+msgstr ""
+
 #, python-brace-format
 msgid "Login on {0} failed."
 msgstr "Autentificarea pe {0} a eșuat."
@@ -3169,6 +3235,12 @@ msgstr ""
 
 msgid "Maximum log file size"
 msgstr "Dimensiunea maximă a fișierului jurnal"
+
+msgid "Maximum torrent size:"
+msgstr ""
+
+msgid "MediaFusion manifest URL (your own):"
+msgstr ""
 
 msgid "Medtryx Marketing"
 msgstr "Medtryx Marketing"
@@ -3577,6 +3649,9 @@ msgstr "Indisponibil în țara dvs. (geo-blocare)."
 msgid "Not available yet"
 msgstr "Încă indisponibil"
 
+msgid "Not in /usr/bin: choose the file under \"TorrServer binary\" in the torrent configuration."
+msgstr ""
+
 msgid "Not possible (no enigma2 session)."
 msgstr "Imposibil (nicio sesiune enigma2)."
 
@@ -3856,6 +3931,9 @@ msgstr "Protecție cu PIN pentru plugin"
 msgid "Pin protection for this host"
 msgstr "Protecție cu PIN pentru acest host"
 
+msgid "Play torrents with TorrServer"
+msgstr ""
+
 #, python-format
 msgid "Play with [%s] player"
 msgstr "Redați cu playerul [%s]"
@@ -4128,6 +4206,9 @@ msgstr "Calitate:"
 msgid "Quick test: menu and a list with videos"
 msgstr "Test rapid: meniu și o listă cu videoclipuri"
 
+msgid "RAM"
+msgstr ""
+
 msgid "RAM buffer size [MB] for local files"
 msgstr "Dimensiunea bufferului RAM [MB] pentru fișiere locale"
 
@@ -4192,6 +4273,9 @@ msgstr "Evaluare:"
 #, python-format
 msgid "Rating: %s"
 msgstr "Evaluare: %s"
+
+msgid "Read ahead (share of the cache)"
+msgstr ""
 
 msgid "Read by"
 msgstr "Citit de"
@@ -4448,6 +4532,9 @@ msgstr "Istoricul căutărilor este gol."
 msgid "Search History successfully deleted."
 msgstr "Istoricul căutărilor a fost șters cu succes."
 
+msgid "Search automatically"
+msgstr ""
+
 msgid "Search for an artist (exact name) or a Last.fm user"
 msgstr "Căutați un artist (numele exact) sau un utilizator Last.fm"
 
@@ -4520,6 +4607,9 @@ msgstr "Sezonul %d (%d episoade)"
 msgid "Season %s"
 msgstr "Sezonul %s"
 
+msgid "Season pack"
+msgstr ""
+
 msgid "Seasons"
 msgstr "Sezoane"
 
@@ -4590,6 +4680,9 @@ msgstr "Selectați subtitrările de descărcat"
 
 msgid "Select subtitles track"
 msgstr "Selectați pista de subtitrări"
+
+msgid "Select the TorrServer binary"
+msgstr ""
 
 msgid "Select the directory"
 msgstr "Selectați directorul"
@@ -4975,6 +5068,9 @@ msgstr "Mod downmix stereo pentru decodorul software"
 msgid "Stop"
 msgstr "Stop"
 
+msgid "Stop TorrServer when E2iPlayer is closed"
+msgstr ""
+
 msgid "Stop downloading"
 msgstr "Opriți descărcarea"
 
@@ -5130,6 +5226,9 @@ msgstr "Suedia"
 
 msgid "Swedish"
 msgstr "Suedeză"
+
+msgid "Switch on torrent playback?"
+msgstr ""
 
 msgid "Synchronize"
 msgstr "Sincronizați"
@@ -5546,6 +5645,10 @@ msgstr ""
 "Nu există niciun dispozitiv de stocare la \"%s\" (%s liber). E2iPlayer va readuce acest folder la \"%s\" la următoarea pornire.\n"
 "Selectați un folder de pe un HDD sau stick USB montat."
 
+#, python-format
+msgid "There is no storage device under \"%s\". TorrServer keeps its cache in RAM until a HDD or USB stick is mounted there."
+msgstr ""
+
 msgid "This article has no free video."
 msgstr "Acest articol nu are un videoclip gratuit."
 
@@ -5803,6 +5906,39 @@ msgstr "Top-IMDB"
 msgid "Topics"
 msgstr "Subiecte"
 
+msgid "TorrServer binary (OK = choose, empty = search automatically)"
+msgstr ""
+
+#, python-format
+msgid "TorrServer could not be started (%s)."
+msgstr ""
+
+msgid "TorrServer got no file list for this torrent (no peers or a dead link?)."
+msgstr ""
+
+msgid "TorrServer port"
+msgstr ""
+
+msgid "TorrServer was not found on the receiver. It is not part of E2iPlayer and not in the image feeds - install it yourself:"
+msgstr ""
+
+msgid "TorrServer web interface in the home network"
+msgstr ""
+
+msgid "Torrent"
+msgstr ""
+
+msgid ""
+"Torrent links are played with TorrServer.\n"
+"Switch on \"Play torrents with TorrServer\" in the E2iPlayer settings (Torrent configuration)."
+msgstr ""
+
+msgid ""
+"Torrents are peer-to-peer: while a torrent plays, the receiver connects to other users and your IP address is visible to them. Depending on your country, downloading or sharing copyrighted content through torrents may be illegal - you alone are responsible for what you play. Upload to other peers stays off unless you switch it on.\n"
+"\n"
+"TorrServer itself is not part of E2iPlayer, it has to be installed separately."
+msgstr ""
+
 msgid "Total size:"
 msgstr "Dimensiune totală:"
 
@@ -5952,6 +6088,9 @@ msgstr "Actualizări"
 
 msgid "Upload date"
 msgstr "Data încărcării"
+
+msgid "Upload speed limit"
+msgstr ""
 
 #, python-format
 msgid "Uploader: %s"

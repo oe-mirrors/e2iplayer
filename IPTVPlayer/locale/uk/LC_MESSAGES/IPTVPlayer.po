@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-09 19:42+0000\n"
+"POT-Creation-Date: 2026-10-09 20:23+0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: vovan43 <yuozyo@ukr.net>\n"
 "Language-Team: IPTVPlayer\n"
@@ -144,6 +144,10 @@ msgstr "%s епізодів"
 #, python-format
 msgid "%s followers"
 msgstr "%s підписників"
+
+#, python-format
+msgid "%s needs a free account. Enter login and password in the host configuration."
+msgstr ""
 
 #, python-format
 msgid "%s password"
@@ -287,6 +291,9 @@ msgstr "----- Показати або приховати live-камери -----
 
 msgid "----- Show or hide Porn Sites -----"
 msgstr "----- Показати або приховати порносайти -----"
+
+msgid "----- TORRENT CONFIGURATION -----"
+msgstr ""
 
 msgid "----- VIRTUAL KEYBOARD & SEARCH CONFIGURATION -----"
 msgstr "----- НАЛАШТУВАННЯ ВІРТУАЛЬНОЇ КЛАВІАТУРИ І ПОШУКУ -----"
@@ -556,6 +563,9 @@ msgstr "Дозволити зовнішній сервіс розшифрува�
 
 msgid "Allow host to override suggestions provider"
 msgstr "Дозволити хосту перевизначати постачальника підказок"
+
+msgid "Allow upload to other peers (seeding)"
+msgstr ""
 
 msgid "Allow watched flag to be set"
 msgstr "Дозволити позначку «переглянуто»"
@@ -907,9 +917,21 @@ msgstr "CUMLOUDER може шукати лише за своїми тегами 
 msgid "Cache"
 msgstr "Кеш"
 
+msgid "Cache folder"
+msgstr ""
+
 #, python-format
 msgid "Cache folder \"%s\" could not be created. Some data (cookies, subtitles, ...) may not be saved."
 msgstr "Не вдалося створити папку кешу \"%s\". Деякі дані (cookies, субтитри, ...) можуть не зберегтися."
+
+msgid "Cache location"
+msgstr ""
+
+msgid "Cache size in RAM"
+msgstr ""
+
+msgid "Cache size on disk"
+msgstr ""
 
 #, python-format
 msgid ""
@@ -1031,6 +1053,9 @@ msgstr "Китайська"
 msgid "Chinese anime"
 msgstr "Китайське аніме"
 
+msgid "Choose the TorrServer binary"
+msgstr ""
+
 msgid "Cinema History"
 msgstr "Історія кіно"
 
@@ -1069,6 +1094,9 @@ msgstr "Кліпи"
 
 msgid "Close"
 msgstr "Закрити"
+
+msgid "Close an unused torrent after"
+msgstr ""
 
 msgid "Closes the host opened in the web interface, clears the search results and stops what the web interface still runs in the background. Use it when a page keeps loading. Settings, downloads and the E2iPlayer on the TV are not touched."
 msgstr "Закриває хост, відкритий у веб-інтерфейсі, очищає результати пошуку та зупиняє все, що веб-інтерфейс ще виконує у фоні. Використовуйте, якщо сторінка постійно завантажується. Налаштування, завантаження та E2iPlayer на телевізорі не зачіпаються."
@@ -1160,6 +1188,9 @@ msgstr "Не вдалося підключитися до сервера!"
 msgid "Connection to the weeb.tv server failed."
 msgstr "Не вдалося підключитися до сервера weeb.tv."
 
+msgid "Connections per torrent"
+msgstr ""
+
 #, python-format
 msgid "Connections: %s of %s"
 msgstr "З'єднань: %s з %s"
@@ -1178,6 +1209,9 @@ msgstr "Кулінарія"
 
 msgid "Copy"
 msgstr "Копіювати"
+
+msgid "Copy it to /usr/bin/TorrServer (or a folder on HDD/USB) and make it executable (chmod 755)."
+msgstr ""
 
 msgid "Could not add the user link."
 msgstr "Не вдалося додати посилання користувача."
@@ -1271,6 +1305,9 @@ msgstr "Чеська"
 
 msgid "DASH/mpd"
 msgstr "DASH/mpd"
+
+msgid "DLNA server of TorrServer"
+msgstr ""
 
 msgid "DOWNLOAD ERROR"
 msgstr "ПОМИЛКА ЗАВАНТАЖЕННЯ"
@@ -1419,6 +1456,9 @@ msgstr "Видаляти кеш субтитрів через (днів, 0 = н�
 msgid "Delete subtitles cache now"
 msgstr "Видалити кеш субтитрів зараз"
 
+msgid "Delete the cache when the torrent is closed"
+msgstr ""
+
 msgid "Delete thumbnails cache now"
 msgstr "Видалити кеш мініатюр зараз"
 
@@ -1533,6 +1573,10 @@ msgid "Download"
 msgstr "Завантажити"
 
 #, python-format
+msgid "Download \"%s\" (for this receiver) from %s"
+msgstr ""
+
+#, python-format
 msgid "Download (ready in %d seconds)"
 msgstr "Завантажити (готово через %d секунд)"
 
@@ -1580,11 +1624,18 @@ msgstr "Завантажити нову версію"
 msgid "Download notification duration"
 msgstr "Тривалість сповіщення про завантаження"
 
+msgid "Download speed limit"
+msgstr ""
+
 msgid "Download subtiles failed."
 msgstr "Не вдалося завантажити субтитри."
 
 msgid "Download suggested"
 msgstr "Рекомендовано завантажити"
+
+#, python-format
+msgid "Download the Linux file for the CPU of this receiver from %s"
+msgstr ""
 
 msgid "Downloaded file is too small or corrupted."
 msgstr "Завантажений файл занадто малий або пошкоджений."
@@ -1786,6 +1837,9 @@ msgstr "Увімкнути режим впорядкування"
 
 msgid "Enabled hosts"
 msgstr "Увімкнені хости"
+
+msgid "Encrypted connections only"
+msgstr ""
 
 msgid "Encrypted stream list - not supported"
 msgstr "Зашифрований список потоків - не підтримується"
@@ -2162,6 +2216,9 @@ msgstr "Файл успішно перейменовано!"
 msgid "Files"
 msgstr "Файли"
 
+msgid "Fill cache before playback"
+msgstr ""
+
 msgid "Filler"
 msgstr "Філер"
 
@@ -2223,6 +2280,9 @@ msgstr "Папка для даних налаштувань"
 
 msgid "Folder for temporary data"
 msgstr "Папка для тимчасових даних"
+
+msgid "Folder on HDD / USB"
+msgstr ""
 
 msgid "Followers"
 msgstr "Підписники"
@@ -2901,6 +2961,9 @@ msgstr "Останні відео"
 msgid "Latest videos from the channels you are subscribed to."
 msgstr "Останні відео з каналів, на які ви підписані."
 
+msgid "Latin American movies"
+msgstr ""
+
 msgid "Latin American series"
 msgstr "Латиноамериканські серіали"
 
@@ -3062,6 +3125,9 @@ msgstr "Помилка входу!"
 msgid "Login failed."
 msgstr "Помилка входу."
 
+msgid "Login needed"
+msgstr ""
+
 #, python-brace-format
 msgid "Login on {0} failed."
 msgstr "Не вдалося увійти на {0}."
@@ -3172,6 +3238,12 @@ msgstr ""
 
 msgid "Maximum log file size"
 msgstr "Максимальний розмір файлу журналу"
+
+msgid "Maximum torrent size:"
+msgstr ""
+
+msgid "MediaFusion manifest URL (your own):"
+msgstr ""
 
 msgid "Medtryx Marketing"
 msgstr "Medtryx Marketing"
@@ -3580,6 +3652,9 @@ msgstr "Недоступно у вашій країні (геоблокуван�
 msgid "Not available yet"
 msgstr "Ще недоступно"
 
+msgid "Not in /usr/bin: choose the file under \"TorrServer binary\" in the torrent configuration."
+msgstr ""
+
 msgid "Not possible (no enigma2 session)."
 msgstr "Неможливо (немає сеансу enigma2)."
 
@@ -3859,6 +3934,9 @@ msgstr "Захист плагіна PIN-кодом"
 msgid "Pin protection for this host"
 msgstr "Захист PIN-кодом для цього хоста"
 
+msgid "Play torrents with TorrServer"
+msgstr ""
+
 #, python-format
 msgid "Play with [%s] player"
 msgstr "Відтворити плеєром [%s]"
@@ -4131,6 +4209,9 @@ msgstr "Якість:"
 msgid "Quick test: menu and a list with videos"
 msgstr "Швидкий тест: меню та список з відео"
 
+msgid "RAM"
+msgstr ""
+
 msgid "RAM buffer size [MB] for local files"
 msgstr "Розмір буфера в RAM [МБ] для локальних файлів"
 
@@ -4195,6 +4276,9 @@ msgstr "Оцінка:"
 #, python-format
 msgid "Rating: %s"
 msgstr "Оцінка: %s"
+
+msgid "Read ahead (share of the cache)"
+msgstr ""
 
 msgid "Read by"
 msgstr "Читає"
@@ -4451,6 +4535,9 @@ msgstr "Історія пошуку порожня."
 msgid "Search History successfully deleted."
 msgstr "Історію пошуку успішно видалено."
 
+msgid "Search automatically"
+msgstr ""
+
 msgid "Search for an artist (exact name) or a Last.fm user"
 msgstr "Пошук виконавця (точна назва) або користувача Last.fm"
 
@@ -4523,6 +4610,9 @@ msgstr "Сезон %d (%d епізодів)"
 msgid "Season %s"
 msgstr "Сезон %s"
 
+msgid "Season pack"
+msgstr ""
+
 msgid "Seasons"
 msgstr "Сезони"
 
@@ -4593,6 +4683,9 @@ msgstr "Виберіть субтитри для завантаження"
 
 msgid "Select subtitles track"
 msgstr "Виберіть доріжку субтитрів"
+
+msgid "Select the TorrServer binary"
+msgstr ""
 
 msgid "Select the directory"
 msgstr "Виберіть каталог"
@@ -4978,6 +5071,9 @@ msgstr "Режим стерео-даунміксу для програмного
 msgid "Stop"
 msgstr "Зупинити"
 
+msgid "Stop TorrServer when E2iPlayer is closed"
+msgstr ""
+
 msgid "Stop downloading"
 msgstr "Зупинити завантаження"
 
@@ -5133,6 +5229,9 @@ msgstr "Швеція"
 
 msgid "Swedish"
 msgstr "Шведська"
+
+msgid "Switch on torrent playback?"
+msgstr ""
 
 msgid "Synchronize"
 msgstr "Синхронізувати"
@@ -5549,6 +5648,10 @@ msgstr ""
 "За шляхом \"%s\" немає накопичувача (%s вільно). E2iPlayer під час наступного запуску поверне цю папку до \"%s\".\n"
 "Виберіть папку на підключеному HDD або USB-накопичувачі."
 
+#, python-format
+msgid "There is no storage device under \"%s\". TorrServer keeps its cache in RAM until a HDD or USB stick is mounted there."
+msgstr ""
+
 msgid "This article has no free video."
 msgstr "Ця стаття не містить безкоштовного відео."
 
@@ -5806,6 +5909,39 @@ msgstr "Топ-IMDB"
 msgid "Topics"
 msgstr "Теми"
 
+msgid "TorrServer binary (OK = choose, empty = search automatically)"
+msgstr ""
+
+#, python-format
+msgid "TorrServer could not be started (%s)."
+msgstr ""
+
+msgid "TorrServer got no file list for this torrent (no peers or a dead link?)."
+msgstr ""
+
+msgid "TorrServer port"
+msgstr ""
+
+msgid "TorrServer was not found on the receiver. It is not part of E2iPlayer and not in the image feeds - install it yourself:"
+msgstr ""
+
+msgid "TorrServer web interface in the home network"
+msgstr ""
+
+msgid "Torrent"
+msgstr ""
+
+msgid ""
+"Torrent links are played with TorrServer.\n"
+"Switch on \"Play torrents with TorrServer\" in the E2iPlayer settings (Torrent configuration)."
+msgstr ""
+
+msgid ""
+"Torrents are peer-to-peer: while a torrent plays, the receiver connects to other users and your IP address is visible to them. Depending on your country, downloading or sharing copyrighted content through torrents may be illegal - you alone are responsible for what you play. Upload to other peers stays off unless you switch it on.\n"
+"\n"
+"TorrServer itself is not part of E2iPlayer, it has to be installed separately."
+msgstr ""
+
 msgid "Total size:"
 msgstr "Загальний розмір:"
 
@@ -5955,6 +6091,9 @@ msgstr "Оновлення"
 
 msgid "Upload date"
 msgstr "Дата завантаження"
+
+msgid "Upload speed limit"
+msgstr ""
 
 #, python-format
 msgid "Uploader: %s"
