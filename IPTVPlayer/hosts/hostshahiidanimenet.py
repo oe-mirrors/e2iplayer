@@ -1,5 +1,11 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026
+# Last Modified: 09.10.2026
+# 08.10.2026 - the site sits behind a Cloudflare challenge since ~05.10 (MyE2i cookie needed; checked live
+#   with one: markup unchanged). Hardened: season episode list from the <nav class="navbar"> blocks
+#   (first /episodes*/<slug>/ link), server buttons = any element with data-frameserver, admin-ajax url +
+#   action read from the page script, POST to admin-ajax when the GET answer has no iframe; default icon =
+#   local PlayerSelector icon (the site logo needs the Cloudflare cookie); watched keys on the url path only
+#   (domain-independent)
 # 03.10.2026 - revived for the current shahiid-anime.net (bare domain, WordPress theme
 #   "shahiidanime-220px"): uniform "one-poster" archives for series / films / dubbed / latest episodes,
 #   /series/<slug>/ -> /seasons/?serie=<id> season list, season pages list the episodes; First page /
@@ -13,13 +19,13 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHost
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
-from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
+from Plugins.Extensions.IPTVPlayer.libs.moviemeta import LATIN_ONLY, getMeta, isLatinTitle
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus, urllib_urlencode
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIconDir
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
@@ -73,7 +79,7 @@ class ShahiidAnime(GenericFolderWatchedScraperMixin, CBaseHostClass):
         self.HEADER = self.cm.getDefaultHeader()
         self.MAIN_URL = gettytul()
         self.HEADER.update({"Referer": self.MAIN_URL})
-        self.DEFAULT_ICON_URL = self.MAIN_URL + "wp-content/uploads/shahiid-anime-1.png"
+        self.DEFAULT_ICON_URL = "file://" + GetIconDir("PlayerSelector/shahiidanimenet135.png")  # the site logo sits behind Cloudflare
         self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
         self.MENU = [{"category": "list_items", "title": _("Newest Episodes"), "url": self.getFullUrl("episodes/")},
                      {"category": "list_items", "title": _("Anime TV series"), "url": self.getFullUrl("series/")},
@@ -101,7 +107,8 @@ class ShahiidAnime(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 return cItem["wf_key"]
             if not cItem.get("kind"):
                 return ""
-            url = str(cItem.get("url", "") or "").strip()
+            # path (+ query) only, so the keys survive a domain change of the site
+            url = re.sub(r"^https?://[^/]+", "", str(cItem.get("url", "") or "").strip())
             if not url:
                 return ""
             if cItem.get("type", "") in ("video", "audio"):
@@ -371,12 +378,10 @@ class ShahiidAnime(GenericFolderWatchedScraperMixin, CBaseHostClass):
         season = cItem.get("season", 0) or 0
         cnt = 0
         seen = set()
-        for epUrl, raw in re.findall(r'fa-arrow-alt-circle-left"></i>(?:&nbsp;)*\s*<a href="([^"]+)"[^>]*>([^<]+)</a>', data):
-            epUrl = self.getFullUrl(epUrl)
+        for epUrl, raw in self._episodeLinks(data):
             if epUrl in seen:
                 continue
             seen.add(epUrl)
-            raw = self.cleanHtmlStr(raw)
             params = stripPagerKeys(dict(cItem), LIST_STATE_KEYS)
             params.update({"good_for_fav": True, "category": "video", "kind": "episode", "url": epUrl, "raw_title": raw,
                            "title": self._episodeTitle(raw, epUrl, showTitle, season), "meta_type": "tv", "meta_title": showTitle})
@@ -391,6 +396,20 @@ class ShahiidAnime(GenericFolderWatchedScraperMixin, CBaseHostClass):
         # a single season listed straight from its series row: the pager rows open the season page
         self._addPaging(cItem, page, hasNext, lastPage, pageUrlTpl, base_url=baseUrl, url=baseUrl, category="list_episodes")
 
+    def _episodeLinks(self, data):
+        # (url, label) of a season page's episodes: one <nav class="navbar ..."> per episode, its first link
+        # is the episode title (the second block holds the download / watch buttons)
+        ret = []
+        for nav in self.cm.ph.getAllItemsBeetwenNodes(data, ("<nav", ">", "navbar"), ("</nav", ">"), False):
+            for href, label in re.findall(r"""(?s)<a[^>]+href=['"]([^'"]+)['"][^>]*>(.*?)</a>""", nav):
+                url = self.getFullUrl(href.replace("&amp;", "&"))
+                label = self.cleanHtmlStr(label)
+                # an episode page (/episodes/<slug>/), not the episode archive a menu links to
+                if label and self._urlType(url) in EPISODE_TYPES and re.search(r"://[^/]+/[^/]+/[^/?#]+", url):
+                    ret.append((url, label))
+                    break
+        return ret
+
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("ShahiidAnime.listSearchResult [%s]" % searchPattern)
         # the site's search is not paged: all hits come on one page
@@ -402,7 +421,13 @@ class ShahiidAnime(GenericFolderWatchedScraperMixin, CBaseHostClass):
     ###################################################
     # links
     ###################################################
-    def _serverEmbed(self, attrs, referer):
+    def _ajaxTarget(self, data):
+        # admin-ajax url and action of the page's server-button script (defaults: the values of 10.2026)
+        url = self.cm.ph.getSearchGroups(data, r"""var\s+ajaxurl\s*=\s*['"]([^'"]+)['"]""")[0]
+        action = self.cm.ph.getSearchGroups(data, r"""['"]action['"]\s*:\s*['"]([^'"]+)['"]""")[0]
+        return self.getFullUrl(url) if url else self.MAIN_URL + "wp-admin/admin-ajax.php", action or "codecanal_ajax_request"
+
+    def _serverEmbed(self, attrs, referer, ajax):
         frame = self.cm.ph.getSearchGroups(attrs, r"""data-frameserver=['"]([^'"]*)['"]""")[0]
         frame = frame.replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", '"').replace("&amp;", "&")
         if "<iframe" in frame or "://" in frame:
@@ -415,15 +440,18 @@ class ShahiidAnime(GenericFolderWatchedScraperMixin, CBaseHostClass):
             isFilm = self.cm.ph.getSearchGroups(attrs, r"""data-is_film=['"]([^'"]*)['"]""")[0]
             if not post or not frame:
                 return ""
-            query = urllib_urlencode([("action", "codecanal_ajax_request"), ("post", post), ("_server_code_", ""),
+            ajaxUrl, action = ajax
+            query = urllib_urlencode([("action", action), ("post", post), ("_server_code_", ""),
                                       ("frameserver", frame), ("is_film", isFilm), ("serv", serv)])
             params = dict(self.defaultParams)
             params["header"] = dict(self.HEADER)
             params["header"].update({"Referer": referer, "X-Requested-With": "XMLHttpRequest"})
-            sts, data = self.getPage(self.MAIN_URL + "wp-admin/admin-ajax.php?" + query, params)
-            if not sts:
-                return ""
-            src = self.cm.ph.getSearchGroups(data, r'''<iframe[^>]+src=["']([^"']+)["']''')[0]
+            sts, data = self.getPage(ajaxUrl + ("&" if "?" in ajaxUrl else "?") + query, params)
+            src = self.cm.ph.getSearchGroups(data, r'''<iframe[^>]+src=["']([^"']+)["']''', ignoreCase=True)[0] if sts else ""
+            if not src:
+                # the page script sends a GET (jQuery default); answer the form the way a POST does too
+                sts, data = self.getPage(ajaxUrl, params, {"action": action, "post": post, "frameserver": frame, "serv": serv, "is_film": isFilm})
+                src = self.cm.ph.getSearchGroups(data, r'''<iframe[^>]+src=["']([^"']+)["']''', ignoreCase=True)[0] if sts else ""
         src = src.strip()
         if src.startswith("//"):
             src = "https:" + src
@@ -441,8 +469,12 @@ class ShahiidAnime(GenericFolderWatchedScraperMixin, CBaseHostClass):
             return []
         sidecarTxt = self._story(data) or cItem.get("desc", "")
         seen = set()
-        for attrs, label in re.findall(r'<a class="buttosn"([^>]*)>(.*?)</a>', data, re.DOTALL)[:12]:
-            url = self._serverEmbed(attrs, cItem["url"])
+        ajax = self._ajaxTarget(data)
+        # server buttons: <a class="buttosn" data-serv=".." data-frameserver='..' data-post=".."> (any tag / class
+        # that carries data-frameserver)
+        buttons = re.findall(r"""(?s)<(?:a|li|button|span)\s([^>]*data-frameserver=[^>]*)>(.*?)</(?:a|li|button|span)>""", data)
+        for attrs, label in buttons[:12]:
+            url = self._serverEmbed(attrs, cItem["url"], ajax)
             if not url or url in seen:
                 continue
             seen.add(url)
@@ -511,9 +543,10 @@ class ShahiidAnime(GenericFolderWatchedScraperMixin, CBaseHostClass):
         meta = {}
         if cItem.get("meta_type") in ("movie", "tv"):
             try:
-                meta = getMeta(cItem["meta_type"], english or title, year)
+                metaTitle = english or title
+                meta = getMeta(cItem["meta_type"], metaTitle, year, () if isLatinTitle(metaTitle) else LATIN_ONLY)
                 if not meta and english and title and title != english:
-                    meta = getMeta(cItem["meta_type"], title, year)
+                    meta = getMeta(cItem["meta_type"], title, year, () if isLatinTitle(title) else LATIN_ONLY)
             except Exception:
                 printExc()
         for key, value in meta.get("info", {}).items():

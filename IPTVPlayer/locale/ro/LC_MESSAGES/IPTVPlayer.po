@@ -1,0 +1,6903 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: IPTVPlayer\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-08 20:17+0000\n"
+"PO-Revision-Date: 2026-10-08 20:17+0000\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: Romanian\n"
+"Language: ro\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2;\n"
+
+#, python-format
+msgid "\tDisk space available: %s"
+msgstr "\tSpațiu disponibil pe disc: %s"
+
+#, python-format
+msgid "\tDisk space required: %s"
+msgstr "\tSpațiu necesar pe disc: %s"
+
+msgid ""
+"\n"
+"Make sure you are using the latest version of the plugin."
+msgstr ""
+"\n"
+"Asigurați-vă că utilizați cea mai recentă versiune a pluginului."
+
+msgid ""
+"\n"
+"This host is not integral part of the E2iPlayer plugin.\n"
+"It is not supported by E2iPlayer team."
+msgstr ""
+"\n"
+"Acest host nu face parte integrantă din pluginul E2iPlayer.\n"
+"Nu este susținut de echipa E2iPlayer."
+
+msgid ""
+"\n"
+"You can also report problem here: \n"
+"https://github.com/oe-mirrors/e2iplayer/issues"
+msgstr ""
+"\n"
+"Puteți raporta problema și aici: \n"
+"https://github.com/oe-mirrors/e2iplayer/issues"
+
+msgid "  • Fixed: order never changes - useful for browsing by letter jump (0-9)."
+msgstr "  • Fixat: ordinea nu se schimbă niciodată - util pentru navigarea prin salt la literă (0-9)."
+
+msgid "  • Sorting or reordering fixes this automatically, so your order stays."
+msgstr "  • Sortarea sau reordonarea fixează automat acest lucru, astfel încât ordinea dvs. se păstrează."
+
+msgid "  • Unfixed (default): the entry jumps back to the top of the list."
+msgstr "  • Nefixat (implicit): intrarea revine în partea de sus a listei."
+
+#, python-format
+msgid "\"%s\" Virtual Keyboard layout not available."
+msgstr "Aspectul de tastatură virtuală \"%s\" nu este disponibil."
+
+#, python-format
+msgid "\"%s\" has been added to the favourites group \"%s\"."
+msgstr "\"%s\" a fost adăugat în grupul de favorite \"%s\"."
+
+#, python-format
+msgid "\"%s\" is playing on the TV."
+msgstr "\"%s\" rulează pe televizor."
+
+msgid "\"Web\" streams player"
+msgstr "Player pentru streamuri \"Web\""
+
+#, python-format
+msgid "%d duplicate entries removed."
+msgstr "%d intrări duplicate au fost eliminate."
+
+#, python-format
+msgid "%d duplicate entry removed."
+msgstr "%d intrare duplicată eliminată."
+
+#, python-format
+msgid "%d parts"
+msgstr "%d părți"
+
+#, python-format
+msgid "%d programmes"
+msgstr "%d emisiuni"
+
+#, python-format
+msgid "%d recitations"
+msgstr "%d recitări"
+
+#, python-format
+msgid "%d videos"
+msgstr "%d videoclipuri"
+
+#, python-format
+msgid "%s - service overview"
+msgstr "%s - prezentare generală a serviciului"
+
+#, python-format
+msgid "%s - subtitles provider"
+msgstr "%s - furnizor de subtitrări"
+
+#, python-format
+msgid "%s blocks the connection of the receiver (HTTP 403). It only plays with curl-impersonate installed on the receiver - otherwise please choose another server."
+msgstr "%s blochează conexiunea receptorului (HTTP 403). Redarea funcționează doar cu curl-impersonate instalat pe receptor - altfel selectați un alt server."
+
+#, python-format
+msgid "%s blocks the connection of the receiver (HTTP 403). Please choose another server."
+msgstr "%s blochează conexiunea receptorului (HTTP 403). Selectați un alt server."
+
+#, python-format
+msgid "%s buffering..."
+msgstr "%s se încarcă în buffer..."
+
+#, python-format
+msgid "%s cannot solve this type of captcha."
+msgstr "%s nu poate rezolva acest tip de captcha."
+
+#, python-format
+msgid "%s could not solve the captcha."
+msgstr "%s nu a putut rezolva captcha."
+
+#, python-format
+msgid "%s device name"
+msgstr "Nume dispozitiv %s"
+
+#, python-format
+msgid "%s download manager"
+msgstr "Manager de descărcări %s"
+
+#, python-format
+msgid "%s e-mail"
+msgstr "E-mail %s"
+
+#, python-format
+msgid "%s episodes"
+msgstr "%s episoade"
+
+#, python-format
+msgid "%s followers"
+msgstr "%s urmăritori"
+
+#, python-format
+msgid "%s password"
+msgstr "Parolă %s"
+
+#, python-format
+msgid "%s plays"
+msgstr "%s redări"
+
+#, python-format
+msgid "%s posts"
+msgstr "%s postări"
+
+#, python-format
+msgid "%s recitations"
+msgstr "%s recitări"
+
+#, python-format
+msgid "%s refused the download. Please set your login and password in the configuration."
+msgstr "%s a refuzat descărcarea. Introduceți numele de utilizator și parola în configurare."
+
+#, python-format
+msgid "%s refused the request (Cloudflare check, HTTP %s). This host needs curl-impersonate on the receiver."
+msgstr "%s a refuzat cererea (verificare Cloudflare, HTTP %s). Acest host necesită curl-impersonate pe receptor."
+
+#, python-format
+msgid "%s returned %s: %s"
+msgstr "%s a returnat %s: %s"
+
+#, python-format
+msgid "%s services configuration"
+msgstr "Configurare servicii %s"
+
+#, python-format
+msgid "%s subtitles download - how to"
+msgstr "Descărcare subtitrări %s - instrucțiuni"
+
+#, python-format
+msgid "%s talks"
+msgstr "%s prelegeri"
+
+#, python-format
+msgid "%s timeout."
+msgstr "%s: timp de așteptare expirat."
+
+#, python-format
+msgid "%s uploads"
+msgstr "%s încărcări"
+
+#, python-format
+msgid ""
+"%s uses \"geo-blocking\" measures to prevent you from accessing the services from abroad.\n"
+" Host country: %s, your country: %s"
+msgstr ""
+"%s utilizează măsuri de „geo-blocare” pentru a vă împiedica să accesați serviciile din străinătate.\n"
+" Țara hostului: %s, țara dvs.: %s"
+
+#, python-format
+msgid "%s viewers"
+msgstr "%s spectatori"
+
+#, python-format
+msgid "%s views"
+msgstr "%s vizualizări"
+
+#, python-format
+msgid "(%d YouTube channel(s) could not be read)"
+msgstr "(Canale YouTube care nu au putut fi citite: %d)"
+
+msgid "(no videos found)"
+msgstr "(nu s-au găsit videoclipuri)"
+
+msgid "(nothing here yet)"
+msgstr "(încă nimic aici)"
+
+msgid "(reading...)"
+msgstr "(se citește...)"
+
+msgid "++"
+msgstr "++"
+
+msgid "--"
+msgstr "--"
+
+msgid "----- BASIC CONFIGURATION -----"
+msgstr "----- CONFIGURARE DE BAZĂ -----"
+
+msgid "----- BUFFERING CONFIGURATION -----"
+msgstr "----- CONFIGURARE BUFFER -----"
+
+msgid "----- CAPTCHA CONFIGURATION -----"
+msgstr "----- CONFIGURARE CAPTCHA -----"
+
+msgid "----- DEBUG CONFIGURATION -----"
+msgstr "----- CONFIGURARE DEPANARE -----"
+
+msgid "----- DOWNLOADING CONFIGURATION -----"
+msgstr "----- CONFIGURARE DESCĂRCARE -----"
+
+msgid "----- Debug -----"
+msgstr "----- Depanare -----"
+
+msgid "----- Global HostXXX Configuration -----"
+msgstr "----- Configurare globală HostXXX -----"
+
+msgid "----- METADATA PROVIDERS CONFIGURATION -----"
+msgstr "----- CONFIGURARE FURNIZORI DE METADATE -----"
+
+msgid "----- PLAYERS & PLAYBACK CONFIGURATION -----"
+msgstr "----- CONFIGURARE PLAYERE ȘI REDARE -----"
+
+msgid "----- PROXIES CONFIGURATION -----"
+msgstr "----- CONFIGURARE PROXY -----"
+
+msgid "----- Porn Site Configuration -----"
+msgstr "----- Configurare site-uri porno -----"
+
+msgid "----- SCREENSAVER CONFIGURATION -----"
+msgstr "----- CONFIGURARE SCREENSAVER -----"
+
+msgid "----- SECURITY CONFIGURATION -----"
+msgstr "----- CONFIGURARE SECURITATE -----"
+
+msgid "----- SERVICE CONFIGURATION -----"
+msgstr "----- CONFIGURARE SERVICII -----"
+
+msgid "----- SKIN CONFIGURATION -----"
+msgstr "----- CONFIGURARE SKIN -----"
+
+msgid "----- STORAGE CONFIGURATION -----"
+msgstr "----- CONFIGURARE STOCARE -----"
+
+msgid "----- SUBTITLES CONFIGURATION -----"
+msgstr "----- CONFIGURARE SUBTITRĂRI -----"
+
+msgid "----- Show or hide Anime / Hentai -----"
+msgstr "----- Afișare sau ascundere Anime / Hentai -----"
+
+msgid "----- Show or hide Live Cams -----"
+msgstr "----- Afișare sau ascundere Live Cams -----"
+
+msgid "----- Show or hide Porn Sites -----"
+msgstr "----- Afișare sau ascundere site-uri porno -----"
+
+msgid "----- VIRTUAL KEYBOARD & SEARCH CONFIGURATION -----"
+msgstr "----- CONFIGURARE TASTATURĂ VIRTUALĂ ȘI CĂUTARE -----"
+
+msgid "----- XXXList Configuration -----"
+msgstr "----- Configurare XXXList -----"
+
+msgid "----------  Anime / Hentai  ----------"
+msgstr "----------  Anime / Hentai  ----------"
+
+msgid "----------  Live Cams  ----------"
+msgstr "----------  Live Cams  ----------"
+
+msgid "----------  Other  ----------"
+msgstr "----------  Altele  ----------"
+
+msgid "----------  Porn Sites  ----------"
+msgstr "----------  Site-uri porno  ----------"
+
+#, python-format
+msgid "----------  Search \"%s\"  ----------"
+msgstr "----------  Căutare \"%s\"  ----------"
+
+msgid "----------------- External exteplayer3 options -----------------"
+msgstr "----------------- Opțiuni externe exteplayer3 -----------------"
+
+msgid "--All Episodes--"
+msgstr "--Toate episoadele--"
+
+msgid "--All--"
+msgstr "--Toate--"
+
+msgid "--Other--"
+msgstr "--Altele--"
+
+msgid "... and that the stream delivers video :"
+msgstr "... și că streamul furnizează video :"
+
+msgid "0-9"
+msgstr "0-9"
+
+msgid "1 minute"
+msgstr "1 minut"
+
+msgid "1. On a phone or PC in the same network, open the address shown in the captcha window (or scan its QR code) in a browser with the MyE2i extension installed. If it asks for a code, you find it in the title of the captcha window."
+msgstr "1. Pe un telefon sau PC din aceeași rețea, deschideți adresa afișată în fereastra captcha (sau scanați codul QR) într-un browser cu extensia MyE2i instalată. Dacă se cere un cod, îl găsiți în titlul ferestrei captcha."
+
+msgid "12 hour format"
+msgstr "Format de 12 ore"
+
+msgid "15 seconds"
+msgstr "15 secunde"
+
+msgid "2. Click the big green button on that page. A new tab opens with the captcha or the website's browser check."
+msgstr "2. Faceți clic pe butonul mare verde de pe acea pagină. Se deschide o filă nouă cu captcha sau cu verificarea de browser a site-ului."
+
+msgid "24 hour format"
+msgstr "Format de 24 de ore"
+
+msgid "3. Solve it. The result goes back to the receiver by itself and the captcha window closes."
+msgstr "3. Rezolvați-l. Rezultatul este trimis automat înapoi la receptor, iar fereastra captcha se închide."
+
+msgid "30 seconds"
+msgstr "30 de secunde"
+
+msgid "4K movies"
+msgstr "Filme 4K"
+
+msgid "5 seconds"
+msgstr "5 secunde"
+
+msgid "A search is already running."
+msgstr "O căutare este deja în curs."
+
+msgid "A-Z"
+msgstr "A-Z"
+
+msgid "AAC downmix mode"
+msgstr "Mod downmix AAC"
+
+msgid "ABORTED"
+msgstr "ÎNTRERUPT"
+
+msgid "AC3 downmix mode"
+msgstr "Mod downmix AC3"
+
+msgid ""
+"ACCESS DENIED.\n"
+"THIS VIDEO IS DELETED OR NOT AVAILABLE TO YOUR REGION."
+msgstr ""
+"ACCES INTERZIS.\n"
+"ACEST VIDEOCLIP A FOST ȘTERS SAU NU ESTE DISPONIBIL ÎN REGIUNEA DVS."
+
+msgid "ALBUMS"
+msgstr "ALBUME"
+
+msgid "API Key"
+msgstr "Cheie API"
+
+msgid "ARTISTS"
+msgstr "ARTIȘTI"
+
+msgid "ATTENTION!"
+msgstr "ATENȚIE!"
+
+msgid "Aborted"
+msgstr "Întrerupt"
+
+msgid "About"
+msgstr "Despre"
+
+msgid "Accept"
+msgstr "Acceptați"
+
+msgid "Access Forbidden"
+msgstr "Acces interzis"
+
+msgid "Access denied - open the page with the QR code or the code shown on the receiver screen."
+msgstr "Acces refuzat - deschideți pagina cu codul QR sau cu codul afișat pe ecranul receptorului."
+
+msgid "Access denied. Please check password."
+msgstr "Acces refuzat. Verificați parola."
+
+msgid "Accessible"
+msgstr "Accesibil"
+
+#, python-format
+msgid "Account %d - name (optional):"
+msgstr "Contul %d - nume (opțional):"
+
+#, python-format
+msgid "Account %d - password:"
+msgstr "Contul %d - parolă:"
+
+#, python-format
+msgid "Account %d - server (http://host:port or get.php link):"
+msgstr "Contul %d - server (http://host:port sau link get.php):"
+
+#, python-format
+msgid "Account %d - user name:"
+msgstr "Contul %d - nume de utilizator:"
+
+msgid "Accounts & API keys"
+msgstr "Conturi și chei API"
+
+msgid "Action"
+msgstr "Acțiune"
+
+msgid "Action & Thriller"
+msgstr "Acțiune și thriller"
+
+msgid "Actors"
+msgstr "Actori"
+
+msgid "Actors:"
+msgstr "Actori:"
+
+msgid "Add channel name to downloaded file"
+msgstr "Adăugați numele canalului la fișierul descărcat"
+
+#, python-format
+msgid "Add host %s to group"
+msgstr "Adăugați hostul %s în grup"
+
+msgid "Add item to favorites"
+msgstr "Adăugați elementul la favorite"
+
+msgid "Add item to group"
+msgstr "Adăugați elementul în grup"
+
+msgid "Add new entry"
+msgstr "Adăugați o intrare nouă"
+
+msgid "Add new group"
+msgstr "Adăugați un grup nou"
+
+msgid "Add new group of favorites"
+msgstr "Adăugați un grup nou de favorite"
+
+msgid "Add to User Links"
+msgstr "Adăugați la linkurile utilizatorului"
+
+msgid "Added"
+msgstr "Adăugat"
+
+#, python-format
+msgid "Added by: %s, directory: %s"
+msgstr "Adăugat de: %s, director: %s"
+
+msgid "Adhan"
+msgstr "Adhan"
+
+msgid "Adventure"
+msgstr "Aventură"
+
+msgid "African series"
+msgstr "Seriale africane"
+
+msgid "Age limit:"
+msgstr "Limită de vârstă:"
+
+msgid "Aired"
+msgstr "Difuzat"
+
+msgid "Aired this week"
+msgstr "Difuzat săptămâna aceasta"
+
+msgid "Airing now"
+msgstr "Se difuzează acum"
+
+msgid "All"
+msgstr "Toate"
+
+msgid "All Sports"
+msgstr "Toate sporturile"
+
+msgid "All audiobooks"
+msgstr "Toate cărțile audio"
+
+msgid "All categories"
+msgstr "Toate categoriile"
+
+msgid "All in one"
+msgstr "Toate într-unul"
+
+msgid "All movies"
+msgstr "Toate filmele"
+
+msgid "All programmes"
+msgstr "Toate emisiunile"
+
+msgid "All results"
+msgstr "Toate rezultatele"
+
+msgid "All seasons"
+msgstr "Toate sezoanele"
+
+msgid "All series"
+msgstr "Toate serialele"
+
+msgid "All shows"
+msgstr "Toate show-urile"
+
+msgid "All stations"
+msgstr "Toate posturile"
+
+msgid "All streams"
+msgstr "Toate streamurile"
+
+msgid "All time"
+msgstr "Dintotdeauna"
+
+msgid "All titles A-Z"
+msgstr "Toate titlurile A-Z"
+
+msgid "All videos"
+msgstr "Toate videoclipurile"
+
+msgid "Allow VP9 codec:"
+msgstr "Permiteți codecul VP9:"
+
+msgid "Allow dash format:"
+msgstr "Permiteți formatul DASH:"
+
+msgid "Allow external link-decryption service (enc-dec.app)"
+msgstr "Permiteți serviciul extern de decriptare a linkurilor (enc-dec.app)"
+
+msgid "Allow host to override suggestions provider"
+msgstr "Permiteți hostului să înlocuiască furnizorul de sugestii"
+
+msgid "Allow watched flag to be set"
+msgstr "Permiteți setarea marcajului de vizionat"
+
+msgid "Alphabetically"
+msgstr "Alfabetic"
+
+#, python-format
+msgid "Also use the accounts of X-Streamity (%s)"
+msgstr "Utilizați și conturile din X-Streamity (%s)"
+
+#, python-format
+msgid "Also use the portals of EStalker (%s)"
+msgstr "Utilizați și portalurile din EStalker (%s)"
+
+msgid "AltGr"
+msgstr "AltGr"
+
+msgid "Alternate Title:"
+msgstr "Titlu alternativ:"
+
+msgid "Alternative domain:"
+msgstr "Domeniu alternativ:"
+
+msgid "Alternative proxy server (1)"
+msgstr "Server proxy alternativ (1)"
+
+msgid "Alternative proxy server (2)"
+msgstr "Server proxy alternativ (2)"
+
+msgid "Alternative proxy server (3)"
+msgstr "Server proxy alternativ (3)"
+
+msgid "Alternative proxy server (4)"
+msgstr "Server proxy alternativ (4)"
+
+msgid "Alternative proxy server (5)"
+msgstr "Server proxy alternativ (5)"
+
+msgid "An API key from subsource.net can be entered in the E2iPlayer settings (Subtitles)."
+msgstr "O cheie API de la subsource.net poate fi introdusă în setările E2iPlayer (Subtitrări)."
+
+#, python-format
+msgid "An error occurred while loading a subtitle from [%s]."
+msgstr "A apărut o eroare la încărcarea unei subtitrări de la [%s]."
+
+#, python-format
+msgid "An error occurred while writing into: %s"
+msgstr "A apărut o eroare la scrierea în: %s"
+
+msgid "An opensubtitles.com account (login and password in the E2iPlayer settings) raises the limit."
+msgstr "Un cont opensubtitles.com (nume de utilizator și parolă în setările E2iPlayer) mărește limita."
+
+msgid "Anatomy"
+msgstr "Anatomie"
+
+msgid "Animals"
+msgstr "Animale"
+
+msgid "Animated movies"
+msgstr "Filme de animație"
+
+msgid "Animated series"
+msgstr "Seriale de animație"
+
+msgid "Animation"
+msgstr "Animație"
+
+msgid "Anime"
+msgstr "Anime"
+
+msgid "Anime A-Z"
+msgstr "Anime A-Z"
+
+msgid "Anime Movies"
+msgstr "Filme anime"
+
+msgid "Anime Series"
+msgstr "Seriale anime"
+
+msgid "Anime TV series"
+msgstr "Seriale TV anime"
+
+msgid "Anime genres"
+msgstr "Genuri anime"
+
+msgid "Anime list"
+msgstr "Listă anime"
+
+msgid "Anime movies"
+msgstr "Filme anime"
+
+msgid "Anime movies A-Z"
+msgstr "Filme anime A-Z"
+
+msgid "Anime series (dubbed)"
+msgstr "Seriale anime (dublate)"
+
+msgid "Anime series A-Z"
+msgstr "Seriale anime A-Z"
+
+msgid "Answer"
+msgstr "Răspuns"
+
+msgid "Any"
+msgstr "Oricare"
+
+msgid "Apply"
+msgstr "Aplicați"
+
+msgid "Approaches"
+msgstr "Abordări"
+
+msgid "Arabic"
+msgstr "Arabă"
+
+msgid "Arabic Movies"
+msgstr "Filme arabe"
+
+msgid "Arabic Series"
+msgstr "Seriale arabe"
+
+msgid "Arabic movies"
+msgstr "Filme arabe"
+
+msgid "Arabic plays"
+msgstr "Piese de teatru arabe"
+
+msgid "Arabic songs"
+msgstr "Cântece arabe"
+
+msgid "Archive"
+msgstr "Arhivă"
+
+msgid "Are you sure you want to delete search history?"
+msgstr "Sigur doriți să ștergeți istoricul căutărilor?"
+
+#, python-format
+msgid "Are you sure you want to remove file \"%s\"?"
+msgstr "Sigur doriți să eliminați fișierul \"%s\"?"
+
+msgid "Are you sure you want to reset all settings to their default values?"
+msgstr "Sigur doriți să resetați toate setările la valorile implicite?"
+
+msgid "Art"
+msgstr "Artă"
+
+msgid "Articles"
+msgstr "Articole"
+
+msgid "Artist"
+msgstr "Artist"
+
+#, python-format
+msgid "Artist \"%s\" not found on Last.fm - the exact artist name is needed."
+msgstr "Artistul \"%s\" nu a fost găsit pe Last.fm - este necesar numele exact al artistului."
+
+msgid "Artists"
+msgstr "Artiști"
+
+msgid "Asian"
+msgstr "Asiatic"
+
+msgid "Asian TV series"
+msgstr "Seriale TV asiatice"
+
+msgid "Asian movies"
+msgstr "Filme asiatice"
+
+msgid "Asian series (dubbed)"
+msgstr "Seriale asiatice (dublate)"
+
+msgid "Aspect"
+msgstr "Raport de aspect"
+
+msgid "At least one of plugin browser, extension list and main menu has to stay on, otherwise E2iPlayer could no longer be started."
+msgstr "Cel puțin unul dintre browserul de pluginuri, lista de extensii și meniul principal trebuie să rămână activ, altfel E2iPlayer nu ar mai putea fi pornit."
+
+msgid "At the live edge"
+msgstr "La punctul live"
+
+msgid "Atheer radio (Arabic)"
+msgstr "Radio Atheer (arabă)"
+
+msgid "Audio"
+msgstr "Audio"
+
+msgid "Audio buffer size [KB]"
+msgstr "Dimensiune buffer audio [KB]"
+
+msgid "Audio description"
+msgstr "Descriere audio"
+
+msgid "Audio programme"
+msgstr "Emisiune audio"
+
+msgid "Audio track"
+msgstr "Pistă audio"
+
+msgid "Audio tracks"
+msgstr "Piste audio"
+
+#, python-format
+msgid "Author: %s"
+msgstr "Autor: %s"
+
+msgid "Authors"
+msgstr "Autori"
+
+msgid "Auto"
+msgstr "Auto"
+
+#, python-format
+msgid "Auto refresh: %s"
+msgstr "Reîmprospătare automată: %s"
+
+msgid "Auto selection based on the settings"
+msgstr "Selecție automată pe baza setărilor"
+
+msgid "Auto start method"
+msgstr "Metodă de pornire automată"
+
+msgid "Auto-generated"
+msgstr "Generat automat"
+
+msgid "Automatic"
+msgstr "Automat"
+
+msgid "Automatically turn on external subtitles"
+msgstr "Activați automat subtitrările externe"
+
+msgid "Automotive"
+msgstr "Auto și moto"
+
+msgid "Autoplay start delay"
+msgstr "Întârziere la pornirea redării automate"
+
+msgid "Autumn"
+msgstr "Toamnă"
+
+msgid "Available worldwide"
+msgstr "Disponibil în toată lumea"
+
+msgid "Awards:"
+msgstr "Premii:"
+
+msgid "BLUE"
+msgstr "ALBASTRU"
+
+msgid "Background color"
+msgstr "Culoare de fundal"
+
+msgid "Backspace"
+msgstr "Backspace"
+
+msgid "Balkans"
+msgstr "Balcani"
+
+msgid "Basic Science"
+msgstr "Științe fundamentale"
+
+msgid "Being watched"
+msgstr "Se vizionează acum"
+
+msgid "Best"
+msgstr "Cele mai bune"
+
+msgid "Best Pinkbike videos"
+msgstr "Cele mai bune videoclipuri Pinkbike"
+
+msgid "Best movies"
+msgstr "Cele mai bune filme"
+
+msgid "Best series"
+msgstr "Cele mai bune seriale"
+
+msgid "Binaries"
+msgstr "Fișiere binare"
+
+msgid "Bing Suggestions"
+msgstr "Sugestii Bing"
+
+msgid "Biography"
+msgstr "Biografie"
+
+#, python-format
+msgid "Bitrate: %s"
+msgstr "Rată de biți: %s"
+
+msgid "Black"
+msgstr "Negru"
+
+msgid "Black iframe file"
+msgstr "Fișier iframe negru"
+
+msgid "Black screensaver"
+msgstr "Screensaver negru"
+
+msgid "Block wmv files"
+msgstr "Blocați fișierele WMV"
+
+msgid "Board Review"
+msgstr "Recapitulare pentru examenul de specialitate"
+
+msgid "Books"
+msgstr "Cărți"
+
+msgid "Box"
+msgstr "Box"
+
+msgid "Broadcast:"
+msgstr "Difuzare:"
+
+msgid "Browse by genre"
+msgstr "Răsfoiți după gen"
+
+msgid "Browse youtube trending feeds"
+msgstr "Răsfoiți fluxurile YouTube în tendințe"
+
+msgid "Budget:"
+msgstr "Buget:"
+
+msgid "Buffering location"
+msgstr "Locație buffer"
+
+msgid "Business"
+msgstr "Afaceri"
+
+#, python-format
+msgid "By %s"
+msgstr "De %s"
+
+msgid "CME SAE"
+msgstr "CME SAE"
+
+#, python-format
+msgid "CUMLOUDER can only search its tags (e.g. milf, step sister, big tits) - there is no tag \"%s\"."
+msgstr "CUMLOUDER poate căuta doar în etichetele sale (de ex. milf, step sister, big tits) - nu există eticheta \"%s\"."
+
+msgid "Cache"
+msgstr "Cache"
+
+#, python-format
+msgid "Cache folder \"%s\" could not be created. Some data (cookies, subtitles, ...) may not be saved."
+msgstr "Folderul cache \"%s\" nu a putut fi creat. Este posibil ca unele date (cookie-uri, subtitrări, ...) să nu fie salvate."
+
+#, python-format
+msgid ""
+"Can not get mount points - cmd mount failed.\n"
+"Return code[%s].\n"
+"Return data[%s]."
+msgstr ""
+"Nu se pot obține punctele de montare - comanda mount a eșuat.\n"
+"Cod returnat[%s].\n"
+"Date returnate[%s]."
+
+msgid "Cancel"
+msgstr "Anulare"
+
+msgid "Cancelled."
+msgstr "Anulat."
+
+msgid "Captcha"
+msgstr "Captcha"
+
+msgid "Captcha error:"
+msgstr "Eroare captcha:"
+
+msgid ""
+"Captcha solved.\n"
+"Waiting for notification."
+msgstr ""
+"Captcha rezolvat.\n"
+"Se așteaptă notificarea."
+
+msgid "Captcha solving service"
+msgstr "Serviciu de rezolvare captcha"
+
+msgid "Captcha was not entered."
+msgstr "Captcha nu a fost introdus."
+
+#, python-format
+msgid "Carrying: %s | UP/DOWN=Move, OK=Drop"
+msgstr "Mutare: %s | SUS/JOS=Deplasare, OK=Plasare"
+
+msgid "Cartoon genres"
+msgstr "Genuri de desene animate"
+
+msgid "Cartoon series (dubbed)"
+msgstr "Seriale de desene animate (dublate)"
+
+msgid "Cartoons"
+msgstr "Desene animate"
+
+msgid "Cartoons A-Z"
+msgstr "Desene animate A-Z"
+
+msgid "Cartoons and anime"
+msgstr "Desene animate și anime"
+
+msgid "Cartoons and series"
+msgstr "Desene animate și seriale"
+
+msgid "Cast:"
+msgstr "Distribuție:"
+
+msgid "Catch-up"
+msgstr "Catch-up"
+
+#, python-format
+msgid "Catch-up (%d channels)"
+msgstr "Catch-up (%d canale)"
+
+msgid "Catch-up (timeshift.php)"
+msgstr "Catch-up (timeshift.php)"
+
+#, python-format
+msgid "Catch-up: %d days"
+msgstr "Catch-up: %d zile"
+
+msgid "Categories"
+msgstr "Categorii"
+
+msgid "Categories:"
+msgstr "Categorii:"
+
+msgid "Category"
+msgstr "Categorie"
+
+msgid "Category:"
+msgstr "Categorie:"
+
+msgid "Change active movie player"
+msgstr "Schimbați playerul video activ"
+
+msgid "Change own pin"
+msgstr "Schimbați PIN-ul propriu"
+
+msgid "Channel"
+msgstr "Canal"
+
+#, python-format
+msgid "Channel: %s"
+msgstr "Canal: %s"
+
+msgid "Channels"
+msgstr "Canale"
+
+msgid "Checking for updates"
+msgstr "Se caută actualizări"
+
+msgid "Checks every enabled site: menu, a list with videos and, in the full test, the stream link of one video."
+msgstr "Verifică fiecare site activat: meniul, o listă cu videoclipuri și, în testul complet, linkul de stream al unui videoclip."
+
+msgid "Children"
+msgstr "Copii"
+
+msgid "Children & Family"
+msgstr "Copii și familie"
+
+msgid "Chinese"
+msgstr "Chineză"
+
+msgid "Chinese anime"
+msgstr "Anime chinezesc"
+
+msgid "Cinema History"
+msgstr "Istoria cinematografiei"
+
+msgid "Cinema movies"
+msgstr "Filme de cinema"
+
+msgid "Classic"
+msgstr "Clasic"
+
+msgid "Classic movies"
+msgstr "Filme clasice"
+
+msgid "Clear"
+msgstr "Ștergere"
+
+msgid "Clear log"
+msgstr "Ștergeți jurnalul"
+
+#, python-format
+msgid ""
+"Clear the debug log file?\n"
+"%s"
+msgstr ""
+"Ștergeți fișierul jurnal de depanare?\n"
+"%s"
+
+msgid "Clear the log file at plugin start"
+msgstr "Ștergeți fișierul jurnal la pornirea pluginului"
+
+#, python-format
+msgid "Clipped by: %s"
+msgstr "Clip realizat de: %s"
+
+msgid "Clips"
+msgstr "Clipuri"
+
+msgid "Close"
+msgstr "Închidere"
+
+msgid "Closes the host opened in the web interface, clears the search results and stops what the web interface still runs in the background. Use it when a page keeps loading. Settings, downloads and the E2iPlayer on the TV are not touched."
+msgstr "Închide hostul deschis în interfața web, golește rezultatele căutării și oprește ceea ce interfața web încă rulează în fundal. Utilizați această opțiune când o pagină se încarcă la nesfârșit. Setările, descărcările și E2iPlayer de pe televizor nu sunt afectate."
+
+msgid "Closing. Please wait..."
+msgstr "Se închide. Vă rugăm să așteptați..."
+
+msgid "Clubs and athletes"
+msgstr "Cluburi și sportivi"
+
+msgid "Code"
+msgstr "Cod"
+
+msgid "Collected streams only"
+msgstr "Doar streamurile colectate"
+
+msgid "Collections"
+msgstr "Colecții"
+
+msgid "Colored text in titles and descriptions"
+msgstr "Text colorat în titluri și descrieri"
+
+msgid "Combine pull request merges with their commit"
+msgstr "Combinați merge-urile de pull request cu commitul lor"
+
+msgid "Comedy"
+msgstr "Comedie"
+
+msgid "Comments"
+msgstr "Comentarii"
+
+msgid "Commits"
+msgstr "Commituri"
+
+msgid "Competitions"
+msgstr "Competiții"
+
+msgid "Complete Quran"
+msgstr "Coranul complet"
+
+msgid "Complete series"
+msgstr "Seriale complete"
+
+msgid "Completed"
+msgstr "Finalizat"
+
+msgid "Concert"
+msgstr "Concert"
+
+msgid "Config"
+msgstr "Configurare"
+
+#, python-format
+msgid "Config folder \"%s\" could not be created. Some data (host order, search history, favourites, movie player preferences, ...) may not be saved."
+msgstr "Folderul de configurare \"%s\" nu a putut fi creat. Este posibil ca unele date (ordinea hosturilor, istoricul căutărilor, favorite, preferințele playerului video, ...) să nu fie salvate."
+
+msgid "Configuration"
+msgstr "Configurare"
+
+#, python-format
+msgid "Configuration [%s] service"
+msgstr "Configurare serviciu [%s]"
+
+#, python-format
+msgid "Configure %s"
+msgstr "Configurați %s"
+
+msgid "Configure host"
+msgstr "Configurați hostul"
+
+msgid "Configuring an external movie player"
+msgstr "Configurarea unui player video extern"
+
+msgid "Confirm new pin"
+msgstr "Confirmați noul PIN"
+
+msgid "Confirm the title of the movie"
+msgstr "Confirmați titlul filmului"
+
+msgid "Confirmation error."
+msgstr "Eroare de confirmare."
+
+msgid "Connection to server failed!"
+msgstr "Conectarea la server a eșuat!"
+
+msgid "Connection to the weeb.tv server failed."
+msgstr "Conectarea la serverul weeb.tv a eșuat."
+
+#, python-format
+msgid "Connections: %s of %s"
+msgstr "Conexiuni: %s din %s"
+
+msgid "Content not available"
+msgstr "Conținut indisponibil"
+
+msgid "Continue"
+msgstr "Continuare"
+
+msgid "Continue downloading"
+msgstr "Continuați descărcarea"
+
+msgid "Cooking"
+msgstr "Gătit"
+
+msgid "Copy"
+msgstr "Copiere"
+
+msgid "Could not add the user link."
+msgstr "Linkul utilizatorului nu a putut fi adăugat."
+
+msgid "Could not load the wiki page."
+msgstr "Pagina wiki nu a putut fi încărcată."
+
+msgid "Could not resolve host."
+msgstr "Hostul nu a putut fi rezolvat."
+
+msgid "Could not resolve proxy."
+msgstr "Proxy-ul nu a putut fi rezolvat."
+
+msgid "Could not sort the user links."
+msgstr "Linkurile utilizatorului nu au putut fi sortate."
+
+msgid "Could not start the YouTube sign-in."
+msgstr "Autentificarea YouTube nu a putut fi pornită."
+
+msgid "Could not write the file."
+msgstr "Fișierul nu a putut fi scris."
+
+msgid "Countries"
+msgstr "Țări"
+
+msgid "Country"
+msgstr "Țară"
+
+msgid "Country / store:"
+msgstr "Țară / magazin:"
+
+msgid "Country:"
+msgstr "Țară:"
+
+msgid "Couples"
+msgstr "Cupluri"
+
+msgid "Create Enigma2 .cuts chapter marks"
+msgstr "Creați marcaje de capitol Enigma2 .cuts"
+
+msgid "Create LCD/VFD summary screen"
+msgstr "Creați ecran de rezumat LCD/VFD"
+
+msgid "Create MKV"
+msgstr "Creați MKV"
+
+msgid "Create MKV with chapter marks from description"
+msgstr "Creați MKV cu marcaje de capitol din descriere"
+
+msgid "Create debug logs"
+msgstr "Creați jurnale de depanare"
+
+msgid "Create sidecar files (.txt/.jpg)"
+msgstr "Creați fișiere însoțitoare (.txt/.jpg)"
+
+msgid "Creator:"
+msgstr "Creator:"
+
+msgid "Creators:"
+msgstr "Creatori:"
+
+msgid "Crime"
+msgstr "Polițist"
+
+msgid "Critical Error - cookie can't be saved!"
+msgstr "Eroare critică - cookie-ul nu poate fi salvat!"
+
+msgid "Critical Error – Content-Encoding gzip cannot be handled!"
+msgstr "Eroare critică – Content-Encoding gzip nu poate fi procesat!"
+
+msgid "Culture"
+msgstr "Cultură"
+
+msgid "Culture and lifestyle"
+msgstr "Cultură și stil de viață"
+
+msgid "Culture and pop"
+msgstr "Cultură și pop"
+
+msgid "Current item is not a channel."
+msgstr "Elementul curent nu este un canal."
+
+msgid "Cut"
+msgstr "Decupare"
+
+msgid "Czech"
+msgstr "Cehă"
+
+msgid "DASH/mpd"
+msgstr "DASH/mpd"
+
+msgid "DOWNLOAD ERROR"
+msgstr "EROARE LA DESCĂRCARE"
+
+msgid "DOWNLOADED"
+msgstr "DESCĂRCAT"
+
+msgid "DOWNLOADING"
+msgstr "SE DESCARCĂ"
+
+msgid "DRM protection detected."
+msgstr "A fost detectată protecție DRM."
+
+msgid "Daily download limit reached - type the code"
+msgstr "Limita zilnică de descărcare a fost atinsă - introduceți codul"
+
+msgid "Darkgray"
+msgstr "Gri închis"
+
+msgid "Date"
+msgstr "Dată"
+
+msgid "Debug file does not exist - nothing to delete"
+msgstr "Fișierul de depanare nu există - nimic de șters"
+
+msgid "Debug log"
+msgstr "Jurnal de depanare"
+
+msgid "Debug logs"
+msgstr "Jurnale de depanare"
+
+msgid "Debug option is disabled - nothing to display"
+msgstr "Opțiunea de depanare este dezactivată - nimic de afișat"
+
+msgid "Debug snapshot"
+msgstr "Snapshot de depanare"
+
+msgid "Debug snapshot (for site development)"
+msgstr "Snapshot de depanare (pentru dezvoltarea site-urilor)"
+
+#, python-format
+msgid "Debug snapshot: \"%s\" received by the box"
+msgstr "Snapshot de depanare: \"%s\" primit de receptor"
+
+#, python-format
+msgid "Debug snapshot: sending \"%s\" failed"
+msgstr "Snapshot de depanare: trimiterea \"%s\" a eșuat"
+
+#, python-format
+msgid "Decode file [%s] problem."
+msgstr "Problemă la decodarea fișierului [%s]."
+
+msgid "Decrypt Signatures Error"
+msgstr "Eroare la decriptarea semnăturilor"
+
+msgid "Default"
+msgstr "Implicit"
+
+msgid "Default (2 minutes)"
+msgstr "Implicit (2 minute)"
+
+msgid "Default browser"
+msgstr "Browser implicit"
+
+msgid "Default captcha bypass"
+msgstr "Ocolire captcha implicită"
+
+msgid "Default suggestions provider"
+msgstr "Furnizor implicit de sugestii"
+
+msgid "Default video aspect ratio"
+msgstr "Raport de aspect video implicit"
+
+msgid "Default video policy for 16:9"
+msgstr "Politică video implicită pentru 16:9"
+
+msgid "Default video policy for 4:3"
+msgstr "Politică video implicită pentru 4:3"
+
+msgid "Default video quality"
+msgstr "Calitate video implicită"
+
+msgid "Default video quality:"
+msgstr "Calitate video implicită:"
+
+msgid "Defaults"
+msgstr "Valori implicite"
+
+msgid "Definitely remove from favorites?"
+msgstr "Sigur eliminați din favorite?"
+
+msgid "Delete"
+msgstr "Ștergere"
+
+msgid "Delete JS cache after (days, 0 = never)"
+msgstr "Ștergeți cache-ul JS după (zile, 0 = niciodată)"
+
+msgid "Delete JS cache now"
+msgstr "Ștergeți acum cache-ul JS"
+
+msgid "Delete all cache files now"
+msgstr "Ștergeți acum toate fișierele cache"
+
+msgid "Delete all config files now"
+msgstr "Ștergeți acum toate fișierele de configurare"
+
+msgid "Delete cookies cache after (days, 0 = never)"
+msgstr "Ștergeți cache-ul de cookie-uri după (zile, 0 = niciodată)"
+
+msgid "Delete cookies cache now"
+msgstr "Ștergeți acum cache-ul de cookie-uri"
+
+msgid "Delete entry"
+msgstr "Ștergeți intrarea"
+
+msgid "Delete favourites and watched status now"
+msgstr "Ștergeți acum favoritele și starea de vizionare"
+
+msgid "Delete host order and groups now"
+msgstr "Ștergeți acum ordinea hosturilor și grupurile"
+
+msgid "Delete movie metadata cache after (days, 0 = never)"
+msgstr "Ștergeți cache-ul de metadate ale filmelor după (zile, 0 = niciodată)"
+
+msgid "Delete movie metadata cache now"
+msgstr "Ștergeți acum cache-ul de metadate ale filmelor"
+
+msgid "Delete movie player preferences now"
+msgstr "Ștergeți acum preferințele playerului video"
+
+msgid "Delete now"
+msgstr "Ștergeți acum"
+
+msgid "Delete search history"
+msgstr "Ștergeți istoricul căutărilor"
+
+msgid "Delete search history now"
+msgstr "Ștergeți acum istoricul căutărilor"
+
+msgid "Delete subtitles cache after (days, 0 = never)"
+msgstr "Ștergeți cache-ul de subtitrări după (zile, 0 = niciodată)"
+
+msgid "Delete subtitles cache now"
+msgstr "Ștergeți acum cache-ul de subtitrări"
+
+msgid "Delete thumbnails cache now"
+msgstr "Ștergeți acum cache-ul de miniaturi"
+
+msgid "Denmark"
+msgstr "Danemarca"
+
+msgid "Description:"
+msgstr "Descriere:"
+
+msgid "Detail/expert mode"
+msgstr "Mod detaliat/expert"
+
+msgid "Detective"
+msgstr "Detectivi"
+
+msgid "Developers:"
+msgstr "Dezvoltatori:"
+
+msgid "Digital programmes"
+msgstr "Emisiuni digitale"
+
+msgid "Direct"
+msgstr "Direct"
+
+msgid "Director:"
+msgstr "Regizor:"
+
+msgid "Directors"
+msgstr "Regizori"
+
+msgid "Directors:"
+msgstr "Regizori:"
+
+#, python-format
+msgid "Directory \"%s\" does not exists."
+msgstr "Directorul \"%s\" nu există."
+
+msgid "Directory browser"
+msgstr "Selector de directoare"
+
+msgid "Disable all groups"
+msgstr "Dezactivați toate grupurile"
+
+msgid "Disable live at plugin start"
+msgstr "Dezactivați semnalul TV live la pornirea pluginului"
+
+msgid "Disable not used services"
+msgstr "Dezactivați serviciile neutilizate"
+
+msgid "Disable reordering"
+msgstr "Dezactivați reordonarea"
+
+msgid "Disable reordering mode"
+msgstr "Dezactivați modul de reordonare"
+
+msgid "Disable/Enable groups"
+msgstr "Dezactivare/activare grupuri"
+
+msgid "Disable/Enable services"
+msgstr "Dezactivare/activare servicii"
+
+msgid "Discovery"
+msgstr "Descoperire"
+
+msgid "Disney cartoon movies (Egyptian dub)"
+msgstr "Filme de desene animate Disney (dublaj egiptean)"
+
+msgid "Display language:"
+msgstr "Limba de afișare:"
+
+msgid "Display thumbnails"
+msgstr "Afișați miniaturi"
+
+msgid "Do you really want to delete ALL cache data now? This includes cookies, subtitles, movie metadata and thumbnails, and cannot be undone."
+msgstr "Sigur doriți să ștergeți acum TOATE datele din cache? Aceasta include cookie-uri, subtitrări, metadate ale filmelor și miniaturi și nu poate fi anulată."
+
+msgid "Do you really want to delete ALL config data now? This is real user data, not just cache - it includes favourites, watched status, search history, movie player preferences and host order/groups, and cannot be undone."
+msgstr "Sigur doriți să ștergeți acum TOATE datele de configurare? Acestea sunt date reale ale utilizatorului, nu doar cache - includ favoritele, starea de vizionare, istoricul căutărilor, preferințele playerului video și ordinea/grupurile hosturilor și nu pot fi recuperate."
+
+msgid "Do you really want to delete ALL favourites and watched status now? This is real user data, not just cache, and cannot be undone."
+msgstr "Sigur doriți să ștergeți acum TOATE favoritele și starea de vizionare? Acestea sunt date reale ale utilizatorului, nu doar cache, iar operațiunea nu poate fi anulată."
+
+#, python-format
+msgid "Do you really want to delete the %s now?"
+msgstr "Sigur doriți să ștergeți acum %s?"
+
+msgid "Do you really want to delete the thumbnails cache now?"
+msgstr "Sigur doriți să ștergeți acum cache-ul de miniaturi?"
+
+msgid "Do you want to finish?"
+msgstr "Doriți să încheiați?"
+
+msgid "Documentaries"
+msgstr "Documentare"
+
+msgid "Documentaries A-Z"
+msgstr "Documentare A-Z"
+
+msgid "Documentary"
+msgstr "Documentar"
+
+msgid "Documentary Movies"
+msgstr "Filme documentare"
+
+msgid "Documentary series"
+msgstr "Seriale documentare"
+
+msgid "Done - the result was sent to the box, you can close this page."
+msgstr "Gata - rezultatul a fost trimis la receptor, puteți închide această pagină."
+
+msgid "Download"
+msgstr "Descărcare"
+
+#, python-format
+msgid "Download (ready in %d seconds)"
+msgstr "Descărcare (gata în %d secunde)"
+
+msgid "Download again"
+msgstr "Descărcați din nou"
+
+msgid "Download already exists"
+msgstr "Descărcarea există deja"
+
+#, python-format
+msgid ""
+"Download can not be started.\n"
+" Incorrect address ('%r')."
+msgstr ""
+"Descărcarea nu poate fi pornită.\n"
+" Adresă incorectă ('%r')."
+
+#, python-format
+msgid ""
+"Download can not be started.\n"
+"Downloader %s not working correctly.\n"
+"Status[%s]"
+msgstr ""
+"Descărcarea nu poate fi pornită.\n"
+"Downloaderul %s nu funcționează corect.\n"
+"Stare[%s]"
+
+#, python-format
+msgid ""
+"Download failed.\n"
+"Status[%s]"
+msgstr ""
+"Descărcarea a eșuat.\n"
+"Stare[%s]"
+
+msgid "Download manager"
+msgstr "Manager de descărcări"
+
+msgid "Download manager is not initialized"
+msgstr "Managerul de descărcări nu este inițializat"
+
+msgid "Download new version"
+msgstr "Descărcați versiunea nouă"
+
+msgid "Download notification duration"
+msgstr "Durata notificării de descărcare"
+
+msgid "Download subtiles failed."
+msgstr "Descărcarea subtitrărilor a eșuat."
+
+msgid "Download suggested"
+msgstr "Descărcare recomandată"
+
+msgid "Downloaded file is too small or corrupted."
+msgstr "Fișierul descărcat este prea mic sau corupt."
+
+msgid "Downloading"
+msgstr "Se descarcă"
+
+#, python-format
+msgid ""
+"Downloading can not be started.\n"
+" Downloader %s does not work properly.\n"
+"Status[%s]"
+msgstr ""
+"Descărcarea nu poate fi pornită.\n"
+" Downloaderul %s nu funcționează corect.\n"
+"Stare[%s]"
+
+#, python-format
+msgid ""
+"Downloading can not be started.\n"
+" The address ('%r') is incorrect."
+msgstr ""
+"Descărcarea nu poate fi pornită.\n"
+" Adresa ('%r') este incorectă."
+
+#, python-format
+msgid ""
+"Downloading cannot be started.\n"
+" Downloader [%s] not working properly.\n"
+" Status[%s]"
+msgstr ""
+"Descărcarea nu poate fi pornită.\n"
+" Downloaderul [%s] nu funcționează corect.\n"
+" Stare[%s]"
+
+#, python-format
+msgid ""
+"Downloading cannot be started.\n"
+" Invalid URI[%s]."
+msgstr ""
+"Descărcarea nu poate fi pornită.\n"
+" URI invalid[%s]."
+
+#, python-format
+msgid "Downloading file [%s] problem."
+msgstr "Problemă la descărcarea fișierului [%s]."
+
+msgid "Downloading from prijevodi-online.org needs a free account. Enter login and password in the E2iPlayer settings."
+msgstr "Descărcarea de pe prijevodi-online.org necesită un cont gratuit. Introduceți numele de utilizator și parola în setările E2iPlayer."
+
+#, python-format
+msgid ""
+"Downloading subtitles.\n"
+" ('%r')."
+msgstr ""
+"Se descarcă subtitrările.\n"
+" ('%r')."
+
+msgid "Downloads"
+msgstr "Descărcări"
+
+msgid "Downloads location"
+msgstr "Locația descărcărilor"
+
+#, python-format
+msgid "Downloads: %s"
+msgstr "Descărcări: %s"
+
+msgid "Draft"
+msgstr "Ciornă"
+
+msgid "Drama"
+msgstr "Dramă"
+
+msgid "Dramas (Asian)"
+msgstr "Drame (asiatice)"
+
+msgid "Dubbed"
+msgstr "Dublat"
+
+msgid "Dubbed anime"
+msgstr "Anime dublate"
+
+msgid "Dubbed movies"
+msgstr "Filme dublate"
+
+msgid "Dubbed series"
+msgstr "Seriale dublate"
+
+msgid "DuckDuckGo Suggestions"
+msgstr "Sugestii DuckDuckGo"
+
+msgid "Duration"
+msgstr "Durată"
+
+msgid "Duration:"
+msgstr "Durată:"
+
+#, python-format
+msgid "Duration: %s"
+msgstr "Durată: %s"
+
+msgid "Dutch"
+msgstr "Olandeză"
+
+msgid "E-mail (free TBN GO account):"
+msgstr "E-mail (cont TBN GO gratuit):"
+
+msgid "E2iPlayer"
+msgstr "E2iPlayer"
+
+msgid "E2iPlayer - keyboard settings"
+msgstr "E2iPlayer - setări tastatură"
+
+msgid "E2iPlayer - settings"
+msgstr "E2iPlayer - setări"
+
+msgid "E2iPlayer auto start at Enigma2 start"
+msgstr "Pornire automată E2iPlayer la pornirea Enigma2"
+
+msgid "E2iPlayer config folder"
+msgstr "Folder de configurare E2iPlayer"
+
+msgid "E2iPlayer downloader"
+msgstr "Downloader E2iPlayer"
+
+msgid "E2iPlayer enable/disabled groups"
+msgstr "Grupuri activate/dezactivate E2iPlayer"
+
+msgid "E2iPlayer is only a specialized web browser. It does not host any materials."
+msgstr "E2iPlayer este doar un browser web specializat. Nu găzduiește niciun material."
+
+msgid "E2iPlayer virtual keyboard"
+msgstr "Tastatură virtuală E2iPlayer"
+
+msgid ""
+"ERROR: pipeline could not be constructed: no element \"playbin2\" \n"
+"Please check if gstreamer plugins are available in your system."
+msgstr ""
+"EROARE: pipeline-ul nu a putut fi construit: nu există elementul \"playbin2\" \n"
+"Verificați dacă pluginurile gstreamer sunt disponibile în sistemul dvs."
+
+msgid "EXIT"
+msgstr "EXIT"
+
+msgid "Economy"
+msgstr "Economie"
+
+msgid "Edit"
+msgstr "Editare"
+
+msgid "Edit User Links"
+msgstr "Editați linkurile utilizatorului"
+
+msgid "Edit failed."
+msgstr "Editarea a eșuat."
+
+msgid "Edit favorite group"
+msgstr "Editați grupul de favorite"
+
+msgid "Edit favorite item"
+msgstr "Editați elementul favorit"
+
+msgid "Edit favorites"
+msgstr "Editați favoritele"
+
+msgid "Edit search history"
+msgstr "Editați istoricul căutărilor"
+
+msgid "Edit title"
+msgstr "Editați titlul"
+
+msgid "Edit, sort and delete search history entries"
+msgstr "Editați, sortați și ștergeți intrările din istoricul căutărilor"
+
+msgid "Education"
+msgstr "Educație"
+
+msgid "Educational Animation"
+msgstr "Animație educativă"
+
+msgid "Egyptian series"
+msgstr "Seriale egiptene"
+
+msgid "Empty title is not allowed."
+msgstr "Titlul gol nu este permis."
+
+msgid "Enable all groups"
+msgstr "Activați toate grupurile"
+
+msgid "Enable hosts groups"
+msgstr "Activați grupurile de hosturi"
+
+msgid "Enable reordering"
+msgstr "Activați reordonarea"
+
+msgid "Enable reordering mode"
+msgstr "Activați modul de reordonare"
+
+msgid "Enabled hosts"
+msgstr "Hosturi activate"
+
+msgid "Encrypted stream list - not supported"
+msgstr "Listă de streamuri criptată - neacceptată"
+
+#, python-format
+msgid ""
+"Encryption function body extraction failed!\n"
+"Please report the problem to %s"
+msgstr ""
+"Extragerea corpului funcției de criptare a eșuat!\n"
+"Raportați problema la %s"
+
+#, python-format
+msgid ""
+"Encryption function name extraction failed!\n"
+"Please report the problem to %s"
+msgstr ""
+"Extragerea numelui funcției de criptare a eșuat!\n"
+"Raportați problema la %s"
+
+msgid "English"
+msgstr "Engleză"
+
+msgid "English TV series"
+msgstr "Seriale TV englezești"
+
+msgid "English dubbed"
+msgstr "Dublat în engleză"
+
+msgid "English movies"
+msgstr "Filme englezești"
+
+msgid "English movies (dubbed)"
+msgstr "Filme englezești (dublate)"
+
+msgid "English series (dubbed)"
+msgstr "Seriale englezești (dublate)"
+
+msgid "English subbed"
+msgstr "Subtitrat în engleză"
+
+msgid "Enter"
+msgstr "Enter"
+
+msgid "Enter (confirm and close)"
+msgstr "Enter (confirmare și închidere)"
+
+msgid "Enter a value"
+msgstr "Introduceți o valoare"
+
+msgid "Enter name"
+msgstr "Introduceți numele"
+
+msgid "Enter new pin"
+msgstr "Introduceți noul PIN"
+
+msgid "Enter old pin"
+msgstr "Introduceți vechiul PIN"
+
+msgid "Enter pin"
+msgstr "Introduceți PIN-ul"
+
+msgid "Enter the code shown in the title of the window on your receiver's screen (or scan the QR code shown there - no code needed then):"
+msgstr "Introduceți codul afișat în titlul ferestrei de pe ecranul receptorului (sau scanați codul QR afișat acolo - atunci nu mai este necesar niciun cod):"
+
+msgid "Enter the text"
+msgstr "Introduceți textul"
+
+msgid "Entertainment"
+msgstr "Divertisment"
+
+msgid "Entitlement parsing error."
+msgstr "Eroare la analiza drepturilor de acces."
+
+#, python-format
+msgid "Entries: %d | Sort: %s | Status: %s | Jump target: %s"
+msgstr "Intrări: %d | Sortare: %s | Stare: %s | Țintă salt: %s"
+
+msgid "Episode"
+msgstr "Episod"
+
+#, python-format
+msgid "Episode %d"
+msgstr "Episodul %d"
+
+msgid "Episodes"
+msgstr "Episoade"
+
+msgid "Episodes:"
+msgstr "Episoade:"
+
+#, python-format
+msgid "Episodes: %s"
+msgstr "Episoade: %s"
+
+msgid "Epochs"
+msgstr "Epoci"
+
+msgid "Error"
+msgstr "Eroare"
+
+#, python-format
+msgid "Error code: %s\n"
+msgstr "Cod de eroare: %s\n"
+
+#, python-format
+msgid ""
+"Error code: %s\n"
+"Error message: %s"
+msgstr ""
+"Cod de eroare: %s\n"
+"Mesaj de eroare: %s"
+
+msgid "Error deleting favorite item."
+msgstr "Eroare la ștergerea elementului favorit."
+
+#, python-format
+msgid "Error deleting file \"%s\".\n"
+msgstr "Eroare la ștergerea fișierului \"%s\".\n"
+
+msgid "Error during deletion of the debug file."
+msgstr "Eroare la ștergerea fișierului de depanare."
+
+#, python-format
+msgid "Error getting file name: %s"
+msgstr "Eroare la obținerea numelui fișierului: %s"
+
+msgid "Error loading favorites."
+msgstr "Eroare la încărcarea favoritelor."
+
+#, python-format
+msgid ""
+"Error message: \"%s\".\n"
+"Error code: \"%s\"."
+msgstr ""
+"Mesaj de eroare: \"%s\".\n"
+"Cod de eroare: \"%s\"."
+
+#, python-format
+msgid "Error message: %s\n"
+msgstr "Mesaj de eroare: %s\n"
+
+msgid "Error occurs"
+msgstr "A apărut o eroare"
+
+msgid "Error occurs during download."
+msgstr "A apărut o eroare în timpul descărcării."
+
+msgid "Error occurs:"
+msgstr "A apărut o eroare:"
+
+#, python-format
+msgid "Error reading file \"%s\".\n"
+msgstr "Eroare la citirea fișierului \"%s\".\n"
+
+#, python-format
+msgid "Error renaming file: %s"
+msgstr "Eroare la redenumirea fișierului: %s"
+
+msgid "Error saving favorites."
+msgstr "Eroare la salvarea favoritelor."
+
+msgid "Error while loading watch data"
+msgstr "Eroare la încărcarea datelor de vizionare"
+
+msgid "Error while saving."
+msgstr "Eroare la salvare."
+
+#, python-format
+msgid "Error writing file \"%s\".\n"
+msgstr "Eroare la scrierea fișierului \"%s\".\n"
+
+msgid "Ethical & Legal"
+msgstr "Etic și legal"
+
+msgid "European movies"
+msgstr "Filme europene"
+
+msgid "Events"
+msgstr "Evenimente"
+
+msgid "Every enabled site: does the menu open, does a list show videos? Takes a few minutes."
+msgstr "Fiecare site activat: se deschide meniul, o listă afișează videoclipuri? Durează câteva minute."
+
+msgid "Exam Review"
+msgstr "Recapitulare examen"
+
+msgid "Exception occurs"
+msgstr "A apărut o excepție"
+
+msgid "Exclusive"
+msgstr "Exclusiv"
+
+msgid "Exit"
+msgstr "Ieșire"
+
+#, python-format
+msgid "Expiry: %s"
+msgstr "Expirare: %s"
+
+msgid "Extended"
+msgstr "Extins"
+
+msgid "External movie player config"
+msgstr "Configurare player extern"
+
+msgid "Extracted subtitle file is empty or missing."
+msgstr "Fișierul de subtitrare extras este gol sau lipsește."
+
+msgid "FAILED"
+msgstr "EȘUAT"
+
+msgid "FAST FORWARD"
+msgstr "DERULARE ÎNAINTE"
+
+msgid "FREE"
+msgstr "LIBER"
+
+msgid "FUCKER sorting by :"
+msgstr "Sortare FUCKER după :"
+
+#, python-format
+msgid "Fail to get \"%s\"."
+msgstr "Obținerea \"%s\" a eșuat."
+
+msgid "Fail to get captcha data."
+msgstr "Obținerea datelor captcha a eșuat."
+
+msgid "Failed to connect to host."
+msgstr "Conectarea la host a eșuat."
+
+#, python-format
+msgid "Failed to connect to server \"%s\"."
+msgstr "Conectarea la serverul \"%s\" a eșuat."
+
+#, python-format
+msgid "Failed to convert the file \"%s\" to UTF-8."
+msgstr "Conversia fișierului \"%s\" în UTF-8 a eșuat."
+
+#, python-format
+msgid "Failed to create directory \"%s\"."
+msgstr "Crearea directorului \"%s\" a eșuat."
+
+msgid "Failed to create extraction directory."
+msgstr "Crearea directorului de extragere a eșuat."
+
+msgid "Failed to download subtitle."
+msgstr "Descărcarea subtitrării a eșuat."
+
+msgid "Failed to download the subtitles."
+msgstr "Descărcarea subtitrărilor a eșuat."
+
+msgid "Failed to get the download link."
+msgstr "Obținerea linkului de descărcare a eșuat."
+
+#, python-format
+msgid "Failed to get the file list from %s."
+msgstr "Obținerea listei de fișiere de la %s a eșuat."
+
+msgid "Failed to gzip."
+msgstr "Comprimarea gzip a eșuat."
+
+msgid "Failed to initialize (unknown option or old curl version?)."
+msgstr "Inițializarea a eșuat (opțiune necunoscută sau versiune curl veche?)."
+
+msgid "Failed to load the match list"
+msgstr "Încărcarea listei de meciuri a eșuat"
+
+#, python-format
+msgid "Failed to log in user \"%s\". Please check your login and password."
+msgstr "Autentificarea utilizatorului \"%s\" a eșuat. Verificați numele de utilizator și parola."
+
+#, python-format
+msgid "Failed to open the file \"%s\"."
+msgstr "Deschiderea fișierului \"%s\" a eșuat."
+
+#, python-format
+msgid "Failed to write file \"%s\"."
+msgstr "Scrierea fișierului \"%s\" a eșuat."
+
+#, python-format
+msgid "Failed to write the file \"%s\"."
+msgstr "Scrierea fișierului \"%s\" a eșuat."
+
+#, python-format
+msgid "Failed: %s"
+msgstr "Eșuat: %s"
+
+msgid "Family"
+msgstr "Familie"
+
+msgid "Fantasy"
+msgstr "Fantezie"
+
+msgid "Fashion"
+msgstr "Modă"
+
+msgid "Fatal error: consoleWrite failed!"
+msgstr "Eroare fatală: consoleWrite a eșuat!"
+
+msgid "Favorite group not found."
+msgstr "Grupul de favorite nu a fost găsit."
+
+msgid "Favorite item not found."
+msgstr "Elementul favorit nu a fost găsit."
+
+msgid "Favorites"
+msgstr "Favorite"
+
+msgid "Favorites groups"
+msgstr "Grupuri de favorite"
+
+msgid "Favorites manager"
+msgstr "Administrare favorite"
+
+msgid "Featured"
+msgstr "Recomandate"
+
+#, python-format
+msgid "File \"%s\" already exists"
+msgstr "Fișierul \"%s\" există deja"
+
+#, python-format
+msgid "File \"%s\" already exists!"
+msgstr "Fișierul \"%s\" există deja!"
+
+msgid "File I/O error (write)."
+msgstr "Eroare I/O fișier (scriere)."
+
+msgid "File I/O error."
+msgstr "Eroare I/O fișier."
+
+msgid "File Not Found."
+msgstr "Fișierul nu a fost găsit."
+
+#, python-format
+msgid "File [%s] has been added to the downloading queue."
+msgstr "Fișierul [%s] a fost adăugat în coada de descărcare."
+
+#, python-format
+msgid "File [%s] is already in the downloading queue."
+msgstr "Fișierul [%s] se află deja în coada de descărcare."
+
+#, python-format
+msgid "File [%s] was added to downloading queue."
+msgstr "Fișierul [%s] a fost adăugat în coada de descărcare."
+
+msgid "File browser"
+msgstr "Navigator de fișiere"
+
+msgid "File can not be downloaded. Download manager is not available."
+msgstr "Fișierul nu poate fi descărcat. Managerul de descărcări nu este disponibil."
+
+#, python-format
+msgid "File can not be downloaded. Protocol [%s] is unsupported"
+msgstr "Fișierul nu poate fi descărcat. Protocolul [%s] nu este acceptat"
+
+msgid "File format of DASH (MPD) downloads"
+msgstr "Formatul fișierului pentru descărcările DASH (MPD)"
+
+#, python-format
+msgid "File might be corrupted (size: %d bytes)."
+msgstr "Fișierul ar putea fi deteriorat (dimensiune: %d octeți)."
+
+msgid "File name cannot be empty!"
+msgstr "Numele fișierului nu poate fi gol!"
+
+msgid "File renamed successfully!"
+msgstr "Fișierul a fost redenumit cu succes!"
+
+msgid "Files"
+msgstr "Fișiere"
+
+msgid "Filler"
+msgstr "Episoade de umplutură"
+
+msgid "Films"
+msgstr "Filme"
+
+msgid "Films by genre"
+msgstr "Filme după gen"
+
+msgid "Filmweb Suggestions"
+msgstr "Sugestii Filmweb"
+
+msgid "Filter"
+msgstr "Filtru"
+
+msgid "Filter settings"
+msgstr "Setări filtru"
+
+msgid "Find item"
+msgstr "Căutare element"
+
+msgid "Find out more."
+msgstr "Aflați mai multe."
+
+msgid "Finished matches with a full replay, highlights or match cuts, newest first (usually a few days after the match)."
+msgstr "Meciuri încheiate cu reluare completă, rezumate sau secvențe din meci, cele mai noi primele (de obicei la câteva zile după meci)."
+
+msgid "First Page"
+msgstr "Prima pagină"
+
+msgid "First air date:"
+msgstr "Data primei difuzări:"
+
+msgid "First aired"
+msgstr "Prima difuzare"
+
+msgid "First movie player in buffering mode"
+msgstr "Primul player în modul cu buffer"
+
+msgid "First movie player without buffering mode"
+msgstr "Primul player fără modul cu buffer"
+
+msgid "Fix jump target"
+msgstr "Fixare țintă salt"
+
+#, python-format
+msgid "Folder \"%s\" can not be created."
+msgstr "Folderul \"%s\" nu poate fi creat."
+
+#, python-format
+msgid "Folder \"%s\" has been created."
+msgstr "Folderul \"%s\" a fost creat."
+
+msgid "Folder for cache data"
+msgstr "Folder pentru datele cache"
+
+msgid "Folder for config data"
+msgstr "Folder pentru datele de configurare"
+
+msgid "Folder for temporary data"
+msgstr "Folder pentru datele temporare"
+
+msgid "Followers"
+msgstr "Urmăritori"
+
+msgid "Following host are broken or additional python modules are needed."
+msgstr "Următoarele hosturi sunt defecte sau necesită module Python suplimentare."
+
+msgid "Font size offset"
+msgstr "Decalaj mărime font"
+
+msgid "Food"
+msgstr "Mâncare"
+
+msgid "Foot & Ankle"
+msgstr "Picior și gleznă"
+
+msgid "Football Live"
+msgstr "Fotbal live"
+
+msgid "For continuous playing, please press 8!"
+msgstr "Pentru redare continuă, apăsați 8!"
+
+msgid "For developers"
+msgstr "Pentru dezvoltatori"
+
+msgid "Force internal skin: all E2iPlayer screens"
+msgstr "Forțare skin intern: toate ecranele E2iPlayer"
+
+msgid "Force internal skin: main screen only"
+msgstr "Forțare skin intern: doar ecranul principal"
+
+msgid "Foreign movies"
+msgstr "Filme străine"
+
+msgid "Foreign parts only"
+msgstr "Doar părțile în limbă străină"
+
+msgid "Foreign series"
+msgstr "Seriale străine"
+
+msgid "Format 'wmv' blocked in configuration."
+msgstr "Formatul 'wmv' este blocat în configurare."
+
+msgid "Formations"
+msgstr "Formații"
+
+msgid "Fotka.pl stream :"
+msgstr "Fotka.pl stream :"
+
+msgid "Free IPTV list"
+msgstr "Listă IPTV gratuită"
+
+msgid "French"
+msgstr "Franceză"
+
+msgid "From E2 settings"
+msgstr "Din setările E2"
+
+msgid "Full description loaded"
+msgstr "Descrierea completă a fost încărcată"
+
+msgid "Full description not available"
+msgstr "Descrierea completă nu este disponibilă"
+
+msgid "Full test"
+msgstr "Test complet"
+
+msgid "Full test checks the INFO window :"
+msgstr "Testul complet verifică fereastra INFO :"
+
+msgid "Full test checks the next page :"
+msgstr "Testul complet verifică pagina următoare :"
+
+msgid "Full test checks the search :"
+msgstr "Testul complet verifică căutarea :"
+
+msgid "Full test checks the stream link :"
+msgstr "Testul complet verifică linkul de stream :"
+
+msgid "Full test checks thumbnails :"
+msgstr "Testul complet verifică miniaturile :"
+
+msgid "GREEN"
+msgstr "VERDE"
+
+#, python-format
+msgid "Game: %s"
+msgstr "Joc: %s"
+
+msgid "Games"
+msgstr "Jocuri"
+
+msgid "Gaming"
+msgstr "Gaming"
+
+msgid "General"
+msgstr "General"
+
+msgid "Generic error code."
+msgstr "Cod de eroare generic."
+
+msgid "Genre"
+msgstr "Gen"
+
+msgid "Genre:"
+msgstr "Gen:"
+
+#, python-format
+msgid "Genre: %s"
+msgstr "Gen: %s"
+
+msgid "Genres"
+msgstr "Genuri"
+
+msgid "Genres:"
+msgstr "Genuri:"
+
+msgid "German"
+msgstr "Germană"
+
+msgid "Get Cloudflare job"
+msgstr "Obținere sarcină Cloudflare"
+
+msgid "Get captcha job"
+msgstr "Obținere sarcină captcha"
+
+msgid "Get cookies job"
+msgstr "Obținere sarcină cookie-uri"
+
+msgid "Get languages failed!"
+msgstr "Obținerea limbilor a eșuat!"
+
+msgid "Get token failed!"
+msgstr "Obținerea tokenului a eșuat!"
+
+msgid "GitHub API error"
+msgstr "Eroare GitHub API"
+
+msgid "Global"
+msgstr "Global"
+
+msgid "Global Search mode :"
+msgstr "Mod căutare globală :"
+
+msgid "Go to the host configuration available under blue button."
+msgstr "Accesați configurarea hostului disponibilă sub butonul albastru."
+
+msgid "Google Suggestions"
+msgstr "Sugestii Google"
+
+msgid "Google account"
+msgstr "Cont Google"
+
+msgid "Graphic services selector"
+msgstr "Selector grafic de servicii"
+
+msgid "Greek"
+msgstr "Greacă"
+
+#, python-format
+msgid "Group \"%s\" already exists."
+msgstr "Grupul \"%s\" există deja."
+
+#, python-format
+msgid "Group %d"
+msgstr "Grupul %d"
+
+msgid "Group links into categories:"
+msgstr "Grupare linkuri în categorii:"
+
+#, python-format
+msgid "Group with id[%s] not found."
+msgstr "Grupul cu id[%s] nu a fost găsit."
+
+msgid "Groups"
+msgstr "Grupuri"
+
+msgid "HIDDEN CAM SHOW IN PROGRESS. TRY AGAIN LATER!"
+msgstr "SHOW CAM ASCUNS ÎN DESFĂȘURARE. ÎNCERCAȚI DIN NOU MAI TÂRZIU!"
+
+msgid "HLS with subtitles"
+msgstr "HLS cu subtitrări"
+
+msgid "HLS/m3u8"
+msgstr "HLS/m3u8"
+
+msgid "HTTP/2 framing layer error."
+msgstr "Eroare HTTP/2 la nivelul de încadrare."
+
+msgid "HTTP/2 stream error."
+msgstr "Eroare de stream HTTP/2."
+
+#, python-format
+msgid "HTTPS connection error \"%s\"\n"
+msgstr "Eroare de conexiune HTTPS \"%s\"\n"
+
+msgid "Hand"
+msgstr "Mână"
+
+msgid "Health"
+msgstr "Sănătate"
+
+msgid "Hearing impaired"
+msgstr "Pentru persoane cu deficiențe de auz"
+
+msgid "Help"
+msgstr "Ajutor"
+
+#, python-format
+msgid "Hide \"%s\" group"
+msgstr "Ascundere grup \"%s\""
+
+msgid "Hide the menu (live TV visible)"
+msgstr "Ascundere meniu (TV live vizibil)"
+
+msgid "Hide titles only available in Sweden"
+msgstr "Ascundere titluri disponibile doar în Suedia"
+
+msgid "Hide/Active Group"
+msgstr "Ascundere/Activare grup"
+
+msgid "High (or HD)"
+msgstr "Înaltă (sau HD)"
+
+msgid "Highlights"
+msgstr "Rezumate"
+
+msgid "History"
+msgstr "Istoric"
+
+msgid "History of searched phrases."
+msgstr "Istoricul frazelor căutate."
+
+msgid "Home"
+msgstr "Acasă"
+
+msgid "Home / Sections"
+msgstr "Acasă / Secțiuni"
+
+msgid "Home page"
+msgstr "Pagina principală"
+
+msgid "Horror"
+msgstr "Horror"
+
+msgid "Host"
+msgstr "Host"
+
+#, python-format
+msgid "Host: %s"
+msgstr "Host: %s"
+
+#, python-format
+msgid "Hosting \"%s\" not supported."
+msgstr "Serviciul de găzduire \"%s\" nu este acceptat."
+
+#, python-format
+msgid "Hosting \"%s\" unknown."
+msgstr "Serviciu de găzduire \"%s\" necunoscut."
+
+#, python-format
+msgid "Hosting: %s, %s"
+msgstr "Găzduire: %s, %s"
+
+msgid "Hosts"
+msgstr "Hosturi"
+
+msgid "Hosts list type"
+msgstr "Tip listă hosturi"
+
+msgid "Hot"
+msgstr "Populare acum"
+
+msgid "How to solve a captcha:"
+msgstr "Cum se rezolvă un captcha:"
+
+msgid "Humanitarian"
+msgstr "Umanitar"
+
+msgid "Hungarian"
+msgstr "Maghiară"
+
+msgid "I am no robot"
+msgstr "Nu sunt robot"
+
+msgid "IMDb"
+msgstr "IMDb"
+
+msgid "IMDb Rating:"
+msgstr "Evaluare IMDb:"
+
+msgid "IMDb Suggestions"
+msgstr "Sugestii IMDb"
+
+msgid "INFO"
+msgstr "INFO"
+
+#, python-format
+msgid "INFO %d rows"
+msgstr "INFO %d rânduri"
+
+msgid "INFO list text"
+msgstr "Text listă INFO"
+
+msgid "INFO opens no window"
+msgstr "INFO nu deschide nicio fereastră"
+
+msgid "INFO window"
+msgstr "Fereastra INFO"
+
+msgid "INTERRUPTED"
+msgstr "ÎNTRERUPT"
+
+msgid "IPTV Portals"
+msgstr "Portaluri IPTV"
+
+msgid "Icon type"
+msgstr "Tip pictogramă"
+
+msgid "Icons quality"
+msgstr "Calitate pictograme"
+
+msgid "Icons size"
+msgstr "Dimensiune pictograme"
+
+msgid "Image"
+msgstr "Imagine"
+
+msgid "Indian"
+msgstr "Indian"
+
+msgid "Indian Movies"
+msgstr "Filme indiene"
+
+msgid "Indian TV series"
+msgstr "Seriale TV indiene"
+
+msgid "Indian movies"
+msgstr "Filme indiene"
+
+msgid "Indian movies (dubbed)"
+msgstr "Filme indiene (dublate)"
+
+msgid "Indian series (dubbed)"
+msgstr "Seriale indiene (dublate)"
+
+msgid "Industry"
+msgstr "Industrie"
+
+msgid "Info"
+msgstr "Info"
+
+msgid "Info bar timeout"
+msgstr "Timp de afișare bară info"
+
+msgid "Information"
+msgstr "Informații"
+
+msgid "Information about audio tracks not available."
+msgstr "Informațiile despre pistele audio nu sunt disponibile."
+
+msgid "Initialize web interface"
+msgstr "Inițializare interfață web"
+
+msgid "Inject black iframe at video playback finish"
+msgstr "Inserare iframe negru la sfârșitul redării video"
+
+msgid "Input"
+msgstr "Intrare"
+
+msgid "Install E2iPlayer"
+msgstr "Instalare E2iPlayer"
+
+msgid "Installed version"
+msgstr "Versiune instalată"
+
+#, python-format
+msgid "Installed: v%s"
+msgstr "Instalat: v%s"
+
+#, python-format
+msgid "Installed: v%s - %d commits behind %s"
+msgstr "Instalat: v%s - %d commituri în urma %s"
+
+#, python-format
+msgid "Installed: v%s - no matching release tag (local build?)"
+msgstr "Instalat: v%s - niciun tag de lansare corespunzător (build local?)"
+
+#, python-format
+msgid "Installed: v%s - up to date"
+msgstr "Instalat: v%s - la zi"
+
+msgid "Interactive Learning Center(ILC)"
+msgstr "Centru de învățare interactivă (ILC)"
+
+msgid "Intervention"
+msgstr "Intervenție"
+
+msgid "Interviews"
+msgstr "Interviuri"
+
+#, python-format
+msgid "Invalid answer from %s."
+msgstr "Răspuns nevalid de la %s."
+
+msgid "Invalid email."
+msgstr "E-mail nevalid."
+
+msgid "Invalid name."
+msgstr "Nume nevalid."
+
+msgid "Invalid value."
+msgstr "Valoare nevalidă."
+
+msgid "Investigations"
+msgstr "Investigații"
+
+msgid "Is this message displayed correctly?"
+msgstr "Este acest mesaj afișat corect?"
+
+msgid "It is not allowed to call getURLRequestData from main thread."
+msgstr "Nu este permisă apelarea getURLRequestData din firul principal."
+
+msgid "It looks like some kind of protection. Try again later."
+msgstr "Pare a fi un fel de protecție. Încercați din nou mai târziu."
+
+#, python-format
+msgid "It looks like your current configuration do not allow to connect to the https://%s/.\n"
+msgstr "Se pare că configurarea dvs. actuală nu permite conectarea la https://%s/.\n"
+
+#, python-format
+msgid "It seems that the host \"%s\" has crashed."
+msgstr "Se pare că hostul \"%s\" s-a blocat."
+
+#, python-format
+msgid "It seems that the subtitle's provider \"%s\" has crashed."
+msgstr "Se pare că furnizorul de subtitrări \"%s\" s-a blocat."
+
+#, python-format
+msgid ""
+"It seems that the video player \"%s\" does not work properly.\n"
+"\n"
+"STS: %s\n"
+"ERROR CODE: %r"
+msgstr ""
+"Se pare că playerul video \"%s\" nu funcționează corect.\n"
+"\n"
+"STS: %s\n"
+"COD DE EROARE: %r"
+
+msgid "It seems that unrar utility is not installed."
+msgstr "Se pare că utilitarul unrar nu este instalat."
+
+msgid "It seems that unzip utility is not installed."
+msgstr "Se pare că utilitarul unzip nu este instalat."
+
+msgid "Italian"
+msgstr "Italiană"
+
+#, python-format
+msgid "Item idx[%d] not found in group[%s]."
+msgstr "Elementul idx[%d] nu a fost găsit în grupul[%s]."
+
+#, python-format
+msgid "Items in group \"%s\""
+msgstr "Elemente în grupul \"%s\""
+
+msgid "JDownloader script execution"
+msgstr "Execuție script JDownloader"
+
+#, python-format
+msgid ""
+"JDownloader script execution failed.\n"
+"Error code: %s\n"
+msgstr ""
+"Execuția scriptului JDownloader a eșuat.\n"
+"Cod de eroare: %s\n"
+
+msgid "JDownloader script finished."
+msgstr "Scriptul JDownloader s-a încheiat."
+
+msgid "JS cache"
+msgstr "Cache JS"
+
+msgid "Japanese"
+msgstr "Japoneză"
+
+msgid "Japanese dramas"
+msgstr "Drame japoneze"
+
+msgid "Japanese films"
+msgstr "Filme japoneze"
+
+msgid "Jobs & Positions"
+msgstr "Locuri de muncă și posturi"
+
+msgid "Journal Club"
+msgstr "Journal Club"
+
+msgid "Jump"
+msgstr "Salt"
+
+msgid "Jump target was fixed so the sort order is preserved."
+msgstr "Ținta saltului a fost fixată, astfel încât ordinea de sortare este păstrată."
+
+msgid "Jump to a selected page"
+msgstr "Salt la o pagină selectată"
+
+msgid "Jump to a selected page, max: {}"
+msgstr "Salt la o pagină selectată, max: {}"
+
+msgid "Keep FFmpeg command files (.iptv.cmd)"
+msgstr "Păstrare fișiere de comenzi FFmpeg (.iptv.cmd)"
+
+msgid "Keep temporary JS scripts"
+msgstr "Păstrare scripturi JS temporare"
+
+msgid "Kids"
+msgstr "Copii"
+
+msgid "Kinds"
+msgstr "Tipuri"
+
+msgid "Knee & Sports"
+msgstr "Genunchi și sport"
+
+msgid "Knowledge"
+msgstr "Cunoaștere"
+
+msgid "Knowledge & Nature"
+msgstr "Cunoaștere și natură"
+
+msgid "Korean"
+msgstr "Coreeană"
+
+msgid "Korean TV series"
+msgstr "Seriale TV coreene"
+
+msgid "Korean anime"
+msgstr "Anime coreean"
+
+msgid "Korean dramas"
+msgstr "Drame coreene"
+
+msgid "Korean films"
+msgstr "Filme coreene"
+
+msgid "Korean movies"
+msgstr "Filme coreene"
+
+msgid "LEFT/RIGHT at start/end of text - alternative way to switch panels"
+msgstr "STÂNGA/DREAPTA la începutul/sfârșitul textului - mod alternativ de a comuta între panouri"
+
+msgid "Language"
+msgstr "Limbă"
+
+msgid "Language of the details (TMDb, IMDb)"
+msgstr "Limba detaliilor (TMDb, IMDb)"
+
+msgid "Language:"
+msgstr "Limbă:"
+
+msgid "Last"
+msgstr "Ultima"
+
+#, python-format
+msgid "Last Exception error: \"%s\""
+msgstr "Ultima eroare de excepție: \"%s\""
+
+#, python-format
+msgid "Last Exception error: '%s'"
+msgstr "Ultima eroare de excepție: '%s'"
+
+#, python-format
+msgid "Last Modified: %s"
+msgstr "Ultima modificare: %s"
+
+msgid "Last air date:"
+msgstr "Data ultimei difuzări:"
+
+msgid "Last chance"
+msgstr "Ultima șansă"
+
+msgid "Last day"
+msgstr "Ultima zi"
+
+#, python-format
+msgid ""
+"Last error:\n"
+"%s"
+msgstr ""
+"Ultima eroare:\n"
+"%s"
+
+#, python-format
+msgid "Last error: \"%s\""
+msgstr "Ultima eroare: \"%s\""
+
+msgid "Last month"
+msgstr "Ultima lună"
+
+msgid "Last result"
+msgstr "Ultimul rezultat"
+
+msgid "Last week"
+msgstr "Ultima săptămână"
+
+msgid "Last.fm charts and tag pages are behind a browser check, only the radio stations can be used."
+msgstr "Topurile și paginile de etichete Last.fm sunt protejate de o verificare a browserului, se pot folosi doar posturile de radio."
+
+#, python-format
+msgid "Last.fm user \"%s\" not found."
+msgstr "Utilizatorul Last.fm \"%s\" nu a fost găsit."
+
+msgid "Last.fm user name:"
+msgstr "Nume de utilizator Last.fm:"
+
+msgid "Lastest"
+msgstr "Cele mai noi"
+
+msgid "Latest"
+msgstr "Cele mai noi"
+
+msgid "Latest added"
+msgstr "Adăugate recent"
+
+msgid "Latest anime episodes"
+msgstr "Cele mai noi episoade anime"
+
+msgid "Latest cartoon episodes"
+msgstr "Cele mai noi episoade de desene animate"
+
+msgid "Latest dubbed episodes"
+msgstr "Cele mai noi episoade dublate"
+
+msgid "Latest episodes"
+msgstr "Cele mai noi episoade"
+
+msgid "Latest episodes (airing)"
+msgstr "Cele mai noi episoade (în difuzare)"
+
+msgid "Latest episodes (finished series)"
+msgstr "Cele mai noi episoade (seriale încheiate)"
+
+msgid "Latest highlights"
+msgstr "Cele mai noi rezumate"
+
+msgid "Latest update"
+msgstr "Ultima actualizare"
+
+msgid "Latest updates"
+msgstr "Cele mai noi actualizări"
+
+msgid "Latest video"
+msgstr "Cel mai nou videoclip"
+
+msgid "Latest videos"
+msgstr "Cele mai noi videoclipuri"
+
+msgid "Latest videos from the channels you are subscribed to."
+msgstr "Cele mai noi videoclipuri de pe canalele la care sunteți abonat."
+
+msgid "Latin American series"
+msgstr "Seriale latino-americane"
+
+msgid "Latin American series (dubbed)"
+msgstr "Seriale latino-americane (dublate)"
+
+msgid "Latino"
+msgstr "Latino"
+
+#, python-brace-format
+msgid "Launcher URI ({url} or {address} = address of the box)"
+msgstr "URI lansator ({url} sau {address} = adresa receptorului)"
+
+msgid "Law"
+msgstr "Drept"
+
+msgid "League and cup matches"
+msgstr "Meciuri de campionat și de cupă"
+
+msgid "Leagues"
+msgstr "Ligi"
+
+msgid "Leagues, clubs and events"
+msgstr "Ligi, cluburi și evenimente"
+
+msgid "Lecturers"
+msgstr "Lectori"
+
+msgid "Left"
+msgstr "Stânga"
+
+msgid "Library"
+msgstr "Bibliotecă"
+
+msgid "Lifestyle"
+msgstr "Stil de viață"
+
+msgid "Light / dark design"
+msgstr "Design luminos / întunecat"
+
+msgid "Lightgray"
+msgstr "Gri deschis"
+
+msgid "Like the quick test, plus the checks chosen in the host settings (Debug). Takes about 20-40 minutes."
+msgstr "Ca testul rapid, plus verificările alese în setările hostului (Depanare). Durează aproximativ 20-40 de minute."
+
+msgid "Liked videos"
+msgstr "Videoclipuri apreciate"
+
+msgid "Line Spacing"
+msgstr "Spațiere rânduri"
+
+msgid "Link"
+msgstr "Link"
+
+msgid "Link is not supported by the gstplayer. Please use the extelayer3 if available."
+msgstr "Linkul nu este acceptat de gstplayer. Folosiți exteplayer3, dacă este disponibil."
+
+msgid "Link protected with Google ReCaptcha v2"
+msgstr "Link protejat cu Google ReCaptcha v2"
+
+msgid "Link protected with google recaptcha v2."
+msgstr "Link protejat cu Google reCaptcha v2."
+
+msgid "Links from all files without categories"
+msgstr "Linkuri din toate fișierele, fără categorii"
+
+#, python-format
+msgid "Links from the file %s"
+msgstr "Linkuri din fișierul %s"
+
+msgid "List"
+msgstr "Listă"
+
+msgid "List by day"
+msgstr "Listă pe zile"
+
+msgid "List view"
+msgstr "Vizualizare listă"
+
+#, python-format
+msgid "Listeners: %s"
+msgstr "Ascultători: %s"
+
+msgid "Live"
+msgstr "Live"
+
+msgid "Live channels"
+msgstr "Canale live"
+
+msgid "Live radio"
+msgstr "Radio live"
+
+#, python-format
+msgid "Live stream of the %s channel"
+msgstr "Stream live al canalului %s"
+
+msgid "Live stream on YouTube"
+msgstr "Stream live pe YouTube"
+
+#, python-format
+msgid "Live stream starts %s"
+msgstr "Streamul live începe %s"
+
+msgid "Live streams"
+msgstr "Streamuri live"
+
+msgid "Live streams by day"
+msgstr "Streamuri live pe zile"
+
+msgid "Live-action series episodes"
+msgstr "Episoade din seriale cu actori reali"
+
+msgid "Load"
+msgstr "Încărcare"
+
+#, python-format
+msgid "Load of the Virtual Keyboard layout \"%s\" failed due to the following error: \"%s\""
+msgstr "Încărcarea aspectului tastaturii virtuale \"%s\" a eșuat din cauza următoarei erori: \"%s\""
+
+msgid "Loading"
+msgstr "Se încarcă"
+
+#, python-format
+msgid "Loading %s failed due to following error:"
+msgstr "Încărcarea %s a eșuat din cauza următoarei erori:"
+
+msgid "Loading failed."
+msgstr "Încărcarea a eșuat."
+
+msgid "Loading watch data..."
+msgstr "Se încarcă datele de vizionare..."
+
+msgid "Loading..."
+msgstr "Se încarcă..."
+
+msgid "LocalMedia"
+msgstr "Media locale"
+
+#, python-format
+msgid "Locale ID mismatched! %s <> %s"
+msgstr "ID-ul de localizare nu corespunde! %s <> %s"
+
+msgid "Locality:"
+msgstr "Localitate:"
+
+msgid "Localization"
+msgstr "Localizare"
+
+msgid "Lodynet offers this video only on its subscription servers (Lody Plus / VIP) for now - the free servers usually follow later."
+msgstr "Deocamdată Lodynet oferă acest videoclip doar pe serverele sale cu abonament (Lody Plus / VIP) - serverele gratuite urmează de obicei mai târziu."
+
+msgid "Log"
+msgstr "Jurnal"
+
+msgid "Login failed!"
+msgstr "Autentificarea a eșuat!"
+
+msgid "Login failed."
+msgstr "Autentificarea a eșuat."
+
+#, python-brace-format
+msgid "Login on {0} failed."
+msgstr "Autentificarea pe {0} a eșuat."
+
+msgid "Login or password is wrong."
+msgstr "Numele de utilizator sau parola sunt greșite."
+
+#, python-format
+msgid "Login to prijevodi-online.org failed: %s"
+msgstr "Autentificarea pe prijevodi-online.org a eșuat: %s"
+
+msgid "Login to prijevodi-online.org failed: the site asks for a captcha, which E2iPlayer cannot solve. Series subtitles download without an account."
+msgstr "Autentificarea pe prijevodi-online.org a eșuat: site-ul solicită un captcha pe care E2iPlayer nu îl poate rezolva. Subtitrările pentru seriale se pot descărca fără cont."
+
+#, python-format
+msgid ""
+"Login user \"%s\" to https://vk.com/ failed!\n"
+"Please check your login data in the IPTVPlayer configuration."
+msgstr ""
+"Autentificarea utilizatorului \"%s\" pe https://vk.com/ a eșuat!\n"
+"Verificați datele de autentificare în configurarea IPTVPlayer."
+
+msgid "Logs"
+msgstr "Jurnale"
+
+msgid "Long list"
+msgstr "Listă lungă"
+
+msgid "Longest"
+msgstr "Cele mai lungi"
+
+msgid "Low"
+msgstr "Scăzută"
+
+msgid "MENU"
+msgstr "MENU"
+
+msgid "MENU → Add new entry: type a new search term to add to the history."
+msgstr "MENU → Adăugare intrare nouă: introduceți un termen de căutare nou pentru a-l adăuga în istoric."
+
+msgid "MENU → Enable/Disable reordering: same as GREEN (pick up/move/drop with OK, UP/DOWN)."
+msgstr "MENU → Activare/Dezactivare reordonare: la fel ca VERDE (preluare/mutare/plasare cu OK, SUS/JOS)."
+
+msgid "MENU → Fix/Unfix jump target: sets what happens when an entry is reused elsewhere."
+msgstr "MENU → Fixare/Anulare fixare țintă salt: stabilește ce se întâmplă când o intrare este reutilizată în altă parte."
+
+msgid "MENU → Reset to saved order: undo unsaved changes, reload from disk."
+msgstr "MENU → Resetare la ordinea salvată: anulează modificările nesalvate, reîncarcă de pe disc."
+
+msgid "MENU → Sort A-Z / Sort Z-A: sort all entries alphabetically."
+msgstr "MENU → Sortare A-Z / Sortare Z-A: sortează toate intrările alfabetic."
+
+msgid "MENU=Options"
+msgstr "MENU=Opțiuni"
+
+#, python-format
+msgid "MOVE: %s"
+msgstr "MUTARE: %s"
+
+msgid "MOVING"
+msgstr "SE MUTĂ"
+
+msgid "MP3Quran live radio"
+msgstr "Radio live MP3Quran"
+
+msgid "Main"
+msgstr "Principal"
+
+msgid "Main menu"
+msgstr "Meniu principal"
+
+#, python-format
+msgid "Make directory [%s]"
+msgstr "Creare director [%s]"
+
+msgid "Manager status:"
+msgstr "Stare manager:"
+
+msgid "Mark downloaded items"
+msgstr "Marcare elemente descărcate"
+
+msgid "Mark favourite items"
+msgstr "Marcare elemente favorite"
+
+msgid "Match cuts"
+msgstr "Secvențe din meci"
+
+msgid "Match not started yet"
+msgstr "Meciul nu a început încă"
+
+msgid "Matches of the national teams"
+msgstr "Meciurile echipelor naționale"
+
+msgid "Matching entries"
+msgstr "Intrări corespunzătoare"
+
+msgid "Max items per page"
+msgstr "Număr maxim de elemente pe pagină"
+
+msgid "Max number of parallel downloads has been reached."
+msgstr "S-a atins numărul maxim de descărcări paralele."
+
+msgid "Maximum log file size"
+msgstr "Dimensiunea maximă a fișierului jurnal"
+
+msgid "Medtryx Marketing"
+msgstr "Medtryx Marketing"
+
+msgid "Meetings"
+msgstr "Întâlniri"
+
+msgid "Members"
+msgstr "Membri"
+
+msgid "Menu"
+msgstr "Meniu"
+
+msgid "Military"
+msgstr "Militar"
+
+msgid "Mini series"
+msgstr "Miniserii"
+
+msgid "Missed"
+msgstr "Ratate"
+
+msgid "Missed the show?"
+msgstr "Ați ratat emisiunea?"
+
+msgid "Missing API key - set it in Settings, Web streams, Windy Webcams"
+msgstr "Lipsește cheia API - setați-o în Setări, Streamuri web, Windy Webcams"
+
+msgid "Mix"
+msgstr "Mix"
+
+msgid "MixDrop: this file is not available as a video stream (deleted or download only)."
+msgstr "MixDrop: acest fișier nu este disponibil ca stream video (șters sau doar pentru descărcare)."
+
+msgid "Mixes"
+msgstr "Mixuri"
+
+msgid "Models"
+msgstr "Modele"
+
+msgid "More"
+msgstr "Mai mult"
+
+msgid "More Categories"
+msgstr "Mai multe categorii"
+
+msgid "More Channels"
+msgstr "Mai multe canale"
+
+msgid "More Models"
+msgstr "Mai multe modele"
+
+msgid "More Pornstars"
+msgstr "Mai multe vedete porno"
+
+msgid "More important"
+msgstr "Mai important"
+
+msgid "More results"
+msgstr "Mai multe rezultate"
+
+msgid "Most Popular"
+msgstr "Cele mai populare"
+
+msgid "Most Watched"
+msgstr "Cele mai vizionate"
+
+msgid "Most commented"
+msgstr "Cele mai comentate"
+
+msgid "Most discussed"
+msgstr "Cele mai discutate"
+
+msgid "Most favourited"
+msgstr "Cele mai adăugate la favorite"
+
+msgid "Most listened anasheed"
+msgstr "Cele mai ascultate anasheed"
+
+msgid "Most listened recitations"
+msgstr "Cele mai ascultate recitări"
+
+msgid "Most popular"
+msgstr "Cele mai populare"
+
+msgid "Most rated"
+msgstr "Cele mai evaluate"
+
+msgid "Most recent"
+msgstr "Cele mai recente"
+
+msgid "Most viewed"
+msgstr "Cele mai vizualizate"
+
+msgid "Most viewed movies"
+msgstr "Cele mai vizionate filme"
+
+msgid "Most viewed series"
+msgstr "Cele mai vizionate seriale"
+
+#, python-format
+msgid ""
+"Mount ISO file [%s] on [%s] failed.\n"
+"Return code[%s].\n"
+"Return data[%s]."
+msgstr ""
+"Montarea fișierului ISO [%s] pe [%s] a eșuat.\n"
+"Cod returnat[%s].\n"
+"Date returnate[%s]."
+
+msgid "Move"
+msgstr "Mutare"
+
+msgid "Move failed."
+msgstr "Mutarea a eșuat."
+
+msgid "Movie"
+msgstr "Film"
+
+msgid "Movie collections"
+msgstr "Colecții de filme"
+
+msgid "Movie player selection list"
+msgstr "Listă de selecție player"
+
+msgid "Movies"
+msgstr "Filme"
+
+msgid "Movies and series"
+msgstr "Filme și seriale"
+
+msgid "Movies genres"
+msgstr "Genuri de filme"
+
+#, python-format
+msgid "Moving file from \"%s\" to \"%s\" failed.\n"
+msgstr "Mutarea fișierului din \"%s\" în \"%s\" a eșuat.\n"
+
+#, python-format
+msgid "Moving playback buffer to the download manager failed with the following error \"%s\""
+msgstr "Mutarea bufferului de redare în managerul de descărcări a eșuat cu următoarea eroare \"%s\""
+
+msgid "Munshids"
+msgstr "Munshizi"
+
+msgid "Music"
+msgstr "Muzică"
+
+msgid "My JDownloader reCAPTCHA v2 solution"
+msgstr "Soluție reCAPTCHA v2 My JDownloader"
+
+msgid "My list"
+msgstr "Lista mea"
+
+msgid "My subscriptions"
+msgstr "Abonamentele mele"
+
+msgid "MyE2i (solve on your phone/PC)"
+msgstr "MyE2i (rezolvare pe telefon/PC)"
+
+msgid "MyE2i - how to solve a captcha"
+msgstr "MyE2i - cum se rezolvă un captcha"
+
+msgid "MyE2i Cloudflare solution"
+msgstr "Soluție Cloudflare MyE2i"
+
+msgid "MyE2i browser check solution"
+msgstr "Soluție verificare browser MyE2i"
+
+msgid "MyE2i debug snapshot received - see the debug log."
+msgstr "Snapshot de depanare MyE2i primit - consultați jurnalul de depanare."
+
+msgid "MyE2i extension is outdated - please update it."
+msgstr "Extensia MyE2i este învechită - actualizați-o."
+
+msgid "MyE2i extension: increase security"
+msgstr "Extensia MyE2i: creșterea securității"
+
+msgid "MyE2i reCAPTCHA solution"
+msgstr "Soluție reCAPTCHA MyE2i"
+
+#, python-format
+msgid ""
+"MyE2i script execution failed.\n"
+"Error code: %s\n"
+msgstr ""
+"Execuția scriptului MyE2i a eșuat.\n"
+"Cod de eroare: %s\n"
+
+msgid "MyE2i script finished."
+msgstr "Scriptul MyE2i s-a încheiat."
+
+msgid "MyE2i: close the start page when done"
+msgstr "MyE2i: închideți pagina de start la final"
+
+msgid "MyE2i: offer to open the page in (Android)"
+msgstr "MyE2i: oferă deschiderea paginii în (Android)"
+
+msgid ""
+"NO VIDEOS FOUND FOR NOW! \n"
+"CHECK BELOW ADVANCE SEARCH RESULTS!"
+msgstr ""
+"DEOCAMDATĂ NU AU FOST GĂSITE VIDEOCLIPURI! \n"
+"VERIFICAȚI MAI JOS REZULTATELE CĂUTĂRII AVANSATE!"
+
+msgid "Name cannot be empty."
+msgstr "Numele nu poate fi gol."
+
+msgid ""
+"Name is not valid.\n"
+"Please remove special characters."
+msgstr ""
+"Numele nu este valid.\n"
+"Eliminați caracterele speciale."
+
+msgid "Name:"
+msgstr "Nume:"
+
+msgid "Needs extension v1.18+. Opens the page in this browser, waits until it is fully rendered (Cloudflare challenge included, solve it if it shows up) and sends the rendered HTML, the fetch/XHR calls and the cookie names to the box debug log."
+msgstr "Necesită extensia v1.18+. Deschide pagina în acest browser, așteaptă până când este complet randată (inclusiv provocarea Cloudflare - rezolvați-o dacă apare) și trimite HTML-ul randat, apelurile fetch/XHR și numele cookie-urilor în jurnalul de depanare al receptorului."
+
+msgid "Netflix movies"
+msgstr "Filme Netflix"
+
+msgid "Netflix series"
+msgstr "Seriale Netflix"
+
+msgid "Network"
+msgstr "Rețea TV"
+
+#, python-format
+msgid "Network failed %s."
+msgstr "Rețeaua a eșuat %s."
+
+msgid "Network failure (receive)."
+msgstr "Eroare de rețea (recepție)."
+
+msgid "Network failure (send)."
+msgstr "Eroare de rețea (trimitere)."
+
+msgid "Network failure."
+msgstr "Eroare de rețea."
+
+msgid "New"
+msgstr "Nou"
+
+msgid "New dir"
+msgstr "Director nou"
+
+msgid "New entry"
+msgstr "Intrare nouă"
+
+msgid "New episodes"
+msgstr "Episoade noi"
+
+msgid "New icons will not be available."
+msgstr "Pictogramele noi nu vor fi disponibile."
+
+msgid "New links"
+msgstr "Linkuri noi"
+
+msgid "New since installed version"
+msgstr "Nou de la versiunea instalată"
+
+msgid "Newest Episodes"
+msgstr "Cele mai noi episoade"
+
+msgid "Newest videos (all YouTube channels)"
+msgstr "Cele mai noi videoclipuri (toate canalele YouTube)"
+
+msgid "Newest videos of a YouTube channel in a group"
+msgstr "Cele mai noi videoclipuri ale unui canal YouTube dintr-un grup"
+
+msgid "News"
+msgstr "Știri"
+
+msgid "News (tagesschau)"
+msgstr "Știri (tagesschau)"
+
+msgid "News Poland"
+msgstr "Știri Polonia"
+
+msgid "Next"
+msgstr "Următorul"
+
+msgid "Next page"
+msgstr "Pagina următoare"
+
+msgid "No"
+msgstr "Nu"
+
+msgid "No YouTube video found for this track."
+msgstr "Nu a fost găsit niciun videoclip YouTube pentru această piesă."
+
+msgid "No channels with an archive on this portal."
+msgstr "Niciun canal cu arhivă pe acest portal."
+
+msgid "No description available."
+msgstr "Nicio descriere disponibilă."
+
+msgid "No episodes available yet."
+msgstr "Încă nu sunt disponibile episoade."
+
+msgid "No episodes found."
+msgstr "Nu au fost găsite episoade."
+
+msgid "No free player available for this title."
+msgstr "Niciun player gratuit disponibil pentru acest titlu."
+
+msgid "No free videos or live streams here at the moment."
+msgstr "Momentan nu există aici videoclipuri gratuite sau streamuri live."
+
+msgid "No host is open."
+msgstr "Niciun host nu este deschis."
+
+msgid ""
+"No item to display. \n"
+"Press OK to refresh.\n"
+msgstr ""
+"Niciun element de afișat. \n"
+"Apăsați OK pentru reîmprospătare.\n"
+
+msgid "No items found"
+msgstr "Nu au fost găsite elemente"
+
+msgid "No matching entries found."
+msgstr "Nu au fost găsite intrări corespunzătoare."
+
+msgid "No player found for this title."
+msgstr "Nu a fost găsit niciun player pentru acest titlu."
+
+msgid "No problems occurred."
+msgstr "Nu au apărut probleme."
+
+msgid "No programme guide for this channel."
+msgstr "Niciun ghid de programe pentru acest canal."
+
+msgid "No recorded programmes on this day."
+msgstr "Nicio emisiune înregistrată în această zi."
+
+msgid "No replays in these days"
+msgstr "Nicio reluare în aceste zile"
+
+#, python-format
+msgid "No results found for: %s"
+msgstr "Nu au fost găsite rezultate pentru: %s"
+
+msgid "No self-test result yet."
+msgstr "Încă nu există niciun rezultat al autotestului."
+
+msgid "No storage found for the cache folder. The cache folder will be switched to the plugin's own cache directory."
+msgstr "Nu a fost găsit spațiu de stocare pentru folderul cache. Folderul cache va fi comutat pe directorul cache propriu al pluginului."
+
+msgid "No storage found for the downloads location. Where would you like to save your downloads?"
+msgstr "Nu a fost găsit spațiu de stocare pentru locația descărcărilor. Unde doriți să salvați descărcările?"
+
+msgid "No stream available"
+msgstr "Niciun stream disponibil"
+
+msgid "No streams are available for this title yet."
+msgstr "Încă nu sunt disponibile streamuri pentru acest titlu."
+
+msgid "No subtitle file found in the archive."
+msgstr "Nu a fost găsit niciun fișier de subtitrare în arhivă."
+
+msgid "No subtitles available for this title."
+msgstr "Nu sunt disponibile subtitrări pentru acest titlu."
+
+msgid "No subtitles found."
+msgstr "Nu au fost găsite subtitrări."
+
+#, python-format
+msgid "No subtitles in %s. Available: %s"
+msgstr "Nu există subtitrări în %s. Disponibile: %s"
+
+msgid "No title to search for."
+msgstr "Niciun titlu de căutat."
+
+msgid "No valid entitlement found for asset."
+msgstr "Nu a fost găsit niciun drept de acces valid pentru acest conținut."
+
+msgid "No valid links available."
+msgstr "Nu există linkuri valide disponibile."
+
+msgid "No video ID available"
+msgstr "Nu există niciun ID video disponibil"
+
+msgid "None"
+msgstr "Niciunul"
+
+msgid "Normalize item / file names (Show - SxxExx - Title)"
+msgstr "Normalizați numele elementelor / fișierelor (Serial - SxxExx - Titlu)"
+
+msgid "Not available in your country (geo-blocking)."
+msgstr "Indisponibil în țara dvs. (geo-blocare)."
+
+msgid "Not available yet"
+msgstr "Încă indisponibil"
+
+msgid "Not possible (no enigma2 session)."
+msgstr "Imposibil (nicio sesiune enigma2)."
+
+msgid "Nothing available here at the moment (only upcoming broadcasts)."
+msgstr "Momentan nu este nimic disponibil aici (doar emisiuni viitoare)."
+
+msgid "Nothing found on subdl.com."
+msgstr "Nu s-a găsit nimic pe subdl.com."
+
+msgid "Nothing found. This site only finds Russian (Cyrillic) search terms."
+msgstr "Nu s-a găsit nimic. Acest site găsește doar termeni de căutare în rusă (chirilică)."
+
+msgid "Nothing open"
+msgstr "Nimic deschis"
+
+msgid "Nothing to save - the debug log is not active."
+msgstr "Nimic de salvat - jurnalul de depanare nu este activ."
+
+msgid "Now"
+msgstr "Acum"
+
+msgid "Number of columns"
+msgstr "Număr de coloane"
+
+msgid "Number of downloaded files simultaneously"
+msgstr "Număr de fișiere descărcate simultan"
+
+#, python-format
+msgid "Number of items in search history: %d"
+msgstr "Număr de intrări în istoricul căutărilor: %d"
+
+msgid "Number of rotated files to keep"
+msgstr "Număr de fișiere rotite de păstrat"
+
+msgid "Number of rows"
+msgstr "Număr de rânduri"
+
+msgid "Numeric keypad for numbers"
+msgstr "Tastatură numerică pentru numere"
+
+msgid "OFFLINE"
+msgstr "OFFLINE"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "OMDb API key (free at omdbapi.com)"
+msgstr "Cheie API OMDb (gratuită la omdbapi.com)"
+
+msgid "Off"
+msgstr "Oprit"
+
+msgid "Offline channels"
+msgstr "Canale offline"
+
+msgid "Older days"
+msgstr "Zile mai vechi"
+
+msgid "Older replays"
+msgstr "Reluări mai vechi"
+
+msgid "On Air"
+msgstr "În emisie"
+
+msgid "One link mode"
+msgstr "Mod cu un singur link"
+
+#, python-format
+msgid "Only available in %s"
+msgstr "Disponibil doar în %s"
+
+msgid "Only files in the downloads folder can be deleted."
+msgstr "Doar fișierele din folderul de descărcări pot fi șterse."
+
+msgid "Only links can be moved to a group."
+msgstr "Doar linkurile pot fi mutate într-un grup."
+
+#, python-format
+msgid "Only the %d oldest new commits are shown"
+msgstr "Sunt afișate doar cele mai vechi %d commituri noi"
+
+msgid "Only the sites that failed in the last run, same checks."
+msgstr "Doar site-urile care au eșuat la ultima rulare, cu aceleași verificări."
+
+#, python-format
+msgid "Only unsupported hosters available: %s"
+msgstr "Sunt disponibili doar hosteri neacceptați: %s"
+
+msgid "Open issues"
+msgstr "Issues deschise"
+
+msgid "Open pull requests"
+msgstr "Pull requests deschise"
+
+#, python-format
+msgid "Open this page in %s"
+msgstr "Deschideți această pagină în %s"
+
+msgid "Open this page in the chosen browser"
+msgstr "Deschideți această pagină în browserul ales"
+
+#, python-format
+msgid "OpenSubtitles.com login failed for user \"%s\". Please check your login and password."
+msgstr "Autentificarea OpenSubtitles.com a eșuat pentru utilizatorul \"%s\". Verificați numele de utilizator și parola."
+
+msgid "OpenSubtitles.com needs an API key. Create a free API consumer at https://www.opensubtitles.com/consumers and enter its key in the E2iPlayer settings (Subtitles)."
+msgstr "OpenSubtitles.com necesită o cheie API. Creați gratuit un API consumer la https://www.opensubtitles.com/consumers și introduceți cheia acestuia în setările E2iPlayer (Subtitrări)."
+
+#, python-format
+msgid "OpenSubtitles.com rejected the request (HTTP %s). Please check the API key in the E2iPlayer settings."
+msgstr "OpenSubtitles.com a respins cererea (HTTP %s). Verificați cheia API în setările E2iPlayer."
+
+msgid "OpenSubtitles.org sent a \"become VIP member\" note instead of the subtitle (download limit reached?)."
+msgstr "OpenSubtitles.org a trimis o notă „deveniți membru VIP” în locul subtitrării (limită de descărcare atinsă?)."
+
+msgid "Opening. Please wait..."
+msgstr "Se deschide. Vă rugăm să așteptați..."
+
+msgid "Operation aborted!"
+msgstr "Operațiune anulată!"
+
+msgid "Operation timed out."
+msgstr "Timpul operațiunii a expirat."
+
+msgid "Options"
+msgstr "Opțiuni"
+
+msgid "Options (select language, clear search history, settings)"
+msgstr "Opțiuni (selectare limbă, ștergere istoric căutări, setări)"
+
+msgid "Order of user links:"
+msgstr "Ordinea linkurilor utilizatorului:"
+
+msgid "Order stays fixed - useful for T9 browsing."
+msgstr "Ordinea rămâne fixă - util pentru navigarea T9."
+
+msgid "Original Title:"
+msgstr "Titlu original:"
+
+#, python-format
+msgid "Original language: %s"
+msgstr "Limba originală: %s"
+
+msgid "Original title"
+msgstr "Titlu original"
+
+msgid "Original version"
+msgstr "Versiune originală"
+
+msgid "Other"
+msgstr "Altele"
+
+msgid "Other dramas (Chinese, Thai, ...)"
+msgstr "Alte drame (chinezești, thailandeze, ...)"
+
+msgid "Other films"
+msgstr "Alte filme"
+
+msgid "Other seasons"
+msgstr "Alte sezoane"
+
+msgid "Others"
+msgstr "Altele"
+
+msgid "Out of memory."
+msgstr "Memorie insuficientă."
+
+msgid "Own launcher URI"
+msgstr "URI propriu pentru launcher"
+
+msgid "Own model"
+msgstr "Model propriu"
+
+msgid "PAGE UP/PAGE DOWN"
+msgstr "PAGINA SUS/PAGINA JOS"
+
+msgid "PAY"
+msgstr "PAY"
+
+msgid "PENDING"
+msgstr "ÎN AȘTEPTARE"
+
+msgid "PLAY"
+msgstr "PLAY"
+
+msgid "PREVIOUS/NEXT"
+msgstr "ANTERIOR/URMĂTOR"
+
+#, python-format
+msgid "PRIVATE - wait %s seconds"
+msgstr "PRIVAT - așteptați %s secunde"
+
+msgid "PRIVATE - wait a few seconds"
+msgstr "PRIVAT - așteptați câteva secunde"
+
+msgid "Page not found - please check the address."
+msgstr "Pagina nu a fost găsită - verificați adresa."
+
+msgid "Page:"
+msgstr "Pagina:"
+
+msgid "Paid content"
+msgstr "Conținut cu plată"
+
+msgid "Parse error."
+msgstr "Eroare de parsare."
+
+msgid "Part"
+msgstr "Partea"
+
+msgid "Partial file - transfer ended early."
+msgstr "Fișier parțial - transferul s-a încheiat prematur."
+
+msgid "Password:"
+msgstr "Parolă:"
+
+msgid "Past premieres"
+msgstr "Premiere trecute"
+
+#, python-format
+msgid "Paste \"%s\""
+msgstr "Lipiți \"%s\""
+
+msgid "Path to xxxlist.txt :"
+msgstr "Calea către xxxlist.txt :"
+
+msgid "Path to ytlist.txt, urllist.txt"
+msgstr "Calea către ytlist.txt, urllist.txt"
+
+msgid "Pathology"
+msgstr "Patologie"
+
+msgid "Pathology Rounds"
+msgstr "Vizite de patologie"
+
+msgid "Patriotism"
+msgstr "Patriotism"
+
+msgid "Pediatrics"
+msgstr "Pediatrie"
+
+msgid "People"
+msgstr "Persoane"
+
+msgid "Persons"
+msgstr "Persoane"
+
+msgid "Philosophy"
+msgstr "Filozofie"
+
+msgid "Physical Exam"
+msgstr "Examen fizic"
+
+msgid "Pin has been changed."
+msgstr "PIN-ul a fost schimbat."
+
+msgid "Pin incorrect!"
+msgstr "PIN incorect!"
+
+msgid "Pin protection for configuration"
+msgstr "Protecție cu PIN pentru configurare"
+
+msgid "Pin protection for plugin"
+msgstr "Protecție cu PIN pentru plugin"
+
+msgid "Pin protection for this host"
+msgstr "Protecție cu PIN pentru acest host"
+
+#, python-format
+msgid "Play with [%s] player"
+msgstr "Redați cu playerul [%s]"
+
+msgid "Playback UHD :"
+msgstr "Redare UHD :"
+
+#, python-format
+msgid "Player %s"
+msgstr "Player %s"
+
+#, python-format
+msgid "Player %s: %s"
+msgstr "Player %s: %s"
+
+msgid "Player Skin"
+msgstr "Skin player"
+
+msgid "Player data parsing error."
+msgstr "Eroare la parsarea datelor playerului."
+
+msgid "Playing on the TV is not possible (no enigma2 session)."
+msgstr "Redarea pe televizor nu este posibilă (nicio sesiune enigma2)."
+
+msgid "Playlist"
+msgstr "Playlist"
+
+msgid "Playlists"
+msgstr "Playlisturi"
+
+msgid "Plays"
+msgstr "Piese de teatru"
+
+#, python-brace-format
+msgid ""
+"Please Open site:\n"
+"http://{0}:{1}\n"
+"in a web browser with the MyE2i extension installed"
+msgstr ""
+"Deschideți site-ul:\n"
+"http://{0}:{1}\n"
+"într-un browser web cu extensia MyE2i instalată"
+
+msgid "Please configure Xtream (blue button)"
+msgstr "Configurați Xtream (butonul albastru)"
+
+msgid "Please configure the Stalker portal (blue button)"
+msgstr "Configurați portalul Stalker (butonul albastru)"
+
+#, python-format
+msgid "Please consider restart your Engima2 and agree to install the %s utlity when the %s will propose this."
+msgstr "Vă rugăm să reporniți Enigma2 și să acceptați instalarea utilitarului %s atunci când %s vă va propune acest lucru."
+
+msgid "Please enter a search text."
+msgstr "Introduceți un text de căutare."
+
+msgid "Please enter a valid link (http:// or https://)."
+msgstr "Introduceți un link valid (http:// sau https://)."
+
+#, python-format
+msgid "Please enter the %s login and password in the E2iPlayer settings (Captcha)."
+msgstr "Introduceți numele de utilizator și parola pentru %s în setările E2iPlayer (Captcha)."
+
+msgid "Please make sure that the folder for cache data (set in the configuration) is writable."
+msgstr "Asigurați-vă că folderul pentru datele cache (setat în configurare) poate fi scris."
+
+msgid "Please register and set login and password in the host configuration, to solve this problems permanently."
+msgstr "Înregistrați-vă și setați numele de utilizator și parola în configurarea hostului pentru a rezolva definitiv aceste probleme."
+
+msgid "Please select a group of favourites."
+msgstr "Selectați un grup de favorite."
+
+msgid "Please select an entry."
+msgstr "Selectați o intrare."
+
+msgid "Please select the link first."
+msgstr "Selectați mai întâi linkul."
+
+#, python-format
+msgid "Please set valid %s in the %s configuration."
+msgstr "Setați un %s valid în configurarea %s."
+
+msgid "Please solve to continue downloads with:"
+msgstr "Rezolvați pentru a continua descărcările cu:"
+
+#, python-format
+msgid "Please visit \"%s\" and confirm that you are human."
+msgstr "Vizitați \"%s\" și confirmați că sunteți om."
+
+#, python-format
+msgid "Please visit %s to learn how to redirect this task to the external device."
+msgstr "Vizitați %s pentru a afla cum să redirecționați această sarcină către dispozitivul extern."
+
+msgid "Please wait - downloading initialization data."
+msgstr "Așteptați - se descarcă datele de inițializare."
+
+msgid "Please wait for initialization data."
+msgstr "Așteptați datele de inițializare."
+
+msgid "Please wait, the previous action is still running."
+msgstr "Așteptați, acțiunea anterioară încă rulează."
+
+msgid "Please wait..."
+msgstr "Vă rugăm să așteptați..."
+
+msgid "Podcasts"
+msgstr "Podcasturi"
+
+msgid "Podcasts by category"
+msgstr "Podcasturi după categorie"
+
+msgid "Podcasts by station"
+msgstr "Podcasturi după post"
+
+msgid "Poland"
+msgstr "Polonia"
+
+msgid "Polish"
+msgstr "Poloneză"
+
+msgid "Polish dubbing"
+msgstr "Dublaj în poloneză"
+
+msgid "Polish films"
+msgstr "Filme poloneze"
+
+msgid "Polish subtitles"
+msgstr "Subtitrări în poloneză"
+
+msgid "Polish voice-over"
+msgstr "Voice-over în poloneză"
+
+msgid "Politics"
+msgstr "Politică"
+
+msgid "Popular"
+msgstr "Populare"
+
+msgid "Popular episodes"
+msgstr "Episoade populare"
+
+msgid "Popular movies"
+msgstr "Filme populare"
+
+msgid "Popular series"
+msgstr "Seriale populare"
+
+msgid "Popular sports"
+msgstr "Sporturi populare"
+
+msgid "Popularity"
+msgstr "Popularitate"
+
+msgid "Pornstars"
+msgstr "Vedete porno"
+
+#, python-format
+msgid "Portal %d - %s (optional, from the MAG box):"
+msgstr "Portal %d - %s (opțional, de pe MAG box):"
+
+#, python-format
+msgid "Portal %d - MAC address (00:1A:79:...):"
+msgstr "Portal %d - adresă MAC (00:1A:79:...):"
+
+#, python-format
+msgid "Portal %d - name (optional):"
+msgstr "Portal %d - nume (opțional):"
+
+#, python-format
+msgid "Portal %d - portal URL (http://host:port/c/):"
+msgstr "Portal %d - URL portal (http://host:port/c/):"
+
+#, python-format
+msgid "Portal URL and MAC address in the host configuration, as the provider gives them out. More portals: %s in the EStalker format (portal URL, then its MAC addresses, one per line)."
+msgstr "URL-ul portalului și adresa MAC în configurarea hostului, așa cum le furnizează furnizorul. Mai multe portaluri: %s în formatul EStalker (URL-ul portalului, apoi adresele sale MAC, câte una pe rând)."
+
+msgid "Portuguese"
+msgstr "Portugheză"
+
+msgid "Powerpoint Presentation"
+msgstr "Prezentare PowerPoint"
+
+msgid "Practice Management"
+msgstr "Managementul cabinetului"
+
+msgid "Prefer MP4 over HLS:"
+msgstr "Preferă MP4 în loc de HLS:"
+
+msgid "Prefered format"
+msgstr "Format preferat"
+
+msgid "Prefered quality"
+msgstr "Calitate preferată"
+
+msgid "Preferred streaming protocol"
+msgstr "Protocol de streaming preferat"
+
+msgid "Preferred video quality:"
+msgstr "Calitate video preferată:"
+
+msgid "Premium"
+msgstr "Premium"
+
+msgid "Premium user"
+msgstr "Utilizator premium"
+
+msgid "Previous Page"
+msgstr "Pagina anterioară"
+
+msgid "Previous days"
+msgstr "Zilele anterioare"
+
+msgid "Price:"
+msgstr "Preț:"
+
+msgid "Pro wrestling"
+msgstr "Wrestling profesionist"
+
+msgid "Production:"
+msgstr "Producție:"
+
+msgid "Professional Networks"
+msgstr "Rețele profesionale"
+
+msgid "Professionals"
+msgstr "Profesioniști"
+
+msgid "Program"
+msgstr "Program"
+
+msgid "Program A-Z"
+msgstr "Emisiuni A-Z"
+
+msgid "Program for file downloads (HTTP/FTP)"
+msgstr "Program pentru descărcarea fișierelor (HTTP/FTP)"
+
+msgid "Programme archive (last 7 days)"
+msgstr "Arhivă emisiuni (ultimele 7 zile)"
+
+msgid "Programme archive:"
+msgstr "Arhivă emisiuni:"
+
+msgid "Programmes"
+msgstr "Emisiuni"
+
+msgid "Programmes of the last days of the channels with an archive"
+msgstr "Emisiunile din ultimele zile ale canalelor cu arhivă"
+
+msgid "Promote item"
+msgstr "Promovați elementul"
+
+msgid "Protocol errors."
+msgstr "Erori de protocol."
+
+msgid "Published"
+msgstr "Publicat"
+
+msgid "Python modules"
+msgstr "Module Python"
+
+msgid "Python was not found on the receiver."
+msgstr "Python nu a fost găsit pe receptor."
+
+msgid "Quality"
+msgstr "Calitate"
+
+msgid "Quality:"
+msgstr "Calitate:"
+
+msgid "Quick test: menu and a list with videos"
+msgstr "Test rapid: meniu și o listă cu videoclipuri"
+
+msgid "RAM buffer size [MB] for local files"
+msgstr "Dimensiunea bufferului RAM [MB] pentru fișiere locale"
+
+msgid "RAM buffer size [MB] for network protocols"
+msgstr "Dimensiunea bufferului RAM [MB] pentru protocoale de rețea"
+
+msgid "RED"
+msgstr "ROȘU"
+
+msgid "REWIND"
+msgstr "DERULARE ÎNAPOI"
+
+msgid "Radio"
+msgstr "Radio"
+
+msgid "Radio iframe file"
+msgstr "Fișier iframe radio"
+
+msgid "Radio station - live stream"
+msgstr "Post de radio - stream live"
+
+msgid "Radio stations"
+msgstr "Posturi de radio"
+
+msgid "Radiology Rounds"
+msgstr "Vizite de radiologie"
+
+msgid "Ramadan"
+msgstr "Ramadan"
+
+msgid "Ramadan series"
+msgstr "Seriale de Ramadan"
+
+msgid "Random"
+msgstr "Aleatoriu"
+
+msgid "Random selection"
+msgstr "Selecție aleatorie"
+
+msgid "Randomize a playlist"
+msgstr "Amestecați un playlist"
+
+msgid "Range request not supported (resume failed)."
+msgstr "Cererea de interval (range) nu este acceptată (reluarea a eșuat)."
+
+msgid "Ranking"
+msgstr "Clasament"
+
+msgid "Rated"
+msgstr "Clasificare de vârstă"
+
+msgid "Rated:"
+msgstr "Clasificare:"
+
+msgid "Rating"
+msgstr "Evaluare"
+
+#, python-format
+msgid "Rating %s"
+msgstr "Evaluare %s"
+
+msgid "Rating:"
+msgstr "Evaluare:"
+
+#, python-format
+msgid "Rating: %s"
+msgstr "Evaluare: %s"
+
+msgid "Read by"
+msgstr "Citit de"
+
+msgid "Read error."
+msgstr "Eroare de citire."
+
+msgid "Reading binaries..."
+msgstr "Se citesc fișierele binare..."
+
+msgid "Reading..."
+msgstr "Se citește..."
+
+msgid "Recent"
+msgstr "Recente"
+
+msgid "Recently added"
+msgstr "Adăugate recent"
+
+msgid "Reciters"
+msgstr "Recitatori"
+
+msgid "Recommended"
+msgstr "Recomandate"
+
+msgid "Recon"
+msgstr "Reconstrucție"
+
+msgid "Referee"
+msgstr "Arbitru"
+
+msgid "Refresh"
+msgstr "Reîmprospătare"
+
+msgid "Refreshing"
+msgstr "Se reîmprospătează"
+
+#, python-format
+msgid "Refusing to empty \"%s\" - it also holds \"%s\" (downloads, buffering, cache or config folder). Check the folder paths in the storage configuration."
+msgstr "Golirea \"%s\" este refuzată - conține și \"%s\" (folderul de descărcări, buffer, cache sau configurare). Verificați căile folderelor în configurarea stocării."
+
+#, python-format
+msgid "Refusing to empty \"%s\" - this does not look like a dedicated cache/config folder. Check the folder paths in the storage configuration."
+msgstr "Golirea \"%s\" este refuzată - nu pare a fi un folder dedicat pentru cache/configurare. Verificați căile folderelor în configurarea stocării."
+
+msgid "Regions"
+msgstr "Regiuni"
+
+msgid "Release"
+msgstr "Lansare"
+
+msgid "Released"
+msgstr "Lansat"
+
+msgid "Released:"
+msgstr "Lansat:"
+
+msgid "Releases"
+msgstr "Lansări"
+
+msgid "Relevance"
+msgstr "Relevanță"
+
+msgid "Religion"
+msgstr "Religie"
+
+msgid "Remaining:"
+msgstr "Rămas:"
+
+msgid "Remember a host's pin until E2iPlayer is closed"
+msgstr "Memorați PIN-ul unui host până la închiderea E2iPlayer"
+
+msgid "Remember last search entry"
+msgstr "Memorați ultima intrare de căutare"
+
+msgid "Remember last search history selection"
+msgstr "Memorați ultima selecție din istoricul căutărilor"
+
+msgid "Remember last watched position"
+msgstr "Memorați ultima poziție vizionată"
+
+msgid "Remove"
+msgstr "Eliminați"
+
+#, python-format
+msgid "Remove \"%s\" item"
+msgstr "Eliminați elementul \"%s\""
+
+msgid "Remove file"
+msgstr "Ștergeți fișierul"
+
+msgid "Remove from favorites"
+msgstr "Eliminați din favorite"
+
+msgid "Remove group"
+msgstr "Eliminați grupul"
+
+msgid "Remove item"
+msgstr "Eliminați elementul"
+
+msgid "Remove thumbnails"
+msgstr "Eliminați miniaturile"
+
+msgid "Rename"
+msgstr "Redenumiți"
+
+msgid "Rename file"
+msgstr "Redenumiți fișierul"
+
+msgid "Reordering: UP/DOWN moves the row, OK saves, EXIT cancels."
+msgstr "Reordonare: SUS/JOS mută rândul, OK salvează, EXIT anulează."
+
+msgid "Replay"
+msgstr "Reluare"
+
+msgid "Replays & highlights"
+msgstr "Reluări și rezumate"
+
+msgid "Report a problem (GitHub issues)"
+msgstr "Raportați o problemă (GitHub issues)"
+
+msgid "Report file"
+msgstr "Fișier raport"
+
+msgid "Reset this list to its default layout?"
+msgstr "Resetați această listă la aranjamentul implicit?"
+
+msgid "Reset to defaults"
+msgstr "Resetare la valorile implicite"
+
+msgid "Reset to saved order"
+msgstr "Resetare la ordinea salvată"
+
+msgid "Reset web interface"
+msgstr "Resetați interfața web"
+
+#, python-format
+msgid ""
+"Resolving hCaptcha with %s failed!\n"
+"\n"
+msgstr ""
+"Rezolvarea hCaptcha cu %s a eșuat!\n"
+"\n"
+
+#, python-format
+msgid ""
+"Resolving reCaptcha with %s failed!\n"
+"\n"
+msgstr ""
+"Rezolvarea reCaptcha cu %s a eșuat!\n"
+"\n"
+
+msgid "Restart GUI"
+msgstr "Reporniți GUI"
+
+msgid "Reused entries move back to the top again."
+msgstr "Intrările reutilizate se mută din nou în partea de sus."
+
+msgid "Reverse a playlist"
+msgstr "Inversați un playlist"
+
+msgid "Reverting to unsorted order will discard unsaved changes. Continue?"
+msgstr "Revenirea la ordinea nesortată va anula modificările nesalvate. Continuați?"
+
+msgid "Right"
+msgstr "Dreapta"
+
+msgid "Romance"
+msgstr "Romantic"
+
+msgid "Round"
+msgstr "Runda"
+
+msgid "Runtime"
+msgstr "Durată"
+
+msgid "Russian"
+msgstr "Rusă"
+
+msgid "SOME.PORN sorting by :"
+msgstr "Sortare SOME.PORN după :"
+
+msgid "SONGS"
+msgstr "MELODII"
+
+msgid "SSL connect error."
+msgstr "Eroare de conectare SSL."
+
+msgid "SSL verification failure."
+msgstr "Verificarea SSL a eșuat."
+
+msgid "STARTED"
+msgstr "PORNIT"
+
+msgid "STOPPED"
+msgstr "OPRIT"
+
+msgid "Safe search (restricted mode):"
+msgstr "Căutare sigură (mod restricționat):"
+
+msgid "Save"
+msgstr "Salvați"
+
+msgid "Save changes?"
+msgstr "Salvați modificările?"
+
+#, python-format
+msgid "Save subtitles (%s)"
+msgstr "Salvați subtitrările (%s)"
+
+#, python-format
+msgid ""
+"Saved to:\n"
+"%s"
+msgstr ""
+"Salvat în:\n"
+"%s"
+
+msgid "Sci-Fi"
+msgstr "SF"
+
+msgid "Sci-Fi & Fantasy"
+msgstr "SF și fantasy"
+
+msgid "Science"
+msgstr "Știință"
+
+msgid "Screensaver during audio playback"
+msgstr "Screensaver în timpul redării audio"
+
+msgid "Screensaver in E2iPlayer menus"
+msgstr "Screensaver în meniurile E2iPlayer"
+
+#, python-format
+msgid ""
+"Script execution failed.\n"
+"Error code: %s\n"
+msgstr ""
+"Execuția scriptului a eșuat.\n"
+"Cod de eroare: %s\n"
+
+msgid "Script finished."
+msgstr "Scriptul s-a încheiat."
+
+msgid "Search"
+msgstr "Căutare"
+
+msgid "Search History is empty."
+msgstr "Istoricul căutărilor este gol."
+
+msgid "Search History successfully deleted."
+msgstr "Istoricul căutărilor a fost șters cu succes."
+
+msgid "Search for an artist (exact name) or a Last.fm user"
+msgstr "Căutați un artist (numele exact) sau un utilizator Last.fm"
+
+msgid "Search history"
+msgstr "Istoricul căutărilor"
+
+msgid "Search history - options"
+msgstr "Istoricul căutărilor - opțiuni"
+
+msgid "Search history is not available for this host."
+msgstr "Istoricul căutărilor nu este disponibil pentru acest host."
+
+msgid "Search history saved."
+msgstr "Istoricul căutărilor a fost salvat."
+
+#, python-format
+msgid "Search history saved. %d duplicate entries removed."
+msgstr "Istoricul căutărilor a fost salvat. %d intrări duplicate eliminate."
+
+msgid "Search in all active hosts"
+msgstr "Căutare în toate hosturile active"
+
+msgid "Search is not available right now."
+msgstr "Căutarea nu este disponibilă momentan."
+
+msgid "Search next page"
+msgstr "Căutare pagina următoare"
+
+msgid "Search results"
+msgstr "Rezultatele căutării"
+
+msgid "Search results region:"
+msgstr "Regiunea rezultatelor căutării:"
+
+msgid "Search string must have at least 4 characters."
+msgstr "Textul căutat trebuie să aibă cel puțin 4 caractere."
+
+msgid "Search term :"
+msgstr "Termen de căutare :"
+
+msgid "Search text"
+msgstr "Text de căutare"
+
+msgid "Search type"
+msgstr "Tip de căutare"
+
+msgid "Search: "
+msgstr "Căutare: "
+
+#, python-format
+msgid "Search: %d of %d - now %s (%d found so far)"
+msgstr "Căutare: %d din %d - acum %s (%d găsite până acum)"
+
+#, python-format
+msgid "Searching subtitles for \"%s\""
+msgstr "Se caută subtitrări pentru \"%s\""
+
+msgid "Season"
+msgstr "Sezon"
+
+#, python-format
+msgid "Season %d"
+msgstr "Sezonul %d"
+
+#, python-format
+msgid "Season %d (%d episodes)"
+msgstr "Sezonul %d (%d episoade)"
+
+#, python-format
+msgid "Season %s"
+msgstr "Sezonul %s"
+
+msgid "Seasons"
+msgstr "Sezoane"
+
+msgid "Seasons:"
+msgstr "Sezoane:"
+
+#, python-format
+msgid "Seasons: %s"
+msgstr "Sezoane: %s"
+
+msgid "Second movie player in buffering mode"
+msgstr "Al doilea player în modul cu buffer"
+
+msgid "Second movie player without buffering mode"
+msgstr "Al doilea player fără modul cu buffer"
+
+msgid "Section"
+msgstr "Secțiune"
+
+msgid "Sections"
+msgstr "Secțiuni"
+
+#, python-format
+msgid "Select %s"
+msgstr "Selectați %s"
+
+msgid "Select action"
+msgstr "Selectați acțiunea"
+
+msgid "Select audio track"
+msgstr "Selectați pista audio"
+
+msgid "Select best available quality"
+msgstr "Selectați cea mai bună calitate disponibilă"
+
+msgid "Select directory"
+msgstr "Selectați directorul"
+
+msgid "Select favorite group"
+msgstr "Selectați grupul de favorite"
+
+msgid "Select group"
+msgstr "Selectați grupul"
+
+msgid "Select language"
+msgstr "Selectați limba"
+
+msgid "Select link"
+msgstr "Selectați linkul"
+
+msgid "Select movie player"
+msgstr "Selectați playerul"
+
+msgid "Select option"
+msgstr "Selectați opțiunea"
+
+msgid "Select pictures"
+msgstr "Selectați imaginile"
+
+msgid "Select subtitles file"
+msgstr "Selectați fișierul de subtitrări"
+
+msgid "Select subtitles provider:"
+msgstr "Selectați furnizorul de subtitrări:"
+
+msgid "Select subtitles to download"
+msgstr "Selectați subtitrările de descărcat"
+
+msgid "Select subtitles track"
+msgstr "Selectați pista de subtitrări"
+
+msgid "Select the directory"
+msgstr "Selectați directorul"
+
+msgid "Select the file"
+msgstr "Selectați fișierul"
+
+msgid "Select video option"
+msgstr "Selectați opțiunea video"
+
+msgid "Selection"
+msgstr "Selecție"
+
+msgid "Self-test"
+msgstr "Autotest"
+
+msgid "Self-test report :"
+msgstr "Raport autotest :"
+
+msgid "Send"
+msgstr "Trimiteți"
+
+msgid "Send data to enc-dec.app on every link resolve?"
+msgstr "Trimiteți date către enc-dec.app la fiecare rezolvare de link?"
+
+msgid "Sending the result to the box failed."
+msgstr "Trimiterea rezultatului către receptor a eșuat."
+
+msgid "Series"
+msgstr "Seriale"
+
+msgid "Series - latest episodes"
+msgstr "Seriale - cele mai noi episoade"
+
+msgid "Series - seasons"
+msgstr "Seriale - sezoane"
+
+msgid "Series A-Z"
+msgstr "Seriale A-Z"
+
+msgid "Series by genre"
+msgstr "Seriale după gen"
+
+msgid "Series by year"
+msgstr "Seriale după an"
+
+msgid "Series genres"
+msgstr "Genuri de seriale"
+
+msgid "Server"
+msgstr "Server"
+
+msgid "Server issued an error response (HTTP 4xx/5xx)."
+msgstr "Serverul a răspuns cu o eroare (HTTP 4xx/5xx)."
+
+msgid "Server issued an error response."
+msgstr "Serverul a răspuns cu o eroare."
+
+msgid "Server return 404 - Not Found."
+msgstr "Serverul a returnat 404 - Negăsit."
+
+msgid "Server returned nothing."
+msgstr "Serverul nu a returnat nimic."
+
+#, python-format
+msgid "Server, user name and password in the host configuration. The server field also takes a get.php link. More accounts: %s with one get.php link per line (X-Streamity format)."
+msgstr "Serverul, numele de utilizator și parola în configurarea hostului. Câmpul server acceptă și un link get.php. Mai multe conturi: %s cu câte un link get.php pe rând (format X-Streamity)."
+
+#, python-format
+msgid ""
+"Service %s requires registration. \n"
+"Please fill your login and password in the %s configuration."
+msgstr ""
+"Serviciul %s necesită înregistrare. \n"
+"Introduceți numele de utilizator și parola în configurarea %s."
+
+msgid "Service icon size"
+msgstr "Dimensiunea pictogramei serviciului"
+
+msgid "Services configuration"
+msgstr "Configurarea serviciilor"
+
+msgid "Services management"
+msgstr "Gestionarea serviciilor"
+
+msgid "Set active movie player"
+msgstr "Setați playerul activ"
+
+msgid "Set file name"
+msgstr "Setați numele fișierului"
+
+msgid "Set own configuration pin code"
+msgstr "Setați un PIN propriu pentru configurare"
+
+msgid "Set own pin"
+msgstr "Setați un PIN propriu"
+
+msgid "Set pin code"
+msgstr "Setați codul PIN"
+
+msgid "Set watched"
+msgstr "Marcați ca vizionat"
+
+msgid "Settings"
+msgstr "Setări"
+
+#, python-format
+msgid "Settings of service [%s] cannot be opened."
+msgstr "Setările serviciului [%s] nu pot fi deschise."
+
+msgid "Settings screen layout"
+msgstr "Aspectul ecranului de setări"
+
+msgid "Shift"
+msgstr "Shift"
+
+msgid "Short Movies"
+msgstr "Scurtmetraje"
+
+msgid "Short series"
+msgstr "Seriale scurte"
+
+msgid "Shorts"
+msgstr "Shorts"
+
+msgid "Shoulder & Elbow"
+msgstr "Umăr și cot"
+
+msgid "Show"
+msgstr "Emisiune"
+
+msgid "Show \"Newest videos\" of all YouTube channels in a group"
+msgstr "Afișați „Cele mai noi videoclipuri” ale tuturor canalelor YouTube dintr-un grup"
+
+msgid "Show & Comedy"
+msgstr "Emisiuni și comedie"
+
+msgid "Show E2iPlayer settings in system menu"
+msgstr "Afișați setările E2iPlayer în meniul de sistem"
+
+msgid "Show IPTVPlayer in extension list (blue button)"
+msgstr "Afișați IPTVPlayer în lista de extensii (butonul albastru)"
+
+msgid "Show IPTVPlayer in main menu"
+msgstr "Afișați IPTVPlayer în meniul principal"
+
+msgid "Show IPTVPlayer in plugin browser"
+msgstr "Afișați IPTVPlayer în browserul de pluginuri"
+
+msgid "Show Profiles in ZBIORNIK MINI :"
+msgstr "Afișați profilurile în ZBIORNIK MINI :"
+
+msgid "Show Youtube Api Key warnings"
+msgstr "Afișați avertismentele privind cheia API YouTube"
+
+msgid "Show adult content"
+msgstr "Afișați conținut pentru adulți"
+
+msgid "Show all channels"
+msgstr "Afișați toate canalele"
+
+msgid "Show clock in header"
+msgstr "Afișați ceasul în antet"
+
+msgid "Show download manager after adding new item"
+msgstr "Afișați managerul de descărcări după adăugarea unui element nou"
+
+msgid "Show download notification"
+msgstr "Afișați notificarea de descărcare"
+
+msgid "Show file size"
+msgstr "Afișați dimensiunea fișierului"
+
+msgid "Show flags"
+msgstr "Afișați steagurile"
+
+msgid "Show global search :"
+msgstr "Afișați căutarea globală :"
+
+msgid "Show hiddens catalogs"
+msgstr "Afișați cataloagele ascunse"
+
+msgid "Show hiddens files"
+msgstr "Afișați fișierele ascunse"
+
+msgid "Show iframe during audio playback"
+msgstr "Afișați iframe în timpul redării audio"
+
+msgid "Show only audio in selected language:"
+msgstr "Afișați doar audio în limba selectată:"
+
+msgid "Show only best quality of streams:"
+msgstr "Afișați doar cea mai bună calitate a streamurilor:"
+
+msgid "Show results"
+msgstr "Afișați rezultatele"
+
+msgid "Show search history"
+msgstr "Afișați istoricul căutărilor"
+
+msgid "Show suggestions"
+msgstr "Afișați sugestiile"
+
+msgid "Shows"
+msgstr "Emisiuni"
+
+msgid "Shows A-Z"
+msgstr "Emisiuni A-Z"
+
+msgid "Shows and concerts"
+msgstr "Emisiuni și concerte"
+
+msgid "Shows with new episodes"
+msgstr "Emisiuni cu episoade noi"
+
+msgid "Sign-in was not completed."
+msgstr "Autentificarea nu a fost finalizată."
+
+msgid "Signed in to YouTube."
+msgstr "Autentificat la YouTube."
+
+msgid "Signed out of YouTube."
+msgstr "Deconectat de la YouTube."
+
+msgid "Similar artists"
+msgstr "Artiști similari"
+
+msgid "Similar artists mix"
+msgstr "Mix de artiști similari"
+
+msgid "Simple list"
+msgstr "Listă simplă"
+
+msgid "Simple subtitles downloader"
+msgstr "Descărcare simplă de subtitrări"
+
+msgid "Simplify the title and try again."
+msgstr "Simplificați titlul și încercați din nou."
+
+msgid "Site self-test"
+msgstr "Autotest site-uri"
+
+msgid "Site self-test in the main menu :"
+msgstr "Autotest site-uri în meniul principal :"
+
+#, python-format
+msgid "Site self-test: %d of %d - now %s (%d failed so far)"
+msgstr "Autotest site-uri: %d din %d - acum %s (%d eșuate până acum)"
+
+msgid "Size:"
+msgstr "Dimensiune:"
+
+msgid "Skin"
+msgstr "Skin"
+
+msgid "Skinners:"
+msgstr "Skinneri:"
+
+msgid "Skip video shorter than [min]"
+msgstr "Omiteți videoclipurile mai scurte de [min]"
+
+msgid "Society"
+msgstr "Societate"
+
+msgid "Software decoding as"
+msgstr "Decodare software ca"
+
+msgid "Solve Cloudflare, hCaptcha and reCAPTCHA with MyE2i"
+msgstr "Rezolvați Cloudflare, hCaptcha și reCAPTCHA cu MyE2i"
+
+msgid "Solve Google reCAPTCHA v2 with My JDownloader"
+msgstr "Rezolvați Google reCAPTCHA v2 cu My JDownloader"
+
+msgid "Solver"
+msgstr "Rezolvator"
+
+msgid "Some changes will be applied only after movie player restart."
+msgstr "Unele modificări vor fi aplicate doar după repornirea playerului."
+
+msgid "Some settings will be applied only after GUI restart."
+msgstr "Unele setări vor fi aplicate doar după repornirea GUI."
+
+msgid "Sort A-Z"
+msgstr "Sortare A-Z"
+
+msgid "Sort Myfreecams :"
+msgstr "Sortare Myfreecams :"
+
+msgid "Sort Z-A"
+msgstr "Sortare Z-A"
+
+msgid "Sort alphabetically"
+msgstr "Sortare alfabetică"
+
+msgid "Sort by name"
+msgstr "Sortare după nume"
+
+msgid "Sort by:"
+msgstr "Sortare după:"
+
+msgid "Sort the links now? The order of the lines in the file will change."
+msgstr "Sortați linkurile acum? Ordinea rândurilor din fișier se va schimba."
+
+msgid "Sort the list:"
+msgstr "Sortați lista:"
+
+msgid "Sort xxxlist :"
+msgstr "Sortare xxxlist :"
+
+msgid "Sorted channels A-Z [live]"
+msgstr "Canale sortate A-Z [live]"
+
+msgid "Sorted most viewed channels general [live]"
+msgstr "Canale sortate după cele mai vizionate în general [live]"
+
+msgid "Sorted most viewed channels now [live]"
+msgstr "Canale sortate după cele mai vizionate acum [live]"
+
+msgid "Source:"
+msgstr "Sursă:"
+
+msgid "Spanish"
+msgstr "Spaniolă"
+
+msgid "Specials"
+msgstr "Speciale"
+
+msgid "Spine"
+msgstr "Coloana vertebrală"
+
+msgid "Spoken subtitles"
+msgstr "Subtitrări vorbite"
+
+msgid "Sport"
+msgstr "Sport"
+
+msgid "Spring"
+msgstr "Primăvară"
+
+msgid "Squad"
+msgstr "Lot"
+
+msgid "Stadium:"
+msgstr "Stadion:"
+
+msgid "Standard"
+msgstr "Standard"
+
+msgid "Stars:"
+msgstr "Vedete:"
+
+msgid "Start"
+msgstr "Start"
+
+msgid "Start download manager per default"
+msgstr "Porniți managerul de descărcări în mod implicit"
+
+msgid "Station:"
+msgstr "Post:"
+
+msgid "Status:"
+msgstr "Stare:"
+
+#, python-format
+msgid "Status: %s"
+msgstr "Stare: %s"
+
+msgid "Stereo downmix mode for software decoder"
+msgstr "Mod downmix stereo pentru decodorul software"
+
+msgid "Stop"
+msgstr "Stop"
+
+msgid "Stop downloading"
+msgstr "Opriți descărcarea"
+
+msgid "Stop playback with buffer save"
+msgstr "Opriți redarea cu salvarea bufferului"
+
+msgid "Stop playing?"
+msgstr "Opriți redarea?"
+
+msgid "Storage"
+msgstr "Stocare"
+
+msgid "Story"
+msgstr "Poveste"
+
+msgid "Stream link"
+msgstr "Link stream"
+
+msgid "Streamed"
+msgstr "Transmis în stream"
+
+msgid "Streaming platforms"
+msgstr "Platforme de streaming"
+
+msgid "Studios"
+msgstr "Studiouri"
+
+msgid "Study Plan"
+msgstr "Plan de studiu"
+
+msgid "Subbed anime"
+msgstr "Anime subtitrat"
+
+msgid "Subscribers"
+msgstr "Abonați"
+
+msgid "Subspecialities"
+msgstr "Subspecialități"
+
+msgid "Subtitle background"
+msgstr "Fundal subtitrare"
+
+msgid "Subtitle border color"
+msgstr "Culoarea conturului subtitrării"
+
+msgid "Subtitle border enabled"
+msgstr "Contur subtitrare activat"
+
+msgid "Subtitle border width"
+msgstr "Lățimea conturului subtitrării"
+
+msgid "Subtitle box height"
+msgstr "Înălțimea casetei de subtitrare"
+
+msgid "Subtitle box position"
+msgstr "Poziția casetei de subtitrare"
+
+msgid "Subtitle font"
+msgstr "Font subtitrare"
+
+msgid "Subtitle font color"
+msgstr "Culoarea fontului subtitrării"
+
+msgid "Subtitle font size"
+msgstr "Dimensiunea fontului subtitrării"
+
+msgid "Subtitle languages"
+msgstr "Limbile subtitrărilor"
+
+msgid "Subtitle line height"
+msgstr "Înălțimea rândului subtitrării"
+
+msgid "Subtitle line wrapping"
+msgstr "Încadrarea rândurilor subtitrării"
+
+msgid "Subtitle shadow X offset"
+msgstr "Decalaj X al umbrei subtitrării"
+
+msgid "Subtitle shadow Y offset"
+msgstr "Decalaj Y al umbrei subtitrării"
+
+msgid "Subtitle shadow color"
+msgstr "Culoarea umbrei subtitrării"
+
+msgid "Subtitle shadow enabled"
+msgstr "Umbră subtitrare activată"
+
+msgid "Subtitle vertical alignment"
+msgstr "Alinierea verticală a subtitrării"
+
+msgid "Subtitles"
+msgstr "Subtitrări"
+
+#, python-format
+msgid "Subtitles \"%s\" downloaded correctly."
+msgstr "Subtitrările \"%s\" au fost descărcate corect."
+
+msgid "Subtitles by Islam El-Gizawy"
+msgstr "Subtitrări de Islam El-Gizawy"
+
+msgid "Subtitles conversion to UTF-8 failed."
+msgstr "Conversia subtitrărilor în UTF-8 a eșuat."
+
+#, python-format
+msgid "Subtitles downloaded successfully. [%s], conversion to UTF-8."
+msgstr "Subtitrări descărcate cu succes. [%s], conversie în UTF-8."
+
+#, python-format
+msgid "Subtitles for: %s"
+msgstr "Subtitrări pentru: %s"
+
+#, python-format
+msgid ""
+"Subtitles saved:\n"
+"%s"
+msgstr ""
+"Subtitrări salvate:\n"
+"%s"
+
+msgid "Subtitles:"
+msgstr "Subtitrări:"
+
+#, python-format
+msgid "Subtitles: %s"
+msgstr "Subtitrări: %s"
+
+msgid "Summer"
+msgstr "Vară"
+
+msgid "Support forum (opena.tv)"
+msgstr "Forum de suport (opena.tv)"
+
+msgid "Support package"
+msgstr "Pachet de suport"
+
+msgid "Surahs"
+msgstr "Sure"
+
+msgid "Surgical Approaches"
+msgstr "Abordări chirurgicale"
+
+msgid "Surgical Cases"
+msgstr "Cazuri chirurgicale"
+
+msgid "Surgical Complications"
+msgstr "Complicații chirurgicale"
+
+msgid "Surgical Techniques"
+msgstr "Tehnici chirurgicale"
+
+msgid "Sweden"
+msgstr "Suedia"
+
+msgid "Swedish"
+msgstr "Suedeză"
+
+msgid "Synchronize"
+msgstr "Sincronizați"
+
+msgid "System"
+msgstr "Sistem"
+
+msgid "System language"
+msgstr "Limba sistemului"
+
+msgid "T9 letter jump in lists"
+msgstr "Salt la literă T9 în liste"
+
+msgid ""
+"TBN GO needs a free account to play programmes.\n"
+"Register on https://tbngo.pl/ and enter the e-mail and password in the host settings."
+msgstr ""
+"TBN GO necesită un cont gratuit pentru redarea emisiunilor.\n"
+"Înregistrați-vă pe https://tbngo.pl/ și introduceți adresa de e-mail și parola în setările hostului."
+
+msgid "THE PAGE YOU ARE LOOKING FOR IS NOT FOUND."
+msgstr "PAGINA PE CARE O CĂUTAȚI NU A FOST GĂSITĂ."
+
+msgid ""
+"THIS IS A PREMIUM VIDEO.\n"
+"LOGIN OR PREMIUM REQUIRED."
+msgstr ""
+"ACESTA ESTE UN VIDEOCLIP PREMIUM.\n"
+"ESTE NECESARĂ AUTENTIFICAREA SAU UN CONT PREMIUM."
+
+msgid "THIS IS A PRIVATE VIDEO."
+msgstr "ACESTA ESTE UN VIDEOCLIP PRIVAT."
+
+msgid ""
+"THIS LINK CONTAINS PHOTOS ONLY.\n"
+" PLEASE CHOOSE ANOTHER ONE!"
+msgstr ""
+"ACEST LINK CONȚINE DOAR FOTOGRAFII.\n"
+" VĂ RUGĂM SĂ ALEGEȚI ALTUL!"
+
+msgid ""
+"THIS VIDEO HAS BEEN REMOVED DUE TO COPYRIGHT INFRINGEMENT.\n"
+" PLEASE CHOOSE ANOTHER ONE!"
+msgstr ""
+"ACEST VIDEOCLIP A FOST ELIMINAT DIN CAUZA ÎNCĂLCĂRII DREPTURILOR DE AUTOR.\n"
+" VĂ RUGĂM SĂ ALEGEȚI ALTUL!"
+
+msgid ""
+"THIS VIDEO IS JUST A PREVIEW ON EXTERNAL STORAGE.\n"
+"VIEWING IT HERE IS NOT SUPPORTED."
+msgstr ""
+"ACEST VIDEOCLIP ESTE DOAR O PREVIZUALIZARE PE UN SPAȚIU DE STOCARE EXTERN.\n"
+"VIZIONAREA AICI NU ESTE ACCEPTATĂ."
+
+msgid ""
+"THIS VIDEO IS UNAVAILABLE.\n"
+"TRY AGAIN LATER!"
+msgstr ""
+"ACEST VIDEOCLIP NU ESTE DISPONIBIL.\n"
+"ÎNCERCAȚI DIN NOU MAI TÂRZIU!"
+
+msgid "TMDb API key (free at themoviedb.org)"
+msgstr "Cheie API TMDb (gratuită la themoviedb.org)"
+
+msgid "TMDb Rating:"
+msgstr "Evaluare TMDb:"
+
+msgid "TODAY"
+msgstr "AZI"
+
+msgid "TOMORROW"
+msgstr "MÂINE"
+
+msgid "TV Series"
+msgstr "Seriale TV"
+
+msgid "TV Show"
+msgstr "Emisiune TV"
+
+msgid "TV Shows"
+msgstr "Emisiuni TV"
+
+msgid "TV channels"
+msgstr "Canale TV"
+
+msgid "TV series"
+msgstr "Seriale TV"
+
+msgid "Tadabor"
+msgstr "Tadabor"
+
+msgid "Tafsir (Arabic)"
+msgstr "Tafsir (arabă)"
+
+msgid "Tags"
+msgstr "Etichete"
+
+msgid "Taiwanese"
+msgstr "Taiwaneză"
+
+msgid "Talk shows"
+msgstr "Talk-show-uri"
+
+msgid "Teams"
+msgstr "Echipe"
+
+msgid "Techniques"
+msgstr "Tehnici"
+
+msgid "Technology"
+msgstr "Tehnologie"
+
+msgid "Temp"
+msgstr "Temp"
+
+msgid "Test the failed sites again"
+msgstr "Testați din nou site-urile eșuate"
+
+msgid "Testers:"
+msgstr "Testeri:"
+
+msgid "Text field alignment"
+msgstr "Alinierea câmpurilor de text"
+
+msgid "Text files ytlist and urllist are in:"
+msgstr "Fișierele text ytlist și urllist se află în:"
+
+msgid "Thai"
+msgstr "Thailandeză"
+
+#, python-format
+msgid "The %s utility is necessary here but it was not detected."
+msgstr "Utilitarul %s este necesar aici, dar nu a fost detectat."
+
+msgid "The 100 tags with the most videos"
+msgstr "Cele 100 de etichete cu cele mai multe videoclipuri"
+
+msgid ""
+"The 7reels / cineb resolvers 'VidEasy', 'VidCore/VidFast', 'VidLink' and 'Peachify' cannot decrypt their links on the receiver.\n"
+"\n"
+"With this option ON, every time you open one of them E2iPlayer sends the site's encrypted stream token - which contains the TMDb id of the movie or episode you are opening - to the third-party web service enc-dec.app (operated by a private individual). That server then sees the id and your IP address on each play. Nothing else is transmitted, and it is only used for these four resolvers.\n"
+"\n"
+"Leave this OFF if you do not want that. The other resolvers (AdRock/vidrock, VidNest, ...) are not affected."
+msgstr ""
+"Resolverele 7reels / cineb 'VidEasy', 'VidCore/VidFast', 'VidLink' și 'Peachify' nu își pot decripta linkurile pe receptor.\n"
+"\n"
+"Cu această opțiune ACTIVATĂ, de fiecare dată când deschideți unul dintre ele, E2iPlayer trimite tokenul de stream criptat al site-ului - care conține ID-ul TMDb al filmului sau episodului pe care îl deschideți - către serviciul web terț enc-dec.app (operat de o persoană fizică). Acel server vede apoi ID-ul și adresa dvs. IP la fiecare redare. Nu se transmite nimic altceva și este folosit doar pentru aceste patru resolvere.\n"
+"\n"
+"Lăsați această opțiune DEZACTIVATĂ dacă nu doriți acest lucru. Celelalte resolvere (AdRock/vidrock, VidNest, ...) nu sunt afectate."
+
+msgid "The OpenSubtitles v3 server did not answer. Please try again later."
+msgstr "Serverul OpenSubtitles v3 nu a răspuns. Încercați din nou mai târziu."
+
+msgid "The OpenSubtitles.com server did not answer. Please try again later."
+msgstr "Serverul OpenSubtitles.com nu a răspuns. Încercați din nou mai târziu."
+
+msgid "The QR code leads to the wiki page with pictures and the extension download."
+msgstr "Codul QR duce la pagina wiki cu imagini și descărcarea extensiei."
+
+msgid "The Stalker portal of this entry is not configured (any more)."
+msgstr "Portalul Stalker al acestei intrări nu (mai) este configurat."
+
+msgid "The Xtream account of this entry is not configured (any more)."
+msgstr "Contul Xtream al acestei intrări nu (mai) este configurat."
+
+msgid "The YouTube channels of this group have no videos."
+msgstr "Canalele YouTube din acest grup nu au videoclipuri."
+
+msgid "The YouTube video ID is invalid."
+msgstr "ID-ul videoclipului YouTube nu este valid."
+
+msgid "The account is banned."
+msgstr "Contul este blocat."
+
+msgid "The balance of the account is too low."
+msgstr "Soldul contului este prea mic."
+
+msgid "The best short films on the internet, handpicked by Vimeo staff"
+msgstr "Cele mai bune scurtmetraje de pe internet, alese de echipa Vimeo"
+
+msgid "The channel already exists in User Links."
+msgstr "Canalul există deja în „Linkuri utilizator”."
+
+msgid "The color of the current version"
+msgstr "Culoarea versiunii curente"
+
+msgid "The color of the downloaded item"
+msgstr "Culoarea elementului descărcat"
+
+msgid "The color of the favourite item"
+msgstr "Culoarea elementului favorit"
+
+msgid "The color of the started item"
+msgstr "Culoarea elementului început"
+
+msgid "The color of the viewed item"
+msgstr "Culoarea elementului vizionat"
+
+msgid "The connection limit for your weeb.tv account has been reached."
+msgstr "Limita de conexiuni pentru contul dvs. weeb.tv a fost atinsă."
+
+msgid "The daily download limit is reached."
+msgstr "Limita zilnică de descărcare a fost atinsă."
+
+msgid "The data is too large."
+msgstr "Datele sunt prea mari."
+
+#, python-format
+msgid ""
+"The debug log file is empty:\n"
+"%s"
+msgstr ""
+"Fișierul jurnal de depanare este gol:\n"
+"%s"
+
+msgid ""
+"The debug log is disabled or set to console output.\n"
+"\n"
+"Enable it in the E2iPlayer configuration (Debug -> log to file) and reproduce the problem, then come back here."
+msgstr ""
+"Jurnalul de depanare este dezactivat sau setat pe ieșirea în consolă.\n"
+"\n"
+"Activați-l în configurarea E2iPlayer (Depanare -> jurnal în fișier), reproduceți problema și apoi reveniți aici."
+
+msgid "The debug log is not active."
+msgstr "Jurnalul de depanare nu este activ."
+
+msgid "The download is not ready yet. Please try again in a few seconds."
+msgstr "Descărcarea nu este încă pregătită. Încercați din nou în câteva secunde."
+
+#, python-format
+msgid "The download is ready in %d seconds. Please try again then."
+msgstr "Descărcarea va fi pregătită în %d secunde. Încercați din nou atunci."
+
+msgid "The download manager is stopped, start it on the download page."
+msgstr "Managerul de descărcări este oprit, porniți-l pe pagina de descărcări."
+
+msgid "The element already exists in User Links."
+msgstr "Elementul există deja în „Linkuri utilizator”."
+
+msgid "The feed of these channels could not be read - press OK to try again."
+msgstr "Feedul acestor canale nu a putut fi citit - apăsați OK pentru a încerca din nou."
+
+msgid "The helper process ended unexpectedly."
+msgstr "Procesul auxiliar s-a încheiat neașteptat."
+
+#, python-format
+msgid "The helper script %s is missing."
+msgstr "Scriptul auxiliar %s lipsește."
+
+#, python-format
+msgid "The host \"%s\" cannot be used from the web interface (disabled, unknown or protected by PIN)."
+msgstr "Hostul \"%s\" nu poate fi folosit din interfața web (dezactivat, necunoscut sau protejat prin PIN)."
+
+#, python-format
+msgid ""
+"The host %s requires registration. \n"
+"Please fill your login and password in the host configuration. Available under blue button."
+msgstr ""
+"Hostul %s necesită înregistrare. \n"
+"Introduceți numele de utilizator și parola în configurarea hostului. Disponibilă prin butonul albastru."
+
+msgid "The host asks for a captcha. It can only be solved on the receiver (or with MyE2i there)."
+msgstr "Hostul cere un captcha. Acesta poate fi rezolvat doar pe receptor (sau acolo cu MyE2i)."
+
+msgid "The host did not return a list."
+msgstr "Hostul nu a returnat o listă."
+
+#, python-format
+msgid "The host wanted to open a window on the TV (%s) - that only works on the receiver."
+msgstr "Hostul a vrut să deschidă o fereastră pe televizor (%s) - acest lucru funcționează doar pe receptor."
+
+msgid "The hoster sends an advert redirect instead of the video at the moment. Try another hoster."
+msgstr "Hosterul trimite momentan o redirecționare publicitară în locul videoclipului. Încercați alt hoster."
+
+msgid "The latest uploads of all YouTube channels in this group, newest first."
+msgstr "Cele mai noi încărcări ale tuturor canalelor YouTube din acest grup, cele mai noi primele."
+
+msgid "The link could not be resolved."
+msgstr "Linkul nu a putut fi rezolvat."
+
+msgid "The list has changed, please try again."
+msgstr "Lista s-a modificat, încercați din nou."
+
+msgid "The live stream is not available at the moment."
+msgstr "Transmisiunea live nu este disponibilă momentan."
+
+msgid "The model is offline or in a private show."
+msgstr "Modelul este offline sau într-un show privat."
+
+msgid "The number of items in the search history"
+msgstr "Numărul de elemente din istoricul căutărilor"
+
+#, python-format
+msgid "The page layout of %s has changed."
+msgstr "Structura paginii %s s-a modificat."
+
+#, python-format
+msgid ""
+"The playback buffer has been moved to the download manager.\n"
+"It will be saved in the file:\n"
+"\"%s\""
+msgstr ""
+"Bufferul de redare a fost mutat în managerul de descărcări.\n"
+"Va fi salvat în fișierul:\n"
+"\"%s\""
+
+msgid "The portal did not hand out a link for this entry."
+msgstr "Portalul nu a furnizat un link pentru această intrare."
+
+msgid "The recordings of this page were on the site's old media server, which is offline."
+msgstr "Înregistrările acestei pagini se aflau pe vechiul server media al site-ului, care este offline."
+
+msgid "The request has no valid length."
+msgstr "Cererea nu are o lungime validă."
+
+msgid "The same item already exists in this group."
+msgstr "Același element există deja în acest grup."
+
+msgid "The server did not return a subtitle file (download limit reached?)."
+msgstr "Serverul nu a returnat un fișier de subtitrare (limita de descărcare atinsă?)."
+
+msgid "The server did not send a subtitle file."
+msgstr "Serverul nu a trimis un fișier de subtitrare."
+
+msgid "The server limits the number of requests. Please try again in a few seconds."
+msgstr "Serverul limitează numărul de cereri. Încercați din nou în câteva secunde."
+
+msgid "The service is overloaded. Please try again later."
+msgstr "Serviciul este supraîncărcat. Încercați din nou mai târziu."
+
+msgid "The settings are protected by a PIN, change them on the receiver."
+msgstr "Setările sunt protejate printr-un PIN, modificați-le pe receptor."
+
+msgid "The site has no player for this video (it only shows a cam advert)."
+msgstr "Site-ul nu are player pentru acest videoclip (afișează doar o reclamă cam)."
+
+msgid "The site refuses all qualities of this video at the moment (HTTP 403). Try again later."
+msgstr "Site-ul refuză momentan toate calitățile acestui videoclip (HTTP 403). Încercați din nou mai târziu."
+
+msgid "The site rejected the search request."
+msgstr "Site-ul a respins cererea de căutare."
+
+msgid "The site's browser check could not be passed."
+msgstr "Verificarea de browser a site-ului nu a putut fi trecută."
+
+msgid "The site's catalogue could not be loaded."
+msgstr "Catalogul site-ului nu a putut fi încărcat."
+
+msgid "The support package holds the versions, the system information, the enabled hosts and the end of the debug log in one text file for a problem report. Look through it before posting it - the log can contain addresses of the sites you opened."
+msgstr "Pachetul de suport conține versiunile, informațiile de sistem, hosturile activate și sfârșitul jurnalului de depanare într-un singur fișier text pentru raportarea unei probleme. Parcurgeți-l înainte de a-l publica - jurnalul poate conține adresele site-urilor pe care le-ați deschis."
+
+msgid "The user link could not be deleted."
+msgstr "Linkul utilizatorului nu a putut fi șters."
+
+msgid "The user link could not be updated."
+msgstr "Linkul utilizatorului nu a putut fi actualizat."
+
+#, python-format
+msgid "The value must be between %d and %d."
+msgstr "Valoarea trebuie să fie între %d și %d."
+
+msgid "The video could not be resolved (it may be private, ended or not available in your country)."
+msgstr "Videoclipul nu a putut fi rezolvat (poate fi privat, încheiat sau indisponibil în țara dvs.)."
+
+msgid "The video file of this title is not available on the server (HTTP 403)."
+msgstr "Fișierul video al acestui titlu nu este disponibil pe server (HTTP 403)."
+
+msgid "The video has been removed."
+msgstr "Videoclipul a fost eliminat."
+
+msgid "The video player of this site (hdvbua.pro) does not offer this title in your country (licence area, mainly Ukraine)."
+msgstr "Playerul video al acestui site (hdvbua.pro) nu oferă acest titlu în țara dvs. (zonă de licență, în principal Ucraina)."
+
+msgid "The website returned a server error for this request."
+msgstr "Site-ul web a returnat o eroare de server pentru această cerere."
+
+msgid "There are no other favorite groups"
+msgstr "Nu există alte grupuri de favorite"
+
+msgid "There are unsaved changes. Save now?"
+msgstr "Există modificări nesalvate. Salvați acum?"
+
+#, python-format
+msgid "There is no enough free space in the folder \"%s\"."
+msgstr "Nu există suficient spațiu liber în folderul \"%s\"."
+
+#, python-format
+msgid "There is no free space on the drive [%s]."
+msgstr "Nu există spațiu liber pe unitatea [%s]."
+
+msgid "There is no hosts in this group."
+msgstr "Nu există hosturi în acest grup."
+
+msgid "There is no next item in this list."
+msgstr "Nu există un element următor în această listă."
+
+msgid "There is no previous item in this list."
+msgstr "Nu există un element anterior în această listă."
+
+#, python-format
+msgid ""
+"There is no storage device under \"%s\" (%s free). E2iPlayer will switch this folder back to \"%s\" at the next start.\n"
+"Please choose a folder on a mounted HDD or USB stick."
+msgstr ""
+"Nu există niciun dispozitiv de stocare la \"%s\" (%s liber). E2iPlayer va readuce acest folder la \"%s\" la următoarea pornire.\n"
+"Selectați un folder de pe un HDD sau stick USB montat."
+
+msgid "This article has no free video."
+msgstr "Acest articol nu are un videoclip gratuit."
+
+msgid "This channel does not exist."
+msgstr "Acest canal nu există."
+
+msgid "This channel is currently offline."
+msgstr "Acest canal este momentan offline."
+
+msgid "This channel is not available in your country (geo-blocking)."
+msgstr "Acest canal nu este disponibil în țara dvs. (geo-blocare)."
+
+msgid "This channel is temporarily unavailable. Please try again later."
+msgstr "Acest canal este temporar indisponibil. Încercați din nou mai târziu."
+
+msgid "This channel requires a premium account, or the free connection limit has been reached. Enter your weeb.tv login data in the host configuration."
+msgstr "Acest canal necesită un cont premium sau limita de conexiuni gratuite a fost atinsă. Introduceți datele de autentificare weeb.tv în configurarea hostului."
+
+msgid "This content is not available in your region."
+msgstr "Acest conținut nu este disponibil în regiunea dvs."
+
+msgid "This content is only available in Switzerland."
+msgstr "Acest conținut este disponibil doar în Elveția."
+
+msgid "This content needs a login - not supported."
+msgstr "Acest conținut necesită autentificare - nu este acceptat."
+
+msgid "This entry cannot be added to the favourites."
+msgstr "Această intrare nu poate fi adăugată la favorite."
+
+msgid "This entry cannot be opened."
+msgstr "Această intrare nu poate fi deschisă."
+
+msgid "This entry is only an advert, there is no video."
+msgstr "Această intrare este doar o reclamă, nu există videoclip."
+
+msgid "This entry is protected by a PIN, open it on the receiver."
+msgstr "Această intrare este protejată printr-un PIN, deschideți-o pe receptor."
+
+msgid "This episode is not available in this version (SUB/DUB) on this server. Try another one."
+msgstr "Acest episod nu este disponibil în această versiune (SUB/DUB) pe acest server. Încercați altul."
+
+msgid "This feed is empty, or the YouTube sign-in has expired - sign out and in again."
+msgstr "Acest feed este gol sau autentificarea YouTube a expirat - deconectați-vă și conectați-vă din nou."
+
+msgid "This folder is protected by a PIN, open it on the receiver."
+msgstr "Acest folder este protejat printr-un PIN, deschideți-l pe receptor."
+
+msgid "This host has been added already to this group."
+msgstr "Acest host a fost deja adăugat la acest grup."
+
+msgid "This is only an advert for a paid clip (clips4sale), there is no free video."
+msgstr "Aceasta este doar o reclamă pentru un clip plătit (clips4sale), nu există videoclip gratuit."
+
+msgid "This is paid content of PZPN+, it needs a purchase on the website."
+msgstr "Acesta este conținut plătit PZPN+, trebuie cumpărat pe site."
+
+msgid "This mix is only available with a Mixcloud Select subscription."
+msgstr "Acest mix este disponibil doar cu un abonament Mixcloud Select."
+
+msgid "This model is offline."
+msgstr "Acest model este offline."
+
+msgid "This option cannot be changed from the web interface."
+msgstr "Această opțiune nu poate fi modificată din interfața web."
+
+msgid "This page has no video (blog article)."
+msgstr "Această pagină nu are videoclip (articol de blog)."
+
+msgid "This player is not available any more - reload the links."
+msgstr "Acest player nu mai este disponibil - reîncărcați linkurile."
+
+msgid "This room is currently offline or unavailable."
+msgstr "Această cameră este momentan offline sau indisponibilă."
+
+msgid "This room is offline. Try again later!"
+msgstr "Această cameră este offline. Încercați din nou mai târziu!"
+
+msgid "This section is no longer on the main page."
+msgstr "Această secțiune nu mai este pe pagina principală."
+
+msgid "This session has no code - scan the QR code on the receiver screen."
+msgstr "Această sesiune nu are cod - scanați codul QR de pe ecranul receptorului."
+
+msgid "This show is private. Try again later!"
+msgstr "Acest show este privat. Încercați din nou mai târziu!"
+
+msgid "This source is offline at the moment. Try another source of the channel."
+msgstr "Această sursă este momentan offline. Încercați o altă sursă a canalului."
+
+msgid "This stream can only be played with buffering - please start it on the receiver."
+msgstr "Acest stream poate fi redat doar cu buffer - porniți-l pe receptor."
+
+msgid "This subtitle provider has subtitles for movies only."
+msgstr "Acest furnizor de subtitrări are subtitrări doar pentru filme."
+
+msgid "This video has been deleted."
+msgstr "Acest videoclip a fost șters."
+
+msgid "This video is Premium-only content."
+msgstr "Acest videoclip este conținut exclusiv Premium."
+
+msgid "This video is a private video."
+msgstr "Acest videoclip este un videoclip privat."
+
+msgid "This video is a private."
+msgstr "Acest videoclip este privat."
+
+msgid "This video is only on hosters E2iPlayer cannot play."
+msgstr "Acest videoclip se află doar pe hostere pe care E2iPlayer nu le poate reda."
+
+msgid "This video is only on the netu.tv player (pbtube.net), which E2iPlayer cannot play."
+msgstr "Acest videoclip se află doar în playerul netu.tv (pbtube.net), pe care E2iPlayer nu îl poate reda."
+
+msgid "This video needs a paid ororo.tv subscription."
+msgstr "Acest videoclip necesită un abonament plătit ororo.tv."
+
+msgid "This video requires you to sign in to a YouTube account."
+msgstr "Pentru acest videoclip trebuie să vă conectați la un cont YouTube."
+
+msgid "This video was embedded from Pornhub and is no longer available there."
+msgstr "Acest videoclip a fost încorporat de pe Pornhub și nu mai este disponibil acolo."
+
+msgid "This video was embedded from xHamster and has been deleted there."
+msgstr "Acest videoclip a fost încorporat de pe xHamster și a fost șters acolo."
+
+msgid "Thriller"
+msgstr "Thriller"
+
+msgid "Thumbnails"
+msgstr "Miniaturi"
+
+msgid "Time"
+msgstr "Timp"
+
+msgid "Tip! You can connect USB flash drive to fix this problem."
+msgstr "Sfat! Puteți conecta un stick USB pentru a rezolva această problemă."
+
+msgid "Titles"
+msgstr "Titluri"
+
+#, python-format
+msgid "Titlovi.com login failed (HTTP %s)."
+msgstr "Autentificarea Titlovi.com a eșuat (HTTP %s)."
+
+#, python-format
+msgid "Titlovi.com login failed for user \"%s\". Please check your login and password."
+msgstr "Autentificarea Titlovi.com a eșuat pentru utilizatorul \"%s\". Verificați numele de utilizator și parola."
+
+msgid "Titlovi.com needs a free titlovi.com account. Enter login and password in the E2iPlayer settings."
+msgstr "Titlovi.com necesită un cont gratuit titlovi.com. Introduceți numele de utilizator și parola în setările E2iPlayer."
+
+#, python-format
+msgid "Titlovi.com search failed (HTTP %s)."
+msgstr "Căutarea Titlovi.com a eșuat (HTTP %s)."
+
+#, python-format
+msgid "Titlovi.com: API access is disabled for the account \"%s\". See titlovi.com/donacije."
+msgstr "Titlovi.com: accesul API este dezactivat pentru contul \"%s\". Consultați titlovi.com/donacije."
+
+msgid "Titlovi.com: invalid server response."
+msgstr "Titlovi.com: răspuns nevalid de la server."
+
+#, python-format
+msgid ""
+"To sign in to YouTube:\n"
+"\n"
+"1. On a phone or computer open:\n"
+"     %s\n"
+"\n"
+"2. Enter this code:\n"
+"\n"
+"     %s\n"
+"\n"
+"3. Approve the access, then select OK here."
+msgstr ""
+"Pentru a vă conecta la YouTube:\n"
+"\n"
+"1. Pe un telefon sau computer deschideți:\n"
+"     %s\n"
+"\n"
+"2. Introduceți acest cod:\n"
+"\n"
+"     %s\n"
+"\n"
+"3. Aprobați accesul, apoi selectați OK aici."
+
+msgid ""
+"To watch videos from https://vk.com/ you need to login.\n"
+"Please fill your login and password in the IPTVPlayer configuration."
+msgstr ""
+"Pentru a viziona videoclipuri de pe https://vk.com/ trebuie să vă autentificați.\n"
+"Introduceți numele de utilizator și parola în configurarea IPTVPlayer."
+
+msgid "Today"
+msgstr "Astăzi"
+
+msgid "Tomorrow"
+msgstr "Mâine"
+
+msgid "Too many redirects."
+msgstr "Prea multe redirecționări."
+
+msgid "Too many requests. Please try again later."
+msgstr "Prea multe cereri. Încercați din nou mai târziu."
+
+msgid "Too many wrong codes - scan the QR code on the receiver screen instead."
+msgstr "Prea multe coduri greșite - scanați în schimb codul QR de pe ecranul receptorului."
+
+msgid "Top"
+msgstr "Top"
+
+msgid "Top 10"
+msgstr "Top 10"
+
+msgid "Top IMDb"
+msgstr "Top IMDb"
+
+msgid "Top airing"
+msgstr "Populare acum"
+
+msgid "Top in your country"
+msgstr "Top în țara dvs."
+
+msgid "Top leagues and clubs"
+msgstr "Ligi și cluburi de top"
+
+msgid "Top rated"
+msgstr "Cele mai apreciate"
+
+msgid "Top rated movies"
+msgstr "Cele mai apreciate filme"
+
+msgid "Top rated series"
+msgstr "Cele mai apreciate seriale"
+
+msgid "Top scorers"
+msgstr "Golgheteri"
+
+msgid "Top series"
+msgstr "Top seriale"
+
+msgid "Top stations"
+msgstr "Top posturi"
+
+msgid "Top tracks"
+msgstr "Top piese"
+
+msgid "Top upcoming"
+msgstr "Populare în curând"
+
+msgid "Top-IMDB"
+msgstr "Top-IMDB"
+
+msgid "Topics"
+msgstr "Subiecte"
+
+msgid "Total size:"
+msgstr "Dimensiune totală:"
+
+msgid "Tourism"
+msgstr "Turism"
+
+msgid "Tracklist"
+msgstr "Listă de piese"
+
+msgid "Trailer"
+msgstr "Trailer"
+
+msgid "Translation:"
+msgstr "Traducere:"
+
+#, python-format
+msgid "Translator: %s"
+msgstr "Traducător: %s"
+
+msgid "Transparent"
+msgstr "Transparent"
+
+msgid "Trauma"
+msgstr "Traumă"
+
+msgid "Travel"
+msgstr "Călătorii"
+
+msgid "Treatment Consult"
+msgstr "Consultație de tratament"
+
+msgid "Trending"
+msgstr "În tendințe"
+
+msgid "Trending this week"
+msgstr "În tendințe săptămâna aceasta"
+
+msgid "Trial"
+msgstr "Cont de probă"
+
+msgid "Troubleshooting"
+msgstr "Depanare"
+
+msgid "Try to change extplayer or reinstall gst-ifdsrc"
+msgstr "Încercați să schimbați extplayer sau să reinstalați gst-ifdsrc"
+
+msgid "Turkish"
+msgstr "Turcă"
+
+msgid "Turkish Movies"
+msgstr "Filme turcești"
+
+msgid "Turkish Series"
+msgstr "Seriale turcești"
+
+msgid "Turkish TV series"
+msgstr "Seriale TV turcești"
+
+msgid "Turkish movies (dubbed)"
+msgstr "Filme turcești (dublate)"
+
+msgid "Turkish series (dubbed)"
+msgstr "Seriale turcești (dublate)"
+
+msgid "Tutorials"
+msgstr "Tutoriale"
+
+msgid "Type"
+msgstr "Tip"
+
+msgid "Type:"
+msgstr "Tip:"
+
+msgid "Type: "
+msgstr "Tip: "
+
+#, python-format
+msgid "Type: %s"
+msgstr "Tip: %s"
+
+msgid "Types"
+msgstr "Tipuri"
+
+msgid "UNKNOWN"
+msgstr "NECUNOSCUT"
+
+msgid "URL malformed."
+msgstr "URL incorect."
+
+msgid "Ukrainian"
+msgstr "Ucraineană"
+
+msgid "Umount iso file"
+msgstr "Demontare fișier ISO"
+
+msgid "Unable to comply. Search History is empty."
+msgstr "Operațiune imposibilă. Istoricul căutărilor este gol."
+
+msgid "Unfix jump target"
+msgstr "Anulare fixare țintă salt"
+
+msgid "Unknown action."
+msgstr "Acțiune necunoscută."
+
+msgid "Unknown error code."
+msgstr "Cod de eroare necunoscut."
+
+msgid "Unknown error."
+msgstr "Eroare necunoscută."
+
+#, python-format
+msgid "Unknown protocol [%s]"
+msgstr "Protocol necunoscut [%s]"
+
+msgid "Unknown server response."
+msgstr "Răspuns necunoscut de la server."
+
+#, python-format
+msgid "Unknown subtitle parser for format \"%s\"."
+msgstr "Parser de subtitrări necunoscut pentru formatul \"%s\"."
+
+#, python-format
+msgid "Unrar error code[%s]."
+msgstr "Cod de eroare Unrar[%s]."
+
+msgid "Unset watched"
+msgstr "Anulare marcaj vizionat"
+
+msgid "Unsupported protocol."
+msgstr "Protocol neacceptat."
+
+#, python-format
+msgid "Unzip error code[%s]."
+msgstr "Cod de eroare Unzip[%s]."
+
+msgid "Upbringing"
+msgstr "Creșterea copiilor"
+
+msgid "Upcoming"
+msgstr "În curând"
+
+msgid "Updates"
+msgstr "Actualizări"
+
+msgid "Upload date"
+msgstr "Data încărcării"
+
+#, python-format
+msgid "Uploader: %s"
+msgstr "Încărcat de: %s"
+
+msgid "Uploads"
+msgstr "Încărcări"
+
+msgid "Urllists player"
+msgstr "Player Urllists"
+
+msgid "Use Cinemeta (no key, English)"
+msgstr "Folosire Cinemeta (fără cheie, engleză)"
+
+msgid "Use HLS streams (adaptive):"
+msgstr "Folosire streamuri HLS (adaptive):"
+
+msgid "Use IMDb (no key)"
+msgstr "Folosire IMDb (fără cheie)"
+
+msgid "Use OMDb"
+msgstr "Folosire OMDb"
+
+msgid "Use TMDb"
+msgstr "Folosire TMDb"
+
+msgid "Use TVmaze for series (no key, English)"
+msgstr "Folosire TVmaze pentru seriale (fără cheie, engleză)"
+
+msgid "Use default video quality"
+msgstr "Folosire calitate video implicită"
+
+msgid "Use default video quality:"
+msgstr "Folosire calitate video implicită:"
+
+msgid "Use login"
+msgstr "Folosire autentificare"
+
+msgid "Use own pin for configuration"
+msgstr "Folosire PIN propriu pentru configurare"
+
+msgid "Use own pin instead of the player pin"
+msgstr "Folosire PIN propriu în locul PIN-ului playerului"
+
+msgid "Use proxy server:"
+msgstr "Folosire server proxy:"
+
+#, python-format
+msgid "Use software decoder for the %s"
+msgstr "Folosire decodor software pentru %s"
+
+msgid "Use subtitles parser extension if available"
+msgstr "Folosire extensie parser de subtitrări, dacă este disponibilă"
+
+msgid "Use the PyCurl for HTTP(S) requests"
+msgstr "Folosire PyCurl pentru cererile HTTP(S)"
+
+msgid "Use the best quality :"
+msgstr "Folosire cea mai bună calitate :"
+
+msgid "User"
+msgstr "Utilizator"
+
+msgid "User defined"
+msgstr "Definit de utilizator"
+
+msgid "User files"
+msgstr "Fișiere utilizator"
+
+msgid "User link added."
+msgstr "Link utilizator adăugat."
+
+msgid "User link deleted."
+msgstr "Link utilizator șters."
+
+msgid "User link updated."
+msgstr "Link utilizator actualizat."
+
+msgid "User links"
+msgstr "Linkuri utilizator"
+
+msgid "User links sorted."
+msgstr "Linkuri utilizator sortate."
+
+msgid "User links stored in the ytlist.txt file."
+msgstr "Linkuri utilizator stocate în fișierul ytlist.txt."
+
+msgid "User-Agent (leave empty for the default):"
+msgstr "User-Agent (lăsați gol pentru valoarea implicită):"
+
+#, python-format
+msgid "User-Links: %d"
+msgstr "Linkuri utilizator: %d"
+
+msgid "Username/password authentication failure."
+msgstr "Autentificarea cu nume de utilizator/parolă a eșuat."
+
+msgid "Username:"
+msgstr "Nume utilizator:"
+
+msgid "Users"
+msgstr "Utilizatori"
+
+#, python-format
+msgid "Utility \"%s\" can not be found."
+msgstr "Utilitarul \"%s\" nu a fost găsit."
+
+msgid "VAVOO did not hand out a session signature. Try again later."
+msgstr "VAVOO nu a furnizat o semnătură de sesiune. Încercați din nou mai târziu."
+
+msgid "Venue"
+msgstr "Locație"
+
+msgid "Verify"
+msgstr "Verificare"
+
+msgid "Version"
+msgstr "Versiune"
+
+#, python-format
+msgid "Version: %s"
+msgstr "Versiune: %s"
+
+msgid "Video"
+msgstr "Video"
+
+msgid "Video buffer size [MB]"
+msgstr "Dimensiune buffer video [MB]"
+
+msgid "Video library"
+msgstr "Videotecă"
+
+msgid "Video link not found."
+msgstr "Linkul video nu a fost găsit."
+
+msgid "Video mode"
+msgstr "Mod video"
+
+msgid "Video options"
+msgstr "Opțiuni video"
+
+msgid "Video player OSD clock format"
+msgstr "Format ceas OSD al playerului video"
+
+msgid "Video policy"
+msgstr "Politică video"
+
+msgid "Video policy for 4:3"
+msgstr "Politică video pentru 4:3"
+
+msgid "Video recitations"
+msgstr "Recitări video"
+
+msgid "Video with DRM protection."
+msgstr "Videoclip cu protecție DRM."
+
+msgid "Videos"
+msgstr "Videoclipuri"
+
+#, python-format
+msgid "Videos %s"
+msgstr "Videoclipuri %s"
+
+msgid "Videos you have liked."
+msgstr "Videoclipuri pe care le-ați apreciat."
+
+msgid "Videos you have recently watched."
+msgstr "Videoclipuri vizionate recent."
+
+msgid "View count"
+msgstr "Număr de vizualizări"
+
+msgid "Views"
+msgstr "Vizualizări"
+
+msgid "Views:"
+msgstr "Vizualizări:"
+
+msgid "Vimeo does not offer this list to anonymous users in your region."
+msgstr "Vimeo nu oferă această listă utilizatorilor anonimi din regiunea dvs."
+
+msgid "Vimeo live event: the live transmission (while on air) and the past transmissions."
+msgstr "Eveniment live Vimeo: transmisiunea live (cât timp este în emisie) și transmisiunile anterioare."
+
+msgid "Vimeo playlist with the recordings of this page."
+msgstr "Playlist Vimeo cu înregistrările acestei pagini."
+
+msgid "Vimeo: this video is private, removed or may only be played on the site that embeds it."
+msgstr "Vimeo: acest videoclip este privat, eliminat sau poate fi redat doar pe site-ul care îl încorporează."
+
+msgid "Virtual Keyboard"
+msgstr "Tastatură virtuală"
+
+msgid "Virtual Keyboard type"
+msgstr "Tip tastatură virtuală"
+
+msgid "Voice-over"
+msgstr "Voice-over"
+
+msgid "WWE shows"
+msgstr "Show-uri WWE"
+
+msgid "Waiting for the result ..."
+msgstr "Se așteaptă rezultatul ..."
+
+msgid "War"
+msgstr "Război"
+
+msgid "Watch Videos Online"
+msgstr "Vizionați videoclipuri online"
+
+msgid "Watch history"
+msgstr "Istoric vizionări"
+
+msgid "Watch later"
+msgstr "Vizionați mai târziu"
+
+msgid "Watch online"
+msgstr "Vizionare online"
+
+msgid "Western"
+msgstr "Western"
+
+msgid "What's happening?"
+msgstr "Ce se întâmplă?"
+
+msgid "When the maximum is reached"
+msgstr "Când se atinge maximul"
+
+msgid "While live TV is running"
+msgstr "În timp ce rulează TV live"
+
+msgid "Whole file must be downloaded to start playback!"
+msgstr "Întregul fișier trebuie descărcat pentru a porni redarea!"
+
+msgid "Wiki"
+msgstr "Wiki"
+
+msgid "Winter"
+msgstr "Iarnă"
+
+msgid "With an API key from subdl.com (E2iPlayer settings, Subtitles) the official SubDL API is searched as well."
+msgstr "Cu o cheie API de la subdl.com (setări E2iPlayer, Subtitrări) se caută și în API-ul oficial SubDL."
+
+msgid "With subtitles"
+msgstr "Cu subtitrări"
+
+msgid "World"
+msgstr "Lume"
+
+msgid "Worldwide"
+msgstr "Mondial"
+
+msgid "Wrestling"
+msgstr "Wrestling"
+
+msgid "Wrestling shows"
+msgstr "Show-uri de wrestling"
+
+msgid "Write current title to file:"
+msgstr "Scriere titlu curent în fișier:"
+
+msgid "Writer:"
+msgstr "Scenarist:"
+
+msgid "Writers:"
+msgstr "Scenariști:"
+
+msgid "Written Boards Review"
+msgstr "Recapitulare pentru examenul scris de specialitate"
+
+msgid "Wrong Youtube Api Key length"
+msgstr "Lungime greșită a cheii API YouTube"
+
+msgid "Wrong captcha code."
+msgstr "Cod captcha greșit."
+
+msgid "Wrong code."
+msgstr "Cod greșit."
+
+msgid "Wrong format of rar archive."
+msgstr "Format greșit al arhivei RAR."
+
+msgid "Wrong format of zip archive."
+msgstr "Format greșit al arhivei ZIP."
+
+msgid "Wrong indexes."
+msgstr "Indecși greșiți."
+
+msgid "Wrong uri."
+msgstr "URI greșit."
+
+msgid "Wrong weeb.tv username or password."
+msgstr "Nume de utilizator sau parolă weeb.tv greșite."
+
+#, python-format
+msgid "Wyzie Subs API key rejected: %s"
+msgstr "Cheia API Wyzie Subs a fost respinsă: %s"
+
+msgid "Wyzie Subs needs an API key. You can get a free one at https://store.wyzie.io/redeem and enter it in the E2iPlayer configuration."
+msgstr "Wyzie Subs necesită o cheie API. Puteți obține una gratuită la https://store.wyzie.io/redeem și o puteți introduce în configurarea E2iPlayer."
+
+msgid "Wyzie Subs: the daily request limit of the API key is reached."
+msgstr "Wyzie Subs: limita zilnică de cereri a cheii API a fost atinsă."
+
+msgid "YELLOW"
+msgstr "GALBEN"
+
+msgid "YESTERDAY"
+msgstr "IERI"
+
+msgid "YP connected"
+msgstr "YP conectat"
+
+msgid "Year"
+msgstr "An"
+
+#, python-format
+msgid "Year %s"
+msgstr "Anul %s"
+
+msgid "Year:"
+msgstr "An:"
+
+msgid "Yes"
+msgstr "Da"
+
+msgid "Yes + Global Search"
+msgstr "Da + Căutare globală"
+
+msgid "Yes, to console"
+msgstr "Da, în consolă"
+
+msgid "Yes, to file /hdd/iptv.dbg"
+msgstr "Da, în fișierul /hdd/iptv.dbg"
+
+msgid "Yes, to file /home/root/logs/iptv.dbg"
+msgstr "Da, în fișierul /home/root/logs/iptv.dbg"
+
+msgid "Yes, to file /tmp/iptv.dbg"
+msgstr "Da, în fișierul /tmp/iptv.dbg"
+
+msgid "Yesterday"
+msgstr "Ieri"
+
+msgid "You can disable HTTPS certificates validation in the E2iPlayer configuration to suppress this problem."
+msgstr "Puteți dezactiva validarea certificatelor HTTPS în configurarea E2iPlayer pentru a evita această problemă."
+
+msgid "You can enable PyCurl in the E2iPlayer configuration to fix this problem."
+msgstr "Puteți activa PyCurl în configurarea E2iPlayer pentru a rezolva această problemă."
+
+msgid "You can install PyCurl package with TLS 1.3 support from the feed to fix this problem."
+msgstr "Puteți instala din feed pachetul PyCurl cu suport TLS 1.3 pentru a rezolva această problemă."
+
+#, python-format
+msgid "You can use \"%s\" or \"%s\" services for automatic solution."
+msgstr "Puteți folosi serviciile \"%s\" sau \"%s\" pentru rezolvare automată."
+
+msgid "You can use external eplayer to start playback faster."
+msgstr "Puteți folosi eplayer extern pentru a porni redarea mai rapid."
+
+msgid "You do not have a premium account. Starting a sponsored broadcast."
+msgstr "Nu aveți un cont premium. Se pornește o transmisiune sponsorizată."
+
+msgid "You have reached the play limit for this mix."
+msgstr "Ați atins limita de redare pentru acest mix."
+
+msgid "You should never perform block I/O operations in the __init__."
+msgstr "Nu ar trebui să efectuați niciodată operații I/O blocante în __init__."
+
+msgid "YouTube User Links Editor"
+msgstr "Editor linkuri utilizator YouTube"
+
+msgid "YouTube channels: original order"
+msgstr "Canale YouTube: ordinea originală"
+
+msgid "YouTube channels: sort by newest upload"
+msgstr "Canale YouTube: sortare după cea mai nouă încărcare"
+
+msgid "Your 'Watch later' playlist."
+msgstr "Playlistul dvs. „Vizionați mai târziu”."
+
+#, python-format
+msgid "Your MyE2i extension is outdated or unknown (v%s or newer needed). Please update:"
+msgstr "Extensia dvs. MyE2i este învechită sau necunoscută (este necesară v%s sau mai nouă). Actualizați:"
+
+msgid "Your search entry"
+msgstr "Termenul dvs. de căutare"
+
+#, python-format
+msgid "Youth protection: only available between %s and %s."
+msgstr "Protecția minorilor: disponibil doar între %s și %s."
+
+msgid "Youtube Suggestions"
+msgstr "Sugestii YouTube"
+
+msgid "Youtube searches are quicker, if you fill API key in setting menu"
+msgstr "Căutările YouTube sunt mai rapide dacă introduceți cheia API în meniul de setări"
+
+msgid "Z-A"
+msgstr "Z-A"
+
+#, python-format
+msgid "[%s CD]"
+msgstr "[%s CD]"
+
+#, python-format
+msgid "[%s] - configuration"
+msgstr "[%s] - configurare"
+
+#, python-format
+msgid "[%s] with buffering"
+msgstr "[%s] cu buffer"
+
+#, python-format
+msgid "[%s] without buffering"
+msgstr "[%s] fără buffer"
+
+msgid "[HLS/M3U8] buffering"
+msgstr "[HLS/M3U8] buffer"
+
+msgid "[HLS/M3U8] live stream starts behind live"
+msgstr "[HLS/M3U8] streamul live pornește în urma punctului live"
+
+msgid "[HTTP] buffering"
+msgstr "[HTTP] buffer"
+
+msgid "[Logged-in-only]"
+msgstr "[Doar cu autentificare]"
+
+msgid "[RTMP] buffering (rtmpdump required)"
+msgstr "[RTMP] buffer (necesită rtmpdump)"
+
+msgid "[en]"
+msgstr "[en]"
+
+msgid "[pl]"
+msgstr "[pl]"
+
+msgid "_checkStatus except error"
+msgstr "_checkStatus except error"
+
+msgid "after a week"
+msgstr "după o săptămână"
+
+msgid "after closing"
+msgstr "după închidere"
+
+msgid "after day"
+msgstr "după o zi"
+
+msgid "after three days"
+msgstr "după trei zile"
+
+msgid "all"
+msgstr "toate"
+
+msgid "alphabetical"
+msgstr "alfabetic"
+
+msgid "anime-odcinki.pl shows this title only to logged-in users."
+msgstr "anime-odcinki.pl afișează acest titlu doar utilizatorilor autentificați."
+
+msgid "aqua"
+msgstr "aqua"
+
+msgid "as Chrome this session"
+msgstr "ca Chrome în această sesiune"
+
+msgid "as in ytlist.txt"
+msgstr "ca în ytlist.txt"
+
+msgid "auto"
+msgstr "auto"
+
+#, python-format
+msgid "available until %s"
+msgstr "disponibil până la %s"
+
+msgid "back to host/group selection"
+msgstr "înapoi la selecția host/grup"
+
+msgid "back to the previous category / jump to the next page"
+msgstr "înapoi la categoria anterioară / salt la pagina următoare"
+
+msgid "black"
+msgstr "negru"
+
+msgid "black&white"
+msgstr "alb-negru"
+
+msgid "blue"
+msgstr "albastru"
+
+msgid "bottom"
+msgstr "jos"
+
+msgid "buffering location"
+msgstr "locație buffer"
+
+msgid "center"
+msgstr "centrat"
+
+msgid "changed"
+msgstr "modificat"
+
+msgid "close the editor - or stop manual reordering if it's active"
+msgstr "închidere editor - sau oprirea reordonării manuale, dacă este activă"
+
+msgid "cobalt"
+msgstr "cobalt"
+
+msgid "cookies cache"
+msgstr "cache cookie-uri"
+
+msgid "could not run the probe"
+msgstr "testul nu a putut fi rulat"
+
+#, python-format
+msgid "curl-impersonate is not installed on the receiver (%s). This stream only plays with it."
+msgstr "curl-impersonate nu este instalat pe receptor (%s). Acest stream se redă doar cu el."
+
+msgid "debug"
+msgstr "depanare"
+
+msgid "default"
+msgstr "implicit"
+
+msgid "delete entered text"
+msgstr "ștergere text introdus"
+
+msgid "delete the selected entry"
+msgstr "ștergere intrare selectată"
+
+msgid "device ID"
+msgstr "ID dispozitiv"
+
+msgid "device ID 2"
+msgstr "ID dispozitiv 2"
+
+msgid "direct link"
+msgstr "link direct"
+
+msgid "direct number input"
+msgstr "introducere directă a numărului"
+
+msgid "download the selected item"
+msgstr "descărcare element selectat"
+
+msgid "downloads location"
+msgstr "locație descărcări"
+
+msgid "e-mail"
+msgstr "e-mail"
+
+msgid "edit the selected entry (same as BLUE) - or drop it while manually reordering"
+msgstr "editare intrare selectată (la fel ca ALBASTRU) - sau plasarea ei în timpul reordonării manuale"
+
+msgid "edit the selected entry (same as OK)"
+msgstr "editare intrare selectată (la fel ca OK)"
+
+msgid "enable / disable manual reordering"
+msgstr "activare / dezactivare reordonare manuală"
+
+msgid "external eplayer3"
+msgstr "eplayer3 extern"
+
+msgid "external gstplayer"
+msgstr "gstplayer extern"
+
+msgid "failed"
+msgstr "eșuat"
+
+msgid "file"
+msgstr "fișier"
+
+msgid "fixed"
+msgstr "fixat"
+
+msgid "format"
+msgstr "format"
+
+msgid "free"
+msgstr "liber"
+
+msgid "from E2 settings"
+msgstr "din setările E2"
+
+msgid "fuchsia"
+msgstr "fucsia"
+
+msgid "go back / close"
+msgstr "înapoi / închidere"
+
+msgid "goals"
+msgstr "goluri"
+
+msgid "gray"
+msgstr "gri"
+
+msgid "green"
+msgstr "verde"
+
+msgid "hd"
+msgstr "hd"
+
+msgid "hearing impaired"
+msgstr "pentru persoane cu deficiențe de auz"
+
+msgid "high"
+msgstr "înaltă"
+
+msgid "hint: the site shows a next page link"
+msgstr "indiciu: site-ul afișează un link către pagina următoare"
+
+msgid "horizontal"
+msgstr "orizontal"
+
+msgid "host"
+msgstr "host"
+
+msgid "host order and groups"
+msgstr "ordinea hosturilor și grupuri"
+
+msgid "https"
+msgstr "https"
+
+msgid "https - validate SSL certificates"
+msgstr "https - validare certificate SSL"
+
+msgid "insert space"
+msgstr "inserare spațiu"
+
+msgid "installed"
+msgstr "instalat"
+
+msgid "internal"
+msgstr "intern"
+
+msgid "item actions (favorites, host-specific actions)"
+msgstr "acțiuni pentru element (favorite, acțiuni specifice hostului)"
+
+msgid "jersey"
+msgstr "Jersey"
+
+msgid "jump to entries starting with that letter (if enabled in the settings)"
+msgstr "salt la intrările care încep cu acea literă (dacă este activat în setări)"
+
+msgid "jump to items starting with that letter, or launch a specific player directly"
+msgstr "salt la elementele care încep cu acea literă sau pornirea directă a unui anumit player"
+
+msgid "kernel reports"
+msgstr "kernelul raportează"
+
+msgid "large"
+msgstr "mare"
+
+msgid "leave movie player..."
+msgstr "părăsire player video..."
+
+msgid "lime"
+msgstr "verde lime"
+
+msgid "line"
+msgstr "linie"
+
+msgid "loaded (no version)"
+msgstr "încărcat (fără versiune)"
+
+msgid "login"
+msgstr "autentificare"
+
+msgid "low"
+msgstr "scăzută"
+
+msgid "machine translated"
+msgstr "tradus automat"
+
+msgid "main"
+msgstr "main"
+
+msgid "manual"
+msgstr "manual"
+
+msgid "maroon"
+msgstr "grena"
+
+msgid "medium"
+msgstr "medie"
+
+msgid "menu and list only"
+msgstr "doar meniu și listă"
+
+msgid "minutes"
+msgstr "minute"
+
+msgid "more options (this menu)"
+msgstr "mai multe opțiuni (acest meniu)"
+
+msgid "move cursor right/left"
+msgstr "mutare cursor dreapta/stânga"
+
+msgid "move the selection - or move it while manually reordering"
+msgstr "mutare selecție - sau mutarea intrării în timpul reordonării manuale"
+
+msgid "movie metadata cache"
+msgstr "cache metadate filme"
+
+msgid "movie player preferences"
+msgstr "preferințe player video"
+
+msgid "navy"
+msgstr "bleumarin"
+
+msgid "netu/hqq: the player check failed, try again later."
+msgstr "netu/hqq: verificarea playerului a eșuat, încercați din nou mai târziu."
+
+msgid "never"
+msgstr "niciodată"
+
+msgid "next page"
+msgstr "pagina următoare"
+
+msgid "next page = page 1"
+msgstr "pagina următoare = pagina 1"
+
+msgid "next page empty"
+msgstr "pagina următoare goală"
+
+msgid "next page ok"
+msgstr "pagina următoare ok"
+
+msgid "no answer"
+msgstr "niciun răspuns"
+
+msgid "no next page"
+msgstr "nicio pagină următoare"
+
+msgid "no stream link"
+msgstr "niciun link de stream"
+
+msgid "no videos in the first lists"
+msgstr "niciun videoclip în primele liste"
+
+msgid "not available (the Python parser is used)"
+msgstr "indisponibil (se folosește parserul Python)"
+
+msgid "not found"
+msgstr "negăsit"
+
+msgid "not installed"
+msgstr "neinstalat"
+
+msgid "not loadable"
+msgstr "nu poate fi încărcat"
+
+msgid "off"
+msgstr "oprit"
+
+msgid "off / console"
+msgstr "oprit / consolă"
+
+msgid "olive"
+msgstr "oliv"
+
+msgid "on"
+msgstr "pornit"
+
+msgid "only on the receiver"
+msgstr "doar pe receptor"
+
+msgid "open / play the selected item"
+msgstr "deschidere / redare element selectat"
+
+msgid "open the options menu - see below"
+msgstr "deschidere meniu de opțiuni - vedeți mai jos"
+
+msgid "or"
+msgstr "sau"
+
+msgid "other binaries"
+msgstr "alte fișiere binare"
+
+msgid "password"
+msgstr "parolă"
+
+msgid "prijevodi-online.org refused the download for this account."
+msgstr "prijevodi-online.org a refuzat descărcarea pentru acest cont."
+
+msgid "purple"
+msgstr "mov"
+
+msgid "quality"
+msgstr "calitate"
+
+msgid "red"
+msgstr "roșu"
+
+msgid "refresh the current list"
+msgstr "reîmprospătare listă curentă"
+
+msgid "rootfs"
+msgstr "rootfs"
+
+msgid "rotate (keep the old one as iptv-<date>.dbg)"
+msgstr "rotire (păstrați-l pe cel vechi ca iptv-<dată>.dbg)"
+
+msgid "rtmp"
+msgstr "rtmp"
+
+msgid "save all changes to disk"
+msgstr "salvare toate modificările pe disc"
+
+msgid "saved"
+msgstr "salvat"
+
+msgid "saved in the temporary data folder"
+msgstr "salvat în folderul de date temporare"
+
+msgid "saved next to the downloaded video file"
+msgstr "salvat lângă fișierul video descărcat"
+
+msgid "search"
+msgstr "căutare"
+
+#, python-format
+msgid "search %d"
+msgstr "căutare %d"
+
+msgid "search found nothing"
+msgstr "căutarea nu a găsit nimic"
+
+msgid "search history"
+msgstr "istoricul căutărilor"
+
+msgid "search next page = page 1"
+msgstr "căutare pagina următoare = pagina 1"
+
+msgid "search next page empty"
+msgstr "căutare pagina următoare goală"
+
+msgid "search next page ok"
+msgstr "căutare pagina următoare ok"
+
+msgid "season pack"
+msgstr "pachet sezon"
+
+msgid "second"
+msgstr "secundă"
+
+msgid "seconds"
+msgstr "secunde"
+
+msgid "select to sign out"
+msgstr "selectați pentru deconectare"
+
+msgid "serial number"
+msgstr "număr de serie"
+
+msgid "show more details about the selected item"
+msgstr "afișare mai multe detalii despre elementul selectat"
+
+msgid "show this help"
+msgstr "afișare acest ajutor"
+
+msgid "sign in (subscriptions, playlists, age-restricted videos)"
+msgstr "conectare (abonamente, playlisturi, videoclipuri cu restricție de vârstă)"
+
+msgid "signature"
+msgstr "semnătură"
+
+msgid "signed in"
+msgstr "conectat"
+
+msgid "silver"
+msgstr "argintiu"
+
+msgid "small"
+msgstr "mic"
+
+msgid "sources"
+msgstr "surse"
+
+msgid "standard"
+msgstr "standard"
+
+msgid "start auto-play (plays through the list automatically)"
+msgstr "pornire redare automată (redă automat întreaga listă)"
+
+msgid "status"
+msgstr "stare"
+
+msgid "stream data"
+msgstr "date stream"
+
+msgid "stream data ok"
+msgstr "date stream ok"
+
+msgid "stream data ok (HLS)"
+msgstr "date stream ok (HLS)"
+
+#, python-format
+msgid "stream is a web page, not video (HTTP %s)"
+msgstr "streamul este o pagină web, nu un video (HTTP %s)"
+
+msgid "stream link"
+msgstr "link stream"
+
+msgid "stream link ok"
+msgstr "link stream ok"
+
+#, python-format
+msgid "stream not checked (%s)"
+msgstr "stream neverificat (%s)"
+
+msgid "stream not checked (HTTP 429, too many requests)"
+msgstr "stream neverificat (HTTP 429, prea multe cereri)"
+
+#, python-format
+msgid "stream: %s"
+msgstr "stream: %s"
+
+#, python-format
+msgid "stream: no data (HTTP %s)"
+msgstr "stream: fără date (HTTP %s)"
+
+msgid "subs.ro does not answer."
+msgstr "subs.ro nu răspunde."
+
+msgid "subsource.net does not answer."
+msgstr "subsource.net nu răspunde."
+
+msgid "subtitles"
+msgstr "subtitrări"
+
+msgid "subtitles cache"
+msgstr "cache subtitrări"
+
+msgid "switch between keyboard, suggestions and search history"
+msgstr "comutare între tastatură, sugestii și istoricul căutărilor"
+
+msgid "teal"
+msgstr "verde-albăstrui"
+
+msgid "the best"
+msgstr "cea mai bună"
+
+msgid "the menu has no lists"
+msgstr "meniul nu are liste"
+
+msgid "the menu is empty"
+msgstr "meniul este gol"
+
+msgid "the worst"
+msgstr "cea mai slabă"
+
+msgid "thumbnails"
+msgstr "miniaturi"
+
+#, python-format
+msgid "thumbnails %d/%d"
+msgstr "miniaturi %d/%d"
+
+msgid "thumbnails do not load"
+msgstr "miniaturile nu se încarcă"
+
+msgid "to top"
+msgstr "la început"
+
+msgid "top"
+msgstr "sus"
+
+msgid "truncate the file"
+msgstr "trunchierea fișierului"
+
+msgid "type selected character / confirm selection"
+msgstr "introducere caracter selectat / confirmare selecție"
+
+msgid "unknown"
+msgstr "necunoscut"
+
+msgid "unlimited"
+msgstr "nelimitat"
+
+msgid "unsorted"
+msgstr "nesortat"
+
+msgid "upzone.cc: free transfer limit reached - PREMIUM account required."
+msgstr "upzone.cc: limita de transfer gratuit a fost atinsă - este necesar un cont PREMIUM."
+
+msgid "version"
+msgstr "versiune"
+
+msgid "vertical"
+msgstr "vertical"
+
+msgid "very high"
+msgstr "foarte înaltă"
+
+#, python-format
+msgid "videos: %s"
+msgstr "videoclipuri: %s"
+
+msgid "views"
+msgstr "vizualizări"
+
+#, python-format
+msgid "wait %s second"
+msgstr "așteptați %s secundă"
+
+#, python-format
+msgid "wait %s seconds"
+msgstr "așteptați %s secunde"
+
+msgid "wants you to solve a captcha. Only after solving this captcha, you are allowed to continue with your downloads. E2iPlayer is not able to auto-solve these captchas, so we need to pass the captcha to you."
+msgstr "vă solicită să rezolvați un captcha. Doar după rezolvarea acestui captcha puteți continua descărcările. E2iPlayer nu poate rezolva automat aceste captcha-uri, așa că vi le transmitem dvs."
+
+#, python-format
+msgid "weeb.tv did not return a valid stream (error %s)."
+msgstr "weeb.tv nu a returnat un stream valid (eroare %s)."
+
+msgid "weeb.tv did not return a valid stream for this channel."
+msgstr "weeb.tv nu a returnat un stream valid pentru acest canal."
+
+msgid "weeb.tv streams need a weeb.tv account - enter the login in the host configuration (Web streams, WeebTV)"
+msgstr "streamurile weeb.tv necesită un cont weeb.tv - introduceți datele de autentificare în configurarea hostului (Web streams, WeebTV)"
+
+msgid "white"
+msgstr "alb"
+
+msgid "www:"
+msgstr "www:"
+
+msgid "yellow"
+msgstr "galben"

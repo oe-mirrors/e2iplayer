@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026
-# 03.10.2026 - rework for we.3isq.cam (b.3isq.cam redirects there; Cloudflare, cleared via
-#   pCommon getPageCFProtection / MyE2i)
-#   - menus from the site's current navigation: latest episodes, recently added, most viewed, all series,
-#     movies, search - all with First page / Jump / Next page (the site's "page/N/" and "?offset=N" pagers)
-#   - movies and episodes are VIDEO rows keyed on their page url; the server list of "<page>/see/"
-#     (ul#watch, data-watch) is read in getLinksForVideo and handed to urlparser
-#   - series -> episodes (ascending); watched flag (series:/video: page-path keys), downloaded flag,
-#     favourites, name normalisation ("Title (Year)", "Show - SxxExx"), sidecar, INFO via moviemeta +
-#     the site's story/poster/fields; no blocking retry loops, no colour codes in titles
-#   - posters carry the cf_clearance cookie + User-Agent (getFullIconUrl); default icon = bundled logo
+# Last Modified: 09.10.2026
+# 09.10.2026 - moved to 3isq.qist3ishq.site ("قصة عشق الأصلي", the 3isq brand on its own PHP site, no Cloudflare);
+#   we.3isq.cam / b.3isq.cam answer a Cloudflare challenge (MyE2i only) and use other urls + markup
+#   - menus: latest episodes, series, movies, search - all with First page / Jump / Next page (the site's "?page=N")
+#   - movies and episodes are VIDEO rows keyed on their page url; the server list (ul.servers-list, data-link) comes
+#     from POSTing the page's play button (token=play) and is handed to urlparser
+#   - series -> episodes (ascending, local paging over 100); watched flag (series:/video: keys on the site's numeric
+#     ids, domain independent), downloaded flag, favourites, name normalisation ("Title (Year)", "Show - SxxExx"),
+#     sidecar, INFO via moviemeta + the site's story/poster; no blocking retry loops, no colour codes in titles
+#   - favourites of the old *.3isq.cam site are looked up by title on this site (search -> series/movie -> episode)
+#   - pages still go through getPageCFProtection, so a later Cloudflare check gets MyE2i; covers then carry the
+#     cf_clearance cookie + User-Agent (getFullIconUrl); default icon = bundled logo
 import os
 import re
 
@@ -18,7 +19,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
 from Plugins.Extensions.IPTVPlayer.libs.botprotection import remembered_user_agent
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
-from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
+from Plugins.Extensions.IPTVPlayer.libs.moviemeta import LATIN_ONLY, getMeta, isLatinTitle
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_unquote
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
@@ -34,9 +35,12 @@ def GetConfigList():
 
 
 def gettytul():
-    return "https://we.3isq.cam/"
+    return "https://3isq.qist3ishq.site/"
 
 
+LOCAL_PAGE_SIZE = 100
+# cards on a full page of the site's smallest list (search)
+MIN_PAGE_SIZE = 20
 COLOR_CODE_RE = re.compile(r"\\c[0-9A-Fa-f]{8}")
 # Arabic ordinals used in season labels ("الموسم الثاني")
 SEASON_ORDINALS = [
@@ -49,8 +53,12 @@ SEASON_WORD_RE = re.compile(r"الموسم\s*(\d+|%s)" % "|".join(o[0] for o in 
 EPISODE_RE = re.compile(r"^(.*?)\s*الحلقة\s*(\d+)")
 YEAR_RE = re.compile(r"(?:^|\s)((?:19|20)\d{2})(?=\s|$)")
 JUNK_RE = re.compile(r"(?:^|\s)(?:مترجم|مترجمة|مدبلج|مدبلجة|اون لاين|أون لاين|مشاهدة|وتحميل|فيلم|مسلسل|كامل|كاملة|HD)(?=\s|$)")
-# "<div class="tax"><span>الأنواع : </span><a>..</a>" blocks -> INFO keys
-TAX_FIELDS = {"الأنواع": "genres", "الممثلين": "actors", "السنة": "year", "اللغة": "language", "الحالة": "status", "التصنيفات": "category"}
+# numeric ids in the site's urls: /serie/<id>/.., /movie/<id>/.., /watch/<serie id>/episode/<id>/..
+ID_RE = re.compile(r"/(serie|movie|episode)/(\d+)(?:/|$)")
+# old site (we.3isq.cam, b.3isq.cam): other urls + markup, Cloudflare - its favourites are looked up by title
+LEGACY_DOMAIN = "3isq.cam"
+# spelling variants that differ between the old and the new site's titles
+ARABIC_FOLD = (("أ", "ا"), ("إ", "ا"), ("آ", "ا"), ("ة", "ه"), ("ى", "ي"))
 
 
 def _stripColors(text):
@@ -67,7 +75,15 @@ def _seasonNum(text):
 
 def _clean(text):
     text = JUNK_RE.sub(" ", JUNK_RE.sub(" ", text or ""))
-    return re.sub(r"\s+", " ", text).strip(" -:|")
+    # the en dash as a whole sequence (py2 str.strip would take its single utf-8 bytes)
+    return re.sub(r"\s+", " ", text.replace("–", " ")).strip(" -:|")
+
+
+def _fold(text):
+    text = _clean(text).lower()
+    for src, dst in ARABIC_FOLD:
+        text = text.replace(src, dst)
+    return text
 
 
 class Q3isk(GenericFolderWatchedScraperMixin, CBaseHostClass):
@@ -78,17 +94,13 @@ class Q3isk(GenericFolderWatchedScraperMixin, CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(self, {"history": "q3isk", "cookie": "q3isk.cookie"})
         self.MAIN_URL = gettytul()
-        # the site's logo sits behind the Cloudflare check too: the main menu is drawn before any page
-        # request has stored a cf_clearance cookie, so its download got a 403 - the bundled logo instead
         self.DEFAULT_ICON_URL = "file://" + GetIconDir("PlayerSelector/q3isk135.png")
         self.HEADER = self.cm.getDefaultHeader(browser="chrome")
         self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
         self.MENU = [
-            {"category": "list_items", "title": _("Latest episodes"), "url": self.getFullUrl("/آخر-الحلقات-hfgrtjf/")},
-            {"category": "list_items", "title": _("Recently added"), "url": self.getFullUrl("/last/")},
-            {"category": "list_items", "title": _("Most viewed"), "url": self.getFullUrl("/views/")},
-            {"category": "list_items", "title": _("Series"), "url": self.getFullUrl("/series/"), "pager": "offset"},
-            {"category": "list_items", "title": _("Movies"), "url": self.getFullUrl("/movies/")},
+            {"category": "list_items", "title": _("Latest episodes"), "url": self.getFullUrl("/episodes")},
+            {"category": "list_items", "title": _("Series"), "url": self.getFullUrl("/series")},
+            {"category": "list_items", "title": _("Movies"), "url": self.getFullUrl("/movies")},
         ] + self.searchItems()
         self.watchedHelper = IPTVWatchedHelper("q3isk")
         self.wfInitFolderCache()
@@ -103,7 +115,7 @@ class Q3isk(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return self.cm.getPageCFProtection(self._canonUrl(baseUrl), addParams, post_data)
 
     def getFullUrl(self, url, currUrl=None):
-        # menu urls are written in Arabic - one ASCII (percent-encoded) form for everything
+        # the site's urls carry Arabic slugs - one ASCII (percent-encoded) form for everything
         return self._quote(CBaseHostClass.getFullUrl(self, url, currUrl))
 
     @staticmethod
@@ -123,26 +135,31 @@ class Q3isk(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return self._quote(url)
 
     def _path(self, url):
-        # domain independent identity of a page (the site moves between *.3isq.cam sub-domains)
         url = urllib_unquote(self._canonUrl(url))
         return re.sub(r"^https?://[^/]+", "", url).rstrip("/").lower()
+
+    def _kind(self, url):
+        # "serie" / "movie" / "episode" from the site's url, "" for anything else
+        m = ID_RE.search(self._path(url))
+        return m.group(1) if m else ""
+
+    def _isLegacy(self, url):
+        domain = self.up.getDomain(url or "").lower()
+        return domain == LEGACY_DOMAIN or domain.endswith("." + LEGACY_DOMAIN)
 
     def _icon(self, url):
         url = (url or "").strip()
         return self.getFullIconUrl(url) if url else ""
 
     def getFullIconUrl(self, url, currUrl=None):
-        # the posters sit behind the same Cloudflare check as the pages: the icon download needs the
-        # site's cf_clearance cookie and the User-Agent that passed the check, otherwise it gets a 403.
-        # The meta is attached here because the host base runs every icon through getFullIconUrl again
-        # (getFullUrl returns a plain str); covers on foreign domains stay plain
+        # covers need a browser User-Agent; once MyE2i stored a cf_clearance cookie (a later Cloudflare check)
+        # the cover download needs it + the User-Agent that passed the check. The meta is attached here because the
+        # host base runs every icon through getFullIconUrl again; covers on foreign domains stay plain
         url = CBaseHostClass.getFullIconUrl(self, url, currUrl)
-        if not url.startswith("http"):
+        if not url.startswith("http") or self.up.getDomain(url).lower() != self.up.getDomain(self.MAIN_URL).lower():
             return url
-        domain = self.up.getDomain(url).lower()
-        if domain != "3isq.cam" and not domain.endswith(".3isq.cam"):
-            return url
-        meta = {"Referer": self.MAIN_URL}
+        # the CDN answers a 403 to library User-Agents (Python-urllib)
+        meta = {"Referer": self.MAIN_URL, "User-Agent": self.HEADER.get("User-Agent")}
         try:
             # getCookieHeader logs tracebacks for a cookie file that does not exist yet
             cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE, ["cf_clearance"]).rstrip("; ") if os.path.isfile(self.COOKIE_FILE) else ""
@@ -168,7 +185,14 @@ class Q3isk(GenericFolderWatchedScraperMixin, CBaseHostClass):
             if not isinstance(cItem, dict):
                 return ""
             prefix = {"q3_video": "video", "q3_series": "series"}.get(cItem.get("category", ""), "")
-            path = self._path(cItem.get("url", "")) if prefix else ""
+            if not prefix:
+                return ""
+            path = self._path(cItem.get("url", ""))
+            m = ID_RE.search(path)
+            if m:
+                # the slug and the domain may change, the numeric id stays
+                return "%s:%s/%s" % (prefix, m.group(1), m.group(2))
+            # rows of the old *.3isq.cam site keep their old keys
             return "%s:%s" % (prefix, path) if path else ""
         except Exception:
             printExc()
@@ -202,10 +226,11 @@ class Q3isk(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 "meta_type": "movie", "meta_title": metaTitle, "meta_year": year}
 
     def _boxes(self, data):
-        # (url, label, icon, episode number) of the <div class="Small--Box"> cards
+        # (url, label, icon, episode number) of the <li class="EpisodeBlock"> / "EpisodeBlock_serie" cards
+        block = self.cm.ph.getDataBeetwenNodes(data, ("<main", ">", "SiteInner"), ("</main", ">"), False)[1] or data
         out = []
         seen = set()
-        for item in self.cm.ph.getAllItemsBeetwenNodes(data, ("<div", ">", "Small--Box"), ("</a", ">")):
+        for item in self.cm.ph.getAllItemsBeetwenNodes(block, ("<li", ">", "EpisodeBlock"), ("</li", ">")):
             href = self.cm.ph.getSearchGroups(item, r'<a[^>]+href="([^"]+)"')[0]
             if not href:
                 continue
@@ -213,126 +238,147 @@ class Q3isk(GenericFolderWatchedScraperMixin, CBaseHostClass):
             if url in seen:
                 continue
             seen.add(url)
-            label = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'(?s)<div class="title">(.*?)</div>')[0])
+            label = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'(?s)<div class="EpisodeBlockTitle">(.*?)</div>')[0])
             if not label:
                 label = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'title="([^"]+)"')[0])
-            label = re.sub(r"\s*(?:اون لاين|أون لاين)\s*$", "", label).strip()
             if not label:
                 continue
-            number = self.cm.ph.getSearchGroups(item, r'<div class="number">.*?<em>\s*(\d+)\s*</em>')[0]
-            icon = self.cm.ph.getSearchGroups(item, r'<img[^>]+?(?:data-src|src)="([^"]+)"')[0]
+            number = self.cm.ph.getSearchGroups(item, r'(?s)class="EPNumber(?:Card)?">.*?<span>\s*(\d+)\s*</span>')[0]
+            icon = self.cm.ph.getSearchGroups(item, r'<img[^>]+?(?:data-image|data-src|src)="([^"]+)"')[0]
             out.append((url, label, self._icon(icon), number))
         return out
+
+    @staticmethod
+    def _pageTpl(baseUrl):
+        return baseUrl + ("&" if "?" in baseUrl else "?") + "page={page}"
 
     def listItems(self, cItem):
         page = cItem.get("page", 1)
         baseUrl = cItem.get("base_url") or self._canonUrl(cItem["url"])
-        pageTpl = cItem.get("page_tpl") or self._pageTpl(baseUrl, cItem.get("pager", ""))
+        pageTpl = self._pageTpl(baseUrl)
         url = baseUrl if page <= 1 else pageTpl.format(page=page)
         printDBG("Q3isk.listItems [%s]" % url)
         sts, data = self.getPage(url)
         if not sts:
             return
-        block = self.cm.ph.getDataBeetwenNodes(data, ("<div", ">", 'id="MainFiltar"'), ("<div", ">", 'class="pagination"'), False)[1] or data
         normalize = IsMediaNamingNormalized()
-        boxes = self._boxes(block)
+        boxes = self._boxes(data)
         for url, label, icon, number in boxes:
-            path = self._path(url)
-            if path.startswith("/series/"):
+            kind = self._kind(url)
+            if kind == "serie":
                 show = _clean(label) or label
                 self.addDir({"name": "category", "good_for_fav": True, "category": "q3_series", "title": show if normalize else label, "url": url,
                              "icon": icon, "s_title": show, "meta_type": "tv", "meta_title": show})
-            elif number or "الحلقة" in label:
+            elif kind == "episode" or number or "الحلقة" in label:
                 self.addVideo(self._episodeParams(label, url, icon, "", normalize, episode=number))
             else:
                 self.addVideo(self._movieParams(label, url, icon, "", normalize))
 
-        pager = self.cm.ph.getDataBeetwenNodes(data, ("<div", ">", 'class="pagination"'), ("</ul", ">"), False)[1]
-        lastPage = max([int(n) for n in re.findall(r'class="page-numbers"[^>]*>\s*(\d+)\s*<', pager)] + [page])
-        hasNext = bool(boxes) and ("next page-numbers" in pager or lastPage > page)
+        # the site only links the next page ("?page=N+1"), it never names the last one - and it links it on the
+        # last page too, so a short page (fewer cards than a full one: 40 in the lists, 20 in search) ends the list
+        pageSize = max(cItem.get("page_size", 0), len(boxes))
+        hasNext = len(boxes) >= max(MIN_PAGE_SIZE, pageSize) and bool(re.search(r'href="[^"]*[?&]page=%d(?:[&"])' % (page + 1), data))
         listItem = dict(cItem)
-        listItem.update({"category": "list_items", "base_url": baseUrl, "url": baseUrl, "page_tpl": pageTpl})
-        addPagingItems(self, listItem, page, hasNext, lastPage, pageTpl)
+        listItem.update({"category": "list_items", "base_url": baseUrl, "url": baseUrl, "page_size": pageSize})
+        addPagingItems(self, listItem, page, hasNext, 0, pageTpl)
 
-    @staticmethod
-    def _pageTpl(baseUrl, pager):
-        if pager == "offset":
-            return baseUrl.split("?", 1)[0] + "?offset={page}"
-        base, sep, query = baseUrl.partition("?")
-        if not base.endswith("/"):
-            base += "/"
-        return base + "page/{page}/" + sep + query
-
-    def listEpisodes(self, cItem):
-        printDBG("Q3isk.listEpisodes [%s]" % cItem.get("url", ""))
-        sts, data = self.getPage(cItem["url"])
+    def _seriesEpisodes(self, url, show, icon, desc, metaTitle, normalize):
+        sts, data = self.getPage(url)
         if not sts:
-            return
-        block = self.cm.ph.getDataBeetwenNodes(data, ("<div", ">", 'id="MainFiltar"'), ("<footer", ">"), False)[1] or data
-        normalize = IsMediaNamingNormalized()
-        show = cItem.get("s_title", "") or cItem.get("title", "")
+            return []
         episodes = []
-        for url, label, icon, number in self._boxes(block):
-            if self._path(url).startswith("/series/"):
+        for epUrl, label, epIcon, number in self._boxes(data):
+            if self._kind(epUrl) != "episode":
                 continue
-            params = self._episodeParams(label, url, icon or cItem.get("icon", ""), cItem.get("desc", ""), normalize, show, number)
-            params.update({"s_title": show, "meta_title": cItem.get("meta_title", show)})
+            params = self._episodeParams(label, epUrl, epIcon or icon, desc, normalize, show, number)
+            params.update({"s_title": show, "meta_title": metaTitle or show})
             if normalize and params["s_episode"]:
                 params["title"] = "%s - %s" % (show, formatSxxExx(params["s_season"], params["s_episode"]))
             episodes.append(params)
+        episodes.sort(key=lambda p: int(p["s_episode"]) if p["s_episode"] else 0)
+        return episodes
+
+    def listEpisodes(self, cItem):
+        page = cItem.get("page", 1)
+        url = self._relocate(cItem)
+        printDBG("Q3isk.listEpisodes [%s]" % url)
+        if not url:
+            SetIPTVPlayerLastHostError(_("No episodes found."))
+            return
+        show = cItem.get("s_title", "") or cItem.get("title", "")
+        episodes = self._seriesEpisodes(url, show, cItem.get("icon", ""), cItem.get("desc", ""), cItem.get("meta_title", ""), IsMediaNamingNormalized())
         if not episodes:
             SetIPTVPlayerLastHostError(_("No episodes found."))
-        # the site lists the newest first
-        episodes.sort(key=lambda p: int(p["s_episode"]) if p["s_episode"] else 0)
-        for params in episodes:
+            return
+        start = (page - 1) * LOCAL_PAGE_SIZE
+        for params in episodes[start:start + LOCAL_PAGE_SIZE]:
             self.addVideo(params)
+        if len(episodes) > LOCAL_PAGE_SIZE:
+            lastPage = (len(episodes) + LOCAL_PAGE_SIZE - 1) // LOCAL_PAGE_SIZE
+            addPagingItems(self, dict(cItem), page, page < lastPage, lastPage)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("Q3isk.listSearchResult [%s]" % searchPattern)
         cItem = dict(cItem)
-        query = urllib_quote(searchPattern.strip(), safe="")
-        baseUrl = self.getFullUrl("/?s=%s" % query)
-        cItem.update({"category": "list_items", "url": baseUrl, "base_url": baseUrl, "page_tpl": self.MAIN_URL + "page/{page}/?s=" + query, "page": 1})
+        baseUrl = self.getFullUrl("/search?query=%s" % urllib_quote(searchPattern.strip(), safe=""))
+        cItem.update({"category": "list_items", "url": baseUrl, "base_url": baseUrl, "page": 1})
         self.listItems(cItem)
+
+    def _relocate(self, cItem):
+        # page url of a row; rows of the old *.3isq.cam site (favourites, history) -> the same title on this site
+        url = self._canonUrl(cItem.get("url", ""))
+        if not self._isLegacy(url):
+            return url
+        isEpisode = cItem.get("category") == "q3_video" and bool(cItem.get("s_episode"))
+        wanted = "serie" if cItem.get("category") == "q3_series" or isEpisode else "movie"
+        title = cItem.get("s_title") or cItem.get("meta_title") or cItem.get("title", "")
+        printDBG("Q3isk._relocate [%s] -> %s [%s]" % (url, wanted, title))
+        sts, data = self.getPage(self.getFullUrl("/search?query=%s" % urllib_quote(_clean(title), safe="")))
+        target = ""
+        for hitUrl, label, _icon, _number in self._boxes(data) if sts else []:
+            if self._kind(hitUrl) == wanted and _fold(label) == _fold(title):
+                target = hitUrl
+                break
+        if not target or not isEpisode:
+            return target
+        for params in self._seriesEpisodes(target, title, "", "", "", False):
+            if params["s_episode"] == cItem["s_episode"]:
+                return params["url"]
+        return ""
 
     ###################################################
     # links
     ###################################################
     def _siteInfo(self, data):
-        story = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'(?s)<div class="story">(.*?)</div>')[0])
-        story = re.sub(r"^.*?(?:الاصلي|الأصلي)\s*3isq\.\s*", "", story).strip()
-        poster = self.cm.ph.getSearchGroups(data, r'<meta property="og:image" content="([^"]+)"')[0]
-        info = {}
-        for block in self.cm.ph.getAllItemsBeetwenNodes(data, ("<div", ">", 'class="tax"'), ("</div", ">"), False):
-            label = self.cleanHtmlStr(self.cm.ph.getSearchGroups(block, r"<span>([^<]+)</span>")[0]).replace(":", "").strip()
-            values = [self.cleanHtmlStr(v) for v in re.findall(r"(?s)<a[^>]*>(.*?)</a>", block)]
-            values = ", ".join(v for v in values if v)
-            if label in TAX_FIELDS and values:
-                info[TAX_FIELDS[label]] = values
-        return story, self._icon(poster) if poster else "", info
+        story = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'(?s)<p class="hero-story">(.*?)</p>')[0])
+        poster = self.cm.ph.getSearchGroups(data, r'(?s)class="hero-poster">.*?data-image="([^"]+)"')[0]
+        return story, self._icon(poster) if poster else ""
 
     def getLinksForVideo(self, cItem):
-        pageUrl = self._canonUrl(cItem.get("url", ""))
+        pageUrl = self._relocate(cItem)
         printDBG("Q3isk.getLinksForVideo [%s]" % pageUrl)
         if not pageUrl:
+            SetIPTVPlayerLastHostError(_("No stream available"))
             return []
-        watchUrl = pageUrl if pageUrl.rstrip("/").endswith("/see") else pageUrl.rstrip("/") + "/see/"
-        sts, data = self.getPage(watchUrl)
+        # the servers are only listed after the page's play button posted token=play
+        params = dict(self.defaultParams)
+        params["header"] = dict(self.HEADER, Referer=pageUrl)
+        sts, data = self.getPage(pageUrl, params, {"token": "play"})
         if not sts:
             return []
         story = self._siteInfo(data)[0]
-        block = self.cm.ph.getDataBeetwenMarkers(data, '<ul id="watch">', "</ul>", False)[1]
+        block = self.cm.ph.getDataBeetwenNodes(data, ("<ul", ">", "servers-list"), ("</ul", ">"), False)[1]
         urltab = []
         seen = set()
-        for item in self.cm.ph.getAllItemsBeetwenMarkers(block, "<li", "</li>"):
-            url = self.cm.ph.getSearchGroups(item, r'data-watch="([^"]+)"')[0].replace("&amp;", "&").strip()
+        for item in self.cm.ph.getAllItemsBeetwenNodes(block, ("<li", ">", "server-item"), ("</li", ">")):
+            url = self.cm.ph.getSearchGroups(item, r'data-link="([^"]+)"')[0].replace("&amp;", "&").strip()
             if url.startswith("//"):
                 url = "https:" + url
             if not self.cm.isValidUrl(url) or url in seen:
                 continue
             seen.add(url)
-            name = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, "<em>", "</em>", False)[1]) or self.up.getHostName(url)
-            urltab.append({"name": name, "url": url, "need_resolve": 1})
+            name = self.cleanHtmlStr(item) or self.up.getHostName(url)
+            urltab.append({"name": name, "url": strwithmeta(url, {"Referer": self.MAIN_URL}), "need_resolve": 1})
         if not urltab:
             SetIPTVPlayerLastHostError(_("No stream available"))
             return []
@@ -350,24 +396,25 @@ class Q3isk(GenericFolderWatchedScraperMixin, CBaseHostClass):
     ###################################################
     def getArticleContent(self, cItem):
         printDBG("Q3isk.getArticleContent [%s]" % cItem.get("url", ""))
-        story, poster, info = "", "", {}
-        sts, data = self.getPage(cItem.get("url", ""))
-        if sts:
-            story, poster, info = self._siteInfo(data)
-        year = cItem.get("meta_year", "") or info.get("year", "")
+        story, poster = "", ""
+        url = cItem.get("url", "")
+        if not self._isLegacy(url):
+            sts, data = self.getPage(url)
+            if sts:
+                story, poster = self._siteInfo(data)
         meta = {}
         if cItem.get("meta_type") and cItem.get("meta_title"):
             try:
-                meta = getMeta(cItem["meta_type"], cItem["meta_title"], year)
+                skip = () if isLatinTitle(cItem["meta_title"]) else LATIN_ONLY
+                meta = getMeta(cItem["meta_type"], cItem["meta_title"], cItem.get("meta_year", ""), skip)
             except Exception:
                 printExc()
-        info.update(meta.get("info", {}))
         plot = meta.get("plot", "")
         text = plot or story or _stripColors(cItem.get("desc", ""))
         if plot and story and story != plot:
             text = "%s[/br][/br]%s" % (plot, story)
         icon = meta.get("poster") or poster or cItem.get("icon", "")
-        return [{"title": cItem.get("title", ""), "text": text, "images": [{"title": "", "url": icon}] if icon else [], "other_info": info}]
+        return [{"title": cItem.get("title", ""), "text": text, "images": [{"title": "", "url": icon}] if icon else [], "other_info": meta.get("info", {})}]
 
     ###################################################
     # service

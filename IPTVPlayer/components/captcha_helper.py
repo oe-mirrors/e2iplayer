@@ -35,11 +35,14 @@ class CaptchaHelper():
             except Exception:
                 pass
 
-        recaptcha = UnCaptchaReCaptcha_fallback(lang=GetDefaultLang())
-        recaptcha.HTTP_HEADER['Referer'] = refUrl
-        if userAgent is not None:
-            recaptcha.HTTP_HEADER['User-Agent'] = userAgent
-        token = recaptcha.processCaptcha(sitekey)
+        token = ''
+        # the Google fallback page only knows reCAPTCHA keys ("6L..."); for a Cloudflare Turnstile key ("0x...") it answers 400
+        if not str(sitekey or '').startswith('0x'):
+            recaptcha = UnCaptchaReCaptcha_fallback(lang=GetDefaultLang())
+            recaptcha.HTTP_HEADER['Referer'] = refUrl
+            if userAgent is not None:
+                recaptcha.HTTP_HEADER['User-Agent'] = userAgent
+            token = recaptcha.processCaptcha(sitekey)
 
         if token == '':
             recaptcha = None

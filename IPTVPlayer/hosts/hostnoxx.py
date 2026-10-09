@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026
+# Last Modified: 09.10.2026
 # 03.10.2026 - new host for noxx.gg (noxx.to), free TV series (English, TMDb catalogue)
 #   Every visit first lands on /verify: a cookie check (token in the page, POST /verified -> PHPSESSID,
 #   valid ~2 hours) that is passed here automatically, no captcha. Browse / genres / years / sort /
 #   search through the JSON endpoint /api/load-more-browse, "Aired this week" from /timeline,
 #   series page /tv/<slug> carries all seasons and episodes, episode page /tv/<slug>/<s>/<e> the
-#   servers: Doodstream (myvidplay/playmogo) and SeekStreaming (seekplayer.vip) first, vidcore /
-#   videasy only when the opt-in enc-dec.app resolving is switched on; the vidsrc player is skipped.
+#   servers: Doodstream (myvidplay/playmogo) and SeekStreaming (seekplayer.vip) first, then videasy;
+#   vidcore / vidup / vidfast only when the opt-in enc-dec.app resolving is switched on; the vidsrc player is skipped.
 #   Watched flag / downloaded flag / name normalisation / sidecar / moviemeta INFO / favourites /
 #   paging (First / Jump / Next, the endpoint only tells whether there is more).
 import re
@@ -327,8 +327,9 @@ class Noxx(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 continue
             label = self.cleanHtmlStr(label) or server
             hostName = self.up.getHostName(url)
-            # vidcore / videasy only resolve through the opt-in enc-dec.app service
-            external = "vidcore" in hostName or "videasy" in hostName
+            # upd 091026: only the vidcore family still resolves through the opt-in enc-dec.app service
+            # (videasy decrypts on the box)
+            external = "vidcore" in hostName or "vidup" in hostName or "vidfast" in hostName
             if self.up.checkHostSupport(url) != 1 or (external and not externalOk):
                 skipped.append(label)
                 continue
@@ -336,7 +337,7 @@ class Noxx(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 # the videasy resolver needs the show title on the embed url
                 url = "%s%stitle=%s&year=%s" % (url, "&" if "?" in url else "?", urllib_quote(cItem.get("s_title", "") or cItem.get("meta_title", ""), safe=""), cItem.get("meta_year", ""))
             urltab.append({"name": "%s (%s)" % (label, hostName), "url": strwithmeta(url, {"Referer": self.MAIN_URL}), "need_resolve": 1,
-                           "_prio": 1 if external else 0})
+                           "_prio": 1 if external or "videasy" in hostName else 0})
         urltab.sort(key=lambda item: item.pop("_prio"))
         if not urltab:
             if skipped:

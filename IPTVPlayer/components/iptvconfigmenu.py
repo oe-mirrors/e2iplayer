@@ -776,18 +776,18 @@ class ConfigMenu(ConfigBaseWidget):
                     text=_("Send data to enc-dec.app on every link resolve?"),
                     type=MessageBox.TYPE_YESNO, default=False)
 
-            info = _("The 7reels / cineb resolvers 'VidEasy', 'VidCore/VidFast', "
-                     "'VidLink' and 'Peachify' cannot decrypt their links on the "
-                     "receiver.\n\n"
+            info = _("The resolvers 'VidCore', 'VidUp' and 'VidFast' cannot decrypt "
+                     "their links on the receiver.\n\n"
                      "With this option ON, every time you open one of them E2iPlayer "
                      "sends the site's encrypted stream token - which contains the "
                      "TMDb id of the movie or episode you are opening - to the "
                      "third-party web service enc-dec.app (operated by a private "
                      "individual). That server then sees the id and your IP address "
                      "on each play. Nothing else is transmitted, and it is only used "
-                     "for these four resolvers.\n\n"
+                     "for these three resolvers.\n\n"
                      "Leave this OFF if you do not want that. The other resolvers "
-                     "(AdRock/vidrock, VidNest, ...) are not affected.")
+                     "(VidEasy, VidLink, Peachify, vidrock, VidNest, ...) decrypt "
+                     "their links on the receiver and are not affected.")
             self.session.openWithCallback(askConfirm, MessageBox, text=info, type=MessageBox.TYPE_INFO)
         except Exception:
             printExc()

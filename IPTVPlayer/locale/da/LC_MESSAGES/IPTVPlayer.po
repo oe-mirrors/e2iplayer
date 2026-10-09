@@ -1,0 +1,6903 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: IPTVPlayer\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-08 20:17+0000\n"
+"PO-Revision-Date: 2026-10-08 20:17+0000\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: Danish\n"
+"Language: da\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#, python-format
+msgid "\tDisk space available: %s"
+msgstr "\tLedig diskplads: %s"
+
+#, python-format
+msgid "\tDisk space required: %s"
+msgstr "\tNødvendig diskplads: %s"
+
+msgid ""
+"\n"
+"Make sure you are using the latest version of the plugin."
+msgstr ""
+"\n"
+"Sørg for, at du bruger den nyeste version af pluginet."
+
+msgid ""
+"\n"
+"This host is not integral part of the E2iPlayer plugin.\n"
+"It is not supported by E2iPlayer team."
+msgstr ""
+"\n"
+"Denne host er ikke en integreret del af E2iPlayer-pluginet.\n"
+"Den understøttes ikke af E2iPlayer-teamet."
+
+msgid ""
+"\n"
+"You can also report problem here: \n"
+"https://github.com/oe-mirrors/e2iplayer/issues"
+msgstr ""
+"\n"
+"Du kan også rapportere problemet her: \n"
+"https://github.com/oe-mirrors/e2iplayer/issues"
+
+msgid "  • Fixed: order never changes - useful for browsing by letter jump (0-9)."
+msgstr "  • Fastlåst: rækkefølgen ændres aldrig - nyttigt til at bladre med bogstavspring (0-9)."
+
+msgid "  • Sorting or reordering fixes this automatically, so your order stays."
+msgstr "  • Sortering eller omarrangering fastlåser dette automatisk, så din rækkefølge bevares."
+
+msgid "  • Unfixed (default): the entry jumps back to the top of the list."
+msgstr "  • Ikke fastlåst (standard): posten springer tilbage til toppen af listen."
+
+#, python-format
+msgid "\"%s\" Virtual Keyboard layout not available."
+msgstr "Det virtuelle tastaturlayout \"%s\" er ikke tilgængeligt."
+
+#, python-format
+msgid "\"%s\" has been added to the favourites group \"%s\"."
+msgstr "\"%s\" er tilføjet til favoritgruppen \"%s\"."
+
+#, python-format
+msgid "\"%s\" is playing on the TV."
+msgstr "\"%s\" afspilles på tv'et."
+
+msgid "\"Web\" streams player"
+msgstr "Afspiller til \"Web\"-streams"
+
+#, python-format
+msgid "%d duplicate entries removed."
+msgstr "%d dublerede poster fjernet."
+
+#, python-format
+msgid "%d duplicate entry removed."
+msgstr "%d dubleret post fjernet."
+
+#, python-format
+msgid "%d parts"
+msgstr "%d dele"
+
+#, python-format
+msgid "%d programmes"
+msgstr "%d programmer"
+
+#, python-format
+msgid "%d recitations"
+msgstr "%d recitationer"
+
+#, python-format
+msgid "%d videos"
+msgstr "%d videoer"
+
+#, python-format
+msgid "%s - service overview"
+msgstr "%s - tjenesteoversigt"
+
+#, python-format
+msgid "%s - subtitles provider"
+msgstr "%s - udbyder af undertekster"
+
+#, python-format
+msgid "%s blocks the connection of the receiver (HTTP 403). It only plays with curl-impersonate installed on the receiver - otherwise please choose another server."
+msgstr "%s blokerer modtagerens forbindelse (HTTP 403). Den afspilles kun, hvis curl-impersonate er installeret på modtageren - ellers skal du vælge en anden server."
+
+#, python-format
+msgid "%s blocks the connection of the receiver (HTTP 403). Please choose another server."
+msgstr "%s blokerer modtagerens forbindelse (HTTP 403). Vælg en anden server."
+
+#, python-format
+msgid "%s buffering..."
+msgstr "%s bufferer..."
+
+#, python-format
+msgid "%s cannot solve this type of captcha."
+msgstr "%s kan ikke løse denne type captcha."
+
+#, python-format
+msgid "%s could not solve the captcha."
+msgstr "%s kunne ikke løse captchaen."
+
+#, python-format
+msgid "%s device name"
+msgstr "%s enhedsnavn"
+
+#, python-format
+msgid "%s download manager"
+msgstr "%s downloadhåndtering"
+
+#, python-format
+msgid "%s e-mail"
+msgstr "%s e-mail"
+
+#, python-format
+msgid "%s episodes"
+msgstr "%s afsnit"
+
+#, python-format
+msgid "%s followers"
+msgstr "%s følgere"
+
+#, python-format
+msgid "%s password"
+msgstr "%s adgangskode"
+
+#, python-format
+msgid "%s plays"
+msgstr "%s afspilninger"
+
+#, python-format
+msgid "%s posts"
+msgstr "%s indlæg"
+
+#, python-format
+msgid "%s recitations"
+msgstr "%s recitationer"
+
+#, python-format
+msgid "%s refused the download. Please set your login and password in the configuration."
+msgstr "%s afviste downloadet. Angiv dit login og din adgangskode i indstillingerne."
+
+#, python-format
+msgid "%s refused the request (Cloudflare check, HTTP %s). This host needs curl-impersonate on the receiver."
+msgstr "%s afviste forespørgslen (Cloudflare-kontrol, HTTP %s). Denne host kræver curl-impersonate på modtageren."
+
+#, python-format
+msgid "%s returned %s: %s"
+msgstr "%s returnerede %s: %s"
+
+#, python-format
+msgid "%s services configuration"
+msgstr "%s tjenesteindstillinger"
+
+#, python-format
+msgid "%s subtitles download - how to"
+msgstr "%s download af undertekster - vejledning"
+
+#, python-format
+msgid "%s talks"
+msgstr "%s foredrag"
+
+#, python-format
+msgid "%s timeout."
+msgstr "%s timeout."
+
+#, python-format
+msgid "%s uploads"
+msgstr "%s uploads"
+
+#, python-format
+msgid ""
+"%s uses \"geo-blocking\" measures to prevent you from accessing the services from abroad.\n"
+" Host country: %s, your country: %s"
+msgstr ""
+"%s bruger \"geoblokering\" for at forhindre dig i at tilgå tjenesterne fra udlandet.\n"
+" Hostens land: %s, dit land: %s"
+
+#, python-format
+msgid "%s viewers"
+msgstr "%s seere"
+
+#, python-format
+msgid "%s views"
+msgstr "%s visninger"
+
+#, python-format
+msgid "(%d YouTube channel(s) could not be read)"
+msgstr "(%d YouTube-kanal(er) kunne ikke læses)"
+
+msgid "(no videos found)"
+msgstr "(ingen videoer fundet)"
+
+msgid "(nothing here yet)"
+msgstr "(intet her endnu)"
+
+msgid "(reading...)"
+msgstr "(læser...)"
+
+msgid "++"
+msgstr "++"
+
+msgid "--"
+msgstr "--"
+
+msgid "----- BASIC CONFIGURATION -----"
+msgstr "----- GRUNDLÆGGENDE INDSTILLINGER -----"
+
+msgid "----- BUFFERING CONFIGURATION -----"
+msgstr "----- BUFFERINDSTILLINGER -----"
+
+msgid "----- CAPTCHA CONFIGURATION -----"
+msgstr "----- CAPTCHA-INDSTILLINGER -----"
+
+msgid "----- DEBUG CONFIGURATION -----"
+msgstr "----- DEBUG-INDSTILLINGER -----"
+
+msgid "----- DOWNLOADING CONFIGURATION -----"
+msgstr "----- DOWNLOADINDSTILLINGER -----"
+
+msgid "----- Debug -----"
+msgstr "----- Debug -----"
+
+msgid "----- Global HostXXX Configuration -----"
+msgstr "----- Globale HostXXX-indstillinger -----"
+
+msgid "----- METADATA PROVIDERS CONFIGURATION -----"
+msgstr "----- INDSTILLINGER FOR METADATAUDBYDERE -----"
+
+msgid "----- PLAYERS & PLAYBACK CONFIGURATION -----"
+msgstr "----- INDSTILLINGER FOR AFSPILLERE OG AFSPILNING -----"
+
+msgid "----- PROXIES CONFIGURATION -----"
+msgstr "----- PROXYINDSTILLINGER -----"
+
+msgid "----- Porn Site Configuration -----"
+msgstr "----- Indstillinger for pornosider -----"
+
+msgid "----- SCREENSAVER CONFIGURATION -----"
+msgstr "----- PAUSESKÆRMINDSTILLINGER -----"
+
+msgid "----- SECURITY CONFIGURATION -----"
+msgstr "----- SIKKERHEDSINDSTILLINGER -----"
+
+msgid "----- SERVICE CONFIGURATION -----"
+msgstr "----- TJENESTEINDSTILLINGER -----"
+
+msgid "----- SKIN CONFIGURATION -----"
+msgstr "----- SKIN-INDSTILLINGER -----"
+
+msgid "----- STORAGE CONFIGURATION -----"
+msgstr "----- LAGERINDSTILLINGER -----"
+
+msgid "----- SUBTITLES CONFIGURATION -----"
+msgstr "----- INDSTILLINGER FOR UNDERTEKSTER -----"
+
+msgid "----- Show or hide Anime / Hentai -----"
+msgstr "----- Vis eller skjul anime / hentai -----"
+
+msgid "----- Show or hide Live Cams -----"
+msgstr "----- Vis eller skjul livecams -----"
+
+msgid "----- Show or hide Porn Sites -----"
+msgstr "----- Vis eller skjul pornosider -----"
+
+msgid "----- VIRTUAL KEYBOARD & SEARCH CONFIGURATION -----"
+msgstr "----- INDSTILLINGER FOR VIRTUELT TASTATUR OG SØGNING -----"
+
+msgid "----- XXXList Configuration -----"
+msgstr "----- XXXList-indstillinger -----"
+
+msgid "----------  Anime / Hentai  ----------"
+msgstr "----------  Anime / Hentai  ----------"
+
+msgid "----------  Live Cams  ----------"
+msgstr "----------  Livecams  ----------"
+
+msgid "----------  Other  ----------"
+msgstr "----------  Andet  ----------"
+
+msgid "----------  Porn Sites  ----------"
+msgstr "----------  Pornosider  ----------"
+
+#, python-format
+msgid "----------  Search \"%s\"  ----------"
+msgstr "----------  Søg \"%s\"  ----------"
+
+msgid "----------------- External exteplayer3 options -----------------"
+msgstr "----------------- Eksterne exteplayer3-valgmuligheder -----------------"
+
+msgid "--All Episodes--"
+msgstr "--Alle afsnit--"
+
+msgid "--All--"
+msgstr "--Alle--"
+
+msgid "--Other--"
+msgstr "--Andet--"
+
+msgid "... and that the stream delivers video :"
+msgstr "... og at streamen leverer video :"
+
+msgid "0-9"
+msgstr "0-9"
+
+msgid "1 minute"
+msgstr "1 minut"
+
+msgid "1. On a phone or PC in the same network, open the address shown in the captcha window (or scan its QR code) in a browser with the MyE2i extension installed. If it asks for a code, you find it in the title of the captcha window."
+msgstr "1. Åbn på en telefon eller pc i samme netværk adressen, der vises i captcha-vinduet (eller scan QR-koden), i en browser med MyE2i-udvidelsen installeret. Hvis der bedes om en kode, finder du den i captcha-vinduets titel."
+
+msgid "12 hour format"
+msgstr "12-timers format"
+
+msgid "15 seconds"
+msgstr "15 sekunder"
+
+msgid "2. Click the big green button on that page. A new tab opens with the captcha or the website's browser check."
+msgstr "2. Klik på den store grønne knap på siden. En ny fane åbnes med captchaen eller hjemmesidens browserkontrol."
+
+msgid "24 hour format"
+msgstr "24-timers format"
+
+msgid "3. Solve it. The result goes back to the receiver by itself and the captcha window closes."
+msgstr "3. Løs den. Resultatet sendes automatisk tilbage til modtageren, og captcha-vinduet lukkes."
+
+msgid "30 seconds"
+msgstr "30 sekunder"
+
+msgid "4K movies"
+msgstr "4K-film"
+
+msgid "5 seconds"
+msgstr "5 sekunder"
+
+msgid "A search is already running."
+msgstr "En søgning kører allerede."
+
+msgid "A-Z"
+msgstr "A-Z"
+
+msgid "AAC downmix mode"
+msgstr "AAC-downmixtilstand"
+
+msgid "ABORTED"
+msgstr "AFBRUDT"
+
+msgid "AC3 downmix mode"
+msgstr "AC3-downmixtilstand"
+
+msgid ""
+"ACCESS DENIED.\n"
+"THIS VIDEO IS DELETED OR NOT AVAILABLE TO YOUR REGION."
+msgstr ""
+"ADGANG NÆGTET.\n"
+"DENNE VIDEO ER SLETTET ELLER IKKE TILGÆNGELIG I DIN REGION."
+
+msgid "ALBUMS"
+msgstr "ALBUM"
+
+msgid "API Key"
+msgstr "API-nøgle"
+
+msgid "ARTISTS"
+msgstr "KUNSTNERE"
+
+msgid "ATTENTION!"
+msgstr "BEMÆRK!"
+
+msgid "Aborted"
+msgstr "Afbrudt"
+
+msgid "About"
+msgstr "Om"
+
+msgid "Accept"
+msgstr "Accepter"
+
+msgid "Access Forbidden"
+msgstr "Adgang forbudt"
+
+msgid "Access denied - open the page with the QR code or the code shown on the receiver screen."
+msgstr "Adgang nægtet - åbn siden via QR-koden eller med koden, der vises på modtagerens skærm."
+
+msgid "Access denied. Please check password."
+msgstr "Adgang nægtet. Kontrollér adgangskoden."
+
+msgid "Accessible"
+msgstr "Tilgængelig"
+
+#, python-format
+msgid "Account %d - name (optional):"
+msgstr "Konto %d - navn (valgfrit):"
+
+#, python-format
+msgid "Account %d - password:"
+msgstr "Konto %d - adgangskode:"
+
+#, python-format
+msgid "Account %d - server (http://host:port or get.php link):"
+msgstr "Konto %d - server (http://host:port eller get.php-link):"
+
+#, python-format
+msgid "Account %d - user name:"
+msgstr "Konto %d - brugernavn:"
+
+msgid "Accounts & API keys"
+msgstr "Konti og API-nøgler"
+
+msgid "Action"
+msgstr "Action"
+
+msgid "Action & Thriller"
+msgstr "Action og thriller"
+
+msgid "Actors"
+msgstr "Skuespillere"
+
+msgid "Actors:"
+msgstr "Skuespillere:"
+
+msgid "Add channel name to downloaded file"
+msgstr "Tilføj kanalnavn til den downloadede fil"
+
+#, python-format
+msgid "Add host %s to group"
+msgstr "Tilføj host %s til gruppe"
+
+msgid "Add item to favorites"
+msgstr "Tilføj element til favoritter"
+
+msgid "Add item to group"
+msgstr "Tilføj element til gruppe"
+
+msgid "Add new entry"
+msgstr "Tilføj ny post"
+
+msgid "Add new group"
+msgstr "Tilføj ny gruppe"
+
+msgid "Add new group of favorites"
+msgstr "Tilføj ny favoritgruppe"
+
+msgid "Add to User Links"
+msgstr "Tilføj til brugerlinks"
+
+msgid "Added"
+msgstr "Tilføjet"
+
+#, python-format
+msgid "Added by: %s, directory: %s"
+msgstr "Tilføjet af: %s, mappe: %s"
+
+msgid "Adhan"
+msgstr "Adhan"
+
+msgid "Adventure"
+msgstr "Eventyr"
+
+msgid "African series"
+msgstr "Afrikanske serier"
+
+msgid "Age limit:"
+msgstr "Aldersgrænse:"
+
+msgid "Aired"
+msgstr "Sendt"
+
+msgid "Aired this week"
+msgstr "Sendt i denne uge"
+
+msgid "Airing now"
+msgstr "Sendes nu"
+
+msgid "All"
+msgstr "Alle"
+
+msgid "All Sports"
+msgstr "Alle sportsgrene"
+
+msgid "All audiobooks"
+msgstr "Alle lydbøger"
+
+msgid "All categories"
+msgstr "Alle kategorier"
+
+msgid "All in one"
+msgstr "Alt i én"
+
+msgid "All movies"
+msgstr "Alle film"
+
+msgid "All programmes"
+msgstr "Alle programmer"
+
+msgid "All results"
+msgstr "Alle resultater"
+
+msgid "All seasons"
+msgstr "Alle sæsoner"
+
+msgid "All series"
+msgstr "Alle serier"
+
+msgid "All shows"
+msgstr "Alle shows"
+
+msgid "All stations"
+msgstr "Alle stationer"
+
+msgid "All streams"
+msgstr "Alle streams"
+
+msgid "All time"
+msgstr "Alle tider"
+
+msgid "All titles A-Z"
+msgstr "Alle titler A-Z"
+
+msgid "All videos"
+msgstr "Alle videoer"
+
+msgid "Allow VP9 codec:"
+msgstr "Tillad VP9-codec:"
+
+msgid "Allow dash format:"
+msgstr "Tillad DASH-format:"
+
+msgid "Allow external link-decryption service (enc-dec.app)"
+msgstr "Tillad ekstern linkdekrypteringstjeneste (enc-dec.app)"
+
+msgid "Allow host to override suggestions provider"
+msgstr "Tillad hosten at tilsidesætte forslagsudbyderen"
+
+msgid "Allow watched flag to be set"
+msgstr "Tillad, at set-markering sættes"
+
+msgid "Alphabetically"
+msgstr "Alfabetisk"
+
+#, python-format
+msgid "Also use the accounts of X-Streamity (%s)"
+msgstr "Brug også X-Streamitys konti (%s)"
+
+#, python-format
+msgid "Also use the portals of EStalker (%s)"
+msgstr "Brug også EStalkers portaler (%s)"
+
+msgid "AltGr"
+msgstr "AltGr"
+
+msgid "Alternate Title:"
+msgstr "Alternativ titel:"
+
+msgid "Alternative domain:"
+msgstr "Alternativt domæne:"
+
+msgid "Alternative proxy server (1)"
+msgstr "Alternativ proxyserver (1)"
+
+msgid "Alternative proxy server (2)"
+msgstr "Alternativ proxyserver (2)"
+
+msgid "Alternative proxy server (3)"
+msgstr "Alternativ proxyserver (3)"
+
+msgid "Alternative proxy server (4)"
+msgstr "Alternativ proxyserver (4)"
+
+msgid "Alternative proxy server (5)"
+msgstr "Alternativ proxyserver (5)"
+
+msgid "An API key from subsource.net can be entered in the E2iPlayer settings (Subtitles)."
+msgstr "En API-nøgle fra subsource.net kan angives i E2iPlayer-indstillingerne (Undertekster)."
+
+#, python-format
+msgid "An error occurred while loading a subtitle from [%s]."
+msgstr "Der opstod en fejl under indlæsning af undertekster fra [%s]."
+
+#, python-format
+msgid "An error occurred while writing into: %s"
+msgstr "Der opstod en fejl under skrivning til: %s"
+
+msgid "An opensubtitles.com account (login and password in the E2iPlayer settings) raises the limit."
+msgstr "En opensubtitles.com-konto (login og adgangskode i E2iPlayer-indstillingerne) hæver grænsen."
+
+msgid "Anatomy"
+msgstr "Anatomi"
+
+msgid "Animals"
+msgstr "Dyr"
+
+msgid "Animated movies"
+msgstr "Animationsfilm"
+
+msgid "Animated series"
+msgstr "Animationsserier"
+
+msgid "Animation"
+msgstr "Animation"
+
+msgid "Anime"
+msgstr "Anime"
+
+msgid "Anime A-Z"
+msgstr "Anime A-Z"
+
+msgid "Anime Movies"
+msgstr "Animefilm"
+
+msgid "Anime Series"
+msgstr "Animeserier"
+
+msgid "Anime TV series"
+msgstr "Anime-tv-serier"
+
+msgid "Anime genres"
+msgstr "Animegenrer"
+
+msgid "Anime list"
+msgstr "Animeliste"
+
+msgid "Anime movies"
+msgstr "Animefilm"
+
+msgid "Anime movies A-Z"
+msgstr "Animefilm A-Z"
+
+msgid "Anime series (dubbed)"
+msgstr "Animeserier (dubbede)"
+
+msgid "Anime series A-Z"
+msgstr "Animeserier A-Z"
+
+msgid "Answer"
+msgstr "Svar"
+
+msgid "Any"
+msgstr "Vilkårlig"
+
+msgid "Apply"
+msgstr "Anvend"
+
+msgid "Approaches"
+msgstr "Fremgangsmåder"
+
+msgid "Arabic"
+msgstr "Arabisk"
+
+msgid "Arabic Movies"
+msgstr "Arabiske film"
+
+msgid "Arabic Series"
+msgstr "Arabiske serier"
+
+msgid "Arabic movies"
+msgstr "Arabiske film"
+
+msgid "Arabic plays"
+msgstr "Arabiske teaterstykker"
+
+msgid "Arabic songs"
+msgstr "Arabiske sange"
+
+msgid "Archive"
+msgstr "Arkiv"
+
+msgid "Are you sure you want to delete search history?"
+msgstr "Er du sikker på, at du vil slette søgehistorikken?"
+
+#, python-format
+msgid "Are you sure you want to remove file \"%s\"?"
+msgstr "Er du sikker på, at du vil fjerne filen \"%s\"?"
+
+msgid "Are you sure you want to reset all settings to their default values?"
+msgstr "Er du sikker på, at du vil nulstille alle indstillinger til standardværdierne?"
+
+msgid "Art"
+msgstr "Kunst"
+
+msgid "Articles"
+msgstr "Artikler"
+
+msgid "Artist"
+msgstr "Kunstner"
+
+#, python-format
+msgid "Artist \"%s\" not found on Last.fm - the exact artist name is needed."
+msgstr "Kunstneren \"%s\" blev ikke fundet på Last.fm - det nøjagtige kunstnernavn er nødvendigt."
+
+msgid "Artists"
+msgstr "Kunstnere"
+
+msgid "Asian"
+msgstr "Asiatisk"
+
+msgid "Asian TV series"
+msgstr "Asiatiske tv-serier"
+
+msgid "Asian movies"
+msgstr "Asiatiske film"
+
+msgid "Asian series (dubbed)"
+msgstr "Asiatiske serier (dubbede)"
+
+msgid "Aspect"
+msgstr "Billedformat"
+
+msgid "At least one of plugin browser, extension list and main menu has to stay on, otherwise E2iPlayer could no longer be started."
+msgstr "Mindst én af plugin-browser, udvidelsesliste og hovedmenu skal forblive slået til, ellers kan E2iPlayer ikke længere startes."
+
+msgid "At the live edge"
+msgstr "Ved live-kanten"
+
+msgid "Atheer radio (Arabic)"
+msgstr "Atheer radio (arabisk)"
+
+msgid "Audio"
+msgstr "Lyd"
+
+msgid "Audio buffer size [KB]"
+msgstr "Lydbufferstørrelse [KB]"
+
+msgid "Audio description"
+msgstr "Synstolkning"
+
+msgid "Audio programme"
+msgstr "Lydprogram"
+
+msgid "Audio track"
+msgstr "Lydspor"
+
+msgid "Audio tracks"
+msgstr "Lydspor"
+
+#, python-format
+msgid "Author: %s"
+msgstr "Forfatter: %s"
+
+msgid "Authors"
+msgstr "Forfattere"
+
+msgid "Auto"
+msgstr "Auto"
+
+#, python-format
+msgid "Auto refresh: %s"
+msgstr "Automatisk opdatering: %s"
+
+msgid "Auto selection based on the settings"
+msgstr "Automatisk valg ud fra indstillingerne"
+
+msgid "Auto start method"
+msgstr "Autostartmetode"
+
+msgid "Auto-generated"
+msgstr "Autogenereret"
+
+msgid "Automatic"
+msgstr "Automatisk"
+
+msgid "Automatically turn on external subtitles"
+msgstr "Slå eksterne undertekster til automatisk"
+
+msgid "Automotive"
+msgstr "Biler og motor"
+
+msgid "Autoplay start delay"
+msgstr "Startforsinkelse for autoafspilning"
+
+msgid "Autumn"
+msgstr "Efterår"
+
+msgid "Available worldwide"
+msgstr "Tilgængelig i hele verden"
+
+msgid "Awards:"
+msgstr "Priser:"
+
+msgid "BLUE"
+msgstr "BLÅ"
+
+msgid "Background color"
+msgstr "Baggrundsfarve"
+
+msgid "Backspace"
+msgstr "Tilbagetast"
+
+msgid "Balkans"
+msgstr "Balkan"
+
+msgid "Basic Science"
+msgstr "Grundvidenskab"
+
+msgid "Being watched"
+msgstr "Ses lige nu"
+
+msgid "Best"
+msgstr "Bedste"
+
+msgid "Best Pinkbike videos"
+msgstr "Bedste Pinkbike-videoer"
+
+msgid "Best movies"
+msgstr "Bedste film"
+
+msgid "Best series"
+msgstr "Bedste serier"
+
+msgid "Binaries"
+msgstr "Binære filer"
+
+msgid "Bing Suggestions"
+msgstr "Bing-forslag"
+
+msgid "Biography"
+msgstr "Biografi"
+
+#, python-format
+msgid "Bitrate: %s"
+msgstr "Bitrate: %s"
+
+msgid "Black"
+msgstr "Sort"
+
+msgid "Black iframe file"
+msgstr "Sort iframe-fil"
+
+msgid "Black screensaver"
+msgstr "Sort pauseskærm"
+
+msgid "Block wmv files"
+msgstr "Bloker WMV-filer"
+
+msgid "Board Review"
+msgstr "Repetition til speciallægeeksamen"
+
+msgid "Books"
+msgstr "Bøger"
+
+msgid "Box"
+msgstr "Boks"
+
+msgid "Broadcast:"
+msgstr "Udsendelse:"
+
+msgid "Browse by genre"
+msgstr "Gennemse efter genre"
+
+msgid "Browse youtube trending feeds"
+msgstr "Gennemse YouTubes trend-feeds"
+
+msgid "Budget:"
+msgstr "Budget:"
+
+msgid "Buffering location"
+msgstr "Placering af buffer"
+
+msgid "Business"
+msgstr "Erhverv"
+
+#, python-format
+msgid "By %s"
+msgstr "Af %s"
+
+msgid "CME SAE"
+msgstr "CME SAE"
+
+#, python-format
+msgid "CUMLOUDER can only search its tags (e.g. milf, step sister, big tits) - there is no tag \"%s\"."
+msgstr "CUMLOUDER kan kun søge i sine tags (f.eks. milf, step sister, big tits) - tagget \"%s\" findes ikke."
+
+msgid "Cache"
+msgstr "Cache"
+
+#, python-format
+msgid "Cache folder \"%s\" could not be created. Some data (cookies, subtitles, ...) may not be saved."
+msgstr "Cachemappen \"%s\" kunne ikke oprettes. Nogle data (cookies, undertekster, ...) bliver muligvis ikke gemt."
+
+#, python-format
+msgid ""
+"Can not get mount points - cmd mount failed.\n"
+"Return code[%s].\n"
+"Return data[%s]."
+msgstr ""
+"Kan ikke hente monteringspunkter - kommandoen mount mislykkedes.\n"
+"Returkode[%s].\n"
+"Returdata[%s]."
+
+msgid "Cancel"
+msgstr "Annuller"
+
+msgid "Cancelled."
+msgstr "Annulleret."
+
+msgid "Captcha"
+msgstr "Captcha"
+
+msgid "Captcha error:"
+msgstr "Captcha-fejl:"
+
+msgid ""
+"Captcha solved.\n"
+"Waiting for notification."
+msgstr ""
+"Captcha løst.\n"
+"Venter på meddelelse."
+
+msgid "Captcha solving service"
+msgstr "Captcha-løsningstjeneste"
+
+msgid "Captcha was not entered."
+msgstr "Captchaen blev ikke indtastet."
+
+#, python-format
+msgid "Carrying: %s | UP/DOWN=Move, OK=Drop"
+msgstr "Flytter: %s | OP/NED=Flyt, OK=Slip"
+
+msgid "Cartoon genres"
+msgstr "Tegnefilmsgenrer"
+
+msgid "Cartoon series (dubbed)"
+msgstr "Tegnefilmserier (dubbede)"
+
+msgid "Cartoons"
+msgstr "Tegnefilm"
+
+msgid "Cartoons A-Z"
+msgstr "Tegnefilm A-Z"
+
+msgid "Cartoons and anime"
+msgstr "Tegnefilm og anime"
+
+msgid "Cartoons and series"
+msgstr "Tegnefilm og serier"
+
+msgid "Cast:"
+msgstr "Medvirkende:"
+
+msgid "Catch-up"
+msgstr "Catch-up"
+
+#, python-format
+msgid "Catch-up (%d channels)"
+msgstr "Catch-up (%d kanaler)"
+
+msgid "Catch-up (timeshift.php)"
+msgstr "Catch-up (timeshift.php)"
+
+#, python-format
+msgid "Catch-up: %d days"
+msgstr "Catch-up: %d dage"
+
+msgid "Categories"
+msgstr "Kategorier"
+
+msgid "Categories:"
+msgstr "Kategorier:"
+
+msgid "Category"
+msgstr "Kategori"
+
+msgid "Category:"
+msgstr "Kategori:"
+
+msgid "Change active movie player"
+msgstr "Skift aktiv filmafspiller"
+
+msgid "Change own pin"
+msgstr "Skift egen PIN-kode"
+
+msgid "Channel"
+msgstr "Kanal"
+
+#, python-format
+msgid "Channel: %s"
+msgstr "Kanal: %s"
+
+msgid "Channels"
+msgstr "Kanaler"
+
+msgid "Checking for updates"
+msgstr "Søger efter opdateringer"
+
+msgid "Checks every enabled site: menu, a list with videos and, in the full test, the stream link of one video."
+msgstr "Kontrollerer hver aktiveret side: menu, en liste med videoer og, i den fulde test, stream-linket til én video."
+
+msgid "Children"
+msgstr "Børn"
+
+msgid "Children & Family"
+msgstr "Børn og familie"
+
+msgid "Chinese"
+msgstr "Kinesisk"
+
+msgid "Chinese anime"
+msgstr "Kinesisk anime"
+
+msgid "Cinema History"
+msgstr "Filmhistorie"
+
+msgid "Cinema movies"
+msgstr "Biograffilm"
+
+msgid "Classic"
+msgstr "Klassisk"
+
+msgid "Classic movies"
+msgstr "Klassiske film"
+
+msgid "Clear"
+msgstr "Ryd"
+
+msgid "Clear log"
+msgstr "Ryd log"
+
+#, python-format
+msgid ""
+"Clear the debug log file?\n"
+"%s"
+msgstr ""
+"Ryd debug-logfilen?\n"
+"%s"
+
+msgid "Clear the log file at plugin start"
+msgstr "Ryd logfilen ved pluginstart"
+
+#, python-format
+msgid "Clipped by: %s"
+msgstr "Klippet af: %s"
+
+msgid "Clips"
+msgstr "Klip"
+
+msgid "Close"
+msgstr "Luk"
+
+msgid "Closes the host opened in the web interface, clears the search results and stops what the web interface still runs in the background. Use it when a page keeps loading. Settings, downloads and the E2iPlayer on the TV are not touched."
+msgstr "Lukker den host, der er åbnet i webgrænsefladen, rydder søgeresultaterne og stopper det, som webgrænsefladen stadig kører i baggrunden. Brug det, når en side bliver ved med at indlæse. Indstillinger, downloads og E2iPlayer på tv'et berøres ikke."
+
+msgid "Closing. Please wait..."
+msgstr "Lukker. Vent venligst..."
+
+msgid "Clubs and athletes"
+msgstr "Klubber og atleter"
+
+msgid "Code"
+msgstr "Kode"
+
+msgid "Collected streams only"
+msgstr "Kun indsamlede streams"
+
+msgid "Collections"
+msgstr "Samlinger"
+
+msgid "Colored text in titles and descriptions"
+msgstr "Farvet tekst i titler og beskrivelser"
+
+msgid "Combine pull request merges with their commit"
+msgstr "Kombiner pull request-merges med deres commit"
+
+msgid "Comedy"
+msgstr "Komedie"
+
+msgid "Comments"
+msgstr "Kommentarer"
+
+msgid "Commits"
+msgstr "Commits"
+
+msgid "Competitions"
+msgstr "Konkurrencer"
+
+msgid "Complete Quran"
+msgstr "Hele Koranen"
+
+msgid "Complete series"
+msgstr "Komplette serier"
+
+msgid "Completed"
+msgstr "Afsluttet"
+
+msgid "Concert"
+msgstr "Koncert"
+
+msgid "Config"
+msgstr "Indstillinger"
+
+#, python-format
+msgid "Config folder \"%s\" could not be created. Some data (host order, search history, favourites, movie player preferences, ...) may not be saved."
+msgstr "Konfigurationsmappen \"%s\" kunne ikke oprettes. Nogle data (hostrækkefølge, søgehistorik, favoritter, filmafspillerindstillinger, ...) bliver muligvis ikke gemt."
+
+msgid "Configuration"
+msgstr "Indstillinger"
+
+#, python-format
+msgid "Configuration [%s] service"
+msgstr "Indstillinger for tjenesten [%s]"
+
+#, python-format
+msgid "Configure %s"
+msgstr "Konfigurer %s"
+
+msgid "Configure host"
+msgstr "Konfigurer host"
+
+msgid "Configuring an external movie player"
+msgstr "Konfiguration af en ekstern filmafspiller"
+
+msgid "Confirm new pin"
+msgstr "Bekræft ny PIN-kode"
+
+msgid "Confirm the title of the movie"
+msgstr "Bekræft filmens titel"
+
+msgid "Confirmation error."
+msgstr "Bekræftelsesfejl."
+
+msgid "Connection to server failed!"
+msgstr "Forbindelse til serveren mislykkedes!"
+
+msgid "Connection to the weeb.tv server failed."
+msgstr "Forbindelse til weeb.tv-serveren mislykkedes."
+
+#, python-format
+msgid "Connections: %s of %s"
+msgstr "Forbindelser: %s af %s"
+
+msgid "Content not available"
+msgstr "Indhold ikke tilgængeligt"
+
+msgid "Continue"
+msgstr "Fortsæt"
+
+msgid "Continue downloading"
+msgstr "Fortsæt download"
+
+msgid "Cooking"
+msgstr "Madlavning"
+
+msgid "Copy"
+msgstr "Kopier"
+
+msgid "Could not add the user link."
+msgstr "Brugerlinket kunne ikke tilføjes."
+
+msgid "Could not load the wiki page."
+msgstr "Wiki-siden kunne ikke indlæses."
+
+msgid "Could not resolve host."
+msgstr "Hosten kunne ikke opløses."
+
+msgid "Could not resolve proxy."
+msgstr "Proxyen kunne ikke opløses."
+
+msgid "Could not sort the user links."
+msgstr "Brugerlinkene kunne ikke sorteres."
+
+msgid "Could not start the YouTube sign-in."
+msgstr "YouTube-login kunne ikke startes."
+
+msgid "Could not write the file."
+msgstr "Filen kunne ikke skrives."
+
+msgid "Countries"
+msgstr "Lande"
+
+msgid "Country"
+msgstr "Land"
+
+msgid "Country / store:"
+msgstr "Land / butik:"
+
+msgid "Country:"
+msgstr "Land:"
+
+msgid "Couples"
+msgstr "Par"
+
+msgid "Create Enigma2 .cuts chapter marks"
+msgstr "Opret Enigma2 .cuts-kapitelmærker"
+
+msgid "Create LCD/VFD summary screen"
+msgstr "Opret LCD/VFD-oversigtsskærm"
+
+msgid "Create MKV"
+msgstr "Opret MKV"
+
+msgid "Create MKV with chapter marks from description"
+msgstr "Opret MKV med kapitelmærker ud fra beskrivelsen"
+
+msgid "Create debug logs"
+msgstr "Opret debug-logs"
+
+msgid "Create sidecar files (.txt/.jpg)"
+msgstr "Opret sidecar-filer (.txt/.jpg)"
+
+msgid "Creator:"
+msgstr "Skaber:"
+
+msgid "Creators:"
+msgstr "Skabere:"
+
+msgid "Crime"
+msgstr "Krimi"
+
+msgid "Critical Error - cookie can't be saved!"
+msgstr "Kritisk fejl - cookie kan ikke gemmes!"
+
+msgid "Critical Error – Content-Encoding gzip cannot be handled!"
+msgstr "Kritisk fejl – Content-Encoding gzip kan ikke håndteres!"
+
+msgid "Culture"
+msgstr "Kultur"
+
+msgid "Culture and lifestyle"
+msgstr "Kultur og livsstil"
+
+msgid "Culture and pop"
+msgstr "Kultur og pop"
+
+msgid "Current item is not a channel."
+msgstr "Det aktuelle element er ikke en kanal."
+
+msgid "Cut"
+msgstr "Klip"
+
+msgid "Czech"
+msgstr "Tjekkisk"
+
+msgid "DASH/mpd"
+msgstr "DASH/mpd"
+
+msgid "DOWNLOAD ERROR"
+msgstr "DOWNLOADFEJL"
+
+msgid "DOWNLOADED"
+msgstr "DOWNLOADET"
+
+msgid "DOWNLOADING"
+msgstr "DOWNLOADER"
+
+msgid "DRM protection detected."
+msgstr "DRM-beskyttelse registreret."
+
+msgid "Daily download limit reached - type the code"
+msgstr "Daglig downloadgrænse nået - indtast koden"
+
+msgid "Darkgray"
+msgstr "Mørkegrå"
+
+msgid "Date"
+msgstr "Dato"
+
+msgid "Debug file does not exist - nothing to delete"
+msgstr "Debug-filen findes ikke - intet at slette"
+
+msgid "Debug log"
+msgstr "Debug-log"
+
+msgid "Debug logs"
+msgstr "Debug-logs"
+
+msgid "Debug option is disabled - nothing to display"
+msgstr "Debug-indstillingen er deaktiveret - intet at vise"
+
+msgid "Debug snapshot"
+msgstr "Debug-snapshot"
+
+msgid "Debug snapshot (for site development)"
+msgstr "Debug-snapshot (til sideudvikling)"
+
+#, python-format
+msgid "Debug snapshot: \"%s\" received by the box"
+msgstr "Debug-snapshot: \"%s\" er nået frem til modtageren"
+
+#, python-format
+msgid "Debug snapshot: sending \"%s\" failed"
+msgstr "Debug-snapshot: afsendelse af \"%s\" mislykkedes"
+
+#, python-format
+msgid "Decode file [%s] problem."
+msgstr "Problem med afkodning af filen [%s]."
+
+msgid "Decrypt Signatures Error"
+msgstr "Fejl ved dekryptering af signaturer"
+
+msgid "Default"
+msgstr "Standard"
+
+msgid "Default (2 minutes)"
+msgstr "Standard (2 minutter)"
+
+msgid "Default browser"
+msgstr "Standardbrowser"
+
+msgid "Default captcha bypass"
+msgstr "Standard captcha-omgåelse"
+
+msgid "Default suggestions provider"
+msgstr "Standard forslagsudbyder"
+
+msgid "Default video aspect ratio"
+msgstr "Standard billedformat for video"
+
+msgid "Default video policy for 16:9"
+msgstr "Standard videopolitik for 16:9"
+
+msgid "Default video policy for 4:3"
+msgstr "Standard videopolitik for 4:3"
+
+msgid "Default video quality"
+msgstr "Standard videokvalitet"
+
+msgid "Default video quality:"
+msgstr "Standard videokvalitet:"
+
+msgid "Defaults"
+msgstr "Standardværdier"
+
+msgid "Definitely remove from favorites?"
+msgstr "Vil du virkelig fjerne fra favoritter?"
+
+msgid "Delete"
+msgstr "Slet"
+
+msgid "Delete JS cache after (days, 0 = never)"
+msgstr "Slet JS-cache efter (dage, 0 = aldrig)"
+
+msgid "Delete JS cache now"
+msgstr "Slet JS-cache nu"
+
+msgid "Delete all cache files now"
+msgstr "Slet alle cachefiler nu"
+
+msgid "Delete all config files now"
+msgstr "Slet alle konfigurationsfiler nu"
+
+msgid "Delete cookies cache after (days, 0 = never)"
+msgstr "Slet cookie-cache efter (dage, 0 = aldrig)"
+
+msgid "Delete cookies cache now"
+msgstr "Slet cookie-cache nu"
+
+msgid "Delete entry"
+msgstr "Slet post"
+
+msgid "Delete favourites and watched status now"
+msgstr "Slet favoritter og set-status nu"
+
+msgid "Delete host order and groups now"
+msgstr "Slet hostrækkefølge og grupper nu"
+
+msgid "Delete movie metadata cache after (days, 0 = never)"
+msgstr "Slet filmmetadata-cache efter (dage, 0 = aldrig)"
+
+msgid "Delete movie metadata cache now"
+msgstr "Slet filmmetadata-cache nu"
+
+msgid "Delete movie player preferences now"
+msgstr "Slet filmafspillerindstillinger nu"
+
+msgid "Delete now"
+msgstr "Slet nu"
+
+msgid "Delete search history"
+msgstr "Slet søgehistorik"
+
+msgid "Delete search history now"
+msgstr "Slet søgehistorik nu"
+
+msgid "Delete subtitles cache after (days, 0 = never)"
+msgstr "Slet undertekst-cache efter (dage, 0 = aldrig)"
+
+msgid "Delete subtitles cache now"
+msgstr "Slet undertekst-cache nu"
+
+msgid "Delete thumbnails cache now"
+msgstr "Slet miniaturebillede-cache nu"
+
+msgid "Denmark"
+msgstr "Danmark"
+
+msgid "Description:"
+msgstr "Beskrivelse:"
+
+msgid "Detail/expert mode"
+msgstr "Detalje-/eksperttilstand"
+
+msgid "Detective"
+msgstr "Detektiv"
+
+msgid "Developers:"
+msgstr "Udviklere:"
+
+msgid "Digital programmes"
+msgstr "Digitale programmer"
+
+msgid "Direct"
+msgstr "Direkte"
+
+msgid "Director:"
+msgstr "Instruktør:"
+
+msgid "Directors"
+msgstr "Instruktører"
+
+msgid "Directors:"
+msgstr "Instruktører:"
+
+#, python-format
+msgid "Directory \"%s\" does not exists."
+msgstr "Mappen \"%s\" findes ikke."
+
+msgid "Directory browser"
+msgstr "Mappebrowser"
+
+msgid "Disable all groups"
+msgstr "Deaktiver alle grupper"
+
+msgid "Disable live at plugin start"
+msgstr "Deaktiver live-tv ved pluginstart"
+
+msgid "Disable not used services"
+msgstr "Deaktiver ubrugte tjenester"
+
+msgid "Disable reordering"
+msgstr "Deaktiver omarrangering"
+
+msgid "Disable reordering mode"
+msgstr "Deaktiver omarrangeringstilstand"
+
+msgid "Disable/Enable groups"
+msgstr "Deaktiver/aktiver grupper"
+
+msgid "Disable/Enable services"
+msgstr "Deaktiver/aktiver tjenester"
+
+msgid "Discovery"
+msgstr "Opdagelse"
+
+msgid "Disney cartoon movies (Egyptian dub)"
+msgstr "Disney-tegnefilm (egyptisk dubbing)"
+
+msgid "Display language:"
+msgstr "Visningssprog:"
+
+msgid "Display thumbnails"
+msgstr "Vis miniaturebilleder"
+
+msgid "Do you really want to delete ALL cache data now? This includes cookies, subtitles, movie metadata and thumbnails, and cannot be undone."
+msgstr "Vil du virkelig slette ALLE cachedata nu? Dette omfatter cookies, undertekster, filmmetadata og miniaturebilleder og kan ikke fortrydes."
+
+msgid "Do you really want to delete ALL config data now? This is real user data, not just cache - it includes favourites, watched status, search history, movie player preferences and host order/groups, and cannot be undone."
+msgstr "Vil du virkelig slette ALLE konfigurationsdata nu? Dette er rigtige brugerdata, ikke kun cache - det omfatter favoritter, set-status, søgehistorik, filmafspillerindstillinger og hostrækkefølge/grupper og kan ikke fortrydes."
+
+msgid "Do you really want to delete ALL favourites and watched status now? This is real user data, not just cache, and cannot be undone."
+msgstr "Vil du virkelig slette ALLE favoritter og set-status nu? Dette er rigtige brugerdata, ikke kun cache, og kan ikke fortrydes."
+
+#, python-format
+msgid "Do you really want to delete the %s now?"
+msgstr "Vil du virkelig slette %s nu?"
+
+msgid "Do you really want to delete the thumbnails cache now?"
+msgstr "Vil du virkelig slette miniaturebillede-cachen nu?"
+
+msgid "Do you want to finish?"
+msgstr "Vil du afslutte?"
+
+msgid "Documentaries"
+msgstr "Dokumentarfilm"
+
+msgid "Documentaries A-Z"
+msgstr "Dokumentarer A-Z"
+
+msgid "Documentary"
+msgstr "Dokumentar"
+
+msgid "Documentary Movies"
+msgstr "Dokumentarfilm"
+
+msgid "Documentary series"
+msgstr "Dokumentarserier"
+
+msgid "Done - the result was sent to the box, you can close this page."
+msgstr "Færdig - resultatet er sendt til modtageren, du kan lukke denne side."
+
+msgid "Download"
+msgstr "Download"
+
+#, python-format
+msgid "Download (ready in %d seconds)"
+msgstr "Download (klar om %d sekunder)"
+
+msgid "Download again"
+msgstr "Download igen"
+
+msgid "Download already exists"
+msgstr "Download findes allerede"
+
+#, python-format
+msgid ""
+"Download can not be started.\n"
+" Incorrect address ('%r')."
+msgstr ""
+"Download kan ikke startes.\n"
+" Ugyldig adresse ('%r')."
+
+#, python-format
+msgid ""
+"Download can not be started.\n"
+"Downloader %s not working correctly.\n"
+"Status[%s]"
+msgstr ""
+"Download kan ikke startes.\n"
+"Downloader %s fungerer ikke korrekt.\n"
+"Status[%s]"
+
+#, python-format
+msgid ""
+"Download failed.\n"
+"Status[%s]"
+msgstr ""
+"Download mislykkedes.\n"
+"Status[%s]"
+
+msgid "Download manager"
+msgstr "Downloadhåndtering"
+
+msgid "Download manager is not initialized"
+msgstr "Downloadhåndtering er ikke initialiseret"
+
+msgid "Download new version"
+msgstr "Download ny version"
+
+msgid "Download notification duration"
+msgstr "Varighed af downloadmeddelelse"
+
+msgid "Download subtiles failed."
+msgstr "Download af undertekster mislykkedes."
+
+msgid "Download suggested"
+msgstr "Download foreslået"
+
+msgid "Downloaded file is too small or corrupted."
+msgstr "Den downloadede fil er for lille eller beskadiget."
+
+msgid "Downloading"
+msgstr "Downloader"
+
+#, python-format
+msgid ""
+"Downloading can not be started.\n"
+" Downloader %s does not work properly.\n"
+"Status[%s]"
+msgstr ""
+"Download kan ikke startes.\n"
+" Downloader %s fungerer ikke korrekt.\n"
+"Status[%s]"
+
+#, python-format
+msgid ""
+"Downloading can not be started.\n"
+" The address ('%r') is incorrect."
+msgstr ""
+"Download kan ikke startes.\n"
+" Adressen ('%r') er ugyldig."
+
+#, python-format
+msgid ""
+"Downloading cannot be started.\n"
+" Downloader [%s] not working properly.\n"
+" Status[%s]"
+msgstr ""
+"Download kan ikke startes.\n"
+" Downloader [%s] fungerer ikke korrekt.\n"
+" Status[%s]"
+
+#, python-format
+msgid ""
+"Downloading cannot be started.\n"
+" Invalid URI[%s]."
+msgstr ""
+"Download kan ikke startes.\n"
+" Ugyldig URI[%s]."
+
+#, python-format
+msgid "Downloading file [%s] problem."
+msgstr "Problem med download af filen [%s]."
+
+msgid "Downloading from prijevodi-online.org needs a free account. Enter login and password in the E2iPlayer settings."
+msgstr "Download fra prijevodi-online.org kræver en gratis konto. Angiv login og adgangskode i E2iPlayer-indstillingerne."
+
+#, python-format
+msgid ""
+"Downloading subtitles.\n"
+" ('%r')."
+msgstr ""
+"Downloader undertekster.\n"
+" ('%r')."
+
+msgid "Downloads"
+msgstr "Downloads"
+
+msgid "Downloads location"
+msgstr "Downloadplacering"
+
+#, python-format
+msgid "Downloads: %s"
+msgstr "Downloads: %s"
+
+msgid "Draft"
+msgstr "Kladde"
+
+msgid "Drama"
+msgstr "Drama"
+
+msgid "Dramas (Asian)"
+msgstr "Dramaer (asiatiske)"
+
+msgid "Dubbed"
+msgstr "Dubbet"
+
+msgid "Dubbed anime"
+msgstr "Dubbet anime"
+
+msgid "Dubbed movies"
+msgstr "Dubbede film"
+
+msgid "Dubbed series"
+msgstr "Dubbede serier"
+
+msgid "DuckDuckGo Suggestions"
+msgstr "DuckDuckGo-forslag"
+
+msgid "Duration"
+msgstr "Varighed"
+
+msgid "Duration:"
+msgstr "Varighed:"
+
+#, python-format
+msgid "Duration: %s"
+msgstr "Varighed: %s"
+
+msgid "Dutch"
+msgstr "Hollandsk"
+
+msgid "E-mail (free TBN GO account):"
+msgstr "E-mail (gratis TBN GO-konto):"
+
+msgid "E2iPlayer"
+msgstr "E2iPlayer"
+
+msgid "E2iPlayer - keyboard settings"
+msgstr "E2iPlayer - tastaturindstillinger"
+
+msgid "E2iPlayer - settings"
+msgstr "E2iPlayer - indstillinger"
+
+msgid "E2iPlayer auto start at Enigma2 start"
+msgstr "E2iPlayer starter automatisk ved Enigma2-start"
+
+msgid "E2iPlayer config folder"
+msgstr "E2iPlayer-konfigurationsmappe"
+
+msgid "E2iPlayer downloader"
+msgstr "E2iPlayer-downloader"
+
+msgid "E2iPlayer enable/disabled groups"
+msgstr "E2iPlayer aktiverede/deaktiverede grupper"
+
+msgid "E2iPlayer is only a specialized web browser. It does not host any materials."
+msgstr "E2iPlayer er kun en specialiseret webbrowser. Den hoster ikke selv noget materiale."
+
+msgid "E2iPlayer virtual keyboard"
+msgstr "E2iPlayer virtuelt tastatur"
+
+msgid ""
+"ERROR: pipeline could not be constructed: no element \"playbin2\" \n"
+"Please check if gstreamer plugins are available in your system."
+msgstr ""
+"FEJL: pipeline kunne ikke oprettes: intet element \"playbin2\" \n"
+"Kontrollér, om gstreamer-plugins er tilgængelige på dit system."
+
+msgid "EXIT"
+msgstr "EXIT"
+
+msgid "Economy"
+msgstr "Økonomi"
+
+msgid "Edit"
+msgstr "Rediger"
+
+msgid "Edit User Links"
+msgstr "Rediger brugerlinks"
+
+msgid "Edit failed."
+msgstr "Redigering mislykkedes."
+
+msgid "Edit favorite group"
+msgstr "Rediger favoritgruppe"
+
+msgid "Edit favorite item"
+msgstr "Rediger favoritelement"
+
+msgid "Edit favorites"
+msgstr "Rediger favoritter"
+
+msgid "Edit search history"
+msgstr "Rediger søgehistorik"
+
+msgid "Edit title"
+msgstr "Rediger titel"
+
+msgid "Edit, sort and delete search history entries"
+msgstr "Rediger, sorter og slet poster i søgehistorikken"
+
+msgid "Education"
+msgstr "Uddannelse"
+
+msgid "Educational Animation"
+msgstr "Pædagogisk animation"
+
+msgid "Egyptian series"
+msgstr "Egyptiske serier"
+
+msgid "Empty title is not allowed."
+msgstr "En tom titel er ikke tilladt."
+
+msgid "Enable all groups"
+msgstr "Aktiver alle grupper"
+
+msgid "Enable hosts groups"
+msgstr "Aktiver hostgrupper"
+
+msgid "Enable reordering"
+msgstr "Aktiver omarrangering"
+
+msgid "Enable reordering mode"
+msgstr "Aktiver omarrangeringstilstand"
+
+msgid "Enabled hosts"
+msgstr "Aktiverede hosts"
+
+msgid "Encrypted stream list - not supported"
+msgstr "Krypteret streamliste - understøttes ikke"
+
+#, python-format
+msgid ""
+"Encryption function body extraction failed!\n"
+"Please report the problem to %s"
+msgstr ""
+"Udtrækning af krypteringsfunktionens krop mislykkedes!\n"
+"Rapportér problemet til %s"
+
+#, python-format
+msgid ""
+"Encryption function name extraction failed!\n"
+"Please report the problem to %s"
+msgstr ""
+"Udtrækning af navnet på krypteringsfunktionen mislykkedes!\n"
+"Rapportér problemet til %s"
+
+msgid "English"
+msgstr "Engelsk"
+
+msgid "English TV series"
+msgstr "Engelske tv-serier"
+
+msgid "English dubbed"
+msgstr "Engelsk dubbet"
+
+msgid "English movies"
+msgstr "Engelske film"
+
+msgid "English movies (dubbed)"
+msgstr "Engelske film (dubbede)"
+
+msgid "English series (dubbed)"
+msgstr "Engelske serier (dubbede)"
+
+msgid "English subbed"
+msgstr "Engelsk med undertekster"
+
+msgid "Enter"
+msgstr "Enter"
+
+msgid "Enter (confirm and close)"
+msgstr "Enter (bekræft og luk)"
+
+msgid "Enter a value"
+msgstr "Indtast en værdi"
+
+msgid "Enter name"
+msgstr "Indtast navn"
+
+msgid "Enter new pin"
+msgstr "Indtast ny PIN-kode"
+
+msgid "Enter old pin"
+msgstr "Indtast gammel PIN-kode"
+
+msgid "Enter pin"
+msgstr "Indtast PIN-kode"
+
+msgid "Enter the code shown in the title of the window on your receiver's screen (or scan the QR code shown there - no code needed then):"
+msgstr "Indtast koden, der vises i vinduets titel på din modtagers skærm (eller scan QR-koden, der vises der - så behøves ingen kode):"
+
+msgid "Enter the text"
+msgstr "Indtast teksten"
+
+msgid "Entertainment"
+msgstr "Underholdning"
+
+msgid "Entitlement parsing error."
+msgstr "Fejl ved fortolkning af rettigheder."
+
+#, python-format
+msgid "Entries: %d | Sort: %s | Status: %s | Jump target: %s"
+msgstr "Poster: %d | Sortering: %s | Status: %s | Springmål: %s"
+
+msgid "Episode"
+msgstr "Afsnit"
+
+#, python-format
+msgid "Episode %d"
+msgstr "Afsnit %d"
+
+msgid "Episodes"
+msgstr "Afsnit"
+
+msgid "Episodes:"
+msgstr "Afsnit:"
+
+#, python-format
+msgid "Episodes: %s"
+msgstr "Afsnit: %s"
+
+msgid "Epochs"
+msgstr "Epoker"
+
+msgid "Error"
+msgstr "Fejl"
+
+#, python-format
+msgid "Error code: %s\n"
+msgstr "Fejlkode: %s\n"
+
+#, python-format
+msgid ""
+"Error code: %s\n"
+"Error message: %s"
+msgstr ""
+"Fejlkode: %s\n"
+"Fejlmeddelelse: %s"
+
+msgid "Error deleting favorite item."
+msgstr "Fejl ved sletning af favorit."
+
+#, python-format
+msgid "Error deleting file \"%s\".\n"
+msgstr "Fejl ved sletning af filen \"%s\".\n"
+
+msgid "Error during deletion of the debug file."
+msgstr "Fejl ved sletning af debug-filen."
+
+#, python-format
+msgid "Error getting file name: %s"
+msgstr "Fejl ved hentning af filnavn: %s"
+
+msgid "Error loading favorites."
+msgstr "Fejl ved indlæsning af favoritter."
+
+#, python-format
+msgid ""
+"Error message: \"%s\".\n"
+"Error code: \"%s\"."
+msgstr ""
+"Fejlmeddelelse: \"%s\".\n"
+"Fejlkode: \"%s\"."
+
+#, python-format
+msgid "Error message: %s\n"
+msgstr "Fejlmeddelelse: %s\n"
+
+msgid "Error occurs"
+msgstr "Der opstod en fejl"
+
+msgid "Error occurs during download."
+msgstr "Der opstod en fejl under download."
+
+msgid "Error occurs:"
+msgstr "Der opstod en fejl:"
+
+#, python-format
+msgid "Error reading file \"%s\".\n"
+msgstr "Fejl ved læsning af filen \"%s\".\n"
+
+#, python-format
+msgid "Error renaming file: %s"
+msgstr "Fejl ved omdøbning af fil: %s"
+
+msgid "Error saving favorites."
+msgstr "Fejl ved lagring af favoritter."
+
+msgid "Error while loading watch data"
+msgstr "Fejl ved indlæsning af visningsdata"
+
+msgid "Error while saving."
+msgstr "Fejl ved lagring."
+
+#, python-format
+msgid "Error writing file \"%s\".\n"
+msgstr "Fejl ved skrivning af filen \"%s\".\n"
+
+msgid "Ethical & Legal"
+msgstr "Etik & jura"
+
+msgid "European movies"
+msgstr "Europæiske film"
+
+msgid "Events"
+msgstr "Begivenheder"
+
+msgid "Every enabled site: does the menu open, does a list show videos? Takes a few minutes."
+msgstr "Hver aktiveret side: Åbner menuen, viser en liste videoer? Tager et par minutter."
+
+msgid "Exam Review"
+msgstr "Eksamensgennemgang"
+
+msgid "Exception occurs"
+msgstr "Der opstod en undtagelse"
+
+msgid "Exclusive"
+msgstr "Eksklusivt"
+
+msgid "Exit"
+msgstr "Afslut"
+
+#, python-format
+msgid "Expiry: %s"
+msgstr "Udløber: %s"
+
+msgid "Extended"
+msgstr "Udvidet"
+
+msgid "External movie player config"
+msgstr "Konfiguration af ekstern filmafspiller"
+
+msgid "Extracted subtitle file is empty or missing."
+msgstr "Den udpakkede undertekstfil er tom eller mangler."
+
+msgid "FAILED"
+msgstr "MISLYKKEDES"
+
+msgid "FAST FORWARD"
+msgstr "SPOL FREM"
+
+msgid "FREE"
+msgstr "LEDIG"
+
+msgid "FUCKER sorting by :"
+msgstr "FUCKER sorteret efter :"
+
+#, python-format
+msgid "Fail to get \"%s\"."
+msgstr "Kunne ikke hente \"%s\"."
+
+msgid "Fail to get captcha data."
+msgstr "Kunne ikke hente captcha-data."
+
+msgid "Failed to connect to host."
+msgstr "Kunne ikke oprette forbindelse til host."
+
+#, python-format
+msgid "Failed to connect to server \"%s\"."
+msgstr "Kunne ikke oprette forbindelse til serveren \"%s\"."
+
+#, python-format
+msgid "Failed to convert the file \"%s\" to UTF-8."
+msgstr "Kunne ikke konvertere filen \"%s\" til UTF-8."
+
+#, python-format
+msgid "Failed to create directory \"%s\"."
+msgstr "Kunne ikke oprette mappen \"%s\"."
+
+msgid "Failed to create extraction directory."
+msgstr "Kunne ikke oprette udpakningsmappen."
+
+msgid "Failed to download subtitle."
+msgstr "Kunne ikke downloade undertekst."
+
+msgid "Failed to download the subtitles."
+msgstr "Kunne ikke downloade underteksterne."
+
+msgid "Failed to get the download link."
+msgstr "Kunne ikke hente download-linket."
+
+#, python-format
+msgid "Failed to get the file list from %s."
+msgstr "Kunne ikke hente fillisten fra %s."
+
+msgid "Failed to gzip."
+msgstr "Gzip mislykkedes."
+
+msgid "Failed to initialize (unknown option or old curl version?)."
+msgstr "Initialisering mislykkedes (ukendt valgmulighed eller gammel curl-version?)."
+
+msgid "Failed to load the match list"
+msgstr "Kunne ikke indlæse kamplisten"
+
+#, python-format
+msgid "Failed to log in user \"%s\". Please check your login and password."
+msgstr "Kunne ikke logge brugeren \"%s\" ind. Kontrollér dit login og din adgangskode."
+
+#, python-format
+msgid "Failed to open the file \"%s\"."
+msgstr "Kunne ikke åbne filen \"%s\"."
+
+#, python-format
+msgid "Failed to write file \"%s\"."
+msgstr "Kunne ikke skrive filen \"%s\"."
+
+#, python-format
+msgid "Failed to write the file \"%s\"."
+msgstr "Kunne ikke skrive filen \"%s\"."
+
+#, python-format
+msgid "Failed: %s"
+msgstr "Mislykkedes: %s"
+
+msgid "Family"
+msgstr "Familie"
+
+msgid "Fantasy"
+msgstr "Fantasy"
+
+msgid "Fashion"
+msgstr "Mode"
+
+msgid "Fatal error: consoleWrite failed!"
+msgstr "Alvorlig fejl: consoleWrite mislykkedes!"
+
+msgid "Favorite group not found."
+msgstr "Favoritgruppe ikke fundet."
+
+msgid "Favorite item not found."
+msgstr "Favorit ikke fundet."
+
+msgid "Favorites"
+msgstr "Favoritter"
+
+msgid "Favorites groups"
+msgstr "Favoritgrupper"
+
+msgid "Favorites manager"
+msgstr "Favoritstyring"
+
+msgid "Featured"
+msgstr "Udvalgte"
+
+#, python-format
+msgid "File \"%s\" already exists"
+msgstr "Filen \"%s\" findes allerede"
+
+#, python-format
+msgid "File \"%s\" already exists!"
+msgstr "Filen \"%s\" findes allerede!"
+
+msgid "File I/O error (write)."
+msgstr "Fil-I/O-fejl (skrivning)."
+
+msgid "File I/O error."
+msgstr "Fil-I/O-fejl."
+
+msgid "File Not Found."
+msgstr "Filen blev ikke fundet."
+
+#, python-format
+msgid "File [%s] has been added to the downloading queue."
+msgstr "Filen [%s] er føjet til download-køen."
+
+#, python-format
+msgid "File [%s] is already in the downloading queue."
+msgstr "Filen [%s] er allerede i download-køen."
+
+#, python-format
+msgid "File [%s] was added to downloading queue."
+msgstr "Filen [%s] blev føjet til download-køen."
+
+msgid "File browser"
+msgstr "Filbrowser"
+
+msgid "File can not be downloaded. Download manager is not available."
+msgstr "Filen kan ikke downloades. Downloadhåndteringen er ikke tilgængelig."
+
+#, python-format
+msgid "File can not be downloaded. Protocol [%s] is unsupported"
+msgstr "Filen kan ikke downloades. Protokollen [%s] understøttes ikke"
+
+msgid "File format of DASH (MPD) downloads"
+msgstr "Filformat for DASH-downloads (MPD)"
+
+#, python-format
+msgid "File might be corrupted (size: %d bytes)."
+msgstr "Filen kan være beskadiget (størrelse: %d bytes)."
+
+msgid "File name cannot be empty!"
+msgstr "Filnavnet må ikke være tomt!"
+
+msgid "File renamed successfully!"
+msgstr "Filen blev omdøbt!"
+
+msgid "Files"
+msgstr "Filer"
+
+msgid "Filler"
+msgstr "Filler"
+
+msgid "Films"
+msgstr "Film"
+
+msgid "Films by genre"
+msgstr "Film efter genre"
+
+msgid "Filmweb Suggestions"
+msgstr "Filmweb-forslag"
+
+msgid "Filter"
+msgstr "Filter"
+
+msgid "Filter settings"
+msgstr "Filterindstillinger"
+
+msgid "Find item"
+msgstr "Find post"
+
+msgid "Find out more."
+msgstr "Få mere at vide."
+
+msgid "Finished matches with a full replay, highlights or match cuts, newest first (usually a few days after the match)."
+msgstr "Afsluttede kampe med fuld genudsendelse, højdepunkter eller kampklip, nyeste først (normalt et par dage efter kampen)."
+
+msgid "First Page"
+msgstr "Første side"
+
+msgid "First air date:"
+msgstr "Første sendedato:"
+
+msgid "First aired"
+msgstr "Første gang sendt"
+
+msgid "First movie player in buffering mode"
+msgstr "Første filmafspiller i buffertilstand"
+
+msgid "First movie player without buffering mode"
+msgstr "Første filmafspiller uden buffertilstand"
+
+msgid "Fix jump target"
+msgstr "Fastlås springmål"
+
+#, python-format
+msgid "Folder \"%s\" can not be created."
+msgstr "Mappen \"%s\" kan ikke oprettes."
+
+#, python-format
+msgid "Folder \"%s\" has been created."
+msgstr "Mappen \"%s\" er oprettet."
+
+msgid "Folder for cache data"
+msgstr "Mappe til cache-data"
+
+msgid "Folder for config data"
+msgstr "Mappe til konfigurationsdata"
+
+msgid "Folder for temporary data"
+msgstr "Mappe til midlertidige data"
+
+msgid "Followers"
+msgstr "Følgere"
+
+msgid "Following host are broken or additional python modules are needed."
+msgstr "Følgende hosts er defekte, eller der kræves yderligere Python-moduler."
+
+msgid "Font size offset"
+msgstr "Forskydning af skriftstørrelse"
+
+msgid "Food"
+msgstr "Mad"
+
+msgid "Foot & Ankle"
+msgstr "Fod & ankel"
+
+msgid "Football Live"
+msgstr "Fodbold live"
+
+msgid "For continuous playing, please press 8!"
+msgstr "Tryk på 8 for kontinuerlig afspilning!"
+
+msgid "For developers"
+msgstr "For udviklere"
+
+msgid "Force internal skin: all E2iPlayer screens"
+msgstr "Gennemtving internt skin: alle E2iPlayer-skærme"
+
+msgid "Force internal skin: main screen only"
+msgstr "Gennemtving internt skin: kun hovedskærm"
+
+msgid "Foreign movies"
+msgstr "Udenlandske film"
+
+msgid "Foreign parts only"
+msgstr "Kun fremmedsprogede dele"
+
+msgid "Foreign series"
+msgstr "Udenlandske serier"
+
+msgid "Format 'wmv' blocked in configuration."
+msgstr "Formatet 'wmv' er blokeret i konfigurationen."
+
+msgid "Formations"
+msgstr "Formationer"
+
+msgid "Fotka.pl stream :"
+msgstr "Fotka.pl stream :"
+
+msgid "Free IPTV list"
+msgstr "Gratis IPTV-liste"
+
+msgid "French"
+msgstr "Fransk"
+
+msgid "From E2 settings"
+msgstr "Fra E2-indstillinger"
+
+msgid "Full description loaded"
+msgstr "Fuld beskrivelse indlæst"
+
+msgid "Full description not available"
+msgstr "Fuld beskrivelse ikke tilgængelig"
+
+msgid "Full test"
+msgstr "Fuld test"
+
+msgid "Full test checks the INFO window :"
+msgstr "Fuld test kontrollerer INFO-vinduet :"
+
+msgid "Full test checks the next page :"
+msgstr "Fuld test kontrollerer næste side :"
+
+msgid "Full test checks the search :"
+msgstr "Fuld test kontrollerer søgningen :"
+
+msgid "Full test checks the stream link :"
+msgstr "Fuld test kontrollerer stream-linket :"
+
+msgid "Full test checks thumbnails :"
+msgstr "Fuld test kontrollerer miniaturebilleder :"
+
+msgid "GREEN"
+msgstr "GRØN"
+
+#, python-format
+msgid "Game: %s"
+msgstr "Spil: %s"
+
+msgid "Games"
+msgstr "Spil"
+
+msgid "Gaming"
+msgstr "Gaming"
+
+msgid "General"
+msgstr "Generelt"
+
+msgid "Generic error code."
+msgstr "Generisk fejlkode."
+
+msgid "Genre"
+msgstr "Genre"
+
+msgid "Genre:"
+msgstr "Genre:"
+
+#, python-format
+msgid "Genre: %s"
+msgstr "Genre: %s"
+
+msgid "Genres"
+msgstr "Genrer"
+
+msgid "Genres:"
+msgstr "Genrer:"
+
+msgid "German"
+msgstr "Tysk"
+
+msgid "Get Cloudflare job"
+msgstr "Hent Cloudflare-opgave"
+
+msgid "Get captcha job"
+msgstr "Hent captcha-opgave"
+
+msgid "Get cookies job"
+msgstr "Hent cookie-opgave"
+
+msgid "Get languages failed!"
+msgstr "Hentning af sprog mislykkedes!"
+
+msgid "Get token failed!"
+msgstr "Hentning af token mislykkedes!"
+
+msgid "GitHub API error"
+msgstr "GitHub API-fejl"
+
+msgid "Global"
+msgstr "Global"
+
+msgid "Global Search mode :"
+msgstr "Global søgetilstand :"
+
+msgid "Go to the host configuration available under blue button."
+msgstr "Gå til host-konfigurationen, som findes under den blå knap."
+
+msgid "Google Suggestions"
+msgstr "Google-forslag"
+
+msgid "Google account"
+msgstr "Google-konto"
+
+msgid "Graphic services selector"
+msgstr "Grafisk tjenestevælger"
+
+msgid "Greek"
+msgstr "Græsk"
+
+#, python-format
+msgid "Group \"%s\" already exists."
+msgstr "Gruppen \"%s\" findes allerede."
+
+#, python-format
+msgid "Group %d"
+msgstr "Gruppe %d"
+
+msgid "Group links into categories:"
+msgstr "Gruppér links i kategorier:"
+
+#, python-format
+msgid "Group with id[%s] not found."
+msgstr "Gruppe med id[%s] blev ikke fundet."
+
+msgid "Groups"
+msgstr "Grupper"
+
+msgid "HIDDEN CAM SHOW IN PROGRESS. TRY AGAIN LATER!"
+msgstr "SKJULT CAM-SHOW I GANG. PRØV IGEN SENERE!"
+
+msgid "HLS with subtitles"
+msgstr "HLS med undertekster"
+
+msgid "HLS/m3u8"
+msgstr "HLS/m3u8"
+
+msgid "HTTP/2 framing layer error."
+msgstr "HTTP/2-fejl i framing-laget."
+
+msgid "HTTP/2 stream error."
+msgstr "HTTP/2-stream-fejl."
+
+#, python-format
+msgid "HTTPS connection error \"%s\"\n"
+msgstr "HTTPS-forbindelsesfejl \"%s\"\n"
+
+msgid "Hand"
+msgstr "Hånd"
+
+msgid "Health"
+msgstr "Sundhed"
+
+msgid "Hearing impaired"
+msgstr "Hørehæmmede"
+
+msgid "Help"
+msgstr "Hjælp"
+
+#, python-format
+msgid "Hide \"%s\" group"
+msgstr "Skjul gruppen \"%s\""
+
+msgid "Hide the menu (live TV visible)"
+msgstr "Skjul menuen (live-tv synligt)"
+
+msgid "Hide titles only available in Sweden"
+msgstr "Skjul titler, der kun er tilgængelige i Sverige"
+
+msgid "Hide/Active Group"
+msgstr "Skjul/aktivér gruppe"
+
+msgid "High (or HD)"
+msgstr "Høj (eller HD)"
+
+msgid "Highlights"
+msgstr "Højdepunkter"
+
+msgid "History"
+msgstr "Historik"
+
+msgid "History of searched phrases."
+msgstr "Historik over søgte sætninger."
+
+msgid "Home"
+msgstr "Hjem"
+
+msgid "Home / Sections"
+msgstr "Hjem / sektioner"
+
+msgid "Home page"
+msgstr "Startside"
+
+msgid "Horror"
+msgstr "Gyser"
+
+msgid "Host"
+msgstr "Host"
+
+#, python-format
+msgid "Host: %s"
+msgstr "Host: %s"
+
+#, python-format
+msgid "Hosting \"%s\" not supported."
+msgstr "Hosting \"%s\" understøttes ikke."
+
+#, python-format
+msgid "Hosting \"%s\" unknown."
+msgstr "Hosting \"%s\" ukendt."
+
+#, python-format
+msgid "Hosting: %s, %s"
+msgstr "Hosting: %s, %s"
+
+msgid "Hosts"
+msgstr "Hosts"
+
+msgid "Hosts list type"
+msgstr "Type af hostliste"
+
+msgid "Hot"
+msgstr "Populært"
+
+msgid "How to solve a captcha:"
+msgstr "Sådan løser du en captcha:"
+
+msgid "Humanitarian"
+msgstr "Humanitært"
+
+msgid "Hungarian"
+msgstr "Ungarsk"
+
+msgid "I am no robot"
+msgstr "Jeg er ikke en robot"
+
+msgid "IMDb"
+msgstr "IMDb"
+
+msgid "IMDb Rating:"
+msgstr "IMDb-bedømmelse:"
+
+msgid "IMDb Suggestions"
+msgstr "IMDb-forslag"
+
+msgid "INFO"
+msgstr "INFO"
+
+#, python-format
+msgid "INFO %d rows"
+msgstr "INFO %d linjer"
+
+msgid "INFO list text"
+msgstr "INFO-listetekst"
+
+msgid "INFO opens no window"
+msgstr "INFO åbner intet vindue"
+
+msgid "INFO window"
+msgstr "INFO-vindue"
+
+msgid "INTERRUPTED"
+msgstr "AFBRUDT"
+
+msgid "IPTV Portals"
+msgstr "IPTV-portaler"
+
+msgid "Icon type"
+msgstr "Ikontype"
+
+msgid "Icons quality"
+msgstr "Ikonkvalitet"
+
+msgid "Icons size"
+msgstr "Ikonstørrelse"
+
+msgid "Image"
+msgstr "Image"
+
+msgid "Indian"
+msgstr "Indisk"
+
+msgid "Indian Movies"
+msgstr "Indiske film"
+
+msgid "Indian TV series"
+msgstr "Indiske tv-serier"
+
+msgid "Indian movies"
+msgstr "Indiske film"
+
+msgid "Indian movies (dubbed)"
+msgstr "Indiske film (dubbede)"
+
+msgid "Indian series (dubbed)"
+msgstr "Indiske serier (dubbede)"
+
+msgid "Industry"
+msgstr "Industri"
+
+msgid "Info"
+msgstr "Info"
+
+msgid "Info bar timeout"
+msgstr "Timeout for infobjælke"
+
+msgid "Information"
+msgstr "Information"
+
+msgid "Information about audio tracks not available."
+msgstr "Oplysninger om lydspor er ikke tilgængelige."
+
+msgid "Initialize web interface"
+msgstr "Initialiser webgrænseflade"
+
+msgid "Inject black iframe at video playback finish"
+msgstr "Indsæt sort iframe ved afslutning af videoafspilning"
+
+msgid "Input"
+msgstr "Input"
+
+msgid "Install E2iPlayer"
+msgstr "Installér E2iPlayer"
+
+msgid "Installed version"
+msgstr "Installeret version"
+
+#, python-format
+msgid "Installed: v%s"
+msgstr "Installeret: v%s"
+
+#, python-format
+msgid "Installed: v%s - %d commits behind %s"
+msgstr "Installeret: v%s - %d commits bagud for %s"
+
+#, python-format
+msgid "Installed: v%s - no matching release tag (local build?)"
+msgstr "Installeret: v%s - intet matchende release-tag (lokalt build?)"
+
+#, python-format
+msgid "Installed: v%s - up to date"
+msgstr "Installeret: v%s - opdateret"
+
+msgid "Interactive Learning Center(ILC)"
+msgstr "Interactive Learning Center(ILC)"
+
+msgid "Intervention"
+msgstr "Intervention"
+
+msgid "Interviews"
+msgstr "Interviews"
+
+#, python-format
+msgid "Invalid answer from %s."
+msgstr "Ugyldigt svar fra %s."
+
+msgid "Invalid email."
+msgstr "Ugyldig e-mail."
+
+msgid "Invalid name."
+msgstr "Ugyldigt navn."
+
+msgid "Invalid value."
+msgstr "Ugyldig værdi."
+
+msgid "Investigations"
+msgstr "Undersøgelser"
+
+msgid "Is this message displayed correctly?"
+msgstr "Vises denne meddelelse korrekt?"
+
+msgid "It is not allowed to call getURLRequestData from main thread."
+msgstr "Det er ikke tilladt at kalde getURLRequestData fra hovedtråden."
+
+msgid "It looks like some kind of protection. Try again later."
+msgstr "Det ligner en form for beskyttelse. Prøv igen senere."
+
+#, python-format
+msgid "It looks like your current configuration do not allow to connect to the https://%s/.\n"
+msgstr "Det ser ud til, at din nuværende konfiguration ikke tillader forbindelse til https://%s/.\n"
+
+#, python-format
+msgid "It seems that the host \"%s\" has crashed."
+msgstr "Det ser ud til, at hosten \"%s\" er gået ned."
+
+#, python-format
+msgid "It seems that the subtitle's provider \"%s\" has crashed."
+msgstr "Det ser ud til, at undertekstudbyderen \"%s\" er gået ned."
+
+#, python-format
+msgid ""
+"It seems that the video player \"%s\" does not work properly.\n"
+"\n"
+"STS: %s\n"
+"ERROR CODE: %r"
+msgstr ""
+"Det ser ud til, at videoafspilleren \"%s\" ikke fungerer korrekt.\n"
+"\n"
+"STS: %s\n"
+"FEJLKODE: %r"
+
+msgid "It seems that unrar utility is not installed."
+msgstr "Det ser ud til, at værktøjet unrar ikke er installeret."
+
+msgid "It seems that unzip utility is not installed."
+msgstr "Det ser ud til, at værktøjet unzip ikke er installeret."
+
+msgid "Italian"
+msgstr "Italiensk"
+
+#, python-format
+msgid "Item idx[%d] not found in group[%s]."
+msgstr "Element idx[%d] blev ikke fundet i gruppe[%s]."
+
+#, python-format
+msgid "Items in group \"%s\""
+msgstr "Poster i gruppen \"%s\""
+
+msgid "JDownloader script execution"
+msgstr "Udførelse af JDownloader-script"
+
+#, python-format
+msgid ""
+"JDownloader script execution failed.\n"
+"Error code: %s\n"
+msgstr ""
+"Udførelse af JDownloader-script mislykkedes.\n"
+"Fejlkode: %s\n"
+
+msgid "JDownloader script finished."
+msgstr "JDownloader-script afsluttet."
+
+msgid "JS cache"
+msgstr "JS-cache"
+
+msgid "Japanese"
+msgstr "Japansk"
+
+msgid "Japanese dramas"
+msgstr "Japanske dramaer"
+
+msgid "Japanese films"
+msgstr "Japanske film"
+
+msgid "Jobs & Positions"
+msgstr "Job & stillinger"
+
+msgid "Journal Club"
+msgstr "Journal Club"
+
+msgid "Jump"
+msgstr "Spring"
+
+msgid "Jump target was fixed so the sort order is preserved."
+msgstr "Springmålet blev fastlåst, så sorteringsrækkefølgen bevares."
+
+msgid "Jump to a selected page"
+msgstr "Spring til en valgt side"
+
+msgid "Jump to a selected page, max: {}"
+msgstr "Spring til en valgt side, maks.: {}"
+
+msgid "Keep FFmpeg command files (.iptv.cmd)"
+msgstr "Behold FFmpeg-kommandofiler (.iptv.cmd)"
+
+msgid "Keep temporary JS scripts"
+msgstr "Behold midlertidige JS-scripts"
+
+msgid "Kids"
+msgstr "Børn"
+
+msgid "Kinds"
+msgstr "Typer"
+
+msgid "Knee & Sports"
+msgstr "Knæ & sport"
+
+msgid "Knowledge"
+msgstr "Viden"
+
+msgid "Knowledge & Nature"
+msgstr "Viden & natur"
+
+msgid "Korean"
+msgstr "Koreansk"
+
+msgid "Korean TV series"
+msgstr "Koreanske tv-serier"
+
+msgid "Korean anime"
+msgstr "Koreansk anime"
+
+msgid "Korean dramas"
+msgstr "Koreanske dramaer"
+
+msgid "Korean films"
+msgstr "Koreanske film"
+
+msgid "Korean movies"
+msgstr "Koreanske film"
+
+msgid "LEFT/RIGHT at start/end of text - alternative way to switch panels"
+msgstr "VENSTRE/HØJRE i starten/slutningen af teksten - alternativ måde at skifte panel på"
+
+msgid "Language"
+msgstr "Sprog"
+
+msgid "Language of the details (TMDb, IMDb)"
+msgstr "Sprog for detaljer (TMDb, IMDb)"
+
+msgid "Language:"
+msgstr "Sprog:"
+
+msgid "Last"
+msgstr "Sidste"
+
+#, python-format
+msgid "Last Exception error: \"%s\""
+msgstr "Seneste undtagelsesfejl: \"%s\""
+
+#, python-format
+msgid "Last Exception error: '%s'"
+msgstr "Seneste undtagelsesfejl: '%s'"
+
+#, python-format
+msgid "Last Modified: %s"
+msgstr "Sidst ændret: %s"
+
+msgid "Last air date:"
+msgstr "Sidste sendedato:"
+
+msgid "Last chance"
+msgstr "Sidste chance"
+
+msgid "Last day"
+msgstr "Sidste dag"
+
+#, python-format
+msgid ""
+"Last error:\n"
+"%s"
+msgstr ""
+"Seneste fejl:\n"
+"%s"
+
+#, python-format
+msgid "Last error: \"%s\""
+msgstr "Seneste fejl: \"%s\""
+
+msgid "Last month"
+msgstr "Sidste måned"
+
+msgid "Last result"
+msgstr "Seneste resultat"
+
+msgid "Last week"
+msgstr "Sidste uge"
+
+msgid "Last.fm charts and tag pages are behind a browser check, only the radio stations can be used."
+msgstr "Last.fm-hitlister og tag-sider ligger bag en browserkontrol, kun radiostationerne kan bruges."
+
+#, python-format
+msgid "Last.fm user \"%s\" not found."
+msgstr "Last.fm-brugeren \"%s\" blev ikke fundet."
+
+msgid "Last.fm user name:"
+msgstr "Last.fm-brugernavn:"
+
+msgid "Lastest"
+msgstr "Nyeste"
+
+msgid "Latest"
+msgstr "Nyeste"
+
+msgid "Latest added"
+msgstr "Senest tilføjet"
+
+msgid "Latest anime episodes"
+msgstr "Nyeste anime-afsnit"
+
+msgid "Latest cartoon episodes"
+msgstr "Nyeste tegnefilmsafsnit"
+
+msgid "Latest dubbed episodes"
+msgstr "Nyeste dubbede afsnit"
+
+msgid "Latest episodes"
+msgstr "Nyeste afsnit"
+
+msgid "Latest episodes (airing)"
+msgstr "Nyeste afsnit (kører)"
+
+msgid "Latest episodes (finished series)"
+msgstr "Nyeste afsnit (afsluttede serier)"
+
+msgid "Latest highlights"
+msgstr "Nyeste højdepunkter"
+
+msgid "Latest update"
+msgstr "Seneste opdatering"
+
+msgid "Latest updates"
+msgstr "Nyeste opdateringer"
+
+msgid "Latest video"
+msgstr "Nyeste video"
+
+msgid "Latest videos"
+msgstr "Nyeste videoer"
+
+msgid "Latest videos from the channels you are subscribed to."
+msgstr "Nyeste videoer fra de kanaler, du abonnerer på."
+
+msgid "Latin American series"
+msgstr "Latinamerikanske serier"
+
+msgid "Latin American series (dubbed)"
+msgstr "Latinamerikanske serier (dubbede)"
+
+msgid "Latino"
+msgstr "Latino"
+
+#, python-brace-format
+msgid "Launcher URI ({url} or {address} = address of the box)"
+msgstr "Launcher-URI ({url} eller {address} = modtagerens adresse)"
+
+msgid "Law"
+msgstr "Jura"
+
+msgid "League and cup matches"
+msgstr "Liga- og pokalkampe"
+
+msgid "Leagues"
+msgstr "Ligaer"
+
+msgid "Leagues, clubs and events"
+msgstr "Ligaer, klubber og begivenheder"
+
+msgid "Lecturers"
+msgstr "Undervisere"
+
+msgid "Left"
+msgstr "Venstre"
+
+msgid "Library"
+msgstr "Bibliotek"
+
+msgid "Lifestyle"
+msgstr "Livsstil"
+
+msgid "Light / dark design"
+msgstr "Lyst / mørkt design"
+
+msgid "Lightgray"
+msgstr "Lysegrå"
+
+msgid "Like the quick test, plus the checks chosen in the host settings (Debug). Takes about 20-40 minutes."
+msgstr "Som hurtigtesten plus de kontroller, der er valgt i host-indstillingerne (Debug). Tager ca. 20-40 minutter."
+
+msgid "Liked videos"
+msgstr "Videoer, du har syntes godt om"
+
+msgid "Line Spacing"
+msgstr "Linjeafstand"
+
+msgid "Link"
+msgstr "Link"
+
+msgid "Link is not supported by the gstplayer. Please use the extelayer3 if available."
+msgstr "Linket understøttes ikke af gstplayer. Brug exteplayer3, hvis den er tilgængelig."
+
+msgid "Link protected with Google ReCaptcha v2"
+msgstr "Link beskyttet med Google ReCaptcha v2"
+
+msgid "Link protected with google recaptcha v2."
+msgstr "Link beskyttet med Google reCaptcha v2."
+
+msgid "Links from all files without categories"
+msgstr "Links fra alle filer uden kategorier"
+
+#, python-format
+msgid "Links from the file %s"
+msgstr "Links fra filen %s"
+
+msgid "List"
+msgstr "Liste"
+
+msgid "List by day"
+msgstr "Liste efter dag"
+
+msgid "List view"
+msgstr "Listevisning"
+
+#, python-format
+msgid "Listeners: %s"
+msgstr "Lyttere: %s"
+
+msgid "Live"
+msgstr "Live"
+
+msgid "Live channels"
+msgstr "Live-kanaler"
+
+msgid "Live radio"
+msgstr "Live-radio"
+
+#, python-format
+msgid "Live stream of the %s channel"
+msgstr "Livestream fra kanalen %s"
+
+msgid "Live stream on YouTube"
+msgstr "Livestream på YouTube"
+
+#, python-format
+msgid "Live stream starts %s"
+msgstr "Livestream starter %s"
+
+msgid "Live streams"
+msgstr "Livestreams"
+
+msgid "Live streams by day"
+msgstr "Livestreams efter dag"
+
+msgid "Live-action series episodes"
+msgstr "Afsnit af live-action-serier"
+
+msgid "Load"
+msgstr "Indlæs"
+
+#, python-format
+msgid "Load of the Virtual Keyboard layout \"%s\" failed due to the following error: \"%s\""
+msgstr "Indlæsning af layoutet \"%s\" til det virtuelle tastatur mislykkedes på grund af følgende fejl: \"%s\""
+
+msgid "Loading"
+msgstr "Indlæser"
+
+#, python-format
+msgid "Loading %s failed due to following error:"
+msgstr "Indlæsning af %s mislykkedes på grund af følgende fejl:"
+
+msgid "Loading failed."
+msgstr "Indlæsning mislykkedes."
+
+msgid "Loading watch data..."
+msgstr "Indlæser visningsdata..."
+
+msgid "Loading..."
+msgstr "Indlæser..."
+
+msgid "LocalMedia"
+msgstr "Lokale medier"
+
+#, python-format
+msgid "Locale ID mismatched! %s <> %s"
+msgstr "Locale-ID stemmer ikke overens! %s <> %s"
+
+msgid "Locality:"
+msgstr "Sted:"
+
+msgid "Localization"
+msgstr "Lokalisering"
+
+msgid "Lodynet offers this video only on its subscription servers (Lody Plus / VIP) for now - the free servers usually follow later."
+msgstr "Lodynet tilbyder indtil videre kun denne video på sine abonnementsservere (Lody Plus / VIP) - de gratis servere følger normalt senere."
+
+msgid "Log"
+msgstr "Log"
+
+msgid "Login failed!"
+msgstr "Login mislykkedes!"
+
+msgid "Login failed."
+msgstr "Login mislykkedes."
+
+#, python-brace-format
+msgid "Login on {0} failed."
+msgstr "Login på {0} mislykkedes."
+
+msgid "Login or password is wrong."
+msgstr "Login eller adgangskode er forkert."
+
+#, python-format
+msgid "Login to prijevodi-online.org failed: %s"
+msgstr "Login på prijevodi-online.org mislykkedes: %s"
+
+msgid "Login to prijevodi-online.org failed: the site asks for a captcha, which E2iPlayer cannot solve. Series subtitles download without an account."
+msgstr "Login på prijevodi-online.org mislykkedes: Siden kræver en captcha, som E2iPlayer ikke kan løse. Undertekster til serier kan downloades uden konto."
+
+#, python-format
+msgid ""
+"Login user \"%s\" to https://vk.com/ failed!\n"
+"Please check your login data in the IPTVPlayer configuration."
+msgstr ""
+"Login af brugeren \"%s\" på https://vk.com/ mislykkedes!\n"
+"Kontrollér dine logindata i IPTVPlayer-konfigurationen."
+
+msgid "Logs"
+msgstr "Logs"
+
+msgid "Long list"
+msgstr "Lang liste"
+
+msgid "Longest"
+msgstr "Længste"
+
+msgid "Low"
+msgstr "Lav"
+
+msgid "MENU"
+msgstr "MENU"
+
+msgid "MENU → Add new entry: type a new search term to add to the history."
+msgstr "MENU → Tilføj ny post: Indtast et nyt søgeord, der skal føjes til historikken."
+
+msgid "MENU → Enable/Disable reordering: same as GREEN (pick up/move/drop with OK, UP/DOWN)."
+msgstr "MENU → Aktivér/deaktivér omarrangering: samme som GRØN (tag op/flyt/slip med OK, OP/NED)."
+
+msgid "MENU → Fix/Unfix jump target: sets what happens when an entry is reused elsewhere."
+msgstr "MENU → Fastlås/frigør springmål: bestemmer, hvad der sker, når en post genbruges andetsteds."
+
+msgid "MENU → Reset to saved order: undo unsaved changes, reload from disk."
+msgstr "MENU → Nulstil til gemt rækkefølge: fortryd ikke-gemte ændringer, genindlæs fra disk."
+
+msgid "MENU → Sort A-Z / Sort Z-A: sort all entries alphabetically."
+msgstr "MENU → Sortér A-Z / Sortér Z-A: sortér alle poster alfabetisk."
+
+msgid "MENU=Options"
+msgstr "MENU=Valgmuligheder"
+
+#, python-format
+msgid "MOVE: %s"
+msgstr "FLYT: %s"
+
+msgid "MOVING"
+msgstr "FLYTTER"
+
+msgid "MP3Quran live radio"
+msgstr "MP3Quran live-radio"
+
+msgid "Main"
+msgstr "Hovedside"
+
+msgid "Main menu"
+msgstr "Hovedmenu"
+
+#, python-format
+msgid "Make directory [%s]"
+msgstr "Opret mappe [%s]"
+
+msgid "Manager status:"
+msgstr "Managerstatus:"
+
+msgid "Mark downloaded items"
+msgstr "Markér downloadede poster"
+
+msgid "Mark favourite items"
+msgstr "Markér favoritter"
+
+msgid "Match cuts"
+msgstr "Kampklip"
+
+msgid "Match not started yet"
+msgstr "Kampen er ikke startet endnu"
+
+msgid "Matches of the national teams"
+msgstr "Landsholdskampe"
+
+msgid "Matching entries"
+msgstr "Matchende poster"
+
+msgid "Max items per page"
+msgstr "Maks. antal poster pr. side"
+
+msgid "Max number of parallel downloads has been reached."
+msgstr "Det maksimale antal parallelle downloads er nået."
+
+msgid "Maximum log file size"
+msgstr "Maksimal størrelse på logfil"
+
+msgid "Medtryx Marketing"
+msgstr "Medtryx Marketing"
+
+msgid "Meetings"
+msgstr "Møder"
+
+msgid "Members"
+msgstr "Medlemmer"
+
+msgid "Menu"
+msgstr "Menu"
+
+msgid "Military"
+msgstr "Militær"
+
+msgid "Mini series"
+msgstr "Miniserier"
+
+msgid "Missed"
+msgstr "Gået glip af"
+
+msgid "Missed the show?"
+msgstr "Gik du glip af udsendelsen?"
+
+msgid "Missing API key - set it in Settings, Web streams, Windy Webcams"
+msgstr "API-nøgle mangler - angiv den under Indstillinger, Web streams, Windy Webcams"
+
+msgid "Mix"
+msgstr "Mix"
+
+msgid "MixDrop: this file is not available as a video stream (deleted or download only)."
+msgstr "MixDrop: Denne fil er ikke tilgængelig som videostream (slettet eller kun download)."
+
+msgid "Mixes"
+msgstr "Mixes"
+
+msgid "Models"
+msgstr "Modeller"
+
+msgid "More"
+msgstr "Mere"
+
+msgid "More Categories"
+msgstr "Flere kategorier"
+
+msgid "More Channels"
+msgstr "Flere kanaler"
+
+msgid "More Models"
+msgstr "Flere modeller"
+
+msgid "More Pornstars"
+msgstr "Flere pornostjerner"
+
+msgid "More important"
+msgstr "Vigtigere"
+
+msgid "More results"
+msgstr "Flere resultater"
+
+msgid "Most Popular"
+msgstr "Mest populære"
+
+msgid "Most Watched"
+msgstr "Mest sete"
+
+msgid "Most commented"
+msgstr "Mest kommenterede"
+
+msgid "Most discussed"
+msgstr "Mest diskuterede"
+
+msgid "Most favourited"
+msgstr "Flest gange favorit"
+
+msgid "Most listened anasheed"
+msgstr "Mest hørte anasheed"
+
+msgid "Most listened recitations"
+msgstr "Mest hørte recitationer"
+
+msgid "Most popular"
+msgstr "Mest populære"
+
+msgid "Most rated"
+msgstr "Flest bedømmelser"
+
+msgid "Most recent"
+msgstr "Nyeste"
+
+msgid "Most viewed"
+msgstr "Mest sete"
+
+msgid "Most viewed movies"
+msgstr "Mest sete film"
+
+msgid "Most viewed series"
+msgstr "Mest sete serier"
+
+#, python-format
+msgid ""
+"Mount ISO file [%s] on [%s] failed.\n"
+"Return code[%s].\n"
+"Return data[%s]."
+msgstr ""
+"Montering af ISO-filen [%s] på [%s] mislykkedes.\n"
+"Returkode[%s].\n"
+"Returdata[%s]."
+
+msgid "Move"
+msgstr "Flyt"
+
+msgid "Move failed."
+msgstr "Flytning mislykkedes."
+
+msgid "Movie"
+msgstr "Film"
+
+msgid "Movie collections"
+msgstr "Filmsamlinger"
+
+msgid "Movie player selection list"
+msgstr "Valgliste for filmafspiller"
+
+msgid "Movies"
+msgstr "Film"
+
+msgid "Movies and series"
+msgstr "Film og serier"
+
+msgid "Movies genres"
+msgstr "Filmgenrer"
+
+#, python-format
+msgid "Moving file from \"%s\" to \"%s\" failed.\n"
+msgstr "Flytning af fil fra \"%s\" til \"%s\" mislykkedes.\n"
+
+#, python-format
+msgid "Moving playback buffer to the download manager failed with the following error \"%s\""
+msgstr "Flytning af afspilningsbufferen til downloadhåndteringen mislykkedes med følgende fejl \"%s\""
+
+msgid "Munshids"
+msgstr "Munshids"
+
+msgid "Music"
+msgstr "Musik"
+
+msgid "My JDownloader reCAPTCHA v2 solution"
+msgstr "My JDownloader reCAPTCHA v2-løsning"
+
+msgid "My list"
+msgstr "Min liste"
+
+msgid "My subscriptions"
+msgstr "Mine abonnementer"
+
+msgid "MyE2i (solve on your phone/PC)"
+msgstr "MyE2i (løs på din telefon/pc)"
+
+msgid "MyE2i - how to solve a captcha"
+msgstr "MyE2i - sådan løser du en captcha"
+
+msgid "MyE2i Cloudflare solution"
+msgstr "MyE2i Cloudflare-løsning"
+
+msgid "MyE2i browser check solution"
+msgstr "MyE2i løsning af browserkontrol"
+
+msgid "MyE2i debug snapshot received - see the debug log."
+msgstr "MyE2i-debug-snapshot modtaget - se debug-loggen."
+
+msgid "MyE2i extension is outdated - please update it."
+msgstr "MyE2i-udvidelsen er forældet - opdatér den."
+
+msgid "MyE2i extension: increase security"
+msgstr "MyE2i-udvidelse: øg sikkerheden"
+
+msgid "MyE2i reCAPTCHA solution"
+msgstr "MyE2i reCAPTCHA-løsning"
+
+#, python-format
+msgid ""
+"MyE2i script execution failed.\n"
+"Error code: %s\n"
+msgstr ""
+"Udførelse af MyE2i-script mislykkedes.\n"
+"Fejlkode: %s\n"
+
+msgid "MyE2i script finished."
+msgstr "MyE2i-script afsluttet."
+
+msgid "MyE2i: close the start page when done"
+msgstr "MyE2i: luk startsiden, når du er færdig"
+
+msgid "MyE2i: offer to open the page in (Android)"
+msgstr "MyE2i: tilbyd at åbne siden i (Android)"
+
+msgid ""
+"NO VIDEOS FOUND FOR NOW! \n"
+"CHECK BELOW ADVANCE SEARCH RESULTS!"
+msgstr ""
+"INGEN VIDEOER FUNDET LIGE NU! \n"
+"SE RESULTATERNE AF DEN AVANCEREDE SØGNING NEDENFOR!"
+
+msgid "Name cannot be empty."
+msgstr "Navnet må ikke være tomt."
+
+msgid ""
+"Name is not valid.\n"
+"Please remove special characters."
+msgstr ""
+"Navnet er ugyldigt.\n"
+"Fjern specialtegn."
+
+msgid "Name:"
+msgstr "Navn:"
+
+msgid "Needs extension v1.18+. Opens the page in this browser, waits until it is fully rendered (Cloudflare challenge included, solve it if it shows up) and sends the rendered HTML, the fetch/XHR calls and the cookie names to the box debug log."
+msgstr "Kræver udvidelsen v1.18+. Åbner siden i denne browser, venter, til den er fuldt gengivet (inklusive Cloudflare-udfordring - løs den, hvis den vises), og sender den gengivne HTML, fetch/XHR-kaldene og cookienavnene til modtagerens debug-log."
+
+msgid "Netflix movies"
+msgstr "Netflix-film"
+
+msgid "Netflix series"
+msgstr "Netflix-serier"
+
+msgid "Network"
+msgstr "Kanal"
+
+#, python-format
+msgid "Network failed %s."
+msgstr "Netværk mislykkedes %s."
+
+msgid "Network failure (receive)."
+msgstr "Netværksfejl (modtagelse)."
+
+msgid "Network failure (send)."
+msgstr "Netværksfejl (afsendelse)."
+
+msgid "Network failure."
+msgstr "Netværksfejl."
+
+msgid "New"
+msgstr "Ny"
+
+msgid "New dir"
+msgstr "Ny mappe"
+
+msgid "New entry"
+msgstr "Ny post"
+
+msgid "New episodes"
+msgstr "Nye afsnit"
+
+msgid "New icons will not be available."
+msgstr "Nye ikoner vil ikke være tilgængelige."
+
+msgid "New links"
+msgstr "Nye links"
+
+msgid "New since installed version"
+msgstr "Nyt siden installeret version"
+
+msgid "Newest Episodes"
+msgstr "Nyeste afsnit"
+
+msgid "Newest videos (all YouTube channels)"
+msgstr "Nyeste videoer (alle YouTube-kanaler)"
+
+msgid "Newest videos of a YouTube channel in a group"
+msgstr "Nyeste videoer fra en YouTube-kanal i en gruppe"
+
+msgid "News"
+msgstr "Nyheder"
+
+msgid "News (tagesschau)"
+msgstr "Nyheder (tagesschau)"
+
+msgid "News Poland"
+msgstr "Nyheder Polen"
+
+msgid "Next"
+msgstr "Næste"
+
+msgid "Next page"
+msgstr "Næste side"
+
+msgid "No"
+msgstr "Nej"
+
+msgid "No YouTube video found for this track."
+msgstr "Ingen YouTube-video fundet til dette nummer."
+
+msgid "No channels with an archive on this portal."
+msgstr "Ingen kanaler med arkiv på denne portal."
+
+msgid "No description available."
+msgstr "Ingen beskrivelse tilgængelig."
+
+msgid "No episodes available yet."
+msgstr "Ingen afsnit tilgængelige endnu."
+
+msgid "No episodes found."
+msgstr "Ingen afsnit fundet."
+
+msgid "No free player available for this title."
+msgstr "Ingen gratis afspiller tilgængelig for denne titel."
+
+msgid "No free videos or live streams here at the moment."
+msgstr "Ingen gratis videoer eller livestreams her i øjeblikket."
+
+msgid "No host is open."
+msgstr "Ingen host er åben."
+
+msgid ""
+"No item to display. \n"
+"Press OK to refresh.\n"
+msgstr ""
+"Intet at vise. \n"
+"Tryk på OK for at opdatere.\n"
+
+msgid "No items found"
+msgstr "Ingen poster fundet"
+
+msgid "No matching entries found."
+msgstr "Ingen matchende poster fundet."
+
+msgid "No player found for this title."
+msgstr "Ingen afspiller fundet til denne titel."
+
+msgid "No problems occurred."
+msgstr "Der opstod ingen problemer."
+
+msgid "No programme guide for this channel."
+msgstr "Ingen programoversigt for denne kanal."
+
+msgid "No recorded programmes on this day."
+msgstr "Ingen optagede udsendelser på denne dag."
+
+msgid "No replays in these days"
+msgstr "Ingen genudsendelser i disse dage"
+
+#, python-format
+msgid "No results found for: %s"
+msgstr "Ingen resultater fundet for: %s"
+
+msgid "No self-test result yet."
+msgstr "Intet selvtestresultat endnu."
+
+msgid "No storage found for the cache folder. The cache folder will be switched to the plugin's own cache directory."
+msgstr "Intet lager fundet til cache-mappen. Cache-mappen skiftes til pluginnets egen cache-mappe."
+
+msgid "No storage found for the downloads location. Where would you like to save your downloads?"
+msgstr "Intet lager fundet til download-placeringen. Hvor vil du gemme dine downloads?"
+
+msgid "No stream available"
+msgstr "Ingen stream tilgængelig"
+
+msgid "No streams are available for this title yet."
+msgstr "Der er endnu ingen streams tilgængelige for denne titel."
+
+msgid "No subtitle file found in the archive."
+msgstr "Ingen undertekstfil fundet i arkivet."
+
+msgid "No subtitles available for this title."
+msgstr "Ingen undertekster tilgængelige for denne titel."
+
+msgid "No subtitles found."
+msgstr "Ingen undertekster fundet."
+
+#, python-format
+msgid "No subtitles in %s. Available: %s"
+msgstr "Ingen undertekster på %s. Tilgængelige: %s"
+
+msgid "No title to search for."
+msgstr "Ingen titel at søge efter."
+
+msgid "No valid entitlement found for asset."
+msgstr "Ingen gyldig rettighed fundet for mediet."
+
+msgid "No valid links available."
+msgstr "Ingen gyldige links tilgængelige."
+
+msgid "No video ID available"
+msgstr "Intet video-ID tilgængeligt"
+
+msgid "None"
+msgstr "Ingen"
+
+msgid "Normalize item / file names (Show - SxxExx - Title)"
+msgstr "Normaliser element-/filnavne (Serie - SxxExx - Titel)"
+
+msgid "Not available in your country (geo-blocking)."
+msgstr "Ikke tilgængelig i dit land (geoblokering)."
+
+msgid "Not available yet"
+msgstr "Endnu ikke tilgængelig"
+
+msgid "Not possible (no enigma2 session)."
+msgstr "Ikke muligt (ingen enigma2-session)."
+
+msgid "Nothing available here at the moment (only upcoming broadcasts)."
+msgstr "Intet tilgængeligt her i øjeblikket (kun kommende udsendelser)."
+
+msgid "Nothing found on subdl.com."
+msgstr "Intet fundet på subdl.com."
+
+msgid "Nothing found. This site only finds Russian (Cyrillic) search terms."
+msgstr "Intet fundet. Denne side finder kun russiske (kyrilliske) søgeord."
+
+msgid "Nothing open"
+msgstr "Intet åbent"
+
+msgid "Nothing to save - the debug log is not active."
+msgstr "Intet at gemme - debug-loggen er ikke aktiv."
+
+msgid "Now"
+msgstr "Nu"
+
+msgid "Number of columns"
+msgstr "Antal kolonner"
+
+msgid "Number of downloaded files simultaneously"
+msgstr "Antal samtidige downloads"
+
+#, python-format
+msgid "Number of items in search history: %d"
+msgstr "Antal poster i søgehistorikken: %d"
+
+msgid "Number of rotated files to keep"
+msgstr "Antal roterede filer, der skal beholdes"
+
+msgid "Number of rows"
+msgstr "Antal rækker"
+
+msgid "Numeric keypad for numbers"
+msgstr "Numerisk tastatur til tal"
+
+msgid "OFFLINE"
+msgstr "OFFLINE"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "OMDb API key (free at omdbapi.com)"
+msgstr "OMDb API-nøgle (gratis på omdbapi.com)"
+
+msgid "Off"
+msgstr "Fra"
+
+msgid "Offline channels"
+msgstr "Offline kanaler"
+
+msgid "Older days"
+msgstr "Ældre dage"
+
+msgid "Older replays"
+msgstr "Ældre genudsendelser"
+
+msgid "On Air"
+msgstr "On Air"
+
+msgid "One link mode"
+msgstr "Enkeltlink-tilstand"
+
+#, python-format
+msgid "Only available in %s"
+msgstr "Kun tilgængelig i %s"
+
+msgid "Only files in the downloads folder can be deleted."
+msgstr "Kun filer i download-mappen kan slettes."
+
+msgid "Only links can be moved to a group."
+msgstr "Kun links kan flyttes til en gruppe."
+
+#, python-format
+msgid "Only the %d oldest new commits are shown"
+msgstr "Kun de %d ældste nye commits vises"
+
+msgid "Only the sites that failed in the last run, same checks."
+msgstr "Kun de sider, der fejlede i sidste kørsel, med de samme tjek."
+
+#, python-format
+msgid "Only unsupported hosters available: %s"
+msgstr "Kun ikke-understøttede hostere tilgængelige: %s"
+
+msgid "Open issues"
+msgstr "Åbne issues"
+
+msgid "Open pull requests"
+msgstr "Åbne pull requests"
+
+#, python-format
+msgid "Open this page in %s"
+msgstr "Åbn denne side i %s"
+
+msgid "Open this page in the chosen browser"
+msgstr "Åbn denne side i den valgte browser"
+
+#, python-format
+msgid "OpenSubtitles.com login failed for user \"%s\". Please check your login and password."
+msgstr "Login på OpenSubtitles.com mislykkedes for brugeren \"%s\". Kontrollér dit brugernavn og din adgangskode."
+
+msgid "OpenSubtitles.com needs an API key. Create a free API consumer at https://www.opensubtitles.com/consumers and enter its key in the E2iPlayer settings (Subtitles)."
+msgstr "OpenSubtitles.com kræver en API-nøgle. Opret en gratis API-consumer på https://www.opensubtitles.com/consumers, og indtast nøglen i E2iPlayer-indstillingerne (Undertekster)."
+
+#, python-format
+msgid "OpenSubtitles.com rejected the request (HTTP %s). Please check the API key in the E2iPlayer settings."
+msgstr "OpenSubtitles.com afviste forespørgslen (HTTP %s). Kontrollér API-nøglen i E2iPlayer-indstillingerne."
+
+msgid "OpenSubtitles.org sent a \"become VIP member\" note instead of the subtitle (download limit reached?)."
+msgstr "OpenSubtitles.org sendte en \"bliv VIP-medlem\"-besked i stedet for underteksten (downloadgrænse nået?)."
+
+msgid "Opening. Please wait..."
+msgstr "Åbner. Vent venligst..."
+
+msgid "Operation aborted!"
+msgstr "Handlingen blev afbrudt!"
+
+msgid "Operation timed out."
+msgstr "Tidsgrænsen for handlingen blev overskredet."
+
+msgid "Options"
+msgstr "Valgmuligheder"
+
+msgid "Options (select language, clear search history, settings)"
+msgstr "Valgmuligheder (vælg sprog, ryd søgehistorik, indstillinger)"
+
+msgid "Order of user links:"
+msgstr "Rækkefølge af brugerlinks:"
+
+msgid "Order stays fixed - useful for T9 browsing."
+msgstr "Rækkefølgen forbliver fast - nyttigt ved T9-gennemsyn."
+
+msgid "Original Title:"
+msgstr "Originaltitel:"
+
+#, python-format
+msgid "Original language: %s"
+msgstr "Originalsprog: %s"
+
+msgid "Original title"
+msgstr "Originaltitel"
+
+msgid "Original version"
+msgstr "Originalversion"
+
+msgid "Other"
+msgstr "Andet"
+
+msgid "Other dramas (Chinese, Thai, ...)"
+msgstr "Andre dramaer (kinesiske, thailandske, ...)"
+
+msgid "Other films"
+msgstr "Andre film"
+
+msgid "Other seasons"
+msgstr "Andre sæsoner"
+
+msgid "Others"
+msgstr "Andre"
+
+msgid "Out of memory."
+msgstr "Ikke nok hukommelse."
+
+msgid "Own launcher URI"
+msgstr "Egen launcher-URI"
+
+msgid "Own model"
+msgstr "Egen model"
+
+msgid "PAGE UP/PAGE DOWN"
+msgstr "SIDE OP/SIDE NED"
+
+msgid "PAY"
+msgstr "PAY"
+
+msgid "PENDING"
+msgstr "AFVENTER"
+
+msgid "PLAY"
+msgstr "PLAY"
+
+msgid "PREVIOUS/NEXT"
+msgstr "FORRIGE/NÆSTE"
+
+#, python-format
+msgid "PRIVATE - wait %s seconds"
+msgstr "PRIVAT - vent %s sekunder"
+
+msgid "PRIVATE - wait a few seconds"
+msgstr "PRIVAT - vent et par sekunder"
+
+msgid "Page not found - please check the address."
+msgstr "Siden blev ikke fundet - kontrollér adressen."
+
+msgid "Page:"
+msgstr "Side:"
+
+msgid "Paid content"
+msgstr "Betalt indhold"
+
+msgid "Parse error."
+msgstr "Fortolkningsfejl."
+
+msgid "Part"
+msgstr "Del"
+
+msgid "Partial file - transfer ended early."
+msgstr "Ufuldstændig fil - overførslen sluttede for tidligt."
+
+msgid "Password:"
+msgstr "Adgangskode:"
+
+msgid "Past premieres"
+msgstr "Tidligere premierer"
+
+#, python-format
+msgid "Paste \"%s\""
+msgstr "Indsæt \"%s\""
+
+msgid "Path to xxxlist.txt :"
+msgstr "Sti til xxxlist.txt :"
+
+msgid "Path to ytlist.txt, urllist.txt"
+msgstr "Sti til ytlist.txt, urllist.txt"
+
+msgid "Pathology"
+msgstr "Patologi"
+
+msgid "Pathology Rounds"
+msgstr "Patologirunder"
+
+msgid "Patriotism"
+msgstr "Patriotisme"
+
+msgid "Pediatrics"
+msgstr "Pædiatri"
+
+msgid "People"
+msgstr "Personer"
+
+msgid "Persons"
+msgstr "Personer"
+
+msgid "Philosophy"
+msgstr "Filosofi"
+
+msgid "Physical Exam"
+msgstr "Fysisk undersøgelse"
+
+msgid "Pin has been changed."
+msgstr "PIN-koden er ændret."
+
+msgid "Pin incorrect!"
+msgstr "Forkert PIN-kode!"
+
+msgid "Pin protection for configuration"
+msgstr "PIN-beskyttelse af konfigurationen"
+
+msgid "Pin protection for plugin"
+msgstr "PIN-beskyttelse af plugin"
+
+msgid "Pin protection for this host"
+msgstr "PIN-beskyttelse af denne host"
+
+#, python-format
+msgid "Play with [%s] player"
+msgstr "Afspil med [%s]-afspiller"
+
+msgid "Playback UHD :"
+msgstr "Afspilning UHD :"
+
+#, python-format
+msgid "Player %s"
+msgstr "Afspiller %s"
+
+#, python-format
+msgid "Player %s: %s"
+msgstr "Afspiller %s: %s"
+
+msgid "Player Skin"
+msgstr "Afspiller-skin"
+
+msgid "Player data parsing error."
+msgstr "Fejl ved fortolkning af afspillerdata."
+
+msgid "Playing on the TV is not possible (no enigma2 session)."
+msgstr "Afspilning på tv'et er ikke mulig (ingen enigma2-session)."
+
+msgid "Playlist"
+msgstr "Playliste"
+
+msgid "Playlists"
+msgstr "Playlister"
+
+msgid "Plays"
+msgstr "Teaterstykker"
+
+#, python-brace-format
+msgid ""
+"Please Open site:\n"
+"http://{0}:{1}\n"
+"in a web browser with the MyE2i extension installed"
+msgstr ""
+"Åbn siden:\n"
+"http://{0}:{1}\n"
+"i en webbrowser med MyE2i-udvidelsen installeret"
+
+msgid "Please configure Xtream (blue button)"
+msgstr "Konfigurer Xtream (blå knap)"
+
+msgid "Please configure the Stalker portal (blue button)"
+msgstr "Konfigurer Stalker-portalen (blå knap)"
+
+#, python-format
+msgid "Please consider restart your Engima2 and agree to install the %s utlity when the %s will propose this."
+msgstr "Overvej at genstarte Enigma2, og accepter at installere hjælpeprogrammet %s, når %s foreslår det."
+
+msgid "Please enter a search text."
+msgstr "Indtast en søgetekst."
+
+msgid "Please enter a valid link (http:// or https://)."
+msgstr "Indtast et gyldigt link (http:// eller https://)."
+
+#, python-format
+msgid "Please enter the %s login and password in the E2iPlayer settings (Captcha)."
+msgstr "Indtast brugernavn og adgangskode til %s i E2iPlayer-indstillingerne (Captcha)."
+
+msgid "Please make sure that the folder for cache data (set in the configuration) is writable."
+msgstr "Sørg for, at mappen til cache-data (angivet i konfigurationen) er skrivbar."
+
+msgid "Please register and set login and password in the host configuration, to solve this problems permanently."
+msgstr "Registrer dig, og angiv brugernavn og adgangskode i host-konfigurationen for at løse disse problemer permanent."
+
+msgid "Please select a group of favourites."
+msgstr "Vælg en favoritgruppe."
+
+msgid "Please select an entry."
+msgstr "Vælg en post."
+
+msgid "Please select the link first."
+msgstr "Vælg linket først."
+
+#, python-format
+msgid "Please set valid %s in the %s configuration."
+msgstr "Angiv et gyldigt %s i %s-konfigurationen."
+
+msgid "Please solve to continue downloads with:"
+msgstr "Løs for at fortsætte downloads med:"
+
+#, python-format
+msgid "Please visit \"%s\" and confirm that you are human."
+msgstr "Besøg \"%s\", og bekræft, at du er et menneske."
+
+#, python-format
+msgid "Please visit %s to learn how to redirect this task to the external device."
+msgstr "Besøg %s for at lære, hvordan du omdirigerer denne opgave til den eksterne enhed."
+
+msgid "Please wait - downloading initialization data."
+msgstr "Vent venligst - henter initialiseringsdata."
+
+msgid "Please wait for initialization data."
+msgstr "Vent venligst på initialiseringsdata."
+
+msgid "Please wait, the previous action is still running."
+msgstr "Vent venligst, den forrige handling kører stadig."
+
+msgid "Please wait..."
+msgstr "Vent venligst..."
+
+msgid "Podcasts"
+msgstr "Podcasts"
+
+msgid "Podcasts by category"
+msgstr "Podcasts efter kategori"
+
+msgid "Podcasts by station"
+msgstr "Podcasts efter station"
+
+msgid "Poland"
+msgstr "Polen"
+
+msgid "Polish"
+msgstr "Polsk"
+
+msgid "Polish dubbing"
+msgstr "Polsk dubbing"
+
+msgid "Polish films"
+msgstr "Polske film"
+
+msgid "Polish subtitles"
+msgstr "Polske undertekster"
+
+msgid "Polish voice-over"
+msgstr "Polsk speak"
+
+msgid "Politics"
+msgstr "Politik"
+
+msgid "Popular"
+msgstr "Populært"
+
+msgid "Popular episodes"
+msgstr "Populære afsnit"
+
+msgid "Popular movies"
+msgstr "Populære film"
+
+msgid "Popular series"
+msgstr "Populære serier"
+
+msgid "Popular sports"
+msgstr "Populære sportsgrene"
+
+msgid "Popularity"
+msgstr "Popularitet"
+
+msgid "Pornstars"
+msgstr "Pornostjerner"
+
+#, python-format
+msgid "Portal %d - %s (optional, from the MAG box):"
+msgstr "Portal %d - %s (valgfri, fra MAG-boksen):"
+
+#, python-format
+msgid "Portal %d - MAC address (00:1A:79:...):"
+msgstr "Portal %d - MAC-adresse (00:1A:79:...):"
+
+#, python-format
+msgid "Portal %d - name (optional):"
+msgstr "Portal %d - navn (valgfrit):"
+
+#, python-format
+msgid "Portal %d - portal URL (http://host:port/c/):"
+msgstr "Portal %d - portal-URL (http://host:port/c/):"
+
+#, python-format
+msgid "Portal URL and MAC address in the host configuration, as the provider gives them out. More portals: %s in the EStalker format (portal URL, then its MAC addresses, one per line)."
+msgstr "Portal-URL og MAC-adresse i host-konfigurationen, som udbyderen udleverer dem. Flere portaler: %s i EStalker-format (portal-URL, derefter dens MAC-adresser, én pr. linje)."
+
+msgid "Portuguese"
+msgstr "Portugisisk"
+
+msgid "Powerpoint Presentation"
+msgstr "PowerPoint-præsentation"
+
+msgid "Practice Management"
+msgstr "Praksisledelse"
+
+msgid "Prefer MP4 over HLS:"
+msgstr "Foretræk MP4 frem for HLS:"
+
+msgid "Prefered format"
+msgstr "Foretrukket format"
+
+msgid "Prefered quality"
+msgstr "Foretrukken kvalitet"
+
+msgid "Preferred streaming protocol"
+msgstr "Foretrukken streamingprotokol"
+
+msgid "Preferred video quality:"
+msgstr "Foretrukken videokvalitet:"
+
+msgid "Premium"
+msgstr "Premium"
+
+msgid "Premium user"
+msgstr "Premium-bruger"
+
+msgid "Previous Page"
+msgstr "Forrige side"
+
+msgid "Previous days"
+msgstr "Tidligere dage"
+
+msgid "Price:"
+msgstr "Pris:"
+
+msgid "Pro wrestling"
+msgstr "Pro-wrestling"
+
+msgid "Production:"
+msgstr "Produktion:"
+
+msgid "Professional Networks"
+msgstr "Professionelle netværk"
+
+msgid "Professionals"
+msgstr "Professionelle"
+
+msgid "Program"
+msgstr "Program"
+
+msgid "Program A-Z"
+msgstr "Programmer A-Z"
+
+msgid "Program for file downloads (HTTP/FTP)"
+msgstr "Program til fildownloads (HTTP/FTP)"
+
+msgid "Programme archive (last 7 days)"
+msgstr "Programarkiv (sidste 7 dage)"
+
+msgid "Programme archive:"
+msgstr "Programarkiv:"
+
+msgid "Programmes"
+msgstr "Programmer"
+
+msgid "Programmes of the last days of the channels with an archive"
+msgstr "Programmer fra de seneste dage på kanaler med arkiv"
+
+msgid "Promote item"
+msgstr "Prioriter element"
+
+msgid "Protocol errors."
+msgstr "Protokolfejl."
+
+msgid "Published"
+msgstr "Udgivet"
+
+msgid "Python modules"
+msgstr "Python-moduler"
+
+msgid "Python was not found on the receiver."
+msgstr "Python blev ikke fundet på modtageren."
+
+msgid "Quality"
+msgstr "Kvalitet"
+
+msgid "Quality:"
+msgstr "Kvalitet:"
+
+msgid "Quick test: menu and a list with videos"
+msgstr "Hurtigtest: menu og en liste med videoer"
+
+msgid "RAM buffer size [MB] for local files"
+msgstr "RAM-bufferstørrelse [MB] for lokale filer"
+
+msgid "RAM buffer size [MB] for network protocols"
+msgstr "RAM-bufferstørrelse [MB] for netværksprotokoller"
+
+msgid "RED"
+msgstr "RØD"
+
+msgid "REWIND"
+msgstr "SPOL TILBAGE"
+
+msgid "Radio"
+msgstr "Radio"
+
+msgid "Radio iframe file"
+msgstr "Radio-iframe-fil"
+
+msgid "Radio station - live stream"
+msgstr "Radiostation - livestream"
+
+msgid "Radio stations"
+msgstr "Radiostationer"
+
+msgid "Radiology Rounds"
+msgstr "Radiologirunder"
+
+msgid "Ramadan"
+msgstr "Ramadan"
+
+msgid "Ramadan series"
+msgstr "Ramadan-serier"
+
+msgid "Random"
+msgstr "Tilfældig"
+
+msgid "Random selection"
+msgstr "Tilfældigt udvalg"
+
+msgid "Randomize a playlist"
+msgstr "Bland en playliste"
+
+msgid "Range request not supported (resume failed)."
+msgstr "Range-forespørgsel understøttes ikke (genoptagelse mislykkedes)."
+
+msgid "Ranking"
+msgstr "Rangliste"
+
+msgid "Rated"
+msgstr "Aldersgrænse"
+
+msgid "Rated:"
+msgstr "Aldersgrænse:"
+
+msgid "Rating"
+msgstr "Bedømmelse"
+
+#, python-format
+msgid "Rating %s"
+msgstr "Bedømmelse %s"
+
+msgid "Rating:"
+msgstr "Bedømmelse:"
+
+#, python-format
+msgid "Rating: %s"
+msgstr "Bedømmelse: %s"
+
+msgid "Read by"
+msgstr "Læst af"
+
+msgid "Read error."
+msgstr "Læsefejl."
+
+msgid "Reading binaries..."
+msgstr "Læser binære filer..."
+
+msgid "Reading..."
+msgstr "Læser..."
+
+msgid "Recent"
+msgstr "Seneste"
+
+msgid "Recently added"
+msgstr "Senest tilføjet"
+
+msgid "Reciters"
+msgstr "Recitatorer"
+
+msgid "Recommended"
+msgstr "Anbefalet"
+
+msgid "Recon"
+msgstr "Rekonstruktion"
+
+msgid "Referee"
+msgstr "Dommer"
+
+msgid "Refresh"
+msgstr "Opdater"
+
+msgid "Refreshing"
+msgstr "Opdaterer"
+
+#, python-format
+msgid "Refusing to empty \"%s\" - it also holds \"%s\" (downloads, buffering, cache or config folder). Check the folder paths in the storage configuration."
+msgstr "Nægter at tømme \"%s\" - den indeholder også \"%s\" (download-, buffer-, cache- eller konfigurationsmappe). Kontrollér mappestierne i lagerkonfigurationen."
+
+#, python-format
+msgid "Refusing to empty \"%s\" - this does not look like a dedicated cache/config folder. Check the folder paths in the storage configuration."
+msgstr "Nægter at tømme \"%s\" - den ligner ikke en dedikeret cache-/konfigurationsmappe. Kontrollér mappestierne i lagerkonfigurationen."
+
+msgid "Regions"
+msgstr "Regioner"
+
+msgid "Release"
+msgstr "Udgivelse"
+
+msgid "Released"
+msgstr "Udgivet"
+
+msgid "Released:"
+msgstr "Udgivet:"
+
+msgid "Releases"
+msgstr "Udgivelser"
+
+msgid "Relevance"
+msgstr "Relevans"
+
+msgid "Religion"
+msgstr "Religion"
+
+msgid "Remaining:"
+msgstr "Resterende:"
+
+msgid "Remember a host's pin until E2iPlayer is closed"
+msgstr "Husk en hosts PIN-kode, indtil E2iPlayer lukkes"
+
+msgid "Remember last search entry"
+msgstr "Husk sidste søgning"
+
+msgid "Remember last search history selection"
+msgstr "Husk sidste valg i søgehistorikken"
+
+msgid "Remember last watched position"
+msgstr "Husk sidst sete position"
+
+msgid "Remove"
+msgstr "Fjern"
+
+#, python-format
+msgid "Remove \"%s\" item"
+msgstr "Fjern elementet \"%s\""
+
+msgid "Remove file"
+msgstr "Fjern fil"
+
+msgid "Remove from favorites"
+msgstr "Fjern fra favoritter"
+
+msgid "Remove group"
+msgstr "Fjern gruppe"
+
+msgid "Remove item"
+msgstr "Fjern element"
+
+msgid "Remove thumbnails"
+msgstr "Fjern miniaturebilleder"
+
+msgid "Rename"
+msgstr "Omdøb"
+
+msgid "Rename file"
+msgstr "Omdøb fil"
+
+msgid "Reordering: UP/DOWN moves the row, OK saves, EXIT cancels."
+msgstr "Omarrangering: OP/NED flytter rækken, OK gemmer, EXIT annullerer."
+
+msgid "Replay"
+msgstr "Genudsendelse"
+
+msgid "Replays & highlights"
+msgstr "Genudsendelser & højdepunkter"
+
+msgid "Report a problem (GitHub issues)"
+msgstr "Rapportér et problem (GitHub issues)"
+
+msgid "Report file"
+msgstr "Rapportfil"
+
+msgid "Reset this list to its default layout?"
+msgstr "Nulstil denne liste til standardlayoutet?"
+
+msgid "Reset to defaults"
+msgstr "Nulstil til standard"
+
+msgid "Reset to saved order"
+msgstr "Nulstil til gemt rækkefølge"
+
+msgid "Reset web interface"
+msgstr "Nulstil webgrænseflade"
+
+#, python-format
+msgid ""
+"Resolving hCaptcha with %s failed!\n"
+"\n"
+msgstr ""
+"Løsning af hCaptcha med %s mislykkedes!\n"
+"\n"
+
+#, python-format
+msgid ""
+"Resolving reCaptcha with %s failed!\n"
+"\n"
+msgstr ""
+"Løsning af reCaptcha med %s mislykkedes!\n"
+"\n"
+
+msgid "Restart GUI"
+msgstr "Genstart GUI"
+
+msgid "Reused entries move back to the top again."
+msgstr "Genbrugte poster flyttes tilbage til toppen igen."
+
+msgid "Reverse a playlist"
+msgstr "Vend en playliste om"
+
+msgid "Reverting to unsorted order will discard unsaved changes. Continue?"
+msgstr "Hvis du vender tilbage til usorteret rækkefølge, kasseres ikke-gemte ændringer. Vil du fortsætte?"
+
+msgid "Right"
+msgstr "Højre"
+
+msgid "Romance"
+msgstr "Romantik"
+
+msgid "Round"
+msgstr "Runde"
+
+msgid "Runtime"
+msgstr "Spilletid"
+
+msgid "Russian"
+msgstr "Russisk"
+
+msgid "SOME.PORN sorting by :"
+msgstr "SOME.PORN sortering efter :"
+
+msgid "SONGS"
+msgstr "SANGE"
+
+msgid "SSL connect error."
+msgstr "SSL-forbindelsesfejl."
+
+msgid "SSL verification failure."
+msgstr "SSL-verificering mislykkedes."
+
+msgid "STARTED"
+msgstr "STARTET"
+
+msgid "STOPPED"
+msgstr "STOPPET"
+
+msgid "Safe search (restricted mode):"
+msgstr "Sikker søgning (begrænset tilstand):"
+
+msgid "Save"
+msgstr "Gem"
+
+msgid "Save changes?"
+msgstr "Gem ændringer?"
+
+#, python-format
+msgid "Save subtitles (%s)"
+msgstr "Gem undertekster (%s)"
+
+#, python-format
+msgid ""
+"Saved to:\n"
+"%s"
+msgstr ""
+"Gemt i:\n"
+"%s"
+
+msgid "Sci-Fi"
+msgstr "Sci-fi"
+
+msgid "Sci-Fi & Fantasy"
+msgstr "Sci-fi & fantasy"
+
+msgid "Science"
+msgstr "Videnskab"
+
+msgid "Screensaver during audio playback"
+msgstr "Pauseskærm under lydafspilning"
+
+msgid "Screensaver in E2iPlayer menus"
+msgstr "Pauseskærm i E2iPlayer-menuer"
+
+#, python-format
+msgid ""
+"Script execution failed.\n"
+"Error code: %s\n"
+msgstr ""
+"Kørsel af script mislykkedes.\n"
+"Fejlkode: %s\n"
+
+msgid "Script finished."
+msgstr "Script afsluttet."
+
+msgid "Search"
+msgstr "Søg"
+
+msgid "Search History is empty."
+msgstr "Søgehistorikken er tom."
+
+msgid "Search History successfully deleted."
+msgstr "Søgehistorikken er slettet."
+
+msgid "Search for an artist (exact name) or a Last.fm user"
+msgstr "Søg efter en kunstner (præcist navn) eller en Last.fm-bruger"
+
+msgid "Search history"
+msgstr "Søgehistorik"
+
+msgid "Search history - options"
+msgstr "Søgehistorik - valgmuligheder"
+
+msgid "Search history is not available for this host."
+msgstr "Søgehistorik er ikke tilgængelig for denne host."
+
+msgid "Search history saved."
+msgstr "Søgehistorik gemt."
+
+#, python-format
+msgid "Search history saved. %d duplicate entries removed."
+msgstr "Søgehistorik gemt. %d dublerede poster fjernet."
+
+msgid "Search in all active hosts"
+msgstr "Søg i alle aktive hosts"
+
+msgid "Search is not available right now."
+msgstr "Søgning er ikke tilgængelig lige nu."
+
+msgid "Search next page"
+msgstr "Søg næste side"
+
+msgid "Search results"
+msgstr "Søgeresultater"
+
+msgid "Search results region:"
+msgstr "Region for søgeresultater:"
+
+msgid "Search string must have at least 4 characters."
+msgstr "Søgeteksten skal have mindst 4 tegn."
+
+msgid "Search term :"
+msgstr "Søgeord :"
+
+msgid "Search text"
+msgstr "Søgetekst"
+
+msgid "Search type"
+msgstr "Søgetype"
+
+msgid "Search: "
+msgstr "Søg: "
+
+#, python-format
+msgid "Search: %d of %d - now %s (%d found so far)"
+msgstr "Søgning: %d af %d - nu %s (%d fundet indtil videre)"
+
+#, python-format
+msgid "Searching subtitles for \"%s\""
+msgstr "Søger efter undertekster til \"%s\""
+
+msgid "Season"
+msgstr "Sæson"
+
+#, python-format
+msgid "Season %d"
+msgstr "Sæson %d"
+
+#, python-format
+msgid "Season %d (%d episodes)"
+msgstr "Sæson %d (%d afsnit)"
+
+#, python-format
+msgid "Season %s"
+msgstr "Sæson %s"
+
+msgid "Seasons"
+msgstr "Sæsoner"
+
+msgid "Seasons:"
+msgstr "Sæsoner:"
+
+#, python-format
+msgid "Seasons: %s"
+msgstr "Sæsoner: %s"
+
+msgid "Second movie player in buffering mode"
+msgstr "Anden filmafspiller i buffertilstand"
+
+msgid "Second movie player without buffering mode"
+msgstr "Anden filmafspiller uden buffertilstand"
+
+msgid "Section"
+msgstr "Sektion"
+
+msgid "Sections"
+msgstr "Sektioner"
+
+#, python-format
+msgid "Select %s"
+msgstr "Vælg %s"
+
+msgid "Select action"
+msgstr "Vælg handling"
+
+msgid "Select audio track"
+msgstr "Vælg lydspor"
+
+msgid "Select best available quality"
+msgstr "Vælg bedste tilgængelige kvalitet"
+
+msgid "Select directory"
+msgstr "Vælg mappe"
+
+msgid "Select favorite group"
+msgstr "Vælg favoritgruppe"
+
+msgid "Select group"
+msgstr "Vælg gruppe"
+
+msgid "Select language"
+msgstr "Vælg sprog"
+
+msgid "Select link"
+msgstr "Vælg link"
+
+msgid "Select movie player"
+msgstr "Vælg filmafspiller"
+
+msgid "Select option"
+msgstr "Vælg mulighed"
+
+msgid "Select pictures"
+msgstr "Vælg billeder"
+
+msgid "Select subtitles file"
+msgstr "Vælg undertekstfil"
+
+msgid "Select subtitles provider:"
+msgstr "Vælg undertekstudbyder:"
+
+msgid "Select subtitles to download"
+msgstr "Vælg undertekster til download"
+
+msgid "Select subtitles track"
+msgstr "Vælg undertekstspor"
+
+msgid "Select the directory"
+msgstr "Vælg mappen"
+
+msgid "Select the file"
+msgstr "Vælg filen"
+
+msgid "Select video option"
+msgstr "Vælg videomulighed"
+
+msgid "Selection"
+msgstr "Udvalg"
+
+msgid "Self-test"
+msgstr "Selvtest"
+
+msgid "Self-test report :"
+msgstr "Selvtestrapport :"
+
+msgid "Send"
+msgstr "Send"
+
+msgid "Send data to enc-dec.app on every link resolve?"
+msgstr "Send data til enc-dec.app ved hver link-opløsning?"
+
+msgid "Sending the result to the box failed."
+msgstr "Afsendelse af resultatet til modtageren mislykkedes."
+
+msgid "Series"
+msgstr "Serier"
+
+msgid "Series - latest episodes"
+msgstr "Serier - nyeste afsnit"
+
+msgid "Series - seasons"
+msgstr "Serier - sæsoner"
+
+msgid "Series A-Z"
+msgstr "Serier A-Z"
+
+msgid "Series by genre"
+msgstr "Serier efter genre"
+
+msgid "Series by year"
+msgstr "Serier efter år"
+
+msgid "Series genres"
+msgstr "Seriegenrer"
+
+msgid "Server"
+msgstr "Server"
+
+msgid "Server issued an error response (HTTP 4xx/5xx)."
+msgstr "Serveren svarede med en fejl (HTTP 4xx/5xx)."
+
+msgid "Server issued an error response."
+msgstr "Serveren svarede med en fejl."
+
+msgid "Server return 404 - Not Found."
+msgstr "Serveren returnerede 404 - Ikke fundet."
+
+msgid "Server returned nothing."
+msgstr "Serveren returnerede intet."
+
+#, python-format
+msgid "Server, user name and password in the host configuration. The server field also takes a get.php link. More accounts: %s with one get.php link per line (X-Streamity format)."
+msgstr "Server, brugernavn og adgangskode i host-konfigurationen. Serverfeltet accepterer også et get.php-link. Flere konti: %s med ét get.php-link pr. linje (X-Streamity-format)."
+
+#, python-format
+msgid ""
+"Service %s requires registration. \n"
+"Please fill your login and password in the %s configuration."
+msgstr ""
+"Tjenesten %s kræver registrering. \n"
+"Indtast dit brugernavn og din adgangskode i %s-konfigurationen."
+
+msgid "Service icon size"
+msgstr "Størrelse på tjenesteikon"
+
+msgid "Services configuration"
+msgstr "Konfiguration af tjenester"
+
+msgid "Services management"
+msgstr "Administration af tjenester"
+
+msgid "Set active movie player"
+msgstr "Indstil aktiv filmafspiller"
+
+msgid "Set file name"
+msgstr "Angiv filnavn"
+
+msgid "Set own configuration pin code"
+msgstr "Angiv egen PIN-kode til konfiguration"
+
+msgid "Set own pin"
+msgstr "Angiv egen PIN-kode"
+
+msgid "Set pin code"
+msgstr "Angiv PIN-kode"
+
+msgid "Set watched"
+msgstr "Markér som set"
+
+msgid "Settings"
+msgstr "Indstillinger"
+
+#, python-format
+msgid "Settings of service [%s] cannot be opened."
+msgstr "Indstillingerne for tjenesten [%s] kan ikke åbnes."
+
+msgid "Settings screen layout"
+msgstr "Layout af indstillingsskærm"
+
+msgid "Shift"
+msgstr "Shift"
+
+msgid "Short Movies"
+msgstr "Kortfilm"
+
+msgid "Short series"
+msgstr "Korte serier"
+
+msgid "Shorts"
+msgstr "Shorts"
+
+msgid "Shoulder & Elbow"
+msgstr "Skulder & albue"
+
+msgid "Show"
+msgstr "Show"
+
+msgid "Show \"Newest videos\" of all YouTube channels in a group"
+msgstr "Vis \"Nyeste videoer\" fra alle YouTube-kanaler i en gruppe"
+
+msgid "Show & Comedy"
+msgstr "Show & komedie"
+
+msgid "Show E2iPlayer settings in system menu"
+msgstr "Vis E2iPlayer-indstillinger i systemmenuen"
+
+msgid "Show IPTVPlayer in extension list (blue button)"
+msgstr "Vis IPTVPlayer i udvidelseslisten (blå knap)"
+
+msgid "Show IPTVPlayer in main menu"
+msgstr "Vis IPTVPlayer i hovedmenuen"
+
+msgid "Show IPTVPlayer in plugin browser"
+msgstr "Vis IPTVPlayer i plugin-browseren"
+
+msgid "Show Profiles in ZBIORNIK MINI :"
+msgstr "Vis profiler i ZBIORNIK MINI :"
+
+msgid "Show Youtube Api Key warnings"
+msgstr "Vis advarsler om YouTube API-nøgle"
+
+msgid "Show adult content"
+msgstr "Vis voksenindhold"
+
+msgid "Show all channels"
+msgstr "Vis alle kanaler"
+
+msgid "Show clock in header"
+msgstr "Vis ur i overskriften"
+
+msgid "Show download manager after adding new item"
+msgstr "Vis downloadhåndtering efter tilføjelse af nyt element"
+
+msgid "Show download notification"
+msgstr "Vis downloadmeddelelse"
+
+msgid "Show file size"
+msgstr "Vis filstørrelse"
+
+msgid "Show flags"
+msgstr "Vis flag"
+
+msgid "Show global search :"
+msgstr "Vis global søgning :"
+
+msgid "Show hiddens catalogs"
+msgstr "Vis skjulte mapper"
+
+msgid "Show hiddens files"
+msgstr "Vis skjulte filer"
+
+msgid "Show iframe during audio playback"
+msgstr "Vis iframe under lydafspilning"
+
+msgid "Show only audio in selected language:"
+msgstr "Vis kun lyd på det valgte sprog:"
+
+msgid "Show only best quality of streams:"
+msgstr "Vis kun streams i bedste kvalitet:"
+
+msgid "Show results"
+msgstr "Vis resultater"
+
+msgid "Show search history"
+msgstr "Vis søgehistorik"
+
+msgid "Show suggestions"
+msgstr "Vis forslag"
+
+msgid "Shows"
+msgstr "Shows"
+
+msgid "Shows A-Z"
+msgstr "Shows A-Z"
+
+msgid "Shows and concerts"
+msgstr "Shows og koncerter"
+
+msgid "Shows with new episodes"
+msgstr "Shows med nye afsnit"
+
+msgid "Sign-in was not completed."
+msgstr "Login blev ikke fuldført."
+
+msgid "Signed in to YouTube."
+msgstr "Logget ind på YouTube."
+
+msgid "Signed out of YouTube."
+msgstr "Logget ud af YouTube."
+
+msgid "Similar artists"
+msgstr "Lignende kunstnere"
+
+msgid "Similar artists mix"
+msgstr "Mix af lignende kunstnere"
+
+msgid "Simple list"
+msgstr "Enkel liste"
+
+msgid "Simple subtitles downloader"
+msgstr "Enkel undertekst-downloader"
+
+msgid "Simplify the title and try again."
+msgstr "Forenkl titlen, og prøv igen."
+
+msgid "Site self-test"
+msgstr "Selvtest af sider"
+
+msgid "Site self-test in the main menu :"
+msgstr "Selvtest af sider i hovedmenuen :"
+
+#, python-format
+msgid "Site self-test: %d of %d - now %s (%d failed so far)"
+msgstr "Selvtest af sider: %d af %d - nu %s (%d fejlet indtil videre)"
+
+msgid "Size:"
+msgstr "Størrelse:"
+
+msgid "Skin"
+msgstr "Skin"
+
+msgid "Skinners:"
+msgstr "Skin-designere:"
+
+msgid "Skip video shorter than [min]"
+msgstr "Spring videoer kortere end [min] over"
+
+msgid "Society"
+msgstr "Samfund"
+
+msgid "Software decoding as"
+msgstr "Softwareafkodning som"
+
+msgid "Solve Cloudflare, hCaptcha and reCAPTCHA with MyE2i"
+msgstr "Løs Cloudflare, hCaptcha og reCAPTCHA med MyE2i"
+
+msgid "Solve Google reCAPTCHA v2 with My JDownloader"
+msgstr "Løs Google reCAPTCHA v2 med My JDownloader"
+
+msgid "Solver"
+msgstr "Løser"
+
+msgid "Some changes will be applied only after movie player restart."
+msgstr "Nogle ændringer træder først i kraft efter genstart af filmafspilleren."
+
+msgid "Some settings will be applied only after GUI restart."
+msgstr "Nogle indstillinger træder først i kraft efter genstart af GUI."
+
+msgid "Sort A-Z"
+msgstr "Sortér A-Z"
+
+msgid "Sort Myfreecams :"
+msgstr "Sortér Myfreecams :"
+
+msgid "Sort Z-A"
+msgstr "Sortér Z-A"
+
+msgid "Sort alphabetically"
+msgstr "Sortér alfabetisk"
+
+msgid "Sort by name"
+msgstr "Sortér efter navn"
+
+msgid "Sort by:"
+msgstr "Sortér efter:"
+
+msgid "Sort the links now? The order of the lines in the file will change."
+msgstr "Sortér linkene nu? Rækkefølgen af linjerne i filen vil ændre sig."
+
+msgid "Sort the list:"
+msgstr "Sortér listen:"
+
+msgid "Sort xxxlist :"
+msgstr "Sortér xxxlist :"
+
+msgid "Sorted channels A-Z [live]"
+msgstr "Sorterede kanaler A-Z [live]"
+
+msgid "Sorted most viewed channels general [live]"
+msgstr "Mest sete kanaler samlet [live]"
+
+msgid "Sorted most viewed channels now [live]"
+msgstr "Mest sete kanaler lige nu [live]"
+
+msgid "Source:"
+msgstr "Kilde:"
+
+msgid "Spanish"
+msgstr "Spansk"
+
+msgid "Specials"
+msgstr "Specials"
+
+msgid "Spine"
+msgstr "Rygsøjle"
+
+msgid "Spoken subtitles"
+msgstr "Talte undertekster"
+
+msgid "Sport"
+msgstr "Sport"
+
+msgid "Spring"
+msgstr "Forår"
+
+msgid "Squad"
+msgstr "Trup"
+
+msgid "Stadium:"
+msgstr "Stadion:"
+
+msgid "Standard"
+msgstr "Standard"
+
+msgid "Stars:"
+msgstr "Stjerner:"
+
+msgid "Start"
+msgstr "Start"
+
+msgid "Start download manager per default"
+msgstr "Start downloadhåndtering som standard"
+
+msgid "Station:"
+msgstr "Station:"
+
+msgid "Status:"
+msgstr "Status:"
+
+#, python-format
+msgid "Status: %s"
+msgstr "Status: %s"
+
+msgid "Stereo downmix mode for software decoder"
+msgstr "Stereo-downmix-tilstand for softwaredekoder"
+
+msgid "Stop"
+msgstr "Stop"
+
+msgid "Stop downloading"
+msgstr "Stop download"
+
+msgid "Stop playback with buffer save"
+msgstr "Stop afspilning og gem buffer"
+
+msgid "Stop playing?"
+msgstr "Stop afspilning?"
+
+msgid "Storage"
+msgstr "Lager"
+
+msgid "Story"
+msgstr "Handling"
+
+msgid "Stream link"
+msgstr "Stream-link"
+
+msgid "Streamed"
+msgstr "Streamet"
+
+msgid "Streaming platforms"
+msgstr "Streamingplatforme"
+
+msgid "Studios"
+msgstr "Studier"
+
+msgid "Study Plan"
+msgstr "Studieplan"
+
+msgid "Subbed anime"
+msgstr "Anime med undertekster"
+
+msgid "Subscribers"
+msgstr "Abonnenter"
+
+msgid "Subspecialities"
+msgstr "Subspecialer"
+
+msgid "Subtitle background"
+msgstr "Undertekstbaggrund"
+
+msgid "Subtitle border color"
+msgstr "Kantfarve for undertekster"
+
+msgid "Subtitle border enabled"
+msgstr "Kant om undertekster aktiveret"
+
+msgid "Subtitle border width"
+msgstr "Kantbredde for undertekster"
+
+msgid "Subtitle box height"
+msgstr "Højde på undertekstboks"
+
+msgid "Subtitle box position"
+msgstr "Placering af undertekstboks"
+
+msgid "Subtitle font"
+msgstr "Skrifttype for undertekster"
+
+msgid "Subtitle font color"
+msgstr "Skriftfarve for undertekster"
+
+msgid "Subtitle font size"
+msgstr "Skriftstørrelse for undertekster"
+
+msgid "Subtitle languages"
+msgstr "Undertekstsprog"
+
+msgid "Subtitle line height"
+msgstr "Linjehøjde for undertekster"
+
+msgid "Subtitle line wrapping"
+msgstr "Linjeombrydning for undertekster"
+
+msgid "Subtitle shadow X offset"
+msgstr "X-forskydning for underteksters skygge"
+
+msgid "Subtitle shadow Y offset"
+msgstr "Y-forskydning for underteksters skygge"
+
+msgid "Subtitle shadow color"
+msgstr "Skyggefarve for undertekster"
+
+msgid "Subtitle shadow enabled"
+msgstr "Skygge for undertekster aktiveret"
+
+msgid "Subtitle vertical alignment"
+msgstr "Lodret justering af undertekster"
+
+msgid "Subtitles"
+msgstr "Undertekster"
+
+#, python-format
+msgid "Subtitles \"%s\" downloaded correctly."
+msgstr "Underteksterne \"%s\" er downloadet korrekt."
+
+msgid "Subtitles by Islam El-Gizawy"
+msgstr "Undertekster af Islam El-Gizawy"
+
+msgid "Subtitles conversion to UTF-8 failed."
+msgstr "Konvertering af undertekster til UTF-8 mislykkedes."
+
+#, python-format
+msgid "Subtitles downloaded successfully. [%s], conversion to UTF-8."
+msgstr "Undertekster downloadet. [%s], konvertering til UTF-8."
+
+#, python-format
+msgid "Subtitles for: %s"
+msgstr "Undertekster til: %s"
+
+#, python-format
+msgid ""
+"Subtitles saved:\n"
+"%s"
+msgstr ""
+"Undertekster gemt:\n"
+"%s"
+
+msgid "Subtitles:"
+msgstr "Undertekster:"
+
+#, python-format
+msgid "Subtitles: %s"
+msgstr "Undertekster: %s"
+
+msgid "Summer"
+msgstr "Sommer"
+
+msgid "Support forum (opena.tv)"
+msgstr "Supportforum (opena.tv)"
+
+msgid "Support package"
+msgstr "Supportpakke"
+
+msgid "Surahs"
+msgstr "Suraer"
+
+msgid "Surgical Approaches"
+msgstr "Kirurgiske adgange"
+
+msgid "Surgical Cases"
+msgstr "Kirurgiske tilfælde"
+
+msgid "Surgical Complications"
+msgstr "Kirurgiske komplikationer"
+
+msgid "Surgical Techniques"
+msgstr "Kirurgiske teknikker"
+
+msgid "Sweden"
+msgstr "Sverige"
+
+msgid "Swedish"
+msgstr "Svensk"
+
+msgid "Synchronize"
+msgstr "Synkroniser"
+
+msgid "System"
+msgstr "System"
+
+msgid "System language"
+msgstr "Systemsprog"
+
+msgid "T9 letter jump in lists"
+msgstr "T9-bogstavspring i lister"
+
+msgid ""
+"TBN GO needs a free account to play programmes.\n"
+"Register on https://tbngo.pl/ and enter the e-mail and password in the host settings."
+msgstr ""
+"TBN GO kræver en gratis konto for at afspille programmer.\n"
+"Registrer dig på https://tbngo.pl/, og indtast e-mail og adgangskode i host-indstillingerne."
+
+msgid "THE PAGE YOU ARE LOOKING FOR IS NOT FOUND."
+msgstr "DEN SIDE, DU LEDER EFTER, BLEV IKKE FUNDET."
+
+msgid ""
+"THIS IS A PREMIUM VIDEO.\n"
+"LOGIN OR PREMIUM REQUIRED."
+msgstr ""
+"DETTE ER EN PREMIUM-VIDEO.\n"
+"LOGIN ELLER PREMIUM PÅKRÆVET."
+
+msgid "THIS IS A PRIVATE VIDEO."
+msgstr "DETTE ER EN PRIVAT VIDEO."
+
+msgid ""
+"THIS LINK CONTAINS PHOTOS ONLY.\n"
+" PLEASE CHOOSE ANOTHER ONE!"
+msgstr ""
+"DETTE LINK INDEHOLDER KUN FOTOS.\n"
+" VÆLG ET ANDET!"
+
+msgid ""
+"THIS VIDEO HAS BEEN REMOVED DUE TO COPYRIGHT INFRINGEMENT.\n"
+" PLEASE CHOOSE ANOTHER ONE!"
+msgstr ""
+"DENNE VIDEO ER FJERNET PÅ GRUND AF KRÆNKELSE AF OPHAVSRET.\n"
+" VÆLG EN ANDEN!"
+
+msgid ""
+"THIS VIDEO IS JUST A PREVIEW ON EXTERNAL STORAGE.\n"
+"VIEWING IT HERE IS NOT SUPPORTED."
+msgstr ""
+"DENNE VIDEO ER KUN EN FORHÅNDSVISNING PÅ EKSTERNT LAGER.\n"
+"VISNING HER UNDERSTØTTES IKKE."
+
+msgid ""
+"THIS VIDEO IS UNAVAILABLE.\n"
+"TRY AGAIN LATER!"
+msgstr ""
+"DENNE VIDEO ER IKKE TILGÆNGELIG.\n"
+"PRØV IGEN SENERE!"
+
+msgid "TMDb API key (free at themoviedb.org)"
+msgstr "TMDb API-nøgle (gratis på themoviedb.org)"
+
+msgid "TMDb Rating:"
+msgstr "TMDb-bedømmelse:"
+
+msgid "TODAY"
+msgstr "I DAG"
+
+msgid "TOMORROW"
+msgstr "I MORGEN"
+
+msgid "TV Series"
+msgstr "Tv-serier"
+
+msgid "TV Show"
+msgstr "Tv-show"
+
+msgid "TV Shows"
+msgstr "Tv-shows"
+
+msgid "TV channels"
+msgstr "Tv-kanaler"
+
+msgid "TV series"
+msgstr "Tv-serier"
+
+msgid "Tadabor"
+msgstr "Tadabor"
+
+msgid "Tafsir (Arabic)"
+msgstr "Tafsir (arabisk)"
+
+msgid "Tags"
+msgstr "Tags"
+
+msgid "Taiwanese"
+msgstr "Taiwanesisk"
+
+msgid "Talk shows"
+msgstr "Talkshows"
+
+msgid "Teams"
+msgstr "Hold"
+
+msgid "Techniques"
+msgstr "Teknikker"
+
+msgid "Technology"
+msgstr "Teknologi"
+
+msgid "Temp"
+msgstr "Temp"
+
+msgid "Test the failed sites again"
+msgstr "Test de fejlede sider igen"
+
+msgid "Testers:"
+msgstr "Testere:"
+
+msgid "Text field alignment"
+msgstr "Justering af tekstfelter"
+
+msgid "Text files ytlist and urllist are in:"
+msgstr "Tekstfilerne ytlist og urllist ligger i:"
+
+msgid "Thai"
+msgstr "Thai"
+
+#, python-format
+msgid "The %s utility is necessary here but it was not detected."
+msgstr "Hjælpeprogrammet %s er nødvendigt her, men det blev ikke fundet."
+
+msgid "The 100 tags with the most videos"
+msgstr "De 100 tags med flest videoer"
+
+msgid ""
+"The 7reels / cineb resolvers 'VidEasy', 'VidCore/VidFast', 'VidLink' and 'Peachify' cannot decrypt their links on the receiver.\n"
+"\n"
+"With this option ON, every time you open one of them E2iPlayer sends the site's encrypted stream token - which contains the TMDb id of the movie or episode you are opening - to the third-party web service enc-dec.app (operated by a private individual). That server then sees the id and your IP address on each play. Nothing else is transmitted, and it is only used for these four resolvers.\n"
+"\n"
+"Leave this OFF if you do not want that. The other resolvers (AdRock/vidrock, VidNest, ...) are not affected."
+msgstr ""
+"7reels-/cineb-resolverne 'VidEasy', 'VidCore/VidFast', 'VidLink' og 'Peachify' kan ikke dekryptere deres links på modtageren.\n"
+"\n"
+"Når denne indstilling er TIL, sender E2iPlayer hver gang, du åbner en af dem, sidens krypterede stream-token - som indeholder TMDb-id'et for den film eller det afsnit, du åbner - til tredjeparts-webtjenesten enc-dec.app (drevet af en privatperson). Serveren ser så id'et og din IP-adresse ved hver afspilning. Intet andet overføres, og det bruges kun til disse fire resolvere.\n"
+"\n"
+"Lad den være FRA, hvis du ikke ønsker det. De andre resolvere (AdRock/vidrock, VidNest, ...) påvirkes ikke."
+
+msgid "The OpenSubtitles v3 server did not answer. Please try again later."
+msgstr "OpenSubtitles v3-serveren svarede ikke. Prøv igen senere."
+
+msgid "The OpenSubtitles.com server did not answer. Please try again later."
+msgstr "OpenSubtitles.com-serveren svarede ikke. Prøv igen senere."
+
+msgid "The QR code leads to the wiki page with pictures and the extension download."
+msgstr "QR-koden fører til wiki-siden med billeder og download af udvidelsen."
+
+msgid "The Stalker portal of this entry is not configured (any more)."
+msgstr "Stalker-portalen for denne post er ikke (længere) konfigureret."
+
+msgid "The Xtream account of this entry is not configured (any more)."
+msgstr "Xtream-kontoen for denne post er ikke (længere) konfigureret."
+
+msgid "The YouTube channels of this group have no videos."
+msgstr "YouTube-kanalerne i denne gruppe har ingen videoer."
+
+msgid "The YouTube video ID is invalid."
+msgstr "YouTube-video-ID'et er ugyldigt."
+
+msgid "The account is banned."
+msgstr "Kontoen er spærret."
+
+msgid "The balance of the account is too low."
+msgstr "Saldoen på kontoen er for lav."
+
+msgid "The best short films on the internet, handpicked by Vimeo staff"
+msgstr "De bedste kortfilm på internettet, håndplukket af Vimeo-teamet"
+
+msgid "The channel already exists in User Links."
+msgstr "Kanalen findes allerede i brugerlinks."
+
+msgid "The color of the current version"
+msgstr "Farven for den aktuelle version"
+
+msgid "The color of the downloaded item"
+msgstr "Farven for downloadede elementer"
+
+msgid "The color of the favourite item"
+msgstr "Farven for favoritelementer"
+
+msgid "The color of the started item"
+msgstr "Farven for startede elementer"
+
+msgid "The color of the viewed item"
+msgstr "Farven for sete elementer"
+
+msgid "The connection limit for your weeb.tv account has been reached."
+msgstr "Forbindelsesgrænsen for din weeb.tv-konto er nået."
+
+msgid "The daily download limit is reached."
+msgstr "Den daglige downloadgrænse er nået."
+
+msgid "The data is too large."
+msgstr "Dataene er for store."
+
+#, python-format
+msgid ""
+"The debug log file is empty:\n"
+"%s"
+msgstr ""
+"Debug-logfilen er tom:\n"
+"%s"
+
+msgid ""
+"The debug log is disabled or set to console output.\n"
+"\n"
+"Enable it in the E2iPlayer configuration (Debug -> log to file) and reproduce the problem, then come back here."
+msgstr ""
+"Debug-loggen er deaktiveret eller sat til konsoloutput.\n"
+"\n"
+"Aktivér den i E2iPlayer-konfigurationen (Debug -> log til fil), genskab problemet, og vend derefter tilbage hertil."
+
+msgid "The debug log is not active."
+msgstr "Debug-loggen er ikke aktiv."
+
+msgid "The download is not ready yet. Please try again in a few seconds."
+msgstr "Downloaden er ikke klar endnu. Prøv igen om et par sekunder."
+
+#, python-format
+msgid "The download is ready in %d seconds. Please try again then."
+msgstr "Downloaden er klar om %d sekunder. Prøv igen til den tid."
+
+msgid "The download manager is stopped, start it on the download page."
+msgstr "Downloadhåndteringen er stoppet, start den på downloadsiden."
+
+msgid "The element already exists in User Links."
+msgstr "Elementet findes allerede i brugerlinks."
+
+msgid "The feed of these channels could not be read - press OK to try again."
+msgstr "Feedet for disse kanaler kunne ikke læses - tryk OK for at prøve igen."
+
+msgid "The helper process ended unexpectedly."
+msgstr "Hjælpeprocessen sluttede uventet."
+
+#, python-format
+msgid "The helper script %s is missing."
+msgstr "Hjælpescriptet %s mangler."
+
+#, python-format
+msgid "The host \"%s\" cannot be used from the web interface (disabled, unknown or protected by PIN)."
+msgstr "Hosten \"%s\" kan ikke bruges fra webgrænsefladen (deaktiveret, ukendt eller beskyttet med PIN-kode)."
+
+#, python-format
+msgid ""
+"The host %s requires registration. \n"
+"Please fill your login and password in the host configuration. Available under blue button."
+msgstr ""
+"Hosten %s kræver registrering. \n"
+"Udfyld dit login og din adgangskode i host-konfigurationen. Tilgængelig via den blå knap."
+
+msgid "The host asks for a captcha. It can only be solved on the receiver (or with MyE2i there)."
+msgstr "Hosten beder om en captcha. Den kan kun løses på modtageren (eller med MyE2i der)."
+
+msgid "The host did not return a list."
+msgstr "Hosten returnerede ikke en liste."
+
+#, python-format
+msgid "The host wanted to open a window on the TV (%s) - that only works on the receiver."
+msgstr "Hosten ville åbne et vindue på tv'et (%s) - det virker kun på modtageren."
+
+msgid "The hoster sends an advert redirect instead of the video at the moment. Try another hoster."
+msgstr "Hosteren sender i øjeblikket en reklameomdirigering i stedet for videoen. Prøv en anden hoster."
+
+msgid "The latest uploads of all YouTube channels in this group, newest first."
+msgstr "De seneste uploads fra alle YouTube-kanaler i denne gruppe, nyeste først."
+
+msgid "The link could not be resolved."
+msgstr "Linket kunne ikke opløses."
+
+msgid "The list has changed, please try again."
+msgstr "Listen er ændret, prøv igen."
+
+msgid "The live stream is not available at the moment."
+msgstr "Livestreamen er ikke tilgængelig i øjeblikket."
+
+msgid "The model is offline or in a private show."
+msgstr "Modellen er offline eller i et privat show."
+
+msgid "The number of items in the search history"
+msgstr "Antal elementer i søgehistorikken"
+
+#, python-format
+msgid "The page layout of %s has changed."
+msgstr "Sidelayoutet for %s er ændret."
+
+#, python-format
+msgid ""
+"The playback buffer has been moved to the download manager.\n"
+"It will be saved in the file:\n"
+"\"%s\""
+msgstr ""
+"Afspilningsbufferen er flyttet til downloadhåndteringen.\n"
+"Den gemmes i filen:\n"
+"\"%s\""
+
+msgid "The portal did not hand out a link for this entry."
+msgstr "Portalen udleverede ikke et link til denne post."
+
+msgid "The recordings of this page were on the site's old media server, which is offline."
+msgstr "Optagelserne på denne side lå på sidens gamle medieserver, som er offline."
+
+msgid "The request has no valid length."
+msgstr "Forespørgslen har ikke en gyldig længde."
+
+msgid "The same item already exists in this group."
+msgstr "Det samme element findes allerede i denne gruppe."
+
+msgid "The server did not return a subtitle file (download limit reached?)."
+msgstr "Serveren returnerede ikke en undertekstfil (downloadgrænse nået?)."
+
+msgid "The server did not send a subtitle file."
+msgstr "Serveren sendte ikke en undertekstfil."
+
+msgid "The server limits the number of requests. Please try again in a few seconds."
+msgstr "Serveren begrænser antallet af forespørgsler. Prøv igen om et par sekunder."
+
+msgid "The service is overloaded. Please try again later."
+msgstr "Tjenesten er overbelastet. Prøv igen senere."
+
+msgid "The settings are protected by a PIN, change them on the receiver."
+msgstr "Indstillingerne er beskyttet med en PIN-kode, skift dem på modtageren."
+
+msgid "The site has no player for this video (it only shows a cam advert)."
+msgstr "Siden har ingen afspiller til denne video (den viser kun en cam-reklame)."
+
+msgid "The site refuses all qualities of this video at the moment (HTTP 403). Try again later."
+msgstr "Siden afviser i øjeblikket alle kvaliteter af denne video (HTTP 403). Prøv igen senere."
+
+msgid "The site rejected the search request."
+msgstr "Siden afviste søgeforespørgslen."
+
+msgid "The site's browser check could not be passed."
+msgstr "Sidens browsertjek kunne ikke bestås."
+
+msgid "The site's catalogue could not be loaded."
+msgstr "Sidens katalog kunne ikke indlæses."
+
+msgid "The support package holds the versions, the system information, the enabled hosts and the end of the debug log in one text file for a problem report. Look through it before posting it - the log can contain addresses of the sites you opened."
+msgstr "Supportpakken samler versionerne, systemoplysningerne, de aktiverede hosts og slutningen af debug-loggen i én tekstfil til en fejlrapport. Gennemse den, før du offentliggør den - loggen kan indeholde adresser på de sider, du har åbnet."
+
+msgid "The user link could not be deleted."
+msgstr "Brugerlinket kunne ikke slettes."
+
+msgid "The user link could not be updated."
+msgstr "Brugerlinket kunne ikke opdateres."
+
+#, python-format
+msgid "The value must be between %d and %d."
+msgstr "Værdien skal være mellem %d og %d."
+
+msgid "The video could not be resolved (it may be private, ended or not available in your country)."
+msgstr "Videoen kunne ikke opløses (den er måske privat, afsluttet eller ikke tilgængelig i dit land)."
+
+msgid "The video file of this title is not available on the server (HTTP 403)."
+msgstr "Videofilen til denne titel er ikke tilgængelig på serveren (HTTP 403)."
+
+msgid "The video has been removed."
+msgstr "Videoen er fjernet."
+
+msgid "The video player of this site (hdvbua.pro) does not offer this title in your country (licence area, mainly Ukraine)."
+msgstr "Videoafspilleren på denne side (hdvbua.pro) tilbyder ikke denne titel i dit land (licensområde, primært Ukraine)."
+
+msgid "The website returned a server error for this request."
+msgstr "Hjemmesiden returnerede en serverfejl for denne forespørgsel."
+
+msgid "There are no other favorite groups"
+msgstr "Der er ingen andre favoritgrupper"
+
+msgid "There are unsaved changes. Save now?"
+msgstr "Der er ændringer, som ikke er gemt. Gem nu?"
+
+#, python-format
+msgid "There is no enough free space in the folder \"%s\"."
+msgstr "Der er ikke nok ledig plads i mappen \"%s\"."
+
+#, python-format
+msgid "There is no free space on the drive [%s]."
+msgstr "Der er ingen ledig plads på drevet [%s]."
+
+msgid "There is no hosts in this group."
+msgstr "Der er ingen hosts i denne gruppe."
+
+msgid "There is no next item in this list."
+msgstr "Der er intet næste element i denne liste."
+
+msgid "There is no previous item in this list."
+msgstr "Der er intet forrige element i denne liste."
+
+#, python-format
+msgid ""
+"There is no storage device under \"%s\" (%s free). E2iPlayer will switch this folder back to \"%s\" at the next start.\n"
+"Please choose a folder on a mounted HDD or USB stick."
+msgstr ""
+"Der er ingen lagerenhed under \"%s\" (%s ledig). E2iPlayer sætter denne mappe tilbage til \"%s\" ved næste start.\n"
+"Vælg en mappe på en monteret harddisk eller USB-nøgle."
+
+msgid "This article has no free video."
+msgstr "Denne artikel har ingen gratis video."
+
+msgid "This channel does not exist."
+msgstr "Denne kanal findes ikke."
+
+msgid "This channel is currently offline."
+msgstr "Denne kanal er offline i øjeblikket."
+
+msgid "This channel is not available in your country (geo-blocking)."
+msgstr "Denne kanal er ikke tilgængelig i dit land (geoblokering)."
+
+msgid "This channel is temporarily unavailable. Please try again later."
+msgstr "Denne kanal er midlertidigt utilgængelig. Prøv igen senere."
+
+msgid "This channel requires a premium account, or the free connection limit has been reached. Enter your weeb.tv login data in the host configuration."
+msgstr "Denne kanal kræver en premium-konto, eller den gratis forbindelsesgrænse er nået. Indtast dine weeb.tv-logindata i host-konfigurationen."
+
+msgid "This content is not available in your region."
+msgstr "Dette indhold er ikke tilgængeligt i din region."
+
+msgid "This content is only available in Switzerland."
+msgstr "Dette indhold er kun tilgængeligt i Schweiz."
+
+msgid "This content needs a login - not supported."
+msgstr "Dette indhold kræver login - understøttes ikke."
+
+msgid "This entry cannot be added to the favourites."
+msgstr "Denne post kan ikke føjes til favoritterne."
+
+msgid "This entry cannot be opened."
+msgstr "Denne post kan ikke åbnes."
+
+msgid "This entry is only an advert, there is no video."
+msgstr "Denne post er kun en reklame, der er ingen video."
+
+msgid "This entry is protected by a PIN, open it on the receiver."
+msgstr "Denne post er beskyttet med en PIN-kode, åbn den på modtageren."
+
+msgid "This episode is not available in this version (SUB/DUB) on this server. Try another one."
+msgstr "Dette afsnit er ikke tilgængeligt i denne version (SUB/DUB) på denne server. Prøv en anden."
+
+msgid "This feed is empty, or the YouTube sign-in has expired - sign out and in again."
+msgstr "Dette feed er tomt, eller YouTube-logindet er udløbet - log ud og ind igen."
+
+msgid "This folder is protected by a PIN, open it on the receiver."
+msgstr "Denne mappe er beskyttet med en PIN-kode, åbn den på modtageren."
+
+msgid "This host has been added already to this group."
+msgstr "Denne host er allerede føjet til denne gruppe."
+
+msgid "This is only an advert for a paid clip (clips4sale), there is no free video."
+msgstr "Dette er kun en reklame for et betalt klip (clips4sale), der er ingen gratis video."
+
+msgid "This is paid content of PZPN+, it needs a purchase on the website."
+msgstr "Dette er betalt indhold fra PZPN+, det skal købes på hjemmesiden."
+
+msgid "This mix is only available with a Mixcloud Select subscription."
+msgstr "Dette mix er kun tilgængeligt med et Mixcloud Select-abonnement."
+
+msgid "This model is offline."
+msgstr "Denne model er offline."
+
+msgid "This option cannot be changed from the web interface."
+msgstr "Denne indstilling kan ikke ændres fra webgrænsefladen."
+
+msgid "This page has no video (blog article)."
+msgstr "Denne side har ingen video (blogartikel)."
+
+msgid "This player is not available any more - reload the links."
+msgstr "Denne afspiller er ikke længere tilgængelig - genindlæs linkene."
+
+msgid "This room is currently offline or unavailable."
+msgstr "Dette rum er offline eller utilgængeligt i øjeblikket."
+
+msgid "This room is offline. Try again later!"
+msgstr "Dette rum er offline. Prøv igen senere!"
+
+msgid "This section is no longer on the main page."
+msgstr "Denne sektion er ikke længere på forsiden."
+
+msgid "This session has no code - scan the QR code on the receiver screen."
+msgstr "Denne session har ingen kode - scan QR-koden på modtagerens skærm."
+
+msgid "This show is private. Try again later!"
+msgstr "Dette show er privat. Prøv igen senere!"
+
+msgid "This source is offline at the moment. Try another source of the channel."
+msgstr "Denne kilde er offline i øjeblikket. Prøv en anden kilde til kanalen."
+
+msgid "This stream can only be played with buffering - please start it on the receiver."
+msgstr "Denne stream kan kun afspilles med buffering - start den på modtageren."
+
+msgid "This subtitle provider has subtitles for movies only."
+msgstr "Denne undertekstudbyder har kun undertekster til film."
+
+msgid "This video has been deleted."
+msgstr "Denne video er slettet."
+
+msgid "This video is Premium-only content."
+msgstr "Denne video er kun premium-indhold."
+
+msgid "This video is a private video."
+msgstr "Denne video er en privat video."
+
+msgid "This video is a private."
+msgstr "Denne video er privat."
+
+msgid "This video is only on hosters E2iPlayer cannot play."
+msgstr "Denne video findes kun hos hostere, som E2iPlayer ikke kan afspille."
+
+msgid "This video is only on the netu.tv player (pbtube.net), which E2iPlayer cannot play."
+msgstr "Denne video findes kun i netu.tv-afspilleren (pbtube.net), som E2iPlayer ikke kan afspille."
+
+msgid "This video needs a paid ororo.tv subscription."
+msgstr "Denne video kræver et betalt ororo.tv-abonnement."
+
+msgid "This video requires you to sign in to a YouTube account."
+msgstr "Denne video kræver, at du logger ind på en YouTube-konto."
+
+msgid "This video was embedded from Pornhub and is no longer available there."
+msgstr "Denne video var indlejret fra Pornhub og er ikke længere tilgængelig der."
+
+msgid "This video was embedded from xHamster and has been deleted there."
+msgstr "Denne video var indlejret fra xHamster og er blevet slettet der."
+
+msgid "Thriller"
+msgstr "Thriller"
+
+msgid "Thumbnails"
+msgstr "Miniaturebilleder"
+
+msgid "Time"
+msgstr "Tid"
+
+msgid "Tip! You can connect USB flash drive to fix this problem."
+msgstr "Tip! Du kan tilslutte en USB-nøgle for at løse dette problem."
+
+msgid "Titles"
+msgstr "Titler"
+
+#, python-format
+msgid "Titlovi.com login failed (HTTP %s)."
+msgstr "Titlovi.com-login mislykkedes (HTTP %s)."
+
+#, python-format
+msgid "Titlovi.com login failed for user \"%s\". Please check your login and password."
+msgstr "Titlovi.com-login mislykkedes for brugeren \"%s\". Kontrollér dit login og din adgangskode."
+
+msgid "Titlovi.com needs a free titlovi.com account. Enter login and password in the E2iPlayer settings."
+msgstr "Titlovi.com kræver en gratis titlovi.com-konto. Indtast login og adgangskode i E2iPlayer-indstillingerne."
+
+#, python-format
+msgid "Titlovi.com search failed (HTTP %s)."
+msgstr "Titlovi.com-søgning mislykkedes (HTTP %s)."
+
+#, python-format
+msgid "Titlovi.com: API access is disabled for the account \"%s\". See titlovi.com/donacije."
+msgstr "Titlovi.com: API-adgang er deaktiveret for kontoen \"%s\". Se titlovi.com/donacije."
+
+msgid "Titlovi.com: invalid server response."
+msgstr "Titlovi.com: ugyldigt svar fra serveren."
+
+#, python-format
+msgid ""
+"To sign in to YouTube:\n"
+"\n"
+"1. On a phone or computer open:\n"
+"     %s\n"
+"\n"
+"2. Enter this code:\n"
+"\n"
+"     %s\n"
+"\n"
+"3. Approve the access, then select OK here."
+msgstr ""
+"Sådan logger du ind på YouTube:\n"
+"\n"
+"1. Åbn på en telefon eller computer:\n"
+"     %s\n"
+"\n"
+"2. Indtast denne kode:\n"
+"\n"
+"     %s\n"
+"\n"
+"3. Godkend adgangen, og vælg derefter OK her."
+
+msgid ""
+"To watch videos from https://vk.com/ you need to login.\n"
+"Please fill your login and password in the IPTVPlayer configuration."
+msgstr ""
+"For at se videoer fra https://vk.com/ skal du logge ind.\n"
+"Udfyld dit login og din adgangskode i IPTVPlayer-konfigurationen."
+
+msgid "Today"
+msgstr "I dag"
+
+msgid "Tomorrow"
+msgstr "I morgen"
+
+msgid "Too many redirects."
+msgstr "For mange omdirigeringer."
+
+msgid "Too many requests. Please try again later."
+msgstr "For mange forespørgsler. Prøv igen senere."
+
+msgid "Too many wrong codes - scan the QR code on the receiver screen instead."
+msgstr "For mange forkerte koder - scan i stedet QR-koden på modtagerens skærm."
+
+msgid "Top"
+msgstr "Top"
+
+msgid "Top 10"
+msgstr "Top 10"
+
+msgid "Top IMDb"
+msgstr "Top IMDb"
+
+msgid "Top airing"
+msgstr "Populære lige nu"
+
+msgid "Top in your country"
+msgstr "Top i dit land"
+
+msgid "Top leagues and clubs"
+msgstr "Topligaer og -klubber"
+
+msgid "Top rated"
+msgstr "Bedst bedømte"
+
+msgid "Top rated movies"
+msgstr "Bedst bedømte film"
+
+msgid "Top rated series"
+msgstr "Bedst bedømte serier"
+
+msgid "Top scorers"
+msgstr "Topscorere"
+
+msgid "Top series"
+msgstr "Topserier"
+
+msgid "Top stations"
+msgstr "Topstationer"
+
+msgid "Top tracks"
+msgstr "Topnumre"
+
+msgid "Top upcoming"
+msgstr "Populære kommende"
+
+msgid "Top-IMDB"
+msgstr "Top-IMDB"
+
+msgid "Topics"
+msgstr "Emner"
+
+msgid "Total size:"
+msgstr "Samlet størrelse:"
+
+msgid "Tourism"
+msgstr "Turisme"
+
+msgid "Tracklist"
+msgstr "Nummerliste"
+
+msgid "Trailer"
+msgstr "Trailer"
+
+msgid "Translation:"
+msgstr "Oversættelse:"
+
+#, python-format
+msgid "Translator: %s"
+msgstr "Oversætter: %s"
+
+msgid "Transparent"
+msgstr "Gennemsigtig"
+
+msgid "Trauma"
+msgstr "Traume"
+
+msgid "Travel"
+msgstr "Rejser"
+
+msgid "Treatment Consult"
+msgstr "Behandlingskonsultation"
+
+msgid "Trending"
+msgstr "Trending"
+
+msgid "Trending this week"
+msgstr "Trending denne uge"
+
+msgid "Trial"
+msgstr "Prøveadgang"
+
+msgid "Troubleshooting"
+msgstr "Fejlfinding"
+
+msgid "Try to change extplayer or reinstall gst-ifdsrc"
+msgstr "Prøv at skifte extplayer eller geninstallere gst-ifdsrc"
+
+msgid "Turkish"
+msgstr "Tyrkisk"
+
+msgid "Turkish Movies"
+msgstr "Tyrkiske film"
+
+msgid "Turkish Series"
+msgstr "Tyrkiske serier"
+
+msgid "Turkish TV series"
+msgstr "Tyrkiske tv-serier"
+
+msgid "Turkish movies (dubbed)"
+msgstr "Tyrkiske film (dubbede)"
+
+msgid "Turkish series (dubbed)"
+msgstr "Tyrkiske serier (dubbede)"
+
+msgid "Tutorials"
+msgstr "Vejledninger"
+
+msgid "Type"
+msgstr "Type"
+
+msgid "Type:"
+msgstr "Type:"
+
+msgid "Type: "
+msgstr "Type: "
+
+#, python-format
+msgid "Type: %s"
+msgstr "Type: %s"
+
+msgid "Types"
+msgstr "Typer"
+
+msgid "UNKNOWN"
+msgstr "UKENDT"
+
+msgid "URL malformed."
+msgstr "URL er ugyldig."
+
+msgid "Ukrainian"
+msgstr "Ukrainsk"
+
+msgid "Umount iso file"
+msgstr "Afmonter iso-fil"
+
+msgid "Unable to comply. Search History is empty."
+msgstr "Kan ikke udføres. Søgehistorikken er tom."
+
+msgid "Unfix jump target"
+msgstr "Frigør springmål"
+
+msgid "Unknown action."
+msgstr "Ukendt handling."
+
+msgid "Unknown error code."
+msgstr "Ukendt fejlkode."
+
+msgid "Unknown error."
+msgstr "Ukendt fejl."
+
+#, python-format
+msgid "Unknown protocol [%s]"
+msgstr "Ukendt protokol [%s]"
+
+msgid "Unknown server response."
+msgstr "Ukendt svar fra serveren."
+
+#, python-format
+msgid "Unknown subtitle parser for format \"%s\"."
+msgstr "Ukendt undertekst-parser for formatet \"%s\"."
+
+#, python-format
+msgid "Unrar error code[%s]."
+msgstr "Unrar-fejlkode[%s]."
+
+msgid "Unset watched"
+msgstr "Fjern markering som set"
+
+msgid "Unsupported protocol."
+msgstr "Protokollen understøttes ikke."
+
+#, python-format
+msgid "Unzip error code[%s]."
+msgstr "Unzip-fejlkode[%s]."
+
+msgid "Upbringing"
+msgstr "Opdragelse"
+
+msgid "Upcoming"
+msgstr "Kommende"
+
+msgid "Updates"
+msgstr "Opdateringer"
+
+msgid "Upload date"
+msgstr "Uploaddato"
+
+#, python-format
+msgid "Uploader: %s"
+msgstr "Uploadet af: %s"
+
+msgid "Uploads"
+msgstr "Uploads"
+
+msgid "Urllists player"
+msgstr "Urllists-afspiller"
+
+msgid "Use Cinemeta (no key, English)"
+msgstr "Brug Cinemeta (ingen nøgle, engelsk)"
+
+msgid "Use HLS streams (adaptive):"
+msgstr "Brug HLS-streams (adaptive):"
+
+msgid "Use IMDb (no key)"
+msgstr "Brug IMDb (ingen nøgle)"
+
+msgid "Use OMDb"
+msgstr "Brug OMDb"
+
+msgid "Use TMDb"
+msgstr "Brug TMDb"
+
+msgid "Use TVmaze for series (no key, English)"
+msgstr "Brug TVmaze til serier (ingen nøgle, engelsk)"
+
+msgid "Use default video quality"
+msgstr "Brug standardvideokvalitet"
+
+msgid "Use default video quality:"
+msgstr "Brug standardvideokvalitet:"
+
+msgid "Use login"
+msgstr "Brug login"
+
+msgid "Use own pin for configuration"
+msgstr "Brug egen PIN-kode til konfigurationen"
+
+msgid "Use own pin instead of the player pin"
+msgstr "Brug egen PIN-kode i stedet for afspillerens PIN-kode"
+
+msgid "Use proxy server:"
+msgstr "Brug proxyserver:"
+
+#, python-format
+msgid "Use software decoder for the %s"
+msgstr "Brug softwaredekoder til %s"
+
+msgid "Use subtitles parser extension if available"
+msgstr "Brug undertekst-parserudvidelse, hvis tilgængelig"
+
+msgid "Use the PyCurl for HTTP(S) requests"
+msgstr "Brug PyCurl til HTTP(S)-forespørgsler"
+
+msgid "Use the best quality :"
+msgstr "Brug den bedste kvalitet :"
+
+msgid "User"
+msgstr "Bruger"
+
+msgid "User defined"
+msgstr "Brugerdefineret"
+
+msgid "User files"
+msgstr "Brugerfiler"
+
+msgid "User link added."
+msgstr "Brugerlink tilføjet."
+
+msgid "User link deleted."
+msgstr "Brugerlink slettet."
+
+msgid "User link updated."
+msgstr "Brugerlink opdateret."
+
+msgid "User links"
+msgstr "Brugerlinks"
+
+msgid "User links sorted."
+msgstr "Brugerlinks sorteret."
+
+msgid "User links stored in the ytlist.txt file."
+msgstr "Brugerlinks gemt i filen ytlist.txt."
+
+msgid "User-Agent (leave empty for the default):"
+msgstr "User-Agent (lad være tom for standard):"
+
+#, python-format
+msgid "User-Links: %d"
+msgstr "Brugerlinks: %d"
+
+msgid "Username/password authentication failure."
+msgstr "Godkendelse med brugernavn/adgangskode mislykkedes."
+
+msgid "Username:"
+msgstr "Brugernavn:"
+
+msgid "Users"
+msgstr "Brugere"
+
+#, python-format
+msgid "Utility \"%s\" can not be found."
+msgstr "Værktøjet \"%s\" blev ikke fundet."
+
+msgid "VAVOO did not hand out a session signature. Try again later."
+msgstr "VAVOO udleverede ikke en sessionssignatur. Prøv igen senere."
+
+msgid "Venue"
+msgstr "Spillested"
+
+msgid "Verify"
+msgstr "Bekræft"
+
+msgid "Version"
+msgstr "Version"
+
+#, python-format
+msgid "Version: %s"
+msgstr "Version: %s"
+
+msgid "Video"
+msgstr "Video"
+
+msgid "Video buffer size [MB]"
+msgstr "Videobufferstørrelse [MB]"
+
+msgid "Video library"
+msgstr "Videobibliotek"
+
+msgid "Video link not found."
+msgstr "Videolink blev ikke fundet."
+
+msgid "Video mode"
+msgstr "Videotilstand"
+
+msgid "Video options"
+msgstr "Valgmuligheder for video"
+
+msgid "Video player OSD clock format"
+msgstr "Urformat i videoafspillerens OSD"
+
+msgid "Video policy"
+msgstr "Videopolitik"
+
+msgid "Video policy for 4:3"
+msgstr "Videopolitik for 4:3"
+
+msgid "Video recitations"
+msgstr "Videorecitationer"
+
+msgid "Video with DRM protection."
+msgstr "Video med DRM-beskyttelse."
+
+msgid "Videos"
+msgstr "Videoer"
+
+#, python-format
+msgid "Videos %s"
+msgstr "Videoer %s"
+
+msgid "Videos you have liked."
+msgstr "Videoer, du har syntes godt om."
+
+msgid "Videos you have recently watched."
+msgstr "Videoer, du har set for nylig."
+
+msgid "View count"
+msgstr "Antal visninger"
+
+msgid "Views"
+msgstr "Visninger"
+
+msgid "Views:"
+msgstr "Visninger:"
+
+msgid "Vimeo does not offer this list to anonymous users in your region."
+msgstr "Vimeo tilbyder ikke denne liste til anonyme brugere i din region."
+
+msgid "Vimeo live event: the live transmission (while on air) and the past transmissions."
+msgstr "Vimeo-livebegivenhed: liveudsendelsen (mens den sendes) og de tidligere udsendelser."
+
+msgid "Vimeo playlist with the recordings of this page."
+msgstr "Vimeo-playliste med optagelserne fra denne side."
+
+msgid "Vimeo: this video is private, removed or may only be played on the site that embeds it."
+msgstr "Vimeo: denne video er privat, fjernet eller må kun afspilles på den side, der indlejrer den."
+
+msgid "Virtual Keyboard"
+msgstr "Virtuelt tastatur"
+
+msgid "Virtual Keyboard type"
+msgstr "Type af virtuelt tastatur"
+
+msgid "Voice-over"
+msgstr "Voice-over"
+
+msgid "WWE shows"
+msgstr "WWE-shows"
+
+msgid "Waiting for the result ..."
+msgstr "Venter på resultatet ..."
+
+msgid "War"
+msgstr "Krig"
+
+msgid "Watch Videos Online"
+msgstr "Se videoer online"
+
+msgid "Watch history"
+msgstr "Visningshistorik"
+
+msgid "Watch later"
+msgstr "Se senere"
+
+msgid "Watch online"
+msgstr "Se online"
+
+msgid "Western"
+msgstr "Western"
+
+msgid "What's happening?"
+msgstr "Hvad sker der?"
+
+msgid "When the maximum is reached"
+msgstr "Når maksimum er nået"
+
+msgid "While live TV is running"
+msgstr "Mens live-tv kører"
+
+msgid "Whole file must be downloaded to start playback!"
+msgstr "Hele filen skal downloades, før afspilningen kan starte!"
+
+msgid "Wiki"
+msgstr "Wiki"
+
+msgid "Winter"
+msgstr "Vinter"
+
+msgid "With an API key from subdl.com (E2iPlayer settings, Subtitles) the official SubDL API is searched as well."
+msgstr "Med en API-nøgle fra subdl.com (E2iPlayer-indstillinger, Undertekster) søges der også i den officielle SubDL-API."
+
+msgid "With subtitles"
+msgstr "Med undertekster"
+
+msgid "World"
+msgstr "Verden"
+
+msgid "Worldwide"
+msgstr "Hele verden"
+
+msgid "Wrestling"
+msgstr "Wrestling"
+
+msgid "Wrestling shows"
+msgstr "Wrestling-shows"
+
+msgid "Write current title to file:"
+msgstr "Skriv aktuel titel til fil:"
+
+msgid "Writer:"
+msgstr "Forfatter:"
+
+msgid "Writers:"
+msgstr "Forfattere:"
+
+msgid "Written Boards Review"
+msgstr "Repetition til skriftlig speciallægeeksamen"
+
+msgid "Wrong Youtube Api Key length"
+msgstr "Forkert længde på YouTube API-nøgle"
+
+msgid "Wrong captcha code."
+msgstr "Forkert captcha-kode."
+
+msgid "Wrong code."
+msgstr "Forkert kode."
+
+msgid "Wrong format of rar archive."
+msgstr "Forkert format på rar-arkiv."
+
+msgid "Wrong format of zip archive."
+msgstr "Forkert format på zip-arkiv."
+
+msgid "Wrong indexes."
+msgstr "Forkerte indekser."
+
+msgid "Wrong uri."
+msgstr "Forkert uri."
+
+msgid "Wrong weeb.tv username or password."
+msgstr "Forkert weeb.tv-brugernavn eller -adgangskode."
+
+#, python-format
+msgid "Wyzie Subs API key rejected: %s"
+msgstr "Wyzie Subs API-nøgle afvist: %s"
+
+msgid "Wyzie Subs needs an API key. You can get a free one at https://store.wyzie.io/redeem and enter it in the E2iPlayer configuration."
+msgstr "Wyzie Subs kræver en API-nøgle. Du kan få en gratis på https://store.wyzie.io/redeem og indtaste den i E2iPlayer-konfigurationen."
+
+msgid "Wyzie Subs: the daily request limit of the API key is reached."
+msgstr "Wyzie Subs: API-nøglens daglige forespørgselsgrænse er nået."
+
+msgid "YELLOW"
+msgstr "GUL"
+
+msgid "YESTERDAY"
+msgstr "I GÅR"
+
+msgid "YP connected"
+msgstr "YP forbundet"
+
+msgid "Year"
+msgstr "År"
+
+#, python-format
+msgid "Year %s"
+msgstr "År %s"
+
+msgid "Year:"
+msgstr "År:"
+
+msgid "Yes"
+msgstr "Ja"
+
+msgid "Yes + Global Search"
+msgstr "Ja + global søgning"
+
+msgid "Yes, to console"
+msgstr "Ja, til konsol"
+
+msgid "Yes, to file /hdd/iptv.dbg"
+msgstr "Ja, til filen /hdd/iptv.dbg"
+
+msgid "Yes, to file /home/root/logs/iptv.dbg"
+msgstr "Ja, til filen /home/root/logs/iptv.dbg"
+
+msgid "Yes, to file /tmp/iptv.dbg"
+msgstr "Ja, til filen /tmp/iptv.dbg"
+
+msgid "Yesterday"
+msgstr "I går"
+
+msgid "You can disable HTTPS certificates validation in the E2iPlayer configuration to suppress this problem."
+msgstr "Du kan deaktivere validering af HTTPS-certifikater i E2iPlayer-konfigurationen for at undgå dette problem."
+
+msgid "You can enable PyCurl in the E2iPlayer configuration to fix this problem."
+msgstr "Du kan aktivere PyCurl i E2iPlayer-konfigurationen for at løse dette problem."
+
+msgid "You can install PyCurl package with TLS 1.3 support from the feed to fix this problem."
+msgstr "Du kan installere PyCurl-pakken med TLS 1.3-understøttelse fra feedet for at løse dette problem."
+
+#, python-format
+msgid "You can use \"%s\" or \"%s\" services for automatic solution."
+msgstr "Du kan bruge tjenesterne \"%s\" eller \"%s\" til en automatisk løsning."
+
+msgid "You can use external eplayer to start playback faster."
+msgstr "Du kan bruge ekstern eplayer for at starte afspilningen hurtigere."
+
+msgid "You do not have a premium account. Starting a sponsored broadcast."
+msgstr "Du har ikke en premium-konto. Starter en sponsoreret udsendelse."
+
+msgid "You have reached the play limit for this mix."
+msgstr "Du har nået afspilningsgrænsen for dette mix."
+
+msgid "You should never perform block I/O operations in the __init__."
+msgstr "Du bør aldrig udføre blokerende I/O-operationer i __init__."
+
+msgid "YouTube User Links Editor"
+msgstr "YouTube-brugerlinkeditor"
+
+msgid "YouTube channels: original order"
+msgstr "YouTube-kanaler: oprindelig rækkefølge"
+
+msgid "YouTube channels: sort by newest upload"
+msgstr "YouTube-kanaler: sortér efter nyeste upload"
+
+msgid "Your 'Watch later' playlist."
+msgstr "Din playliste 'Se senere'."
+
+#, python-format
+msgid "Your MyE2i extension is outdated or unknown (v%s or newer needed). Please update:"
+msgstr "Din MyE2i-udvidelse er forældet eller ukendt (v%s eller nyere kræves). Opdater:"
+
+msgid "Your search entry"
+msgstr "Din søgning"
+
+#, python-format
+msgid "Youth protection: only available between %s and %s."
+msgstr "Børnebeskyttelse: kun tilgængelig mellem %s og %s."
+
+msgid "Youtube Suggestions"
+msgstr "YouTube-forslag"
+
+msgid "Youtube searches are quicker, if you fill API key in setting menu"
+msgstr "YouTube-søgninger er hurtigere, hvis du angiver en API-nøgle i indstillingsmenuen"
+
+msgid "Z-A"
+msgstr "Z-A"
+
+#, python-format
+msgid "[%s CD]"
+msgstr "[%s CD]"
+
+#, python-format
+msgid "[%s] - configuration"
+msgstr "[%s] - konfiguration"
+
+#, python-format
+msgid "[%s] with buffering"
+msgstr "[%s] med buffering"
+
+#, python-format
+msgid "[%s] without buffering"
+msgstr "[%s] uden buffering"
+
+msgid "[HLS/M3U8] buffering"
+msgstr "[HLS/M3U8] buffering"
+
+msgid "[HLS/M3U8] live stream starts behind live"
+msgstr "[HLS/M3U8] livestream starter bag live-punktet"
+
+msgid "[HTTP] buffering"
+msgstr "[HTTP] buffering"
+
+msgid "[Logged-in-only]"
+msgstr "[Kun for indloggede]"
+
+msgid "[RTMP] buffering (rtmpdump required)"
+msgstr "[RTMP] buffering (kræver rtmpdump)"
+
+msgid "[en]"
+msgstr "[en]"
+
+msgid "[pl]"
+msgstr "[pl]"
+
+msgid "_checkStatus except error"
+msgstr "_checkStatus except-fejl"
+
+msgid "after a week"
+msgstr "efter en uge"
+
+msgid "after closing"
+msgstr "efter lukning"
+
+msgid "after day"
+msgstr "efter en dag"
+
+msgid "after three days"
+msgstr "efter tre dage"
+
+msgid "all"
+msgstr "alle"
+
+msgid "alphabetical"
+msgstr "alfabetisk"
+
+msgid "anime-odcinki.pl shows this title only to logged-in users."
+msgstr "anime-odcinki.pl viser kun denne titel til indloggede brugere."
+
+msgid "aqua"
+msgstr "aqua"
+
+msgid "as Chrome this session"
+msgstr "som Chrome i denne session"
+
+msgid "as in ytlist.txt"
+msgstr "som i ytlist.txt"
+
+msgid "auto"
+msgstr "auto"
+
+#, python-format
+msgid "available until %s"
+msgstr "tilgængelig indtil %s"
+
+msgid "back to host/group selection"
+msgstr "tilbage til valg af host/gruppe"
+
+msgid "back to the previous category / jump to the next page"
+msgstr "tilbage til forrige kategori / spring til næste side"
+
+msgid "black"
+msgstr "sort"
+
+msgid "black&white"
+msgstr "sort-hvid"
+
+msgid "blue"
+msgstr "blå"
+
+msgid "bottom"
+msgstr "nederst"
+
+msgid "buffering location"
+msgstr "bufferplacering"
+
+msgid "center"
+msgstr "centreret"
+
+msgid "changed"
+msgstr "ændret"
+
+msgid "close the editor - or stop manual reordering if it's active"
+msgstr "luk editoren - eller stop manuel omarrangering, hvis den er aktiv"
+
+msgid "cobalt"
+msgstr "kobolt"
+
+msgid "cookies cache"
+msgstr "cookie-cache"
+
+msgid "could not run the probe"
+msgstr "testen kunne ikke køres"
+
+#, python-format
+msgid "curl-impersonate is not installed on the receiver (%s). This stream only plays with it."
+msgstr "curl-impersonate er ikke installeret på modtageren (%s). Denne stream kan kun afspilles med det."
+
+msgid "debug"
+msgstr "debug"
+
+msgid "default"
+msgstr "standard"
+
+msgid "delete entered text"
+msgstr "slet indtastet tekst"
+
+msgid "delete the selected entry"
+msgstr "slet den valgte post"
+
+msgid "device ID"
+msgstr "enheds-ID"
+
+msgid "device ID 2"
+msgstr "enheds-ID 2"
+
+msgid "direct link"
+msgstr "direkte link"
+
+msgid "direct number input"
+msgstr "direkte talindtastning"
+
+msgid "download the selected item"
+msgstr "download det valgte element"
+
+msgid "downloads location"
+msgstr "downloadplacering"
+
+msgid "e-mail"
+msgstr "e-mail"
+
+msgid "edit the selected entry (same as BLUE) - or drop it while manually reordering"
+msgstr "rediger den valgte post (samme som BLÅ) - eller slip den under manuel omarrangering"
+
+msgid "edit the selected entry (same as OK)"
+msgstr "rediger den valgte post (samme som OK)"
+
+msgid "enable / disable manual reordering"
+msgstr "slå manuel omarrangering til/fra"
+
+msgid "external eplayer3"
+msgstr "ekstern eplayer3"
+
+msgid "external gstplayer"
+msgstr "ekstern gstplayer"
+
+msgid "failed"
+msgstr "mislykkedes"
+
+msgid "file"
+msgstr "fil"
+
+msgid "fixed"
+msgstr "fastlåst"
+
+msgid "format"
+msgstr "format"
+
+msgid "free"
+msgstr "ledig"
+
+msgid "from E2 settings"
+msgstr "fra E2-indstillinger"
+
+msgid "fuchsia"
+msgstr "fuchsia"
+
+msgid "go back / close"
+msgstr "gå tilbage / luk"
+
+msgid "goals"
+msgstr "mål"
+
+msgid "gray"
+msgstr "grå"
+
+msgid "green"
+msgstr "grøn"
+
+msgid "hd"
+msgstr "hd"
+
+msgid "hearing impaired"
+msgstr "hørehæmmede"
+
+msgid "high"
+msgstr "høj"
+
+msgid "hint: the site shows a next page link"
+msgstr "tip: siden viser et link til næste side"
+
+msgid "horizontal"
+msgstr "vandret"
+
+msgid "host"
+msgstr "host"
+
+msgid "host order and groups"
+msgstr "hostrækkefølge og grupper"
+
+msgid "https"
+msgstr "https"
+
+msgid "https - validate SSL certificates"
+msgstr "https - valider SSL-certifikater"
+
+msgid "insert space"
+msgstr "indsæt mellemrum"
+
+msgid "installed"
+msgstr "installeret"
+
+msgid "internal"
+msgstr "intern"
+
+msgid "item actions (favorites, host-specific actions)"
+msgstr "handlinger for elementet (favoritter, host-specifikke handlinger)"
+
+msgid "jersey"
+msgstr "trøje"
+
+msgid "jump to entries starting with that letter (if enabled in the settings)"
+msgstr "spring til poster, der starter med det bogstav (hvis aktiveret i indstillingerne)"
+
+msgid "jump to items starting with that letter, or launch a specific player directly"
+msgstr "spring til elementer, der starter med det bogstav, eller start en bestemt afspiller direkte"
+
+msgid "kernel reports"
+msgstr "kernen rapporterer"
+
+msgid "large"
+msgstr "stor"
+
+msgid "leave movie player..."
+msgstr "forlader filmafspiller..."
+
+msgid "lime"
+msgstr "limegrøn"
+
+msgid "line"
+msgstr "linje"
+
+msgid "loaded (no version)"
+msgstr "indlæst (ingen version)"
+
+msgid "login"
+msgstr "login"
+
+msgid "low"
+msgstr "lav"
+
+msgid "machine translated"
+msgstr "maskinoversat"
+
+msgid "main"
+msgstr "main"
+
+msgid "manual"
+msgstr "manuel"
+
+msgid "maroon"
+msgstr "rødbrun"
+
+msgid "medium"
+msgstr "mellem"
+
+msgid "menu and list only"
+msgstr "kun menu og liste"
+
+msgid "minutes"
+msgstr "minutter"
+
+msgid "more options (this menu)"
+msgstr "flere valgmuligheder (denne menu)"
+
+msgid "move cursor right/left"
+msgstr "flyt markøren til højre/venstre"
+
+msgid "move the selection - or move it while manually reordering"
+msgstr "flyt markeringen - eller flyt posten under manuel omarrangering"
+
+msgid "movie metadata cache"
+msgstr "cache for filmmetadata"
+
+msgid "movie player preferences"
+msgstr "indstillinger for filmafspiller"
+
+msgid "navy"
+msgstr "marineblå"
+
+msgid "netu/hqq: the player check failed, try again later."
+msgstr "netu/hqq: afspillerens tjek mislykkedes, prøv igen senere."
+
+msgid "never"
+msgstr "aldrig"
+
+msgid "next page"
+msgstr "næste side"
+
+msgid "next page = page 1"
+msgstr "næste side = side 1"
+
+msgid "next page empty"
+msgstr "næste side tom"
+
+msgid "next page ok"
+msgstr "næste side ok"
+
+msgid "no answer"
+msgstr "intet svar"
+
+msgid "no next page"
+msgstr "ingen næste side"
+
+msgid "no stream link"
+msgstr "intet stream-link"
+
+msgid "no videos in the first lists"
+msgstr "ingen videoer i de første lister"
+
+msgid "not available (the Python parser is used)"
+msgstr "ikke tilgængelig (Python-parseren bruges)"
+
+msgid "not found"
+msgstr "ikke fundet"
+
+msgid "not installed"
+msgstr "ikke installeret"
+
+msgid "not loadable"
+msgstr "kan ikke indlæses"
+
+msgid "off"
+msgstr "fra"
+
+msgid "off / console"
+msgstr "fra / konsol"
+
+msgid "olive"
+msgstr "olivengrøn"
+
+msgid "on"
+msgstr "til"
+
+msgid "only on the receiver"
+msgstr "kun på modtageren"
+
+msgid "open / play the selected item"
+msgstr "åbn / afspil det valgte element"
+
+msgid "open the options menu - see below"
+msgstr "åbn menuen med valgmuligheder - se nedenfor"
+
+msgid "or"
+msgstr "eller"
+
+msgid "other binaries"
+msgstr "andre binære filer"
+
+msgid "password"
+msgstr "adgangskode"
+
+msgid "prijevodi-online.org refused the download for this account."
+msgstr "prijevodi-online.org afviste downloaden for denne konto."
+
+msgid "purple"
+msgstr "lilla"
+
+msgid "quality"
+msgstr "kvalitet"
+
+msgid "red"
+msgstr "rød"
+
+msgid "refresh the current list"
+msgstr "opdater den aktuelle liste"
+
+msgid "rootfs"
+msgstr "rootfs"
+
+msgid "rotate (keep the old one as iptv-<date>.dbg)"
+msgstr "roter (behold den gamle som iptv-<dato>.dbg)"
+
+msgid "rtmp"
+msgstr "rtmp"
+
+msgid "save all changes to disk"
+msgstr "gem alle ændringer på disken"
+
+msgid "saved"
+msgstr "gemt"
+
+msgid "saved in the temporary data folder"
+msgstr "gemt i den midlertidige datamappe"
+
+msgid "saved next to the downloaded video file"
+msgstr "gemt ved siden af den downloadede videofil"
+
+msgid "search"
+msgstr "søg"
+
+#, python-format
+msgid "search %d"
+msgstr "søgning %d"
+
+msgid "search found nothing"
+msgstr "søgningen fandt intet"
+
+msgid "search history"
+msgstr "søgehistorik"
+
+msgid "search next page = page 1"
+msgstr "søgning næste side = side 1"
+
+msgid "search next page empty"
+msgstr "søgning næste side tom"
+
+msgid "search next page ok"
+msgstr "søgning næste side ok"
+
+msgid "season pack"
+msgstr "sæsonpakke"
+
+msgid "second"
+msgstr "sekund"
+
+msgid "seconds"
+msgstr "sekunder"
+
+msgid "select to sign out"
+msgstr "vælg for at logge ud"
+
+msgid "serial number"
+msgstr "serienummer"
+
+msgid "show more details about the selected item"
+msgstr "vis flere detaljer om det valgte element"
+
+msgid "show this help"
+msgstr "vis denne hjælp"
+
+msgid "sign in (subscriptions, playlists, age-restricted videos)"
+msgstr "log ind (abonnementer, playlister, aldersbegrænsede videoer)"
+
+msgid "signature"
+msgstr "signatur"
+
+msgid "signed in"
+msgstr "logget ind"
+
+msgid "silver"
+msgstr "sølv"
+
+msgid "small"
+msgstr "lille"
+
+msgid "sources"
+msgstr "kilder"
+
+msgid "standard"
+msgstr "standard"
+
+msgid "start auto-play (plays through the list automatically)"
+msgstr "start autoafspilning (afspiller listen automatisk)"
+
+msgid "status"
+msgstr "status"
+
+msgid "stream data"
+msgstr "streamdata"
+
+msgid "stream data ok"
+msgstr "streamdata ok"
+
+msgid "stream data ok (HLS)"
+msgstr "streamdata ok (HLS)"
+
+#, python-format
+msgid "stream is a web page, not video (HTTP %s)"
+msgstr "stream er en webside, ikke video (HTTP %s)"
+
+msgid "stream link"
+msgstr "stream-link"
+
+msgid "stream link ok"
+msgstr "stream-link ok"
+
+#, python-format
+msgid "stream not checked (%s)"
+msgstr "stream ikke kontrolleret (%s)"
+
+msgid "stream not checked (HTTP 429, too many requests)"
+msgstr "stream ikke kontrolleret (HTTP 429, for mange forespørgsler)"
+
+#, python-format
+msgid "stream: %s"
+msgstr "stream: %s"
+
+#, python-format
+msgid "stream: no data (HTTP %s)"
+msgstr "stream: ingen data (HTTP %s)"
+
+msgid "subs.ro does not answer."
+msgstr "subs.ro svarer ikke."
+
+msgid "subsource.net does not answer."
+msgstr "subsource.net svarer ikke."
+
+msgid "subtitles"
+msgstr "undertekster"
+
+msgid "subtitles cache"
+msgstr "cache for undertekster"
+
+msgid "switch between keyboard, suggestions and search history"
+msgstr "skift mellem tastatur, forslag og søgehistorik"
+
+msgid "teal"
+msgstr "blågrøn"
+
+msgid "the best"
+msgstr "den bedste"
+
+msgid "the menu has no lists"
+msgstr "menuen har ingen lister"
+
+msgid "the menu is empty"
+msgstr "menuen er tom"
+
+msgid "the worst"
+msgstr "den dårligste"
+
+msgid "thumbnails"
+msgstr "miniaturebilleder"
+
+#, python-format
+msgid "thumbnails %d/%d"
+msgstr "miniaturebilleder %d/%d"
+
+msgid "thumbnails do not load"
+msgstr "miniaturebilleder indlæses ikke"
+
+msgid "to top"
+msgstr "til toppen"
+
+msgid "top"
+msgstr "øverst"
+
+msgid "truncate the file"
+msgstr "afkort filen"
+
+msgid "type selected character / confirm selection"
+msgstr "indtast valgt tegn / bekræft valg"
+
+msgid "unknown"
+msgstr "ukendt"
+
+msgid "unlimited"
+msgstr "ubegrænset"
+
+msgid "unsorted"
+msgstr "usorteret"
+
+msgid "upzone.cc: free transfer limit reached - PREMIUM account required."
+msgstr "upzone.cc: gratis overførselsgrænse nået - PREMIUM-konto kræves."
+
+msgid "version"
+msgstr "version"
+
+msgid "vertical"
+msgstr "lodret"
+
+msgid "very high"
+msgstr "meget høj"
+
+#, python-format
+msgid "videos: %s"
+msgstr "videoer: %s"
+
+msgid "views"
+msgstr "visninger"
+
+#, python-format
+msgid "wait %s second"
+msgstr "vent %s sekund"
+
+#, python-format
+msgid "wait %s seconds"
+msgstr "vent %s sekunder"
+
+msgid "wants you to solve a captcha. Only after solving this captcha, you are allowed to continue with your downloads. E2iPlayer is not able to auto-solve these captchas, so we need to pass the captcha to you."
+msgstr "vil have dig til at løse en captcha. Først når du har løst denne captcha, kan du fortsætte med dine downloads. E2iPlayer kan ikke løse disse captchaer automatisk, så vi er nødt til at give captchaen videre til dig."
+
+#, python-format
+msgid "weeb.tv did not return a valid stream (error %s)."
+msgstr "weeb.tv returnerede ikke en gyldig stream (fejl %s)."
+
+msgid "weeb.tv did not return a valid stream for this channel."
+msgstr "weeb.tv returnerede ikke en gyldig stream for denne kanal."
+
+msgid "weeb.tv streams need a weeb.tv account - enter the login in the host configuration (Web streams, WeebTV)"
+msgstr "weeb.tv-streams kræver en weeb.tv-konto - indtast login i host-konfigurationen (Web streams, WeebTV)"
+
+msgid "white"
+msgstr "hvid"
+
+msgid "www:"
+msgstr "www:"
+
+msgid "yellow"
+msgstr "gul"

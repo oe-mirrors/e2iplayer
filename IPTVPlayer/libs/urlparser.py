@@ -25,6 +25,7 @@ from Plugins.Extensions.IPTVPlayer.libs.ecdsa import NIST256p as ECDSA_NIST256p,
 from Plugins.Extensions.IPTVPlayer.libs.jsunpack import get_packed_data
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import common
 from Plugins.Extensions.IPTVPlayer.libs.recaptcha_v2 import UnCaptchaReCaptcha
+from Plugins.Extensions.IPTVPlayer.libs.secretbox import secretbox as nacl_secretbox
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import captchaParser, decorateUrl, getDirectM3U8Playlist, getImpersonateM3U8Playlist, getMPDLinksWithMeta, requireDownloaderForDisguisedHls, unicode_escape, unpackJSPlayerParams, VIDUPME_decryptPlayerParams, safeEvalExpression
 from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import clean_html
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_binary, ensure_str
@@ -174,6 +175,7 @@ class urlparser:
             "adrianmissionminute.com": self.pp.parserVOESX,  # add 061026
             "advertape.net": self.pp.parserSTREAMTAPE,  # add 061026
             "advtpe.com": self.pp.parserSTREAMTAPE,  # add 061026
+            "aflamy.pro": self.pp.parserALBAPLAYER,  # add 091026
             "agbsb.com": self.pp.parserSTREAMUP,
             "aiavh.com": self.pp.parserJWPLAYER,
             "ajmidyad.sbs": self.pp.parserJWPLAYER,  # add 061026
@@ -287,6 +289,7 @@ class urlparser:
             # d
             "d0000d.com": self.pp.parserDOOD,
             "d000d.com": self.pp.parserDOOD,
+            "d000d.xyz": self.pp.parserDOOD,  # add 081026
             "d00ds.site": self.pp.parserJWPLAYER,  # add 061026
             "d0o0d.com": self.pp.parserDOOD,
             "d-s.io": self.pp.parserDOOD,
@@ -373,6 +376,7 @@ class urlparser:
             "f51rm.com": self.pp.parserBYSE,
             "fastream.to": self.pp.parserJWPLAYER,
             "fastvid.cam": self.pp.parserJWPLAYER,  # add 041026
+            "fastvip.space": self.pp.parserJWPLAYER,  # add 081026
             "fdewsdc.sbs": self.pp.parserJWPLAYER,
             "figeterpiazine.com": self.pp.parserVOESX,  # add 061026
             "file-upload.com": self.pp.parserJWPLAYER,  # add 061026
@@ -397,6 +401,7 @@ class urlparser:
             "filemoon.wf": self.pp.parserBYSE,
             "fileone.tv": self.pp.parserFILEONETV,
             "file-upload.org": self.pp.parserJWPLAYER,
+            "filewatch.space": self.pp.parserJWPLAYER,  # add 081026
             "filma365.strp2p.site": self.pp.parserSBS,
             "filmi9.upns.xyz": self.pp.parserSBS,  # add 061026
             "firestream.site": self.pp.parserFIRESTREAM,  # add 061026
@@ -522,8 +527,10 @@ class urlparser:
             # l
             "l1afav.net": self.pp.parserBYSE,
             "lancewhosedifficult.com": self.pp.parserVOESX,  # add 061026
+            "larhu.website": self.pp.parserJWPLAYER,  # add 081026
             "launchreliantcleaverriver.com": self.pp.parserVOESX,  # add 061026
             "lauradaydo.com": self.pp.parserVOESX,  # add 061026
+            "liiivideo.com": self.pp.parserJWPLAYER,  # add 081026
             "lisatrialidea.com": self.pp.parserVOESX,  # add 061026
             "loadvid.com": self.pp.parserLOADVID,  # add 071026 (cdn.loadvid.com, pornbusy)
             "lolololo.store": self.pp.parserSBS,  # add 031026 (Streamp2p "#id" player, not the earnvids lolololu.website)
@@ -571,6 +578,7 @@ class urlparser:
             "miixdrop.net": self.pp.parserMIXDROP,
             "mikaylaarealike.com": self.pp.parserVOESX,  # add 061026
             "minochinos.com": self.pp.parserJWPLAYER,
+            "miravd.com": self.pp.parserJWPLAYER,  # add 081026
             "mivalyo.com": self.pp.parserJWPLAYER,
             "mixdrp.click": self.pp.parserMIXDROP,
             "mixdrp.co": self.pp.parserMIXDROP,
@@ -615,6 +623,7 @@ class urlparser:
             "mp4plus.cyou": self.pp.parserJWPLAYER,
             "mp4plus.org": self.pp.parserJWPLAYER,
             "mp4upload.com": self.pp.parserJWPLAYER,
+            "mwdy.cc": self.pp.parserJWPLAYER,  # add 081026
             "mwish.pro": self.pp.parserJWPLAYER,  # add 061026
             "mxdrop.sx": self.pp.parserMIXDROP,
             "mxdrop.to": self.pp.parserMIXDROP,
@@ -654,9 +663,13 @@ class urlparser:
             "playmate.to": self.pp.parserPLAYMATE,
             "playmogo.com": self.pp.parserDOOD,
             "playnixes.com": self.pp.parserJWPLAYER,  # add 061026 (StreamWish mirror, e.g. pornbusy)
+            "pluss24.com": self.pp.parserJWPLAYER,  # add 081026
             "polsatsport.pl": self.pp.parserJWPLAYER,
             "poophq.com": self.pp.parserVEEV,
             "pqham.com": self.pp.parserJWPLAYER,
+            # q
+            "q7v3k8m2p1.top": self.pp.parserMEGAMAX,  # add 091026
+            "qvid.cc": self.pp.parserALBAPLAYER,  # add 091026
             # r
             "rapid-cloud.co": self.pp.parserVIDCLOUD,
             "realfinanceblogcenter.com": self.pp.parserVOESX,  # add 061026
@@ -666,6 +679,7 @@ class urlparser:
             "roberteachfinal.com": self.pp.parserVOESX,  # add 061026
             "robertordercharacter.com": self.pp.parserVOESX,  # add 061026
             "robertplacespace.com": self.pp.parserVOESX,  # add 061026
+            "rpmhub.site": self.pp.parserSBS,  # add 081026
             "rubystm.com": self.pp.parserJWPLAYER,
             "rubystream.xyz": self.pp.parserJWPLAYER,  # add 061026
             "rubyvid.com": self.pp.parserJWPLAYER,  # add 061026
@@ -717,6 +731,7 @@ class urlparser:
             "streamadblocker.xyz": self.pp.parserSTREAMTAPE,
             "streamadblockplus.com": self.pp.parserSTREAMTAPE,
             "streamcash.to": self.pp.parserSTREAMCASH,
+            "streamfile.net": self.pp.parserJWPLAYER,  # add 091026
             "streamhihi.com": self.pp.parserJWPLAYER,
             "streamhls.to": self.pp.parserJWPLAYER,
             "streamlyplayer.online": self.pp.parserBYSE,
@@ -809,6 +824,7 @@ class urlparser:
             "upns.pro": self.pp.parserSBS,  # add 061026 (flemmix.upns.pro via the parent domain, wiflix)
             "uptodatefinishconferenceroom.com": self.pp.parserVOESX,  # add 061026
             "upzone.cc": self.pp.parserUPZONECC,
+            "upzur.com": self.pp.parserUPZUR,  # add 091026
             "uqload.bz": self.pp.parserJWPLAYER,
             "uqload.co": self.pp.parserJWPLAYER,  # add 061026
             "uqload.com": self.pp.parserJWPLAYER,
@@ -828,6 +844,7 @@ class urlparser:
             "valeronevijao.com": self.pp.parserVOESX,  # add 061026
             "veev.pro": self.pp.parserVEEV,  # add 061026
             "veev.to": self.pp.parserVEEV,
+            "vfaststream.co": self.pp.parserSTREAMUP,  # add 091026
             "vfaststream.com": self.pp.parserSTREAMUP,  # add 061026
             "vide0.net": self.pp.parserDOOD,
             "videoland.cfd": self.pp.parserSBS,  # add 061026
@@ -990,6 +1007,7 @@ class urlparser:
             "yadmalik.sbs": self.pp.parserJWPLAYER,  # add 061026
             "yodelswartlike.com": self.pp.parserVOESX,  # add 061026
             "younetu.com": self.pp.parserHQQ,
+            "younetu.org": self.pp.parserHQQ,  # add 081026
             "yourupload.com": self.pp.parserJWPLAYER,
             "youtu.be": self.pp.parserYOUTUBE,
             "youtube-nocookie.com": self.pp.parserYOUTUBE,
@@ -2206,6 +2224,41 @@ class pageParser(CaptchaHelper):
             return []
         url = urlparser.decorateUrl(url.replace("&amp;", "&"), {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": "https://sendvid.com/"})
         return [{"name": "sendvid.com", "url": url}]
+
+    def parserUPZUR(self, baseUrl):  # add 091026
+        # add 091026: upzur.com (laroza) - the video.js <source> tag is written by a script whose html is a char
+        # array of \xNN escapes, joined in reversed order: var a = ["\x3b", ...]; c[c][c][c](a.reverse().join(""))()
+        printDBG("parserUPZUR baseUrl[%r]" % baseUrl)
+        baseUrl = strwithmeta(baseUrl)
+        HTTP_HEADER = self.cm.getDefaultHeader()
+        HTTP_HEADER["Referer"] = baseUrl.meta.get("Referer", "https://upzur.com/")
+        videoId = self.cm.ph.getSearchGroups(baseUrl + "/", r"upzur\.com/(?:embed-|e/|d/)?([0-9a-zA-Z]{12})[/.?]")[0]
+        pageUrl = ("https://upzur.com/embed-%s.html" % videoId) if videoId else baseUrl
+        sts, data = self.cm.getPage(pageUrl, {"header": HTTP_HEADER, "ignore_http_code_ranges": [(404, 404)]})
+        if not sts:
+            return False
+
+        def _unescape(text):
+            # only ascii is needed for the tag (chr() of py2 is limited to 0-255)
+            return re.sub(r"\\(?:x([0-9a-fA-F]{2})|u([0-9a-fA-F]{4}))", lambda m: chr(int(m.group(1) or m.group(2), 16)) if int(m.group(1) or m.group(2), 16) < 128 else m.group(0), text)
+
+        html = data
+        for item in re.finditer(r"""var\s+([\w$]+)\s*=\s*\[((?:\s*(?:"[^"]*"|'[^']*')\s*,?)+)\]""", data):
+            chars = [_unescape(c[1:-1]) for c in re.findall(r""""[^"]*"|'[^']*'""", item.group(2))]
+            if re.search(r"%s\s*\.\s*reverse\s*\(\s*\)" % re.escape(item.group(1)), data):
+                chars.reverse()
+            html += "\n" + "".join(chars)
+        url = self.cm.ph.getSearchGroups(html, r"""<source[^>]+?src=['"](https?://[^'"]+?)['"]""")[0]
+        if not url:
+            url = self.cm.ph.getSearchGroups(html, r"""['"]?(?:file|src)['"]?\s*:\s*['"](https?://[^'"]+?\.(?:mp4|m3u8)[^'"]*?)['"]""")[0]
+        if not url:
+            if "File was deleted" in data or "File Not Found" in data or self.cm.meta.get("status_code") == 404:
+                SetIPTVPlayerLastHostError(_("The video has been removed."))
+            return []
+        url = urlparser.decorateUrl(url.replace("&amp;", "&"), {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": "https://upzur.com/"})
+        if ".m3u8" in url:
+            return getDirectM3U8Playlist(url, checkContent=True, sortWithMaxBitrate=999999999)
+        return [{"name": "upzur.com", "url": url}]
 
     def parserVIDMOLYME(self, baseUrl):  # fix 150126
         printDBG("parserVIDMOLYME baseUrl[%r]" % baseUrl)
@@ -4643,7 +4696,11 @@ class pageParser(CaptchaHelper):
         sts, data = self.cm.getPage(baseUrl.replace(host, host + "api/"), {"header": HTTP_HEADER})
         if not sts:
             return []
-        src = json_loads(data).get("src", "")
+        try:
+            src = json_loads(data).get("src", "")
+        except Exception:
+            printDBG("parserVIXSRC: no JSON from the api (title not on vixsrc?)")
+            return []
         if src.startswith("/"):
             src = host[:-1] + src
         HTTP_HEADER["Referer"] = host
@@ -5143,32 +5200,40 @@ class pageParser(CaptchaHelper):
                     out.append((((c2 & 0x03) << 6) | c3) & 0xFF)
             return bytes(out).decode("utf-8", "replace")
 
-        def extractLinks(server, root):
+        def extractLinks(root):
+            # upd 091026: the servers now answer {"streams":[{"url","quality","language","type","headers":{"Referer"}}]}
+            # (moviebox, purstream, hollymoviehd, onehd) or a top-level {"url": ..., "type": "hls"} (flixhq);
+            # older shapes ("sources" with file/link/label, data.stream.playlist) are still read
             links = []
             try:
-                if server == "moviebox":
-                    for item in root.get("url", []) or []:
-                        if item.get("link"):
-                            links.append((item["link"], item.get("resolution", "")))
-                elif server in ("allmovies", "delta"):
-                    for item in root.get("streams", []) or []:
-                        if item.get("url"):
-                            links.append((item["url"], item.get("language", "")))
-                elif server == "hollymoviehd":
-                    for item in root.get("sources", []) or []:
-                        if item.get("file"):
-                            links.append((item["file"], item.get("label", "")))
-                elif server in ("purstream", "klikxxi"):
-                    for item in root.get("sources", []) or []:
-                        if item.get("url"):
-                            links.append((item["url"], item.get("quality", item.get("name", ""))))
-                elif server == "vidlink":
-                    playlist = root.get("data", {}).get("stream", {}).get("playlist")
-                    if playlist:
-                        links.append((playlist, ""))
-                elif server == "onehd":
-                    if root.get("url"):
-                        links.append((root["url"], ""))
+                if not isinstance(root, dict):
+                    return links
+                stream = root.get("data")
+                stream = stream.get("stream") if isinstance(stream, dict) else None
+                if isinstance(stream, dict) and stream.get("playlist"):
+                    links.append((stream["playlist"], "", "", True))
+                items = root.get("streams") or root.get("sources") or root.get("url") or []
+                if isinstance(items, (str, type(u""))):
+                    items = [dict(root, url=items)]
+                elif isinstance(items, dict):
+                    items = [items]
+                for item in items:
+                    if not isinstance(item, dict):
+                        continue
+                    link = item.get("url") or item.get("file") or item.get("link") or ""
+                    if not isinstance(link, (str, type(u""))) or not link:
+                        continue
+                    label = []
+                    for key in ("language", "quality", "resolution", "label"):
+                        val = item.get(key)
+                        if val and isinstance(val, (str, type(u""))) and val.lower() != "auto" and val not in label:
+                            label.append(val)
+                    ref = ""
+                    headers = item.get("headers")
+                    if isinstance(headers, dict):
+                        ref = headers.get("Referer") or headers.get("referer") or ""
+                    isHls = str(item.get("type", "")).lower() == "hls" or ".m3u8" in link.lower()
+                    links.append((link, " ".join(label), ref, isHls))
             except Exception:
                 printExc()
             return links
@@ -5203,15 +5268,25 @@ class pageParser(CaptchaHelper):
                 root = json_loads(payload)
             except Exception:
                 continue
-            for url, label in extractLinks(server, root):
+            for url, label, ref, isHls in extractLinks(root):
                 if url.startswith("//"):
                     url = "https:" + url
-                decoUrl = urlparser.decorateUrl(url, {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": "https://vidnest.fun/"})
+                if not url.startswith("http"):
+                    printDBG("parserVIDNEST %s: skip relative url [%s]" % (server, url))
+                    continue
+                path = urlparse(url).path.lower()
+                if "/embed" in path or path.endswith((".php", ".html")):
+                    printDBG("parserVIDNEST %s: skip player page [%s]" % (server, url))
+                    continue
+                params = {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": ref or "https://vidnest.fun/"}
+                if isHls:
+                    params["iptv_proto"] = "m3u8"
+                decoUrl = urlparser.decorateUrl(url, params)
                 name = "VidNest %s" % server.capitalize()
                 if label:
                     name += " %s" % label
-                if ".m3u8" in url.lower():
-                    for item in getDirectM3U8Playlist(decoUrl, sortWithMaxBitrate=99999999):
+                if isHls:
+                    for item in getDirectM3U8Playlist(decoUrl, checkExt=False, checkContent=True, sortWithMaxBitrate=99999999):
                         item["name"] = ("%s %s" % (name, item.get("name", ""))).strip()
                         urltab.append(item)
                 else:
@@ -5219,9 +5294,10 @@ class pageParser(CaptchaHelper):
         return urltab
 
     def _externalResolveAllowed(self, who):
-        # parserVIDEASY/VIDCORE/VIDLINK/PEACHIFY need the third-party enc-dec.app
-        # service to decrypt their links; it is opt-in (off by default) and the
-        # settings screen makes the user confirm twice - see iptvconfigmenu.
+        # upd 091026: only parserVIDCORE (vidcore / vidup / vidfast) still needs the
+        # third-party enc-dec.app service (its player runs a per-build bytecode VM);
+        # VidLink / Peachify / Videasy decrypt on the box. Opt-in (off by default),
+        # the settings screen makes the user confirm twice - see iptvconfigmenu.
         try:
             from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsExternalResolveAllowed
             if not IsExternalResolveAllowed():
@@ -5231,10 +5307,10 @@ class pageParser(CaptchaHelper):
             printExc()
         return True
 
-    def parserPEACHIFY(self, baseUrl):  # add 250826
+    def parserPEACHIFY(self, baseUrl):  # add 250826 / upd 091026 - decrypted on the box (no enc-dec.app any more)
+        # x.eat-peach.sbs/<server>/... answers {"isEncrypted": true, "data": "<iv>.<ct>.<tag>"} (base64url parts):
+        # AES-256-GCM with the static key from peachify's player chunk (the one enc-dec.app's dec-peachify used)
         printDBG("parserPEACHIFY baseUrl[%s]" % baseUrl)
-        if not self._externalResolveAllowed("parserPEACHIFY"):
-            return []
         urltab = []
         m = re.search(r"/(movie|tv)/(\d+)(?:/(\d+)/(\d+))?", baseUrl)
         if not m:
@@ -5244,6 +5320,12 @@ class pageParser(CaptchaHelper):
         HTTP_HEADER["Referer"] = "https://peachify.top/"
         HTTP_HEADER["Origin"] = "https://peachify.top"
         apiBase = "https://x.eat-peach.sbs"
+        cipher = python_aesgcm.new(unhexlify("d8f2a1b5e9c470814f6b2c3a5d8e7f901a2b3c4d5e3f7a8b9c0d1e2f3a4d5c6d"))
+
+        def _b64u(s):
+            s = str(s)
+            return base64.urlsafe_b64decode(s + "=" * (-len(s) % 4))
+
         servers = ["moviebox", "air", "holly", "hr", "multi"]
         for server in servers:
             if mediaType == "tv" and season and episode:
@@ -5252,26 +5334,31 @@ class pageParser(CaptchaHelper):
                 apiUrl = "%s/%s/movie/%s" % (apiBase, server, tmdbId)
             sts, data = self.cm.getPage(apiUrl, {"header": dict(HTTP_HEADER), "timeout": 10})
             if not sts:
+                # fix 091026: all servers sit on the same API host - when it gives no HTTP answer at all (curl 28
+                # timeout in the box log 09.10., also DNS / connect errors on the urllib path) the other servers
+                # would hang too, 10 s each; an HTTP error status (e.g. 404 for one server) still tries the next
+                if not self.cm.meta.get("status_code"):
+                    printDBG("parserPEACHIFY %s: API host does not answer - other servers skipped" % server)
+                    break
                 continue
             try:
-                payload = json_loads(data).get("data")
-                if not payload:
-                    continue
-                sts2, decData = self.cm.getPage(
-                    "https://enc-dec.app/api/dec-peachify",
-                    {"header": {"Content-Type": "application/json"}, "raw_post_data": True, "timeout": 10},
-                    json_dumps({"text": payload}),
-                )
-                if not sts2:
-                    continue
-                decResp = json_loads(decData)
-                if decResp.get("status") != 200:
-                    continue
-                sources = decResp.get("result", {}).get("sources", [])
+                res = json_loads(data)
+                if res.get("isEncrypted") or isinstance(res.get("data"), basestring):
+                    iv, ct, tag = res["data"].split(".")
+                    # libs/aesgcm checks the tag only when associated data is given, so a rotated key
+                    # shows up as undecodable plain text instead of None
+                    plain = cipher.open(_b64u(iv), _b64u(ct) + _b64u(tag))
+                    try:
+                        res = json_loads(bytes(plain).decode("utf-8"))
+                    except Exception:
+                        printDBG("parserPEACHIFY %s: answer cannot be decrypted (key rotated?)" % server)
+                        continue
+                sources = res.get("sources", [])
             except Exception:
+                printExc()
                 continue
             for src in sources or []:
-                url = src.get("url")
+                url = src.get("url") or src.get("file")
                 if not url:
                     continue
                 name = "Peachify %s" % server.capitalize()
@@ -5279,7 +5366,11 @@ class pageParser(CaptchaHelper):
                     name += " %s" % src["dub"]
                 if src.get("quality"):
                     name += " %sp" % src["quality"]
-                decoUrl = urlparser.decorateUrl(url, {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": "https://peachify.top/", "Origin": "https://peachify.top"})
+                hdr = {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": "https://peachify.top/", "Origin": "https://peachify.top"}
+                for key, value in (src.get("headers") or {}).items():
+                    if key.lower() in ("referer", "origin", "user-agent"):
+                        hdr["-".join(p.capitalize() for p in key.split("-"))] = value
+                decoUrl = urlparser.decorateUrl(url, hdr)
                 if ".m3u8" in url.lower():
                     for item in getDirectM3U8Playlist(decoUrl, sortWithMaxBitrate=99999999):
                         item["name"] = ("%s %s" % (name, item.get("name", ""))).strip()
@@ -5288,10 +5379,62 @@ class pageParser(CaptchaHelper):
                     urltab.append({"name": name, "url": decoUrl})
         return urltab
 
+    def _videasyDecrypt(self, text, seed, mediaId):  # add 091026
+        # enc=2 answer of api.speedracelight.com: base64url text, XOR with an arithmetic keystream
+        # (FNV-1a + murmur3 fmix32, sparse 61-slot table) keyed by (seed, tmdb id); the plain text is
+        # b"mvm1" + JSON {sources, subtitles}. Port of the player bundle (via github.com/Trixjustbetter/videasy-nuvio).
+        # Returns None when the magic does not match (wrong seed or the algorithm changed).
+        m32 = 0xffffffff
+        gold = 2654435769
+
+        def imul(a, b):
+            return (a * b) & m32
+
+        def fmix(e):
+            e &= m32
+            e ^= e >> 16
+            e = imul(e, 2246822507)
+            e ^= e >> 13
+            e = imul(e, 3266489909)
+            return (e ^ (e >> 16)) & m32
+
+        def rotl(e, t):
+            e &= m32
+            t &= 31
+            return e if t == 0 else ((e << t) | (e >> (32 - t))) & m32
+
+        t = 2166136261
+        for ch in ensure_str(seed):
+            t = imul(t ^ ord(ch), 16777619)
+        s = ensure_str(text).strip().replace("-", "+").replace("_", "/").rstrip("=")
+        data = bytearray(base64.b64decode(s + "=" * (-len(s) % 4)))
+        table = {}
+        a = fmix(fmix(t) ^ fmix((int(mediaId) & m32) ^ gold))
+        for i in range(8):
+            idx = a % 61
+            a = rotl((a + gold) & m32, 7 + (7 & i))
+            table[idx] = (a ^ fmix(a)) & m32
+            a = fmix((a + idx) & m32)
+        acc = fmix(2779096485 ^ a)
+        stream = bytearray()
+        counter = 0
+        while len(stream) < len(data):
+            n = acc % 61
+            x = (table.get(n, 0) ^ imul(gold, counter + 1)) & m32
+            v = (acc ^ x) | ((acc & x) if n in table else 0)
+            v = (rotl((v + acc) & m32, 31 & n) ^ rotl(acc, 31 & imul(n, 7))) & m32
+            acc = fmix((v + gold) & m32)
+            table[n] = acc
+            counter += 1
+            stream.extend(bytearray((acc & 255, (acc >> 8) & 255, (acc >> 16) & 255, (acc >> 24) & 255)))
+        plain = bytes(bytearray(b ^ k for b, k in zip(data, stream)))
+        if plain[:4] != b"mvm1":
+            return None
+        return json_loads(ensure_str(plain[4:]))
+
     def parserVIDEASY(self, baseUrl):  # updated 040926 - site moved its backend from api.videasy.net to api.speedracelight.com and now requires a /seed step plus a (double URL-encoded) title for sources-with-title
+        # upd 091026: the enc=2 answer is decrypted on the box (_videasyDecrypt), no enc-dec.app any more
         printDBG("parserVIDEASY baseUrl[%s]" % baseUrl)
-        if not self._externalResolveAllowed("parserVIDEASY"):
-            return []
         urltab = []
         m = re.search(r"/(movie|tv)/(\d+)(?:/(\d+)/(\d+))?", baseUrl)
         if not m:
@@ -5327,26 +5470,20 @@ class pageParser(CaptchaHelper):
         for name in servers:
             apiUrl = ("https://api.speedracelight.com/%s/sources-with-title"
                       "?title=%s&mediaType=%s&year=%s&tmdbId=%s&imdbId=&episodeId=%s&seasonId=%s&enc=2&seed=%s"
-                      % (name, encTitle, mediaType, year, tmdbId, episode or "1", season or "1", seed))
+                      % (name, encTitle, mediaType, year, tmdbId, episode or "1", season or "1", urllib_quote(ensure_str(seed), safe="")))
             sts, data = self.cm.getPage(apiUrl, {"header": dict(HTTP_HEADER), "timeout": 10})
             if not sts:
                 continue
             blob = data.strip()
             if not blob or len(blob) < 10:
                 continue
-            sts2, decData = self.cm.getPage(
-                "https://enc-dec.app/api/dec-videasy",
-                {"header": {"Content-Type": "application/json"}, "raw_post_data": True, "timeout": 10},
-                json_dumps({"text": blob, "id": tmdbId, "seed": seed}),
-            )
-            if not sts2:
-                continue
             try:
-                decResp = json_loads(decData)
-                if decResp.get("status") != 200:
-                    continue
-                result = decResp.get("result", {})
+                result = self._videasyDecrypt(blob, seed, tmdbId)
             except Exception:
+                printExc()
+                continue
+            if result is None:
+                printDBG("parserVIDEASY %s: bad magic after decryption (algorithm changed?)" % name)
                 continue
 
             sources = result.get("sources") if isinstance(result, dict) else None
@@ -5391,26 +5528,25 @@ class pageParser(CaptchaHelper):
                 return urltab
         return urltab
 
-    def parserVIDLINK(self, baseUrl):  # add 060926 - vidlink.pro; enc-dec.app encrypts the tmdb id, /api/b returns the sources json directly (no 2nd decrypt)
+    def parserVIDLINK(self, baseUrl):  # add 060926 - vidlink.pro; /api/b returns the sources json directly (no 2nd decrypt)
+        # upd 091026: the request token is built on the box (no enc-dec.app any more): the site's fu.wasm
+        # (main.generateToken) does libsodium crypto_secretbox_easy(tmdbId + uint64_be(unix time), nonce = 24 zero
+        # bytes, static key) -> base64url(nonce + mac + ciphertext). The server wants a time "now or later", so
+        # now + 300 s (also covers boxes whose clock runs a few minutes slow).
         printDBG("parserVIDLINK baseUrl[%s]" % baseUrl)
-        if not self._externalResolveAllowed("parserVIDLINK"):
-            return []
         urltab = []
         m = re.search(r"/(movie|tv)/(\d+)(?:/(\d+)/(\d+))?", baseUrl)
         if not m:
             return []
         mediaType, tmdbId, season, episode = m.group(1), m.group(2), m.group(3), m.group(4)
-        api = "https://enc-dec.app/api"
         HTTP_HEADER = self.cm.getDefaultHeader()
-        sts, data = self.cm.getPage("%s/enc-vidlink?%s" % (api, urllib_urlencode({"text": tmdbId})), {"header": {"User-Agent": HTTP_HEADER["User-Agent"]}})
-        if not sts:
-            return []
         try:
-            enc = json_loads(data).get("result")
+            nonce = b"\x00" * 24
+            key = unhexlify("c75136c5668bbfe65a7ecad431a745db68b5f381555b38d8f6c699449cf11fcd")
+            box = nacl_secretbox(ensure_binary(tmdbId) + struct.pack(">Q", int(time.time()) + 300), nonce, key)
+            enc = ensure_str(base64.urlsafe_b64encode(nonce + box)).rstrip("=")
         except Exception:
             printExc()
-            return []
-        if not enc:
             return []
         if mediaType == "tv":
             apiUrl = "https://vidlink.pro/api/b/tv/%s/%s/%s" % (enc, season or "1", episode or "1")
@@ -5447,6 +5583,15 @@ class pageParser(CaptchaHelper):
             elif isinstance(node, basestring) and node.startswith("http") and node not in seen and (".m3u8" in node or ".mp4" in node):
                 seen.add(node)
                 found.append(node)
+        # upd 091026: "type": "file" answers list one mp4 per quality in stream.qualities ({"1080": {"url": ...}})
+        qualities = {}
+        try:
+            for q, item in ((res.get("stream") or {}).get("qualities") or {}).items():
+                if isinstance(item, dict) and item.get("url"):
+                    qualities[item["url"]] = int(q) if str(q).isdigit() else 0
+        except Exception:
+            printExc()
+        found.sort(key=lambda u: -qualities.get(u, 0))
         for url in found:
             deco = {"User-Agent": provHdr["User-Agent"], "Referer": "https://vidlink.pro/", "Origin": "https://vidlink.pro", "iptv_use_ffmpeg": True}
             if subTracks:
@@ -5457,10 +5602,10 @@ class pageParser(CaptchaHelper):
                     item["name"] = ("Vidlink %s" % item.get("name", "")).strip()
                     urltab.append(item)
             else:
-                urltab.append({"name": "Vidlink", "url": decoUrl})
+                urltab.append({"name": ("Vidlink %sp" % qualities[url]) if qualities.get(url) else "Vidlink", "url": decoUrl})
         return urltab
 
-    def parserVIDCORE(self, baseUrl):  # add 030926 / upd 060926 - vidcore.net/.io + vidup.to + vidfast.pro/.vc (shared codebase); page token -> enc-dec.app enc/dec chain
+    def parserVIDCORE(self, baseUrl):  # add 030926 / upd 060926 / fix 091026 - vidcore.net/.io + vidup.to + vidfast.pro/.vc (shared codebase); page token -> enc-dec.app two-stage enc/dec chain
         printDBG("parserVIDCORE baseUrl[%s]" % baseUrl)
         if not self._externalResolveAllowed("parserVIDCORE"):
             return []
@@ -5502,7 +5647,24 @@ class pageParser(CaptchaHelper):
                 break
         if not token:
             return []
-        sts, data = self.cm.getPage("%s/enc-%s?%s" % (api, name, urllib_urlencode({"text": token})), {"header": {"User-Agent": HTTP_HEADER["User-Agent"]}})
+        # fix 091026: enc-dec.app now works in two stages (a call without "stage" answers 400
+        # "Expected query: text, stage"): stage=1 gives a url (+ csrf token) to POST on the provider,
+        # its answer goes into stage=2, which gives the servers / stream urls and the token for them
+        apiHdr = {"User-Agent": HTTP_HEADER["User-Agent"]}
+        sts, data = self.cm.getPage("%s/enc-%s?%s" % (api, name, urllib_urlencode({"text": token, "stage": "1"})), {"header": apiHdr})
+        if not sts:
+            return []
+        try:
+            parts = json_loads(data)["result"]
+            stage1Url, csrf = parts["stage1"], parts["token"]
+        except Exception:
+            printExc()
+            return []
+        provHdr = {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": ref, "X-Requested-With": "XMLHttpRequest", "X-CSRF-Token": csrf}
+        sts, stage1 = self.cm.getPage(stage1Url, {"header": provHdr, "raw_post_data": True}, "")
+        if not sts or not stage1:
+            return []
+        sts, data = self.cm.getPage("%s/enc-%s?%s" % (api, name, urllib_urlencode({"text": stage1.strip(), "stage": "2"})), {"header": apiHdr})
         if not sts:
             return []
         try:
@@ -5511,7 +5673,7 @@ class pageParser(CaptchaHelper):
         except Exception:
             printExc()
             return []
-        provHdr = {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": ref, "X-Requested-With": "XMLHttpRequest", "X-CSRF-Token": csrf}
+        provHdr["X-CSRF-Token"] = csrf
         sts, serversEnc = self.cm.getPage(serversUrl, {"header": provHdr, "raw_post_data": True}, "")
         if not sts:
             return []
@@ -5528,7 +5690,7 @@ class pageParser(CaptchaHelper):
             if not srvData:
                 continue
             sts, streamEnc = self.cm.getPage("%s/%s" % (streamBase, srvData), {"header": provHdr, "raw_post_data": True}, "")
-            if not sts:
+            if not sts or not (streamEnc or "").strip():
                 continue
             sts, data = self.cm.getPage("%s/dec-%s" % (api, name), {"header": {"Content-Type": "application/json"}, "raw_post_data": True}, json_dumps({"text": streamEnc}))
             if not sts:
@@ -5537,15 +5699,28 @@ class pageParser(CaptchaHelper):
                 res = json_loads(data)
                 if res.get("status") != 200:
                     continue
-                streamUrl = res.get("result", {}).get("url")
+                res = res.get("result") or {}
+                streamUrl = res.get("url")
             except Exception:
                 continue
             if not streamUrl:
                 continue
             label = ("%s %s" % (name.capitalize(), srv.get("name", ""))).strip()
-            decoUrl = urlparser.decorateUrl(streamUrl, {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": ref, "Origin": ref[:-1], "iptv_use_ffmpeg": True})
+            # the CDN (moon.zenoak.top / stormhive.top ...) checks the player's Referer; the
+            # stream answer flags the few servers that must be fetched without one
+            deco = {"User-Agent": HTTP_HEADER["User-Agent"], "iptv_use_ffmpeg": True}
+            if not res.get("noReferrer"):
+                deco.update({"Referer": ref, "Origin": ref[:-1]})
+            subTracks = []
+            for track in res.get("tracks") or []:
+                if isinstance(track, dict) and track.get("file") and track.get("kind", "captions") in ("captions", "subtitles"):
+                    subTracks.append({"title": track.get("label", ""), "url": track["file"], "lang": track.get("label", "")})
+            if subTracks:
+                deco["external_sub_tracks"] = subTracks
+            decoUrl = urlparser.decorateUrl(streamUrl, deco)
             if ".m3u8" in streamUrl:
-                for item in getDirectM3U8Playlist(decoUrl, sortWithMaxBitrate=99999999):
+                # checkContent: a dead server answers an html error page instead of a playlist
+                for item in getDirectM3U8Playlist(decoUrl, checkContent=True, sortWithMaxBitrate=99999999):
                     item["name"] = ("%s %s" % (label, item.get("name", ""))).strip()
                     urltab.append(item)
             else:

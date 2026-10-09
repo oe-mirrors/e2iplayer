@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026
+# Last Modified: 09.10.2026
+# 08.10.2026 - server list fixed: the "ffQualities" forafile object is gone; the page's watch button now leads
+#   through an ad gateway (rm.freex2line.online) to <page>/watching/?token=... (without a valid token the site
+#   redirects home). The token is fetched from the cimaleech.vercel.app API (same as MOHAMED_OS's host), the
+#   watching page is XOR/base64 obfuscated (key = sum of the page's JS constants) and decoded here; its server
+#   list (<ul id="watch">, data-index/data-id + "var tk") is resolved through core.php?action=switch -> iframe,
+#   plus the forafile links of its download box
 # 03.10.2026 - revived for cimanow.cc (the site dropped its "hide_my_HTML_" obfuscation)
 #   Rewrite against the plain-HTML site (same markup as before: <section aria-label="posts">,
 #   <article aria-label="post">, aria-label="title|year|ribbon|tab", <ul aria-label="pagination">):
 #   - categories, "Latest" (/الاحدث/) and search (/search/<q>/) with First page / Jump / Next page
-#   - movies and episodes are VIDEO rows keyed on their page url; the forafile.com links per quality
-#     (the page's "ffQualities" JS object) are read in getLinksForVideo and handed to urlparser
-#     (forafile embed page, jwplayer) - the old <item>/watching/ server list is gone (redirects home)
+#   - movies and episodes are VIDEO rows keyed on their page url (links: see 08.10.2026)
 #   - series -> seasons (when the show has more than one) -> episodes (ascending)
 #   - watched flag (stable series:/season:/video: page-url keys), downloaded flag, favourites,
 #     name normalisation ("Title (Year)", "Show - SxxExx"), sidecar, INFO via moviemeta + the site's
@@ -17,12 +21,13 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHost
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
-from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
+from Plugins.Extensions.IPTVPlayer.libs.moviemeta import LATIN_ONLY, getMeta, isLatinTitle
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
-from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_unquote
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_unquote, urllib_urlencode
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import strDecode
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, E2ColoR
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, E2ColoR, StripColorCodes, b64Decode
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
@@ -36,7 +41,6 @@ def gettytul():
     return "https://cimanow.cc/"
 
 
-COLOR_CODE_RE = re.compile(r"\\c[0-9A-Fa-f]{8}")
 # Arabic ordinals used in season labels ("الموسم الثاني")
 SEASON_ORDINALS = [
     ("الحادي عشر", 11), ("الثاني عشر", 12), ("الثالث عشر", 13), ("الرابع عشر", 14), ("الخامس عشر", 15),
@@ -49,11 +53,15 @@ JUNK_RE = re.compile(r"(?:^|\s)(?:مترجم|مترجمة|اون لاين|أون
 # "<strong>..مدة العرض : </strong>" rows of the details tab -> INFO keys
 INFO_FIELDS = (("language", "المحتوي"), ("duration", "مدة العرض"), ("quality", "الجودة"), ("actors", "بطولة"),
                ("director", "اخراج"), ("writer", "تأليف"))
-FF_QUALITIES = (("Ff1080", "1080p"), ("Ff720", "720p"), ("Ff480", "480p"), ("Ff360", "360p"))
+# the watch button's ad gateway is a per-request obfuscated anti-bot page; this API returns the tokenised
+# <page>/watching/?token=... url for the gateway link ("upcloud" first, "test" as the fallback endpoint)
+TOKEN_APIS = ("https://cimaleech.vercel.app/api/upcloud", "https://cimaleech.vercel.app/api/test")
+NUM_RE = re.compile(r"0x[0-9a-fA-F]+|\d+")
 
 
-def _stripColors(text):
-    return COLOR_CODE_RE.sub("", text or "")
+def _numSum(expr):
+    # the obfuscator's constants are plain sums of hex/decimal literals - add them up instead of eval()
+    return sum(int(n, 16) if n.lower().startswith("0x") else int(n) for n in NUM_RE.findall(expr or ""))
 
 
 def _seasonNum(text):
@@ -359,37 +367,126 @@ class CimaNow(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not sts:
             return []
         story = self._siteInfo(data)[0]
-        groups = {}
-        raw = self.cm.ph.getSearchGroups(data, r"var ffQualities\s*=\s*(\{.*?\}\s*\})\s*;")[0]
-        if raw:
-            try:
-                groups = json_loads(raw) or {}
-            except Exception:
-                printExc()
+        watchUrl = self._watchingUrl(self.cm.ph.getSearchGroups(data, r'<a[^>]+class="shine"[^>]+href="([^"]+)"')[0])
+        if not watchUrl:
+            SetIPTVPlayerLastHostError(_("No stream available"))
+            return []
+        params = dict(self.defaultParams)
+        params["header"] = dict(self.HEADER, Referer=pageUrl)
+        sts, data = self.getPage(watchUrl, params)
+        if not sts:
+            return []
+        if 'id="watch"' not in data:
+            data = self._decodeWatching(data)
         urltab = []
-        keys = sorted(groups, key=lambda k: int(k) if str(k).isdigit() else 0) if isinstance(groups, dict) else []
-        for idx, key in enumerate(keys):
-            group = groups.get(key) or {}
-            if not isinstance(group, dict):
+        token = self.cm.ph.getSearchGroups(data, r"""var\s+tk\s*=\s*['"]([^'"]+)['"]""")[0]
+        block = self.cm.ph.getDataBeetwenMarkers(data, 'id="watch">', "</ul>", False)[1]
+        coreUrl = self.getFullUrl("/wp-content/themes/Cima%20Now%20New/core.php")
+        params = dict(self.defaultParams)
+        params["header"] = dict(self.HEADER, Referer=watchUrl)
+        seen = set()
+        for index, serverId, label in re.findall(r'(?s)<li[^>]+data-index="([^"]+)"[^>]+data-id="([^"]+)"[^>]*>(.*?)</li>', block):
+            sts, frame = self.getPage("%s?%s" % (coreUrl, urllib_urlencode([("action", "switch"), ("index", index), ("id", serverId), ("token", token)])), params)
+            url = self.cm.ph.getSearchGroups(frame, r"""<iframe[^>]+src=['"]([^'"]+)['"]""", ignoreCase=True)[0] if sts else ""
+            if url.startswith("//"):
+                url = "https:" + url
+            if not self.cm.isValidUrl(url) or url in seen:
                 continue
-            for field, label in FF_QUALITIES:
-                url = (group.get(field) or "").strip()
-                code = self.cm.ph.getSearchGroups(url, r"forafile\.[a-z]+/(?:embed-|e/|d/)?([a-z0-9]{12})")[0]
-                if not code:
-                    continue
-                name = "Forafile %s" % label if len(keys) == 1 else "Forafile %s #%d" % (label, idx + 1)
-                urltab.append({"name": name, "url": strwithmeta("https://forafile.com/embed-%s.html" % code, {"Referer": self.MAIN_URL}), "need_resolve": 1})
+            seen.add(url)
+            name = "%s - %s" % (self.cleanHtmlStr(label), self.up.getDomain(url, onlyDomain=True))
+            urltab.append({"name": name, "url": strwithmeta(url, {"Referer": self.MAIN_URL}), "need_resolve": 1})
+        # download box: forafile per quality (the site's player adds them as the "Forafile" server)
+        for code, rest in re.findall(r'forafile\.[a-z]+/([a-z0-9]{12})([^"\']*)', data):
+            quality = self.cm.ph.getSearchGroups(rest, r"(\d{3,4}p)")[0]
+            url = "https://forafile.com/embed-%s.html" % code
+            if url in seen:
+                continue
+            seen.add(url)
+            urltab.append({"name": ("Forafile %s" % quality).strip(), "url": strwithmeta(url, {"Referer": self.MAIN_URL}), "need_resolve": 1})
         if not urltab:
             SetIPTVPlayerLastHostError(_("No stream available"))
             return []
-        return applySidecarToLinks(urltab, buildSidecarFromItem(dict(cItem, desc=_stripColors(cItem.get("desc", ""))), IsSidecarEnabled(), story))
+        return applySidecarToLinks(urltab, buildSidecarFromItem(dict(cItem, desc=StripColorCodes(cItem.get("desc", ""))), IsSidecarEnabled(), story))
+
+    def _watchingUrl(self, shineUrl):
+        # direct <page>/watching/?token= link, or the ad gateway link -> tokenised url from the API
+        shineUrl = (shineUrl or "").replace("&amp;", "&").strip()
+        if not shineUrl:
+            return ""
+        if "/watching/" in shineUrl and "token=" in shineUrl:
+            return self._canonUrl(shineUrl)
+        params = {"header": {"User-Agent": self.HEADER.get("User-Agent"), "Referer": self.MAIN_URL, "Accept": "application/json"}}
+        for api in TOKEN_APIS:
+            sts, data = self.cm.getPage(api, params, {"id": shineUrl})
+            if not sts:
+                continue
+            try:
+                url = (json_loads(data) or {}).get("downloadLink") or ""
+            except Exception:
+                printExc()
+                url = ""
+            if "/watching/" in url:
+                return self._canonUrl(url)
+        printDBG("CimaNow._watchingUrl no token for [%s]" % shineUrl)
+        return ""
+
+    def _decodeWatching(self, data):
+        # window['<arr>'] = new Array("b64", ...) XORed with String(_part1 + _part2 + _part3 + _tVal + _dVal) + suffix;
+        # the constants sit in an atob("...") loader script
+        code = data
+        for b64 in re.findall(r"""\(\s*['"]([A-Za-z0-9+/=]{200,})['"]\s*\)""", data):
+            try:
+                code += "\n" + b64Decode(b64)
+            except Exception:
+                continue
+        try:
+            m1 = re.search(r"_part1\s*=\s*\w+\(\s*\((.*?)\)\s*/\s*(\d+)\s*\)", code)
+            m2 = re.search(r"_part2\s*=\s*\((.*?)\)\s*\*", code)
+            m3 = re.search(r"_part3\s*=\s*\((.*?)\)\s*;", code)
+            mt = re.search(r"ndex'\]\s*=\s*String\(\(?([^)]+)\)?\)", code)
+            md = re.search(r"idth:'\s*\+\s*String\(([^)]+)\)", code)
+            mk = re.search(r"=\s*String\(\s*_part1[^)]*\)\s*\+\s*'([^']*)'", code)
+            ma = re.search(r"""=\s*window\[['"](\w+)['"]\]\.join\(""", code)
+            if not (m1 and m2 and m3 and ma):
+                printDBG("CimaNow._decodeWatching: decoder constants not found")
+                return data
+            total = _numSum(m1.group(1)) // (int(m1.group(2)) or 1) + _numSum(m2.group(1)) + _numSum(m3.group(1))
+            total += _numSum(mt.group(1)) if mt else 0
+            total += _numSum(md.group(1)) if md else 0
+            key = str(total) + (mk.group(1) if mk else "")
+            arr = re.search(r"""window\[['"]%s['"]\]\s*=\s*(?:\[|new\s*\(?\s*window\[[^\]]*\]\s*\)?\s*\()(.*?)[\])]\s*;""" % ma.group(1), code, re.S)
+            if not arr:
+                return data
+            raw = bytearray(b64Decode("".join(re.findall(r"""['"]([A-Za-z0-9+/=]+)['"]""", arr.group(1))), binary=True))
+            out = bytearray(b ^ ord(key[i % len(key)]) for i, b in enumerate(raw))
+            return strDecode(bytes(out), "ignore")
+        except Exception:
+            printExc()
+        return data
 
     def getVideoLinks(self, videoUrl):
         printDBG("CimaNow.getVideoLinks [%s]" % videoUrl)
-        if self.cm.isValidUrl(videoUrl):
-            sidecar = sidecarFromUrlMeta(videoUrl, IsSidecarEnabled())
-            return decorateResolvedLinkItems(self.up.getVideoLinkExt(videoUrl), sidecar)
-        return []
+        if not self.cm.isValidUrl(videoUrl):
+            return []
+        sidecar = sidecarFromUrlMeta(videoUrl, IsSidecarEnabled())
+        if "cimanowtv.com/" in videoUrl:
+            return decorateResolvedLinkItems(self._ownServerLinks(videoUrl), sidecar)
+        return decorateResolvedLinkItems(self.up.getVideoLinkExt(videoUrl), sidecar)
+
+    def _ownServerLinks(self, videoUrl):
+        # the site's own "Cima Now" server (<x>.cimanowtv.com/e/<id>): Playerjs "file": ["[720p] /uploads/....mp4", ...]
+        params = {"header": dict(self.HEADER, Referer=self.MAIN_URL)}
+        sts, data = self.cm.getPage(videoUrl, params)
+        if not sts:
+            return []
+        base = re.sub(r"^(https?://[^/]+).*$", r"\1", str(videoUrl))
+        files = data[data.find('"file"'):] if '"file"' in data else ""
+        links = []
+        for label, path in re.findall(r'"\[([^\]"]*)\]\s*([^"]+\.(?:mp4|m3u8)[^"]*)"', files):
+            url = path.strip() if path.strip().startswith("http") else base + urllib_quote(path.strip(), safe="/%")
+            links.append({"name": label or "mp4", "url": strwithmeta(url, {"Referer": base + "/", "User-Agent": self.HEADER.get("User-Agent")})})
+        links.reverse()  # best quality first
+        return links
 
     ###################################################
     # INFO
@@ -399,7 +496,8 @@ class CimaNow(GenericFolderWatchedScraperMixin, CBaseHostClass):
         meta = {}
         if cItem.get("meta_type") and cItem.get("meta_title"):
             try:
-                meta = getMeta(cItem["meta_type"], cItem["meta_title"], cItem.get("meta_year", ""))
+                skip = () if isLatinTitle(cItem["meta_title"]) else LATIN_ONLY
+                meta = getMeta(cItem["meta_type"], cItem["meta_title"], cItem.get("meta_year", ""), skip)
             except Exception:
                 printExc()
         story, poster, info = "", "", {}
@@ -410,7 +508,7 @@ class CimaNow(GenericFolderWatchedScraperMixin, CBaseHostClass):
             info.setdefault("year", cItem["meta_year"])
         info.update(meta.get("info", {}))
         plot = meta.get("plot", "")
-        text = plot or story or _stripColors(cItem.get("desc", ""))
+        text = plot or story or StripColorCodes(cItem.get("desc", ""))
         if plot and story and story != plot:
             text = "%s[/br][/br]%s" % (plot, story)
         icon = meta.get("poster") or poster or cItem.get("icon", "")
