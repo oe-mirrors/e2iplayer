@@ -707,7 +707,11 @@
 		var node = el('div', {cls: 'row', 'data-filter': (row.label + ' ' + row.name).toLowerCase()}, label, control);
 		var save = function (value) { saveSetting(row.name, value, node, reload); };
 		if (row.kind === 'bool') {
-			var cb = el('input', {type: 'checkbox', checked: !!row.value, onchange: function () { save(cb.checked); }});
+			var cb = el('input', {type: 'checkbox', checked: !!row.value, onchange: function () {
+				// row.confirm: switching on needs a yes (torrent playback), otherwise the switch stays off
+				if (cb.checked && row.confirm && !window.confirm(row.confirm)) { cb.checked = false; return; }
+				save(cb.checked);
+			}});
 			control.appendChild(el('label', {cls: 'switch'}, cb, el('span')));
 		} else if (row.kind === 'select') {
 			var sel = el('select', {onchange: function () { save(sel.value); }}, row.choices.map(function (c) {

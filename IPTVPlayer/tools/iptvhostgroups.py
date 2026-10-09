@@ -5,7 +5,7 @@
 # LOCAL import
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetMigratedHostOrderFile, GetHostsList, IsHostEnabled, getHostsPath
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetMigratedHostOrderFile, GetHostsList, IsHostEnabled, IsTorrentPlaybackEnabled, TORRENT_HOSTS, getHostsPath
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostsGroupItem
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.__init__ import GRIDSUPPORT
@@ -27,7 +27,7 @@ class IPTVHostsGroups:
         self.GROUPS_FILE = GetMigratedHostOrderFile('iptvplayerhostsgroups.json')
 
         # groups
-        self.PREDEFINED_GROUPS = ["userdefined", "worldwide", "moviesandseries", "cartoonsandanime", "music", "sport", "live", "iptv", "documentary", "science",
+        self.PREDEFINED_GROUPS = ["userdefined", "worldwide", "moviesandseries", "cartoonsandanime", "music", "sport", "live", "iptv", "torrent", "documentary", "science",
                                   "polish", "english", "german", "french", "russian", "hungarian", "arabic", "greek", "latino", "italian", "swedish", "balkans", "others", "all"]
         self.PREDEFINED_GROUPS_TITLES = {"userdefined": _("User defined"),
                                          "worldwide": _("Worldwide"),
@@ -37,6 +37,7 @@ class IPTVHostsGroups:
                                          "sport": _("Sport"),
                                          "live": _("Live"),
                                          "iptv": _("IPTV Portals"),
+                                         "torrent": _("Torrent"),
                                          "documentary": _("Documentary"),
                                          "science": _("Science"),
                                          "polish": _("Polish"),
@@ -74,6 +75,10 @@ class IPTVHostsGroups:
 
         self.hostListFromFolder = None
         self.hostListFromList = None
+
+    @staticmethod
+    def _hiddenGroups():
+        return () if IsTorrentPlaybackEnabled() else ("torrent",)
 
     def _getGroupFile(self, groupName):
         printDBG("IPTVHostsGroups._getGroupFile")
@@ -141,6 +146,15 @@ class IPTVHostsGroups:
         # hostsList - must be updated with host which were not disabled in this group but they are not
         # available or they are disabled globally
         outObj = {"version": 0, "hosts": hostsList, "disabled_hosts": []}
+
+        # add 091026: torrent hosts hidden right now (torrent playback off) were not in the list the user edited - they
+        # keep their saved place (e.g. in "User defined") instead of being dropped; the shown list stays without them
+        if not IsTorrentPlaybackEnabled():
+            savedHosts = list(hostsList)
+            for idx, host in enumerate(self.LOADED_HOSTS.get(groupName, [])):
+                if host in TORRENT_HOSTS and host not in savedHosts:
+                    savedHosts.insert(min(idx, len(savedHosts)), host)
+            outObj['hosts'] = savedHosts
 
         # check if some host from diabled one has been enabled
         disabledHosts = []
@@ -245,6 +259,9 @@ class IPTVHostsGroups:
         for group in self.PREDEFINED_GROUPS:
             if group not in loadedGroups and group not in loadedDisabledGroups:
                 groups.append(group)
+        # the torrent group only while torrent playback (TorrServer) is switched on
+        hidden = self._hiddenGroups()
+        groups = [group for group in groups if group not in hidden]
 
         groupList = []
         for group in groups:
@@ -261,7 +278,12 @@ class IPTVHostsGroups:
     def getPredefinedGroupsList(self):
         printDBG("IPTVHostsGroups.getPredefinedGroupsList")
         groupList = []
+        # fix 091026: a hidden group is not offered in the groups configuration either - it would show up as "off"
+        # there although setGroupList() keeps it enabled
+        hidden = self._hiddenGroups()
         for group in self.PREDEFINED_GROUPS:
+            if group in hidden:
+                continue
             title = self.PREDEFINED_GROUPS_TITLES[group]
             item = CHostsGroupItem(group, title)
             groupList.append(item)
@@ -272,14 +294,23 @@ class IPTVHostsGroups:
         # update disabled groups
         outObj = {"version": 0, "groups": [], "disabled_groups": []}
 
+        # a group hidden right now was not in the list the user edited: it keeps its saved place / state
+        hidden = self._hiddenGroups()
+        groupList = list(groupList)
+        if hidden:
+            self._loadGroups()
+        for group in hidden:
+            if group in self.LOADED_GROUPS and group not in groupList:
+                groupList.insert(min(self.LOADED_GROUPS.index(group), len(groupList)), group)
+
         for group in self.PREDEFINED_GROUPS:
-            if group not in groupList:
+            if group not in groupList and (group not in hidden or group in self.LOADED_DISABLED_GROUPS):
                 outObj['disabled_groups'].append(group)
 
         for group in groupList:
             outObj['groups'].append({'name': group})
             if group in self.LOADED_GROUPS_TITLES:
-                outObj['groups']['title'] = self.LOADED_GROUPS_TITLES[group]
+                outObj['groups'][-1]['title'] = self.LOADED_GROUPS_TITLES[group]  # fix 091026: was ['groups']['title'] (TypeError)
 
         return self._saveGroups(outObj)
 

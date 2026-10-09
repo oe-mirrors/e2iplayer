@@ -1417,13 +1417,28 @@ def GetSkinsList():
     return skins
 
 
-def IsHostEnabled(hostName):
+# hosts that only play through TorrServer - the same hosts as the "torrent" group of hosts/hostgroups.txt
+# (tests/test_torrent_hosts.py keeps both in sync); hidden everywhere while torrent playback is off
+TORRENT_HOSTS = ('arabp2p', 'eztv', 'torrent9', 'torrentdb', 'torrentgalaxy', 'yts')
+
+
+def IsTorrentPlaybackEnabled():
+    try:
+        return bool(config.plugins.iptvplayer.torrserver_enabled.value)
+    except Exception:
+        return False
+
+
+def IsHostEnabled(hostName, switchOnly=False):
+    # switchOnly: just the host's own on/off switch (host settings, the switch in the web interface)
     hostEnabled = False
     try:
         if getattr(config.plugins.iptvplayer, 'host' + hostName).value:
             hostEnabled = True
     except Exception:
         hostEnabled = False
+    if hostEnabled and not switchOnly and hostName in TORRENT_HOSTS:
+        hostEnabled = IsTorrentPlaybackEnabled()
     return hostEnabled
 
 

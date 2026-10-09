@@ -176,7 +176,7 @@ class ConfigHostsMenu(ConfigBaseWidget):
         currItem = self["config"].list[curIndex][1]
         if curIndex < len(self.listOfHostsNames):
             hostName = self.listOfHostsNames[curIndex]
-            if self.hostsConfigsAvailableList[curIndex] and IsHostEnabled(hostName):
+            if self.hostsConfigsAvailableList[curIndex] and IsHostEnabled(hostName, switchOnly=True):
                 # every host has settings: at least its PIN protection
                 try:
                     __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + hostName, globals(), locals(), ['GetConfigList'], 0)
