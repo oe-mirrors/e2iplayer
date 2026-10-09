@@ -535,7 +535,7 @@ class Raiplay(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not (searchPattern or '').strip():
             return
         cItem = dict(cItem, search_pattern=searchPattern)
-        page = max(1,self._num(cItem.get('page', 1)) or 1)
+        page = max(1, self._num(cItem.get('page', 1)) or 1)
         agg = self._search(searchPattern, (page - 1) * self.SEARCH_PAGE_SIZE, self.SEARCH_PAGE_SIZE, False)
         if page == 1:
             videoTotal = self._num((self._search(searchPattern, 0, 1, True).get('video') or {}).get('totale'))

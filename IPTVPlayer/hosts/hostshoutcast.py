@@ -225,7 +225,7 @@ class ShoutcastCom(CBaseHostClass):
             otherInfo['source'] = cItem['website']
         icon = cItem.get('icon', '') or self.DEFAULT_ICON_URL
         # a favourite keeps no desc (listeners / current track change)
-        return [{'title': cItem.get('title', ''), 'text': cItem.get('desc', '') or cItem.get('title', ''),'images': [{'title': '', 'url': icon}], 'other_info': otherInfo}]
+        return [{'title': cItem.get('title', ''), 'text': cItem.get('desc', '') or cItem.get('title', ''), 'images': [{'title': '', 'url': icon}], 'other_info': otherInfo}]
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
