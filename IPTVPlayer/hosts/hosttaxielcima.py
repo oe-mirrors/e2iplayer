@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026
+# Last Modified: 09.10.2026
+# 09.10.2026 - gettytul() returns the address itself (the host list reads it from the file, see GetHostTitle)
 # 03.10.2026 - rewrite of the MOHAMED_OS host for the current site (b.txcima.com, "CimaclubBlocks"
 #   card grids with "?page=N" paging, /series/<slug>/ = flat episode list, <post>/watch/ = server list with the
 #   embeds in data-url) + paging (First page / Jump / Next page with the last page) / watched flag / downloaded
@@ -22,16 +23,16 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
 
-# the site moves between mirrors (txcima.com -> b.txcima.com): change only this line
-MAIN_URL = "https://b.txcima.com/"
-
-
 def GetConfigList():
     return []
 
 
+# the site moves between mirrors (txcima.com -> b.txcima.com): change only the address here
 def gettytul():
-    return MAIN_URL
+    return "https://b.txcima.com/"
+
+
+MAIN_URL = gettytul()
 
 
 # "مشاهدة فيلم X 2026 مترجم", "مسلسل X الموسم الثاني الحلقة 2 مترجمة", "انمي ...", "برنامج ..."
