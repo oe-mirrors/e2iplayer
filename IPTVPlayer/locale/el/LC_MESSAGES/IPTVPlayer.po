@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-08 20:17+0000\n"
-"PO-Revision-Date: 2026-10-05 01:16+0300\n"
+"PO-Revision-Date: 2026-10-09 00:34+0300\n"
 "Last-Translator: \n"
 "Language-Team: giorbak\n"
 "Language: el\n"
@@ -110,11 +110,11 @@ msgstr "%s - πάροχος υποτίτλων"
 
 #, python-format
 msgid "%s blocks the connection of the receiver (HTTP 403). It only plays with curl-impersonate installed on the receiver - otherwise please choose another server."
-msgstr ""
+msgstr "Το %s αποκλείει τη σύνδεση του δέκτη (HTTP 403). Αναπαράγεται μόνο με εγκατεστημένο το curl-impersonate στον δέκτη - διαφορετικά παρακαλώ επιλέξτε άλλον διακομιστή."
 
 #, python-format
 msgid "%s blocks the connection of the receiver (HTTP 403). Please choose another server."
-msgstr ""
+msgstr "Το %s αποκλείει τη σύνδεση του δέκτη (HTTP 403). Παρακαλώ επιλέξτε άλλον διακομιστή."
 
 #, python-format
 msgid "%s buffering..."
@@ -256,7 +256,7 @@ msgid "----- METADATA PROVIDERS CONFIGURATION -----"
 msgstr "----- ΡΥΘΜΙΣΕΙΣ ΠΑΡΟΧΩΝ ΜΕΤΑΔΕΔΟΜΕΝΩΝ -----"
 
 msgid "----- PLAYERS & PLAYBACK CONFIGURATION -----"
-msgstr "----- ΡΥΘΜΙΣΕΙΣ ΠΡΟΓΡΑΜΜΑΤΩΝ ΑΝΑΠΑΡΑΓΩΓΗΣ & ΑΝΑΠΑΡΑΓΩΓΗΣ -----"
+msgstr "----- ΡΥΘΜΙΣΕΙΣ ΠΡΟΓΡΑΜΜΑΤΩΝ ΑΝΑΠΑΡΑΓΩΓΗΣ & ΑΝΑΠΑΡΑΓΩΓΗ -----"
 
 msgid "----- PROXIES CONFIGURATION -----"
 msgstr "----- ΡΥΘΜΙΣΕΙΣ ΔΙΑΚΟΜΙΣΤΩΝ ΜΕΣΟΛΑΒΗΣΗΣ -----"
@@ -265,7 +265,7 @@ msgid "----- Porn Site Configuration -----"
 msgstr "----- Ρυθμίσεις ιστοσελίδων για ενήλικες -----"
 
 msgid "----- SCREENSAVER CONFIGURATION -----"
-msgstr ""
+msgstr "----- ΡΥΘΜΙΣΕΙΣ ΠΡΟΦΥΛΑΞΗΣ ΟΘΟΝΗΣ -----"
 
 msgid "----- SECURITY CONFIGURATION -----"
 msgstr "----- ΡΥΘΜΙΣΕΙΣ ΑΣΦΑΛΕΙΑΣ -----"
@@ -568,11 +568,11 @@ msgstr "Αλφαβητικά"
 
 #, python-format
 msgid "Also use the accounts of X-Streamity (%s)"
-msgstr ""
+msgstr "Χρησιμοποιήστε επίσης τους λογαριασμούς του X-Streamity (%s)"
 
 #, python-format
 msgid "Also use the portals of EStalker (%s)"
-msgstr ""
+msgstr "Χρησιμοποιήστε επίσης τις πύλες του EStalker (%s)"
 
 msgid "AltGr"
 msgstr "AltGr"
@@ -610,7 +610,7 @@ msgid "An error occurred while writing into: %s"
 msgstr "Προέκυψε σφάλμα κατά την εγγραφή στο: %s"
 
 msgid "An opensubtitles.com account (login and password in the E2iPlayer settings) raises the limit."
-msgstr ""
+msgstr "Ένας λογαριασμός opensubtitles.com (όνομα χρήστη και κωδικός πρόσβασης στις ρυθμίσεις του E2iPlayer) αυξάνει το όριο."
 
 msgid "Anatomy"
 msgstr "Ανατομία"
@@ -821,7 +821,7 @@ msgid "Basic Science"
 msgstr "Βασικές επιστήμες"
 
 msgid "Being watched"
-msgstr "Σε παρακολούθηση"
+msgstr "Γίνεται προβολή"
 
 msgid "Best"
 msgstr "Καλύτερο"
@@ -855,7 +855,7 @@ msgid "Black iframe file"
 msgstr "Αρχείο iframe μαύρου χρώματος"
 
 msgid "Black screensaver"
-msgstr ""
+msgstr "Μαύρη προφύλαξη οθόνης"
 
 msgid "Block wmv files"
 msgstr "Αποκλεισμός αρχείων wmv"
@@ -1426,7 +1426,7 @@ msgid "Digital programmes"
 msgstr "Ψηφιακά προγράμματα"
 
 msgid "Direct"
-msgstr ""
+msgstr "Απευθείας"
 
 msgid "Director:"
 msgstr "Σκηνοθέτης:"
@@ -1947,10 +1947,10 @@ msgid "Ethical & Legal"
 msgstr "Ηθικά & Νομικά"
 
 msgid "European movies"
-msgstr ""
+msgstr "Ευρωπαϊκές ταινίες"
 
 msgid "Events"
-msgstr ""
+msgstr "Συμβάντα"
 
 msgid "Every enabled site: does the menu open, does a list show videos? Takes a few minutes."
 msgstr "Κάθε ενεργοποιημένο ιστότοπο: ανοίγει το μενού, εμφανίζεται λίστα με βίντεο; Χρειάζονται λίγα λεπτά."
@@ -1962,7 +1962,7 @@ msgid "Exception occurs"
 msgstr "Παρουσιάστηκε εξαίρεση"
 
 msgid "Exclusive"
-msgstr ""
+msgstr "Αποκλειστικό"
 
 msgid "Exit"
 msgstr "Έξοδος"
@@ -2240,7 +2240,7 @@ msgid "Foreign movies"
 msgstr "Ξένες ταινίες"
 
 msgid "Foreign parts only"
-msgstr ""
+msgstr "Μόνο ξένα μέρη"
 
 msgid "Foreign series"
 msgstr "Ξένες σειρές"
@@ -2418,7 +2418,7 @@ msgid "Hide \"%s\" group"
 msgstr "Απόκρυψη ομάδας \"%s\""
 
 msgid "Hide the menu (live TV visible)"
-msgstr ""
+msgstr "Απόκρυψη του μενού (ορατή η ζωντανή TV)"
 
 msgid "Hide titles only available in Sweden"
 msgstr "Απόκρυψη τίτλων που είναι διαθέσιμοι μόνο στη Σουηδία"
@@ -2455,7 +2455,7 @@ msgstr "Host"
 
 #, python-format
 msgid "Host: %s"
-msgstr ""
+msgstr "Host: %s"
 
 #, python-format
 msgid "Hosting \"%s\" not supported."
@@ -2519,7 +2519,7 @@ msgid "INTERRUPTED"
 msgstr "ΔΙΑΚΟΠΗΚΕ"
 
 msgid "IPTV Portals"
-msgstr ""
+msgstr "Πύλες IPTV"
 
 msgid "Icon type"
 msgstr "Τύπος εικονιδίου"
@@ -2780,7 +2780,7 @@ msgstr "Τελευταίο σφάλμα εξαίρεσης: '%s'"
 
 #, python-format
 msgid "Last Modified: %s"
-msgstr ""
+msgstr "Τελευταία τροποποίηση: %s"
 
 msgid "Last air date:"
 msgstr "Τελευταία ημερομηνία προβολής:"
@@ -3427,7 +3427,7 @@ msgid "No YouTube video found for this track."
 msgstr "Δεν βρέθηκε βίντεο στο YouTube για αυτό το κομμάτι."
 
 msgid "No channels with an archive on this portal."
-msgstr ""
+msgstr "Δεν υπάρχουν κανάλια με αρχείο σε αυτή την πύλη."
 
 msgid "No description available."
 msgstr "Δεν υπάρχει διαθέσιμη περιγραφή."
@@ -3470,7 +3470,7 @@ msgid "No programme guide for this channel."
 msgstr "Δεν υπάρχει οδηγός προγράμματος για αυτό το κανάλι."
 
 msgid "No recorded programmes on this day."
-msgstr ""
+msgstr "Δεν υπάρχουν καταγεγραμμένα προγράμματα για αυτή την ημέρα."
 
 msgid "No replays in these days"
 msgstr "Δεν υπάρχουν επαναλήψεις για αυτές τις ημέρες"
@@ -3526,7 +3526,7 @@ msgid "Normalize item / file names (Show - SxxExx - Title)"
 msgstr "Κανονικοποίηση ονομάτων στοιχείων / αρχείων (Εκπομπή - SxxExx - Τίτλος)"
 
 msgid "Not available in your country (geo-blocking)."
-msgstr ""
+msgstr "Δεν είναι διαθέσιμο στη χώρα σας (γεωγραφικός αποκλεισμός)."
 
 msgid "Not available yet"
 msgstr "Δεν είναι ακόμη διαθέσιμο"
@@ -3581,7 +3581,7 @@ msgid "OMDb API key (free at omdbapi.com)"
 msgstr "Κλειδί API OMDb (δωρεάν στο omdbapi.com)"
 
 msgid "Off"
-msgstr ""
+msgstr "Απενεργοποίηση"
 
 msgid "Offline channels"
 msgstr "Κανάλια εκτός σύνδεσης"
@@ -3634,14 +3634,14 @@ msgstr "Άνοιγμα αυτής της σελίδας στον επιλεγμ�
 
 #, python-format
 msgid "OpenSubtitles.com login failed for user \"%s\". Please check your login and password."
-msgstr ""
+msgstr "Η σύνδεση στο OpenSubtitles.com απέτυχε για τον χρήστη \"%s\". Παρακαλώ ελέγξτε το όνομα χρήστη και τον κωδικό πρόσβασης."
 
 msgid "OpenSubtitles.com needs an API key. Create a free API consumer at https://www.opensubtitles.com/consumers and enter its key in the E2iPlayer settings (Subtitles)."
-msgstr ""
+msgstr "Το OpenSubtitles.com απαιτεί ένα κλειδί API. Δημιουργήστε έναν δωρεάν λογαριασμό API καταναλωτή στο https://www.opensubtitles.com/consumers και εισάγετε το κλειδί του στις ρυθμίσεις του E2iPlayer (Υπότιτλοι)."
 
 #, python-format
 msgid "OpenSubtitles.com rejected the request (HTTP %s). Please check the API key in the E2iPlayer settings."
-msgstr ""
+msgstr "Το OpenSubtitles.com απέρριψε το αίτημα (HTTP %s). Παρακαλώ ελέγξτε το κλειδί API στις ρυθμίσεις του E2iPlayer."
 
 msgid "OpenSubtitles.org sent a \"become VIP member\" note instead of the subtitle (download limit reached?)."
 msgstr "Το OpenSubtitles.org έστειλε μήνυμα \"γίνετε μέλος VIP\" αντί για τον υπότιτλο (συμπληρώθηκε το όριο λήψεων;)."
@@ -3797,7 +3797,7 @@ msgid "Pin protection for plugin"
 msgstr "Προστασία pin για το πρόσθετο"
 
 msgid "Pin protection for this host"
-msgstr ""
+msgstr "Προστασία αυτού του host με pin"
 
 #, python-format
 msgid "Play with [%s] player"
@@ -3846,7 +3846,7 @@ msgid "Please configure Xtream (blue button)"
 msgstr "Παρακαλώ ρυθμίστε το Xtream (μπλε κουμπί)"
 
 msgid "Please configure the Stalker portal (blue button)"
-msgstr ""
+msgstr "Παρακαλώ ρυθμίστε την πύλη Stalker (μπλε πλήκτρο)"
 
 #, python-format
 msgid "Please consider restart your Engima2 and agree to install the %s utlity when the %s will propose this."
@@ -3957,23 +3957,23 @@ msgstr "Πορνοστάρ"
 
 #, python-format
 msgid "Portal %d - %s (optional, from the MAG box):"
-msgstr ""
+msgstr "Πύλη %d - %s (προαιρετικό, από το MAG box):"
 
 #, python-format
 msgid "Portal %d - MAC address (00:1A:79:...):"
-msgstr ""
+msgstr "Πύλη %d - Διεύθυνση MAC (00:1A:79:...):"
 
 #, python-format
 msgid "Portal %d - name (optional):"
-msgstr ""
+msgstr "Πύλη %d - όνομα (προαιρετικό):"
 
 #, python-format
 msgid "Portal %d - portal URL (http://host:port/c/):"
-msgstr ""
+msgstr "Πύλη %d - URL πύλης ([http://host:port/c/](http://host:port/c/)):"
 
 #, python-format
 msgid "Portal URL and MAC address in the host configuration, as the provider gives them out. More portals: %s in the EStalker format (portal URL, then its MAC addresses, one per line)."
-msgstr ""
+msgstr "URL πούλης και διεύθυνση MAC στις ρυθμίσεις του host, όπως παρέχονται από τον πάροχο. Περισσότερες πύλες: %s στη μορφή EStalker (URL πύλης και στη συνέχεια οι διευθύνσεις MAC του, μία ανά γραμμή)."
 
 msgid "Portuguese"
 msgstr "Πορτογαλικά"
@@ -4060,7 +4060,7 @@ msgid "Python modules"
 msgstr "Μονάδες Python"
 
 msgid "Python was not found on the receiver."
-msgstr ""
+msgstr "Η Python δεν βρέθηκε στον δέκτη."
 
 msgid "Quality"
 msgstr "Ποιότητα"
@@ -4208,7 +4208,7 @@ msgid "Remaining:"
 msgstr "Απομένουν:"
 
 msgid "Remember a host's pin until E2iPlayer is closed"
-msgstr ""
+msgstr "Απομνημόνευση του pin ενός host μέχρι να κλείσει το E2iPlayer"
 
 msgid "Remember last search entry"
 msgstr "Απομνημόνευση τελευταίας καταχώρησης αναζήτησης"
@@ -4366,10 +4366,10 @@ msgid "Science"
 msgstr "Επιστήμη"
 
 msgid "Screensaver during audio playback"
-msgstr ""
+msgstr "Προφύλαξη οθόνης κατά την αναπαραγωγή ήχου"
 
 msgid "Screensaver in E2iPlayer menus"
-msgstr ""
+msgstr "Προφύλαξη οθόνης στα μενού του E2iPlayer"
 
 #, python-format
 msgid ""
@@ -4426,7 +4426,7 @@ msgid "Search results region:"
 msgstr "Περιοχή αποτελεσμάτων αναζήτησης:"
 
 msgid "Search string must have at least 4 characters."
-msgstr ""
+msgstr "Η συμβολοσειρά αναζήτησης πρέπει να περιέχει τουλάχιστον 4 χαρακτήρες."
 
 msgid "Search term :"
 msgstr "Όρος αναζήτησης:"
@@ -4599,7 +4599,7 @@ msgstr "Ο διακομιστής δεν επέστρεψε τίποτα."
 
 #, python-format
 msgid "Server, user name and password in the host configuration. The server field also takes a get.php link. More accounts: %s with one get.php link per line (X-Streamity format)."
-msgstr ""
+msgstr "Διακομιστής, όνομα χρήστη και κωδικός πρόσβασης στις ρυθμίσεις του host. Το πεδίο διακομιστή δέχεται επίσης σύνδεσμο get.php. Περισσότεροι λογαριασμοί: %s με έναν σύνδεσμο get.php ανά γραμμή (μορφή X-Streamity)."
 
 #, python-format
 msgid ""
@@ -4641,7 +4641,7 @@ msgstr "Ρυθμίσεις"
 
 #, python-format
 msgid "Settings of service [%s] cannot be opened."
-msgstr ""
+msgstr "Δεν είναι δυνατό να ανοίξουν οι ρυθμίσεις της υπηρεσίας [%s]."
 
 msgid "Settings screen layout"
 msgstr "Διάταξη οθόνης ρυθμίσεων"
@@ -4653,7 +4653,7 @@ msgid "Short Movies"
 msgstr "Ταινίες μικρού μήκους"
 
 msgid "Short series"
-msgstr ""
+msgstr "Σύντομες σειρές"
 
 msgid "Shorts"
 msgstr "Σύντομα βίντεο"
@@ -4689,7 +4689,7 @@ msgid "Show Youtube Api Key warnings"
 msgstr "Εμφάνιση προειδοποιήσεων κλειδιού Api Youtube"
 
 msgid "Show adult content"
-msgstr ""
+msgstr "Εμφάνιση περιεχομένου για ενηλίκους"
 
 msgid "Show all channels"
 msgstr "Εμφάνιση όλων των καναλιών"
@@ -4928,7 +4928,7 @@ msgid "Streamed"
 msgstr "Μεταδόθηκε"
 
 msgid "Streaming platforms"
-msgstr ""
+msgstr "Πλατφόρμες ροής"
 
 msgid "Studios"
 msgstr "Στούντιο"
@@ -5215,13 +5215,13 @@ msgid "The OpenSubtitles v3 server did not answer. Please try again later."
 msgstr "Ο διακομιστής OpenSubtitles v3 δεν απάντησε. Παρακαλώ δοκιμάστε ξανά αργότερα."
 
 msgid "The OpenSubtitles.com server did not answer. Please try again later."
-msgstr ""
+msgstr "Ο διακομιστής του OpenSubtitles.com δεν απάντησε. Παρακαλώ δοκιμάστε ξανά αργότερα."
 
 msgid "The QR code leads to the wiki page with pictures and the extension download."
 msgstr "Ο κωδικός QR οδηγεί στη σελίδα wiki με εικόνες και τη λήψη της επέκτασης."
 
 msgid "The Stalker portal of this entry is not configured (any more)."
-msgstr ""
+msgstr "Η πύλη Stalker αυτής της καταχώρισης δεν είναι πλέον ρυθμισμένη."
 
 msgid "The Xtream account of this entry is not configured (any more)."
 msgstr "Ο λογαριασμός Xtream αυτής της καταχώρισης δεν είναι πλέον ρυθμισμένος."
@@ -5263,7 +5263,7 @@ msgid "The connection limit for your weeb.tv account has been reached."
 msgstr "Έχει επιτευχθεί το όριο συνδέσεων για τον λογαριασμό σας στο weeb.tv."
 
 msgid "The daily download limit is reached."
-msgstr ""
+msgstr "Έγινε υπέρβαση του ημερήσιου ορίου λήψεων."
 
 msgid "The data is too large."
 msgstr "Τα δεδομένα είναι πολύ μεγάλα."
@@ -5305,11 +5305,11 @@ msgid "The feed of these channels could not be read - press OK to try again."
 msgstr "Δεν ήταν δυνατή η ανάγνωση της ροής αυτών των καναλιών - πατήστε OK για να δοκιμάσετε ξανά."
 
 msgid "The helper process ended unexpectedly."
-msgstr ""
+msgstr "Η βοηθητική διεργασία τερματίστηκε απροσδόκητα."
 
 #, python-format
 msgid "The helper script %s is missing."
-msgstr ""
+msgstr "Το βοηθητικό script %s λείπει."
 
 #, python-format
 msgid "The host \"%s\" cannot be used from the web interface (disabled, unknown or protected by PIN)."
@@ -5334,7 +5334,7 @@ msgid "The host wanted to open a window on the TV (%s) - that only works on the 
 msgstr "Ο host προσπάθησε να ανοίξει ένα παράθυρο στην TV (%s) - αυτό λειτουργεί μόνο στον δέκτη."
 
 msgid "The hoster sends an advert redirect instead of the video at the moment. Try another hoster."
-msgstr ""
+msgstr "Ο hoster στέλνει αυτή τη στιγμή ανακατεύθυνση διαφήμισης αντί για το βίντεο. Δοκιμάστε άλλον hoster."
 
 msgid "The latest uploads of all YouTube channels in this group, newest first."
 msgstr "Οι τελευταίες μεταφορτώσεις όλων των καναλιών YouTube αυτής της ομάδας, με τις νεότερες πρώτες."
@@ -5369,7 +5369,7 @@ msgstr ""
 "\"%s\""
 
 msgid "The portal did not hand out a link for this entry."
-msgstr ""
+msgstr "Η πύλη δεν παρείχε σύνδεσμο για αυτή την καταχώριση."
 
 msgid "The recordings of this page were on the site's old media server, which is offline."
 msgstr "Οι εγγραφές αυτής της σελίδας βρίσκονταν στον παλιό διακομιστή πολυμέσων του ιστότοπου, ο οποίος είναι εκτός σύνδεσης."
@@ -5456,16 +5456,16 @@ msgid "There is no hosts in this group."
 msgstr "Δεν υπάρχουν hosts σε αυτή την ομάδα."
 
 msgid "There is no next item in this list."
-msgstr ""
+msgstr "Δεν υπάρχει επόμενο στοιχείο σε αυτή τη λίστα."
 
 msgid "There is no previous item in this list."
-msgstr ""
+msgstr "Δεν υπάρχει προηγούμενο στοιχείο σε αυτή τη λίστα."
 
 #, python-format
 msgid ""
 "There is no storage device under \"%s\" (%s free). E2iPlayer will switch this folder back to \"%s\" at the next start.\n"
 "Please choose a folder on a mounted HDD or USB stick."
-msgstr ""
+msgstr "Δεν υπάρχει συσκευή αποθήκευσης στο \"%s\" (%s ελεύθερα). Το E2iPlayer θα επαναφέρει αυτόν τον φάκελο στο \"%s\" κατά την επόμενη εκκίνηση. Παρακαλώ επιλέξτε έναν φάκελο σε προσαρτημένο HDD ή USB stick."
 
 msgid "This article has no free video."
 msgstr "Αυτό το άρθρο δεν διαθέτει δωρεάν βίντεο."
@@ -5501,10 +5501,10 @@ msgid "This entry cannot be opened."
 msgstr "Αυτή η καταχώριση δεν μπορεί να ανοίξει."
 
 msgid "This entry is only an advert, there is no video."
-msgstr ""
+msgstr "Αυτή η καταχώριση είναι μόνο διαφήμιση, δεν υπάρχει βίντεο."
 
 msgid "This entry is protected by a PIN, open it on the receiver."
-msgstr ""
+msgstr "Αυτή η καταχώριση προστατεύεται με PIN, ανοίξτε την στον δέκτη."
 
 msgid "This episode is not available in this version (SUB/DUB) on this server. Try another one."
 msgstr "Αυτό το επεισόδιο δεν είναι διαθέσιμο σε αυτή την έκδοση (SUB/DUB) σε αυτόν τον διακομιστή. Δοκιμάστε κάποιον άλλο."
@@ -5991,7 +5991,7 @@ msgstr "Έκδοση"
 
 #, python-format
 msgid "Version: %s"
-msgstr ""
+msgstr "Έκδοση: %s"
 
 msgid "Video"
 msgstr "Βίντεο"
@@ -6003,7 +6003,7 @@ msgid "Video library"
 msgstr "Βιβλιοθήκη βίντεο"
 
 msgid "Video link not found."
-msgstr ""
+msgstr "Δεν βρέθηκε σύνδεσμος βίντεο."
 
 msgid "Video mode"
 msgstr "Λειτουργία βίντεο"
@@ -6088,7 +6088,7 @@ msgid "Watch later"
 msgstr "Προβολή αργότερα"
 
 msgid "Watch online"
-msgstr ""
+msgstr "Προβολή online"
 
 msgid "Western"
 msgstr "Γουέστερν"
@@ -6100,7 +6100,7 @@ msgid "When the maximum is reached"
 msgstr "Όταν επιτευχθεί το μέγιστο"
 
 msgid "While live TV is running"
-msgstr ""
+msgstr "Κατά την αναπαραγωγή ζωντανής TV"
 
 msgid "Whole file must be downloaded to start playback!"
 msgstr "Πρέπει να ληφθεί ολόκληρο το αρχείο για να ξεκινήσει η αναπαραγωγή!"
@@ -6121,7 +6121,7 @@ msgid "World"
 msgstr "Κόσμος"
 
 msgid "Worldwide"
-msgstr ""
+msgstr "Παγκοσμίως"
 
 msgid "Wrestling"
 msgstr "Πάλη"
@@ -6261,7 +6261,7 @@ msgstr "Η αναζήτησή σας"
 
 #, python-format
 msgid "Youth protection: only available between %s and %s."
-msgstr ""
+msgstr "Προστασία ανηλίκων: διαθέσιμο μόνο μεταξύ %s και %s."
 
 msgid "Youtube Suggestions"
 msgstr "Προτάσεις Youtube"
@@ -6390,7 +6390,7 @@ msgstr "δεν ήταν δυνατή η εκτέλεση του ελέγχου"
 
 #, python-format
 msgid "curl-impersonate is not installed on the receiver (%s). This stream only plays with it."
-msgstr ""
+msgstr "Το curl-impersonate δεν είναι εγκατεστημένο στον δέκτη (%s). Αυτή η ροή αναπαράγεται μόνο με αυτό."
 
 msgid "debug"
 msgstr "εντοπισμός σφαλμάτων"
@@ -6405,10 +6405,10 @@ msgid "delete the selected entry"
 msgstr "διαγραφή της επιλεγμένης καταχώρισης"
 
 msgid "device ID"
-msgstr ""
+msgstr "ID συσκευής"
 
 msgid "device ID 2"
-msgstr ""
+msgstr "ID συσκευής 2"
 
 msgid "direct link"
 msgstr "απευθείας σύνδεσμος"
@@ -6564,7 +6564,7 @@ msgid "menu and list only"
 msgstr "μόνο μενού και λίστα"
 
 msgid "minutes"
-msgstr ""
+msgstr "λεπτά"
 
 msgid "more options (this menu)"
 msgstr "περισσότερες επιλογές (αυτό το μενού)"
@@ -6727,7 +6727,7 @@ msgid "select to sign out"
 msgstr "επιλέξτε για αποσύνδεση"
 
 msgid "serial number"
-msgstr ""
+msgstr "σειριακός αριθμός"
 
 msgid "show more details about the selected item"
 msgstr "εμφάνιση περισσότερων λεπτομερειών για το επιλεγμένο στοιχείο"
@@ -6739,7 +6739,7 @@ msgid "sign in (subscriptions, playlists, age-restricted videos)"
 msgstr "σύνδεση (εγγραφές, λίστες αναπαραγωγής, βίντεο με περιορισμό ηλικίας)"
 
 msgid "signature"
-msgstr ""
+msgstr "υπογραφή"
 
 msgid "signed in"
 msgstr "σε σύνδεση"
