@@ -17,7 +17,7 @@ from Plugins.Extensions.IPTVPlayer.components.asynccall import MainSessionWrappe
 from Plugins.Extensions.IPTVPlayer.components.captcha_helper import CaptchaHelper
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import GetIPTVSleep, SetIPTVPlayerLastHostError, TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
-from Plugins.Extensions.IPTVPlayer.libs import curlimpersonate, ph, pyaes  # fix 071026: curlimpersonate (parserVIDZY)
+from Plugins.Extensions.IPTVPlayer.libs import curlimpersonate, ph, pyaes, torrserver  # fix 071026: curlimpersonate (parserVIDZY)
 from Plugins.Extensions.IPTVPlayer.libs.aesgcm import python_aesgcm
 from Plugins.Extensions.IPTVPlayer.libs.crypto.cipher.aes_cbc import AES_CBC
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
@@ -26,6 +26,7 @@ from Plugins.Extensions.IPTVPlayer.libs.jsunpack import get_packed_data
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import common
 from Plugins.Extensions.IPTVPlayer.libs.recaptcha_v2 import UnCaptchaReCaptcha
 from Plugins.Extensions.IPTVPlayer.libs.secretbox import secretbox as nacl_secretbox
+from Plugins.Extensions.IPTVPlayer.libs.torrserver import isTorrentLink
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import captchaParser, decorateUrl, getDirectM3U8Playlist, getImpersonateM3U8Playlist, getMPDLinksWithMeta, requireDownloaderForDisguisedHls, unicode_escape, unpackJSPlayerParams, VIDUPME_decryptPlayerParams, safeEvalExpression
 from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import clean_html
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_binary, ensure_str
@@ -1079,7 +1080,10 @@ class urlparser:
 
     def getHostName(self, url, nameOnly=False):
         hostName = strwithmeta(url).meta.get("host_name", "")
-        if not hostName:
+        if not hostName and url.startswith("magnet:?"):
+            # the tracker urls (tr=http://...) inside a magnet link are not its host
+            hostName = "magnet"
+        elif not hostName:
             match = re.search("https?://(?:www.)?(.+?)/", url)
             if match:
                 hostName = match.group(1)
@@ -1096,6 +1100,8 @@ class urlparser:
     def getParser(self, url, host=None):
         if None is host:
             host = self.getHostName(url)
+        if host == "magnet" or isTorrentLink(url):
+            return self.pp.parserTORRSERVER
         parser = self.hostMap.get(host, None)
         if None is parser:
             host2 = host[host.find(".") + 1:]
@@ -5831,3 +5837,47 @@ class pageParser(CaptchaHelper):
                 urltab.append((height, {"name": "%sp %s" % (height, key) if height else key, "url": urlparser.decorateUrl(url, {"User-Agent": HTTP_HEADER["User-Agent"]})}))
         urltab.sort(key=lambda x: x[0], reverse=True)
         return [x[1] for x in urltab]
+
+    def parserTORRSERVER(self, baseUrl):  # magnet / .torrent links, played through the local TorrServer (libs/torrserver.py)
+        printDBG("parserTORRSERVER baseUrl[%s]" % baseUrl)
+        if not config.plugins.iptvplayer.torrserver_enabled.value:
+            SetIPTVPlayerLastHostError(_('Torrent links are played with TorrServer.\nSwitch on "Play torrents with TorrServer" in the E2iPlayer settings (Torrent configuration).'))
+            return []
+        server = torrserver.TorrServer()
+        error = server.start()
+        if error == "binary":
+            SetIPTVPlayerLastHostError(torrserver.installHint())
+            return []
+        if error:
+            SetIPTVPlayerLastHostError(_("TorrServer could not be started (%s).") % error)
+            return []
+        meta = strwithmeta(baseUrl).meta
+        infoHash, files = server.getFiles(str(baseUrl), meta.get("title", ""), meta.get("icon", ""))
+        if not infoHash or not files:
+            SetIPTVPlayerLastHostError(_("TorrServer got no file list for this torrent (no peers or a dead link?)."))
+            return []
+
+        def _ext(item):
+            return torrserver.fileExt(item.get("path", ""))
+
+        files = sorted(files, key=lambda item: torrserver.naturalKey(item.get("path", "")))
+        media = [item for item in files if _ext(item) in torrserver.VIDEO_EXTS] or [item for item in files if _ext(item) in torrserver.AUDIO_EXTS] or files
+        # release "sample" clips only when there is nothing else
+        media = [item for item in media if not torrserver.isSample(item.get("path", ""))] or media
+        subs = [item for item in files if _ext(item) in torrserver.SUB_EXTS]
+        urltab = []
+        for item in media:
+            # fix 091026: ensure_str - py2 json gives unicode file names (non-ASCII in Arabic / French torrents)
+            fileName = ensure_str(item.get("path", "")).split("/")[-1]
+            stem = fileName.rsplit(".", 1)[0].lower()
+            # subtitles named like the video file, or all of them when there is only one video
+            subTracks = []
+            for sub in subs:
+                subName = ensure_str(sub.get("path", "")).split("/")[-1]
+                if len(media) == 1 or subName.lower().startswith(stem):
+                    lang = ph.search(subName, r"[._-]([a-zA-Z]{2,3})\.[A-Za-z]{2,3}$")[0].lower()
+                    subTracks.append({"title": subName, "url": server.streamUrl(infoHash, sub), "lang": lang, "format": _ext(sub)})
+            urlMeta = {"external_sub_tracks": subTracks} if subTracks else {}
+            size = torrserver.formatSize(item.get("length", 0))
+            urltab.append({"name": "%s (%s)" % (fileName, size) if size else fileName, "url": urlparser.decorateUrl(server.streamUrl(infoHash, item), urlMeta)})
+        return urltab

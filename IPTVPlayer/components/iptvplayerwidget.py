@@ -1024,6 +1024,20 @@ class E2iPlayerWidget(Screen):
         except Exception:
             printExc()
         self.activePlayer = None
+        self.stopTorrServer()
+
+    def stopTorrServer(self):
+        # only the TorrServer E2iPlayer started, and not while the download manager still fetches from it
+        if not config.plugins.iptvplayer.torrserver_stop_on_exit.value:
+            return
+        try:
+            from Plugins.Extensions.IPTVPlayer.libs import torrserver
+            baseUrl = torrserver.getBaseUrl()
+            if gDownloadManager is not None and any(str(item.url).startswith(baseUrl) for item in gDownloadManager.queueUD + gDownloadManager.queueDQ):
+                return
+            torrserver.stopOwnServer()
+        except Exception:
+            printExc()
 
     def isPlayableType(self, type):
         if type in [CDisplayListItem.TYPE_VIDEO, CDisplayListItem.TYPE_AUDIO, CDisplayListItem.TYPE_ARTICLE, CDisplayListItem.TYPE_PICTURE]:

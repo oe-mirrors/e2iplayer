@@ -219,6 +219,10 @@ def _rows(entries, editable, readOnly):
 			row['value'] = '' if kind == 'password' else _elementText(element)
 		elif kind == 'bool':
 			row['value'] = bool(element.value)
+			if name == 'torrserver_enabled':
+				# switching on needs a confirmation, like on the receiver
+				from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import GetTorrentWarning
+				row['confirm'] = GetTorrentWarning() + '\n\n' + _('Switch on torrent playback?')
 		elif kind == 'select':
 			row['value'] = str(element.value)
 			row['choices'] = _choices(element)
@@ -264,7 +268,7 @@ def apiSettingsHosts(req, params):
 			hasOptions = len(_temp.GetConfigList()) > 0
 		except Exception:
 			pass
-		hosts.append({'name': hostName, 'title': hostDisplayTitle(title), 'logo': hostLogoUrl(hostName), 'enabled': IsHostEnabled(hostName),
+		hosts.append({'name': hostName, 'title': hostDisplayTitle(title), 'logo': hostLogoUrl(hostName), 'enabled': IsHostEnabled(hostName, switchOnly=True),
 					'hasOptions': hasOptions})
 	return {'locked': isConfigPinProtected(), 'hosts': hosts}
 
@@ -334,10 +338,25 @@ def apiSettingsSet(req, params):
 		return {'ok': False, 'error': str(e)}
 	if name in RESTART_OPTIONS:
 		settings.restartPending = True
+	if name.startswith('torrserver_'):
+		# our TorrServer follows the changed torrent configuration at once, like after saving on the receiver
+		try:
+			from Plugins.Extensions.IPTVPlayer.libs import torrserver
+			torrserver.applyConfigInBackground()
+		except Exception:
+			printExc()
 	warning = ''
 	if kind == 'text':
 		from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import GetNoStorageWarning
 		warning = GetNoStorageWarning(element, element.value)
+	elif name == 'torrserver_enabled' and element.value:
+		# TorrServer is in no image feed: without the binary the user is told what to install
+		try:
+			from Plugins.Extensions.IPTVPlayer.libs import torrserver
+			if not torrserver.findBinary():
+				warning = torrserver.installHint()
+		except Exception:
+			printExc()
 	return {'ok': True, 'restart': name in RESTART_OPTIONS, 'warning': warning}
 
 

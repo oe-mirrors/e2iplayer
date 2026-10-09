@@ -311,6 +311,34 @@ config.plugins.iptvplayer.fakeHostsList = ConfigSelection(default="fake", choice
 # External movie player settings
 config.plugins.iptvplayer.fakExtMoviePlayerList = ConfigSelection(default="fake", choices=[("fake", "  ")])
 
+# torrent playback through a local TorrServer (libs/torrserver.py) - the user installs the binary;
+# off by default because a torrent client also sends data to other peers unless upload is disabled
+config.plugins.iptvplayer.torrserver_enabled = ConfigYesNo(default=False)
+# empty = search $PATH and the usual folders; a folder or the full path of the binary (OK in the
+# configuration opens a file browser, the web interface takes it as text)
+config.plugins.iptvplayer.torrserver_path = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.torrserver_port = ConfigInteger(8090, (1024, 65535))
+config.plugins.iptvplayer.torrserver_cache = ConfigSelection(default="64", choices=[("32", "32 MB"), ("64", "64 MB"), ("128", "128 MB"), ("256", "256 MB"), ("512", "512 MB")])
+config.plugins.iptvplayer.torrserver_preload = ConfigSelection(default="50", choices=[("0", _("Off")), ("25", "25%"), ("50", "50%"), ("75", "75%"), ("100", "100%")])
+config.plugins.iptvplayer.torrserver_upload = ConfigYesNo(default=False)
+config.plugins.iptvplayer.torrserver_stop_on_exit = ConfigYesNo(default=True)
+# TorrServer's own web interface (http://<receiver>:<port>) from other devices of the home network; off =
+# bound to 127.0.0.1, only E2iPlayer reaches it (TorrServer's web interface has no password by default)
+config.plugins.iptvplayer.torrserver_lan = ConfigYesNo(default=False)
+# cache in RAM (default) or in a folder on HDD/USB - TorrServer then keeps the pieces in <folder>/TorrServer
+config.plugins.iptvplayer.torrserver_cache_location = ConfigSelection(default="ram", choices=[("ram", _("RAM")), ("disk", _("Folder on HDD / USB"))])
+config.plugins.iptvplayer.torrserver_cache_dir = ConfigDirectory(default="/media/hdd/")
+config.plugins.iptvplayer.torrserver_disk_cache = ConfigSelection(default="2048", choices=[("1024", "1 GB"), ("2048", "2 GB"), ("4096", "4 GB"), ("8192", "8 GB"), ("16384", "16 GB"), ("32768", "32 GB")])
+config.plugins.iptvplayer.torrserver_remove_cache = ConfigYesNo(default=True)
+# TorrServer's own settings (BTSets) - values as TorrServer takes them: rates in KB/s, timeout in seconds
+config.plugins.iptvplayer.torrserver_connections = ConfigSelection(default="25", choices=[("10", "10"), ("25", "25"), ("50", "50"), ("100", "100"), ("200", "200")])
+config.plugins.iptvplayer.torrserver_dl_limit = ConfigSelection(default="0", choices=[("0", _("unlimited")), ("512", "512 KB/s"), ("1024", "1 MB/s"), ("2048", "2 MB/s"), ("5120", "5 MB/s"), ("10240", "10 MB/s")])
+config.plugins.iptvplayer.torrserver_ul_limit = ConfigSelection(default="512", choices=[("0", _("unlimited")), ("128", "128 KB/s"), ("256", "256 KB/s"), ("512", "512 KB/s"), ("1024", "1 MB/s"), ("2048", "2 MB/s")])
+config.plugins.iptvplayer.torrserver_readahead = ConfigSelection(default="95", choices=[("50", "50%"), ("75", "75%"), ("95", "95%"), ("100", "100%")])
+config.plugins.iptvplayer.torrserver_timeout = ConfigSelection(default="30", choices=[("30", "30 s"), ("60", "60 s"), ("120", "2 min"), ("300", "5 min")])
+config.plugins.iptvplayer.torrserver_encrypt = ConfigYesNo(default=False)
+config.plugins.iptvplayer.torrserver_dlna = ConfigYesNo(default=False)
+
 # hidden options
 # config.plugins.iptvplayer.hiddenAllVersionInUpdate = ConfigYesNo(default=False)
 

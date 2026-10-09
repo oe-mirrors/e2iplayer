@@ -15,7 +15,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, \
                                                           IsSameDir, IsSameOrSubDir, IsRealStoragePresent, FreeSpace, formatBytes, GetPluginDir
 from Plugins.Extensions.IPTVPlayer.components.configbase import ConfigBaseWidget
 from Plugins.Extensions.IPTVPlayer.components.confighost import ConfigHostsMenu
-from Plugins.Extensions.IPTVPlayer.components.iptvdirbrowser import IPTVDirectorySelectorWidget
+from Plugins.Extensions.IPTVPlayer.components.iptvdirbrowser import IPTVDirectorySelectorWidget, IPTVFileSelectorWidget
 from Plugins.Extensions.IPTVPlayer.components.configextmovieplayer import ConfigExtMoviePlayer
 from Plugins.Extensions.IPTVPlayer.__init__ import _, GRIDSUPPORT
 from .iptvpin import IPTVPinWidget
@@ -25,7 +25,9 @@ from .iptvpin import IPTVPinWidget
 # FOREIGN import
 ###################################################
 from os import path as os_path
+import re
 
+from Screens.ChoiceBox import ChoiceBox
 from Screens.MessageBox import MessageBox
 
 from Components.ActionMap import ActionMap
@@ -50,10 +52,23 @@ from Plugins.Extensions.IPTVPlayer.components.iptvconfig import GetMoviePlayerNa
 ###################################################
 
 
+def GetTorrentWarning():
+    # shown when torrent playback is switched on - on the receiver as a yes/no question, in the web interface as a notice
+    return _("Torrents are peer-to-peer: while a torrent plays, the receiver connects to other users and your IP address is visible to them. "
+             "Depending on your country, downloading or sharing copyrighted content through torrents may be illegal - you alone are "
+             "responsible for what you play. Upload to other peers stays off unless you switch it on.\n\n"
+             "TorrServer itself is not part of E2iPlayer, it has to be installed separately.")
+
+
 def GetNoStorageWarning(cfgItem, path):
     # same check as the start of E2iPlayer (IPTVPlayerWidget), which would silently switch such a folder back -
     # e.g. /media/hdd without a mounted HDD is only an empty folder in a tiny tmpfs; '' when the folder is fine
     cp = config.plugins.iptvplayer
+    if cfgItem is cp.torrserver_cache_dir:
+        # libs/torrserver.py keeps the cache in RAM while the folder has no storage behind it
+        if IsRealStoragePresent(path):
+            return ''
+        return _('There is no storage device under "%s". TorrServer keeps its cache in RAM until a HDD or USB stick is mounted there.') % path
     if cfgItem is cp.bufferingPath:
         fallbackDir = cp.TmpDir.value
     elif cfgItem is cp.CacheDir:
@@ -416,6 +431,33 @@ class ConfigMenu(ConfigBaseWidget):
         list.append(getConfigListEntry(_("Write current title to file:"), config.plugins.iptvplayer.curr_title_file))
 
     @staticmethod
+    def _fillTorrent(list):
+        cp = config.plugins.iptvplayer
+        list.append(getConfigListEntry(_("Play torrents with TorrServer"), cp.torrserver_enabled))
+        if cp.torrserver_enabled.value:
+            list.append(getConfigListEntry("    " + _("TorrServer binary (OK = choose, empty = search automatically)"), cp.torrserver_path))
+            list.append(getConfigListEntry("    " + _("TorrServer port"), cp.torrserver_port))
+            list.append(getConfigListEntry("    " + _("TorrServer web interface in the home network"), cp.torrserver_lan))
+            list.append(getConfigListEntry("    " + _("Cache location"), cp.torrserver_cache_location))
+            if cp.torrserver_cache_location.value == "disk":
+                list.append(getConfigListEntry("        " + _("Cache folder"), cp.torrserver_cache_dir))
+                list.append(getConfigListEntry("        " + _("Cache size on disk"), cp.torrserver_disk_cache))
+                list.append(getConfigListEntry("        " + _("Delete the cache when the torrent is closed"), cp.torrserver_remove_cache))
+            else:
+                list.append(getConfigListEntry("        " + _("Cache size in RAM"), cp.torrserver_cache))
+            list.append(getConfigListEntry("    " + _("Fill cache before playback"), cp.torrserver_preload))
+            list.append(getConfigListEntry("    " + _("Read ahead (share of the cache)"), cp.torrserver_readahead))
+            list.append(getConfigListEntry("    " + _("Connections per torrent"), cp.torrserver_connections))
+            list.append(getConfigListEntry("    " + _("Download speed limit"), cp.torrserver_dl_limit))
+            list.append(getConfigListEntry("    " + _("Allow upload to other peers (seeding)"), cp.torrserver_upload))
+            if cp.torrserver_upload.value:
+                list.append(getConfigListEntry("        " + _("Upload speed limit"), cp.torrserver_ul_limit))
+            list.append(getConfigListEntry("    " + _("Encrypted connections only"), cp.torrserver_encrypt))
+            list.append(getConfigListEntry("    " + _("Close an unused torrent after"), cp.torrserver_timeout))
+            list.append(getConfigListEntry("    " + _("DLNA server of TorrServer"), cp.torrserver_dlna))
+            list.append(getConfigListEntry("    " + _("Stop TorrServer when E2iPlayer is closed"), cp.torrserver_stop_on_exit))
+
+    @staticmethod
     def _fillScreensaver(list):
         # E2iPlayerWidget (menus, every E2iPlayer screen except the players) and IPTVExtMoviePlayer (audio only)
         list.append(getConfigListEntry(_("Screensaver in E2iPlayer menus"), config.plugins.iptvplayer.screensaver_menu))
@@ -458,6 +500,7 @@ class ConfigMenu(ConfigBaseWidget):
             ("captcha", _("----- CAPTCHA CONFIGURATION -----"), ConfigMenu._fillCaptcha),
             ("subtitles", _("----- SUBTITLES CONFIGURATION -----"), ConfigMenu._fillSubtitles),
             ("players", _("----- PLAYERS & PLAYBACK CONFIGURATION -----"), ConfigMenu._fillPlayers),
+            ("torrent", _("----- TORRENT CONFIGURATION -----"), ConfigMenu._fillTorrent),
             ("screensaver", _("----- SCREENSAVER CONFIGURATION -----"), ConfigMenu._fillScreensaver),
             ("debug", _("----- DEBUG CONFIGURATION -----"), ConfigMenu._fillDebug),
         )
@@ -540,6 +583,15 @@ class ConfigMenu(ConfigBaseWidget):
         else:
             ConfigBaseWidget.keyExit(self)
 
+    def save(self):
+        ConfigBaseWidget.save(self)
+        # our TorrServer follows the saved torrent configuration at once (not only with the next torrent link)
+        try:
+            from Plugins.Extensions.IPTVPlayer.libs import torrserver
+            torrserver.applyConfigInBackground()
+        except Exception:
+            printExc()
+
     def changeSubOptions(self):
         current = self["config"].getCurrent()
         if current and len(current) > 1 and current[1] is config.plugins.iptvplayer.configMenuView:
@@ -547,6 +599,28 @@ class ConfigMenu(ConfigBaseWidget):
         else:
             self._keepOneStartEntry(current)
             ConfigBaseWidget.changeSubOptions(self)
+            self._confirmTorrentPlayback(current)
+
+    def _confirmTorrentPlayback(self, current):
+        # switching torrent playback on needs a "yes" to the warning, otherwise it goes back off
+        cfg = config.plugins.iptvplayer.torrserver_enabled
+        if not current or len(current) < 2 or current[1] is not cfg or not cfg.value:
+            return
+
+        def answer(ret):
+            if not ret:
+                cfg.value = False
+                self.runSetup()
+                return
+            # TorrServer is in no image feed: without the binary the user is told what to install
+            try:
+                from Plugins.Extensions.IPTVPlayer.libs import torrserver
+                if not torrserver.findBinary():
+                    self.session.open(MessageBox, torrserver.installHint(), type=MessageBox.TYPE_INFO)
+            except Exception:
+                printExc()
+
+        self.session.openWithCallback(answer, MessageBox, GetTorrentWarning() + "\n\n" + _("Switch on torrent playback?"), type=MessageBox.TYPE_YESNO, default=False)
 
     def _keepOneStartEntry(self, current):
         # the player must stay startable: when the last of plugin browser / extension list / main menu
@@ -644,7 +718,9 @@ class ConfigMenu(ConfigBaseWidget):
             self._openSection(curIndex)
             return
         currItem = self["config"].list[curIndex][1]
-        if isinstance(currItem, ConfigDirectory):
+        if currItem is config.plugins.iptvplayer.torrserver_path:
+            self._chooseTorrServerBinary(curIndex, currItem)
+        elif isinstance(currItem, ConfigDirectory):
             def SetDirPathCallBack(curIndex, newPath):
                 if None is not newPath:
                     self["config"].list[curIndex][1].value = newPath
@@ -667,6 +743,32 @@ class ConfigMenu(ConfigBaseWidget):
                     break
             else:
                 ConfigBaseWidget.keyOK(self)
+
+    def _chooseTorrServerBinary(self, curIndex, currItem):
+        # the binary is picked in a file browser (only TorrServer* files are listed) instead of being typed;
+        # with a path already set, "search automatically" empties it again
+        def setPath(newPath):
+            if newPath is not None:
+                self["config"].list[curIndex][1].value = newPath
+
+        def browse():
+            currDir = os_path.dirname(currItem.value.strip())
+            if not os_path.isdir(currDir):
+                currDir = "/usr/bin/"
+            self.session.openWithCallback(setPath, IPTVFileSelectorWidget, currDir, _("Select the TorrServer binary"), re.compile(r"^torrserver", re.IGNORECASE))
+
+        def choice(ret):
+            if ret is not None:
+                if ret[1] == "browse":
+                    browse()
+                else:
+                    setPath("")
+
+        if not currItem.value.strip():
+            browse()
+            return
+        options = [(_("Choose the TorrServer binary"), "browse"), (_("Search automatically"), "auto")]
+        self.session.openWithCallback(choice, ChoiceBox, title=currItem.value, list=options)
 
     def _getDeleteNowActions(self):
         # every "Delete ... now" row and what OK does on it; built per call so the texts follow the UI language
@@ -814,6 +916,9 @@ class ConfigMenu(ConfigBaseWidget):
             config.plugins.iptvplayer.hostsListType,
             config.plugins.iptvplayer.skinforceallinternal,
             config.plugins.iptvplayer.IPTVDMShowNotification,
+            config.plugins.iptvplayer.torrserver_enabled,
+            config.plugins.iptvplayer.torrserver_cache_location,
+            config.plugins.iptvplayer.torrserver_upload,
             config.plugins.iptvplayer.debugprint,
             config.plugins.iptvplayer.debug_max_size,
             config.plugins.iptvplayer.debug_on_limit,
