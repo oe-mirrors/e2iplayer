@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 08.10.2026
+# Last Modified: 09.10.2026
+# 09.10.2026 - "Newest videos": INFO shows the full YouTube description, no age in the title (file name)
 # 08.10.2026 - favourites of a PIN protected host ask for the host's PIN
 # 01.10.2026 - the "Newest videos (all YouTube channels)" row can be switched off in the host settings
 # 20.09.2026 - YouTube channels in a group: sort by newest upload + merged "newest videos" list,
@@ -277,8 +278,8 @@ class Favourites(CBaseHostClass):
             extra.append(entry['views'] + ' ' + _("views"))
         if extra:
             desc += "\n" + ' | '.join(extra)
-        # the age first: the list is sorted by it, not by channel
-        title = '[' + ytchannelfeed.formatAge(entry['published'], now) + '] ' + entry['channel'] + ': ' + entry['title']
+        # no age in the title: it ends up in the download file name; the description shows it
+        title = entry['channel'] + ': ' + entry['title']
         self.addVideo({'name': 'item', 'title': title, 'host': 'youtube', 'icon': entry['icon'], 'desc': desc,
                        'yt_video': True, 'yt_item': video, 'fav_item': video, 'fav_url': video['url']})
 
@@ -380,6 +381,12 @@ class Favourites(CBaseHostClass):
         except Exception:
             printExc()
         return ret
+
+    def getYtArticleContent(self, cItem):
+        # INFO on a video of the merged "newest videos" list: the YouTube host reads the full description
+        if self._setHost('youtube'):
+            return RetHost(RetHost.OK, value=self.host.host.getArticleContent(dict(cItem['yt_item'])))
+        return RetHost(RetHost.ERROR, value=[])
 
     def getCurrentGuestHost(self):
         return self.host
@@ -943,6 +950,8 @@ class IPTVHost(CHostBase):
         guestIndex = Index
         callQuestHost = True
         if not self.host.isQuestMode():
+            if 0 <= Index < len(self.host.currList) and self.host.currList[Index].get('yt_video'):
+                return self.host.getYtArticleContent(self.host.currList[Index])
             callQuestHost = self.host.prepareGuestHostItem(Index)
             guestIndex = 0
         if callQuestHost:
