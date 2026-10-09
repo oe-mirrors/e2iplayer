@@ -23,6 +23,13 @@ def test_cloudflare_bare_403_defaults_to_challenge():
     assert kind(403, {"Server": "cloudflare"}, "") == ("Cloudflare", bp.KIND_CLOUDFLARE)
 
 
+def test_cloudflare_passive_jsd_script_is_not_a_challenge():
+    body = "<h1>Too many requests</h1><script src='/cdn-cgi/challenge-platform/scripts/jsd/main.js'></script>"
+    assert kind(429, {}, body) is None
+    body = "<script src='/cdn-cgi/challenge-platform/h/b/orchestrate/chl_page/v1?ray=1'></script>"
+    assert kind(403, {}, body) == ("Cloudflare", bp.KIND_CLOUDFLARE)
+
+
 def test_cloudflare_waf_block_is_not_solvable():
     body = "<h1>Sorry, you have been blocked</h1> Cloudflare Ray ID: 1"
     assert kind(403, {"Server": "cloudflare"}, body) == ("Cloudflare WAF block", bp.KIND_BLOCK)

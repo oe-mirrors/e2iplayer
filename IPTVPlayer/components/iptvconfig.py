@@ -341,11 +341,11 @@ config.plugins.iptvplayer.meta_tmdb_apikey = ConfigSecret(default="", fixed_size
 config.plugins.iptvplayer.meta_omdb_apikey = ConfigSecret(default="", fixed_size=False)
 config.plugins.iptvplayer.sidecar_enabled = ConfigYesNo(default=True)
 config.plugins.iptvplayer.normalize_media_names = ConfigYesNo(default=True)
-# OFF by default. The 7reels/cineb community-host resolvers VidEasy,
-# VidCore/VidFast, VidLink and Peachify cannot decrypt their links on the
-# box - they POST the site's encrypted stream token (which carries the
-# TMDb id of what is being played) to the third-party web service
-# enc-dec.app. The settings screen makes the user confirm twice before
+# OFF by default. The resolvers VidCore / VidUp / VidFast cannot decrypt
+# their links on the box - they send the site's encrypted stream token
+# (which carries the TMDb id of what is being played) to the third-party
+# web service enc-dec.app (VidEasy, VidLink and Peachify decrypt on the
+# box since 09.10.2026). The settings screen makes the user confirm twice before
 # this can be turned on (see ConfigMenu._confirmExternalResolve).
 config.plugins.iptvplayer.allow_external_resolve = ConfigYesNo(default=False)
 
@@ -360,8 +360,8 @@ def IsPluginBrowserEntryShown():
 
 
 def IsExternalResolveAllowed():
-    # asked by parserVIDEASY / parserVIDCORE / parserVIDLINK / parserPEACHIFY
-    # before they contact enc-dec.app
+    # asked by parserVIDCORE (vidcore / vidup / vidfast) before it contacts
+    # enc-dec.app, and by the hosts that offer those links
     return config.plugins.iptvplayer.allow_external_resolve.value
 
 

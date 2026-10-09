@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 07.10.2026
+# Last Modified: 09.10.2026
 # Coding: BY MOHAMED_OS
 # 06.10.2026 - ported to the python3 host standard
 #   - 4khdhub.one (4K / 1080p WEB-DL and BluRay releases): the menus of the site (movies, series, streaming
@@ -17,7 +17,7 @@ import re
 
 from Components.config import ConfigSelection, ConfigText, config, getConfigListEntry
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
-from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import GetAlternativeProxyChoices, GetAlternativeProxyUrl, IsExternalResolveAllowed, IsMediaNamingNormalized, IsSidecarEnabled
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import GetAlternativeProxyChoices, GetAlternativeProxyUrl, IsMediaNamingNormalized, IsSidecarEnabled
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
@@ -365,8 +365,8 @@ class UltrahdHub(GenericFolderWatchedScraperMixin, CBaseHostClass):
                            "url": strwithmeta(servers[server], {"Referer": pageUrl}), "need_resolve": 1})
         if not (season and episode):
             tmdbId = self.cm.ph.getSearchGroups(data, r"defaultVideoId\s*=\s*'(\d+)'")[0]
-            # the VidEasy player only resolves with the (opt-in) external link decryption
-            if tmdbId and "videasy" in data and IsExternalResolveAllowed():
+            # the site's VidEasy player by TMDb id (urlparser decrypts its answer on the box)
+            if tmdbId and "videasy" in data:
                 embed = "https://player.videasy.net/movie/%s?title=%s&year=%s" % (tmdbId, urllib_quote(cItem.get("meta_title", "")), cItem.get("meta_year", ""))
                 urltab.append({"name": "%s - VidEasy" % _("Watch online"), "url": embed, "need_resolve": 1})
             trailer = self.cm.ph.getSearchGroups(data, r'data-trailer-url="[^"]*youtube\.com/embed/([^"?&]+)')[0]

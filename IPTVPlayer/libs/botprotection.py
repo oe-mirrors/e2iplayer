@@ -99,7 +99,11 @@ def detect(status=0, headers=None, body='', url=''):
         return Protection('Cloudflare WAF block', KIND_BLOCK, marker)
     if h.get('cf-mitigated') == 'challenge':
         return Protection('Cloudflare', KIND_CLOUDFLARE, 'cf-mitigated: challenge')
-    marker = has('just a moment', 'cf-chl', '/cdn-cgi/challenge-platform', '_cf_chl_opt', 'cf_chl_')
+    marker = has('just a moment', 'cf-chl', '_cf_chl_opt', 'cf_chl_')
+    # fix 091026: Cloudflare puts its passive bot-detection script (/cdn-cgi/challenge-platform/scripts/jsd/main.js)
+    # on ordinary pages too (anime3rb's own 429 page, box log 09.10.) - only other challenge-platform paths count
+    if not marker and '/cdn-cgi/challenge-platform' in b.replace('/cdn-cgi/challenge-platform/scripts/jsd/', ''):
+        marker = '/cdn-cgi/challenge-platform'
     if marker:
         return Protection('Cloudflare', KIND_CLOUDFLARE, marker)
     if 'cloudflare' in server and status in (403, 503):

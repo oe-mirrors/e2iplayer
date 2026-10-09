@@ -702,6 +702,20 @@ class common:
         cj._really_load(StringIO(''.join(lines)), cookiefile, ignore_discard=ignoreDiscard, ignore_expires=ignoreExpires)
         return cj
 
+    def _pyCurlPrepareCookieFile(self, cookiefile):
+        # the reverse of _pyCurlLoadCookie: session cookies get expires 0 (an empty field = line dropped by curl);
+        # rewritten only when such a line may be there. _pyCurlLoadCookie, curlimpersonate.normalizeCookieFile and
+        # a current Python 3 MozillaCookieJar read 0 back as a session cookie
+        if not cookiefile or not os.path.isfile(cookiefile):
+            return
+        try:
+            with open(cookiefile, 'rb') as f:
+                if b'\t\t' not in f.read():
+                    return
+            curlimpersonate.prepareCookieFile(cookiefile, cookiefile)
+        except Exception:
+            printExc()
+
     def clearCookie(self, cookiefile, leaveNames=[], removeNames=None, ignoreDiscard=True, ignoreExpires=False):
         if not os.path.isfile(cookiefile):
             # nothing saved yet for this host - nothing to clear (was logged as an exception)
@@ -1003,6 +1017,10 @@ class common:
                     curlSession.setopt(pycurl.COOKIE, cookiesStr)  # 'Set-Cookie: foo=baar') #
 
                 if params.get('load_cookie', False):
+                    # upd 091026: a file saved by the urllib path (MozillaCookieJar) has an empty "expires" field
+                    # for session cookies (e.g. PHPSESSID) - curl 8.x drops such lines silently and the request
+                    # went out without them; curl wants 0 there (what it writes itself for session cookies)
+                    self._pyCurlPrepareCookieFile(params.get('cookiefile', ''))
                     curlSession.setopt(pycurl.COOKIEFILE, params.get('cookiefile', ''))
 
                 if params.get('save_cookie', False):
@@ -1992,7 +2010,19 @@ class common:
         if params.get('use_cookie', False):
             if params.get('load_cookie', False):
                 try:
-                    cj.load(params['cookiefile'], ignore_discard=True)
+                    # fix 091026: read through _pyCurlLoadCookie - pycurl writes session cookies with expires 0 and
+                    # MozillaCookieJar before Python 3.13 drops those as expired
+                    try:
+                        loaded = self._pyCurlLoadCookie(params['cookiefile'])
+                    except (IOError, OSError):
+                        raise
+                    except Exception:
+                        loaded = None  # e.g. py2 io.StringIO refuses a byte str - plain load as before
+                    if loaded is None:
+                        cj.load(params['cookiefile'], ignore_discard=True)
+                    else:
+                        for cookie in loaded:
+                            cj.set_cookie(cookie)
                 except IOError:
                     printDBG('Cookie file [%s] not exists' % params['cookiefile'])
                 except Exception:
