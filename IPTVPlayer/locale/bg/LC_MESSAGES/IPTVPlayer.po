@@ -1,0 +1,6903 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: IPTVPlayer\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-08 20:17+0000\n"
+"PO-Revision-Date: 2026-10-08 20:17+0000\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: Bulgarian\n"
+"Language: bg\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#, python-format
+msgid "\tDisk space available: %s"
+msgstr "\tНалично дисково пространство: %s"
+
+#, python-format
+msgid "\tDisk space required: %s"
+msgstr "\tНеобходимо дисково пространство: %s"
+
+msgid ""
+"\n"
+"Make sure you are using the latest version of the plugin."
+msgstr ""
+"\n"
+"Уверете се, че използвате най-новата версия на плъгина."
+
+msgid ""
+"\n"
+"This host is not integral part of the E2iPlayer plugin.\n"
+"It is not supported by E2iPlayer team."
+msgstr ""
+"\n"
+"Този хост не е неразделна част от плъгина E2iPlayer.\n"
+"Той не се поддържа от екипа на E2iPlayer."
+
+msgid ""
+"\n"
+"You can also report problem here: \n"
+"https://github.com/oe-mirrors/e2iplayer/issues"
+msgstr ""
+"\n"
+"Можете да съобщите за проблем и тук: \n"
+"https://github.com/oe-mirrors/e2iplayer/issues"
+
+msgid "  • Fixed: order never changes - useful for browsing by letter jump (0-9)."
+msgstr "  • Фиксиран: редът никога не се променя – полезно при прелистване със скок по буква (0-9)."
+
+msgid "  • Sorting or reordering fixes this automatically, so your order stays."
+msgstr "  • Сортирането или пренареждането фиксира това автоматично, така че вашият ред се запазва."
+
+msgid "  • Unfixed (default): the entry jumps back to the top of the list."
+msgstr "  • Нефиксиран (по подразбиране): записът се връща в началото на списъка."
+
+#, python-format
+msgid "\"%s\" Virtual Keyboard layout not available."
+msgstr "Подредбата на виртуалната клавиатура \"%s\" не е налична."
+
+#, python-format
+msgid "\"%s\" has been added to the favourites group \"%s\"."
+msgstr "\"%s\" беше добавен към групата любими \"%s\"."
+
+#, python-format
+msgid "\"%s\" is playing on the TV."
+msgstr "\"%s\" се възпроизвежда на телевизора."
+
+msgid "\"Web\" streams player"
+msgstr "Плейър за \"Web\" потоци"
+
+#, python-format
+msgid "%d duplicate entries removed."
+msgstr "Премахнати са %d дублирани записа."
+
+#, python-format
+msgid "%d duplicate entry removed."
+msgstr "Премахнат е %d дублиран запис."
+
+#, python-format
+msgid "%d parts"
+msgstr "%d части"
+
+#, python-format
+msgid "%d programmes"
+msgstr "%d предавания"
+
+#, python-format
+msgid "%d recitations"
+msgstr "%d рецитации"
+
+#, python-format
+msgid "%d videos"
+msgstr "%d видеа"
+
+#, python-format
+msgid "%s - service overview"
+msgstr "%s - преглед на услугата"
+
+#, python-format
+msgid "%s - subtitles provider"
+msgstr "%s - доставчик на субтитри"
+
+#, python-format
+msgid "%s blocks the connection of the receiver (HTTP 403). It only plays with curl-impersonate installed on the receiver - otherwise please choose another server."
+msgstr "%s блокира връзката на приемника (HTTP 403). Възпроизвежда се само ако на приемника е инсталиран curl-impersonate – в противен случай изберете друг сървър."
+
+#, python-format
+msgid "%s blocks the connection of the receiver (HTTP 403). Please choose another server."
+msgstr "%s блокира връзката на приемника (HTTP 403). Изберете друг сървър."
+
+#, python-format
+msgid "%s buffering..."
+msgstr "%s буфериране..."
+
+#, python-format
+msgid "%s cannot solve this type of captcha."
+msgstr "%s не може да реши този тип captcha."
+
+#, python-format
+msgid "%s could not solve the captcha."
+msgstr "%s не успя да реши captcha."
+
+#, python-format
+msgid "%s device name"
+msgstr "%s име на устройството"
+
+#, python-format
+msgid "%s download manager"
+msgstr "%s мениджър на изтеглянията"
+
+#, python-format
+msgid "%s e-mail"
+msgstr "%s имейл"
+
+#, python-format
+msgid "%s episodes"
+msgstr "%s епизода"
+
+#, python-format
+msgid "%s followers"
+msgstr "%s последователи"
+
+#, python-format
+msgid "%s password"
+msgstr "%s парола"
+
+#, python-format
+msgid "%s plays"
+msgstr "%s възпроизвеждания"
+
+#, python-format
+msgid "%s posts"
+msgstr "%s публикации"
+
+#, python-format
+msgid "%s recitations"
+msgstr "%s рецитации"
+
+#, python-format
+msgid "%s refused the download. Please set your login and password in the configuration."
+msgstr "%s отказа изтеглянето. Въведете потребителско име и парола в настройките."
+
+#, python-format
+msgid "%s refused the request (Cloudflare check, HTTP %s). This host needs curl-impersonate on the receiver."
+msgstr "%s отказа заявката (проверка на Cloudflare, HTTP %s). Този хост изисква curl-impersonate на приемника."
+
+#, python-format
+msgid "%s returned %s: %s"
+msgstr "%s върна %s: %s"
+
+#, python-format
+msgid "%s services configuration"
+msgstr "%s конфигурация на услугите"
+
+#, python-format
+msgid "%s subtitles download - how to"
+msgstr "%s изтегляне на субтитри - инструкции"
+
+#, python-format
+msgid "%s talks"
+msgstr "%s лекции"
+
+#, python-format
+msgid "%s timeout."
+msgstr "%s изтичане на времето."
+
+#, python-format
+msgid "%s uploads"
+msgstr "%s качвания"
+
+#, python-format
+msgid ""
+"%s uses \"geo-blocking\" measures to prevent you from accessing the services from abroad.\n"
+" Host country: %s, your country: %s"
+msgstr ""
+"%s използва мерки за „геоблокиране“, за да ви попречи да достъпвате услугите от чужбина.\n"
+" Държава на хоста: %s, вашата държава: %s"
+
+#, python-format
+msgid "%s viewers"
+msgstr "%s зрители"
+
+#, python-format
+msgid "%s views"
+msgstr "%s преглеждания"
+
+#, python-format
+msgid "(%d YouTube channel(s) could not be read)"
+msgstr "(YouTube канали, които не можаха да бъдат прочетени: %d)"
+
+msgid "(no videos found)"
+msgstr "(не са намерени видеа)"
+
+msgid "(nothing here yet)"
+msgstr "(тук все още няма нищо)"
+
+msgid "(reading...)"
+msgstr "(четене...)"
+
+msgid "++"
+msgstr "++"
+
+msgid "--"
+msgstr "--"
+
+msgid "----- BASIC CONFIGURATION -----"
+msgstr "----- ОСНОВНА КОНФИГУРАЦИЯ -----"
+
+msgid "----- BUFFERING CONFIGURATION -----"
+msgstr "----- КОНФИГУРАЦИЯ НА БУФЕРИРАНЕТО -----"
+
+msgid "----- CAPTCHA CONFIGURATION -----"
+msgstr "----- КОНФИГУРАЦИЯ НА CAPTCHA -----"
+
+msgid "----- DEBUG CONFIGURATION -----"
+msgstr "----- КОНФИГУРАЦИЯ НА ДЕБЪГ -----"
+
+msgid "----- DOWNLOADING CONFIGURATION -----"
+msgstr "----- КОНФИГУРАЦИЯ НА ИЗТЕГЛЯНЕТО -----"
+
+msgid "----- Debug -----"
+msgstr "----- Дебъг -----"
+
+msgid "----- Global HostXXX Configuration -----"
+msgstr "----- Глобална конфигурация на HostXXX -----"
+
+msgid "----- METADATA PROVIDERS CONFIGURATION -----"
+msgstr "----- КОНФИГУРАЦИЯ НА ДОСТАВЧИЦИТЕ НА МЕТАДАННИ -----"
+
+msgid "----- PLAYERS & PLAYBACK CONFIGURATION -----"
+msgstr "----- КОНФИГУРАЦИЯ НА ПЛЕЙЪРИТЕ И ВЪЗПРОИЗВЕЖДАНЕТО -----"
+
+msgid "----- PROXIES CONFIGURATION -----"
+msgstr "----- КОНФИГУРАЦИЯ НА ПРОКСИТАТА -----"
+
+msgid "----- Porn Site Configuration -----"
+msgstr "----- Конфигурация на порно сайтове -----"
+
+msgid "----- SCREENSAVER CONFIGURATION -----"
+msgstr "----- КОНФИГУРАЦИЯ НА СКРИЙНСЕЙВЪРА -----"
+
+msgid "----- SECURITY CONFIGURATION -----"
+msgstr "----- КОНФИГУРАЦИЯ НА СИГУРНОСТТА -----"
+
+msgid "----- SERVICE CONFIGURATION -----"
+msgstr "----- КОНФИГУРАЦИЯ НА УСЛУГАТА -----"
+
+msgid "----- SKIN CONFIGURATION -----"
+msgstr "----- КОНФИГУРАЦИЯ НА СКИНА -----"
+
+msgid "----- STORAGE CONFIGURATION -----"
+msgstr "----- КОНФИГУРАЦИЯ НА ХРАНИЛИЩЕТО -----"
+
+msgid "----- SUBTITLES CONFIGURATION -----"
+msgstr "----- КОНФИГУРАЦИЯ НА СУБТИТРИТЕ -----"
+
+msgid "----- Show or hide Anime / Hentai -----"
+msgstr "----- Показване или скриване на Anime / Hentai -----"
+
+msgid "----- Show or hide Live Cams -----"
+msgstr "----- Показване или скриване на Live Cams -----"
+
+msgid "----- Show or hide Porn Sites -----"
+msgstr "----- Показване или скриване на порно сайтове -----"
+
+msgid "----- VIRTUAL KEYBOARD & SEARCH CONFIGURATION -----"
+msgstr "----- КОНФИГУРАЦИЯ НА ВИРТУАЛНАТА КЛАВИАТУРА И ТЪРСЕНЕТО -----"
+
+msgid "----- XXXList Configuration -----"
+msgstr "----- Конфигурация на XXXList -----"
+
+msgid "----------  Anime / Hentai  ----------"
+msgstr "----------  Anime / Hentai  ----------"
+
+msgid "----------  Live Cams  ----------"
+msgstr "----------  Live Cams  ----------"
+
+msgid "----------  Other  ----------"
+msgstr "----------  Други  ----------"
+
+msgid "----------  Porn Sites  ----------"
+msgstr "----------  Порно сайтове  ----------"
+
+#, python-format
+msgid "----------  Search \"%s\"  ----------"
+msgstr "----------  Търсене \"%s\"  ----------"
+
+msgid "----------------- External exteplayer3 options -----------------"
+msgstr "----------------- Външни опции на exteplayer3 -----------------"
+
+msgid "--All Episodes--"
+msgstr "--Всички епизоди--"
+
+msgid "--All--"
+msgstr "--Всички--"
+
+msgid "--Other--"
+msgstr "--Други--"
+
+msgid "... and that the stream delivers video :"
+msgstr "... и че потокът доставя видео :"
+
+msgid "0-9"
+msgstr "0-9"
+
+msgid "1 minute"
+msgstr "1 минута"
+
+msgid "1. On a phone or PC in the same network, open the address shown in the captcha window (or scan its QR code) in a browser with the MyE2i extension installed. If it asks for a code, you find it in the title of the captcha window."
+msgstr "1. На телефон или компютър в същата мрежа отворете адреса, показан в прозореца на captcha (или сканирайте неговия QR код), в браузър с инсталирано разширение MyE2i. Ако бъде поискан код, ще го намерите в заглавието на прозореца на captcha."
+
+msgid "12 hour format"
+msgstr "12-часов формат"
+
+msgid "15 seconds"
+msgstr "15 секунди"
+
+msgid "2. Click the big green button on that page. A new tab opens with the captcha or the website's browser check."
+msgstr "2. Щракнете върху големия зелен бутон на тази страница. Отваря се нов раздел с captcha или с проверката на браузъра от уебсайта."
+
+msgid "24 hour format"
+msgstr "24-часов формат"
+
+msgid "3. Solve it. The result goes back to the receiver by itself and the captcha window closes."
+msgstr "3. Решете го. Резултатът се връща автоматично към приемника и прозорецът на captcha се затваря."
+
+msgid "30 seconds"
+msgstr "30 секунди"
+
+msgid "4K movies"
+msgstr "4K филми"
+
+msgid "5 seconds"
+msgstr "5 секунди"
+
+msgid "A search is already running."
+msgstr "Вече се изпълнява търсене."
+
+msgid "A-Z"
+msgstr "A-Z"
+
+msgid "AAC downmix mode"
+msgstr "Режим на downmix за AAC"
+
+msgid "ABORTED"
+msgstr "ПРЕКЪСНАТО"
+
+msgid "AC3 downmix mode"
+msgstr "Режим на downmix за AC3"
+
+msgid ""
+"ACCESS DENIED.\n"
+"THIS VIDEO IS DELETED OR NOT AVAILABLE TO YOUR REGION."
+msgstr ""
+"ДОСТЪПЪТ Е ОТКАЗАН.\n"
+"ТОВА ВИДЕО Е ИЗТРИТО ИЛИ НЕ Е НАЛИЧНО ВЪВ ВАШИЯ РЕГИОН."
+
+msgid "ALBUMS"
+msgstr "АЛБУМИ"
+
+msgid "API Key"
+msgstr "API ключ"
+
+msgid "ARTISTS"
+msgstr "ИЗПЪЛНИТЕЛИ"
+
+msgid "ATTENTION!"
+msgstr "ВНИМАНИЕ!"
+
+msgid "Aborted"
+msgstr "Прекъснато"
+
+msgid "About"
+msgstr "Относно"
+
+msgid "Accept"
+msgstr "Приемане"
+
+msgid "Access Forbidden"
+msgstr "Достъпът е забранен"
+
+msgid "Access denied - open the page with the QR code or the code shown on the receiver screen."
+msgstr "Достъпът е отказан - отворете страницата чрез QR кода или с кода, показан на екрана на приемника."
+
+msgid "Access denied. Please check password."
+msgstr "Достъпът е отказан. Проверете паролата."
+
+msgid "Accessible"
+msgstr "Достъпно"
+
+#, python-format
+msgid "Account %d - name (optional):"
+msgstr "Акаунт %d - име (по избор):"
+
+#, python-format
+msgid "Account %d - password:"
+msgstr "Акаунт %d - парола:"
+
+#, python-format
+msgid "Account %d - server (http://host:port or get.php link):"
+msgstr "Акаунт %d - сървър (http://host:port или връзка get.php):"
+
+#, python-format
+msgid "Account %d - user name:"
+msgstr "Акаунт %d - потребителско име:"
+
+msgid "Accounts & API keys"
+msgstr "Акаунти и API ключове"
+
+msgid "Action"
+msgstr "Екшън"
+
+msgid "Action & Thriller"
+msgstr "Екшън и трилър"
+
+msgid "Actors"
+msgstr "Актьори"
+
+msgid "Actors:"
+msgstr "Актьори:"
+
+msgid "Add channel name to downloaded file"
+msgstr "Добавяне на името на канала към изтегления файл"
+
+#, python-format
+msgid "Add host %s to group"
+msgstr "Добавяне на хоста %s към група"
+
+msgid "Add item to favorites"
+msgstr "Добавяне на записа към любими"
+
+msgid "Add item to group"
+msgstr "Добавяне на записа към група"
+
+msgid "Add new entry"
+msgstr "Добавяне на нов запис"
+
+msgid "Add new group"
+msgstr "Добавяне на нова група"
+
+msgid "Add new group of favorites"
+msgstr "Добавяне на нова група любими"
+
+msgid "Add to User Links"
+msgstr "Добавяне към потребителските връзки"
+
+msgid "Added"
+msgstr "Добавено"
+
+#, python-format
+msgid "Added by: %s, directory: %s"
+msgstr "Добавено от: %s, директория: %s"
+
+msgid "Adhan"
+msgstr "Азан"
+
+msgid "Adventure"
+msgstr "Приключения"
+
+msgid "African series"
+msgstr "Африкански сериали"
+
+msgid "Age limit:"
+msgstr "Възрастово ограничение:"
+
+msgid "Aired"
+msgstr "Излъчено"
+
+msgid "Aired this week"
+msgstr "Излъчено тази седмица"
+
+msgid "Airing now"
+msgstr "Излъчва се сега"
+
+msgid "All"
+msgstr "Всички"
+
+msgid "All Sports"
+msgstr "Всички спортове"
+
+msgid "All audiobooks"
+msgstr "Всички аудиокниги"
+
+msgid "All categories"
+msgstr "Всички категории"
+
+msgid "All in one"
+msgstr "Всичко в едно"
+
+msgid "All movies"
+msgstr "Всички филми"
+
+msgid "All programmes"
+msgstr "Всички предавания"
+
+msgid "All results"
+msgstr "Всички резултати"
+
+msgid "All seasons"
+msgstr "Всички сезони"
+
+msgid "All series"
+msgstr "Всички сериали"
+
+msgid "All shows"
+msgstr "Всички шоута"
+
+msgid "All stations"
+msgstr "Всички станции"
+
+msgid "All streams"
+msgstr "Всички потоци"
+
+msgid "All time"
+msgstr "За всички времена"
+
+msgid "All titles A-Z"
+msgstr "Всички заглавия A-Z"
+
+msgid "All videos"
+msgstr "Всички видеа"
+
+msgid "Allow VP9 codec:"
+msgstr "Разрешаване на кодек VP9:"
+
+msgid "Allow dash format:"
+msgstr "Разрешаване на формат DASH:"
+
+msgid "Allow external link-decryption service (enc-dec.app)"
+msgstr "Разрешаване на външна услуга за декриптиране на връзки (enc-dec.app)"
+
+msgid "Allow host to override suggestions provider"
+msgstr "Разрешаване на хоста да замени доставчика на предложения"
+
+msgid "Allow watched flag to be set"
+msgstr "Разрешаване на маркирането като гледано"
+
+msgid "Alphabetically"
+msgstr "По азбучен ред"
+
+#, python-format
+msgid "Also use the accounts of X-Streamity (%s)"
+msgstr "Използване и на акаунтите на X-Streamity (%s)"
+
+#, python-format
+msgid "Also use the portals of EStalker (%s)"
+msgstr "Използване и на порталите на EStalker (%s)"
+
+msgid "AltGr"
+msgstr "AltGr"
+
+msgid "Alternate Title:"
+msgstr "Алтернативно заглавие:"
+
+msgid "Alternative domain:"
+msgstr "Алтернативен домейн:"
+
+msgid "Alternative proxy server (1)"
+msgstr "Алтернативен прокси сървър (1)"
+
+msgid "Alternative proxy server (2)"
+msgstr "Алтернативен прокси сървър (2)"
+
+msgid "Alternative proxy server (3)"
+msgstr "Алтернативен прокси сървър (3)"
+
+msgid "Alternative proxy server (4)"
+msgstr "Алтернативен прокси сървър (4)"
+
+msgid "Alternative proxy server (5)"
+msgstr "Алтернативен прокси сървър (5)"
+
+msgid "An API key from subsource.net can be entered in the E2iPlayer settings (Subtitles)."
+msgstr "API ключ от subsource.net може да бъде въведен в настройките на E2iPlayer (Субтитри)."
+
+#, python-format
+msgid "An error occurred while loading a subtitle from [%s]."
+msgstr "Възникна грешка при зареждане на субтитри от [%s]."
+
+#, python-format
+msgid "An error occurred while writing into: %s"
+msgstr "Възникна грешка при записване в: %s"
+
+msgid "An opensubtitles.com account (login and password in the E2iPlayer settings) raises the limit."
+msgstr "Акаунт в opensubtitles.com (потребителско име и парола в настройките на E2iPlayer) увеличава лимита."
+
+msgid "Anatomy"
+msgstr "Анатомия"
+
+msgid "Animals"
+msgstr "Животни"
+
+msgid "Animated movies"
+msgstr "Анимационни филми"
+
+msgid "Animated series"
+msgstr "Анимационни сериали"
+
+msgid "Animation"
+msgstr "Анимация"
+
+msgid "Anime"
+msgstr "Аниме"
+
+msgid "Anime A-Z"
+msgstr "Аниме A-Z"
+
+msgid "Anime Movies"
+msgstr "Аниме филми"
+
+msgid "Anime Series"
+msgstr "Аниме сериали"
+
+msgid "Anime TV series"
+msgstr "Аниме ТВ сериали"
+
+msgid "Anime genres"
+msgstr "Аниме жанрове"
+
+msgid "Anime list"
+msgstr "Списък с аниме"
+
+msgid "Anime movies"
+msgstr "Аниме филми"
+
+msgid "Anime movies A-Z"
+msgstr "Аниме филми A-Z"
+
+msgid "Anime series (dubbed)"
+msgstr "Аниме сериали (дублирани)"
+
+msgid "Anime series A-Z"
+msgstr "Аниме сериали A-Z"
+
+msgid "Answer"
+msgstr "Отговор"
+
+msgid "Any"
+msgstr "Произволен"
+
+msgid "Apply"
+msgstr "Прилагане"
+
+msgid "Approaches"
+msgstr "Подходи"
+
+msgid "Arabic"
+msgstr "Арабски"
+
+msgid "Arabic Movies"
+msgstr "Арабски филми"
+
+msgid "Arabic Series"
+msgstr "Арабски сериали"
+
+msgid "Arabic movies"
+msgstr "Арабски филми"
+
+msgid "Arabic plays"
+msgstr "Арабски театрални постановки"
+
+msgid "Arabic songs"
+msgstr "Арабски песни"
+
+msgid "Archive"
+msgstr "Архив"
+
+msgid "Are you sure you want to delete search history?"
+msgstr "Сигурни ли сте, че искате да изтриете историята на търсенето?"
+
+#, python-format
+msgid "Are you sure you want to remove file \"%s\"?"
+msgstr "Сигурни ли сте, че искате да премахнете файла \"%s\"?"
+
+msgid "Are you sure you want to reset all settings to their default values?"
+msgstr "Сигурни ли сте, че искате да възстановите всички настройки към стойностите по подразбиране?"
+
+msgid "Art"
+msgstr "Изкуство"
+
+msgid "Articles"
+msgstr "Статии"
+
+msgid "Artist"
+msgstr "Изпълнител"
+
+#, python-format
+msgid "Artist \"%s\" not found on Last.fm - the exact artist name is needed."
+msgstr "Изпълнителят \"%s\" не е намерен в Last.fm - необходимо е точното име на изпълнителя."
+
+msgid "Artists"
+msgstr "Изпълнители"
+
+msgid "Asian"
+msgstr "Азиатски"
+
+msgid "Asian TV series"
+msgstr "Азиатски ТВ сериали"
+
+msgid "Asian movies"
+msgstr "Азиатски филми"
+
+msgid "Asian series (dubbed)"
+msgstr "Азиатски сериали (дублирани)"
+
+msgid "Aspect"
+msgstr "Съотношение"
+
+msgid "At least one of plugin browser, extension list and main menu has to stay on, otherwise E2iPlayer could no longer be started."
+msgstr "Поне един от елементите браузър на плъгини, списък с разширения и главно меню трябва да остане включен, в противен случай E2iPlayer вече не може да бъде стартиран."
+
+msgid "At the live edge"
+msgstr "В реално време (на живо)"
+
+msgid "Atheer radio (Arabic)"
+msgstr "Atheer радио (арабско)"
+
+msgid "Audio"
+msgstr "Аудио"
+
+msgid "Audio buffer size [KB]"
+msgstr "Размер на аудио буфера [KB]"
+
+msgid "Audio description"
+msgstr "Аудио описание"
+
+msgid "Audio programme"
+msgstr "Аудио предаване"
+
+msgid "Audio track"
+msgstr "Аудио писта"
+
+msgid "Audio tracks"
+msgstr "Аудио писти"
+
+#, python-format
+msgid "Author: %s"
+msgstr "Автор: %s"
+
+msgid "Authors"
+msgstr "Автори"
+
+msgid "Auto"
+msgstr "Авто"
+
+#, python-format
+msgid "Auto refresh: %s"
+msgstr "Автоматично опресняване: %s"
+
+msgid "Auto selection based on the settings"
+msgstr "Автоматичен избор според настройките"
+
+msgid "Auto start method"
+msgstr "Метод на автоматично стартиране"
+
+msgid "Auto-generated"
+msgstr "Автоматично генерирани"
+
+msgid "Automatic"
+msgstr "Автоматично"
+
+msgid "Automatically turn on external subtitles"
+msgstr "Автоматично включване на външни субтитри"
+
+msgid "Automotive"
+msgstr "Автомобили"
+
+msgid "Autoplay start delay"
+msgstr "Забавяне на автоматичното възпроизвеждане"
+
+msgid "Autumn"
+msgstr "Есен"
+
+msgid "Available worldwide"
+msgstr "Достъпно в цял свят"
+
+msgid "Awards:"
+msgstr "Награди:"
+
+msgid "BLUE"
+msgstr "СИН"
+
+msgid "Background color"
+msgstr "Цвят на фона"
+
+msgid "Backspace"
+msgstr "Backspace"
+
+msgid "Balkans"
+msgstr "Балкани"
+
+msgid "Basic Science"
+msgstr "Фундаментални науки"
+
+msgid "Being watched"
+msgstr "Гледани в момента"
+
+msgid "Best"
+msgstr "Най-добри"
+
+msgid "Best Pinkbike videos"
+msgstr "Най-добрите видеа от Pinkbike"
+
+msgid "Best movies"
+msgstr "Най-добри филми"
+
+msgid "Best series"
+msgstr "Най-добри сериали"
+
+msgid "Binaries"
+msgstr "Двоични файлове"
+
+msgid "Bing Suggestions"
+msgstr "Предложения от Bing"
+
+msgid "Biography"
+msgstr "Биография"
+
+#, python-format
+msgid "Bitrate: %s"
+msgstr "Битрейт: %s"
+
+msgid "Black"
+msgstr "Черен"
+
+msgid "Black iframe file"
+msgstr "Черен iframe файл"
+
+msgid "Black screensaver"
+msgstr "Черен скрийнсейвър"
+
+msgid "Block wmv files"
+msgstr "Блокиране на WMV файлове"
+
+msgid "Board Review"
+msgstr "Преглед за изпит"
+
+msgid "Books"
+msgstr "Книги"
+
+msgid "Box"
+msgstr "Box"
+
+msgid "Broadcast:"
+msgstr "Излъчване:"
+
+msgid "Browse by genre"
+msgstr "Разглеждане по жанр"
+
+msgid "Browse youtube trending feeds"
+msgstr "Разглеждане на популярните в YouTube"
+
+msgid "Budget:"
+msgstr "Бюджет:"
+
+msgid "Buffering location"
+msgstr "Местоположение на буфера"
+
+msgid "Business"
+msgstr "Бизнес"
+
+#, python-format
+msgid "By %s"
+msgstr "От %s"
+
+msgid "CME SAE"
+msgstr "CME SAE"
+
+#, python-format
+msgid "CUMLOUDER can only search its tags (e.g. milf, step sister, big tits) - there is no tag \"%s\"."
+msgstr "CUMLOUDER може да търси само по своите тагове (напр. milf, step sister, big tits) - таг \"%s\" не съществува."
+
+msgid "Cache"
+msgstr "Кеш"
+
+#, python-format
+msgid "Cache folder \"%s\" could not be created. Some data (cookies, subtitles, ...) may not be saved."
+msgstr "Папката за кеш \"%s\" не можа да бъде създадена. Някои данни (бисквитки, субтитри, ...) може да не бъдат запазени."
+
+#, python-format
+msgid ""
+"Can not get mount points - cmd mount failed.\n"
+"Return code[%s].\n"
+"Return data[%s]."
+msgstr ""
+"Не могат да бъдат получени точките на монтиране - командата mount е неуспешна.\n"
+"Код за връщане[%s].\n"
+"Върнати данни[%s]."
+
+msgid "Cancel"
+msgstr "Отказ"
+
+msgid "Cancelled."
+msgstr "Отменено."
+
+msgid "Captcha"
+msgstr "Captcha"
+
+msgid "Captcha error:"
+msgstr "Грешка в captcha:"
+
+msgid ""
+"Captcha solved.\n"
+"Waiting for notification."
+msgstr ""
+"Captcha е решена.\n"
+"Изчакване на известие."
+
+msgid "Captcha solving service"
+msgstr "Услуга за решаване на captcha"
+
+msgid "Captcha was not entered."
+msgstr "Captcha не беше въведена."
+
+#, python-format
+msgid "Carrying: %s | UP/DOWN=Move, OK=Drop"
+msgstr "Пренасяне: %s | НАГОРЕ/НАДОЛУ=Преместване, OK=Пускане"
+
+msgid "Cartoon genres"
+msgstr "Анимационни жанрове"
+
+msgid "Cartoon series (dubbed)"
+msgstr "Анимационни сериали (дублирани)"
+
+msgid "Cartoons"
+msgstr "Анимации"
+
+msgid "Cartoons A-Z"
+msgstr "Анимации A-Z"
+
+msgid "Cartoons and anime"
+msgstr "Анимации и аниме"
+
+msgid "Cartoons and series"
+msgstr "Анимации и сериали"
+
+msgid "Cast:"
+msgstr "Актьорски състав:"
+
+msgid "Catch-up"
+msgstr "Архив"
+
+#, python-format
+msgid "Catch-up (%d channels)"
+msgstr "Архив (%d канала)"
+
+msgid "Catch-up (timeshift.php)"
+msgstr "Архив (timeshift.php)"
+
+#, python-format
+msgid "Catch-up: %d days"
+msgstr "Архив: %d дни"
+
+msgid "Categories"
+msgstr "Категории"
+
+msgid "Categories:"
+msgstr "Категории:"
+
+msgid "Category"
+msgstr "Категория"
+
+msgid "Category:"
+msgstr "Категория:"
+
+msgid "Change active movie player"
+msgstr "Смяна на активния плейър"
+
+msgid "Change own pin"
+msgstr "Смяна на собствения ПИН"
+
+msgid "Channel"
+msgstr "Канал"
+
+#, python-format
+msgid "Channel: %s"
+msgstr "Канал: %s"
+
+msgid "Channels"
+msgstr "Канали"
+
+msgid "Checking for updates"
+msgstr "Проверка за актуализации"
+
+msgid "Checks every enabled site: menu, a list with videos and, in the full test, the stream link of one video."
+msgstr "Проверява всеки активиран сайт: меню, списък с видеа и, при пълния тест, връзката към потока на едно видео."
+
+msgid "Children"
+msgstr "Деца"
+
+msgid "Children & Family"
+msgstr "Деца и семейство"
+
+msgid "Chinese"
+msgstr "Китайски"
+
+msgid "Chinese anime"
+msgstr "Китайско аниме"
+
+msgid "Cinema History"
+msgstr "История на киното"
+
+msgid "Cinema movies"
+msgstr "Кинофилми"
+
+msgid "Classic"
+msgstr "Класика"
+
+msgid "Classic movies"
+msgstr "Класически филми"
+
+msgid "Clear"
+msgstr "Изчистване"
+
+msgid "Clear log"
+msgstr "Изчистване на лога"
+
+#, python-format
+msgid ""
+"Clear the debug log file?\n"
+"%s"
+msgstr ""
+"Изчистване на дебъг лог файла?\n"
+"%s"
+
+msgid "Clear the log file at plugin start"
+msgstr "Изчистване на лог файла при стартиране на плъгина"
+
+#, python-format
+msgid "Clipped by: %s"
+msgstr "Клип от: %s"
+
+msgid "Clips"
+msgstr "Клипове"
+
+msgid "Close"
+msgstr "Затваряне"
+
+msgid "Closes the host opened in the web interface, clears the search results and stops what the web interface still runs in the background. Use it when a page keeps loading. Settings, downloads and the E2iPlayer on the TV are not touched."
+msgstr "Затваря хоста, отворен в уеб интерфейса, изчиства резултатите от търсенето и спира това, което уеб интерфейсът все още изпълнява във фонов режим. Използвайте го, когато дадена страница не спира да се зарежда. Настройките, изтеглянията и E2iPlayer на телевизора не се засягат."
+
+msgid "Closing. Please wait..."
+msgstr "Затваряне. Моля, изчакайте..."
+
+msgid "Clubs and athletes"
+msgstr "Клубове и спортисти"
+
+msgid "Code"
+msgstr "Код"
+
+msgid "Collected streams only"
+msgstr "Само събрани потоци"
+
+msgid "Collections"
+msgstr "Колекции"
+
+msgid "Colored text in titles and descriptions"
+msgstr "Цветен текст в заглавия и описания"
+
+msgid "Combine pull request merges with their commit"
+msgstr "Обединяване на сливанията на pull request с техния commit"
+
+msgid "Comedy"
+msgstr "Комедия"
+
+msgid "Comments"
+msgstr "Коментари"
+
+msgid "Commits"
+msgstr "Commits"
+
+msgid "Competitions"
+msgstr "Състезания"
+
+msgid "Complete Quran"
+msgstr "Целият Коран"
+
+msgid "Complete series"
+msgstr "Завършени сериали"
+
+msgid "Completed"
+msgstr "Завършено"
+
+msgid "Concert"
+msgstr "Концерт"
+
+msgid "Config"
+msgstr "Конфигурация"
+
+#, python-format
+msgid "Config folder \"%s\" could not be created. Some data (host order, search history, favourites, movie player preferences, ...) may not be saved."
+msgstr "Папката за конфигурация \"%s\" не можа да бъде създадена. Някои данни (ред на хостовете, история на търсенето, любими, предпочитания за плейъра, ...) може да не бъдат запазени."
+
+msgid "Configuration"
+msgstr "Конфигурация"
+
+#, python-format
+msgid "Configuration [%s] service"
+msgstr "Конфигурация на услугата [%s]"
+
+#, python-format
+msgid "Configure %s"
+msgstr "Конфигуриране на %s"
+
+msgid "Configure host"
+msgstr "Конфигуриране на хоста"
+
+msgid "Configuring an external movie player"
+msgstr "Конфигуриране на външен плейър"
+
+msgid "Confirm new pin"
+msgstr "Потвърдете новия ПИН"
+
+msgid "Confirm the title of the movie"
+msgstr "Потвърдете заглавието на филма"
+
+msgid "Confirmation error."
+msgstr "Грешка при потвърждението."
+
+msgid "Connection to server failed!"
+msgstr "Връзката със сървъра е неуспешна!"
+
+msgid "Connection to the weeb.tv server failed."
+msgstr "Връзката със сървъра на weeb.tv е неуспешна."
+
+#, python-format
+msgid "Connections: %s of %s"
+msgstr "Връзки: %s от %s"
+
+msgid "Content not available"
+msgstr "Съдържанието не е налично"
+
+msgid "Continue"
+msgstr "Продължаване"
+
+msgid "Continue downloading"
+msgstr "Продължаване на изтеглянето"
+
+msgid "Cooking"
+msgstr "Готвене"
+
+msgid "Copy"
+msgstr "Копиране"
+
+msgid "Could not add the user link."
+msgstr "Потребителската връзка не можа да бъде добавена."
+
+msgid "Could not load the wiki page."
+msgstr "Уики страницата не можа да бъде заредена."
+
+msgid "Could not resolve host."
+msgstr "Хостът не можа да бъде разрешен."
+
+msgid "Could not resolve proxy."
+msgstr "Проксито не можа да бъде разрешено."
+
+msgid "Could not sort the user links."
+msgstr "Потребителските връзки не можаха да бъдат сортирани."
+
+msgid "Could not start the YouTube sign-in."
+msgstr "Влизането в YouTube не можа да бъде стартирано."
+
+msgid "Could not write the file."
+msgstr "Файлът не можа да бъде записан."
+
+msgid "Countries"
+msgstr "Държави"
+
+msgid "Country"
+msgstr "Държава"
+
+msgid "Country / store:"
+msgstr "Държава / магазин:"
+
+msgid "Country:"
+msgstr "Държава:"
+
+msgid "Couples"
+msgstr "Двойки"
+
+msgid "Create Enigma2 .cuts chapter marks"
+msgstr "Създаване на маркери за глави Enigma2 .cuts"
+
+msgid "Create LCD/VFD summary screen"
+msgstr "Създаване на обобщаващ екран за LCD/VFD"
+
+msgid "Create MKV"
+msgstr "Създаване на MKV"
+
+msgid "Create MKV with chapter marks from description"
+msgstr "Създаване на MKV с маркери за глави от описанието"
+
+msgid "Create debug logs"
+msgstr "Създаване на дебъг логове"
+
+msgid "Create sidecar files (.txt/.jpg)"
+msgstr "Създаване на придружаващи файлове (.txt/.jpg)"
+
+msgid "Creator:"
+msgstr "Създател:"
+
+msgid "Creators:"
+msgstr "Създатели:"
+
+msgid "Crime"
+msgstr "Криминален"
+
+msgid "Critical Error - cookie can't be saved!"
+msgstr "Критична грешка - бисквитката не може да бъде запазена!"
+
+msgid "Critical Error – Content-Encoding gzip cannot be handled!"
+msgstr "Критична грешка – Content-Encoding gzip не може да бъде обработен!"
+
+msgid "Culture"
+msgstr "Култура"
+
+msgid "Culture and lifestyle"
+msgstr "Култура и начин на живот"
+
+msgid "Culture and pop"
+msgstr "Култура и поп"
+
+msgid "Current item is not a channel."
+msgstr "Текущият запис не е канал."
+
+msgid "Cut"
+msgstr "Изрязване"
+
+msgid "Czech"
+msgstr "Чешки"
+
+msgid "DASH/mpd"
+msgstr "DASH/mpd"
+
+msgid "DOWNLOAD ERROR"
+msgstr "ГРЕШКА ПРИ ИЗТЕГЛЯНЕ"
+
+msgid "DOWNLOADED"
+msgstr "ИЗТЕГЛЕНО"
+
+msgid "DOWNLOADING"
+msgstr "ИЗТЕГЛЯНЕ"
+
+msgid "DRM protection detected."
+msgstr "Открита е DRM защита."
+
+msgid "Daily download limit reached - type the code"
+msgstr "Достигнат е дневният лимит за изтегляне - въведете кода"
+
+msgid "Darkgray"
+msgstr "Тъмносив"
+
+msgid "Date"
+msgstr "Дата"
+
+msgid "Debug file does not exist - nothing to delete"
+msgstr "Дебъг файлът не съществува - няма нищо за изтриване"
+
+msgid "Debug log"
+msgstr "Дебъг лог"
+
+msgid "Debug logs"
+msgstr "Дебъг логове"
+
+msgid "Debug option is disabled - nothing to display"
+msgstr "Опцията за дебъг е изключена - няма нищо за показване"
+
+msgid "Debug snapshot"
+msgstr "Дебъг снимка"
+
+msgid "Debug snapshot (for site development)"
+msgstr "Дебъг снимка (за разработка на сайтове)"
+
+#, python-format
+msgid "Debug snapshot: \"%s\" received by the box"
+msgstr "Дебъг снимка: \"%s\" е получен от приемника"
+
+#, python-format
+msgid "Debug snapshot: sending \"%s\" failed"
+msgstr "Дебъг снимка: изпращането на \"%s\" е неуспешно"
+
+#, python-format
+msgid "Decode file [%s] problem."
+msgstr "Проблем при декодиране на файла [%s]."
+
+msgid "Decrypt Signatures Error"
+msgstr "Грешка при декриптиране на подписите"
+
+msgid "Default"
+msgstr "По подразбиране"
+
+msgid "Default (2 minutes)"
+msgstr "По подразбиране (2 минути)"
+
+msgid "Default browser"
+msgstr "Браузър по подразбиране"
+
+msgid "Default captcha bypass"
+msgstr "Заобикаляне на captcha по подразбиране"
+
+msgid "Default suggestions provider"
+msgstr "Доставчик на предложения по подразбиране"
+
+msgid "Default video aspect ratio"
+msgstr "Съотношение на видеото по подразбиране"
+
+msgid "Default video policy for 16:9"
+msgstr "Видео режим по подразбиране за 16:9"
+
+msgid "Default video policy for 4:3"
+msgstr "Видео режим по подразбиране за 4:3"
+
+msgid "Default video quality"
+msgstr "Качество на видеото по подразбиране"
+
+msgid "Default video quality:"
+msgstr "Качество на видеото по подразбиране:"
+
+msgid "Defaults"
+msgstr "Стойности по подразбиране"
+
+msgid "Definitely remove from favorites?"
+msgstr "Наистина ли да се премахне от любими?"
+
+msgid "Delete"
+msgstr "Изтриване"
+
+msgid "Delete JS cache after (days, 0 = never)"
+msgstr "Изтриване на JS кеша след (дни, 0 = никога)"
+
+msgid "Delete JS cache now"
+msgstr "Изтриване на JS кеша сега"
+
+msgid "Delete all cache files now"
+msgstr "Изтриване на всички кеш файлове сега"
+
+msgid "Delete all config files now"
+msgstr "Изтриване на всички конфигурационни файлове сега"
+
+msgid "Delete cookies cache after (days, 0 = never)"
+msgstr "Изтриване на кеша на бисквитките след (дни, 0 = никога)"
+
+msgid "Delete cookies cache now"
+msgstr "Изтриване на кеша на бисквитките сега"
+
+msgid "Delete entry"
+msgstr "Изтриване на записа"
+
+msgid "Delete favourites and watched status now"
+msgstr "Изтриване на любимите и статуса на гледане сега"
+
+msgid "Delete host order and groups now"
+msgstr "Изтриване на реда на хостовете и групите сега"
+
+msgid "Delete movie metadata cache after (days, 0 = never)"
+msgstr "Изтриване на кеша с метаданни за филми след (дни, 0 = никога)"
+
+msgid "Delete movie metadata cache now"
+msgstr "Изтриване на кеша с метаданни за филми сега"
+
+msgid "Delete movie player preferences now"
+msgstr "Изтриване на предпочитанията за плейъра сега"
+
+msgid "Delete now"
+msgstr "Изтриване сега"
+
+msgid "Delete search history"
+msgstr "Изтриване на историята на търсенето"
+
+msgid "Delete search history now"
+msgstr "Изтриване на историята на търсенето сега"
+
+msgid "Delete subtitles cache after (days, 0 = never)"
+msgstr "Изтриване на кеша на субтитрите след (дни, 0 = никога)"
+
+msgid "Delete subtitles cache now"
+msgstr "Изтриване на кеша на субтитрите сега"
+
+msgid "Delete thumbnails cache now"
+msgstr "Изтриване на кеша на миниатюрите сега"
+
+msgid "Denmark"
+msgstr "Дания"
+
+msgid "Description:"
+msgstr "Описание:"
+
+msgid "Detail/expert mode"
+msgstr "Подробен/експертен режим"
+
+msgid "Detective"
+msgstr "Детективски"
+
+msgid "Developers:"
+msgstr "Разработчици:"
+
+msgid "Digital programmes"
+msgstr "Дигитални предавания"
+
+msgid "Direct"
+msgstr "Директно"
+
+msgid "Director:"
+msgstr "Режисьор:"
+
+msgid "Directors"
+msgstr "Режисьори"
+
+msgid "Directors:"
+msgstr "Режисьори:"
+
+#, python-format
+msgid "Directory \"%s\" does not exists."
+msgstr "Директорията \"%s\" не съществува."
+
+msgid "Directory browser"
+msgstr "Избор на директория"
+
+msgid "Disable all groups"
+msgstr "Деактивиране на всички групи"
+
+msgid "Disable live at plugin start"
+msgstr "Изключване на живия ТВ сигнал при стартиране на плъгина"
+
+msgid "Disable not used services"
+msgstr "Деактивиране на неизползваните услуги"
+
+msgid "Disable reordering"
+msgstr "Изключване на пренареждането"
+
+msgid "Disable reordering mode"
+msgstr "Изключване на режима на пренареждане"
+
+msgid "Disable/Enable groups"
+msgstr "Деактивиране/активиране на групи"
+
+msgid "Disable/Enable services"
+msgstr "Деактивиране/активиране на услуги"
+
+msgid "Discovery"
+msgstr "Открития"
+
+msgid "Disney cartoon movies (Egyptian dub)"
+msgstr "Анимационни филми на Disney (египетски дублаж)"
+
+msgid "Display language:"
+msgstr "Език на интерфейса:"
+
+msgid "Display thumbnails"
+msgstr "Показване на миниатюри"
+
+msgid "Do you really want to delete ALL cache data now? This includes cookies, subtitles, movie metadata and thumbnails, and cannot be undone."
+msgstr "Наистина ли искате да изтриете ЦЕЛИЯ кеш сега? Това включва бисквитки, субтитри, метаданни за филми и миниатюри и не може да бъде отменено."
+
+msgid "Do you really want to delete ALL config data now? This is real user data, not just cache - it includes favourites, watched status, search history, movie player preferences and host order/groups, and cannot be undone."
+msgstr "Наистина ли искате да изтриете ВСИЧКИ конфигурационни данни сега? Това са реални потребителски данни, а не само кеш - включват любими, статус на гледане, история на търсенето, предпочитания за плейъра и ред/групи на хостовете, и не могат да бъдат възстановени."
+
+msgid "Do you really want to delete ALL favourites and watched status now? This is real user data, not just cache, and cannot be undone."
+msgstr "Наистина ли искате да изтриете ВСИЧКИ любими и статуса на гледане сега? Това са реални потребителски данни, а не само кеш, и не могат да бъдат възстановени."
+
+#, python-format
+msgid "Do you really want to delete the %s now?"
+msgstr "Наистина ли искате да изтриете %s сега?"
+
+msgid "Do you really want to delete the thumbnails cache now?"
+msgstr "Наистина ли искате да изтриете кеша на миниатюрите сега?"
+
+msgid "Do you want to finish?"
+msgstr "Искате ли да завършите?"
+
+msgid "Documentaries"
+msgstr "Документални филми"
+
+msgid "Documentaries A-Z"
+msgstr "Документални филми A-Z"
+
+msgid "Documentary"
+msgstr "Документален"
+
+msgid "Documentary Movies"
+msgstr "Документални филми"
+
+msgid "Documentary series"
+msgstr "Документални сериали"
+
+msgid "Done - the result was sent to the box, you can close this page."
+msgstr "Готово - резултатът беше изпратен към приемника, можете да затворите тази страница."
+
+msgid "Download"
+msgstr "Изтегляне"
+
+#, python-format
+msgid "Download (ready in %d seconds)"
+msgstr "Изтегляне (готово след %d секунди)"
+
+msgid "Download again"
+msgstr "Повторно изтегляне"
+
+msgid "Download already exists"
+msgstr "Изтеглянето вече съществува"
+
+#, python-format
+msgid ""
+"Download can not be started.\n"
+" Incorrect address ('%r')."
+msgstr ""
+"Изтеглянето не може да бъде стартирано.\n"
+" Неправилен адрес ('%r')."
+
+#, python-format
+msgid ""
+"Download can not be started.\n"
+"Downloader %s not working correctly.\n"
+"Status[%s]"
+msgstr ""
+"Изтеглянето не може да бъде стартирано.\n"
+"Програмата за изтегляне %s не работи правилно.\n"
+"Статус[%s]"
+
+#, python-format
+msgid ""
+"Download failed.\n"
+"Status[%s]"
+msgstr ""
+"Изтеглянето е неуспешно.\n"
+"Статус[%s]"
+
+msgid "Download manager"
+msgstr "Мениджър на изтеглянията"
+
+msgid "Download manager is not initialized"
+msgstr "Мениджърът на изтеглянията не е инициализиран"
+
+msgid "Download new version"
+msgstr "Изтегляне на новата версия"
+
+msgid "Download notification duration"
+msgstr "Продължителност на известието за изтегляне"
+
+msgid "Download subtiles failed."
+msgstr "Изтеглянето на субтитрите е неуспешно."
+
+msgid "Download suggested"
+msgstr "Предложено изтегляне"
+
+msgid "Downloaded file is too small or corrupted."
+msgstr "Изтегленият файл е твърде малък или повреден."
+
+msgid "Downloading"
+msgstr "Изтегляне"
+
+#, python-format
+msgid ""
+"Downloading can not be started.\n"
+" Downloader %s does not work properly.\n"
+"Status[%s]"
+msgstr ""
+"Изтеглянето не може да бъде стартирано.\n"
+" Програмата за изтегляне %s не работи правилно.\n"
+"Статус[%s]"
+
+#, python-format
+msgid ""
+"Downloading can not be started.\n"
+" The address ('%r') is incorrect."
+msgstr ""
+"Изтеглянето не може да бъде стартирано.\n"
+" Адресът ('%r') е неправилен."
+
+#, python-format
+msgid ""
+"Downloading cannot be started.\n"
+" Downloader [%s] not working properly.\n"
+" Status[%s]"
+msgstr ""
+"Изтеглянето не може да бъде стартирано.\n"
+" Програмата за изтегляне [%s] не работи правилно.\n"
+" Статус[%s]"
+
+#, python-format
+msgid ""
+"Downloading cannot be started.\n"
+" Invalid URI[%s]."
+msgstr ""
+"Изтеглянето не може да бъде стартирано.\n"
+" Невалиден URI[%s]."
+
+#, python-format
+msgid "Downloading file [%s] problem."
+msgstr "Проблем при изтегляне на файла [%s]."
+
+msgid "Downloading from prijevodi-online.org needs a free account. Enter login and password in the E2iPlayer settings."
+msgstr "Изтеглянето от prijevodi-online.org изисква безплатен акаунт. Въведете потребителско име и парола в настройките на E2iPlayer."
+
+#, python-format
+msgid ""
+"Downloading subtitles.\n"
+" ('%r')."
+msgstr ""
+"Изтегляне на субтитри.\n"
+" ('%r')."
+
+msgid "Downloads"
+msgstr "Изтегляния"
+
+msgid "Downloads location"
+msgstr "Местоположение на изтеглянията"
+
+#, python-format
+msgid "Downloads: %s"
+msgstr "Изтегляния: %s"
+
+msgid "Draft"
+msgstr "Чернова"
+
+msgid "Drama"
+msgstr "Драма"
+
+msgid "Dramas (Asian)"
+msgstr "Драми (азиатски)"
+
+msgid "Dubbed"
+msgstr "Дублирани"
+
+msgid "Dubbed anime"
+msgstr "Дублирано аниме"
+
+msgid "Dubbed movies"
+msgstr "Дублирани филми"
+
+msgid "Dubbed series"
+msgstr "Дублирани сериали"
+
+msgid "DuckDuckGo Suggestions"
+msgstr "Предложения от DuckDuckGo"
+
+msgid "Duration"
+msgstr "Продължителност"
+
+msgid "Duration:"
+msgstr "Продължителност:"
+
+#, python-format
+msgid "Duration: %s"
+msgstr "Продължителност: %s"
+
+msgid "Dutch"
+msgstr "Нидерландски"
+
+msgid "E-mail (free TBN GO account):"
+msgstr "Имейл (безплатен акаунт в TBN GO):"
+
+msgid "E2iPlayer"
+msgstr "E2iPlayer"
+
+msgid "E2iPlayer - keyboard settings"
+msgstr "E2iPlayer - настройки на клавиатурата"
+
+msgid "E2iPlayer - settings"
+msgstr "E2iPlayer - настройки"
+
+msgid "E2iPlayer auto start at Enigma2 start"
+msgstr "Автоматично стартиране на E2iPlayer при стартиране на Enigma2"
+
+msgid "E2iPlayer config folder"
+msgstr "Папка за конфигурация на E2iPlayer"
+
+msgid "E2iPlayer downloader"
+msgstr "Програма за изтегляне на E2iPlayer"
+
+msgid "E2iPlayer enable/disabled groups"
+msgstr "E2iPlayer активирани/деактивирани групи"
+
+msgid "E2iPlayer is only a specialized web browser. It does not host any materials."
+msgstr "E2iPlayer е само специализиран уеб браузър. Той не хоства никакви материали."
+
+msgid "E2iPlayer virtual keyboard"
+msgstr "Виртуална клавиатура на E2iPlayer"
+
+msgid ""
+"ERROR: pipeline could not be constructed: no element \"playbin2\" \n"
+"Please check if gstreamer plugins are available in your system."
+msgstr ""
+"ГРЕШКА: конвейерът не може да бъде създаден: няма елемент \"playbin2\" \n"
+"Проверете дали в системата ви са налични плъгините на gstreamer."
+
+msgid "EXIT"
+msgstr "EXIT"
+
+msgid "Economy"
+msgstr "Икономика"
+
+msgid "Edit"
+msgstr "Редактиране"
+
+msgid "Edit User Links"
+msgstr "Редактиране на потребителските връзки"
+
+msgid "Edit failed."
+msgstr "Редактирането е неуспешно."
+
+msgid "Edit favorite group"
+msgstr "Редактиране на група любими"
+
+msgid "Edit favorite item"
+msgstr "Редактиране на запис в любими"
+
+msgid "Edit favorites"
+msgstr "Редактиране на любими"
+
+msgid "Edit search history"
+msgstr "Редактиране на историята на търсенето"
+
+msgid "Edit title"
+msgstr "Редактиране на заглавието"
+
+msgid "Edit, sort and delete search history entries"
+msgstr "Редактиране, сортиране и изтриване на записи от историята на търсенето"
+
+msgid "Education"
+msgstr "Образование"
+
+msgid "Educational Animation"
+msgstr "Образователна анимация"
+
+msgid "Egyptian series"
+msgstr "Египетски сериали"
+
+msgid "Empty title is not allowed."
+msgstr "Празно заглавие не е разрешено."
+
+msgid "Enable all groups"
+msgstr "Активиране на всички групи"
+
+msgid "Enable hosts groups"
+msgstr "Активиране на групите хостове"
+
+msgid "Enable reordering"
+msgstr "Включване на пренареждането"
+
+msgid "Enable reordering mode"
+msgstr "Включване на режима на пренареждане"
+
+msgid "Enabled hosts"
+msgstr "Активирани хостове"
+
+msgid "Encrypted stream list - not supported"
+msgstr "Шифрован списък с потоци - не се поддържа"
+
+#, python-format
+msgid ""
+"Encryption function body extraction failed!\n"
+"Please report the problem to %s"
+msgstr ""
+"Извличането на тялото на функцията за шифроване е неуспешно!\n"
+"Съобщете за проблема на %s"
+
+#, python-format
+msgid ""
+"Encryption function name extraction failed!\n"
+"Please report the problem to %s"
+msgstr ""
+"Извличането на името на функцията за шифроване е неуспешно!\n"
+"Моля, съобщете за проблема на %s"
+
+msgid "English"
+msgstr "Английски"
+
+msgid "English TV series"
+msgstr "Английски сериали"
+
+msgid "English dubbed"
+msgstr "Английски дублаж"
+
+msgid "English movies"
+msgstr "Английски филми"
+
+msgid "English movies (dubbed)"
+msgstr "Английски филми (дублирани)"
+
+msgid "English series (dubbed)"
+msgstr "Английски сериали (дублирани)"
+
+msgid "English subbed"
+msgstr "Английски субтитри"
+
+msgid "Enter"
+msgstr "Enter"
+
+msgid "Enter (confirm and close)"
+msgstr "Enter (потвърждаване и затваряне)"
+
+msgid "Enter a value"
+msgstr "Въведете стойност"
+
+msgid "Enter name"
+msgstr "Въведете име"
+
+msgid "Enter new pin"
+msgstr "Въведете нов ПИН"
+
+msgid "Enter old pin"
+msgstr "Въведете стария ПИН"
+
+msgid "Enter pin"
+msgstr "Въведете ПИН"
+
+msgid "Enter the code shown in the title of the window on your receiver's screen (or scan the QR code shown there - no code needed then):"
+msgstr "Въведете кода, показан в заглавието на прозореца на екрана на приемника (или сканирайте показания там QR код - тогава не е нужен код):"
+
+msgid "Enter the text"
+msgstr "Въведете текста"
+
+msgid "Entertainment"
+msgstr "Развлечения"
+
+msgid "Entitlement parsing error."
+msgstr "Грешка при анализа на правата за достъп."
+
+#, python-format
+msgid "Entries: %d | Sort: %s | Status: %s | Jump target: %s"
+msgstr "Записи: %d | Сортиране: %s | Състояние: %s | Цел на прехода: %s"
+
+msgid "Episode"
+msgstr "Епизод"
+
+#, python-format
+msgid "Episode %d"
+msgstr "Епизод %d"
+
+msgid "Episodes"
+msgstr "Епизоди"
+
+msgid "Episodes:"
+msgstr "Епизоди:"
+
+#, python-format
+msgid "Episodes: %s"
+msgstr "Епизоди: %s"
+
+msgid "Epochs"
+msgstr "Епохи"
+
+msgid "Error"
+msgstr "Грешка"
+
+#, python-format
+msgid "Error code: %s\n"
+msgstr "Код на грешката: %s\n"
+
+#, python-format
+msgid ""
+"Error code: %s\n"
+"Error message: %s"
+msgstr ""
+"Код на грешката: %s\n"
+"Съобщение за грешка: %s"
+
+msgid "Error deleting favorite item."
+msgstr "Грешка при изтриване на любим запис."
+
+#, python-format
+msgid "Error deleting file \"%s\".\n"
+msgstr "Грешка при изтриване на файла \"%s\".\n"
+
+msgid "Error during deletion of the debug file."
+msgstr "Грешка при изтриване на дебъг файла."
+
+#, python-format
+msgid "Error getting file name: %s"
+msgstr "Грешка при получаване на името на файла: %s"
+
+msgid "Error loading favorites."
+msgstr "Грешка при зареждане на любимите."
+
+#, python-format
+msgid ""
+"Error message: \"%s\".\n"
+"Error code: \"%s\"."
+msgstr ""
+"Съобщение за грешка: \"%s\".\n"
+"Код на грешката: \"%s\"."
+
+#, python-format
+msgid "Error message: %s\n"
+msgstr "Съобщение за грешка: %s\n"
+
+msgid "Error occurs"
+msgstr "Възникна грешка"
+
+msgid "Error occurs during download."
+msgstr "Възникна грешка по време на изтеглянето."
+
+msgid "Error occurs:"
+msgstr "Възникна грешка:"
+
+#, python-format
+msgid "Error reading file \"%s\".\n"
+msgstr "Грешка при четене на файла \"%s\".\n"
+
+#, python-format
+msgid "Error renaming file: %s"
+msgstr "Грешка при преименуване на файла: %s"
+
+msgid "Error saving favorites."
+msgstr "Грешка при запазване на любимите."
+
+msgid "Error while loading watch data"
+msgstr "Грешка при зареждане на данните за гледане"
+
+msgid "Error while saving."
+msgstr "Грешка при запазване."
+
+#, python-format
+msgid "Error writing file \"%s\".\n"
+msgstr "Грешка при запис на файла \"%s\".\n"
+
+msgid "Ethical & Legal"
+msgstr "Етика и право"
+
+msgid "European movies"
+msgstr "Европейски филми"
+
+msgid "Events"
+msgstr "Събития"
+
+msgid "Every enabled site: does the menu open, does a list show videos? Takes a few minutes."
+msgstr "Всеки активиран сайт: отваря ли се менюто, показва ли списъкът видеа? Отнема няколко минути."
+
+msgid "Exam Review"
+msgstr "Преглед на изпита"
+
+msgid "Exception occurs"
+msgstr "Възникна изключение"
+
+msgid "Exclusive"
+msgstr "Ексклузивно"
+
+msgid "Exit"
+msgstr "Изход"
+
+#, python-format
+msgid "Expiry: %s"
+msgstr "Изтича: %s"
+
+msgid "Extended"
+msgstr "Разширени"
+
+msgid "External movie player config"
+msgstr "Настройки на външния плейър"
+
+msgid "Extracted subtitle file is empty or missing."
+msgstr "Извлеченият файл със субтитри е празен или липсва."
+
+msgid "FAILED"
+msgstr "НЕУСПЕШНО"
+
+msgid "FAST FORWARD"
+msgstr "ПРЕВЪРТАНЕ НАПРЕД"
+
+msgid "FREE"
+msgstr "СВОБОДНО"
+
+msgid "FUCKER sorting by :"
+msgstr "FUCKER, сортиране по :"
+
+#, python-format
+msgid "Fail to get \"%s\"."
+msgstr "Неуспешно получаване на \"%s\"."
+
+msgid "Fail to get captcha data."
+msgstr "Неуспешно получаване на данни за captcha."
+
+msgid "Failed to connect to host."
+msgstr "Неуспешно свързване с хоста."
+
+#, python-format
+msgid "Failed to connect to server \"%s\"."
+msgstr "Неуспешно свързване със сървъра \"%s\"."
+
+#, python-format
+msgid "Failed to convert the file \"%s\" to UTF-8."
+msgstr "Неуспешно конвертиране на файла \"%s\" в UTF-8."
+
+#, python-format
+msgid "Failed to create directory \"%s\"."
+msgstr "Неуспешно създаване на директорията \"%s\"."
+
+msgid "Failed to create extraction directory."
+msgstr "Неуспешно създаване на директорията за извличане."
+
+msgid "Failed to download subtitle."
+msgstr "Неуспешно изтегляне на субтитрите."
+
+msgid "Failed to download the subtitles."
+msgstr "Субтитрите не можаха да бъдат изтеглени."
+
+msgid "Failed to get the download link."
+msgstr "Връзката за изтегляне не можа да бъде получена."
+
+#, python-format
+msgid "Failed to get the file list from %s."
+msgstr "Списъкът с файлове от %s не можа да бъде получен."
+
+msgid "Failed to gzip."
+msgstr "Неуспешно gzip компресиране."
+
+msgid "Failed to initialize (unknown option or old curl version?)."
+msgstr "Неуспешна инициализация (непозната опция или стара версия на curl?)."
+
+msgid "Failed to load the match list"
+msgstr "Списъкът с мачове не можа да бъде зареден"
+
+#, python-format
+msgid "Failed to log in user \"%s\". Please check your login and password."
+msgstr "Неуспешно влизане на потребител \"%s\". Моля, проверете потребителското име и паролата."
+
+#, python-format
+msgid "Failed to open the file \"%s\"."
+msgstr "Неуспешно отваряне на файла \"%s\"."
+
+#, python-format
+msgid "Failed to write file \"%s\"."
+msgstr "Неуспешен запис на файла \"%s\"."
+
+#, python-format
+msgid "Failed to write the file \"%s\"."
+msgstr "Неуспешен запис на файла \"%s\"."
+
+#, python-format
+msgid "Failed: %s"
+msgstr "Неуспешно: %s"
+
+msgid "Family"
+msgstr "Семейни"
+
+msgid "Fantasy"
+msgstr "Фентъзи"
+
+msgid "Fashion"
+msgstr "Мода"
+
+msgid "Fatal error: consoleWrite failed!"
+msgstr "Фатална грешка: consoleWrite е неуспешно!"
+
+msgid "Favorite group not found."
+msgstr "Групата с любими не е намерена."
+
+msgid "Favorite item not found."
+msgstr "Любимият запис не е намерен."
+
+msgid "Favorites"
+msgstr "Любими"
+
+msgid "Favorites groups"
+msgstr "Групи с любими"
+
+msgid "Favorites manager"
+msgstr "Управление на любими"
+
+msgid "Featured"
+msgstr "Препоръчани"
+
+#, python-format
+msgid "File \"%s\" already exists"
+msgstr "Файлът \"%s\" вече съществува"
+
+#, python-format
+msgid "File \"%s\" already exists!"
+msgstr "Файлът \"%s\" вече съществува!"
+
+msgid "File I/O error (write)."
+msgstr "Входно-изходна грешка на файла (запис)."
+
+msgid "File I/O error."
+msgstr "Входно-изходна грешка на файла."
+
+msgid "File Not Found."
+msgstr "Файлът не е намерен."
+
+#, python-format
+msgid "File [%s] has been added to the downloading queue."
+msgstr "Файлът [%s] е добавен към опашката за изтегляне."
+
+#, python-format
+msgid "File [%s] is already in the downloading queue."
+msgstr "Файлът [%s] вече е в опашката за изтегляне."
+
+#, python-format
+msgid "File [%s] was added to downloading queue."
+msgstr "Файлът [%s] е добавен към опашката за изтегляне."
+
+msgid "File browser"
+msgstr "Файлов браузър"
+
+msgid "File can not be downloaded. Download manager is not available."
+msgstr "Файлът не може да бъде изтеглен. Мениджърът на изтеглянията не е наличен."
+
+#, python-format
+msgid "File can not be downloaded. Protocol [%s] is unsupported"
+msgstr "Файлът не може да бъде изтеглен. Протоколът [%s] не се поддържа"
+
+msgid "File format of DASH (MPD) downloads"
+msgstr "Файлов формат на DASH (MPD) изтеглянията"
+
+#, python-format
+msgid "File might be corrupted (size: %d bytes)."
+msgstr "Файлът може да е повреден (размер: %d байта)."
+
+msgid "File name cannot be empty!"
+msgstr "Името на файла не може да бъде празно!"
+
+msgid "File renamed successfully!"
+msgstr "Файлът е преименуван успешно!"
+
+msgid "Files"
+msgstr "Файлове"
+
+msgid "Filler"
+msgstr "Пълнеж"
+
+msgid "Films"
+msgstr "Филми"
+
+msgid "Films by genre"
+msgstr "Филми по жанр"
+
+msgid "Filmweb Suggestions"
+msgstr "Предложения от Filmweb"
+
+msgid "Filter"
+msgstr "Филтър"
+
+msgid "Filter settings"
+msgstr "Настройки на филтъра"
+
+msgid "Find item"
+msgstr "Търсене на запис"
+
+msgid "Find out more."
+msgstr "Научете повече."
+
+msgid "Finished matches with a full replay, highlights or match cuts, newest first (usually a few days after the match)."
+msgstr "Завършили мачове с пълен запис, акценти или откъси, най-новите първо (обикновено няколко дни след мача)."
+
+msgid "First Page"
+msgstr "Първа страница"
+
+msgid "First air date:"
+msgstr "Първо излъчване:"
+
+msgid "First aired"
+msgstr "Първо излъчване"
+
+msgid "First movie player in buffering mode"
+msgstr "Основен плейър в режим с буфериране"
+
+msgid "First movie player without buffering mode"
+msgstr "Основен плейър без режим с буфериране"
+
+msgid "Fix jump target"
+msgstr "Фиксиране на целта на прехода"
+
+#, python-format
+msgid "Folder \"%s\" can not be created."
+msgstr "Папката \"%s\" не може да бъде създадена."
+
+#, python-format
+msgid "Folder \"%s\" has been created."
+msgstr "Папката \"%s\" е създадена."
+
+msgid "Folder for cache data"
+msgstr "Папка за кеш данни"
+
+msgid "Folder for config data"
+msgstr "Папка за конфигурационни данни"
+
+msgid "Folder for temporary data"
+msgstr "Папка за временни данни"
+
+msgid "Followers"
+msgstr "Последователи"
+
+msgid "Following host are broken or additional python modules are needed."
+msgstr "Следните хостове не работят или се нуждаят от допълнителни Python модули."
+
+msgid "Font size offset"
+msgstr "Отместване на размера на шрифта"
+
+msgid "Food"
+msgstr "Храна"
+
+msgid "Foot & Ankle"
+msgstr "Стъпало и глезен"
+
+msgid "Football Live"
+msgstr "Футбол на живо"
+
+msgid "For continuous playing, please press 8!"
+msgstr "За непрекъснато възпроизвеждане, моля, натиснете 8!"
+
+msgid "For developers"
+msgstr "За разработчици"
+
+msgid "Force internal skin: all E2iPlayer screens"
+msgstr "Принудителен вграден скин: всички екрани на E2iPlayer"
+
+msgid "Force internal skin: main screen only"
+msgstr "Принудителен вграден скин: само главният екран"
+
+msgid "Foreign movies"
+msgstr "Чуждестранни филми"
+
+msgid "Foreign parts only"
+msgstr "Само чуждоезичните части"
+
+msgid "Foreign series"
+msgstr "Чуждестранни сериали"
+
+msgid "Format 'wmv' blocked in configuration."
+msgstr "Форматът 'wmv' е блокиран в конфигурацията."
+
+msgid "Formations"
+msgstr "Състави"
+
+msgid "Fotka.pl stream :"
+msgstr "Fotka.pl поток :"
+
+msgid "Free IPTV list"
+msgstr "Безплатен IPTV списък"
+
+msgid "French"
+msgstr "Френски"
+
+msgid "From E2 settings"
+msgstr "От настройките на E2"
+
+msgid "Full description loaded"
+msgstr "Пълното описание е заредено"
+
+msgid "Full description not available"
+msgstr "Няма пълно описание"
+
+msgid "Full test"
+msgstr "Пълен тест"
+
+msgid "Full test checks the INFO window :"
+msgstr "Пълният тест проверява прозореца INFO :"
+
+msgid "Full test checks the next page :"
+msgstr "Пълният тест проверява следващата страница :"
+
+msgid "Full test checks the search :"
+msgstr "Пълният тест проверява търсенето :"
+
+msgid "Full test checks the stream link :"
+msgstr "Пълният тест проверява връзката към потока :"
+
+msgid "Full test checks thumbnails :"
+msgstr "Пълният тест проверява миниатюрите :"
+
+msgid "GREEN"
+msgstr "ЗЕЛЕН"
+
+#, python-format
+msgid "Game: %s"
+msgstr "Игра: %s"
+
+msgid "Games"
+msgstr "Игри"
+
+msgid "Gaming"
+msgstr "Гейминг"
+
+msgid "General"
+msgstr "Общи"
+
+msgid "Generic error code."
+msgstr "Общ код на грешка."
+
+msgid "Genre"
+msgstr "Жанр"
+
+msgid "Genre:"
+msgstr "Жанр:"
+
+#, python-format
+msgid "Genre: %s"
+msgstr "Жанр: %s"
+
+msgid "Genres"
+msgstr "Жанрове"
+
+msgid "Genres:"
+msgstr "Жанрове:"
+
+msgid "German"
+msgstr "Немски"
+
+msgid "Get Cloudflare job"
+msgstr "Получаване на Cloudflare задача"
+
+msgid "Get captcha job"
+msgstr "Получаване на captcha задача"
+
+msgid "Get cookies job"
+msgstr "Получаване на задача за бисквитки"
+
+msgid "Get languages failed!"
+msgstr "Неуспешно получаване на езиците!"
+
+msgid "Get token failed!"
+msgstr "Неуспешно получаване на токен!"
+
+msgid "GitHub API error"
+msgstr "Грешка в GitHub API"
+
+msgid "Global"
+msgstr "Глобално"
+
+msgid "Global Search mode :"
+msgstr "Режим на глобално търсене :"
+
+msgid "Go to the host configuration available under blue button."
+msgstr "Отидете в конфигурацията на хоста, достъпна чрез синия бутон."
+
+msgid "Google Suggestions"
+msgstr "Предложения от Google"
+
+msgid "Google account"
+msgstr "Google акаунт"
+
+msgid "Graphic services selector"
+msgstr "Графичен избор на услуги"
+
+msgid "Greek"
+msgstr "Гръцки"
+
+#, python-format
+msgid "Group \"%s\" already exists."
+msgstr "Групата \"%s\" вече съществува."
+
+#, python-format
+msgid "Group %d"
+msgstr "Група %d"
+
+msgid "Group links into categories:"
+msgstr "Групиране на връзките по категории:"
+
+#, python-format
+msgid "Group with id[%s] not found."
+msgstr "Групата с id[%s] не е намерена."
+
+msgid "Groups"
+msgstr "Групи"
+
+msgid "HIDDEN CAM SHOW IN PROGRESS. TRY AGAIN LATER!"
+msgstr "В МОМЕНТА ТЕЧЕ СКРИТО CAM ШОУ. ОПИТАЙТЕ ОТНОВО ПО-КЪСНО!"
+
+msgid "HLS with subtitles"
+msgstr "HLS със субтитри"
+
+msgid "HLS/m3u8"
+msgstr "HLS/m3u8"
+
+msgid "HTTP/2 framing layer error."
+msgstr "Грешка в слоя за рамкиране на HTTP/2."
+
+msgid "HTTP/2 stream error."
+msgstr "Грешка в потока на HTTP/2."
+
+#, python-format
+msgid "HTTPS connection error \"%s\"\n"
+msgstr "Грешка при HTTPS връзка \"%s\"\n"
+
+msgid "Hand"
+msgstr "Ръка"
+
+msgid "Health"
+msgstr "Здраве"
+
+msgid "Hearing impaired"
+msgstr "За хора с увреден слух"
+
+msgid "Help"
+msgstr "Помощ"
+
+#, python-format
+msgid "Hide \"%s\" group"
+msgstr "Скриване на група \"%s\""
+
+msgid "Hide the menu (live TV visible)"
+msgstr "Скриване на менюто (телевизията на живо е видима)"
+
+msgid "Hide titles only available in Sweden"
+msgstr "Скриване на заглавия, налични само в Швеция"
+
+msgid "Hide/Active Group"
+msgstr "Скриване/активиране на група"
+
+msgid "High (or HD)"
+msgstr "Високо (или HD)"
+
+msgid "Highlights"
+msgstr "Акценти"
+
+msgid "History"
+msgstr "История"
+
+msgid "History of searched phrases."
+msgstr "История на търсените фрази."
+
+msgid "Home"
+msgstr "Начало"
+
+msgid "Home / Sections"
+msgstr "Начало / Раздели"
+
+msgid "Home page"
+msgstr "Начална страница"
+
+msgid "Horror"
+msgstr "Ужаси"
+
+msgid "Host"
+msgstr "Хост"
+
+#, python-format
+msgid "Host: %s"
+msgstr "Хост: %s"
+
+#, python-format
+msgid "Hosting \"%s\" not supported."
+msgstr "Хостингът \"%s\" не се поддържа."
+
+#, python-format
+msgid "Hosting \"%s\" unknown."
+msgstr "Хостингът \"%s\" е неизвестен."
+
+#, python-format
+msgid "Hosting: %s, %s"
+msgstr "Хостинг: %s, %s"
+
+msgid "Hosts"
+msgstr "Хостове"
+
+msgid "Hosts list type"
+msgstr "Тип на списъка с хостове"
+
+msgid "Hot"
+msgstr "Горещо"
+
+msgid "How to solve a captcha:"
+msgstr "Как да решите captcha:"
+
+msgid "Humanitarian"
+msgstr "Хуманитарни"
+
+msgid "Hungarian"
+msgstr "Унгарски"
+
+msgid "I am no robot"
+msgstr "Не съм робот"
+
+msgid "IMDb"
+msgstr "IMDb"
+
+msgid "IMDb Rating:"
+msgstr "Рейтинг в IMDb:"
+
+msgid "IMDb Suggestions"
+msgstr "Предложения от IMDb"
+
+msgid "INFO"
+msgstr "INFO"
+
+#, python-format
+msgid "INFO %d rows"
+msgstr "INFO %d реда"
+
+msgid "INFO list text"
+msgstr "Текст на списъка в INFO"
+
+msgid "INFO opens no window"
+msgstr "INFO не отваря прозорец"
+
+msgid "INFO window"
+msgstr "Прозорец INFO"
+
+msgid "INTERRUPTED"
+msgstr "ПРЕКЪСНАТО"
+
+msgid "IPTV Portals"
+msgstr "IPTV портали"
+
+msgid "Icon type"
+msgstr "Тип на иконите"
+
+msgid "Icons quality"
+msgstr "Качество на иконите"
+
+msgid "Icons size"
+msgstr "Размер на иконите"
+
+msgid "Image"
+msgstr "Имидж"
+
+msgid "Indian"
+msgstr "Индийски"
+
+msgid "Indian Movies"
+msgstr "Индийски филми"
+
+msgid "Indian TV series"
+msgstr "Индийски сериали"
+
+msgid "Indian movies"
+msgstr "Индийски филми"
+
+msgid "Indian movies (dubbed)"
+msgstr "Индийски филми (дублирани)"
+
+msgid "Indian series (dubbed)"
+msgstr "Индийски сериали (дублирани)"
+
+msgid "Industry"
+msgstr "Индустрия"
+
+msgid "Info"
+msgstr "Информация"
+
+msgid "Info bar timeout"
+msgstr "Време за показване на инфолентата"
+
+msgid "Information"
+msgstr "Информация"
+
+msgid "Information about audio tracks not available."
+msgstr "Няма информация за аудио пистите."
+
+msgid "Initialize web interface"
+msgstr "Инициализиране на уеб интерфейса"
+
+msgid "Inject black iframe at video playback finish"
+msgstr "Вмъкване на черен iframe в края на възпроизвеждането"
+
+msgid "Input"
+msgstr "Въвеждане"
+
+msgid "Install E2iPlayer"
+msgstr "Инсталиране на E2iPlayer"
+
+msgid "Installed version"
+msgstr "Инсталирана версия"
+
+#, python-format
+msgid "Installed: v%s"
+msgstr "Инсталирана: v%s"
+
+#, python-format
+msgid "Installed: v%s - %d commits behind %s"
+msgstr "Инсталирана: v%s - %d commit-а назад спрямо %s"
+
+#, python-format
+msgid "Installed: v%s - no matching release tag (local build?)"
+msgstr "Инсталирана: v%s - няма съответстващ release таг (локална компилация?)"
+
+#, python-format
+msgid "Installed: v%s - up to date"
+msgstr "Инсталирана: v%s - актуална"
+
+msgid "Interactive Learning Center(ILC)"
+msgstr "Интерактивен учебен център (ILC)"
+
+msgid "Intervention"
+msgstr "Интервенция"
+
+msgid "Interviews"
+msgstr "Интервюта"
+
+#, python-format
+msgid "Invalid answer from %s."
+msgstr "Невалиден отговор от %s."
+
+msgid "Invalid email."
+msgstr "Невалиден имейл."
+
+msgid "Invalid name."
+msgstr "Невалидно име."
+
+msgid "Invalid value."
+msgstr "Невалидна стойност."
+
+msgid "Investigations"
+msgstr "Разследвания"
+
+msgid "Is this message displayed correctly?"
+msgstr "Показва ли се това съобщение правилно?"
+
+msgid "It is not allowed to call getURLRequestData from main thread."
+msgstr "Не е разрешено извикването на getURLRequestData от главната нишка."
+
+msgid "It looks like some kind of protection. Try again later."
+msgstr "Изглежда като някакъв вид защита. Опитайте отново по-късно."
+
+#, python-format
+msgid "It looks like your current configuration do not allow to connect to the https://%s/.\n"
+msgstr "Изглежда, че текущата Ви конфигурация не позволява свързване с https://%s/.\n"
+
+#, python-format
+msgid "It seems that the host \"%s\" has crashed."
+msgstr "Изглежда, че хостът \"%s\" се е сринал."
+
+#, python-format
+msgid "It seems that the subtitle's provider \"%s\" has crashed."
+msgstr "Изглежда, че доставчикът на субтитри \"%s\" се е сринал."
+
+#, python-format
+msgid ""
+"It seems that the video player \"%s\" does not work properly.\n"
+"\n"
+"STS: %s\n"
+"ERROR CODE: %r"
+msgstr ""
+"Изглежда, че видео плейърът \"%s\" не работи правилно.\n"
+"\n"
+"STS: %s\n"
+"КОД НА ГРЕШКАТА: %r"
+
+msgid "It seems that unrar utility is not installed."
+msgstr "Изглежда, че помощната програма unrar не е инсталирана."
+
+msgid "It seems that unzip utility is not installed."
+msgstr "Изглежда, че помощната програма unzip не е инсталирана."
+
+msgid "Italian"
+msgstr "Италиански"
+
+#, python-format
+msgid "Item idx[%d] not found in group[%s]."
+msgstr "Елементът idx[%d] не е намерен в групата [%s]."
+
+#, python-format
+msgid "Items in group \"%s\""
+msgstr "Записи в групата \"%s\""
+
+msgid "JDownloader script execution"
+msgstr "Изпълнение на скрипт на JDownloader"
+
+#, python-format
+msgid ""
+"JDownloader script execution failed.\n"
+"Error code: %s\n"
+msgstr ""
+"Изпълнението на скрипта на JDownloader е неуспешно.\n"
+"Код на грешката: %s\n"
+
+msgid "JDownloader script finished."
+msgstr "Скриптът на JDownloader приключи."
+
+msgid "JS cache"
+msgstr "JS кеш"
+
+msgid "Japanese"
+msgstr "Японски"
+
+msgid "Japanese dramas"
+msgstr "Японски драми"
+
+msgid "Japanese films"
+msgstr "Японски филми"
+
+msgid "Jobs & Positions"
+msgstr "Работа и позиции"
+
+msgid "Journal Club"
+msgstr "Журнален клуб"
+
+msgid "Jump"
+msgstr "Преход"
+
+msgid "Jump target was fixed so the sort order is preserved."
+msgstr "Целта на прехода беше фиксирана, за да се запази редът на сортиране."
+
+msgid "Jump to a selected page"
+msgstr "Преход към избрана страница"
+
+msgid "Jump to a selected page, max: {}"
+msgstr "Преход към избрана страница, макс.: {}"
+
+msgid "Keep FFmpeg command files (.iptv.cmd)"
+msgstr "Запазване на командните файлове на FFmpeg (.iptv.cmd)"
+
+msgid "Keep temporary JS scripts"
+msgstr "Запазване на временните JS скриптове"
+
+msgid "Kids"
+msgstr "Деца"
+
+msgid "Kinds"
+msgstr "Видове"
+
+msgid "Knee & Sports"
+msgstr "Коляно и спорт"
+
+msgid "Knowledge"
+msgstr "Знание"
+
+msgid "Knowledge & Nature"
+msgstr "Знание и природа"
+
+msgid "Korean"
+msgstr "Корейски"
+
+msgid "Korean TV series"
+msgstr "Корейски сериали"
+
+msgid "Korean anime"
+msgstr "Корейско аниме"
+
+msgid "Korean dramas"
+msgstr "Корейски драми"
+
+msgid "Korean films"
+msgstr "Корейски филми"
+
+msgid "Korean movies"
+msgstr "Корейски филми"
+
+msgid "LEFT/RIGHT at start/end of text - alternative way to switch panels"
+msgstr "НАЛЯВО/НАДЯСНО в началото/края на текста - алтернативен начин за превключване между панелите"
+
+msgid "Language"
+msgstr "Език"
+
+msgid "Language of the details (TMDb, IMDb)"
+msgstr "Език на подробностите (TMDb, IMDb)"
+
+msgid "Language:"
+msgstr "Език:"
+
+msgid "Last"
+msgstr "Последна"
+
+#, python-format
+msgid "Last Exception error: \"%s\""
+msgstr "Последна грешка (изключение): \"%s\""
+
+#, python-format
+msgid "Last Exception error: '%s'"
+msgstr "Последна грешка (изключение): '%s'"
+
+#, python-format
+msgid "Last Modified: %s"
+msgstr "Последна промяна: %s"
+
+msgid "Last air date:"
+msgstr "Последно излъчване:"
+
+msgid "Last chance"
+msgstr "Последен шанс"
+
+msgid "Last day"
+msgstr "Последният ден"
+
+#, python-format
+msgid ""
+"Last error:\n"
+"%s"
+msgstr ""
+"Последна грешка:\n"
+"%s"
+
+#, python-format
+msgid "Last error: \"%s\""
+msgstr "Последна грешка: \"%s\""
+
+msgid "Last month"
+msgstr "Последният месец"
+
+msgid "Last result"
+msgstr "Последен резултат"
+
+msgid "Last week"
+msgstr "Последната седмица"
+
+msgid "Last.fm charts and tag pages are behind a browser check, only the radio stations can be used."
+msgstr "Класациите и страниците с тагове на Last.fm са зад проверка на браузъра, могат да се използват само радиостанциите."
+
+#, python-format
+msgid "Last.fm user \"%s\" not found."
+msgstr "Потребителят \"%s\" в Last.fm не е намерен."
+
+msgid "Last.fm user name:"
+msgstr "Потребителско име в Last.fm:"
+
+msgid "Lastest"
+msgstr "Най-нови"
+
+msgid "Latest"
+msgstr "Най-нови"
+
+msgid "Latest added"
+msgstr "Последно добавени"
+
+msgid "Latest anime episodes"
+msgstr "Най-нови аниме епизоди"
+
+msgid "Latest cartoon episodes"
+msgstr "Най-нови анимационни епизоди"
+
+msgid "Latest dubbed episodes"
+msgstr "Най-нови дублирани епизоди"
+
+msgid "Latest episodes"
+msgstr "Най-нови епизоди"
+
+msgid "Latest episodes (airing)"
+msgstr "Най-нови епизоди (излъчващи се)"
+
+msgid "Latest episodes (finished series)"
+msgstr "Най-нови епизоди (завършени сериали)"
+
+msgid "Latest highlights"
+msgstr "Най-нови акценти"
+
+msgid "Latest update"
+msgstr "Последна актуализация"
+
+msgid "Latest updates"
+msgstr "Най-нови актуализации"
+
+msgid "Latest video"
+msgstr "Най-ново видео"
+
+msgid "Latest videos"
+msgstr "Най-нови видеа"
+
+msgid "Latest videos from the channels you are subscribed to."
+msgstr "Най-нови видеа от каналите, за които сте абонирани."
+
+msgid "Latin American series"
+msgstr "Латиноамерикански сериали"
+
+msgid "Latin American series (dubbed)"
+msgstr "Латиноамерикански сериали (дублирани)"
+
+msgid "Latino"
+msgstr "Латино"
+
+#, python-brace-format
+msgid "Launcher URI ({url} or {address} = address of the box)"
+msgstr "URI за стартиране ({url} или {address} = адрес на приемника)"
+
+msgid "Law"
+msgstr "Право"
+
+msgid "League and cup matches"
+msgstr "Мачове от първенство и купа"
+
+msgid "Leagues"
+msgstr "Първенства"
+
+msgid "Leagues, clubs and events"
+msgstr "Първенства, клубове и събития"
+
+msgid "Lecturers"
+msgstr "Лектори"
+
+msgid "Left"
+msgstr "Ляво"
+
+msgid "Library"
+msgstr "Библиотека"
+
+msgid "Lifestyle"
+msgstr "Начин на живот"
+
+msgid "Light / dark design"
+msgstr "Светъл / тъмен дизайн"
+
+msgid "Lightgray"
+msgstr "Светлосиво"
+
+msgid "Like the quick test, plus the checks chosen in the host settings (Debug). Takes about 20-40 minutes."
+msgstr "Като бързия тест, плюс проверките, избрани в настройките на хоста (Дебъг). Отнема около 20-40 минути."
+
+msgid "Liked videos"
+msgstr "Харесани видеа"
+
+msgid "Line Spacing"
+msgstr "Междуредие"
+
+msgid "Link"
+msgstr "Връзка"
+
+msgid "Link is not supported by the gstplayer. Please use the extelayer3 if available."
+msgstr "Връзката не се поддържа от gstplayer. Моля, използвайте extelayer3, ако е наличен."
+
+msgid "Link protected with Google ReCaptcha v2"
+msgstr "Връзката е защитена с Google ReCaptcha v2"
+
+msgid "Link protected with google recaptcha v2."
+msgstr "Връзката е защитена с google recaptcha v2."
+
+msgid "Links from all files without categories"
+msgstr "Връзки от всички файлове без категории"
+
+#, python-format
+msgid "Links from the file %s"
+msgstr "Връзки от файла %s"
+
+msgid "List"
+msgstr "Списък"
+
+msgid "List by day"
+msgstr "Списък по дни"
+
+msgid "List view"
+msgstr "Изглед на списък"
+
+#, python-format
+msgid "Listeners: %s"
+msgstr "Слушатели: %s"
+
+msgid "Live"
+msgstr "На живо"
+
+msgid "Live channels"
+msgstr "Канали на живо"
+
+msgid "Live radio"
+msgstr "Радио на живо"
+
+#, python-format
+msgid "Live stream of the %s channel"
+msgstr "Поток на живо на канала %s"
+
+msgid "Live stream on YouTube"
+msgstr "Поток на живо в YouTube"
+
+#, python-format
+msgid "Live stream starts %s"
+msgstr "Потокът на живо започва %s"
+
+msgid "Live streams"
+msgstr "Потоци на живо"
+
+msgid "Live streams by day"
+msgstr "Потоци на живо по дни"
+
+msgid "Live-action series episodes"
+msgstr "Епизоди от игрални сериали"
+
+msgid "Load"
+msgstr "Зареждане"
+
+#, python-format
+msgid "Load of the Virtual Keyboard layout \"%s\" failed due to the following error: \"%s\""
+msgstr "Зареждането на подредбата на виртуалната клавиатура \"%s\" е неуспешно поради следната грешка: \"%s\""
+
+msgid "Loading"
+msgstr "Зареждане"
+
+#, python-format
+msgid "Loading %s failed due to following error:"
+msgstr "Зареждането на %s е неуспешно поради следната грешка:"
+
+msgid "Loading failed."
+msgstr "Зареждането е неуспешно."
+
+msgid "Loading watch data..."
+msgstr "Зареждане на данните за гледане..."
+
+msgid "Loading..."
+msgstr "Зареждане..."
+
+msgid "LocalMedia"
+msgstr "Локални медии"
+
+#, python-format
+msgid "Locale ID mismatched! %s <> %s"
+msgstr "Несъответствие на Locale ID! %s <> %s"
+
+msgid "Locality:"
+msgstr "Местоположение:"
+
+msgid "Localization"
+msgstr "Локализация"
+
+msgid "Lodynet offers this video only on its subscription servers (Lody Plus / VIP) for now - the free servers usually follow later."
+msgstr "Засега Lodynet предлага това видео само на своите платени сървъри (Lody Plus / VIP) - безплатните сървъри обикновено го получават по-късно."
+
+msgid "Log"
+msgstr "Лог"
+
+msgid "Login failed!"
+msgstr "Неуспешно влизане!"
+
+msgid "Login failed."
+msgstr "Неуспешно влизане."
+
+#, python-brace-format
+msgid "Login on {0} failed."
+msgstr "Неуспешно влизане в {0}."
+
+msgid "Login or password is wrong."
+msgstr "Грешно потребителско име или парола."
+
+#, python-format
+msgid "Login to prijevodi-online.org failed: %s"
+msgstr "Неуспешно влизане в prijevodi-online.org: %s"
+
+msgid "Login to prijevodi-online.org failed: the site asks for a captcha, which E2iPlayer cannot solve. Series subtitles download without an account."
+msgstr "Неуспешно влизане в prijevodi-online.org: сайтът изисква captcha, която E2iPlayer не може да реши. Субтитрите за сериали се изтеглят и без акаунт."
+
+#, python-format
+msgid ""
+"Login user \"%s\" to https://vk.com/ failed!\n"
+"Please check your login data in the IPTVPlayer configuration."
+msgstr ""
+"Неуспешно влизане на потребител \"%s\" в https://vk.com/!\n"
+"Моля, проверете данните за вход в конфигурацията на IPTVPlayer."
+
+msgid "Logs"
+msgstr "Логове"
+
+msgid "Long list"
+msgstr "Дълъг списък"
+
+msgid "Longest"
+msgstr "Най-дълги"
+
+msgid "Low"
+msgstr "Ниско"
+
+msgid "MENU"
+msgstr "MENU"
+
+msgid "MENU → Add new entry: type a new search term to add to the history."
+msgstr "MENU → Добавяне на нов запис: въведете нова фраза за търсене, която да се добави към историята."
+
+msgid "MENU → Enable/Disable reordering: same as GREEN (pick up/move/drop with OK, UP/DOWN)."
+msgstr "MENU → Включване/изключване на пренареждането: същото като ЗЕЛЕН (вземане/преместване/пускане с OK, НАГОРЕ/НАДОЛУ)."
+
+msgid "MENU → Fix/Unfix jump target: sets what happens when an entry is reused elsewhere."
+msgstr "MENU → Фиксиране/освобождаване на целта на прехода: определя какво се случва, когато запис се използва повторно на друго място."
+
+msgid "MENU → Reset to saved order: undo unsaved changes, reload from disk."
+msgstr "MENU → Връщане към запазения ред: отменя незапазените промени и презарежда от диска."
+
+msgid "MENU → Sort A-Z / Sort Z-A: sort all entries alphabetically."
+msgstr "MENU → Сортиране A-Z / Сортиране Z-A: сортира всички записи по азбучен ред."
+
+msgid "MENU=Options"
+msgstr "MENU=Опции"
+
+#, python-format
+msgid "MOVE: %s"
+msgstr "ПРЕМЕСТВАНЕ: %s"
+
+msgid "MOVING"
+msgstr "ПРЕМЕСТВАНЕ"
+
+msgid "MP3Quran live radio"
+msgstr "MP3Quran радио на живо"
+
+msgid "Main"
+msgstr "Основно"
+
+msgid "Main menu"
+msgstr "Главно меню"
+
+#, python-format
+msgid "Make directory [%s]"
+msgstr "Създаване на директория [%s]"
+
+msgid "Manager status:"
+msgstr "Състояние на мениджъра:"
+
+msgid "Mark downloaded items"
+msgstr "Маркиране на изтеглените записи"
+
+msgid "Mark favourite items"
+msgstr "Маркиране на любимите записи"
+
+msgid "Match cuts"
+msgstr "Откъси от мачове"
+
+msgid "Match not started yet"
+msgstr "Мачът още не е започнал"
+
+msgid "Matches of the national teams"
+msgstr "Мачове на националните отбори"
+
+msgid "Matching entries"
+msgstr "Съвпадащи записи"
+
+msgid "Max items per page"
+msgstr "Макс. брой записи на страница"
+
+msgid "Max number of parallel downloads has been reached."
+msgstr "Достигнат е максималният брой паралелни изтегляния."
+
+msgid "Maximum log file size"
+msgstr "Максимален размер на лог файла"
+
+msgid "Medtryx Marketing"
+msgstr "Medtryx Marketing"
+
+msgid "Meetings"
+msgstr "Срещи"
+
+msgid "Members"
+msgstr "Членове"
+
+msgid "Menu"
+msgstr "Меню"
+
+msgid "Military"
+msgstr "Военни"
+
+msgid "Mini series"
+msgstr "Минисериали"
+
+msgid "Missed"
+msgstr "Пропуснати"
+
+msgid "Missed the show?"
+msgstr "Пропуснахте предаването?"
+
+msgid "Missing API key - set it in Settings, Web streams, Windy Webcams"
+msgstr "Липсва API ключ - задайте го в Настройки, Web streams, Windy Webcams"
+
+msgid "Mix"
+msgstr "Микс"
+
+msgid "MixDrop: this file is not available as a video stream (deleted or download only)."
+msgstr "MixDrop: този файл не е наличен като видео поток (изтрит или само за изтегляне)."
+
+msgid "Mixes"
+msgstr "Миксове"
+
+msgid "Models"
+msgstr "Модели"
+
+msgid "More"
+msgstr "Още"
+
+msgid "More Categories"
+msgstr "Още категории"
+
+msgid "More Channels"
+msgstr "Още канали"
+
+msgid "More Models"
+msgstr "Още модели"
+
+msgid "More Pornstars"
+msgstr "Още порнозвезди"
+
+msgid "More important"
+msgstr "По-важни"
+
+msgid "More results"
+msgstr "Още резултати"
+
+msgid "Most Popular"
+msgstr "Най-популярни"
+
+msgid "Most Watched"
+msgstr "Най-гледани"
+
+msgid "Most commented"
+msgstr "Най-коментирани"
+
+msgid "Most discussed"
+msgstr "Най-обсъждани"
+
+msgid "Most favourited"
+msgstr "Най-често добавяни в любими"
+
+msgid "Most listened anasheed"
+msgstr "Най-слушани нашиди"
+
+msgid "Most listened recitations"
+msgstr "Най-слушани рецитации"
+
+msgid "Most popular"
+msgstr "Най-популярни"
+
+msgid "Most rated"
+msgstr "Най-оценявани"
+
+msgid "Most recent"
+msgstr "Най-нови"
+
+msgid "Most viewed"
+msgstr "Най-гледани"
+
+msgid "Most viewed movies"
+msgstr "Най-гледани филми"
+
+msgid "Most viewed series"
+msgstr "Най-гледани сериали"
+
+#, python-format
+msgid ""
+"Mount ISO file [%s] on [%s] failed.\n"
+"Return code[%s].\n"
+"Return data[%s]."
+msgstr ""
+"Монтирането на ISO файла [%s] в [%s] е неуспешно.\n"
+"Код на връщане[%s].\n"
+"Върнати данни[%s]."
+
+msgid "Move"
+msgstr "Преместване"
+
+msgid "Move failed."
+msgstr "Преместването е неуспешно."
+
+msgid "Movie"
+msgstr "Филм"
+
+msgid "Movie collections"
+msgstr "Филмови колекции"
+
+msgid "Movie player selection list"
+msgstr "Списък за избор на плейър"
+
+msgid "Movies"
+msgstr "Филми"
+
+msgid "Movies and series"
+msgstr "Филми и сериали"
+
+msgid "Movies genres"
+msgstr "Филмови жанрове"
+
+#, python-format
+msgid "Moving file from \"%s\" to \"%s\" failed.\n"
+msgstr "Преместването на файла от \"%s\" в \"%s\" е неуспешно.\n"
+
+#, python-format
+msgid "Moving playback buffer to the download manager failed with the following error \"%s\""
+msgstr "Преместването на буфера за възпроизвеждане в мениджъра на изтеглянията е неуспешно поради следната грешка \"%s\""
+
+msgid "Munshids"
+msgstr "Муншиди"
+
+msgid "Music"
+msgstr "Музика"
+
+msgid "My JDownloader reCAPTCHA v2 solution"
+msgstr "Решение на reCAPTCHA v2 чрез My JDownloader"
+
+msgid "My list"
+msgstr "Моят списък"
+
+msgid "My subscriptions"
+msgstr "Моите абонаменти"
+
+msgid "MyE2i (solve on your phone/PC)"
+msgstr "MyE2i (решете на телефона/компютъра)"
+
+msgid "MyE2i - how to solve a captcha"
+msgstr "MyE2i - как да решите captcha"
+
+msgid "MyE2i Cloudflare solution"
+msgstr "Решение на Cloudflare чрез MyE2i"
+
+msgid "MyE2i browser check solution"
+msgstr "Решение на проверката на браузъра чрез MyE2i"
+
+msgid "MyE2i debug snapshot received - see the debug log."
+msgstr "Получена е дебъг снимка от MyE2i - вижте дебъг лога."
+
+msgid "MyE2i extension is outdated - please update it."
+msgstr "Разширението MyE2i е остаряло - моля, актуализирайте го."
+
+msgid "MyE2i extension: increase security"
+msgstr "Разширение MyE2i: повишаване на сигурността"
+
+msgid "MyE2i reCAPTCHA solution"
+msgstr "Решение на reCAPTCHA чрез MyE2i"
+
+#, python-format
+msgid ""
+"MyE2i script execution failed.\n"
+"Error code: %s\n"
+msgstr ""
+"Изпълнението на скрипта на MyE2i е неуспешно.\n"
+"Код на грешката: %s\n"
+
+msgid "MyE2i script finished."
+msgstr "Скриптът на MyE2i приключи."
+
+msgid "MyE2i: close the start page when done"
+msgstr "MyE2i: затваряне на началната страница след приключване"
+
+msgid "MyE2i: offer to open the page in (Android)"
+msgstr "MyE2i: предлагане на отваряне на страницата в (Android)"
+
+msgid ""
+"NO VIDEOS FOUND FOR NOW! \n"
+"CHECK BELOW ADVANCE SEARCH RESULTS!"
+msgstr ""
+"ЗАСЕГА НЕ СА НАМЕРЕНИ ВИДЕА! \n"
+"ВИЖТЕ РЕЗУЛТАТИТЕ ОТ РАЗШИРЕНОТО ТЪРСЕНЕ ПО-ДОЛУ!"
+
+msgid "Name cannot be empty."
+msgstr "Името не може да бъде празно."
+
+msgid ""
+"Name is not valid.\n"
+"Please remove special characters."
+msgstr ""
+"Името е невалидно.\n"
+"Моля, премахнете специалните символи."
+
+msgid "Name:"
+msgstr "Име:"
+
+msgid "Needs extension v1.18+. Opens the page in this browser, waits until it is fully rendered (Cloudflare challenge included, solve it if it shows up) and sends the rendered HTML, the fetch/XHR calls and the cookie names to the box debug log."
+msgstr "Изисква разширение v1.18+. Отваря страницата в този браузър, изчаква пълното ѝ изобразяване (включително проверката на Cloudflare - решете я, ако се появи) и изпраща изобразения HTML, извикванията fetch/XHR и имената на бисквитките в дебъг лога на приемника."
+
+msgid "Netflix movies"
+msgstr "Netflix филми"
+
+msgid "Netflix series"
+msgstr "Netflix сериали"
+
+msgid "Network"
+msgstr "ТВ мрежа"
+
+#, python-format
+msgid "Network failed %s."
+msgstr "Мрежова грешка %s."
+
+msgid "Network failure (receive)."
+msgstr "Мрежова грешка (получаване)."
+
+msgid "Network failure (send)."
+msgstr "Мрежова грешка (изпращане)."
+
+msgid "Network failure."
+msgstr "Мрежова грешка."
+
+msgid "New"
+msgstr "Нови"
+
+msgid "New dir"
+msgstr "Нова директория"
+
+msgid "New entry"
+msgstr "Нов запис"
+
+msgid "New episodes"
+msgstr "Нови епизоди"
+
+msgid "New icons will not be available."
+msgstr "Новите икони няма да бъдат налични."
+
+msgid "New links"
+msgstr "Нови връзки"
+
+msgid "New since installed version"
+msgstr "Ново спрямо инсталираната версия"
+
+msgid "Newest Episodes"
+msgstr "Най-нови епизоди"
+
+msgid "Newest videos (all YouTube channels)"
+msgstr "Най-нови видеа (всички YouTube канали)"
+
+msgid "Newest videos of a YouTube channel in a group"
+msgstr "Най-нови видеа на YouTube канал в група"
+
+msgid "News"
+msgstr "Новини"
+
+msgid "News (tagesschau)"
+msgstr "Новини (tagesschau)"
+
+msgid "News Poland"
+msgstr "Новини Полша"
+
+msgid "Next"
+msgstr "Следваща"
+
+msgid "Next page"
+msgstr "Следваща страница"
+
+msgid "No"
+msgstr "Не"
+
+msgid "No YouTube video found for this track."
+msgstr "Не е намерено YouTube видео за тази песен."
+
+msgid "No channels with an archive on this portal."
+msgstr "Няма канали с архив в този портал."
+
+msgid "No description available."
+msgstr "Няма налично описание."
+
+msgid "No episodes available yet."
+msgstr "Все още няма налични епизоди."
+
+msgid "No episodes found."
+msgstr "Не са намерени епизоди."
+
+msgid "No free player available for this title."
+msgstr "Няма наличен безплатен плейър за това заглавие."
+
+msgid "No free videos or live streams here at the moment."
+msgstr "В момента тук няма безплатни видеа или потоци на живо."
+
+msgid "No host is open."
+msgstr "Няма отворен хост."
+
+msgid ""
+"No item to display. \n"
+"Press OK to refresh.\n"
+msgstr ""
+"Няма записи за показване. \n"
+"Натиснете OK за опресняване.\n"
+
+msgid "No items found"
+msgstr "Не са намерени записи"
+
+msgid "No matching entries found."
+msgstr "Не са намерени съвпадащи записи."
+
+msgid "No player found for this title."
+msgstr "Не е намерен плейър за това заглавие."
+
+msgid "No problems occurred."
+msgstr "Не са възникнали проблеми."
+
+msgid "No programme guide for this channel."
+msgstr "Няма програмен справочник за този канал."
+
+msgid "No recorded programmes on this day."
+msgstr "Няма записани предавания за този ден."
+
+msgid "No replays in these days"
+msgstr "Няма записи през тези дни"
+
+#, python-format
+msgid "No results found for: %s"
+msgstr "Няма намерени резултати за: %s"
+
+msgid "No self-test result yet."
+msgstr "Все още няма резултат от самотеста."
+
+msgid "No storage found for the cache folder. The cache folder will be switched to the plugin's own cache directory."
+msgstr "Не е намерено хранилище за папката за кеш. Папката за кеш ще бъде превключена към собствената кеш директория на плъгина."
+
+msgid "No storage found for the downloads location. Where would you like to save your downloads?"
+msgstr "Не е намерено хранилище за мястото на изтеглянията. Къде желаете да запазвате изтеглянията си?"
+
+msgid "No stream available"
+msgstr "Няма наличен поток"
+
+msgid "No streams are available for this title yet."
+msgstr "Все още няма налични потоци за това заглавие."
+
+msgid "No subtitle file found in the archive."
+msgstr "В архива не е намерен файл със субтитри."
+
+msgid "No subtitles available for this title."
+msgstr "Няма налични субтитри за това заглавие."
+
+msgid "No subtitles found."
+msgstr "Не са намерени субтитри."
+
+#, python-format
+msgid "No subtitles in %s. Available: %s"
+msgstr "Няма субтитри на %s. Налични: %s"
+
+msgid "No title to search for."
+msgstr "Няма заглавие за търсене."
+
+msgid "No valid entitlement found for asset."
+msgstr "Не е намерено валидно право на достъп за този материал."
+
+msgid "No valid links available."
+msgstr "Няма налични валидни връзки."
+
+msgid "No video ID available"
+msgstr "Няма наличен ID на видеото"
+
+msgid "None"
+msgstr "Няма"
+
+msgid "Normalize item / file names (Show - SxxExx - Title)"
+msgstr "Нормализиране на имената на елементи / файлове (Сериал - SxxExx - Заглавие)"
+
+msgid "Not available in your country (geo-blocking)."
+msgstr "Не е налично във вашата държава (географско ограничение)."
+
+msgid "Not available yet"
+msgstr "Все още не е налично"
+
+msgid "Not possible (no enigma2 session)."
+msgstr "Не е възможно (няма enigma2 сесия)."
+
+msgid "Nothing available here at the moment (only upcoming broadcasts)."
+msgstr "В момента тук няма нищо налично (само предстоящи предавания)."
+
+msgid "Nothing found on subdl.com."
+msgstr "Нищо не е намерено в subdl.com."
+
+msgid "Nothing found. This site only finds Russian (Cyrillic) search terms."
+msgstr "Нищо не е намерено. Този сайт намира само руски (кирилски) думи за търсене."
+
+msgid "Nothing open"
+msgstr "Нищо не е отворено"
+
+msgid "Nothing to save - the debug log is not active."
+msgstr "Няма какво да се запише - дебъг логът не е активен."
+
+msgid "Now"
+msgstr "Сега"
+
+msgid "Number of columns"
+msgstr "Брой колони"
+
+msgid "Number of downloaded files simultaneously"
+msgstr "Брой едновременни изтегляния"
+
+#, python-format
+msgid "Number of items in search history: %d"
+msgstr "Брой записи в историята на търсенето: %d"
+
+msgid "Number of rotated files to keep"
+msgstr "Брой запазени ротирани файлове"
+
+msgid "Number of rows"
+msgstr "Брой редове"
+
+msgid "Numeric keypad for numbers"
+msgstr "Цифрова клавиатура за числа"
+
+msgid "OFFLINE"
+msgstr "OFFLINE"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "OMDb API key (free at omdbapi.com)"
+msgstr "OMDb API ключ (безплатен от omdbapi.com)"
+
+msgid "Off"
+msgstr "Изкл."
+
+msgid "Offline channels"
+msgstr "Офлайн канали"
+
+msgid "Older days"
+msgstr "По-стари дни"
+
+msgid "Older replays"
+msgstr "По-стари записи"
+
+msgid "On Air"
+msgstr "В ефир"
+
+msgid "One link mode"
+msgstr "Режим с една връзка"
+
+#, python-format
+msgid "Only available in %s"
+msgstr "Налично само в %s"
+
+msgid "Only files in the downloads folder can be deleted."
+msgstr "Могат да се изтриват само файлове в папката за изтегляния."
+
+msgid "Only links can be moved to a group."
+msgstr "Само връзки могат да се преместват в група."
+
+#, python-format
+msgid "Only the %d oldest new commits are shown"
+msgstr "Показват се само %d-те най-стари нови commit-а"
+
+msgid "Only the sites that failed in the last run, same checks."
+msgstr "Само сайтовете, които са се провалили при последното изпълнение, със същите проверки."
+
+#, python-format
+msgid "Only unsupported hosters available: %s"
+msgstr "Налични са само неподдържани хостери: %s"
+
+msgid "Open issues"
+msgstr "Отворени issues"
+
+msgid "Open pull requests"
+msgstr "Отворени pull заявки"
+
+#, python-format
+msgid "Open this page in %s"
+msgstr "Отваряне на тази страница в %s"
+
+msgid "Open this page in the chosen browser"
+msgstr "Отваряне на тази страница в избрания браузър"
+
+#, python-format
+msgid "OpenSubtitles.com login failed for user \"%s\". Please check your login and password."
+msgstr "Влизането в OpenSubtitles.com за потребител \"%s\" е неуспешно. Моля, проверете потребителското име и паролата."
+
+msgid "OpenSubtitles.com needs an API key. Create a free API consumer at https://www.opensubtitles.com/consumers and enter its key in the E2iPlayer settings (Subtitles)."
+msgstr "OpenSubtitles.com изисква API ключ. Създайте безплатен API consumer на https://www.opensubtitles.com/consumers и въведете ключа му в настройките на E2iPlayer (Субтитри)."
+
+#, python-format
+msgid "OpenSubtitles.com rejected the request (HTTP %s). Please check the API key in the E2iPlayer settings."
+msgstr "OpenSubtitles.com отхвърли заявката (HTTP %s). Моля, проверете API ключа в настройките на E2iPlayer."
+
+msgid "OpenSubtitles.org sent a \"become VIP member\" note instead of the subtitle (download limit reached?)."
+msgstr "OpenSubtitles.org изпрати съобщение \"станете VIP член\" вместо субтитрите (достигнат лимит за изтегляне?)."
+
+msgid "Opening. Please wait..."
+msgstr "Отваряне. Моля, изчакайте..."
+
+msgid "Operation aborted!"
+msgstr "Операцията е прекъсната!"
+
+msgid "Operation timed out."
+msgstr "Времето за изчакване изтече."
+
+msgid "Options"
+msgstr "Опции"
+
+msgid "Options (select language, clear search history, settings)"
+msgstr "Опции (избор на език, изчистване на историята на търсенето, настройки)"
+
+msgid "Order of user links:"
+msgstr "Ред на потребителските връзки:"
+
+msgid "Order stays fixed - useful for T9 browsing."
+msgstr "Редът остава непроменен - полезно при прелистване с T9."
+
+msgid "Original Title:"
+msgstr "Оригинално заглавие:"
+
+#, python-format
+msgid "Original language: %s"
+msgstr "Оригинален език: %s"
+
+msgid "Original title"
+msgstr "Оригинално заглавие"
+
+msgid "Original version"
+msgstr "Оригинална версия"
+
+msgid "Other"
+msgstr "Друго"
+
+msgid "Other dramas (Chinese, Thai, ...)"
+msgstr "Други драми (китайски, тайландски, ...)"
+
+msgid "Other films"
+msgstr "Други филми"
+
+msgid "Other seasons"
+msgstr "Други сезони"
+
+msgid "Others"
+msgstr "Други"
+
+msgid "Out of memory."
+msgstr "Недостатъчно памет."
+
+msgid "Own launcher URI"
+msgstr "Собствен URI за стартиране"
+
+msgid "Own model"
+msgstr "Собствен модел"
+
+msgid "PAGE UP/PAGE DOWN"
+msgstr "СТРАНИЦА НАГОРЕ/СТРАНИЦА НАДОЛУ"
+
+msgid "PAY"
+msgstr "PAY"
+
+msgid "PENDING"
+msgstr "ИЗЧАКВАЩО"
+
+msgid "PLAY"
+msgstr "PLAY"
+
+msgid "PREVIOUS/NEXT"
+msgstr "ПРЕДИШНО/СЛЕДВАЩО"
+
+#, python-format
+msgid "PRIVATE - wait %s seconds"
+msgstr "ЧАСТНО - изчакайте %s секунди"
+
+msgid "PRIVATE - wait a few seconds"
+msgstr "ЧАСТНО - изчакайте няколко секунди"
+
+msgid "Page not found - please check the address."
+msgstr "Страницата не е намерена - моля, проверете адреса."
+
+msgid "Page:"
+msgstr "Страница:"
+
+msgid "Paid content"
+msgstr "Платено съдържание"
+
+msgid "Parse error."
+msgstr "Грешка при анализ."
+
+msgid "Part"
+msgstr "Част"
+
+msgid "Partial file - transfer ended early."
+msgstr "Непълен файл - прехвърлянето приключи преждевременно."
+
+msgid "Password:"
+msgstr "Парола:"
+
+msgid "Past premieres"
+msgstr "Минали премиери"
+
+#, python-format
+msgid "Paste \"%s\""
+msgstr "Поставяне на \"%s\""
+
+msgid "Path to xxxlist.txt :"
+msgstr "Път до xxxlist.txt :"
+
+msgid "Path to ytlist.txt, urllist.txt"
+msgstr "Път до ytlist.txt, urllist.txt"
+
+msgid "Pathology"
+msgstr "Патология"
+
+msgid "Pathology Rounds"
+msgstr "Патологични визитации"
+
+msgid "Patriotism"
+msgstr "Патриотизъм"
+
+msgid "Pediatrics"
+msgstr "Педиатрия"
+
+msgid "People"
+msgstr "Хора"
+
+msgid "Persons"
+msgstr "Личности"
+
+msgid "Philosophy"
+msgstr "Философия"
+
+msgid "Physical Exam"
+msgstr "Физикален преглед"
+
+msgid "Pin has been changed."
+msgstr "ПИН кодът е променен."
+
+msgid "Pin incorrect!"
+msgstr "Грешен ПИН код!"
+
+msgid "Pin protection for configuration"
+msgstr "Защита с ПИН код за конфигурацията"
+
+msgid "Pin protection for plugin"
+msgstr "Защита с ПИН код за плъгина"
+
+msgid "Pin protection for this host"
+msgstr "Защита с ПИН код за този хост"
+
+#, python-format
+msgid "Play with [%s] player"
+msgstr "Възпроизвеждане с плейър [%s]"
+
+msgid "Playback UHD :"
+msgstr "Възпроизвеждане UHD :"
+
+#, python-format
+msgid "Player %s"
+msgstr "Плейър %s"
+
+#, python-format
+msgid "Player %s: %s"
+msgstr "Плейър %s: %s"
+
+msgid "Player Skin"
+msgstr "Скин на плейъра"
+
+msgid "Player data parsing error."
+msgstr "Грешка при анализ на данните на плейъра."
+
+msgid "Playing on the TV is not possible (no enigma2 session)."
+msgstr "Възпроизвеждането на телевизора не е възможно (няма enigma2 сесия)."
+
+msgid "Playlist"
+msgstr "Плейлист"
+
+msgid "Playlists"
+msgstr "Плейлисти"
+
+msgid "Plays"
+msgstr "Пиеси"
+
+#, python-brace-format
+msgid ""
+"Please Open site:\n"
+"http://{0}:{1}\n"
+"in a web browser with the MyE2i extension installed"
+msgstr ""
+"Моля, отворете сайта:\n"
+"http://{0}:{1}\n"
+"в уеб браузър с инсталирано разширение MyE2i"
+
+msgid "Please configure Xtream (blue button)"
+msgstr "Моля, конфигурирайте Xtream (син бутон)"
+
+msgid "Please configure the Stalker portal (blue button)"
+msgstr "Моля, конфигурирайте Stalker портала (син бутон)"
+
+#, python-format
+msgid "Please consider restart your Engima2 and agree to install the %s utlity when the %s will propose this."
+msgstr "Моля, рестартирайте Enigma2 и се съгласете да инсталирате помощната програма %s, когато %s предложи това."
+
+msgid "Please enter a search text."
+msgstr "Моля, въведете текст за търсене."
+
+msgid "Please enter a valid link (http:// or https://)."
+msgstr "Моля, въведете валидна връзка (http:// или https://)."
+
+#, python-format
+msgid "Please enter the %s login and password in the E2iPlayer settings (Captcha)."
+msgstr "Моля, въведете потребителско име и парола за %s в настройките на E2iPlayer (Captcha)."
+
+msgid "Please make sure that the folder for cache data (set in the configuration) is writable."
+msgstr "Моля, уверете се, че папката за кеш данни (зададена в конфигурацията) е с права за запис."
+
+msgid "Please register and set login and password in the host configuration, to solve this problems permanently."
+msgstr "Моля, регистрирайте се и задайте потребителско име и парола в конфигурацията на хоста, за да решите тези проблеми окончателно."
+
+msgid "Please select a group of favourites."
+msgstr "Моля, изберете група любими."
+
+msgid "Please select an entry."
+msgstr "Моля, изберете запис."
+
+msgid "Please select the link first."
+msgstr "Моля, първо изберете връзката."
+
+#, python-format
+msgid "Please set valid %s in the %s configuration."
+msgstr "Моля, задайте валиден %s в конфигурацията на %s."
+
+msgid "Please solve to continue downloads with:"
+msgstr "Моля, решете, за да продължите изтеглянията с:"
+
+#, python-format
+msgid "Please visit \"%s\" and confirm that you are human."
+msgstr "Моля, посетете \"%s\" и потвърдете, че сте човек."
+
+#, python-format
+msgid "Please visit %s to learn how to redirect this task to the external device."
+msgstr "Моля, посетете %s, за да научите как да пренасочите тази задача към външното устройство."
+
+msgid "Please wait - downloading initialization data."
+msgstr "Моля, изчакайте - изтегляне на данни за инициализация."
+
+msgid "Please wait for initialization data."
+msgstr "Моля, изчакайте данните за инициализация."
+
+msgid "Please wait, the previous action is still running."
+msgstr "Моля, изчакайте, предишното действие все още се изпълнява."
+
+msgid "Please wait..."
+msgstr "Моля, изчакайте..."
+
+msgid "Podcasts"
+msgstr "Подкасти"
+
+msgid "Podcasts by category"
+msgstr "Подкасти по категория"
+
+msgid "Podcasts by station"
+msgstr "Подкасти по станция"
+
+msgid "Poland"
+msgstr "Полша"
+
+msgid "Polish"
+msgstr "Полски"
+
+msgid "Polish dubbing"
+msgstr "Полски дублаж"
+
+msgid "Polish films"
+msgstr "Полски филми"
+
+msgid "Polish subtitles"
+msgstr "Полски субтитри"
+
+msgid "Polish voice-over"
+msgstr "Полско озвучаване"
+
+msgid "Politics"
+msgstr "Политика"
+
+msgid "Popular"
+msgstr "Популярни"
+
+msgid "Popular episodes"
+msgstr "Популярни епизоди"
+
+msgid "Popular movies"
+msgstr "Популярни филми"
+
+msgid "Popular series"
+msgstr "Популярни сериали"
+
+msgid "Popular sports"
+msgstr "Популярни спортове"
+
+msgid "Popularity"
+msgstr "Популярност"
+
+msgid "Pornstars"
+msgstr "Порнозвезди"
+
+#, python-format
+msgid "Portal %d - %s (optional, from the MAG box):"
+msgstr "Портал %d - %s (по избор, от MAG приемника):"
+
+#, python-format
+msgid "Portal %d - MAC address (00:1A:79:...):"
+msgstr "Портал %d - MAC адрес (00:1A:79:...):"
+
+#, python-format
+msgid "Portal %d - name (optional):"
+msgstr "Портал %d - име (по избор):"
+
+#, python-format
+msgid "Portal %d - portal URL (http://host:port/c/):"
+msgstr "Портал %d - URL на портала (http://host:port/c/):"
+
+#, python-format
+msgid "Portal URL and MAC address in the host configuration, as the provider gives them out. More portals: %s in the EStalker format (portal URL, then its MAC addresses, one per line)."
+msgstr "URL на портала и MAC адрес в конфигурацията на хоста, както ги предоставя доставчикът. Още портали: %s във формат EStalker (URL на портала, след това неговите MAC адреси, по един на ред)."
+
+msgid "Portuguese"
+msgstr "Португалски"
+
+msgid "Powerpoint Presentation"
+msgstr "Презентация PowerPoint"
+
+msgid "Practice Management"
+msgstr "Управление на практиката"
+
+msgid "Prefer MP4 over HLS:"
+msgstr "Предпочитане на MP4 пред HLS:"
+
+msgid "Prefered format"
+msgstr "Предпочитан формат"
+
+msgid "Prefered quality"
+msgstr "Предпочитано качество"
+
+msgid "Preferred streaming protocol"
+msgstr "Предпочитан протокол за стрийминг"
+
+msgid "Preferred video quality:"
+msgstr "Предпочитано качество на видеото:"
+
+msgid "Premium"
+msgstr "Premium"
+
+msgid "Premium user"
+msgstr "Premium потребител"
+
+msgid "Previous Page"
+msgstr "Предишна страница"
+
+msgid "Previous days"
+msgstr "Предишни дни"
+
+msgid "Price:"
+msgstr "Цена:"
+
+msgid "Pro wrestling"
+msgstr "Професионална борба"
+
+msgid "Production:"
+msgstr "Продукция:"
+
+msgid "Professional Networks"
+msgstr "Професионални мрежи"
+
+msgid "Professionals"
+msgstr "Професионалисти"
+
+msgid "Program"
+msgstr "Програма"
+
+msgid "Program A-Z"
+msgstr "Предавания A-Z"
+
+msgid "Program for file downloads (HTTP/FTP)"
+msgstr "Програма за изтегляне на файлове (HTTP/FTP)"
+
+msgid "Programme archive (last 7 days)"
+msgstr "Архив на предаванията (последните 7 дни)"
+
+msgid "Programme archive:"
+msgstr "Архив на предаванията:"
+
+msgid "Programmes"
+msgstr "Предавания"
+
+msgid "Programmes of the last days of the channels with an archive"
+msgstr "Предавания от последните дни на каналите с архив"
+
+msgid "Promote item"
+msgstr "Преместване на записа напред"
+
+msgid "Protocol errors."
+msgstr "Грешки в протокола."
+
+msgid "Published"
+msgstr "Публикувано"
+
+msgid "Python modules"
+msgstr "Python модули"
+
+msgid "Python was not found on the receiver."
+msgstr "Python не е намерен на приемника."
+
+msgid "Quality"
+msgstr "Качество"
+
+msgid "Quality:"
+msgstr "Качество:"
+
+msgid "Quick test: menu and a list with videos"
+msgstr "Бърз тест: меню и списък с видеа"
+
+msgid "RAM buffer size [MB] for local files"
+msgstr "Размер на RAM буфера [MB] за локални файлове"
+
+msgid "RAM buffer size [MB] for network protocols"
+msgstr "Размер на RAM буфера [MB] за мрежови протоколи"
+
+msgid "RED"
+msgstr "ЧЕРВЕН"
+
+msgid "REWIND"
+msgstr "ПРЕВЪРТАНЕ НАЗАД"
+
+msgid "Radio"
+msgstr "Радио"
+
+msgid "Radio iframe file"
+msgstr "Iframe файл за радио"
+
+msgid "Radio station - live stream"
+msgstr "Радиостанция - поток на живо"
+
+msgid "Radio stations"
+msgstr "Радиостанции"
+
+msgid "Radiology Rounds"
+msgstr "Радиологични визитации"
+
+msgid "Ramadan"
+msgstr "Рамадан"
+
+msgid "Ramadan series"
+msgstr "Рамаданови сериали"
+
+msgid "Random"
+msgstr "Случайно"
+
+msgid "Random selection"
+msgstr "Случаен избор"
+
+msgid "Randomize a playlist"
+msgstr "Разбъркване на плейлист"
+
+msgid "Range request not supported (resume failed)."
+msgstr "Заявката за диапазон (Range) не се поддържа (продължаването е неуспешно)."
+
+msgid "Ranking"
+msgstr "Класиране"
+
+msgid "Rated"
+msgstr "Възрастова категория"
+
+msgid "Rated:"
+msgstr "Възрастова категория:"
+
+msgid "Rating"
+msgstr "Оценка"
+
+#, python-format
+msgid "Rating %s"
+msgstr "Оценка %s"
+
+msgid "Rating:"
+msgstr "Оценка:"
+
+#, python-format
+msgid "Rating: %s"
+msgstr "Оценка: %s"
+
+msgid "Read by"
+msgstr "Чете"
+
+msgid "Read error."
+msgstr "Грешка при четене."
+
+msgid "Reading binaries..."
+msgstr "Четене на двоични файлове..."
+
+msgid "Reading..."
+msgstr "Четене..."
+
+msgid "Recent"
+msgstr "Последни"
+
+msgid "Recently added"
+msgstr "Наскоро добавени"
+
+msgid "Reciters"
+msgstr "Рецитатори"
+
+msgid "Recommended"
+msgstr "Препоръчани"
+
+msgid "Recon"
+msgstr "Реконструкция"
+
+msgid "Referee"
+msgstr "Съдия"
+
+msgid "Refresh"
+msgstr "Опресняване"
+
+msgid "Refreshing"
+msgstr "Опресняване"
+
+#, python-format
+msgid "Refusing to empty \"%s\" - it also holds \"%s\" (downloads, buffering, cache or config folder). Check the folder paths in the storage configuration."
+msgstr "Отказ за изпразване на \"%s\" - в нея се намира и \"%s\" (папка за изтегляния, буфериране, кеш или конфигурация). Проверете пътищата на папките в конфигурацията на хранилището."
+
+#, python-format
+msgid "Refusing to empty \"%s\" - this does not look like a dedicated cache/config folder. Check the folder paths in the storage configuration."
+msgstr "Отказ за изпразване на \"%s\" - това не изглежда като отделна папка за кеш/конфигурация. Проверете пътищата на папките в конфигурацията на хранилището."
+
+msgid "Regions"
+msgstr "Региони"
+
+msgid "Release"
+msgstr "Издание"
+
+msgid "Released"
+msgstr "Издадено"
+
+msgid "Released:"
+msgstr "Издадено:"
+
+msgid "Releases"
+msgstr "Издания"
+
+msgid "Relevance"
+msgstr "Релевантност"
+
+msgid "Religion"
+msgstr "Религия"
+
+msgid "Remaining:"
+msgstr "Оставащо:"
+
+msgid "Remember a host's pin until E2iPlayer is closed"
+msgstr "Запомняне на ПИН кода на хост, докато E2iPlayer не бъде затворен"
+
+msgid "Remember last search entry"
+msgstr "Запомняне на последния запис за търсене"
+
+msgid "Remember last search history selection"
+msgstr "Запомняне на последния избор от историята на търсенето"
+
+msgid "Remember last watched position"
+msgstr "Запомняне на последната гледана позиция"
+
+msgid "Remove"
+msgstr "Премахване"
+
+#, python-format
+msgid "Remove \"%s\" item"
+msgstr "Премахване на записа \"%s\""
+
+msgid "Remove file"
+msgstr "Изтриване на файла"
+
+msgid "Remove from favorites"
+msgstr "Премахване от любими"
+
+msgid "Remove group"
+msgstr "Премахване на групата"
+
+msgid "Remove item"
+msgstr "Премахване на записа"
+
+msgid "Remove thumbnails"
+msgstr "Изтриване на миниатюрите"
+
+msgid "Rename"
+msgstr "Преименуване"
+
+msgid "Rename file"
+msgstr "Преименуване на файла"
+
+msgid "Reordering: UP/DOWN moves the row, OK saves, EXIT cancels."
+msgstr "Пренареждане: НАГОРЕ/НАДОЛУ премества реда, OK запазва, EXIT отказва."
+
+msgid "Replay"
+msgstr "Запис"
+
+msgid "Replays & highlights"
+msgstr "Записи и акценти"
+
+msgid "Report a problem (GitHub issues)"
+msgstr "Докладване на проблем (GitHub issues)"
+
+msgid "Report file"
+msgstr "Файл с отчет"
+
+msgid "Reset this list to its default layout?"
+msgstr "Да се върне ли този списък към подредбата по подразбиране?"
+
+msgid "Reset to defaults"
+msgstr "Връщане към стойностите по подразбиране"
+
+msgid "Reset to saved order"
+msgstr "Връщане към запазения ред"
+
+msgid "Reset web interface"
+msgstr "Нулиране на уеб интерфейса"
+
+#, python-format
+msgid ""
+"Resolving hCaptcha with %s failed!\n"
+"\n"
+msgstr ""
+"Решаването на hCaptcha с %s е неуспешно!\n"
+"\n"
+
+#, python-format
+msgid ""
+"Resolving reCaptcha with %s failed!\n"
+"\n"
+msgstr ""
+"Решаването на reCaptcha с %s е неуспешно!\n"
+"\n"
+
+msgid "Restart GUI"
+msgstr "Рестартиране на GUI"
+
+msgid "Reused entries move back to the top again."
+msgstr "Повторно използваните записи отново се преместват най-горе."
+
+msgid "Reverse a playlist"
+msgstr "Обръщане на плейлист"
+
+msgid "Reverting to unsorted order will discard unsaved changes. Continue?"
+msgstr "Връщането към несортиран ред ще отхвърли незапазените промени. Продължаване?"
+
+msgid "Right"
+msgstr "Дясно"
+
+msgid "Romance"
+msgstr "Романтика"
+
+msgid "Round"
+msgstr "Кръг"
+
+msgid "Runtime"
+msgstr "Продължителност"
+
+msgid "Russian"
+msgstr "Руски"
+
+msgid "SOME.PORN sorting by :"
+msgstr "SOME.PORN сортиране по :"
+
+msgid "SONGS"
+msgstr "ПЕСНИ"
+
+msgid "SSL connect error."
+msgstr "Грешка при SSL връзка."
+
+msgid "SSL verification failure."
+msgstr "Неуспешна SSL проверка."
+
+msgid "STARTED"
+msgstr "АКТИВЕН"
+
+msgid "STOPPED"
+msgstr "СПРЯН"
+
+msgid "Safe search (restricted mode):"
+msgstr "Безопасно търсене (ограничен режим):"
+
+msgid "Save"
+msgstr "Запазване"
+
+msgid "Save changes?"
+msgstr "Запазване на промените?"
+
+#, python-format
+msgid "Save subtitles (%s)"
+msgstr "Запазване на субтитрите (%s)"
+
+#, python-format
+msgid ""
+"Saved to:\n"
+"%s"
+msgstr ""
+"Запазено в:\n"
+"%s"
+
+msgid "Sci-Fi"
+msgstr "Научна фантастика"
+
+msgid "Sci-Fi & Fantasy"
+msgstr "Научна фантастика и фентъзи"
+
+msgid "Science"
+msgstr "Наука"
+
+msgid "Screensaver during audio playback"
+msgstr "Скрийнсейвър по време на аудио възпроизвеждане"
+
+msgid "Screensaver in E2iPlayer menus"
+msgstr "Скрийнсейвър в менютата на E2iPlayer"
+
+#, python-format
+msgid ""
+"Script execution failed.\n"
+"Error code: %s\n"
+msgstr ""
+"Изпълнението на скрипта е неуспешно.\n"
+"Код на грешка: %s\n"
+
+msgid "Script finished."
+msgstr "Скриптът приключи."
+
+msgid "Search"
+msgstr "Търсене"
+
+msgid "Search History is empty."
+msgstr "Историята на търсенето е празна."
+
+msgid "Search History successfully deleted."
+msgstr "Историята на търсенето е изтрита успешно."
+
+msgid "Search for an artist (exact name) or a Last.fm user"
+msgstr "Търсене на изпълнител (точно име) или потребител на Last.fm"
+
+msgid "Search history"
+msgstr "История на търсенето"
+
+msgid "Search history - options"
+msgstr "История на търсенето - опции"
+
+msgid "Search history is not available for this host."
+msgstr "Историята на търсенето не е налична за този хост."
+
+msgid "Search history saved."
+msgstr "Историята на търсенето е запазена."
+
+#, python-format
+msgid "Search history saved. %d duplicate entries removed."
+msgstr "Историята на търсенето е запазена. Премахнати дублирани записи: %d."
+
+msgid "Search in all active hosts"
+msgstr "Търсене във всички активни хостове"
+
+msgid "Search is not available right now."
+msgstr "Търсенето в момента не е налично."
+
+msgid "Search next page"
+msgstr "Търсене в следващата страница"
+
+msgid "Search results"
+msgstr "Резултати от търсенето"
+
+msgid "Search results region:"
+msgstr "Регион на резултатите от търсенето:"
+
+msgid "Search string must have at least 4 characters."
+msgstr "Текстът за търсене трябва да съдържа поне 4 знака."
+
+msgid "Search term :"
+msgstr "Дума за търсене :"
+
+msgid "Search text"
+msgstr "Текст за търсене"
+
+msgid "Search type"
+msgstr "Вид търсене"
+
+msgid "Search: "
+msgstr "Търсене: "
+
+#, python-format
+msgid "Search: %d of %d - now %s (%d found so far)"
+msgstr "Търсене: %d от %d - сега %s (намерени досега: %d)"
+
+#, python-format
+msgid "Searching subtitles for \"%s\""
+msgstr "Търсене на субтитри за \"%s\""
+
+msgid "Season"
+msgstr "Сезон"
+
+#, python-format
+msgid "Season %d"
+msgstr "Сезон %d"
+
+#, python-format
+msgid "Season %d (%d episodes)"
+msgstr "Сезон %d (%d епизода)"
+
+#, python-format
+msgid "Season %s"
+msgstr "Сезон %s"
+
+msgid "Seasons"
+msgstr "Сезони"
+
+msgid "Seasons:"
+msgstr "Сезони:"
+
+#, python-format
+msgid "Seasons: %s"
+msgstr "Сезони: %s"
+
+msgid "Second movie player in buffering mode"
+msgstr "Втори плейър в режим с буфериране"
+
+msgid "Second movie player without buffering mode"
+msgstr "Втори плейър без режим с буфериране"
+
+msgid "Section"
+msgstr "Раздел"
+
+msgid "Sections"
+msgstr "Рубрики"
+
+#, python-format
+msgid "Select %s"
+msgstr "Изберете %s"
+
+msgid "Select action"
+msgstr "Изберете действие"
+
+msgid "Select audio track"
+msgstr "Изберете аудио писта"
+
+msgid "Select best available quality"
+msgstr "Избор на най-доброто налично качество"
+
+msgid "Select directory"
+msgstr "Изберете директория"
+
+msgid "Select favorite group"
+msgstr "Изберете група любими"
+
+msgid "Select group"
+msgstr "Изберете група"
+
+msgid "Select language"
+msgstr "Изберете език"
+
+msgid "Select link"
+msgstr "Изберете връзка"
+
+msgid "Select movie player"
+msgstr "Изберете плейър"
+
+msgid "Select option"
+msgstr "Изберете опция"
+
+msgid "Select pictures"
+msgstr "Изберете снимки"
+
+msgid "Select subtitles file"
+msgstr "Изберете файл със субтитри"
+
+msgid "Select subtitles provider:"
+msgstr "Изберете доставчик на субтитри:"
+
+msgid "Select subtitles to download"
+msgstr "Изберете субтитри за изтегляне"
+
+msgid "Select subtitles track"
+msgstr "Изберете писта със субтитри"
+
+msgid "Select the directory"
+msgstr "Изберете директорията"
+
+msgid "Select the file"
+msgstr "Изберете файла"
+
+msgid "Select video option"
+msgstr "Изберете опция за видео"
+
+msgid "Selection"
+msgstr "Избор"
+
+msgid "Self-test"
+msgstr "Самопроверка"
+
+msgid "Self-test report :"
+msgstr "Отчет от самопроверката :"
+
+msgid "Send"
+msgstr "Изпращане"
+
+msgid "Send data to enc-dec.app on every link resolve?"
+msgstr "Изпращане на данни към enc-dec.app при всяко разрешаване на връзка?"
+
+msgid "Sending the result to the box failed."
+msgstr "Изпращането на резултата към приемника е неуспешно."
+
+msgid "Series"
+msgstr "Сериали"
+
+msgid "Series - latest episodes"
+msgstr "Сериали - най-нови епизоди"
+
+msgid "Series - seasons"
+msgstr "Сериали - сезони"
+
+msgid "Series A-Z"
+msgstr "Сериали A-Z"
+
+msgid "Series by genre"
+msgstr "Сериали по жанр"
+
+msgid "Series by year"
+msgstr "Сериали по година"
+
+msgid "Series genres"
+msgstr "Жанрове сериали"
+
+msgid "Server"
+msgstr "Сървър"
+
+msgid "Server issued an error response (HTTP 4xx/5xx)."
+msgstr "Сървърът върна грешка (HTTP 4xx/5xx)."
+
+msgid "Server issued an error response."
+msgstr "Сървърът върна грешка."
+
+msgid "Server return 404 - Not Found."
+msgstr "Сървърът върна 404 - Не е намерено."
+
+msgid "Server returned nothing."
+msgstr "Сървърът не върна нищо."
+
+#, python-format
+msgid "Server, user name and password in the host configuration. The server field also takes a get.php link. More accounts: %s with one get.php link per line (X-Streamity format)."
+msgstr "Сървър, потребителско име и парола в конфигурацията на хоста. Полето за сървър приема и get.php връзка. Още акаунти: %s с по една get.php връзка на ред (формат X-Streamity)."
+
+#, python-format
+msgid ""
+"Service %s requires registration. \n"
+"Please fill your login and password in the %s configuration."
+msgstr ""
+"Услугата %s изисква регистрация. \n"
+"Моля, въведете потребителско име и парола в конфигурацията на %s."
+
+msgid "Service icon size"
+msgstr "Размер на иконите на услугите"
+
+msgid "Services configuration"
+msgstr "Конфигурация на услугите"
+
+msgid "Services management"
+msgstr "Управление на услугите"
+
+msgid "Set active movie player"
+msgstr "Задаване на активен плейър"
+
+msgid "Set file name"
+msgstr "Задаване на име на файла"
+
+msgid "Set own configuration pin code"
+msgstr "Задаване на собствен ПИН код за конфигурацията"
+
+msgid "Set own pin"
+msgstr "Задаване на собствен ПИН код"
+
+msgid "Set pin code"
+msgstr "Задаване на ПИН код"
+
+msgid "Set watched"
+msgstr "Маркиране като гледано"
+
+msgid "Settings"
+msgstr "Настройки"
+
+#, python-format
+msgid "Settings of service [%s] cannot be opened."
+msgstr "Настройките на услугата [%s] не могат да бъдат отворени."
+
+msgid "Settings screen layout"
+msgstr "Оформление на екрана с настройки"
+
+msgid "Shift"
+msgstr "Shift"
+
+msgid "Short Movies"
+msgstr "Късометражни филми"
+
+msgid "Short series"
+msgstr "Кратки сериали"
+
+msgid "Shorts"
+msgstr "Shorts"
+
+msgid "Shoulder & Elbow"
+msgstr "Рамо и лакът"
+
+msgid "Show"
+msgstr "Шоу"
+
+msgid "Show \"Newest videos\" of all YouTube channels in a group"
+msgstr "Показване на \"Най-нови видеа\" от всички YouTube канали в група"
+
+msgid "Show & Comedy"
+msgstr "Шоу и комедия"
+
+msgid "Show E2iPlayer settings in system menu"
+msgstr "Показване на настройките на E2iPlayer в системното меню"
+
+msgid "Show IPTVPlayer in extension list (blue button)"
+msgstr "Показване на IPTVPlayer в списъка с разширения (син бутон)"
+
+msgid "Show IPTVPlayer in main menu"
+msgstr "Показване на IPTVPlayer в главното меню"
+
+msgid "Show IPTVPlayer in plugin browser"
+msgstr "Показване на IPTVPlayer в браузъра на плъгини"
+
+msgid "Show Profiles in ZBIORNIK MINI :"
+msgstr "Показване на профили в ZBIORNIK MINI :"
+
+msgid "Show Youtube Api Key warnings"
+msgstr "Показване на предупреждения за YouTube API ключа"
+
+msgid "Show adult content"
+msgstr "Показване на съдържание за възрастни"
+
+msgid "Show all channels"
+msgstr "Показване на всички канали"
+
+msgid "Show clock in header"
+msgstr "Показване на часовник в заглавната лента"
+
+msgid "Show download manager after adding new item"
+msgstr "Показване на мениджъра на изтеглянията след добавяне на нов елемент"
+
+msgid "Show download notification"
+msgstr "Показване на известие за изтегляне"
+
+msgid "Show file size"
+msgstr "Показване на размера на файла"
+
+msgid "Show flags"
+msgstr "Показване на знамена"
+
+msgid "Show global search :"
+msgstr "Показване на глобално търсене :"
+
+msgid "Show hiddens catalogs"
+msgstr "Показване на скритите папки"
+
+msgid "Show hiddens files"
+msgstr "Показване на скритите файлове"
+
+msgid "Show iframe during audio playback"
+msgstr "Показване на iframe по време на аудио възпроизвеждане"
+
+msgid "Show only audio in selected language:"
+msgstr "Показване само на аудио на избрания език:"
+
+msgid "Show only best quality of streams:"
+msgstr "Показване само на потоци с най-добро качество:"
+
+msgid "Show results"
+msgstr "Показване на резултатите"
+
+msgid "Show search history"
+msgstr "Показване на историята на търсенето"
+
+msgid "Show suggestions"
+msgstr "Показване на предложения"
+
+msgid "Shows"
+msgstr "Предавания"
+
+msgid "Shows A-Z"
+msgstr "Предавания A-Z"
+
+msgid "Shows and concerts"
+msgstr "Шоута и концерти"
+
+msgid "Shows with new episodes"
+msgstr "Предавания с нови епизоди"
+
+msgid "Sign-in was not completed."
+msgstr "Влизането не беше завършено."
+
+msgid "Signed in to YouTube."
+msgstr "Влязохте в YouTube."
+
+msgid "Signed out of YouTube."
+msgstr "Излязохте от YouTube."
+
+msgid "Similar artists"
+msgstr "Подобни изпълнители"
+
+msgid "Similar artists mix"
+msgstr "Микс от подобни изпълнители"
+
+msgid "Simple list"
+msgstr "Обикновен списък"
+
+msgid "Simple subtitles downloader"
+msgstr "Обикновен инструмент за изтегляне на субтитри"
+
+msgid "Simplify the title and try again."
+msgstr "Опростете заглавието и опитайте отново."
+
+msgid "Site self-test"
+msgstr "Самопроверка на сайтовете"
+
+msgid "Site self-test in the main menu :"
+msgstr "Самопроверка на сайтовете в главното меню :"
+
+#, python-format
+msgid "Site self-test: %d of %d - now %s (%d failed so far)"
+msgstr "Самопроверка на сайтовете: %d от %d - сега %s (неуспешни досега: %d)"
+
+msgid "Size:"
+msgstr "Размер:"
+
+msgid "Skin"
+msgstr "Скин"
+
+msgid "Skinners:"
+msgstr "Автори на скинове:"
+
+msgid "Skip video shorter than [min]"
+msgstr "Пропускане на видеа, по-кратки от [мин]"
+
+msgid "Society"
+msgstr "Общество"
+
+msgid "Software decoding as"
+msgstr "Софтуерно декодиране като"
+
+msgid "Solve Cloudflare, hCaptcha and reCAPTCHA with MyE2i"
+msgstr "Решаване на Cloudflare, hCaptcha и reCAPTCHA с MyE2i"
+
+msgid "Solve Google reCAPTCHA v2 with My JDownloader"
+msgstr "Решаване на Google reCAPTCHA v2 с My JDownloader"
+
+msgid "Solver"
+msgstr "Решаване"
+
+msgid "Some changes will be applied only after movie player restart."
+msgstr "Някои промени ще бъдат приложени едва след рестартиране на плейъра."
+
+msgid "Some settings will be applied only after GUI restart."
+msgstr "Някои настройки ще бъдат приложени едва след рестартиране на GUI."
+
+msgid "Sort A-Z"
+msgstr "Сортиране A-Z"
+
+msgid "Sort Myfreecams :"
+msgstr "Сортиране на Myfreecams :"
+
+msgid "Sort Z-A"
+msgstr "Сортиране Z-A"
+
+msgid "Sort alphabetically"
+msgstr "Сортиране по азбучен ред"
+
+msgid "Sort by name"
+msgstr "Сортиране по име"
+
+msgid "Sort by:"
+msgstr "Сортиране по:"
+
+msgid "Sort the links now? The order of the lines in the file will change."
+msgstr "Да се сортират ли връзките сега? Редът на редовете във файла ще се промени."
+
+msgid "Sort the list:"
+msgstr "Сортиране на списъка:"
+
+msgid "Sort xxxlist :"
+msgstr "Сортиране на xxxlist :"
+
+msgid "Sorted channels A-Z [live]"
+msgstr "Сортирани канали A-Z [на живо]"
+
+msgid "Sorted most viewed channels general [live]"
+msgstr "Сортирани най-гледани канали общо [на живо]"
+
+msgid "Sorted most viewed channels now [live]"
+msgstr "Сортирани най-гледани канали в момента [на живо]"
+
+msgid "Source:"
+msgstr "Източник:"
+
+msgid "Spanish"
+msgstr "Испански"
+
+msgid "Specials"
+msgstr "Специални"
+
+msgid "Spine"
+msgstr "Гръбначен стълб"
+
+msgid "Spoken subtitles"
+msgstr "Говорими субтитри"
+
+msgid "Sport"
+msgstr "Спорт"
+
+msgid "Spring"
+msgstr "Пролет"
+
+msgid "Squad"
+msgstr "Състав"
+
+msgid "Stadium:"
+msgstr "Стадион:"
+
+msgid "Standard"
+msgstr "Стандартно"
+
+msgid "Stars:"
+msgstr "Звезди:"
+
+msgid "Start"
+msgstr "Старт"
+
+msgid "Start download manager per default"
+msgstr "Стартиране на мениджъра на изтеглянията по подразбиране"
+
+msgid "Station:"
+msgstr "Станция:"
+
+msgid "Status:"
+msgstr "Състояние:"
+
+#, python-format
+msgid "Status: %s"
+msgstr "Състояние: %s"
+
+msgid "Stereo downmix mode for software decoder"
+msgstr "Режим на стерео смесване за софтуерния декодер"
+
+msgid "Stop"
+msgstr "Стоп"
+
+msgid "Stop downloading"
+msgstr "Спиране на изтеглянето"
+
+msgid "Stop playback with buffer save"
+msgstr "Спиране на възпроизвеждането със запазване на буфера"
+
+msgid "Stop playing?"
+msgstr "Спиране на възпроизвеждането?"
+
+msgid "Storage"
+msgstr "Хранилище"
+
+msgid "Story"
+msgstr "Сюжет"
+
+msgid "Stream link"
+msgstr "Връзка към потока"
+
+msgid "Streamed"
+msgstr "Излъчено"
+
+msgid "Streaming platforms"
+msgstr "Стрийминг платформи"
+
+msgid "Studios"
+msgstr "Студия"
+
+msgid "Study Plan"
+msgstr "Учебен план"
+
+msgid "Subbed anime"
+msgstr "Аниме със субтитри"
+
+msgid "Subscribers"
+msgstr "Абонати"
+
+msgid "Subspecialities"
+msgstr "Подспециалности"
+
+msgid "Subtitle background"
+msgstr "Фон на субтитрите"
+
+msgid "Subtitle border color"
+msgstr "Цвят на рамката на субтитрите"
+
+msgid "Subtitle border enabled"
+msgstr "Рамка на субтитрите"
+
+msgid "Subtitle border width"
+msgstr "Ширина на рамката на субтитрите"
+
+msgid "Subtitle box height"
+msgstr "Височина на полето за субтитри"
+
+msgid "Subtitle box position"
+msgstr "Позиция на полето за субтитри"
+
+msgid "Subtitle font"
+msgstr "Шрифт на субтитрите"
+
+msgid "Subtitle font color"
+msgstr "Цвят на шрифта на субтитрите"
+
+msgid "Subtitle font size"
+msgstr "Размер на шрифта на субтитрите"
+
+msgid "Subtitle languages"
+msgstr "Езици на субтитрите"
+
+msgid "Subtitle line height"
+msgstr "Височина на реда на субтитрите"
+
+msgid "Subtitle line wrapping"
+msgstr "Пренасяне на редове в субтитрите"
+
+msgid "Subtitle shadow X offset"
+msgstr "Отместване X на сянката на субтитрите"
+
+msgid "Subtitle shadow Y offset"
+msgstr "Отместване Y на сянката на субтитрите"
+
+msgid "Subtitle shadow color"
+msgstr "Цвят на сянката на субтитрите"
+
+msgid "Subtitle shadow enabled"
+msgstr "Сянка на субтитрите"
+
+msgid "Subtitle vertical alignment"
+msgstr "Вертикално подравняване на субтитрите"
+
+msgid "Subtitles"
+msgstr "Субтитри"
+
+#, python-format
+msgid "Subtitles \"%s\" downloaded correctly."
+msgstr "Субтитрите \"%s\" са изтеглени успешно."
+
+msgid "Subtitles by Islam El-Gizawy"
+msgstr "Субтитри от Islam El-Gizawy"
+
+msgid "Subtitles conversion to UTF-8 failed."
+msgstr "Преобразуването на субтитрите в UTF-8 е неуспешно."
+
+#, python-format
+msgid "Subtitles downloaded successfully. [%s], conversion to UTF-8."
+msgstr "Субтитрите са изтеглени успешно. [%s], преобразуване в UTF-8."
+
+#, python-format
+msgid "Subtitles for: %s"
+msgstr "Субтитри за: %s"
+
+#, python-format
+msgid ""
+"Subtitles saved:\n"
+"%s"
+msgstr ""
+"Субтитрите са запазени:\n"
+"%s"
+
+msgid "Subtitles:"
+msgstr "Субтитри:"
+
+#, python-format
+msgid "Subtitles: %s"
+msgstr "Субтитри: %s"
+
+msgid "Summer"
+msgstr "Лято"
+
+msgid "Support forum (opena.tv)"
+msgstr "Форум за поддръжка (opena.tv)"
+
+msgid "Support package"
+msgstr "Пакет за поддръжка"
+
+msgid "Surahs"
+msgstr "Сури"
+
+msgid "Surgical Approaches"
+msgstr "Хирургични достъпи"
+
+msgid "Surgical Cases"
+msgstr "Хирургични случаи"
+
+msgid "Surgical Complications"
+msgstr "Хирургични усложнения"
+
+msgid "Surgical Techniques"
+msgstr "Хирургични техники"
+
+msgid "Sweden"
+msgstr "Швеция"
+
+msgid "Swedish"
+msgstr "Шведски"
+
+msgid "Synchronize"
+msgstr "Синхронизиране"
+
+msgid "System"
+msgstr "Система"
+
+msgid "System language"
+msgstr "Системен език"
+
+msgid "T9 letter jump in lists"
+msgstr "T9 скок по буква в списъците"
+
+msgid ""
+"TBN GO needs a free account to play programmes.\n"
+"Register on https://tbngo.pl/ and enter the e-mail and password in the host settings."
+msgstr ""
+"TBN GO изисква безплатен акаунт за възпроизвеждане на предавания.\n"
+"Регистрирайте се на https://tbngo.pl/ и въведете имейла и паролата в настройките на хоста."
+
+msgid "THE PAGE YOU ARE LOOKING FOR IS NOT FOUND."
+msgstr "ТЪРСЕНАТА ОТ ВАС СТРАНИЦА НЕ Е НАМЕРЕНА."
+
+msgid ""
+"THIS IS A PREMIUM VIDEO.\n"
+"LOGIN OR PREMIUM REQUIRED."
+msgstr ""
+"ТОВА Е PREMIUM ВИДЕО.\n"
+"ИЗИСКВА СЕ ВХОД ИЛИ PREMIUM."
+
+msgid "THIS IS A PRIVATE VIDEO."
+msgstr "ТОВА Е ЧАСТНО ВИДЕО."
+
+msgid ""
+"THIS LINK CONTAINS PHOTOS ONLY.\n"
+" PLEASE CHOOSE ANOTHER ONE!"
+msgstr ""
+"ТАЗИ ВРЪЗКА СЪДЪРЖА САМО СНИМКИ.\n"
+" МОЛЯ, ИЗБЕРЕТЕ ДРУГА!"
+
+msgid ""
+"THIS VIDEO HAS BEEN REMOVED DUE TO COPYRIGHT INFRINGEMENT.\n"
+" PLEASE CHOOSE ANOTHER ONE!"
+msgstr ""
+"ТОВА ВИДЕО Е ПРЕМАХНАТО ПОРАДИ НАРУШЕНИЕ НА АВТОРСКИ ПРАВА.\n"
+" МОЛЯ, ИЗБЕРЕТЕ ДРУГО!"
+
+msgid ""
+"THIS VIDEO IS JUST A PREVIEW ON EXTERNAL STORAGE.\n"
+"VIEWING IT HERE IS NOT SUPPORTED."
+msgstr ""
+"ТОВА ВИДЕО Е САМО ВИЗУАЛИЗАЦИЯ ВЪВ ВЪНШНО ХРАНИЛИЩЕ.\n"
+"ГЛЕДАНЕТО МУ ТУК НЕ СЕ ПОДДЪРЖА."
+
+msgid ""
+"THIS VIDEO IS UNAVAILABLE.\n"
+"TRY AGAIN LATER!"
+msgstr ""
+"ТОВА ВИДЕО НЕ Е НАЛИЧНО.\n"
+"ОПИТАЙТЕ ОТНОВО ПО-КЪСНО!"
+
+msgid "TMDb API key (free at themoviedb.org)"
+msgstr "TMDb API ключ (безплатен от themoviedb.org)"
+
+msgid "TMDb Rating:"
+msgstr "TMDb оценка:"
+
+msgid "TODAY"
+msgstr "ДНЕС"
+
+msgid "TOMORROW"
+msgstr "УТРЕ"
+
+msgid "TV Series"
+msgstr "ТВ сериали"
+
+msgid "TV Show"
+msgstr "ТВ шоу"
+
+msgid "TV Shows"
+msgstr "ТВ предавания"
+
+msgid "TV channels"
+msgstr "ТВ канали"
+
+msgid "TV series"
+msgstr "ТВ сериали"
+
+msgid "Tadabor"
+msgstr "Tadabor"
+
+msgid "Tafsir (Arabic)"
+msgstr "Тафсир (арабски)"
+
+msgid "Tags"
+msgstr "Тагове"
+
+msgid "Taiwanese"
+msgstr "Тайвански"
+
+msgid "Talk shows"
+msgstr "Токшоута"
+
+msgid "Teams"
+msgstr "Отбори"
+
+msgid "Techniques"
+msgstr "Техники"
+
+msgid "Technology"
+msgstr "Технологии"
+
+msgid "Temp"
+msgstr "Temp"
+
+msgid "Test the failed sites again"
+msgstr "Повторно тестване на неуспешните сайтове"
+
+msgid "Testers:"
+msgstr "Тестери:"
+
+msgid "Text field alignment"
+msgstr "Подравняване на текстовите полета"
+
+msgid "Text files ytlist and urllist are in:"
+msgstr "Текстовите файлове ytlist и urllist са в:"
+
+msgid "Thai"
+msgstr "Тайландски"
+
+#, python-format
+msgid "The %s utility is necessary here but it was not detected."
+msgstr "Тук е необходима помощната програма %s, но тя не е открита."
+
+msgid "The 100 tags with the most videos"
+msgstr "100-те тага с най-много видеа"
+
+msgid ""
+"The 7reels / cineb resolvers 'VidEasy', 'VidCore/VidFast', 'VidLink' and 'Peachify' cannot decrypt their links on the receiver.\n"
+"\n"
+"With this option ON, every time you open one of them E2iPlayer sends the site's encrypted stream token - which contains the TMDb id of the movie or episode you are opening - to the third-party web service enc-dec.app (operated by a private individual). That server then sees the id and your IP address on each play. Nothing else is transmitted, and it is only used for these four resolvers.\n"
+"\n"
+"Leave this OFF if you do not want that. The other resolvers (AdRock/vidrock, VidNest, ...) are not affected."
+msgstr ""
+"Резолверите на 7reels / cineb 'VidEasy', 'VidCore/VidFast', 'VidLink' и 'Peachify' не могат да дешифрират връзките си на приемника.\n"
+"\n"
+"Когато тази опция е ВКЛ., всеки път, когато отворите някой от тях, E2iPlayer изпраща шифрования токен на потока от сайта - който съдържа TMDb ID на филма или епизода, който отваряте - към външната уеб услуга enc-dec.app (поддържана от частно лице). Така този сървър вижда ID-то и вашия IP адрес при всяко възпроизвеждане. Нищо друго не се предава и това се използва само за тези четири резолвера.\n"
+"\n"
+"Оставете тази опция ИЗКЛ., ако не желаете това. Другите резолвери (AdRock/vidrock, VidNest, ...) не са засегнати."
+
+msgid "The OpenSubtitles v3 server did not answer. Please try again later."
+msgstr "Сървърът на OpenSubtitles v3 не отговори. Моля, опитайте отново по-късно."
+
+msgid "The OpenSubtitles.com server did not answer. Please try again later."
+msgstr "Сървърът на OpenSubtitles.com не отговори. Моля, опитайте отново по-късно."
+
+msgid "The QR code leads to the wiki page with pictures and the extension download."
+msgstr "QR кодът води към уики страницата със снимки и изтеглянето на разширението."
+
+msgid "The Stalker portal of this entry is not configured (any more)."
+msgstr "Stalker порталът на този запис не е конфигуриран (вече)."
+
+msgid "The Xtream account of this entry is not configured (any more)."
+msgstr "Акаунтът Xtream на този запис не е конфигуриран (вече)."
+
+msgid "The YouTube channels of this group have no videos."
+msgstr "YouTube каналите на тази група нямат видеа."
+
+msgid "The YouTube video ID is invalid."
+msgstr "YouTube ID на видеото е невалиден."
+
+msgid "The account is banned."
+msgstr "Акаунтът е блокиран."
+
+msgid "The balance of the account is too low."
+msgstr "Балансът на акаунта е твърде нисък."
+
+msgid "The best short films on the internet, handpicked by Vimeo staff"
+msgstr "Най-добрите късометражни филми в интернет, подбрани от екипа на Vimeo"
+
+msgid "The channel already exists in User Links."
+msgstr "Каналът вече съществува в „Потребителски връзки“."
+
+msgid "The color of the current version"
+msgstr "Цвят на текущата версия"
+
+msgid "The color of the downloaded item"
+msgstr "Цвят на изтегления елемент"
+
+msgid "The color of the favourite item"
+msgstr "Цвят на любимия елемент"
+
+msgid "The color of the started item"
+msgstr "Цвят на започнатия елемент"
+
+msgid "The color of the viewed item"
+msgstr "Цвят на гледания елемент"
+
+msgid "The connection limit for your weeb.tv account has been reached."
+msgstr "Лимитът на връзките за вашия weeb.tv акаунт е достигнат."
+
+msgid "The daily download limit is reached."
+msgstr "Дневният лимит за изтегляне е достигнат."
+
+msgid "The data is too large."
+msgstr "Данните са твърде големи."
+
+#, python-format
+msgid ""
+"The debug log file is empty:\n"
+"%s"
+msgstr ""
+"Файлът с дебъг лога е празен:\n"
+"%s"
+
+msgid ""
+"The debug log is disabled or set to console output.\n"
+"\n"
+"Enable it in the E2iPlayer configuration (Debug -> log to file) and reproduce the problem, then come back here."
+msgstr ""
+"Дебъг логът е изключен или е настроен за извеждане в конзолата.\n"
+"\n"
+"Включете го в конфигурацията на E2iPlayer (Дебъг -> запис във файл), възпроизведете проблема и след това се върнете тук."
+
+msgid "The debug log is not active."
+msgstr "Дебъг логът не е активен."
+
+msgid "The download is not ready yet. Please try again in a few seconds."
+msgstr "Изтеглянето все още не е готово. Моля, опитайте отново след няколко секунди."
+
+#, python-format
+msgid "The download is ready in %d seconds. Please try again then."
+msgstr "Изтеглянето ще бъде готово след %d секунди. Моля, опитайте отново тогава."
+
+msgid "The download manager is stopped, start it on the download page."
+msgstr "Мениджърът на изтеглянията е спрян, стартирайте го от страницата за изтегляния."
+
+msgid "The element already exists in User Links."
+msgstr "Елементът вече съществува в „Потребителски връзки“."
+
+msgid "The feed of these channels could not be read - press OK to try again."
+msgstr "Емисията на тези канали не можа да бъде прочетена - натиснете OK, за да опитате отново."
+
+msgid "The helper process ended unexpectedly."
+msgstr "Помощният процес приключи неочаквано."
+
+#, python-format
+msgid "The helper script %s is missing."
+msgstr "Помощният скрипт %s липсва."
+
+#, python-format
+msgid "The host \"%s\" cannot be used from the web interface (disabled, unknown or protected by PIN)."
+msgstr "Хостът \"%s\" не може да се използва от уеб интерфейса (изключен, неизвестен или защитен с ПИН)."
+
+#, python-format
+msgid ""
+"The host %s requires registration. \n"
+"Please fill your login and password in the host configuration. Available under blue button."
+msgstr ""
+"Хостът %s изисква регистрация. \n"
+"Моля, въведете потребителското си име и парола в конфигурацията на хоста. Достъпна е чрез синия бутон."
+
+msgid "The host asks for a captcha. It can only be solved on the receiver (or with MyE2i there)."
+msgstr "Хостът изисква captcha. Тя може да бъде решена само на приемника (или там с MyE2i)."
+
+msgid "The host did not return a list."
+msgstr "Хостът не върна списък."
+
+#, python-format
+msgid "The host wanted to open a window on the TV (%s) - that only works on the receiver."
+msgstr "Хостът искаше да отвори прозорец на телевизора (%s) - това работи само на приемника."
+
+msgid "The hoster sends an advert redirect instead of the video at the moment. Try another hoster."
+msgstr "В момента хостерът изпраща рекламно пренасочване вместо видеото. Опитайте друг хостер."
+
+msgid "The latest uploads of all YouTube channels in this group, newest first."
+msgstr "Най-новите качени видеа от всички YouTube канали в тази група, първо най-новите."
+
+msgid "The link could not be resolved."
+msgstr "Връзката не можа да бъде разрешена."
+
+msgid "The list has changed, please try again."
+msgstr "Списъкът е променен, моля, опитайте отново."
+
+msgid "The live stream is not available at the moment."
+msgstr "Потокът на живо в момента не е наличен."
+
+msgid "The model is offline or in a private show."
+msgstr "Моделът е офлайн или в частно шоу."
+
+msgid "The number of items in the search history"
+msgstr "Брой елементи в историята на търсенето"
+
+#, python-format
+msgid "The page layout of %s has changed."
+msgstr "Оформлението на страницата на %s е променено."
+
+#, python-format
+msgid ""
+"The playback buffer has been moved to the download manager.\n"
+"It will be saved in the file:\n"
+"\"%s\""
+msgstr ""
+"Буферът за възпроизвеждане е преместен в мениджъра на изтеглянията.\n"
+"Той ще бъде записан във файла:\n"
+"\"%s\""
+
+msgid "The portal did not hand out a link for this entry."
+msgstr "Порталът не предостави връзка за този запис."
+
+msgid "The recordings of this page were on the site's old media server, which is offline."
+msgstr "Записите от тази страница бяха на стария медиен сървър на сайта, който е офлайн."
+
+msgid "The request has no valid length."
+msgstr "Заявката няма валидна дължина."
+
+msgid "The same item already exists in this group."
+msgstr "Същият елемент вече съществува в тази група."
+
+msgid "The server did not return a subtitle file (download limit reached?)."
+msgstr "Сървърът не върна файл със субтитри (достигнат лимит за изтегляне?)."
+
+msgid "The server did not send a subtitle file."
+msgstr "Сървърът не изпрати файл със субтитри."
+
+msgid "The server limits the number of requests. Please try again in a few seconds."
+msgstr "Сървърът ограничава броя на заявките. Моля, опитайте отново след няколко секунди."
+
+msgid "The service is overloaded. Please try again later."
+msgstr "Услугата е претоварена. Моля, опитайте отново по-късно."
+
+msgid "The settings are protected by a PIN, change them on the receiver."
+msgstr "Настройките са защитени с ПИН, променете ги на приемника."
+
+msgid "The site has no player for this video (it only shows a cam advert)."
+msgstr "Сайтът няма плейър за това видео (показва само реклама за камери)."
+
+msgid "The site refuses all qualities of this video at the moment (HTTP 403). Try again later."
+msgstr "В момента сайтът отказва всички качества на това видео (HTTP 403). Опитайте отново по-късно."
+
+msgid "The site rejected the search request."
+msgstr "Сайтът отхвърли заявката за търсене."
+
+msgid "The site's browser check could not be passed."
+msgstr "Проверката на браузъра от сайта не можа да бъде премината."
+
+msgid "The site's catalogue could not be loaded."
+msgstr "Каталогът на сайта не можа да бъде зареден."
+
+msgid "The support package holds the versions, the system information, the enabled hosts and the end of the debug log in one text file for a problem report. Look through it before posting it - the log can contain addresses of the sites you opened."
+msgstr "Пакетът за поддръжка съдържа версиите, системната информация, включените хостове и края на дебъг лога в един текстов файл за доклад за проблем. Прегледайте го, преди да го публикувате - логът може да съдържа адреси на сайтовете, които сте отваряли."
+
+msgid "The user link could not be deleted."
+msgstr "Потребителската връзка не можа да бъде изтрита."
+
+msgid "The user link could not be updated."
+msgstr "Потребителската връзка не можа да бъде обновена."
+
+#, python-format
+msgid "The value must be between %d and %d."
+msgstr "Стойността трябва да е между %d и %d."
+
+msgid "The video could not be resolved (it may be private, ended or not available in your country)."
+msgstr "Видеото не можа да бъде разрешено (може да е частно, приключило или недостъпно във вашата държава)."
+
+msgid "The video file of this title is not available on the server (HTTP 403)."
+msgstr "Видеофайлът на това заглавие не е наличен на сървъра (HTTP 403)."
+
+msgid "The video has been removed."
+msgstr "Видеото е премахнато."
+
+msgid "The video player of this site (hdvbua.pro) does not offer this title in your country (licence area, mainly Ukraine)."
+msgstr "Видеоплейърът на този сайт (hdvbua.pro) не предлага това заглавие във вашата държава (лицензна зона, главно Украйна)."
+
+msgid "The website returned a server error for this request."
+msgstr "Уебсайтът върна сървърна грешка за тази заявка."
+
+msgid "There are no other favorite groups"
+msgstr "Няма други групи любими"
+
+msgid "There are unsaved changes. Save now?"
+msgstr "Има незапазени промени. Да се запазят ли сега?"
+
+#, python-format
+msgid "There is no enough free space in the folder \"%s\"."
+msgstr "Няма достатъчно свободно място в папката \"%s\"."
+
+#, python-format
+msgid "There is no free space on the drive [%s]."
+msgstr "Няма свободно място на устройството [%s]."
+
+msgid "There is no hosts in this group."
+msgstr "Няма хостове в тази група."
+
+msgid "There is no next item in this list."
+msgstr "Няма следващ елемент в този списък."
+
+msgid "There is no previous item in this list."
+msgstr "Няма предишен елемент в този списък."
+
+#, python-format
+msgid ""
+"There is no storage device under \"%s\" (%s free). E2iPlayer will switch this folder back to \"%s\" at the next start.\n"
+"Please choose a folder on a mounted HDD or USB stick."
+msgstr ""
+"Няма устройство за съхранение в \"%s\" (%s свободни). E2iPlayer ще върне тази папка на \"%s\" при следващото стартиране.\n"
+"Моля, изберете папка на монтиран твърд диск или USB флашка."
+
+msgid "This article has no free video."
+msgstr "Тази статия няма безплатно видео."
+
+msgid "This channel does not exist."
+msgstr "Този канал не съществува."
+
+msgid "This channel is currently offline."
+msgstr "Този канал в момента е офлайн."
+
+msgid "This channel is not available in your country (geo-blocking)."
+msgstr "Този канал не е достъпен във вашата държава (географско ограничение)."
+
+msgid "This channel is temporarily unavailable. Please try again later."
+msgstr "Този канал е временно недостъпен. Моля, опитайте отново по-късно."
+
+msgid "This channel requires a premium account, or the free connection limit has been reached. Enter your weeb.tv login data in the host configuration."
+msgstr "Този канал изисква премиум акаунт или безплатният лимит на връзките е достигнат. Въведете данните си за вход в weeb.tv в конфигурацията на хоста."
+
+msgid "This content is not available in your region."
+msgstr "Това съдържание не е достъпно във вашия регион."
+
+msgid "This content is only available in Switzerland."
+msgstr "Това съдържание е достъпно само в Швейцария."
+
+msgid "This content needs a login - not supported."
+msgstr "Това съдържание изисква вход - не се поддържа."
+
+msgid "This entry cannot be added to the favourites."
+msgstr "Този запис не може да бъде добавен към любимите."
+
+msgid "This entry cannot be opened."
+msgstr "Този запис не може да бъде отворен."
+
+msgid "This entry is only an advert, there is no video."
+msgstr "Този запис е само реклама, няма видео."
+
+msgid "This entry is protected by a PIN, open it on the receiver."
+msgstr "Този запис е защитен с ПИН, отворете го на приемника."
+
+msgid "This episode is not available in this version (SUB/DUB) on this server. Try another one."
+msgstr "Този епизод не е наличен в тази версия (SUB/DUB) на този сървър. Опитайте друг."
+
+msgid "This feed is empty, or the YouTube sign-in has expired - sign out and in again."
+msgstr "Тази емисия е празна или входът в YouTube е изтекъл - излезте и влезте отново."
+
+msgid "This folder is protected by a PIN, open it on the receiver."
+msgstr "Тази папка е защитена с ПИН, отворете я на приемника."
+
+msgid "This host has been added already to this group."
+msgstr "Този хост вече е добавен към тази група."
+
+msgid "This is only an advert for a paid clip (clips4sale), there is no free video."
+msgstr "Това е само реклама за платен клип (clips4sale), няма безплатно видео."
+
+msgid "This is paid content of PZPN+, it needs a purchase on the website."
+msgstr "Това е платено съдържание на PZPN+, трябва да бъде закупено на уебсайта."
+
+msgid "This mix is only available with a Mixcloud Select subscription."
+msgstr "Този микс е достъпен само с абонамент Mixcloud Select."
+
+msgid "This model is offline."
+msgstr "Този модел е офлайн."
+
+msgid "This option cannot be changed from the web interface."
+msgstr "Тази опция не може да бъде променена от уеб интерфейса."
+
+msgid "This page has no video (blog article)."
+msgstr "Тази страница няма видео (статия в блог)."
+
+msgid "This player is not available any more - reload the links."
+msgstr "Този плейър вече не е наличен - заредете връзките отново."
+
+msgid "This room is currently offline or unavailable."
+msgstr "Тази стая в момента е офлайн или недостъпна."
+
+msgid "This room is offline. Try again later!"
+msgstr "Тази стая е офлайн. Опитайте отново по-късно!"
+
+msgid "This section is no longer on the main page."
+msgstr "Този раздел вече не е на главната страница."
+
+msgid "This session has no code - scan the QR code on the receiver screen."
+msgstr "Тази сесия няма код - сканирайте QR кода на екрана на приемника."
+
+msgid "This show is private. Try again later!"
+msgstr "Това шоу е частно. Опитайте отново по-късно!"
+
+msgid "This source is offline at the moment. Try another source of the channel."
+msgstr "Този източник в момента е офлайн. Опитайте друг източник на канала."
+
+msgid "This stream can only be played with buffering - please start it on the receiver."
+msgstr "Този поток може да се възпроизвежда само с буфериране - моля, стартирайте го на приемника."
+
+msgid "This subtitle provider has subtitles for movies only."
+msgstr "Този доставчик на субтитри има субтитри само за филми."
+
+msgid "This video has been deleted."
+msgstr "Това видео е изтрито."
+
+msgid "This video is Premium-only content."
+msgstr "Това видео е съдържание само за Premium."
+
+msgid "This video is a private video."
+msgstr "Това видео е частно видео."
+
+msgid "This video is a private."
+msgstr "Това видео е частно."
+
+msgid "This video is only on hosters E2iPlayer cannot play."
+msgstr "Това видео е само на хостери, които E2iPlayer не може да възпроизвежда."
+
+msgid "This video is only on the netu.tv player (pbtube.net), which E2iPlayer cannot play."
+msgstr "Това видео е само в плейъра netu.tv (pbtube.net), който E2iPlayer не може да възпроизвежда."
+
+msgid "This video needs a paid ororo.tv subscription."
+msgstr "Това видео изисква платен абонамент за ororo.tv."
+
+msgid "This video requires you to sign in to a YouTube account."
+msgstr "Това видео изисква да влезете в YouTube акаунт."
+
+msgid "This video was embedded from Pornhub and is no longer available there."
+msgstr "Това видео беше вградено от Pornhub и вече не е налично там."
+
+msgid "This video was embedded from xHamster and has been deleted there."
+msgstr "Това видео беше вградено от xHamster и е изтрито там."
+
+msgid "Thriller"
+msgstr "Трилър"
+
+msgid "Thumbnails"
+msgstr "Миниатюри"
+
+msgid "Time"
+msgstr "Време"
+
+msgid "Tip! You can connect USB flash drive to fix this problem."
+msgstr "Съвет! Можете да свържете USB флашка, за да решите този проблем."
+
+msgid "Titles"
+msgstr "Заглавия"
+
+#, python-format
+msgid "Titlovi.com login failed (HTTP %s)."
+msgstr "Неуспешен вход в Titlovi.com (HTTP %s)."
+
+#, python-format
+msgid "Titlovi.com login failed for user \"%s\". Please check your login and password."
+msgstr "Неуспешен вход в Titlovi.com за потребител \"%s\". Моля, проверете потребителското име и паролата."
+
+msgid "Titlovi.com needs a free titlovi.com account. Enter login and password in the E2iPlayer settings."
+msgstr "Titlovi.com изисква безплатен акаунт в titlovi.com. Въведете потребителско име и парола в настройките на E2iPlayer."
+
+#, python-format
+msgid "Titlovi.com search failed (HTTP %s)."
+msgstr "Неуспешно търсене в Titlovi.com (HTTP %s)."
+
+#, python-format
+msgid "Titlovi.com: API access is disabled for the account \"%s\". See titlovi.com/donacije."
+msgstr "Titlovi.com: достъпът до API е изключен за акаунта \"%s\". Вижте titlovi.com/donacije."
+
+msgid "Titlovi.com: invalid server response."
+msgstr "Titlovi.com: невалиден отговор от сървъра."
+
+#, python-format
+msgid ""
+"To sign in to YouTube:\n"
+"\n"
+"1. On a phone or computer open:\n"
+"     %s\n"
+"\n"
+"2. Enter this code:\n"
+"\n"
+"     %s\n"
+"\n"
+"3. Approve the access, then select OK here."
+msgstr ""
+"За да влезете в YouTube:\n"
+"\n"
+"1. На телефон или компютър отворете:\n"
+"     %s\n"
+"\n"
+"2. Въведете този код:\n"
+"\n"
+"     %s\n"
+"\n"
+"3. Одобрете достъпа, след това изберете OK тук."
+
+msgid ""
+"To watch videos from https://vk.com/ you need to login.\n"
+"Please fill your login and password in the IPTVPlayer configuration."
+msgstr ""
+"За да гледате видеа от https://vk.com/, трябва да влезете.\n"
+"Моля, въведете потребителското си име и парола в конфигурацията на IPTVPlayer."
+
+msgid "Today"
+msgstr "Днес"
+
+msgid "Tomorrow"
+msgstr "Утре"
+
+msgid "Too many redirects."
+msgstr "Твърде много пренасочвания."
+
+msgid "Too many requests. Please try again later."
+msgstr "Твърде много заявки. Моля, опитайте отново по-късно."
+
+msgid "Too many wrong codes - scan the QR code on the receiver screen instead."
+msgstr "Твърде много грешни кодове - вместо това сканирайте QR кода на екрана на приемника."
+
+msgid "Top"
+msgstr "Топ"
+
+msgid "Top 10"
+msgstr "Топ 10"
+
+msgid "Top IMDb"
+msgstr "Топ IMDb"
+
+msgid "Top airing"
+msgstr "Популярни в момента"
+
+msgid "Top in your country"
+msgstr "Топ във вашата държава"
+
+msgid "Top leagues and clubs"
+msgstr "Топ лиги и клубове"
+
+msgid "Top rated"
+msgstr "Най-високо оценени"
+
+msgid "Top rated movies"
+msgstr "Най-високо оценени филми"
+
+msgid "Top rated series"
+msgstr "Най-високо оценени сериали"
+
+msgid "Top scorers"
+msgstr "Голмайстори"
+
+msgid "Top series"
+msgstr "Топ сериали"
+
+msgid "Top stations"
+msgstr "Топ станции"
+
+msgid "Top tracks"
+msgstr "Топ песни"
+
+msgid "Top upcoming"
+msgstr "Най-очаквани"
+
+msgid "Top-IMDB"
+msgstr "Top-IMDB"
+
+msgid "Topics"
+msgstr "Теми"
+
+msgid "Total size:"
+msgstr "Общ размер:"
+
+msgid "Tourism"
+msgstr "Туризъм"
+
+msgid "Tracklist"
+msgstr "Списък с песни"
+
+msgid "Trailer"
+msgstr "Трейлър"
+
+msgid "Translation:"
+msgstr "Превод:"
+
+#, python-format
+msgid "Translator: %s"
+msgstr "Преводач: %s"
+
+msgid "Transparent"
+msgstr "Прозрачен"
+
+msgid "Trauma"
+msgstr "Травма"
+
+msgid "Travel"
+msgstr "Пътувания"
+
+msgid "Treatment Consult"
+msgstr "Консултация за лечение"
+
+msgid "Trending"
+msgstr "Набиращи популярност"
+
+msgid "Trending this week"
+msgstr "Популярни тази седмица"
+
+msgid "Trial"
+msgstr "Пробен достъп"
+
+msgid "Troubleshooting"
+msgstr "Отстраняване на проблеми"
+
+msgid "Try to change extplayer or reinstall gst-ifdsrc"
+msgstr "Опитайте да смените extplayer или да преинсталирате gst-ifdsrc"
+
+msgid "Turkish"
+msgstr "Турски"
+
+msgid "Turkish Movies"
+msgstr "Турски филми"
+
+msgid "Turkish Series"
+msgstr "Турски сериали"
+
+msgid "Turkish TV series"
+msgstr "Турски телевизионни сериали"
+
+msgid "Turkish movies (dubbed)"
+msgstr "Турски филми (дублирани)"
+
+msgid "Turkish series (dubbed)"
+msgstr "Турски сериали (дублирани)"
+
+msgid "Tutorials"
+msgstr "Ръководства"
+
+msgid "Type"
+msgstr "Тип"
+
+msgid "Type:"
+msgstr "Тип:"
+
+msgid "Type: "
+msgstr "Тип: "
+
+#, python-format
+msgid "Type: %s"
+msgstr "Тип: %s"
+
+msgid "Types"
+msgstr "Типове"
+
+msgid "UNKNOWN"
+msgstr "НЕИЗВЕСТНО"
+
+msgid "URL malformed."
+msgstr "Неправилен URL."
+
+msgid "Ukrainian"
+msgstr "Украински"
+
+msgid "Umount iso file"
+msgstr "Демонтиране на iso файл"
+
+msgid "Unable to comply. Search History is empty."
+msgstr "Действието не може да бъде изпълнено. Историята на търсенето е празна."
+
+msgid "Unfix jump target"
+msgstr "Освобождаване на целта на прехода"
+
+msgid "Unknown action."
+msgstr "Неизвестно действие."
+
+msgid "Unknown error code."
+msgstr "Неизвестен код на грешка."
+
+msgid "Unknown error."
+msgstr "Неизвестна грешка."
+
+#, python-format
+msgid "Unknown protocol [%s]"
+msgstr "Неизвестен протокол [%s]"
+
+msgid "Unknown server response."
+msgstr "Неизвестен отговор от сървъра."
+
+#, python-format
+msgid "Unknown subtitle parser for format \"%s\"."
+msgstr "Неизвестен парсер на субтитри за формат \"%s\"."
+
+#, python-format
+msgid "Unrar error code[%s]."
+msgstr "Unrar код на грешка[%s]."
+
+msgid "Unset watched"
+msgstr "Премахване на отметката за гледано"
+
+msgid "Unsupported protocol."
+msgstr "Неподдържан протокол."
+
+#, python-format
+msgid "Unzip error code[%s]."
+msgstr "Unzip код на грешка[%s]."
+
+msgid "Upbringing"
+msgstr "Възпитание"
+
+msgid "Upcoming"
+msgstr "Предстоящи"
+
+msgid "Updates"
+msgstr "Актуализации"
+
+msgid "Upload date"
+msgstr "Дата на качване"
+
+#, python-format
+msgid "Uploader: %s"
+msgstr "Качено от: %s"
+
+msgid "Uploads"
+msgstr "Качени"
+
+msgid "Urllists player"
+msgstr "Urllists плейър"
+
+msgid "Use Cinemeta (no key, English)"
+msgstr "Използване на Cinemeta (без ключ, на английски)"
+
+msgid "Use HLS streams (adaptive):"
+msgstr "Използване на HLS потоци (адаптивни):"
+
+msgid "Use IMDb (no key)"
+msgstr "Използване на IMDb (без ключ)"
+
+msgid "Use OMDb"
+msgstr "Използване на OMDb"
+
+msgid "Use TMDb"
+msgstr "Използване на TMDb"
+
+msgid "Use TVmaze for series (no key, English)"
+msgstr "Използване на TVmaze за сериали (без ключ, на английски)"
+
+msgid "Use default video quality"
+msgstr "Използване на качество на видеото по подразбиране"
+
+msgid "Use default video quality:"
+msgstr "Използване на качество на видеото по подразбиране:"
+
+msgid "Use login"
+msgstr "Използване на вход"
+
+msgid "Use own pin for configuration"
+msgstr "Собствен ПИН за конфигурацията"
+
+msgid "Use own pin instead of the player pin"
+msgstr "Собствен ПИН вместо ПИН на плейъра"
+
+msgid "Use proxy server:"
+msgstr "Използване на прокси сървър:"
+
+#, python-format
+msgid "Use software decoder for the %s"
+msgstr "Софтуерен декодер за %s"
+
+msgid "Use subtitles parser extension if available"
+msgstr "Използване на разширение за парсер на субтитри, ако е налично"
+
+msgid "Use the PyCurl for HTTP(S) requests"
+msgstr "Използване на PyCurl за HTTP(S) заявки"
+
+msgid "Use the best quality :"
+msgstr "Използване на най-доброто качество :"
+
+msgid "User"
+msgstr "Потребител"
+
+msgid "User defined"
+msgstr "Потребителски"
+
+msgid "User files"
+msgstr "Потребителски файлове"
+
+msgid "User link added."
+msgstr "Потребителската връзка е добавена."
+
+msgid "User link deleted."
+msgstr "Потребителската връзка е изтрита."
+
+msgid "User link updated."
+msgstr "Потребителската връзка е обновена."
+
+msgid "User links"
+msgstr "Потребителски връзки"
+
+msgid "User links sorted."
+msgstr "Потребителските връзки са сортирани."
+
+msgid "User links stored in the ytlist.txt file."
+msgstr "Потребителски връзки, съхранени във файла ytlist.txt."
+
+msgid "User-Agent (leave empty for the default):"
+msgstr "User-Agent (оставете празно за стойност по подразбиране):"
+
+#, python-format
+msgid "User-Links: %d"
+msgstr "Потребителски връзки: %d"
+
+msgid "Username/password authentication failure."
+msgstr "Неуспешно удостоверяване с потребителско име/парола."
+
+msgid "Username:"
+msgstr "Потребителско име:"
+
+msgid "Users"
+msgstr "Потребители"
+
+#, python-format
+msgid "Utility \"%s\" can not be found."
+msgstr "Помощната програма \"%s\" не може да бъде намерена."
+
+msgid "VAVOO did not hand out a session signature. Try again later."
+msgstr "VAVOO не предостави подпис на сесията. Опитайте отново по-късно."
+
+msgid "Venue"
+msgstr "Място на провеждане"
+
+msgid "Verify"
+msgstr "Потвърждаване"
+
+msgid "Version"
+msgstr "Версия"
+
+#, python-format
+msgid "Version: %s"
+msgstr "Версия: %s"
+
+msgid "Video"
+msgstr "Видео"
+
+msgid "Video buffer size [MB]"
+msgstr "Размер на видео буфера [MB]"
+
+msgid "Video library"
+msgstr "Видеотека"
+
+msgid "Video link not found."
+msgstr "Връзката към видеото не е намерена."
+
+msgid "Video mode"
+msgstr "Видео режим"
+
+msgid "Video options"
+msgstr "Видео опции"
+
+msgid "Video player OSD clock format"
+msgstr "Формат на часовника в OSD на видеоплейъра"
+
+msgid "Video policy"
+msgstr "Видео политика"
+
+msgid "Video policy for 4:3"
+msgstr "Видео политика за 4:3"
+
+msgid "Video recitations"
+msgstr "Видео рецитации"
+
+msgid "Video with DRM protection."
+msgstr "Видео със защита DRM."
+
+msgid "Videos"
+msgstr "Видеа"
+
+#, python-format
+msgid "Videos %s"
+msgstr "Видеа %s"
+
+msgid "Videos you have liked."
+msgstr "Видеа, които сте харесали."
+
+msgid "Videos you have recently watched."
+msgstr "Видеа, които сте гледали наскоро."
+
+msgid "View count"
+msgstr "Брой гледания"
+
+msgid "Views"
+msgstr "Гледания"
+
+msgid "Views:"
+msgstr "Гледания:"
+
+msgid "Vimeo does not offer this list to anonymous users in your region."
+msgstr "Vimeo не предлага този списък на анонимни потребители във вашия регион."
+
+msgid "Vimeo live event: the live transmission (while on air) and the past transmissions."
+msgstr "Vimeo събитие на живо: предаването на живо (докато е в ефир) и минали предавания."
+
+msgid "Vimeo playlist with the recordings of this page."
+msgstr "Плейлист в Vimeo със записите от тази страница."
+
+msgid "Vimeo: this video is private, removed or may only be played on the site that embeds it."
+msgstr "Vimeo: това видео е частно, премахнато или може да се възпроизвежда само на сайта, в който е вградено."
+
+msgid "Virtual Keyboard"
+msgstr "Виртуална клавиатура"
+
+msgid "Virtual Keyboard type"
+msgstr "Тип виртуална клавиатура"
+
+msgid "Voice-over"
+msgstr "Озвучаване"
+
+msgid "WWE shows"
+msgstr "WWE шоута"
+
+msgid "Waiting for the result ..."
+msgstr "Изчакване на резултата ..."
+
+msgid "War"
+msgstr "Военни"
+
+msgid "Watch Videos Online"
+msgstr "Гледайте видеа онлайн"
+
+msgid "Watch history"
+msgstr "История на гледането"
+
+msgid "Watch later"
+msgstr "За гледане по-късно"
+
+msgid "Watch online"
+msgstr "Гледане онлайн"
+
+msgid "Western"
+msgstr "Уестърн"
+
+msgid "What's happening?"
+msgstr "Какво се случва?"
+
+msgid "When the maximum is reached"
+msgstr "При достигане на максимума"
+
+msgid "While live TV is running"
+msgstr "Докато върви телевизия на живо"
+
+msgid "Whole file must be downloaded to start playback!"
+msgstr "Целият файл трябва да бъде изтеглен, за да започне възпроизвеждането!"
+
+msgid "Wiki"
+msgstr "Wiki"
+
+msgid "Winter"
+msgstr "Зима"
+
+msgid "With an API key from subdl.com (E2iPlayer settings, Subtitles) the official SubDL API is searched as well."
+msgstr "С API ключ от subdl.com (настройки на E2iPlayer, Субтитри) се търси и в официалния SubDL API."
+
+msgid "With subtitles"
+msgstr "Със субтитри"
+
+msgid "World"
+msgstr "Свят"
+
+msgid "Worldwide"
+msgstr "По целия свят"
+
+msgid "Wrestling"
+msgstr "Кеч"
+
+msgid "Wrestling shows"
+msgstr "Кеч шоута"
+
+msgid "Write current title to file:"
+msgstr "Записване на текущото заглавие във файл:"
+
+msgid "Writer:"
+msgstr "Сценарист:"
+
+msgid "Writers:"
+msgstr "Сценаристи:"
+
+msgid "Written Boards Review"
+msgstr "Преговор за писмения специализантски изпит"
+
+msgid "Wrong Youtube Api Key length"
+msgstr "Грешна дължина на YouTube API ключа"
+
+msgid "Wrong captcha code."
+msgstr "Грешен captcha код."
+
+msgid "Wrong code."
+msgstr "Грешен код."
+
+msgid "Wrong format of rar archive."
+msgstr "Грешен формат на RAR архива."
+
+msgid "Wrong format of zip archive."
+msgstr "Грешен формат на ZIP архива."
+
+msgid "Wrong indexes."
+msgstr "Грешни индекси."
+
+msgid "Wrong uri."
+msgstr "Грешен uri."
+
+msgid "Wrong weeb.tv username or password."
+msgstr "Грешно потребителско име или парола за weeb.tv."
+
+#, python-format
+msgid "Wyzie Subs API key rejected: %s"
+msgstr "API ключът за Wyzie Subs е отхвърлен: %s"
+
+msgid "Wyzie Subs needs an API key. You can get a free one at https://store.wyzie.io/redeem and enter it in the E2iPlayer configuration."
+msgstr "Wyzie Subs изисква API ключ. Можете да получите безплатен на https://store.wyzie.io/redeem и да го въведете в конфигурацията на E2iPlayer."
+
+msgid "Wyzie Subs: the daily request limit of the API key is reached."
+msgstr "Wyzie Subs: дневният лимит на заявки за API ключа е достигнат."
+
+msgid "YELLOW"
+msgstr "ЖЪЛТ"
+
+msgid "YESTERDAY"
+msgstr "ВЧЕРА"
+
+msgid "YP connected"
+msgstr "YP е свързан"
+
+msgid "Year"
+msgstr "Година"
+
+#, python-format
+msgid "Year %s"
+msgstr "Година %s"
+
+msgid "Year:"
+msgstr "Година:"
+
+msgid "Yes"
+msgstr "Да"
+
+msgid "Yes + Global Search"
+msgstr "Да + Глобално търсене"
+
+msgid "Yes, to console"
+msgstr "Да, в конзолата"
+
+msgid "Yes, to file /hdd/iptv.dbg"
+msgstr "Да, във файл /hdd/iptv.dbg"
+
+msgid "Yes, to file /home/root/logs/iptv.dbg"
+msgstr "Да, във файл /home/root/logs/iptv.dbg"
+
+msgid "Yes, to file /tmp/iptv.dbg"
+msgstr "Да, във файл /tmp/iptv.dbg"
+
+msgid "Yesterday"
+msgstr "Вчера"
+
+msgid "You can disable HTTPS certificates validation in the E2iPlayer configuration to suppress this problem."
+msgstr "Можете да изключите проверката на HTTPS сертификатите в конфигурацията на E2iPlayer, за да избегнете този проблем."
+
+msgid "You can enable PyCurl in the E2iPlayer configuration to fix this problem."
+msgstr "Можете да включите PyCurl в конфигурацията на E2iPlayer, за да решите този проблем."
+
+msgid "You can install PyCurl package with TLS 1.3 support from the feed to fix this problem."
+msgstr "Можете да инсталирате пакета PyCurl с поддръжка на TLS 1.3 от фийда, за да решите този проблем."
+
+#, python-format
+msgid "You can use \"%s\" or \"%s\" services for automatic solution."
+msgstr "Можете да използвате услугите \"%s\" или \"%s\" за автоматично решаване."
+
+msgid "You can use external eplayer to start playback faster."
+msgstr "Можете да използвате външния eplayer, за да започне възпроизвеждането по-бързо."
+
+msgid "You do not have a premium account. Starting a sponsored broadcast."
+msgstr "Нямате премиум акаунт. Стартира се спонсорирано предаване."
+
+msgid "You have reached the play limit for this mix."
+msgstr "Достигнахте лимита за възпроизвеждане на този микс."
+
+msgid "You should never perform block I/O operations in the __init__."
+msgstr "Никога не трябва да извършвате блокиращи I/O операции в __init__."
+
+msgid "YouTube User Links Editor"
+msgstr "Редактор на потребителски връзки за YouTube"
+
+msgid "YouTube channels: original order"
+msgstr "YouTube канали: първоначален ред"
+
+msgid "YouTube channels: sort by newest upload"
+msgstr "YouTube канали: сортиране по най-ново качване"
+
+msgid "Your 'Watch later' playlist."
+msgstr "Вашият плейлист „За гледане по-късно“."
+
+#, python-format
+msgid "Your MyE2i extension is outdated or unknown (v%s or newer needed). Please update:"
+msgstr "Вашето разширение MyE2i е остаряло или неизвестно (необходима е v%s или по-нова). Моля, актуализирайте:"
+
+msgid "Your search entry"
+msgstr "Вашето търсене"
+
+#, python-format
+msgid "Youth protection: only available between %s and %s."
+msgstr "Защита на непълнолетните: достъпно само между %s и %s."
+
+msgid "Youtube Suggestions"
+msgstr "Предложения от YouTube"
+
+msgid "Youtube searches are quicker, if you fill API key in setting menu"
+msgstr "Търсенето в YouTube е по-бързо, ако въведете API ключ в менюто с настройки"
+
+msgid "Z-A"
+msgstr "Z-A"
+
+#, python-format
+msgid "[%s CD]"
+msgstr "[%s CD]"
+
+#, python-format
+msgid "[%s] - configuration"
+msgstr "[%s] - конфигурация"
+
+#, python-format
+msgid "[%s] with buffering"
+msgstr "[%s] с буфериране"
+
+#, python-format
+msgid "[%s] without buffering"
+msgstr "[%s] без буфериране"
+
+msgid "[HLS/M3U8] buffering"
+msgstr "[HLS/M3U8] буфериране"
+
+msgid "[HLS/M3U8] live stream starts behind live"
+msgstr "[HLS/M3U8] потокът на живо започва зад точката на живо"
+
+msgid "[HTTP] buffering"
+msgstr "[HTTP] буфериране"
+
+msgid "[Logged-in-only]"
+msgstr "[Само за влезли потребители]"
+
+msgid "[RTMP] buffering (rtmpdump required)"
+msgstr "[RTMP] буфериране (изисква се rtmpdump)"
+
+msgid "[en]"
+msgstr "[en]"
+
+msgid "[pl]"
+msgstr "[pl]"
+
+msgid "_checkStatus except error"
+msgstr "_checkStatus except error"
+
+msgid "after a week"
+msgstr "след седмица"
+
+msgid "after closing"
+msgstr "след затваряне"
+
+msgid "after day"
+msgstr "след ден"
+
+msgid "after three days"
+msgstr "след три дни"
+
+msgid "all"
+msgstr "всички"
+
+msgid "alphabetical"
+msgstr "азбучно"
+
+msgid "anime-odcinki.pl shows this title only to logged-in users."
+msgstr "anime-odcinki.pl показва това заглавие само на влезли потребители."
+
+msgid "aqua"
+msgstr "аква"
+
+msgid "as Chrome this session"
+msgstr "като Chrome за тази сесия"
+
+msgid "as in ytlist.txt"
+msgstr "както в ytlist.txt"
+
+msgid "auto"
+msgstr "авто"
+
+#, python-format
+msgid "available until %s"
+msgstr "достъпно до %s"
+
+msgid "back to host/group selection"
+msgstr "обратно към избора на хост/група"
+
+msgid "back to the previous category / jump to the next page"
+msgstr "обратно към предишната категория / към следващата страница"
+
+msgid "black"
+msgstr "черен"
+
+msgid "black&white"
+msgstr "черно-бял"
+
+msgid "blue"
+msgstr "син"
+
+msgid "bottom"
+msgstr "долу"
+
+msgid "buffering location"
+msgstr "местоположение на буфера"
+
+msgid "center"
+msgstr "центрирано"
+
+msgid "changed"
+msgstr "променено"
+
+msgid "close the editor - or stop manual reordering if it's active"
+msgstr "затваряне на редактора - или спиране на ръчното пренареждане, ако е активно"
+
+msgid "cobalt"
+msgstr "кобалт"
+
+msgid "cookies cache"
+msgstr "кеш на бисквитките"
+
+msgid "could not run the probe"
+msgstr "проверката не можа да бъде изпълнена"
+
+#, python-format
+msgid "curl-impersonate is not installed on the receiver (%s). This stream only plays with it."
+msgstr "curl-impersonate не е инсталиран на приемника (%s). Този поток се възпроизвежда само с него."
+
+msgid "debug"
+msgstr "дебъг"
+
+msgid "default"
+msgstr "по подразбиране"
+
+msgid "delete entered text"
+msgstr "изтриване на въведения текст"
+
+msgid "delete the selected entry"
+msgstr "изтриване на избрания запис"
+
+msgid "device ID"
+msgstr "ID на устройството"
+
+msgid "device ID 2"
+msgstr "ID на устройството 2"
+
+msgid "direct link"
+msgstr "директна връзка"
+
+msgid "direct number input"
+msgstr "директно въвеждане на число"
+
+msgid "download the selected item"
+msgstr "изтегляне на избрания елемент"
+
+msgid "downloads location"
+msgstr "местоположение на изтеглянията"
+
+msgid "e-mail"
+msgstr "имейл"
+
+msgid "edit the selected entry (same as BLUE) - or drop it while manually reordering"
+msgstr "редактиране на избрания запис (същото като СИН) - или пускането му при ръчно пренареждане"
+
+msgid "edit the selected entry (same as OK)"
+msgstr "редактиране на избрания запис (същото като OK)"
+
+msgid "enable / disable manual reordering"
+msgstr "включване / изключване на ръчното пренареждане"
+
+msgid "external eplayer3"
+msgstr "външен eplayer3"
+
+msgid "external gstplayer"
+msgstr "външен gstplayer"
+
+msgid "failed"
+msgstr "неуспешно"
+
+msgid "file"
+msgstr "файл"
+
+msgid "fixed"
+msgstr "фиксирано"
+
+msgid "format"
+msgstr "формат"
+
+msgid "free"
+msgstr "свободно"
+
+msgid "from E2 settings"
+msgstr "от настройките на E2"
+
+msgid "fuchsia"
+msgstr "фуксия"
+
+msgid "go back / close"
+msgstr "назад / затваряне"
+
+msgid "goals"
+msgstr "голове"
+
+msgid "gray"
+msgstr "сив"
+
+msgid "green"
+msgstr "зелен"
+
+msgid "hd"
+msgstr "hd"
+
+msgid "hearing impaired"
+msgstr "за хора с увреден слух"
+
+msgid "high"
+msgstr "високо"
+
+msgid "hint: the site shows a next page link"
+msgstr "подсказка: сайтът показва връзка към следваща страница"
+
+msgid "horizontal"
+msgstr "хоризонтално"
+
+msgid "host"
+msgstr "хост"
+
+msgid "host order and groups"
+msgstr "ред на хостовете и групи"
+
+msgid "https"
+msgstr "https"
+
+msgid "https - validate SSL certificates"
+msgstr "https - проверка на SSL сертификатите"
+
+msgid "insert space"
+msgstr "вмъкване на интервал"
+
+msgid "installed"
+msgstr "инсталирано"
+
+msgid "internal"
+msgstr "вътрешен"
+
+msgid "item actions (favorites, host-specific actions)"
+msgstr "действия за елемента (любими, специфични за хоста действия)"
+
+msgid "jersey"
+msgstr "фланелка"
+
+msgid "jump to entries starting with that letter (if enabled in the settings)"
+msgstr "прескачане до записи, започващи с тази буква (ако е включено в настройките)"
+
+msgid "jump to items starting with that letter, or launch a specific player directly"
+msgstr "прескачане до елементи, започващи с тази буква, или директно стартиране на определен плейър"
+
+msgid "kernel reports"
+msgstr "ядрото съобщава"
+
+msgid "large"
+msgstr "голям"
+
+msgid "leave movie player..."
+msgstr "излизане от плейъра..."
+
+msgid "lime"
+msgstr "лайм"
+
+msgid "line"
+msgstr "линия"
+
+msgid "loaded (no version)"
+msgstr "заредено (без версия)"
+
+msgid "login"
+msgstr "вход"
+
+msgid "low"
+msgstr "ниско"
+
+msgid "machine translated"
+msgstr "машинен превод"
+
+msgid "main"
+msgstr "main"
+
+msgid "manual"
+msgstr "ръчно"
+
+msgid "maroon"
+msgstr "кестеняво"
+
+msgid "medium"
+msgstr "средно"
+
+msgid "menu and list only"
+msgstr "само меню и списък"
+
+msgid "minutes"
+msgstr "минути"
+
+msgid "more options (this menu)"
+msgstr "още опции (това меню)"
+
+msgid "move cursor right/left"
+msgstr "преместване на курсора надясно/наляво"
+
+msgid "move the selection - or move it while manually reordering"
+msgstr "преместване на избора - или преместване на записа при ръчно пренареждане"
+
+msgid "movie metadata cache"
+msgstr "кеш на метаданните за филми"
+
+msgid "movie player preferences"
+msgstr "предпочитания за плейъра на филми"
+
+msgid "navy"
+msgstr "предпочитания за плейъра"
+
+msgid "netu/hqq: the player check failed, try again later."
+msgstr "netu/hqq: проверката на плейъра не бе успешна, опитайте отново по-късно."
+
+msgid "never"
+msgstr "никога"
+
+msgid "next page"
+msgstr "следваща страница"
+
+msgid "next page = page 1"
+msgstr "следваща страница = страница 1"
+
+msgid "next page empty"
+msgstr "следващата страница е празна"
+
+msgid "next page ok"
+msgstr "следваща страница ok"
+
+msgid "no answer"
+msgstr "няма отговор"
+
+msgid "no next page"
+msgstr "няма следваща страница"
+
+msgid "no stream link"
+msgstr "няма връзка към потока"
+
+msgid "no videos in the first lists"
+msgstr "няма видеа в първите списъци"
+
+msgid "not available (the Python parser is used)"
+msgstr "не е налично (използва се Python парсерът)"
+
+msgid "not found"
+msgstr "не е намерено"
+
+msgid "not installed"
+msgstr "не е инсталирано"
+
+msgid "not loadable"
+msgstr "не може да се зареди"
+
+msgid "off"
+msgstr "изкл."
+
+msgid "off / console"
+msgstr "изкл. / конзола"
+
+msgid "olive"
+msgstr "маслинено"
+
+msgid "on"
+msgstr "вкл."
+
+msgid "only on the receiver"
+msgstr "само на приемника"
+
+msgid "open / play the selected item"
+msgstr "отваряне / възпроизвеждане на избрания елемент"
+
+msgid "open the options menu - see below"
+msgstr "отваряне на менюто с опции - вижте по-долу"
+
+msgid "or"
+msgstr "или"
+
+msgid "other binaries"
+msgstr "други изпълними файлове"
+
+msgid "password"
+msgstr "парола"
+
+msgid "prijevodi-online.org refused the download for this account."
+msgstr "prijevodi-online.org отказа изтеглянето за този акаунт."
+
+msgid "purple"
+msgstr "лилав"
+
+msgid "quality"
+msgstr "качество"
+
+msgid "red"
+msgstr "червен"
+
+msgid "refresh the current list"
+msgstr "опресняване на текущия списък"
+
+msgid "rootfs"
+msgstr "rootfs"
+
+msgid "rotate (keep the old one as iptv-<date>.dbg)"
+msgstr "ротация (запазване на стария като iptv-<date>.dbg)"
+
+msgid "rtmp"
+msgstr "rtmp"
+
+msgid "save all changes to disk"
+msgstr "запазване на всички промени на диска"
+
+msgid "saved"
+msgstr "запазено"
+
+msgid "saved in the temporary data folder"
+msgstr "запазено в папката за временни данни"
+
+msgid "saved next to the downloaded video file"
+msgstr "запазено до изтегления видеофайл"
+
+msgid "search"
+msgstr "търсене"
+
+#, python-format
+msgid "search %d"
+msgstr "търсене %d"
+
+msgid "search found nothing"
+msgstr "търсенето не намери нищо"
+
+msgid "search history"
+msgstr "история на търсенето"
+
+msgid "search next page = page 1"
+msgstr "търсене следваща страница = страница 1"
+
+msgid "search next page empty"
+msgstr "търсене следващата страница е празна"
+
+msgid "search next page ok"
+msgstr "търсене следваща страница ok"
+
+msgid "season pack"
+msgstr "пакет за сезон"
+
+msgid "second"
+msgstr "секунда"
+
+msgid "seconds"
+msgstr "секунди"
+
+msgid "select to sign out"
+msgstr "изберете, за да излезете"
+
+msgid "serial number"
+msgstr "сериен номер"
+
+msgid "show more details about the selected item"
+msgstr "показване на повече подробности за избрания елемент"
+
+msgid "show this help"
+msgstr "показване на тази помощ"
+
+msgid "sign in (subscriptions, playlists, age-restricted videos)"
+msgstr "вход (абонаменти, плейлисти, видеа с възрастово ограничение)"
+
+msgid "signature"
+msgstr "подпис"
+
+msgid "signed in"
+msgstr "влезли сте"
+
+msgid "silver"
+msgstr "сребрист"
+
+msgid "small"
+msgstr "малък"
+
+msgid "sources"
+msgstr "източници"
+
+msgid "standard"
+msgstr "стандартно"
+
+msgid "start auto-play (plays through the list automatically)"
+msgstr "стартиране на автоматично възпроизвеждане (възпроизвежда списъка автоматично)"
+
+msgid "status"
+msgstr "статус"
+
+msgid "stream data"
+msgstr "данни на потока"
+
+msgid "stream data ok"
+msgstr "данни на потока ok"
+
+msgid "stream data ok (HLS)"
+msgstr "данни на потока ok (HLS)"
+
+#, python-format
+msgid "stream is a web page, not video (HTTP %s)"
+msgstr "потокът е уеб страница, а не видео (HTTP %s)"
+
+msgid "stream link"
+msgstr "връзка към потока"
+
+msgid "stream link ok"
+msgstr "връзка към потока ok"
+
+#, python-format
+msgid "stream not checked (%s)"
+msgstr "потокът не е проверен (%s)"
+
+msgid "stream not checked (HTTP 429, too many requests)"
+msgstr "потокът не е проверен (HTTP 429, твърде много заявки)"
+
+#, python-format
+msgid "stream: %s"
+msgstr "поток: %s"
+
+#, python-format
+msgid "stream: no data (HTTP %s)"
+msgstr "поток: няма данни (HTTP %s)"
+
+msgid "subs.ro does not answer."
+msgstr "subs.ro не отговаря."
+
+msgid "subsource.net does not answer."
+msgstr "subsource.net не отговаря."
+
+msgid "subtitles"
+msgstr "субтитри"
+
+msgid "subtitles cache"
+msgstr "кеш на субтитрите"
+
+msgid "switch between keyboard, suggestions and search history"
+msgstr "превключване между клавиатура, предложения и история на търсенето"
+
+msgid "teal"
+msgstr "синьозелен"
+
+msgid "the best"
+msgstr "най-доброто"
+
+msgid "the menu has no lists"
+msgstr "менюто няма списъци"
+
+msgid "the menu is empty"
+msgstr "менюто е празно"
+
+msgid "the worst"
+msgstr "най-лошото"
+
+msgid "thumbnails"
+msgstr "миниатюри"
+
+#, python-format
+msgid "thumbnails %d/%d"
+msgstr "миниатюри %d/%d"
+
+msgid "thumbnails do not load"
+msgstr "миниатюрите не се зареждат"
+
+msgid "to top"
+msgstr "към началото"
+
+msgid "top"
+msgstr "горе"
+
+msgid "truncate the file"
+msgstr "съкращаване на файла"
+
+msgid "type selected character / confirm selection"
+msgstr "въвеждане на избрания символ / потвърждаване на избора"
+
+msgid "unknown"
+msgstr "неизвестно"
+
+msgid "unlimited"
+msgstr "неограничено"
+
+msgid "unsorted"
+msgstr "несортирано"
+
+msgid "upzone.cc: free transfer limit reached - PREMIUM account required."
+msgstr "upzone.cc: безплатният лимит за трансфер е достигнат - изисква се PREMIUM акаунт."
+
+msgid "version"
+msgstr "версия"
+
+msgid "vertical"
+msgstr "вертикално"
+
+msgid "very high"
+msgstr "много високо"
+
+#, python-format
+msgid "videos: %s"
+msgstr "видеа: %s"
+
+msgid "views"
+msgstr "гледания"
+
+#, python-format
+msgid "wait %s second"
+msgstr "изчакайте %s секунда"
+
+#, python-format
+msgid "wait %s seconds"
+msgstr "изчакайте %s секунди"
+
+msgid "wants you to solve a captcha. Only after solving this captcha, you are allowed to continue with your downloads. E2iPlayer is not able to auto-solve these captchas, so we need to pass the captcha to you."
+msgstr "иска да решите captcha. Едва след решаването ѝ ще можете да продължите с изтеглянията си. E2iPlayer не може да решава тези captcha автоматично, затова трябва да ви я предадем."
+
+#, python-format
+msgid "weeb.tv did not return a valid stream (error %s)."
+msgstr "weeb.tv не върна валиден поток (грешка %s)."
+
+msgid "weeb.tv did not return a valid stream for this channel."
+msgstr "weeb.tv не върна валиден поток за този канал."
+
+msgid "weeb.tv streams need a weeb.tv account - enter the login in the host configuration (Web streams, WeebTV)"
+msgstr "Потоците на weeb.tv изискват акаунт в weeb.tv - въведете данните за вход в конфигурацията на хоста (Web streams, WeebTV)"
+
+msgid "white"
+msgstr "бял"
+
+msgid "www:"
+msgstr "www:"
+
+msgid "yellow"
+msgstr "жълт"

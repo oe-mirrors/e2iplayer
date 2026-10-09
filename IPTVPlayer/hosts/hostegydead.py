@@ -1,5 +1,12 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026
+# Last Modified: 09.10.2026
+# 09.10.2026 - INFO: Arabic-only titles skip IMDb/Cinemeta/OMDb; season folders "Show - Sxx" when normalising
+# 09.10.2026 - the site's Megamax server on throw-away domains (q7v3k8m2p1.top/iframe/<id>, the only server of
+#   the newest titles) goes to megamax.me/iframe/<id> when urlparser does not know the domain
+# 08.10.2026 - server list hardened (the site sits behind a Cloudflare challenge since ~05.10, not
+#   reachable from the PC): <ul ... serversList ...> with any extra classes / quotes, relative data-link
+#   urls, the whole POST answer when the list markup changes, one more page load + POST when the answer
+#   has no player; plus the download servers (ser-link) urlparser knows
 # 03.10.2026 - revived for tv10.egydead.live (c4u1r.sbs only redirects there)
 #   Rewrite against the current site:
 #   - one list parser for all sections; the kind of a row comes from its url: /serie/ = series
@@ -19,7 +26,7 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHost
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
-from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
+from Plugins.Extensions.IPTVPlayer.libs.moviemeta import LATIN_ONLY, getMeta, isLatinTitle
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus, urllib_unquote
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
@@ -278,7 +285,7 @@ class EgyDead(GenericFolderWatchedScraperMixin, CBaseHostClass):
             self.addVideo(params)
         elif kind == "season":
             season = season or 1
-            title = ("%s - %s %d" % (name, _("Season"), season)) if normalize else raw
+            title = ("%s - %s" % (name, formatSxxExx(season))) if normalize else raw
             params.update({"category": "eg_season", "title": title or raw, "s_title": name, "s_season": season,
                            "meta_type": "tv", "meta_title": self._metaTitle(name), "meta_year": year or cItem.get("meta_year", "")})
             self.addDir(params)
@@ -423,6 +430,15 @@ class EgyDead(GenericFolderWatchedScraperMixin, CBaseHostClass):
             poster = self.cm.ph.getSearchGroups(data, r'<meta property="og:image" content="([^"]+)"')[0]
         return story, self._canonUrl(poster) if poster else ""
 
+    def _megamaxMirror(self, url):
+        # the site's own Megamax server sits on throw-away domains (q7v3k8m2p1.top/iframe/<id>, /download/<id>)
+        # urlparser does not know -> the same id on megamax.me (parserMEGAMAX); the download page is the same
+        # mirror page, so it collapses into the watch link
+        match = re.match(r"https?://[^/]+/(?:iframe|download)/([A-Za-z0-9]{8,20})/?$", url)
+        if match and self.up.checkHostSupport(url) != 1:
+            return "https://megamax.me/iframe/%s" % match.group(1)
+        return url
+
     def getLinksForVideo(self, cItem):
         printDBG("EgyDead.getLinksForVideo [%s]" % cItem.get("url", ""))
         pageUrl = self._canonUrl(cItem.get("url", ""))
@@ -430,23 +446,45 @@ class EgyDead(GenericFolderWatchedScraperMixin, CBaseHostClass):
         params["header"] = dict(self.HEADER, Referer=pageUrl)
         params["header"]["Content-Type"] = "application/x-www-form-urlencoded"
         sts, data = self.getPage(pageUrl, params, {"View": "1"})
+        if sts and "data-link=" not in data:
+            # the POST answer came back without the player (fresh Cloudflare cookie, redirect) - load the
+            # page once like the browser does and send the form again
+            self.getPage(pageUrl)
+            sts, data = self.getPage(pageUrl, params, {"View": "1"})
         if not sts:
             return []
         story = self._siteInfo(data)[0]
-        block = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="serversList">', "</ul>", False)[1]
         urltab = []
         names = {}
-        for item in self.cm.ph.getAllItemsBeetwenMarkers(block, "<li", "</li>"):
-            url = self.cm.ph.getSearchGroups(item, r'data-link="([^"]+)"')[0].strip()
-            if url.startswith("//"):
-                url = "https:" + url
-            if not self.cm.isValidUrl(url) or url in [u["url"] for u in urltab]:
-                continue
-            name = self.cleanHtmlStr(item) or self.up.getDomain(url, onlyDomain=True)
+        seen = set()
+
+        def addLink(url, name):
+            url = self.getFullUrl(url.replace("&amp;", "&").strip())
+            url = self._megamaxMirror(url)
+            if not self.cm.isValidUrl(url) or url in seen:
+                return
+            seen.add(url)
+            name = name or self.up.getDomain(url, onlyDomain=True)
             names[name] = names.get(name, 0) + 1
             if names[name] > 1:
                 name = "%s %d" % (name, names[name])
             urltab.append({"name": name, "url": strwithmeta(url, {"Referer": self.MAIN_URL}), "need_resolve": 1})
+
+        # watch servers: <ul class="serversList ..."><li data-link="..."><p>name</p></li>; the whole answer when
+        # the list markup changes
+        block = self.cm.ph.getDataBeetwenNodes(data, ("<ul", ">", "serversList"), ("</ul", ">"), False)[1] or data
+        for item in self.cm.ph.getAllItemsBeetwenMarkers(block, "<li", "</li>"):
+            url = self.cm.ph.getSearchGroups(item, r"""data-link=['"]([^'"]+)['"]""")[0]
+            if url:
+                name = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ("<p", ">"), ("</p", ">"), False)[1]) or self.cleanHtmlStr(item)
+                addLink(url, name)
+        # download servers (<a class="ser-link" href="...">) of hosters urlparser knows
+        for item in self.cm.ph.getAllItemsBeetwenMarkers(data, "<li", "</li>"):
+            url = self.cm.ph.getSearchGroups(item, r"""class=['"]ser-link['"][^>]+href=['"]([^'"]+)['"]""")[0] or \
+                self.cm.ph.getSearchGroups(item, r"""href=['"]([^'"]+)['"][^>]+class=['"]ser-link['"]""")[0]
+            if url and self.up.checkHostSupport(self._megamaxMirror(self.getFullUrl(url))) == 1:
+                name = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ("<span", ">", "ser-name"), ("</span", ">"), False)[1])
+                addLink(url, "%s (%s)" % (name or self.up.getDomain(self.getFullUrl(url), onlyDomain=True), _("Download")))
         if not urltab:
             SetIPTVPlayerLastHostError(_("No stream available"))
             return []
@@ -467,7 +505,9 @@ class EgyDead(GenericFolderWatchedScraperMixin, CBaseHostClass):
         meta = {}
         if cItem.get("meta_type") and cItem.get("meta_title"):
             try:
-                meta = getMeta(cItem["meta_type"], cItem["meta_title"], cItem.get("meta_year", ""))
+                # Arabic-only titles -> no IMDb/Cinemeta/OMDb (they answer with unrelated English hits)
+                skip = () if isLatinTitle(cItem["meta_title"]) else LATIN_ONLY
+                meta = getMeta(cItem["meta_type"], cItem["meta_title"], cItem.get("meta_year", ""), skip)
             except Exception:
                 printExc()
         story, poster, info, title = "", "", {}, ""

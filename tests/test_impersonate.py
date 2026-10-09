@@ -677,3 +677,30 @@ def test_getpage_return_data_false_impersonate(pc, tmp_path, monkeypatch):
     sts, data = cm.getPage("https://mlb.example/cf", {"return_data": False})
     assert sts is False and data == "Access Forbidden" and "Just a moment" in data.meta["body_head"]
     assert [f for f in os.listdir(str(tmp_path)) if f.startswith("e2i_impdl_")] == []
+
+
+def test_pycurl_cookie_file_session_expiry(pc, tmp_path):
+    # a file saved by the urllib path: PHPSESSID with an empty "expires" - pycurl (curl 8.x) dropped that line
+    jar = http.cookiejar.MozillaCookieJar()
+    jar.set_cookie(http.cookiejar.Cookie(0, "PHPSESSID", "s1", None, False, "a.example", False, False, "/", True, False, None, True, None, None, {}))
+    jar.set_cookie(http.cookiejar.Cookie(0, "perm", "w", None, False, ".a.example", True, True, "/", True, True, 4102444800, False, None, None, {}))
+    path = str(tmp_path / "a.cookie")
+    jar.save(path, ignore_discard=True)
+    cm = pc.common()
+    cm._pyCurlPrepareCookieFile(path)
+    lines = open(path).read().splitlines()
+    assert "a.example\tFALSE\t/\tFALSE\t0\tPHPSESSID\ts1" in lines
+    assert ".a.example\tTRUE\t/\tTRUE\t4102444800\tperm\tw" in lines
+    # pCommon's pycurl reader and the curl-impersonate normaliser still read it as a session cookie
+    assert sorted((c.name, c.expires) for c in cm._pyCurlLoadCookie(path)) == [("PHPSESSID", None), ("perm", 4102444800)]
+    assert pc.ci.normalizeCookieFile(path)
+    back = http.cookiejar.MozillaCookieJar()
+    back.load(path, ignore_discard=True)
+    assert sorted(c.name for c in back) == ["PHPSESSID", "perm"]
+    # nothing to fix -> file untouched; a missing file is no error
+    with open(path, "wb") as f:
+        f.write(b"# Netscape HTTP Cookie File\r\na.example\tFALSE\t/\tFALSE\t0\tx\t1\r\n")
+    cm._pyCurlPrepareCookieFile(path)
+    assert open(path, "rb").read() == b"# Netscape HTTP Cookie File\r\na.example\tFALSE\t/\tFALSE\t0\tx\t1\r\n"
+    cm._pyCurlPrepareCookieFile(str(tmp_path / "missing.cookie"))
+    assert "EXC" not in pc.logs
