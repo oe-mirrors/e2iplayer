@@ -7,7 +7,7 @@
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetHostTitle
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 ###################################################
 
@@ -81,8 +81,7 @@ def HostNameOf(hostObj):
 def GetHostDisplayTitle(hostName):
     # hosts named by their address: "https://www.site.example/" -> "site.example"
     try:
-        module = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + hostName, globals(), locals(), ['gettytul'], 0)
-        title = re.sub(r'^https?://(www\.)?', '', str(module.gettytul()).strip()).rstrip('/')
+        title = re.sub(r'^https?://(www\.)?', '', str(GetHostTitle(hostName) or '').strip()).rstrip('/')
     except Exception:
         printExc()
         title = ''

@@ -273,15 +273,17 @@ _HOST_INFO_CACHE = {}
 # "# Last Modified: 07.10.2026" (line 2 of every host), hosts from other
 # sources may still use dd/mm/yyyy or yyyy-mm-dd
 _HOST_LAST_MODIFIED_RE = re.compile(r'#\s*Last\s*Modified\s*:?\s*(\d{1,4})[./-](\d{1,2})[./-](\d{2,4})', re.IGNORECASE)
+# hostxxx: '\tXXXversion = "2026.10.07.1"' in its Host class
+_HOST_XXX_VERSION_RE = re.compile(r'''^\s+XXXversion\s*=\s*['"]([^'"]+)['"]''')
 
 
 def _getHostInfoText(key):
     # "Host: <key>, Last Modified: dd.mm.yyyy[, Version: x]" for the line
     # above the host URL. The date comes from the header of the host file
     # (only its start is read - hostxxx alone is 1.5 MB), the version from
-    # hostxxx's Host.XXXversion of the module E2iPlayerWidget already
-    # imported for gettytul(). Cached per session; empty for groups and
-    # "config".
+    # hostxxx's Host.XXXversion - of the loaded module, else read from the
+    # file (the host list does not load the hosts). Cached per session;
+    # empty for groups and "config".
     if key in _HOST_INFO_CACHE:
         return _HOST_INFO_CACHE[key]
     text = ""
@@ -299,6 +301,15 @@ def _getHostInfoText(key):
                     year = '20' + year
                 parts.append(_("Last Modified: %s") % ('%02d.%02d.%s' % (int(day), int(month), year)))
         version = getattr(getattr(sys.modules.get('Plugins.Extensions.IPTVPlayer.hosts.host' + key), 'Host', None), 'XXXversion', None)
+        if not version and key == 'xxx' and os.path.isfile(path):
+            # the host list no longer loads the hosts, so read it from the file
+            # (only hostxxx has it - the other files are not scanned)
+            with io.open(path, 'r', encoding='utf-8', errors='ignore') as f:
+                for line in f:
+                    match = _HOST_XXX_VERSION_RE.match(line)
+                    if match:
+                        version = match.group(1)
+                        break
         if version:
             parts.append(_("Version: %s") % version)
         if parts:
