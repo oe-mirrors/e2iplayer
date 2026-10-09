@@ -183,7 +183,9 @@ class IPTVIdleScreenSaver:
 
     def __init__(self, session, configItem):
         self.session = session
-        self.configItem = configItem  # seconds, 0 = off
+        # seconds, 0 = off; None (setting not registered) = off too - after an update without an enigma2
+        # restart the old iptvconfig module stays loaded and lacks settings added since (issue #689)
+        self.configItem = configItem
         self.swallow = False
         self.bound = False
         self.timer = eTimer()
@@ -273,7 +275,7 @@ class IPTVAudioScreenSaver(IPTVIdleScreenSaver):
     # cover and the playback time; the player decides when it is wanted (_screenSaverWanted)
 
     def __init__(self, player, imagePaths):
-        IPTVIdleScreenSaver.__init__(self, player.session, config.plugins.iptvplayer.screensaver_audio)
+        IPTVIdleScreenSaver.__init__(self, player.session, getattr(config.plugins.iptvplayer, 'screensaver_audio', None))
         self.player = player
         self.imagePaths = imagePaths
         self.dialog = None
@@ -315,7 +317,7 @@ class IPTVMenuScreenSaver(IPTVIdleScreenSaver):
 
     def __init__(self, session, owner, getInfo):
         # getInfo() -> (title, [image paths]) for the black screensaver
-        IPTVIdleScreenSaver.__init__(self, session, config.plugins.iptvplayer.screensaver_menu)
+        IPTVIdleScreenSaver.__init__(self, session, getattr(config.plugins.iptvplayer, 'screensaver_menu', None))
         self.owner = owner
         self.getInfo = getInfo
         self.dialog = None
