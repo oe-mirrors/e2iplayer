@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-08 20:17+0000\n"
+"POT-Creation-Date: 2026-10-09 19:42+0000\n"
 "PO-Revision-Date: 2026-10-08 20:17+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Danish\n"
@@ -592,6 +592,9 @@ msgstr "Alternativ proxyserver (4)"
 msgid "Alternative proxy server (5)"
 msgstr "Alternativ proxyserver (5)"
 
+msgid "American football"
+msgstr ""
+
 msgid "An API key from subsource.net can be entered in the E2iPlayer settings (Subtitles)."
 msgstr "En API-nøgle fra subsource.net kan angives i E2iPlayer-indstillingerne (Undertekster)."
 
@@ -814,6 +817,9 @@ msgstr "Balkan"
 msgid "Basic Science"
 msgstr "Grundvidenskab"
 
+msgid "Basketball"
+msgstr ""
+
 msgid "Being watched"
 msgstr "Ses lige nu"
 
@@ -862,6 +868,9 @@ msgstr "Bøger"
 
 msgid "Box"
 msgstr "Boks"
+
+msgid "Boxing"
+msgstr ""
 
 msgid "Broadcast:"
 msgstr "Udsendelse:"
@@ -1085,6 +1094,9 @@ msgstr "Kombiner pull request-merges med deres commit"
 msgid "Comedy"
 msgstr "Komedie"
 
+msgid "Commentator"
+msgstr ""
+
 msgid "Comments"
 msgstr "Kommentarer"
 
@@ -1224,6 +1236,9 @@ msgstr "Skaber:"
 msgid "Creators:"
 msgstr "Skabere:"
 
+msgid "Cricket"
+msgstr ""
+
 msgid "Crime"
 msgstr "Krimi"
 
@@ -1271,6 +1286,9 @@ msgstr "Daglig downloadgrænse nået - indtast koden"
 
 msgid "Darkgray"
 msgstr "Mørkegrå"
+
+msgid "Darts"
+msgstr ""
 
 msgid "Date"
 msgstr "Dato"
@@ -2083,6 +2101,9 @@ msgstr "Favoritstyring"
 msgid "Featured"
 msgstr "Udvalgte"
 
+msgid "FebBox token (\"ui\" cookie of www.febbox.com):"
+msgstr ""
+
 #, python-format
 msgid "File \"%s\" already exists"
 msgstr "Filen \"%s\" findes allerede"
@@ -2215,6 +2236,9 @@ msgstr "Mad"
 msgid "Foot & Ankle"
 msgstr "Fod & ankel"
 
+msgid "Football"
+msgstr ""
+
 msgid "Football Live"
 msgstr "Fodbold live"
 
@@ -2280,6 +2304,9 @@ msgstr "Fuld test kontrollerer stream-linket :"
 
 msgid "Full test checks thumbnails :"
 msgstr "Fuld test kontrollerer miniaturebilleder :"
+
+msgid "Futsal"
+msgstr ""
 
 msgid "GREEN"
 msgstr "GRØN"
@@ -2398,6 +2425,9 @@ msgstr "HTTPS-forbindelsesfejl \"%s\"\n"
 msgid "Hand"
 msgstr "Hånd"
 
+msgid "Handball"
+msgstr ""
+
 msgid "Health"
 msgstr "Sundhed"
 
@@ -2431,6 +2461,9 @@ msgstr "Historik"
 
 msgid "History of searched phrases."
 msgstr "Historik over søgte sætninger."
+
+msgid "Hockey"
+msgstr ""
 
 msgid "Home"
 msgstr "Hjem"
@@ -2806,6 +2839,10 @@ msgstr "Seneste resultat"
 msgid "Last week"
 msgstr "Sidste uge"
 
+#, python-format
+msgid "Last week: %s"
+msgstr ""
+
 msgid "Last.fm charts and tag pages are behind a browser check, only the radio stations can be used."
 msgstr "Last.fm-hitlister og tag-sider ligger bag en browserkontrol, kun radiostationerne kan bruges."
 
@@ -3053,6 +3090,9 @@ msgstr "Lang liste"
 msgid "Longest"
 msgstr "Længste"
 
+msgid "Loved tracks"
+msgstr ""
+
 msgid "Low"
 msgstr "Lav"
 
@@ -3123,6 +3163,9 @@ msgstr "Maks. antal poster pr. side"
 
 msgid "Max number of parallel downloads has been reached."
 msgstr "Det maksimale antal parallelle downloads er nået."
+
+msgid "MaxStream (uprot.net) asks for its image captcha: solve it in MyE2i, then open the video again."
+msgstr ""
 
 msgid "Maximum log file size"
 msgstr "Maksimal størrelse på logfil"
@@ -3211,9 +3254,6 @@ msgstr "Mest hørte recitationer"
 msgid "Most popular"
 msgstr "Mest populære"
 
-msgid "Most rated"
-msgstr "Flest bedømmelser"
-
 msgid "Most recent"
 msgstr "Nyeste"
 
@@ -3225,6 +3265,12 @@ msgstr "Mest sete film"
 
 msgid "Most viewed series"
 msgstr "Mest sete serier"
+
+msgid "Most voted"
+msgstr ""
+
+msgid "Motorsport"
+msgstr ""
 
 #, python-format
 msgid ""
@@ -3295,6 +3341,9 @@ msgstr "MyE2i Cloudflare-løsning"
 msgid "MyE2i browser check solution"
 msgstr "MyE2i løsning af browserkontrol"
 
+msgid "MyE2i captcha: solve it, then Job (no CONTINUE)"
+msgstr ""
+
 msgid "MyE2i debug snapshot received - see the debug log."
 msgstr "MyE2i-debug-snapshot modtaget - se debug-loggen."
 
@@ -3323,6 +3372,9 @@ msgstr "MyE2i: luk startsiden, når du er færdig"
 
 msgid "MyE2i: offer to open the page in (Android)"
 msgstr "MyE2i: tilbyd at åbne siden i (Android)"
+
+msgid "Mystery"
+msgstr ""
 
 msgid ""
 "NO VIDEOS FOUND FOR NOW! \n"
@@ -3546,6 +3598,13 @@ msgstr "Intet at gemme - debug-loggen er ikke aktiv."
 msgid "Now"
 msgstr "Nu"
 
+msgid "Now playing"
+msgstr ""
+
+#, python-format
+msgid "Now playing: %s"
+msgstr ""
+
 msgid "Number of columns"
 msgstr "Antal kolonner"
 
@@ -3762,6 +3821,10 @@ msgstr "Patologirunder"
 
 msgid "Patriotism"
 msgstr "Patriotisme"
+
+#, python-format
+msgid "Peak: %s"
+msgstr ""
 
 msgid "Pediatrics"
 msgstr "Pædiatri"
@@ -4110,9 +4173,6 @@ msgstr "Bland en playliste"
 msgid "Range request not supported (resume failed)."
 msgstr "Range-forespørgsel understøttes ikke (genoptagelse mislykkedes)."
 
-msgid "Ranking"
-msgstr "Rangliste"
-
 msgid "Rated"
 msgstr "Aldersgrænse"
 
@@ -4179,6 +4239,9 @@ msgstr "Nægter at tømme \"%s\" - den ligner ikke en dedikeret cache-/konfigura
 
 msgid "Regions"
 msgstr "Regioner"
+
+msgid "Related seasons and works"
+msgstr ""
 
 msgid "Release"
 msgstr "Udgivelse"
@@ -4646,6 +4709,9 @@ msgstr "Shift"
 msgid "Short Movies"
 msgstr "Kortfilm"
 
+msgid "Short films"
+msgstr ""
+
 msgid "Short series"
 msgstr "Korte serier"
 
@@ -4730,6 +4796,9 @@ msgstr "Vis søgehistorik"
 msgid "Show suggestions"
 msgstr "Vis forslag"
 
+msgid "ShowBox streams need a FebBox login: enter the \"ui\" cookie of your FebBox account in the host configuration."
+msgstr ""
+
 msgid "Shows"
 msgstr "Shows"
 
@@ -4787,6 +4856,9 @@ msgstr "Skin-designere:"
 
 msgid "Skip video shorter than [min]"
 msgstr "Spring videoer kortere end [min] over"
+
+msgid "Snooker"
+msgstr ""
 
 msgid "Society"
 msgstr "Samfund"
@@ -4886,6 +4958,9 @@ msgstr "Start downloadhåndtering som standard"
 
 msgid "Station:"
 msgstr "Station:"
+
+msgid "Status"
+msgstr ""
 
 msgid "Status:"
 msgstr "Status:"
@@ -5170,6 +5245,9 @@ msgstr "Teknologi"
 msgid "Temp"
 msgstr "Temp"
 
+msgid "Tennis"
+msgstr ""
+
 msgid "Test the failed sites again"
 msgstr "Test de fejlede sider igen"
 
@@ -5191,19 +5269,6 @@ msgstr "Hjælpeprogrammet %s er nødvendigt her, men det blev ikke fundet."
 
 msgid "The 100 tags with the most videos"
 msgstr "De 100 tags med flest videoer"
-
-msgid ""
-"The 7reels / cineb resolvers 'VidEasy', 'VidCore/VidFast', 'VidLink' and 'Peachify' cannot decrypt their links on the receiver.\n"
-"\n"
-"With this option ON, every time you open one of them E2iPlayer sends the site's encrypted stream token - which contains the TMDb id of the movie or episode you are opening - to the third-party web service enc-dec.app (operated by a private individual). That server then sees the id and your IP address on each play. Nothing else is transmitted, and it is only used for these four resolvers.\n"
-"\n"
-"Leave this OFF if you do not want that. The other resolvers (AdRock/vidrock, VidNest, ...) are not affected."
-msgstr ""
-"7reels-/cineb-resolverne 'VidEasy', 'VidCore/VidFast', 'VidLink' og 'Peachify' kan ikke dekryptere deres links på modtageren.\n"
-"\n"
-"Når denne indstilling er TIL, sender E2iPlayer hver gang, du åbner en af dem, sidens krypterede stream-token - som indeholder TMDb-id'et for den film eller det afsnit, du åbner - til tredjeparts-webtjenesten enc-dec.app (drevet af en privatperson). Serveren ser så id'et og din IP-adresse ved hver afspilning. Intet andet overføres, og det bruges kun til disse fire resolvere.\n"
-"\n"
-"Lad den være FRA, hvis du ikke ønsker det. De andre resolvere (AdRock/vidrock, VidNest, ...) påvirkes ikke."
 
 msgid "The OpenSubtitles v3 server did not answer. Please try again later."
 msgstr "OpenSubtitles v3-serveren svarede ikke. Prøv igen senere."
@@ -5336,6 +5401,9 @@ msgstr "De seneste uploads fra alle YouTube-kanaler i denne gruppe, nyeste førs
 msgid "The link could not be resolved."
 msgstr "Linket kunne ikke opløses."
 
+msgid "The link has expired. Please open the video again."
+msgstr ""
+
 msgid "The list has changed, please try again."
 msgstr "Listen er ændret, prøv igen."
 
@@ -5371,6 +5439,14 @@ msgstr "Optagelserne på denne side lå på sidens gamle medieserver, som er off
 msgid "The request has no valid length."
 msgstr "Forespørgslen har ikke en gyldig længde."
 
+msgid ""
+"The resolvers 'VidCore', 'VidUp' and 'VidFast' cannot decrypt their links on the receiver.\n"
+"\n"
+"With this option ON, every time you open one of them E2iPlayer sends the site's encrypted stream token - which contains the TMDb id of the movie or episode you are opening - to the third-party web service enc-dec.app (operated by a private individual). That server then sees the id and your IP address on each play. Nothing else is transmitted, and it is only used for these three resolvers.\n"
+"\n"
+"Leave this OFF if you do not want that. The other resolvers (VidEasy, VidLink, Peachify, vidrock, VidNest, ...) decrypt their links on the receiver and are not affected."
+msgstr ""
+
 msgid "The same item already exists in this group."
 msgstr "Det samme element findes allerede i denne gruppe."
 
@@ -5389,6 +5465,10 @@ msgstr "Tjenesten er overbelastet. Prøv igen senere."
 msgid "The settings are protected by a PIN, change them on the receiver."
 msgstr "Indstillingerne er beskyttet med en PIN-kode, skift dem på modtageren."
 
+#, python-format
+msgid "The site did not answer with data (HTTP %s). It may be down or have moved."
+msgstr ""
+
 msgid "The site has no player for this video (it only shows a cam advert)."
 msgstr "Siden har ingen afspiller til denne video (den viser kun en cam-reklame)."
 
@@ -5397,6 +5477,9 @@ msgstr "Siden afviser i øjeblikket alle kvaliteter af denne video (HTTP 403). P
 
 msgid "The site rejected the search request."
 msgstr "Siden afviste søgeforespørgslen."
+
+msgid "The site's browser check (Cloudflare) could not be passed. The site may also be blocked in your country."
+msgstr ""
 
 msgid "The site's browser check could not be passed."
 msgstr "Sidens browsertjek kunne ikke bestås."
@@ -5725,6 +5808,9 @@ msgstr "Samlet størrelse:"
 
 msgid "Tourism"
 msgstr "Turisme"
+
+msgid "Tournament"
+msgstr ""
 
 msgid "Tracklist"
 msgstr "Nummerliste"
@@ -6065,6 +6151,9 @@ msgstr "Type af virtuelt tastatur"
 msgid "Voice-over"
 msgstr "Voice-over"
 
+msgid "Volleyball"
+msgstr ""
+
 msgid "WWE shows"
 msgstr "WWE-shows"
 
@@ -6086,6 +6175,13 @@ msgstr "Se senere"
 msgid "Watch online"
 msgstr "Se online"
 
+msgid "WebStreamr / AIOStreams manifest URL (your own):"
+msgstr ""
+
+#, python-format
+msgid "Weeks on chart: %s"
+msgstr ""
+
 msgid "Western"
 msgstr "Western"
 
@@ -6106,6 +6202,9 @@ msgstr "Wiki"
 
 msgid "Winter"
 msgstr "Vinter"
+
+msgid "Winter sports"
+msgstr ""
 
 msgid "With an API key from subdl.com (E2iPlayer settings, Subtitles) the official SubDL API is searched as well."
 msgstr "Med en API-nøgle fra subdl.com (E2iPlayer-indstillinger, Undertekster) søges der også i den officielle SubDL-API."
@@ -6495,6 +6594,12 @@ msgstr "https"
 
 msgid "https - validate SSL certificates"
 msgstr "https - valider SSL-certifikater"
+
+msgid "iTunes - Top albums by country"
+msgstr ""
+
+msgid "iTunes - Top songs by country"
+msgstr ""
 
 msgid "insert space"
 msgstr "indsæt mellemrum"

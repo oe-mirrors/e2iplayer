@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-08 20:17+0000\n"
+"POT-Creation-Date: 2026-10-09 19:42+0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Persian Prince <persianpros@gmail.com>\n"
 "Language-Team: IPTVPlayer\n"
@@ -595,6 +595,9 @@ msgstr "سرور پراکسی جایگزین (4)"
 msgid "Alternative proxy server (5)"
 msgstr "سرور پراکسی جایگزین (5)"
 
+msgid "American football"
+msgstr ""
+
 msgid "An API key from subsource.net can be entered in the E2iPlayer settings (Subtitles)."
 msgstr "یک کلید API از subsource.net را می‌توان در تنظیمات E2iPlayer (زیرنویس) وارد کرد."
 
@@ -817,6 +820,9 @@ msgstr "بالکان"
 msgid "Basic Science"
 msgstr "علوم پایه"
 
+msgid "Basketball"
+msgstr ""
+
 msgid "Being watched"
 msgstr "در حال تماشا"
 
@@ -865,6 +871,9 @@ msgstr "کتاب‌ها"
 
 msgid "Box"
 msgstr "گیرنده"
+
+msgid "Boxing"
+msgstr ""
 
 msgid "Broadcast:"
 msgstr "پخش:"
@@ -1088,6 +1097,9 @@ msgstr "ادغام merge های pull request با commit مربوطه"
 msgid "Comedy"
 msgstr "کمدی"
 
+msgid "Commentator"
+msgstr ""
+
 msgid "Comments"
 msgstr "نظرها"
 
@@ -1227,6 +1239,9 @@ msgstr "سازنده:"
 msgid "Creators:"
 msgstr "سازندگان:"
 
+msgid "Cricket"
+msgstr ""
+
 msgid "Crime"
 msgstr "جنایی"
 
@@ -1274,6 +1289,9 @@ msgstr "سقف دانلود روزانه پر شد - کد را وارد کنید
 
 msgid "Darkgray"
 msgstr "خاکستری تیره"
+
+msgid "Darts"
+msgstr ""
 
 msgid "Date"
 msgstr "تاریخ"
@@ -2086,6 +2104,9 @@ msgstr "مدیریت علاقه‌مندی‌ها"
 msgid "Featured"
 msgstr "ویژه"
 
+msgid "FebBox token (\"ui\" cookie of www.febbox.com):"
+msgstr ""
+
 #, python-format
 msgid "File \"%s\" already exists"
 msgstr "فایل \"%s\" از قبل وجود دارد"
@@ -2218,6 +2239,9 @@ msgstr "غذا"
 msgid "Foot & Ankle"
 msgstr "پا و مچ پا"
 
+msgid "Football"
+msgstr ""
+
 msgid "Football Live"
 msgstr "فوتبال زنده"
 
@@ -2283,6 +2307,9 @@ msgstr "آزمون کامل پیوند جریان را بررسی می‌کند 
 
 msgid "Full test checks thumbnails :"
 msgstr "آزمون کامل تصاویر بندانگشتی را بررسی می‌کند :"
+
+msgid "Futsal"
+msgstr ""
 
 msgid "GREEN"
 msgstr "سبز"
@@ -2401,6 +2428,9 @@ msgstr "خطای اتصال HTTPS \"%s\"\n"
 msgid "Hand"
 msgstr "دست"
 
+msgid "Handball"
+msgstr ""
+
 msgid "Health"
 msgstr "سلامت"
 
@@ -2434,6 +2464,9 @@ msgstr "تاریخچه"
 
 msgid "History of searched phrases."
 msgstr "تاریخچه عبارت‌های جستجوشده."
+
+msgid "Hockey"
+msgstr ""
 
 msgid "Home"
 msgstr "خانه"
@@ -2809,6 +2842,10 @@ msgstr "آخرین نتیجه"
 msgid "Last week"
 msgstr "هفته گذشته"
 
+#, python-format
+msgid "Last week: %s"
+msgstr ""
+
 msgid "Last.fm charts and tag pages are behind a browser check, only the radio stations can be used."
 msgstr "نمودارها و صفحه‌های برچسب Last.fm پشت بررسی مرورگر هستند، فقط ایستگاه‌های رادیویی قابل استفاده‌اند."
 
@@ -3056,6 +3093,9 @@ msgstr "فهرست بلند"
 msgid "Longest"
 msgstr "طولانی‌ترین"
 
+msgid "Loved tracks"
+msgstr ""
+
 msgid "Low"
 msgstr "پایین"
 
@@ -3126,6 +3166,9 @@ msgstr "حداکثر تعداد موارد در هر صفحه"
 
 msgid "Max number of parallel downloads has been reached."
 msgstr "به حداکثر تعداد دانلودهای همزمان رسیده‌اید."
+
+msgid "MaxStream (uprot.net) asks for its image captcha: solve it in MyE2i, then open the video again."
+msgstr ""
 
 msgid "Maximum log file size"
 msgstr "حداکثر اندازه فایل گزارش"
@@ -3214,9 +3257,6 @@ msgstr "پرشنونده‌ترین تلاوت‌ها"
 msgid "Most popular"
 msgstr "محبوب‌ترین"
 
-msgid "Most rated"
-msgstr "بیشترین امتیاز"
-
 msgid "Most recent"
 msgstr "جدیدترین"
 
@@ -3228,6 +3268,12 @@ msgstr "پربازدیدترین فیلم‌ها"
 
 msgid "Most viewed series"
 msgstr "پربازدیدترین سریال‌ها"
+
+msgid "Most voted"
+msgstr ""
+
+msgid "Motorsport"
+msgstr ""
 
 #, python-format
 msgid ""
@@ -3298,6 +3344,9 @@ msgstr "حل Cloudflare با MyE2i"
 msgid "MyE2i browser check solution"
 msgstr "حل بررسی مرورگر با MyE2i"
 
+msgid "MyE2i captcha: solve it, then Job (no CONTINUE)"
+msgstr ""
+
 msgid "MyE2i debug snapshot received - see the debug log."
 msgstr "تصویر اشکال‌زدایی MyE2i دریافت شد - گزارش اشکال‌زدایی را ببینید."
 
@@ -3326,6 +3375,9 @@ msgstr "MyE2i: بستن صفحه شروع پس از اتمام"
 
 msgid "MyE2i: offer to open the page in (Android)"
 msgstr "MyE2i: پیشنهاد باز کردن صفحه در (Android)"
+
+msgid "Mystery"
+msgstr ""
 
 msgid ""
 "NO VIDEOS FOUND FOR NOW! \n"
@@ -3549,6 +3601,13 @@ msgstr "چیزی برای ذخیره نیست - گزارش اشکال‌زدای
 msgid "Now"
 msgstr "اکنون"
 
+msgid "Now playing"
+msgstr ""
+
+#, python-format
+msgid "Now playing: %s"
+msgstr ""
+
 msgid "Number of columns"
 msgstr "تعداد ستون‌ها"
 
@@ -3765,6 +3824,10 @@ msgstr "راندهای آسیب‌شناسی"
 
 msgid "Patriotism"
 msgstr "میهن‌دوستی"
+
+#, python-format
+msgid "Peak: %s"
+msgstr ""
 
 msgid "Pediatrics"
 msgstr "کودکان"
@@ -4113,9 +4176,6 @@ msgstr "تصادفی کردن فهرست پخش"
 msgid "Range request not supported (resume failed)."
 msgstr "درخواست بازه پشتیبانی نمی‌شود (ادامه دانلود ناموفق بود)."
 
-msgid "Ranking"
-msgstr "رتبه‌بندی"
-
 msgid "Rated"
 msgstr "امتیازدار"
 
@@ -4182,6 +4242,9 @@ msgstr "خالی کردن \"%s\" انجام نشد - به نظر نمی‌رسد
 
 msgid "Regions"
 msgstr "مناطق"
+
+msgid "Related seasons and works"
+msgstr ""
 
 msgid "Release"
 msgstr "انتشار"
@@ -4649,6 +4712,9 @@ msgstr "Shift"
 msgid "Short Movies"
 msgstr "فیلم‌های کوتاه"
 
+msgid "Short films"
+msgstr ""
+
 msgid "Short series"
 msgstr "سریال‌های کوتاه"
 
@@ -4733,6 +4799,9 @@ msgstr "نمایش تاریخچه جستجو"
 msgid "Show suggestions"
 msgstr "نمایش پیشنهادها"
 
+msgid "ShowBox streams need a FebBox login: enter the \"ui\" cookie of your FebBox account in the host configuration."
+msgstr ""
+
 msgid "Shows"
 msgstr "برنامه‌ها"
 
@@ -4790,6 +4859,9 @@ msgstr "طراحان پوسته:"
 
 msgid "Skip video shorter than [min]"
 msgstr "رد کردن ویدیوهای کوتاه‌تر از [دقیقه]"
+
+msgid "Snooker"
+msgstr ""
 
 msgid "Society"
 msgstr "جامعه"
@@ -4889,6 +4961,9 @@ msgstr "شروع پیش‌فرض مدیریت دانلود"
 
 msgid "Station:"
 msgstr "ایستگاه:"
+
+msgid "Status"
+msgstr ""
 
 msgid "Status:"
 msgstr "وضعیت:"
@@ -5173,6 +5248,9 @@ msgstr "فناوری"
 msgid "Temp"
 msgstr "موقت"
 
+msgid "Tennis"
+msgstr ""
+
 msgid "Test the failed sites again"
 msgstr "آزمایش دوباره سایت‌های ناموفق"
 
@@ -5194,19 +5272,6 @@ msgstr "ابزار %s در اینجا لازم است اما شناسایی نش
 
 msgid "The 100 tags with the most videos"
 msgstr "100 برچسب با بیشترین ویدیو"
-
-msgid ""
-"The 7reels / cineb resolvers 'VidEasy', 'VidCore/VidFast', 'VidLink' and 'Peachify' cannot decrypt their links on the receiver.\n"
-"\n"
-"With this option ON, every time you open one of them E2iPlayer sends the site's encrypted stream token - which contains the TMDb id of the movie or episode you are opening - to the third-party web service enc-dec.app (operated by a private individual). That server then sees the id and your IP address on each play. Nothing else is transmitted, and it is only used for these four resolvers.\n"
-"\n"
-"Leave this OFF if you do not want that. The other resolvers (AdRock/vidrock, VidNest, ...) are not affected."
-msgstr ""
-"استخراج‌کننده‌های 7reels / cineb یعنی 'VidEasy'، 'VidCore/VidFast'، 'VidLink' و 'Peachify' نمی‌توانند پیوندهای خود را روی گیرنده رمزگشایی کنند.\n"
-"\n"
-"با روشن بودن این گزینه، هر بار که یکی از آن‌ها را باز می‌کنید، E2iPlayer توکن رمزشده جریان سایت را - که شامل شناسه TMDb فیلم یا قسمتی است که باز می‌کنید - به سرویس وب شخص ثالث enc-dec.app (که توسط یک شخص حقیقی اداره می‌شود) ارسال می‌کند. آن سرور در هر پخش، شناسه و نشانی IP شما را می‌بیند. هیچ چیز دیگری ارسال نمی‌شود و این فقط برای همین چهار استخراج‌کننده استفاده می‌شود.\n"
-"\n"
-"اگر این را نمی‌خواهید، آن را خاموش بگذارید. سایر استخراج‌کننده‌ها (AdRock/vidrock، VidNest، ...) تحت تأثیر قرار نمی‌گیرند."
 
 msgid "The OpenSubtitles v3 server did not answer. Please try again later."
 msgstr "سرور OpenSubtitles v3 پاسخ نداد. لطفاً بعداً دوباره تلاش کنید."
@@ -5339,6 +5404,9 @@ msgstr "آخرین آپلودهای همه کانال‌های YouTube این گ
 msgid "The link could not be resolved."
 msgstr "پیوند قابل استخراج نبود."
 
+msgid "The link has expired. Please open the video again."
+msgstr ""
+
 msgid "The list has changed, please try again."
 msgstr "فهرست تغییر کرده است، لطفاً دوباره تلاش کنید."
 
@@ -5374,6 +5442,14 @@ msgstr "ضبط‌های این صفحه روی سرور رسانه قدیمی س
 msgid "The request has no valid length."
 msgstr "درخواست طول معتبری ندارد."
 
+msgid ""
+"The resolvers 'VidCore', 'VidUp' and 'VidFast' cannot decrypt their links on the receiver.\n"
+"\n"
+"With this option ON, every time you open one of them E2iPlayer sends the site's encrypted stream token - which contains the TMDb id of the movie or episode you are opening - to the third-party web service enc-dec.app (operated by a private individual). That server then sees the id and your IP address on each play. Nothing else is transmitted, and it is only used for these three resolvers.\n"
+"\n"
+"Leave this OFF if you do not want that. The other resolvers (VidEasy, VidLink, Peachify, vidrock, VidNest, ...) decrypt their links on the receiver and are not affected."
+msgstr ""
+
 msgid "The same item already exists in this group."
 msgstr "همین مورد از قبل در این گروه وجود دارد."
 
@@ -5392,6 +5468,10 @@ msgstr "سرویس بیش از حد شلوغ است. لطفاً بعداً دو�
 msgid "The settings are protected by a PIN, change them on the receiver."
 msgstr "تنظیمات با PIN محافظت شده‌اند، آن‌ها را روی گیرنده تغییر دهید."
 
+#, python-format
+msgid "The site did not answer with data (HTTP %s). It may be down or have moved."
+msgstr ""
+
 msgid "The site has no player for this video (it only shows a cam advert)."
 msgstr "سایت برای این ویدیو پخش‌کننده‌ای ندارد (فقط یک تبلیغ وب‌کم نشان می‌دهد)."
 
@@ -5400,6 +5480,9 @@ msgstr "سایت در حال حاضر همه کیفیت‌های این ویدی
 
 msgid "The site rejected the search request."
 msgstr "سایت درخواست جستجو را رد کرد."
+
+msgid "The site's browser check (Cloudflare) could not be passed. The site may also be blocked in your country."
+msgstr ""
 
 msgid "The site's browser check could not be passed."
 msgstr "بررسی مرورگر سایت با موفقیت پشت سر گذاشته نشد."
@@ -5728,6 +5811,9 @@ msgstr "اندازه کل:"
 
 msgid "Tourism"
 msgstr "گردشگری"
+
+msgid "Tournament"
+msgstr ""
 
 msgid "Tracklist"
 msgstr "فهرست قطعات"
@@ -6068,6 +6154,9 @@ msgstr "نوع صفحه‌کلید مجازی"
 msgid "Voice-over"
 msgstr "صداگذاری"
 
+msgid "Volleyball"
+msgstr ""
+
 msgid "WWE shows"
 msgstr "برنامه‌های WWE"
 
@@ -6089,6 +6178,13 @@ msgstr "بعداً تماشا کنید"
 msgid "Watch online"
 msgstr "تماشای آنلاین"
 
+msgid "WebStreamr / AIOStreams manifest URL (your own):"
+msgstr ""
+
+#, python-format
+msgid "Weeks on chart: %s"
+msgstr ""
+
 msgid "Western"
 msgstr "وسترن"
 
@@ -6109,6 +6205,9 @@ msgstr "ویکی"
 
 msgid "Winter"
 msgstr "زمستان"
+
+msgid "Winter sports"
+msgstr ""
 
 msgid "With an API key from subdl.com (E2iPlayer settings, Subtitles) the official SubDL API is searched as well."
 msgstr "با یک کلید API از subdl.com (تنظیمات E2iPlayer، زیرنویس‌ها) در API رسمی SubDL نیز جستجو می‌شود."
@@ -6498,6 +6597,12 @@ msgstr "https"
 
 msgid "https - validate SSL certificates"
 msgstr "https - اعتبارسنجی گواهی‌های SSL"
+
+msgid "iTunes - Top albums by country"
+msgstr ""
+
+msgid "iTunes - Top songs by country"
+msgstr ""
 
 msgid "insert space"
 msgstr "درج فاصله"

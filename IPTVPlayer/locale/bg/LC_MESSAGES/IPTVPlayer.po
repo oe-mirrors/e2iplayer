@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-08 20:17+0000\n"
+"POT-Creation-Date: 2026-10-09 19:42+0000\n"
 "PO-Revision-Date: 2026-10-08 20:17+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Bulgarian\n"
@@ -592,6 +592,9 @@ msgstr "Алтернативен прокси сървър (4)"
 msgid "Alternative proxy server (5)"
 msgstr "Алтернативен прокси сървър (5)"
 
+msgid "American football"
+msgstr ""
+
 msgid "An API key from subsource.net can be entered in the E2iPlayer settings (Subtitles)."
 msgstr "API ключ от subsource.net може да бъде въведен в настройките на E2iPlayer (Субтитри)."
 
@@ -814,6 +817,9 @@ msgstr "Балкани"
 msgid "Basic Science"
 msgstr "Фундаментални науки"
 
+msgid "Basketball"
+msgstr ""
+
 msgid "Being watched"
 msgstr "Гледани в момента"
 
@@ -862,6 +868,9 @@ msgstr "Книги"
 
 msgid "Box"
 msgstr "Box"
+
+msgid "Boxing"
+msgstr ""
 
 msgid "Broadcast:"
 msgstr "Излъчване:"
@@ -1085,6 +1094,9 @@ msgstr "Обединяване на сливанията на pull request с т
 msgid "Comedy"
 msgstr "Комедия"
 
+msgid "Commentator"
+msgstr ""
+
 msgid "Comments"
 msgstr "Коментари"
 
@@ -1224,6 +1236,9 @@ msgstr "Създател:"
 msgid "Creators:"
 msgstr "Създатели:"
 
+msgid "Cricket"
+msgstr ""
+
 msgid "Crime"
 msgstr "Криминален"
 
@@ -1271,6 +1286,9 @@ msgstr "Достигнат е дневният лимит за изтеглян�
 
 msgid "Darkgray"
 msgstr "Тъмносив"
+
+msgid "Darts"
+msgstr ""
 
 msgid "Date"
 msgstr "Дата"
@@ -2083,6 +2101,9 @@ msgstr "Управление на любими"
 msgid "Featured"
 msgstr "Препоръчани"
 
+msgid "FebBox token (\"ui\" cookie of www.febbox.com):"
+msgstr ""
+
 #, python-format
 msgid "File \"%s\" already exists"
 msgstr "Файлът \"%s\" вече съществува"
@@ -2215,6 +2236,9 @@ msgstr "Храна"
 msgid "Foot & Ankle"
 msgstr "Стъпало и глезен"
 
+msgid "Football"
+msgstr ""
+
 msgid "Football Live"
 msgstr "Футбол на живо"
 
@@ -2280,6 +2304,9 @@ msgstr "Пълният тест проверява връзката към по�
 
 msgid "Full test checks thumbnails :"
 msgstr "Пълният тест проверява миниатюрите :"
+
+msgid "Futsal"
+msgstr ""
 
 msgid "GREEN"
 msgstr "ЗЕЛЕН"
@@ -2398,6 +2425,9 @@ msgstr "Грешка при HTTPS връзка \"%s\"\n"
 msgid "Hand"
 msgstr "Ръка"
 
+msgid "Handball"
+msgstr ""
+
 msgid "Health"
 msgstr "Здраве"
 
@@ -2431,6 +2461,9 @@ msgstr "История"
 
 msgid "History of searched phrases."
 msgstr "История на търсените фрази."
+
+msgid "Hockey"
+msgstr ""
 
 msgid "Home"
 msgstr "Начало"
@@ -2806,6 +2839,10 @@ msgstr "Последен резултат"
 msgid "Last week"
 msgstr "Последната седмица"
 
+#, python-format
+msgid "Last week: %s"
+msgstr ""
+
 msgid "Last.fm charts and tag pages are behind a browser check, only the radio stations can be used."
 msgstr "Класациите и страниците с тагове на Last.fm са зад проверка на браузъра, могат да се използват само радиостанциите."
 
@@ -3053,6 +3090,9 @@ msgstr "Дълъг списък"
 msgid "Longest"
 msgstr "Най-дълги"
 
+msgid "Loved tracks"
+msgstr ""
+
 msgid "Low"
 msgstr "Ниско"
 
@@ -3123,6 +3163,9 @@ msgstr "Макс. брой записи на страница"
 
 msgid "Max number of parallel downloads has been reached."
 msgstr "Достигнат е максималният брой паралелни изтегляния."
+
+msgid "MaxStream (uprot.net) asks for its image captcha: solve it in MyE2i, then open the video again."
+msgstr ""
 
 msgid "Maximum log file size"
 msgstr "Максимален размер на лог файла"
@@ -3211,9 +3254,6 @@ msgstr "Най-слушани рецитации"
 msgid "Most popular"
 msgstr "Най-популярни"
 
-msgid "Most rated"
-msgstr "Най-оценявани"
-
 msgid "Most recent"
 msgstr "Най-нови"
 
@@ -3225,6 +3265,12 @@ msgstr "Най-гледани филми"
 
 msgid "Most viewed series"
 msgstr "Най-гледани сериали"
+
+msgid "Most voted"
+msgstr ""
+
+msgid "Motorsport"
+msgstr ""
 
 #, python-format
 msgid ""
@@ -3295,6 +3341,9 @@ msgstr "Решение на Cloudflare чрез MyE2i"
 msgid "MyE2i browser check solution"
 msgstr "Решение на проверката на браузъра чрез MyE2i"
 
+msgid "MyE2i captcha: solve it, then Job (no CONTINUE)"
+msgstr ""
+
 msgid "MyE2i debug snapshot received - see the debug log."
 msgstr "Получена е дебъг снимка от MyE2i - вижте дебъг лога."
 
@@ -3323,6 +3372,9 @@ msgstr "MyE2i: затваряне на началната страница сл�
 
 msgid "MyE2i: offer to open the page in (Android)"
 msgstr "MyE2i: предлагане на отваряне на страницата в (Android)"
+
+msgid "Mystery"
+msgstr ""
 
 msgid ""
 "NO VIDEOS FOUND FOR NOW! \n"
@@ -3546,6 +3598,13 @@ msgstr "Няма какво да се запише - дебъг логът не 
 msgid "Now"
 msgstr "Сега"
 
+msgid "Now playing"
+msgstr ""
+
+#, python-format
+msgid "Now playing: %s"
+msgstr ""
+
 msgid "Number of columns"
 msgstr "Брой колони"
 
@@ -3762,6 +3821,10 @@ msgstr "Патологични визитации"
 
 msgid "Patriotism"
 msgstr "Патриотизъм"
+
+#, python-format
+msgid "Peak: %s"
+msgstr ""
 
 msgid "Pediatrics"
 msgstr "Педиатрия"
@@ -4110,9 +4173,6 @@ msgstr "Разбъркване на плейлист"
 msgid "Range request not supported (resume failed)."
 msgstr "Заявката за диапазон (Range) не се поддържа (продължаването е неуспешно)."
 
-msgid "Ranking"
-msgstr "Класиране"
-
 msgid "Rated"
 msgstr "Възрастова категория"
 
@@ -4179,6 +4239,9 @@ msgstr "Отказ за изпразване на \"%s\" - това не изг�
 
 msgid "Regions"
 msgstr "Региони"
+
+msgid "Related seasons and works"
+msgstr ""
 
 msgid "Release"
 msgstr "Издание"
@@ -4646,6 +4709,9 @@ msgstr "Shift"
 msgid "Short Movies"
 msgstr "Късометражни филми"
 
+msgid "Short films"
+msgstr ""
+
 msgid "Short series"
 msgstr "Кратки сериали"
 
@@ -4730,6 +4796,9 @@ msgstr "Показване на историята на търсенето"
 msgid "Show suggestions"
 msgstr "Показване на предложения"
 
+msgid "ShowBox streams need a FebBox login: enter the \"ui\" cookie of your FebBox account in the host configuration."
+msgstr ""
+
 msgid "Shows"
 msgstr "Предавания"
 
@@ -4787,6 +4856,9 @@ msgstr "Автори на скинове:"
 
 msgid "Skip video shorter than [min]"
 msgstr "Пропускане на видеа, по-кратки от [мин]"
+
+msgid "Snooker"
+msgstr ""
 
 msgid "Society"
 msgstr "Общество"
@@ -4886,6 +4958,9 @@ msgstr "Стартиране на мениджъра на изтегляният
 
 msgid "Station:"
 msgstr "Станция:"
+
+msgid "Status"
+msgstr ""
 
 msgid "Status:"
 msgstr "Състояние:"
@@ -5170,6 +5245,9 @@ msgstr "Технологии"
 msgid "Temp"
 msgstr "Temp"
 
+msgid "Tennis"
+msgstr ""
+
 msgid "Test the failed sites again"
 msgstr "Повторно тестване на неуспешните сайтове"
 
@@ -5191,19 +5269,6 @@ msgstr "Тук е необходима помощната програма %s, �
 
 msgid "The 100 tags with the most videos"
 msgstr "100-те тага с най-много видеа"
-
-msgid ""
-"The 7reels / cineb resolvers 'VidEasy', 'VidCore/VidFast', 'VidLink' and 'Peachify' cannot decrypt their links on the receiver.\n"
-"\n"
-"With this option ON, every time you open one of them E2iPlayer sends the site's encrypted stream token - which contains the TMDb id of the movie or episode you are opening - to the third-party web service enc-dec.app (operated by a private individual). That server then sees the id and your IP address on each play. Nothing else is transmitted, and it is only used for these four resolvers.\n"
-"\n"
-"Leave this OFF if you do not want that. The other resolvers (AdRock/vidrock, VidNest, ...) are not affected."
-msgstr ""
-"Резолверите на 7reels / cineb 'VidEasy', 'VidCore/VidFast', 'VidLink' и 'Peachify' не могат да дешифрират връзките си на приемника.\n"
-"\n"
-"Когато тази опция е ВКЛ., всеки път, когато отворите някой от тях, E2iPlayer изпраща шифрования токен на потока от сайта - който съдържа TMDb ID на филма или епизода, който отваряте - към външната уеб услуга enc-dec.app (поддържана от частно лице). Така този сървър вижда ID-то и вашия IP адрес при всяко възпроизвеждане. Нищо друго не се предава и това се използва само за тези четири резолвера.\n"
-"\n"
-"Оставете тази опция ИЗКЛ., ако не желаете това. Другите резолвери (AdRock/vidrock, VidNest, ...) не са засегнати."
 
 msgid "The OpenSubtitles v3 server did not answer. Please try again later."
 msgstr "Сървърът на OpenSubtitles v3 не отговори. Моля, опитайте отново по-късно."
@@ -5336,6 +5401,9 @@ msgstr "Най-новите качени видеа от всички YouTube к
 msgid "The link could not be resolved."
 msgstr "Връзката не можа да бъде разрешена."
 
+msgid "The link has expired. Please open the video again."
+msgstr ""
+
 msgid "The list has changed, please try again."
 msgstr "Списъкът е променен, моля, опитайте отново."
 
@@ -5371,6 +5439,14 @@ msgstr "Записите от тази страница бяха на стари
 msgid "The request has no valid length."
 msgstr "Заявката няма валидна дължина."
 
+msgid ""
+"The resolvers 'VidCore', 'VidUp' and 'VidFast' cannot decrypt their links on the receiver.\n"
+"\n"
+"With this option ON, every time you open one of them E2iPlayer sends the site's encrypted stream token - which contains the TMDb id of the movie or episode you are opening - to the third-party web service enc-dec.app (operated by a private individual). That server then sees the id and your IP address on each play. Nothing else is transmitted, and it is only used for these three resolvers.\n"
+"\n"
+"Leave this OFF if you do not want that. The other resolvers (VidEasy, VidLink, Peachify, vidrock, VidNest, ...) decrypt their links on the receiver and are not affected."
+msgstr ""
+
 msgid "The same item already exists in this group."
 msgstr "Същият елемент вече съществува в тази група."
 
@@ -5389,6 +5465,10 @@ msgstr "Услугата е претоварена. Моля, опитайте �
 msgid "The settings are protected by a PIN, change them on the receiver."
 msgstr "Настройките са защитени с ПИН, променете ги на приемника."
 
+#, python-format
+msgid "The site did not answer with data (HTTP %s). It may be down or have moved."
+msgstr ""
+
 msgid "The site has no player for this video (it only shows a cam advert)."
 msgstr "Сайтът няма плейър за това видео (показва само реклама за камери)."
 
@@ -5397,6 +5477,9 @@ msgstr "В момента сайтът отказва всички качест�
 
 msgid "The site rejected the search request."
 msgstr "Сайтът отхвърли заявката за търсене."
+
+msgid "The site's browser check (Cloudflare) could not be passed. The site may also be blocked in your country."
+msgstr ""
 
 msgid "The site's browser check could not be passed."
 msgstr "Проверката на браузъра от сайта не можа да бъде премината."
@@ -5725,6 +5808,9 @@ msgstr "Общ размер:"
 
 msgid "Tourism"
 msgstr "Туризъм"
+
+msgid "Tournament"
+msgstr ""
 
 msgid "Tracklist"
 msgstr "Списък с песни"
@@ -6065,6 +6151,9 @@ msgstr "Тип виртуална клавиатура"
 msgid "Voice-over"
 msgstr "Озвучаване"
 
+msgid "Volleyball"
+msgstr ""
+
 msgid "WWE shows"
 msgstr "WWE шоута"
 
@@ -6086,6 +6175,13 @@ msgstr "За гледане по-късно"
 msgid "Watch online"
 msgstr "Гледане онлайн"
 
+msgid "WebStreamr / AIOStreams manifest URL (your own):"
+msgstr ""
+
+#, python-format
+msgid "Weeks on chart: %s"
+msgstr ""
+
 msgid "Western"
 msgstr "Уестърн"
 
@@ -6106,6 +6202,9 @@ msgstr "Wiki"
 
 msgid "Winter"
 msgstr "Зима"
+
+msgid "Winter sports"
+msgstr ""
 
 msgid "With an API key from subdl.com (E2iPlayer settings, Subtitles) the official SubDL API is searched as well."
 msgstr "С API ключ от subdl.com (настройки на E2iPlayer, Субтитри) се търси и в официалния SubDL API."
@@ -6495,6 +6594,12 @@ msgstr "https"
 
 msgid "https - validate SSL certificates"
 msgstr "https - проверка на SSL сертификатите"
+
+msgid "iTunes - Top albums by country"
+msgstr ""
+
+msgid "iTunes - Top songs by country"
+msgstr ""
 
 msgid "insert space"
 msgstr "вмъкване на интервал"

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-08 20:17+0000\n"
+"POT-Creation-Date: 2026-10-09 19:42+0000\n"
 "PO-Revision-Date: 2026-10-08 20:17+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Romanian\n"
@@ -592,6 +592,9 @@ msgstr "Server proxy alternativ (4)"
 msgid "Alternative proxy server (5)"
 msgstr "Server proxy alternativ (5)"
 
+msgid "American football"
+msgstr ""
+
 msgid "An API key from subsource.net can be entered in the E2iPlayer settings (Subtitles)."
 msgstr "O cheie API de la subsource.net poate fi introdusă în setările E2iPlayer (Subtitrări)."
 
@@ -814,6 +817,9 @@ msgstr "Balcani"
 msgid "Basic Science"
 msgstr "Științe fundamentale"
 
+msgid "Basketball"
+msgstr ""
+
 msgid "Being watched"
 msgstr "Se vizionează acum"
 
@@ -862,6 +868,9 @@ msgstr "Cărți"
 
 msgid "Box"
 msgstr "Box"
+
+msgid "Boxing"
+msgstr ""
 
 msgid "Broadcast:"
 msgstr "Difuzare:"
@@ -1085,6 +1094,9 @@ msgstr "Combinați merge-urile de pull request cu commitul lor"
 msgid "Comedy"
 msgstr "Comedie"
 
+msgid "Commentator"
+msgstr ""
+
 msgid "Comments"
 msgstr "Comentarii"
 
@@ -1224,6 +1236,9 @@ msgstr "Creator:"
 msgid "Creators:"
 msgstr "Creatori:"
 
+msgid "Cricket"
+msgstr ""
+
 msgid "Crime"
 msgstr "Polițist"
 
@@ -1271,6 +1286,9 @@ msgstr "Limita zilnică de descărcare a fost atinsă - introduceți codul"
 
 msgid "Darkgray"
 msgstr "Gri închis"
+
+msgid "Darts"
+msgstr ""
 
 msgid "Date"
 msgstr "Dată"
@@ -2083,6 +2101,9 @@ msgstr "Administrare favorite"
 msgid "Featured"
 msgstr "Recomandate"
 
+msgid "FebBox token (\"ui\" cookie of www.febbox.com):"
+msgstr ""
+
 #, python-format
 msgid "File \"%s\" already exists"
 msgstr "Fișierul \"%s\" există deja"
@@ -2215,6 +2236,9 @@ msgstr "Mâncare"
 msgid "Foot & Ankle"
 msgstr "Picior și gleznă"
 
+msgid "Football"
+msgstr ""
+
 msgid "Football Live"
 msgstr "Fotbal live"
 
@@ -2280,6 +2304,9 @@ msgstr "Testul complet verifică linkul de stream :"
 
 msgid "Full test checks thumbnails :"
 msgstr "Testul complet verifică miniaturile :"
+
+msgid "Futsal"
+msgstr ""
 
 msgid "GREEN"
 msgstr "VERDE"
@@ -2398,6 +2425,9 @@ msgstr "Eroare de conexiune HTTPS \"%s\"\n"
 msgid "Hand"
 msgstr "Mână"
 
+msgid "Handball"
+msgstr ""
+
 msgid "Health"
 msgstr "Sănătate"
 
@@ -2431,6 +2461,9 @@ msgstr "Istoric"
 
 msgid "History of searched phrases."
 msgstr "Istoricul frazelor căutate."
+
+msgid "Hockey"
+msgstr ""
 
 msgid "Home"
 msgstr "Acasă"
@@ -2806,6 +2839,10 @@ msgstr "Ultimul rezultat"
 msgid "Last week"
 msgstr "Ultima săptămână"
 
+#, python-format
+msgid "Last week: %s"
+msgstr ""
+
 msgid "Last.fm charts and tag pages are behind a browser check, only the radio stations can be used."
 msgstr "Topurile și paginile de etichete Last.fm sunt protejate de o verificare a browserului, se pot folosi doar posturile de radio."
 
@@ -3053,6 +3090,9 @@ msgstr "Listă lungă"
 msgid "Longest"
 msgstr "Cele mai lungi"
 
+msgid "Loved tracks"
+msgstr ""
+
 msgid "Low"
 msgstr "Scăzută"
 
@@ -3123,6 +3163,9 @@ msgstr "Număr maxim de elemente pe pagină"
 
 msgid "Max number of parallel downloads has been reached."
 msgstr "S-a atins numărul maxim de descărcări paralele."
+
+msgid "MaxStream (uprot.net) asks for its image captcha: solve it in MyE2i, then open the video again."
+msgstr ""
 
 msgid "Maximum log file size"
 msgstr "Dimensiunea maximă a fișierului jurnal"
@@ -3211,9 +3254,6 @@ msgstr "Cele mai ascultate recitări"
 msgid "Most popular"
 msgstr "Cele mai populare"
 
-msgid "Most rated"
-msgstr "Cele mai evaluate"
-
 msgid "Most recent"
 msgstr "Cele mai recente"
 
@@ -3225,6 +3265,12 @@ msgstr "Cele mai vizionate filme"
 
 msgid "Most viewed series"
 msgstr "Cele mai vizionate seriale"
+
+msgid "Most voted"
+msgstr ""
+
+msgid "Motorsport"
+msgstr ""
 
 #, python-format
 msgid ""
@@ -3295,6 +3341,9 @@ msgstr "Soluție Cloudflare MyE2i"
 msgid "MyE2i browser check solution"
 msgstr "Soluție verificare browser MyE2i"
 
+msgid "MyE2i captcha: solve it, then Job (no CONTINUE)"
+msgstr ""
+
 msgid "MyE2i debug snapshot received - see the debug log."
 msgstr "Snapshot de depanare MyE2i primit - consultați jurnalul de depanare."
 
@@ -3323,6 +3372,9 @@ msgstr "MyE2i: închideți pagina de start la final"
 
 msgid "MyE2i: offer to open the page in (Android)"
 msgstr "MyE2i: oferă deschiderea paginii în (Android)"
+
+msgid "Mystery"
+msgstr ""
 
 msgid ""
 "NO VIDEOS FOUND FOR NOW! \n"
@@ -3546,6 +3598,13 @@ msgstr "Nimic de salvat - jurnalul de depanare nu este activ."
 msgid "Now"
 msgstr "Acum"
 
+msgid "Now playing"
+msgstr ""
+
+#, python-format
+msgid "Now playing: %s"
+msgstr ""
+
 msgid "Number of columns"
 msgstr "Număr de coloane"
 
@@ -3762,6 +3821,10 @@ msgstr "Vizite de patologie"
 
 msgid "Patriotism"
 msgstr "Patriotism"
+
+#, python-format
+msgid "Peak: %s"
+msgstr ""
 
 msgid "Pediatrics"
 msgstr "Pediatrie"
@@ -4110,9 +4173,6 @@ msgstr "Amestecați un playlist"
 msgid "Range request not supported (resume failed)."
 msgstr "Cererea de interval (range) nu este acceptată (reluarea a eșuat)."
 
-msgid "Ranking"
-msgstr "Clasament"
-
 msgid "Rated"
 msgstr "Clasificare de vârstă"
 
@@ -4179,6 +4239,9 @@ msgstr "Golirea \"%s\" este refuzată - nu pare a fi un folder dedicat pentru ca
 
 msgid "Regions"
 msgstr "Regiuni"
+
+msgid "Related seasons and works"
+msgstr ""
 
 msgid "Release"
 msgstr "Lansare"
@@ -4646,6 +4709,9 @@ msgstr "Shift"
 msgid "Short Movies"
 msgstr "Scurtmetraje"
 
+msgid "Short films"
+msgstr ""
+
 msgid "Short series"
 msgstr "Seriale scurte"
 
@@ -4730,6 +4796,9 @@ msgstr "Afișați istoricul căutărilor"
 msgid "Show suggestions"
 msgstr "Afișați sugestiile"
 
+msgid "ShowBox streams need a FebBox login: enter the \"ui\" cookie of your FebBox account in the host configuration."
+msgstr ""
+
 msgid "Shows"
 msgstr "Emisiuni"
 
@@ -4787,6 +4856,9 @@ msgstr "Skinneri:"
 
 msgid "Skip video shorter than [min]"
 msgstr "Omiteți videoclipurile mai scurte de [min]"
+
+msgid "Snooker"
+msgstr ""
 
 msgid "Society"
 msgstr "Societate"
@@ -4886,6 +4958,9 @@ msgstr "Porniți managerul de descărcări în mod implicit"
 
 msgid "Station:"
 msgstr "Post:"
+
+msgid "Status"
+msgstr ""
 
 msgid "Status:"
 msgstr "Stare:"
@@ -5170,6 +5245,9 @@ msgstr "Tehnologie"
 msgid "Temp"
 msgstr "Temp"
 
+msgid "Tennis"
+msgstr ""
+
 msgid "Test the failed sites again"
 msgstr "Testați din nou site-urile eșuate"
 
@@ -5191,19 +5269,6 @@ msgstr "Utilitarul %s este necesar aici, dar nu a fost detectat."
 
 msgid "The 100 tags with the most videos"
 msgstr "Cele 100 de etichete cu cele mai multe videoclipuri"
-
-msgid ""
-"The 7reels / cineb resolvers 'VidEasy', 'VidCore/VidFast', 'VidLink' and 'Peachify' cannot decrypt their links on the receiver.\n"
-"\n"
-"With this option ON, every time you open one of them E2iPlayer sends the site's encrypted stream token - which contains the TMDb id of the movie or episode you are opening - to the third-party web service enc-dec.app (operated by a private individual). That server then sees the id and your IP address on each play. Nothing else is transmitted, and it is only used for these four resolvers.\n"
-"\n"
-"Leave this OFF if you do not want that. The other resolvers (AdRock/vidrock, VidNest, ...) are not affected."
-msgstr ""
-"Resolverele 7reels / cineb 'VidEasy', 'VidCore/VidFast', 'VidLink' și 'Peachify' nu își pot decripta linkurile pe receptor.\n"
-"\n"
-"Cu această opțiune ACTIVATĂ, de fiecare dată când deschideți unul dintre ele, E2iPlayer trimite tokenul de stream criptat al site-ului - care conține ID-ul TMDb al filmului sau episodului pe care îl deschideți - către serviciul web terț enc-dec.app (operat de o persoană fizică). Acel server vede apoi ID-ul și adresa dvs. IP la fiecare redare. Nu se transmite nimic altceva și este folosit doar pentru aceste patru resolvere.\n"
-"\n"
-"Lăsați această opțiune DEZACTIVATĂ dacă nu doriți acest lucru. Celelalte resolvere (AdRock/vidrock, VidNest, ...) nu sunt afectate."
 
 msgid "The OpenSubtitles v3 server did not answer. Please try again later."
 msgstr "Serverul OpenSubtitles v3 nu a răspuns. Încercați din nou mai târziu."
@@ -5336,6 +5401,9 @@ msgstr "Cele mai noi încărcări ale tuturor canalelor YouTube din acest grup, 
 msgid "The link could not be resolved."
 msgstr "Linkul nu a putut fi rezolvat."
 
+msgid "The link has expired. Please open the video again."
+msgstr ""
+
 msgid "The list has changed, please try again."
 msgstr "Lista s-a modificat, încercați din nou."
 
@@ -5371,6 +5439,14 @@ msgstr "Înregistrările acestei pagini se aflau pe vechiul server media al site
 msgid "The request has no valid length."
 msgstr "Cererea nu are o lungime validă."
 
+msgid ""
+"The resolvers 'VidCore', 'VidUp' and 'VidFast' cannot decrypt their links on the receiver.\n"
+"\n"
+"With this option ON, every time you open one of them E2iPlayer sends the site's encrypted stream token - which contains the TMDb id of the movie or episode you are opening - to the third-party web service enc-dec.app (operated by a private individual). That server then sees the id and your IP address on each play. Nothing else is transmitted, and it is only used for these three resolvers.\n"
+"\n"
+"Leave this OFF if you do not want that. The other resolvers (VidEasy, VidLink, Peachify, vidrock, VidNest, ...) decrypt their links on the receiver and are not affected."
+msgstr ""
+
 msgid "The same item already exists in this group."
 msgstr "Același element există deja în acest grup."
 
@@ -5389,6 +5465,10 @@ msgstr "Serviciul este supraîncărcat. Încercați din nou mai târziu."
 msgid "The settings are protected by a PIN, change them on the receiver."
 msgstr "Setările sunt protejate printr-un PIN, modificați-le pe receptor."
 
+#, python-format
+msgid "The site did not answer with data (HTTP %s). It may be down or have moved."
+msgstr ""
+
 msgid "The site has no player for this video (it only shows a cam advert)."
 msgstr "Site-ul nu are player pentru acest videoclip (afișează doar o reclamă cam)."
 
@@ -5397,6 +5477,9 @@ msgstr "Site-ul refuză momentan toate calitățile acestui videoclip (HTTP 403)
 
 msgid "The site rejected the search request."
 msgstr "Site-ul a respins cererea de căutare."
+
+msgid "The site's browser check (Cloudflare) could not be passed. The site may also be blocked in your country."
+msgstr ""
 
 msgid "The site's browser check could not be passed."
 msgstr "Verificarea de browser a site-ului nu a putut fi trecută."
@@ -5725,6 +5808,9 @@ msgstr "Dimensiune totală:"
 
 msgid "Tourism"
 msgstr "Turism"
+
+msgid "Tournament"
+msgstr ""
 
 msgid "Tracklist"
 msgstr "Listă de piese"
@@ -6065,6 +6151,9 @@ msgstr "Tip tastatură virtuală"
 msgid "Voice-over"
 msgstr "Voice-over"
 
+msgid "Volleyball"
+msgstr ""
+
 msgid "WWE shows"
 msgstr "Show-uri WWE"
 
@@ -6086,6 +6175,13 @@ msgstr "Vizionați mai târziu"
 msgid "Watch online"
 msgstr "Vizionare online"
 
+msgid "WebStreamr / AIOStreams manifest URL (your own):"
+msgstr ""
+
+#, python-format
+msgid "Weeks on chart: %s"
+msgstr ""
+
 msgid "Western"
 msgstr "Western"
 
@@ -6106,6 +6202,9 @@ msgstr "Wiki"
 
 msgid "Winter"
 msgstr "Iarnă"
+
+msgid "Winter sports"
+msgstr ""
 
 msgid "With an API key from subdl.com (E2iPlayer settings, Subtitles) the official SubDL API is searched as well."
 msgstr "Cu o cheie API de la subdl.com (setări E2iPlayer, Subtitrări) se caută și în API-ul oficial SubDL."
@@ -6495,6 +6594,12 @@ msgstr "https"
 
 msgid "https - validate SSL certificates"
 msgstr "https - validare certificate SSL"
+
+msgid "iTunes - Top albums by country"
+msgstr ""
+
+msgid "iTunes - Top songs by country"
+msgstr ""
 
 msgid "insert space"
 msgstr "inserare spațiu"

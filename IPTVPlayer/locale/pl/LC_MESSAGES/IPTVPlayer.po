@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-08 20:17+0000\n"
+"POT-Creation-Date: 2026-10-09 19:42+0000\n"
 "PO-Revision-Date: 2026-10-05 20:00+0200\n"
 "Last-Translator: damagic-pl\n"
 "Language-Team: IPTVPlayer\n"
@@ -601,6 +601,9 @@ msgstr "Alternatywny serwer proxy (4)"
 msgid "Alternative proxy server (5)"
 msgstr "Alternatywny serwer proxy (5)"
 
+msgid "American football"
+msgstr ""
+
 msgid "An API key from subsource.net can be entered in the E2iPlayer settings (Subtitles)."
 msgstr "Klucz API z subsource.net można wpisać w ustawieniach E2iPlayer (Napisy)."
 
@@ -823,6 +826,9 @@ msgstr "Bałkany"
 msgid "Basic Science"
 msgstr "Nauka podstawowa"
 
+msgid "Basketball"
+msgstr ""
+
 msgid "Being watched"
 msgstr "Teraz oglądane"
 
@@ -871,6 +877,9 @@ msgstr "Książki"
 
 msgid "Box"
 msgstr "Box"
+
+msgid "Boxing"
+msgstr ""
 
 msgid "Broadcast:"
 msgstr "Emisja:"
@@ -1094,6 +1103,9 @@ msgstr "Łącz scalenia pull requestów z ich commitem"
 msgid "Comedy"
 msgstr "Komedia"
 
+msgid "Commentator"
+msgstr ""
+
 msgid "Comments"
 msgstr "Komentarze"
 
@@ -1233,6 +1245,9 @@ msgstr "Twórca:"
 msgid "Creators:"
 msgstr "Twórcy:"
 
+msgid "Cricket"
+msgstr ""
+
 msgid "Crime"
 msgstr "Kryminał"
 
@@ -1280,6 +1295,9 @@ msgstr "Osiągnięto dzienny limit pobierania - wpisz kod"
 
 msgid "Darkgray"
 msgstr "Ciemno szare"
+
+msgid "Darts"
+msgstr ""
 
 msgid "Date"
 msgstr "Data"
@@ -2092,6 +2110,9 @@ msgstr "Menadżer ulubionych"
 msgid "Featured"
 msgstr "Polecane"
 
+msgid "FebBox token (\"ui\" cookie of www.febbox.com):"
+msgstr ""
+
 #, python-format
 msgid "File \"%s\" already exists"
 msgstr "Plik \"%s\" już istnieje"
@@ -2224,6 +2245,9 @@ msgstr "Jedzenie"
 msgid "Foot & Ankle"
 msgstr "Stopa i kostka"
 
+msgid "Football"
+msgstr ""
+
 msgid "Football Live"
 msgstr "Football Live"
 
@@ -2289,6 +2313,9 @@ msgstr "Pełny test sprawdza link do strumienia :"
 
 msgid "Full test checks thumbnails :"
 msgstr "Pełny test sprawdza miniatury :"
+
+msgid "Futsal"
+msgstr ""
 
 msgid "GREEN"
 msgstr "ZIELONY"
@@ -2407,6 +2434,9 @@ msgstr "Błąd połączenia HTTPS: \"%s\"\n"
 msgid "Hand"
 msgstr "Dłoń"
 
+msgid "Handball"
+msgstr ""
+
 msgid "Health"
 msgstr "Zdrowie"
 
@@ -2440,6 +2470,9 @@ msgstr "Historia"
 
 msgid "History of searched phrases."
 msgstr "Historia wyszukiwanych fraz."
+
+msgid "Hockey"
+msgstr ""
 
 msgid "Home"
 msgstr "Głowna strona"
@@ -2815,6 +2848,10 @@ msgstr "Ostatni wynik"
 msgid "Last week"
 msgstr "Ostatni tydzień"
 
+#, python-format
+msgid "Last week: %s"
+msgstr ""
+
 msgid "Last.fm charts and tag pages are behind a browser check, only the radio stations can be used."
 msgstr "Listy przebojów i strony tagów Last.fm są za weryfikacją przeglądarki, można używać tylko stacji radiowych."
 
@@ -3062,6 +3099,9 @@ msgstr "Długa lista"
 msgid "Longest"
 msgstr "Najdłuższe"
 
+msgid "Loved tracks"
+msgstr ""
+
 msgid "Low"
 msgstr "Niska"
 
@@ -3132,6 +3172,9 @@ msgstr "Maksymalna liczba elementów na stronie"
 
 msgid "Max number of parallel downloads has been reached."
 msgstr "Osiągnięto maksymalną liczbę równoczesnych pobierań."
+
+msgid "MaxStream (uprot.net) asks for its image captcha: solve it in MyE2i, then open the video again."
+msgstr ""
 
 msgid "Maximum log file size"
 msgstr "Maksymalny rozmiar pliku logu"
@@ -3220,9 +3263,6 @@ msgstr "Najczęściej słuchane recytacje"
 msgid "Most popular"
 msgstr "Najbardziej popularny"
 
-msgid "Most rated"
-msgstr "Najwyżej oceniane"
-
 msgid "Most recent"
 msgstr "Ostatnio dodane"
 
@@ -3234,6 +3274,12 @@ msgstr "Najczęściej oglądane filmy"
 
 msgid "Most viewed series"
 msgstr "Najczęściej oglądane seriale"
+
+msgid "Most voted"
+msgstr ""
+
+msgid "Motorsport"
+msgstr ""
 
 #, python-format
 msgid ""
@@ -3304,6 +3350,9 @@ msgstr "MyE2i - rozwiązanie Cloudflare"
 msgid "MyE2i browser check solution"
 msgstr "MyE2i - rozwiązanie weryfikacji przeglądarki"
 
+msgid "MyE2i captcha: solve it, then Job (no CONTINUE)"
+msgstr ""
+
 msgid "MyE2i debug snapshot received - see the debug log."
 msgstr "Otrzymano migawkę debugowania MyE2i - zobacz log debugowania."
 
@@ -3332,6 +3381,9 @@ msgstr "MyE2i: zamknij stronę startową po zakończeniu"
 
 msgid "MyE2i: offer to open the page in (Android)"
 msgstr "MyE2i: proponuj otwarcie strony w (Android)"
+
+msgid "Mystery"
+msgstr ""
 
 msgid ""
 "NO VIDEOS FOUND FOR NOW! \n"
@@ -3555,6 +3607,13 @@ msgstr "Nie ma czego zapisać - log debugowania nie jest aktywny."
 msgid "Now"
 msgstr "Teraz"
 
+msgid "Now playing"
+msgstr ""
+
+#, python-format
+msgid "Now playing: %s"
+msgstr ""
+
 msgid "Number of columns"
 msgstr "Liczba kolumn"
 
@@ -3771,6 +3830,10 @@ msgstr "Rundy patologii"
 
 msgid "Patriotism"
 msgstr "Patriotyzm"
+
+#, python-format
+msgid "Peak: %s"
+msgstr ""
 
 msgid "Pediatrics"
 msgstr "Pediatria"
@@ -4119,9 +4182,6 @@ msgstr "Sortuj losowo listę odtwarzania"
 msgid "Range request not supported (resume failed)."
 msgstr "Żądanie zakresu nieobsługiwane (wznowienie nie powiodło się)."
 
-msgid "Ranking"
-msgstr "Ranking"
-
 msgid "Rated"
 msgstr "Kategoria wiekowa"
 
@@ -4188,6 +4248,9 @@ msgstr "Odmowa opróżnienia \"%s\" - nie wygląda to na dedykowany folder cache
 
 msgid "Regions"
 msgstr "Regiony"
+
+msgid "Related seasons and works"
+msgstr ""
 
 msgid "Release"
 msgstr "Data wydania"
@@ -4655,6 +4718,9 @@ msgstr "Shift"
 msgid "Short Movies"
 msgstr "Filmy krótkometrażowe"
 
+msgid "Short films"
+msgstr ""
+
 msgid "Short series"
 msgstr "Krótkie seriale"
 
@@ -4739,6 +4805,9 @@ msgstr "Pokaż historię wyszukiwania"
 msgid "Show suggestions"
 msgstr "Wyświetl sugestie"
 
+msgid "ShowBox streams need a FebBox login: enter the \"ui\" cookie of your FebBox account in the host configuration."
+msgstr ""
+
 msgid "Shows"
 msgstr "Shows"
 
@@ -4796,6 +4865,9 @@ msgstr "Autorzy skórek:"
 
 msgid "Skip video shorter than [min]"
 msgstr "Pomiń wideo krótsze niż [min]"
+
+msgid "Snooker"
+msgstr ""
 
 msgid "Society"
 msgstr "Społeczeństwo"
@@ -4896,6 +4968,9 @@ msgstr "Domyślnie uruchomić menadżera pobierania plików"
 
 msgid "Station:"
 msgstr "Stacja:"
+
+msgid "Status"
+msgstr ""
 
 msgid "Status:"
 msgstr "Status:"
@@ -5180,6 +5255,9 @@ msgstr "Technologia"
 msgid "Temp"
 msgstr "Temp"
 
+msgid "Tennis"
+msgstr ""
+
 msgid "Test the failed sites again"
 msgstr "Sprawdź ponownie strony z błędami"
 
@@ -5201,19 +5279,6 @@ msgstr "Program %s jest tutaj niezbędny ale nie został on wykryty."
 
 msgid "The 100 tags with the most videos"
 msgstr "100 tagów z największą liczbą filmów"
-
-msgid ""
-"The 7reels / cineb resolvers 'VidEasy', 'VidCore/VidFast', 'VidLink' and 'Peachify' cannot decrypt their links on the receiver.\n"
-"\n"
-"With this option ON, every time you open one of them E2iPlayer sends the site's encrypted stream token - which contains the TMDb id of the movie or episode you are opening - to the third-party web service enc-dec.app (operated by a private individual). That server then sees the id and your IP address on each play. Nothing else is transmitted, and it is only used for these four resolvers.\n"
-"\n"
-"Leave this OFF if you do not want that. The other resolvers (AdRock/vidrock, VidNest, ...) are not affected."
-msgstr ""
-"Resolvery 7reels / cineb 'VidEasy', 'VidCore/VidFast', 'VidLink' i 'Peachify' nie potrafią odszyfrować swoich linków na odbiorniku.\n"
-"\n"
-"Gdy ta opcja jest WŁĄCZONA, przy każdym otwarciu jednego z nich E2iPlayer wysyła zaszyfrowany token strumienia strony - zawierający identyfikator TMDb otwieranego filmu lub odcinka - do zewnętrznej usługi internetowej enc-dec.app (prowadzonej przez osobę prywatną). Serwer ten widzi wtedy przy każdym odtworzeniu identyfikator i Twój adres IP. Nic innego nie jest przesyłane i dotyczy to tylko tych czterech resolverów.\n"
-"\n"
-"Pozostaw tę opcję WYŁĄCZONĄ, jeśli tego nie chcesz. Pozostałe resolvery (AdRock/vidrock, VidNest, ...) nie są objęte tą opcją."
 
 msgid "The OpenSubtitles v3 server did not answer. Please try again later."
 msgstr "Serwer OpenSubtitles v3 nie odpowiedział. Spróbuj ponownie później."
@@ -5346,6 +5411,9 @@ msgstr "Najnowsze filmy wszystkich kanałów YouTube w tej grupie, od najnowszyc
 msgid "The link could not be resolved."
 msgstr "Nie udało się rozwiązać linku."
 
+msgid "The link has expired. Please open the video again."
+msgstr ""
+
 msgid "The list has changed, please try again."
 msgstr "Lista uległa zmianie, spróbuj ponownie."
 
@@ -5381,6 +5449,14 @@ msgstr "Nagrania z tej strony znajdowały się na starym serwerze multimediów s
 msgid "The request has no valid length."
 msgstr "Żądanie nie ma prawidłowej długości."
 
+msgid ""
+"The resolvers 'VidCore', 'VidUp' and 'VidFast' cannot decrypt their links on the receiver.\n"
+"\n"
+"With this option ON, every time you open one of them E2iPlayer sends the site's encrypted stream token - which contains the TMDb id of the movie or episode you are opening - to the third-party web service enc-dec.app (operated by a private individual). That server then sees the id and your IP address on each play. Nothing else is transmitted, and it is only used for these three resolvers.\n"
+"\n"
+"Leave this OFF if you do not want that. The other resolvers (VidEasy, VidLink, Peachify, vidrock, VidNest, ...) decrypt their links on the receiver and are not affected."
+msgstr ""
+
 msgid "The same item already exists in this group."
 msgstr "Ten sam element już istnieje w tej grupie."
 
@@ -5399,6 +5475,10 @@ msgstr "Usługa jest przeciążona. Spróbuj ponownie później."
 msgid "The settings are protected by a PIN, change them on the receiver."
 msgstr "Ustawienia są chronione kodem PIN, zmień je na odbiorniku."
 
+#, python-format
+msgid "The site did not answer with data (HTTP %s). It may be down or have moved."
+msgstr ""
+
 msgid "The site has no player for this video (it only shows a cam advert)."
 msgstr "Strona nie ma odtwarzacza dla tego wideo (pokazuje tylko reklamę kamerki)."
 
@@ -5407,6 +5487,9 @@ msgstr "Strona obecnie odrzuca wszystkie jakości tego wideo (HTTP 403). Spróbu
 
 msgid "The site rejected the search request."
 msgstr "Strona odrzuciła zapytanie wyszukiwania."
+
+msgid "The site's browser check (Cloudflare) could not be passed. The site may also be blocked in your country."
+msgstr ""
 
 msgid "The site's browser check could not be passed."
 msgstr "Nie udało się przejść weryfikacji przeglądarki na stronie."
@@ -5735,6 +5818,9 @@ msgstr "Całkowity rozmiar:"
 
 msgid "Tourism"
 msgstr "Turystyka"
+
+msgid "Tournament"
+msgstr ""
 
 msgid "Tracklist"
 msgstr "Lista utworów"
@@ -6075,6 +6161,9 @@ msgstr "Typ klawiatury wirtualnej"
 msgid "Voice-over"
 msgstr "Lektor"
 
+msgid "Volleyball"
+msgstr ""
+
 msgid "WWE shows"
 msgstr "Programy WWE"
 
@@ -6096,6 +6185,13 @@ msgstr "Do obejrzenia"
 msgid "Watch online"
 msgstr "Oglądaj online"
 
+msgid "WebStreamr / AIOStreams manifest URL (your own):"
+msgstr ""
+
+#, python-format
+msgid "Weeks on chart: %s"
+msgstr ""
+
 msgid "Western"
 msgstr "Western"
 
@@ -6116,6 +6212,9 @@ msgstr "Wiki"
 
 msgid "Winter"
 msgstr "Zima"
+
+msgid "Winter sports"
+msgstr ""
 
 msgid "With an API key from subdl.com (E2iPlayer settings, Subtitles) the official SubDL API is searched as well."
 msgstr "Z kluczem API z subdl.com (ustawienia E2iPlayer, Napisy) przeszukiwane jest także oficjalne API SubDL."
@@ -6507,6 +6606,12 @@ msgstr "https"
 
 msgid "https - validate SSL certificates"
 msgstr "https - weryfikuj certyfikaty SSL"
+
+msgid "iTunes - Top albums by country"
+msgstr ""
+
+msgid "iTunes - Top songs by country"
+msgstr ""
 
 msgid "insert space"
 msgstr "wstaw spację"
