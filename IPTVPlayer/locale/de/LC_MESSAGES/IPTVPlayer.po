@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-09 19:42+0000\n"
+"POT-Creation-Date: 2026-10-09 20:23+0000\n"
 "PO-Revision-Date: 2026-10-08 22:50+0200\n"
 "Last-Translator: Masta2002\n"
 "Language-Team: oATV Team\n"
@@ -144,6 +144,10 @@ msgstr "%s Episoden"
 #, python-format
 msgid "%s followers"
 msgstr "%s Follower"
+
+#, python-format
+msgid "%s needs a free account. Enter login and password in the host configuration."
+msgstr ""
 
 #, python-format
 msgid "%s password"
@@ -287,6 +291,9 @@ msgstr "----- Livecams anzeigen oder ausblenden -----"
 
 msgid "----- Show or hide Porn Sites -----"
 msgstr "----- Pornoseiten anzeigen oder ausblenden -----"
+
+msgid "----- TORRENT CONFIGURATION -----"
+msgstr ""
 
 msgid "----- VIRTUAL KEYBOARD & SEARCH CONFIGURATION -----"
 msgstr "----- VIRTUELLE TASTATUR & SUCHE KONFIGURATION -----"
@@ -556,6 +563,9 @@ msgstr "Externen Link-Entschlüsselungsdienst zulassen (enc-dec.app)"
 
 msgid "Allow host to override suggestions provider"
 msgstr "Dem Host erlauben, den Vorschlagsanbieter zu überschreiben"
+
+msgid "Allow upload to other peers (seeding)"
+msgstr ""
 
 msgid "Allow watched flag to be set"
 msgstr "Setzen von Gesehen-Marker erlauben"
@@ -907,9 +917,21 @@ msgstr "CUMLOUDER kann nur seine Tags durchsuchen (z. B. milf, step sister, big 
 msgid "Cache"
 msgstr "Cache"
 
+msgid "Cache folder"
+msgstr ""
+
 #, python-format
 msgid "Cache folder \"%s\" could not be created. Some data (cookies, subtitles, ...) may not be saved."
 msgstr "Das Cache-Verzeichnis \"%s\" konnte nicht erstellt werden. Einige Daten (Cookies, Untertitel, ...) werden eventuell nicht gespeichert."
+
+msgid "Cache location"
+msgstr ""
+
+msgid "Cache size in RAM"
+msgstr ""
+
+msgid "Cache size on disk"
+msgstr ""
 
 #, python-format
 msgid ""
@@ -1031,6 +1053,9 @@ msgstr "Chinesisch"
 msgid "Chinese anime"
 msgstr "Chinesische Anime"
 
+msgid "Choose the TorrServer binary"
+msgstr ""
+
 msgid "Cinema History"
 msgstr "Kinogeschichte"
 
@@ -1069,6 +1094,9 @@ msgstr "Clips"
 
 msgid "Close"
 msgstr "Schließen"
+
+msgid "Close an unused torrent after"
+msgstr ""
 
 msgid "Closes the host opened in the web interface, clears the search results and stops what the web interface still runs in the background. Use it when a page keeps loading. Settings, downloads and the E2iPlayer on the TV are not touched."
 msgstr "Schließt den im Web-Interface geöffneten Host, leert die Suchergebnisse und beendet, was das Web-Interface noch im Hintergrund ausführt. Verwenden Sie dies, wenn eine Seite nicht fertig lädt. Einstellungen, Downloads und der E2iPlayer auf dem Fernseher bleiben unberührt."
@@ -1160,6 +1188,9 @@ msgstr "Verbindung zum Server fehlgeschlagen!"
 msgid "Connection to the weeb.tv server failed."
 msgstr "Verbindung zum weeb.tv-Server ist fehlgeschlagen."
 
+msgid "Connections per torrent"
+msgstr ""
+
 #, python-format
 msgid "Connections: %s of %s"
 msgstr "Verbindungen: %s von %s"
@@ -1178,6 +1209,9 @@ msgstr "Kochen"
 
 msgid "Copy"
 msgstr "Kopieren"
+
+msgid "Copy it to /usr/bin/TorrServer (or a folder on HDD/USB) and make it executable (chmod 755)."
+msgstr ""
 
 msgid "Could not add the user link."
 msgstr "Der Benutzerlink konnte nicht hinzugefügt werden."
@@ -1271,6 +1305,9 @@ msgstr "Tschechisch"
 
 msgid "DASH/mpd"
 msgstr "DASH/mpd"
+
+msgid "DLNA server of TorrServer"
+msgstr ""
 
 msgid "DOWNLOAD ERROR"
 msgstr "FEHLER BEIM HERUNTERLADEN"
@@ -1419,6 +1456,9 @@ msgstr "Untertitel-Cache löschen nach (Tage, 0 = nie)"
 msgid "Delete subtitles cache now"
 msgstr "Untertitel-Cache jetzt löschen"
 
+msgid "Delete the cache when the torrent is closed"
+msgstr ""
+
 msgid "Delete thumbnails cache now"
 msgstr "Vorschaubild-Cache jetzt löschen"
 
@@ -1533,6 +1573,10 @@ msgid "Download"
 msgstr "Download"
 
 #, python-format
+msgid "Download \"%s\" (for this receiver) from %s"
+msgstr ""
+
+#, python-format
 msgid "Download (ready in %d seconds)"
 msgstr "Download (bereit in %d Sekunden)"
 
@@ -1580,11 +1624,18 @@ msgstr "Neue Version herunterladen"
 msgid "Download notification duration"
 msgstr "Dauer der Download-Benachrichtigung"
 
+msgid "Download speed limit"
+msgstr ""
+
 msgid "Download subtiles failed."
 msgstr "Herunterladen von Untertiteln fehlgeschlagen."
 
 msgid "Download suggested"
 msgstr "Download vorgeschlagen"
+
+#, python-format
+msgid "Download the Linux file for the CPU of this receiver from %s"
+msgstr ""
 
 msgid "Downloaded file is too small or corrupted."
 msgstr "Die heruntergeladene Datei ist zu klein oder beschädigt."
@@ -1786,6 +1837,9 @@ msgstr "Aktiviere Sortiermodus"
 
 msgid "Enabled hosts"
 msgstr "Aktivierte Hosts"
+
+msgid "Encrypted connections only"
+msgstr ""
 
 msgid "Encrypted stream list - not supported"
 msgstr "Verschlüsselte Streamliste - nicht unterstützt"
@@ -2162,6 +2216,9 @@ msgstr "Datei erfolgreich umbenannt!"
 msgid "Files"
 msgstr "Dateien"
 
+msgid "Fill cache before playback"
+msgstr ""
+
 msgid "Filler"
 msgstr "Filler"
 
@@ -2223,6 +2280,9 @@ msgstr "Config-Verzeichnis"
 
 msgid "Folder for temporary data"
 msgstr "Temp-Verzeichnis"
+
+msgid "Folder on HDD / USB"
+msgstr ""
 
 msgid "Followers"
 msgstr "Follower"
@@ -2901,6 +2961,9 @@ msgstr "Neueste Videos"
 msgid "Latest videos from the channels you are subscribed to."
 msgstr "Neueste Videos von den Kanälen, die Sie abonniert haben."
 
+msgid "Latin American movies"
+msgstr ""
+
 msgid "Latin American series"
 msgstr "Lateinamerikanische Serien"
 
@@ -3062,6 +3125,9 @@ msgstr "Login fehlgeschlagen!"
 msgid "Login failed."
 msgstr "Login fehlgeschlagen."
 
+msgid "Login needed"
+msgstr ""
+
 #, python-brace-format
 msgid "Login on {0} failed."
 msgstr "Login in {0} fehlgeschlagen."
@@ -3172,6 +3238,12 @@ msgstr ""
 
 msgid "Maximum log file size"
 msgstr "Maximale Log-Dateigröße"
+
+msgid "Maximum torrent size:"
+msgstr ""
+
+msgid "MediaFusion manifest URL (your own):"
+msgstr ""
 
 msgid "Medtryx Marketing"
 msgstr "Medtryx-Marketing"
@@ -3580,6 +3652,9 @@ msgstr "In Ihrem Land nicht verfügbar (Geoblocking)."
 msgid "Not available yet"
 msgstr "Noch nicht verfügbar"
 
+msgid "Not in /usr/bin: choose the file under \"TorrServer binary\" in the torrent configuration."
+msgstr ""
+
 msgid "Not possible (no enigma2 session)."
 msgstr "Nicht möglich (keine enigma2-Sitzung)."
 
@@ -3859,6 +3934,9 @@ msgstr "PIN-Schutz für Plugin"
 msgid "Pin protection for this host"
 msgstr "PIN-Schutz für diesen Host"
 
+msgid "Play torrents with TorrServer"
+msgstr ""
+
 #, python-format
 msgid "Play with [%s] player"
 msgstr "Wiedergeben mit [%s]"
@@ -4131,6 +4209,9 @@ msgstr "Qualität:"
 msgid "Quick test: menu and a list with videos"
 msgstr "Schnelltest: Menü und eine Liste mit Videos"
 
+msgid "RAM"
+msgstr ""
+
 msgid "RAM buffer size [MB] for local files"
 msgstr "RAM-Puffer in [MB] für lokale Inhalte"
 
@@ -4195,6 +4276,9 @@ msgstr "Bewertung:"
 #, python-format
 msgid "Rating: %s"
 msgstr "Bewertung: %s"
+
+msgid "Read ahead (share of the cache)"
+msgstr ""
 
 msgid "Read by"
 msgstr "Gelesen von"
@@ -4451,6 +4535,9 @@ msgstr "Der Suchverlauf ist leer."
 msgid "Search History successfully deleted."
 msgstr "Suchverlauf erfolgreich gelöscht."
 
+msgid "Search automatically"
+msgstr ""
+
 msgid "Search for an artist (exact name) or a Last.fm user"
 msgstr "Nach einem Künstler (exakter Name) oder einem Last.fm-Benutzer suchen"
 
@@ -4523,6 +4610,9 @@ msgstr "Staffel %d (%d Episoden)"
 msgid "Season %s"
 msgstr "Staffel %s"
 
+msgid "Season pack"
+msgstr ""
+
 msgid "Seasons"
 msgstr "Staffeln"
 
@@ -4593,6 +4683,9 @@ msgstr "Wähle Untertitel Datei zum Herunterladen"
 
 msgid "Select subtitles track"
 msgstr "Wähle Untertitelspur"
+
+msgid "Select the TorrServer binary"
+msgstr ""
 
 msgid "Select the directory"
 msgstr "Wähle das Verzeichnis"
@@ -4978,6 +5071,9 @@ msgstr "Stereo Downmix Modus für Softwaredekoder"
 msgid "Stop"
 msgstr "Stop"
 
+msgid "Stop TorrServer when E2iPlayer is closed"
+msgstr ""
+
 msgid "Stop downloading"
 msgstr "Herunterladen anhalten"
 
@@ -5133,6 +5229,9 @@ msgstr "Schweden"
 
 msgid "Swedish"
 msgstr "Schwedisch"
+
+msgid "Switch on torrent playback?"
+msgstr ""
 
 msgid "Synchronize"
 msgstr "Synchronisieren"
@@ -5549,6 +5648,10 @@ msgstr ""
 "Unter \"%s\" ist kein Speichergerät vorhanden (%s frei). E2iPlayer setzt dieses Verzeichnis beim nächsten Start auf \"%s\" zurück.\n"
 "Bitte wählen Sie ein Verzeichnis auf einer eingebundenen Festplatte oder einem USB-Stick."
 
+#, python-format
+msgid "There is no storage device under \"%s\". TorrServer keeps its cache in RAM until a HDD or USB stick is mounted there."
+msgstr ""
+
 msgid "This article has no free video."
 msgstr "Dieser Artikel hat kein kostenloses Video."
 
@@ -5806,6 +5909,39 @@ msgstr "Top-IMDB"
 msgid "Topics"
 msgstr "Themen"
 
+msgid "TorrServer binary (OK = choose, empty = search automatically)"
+msgstr ""
+
+#, python-format
+msgid "TorrServer could not be started (%s)."
+msgstr ""
+
+msgid "TorrServer got no file list for this torrent (no peers or a dead link?)."
+msgstr ""
+
+msgid "TorrServer port"
+msgstr ""
+
+msgid "TorrServer was not found on the receiver. It is not part of E2iPlayer and not in the image feeds - install it yourself:"
+msgstr ""
+
+msgid "TorrServer web interface in the home network"
+msgstr ""
+
+msgid "Torrent"
+msgstr ""
+
+msgid ""
+"Torrent links are played with TorrServer.\n"
+"Switch on \"Play torrents with TorrServer\" in the E2iPlayer settings (Torrent configuration)."
+msgstr ""
+
+msgid ""
+"Torrents are peer-to-peer: while a torrent plays, the receiver connects to other users and your IP address is visible to them. Depending on your country, downloading or sharing copyrighted content through torrents may be illegal - you alone are responsible for what you play. Upload to other peers stays off unless you switch it on.\n"
+"\n"
+"TorrServer itself is not part of E2iPlayer, it has to be installed separately."
+msgstr ""
+
 msgid "Total size:"
 msgstr "Gesamtgröße:"
 
@@ -5955,6 +6091,9 @@ msgstr "Updates"
 
 msgid "Upload date"
 msgstr "Upload Datum"
+
+msgid "Upload speed limit"
+msgstr ""
 
 #, python-format
 msgid "Uploader: %s"

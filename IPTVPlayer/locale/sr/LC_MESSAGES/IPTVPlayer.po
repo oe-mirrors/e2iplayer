@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-09 19:42+0000\n"
+"POT-Creation-Date: 2026-10-09 20:23+0000\n"
 "PO-Revision-Date: 2026-10-08 20:17+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Serbian (Latin)\n"
@@ -141,6 +141,10 @@ msgstr "%s epizoda"
 #, python-format
 msgid "%s followers"
 msgstr "%s pratilaca"
+
+#, python-format
+msgid "%s needs a free account. Enter login and password in the host configuration."
+msgstr ""
 
 #, python-format
 msgid "%s password"
@@ -284,6 +288,9 @@ msgstr "----- Prikaži ili sakrij Live Cams -----"
 
 msgid "----- Show or hide Porn Sites -----"
 msgstr "----- Prikaži ili sakrij porno sajtove -----"
+
+msgid "----- TORRENT CONFIGURATION -----"
+msgstr ""
 
 msgid "----- VIRTUAL KEYBOARD & SEARCH CONFIGURATION -----"
 msgstr "----- KONFIGURACIJA VIRTUELNE TASTATURE I PRETRAGE -----"
@@ -553,6 +560,9 @@ msgstr "Dozvoli spoljni servis za dešifrovanje linkova (enc-dec.app)"
 
 msgid "Allow host to override suggestions provider"
 msgstr "Dozvoli hostu da zameni dobavljača predloga"
+
+msgid "Allow upload to other peers (seeding)"
+msgstr ""
 
 msgid "Allow watched flag to be set"
 msgstr "Dozvoli postavljanje oznake \"pogledano\""
@@ -904,9 +914,21 @@ msgstr "CUMLOUDER može da pretražuje samo svoje oznake (npr. milf, step sister
 msgid "Cache"
 msgstr "Keš"
 
+msgid "Cache folder"
+msgstr ""
+
 #, python-format
 msgid "Cache folder \"%s\" could not be created. Some data (cookies, subtitles, ...) may not be saved."
 msgstr "Fascikla keša \"%s\" nije mogla da se kreira. Neki podaci (kolačići, titlovi, ...) možda neće biti sačuvani."
+
+msgid "Cache location"
+msgstr ""
+
+msgid "Cache size in RAM"
+msgstr ""
+
+msgid "Cache size on disk"
+msgstr ""
 
 #, python-format
 msgid ""
@@ -1028,6 +1050,9 @@ msgstr "Kineski"
 msgid "Chinese anime"
 msgstr "Kineski anime"
 
+msgid "Choose the TorrServer binary"
+msgstr ""
+
 msgid "Cinema History"
 msgstr "Istorija filma"
 
@@ -1066,6 +1091,9 @@ msgstr "Klipovi"
 
 msgid "Close"
 msgstr "Zatvori"
+
+msgid "Close an unused torrent after"
+msgstr ""
 
 msgid "Closes the host opened in the web interface, clears the search results and stops what the web interface still runs in the background. Use it when a page keeps loading. Settings, downloads and the E2iPlayer on the TV are not touched."
 msgstr "Zatvara host otvoren u veb-interfejsu, briše rezultate pretrage i zaustavlja ono što veb-interfejs još izvršava u pozadini. Koristite ovo kada se stranica stalno učitava. Podešavanja, preuzimanja i E2iPlayer na televizoru ostaju netaknuti."
@@ -1157,6 +1185,9 @@ msgstr "Povezivanje sa serverom nije uspelo!"
 msgid "Connection to the weeb.tv server failed."
 msgstr "Povezivanje sa weeb.tv serverom nije uspelo."
 
+msgid "Connections per torrent"
+msgstr ""
+
 #, python-format
 msgid "Connections: %s of %s"
 msgstr "Veze: %s od %s"
@@ -1175,6 +1206,9 @@ msgstr "Kuvanje"
 
 msgid "Copy"
 msgstr "Kopiraj"
+
+msgid "Copy it to /usr/bin/TorrServer (or a folder on HDD/USB) and make it executable (chmod 755)."
+msgstr ""
 
 msgid "Could not add the user link."
 msgstr "Korisnički link nije mogao da se doda."
@@ -1268,6 +1302,9 @@ msgstr "Češki"
 
 msgid "DASH/mpd"
 msgstr "DASH/mpd"
+
+msgid "DLNA server of TorrServer"
+msgstr ""
 
 msgid "DOWNLOAD ERROR"
 msgstr "GREŠKA PRI PREUZIMANJU"
@@ -1416,6 +1453,9 @@ msgstr "Obriši keš titlova posle (dana, 0 = nikad)"
 msgid "Delete subtitles cache now"
 msgstr "Obriši keš titlova sada"
 
+msgid "Delete the cache when the torrent is closed"
+msgstr ""
+
 msgid "Delete thumbnails cache now"
 msgstr "Obriši keš sličica sada"
 
@@ -1530,6 +1570,10 @@ msgid "Download"
 msgstr "Preuzmi"
 
 #, python-format
+msgid "Download \"%s\" (for this receiver) from %s"
+msgstr ""
+
+#, python-format
 msgid "Download (ready in %d seconds)"
 msgstr "Preuzmi (spremno za %d sekundi)"
 
@@ -1577,11 +1621,18 @@ msgstr "Preuzmi novu verziju"
 msgid "Download notification duration"
 msgstr "Trajanje obaveštenja o preuzimanju"
 
+msgid "Download speed limit"
+msgstr ""
+
 msgid "Download subtiles failed."
 msgstr "Preuzimanje titlova nije uspelo."
 
 msgid "Download suggested"
 msgstr "Preporučeno preuzimanje"
+
+#, python-format
+msgid "Download the Linux file for the CPU of this receiver from %s"
+msgstr ""
 
 msgid "Downloaded file is too small or corrupted."
 msgstr "Preuzeta datoteka je premala ili oštećena."
@@ -1783,6 +1834,9 @@ msgstr "Omogući režim premeštanja"
 
 msgid "Enabled hosts"
 msgstr "Omogućeni hostovi"
+
+msgid "Encrypted connections only"
+msgstr ""
 
 msgid "Encrypted stream list - not supported"
 msgstr "Šifrovana lista strimova - nije podržano"
@@ -2159,6 +2213,9 @@ msgstr "Datoteka je uspešno preimenovana!"
 msgid "Files"
 msgstr "Datoteke"
 
+msgid "Fill cache before playback"
+msgstr ""
+
 msgid "Filler"
 msgstr "Filer"
 
@@ -2220,6 +2277,9 @@ msgstr "Fascikla za konfiguracione podatke"
 
 msgid "Folder for temporary data"
 msgstr "Fascikla za privremene podatke"
+
+msgid "Folder on HDD / USB"
+msgstr ""
 
 msgid "Followers"
 msgstr "Pratioci"
@@ -2898,6 +2958,9 @@ msgstr "Najnoviji video snimci"
 msgid "Latest videos from the channels you are subscribed to."
 msgstr "Najnoviji video snimci sa kanala na koje ste pretplaćeni."
 
+msgid "Latin American movies"
+msgstr ""
+
 msgid "Latin American series"
 msgstr "Latinoameričke serije"
 
@@ -3059,6 +3122,9 @@ msgstr "Prijava nije uspela!"
 msgid "Login failed."
 msgstr "Prijava nije uspela."
 
+msgid "Login needed"
+msgstr ""
+
 #, python-brace-format
 msgid "Login on {0} failed."
 msgstr "Prijava na {0} nije uspela."
@@ -3169,6 +3235,12 @@ msgstr ""
 
 msgid "Maximum log file size"
 msgstr "Maksimalna veličina log datoteke"
+
+msgid "Maximum torrent size:"
+msgstr ""
+
+msgid "MediaFusion manifest URL (your own):"
+msgstr ""
 
 msgid "Medtryx Marketing"
 msgstr "Medtryx marketing"
@@ -3577,6 +3649,9 @@ msgstr "Nije dostupno u vašoj zemlji (geo-blokiranje)."
 msgid "Not available yet"
 msgstr "Još nije dostupno"
 
+msgid "Not in /usr/bin: choose the file under \"TorrServer binary\" in the torrent configuration."
+msgstr ""
+
 msgid "Not possible (no enigma2 session)."
 msgstr "Nije moguće (nema enigma2 sesije)."
 
@@ -3856,6 +3931,9 @@ msgstr "PIN zaštita za dodatak"
 msgid "Pin protection for this host"
 msgstr "PIN zaštita za ovaj host"
 
+msgid "Play torrents with TorrServer"
+msgstr ""
+
 #, python-format
 msgid "Play with [%s] player"
 msgstr "Reprodukuj pomoću plejera [%s]"
@@ -4128,6 +4206,9 @@ msgstr "Kvalitet:"
 msgid "Quick test: menu and a list with videos"
 msgstr "Brzi test: meni i lista sa video snimcima"
 
+msgid "RAM"
+msgstr ""
+
 msgid "RAM buffer size [MB] for local files"
 msgstr "Veličina RAM bafera [MB] za lokalne datoteke"
 
@@ -4192,6 +4273,9 @@ msgstr "Ocena:"
 #, python-format
 msgid "Rating: %s"
 msgstr "Ocena: %s"
+
+msgid "Read ahead (share of the cache)"
+msgstr ""
 
 msgid "Read by"
 msgstr "Čita"
@@ -4448,6 +4532,9 @@ msgstr "Istorija pretrage je prazna."
 msgid "Search History successfully deleted."
 msgstr "Istorija pretrage je uspešno obrisana."
 
+msgid "Search automatically"
+msgstr ""
+
 msgid "Search for an artist (exact name) or a Last.fm user"
 msgstr "Pretražite izvođača (tačan naziv) ili Last.fm korisnika"
 
@@ -4520,6 +4607,9 @@ msgstr "Sezona %d (epizoda: %d)"
 msgid "Season %s"
 msgstr "Sezona %s"
 
+msgid "Season pack"
+msgstr ""
+
 msgid "Seasons"
 msgstr "Sezone"
 
@@ -4590,6 +4680,9 @@ msgstr "Izaberite titlove za preuzimanje"
 
 msgid "Select subtitles track"
 msgstr "Izaberite zapis titla"
+
+msgid "Select the TorrServer binary"
+msgstr ""
 
 msgid "Select the directory"
 msgstr "Izaberite direktorijum"
@@ -4975,6 +5068,9 @@ msgstr "Režim stereo downmix-a za softverski dekoder"
 msgid "Stop"
 msgstr "Zaustavi"
 
+msgid "Stop TorrServer when E2iPlayer is closed"
+msgstr ""
+
 msgid "Stop downloading"
 msgstr "Zaustavi preuzimanje"
 
@@ -5130,6 +5226,9 @@ msgstr "Švedska"
 
 msgid "Swedish"
 msgstr "Švedski"
+
+msgid "Switch on torrent playback?"
+msgstr ""
 
 msgid "Synchronize"
 msgstr "Sinhronizuj"
@@ -5546,6 +5645,10 @@ msgstr ""
 "Pod \"%s\" nema uređaja za skladištenje (%s slobodno). E2iPlayer će pri sledećem pokretanju vratiti ovu fasciklu na \"%s\".\n"
 "Izaberite fasciklu na montiranom hard disku ili USB fleš disku."
 
+#, python-format
+msgid "There is no storage device under \"%s\". TorrServer keeps its cache in RAM until a HDD or USB stick is mounted there."
+msgstr ""
+
 msgid "This article has no free video."
 msgstr "Ovaj članak nema besplatan video snimak."
 
@@ -5803,6 +5906,39 @@ msgstr "Top-IMDB"
 msgid "Topics"
 msgstr "Teme"
 
+msgid "TorrServer binary (OK = choose, empty = search automatically)"
+msgstr ""
+
+#, python-format
+msgid "TorrServer could not be started (%s)."
+msgstr ""
+
+msgid "TorrServer got no file list for this torrent (no peers or a dead link?)."
+msgstr ""
+
+msgid "TorrServer port"
+msgstr ""
+
+msgid "TorrServer was not found on the receiver. It is not part of E2iPlayer and not in the image feeds - install it yourself:"
+msgstr ""
+
+msgid "TorrServer web interface in the home network"
+msgstr ""
+
+msgid "Torrent"
+msgstr ""
+
+msgid ""
+"Torrent links are played with TorrServer.\n"
+"Switch on \"Play torrents with TorrServer\" in the E2iPlayer settings (Torrent configuration)."
+msgstr ""
+
+msgid ""
+"Torrents are peer-to-peer: while a torrent plays, the receiver connects to other users and your IP address is visible to them. Depending on your country, downloading or sharing copyrighted content through torrents may be illegal - you alone are responsible for what you play. Upload to other peers stays off unless you switch it on.\n"
+"\n"
+"TorrServer itself is not part of E2iPlayer, it has to be installed separately."
+msgstr ""
+
 msgid "Total size:"
 msgstr "Ukupna veličina:"
 
@@ -5952,6 +6088,9 @@ msgstr "Ažuriranja"
 
 msgid "Upload date"
 msgstr "Datum otpremanja"
+
+msgid "Upload speed limit"
+msgstr ""
 
 #, python-format
 msgid "Uploader: %s"
