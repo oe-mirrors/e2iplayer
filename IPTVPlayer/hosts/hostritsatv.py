@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 05.09.2026
+# Last Modified: 08.10.2026
 # RitsaTV (ritsatv.ru) - genre-organized live TV channel directory (CinemaPress-based).
 # Playback: the real player is the <iframe id="cinemapress-cdn"> (the page also
 # has EPG / chat / social iframes). Its ?file= is one of ~6 recurring shapes:
@@ -13,10 +13,15 @@
 #   - another /youtube/Y.html wrapper (followed, up to 3 hops)
 # A few channels build the player purely in obfuscated JS or a ${token}
 # template (no static stream) and can't be resolved without a JS engine.
+# 08.10.2026 - genre paging (50 channels per page), genres as favourites, best quality first,
+#   numbered duplicate link names, genre in INFO, sidecar; live channels: no watched flag
 import json
 import re
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 
@@ -43,6 +48,7 @@ class RitsaTv(CBaseHostClass):
         'RADIO': 'Radio Stations', 'RELAX': 'Relax Music',
         'TURKEYTV': 'Türk TV Kanallari', 'CLIPS': 'Music Clips',
     }
+    PAGE_SIZE = 50
     GENRE_ORDER = ('TV', 'MUSIC', 'KINO', 'SPORT', 'ABKHAZIA', 'COGNITIVE', 'REGIONS',
                    'ASIATV', 'KIDSTV', 'WORLDTV', 'POLSKATV', 'RADIO', 'RELAX',
                    'TURKEYTV', 'CLIPS')
@@ -83,19 +89,30 @@ class RitsaTv(CBaseHostClass):
         return self._genresCache
 
     def listMainMenu(self):
-        menu = [{'name': 'category', 'category': 'list_channels', 'title': _(label), 'genre': code}
+        menu = [{'name': 'category', 'category': 'list_channels', 'title': _(label), 'genre_title': _(label), 'genre': code, 'good_for_fav': True}
                 for code, label in self._getGenres()]
         self.listsTab(menu, {'name': 'category'})
 
     def listChannels(self, cItem):
-        printDBG("RitsaTv.listChannels [%s]" % cItem.get('genre', ''))
-        sts, data = self.getPage(self.MAIN_URL + 'genre-' + cItem['genre'])
+        printDBG("RitsaTv.listChannels [%s] page %s" % (cItem.get('genre', ''), cItem.get('page', 1)))
+        page = int(cItem.get('page', 1) or 1)
+        genreUrl = self.MAIN_URL + 'genre-' + cItem['genre']
+        sts, data = self.getPage(genreUrl + ('/%d' % page if page > 1 else ''))
         if not sts:
             return
+        count = self._addChannels(cItem, data)
+        # 50 channels per page; the pager links of a full page also exist when the next page is empty,
+        # so a next page needs both
+        hasNext = count >= self.PAGE_SIZE and ('genre-%s/%d"' % (cItem['genre'], page + 1)) in data
+        addPagingItems(self, cItem, page, hasNext, 0, genreUrl + '/{page}')
+
+    def _addChannels(self, cItem, data):
         # the genre page carries a schema.org JSON-LD block (a list of objects,
         # one of them an ItemList<Movie>) with a clean {name, image,
         # alternativeHeadline, sameAs} entry per channel - far more reliable
         # than scraping the Tailwind/owl-carousel card markup
+        count = 0
+        genreTitle = cItem.get('genre_title') or cItem.get('title', '')
         isRadio = cItem.get('genre', '') == 'RADIO'
         for block in re.findall(r'<script type="application/ld\+json">(.*?)</script>', data, re.DOTALL):
             try:
@@ -112,15 +129,16 @@ class RitsaTv(CBaseHostClass):
                 title = self.cleanHtmlStr(item.get('name', ''))
                 if not url or not title:
                     continue
-                params = dict(cItem)
-                params.update({'good_for_fav': True, 'category': 'video', 'title': title,
-                               'url': url, 'icon': item.get('image', ''),
-                               'desc': self.cleanHtmlStr(item.get('alternativeHeadline', '') or item.get('description', ''))})
+                count += 1
+                params = {'name': 'category', 'good_for_fav': True, 'category': 'video', 'title': title, 'genre': cItem.get('genre', ''),
+                          'genre_title': genreTitle, 'url': url, 'icon': item.get('image', ''),
+                          'desc': self.cleanHtmlStr(item.get('alternativeHeadline', '') or item.get('description', ''))}
                 if isRadio:
                     self.addAudio(params)
                 else:
                     self.addVideo(params)
-            return  # only one ItemList block per page
+            break  # only one ItemList block per page
+        return count
 
     @staticmethod
     def _urlUnquote(value):
@@ -306,8 +324,25 @@ class RitsaTv(CBaseHostClass):
                 urlTab.append({'name': name, 'url': strwithmeta(url, meta)})
         return urlTab
 
+    @staticmethod
+    def _qualityOf(name):
+        m = re.search(r'(\d{3,4})p\b', name)
+        return int(m.group(1)) if m else 0
+
     def getLinksForVideo(self, cItem):
         printDBG("RitsaTv.getLinksForVideo [%s]" % cItem['url'])
+        urlTab = self._getChannelLinks(cItem)
+        # best quality first (the player strings list 240p .. 1080p), then a number for names that repeat
+        urlTab.sort(key=lambda x: -self._qualityOf(x.get('name', '')))
+        names = [x.get('name', '') for x in urlTab]
+        counter = {}
+        for item in urlTab:
+            if names.count(item.get('name', '')) > 1:
+                counter[item['name']] = counter.get(item['name'], 0) + 1
+                item['name'] = '%s %d' % (item['name'], counter[item['name']])
+        return applySidecarToLinks(urlTab, buildSidecarFromItem(cItem, IsSidecarEnabled()))
+
+    def _getChannelLinks(self, cItem):
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return []
@@ -346,20 +381,25 @@ class RitsaTv(CBaseHostClass):
         printDBG("RitsaTv.getVideoLinks [%s]" % videoUrl)
         try:
             if self.up.checkHostSupport(videoUrl):
-                return self.up.getVideoLinkExt(videoUrl)
+                return decorateResolvedLinkItems(self.up.getVideoLinkExt(videoUrl), sidecarFromUrlMeta(videoUrl, IsSidecarEnabled()))
         except Exception:
             printExc()
         return []
 
     def getArticleContent(self, cItem):
         printDBG("RitsaTv.getArticleContent [%s]" % cItem.get('url', ''))
-        return [{'title': cItem.get('title', ''), 'text': cItem.get('desc', ''),
+        other = {}
+        if cItem.get('genre_title'):
+            other['genre'] = cItem['genre_title']
+        return [{'title': cItem.get('title', ''), 'text': cItem.get('desc', '') or cItem.get('title', ''),
                  'images': [{'title': '', 'url': cItem.get('icon', '')}] if cItem.get('icon') else [],
-                 'other_info': {}}]
+                 'other_info': other}]
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('RitsaTv.handleService start')
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
+        if isJumpItem(self.currItem):
+            self.currItem = jumpTarget(self, self.currItem)
         name = self.currItem.get('name', None)
         category = self.currItem.get('category', '')
         self.currList = []

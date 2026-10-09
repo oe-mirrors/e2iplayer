@@ -1,19 +1,29 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 09.09.2026
+# Last Modified: 09.10.2026
 # 09.08.2025 - Lululla - fix for increase getThumbnailUrl2 - sport page show poster - events theatre added
+# 08.10.2026 - catalogue from the current raiplay.it JSON (menu, pages, genres A-Z, programmes,
+# seasons/sets with local paging), search (programmes + videos), live TV from dirette.json and
+# radio from raiplaysound, replay from the JSON TV guide, TG1/TG2/TG3/TGR as programmes, Rai Sport
+# archive (offset paging, videos only); INFO from the programme/video data (moviemeta for films),
+# "Show - SxxExx" / "Title (Year)" / "(YYYY-MM-DD)" names, watched flag programme -> season ->
+# episode, own url per video, subtitles, a message for geo-blocked and DRM videos, default user agent.
+# 09.10.2026 - radio stations as audio rows (the player treated them as videos), INFO on them
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, MergeDicts
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
-from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
+from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
+from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
+from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import normalizeMediathekTitle
+from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
+from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
-from Plugins.Extensions.IPTVPlayer.libs import ph
-from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import parse_qs, urlparse, urlunparse
-from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_urlencode
-from Plugins.Extensions.IPTVPlayer.libs.pCommon import common
+from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
 ###################################################
 
 ###################################################
@@ -21,7 +31,6 @@ from Plugins.Extensions.IPTVPlayer.libs.pCommon import common
 ###################################################
 import re
 import datetime
-
 ###################################################
 
 
@@ -33,931 +42,756 @@ def gettytul():
     return 'https://raiplay.it/'
 
 
-class Raiplay(CBaseHostClass):
+# "... - Puntata del 31/05/2026", "Tg1 ore 20:00 del 07/10/2026", "TGR Lazio del 07/10/2026 ore 19:30"
+DATE_RE = re.compile(r'\s*(?:-\s*)?(?:(?:puntata|edizione)\s+)?(?:del\s+)?\b(\d{1,2})/(\d{1,2})/(\d{4})\b', re.I)
+
+
+class Raiplay(GenericFolderWatchedScraperMixin, CBaseHostClass):
+
+    MAIN_URL = 'https://www.raiplay.it/'
+    HOME_URL = MAIN_URL + 'index.json'
+    MENU_URL = MAIN_URL + 'menu.json'
+    CHANNELS_URL = MAIN_URL + 'dirette.json'
+    EPG_URL = MAIN_URL + 'palinsesto/app/%s/%s.json'
+    SEARCH_URL = MAIN_URL + 'atomatic/raiplay-search-service/api/v1/msearch'
+    # template ids of the raiplay.it search web component (rai-search.js)
+    SEARCH_TEMPLATE_IN = '6470a982e4e0301afe1f81f1'
+    SEARCH_TEMPLATE_OUT = '6516ac5d40da6c377b151642'
+    RADIO_MAIN_URL = 'https://www.raiplaysound.it'
+    CHANNELS_RADIO_URL = RADIO_MAIN_URL + '/dirette.json'
+
+    RAISPORT_DOMAIN = "RaiNews|Category-6dd7493b-f116-45de-af11-7d28a3f33dd2"
+    RAISPORT_CATEGORIES_URL = "https://www.rainews.it/category/6dd7493b-f116-45de-af11-7d28a3f33dd2.json"
+    RAISPORT_SEARCH_URL = "https://www.rainews.it/atomatic/news-search-service/api/v3/search"
+
+    TGR_REGIONS = [('Abruzzo', 'abruzzo'), ('Basilicata', 'basilicata'), ('Calabria', 'calabria'), ('Campania', 'campania'),
+                   ('Emilia Romagna', 'emiliaromagna'), ('Friuli Venezia Giulia', 'friuliveneziagiulia'), ('Lazio', 'lazio'),
+                   ('Liguria', 'liguria'), ('Lombardia', 'lombardia'), ('Marche', 'marche'), ('Molise', 'molise'),
+                   ('Piemonte', 'piemonte'), ('Puglia', 'puglia'), ('Sardegna', 'sardegna'), ('Sicilia', 'sicilia'),
+                   ('Toscana', 'toscana'), ('Trentino Alto Adige - Bolzano', 'trentinoaltoadigebolzano'),
+                   ('Trentino Alto Adige - Trento', 'trentinoaltoadigetrento'), ('Umbria', 'umbria'),
+                   ("Valle d'Aosta", 'valledaosta'), ('Veneto', 'veneto')]
+
+    # blocks of a page that carry a list of contents (hero / sidekick / marketing / recommendation
+    # blocks are teasers of rows listed elsewhere or need a login)
+    LIST_BLOCKS = ('RaiPlay Slider Block', 'RaiPlay Slider Chart Block', 'RaiPlay Slider Video Block', 'RaiPlay Slider Generi Block')
+    PROGRAM_TYPES = ('RaiPlay Programma Item', 'RaiPlay Programma Stagione Item')
+    PAGE_TYPES = ('RaiPlay Raccolta Item', 'RaiPlay Genere Item', 'RaiPlay Tipologia Item')
+    WF_FOLDER_CATEGORIES = ('rp_page', 'rp_block', 'rp_letter', 'rp_program', 'rp_set')
+
+    PAGE_SIZE = 50
+    SEARCH_PAGE_SIZE = 50
+    SPORT_PAGE_SIZE = 50
+    INFO_TWINS = {'directors': 'director', 'cast': 'actors', 'genres': 'genre'}
 
     def __init__(self):
-
         CBaseHostClass.__init__(self, {'history': 'raiplay', 'cookie': 'raiplay.it.cookie'})
-        self.cm = common()
-        self.MAIN_URL = 'https://raiplay.it/'
-        self.MENU_URL = "https://www.rai.it/dl/RaiPlay/2016/menu/PublishingBlock-20b274b1-23ae-414f-b3bf-4bdc13b86af2.html?homejson"
         self.DEFAULT_ICON_URL = "https://img.tuttoandroid.net/wp-content/uploads/2019/10/Raiplay-logo.jpg"
-        self.DEFAULT_ICON_URL2 = "https://images-eu.ssl-images-amazon.com/images/I/41%2B5P94pGPL.png"
-        self.NOTHUMB_URL = "https://img.tuttoandroid.net/wp-content/uploads/2019/10/Raiplay-logo.jpg"
-        self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
-        self.RELINKER_USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.105 Safari/537.36"
-        # self.LOCALIZEURL = "https://mediapolisgs.rai.it/relinker/relinkerServlet.htm?cont=201342"
-
-        self.CHANNELS_URL = "https://www.rai.it/dl/RaiPlay/2016/PublishingBlock-9a2ff311-fcf0-4539-8f8f-c4fee2a71d58.html?json"
-
-        # self.EPG_URL = "https://www.raiplay.it/guidatv/lista?canale=[nomeCanale]&giorno=[dd-mm-yyyy]"
-        self.EPG_URL = 'https://www.raiplay.it/palinsesto/guidatv/lista/[idCanale]/[dd-mm-yyyy].html'
-        self.EPG_URL_JSON = "https://www.raiplay.it/palinsesto/app/old/[idCanale]/[dd-mm-yyyy].json"  # this actual work updated
-
-        # Raiplay RADIO
-        # self.BASEURL = "https://www.raiplayradio.it/"
-        self.CHANNELS_RADIO_URL = "https://rai.it/dl/portaleRadio/popup/ContentSet-003728e4-db46-4df8-83ff-606426c0b3f5-json.html"
-        self.CHANNELS_RADIO_URL2 = "https://www.raiplaysound.it/dirette.json"
-        # self.NOTHUMB_RADIO_URL = "https://www.raiplayradio.it/dl/components/img/radio/player/placeholder_img.png"
-
-        self.TG_URL = "https://www.tgr.rai.it/dl/tgr/mhp/home.xml"
-        self.TG1_URL = "https://www.rainews.it/notiziari/tg1/archivio"
-        # https://www.raiplay.it/programmi/specialetg1.json
-        self.TG2_URL = "https://www.rainews.it/notiziari/tg2/archivio"
-        self.TG3_URL = "https://www.rainews.it/notiziari/tg3/archivio"
-
-        # Rai Sport urls Update Rai Sport URL Lululla
-        self.RAISPORT_MAIN_URL = 'https://www.raisport.rai.it'
-        self.RAISPORT_LIVE_URL = self.RAISPORT_MAIN_URL + '/dirette.html'
-        self.RAISPORT_ARCHIVIO_URL = self.RAISPORT_MAIN_URL + '/archivio.html'
-        self.RAISPORTDOMINIO = "RaiNews|Category-6dd7493b-f116-45de-af11-7d28a3f33dd2"
-        self.RAISPORT_CATEGORIES_URL = "https://www.rainews.it/category/6dd7493b-f116-45de-af11-7d28a3f33dd2.json"
-        self.RAISPORT_SEARCH_URL = "https://www.rainews.it/atomatic/news-search-service/api/v3/search"
-
-        # # future work
-        # PALINSESTO_URL_HTML = "https://www.raiplay.it/palinsesto/guidatv/lista/[idCanale]/[dd-mm-yyyy].html"
-        # ON_AIR_URL = "https://www.raiplay.it/palinsesto/onAir.json"
-        # RAIPLAY_AZ_TV_SHOW_PATH = "https://www.raiplay.it/dl/RaiTV/RaiPlayMobile/Prod/Config/programmiAZ-elenco.json"
-        # RAIPLAY_AZ_RADIO_SHOW_PATH = "https://www.raiplay.it/dl/RaiTV/RaiRadioMobile/Prod/Config/programmiAZ-elenco.json"
-        # PALINSESTO_URL = "https://www.raiplaysound.it/dl/palinsesti/Page-a47ba852-d24f-44c2-8abb-0c9f90187a3e-json.html?canale=[nomeCanale]&giorno=[dd-mm-yyyy]&mode=light"
-
-        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.USER_AGENT = self.cm.getDefaultUserAgent()
+        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'application/json, text/plain, */*'}
+        self.defaultParams = {'header': self.HTTP_HEADER}
         self.RaiSportKeys = []
+        self.watchedHelper = IPTVWatchedHelper('raiplay')
+        self.wfInitFolderCache()
 
-    def getPage(self, url, addParams={}, post_data=None):
-        if addParams == {}:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPage(url, addParams, post_data)
-
-    def getThumbnailUrl(self, pathId):
-        if pathId == "":
-            url = self.NOTHUMB_URL
-        else:
-            url = self.getFullUrl(pathId)
-            url = url.replace("[RESOLUTION]", "256x-")
-        printDBG(">>> getThumbnailUrl - fullUrl: %s" % url)
-        return url
-
-    def getThumbnailUrl2(self, item):
-        printDBG(">>> getThumbnailUrl2 - item keys: %s" % list(item.keys()))
-
-        # Check for 'transparent-icon' first
-        if "transparent-icon" in item:
-            icon_url = item["transparent-icon"]
-            if "[an error occurred" not in icon_url:  # filtro anti-errore
-                printDBG(">>> Using transparent-icon: %s" % icon_url)
-                return self.getThumbnailUrl(icon_url)
-            else:
-                printDBG(">>> Skipping invalid transparent-icon: %s" % icon_url)
-
-        if "audio" in item:
-            ch_image_url = item["poster"]
-            printDBG(">>> Using poster: %s" % ch_image_url)
-            return self.getThumbnailUrl(ch_image_url)
-
-        if "chImage" in item:
-            ch_image_url = item["chImage"]
-            printDBG(">>> Using chImage: %s" % ch_image_url)
-            return self.getThumbnailUrl(ch_image_url)
-
-        # Fallback: check standard images
-        if "images" in item and isinstance(item["images"], dict):
-            images = item["images"]
-            printDBG(">>> Available image keys: %s" % list(images.keys()))
-
-            if "landscape" in images:
-                printDBG(">>> Using landscape: %s" % images["landscape"])
-                return self.getThumbnailUrl(images["landscape"])
-            elif "landscape43" in images:
-                printDBG(">>> Using landscape43: %s" % images["landscape43"])
-                return self.getThumbnailUrl(images["landscape43"])
-            elif "portrait" in images:
-                printDBG(">>> Using portrait: %s" % images["portrait"])
-                return self.getThumbnailUrl(images["portrait"])
-            elif "portrait43" in images:
-                printDBG(">>> Using portrait43: %s" % images["portrait43"])
-                return self.getThumbnailUrl(images["portrait43"])
-            elif "portrait_logo" in images:
-                printDBG(">>> Using portrait_logo: %s" % images["portrait_logo"])
-                return self.getThumbnailUrl(images["portrait_logo"])
-            elif "square" in images:
-                printDBG(">>> Using square: %s" % images["square"])
-                return self.getThumbnailUrl(images["square"])
-            elif "default" in images:
-                printDBG(">>> Using default: %s" % images["default"])
-                return self.getThumbnailUrl(images["default"])
-
-        printDBG(">>> No valid thumbnail found, using DEFAULT_ICON_URL")
-        return self.DEFAULT_ICON_URL
-
-    def getFullUrl(self, url):
-        if url == "":
-            return
-
-        if url[:9] == "/raiplay/":
-            url = url.replace("/raiplay/", self.MAIN_URL)
-
-        while url[:1] == "/":
-            url = url[1:]
-
-        # Add the server to the URL if missing
-        if url.find("://") == -1:
-            url = self.MAIN_URL + url
-
-        url = url.replace(" ", "%20")
-        # url = urllib_quote(url, safe="%/:=&?~#+!$,;'@()*[]")
-
-        # fix old format of url for json
-        if url.endswith(".html?json"):
-            url = url.replace(".html?json", ".json")
-        elif url.endswith("/?json"):
-            url = url.replace("/?json", "/index.json")
-        elif url.endswith("?json"):
-            url = url.replace("?json", ".json")
-
-        return url
-
-    def getIndexFromJSON(self, pathId):
-        url = self.getFullUrl(pathId)
-        sts, data = self.getPage(url)
-        if not sts:
-            return []
-        else:
-            response = json_loads(data)
-
-        index = []
-        for i in response["contents"]:
-            if len(response["contents"][i]) > 0:
-                index.append(i)
-
-        index.sort()
-        return index
-
-    def getRelinkerURL(self, url):
-        scheme, netloc, path, params, query, fragment = urlparse(url)
-        qs = parse_qs(query)
-
-        # output=20 url in body
-        # output=23 HTTP 302 redirect
-        # output=25 url and other parameters in body, space separated
-        # output=44 XML (not well formatted) in body
-        # output=47 json in body
-        # pl=native,flash,silverlight
-        # A stream will be returned depending on the UA (and pl parameter?)
-
-        if "output" in qs:
-            del (qs['output'])
-
-        # qs['output'] = "20" # only url
-        qs['output'] = "56"  # xml stream data
-
-        query = urllib_urlencode(qs, True)
-        url = urlunparse((scheme, netloc, path, params, query, fragment))
-
+    ###################################################
+    # watched flag
+    ###################################################
+    def _getWatchedKeyForItem(self, cItem):
         try:
-            sts, response = self.getPage(url)
-
-            # mediaUrl = response.strip()
-            # xbmc.log(response)
-
-            # find real url
-            content = re.findall("<url type=\"content\">(.*?)</url>", response)
-            if content:
-                # <![CDATA[https://dashaz-dc-euwe.akamaized.net/subtl_proxy/6ed6fac0-ae71-4dd7-b4be-d8921d4948b9/20200713102433_12778339.ism/manifest(format=mpd-time-csf,filter=medium_1200-2400).mpd?hdnea=st=1599391792~exp=1599391942~acl=/*~hmac=27e952b0f784662684fe65fb4717152d8644e2a9f3ad575ece21738dfbe88263]]>
-                url = re.findall(r"<!\[CDATA\[(.*?)\]\]>", content[0])
-                if url:
-                    # find type of stream
-                    ct = re.findall("<ct>(.*?)</ct>", response)
-                    if ct:
-                        """
-                        # # DRM license URL find license key
-                        license_url = '''{"drmLicenseUrlValues":[
-                            {"drm":"WIDEVINE","licenceUrl":"https://mediaservicerainet02.keydelivery.northeurope.media.azure.net/Widevine/?kid=5ca7736f-7e27-49fc-80b2-bde49c8c0259&token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...","name":"Widevine Token...","audience":"urn:raiplay_hdcp_v1_sl1_sd"},
-                            {"drm":"PLAYREADY","licenceUrl":"https://mediaservicerainet02.keydelivery.northeurope.media.azure.net/PlayReady/?kid=5ca7736f-7e27-49fc-80b2-bde49c8c0259&token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...","name":"Playready Token...","audience":"urn:raiplay"}
-                        ]}'''
-                        # end license_url
-                        """
-                        licenseUrl = re.findall("<license_url>(.*?)</license_url>", response)
-                        if licenseUrl:
-                            # xbmc.log(licenseUrl[0])
-                            licenseJson = re.findall(r"<!\[CDATA\[(.*?)\]\]>", licenseUrl[0])
-                            if licenseJson:
-                                # xbmc.log(licenseJson[0])
-                                try:
-                                    licenseJson = json_loads(licenseJson[0])
-
-                                    # xbmc.log(str(licenseJson))
-                                    licenseData = licenseJson.get('drmLicenseUrlValues', [])
-                                    key = ''
-                                    for ls in licenseData:
-                                        if "WIDEVINE" in ls.get("drm", ""):
-                                            key = ls.get("licenceUrl", '')
-
-                                    return {'url': url[0], 'ct': ct[0], 'key': key}
-
-                                except Exception:
-                                    return {'url': url[0], 'ct': ct[0], 'key': ''}
-                        else:
-                            return {'url': url[0], 'ct': ct[0], 'key': ''}
-
-                    else:
-                        return {'url': url[0], 'ct': '', 'key': ''}
-
-                else:
-                    return {'url': '', 'ct': '', 'key': ''}
-            else:
-                return {'url': '', 'ct': '', 'key': ''}
-
-            # Workaround to normalize URL if the relinker doesn't
-            # try:
-            #    mediaUrl = urllib_quote(mediaUrl, safe="%/:=&?~#+!$,;'@()*[]")
-            # except:
-            #    printExc()
-            # return mediaUrl
-
-        except Exception:
-            return {'url': '', 'type': '', 'key': ''}
-
-    def getLinksForVideo(self, cItem):
-        printDBG("Raiplay.getLinksForVideo [%s]" % cItem)
-
-        linksTab = []
-
-        url = self.getRelinkerURL(cItem['url'])
-        url = url.get("url", "")
-        printDBG("----> Url from relinker: %s" % url)
-
-        if (cItem["category"] == "live_tv") or (cItem["category"] == "live_radio") or (cItem["category"] == "video_link") or (cItem["category"] == "raisport_video"):
-
-            linksTab.append({'name': 'hls', 'url': url})
-
-            url = strwithmeta(url, {'User-Agent': self.RELINKER_USER_AGENT})
-            linksTab.extend(getDirectM3U8Playlist(url, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
-
-        elif (cItem["category"] == "program"):
-            # read relinker page
-            program_url = self.getFullUrl(cItem["url"])
-
-            sts, data = self.getPage(program_url)
-            if sts:
-                response = json_loads(data)
-                video_url = response["video"]["content_url"]
-                printDBG(video_url)
-                video_url = strwithmeta(video_url, {'User-Agent': self.RELINKER_USER_AGENT})
-                links = getDirectM3U8Playlist(video_url, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999)
-                if links:
-                    linksTab.append({'name': 'hls', 'url': video_url})
-                    linksTab.extend(links)
-                else:
-                    # for some wrong links opening another mpd link instead of index.m3u8
-                    sts, data = self.getPage(video_url, {'User-Agent': self.RELINKER_USER_AGENT})
-                    if sts:
-                        printDBG(data)
-                        if self.cm.isValidUrl(data.strip()):
-                            linksTab.append({'name': 'mpd', 'url': data.strip()})
-        else:
-            printDBG("Raiplay: video form category %s with url %s not handled" % (cItem["category"], cItem["url"]))
-            linksTab.append({'url': cItem["url"], 'name': 'link1'})
-
-        return linksTab
-
-    def listMainMenu(self, cItem):
-        MAIN_CAT_TAB = [{'category': 'live_tv', 'title': 'Dirette tv', 'icon': self.DEFAULT_ICON_URL},
-                        {'category': 'live_radio', 'title': 'Dirette radio', 'icon': self.DEFAULT_ICON_URL},
-                        {'category': 'replay', 'title': 'Replay', 'icon': self.DEFAULT_ICON_URL},
-                        {'category': 'ondemand', 'title': 'Programmi on demand', 'icon': self.DEFAULT_ICON_URL},
-                        {'category': 'tg', 'title': 'Archivio Telegiornali', 'icon': self.DEFAULT_ICON_URL},
-                        {'category': 'raisport_main', 'title': 'Archivio Rai Sport', 'icon': self.DEFAULT_ICON_URL}]
-        self.listsTab(MAIN_CAT_TAB, cItem)
-
-    def listLiveTvChannels(self, cItem):
-        printDBG("Raiplay - start live channel list")
-
-        sts, data = self.getPage(self.CHANNELS_URL)
-        if not sts:
-            return
-
-        try:
-            response = json_loads(data)
-            tv_stations = response["dirette"]
+            if not isinstance(cItem, dict) or cItem.get('live'):
+                return ''
+            if cItem.get('type') == 'video':
+                url = self.wfNormalizeUrlKey(cItem.get('url', ''))
+                return 'video:%s' % url if url else ''
+            if cItem.get('search_item') or cItem.get('category', '') not in self.WF_FOLDER_CATEGORIES:
+                return ''
+            url = self.wfNormalizeUrlKey(cItem.get('url', ''))
+            if not url:
+                return ''
+            sub = cItem.get('block_id') or cItem.get('letter') or ''
+            return 'folder:%s#%s' % (url, sub) if sub else 'folder:%s' % url
         except Exception:
             printExc()
-            return
+        return ''
 
-        for station in tv_stations:
-            title = station["channel"]
-            desc = station["description"]
+    ###################################################
+    # helpers
+    ###################################################
+    def getPage(self, url, addParams=None, post_data=None):
+        params = dict(self.defaultParams)
+        if addParams:
+            params.update(addParams)
+        return self.cm.getPage(url, params, post_data)
 
-            icon = self.getThumbnailUrl(station["transparent-icon"]) + '|webpToPng'
-            url = station["video"]["contentUrl"]
+    def _json(self, url, post=None, header=None):
+        params = {}
+        if header:
+            params['header'] = header
+        if post is not None:
+            params['raw_post_data'] = True
+        sts, data = self.getPage(url, params, post)
+        if not sts or not data:
+            return {}
+        try:
+            data = json_loads(data)
+            return data if isinstance(data, dict) else {}
+        except Exception:
+            printExc()
+        return {}
 
-            params = {
-                'title': title,
-                'url': url,
-                'icon': icon,
-                'category': 'live_tv',
-                'desc': desc
-            }
-            self.addVideo(params)
+    def _clean(self, value):
+        if value is None or isinstance(value, (dict, list, bool)):
+            return ''
+        if isinstance(value, (int, float)):
+            value = str(value)
+        return self.cleanHtmlStr(value)
 
-        # # Canali Rai Sport add
-        # printDBG("Raiplay - getting Rai Sport channels")
-        # sts, data = self.getPage(self.RAISPORT_LIVE_URL)
-        # if not sts:
-            # printDBG("Raiplay - failed to get Rai Sport page")
-            # return
+    @staticmethod
+    def _num(value):
+        try:
+            return int(str(value).strip())
+        except (TypeError, ValueError):
+            return 0
 
-        container = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'canali-container'), '</div>', False)[1]
-        if not container:
-            printDBG("Raiplay - no canali-container found")
-            return
+    def _full(self, path, base=''):
+        path = str(path or '').strip().replace(' ', '%20')
+        if not path:
+            return ''
+        if '://' in path:
+            return path
+        if path.startswith('//'):
+            return 'https:' + path
+        if path.startswith('/raiplay/'):
+            path = path[len('/raiplay'):]
+        return (base or self.MAIN_URL.rstrip('/')) + ('' if path.startswith('/') else '/') + path
 
-        channels_block = self.cm.ph.getDataBeetwenNodes(container, ('<ul', '>', 'canali'), '</ul>', False)[1]
-        if not channels_block:
-            printDBG("Raiplay - no canali list found")
-            return
+    def _imgUrl(self, path, size='400x-', base=''):
+        # raiplay.it scales its jpg covers on the fly (resizegd) - the originals are up to 1 MB
+        path = str(path or '').strip().replace('[RESOLUTION]', size).replace(' ', '%20')
+        if not path or '[an error occurred' in path:
+            return ''
+        if '://' in path:
+            return path
+        if not path.startswith('/'):
+            path = '/' + path
+        if not base and size and re.search(r'\.jpe?g$', path, re.I):
+            return '%sresizegd/%s%s' % (self.MAIN_URL, size, path)
+        return (base or self.MAIN_URL.rstrip('/')) + path
 
-        items = self.cm.ph.getAllItemsBeetwenMarkers(channels_block, '<li', '</li>')
-        printDBG("Raiplay - found %d sport channels" % len(items))
+    def _img(self, item, size='400x-', keys=('landscape', 'landscape43', 'portrait', 'portrait43', 'square', 'portrait_logo')):
+        images = item.get('images')
+        if isinstance(images, dict):
+            for key in keys:
+                if images.get(key):
+                    return self._imgUrl(images[key], size)
+        for key in ('image', 'immagine', 'transparent_icon', 'transparent-icon'):
+            if item.get(key):
+                return self._imgUrl(item[key], size)
+        return ''
 
-        for i in items:
-            url = self.cm.ph.getSearchGroups(i, '''data-video-url=['"]([^'^"]+?)['"]''')[0]
-            if not url:
+    @staticmethod
+    def _isoDate(value):
+        # "18-09-2020" / "06/10/2026" / "2026-10-07T11:45:00+0000" -> "YYYY-MM-DD"
+        value = str(value or '').strip()
+        m = re.match(r'(\d{4})-(\d{2})-(\d{2})', value)
+        if m:
+            return m.group(0)
+        m = re.match(r'(\d{1,2})[-/.](\d{1,2})[-/.](\d{4})', value)
+        if m:
+            return '%s-%02d-%02d' % (m.group(3), int(m.group(2)), int(m.group(1)))
+        return ''
+
+    def _mediaTitle(self, name, show='', epTitle='', season='', episode='', date='', year='', isFilm=False):
+        # "Show - SxxExx - Episode" for numbered episodes, "Title (Year)" for films, "Title (YYYY-MM-DD)"
+        # for dated rows - only with media naming normalisation on, the site's label otherwise
+        if not IsMediaNamingNormalized():
+            return name
+        season, episode = self._num(season), self._num(episode)
+        # programmes number their "seasons" by year (2026) or as "2024/25": those get the date instead
+        if season and episode and season < 1900 and show:
+            title = '%s - S%02dE%02d' % (show, season, episode)
+            if epTitle and epTitle.lower() != show.lower():
+                title += ' - ' + epTitle
+            return title
+        if isFilm:
+            return normalizeMediathekTitle(name, year=year, isMovie=True)
+        m = DATE_RE.search(name)
+        if m:
+            # "TGR Lazio del 07/10/2026 ore 19:30" -> "TGR Lazio ore 19:30 (2026-10-07)"
+            base = re.sub(r'\s{2,}', ' ', '%s %s' % (name[:m.start()], name[m.end():])).strip(' -') or name
+            return normalizeMediathekTitle(base, date='%s-%02d-%02d' % (m.group(3), int(m.group(2)), int(m.group(1))))
+        if date:
+            return normalizeMediathekTitle(name, date=date)
+        return name
+
+    @staticmethod
+    def _letterKey(key):
+        return (not key[:1].isalpha(), key)
+
+    ###################################################
+    # main menu
+    ###################################################
+    def listMainMenu(self, cItem):
+        tab = [{'category': 'live_tv', 'title': _('Live channels')},
+               {'category': 'live_radio', 'title': _('Radio stations')},
+               {'category': 'replay', 'title': _('Replay')},
+               {'category': 'rp_page', 'title': _('Home page'), 'url': self.HOME_URL},
+               {'category': 'catalogue', 'title': _('Categories')},
+               {'category': 'tg', 'title': _('News')},
+               {'category': 'raisport_main', 'title': _('Sport')}] + self.searchItems()
+        for item in tab:
+            item.setdefault('icon', self.DEFAULT_ICON_URL)
+        self.listsTab(tab, cItem)
+
+    ###################################################
+    # live
+    ###################################################
+    def _channels(self):
+        return [ch for ch in (self._json(self.CHANNELS_URL).get('contents') or []) if isinstance(ch, dict) and ch.get('channel')]
+
+    def listLiveTvChannels(self, cItem):
+        printDBG("Raiplay.listLiveTvChannels")
+        for ch in self._channels():
+            relinker = (ch.get('video') or {}).get('content_url') or ''
+            if not relinker:
                 continue
-
-            icon = self.cm.ph.getSearchGroups(i, '''<img[^>]+src=['"]([^'^"]+?)['"]''')[0]
-            if not icon:
-                icon = self.cm.ph.getSearchGroups(i, '''stillframe=['"]([^'^"]+?)['"]''')[0]
-
-            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(i, ('<div', '>', 'canale-title'), '</div>', False)[1])
-            if not title:
-                title = self.cleanHtmlStr(i)
-
-            params = {
-                'title': "Rai Sport: %s" % title,
-                'url': url,
-                'icon': icon,
-                'category': 'live_tv',
-                'desc': ''
-            }
-            self.addVideo(params)
+            self.addVideo({'name': 'category', 'category': 'rp_live', 'title': self._clean(ch['channel']), 'url': relinker, 'live': True,
+                           'icon': self._img(ch, keys=()), 'desc': self._clean(ch.get('description')), 'good_for_fav': True})
 
     def listLiveRadioChannels(self, cItem):
-        printDBG("Raiplay - start live radio list")
-        sts, data = self.getPage(self.CHANNELS_RADIO_URL)
-        if not sts:
-            return
+        printDBG("Raiplay.listLiveRadioChannels")
+        for st in (self._json(self.CHANNELS_RADIO_URL).get('contents') or []):
+            if not isinstance(st, dict):
+                continue
+            audio = st.get('audio') or {}
+            url = audio.get('url') or ''
+            title = self._clean(st.get('title') or audio.get('title'))
+            if not url or not title:
+                continue
+            icon = self._imgUrl(st.get('image') or audio.get('poster') or (st.get('channel') or {}).get('logo'), '', self.RADIO_MAIN_URL)
+            # an audio row: the player treats it as radio (audio screensaver, no picture expected)
+            self.addAudio({'name': 'category', 'category': 'rp_live', 'title': title, 'url': url, 'live': True, 'radio': True,
+                           'icon': icon, 'desc': '%s: %s' % (_('Live radio'), title), 'good_for_fav': True})
 
-        response = json_loads(data)
-        radio_stations = response["dati"]
-        # printDBG(data)
-
-        for station in radio_stations:
-            title = station["nome"]
-            desc = station["chText"]
-            icon = "https://www.rai.it" + station["chImage"]
-            if not icon:
-                icon = self.getThumbnailUrl2(station)
-            if station["flussi"]["liveAndroid"] != "":
-                url = station["flussi"]["liveAndroid"]
-            params = dict(cItem)
-            params = {'title': title, 'url': url, 'icon': icon, 'category': 'live_radio', 'desc': desc}
-
-            self.addVideo(params)
-
-    def daterange(self, start_date, end_date):
-        for n in range((end_date - start_date).days + 1):
-            yield end_date - datetime.timedelta(n)
-
+    ###################################################
+    # replay (TV guide)
+    ###################################################
     def listReplayDate(self, cItem):
-        printDBG("Raiplay - start replay/EPG section")
-
-        days = ["Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"]
-        months = ["gennaio", "febbraio", "marzo", "aprile", "maggio", "giugno",
-                  "luglio", "agosto", "settembre", "ottobre", "novembre", "dicembre"]
-
-        epgEndDate = datetime.date.today()
-        epgStartDate = datetime.date.today() - datetime.timedelta(days=7)
-
-        for day in self.daterange(epgStartDate, epgEndDate):
-            day_str = days[int(day.strftime("%w"))] + " " + day.strftime("%d") + " " + months[int(day.strftime("%m")) - 1]
-            params = MergeDicts(cItem, {'category': 'replay_date', 'title': day_str, 'name': day.strftime("%d-%m-%Y"), 'icon': self.DEFAULT_ICON_URL})
-            printDBG(str(params))
-            self.addDir(params)
+        today = datetime.date.today()
+        for n in range(8):
+            day = today - datetime.timedelta(days=n)
+            self.addDir({'name': 'category', 'category': 'replay_date', 'title': day.strftime('%Y-%m-%d'),
+                         'epg_date': day.strftime('%d-%m-%Y'), 'icon': self.DEFAULT_ICON_URL})
 
     def listReplayChannels(self, cItem):
-        day = cItem['name']
-        printDBG("Raiplay - start replay/EPG section - channels list for %s " % day)
-
-        sts, data = self.getPage(self.CHANNELS_URL)
-        if not sts:
-            return
-
-        response = json_loads(data)
-        tv_stations = response["dirette"]
-
-        for station in tv_stations:
-            title = station["channel"]
-            name = day + "|" + station["channel"]
-            icon = self.getThumbnailUrl2(station)
-            params = MergeDicts(cItem, {'category': 'replay_channel', 'title': title, 'name': name, 'icon': icon})
-            printDBG(str(params))
-            self.addDir(params)
+        for ch in self._channels():
+            chId = ch.get('absolute_path') or ''
+            if not chId:
+                continue
+            self.addDir({'name': 'category', 'category': 'replay_channel', 'title': self._clean(ch['channel']), 'channel_id': chId,
+                         'epg_date': cItem.get('epg_date', ''), 'icon': self._img(ch, keys=())})
 
     def listEPG(self, cItem):
-        str1 = cItem['name']
-        epgDate = str1[:10]
-        channelName = str1[11:]
-        printDBG(">>> listEPG called with cItem name: %s" % cItem['name'])
-        printDBG(">>> epgDate: %s channelName: %s" % (epgDate, channelName))
-        channel_id = channelName.replace(" ", "-").lower()
-        url = self.EPG_URL
-        url = url.replace("[idCanale]", channel_id)
-        url = url.replace("[dd-mm-yyyy]", epgDate)
+        epgDate = cItem.get('epg_date', '')
+        data = self._json(self.EPG_URL % (cItem.get('channel_id', ''), epgDate))
+        isoDate = self._isoDate(epgDate)
+        seen = set()
+        for ev in (data.get('events') or []):
+            if not isinstance(ev, dict) or not ev.get('has_video') or not ev.get('path_id'):
+                continue
+            name = self._clean(ev.get('name'))
+            # a programme split by the news (UnoMattina 1st/2nd part) points to the same video twice
+            if not name or ev['path_id'] in seen:
+                continue
+            seen.add(ev['path_id'])
+            hour = self._clean(ev.get('hour'))
+            label = '%s %s' % (hour, name) if hour else name
+            if IsMediaNamingNormalized():
+                # a repeat carries its first air date in the name - the guide's day is the one that counts here
+                label = re.sub(r'\s{2,}', ' ', DATE_RE.sub(' ', label)).strip(' -') or label
+            descTab = [x for x in (self._clean(ev.get('duration_in_minutes')), self._clean(ev.get('description'))) if x]
+            self.addVideo({'name': 'category', 'category': 'rp_video', 'url': self._full(ev['path_id']),
+                           'title': self._mediaTitle(label, date=isoDate), 'icon': self._imgUrl(ev.get('image')),
+                           'desc': '[/br]'.join(descTab), 'good_for_fav': True})
 
-        sts, data = self.getPage(url)
-        if not sts:
-            printDBG(">>> Failed to get page data")
-            return
-
-        items = self.cm.ph.getAllItemsBeetwenMarkers(data, ('<li', '>', 'eventSpan'), '</li>')
-
-        for idx, i in enumerate(items):
-            videoUrl = self.cm.ph.getSearchGroups(i, '''data-href=['"]([^'^"]+?)['"]''')[0]
-            videoUrl = self.getFullUrl(videoUrl)
-            printDBG(">>> item #%s videoUrl: %s" % (idx, videoUrl))
-
-            icon = self.cm.ph.getSearchGroups(i, '''data-img=['"]([^'^"]+?)['"]''')[0]
-            printDBG(">>> item #%s raw icon data-img: %s" % (idx, icon))
-            if icon:
-                icon = self.getFullUrl(icon)
-                printDBG(">>> item #%s full icon URL: %s" % (idx, icon))
-            else:
-                icon = self.DEFAULT_ICON_URL
-                printDBG(">>> item #%s no icon found" % idx)
-            title = re.findall("<p class=\"info\">([^<]+?)</p>", i)
-            title = title[0] if title else ''
-            startTime = re.findall("<p class=\"time\">([^<]+?)</p>", i)
-            if startTime:
-                title = startTime[0] + " " + title
-
-            desc = re.findall("<p class=\"descProgram\">([^<]+?)</p>", i, re.S)
-            desc = desc[0] if desc else ""
-            params = {}
-            if videoUrl:
-                if not videoUrl.endswith('json'):
-                    videoUrl = videoUrl + "?json"
-                params = {'title': title, 'url': videoUrl, 'icon': icon, 'category': 'program', 'desc': desc}
-            else:
-                title = title + r"\c00??8800 [not available]"
-                params = {'title': title, 'url': '', 'icon': icon, 'desc': desc, 'category': 'nop'}
-            self.addVideo(params)
-
-    def listOnDemandMain(self, cItem):
-        printDBG("Raiplay - start on demand main list")
-        sts, data = self.getPage(self.MENU_URL)
-        if not sts:
-            return
-
-        response = json_loads(data)
-        items = response["menu"]
-
-        for item in items:
-            if item["sub-type"] in ("RaiPlay Tipologia Page", "RaiPlay Genere Page", "RaiPlay Tipologia Editoriale Page"):
-
-                if item["name"] not in ("Teatro", "Musica"):
-
-                    # new urls
-                    # i.e. change "/raiplay/programmi/?json" to "/raiplay/tipologia/programmi/index.json"
-                    m = re.findall("raiplay/(.*?)/[?]json", item["PathID"])
-                    if m:
-                        # add new item not in old json
-                        params = MergeDicts(cItem, {'category': 'ondemand_items', 'title': "Teatro e musica", 'name': "Teatro e musica", 'url': "/raiplay/tipologia/musica-e-teatro/index.json", 'icon': self.getThumbnailUrl("/dl/img/2018/06/04/1528115285089_ico-teatro.png"), 'sub-type': item["sub-type"]})
-                        printDBG(str(params))
-                        self.addDir(params)
-
-                        # new append example: aggiungo "Documentari"
-                        params = MergeDicts(cItem, {'category': 'ondemand_items', 'title': "Documentari", 'name': "Documentari", 'url': "/raiplay/tipologia/documentari/index.json", 'icon': self.getThumbnailUrl("/dl/img/2018/06/04/1528115285089_ico-documentari.png"), 'sub-type': item["sub-type"]})
-                        printDBG(str(params))
-                        self.addDir(params)
-                        # add new item not in old json
-                        params = MergeDicts(cItem, {'category': 'ondemand_items', 'title': "Teatro e musica", 'name': "Teatro e musica", 'url': "/raiplay/tipologia/musica-e-teatro/index.json", 'icon': self.getThumbnailUrl("/dl/img/2018/06/04/1528115285089_ico-teatro.png"), 'sub-type': item["sub-type"]})
-                        printDBG(str(params))
-                        self.addDir(params)
-
-                        if m[0] == "fiction":
-                            params = MergeDicts(cItem, {'category': 'ondemand_items', 'title': "Serie italiane", 'name': "Serie italiane", 'url': "/raiplay/tipologia/serieitaliane/index.json", 'icon': "https://www.rai.it/dl/img/2018/06/04/1528107006058_ico-fiction.png", 'sub-type': item["sub-type"]})
-                            printDBG(str(params))
-                            self.addDir(params)
-
-                            params = MergeDicts(cItem, {'category': 'ondemand_subhome', 'title': "Original", 'name': "Original", 'url': "/raiplay/tipologia/original/index.json", 'icon': "https://www.rai.it/dl/img/2018/06/04/1528107006058_ico-fiction.png", 'sub-type': item["sub-type"]})
-                            printDBG(str(params))
-                            self.addDir(params)
-
-                        elif m[0] == "serietv":
-
-                            params = MergeDicts(cItem, {'category': 'ondemand_items', 'title': "Serie internazionali", 'name': "Serie internazionali", 'url': "/raiplay/tipologia/serieinternazionali/index.json", 'icon': "https://www.rai.it/dl/img/2018/06/04/1528107006058_ico-fiction.png", 'sub-type': item["sub-type"]})
-                            printDBG(str(params))
-                            self.addDir(params)
-
-                        elif m[0] == "bambini" or m[0] == "bambini/":
-                            icon = self.getThumbnailUrl2(item)
-                            params = MergeDicts(cItem, {'category': 'ondemand_subhome', 'title': "Bambini", 'name': "Bambini", 'url': "/raiplay/tipologia/bambini/index.json", 'icon': icon, 'sub-type': item["sub-type"]})
-                            printDBG(str(params))
-                            self.addDir(params)
-
-                            params = MergeDicts(cItem, {'category': 'ondemand_subhome', 'title': "Teen", 'name': "Teen", 'url': "/raiplay/tipologia/teen/index.json", 'icon': icon, 'sub-type': item["sub-type"]})
-                            printDBG(str(params))
-                            self.addDir(params)
-
-                        else:
-                            # icon_url = self.MAIN_URL + item["image"]
-                            icon_url = self.getThumbnailUrl2(item)
-                            params = MergeDicts(cItem, {'category': 'ondemand_items', 'title': item["name"], 'name': item["name"], 'url': item["PathID"], 'icon': icon_url, 'sub-type': item["sub-type"]})
-                            # new urls
-                            # i.e. change "/raiplay/programmi/?json" to "/raiplay/tipologia/programmi/index.json"
-                            m = re.findall("raiplay/(.*?)/[?]json", params["url"])
-                            if m:
-                                params["url"] = "/raiplay/tipologia/%s/index.json" % m[0]
-                            printDBG(str(params))
-                            self.addDir(params)
-
-    def listOnDemandCategory(self, cItem):
-        pathId = cItem["url"]
-        pathId = self.getFullUrl(pathId)
-        printDBG("Raiplay - processing item %s of sub-type %s with pathId %s" % (cItem["title"], cItem["sub-type"], pathId))
-
-        sts, data = self.getPage(pathId)
-        if not sts:
-            return
-
-        response = json_loads(data)
-
-        for b in response["contents"]:
-            if b["type"] == "RaiPlay Slider Generi Block":
-                for item in b["contents"]:
-                    icon = self.getThumbnailUrl2(item)
-                    params = MergeDicts(cItem, {'category': 'ondemand_items', 'title': item["name"], 'name': item["name"], 'url': item["path_id"], 'sub-type': item["sub_type"], 'icon': icon})
-                    printDBG(str(params))
-                    self.addDir(params)
-
-    def listOnDemandAZ(self, cItem):
-        pathId = self.getFullUrl(cItem["url"])
-        printDBG("Raiplay - processing list with pathId %s" % pathId)
-
-        index = self.getIndexFromJSON(pathId)
-
-        for i in index:
-            self.addDir(MergeDicts(cItem, {'category': 'ondemand_list', 'title': i, 'name': i, 'url': pathId}))
-
-    def listOnDemandIndex(self, cItem):
-        pathId = self.getFullUrl(cItem["url"])
-        printDBG("Raiplay.listOnDemandIndex with index %s and url %s" % (cItem["name"], pathId))
-
-        sts, data = self.getPage(pathId)
-        if not sts:
-            return
-
-        response = json_loads(data)
-        items = response["contents"][cItem["name"]]
-        for item in items:
-            name = item["name"]
-            url = item["path_id"]
-            icon = self.getThumbnailUrl2(item)
-            sub_type = item["type"]
-            params = MergeDicts(cItem, {'category': 'ondemand_items', 'title': name, 'name': name, 'url': url, 'icon': icon, 'sub-type': sub_type})
-            printDBG(str(params))
-            self.addDir(params)
-
-    def listOnDemandProgram(self, cItem):
-        pathId = self.getFullUrl(cItem["url"])
-        printDBG("Raiplay.listOnDemandProgram with url %s" % pathId)
-
-        sts, data = self.getPage(pathId)
-        if not sts:
-            return
-
-        response = json_loads(data)
-        blocks = response["blocks"]
-
-        for block in blocks:
-            for set in block["sets"]:
-                name = set["name"]
-                url = set["path_id"]
-                self.addDir(MergeDicts(cItem, {'category': 'ondemand_program', 'title': name, 'name': name, 'url': url}))
-
-    def listOnDemandProgramItems(self, cItem):
-        pathId = self.getFullUrl(cItem["url"])
-        printDBG("Raiplay.listOnDemandProgram with url %s" % pathId)
-
-        sts, data = self.getPage(pathId)
-        if not sts:
-            return
-
-        response = json_loads(data)
-        items = response["items"]
-
-        for item in items:
-            title = item["name"]
-            if "subtitle" in item and item["subtitle"] != "" and item["subtitle"] != item["name"]:
-                title = title + " (" + item["subtitle"] + ")"
-
-            videoUrl = item["path_id"]
-            icon_url = self.getThumbnailUrl2(item)
-            if not icon_url:
-                images = item.get("images", {})
-                portrait = images.get("portrait", "")
-                landscape = images.get("landscape", "")
-                if portrait:
-                    icon_url = self.getThumbnailUrl(portrait)
-                elif landscape:
-                    icon_url = self.getThumbnailUrl(landscape)
-                else:
-                    icon_url = self.NOTHUMB_URL
-            params = {'title': title, 'url': videoUrl, 'icon': icon_url, 'category': 'program'}
-            printDBG("add video '%s' with pathId '%s'" % (title, videoUrl))
-
-            self.addVideo(params)
+    ###################################################
+    # catalogue / pages
+    ###################################################
+    def listCatalogue(self, cItem):
+        data = self._json(self.MENU_URL)
+        for menu in (data.get('menu') or []):
+            if not isinstance(menu, dict) or menu.get('menu_type') != 'Catalogo':
+                continue
+            for el in (menu.get('elements') or []):
+                path = (el or {}).get('path_id') or ''
+                title = self._clean((el or {}).get('name'))
+                if path and title:
+                    self.addDir({'name': 'category', 'category': 'rp_page', 'title': title, 'url': self._full(path),
+                                 'icon': self._imgUrl(el.get('image_background')) or self.DEFAULT_ICON_URL, 'good_for_fav': True})
 
     def listTg(self, cItem):
-        printDBG("Raiplay start tg list")
-        TG_TAB = [{'category': 'tg1', 'title': 'TG 1'}, {'category': 'tg2', 'title': 'TG 2'},
-                  {'category': 'tg3', 'title': 'TG 3'}, {'category': 'tgr-root', 'title': 'TG Regionali'}]
-        self.listsTab(TG_TAB, cItem)
+        for title, slug in (('Tg1', 'tg1'), ('Tg2', 'tg2'), ('Tg3', 'tg3')):
+            self.addDir({'name': 'category', 'category': 'rp_program', 'title': title,
+                         'url': self._full('/programmi/%s.json' % slug), 'icon': self.DEFAULT_ICON_URL, 'good_for_fav': True})
+        self.addDir({'name': 'category', 'category': 'tgr', 'title': 'TGR', 'icon': self.DEFAULT_ICON_URL})
 
     def listTgr(self, cItem):
-        printDBG("Raiplay. start tgr list")
-        if cItem["category"] != "tgr-root":
-            url = cItem["url"]
-        else:
-            url = self.TG_URL
+        for title, slug in self.TGR_REGIONS:
+            self.addDir({'name': 'category', 'category': 'rp_program', 'title': 'TGR - %s' % title,
+                         'url': self._full('/programmi/tgr-%s.json' % slug), 'icon': self.DEFAULT_ICON_URL, 'good_for_fav': True})
 
-        sts, data = self.getPage(url)
-        if not sts:
+    def _blockItems(self, block):
+        return [it for it in (block.get('contents') or []) if isinstance(it, dict) and self._itemKind(it)]
+
+    def listPage(self, cItem):
+        printDBG("Raiplay.listPage [%s]" % cItem.get('url', ''))
+        data = self._json(cItem.get('url', ''))
+        if not data:
             return
-
-        # search for dirs
-        items = ph.findall(data, '<item behaviour="region">', '</item>', flags=0)
-        items.extend(ph.findall(data, '<item behaviour="list">', '</item>', flags=0))
-
-        for item in items:
-            r_title = ph.find(item, '<label>', '</label>', flags=0)
-            r_url = ph.find(item, '<url type="list">', '</url>', flags=0)
-            r_image = ph.find(item, '<url type="image">', '</url>', flags=0)
-            if r_title[0] and r_url[0]:
-                if r_image[0]:
-                    icon = self.MAIN_URL + r_image[1]
-                else:
-                    icon = self.NOTHUMB_URL
-
-                title = r_title[1]
-                url = self.MAIN_URL + r_url[1]
-                self.addDir(MergeDicts(cItem, {'category': 'tgr', 'title': title, 'url': url, 'icon': icon}))
-
-        # search for video links
-        items = ph.findall(data, '<item behaviour="video">', '</item>', flags=0)
-        for item in items:
-            r_title = ph.find(item, '<label>', '</label>', flags=0)
-            r_url = ph.find(item, '<url type="video">', '</url>', flags=0)
-            r_image = ph.find(item, '<url type="image">', '</url>', flags=0)
-            if r_title[0] and r_url[0]:
-                if r_image[0]:
-                    icon = self.MAIN_URL + r_image[1]
-                else:
-                    icon = self.NOTHUMB_URL
-
-                title = r_title[1]
-                videoUrl = r_url[1]
-                params = {'title': title, 'url': videoUrl, 'icon': icon, 'category': 'video_link'}
-                printDBG("add video '%s' with pathId '%s'" % (title, videoUrl))
-                self.addVideo(params)
-
-    def searchLastTg(self, cItem):
-        category = cItem['category']
-        if category == 'tg1':
-            tag = "NomeProgramma:TG1^Tematica:Edizioni integrali"
-        elif category == 'tg2':
-            tag = "NomeProgramma:TG2^Tematica:Edizione integrale"
-        elif category == 'tg3':
-            tag = "NomeProgramma:TG3^Tematica:Edizioni del TG3"
-        else:
-            printDBG("Raiplay unhandled tg category %s" % category)
+        contents = data.get('contents')
+        if isinstance(contents, dict):
+            self._listLetters(cItem, contents)
             return
-
-        items = self.getLastContentByTag(tag)
-        if items is None:
+        if not contents and data.get('blocks'):
+            self.listProgram(cItem, data)
             return
-
-        for item in items:
-            title = item["name"]
-            icon_url = self.getThumbnailUrl2(item)
-            if not icon_url:
-                images = item.get("images", {})
-                portrait = images.get("portrait", "")
-                landscape = images.get("landscape", "")
-                if portrait:
-                    icon_url = self.getThumbnailUrl(portrait)
-                elif landscape:
-                    icon_url = self.getThumbnailUrl(landscape)
-                else:
-                    icon_url = self.NOTHUMB_URL
-            videoUrl = item.get("Url", "")
-            params = {'title': title, 'url': videoUrl, 'icon': icon_url, 'category': 'video_link'}
-            printDBG("add video '%s' with pathId '%s'" % (title, videoUrl))
-
-            self.addVideo(params)
-
-    def getLastContentByTag(self, tags="", numContents=16):
-        tags = urllib_quote(tags)
-        domain = "RaiTv"
-        xsl = "rai_tv-statistiche-raiplay-json"
-
-        url = "https://www.rai.it/StatisticheProxy/proxyPost.jsp?action=getLastContentByTag&numContents=%s&tags=%s&domain=%s&xsl=%s" % (str(numContents), tags, domain, xsl)
-        sts, data = self.getPage(url)
-        if not sts:
+        blocks = [b for b in (contents or []) if isinstance(b, dict) and b.get('type') in self.LIST_BLOCKS and self._blockItems(b)]
+        if len(blocks) == 1:
+            self._addItemsPaged(cItem, self._blockItems(blocks[0]))
             return
+        # the genres (= the whole catalogue of the page, A-Z) first, then the editorial rows
+        for b in blocks:
+            if b.get('type') == 'RaiPlay Slider Generi Block':
+                for it in self._blockItems(b):
+                    self._addContentItem(cItem, it)
+        for b in blocks:
+            if b.get('type') == 'RaiPlay Slider Generi Block':
+                continue
+            items = self._blockItems(b)
+            title = self._clean(b.get('name') or (b.get('header') or {}).get('label'))
+            if not title or not b.get('id'):
+                continue
+            self.addDir({'name': 'category', 'category': 'rp_block', 'title': title, 'url': cItem['url'], 'block_id': b['id'],
+                         'icon': self._img(items[0]) if items else '', 'desc': '%d %s' % (len(items), _('Videos') if b.get('type') == 'RaiPlay Slider Video Block' else _('Programmes')),
+                         'good_for_fav': True})
 
-        if data == "":
+    def listBlock(self, cItem):
+        data = self._json(cItem.get('url', ''))
+        for b in (data.get('contents') or []):
+            if isinstance(b, dict) and b.get('id') == cItem.get('block_id'):
+                self._addItemsPaged(cItem, self._blockItems(b))
+                break
+
+    def _listLetters(self, cItem, contents):
+        letters = sorted([k for k, v in contents.items() if isinstance(v, list) and v], key=self._letterKey)
+        total = sum(len(contents[k]) for k in letters)
+        if total <= 2 * self.PAGE_SIZE:
+            for k in letters:
+                for it in contents[k]:
+                    if isinstance(it, dict) and self._itemKind(it):
+                        self._addContentItem(cItem, it)
             return
-        response = json_loads(data)
-        return response["list"]
+        for k in letters:
+            self.addDir({'name': 'category', 'category': 'rp_letter', 'title': '%s (%d)' % (k, len(contents[k])), 'url': cItem['url'],
+                         'letter': k, 'icon': cItem.get('icon', ''), 'good_for_fav': True})
 
-    def fillRaiSportKeys(self):
-        printDBG("Raiplay.fillRaiSportKeys")
-        self.RaiSportKeys = []
+    def listLetter(self, cItem):
+        contents = self._json(cItem.get('url', '')).get('contents')
+        if isinstance(contents, dict):
+            items = [it for it in (contents.get(cItem.get('letter', '')) or []) if isinstance(it, dict) and self._itemKind(it)]
+            self._addItemsPaged(cItem, items)
 
+    def _addItemsPaged(self, cItem, items):
+        page = max(1, self._num(cItem.get('page', 1)) or 1)
+        lastPage = (len(items) + self.PAGE_SIZE - 1) // self.PAGE_SIZE
+        for it in items[(page - 1) * self.PAGE_SIZE:page * self.PAGE_SIZE]:
+            self._addContentItem(cItem, it)
+        if lastPage > 1:
+            # the whole list comes in one answer: the page lives in cItem['page'], the url stays ("Jump" template)
+            addPagingItems(self, cItem, page, page < lastPage, lastPage, cItem.get('url', '').replace('{', '%7B').replace('}', '%7D'))
+
+    def _itemKind(self, it):
+        itemType = it.get('type') or ''
+        path = it.get('path_id') or ''
+        if not path or not (it.get('name') or it.get('title') or it.get('titolo')):
+            return ''
+        path = re.sub(r'^https?://[^/]+', '', path)
+        if itemType == 'RaiPlay Video Item' or path.startswith('/video/'):
+            return 'video'
+        if itemType in self.PAGE_TYPES or re.match(r'/(?:collezioni|genere|tipologia)/', path):
+            return 'page'
+        if itemType in self.PROGRAM_TYPES or path.startswith('/programmi/'):
+            return 'program'
+        return ''
+
+    def _addContentItem(self, cItem, it):
         try:
-            sts, data = self.getPage(self.RAISPORT_CATEGORIES_URL)
-            if not sts:
+            kind = self._itemKind(it)
+            if kind == 'video':
+                self._addVideoItem(cItem, it)
                 return
-            response = json_loads(data)
+            if not kind:
+                return
+            title = self._clean(it.get('name') or it.get('title') or it.get('titolo'))
+            descTab = []
+            year = self._clean(it.get('year'))
+            if year:
+                descTab.append(year)
+            for key in ('vanity', 'description', 'sommario'):
+                if it.get(key):
+                    descTab.append(self._clean(it[key]))
+                    break
+            self.addDir({'name': 'category', 'category': 'rp_program' if kind == 'program' else 'rp_page', 'title': title,
+                         'url': self._full(it['path_id']), 'icon': self._img(it), 'desc': '[/br]'.join(descTab), 'good_for_fav': True})
         except Exception:
+            printExc()
+
+    def _addVideoItem(self, cItem, it):
+        name = self._clean(it.get('name') or it.get('title') or it.get('titolo'))
+        show = self._clean(it.get('program_name') or it.get('programma') or cItem.get('prog_name'))
+        epTitle = self._clean(it.get('episode_title') or it.get('toptitle') or it.get('titolo'))
+        season = it.get('season') or it.get('stagione') or ''
+        episode = it.get('episode') or it.get('episodio') or ''
+        # the full film of a film programme (not its trailer / extras)
+        isFilm = bool(cItem.get('prog_film')) and (it.get('forma') or '') == 'Integrale' and not self._num(episode)
+        if it.get('titolo') and show and not (self._num(season) and self._num(episode)):
+            # "Ulisse - La Sicilia di Montalbano" + "La Sicilia di Montalbano": the show alone, no doubled name
+            if name.lower() in show.lower():
+                name = show
+            elif show.lower() not in name.lower():
+                name = '%s - %s' % (show, name)
+        title = self._mediaTitle(name, show, epTitle, season, episode, year=cItem.get('prog_year', ''), isFilm=isFilm)
+        descTab = []
+        duration = self._clean(it.get('duration_in_minutes') or it.get('duration') or it.get('durata'))
+        if duration:
+            descTab.append('%s: %s' % (_('Duration'), duration))
+        if it.get('subtitle'):
+            descTab.append(self._clean(it['subtitle']))
+        for key in ('description', 'vanity', 'sommario'):
+            if it.get(key):
+                descTab.append(self._clean(it[key]))
+                break
+        self.addVideo({'name': 'category', 'category': 'rp_video', 'title': title, 'url': self._full(it['path_id']),
+                       'icon': self._img(it), 'desc': '[/br]'.join(descTab), 'good_for_fav': True})
+
+    ###################################################
+    # programme -> sets (seasons) -> videos
+    ###################################################
+    def listProgram(self, cItem, data=None):
+        printDBG("Raiplay.listProgram [%s]" % cItem.get('url', ''))
+        if data is None:
+            data = self._json(cItem.get('url', ''))
+        if not data:
             return
+        prog = data.get('program_info') or {}
+        ctx = {'prog_name': self._clean(prog.get('name') or data.get('name')), 'prog_year': self._clean(prog.get('year'))[:4],
+               'prog_film': (prog.get('typology') or '') == 'Film'}
+        icon = self._img(prog) or cItem.get('icon', '')
+        sets = []
+        for block in (data.get('blocks') or []):
+            for st in ((block or {}).get('sets') or []):
+                if isinstance(st, dict) and st.get('path_id'):
+                    sets.append((self._clean(block.get('name')), st))
+        if len(sets) == 1:
+            listItem = dict(cItem, category='rp_set', url=self._full(sets[0][1]['path_id']), **ctx)
+            listItem.pop('page', None)
+            self.listSet(listItem)
+            return
+        if not sets and data.get('first_item_path'):
+            self._addVideoItem(dict(cItem, **ctx), {'name': ctx['prog_name'] or cItem.get('title', ''), 'path_id': data['first_item_path'],
+                                                    'forma': 'Integrale', 'images': prog.get('images') or {},
+                                                    'duration': data.get('first_item_duration') or '', 'description': prog.get('description') or ''})
+            return
+        multiBlock = len({b for b, _st in sets}) > 1
+        for blockName, st in sets:
+            setName = self._clean(st.get('name'))
+            title = setName or blockName
+            if multiBlock and blockName and setName and blockName.lower() != setName.lower() and blockName.lower() not in setName.lower():
+                title = '%s - %s' % (blockName, setName)
+            params = {'name': 'category', 'category': 'rp_set', 'title': title, 'url': self._full(st['path_id']), 'icon': icon,
+                      'desc': self._clean((st.get('episode_size') or {}).get('label')), 'good_for_fav': True}
+            params.update(ctx)
+            self.addDir(params)
 
-        dominio = "RaiNews|Category-6dd7493b-f116-45de-af11-7d28a3f33dd2"
+    def listSet(self, cItem):
+        printDBG("Raiplay.listSet [%s]" % cItem.get('url', ''))
+        data = self._json(cItem.get('url', ''))
+        items = [it for it in (data.get('items') or []) if isinstance(it, dict) and it.get('path_id')]
+        self._addItemsPaged(cItem, items)
 
-        for c in response.get('children', []):
-            categName = c.get("name", "")
-            categCode = c.get("uniqueName", "")
-            categChildren = c.get("children", [])
+    ###################################################
+    # search
+    ###################################################
+    def _search(self, pattern, start, size, videos):
+        params = {'param': pattern.strip(), 'from': start, 'sort': 'relevance', 'size': size if videos else 1,
+                  'additionalSize': size, 'onlyVideoQuery': bool(videos), 'onlyProgramsQuery': not videos}
+        body = json_dumps({'templateIn': self.SEARCH_TEMPLATE_IN, 'templateOut': self.SEARCH_TEMPLATE_OUT, 'params': params})
+        header = dict(self.HTTP_HEADER, **{'Content-Type': 'application/json', 'Origin': self.MAIN_URL.rstrip('/'), 'Referer': self.MAIN_URL + 'ricerca.html'})
+        return self._json(self.SEARCH_URL, body, header).get('agg') or {}
 
-            if categName:
-                sub_keys = []
-                for c2 in categChildren:
-                    subcategName = c2.get("name", "")
-                    subcategCode = c2.get("uniqueName", "")
-                    if subcategName:
-                        sub_keys.append({
-                            'title': subcategName,
-                            "dominio": dominio,
-                            "key": subcategName + "|" + subcategCode
-                        })
+    def listSearchResult(self, cItem, searchPattern, searchType):
+        printDBG("Raiplay.listSearchResult [%s]" % searchPattern)
+        if not (searchPattern or '').strip():
+            return
+        cItem = dict(cItem, search_pattern=searchPattern)
+        page = max(1,self._num(cItem.get('page', 1)) or 1)
+        agg = self._search(searchPattern, (page - 1) * self.SEARCH_PAGE_SIZE, self.SEARCH_PAGE_SIZE, False)
+        if page == 1:
+            videoTotal = self._num((self._search(searchPattern, 0, 1, True).get('video') or {}).get('totale'))
+            if videoTotal:
+                self.addDir({'name': 'category', 'category': 'search_videos', 'title': '%s (%d)' % (_('Videos'), videoTotal),
+                             'search_pattern': searchPattern, 'icon': self.DEFAULT_ICON_URL})
+        titles = agg.get('titoli') or {}
+        for card in (titles.get('cards') or []):
+            if isinstance(card, dict) and card.get('path_id'):
+                self._addContentItem(cItem, dict(card, name=card.get('titolo') or ''))
+        total = self._num(titles.get('totale'))
+        lastPage = (total + self.SEARCH_PAGE_SIZE - 1) // self.SEARCH_PAGE_SIZE
+        if lastPage > 1:
+            addPagingItems(self, cItem, page, page < lastPage, lastPage)
 
-                self.RaiSportKeys.append({
-                    'title': categName,
-                    "dominio": dominio,
-                    "key": categName + "|" + categCode,
-                    'sub_keys': sub_keys
-                })
+    def listSearchVideos(self, cItem):
+        pattern = cItem.get('search_pattern', '')
+        page = max(1, self._num(cItem.get('page', 1)) or 1)
+        video = self._search(pattern, (page - 1) * self.SEARCH_PAGE_SIZE, self.SEARCH_PAGE_SIZE, True).get('video') or {}
+        for card in (video.get('cards') or []):
+            if isinstance(card, dict) and card.get('path_id'):
+                self._addVideoItem(cItem, card)
+        total = self._num(video.get('totale'))
+        lastPage = (total + self.SEARCH_PAGE_SIZE - 1) // self.SEARCH_PAGE_SIZE
+        if lastPage > 1:
+            addPagingItems(self, cItem, page, page < lastPage, lastPage)
+
+    ###################################################
+    # Rai Sport archive (rainews.it)
+    ###################################################
+    def fillRaiSportKeys(self):
+        self.RaiSportKeys = []
+        data = self._json(self.RAISPORT_CATEGORIES_URL)
+        for c in (data.get('children') or []):
+            name = self._clean((c or {}).get('name'))
+            code = (c or {}).get('uniqueName') or ''
+            if not name or not code:
+                continue
+            subKeys = []
+            for c2 in (c.get('children') or []):
+                subName = self._clean((c2 or {}).get('name'))
+                subCode = (c2 or {}).get('uniqueName') or ''
+                if subName and subCode:
+                    subKeys.append({'title': subName, 'key': '%s|%s' % (subName, subCode)})
+            self.RaiSportKeys.append({'title': name, 'key': '%s|%s' % (name, code), 'sub_keys': subKeys})
 
     def listRaiSportMain(self, cItem):
-        printDBG("Raiplay.listRaiSportMain")
-
         if not self.RaiSportKeys:
             self.fillRaiSportKeys()
-
         for k in self.RaiSportKeys:
-            params = dict(cItem)
-            params.update({
-                'category': 'raisport_item',
-                'title': k['title'],
-                'dominio': k['dominio'],
-                'key': k['key'],
-                'sub_keys': k['sub_keys']
-            })
-            self.addDir(params)
+            self.addDir({'name': 'category', 'category': 'raisport_item', 'title': k['title'], 'key': k['key'],
+                         'sub_keys': k['sub_keys'], 'icon': self.DEFAULT_ICON_URL})
 
     def listRaiSportItems(self, cItem):
-        printDBG("Raiplay.listRaiSportItem %s" % cItem['title'])
-        dominio = cItem.get('dominio', '')
-        main_key = cItem.get('key', '')
-        sub_keys = cItem.get('sub_keys', [])
-
-        # Add "All Videos" option
-        params = {
-            'category': 'raisport_subitem',
-            'title': "Tutti i video",
-            'dominio': dominio,
-            'key': main_key
-        }
-        self.addDir(params)
-
-        # Add subcategories
-        for k in sub_keys:
-            params = {
-                'category': 'raisport_subitem',
-                'title': k['title'],
-                'dominio': k['dominio'],
-                'key': k['key']
-            }
-            self.addDir(params)
+        tab = [{'title': _('All videos'), 'key': cItem.get('key', '')}] + list(cItem.get('sub_keys') or [])
+        for k in tab:
+            # the url only names the list (favourite identity / "Jump" template), the videos come from a POST
+            self.addDir({'name': 'category', 'category': 'raisport_subitem', 'title': k['title'], 'key': k['key'],
+                         'url': 'https://www.rainews.it/sport#%s' % k['key'].split('|')[-1], 'icon': self.DEFAULT_ICON_URL,
+                         'good_for_fav': True})
 
     def listRaiSportVideos(self, cItem):
-        printDBG("Raiplay.listRaiSportVideos %s" % cItem['title'])
-        key = cItem.get('key', '')
-        dominio = cItem.get('dominio', '')
-        page = int(cItem.get('page', 0))
+        printDBG("Raiplay.listRaiSportVideos %s" % cItem.get('title', ''))
+        page = max(1, self._num(cItem.get('page', 1)) or 1)
+        header = dict(self.HTTP_HEADER, **{'Content-Type': 'application/json; charset=UTF-8', 'Origin': 'https://www.rainews.it',
+                                           'Referer': 'https://www.rainews.it/sport', 'X-Requested-With': 'XMLHttpRequest'})
+        # "page" is the offset of the first hit (rainews-archive.js), post_filters keeps only the videos
+        payload = {'page': (page - 1) * self.SPORT_PAGE_SIZE, 'pageSize': self.SPORT_PAGE_SIZE, 'mode': 'archive', 'param': None,
+                   'filters': {'tematica': [cItem.get('key', '')], 'dominio': self.RAISPORT_DOMAIN}, 'post_filters': {'tipo': 'video'}}
+        data = self._json(self.RAISPORT_SEARCH_URL, json_dumps(payload), header)
+        for video in (data.get('hits') or []):
+            if not isinstance(video, dict) or video.get('data_type') != 'video':
+                continue
+            media = video.get('media') or {}
+            relinker = media.get('mediapolis') or ''
+            title = self._clean(video.get('title'))
+            if not relinker or not title:
+                continue
+            date = self._isoDate(video.get('publication_date') or video.get('create_date'))
+            duration = self._clean(media.get('durata'))
+            descTab = [x for x in (date, duration, self._clean(video.get('summary'))) if x]
+            # the relinker url has no page of its own to read the INFO from: date / duration go with the row
+            self.addVideo({'name': 'category', 'category': 'rp_video', 'title': self._mediaTitle(title, date=date), 'url': relinker,
+                           'icon': self._img(video), 'desc': '[/br]'.join(descTab), 'air_date': date, 'duration': duration,
+                           'good_for_fav': True})
+        total = self._num(data.get('total'))
+        lastPage = (total + self.SPORT_PAGE_SIZE - 1) // self.SPORT_PAGE_SIZE
+        if lastPage > 1:
+            addPagingItems(self, cItem, page, page < lastPage, lastPage, cItem.get('url', ''))
 
-        header = {
-            'Accept': 'application/json, text/javascript, */*; q=0.01',
-            'Content-Type': 'application/json; charset=UTF-8',
-            'Origin': 'https://www.raisport.rai.it',
-            'Referer': 'https://www.raisport.rai.it/archivio.html',
-            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36',
-            'X-Requested-With': 'XMLHttpRequest',
-        }
-        pageSize = 50
+    ###################################################
+    # links
+    ###################################################
+    def _relinker(self, url):
+        # output=56: the stream as XML (url, type, DRM licence); outside Italy a geo-protected
+        # stream answers with ".../video_no_available.mp4"
+        url = re.sub(r'^http://(mediapolis)', r'https://\1', url.strip())
+        base = re.sub(r'([?&])output=[^&]*&?', r'\1', url).rstrip('?&')
+        if '?' not in base and '&' in base:
+            base = base.replace('&', '?', 1)
+        sts, data = self.getPage(base + ('&' if '?' in base else '?') + 'output=56')
+        if not sts or not data or '<Mediapolis' not in data:
+            return {}
+        streamUrl = re.search(r'<url type="content">\s*(?:<!\[CDATA\[)?\s*([^\]<\s]*)', data)
+        ct = re.search(r'<ct>([^<]*)</ct>', data)
+        drm = False
+        lic = re.search(r'<license_url>\s*<!\[CDATA\[(.*?)\]\]>', data, re.S)
+        if lic and lic.group(1).strip() not in ('', '{}'):
+            try:
+                drm = bool((json_loads(lic.group(1)) or {}).get('drmLicenseUrlValues'))
+            except Exception:
+                drm = True
+        return {'url': streamUrl.group(1) if streamUrl else '', 'ct': (ct.group(1) if ct else '').strip().lower(), 'drm': drm}
 
-        payload = {
-            "page": page,
-            "pageSize": pageSize,
-            "mode": "archive",
-            "filters": {
-                "tematica": [key],
-                "dominio": dominio
-            }
-        }
-        postData = json_dumps(payload)
+    def getLinksForVideo(self, cItem):
+        printDBG("Raiplay.getLinksForVideo [%s]" % cItem.get('url', ''))
+        url = cItem.get('url', '')
+        live = bool(cItem.get('live'))
+        relinker, synopsis, subTracks = '', '', []
+        if '/relinker/' in url:
+            relinker = url
+        elif url.endswith('.json'):
+            data = self._json(url)
+            video = data.get('video') or {}
+            relinker = video.get('content_url') or ''
+            synopsis = self._clean(data.get('description'))
+            for sub in (video.get('subtitlesArray') or video.get('subtitleList') or []):
+                subUrl = (sub or {}).get('url') or ''
+                if subUrl:
+                    lang = (sub.get('language') or 'it').lower()
+                    subTracks.append({'title': self._clean(sub.get('label')) or lang, 'url': self._full(subUrl), 'lang': lang,
+                                      'format': 'vtt' if subUrl.lower().endswith('.vtt') else 'srt'})
+        if not relinker:
+            return []
+        res = self._relinker(relinker)
+        streamUrl = res.get('url', '')
+        if not streamUrl:
+            return []
+        if 'video_no_available' in streamUrl:
+            if live:
+                SetIPTVPlayerLastHostError(_('This channel is not available in your country (geo-blocking).'))
+            else:
+                SetIPTVPlayerLastHostError(_('Not available in your country (geo-blocking).'))
+            return []
+        if res.get('drm'):
+            SetIPTVPlayerLastHostError(_('Video with DRM protection.'))
+            return []
 
-        sts, data = self.getPage(self.RAISPORT_SEARCH_URL, {'header': header, 'raw_post_data': True}, post_data=postData)
-        if not sts:
-            return
+        meta = {'User-Agent': self.USER_AGENT, 'iptv_livestream': live}
+        if subTracks:
+            meta['external_sub_tracks'] = subTracks
+        ct = res.get('ct', '')
+        urlTab = []
+        if 'm3u8' in ct or 'hls' in ct or '.m3u8' in streamUrl:
+            meta['iptv_proto'] = 'm3u8'
+            master = strwithmeta(streamUrl, meta)
+            if live:
+                urlTab.append({'name': 'auto', 'url': master, 'need_resolve': 0})
+            for item in getDirectM3U8Playlist(master, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999):
+                # audio-only variants have no resolution: " 320k"
+                item['name'] = str(item.get('name', '')).strip() or 'hls'
+                item['need_resolve'] = 0
+                urlTab.append(item)
+            if not urlTab:
+                urlTab.append({'name': 'hls', 'url': master, 'need_resolve': 0})
+        else:
+            name = 'mpd' if ('mpd' in ct or '.mpd' in streamUrl) else (ct or 'mp4')
+            urlTab.append({'name': name, 'url': strwithmeta(streamUrl, meta), 'need_resolve': 0})
+        if not live:
+            urlTab = applySidecarToLinks(urlTab, buildSidecarFromItem(cItem, IsSidecarEnabled(), synopsis))
+        return urlTab
 
-        try:
-            j = json_loads(data)
-        except Exception:
-            return
+    ###################################################
+    # INFO
+    ###################################################
+    def _programInfo(self, prog, info):
+        year = self._clean(prog.get('year'))[:4]
+        if year.isdigit():
+            info['year'] = year
+        for src, dst in (('direction', 'director'), ('actors', 'actors'), ('country', 'country'), ('channel', 'station')):
+            value = self._clean(prog.get(src))
+            if value:
+                info.setdefault(dst, value)
+        genres = [self._clean((g or {}).get('name')) for g in (prog.get('genres') or []) if isinstance(g, dict)]
+        genres = [g for g in genres if g]
+        if genres:
+            info['genre'] = ', '.join(genres)
+        if self._num(prog.get('seasons_number')):
+            info['seasons'] = str(self._num(prog['seasons_number']))
+        return year
 
-        videos = j.get("hits", [])
+    def getArticleContent(self, cItem):
+        printDBG("Raiplay.getArticleContent [%s]" % cItem.get('url', ''))
+        text, icon, info = cItem.get('desc', ''), cItem.get('icon', ''), {}
+        url = cItem.get('url', '')
+        isVideo = cItem.get('type') == 'video'
+        meta = {}
+        if cItem.get('air_date'):
+            info['broadcast'] = cItem['air_date']
+        if cItem.get('duration'):
+            info['duration'] = cItem['duration']
+        if url.endswith('.json') and (isVideo or cItem.get('category') == 'rp_program'):
+            data = self._json(url)
+            prog = data.get('program_info') or {}
+            if isVideo and data:
+                text = self._clean(data.get('description')) or self._clean(prog.get('description') or prog.get('vanity')) or text
+                video = data.get('video') or {}
+                if video.get('duration'):
+                    info['duration'] = self._clean(video['duration'])
+                # the air date is in the name ("... - Puntata del 04/10/2026"), date_published is when it went online
+                m = DATE_RE.search(self._clean(data.get('name')))
+                bcast = '%s-%02d-%02d' % (m.group(3), int(m.group(2)), int(m.group(1))) if m else self._isoDate(data.get('date_published'))
+                if bcast:
+                    info['broadcast'] = bcast
+                avail = data.get('availabilities') or {}
+                end = self._isoDate(avail.get('expiration_date_iso') or avail.get('expiration_date')) if isinstance(avail, dict) else ''
+                if end:
+                    info['remaining'] = _('available until %s') % end
+                if data.get('channel'):
+                    info['station'] = self._clean(data['channel'])
+                if video.get('subtitlesArray') or video.get('subtitleList'):
+                    info['subtitles'] = ', '.join([self._clean((s or {}).get('label')) for s in (video.get('subtitlesArray') or video.get('subtitleList')) if (s or {}).get('label')])
+                icon = self._img(data, '600x-') or icon
+            elif prog:
+                text = self._clean(prog.get('description') or prog.get('vanity')) or text
+                icon = self._img(prog, '600x-', ('portrait43', 'portrait', 'landscape', 'landscape43')) or icon
+            year = self._programInfo(prog, info) if prog else ''
+            # moviemeta only for real films: the full film (not an episode, clip or trailer) of a "Film" programme
+            isFilm = (prog.get('typology') or '') == 'Film' and (not isVideo or (data.get('form') or '') == 'Integrale')
+            if isFilm and prog.get('name'):
+                try:
+                    meta = getMeta('movie', self._clean(prog['name']), year, maxYearDiff=1)
+                except Exception:
+                    printExc()
+        # the site's Italian texts first, the service adds ratings, poster and missing fields
+        for key, value in (meta.get('info') or {}).items():
+            if key not in info and self.INFO_TWINS.get(key, '') not in info:
+                info[key] = value
+        text = text or meta.get('plot', '')
+        icon = meta.get('poster') or icon
+        return [{'title': cItem.get('title', ''), 'text': text, 'images': [{'title': '', 'url': icon}] if icon else [], 'other_info': info}]
 
-        for video in videos:
-            title = video.get("title", "")
-            data_type = video.get("data_type", "")
-
-            if data_type == "video":
-                media = video.get('media', {})
-                relinker_url = media.get('mediapolis', "")
-                duration = 0
-                if 'durata' in media:
-                    d = media['durata'].split(":")
-                    if len(d) == 3:
-                        duration = int(d[0]) * 3600 + int(d[1]) * 60 + int(d[2])
-
-                images = video.get('images', {})
-                if images:
-                    icon = self.getThumbnailUrl2(video)
-
-                creation_date = video.get('create_date', "")
-                desc = video.get('summary', "")
-                if creation_date and desc:
-                    desc = "%s\n%s" % (creation_date, desc)
-                elif creation_date:
-                    desc = creation_date
-
-                params = {
-                    'category': 'raisport_video',
-                    'title': title,
-                    'desc': desc,
-                    'url': relinker_url,
-                    'icon': icon,
-                    'duration': duration
-                }
-                self.addVideo(params)
-
-        # Add next page if available
-        total = j.get('total', 0)
-        if total > (page + 1) * pageSize:
-            params = dict(cItem)
-            params['title'] = _("Next page")
-            params['page'] = page + 1
-            self.addDir(params)
-
+    ###################################################
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
-        printDBG('Raiplay - handleService start')
-
+        printDBG('Raiplay.handleService start')
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
-
+        if isJumpItem(self.currItem):
+            self.currItem = jumpTarget(self, self.currItem)
         self.informAboutGeoBlockingIfNeeded('IT')
 
-        name = self.currItem.get("name", '')
+        name = self.currItem.get("name", None)
         category = self.currItem.get("category", '')
-        # mode = self.currItem.get("mode", '')
-        subtype = self.currItem.get("sub-type", '')
-
-        printDBG("handleService: >> name[%s], category[%s] " % (name, category))
+        searchPattern = self.currItem.get("search_pattern", searchPattern)
+        printDBG("Raiplay.handleService: name[%s] category[%s]" % (name, category))
         self.currList = []
 
-        # MAIN MENU
         if name is None:
             self.listMainMenu({'name': 'category'})
         elif category == 'live_tv':
@@ -970,42 +804,49 @@ class Raiplay(CBaseHostClass):
             self.listReplayChannels(self.currItem)
         elif category == 'replay_channel':
             self.listEPG(self.currItem)
-        elif category == 'ondemand':
-            self.listOnDemandMain(self.currItem)
-        elif category == 'ondemand_items':
-            if subtype == "RaiPlay Tipologia Page" or subtype == "RaiPlay Genere Page" or subtype == "RaiPlay Tipologia Editoriale Page":
-                self.listOnDemandCategory(self.currItem)
-            elif subtype in ("Raiplay Tipologia Item", "RaiPlay V2 Genere Page"):
-                self.listOnDemandAZ(self.currItem)
-            elif subtype in ("PLR programma Page", "RaiPlay Programma Item"):
-                self.listOnDemandProgram(self.currItem)
-            else:
-                printDBG("Raiplay - item '%s' - Sub-type not handled '%s' " % (name, subtype))
-        elif category == 'ondemand_list':
-            self.listOnDemandIndex(self.currItem)
-        elif category == 'ondemand_program':
-            self.listOnDemandProgramItems(self.currItem)
+        elif category == 'catalogue':
+            self.listCatalogue(self.currItem)
+        elif category == 'rp_page':
+            self.listPage(self.currItem)
+        elif category == 'rp_block':
+            self.listBlock(self.currItem)
+        elif category == 'rp_letter':
+            self.listLetter(self.currItem)
+        elif category == 'rp_program':
+            self.listProgram(self.currItem)
+        elif category == 'rp_set':
+            self.listSet(self.currItem)
         elif category == 'tg':
             self.listTg(self.currItem)
-        elif category == 'tgr' or category == 'tgr-root':
+        elif category == 'tgr':
             self.listTgr(self.currItem)
-        elif category in ['tg1', 'tg2', 'tg3']:
-            self.searchLastTg(self.currItem)
-        elif category == 'nop':
-            printDBG('raiplay no link')
         elif category == 'raisport_main':
             self.listRaiSportMain(self.currItem)
         elif category == 'raisport_item':
             self.listRaiSportItems(self.currItem)
         elif category == 'raisport_subitem':
             self.listRaiSportVideos(self.currItem)
+        elif category in ('search', 'search_next_page'):
+            cItem = dict(self.currItem)
+            cItem.update({'search_item': False, 'name': 'category', 'category': 'search_next_page'})
+            self.listSearchResult(cItem, searchPattern, searchType)
+        elif category == 'search_videos':
+            self.listSearchVideos(self.currItem)
+        elif category == 'search_history':
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc')
         else:
             printExc()
 
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
-class IPTVHost(CHostBase):
+class IPTVHost(GenericFolderWatchedHostMixin, CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, Raiplay(), True, [])
+        self.cachedRet = None
+        self.refreshAfterWatchedFlagChange = False
+        self.watchedHelper = IPTVWatchedHelper('raiplay')
+
+    def withArticleContent(self, cItem):
+        return cItem.get('type') in ('video', 'audio') or cItem.get('category') == 'rp_program'

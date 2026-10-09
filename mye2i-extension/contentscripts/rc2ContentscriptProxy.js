@@ -574,7 +574,8 @@ function e2i_checkCookies(cookie) {
     let result = {user_agent:navigator.userAgent,
                   cookie:cookie,
                   url:document.location.href,
-                  domain:domain}
+                  domain:domain,
+                  links:window.e2i_page_links || []}
     e2ilog("MyE2i FINAL result being sent:", JSON.stringify(result));
     let params = new ParamsExt(document.location.hash);
     window.e2i_job = {callbackUrl: decodeURIComponent(params.get("u")),
@@ -601,7 +602,9 @@ function e2i_checkCookies(cookie) {
 // (kept in step with libs/botprotection.py on the box).
 var E2I_CHALLENGE_MARKERS = ['just a moment', 'cf-chl', '_cf_chl_opt', '/cdn-cgi/challenge-platform', 'ddos-guard', 'sucuri_cloudproxy_js',
     '_incapsula_resource', "making sure you", 'anubis', 'px-captcha', 'captcha-delivery.com', 'awswafintegration', 'vercel security checkpoint',
-    'checking your browser', 'verifying you are human', 'press & hold', 'press &amp; hold'];
+    'checking your browser', 'verifying you are human', 'press & hold', 'press &amp; hold',
+    // v1.19: the image captcha of the uprot.net link protector (cb01 MaxStream links)
+    'upcaptcha-form'];
 
 // Interstitials are small pages. A big page that merely mentions one of the
 // words (a "protected by DDoS-Guard" footer) is a normal page.
@@ -659,9 +662,28 @@ function main_e2itck() {
         done = true;
         clearInterval(timer);
         e2ilog(now + " | cookie mode: page settled, collecting cookies");
+        // v1.19: the button links of the settled page go back too, taken before the page is wiped - a link
+        // protector (uprot.net) shows its one-time CONTINUE link only once per solved captcha, the box uses it
+        // instead of asking again (and the wiped page cannot spend it any more)
+        window.e2i_page_links = e2iButtonLinks();
         e2iWipeDocument();
         e2i_checkCookiesPre({cookies: [], idx: 0});
     }, 500);
+}
+
+// The targets of the links that hold a button (<a href=...><button>CONTINUE</button></a>), at most 20.
+function e2iButtonLinks() {
+    var links = [];
+    try {
+        document.querySelectorAll('a[href]').forEach(function (a) {
+            if (links.length < 20 && a.querySelector('button') && /^https?:/i.test(a.href) && links.indexOf(a.href) < 0) {
+                links.push(a.href);
+            }
+        });
+    } catch (e) {
+        // a page that cannot be read sends no links
+    }
+    return links;
 }
 
 function main_e2itcf(){

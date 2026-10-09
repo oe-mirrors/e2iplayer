@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 24.09.2026
+# Last Modified: 08.10.2026
 #
 # Revived against Twitch's current web GraphQL API (gql.twitch.tv), used
 # anonymously with the public web Client-ID:
@@ -11,13 +11,24 @@
 #   - any request with an "after" cursor fails Twitch's client integrity
 #     check without a browser, so every list is fetched as one first page
 #     (up to 100, live streams max 30) and paged locally.
+# 08.10.2026 - host standard: watched flag (channel -> videos / clips -> VOD / clip), favourites, INFO from the
+#   API (VOD, clip, live stream, channel, game), sidecar, download marker on the twitch.tv page url of a VOD /
+#   clip, date in the VOD / clip name (naming option, was a "[date]" prefix on clips), First/Next page with
+#   page x/y for the local paging, language names as plain strings (no unicode titles on Python 2), no empty
+#   fields in the VOD / clip descriptions
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass, CDisplayListItem
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetDefaultLang
+from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import normalizeMediathekTitle
+from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems
+from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedHostMixin, GenericFolderWatchedScraperMixin
+from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
 from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_urlencode
@@ -39,12 +50,12 @@ MAX_STREAMS = 30
 PLAYBACK_PARAMS = '{platform: "web", playerBackend: "mediaplayer", playerType: "site"}'
 
 # Twitch "Language" enum values, shown in their own language
-LANGUAGES = [('DE', 'Deutsch'), ('EN', 'English'), ('ES', u'Español'), ('FR', u'Français'), ('IT', 'Italiano'),
-             ('PL', 'Polski'), ('PT', u'Português'), ('RU', u'Русский'), ('TR', u'Türkçe'), ('NL', 'Nederlands'),
-             ('SV', 'Svenska'), ('NO', 'Norsk'), ('DA', 'Dansk'), ('FI', 'Suomi'), ('CS', u'Čeština'),
-             ('HU', 'Magyar'), ('RO', u'Română'), ('SK', u'Slovenčina'), ('EL', u'Ελληνικά'), ('BG', u'Български'),
-             ('UK', u'Українська'), ('AR', u'العربية'), ('JA', u'日本語'), ('KO', u'한국어'), ('ZH', u'中文'),
-             ('ZH_HK', u'中文(粵語)'), ('TH', u'ภาษาไทย'), ('VI', u'Tiếng Việt'), ('ASL', 'American Sign Language'),
+LANGUAGES = [('DE', 'Deutsch'), ('EN', 'English'), ('ES', 'Español'), ('FR', 'Français'), ('IT', 'Italiano'),
+             ('PL', 'Polski'), ('PT', 'Português'), ('RU', 'Русский'), ('TR', 'Türkçe'), ('NL', 'Nederlands'),
+             ('SV', 'Svenska'), ('NO', 'Norsk'), ('DA', 'Dansk'), ('FI', 'Suomi'), ('CS', 'Čeština'),
+             ('HU', 'Magyar'), ('RO', 'Română'), ('SK', 'Slovenčina'), ('EL', 'Ελληνικά'), ('BG', 'Български'),
+             ('UK', 'Українська'), ('AR', 'العربية'), ('JA', '日本語'), ('KO', '한국어'), ('ZH', '中文'),
+             ('ZH_HK', '中文(粵語)'), ('TH', 'ภาษาไทย'), ('VI', 'Tiếng Việt'), ('ASL', 'American Sign Language'),
              ('OTHER', 'Other')]
 LANG_CODES = frozenset(code for code, _title in LANGUAGES)
 
@@ -70,7 +81,7 @@ def jstr(item, key, default=''):
     return ensure_str(v)
 
 
-class Twitch(CBaseHostClass):
+class Twitch(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'Twitch', 'cookie': 'Twitch.cookie'})
@@ -109,6 +120,41 @@ class Twitch(CBaseHostClass):
         self.GAME_CAT_TAB = [{'category': 'game_lang', 'next_category': 'game_channels', 'title': _('Channels')},
                              {'category': 'game_videos_types', 'title': _('Videos')},
                              {'category': 'game_lang', 'next_category': 'game_clips_filters', 'title': _('Clips')}]
+        self.watchedHelper = IPTVWatchedHelper('twitchtv')
+        self.wfInitFolderCache()
+
+    # ---------------------------------------------------------------- watched flag
+    def _getWatchedKeyForItem(self, cItem):
+        # VOD / clip rows by their id; a channel and its videos / clips folders (per type / sort / period)
+        # so a watched VOD propagates up to the channel. Live streams and the game lists have no key.
+        try:
+            if not isinstance(cItem, dict) or cItem.get('search_item') or cItem.get('name') == 'history':
+                return ''
+            if cItem.get('type') == 'video':
+                if cItem.get('video_type') == 'video' and cItem.get('video_id'):
+                    return 'video:%s' % cItem['video_id']
+                if cItem.get('video_type') == 'clip' and cItem.get('clip_slug'):
+                    return 'video:clip:%s' % cItem['clip_slug']
+                return ''
+            login = cItem.get('user_login', '')
+            category = cItem.get('category', '')
+            if not login:
+                return ''
+            if category == 'list_channel':
+                return 'folder:channel:%s' % login
+            if category == 'videos_types':
+                return 'folder:channel:%s:videos' % login
+            if category == 'videos_sort':
+                return 'folder:channel:%s:videos:%s' % (login, cItem.get('videos_type', ''))
+            if category == 'list_videos':
+                return 'folder:channel:%s:videos:%s:%s' % (login, cItem.get('videos_type', ''), cItem.get('sort', ''))
+            if category == 'clips_filters':
+                return 'folder:channel:%s:clips' % login
+            if category == 'list_clips':
+                return 'folder:channel:%s:clips:%s' % (login, cItem.get('clips_period', ''))
+        except Exception:
+            printExc()
+        return ''
 
     # ---------------------------------------------------------------- api
     def gql(self, query, variables=None):
@@ -140,13 +186,14 @@ class Twitch(CBaseHostClass):
             return []
 
     def _addPaged(self, cItem, items, addFunc):
-        page = cItem.get('page', 0)
-        for item in items[page * PER_PAGE:(page + 1) * PER_PAGE]:
+        try:
+            page = max(1, int(cItem.get('page', 1) or 1))
+        except (TypeError, ValueError):
+            page = 1
+        for item in items[(page - 1) * PER_PAGE:page * PER_PAGE]:
             addFunc(cItem, item)
-        if len(items) > (page + 1) * PER_PAGE:
-            params = dict(cItem)
-            params.update({'good_for_fav': False, 'title': _('Next page'), 'page': page + 1})
-            self.addDir(params)
+        lastPage = (len(items) + PER_PAGE - 1) // PER_PAGE
+        addPagingItems(self, cItem, page, len(items) > page * PER_PAGE, lastPage)
 
     # ---------------------------------------------------------------- item builders
     def _addStream(self, cItem, item):
@@ -170,26 +217,30 @@ class Twitch(CBaseHostClass):
 
     def _addVideo(self, cItem, item):
         descTab = [str(timedelta(seconds=int(item.get('lengthSeconds') or 0))), _('%s views') % item.get('viewCount', 0), jstr(item, 'publishedAt')[:10]]
-        descTab = [' | '.join(descTab)]
+        descTab = [' | '.join([x for x in descTab if x])]
         if item.get('owner'):
             descTab.append(_('Channel: %s') % jstr(item['owner'], 'displayName'))
         if item.get('game'):
             descTab.append(_('Game: %s') % jstr(item['game'], 'displayName'))
-        params = {'good_for_fav': True, 'title': jstr(item, 'title'), 'video_type': 'video', 'video_id': jstr(item, 'id'),
+        title = jstr(item, 'title') or jstr(item, 'id')
+        params = {'good_for_fav': True, 'title': normalizeMediathekTitle(title, date=jstr(item, 'publishedAt')[:10]), 'raw_title': title,
+                  'video_type': 'video', 'video_id': jstr(item, 'id'), 'url': 'https://www.twitch.tv/videos/%s' % jstr(item, 'id'),
                   'icon': jstr(item, 'previewThumbnailURL'), 'desc': '[/br]'.join(descTab)}
         self.addVideo(params)
 
     def _addClip(self, cItem, item):
-        descTab = [str(timedelta(seconds=int(item.get('durationSeconds') or 0))), _('%s views') % item.get('viewCount', 0), jstr(item, 'language')]
-        descTab = [' | '.join(descTab)]
+        descTab = [str(timedelta(seconds=int(item.get('durationSeconds') or 0))), _('%s views') % item.get('viewCount', 0), jstr(item, 'language'), jstr(item, 'createdAt')[:10]]
+        descTab = [' | '.join([x for x in descTab if x])]
         if item.get('broadcaster'):
             descTab.append(_('Channel: %s') % jstr(item['broadcaster'], 'displayName'))
         if item.get('curator'):
             descTab.append(_('Clipped by: %s') % jstr(item['curator'], 'displayName'))
         if item.get('game'):
             descTab.append(_('Game: %s') % jstr(item['game'], 'displayName'))
-        params = {'good_for_fav': True, 'title': '[%s] %s' % (jstr(item, 'createdAt')[:10], jstr(item, 'title')),
-                  'video_type': 'clip', 'clip_slug': jstr(item, 'slug'), 'icon': jstr(item, 'thumbnailURL'), 'desc': '[/br]'.join(descTab)}
+        title = jstr(item, 'title') or jstr(item, 'slug')
+        params = {'good_for_fav': True, 'title': normalizeMediathekTitle(title, date=jstr(item, 'createdAt')[:10]), 'raw_title': title,
+                  'video_type': 'clip', 'clip_slug': jstr(item, 'slug'), 'url': 'https://clips.twitch.tv/%s' % jstr(item, 'slug'),
+                  'icon': jstr(item, 'thumbnailURL'), 'desc': '[/br]'.join(descTab)}
         self.addVideo(params)
 
     def _addChannelUser(self, cItem, item):
@@ -248,7 +299,8 @@ class Twitch(CBaseHostClass):
             if stream.get('game'):
                 descTab.append(_('Game: %s') % jstr(stream['game'], 'displayName'))
             self.addVideo({'good_for_fav': True, 'title': '[%s] %s' % (_('Live'), jstr(stream, 'title')), 'video_type': 'live',
-                           'user_login': login, 'icon': jstr(stream, 'previewImageURL') or icon, 'desc': '[/br]'.join(descTab)})
+                           'user_login': login, 'url': 'https://www.twitch.tv/%s' % login, 'icon': jstr(stream, 'previewImageURL') or icon,
+                           'desc': '[/br]'.join(descTab)})
         videosCount = (user.get('videos') or {}).get('totalCount') or 0
         if videosCount:
             self.addDir(dict(cItem, good_for_fav=False, category='videos_types', title=_('Videos %s') % videosCount, icon=icon, desc=''))
@@ -326,7 +378,7 @@ class Twitch(CBaseHostClass):
                         if item.get('frameRate'):
                             name += ', %dfps' % int(item['frameRate'])
                         urlTab.append({'name': name, 'url': item['sourceURL'] + '?' + query, 'need_resolve': 0})
-            return urlTab
+            return self._finishLinks(cItem, urlTab)
 
         if videoType == 'live':
             token = self._getToken('streamPlaybackAccessToken', 'channelName', 'String!', cItem['user_login'])
@@ -337,7 +389,7 @@ class Twitch(CBaseHostClass):
             url = 'https://usher.ttvnw.net/vod/%s.m3u8' % cItem['video_id']
             liveStream = False
         if not token:
-            return urlTab
+            return self._finishLinks(cItem, urlTab)
 
         url += '?' + urllib_urlencode({'sig': token['signature'], 'token': token['value'], 'allow_source': 'true', 'allow_audio_only': 'true', 'fast_bread': 'true', 'player': 'twitchweb'})
         try:
@@ -346,7 +398,88 @@ class Twitch(CBaseHostClass):
                 urlTab.append(item)
         except Exception:
             printExc()
-        return urlTab
+        return self._finishLinks(cItem, urlTab)
+
+    def _finishLinks(self, cItem, urlTab):
+        if not urlTab:
+            # offline channel, deleted VOD / clip, subscriber-only VOD
+            SetIPTVPlayerLastHostError(_("Content not available"))
+            return urlTab
+        if cItem.get('video_type') == 'live':
+            # no sidecar for a live stream recording
+            return urlTab
+        return applySidecarToLinks(urlTab, buildSidecarFromItem(cItem, IsSidecarEnabled()))
+
+    # ---------------------------------------------------------------- INFO
+    def getArticleContent(self, cItem):
+        printDBG("Twitch.getArticleContent [%s]" % cItem)
+        title = cItem.get('raw_title') or cItem.get('title', '')
+        text = cItem.get('desc', '')
+        icon = cItem.get('icon', '')
+        other = {}
+        videoType = cItem.get('video_type', '')
+        try:
+            if videoType == 'video' and cItem.get('video_id'):
+                data = self.gql('query($v: ID!) { video(id: $v) { title description lengthSeconds viewCount publishedAt broadcastType language '
+                                'owner { displayName } game { displayName } previewThumbnailURL(width: 640, height: 360) } }', {'v': cItem['video_id']})
+                item = (data or {}).get('video') or {}
+                if item:
+                    title = jstr(item, 'title') or title
+                    text = jstr(item, 'description') or text
+                    other.update({'duration': str(timedelta(seconds=int(item.get('lengthSeconds') or 0))), 'views': str(item.get('viewCount', 0)),
+                                  'released': jstr(item, 'publishedAt')[:16].replace('T', ' '), 'type': jstr(item, 'broadcastType').title(),
+                                  'language': jstr(item, 'language')})
+                    if item.get('owner'):
+                        other['station'] = jstr(item['owner'], 'displayName')
+                    if item.get('game'):
+                        other['category'] = jstr(item['game'], 'displayName')
+            elif videoType == 'clip' and cItem.get('clip_slug'):
+                data = self.gql('query($s: ID!) { clip(slug: $s) { title durationSeconds viewCount createdAt language broadcaster { displayName } '
+                                'curator { displayName } game { displayName } thumbnailURL(width: 480, height: 272) } }', {'s': cItem['clip_slug']})
+                item = (data or {}).get('clip') or {}
+                if item:
+                    title = jstr(item, 'title') or title
+                    other.update({'duration': str(timedelta(seconds=int(item.get('durationSeconds') or 0))), 'views': str(item.get('viewCount', 0)),
+                                  'released': jstr(item, 'createdAt')[:16].replace('T', ' '), 'language': jstr(item, 'language')})
+                    if item.get('broadcaster'):
+                        other['station'] = jstr(item['broadcaster'], 'displayName')
+                    if item.get('curator'):
+                        text = _('Clipped by: %s') % jstr(item['curator'], 'displayName')
+                    if item.get('game'):
+                        other['category'] = jstr(item['game'], 'displayName')
+            elif cItem.get('user_login'):
+                # live row and channel folder
+                data = self.gql('query($l: String!) { user(login: $l) { displayName description profileImageURL(width: 300) followers { totalCount } '
+                                'stream { title viewersCount createdAt game { displayName } } } }', {'l': cItem['user_login']})
+                item = (data or {}).get('user') or {}
+                if item:
+                    lines = []
+                    stream = item.get('stream')
+                    if stream:
+                        lines.append('%s: %s' % (_('Live'), jstr(stream, 'title')))
+                        lines.append(_('%s viewers') % stream.get('viewersCount', 0))
+                        other['broadcast'] = jstr(stream, 'createdAt')[:16].replace('T', ' ')
+                        if stream.get('game'):
+                            other['category'] = jstr(stream['game'], 'displayName')
+                    if item.get('followers'):
+                        lines.append(_('%s followers') % item['followers'].get('totalCount', 0))
+                    if jstr(item, 'description'):
+                        lines.append(jstr(item, 'description'))
+                    if videoType != 'live':
+                        title = jstr(item, 'displayName') or title
+                        icon = jstr(item, 'profileImageURL') or icon
+                    text = '[/br]'.join(lines) or text
+            elif cItem.get('game_name'):
+                data = self.gql('query($n: String!) { game(name: $n) { displayName description viewersCount followersCount } }', {'n': cItem['game_name']})
+                item = (data or {}).get('game') or {}
+                if item:
+                    title = jstr(item, 'displayName') or title
+                    lines = [_('%s viewers') % item.get('viewersCount', 0), _('%s followers') % item.get('followersCount', 0), jstr(item, 'description')]
+                    text = '[/br]'.join([x for x in lines if x])
+        except Exception:
+            printExc()
+        other = dict((k, v) for k, v in other.items() if v)
+        return [{'title': self.cleanHtmlStr(title), 'text': text, 'images': [{'title': '', 'url': icon}] if icon else [], 'other_info': other}]
 
     # ---------------------------------------------------------------- service
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
@@ -405,10 +538,18 @@ class Twitch(CBaseHostClass):
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
-class IPTVHost(CHostBase):
+class IPTVHost(GenericFolderWatchedHostMixin, CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, Twitch(), True, [CDisplayListItem.TYPE_VIDEO, CDisplayListItem.TYPE_CATEGORY])
+        self.cachedRet = None
+        self.refreshAfterWatchedFlagChange = False
+        self.watchedHelper = IPTVWatchedHelper('twitchtv')
+
+    def withArticleContent(self, cItem):
+        if cItem.get('type') == 'video':
+            return bool(cItem.get('video_id') or cItem.get('clip_slug') or cItem.get('user_login'))
+        return cItem.get('category') in ('list_channel', 'browse_game')
 
     def getSearchTypes(self):
         return [(_("Channels"), "channels"), (_("Live streams"), "streams"), (_("Games"), "games")]
