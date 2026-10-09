@@ -67,6 +67,7 @@ def hostpin(monkeypatch):
         configMod.ConfigSelection, configMod.ConfigText, configMod.ConfigYesNo = ConfigSelection, ConfigText, ConfigYesNo
         tools = types.ModuleType("Plugins.Extensions.IPTVPlayer.tools.iptvtools")
         tools.printDBG = tools.printExc = lambda *args: None
+        tools.GetHostTitle = lambda hostName: 'https://www.%s.example/' % hostName
         init = types.ModuleType("Plugins.Extensions.IPTVPlayer.components.iptvplayerinit")
         init.TranslateTXT = lambda text: text
         box = types.ModuleType("Screens.MessageBox")

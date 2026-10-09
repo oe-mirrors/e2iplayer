@@ -9,7 +9,7 @@ import urllib.parse
 from html import escape as _html_escape
 
 from . import settings
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import GetPluginDir, IsSameOrSubDir
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import GetPluginDir, IsSameOrSubDir, GetHostTitle
 ########################################################
 
 
@@ -99,11 +99,8 @@ def fileDownloadLocation(path):
 
 
 def getHostTitle(hostName):
-	try:
-		_temp = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + hostName, globals(), locals(), ['gettytul'], 0)
-		return _temp.gettytul()
-	except Exception:
-		return None
+	# None = broken host; read from the host file, the host is not loaded
+	return GetHostTitle(hostName)
 ########################################################
 
 

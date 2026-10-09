@@ -14,7 +14,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, Ge
 from Plugins.Extensions.IPTVPlayer.tools.iptvfavourites import IPTVFavourites
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
 from Plugins.Extensions.IPTVPlayer.components.iptvchoicebox import IPTVChoiceBoxItem
-from Plugins.Extensions.IPTVPlayer.components.iptvhostpin import IsHostPinProtected
+from Plugins.Extensions.IPTVPlayer.components.iptvhostpin import GetHostDisplayTitle, IsHostPinProtected
 from Plugins.Extensions.IPTVPlayer.libs.crypto.hash.md5Hash import MD5
 from Plugins.Extensions.IPTVPlayer.libs import ytchannelfeed
 ###################################################
@@ -28,7 +28,6 @@ try:
 except Exception:
     import json
 from binascii import hexlify
-import re
 import time
 from Components.config import config, ConfigInteger, ConfigYesNo, getConfigListEntry
 ###################################################
@@ -67,7 +66,6 @@ class Favourites(CBaseHostClass):
         self.DEFAULT_ICON_URL = "https://raw.githubusercontent.com/oe-mirrors/e2iplayer/refs/heads/gh-pages/icons/favourites.png"
         self._guestParentWatchedHelper = IPTVWatchedHelper('favourites')
         self.ytSortedGroups = set()  # group ids shown sorted by the newest YouTube upload (this visit only)
-        self.hostTitles = {}  # host module name -> title to show, see _getHostTitle()
 
     def _setHost(self, hostName):
         if hostName == self.hostName:
@@ -143,21 +141,10 @@ class Favourites(CBaseHostClass):
 
     def _addHostLine(self, hostName, desc):
         # the host a favourite comes from, first line of its description
-        title = self._getHostTitle(hostName)
+        title = GetHostDisplayTitle(hostName)
         if title == '':
             return desc
         return _("Host") + ": " + title + ("\n" + desc if desc else '')
-
-    def _getHostTitle(self, hostName):
-        if hostName not in self.hostTitles:
-            title = ''
-            try:
-                module = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + hostName, globals(), locals(), ['gettytul'], 0)
-                title = re.sub(r'^https?://(www\.)?', '', str(module.gettytul()).strip()).rstrip('/')
-            except Exception:
-                printExc()
-            self.hostTitles[hostName] = title or str(hostName)
-        return self.hostTitles[hostName]
 
     def _parseFavItem(self, item):
         # -> (favUrl, favItem) of a stored favourite; favItem is the host's own item dict (or None)

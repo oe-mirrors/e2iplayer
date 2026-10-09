@@ -1426,6 +1426,81 @@ def IsHostEnabled(hostName):
         hostEnabled = False
     return hostEnabled
 
+
+# host titles for the lists, read from the host file instead of importing it:
+# almost every host has "def gettytul(): return '<fixed text>'" (or _('<text>')),
+# so showing a group no longer loads all its hosts - only the one opened
+_HOST_TITLE_DEF_RE = re.compile(r'^def\s+gettytul\s*\(\s*\)\s*:\s*(?:#.*)?$')
+# (the lines are rstrip()ed before they are matched)
+_HOST_TITLE_RETURN_RE = re.compile(r'''^\s+return\s+(_\(\s*)?([rRuU]?(?:'[^'\\]*(?:\\.[^'\\]*)*'|"[^"\\]*(?:\\.[^"\\]*)*"))\s*(\)\s*)?(?:#.*)?$''')
+_HOST_TITLE_DOC_RE = re.compile(r'''^\s+[rRuU]?("""|\'\'\'|"|').*\1$''')
+_HOST_TITLE_CACHE = {}
+
+
+def _readHostTitleFromFile(path):
+    # -> the fixed title of the host file's gettytul(), or None when it is not
+    # a single "return <string>" (then the caller imports the host as before)
+    from ast import literal_eval
+    with io.open(path, 'r', encoding='utf-8', errors='replace') as f:
+        for line in f:
+            if _HOST_TITLE_DEF_RE.match(line.rstrip()):
+                break
+        else:
+            return None
+        title = None
+        docSkipped = False
+        for line in f:
+            line = line.rstrip()
+            if line.strip() == '' or line.lstrip().startswith('#'):
+                continue
+            if title is None:
+                if not docSkipped and not line.lstrip().startswith('return') and _HOST_TITLE_DOC_RE.match(line):
+                    # one-line docstring
+                    docSkipped = True
+                    continue
+                match = _HOST_TITLE_RETURN_RE.match(line)
+                if not match or bool(match.group(1)) != bool(match.group(3)):
+                    return None
+                title = literal_eval(match.group(2))
+                if not isinstance(title, str):
+                    title = ensure_str(title)
+                if match.group(1):
+                    title = _(title)
+                continue
+            # anything indented after the return means more body -> not a fixed title
+            return title if not line[0].isspace() else None
+        return title
+
+
+def GetHostTitle(hostName):
+    # gettytul() of a host without loading the host; None when the host is
+    # broken (only noticed if its title needs the import). Installs with
+    # only .pyc/.pyo files have nothing to read -> import as before.
+    path = getHostsPath('host%s.py' % hostName)
+    try:
+        st = os.stat(path)
+        key = (st.st_mtime, st.st_size)
+    except Exception:
+        key = None
+    cached = _HOST_TITLE_CACHE.get(hostName)
+    if cached and cached[0] == key:
+        return cached[1]
+    title = None
+    if key is not None:
+        try:
+            title = _readHostTitleFromFile(path)
+        except Exception:
+            printExc()
+    if title is None:
+        try:
+            module = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + hostName, globals(), locals(), ['gettytul'], 0)
+            title = module.gettytul()
+        except Exception:
+            printExc('get host name exception for host "%s"' % hostName)
+            return None
+    _HOST_TITLE_CACHE[hostName] = (key, title)
+    return title
+
 ##############################################################
 # check if we have enough free space
 # if required == None return free space instead of comparing

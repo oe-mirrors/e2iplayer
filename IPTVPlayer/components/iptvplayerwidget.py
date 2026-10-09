@@ -8,6 +8,8 @@
 
 from os import path as os_path
 from random import shuffle as random_shuffle
+import sys
+import time
 import traceback
 
 ####################################################
@@ -48,7 +50,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import FreeSpace as iptvtools
                                                           IsSameDir as iptvtools_IsSameDir, IsSameOrSubDir as iptvtools_IsSameOrSubDir, \
                                                           CleanOldFilesInDir as iptvtools_CleanOldFilesInDir, StartStorageMigrations as iptvtools_StartStorageMigrations, \
                                                           GetIPTVPlayerVersion, GetShortSystemInfo, \
-                                                          printDBG, printExc, GetHostsList, IsHostEnabled, \
+                                                          printDBG, printExc, GetHostsList, IsHostEnabled, GetHostTitle, \
                                                           eConnectCallback, GetSkinsDir, GetIconDir, GetPluginDir, \
                                                           SortHostsList, GetHostsOrderList, CSearchHistoryHelper, \
                                                           CMoviePlayerPerHost, GetFavouritesDir, CFakeMoviePlayerOption, GetAvailableIconSize, \
@@ -2400,6 +2402,7 @@ class E2iPlayerWidget(Screen):
         self.currItem = CDisplayListItem()
 
         self.displayHostsList = []
+        startTime = time.time()
         if self.group != 'all':
             hostsList = self.groupObj.getHostsList(self.group)
         else:
@@ -2411,19 +2414,13 @@ class E2iPlayerWidget(Screen):
 
         brokenHostList = []
         for hostName in hostsList:
-            if hostName == "localmedia":
-                title = _("LocalMedia")
-            elif hostName == "favourites":
-                title = _("Favorites")
-            else:
-                try:
-                    _temp = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + hostName, globals(), locals(), ['gettytul'], 0)
-                    title = _temp.gettytul()
-                except Exception:
-                    printExc('get host name exception for host "%s"' % hostName)
-                    brokenHostList.append('host' + hostName)
-                    continue
+            # read from the host file: the host itself is only loaded when it is opened
+            title = GetHostTitle(hostName)
+            if title is None:
+                brokenHostList.append('host' + hostName)
+                continue
             self.displayHostsList.append((title, hostName))
+        self._logHostListBuilt(startTime, self.group)
 
         # if there is no order hosts list use old behavior for all group
         if self.group == 'all' and 0 == len(GetHostsOrderList()):
@@ -2468,17 +2465,23 @@ class E2iPlayerWidget(Screen):
         self.groupObj.flushAddedHosts()
         self.selectItemCallback(ret, 'selecthostfromgroup')
 
+    def _logHostListBuilt(self, startTime, listName):
+        # how long a host list took and how many hosts are loaded so far (debug log):
+        # the lists only read the titles, so only hosts opened before are loaded
+        prefix = 'Plugins.Extensions.IPTVPlayer.hosts.host'
+        loaded = len([name for name in list(sys.modules) if name.startswith(prefix)])
+        printDBG("Host list [%s]: %d hosts in %d ms, %d host modules loaded" % (listName, len(self.displayHostsList), int((time.time() - startTime) * 1000), loaded))
+
     def selectHostFromSingleList(self):
         self.displayHostsList = []
+        startTime = time.time()
         sortedList = SortHostsList(GetHostsList(fromList=False, fromHostFolder=True))
         brokenHostList = []
         for hostName in sortedList:
             if IsHostEnabled(hostName):
-                try:
-                    _temp = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + hostName, globals(), locals(), ['gettytul'], 0)
-                    title = _temp.gettytul()
-                except Exception:
-                    printExc('get host name exception for host "%s"' % hostName)
+                # read from the host file: the host itself is only loaded when it is opened
+                title = GetHostTitle(hostName)
+                if title is None:
                     brokenHostList.append('host' + hostName)
                     continue
 
@@ -2492,6 +2495,7 @@ class E2iPlayerWidget(Screen):
                         pass
                 """
                 self.displayHostsList.append((title, hostName))
+        self._logHostListBuilt(startTime, 'single list')
         # if there is no order hosts list use old behavior
         if 0 == len(GetHostsOrderList()):
             try:
