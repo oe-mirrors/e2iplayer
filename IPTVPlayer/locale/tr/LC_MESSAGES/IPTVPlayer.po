@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-08 20:17+0000\n"
+"POT-Creation-Date: 2026-10-09 19:42+0000\n"
 "PO-Revision-Date: 2026-03-13 15:06+0300\n"
 "Last-Translator: audi06_19 <audi06_19@hotmail.com>\n"
 "Language-Team: Turkish\n"
@@ -593,6 +593,9 @@ msgstr "Alternatif proxy sunucusu (4)"
 msgid "Alternative proxy server (5)"
 msgstr "Alternatif proxy sunucusu (5)"
 
+msgid "American football"
+msgstr ""
+
 msgid "An API key from subsource.net can be entered in the E2iPlayer settings (Subtitles)."
 msgstr "subsource.net'ten alınan bir API anahtarı E2iPlayer ayarlarına (Altyazılar) girilebilir."
 
@@ -815,6 +818,9 @@ msgstr "Balkanlar"
 msgid "Basic Science"
 msgstr "Temel Bilimler"
 
+msgid "Basketball"
+msgstr ""
+
 msgid "Being watched"
 msgstr "İzleniyor"
 
@@ -863,6 +869,9 @@ msgstr "Kitaplar"
 
 msgid "Box"
 msgstr "Alıcı"
+
+msgid "Boxing"
+msgstr ""
 
 msgid "Broadcast:"
 msgstr "Yayın:"
@@ -1086,6 +1095,9 @@ msgstr "Pull request birleştirmelerini commit'leriyle birleştir"
 msgid "Comedy"
 msgstr "Komedi"
 
+msgid "Commentator"
+msgstr ""
+
 msgid "Comments"
 msgstr "Yorumlar"
 
@@ -1225,6 +1237,9 @@ msgstr "Yaratıcı:"
 msgid "Creators:"
 msgstr "Yaratıcılar:"
 
+msgid "Cricket"
+msgstr ""
+
 msgid "Crime"
 msgstr "Suç"
 
@@ -1272,6 +1287,9 @@ msgstr "Günlük indirme sınırına ulaşıldı - kodu yazın"
 
 msgid "Darkgray"
 msgstr "Koyu gri"
+
+msgid "Darts"
+msgstr ""
 
 msgid "Date"
 msgstr "Tarih"
@@ -2084,6 +2102,9 @@ msgstr "Favoriler yöneticisi"
 msgid "Featured"
 msgstr "Öne çıkanlar"
 
+msgid "FebBox token (\"ui\" cookie of www.febbox.com):"
+msgstr ""
+
 #, python-format
 msgid "File \"%s\" already exists"
 msgstr "\"%s\" dosyası zaten mevcut"
@@ -2216,6 +2237,9 @@ msgstr "Yemek"
 msgid "Foot & Ankle"
 msgstr "Ayak ve ayak bileği"
 
+msgid "Football"
+msgstr ""
+
 msgid "Football Live"
 msgstr "Canlı futbol"
 
@@ -2281,6 +2305,9 @@ msgstr "Tam test yayın bağlantısını kontrol eder :"
 
 msgid "Full test checks thumbnails :"
 msgstr "Tam test küçük resimleri kontrol eder :"
+
+msgid "Futsal"
+msgstr ""
 
 msgid "GREEN"
 msgstr "YEŞİL"
@@ -2399,6 +2426,9 @@ msgstr "HTTPS bağlantı hatası \"%s\"\n"
 msgid "Hand"
 msgstr "El"
 
+msgid "Handball"
+msgstr ""
+
 msgid "Health"
 msgstr "Sağlık"
 
@@ -2432,6 +2462,9 @@ msgstr "Geçmiş"
 
 msgid "History of searched phrases."
 msgstr "Aranan ifadelerin geçmişi."
+
+msgid "Hockey"
+msgstr ""
 
 msgid "Home"
 msgstr "Ana Sayfa"
@@ -2807,6 +2840,10 @@ msgstr "Son sonuç"
 msgid "Last week"
 msgstr "Geçen hafta"
 
+#, python-format
+msgid "Last week: %s"
+msgstr ""
+
 msgid "Last.fm charts and tag pages are behind a browser check, only the radio stations can be used."
 msgstr "Last.fm listeleri ve etiket sayfaları bir tarayıcı kontrolünün arkasında, yalnızca radyo istasyonları kullanılabilir."
 
@@ -3054,6 +3091,9 @@ msgstr "Uzun liste"
 msgid "Longest"
 msgstr "En uzun"
 
+msgid "Loved tracks"
+msgstr ""
+
 msgid "Low"
 msgstr "Düşük"
 
@@ -3124,6 +3164,9 @@ msgstr "Sayfa başına en fazla öğe"
 
 msgid "Max number of parallel downloads has been reached."
 msgstr "En fazla paralel indirme sayısına ulaşıldı."
+
+msgid "MaxStream (uprot.net) asks for its image captcha: solve it in MyE2i, then open the video again."
+msgstr ""
 
 msgid "Maximum log file size"
 msgstr "En fazla günlük dosyası boyutu"
@@ -3212,9 +3255,6 @@ msgstr "En çok dinlenen tilavetler"
 msgid "Most popular"
 msgstr "En popüler"
 
-msgid "Most rated"
-msgstr "En çok oylananlar"
-
 msgid "Most recent"
 msgstr "En yeni"
 
@@ -3226,6 +3266,12 @@ msgstr "En çok izlenen filmler"
 
 msgid "Most viewed series"
 msgstr "En çok izlenen diziler"
+
+msgid "Most voted"
+msgstr ""
+
+msgid "Motorsport"
+msgstr ""
 
 #, python-format
 msgid ""
@@ -3296,6 +3342,9 @@ msgstr "MyE2i Cloudflare çözümü"
 msgid "MyE2i browser check solution"
 msgstr "MyE2i tarayıcı kontrolü çözümü"
 
+msgid "MyE2i captcha: solve it, then Job (no CONTINUE)"
+msgstr ""
+
 msgid "MyE2i debug snapshot received - see the debug log."
 msgstr "MyE2i hata ayıklama anlık görüntüsü alındı - hata ayıklama günlüğüne bakın."
 
@@ -3324,6 +3373,9 @@ msgstr "MyE2i: bitince başlangıç sayfasını kapat"
 
 msgid "MyE2i: offer to open the page in (Android)"
 msgstr "MyE2i: sayfayı şurada açmayı öner (Android)"
+
+msgid "Mystery"
+msgstr ""
 
 msgid ""
 "NO VIDEOS FOUND FOR NOW! \n"
@@ -3547,6 +3599,13 @@ msgstr "Kaydedilecek bir şey yok - hata ayıklama günlüğü etkin değil."
 msgid "Now"
 msgstr "Şimdi"
 
+msgid "Now playing"
+msgstr ""
+
+#, python-format
+msgid "Now playing: %s"
+msgstr ""
+
 msgid "Number of columns"
 msgstr "Sütun sayısı"
 
@@ -3763,6 +3822,10 @@ msgstr "Patoloji vizitleri"
 
 msgid "Patriotism"
 msgstr "Vatanseverlik"
+
+#, python-format
+msgid "Peak: %s"
+msgstr ""
 
 msgid "Pediatrics"
 msgstr "Pediatri"
@@ -4111,9 +4174,6 @@ msgstr "Oynatma listesini karıştır"
 msgid "Range request not supported (resume failed)."
 msgstr "Aralık isteği desteklenmiyor (devam ettirme başarısız)."
 
-msgid "Ranking"
-msgstr "Sıralama"
-
 msgid "Rated"
 msgstr "Puanlanan"
 
@@ -4180,6 +4240,9 @@ msgstr "\"%s\" boşaltılmıyor - bu, ayrılmış bir önbellek/yapılandırma k
 
 msgid "Regions"
 msgstr "Bölgeler"
+
+msgid "Related seasons and works"
+msgstr ""
 
 msgid "Release"
 msgstr "Yayınlanma"
@@ -4647,6 +4710,9 @@ msgstr "Shift"
 msgid "Short Movies"
 msgstr "Kısa filmler"
 
+msgid "Short films"
+msgstr ""
+
 msgid "Short series"
 msgstr "Kısa diziler"
 
@@ -4731,6 +4797,9 @@ msgstr "Arama geçmişini göster"
 msgid "Show suggestions"
 msgstr "Önerileri göster"
 
+msgid "ShowBox streams need a FebBox login: enter the \"ui\" cookie of your FebBox account in the host configuration."
+msgstr ""
+
 msgid "Shows"
 msgstr "Şovlar"
 
@@ -4788,6 +4857,9 @@ msgstr "Görünüm tasarımcıları:"
 
 msgid "Skip video shorter than [min]"
 msgstr "[dk] değerinden kısa videoları atla"
+
+msgid "Snooker"
+msgstr ""
 
 msgid "Society"
 msgstr "Toplum"
@@ -4887,6 +4959,9 @@ msgstr "İndirme yöneticisini varsayılan olarak başlat"
 
 msgid "Station:"
 msgstr "İstasyon:"
+
+msgid "Status"
+msgstr ""
 
 msgid "Status:"
 msgstr "Durum:"
@@ -5171,6 +5246,9 @@ msgstr "Teknoloji"
 msgid "Temp"
 msgstr "Geçici"
 
+msgid "Tennis"
+msgstr ""
+
 msgid "Test the failed sites again"
 msgstr "Başarısız siteleri tekrar test et"
 
@@ -5192,19 +5270,6 @@ msgstr "Burada %s yardımcı programı gerekli ancak algılanmadı."
 
 msgid "The 100 tags with the most videos"
 msgstr "En çok videoya sahip 100 etiket"
-
-msgid ""
-"The 7reels / cineb resolvers 'VidEasy', 'VidCore/VidFast', 'VidLink' and 'Peachify' cannot decrypt their links on the receiver.\n"
-"\n"
-"With this option ON, every time you open one of them E2iPlayer sends the site's encrypted stream token - which contains the TMDb id of the movie or episode you are opening - to the third-party web service enc-dec.app (operated by a private individual). That server then sees the id and your IP address on each play. Nothing else is transmitted, and it is only used for these four resolvers.\n"
-"\n"
-"Leave this OFF if you do not want that. The other resolvers (AdRock/vidrock, VidNest, ...) are not affected."
-msgstr ""
-"7reels / cineb çözümleyicileri 'VidEasy', 'VidCore/VidFast', 'VidLink' ve 'Peachify' bağlantılarının şifresini alıcıda çözemez.\n"
-"\n"
-"Bu seçenek AÇIK olduğunda, bunlardan birini her açtığınızda E2iPlayer sitenin şifreli yayın belirtecini - açtığınız film veya bölümün TMDb kimliğini içerir - üçüncü taraf web hizmeti enc-dec.app'e (özel bir kişi tarafından işletilir) gönderir. Bu sunucu her oynatmada kimliği ve IP adresinizi görür. Başka hiçbir şey iletilmez ve yalnızca bu dört çözümleyici için kullanılır.\n"
-"\n"
-"Bunu istemiyorsanız KAPALI bırakın. Diğer çözümleyiciler (AdRock/vidrock, VidNest, ...) etkilenmez."
 
 msgid "The OpenSubtitles v3 server did not answer. Please try again later."
 msgstr "OpenSubtitles v3 sunucusu yanıt vermedi. Lütfen daha sonra tekrar deneyin."
@@ -5337,6 +5402,9 @@ msgstr "Bu gruptaki tüm YouTube kanallarının son yüklemeleri, en yenisi önc
 msgid "The link could not be resolved."
 msgstr "Bağlantı çözümlenemedi."
 
+msgid "The link has expired. Please open the video again."
+msgstr ""
+
 msgid "The list has changed, please try again."
 msgstr "Liste değişti, lütfen tekrar deneyin."
 
@@ -5372,6 +5440,14 @@ msgstr "Bu sayfanın kayıtları sitenin artık çevrimdışı olan eski medya s
 msgid "The request has no valid length."
 msgstr "İsteğin geçerli bir uzunluğu yok."
 
+msgid ""
+"The resolvers 'VidCore', 'VidUp' and 'VidFast' cannot decrypt their links on the receiver.\n"
+"\n"
+"With this option ON, every time you open one of them E2iPlayer sends the site's encrypted stream token - which contains the TMDb id of the movie or episode you are opening - to the third-party web service enc-dec.app (operated by a private individual). That server then sees the id and your IP address on each play. Nothing else is transmitted, and it is only used for these three resolvers.\n"
+"\n"
+"Leave this OFF if you do not want that. The other resolvers (VidEasy, VidLink, Peachify, vidrock, VidNest, ...) decrypt their links on the receiver and are not affected."
+msgstr ""
+
 msgid "The same item already exists in this group."
 msgstr "Aynı öğe bu grupta zaten mevcut."
 
@@ -5390,6 +5466,10 @@ msgstr "Hizmet aşırı yüklü. Lütfen daha sonra tekrar deneyin."
 msgid "The settings are protected by a PIN, change them on the receiver."
 msgstr "Ayarlar PIN ile korumalı, alıcıda değiştirin."
 
+#, python-format
+msgid "The site did not answer with data (HTTP %s). It may be down or have moved."
+msgstr ""
+
 msgid "The site has no player for this video (it only shows a cam advert)."
 msgstr "Sitenin bu video için oynatıcısı yok (yalnızca bir kamera reklamı gösteriyor)."
 
@@ -5398,6 +5478,9 @@ msgstr "Site şu anda bu videonun tüm kalitelerini reddediyor (HTTP 403). Daha 
 
 msgid "The site rejected the search request."
 msgstr "Site arama isteğini reddetti."
+
+msgid "The site's browser check (Cloudflare) could not be passed. The site may also be blocked in your country."
+msgstr ""
 
 msgid "The site's browser check could not be passed."
 msgstr "Sitenin tarayıcı denetimi geçilemedi."
@@ -5726,6 +5809,9 @@ msgstr "Toplam boyut:"
 
 msgid "Tourism"
 msgstr "Turizm"
+
+msgid "Tournament"
+msgstr ""
 
 msgid "Tracklist"
 msgstr "Parça listesi"
@@ -6066,6 +6152,9 @@ msgstr "Sanal klavye türü"
 msgid "Voice-over"
 msgstr "Seslendirme"
 
+msgid "Volleyball"
+msgstr ""
+
 msgid "WWE shows"
 msgstr "WWE şovları"
 
@@ -6087,6 +6176,13 @@ msgstr "Daha sonra izle"
 msgid "Watch online"
 msgstr "Çevrimiçi izle"
 
+msgid "WebStreamr / AIOStreams manifest URL (your own):"
+msgstr ""
+
+#, python-format
+msgid "Weeks on chart: %s"
+msgstr ""
+
 msgid "Western"
 msgstr "Western"
 
@@ -6107,6 +6203,9 @@ msgstr "Wiki"
 
 msgid "Winter"
 msgstr "Kış"
+
+msgid "Winter sports"
+msgstr ""
 
 msgid "With an API key from subdl.com (E2iPlayer settings, Subtitles) the official SubDL API is searched as well."
 msgstr "subdl.com'dan alınan bir API anahtarıyla (E2iPlayer ayarları, Altyazılar) resmi SubDL API'sinde de arama yapılır."
@@ -6496,6 +6595,12 @@ msgstr "https"
 
 msgid "https - validate SSL certificates"
 msgstr "https - SSL sertifikalarını doğrula"
+
+msgid "iTunes - Top albums by country"
+msgstr ""
+
+msgid "iTunes - Top songs by country"
+msgstr ""
 
 msgid "insert space"
 msgstr "boşluk ekle"

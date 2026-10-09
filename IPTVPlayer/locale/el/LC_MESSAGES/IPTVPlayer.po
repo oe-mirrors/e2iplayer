@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-08 20:17+0000\n"
+"POT-Creation-Date: 2026-10-09 19:42+0000\n"
 "PO-Revision-Date: 2026-10-09 00:34+0300\n"
 "Last-Translator: \n"
 "Language-Team: giorbak\n"
@@ -598,6 +598,9 @@ msgstr "Εναλλακτικός διακομιστής μεσολάβησης (
 msgid "Alternative proxy server (5)"
 msgstr "Εναλλακτικός διακομιστής μεσολάβησης (5)"
 
+msgid "American football"
+msgstr ""
+
 msgid "An API key from subsource.net can be entered in the E2iPlayer settings (Subtitles)."
 msgstr "Ένα κλειδί API από το subsource.net μπορεί να εισαχθεί στις ρυθμίσεις του E2iPlayer (Υπότιτλοι)."
 
@@ -820,6 +823,9 @@ msgstr "Βαλκάνια"
 msgid "Basic Science"
 msgstr "Βασικές επιστήμες"
 
+msgid "Basketball"
+msgstr ""
+
 msgid "Being watched"
 msgstr "Γίνεται προβολή"
 
@@ -868,6 +874,9 @@ msgstr "Βιβλία"
 
 msgid "Box"
 msgstr "Δέκτης"
+
+msgid "Boxing"
+msgstr ""
 
 msgid "Broadcast:"
 msgstr "Μετάδοση:"
@@ -1091,6 +1100,9 @@ msgstr "Συγχώνευση των pull request με το commit τους"
 msgid "Comedy"
 msgstr "Κωμωδία"
 
+msgid "Commentator"
+msgstr ""
+
 msgid "Comments"
 msgstr "Σχόλια"
 
@@ -1230,6 +1242,9 @@ msgstr "Δημιουργός:"
 msgid "Creators:"
 msgstr "Δημιουργοί:"
 
+msgid "Cricket"
+msgstr ""
+
 msgid "Crime"
 msgstr "Έγκλημα"
 
@@ -1277,6 +1292,9 @@ msgstr "Συμπληρώθηκε το ημερήσιο όριο λήψεων - �
 
 msgid "Darkgray"
 msgstr "Σκούρο γκρι"
+
+msgid "Darts"
+msgstr ""
 
 msgid "Date"
 msgstr "Ημερομηνία"
@@ -2089,6 +2107,9 @@ msgstr "Διαχείριση αγαπημένων"
 msgid "Featured"
 msgstr "Προτεινόμενα"
 
+msgid "FebBox token (\"ui\" cookie of www.febbox.com):"
+msgstr ""
+
 #, python-format
 msgid "File \"%s\" already exists"
 msgstr "Το αρχείο \"%s\" υπάρχει ήδη"
@@ -2221,6 +2242,9 @@ msgstr "Τρόφιμα"
 msgid "Foot & Ankle"
 msgstr "Πόδι & Αστράγαλος"
 
+msgid "Football"
+msgstr ""
+
 msgid "Football Live"
 msgstr "Ποδόσφαιρο ζωντανά"
 
@@ -2286,6 +2310,9 @@ msgstr "Η πλήρης δοκιμή ελέγχει τον σύνδεσμο ρο
 
 msgid "Full test checks thumbnails :"
 msgstr "Η πλήρης δοκιμή ελέγχει τις μικρογραφίες:"
+
+msgid "Futsal"
+msgstr ""
 
 msgid "GREEN"
 msgstr "GREEN"
@@ -2404,6 +2431,9 @@ msgstr "Σφάλμα σύνδεσης HTTPS \"%s\"\n"
 msgid "Hand"
 msgstr "Χέρι"
 
+msgid "Handball"
+msgstr ""
+
 msgid "Health"
 msgstr "Υγεία"
 
@@ -2437,6 +2467,9 @@ msgstr "Ιστορικό"
 
 msgid "History of searched phrases."
 msgstr "Ιστορικό όρων αναζήτησης."
+
+msgid "Hockey"
+msgstr ""
 
 msgid "Home"
 msgstr "Αρχική"
@@ -2812,6 +2845,10 @@ msgstr "Τελευταίο αποτέλεσμα"
 msgid "Last week"
 msgstr "Τελευταία εβδομάδα"
 
+#, python-format
+msgid "Last week: %s"
+msgstr ""
+
 msgid "Last.fm charts and tag pages are behind a browser check, only the radio stations can be used."
 msgstr "Τα charts και οι σελίδες ετικετών του Last.fm προστατεύονται από έλεγχο μέσω περιηγητή, μόνο οι ραδιοφωνικοί σταθμοί μπορούν να χρησιμοποιηθούν."
 
@@ -3059,6 +3096,9 @@ msgstr "Μεγάλη λίστα"
 msgid "Longest"
 msgstr "Μεγαλύτερη"
 
+msgid "Loved tracks"
+msgstr ""
+
 msgid "Low"
 msgstr "Χαμηλό"
 
@@ -3129,6 +3169,9 @@ msgstr "Μέγιστα στοιχεία ανά σελίδα"
 
 msgid "Max number of parallel downloads has been reached."
 msgstr "Έχει επιτευχθεί ο μέγιστος αριθμός ταυτόχρονων λήψεων."
+
+msgid "MaxStream (uprot.net) asks for its image captcha: solve it in MyE2i, then open the video again."
+msgstr ""
 
 msgid "Maximum log file size"
 msgstr "Μέγιστο μέγεθος αρχείου καταγραφής"
@@ -3217,9 +3260,6 @@ msgstr "Περισσότερα ακούσματα απαγγελιών"
 msgid "Most popular"
 msgstr "Πιο δημοφιλή"
 
-msgid "Most rated"
-msgstr "Περισσότερο αξιολογημένο"
-
 msgid "Most recent"
 msgstr "Πιο πρόσφατο"
 
@@ -3231,6 +3271,12 @@ msgstr "Ταινίες με τις περισσότερες προβολές"
 
 msgid "Most viewed series"
 msgstr "Σειρές με τις περισσότερες προβολές"
+
+msgid "Most voted"
+msgstr ""
+
+msgid "Motorsport"
+msgstr ""
 
 #, python-format
 msgid ""
@@ -3301,6 +3347,9 @@ msgstr "Λύση MyE2i Cloudflare"
 msgid "MyE2i browser check solution"
 msgstr "Λύση ελέγχου περιηγητή MyE2i"
 
+msgid "MyE2i captcha: solve it, then Job (no CONTINUE)"
+msgstr ""
+
 msgid "MyE2i debug snapshot received - see the debug log."
 msgstr "Ελήφθη στιγμιότυπο εντοπισμού σφαλμάτων MyE2i - δείτε το αρχείο καταγραφής εντοπισμού σφαλμάτων."
 
@@ -3329,6 +3378,9 @@ msgstr "MyE2i: κλείσιμο της αρχικής σελίδας όταν ο
 
 msgid "MyE2i: offer to open the page in (Android)"
 msgstr "MyE2i: πρόταση για άνοιγμα της σελίδας στο (Android)"
+
+msgid "Mystery"
+msgstr ""
 
 msgid ""
 "NO VIDEOS FOUND FOR NOW! \n"
@@ -3552,6 +3604,13 @@ msgstr "Δεν υπάρχει τίποτα για αποθήκευση - το α
 msgid "Now"
 msgstr "Τώρα"
 
+msgid "Now playing"
+msgstr ""
+
+#, python-format
+msgid "Now playing: %s"
+msgstr ""
+
 msgid "Number of columns"
 msgstr "Αριθμός στηλών"
 
@@ -3768,6 +3827,10 @@ msgstr "Κύκλοι παθολογίας"
 
 msgid "Patriotism"
 msgstr "Πατριωτισμός"
+
+#, python-format
+msgid "Peak: %s"
+msgstr ""
 
 msgid "Pediatrics"
 msgstr "Παιδιατρική"
@@ -4116,9 +4179,6 @@ msgstr "Τυχαία επιλογή λίστας αναπαραγωγής"
 msgid "Range request not supported (resume failed)."
 msgstr "Το αίτημα εύρους δεν υποστηρίζεται (η συνέχιση της λήψης απέτυχε)."
 
-msgid "Ranking"
-msgstr "Κατάταξη"
-
 msgid "Rated"
 msgstr "Βαθμολογία"
 
@@ -4185,6 +4245,9 @@ msgstr "Δεν είναι δυνατή η εκκαθάριση του \"%s\" - �
 
 msgid "Regions"
 msgstr "Περιοχές"
+
+msgid "Related seasons and works"
+msgstr ""
 
 msgid "Release"
 msgstr "Κυκλοφορία"
@@ -4652,6 +4715,9 @@ msgstr "Shift"
 msgid "Short Movies"
 msgstr "Ταινίες μικρού μήκους"
 
+msgid "Short films"
+msgstr ""
+
 msgid "Short series"
 msgstr "Σύντομες σειρές"
 
@@ -4736,6 +4802,9 @@ msgstr "Εμφάνιση ιστορικού αναζήτησης"
 msgid "Show suggestions"
 msgstr "Εμφάνιση προτάσεων"
 
+msgid "ShowBox streams need a FebBox login: enter the \"ui\" cookie of your FebBox account in the host configuration."
+msgstr ""
+
 msgid "Shows"
 msgstr "Εκπομπές"
 
@@ -4793,6 +4862,9 @@ msgstr "Δημιουργοί θεμάτων:"
 
 msgid "Skip video shorter than [min]"
 msgstr "Παράλειψη βίντεο μικρότερου από [λεπτά]"
+
+msgid "Snooker"
+msgstr ""
 
 msgid "Society"
 msgstr "Κοινωνία"
@@ -4892,6 +4964,9 @@ msgstr "Έναρξη Διαχείρισης λήψεων από προεπιλο
 
 msgid "Station:"
 msgstr "Σταθμός:"
+
+msgid "Status"
+msgstr ""
 
 msgid "Status:"
 msgstr "Κατάσταση:"
@@ -5176,6 +5251,9 @@ msgstr "Τεχνολογία"
 msgid "Temp"
 msgstr "Προσωρινά"
 
+msgid "Tennis"
+msgstr ""
+
 msgid "Test the failed sites again"
 msgstr "Επανάληψη δοκιμής των ιστότοπων που απέτυχαν"
 
@@ -5197,19 +5275,6 @@ msgstr "Το εργαλείο %s είναι απαραίτητο εδώ, αλλ�
 
 msgid "The 100 tags with the most videos"
 msgstr "Οι 100 ετικέτες με τα περισσότερα βίντεο"
-
-msgid ""
-"The 7reels / cineb resolvers 'VidEasy', 'VidCore/VidFast', 'VidLink' and 'Peachify' cannot decrypt their links on the receiver.\n"
-"\n"
-"With this option ON, every time you open one of them E2iPlayer sends the site's encrypted stream token - which contains the TMDb id of the movie or episode you are opening - to the third-party web service enc-dec.app (operated by a private individual). That server then sees the id and your IP address on each play. Nothing else is transmitted, and it is only used for these four resolvers.\n"
-"\n"
-"Leave this OFF if you do not want that. The other resolvers (AdRock/vidrock, VidNest, ...) are not affected."
-msgstr ""
-"Οι επιλυτές 7reels / cineb 'VidEasy', 'VidCore/VidFast', 'VidLink' και 'Peachify' δεν μπορούν να αποκρυπτογραφήσουν τους συνδέσμους στον δέκτη.\n"
-"\n"
-"Με αυτή την επιλογή ενεργοποιημένη, κάθε φορά που ανοίγετε έναν από αυτούς, το E2iPlayer στέλνει το κρυπτογραφημένο token ροής του ιστότοπου - το οποίο περιέχει το TMDb id της ταινίας ή του επεισοδίου που ανοίγετε - στην υπηρεσία τρίτων enc-dec.app (η οποία λειτουργεί από ιδιώτη). Ο συγκεκριμένος διακομιστής βλέπει το id και τη διεύθυνση IP σας σε κάθε αναπαραγωγή. Δεν μεταδίδεται τίποτα άλλο και χρησιμοποιείται μόνο για αυτούς τους τέσσερις επιλυτές.\n"
-"\n"
-"Αφήστε αυτή την επιλογή απενεργοποιημένη εάν δεν το επιθυμείτε. Οι άλλοι επιλυτές (AdRock/vidrock, VidNest, ...) δεν επηρεάζονται."
 
 msgid "The OpenSubtitles v3 server did not answer. Please try again later."
 msgstr "Ο διακομιστής OpenSubtitles v3 δεν απάντησε. Παρακαλώ δοκιμάστε ξανά αργότερα."
@@ -5342,6 +5407,9 @@ msgstr "Οι τελευταίες μεταφορτώσεις όλων των κ�
 msgid "The link could not be resolved."
 msgstr "Δεν ήταν δυνατή η επίλυση του συνδέσμου."
 
+msgid "The link has expired. Please open the video again."
+msgstr ""
+
 msgid "The list has changed, please try again."
 msgstr "Η λίστα άλλαξε, παρακαλώ δοκιμάστε ξανά."
 
@@ -5377,6 +5445,14 @@ msgstr "Οι εγγραφές αυτής της σελίδας βρίσκοντ�
 msgid "The request has no valid length."
 msgstr "Το αίτημα δεν έχει έγκυρο μήκος."
 
+msgid ""
+"The resolvers 'VidCore', 'VidUp' and 'VidFast' cannot decrypt their links on the receiver.\n"
+"\n"
+"With this option ON, every time you open one of them E2iPlayer sends the site's encrypted stream token - which contains the TMDb id of the movie or episode you are opening - to the third-party web service enc-dec.app (operated by a private individual). That server then sees the id and your IP address on each play. Nothing else is transmitted, and it is only used for these three resolvers.\n"
+"\n"
+"Leave this OFF if you do not want that. The other resolvers (VidEasy, VidLink, Peachify, vidrock, VidNest, ...) decrypt their links on the receiver and are not affected."
+msgstr ""
+
 msgid "The same item already exists in this group."
 msgstr "Το ίδιο στοιχείο υπάρχει ήδη σε αυτή την ομάδα."
 
@@ -5395,6 +5471,10 @@ msgstr "Η υπηρεσία είναι υπερφορτωμένη. Παρακα�
 msgid "The settings are protected by a PIN, change them on the receiver."
 msgstr "Οι ρυθμίσεις προστατεύονται με PIN, αλλάξτε τις στον δέκτη."
 
+#, python-format
+msgid "The site did not answer with data (HTTP %s). It may be down or have moved."
+msgstr ""
+
 msgid "The site has no player for this video (it only shows a cam advert)."
 msgstr "Ο ιστότοπος δεν διαθέτει πρόγραμμα αναπαραγωγής για αυτό το βίντεο (εμφανίζει μόνο διαφήμιση κάμερας)."
 
@@ -5403,6 +5483,9 @@ msgstr "Ο ιστότοπος απορρίπτει προς το παρόν όλ
 
 msgid "The site rejected the search request."
 msgstr "Ο ιστότοπος απέρριψε το αίτημα αναζήτησης."
+
+msgid "The site's browser check (Cloudflare) could not be passed. The site may also be blocked in your country."
+msgstr ""
 
 msgid "The site's browser check could not be passed."
 msgstr "Δεν ήταν δυνατή η παράκαμψη του ελέγχου περιηγητή του ιστότοπου."
@@ -5729,6 +5812,9 @@ msgstr "Συνολικό μέγεθος:"
 
 msgid "Tourism"
 msgstr "Τουρισμός"
+
+msgid "Tournament"
+msgstr ""
 
 msgid "Tracklist"
 msgstr "Λίστα κομματιών"
@@ -6069,6 +6155,9 @@ msgstr "Τύπος εικονικού πληκτρολογίου"
 msgid "Voice-over"
 msgstr "Εκφώνηση"
 
+msgid "Volleyball"
+msgstr ""
+
 msgid "WWE shows"
 msgstr "Εκπομπές WWE"
 
@@ -6090,6 +6179,13 @@ msgstr "Προβολή αργότερα"
 msgid "Watch online"
 msgstr "Προβολή online"
 
+msgid "WebStreamr / AIOStreams manifest URL (your own):"
+msgstr ""
+
+#, python-format
+msgid "Weeks on chart: %s"
+msgstr ""
+
 msgid "Western"
 msgstr "Γουέστερν"
 
@@ -6110,6 +6206,9 @@ msgstr "Wiki"
 
 msgid "Winter"
 msgstr "Χειμώνας"
+
+msgid "Winter sports"
+msgstr ""
 
 msgid "With an API key from subdl.com (E2iPlayer settings, Subtitles) the official SubDL API is searched as well."
 msgstr "Με ένα κλειδί API από το subdl.com (ρυθμίσεις E2iPlayer, Υπότιτλοι) γίνεται αναζήτηση και στο επίσημο API του SubDL."
@@ -6499,6 +6598,12 @@ msgstr "https"
 
 msgid "https - validate SSL certificates"
 msgstr "https - Επικύρωση πιστοποιητικών SSL"
+
+msgid "iTunes - Top albums by country"
+msgstr ""
+
+msgid "iTunes - Top songs by country"
+msgstr ""
 
 msgid "insert space"
 msgstr "εισαγωγή κενού διαστήματος"

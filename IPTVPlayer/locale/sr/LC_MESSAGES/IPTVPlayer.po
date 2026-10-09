@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-08 20:17+0000\n"
+"POT-Creation-Date: 2026-10-09 19:42+0000\n"
 "PO-Revision-Date: 2026-10-08 20:17+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Serbian (Latin)\n"
@@ -592,6 +592,9 @@ msgstr "Alternativni proksi server (4)"
 msgid "Alternative proxy server (5)"
 msgstr "Alternativni proksi server (5)"
 
+msgid "American football"
+msgstr ""
+
 msgid "An API key from subsource.net can be entered in the E2iPlayer settings (Subtitles)."
 msgstr "API ključ sa subsource.net možete uneti u podešavanjima E2iPlayer (Titlovi)."
 
@@ -814,6 +817,9 @@ msgstr "Balkan"
 msgid "Basic Science"
 msgstr "Osnovne nauke"
 
+msgid "Basketball"
+msgstr ""
+
 msgid "Being watched"
 msgstr "Trenutno se gleda"
 
@@ -862,6 +868,9 @@ msgstr "Knjige"
 
 msgid "Box"
 msgstr "Box"
+
+msgid "Boxing"
+msgstr ""
 
 msgid "Broadcast:"
 msgstr "Emitovanje:"
@@ -1085,6 +1094,9 @@ msgstr "Spoji pull request merge-ove sa njihovim commit-om"
 msgid "Comedy"
 msgstr "Komedija"
 
+msgid "Commentator"
+msgstr ""
+
 msgid "Comments"
 msgstr "Komentari"
 
@@ -1224,6 +1236,9 @@ msgstr "Autor:"
 msgid "Creators:"
 msgstr "Autori:"
 
+msgid "Cricket"
+msgstr ""
+
 msgid "Crime"
 msgstr "Krimi"
 
@@ -1271,6 +1286,9 @@ msgstr "Dostignuto je dnevno ograničenje preuzimanja - unesite kod"
 
 msgid "Darkgray"
 msgstr "Tamnosiva"
+
+msgid "Darts"
+msgstr ""
 
 msgid "Date"
 msgstr "Datum"
@@ -2083,6 +2101,9 @@ msgstr "Upravljanje omiljenima"
 msgid "Featured"
 msgstr "Izdvojeno"
 
+msgid "FebBox token (\"ui\" cookie of www.febbox.com):"
+msgstr ""
+
 #, python-format
 msgid "File \"%s\" already exists"
 msgstr "Datoteka \"%s\" već postoji"
@@ -2215,6 +2236,9 @@ msgstr "Hrana"
 msgid "Foot & Ankle"
 msgstr "Stopalo i skočni zglob"
 
+msgid "Football"
+msgstr ""
+
 msgid "Football Live"
 msgstr "Fudbal uživo"
 
@@ -2280,6 +2304,9 @@ msgstr "Potpuni test proverava link strima :"
 
 msgid "Full test checks thumbnails :"
 msgstr "Potpuni test proverava sličice :"
+
+msgid "Futsal"
+msgstr ""
 
 msgid "GREEN"
 msgstr "ZELENI"
@@ -2398,6 +2425,9 @@ msgstr "HTTPS greška veze \"%s\"\n"
 msgid "Hand"
 msgstr "Šaka"
 
+msgid "Handball"
+msgstr ""
+
 msgid "Health"
 msgstr "Zdravlje"
 
@@ -2431,6 +2461,9 @@ msgstr "Istorija"
 
 msgid "History of searched phrases."
 msgstr "Istorija pretraženih izraza."
+
+msgid "Hockey"
+msgstr ""
 
 msgid "Home"
 msgstr "Početna"
@@ -2806,6 +2839,10 @@ msgstr "Poslednji rezultat"
 msgid "Last week"
 msgstr "Prošla nedelja"
 
+#, python-format
+msgid "Last week: %s"
+msgstr ""
+
 msgid "Last.fm charts and tag pages are behind a browser check, only the radio stations can be used."
 msgstr "Last.fm top liste i stranice oznaka su iza provere pregledača, mogu se koristiti samo radio stanice."
 
@@ -3053,6 +3090,9 @@ msgstr "Duga lista"
 msgid "Longest"
 msgstr "Najduže"
 
+msgid "Loved tracks"
+msgstr ""
+
 msgid "Low"
 msgstr "Nizak"
 
@@ -3123,6 +3163,9 @@ msgstr "Maks. broj stavki po strani"
 
 msgid "Max number of parallel downloads has been reached."
 msgstr "Dostignut je maksimalan broj paralelnih preuzimanja."
+
+msgid "MaxStream (uprot.net) asks for its image captcha: solve it in MyE2i, then open the video again."
+msgstr ""
 
 msgid "Maximum log file size"
 msgstr "Maksimalna veličina log datoteke"
@@ -3211,9 +3254,6 @@ msgstr "Najslušanije recitacije"
 msgid "Most popular"
 msgstr "Najpopularnije"
 
-msgid "Most rated"
-msgstr "Najocenjivanije"
-
 msgid "Most recent"
 msgstr "Najnovije"
 
@@ -3225,6 +3265,12 @@ msgstr "Najgledaniji filmovi"
 
 msgid "Most viewed series"
 msgstr "Najgledanije serije"
+
+msgid "Most voted"
+msgstr ""
+
+msgid "Motorsport"
+msgstr ""
 
 #, python-format
 msgid ""
@@ -3295,6 +3341,9 @@ msgstr "MyE2i Cloudflare rešenje"
 msgid "MyE2i browser check solution"
 msgstr "MyE2i rešenje provere pregledača"
 
+msgid "MyE2i captcha: solve it, then Job (no CONTINUE)"
+msgstr ""
+
 msgid "MyE2i debug snapshot received - see the debug log."
 msgstr "MyE2i debug snimak stanja je primljen - pogledajte debug log."
 
@@ -3323,6 +3372,9 @@ msgstr "MyE2i: zatvori početnu stranicu po završetku"
 
 msgid "MyE2i: offer to open the page in (Android)"
 msgstr "MyE2i: ponudi otvaranje stranice u (Android)"
+
+msgid "Mystery"
+msgstr ""
 
 msgid ""
 "NO VIDEOS FOUND FOR NOW! \n"
@@ -3546,6 +3598,13 @@ msgstr "Nema šta da se sačuva - debug log nije aktivan."
 msgid "Now"
 msgstr "Sada"
 
+msgid "Now playing"
+msgstr ""
+
+#, python-format
+msgid "Now playing: %s"
+msgstr ""
+
 msgid "Number of columns"
 msgstr "Broj kolona"
 
@@ -3762,6 +3821,10 @@ msgstr "Patološke vizite"
 
 msgid "Patriotism"
 msgstr "Patriotizam"
+
+#, python-format
+msgid "Peak: %s"
+msgstr ""
 
 msgid "Pediatrics"
 msgstr "Pedijatrija"
@@ -4110,9 +4173,6 @@ msgstr "Nasumično izmešaj plejlistu"
 msgid "Range request not supported (resume failed)."
 msgstr "Range zahtev nije podržan (nastavak nije uspeo)."
 
-msgid "Ranking"
-msgstr "Rang lista"
-
 msgid "Rated"
 msgstr "Uzrasna oznaka"
 
@@ -4179,6 +4239,9 @@ msgstr "Pražnjenje \"%s\" je odbijeno - ovo ne izgleda kao namenska fascikla za
 
 msgid "Regions"
 msgstr "Regioni"
+
+msgid "Related seasons and works"
+msgstr ""
 
 msgid "Release"
 msgstr "Izdanje"
@@ -4646,6 +4709,9 @@ msgstr "Shift"
 msgid "Short Movies"
 msgstr "Kratki filmovi"
 
+msgid "Short films"
+msgstr ""
+
 msgid "Short series"
 msgstr "Kratke serije"
 
@@ -4730,6 +4796,9 @@ msgstr "Prikaži istoriju pretrage"
 msgid "Show suggestions"
 msgstr "Prikaži predloge"
 
+msgid "ShowBox streams need a FebBox login: enter the \"ui\" cookie of your FebBox account in the host configuration."
+msgstr ""
+
 msgid "Shows"
 msgstr "Šou programi"
 
@@ -4787,6 +4856,9 @@ msgstr "Autori skinova:"
 
 msgid "Skip video shorter than [min]"
 msgstr "Preskoči video kraći od [min]"
+
+msgid "Snooker"
+msgstr ""
 
 msgid "Society"
 msgstr "Društvo"
@@ -4886,6 +4958,9 @@ msgstr "Podrazumevano pokreni menadžer preuzimanja"
 
 msgid "Station:"
 msgstr "Stanica:"
+
+msgid "Status"
+msgstr ""
 
 msgid "Status:"
 msgstr "Status:"
@@ -5170,6 +5245,9 @@ msgstr "Tehnologija"
 msgid "Temp"
 msgstr "Temp"
 
+msgid "Tennis"
+msgstr ""
+
 msgid "Test the failed sites again"
 msgstr "Ponovo testiraj neuspele sajtove"
 
@@ -5191,19 +5269,6 @@ msgstr "Alat %s je ovde neophodan, ali nije pronađen."
 
 msgid "The 100 tags with the most videos"
 msgstr "100 oznaka sa najviše videa"
-
-msgid ""
-"The 7reels / cineb resolvers 'VidEasy', 'VidCore/VidFast', 'VidLink' and 'Peachify' cannot decrypt their links on the receiver.\n"
-"\n"
-"With this option ON, every time you open one of them E2iPlayer sends the site's encrypted stream token - which contains the TMDb id of the movie or episode you are opening - to the third-party web service enc-dec.app (operated by a private individual). That server then sees the id and your IP address on each play. Nothing else is transmitted, and it is only used for these four resolvers.\n"
-"\n"
-"Leave this OFF if you do not want that. The other resolvers (AdRock/vidrock, VidNest, ...) are not affected."
-msgstr ""
-"7reels / cineb resolveri 'VidEasy', 'VidCore/VidFast', 'VidLink' i 'Peachify' ne mogu da dešifruju svoje linkove na risiveru.\n"
-"\n"
-"Kada je ova opcija UKLJUČENA, svaki put kada otvorite neki od njih E2iPlayer šalje šifrovani token strima sa sajta - koji sadrži TMDb ID filma ili epizode koju otvarate - veb servisu treće strane enc-dec.app (koji vodi privatno lice). Taj server tada pri svakoj reprodukciji vidi ID i vašu IP adresu. Ništa drugo se ne prenosi, i to se koristi samo za ova četiri resolvera.\n"
-"\n"
-"Ostavite ovu opciju ISKLJUČENOM ako to ne želite. Ostali resolveri (AdRock/vidrock, VidNest, ...) nisu pogođeni."
 
 msgid "The OpenSubtitles v3 server did not answer. Please try again later."
 msgstr "OpenSubtitles v3 server nije odgovorio. Pokušajte ponovo kasnije."
@@ -5336,6 +5401,9 @@ msgstr "Najnovija otpremanja svih YouTube kanala u ovoj grupi, najnovija prva."
 msgid "The link could not be resolved."
 msgstr "Link nije mogao biti razrešen."
 
+msgid "The link has expired. Please open the video again."
+msgstr ""
+
 msgid "The list has changed, please try again."
 msgstr "Lista se promenila, pokušajte ponovo."
 
@@ -5371,6 +5439,14 @@ msgstr "Snimci ove stranice nalazili su se na starom medijskom serveru sajta, ko
 msgid "The request has no valid length."
 msgstr "Zahtev nema važeću dužinu."
 
+msgid ""
+"The resolvers 'VidCore', 'VidUp' and 'VidFast' cannot decrypt their links on the receiver.\n"
+"\n"
+"With this option ON, every time you open one of them E2iPlayer sends the site's encrypted stream token - which contains the TMDb id of the movie or episode you are opening - to the third-party web service enc-dec.app (operated by a private individual). That server then sees the id and your IP address on each play. Nothing else is transmitted, and it is only used for these three resolvers.\n"
+"\n"
+"Leave this OFF if you do not want that. The other resolvers (VidEasy, VidLink, Peachify, vidrock, VidNest, ...) decrypt their links on the receiver and are not affected."
+msgstr ""
+
 msgid "The same item already exists in this group."
 msgstr "Ista stavka već postoji u ovoj grupi."
 
@@ -5389,6 +5465,10 @@ msgstr "Servis je preopterećen. Pokušajte ponovo kasnije."
 msgid "The settings are protected by a PIN, change them on the receiver."
 msgstr "Podešavanja su zaštićena PIN-om, promenite ih na risiveru."
 
+#, python-format
+msgid "The site did not answer with data (HTTP %s). It may be down or have moved."
+msgstr ""
+
 msgid "The site has no player for this video (it only shows a cam advert)."
 msgstr "Sajt nema plejer za ovaj video snimak (prikazuje samo kam reklamu)."
 
@@ -5397,6 +5477,9 @@ msgstr "Sajt trenutno odbija sve kvalitete ovog video snimka (HTTP 403). Pokuša
 
 msgid "The site rejected the search request."
 msgstr "Sajt je odbio zahtev za pretragu."
+
+msgid "The site's browser check (Cloudflare) could not be passed. The site may also be blocked in your country."
+msgstr ""
 
 msgid "The site's browser check could not be passed."
 msgstr "Provera pregledača na sajtu nije mogla biti prođena."
@@ -5725,6 +5808,9 @@ msgstr "Ukupna veličina:"
 
 msgid "Tourism"
 msgstr "Turizam"
+
+msgid "Tournament"
+msgstr ""
 
 msgid "Tracklist"
 msgstr "Lista numera"
@@ -6065,6 +6151,9 @@ msgstr "Tip virtuelne tastature"
 msgid "Voice-over"
 msgstr "Glas preko (voice-over)"
 
+msgid "Volleyball"
+msgstr ""
+
 msgid "WWE shows"
 msgstr "WWE šou programi"
 
@@ -6086,6 +6175,13 @@ msgstr "Pogledaj kasnije"
 msgid "Watch online"
 msgstr "Gledaj onlajn"
 
+msgid "WebStreamr / AIOStreams manifest URL (your own):"
+msgstr ""
+
+#, python-format
+msgid "Weeks on chart: %s"
+msgstr ""
+
 msgid "Western"
 msgstr "Vestern"
 
@@ -6106,6 +6202,9 @@ msgstr "Wiki"
 
 msgid "Winter"
 msgstr "Zima"
+
+msgid "Winter sports"
+msgstr ""
 
 msgid "With an API key from subdl.com (E2iPlayer settings, Subtitles) the official SubDL API is searched as well."
 msgstr "Sa API ključem sa subdl.com (E2iPlayer podešavanja, Titlovi) pretražuje se i zvanični SubDL API."
@@ -6495,6 +6594,12 @@ msgstr "https"
 
 msgid "https - validate SSL certificates"
 msgstr "https - proveravaj SSL sertifikate"
+
+msgid "iTunes - Top albums by country"
+msgstr ""
+
+msgid "iTunes - Top songs by country"
+msgstr ""
 
 msgid "insert space"
 msgstr "umetni razmak"

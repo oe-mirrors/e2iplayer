@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-08 20:17+0000\n"
+"POT-Creation-Date: 2026-10-09 19:42+0000\n"
 "PO-Revision-Date: 2026-07-27 16:49+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -613,6 +613,9 @@ msgstr "Alternatív proxy szerver (1)"
 msgid "Alternative proxy server (5)"
 msgstr "Alternatív proxy szerver (1)"
 
+msgid "American football"
+msgstr ""
+
 msgid "An API key from subsource.net can be entered in the E2iPlayer settings (Subtitles)."
 msgstr ""
 
@@ -837,6 +840,9 @@ msgstr "Balkán"
 msgid "Basic Science"
 msgstr "Alaptudomány"
 
+msgid "Basketball"
+msgstr ""
+
 #, fuzzy
 msgid "Being watched"
 msgstr "Megfigyelt"
@@ -886,6 +892,9 @@ msgid "Books"
 msgstr ""
 
 msgid "Box"
+msgstr ""
+
+msgid "Boxing"
 msgstr ""
 
 # GPT: A „Broadcast” lehet „közvetítés” (műsor/stream) vagy „szórás” (rádiós/technikai értelemben); itt címkeként a legvalószínűbb UI-jelentésű „Közvetítés:”-t választottam.
@@ -1115,6 +1124,9 @@ msgstr ""
 msgid "Comedy"
 msgstr ""
 
+msgid "Commentator"
+msgstr ""
+
 #, fuzzy
 msgid "Comments"
 msgstr "Commits"
@@ -1266,6 +1278,9 @@ msgstr "Készítő:"
 msgid "Creators:"
 msgstr "Készítők:"
 
+msgid "Cricket"
+msgstr ""
+
 msgid "Crime"
 msgstr ""
 
@@ -1313,6 +1328,9 @@ msgstr ""
 
 msgid "Darkgray"
 msgstr "Sötétszürke"
+
+msgid "Darts"
+msgstr ""
 
 msgid "Date"
 msgstr "Dátum"
@@ -2156,6 +2174,9 @@ msgstr "Kedvencek kezelője"
 msgid "Featured"
 msgstr ""
 
+msgid "FebBox token (\"ui\" cookie of www.febbox.com):"
+msgstr ""
+
 #, python-format
 msgid "File \"%s\" already exists"
 msgstr "A(z) \"%s\" fájl már létezik"
@@ -2292,6 +2313,9 @@ msgstr ""
 msgid "Foot & Ankle"
 msgstr "Láb és boka"
 
+msgid "Football"
+msgstr ""
+
 msgid "Football Live"
 msgstr ""
 
@@ -2358,6 +2382,9 @@ msgid "Full test checks the stream link :"
 msgstr ""
 
 msgid "Full test checks thumbnails :"
+msgstr ""
+
+msgid "Futsal"
 msgstr ""
 
 msgid "GREEN"
@@ -2480,6 +2507,9 @@ msgstr "HTTPS csatlakozási hiba: \"%s\"\n"
 msgid "Hand"
 msgstr "Kéz"
 
+msgid "Handball"
+msgstr ""
+
 msgid "Health"
 msgstr ""
 
@@ -2514,6 +2544,9 @@ msgstr "Filmtörténet"
 
 msgid "History of searched phrases."
 msgstr "Keresési előzmények."
+
+msgid "Hockey"
+msgstr ""
 
 msgid "Home"
 msgstr "Főoldal"
@@ -2897,6 +2930,10 @@ msgstr "Legfrissebb"
 msgid "Last week"
 msgstr "egy hét után"
 
+#, python-format
+msgid "Last week: %s"
+msgstr ""
+
 msgid "Last.fm charts and tag pages are behind a browser check, only the radio stations can be used."
 msgstr ""
 
@@ -3155,6 +3192,9 @@ msgstr "Leghosszabb"
 msgid "Longest"
 msgstr "Leghosszabb"
 
+msgid "Loved tracks"
+msgstr ""
+
 msgid "Low"
 msgstr "Alacsony"
 
@@ -3229,6 +3269,9 @@ msgstr "Elemek maximális száma oldalonként"
 
 msgid "Max number of parallel downloads has been reached."
 msgstr "Elérte a párhuzamos letöltések maximális számát."
+
+msgid "MaxStream (uprot.net) asks for its image captcha: solve it in MyE2i, then open the video again."
+msgstr ""
 
 #, fuzzy
 msgid "Maximum log file size"
@@ -3323,9 +3366,6 @@ msgstr ""
 msgid "Most popular"
 msgstr "Legnépszerűbb"
 
-msgid "Most rated"
-msgstr "Legtöbbre értékelt"
-
 msgid "Most recent"
 msgstr "Legfrissebb"
 
@@ -3336,6 +3376,12 @@ msgid "Most viewed movies"
 msgstr ""
 
 msgid "Most viewed series"
+msgstr ""
+
+msgid "Most voted"
+msgstr ""
+
+msgid "Motorsport"
 msgstr ""
 
 #, python-format
@@ -3410,6 +3456,9 @@ msgstr "MyE2i Cloudflare megoldás"
 msgid "MyE2i browser check solution"
 msgstr "MyE2i Cloudflare megoldás"
 
+msgid "MyE2i captcha: solve it, then Job (no CONTINUE)"
+msgstr ""
+
 msgid "MyE2i debug snapshot received - see the debug log."
 msgstr ""
 
@@ -3437,6 +3486,9 @@ msgid "MyE2i: close the start page when done"
 msgstr ""
 
 msgid "MyE2i: offer to open the page in (Android)"
+msgstr ""
+
+msgid "Mystery"
 msgstr ""
 
 msgid ""
@@ -3671,6 +3723,13 @@ msgstr ""
 msgid "Now"
 msgstr "Nem"
 
+msgid "Now playing"
+msgstr ""
+
+#, python-format
+msgid "Now playing: %s"
+msgstr ""
+
 msgid "Number of columns"
 msgstr "Oszlopok száma"
 
@@ -3893,6 +3952,10 @@ msgid "Pathology Rounds"
 msgstr "Patológiai körök"
 
 msgid "Patriotism"
+msgstr ""
+
+#, python-format
+msgid "Peak: %s"
 msgstr ""
 
 msgid "Pediatrics"
@@ -4248,9 +4311,6 @@ msgstr "Lejátszási lista véletlenszerűsítése"
 msgid "Range request not supported (resume failed)."
 msgstr ""
 
-msgid "Ranking"
-msgstr "Rangsor"
-
 msgid "Rated"
 msgstr ""
 
@@ -4320,6 +4380,9 @@ msgid "Refusing to empty \"%s\" - this does not look like a dedicated cache/conf
 msgstr ""
 
 msgid "Regions"
+msgstr ""
+
+msgid "Related seasons and works"
 msgstr ""
 
 msgid "Release"
@@ -4803,6 +4866,9 @@ msgstr ""
 msgid "Short Movies"
 msgstr "Rövidfilmek"
 
+msgid "Short films"
+msgstr ""
+
 msgid "Short series"
 msgstr ""
 
@@ -4895,6 +4961,9 @@ msgstr "Keresési előzmények"
 msgid "Show suggestions"
 msgstr "Javaslatok megjelenítése"
 
+msgid "ShowBox streams need a FebBox login: enter the \"ui\" cookie of your FebBox account in the host configuration."
+msgstr ""
+
 msgid "Shows"
 msgstr "Műsorok"
 
@@ -4953,6 +5022,9 @@ msgstr "Nyúzók:"
 
 msgid "Skip video shorter than [min]"
 msgstr "[percnél rövidebb videó kihagyása"
+
+msgid "Snooker"
+msgstr ""
 
 msgid "Society"
 msgstr ""
@@ -5055,6 +5127,9 @@ msgstr "Alapértelmezés szerint indítsa el a letöltéskezelőt"
 
 msgid "Station:"
 msgstr "Gyűjtőállomás:"
+
+msgid "Status"
+msgstr ""
 
 msgid "Status:"
 msgstr "Állapot:"
@@ -5334,6 +5409,9 @@ msgstr ""
 msgid "Temp"
 msgstr ""
 
+msgid "Tennis"
+msgstr ""
+
 msgid "Test the failed sites again"
 msgstr ""
 
@@ -5356,14 +5434,6 @@ msgid "The %s utility is necessary here but it was not detected."
 msgstr "A %s segédprogram szükséges itt, de a rendszer nem észlelte."
 
 msgid "The 100 tags with the most videos"
-msgstr ""
-
-msgid ""
-"The 7reels / cineb resolvers 'VidEasy', 'VidCore/VidFast', 'VidLink' and 'Peachify' cannot decrypt their links on the receiver.\n"
-"\n"
-"With this option ON, every time you open one of them E2iPlayer sends the site's encrypted stream token - which contains the TMDb id of the movie or episode you are opening - to the third-party web service enc-dec.app (operated by a private individual). That server then sees the id and your IP address on each play. Nothing else is transmitted, and it is only used for these four resolvers.\n"
-"\n"
-"Leave this OFF if you do not want that. The other resolvers (AdRock/vidrock, VidNest, ...) are not affected."
 msgstr ""
 
 msgid "The OpenSubtitles v3 server did not answer. Please try again later."
@@ -5496,6 +5566,9 @@ msgstr ""
 msgid "The link could not be resolved."
 msgstr "A felhasználói hivatkozást nem sikerült törölni."
 
+msgid "The link has expired. Please open the video again."
+msgstr ""
+
 msgid "The list has changed, please try again."
 msgstr ""
 
@@ -5532,6 +5605,14 @@ msgstr ""
 msgid "The request has no valid length."
 msgstr ""
 
+msgid ""
+"The resolvers 'VidCore', 'VidUp' and 'VidFast' cannot decrypt their links on the receiver.\n"
+"\n"
+"With this option ON, every time you open one of them E2iPlayer sends the site's encrypted stream token - which contains the TMDb id of the movie or episode you are opening - to the third-party web service enc-dec.app (operated by a private individual). That server then sees the id and your IP address on each play. Nothing else is transmitted, and it is only used for these three resolvers.\n"
+"\n"
+"Leave this OFF if you do not want that. The other resolvers (VidEasy, VidLink, Peachify, vidrock, VidNest, ...) decrypt their links on the receiver and are not affected."
+msgstr ""
+
 msgid "The same item already exists in this group."
 msgstr "Ugyanez az elem már létezik ebben a csoportban."
 
@@ -5550,6 +5631,10 @@ msgstr ""
 msgid "The settings are protected by a PIN, change them on the receiver."
 msgstr ""
 
+#, python-format
+msgid "The site did not answer with data (HTTP %s). It may be down or have moved."
+msgstr ""
+
 msgid "The site has no player for this video (it only shows a cam advert)."
 msgstr ""
 
@@ -5557,6 +5642,9 @@ msgid "The site refuses all qualities of this video at the moment (HTTP 403). Tr
 msgstr ""
 
 msgid "The site rejected the search request."
+msgstr ""
+
+msgid "The site's browser check (Cloudflare) could not be passed. The site may also be blocked in your country."
 msgstr ""
 
 msgid "The site's browser check could not be passed."
@@ -5884,6 +5972,9 @@ msgid "Total size:"
 msgstr "Teljes méret:"
 
 msgid "Tourism"
+msgstr ""
+
+msgid "Tournament"
 msgstr ""
 
 msgid "Tracklist"
@@ -6235,6 +6326,9 @@ msgstr "Virtuális billentyűzet típusa"
 msgid "Voice-over"
 msgstr ""
 
+msgid "Volleyball"
+msgstr ""
+
 msgid "WWE shows"
 msgstr ""
 
@@ -6258,6 +6352,13 @@ msgstr "Figyelés"
 msgid "Watch online"
 msgstr ""
 
+msgid "WebStreamr / AIOStreams manifest URL (your own):"
+msgstr ""
+
+#, python-format
+msgid "Weeks on chart: %s"
+msgstr ""
+
 msgid "Western"
 msgstr ""
 
@@ -6277,6 +6378,9 @@ msgid "Wiki"
 msgstr ""
 
 msgid "Winter"
+msgstr ""
+
+msgid "Winter sports"
 msgstr ""
 
 msgid "With an API key from subdl.com (E2iPlayer settings, Subtitles) the official SubDL API is searched as well."
@@ -6677,6 +6781,12 @@ msgstr "https"
 
 msgid "https - validate SSL certificates"
 msgstr "https - SSL tanúsítványok érvényesítése"
+
+msgid "iTunes - Top albums by country"
+msgstr ""
+
+msgid "iTunes - Top songs by country"
+msgstr ""
 
 msgid "insert space"
 msgstr ""
