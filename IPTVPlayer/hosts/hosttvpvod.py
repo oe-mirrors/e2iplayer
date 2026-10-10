@@ -45,7 +45,7 @@ config.plugins.iptvplayer.tvpvod_proxy = ConfigSelection(default="None", choices
 # both are only kept to move an existing setup over to one of the alternative proxies
 config.plugins.iptvplayer.tvpVodProxyEnable = ConfigYesNo(default=False)
 config.plugins.iptvplayer.proxyurl = ConfigText(default="http://user:pass@ip:port", fixed_size=False)  # NOSONAR
-config.plugins.iptvplayer.tvpVodDefaultformat = ConfigSelection(default="9100000",choices=[("360000", "320x180"),
+config.plugins.iptvplayer.tvpVodDefaultformat = ConfigSelection(default="9100000", choices=[("360000", "320x180"),
                                                                                                ("590000", "398x224"),
                                                                                                ("820000", "480x270"),
                                                                                                ("1250000", "640x360"),
