@@ -1,40 +1,48 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 05.09.2026
+# Last Modified: 10.10.2026
 ###################################################
 # 2026-08-28 - add automatic videa-quality - by Blindspot
 # 2026-09-05 - add VideaKid + VideaTon - by Blindspot
+# 10.10.2026 - host standard: no requests to figyelmeztetes.hu any more (usage counter with the box's
+#   /etc/issue id, remote uploader filter list) and the "id:" option that drove them; py2 runs again (no
+#   urllib.parse), plain requests instead of the Cloudflare path (the site has none), links are the
+#   videa player url of the video id (no page request; resolved by urlparser parserVIDEA, also for Videa
+#   Kid and the Videaton audio), covers from the list's background image, First/Jump/Next paging for
+#   categories, "Next page" with First page for channels and search (lazy lists), Videaton (one page with
+#   ~1000 entries) paged locally, watched flag (channel -> video), favourites, sidecar, INFO from the
+#   video page (description, length, upload date, views, uploader), English menu texts
+# 10.10.2026 - review: favourites of the old version (any row could be saved then) reopen - channels and their
+#   sort tabs / lazy "Next page" rows as the channel, search rows as the search
 ###################################################
-HOST_VERSION = "1.8"
+HOST_VERSION = "1.9"
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, MergeDicts
-from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
-from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist, getF4MLinksWithMeta, getMPDLinksWithMeta
-from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
-###################################################
-
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
+from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
+from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
+from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 ###################################################
 # FOREIGN import
 ###################################################
 from Components.config import config, ConfigYesNo, getConfigListEntry
 import re
-import random
-import urllib.parse
 ###################################################
 
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.videa_id = ConfigYesNo(default=False)
+# also read by urlparser.parserVIDEA (only the best quality as link)
 config.plugins.iptvplayer.videa_quality = ConfigYesNo(default=False)
 
 
 def GetConfigList():
     optionList = []
-    optionList.append(getConfigListEntry("id:", config.plugins.iptvplayer.videa_id))
     optionList.append(getConfigListEntry(_("Select best available quality"), config.plugins.iptvplayer.videa_quality))
     return optionList
 
@@ -46,313 +54,283 @@ def gettytul():
     return "Videa"
 
 
-class videa(CBaseHostClass):
+LAZY_PER_PAGE = 36  # a channel page / one lazy request answers 36 videos
+LOCAL_PER_PAGE = 100  # Videaton: the whole catalogue (~1000 entries) on one page
+
+
+class videa(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     def __init__(self):
         CBaseHostClass.__init__(self, {"history": "videa", "cookie": "videa.cookie"})
-        self.USER_AGENT = "User-Agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"
         self.HEADER = self.cm.getDefaultHeader()
         self.DEFAULT_ICON_URL = "https://videa.hu/static/uis/redesign/images/product-logos/videa-logo-footer.png"
         self.MAIN_URL = "https://videa.hu"
-        self.vmkrs = self.MAIN_URL + "/kereses"
-        self.aid = config.plugins.iptvplayer.videa_id.value
-        self.vszkzrs = []
-        self.defaultParams = {"header": self.HEADER, "use_cookie": False, "load_cookie": False, "save_cookie": False, "cookiefile": self.COOKIE_FILE}
+        self.defaultParams = {"header": self.HEADER, "use_cookie": False, "load_cookie": False, "save_cookie": False}
+        self.watchedHelper = IPTVWatchedHelper("videa")
+        self.wfInitFolderCache()
+        self.localCache = ("", [])  # (url, item blocks) of the last Videaton page
 
-    def _uriIsValid(self, url):
-        return "://" in url
-
-    def getFullIconUrl(self, url):
-        url = url.replace("&amp;", "&")
-        return CBaseHostClass.getFullIconUrl(self, url)
-
-    def getPage(self, baseUrl, addParams={}, post_data=None):
-        if addParams == {}:
+    def getPage(self, url, addParams=None, post_data=None):
+        if addParams is None:
             addParams = dict(self.defaultParams)
+        return self.cm.getPage(url, addParams, post_data)
 
-        def _getFullUrl(url):
-            if self.cm.isValidUrl(url):
-                return url
-            return urllib.parse.urljoin(baseUrl, url)
+    def getFullIconUrl(self, url, currUrl=None):
+        return CBaseHostClass.getFullIconUrl(self, url.replace("&amp;", "&"), currUrl)
 
-        addParams["cloudflare_params"] = {"domain": self.up.getDomain(baseUrl), "cookie_file": self.COOKIE_FILE, "User-Agent": self.USER_AGENT, "full_url_handle": _getFullUrl}
-        return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
-
-    def listMainMenu(self, cItem):
+    ###################################################
+    # watched flag
+    ###################################################
+    def _getWatchedKeyForItem(self, cItem):
         try:
-            tab_kat = "videa_kategoriak"
-            desc_kat = self.getdvdsz(tab_kat, "Videa kategóriáinak megjelenítése...")
-            tab_csat = "videa_csatornak"
-            desc_csat = self.getdvdsz(tab_csat, "Videa csatornáinak megjelenítése...")
-            MAIN_CAT_TAB = [
-                {"category": "list_main", "title": _("Categories"), "tab_id": tab_kat, "desc": desc_kat},
-                {"category": "list_main", "title": _("Channels"), "tab_id": tab_csat, "desc": desc_csat},
-                {"category": "list_items", "title": "Videa Kid", "url": "https://videakid.hu/", "icon": "https://videakid.hu/static/uis/redesign/images/product-logos/videakid-logo.png", "desc": "Videa Kid videóinak megjelenítése"},
-                {"category": "list_items", "title": "Videaton", "url": self.MAIN_URL + "/videaton", "icon": "https://videa.hu/static/uis/redesign/images/product-logos/videaton-logo.png", "videaton_mode": True, "desc": "Videaton videóinak megjelenítése"},
-            ] + self.searchItems()
-            self.listsTab(MAIN_CAT_TAB, {"name": "category"})
+            if not isinstance(cItem, dict) or cItem.get("search_item"):
+                return ""
+            if cItem.get("type") in ("video", "audio"):
+                vid = cItem.get("vid", "") or self._videoId(cItem.get("url", ""))
+                return "video:%s" % vid if vid else ""
+            if cItem.get("category") == "list_items" and cItem.get("channel_mode") and cItem.get("ch_url"):
+                return "folder:channel:%s" % cItem["ch_url"]
         except Exception:
-            return
+            printExc()
+        return ""
+
+    @staticmethod
+    def _videoId(url):
+        # https://videa.hu/videok/<cat>/<slug>-<16 char id> | .../player?v=<id>
+        m = re.search(r"(?:[-/]|v=)([A-Za-z0-9]{16})(?:[?#&]|$)", url or "")
+        return m.group(1) if m else ""
+
+    ###################################################
+    # lists
+    ###################################################
+    def listMainMenu(self, cItem):
+        MAIN_CAT_TAB = [
+            {"category": "list_main", "title": _("Categories"), "tab_id": "videa_kategoriak"},
+            {"category": "list_main", "title": _("Channels"), "tab_id": "videa_csatornak"},
+            {"category": "list_items", "title": "Videa Kid", "url": "https://videakid.hu/", "icon": "https://videakid.hu/static/uis/redesign/images/product-logos/videakid-logo.png", "single_page": True, "good_for_fav": True},
+            {"category": "list_items", "title": "Videaton", "url": self.MAIN_URL + "/videaton", "icon": "https://videa.hu/static/uis/redesign/images/product-logos/videaton-logo.png", "videaton_mode": True, "good_for_fav": True},
+        ] + self.searchItems()
+        self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listMainItems(self, cItem):
-        try:
-            self.vszkzrs = self.malvadkiszrz()
-            tabID = cItem.get("tab_id", "")
-            if tabID == "videa_kategoriak":
-                self.Vdktgrk(cItem, tabID)
-            elif tabID == "videa_csatornak":
-                self.Vdcstrnk(cItem, tabID)
-        except Exception:
-            return
-
-    def _listMainSection(self, cItem, tabID, items, descSuffix):
-        mlt = []
-        try:
-            for item in items:
-                url = self.cm.ph.getSearchGroups(item, "href=['\"]([^\"']+?)['\"]")[0]
-                if url.startswith("/"):
-                    url = self.MAIN_URL + url
-                if not self.cm.isValidUrl(url):
-                    continue
-                title = self.cm.ph.getSearchGroups(item, "text\"[>]([^\"']+?)[<]")[0].capitalize()
-                desc = self.getdvdsz(url, '"' + title + '" ' + descSuffix)
-                params = MergeDicts(cItem, {"good_for_fav": False, "category": "list_second", "title": title, "url": url, "icon": "", "desc": desc, "tab_id": tabID})
-                mlt.append(params)
-            if len(mlt) > 0:
-                random.shuffle(mlt)
-                for ipv in mlt:
-                    self.addDir(ipv)
-        except Exception:
-            return
-
-    def Vdktgrk(self, cItem, tabID):
         sts, data = self.getPage(self.MAIN_URL)
-        if not sts or len(data) == 0:
+        if not sts:
             return
-        data = data.split('class="category-item">')
-        del data[0]
-        self._listMainSection(cItem, tabID, data, "kategória videóinak megjelenítése...")
-
-    def Vdcstrnk(self, cItem, tabID):
-        sts, data = self.getPage(self.MAIN_URL)
-        if not sts or len(data) == 0:
-            return
-        data = self.cm.ph.getDataBeetwenMarkers(data, 'title list-opener">', "</ul>")[1]
-        if len(data) == 0:
-            return
-        data = data.split("<li>")
-        del data[0]
-        self._listMainSection(cItem, tabID, data, " csatorna videóinak megjelenítése...")
+        if cItem.get("tab_id") == "videa_kategoriak":
+            blocks = data.split('class="category-item">')[1:]
+            nextCategory = "list_second"
+        else:
+            data = self.cm.ph.getDataBeetwenMarkers(data, 'list-opener">Channels', "</ul>", False)[1] or self.cm.ph.getDataBeetwenMarkers(data, 'title list-opener">', "</ul>")[1]
+            blocks = data.split("<li>")[1:]
+            nextCategory = "list_items"
+        for item in blocks:
+            url = self.cm.ph.getSearchGroups(item, r"href=['\"]([^\"']+?)['\"]")[0]
+            title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'class="menu-text">([^<]+)<')[0])
+            if not url or not title:
+                continue
+            url = self.getFullUrl(url)
+            icon = self.cm.ph.getSearchGroups(item, r"background-image:url\('([^']+)'\)")[0]
+            params = {"name": "category", "good_for_fav": True, "category": nextCategory, "title": title[:1].upper() + title[1:], "url": url, "icon": self.getFullIconUrl(icon.replace("http://", "https://")) if icon else ""}
+            if nextCategory == "list_items":
+                params.update({"channel_mode": True, "ch_url": url})
+            self.addDir(params)
 
     def listSecondItems(self, cItem):
-        try:
-            tabID = cItem.get("tab_id", "")
-            if tabID in ("videa_kategoriak", "videa_csatornak"):
-                url = cItem["url"]
-                CAT_TAB = [{"category": "list_items", "title": "Feltöltés ideje szerint", "url": url + "?page=1", "desc": ""}, {"category": "list_items", "title": "Nézettség szerint", "url": url + "?popular&page=1", "desc": ""}, {"category": "list_items", "title": "Legrégebbi elöl", "url": url + "?oldest&page=1", "desc": ""}]
-                self.listsTab(CAT_TAB, cItem)
-        except Exception:
+        url = cItem["url"].split("?")[0]
+        sortTab = [{"title": _("Most recent"), "page_tpl": url + "?page={page}"},
+                   {"title": _("Most viewed"), "page_tpl": url + "?popular&page={page}"},
+                   {"title": "Oldest first", "page_tpl": url + "?oldest&page={page}"}]
+        for item in sortTab:
+            params = dict(cItem)
+            params.update({"category": "list_items", "good_for_fav": True, "page": 1, "url": item["page_tpl"].format(page=1)})
+            params.update(item)
+            self.addDir(params)
+
+    def _addItem(self, cItem, item):
+        url = self.cm.ph.getSearchGroups(item, r'<h2 class="title"><a href="([^"]+)"')[0] or self.cm.ph.getSearchGroups(item, r"<a\shref=['\"]([^\"']+?)['\"]\saria-label")[0]
+        if not self.cm.isValidUrl(url):
             return
+        title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'<h2 class="title"><a [^>]*title="([^"]*)"')[0] or self.cm.ph.getSearchGroups(item, r'aria-label="([^"]+)"')[0])
+        title = title.replace("<unknown> - ", "")
+        if not title:
+            return
+        icon = self.cm.ph.getSearchGroups(item, r'data-image="([^"]+)"')[0] or self.cm.ph.getSearchGroups(item, r"background-image:url\('([^']+)'\)")[0]
+        length = self.cm.ph.getSearchGroups(item, r'class="length">([0-9:]+)<')[0]
+        hd = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<div class="hd">', "</div>", False)[1])
+        uploader = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'<a href="/tagok/[^"]+"\s*>([^<]+)</a>')[0])
+        views = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'class="view-count">([^<]+)<')[0])
+        uploaded = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'class="uploaded-at">([^<]+)<')[0])
+        desc = " | ".join(x for x in (length, hd.upper(), views, uploaded) if x)
+        if uploader:
+            desc += "[/br]" + _("Channel: %s") % uploader
+        params = stripPagerKeys(dict(cItem), ("page_tpl", "lazy_url", "search_pattern", "ch_url", "channel_mode", "search_mode", "videaton_mode", "single_page", "tab_id"))
+        params.update({"good_for_fav": True, "title": title, "url": url, "vid": self._videoId(url), "icon": self.getFullIconUrl(icon) if icon else self.DEFAULT_ICON_URL,
+                       "desc": desc, "uploader": uploader, "category": "video"})
+        if 'videa-list-item podcast"' in item:
+            self.addAudio(params)
+        else:
+            self.addVideo(params)
+
+    def _itemBlocks(self, data):
+        blocks = []
+        for block in data.split('class="col video-item">')[1:]:
+            itemId = self.cm.ph.getSearchGroups(block, r'data-item-id="([^"]+)"')[0]
+            blocks.append((itemId, block))
+        return blocks
 
     def listItems(self, cItem):
-        try:
-            url_ere = cItem["url"]
-            page = cItem.get("page", 1)
-            searchMode = cItem.get("search_mode", False)
-            channelMode = cItem.get("channel_mode", False)
-            # videaton: audio uploads, whole catalogue (~1000 items) on one page.
-            # ?page=N is ignored server-side and /lazy/videaton/ has nothing past
-            # the last item, so no pagination - just list what the page returns.
-            videatonMode = cItem.get("videaton_mode", False)
-            if not searchMode and not channelMode and "/csatornak/" in url_ere:
-                channelMode = True
-            if channelMode:
-                url_ere = re.sub(r"[?&]page=\d+", "", url_ere)
-            elif not searchMode and not videatonMode and page > 0 and "page=" in url_ere:
-                idx1 = url_ere.rfind("page=")
-                url_ere = url_ere[:idx1].strip() + "page=" + str(page)
-            sts, data = self.getPage(url_ere)
-            if not sts or len(data) == 0:
-                return
-            nextPage = False
-            if not searchMode and not channelMode and not videatonMode:
-                nextPage = bool(self.cm.ph.getSearchGroups(data, "next\"\\shref=['\"]([^\"']+?)['\"]")[0])
-            data = data.split('class="col video-item">')
-            del data[0]
-            if channelMode:
-                data = data[:36]
-            lastItemId = ""
-            for item in data:
-                itemId = self.cm.ph.getSearchGroups(item, """data-item-id=['"]([^"']+?)['"]""")[0]
-                if itemId != "":
-                    lastItemId = itemId
-                url = self.cm.ph.getSearchGroups(item, "<a\\shref=['\"]([^\"']+?)['\"]\\sa")[0]
-                if not self.cm.isValidUrl(url):
-                    continue
-                icon = self.cm.ph.getSearchGroups(item, """data-image=['"]([^"']+?)['"]""")[0]
-                if icon == "":
-                    icon = self.DEFAULT_ICON_URL
-                elif icon.startswith("/"):
-                    icon = self.MAIN_URL + icon
-                vszrz = self.cm.ph.getSearchGroups(item, """aria-label=['"]([^"']+?)['"].+\n.+href""")[0]
-                if not vszrz:
-                    vszrz = self.cm.ph.getSearchGroups(item, """uploader.{,50}[>]([^"']+?)[<]/a""")[0]
-                if not vszrz:
-                    vszrz = self.cm.ph.getSearchGroups(item, """tagok[/]([^"']+?)[-"]""")[0]
-                if self.vszkzrs and any(s in vszrz for s in self.vszkzrs):
-                    continue
-                vhz = self.cm.ph.getSearchGroups(item, """length"[>]([0-9:]+?)[<]""")[0]
-                vmsg = self.cm.ph.getDataBeetwenMarkers(item, 'div class="hd">', "</div>", False)[1]
-                if vmsg != "":
-                    vmsg = "  |  " + vmsg
-                title = self.cm.ph.getSearchGroups(item, """aria-label=['"]([^"']+?)['"].+\n.+div""")[0]
-                title = title.replace("<unknown> - ", "")
-                if title == "":
-                    continue
-                ftlv = self.cm.ph.getSearchGroups(item, """uploaded-at"[>]([^"']+?)[<]""")[0]
-                desc = title + "\n" + _("Duration:") + " " + vhz + vmsg + "\nSzerző: " + vszrz + "\nFeltöltve: " + ftlv
-                params = MergeDicts(cItem, {"good_for_fav": False, "title": title, "url": url, "icon": icon, "desc": desc, "tps": "0"})
-                if videatonMode:
-                    self.addAudio(params)
-                else:
-                    self.addVideo(params)
-            if searchMode:
-                if lastItemId != "":
-                    searchPattern = cItem.get("search_pattern", "")
-                    lazyUrl = self.MAIN_URL + "/lazy/kereses/" + urllib.parse.quote_plus(searchPattern) + "?cacheId=" + urllib.parse.quote_plus(searchPattern) + "&lastItemId=" + urllib.parse.quote_plus(lastItemId) + "&itemCount=432&sort=0"
-                    params = dict(cItem)
-                    params.update({"title": _("Next page"), "url": lazyUrl, "category": "list_items", "search_mode": True, "desc": "Nyugi...\nVan még további tartalom, lapozz tovább!"})
-                    self.addDir(params)
-            elif channelMode:
-                if lastItemId != "":
-                    itemCount = self.cm.ph.getSearchGroups(url_ere, "itemCount=([0-9]+)")[0]
-                    count = (int(itemCount) if itemCount else 0) + len(data)
-                    channelUrl = url_ere.split("?")[0]
-                    if "/lazy/csatornak/" not in channelUrl:
-                        channelUrl = channelUrl.replace("/csatornak/", "/lazy/csatornak/")
-                    lazyUrl = "%s?cacheId=&lastItemId=%s&itemCount=%s&sort=0" % (channelUrl, urllib.parse.quote_plus(lastItemId), count)
-                    params = dict(cItem)
-                    params.update({"title": _("Next page"), "url": lazyUrl, "category": "list_items", "channel_mode": True, "desc": "Nyugi...\nVan még további tartalom, lapozz tovább!"})
-                    self.addDir(params)
-            elif nextPage:
-                params = dict(cItem)
-                params.update({"title": _("Next page"), "page": page + 1, "desc": "Nyugi...\nVan még további tartalom, lapozz tovább!"})
-                self.addDir(params)
-        except Exception:
+        if not cItem.get("search_mode") and not cItem.get("ch_url") and "/csatornak/" in cItem.get("url", ""):
+            # channel rows saved by the old version: ".../csatornak/<name>?page=1" or its lazy "Next page" url
+            chUrl = cItem["url"].split("?")[0].replace("/lazy/", "/")
+            cItem = dict(cItem, category="list_items", channel_mode=True, ch_url=chUrl, url=chUrl, page=1)
+        page = max(1, int(cItem.get("page", 1) or 1))
+        if cItem.get("videaton_mode"):
+            self._listLocal(cItem, page)
             return
-
-    def getLinksForVideo(self, cItem):
-        videoUrls = []
-        baseUrl = strwithmeta(cItem["url"])
-        sts, data = self.getPage(baseUrl)
+        lazy = cItem.get("lazy_url", "") if page > 1 else ""
+        if lazy:
+            url = lazy
+        elif cItem.get("page_tpl"):
+            url = cItem["page_tpl"].format(page=page)
+        elif not cItem.get("search_mode") and not cItem.get("channel_mode") and re.search(r"[?&]page=\d+", cItem.get("url", "")):
+            # favourites of the old version (any row could be saved then): "<category>?popular&page=1"
+            cItem = dict(cItem, page_tpl=re.sub(r"([?&]page=)\d+", r"\g<1>{page}", cItem["url"].replace("{", "{{").replace("}", "}}")))
+            url = cItem["page_tpl"].format(page=page)
+        elif cItem.get("search_mode"):
+            url = "%s/kereses/%s" % (self.MAIN_URL, urllib_quote_plus(cItem.get("search_pattern", "")))
+        else:
+            url = cItem.get("ch_url") or cItem["url"]
+        sts, data = self.getPage(url)
         if not sts:
-            return videoUrls
-        url = self.cm.ph.getDataBeetwenMarkers(data, '"embedURL": "', '"', False)[1]
-        if not url:
-            return videoUrls
-        url = url.replace("/v/", "?v=").replace("?autoplay=1", "&autoplay=0")
-        uri = urlparser.decorateParamsFromUrl(url)
-        protocol = uri.meta.get("iptv_proto", "")
-        printDBG("Videa: protocol [%s]" % protocol)
-        urlSupport = self.up.checkHostSupport(uri)
-        if 1 == urlSupport:
-            videoUrls.extend(self.up.getVideoLinkExt(uri))
-        elif 0 == urlSupport and self._uriIsValid(uri):
-            if protocol == "m3u8":
-                videoUrls.extend(getDirectM3U8Playlist(uri, checkExt=False, checkContent=True))
-            elif protocol == "f4m":
-                videoUrls.extend(getF4MLinksWithMeta(uri))
-            elif protocol == "mpd":
-                videoUrls.extend(getMPDLinksWithMeta(uri, False))
+            return
+        blocks = self._itemBlocks(data)
+        if cItem.get("channel_mode") and not lazy:
+            blocks = blocks[:LAZY_PER_PAGE]  # the channel page also lists shorts and podcasts after the videos
+        for _itemId, block in blocks:
+            self._addItem(cItem, block)
+        if cItem.get("single_page") or "videakid.hu" in url or not blocks:
+            return
+        lastId = blocks[-1][0]
+        if cItem.get("page_tpl"):
+            hasNext = bool(re.search(r'rel="next"', data))
+            addPagingItems(self, cItem, page, hasNext, 0, cItem["page_tpl"])
+        elif lastId and len(blocks) >= LAZY_PER_PAGE:
+            if cItem.get("search_mode"):
+                pattern = urllib_quote_plus(cItem.get("search_pattern", ""))
+                lazyUrl = "%s/lazy/kereses/%s?cacheId=%s&lastItemId=%s&itemCount=432&sort=0" % (self.MAIN_URL, pattern, pattern, urllib_quote_plus(lastId))
             else:
-                videoUrls.append({"name": "direct link", "url": uri})
-        return videoUrls
+                chUrl = (cItem.get("ch_url") or cItem["url"]).split("?")[0].replace("/csatornak/", "/lazy/csatornak/")
+                lazyUrl = "%s?cacheId=&lastItemId=%s&itemCount=%d&sort=0" % (chUrl, urllib_quote_plus(lastId), page * LAZY_PER_PAGE)
+            addPagingItems(self, cItem, page, True, 0, "", {"lazy_url": lazyUrl})
 
-    def getdvdsz(self, pu="", psz=""):
-        if pu == "" or psz == "":
-            return ""
-        header = "Videa  v" + HOST_VERSION + "\n" if pu == "videa_kategoriak" else ""
-        if self.aid:
-            n_atnav = self.malvadst("1", "12", pu)
-            if n_atnav != "":
-                if pu == "videa_kategoriak":
-                    header = "ID: " + n_atnav + "  |  Videa  v" + HOST_VERSION + "\n"
-                else:
-                    header = "ID: " + n_atnav + "\n"
-        return header + psz
-
-    def malvadst(self, i_md="", i_hgk="", i_mpu=""):
-        uhe = "https://www.figyelmeztetes.hu/hely/sata/vansatdb.php"
-        try:
-            if i_md == "" or i_hgk == "" or i_mpu == "":
-                return ""
-            sts, data = self.cm.getPage(uhe, self.defaultParams, {"md": i_md, "hgk": i_hgk, "mpu": i_mpu})
-            if not sts or len(data) == 0:
-                return ""
-            data = self.cm.ph.getDataBeetwenMarkers(data, '<div id="div_a_div', "</div>")[1]
-            if len(data) == 0:
-                return ""
-            for item in self.cm.ph.getAllItemsBeetwenMarkers(data, "<input", "/>"):
-                if self.cm.ph.getSearchGroups(item, "id=['\"]([^\"']+?)['\"]")[0] == "vn":
-                    return self.cm.ph.getSearchGroups(item, "value=['\"]([^\"']+?)['\"]")[0]
-            return ""
-        except Exception:
-            return ""
-
-    def malvadkiszrz(self):
-        ukszrz = "https://www.figyelmeztetes.hu/hely/muta/mutasatdbki.php"
-        try:
-            sts, data = self.cm.getPage(ukszrz)
-            if not sts or len(data) == 0:
-                return []
-            return self.cm.ph.getAllItemsBeetwenMarkers(data, "<div>", "</div>", False)
-        except Exception:
-            return []
+    def _listLocal(self, cItem, page):
+        url = cItem["url"]
+        if self.localCache[0] != url or not self.localCache[1]:
+            sts, data = self.getPage(url)
+            if not sts:
+                return
+            self.localCache = (url, self._itemBlocks(data))
+        blocks = self.localCache[1]
+        lastPage = (len(blocks) + LOCAL_PER_PAGE - 1) // LOCAL_PER_PAGE
+        for _itemId, block in blocks[(page - 1) * LOCAL_PER_PAGE:page * LOCAL_PER_PAGE]:
+            self._addItem(cItem, block)
+        if lastPage > 1:
+            addPagingItems(self, cItem, page, page < lastPage, lastPage, url.replace("{", "{{").replace("}", "}}"))
 
     def listSearchResult(self, cItem, searchPattern, searchType):
-        try:
-            cItem = dict(cItem)
-            cItem["url"] = self.vmkrs + "/" + urllib.parse.quote_plus(searchPattern) + "?page=1"
-            cItem["search_pattern"] = searchPattern
-            cItem["search_mode"] = True
-            self.listItems(cItem)
-        except Exception as e:
-            printDBG("Videa search ERROR: listSearchResult [%s]" % str(e))
-            printExc()
+        cItem = dict(cItem)
+        cItem.update({"category": "list_items", "url": "%s/kereses/%s" % (self.MAIN_URL, urllib_quote_plus(searchPattern)), "search_pattern": searchPattern, "search_mode": True})
+        self.listItems(cItem)
+
+    ###################################################
+    # links
+    ###################################################
+    def getLinksForVideo(self, cItem):
+        printDBG("Videa.getLinksForVideo [%s]" % cItem)
+        vid = cItem.get("vid", "") or self._videoId(cItem.get("url", ""))
+        if not vid:
+            # a video url without the id in it: the page names its player
+            sts, data = self.getPage(cItem.get("url", ""))
+            vid = self._videoId(self.cm.ph.getSearchGroups(data, r'"embedURL":\s*"([^"]+)"')[0].split("?")[0]) if sts else ""
+        if not vid:
+            SetIPTVPlayerLastHostError(_("Content not available"))
+            return []
+        urlTab = [{"name": "Videa", "url": "%s/player?v=%s" % (self.MAIN_URL, vid), "need_resolve": 1}]
+        return applySidecarToLinks(urlTab, buildSidecarFromItem(cItem, IsSidecarEnabled()))
+
+    def getVideoLinks(self, videoUrl):
+        printDBG("Videa.getVideoLinks [%s]" % videoUrl)
+        urlTab = self.up.getVideoLinkExt(videoUrl) if self.cm.isValidUrl(videoUrl) else []
+        if not urlTab:
+            SetIPTVPlayerLastHostError(_("Content not available"))
+        return decorateResolvedLinkItems(urlTab, sidecarFromUrlMeta(videoUrl, IsSidecarEnabled()))
+
+    ###################################################
+    # INFO
+    ###################################################
+    def getArticleContent(self, cItem):
+        printDBG("Videa.getArticleContent [%s]" % cItem)
+        title = cItem.get("title", "")
+        text = cItem.get("desc", "")
+        icon = cItem.get("icon", "")
+        other = {}
+        sts, data = self.getPage(cItem.get("url", ""))
+        if sts:
+            title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'<meta property="og:title" content="([^"]*)"')[0]) or title
+            desc = self.cm.ph.getSearchGroups(data, r'<meta property="og:description" content="([^"]*)"')[0]
+            if desc:
+                text = self.cleanHtmlStr(desc.replace("\n", "[/br]")) or text
+            icon = self.cm.ph.getSearchGroups(data, r'<meta property="og:image" content="([^"]+)"')[0] or icon
+            m = re.search(r'"duration":\s*"PT(\d+)H(\d+)M(\d+)S"', data)
+            if m:
+                hours, minutes, seconds = int(m.group(1)), int(m.group(2)), int(m.group(3))
+                other["duration"] = "%d:%02d:%02d" % (hours, minutes, seconds) if hours else "%d:%02d" % (minutes, seconds)
+            date = self.cm.ph.getSearchGroups(data, r'"uploadDate":\s*"([^"]+)"')[0]
+            if date:
+                other["released"] = date
+            views = self.cm.ph.getSearchGroups(data, r'<meta name="description" content="[^"]*?(\d+) alkalommal')[0]
+            if views:
+                other["views"] = views
+        if cItem.get("uploader"):
+            other["station"] = cItem["uploader"]
+        return [{"title": title, "text": text, "images": [{"title": "", "url": self.getFullIconUrl(icon)}] if icon else [], "other_info": other}]
 
     def handleService(self, index, refresh=0, searchPattern="", searchType=""):
-        try:
-            CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
-            name = self.currItem.get("name", "")
-            category = self.currItem.get("category", "")
-            self.currList = []
-            if name is None:
-                self.listMainMenu({"name": "category"})
-            elif category == "list_main":
-                self.listMainItems(self.currItem)
-            elif category == "list_second":
-                self.listSecondItems(self.currItem)
-            elif category == "list_items":
-                self.listItems(self.currItem)
-            elif category in ("search", "search_next_page"):
-                cItem = dict(self.currItem)
-                cItem.update({"search_item": False, "name": "category"})
-                self.listSearchResult(cItem, searchPattern, searchType)
-            elif category == "search_history":
-                self.listsHistory({"name": "history", "category": "search", "tab_id": ""}, "desc", _("Type:") + " ")
-            else:
-                return
-            CBaseHostClass.endHandleService(self, index, refresh)
-        except Exception:
-            return
+        CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
+        if isJumpItem(self.currItem):
+            self.currItem = jumpTarget(self, self.currItem)
+        name = self.currItem.get("name", "")
+        category = self.currItem.get("category", "")
+        printDBG("Videa.handleService name[%s] category[%s]" % (name, category))
+        self.currList = []
+        if name is None:
+            self.listMainMenu({"name": "category"})
+        elif category == "list_main":
+            self.listMainItems(self.currItem)
+        elif category == "list_second" and "/csatornak/" in self.currItem.get("url", ""):
+            self.listItems(self.currItem)  # a channel saved by the old version (it had sort tabs too)
+        elif category == "list_second":
+            self.listSecondItems(self.currItem)
+        elif category == "list_items":
+            self.listItems(self.currItem)
+        elif category in ("search", "search_next_page"):
+            cItem = dict(self.currItem)
+            cItem.update({"search_item": False, "name": "category"})
+            self.listSearchResult(cItem, searchPattern, searchType)
+        elif category == "search_history":
+            self.listsHistory({"name": "history", "category": "search", "tab_id": ""}, "desc", _("Type:") + " ")
+        else:
+            printExc()
+        CBaseHostClass.endHandleService(self, index, refresh)
 
 
-class IPTVHost(CHostBase):
+class IPTVHost(GenericFolderWatchedHostMixin, CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, videa(), True, [])
+        self.cachedRet = None
+        self.refreshAfterWatchedFlagChange = False
+        self.watchedHelper = IPTVWatchedHelper("videa")
 
     def withArticleContent(self, cItem):
-        if cItem["type"] != "article":
-            return False
-        return True
+        return cItem.get("type") in ("video", "audio") and self.host.cm.isValidUrl(cItem.get("url", ""))

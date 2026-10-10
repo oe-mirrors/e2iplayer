@@ -525,7 +525,6 @@
   "cdapl",
   "dailymotion",
   "tvjworg",
-  "kijknl",
   "rtbfbe",
   "playrtsiw",
   "kabarety",

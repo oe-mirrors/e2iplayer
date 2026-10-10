@@ -1,29 +1,33 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 22.06.2025
+# Last Modified: 10.10.2026
 # 15.07.2022 - Blindspot
+# 10.10.2026 - host standard: the lists are read from the list page itself (one request instead of one per
+#   station; a station with several channels opens as a folder), radio / TV / webcam told apart by the stream
+#   format of the row (MP3/AAC -> audio, else video, MJPEG webcams as their stream), First/Jump/Next paging with the last
+#   page, favourites (stations and channels reopen from their own page), INFO from the station page
+#   (description, website, genre, audio/stream info, status, listeners, last 10 tracks), links: the direct
+#   stream plus the site's own proxy/HLS link, MTVA channels (M1, M2, M4 Sport, M5, Duna ...) through the
+#   mediaklikk player, YouTube webcams through urlparser; English menu texts, no crash on an empty page
+# 10.10.2026 - review: the last page only when the site's pager shows it (its 9-number window made
+#   "Next page (2/9)" and a Jump limit of 9 on longer lists)
 ###################################################
-HOST_VERSION = "1.4"
+HOST_VERSION = "1.5"
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, MergeDicts
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
+from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
+from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
+from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
-from Plugins.Extensions.IPTVPlayer.libs import ph
-from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist, getF4MLinksWithMeta, getMPDLinksWithMeta
-###################################################
-
+from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 ###################################################
 # FOREIGN import
 ###################################################
-import os
-###################################################
-
-###################################################
-# E2 GUI COMPONENTS
-###################################################
-from Screens.MessageBox import MessageBox
+import re
 ###################################################
 
 
@@ -35,210 +39,253 @@ def gettytul():
     return 'https://onlinestream.live/'
 
 
+LIST_URL = 'https://onlinestream.live/main.cgi?search=%s&broad=%s&feat=&chtype=&server=&format=&sort=%s&fp=20&p={page}'
+MEDIAKLIKK_PLAYER = 'https://player.mediaklikk.hu/playernew/player.php?video=%s&noflash=yes&osfamily=Android&osversion=7.0&browsername=Chrome%%20Mobile&browserversion=&title=&contentid=%s&embedded=1'
+M3_API = 'https://nemzetiarchivum.hu/api/m3/v3/stream?target=live'
+AUDIO_FORMATS = ('MP3', 'AAC', 'OGG', 'OPUS', 'FLAC', 'WMA')
+
+
 class OnlineStream(CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'onlinestream', 'cookie': 'onlinestream.cookie'})
-        self.MAIN_URL = 'https://onlinestream.live/'
+        self.MAIN_URL = gettytul()
         self.DEFAULT_ICON_URL = "https://raw.githubusercontent.com/oe-mirrors/e2iplayer/refs/heads/gh-pages/Thumbnails/onlinestream.jpg"
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
         self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
-    def getPage(self, url, addParams={}, post_data=None):
-        if addParams == {}:
+    def getPage(self, url, addParams=None, post_data=None):
+        if addParams is None:
             addParams = dict(self.defaultParams)
         return self.cm.getPage(url, addParams, post_data)
 
-    def _uriIsValid(self, url):
-        return '://' in url
-
-    def _isPicture(self, url):
-        def _checkExtension(url):
-            return url.endswith(".jpeg") or url.endswith(".jpg") or url.endswith(".png") or url.endswith(".mjpg") or url.endswith(".cgi")
-        if _checkExtension(url):
-            return True
-        if _checkExtension(url.split('|')[0]):
-            return True
-        if _checkExtension(url.split('?')[0]):
-            return True
-        return False
-
-    def getLinksForVideo(self, cItem):
-        printDBG('OnlineStream.getLinksForVideo')
-        sts, data = self.cm.getPage(cItem['url'])
-        if not sts:
-            return
-        videoUrls = []
-        dat = self.cm.ph.getDataBeetwenMarkers(data, '<li><a target="_blank" href="', '">', False)[1]
-        if dat == "":
-            dat = self.cm.ph.getDataBeetwenMarkers(data, '<li><a href="', '">', False)[1]
-            dat = "https://onlinestream.live" + dat
-            sts, data = self.cm.getPage(dat)
-            if not sts:
-                return
-            dat = self.cm.ph.getDataBeetwenMarkers(data, "https://", "m3u8")[1]
-        if cItem['title'] == 'M3':
-            url = "https://archivum.mtva.hu/api/m3/v3/stream?target=live"
-            sts, data = self.cm.getPage(url)
-            dat = self.cm.ph.getDataBeetwenMarkers(data, '"url":"', '","', False)[1]
-            dat = dat.replace(r'\/', '/').replace("HLS.smil", "nodrm.smil")
-        if self._isPicture(dat):
-            dat = dat.replace("mjpg", "jpg")
-            dat = dat.replace("video", "image")
-        uri = urlparser.decorateParamsFromUrl(dat)
-        protocol = uri.meta.get('iptv_proto', '')
-        urlSupport = self.up.checkHostSupport(uri)
-        if 1 == urlSupport:
-             retTab = self.up.getVideoLinkExt(uri)
-             videoUrls.extend(retTab)
-        elif 0 == urlSupport and self._uriIsValid(uri):
-           if protocol == 'm3u8':
-               retTab = getDirectM3U8Playlist(uri, checkExt=False, checkContent=True)
-               videoUrls.extend(retTab)
-           elif protocol == 'f4m':
-              retTab = getF4MLinksWithMeta(uri)
-              videoUrls.extend(retTab)
-           elif protocol == 'mpd':
-              retTab = getMPDLinksWithMeta(uri, False)
-              videoUrls.extend(retTab)
-           elif dat.endswith(".jpg"):
-                uri = urlparser.decorateParamsFromUrl(dat, True)
-                videoUrls.append({'name': 'picture link', 'url': uri})
-           else:
-              videoUrls.append({'name': 'direct link', 'url': uri})
-        return videoUrls
-
+    ###################################################
+    # lists
+    ###################################################
     def listMainMenu(self, cItem):
         printDBG('OnlineStream.listMainMenu')
-        page = 1
-        MAIN_CAT_TAB = [{'category': 'list_items', 'title': 'Sugárzó rádiók listázása', 'url': 'https://onlinestream.live/main.cgi?search=&broad=1&feat=&chtype=&server=&format=&sort=listen&fp=20&p=', 'page': page},
-                        {'category': 'list_items', 'title': 'Internetes rádiók listázása', 'url': 'https://onlinestream.live/main.cgi?search=&broad=0&feat=&chtype=&server=&format=&sort=listen&fp=20&p=', 'page': page},
-                        {'category': 'list_items', 'title': 'TV-k listázása', 'url': 'https://onlinestream.live/?search=&broad=7&feat=&chtype=&server=&format=&sort=listenpeak&fp=20&p=', 'page': page},
-                        {'category': 'list_items', 'title': 'Webkamerák listázása', 'url': 'https://onlinestream.live/?search=&broad=4&feat=&chtype=&server=&format=&sort=&fp=20&p=', 'page': page}
-                        ] + self.searchItems()
-        self.listsTab(MAIN_CAT_TAB, cItem)
+        MAIN_CAT_TAB = [{'category': 'list_items', 'title': _('Radio stations'), 'page_tpl': LIST_URL % ('', '1', 'listen')},
+                        {'category': 'list_items', 'title': 'Internet radio stations', 'page_tpl': LIST_URL % ('', '0', 'listen')},
+                        {'category': 'list_items', 'title': _('TV channels'), 'page_tpl': LIST_URL % ('', '7', 'listenpeak')},
+                        {'category': 'list_items', 'title': 'Webcams', 'page_tpl': LIST_URL % ('', '4', '')}]
+        for item in MAIN_CAT_TAB:
+            item.update({'good_for_fav': True, 'page': 1})
+        self.listsTab(MAIN_CAT_TAB + self.searchItems(), cItem)
+
+    def _rowFormat(self, row):
+        formats = re.findall(r'<span class="([A-Z0-9]+)"></span>', row)
+        return formats[0] if formats else ''
+
+    def _rowInfo(self, row):
+        """the fields of one list row"""
+        info = self.cm.ph.getSearchGroups(row, r'href="(/[^"]+/online/\d+-\d+)"')[0]
+        name = self.cleanHtmlStr(self.cm.ph.getSearchGroups(row, r'class="allomasnev_allomasnev[^"]*">([^<]+)<')[0])
+        genre = self.cleanHtmlStr(self.cm.ph.getSearchGroups(row, r'<p class="allomasnev_mufaj[^"]*">([^<]*)<')[0])
+        quality = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(row, '<td class="minoseg', '</td>', False)[1].split('>', 1)[-1]).replace(' ,', ',')
+        listeners = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(row, '<td class="kapcs', '</td>', False)[1].split('>', 1)[-1])
+        track = self.cleanHtmlStr(self.cm.ph.getSearchGroups(row, r'class="allomasnev_szamcim">(.*?)</a>', 1, True)[0])
+        return {'info': info, 'name': name, 'genre': genre, 'quality': quality, 'listeners': listeners, 'track': track, 'format': self._rowFormat(row)}
+
+    def _desc(self, row):
+        parts = [x for x in (row.get('genre', ''), row.get('quality', ''), row.get('listeners', '')) if x]
+        desc = ' | '.join(parts)
+        if row.get('track'):
+            desc += '[/br]%s %s' % (_('Now playing'), row['track'])
+        return desc
+
+    def _addChannel(self, cItem, title, url, icon, desc, fmt):
+        params = stripPagerKeys(dict(cItem), ('page_tpl', 'query'))
+        params.update({'good_for_fav': True, 'category': 'os_channel', 'title': title, 'url': url, 'icon': icon, 'desc': desc, 'stream_format': fmt, 'is_live': True})
+        if fmt in AUDIO_FORMATS:
+            self.addAudio(params)
+        else:
+            # MJPEG webcams too: the picture viewer can not show a multipart stream, and the old
+            # "video -> image" snapshot guess answers 404 on the cameras checked
+            self.addVideo(params)
 
     def listItems(self, cItem):
         printDBG('OnlineStream.listItems')
-        sts, dat = self.getPage(cItem['url'] + str(cItem['page']))
+        try:
+            page = max(1, int(cItem.get('page', 1) or 1))
+        except (TypeError, ValueError):
+            page = 1
+        pageTpl = cItem.get('page_tpl', '')
+        if not pageTpl:
+            # lists saved by the old version: the url ends with "&p="
+            pageTpl = cItem.get('url', '').replace('{', '{{').replace('}', '}}') + '{page}'
+        sts, data = self.getPage(pageTpl.format(page=page))
         if not sts:
             return
-        page = cItem['page']
-        web = self.cm.ph.getDataBeetwenMarkers(dat, '>Lejátszás</th>', '<span class="glyphicon glyphicon-chevron-left">', False)[1]
-        web = str(web)
-        listurl = self.cm.ph.getAllItemsBeetwenMarkers(web, 'href="', '"', False)
-        for i in listurl:
-            if 'online' not in i:
-                listurl.remove(i)
-        listurls = []
-        listitle = []
-        for a in listurl:
-            if "https://onlinestream.live" not in a:
-                a = "https://onlinestream.live" + a
-            test = self.cm.ph.getDataBeetwenMarkers(a, "https://onlinestream.live/", "/online", False)[1]
-            if test not in listitle:
-                listurls.append(a)
-                listitle.append(test)
-        listurl = listurls
-        listurl.pop(0)
-        for i in listurl:
-            sts, data = self.getPage(i)
-            if not sts:
-                return
-            inf = self.cm.ph.getDataBeetwenMarkers(data, 'Állomás általános információi', 'Állapot:')[1]
-            title = self.cm.ph.getDataBeetwenMarkers(inf, 'Név:</td><th>', '</th></tr>', False)[1]
-            url = i
-            icon = self.cm.ph.getDataBeetwenMarkers(inf, 'src="', '"', False)[1]
-            if "https://onlinestream.live" not in icon:
-                icon = "https://onlinestream.live" + icon
-            if icon == 'https://onlinestream.live':
-                icon = None
-            desc = self.cm.ph.getDataBeetwenMarkers(inf, 'Leírás, szlogen:</td><th>', '</th></tr>', False)[1]
-            printDBG(str(desc))
-            descs = self.cm.ph.getDataBeetwenMarkers(data, 'Műsorlista (utolsó 10)', 'Mégtöbb műsor visszamenőleg', False)[1]
-            desctime = self.cm.ph.getAllItemsBeetwenMarkers(descs, '<span class="badge">', '</span>', False)
-            descstr = self.cm.ph.getAllItemsBeetwenMarkers(descs, '<div class="info_tracklist_szamcim">', '</div>', False)
-            odesc = ""
-            if desc:
-                odesc = desc
-                desc = desc + "\n" + "Műsorlista (utolsó 10):"
+        table = data[data.find('>Lejátszás</th>'):] if '>Lejátszás</th>' in data else ''
+        stations = []
+        for row in table.split('<tr class="lista_')[1:]:
+            row = row.split('</tr>')[0]
+            if row.startswith('collapse_'):
+                if stations:
+                    stations[-1]['channels'].append(self._rowInfo(row))
+            elif row.startswith(('paratlan_sor', 'paros_sor')):
+                station = self._rowInfo(row)
+                if not station['info']:
+                    continue
+                logo = self.cm.ph.getSearchGroups(row, r"background-image: url\('([^']+)'\)")[0]
+                station.update({'icon': self.getFullIconUrl(logo) if logo else '', 'channels': []})
+                stations.append(station)
+        for station in stations:
+            channels = station['channels']
+            title = station['name'] or self.cleanHtmlStr(station['info'].split('/')[1].replace('-', ' '))
+            if len(channels) > 1:
+                params = stripPagerKeys(dict(cItem), ('page_tpl', 'query'))
+                params.update({'good_for_fav': True, 'category': 'os_station', 'title': title, 'url': self.getFullUrl(station['info']), 'icon': station['icon'],
+                               'desc': '%s: %d[/br]%s' % (_('Channels'), len(channels), self._desc(station)),
+                               'stream_format': channels[0]['format'] or station['format']})
+                self.addDir(params)
             else:
-               desc = "Műsorlista (utolsó 10):"
-            for i in descstr:
-                if i == "":
-                   descstr[descstr.index(i)] = "Jelenleg nem elérhető a műsortartalom."
-            for i in desctime:
-                desc = str(desc) + "\n" + str(i) + "   " + str(descstr[desctime.index(i)])
-            if desc == odesc + "\n" + "Műsorlista (utolsó 10):":
-                desc = odesc
-            if desc == "Műsorlista (utolsó 10):":
-                desc = "Jelenleg nincs elérhető információ."
-            if title == "":
-                title = "Névtelen"
-            params = {'category': 'list_more', 'title': title, 'icon': icon, 'url': url, 'desc': desc}
-            self.addDir(params)
-        if '<li class="disabled"><a><span class="glyphicon glyphicon-chevron-right">' not in dat:
-            params = {'category': 'list_items', 'title': "Következő oldal", 'icon': None, 'url': cItem['url'], 'page': page + 1}
-            self.addDir(params)
+                row = channels[0] if channels else station
+                fmt = row['format'] or station['format']
+                self._addChannel(cItem, title, self.getFullUrl(row['info'] or station['info']), station['icon'], self._desc(dict(station, **{k: v for k, v in row.items() if v})), fmt)
+        pager = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="pagination">', '</ul>', False)[1]
+        hasNext = bool(pager) and 'disabled"><a><span class="glyphicon glyphicon-chevron-right' not in pager and bool(re.search(r'[?&]p=\d+"[^>]*>(?:<[^>]+>)*<span class="glyphicon glyphicon-chevron-right', pager))
+        # the pager shows a window of 9 numbers; the last page is only known when the window
+        # reaches past it (the numbers after the last page are greyed out) or there is no next page
+        numbers = re.findall(r'<li class="([^"]*)"><a[^>]*>(\d+)</a>', pager)
+        if not hasNext:
+            lastPage = page
+        elif any('disabled' in cls for cls, _num in numbers):
+            lastPage = max([int(num) for cls, num in numbers if 'disabled' not in cls] + [page])
+        else:
+            lastPage = 0
+        addPagingItems(self, dict(cItem, page_tpl=pageTpl), page, hasNext, lastPage, pageTpl)
 
-    def exploreItems(self, cItem):
-        printDBG('OnlineStream.exploreItems')
-        sts, dat = self.getPage(cItem['url'])
+    def listStation(self, cItem):
+        printDBG('OnlineStream.listStation')
+        sts, data = self.getPage(cItem['url'])
         if not sts:
             return
-        data = self.cm.ph.getDataBeetwenMarkers(dat, '<div class="dropdown info_csatornalista_select">', '</a></li></ul></div></div>')[1]
-        printDBG("data " + str(data))
-        if '<a class="ajax_link" href="' not in str(data):
-            params = {'title': cItem['title'], 'icon': cItem['icon'], 'url': cItem['url'], 'desc': cItem['desc'], 'type': None}
-            sts, data = self.cm.getPage(cItem['url'])
-            type = self.cm.ph.getDataBeetwenMarkers(data, '<title>', '</title>', False)[1]
-            if "Online rádió" in type:
-                self.addAudio(params)
-            elif 'MJPEG' in data:
-               params.update({'desc': cItem['desc'] + "\n" + "Az OK gomb lenyomásával a kép automatikusan frissül!"})
-               self.addPicture(params)
+        fmt = cItem.get('stream_format', '')
+        if not fmt:
+            # a station saved as favourite by the old version: the page title tells radio from TV / webcam
+            pageTitle = self.cm.ph.getSearchGroups(data, r'<title>([^<]*)')[0]
+            fmt = 'MP3' if 'Online rádió' in pageTitle else ('MJPEG' if 'MJPEG' in data else 'HLS')
+        select = self.cm.ph.getDataBeetwenMarkers(data, 'info_csatornalista_select', '</ul>', False)[1]
+        channels = re.findall(r'<a class="ajax_link" href="(/[^"]+/online/\d+-\d+)"[^>]*>([^<]+)</a>', select)
+        if not channels:
+            channels = [(cItem['url'].replace(self.MAIN_URL, '/'), cItem['title'])]
+        for href, label in channels:
+            self._addChannel(cItem, self.cleanHtmlStr(label), self.getFullUrl(href), cItem.get('icon', ''), cItem.get('desc', ''), fmt)
+
+    def listSearchResult(self, cItem, searchPattern, searchType):
+        printDBG("OnlineStream.listSearchResult [%s]" % searchPattern)
+        cItem = dict(cItem)
+        cItem.update({'category': 'list_items', 'page': 1, 'page_tpl': LIST_URL % (urllib_quote_plus(searchPattern), '', '')})
+        self.listItems(cItem)
+
+    ###################################################
+    # links
+    ###################################################
+    def _infoField(self, data, label):
+        return self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'<td>%s:</td><th[^>]*>(.*?)</th>' % re.escape(label), 1, True)[0])
+
+    def _mediaklikk(self, name):
+        sts, data = self.getPage(MEDIAKLIKK_PLAYER % (name, name))
+        if not sts:
+            return ''
+        files = re.findall(r'"file":\s*"([^"]+)"', data)
+        url = files[-1].replace('\\/', '/') if files else ''
+        return 'https:' + url if url.startswith('//') else url
+
+    def getLinksForVideo(self, cItem):
+        printDBG('OnlineStream.getLinksForVideo [%s]' % cItem)
+        url = cItem.get('url', '')
+        if '/online/' not in url:
+            return []
+        sts, data = self.getPage(url)
+        if not sts:
+            return []
+        urlTab = []
+        playlists = self.cm.ph.getDataBeetwenMarkers(data, 'Lejátszási listák:', '</ul>', False)[1]
+        direct = ''
+        for href, label in re.findall(r'<a (?:target="_blank" )?href="([^"]+)"><span[^>]*>([^<]*)</span>', playlists):
+            if '&#9658;' in label:
+                direct = href
+        hlsLink = self.cm.ph.getSearchGroups(playlists, r'href="(/play\.m3u8\?[^"]+)"')[0]
+        proxy = self.cm.ph.getSearchGroups(data, r'data-stream-url="(/?play\.cgi\?[^"]+)"')[0]
+        if '/m3/online/' in url and not direct:
+            sts, api = self.getPage(M3_API)
+            try:
+                direct = json_loads(api)['hls']['url'] if sts else ''
+            except Exception:
+                printExc()
+        if 'mkredir' in direct:
+            direct = self._mediaklikk(self.cm.ph.getSearchGroups(direct, r'[?&]video=([^&]+)')[0])
+        fmt = cItem.get('stream_format', '')
+        if direct:
+            if self.up.checkHostSupport(direct) == 1:
+                # YouTube webcams and the like
+                urlTab.append({'name': self.up.getHostName(direct).replace('www.', '').capitalize(), 'url': direct, 'need_resolve': 1})
+            elif '.m3u8' in direct or fmt == 'HLS':
+                urlTab.extend(getDirectM3U8Playlist(direct, checkExt=False, checkContent=True, sortWithMaxBitrate=99999999) or [{'name': 'HLS', 'url': direct}])
             else:
-               self.addVideo(params)
-            return
-        urllist = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a class="ajax_link" href="', '"', False)
-        printDBG("urllist " + str(urllist))
-        help = self.cm.ph.getAllItemsBeetwenMarkers(data, 'data-ajax_link="', '">')
-        printDBG("help " + str(help))
-        for i in urllist:
-            url = "https://onlinestream.live" + i
-            printDBG("url " + url)
-            title = self.cm.ph.getDataBeetwenMarkers(data, help[urllist.index(i)], '</a>', False)[1]
-            printDBG("title " + title)
-            title = title.replace('&nbsp;', '')
-            printDBG("title " + title)
-            params = {'title': title, 'icon': cItem['icon'], 'url': url, 'desc': cItem['desc']}
-            type = self.cm.ph.getDataBeetwenMarkers(dat, '<title>', '</title>', False)[1]
-            if "Online rádió" in type:
-                self.addAudio(params)
-            else:
-               self.addVideo(params)
+                urlTab.append({'name': 'Direct link', 'url': urlparser.decorateParamsFromUrl(direct)})
+        if proxy:
+            urlTab.append({'name': 'OnlineStream proxy', 'url': strwithmeta(self.getFullUrl(proxy.lstrip('/')), {'User-Agent': self.HTTP_HEADER['User-Agent']})})
+        elif hlsLink and not urlTab:
+            urlTab.append({'name': 'OnlineStream HLS', 'url': strwithmeta(self.getFullUrl(hlsLink.lstrip('/')), {'User-Agent': self.HTTP_HEADER['User-Agent']})})
+        if not urlTab:
+            SetIPTVPlayerLastHostError(_("Content not available"))
+        return urlTab
+
+    def getVideoLinks(self, videoUrl):
+        printDBG('OnlineStream.getVideoLinks [%s]' % videoUrl)
+        urlTab = self.up.getVideoLinkExt(videoUrl) if self.cm.isValidUrl(videoUrl) else []
+        if not urlTab:
+            SetIPTVPlayerLastHostError(_("Content not available"))
+        return urlTab
+
+    ###################################################
+    # INFO
+    ###################################################
+    def getArticleContent(self, cItem):
+        printDBG('OnlineStream.getArticleContent [%s]' % cItem)
+        title = cItem.get('title', '')
+        text = cItem.get('desc', '')
+        icon = cItem.get('icon', '')
+        other = {}
+        sts, data = self.getPage(cItem.get('url', ''))
+        if sts:
+            name = self._infoField(data, 'Név')
+            title = name or title
+            textTab = [x for x in (self._infoField(data, 'Leírás, szlogen'), self._infoField(data, 'Weboldal')) if x]
+            for key, label in (('genre', 'Műfaj'), ('quality', 'Audió infó'), ('quality', 'Videó infó'), ('status', 'Állapot'), ('views', 'Kapcsolódások')):
+                value = self._infoField(data, label)
+                if value and key not in other:
+                    other[key] = value
+            tracks = self.cm.ph.getDataBeetwenMarkers(data, 'Műsorlista (utolsó 10)', 'Mégtöbb műsor', False)[1]
+            times = re.findall(r'<span class="badge">([^<]*)</span>', tracks)
+            names = [self.cleanHtmlStr(x) for x in re.findall(r'<div class="info_tracklist_szamcim">(.*?)</div>', tracks, re.S)]
+            lines = ['%s  %s' % (t, n) for t, n in zip(times, names) if n]
+            if lines:
+                textTab.append('%s:[/br]%s' % (_('Tracklist'), '[/br]'.join(lines)))
+            if textTab:
+                text = '[/br][/br]'.join(textTab)
+        return [{'title': title, 'text': text, 'images': [{'title': '', 'url': icon}] if icon else [], 'other_info': other}]
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('OnlineStream.handleService start')
-
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
-
+        if isJumpItem(self.currItem):
+            self.currItem = jumpTarget(self, self.currItem)
         name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        title = self.currItem.get("title", '')
-        icon = self.currItem.get("icon", '')
-        url = self.currItem.get("url", '')
-        desc = self.currItem.get("desc", '')
-
-        printDBG("handleService: >> name[%s], category[%s], title[%s], icon[%s] " % (name, category, title, icon))
+        printDBG("handleService: >> name[%s], category[%s]" % (name, category))
         self.currList = []
 
         if name is None:
             self.listMainMenu({'name': 'category'})
         elif category == 'list_items':
             self.listItems(self.currItem)
-        elif category == 'list_more':
-            self.exploreItems(self.currItem)
-        elif category == 'search':
+        elif category in ('os_station', 'list_more'):
+            # list_more: a station saved by the old version
+            self.listStation(self.currItem)
+        elif category in ('search', 'search_next_page'):
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
@@ -249,16 +296,11 @@ class OnlineStream(CBaseHostClass):
 
         CBaseHostClass.endHandleService(self, index, refresh)
 
-    def listSearchResult(self, cItem, searchPattern, searchType):
-        printDBG("FilmVilag.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
-        searchPattern = searchPattern.replace(" ", "+")
-        url = 'https://onlinestream.live/?search=' + searchPattern + '&broad=&feat=&chtype=&server=&format=&sort=&fp=20&p='
-        cItem['url'] = url
-        cItem['page'] = 1
-        self.listItems(cItem)
-
 
 class IPTVHost(CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, OnlineStream(), True, [])
+
+    def withArticleContent(self, cItem):
+        return '/online/' in cItem.get('url', '') and (cItem.get('type') in ('video', 'audio') or cItem.get('category') == 'os_station')
