@@ -27,11 +27,13 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 ###################################################
 # FOREIGN import
 ###################################################
+from Components.config import config
 from Tools.BoundFunction import boundFunction
 from enigma import eTimer
 from time import sleep
 import datetime
 import os
+import time
 ###################################################
 
 
@@ -76,6 +78,8 @@ class IPTVDMApi():
         # it holds a download slot like a running download
         self.queueRS = []
         self.resolveThread = None
+        # host name -> time the last link lookup of a batch item of that host ended (IPTVDMBatchPause)
+        self.lastBatchLookup = {}
 
         self.onlistChanged = []
 
@@ -404,8 +408,9 @@ class IPTVDMApi():
             if len(self.queueUD) + len(self.queueRS) < self.MAX_DOWNLOAD_ITEM and \
                0 < len(self.queueDQ):
                 if self.needsResolve(self.queueDQ[0]):
-                    # batch item: look up its links first - one at a time, the queue keeps its order
-                    if 0 == len(self.queueRS):
+                    # batch item: look up its links first - one at a time, the queue keeps its order, and not
+                    # before the pause after the last lookup of the same host is over (this timer comes again)
+                    if 0 == len(self.queueRS) and 0 == self._batchPauseLeft(self.queueDQ[0]):
                         self.startResolve(self.queueDQ.pop(0))
                         dListChanged = True
                 else:
@@ -430,6 +435,16 @@ class IPTVDMApi():
     ###################################################
     # batch download: looking up the links of an item
     ###################################################
+    def _batchPauseLeft(self, item):
+        # seconds until the links of this batch item may be looked up (config IPTVDMBatchPause per host)
+        from Plugins.Extensions.IPTVPlayer.iptvdm.batchdownload import batchPauseLeft
+        try:
+            host = item.batchSource.get('host', '')
+            return batchPauseLeft(self.lastBatchLookup.get(host, 0), time.time(), config.plugins.iptvplayer.IPTVDMBatchPause.value)
+        except Exception:
+            printExc()
+        return 0
+
     def startResolve(self, item):
         # the item holds a download slot while its links are looked up in a worker thread
         # (batchdownload.BatchResolveThread); pollResolve() checks it from the main thread
@@ -497,6 +512,11 @@ class IPTVDMApi():
         from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdownloadercreator import IsUrlDownloadable
         if isInRS and item in self.queueRS:
             self.queueRS.remove(item)
+        try:
+            # the pause before the next lookup of this host counts from here
+            self.lastBatchLookup[item.batchSource.get('host', '')] = time.time()
+        except Exception:
+            printExc()
         url, fileExt = None, ''
         if candidates:
             try:

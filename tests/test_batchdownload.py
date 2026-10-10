@@ -145,7 +145,7 @@ def env(tmp_path):
                 PKG + ".components", PKG + ".libs", PKG + ".hosts", PKG + ".p2p3"):
         _stubModule(pkg)
         sys.modules[pkg].__path__ = []
-    cfg = types.SimpleNamespace(plugins=types.SimpleNamespace(iptvplayer=types.SimpleNamespace(ZablokujWMV=_Value(True))))
+    cfg = types.SimpleNamespace(plugins=types.SimpleNamespace(iptvplayer=types.SimpleNamespace(ZablokujWMV=_Value(True), IPTVDMBatchPause=_Value("0"))))
     _stubModule("Components.config", config=cfg)
     _stubModule("Tools.Directories", resolveFilename=lambda *a: '', SCOPE_PLUGINS=0, fileExists=os.path.exists)
     _stubModule("Tools.BoundFunction", boundFunction=lambda fnc, *args: (lambda *more: fnc(*(args + more))))
@@ -188,7 +188,7 @@ def env(tmp_path):
     dmapi = _load(PKG + ".iptvdm.iptvdmapi", os.path.join(ROOT, "iptvdm", "iptvdmapi.py"))
     _Downloader.started = []
     env = types.SimpleNamespace(batch=batch, dmapi=dmapi, STS=iptvdh.DMHelper.STS, strwithmeta=strwithmeta, decorateUrl=decorateUrl,
-                                state=state, marked=marked, asyncQueue=asyncQueue, tmp=str(tmp_path))
+                                state=state, marked=marked, asyncQueue=asyncQueue, tmp=str(tmp_path), cfg=cfg)
     yield env
     sys.modules.clear()
     sys.modules.update(saved)
@@ -609,3 +609,30 @@ def test_list_shows_lookup_between_running_and_waiting(env):
     dm.processDQ()
     dm.processDQ()
     assert [item.status for item in dm.getList()] == [env.STS.DOWNLOADING, env.STS.RESOLVING, env.STS.WAITING]
+
+
+def test_batch_pause_left(env):
+    pauseLeft = env.batch.batchPauseLeft
+    assert pauseLeft(0, 1000.0, "20") == 0          # no lookup of this host yet
+    assert pauseLeft(990.0, 1000.0, "20") == 10
+    assert pauseLeft(970.0, 1000.0, "20") == 0
+    assert pauseLeft(990.0, 1000.0, "0") == 0       # pause off
+    assert pauseLeft(990.0, 1000.0, "x") == 0
+    assert pauseLeft(1010.0, 1000.0, "20") == 0     # clock went back: no endless wait
+
+
+def test_batch_pause_between_lookups_of_one_host(env):
+    # IPTVDMBatchPause: the next lookup of the same host waits, the timer of the download manager comes again
+    env.cfg.plugins.iptvplayer.IPTVDMBatchPause.value = "30"
+    dm = _dm(env, parallel=2)
+    dm.addBatchToDQueue(_batchItems(env, dm, ['E1', 'E2']))
+    dm.processDQ()
+    _finishLookup(env, dm, ['https://cdn.example/e1.mp4'])
+    dm.processDQ()
+    assert len(_FakeThread.instances) == 1 and dm.queueDQ[0].batchSource['title'] == 'E2'
+    assert dm.queueDQ[0].status == env.STS.WAITING
+    # the pause is over
+    host = dm.queueDQ[0].batchSource['host']
+    dm.lastBatchLookup[host] -= 31
+    dm.processDQ()
+    assert len(_FakeThread.instances) == 2 and dm.queueRS[0].batchSource['title'] == 'E2'

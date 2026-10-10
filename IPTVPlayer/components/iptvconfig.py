@@ -80,6 +80,9 @@ config.plugins.iptvplayer.requestedAudioBuffSize = ConfigInteger(256, (1, 10240)
 config.plugins.iptvplayer.IPTVDMRunAtStart = ConfigYesNo(default=False)
 config.plugins.iptvplayer.IPTVDMShowAfterAdd = ConfigYesNo(default=True)
 config.plugins.iptvplayer.IPTVDMMaxDownloadItem = ConfigSelection(default="1", choices=[("1", "1"), ("2", "2"), ("3", "3"), ("4", "4"), ("5", "5"), ("10", "10"), ("20", "20"), ("30", "30"), ("40", "40"), ("50", "50")])
+# batch download: seconds between two link lookups of the same host - sites like s.to protect their links for
+# visitors without a login after many lookups in a short time
+config.plugins.iptvplayer.IPTVDMBatchPause = ConfigSelection(default="20", choices=[("0", "0"), ("10", "10"), ("20", "20"), ("30", "30"), ("60", "60"), ("120", "120")])
 config.plugins.iptvplayer.IPTVDMShowNotification = ConfigYesNo(default=True)
 # program for plain file downloads in the download manager; curl falls back
 # to wget when the box has no curl binary

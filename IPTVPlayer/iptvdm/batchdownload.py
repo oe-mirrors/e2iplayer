@@ -35,6 +35,17 @@ BATCH_TYPES = (TYPE_VIDEO, TYPE_AUDIO)
 # a row whose links are not found after this long is given up (ERROR) and the queue goes on
 RESOLVE_TIMEOUT = 240
 
+
+def batchPauseLeft(lastLookup, now, pause):
+    # seconds to wait before the next link lookup of a host whose last one ended at lastLookup (0: go)
+    try:
+        pause = int(pause)
+    except (TypeError, ValueError):
+        pause = 0
+    if pause <= 0 or not lastLookup or now < lastLookup:
+        return 0
+    return max(0, int(round(lastLookup + pause - now)))
+
 # what a title must not contain to be a file name - the same characters playVideo() always replaced
 FILE_NAME_FORBIDDEN = '/:*?"<>|'
 

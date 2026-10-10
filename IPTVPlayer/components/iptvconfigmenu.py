@@ -387,6 +387,7 @@ class ConfigMenu(ConfigBaseWidget):
         list.append(getConfigListEntry("    " + _("Start download manager per default"), config.plugins.iptvplayer.IPTVDMRunAtStart))
         list.append(getConfigListEntry("    " + _("Show download manager after adding new item"), config.plugins.iptvplayer.IPTVDMShowAfterAdd))
         list.append(getConfigListEntry("    " + _("Number of downloaded files simultaneously"), config.plugins.iptvplayer.IPTVDMMaxDownloadItem))
+        list.append(getConfigListEntry("    " + _("Pause between the batch lookups of one host [s]"), config.plugins.iptvplayer.IPTVDMBatchPause))
         list.append(getConfigListEntry("    " + _("Program for file downloads (HTTP/FTP)"), config.plugins.iptvplayer.http_downloader))
         list.append(getConfigListEntry("    " + _("File format of DASH (MPD) downloads"), config.plugins.iptvplayer.dash_out_container))
         list.append(getConfigListEntry("    " + _("Show download notification"), config.plugins.iptvplayer.IPTVDMShowNotification))
