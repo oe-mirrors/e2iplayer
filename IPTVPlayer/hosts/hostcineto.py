@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026
+# Last Modified: 10.10.2026
 # 03.10.2026 - brought to the current host standard
 #   - covers from cine.to/public/cover/<8-digit id>.jpg (s.cine.to is gone -> 502)
 #   - INFO: site plot/genres/director/cast/rating merged with libs/moviemeta (the site's
@@ -7,6 +7,7 @@
 #   - one folder per movie, one VIDEO row per audio language (+ trailer), keyed on a stable
 #     page url; watched flag with movie folder propagation, favourites, sidecar, name
 #     normalisation ("Title (Year)"), First page / Jump / Next page
+# 10.10.2026 - links are no longer renamed to "*name*" after use - that broke the link list's own used mark (tick + colour)
 ###################################################
 # LOCAL import
 ###################################################
@@ -395,14 +396,6 @@ class CineTO(GenericFolderWatchedScraperMixin, CBaseHostClass, CaptchaHelper):
         printDBG("CineTO.getVideoLinks [%s]" % videoUrl)
         videoUrl = strwithmeta(videoUrl)
         sidecar = sidecarFromUrlMeta(videoUrl, IsSidecarEnabled())
-
-        # mark requested link as used one
-        for key in self.cacheLinks:
-            for link in self.cacheLinks[key]:
-                if videoUrl in link['url']:
-                    if not link['name'].startswith('*'):
-                        link['name'] = '*' + link['name']
-                    break
 
         errorMsgTab = []
         sts, data = self.getPage(videoUrl)

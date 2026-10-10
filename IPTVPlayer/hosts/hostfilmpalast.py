@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 23.08.2026
+# Last Modified: 10.10.2026
 # 23.08.2026 - getSuggestionsProvider() added (forces Google search suggestions) - Kamikaze24
+# 10.10.2026 - links are no longer renamed to "*name*" after use - that broke the link list's own used mark (tick + colour)
 ###################################################
 # LOCAL import
 ###################################################
@@ -450,11 +451,6 @@ class FilmPalastTo(CBaseHostClass):
             return decorateResolvedLinkItems(videoLinks, sidecar, cfgMkvEnabled)
 
         key = videoUrl.meta.get("links_key", "")
-        if key != "":
-            if key in self.cacheLinks:
-                for idx in range(len(self.cacheLinks[key])):
-                    if self.cacheLinks[key][idx]["url"] == videoUrl and not self.cacheLinks[key][idx]["name"].startswith("*"):
-                        self.cacheLinks[key][idx]["name"] = "*" + self.cacheLinks[key][idx]["name"]
 
         data_id = videoUrl.meta.get("data_id", "")
         data_stamp = videoUrl.meta.get("data_stamp", "")

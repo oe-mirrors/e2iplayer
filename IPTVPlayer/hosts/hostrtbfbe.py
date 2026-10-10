@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 13.08.2025
+# Last Modified: 10.10.2026
+# 10.10.2026 - links are no longer renamed to "*name*" after use - that broke the link list's own used mark (tick + colour)
 ###################################################
 # LOCAL import
 ###################################################
@@ -553,15 +554,6 @@ class RTBFBE(CBaseHostClass):
     def getVideoLinks(self, videoUrl):
         printDBG("RTBFBE.getVideoLinks [%s]" % videoUrl)
         self.tryTologin()
-
-        # mark requested link as used one
-        if len(self.cacheLinks.keys()):
-            for key in self.cacheLinks:
-                for idx in range(len(self.cacheLinks[key])):
-                    if videoUrl in self.cacheLinks[key][idx]['url']:
-                        if not self.cacheLinks[key][idx]['name'].startswith('*'):
-                            self.cacheLinks[key][idx]['name'] = '*' + self.cacheLinks[key][idx]['name']
-                        break
 
         if 1 == self.up.checkHostSupport(videoUrl):
             videoUrl = videoUrl.replace('youtu.be/', 'youtube.com/watch?v=')

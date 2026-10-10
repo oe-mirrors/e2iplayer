@@ -1,23 +1,28 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 13.08.2025
+# Last Modified: 10.10.2026
+# Radiostacja.pl: Polish radio stations (Radio ZET group, local stations), music channels by mood and the
+#   RMF ON station list, search by station name
+# 10.10.2026 - host standard: station rows are audio rows with INFO and sidecar, mood / RMF ON folders reopen
+#   from favourites, RMF ON streams from the station list (AAC + MP3), long lists paged, search by station
+#   name, English labels, current user agent; removed the dead weszlo.fm row (domain now a casino page)
+#   and the empty "Sety Muzyczne" list
 ###################################################
 # LOCAL import
 ###################################################
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
-from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
-###################################################
-
-###################################################
-# FOREIGN import
-###################################################
-import random
+from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
+from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
+from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str_deep
 ###################################################
 
 
 def GetConfigList():
-    optionList = []
-    return optionList
+    return []
 
 
 def gettytul():
@@ -26,268 +31,308 @@ def gettytul():
 
 class RadiostacjaPl(CBaseHostClass):
 
+    LIVE_URL = 'http://www.radiostacja.pl/data/mobile/live.json'
+    CHANNELS_URL = 'http://www.radiostacja.pl/data/mobile/muzyczne_android.json'
+    RMF_URL = 'https://www.rmfon.pl/json/app.txt'
+    RMF_ICON = 'https://www.rmfon.pl/img/z/p1-512.jpg'
+    # stable identity of a station row
+    FAV_FIELDS = ('name', 'category', 'type', 'url', 'title', 'icon', 'rmf_id', 'group', 'genre')
+    PAGE_SIZE = 100
+
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'radiostacja.pl', 'cookie': 'radiostacja.pl.cookie'})
-        self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.MAIN_URL = 'http://www.radiostacja.pl/'
         self.DEFAULT_ICON_URL = 'http://is3.mzstatic.com/image/thumb/Purple122/v4/82/c4/6f/82c46f38-3532-e414-530e-33e5d0be2614/source/392x696bb.jpg'
-        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate', 'Referer': self.getMainUrl(), 'Origin': self.getMainUrl()}
-        self.AJAX_HEADER = dict(self.HTTP_HEADER)
-        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding': 'gzip, deflate', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': '*/*', 'Origin': self.getMainUrl()[:-1]})
-
+        self.HTTP_HEADER = {'User-Agent': self.cm.getDefaultUserAgent(), 'Accept': 'application/json, text/html, */*', 'Accept-Encoding': 'gzip, deflate',
+                            'Referer': self.getMainUrl()}
         self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.cache = {}
 
-    def getPage(self, baseUrl, addParams={}, post_data=None):
-        if addParams == {}:
+    def getPage(self, baseUrl, addParams=None, post_data=None):
+        if addParams is None:
             addParams = dict(self.defaultParams)
         return self.cm.getPage(baseUrl, addParams, post_data)
 
+    def _getJson(self, url):
+        # the station lists change rarely - one download per session
+        if url not in self.cache:
+            sts, data = self.getPage(url)
+            if not sts or not data.strip():
+                return {}
+            try:
+                data = ensure_str_deep(json_loads(data))
+                if isinstance(data, dict):
+                    self.cache[url] = data
+            except Exception:
+                printExc()
+        return self.cache.get(url, {})
+
+    def getFavouriteData(self, cItem):
+        try:
+            if cItem.get('type') == 'audio':
+                return json_dumps({key: cItem[key] for key in self.FAV_FIELDS if key in cItem})
+        except Exception:
+            printExc()
+        return CBaseHostClass.getFavouriteData(self, cItem)
+
+    ###################################################
+    # lists
+    ###################################################
     def listMainMenu(self, cItem):
         printDBG("RadiostacjaPl.listMainMenu")
-
-        MAIN_CAT_TAB = [{'category': 'live', 'title': 'Stacje Radiowe', 'f_cache': 'live', 'url': self.getFullUrl('/data/mobile/live.json')},
-                        {'category': 'channels', 'title': 'Kanały Muzyczne', 'f_cache': 'muzyczne', 'url': self.getFullUrl('/data/mobile/muzyczne_android.json')},
-                        {'category': 'djsety', 'title': 'Sety Muzyczne', 'f_cache': 'podcasty', 'url': self.getFullUrl('/data/mobile/podcasty_android.json'), 'f_key': 'djsety'},
-                       ]
-
+        MAIN_CAT_TAB = [{'category': 'live', 'title': _('Radio stations')},
+                        {'category': 'channels', 'title': 'Music channels'}] + self.searchItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
-        TAB = [{'good_for_fav': True, 'url': 'http://weszlo.fm/audycja-na-zywo/', 'title': 'http://weszlo.fm/', 'icon': 'https://images.radio.co/station_logos/s7d70a7895.20180131023319.jpg', 'desc': 'http://weszlo.fm/audycja-na-zywo/'}, ]
-        for item in TAB:
-            params = dict(cItem)
-            params.update(item)
-            self.addAudio(params)
 
-    def listLive(self, cItem, nextCategory1, nextCategory2):
-        printDBG("RadiostacjaPl.listGenres [%s]" % cItem)
+    def listLive(self, cItem):
+        printDBG("RadiostacjaPl.listLive")
+        CAT_TAB = [{'category': 'list_items', 'title': 'Radio ZET', 'f_key': 'eurozet', 'good_for_fav': True},
+                   {'category': 'list_items', 'title': 'Local radio stations', 'f_key': 'lokalne', 'good_for_fav': True},
+                   {'category': 'list_rmf', 'title': 'RMF ON', 'icon': self.RMF_ICON, 'good_for_fav': True}]
+        self.listsTab(CAT_TAB, {'name': 'category'})
 
-        params = dict(cItem)
-        params.update({'good_for_fav': True, 'title': 'Radia RMFON', 'category': nextCategory2, 'f_cache': 'rmfon', 'url': 'http://rmfon.pl/json/app.txt', 'icon': 'http://www.programosy.pl/download/screens/13748/android-rmfon-1_s.png'})
-        self.addDir(params)
-
-        CAT_TAB = [{'good_for_fav': True, 'title': 'Radia ZET', 'f_key': 'eurozet'},
-                   {'good_for_fav': True, 'title': 'Radia Lokalne', 'f_key': 'lokalne'}]
-
-        cItem = dict(cItem)
-        cItem['category'] = nextCategory1
-        self.listsTab(CAT_TAB, cItem)
-
-    def _fillCache(self, cItem):
-        if cItem['f_cache'] not in self.cache:
-            sts, data = self.getPage(cItem['url'])
-            if not sts:
-                return
-
+    def listChannels(self, cItem):
+        printDBG("RadiostacjaPl.listChannels")
+        self.addDir({'name': 'category', 'category': 'list_channel_items', 'title': _('All'), 'f_key': 'muzyczne', 'good_for_fav': True})
+        for genre in self._getJson(self.CHANNELS_URL).get('kategorie', []):
             try:
-                data = json_loads(data)
-                self.cache[cItem['f_cache']] = data
+                title = self.cleanHtmlStr(genre.get('name', ''))
+                if title and genre.get('channels'):
+                    self.addDir({'name': 'category', 'category': 'list_channel_items', 'title': title, 'icon': genre.get('logo', ''),
+                                 'f_genre': str(genre.get('id', '')), 'good_for_fav': True})
             except Exception:
                 printExc()
 
-    def listItemsFromCache(self, cItem):
-        printDBG("RadiostacjaPl.listItems [%s]" % cItem)
-        self._fillCache(cItem)
+    def _stationParams(self, item, group, genre=''):
+        title = self.cleanHtmlStr(item.get('name', ''))
+        url = (item.get('stream') or '').strip()
+        if not title or not self.cm.isValidUrl(url):
+            return None
+        params = {'name': 'category', 'good_for_fav': True, 'title': title, 'url': url, 'icon': item.get('image', ''), 'group': group}
+        if genre:
+            params['genre'] = genre
+        return params
 
+    def _addRows(self, cItem, rows):
+        # local paging for long lists
         try:
-            cacheKey = cItem['f_cache']
-            tabKey = cItem['f_key']
-            data = self.cache[cacheKey][tabKey]
-            self.listItems(cItem, data)
-        except Exception:
-            printExc()
-
-    def listItems(self, cItem, data):
-        printDBG("RadiostacjaPl.listItems [%s]" % cItem)
-        for item in data:
-            title = self.cleanHtmlStr(item['name'])
-            icon = self.cleanHtmlStr(item['image'])
-            url = self.cleanHtmlStr(item['stream'])
-            params = {'title': title, 'url': url, 'icon': icon}
+            page = max(1, int(cItem.get('page', 1)))
+        except (TypeError, ValueError):
+            page = 1
+        seen = set()
+        rows = [params for params in rows if not (params['url'] in seen or seen.add(params['url']))]
+        lastPage = (len(rows) + self.PAGE_SIZE - 1) // self.PAGE_SIZE
+        for params in rows[(page - 1) * self.PAGE_SIZE:page * self.PAGE_SIZE]:
             self.addAudio(params)
+        if lastPage > 1:
+            addPagingItems(self, cItem, page, page < lastPage, lastPage)
 
-    def listChannels(self, cItem):
-        printDBG("RadiostacjaPl.listGenres [%s]" % cItem)
-        self._fillCache(cItem)
+    def listItems(self, cItem):
+        printDBG("RadiostacjaPl.listItems [%s]" % cItem.get('f_key', ''))
+        if cItem.get('f_key') == 'muzyczne':
+            # "Wszystkie" music channels folder saved as favourite by the old version
+            return self.listChannelItems({'name': 'category', 'category': 'list_channel_items', 'page': cItem.get('page', 1)})
+        group = {'eurozet': 'Radio ZET', 'lokalne': 'Local radio stations'}.get(cItem.get('f_key', ''), '')
+        rows = []
+        for item in self._getJson(self.LIVE_URL).get(cItem.get('f_key', ''), []):
+            params = self._stationParams(item, group)
+            if params:
+                rows.append(params)
+        self._addRows(cItem, rows)
 
-        CAT_TAB = [{'good_for_fav': True, 'category': 'list_items', 'title': 'Wszystkie', 'f_key': 'muzyczne'},
-                   {'good_for_fav': True, 'category': 'list_genres', 'title': 'Nastroje', 'f_key': 'kategorie'}]
-
-        cItem = dict(cItem)
-        cItem.pop('category', None)
-        self.listsTab(CAT_TAB, cItem)
-
-    def listGenres(self, cItem, nextCategory):
-        printDBG("RadiostacjaPl.listGenres [%s]" % cItem)
-        self._fillCache(cItem)
-
-        try:
-            cacheKey = cItem['f_cache']
-            tabKey = cItem['f_key']
-
-            for idx in range(len(self.cache[cacheKey][tabKey])):
-                channel = self.cache[cacheKey][tabKey][idx]
-                title = self.cleanHtmlStr(channel['name'])
-                icon = self.cleanHtmlStr(channel['logo'])
-                params = dict(cItem)
-                params.update({'good_for_fav': False, 'category': nextCategory, 'title': title, 'icon': icon, 'f_idx': idx})
-                self.addDir(params)
-        except Exception:
-            printExc()
-
-    def listChannel(self, cItem):
-        printDBG("RadiostacjaPl.listChannelsItems [%s]" % cItem)
-        try:
-            cacheKey = cItem['f_cache']
-            tabKey = cItem['f_key']
-            idx = cItem['f_idx']
-            data = self.cache[cacheKey][tabKey][idx]['channels']
-            self.listItems(cItem, data)
-        except Exception:
-            printExc()
-
-    def listDJSety(self, cItem, nextCategory):
-        printDBG("RadiostacjaPl.listDJSety [%s]" % cItem)
-        self._fillCache(cItem)
-
-        try:
-            cacheKey = cItem['f_cache']
-            tabKey = cItem['f_key']
-            for idx in range(len(self.cache[cacheKey][tabKey])):
-                content = self.cache[cacheKey][tabKey][idx]['content']
-                title = self.cleanHtmlStr(content['name'])
-                icon = self.cleanHtmlStr(content['logo'])
-                params = dict(cItem)
-                params.update({'good_for_fav': False, 'category': nextCategory, 'title': title, 'icon': icon, 'f_idx': idx})
-                self.addDir(params)
-        except Exception:
-            printExc()
-
-    def listDJ(self, cItem):
-        printDBG("RadiostacjaPl.listDJ [%s]" % cItem)
-        try:
-            cacheKey = cItem['f_cache']
-            tabKey = cItem['f_key']
-            idx = cItem['f_idx']
-            data = self.cache[cacheKey][tabKey][idx]['content']['data']
-            for item in data:
-                title = self.cleanHtmlStr(item['name'])
-                url = self.cleanHtmlStr(item['file'])
-                params = {'title': title, 'url': url, 'icon': cItem.get('icon', '')}
-                self.addAudio(params)
-        except Exception:
-            printExc()
-
-    ############################################################
-    def listRMF(self, cItem, nextCategory):
-        printDBG("RadiostacjaPl.listRMF [%s]" % cItem)
-        self._fillCache(cItem)
-
-        try:
-            cacheKey = cItem['f_cache']
-            for item in self.cache[cacheKey]['categories']:
-                if 0 == len(item['ids']):
+    def listChannelItems(self, cItem):
+        printDBG("RadiostacjaPl.listChannelItems [%s]" % cItem.get('f_genre', ''))
+        data = self._getJson(self.CHANNELS_URL)
+        rows = []
+        if cItem.get('f_genre'):
+            for genre in data.get('kategorie', []):
+                if str(genre.get('id', '')) != cItem['f_genre']:
                     continue
-                title = self.cleanHtmlStr(item['name'])
-                params = dict(cItem)
-                params.update({'good_for_fav': True, 'category': nextCategory, 'title': title, 'f_id': item['id']})
-                self.addDir(params)
-        except Exception:
-            printExc()
+                genreName = self.cleanHtmlStr(genre.get('name', ''))
+                for item in genre.get('channels', []):
+                    params = self._stationParams(item, 'Music channels', genreName)
+                    if params:
+                        rows.append(params)
+                break
+        else:
+            for item in data.get('muzyczne', []):
+                params = self._stationParams(item, 'Music channels')
+                if params:
+                    rows.append(params)
+        self._addRows(cItem, rows)
+
+    def listRMF(self, cItem):
+        printDBG("RadiostacjaPl.listRMF")
+        self.addDir({'name': 'category', 'category': 'list_rmf_items', 'title': _('All'), 'icon': self.RMF_ICON, 'good_for_fav': True})
+        for item in self._getJson(self.RMF_URL).get('categories', []):
+            try:
+                title = self.cleanHtmlStr(item.get('name', ''))
+                if title and item.get('ids'):
+                    self.addDir({'name': 'category', 'category': 'list_rmf_items', 'title': title, 'icon': self.RMF_ICON,
+                                 'f_id': str(item.get('id', '')), 'good_for_fav': True})
+            except Exception:
+                printExc()
+
+    def _rmfStationParams(self, item):
+        title = self.cleanHtmlStr(item.get('name', ''))
+        if not title or not item.get('id'):
+            return None
+        params = {'name': 'category', 'good_for_fav': True, 'title': title, 'url': 'http://www.rmfon.pl/play,%s' % item['id'],
+                  'rmf_id': str(item['id']), 'icon': item.get('defaultart', '') or self.RMF_ICON, 'group': 'RMF ON'}
+        genre = ', '.join([tag.strip() for tag in item.get('search', '').split(',')[1:] if tag.strip()])
+        if genre:
+            params['genre'] = genre
+        return params
 
     def listRMFItems(self, cItem):
-        printDBG("RadiostacjaPl.listRMFItems [%s]" % cItem)
-        self._fillCache(cItem)
+        printDBG("RadiostacjaPl.listRMFItems [%s]" % cItem.get('f_id', ''))
+        data = self._getJson(self.RMF_URL)
+        ids = None
+        if cItem.get('f_id'):
+            for item in data.get('categories', []):
+                if str(item.get('id', '')) == cItem['f_id']:
+                    ids = item.get('ids', [])
+                    break
+            if ids is None:
+                return
+        rows = []
+        for item in data.get('stations', []):
+            if ids is not None and item.get('id') not in ids:
+                continue
+            params = self._rmfStationParams(item)
+            if params:
+                rows.append(params)
+        self._addRows(cItem, rows)
 
-        try:
-            cacheKey = cItem['f_cache']
-            ids = None
-            if 'f_id' in cItem:
-                for item in self.cache[cacheKey]['categories']:
-                    if item['id'] == cItem['f_id']:
-                        ids = item['ids']
+    def listSearchResult(self, cItem, searchPattern, searchType):
+        printDBG("RadiostacjaPl.listSearchResult [%s]" % searchPattern)
+        pattern = (searchPattern or '').strip().lower()
+        if not pattern:
+            return
+        rows = []
+        seen = set()
 
-            for item in self.cache[cacheKey]['stations']:
-                if ids is not None and item['id'] not in ids:
-                    continue
-                title = self.cleanHtmlStr(item['name'])
-                icon = item['defaultart']
-                params = {'good_for_fav': True, 'title': title, 'url': 'http://www.rmfon.pl/play,%s' % item['id'], 'icon': icon}
-                self.addAudio(params)
-        except Exception:
-            printExc()
+        def _add(params):
+            if params and params['url'] not in seen and pattern in params['title'].lower():
+                seen.add(params['url'])
+                rows.append(params)
+
+        live = self._getJson(self.LIVE_URL)
+        for key, group in (('eurozet', 'Radio ZET'), ('lokalne', 'Local radio stations')):
+            for item in live.get(key, []):
+                _add(self._stationParams(item, group))
+        channels = self._getJson(self.CHANNELS_URL)
+        for item in channels.get('muzyczne', []):
+            _add(self._stationParams(item, 'Music channels'))
+        for genre in channels.get('kategorie', []):
+            for item in genre.get('channels', []):
+                _add(self._stationParams(item, 'Music channels', self.cleanHtmlStr(genre.get('name', ''))))
+        for item in self._getJson(self.RMF_URL).get('stations', []):
+            _add(self._rmfStationParams(item))
+        self._addRows(cItem, rows)
+        if not self.currList:
+            SetIPTVPlayerLastHostError(_('No matching entries found.'))
+
+    ###################################################
+    # links / info
+    ###################################################
+    def _rmfLinks(self, stationId):
+        linksTab = []
+        for item in self._getJson(self.RMF_URL).get('stations', []):
+            if str(item.get('id', '')) != stationId:
+                continue
+            for key, name in (('aac', 'AAC'), ('mp3', 'MP3')):
+                if self.cm.isValidUrl(item.get(key, '')):
+                    linksTab.append({'name': name, 'url': item[key]})
+            break
+        if not linksTab:
+            # station missing in the app list - the old per-station playlist
+            sts, data = self.getPage('https://www.rmfon.pl/stacje/flash_aac_%s.xml.txt' % stationId)
+            if sts:
+                for playlistItem in self.cm.ph.getAllItemsBeetwenMarkers(data, '<playlist', '</playlist'):
+                    name = 'MP3' if 'playlistMp3' in playlistItem else 'AAC'
+                    for url in self.cm.ph.getAllItemsBeetwenNodes(playlistItem, ('<item', '>'), ('</item', '>'), False):
+                        url = url.strip()
+                        if self.cm.isValidUrl(url):
+                            linksTab.append({'name': name, 'url': url})
+                            break
+        return linksTab
 
     def getLinksForVideo(self, cItem):
-        printDBG("RadiostacjaPl.getLinksForVideo [%s]" % cItem)
-        linksTab = []
-        if 'weszlo.fm' in cItem['url']:
-            sts, data = self.getPage(cItem['url'])
-            if not sts:
-                return []
-            data = self.cm.ph.getDataBeetwenNodes(data, ('<div ', '>', 'radioplayer'), ('<', '>'))[1]
-            url = self.cm.ph.getSearchGroups(data, r'''\sdata\-src=['"](https?://[^'^"]+?)['"]''')[0]
-            linksTab.append({'name': 'direct', 'url': url, 'need_resolve': 0})
-        elif 'rmfon.pl' in cItem['url']:
-            url = 'http://www.rmfon.pl/stacje/flash_aac_%s.xml.txt' % cItem['url'].split(',')[-1]
-            sts, data = self.getPage(url)
-            if not sts:
-                return []
-            data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<playlist', '</playlist')
-            for playlistItem in data:
-                if 'playlistMp3' in playlistItem:
-                    title = 'MP3'
-                else:
-                    title = 'AAC'
-                tmp = []
-                playlistItem = self.cm.ph.getAllItemsBeetwenNodes(playlistItem, ('<item', '>'), ('</item', '>'), False)
-                for item in playlistItem:
-                    url = item.strip()
-                    if not self.cm.isValidUrl(url):
-                        continue
-                    tmp.append({'name': title, 'url': url, 'need_resolve': 0})
-                if len(tmp):
-                    linksTab.append(random.choice(tmp))
+        printDBG("RadiostacjaPl.getLinksForVideo [%s]" % cItem.get('url', ''))
+        url = cItem.get('url', '')
+        if 'rmfon.pl/play,' in url:
+            linksTab = self._rmfLinks(cItem.get('rmf_id', '') or url.split(',')[-1])
+        elif self.cm.isValidUrl(url) and 'weszlo.fm' not in url:
+            linksTab = [{'name': cItem.get('group', '') or 'stream', 'url': url}]
         else:
-            linksTab = [{'name': 'stream', 'url': cItem['url'], 'need_resolve': 0}]
-        return linksTab
+            linksTab = []
+        if not linksTab:
+            SetIPTVPlayerLastHostError(_('No stream available'))
+            return []
+        for item in linksTab:
+            item['url'] = strwithmeta(item['url'], {'User-Agent': self.HTTP_HEADER['User-Agent'], 'iptv_livestream': True})
+            item['need_resolve'] = 0
+        return applySidecarToLinks(linksTab, buildSidecarFromItem(cItem, IsSidecarEnabled()))
+
+    def getArticleContent(self, cItem):
+        printDBG("RadiostacjaPl.getArticleContent [%s]" % cItem.get('url', ''))
+        otherInfo = {}
+        if cItem.get('genre'):
+            otherInfo['genre'] = cItem['genre']
+        if cItem.get('group'):
+            otherInfo['station'] = cItem['group']
+        icon = cItem.get('icon', '') or self.DEFAULT_ICON_URL
+        title = cItem.get('title', '')
+        group = cItem.get('group', '')
+        text = ['%s - %s' % (title, group) if group and group != title else title]
+        if cItem.get('genre'):
+            text.append(_('Genre: %s') % cItem['genre'])
+        url = cItem.get('url', '')
+        if 'rmfon.pl/play,' in url:
+            text.append('Stream: AAC / MP3')
+        elif self.cm.isValidUrl(url):
+            text.append('Stream: %s' % self.cm.getBaseUrl(url, True))
+        text = '[/br]'.join(text)
+        return [{'title': cItem.get('title', ''), 'text': text, 'images': [{'title': '', 'url': icon}], 'other_info': otherInfo}]
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
-
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
+        if isJumpItem(self.currItem):
+            self.currItem = jumpTarget(self, self.currItem)
 
         name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode = self.currItem.get("mode", '')
-
         printDBG("handleService: |||| name[%s], category[%s] " % (name, category))
-        self.cacheLinks = {}
         self.currList = []
 
-    # MAIN MENU
         if name is None:
             self.listMainMenu({'name': 'category'})
-    # LIVE
         elif category == 'live':
-            self.listLive(self.currItem, 'list_items', 'list_rmf')
+            self.listLive(self.currItem)
         elif category == 'list_items':
-            self.listItemsFromCache(self.currItem)
-    # CHANNELS
+            self.listItems(self.currItem)
         elif category == 'channels':
             self.listChannels(self.currItem)
         elif category == 'list_genres':
-            self.listGenres(self.currItem, 'list_channel')
-        elif category == 'list_channel':
-            self.listChannel(self.currItem)
-    # DJSETY
-        elif category == 'djsety':
-            self.listDJSety(self.currItem, 'list_dj')
-        elif category == 'list_dj':
-            self.listDJ(self.currItem)
-    # RMFON
+            # "Nastroje" folder saved as favourite by the old version
+            self.listChannels(self.currItem)
+        elif category == 'list_channel_items':
+            self.listChannelItems(self.currItem)
         elif category == 'list_rmf':
-            self.listRMF(self.currItem, 'list_rmf_items')
+            self.listRMF(self.currItem)
         elif category == 'list_rmf_items':
             self.listRMFItems(self.currItem)
+        elif category in ["search", "search_next_page"]:
+            searchPattern = self.currItem.get('search_pattern', searchPattern)
+            cItem = dict(self.currItem)
+            cItem.update({'search_item': False, 'name': 'category', 'category': 'search_next_page', 'search_pattern': searchPattern})
+            self.listSearchResult(cItem, searchPattern, searchType)
+        elif category == "search_history":
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _('Type: '))
+        else:
+            printExc()
 
         CBaseHostClass.endHandleService(self, index, refresh)
 
@@ -296,3 +341,6 @@ class IPTVHost(CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, RadiostacjaPl(), True, [])
+
+    def withArticleContent(self, cItem):
+        return cItem.get('type', '') == 'audio'

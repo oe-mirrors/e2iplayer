@@ -1,19 +1,31 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 28.09.2026
+# Last Modified: 10.10.2026
 # 25.06.2026 - damagic
-
+# 10.10.2026 - host standard: watched flag (series -> season -> episode; a series with more than one season gets
+#   season folders), favourites reopen without state, downloaded marker on the film / episode url,
+#   "Title (Year)" / "Show - SxxExx" names only when name normalisation is on (raw site labels otherwise),
+#   sidecar on the links, First / Jump / Next page, INFO via moviemeta merged with the
+#   site's fields, default user agent; the PHPSESSID option is a hidden secret now and no longer overwrites the
+#   whole cookie file on every list (that threw away the Cloudflare clearance), dead rot13 helpers removed
+#   links are no longer renamed to "*name*" after use - that broke the link list's own used mark (tick + colour)
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import SetIPTVPlayerLastHostError, TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, rm, GetIconDir
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsMediaNamingNormalized, IsSidecarEnabled
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIconDir
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
+from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
+from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
+from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
+from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
 from Plugins.Extensions.IPTVPlayer.components.captcha_helper import CaptchaHelper
-from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute
+from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
+from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, getMetaByImdbId
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
 
 ###################################################
-from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 
@@ -34,7 +46,7 @@ try:
     import json
 except Exception:
     import simplejson as json
-from Components.config import config, ConfigText, ConfigSelection, getConfigListEntry
+from Components.config import config, getConfigListEntry
 from Plugins.Extensions.IPTVPlayer.components.configsecret import ConfigLogin, ConfigSecret
 
 ###################################################
@@ -44,13 +56,14 @@ from Plugins.Extensions.IPTVPlayer.components.configsecret import ConfigLogin, C
 ###################################################
 config.plugins.iptvplayer.filman_login = ConfigLogin(default="", fixed_size=False)
 config.plugins.iptvplayer.filman_password = ConfigSecret(default="", fixed_size=False)
-config.plugins.iptvplayer.filman_cookie_phpsessid = ConfigText(default="", fixed_size=False)
+# a session cookie of the user's own browser login - a secret like the password
+config.plugins.iptvplayer.filman_cookie_phpsessid = ConfigSecret(default="", fixed_size=False)
 
 
 def GetConfigList():
     optionList = []
-    optionList.append(getConfigListEntry("Filman login:", config.plugins.iptvplayer.filman_login))
-    optionList.append(getConfigListEntry("Filman hasło:", config.plugins.iptvplayer.filman_password))
+    optionList.append(getConfigListEntry("Filman %s:" % _("login"), config.plugins.iptvplayer.filman_login))
+    optionList.append(getConfigListEntry("Filman %s:" % _("password"), config.plugins.iptvplayer.filman_password))
     optionList.append(getConfigListEntry("Filman cookie (PHPSESSID):", config.plugins.iptvplayer.filman_cookie_phpsessid))
     return optionList
 
@@ -62,11 +75,12 @@ def gettytul():
     return "https://filman.cc/"
 
 
-class Filman(CBaseHostClass, CaptchaHelper):
+class Filman(GenericFolderWatchedScraperMixin, CBaseHostClass, CaptchaHelper):
+    FAV_FIELDS = ("name", "category", "type", "url", "title", "icon", "desc", "s_title", "s_year", "season", "episode", "meta_type", "sort")
 
     def __init__(self):
         CBaseHostClass.__init__(self, {"history": "Filman.online", "cookie": "filman.cookie"})
-        self.USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+        self.USER_AGENT = self.cm.getDefaultUserAgent()
         self.MAIN_URL = "https://filman.cc/"
         # the site logo sits behind Cloudflare too and is asked for before the check is solved (main menu): use the plugin's tile
         self.DEFAULT_ICON_URL = "file://" + GetIconDir("PlayerSelector/filman135.png")
@@ -82,22 +96,32 @@ class Filman(CBaseHostClass, CaptchaHelper):
         self.loggedIn = None
         self.login = ""
         self.password = ""
+        self.sessid = ""
+        self.watchedHelper = IPTVWatchedHelper("filman")
+        self.wfInitFolderCache()
 
-    def _overwriteCookie(self, sessid):
+    def _setSessionCookie(self, sessid):
+        # puts the user's PHPSESSID into the cookie jar and keeps the other cookies (cf_clearance!)
         try:
-            with open(self.COOKIE_FILE, 'w') as f:
-                f.write("# Netscape HTTP Cookie File\n")
-                f.write("filman.cc\tFALSE\t/\tFALSE\t\tPHPSESSID\t" + sessid + "\n")
-            printDBG("Filman cookie overwritten with PHPSESSID")
+            lines = []
+            if os.path.isfile(self.COOKIE_FILE):
+                with open(self.COOKIE_FILE, "r") as f:
+                    lines = [line for line in f.read().splitlines() if line.strip() and "\tPHPSESSID\t" not in line]
+            if not lines or not lines[0].startswith("#"):
+                lines.insert(0, "# Netscape HTTP Cookie File")
+            lines.append("filman.cc\tFALSE\t/\tFALSE\t0\tPHPSESSID\t" + sessid)
+            with open(self.COOKIE_FILE, "w") as f:
+                f.write("\n".join(lines) + "\n")
+            printDBG("Filman PHPSESSID set in the cookie file")
             return True
         except Exception as e:
             printDBG("Failed to write cookie: %s" % str(e))
             return False
 
-    def getPage(self, baseUrl, addParams={}, post_data=None):
-        if addParams == {}:
+    def getPage(self, baseUrl, addParams=None, post_data=None):
+        if addParams is None:
             addParams = dict(self.defaultParams)
-        baseUrl = self.cm.iriToUri(baseUrl)
+        baseUrl = self.cm.iriToUri(baseUrl.split("#", 1)[0])
         sts, data = self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         return sts, data
 
@@ -124,6 +148,34 @@ class Filman(CBaseHostClass, CaptchaHelper):
         if self.cm.isValidUrl(url):
             self.MAIN_URL = self.cm.getBaseUrl(url)
 
+    ###################################################
+    # watched flag / favourites
+    ###################################################
+    def _getWatchedKeyForItem(self, cItem):
+        try:
+            if not isinstance(cItem, dict):
+                return ""
+            url = re.sub(r"^https?://[^/]+", "", str(cItem.get("url", "") or "").strip())
+            if not url:
+                return ""
+            if cItem.get("type", "") == "video":
+                return "video:%s" % url
+            prefix = {"list_series": "series", "list_season": "season"}.get(cItem.get("category", ""), "")
+            return "%s:%s" % (prefix, url) if prefix else ""
+        except Exception:
+            printExc()
+        return ""
+
+    def getFavouriteData(self, cItem):
+        try:
+            return json_dumps(dict((key, cItem[key]) for key in self.FAV_FIELDS if key in cItem))
+        except Exception:
+            printExc()
+        return CBaseHostClass.getFavouriteData(self, cItem)
+
+    ###################################################
+    # lists
+    ###################################################
     def listMainMenu(self, cItem):
         printDBG("Filman.listMainMenu")
         MAIN_CAT_TAB = [
@@ -163,6 +215,8 @@ class Filman(CBaseHostClass, CaptchaHelper):
             if category is not None:
                 params["category"] = category
             params.update(item)
+            if params.get("category") == "list_items":
+                params["good_for_fav"] = True
             self.addDir(params)
 
     def _parseItemInfo(self, item):
@@ -226,13 +280,26 @@ class Filman(CBaseHostClass, CaptchaHelper):
             title = title + " (" + year + ")"
         return title
 
+    @staticmethod
+    def _seriesName(title):
+        # "Wiedźmin / The Witcher (2019) online pl" -> "Wiedźmin"
+        title = re.sub(r'\s*\(\d{4}\)\s*$', '', title or '').strip()
+        title = re.sub(r'\s*\bonline\s+pl\b\s*', '', title, flags=re.IGNORECASE).strip()
+        return title.split('/')[0].strip()
+
     def listItems(self, cItem):
         printDBG("Filman.listItems %s" % cItem)
-        page = cItem.get("page", 1)
-        url = cItem["url"]
+        try:
+            page = max(1, int(cItem.get("page", 1) or 1))
+        except (TypeError, ValueError):
+            page = 1
+        # the pager rows carry the url of the list itself in base_url (their own url is only for Jump)
+        baseUrl = cItem.get("base_url") or cItem["url"]
+        url = baseUrl
         sort = cItem.get("sort", "")
         if sort and sort not in url:
             url = url + sort
+        listUrl = url
         if page > 1:
             sep = "&" if "?" in url else "?"
             url = "%s%spage=%d" % (url, sep, page)
@@ -242,7 +309,11 @@ class Filman(CBaseHostClass, CaptchaHelper):
             return
         self.setMainUrl(data.meta["url"])
 
-        is_search = "search?phrase=" in cItem.get("url", "")
+        is_search = "search?phrase=" in baseUrl
+        if is_search and "/logowanie" in data.meta.get("url", ""):
+            # since 10.2026 the site sends a search without a login to its login page
+            SetIPTVPlayerLastHostError(_("Login needed"))
+            return
 
         if is_search:
             items = []
@@ -285,6 +356,7 @@ class Filman(CBaseHostClass, CaptchaHelper):
 
         printDBG("Filman.listItems found %d items" % len(items))
 
+        normalize = IsMediaNamingNormalized()
         for item in items:
             info = self._parseItemInfo(item)
             if "url" not in info:
@@ -292,13 +364,7 @@ class Filman(CBaseHostClass, CaptchaHelper):
 
             film_url = info["url"]
             title = info["title"]
-            icon = info.get("icon", self.DEFAULT_ICON_URL)
-
-            display_title = title
-            if info["year"] and info["year"] not in display_title:
-                display_title = display_title + " (" + info["year"] + ")"
-
-            file_title = self._cleanTitleForFilename(title, info["year"])
+            icon = info.get("icon") or self.DEFAULT_ICON_URL
 
             desc_parts = []
             if info["year"]:
@@ -316,83 +382,91 @@ class Filman(CBaseHostClass, CaptchaHelper):
                 continue
 
             if is_series:
-                params = {"good_for_fav": True, "category": "list_series", "url": film_url, "title": display_title, "desc": full_desc, "icon": icon}
+                display_title = title
+                if info["year"] and info["year"] not in display_title:
+                    display_title = display_title + " (" + info["year"] + ")"
+                params = {"name": "category", "good_for_fav": True, "category": "list_series", "url": film_url, "title": display_title, "desc": full_desc, "icon": icon,
+                          "s_title": self._seriesName(title), "s_year": info["year"], "meta_type": "tv"}
                 self.addDir(params)
             else:
-                params = {"good_for_fav": True, "url": film_url, "title": file_title, "desc": full_desc, "icon": icon}
+                params = {"name": "category", "good_for_fav": True, "url": film_url, "title": self._cleanTitleForFilename(title, info["year"]) if normalize else title,
+                          "desc": full_desc, "icon": icon, "s_title": title, "s_year": info["year"], "meta_type": "movie"}
                 self.addVideo(params)
 
         if not is_search:
             next_page_match = re.search(r'''<li\s+class=['"]next['"]\s*>\s*<a\s+href=['"]\?page=(\d+)['"][^>]*>Nast''', data)
             if not next_page_match:
                 next_page_match = re.search(r'''<li\s+class=['"]next['"]\s*>\s*<a\s+href=['"]\?page=(\d+)['"]''', data)
-
-            if next_page_match:
-                next_page = int(next_page_match.group(1))
-                printDBG("Filman.listItems adding next page: %d" % next_page)
-                params = dict(cItem)
-                params.update({"title": _("Next page"), "page": next_page, "icon": self.DEFAULT_ICON_URL})
-                self.addDir(params)
-            else:
+            if not next_page_match:
                 printDBG("Filman.listItems NO next page found in data")
+            # no last page: the pager behind the Cloudflare check could not be checked for a "last" link, and the
+            # highest number of a pager window would cap Jump below the real end
+            tpl = listUrl.replace("{", "{{").replace("}", "}}") + ("&" if "?" in listUrl else "?") + "page={page}"
+            addPagingItems(self, dict(cItem, base_url=baseUrl), page, bool(next_page_match) and bool(items), 0, tpl)
 
-    def listSeries(self, cItem):
-        printDBG("Filman.listSeries %s" % cItem)
-        sts, data = self.getPage(cItem["url"])
-        if not sts:
-            return
-        self.setMainUrl(data.meta["url"])
-
-        series_title = cItem.get("title", "")
-        if series_title:
-            series_title = re.sub(r'\s*\(\d{4}\)\s*$', '', series_title).strip()
-            series_title = re.sub(r'\s*\bonline\s+pl\b\s*', '', series_title, flags=re.IGNORECASE).strip()
-            series_title = series_title.split('/')[0].strip()
-
-        episodes = re.findall(
-            r'<a\s+href=["\']([^"\']+)["\'][^>]*?>\s*(.*?)</a>',
-            data,
-            re.DOTALL | re.IGNORECASE,
-        )
-        for url, raw_title in episodes:
+    def _episodes(self, data):
+        # [(season, episode, url, ep_title)] in page order - "[s01e02] Title" links to /e/...
+        episodes = []
+        for url, raw_title in re.findall(r'<a\s+href=["\']([^"\']+)["\'][^>]*?>\s*(.*?)</a>', data, re.DOTALL | re.IGNORECASE):
             if '/e/' not in url:
                 continue
             url = self.getFullUrl(url)
-            if url == "":
+            if url == "" or url in [e[2] for e in episodes]:
                 continue
             raw_title = self.cleanHtmlStr(raw_title).strip()
-            match = re.match(
-                r'\[?(s\d+e\d+)\]?\s*(.*)',
-                raw_title,
-                re.IGNORECASE,
-            )
+            match = re.match(r'\[?s(\d+)e(\d+)\]?\s*(.*)', raw_title, re.IGNORECASE)
             if match:
-                episode_num = match.group(1).upper()
-                ep_title = match.group(2).strip()
+                episodes.append((str(int(match.group(1))), str(int(match.group(2))), url, match.group(3).strip()))
             else:
-                episode_num = ""
-                ep_title = raw_title
-            if episode_num:
-                if ep_title:
-                    full_title = "%s [%s] %s" % (
-                        series_title,
-                        episode_num,
-                        ep_title,
-                    )
-                else:
-                    full_title = "%s [%s]" % (
-                        series_title,
-                        episode_num,
-                    )
+                episodes.append(("", "", url, raw_title))
+        return episodes
+
+    def listSeries(self, cItem):
+        printDBG("Filman.listSeries %s" % cItem)
+        url = cItem["url"].split("#", 1)[0]
+        sts, data = self.getPage(url)
+        if not sts:
+            return
+        self.setMainUrl(data.meta["url"])
+        episodes = self._episodes(data)
+        seasons = []
+        for ep in episodes:
+            if ep[0] and ep[0] not in seasons:
+                seasons.append(ep[0])
+        sTitle = cItem.get("s_title", "") or self._seriesName(cItem.get("title", ""))
+        if len(seasons) < 2:
+            self.listEpisodes(dict(cItem, s_title=sTitle), episodes)
+            return
+        normalize = IsMediaNamingNormalized()
+        for season in sorted(seasons, key=int):
+            count = len([ep for ep in episodes if ep[0] == season])
+            params = dict(cItem)
+            params.update({"good_for_fav": True, "category": "list_season", "season": season, "s_title": sTitle, "url": "%s#s%s" % (url, season),
+                           "title": "%s - %s" % (sTitle, formatSxxExx(season) if normalize else "%s %s" % (_("Season"), season)),
+                           "desc": "%s: %d\n%s" % (_("Episodes"), count, cItem.get("desc", ""))})
+            self.addDir(params)
+
+    def listEpisodes(self, cItem, episodes=None):
+        printDBG("Filman.listEpisodes %s" % cItem)
+        season = str(cItem.get("season", "") or "")
+        if episodes is None:
+            sts, data = self.getPage(cItem["url"])
+            if not sts:
+                return
+            episodes = [ep for ep in self._episodes(data) if ep[0] == season]
+        sTitle = cItem.get("s_title", "") or self._seriesName(cItem.get("title", ""))
+        normalize = IsMediaNamingNormalized()
+        for epSeason, epNum, url, epTitle in episodes:
+            if normalize and epSeason and epNum:
+                title = "%s - %s" % (sTitle, formatSxxExx(epSeason, epNum))
+            elif epNum:
+                tag = "S%02dE%02d" % (int(epSeason), int(epNum))
+                title = self._cleanTitleForFilename("%s [%s] %s" % (sTitle, tag, epTitle) if epTitle else "%s [%s]" % (sTitle, tag))
             else:
-                full_title = "%s - %s" % (series_title, ep_title)
-            clean_title = self._cleanTitleForFilename(full_title)
-            params = {
-                "good_for_fav": True,
-                "url": url,
-                "title": clean_title,
-                "icon": cItem["icon"],
-            }
+                title = self._cleanTitleForFilename("%s - %s" % (sTitle, epTitle))
+            params = {"name": "category", "good_for_fav": True, "url": url, "title": title, "icon": cItem.get("icon", ""), "s_title": sTitle,
+                      "s_year": cItem.get("s_year", ""), "season": epSeason, "episode": epNum, "meta_type": "tv",
+                      "desc": "%s[/br]%s" % (epTitle, cItem.get("desc", "")) if epTitle else cItem.get("desc", "")}
             self.addVideo(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -400,24 +474,13 @@ class Filman(CBaseHostClass, CaptchaHelper):
         params = {"name": "category", "category": "list_items", "good_for_fav": False, "url": url}
         self.listItems(params)
 
-    def rot13(self, s):
-        result = []
-        for c in s:
-            if 'a' <= c <= 'z':
-                result.append(chr((ord(c) - ord('a') + 13) % 26 + ord('a')))
-            elif 'A' <= c <= 'Z':
-                result.append(chr((ord(c) - ord('A') + 13) % 26 + ord('A')))
-            else:
-                result.append(c)
-        return ''.join(result)
-
-    def decodeEmbedUrl(self, encoded_string):
+    def getHostNameFromUrl(self, url):
         try:
-            decoded_base64 = ensure_str(base64.b64decode(encoded_string))
-            decoded_rot13 = self.rot13(decoded_base64)
-            return decoded_rot13
+            host = re.search(r'https?://([^/]+)', url).group(1)
+            host = host.replace('www.', '')
+            return host.split('.')[0]
         except Exception:
-            return ""
+            return "filman"
 
     def _xd_decode(self, enc, key):
         try:
@@ -431,14 +494,6 @@ class Filman(CBaseHostClass, CaptchaHelper):
         except Exception as e:
             printDBG("_xd_decode error: %s" % str(e))
             return ""
-
-    def getHostNameFromUrl(self, url):
-        try:
-            host = re.search(r'https?://([^/]+)', url).group(1)
-            host = host.replace('www.', '')
-            return host.split('.')[0]
-        except Exception:
-            return "filman"
 
     def _tryDecodeXdFromData(self, data):
         e_match = re.search(r"var\s+_e\s*=\s*'([^']+)'", data)
@@ -469,6 +524,7 @@ class Filman(CBaseHostClass, CaptchaHelper):
         return ""
 
     def _getLinkToken(self, link_id):
+        # the token endpoint refuses requests that come right after the page (the author's value, see #476)
         time.sleep(1.0)
 
         params = dict(self.defaultParams)
@@ -560,33 +616,22 @@ class Filman(CBaseHostClass, CaptchaHelper):
 
                 retTab.append({"name": name, "url": strwithmeta(link_id, {"Referer": cItem["url"], "link_id": link_id, "pending": True}), "need_resolve": 1})
         if retTab:
+            retTab = applySidecarToLinks(retTab, buildSidecarFromItem(cItem, IsSidecarEnabled(), cItem.get("desc", "")))
             self.cacheLinks[cacheKey] = retTab
+        elif links_section and "/premium" in links_section:
+            SetIPTVPlayerLastHostError("Only premium links are available for this title.")
         return retTab
 
     def getVideoLinks(self, baseUrl):
         printDBG("Filman.getVideoLinks [%s]" % baseUrl)
         baseUrl = strwithmeta(baseUrl)
+        sidecar = sidecarFromUrlMeta(baseUrl, IsSidecarEnabled())
 
         link_id = baseUrl.meta.get("link_id", "")
         is_pending = baseUrl.meta.get("pending", False)
 
-        if not link_id:
-            for key in self.cacheLinks:
-                for idx in range(len(self.cacheLinks[key])):
-                    if baseUrl in self.cacheLinks[key][idx]["url"]:
-                        if not self.cacheLinks[key][idx]["name"].startswith("*"):
-                            self.cacheLinks[key][idx]["name"] = "*" + self.cacheLinks[key][idx]["name"] + "*"
-                        break
-            return self.up.getVideoLinkExt(baseUrl)
-
-        if not is_pending:
-            for key in self.cacheLinks:
-                for idx in range(len(self.cacheLinks[key])):
-                    if baseUrl in self.cacheLinks[key][idx]["url"]:
-                        if not self.cacheLinks[key][idx]["name"].startswith("*"):
-                            self.cacheLinks[key][idx]["name"] = "*" + self.cacheLinks[key][idx]["name"] + "*"
-                        break
-            return self.up.getVideoLinkExt(baseUrl)
+        if not link_id or not is_pending:
+            return decorateResolvedLinkItems(self.up.getVideoLinkExt(baseUrl), sidecar)
 
         embed_url = self._getLinkToken(link_id)
         if not embed_url:
@@ -607,31 +652,22 @@ class Filman(CBaseHostClass, CaptchaHelper):
         if not finalUrl:
             return []
 
-        host_name = self.getHostNameFromUrl(finalUrl)
+        return decorateResolvedLinkItems(self.up.getVideoLinkExt(strwithmeta(finalUrl, {"Referer": self.getMainUrl()})), sidecar)
 
-        for key in self.cacheLinks:
-            for idx in range(len(self.cacheLinks[key])):
-                if link_id in self.cacheLinks[key][idx]["url"]:
-                    if not self.cacheLinks[key][idx]["name"].startswith("*"):
-                        self.cacheLinks[key][idx]["name"] = "*" + host_name + "*"
-                    break
-
-        return self.up.getVideoLinkExt(strwithmeta(finalUrl, {"Referer": self.getMainUrl()}))
-
+    ###################################################
+    # INFO
+    ###################################################
     def getArticleContent(self, cItem):
         printDBG("Filman.getArticleContent %s" % cItem)
         sts, data = self.getPage(cItem["url"])
         if not sts:
-            return []
+            data = ""
 
         title = cItem.get("title", "")
         icon = cItem.get("icon", "")
-        desc = cItem.get("desc", "")
-
-        year = ""
-        duration = ""
-        views = ""
-        genres_str = ""
+        desc = ""
+        pageTitle = ""
+        info = {}
 
         single_info = self.cm.ph.getDataBeetwenNodes(data, ('<div', 'id="single-info"'), ('</div', '>'))[1]
 
@@ -640,14 +676,8 @@ class Filman(CBaseHostClass, CaptchaHelper):
             if not h1_match:
                 h1_match = re.search(r'<h1[^>]*?itemprop="partOfSeries"[^>]*?>(.*?)</h1>', single_info, re.DOTALL)
             if h1_match:
-                title = self.cleanHtmlStr(h1_match.group(1))
-                title = re.sub(r'\s*\bonline\s+pl\b\s*', '', title, flags=re.IGNORECASE).strip()
-
-            episode_subtitle = re.search(r'<span\s+itemprop="name">(.*?)</span>', single_info, re.DOTALL)
-            if episode_subtitle:
-                ep_name = self.cleanHtmlStr(episode_subtitle.group(1))
-                if ep_name:
-                    title = title + " - " + ep_name
+                pageTitle = self.cleanHtmlStr(h1_match.group(1))
+                pageTitle = re.sub(r'\s*\bonline\s+pl\b\s*', '', pageTitle, flags=re.IGNORECASE).strip()
 
             meta_items = re.findall(r'<div\s+class="flm-meta-item">(.*?)</div>', single_info, re.DOTALL)
             for meta in meta_items:
@@ -655,14 +685,16 @@ class Filman(CBaseHostClass, CaptchaHelper):
                 if value_match:
                     val = self.cleanHtmlStr(value_match.group(1))
                     if '📅' in meta:
-                        year = val
+                        info["year"] = val
                     elif '⏳' in meta:
-                        duration = val
+                        info["duration"] = val
                     elif '👁' in meta:
-                        views = val
+                        info["views"] = val
 
             genres = re.findall(r'<a[^>]*?class="flm-genre-tag"[^>]*?>(.*?)</a>', single_info)
             genres_str = ", ".join([self.cleanHtmlStr(g) for g in genres])
+            if genres_str:
+                info["genres"] = genres_str
 
         poster_match = re.search(r'<img\s+class="main-poster"[^>]*?src="([^"]+)"', data)
         if poster_match:
@@ -672,31 +704,50 @@ class Filman(CBaseHostClass, CaptchaHelper):
         if desc_match:
             desc = self.cleanHtmlStr(desc_match.group(1))
 
-        desc_parts = []
-        if year:
-            desc_parts.append(_("Year:") + " " + year)
-        if duration:
-            desc_parts.append(_("Duration:") + " " + duration)
-        if views:
-            desc_parts.append(_("Views:") + " " + views)
-        if genres_str:
-            desc_parts.append(_("Genre:") + " " + genres_str)
-        if desc:
-            desc_parts.append(desc)
+        # moviemeta: the IMDb id when the page links it, else the original title ("Pacjent / The Patient")
+        mediaType = cItem.get("meta_type", "") or ("tv" if re.search(r"/(?:s|e|serial)/", cItem["url"]) else "movie")
+        name = cItem.get("s_title", "") or pageTitle or title
+        if mediaType == "tv":
+            name = self._seriesName(pageTitle if (pageTitle and not cItem.get("s_title")) else name)
+        lookup = name.split("/")[-1].strip() if "/" in name else name
+        year = info.get("year", "") or cItem.get("s_year", "")
+        meta = {}
+        try:
+            imdb = self.cm.ph.getSearchGroups(data, r"imdb\.com/title/(tt\d+)")[0]
+            if imdb:
+                meta = getMetaByImdbId(mediaType, imdb)
+            if not meta and lookup:
+                meta = getMeta(mediaType, lookup, "" if mediaType == "tv" else year)
+        except Exception:
+            printExc()
+        otherInfo = dict(meta.get("info", {}))
+        otherInfo.update(info)
+        text = desc or cItem.get("desc", "")
+        metaPlot = meta.get("plot", "")
+        if metaPlot and text and metaPlot not in text:
+            text = "%s[/br][/br]%s" % (text, metaPlot)
+        else:
+            text = text or metaPlot
+        icon = icon or meta.get("poster", "") or self.DEFAULT_ICON_URL
+        return [{"title": title, "text": text, "images": [{"title": "", "url": icon}], "other_info": otherInfo}]
 
-        full_desc = "[/br]".join(desc_parts)
-
-        return [{"title": title, "text": full_desc, "images": [{"title": "", "url": icon}], "other_info": {"custom_items_list": []}}]
-
+    ###################################################
+    # login (own account / own browser session only)
+    ###################################################
     def tryTologin(self):
         printDBG("tryTologin start")
         manual_sessid = config.plugins.iptvplayer.filman_cookie_phpsessid.value.strip()
         if manual_sessid:
-            self._overwriteCookie(manual_sessid)
+            if manual_sessid == self.sessid:
+                return self.loggedIn
+            self.sessid = manual_sessid
+            self._setSessionCookie(manual_sessid)
             sts, data = self.getPage(self.getFullUrl("/logowanie"))
             if sts and "/wylogowanie" in data:
                 self.loggedIn = True
                 return True
+        else:
+            self.sessid = ""
 
         if self.loggedIn is None or self.login != config.plugins.iptvplayer.filman_login.value or self.password != config.plugins.iptvplayer.filman_password.value:
             self.login = config.plugins.iptvplayer.filman_login.value
@@ -733,19 +784,19 @@ class Filman(CBaseHostClass, CaptchaHelper):
             sitekey = "6LcQs24iAAAAALFibpEQwpQZiyhOCn-zdc-eFout"
             token = None
             printDBG("Trying sitekey: %s" % sitekey)
-            token, _ = self.processCaptcha(sitekey, self.getFullUrl("/logowanie"))
+            token, _unused = self.processCaptcha(sitekey, self.getFullUrl("/logowanie"))
             if not token:
                 ent_sitekey = "6LdjECEpAAAAAII12AekMIVTsLnFA6A1Qeu7YRnU"
                 printDBG("Trying enterprise sitekey: %s" % ent_sitekey)
-                token, _ = self.processCaptcha(ent_sitekey, self.getFullUrl("/logowanie"), captchaType="ENTERPRISE")
+                token, _unused = self.processCaptcha(ent_sitekey, self.getFullUrl("/logowanie"), captchaType="ENTERPRISE")
 
             if token:
                 post_data["g-recaptcha-response"] = token
                 printDBG("Got recaptcha token")
             else:
-                printDBG("Failed to get any recaptcha token – login will likely fail")
+                printDBG("Failed to get any recaptcha token - login will likely fail")
 
-            sts, _ = self.getPage(self.getFullUrl("/logowanie"), login_params, post_data)
+            sts, _unused = self.getPage(self.getFullUrl("/logowanie"), login_params, post_data)
             sts, data = self.getPage(self.getFullUrl("/logowanie"), login_params)
             if sts and "/wylogowanie" in data:
                 self.loggedIn = True
@@ -770,6 +821,8 @@ class Filman(CBaseHostClass, CaptchaHelper):
         printDBG("handleService start")
         self.tryTologin()
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
+        if isJumpItem(self.currItem):
+            self.currItem = jumpTarget(self, self.currItem)
         name = self.currItem.get("name", "")
         category = self.currItem.get("category", "")
         self.cacheLinks = {}
@@ -784,6 +837,8 @@ class Filman(CBaseHostClass, CaptchaHelper):
             self.listItems(self.currItem)
         elif category == "list_series":
             self.listSeries(self.currItem)
+        elif category == "list_season":
+            self.listEpisodes(self.currItem)
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({"search_item": False, "name": "category"})
@@ -795,10 +850,13 @@ class Filman(CBaseHostClass, CaptchaHelper):
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
-class IPTVHost(CHostBase):
+class IPTVHost(GenericFolderWatchedHostMixin, CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, Filman(), True, [])
+        self.cachedRet = None
+        self.refreshAfterWatchedFlagChange = False
+        self.watchedHelper = IPTVWatchedHelper("filman")
 
     def withArticleContent(self, cItem):
-        return True
+        return cItem.get("type") == "video" or cItem.get("category", "") in ("list_series", "list_season")
