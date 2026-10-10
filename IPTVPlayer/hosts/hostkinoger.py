@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 27.09.2026
+# Last Modified: 10.10.2026
 # 05.04.2026 - Mr.X
+# 10.10.2026 - kinoger.ch: Cloudflare + HostAdmin.online WAF, both through MyE2i (pCommon asks the cookie mode after
+#              the Cloudflare one); default icon from the plugin, covers on the site with the solving User-Agent
 import re
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
+from Plugins.Extensions.IPTVPlayer.libs.botprotection import remembered_user_agent
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import GetIconDir, printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 
 try:
@@ -31,7 +34,8 @@ class KinoGer(CBaseHostClass):
         # the site's anti-bot filter answers every full browser User-Agent with a JS verification page
         self.HEADER["User-Agent"] = "Mozilla/5.0"
         self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
-        self.DEFAULT_ICON_URL = gettytul() + "templates/kinoger/images/logo.png"
+        # the site's own logo sits behind both checks - IconMenager would get 403 without the cookies
+        self.DEFAULT_ICON_URL = "file://" + GetIconDir("PlayerSelector/kinoger135.png")
         self.MAIN_URL = gettytul()
         self.MENU = [{"category": "list_items", "title": "Neues", "url": self.MAIN_URL}, {"category": "list_items", "title": _("Series"), "url": self.getFullUrl("/stream/serie/")}, {"category": "list_genres", "title": "Genres"}] + self.searchItems()
 
@@ -45,7 +49,9 @@ class KinoGer(CBaseHostClass):
         if url == "":
             return ""
         cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE)
-        return strwithmeta(url, {"Cookie": cookieHeader, "User-Agent": self.HEADER.get("User-Agent")})
+        # the cookies only work with the User-Agent of the browser that solved the checks
+        userAgent = remembered_user_agent(self.COOKIE_FILE) or self.HEADER.get("User-Agent")
+        return strwithmeta(url, {"Cookie": cookieHeader, "User-Agent": userAgent})
 
     def listItems(self, cItem):
         printDBG("KinoGer.listItems |%s|" % cItem)

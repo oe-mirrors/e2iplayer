@@ -93,6 +93,13 @@ def detect(status=0, headers=None, body='', url=''):
                 return needle
         return ''
 
+    # --- HostAdmin.online WAF (kinoger), often behind Cloudflare ------------
+    # add 101026: its pages run before the Cloudflare checks below - the "Access Denied" page comes as
+    # "server: cloudflare, HTTP 403", which would read as a Cloudflare challenge. "Verification..." = WASM
+    # proof of work + browser data in the page, ends in the ha-waf-* cookies -> MyE2i cookie mode
+    if has('hostadmin.online') and has('runwafengine', '__waf_i18n__', '<title>access denied', 'access is denied'):
+        return Protection('HostAdmin.online WAF', KIND_COOKIE_GATE, has('runwafengine', '__waf_i18n__') or 'access denied page')
+
     # --- Cloudflare -------------------------------------------------------
     marker = has('sorry, you have been blocked', 'cf-error-details', 'error 1020')
     if marker and ('cloudflare' in server or 'cloudflare' in b):
@@ -149,3 +156,14 @@ def detect(status=0, headers=None, body='', url=''):
         if needle in b:
             return Protection(name, KIND_CAPTCHA, needle)
     return None
+
+
+# check pages that can come as an ordinary HTTP 200 answer (a getPage "success"). Only names whose markers
+# never show on the site's real pages - detect() on every normal page would trip over words like "datadome"
+_GATES_ON_SUCCESS = ('HostAdmin.online WAF',)
+
+
+def gate_page_on_success(status=200, headers=None, body='', url=''):
+    """a check page that arrived as a normal answer, else None"""
+    found = detect(status, headers, body, url)
+    return found if found is not None and found.name in _GATES_ON_SUCCESS else None

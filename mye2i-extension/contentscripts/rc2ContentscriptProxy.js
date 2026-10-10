@@ -606,13 +606,19 @@ var E2I_CHALLENGE_MARKERS = ['just a moment', 'cf-chl', '_cf_chl_opt', '/cdn-cgi
     // v1.19: the image captcha of the uprot.net link protector (cb01 MaxStream links)
     'upcaptcha-form'];
 
+// v1.20: check pages that carry their whole engine inline and so are bigger than 60000 - markers that
+// never show on a normal page (HostAdmin.online WAF "Verification..." of kinoger, about 85 KB: WASM
+// proof of work, the inline call window.runWafEngine({...}))
+var E2I_BIG_CHALLENGE_MARKERS = ['runwafengine('];
+
 // Interstitials are small pages. A big page that merely mentions one of the
 // words (a "protected by DDoS-Guard" footer) is a normal page.
 function e2iLooksLikeAnyChallenge() {
     try {
         var html = document.documentElement.innerHTML;
         if (html.length > 60000) {
-            return false;
+            html = html.toLowerCase();
+            return E2I_BIG_CHALLENGE_MARKERS.some(function (marker) { return html.includes(marker); });
         }
         html = (document.title + ' ' + html).toLowerCase();
         for (const marker of E2I_CHALLENGE_MARKERS) {

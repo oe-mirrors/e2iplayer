@@ -1,11 +1,19 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 07.09.2026
+# Last Modified: 10.10.2026
 # =========== Created by angel_heart (Mohamed Elsafty) ======== 20260801
 # 24.08.2026 - Fixed search (search_item was False), switched to
 # searchItems()/listsHistory() pattern, added watched/started flag support,
 # removed duplicated link-building code
+# 10.10.2026 - links: the watch page has no window.__OPT server list any more, the servers are a form
+# (/api/go?t=..&slug=..[&s=..&e=..]&x=N -> embed url of server N, like vumoo of the same network); the site's
+# "Quick check" page is passed like the vumoo host does it
+import hashlib
+import struct
+
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase, RetHost
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_binary, ensure_str
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
@@ -26,6 +34,15 @@ def _cleanSeriesTitle(title):
     return _SERIES_SUFFIX_RE.sub("", title or "").strip()
 
 
+# servers of the site that urlparser resolves, best first: (label of the site's button, lowercase), needs enc-dec.app
+SERVERS = (("vidsrc.mov", False), ("vidsrc-v1", False), ("vidrock", False), ("vixsrc", False), ("vidlink", False),
+           ("vidsrc.fyi", False), ("vidnest", False), ("peachify", False),
+           ("vidfast", True), ("vidup", True), ("vidcore-v2", True))
+# their numbers on 10.10.2026, used when the server list cannot be read from the page
+SERVER_FALLBACK = (("0", "vidsrc.mov"), ("5", "vidrock"), ("7", "vidlink"), ("1", "vidsrc.fyi"), ("6", "vidnest"))
+WATCH_RE = re.compile(r"/watch/((movie|tv)-[^/?#]+)")
+
+
 def GetConfigList():
     return []
 
@@ -39,7 +56,9 @@ class Cineb(CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(self, {"history": "Cineb", "cookie": "Cineb.cookie"})
         self.HEADER = self.cm.getDefaultHeader()
-        self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
+        # hv / hv2 are set by the script of the "Quick check" page, hv3 comes from the server
+        self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE,
+                              "cookie_items": {"hv": "1", "hv2": "1"}}
         self.MAIN_URL = "https://cineb.sx"
         self.DEFAULT_ICON_URL = self.MAIN_URL + "/assets/brands/cineb/favicon.png"
         self.cacheSeasons = {}
@@ -61,7 +80,76 @@ class Cineb(CBaseHostClass):
             if "header" not in addParams:
                 addParams["header"] = dict(self.HEADER)
         addParams["header"]["Referer"] = self.MAIN_URL
-        return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
+        sts, data = self.cm.getPageCFProtection(baseUrl, addParams, post_data)
+        if sts and self._isGate(data):
+            if self._passGate(baseUrl):
+                sts, data = self.cm.getPageCFProtection(baseUrl, dict(addParams), post_data)
+            if sts and self._isGate(data):
+                printDBG("Cineb: still the quick check page [%s]" % baseUrl)
+                return False, ""
+        return sts, data
+
+    @staticmethod
+    def _isGate(data):
+        return "<title>Quick check" in (data or "")[:2000]
+
+    def _passGate(self, url):
+        # what the script of the check page does: GET <path>?__hvtok=1&s=1 -> {"seed", "bits"}, find n with
+        # sha256("seed:n") below 2^(32-bits), GET <path>?__hvtok=1&seed=..&n=.. -> sets the hv3 cookie
+        path = url.split("#", 1)[0].split("?", 1)[0]
+        sts, data = self.cm.getPage(path + "?__hvtok=1&s=1&r=0", dict(self.defaultParams))
+        query = "nc=1"
+        try:
+            js = json_loads(data) if sts else {}
+            seed, bits = ensure_str(js.get("seed") or ""), int(js.get("bits") or 0)
+            if seed and 0 < bits <= 22:
+                target = 2 ** (32 - bits)
+                for n in range(1, 2 ** (bits + 4)):
+                    digest = hashlib.sha256(ensure_binary("%s:%d" % (seed, n))).digest()
+                    if struct.unpack(">I", digest[:4])[0] < target:
+                        query = "seed=%s&n=%d" % (seed, n)
+                        break
+        except Exception:
+            printExc()
+        sts, data = self.cm.getPage("%s?__hvtok=1&%s&r=0" % (path, query), dict(self.defaultParams))
+        ok = sts and re.match(r"^[0-9a-f]{32}", (data or "").strip()) is not None
+        printDBG("Cineb: quick check %s [%s]" % ("passed" if ok else "failed", path))
+        return ok
+
+    def _servers(self, data):
+        # [(x, label)] of the urlparser-known servers on a watch page, in the order of SERVERS
+        found = {}
+        for x, label in re.findall(r'name="x" value="(\d+)"[^>]*>(?:\s*<i[^>]*></i>)?([^<]+)<', data or ""):
+            found.setdefault(self.cleanHtmlStr(label).lower(), (x, self.cleanHtmlStr(label)))
+        return [found[key] for key, _enc in SERVERS if key in found]
+
+    def _goLinks(self, cItem, data):
+        # the server form of the watch page -> /api/go links (resolved in getVideoLinks)
+        url = cItem.get("url", "")
+        match = WATCH_RE.search(url)
+        if not match:
+            return []
+        slug, kind = match.group(1), match.group(2)
+        season = self.cm.ph.getSearchGroups(url, r"[?&]s=(\d+)")[0]
+        episode = self.cm.ph.getSearchGroups(url, r"[?&]e=(\d+)")[0]
+        if kind == "tv" and not (season and episode):
+            return []
+        servers = self._servers(data) or list(SERVER_FALLBACK)
+        try:
+            from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsExternalResolveAllowed
+            external = IsExternalResolveAllowed()
+        except Exception:
+            external = False
+        needsExternal = dict(SERVERS)
+        urlTab = []
+        for x, label in servers:
+            if needsExternal.get(label.lower()) and not external:
+                continue
+            goUrl = "%s/api/go?t=%s&slug=%s&x=%s" % (self.MAIN_URL, kind, slug, x)
+            if kind == "tv":
+                goUrl += "&s=%s&e=%s" % (season, episode)
+            urlTab.append({"name": label, "url": strwithmeta(goUrl, {"Referer": url}), "need_resolve": 1})
+        return urlTab
 
     def _getWatchedKeyForItem(self, cItem):
         try:
@@ -236,9 +324,11 @@ class Cineb(CBaseHostClass):
         if seriesUrl is None:
             seriesUrl = cItem.get("series_url", cItem["url"])
         seasonUrl = cItem["url"]
-        episodes = re.findall(r'<a[^>]+href=["\'](/watch/[^"\']+)["\'][^>]+class=["\']ep-tile[^"\']*["\'][^>]*title=["\']([^"\']+)["\']', data)
+        # ep-card since 10.10.2026 (title "E5 · Name"), ep-tile before
+        episodes = re.findall(r'<a[^>]+href=["\'](/watch/[^"\']+)["\'][^>]+class=["\']ep-(?:card|tile)[^"\']*["\'][^>]*title=["\']([^"\']+)["\']', data)
         if not episodes:
-            episodes = re.findall(r'<a[^>]+href=["\'](/watch/[^"\']+)["\'][^>]+class=["\']ep-tile[^"\']*["\'][^>]*>([^<]+)<', data)
+            episodes = re.findall(r'<a[^>]+href=["\'](/watch/[^"\']+)["\'][^>]+class=["\']ep-(?:card|tile)[^"\']*["\'][^>]*>([^<]+)<', data)
+        episodes = [(url, re.sub(r"^E\d+\s*\S\s*", "", rawTitle)) for url, rawTitle in episodes]
         normalize = IsMediaNamingNormalized()
         sTitle = cItem.get("s_title") or _cleanSeriesTitle(cItem.get("title", ""))
         episodeItems = []
@@ -384,10 +474,15 @@ class Cineb(CBaseHostClass):
             except Exception:
                 printExc()
         if not urlTab:
+            urlTab = self._goLinks(cItem, data)
+        if not urlTab:
             iframeList = re.findall(r'<iframe[^>]+src=["\']([^"\']+)["\']', data, re.I)
             for src in iframeList:
                 if "youtube" not in src and "google" not in src:
                     urlTab.append(self._linkItemFromUrl(src, cItem))
+        if not urlTab:
+            SetIPTVPlayerLastHostError(_("No streams are available for this title yet."))
+            return []
         descMatch = re.search(r'class=["\']description text-expand["\'][^>]*>(.*?)</div>', data, re.DOTALL)
         synopsis = self.cleanHtmlStr(descMatch.group(1)) if descMatch else ""
         if not synopsis:
@@ -396,9 +491,28 @@ class Cineb(CBaseHostClass):
 
     def getVideoLinks(self, url):
         printDBG("Cineb.getVideoLinks [%s]" % url)
-        if self.cm.isValidUrl(url):
-            return decorateResolvedLinkItems(self.up.getVideoLinkExt(url), sidecarFromUrlMeta(url, IsSidecarEnabled()))
-        return []
+        if not self.cm.isValidUrl(url):
+            return []
+        sidecar = sidecarFromUrlMeta(url, IsSidecarEnabled())
+        embed = str(url)
+        if "/api/go?" in embed:
+            # answers with a page that refreshes to the embed url of the chosen server
+            params = dict(self.defaultParams)
+            params["header"] = dict(self.HEADER)
+            sts, data = self.getPage(embed, params)
+            if not sts:
+                return []
+            embed = self.cm.ph.getSearchGroups(data, r'http-equiv="refresh" content="\d+;\s*url=([^"]+)"')[0] or self.cm.ph.getSearchGroups(data, r'<a href="(https?://[^"]+)"')[0]
+            embed = embed.replace("&amp;", "&")
+            if not self.cm.isValidUrl(embed):
+                printDBG("Cineb: no player url")
+                return []
+            if self.up.checkHostSupport(embed) != 1:
+                printDBG("Cineb: player not known to urlparser [%s]" % embed)
+                SetIPTVPlayerLastHostError(_("No streams are available for this title yet."))
+                return []
+            url = strwithmeta(embed, {"Referer": self.MAIN_URL + "/"})
+        return decorateResolvedLinkItems(self.up.getVideoLinkExt(url), sidecar)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("Cineb.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))

@@ -1,6 +1,6 @@
 {
   "name": "MyE2iV3",
-  "version": "1.19",
+  "version": "1.20",
   "description": "E2iPlayer helper extension for solving captchas (Cloudflare managed-challenge detection fixes, see README.md)",
   "manifest_version": 3,
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzM7tsn0Id82Ptcfypj7u96471Z9DyxVd8tqCiINmFgqt2rJQlQeIyqECI0D1uMXdtLnNHewHC/LdsbQEaRolyLnmWrWcE3GByY0SMdZcZ6YkiBaWC0BS+3jPizQv+SHFkq3YgYvStd0bRcJKbav8ZrTfHlpbO1dUt6ua1cGIfvge4cePt4bsX7T3WveZ79SgY/EqipUkGPueuj4ZXHTQFvEsF6Txz/KAn8zsXeFYt4+RvvK8KPMkRWeO9fk9dcgqDAcTWmBKkAuQDcnOPIzbWVDYfCvPxEaArgaMY2Pjja5WT7tSpm9id64llbpQy3UE/Cyt+bhI5t0hp3zv/pkKrwIDAQAB",

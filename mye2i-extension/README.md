@@ -1,4 +1,4 @@
-# MyE2iV3 - browser extension for E2iPlayer (v1.19)
+# MyE2iV3 - browser extension for E2iPlayer (v1.20)
 
 MyE2iV3 lets a real browser solve what the receiver cannot: Cloudflare challenges, other
 browser checks (DDoS-Guard, Anubis, ...) and captchas (reCAPTCHA, hCaptcha, Turnstile). The
@@ -64,6 +64,14 @@ the cookies of the unsolved page after 3 s (a box log of 09.10.2026 showed the c
 anyone could solve it). The cookie-mode result also carries `links`: the targets of the links that hold a
 button on the settled page (at most 20), taken before the page is wiped. uprot opens its one-time
 CONTINUE link only once per solved captcha, so the host takes it from there instead of asking again.
+
+Since v1.20 the cookie mode also waits for the HostAdmin.online WAF ("Verification...", kinoger): its
+page carries the whole engine inline (about 85 KB) and was skipped by the 60000 size limit, so the
+cookies could leave while the proof of work was still running. On the box the WAF sits behind
+Cloudflare: `getPageCFProtection()` first solves Cloudflare (`CF`), then sees the WAF page
+(`botprotection.py`: "HostAdmin.online WAF", cookie check) and asks once more in `COOKIES` mode - the site
+needs every cookie (`cf_clearance`, `ha-waf-*`, `PHPSESSID`, ...). The domain is remembered for the
+session, so the next challenge (the WAF ticket lasts about 30 minutes) goes to the cookie mode directly.
 
 ### More captcha types
 

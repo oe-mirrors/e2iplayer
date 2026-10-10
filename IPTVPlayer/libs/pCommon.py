@@ -60,6 +60,11 @@ _SECRET_HEADER_RE = re.compile(r'(?<![A-Za-z0-9_-])((?:api-key|authorization)\s*
 _impersonateDomains = set()
 _impersonateMissingLogged = [False]
 
+# add 101026: domains with a second browser check behind Cloudflare (HostAdmin.online WAF: kinoger) - MyE2i's
+# CF mode only brings cf_clearance back, their check needs every cookie of the site. Found by getPageCFProtection
+# (Cloudflare solved, then the WAF page); their next challenge starts the cookie mode straight away
+_cookieGateDomains = set()
+
 
 def _impersonateDomain(url):
     try:
@@ -1546,6 +1551,21 @@ class common:
         printDBG('pCommon - saveWebFileImpersonate() -> %d bytes, HTTP %s, url: %s' % (size, status, maskSecrets(res['url'])))
         return {'sts': True, 'fsize': size, 'reason': ''}
 
+    def _gatePageOnSuccess(self, data, baseUrl):
+        '''a getPage "success" that is really a browser-check page (HostAdmin.online "Verification...", HTTP 200)'''
+        if not isinstance(data, str):
+            return None
+        try:
+            from Plugins.Extensions.IPTVPlayer.libs.botprotection import gate_page_on_success
+            meta = getattr(data, 'meta', None) or {}
+            found = gate_page_on_success(meta.get('status_code', 200), meta, data[:65536], meta.get('url', baseUrl))
+            if found is not None:
+                printDBG('PROTECTION: %s (HTTP 200 check page)' % found.describe())
+            return found
+        except Exception:
+            printExc()
+        return None
+
     def _retryImpersonate(self, baseUrl, params, post_data, data):
         '''getPageCFProtection: the answer is a Cloudflare challenge - ask again as Chrome (curl-impersonate).
         Returns (sts, data) when that got a normal answer (the domain then keeps using it), else None.'''
@@ -1580,6 +1600,8 @@ class common:
                 if found2 is not None:
                     printDBG('PROTECTION: curl-impersonate stopped too: %s' % found2.describe())
                     return None
+            elif self._gatePageOnSuccess(data2, baseUrl):
+                return None  # Chrome got past Cloudflare onto a second check page (200) - MyE2i has to solve it
             _impersonateDomains.add(domain)
             printDBG('impersonate: %s passes as Chrome (%s)' % (domain, meta2.get('impersonate')))
             return sts2, data2
@@ -1696,6 +1718,8 @@ class common:
         params.update({'CFProtection': True})
         start_time = time.time()
         sts, data = self.getPage(baseUrl, params, post_data)
+        if sts and self._gatePageOnSuccess(data, baseUrl):
+            sts = False  # a check page that answers HTTP 200 (HostAdmin.online "Verification...")
 
         impersonated = False
         if not sts and data is not None:
@@ -1705,8 +1729,12 @@ class common:
                 sts, data = retried
                 impersonated = True
 
-        if not impersonated and not sts and data is not None:
-            solveMode = 'CF'
+        gateDomain = _impersonateDomain(baseUrl)
+        solveMode = 'COOKIES' if gateDomain in _cookieGateDomains else 'CF'
+        # a second pass only when the first (CF mode) got past Cloudflare onto a check that needs every cookie
+        for solvePass in range(2):
+            if impersonated or sts or data is None:
+                break
             try:
                 from Plugins.Extensions.IPTVPlayer.libs.botprotection import detect as detectProtection, KIND_BLOCK, KIND_CAPTCHA, KIND_COOKIE_GATE
                 failMeta = getattr(data, 'meta', None) or {}
@@ -1719,12 +1747,20 @@ class common:
                         blockMeta['cf_user'] = cf_user
                         return sts, strwithmeta(data, blockMeta)
                     if found.kind in (KIND_COOKIE_GATE, KIND_CAPTCHA):
+                        if solvePass and solveMode == 'CF' and gateDomain:
+                            _cookieGateDomains.add(gateDomain)
+                            printDBG('PROTECTION: %s needs the cookie mode behind Cloudflare - asking MyE2i again' % gateDomain)
                         solveMode = 'COOKIES'
+                    elif solvePass:
+                        break  # the same check again after a solve - asking once more would not help
+                elif solvePass:
+                    break
             except Exception:
                 printExc()
             from Plugins.Extensions.IPTVPlayer.libs.recaptcha_mye2i import UnCaptchaReCaptcha
             recaptcha = UnCaptchaReCaptcha(lang=GetDefaultLang())
-            token = recaptcha.processCaptcha(start_time, baseUrl, captchaType=solveMode)
+            # the job id must be new for the second browser job
+            token = recaptcha.processCaptcha(start_time if not solvePass else time.time(), baseUrl, captchaType=solveMode)
             if token != '':
                 r = json_loads(base64.b64decode(token))
                 printDBG('>>>>>>>>>>>>>>>>>>>>> CF token >>>>>>>>>>>>>>>>>>>>>>')
@@ -1753,10 +1789,14 @@ class common:
                         except Exception:
                             printDBG('missing cf_clearance value in received token')
                 sts, data = self.getPage(baseUrl, params, post_data)
+                if sts and self._gatePageOnSuccess(data, baseUrl):
+                    sts = False
                 if not sts:
                     printDBG('>>>>>>>>>>>>>>>> not sts returned data >>>>>>>>>>>>>>')
                     printDBG(data)
                     printDBG('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
+            if token == '' or solveMode != 'CF':
+                break  # no answer from the browser, or the cookie mode already brought every cookie back
 
         data = strwithmeta(data, {'cf_user': cf_user})
 
