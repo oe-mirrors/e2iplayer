@@ -108,7 +108,8 @@
   "hawak",
   "cimatn",
   "streamdb",
-  "egyclub"
+  "egyclub",
+  "ask4movie"
  ],
  "cartoonsandanime": [
   "aniworld",
@@ -306,7 +307,8 @@
   "uhdhub",
   "showbox",
   "cinehd",
-  "streamdb"
+  "streamdb",
+  "ask4movie"
  ],
  "german": [
   "youtube",
@@ -397,6 +399,7 @@
   "cimalina",
   "mycima",
   "q3isk",
+  "3seq",
   "topcinema",
   "tuktukcam",
   "shahid44u",

@@ -15,7 +15,7 @@ from Components.config import config
 from Screens.MessageBox import MessageBox
 from Plugins.Extensions.IPTVPlayer.components.asynccall import MainSessionWrapper
 from Plugins.Extensions.IPTVPlayer.components.captcha_helper import CaptchaHelper
-from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import GetIPTVSleep, SetIPTVPlayerLastHostError, TranslateTXT as _
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import GetIPTVNotify, GetIPTVSleep, SetIPTVPlayerLastHostError, TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
 from Plugins.Extensions.IPTVPlayer.libs import curlimpersonate, ph, pyaes, torrserver  # fix 071026: curlimpersonate (parserVIDZY)
 from Plugins.Extensions.IPTVPlayer.libs.aesgcm import python_aesgcm
@@ -262,6 +262,7 @@ class urlparser:
             "cavanhabg.com": self.pp.parserJWPLAYER,
             "cd189tryo7.sbs": self.pp.parserJWPLAYER,  # add 061026
             "cda.pl": self.pp.parserCDA,
+            "cdn-vids.xyz": self.pp.parserVIDSP,  # add 091026 (vidsp.net's HLS CDN, sNN.cdn-vids.xyz/hls2/...)
             "cdn1.site": self.pp.parserJWPLAYER,
             "cdnplus.org": self.pp.parserJWPLAYER,  # add 061026 (shooflive)
             "cdnplus.sbs": self.pp.parserJWPLAYER,  # add 031026
@@ -367,6 +368,7 @@ class urlparser:
             "embedplayabyss.top": self.pp.parserABYSS,
             "embedplayapiupn.upns.xyz": self.pp.parserSBS,  # add 061026
             "embedplaybyse.top": self.pp.parserBYSE,
+            "embedsun.cc": self.pp.parserVIDMOLYME,  # add 091026 (vidmoly mirror: bflix, filmehd "Filesun")
             "embedwish.com": self.pp.parserJWPLAYER,
             "emturbovid.com": self.pp.parserJWPLAYER,
             "en.embedz.net": self.pp.parserJWPLAYER,
@@ -423,6 +425,7 @@ class urlparser:
             # g
             "gamoneinterrupted.com": self.pp.parserVOESX,  # add 061026
             "garylargeavailable.com": self.pp.parserVOESX,  # add 061026
+            "gbadosadl.com": self.pp.parserSTREAMUP,  # add 091026 (coflix kokoflix grandline_go "Filmoon", /api/stream like vidara)
             "gbsagbo.com": self.pp.parserSTREAMUP,
             "generatesnitrosate.com": self.pp.parserVOESX,  # add 061026
             "gettapeads.com": self.pp.parserSTREAMTAPE,  # add 061026
@@ -635,6 +638,7 @@ class urlparser:
             "nathanfromsubject.com": self.pp.parserVOESX,  # add 061026
             "ncdn22.xyz": self.pp.parserHQQ,  # add 061026
             "nectareousoverelate.com": self.pp.parserVOESX,  # add 061026
+            "netembed.xyz": self.pp.parserVIDSRC,  # add 101026 (ask4movie, vidsrc network)
             "netu.ac": self.pp.parserHQQ,
             "netu.filmoviplex.com": self.pp.parserHQQ,
             "netu.to": self.pp.parserHQQ,
@@ -760,6 +764,7 @@ class urlparser:
             "strmup.cc": self.pp.parserSTREAMUP,
             "strmup.to": self.pp.parserSTREAMUP,
             "strmwis.xyz": self.pp.parserJWPLAYER,  # add 061026
+            "strp2p.live": self.pp.parserSBS,  # add 091026 (filma365.strp2p.live)
             "strp2p.site": self.pp.parserSBS,
             "strtape.cloud": self.pp.parserSTREAMTAPE,
             "strtape.site": self.pp.parserSTREAMTAPE,  # add 061026
@@ -907,6 +912,7 @@ class urlparser:
             "vidrock.net": self.pp.parserVIDROCK,
             "vids.st": self.pp.parserVIDSST,
             "vidsonic.net": self.pp.parserVIDSONIC,
+            "vidsp.net": self.pp.parserVIDSP,  # add 091026 (v.vidsp.net/embed-<code>.html, 3seq)
             "vidspeed.space": self.pp.parserJWPLAYER,
             "vidsrc.bz": self.pp.parserVIDSRC,
             "vidsrc.cc": self.pp.parserMEGAFILES,
@@ -952,6 +958,7 @@ class urlparser:
             "voe-un-block.com": self.pp.parserVOESX,  # add 061026
             "voe-unblock.com": self.pp.parserVOESX,  # add 061026
             "voe-unblock.net": self.pp.parserVOESX,  # add 061026
+            "voembed.net": self.pp.parserJWPLAYER,  # add 091026 (coflix anime, jwplayer sources in plain text)
             "voeun-block.net": self.pp.parserVOESX,  # add 061026
             "voeunbl0ck.com": self.pp.parserVOESX,  # add 061026
             "voeunblck.com": self.pp.parserVOESX,  # add 061026
@@ -1204,6 +1211,75 @@ FILELIONS_DEAD_DOMAINS = frozenset((
     "dinisglows.com", "dintezuvio.com",
 ))
 FILELIONS_LIVE_HOST = "callistanise.com"
+# vidsp.net (parserVIDSP): the /dl answer {"file", "seed"} is XTEA-CBC encrypted, the key is an XTEA-CBC hash of
+# the seed; seed and plain text have the digits 0<->5, 1<->6, 2<->7 swapped. Key and IV of the hash: "abcd" "bcde" ...
+VIDSP_DIGIT_SWAP = {"0": "5", "1": "6", "2": "7", "5": "0", "6": "1", "7": "2"}
+VIDSP_HASH_KEY = (0x61626364, 0x62636465, 0x63646566, 0x64656667)
+VIDSP_IV = VIDSP_HASH_KEY[:2]
+XTEA_DELTA = 0x9E3779B9
+MASK32 = 0xFFFFFFFF
+
+
+def _xteaMix(v):
+    return ((((v << 4) & MASK32) ^ (v >> 5)) + v) & MASK32
+
+
+def _xteaEncrypt(v0, v1, key):
+    total = 0
+    for _i in range(32):
+        v0 = (v0 + (_xteaMix(v1) ^ ((total + key[total & 3]) & MASK32))) & MASK32
+        total = (total + XTEA_DELTA) & MASK32
+        v1 = (v1 + (_xteaMix(v0) ^ ((total + key[(total >> 11) & 3]) & MASK32))) & MASK32
+    return v0, v1
+
+
+def _xteaDecrypt(v0, v1, key):
+    total = (XTEA_DELTA * 32) & MASK32
+    for _i in range(32):
+        v1 = (v1 - (_xteaMix(v0) ^ ((total + key[(total >> 11) & 3]) & MASK32))) & MASK32
+        total = (total - XTEA_DELTA) & MASK32
+        v0 = (v0 - (_xteaMix(v1) ^ ((total + key[total & 3]) & MASK32))) & MASK32
+    return v0, v1
+
+
+def _vidspSwapDigits(text):
+    return "".join(VIDSP_DIGIT_SWAP.get(c, c) for c in text)
+
+
+def _vidspKey(seed):
+    # [pad length] + seed, zero padded to 16 bytes; two XTEA-CBC chains over the 8 byte halves of every block
+    seed = bytearray(ensure_binary(seed))
+    data = bytearray([(16 - (len(seed) + 1) % 16) % 16]) + seed
+    data += bytearray(-len(data) % 16)
+    words = struct.unpack(">%dI" % (len(data) // 4), bytes(data))
+    h1 = h2 = VIDSP_IV
+    for i in range(0, len(words), 4):
+        a = _xteaEncrypt(words[i] ^ h1[0], words[i + 1] ^ h1[1], VIDSP_HASH_KEY)
+        b = _xteaEncrypt(words[i + 2] ^ h2[0], words[i + 3] ^ h2[1], VIDSP_HASH_KEY)
+        h1, h2 = (a[1], b[0]), (b[1], a[0])
+    return h1 + h2
+
+
+def vidspDecrypt(fileStr, seed):
+    # base64url -> XTEA-CBC (IV "abcdbcde") -> first byte & 7 = padding at the end; "" for anything malformed
+    try:
+        raw = bytearray(base64.b64decode(ensure_str(fileStr).replace("-", "+").replace("_", "/") + "=" * (-len(fileStr) % 4)))
+    except Exception:
+        printExc()
+        return ""
+    if not raw or len(raw) % 8:
+        return ""
+    key = _vidspKey(_vidspSwapDigits(ensure_str(seed)))
+    words = struct.unpack(">%dI" % (len(raw) // 4), bytes(raw))
+    iv = VIDSP_IV
+    out = []
+    for i in range(0, len(words), 2):
+        v0, v1 = _xteaDecrypt(words[i], words[i + 1], key)
+        out.extend((v0 ^ iv[0], v1 ^ iv[1]))
+        iv = (words[i], words[i + 1])
+    plain = bytearray(struct.pack(">%dI" % len(out), *out))
+    plain = plain[1:len(plain) - (plain[0] & 7)]
+    return ensure_str(_vidspSwapDigits(plain.decode("latin-1")))
 
 
 class pageParser(CaptchaHelper):
@@ -3222,21 +3298,32 @@ class pageParser(CaptchaHelper):
                 zeros += 32
             return zeros
 
-        def er(t, e, timeout):
+        def er(t, e, timeout, progress=None):
             # returns (solution or None, hashes tried); the time limit is checked every 16 hashes
-            # (a few seconds at most even on a slow ARM box)
+            # (a few seconds at most even on a slow ARM box); progress(seconds) about once a second
             if e <= 0:
                 return "0", 0
             state = grAbsorb(powBytes(t + ":"))
-            start = time.time()
+            start = shown = time.time()
             s = 0
             while True:
                 for _i in range(16):
                     if gr(state, powBytes(str(s))) >= e:
                         return str(s), s + 1
                     s += 1
-                if time.time() - start > timeout:
+                now = time.time()
+                if now - start > timeout:
                     return None, s
+                if progress and now - shown >= 1.0:
+                    shown = now
+                    progress(int(now - start))
+
+        def powProgress(seconds):
+            # add 101026: the loading line tells why the start takes so long (up to a few minutes on a box);
+            # a framework without the status line (zadmario) just waits
+            notify = GetIPTVNotify()
+            if hasattr(notify, "setStatus"):
+                notify.setStatus("%s\n%s" % (_("Loading"), _("%s: decrypting the stream, this can take a while (%d s)") % ("Byse", seconds)))
 
         def statusCode(data, sts):
             try:
@@ -3378,7 +3465,8 @@ class pageParser(CaptchaHelper):
                 difficulty = int(captcha.get("pow_difficulty") or 0)
                 timeLimit = min(180.0, max(20.0, float(captcha.get("expires_in") or 300) - 60.0))
                 powStart = time.time()
-                solution, hashes = er(captcha.get("pow_nonce") or "", difficulty, timeLimit)
+                powProgress(0)
+                solution, hashes = er(captcha.get("pow_nonce") or "", difficulty, timeLimit, powProgress)
                 printDBG("parserBYSE proof of work difficulty %d: %s after %d hashes in %.1fs" % (difficulty, solution, hashes, time.time() - powStart))
                 if solution is None:
                     SetIPTVPlayerLastHostError(_("%s could not solve the captcha.") % "Byse")
@@ -3731,6 +3819,10 @@ class pageParser(CaptchaHelper):
         if "uqload." in baseUrl and "/e/" in baseUrl:
             # add 031026: uqload /e/<id> is only a click-to-play form (its POST answers with the site's demo clip)
             baseUrl = re.sub(r"(uqload\.[a-z]+)/e/([0-9a-zA-Z]+).*", r"\1/embed-\2.html", baseUrl)
+        if re.match(r"https?://(?:www\.)?uqload\.(?!vc/)[a-z]+/embed-", baseUrl):
+            # fix 101026: uqload.bz redirects to the uqload.vc home page without the id (whose demo clip
+            # static/hero.mp4 was played) - uqload.vc serves every mirror's embed
+            baseUrl = re.sub(r"^https?://(?:www\.)?uqload\.[a-z]+/", "https://uqload.vc/", baseUrl)
         if mirrorData:
             sts, data = True, mirrorData  # StreamWish mirror page fetched above
         else:
@@ -3752,7 +3844,8 @@ class pageParser(CaptchaHelper):
                 data = dataV
         if not sts:
             return []
-        if "File is no longer available" in data:
+        if "File is no longer available" in data or ("uqload." in baseUrl and "/static/hero.mp4" in data and ".m3u8" not in data):
+            # (uqload: its home page with the demo clip instead of the video)
             SetIPTVPlayerLastHostError(_("The video has been removed."))
             return []
         if 'name="op" value="embed"' in data and "p,a,c,k,e" not in data and "<form" in data:
@@ -3769,7 +3862,9 @@ class pageParser(CaptchaHelper):
                     return []
             elif "<form" in data:
                 data = jw_hidden(data, baseUrl)
-        if "function(p,a,c,k,e" in data:
+        # fix 091026: a page with its jwplayer sources in plain text and an unrelated packed script (voembed.net)
+        # lost the sources by unpacking
+        if "function(p,a,c,k,e" in data and not re.search(r"""sources\s*:\s*\[\s*\{\s*file\s*:""", data):
             data = get_packed_data(data)
             if not data:
                 return []
@@ -3847,6 +3942,72 @@ class pageParser(CaptchaHelper):
             return getDirectM3U8Playlist(url, checkContent=True, sortWithMaxBitrate=99999999)
         return [{"name": "MP4", "url": url}]
 
+    def parserVIDSP(self, baseUrl):  # add 091026
+        # vidsp.net (3seq): the embed page sits behind Cloudflare (passes with Chrome's TLS fingerprint, else MyE2i)
+        # and posts {op: "playerddl", file_code, hash} to /dl; the JSON answer [{"file", "seed"}] decrypts locally
+        # (vidspDecrypt) to a master.m3u8 on sNN.cdn-vids.xyz. That CDN answers 403 to OpenSSL clients (Python,
+        # pycurl, hlsdl, ffmpeg) like vidzy's -> through curl-impersonate (ImpersonateHLSDownloader) first
+        printDBG("parserVIDSP baseUrl[%s]" % baseUrl)
+        baseUrl = strwithmeta(baseUrl)
+        url = str(baseUrl)
+        playerHost = "https://v.vidsp.net/"
+        userAgent = ""
+        if urlparser.getDomain(url).endswith("cdn-vids.xyz"):
+            # an already resolved stream url of the CDN
+            if ".m3u8" not in url:
+                return []
+            streamUrl = url
+            userAgent = baseUrl.meta.get("User-Agent", "")
+        else:
+            code = ph.search(url, r"/(?:embed-|e/|d/)?([0-9a-zA-Z]{12})(?:\.html)?(?:[/?#]|$)")[0]
+            if not code:
+                return []
+            playerHost = urlparser.getDomain(url, False)
+            embedUrl = "%sembed-%s.html" % (playerHost, code)
+            HTTP_HEADER = self.cm.getDefaultHeader(browser="chrome")
+            HTTP_HEADER["Referer"] = baseUrl.meta.get("Referer") or playerHost
+            params = {"header": HTTP_HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": GetCookieDir("vidsp.net.cookie")}
+            sts, data = self.getPageCF(embedUrl, params)
+            if not sts or not data:
+                return []
+            if "File is no longer available" in data or "File Not Found" in data:
+                SetIPTVPlayerLastHostError(_("The video has been removed."))
+                return []
+            match = re.search(r"""op\s*:\s*["']playerddl["']\s*,\s*file_code\s*:\s*["']([^"']+)["']\s*,\s*hash\s*:\s*["']([^"']+)["']""", data)
+            if not match:
+                SetIPTVPlayerLastHostError(_("Video link not found."))
+                return []
+            # the User-Agent that passed the Cloudflare check: /dl and the stream go with the same one
+            userAgent = (getattr(data, "meta", None) or {}).get("cf_user") or HTTP_HEADER["User-Agent"]
+            params["header"] = dict(HTTP_HEADER, **{"User-Agent": userAgent, "Referer": embedUrl, "Origin": playerHost[:-1], "X-Requested-With": "XMLHttpRequest",
+                                                    "Accept": "application/json, text/javascript, */*; q=0.01", "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"})
+            sts, data = self.getPageCF(playerHost + "dl", params, {"op": "playerddl", "file_code": match.group(1), "hash": match.group(2)})
+            streamUrl = ""
+            try:
+                items = json_loads(data) if sts and data else []
+                item = items[0] if isinstance(items, list) and items and isinstance(items[0], dict) else {}
+                if item.get("file") and item.get("seed"):
+                    streamUrl = vidspDecrypt(item["file"], item["seed"])
+            except Exception:
+                printExc()
+            if not streamUrl.startswith("http"):
+                printDBG("parserVIDSP: no stream url in the /dl answer [%s]" % str(data)[:200])
+                SetIPTVPlayerLastHostError(_("Video link not found."))
+                return []
+        meta = {"Referer": playerHost, "Origin": playerHost[:-1]}
+        if userAgent:
+            meta["User-Agent"] = userAgent
+        streamUrl = urlparser.decorateUrl(streamUrl, meta)
+        urltab = getImpersonateM3U8Playlist(streamUrl, sortWithMaxBitrate=99999999)
+        if not urltab:
+            urltab = getDirectM3U8Playlist(streamUrl, checkContent=True, sortWithMaxBitrate=99999999)
+        if not urltab:
+            if curlimpersonate.getImpersonateBinary():
+                SetIPTVPlayerLastHostError(_("%s blocks the connection of the receiver (HTTP 403). Please choose another server.") % "Vidsp")
+            else:
+                SetIPTVPlayerLastHostError(_("%s blocks the connection of the receiver (HTTP 403). It only plays with curl-impersonate installed on the receiver - otherwise please choose another server.") % "Vidsp")
+        return urltab
+
     def parserOKRU(self, baseUrl):  # Fix 061225
         printDBG("parserOKRU baseUrl[%s]" % baseUrl)
         host = urlparser.getDomain(baseUrl, False)
@@ -3872,7 +4033,7 @@ class pageParser(CaptchaHelper):
             SetIPTVPlayerLastHostError(_("Content not available"))
         return urltab
 
-    def parserVIDSRC(self, baseUrl):  # update 031026 - vsembed/vidsrc -> cloudorchestranova -> data.vidsrc.sh (ChaCha20 wasm)
+    def parserVIDSRC(self, baseUrl):  # update 101026 (api_token) - vsembed/vidsrc -> cloudorchestranova -> data.vidsrc.sh (ChaCha20 wasm)
         printDBG("parserVIDSRC baseUrl[%s]" % baseUrl)
         HTTP_HEADER = self.cm.getDefaultHeader(browser="chrome")
         referer = baseUrl.meta.get("Referer", "") if isinstance(baseUrl, strwithmeta) else ""
@@ -4009,6 +4170,9 @@ class pageParser(CaptchaHelper):
                 api = cfg.get("api", "")
                 if not api and cfg.get("streamBase"):
                     api = "%s&season=%s&episode=%s&stream_urls" % (cfg["streamBase"], cfg.get("season") or 1, cfg.get("episode") or 1)
+                if api and cfg.get("apiToken") and "stream_urls" in api and "api_token=" not in api:
+                    # fix 101026: single-use token minted with the player page - without it the API answers 403
+                    api += "&api_token=" + urllib_quote(cfg["apiToken"])
                 break
             nextUrl = ""
             m = re.search(r"window\.CFG\s*=\s*(\{.+?\});", data)

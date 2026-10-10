@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 05.09.2026
+# Last Modified: 09.10.2026
 #
 # trailers.apple.com is gone (the whole domain 301s to tv.apple.com and
 # every /trailers/*.json feed with it). This rebuild targets the Apple TV
@@ -7,20 +7,34 @@
 #   https://uts-api.itunes.apple.com/uts/v3/...   (token-less, utsk=0)
 #   - /uts/v2/browse/movies                       -> editorial shelves
 #   - /uts/v2/browse/collection/<id>              -> a shelf, paged
-#   - /uts/v2/browse/genre/<genreId>             -> per-genre charts
+#   - /uts/v2/browse/genre/<genreId>             -> per-genre shelves
 #   - /uts/v3/mcp/genres                          -> genre list
 #   - /uts/v3/movies/<id>?includePreviewAssets=1  -> the "Trailers" shelf
 # The iTunes-store previews resolve to a plain (DRM-free) HLS playlist on
 # play-edge.itunes.apple.com; Apple TV+ channel previews do not and are
 # skipped.
+# 09.10.2026 - host standard
+#   - trailer rows are keyed on a stable url (movie id + trailer id) and find their stream again without the
+#     list they came from: favourites / downloads / watched flag of trailers work (before they only worked
+#     right after opening the film; rows saved by the old version reopen too)
+#   - film folders "Title (Year)" and trailers "Title (Year) - <trailer>" (name normalisation), INFO for films
+#     and trailers via moviemeta + Apple's fields (genre, cast, director, rating, runtime)
+#   - watched flag (the film folder follows its trailers), sidecar on the links, Next page counts the pages,
+#     a genre lists its shelves (each paged) instead of one long list, current default user agent
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsMediaNamingNormalized, IsSidecarEnabled
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
+from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems
+from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedHostMixin, GenericFolderWatchedScraperMixin
+from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
+from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, decorateResolvedLinkItems, sidecarFromUrlMeta
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 from Components.config import config, ConfigSelection, getConfigListEntry
@@ -30,6 +44,7 @@ from Components.config import config, ConfigSelection, getConfigListEntry
 # FOREIGN import
 ###################################################
 import re
+from datetime import datetime, timedelta
 ###################################################
 
 # code -> (storefront id, locale, tv.apple.com country path)
@@ -47,6 +62,12 @@ STOREFRONT_MAP = dict(STOREFRONTS)
 
 config.plugins.iptvplayer.appletrailers_storefront = ConfigSelection(default='us', choices=[(c, c.upper()) for c, _v in STOREFRONTS])
 
+# the stable url of a trailer row: tv.apple.com movie id + the trailer's own id
+TRAILER_URL = 'https://tv.apple.com/movie/%s#trailer=%s'
+TRAILER_URL_RE = re.compile(r'/movie/(umc\.[^#/?]+)#trailer=([^&#]+)')
+# rows saved by the old version: "apl_<movie id>_<n-th trailer>"
+OLD_KEY_RE = re.compile(r'^apl_(umc\..+)_(\d+)$')
+
 
 def GetConfigList():
     return [getConfigListEntry(_('Country / store:'), config.plugins.iptvplayer.appletrailers_storefront)]
@@ -56,7 +77,7 @@ def gettytul():
     return 'https://tv.apple.com/'
 
 
-class TrailersApple(CBaseHostClass):
+class TrailersApple(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     API_URL = 'https://uts-api.itunes.apple.com/'
 
@@ -69,11 +90,28 @@ class TrailersApple(CBaseHostClass):
         self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.cacheLinks = {}
         self._catalog = None
+        self.watchedHelper = IPTVWatchedHelper('appletrailers')
+        self.wfInitFolderCache()
 
     def getPage(self, url, addParams=None, post_data=None):
         if addParams is None:
             addParams = dict(self.defaultParams)
         return self.cm.getPage(url, addParams, post_data)
+
+    # ---------------------------------------------------------------- watched flag
+    def _getWatchedKeyForItem(self, cItem):
+        try:
+            if not isinstance(cItem, dict):
+                return ''
+            # rows saved by the old version: trailers with category "movie" and type "video"
+            if cItem.get('type') == 'video' or cItem.get('category') == 'video':
+                url = str(cItem.get('url', '') or '')
+                return 'video:%s' % url if url else ''
+            if cItem.get('category') == 'movie' and cItem.get('movie_id'):
+                return 'movie:%s' % cItem['movie_id']
+        except Exception:
+            printExc()
+        return ''
 
     # ---------------------------------------------------------------- helpers
     def _sf(self):
@@ -97,16 +135,73 @@ class TrailersApple(CBaseHostClass):
             return None
 
     @staticmethod
-    def _img(images, keys):
+    def _img(images, keys, width=600, height=900):
+        # posters 600x900; trailer stills are 16:9 - a "mw" still asked for in 2:3 answers 400
         if not isinstance(images, dict):
             return ''
         for k in keys:
             node = images.get(k)
             if isinstance(node, dict) and node.get('url'):
                 url = node['url']
-                url = url.replace('{w}', '600').replace('{h}', '900').replace('{f}', 'jpg').replace('{c}', 'bb')
-                return re.sub(r'\{[^}]+\}', '600', url)
+                url = url.replace('{w}', str(width)).replace('{h}', str(height)).replace('{f}', 'jpg').replace('{c}', 'bb')
+                return re.sub(r'\{[^}]+\}', str(width), url)
         return ''
+
+    @staticmethod
+    def _year(item):
+        rd = item.get('releaseDate')
+        if isinstance(rd, (int, float)):
+            try:
+                # epoch milliseconds (UTC, negative before 1970) - py2 + py3, no platform limits of fromtimestamp
+                day = datetime(1970, 1, 1) + timedelta(milliseconds=rd)
+                return '%04d-%02d-%02d' % (day.year, day.month, day.day)
+            except Exception:
+                pass
+        return ''
+
+    @staticmethod
+    def _names(value, limit=6):
+        out = []
+        for v in (value if isinstance(value, list) else [])[:limit]:
+            name = v.get('name', '') if isinstance(v, dict) else v
+            if name:
+                out.append(name)
+        return ', '.join(out)
+
+    def _siteInfo(self, item):
+        # Apple's own fields of a movie (browse item or /movies/<id> content) for the INFO screen
+        info = {}
+        date = self._year(item)
+        if date:
+            info['released'] = date
+            info['year'] = date[:4]
+        rating = (item.get('rating') or {}).get('displayName')
+        if rating:
+            info['rated'] = rating
+        if item.get('tomatometerPercentage'):
+            info['rating'] = 'Rotten Tomatoes %s%%' % item['tomatometerPercentage']
+        genres = self._names(item.get('genres'))
+        if genres:
+            info['genres'] = genres
+        roles = item.get('rolesSummary') or {}
+        for key, metaKey in (('cast', 'cast'), ('directors', 'directors')):
+            value = self._names(roles.get(key))
+            if value:
+                info[metaKey] = value
+        try:
+            minutes = int(item.get('duration') or 0) // 60
+        except (TypeError, ValueError):
+            minutes = 0
+        if minutes:
+            info['duration'] = '%dh %02dmin' % (minutes // 60, minutes % 60) if minutes >= 60 else '%dmin' % minutes
+        if item.get('studio'):
+            info['production'] = item['studio']
+        return info
+
+    def _movieTitle(self, title, year):
+        if IsMediaNamingNormalized() and year and '(%s)' % year not in title:
+            return '%s (%s)' % (title, year)
+        return title
 
     def _addMovie(self, cItem, item):
         # only single movies expose /uts/v3/movies/<id>; bundles 404 there
@@ -115,26 +210,19 @@ class TrailersApple(CBaseHostClass):
         mid = item.get('id')
         if not mid:
             return
+        siteInfo = self._siteInfo(item)
+        year = siteInfo.get('year', '')
+        title = item.get('title', '')
         desc = []
-        rd = item.get('releaseDate')
-        if isinstance(rd, (int, float)):
-            try:
-                from datetime import datetime, timezone
-                desc.append(datetime.fromtimestamp(rd / 1000, timezone.utc).strftime('%Y-%m-%d'))
-            except Exception:
-                pass
-        if item.get('rating', {}).get('displayName'):
-            desc.append(item['rating']['displayName'])
-        if item.get('tomatometerPercentage'):
-            desc.append('RT %s%%' % item['tomatometerPercentage'])
+        for key in ('released', 'rated', 'rating'):
+            if siteInfo.get(key):
+                desc.append(siteInfo[key].replace('Rotten Tomatoes', 'RT'))
         if item.get('description'):
             desc.append('\n' + item['description'])
-        params = dict(cItem)
-        params.update({'good_for_fav': True, 'name': 'category', 'category': 'movie',
-                       'movie_id': mid, 'title': item.get('title', ''),
-                       'icon': self._img(item.get('images'), ('coverArt', 'coverArt16X9', 'shelfImage', 'previewFrame')),
-                       'desc': ' | '.join(desc)})
-        self.addDir(params)
+        self.addDir({'good_for_fav': True, 'name': 'category', 'category': 'movie', 'movie_id': mid,
+                     'title': self._movieTitle(title, year), 'icon': self._img(item.get('images'), ('coverArt', 'coverArt16X9', 'shelfImage', 'previewFrame')),
+                     'desc': ' | '.join(desc), 'site_info': siteInfo, 'plot': item.get('description', ''),
+                     'meta_type': 'movie', 'meta_title': title, 'meta_year': year})
 
     # ---------------------------------------------------------------- listings
     def listMainMenu(self, cItem):
@@ -149,27 +237,30 @@ class TrailersApple(CBaseHostClass):
             if not any(i.get('type') == 'Movie' for i in shelf.get('items', [])):
                 continue
             params = dict(cItem)
-            params.update({'category': 'collection', 'coll_id': coll, 'title': title})
+            params.update({'good_for_fav': True, 'category': 'collection', 'coll_id': coll, 'title': title})
             self.addDir(params)
         params = dict(cItem)
-        params.update({'category': 'genres', 'title': _('Browse by genre')})
+        params.update({'good_for_fav': True, 'category': 'genres', 'title': _('Browse by genre')})
         self.addDir(params)
         self.listsTab(self.searchItems(), cItem)
 
     def listCollection(self, cItem):
         printDBG("TrailersApple.listCollection")
+        try:
+            page = max(1, int(cItem.get('page', 1)))
+        except (TypeError, ValueError):
+            page = 1
         extra = ''
-        if cItem.get('next_token'):
+        if page > 1 and cItem.get('next_token'):
             extra = 'nextToken=' + urllib_quote_plus(cItem['next_token'])
         js = self._getJson(self._apiUrl('uts/v2/browse/collection/%s' % cItem['coll_id'], extra))
         data = (js or {}).get('data', {})
-        for item in data.get('items', []):
+        items = data.get('items', [])
+        for item in items:
             self._addMovie(cItem, item)
+        # a page of only bundles / TV+ items adds no row but the shelf goes on
         nextToken = data.get('nextToken')
-        if nextToken:
-            params = dict(cItem)
-            params.update({'good_for_fav': False, 'title': _('Next page'), 'next_token': nextToken})
-            self.addDir(params)
+        addPagingItems(self, cItem, page, bool(nextToken) and bool(items), nextParams={'next_token': nextToken})
 
     def listGenres(self, cItem):
         printDBG("TrailersApple.listGenres")
@@ -179,19 +270,18 @@ class TrailersApple(CBaseHostClass):
             if not ident:
                 continue
             params = dict(cItem)
-            params.update({'category': 'genre_items', 'genre_id': 'umc.gnr.mov.%s' % ident, 'title': genre.get('name', ident)})
+            params.update({'good_for_fav': True, 'category': 'genre_items', 'genre_id': 'umc.gnr.mov.%s' % ident, 'title': genre.get('name', ident)})
             self.addDir(params)
 
     def listGenreItems(self, cItem):
         printDBG("TrailersApple.listGenreItems")
+        # the genre page is a few shelves (charts, editors' picks ...) - each one a paged collection
         js = self._getJson(self._apiUrl('uts/v2/browse/genre/%s' % cItem['genre_id']))
-        seen = set()
         for shelf in (js or {}).get('data', {}).get('canvas', {}).get('shelves', []):
-            for item in shelf.get('items', []):
-                if item.get('id') in seen:
-                    continue
-                seen.add(item.get('id'))
-                self._addMovie(cItem, item)
+            if not shelf.get('id') or not any(i.get('type') == 'Movie' for i in shelf.get('items', [])):
+                continue
+            self.addDir({'good_for_fav': True, 'name': 'category', 'category': 'collection', 'coll_id': shelf['id'],
+                         'title': '%s - %s' % (cItem.get('title', ''), shelf.get('title') or _('Movies'))})
 
     @staticmethod
     def _norm(s):
@@ -244,21 +334,16 @@ class TrailersApple(CBaseHostClass):
         for _rank, item in scored:
             self._addMovie(cItem, item)
 
-    # ---------------------------------------------------------------- playback
-    def exploreItem(self, cItem):
-        printDBG("TrailersApple.exploreItem [%s]" % cItem)
-        self.cacheLinks = {}
-        js = self._getJson(self._apiUrl('uts/v3/movies/%s' % cItem['movie_id'], 'includePreviewAssets=true'))
+    # ---------------------------------------------------------------- trailers
+    def _getTrailers(self, movieId):
+        # (movie content, [(trailer id, label, icon, [hls urls])]) of a movie, DRM-free previews only
+        js = self._getJson(self._apiUrl('uts/v3/movies/%s' % movieId, 'includePreviewAssets=true'))
         data = (js or {}).get('data', {})
-        movieTitle = data.get('content', {}).get('title') or cItem.get('title', '')
-        shelves = data.get('canvas', {}).get('shelves', [])
-        key = 0
-        for shelf in shelves:
+        trailers = []
+        for shelf in data.get('canvas', {}).get('shelves', []):
             if shelf.get('id') != 'uts.col.Trailers':
                 continue
-            for item in shelf.get('items', []):
-                label = item.get('title') or _('Trailer')
-                icon = self._img(item.get('images'), ('shelfImage', 'previewFrame', 'coverArt'))
+            for idx, item in enumerate(shelf.get('items', [])):
                 streams = []
                 for pl in item.get('playables', []):
                     hlsUrl = pl.get('assets', {}).get('hlsUrl', '')
@@ -266,30 +351,101 @@ class TrailersApple(CBaseHostClass):
                     if '/hls/playlist.m3u8' not in hlsUrl or '/hls/subscription/' in hlsUrl:
                         continue
                     streams.append(hlsUrl)
-                if not streams:
-                    continue
-                key += 1
-                vkey = 'apl_%s_%d' % (cItem['movie_id'], key)
-                self.cacheLinks[vkey] = streams
-                name = movieTitle if label == movieTitle else '%s - %s' % (movieTitle, label)
-                params = dict(cItem)
-                params.update({'good_for_fav': True, 'name': 'category', 'title': name,
-                               'url': vkey, 'icon': icon or cItem.get('icon', ''), 'desc': cItem.get('desc', '')})
-                self.addVideo(params)
-        if not self.currList:
-            printDBG("TrailersApple.exploreItem: no DRM-free trailer for %s" % cItem['movie_id'])
+                if streams:
+                    trailers.append((item.get('id') or str(idx), item.get('title') or _('Trailer'),
+                                     self._img(item.get('images'), ('shelfImage', 'previewFrame'), 640, 360), streams))
+        return data.get('content', {}), trailers
+
+    def exploreItem(self, cItem):
+        printDBG("TrailersApple.exploreItem [%s]" % cItem)
+        movieId = cItem['movie_id']
+        content, trailers = self._getTrailers(movieId)
+        movieTitle = content.get('title') or cItem.get('meta_title') or cItem.get('title', '')
+        siteInfo = self._siteInfo(content) if content else cItem.get('site_info', {})
+        year = siteInfo.get('year', '') or cItem.get('meta_year', '')
+        dispTitle = self._movieTitle(movieTitle, year)
+        for trailerId, label, icon, streams in trailers:
+            url = TRAILER_URL % (movieId, trailerId)
+            self.cacheLinks[url] = streams
+            name = dispTitle if label == movieTitle else '%s - %s' % (dispTitle, label)
+            self.addVideo({'good_for_fav': True, 'name': 'category', 'category': 'video', 'title': name, 'url': url,
+                           'movie_id': movieId, 'trailer_id': trailerId, 'icon': icon or cItem.get('icon', ''),
+                           'desc': cItem.get('desc', ''), 'site_info': siteInfo, 'plot': content.get('description') or cItem.get('plot', ''),
+                           'meta_type': 'movie', 'meta_title': movieTitle, 'meta_year': year})
+        if not trailers:
+            printDBG("TrailersApple.exploreItem: no DRM-free trailer for %s" % movieId)
+
+    def _streamsForItem(self, cItem):
+        url = cItem.get('url', '')
+        if url in self.cacheLinks:
+            return self.cacheLinks[url]
+        movieId, trailerId = cItem.get('movie_id', ''), cItem.get('trailer_id', '')
+        position = 0
+        found = TRAILER_URL_RE.search(url)
+        if found:
+            movieId, trailerId = found.group(1), found.group(2)
+        else:
+            old = OLD_KEY_RE.match(url)
+            if old:
+                movieId, position = old.group(1), int(old.group(2))
+        if not movieId:
+            return []
+        _content, trailers = self._getTrailers(movieId)
+        for idx, (tid, _label, _icon, streams) in enumerate(trailers):
+            self.cacheLinks[TRAILER_URL % (movieId, tid)] = streams
+            if (trailerId and tid == trailerId) or (position and idx + 1 == position):
+                return streams
+        return []
 
     def getLinksForVideo(self, cItem):
         printDBG("TrailersApple.getLinksForVideo [%s]" % cItem)
         urlTab = []
-        for streamUrl in self.cacheLinks.get(cItem.get('url', ''), []):
+        for streamUrl in self._streamsForItem(cItem):
             urlTab.append({'name': 'HLS', 'url': strwithmeta(streamUrl, {'User-Agent': self.HEADER['User-Agent']}), 'need_resolve': 1})
-        return urlTab
+        if not urlTab:
+            SetIPTVPlayerLastHostError(_("No stream available"))
+            return []
+        return applySidecarToLinks(urlTab, buildSidecarFromItem(cItem, IsSidecarEnabled(), cItem.get('plot', '')))
 
     def getVideoLinks(self, videoUrl):
         printDBG("TrailersApple.getVideoLinks [%s]" % videoUrl)
+        sidecar = sidecarFromUrlMeta(videoUrl, IsSidecarEnabled())
         videoUrl = strwithmeta(videoUrl, {'User-Agent': self.HEADER['User-Agent']})
-        return getDirectM3U8Playlist(videoUrl, checkExt=False, sortWithMaxBitrate=99999999)
+        return decorateResolvedLinkItems(getDirectM3U8Playlist(videoUrl, checkExt=False, sortWithMaxBitrate=99999999), sidecar)
+
+    # ---------------------------------------------------------------- INFO
+    def getArticleContent(self, cItem):
+        printDBG("TrailersApple.getArticleContent [%s]" % cItem)
+        info = dict(cItem.get('site_info') or {})
+        title = cItem.get('meta_title', '')
+        year = cItem.get('meta_year', '')
+        if not title:
+            # a row saved by the old version: Apple's own fields of the movie
+            old = OLD_KEY_RE.match(cItem.get('url', ''))
+            movieId = cItem.get('movie_id') or (old.group(1) if old else '')
+            if movieId:
+                content, _trailers = self._getTrailers(movieId)
+                info = self._siteInfo(content)
+                title, year = content.get('title', ''), info.get('year', '')
+                cItem = dict(cItem, plot=content.get('description', ''))
+        meta = {}
+        if title:
+            try:
+                meta = getMeta('movie', title, year, maxYearDiff=1)
+            except Exception:
+                printExc()
+        for siteKey in ('rating', 'production'):
+            if siteKey in info and meta.get('info'):
+                info.pop(siteKey)
+        info.update(meta.get('info', {}))
+        text = cItem.get('plot', '') or cItem.get('desc', '')
+        plot = meta.get('plot', '')
+        if plot and text and plot != text:
+            text = '%s[/br][/br]%s' % (text, plot)
+        else:
+            text = text or plot
+        icon = cItem.get('icon', '') or meta.get('poster', '') or self.DEFAULT_ICON_URL
+        return [{'title': cItem.get('title', ''), 'text': text, 'images': [{'title': '', 'url': icon}], 'other_info': info}]
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -320,6 +476,12 @@ class TrailersApple(CBaseHostClass):
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
-class IPTVHost(CHostBase):
+class IPTVHost(GenericFolderWatchedHostMixin, CHostBase):
     def __init__(self):
         CHostBase.__init__(self, TrailersApple(), True, [])
+        self.cachedRet = None
+        self.refreshAfterWatchedFlagChange = False
+        self.watchedHelper = IPTVWatchedHelper('appletrailers')
+
+    def withArticleContent(self, cItem):
+        return cItem.get('category') == 'movie' or cItem.get('type') == 'video'
