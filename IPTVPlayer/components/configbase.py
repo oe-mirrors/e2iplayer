@@ -68,6 +68,8 @@ class ConfigBaseWidget(Screen, ConfigListScreen):
     # Disable reordering mode" toggle) sets this to True as a class
     # attribute.
     HAS_BLUE_KEY = False
+    # opt-in INFO icon in the left icon cluster (after MENU) for a subclass that binds the INFO key
+    HAS_INFO_KEY = False
 
     def __prepareSkin(self):
         iconBase = skinchrome.getIconBase()
@@ -78,7 +80,7 @@ class ConfigBaseWidget(Screen, ConfigListScreen):
         # explicitly at the end of layoutFinished(), before the screen
         # is ever shown, so this initial guess is corrected immediately
         # either way and never visibly wrong
-        slots = self._footerSlots(False, False)
+        slots = self._footerSlots(False, False, self.HAS_INFO_KEY)
         geomMenu = skinchrome.leftIconGeometry(660, 0, 1.0)
         geomOk = skinchrome.leftIconGeometry(660, slots['ok'], 1.0)
         geomPrevNext = skinchrome.leftIconGeometry(660, slots['prevNext'], 1.0)
@@ -117,6 +119,11 @@ class ConfigBaseWidget(Screen, ConfigListScreen):
             geomYellow['iconX'], geomYellow['iconY'], geomYellow['iconSize'], geomYellow['iconSize'],
             geomYellow['labelX'], geomYellow['labelY'], geomYellow['labelW'], geomYellow['labelH'], geomYellow['font'],
         )]
+        if self.HAS_INFO_KEY:
+            geomInfo = skinchrome.leftIconGeometry(660, slots['info'], 1.0)
+            skin.append("""
+            <widget name="key_info_icon" position="%d,%d" size="%d,%d" zPosition="1" transparent="1" alphatest="blend" />
+            """ % (geomInfo['x'], geomInfo['y'], geomInfo['w'], geomInfo['h']))
         if self.HAS_BLUE_KEY:
             geomBlue = skinchrome.colorKeyGeometry(660, slots['leftIconCount'], 3, 1.0)
             skin.append("""
@@ -138,16 +145,17 @@ class ConfigBaseWidget(Screen, ConfigListScreen):
         return "".join(skin)
 
     @staticmethod
-    def _footerSlots(hasMenu, hasPrevNext):
+    def _footerSlots(hasMenu, hasPrevNext, hasInfo=False):
         # single source of truth for this footer's slot assignment,
         # shared by __prepareSkin() (build-time initial position) and
         # _repositionFooterKeys() (runtime, on every selection change) -
         # same pattern as E2iPlayerWidget's own _footerSlots() this
-        # session. Sequence: menu?, ok, prevnext?, exit, then colors
-        okSlot = 1 if hasMenu else 0
+        # session. Sequence: menu?, info?, ok, prevnext?, exit, then colors
+        infoSlot = 1 if hasMenu else 0
+        okSlot = infoSlot + (1 if hasInfo else 0)
         prevNextSlot = okSlot + 1
         exitSlot = prevNextSlot + (1 if hasPrevNext else 0)
-        return {'ok': okSlot, 'prevNext': prevNextSlot, 'exit': exitSlot, 'leftIconCount': exitSlot + 1}
+        return {'info': infoSlot, 'ok': okSlot, 'prevNext': prevNextSlot, 'exit': exitSlot, 'leftIconCount': exitSlot + 1}
 
     def _repositionFooterKeys(self, hasMenu, hasPrevNext):
         if self._externalSkin:
@@ -158,7 +166,10 @@ class ConfigBaseWidget(Screen, ConfigListScreen):
             return
         scale = skinchrome.getScale()
         height = skinchrome.scalePixels(660, scale)
-        slots = self._footerSlots(hasMenu, hasPrevNext)
+        slots = self._footerSlots(hasMenu, hasPrevNext, self.HAS_INFO_KEY)
+        if self.HAS_INFO_KEY:
+            geomInfo = skinchrome.leftIconGeometry(height, slots['info'], scale)
+            self["key_info_icon"].instance.move(ePoint(geomInfo['x'], geomInfo['y']))
         geomOk = skinchrome.leftIconGeometry(height, slots['ok'], scale)
         geomExit = skinchrome.leftIconGeometry(height, slots['exit'], scale)
         self["key_ok_icon"].instance.move(ePoint(geomOk['x'], geomOk['y']))
@@ -258,6 +269,8 @@ class ConfigBaseWidget(Screen, ConfigListScreen):
         # like MENU, driven by isSelectableActive() via onSelectionChanged()
         self["key_prevnext_icon"] = Cover3()
         self["key_prevnext_icon"].hide()
+        if self.HAS_INFO_KEY:
+            self["key_info_icon"] = Cover3()
         # not bound to any skin widget itself (key_menu_icon above is
         # the actual displayed icon) - kept purely so ConfigListScreen's
         # own per-selection logic still has somewhere to write MENU's
@@ -317,6 +330,8 @@ class ConfigBaseWidget(Screen, ConfigListScreen):
             self["key_yellow_icon"].setPixmap(LoadPixmap(_footerIconBase + '/yellow.png'))
             if self.HAS_BLUE_KEY:
                 self["key_blue_icon"].setPixmap(LoadPixmap(_footerIconBase + '/blue.png'))
+            if self.HAS_INFO_KEY:
+                self["key_info_icon"].setPixmap(LoadPixmap(_footerIconBase + '/info.png'))
         if self.onSelectionChanged not in self["config"].onSelectionChanged:
             self["config"].onSelectionChanged.append(self.onSelectionChanged)
         self.runSetup()
@@ -613,6 +628,54 @@ class ConfigBaseWidget(Screen, ConfigListScreen):
         # actually shows a blue hint at all, so BLUE doing nothing on
         # every other ConfigBaseWidget screen is expected, not a bug.
         pass
+
+    # Settings search (BLUE in ConfigMenu and ConfigHostMenu): the keyboard, then a list of every
+    # matching row, OK jumps to it. A subclass that shows only part of its rows at a time overrides
+    # getSearchRows() and showSearchRow()
+    def openSearch(self):
+        # no is_search: a settings search does not belong in the keyboard's search history
+        self.session.openWithCallback(self._searchCallback, GetVirtualKeyboard(), title=_("Search"), text=getattr(self, '_lastSearch', ''))
+
+    def getSearchRows(self):
+        # [(row label, where it is - a section name or '' -, location for showSearchRow(), config item)]
+        return [(row[0].strip(), '', None, row[1]) for row in self["config"].list if len(row) > 1]
+
+    def showSearchRow(self, location, label, item):
+        # moves the cursor to the row found (location: what getSearchRows() gave for it)
+        for index, row in enumerate(self["config"].list):
+            if len(row) > 1 and row[1] is item and row[0].strip() == label:
+                self["config"].setCurrentIndex(index)
+                break
+
+    @staticmethod
+    def matchSearchRows(rows, query):
+        # the rows whose label holds every word of query (case-insensitive)
+        words = query.lower().split()
+        if not words:
+            return []
+        return [row for row in rows if all(word in row[0].lower() for word in words)]
+
+    def _searchCallback(self, searchText=None):
+        if not isinstance(searchText, str):
+            return
+        self._lastSearch = searchText.strip()
+        matches = self.matchSearchRows(self.getSearchRows(), self._lastSearch)
+        if not matches:
+            if self._lastSearch:
+                self.session.open(MessageBox, _("No matching entries found."), type=MessageBox.TYPE_INFO, timeout=5)
+            return
+        options = [IPTVChoiceBoxItem(name=("%s (%s)" % (label, where)) if where else label, privateData=(location, label, item))
+                   for label, where, location, item in matches]
+        height = self._getSelectionListHeight(len(options))
+        openChoiceBox(self.session, {'width': 900, 'height': height, 'current_idx': 0, 'title': _("Search results"), 'options': options, 'chrome': True}, self._searchResultCallback)
+
+    def _searchResultCallback(self, answer):
+        if answer is None:
+            return
+        try:
+            self.showSearchRow(*answer.privateData)
+        except Exception:
+            printExc()
 
     def keyUp(self):
         if self["config"].instance is not None:

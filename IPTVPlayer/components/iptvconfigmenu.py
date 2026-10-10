@@ -155,6 +155,7 @@ class E2iVKQuickSettings(ConfigBaseWidget):
 class ConfigMenu(ConfigBaseWidget):
 
     HAS_BLUE_KEY = True
+    HAS_INFO_KEY = True
 
     def __init__(self, session):
         printDBG("ConfigMenu.__init__ -------------------------------")
@@ -173,8 +174,10 @@ class ConfigMenu(ConfigBaseWidget):
                 "prevSection": self.keyPrevSection,
                 "nextSection": self.keyNextSection,
             }, -2)
+        # BLUE searches the settings, INFO opens the info screen (BLUE did that before)
+        self["infoActions"] = ActionMap(["IPTVPlayerListActions"], {"info": self.keyInfo}, -2)
         try:
-            self["key_blue"].setText(_("Info"))
+            self["key_blue"].setText(_("Search"))
         except Exception:
             printExc()
         self.runtimeOptionsValues = self.getRuntimeOptionsValues()
@@ -205,12 +208,37 @@ class ConfigMenu(ConfigBaseWidget):
     def _inOverview(self):
         return self._categoryView and self._section is None
 
-    def keyBlue(self):
+    def keyInfo(self):
         try:
             from Plugins.Extensions.IPTVPlayer.components.iptvplayerinfoview import OpenInfoView
             OpenInfoView(self.session)
         except Exception:
             printExc()
+
+    def keyBlue(self):
+        self.openSearch()
+
+    @staticmethod
+    def getAllSearchRows():
+        # every section's rows, not only the ones on screen (category view). Rows of a switched-off
+        # parent option are not built by the fillers, so they are not found either - the same rows
+        # the screen itself would show
+        rows = []
+        for sectionIndex, (sectionId, header, fill) in enumerate(ConfigMenu.getSections()):
+            sectionRows = []
+            fill(sectionRows)
+            where = ConfigMenu.getSectionLabel(header)
+            rows.extend((row[0].strip(), where, sectionIndex, row[1]) for row in sectionRows if len(row) > 1)
+        return rows
+
+    def getSearchRows(self):
+        return ConfigMenu.getAllSearchRows()
+
+    def showSearchRow(self, sectionIndex, label, item):
+        if self._categoryView and self._section != sectionIndex:
+            self._section = sectionIndex
+            self.runSetup()
+        ConfigBaseWidget.showSearchRow(self, sectionIndex, label, item)
 
     @staticmethod
     def _fillBasic(list):

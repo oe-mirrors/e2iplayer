@@ -3,7 +3,7 @@
 #  E2iPlayer info / diagnostics screen.
 #
 #  Opened from the PlayerSelector BLUE menu -> "Info" and from the main
-#  settings BLUE key. Three pages, switched with LEFT / RIGHT:
+#  settings INFO key. Three pages, switched with LEFT / RIGHT:
 #
 #    About   - version, project link, credits (the old MessageBox content)
 #    System  - E2iPlayer / Python / image / box, every externally loaded
@@ -744,7 +744,7 @@ def LogSystemInfoAtStartup(force=False):
 
 
 def OpenInfoView(session, aboutText=""):
-    """Entry point used by playerselector / the settings BLUE key."""
+    """Entry point used by playerselector / the settings INFO key."""
     try:
         session.open(IPTVPlayerInfoView, aboutText)
         return True

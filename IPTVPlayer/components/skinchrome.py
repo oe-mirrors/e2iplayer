@@ -302,7 +302,7 @@ def leftIconGeometry(height, slotIdx, scale=1.0):
     }
 
 
-def build_footer(height, scale=1.0, iconBase=None, keys=('red', 'green', 'yellow', 'blue'), showMenu=True, showNav=True, showNum=False, showOk=True, showExit=True):
+def build_footer(height, scale=1.0, iconBase=None, keys=('red', 'green', 'yellow', 'blue'), showMenu=True, showNav=True, showNum=False, showOk=True, showExit=True, showInfo=False):
     # height: the screen's own true on-screen height for this tier (e.g.
     # 660/990/1320 for PlayerSelectorWidget's grid mode at HD/FHD/WQHD).
     # keys: which of the 4 standard ActionMap color names get a footer
@@ -339,6 +339,12 @@ def build_footer(height, scale=1.0, iconBase=None, keys=('red', 'green', 'yellow
                 <widget source="key_menu" render="Pixmap" pixmap="%s/menu.png" position="%d,%d" size="%d,%d" conditional="key_menu" alphatest="blend">
                     <convert type="ConditionalShowHide" />
                 </widget>""" % (iconBase, g['x'], g['y'], g['w'], g['h']))
+    if showInfo:
+        # INFO/HELP key hint, after MENU like in E2iPlayerWidget's footer
+        g = leftIconGeometry(height, slotIdx, scale)
+        slotIdx += 1
+        parts.append("""
+                <ePixmap pixmap="%s/info.png" position="%d,%d" size="%d,%d" alphatest="blend" transparent="1" />""" % (iconBase, g['x'], g['y'], g['w'], g['h']))
     if showNav:
         g = leftIconGeometry(height, slotIdx, scale)
         slotIdx += 1

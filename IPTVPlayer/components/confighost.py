@@ -25,11 +25,15 @@ from Tools.BoundFunction import boundFunction
 
 class ConfigHostMenu(ConfigBaseWidget):
 
+    # BLUE = search in the host's settings
+    HAS_BLUE_KEY = True
+
     def __init__(self, session, hostName):
         printDBG("ConfigHostMenu.__init__ ")
         self.list = []
         self.hostName = hostName
         ConfigBaseWidget.__init__(self, session)
+        self["key_blue"].setText(_("Search"))
         self.setup_title = _("Configuration [%s] service") % self.hostName
         self.host = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + hostName, globals(), locals(), ['GetConfigList'], 0)
 
@@ -77,6 +81,9 @@ class ConfigHostMenu(ConfigBaseWidget):
                     printExc()
                 return
         ConfigBaseWidget.keyOK(self)
+
+    def keyBlue(self):
+        self.openSearch()
 
     def _afterConfigAction(self, *args):
         try:
