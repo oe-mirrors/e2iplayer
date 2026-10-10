@@ -1,6 +1,7 @@
 # curl-impersonate backend (IPTVPlayer/libs/curlimpersonate.py + pCommon.getPage(..., {'impersonate': True})
 # and the automatic retry in getPageCFProtection). No network, no binary: subprocess.Popen is replaced
 # by a fake curl that answers from the command line it gets; pCommon's enigma2 imports are stubbed.
+import base64
 import http.cookiejar
 import importlib.util
 import json
@@ -549,6 +550,70 @@ def test_cfprotection_impersonate_challenged_too_goes_to_mye2i(pc, tmp_path, mon
     assert sts is False
     assert calls == [("normal", "https://hard.example/"), ("impersonate", "https://hard.example/"), ("mye2i", "https://hard.example/")]
     assert "hard.example" not in pc._impersonateDomains
+
+
+HOSTADMIN_DENY = ("<title>Access Denied</title><h2>Access is denied</h2>"
+                  "<footer>powered by <a href='https://hostadmin.online'>HostAdmin.online</a></footer>")
+
+
+def test_cfprotection_cookie_gate_behind_cloudflare(pc, tmp_path, monkeypatch):
+    # kinoger: Cloudflare first, then the HostAdmin.online WAF that needs every cookie of the site
+    monkeypatch.setenv("PATH", "")
+    calls = []
+
+    def getPage(self, url, addParams={}, post_data=None):
+        items = addParams.get("cookie_items") or {}
+        calls.append(("get", sorted(items)))
+        if "ha-waf-ticket-secure" in items:
+            return True, pc.strwithmeta("<html>real page</html>", {"status_code": 200, "url": url})
+        if "cf_clearance" in items:
+            meta = {"status_code": 403, "url": url, "server": "cloudflare", "body_head": HOSTADMIN_DENY}
+            return False, pc.strwithmeta(HOSTADMIN_DENY, meta)
+        meta = {"status_code": 403, "url": url, "server": "cloudflare", "cf-mitigated": "challenge", "body_head": CHALLENGE.decode()}
+        return False, pc.strwithmeta("Access Forbidden", meta)
+    monkeypatch.setattr(pc.common, "getPage", getPage)
+
+    class Recaptcha(object):
+        def __init__(self, **k):
+            pass
+
+        def processCaptcha(self, siteKey, url, captchaType="CF"):
+            calls.append(("mye2i", captchaType))
+            cookies = [{"name": "cf_clearance", "value": "c"}]
+            if captchaType == "COOKIES":
+                cookies += [{"name": "ha-waf-ticket-secure", "value": "t"}, {"name": "PHPSESSID", "value": "s"}]
+            return base64.b64encode(json.dumps({"cookie": cookies, "user_agent": "Firefox"}).encode()).decode()
+    recaptcha = _module(PKG + ".libs.recaptcha_mye2i", UnCaptchaReCaptcha=Recaptcha)
+    sys.modules[PKG + ".libs"].recaptcha_mye2i = recaptcha
+    params = {"header": {"User-Agent": "Firefox"}, "cookiefile": str(tmp_path / "kinoger.cookie")}
+    sts, data = pc.common().getPageCFProtection("https://kinoger.example/", params)
+    assert sts and data == "<html>real page</html>"
+    assert calls == [("get", []), ("mye2i", "CF"), ("get", ["cf_clearance"]), ("mye2i", "COOKIES"),
+                     ("get", ["PHPSESSID", "cf_clearance", "ha-waf-ticket-secure"])]
+    assert "kinoger.example" in pc._cookieGateDomains
+    # the next challenge of that domain (WAF ticket expired) goes to the cookie mode straight away
+    del calls[:]
+    pc.common().getPageCFProtection("https://www.kinoger.example/stream/", params)
+    assert [c for c in calls if c[0] == "mye2i"] == [("mye2i", "COOKIES")]
+
+
+def test_cfprotection_same_challenge_after_solve_asks_once(pc, tmp_path, monkeypatch):
+    monkeypatch.setenv("PATH", "")
+    calls = []
+    monkeypatch.setattr(pc.common, "getPage", _urllibChallenge(pc, monkeypatch, calls))
+
+    class Recaptcha(object):
+        def __init__(self, **k):
+            pass
+
+        def processCaptcha(self, siteKey, url, captchaType="CF"):
+            calls.append(("mye2i", captchaType))
+            return base64.b64encode(json.dumps({"cookie": [{"name": "cf_clearance", "value": "c"}], "user_agent": ""}).encode()).decode()
+    recaptcha = _module(PKG + ".libs.recaptcha_mye2i", UnCaptchaReCaptcha=Recaptcha)
+    sys.modules[PKG + ".libs"].recaptcha_mye2i = recaptcha
+    sts, _data = pc.common().getPageCFProtection("https://a.example/", {"cookiefile": str(tmp_path / "c")})
+    assert sts is False and [c for c in calls if c[0] == "mye2i"] == [("mye2i", "CF")]
+    assert pc._cookieGateDomains == set()
 
 
 def test_cfprotection_no_retry_without_binary_or_when_asked(pc, tmp_path, monkeypatch):

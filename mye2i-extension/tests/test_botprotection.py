@@ -76,6 +76,21 @@ def test_widget_on_blocking_page_is_named():
     assert kind(403, {}, "<script src='https://hcaptcha.com/1/api.js'>") == ("hCaptcha", bp.KIND_CAPTCHA)
 
 
+def test_hostadmin_waf_before_cloudflare():
+    verify = ("<title>Verification...</title><script>window.__WAF_I18N__ = {};</script>"
+              "<footer>powered by <a href='https://hostadmin.online'>HostAdmin.online</a></footer>"
+              "<script>window.runWafEngine({seed: 'x', rounds: 21});</script>")
+    assert kind(200, {"Server": "cloudflare"}, verify) == ("HostAdmin.online WAF", bp.KIND_COOKIE_GATE)
+    deny = "<title>Access Denied</title><h2>Access is denied</h2><footer>powered by <a href='https://hostadmin.online'>HostAdmin.online</a></footer>"
+    assert kind(403, {"Server": "cloudflare"}, deny) == ("HostAdmin.online WAF", bp.KIND_COOKIE_GATE)
+    # a normal page that links the hoster in its footer is not a check page
+    assert kind(200, {"Server": "cloudflare"}, "<title>Filme</title><a href='https://hostadmin.online'>Hosting</a>") is None
+    # the verification page arrives as HTTP 200 - pCommon must not take it for the site
+    assert bp.gate_page_on_success(200, {}, verify).name == "HostAdmin.online WAF"
+    assert bp.gate_page_on_success(200, {}, "<div id='px-captcha'></div>") is None  # other gates only on errors
+    assert bp.gate_page_on_success(200, {}, "<html>normal</html>") is None
+
+
 def test_normal_page_is_not_flagged():
     assert bp.detect(200, {"Server": "nginx"}, "<html><body>hello</body></html>") is None
     assert bp.detect() is None
