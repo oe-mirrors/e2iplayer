@@ -244,7 +244,7 @@ class IPTVMainNavigatorList(IPTVListComponentBase):
         self.favouriteMarkerPIX = self._loadIcon('FavouriteItem.png')
         self.downloadedMarkerPIX = self._loadIcon('DownloadedItem.png')
         self.downloadingMarkerPIX = self._loadIcon('DownloadingItem.png')
-        # row marked for a batch download (E2iPlayerWidget selection mode)
+        # overlay on the item icon of a row marked for a batch download (E2iPlayerWidget selection mode)
         self.batchMarkerPIX = self._loadIcon('CheckBadge.png')
 
     def onDestroy(self):
@@ -258,10 +258,8 @@ class IPTVMainNavigatorList(IPTVListComponentBase):
             return None
 
     def _getRowMarkers(self, item):
-        # pixmaps for the end of the row, left to right: marked for a batch download, in the favourites, download state
+        # pixmaps for the end of the row, left to right: in the favourites, download state
         markers = []
-        if getattr(item, 'batchMarked', False) and self.batchMarkerPIX is not None:
-            markers.append(self.batchMarkerPIX)
         if getattr(item, 'isFavourite', False) and self.favouriteMarkerPIX is not None:
             markers.append(self.favouriteMarkerPIX)
         downloadState = getattr(item, 'downloadState', '')
@@ -290,7 +288,11 @@ class IPTVMainNavigatorList(IPTVListComponentBase):
         if icon is not None:
             x, y, w, h = fitPixmapInBox(icon, self.ICON_X, self.ICON_Y, self.ICON_W, self.ICON_H)
             res.append(MultiContentEntryPixmapAlphaBlend(pos=(x, y), size=(w, h), png=icon, flags=BT_SCALE))
-        if getattr(item, 'isWatched', False) and self.watchedBadgePIX is not None:
+        # overlay on the item icon: marked for a batch download (only while marking, so it wins), else watched / started
+        if getattr(item, 'batchMarked', False) and self.batchMarkerPIX is not None:
+            x, y, w, h = fitPixmapInBox(self.batchMarkerPIX, self.BADGE_X, self.BADGE_Y, self.BADGE_W, self.BADGE_H)
+            res.append(MultiContentEntryPixmapAlphaBlend(pos=(x, y), size=(w, h), png=self.batchMarkerPIX, flags=BT_SCALE))
+        elif getattr(item, 'isWatched', False) and self.watchedBadgePIX is not None:
             x, y, w, h = fitPixmapInBox(self.watchedBadgePIX, self.BADGE_X, self.BADGE_Y, self.BADGE_W, self.BADGE_H)
             res.append(MultiContentEntryPixmapAlphaBlend(pos=(x, y), size=(w, h), png=self.watchedBadgePIX, flags=BT_SCALE))
         elif getattr(item, 'isStarted', False) and self.startedBadgePIX is not None:
