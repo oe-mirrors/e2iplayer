@@ -189,6 +189,7 @@ class urlparser:
             "anafast.cyou": self.pp.parserJWPLAYER,
             "anafast.online": self.pp.parserJWPLAYER,  # add 061026
             "anafast.org": self.pp.parserJWPLAYER,  # add 061026
+            "anafast.space": self.pp.parserJWPLAYER,  # add 101026 (krmzy / anaplayer servers)
             "anafasts.com": self.pp.parserJWPLAYER,  # add 061026
             "anaplayer.online": self.pp.parserALBAPLAYER,  # add 031026 (w.anaplayer.online/albaplayer/<slug>/)
             "anime4low.sbs": self.pp.parserJWPLAYER,
@@ -626,6 +627,7 @@ class urlparser:
             "mp4player.site": self.pp.parserSTREAMEMBED,
             "mp4plus.cyou": self.pp.parserJWPLAYER,
             "mp4plus.org": self.pp.parserJWPLAYER,
+            "mp4plus.space": self.pp.parserJWPLAYER,  # add 101026 (krmzy)
             "mp4upload.com": self.pp.parserJWPLAYER,
             "mwdy.cc": self.pp.parserJWPLAYER,  # add 081026
             "mwish.pro": self.pp.parserJWPLAYER,  # add 061026
@@ -868,6 +870,7 @@ class urlparser:
             "vidmoviesb.xyz": self.pp.parserJWPLAYER,  # add 061026
             "vidnest.live": self.pp.parserJWPLAYER,  # add 061026
             "vidoba.org": self.pp.parserJWPLAYER,
+            "vidoba.space": self.pp.parserJWPLAYER,  # add 101026 (krmzy)
             "vidply.com": self.pp.parserDOOD,
             "vibuxer.com": self.pp.parserJWPLAYER,  # add 061026 (StreamWish mirror, e.g. pornbusy)
             "vidcore.io": self.pp.parserVIDCORE,
@@ -2883,6 +2886,14 @@ class pageParser(CaptchaHelper):
             printDBG("parserVIDEA noembed redirect -> [%s]" % newUrl)
             baseUrl = newUrl
         else:
+            return []
+
+        if not re.search(r"<video_source\b|<master_playlist_url>|<audio_source\b", videaXml):
+            # fix 101026: an <error> answer (e.g. a removed or blocked video) gave no links without a word
+            printDBG("parserVIDEA no sources, xml[%s]" % videaXml[:300])
+            err = re.search(r"<error[^>]*>\s*(.*?)\s*</error>", videaXml, re.S)
+            if err:
+                SetIPTVPlayerLastHostError(re.sub(r"<[^>]+>", "", err.group(1)).strip())
             return []
 
         subTracks = []

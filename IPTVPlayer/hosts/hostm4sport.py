@@ -1,468 +1,310 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.09.2025
+# Last Modified: 10.10.2026
 # 10.12.2022 - Blindspot
+# 10.10.2026 - rework for the current site: the usage counter / box data sent to figyelmeztetes.hu (and its config
+#   options and logos) removed; live channels (M4 Sport, M4 Sport +, M4 Sport 1-5 while they broadcast) with the
+#   programme now on air from the site's stream list; the video rows of m4sport.hu/video (the old ajax lists answer
+#   empty); streams through the MTVA player with the page as referer, "only in Hungary" told instead of an empty
+#   list; watched flag (row -> video), downloaded marker, favourites (also those of version 1.8), sidecar,
+#   "Title (YYYY-MM-DD)" naming, INFO from the site's own data, local icons, default user agent
 ###################################################
-HOST_VERSION = "1.8"
+HOST_VERSION = "2.0"
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
-from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIPTVPlayerVersion, MergeDicts
-from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist, getF4MLinksWithMeta, getMPDLinksWithMeta
-from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
-from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
-from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin
-###################################################
-
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
+from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass, CDisplayListItem
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIconDir
+from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import normalizeMediathekTitle
+from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
+from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
+from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
+from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks
+from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_unquote
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 ###################################################
 # FOREIGN import
 ###################################################
-from Components.config import config, ConfigText, ConfigYesNo, getConfigListEntry
-from Tools.Directories import fileExists
+import re
 ###################################################
-
-###################################################
-# Config options for HOST
-###################################################
-config.plugins.iptvplayer.m4sport_id = ConfigYesNo(default=False)
-config.plugins.iptvplayer.boxtipus = ConfigText(default="", fixed_size=False)
-config.plugins.iptvplayer.boxrendszer = ConfigText(default="", fixed_size=False)
 
 
 def GetConfigList():
-    optionList = []
-    optionList.append(getConfigListEntry("m4sport_id:", config.plugins.iptvplayer.m4sport_id))
-    return optionList
-###################################################
+    return []
 
 
 def gettytul():
-    return 'M4 Sport'
+    return "https://m4sport.hu/"
 
 
-class m4sport(CBaseHostClass):
+MAIN_URL = "https://m4sport.hu/"
+VIDEO_URL = MAIN_URL + "video"
+STREAMS_URL = MAIN_URL + "wp-content/plugins/hms-global-widgets/interfaces/streamJSONs/StreamSelector.json"
+PLAYER_URL = "https://player.mediaklikk.hu/playernew/player.php?video=%s"
+# the M4 Sport channels of the stream list (M4 Sport 2-5 only while they broadcast)
+LIVE_CODES = ("mtv4live", "mtv4plus", "m4sport1", "m4sport2", "m4sport3", "m4sport4", "m4sport5")
+
+
+class M4Sport(GenericFolderWatchedScraperMixin, CBaseHostClass):
+
+    # stable identity of a row (no state of an earlier menu)
+    FAV_FIELDS = ("name", "category", "type", "url", "title", "raw_title", "icon", "desc", "date", "live", "f_code", "f_row")
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history': 'm4sport.hu', 'cookie': 'm4sport.cookie'})
-        self.USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:66.0) Gecko/20100101 Firefox/66.0'
-        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding': 'gzip, deflate, br'}
-        self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
-        self.MAIN_URL = 'https://www.m4sport.hu/videok/'
-        self.DEFAULT_ICON_URL = 'https://www.figyelmeztetes.hu/m4sport_logo.png'
-        self.ICON_URL_ELO = 'https://www.figyelmeztetes.hu/m4sport_logo_elo.png'
-        self.ICON_URL_FOCI = 'https://www.figyelmeztetes.hu/m4sport_logo_foci.png'
-        self.vivn = GetIPTVPlayerVersion()
-        self.porv = self.gits()
-        self.pbtp = '-'
-        self.btps = config.plugins.iptvplayer.boxtipus.value
-        self.brdr = config.plugins.iptvplayer.boxrendszer.value
-        self.aid = config.plugins.iptvplayer.m4sport_id.value
-        self.aid_ki = ''
-        self.eblf = 'https://www.m4sport.hu/bajnokokligaja'
-        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        CBaseHostClass.__init__(self, {"history": "m4sport.hu", "cookie": "m4sport.cookie"})
+        self.MAIN_URL = MAIN_URL
+        self.DEFAULT_ICON_URL = "file://" + GetIconDir("PlayerSelector/m4sport135.png")
+        self.HEADER = self.cm.getDefaultHeader(browser="chrome")
+        self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
+        self.watchedHelper = IPTVWatchedHelper("m4sport")
+        self.wfInitFolderCache()
 
-    def getFullIconUrl(self, url):
-        url = url.replace('&amp;', '&')
-        return CBaseHostClass.getFullIconUrl(self, url)
-
-    def getPage(self, baseUrl, addParams={}, post_data=None):
-        if addParams == {}:
+    def getPage(self, url, addParams=None, post_data=None):
+        if addParams is None:
             addParams = dict(self.defaultParams)
+        return self.cm.getPage(url, addParams, post_data)
 
-        def _getFullUrl(url):
-            if self.cm.isValidUrl(url):
-                return url
-            else:
-                return urljoin(baseUrl, url)
+    def _meta(self, data, name):
+        return self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'''<meta[^>]+(?:property|name)=['"]%s['"][^>]+content=['"]([^'"]*)['"]''' % name)[0])
 
-        addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
-        sts, data = self.cm.getPageCFProtection(baseUrl, addParams, post_data)
-        return sts, data
+    ###################################################
+    # watched flag / favourites
+    ###################################################
+    def _getWatchedKeyForItem(self, cItem):
+        try:
+            if not isinstance(cItem, dict) or cItem.get("live") or cItem.get("md") == "elo":
+                return ""
+            if cItem.get("type") == "video":
+                path = re.sub(r"^https?://[^/]+", "", cItem.get("url", "")).rstrip("/")
+                return "video:%s" % path if path else ""
+            if cItem.get("category") == "list_row" and cItem.get("f_row"):
+                return "folder:row:%s" % cItem["f_row"]
+        except Exception:
+            printExc()
+        return ""
 
+    def getFavouriteData(self, cItem):
+        try:
+            if cItem.get("type") == "video" or cItem.get("category") == "list_row":
+                return json_dumps(dict((key, cItem[key]) for key in self.FAV_FIELDS if key in cItem))
+        except Exception:
+            printExc()
+        return CBaseHostClass.getFavouriteData(self, cItem)
+
+    ###################################################
+    # menus
+    ###################################################
     def listMainMenu(self, cItem):
-        try:
-            if self.btps != '' and self.brdr != '':
-                self.pbtp = self.btps.strip() + ' - ' + self.brdr.strip()
-            n_bx = self.malvadst('1', '11', 'm4_boxutca')
-            if n_bx != '' and self.aid:
-                self.aid_ki = 'ID: ' + n_bx + '\n'
-            else:
-                self.aid_ki = ''
-            msg_boxutca = self.aid_ki + 'm4sport - v' + HOST_VERSION + '\n\nBoxutca adásainak megjelenítése'
-            n_f = self.malvadst('1', '11', 'm4_foci')
-            if n_f != '' and self.aid:
-                self.aid_ki = 'ID: ' + n_f + '\n'
-            else:
-                self.aid_ki = ''
-            msg_foci = self.aid_ki + 'Magyar Foci adásainak megjelenítése'
-            n_fbl = self.malvadst('1', '11', 'm4_blfoci')
-            if n_fbl != '' and self.aid:
-                self.aid_ki = 'ID: ' + n_fbl + '\n'
-            else:
-                self.aid_ki = ''
-            msg_blfoci = self.aid_ki + 'UEFA Bajnokok Ligája adásainak megjelenítése\n\n(Előfordulhat, hogy egyes műsorokat nem lehet lejátszani a tartalom védelme miatt! - "Nincs elérhető link." üzenet jelenik meg)'
-            n_sh = self.malvadst('1', '11', 'm4_sporthirek')
-            if n_sh != '' and self.aid:
-                self.aid_ki = 'ID: ' + n_sh + '\n'
-            else:
-                self.aid_ki = ''
-            msg_sporthirek = self.aid_ki + 'Sporthírek adásainak megjelenítése'
-            n_sk = self.malvadst('1', '11', 'm4_kozvetitesek')
-            if n_sk != '' and self.aid:
-                self.aid_ki = 'ID: ' + n_sk + '\n'
-            else:
-                self.aid_ki = ''
-            msg_kozvetitesek = self.aid_ki + 'Sportközvetítések megjelenítése'
-            n_krs = self.malvadst('1', '11', 'm4_kereses')
-            if n_krs != '' and self.aid:
-                self.aid_ki = 'ID: ' + n_krs + '\n'
-            else:
-                self.aid_ki = ''
-            msg_kereses = self.aid_ki + 'Keresés eredményeinek megjelenítése'
-            n_krse = self.malvadst('1', '11', 'm4_kereses_elozmeny')
-            if n_krse != '' and self.aid:
-                self.aid_ki = 'ID: ' + n_krse + '\n'
-            else:
-                self.aid_ki = ''
-            msg_keres_elozmeny = self.aid_ki + 'Keresés az előzmények között'
-            n_elo = self.malvadst('1', '11', 'm4_elo')
-            if n_elo != '' and self.aid:
-                self.aid_ki = 'ID: ' + n_elo + '\n'
-            else:
-                self.aid_ki = ''
-            msg_elo = self.aid_ki + 'M4 élő adásának megjelenítése.'
-            msg_eloplus = self.aid_ki + 'M4 Sport + élő adásának megjelenítése.' + "\n" + 'Figyelem! Ez az élő adás csak hétvégén érhető el, a fennmaradó időben a Duna World adása látható.'
-            msg_elo1 = self.aid_ki + 'M4 Sport 1 élő adásának megjelenítése.'
-            msg_elo2 = self.aid_ki + 'M4 Sport 2 élő adásának megjelenítése.'
-            msg_elo3 = self.aid_ki + 'M4 Sport 3 élő adásának megjelenítése.'
-            msg_elo4 = self.aid_ki + 'M4 Sport 4 élő adásának megjelenítése.'
-            msg_elo5 = self.aid_ki + 'M4 Sport 5 élő adásának megjelenítése.'
-            MAIN_CAT_TAB = [{'category': 'list_main', 'title': 'BOXUTCA', 'tab_id': 'boxutca', 'desc': msg_boxutca, 'icon': self.DEFAULT_ICON_URL},
-                            {'category': 'list_main', 'title': 'MAGYAR FOCI', 'tab_id': 'foci', 'desc': msg_foci, 'icon': self.ICON_URL_FOCI},
-                            {'category': 'list_main', 'title': 'UEFA BAJNOKOK LIGÁJA FOCI', 'tab_id': 'blfoci', 'desc': msg_blfoci, 'icon': self.ICON_URL_FOCI},
-                            {'category': 'list_main', 'title': 'SPORTHÍREK', 'tab_id': 'sporthirek', 'desc': msg_sporthirek, 'icon': self.DEFAULT_ICON_URL},
-                            {'category': 'list_main', 'title': 'SPORTKÖZVETÍTÉSEK', 'tab_id': 'kozvetitesek', 'desc': msg_kozvetitesek, 'icon': self.DEFAULT_ICON_URL},
-                           ] + self.searchItems()
-            self.listsTab(MAIN_CAT_TAB, cItem)
-            pvt = 'M4 ÉLŐ ADÁSA'
-            pvd = msg_elo
-            pvu = "https://www.mediaklikk.hu/m4-elo/"
-            icon = self.ICON_URL_ELO
-            params = MergeDicts(cItem, {'good_for_fav': False, 'title': pvt, 'url': pvu, 'url2': pvu, 'desc': pvd, 'icon': icon, 'md': 'elo', 'id': "mtv4live"})
-            self.addVideo(params)
-            pvt = 'M4 SPORT+'
-            pvd = msg_eloplus
-            pvu = "https://www.mediaklikk.hu/m4-elo/"
-            icon = self.ICON_URL_ELO
-            params = MergeDicts(cItem, {'good_for_fav': False, 'title': pvt, 'url': pvu, 'url2': pvu, 'desc': pvd, 'icon': icon, 'md': 'elo', 'id': "mtv4plus"})
-            self.addVideo(params)
-            pvt = 'M4 SPORT 1'
-            pvd = msg_elo1
-            pvu = "https://www.mediaklikk.hu/m4-elo/"
-            icon = self.ICON_URL_ELO
-            params = MergeDicts(cItem, {'good_for_fav': False, 'title': pvt, 'url': pvu, 'url2': pvu, 'desc': pvd, 'icon': icon, 'md': 'elo', 'id': "m4sport1"})
-            self.addVideo(params)
-            pvt = 'M4 SPORT 2'
-            pvd = msg_elo2
-            pvu = "https://www.mediaklikk.hu/m4-elo/"
-            icon = self.ICON_URL_ELO
-            params = MergeDicts(cItem, {'good_for_fav': False, 'title': pvt, 'url': pvu, 'url2': pvu, 'desc': pvd, 'icon': icon, 'md': 'elo', 'id': "m4sport2"})
-            self.addVideo(params)
-            pvt = 'M4 SPORT 3'
-            pvd = msg_elo3
-            pvu = "https://www.mediaklikk.hu/m4-elo/"
-            icon = self.ICON_URL_ELO
-            params = MergeDicts(cItem, {'good_for_fav': False, 'title': pvt, 'url': pvu, 'url2': pvu, 'desc': pvd, 'icon': icon, 'md': 'elo', 'id': "m4sport3"})
-            self.addVideo(params)
-            pvt = 'M4 SPORT 4'
-            pvd = msg_elo4
-            pvu = "https://www.mediaklikk.hu/m4-elo/"
-            icon = self.ICON_URL_ELO
-            params = MergeDicts(cItem, {'good_for_fav': False, 'title': pvt, 'url': pvu, 'url2': pvu, 'desc': pvd, 'icon': icon, 'md': 'elo', 'id': "m4sport4"})
-            self.addVideo(params)
-            pvt = 'M4 SPORT 5'
-            pvd = msg_elo5
-            pvu = "https://www.mediaklikk.hu/m4-elo/"
-            icon = self.ICON_URL_ELO
-            params = MergeDicts(cItem, {'good_for_fav': False, 'title': pvt, 'url': pvu, 'url2': pvu, 'desc': pvd, 'icon': icon, 'md': 'elo', 'id': "m4sport5"})
-            self.addVideo(params)
-        except Exception:
-            printExc()
+        printDBG("M4Sport.listMainMenu")
+        self.addDir({"name": "category", "good_for_fav": True, "category": "list_live", "title": _("Live"), "url": MAIN_URL + "#live", "icon": self.DEFAULT_ICON_URL})
+        self.listVideoRows(cItem)
 
-    def listMainItems(self, cItem):
+    def _getStreams(self):
+        sts, data = self.getPage(STREAMS_URL)
+        if not sts:
+            return []
         try:
-            tabID = cItem.get('tab_id', '')
-            if tabID == 'boxutca':
-                self.susn('2', '11', 'm4_boxutca')
-                self.dfml('548', '4', 4)
-            elif tabID == 'foci':
-                self.susn('2', '11', 'm4_foci')
-                self.dfml('768', '4', 4)
-            elif tabID == 'blfoci':
-                self.susn('2', '11', 'm4_blfoci')
-                self.dfbl(self.eblf)
-            elif tabID == 'sporthirek':
-                self.susn('2', '11', 'm4_sporthirek')
-                self.dfml('1020', '4', 4)
-            elif tabID == 'kozvetitesek':
-                self.susn('2', '11', 'm4_kozvetitesek')
-                self.dfml('1025', '4', 7)
+            return json_loads(data).get("streams", []) or []
         except Exception:
             printExc()
+        return []
 
-    def dfml(self, cid='', bid='', mig=0):
-        try:
-            if cid != '' and bid != '' and mig > 0:
-                params = dict(self.defaultParams)
-                params['header'] = dict(self.AJAX_HEADER)
-                pue = 'https://www.m4sport.hu/wp-content/plugins/telesport.hu.widgets/widgets/newSubCategory/ajax_loadmore.php?cat_id={}&post_type=video&blog_id={}&page_number={}'
-                for x in range(1, mig):
-                    puf = pue.format(cid, bid, str(x))
-                    sts, data = self.getPage(puf, params)
-                    if not sts:
-                        return
-                    if len(data) == 0:
-                        return
-                    data = json_loads(data)
-                    for item in data:
-                        title = item['title']
-                        date_str = item['date'][0:10].replace('.', '/').strip()
-                        url = item['link']
-                        rstr = 'video/' + date_str + '/'
-                        url2 = url.replace('videok//', rstr)
-                        desc = item['date'] + '-i adás\n\nA műsor tartalma:\n' + title
-                        icon = item['image']
-                        params = {'title': title, 'url': url, 'url2': url2, 'desc': desc, 'icon': icon, 'md': 'egyeb'}
-                        self.addVideo(params)
-        except Exception:
-            printExc()
+    def _programme(self, streams, code):
+        # (now, next) programme of a channel: dicts of the stream list
+        now, nxt = {}, {}
+        for item in streams:
+            if ensure_str(item.get("code", "")) == code:
+                if item.get("type") == "live" and not now:
+                    now = item
+                elif item.get("type") == "next" and not nxt:
+                    nxt = item
+        return now, nxt
 
-    def dfbl(self, pu=''):
-        ln = 0
-        try:
-            if pu != '':
-                sts, data = self.getPage(pu)
-                if not sts:
-                    return
-                if len(data) == 0:
-                    return
-                tn = self.cm.ph.getDataBeetwenMarkers(data, '<h2 style="color: ;">Videók', '<div class="pagination" id="pagination', False)[1]
-                if len(tn) == 0:
-                    return
-                data = self.cm.ph.getAllItemsBeetwenMarkers(tn, '<div class="image-wrapper tizenhatkilenc overflow hmsLazyLoad', '<div class="typeico">')
-                if len(data) == 0:
-                    return
-                for item in data:
-                    ln += 1
-                    icon = self.cm.ph.getSearchGroups(item, '''data-src=['"]([^"^']+?)['"]''')[0]
-                    if icon.startswith('//'):
-                        icon = 'https:' + icon
-                    if not icon.startswith('https'):
-                        continue
-                    if not self.cm.isValidUrl(icon):
-                        continue
-                    tnt = self.cm.ph.getDataBeetwenMarkers(item, '<div class="cikk-content-title', '</h1>')[1]
-                    if len(tnt) == 0:
-                        continue
-                    url = self.cm.ph.getSearchGroups(tnt, 'href=[\'"]([^"^\']+?)[\'"]')[0]
-                    if url.startswith('//'):
-                        url = 'https:' + url
-                    if not url.startswith('https'):
-                        continue
-                    title_tmp = self.cm.ph.getDataBeetwenMarkers(tnt, 'href="', '/a>', False)[1]
-                    title = self.cm.ph.getDataBeetwenMarkers(title_tmp, '>', '<', False)[1].strip()
-                    if title == '':
-                        continue
-                    desc = 'A műsor tartalma:\n' + title
-                    params = {'title': title, 'url': url, 'url2': url, 'desc': desc, 'icon': icon, 'md': 'egyeb'}
-                    self.addVideo(params)
-                    if ln > 30:
-                        break
-        except Exception:
-            printExc()
+    def _programmeDesc(self, now, nxt):
+        lines = []
+        for item in (now, nxt):
+            if item:
+                lines.append("%s-%s %s" % (ensure_str(item.get("time", "")), ensure_str(item.get("endTime", "")), self.cleanHtmlStr(ensure_str(item.get("title", "")))))
+        if now.get("description"):
+            lines.append(self.cleanHtmlStr(ensure_str(now["description"]).replace("\n", "<br>")))
+        return "[/br]".join(lines)
 
-    def listSecondItems(self, cItem):
-        try:
-            tabID = cItem.get('tab_id', '')
-            return
-        except Exception:
-            printExc()
+    def listLive(self, cItem):
+        printDBG("M4Sport.listLive")
+        streams = self._getStreams()
+        for code in LIVE_CODES:
+            now, nxt = self._programme(streams, code)
+            if not now:
+                continue
+            name = self.cleanHtmlStr(ensure_str(now.get("name", code)))
+            icon = self.getFullIconUrl(ensure_str(now.get("image", "")).split("?")[0]) or self.DEFAULT_ICON_URL
+            self.addVideo({"name": "category", "good_for_fav": True, "live": True, "title": name, "url": MAIN_URL + "#" + code, "f_code": code,
+                           "icon": icon, "desc": self._programmeDesc(now, nxt)})
+
+    def _getVideoRows(self):
+        # [(row title, [(url, title, icon)])] of the video page
+        sts, data = self.getPage(VIDEO_URL)
+        if not sts:
+            return []
+        rows = []
+        parts = re.split(r"<h2[^>]*>", data)
+        for part in parts[1:]:
+            title = self.cleanHtmlStr(part.split("</h2>", 1)[0])
+            items = []
+            seen = set()
+            for item in re.split(r'''<a class=['"][^'"]*ItemLink[^'"]*['"]''', part)[1:]:
+                url = self.cm.ph.getSearchGroups(item, r'''href=['"](https?://(?:www\.)?(?:m4sport|mediaklikk)\.hu/videok?/[^'"]+)['"]''')[0]
+                name = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'''pMultiplerowGridTitle['"]>(.*?)</p>''')[0]) or \
+                    self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ("<h1", ">"), ("</h1", ">"), False)[1])
+                if not url or not name or url in seen:
+                    continue
+                seen.add(url)
+                icon = self.cm.ph.getSearchGroups(item, r'''data-src=['"]([^'"]+)['"]''')[0] or self.cm.ph.getSearchGroups(item, r'''<img[^>]+src=['"]([^'"]+)['"]''')[0]
+                items.append((url, name, icon))
+            if title and items:
+                rows.append((title, items))
+        return rows
+
+    def listVideoRows(self, cItem):
+        for title, items in self._getVideoRows():
+            self.addDir({"name": "category", "good_for_fav": True, "category": "list_row", "title": title, "f_row": title, "url": VIDEO_URL + "#" + title,
+                         "icon": items[0][2] or self.DEFAULT_ICON_URL, "desc": "%d %s" % (len(items), _("Videos"))})
+
+    def listRow(self, cItem):
+        printDBG("M4Sport.listRow [%s]" % cItem.get("f_row", ""))
+        for title, items in self._getVideoRows():
+            if title != cItem.get("f_row"):
+                continue
+            for url, name, icon in items:
+                date = self.cm.ph.getSearchGroups(url, r"/videok?/(\d{4})/(\d\d)/(\d\d)/", 3)
+                date = "-".join(date) if date[0] else ""
+                desc = " | ".join([x for x in ("%s.%s.%s" % (date[8:10], date[5:7], date[:4]) if date else "", "M4 Sport - %s" % title) if x])
+                self.addVideo({"name": "category", "good_for_fav": True, "title": normalizeMediathekTitle(name, date=date), "raw_title": name, "url": url,
+                               "icon": icon or self.DEFAULT_ICON_URL, "desc": desc, "date": date})
+            break
+
+    ###################################################
+    # links
+    ###################################################
+    def _getPlayerLinks(self, video, referer):
+        # MTVA player: the stream url only with the page of the video as referer
+        params = dict(self.defaultParams)
+        params["header"] = dict(self.HEADER, Referer=referer)
+        sts, data = self.getPage(PLAYER_URL % video, params)
+        if not sts:
+            return []
+        linksTab = []
+        for url in re.findall(r'''['"]file['"]\s*:\s*['"]([^'"]+)['"]''', data):
+            url = url.replace("\\/", "/")
+            if url.startswith("//"):
+                url = "https:" + url
+            if self.cm.isValidUrl(url) and ".m3u8" in url:
+                linksTab = getDirectM3U8Playlist(strwithmeta(url, {"User-Agent": self.HEADER["User-Agent"], "Referer": "https://player.mediaklikk.hu/"}),
+                                                 checkExt=False, checkContent=True, sortWithMaxBitrate=999999999)
+                if linksTab:
+                    break
+        if not linksTab:
+            if "INVALID_LOCATION" in data:
+                SetIPTVPlayerLastHostError(_("Not available in your country (geo-blocking)."))
+            else:
+                SetIPTVPlayerLastHostError(_("No valid links available."))
+        return linksTab
+
+    def _liveCode(self, cItem):
+        # live rows: "f_code"; favourites of version 1.8: "md" = "elo" with the channel in "id"
+        if cItem.get("f_code"):
+            return cItem["f_code"]
+        return cItem.get("id", "") if cItem.get("md") == "elo" else ""
 
     def getLinksForVideo(self, cItem):
-        a = 0
-        url = cItem['url']
-        url2 = cItem['url2']
-        md = cItem['md']
-        printDBG(md)
-        if md == 'elo':
-            self.susn('2', '11', 'm4_elo')
-            urllist = []
-            new = self.kvlva(url, cItem['id'])
-            urllist.append(new)
-            a = 1
-            for i in urllist:
-                if i == '':
-                     urllist.remove(i)
-        videoUrls = []
-        turl = self.kvlva(url, False)
-        if len(turl) == 0:
-            turl = self.kvlva(url2, False)
-        if a == 1:
-             turl = urllist
-             for i in turl:
-                 uri = urlparser.decorateParamsFromUrl(i)
-                 protocol = uri.meta.get('iptv_proto', '')
-                 if protocol == 'm3u8':
-                     retTab = getDirectM3U8Playlist(uri, checkExt=False, checkContent=True)
-                     retTab = retTab[-1]
-                     retTab['name'] = 'direct link'
-                     videoUrls.append(retTab)
-        if a == 0:
-             uri = urlparser.decorateParamsFromUrl(turl)
-             protocol = uri.meta.get('iptv_proto', '')
-             if protocol == 'm3u8':
-                 retTab = getDirectM3U8Playlist(uri, checkExt=False, checkContent=True)
-                 videoUrls.extend(retTab)
-             elif protocol == 'f4m':
-                retTab = getF4MLinksWithMeta(uri)
-                videoUrls.extend(retTab)
-             elif protocol == 'mpd':
-                retTab = getMPDLinksWithMeta(uri, False)
-                videoUrls.extend(retTab)
-             else:
-                videoUrls.append({'name': 'direct link', 'url': uri})
-        return videoUrls
+        url = cItem.get("url", "")
+        printDBG("M4Sport.getLinksForVideo [%s]" % url)
+        code = self._liveCode(cItem)
+        if code:
+            return self._getPlayerLinks(code, MAIN_URL)
+        token = ""
+        # favourites of version 1.8 may carry a fixed-up page url in "url2" ("videok//" -> "video/<date>/")
+        url2 = cItem.get("url2", "")
+        for pageUrl in [url] + ([url2] if url2 and url2 != url else []):
+            sts, data = self.getPage(pageUrl)
+            if not sts:
+                continue
+            token = self.cm.ph.getSearchGroups(data, r'''['"]token['"]\s*:\s*['"]([^'"]+)['"]''')[0]
+            if token:
+                token = urllib_quote(urllib_unquote(token.replace("\\/", "/")), safe="")
+            else:
+                token = self.cm.ph.getSearchGroups(data, r'''['"]streamId['"]\s*:\s*['"]([^'"]+)['"]''')[0]
+            if token:
+                url = pageUrl
+                break
+        if not token:
+            SetIPTVPlayerLastHostError(_("No valid links available."))
+            return []
+        return applySidecarToLinks(self._getPlayerLinks(token, url), buildSidecarFromItem(cItem, IsSidecarEnabled()))
 
-    def kvlva(self, pu, opcio):
-        bu = ''
-        try:
-            if pu != '':
-                sts, data = self.getPage(pu)
-                if not sts:
-                    return ''
-                tn = self.cm.ph.getDataBeetwenMarkers(data, 'token":"', '","', False)[1]
-                if len(tn) == 0:
-                    tn = self.cm.ph.getDataBeetwenMarkers(data, 'streamId":"', '","', False)[1]
-                    if len(tn) == 0:
-                        return ''
-                if not opcio:
-                    tul = "https://player.mediaklikk.hu/playernew/player.php?video=" + tn
-                if opcio:
-                    tul = "https://player.mediaklikk.hu/playernew/player.php?video=" + opcio + "&noflash=yes&osfamily=Android&osversion=7.0&browsername=Chrome%20Mobile&browserversion=&title=&contentid=" + opcio + "&embedded=1"
-                sts, data = self.getPage(tul)
-                if not sts:
-                    return ''
-                printDBG(data)
-                vl = self.cm.ph.getAllItemsBeetwenMarkers(data, 'file": "', '",', False)
-                if len(vl) > 1:
-                    vl = vl[1]
-                else:
-                   vl = vl[0]
-                vl = vl.replace(r'\/', '/')
-                if vl.startswith('/'):
-                    vl = 'https:' + vl
-                if not self.cm.isValidUrl(vl):
-                    return ''
-                if vl:
-                    bu = vl
-        except Exception:
-            return ''
-        return bu
+    ###################################################
+    # INFO
+    ###################################################
+    def getArticleContent(self, cItem):
+        printDBG("M4Sport.getArticleContent [%s]" % cItem.get("url", ""))
+        title = cItem.get("raw_title", cItem.get("title", ""))
+        text = cItem.get("desc", "")
+        icon = cItem.get("icon", "")
+        otherInfo = {}
+        code = self._liveCode(cItem)
+        if code:
+            now, nxt = self._programme(self._getStreams(), code)
+            if now:
+                text = self._programmeDesc(now, nxt)
+                otherInfo["status"] = _("Live")
+        elif cItem.get("type") == "video":
+            sts, data = self.getPage(cItem["url"])
+            if sts:
+                # "... | MédiaKlikk" (\S*: the é is two bytes on py2)
+                title = re.sub(r"\s*\|\s*M\S*diaKlikk$", "", self._meta(data, "og:title")) or title
+                # (the plain "description" is the site's slogan on every page)
+                text = self._meta(data, "og:description") or text
+                image = self._meta(data, "og:image")
+                if image and "logo" not in image:
+                    icon = image
+            if cItem.get("date"):
+                otherInfo["released"] = cItem["date"]
+        return [{"title": title, "text": text, "images": [{"title": "", "url": icon or self.DEFAULT_ICON_URL}], "other_info": otherInfo}]
 
-    def malvadst(self, i_md='', i_hgk='', i_mpu=''):
-        uhe = 'https://www.figyelmeztetes.hu/hely/sata/vansatdb.php'
-        pstd = {'md': i_md, 'hgk': i_hgk, 'mpu': i_mpu}
-        t_s = ''
-        temp_vn = ''
-        temp_vni = ''
-        try:
-            if i_md != '' and i_hgk != '' and i_mpu != '':
-                sts, data = self.cm.getPage(uhe, self.defaultParams, pstd)
-                if not sts:
-                    return t_s
-                if len(data) == 0:
-                    return t_s
-                data = self.cm.ph.getDataBeetwenMarkers(data, '<div id="div_a_div', '</div>')[1]
-                if len(data) == 0:
-                    return t_s
-                data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<input', '/>')
-                if len(data) == 0:
-                    return t_s
-                for item in data:
-                    t_i = self.cm.ph.getSearchGroups(item, 'id=[\'"]([^"^\']+?)[\'"]')[0]
-                    if t_i == 'vn':
-                        temp_vn = self.cm.ph.getSearchGroups(item, 'value=[\'"]([^"^\']+?)[\'"]')[0]
-                    elif t_i == 'vni':
-                        temp_vni = self.cm.ph.getSearchGroups(item, 'value=[\'"]([^"^\']+?)[\'"]')[0]
-                if temp_vn != '':
-                    t_s = temp_vn
-            return t_s
-        except Exception:
-            return t_s
-
-    def susn(self, i_md='', i_hgk='', i_mpu=''):
-        uhe = 'https://www.figyelmeztetes.hu/hely/sata/vansatdb.php'
-        pstd = {'md': i_md, 'hgk': i_hgk, 'mpu': i_mpu, 'hv': self.vivn, 'orv': self.porv, 'bts': self.pbtp}
-        try:
-            if i_md != '' and i_hgk != '' and i_mpu != '':
-                sts, data = self.cm.getPage(uhe, self.defaultParams, pstd)
-            return
-        except Exception:
-            return
-
-    def gits(self):
-        bv = '-'
-        tt = []
-        try:
-            if fileExists('/etc/issue'):
-                fr = open('/etc/issue', 'r')
-                for ln in fr:
-                    ln = ln.rstrip('\n')
-                    if ln != '':
-                        tt.append(ln)
-                fr.close()
-                if len(tt) == 1:
-                    bv = tt[0].strip()[:-6].capitalize()
-                if len(tt) == 2:
-                    bv = tt[1].strip()[:-6].capitalize()
-            return bv
-        except Exception:
-            return '-'
-
-    def listSearchResult(self, cItem, searchPattern, searchType):
-        try:
-            printDBG("listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
-            self.susn('2', '11', 'm4_kereses')
-            return
-        except Exception:
-            return
-        return
-
-    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
+    def handleService(self, index, refresh=0, searchPattern="", searchType=""):
+        printDBG("M4Sport.handleService start")
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
-        name = self.currItem.get("name", '')
-        category = self.currItem.get("category", '')
+
+        name = self.currItem.get("name", "")
+        category = self.currItem.get("category", "")
+        printDBG("M4Sport.handleService: name[%s], category[%s]" % (name, category))
         self.currList = []
+
         if name is None:
-            self.listMainMenu({'name': 'category'})
-        elif category == 'list_main':
-            self.listMainItems(self.currItem)
-        elif category == 'list_second':
-            self.listSecondItems(self.currItem)
-        elif category in ['search', 'search_next_page']:
-            cItem = dict(self.currItem)
-            cItem.update({'search_item': False, 'name': 'category'})
-            self.listSearchResult(cItem, searchPattern, searchType)
-        elif category == 'search_history':
-            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc')
+            self.listMainMenu({"name": "category"})
+        elif category == "list_live":
+            self.listLive(self.currItem)
+        elif category == "list_row":
+            self.listRow(self.currItem)
+        elif category == "list_main":
+            # folder favourites of version 1.8 (BOXUTCA, MAGYAR FOCI ...): their ajax lists are gone, the video rows instead
+            self.listVideoRows(self.currItem)
         else:
             printExc()
+
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
-class IPTVHost(CHostBase):
+class IPTVHost(GenericFolderWatchedHostMixin, CHostBase):
 
     def __init__(self):
-        CHostBase.__init__(self, m4sport(), True, [])
+        CHostBase.__init__(self, M4Sport(), True, [CDisplayListItem.TYPE_VIDEO])
+        self.cachedRet = None
+        self.refreshAfterWatchedFlagChange = False
+        self.watchedHelper = IPTVWatchedHelper("m4sport")
+
+    def withArticleContent(self, cItem):
+        return cItem.get("type", "") == "video"

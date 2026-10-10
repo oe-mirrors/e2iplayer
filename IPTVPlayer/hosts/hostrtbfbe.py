@@ -1,29 +1,38 @@
 # -*- coding: utf-8 -*-
 # Last Modified: 10.10.2026
-# 10.10.2026 - links are no longer renamed to "*name*" after use - that broke the link list's own used mark (tick + colour)
+# 10.10.2026 - links are no longer renamed to "*name*" after use - that broke the link list's own used mark (tick + colour);
+#   lists repaired for auvio.rtbf.be (the old www.rtbf.be/auvio pages are gone): every menu now reads the site's own
+#   bff-service api (pages -> widgets -> programmes / videos / lives / radios, seasons of a programme, the whole
+#   programme mosaic, search), First page / Jump / Next page where the api pages; "En Direct" no longer fails on the
+#   dead planninglist api (401); playback through the site's player backend (Red Bee: anonymous, or the own Auvio
+#   account of the host configuration - Gigya login), HLS / DASH without DRM only (DRM and geo-blocked videos say
+#   so); old favourites (www.rtbf.be/auvio/...?id=) reopen; watched flag (programme -> season -> video), favourites,
+#   "Show - SxxExx" when names are normalised, INFO from the site's data, English menu labels; loads on py2 again
+#   (no module-level datetime.timezone)
+# 10.10.2026 - review: a video outside its geo zone says "geo-blocking" (Red Bee answers NOT_ENTITLED there, not a
+#   missing account); no "!geo-blocked!" mark when the own country is unknown; tabs named by year give no SxxExx
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, byteify, rm, CSelOneLink
-from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
+from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist, getMPDLinksWithMeta
+from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
+from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, rm, GetIconDir
+from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
+from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
+from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
 ###################################################
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus
-from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
-if not isPY2():
-    basestring = str
 ###################################################
 # FOREIGN import
 ###################################################
 import re
-import random
-from datetime import datetime, timedelta, timezone
-try:
-    import json
-except Exception:
-    import simplejson as json
+import uuid
 from Components.config import config, getConfigListEntry
 from Plugins.Extensions.IPTVPlayer.components.configsecret import ConfigLogin, ConfigSecret
 ###################################################
@@ -51,628 +60,492 @@ def GetConfigList():
 
 
 def gettytul():
-    return 'https://www.rtbf.be/'
+    return 'https://auvio.rtbf.be/'
 
 
-class RTBFBE(CBaseHostClass):
+BFF_URL = 'https://bff-service.rtbf.be/auvio/v1.23/'
+LOGIN_URL = 'https://login.rtbf.be/'
+REDBEE_URL = 'https://exposure.api.redbee.live/v2/customer/RTBF/businessunit/Auvio/'
+# widgets without anything to list here (ads, the site user's own lists, single trailers)
+SKIP_WIDGETS = ('BANNER', 'ONGOING_PLAY_HISTORY', 'FAVORITE_PROGRAM_LIST', 'PROMOBOX', 'MEDIA_TRAILER', 'FAVORITE_MEDIA_LIST')
+# old www.rtbf.be/auvio links (favourites of the old version): kind of page -> new path prefix
+OLD_URL_RES = ((re.compile(r'/auvio/emissions/detail[^?]*\?.*\bid=(\d+)'), 'emission'),
+               (re.compile(r'/auvio/detail[^?]*\?.*\blid=(\d+)'), 'live'),
+               (re.compile(r'/auvio/detail[^?]*\?.*\bid=(\d+)'), 'media'),
+               (re.compile(r'/auvio/chaine[^?]*\?.*\bid=(\d+)'), 'chaine'),
+               (re.compile(r'/auvio/categorie/[^?]*\?.*\bid=(\d+)'), 'categorie'))
+# "01 - À bout de souffle", "Épisode 3" (no character class with "É": py2 matches utf-8 bytes)
+EPISODE_NUM_RE = re.compile(r'^\s*(?:(?:Episode|Épisode|épisode|Ep\.?)\s*)?0*(\d{1,3})\s*(?:[-.:/]|$)', re.I)
+
+
+class RTBFBE(GenericFolderWatchedScraperMixin, CBaseHostClass):
     CHECK_GEO_LOCK = True
+    FAV_FIELDS = ('name', 'category', 'type', 'url', 'title', 'icon', 'desc', 'r_kind', 'media_id', 'asset_id', 'program_id',
+                  's_title', 's_season', 's_episode')
 
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'rtbf.be', 'cookie': 'rtbf.be.cookie'})
-        self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
-        self.MAIN_URL = 'https://www.rtbf.be/'
-        self.DEFAULT_ICON_URL = 'https://www.mediaspecs.be/wp-content/uploads/RTBF_Auvio.png'
-        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate', 'Referer': self.getMainUrl(), 'Origin': self.getMainUrl()}
-        self.AJAX_HEADER = dict(self.HTTP_HEADER)
-        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'application/json, text/javascript, */*; q=0.01'})
-
+        self.MAIN_URL = gettytul()
+        self.DEFAULT_ICON_URL = 'file://' + GetIconDir('PlayerSelector/rtbfbe135.png')
+        self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
+        self.HTTP_HEADER.update({'Referer': self.MAIN_URL, 'Origin': self.MAIN_URL.rstrip('/')})
         self.defaultParams = {'header': self.HTTP_HEADER, 'with_metadata': True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.login = ''
         self.password = ''
         self.loggedIn = None
         self.loginMessage = ''
+        self.loginToken = ''
+        self.apiKey = ''
         self.userGeoLoc = ''
+        self.deviceId = str(uuid.uuid4())
+        self.bearer = {}
+        self.cacheLinks = {}
+        self.watchedHelper = IPTVWatchedHelper('rtbfbe')
+        self.wfInitFolderCache()
 
-        self.cacheChannels = []
-
-        self.OFFSET = datetime.now() - datetime.now(timezone.utc).replace(tzinfo=None)
-        seconds = self.OFFSET.seconds + self.OFFSET.days * 24 * 3600
-        if ((seconds + 1) % 10) == 0:
-            seconds += 1
-        elif ((seconds - 1) % 10) == 0:
-            seconds -= 1
-        self.OFFSET = timedelta(seconds=seconds)
-
-        self.partnerKey = ''
-        self.partnerToken = ''
-        self.dataKey = ''
-        self.csrfToken = ''
-        self.loginData = {}
-
-    def setMainUrl(self, url):
-        if self.cm.isValidUrl(url):
-            self.MAIN_URL = self.cm.getBaseUrl(url)
-
-    def getPage(self, baseUrl, addParams={}, post_data=None):
-        if addParams == {}:
+    def getPage(self, baseUrl, addParams=None, post_data=None):
+        if addParams is None:
             addParams = dict(self.defaultParams)
         baseUrl = self.cm.iriToUri(baseUrl)
         return self.cm.getPage(baseUrl, addParams, post_data)
 
-    def listMainMenu(self, cItem, nextCategory):
+    def _getJson(self, url, addParams=None, post_data=None):
+        params = dict(self.defaultParams) if addParams is None else addParams
+        # the api answers its errors (401/403/404) as json too
+        params['ignore_http_code_ranges'] = [(400, 499)]
+        sts, data = self.getPage(url, params, post_data)
+        if not sts:
+            return None
+        try:
+            return json_loads(data)
+        except Exception:
+            printExc()
+        return None
+
+    def getFavouriteData(self, cItem):
+        try:
+            if cItem.get('type') in ('video', 'audio') or cItem.get('program_id'):
+                return json_dumps(dict((key, cItem[key]) for key in self.FAV_FIELDS if key in cItem))
+        except Exception:
+            printExc()
+        return CBaseHostClass.getFavouriteData(self, cItem)
+
+    ###################################################
+    # watched flag: programme -> season -> video (lives / radios have none)
+    ###################################################
+    def _getWatchedKeyForItem(self, cItem):
+        try:
+            if not isinstance(cItem, dict):
+                return ''
+            if cItem.get('r_kind') == 'media' and cItem.get('media_id'):
+                return 'media:%s' % cItem['media_id']
+            if cItem.get('category') == 'list_widget' and cItem.get('program_id') and cItem.get('s_season'):
+                return 'season:%s#%s' % (cItem['program_id'], cItem['s_season'])
+            if cItem.get('category') == 'sections' and cItem.get('program_id'):
+                return 'program:%s' % cItem['program_id']
+        except Exception:
+            printExc()
+        return ''
+
+    ###################################################
+    # lists
+    ###################################################
+    def listMainMenu(self, cItem):
         printDBG("RTBFBE.listMainMenu")
-
-        CAT_TAB = [{'category': 'sections', 'title': _('Main'), 'url': self.getFullUrl('/auvio/')},
-                   {'category': 'live_categories', 'title': 'En Direct', 'url': self.getFullUrl('/auvio/direct')},
-                   {'category': 'channels', 'title': 'Chaînes', 'url': self.getFullUrl('/news/api/menu?site=media')},
-                   {'category': 'sections', 'title': 'Émissions', 'url': self.getFullUrl('/auvio/emissions')},
-                   {'category': 'categories', 'title': 'Catégories', 'url': self.getFullUrl('/news/api/menu?site=media')}] + self.searchItems()
-
+        CAT_TAB = [{'category': 'sections', 'title': _('Main'), 'url': BFF_URL + 'pages/home'},
+                   {'category': 'sections', 'title': _('Live'), 'url': BFF_URL + 'pages/direct'},
+                   {'category': 'home_widget', 'title': _('Channels'), 'widget_type': 'CHANNEL_LIST'},
+                   {'category': 'list_widget', 'title': _('Programmes'), 'url': BFF_URL + 'mosaic/program?includeFastTv=true'},
+                   {'category': 'home_widget', 'title': _('Categories'), 'widget_type': 'CATEGORY_LIST'}] + self.searchItems()
         params = dict(cItem)
         params['desc'] = self.loginMessage
         self.listsTab(CAT_TAB, params)
 
-    def getPartnerKey(self, data=None):
-        if '' in [self.csrfToken, self.partnerKey]:
-            if data is None:
-                sts, data = self.getPage(self.getMainUrl())
-                if not sts:
-                    return ''
-            tmp = re.compile(r'''<script[^>]+?src=['"]([^'^"]+?_ssl\.js)['"]''').findall(data)
-            data = ''
-            for item in tmp:
-                sts, item = self.getPage(self.getFullUrl(item))
-                if sts:
-                    data += item
-            self.partnerKey = self.cm.ph.getSearchGroups(data, r'''partner_key\s*?:\s*?['"]([^'^"]+?)['"]''', ignoreCase=True)[0]
-            self.csrfToken = self.cm.ph.getSearchGroups(data, r'''['"]?X-CSRF-Token['"]?\s*?:\s*?['"]([^'^"]+?)['"]''', ignoreCase=True)[0]
-        return self.partnerKey
+    def _pageUrl(self, path):
+        return BFF_URL + 'pages/' + path.lstrip('/')
 
-    def getPartnerToken(self):
-        if self.partnerToken == '':
-            url = 'https://www.rtbf.be/api/partner/generic/live/planninglist?target_site=media&origin_site=media&category_id=0&start_date&offset=0&limit=1&partner_key=' + self.getPartnerKey()
-            sts, data = self.getPage(url)
-            if not sts:
-                return ''
-            self.partnerToken = self.cm.ph.getSearchGroups(data, r'''\.m3u8\?token=([0-9A-Za-z]+?)[^0-9^A-Z^a-z]''')[0]
-        return self.partnerToken
+    def _icon(self, item):
+        for key in ('illustration', 'background'):
+            images = item.get(key) or {}
+            if isinstance(images, dict):
+                for size in ('m', 's', 'l', 'xs'):
+                    if images.get(size):
+                        return images[size]
+        logo = item.get('logo') or {}
+        if isinstance(logo, dict):
+            logo = logo.get('dark') or logo.get('light') or {}
+            if isinstance(logo, dict):
+                return logo.get('png', '')
+        return ''
 
-    def listLiveCategories(self, cItem, nextCategory):
-        printDBG("RTBFBE.listLiveCategories")
+    @staticmethod
+    def _time(value):
+        # "2026-10-10T13:00:00+02:00" -> "10.10. 13:00" (Belgian time, as the site shows it)
+        m = re.match(r'\d{4}-(\d\d)-(\d\d)T(\d\d:\d\d)', value or '')
+        return '%s.%s. %s' % (m.group(2), m.group(1), m.group(3)) if m else ''
 
-        sts, data = self.getPage(cItem['url'])
-        if not sts:
-            return
-
-        cUrl = data.meta['url']
-        self.setMainUrl(cUrl)
-
-        partnerKey = self.getPartnerKey(data)
-
-        data = self.cm.ph.getDataBeetwenMarkers(data, '<router-gateway', '</router-gateway>')[1]
-        data = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, 'config="', '"', False)[1])
-        try:
-            data = byteify(json.loads(data))
-            baseUrl = data['api']['planninglist']
-            if not self.cm.isValidUrl(baseUrl):
-                return
-            for item in data['categories']:
-                url = baseUrl + '?target_site=media&origin_site=media&category_id=' + item['id'] + '&start_date&offset={0}&limit={1}&partner_key=' + partnerKey
-                title = self.cleanHtmlStr(item['label'])
-                params = dict(cItem)
-                params.update({'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url})
-                self.addDir(params)
-        except Exception:
-            printExc()
-
-    def listLiveItems(self, cItem):
-        printDBG("RTBFBE.listLiveItems")
-
-        def _parseDate(dateStr):
-            date = datetime.strptime(dateStr[:-7], "%Y-%m-%dT%H:%M:%S")
-            offsetDir = dateStr[-6]
-            offsetHours = int(dateStr[-5:-3])
-            offsetMins = int(dateStr[-2:])
-            if offsetDir == "+":
-                offsetHours = -offsetHours
-                offsetMins = -offsetMins
-            utc_date = date + timedelta(hours=offsetHours, minutes=offsetMins) + self.OFFSET
-            return utc_date
-
-        currDate = datetime.now()
-        NUM_ITEMS = 20
-        page = cItem.get('page', 0)
-
-        sts, data = self.getPage(cItem['url'].format(page * NUM_ITEMS, NUM_ITEMS))
-        if not sts:
-            return
-        try:
-            data = byteify(json.loads(data))
-            for item in data:
-                title = self.cleanHtmlStr(item['title'])
-                subtitle = self.cleanHtmlStr(item['subtitle'])
-                if subtitle != '':
-                    title = '%s - %s' % (title, subtitle)
-                url = self.getFullUrl(item['url_share'])
-                try:
-                    streamUrl = self.getFullUrl(item['url_streaming']['url_hls'])
-                except Exception:
-                    streamUrl = ''
-                if not self.cm.isValidUrl(streamUrl):
-                    continue
-                desc = [self.cleanHtmlStr(item['geolock']['title'])]
-                if item.get('drm', False):
-                    desc.append('DRM')
-                try:
-                    icon = self.getFullIconUrl(item['images']['illustration']['16x9']['370x208'])
-                    for k in ['channel', 'program', 'category', 'live']:
-                        desc.append(item[k]['label'])
-                except Exception:
-                    icon = ''
-                desc = [' | '.join(desc)]
-                desc.append(self.cleanHtmlStr(item['description']))
-
-                date = _parseDate(item['start_date'])
-                if date.day == currDate.day:
-                    timeHeader = date.strftime('%Hh%M')
-                else:
-                    timeHeader = date.strftime('%Y-%m-%d %Hh%M')
-                timeHeader += ' - ' + _parseDate(item['end_date']).strftime('%Hh%M')
-                desc.insert(0, timeHeader)
-
-                params = {'good_for_fav': False, 'title': title, 'url': url, 'stream_url': streamUrl, 'icon': icon, 'desc': '[/br]'.join(desc)}
-                self.addVideo(params)
-
-            if NUM_ITEMS == len(self.currList):
-                params = dict(cItem)
-                params.update({'good_for_fav': False, 'title': _('Next page'), 'page': page + 1})
-                self.addDir(params)
-        except Exception:
-            printExc()
-
-    def listSubMenuItems(self, cItem, nextCategory, key):
-        printDBG("RTBFBE.listSubMenuItems")
-
-        sts, data = self.getPage(cItem['url'])
-        if not sts:
-            return
-
-        cUrl = data.meta['url']
-        self.setMainUrl(cUrl)
-
-        try:
-            data = byteify(json.loads(data))['item']
-            for item in data:
-                if item['@attributes']['id'] == key:
-                    for it in item['item']:
-                        it = it['@attributes']
-                        if it['url'].startswith('.'):
-                            continue
-                        url = self.getFullUrl(it['url'])
-                        title = self.cleanHtmlStr(it['name'])
-                        params = dict(cItem)
-                        params.update({'good_for_fav': False, 'url': url, 'title': title, 'category': nextCategory})
-                        self.addDir(params)
-                    break
-        except Exception:
-            printExc()
-
-    def serParams(self, obj, data=''):
-        newData = ''
-        if isinstance(obj, list):
-            for idx in range(len(obj)):
-                newData += self.serParams(obj[idx], data + urllib_quote('[%d]' % idx))
-        elif isinstance(obj, dict):
-            for key in obj:
-                newData += self.serParams(obj[key], data + urllib_quote('[%s]' % key))
-        elif obj is True:
-            newData += data + '=true&'
-        elif obj is False:
-            newData += data + '=false&'
-        else:
-            newData += data + '=%s&' % urllib_quote(str(obj))
-        return newData
-
-    def listSections(self, cItem, nextCategory1, nextCategory2):
-        printDBG("RTBFBE.listSections")
-        page = cItem.get('page', 0)
-
-        sts, data = self.getPage(cItem['url'])
-        if not sts:
-            return
-
-        cItem = dict(cItem)
-        defaultMediaType = cItem.pop('default_media_type', 'video')
-
-        cUrl = data.meta['url']
-        self.setMainUrl(cUrl)
-
-        nextPage = self.cm.ph.getSearchGroups(data, '''(<a[^>]+?pagination__link[^>]+?Next[^>]+?>)''')[0]
-        nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(nextPage, '''href=['"]([^'^"]+?)['"]''')[0], cUrl)
-
-        sections = self.cm.ph.getAllItemsBeetwenNodes(data, ('<section', '>'), ('</section', '>'), False)
-        if page == 0:
-            sections.append(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'autocomplete--medias'), ('</section', '>'))[1])
-
-        reObj = re.compile(r'\sdata\-([^=]+?)="([^"]+?)"')
-        query = []
-        uuids = []
-        data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<b', '>', 'data-uuid'), ('</b', '>'))
-        for item in data:
-            item = reObj.findall(item)
-            obj = {}
-            for it in item:
-                if it[0] == 'devices':
-                    continue
-                if it[0] == 'uuid':
-                    uuids.append(it[1])
-                try:
-                    obj[it[0]] = byteify(json.loads(self.cleanHtmlStr(it[1])))
-                except Exception:
-                    obj[it[0]] = it[1]
-            query.append(obj)
-
-        if len(query):
-            query = self.serParams(query, 'data')
-            url = self.getFullUrl('/news/api/block?' + query)
-            sts, data = self.getPage(url)
-            if not sts:
-                return
-
-            try:
-                data = byteify(json.loads(data))['blocks']
-                for uuid in uuids:
-                    if uuid not in data:
-                        continue
-                    sections.append(data[uuid])
-            except Exception:
-                printExc()
-
-        for sectionItem in sections:
-            sectionItem = sectionItem.split('<section', 1)[-1]
-            sTitle = self.cm.ph.getDataBeetwenNodes(sectionItem, ('<h', '>', 'www-title'), ('</h', '>'))[1]
-            sUrl = self.getFullUrl(self.cm.ph.getSearchGroups(sTitle, '''href=['"]([^'^"]+?)['"]''')[0])
-            if sUrl == '' and '<article' not in sectionItem:
-                sUrl = self.getFullUrl(self.cm.ph.getSearchGroups(sectionItem, '''<a[^>]+?href=['"]([^'^"]+?)['"]''')[0])
-            sTitle = self.cleanHtmlStr(sTitle)
-            if sTitle == '':
-                continue
-            sItems = []
-            sectionItem = self.cm.ph.getAllItemsBeetwenMarkers(sectionItem, '<article', '</article>')
-            for item in sectionItem:
-                icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, r'''data\-srcset=['"]([^'^"^\s]+?)[\s'"]''')[0])
-                if icon == '':
-                    icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, r'''src=['"]([^'^"^\s]+?(?:\.jpe?g|\.png)(?:\?[^'^"^\s]*?)?)[\s'"]''')[0])
-                header = self.cm.ph.getDataBeetwenMarkers(item, '<header', '</header>')[1]
-                url = self.cm.ph.getSearchGroups(header, '''href=['"]([^'^"]+?)['"]''')[0]
-                if url == '' or url[0] in ['{', '[']:
-                    continue
-                url = self.getFullUrl(url)
-                title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(header, ('<h', '>', '__title'), ('</h', '>'))[1])
-                subTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(header, ('<h', '>', '__subtitle'), ('</h', '>'))[1])
-                duration = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<span', '>', 'duration'), ('</span', '>'))[1])
-                desc = []
-                if subTitle != '':
-                    if subTitle.decode('utf-8').lower() not in title.decode('utf-8').lower():
-                        title = '%s - %s' % (title, subTitle)
-                    else:
-                        desc.append(subTitle)
-                if duration != '':
-                    desc.append(duration)
-                desc.append(self.cleanHtmlStr(item.split('</header>', 1)[-1]))
-                params = {'good_for_fav': True, 'title': title, 'url': url, 'icon': icon, 'desc': '[/br]'.join(desc)}
-                if 'ico-playlist' in item:
-                    params.update({'type': 'category', 'category': 'list_playlist_items'})
-                elif 'ico-volume' in item:
-                    params['type'] = 'audio'
-                elif 'ico-play' in item:
-                    params['type'] = 'video'
-                elif '/emissions/' in url:
-                    params['type'] = 'video'
-                else:
-                    params['type'] = defaultMediaType
-                sItems.append(params)
-
-            if len(sItems):
-                icon = sItems[0]['icon']
-            else:
-                icon = ''
-
-            if sUrl != '' and sUrl != cItem['url']:
-                if 0 == len(sItems):
-                    title = sTitle
-                else:
-                    title = _('More')
-                params = dict(cItem)
-                params.update({'good_for_fav': False, 'url': sUrl, 'title': title, 'category': nextCategory2, 'icon': icon})
-                sItems.append(params)
-
-            if len(sItems) > 1:
-                params = dict(cItem)
-                params.update({'good_for_fav': False, 'title': sTitle, 'category': nextCategory1, 'sub_items': sItems, 'icon': icon})
-                self.addDir(params)
-            elif len(sItems) == 1:
-                self.currList.append(sItems[0])
-
-        if 1 == len(self.currList) and 'sub_items' in self.currList[0]:
-            self.currList = self.currList[0]['sub_items']
-
-        if nextPage != '' and len(self.currList):
-            params = dict(cItem)
-            params.update({'good_for_fav': False, 'default_media_type': defaultMediaType, 'category': nextCategory2, 'url': nextPage, 'title': _('Next page'), 'page': page + 1})
+    def _addContent(self, cItem, item):
+        kind = item.get('resourceType', '')
+        title = self.cleanHtmlStr(item.get('title') or item.get('label') or '')
+        path = item.get('path', '') or ''
+        icon = self._icon(item)
+        if kind in ('PROGRAM', 'CATEGORY', 'CHANNEL') and path and title:
+            params = {'name': 'category', 'good_for_fav': True, 'category': 'sections', 'title': title, 'url': self._pageUrl(path), 'icon': icon, 'desc': ''}
+            if kind == 'PROGRAM':
+                params.update({'program_id': str(item.get('id', '')), 's_title': title.strip()})
             self.addDir(params)
+        elif kind in ('MEDIA', 'MEDIA_PREMIUM') and path and title:
+            subtitle = self.cleanHtmlStr(item.get('subtitle') or '')
+            label = ('%s - %s' % (title, subtitle)) if subtitle and subtitle.lower() not in title.lower() else title
+            duration = ('%d min' % (int(item['duration']) // 60)) if item.get('duration') else ''
+            desc = [' | '.join(v for v in (item.get('channelLabel', ''), item.get('categoryLabel', ''), item.get('releaseDate', ''), duration) if v)]
+            if kind == 'MEDIA_PREMIUM':
+                desc.insert(0, _('Premium'))
+            desc.append(self.cleanHtmlStr(item.get('description') or ''))
+            params = {'name': 'category', 'good_for_fav': True, 'title': label, 'url': self.MAIN_URL + path.lstrip('/'), 'icon': icon,
+                      'desc': '[/br]'.join(d for d in desc if d), 'r_kind': 'media', 'media_id': str(item.get('id', '')), 'asset_id': item.get('assetId', ''),
+                      'program_id': str(item.get('programId') or cItem.get('program_id', '') or '')}
+            season = cItem.get('s_season')
+            episode = EPISODE_NUM_RE.search(subtitle)
+            # some programmes name their tabs by year ("Année 2025") - no SxxExx from those
+            if season and str(season).isdigit() and int(season) < 100 and episode and cItem.get('s_title'):
+                params.update({'s_title': cItem['s_title'], 's_season': season, 's_episode': episode.group(1)})
+                if IsMediaNamingNormalized():
+                    params['title'] = '%s - %s' % (cItem['s_title'], formatSxxExx(season, episode.group(1)))
+            if item.get('type') == 'AUDIO':
+                self.addAudio(params)
+            else:
+                self.addVideo(params)
+        elif kind == 'LIVE' and title:
+            subtitle = self.cleanHtmlStr(item.get('subtitle') or '')
+            label = ('%s - %s' % (title, subtitle)) if subtitle else title
+            when = '%s - %s' % (self._time(item.get('scheduledFrom')), self._time(item.get('scheduledTo'))[-5:])
+            desc = ' | '.join(v for v in (when.strip(' -'), item.get('channelLabel', '')) if v)
+            params = {'name': 'category', 'good_for_fav': False, 'title': label, 'url': self.MAIN_URL + path.lstrip('/'), 'icon': icon, 'desc': desc,
+                      'r_kind': 'live', 'media_id': str(item.get('id', '')), 'asset_id': item.get('assetId', '')}
+            if item.get('type') == 'AUDIO':
+                self.addAudio(params)
+            else:
+                self.addVideo(params)
+        elif kind == 'RADIO_LIVE':
+            channel = item.get('channel') or {}
+            asset = channel.get('streamAssetId') or ''
+            if not asset:
+                return
+            name = self.cleanHtmlStr(channel.get('label', ''))
+            desc = ' | '.join(v for v in ('%s - %s' % (self._time(item.get('scheduledFrom')), self._time(item.get('scheduledTo'))[-5:]), title) if v.strip(' -'))
+            self.addAudio({'name': 'category', 'good_for_fav': True, 'title': name or title, 'url': self.MAIN_URL + (channel.get('path', '') or '').lstrip('/'),
+                           'icon': self._icon(channel), 'desc': desc, 'r_kind': 'radio', 'asset_id': asset})
 
-    def listSubItems(self, cItem):
-        printDBG("RTBFBE.listSubItems")
-        self.currList = cItem['sub_items']
-
-    def listPlaylistItems(self, cItem):
-        printDBG("RTBFBE.listPlaylistItems")
-
-        sts, data = self.getPage(cItem['url'])
-        if not sts:
+    def listSections(self, cItem):
+        # a page of the site (home, direct, category, channel, programme): its widgets; a page with one widget is
+        # listed directly (programme -> its seasons)
+        printDBG("RTBFBE.listSections [%s]" % cItem.get('url', ''))
+        data = self._getJson(self._fromOldUrl(cItem.get('url', '')))
+        page = (data or {}).get('data') or {}
+        if not isinstance(page, dict):
             return
-
-        cItem = dict(cItem)
-
-        cUrl = data.meta['url']
-        self.setMainUrl(cUrl)
-
-        data = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'chapter-list'), ('<div', '>', 'media-nav'))[1]
-        data = re.compile(r'''<li[^>]+?js\-chapter\-entry[^>]+?>''').split(data)
-        for item in data:
-            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, r'''data\-srcset=['"]([^'^"^\s]+?)[\s'"]''')[0])
-            if icon == '':
-                icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, r'''src=['"]([^'^"^\s]+?(?:\.jpe?g|\.png)(?:\?[^'^"^\s]*?)?)[\s'"]''')[0])
-            title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'''\stitle=['"]([^'^"]+?)['"]''')[0])
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
-            desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<span', '>', '-subtitle'), ('</span', '>'))[1])
-            if '/auvio/' not in url:
+        content = page.get('content') or {}
+        if content.get('pageType') == 'PROGRAM':
+            cItem = dict(cItem, program_id=str(content.get('id', '')), s_title=self.cleanHtmlStr(content.get('title', '')) or cItem.get('s_title', ''))
+            if not cItem.get('desc'):
+                cItem['desc'] = self.cleanHtmlStr(content.get('description', ''))
+        widgets = [w for w in (page.get('widgets') or []) if w.get('type') not in SKIP_WIDGETS and '{' not in (w.get('contentPath') or '{')]
+        if len(widgets) == 1:
+            self.listWidget(dict(cItem, category='list_widget', url=widgets[0]['contentPath'], page=1))
+            return
+        for widget in widgets:
+            title = self.cleanHtmlStr(widget.get('title', '')) or self.cleanHtmlStr(widget.get('subtitle', ''))
+            if not title:
                 continue
-            params = {'good_for_fav': True, 'title': title, 'url': url, 'icon': icon, 'desc': desc}
-            self.addVideo(params)
+            params = {'name': 'category', 'good_for_fav': True, 'category': 'list_widget', 'title': title, 'url': widget['contentPath'],
+                      'icon': cItem.get('icon', ''), 'desc': self.cleanHtmlStr(widget.get('subtitle', ''))}
+            for key in ('program_id', 's_title'):
+                if cItem.get(key):
+                    params[key] = cItem[key]
+            self.addDir(params)
+        if not self.currList:
+            self.addMarker({'title': _('No items found'), 'desc': ''})
+
+    @staticmethod
+    def _withPage(url, page):
+        url = re.sub(r'([?&])_page=\d+&?', r'\1', url).rstrip('?&')
+        return '%s%s_page=%s' % (url, '&' if '?' in url else '?', page)
+
+    def listWidget(self, cItem):
+        page = cItem.get('page', 1)
+        url = cItem.get('url', '')
+        printDBG("RTBFBE.listWidget [%s] page[%s]" % (url, page))
+        data = self._getJson(self._withPage(url, page) if page > 1 else url)
+        if not data or not isinstance(data.get('data'), (dict, list)):
+            return
+        # a widget: {"type", "content": [...]}; the programme mosaic: the list itself
+        widget = data['data'] if isinstance(data['data'], dict) else {'content': data['data']}
+        content = widget.get('content') or []
+        if isinstance(content, dict):
+            content = content.get('items') or []
+        if widget.get('type') == 'TAB_LIST':
+            # the seasons of a programme
+            tabs = [t for t in content if t.get('contentPath')]
+            if len(tabs) == 1:
+                self.listWidget(dict(cItem, url=tabs[0]['contentPath'], page=1, s_season=tabs[0].get('season') or cItem.get('s_season', '')))
+                return
+            for tab in tabs:
+                params = dict(cItem)
+                params.update({'good_for_fav': True, 'title': self.cleanHtmlStr(tab.get('title', '')), 'url': tab['contentPath'], 'page': 1,
+                               'desc': self.cleanHtmlStr(tab.get('subtitle', '')), 's_season': tab.get('season') or ''})
+                self.addDir(params)
+            return
+        for item in content:
+            self._addContent(cItem, item)
+        if not self.currList:
+            self.addMarker({'title': _('No items found'), 'desc': ''})
+            return
+        meta = ((data.get('meta') or {}).get('page') or {})
+        lastPage = meta.get('last') or 0
+        hasNext = bool((data.get('links') or {}).get('next')) and bool(content)
+        addPagingItems(self, dict(cItem), page, hasNext, lastPage, self._withPage(url, '{page}'))
+
+    def listHomeWidget(self, cItem):
+        # channels / categories: the list widget of that type on the home page
+        data = self._getJson(BFF_URL + 'pages/home')
+        for widget in (((data or {}).get('data') or {}).get('widgets') or []):
+            if widget.get('type') == cItem.get('widget_type') and widget.get('contentPath'):
+                self.listWidget(dict(cItem, category='list_widget', url=widget['contentPath'], page=1))
+                return
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("RTBFBE.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
-        params = {'name': 'category', 'type': 'category', 'default_media_type': searchType, 'url': self.getFullUrl('/auvio/recherche?q=%s&type=%s') % (urllib_quote_plus(searchPattern), searchType)}
-        self.listSections(params, 'list_sub_items', 'sections')
+        data = self._getJson(BFF_URL + 'search?query=' + urllib_quote_plus(searchPattern))
+        for section in ((data or {}).get('data') or []):
+            content = section.get('content') or []
+            if section.get('type') not in ('PROGRAM_LIST', 'MEDIA_LIST', 'MEDIA_PREMIUM_LIST'):
+                continue
+            if section.get('type') != 'PROGRAM_LIST' and searchType in ('video', 'audio'):
+                content = [c for c in content if (c.get('type') or '').lower() == searchType]
+            for item in content:
+                self._addContent(cItem, item)
+        if not self.currList:
+            self.addMarker({'title': _('No items found'), 'desc': ''})
 
+    def _fromOldUrl(self, url):
+        # favourites of the old version: www.rtbf.be/auvio/...?id=N -> the api page of that programme / channel / category
+        if 'www.rtbf.be/auvio' not in url:
+            return url
+        for regex, kind in OLD_URL_RES:
+            m = regex.search(url)
+            if m and kind in ('emission', 'chaine', 'categorie'):
+                return self._pageUrl('%s/x-%s' % (kind, m.group(1)))
+        return url
+
+    ###################################################
+    # links
+    ###################################################
     def getUserGeoLoc(self):
-        if 0 == len(self.userGeoLoc):
-            sts, data = self.getPage(self.getFullUrl('/api/geoloc'))
+        if not self.userGeoLoc:
+            data = self._getJson('https://www.rtbf.be/api/geoloc')
             try:
-                byteify(json.loads(data), '', True)
-                self.userGeoLoc = data['country']
+                self.userGeoLoc = (data or {}).get('country', '') or ''
             except Exception:
                 printExc()
         return self.userGeoLoc
 
+    def _embed(self, cItem):
+        # (asset id, embed data) of a video / live row; old favourites only carry the old page url
+        url = cItem.get('url', '')
+        kind, mid = cItem.get('r_kind', ''), cItem.get('media_id', '')
+        if not mid:
+            for regex, oldKind in OLD_URL_RES:
+                m = regex.search(url)
+                if m and oldKind in ('media', 'live'):
+                    kind, mid = oldKind, m.group(1)
+                    break
+        if not mid:
+            m = re.search(r'/(media|live)/[^/?#]*?-?(\d+)(?:[/?#]|$)', url)
+            if m:
+                kind, mid = m.group(1), m.group(2)
+        if kind not in ('media', 'live') or not mid:
+            return cItem.get('asset_id', ''), {}
+        data = self._getJson(BFF_URL + 'embed/%s/%s?userAgent=%s' % (kind, mid, urllib_quote(self.HTTP_HEADER.get('User-Agent', ''))))
+        embed = ((data or {}).get('data') or {}) if isinstance(data, dict) else {}
+        return embed.get('assetId') or cItem.get('asset_id', ''), embed
+
+    def _bearer(self):
+        # Red Bee session: with the own account (Gigya JWT) when logged in, anonymous otherwise
+        key = 'user' if self.loggedIn else 'anonymous'
+        if self.bearer.get(key):
+            return self.bearer[key]
+        request = {'deviceId': self.deviceId, 'device': {'deviceId': self.deviceId, 'name': 'Chrome', 'type': 'WEB'}}
+        endpoint = 'auth/anonymous'
+        if self.loggedIn:
+            jwt = self._getJWT()
+            if jwt:
+                request['jwt'] = jwt
+                endpoint = 'auth/gigyaLogin'
+        params = dict(self.defaultParams)
+        params.update({'raw_post_data': True, 'use_cookie': False})
+        params['header'] = dict(self.HTTP_HEADER, **{'Content-Type': 'application/json;charset=utf-8', 'Accept': 'application/json'})
+        data = self._getJson(REDBEE_URL + endpoint, params, json_dumps(request))
+        token = (data or {}).get('sessionToken', '')
+        if token:
+            self.bearer[key] = token
+        return token
+
     def getLinksForVideo(self, cItem):
         printDBG("RTBFBE.getLinksForVideo [%s]" % cItem)
         self.tryTologin()
+        cacheKey = cItem.get('url', '')
+        if self.cacheLinks.get(cacheKey):
+            return self.cacheLinks[cacheKey]
 
+        assetId, embed = self._embed(cItem)
+        if not assetId:
+            SetIPTVPlayerLastHostError(_('No stream available'))
+            return []
+        token = self._bearer()
+        if not token:
+            SetIPTVPlayerLastHostError(_('No stream available'))
+            return []
+        params = dict(self.defaultParams)
+        params['use_cookie'] = False
+        params['header'] = dict(self.HTTP_HEADER, **{'Authorization': 'Bearer ' + token, 'Accept': 'application/json, text/plain, */*'})
+        data = self._getJson(REDBEE_URL + 'entitlement/%s/play' % assetId, params) or {}
+        formats = data.get('formats') or []
+        geo = ((embed.get('geoloc') or {}).get('key') or '').lower()
+        userGeo = self.getUserGeoLoc().lower() if geo else ''
+        # an unknown own country (geoloc api down) is no reason to mark the video
+        geoBlocked = bool(userGeo) and geo not in ('open', 'world', 'monde', 'all') and geo != userGeo
+        if not formats:
+            message = data.get('message', '')
+            printDBG("RTBFBE: entitlement [%s] %s" % (assetId, data))
+            # Red Bee answers NOT_ENTITLED outside Belgium too - the video's own geo zone tells which it is
+            if 'GEO' in message or (geoBlocked and message == 'NOT_ENTITLED'):
+                SetIPTVPlayerLastHostError(_('Not available in your country (geo-blocking).'))
+            elif message in ('NOT_ENTITLED', 'LOGIN_REQUIRED', 'NOT_AUTHENTICATED') and not self.loggedIn:
+                SetIPTVPlayerLastHostError(_('%s needs a free account. Enter login and password in the host configuration.') % 'Auvio')
+            else:
+                SetIPTVPlayerLastHostError(_('No valid entitlement found for asset.') + (' (%s)' % message if message else ''))
+            return []
+
+        namePrefix = '!geo-blocked! ' if geoBlocked else ''
         retTab = []
-        mp4Tab = []
-        hlsTab = []
-        dashTab = []
-        subsTab = []
-        cacheKey = cItem['url']
-        cacheTab = self.cacheLinks.get(cacheKey, [])
-        if len(cacheTab):
-            return cacheTab
-
-        sts, data = self.getPage(cItem['url'])
-        if not sts:
+        drm = False
+        for item in formats:
+            url = item.get('mediaLocator', '')
+            proto = {'HLS': 'm3u8', 'DASH': 'mpd'}.get(item.get('format', ''), '')
+            if not self.cm.isValidUrl(url) or not proto:
+                continue
+            if item.get('drm'):
+                drm = True
+                continue
+            meta = {'Referer': self.MAIN_URL, 'Origin': self.MAIN_URL.rstrip('/'), 'User-Agent': self.HTTP_HEADER.get('User-Agent'), 'iptv_proto': proto}
+            retTab.append({'name': '%s[%s]' % (namePrefix, 'HLS/m3u8' if proto == 'm3u8' else 'DASH/mpd'), 'url': strwithmeta(url, meta), 'need_resolve': 1})
+        if not retTab:
+            SetIPTVPlayerLastHostError(_('Video with DRM protection.') if drm else _('No stream available'))
             return []
-
-        cUrl = data.meta['url']
-        self.setMainUrl(cUrl)
-
-        url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0])
-        urlParams = dict(self.defaultParams)
-        urlParams['header'] = dict(urlParams['header'])
-        urlParams['header']['Referer'] = cUrl
-
-        sts, data = self.getPage(url, urlParams)
-        if not sts:
-            return []
-
-        geoLocRestriction = ''
-        data = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, 'data-media="', '"', False)[1])
-        try:
-            data = byteify(json.loads(data), '', True)
-            printDBG("++++++++++++++++++++++++++++++++++++++++++++++")
-            printDBG(data)
-            geoLocRestriction = data.get('geoLocRestriction', '')
-
-            # HLS LINKS
-            hslUrls = [data.get('streamUrlHls', ''), cItem.get('stream_url', '')]
-            hslUrls.append(data.get('urlHls', ''))
-            for hslUrl in hslUrls:
-                if not self.cm.isValidUrl(hslUrl):
-                    continue
-                hlsTab.append({'name': '[HLS/m3u8]', 'url': hslUrl, 'iptv_proto': 'm3u8'})
-                if len(hlsTab):
-                    break
-
-            # DASH LINKS
-            dashUrl = data.get('urlDash', '')
-            if self.cm.isValidUrl(dashUrl):
-                dashTab = [{'name': '[DASH/mpd]', 'url': dashUrl, 'iptv_proto': 'mpd'}]
-
-            # MP4 LINKS
-            if 'sources' in data:
-                try:
-                    tmp = []
-                    for type in ['url', 'high', 'mobile', 'web']:
-                        url = data['sources'][type]
-                        if url in tmp:
-                            continue
-                        tmp.append(url)
-                        name = self.cm.ph.getSearchGroups(url, r'''[\-_]([0-9]+?)p\.mp4''')[0]
-                        if name == '':
-                            name = type
-                        if self.cm.isValidUrl(url):
-                            mp4Tab.append({'name': '[mp4] %sp' % name, 'url': url, 'quality': name})
-                    mp4Tab = CSelOneLink(mp4Tab, lambda item: int(item['quality']), 999999999).getSortedLinks()
-                except Exception:
-                    printExc()
-
-            # SUBTITLES
-            for item in data['tracks']:
-                if isinstance(item, basestring):
-                    item = data['tracks'][item]
-                subtitleUrl = item['url']
-                if not self.cm.isValidUrl(subtitleUrl):
-                    continue
-                subsTab.append({'title': item['label'], 'url': subtitleUrl, 'lang': item['lang'], 'format': item['format']})
-
-            printDBG("++++++++++++++++++++++++++++++++++++++++++++++")
-            printDBG(subsTab)
-        except Exception:
-            printExc()
-
-        retTab.extend(hlsTab)
-        retTab.extend(mp4Tab)
-        retTab.extend(dashTab)
-
-        namePrefix = ''
-        if geoLocRestriction != 'open' and geoLocRestriction == self.getUserGeoLoc():
-            namePrefix = '!geo-blocked! '
-        for idx in range(len(retTab)):
-            meta = {'Referer': cItem['url'], 'external_sub_tracks': subsTab}
-            if 'iptv_proto' in retTab[idx]:
-                meta['iptv_proto'] = retTab[idx]['iptv_proto']
-            retTab[idx]['url'] = strwithmeta(retTab[idx]['url'], meta)
-            retTab[idx]['need_resolve'] = 1
-            retTab[idx]['name'] = namePrefix + retTab[idx]['name']
-
-        if len(retTab):
-            self.cacheLinks[cacheKey] = retTab
+        # HLS first: the box's players handle it better than DASH
+        retTab.sort(key=lambda link: 0 if 'm3u8' in link['name'] else 1)
+        retTab = applySidecarToLinks(retTab, buildSidecarFromItem(cItem, IsSidecarEnabled(), self.cleanHtmlStr(embed.get('description', ''))))
+        self.cacheLinks[cacheKey] = retTab
         return retTab
 
     def getVideoLinks(self, videoUrl):
         printDBG("RTBFBE.getVideoLinks [%s]" % videoUrl)
-        self.tryTologin()
-
-        if 1 == self.up.checkHostSupport(videoUrl):
-            videoUrl = videoUrl.replace('youtu.be/', 'youtube.com/watch?v=')
-            return self.up.getVideoLinkExt(videoUrl)
-
-        retTab = []
+        videoUrl = strwithmeta(videoUrl)
+        sidecar = sidecarFromUrlMeta(videoUrl, IsSidecarEnabled())
         meta = dict(videoUrl.meta)
-        type = meta.pop('iptv_proto', 'mp4')
-        printDBG("++++++++++++++++++++++++ type[%s]" % type)
-        if self.loggedIn:
-            urlParams = dict(self.defaultParams)
-            urlParams['header'] = dict(urlParams['header'])
-            urlParams['header']['Referer'] = videoUrl.meta['Referer']
-            urlParams['raw_post_data'] = True
-
-            url = 'https://token.rtbf.be/'
-            sts, data = self.getPage(url, urlParams, self.serParams({type: videoUrl}, 'streams'))
-            if not sts:
-                return []
-
-            try:
-                data = byteify(json.loads(data))
-                videoUrl = data['streams'][type]
-                printDBG("+++++++++++++++++++++++++++++++++++++++++++++")
-                printDBG(videoUrl)
-            except Exception:
-                printExc()
-        elif 'token=' not in videoUrl and '?' not in videoUrl:
-            videoUrl += '?token=' + self.getPartnerToken()
-
-        if type == 'm3u8':
-            retTab = getDirectM3U8Playlist(videoUrl, checkExt=False, checkContent=True, sortWithMaxBitrate=999999999)
-        elif type == 'mpd':
+        proto = meta.get('iptv_proto', 'm3u8')
+        if proto == 'mpd':
             retTab = getMPDLinksWithMeta(videoUrl, checkExt=False, sortWithMaxBandwidth=999999999)
         else:
-            retTab = [{'name': 'mp4', 'url': videoUrl}]
+            retTab = getDirectM3U8Playlist(videoUrl, checkExt=False, checkContent=True, sortWithMaxBitrate=999999999)
+        for item in retTab:
+            item['url'] = strwithmeta(item['url'], dict(meta, **getattr(item['url'], 'meta', {})))
+        return decorateResolvedLinkItems(retTab, sidecar)
 
-        for idx in range(len(retTab)):
-            retTab[idx]['url'] = strwithmeta(retTab[idx]['url'], meta)
+    ###################################################
+    # INFO
+    ###################################################
+    def getArticleContent(self, cItem):
+        printDBG("RTBFBE.getArticleContent [%s]" % cItem.get('url', ''))
+        title, text, icon, info = cItem.get('title', ''), cItem.get('desc', ''), cItem.get('icon', ''), {}
+        if cItem.get('type') in ('video', 'audio') and cItem.get('r_kind') in ('media', 'live'):
+            embed = self._embed(cItem)[1]
+            if embed:
+                text = self.cleanHtmlStr(embed.get('description', '')) or text
+                icon = self._icon(embed) or icon
+                if embed.get('duration'):
+                    info['duration'] = '%d min' % (int(embed['duration']) // 60)
+                for key, value in (('station', (embed.get('channel') or {}).get('label')), ('genre', (embed.get('category') or {}).get('label')),
+                                   ('released', embed.get('releaseDate')), ('age_limit', embed.get('minimumAge'))):
+                    if value:
+                        info[key] = str(value)
+                cast = [c.get('name', '') for c in (embed.get('casting') or []) if c.get('name')]
+                if cast:
+                    info['cast'] = ', '.join(cast[:8])
+        elif cItem.get('program_id'):
+            data = self._getJson(self._pageUrl('emission/x-%s' % cItem['program_id']))
+            content = (((data or {}).get('data') or {}).get('content') or {})
+            text = self.cleanHtmlStr(content.get('description', '')) or text
+            for key, field in (('seasons', 'seasonCount'), ('episodes', 'videoCount')):
+                if content.get(field):
+                    info[key] = str(content[field])
+            if (content.get('category') or {}).get('label'):
+                info['genre'] = content['category']['label']
+        return [{'title': title, 'text': text, 'images': [{'title': '', 'url': icon}] if icon else [], 'other_info': info}]
 
-        return retTab
+    ###################################################
+    # login (own Auvio account of the host configuration)
+    ###################################################
+    def _getApiKey(self):
+        # the site's public Gigya key, read from its own app script
+        if not self.apiKey:
+            sts, data = self.getPage(self.MAIN_URL)
+            script = self.cm.ph.getSearchGroups(data, r'''src=['"]([^'"]*/_next/static/chunks/pages/_app-[^'"]+\.js)['"]''')[0] if sts else ''
+            if script:
+                sts, data = self.getPage(self.getFullUrl(script))
+                if sts:
+                    self.apiKey = self.cm.ph.getSearchGroups(data, r'''GIGYA:\{dataCenter:"[^"]*",apiKey:"([^"]+)"''')[0]
+        return self.apiKey
+
+    def _getJWT(self):
+        if not self.loginToken:
+            return ''
+        data = self._getJson(LOGIN_URL + 'accounts.getJWT?login_token=%s&APIKey=%s&format=json' % (urllib_quote(self.loginToken), urllib_quote(self._getApiKey())))
+        return (data or {}).get('id_token', '')
 
     def tryTologin(self):
         printDBG('RTBFBE.tryTologin start')
-        serverUnkResponse = _('Unknown server response.')
-        message = serverUnkResponse
-
         if self.login == config.plugins.iptvplayer.rtbfbe_login.value and \
            self.password == config.plugins.iptvplayer.rtbfbe_password.value:
-           return
+            return self.loggedIn
 
         self.login = config.plugins.iptvplayer.rtbfbe_login.value
         self.password = config.plugins.iptvplayer.rtbfbe_password.value
 
-        self.loginData = {}
         rm(self.COOKIE_FILE)
         self.loggedIn = False
+        self.loginToken = ''
+        self.bearer = {}
+        self.cacheLinks = {}
+        self.loginMessage = ''
 
         if '' == self.login.strip() or '' == self.password.strip():
             return False
 
-        sts, data = self.getPage(self.getMainUrl())
-        if sts:
-            self.getPartnerKey(data)
-            self.dataKey = self.cm.ph.getSearchGroups(data, r'''data\-key=['"]([^'^"]+?)['"]''')[0]
-            sts, data = self.getPage(self.getFullUrl('/api/sso/screenset?set=authentication'))
-        if sts:
-            requestId = 'R%s' % random.randint(1000000000, 9999999999)
-            url = 'https://login.rtbf.be/accounts.login?context=%s&&saveResponseID=%s' % (requestId, requestId)
-            post_data = {'loginID': self.login,
-                         'password': self.password,
-                         'sessionExpiration': '-2',
-                         'targetEnv': 'jssdk',
-                         'include': 'profile,data,emails,subscriptions,preferences,',
-                         'includeUserInfo': 'true',
-                         'loginMode': 'standard',
-                         'APIKey': self.dataKey,
-                         'source': 'showScreenSet',
-                         'sdk': 'js_8.1.20',
-                         'authMode': 'cookie',
-                         'pageURL': self.getFullUrl('/auvio/'),
-                         'format'              'json'
-                         'context': requestId
-                         }
-            sts, data = self.getPage(url, post_data=post_data)
-        if sts:
-            url = 'https://login.rtbf.be/socialize.getSavedResponse?APIKey=%s&saveResponseID=%s&noAuth=true&sdk=js_8.1.20&format=jsonp&callback=gigya.callback&context=%s'
-            sts, data = self.getPage(url % (self.dataKey, requestId, requestId), post_data=post_data)
-        if sts:
-            try:
-                data = self.cm.ph.getDataBeetwenMarkers(data, 'gigya.callback(', ');', False)[1]
-                data = byteify(json.loads(data))
-                printDBG(data)
-                printDBG("++++++++++++++++++++++++++++++++++++")
-                if 200 == data['statusCode']:
-                    self.loginData = data
-                    url = 'https://www.rtbf.be/api/sso/login'
-                    post_data = {'gigyaId': data['UID'],
-                                 'signature': data['UIDSignature'],
-                                 'timestamp': data['signatureTimestamp']}
-                    urlParams = dict(self.defaultParams)
-                    urlParams['header'] = dict(urlParams['header'])
-                    urlParams['header']['X-CSRF-Token'] = self.csrfToken
-                    sts, data = self.getPage(url, urlParams, post_data=post_data)
-                else:
-                    sts = False
-                    message = self.cleanHtmlStr(data['errorMessage'])
-            except Exception:
-                printExc()
-        if sts:
-            url = 'https://www.rtbf.be/api/sso/fetch'
-            sts, data = self.getPage(url, urlParams)
-            printDBG(data)
-            printDBG("++++++++++++++++++++++++++++++++++++")
-
-        if sts:
+        message = _('Unknown server response.')
+        apiKey = self._getApiKey()
+        if apiKey:
+            post_data = {'loginID': self.login, 'password': self.password, 'APIKey': apiKey, 'targetEnv': 'jssdk',
+                         'sessionExpiration': '-2', 'include': 'profile,data', 'format': 'json'}
+            data = self._getJson(LOGIN_URL + 'accounts.login', None, post_data) or {}
+            if data.get('statusCode') == 200:
+                self.loginToken = (data.get('sessionInfo') or {}).get('login_token', '')
+            elif data.get('errorMessage'):
+                message = self.cleanHtmlStr(data['errorMessage'])
+        if self.loginToken:
             self.loggedIn = True
         else:
-            self.loggedIn = False
             self.sessionEx.open(MessageBox, _('Login failed.') + '\n' + message, type=MessageBox.TYPE_ERROR, timeout=10)
         return self.loggedIn
 
@@ -682,6 +555,8 @@ class RTBFBE(CBaseHostClass):
         self.tryTologin()
 
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
+        if isJumpItem(self.currItem):
+            self.currItem = jumpTarget(self, self.currItem)
 
         if RTBFBE.CHECK_GEO_LOCK:
             RTBFBE.CHECK_GEO_LOCK = False
@@ -689,7 +564,6 @@ class RTBFBE(CBaseHostClass):
 
         name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode = self.currItem.get("mode", '')
 
         printDBG("handleService: |||| name[%s], category[%s] " % (name, category))
         self.cacheLinks = {}
@@ -697,25 +571,14 @@ class RTBFBE(CBaseHostClass):
 
     # MAIN MENU
         if name is None:
-            self.listMainMenu({'name': 'category'}, 'sub_menu')
-    # LIVE
-        elif category == 'live_categories':
-            self.listLiveCategories(self.currItem, 'list_live_items')
-        elif category == 'list_live_items':
-            self.listLiveItems(self.currItem)
-    # CATEGORIES
-        elif category == 'categories':
-            self.listSubMenuItems(self.currItem, 'sections', 'category')
-    # CHANNELS
-        elif category == 'channels':
-            self.listSubMenuItems(self.currItem, 'sections', 'channel')
-    # SECTIONS
-        elif category == 'sections':
-            self.listSections(self.currItem, 'list_sub_items', 'sections')
-        elif category == 'list_sub_items':
-            self.listSubItems(self.currItem)
-        elif category == 'list_playlist_items':
-            self.listPlaylistItems(self.currItem)
+            self.listMainMenu({'name': 'category'})
+    # PAGES (main, live, channel, category, programme) - "live_categories" / "channels" / "categories": old favourites
+        elif category in ('sections', 'live_categories', 'channels', 'categories', 'list_playlist_items'):
+            self.listSections(self.currItem)
+        elif category == 'list_widget':
+            self.listWidget(self.currItem)
+        elif category == 'home_widget':
+            self.listHomeWidget(self.currItem)
     # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
@@ -730,10 +593,16 @@ class RTBFBE(CBaseHostClass):
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
-class IPTVHost(CHostBase):
+class IPTVHost(GenericFolderWatchedHostMixin, CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, RTBFBE(), True, [])
+        self.cachedRet = None
+        self.refreshAfterWatchedFlagChange = False
+        self.watchedHelper = IPTVWatchedHelper('rtbfbe')
+
+    def withArticleContent(self, cItem):
+        return (cItem.get('type') in ('video', 'audio') and cItem.get('r_kind') in ('media', 'live')) or bool(cItem.get('program_id'))
 
     def getSearchTypes(self):
         searchTypesOptions = []

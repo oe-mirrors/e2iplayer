@@ -1,27 +1,27 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.09.2025
+# Last Modified: 10.10.2026
 # 04.07.2025 - Blindspot
+# 10.10.2026 - rework for the current site: the sections and their maps come from the site's own menu, a map page
+#   gives its animations (video rows) and maps (picture rows) without fetching every file first; webcams: the tag
+#   lists and all cameras (local pages), a camera plays its live stream (when it has one) and the animation of the
+#   last hours, INFO shows the current camera picture; picture albums fixed; dead forecast pictures removed;
+#   favourites without menu state (also those of version 1.3), INFO from the site's own data, local icons, default
+#   user agent
 ###################################################
-HOST_VERSION = "1.3"
+HOST_VERSION = "1.4"
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
-from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, MergeDicts
-from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
-from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
-from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
-from Plugins.Extensions.IPTVPlayer.hosts import hosturllist as urllist
-from Plugins.Extensions.IPTVPlayer.libs import ph
-from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist, getF4MLinksWithMeta, getMPDLinksWithMeta
-###################################################
-
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
+from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass, CDisplayListItem
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIconDir
+from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, stripPagerKeys
+from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
+from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
 ###################################################
 # FOREIGN import
 ###################################################
 import re
-import datetime
 ###################################################
 
 
@@ -30,412 +30,340 @@ def GetConfigList():
 
 
 def gettytul():
-    return 'https://www.idokep.hu/idojaras/Budapest'
+    return "https://www.idokep.hu/"
+
+
+MAIN_URL = "https://www.idokep.hu/"
+MENU_URL = MAIN_URL + "idojaras/Budapest"
+CAM_URL = MAIN_URL + "webkamera/"
+LOCAL_PAGE_SIZE = 100
+
+# files of the maps / animations a page shows (also inside its scripts); legends and backgrounds are left out
+MEDIA_RE = re.compile(r'''(?:https?:)?(?://[a-z0-9.]*idokep\.(?:hu|eu))?/(?:terkep|radar|idokepradar|csapadek|villam)/[^'"\s<>()?]+?\.(?:mp4|jpg|jpeg|png|gif)(?:\?[^'"\s<>()]*)?''', re.I)
+MEDIA_SKIP = ("scale", "skala", "poster", "_bg", "background", "transparent", "legend", "jelmagyarazat")
+
+# forecast maps for the next days (wetterkontor.de)
+FORECAST_TAB = [("Előrejelzés holnapra", "http://img.wetterkontor.de/karten/ungarn1.jpg"),
+                ("Előrejelzés 2 napra", "http://img.wetterkontor.de/karten/ungarn2.jpg"),
+                ("Előrejelzés 3 napra", "http://img.wetterkontor.de/karten/ungarn3.jpg"),
+                ("Előrejelzés 4 napra", "http://img.wetterkontor.de/karten/ungarn4.jpg"),
+                ("Előrejelzés 5 napra", "http://img.wetterkontor.de/karten/ungarn5.jpg")]
+
+# sections of the site menu (= the label of the menu entry)
+SECTIONS_TAB = ["Időkép", "Hőtérkép", "Felhőkép", "Radar", "Térképek"]
 
 
 class Idokep(CBaseHostClass):
 
+    # stable identity of a row (no state of an earlier menu)
+    FAV_FIELDS = ("name", "category", "type", "url", "title", "icon", "desc", "f_section", "f_cam")
+
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history': 'idokep', 'cookie': 'idokep.cookie'})
-        self.MAIN_URL = 'https://www.idokep.hu/idojaras/Budapest'
-        self.DEFAULT_ICON_URL = "https://raw.githubusercontent.com/oe-mirrors/e2iplayer/refs/heads/gh-pages/Thumbnails/idokep.png"
-        self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
-        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        CBaseHostClass.__init__(self, {"history": "idokep", "cookie": "idokep.cookie"})
+        self.MAIN_URL = MAIN_URL
+        self.DEFAULT_ICON_URL = "file://" + GetIconDir("PlayerSelector/idokep135.png")
+        self.HTTP_HEADER = self.cm.getDefaultHeader(browser="chrome")
+        self.defaultParams = {"header": self.HTTP_HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
 
-    def getPage(self, url, addParams={}, post_data=None):
-        if addParams == {}:
+    def getPage(self, url, addParams=None, post_data=None):
+        if addParams is None:
             addParams = dict(self.defaultParams)
-        return self.cm.getPage(url, addParams, post_data)
+        return self.cm.getPage(self.cm.iriToUri(url), addParams, post_data)
 
-    def getLinksForVideo(self, cItem):
-        printDBG("Idokep.getLinksForVideo")
-        videoUrls = []
-        url = cItem['url']
-        uri = urlparser.decorateParamsFromUrl(url)
-        protocol = uri.meta.get('iptv_proto', '')
+    def _meta(self, data, name):
+        return self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'''<meta[^>]+(?:property|name)=['"]%s['"][^>]+content=['"]([^'"]*)['"]''' % name, ignoreCase=True)[0])
 
-        printDBG("PROTOCOL [%s] " % protocol)
+    def _listTitle(self, cItem):
+        # the list's own title: on page 2+ the item is the "Next page" row
+        return cItem.get("f_title") or cItem.get("title", "")
 
-        urlSupport = self.up.checkHostSupport(uri)
-        if 1 == urlSupport:
-            retTab = self.up.getVideoLinkExt(uri)
-            videoUrls.extend(retTab)
-        elif 0 == urlSupport and self._uriIsValid(uri):
-            if protocol == 'm3u8':
-                retTab = getDirectM3U8Playlist(uri, checkExt=False, checkContent=True)
-                videoUrls.extend(retTab)
-            elif protocol == 'f4m':
-                retTab = getF4MLinksWithMeta(uri)
-                videoUrls.extend(retTab)
-            elif protocol == 'mpd':
-                retTab = getMPDLinksWithMeta(uri, False)
-                videoUrls.extend(retTab)
-            else:
-                videoUrls.append({'name': 'direct link', 'url': uri})
-        return videoUrls
-
-    def _uriIsValid(self, url):
-        return '://' in url
-
+    ###################################################
+    # menus
+    ###################################################
     def listMainMenu(self, cItem):
-        printDBG('Idokep.listMainMenu')
-        MAIN_CAT_TAB = [{'category': 'list_static', 'title': 'Előrejelzés'},
-                        {'category': 'list_filters', 'title': 'Időkép', 'url': 'https://www.idokep.hu/idokep'},
-                        {'category': 'list_filters', 'title': 'Hőtérkép', 'url': 'https://www.idokep.hu/hoterkep'},
-                        {'category': 'list_filters', 'title': 'Felhőkép', 'url': 'https://www.idokep.hu/felhokep'},
-                        {'category': 'list_filters', 'title': 'Radar', 'url': 'https://www.idokep.hu/radar'},
-                        {'category': 'list_filters', 'title': 'Kamerák', 'url': 'https://www.idokep.hu/webkamera'},
-                        {'category': 'list_album', 'title': 'Képtár', 'url': 'https://www.idokep.hu/keptar'},
-                        {'category': 'list_filters', 'title': 'Térképek', 'url': 'https://www.idokep.hu/idojaras/Budapest'}]
-        self.listsTab(MAIN_CAT_TAB, cItem)
+        printDBG("Idokep.listMainMenu")
+        self.addDir({"name": "category", "good_for_fav": True, "category": "list_forecast", "title": "Előrejelzés", "url": MAIN_URL + "elorejelzes"})
+        for title in SECTIONS_TAB:
+            self.addDir({"name": "category", "good_for_fav": True, "category": "list_section", "title": title, "f_section": title, "url": MAIN_URL + "#" + title})
+        self.addDir({"name": "category", "good_for_fav": True, "category": "list_cam_tags", "title": "Kamerák", "url": CAM_URL})
+        self.addDir({"name": "category", "good_for_fav": True, "category": "list_albums", "title": "Képtár", "url": MAIN_URL + "keptar"})
 
-    def listKepek(self, cItem):
-        printDBG('Idokep.listKepek')
-        sts, data = self.getPage(cItem['url'])
+    def listForecast(self, cItem):
+        for title, url in FORECAST_TAB:
+            self.addPicture({"name": "category", "good_for_fav": True, "title": title, "url": url, "icon": url, "desc": "wetterkontor.de"})
+
+    def _menuEntries(self, label):
+        # the entries of a drop-down of the site menu: [(title, url)]
+        sts, data = self.getPage(MENU_URL)
+        if not sts:
+            return []
+        menu = self.cm.ph.getDataBeetwenMarkers(data, ">%s</a>" % label, "</ul>", False)[1]
+        entries = []
+        seen = set()
+        for url, title in re.findall(r'''<a[^>]+href=['"]([^'"#]+)[^'"]*['"][^>]*>(.*?)</a>''', menu, re.S):
+            url = self.getFullUrl(url)
+            title = self.cleanHtmlStr(title)
+            if title and url not in seen:
+                seen.add(url)
+                entries.append((title, url))
+        return entries
+
+    def listSection(self, cItem):
+        printDBG("Idokep.listSection [%s]" % cItem.get("f_section", ""))
+        for title, url in self._menuEntries(cItem.get("f_section", "")):
+            self.addDir({"name": "category", "good_for_fav": True, "category": "list_page", "title": title, "url": url})
+
+    def listPage(self, cItem):
+        # the maps (pictures) and animations (videos) of a map page
+        printDBG("Idokep.listPage [%s]" % cItem["url"])
+        url = cItem["url"]
+        sts, data = self.getPage(url)
         if not sts:
             return
-        data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="ik album-image-container col-6 col-sm-3 col-md-2 col-lg-2">', '</a>', False)
-        for i in data:
-            title = self.cm.ph.getDataBeetwenMarkers(i, '<div class="ik image-title">', '</div>', False)[1]
-            icon = self.cm.ph.getDataBeetwenMarkers(i, '" src="', '"', False)[1]
-            icon = "https://idokep.hu" + icon
-            url = self.cm.ph.getDataBeetwenMarkers(i, '<a href="', '"', False)[1]
-            url = "https://idokep.hu" + url
-            params = {'category': 'show_pic', 'title': title, 'icon': icon, 'url': url}
-            self.addDir(params)
+        desc = self._meta(data, "description") or self._meta(data, "og:description")
+        start = data.find("siteMainOuter")
+        if start < 0:
+            # idokep.eu pages have no siteMainOuter - their head names the Hungarian map as og:image
+            start = max(0, data.find("<body"))
+        ends = [x for x in [data.find(x, start) for x in ("frontpage600OuterLockup", "sidebar160x600Container", "promo-news-item", "<footer")] if x > 0]
+        found = self._pageMedia(data[start:min(ends) if ends else len(data)], url)
+        if not found:
+            # maps drawn by a script (Időkép, Radar): their files are named only in the script
+            found = self._pageMedia(data, url)
+        title = cItem["title"]
+        icon = ""
+        for mediaUrl in found:
+            if not mediaUrl.split("?")[0].endswith(".mp4"):
+                icon = mediaUrl
+                break
+        icon = icon or self.DEFAULT_ICON_URL
+        for mediaUrl in found:
+            name = mediaUrl.split("?")[0].rsplit("/", 1)[-1].rsplit(".", 1)[0]
+            rowTitle = title if len(found) == 1 else "%s - %s" % (title, name)
+            params = {"name": "category", "good_for_fav": True, "title": rowTitle, "url": mediaUrl, "desc": desc}
+            if mediaUrl.split("?")[0].endswith(".mp4"):
+                params["icon"] = icon
+                self.addVideo(params)
+            else:
+                params["icon"] = mediaUrl
+                self.addPicture(params)
 
-    def showPic(self, cItem):
-        printDBG('Idokep.showPic')
-        sts, data = self.getPage(cItem['url'])
+    def _pageMedia(self, data, pageUrl):
+        found = []
+        paths = set()
+        for match in MEDIA_RE.finditer(data):
+            mediaUrl = match.group(0)
+            path = mediaUrl.split("?")[0].split("idokep.hu", 1)[-1].split("idokep.eu", 1)[-1]
+            if path in paths or any(x in path.lower() for x in MEDIA_SKIP):
+                continue
+            paths.add(path)
+            found.append(self.getFullUrl(mediaUrl, pageUrl))
+        return found
+
+    ###################################################
+    # webcams
+    ###################################################
+    def listCamTags(self, cItem):
+        printDBG("Idokep.listCamTags")
+        entries = self._menuEntries("Kamerák")
+        if not entries:
+            entries = [("Összes", CAM_URL + "mindegyik")]
+        if "Élő" not in [x[0] for x in entries]:
+            entries.insert(0, ("Élő", CAM_URL + "tag/%C3%A9l%C5%91"))  # the cameras with a live stream
+        for title, url in entries:
+            if url.rstrip("/") in (CAM_URL.rstrip("/"), MAIN_URL + "webkamera/mindegyik"):
+                title, url = "Összes", CAM_URL + "mindegyik"  # the site's "all" link shows only a few cameras
+            self.addDir({"name": "category", "good_for_fav": True, "category": "list_cams", "title": title, "url": url})
+
+    def listCams(self, cItem):
+        printDBG("Idokep.listCams [%s]" % cItem["url"])
+        try:
+            page = max(1, int(cItem.get("page", 1) or 1))
+        except (TypeError, ValueError):
+            page = 1
+        sts, data = self.getPage(cItem["url"])
         if not sts:
             return
-        url = self.cm.ph.getDataBeetwenMarkers(data, '<source srcset="', '"', False)[1]
-        if ".webp" in url:
-            url = url.replace(".webp", "")
-        url = "https://www.idokep.hu" + url
-        params = {'title': cItem['title'], 'icon': cItem['icon'], 'url': url}
-        self.addPicture(params)
+        cams = []
+        seen = set()
+        for item in data.split('class="ik kamera-ajanlo"')[1:]:
+            cam = self.cm.ph.getSearchGroups(item, r'''href=['"]/webkamera/([^'"/?#]+)['"]''')[0]
+            title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'''<span>(.*?)</span>''')[0])
+            if not cam or not title or cam in seen:
+                continue
+            seen.add(cam)
+            icon = self.cm.ph.getSearchGroups(item, r'''(?:poster|src)=['"]([^'"]+?thumbnail\.jpg[^'"]*)['"]''')[0]
+            cams.append((cam, title, self.getFullIconUrl(icon) if icon else ""))
+        lastPage = max(1, (len(cams) + LOCAL_PAGE_SIZE - 1) // LOCAL_PAGE_SIZE)
+        page = min(page, lastPage)
+        listTitle = self._listTitle(cItem)
+        for cam, title, icon in cams[(page - 1) * LOCAL_PAGE_SIZE:page * LOCAL_PAGE_SIZE]:
+            self.addVideo({"name": "category", "good_for_fav": True, "title": title, "url": CAM_URL + cam, "f_cam": cam, "icon": icon or self.DEFAULT_ICON_URL,
+                           "desc": listTitle})
+        if lastPage > 1:
+            addPagingItems(self, dict(stripPagerKeys(dict(cItem)), f_title=listTitle), page, page < lastPage, lastPage)
+
+    def _getCamLinks(self, cItem):
+        cam = cItem.get("f_cam") or cItem["url"].rstrip("/").rsplit("/", 1)[-1]
+        linksTab = []
+        sts, data = self.getPage(CAM_URL + cam)
+        if sts:
+            hls = self.cm.ph.getSearchGroups(data, r'''['"]((?:https?:)?//[^'"]+?\.m3u8[^'"]*)['"]''')[0]
+            if hls:
+                linksTab.extend(getDirectM3U8Playlist(self.getFullUrl(hls), checkExt=False, checkContent=True, sortWithMaxBitrate=999999999))
+        # the animation of the last hours (every camera has one)
+        linksTab.append({"name": _("Animation"), "url": "https://cam.idokep.hu/%s/animation.mp4" % cam, "need_resolve": 0})
+        return linksTab
+
+    ###################################################
+    # picture albums
+    ###################################################
+    def listAlbums(self, cItem):
+        printDBG("Idokep.listAlbums")
+        sts, data = self.getPage(cItem["url"])
+        if not sts:
+            return
+        seen = set()
+        for item in data.split('class="col keptar-album"')[1:]:
+            url = self.cm.ph.getSearchGroups(item, r'''href=['"](/keptar/album/[^'"]+)['"]''')[0]
+            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ("<div", ">", "ik text"), ("</div", ">"), False)[1])
+            if not url or not title or url in seen:
+                continue
+            seen.add(url)
+            icon = self.cm.ph.getSearchGroups(item, r'''<img[^>]+src=['"]([^'"]+)['"]''')[0]
+            self.addDir({"name": "category", "good_for_fav": True, "category": "list_album_pics", "title": title, "url": self.getFullUrl(url),
+                         "icon": self.getFullIconUrl(icon) if icon else self.DEFAULT_ICON_URL})
 
     def listAlbum(self, cItem):
-        printDBG('Idokep.listAlbum')
-        sts, data = self.getPage(cItem['url'])
+        printDBG("Idokep.listAlbum [%s]" % cItem["url"])
+        try:
+            page = max(1, int(cItem.get("page", 1) or 1))
+        except (TypeError, ValueError):
+            page = 1
+        sts, data = self.getPage(cItem["url"])
         if not sts:
             return
-        data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="ik keptar-album col-6 col-md-4 col-lg-3">', '</a>', False)
-        for i in data:
-            title = self.cm.ph.getDataBeetwenMarkers(i, '<div class="ik text">', '</div>', False)[1]
-            title = title.split()
-            if len(title) == 2:
-                title = title[0] + ' ' + title[1]
-            else:
-               title = title[0]
-            icon = self.cm.ph.getDataBeetwenMarkers(i, '" src="', '"', False)[1]
-            icon = "https://idokep.hu" + icon
-            url = self.cm.ph.getDataBeetwenMarkers(i, '<a href="', '"', False)[1]
-            url = "https://idokep.hu" + url
-            params = {'category': 'list_pics', 'title': title, 'icon': icon, 'url': url}
-            self.addDir(params)
-
-    def listRiaszt(self, cItem):
-        printDBG('Idokep.listRiaszt')
-        sts, data = self.getPage(cItem['url'])
-        if not sts:
-            return
-        data = self.cm.ph.getDataBeetwenMarkers(data, 'Riasztás', 'c=c', False)[1]
-        list = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="col-12 col-lg-4">', '</p>', False)
-        for i in list:
-            url = self.cm.ph.getDataBeetwenMarkers(i, '<img src="', '"', False)[1]
+        listTitle = self._listTitle(cItem)
+        pics = []
+        for item in data.split("album-image-container\">")[1:]:
+            url = self.cm.ph.getSearchGroups(item, r'''<img[^>]+src=['"]([^'"]+)['"]''')[0]
             if not url:
-                url = self.cm.ph.getDataBeetwenMarkers(i, '<img src=', '"', False)[1]
-            url = "https:" + url
-            title = self.cm.ph.getDataBeetwenMarkers(i, 'title="', '"', False)[1]
-            params = {'title': title, 'icon': url, 'url': url}
-            self.addPicture(params)
+                continue
+            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ("<div", ">", "image-title"), ("</div", ">"), False)[1])
+            pageUrl = self.cm.ph.getSearchGroups(item, r'''href=['"](/keptar/[^'"]+/kep/\d+)['"]''')[0]
+            pics.append((title or listTitle, self.getFullUrl(url), self.getFullUrl(pageUrl) if pageUrl else ""))
+        lastPage = max(1, (len(pics) + LOCAL_PAGE_SIZE - 1) // LOCAL_PAGE_SIZE)
+        page = min(page, lastPage)
+        for title, url, pageUrl in pics[(page - 1) * LOCAL_PAGE_SIZE:page * LOCAL_PAGE_SIZE]:
+            self.addPicture({"name": "category", "good_for_fav": True, "title": title, "url": url, "icon": url, "desc": "[/br]".join([x for x in (listTitle, pageUrl) if x])})
+        if lastPage > 1:
+            addPagingItems(self, dict(stripPagerKeys(dict(cItem)), f_title=listTitle), page, page < lastPage, lastPage)
 
-    def listItems(self, cItem):
-        printDBG('Idokep.listItems')
-        sts, data = self.getPage(cItem['url'])
-        if not sts:
-            return
-        backup = False
-        if cItem['url'].startswith('https://idokep.eu') or cItem['url'].startswith('https://www.idokep.eu'):
-            link = self.cm.ph.getDataBeetwenMarkers(data, '<source src="', '"', False)[1]
-            if not link:
-                link = self.cm.ph.getDataBeetwenMarkers(data, '<source type="video/mp4" src="', '"', False)[1]
-            if link:
-                if "https:" not in link and "//" in link:
-                    vid = "https:" + link
-                    sts, dat = self.getPage(vid)
-                    if not sts:
-                        vid = vid.replace("https://www.idokep.hu", "https://www.idokep.eu")
-                        sts, dat = self.getPage(vid)
-                        if not sts:
-                            vid = vid.replace("https://www.idokep.eu", "https://www.idokep.hu")
-                else:
-                   vid = link
-                   sts, dat = self.getPage(vid)
-                   if not sts:
-                       vid = vid.replace("https://www.idokep.hu", "https://www.idokep.eu")
-                       sts, dat = self.getPage(vid)
-                       if not sts:
-                           vid = vid.replace("https://www.idokep.eu", "https://www.idokep.hu")
-                if not vid.endswith(".webm"):
-                    params = {'title': cItem['title'], 'icon': None, 'url': vid}
-                    self.addVideo(params)
-            if cItem['picture']:
-                link = self.cm.ph.getDataBeetwenMarkers(data, '<img name', '">', False)[1]
-                if not link:
-                    link = self.cm.ph.getDataBeetwenMarkers(data, '<img id', '">', False)[1]
-                    if not link:
-                        backup = True
-                link = self.cm.ph.getDataBeetwenMarkers(link, 'src="', '"', False)[1]
-                if backup is True:
-                    link = self.cm.ph.getDataBeetwenMarkers(data, 'autoplay muted loop poster="', '"', False)[1]
-                if "https:" not in link and "//" in link:
-                    img = "https:" + link
-                elif "https://www.idokep.hu" not in link:
-                   img = "https://www.idokep.hu" + link
-                sts, dat = self.getPage(img)
-                if not sts:
-                    img = img.replace("https://www.idokep.hu", "https://www.idokep.eu")
-                if cItem['url'] == "https://idokep.eu/ceu/hoterkep":
-                    img = 'https://www.idokep.eu/terkep/fulleu/eumap.jpg?ca64b'
-                sts, dat = self.getPage(img)
-                if not img.endswith(".gif") and sts:
-                    params = {'title': cItem['title'], 'icon': img, 'url': img}
-                    self.addPicture(params)
-        elif cItem['url'].startswith('https://idokep.hu') or cItem['url'].startswith('https://www.idokep.hu'):
-           link = self.cm.ph.getDataBeetwenMarkers(data, '<source type="video/mp4" src="', '"', False)[1]
-           if link:
-               if "https:" not in link and "//" in link:
-                   vid = "https:" + link
-                   sts, dat = self.getPage(vid)
-                   if not sts:
-                       vid = vid.replace("https://www.idokep.hu", "https://www.idokep.eu")
-                       sts, dat = self.getPage(vid)
-                       if not sts:
-                           vid = vid.replace("https://www.idokep.eu", "https://www.idokep.hu")
-               elif "https:" not in link:
-                  vid = "https://idokep.hu" + link
-               else:
-                  vid = link
-                  sts, dat = self.getPage(vid)
-                  if not sts:
-                      vid = vid.replace("https://www.idokep.hu", "https://www.idokep.eu")
-                      sts, dat = self.getPage(vid)
-                      if not sts:
-                          vid = vid.replace("https://www.idokep.eu", "https://www.idokep.hu")
-               if not vid.endswith(".webm"):
-                   params = {'title': cItem['title'], 'icon': None, 'url': vid}
-                   self.addVideo(params)
-           if cItem['picture']:
-               if cItem['title'] == "Min/max":
-                   link1 = self.cm.ph.getDataBeetwenMarkers(data, '<img name="tmax"', '>', False)[1]
-                   link2 = self.cm.ph.getDataBeetwenMarkers(data, '<img name="tmin"', '>', False)[1]
-                   link1 = self.cm.ph.getDataBeetwenMarkers(link1, 'src="', '"', False)[1]
-                   link2 = self.cm.ph.getDataBeetwenMarkers(link2, 'src="', '"', False)[1]
-                   img1 = "https://www.idokep.eu" + link1
-                   img2 = "https://www.idokep.eu" + link2
-                   title2 = "Minimum"
-                   title1 = "Maximum"
-                   params = {'title': title1, 'icon': img1, 'url': img1}
-                   self.addPicture(params)
-                   params = {'title': title2, 'icon': img2, 'url': img2}
-                   self.addPicture(params)
-                   return
-               link = self.cm.ph.getDataBeetwenMarkers(data, '<img', '>', False)[1]
-               link = self.cm.ph.getDataBeetwenMarkers(link, 'src="', '"', False)[1]
-               if "https:" not in link and "//" in link:
-                   img = "https:" + link
-               elif "https://www.idokep.hu" not in link:
-                  img = "https://www.idokep.hu" + link
-               sts, dat = self.getPage(img)
-               if not sts:
-                   img = img.replace("https://www.idokep.hu", "https://www.idokep.eu")
-                   if "https://www.idokep.eu" not in img:
-                       img = img.replace("https://idokep.hu", "https://idokep.eu")
-               sts, dat = self.getPage(img)
-               if not img.endswith(".gif") and sts:
-                   params = {'title': cItem['title'], 'icon': img, 'url': img}
-                   self.addPicture(params)
-
-    def listFilters(self, cItem):
-        printDBG('Idokep.listFilters')
-        picture = True
-        sts, data = self.getPage(cItem['url'])
-        if cItem['title'] == "Időkép":
-            menu = self.cm.ph.getDataBeetwenMarkers(data, 'Időkép</a>', '</ul>', False)[1]
-            list = self.cm.ph.getAllItemsBeetwenMarkers(menu, '<li>', '</li>', False)
-            list.pop(0)
-            list.pop(0)
-            list.pop(0)
-            for i in list:
-                title = self.cm.ph.getDataBeetwenMarkers(i, '">', '</a>', False)[1]
-                url = self.cm.ph.getDataBeetwenMarkers(i, '<a href="', '">', False)[1]
-                if "https:" not in url and title == 'Magyarország':
-                    url = 'https://www.idokep.eu/terkep/hu600/idokep2.jpg'
-                    params = {'title': title, 'icon': url, 'url': url}
-                    self.addPicture(params)
-                else:
-                   params = {'category': 'list_items', 'title': title, 'icon': None, 'url': url, 'picture': picture}
-                   self.addDir(params)
-        elif cItem['title'] == "Hőtérkép":
-            menu = self.cm.ph.getDataBeetwenMarkers(data, 'Hőtérkép</a>', '</ul>', False)[1]
-            list = self.cm.ph.getAllItemsBeetwenMarkers(menu, '<li>', '</li>', False)
-            list.pop(0), list.pop(0), list.pop(0), list.pop(0), list.pop(0)
-            for i in list:
-                title = self.cm.ph.getDataBeetwenMarkers(i, '">', '</a>', False)[1]
-                url = self.cm.ph.getDataBeetwenMarkers(i, '<a href="', '">', False)[1]
-                if "https:" not in url and title == 'Magyarország':
-                    url = 'https://www.idokep.eu/terkep/hu970/hoterkep3.jpg'
-                    params = {'title': title, 'icon': url, 'url': url}
-                    self.addPicture(params)
-                else:
-                   params = {'category': 'list_items', 'title': title, 'icon': None, 'url': url, 'picture': picture}
-                   self.addDir(params)
-        elif cItem['title'] == "Felhőkép":
-            menu = self.cm.ph.getDataBeetwenMarkers(data, 'Felhőkép</a>', '</ul>', False)[1]
-            list = self.cm.ph.getAllItemsBeetwenMarkers(menu, '<li>', '</li>', False)
-            for i in list:
-                title = self.cm.ph.getDataBeetwenMarkers(i, '">', '</a>', False)[1]
-                url = self.cm.ph.getDataBeetwenMarkers(i, '<a href="', '">', False)[1]
-                if "https:" not in url:
-                    url = "https://www.idokep.hu" + url
-                params = {'category': 'list_items', 'title': title, 'icon': None, 'url': url, 'picture': picture}
-                self.addDir(params)
-        elif cItem['title'] == "Radar":
-            menu = self.cm.ph.getDataBeetwenMarkers(data, 'Radar</a>', '</ul>', False)[1]
-            list = self.cm.ph.getAllItemsBeetwenMarkers(menu, '<li>', '</li>', False)
-            list.pop(0)
-            list.pop(-1)
-            for i in list:
-                title = self.cm.ph.getDataBeetwenMarkers(i, '">', '</a>', False)[1]
-                url = self.cm.ph.getDataBeetwenMarkers(i, '<a href="', '">', False)[1]
-                category = 'list_items'
-                if list.index(i) == 0 or list.index(i) == 1:
-                    picture = False
-                if list.index(i) == 2:
-                    category = 'list_riaszt'
-                if "https:" not in url:
-                    url = "https://www.idokep.hu" + url
-                params = {'category': category, 'title': title, 'icon': None, 'url': url, 'picture': picture}
-                picture = True
-                self.addDir(params)
-        elif cItem['title'] == "Kamerák":
-            menu = self.cm.ph.getDataBeetwenMarkers(data, 'Kamerák</a>', '</ul>', False)[1]
-            list = self.cm.ph.getAllItemsBeetwenMarkers(menu, '<li>', '</li>', False)
-            for i in list:
-                title = self.cm.ph.getDataBeetwenMarkers(i, '">', '</a>', False)[1]
-                url = self.cm.ph.getDataBeetwenMarkers(i, '<a href="', '">', False)[1]
-                if "https:" not in url:
-                    url = "https://www.idokep.hu" + url
-                params = {'category': 'list_kamera', 'title': title, 'icon': None, 'url': url, 'picture': picture}
-                self.addDir(params)
-        elif cItem['title'] == "Térképek":
-            url = 'https://www.idokep.hu/radar/sat-hu.mp4'
-            title = 'Magyarország műholdképe'
-            icon = 'https://www.idokep.hu/radar/sat-hu.jpg'
-            params = {'title': title, 'icon': icon, 'url': url}
-            self.addVideo(params)
-            menu = self.cm.ph.getDataBeetwenMarkers(data, 'Térképek</a>', '</ul>', False)[1]
-            list = self.cm.ph.getAllItemsBeetwenMarkers(menu, '<li>', '</li>', False)
-            list.pop(-1)
-            list.pop(-1)
-            list.pop(5)
-            for i in list:
-                title = self.cm.ph.getDataBeetwenMarkers(i, '">', '</a>', False)[1]
-                url = self.cm.ph.getDataBeetwenMarkers(i, '<a href="', '">', False)[1]
-                if "https:" not in url:
-                    url = "https://www.idokep.hu" + url
-                params = {'category': 'list_items', 'title': title, 'icon': None, 'url': url, 'picture': picture}
-                self.addDir(params)
-
-    def listKamera(self, cItem):
-        printDBG('Idokep.listKamera')
-        sts, data = self.getPage(cItem['url'])
-        if not sts:
-            return
-        data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="ik kamera-ajanlo">', '</a>', False)
-        for i in data:
-            url = self.cm.ph.getDataBeetwenMarkers(i, '<a href="', '"', False)[1]
-            if "https://" not in url:
-                url = "https://idokep.hu" + url
-            icon = self.cm.ph.getDataBeetwenMarkers(i, '<img src="', '"', False)[1]
-            if not icon:
-                icon = self.cm.ph.getDataBeetwenMarkers(i, 'muted autoplay loop poster="', '"', False)[1]
-                if "https://" not in icon:
-                    icon = "https://idokep.hu" + icon
-            title = self.cm.ph.getDataBeetwenMarkers(i, '<span>', '</span>', False)[1]
-            if title == "":
-                title = "Nincs elérhető cím."
-            params = {'category': 'picture_camera', 'title': title, 'icon': icon, 'url': url}
-            self.addDir(params)
-
-    def listPics(self, cItem):
-        printDBG('Idokep.listPics')
-        sts, data = self.getPage(cItem['url'])
-        if not sts:
-            return
-        icon = ''
-        data = self.cm.ph.getDataBeetwenMarkers(data, '<div id="camimg"', '</div>', False)[1]
-        url = self.cm.ph.getDataBeetwenMarkers(data, '<img src="', '"', False)[1]
-        if not url:
-            url = self.cm.ph.getDataBeetwenMarkers(data, '<source src="', '"', False)[1]
-            icon = self.cm.ph.getDataBeetwenMarkers(data, '<video poster="', '"', False)[1]
-            icon = "https:" + icon
-        url = "https:" + url
-        if ".m3u8" in url:
-            params = {'title': cItem['title'], 'icon': icon, 'url': url}
-            self.addVideo(params)
+    ###################################################
+    # links / INFO / favourites
+    ###################################################
+    def getLinksForVideo(self, cItem):
+        printDBG("Idokep.getLinksForVideo [%s]" % cItem.get("url", ""))
+        url = cItem.get("url", "")
+        if cItem.get("f_cam") or url.startswith(CAM_URL):
+            linksTab = self._getCamLinks(cItem)
+        elif self.cm.isValidUrl(url):
+            # an animation (mp4) or a map (picture)
+            linksTab = [{"name": url.split("?")[0].rsplit(".", 1)[-1], "url": url, "need_resolve": 0}]
         else:
-            params = {'title': cItem['title'], 'icon': url, 'url': url}
-            self.addPicture(params)
+            linksTab = []
+        if not linksTab:
+            SetIPTVPlayerLastHostError(_("No valid links available."))
+        return linksTab
 
-    def listStatic(self, cItem):
-        names = ['Előrejelzés holnapra', 'Előrejelzés 2 napra', 'Előrejelzés 3 napra', 'Előrejelzés 4 napra', 'Előrejelzés 5 napra', '14 napos előrejelzés', '30 napos előrejelzés']
-        links = ['http://img.wetterkontor.de/karten/ungarn1.jpg', 'http://img.wetterkontor.de/karten/ungarn2.jpg', 'http://img.wetterkontor.de/karten/ungarn3.jpg', 'http://img.wetterkontor.de/karten/ungarn4.jpg', 'http://img.wetterkontor.de/karten/ungarn5.jpg', 'http://2.eumet.hu/homer_de_elemei/image002.png', 'http://esotanc.hu/30napos/30napos.jpg']
-        for i in names:
-            icon = links[names.index(i)]
-            if "14" in i:
-                icon = 'https://www.eumet.hu/wp-content/uploads/logo-beta2.png'
-            params = {'title': i, 'icon': icon, 'url': links[names.index(i)]}
-            self.addPicture(params)
+    def getFavouriteData(self, cItem):
+        return json_dumps(dict((key, cItem[key]) for key in self.FAV_FIELDS if key in cItem))
 
-    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
-        printDBG('Idokep.handleService start')
+    def getArticleContent(self, cItem):
+        printDBG("Idokep.getArticleContent [%s]" % cItem.get("url", ""))
+        title = cItem.get("title", "")
+        text = cItem.get("desc", "")
+        icon = cItem.get("icon", "")
+        otherInfo = {}
+        if cItem.get("f_cam"):
+            # the camera page: its description and the current picture
+            sts, data = self.getPage(CAM_URL + cItem["f_cam"])
+            if sts:
+                title = self._meta(data, "og:title") or title
+                text = self._meta(data, "og:description") or text
+                current = self.cm.ph.getSearchGroups(data, r'''<img[^>]+src=['"]([^'"]*kamera\.php\?[^'"]+)['"]''')[0]
+                if current:
+                    icon = self.getFullIconUrl(current.replace("&amp;", "&"))
+                if "m3u8" in data:
+                    otherInfo["status"] = _("Live")
+        return [{"title": title, "text": text, "images": [{"title": "", "url": icon or self.DEFAULT_ICON_URL}], "other_info": otherInfo}]
 
+    ###################################################
+    # favourites of version 1.3 (any row could be saved, without menu state)
+    ###################################################
+    LEGACY_CATEGORIES = ("list_static", "list_filters", "list_items", "list_riaszt", "list_kamera", "picture_camera", "list_album", "list_pics", "show_pic")
+
+    def listLegacy(self, cItem):
+        category = cItem.get("category", "")
+        title = cItem.get("title", "")
+        printDBG("Idokep.listLegacy [%s] [%s]" % (category, title))
+        if category == "list_static":
+            self.listForecast(cItem)
+        elif category == "list_filters":
+            # main menu entries: the sections of the site menu, "Kamerák" the camera tags
+            if title == "Kamerák":
+                self.listCamTags(cItem)
+            else:
+                self.listSection(dict(cItem, f_section=title))
+        elif category in ("list_items", "list_riaszt"):
+            # a map page of a section (url of the site menu entry)
+            self.listPage(cItem)
+        elif category == "list_kamera":
+            self.listCams(cItem)
+        elif category == "picture_camera":
+            # a camera folder (url https://idokep.hu/webkamera/<cam>) -> the camera row
+            cam = cItem.get("url", "").rstrip("/").rsplit("/", 1)[-1]
+            if cam:
+                self.addVideo({"name": "category", "good_for_fav": True, "title": title or cam, "url": CAM_URL + cam, "f_cam": cam,
+                               "icon": cItem.get("icon") or self.DEFAULT_ICON_URL})
+        elif category == "list_album":
+            self.listAlbums(cItem)
+        elif category == "list_pics":
+            self.listAlbum(cItem)
+        elif category == "show_pic":
+            # the page of one album picture -> the picture
+            sts, data = self.getPage(cItem.get("url", ""))
+            url = self.cm.ph.getSearchGroups(data, r'''<meta[^>]+property=['"]og:image['"][^>]+content=['"]([^'"]+)['"]''')[0] if sts else ""
+            if url:
+                self.addPicture({"name": "category", "good_for_fav": True, "title": title, "url": self.getFullUrl(url), "icon": self.getFullUrl(url)})
+
+    def handleService(self, index, refresh=0, searchPattern="", searchType=""):
+        printDBG("Idokep.handleService start")
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name = self.currItem.get("name", '')
-        category = self.currItem.get("category", '')
-        title = self.currItem.get("title", '')
-        icon = self.currItem.get("icon", '')
-        url = self.currItem.get("url", '')
-        desc = self.currItem.get("desc", '')
-
-        printDBG("handleService: >> name[%s], category[%s], title[%s], icon[%s] " % (name, category, title, icon))
+        name = self.currItem.get("name", "")
+        category = self.currItem.get("category", "")
+        printDBG("Idokep.handleService: name[%s], category[%s]" % (name, category))
         self.currList = []
 
         if name is None:
-            self.listMainMenu({'name': 'category'})
-        elif category == 'list_items':
-            self.listItems(self.currItem)
-        elif category == 'list_filters':
-            self.listFilters(self.currItem)
-        elif category == 'list_static':
-            self.listStatic(self.currItem)
-        elif category == 'list_riaszt':
-            self.listRiaszt(self.currItem)
-        elif category == 'list_kamera':
-            self.listKamera(self.currItem)
-        elif category == 'picture_camera':
-            self.listPics(self.currItem)
-        elif category == 'list_album':
+            self.listMainMenu({"name": "category"})
+        elif category == "list_forecast":
+            self.listForecast(self.currItem)
+        elif category == "list_section":
+            self.listSection(self.currItem)
+        elif category == "list_page":
+            self.listPage(self.currItem)
+        elif category == "list_cam_tags":
+            self.listCamTags(self.currItem)
+        elif category == "list_cams":
+            self.listCams(self.currItem)
+        elif category == "list_albums":
+            self.listAlbums(self.currItem)
+        elif category == "list_album_pics":
             self.listAlbum(self.currItem)
-        elif category == 'list_pics':
-            self.listKepek(self.currItem)
-        elif category == 'show_pic':
-            self.showPic(self.currItem)
+        elif category in self.LEGACY_CATEGORIES:
+            self.listLegacy(self.currItem)
         else:
             printExc()
 
@@ -445,4 +373,7 @@ class Idokep(CBaseHostClass):
 class IPTVHost(CHostBase):
 
     def __init__(self):
-        CHostBase.__init__(self, Idokep(), True, [])
+        CHostBase.__init__(self, Idokep(), True, [CDisplayListItem.TYPE_VIDEO, CDisplayListItem.TYPE_PICTURE])
+
+    def withArticleContent(self, cItem):
+        return cItem.get("type", "") in ("video", "picture")

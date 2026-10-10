@@ -1,39 +1,33 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 24.01.2026
+# Last Modified: 10.10.2026
 # Python3 version
 # 24.01.2026 - WhiteWolf
+# 10.10.2026 - host standard: live TV / radios from the site's own pages (no third-party playlist any more), the TV
+#   shows ("Műsoraink") -> episodes (YouTube through urlparser, own players direct), news sections and search with
+#   First page / Jump / Next page and the last page; articles without a video as article rows (text in INFO); watched
+#   flag (show -> episode), downloaded marker, favourites (also rows of version 1.2), sidecar, "Title (YYYY-MM-DD)"
+#   naming, INFO from the site's own data, local icons, default user agent, no "requests" import
 ###################################################
-HOST_VERSION = "1.2"
+HOST_VERSION = "1.3"
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
-from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, MergeDicts, CSelOneLink
-from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
-from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
-from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
-from Plugins.Extensions.IPTVPlayer.hosts import hosturllist as urllist
-from Plugins.Extensions.IPTVPlayer.libs import ph
-from Plugins.Extensions.IPTVPlayer.libs.pCommon import CParsingHelper
-from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist, getF4MLinksWithMeta, getMPDLinksWithMeta
-
-###################################################
-
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
+from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass, CDisplayListItem
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIconDir
+from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import normalizeMediathekTitle
+from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
+from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
+from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
+from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus, urllib_unquote
 ###################################################
 # FOREIGN import
 ###################################################
 import re
-import requests
-
-###################################################
-
-###################################################
-# E2 GUI COMPONENTS
-###################################################
-from Plugins.Extensions.IPTVPlayer.components.iptvmultipleinputbox import IPTVMultipleInputBox
-from Screens.MessageBox import MessageBox
-
 ###################################################
 
 
@@ -42,252 +36,367 @@ def GetConfigList():
 
 
 def gettytul():
-    return "https://pannonrtv.com"
+    return "https://pannonrtv.com/"
 
 
-class Pannon(CBaseHostClass):
+MAIN_URL = "https://pannonrtv.com/"
+# live streams: (title, page of the site, stream when the page does not name one, type)
+LIVE_TAB = [("Pannon TV", MAIN_URL + "onlinepannon-tv", "https://stream2.nmih.hu:4102/live.m3u8", "video"),
+            ("Pannon Rádió", MAIN_URL + "pannon-radio", "http://stream2.nmih.hu:4120/live.mp3", "audio"),  # NOSONAR - the radio server has no https
+            ("Szabadkai Magyar Rádió", MAIN_URL + "szabadkai-magyar-radio-0", "http://stream2.nmih.hu:4110/live.mp3", "audio")]  # NOSONAR
+
+
+class PannonRTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
+
+    # stable identity of a row (no state of an earlier menu)
+    FAV_FIELDS = ("name", "category", "type", "url", "title", "raw_title", "icon", "desc", "date", "live", "f_live", "f_base")
 
     def __init__(self):
         CBaseHostClass.__init__(self, {"history": "pannonrtv", "cookie": "pannonrtv.cookie"})
-        self.MAIN_URL = "https://pannonrtv.com"
-        self.DEFAULT_ICON_URL = "https://pannonrtv.com/sites/default/files/2021-05/ogpannon.jpg"
+        self.MAIN_URL = MAIN_URL
+        self.DEFAULT_ICON_URL = "file://" + GetIconDir("PlayerSelector/pannonrtv135.png")
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser="chrome")
         self.defaultParams = {"header": self.HTTP_HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
+        self.watchedHelper = IPTVWatchedHelper("pannonrtv")
+        self.wfInitFolderCache()
 
-    def getPage(self, url, addParams={}, post_data=None):
-        if addParams == {}:
+    def getPage(self, url, addParams=None, post_data=None):
+        if addParams is None:
             addParams = dict(self.defaultParams)
         return self.cm.getPage(url, addParams, post_data)
 
-    def getLinksForVideo(self, cItem):
-        printDBG("Pannonrtv.getLinksForVideo")
-        videoUrls = []
-        uri = urlparser.decorateParamsFromUrl(cItem["url"])
-        protocol = uri.meta.get("iptv_proto", "")
+    def getFullUrl(self, url, curUrl=None):
+        return CBaseHostClass.getFullUrl(self, url.replace("&amp;", "&"), curUrl)
 
-        printDBG("PROTOCOL [%s] " % protocol)
+    def _meta(self, data, name):
+        return self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'''<meta[^>]+(?:property|name)=['"]%s['"][^>]+content=['"]([^'"]*)['"]''' % name)[0])
 
-        urlSupport = self.up.checkHostSupport(uri)
-        if 1 == urlSupport:
-            retTab = self.up.getVideoLinkExt(uri)
-            videoUrls.extend(retTab)
-        elif 0 == urlSupport and self._uriIsValid(uri):
-            if protocol == "m3u8":
-                retTab = getDirectM3U8Playlist(uri, checkExt=False, checkContent=True)
-                videoUrls.extend(retTab)
-            elif protocol == "f4m":
-                retTab = getF4MLinksWithMeta(uri)
-                videoUrls.extend(retTab)
-            elif protocol == "mpd":
-                retTab = getMPDLinksWithMeta(uri, False)
-                videoUrls.extend(retTab)
-            else:
-                videoUrls.append({"name": "direct link", "url": uri})
-        return videoUrls
+    ###################################################
+    # watched flag / favourites
+    ###################################################
+    def _getWatchedKeyForItem(self, cItem):
+        try:
+            # live rows; rows of version 1.2 with a stream / YouTube url
+            if not isinstance(cItem, dict) or cItem.get("live") or not cItem.get("url", "").startswith(MAIN_URL):
+                return ""
+            path = re.sub(r"^https?://[^/]+", "", cItem.get("url", "")).split("?")[0].rstrip("/")
+            if cItem.get("type") == "video" and path:
+                return "video:%s" % path
+            if cItem.get("category") == "list_items" and path.startswith("/tv/"):
+                return "folder:%s" % path
+        except Exception:
+            printExc()
+        return ""
 
-    def _uriIsValid(self, url):
-        return "://" in url
+    def getFavouriteData(self, cItem):
+        try:
+            return json_dumps(dict((key, cItem[key]) for key in self.FAV_FIELDS if key in cItem))
+        except Exception:
+            printExc()
+        return CBaseHostClass.getFavouriteData(self, cItem)
 
+    ###################################################
+    # menus
+    ###################################################
     def listMainMenu(self, cItem):
-        printDBG("Pannonrtv.listMainMenu")
-        desc = "Pannon RTV \nAz intézmény a szabadkai Magyar Médiaházban működik. Műsorait több mint 100 foglalkoztatott, és mintegy 50 tiszteletdíjas készíti. Az újságírók mellett operatőrök, vágók, adáslebonyolítók, hangtechnikusok, adásszerkesztők, gyártásvezetők és adminisztratív munkatársak dolgoznak. A riporterek és szerkesztők jelentős része felsőfokú végzettségű. Az alkalmazottak zöme 35 év alatti. A Pannon RTV dinamikusan fejlődő médiaház, mely rendszeresen tudósít a nagyobb horderejű eseményekről Vajdaság egész területéről, valamint az anyaországból, továbbá beszámol Európa és a világ híreiről. A Pannon RTV számos művelődési rendezvény médiatámogatója. Élőben közvetíti a vajdasági magyarság kiemelt politikai, közéleti és művelődési eseményeit, ünnepi rendezvényeit (egyebek mellett a Magyar Nemzeti Tanács üléseit, a Pataki Gyűrű-díj átadóját, a Szent István napi központi ünnepséget)."
-        sts, pannontv = self.getPage("https://media.gerst.se/pannon.xspf")
-        pannontv = re.findall("location>(.*)</location", pannontv)[0]
-        MAIN_CAT_TAB = [{"category": "list_items", "title": "Legfrissebb", "url": "https://pannonrtv.com/legfrissebb", "desc": desc}, {"category": "list_filters", "title": "Kategóriák", "url": self.MAIN_URL, "desc": desc, "next": False}] + self.searchItems()
-        self.listsTab(MAIN_CAT_TAB, cItem)
-        self.addVideo({"title": "Pannon TV", "url": pannontv, "desc": "A Pannon Televízió a Pannon RTV egyik oszlopa, 2006 óta sugároz. Kezdetben csak Szabadkán és környékén láthatták a nézők, ma azonban az IPTV rendszernek köszönhetően egész Vajdaságban fogható, valamint a tartomány több kábeltévé-szolgáltatója is felvette kínálatába. Az interneten a világ bármely pontjáról követhető az adás, illetve visszanézhetők a műsorok. Saját készítésű tájékoztató- és szórakoztató műsorai naponta átlagosan 4-5 órát töltenek ki, emellett számos partnertelevízió (köztük a magyarországi és a szerbiai köztévé) produkcióit (riportműsorait, sorozatait) is sugározza a különböző filmes alkotások és szórakoztató tartalmak mellett. Egyebek mellett koncerteket, színházi előadásokat, játékfilmeket, dokumentumfilmeket, sorozatokat, rajzfilmeket, meséket és videoklipeket is láthatnak a nézők. A Pannon Televízió műsorai az élet összes területével foglalkoznak a tájékoztató- és magazinműsorainak köszönhetően. A médium egyre több saját készítésű dokumentumfilmet tud műsorra tűzni."})
-        self.addAudio({"title": "Pannon Rádió", "url": "http://stream2.nmih.hu:4120/live.mp3", "desc": "Üde, friss, fiatalos, dinamikus – ez a Pannon Rádió. Vajdaság és a mindennapok ritmusa, a 91.5-ös regionális frekvencián. 2008 márciusában indultunk, és nagy utat jártunk be ahhoz, hogy mára Vajdaság vezető magyar nyelvű kereskedelmi rádiójává válhassunk. Nálunk hallható a régió legnépszerűbb magyar nyelvű reggeli műsora, a Pannon Reggeli, valamint a közérdekű információkat közlő, és laza témákban bővelkedő Pannon Presszó is. A nap 24 órájában a legújabb magyar- és külföldi slágerekkel, érdekességekkel, fontos információkkal, sőt óránként rövid hírösszefoglalókkal várunk Titeket. Hangoljatok ránk Szabadkán, Magyarkanizsán, Törökkanizsán, Csókán, Padén, Adán, Moholon, Zentán, Topolyán, Kishegyesen vagy Óbecsén, illetve Magyarországon Szeged, Kiskunhalas és Bácsalmás vonzáskörzetében. Honlapunkról természetesen online is hallhatóak vagyunk, a nap bármely szakában. Ez a Pannon Rádió, 2008 óta. Ismerj meg bennünket!", "icon": "https://pannonrtv.com/sites/default/files/inline-images/pannonradioujlogo1-01.jpg"})
-        self.addAudio({"title": "Szabadkai Magyar Rádió", "url": "http://stream2.nmih.hu:4110/live.mp3", "desc": "A 2015. november 1-jén elindult Szabadkai Magyar Rádió célja a hallgatók naprakész tájékoztatása. A műsorban terítékre kerülnek politikai és szociális témák. Óránként hírek, és naponta többször híradó is várja a hallgatókat. Hírösszefoglalóinkban beszámolunk Szerbia, Magyarország és a világ eseményeiről is. Hétköznaponként Napindító című reggeli sávunkban részletesen feldolgozzuk a kiemelt eseményeket, az érdekes témákat. A Mozaikban tovább boncolgatjuk a történéseket. Bemutatjuk az itt élő érdekes embereket. A színészek, zenészek olykor élő produkciókkal érkeznek hozzánk. Az érdekes történetek mellé pedig a legszebb magyar és külföldi melódiák szólnak, a nosztalgia fonalára fűzve. Az esti órákban zenés szórakoztató-műsorokkal kedveskedünk a hallgatóknak, és a rádiószínházunkban is többször „felgördült a függöny” a 107,1 MHz-en, a hallgatók hullámhosszán.", "icon": "https://pannonrtv.com/sites/default/files/inline-images/onlineradioszmr.png"})
+        printDBG("PannonRTV.listMainMenu")
+        for title, url, stream, kind in LIVE_TAB:
+            params = {"name": "category", "good_for_fav": True, "live": True, "f_live": True, "title": title, "url": url, "icon": self.DEFAULT_ICON_URL,
+                      "desc": "%s - %s" % (title, _("Live"))}
+            if kind == "audio":
+                self.addAudio(params)
+            else:
+                self.addVideo(params)
+        MAIN_CAT_TAB = [{"category": "list_shows", "title": "Műsoraink", "url": MAIN_URL + "musoraink"},
+                        {"category": "list_items", "title": "Legfrissebb", "url": MAIN_URL + "legfrissebb"},
+                        {"category": "list_sections", "title": "Rovatok", "url": MAIN_URL}]
+        for item in MAIN_CAT_TAB:
+            item.update({"name": "category", "good_for_fav": True})
+            self.addDir(item)
+        self.listsTab(self.searchItems(), cItem)
 
-    def listFilters(self, cItem):
-        printDBG("Pannonrtv.listFilters")
-        sts, data = self.getPage(cItem["url"])
+    def listSections(self, cItem):
+        printDBG("PannonRTV.listSections")
+        sts, data = self.getPage(MAIN_URL)
         if not sts:
             return
-        cat = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="block-subnavigation__menu menu">', "</nav>", False)[1]
-        if cItem["next"] is True:
-            cats = self.cm.ph.getDataBeetwenMarkers(cat, cItem["title"], "</ul>", False)[1]
-            cats = self.cm.ph.getAllItemsBeetwenMarkers(cats, "<a", "a>", False)
-            params = {"category": "list_items", "title": cItem["title"], "icon": None, "url": cItem["url"]}
-            self.addDir(params)
-            for i in cats:
-                title = self.cm.ph.getDataBeetwenMarkers(i, '">', "<", False)[1]
-                url = self.MAIN_URL + self.cm.ph.getDataBeetwenMarkers(i, 'href="', '"', False)[1]
-                params = {"category": "list_items", "title": title, "icon": None, "url": url}
-                self.addDir(params)
-        else:
-            cats = self.cm.ph.getAllItemsBeetwenMarkers(cat, '<li class="block-subnavigation__menu-item menu-item', "a>", False)
-            cats.pop(-1)
-            for i in cats:
-                close = self.cm.ph.getDataBeetwenMarkers(i, '">', "</", False)[1] + "<"
-                title = self.cm.ph.getDataBeetwenMarkers(close, '">', "<", False)[1]
-                url = self.MAIN_URL + self.cm.ph.getDataBeetwenMarkers(close, 'href="', '"', False)[1]
-                if "--expanded" in i:
-                    params = {"category": "list_filters", "title": title, "icon": None, "url": url, "next": True}
-                    self.addDir(params)
-                else:
-                    params = {"category": "list_items", "title": title, "icon": None, "url": url}
-                    self.addDir(params)
+        seen = set()
+        for url, title in re.findall(r'''<a[^>]+href=['"](/(?:rovatok/[a-z0-9-]+|vesti-na-srpskom))['"][^>]*>([^<]+)</a>''', data):
+            title = self.cleanHtmlStr(title)
+            if title and url not in seen:
+                seen.add(url)
+                self.addDir({"name": "category", "good_for_fav": True, "category": "list_items", "title": title, "url": self.getFullUrl(url)})
 
-    def listItems(self, cItem):
-        printDBG("Pannonrtv.listItems")
+    def _page(self, cItem):
+        try:
+            if "page" not in cItem and not cItem.get("f_base"):
+                # "Következő oldal" rows of version 1.2: the site's 0-based page in the url
+                return int(self.cm.ph.getSearchGroups(cItem.get("url", ""), r"[?&]page=(\d+)")[0] or 0) + 1
+            return max(1, int(cItem.get("page", 1) or 1))
+        except (TypeError, ValueError):
+            return 1
+
+    def _pagedUrl(self, cItem):
+        # the site counts its pages from 0 ("?page=0" = first page)
+        base = cItem.get("f_base") or re.sub(r"[?&]page=\d+", "", cItem["url"])
+        sep = "&" if "?" in base else "?"
+        return base, base + sep + "page={page}"
+
+    def _addPager(self, cItem, data, page, tpl, base):
+        lastPage = self.cm.ph.getSearchGroups(data, r'''pager__item--last['"][^>]*>\s*<a[^>]+href=['"][^'"]*?page=(\d+)''')[0]
+        lastPage = int(lastPage) + 1 if lastPage.isdigit() else 0
+        hasNext = "pager__item--next" in data
+        # Jump / First page give the site's page (0-based) in the url: the list builds its url from "page" (1-based)
+        addPagingItems(self, dict(stripPagerKeys(dict(cItem)), f_base=base), page, hasNext, lastPage, tpl)
+
+    def listShows(self, cItem):
+        printDBG("PannonRTV.listShows")
+        page = self._page(cItem)
+        base, tpl = self._pagedUrl(cItem)
+        sts, data = self.getPage(tpl.format(page=page - 1) if page > 1 else base)
+        if not sts:
+            return
+        for item in data.split("view-musorok-page-page-1__row ")[1:]:
+            url = self.cm.ph.getSearchGroups(item, r'''href=['"](/tv/[^'"]+)['"]''')[0]
+            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ("<span", ">", "item-name-content"), ("</span", ">"), False)[1])
+            if not url or not title:
+                continue
+            icon = self.cm.ph.getSearchGroups(item, r'''<img[^>]+src=['"]([^'"]+)['"]''')[0]
+            desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ("<div", ">", "paragraph-text-preview__field-text"), ("</div", ">"), False)[1])
+            self.addDir({"name": "category", "good_for_fav": True, "category": "list_items", "title": title, "url": self.getFullUrl(url),
+                         "icon": self.getFullIconUrl(icon) if icon else self.DEFAULT_ICON_URL, "desc": desc})
+        self._addPager(cItem, data, page, tpl, base)
+
+    def _articleRows(self, data, search=False):
+        rows = []
+        marker = "<article class=\"node-article-search-result" if search else "<article class=\"node-article-rovatok-"
+        for item in data.split(marker)[1:]:
+            item = item.split("</article>", 1)[0]
+            link = self.cm.ph.getDataBeetwenNodes(item, ("<a", ">", "__title-link"), ("</a", ">"))[1] or \
+                self.cm.ph.getDataBeetwenNodes(item, ("<a", ">", "bookmark"), ("</a", ">"))[1]
+            url = self.cm.ph.getSearchGroups(link, r'''href=['"]([^'"]+)['"]''')[0]
+            title = self.cleanHtmlStr(link)
+            if not url or not title or "/koz/" in url:
+                continue
+            icon = self.cm.ph.getSearchGroups(item, r'''data-src=['"]([^'"]+)['"]''')[0] or self.cm.ph.getSearchGroups(item, r'''<img[^>]+src=['"](/[^'"]+)['"]''')[0]
+            day = self.cm.ph.getSearchGroups(item, r'''(\d{4})[-.]\s*(\d\d)[-.]\s*(\d\d)''', 3)
+            date = "-".join(day) if day[0] else ""
+            hours = self.cm.ph.getSearchGroups(item, r'''date--hours['"]>\s*([0-9:]+)''')[0] or self.cm.ph.getSearchGroups(item, r'''\d\d\.\s*-\s*(\d\d:\d\d)''')[0]
+            teaser = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ("<div", ">", "field-teaser-text"), ("</div", ">"), False)[1])
+            isVideo = 'class="video"' in item
+            rows.append({"url": self.getFullUrl(url), "title": title, "icon": self.getFullIconUrl(icon) if icon else "", "date": date,
+                         "desc": "[/br]".join([x for x in (" ".join([x for x in ("%s.%s.%s" % (date[8:10], date[5:7], date[:4]) if date else "", hours) if x]), teaser) if x]),
+                         "video": isVideo or "/tv/" in url})
+        return rows
+
+    def listItems(self, cItem, search=False):
+        printDBG("PannonRTV.listItems [%s]" % cItem.get("url", ""))
+        page = self._page(cItem)
+        base, tpl = self._pagedUrl(cItem)
+        sts, data = self.getPage(tpl.format(page=page - 1) if page > 1 else base)
+        if not sts:
+            return
+        for row in self._articleRows(data, search):
+            params = {"name": "category", "good_for_fav": True, "url": row["url"], "raw_title": row["title"], "icon": row["icon"] or self.DEFAULT_ICON_URL,
+                      "desc": row["desc"], "date": row["date"]}
+            if row["video"]:
+                # titles of the news shows already carry their date ("Híradó – 2026.10.09. 20.00h")
+                hasDate = row["date"] and row["date"][:4] in row["title"]
+                params["title"] = normalizeMediathekTitle(row["title"], date="" if hasDate else row["date"])
+                self.addVideo(params)
+            else:
+                params["title"] = row["title"]
+                self.addArticle(params)
+        self._addPager(cItem, data, page, tpl, base)
+
+    def listSearchResult(self, cItem, searchPattern, searchType):
+        printDBG("PannonRTV.listSearchResult [%s]" % searchPattern)
+        url = MAIN_URL + "search?text=" + urllib_quote_plus(searchPattern)
+        self.listItems({"name": "category", "category": "list_search", "url": url, "f_base": url}, True)
+        if not self.currList:
+            SetIPTVPlayerLastHostError(_("No matching entries found."))
+
+    ###################################################
+    # links
+    ###################################################
+    def _getLiveLinks(self, cItem):
         url = cItem["url"]
-        params = False
+        fallback = next((x[2] for x in LIVE_TAB if x[1] == url), "")
+        stream = ""
+        sts, data = self.getPage(url)
+        if sts:
+            stream = self.cm.ph.getSearchGroups(data, r'''<source[^>]+src=['"](https?://[^'"]+?\.m3u8[^'"]*)['"]''')[0] or \
+                self.cm.ph.getSearchGroups(data, r'''(https?://[^'"\s<>)]+?/live\.mp3)''')[0]
+        stream = stream or fallback
+        if not stream:
+            return []
+        if ".m3u8" in stream:
+            return getDirectM3U8Playlist(stream, checkExt=False, checkContent=True, sortWithMaxBitrate=999999999)
+        return [{"name": "mp3", "url": stream, "need_resolve": 0}]
+
+    def _getPageLinks(self, url):
+        linksTab = []
         sts, data = self.getPage(url)
         if not sts:
-            return
-        found = self.cm.ph.getDataBeetwenMarkers(data, '<div class="region-content">', '<div class="region-sidebar-second">', False)[1]
-        found = self.cm.ph.getAllItemsBeetwenMarkers(found, "<div data-b-token", "--promoted", False)
-        for m in found:
-            title = self.cm.ph.getDataBeetwenMarkers(m, '" rel="bookmark">', "</a>", False)[1]
-            icon = self.MAIN_URL + self.cm.ph.getDataBeetwenMarkers(m, '" data-src="', '"', False)[1]
-            date1 = self.cm.ph.getDataBeetwenMarkers(m, '<span class="node-article-rovatok-small__title-date--day">', "</span>", False)[1]
-            if date1 == "":
-                date1 = self.cm.ph.getDataBeetwenMarkers(m, '<span class="node-article-rovatok-medium__title-date--day">', "</span>", False)[1]
-                if date1 == "":
-                    date1 = self.cm.ph.getDataBeetwenMarkers(m, '<span class="node-article-rovatok-big__title-date--day">', "</span>", False)[1]
-            date2 = self.cm.ph.getDataBeetwenMarkers(m, '<span class="node-article-rovatok-small__title-date--hours">', "</span>", False)[1]
-            if date2 == "":
-                date2 = self.cm.ph.getDataBeetwenMarkers(m, '<span class="node-article-rovatok-medium__title-date--hours">', "</span>", False)[1]
-                if date2 == "":
-                    date2 = self.cm.ph.getDataBeetwenMarkers(m, '<span class="node-article-rovatok-big__title-date--hours">', "</span>", False)[1]
-            date = date1 + " " + date2
-            desc = self.cm.ph.getDataBeetwenMarkers(m, '<div class="node-article-rovatok-small__field-teaser-text">', "</div>", False)[1]
-            if desc == "":
-                desc = self.cm.ph.getDataBeetwenMarkers(m, '<div class="node-article-rovatok-medium__field-teaser-text">', "</div>", False)[1]
-                if desc == "":
-                    desc = self.cm.ph.getDataBeetwenMarkers(m, '<div class="node-article-rovatok-big__field-teaser-text">', "</div>", False)[1]
-            desc = desc.strip()
-            desc = date + "\n" + desc
-            url = self.MAIN_URL + self.cm.ph.getDataBeetwenMarkers(m, '" href="', '"', False)[1]
-            params = {"category": "explore_item", "title": title, "icon": icon, "url": url, "desc": desc}
-            if "Kommentár nélkül" not in title:
-                self.addDir(params)
-        if params:
-            if '<li class="pager__item pager__item--next">' in data:
-                url = self.cm.ph.getDataBeetwenMarkers(data, '<li class="pager__item pager__item--next">', 'rel="next">', False)[1]
-                orl = self.cm.ph.getDataBeetwenMarkers(data, '<meta property="og:url" content="', '"', False)[1]
-                url = orl + self.cm.ph.getDataBeetwenMarkers(url, '<a href="', '"', False)[1]
-                params = {"category": "list_items", "title": "Következő oldal", "icon": None, "url": url}
-                self.addDir(params)
+            return linksTab
+        content = self.cm.ph.getDataBeetwenMarkers(data, "<section id=\"content\"", "region-sidebar-second")[1] or data
+        seen = set()
+        for frame in re.findall(r'''<iframe[^>]+src=['"]([^'"]+)['"]''', content):
+            frame = self.getFullUrl(frame)
+            if "/media/oembed" in frame:
+                frame = urllib_unquote(self.cm.ph.getSearchGroups(frame, r"[?&]url=([^&]+)")[0])
+            if not self.cm.isValidUrl(frame) or frame in seen or "googletagmanager" in frame:
+                continue
+            seen.add(frame)
+            if 1 == self.up.checkHostSupport(frame):
+                linksTab.append({"name": self.up.getHostName(frame), "url": frame, "need_resolve": 1})
+        for src in re.findall(r'''<source[^>]+src=['"]([^'"]+)['"]''', content):
+            src = self.getFullUrl(src)
+            if src in seen or not self.cm.isValidUrl(src):
+                continue
+            seen.add(src)
+            if ".m3u8" in src:
+                linksTab.extend(getDirectM3U8Playlist(src, checkExt=False, checkContent=True, sortWithMaxBitrate=999999999))
+            elif ".mp4" in src:
+                linksTab.append({"name": "mp4", "url": src, "need_resolve": 0})
+        return linksTab
 
-    def exploreItems(self, cItem):
-        printDBG("Pannonrtv.exploreItems")
-        sts, data = self.getPage(cItem["url"])
-        if not sts:
-            return
-        content = self.cm.ph.getDataBeetwenMarkers(data, '<section id="content">', '<div class="node-article-full__links">')[1]
-        images = self.cm.ph.getAllItemsBeetwenMarkers(content, 'data-src="', '"', False)
-        text = re.findall("""<p>(.+?)</p>|<p.+?>(.+?)</p>""", content)
-        if text == []:
-            text = re.findall("""<p>(.+?\n.+?)</p>|<p.+?>(.+?\n.+?)</p>""", content)
-        for i in text:
-            text[text.index(i)] = "".join(i)
-        og = list(text)
-        printDBG(str(og))
-        title = self.cm.ph.getDataBeetwenMarkers(content, '<div class="node-article-full__field-teaser-text">', "</div>", False)[1]
-        title = title.strip()
-        text[0] = title + "\n" + text[0]
-        if len(images) == len(text):
-            for i in images:
-                txt = re.sub("""<.+?>""", "", text[images.index(i)])
-                params = {"title": str(images.index(i) + 1) + ".bekezdés", "icon": i, "desc": txt}
+    def _getLegacyLinks(self, cItem):
+        # favourites of version 1.2: the live rows (stream2.nmih.hu / a third-party playlist url) and the
+        # "Youtube videó" row of an article (the YouTube player url)
+        url = cItem.get("url", "")
+        if url.startswith("//"):
+            url = "https:" + url
+        live = next((x for x in LIVE_TAB if x[0] == cItem.get("title") or x[2] == url), None)
+        if live:
+            return self._getLiveLinks({"url": live[1]})
+        if not self.cm.isValidUrl(url):
+            return []
+        if 1 == self.up.checkHostSupport(url):
+            return [{"name": self.up.getHostName(url), "url": url, "need_resolve": 1}]
+        if ".m3u8" in url:
+            return getDirectM3U8Playlist(url, checkExt=False, checkContent=True, sortWithMaxBitrate=999999999)
+        return [{"name": "direct link", "url": url, "need_resolve": 0}]
+
+    def getLinksForVideo(self, cItem):
+        printDBG("PannonRTV.getLinksForVideo [%s]" % cItem.get("url", ""))
+        url = cItem.get("url", "")
+        if cItem.get("f_live"):
+            return self._getLiveLinks(cItem)
+        if url.startswith(MAIN_URL):
+            linksTab = self._getPageLinks(url)
+        else:
+            linksTab = self._getLegacyLinks(cItem)
+        if not linksTab:
+            SetIPTVPlayerLastHostError(_("No valid links available."))
+        return applySidecarToLinks(linksTab, buildSidecarFromItem(cItem, IsSidecarEnabled()))
+
+    def getVideoLinks(self, url):
+        printDBG("PannonRTV.getVideoLinks [%s]" % url)
+        return decorateResolvedLinkItems(self.up.getVideoLinkExt(url), sidecarFromUrlMeta(url, IsSidecarEnabled()))
+
+    ###################################################
+    # INFO
+    ###################################################
+    def getArticleContent(self, cItem):
+        printDBG("PannonRTV.getArticleContent [%s]" % cItem.get("url", ""))
+        title = cItem.get("raw_title", cItem.get("title", ""))
+        text = cItem.get("desc", "")
+        icon = cItem.get("icon", "")
+        otherInfo = {}
+        url = cItem.get("url", "")
+        if cItem.get("live"):
+            otherInfo["status"] = _("Live")
+        elif url.startswith(MAIN_URL):
+            sts, data = self.getPage(url)
+            if sts:
+                title = self._meta(data, "og:title") or title
+                teaser = self._meta(data, "og:description")
+                body = self.cm.ph.getDataBeetwenMarkers(data, "<section id=\"content\"", "region-sidebar-second")[1]
+                paragraphs = [self.cleanHtmlStr(x) for x in re.findall(r"<p[^>]*>(.*?)</p>", body, re.S)]
+                paragraphs = [x for x in paragraphs if x and x != teaser]
+                text = "[/br]".join([x for x in [teaser] + paragraphs[:30] if x]) or text
+                image = self.cm.ph.getSearchGroups(data, r'''<meta[^>]+property=['"]og:image['"][^>]+content=['"]([^'"]+)['"]''')[0]
+                if image:
+                    icon = self.getFullIconUrl(image)
+            if cItem.get("date"):
+                otherInfo["released"] = cItem["date"]
+        return [{"title": title, "text": text, "images": [{"title": "", "url": icon or self.DEFAULT_ICON_URL}], "other_info": otherInfo}]
+
+    def listLegacy(self, cItem):
+        # folder favourites of version 1.2 (any row could be saved)
+        category = cItem.get("category", "")
+        printDBG("PannonRTV.listLegacy [%s] [%s]" % (category, cItem.get("url", "")))
+        if category == "list_filters":
+            # "Kategóriák" (next False) -> the sections; a section with sub-sections (next True) -> its list
+            if cItem.get("next") is True:
+                self.listItems({"name": "category", "category": "list_items", "url": cItem.get("url", "")})
+            else:
+                self.listSections(cItem)
+        elif category == "cont_search":
+            # "Következő oldal" of a search: "page" = the site's 0-based page
+            url = MAIN_URL + "search?text=" + urllib_quote_plus(cItem.get("searchPattern", ""))
+            try:
+                page = int(cItem.get("page", 0)) + 1
+            except (TypeError, ValueError):
+                page = 1
+            self.listItems({"name": "category", "category": "list_search", "url": url, "f_base": url, "page": page}, True)
+        elif category == "explore_item":
+            # an article (its paragraphs were rows): the article as one row, a video row when it has a player
+            url = cItem.get("url", "")
+            if url.startswith("//"):
+                url = "https:" + url
+            params = {"name": "category", "good_for_fav": True, "title": cItem.get("title", ""), "url": url,
+                      "icon": cItem.get("icon") or self.DEFAULT_ICON_URL, "desc": cItem.get("desc", "")}
+            sts, data = self.getPage(url)
+            content = self.cm.ph.getDataBeetwenMarkers(data, "<section id=\"content\"", "region-sidebar-second")[1] if sts else ""
+            if "<iframe" in content or "<source" in content:
+                self.addVideo(params)
+            else:
                 self.addArticle(params)
-        if len(images) > len(text):
-            for i in text:
-                txt = re.sub("""<.+?>""", "", i)
-                params = {"title": str(text.index(i) + 1) + ".bekezdés", "icon": images[text.index(i)], "desc": txt}
-                self.addArticle(params)
-        if len(images) < len(text):
-            printDBG("images:" + str(len(images)))
-            printDBG("text:" + str(len(text)))
-            a = 1
-            while a < len(text):
-                text[0] = text[0] + " " + text[a]
-                text.pop(a)
-                printDBG("textuj:" + str(len(text)))
-                if len(images) < len(text):
-                    a += 1
-                else:
-                    break
-            for i in images:
-                txt = re.sub("""<.+?>""", "", text[images.index(i)])
-                params = {"title": str(images.index(i) + 1) + ".bekezdés", "icon": i, "desc": txt}
-                self.addArticle(params)
-        if "YouTube" in og[-1]:
-            url = self.cm.ph.getDataBeetwenMarkers(og[-1], 'src="', '"', False)[1]
-            params = {"title": "Youtube videó", "icon": None, "url": url}
-            self.addVideo(params)
 
     def handleService(self, index, refresh=0, searchPattern="", searchType=""):
-        printDBG("Pannonrtv.handleService start")
-
+        printDBG("PannonRTV.handleService start")
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
+        if isJumpItem(self.currItem):
+            self.currItem = jumpTarget(self, self.currItem)
 
         name = self.currItem.get("name", "")
         category = self.currItem.get("category", "")
-        title = self.currItem.get("title", "")
-        icon = self.currItem.get("icon", "")
-        url = self.currItem.get("url", "")
-        printDBG("handleService: >> name[%s], category[%s], title[%s], icon[%s] " % (name, category, title, icon))
+        printDBG("PannonRTV.handleService: name[%s], category[%s]" % (name, category))
         self.currList = []
+
         if name is None:
             self.listMainMenu({"name": "category"})
+        elif category == "list_shows":
+            self.listShows(self.currItem)
+        elif category == "list_sections":
+            self.listSections(self.currItem)
         elif category == "list_items":
             self.listItems(self.currItem)
-        elif category == "list_filters":
-            self.listFilters(self.currItem)
-        elif category == "explore_item":
-            self.exploreItems(self.currItem)
-        elif category == "search":
+        elif category == "list_search":
+            self.listItems(self.currItem, True)
+        elif category in ("list_filters", "explore_item", "cont_search"):
+            self.listLegacy(self.currItem)
+        elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({"search_item": False, "name": "category"})
             self.listSearchResult(cItem, searchPattern, searchType)
-        elif category == "cont_search":
-            self.listSearchResult(self.currItem, self.currItem["searchPattern"], "")
         elif category == "search_history":
-            self.listsHistory({"name": "history", "category": "search"}, "desc")
+            self.listsHistory({"name": "history", "category": "search"}, "desc", _("Type: "))
         else:
             printExc()
 
         CBaseHostClass.endHandleService(self, index, refresh)
 
-    def listSearchResult(self, cItem, searchPattern, searchType):
-        printDBG("Pannonrtv.listSearchResult - Filmek cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
-        url = "https://pannonrtv.com/search?text=" + searchPattern
-        if "url" in cItem:
-            url = url + cItem["url"] + str(cItem["page"])
-            printDBG(url)
-        params = False
-        sts, data = self.getPage(url)
-        if not sts:
-            return
-        found = self.cm.ph.getDataBeetwenMarkers(data, '<section id="content">', '<div class="region-sidebar-second">', False)[1]
-        found = self.cm.ph.getAllItemsBeetwenMarkers(found, "node-article-search-result-viewmode__content", 'search-result-viewmode__field-tags"', False)
-        for m in found:
-            title = self.cm.ph.getSearchGroups(m, """" rel="bookmark">([^<].+?)</a>""", 1, True)[0]
-            icon = self.MAIN_URL + self.cm.ph.getDataBeetwenMarkers(m, 'src="', '"', False)[1]
-            date = self.cm.ph.getDataBeetwenMarkers(m, '<span class="node-article-search-result-viewmode__date--created">', "</span>", False)[1]
-            desc = self.cm.ph.getDataBeetwenMarkers(m, 'node-article-search-result-viewmode__field-teaser-text">', "</div>", False)[1]
-            desc = desc.strip()
-            desc = date + "\n" + desc
-            url = self.MAIN_URL + self.cm.ph.getDataBeetwenMarkers(m, '" href="', '"', False)[1]
-            check = self.cm.ph.getDataBeetwenMarkers(m, '<div class="article__row article__row--left--image article__row article__row--left--image--bigger helper-relative">', '<div class="node-article-search-result-viewmode__field-channel">', False)[1]
-            if ('<span class="video">' not in check or '<span class="foto">' in check) and "Közérdekű információk" not in m:
-                params = {"category": "explore_item", "title": title, "icon": icon, "url": url, "desc": desc}
-                self.addDir(params)
-        if params:
-            if '<li class="pager__item pager__item--next">' in data:
-                if "page" not in cItem:
-                    page = 0
-                else:
-                    page = cItem["page"]
-                url = "&page="
-                params = {"category": "cont_search", "title": "Következő oldal", "icon": None, "url": url, "searchPattern": searchPattern, "page": page + 1}
-                self.addDir(params)
 
-
-class IPTVHost(CHostBase):
+class IPTVHost(GenericFolderWatchedHostMixin, CHostBase):
 
     def __init__(self):
-        CHostBase.__init__(self, Pannon(), True, [])
+        CHostBase.__init__(self, PannonRTV(), True, [CDisplayListItem.TYPE_VIDEO, CDisplayListItem.TYPE_AUDIO])
+        self.cachedRet = None
+        self.refreshAfterWatchedFlagChange = False
+        self.watchedHelper = IPTVWatchedHelper("pannonrtv")
+
+    def withArticleContent(self, cItem):
+        return cItem.get("type", "") in ("video", "audio", "article")

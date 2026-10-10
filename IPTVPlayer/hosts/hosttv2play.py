@@ -1,17 +1,32 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 22.06.2025
+# Last Modified: 10.10.2026
 # 17.04.2025 - Blindspot
+# 10.10.2026 - host standard: shows -> seasons -> ribbons -> videos with watched flag (show -> season -> ribbon
+#   -> video), favourites on every level (they reopen from the slug / ribbon id alone), sidecar, INFO from the
+#   API (episode lead, length, category, channel, age limit; show description), "Show - SxxExx" / dated names,
+#   First/Next paging (shows 50 per page, ribbons, search), no API request per card any more (the ribbon cards
+#   carry the player id), cast/article ribbons and premium (subscription) titles left out, geo-blocked titles
+#   tell the user, no crash on a failed or empty answer, English option text
+# 10.10.2026 - review: "Next page" of the shows / search also when the answer held premium titles (a page
+#   with one premium show had none), favourites of the old version (shows, seasons, ribbons, "Műsorok")
+#   reopen, py2: API texts as utf-8 str, no crash on a non-numeric length
 ###################################################
-HOST_VERSION = "1.2"
+HOST_VERSION = "1.3"
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
+from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx, normalizeMediathekTitle
+from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
+from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
+from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
-from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
-from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist, getF4MLinksWithMeta, getMPDLinksWithMeta
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks
+from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str_deep
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_unquote
 ###################################################
 # FOREIGN import
@@ -28,7 +43,7 @@ config.plugins.iptvplayer.tv2play_quality = ConfigYesNo(default=True)
 
 def GetConfigList():
     optionList = []
-    optionList.append(getConfigListEntry("Elérhető legjobb minőség beállítása", config.plugins.iptvplayer.tv2play_quality))
+    optionList.append(getConfigListEntry(_("Select best available quality"), config.plugins.iptvplayer.tv2play_quality))
     return optionList
 
 
@@ -36,248 +51,352 @@ def gettytul():
     return 'https://tv2play.hu/'
 
 
-class TV2Play(CBaseHostClass):
+API_URL = 'https://tv2play.hu/api'
+# recommendation engine of the site: shows (CONTENT_LISTING) and search (SEARCH_RESULT), 50 per answer
+GRREC_URL = 'https://tv2-prod.d-saas.com/grrec-tv2-prod-war/JSServlet4?rn=&cid=&ts=%d&rd=0,%s,800,[*platform:web;*domain:tv2play;%s*country:HU;*userAge:18;*pagingOffset:%d],[displayType;channel;title;itemId;duration;isExtra;ageLimit;showId;genre;availableFrom;director;isExclusive;lead;url;contentType;seriesTitle;availableUntil;showSlug;videoType;series;availableEpisode;imageUrl;totalEpisode;category;playerId;currentSeasonNumber;currentEpisodeNumber;part;isPremium]'
+GRREC_PER_PAGE = 50
+
+
+class TV2Play(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'tv2play', 'cookie': 'tv2play.cookie'})
-        self.MAIN_URL = 'https://tv2play.hu/'
+        self.MAIN_URL = gettytul()
         self.DEFAULT_ICON_URL = "https://raw.githubusercontent.com/oe-mirrors/e2iplayer/refs/heads/gh-pages/Thumbnails/tv2play.png"
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
         self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.watchedHelper = IPTVWatchedHelper('tv2play')
+        self.wfInitFolderCache()
 
-    def getPage(self, url, addParams={}, post_data=None):
-        if addParams == {}:
+    def getPage(self, url, addParams=None, post_data=None):
+        if addParams is None:
             addParams = dict(self.defaultParams)
         return self.cm.getPage(url, addParams, post_data)
 
-    def getLinksForVideo(self, cItem):
-        printDBG("TV2Play.getLinksForVideo")
-        sts, r = self.getPage("%s/search/%s" % ("https://tv2play.hu/api", cItem['slug']), {'with_metadata': True})
-        if r.meta['status_code'] == 404:
-            sts, r = self.getPage(cItem['url'], {'with_metadata': True})
-        data = json_loads(r)
-        playerId = data["playerId"]
-        title = data["title"]
-        plot = data["lead"] if "lead" in data else ""
-        thumb = "%s/%s" % (self.MAIN_URL, data["imageUrl"]) if "https://" not in data["imageUrl"] else data["imageUrl"]
-        sts, r = self.getPage("%s/streaming-url?playerId=%s&stream=undefined" % ("https://tv2play.hu/api", playerId))
-        data = json_loads(r)
-        if (data["geoBlocked"] is not False):
-            return
-        sts, r = self.getPage(data["url"])
-        json_data = json_loads(r)
-        m3u_url = json_data['bitrates']['hls']
-        m3u_url = re.sub('^//', 'https://', m3u_url)
-        sts, data = self.getPage(m3u_url)
-        if not sts:
-            return
-        videoUrls = []
-        uri = urlparser.decorateParamsFromUrl(m3u_url)
-        protocol = uri.meta.get('iptv_proto', '')
+    def _getJson(self, url):
+        sts, data = self.getPage(url)
+        if not sts or not data:
+            return {}
+        try:
+            data = ensure_str_deep(json_loads(data))  # py2: utf-8 str, not unicode (labels mixed with "évad")
+        except Exception:
+            printExc()
+            return {}
+        return data if isinstance(data, dict) else {}
 
-        printDBG("PROTOCOL [%s] " % protocol)
+    def _icon(self, url):
+        url = url or ''
+        if url and not url.startswith('http'):
+            url = self.getFullIconUrl(url.lstrip('/'))
+        return url
 
-        urlSupport = self.up.checkHostSupport(uri)
-        if 1 == urlSupport:
-            retTab = self.up.getVideoLinkExt(uri)
-            videoUrls.extend(retTab)
-        elif 0 == urlSupport and self._uriIsValid(uri):
-            if protocol == 'm3u8':
-                use_best = config.plugins.iptvplayer.tv2play_quality.value
-                printDBG("Legjobb minőség használata: " + str(use_best))
-                retTab = getDirectM3U8Playlist(uri, checkExt=False, checkContent=True)
-                printDBG("Lejátszási linkek vége: " + str(retTab[-1]))
-                if config.plugins.iptvplayer.tv2play_quality.value:
-                   BestLink = str(retTab[-1])
-                   url = self.cm.ph.getSearchGroups(BestLink, '''url.+?['"]([^"^']+?)['"]''', 1, True)[0]
-                   printDBG("Kész link: " + url)
-                   videoUrls.append({'name': 'direct link', 'url': url})
-                   return videoUrls
-                else:
-                   videoUrls.extend(retTab)
-                   printDBG("Utolsó best nélkül: " + str(videoUrls))
-            elif protocol == 'f4m':
-                retTab = getF4MLinksWithMeta(uri)
-                videoUrls.extend(retTab)
-            elif protocol == 'mpd':
-                retTab = getMPDLinksWithMeta(uri, False)
-                videoUrls.extend(retTab)
-            else:
-                videoUrls.append({'name': 'direct link', 'url': uri})
-        return videoUrls
+    ###################################################
+    # watched flag
+    ###################################################
+    def _getWatchedKeyForItem(self, cItem):
+        try:
+            if not isinstance(cItem, dict) or cItem.get('search_item'):
+                return ''
+            if cItem.get('type') == 'video':
+                slug = cItem.get('slug', '')
+                return 'video:%s' % slug if slug else ''
+            category = cItem.get('category', '')
+            if category == 'tv2_show' and cItem.get('slug'):
+                return 'folder:show:%s' % cItem['slug']
+            if category == 'tv2_season' and cItem.get('slug'):
+                return 'folder:season:%s:%s' % (cItem['slug'], cItem.get('season', ''))
+            if category == 'tv2_ribbon' and cItem.get('ribbon_id'):
+                return 'folder:ribbon:%s' % cItem['ribbon_id']
+        except Exception:
+            printExc()
+        return ''
 
-    def _uriIsValid(self, url):
-        return '://' in url
-
+    ###################################################
+    # lists
+    ###################################################
     def listMainMenu(self, cItem):
         printDBG('TV2Play.listMainMenu')
-        MAIN_CAT_TAB = [{'category': 'list_filters', 'title': 'Műsorok', 'page': 0}] + self.searchItems()
+        MAIN_CAT_TAB = [{'category': 'list_shows', 'title': _('Shows'), 'good_for_fav': True}] + self.searchItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
-    def exploreItems(self, cItem):
-        printDBG('TV2Play.exploreItems')
-        sts, data = self.getPage(cItem['url'])
-        data = json_loads(data)
-        ribbons = []
-        index = 0
-        plot = ''
-        thumb = ''
-        if data["contentType"] == "channel":
-            ribbons = data["ribbonIds"]
-        else:
-            if "seasonNumbers" in data and len(data["seasonNumbers"]) > 0:
-                for page in data["pages"]:
-                    if page["seasonNr"] == cItem['season']:
-                        break
-                    index += 1
-            for tab in data["pages"][index]["tabs"]:
-                if tab["tabType"] == "RIBBON":
-                    ribbons += tab["ribbonIds"]
-                if tab["tabType"] == 'SHOW_INFO':
-                    if plot == '' and "description" in tab["showData"]:
-                        plot = tab["showData"]["description"]
-                        plot = str(plot)
-                    if thumb == '' and "imageUrl" in tab["showData"]:
-                        thumb = "%s/%s" % (self.MAIN_URL, tab["showData"]["imageUrl"]) if "https://" not in tab["showData"]["imageUrl"] else tab["showData"]["imageUrl"]
-        for ribbon in ribbons:
-            sts, r = self.getPage("%s/ribbons/%s" % ("https://tv2play.hu/api", ribbon))
-            if r:
-                data = json_loads(r)
-                params = {'category': 'ribbons', 'title': urllib_unquote(data['title']), 'id': data['id'], 'icon': thumb if thumb != '' else None, 'desc': plot, 'page': 0}
-                self.addDir(params)
-
-    def apiRibbons(self, cItem):
-        printDBG('TV2Play.apiRibbons')
-        sts, data = self.getPage("%s/ribbons/%s/%s" % ("https://tv2play.hu/api", cItem['id'], cItem['page']))
-        data = json_loads(data)
-        dirType = 'videos'
-        for card in data["cards"]:
-            thumb = "%s/%s" % (self.MAIN_URL, card["imageUrl"]) if "https://" not in card["imageUrl"] else card["imageUrl"]
-            title = urllib_unquote(card["title"])
-            if "contentLength" in card:
-                plot = ""
-                try:
-                    sts, r = self.getPage("%s%s/search/%s" % ("https://tv2play.hu/api", "/premium" if card["isPremium"] else "", card["slug"]))
-                    episode = json_loads(r)
-                    plot = episode["lead"] if "lead" in episode else ""
-                    if plot.startswith("<p>"):
-                        plot = plot[3:]
-                    if plot.endswith("</p>"):
-                        plot = plot[:-4]
-                except Exception:
-                   pass
-                if 'EPISODE' in card['cardType']:
-                    dirType = 'episodes'
-                if 'MOVIE' in card['cardType']:
-                    dirType = 'movies'
-                params = {'title': title,
-                            'slug': card["slug"],
-                            'icon': thumb,
-                            'desc': plot}
-                self.addVideo(params)
-        url = "%s/ribbons/%s/%d" % ("https://tv2play.hu/api", cItem['id'], int(cItem['page']) + 1)
-        sts, r = self.getPage(url)
-        if r != '':
-            params = {'category': 'ribbons', 'title': 'Következő oldal', 'url': url, 'icon': None, 'id': cItem['id'], 'page': int(cItem['page']) + 1}
-            self.addDir(params)
-
-    def listItems(self, cItem):
-        printDBG('TV2Play.listItems')
-        sts, data = self.getPage(cItem['url'])
-        if not sts:
-            return
-        data = json_loads(data)
-        if "seasonNumbers" in data and len(data["seasonNumbers"]) > 0:
-            if "seo" in data and "description" in data["seo"] and data["seo"]["description"] is not None:
-                plot = urllib_unquote(data["seo"]["description"])
-            else:
-                plot = ""
-            plot = str(plot)
-            for season in data["seasonNumbers"]:
-                params = {'category': 'explore_items',
-                                'title': "%s. évad" % season,
-                                'url': cItem['url'],
-                                'season': season,
-                                'icon': None,
-                                'desc': plot}
-                self.addDir(params)
-        else:
-            cItem.update({'category': 'explore_items', 'season': 0})
-            self.exploreItems(cItem)
-
-    def listFilters(self, cItem):
-        printDBG('TV2Play.listFilters')
-        pageoffset = cItem['page']
-        length = 0
-        items = []
-        if 'url' not in cItem:
-            url = "https://tv2-prod.d-saas.com/grrec-tv2-prod-war/JSServlet4?&rn=&cid=&ts=%d&rd=0,TV2_W_CONTENT_LISTING,800,[*platform:web;*domain:tv2play;*currentContent:SHOW;*country:HU;*userAge:18;*pagingOffset:%d],[displayType;channel;title;itemId;duration;isExtra;ageLimit;showId;genre;availableFrom;director;isExclusive;lead;url;contentType;seriesTitle;availableUntil;showSlug;videoType;series;availableEpisode;imageUrl;totalEpisode;category;playerId;currentSeasonNumber;currentEpisodeNumber;part;isPremium]" % (int(time.time()), pageoffset)
-        else:
-            url = cItem['url'] % (int(time.time()), pageoffset)
+    def _grrec(self, widget, extra, page):
+        """(free items, whether the answer was a full page) - premium titles still count for the paging"""
+        url = GRREC_URL % (int(time.time()), widget, extra, (page - 1) * GRREC_PER_PAGE)
         sts, data = self.getPage(url)
-        data = re.search(r'(.*)var data = (.*)};(.*)', data, re.S)
-        data = json_loads('%s}' % data.group(2))
-        items.extend(data["recommendationWrappers"][0]["recommendation"]["items"])
-        onv = list(data["recommendationWrappers"][0]["recommendation"]["outputNameValues"])
-        for var in onv:
-            if var["name"] == "allItemCount":
-                length = int(var["value"])
-                break
-        cItem['page'] += int(len(items))
+        if not sts or not data:
+            return [], False
+        m = re.search(r'var data = (.*)};', data, re.S)
+        if not m:
+            return [], False
+        try:
+            items = ensure_str_deep(json_loads('%s}' % m.group(1))['recommendationWrappers'][0]['recommendation']['items'])
+        except Exception:
+            printExc()
+            return [], False
+        if not isinstance(items, list):
+            return [], False
+        return [i for i in items if isinstance(i, dict) and str(i.get('isPremium', 'false')) != 'true'], len(items) >= GRREC_PER_PAGE
+
+    def _addShow(self, cItem, slug, title, icon, desc):
+        params = stripPagerKeys(dict(cItem), ('query',))
+        params.update({'good_for_fav': True, 'category': 'tv2_show', 'title': title, 'slug': slug, 'show_title': title, 'icon': icon, 'desc': desc})
+        self.addDir(params)
+
+    @staticmethod
+    def _toInt(value, default=0):
+        try:
+            return int(value)
+        except (TypeError, ValueError):
+            return default
+
+    def _page(self, cItem):
+        return max(1, self._toInt(cItem.get('page'), 1))
+
+    def listShows(self, cItem):
+        printDBG('TV2Play.listShows')
+        page = self._page(cItem)
+        items, hasNext = self._grrec('TV2_W_CONTENT_LISTING', '*currentContent:SHOW;', page)
         for i in items:
-            try:
-                if i["isPremium"] == "false":
-                    if "imageUrl" in i:
-                        icon = i["imageUrl"]
-                    else:
-                        icon = None
-                    if 'SEARCH_RESULT' in url:
-                        if i['contentType'] == 'VIDEO':
-                            vidurl = "https://tv2play.hu/api/search/" + i['url']
-                            sts, vidata = self.getPage(vidurl)
-                            vidata = json_loads(vidata)
-                            slug = vidata['slug']
-                            params = {'title': urllib_unquote(i['title']), 'slug': slug, 'icon': icon, 'desc': urllib_unquote(i['lead']), 'url': "https://tv2play.hu/api/search/" + i['url']}
-                            self.addVideo(params)
-                        elif i['contentType'] != 'ARTICLE':
-                            params = {'category': 'list_items', 'title': urllib_unquote(i['title']), 'url': "https://tv2play.hu/api/search/" + i['url'], 'icon': icon, 'desc': urllib_unquote(i['lead'])}
-                            self.addDir(params)
-                    elif i['contentType'] != 'ARTICLE':
-                        params = {'category': 'list_items', 'title': urllib_unquote(i['title']), 'url': "https://tv2play.hu/api/search/" + i['url'], 'icon': icon, 'desc': urllib_unquote(i['lead'])}
-                        self.addDir(params)
-            except Exception:
-               pass
-        if cItem['page'] != length:
-            params = {'title': "Következő oldal", 'icon': None, 'page': cItem['page'], 'category': 'list_filters'}
+            if i.get('contentType') == 'SHOW' and i.get('url'):
+                self._addShow(cItem, i['url'], urllib_unquote(i.get('title', '')), i.get('imageUrl', ''), urllib_unquote(i.get('lead', '')))
+        addPagingItems(self, cItem, page, hasNext)
+
+    def listSearchResult(self, cItem, searchPattern, searchType):
+        printDBG("TV2Play.listSearchResult [%s]" % searchPattern)
+        cItem = dict(cItem)
+        cItem.update({'category': 'list_search', 'query': searchPattern, 'page': 1})
+        self.listSearch(cItem)
+
+    def listSearch(self, cItem):
+        page = self._page(cItem)
+        items, hasNext = self._grrec('TV2_W_SEARCH_RESULT', '*query:%s;' % urllib_quote(cItem.get('query', '')), page)
+        for i in items:
+            ctype = i.get('contentType', '')
+            if not i.get('url'):
+                continue
+            if ctype == 'SHOW':
+                self._addShow(cItem, i['url'], urllib_unquote(i.get('title', '')), i.get('imageUrl', ''), urllib_unquote(i.get('lead', '')))
+            elif ctype == 'VIDEO':
+                card = {'slug': i['url'], 'title': urllib_unquote(i.get('title', '')), 'imageUrl': i.get('imageUrl', ''), 'lead': urllib_unquote(i.get('lead', '')),
+                        'showTitle': urllib_unquote(i.get('seriesTitle', '')), 'contentLength': i.get('duration'),
+                        'seriesInfo': {'seasonNr': i.get('currentSeasonNumber'), 'episodeNr': i.get('currentEpisodeNumber')}}
+                self._addCard(stripPagerKeys(dict(cItem), ('query',)), card)
+        addPagingItems(self, cItem, page, hasNext)
+
+    def _showData(self, slug):
+        return self._getJson('%s/search/%s' % (API_URL, slug))
+
+    def listShow(self, cItem):
+        printDBG('TV2Play.listShow [%s]' % cItem.get('slug'))
+        data = self._showData(cItem.get('slug', ''))
+        pages = [p for p in data.get('pages') or [] if isinstance(p, dict)]
+        seasons = [s for s in data.get('seasonNumbers') or [] if s is not None]
+        showTitle = cItem.get('show_title', '') or cItem.get('title', '')
+        if seasons:
+            for season in seasons:
+                tag = formatSxxExx(season) if IsMediaNamingNormalized() else '%s. évad' % season
+                params = stripPagerKeys(dict(cItem))
+                params.update({'good_for_fav': True, 'category': 'tv2_season', 'title': '%s - %s' % (showTitle, tag), 'season': str(season), 'show_title': showTitle})
+                self.addDir(params)
+            return
+        self._listRibbons(cItem, pages[0] if pages else {})
+
+    def listSeason(self, cItem):
+        data = self._showData(cItem.get('slug', ''))
+        for page in data.get('pages') or []:
+            if isinstance(page, dict) and str(page.get('seasonNr')) == str(cItem.get('season')):
+                self._listRibbons(cItem, page)
+                return
+
+    def _listRibbons(self, cItem, page):
+        ribbonIds = []
+        for tab in page.get('tabs') or []:
+            if isinstance(tab, dict) and tab.get('tabType') == 'RIBBON':
+                ribbonIds.extend(tab.get('ribbonIds') or [])
+        ribbons = []
+        for ribbonId in ribbonIds:
+            data = self._getJson('%s/ribbons/%s' % (API_URL, ribbonId))
+            # cast / article ribbons have no videos
+            if data.get('type') == 'VIDEO' and data.get('cards'):
+                ribbons.append(data)
+        if len(ribbons) == 1:
+            self._listCards(dict(cItem, category='tv2_ribbon', ribbon_id=str(ribbons[0].get('id', ''))), ribbons[0].get('cards'), 1)
+            return
+        for ribbon in ribbons:
+            params = stripPagerKeys(dict(cItem))
+            params.update({'good_for_fav': True, 'category': 'tv2_ribbon', 'title': '%s - %s' % (cItem.get('show_title', '') or cItem.get('title', ''), urllib_unquote(ribbon.get('title', ''))),
+                           'ribbon_id': str(ribbon.get('id', ''))})
             self.addDir(params)
+
+    def listRibbon(self, cItem):
+        page = self._page(cItem)
+        data = self._getJson('%s/ribbons/%s/%d' % (API_URL, cItem.get('ribbon_id', ''), page - 1))
+        self._listCards(cItem, data.get('cards'), page)
+
+    def _listCards(self, cItem, cards, page):
+        for card in cards or []:
+            if isinstance(card, dict) and card.get('contentLength') and not card.get('isPremium'):
+                self._addCard(cItem, card)
+        if cards:
+            # the API answers the next page or 404 - asked once, there is no total
+            nextData = self._getJson('%s/ribbons/%s/%d' % (API_URL, cItem.get('ribbon_id', ''), page))
+            addPagingItems(self, cItem, page, bool(nextData.get('cards')))
+
+    @staticmethod
+    def _duration(seconds):
+        return '%d:%02d:%02d' % (seconds // 3600, seconds // 60 % 60, seconds % 60)
+
+    def _addCard(self, cItem, card):
+        slug = card.get('slug', '')
+        if not slug:
+            return
+        title = urllib_unquote(card.get('title', ''))
+        info = card.get('seriesInfo') or {}
+        showTitle = urllib_unquote(card.get('showTitle', '') or '') or cItem.get('show_title', '')
+        date = (card.get('availableFrom') or '')[:10]
+        if IsMediaNamingNormalized() and info.get('episodeNr') and showTitle:
+            season = info.get('seasonNr') or cItem.get('season') or 1
+            dispTitle = '%s - %s' % (showTitle, formatSxxExx(season, info['episodeNr']))
+        else:
+            dispTitle = normalizeMediathekTitle(title, date=date)
+        descTab = []
+        seconds = self._toInt(card.get('contentLength'))
+        if seconds:
+            descTab.append(self._duration(seconds))
+        if date:
+            descTab.append(date)
+        desc = ' | '.join(descTab)
+        if card.get('lead'):
+            desc += '[/br]' + self.cleanHtmlStr(card['lead'])
+        params = stripPagerKeys(dict(cItem), ('query',))
+        params.update({'good_for_fav': True, 'category': 'video', 'title': dispTitle, 'raw_title': title, 'slug': slug, 'url': self.MAIN_URL + slug,
+                       'player_id': card.get('playerId', '') if card.get('cardType') else '', 'icon': self._icon(card.get('imageUrl', '')), 'desc': desc,
+                       'show_title': showTitle, 'date': date})
+        self.addVideo(params)
+
+    ###################################################
+    # links
+    ###################################################
+    def getLinksForVideo(self, cItem):
+        printDBG("TV2Play.getLinksForVideo [%s]" % cItem)
+        slug = cItem.get('slug', '')
+        playerId = cItem.get('player_id', '')
+        if not playerId and slug:
+            playerId = self._showData(slug).get('playerId', '')
+        if not playerId:
+            SetIPTVPlayerLastHostError(_("Content not available"))
+            return []
+        data = self._getJson('%s/streaming-url?playerId=%s&stream=undefined' % (API_URL, playerId))
+        if data.get('geoBlocked'):
+            SetIPTVPlayerLastHostError(_("Not available in your country (geo-blocking)."))
+            return []
+        hls = ''
+        if data.get('url'):
+            stream = self._getJson(data['url'])
+            hls = re.sub('^//', 'https://', ((stream.get('bitrates') or {}).get('hls') or ''))
+        if not hls:
+            SetIPTVPlayerLastHostError(_("Content not available"))
+            return []
+        urlTab = getDirectM3U8Playlist(hls, checkExt=False, checkContent=True, sortWithMaxBitrate=99999999)
+        if not urlTab:
+            urlTab = [{'name': 'HLS', 'url': hls}]
+        elif config.plugins.iptvplayer.tv2play_quality.value:
+            urlTab = urlTab[:1]
+        return applySidecarToLinks(urlTab, buildSidecarFromItem(cItem, IsSidecarEnabled()))
+
+    ###################################################
+    # INFO
+    ###################################################
+    def getArticleContent(self, cItem):
+        printDBG("TV2Play.getArticleContent [%s]" % cItem)
+        title = cItem.get('raw_title', '') or cItem.get('title', '')
+        text = cItem.get('desc', '')
+        icon = cItem.get('icon', '')
+        other = {}
+        data = self._showData(cItem.get('slug', ''))
+        if cItem.get('type') == 'video':
+            if data.get('title'):
+                title = data['title']
+                text = self.cleanHtmlStr(data.get('lead', '') or '') or text
+                icon = data.get('imageUrl') or icon
+                seconds = self._toInt(data.get('length'))
+                if seconds:
+                    other['duration'] = self._duration(seconds)
+                if data.get('uploadedAt'):
+                    other['released'] = data['uploadedAt'].rstrip('.')
+                if data.get('channelName'):
+                    other['station'] = data['channelName']
+                if data.get('primaryCategory'):
+                    other['category'] = data['primaryCategory']
+                if data.get('ageRestriction'):
+                    other['age_limit'] = str(data['ageRestriction'])
+                for key, field in (('directors', 'directors'), ('actors', 'actors')):
+                    names = [n.get('name', '') if isinstance(n, dict) else str(n) for n in data.get(key) or []]
+                    if [n for n in names if n]:
+                        other[field] = ', '.join([n for n in names if n])
+        else:
+            for page in data.get('pages') or []:
+                if not isinstance(page, dict):
+                    continue
+                if cItem.get('season') and str(page.get('seasonNr')) != str(cItem.get('season')):
+                    continue
+                for tab in page.get('tabs') or []:
+                    showData = tab.get('showData') if isinstance(tab, dict) else None
+                    if isinstance(showData, dict):
+                        text = self.cleanHtmlStr(showData.get('description', '') or '') or text
+                        icon = showData.get('imageUrl') or icon
+                        if showData.get('primaryCategory'):
+                            other['category'] = showData['primaryCategory']
+                if page.get('lead'):
+                    text = '%s[/br][/br]%s' % (self.cleanHtmlStr(page['lead']), text) if text else self.cleanHtmlStr(page['lead'])
+                if page.get('genre'):
+                    other['genre'] = ', '.join(page['genre']) if isinstance(page['genre'], list) else page['genre']
+                if page.get('ageRestriction'):
+                    other['age_limit'] = str(page['ageRestriction'])
+                icon = icon or page.get('backgroundImageUrl', '')
+                break
+            if data.get('seasonNumbers'):
+                other['seasons'] = str(len(data['seasonNumbers']))
+        return [{'title': title, 'text': text, 'images': [{'title': '', 'url': self._icon(icon)}] if icon else [], 'other_info': other}]
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('TV2Play.handleService start')
-
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
-
+        if isJumpItem(self.currItem):
+            self.currItem = jumpTarget(self, self.currItem)
         name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        title = self.currItem.get("title", '')
-        icon = self.currItem.get("icon", '')
-        url = self.currItem.get("url", '')
-
-        printDBG("handleService: >> name[%s], category[%s], title[%s], icon[%s] " % (name, category, title, icon))
+        printDBG("handleService: >> name[%s], category[%s]" % (name, category))
         self.currList = []
 
         if name is None:
             self.listMainMenu({'name': 'category'})
+        elif category == 'list_shows':
+            self.listShows(self.currItem)
         elif category == 'list_filters':
-            self.listFilters(self.currItem)
-        elif category == 'list_items':
-            self.listItems(self.currItem)
-        elif category == 'explore_items':
-            self.exploreItems(self.currItem)
+            # "Műsorok" saved by the old version (any row could be saved then): its page was the item offset
+            self.listShows(dict(self.currItem, category='list_shows', page=self._toInt(self.currItem.get('page')) // GRREC_PER_PAGE + 1))
+        elif category == 'tv2_show':
+            self.listShow(self.currItem)
+        elif category in ('list_items', 'explore_items'):
+            # a show / season saved by the old version: url .../api/search/<slug>, season 0 = no seasons
+            cItem = dict(self.currItem, slug=self.currItem.get('url', '').replace(API_URL + '/search/', ''), season=str(self.currItem.get('season') or ''))
+            if cItem['season']:
+                self.listSeason(cItem)
+            else:
+                self.listShow(cItem)
+        elif category == 'tv2_season':
+            self.listSeason(self.currItem)
+        elif category == 'tv2_ribbon':
+            self.listRibbon(self.currItem)
         elif category == 'ribbons':
-            self.apiRibbons(self.currItem)
-        elif category == 'search':
+            # a ribbon saved by the old version: its "id" and a page counted from 0
+            self.listRibbon(dict(self.currItem, category='tv2_ribbon', ribbon_id=str(self.currItem.get('id', '')), page=self._toInt(self.currItem.get('page')) + 1))
+        elif category == 'list_search':
+            self.listSearch(self.currItem)
+        elif category in ('search', 'search_next_page'):
             cItem = dict(self.currItem)
-            cItem.update({'search_item': False, 'name': 'category', 'page': 0})
+            cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc')
@@ -286,15 +405,14 @@ class TV2Play(CBaseHostClass):
 
         CBaseHostClass.endHandleService(self, index, refresh)
 
-    def listSearchResult(self, cItem, searchPattern, searchType):
-        printDBG("TV2Play.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
-        searchPattern = urllib_quote(searchPattern).replace("%", "%%")
-        searchURL = "https://tv2-prod.d-saas.com/grrec-tv2-prod-war/JSServlet4?rn=&cid=&ts=%d&rd=0,TV2_W_SEARCH_RESULT,80,[*platform:web;*domain:tv2play;*query:#SEARCHSTRING#;*country:HU;*userAge:18;*pagingOffset:%d],[displayType;channel;title;itemId;duration;isExtra;ageLimit;showId;genre;availableFrom;director;isExclusive;lead;url;contentType;seriesTitle;availableUntil;showSlug;videoType;series;availableEpisode;imageUrl;totalEpisode;category;playerId;currentSeasonNumber;currentEpisodeNumber;part;isPremium]".replace("#SEARCHSTRING#", searchPattern)
-        cItem['url'] = searchURL
-        self.listFilters(cItem)
 
-
-class IPTVHost(CHostBase):
+class IPTVHost(GenericFolderWatchedHostMixin, CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, TV2Play(), True, [])
+        self.cachedRet = None
+        self.refreshAfterWatchedFlagChange = False
+        self.watchedHelper = IPTVWatchedHelper('tv2play')
+
+    def withArticleContent(self, cItem):
+        return bool(cItem.get('slug')) and (cItem.get('type') == 'video' or cItem.get('category') in ('tv2_show', 'tv2_season'))
