@@ -201,7 +201,7 @@ def _buildPlayerSelectorSkin(gridWidgetXML):
                 %s
                 %s
             </screen>
-            """ % (skinchrome.build_header(scale=1.0, iconBase=skinchrome.ICON_ROOT + "/HD"), clockHD, gridWidgetXML['HD'], skinchrome.build_footer(676, scale=1.0, iconBase=skinchrome.ICON_ROOT + "/HD"))
+            """ % (skinchrome.build_header(scale=1.0, iconBase=skinchrome.ICON_ROOT + "/HD"), clockHD, gridWidgetXML['HD'], skinchrome.build_footer(676, scale=1.0, iconBase=skinchrome.ICON_ROOT + "/HD", showInfo=True))
 
     skinFHD = """
             <screen name="PlayerSelectorWidget" position="center,center" size="1530,1014" title="E2iPlayer" backgroundColor="#34111112" flags="wfNoBorder">
@@ -213,7 +213,7 @@ def _buildPlayerSelectorSkin(gridWidgetXML):
                 %s
                 %s
             </screen>
-            """ % (skinchrome.build_header(scale=1.5, iconBase=skinchrome.ICON_ROOT + "/FHD"), clockFHD, gridWidgetXML['FHD'], skinchrome.build_footer(1014, scale=1.5, iconBase=skinchrome.ICON_ROOT + "/FHD"))
+            """ % (skinchrome.build_header(scale=1.5, iconBase=skinchrome.ICON_ROOT + "/FHD"), clockFHD, gridWidgetXML['FHD'], skinchrome.build_footer(1014, scale=1.5, iconBase=skinchrome.ICON_ROOT + "/FHD", showInfo=True))
 
     skinWQHD = """
             <screen name="PlayerSelectorWidget" position="center,center" size="2040,1352" title="E2iPlayer" backgroundColor="#34111112" flags="wfNoBorder">
@@ -225,7 +225,7 @@ def _buildPlayerSelectorSkin(gridWidgetXML):
                 %s
                 %s
             </screen>
-            """ % (skinchrome.build_header(scale=2.0, iconBase=skinchrome.ICON_ROOT + "/WQHD"), clockWQHD, gridWidgetXML['WQHD'], skinchrome.build_footer(1352, scale=2.0, iconBase=skinchrome.ICON_ROOT + "/WQHD"))
+            """ % (skinchrome.build_header(scale=2.0, iconBase=skinchrome.ICON_ROOT + "/WQHD"), clockWQHD, gridWidgetXML['WQHD'], skinchrome.build_footer(1352, scale=2.0, iconBase=skinchrome.ICON_ROOT + "/WQHD", showInfo=True))
 
     return skinHD, skinFHD, skinWQHD
 
@@ -921,6 +921,8 @@ class _PlayerSelectorListMode:
             "up": (self.listKeyUp, ""),
             "down": (self.listKeyDown, ""),
         }, prio=0, description="")
+        # INFO / EPG / HELP open the info screen straight away (also in the BLUE menu)
+        self["infoActions"] = ActionMap(["IPTVPlayerListActions"], {"info": self.showInfo}, 0)
 
         # NOT self.onClose.append(self.__onClose) here - name-mangling
         # would bind it as self._PlayerSelectorListMode__onClose, which
@@ -1044,6 +1046,8 @@ if GRIDSUPPORT:
                 "up": (self.keyUp, ""),
                 "down": (self.keyDown, ""),
             }, prio=0, description="")
+            # INFO / EPG / HELP open the info screen straight away (also in the BLUE menu)
+            self["infoActions"] = ActionMap(["IPTVPlayerListActions"], {"info": self.showInfo}, 0)
 
             self.onClose.append(self.__onClose)
             self.onLayoutFinish.append(self.layoutFinished)
@@ -1679,7 +1683,7 @@ else:
                 pageItemX = self.pageItemStartX + pageItemOffset * self.pageItemSize
                 skinCoverLine = """<ePixmap zPosition="2" position="%d,%d" size="%d,%d" pixmap="%s" transparent="1" alphatest="blend" />""" % (pageItemX, self.pageItemStartY, self.pageItemSize, self.pageItemSize, chromeIconBase + '/radio_button_off.png')
                 skin += '\n' + skinCoverLine
-            skin += '\n' + skinchrome.build_footer(windowHeight, scale=scale, iconBase=chromeIconBase, keys=('blue',))
+            skin += '\n' + skinchrome.build_footer(windowHeight, scale=scale, iconBase=chromeIconBase, keys=('blue',), showInfo=True)
             skin += '</screen>'
             self.skin = skin
 
@@ -1710,6 +1714,7 @@ else:
                 "down": self.keyDown,
                 "blue": self.openContextMenu,
                 "menu": self.keySetup,
+                "info": self.showInfo,
             }, -1)
 
             self["key_menu"] = StaticText(_("MENU"))

@@ -59,9 +59,9 @@ config.plugins.iptvplayer.showinMainMenu = ConfigYesNo(default=False)
 config.plugins.iptvplayer.showinSystemMenu = ConfigYesNo(default=True)
 # config.plugins.iptvplayer.ListaGraficzna = ConfigYesNo(default=True)
 config.plugins.iptvplayer.group_hosts = ConfigYesNo(default=True)
-# layout of the settings screen itself: one long list (default, as it always was) or a list of
-# categories that each open their own rows (see ConfigMenu)
-config.plugins.iptvplayer.configMenuView = ConfigSelection(default="list", choices=[("list", _("Long list")), ("categories", _("Categories"))])
+# layout of the settings screen itself: a list of categories that each open their own rows (default,
+# see ConfigMenu) or the one long list it always was before
+config.plugins.iptvplayer.configMenuView = ConfigSelection(default="categories", choices=[("list", _("Long list")), ("categories", _("Categories"))])
 # legacy attributes are kept only to seed the renamed options (the settings-file key is the attribute name)
 config.plugins.iptvplayer.NaszaSciezka = ConfigDirectory(default="/hdd/movie/")  # , fixed_size = False)
 config.plugins.iptvplayer.DownloadsDir = ConfigDirectory(default=config.plugins.iptvplayer.NaszaSciezka.value)  # , fixed_size = False)
