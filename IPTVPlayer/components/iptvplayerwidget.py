@@ -3822,7 +3822,24 @@ class E2iPlayerWidget(Screen):
             return False
         if item.urlItems and item.urlItems[0].url.startswith('file://'):  # LocalMedia, like updateDownloadButton()
             return False
-        return not batchdownload.isLiveRow(self._getBatchRawRow(item))
+        return self._isBatchFavouriteRow(item) and not batchdownload.isLiveRow(self._getBatchRawRow(item))
+
+    def _isBatchFavouriteRow(self, item):
+        # only a row that can be a favourite reopens without the list it comes from - the check of "Add item to
+        # favorites" (canByAddedToFavourites); a row of the favourites list itself is a stored favourite
+        try:
+            if item.isGoodForFavourites:
+                return True
+            if 'favourites' != self.hostName:
+                return item.type in self.hostFavTypes
+            favHost = self.host.host
+            if not favHost.isQuestMode():
+                return True
+            hRet = favHost.getCurrentGuestHost().getSupportedFavoritesTypes()
+            return RetHost.OK == hRet.status and item.type in hRet.value
+        except Exception:
+            printExc()
+        return False
 
     def _getBatchCandidateRows(self):
         # rows of the current page the batch download takes (the current page only, not the following ones)

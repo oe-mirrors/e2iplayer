@@ -177,7 +177,7 @@ class IPTVDMApi():
             # generaly the file should not exist but when it
             # tries == CONTINUE_DOWNLOAD it exist
             # delete file - a batch item not looked up yet has no file, only its title as a name
-            if not self.needsResolve(item):
+            if not self.hasNoFile(item):
                 try:
                     os.remove(item.fileName)
                 except Exception:
@@ -192,7 +192,7 @@ class IPTVDMApi():
         else:
             # a batch item that ended before it was looked up (ERROR): there is no file to remove
             listAAIdx = self.findIdxInQueueAA(downloadIdx)
-            if -1 < listAAIdx and self.needsResolve(self.queueAA[listAAIdx]):
+            if -1 < listAAIdx and self.hasNoFile(self.queueAA[listAAIdx]):
                 del self.queueAA[listAAIdx]
                 bRet = True
 
@@ -207,13 +207,14 @@ class IPTVDMApi():
             # get processed item from self.queueAA
             item = self.queueAA[listUDIdx]
 
-            # delete file
-            try:
-                os.remove(item.fileName)
-            except Exception:
-                printDBG("removeDownloadItem removing file[%s] error" % item.fileName)
-            # hlsdl's resume sidecar belongs to the file (no-op for the other downloaders)
-            DMHelper.removeHlsdlResumeFiles(item.fileName)
+            # delete file - not for a batch item that never had one (the web interface offers "Delete" on ERROR)
+            if not self.hasNoFile(item):
+                try:
+                    os.remove(item.fileName)
+                except Exception:
+                    printDBG("removeDownloadItem removing file[%s] error" % item.fileName)
+                # hlsdl's resume sidecar belongs to the file (no-op for the other downloaders)
+                DMHelper.removeHlsdlResumeFiles(item.fileName)
 
             # remove item from self.queueAA
             del self.queueAA[listUDIdx]
@@ -261,8 +262,10 @@ class IPTVDMApi():
 
             item.processed = False
             item.tries = DMHelper.DOWNLOAD_TYPE.RETRY
-            # a batch item that ended before its links were found is looked up again
             item.errorReason = ''
+            if item.batchSource is not None:
+                # batch item: hoster links expire, its links are looked up again (startResolve)
+                item.url = ''
             self.queueDQ.append(item)
             # remove processed item from self.queueAA
             del self.queueAA[listUDIdx]
@@ -351,6 +354,13 @@ class IPTVDMApi():
         # a batch item whose links were not looked up yet
         return getattr(item, 'batchSource', None) is not None and not item.url
 
+    @staticmethod
+    def hasNoFile(item):
+        # a batch item that never got to a download: its file name is still the title without an extension -
+        # removing "its file" would hit any file of exactly that name
+        source = getattr(item, 'batchSource', None)
+        return source is not None and item.fileName == source.get('file')
+
     def addBufferItem(self, downloader, fullFilesPaths=[]):
         if downloader.getStatus() == DMHelper.STS.DOWNLOADING:
             if len(self.queueUD) >= self.MAX_DOWNLOAD_ITEM:
@@ -427,8 +437,9 @@ class IPTVDMApi():
         from Plugins.Extensions.IPTVPlayer.iptvdm.batchdownload import BatchResolveThread
         item.status = DMHelper.STS.RESOLVING
         item.errorReason = ''
-        # nothing was written for an item without a url yet: its file gets a free name like a new download
-        item.tries = DMHelper.DOWNLOAD_TYPE.INITIAL
+        # nothing written yet: the file gets a free name like a new download; "Download again" of an item that
+        # had a file (retryDownloadItem) writes it anew - the new url never continues a file of another one
+        item.tries = DMHelper.DOWNLOAD_TYPE.INITIAL if self.hasNoFile(item) else DMHelper.DOWNLOAD_TYPE.RETRY
         self.queueRS.append(item)
         try:
             self.resolveThread = BatchResolveThread(item.batchSource, item.downloadIdx)
@@ -496,8 +507,10 @@ class IPTVDMApi():
                 url = None
         if url is not None:
             printDBG("_endResolve downloadIdx[%d] url[%s]" % (item.downloadIdx, url))
+            previousFileName = item.fileName
             item.url = url
-            item.fileName = item.batchSource['file'] + fileExt
+            if self.hasNoFile(item):
+                item.fileName = item.batchSource['file'] + fileExt
             item.status = DMHelper.STS.WAITING
             self.queueUD.append(item)
             try:
@@ -511,7 +524,7 @@ class IPTVDMApi():
                 # the same check that kept it from the queue: no downloader for this url
                 reason = _("File can not be downloaded. Protocol [%s] is unsupported") % url.meta.get('iptv_proto', '')
                 item.url = ''
-                item.fileName = item.batchSource['file']
+                item.fileName = previousFileName
                 item.downloader = None
         printDBG("_endResolve downloadIdx[%d] failed [%s]" % (item.downloadIdx, reason))
         item.status = DMHelper.STS.ERROR
@@ -549,7 +562,11 @@ class IPTVDMApi():
         del self.batches[item.batchId]
         try:
             from Plugins.Extensions.IPTVPlayer.iptvdm.batchdownload import batchSummary
-            text, status, colour = batchSummary([record[idx] for idx in sorted(record)])
+            summary = batchSummary([record[idx] for idx in sorted(record)])
+            if summary is None:
+                # the user took all of them out of the queue
+                return
+            text, status, colour = summary
             printDBG("batch download [%d] finished: %s %s" % (item.batchId, text, status))
             if self.finishNotifyCallback is not None:
                 self.finishNotifyCallback().showNotify(text, status, colour)

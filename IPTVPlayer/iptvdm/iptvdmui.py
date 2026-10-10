@@ -759,8 +759,8 @@ class IPTVDMWidget(Screen):
                 options.extend(stop)
             elif DMHelper.STS.ERROR == item.status:
                 options.extend(retry)
-                if self.DM.needsResolve(item):
-                    # batch item that ended before its links were found: no file, only its title as a name -
+                if self.DM.hasNoFile(item):
+                    # batch item that never got to a download: no file, only its title as a name -
                     # "Remove file" would look for any video of that name
                     options.extend(delet)
                 else:

@@ -291,9 +291,13 @@ def test_pick_downloadable(env):
 def test_summary(env):
     text, status, colour = env.batch.batchSummary([('A', 'ok'), ('B', 'ok')])
     assert (text, status, colour) == ('2 of 2 downloaded', '', 'green')
+    # a row the user took out of the queue is not counted
     text, status, colour = env.batch.batchSummary([('A', 'ok'), ('Bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', 'failed'), ('C', 'removed')])
-    assert text == '1 of 3 downloaded' and colour == 'orange'
+    assert text == '1 of 2 downloaded' and colour == 'orange'
     assert status == 'Bbbbbbbbbbbbbbbbbbbbbbbbbbb...'
+    assert env.batch.batchSummary([('A', 'ok'), ('C', 'removed')]) == ('1 of 1 downloaded', '', 'green')
+    # all of them taken out: no notification at all
+    assert env.batch.batchSummary([('A', 'removed'), ('B', 'removed')]) is None
     titles = [('T%d' % idx, 'failed') for idx in range(7)]
     text, status, colour = env.batch.batchSummary(titles)
     assert text == '0 of 7 downloaded' and colour == 'red'
@@ -551,8 +555,8 @@ def test_delete_unresolved_never_touches_files(env):
     dm.addBatchToDQueue([item])
     dm.deleteDownloadItem(item.downloadIdx)
     assert os.path.exists(title) and dm.queueDQ == []
-    # removed by the user: no failure in the summary
-    assert dm.notify.shown[-1] == ('0 of 1 downloaded', '', 'red')
+    # removed by the user: no summary for a batch nobody waits for any more
+    assert dm.notify.shown == [] and dm.batches == {}
     # an ERROR item that never had a url leaves the list without file removal too
     item2 = env.dmapi.DMItem('', title)
     item2.batchSource = dict(item.batchSource)
@@ -562,6 +566,40 @@ def test_delete_unresolved_never_touches_files(env):
     _finishLookup(env, dm, error='x')
     dm.deleteDownloadItem(item2.downloadIdx)
     assert os.path.exists(title) and dm.queueAA == []
+    # the same through "Delete" of the web interface (removeDownloadItem)
+    item3 = env.dmapi.DMItem('', title)
+    item3.batchSource = dict(item.batchSource)
+    item3.itemKey = 'fakebatch|E1c'
+    dm.addBatchToDQueue([item3])
+    dm.processDQ()
+    _finishLookup(env, dm, error='x')
+    dm.removeDownloadItem(item3.downloadIdx)
+    assert os.path.exists(title) and dm.queueAA == []
+
+
+def test_retry_after_download_looks_up_again(env):
+    # "Download again" of a batch item that had a download: the old url may have expired - the links are
+    # looked up again and the file of the first try is written anew (no second "E1 (1).mp4")
+    dm = _dm(env)
+    dm.addBatchToDQueue(_batchItems(env, dm, ['E1']))
+    dm.processDQ()
+    _finishLookup(env, dm, ['https://cdn.example/old.mp4'])
+    item = _finishDownload(dm, ok=False)
+    fileName = item.fileName
+    assert item.status == env.STS.ERROR and not dm.hasNoFile(item)
+    dm.retryDownloadItem(item.downloadIdx)
+    assert item.url == '' and dm.needsResolve(item)
+    dm.processDQ()
+    assert item.status == env.STS.RESOLVING and item.tries == 'RETRY_DOWNLOAD'
+    _finishLookup(env, dm, ['https://cdn.example/new.mkv'])
+    assert _Downloader.started[-1] == ('https://cdn.example/new.mkv', fileName.replace('\\', '/'))
+    assert item.fileName == fileName
+    # a lookup that fails now keeps the file of the first try: "Remove" (with the file) is offered, not "delete"
+    _finishDownload(dm, ok=False)
+    dm.retryDownloadItem(item.downloadIdx)
+    dm.processDQ()
+    _finishLookup(env, dm, error='Captcha')
+    assert item.status == env.STS.ERROR and item.fileName == fileName and not dm.hasNoFile(item)
 
 
 def test_list_shows_lookup_between_running_and_waiting(env):

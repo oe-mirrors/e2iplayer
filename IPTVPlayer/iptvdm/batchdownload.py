@@ -161,8 +161,11 @@ def _shortTitle(title):
 
 def batchSummary(results):
     # results: [(title, state)] of all rows of one batch, state 'ok' / 'failed' / 'removed' (taken out of the
-    # queue by the user: neither downloaded nor failed) -> (text, second line, colour) of the notification
-    total = len(results)
+    # queue by the user: not counted) -> (text, second line, colour) of the notification, None when the user
+    # took all of them out
+    total = len([title for title, state in results if state != 'removed'])
+    if 0 == total:
+        return None
     done = len([title for title, state in results if state == 'ok'])
     failed = [_shortTitle(title) for title, state in results if state == 'failed']
     text = _("%d of %d downloaded") % (done, total)
