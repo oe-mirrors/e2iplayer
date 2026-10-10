@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-09 20:23+0000\n"
-"PO-Revision-Date: 2026-10-05 19:05+0200\n"
+"POT-Creation-Date: 2026-10-04 21:08+0000\n"
+"PO-Revision-Date: 2026-10-05 15:43+0300\n"
 "Last-Translator: Mohamed Elsafty [angel_heart150@yahoo.com]\n"
 "Language-Team: \n"
 "Language: ar\n"
@@ -108,12 +108,11 @@ msgstr "%s - مزود الترجمة"
 
 #, python-format
 msgid "%s blocks the connection of the receiver (HTTP 403). It only plays with curl-impersonate installed on the receiver - otherwise please choose another server."
-msgstr ""
+msgstr "%s يحظر اتصال جهاز الاستقبال (HTTP 403). لا يعمل إلا عند تثبيت curl-impersonate على جهاز الاستقبال، وإلا يُرجى اختيار سيرفر آخر."
 
 #, python-format
 msgid "%s blocks the connection of the receiver (HTTP 403). Please choose another server."
-msgstr ""
-
+msgstr "%s يحظر اتصال جهاز الاستقبال (HTTP 403). يُرجى اختيار سيرفر آخر."
 #, python-format
 msgid "%s buffering..."
 msgstr "جارٍ التخزين المؤقت لـ %s..."
@@ -148,7 +147,7 @@ msgstr "%s متابع"
 
 #, python-format
 msgid "%s needs a free account. Enter login and password in the host configuration."
-msgstr ""
+msgstr "%s يتطلب حسابًا مجانيًا. أدخل اسم المستخدم وكلمة المرور في إعدادات الهوست."
 
 #, python-format
 msgid "%s password"
@@ -267,7 +266,7 @@ msgid "----- Porn Site Configuration -----"
 msgstr "----- إعدادات مواقع البالغين -----"
 
 msgid "----- SCREENSAVER CONFIGURATION -----"
-msgstr ""
+msgstr "----- إعدادات شاشة التوقف -----"
 
 msgid "----- SECURITY CONFIGURATION -----"
 msgstr "----- إعدادات الأمان -----"
@@ -294,7 +293,7 @@ msgid "----- Show or hide Porn Sites -----"
 msgstr "----- إظهار أو إخفاء مواقع البالغين -----"
 
 msgid "----- TORRENT CONFIGURATION -----"
-msgstr ""
+msgstr "----- إعدادات التورنت -----"
 
 msgid "----- VIRTUAL KEYBOARD & SEARCH CONFIGURATION -----"
 msgstr "----- إعدادات لوحة المفاتيح الافتراضية والبحث -----"
@@ -563,10 +562,10 @@ msgid "Allow external link-decryption service (enc-dec.app)"
 msgstr "السماح بخدمة فك تشفير الروابط الخارجية (enc-dec.app)"
 
 msgid "Allow host to override suggestions provider"
-msgstr "مزود الاقتراحات الافتراضي"
+msgstr "السماح للهوست بتغيير مزود الاقتراحات"
 
 msgid "Allow upload to other peers (seeding)"
-msgstr ""
+msgstr "السماح برفع البيانات إلى الأجهزة الأخرى (Seeding)"
 
 msgid "Allow watched flag to be set"
 msgstr "السماح بتحديد المحتوى كمشاهد"
@@ -576,11 +575,11 @@ msgstr "حسب الترتيب الأبجدي"
 
 #, python-format
 msgid "Also use the accounts of X-Streamity (%s)"
-msgstr ""
+msgstr "استخدام حسابات X-Streamity (%s) أيضًا"
 
 #, python-format
 msgid "Also use the portals of EStalker (%s)"
-msgstr ""
+msgstr "استخدام بوابات EStalker (%s) أيضًا"
 
 msgid "AltGr"
 msgstr "AltGr"
@@ -607,7 +606,7 @@ msgid "Alternative proxy server (5)"
 msgstr "خادم بروكسي بديل (5)"
 
 msgid "American football"
-msgstr ""
+msgstr "كرة القدم الأمريكية"
 
 msgid "An API key from subsource.net can be entered in the E2iPlayer settings (Subtitles)."
 msgstr "يمكن إدخال مفتاح API من subsource.net في إعدادات E2iPlayer (الترجمة)."
@@ -621,7 +620,7 @@ msgid "An error occurred while writing into: %s"
 msgstr "حدث خطأ أثناء الكتابة إلى: %s"
 
 msgid "An opensubtitles.com account (login and password in the E2iPlayer settings) raises the limit."
-msgstr ""
+msgstr "يسمح حساب على opensubtitles.com (اسم المستخدم وكلمة المرور في إعدادات E2iPlayer) بزيادة الحد المسموح به."
 
 msgid "Anatomy"
 msgstr "علم التشريح"
@@ -832,7 +831,7 @@ msgid "Basic Science"
 msgstr "العلوم الأساسية"
 
 msgid "Basketball"
-msgstr ""
+msgstr "كرة السلة"
 
 msgid "Being watched"
 msgstr "قيد المشاهدة"
@@ -869,7 +868,7 @@ msgid "Black iframe file"
 msgstr "ملف iframe أسود"
 
 msgid "Black screensaver"
-msgstr ""
+msgstr "شاشة توقف سوداء"
 
 msgid "Block wmv files"
 msgstr "حظر ملفات WMV"
@@ -884,7 +883,7 @@ msgid "Box"
 msgstr "الصندوق"
 
 msgid "Boxing"
-msgstr ""
+msgstr "الملاكمة"
 
 msgid "Broadcast:"
 msgstr "البث:"
@@ -919,20 +918,20 @@ msgid "Cache"
 msgstr "ذاكرة التخزين المؤقت"
 
 msgid "Cache folder"
-msgstr ""
+msgstr "مجلد ذاكرة التخزين المؤقت"
 
 #, python-format
 msgid "Cache folder \"%s\" could not be created. Some data (cookies, subtitles, ...) may not be saved."
 msgstr "تعذر إنشاء مجلد ذاكرة التخزين المؤقت \"%s\". قد لا يتم حفظ بعض البيانات (ملفات تعريف الارتباط، الترجمات، ...)."
 
 msgid "Cache location"
-msgstr ""
+msgstr "موقع ذاكرة التخزين المؤقت"
 
 msgid "Cache size in RAM"
-msgstr ""
+msgstr "حجم ذاكرة التخزين المؤقت في ذاكرة RAM"
 
 msgid "Cache size on disk"
-msgstr ""
+msgstr "حجم ذاكرة التخزين المؤقت على القرص"
 
 #, python-format
 msgid ""
@@ -1055,7 +1054,7 @@ msgid "Chinese anime"
 msgstr "أنمي صيني"
 
 msgid "Choose the TorrServer binary"
-msgstr ""
+msgstr "اختر الملف التنفيذي لـ TorrServer"
 
 msgid "Cinema History"
 msgstr "أفلام سينمائية"
@@ -1097,7 +1096,7 @@ msgid "Close"
 msgstr "إغلاق"
 
 msgid "Close an unused torrent after"
-msgstr ""
+msgstr "إغلاق التورنت غير المستخدم بعد"
 
 msgid "Closes the host opened in the web interface, clears the search results and stops what the web interface still runs in the background. Use it when a page keeps loading. Settings, downloads and the E2iPlayer on the TV are not touched."
 msgstr "يغلق الـ host المفتوح في واجهة الويب، ويمسح نتائج البحث، ويوقف ما لا تزال واجهة الويب تشغّله في الخلفية. استخدمه عندما تستمر الصفحة في التحميل. لا يتم المساس بالإعدادات أو التنزيلات أو E2iPlayer على جهاز التلفزيون."
@@ -1127,7 +1126,7 @@ msgid "Comedy"
 msgstr "كوميديا"
 
 msgid "Commentator"
-msgstr ""
+msgstr "المعلّق"
 
 msgid "Comments"
 msgstr "التعليقات"
@@ -1190,7 +1189,7 @@ msgid "Connection to the weeb.tv server failed."
 msgstr "فشل الاتصال بخادم weeb.tv."
 
 msgid "Connections per torrent"
-msgstr ""
+msgstr "عدد الاتصالات لكل تورنت"
 
 #, python-format
 msgid "Connections: %s of %s"
@@ -1212,7 +1211,7 @@ msgid "Copy"
 msgstr "نسخ"
 
 msgid "Copy it to /usr/bin/TorrServer (or a folder on HDD/USB) and make it executable (chmod 755)."
-msgstr ""
+msgstr "انسخه إلى /usr/bin/TorrServer (أو إلى مجلد على القرص الصلب HDD أو وحدة USB)، واجعله قابلاً للتنفيذ باستخدام (chmod 755)."
 
 msgid "Could not add the user link."
 msgstr "تعذر إضافة رابط المستخدم."
@@ -1275,7 +1274,7 @@ msgid "Creators:"
 msgstr "المنشئون:"
 
 msgid "Cricket"
-msgstr ""
+msgstr "الكريكيت"
 
 msgid "Crime"
 msgstr "جريمة"
@@ -1308,7 +1307,7 @@ msgid "DASH/mpd"
 msgstr "DASH/mpd"
 
 msgid "DLNA server of TorrServer"
-msgstr ""
+msgstr "خادم DLNA الخاص بـ TorrServer"
 
 msgid "DOWNLOAD ERROR"
 msgstr "خطأ في التنزيل"
@@ -1329,7 +1328,7 @@ msgid "Darkgray"
 msgstr "رمادي داكن"
 
 msgid "Darts"
-msgstr ""
+msgstr "لعبة رمي السهام"
 
 msgid "Date"
 msgstr "التاريخ"
@@ -1458,7 +1457,7 @@ msgid "Delete subtitles cache now"
 msgstr "حذف ذاكرة التخزين المؤقت للترجمة الآن"
 
 msgid "Delete the cache when the torrent is closed"
-msgstr ""
+msgstr "حذف ذاكرة التخزين المؤقت عند إغلاق التورنت"
 
 msgid "Delete thumbnails cache now"
 msgstr "حذف ذاكرة التخزين المؤقت للصور المصغرة الآن"
@@ -1482,7 +1481,7 @@ msgid "Digital programmes"
 msgstr "البرامج الرقمية"
 
 msgid "Direct"
-msgstr ""
+msgstr "مباشر"
 
 msgid "Director:"
 msgstr "المخرج:"
@@ -1575,7 +1574,7 @@ msgstr "تحميل"
 
 #, python-format
 msgid "Download \"%s\" (for this receiver) from %s"
-msgstr ""
+msgstr "تحميل \"%s\" (لهذا الجهاز) من %s"
 
 #, python-format
 msgid "Download (ready in %d seconds)"
@@ -1626,17 +1625,17 @@ msgid "Download notification duration"
 msgstr "مدة إشعار التنزيل"
 
 msgid "Download speed limit"
-msgstr ""
+msgstr "الحد الأقصى لسرعة التنزيل"
 
 msgid "Download subtiles failed."
 msgstr "فشل تحميل الترجمة."
 
 msgid "Download suggested"
-msgstr "اقتراح التحميل"
+msgstr "اقتراح التنزيل"
 
 #, python-format
 msgid "Download the Linux file for the CPU of this receiver from %s"
-msgstr ""
+msgstr "حمّل ملف Linux المتوافق مع معالج جهاز الاستقبال هذا من %s"
 
 msgid "Downloaded file is too small or corrupted."
 msgstr "الملف الذي تم تنزيله صغير جدًا أو تالف."
@@ -1840,10 +1839,10 @@ msgid "Enabled hosts"
 msgstr "الـ host المفعّلة"
 
 msgid "Encrypted connections only"
-msgstr ""
+msgstr "الاتصالات المشفّرة فقط"
 
 msgid "Encrypted stream list - not supported"
-msgstr "قائمة بث مشفّرة - غير مدعومة"
+msgstr "قائمة البث المشفّرة - غير مدعومة"
 
 #, python-format
 msgid ""
@@ -2017,10 +2016,10 @@ msgid "Ethical & Legal"
 msgstr "أخلاقي وقانوني"
 
 msgid "European movies"
-msgstr ""
+msgstr "الأفلام الأوروبية"
 
 msgid "Events"
-msgstr ""
+msgstr "الأحداث"
 
 msgid "Every enabled site: does the menu open, does a list show videos? Takes a few minutes."
 msgstr "كل موقع مفعّل: هل تفتح القائمة وهل تظهر قائمة بالفيديوهات؟ يستغرق الأمر بضع دقائق."
@@ -2032,7 +2031,7 @@ msgid "Exception occurs"
 msgstr "حدث استثناء"
 
 msgid "Exclusive"
-msgstr ""
+msgstr "حصري"
 
 msgid "Exit"
 msgstr "خروج"
@@ -2218,7 +2217,7 @@ msgid "Files"
 msgstr "الملفات"
 
 msgid "Fill cache before playback"
-msgstr ""
+msgstr "ملء ذاكرة التخزين المؤقت قبل التشغيل"
 
 msgid "Filler"
 msgstr "محتوى إضافي"
@@ -2283,7 +2282,7 @@ msgid "Folder for temporary data"
 msgstr "المجلد المخصص للبيانات المؤقتة"
 
 msgid "Folder on HDD / USB"
-msgstr ""
+msgstr "مجلد على القرص الصلب (HDD) أو وحدة USB"
 
 msgid "Followers"
 msgstr "المتابعون"
@@ -2301,7 +2300,7 @@ msgid "Foot & Ankle"
 msgstr "القدم والكاحل"
 
 msgid "Football"
-msgstr ""
+msgstr "كرة القدم"
 
 msgid "Football Live"
 msgstr "كرة القدم مباشر"
@@ -2322,7 +2321,7 @@ msgid "Foreign movies"
 msgstr "أفلام أجنبية"
 
 msgid "Foreign parts only"
-msgstr ""
+msgstr "الأجزاء الأجنبية فقط"
 
 msgid "Foreign series"
 msgstr "مسلسلات أجنبية"
@@ -2370,7 +2369,7 @@ msgid "Full test checks thumbnails :"
 msgstr "الاختبار الكامل يفحص الصور المصغرة:"
 
 msgid "Futsal"
-msgstr ""
+msgstr "كرة القدم داخل الصالات"
 
 msgid "GREEN"
 msgstr "أخضر"
@@ -2490,7 +2489,7 @@ msgid "Hand"
 msgstr "يد"
 
 msgid "Handball"
-msgstr ""
+msgstr "كرة اليد"
 
 msgid "Health"
 msgstr "الصحة"
@@ -2506,7 +2505,7 @@ msgid "Hide \"%s\" group"
 msgstr "إخفاء المجموعة \"%s\""
 
 msgid "Hide the menu (live TV visible)"
-msgstr ""
+msgstr "إخفاء القائمة (مع بقاء البث التلفزيوني المباشر ظاهرًا)"
 
 msgid "Hide titles only available in Sweden"
 msgstr "إخفاء العناوين المتاحة في السويد فقط"
@@ -2527,7 +2526,7 @@ msgid "History of searched phrases."
 msgstr "سجل العبارات التي تم البحث عنها."
 
 msgid "Hockey"
-msgstr ""
+msgstr "الهوكي"
 
 msgid "Home"
 msgstr "الرئيسية"
@@ -2546,7 +2545,7 @@ msgstr "الـ host"
 
 #, python-format
 msgid "Host: %s"
-msgstr ""
+msgstr "الهوست: %s"
 
 #, python-format
 msgid "Hosting \"%s\" not supported."
@@ -2585,7 +2584,7 @@ msgid "IMDb"
 msgstr "IMDb"
 
 msgid "IMDb Rating:"
-msgstr "التقييم:"
+msgstr "تقييم IMDb:"
 
 msgid "IMDb Suggestions"
 msgstr "اقتراحات IMDb"
@@ -2610,7 +2609,7 @@ msgid "INTERRUPTED"
 msgstr "تم الإيقاف"
 
 msgid "IPTV Portals"
-msgstr ""
+msgstr "بوابات IPTV"
 
 msgid "Icon type"
 msgstr "نوع الأيقونة"
@@ -2871,7 +2870,7 @@ msgstr "آخر خطأ استثناء: '%s'"
 
 #, python-format
 msgid "Last Modified: %s"
-msgstr ""
+msgstr "آخر تعديل: %s"
 
 msgid "Last air date:"
 msgstr "تاريخ آخر عرض:"
@@ -2905,7 +2904,7 @@ msgstr "الأسبوع الماضي"
 
 #, python-format
 msgid "Last week: %s"
-msgstr ""
+msgstr "الأسبوع الماضي: %s"
 
 msgid "Last.fm charts and tag pages are behind a browser check, only the radio stations can be used."
 msgstr "مخططات وصفحات الوسوم في Last.fm محمية بفحص المتصفح، ولا يمكن استخدام سوى المحطات الإذاعية."
@@ -2963,7 +2962,7 @@ msgid "Latest videos from the channels you are subscribed to."
 msgstr "أحدث الفيديوهات من القنوات التي اشتركت فيها."
 
 msgid "Latin American movies"
-msgstr ""
+msgstr "أفلام أمريكا اللاتينية"
 
 msgid "Latin American series"
 msgstr "مسلسلات أمريكية لاتينية"
@@ -3127,7 +3126,7 @@ msgid "Login failed."
 msgstr "فشل تسجيل الدخول."
 
 msgid "Login needed"
-msgstr ""
+msgstr "يتطلب تسجيل الدخول"
 
 #, python-brace-format
 msgid "Login on {0} failed."
@@ -3161,7 +3160,7 @@ msgid "Longest"
 msgstr "الأطول"
 
 msgid "Loved tracks"
-msgstr ""
+msgstr "المقاطع الصوتية المفضّلة"
 
 msgid "Low"
 msgstr "منخفض"
@@ -3235,16 +3234,16 @@ msgid "Max number of parallel downloads has been reached."
 msgstr "تم الوصول للحد الأقصى لعدد التنزيلات المتزامنة."
 
 msgid "MaxStream (uprot.net) asks for its image captcha: solve it in MyE2i, then open the video again."
-msgstr ""
+msgstr "يطلب MaxStream (uprot.net) حل اختبار CAPTCHA المصوّر: حلّه في MyE2i، ثم افتح الفيديو مرة أخرى."
 
 msgid "Maximum log file size"
 msgstr "الحد الأقصى لحجم ملف السجل"
 
 msgid "Maximum torrent size:"
-msgstr ""
+msgstr "الحد الأقصى لحجم التورنت:"
 
 msgid "MediaFusion manifest URL (your own):"
-msgstr ""
+msgstr "رابط ملف manifest الخاص بـ MediaFusion (الخاص بك):"
 
 msgid "Medtryx Marketing"
 msgstr "تسويق Medtryx"
@@ -3343,10 +3342,10 @@ msgid "Most viewed series"
 msgstr "المسلسلات الأكثر مشاهدة"
 
 msgid "Most voted"
-msgstr ""
+msgstr "الأكثر تصويتًا"
 
 msgid "Motorsport"
-msgstr ""
+msgstr "رياضة المحركات"
 
 #, python-format
 msgid ""
@@ -3418,7 +3417,7 @@ msgid "MyE2i browser check solution"
 msgstr "حل MyE2i لفحص المتصفح"
 
 msgid "MyE2i captcha: solve it, then Job (no CONTINUE)"
-msgstr ""
+msgstr "اختبار CAPTCHA في MyE2i: حلّه، ثم اختر Job (بدون CONTINUE)"
 
 msgid "MyE2i debug snapshot received - see the debug log."
 msgstr "تم استلام لقطة تصحيح الأخطاء من MyE2i - راجع سجل تصحيح الأخطاء."
@@ -3450,7 +3449,7 @@ msgid "MyE2i: offer to open the page in (Android)"
 msgstr "MyE2i: اقتراح فتح الصفحة في (Android)"
 
 msgid "Mystery"
-msgstr ""
+msgstr "غموض"
 
 msgid ""
 "NO VIDEOS FOUND FOR NOW! \n"
@@ -3549,7 +3548,7 @@ msgid "No YouTube video found for this track."
 msgstr "لم يتم العثور على فيديو YouTube لهذه المقطوعة."
 
 msgid "No channels with an archive on this portal."
-msgstr ""
+msgstr "لا توجد قنوات تحتوي على أرشيف في هذه البوابة."
 
 msgid "No description available."
 msgstr "لا يوجد وصف متاح."
@@ -3592,7 +3591,7 @@ msgid "No programme guide for this channel."
 msgstr "لا يوجد دليل برامج لهذه القناة."
 
 msgid "No recorded programmes on this day."
-msgstr ""
+msgstr "لا توجد برامج مسجلة في هذا اليوم."
 
 msgid "No replays in these days"
 msgstr "لا توجد إعادات مشاهدة في هذه الأيام"
@@ -3648,13 +3647,13 @@ msgid "Normalize item / file names (Show - SxxExx - Title)"
 msgstr "توحيد أسماء العناصر / الملفات (العرض - SxxExx - العنوان)"
 
 msgid "Not available in your country (geo-blocking)."
-msgstr ""
+msgstr "غير متاح في بلدك (حظر جغرافي)."
 
 msgid "Not available yet"
 msgstr "غير متاح حتى الآن"
 
 msgid "Not in /usr/bin: choose the file under \"TorrServer binary\" in the torrent configuration."
-msgstr ""
+msgstr "الملف غير موجود في /usr/bin: اختر الملف من خيار \"الملف التنفيذي لـ TorrServer\" في إعدادات التورنت."
 
 msgid "Not possible (no enigma2 session)."
 msgstr "غير ممكن (لا توجد جلسة Enigma2)."
@@ -3678,11 +3677,11 @@ msgid "Now"
 msgstr "الآن"
 
 msgid "Now playing"
-msgstr ""
+msgstr "قيد التشغيل الآن"
 
 #, python-format
 msgid "Now playing: %s"
-msgstr ""
+msgstr "قيد التشغيل الآن: %s"
 
 msgid "Number of columns"
 msgstr "عدد الأعمدة"
@@ -3713,7 +3712,7 @@ msgid "OMDb API key (free at omdbapi.com)"
 msgstr "مفتاح OMDb API (مجاني من omdbapi.com)"
 
 msgid "Off"
-msgstr ""
+msgstr "إيقاف"
 
 msgid "Offline channels"
 msgstr "القنوات غير المتصلة"
@@ -3766,14 +3765,14 @@ msgstr "فتح هذه الصفحة في المتصفح المحدد"
 
 #, python-format
 msgid "OpenSubtitles.com login failed for user \"%s\". Please check your login and password."
-msgstr ""
+msgstr "فشل تسجيل الدخول إلى OpenSubtitles.com للمستخدم \"%s\". يُرجى التحقق من اسم المستخدم وكلمة المرور."
 
 msgid "OpenSubtitles.com needs an API key. Create a free API consumer at https://www.opensubtitles.com/consumers and enter its key in the E2iPlayer settings (Subtitles)."
-msgstr ""
+msgstr "يتطلب OpenSubtitles.com مفتاح API. أنشئ حساب API مجانيًا عبر https://www.opensubtitles.com/consumers، ثم أدخل المفتاح في إعدادات E2iPlayer (الترجمة)."
 
 #, python-format
 msgid "OpenSubtitles.com rejected the request (HTTP %s). Please check the API key in the E2iPlayer settings."
-msgstr ""
+msgstr "رفض OpenSubtitles.com الطلب (HTTP %s). يُرجى التحقق من مفتاح API في إعدادات E2iPlayer."
 
 msgid "OpenSubtitles.org sent a \"become VIP member\" note instead of the subtitle (download limit reached?)."
 msgstr "أرسل OpenSubtitles.org رسالة \"كن عضو VIP\" بدلًا من الترجمة (هل تم الوصول إلى حد التنزيل؟)."
@@ -3903,7 +3902,7 @@ msgstr "الوطنية"
 
 #, python-format
 msgid "Peak: %s"
-msgstr ""
+msgstr "الذروة: %s"
 
 msgid "Pediatrics"
 msgstr "طب الأطفال"
@@ -3933,10 +3932,10 @@ msgid "Pin protection for plugin"
 msgstr "حماية الإضافة برمز PIN"
 
 msgid "Pin protection for this host"
-msgstr ""
+msgstr "الحماية برمز PIN لهذا الهوست"
 
 msgid "Play torrents with TorrServer"
-msgstr ""
+msgstr "تشغيل التورنت باستخدام TorrServer"
 
 #, python-format
 msgid "Play with [%s] player"
@@ -3985,7 +3984,7 @@ msgid "Please configure Xtream (blue button)"
 msgstr "يرجى إعداد Xtream (الزر الأزرق)"
 
 msgid "Please configure the Stalker portal (blue button)"
-msgstr ""
+msgstr "يُرجى ضبط بوابة Stalker (الزر الأزرق)"
 
 #, python-format
 msgid "Please consider restart your Engima2 and agree to install the %s utlity when the %s will propose this."
@@ -4092,27 +4091,27 @@ msgid "Popularity"
 msgstr "الشعبية"
 
 msgid "Pornstars"
-msgstr "نجوم الإباحية"
+msgstr "مجرمي الإباحية"
 
 #, python-format
 msgid "Portal %d - %s (optional, from the MAG box):"
-msgstr ""
+msgstr "البوابة %d - %s (اختياري، من جهاز MAG):"
 
 #, python-format
-msgid "Portal %d - MAC address (00:1A:79:...):"
-msgstr ""
+msgid "Portal %d - MAC address (00:1A:79...):"
+msgstr "البوابة %d - عنوان MAC (00:1A:79...):"
 
 #, python-format
 msgid "Portal %d - name (optional):"
-msgstr ""
+msgstr "البوابة %d - الاسم (اختياري):"
 
 #, python-format
 msgid "Portal %d - portal URL (http://host:port/c/):"
-msgstr ""
+msgstr "البوابة %d - رابط البوابة (http://host:port/c/):"
 
 #, python-format
 msgid "Portal URL and MAC address in the host configuration, as the provider gives them out. More portals: %s in the EStalker format (portal URL, then its MAC addresses, one per line)."
-msgstr ""
+msgstr "أدخل رابط البوابة وعنوان MAC في إعدادات الهوست كما يقدمهما مزود الخدمة. لإضافة بوابات أخرى: %s بتنسيق EStalker (رابط البوابة، ثم عناوين MAC الخاصة بها، عنوان واحد في كل سطر)."
 
 msgid "Portuguese"
 msgstr "البرتغالية"
@@ -4199,7 +4198,7 @@ msgid "Python modules"
 msgstr "وحدات Python"
 
 msgid "Python was not found on the receiver."
-msgstr ""
+msgstr "لم يتم العثور على Python في جهاز الاستقبال."
 
 msgid "Quality"
 msgstr "الجودة"
@@ -4211,7 +4210,7 @@ msgid "Quick test: menu and a list with videos"
 msgstr "اختبار سريع: القائمة وقائمة تحتوي على فيديوهات"
 
 msgid "RAM"
-msgstr ""
+msgstr "ذاكرة الوصول العشوائي (RAM)"
 
 msgid "RAM buffer size [MB] for local files"
 msgstr "حجم ذاكرة التخزين المؤقت [MB] للملفات المحلية"
@@ -4279,7 +4278,7 @@ msgid "Rating: %s"
 msgstr "التقييم: %s"
 
 msgid "Read ahead (share of the cache)"
-msgstr ""
+msgstr "القراءة المسبقة (نسبة من ذاكرة التخزين المؤقت)"
 
 msgid "Read by"
 msgstr "قرأه"
@@ -4329,7 +4328,7 @@ msgid "Regions"
 msgstr "المناطق"
 
 msgid "Related seasons and works"
-msgstr ""
+msgstr "المواسم والأعمال ذات الصلة"
 
 msgid "Release"
 msgstr "إصدار"
@@ -4353,7 +4352,7 @@ msgid "Remaining:"
 msgstr "المتبقي:"
 
 msgid "Remember a host's pin until E2iPlayer is closed"
-msgstr ""
+msgstr "تذكّر رمز PIN الخاص بالهوست حتى إغلاق E2iPlayer"
 
 msgid "Remember last search entry"
 msgstr "تذكر آخر إدخال بحث"
@@ -4511,10 +4510,10 @@ msgid "Science"
 msgstr "العِلم"
 
 msgid "Screensaver during audio playback"
-msgstr ""
+msgstr "شاشة التوقف أثناء تشغيل الصوت"
 
 msgid "Screensaver in E2iPlayer menus"
-msgstr ""
+msgstr "شاشة التوقف في قوائم E2iPlayer"
 
 #, python-format
 msgid ""
@@ -4537,7 +4536,7 @@ msgid "Search History successfully deleted."
 msgstr "تم حذف سجل البحث بنجاح."
 
 msgid "Search automatically"
-msgstr ""
+msgstr "البحث تلقائيًا"
 
 msgid "Search for an artist (exact name) or a Last.fm user"
 msgstr "البحث عن فنان (الاسم الدقيق) أو مستخدم Last.fm"
@@ -4574,7 +4573,7 @@ msgid "Search results region:"
 msgstr "منطقة نتائج البحث:"
 
 msgid "Search string must have at least 4 characters."
-msgstr ""
+msgstr "يجب ألا يقل نص البحث عن 4 أحرف."
 
 msgid "Search term :"
 msgstr "عبارة البحث:"
@@ -4612,7 +4611,7 @@ msgid "Season %s"
 msgstr "الموسم %s"
 
 msgid "Season pack"
-msgstr ""
+msgstr "حزمة الموسم"
 
 msgid "Seasons"
 msgstr "المواسم"
@@ -4686,7 +4685,7 @@ msgid "Select subtitles track"
 msgstr "اختر مسار الترجمة"
 
 msgid "Select the TorrServer binary"
-msgstr ""
+msgstr "تحديد الملف التنفيذي لـ TorrServer"
 
 msgid "Select the directory"
 msgstr "اختر المجلد"
@@ -4753,7 +4752,7 @@ msgstr "لم يُرجع الخادم أي بيانات."
 
 #, python-format
 msgid "Server, user name and password in the host configuration. The server field also takes a get.php link. More accounts: %s with one get.php link per line (X-Streamity format)."
-msgstr ""
+msgstr "أدخل السيرفر واسم المستخدم وكلمة المرور في إعدادات الهوست. يقبل حقل السيرفر أيضًا رابط get.php. لإضافة حسابات أخرى: %s، مع وضع رابط get.php واحد في كل سطر (بتنسيق X-Streamity)."
 
 #, python-format
 msgid ""
@@ -4795,7 +4794,7 @@ msgstr "الإعدادات"
 
 #, python-format
 msgid "Settings of service [%s] cannot be opened."
-msgstr ""
+msgstr "تعذّر فتح إعدادات الخدمة [%s]."
 
 msgid "Settings screen layout"
 msgstr "تخطيط شاشة الإعدادات"
@@ -4807,10 +4806,10 @@ msgid "Short Movies"
 msgstr "أفلام قصيرة"
 
 msgid "Short films"
-msgstr ""
+msgstr "أفلام قصيرة"
 
 msgid "Short series"
-msgstr ""
+msgstr "مسلسلات قصيرة"
 
 msgid "Shorts"
 msgstr "مقاطع قصيرة"
@@ -4894,7 +4893,7 @@ msgid "Show suggestions"
 msgstr "عرض الاقتراحات"
 
 msgid "ShowBox streams need a FebBox login: enter the \"ui\" cookie of your FebBox account in the host configuration."
-msgstr ""
+msgstr "تتطلب روابط البث في ShowBox تسجيل الدخول إلى FebBox: أدخل ملف تعريف الارتباط \"ui\" الخاص بحساب FebBox في إعدادات الهوست."
 
 msgid "Shows"
 msgstr "العروض"
@@ -4955,7 +4954,7 @@ msgid "Skip video shorter than [min]"
 msgstr "تخطي الفيديو الأقصر من [دقيقة]"
 
 msgid "Snooker"
-msgstr ""
+msgstr "السنوكر"
 
 msgid "Society"
 msgstr "المجتمع"
@@ -5057,7 +5056,7 @@ msgid "Station:"
 msgstr "المحطة:"
 
 msgid "Status"
-msgstr ""
+msgstr "الحالة"
 
 msgid "Status:"
 msgstr "الحالة:"
@@ -5067,13 +5066,13 @@ msgid "Status: %s"
 msgstr "الحالة: %s"
 
 msgid "Stereo downmix mode for software decoder"
-msgstr "وضع خلط الصوت المجسم لفك التشفير البرمجي"
+msgstr "وضع خفض القنوات الصوتية إلى ستيريو لفك التشفير البرمجي"
 
 msgid "Stop"
 msgstr "إيقاف"
 
 msgid "Stop TorrServer when E2iPlayer is closed"
-msgstr ""
+msgstr "إيقاف TorrServer عند إغلاق E2iPlayer"
 
 msgid "Stop downloading"
 msgstr "إيقاف التنزيل"
@@ -5097,7 +5096,7 @@ msgid "Streamed"
 msgstr "تم بثه"
 
 msgid "Streaming platforms"
-msgstr ""
+msgstr "منصات البث"
 
 msgid "Studios"
 msgstr "الاستوديوهات"
@@ -5232,7 +5231,7 @@ msgid "Swedish"
 msgstr "السويدية"
 
 msgid "Switch on torrent playback?"
-msgstr ""
+msgstr "هل تريد تفعيل تشغيل التورنت؟"
 
 msgid "Synchronize"
 msgstr "مزامنة"
@@ -5349,7 +5348,7 @@ msgid "Temp"
 msgstr "مؤقت"
 
 msgid "Tennis"
-msgstr ""
+msgstr "التنس"
 
 msgid "Test the failed sites again"
 msgstr "اختبار المواقع التي فشلت مرة أخرى"
@@ -5377,13 +5376,13 @@ msgid "The OpenSubtitles v3 server did not answer. Please try again later."
 msgstr "لم يستجب خادم OpenSubtitles v3. يرجى المحاولة مرة أخرى لاحقًا."
 
 msgid "The OpenSubtitles.com server did not answer. Please try again later."
-msgstr ""
+msgstr "لم يستجب خادم OpenSubtitles.com. يُرجى المحاولة مرة أخرى لاحقًا."
 
 msgid "The QR code leads to the wiki page with pictures and the extension download."
 msgstr "يقود رمز QR إلى صفحة Wiki التي تحتوي على الصور وتنزيل الإضافة."
 
 msgid "The Stalker portal of this entry is not configured (any more)."
-msgstr ""
+msgstr "لم تعد بوابة Stalker الخاصة بهذا الإدخال مُعدّة."
 
 msgid "The Xtream account of this entry is not configured (any more)."
 msgstr "لم يعد حساب Xtream لهذا الإدخال مُعدًا."
@@ -5425,7 +5424,7 @@ msgid "The connection limit for your weeb.tv account has been reached."
 msgstr "تم الوصول إلى حد الاتصالات المسموح به لحسابك في weeb.tv."
 
 msgid "The daily download limit is reached."
-msgstr ""
+msgstr "تم بلوغ الحد اليومي للتنزيل."
 
 msgid "The data is too large."
 msgstr "البيانات كبيرة جدًا."
@@ -5467,11 +5466,11 @@ msgid "The feed of these channels could not be read - press OK to try again."
 msgstr "تعذر قراءة موجز هذه القنوات - اضغط OK للمحاولة مرة أخرى."
 
 msgid "The helper process ended unexpectedly."
-msgstr ""
+msgstr "انتهت العملية المساعدة بشكل غير متوقع."
 
 #, python-format
 msgid "The helper script %s is missing."
-msgstr ""
+msgstr "البرنامج النصي المساعد %s غير موجود."
 
 #, python-format
 msgid "The host \"%s\" cannot be used from the web interface (disabled, unknown or protected by PIN)."
@@ -5534,7 +5533,7 @@ msgstr ""
 "\"%s\""
 
 msgid "The portal did not hand out a link for this entry."
-msgstr ""
+msgstr "لم توفّر البوابة رابطًا لهذا المحتوى."
 
 msgid "The recordings of this page were on the site's old media server, which is offline."
 msgstr "كانت تسجيلات هذه الصفحة موجودة على خادم الوسائط القديم للموقع، وهو غير متصل حاليًا."
@@ -5549,6 +5548,11 @@ msgid ""
 "\n"
 "Leave this OFF if you do not want that. The other resolvers (VidEasy, VidLink, Peachify, vidrock, VidNest, ...) decrypt their links on the receiver and are not affected."
 msgstr ""
+"لا تستطيع أدوات حل الروابط 'VidCore' و'VidUp' و'VidFast' فك تشفير روابطها على جهاز الاستقبال.\n"
+"\n"
+"عند تفعيل هذا الخيار، يرسل E2iPlayer في كل مرة تفتح فيها أحد هذه المواقع رمز البث المشفّر الخاص بالموقع، والذي يحتوي على معرّف TMDb للفيلم أو الحلقة التي تفتحها، إلى خدمة الويب التابعة لجهة خارجية enc-dec.app (يديرها شخص مستقل). وبذلك يتمكن هذا الخادم من الاطلاع على المعرّف وعنوان IP الخاص بك عند كل تشغيل. لا يتم إرسال أي بيانات أخرى، ويُستخدم هذا الخيار مع أدوات حل الروابط الثلاث هذه فقط.\n"
+"\n"
+"اترك هذا الخيار معطّلًا إذا كنت لا ترغب في ذلك. أما أدوات حل الروابط الأخرى (VidEasy وVidLink وPeachify وvidrock وVidNest وغيرها)، فتفك تشفير روابطها على جهاز الاستقبال ولا تتأثر بهذا الخيار."
 
 msgid "The same item already exists in this group."
 msgstr "العنصر نفسه موجود بالفعل في هذه المجموعة."
@@ -5570,7 +5574,7 @@ msgstr "الإعدادات محمية برمز PIN، قم بتغييرها عل�
 
 #, python-format
 msgid "The site did not answer with data (HTTP %s). It may be down or have moved."
-msgstr ""
+msgstr "لم يستجب الموقع ببيانات (HTTP %s). قد يكون متوقفًا أو انتقل إلى عنوان آخر."
 
 msgid "The site has no player for this video (it only shows a cam advert)."
 msgstr "لا يحتوي الموقع على مشغل لهذا الفيديو (يعرض فقط إعلان كاميرا)."
@@ -5582,7 +5586,7 @@ msgid "The site rejected the search request."
 msgstr "رفض الموقع طلب البحث."
 
 msgid "The site's browser check (Cloudflare) could not be passed. The site may also be blocked in your country."
-msgstr ""
+msgstr "تعذّر اجتياز فحص المتصفح الخاص بالموقع (Cloudflare). وقد يكون الموقع محظورًا أيضًا في بلدك."
 
 msgid "The site's browser check could not be passed."
 msgstr "تعذر اجتياز فحص المتصفح الخاص بالموقع."
@@ -5636,20 +5640,22 @@ msgid "There is no hosts in this group."
 msgstr "لا توجد hosts في هذه المجموعة."
 
 msgid "There is no next item in this list."
-msgstr ""
+msgstr "لا يوجد عنصر تالٍ في هذه القائمة."
 
 msgid "There is no previous item in this list."
-msgstr ""
+msgstr "لا يوجد عنصر سابق في هذه القائمة."
 
 #, python-format
 msgid ""
 "There is no storage device under \"%s\" (%s free). E2iPlayer will switch this folder back to \"%s\" at the next start.\n"
 "Please choose a folder on a mounted HDD or USB stick."
 msgstr ""
+"لا يوجد جهاز تخزين ضمن المسار \"%s\" (المساحة المتاحة %s). سيعيد E2iPlayer هذا المجلد إلى \"%s\" عند التشغيل التالي.\n"
+"يُرجى اختيار مجلد على قرص صلب HDD أو وحدة USB موصولة ومركّبة."
 
 #, python-format
 msgid "There is no storage device under \"%s\". TorrServer keeps its cache in RAM until a HDD or USB stick is mounted there."
-msgstr ""
+msgstr "لا يوجد جهاز تخزين ضمن المسار \"%s\". سيحتفظ TorrServer بذاكرة التخزين المؤقت في ذاكرة RAM حتى يتم توصيل قرص صلب HDD أو وحدة USB وتركيبها في هذا المسار."
 
 msgid "This article has no free video."
 msgstr "لا يحتوي هذا المقال على فيديو مجاني."
@@ -5685,10 +5691,10 @@ msgid "This entry cannot be opened."
 msgstr "لا يمكن فتح هذا الإدخال."
 
 msgid "This entry is only an advert, there is no video."
-msgstr ""
+msgstr "هذا الإدخال عبارة عن إعلان فقط، ولا يحتوي على فيديو."
 
 msgid "This entry is protected by a PIN, open it on the receiver."
-msgstr ""
+msgstr "هذا الإدخال محمي برمز PIN، افتحه على جهاز الاستقبال."
 
 msgid "This episode is not available in this version (SUB/DUB) on this server. Try another one."
 msgstr "هذه الحلقة غير متاحة بهذه النسخة (مترجمة/مدبلجة) على هذا الخادم. جرّب خادمًا آخر."
@@ -5909,37 +5915,42 @@ msgid "Topics"
 msgstr "المواضيع"
 
 msgid "TorrServer binary (OK = choose, empty = search automatically)"
-msgstr ""
+msgstr "الملف التنفيذي لـ TorrServer (OK = اختيار، فارغ = البحث تلقائيًا)"
 
 #, python-format
 msgid "TorrServer could not be started (%s)."
-msgstr ""
+msgstr "تعذّر تشغيل TorrServer (%s)."
 
 msgid "TorrServer got no file list for this torrent (no peers or a dead link?)."
-msgstr ""
+msgstr "لم يحصل TorrServer على قائمة الملفات لهذا التورنت (هل لا توجد أجهزة مشاركة أم أن الرابط معطّل؟)."
 
 msgid "TorrServer port"
-msgstr ""
+msgstr "منفذ TorrServer"
 
 msgid "TorrServer was not found on the receiver. It is not part of E2iPlayer and not in the image feeds - install it yourself:"
-msgstr ""
+msgstr "لم يتم العثور على TorrServer على جهاز الاستقبال. فهو ليس جزءًا من E2iPlayer ولا يتوفر ضمن مستودعات صورة النظام، لذا يجب تثبيته بنفسك:"
 
 msgid "TorrServer web interface in the home network"
-msgstr ""
+msgstr "واجهة الويب لـ TorrServer على الشبكة المنزلية"
 
 msgid "Torrent"
-msgstr ""
+msgstr "تورنت"
 
 msgid ""
 "Torrent links are played with TorrServer.\n"
 "Switch on \"Play torrents with TorrServer\" in the E2iPlayer settings (Torrent configuration)."
 msgstr ""
+"يتم تشغيل روابط التورنت باستخدام TorrServer.\n"
+"فعّل خيار \"تشغيل التورنت باستخدام TorrServer\" في إعدادات E2iPlayer (إعدادات التورنت)."
 
 msgid ""
 "Torrents are peer-to-peer: while a torrent plays, the receiver connects to other users and your IP address is visible to them. Depending on your country, downloading or sharing copyrighted content through torrents may be illegal - you alone are responsible for what you play. Upload to other peers stays off unless you switch it on.\n"
 "\n"
 "TorrServer itself is not part of E2iPlayer, it has to be installed separately."
 msgstr ""
+"يعتمد التورنت على الاتصال بين المستخدمين مباشرةً (Peer-to-Peer): أثناء تشغيل التورنت، يتصل جهاز الاستقبال بمستخدمين آخرين ويكون عنوان IP الخاص بك ظاهرًا لهم. وفقًا لقوانين بلدك، قد يكون تنزيل المحتوى المحمي بحقوق الطبع والنشر أو مشاركته عبر التورنت غير قانوني؛ وأنت وحدك المسؤول عن المحتوى الذي تشغّله. يظل رفع البيانات إلى الأجهزة الأخرى معطّلًا ما لم تقم بتفعيله.\n"
+"\n"
+"برنامج TorrServer نفسه ليس جزءًا من E2iPlayer، ويجب تثبيته بشكل منفصل."
 
 msgid "Total size:"
 msgstr "الحجم الكلي:"
@@ -5948,7 +5959,7 @@ msgid "Tourism"
 msgstr "السياحة"
 
 msgid "Tournament"
-msgstr ""
+msgstr "بطولة"
 
 msgid "Tracklist"
 msgstr "قائمة المقطوعات"
@@ -6092,7 +6103,7 @@ msgid "Upload date"
 msgstr "تاريخ الرفع"
 
 msgid "Upload speed limit"
-msgstr ""
+msgstr "الحد الأقصى لسرعة الرفع"
 
 #, python-format
 msgid "Uploader: %s"
@@ -6214,7 +6225,7 @@ msgstr "الإصدار"
 
 #, python-format
 msgid "Version: %s"
-msgstr ""
+msgstr "الإصدار: %s"
 
 msgid "Video"
 msgstr "فيديو"
@@ -6226,7 +6237,7 @@ msgid "Video library"
 msgstr "مكتبة الفيديو"
 
 msgid "Video link not found."
-msgstr ""
+msgstr "لم يتم العثور على رابط الفيديو."
 
 msgid "Video mode"
 msgstr "وضع الفيديو"
@@ -6293,7 +6304,7 @@ msgid "Voice-over"
 msgstr "تعليق صوتي"
 
 msgid "Volleyball"
-msgstr ""
+msgstr "الكرة الطائرة"
 
 msgid "WWE shows"
 msgstr "عروض WWE"
@@ -6314,14 +6325,14 @@ msgid "Watch later"
 msgstr "المشاهدة لاحقًا"
 
 msgid "Watch online"
-msgstr ""
+msgstr "المشاهدة عبر الإنترنت"
 
 msgid "WebStreamr / AIOStreams manifest URL (your own):"
-msgstr ""
+msgstr "رابط ملف manifest الخاص بك في WebStreamr / AIOStreams:"
 
 #, python-format
 msgid "Weeks on chart: %s"
-msgstr ""
+msgstr "عدد الأسابيع في التصنيف: %s"
 
 msgid "Western"
 msgstr "ويسترن"
@@ -6333,7 +6344,7 @@ msgid "When the maximum is reached"
 msgstr "عند الوصول إلى الحد الأقصى"
 
 msgid "While live TV is running"
-msgstr ""
+msgstr "أثناء تشغيل البث التلفزيوني المباشر"
 
 msgid "Whole file must be downloaded to start playback!"
 msgstr "يجب تنزيل الملف بالكامل لبدء التشغيل!"
@@ -6345,7 +6356,7 @@ msgid "Winter"
 msgstr "الشتاء"
 
 msgid "Winter sports"
-msgstr ""
+msgstr "الرياضات الشتوية"
 
 msgid "With an API key from subdl.com (E2iPlayer settings, Subtitles) the official SubDL API is searched as well."
 msgstr "باستخدام مفتاح API من subdl.com (إعدادات E2iPlayer، الترجمة)، يتم البحث أيضًا في واجهة SubDL API الرسمية."
@@ -6357,7 +6368,7 @@ msgid "World"
 msgstr "العالم"
 
 msgid "Worldwide"
-msgstr ""
+msgstr "عالميًا"
 
 msgid "Wrestling"
 msgstr "المصارعة"
@@ -6497,7 +6508,7 @@ msgstr "إدخال البحث الخاص بك"
 
 #, python-format
 msgid "Youth protection: only available between %s and %s."
-msgstr ""
+msgstr "حماية القاصرين: متاح فقط بين الساعة %s والساعة %s."
 
 msgid "Youtube Suggestions"
 msgstr "اقتراحات YouTube"
@@ -6626,7 +6637,7 @@ msgstr "تعذر تشغيل الاختبار"
 
 #, python-format
 msgid "curl-impersonate is not installed on the receiver (%s). This stream only plays with it."
-msgstr ""
+msgstr "لم يتم تثبيت curl-impersonate على جهاز الاستقبال (%s). لا يعمل هذا البث إلا باستخدامه."
 
 msgid "debug"
 msgstr "تصحيح الأخطاء"
@@ -6641,10 +6652,10 @@ msgid "delete the selected entry"
 msgstr "حذف الإدخال المحدد"
 
 msgid "device ID"
-msgstr ""
+msgstr "معرّف الجهاز"
 
 msgid "device ID 2"
-msgstr ""
+msgstr "معرّف الجهاز 2"
 
 msgid "direct link"
 msgstr "رابط مباشر"
@@ -6737,10 +6748,10 @@ msgid "https - validate SSL certificates"
 msgstr "https - التحقق من شهادات SSL"
 
 msgid "iTunes - Top albums by country"
-msgstr ""
+msgstr "iTunes - أفضل الألبومات حسب البلد"
 
 msgid "iTunes - Top songs by country"
-msgstr ""
+msgstr "iTunes - أفضل الأغاني حسب البلد"
 
 msgid "insert space"
 msgstr "إدخال مسافة"
@@ -6806,7 +6817,7 @@ msgid "menu and list only"
 msgstr "القائمة والقائمة الفرعية فقط"
 
 msgid "minutes"
-msgstr ""
+msgstr "دقائق"
 
 msgid "more options (this menu)"
 msgstr "خيارات إضافية (هذه القائمة)"
@@ -6969,7 +6980,7 @@ msgid "select to sign out"
 msgstr "اختر لتسجيل الخروج"
 
 msgid "serial number"
-msgstr ""
+msgstr "الرقم التسلسلي"
 
 msgid "show more details about the selected item"
 msgstr "عرض المزيد من التفاصيل حول العنصر المحدد"
@@ -6981,7 +6992,7 @@ msgid "sign in (subscriptions, playlists, age-restricted videos)"
 msgstr "تسجيل الدخول (الاشتراكات، قوائم التشغيل، الفيديوهات المقيّدة بالعمر)"
 
 msgid "signature"
-msgstr ""
+msgstr "التوقيع"
 
 msgid "signed in"
 msgstr "تم تسجيل الدخول"
