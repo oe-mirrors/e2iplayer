@@ -209,7 +209,21 @@ config.plugins.iptvplayer.debug_keep_ffmpeg_cmd = ConfigYesNo(default=True)
 config.plugins.iptvplayer.debug_keep_js_scripts = ConfigYesNo(default=True)
 
 # icons
-config.plugins.iptvplayer.IconsSize = ConfigSelection(default="100", choices=[("100", "100x100"), ("120", "120x120"), ("135", "135x135")])
+
+
+def _defaultIconsSize():
+    # the grid tiles have a fixed pixel size at every resolution, so on a FHD/WQHD skin 100x100 looks small -
+    # there the largest size is the default (only for users who never changed the option)
+    try:
+        from enigma import getDesktop
+        if getDesktop(0).size().width() >= 1920:
+            return "135"
+    except Exception:
+        printExc()
+    return "100"
+
+
+config.plugins.iptvplayer.IconsSize = ConfigSelection(default=_defaultIconsSize(), choices=[("100", "100x100"), ("120", "120x120"), ("135", "135x135")])
 config.plugins.iptvplayer.numOfRow = ConfigSelection(default="0", choices=[("1", "1"), ("2", "2"), ("3", "3"), ("4", "4"), ("0", "auto")])
 config.plugins.iptvplayer.numOfCol = ConfigSelection(default="0", choices=[("1", "1"), ("2", "2"), ("3", "3"), ("4", "4"), ("5", "5"), ("6", "6"), ("7", "7"), ("8", "8"), ("0", "auto")])
 
