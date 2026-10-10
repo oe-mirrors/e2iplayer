@@ -3851,16 +3851,31 @@ class E2iPlayerWidget(Screen):
         return [item for item in self._getBatchCandidateRows() if getattr(item, 'batchMarked', False)]
 
     def _toggleBatchMark(self):
+        idx = self.getSelIndex()
         item = self.getSelItem()
         if item is None or not self._isBatchRow(item):
+            printDBG("batch mark: row %d can not be marked" % idx)
             return
         item.batchMarked = not getattr(item, 'batchMarked', False)
+        printDBG("batch mark: row %d [%s] -> %s, %d marked" % (idx, item.name, item.batchMarked, len(self._getBatchMarkedRows())))
+        self._redrawBatchMarks(idx)
         # next row, so a run of episodes is marked with OK, OK, OK
-        idx = self.getSelIndex()
         try:
-            self["list"].l.invalidate()
             if -1 < idx < len(self.currList) - 1:
                 self["list"].moveToIndex(idx + 1)
+        except Exception:
+            printExc()
+
+    def _redrawBatchMarks(self, idx=-1):
+        # the row markers are drawn by the list's build function: the changed row is redrawn on its own, the
+        # whole list as well (an image whose invalidate() does not rebuild the visible entries gets them anyway)
+        try:
+            if -1 < idx:
+                self["list"].l.invalidateEntry(idx)
+        except Exception:
+            printExc()
+        try:
+            self["list"].l.invalidate()
         except Exception:
             printExc()
 
@@ -3869,10 +3884,7 @@ class E2iPlayerWidget(Screen):
         for item in self.currList:
             if getattr(item, 'batchMarked', False):
                 item.batchMarked = False
-        try:
-            self["list"].l.invalidate()
-        except Exception:
-            printExc()
+        self._redrawBatchMarks()
 
     def _startBatchDownloadConfirmed(self, rows, confirmed=False):
         if confirmed:
