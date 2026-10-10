@@ -1356,10 +1356,10 @@ class pageParser(CaptchaHelper):
                 urltab.append({"name": "vrra.top", "url": url})
         return urltab
 
-    def parserFREEDISC(self, baseUrl):  # OK according to PL user?
+    def parserFREEDISC(self, baseUrl):  # update 101026: current user agent, no traceback for a page without ld+json
         urltab = []
         COOKIE_FILE = GetCookieDir("FreeDiscPL.cookie")
-        HTTP_HEADER = {"User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0 ", "Accept": "text/html", "Accept-Encoding": "gzip, deflate"}
+        HTTP_HEADER = {"User-Agent": self.cm.getDefaultHeader(browser="chrome")["User-Agent"], "Accept": "text/html", "Accept-Encoding": "gzip, deflate"}
         params = {"header": HTTP_HEADER, "cookiefile": COOKIE_FILE, "use_cookie": True, "save_cookie": True, "load_cookie": True}
         videoId = self.cm.ph.getSearchGroups(baseUrl, r"""\,f\-([0-9]+?)[^0-9]""")[0]
         if videoId == "":
@@ -1386,15 +1386,16 @@ class pageParser(CaptchaHelper):
             sts, data = self.cm.getPage(baseUrl, params)
             if not sts:
                 return urltab
-            try:
-                tmp = self.cm.ph.getDataBeetwenMarkers(data, '<script type="application/ld+json">', "</script>", False)[1]
-                tmp = json_loads(tmp)
-                tmp = tmp["embedUrl"].split("?file=")
-                if tmp[1].startswith("https"):
-                    urltab.append({"name": "freedisc.pl", "url": urlparser.decorateUrl(tmp[1], {"Referer": tmp[0], "User-Agent": HTTP_HEADER["User-Agent"]})})
-                    tmpUrls.append(tmp[1])
-            except Exception:
-                printExc()
+            tmp = self.cm.ph.getDataBeetwenMarkers(data, '<script type="application/ld+json">', "</script>", False)[1]
+            if tmp.strip():
+                try:
+                    tmp = json_loads(tmp)
+                    tmp = tmp["embedUrl"].split("?file=")
+                    if tmp[1].startswith("https"):
+                        urltab.append({"name": "freedisc.pl", "url": urlparser.decorateUrl(tmp[1], {"Referer": tmp[0], "User-Agent": HTTP_HEADER["User-Agent"]})})
+                        tmpUrls.append(tmp[1])
+                except Exception:
+                    printExc()
             videoUrl = self.cm.ph.getSearchGroups(data, """<iframe[^>]+?src=["'](http[^"^']+?/embed/[^"^']+?)["']""", 1, True)[0]
         else:
             videoUrl = baseUrl
@@ -3359,6 +3360,14 @@ class pageParser(CaptchaHelper):
         for redirectDomain in ["boosteradx.online", "byse.sx", "streamlyplayer.online"]:
             baseUrl = baseUrl.replace(redirectDomain, "streamlyplayero.online")
         ref = urlparser.getDomain(baseUrl, False)
+        if "streamlyplayero.online" in ref:
+            # fix 101026: streamlyplayero.online only frames the player of the current byse domain (bysekoze.com),
+            # its api answers with that html page - follow the frame
+            sts, page = self.cm.getPage(baseUrl, {"header": {"User-Agent": UA, "Referer": parent or ref}})
+            frame = re.search(r"""<iframe[^>]+src=["'](https?://[^/"']+/)(?:e|d)/""", page) if sts else None
+            if frame and frame.group(1) != ref:
+                baseUrl = baseUrl.replace(ref, frame.group(1), 1)
+                ref = frame.group(1)
         midMatch = re.search(r"/(?:e|d|download)/([0-9a-zA-Z]+)", baseUrl)
         if not midMatch:
             return []
@@ -3508,7 +3517,11 @@ class pageParser(CaptchaHelper):
                 html = json_loads(ct.decode("latin-1"))
                 sources = html.get("sources")
         if sources:
+            seen = set()
             for x in sources:
+                if not x.get("url") or x["url"] in seen:
+                    continue  # fix 101026: the playback data names the same master playlist up to three times
+                seen.add(x["url"])
                 url = urlparser.decorateUrl(x.get("url"), {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": ref, "Origin": ref[:-1]})
                 if ".m3u8" in url:
                     urltab.extend(getDirectM3U8Playlist(url, sortWithMaxBitrate=99999999))
@@ -5342,7 +5355,8 @@ class pageParser(CaptchaHelper):
                     })
 
                     if '.m3u8' in url.lower():
-                        urltab.extend(getDirectM3U8Playlist(url))
+                        # fix 101026: best quality first (the master lists 720p before 1080p)
+                        urltab.extend(getDirectM3U8Playlist(url, sortWithMaxBitrate=99999999))
                     else:
                         urltab.append({'name': 'VidNeo Direct', 'url': url, 'need_resolve': 0})
             except Exception:

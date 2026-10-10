@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 03.06.2025
+# Last Modified: 10.10.2026
+# 10.10.2026 - links are no longer renamed to "*name*" after use - that broke the link list's own used mark (tick + colour)
 ###################################################
 # LOCAL import
 ###################################################
@@ -275,15 +276,6 @@ class FaselhdCOM(CBaseHostClass):
         printDBG("FaselhdCOM.getVideoLinks [%s]" % baseUrl)
         videoUrl = strwithmeta(baseUrl)
         urlTab = []
-
-        # mark requested link as used one
-        if len(self.cacheLinks.keys()):
-            for key in self.cacheLinks:
-                for idx in range(len(self.cacheLinks[key])):
-                    if videoUrl in self.cacheLinks[key][idx]['url']:
-                        if not self.cacheLinks[key][idx]['name'].startswith('*'):
-                            self.cacheLinks[key][idx]['name'] = '*' + self.cacheLinks[key][idx]['name'] + '*'
-                        break
 
         urlTab = self.up.getVideoLinkExt(videoUrl)
         if 0 == len(urlTab):
