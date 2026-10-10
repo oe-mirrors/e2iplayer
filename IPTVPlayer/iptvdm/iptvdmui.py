@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 03.10.2026 - Archive no longer lists .jpg/.txt sidecars as extra copies of their video; LRM prefix for RTL file names in the list.
+# Last Modified: 10.10.2026 - batch download items: "Loading" while their links are looked up, the reason of an ERROR in the info line.
+# 03.10.2026 - Archive no longer lists .jpg/.txt sidecars as extra copies of their video; LRM prefix for RTL file names in the list.
 # 2026-07-26 - Updated to resolve renamed video files (.mp4 -> .mkv and similar) for play/remove actions, extend archive video detection, ignore non-subtitle sidecar text files,  and delete related sidecar files with immediate list refresh on remove. - Kamikaze24
 #
 #  IPTV download manager UI
@@ -79,6 +80,7 @@ class IPTVDMWidget(Screen):
                         DMHelper.STS.DOWNLOADED: 'icondone.png',
                         DMHelper.STS.INTERRUPTED: 'iconerror.png',
                         DMHelper.STS.ERROR: 'iconwarning.png',
+                        DMHelper.STS.RESOLVING: 'iconwait2.png',
                         }
 
     # Header/footer use skinchrome.build_header_auto()/build_footer_auto() -
@@ -752,9 +754,17 @@ class IPTVDMWidget(Screen):
             elif DMHelper.STS.WAITING == item.status:
                 options.extend(move)
                 options.extend(delet)
+            elif DMHelper.STS.RESOLVING == item.status:
+                # batch item whose links are looked up: give up the lookup
+                options.extend(stop)
             elif DMHelper.STS.ERROR == item.status:
                 options.extend(retry)
-                options.extend(remove)
+                if self.DM.needsResolve(item):
+                    # batch item that ended before its links were found: no file, only its title as a name -
+                    # "Remove file" would look for any video of that name
+                    options.extend(delet)
+                else:
+                    options.extend(remove)
 
             # chrome-skinned IPTVChoiceBoxWidget. The tuple-building above
             # is untouched; only converted right before opening, into
@@ -1001,6 +1011,10 @@ class IPTVDMWidget(Screen):
             info = info1
         elif DMHelper.STS.ERROR == item.status:
             status += _("DOWNLOAD ERROR")
+            # batch download: why the item could not be started
+            info = getattr(item, 'errorReason', '')
+        elif DMHelper.STS.RESOLVING == item.status:
+            status += _("Loading")
 
         if item.downloaderName:
             info = ("%s [%s]" % (info, item.downloaderName)) if info else "[%s]" % item.downloaderName
@@ -1018,7 +1032,12 @@ class IPTVDMWidget(Screen):
 #        res.append((eListboxPythonMultiContent.TYPE_TEXT, 45, self.fonts[0][2] + self.fonts[1][2], width - 45 - 240, self.fonts[2][2], 2, RT_HALIGN_LEFT | RT_VALIGN_CENTER, info))
 #        res.append((eListboxPythonMultiContent.TYPE_PIXMAP_ALPHABLEND, 3, 1, 64, 64, self.dictPIX.get(item.status, None)))
 
-        return (self.dictPIX.get(item.status, None), ltrDisplayText(fileName), item.url, info, status)
+        # a batch item has no url before its links are looked up - its host instead
+        url = item.url
+        batchSource = getattr(item, 'batchSource', None)
+        if not url and batchSource is not None:
+            url = batchSource.get('host', '')
+        return (self.dictPIX.get(item.status, None), ltrDisplayText(fileName), url, info, status)
 
     def buildEnties(self, items):
         listItems = []

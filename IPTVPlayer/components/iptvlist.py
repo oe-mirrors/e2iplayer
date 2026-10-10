@@ -172,6 +172,7 @@ class IPTVMainNavigatorList(IPTVListComponentBase):
         self.favouriteMarkerPIX = None
         self.downloadedMarkerPIX = None
         self.downloadingMarkerPIX = None
+        self.batchMarkerPIX = None
 
         # item icon box (imageType pixmap) and the watched/started overlay
         # drawn on top of it, sized to the row's own itemHeight instead of
@@ -217,6 +218,7 @@ class IPTVMainNavigatorList(IPTVListComponentBase):
         self.favouriteMarkerPIX = None
         self.downloadedMarkerPIX = None
         self.downloadingMarkerPIX = None
+        self.batchMarkerPIX = None
 
     def onCreate(self):
         self._nullPIX()
@@ -242,6 +244,8 @@ class IPTVMainNavigatorList(IPTVListComponentBase):
         self.favouriteMarkerPIX = self._loadIcon('FavouriteItem.png')
         self.downloadedMarkerPIX = self._loadIcon('DownloadedItem.png')
         self.downloadingMarkerPIX = self._loadIcon('DownloadingItem.png')
+        # row marked for a batch download (E2iPlayerWidget selection mode)
+        self.batchMarkerPIX = self._loadIcon('CheckBadge.png')
 
     def onDestroy(self):
         self._nullPIX()
@@ -254,8 +258,10 @@ class IPTVMainNavigatorList(IPTVListComponentBase):
             return None
 
     def _getRowMarkers(self, item):
-        # pixmaps for the end of the row, left to right: in the favourites, download state
+        # pixmaps for the end of the row, left to right: marked for a batch download, in the favourites, download state
         markers = []
+        if getattr(item, 'batchMarked', False) and self.batchMarkerPIX is not None:
+            markers.append(self.batchMarkerPIX)
         if getattr(item, 'isFavourite', False) and self.favouriteMarkerPIX is not None:
             markers.append(self.favouriteMarkerPIX)
         downloadState = getattr(item, 'downloadState', '')
@@ -639,6 +645,11 @@ class IPTVPlayerSelectOptionChoiceBoxList(IPTVMainNavigatorList):
         'ReversePlayableItems': 'ReverseItem.png',
         'HELP': 'HelpItem.png',
         'CLOSE': 'ExitItem.png',
+        # batch download: the "downloading" row marker, the mark of a selected row, "Remove item" of the download manager
+        'BATCH_ALL': 'DownloadingItem.png',
+        'BATCH_MARKED': 'DownloadingItem.png',
+        'BATCH_SELECT': 'CheckBadge.png',
+        'BATCH_CLEAR': 'RemoveItem.png',
     }
     # dynamic per-host rows ("HostAction:0", "HostAction:1", ...) all
     # share this one fallback icon instead of getting their own entries

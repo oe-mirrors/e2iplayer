@@ -65,7 +65,9 @@ class DMHelper:
                 DOWNLOADED='STS_DOWNLOADED',
                 INTERRUPTED='STS_INTERRUPTED',
                 ERROR='STS_ERROR',
-                POSTPROCESSING='STS_POSTPROCESSING')
+                POSTPROCESSING='STS_POSTPROCESSING',
+                # batch download: the links of the item are looked up right now (iptvdm/batchdownload.py)
+                RESOLVING='STS_RESOLVING')
     DOWNLOAD_TYPE = enum(INITIAL='INIT_DOWNLOAD',
                           CONTINUE='CONTINUE_DOWNLOAD',
                           RETRY='RETRY_DOWNLOAD')

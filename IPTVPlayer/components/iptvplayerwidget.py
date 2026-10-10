@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 # Last Modified: 2026-07-26 - Updated blue_pressed() and blue_pressed_next(), added YouTube user links actions in the blue menu, and fixed deleteFavouriteItem(); fixed missing key_green label display by correcting the Halidri1080p1 playlist.xml key_green binding and set default green button text to "Download".
+# 2026-10-10 - batch download: BLUE menu "Download all items of this page" / "Select items to download" (OK marks rows);
+#              playVideo()'s folder / free space check moved into _checkDestinationDir(), shared with it.
 # IplaPlayer based on SHOUTcast
 #
 #  $Id$
@@ -41,6 +43,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvfavouriteswidgets import IPTVF
 
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdownloadercreator import IsUrlDownloadable
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import CParsingHelper, DescribeImageFile
+from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
 from Plugins.Extensions.IPTVPlayer.tools.iptvfavourites import IPTVFavourites, getFavouritesIdentityKeys
 from Plugins.Extensions.IPTVPlayer.tools import iptvdownloaded
@@ -63,6 +66,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvhostgroups import IPTVHostsGroups
 from Plugins.Extensions.IPTVPlayer.components.iptvhostpin import AskHostPin, ClearUnlockedHosts, HostNeedsPin, IsHostUnlocked
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvbuffui import E2iPlayerBufferingWidget
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdmapi import IPTVDMApi, DMItem
+from Plugins.Extensions.IPTVPlayer.iptvdm import batchdownload
 
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, GetIPTVPlayerLastHostError, GetIPTVNotify, GetIPTVSleep
 
@@ -405,6 +409,8 @@ class E2iPlayerWidget(Screen):
             self._usingBuiltinSkin = False
 
         self.recorderMode = False  # j00zek
+        # batch download: OK marks / unmarks rows instead of opening them (BLUE menu "Select items to download")
+        self.batchSelectMode = False
         self.hostLogoPath = None
 
         self.currentService = self.session.nav.getCurrentlyPlayingServiceReference()
@@ -1283,6 +1289,18 @@ class E2iPlayerWidget(Screen):
             printExc()
         if hasattr(self.host.host, 'history'):
             options.append((_("Edit search history"), "EditSearchHistory"))
+        # batch download: all downloadable rows of the page at once, or the rows marked with OK
+        try:
+            if self.batchSelectMode:
+                numMarked = len(self._getBatchMarkedRows())
+                if numMarked:
+                    options.append((_("Download marked items (%d)") % numMarked, "BATCH_MARKED"))
+                options.append((_("Clear marks"), "BATCH_CLEAR"))
+            elif len(self._getBatchCandidateRows()) > 1:
+                options.append((_("Download all items of this page"), "BATCH_ALL"))
+                options.append((_("Select items to download"), "BATCH_SELECT"))
+        except Exception:
+            printExc()
         options.append((_("Download manager"), "IPTVDM"))
         # free-text jump inside the list currently on screen (a browsing aid
         # like the T9 letter-jump, but matches anywhere in the title) - never
@@ -1477,6 +1495,19 @@ class E2iPlayerWidget(Screen):
                     self.session.open(MessageBox, _('Search history is not available for this host.'), type=MessageBox.TYPE_ERROR, timeout=5)
             elif ret[1] == 'FIND_ENTRY':
                 self._openFindEntry()
+            elif ret[1] == 'BATCH_ALL':
+                rows = self._getBatchCandidateRows()
+                if rows:
+                    self.session.openWithCallback(boundFunction(self._startBatchDownloadConfirmed, rows), MessageBox, _("Add %d items to the download queue?") % len(rows), type=MessageBox.TYPE_YESNO)
+            elif ret[1] == 'BATCH_SELECT':
+                self.batchSelectMode = True
+                self.session.open(MessageBox, _("OK marks an item, BLUE downloads the marked items."), type=MessageBox.TYPE_INFO, timeout=5)
+            elif ret[1] == 'BATCH_MARKED':
+                rows = self._getBatchMarkedRows()
+                self._endBatchSelect()
+                self.startBatchDownload(rows)
+            elif ret[1] == 'BATCH_CLEAR':
+                self._endBatchSelect()
             elif ret[1].startswith("HostAction:"):
                 try:
                     idx = int(ret[1].split(":")[1])
@@ -1845,6 +1876,10 @@ class E2iPlayerWidget(Screen):
     def back_pressed(self):
         if self.stopAutoPlaySequencer() and self.autoPlaySeqTimerValue:
             return
+        if self.batchSelectMode and self.visible:
+            # EXIT leaves the selection mode of the batch download first (the marks are dropped)
+            self._endBatchSelect()
+            return
         try:
             if self.isInWorkThread():
                 if self.workThread.kill():
@@ -2060,6 +2095,10 @@ class E2iPlayerWidget(Screen):
         self.ok_pressed(useAlternativePlayer=True)
 
     def ok_pressed(self, eventFrom='remote', useAlternativePlayer=False):
+        if self.batchSelectMode and 'remote' == eventFrom and self.visible:
+            # selection mode of the batch download: OK marks / unmarks the row
+            self._toggleBatchMark()
+            return
         self.useAlternativePlayer = useAlternativePlayer
         if eventFrom != 'green':
             self.recorderMode = False
@@ -2907,37 +2946,11 @@ class E2iPlayerWidget(Screen):
             return config.plugins.iptvplayer.buforowanie_m3u8.value
 
     def isUrlBlocked(self, url, type):
-        protocol = url.meta.get('iptv_proto', '')
-        if ".wmv" == self.getFileExt(url, type) and config.plugins.iptvplayer.ZablokujWMV.value:
-            return True, _("Format 'wmv' blocked in configuration.")
-        elif '' == protocol:
-            return True, _("Unknown protocol [%s]") % url
-        return False, ''
+        # shared with the batch download, which looks up its links outside of this screen
+        return batchdownload.isUrlBlocked(url, type)
 
     def getFileExt(self, url, type):
-        format = url.meta.get('iptv_format', '')
-        if '' != format:
-            return '.' + format
-        protocol = url.meta.get('iptv_proto', '')
-
-        fileExtension = ''
-        tmp = url.lower().split('?', 1)[0]
-        for item in ['avi', 'flv', 'mp4', 'ts', 'mov', 'wmv', 'mpeg', 'mpg', 'mkv', 'vob', 'divx', 'm2ts', 'mp3', 'm4a', 'ogg', 'wma', 'fla', 'wav', 'flac']:
-            if tmp.endswith('.' + item):
-                fileExtension = '.' + item
-                break
-
-        if '' == fileExtension:
-            if protocol in ['mms', 'mmsh', 'rtsp']:
-                fileExtension = '.wmv'
-            elif protocol in ['f4m', 'uds', 'rtmp']:
-                fileExtension = '.flv'
-            else:
-                if type == CDisplayListItem.TYPE_VIDEO:
-                    fileExtension = '.mp4'  # default video extension
-                else:
-                    fileExtension = '.mp3'  # default audio extension
-        return fileExtension
+        return batchdownload.getFileExt(url, type)
 
     def getMoviePlayer(self, buffering=False, useAlternativePlayer=False):
         printDBG("getMoviePlayer")
@@ -2961,6 +2974,38 @@ class E2iPlayerWidget(Screen):
                 printExc()
         """
 
+    def _checkDestinationDir(self, destinationPath, recorderMode, url=None):
+        # the folder a download (recorderMode) or the buffering goes to: created when missing, enough free
+        # space -> lines of the message for the user, [] when all is fine. url: the decorated url (the host may
+        # say how much space it needs), None for a batch download (checked once before its items are queued).
+        errorTab = []
+        if not os_path.exists(destinationPath):
+            iptvtools_mkdirs(destinationPath)
+
+        if not os_path.isdir(destinationPath):
+            errorTab.append(_("Directory \"%s\" does not exists.") % destinationPath)
+            errorTab.append(_("Please set valid %s in the %s configuration.") % (_("downloads location") if recorderMode else _("buffering location"), 'E2iPlayer'))
+        else:
+            requiredSpace = 3 * 512 * 1024 * 1024  # 1,5 GB
+            if url is not None:
+                try:
+                    # a host that knows the size (e.g. a short clip) may ask for less, never for more
+                    hostSpace = int(url.meta.get('iptv_buffering_space', 0))
+                    if 0 < hostSpace < requiredSpace:
+                        requiredSpace = hostSpace
+                except (TypeError, ValueError):
+                    printExc()
+            availableSpace = iptvtools_FreeSpace(destinationPath, requiredSpace=None, unitDiv=1)
+            if requiredSpace > availableSpace:
+                errorTab.append(_("There is no enough free space in the folder \"%s\".") % destinationPath)
+                errorTab.append(_("\tDisk space required: %s") % formatBytes(requiredSpace))
+                errorTab.append(_("\tDisk space available: %s") % formatBytes(availableSpace))
+
+        if errorTab:
+            errorTab.append("\n")
+            errorTab.append(_("Tip! You can connect USB flash drive to fix this problem."))
+        return errorTab
+
     def playVideo(self, ret):
         printDBG("playVideo")
         url = ''
@@ -2980,7 +3025,7 @@ class E2iPlayerWidget(Screen):
             else:
                 recorderMode = self.recorderMode
             url = urlparser.decorateUrl(url)
-            titleOfMovie = self.currItem.name.replace('/', '-').replace(':', '-').replace('*', '-').replace('?', '-').replace('"', '-').replace('<', '-').replace('>', '-').replace('|', '-')
+            titleOfMovie = batchdownload.cleanFileTitle(self.currItem.name)
             fileExtension = self.getFileExt(url, self.currItem.type)
 
             blocked, reaseon = self.isUrlBlocked(url, self.currItem.type)
@@ -3003,31 +3048,8 @@ class E2iPlayerWidget(Screen):
             destinationPath = downloadingPath if recorderMode else bufferingPath
 
             if recorderMode or isBufferingMode:
-                errorTab = []
-                if not os_path.exists(destinationPath):
-                    iptvtools_mkdirs(destinationPath)
-
-                if not os_path.isdir(destinationPath):
-                    errorTab.append(_("Directory \"%s\" does not exists.") % destinationPath)
-                    errorTab.append(_("Please set valid %s in the %s configuration.") % (_("downloads location") if recorderMode else _("buffering location"), 'E2iPlayer'))
-                else:
-                    requiredSpace = 3 * 512 * 1024 * 1024  # 1,5 GB
-                    try:
-                        # a host that knows the size (e.g. a short clip) may ask for less, never for more
-                        hostSpace = int(url.meta.get('iptv_buffering_space', 0))
-                        if 0 < hostSpace < requiredSpace:
-                            requiredSpace = hostSpace
-                    except (TypeError, ValueError):
-                        printExc()
-                    availableSpace = iptvtools_FreeSpace(destinationPath, requiredSpace=None, unitDiv=1)
-                    if requiredSpace > availableSpace:
-                        errorTab.append(_("There is no enough free space in the folder \"%s\".") % destinationPath)
-                        errorTab.append(_("\tDisk space required: %s") % formatBytes(requiredSpace))
-                        errorTab.append(_("\tDisk space available: %s") % formatBytes(availableSpace))
-
+                errorTab = self._checkDestinationDir(destinationPath, recorderMode, url)
                 if errorTab:
-                    errorTab.append("\n")
-                    errorTab.append(_("Tip! You can connect USB flash drive to fix this problem."))
                     self.stopAutoPlaySequencer()
                     self.session.open(MessageBox, '\n'.join(errorTab), type=MessageBox.TYPE_INFO, timeout=10)
                     return
@@ -3421,6 +3443,8 @@ class E2iPlayerWidget(Screen):
         # suppresses _rememberHistorySelection() while the list below is being
         # (re)built and its selection moved around programmatically
         self._isLoadingList = True
+        # the marks of a batch download belong to the rows of the list that is replaced now
+        self.batchSelectMode = False
         refresh = params['add_param'].get('refresh', 0)
         selIndex = params['add_param'].get('selIndex', -1)
         ret = params['ret']
@@ -3711,6 +3735,180 @@ class E2iPlayerWidget(Screen):
             self["list"].l.invalidate()
         except Exception:
             printExc()
+
+    ###################################################
+    # batch download (iptvdm/batchdownload.py): the rows of the page go into the download manager at once,
+    # each with what it takes to reopen it like a favourite; the links are looked up when its turn comes
+    ###################################################
+    def _getBatchRawRow(self, item):
+        # the host's own item dict of a row (only read here: is it live?), None if unknown
+        try:
+            host = self.host
+            if 'favourites' == self.hostName:
+                favHost = self.host.host
+                if not favHost.isQuestMode():
+                    if 0 <= item.itemIdx < len(favHost.currList):
+                        params = favHost.currList[item.itemIdx]
+                        return params.get('yt_item') or params.get('fav_item')
+                    return None
+                host = favHost.getCurrentGuestHost()
+            getRaw = getattr(host, '_getRawRow', None)
+            if callable(getRaw):
+                return getRaw(item.itemIdx)
+        except Exception:
+            printExc()
+        return None
+
+    def _getBatchRowSource(self, item):
+        # (host name, favourite data) the download manager reopens the row with later - the data a favourite
+        # of the row stores (getFavouriteDataOfRow); None when the row can not be reopened that way
+        try:
+            idx = item.itemIdx
+            if 'favourites' == self.hostName:
+                favHost = self.host.host
+                if favHost.isQuestMode():
+                    return self._getBatchHostRowSource(favHost.getCurrentGuestHostName(), favHost.getCurrentGuestHost(), idx)
+                if not (0 <= idx < len(favHost.currList)):
+                    return None
+                params = favHost.currList[idx]
+                if params.get('yt_video'):
+                    # a video of the merged "newest videos" list: no stored favourite, the YouTube host opens it
+                    # (hosts/hostfavourites.py getLinksForVideo, YouTube's getFavouriteData is its json)
+                    return 'youtube', json_dumps(params['yt_item'])
+                sts, data = favHost.helper.getGroupItems(params.get('group_id', ''))
+                storageIdx = params.get('item_idx', -1)
+                if not sts or not (0 <= storageIdx < len(data)):
+                    return None
+                favItem = data[storageIdx]
+                # the host that opens the favourite (Favourites.getLinksForVideo); a direct link / urlparser
+                # favourite has none to reopen it
+                resolver = favItem.hostName if CFavItem.RESOLVER_SELF == favItem.resolver else favItem.resolver
+                if not resolver or resolver in (CFavItem.RESOLVER_DIRECT_LINK, CFavItem.RESOLVER_URLLPARSER) or not favItem.data:
+                    return None
+                return resolver, favItem.data
+            return self._getBatchHostRowSource(self.hostName, self.host, idx)
+        except Exception:
+            printExc()
+        return None
+
+    @staticmethod
+    def _getBatchHostRowSource(hostName, host, idx):
+        # hosts built on IHost alone (old API, e.g. hostxxx) have no favourite data of a row
+        getData = getattr(host, 'getFavouriteDataOfRow', None)
+        if not hostName or not callable(getData):
+            return None
+        data = getData(idx)
+        if not data:
+            return None
+        return hostName, data
+
+    def _canBatchDownload(self):
+        # the current list can be offered for a batch download at all
+        if None is gDownloadManager or None is self.host or not self.visible or self.isInWorkThread():
+            return False
+        try:
+            if not self["list"].getVisible():
+                return False
+        except Exception:
+            printExc()
+            return False
+        if 'favourites' == self.hostName:
+            return True
+        return callable(getattr(self.host, 'getFavouriteDataOfRow', None))
+
+    def _isBatchRow(self, item):
+        # a video / audio row of this page that is not live (cheap: no network, no disk)
+        if not isinstance(item, CDisplayListItem) or item.type not in batchdownload.BATCH_TYPES:
+            return False
+        if item.urlItems and item.urlItems[0].url.startswith('file://'):  # LocalMedia, like updateDownloadButton()
+            return False
+        return not batchdownload.isLiveRow(self._getBatchRawRow(item))
+
+    def _getBatchCandidateRows(self):
+        # rows of the current page the batch download takes (the current page only, not the following ones)
+        if not self._canBatchDownload():
+            return []
+        return [item for item in self.currList if self._isBatchRow(item)]
+
+    def _getBatchMarkedRows(self):
+        return [item for item in self._getBatchCandidateRows() if getattr(item, 'batchMarked', False)]
+
+    def _toggleBatchMark(self):
+        item = self.getSelItem()
+        if item is None or not self._isBatchRow(item):
+            return
+        item.batchMarked = not getattr(item, 'batchMarked', False)
+        # next row, so a run of episodes is marked with OK, OK, OK
+        idx = self.getSelIndex()
+        try:
+            self["list"].l.invalidate()
+            if -1 < idx < len(self.currList) - 1:
+                self["list"].moveToIndex(idx + 1)
+        except Exception:
+            printExc()
+
+    def _endBatchSelect(self):
+        self.batchSelectMode = False
+        for item in self.currList:
+            if getattr(item, 'batchMarked', False):
+                item.batchMarked = False
+        try:
+            self["list"].l.invalidate()
+        except Exception:
+            printExc()
+
+    def _startBatchDownloadConfirmed(self, rows, confirmed=False):
+        if confirmed:
+            self.startBatchDownload(rows)
+
+    def startBatchDownload(self, rows):
+        # rows: CDisplayListItems of the current list -> deferred items in the download manager
+        if None is gDownloadManager:
+            self.session.open(MessageBox, _("File can not be downloaded. Download manager is not available."), type=MessageBox.TYPE_ERROR, timeout=10)
+            return
+        # the list may have been replaced while a question was open
+        rows = [item for item in rows if any(item is other for other in self.currList)]
+        if not rows:
+            return
+        downloadsDir = config.plugins.iptvplayer.DownloadsDir.value
+        # free space / folder once for the whole batch, before anything is queued
+        errorTab = self._checkDestinationDir(downloadsDir, True)
+        if errorTab:
+            self.session.open(MessageBox, '\n'.join(errorTab), type=MessageBox.TYPE_INFO, timeout=10)
+            return
+
+        entries = []
+        for item in rows:
+            # the key of the "downloaded" marker exactly like playVideo()
+            hostName, itemUrl = self._getRowSource(item.itemIdx, item)
+            entries.append({'title': item.name, 'type': item.type,
+                            'key': iptvdownloaded.getItemKey(hostName, itemUrl, item.name),
+                            'source': self._getBatchRowSource(item),
+                            'pin': self._itemNeedsPin(item),
+                            'live': batchdownload.isLiveRow(self._getBatchRawRow(item))})
+        activeKeys = gDownloadManager.getActiveItemKeys()
+        accepted, skipped = batchdownload.selectBatchRows(entries, activeKeys, lambda key: iptvdownloaded.getState(key) == iptvdownloaded.STATE_DONE)
+
+        dmItems = []
+        for entry in accepted:
+            source = batchdownload.makeBatchSource(entry, downloadsDir)
+            dmItem = DMItem('', source['file'])
+            dmItem.batchSource = source
+            dmItem.itemKey = entry['key']
+            dmItems.append(dmItem)
+        added = gDownloadManager.addBatchToDQueue(dmItems) if dmItems else 0
+        skipped += len(dmItems) - added
+        printDBG("startBatchDownload host[%s] rows[%d] added[%d] skipped[%d]" % (self.hostName, len(rows), added, skipped))
+        if added:
+            self.refreshRowMarkers()
+        message = _("%d items added to the download queue, %d skipped.") % (added, skipped)
+        if added and config.plugins.iptvplayer.IPTVDMShowAfterAdd.value:
+            self.session.openWithCallback(self._batchAddedCallback, MessageBox, message, type=MessageBox.TYPE_INFO, timeout=5)
+        else:
+            self.session.open(MessageBox, message, type=MessageBox.TYPE_INFO, timeout=10)
+
+    def _batchAddedCallback(self, *args):
+        self.runIPTVDM(self.refreshRowMarkers)
 
     def _canDeleteFavourite(self):
         # inside a favourites group only a stored favourite can be removed - not the virtual
