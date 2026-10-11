@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: E2iPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-10 23:37+0000\n"
+"POT-Creation-Date: 2026-10-11 14:30+0000\n"
 "PO-Revision-Date: 2026-09-27 08:11+0200\n"
 "Last-Translator: \n"
 "Language-Team: IPTVPlayer\n"
@@ -847,6 +847,10 @@ msgstr "Couleur de fond"
 msgid "Backspace"
 msgstr "Retour arrière"
 
+#, python-format
+msgid "Balance: %s"
+msgstr ""
+
 msgid "Balkans"
 msgstr "Balkans"
 
@@ -1287,6 +1291,10 @@ msgstr "Créer des journaux de débogage"
 
 msgid "Create sidecar files (.txt/.jpg)"
 msgstr "Créer des fichiers annexes (.txt/.jpg)"
+
+#, python-format
+msgid "Created: %s"
+msgstr ""
 
 msgid "Creator:"
 msgstr "Créateur:"
@@ -3483,6 +3491,9 @@ msgstr ""
 msgid "MyE2i: offer to open the page in (Android)"
 msgstr ""
 
+msgid "MyE2i: open the page in the browser"
+msgstr ""
+
 msgid "Mystery"
 msgstr ""
 
@@ -3697,6 +3708,10 @@ msgstr ""
 msgid "Not possible (no enigma2 session)."
 msgstr "Impossible (pas de session enigma2)."
 
+#, python-format
+msgid "Not removed, still downloading: %d"
+msgstr ""
+
 msgid "Nothing available here at the moment (only upcoming broadcasts)."
 msgstr ""
 
@@ -3750,6 +3765,9 @@ msgstr "OK"
 msgid "OK marks an item, BLUE shows what can be done with the marked items."
 msgstr ""
 
+msgid "OK marks an item, MENU shows what can be done with the marked items."
+msgstr ""
+
 msgid "OMDb API key (free at omdbapi.com)"
 msgstr ""
 
@@ -3798,6 +3816,9 @@ msgstr "Issues ouvertes"
 
 msgid "Open pull requests"
 msgstr "Pull requests ouvertes"
+
+msgid "Open the page and get the link"
+msgstr ""
 
 #, python-format
 msgid "Open this page in %s"
@@ -4157,6 +4178,10 @@ msgstr ""
 msgid "Portal URL and MAC address in the host configuration, as the provider gives them out. More portals: %s in the EStalker format (portal URL, then its MAC addresses, one per line)."
 msgstr ""
 
+#, python-format
+msgid "Ports: %s"
+msgstr ""
+
 msgid "Portuguese"
 msgstr ""
 
@@ -4421,6 +4446,12 @@ msgstr "Supprimer l'élément \"%s\""
 msgid "Remove %d items from the favourites?"
 msgstr ""
 
+#, python-format
+msgid ""
+"Remove %d marked items?\n"
+"Their files are deleted too."
+msgstr ""
+
 msgid "Remove file"
 msgstr "Supprimer le fichier"
 
@@ -4432,6 +4463,10 @@ msgstr "Retirer le groupe"
 
 msgid "Remove item"
 msgstr "Supprimer l'élément"
+
+#, python-format
+msgid "Remove marked items (%d)"
+msgstr ""
 
 #, python-format
 msgid "Remove marked items from favourites (%d)"
@@ -4462,6 +4497,10 @@ msgstr "Signaler un problème (issues GitHub)"
 #, fuzzy
 msgid "Report file"
 msgstr "Supprimer le fichier"
+
+#, python-format
+msgid "Reset the settings of \"%s\" to their default values?"
+msgstr ""
 
 msgid "Reset this list to its default layout?"
 msgstr "Réinitialiser cette liste à sa disposition par défaut ?"
@@ -4817,6 +4856,10 @@ msgid "Server returned nothing."
 msgstr "Le serveur n'a rien renvoyé."
 
 #, python-format
+msgid "Server time: %s"
+msgstr ""
+
+#, python-format
 msgid "Server, user name and password in the host configuration. The server field also takes a get.php link. More accounts: %s with one get.php link per line (X-Streamity format)."
 msgstr ""
 
@@ -5159,6 +5202,10 @@ msgstr "Stockage"
 msgid "Story"
 msgstr ""
 
+#, python-format
+msgid "Stream formats: %s"
+msgstr ""
+
 #, fuzzy
 msgid "Stream link"
 msgstr "Sélectionnez un lien"
@@ -5397,6 +5444,10 @@ msgid "Taiwanese"
 msgstr ""
 
 msgid "Talk shows"
+msgstr ""
+
+#, python-format
+msgid "Tariff: %s"
 msgstr ""
 
 msgid "Teams"
@@ -6662,9 +6713,6 @@ msgstr "disponible jusqu'au %s"
 msgid "back to host/group selection"
 msgstr "retour à la sélection d'hôte/groupe"
 
-msgid "back to the previous category / jump to the next page"
-msgstr "retour à la catégorie précédente / aller à la page suivante"
-
 msgid "black"
 msgstr "noir"
 
@@ -6913,6 +6961,9 @@ msgstr "jamais"
 #, fuzzy
 msgid "next page"
 msgstr "Page suivante"
+
+msgid "next page / previous page"
+msgstr ""
 
 msgid "next page = page 1"
 msgstr ""

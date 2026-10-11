@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-10 23:37+0000\n"
+"POT-Creation-Date: 2026-10-11 14:30+0000\n"
 "PO-Revision-Date: 2026-10-08 20:17+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Norwegian Bokmål\n"
@@ -845,6 +845,10 @@ msgstr "Bakgrunnsfarge"
 msgid "Backspace"
 msgstr "Tilbake"
 
+#, python-format
+msgid "Balance: %s"
+msgstr ""
+
 msgid "Balkans"
 msgstr "Balkan"
 
@@ -1284,6 +1288,10 @@ msgstr "Opprett feilsøkingslogger"
 
 msgid "Create sidecar files (.txt/.jpg)"
 msgstr "Opprett sidefiler (.txt/.jpg)"
+
+#, python-format
+msgid "Created: %s"
+msgstr ""
 
 msgid "Creator:"
 msgstr "Skaper:"
@@ -3467,6 +3475,9 @@ msgstr "MyE2i: lukk startsiden når du er ferdig"
 msgid "MyE2i: offer to open the page in (Android)"
 msgstr "MyE2i: tilby å åpne siden i (Android)"
 
+msgid "MyE2i: open the page in the browser"
+msgstr ""
+
 msgid "Mystery"
 msgstr ""
 
@@ -3677,6 +3688,10 @@ msgstr ""
 msgid "Not possible (no enigma2 session)."
 msgstr "Ikke mulig (ingen enigma2-økt)."
 
+#, python-format
+msgid "Not removed, still downloading: %d"
+msgstr ""
+
 msgid "Nothing available here at the moment (only upcoming broadcasts)."
 msgstr "Ingenting tilgjengelig her for øyeblikket (bare kommende sendinger)."
 
@@ -3730,6 +3745,9 @@ msgstr "OK"
 msgid "OK marks an item, BLUE shows what can be done with the marked items."
 msgstr ""
 
+msgid "OK marks an item, MENU shows what can be done with the marked items."
+msgstr ""
+
 msgid "OMDb API key (free at omdbapi.com)"
 msgstr "OMDb API-nøkkel (gratis på omdbapi.com)"
 
@@ -3777,6 +3795,9 @@ msgstr "Åpne issues"
 
 msgid "Open pull requests"
 msgstr "Åpne pull requests"
+
+msgid "Open the page and get the link"
+msgstr ""
 
 #, python-format
 msgid "Open this page in %s"
@@ -4134,6 +4155,10 @@ msgstr "Portal %d - portal-URL (http://host:port/c/):"
 msgid "Portal URL and MAC address in the host configuration, as the provider gives them out. More portals: %s in the EStalker format (portal URL, then its MAC addresses, one per line)."
 msgstr "Portal-URL og MAC-adresse i host-konfigurasjonen, slik leverandøren oppgir dem. Flere portaler: %s i EStalker-format (portal-URL, deretter MAC-adressene, én per linje)."
 
+#, python-format
+msgid "Ports: %s"
+msgstr ""
+
 msgid "Portuguese"
 msgstr "Portugisisk"
 
@@ -4395,6 +4420,12 @@ msgstr "Fjern elementet \"%s\""
 msgid "Remove %d items from the favourites?"
 msgstr ""
 
+#, python-format
+msgid ""
+"Remove %d marked items?\n"
+"Their files are deleted too."
+msgstr ""
+
 msgid "Remove file"
 msgstr "Fjern fil"
 
@@ -4406,6 +4437,10 @@ msgstr "Fjern gruppe"
 
 msgid "Remove item"
 msgstr "Fjern element"
+
+#, python-format
+msgid "Remove marked items (%d)"
+msgstr ""
 
 #, python-format
 msgid "Remove marked items from favourites (%d)"
@@ -4434,6 +4469,10 @@ msgstr "Rapporter et problem (GitHub issues)"
 
 msgid "Report file"
 msgstr "Rapportfil"
+
+#, python-format
+msgid "Reset the settings of \"%s\" to their default values?"
+msgstr ""
 
 msgid "Reset this list to its default layout?"
 msgstr "Tilbakestille denne listen til standardoppsettet?"
@@ -4786,6 +4825,10 @@ msgid "Server returned nothing."
 msgstr "Serveren returnerte ingenting."
 
 #, python-format
+msgid "Server time: %s"
+msgstr ""
+
+#, python-format
 msgid "Server, user name and password in the host configuration. The server field also takes a get.php link. More accounts: %s with one get.php link per line (X-Streamity format)."
 msgstr "Server, brukernavn og passord i host-konfigurasjonen. Serverfeltet godtar også en get.php-lenke. Flere kontoer: %s med én get.php-lenke per linje (X-Streamity-format)."
 
@@ -5127,6 +5170,10 @@ msgstr "Lagring"
 msgid "Story"
 msgstr "Handling"
 
+#, python-format
+msgid "Stream formats: %s"
+msgstr ""
+
 msgid "Stream link"
 msgstr "Strømmelenke"
 
@@ -5372,6 +5419,10 @@ msgstr "Taiwansk"
 
 msgid "Talk shows"
 msgstr "Talkshow"
+
+#, python-format
+msgid "Tariff: %s"
+msgstr ""
 
 msgid "Teams"
 msgstr "Lag"
@@ -6633,9 +6684,6 @@ msgstr "tilgjengelig til %s"
 msgid "back to host/group selection"
 msgstr "tilbake til valg av host/gruppe"
 
-msgid "back to the previous category / jump to the next page"
-msgstr "tilbake til forrige kategori / gå til neste side"
-
 msgid "black"
 msgstr "svart"
 
@@ -6882,6 +6930,9 @@ msgstr "aldri"
 
 msgid "next page"
 msgstr "neste side"
+
+msgid "next page / previous page"
+msgstr ""
 
 msgid "next page = page 1"
 msgstr "neste side = side 1"

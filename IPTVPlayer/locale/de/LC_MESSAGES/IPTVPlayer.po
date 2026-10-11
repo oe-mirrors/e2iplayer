@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-10 23:37+0000\n"
+"POT-Creation-Date: 2026-10-11 14:30+0000\n"
 "PO-Revision-Date: 2026-10-11 01:42+0200\n"
 "Last-Translator: Masta2002\n"
 "Language-Team: oATV Team\n"
@@ -848,6 +848,10 @@ msgstr "Hintergrundfarbe"
 msgid "Backspace"
 msgstr "Rücktaste"
 
+#, python-format
+msgid "Balance: %s"
+msgstr ""
+
 msgid "Balkans"
 msgstr "Balkan"
 
@@ -1287,6 +1291,10 @@ msgstr "Debug-Logs erstellen"
 
 msgid "Create sidecar files (.txt/.jpg)"
 msgstr "Erstelle Sidecar-Dateien (.txt/.jpg)"
+
+#, python-format
+msgid "Created: %s"
+msgstr ""
 
 msgid "Creator:"
 msgstr "Ersteller:"
@@ -3470,6 +3478,9 @@ msgstr "MyE2i: Startseite nach Abschluss schließen"
 msgid "MyE2i: offer to open the page in (Android)"
 msgstr "MyE2i: Öffnen der Seite anbieten in (Android)"
 
+msgid "MyE2i: open the page in the browser"
+msgstr ""
+
 msgid "Mystery"
 msgstr "Mystery"
 
@@ -3680,6 +3691,10 @@ msgstr "Nicht in /usr/bin: Wählen Sie die Datei unter \"TorrServer-Programmdate
 msgid "Not possible (no enigma2 session)."
 msgstr "Nicht möglich (keine enigma2-Sitzung)."
 
+#, python-format
+msgid "Not removed, still downloading: %d"
+msgstr ""
+
 msgid "Nothing available here at the moment (only upcoming broadcasts)."
 msgstr "Hier ist derzeit nichts verfügbar (nur kommende Sendungen)."
 
@@ -3733,6 +3748,9 @@ msgstr "OK"
 msgid "OK marks an item, BLUE shows what can be done with the marked items."
 msgstr "OK markiert einen Eintrag, BLAU zeigt, was mit den markierten Einträgen möglich ist."
 
+msgid "OK marks an item, MENU shows what can be done with the marked items."
+msgstr ""
+
 msgid "OMDb API key (free at omdbapi.com)"
 msgstr "OMDb API-Schlüssel (kostenlos bei omdbapi.com)"
 
@@ -3780,6 +3798,9 @@ msgstr "Offene Issues"
 
 msgid "Open pull requests"
 msgstr "Offene Pull-Requests"
+
+msgid "Open the page and get the link"
+msgstr ""
 
 #, python-format
 msgid "Open this page in %s"
@@ -4137,6 +4158,10 @@ msgstr "Portal %d - Portal-URL (http://host:port/c/):"
 msgid "Portal URL and MAC address in the host configuration, as the provider gives them out. More portals: %s in the EStalker format (portal URL, then its MAC addresses, one per line)."
 msgstr "Portal-URL und MAC-Adresse in der Host-Konfiguration, so wie der Anbieter sie herausgibt. Weitere Portale: %s im EStalker-Format (Portal-URL, danach ihre MAC-Adressen, eine pro Zeile)."
 
+#, python-format
+msgid "Ports: %s"
+msgstr ""
+
 msgid "Portuguese"
 msgstr "Portugiesisch"
 
@@ -4398,6 +4423,12 @@ msgstr "Entferne \"%s\" Eintrag"
 msgid "Remove %d items from the favourites?"
 msgstr "%d Einträge aus den Favoriten entfernen?"
 
+#, python-format
+msgid ""
+"Remove %d marked items?\n"
+"Their files are deleted too."
+msgstr ""
+
 msgid "Remove file"
 msgstr "Datei löschen"
 
@@ -4409,6 +4440,10 @@ msgstr "Gruppe entfernen"
 
 msgid "Remove item"
 msgstr "Eintrag entfernen"
+
+#, python-format
+msgid "Remove marked items (%d)"
+msgstr ""
 
 #, python-format
 msgid "Remove marked items from favourites (%d)"
@@ -4437,6 +4472,10 @@ msgstr "Problem melden (GitHub Issues)"
 
 msgid "Report file"
 msgstr "Berichtsdatei"
+
+#, python-format
+msgid "Reset the settings of \"%s\" to their default values?"
+msgstr ""
 
 msgid "Reset this list to its default layout?"
 msgstr "Diese Liste auf die Standardanordnung zurücksetzen?"
@@ -4789,6 +4828,10 @@ msgid "Server returned nothing."
 msgstr "Server hat nichts zurückgegeben."
 
 #, python-format
+msgid "Server time: %s"
+msgstr ""
+
+#, python-format
 msgid "Server, user name and password in the host configuration. The server field also takes a get.php link. More accounts: %s with one get.php link per line (X-Streamity format)."
 msgstr "Server, Benutzername und Passwort in der Host-Konfiguration. Das Server-Feld nimmt auch einen get.php-Link an. Weitere Konten: %s mit einem get.php-Link pro Zeile (X-Streamity-Format)."
 
@@ -5130,6 +5173,10 @@ msgstr "Speicher"
 msgid "Story"
 msgstr "Handlung"
 
+#, python-format
+msgid "Stream formats: %s"
+msgstr ""
+
 msgid "Stream link"
 msgstr "Stream-Link"
 
@@ -5375,6 +5422,10 @@ msgstr "Taiwanesisch"
 
 msgid "Talk shows"
 msgstr "Talkshows"
+
+#, python-format
+msgid "Tariff: %s"
+msgstr ""
 
 msgid "Teams"
 msgstr "Mannschaften"
@@ -6646,9 +6697,6 @@ msgstr "verfügbar bis %s"
 msgid "back to host/group selection"
 msgstr "zurück zur Host-/Gruppenauswahl"
 
-msgid "back to the previous category / jump to the next page"
-msgstr "zurück zur vorherigen Kategorie / zur nächsten Seite springen"
-
 msgid "black"
 msgstr "schwarz"
 
@@ -6895,6 +6943,9 @@ msgstr "nie"
 
 msgid "next page"
 msgstr "nächste Seite"
+
+msgid "next page / previous page"
+msgstr ""
 
 msgid "next page = page 1"
 msgstr "nächste Seite = Seite 1"
