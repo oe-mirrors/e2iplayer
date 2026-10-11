@@ -622,6 +622,22 @@ class ConfigBaseWidget(Screen, ConfigListScreen):
     def keyDefaults(self):
         pass
 
+    def resetToDefaults(self, getRows):
+        # YELLOW "Defaults" of a subclass: every row getRows() returns goes back to its default value (text
+        # settings - names, logins, paths - stay). getRows() is asked again until nothing new comes: a parent
+        # option back on its default can bring sub-options that were not built before. The list is rebuilt
+        # and the changes are saved like any other change (GREEN, or the "Save changes?" question on EXIT)
+        done = set()
+        for _i in range(5):
+            new = [row[1] for row in getRows() if len(row) > 1 and id(row[1]) not in done]
+            if not new:
+                break
+            for configItem in new:
+                done.add(id(configItem))
+                if not isinstance(configItem, ConfigText):
+                    configItem.value = configItem.default
+        self.runSetup()
+
     def keyBlue(self):
         # no-op default - only a subclass with HAS_BLUE_KEY = True (and
         # its own key_blue/key_blue_icon widgets, see __prepareSkin())

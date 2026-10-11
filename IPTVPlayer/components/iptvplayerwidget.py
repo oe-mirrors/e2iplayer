@@ -877,15 +877,13 @@ class E2iPlayerWidget(Screen):
             else:
                 self["key_info_icon"].hide()
 
-        # PAGE UP/DOWN: same exact conditions pageup_pressed()/
-        # pagedown_pressed() themselves check - cheap, local, no network.
-        # Both real handlers also require self.visible; pagedown_pressed()
-        # further no-ops while the list itself is hidden - without that
-        # check here the icon could stay shown while the key would
-        # silently do nothing, e.g. mid-spinner.
-        hasPrevNext = self.visible and (
-            bool(self.prevSelList and self.prevSelList[-1])
-            or bool(self.currList and self.currList[-1].type == CDisplayListItem.TYPE_NEXT and self["list"].getVisible())
+        # PAGE UP/DOWN (CH+ next page, CH- page back): same exact
+        # conditions pageup_pressed()/pagedown_pressed() themselves check
+        # - cheap, local, no network. Both no-op while the list itself is
+        # hidden - without that check here the icon could stay shown
+        # while the key would silently do nothing, e.g. mid-spinner.
+        hasPrevNext = self._canPage() and bool(self.currList) and (
+            -1 < self._pagerIndex(CDisplayListItem.TYPE_NEXT) or self._previousPageStep()[0] is not None
         )
         if self._usingBuiltinSkin:
             if hasPrevNext:
@@ -1595,7 +1593,7 @@ class E2iPlayerWidget(Screen):
             GetKeyHelpItem('menu', _("item actions (favorites, host-specific actions)"), icon('menu')),
             GetKeyHelpItem('info', _("show more details about the selected item"), icon('info')),
             GetKeyHelpItem('num', _("jump to items starting with that letter, or launch a specific player directly"), icon('key_0-9')),
-            GetKeyHelpItem('updown', _("back to the previous category / jump to the next page"), icon('key_updown')),
+            GetKeyHelpItem('updown', _("next page / previous page"), icon('key_updown')),
             GetKeyHelpItem('play', _("start auto-play (plays through the list automatically)"), icon('play')),
         ]
         height = self._getOptionsPickerHeight(len(options))
@@ -2264,29 +2262,70 @@ class E2iPlayerWidget(Screen):
             self.showWindow()
     # end ok_pressed(self):
 
+    def _pagerIndex(self, kind):
+        # index of the list's pager entry of this kind (-1 when there is none) - the generic hosts use the
+        # item type, hostxxx a TYPE_CATEGORY entry with the imageType (PagerKind); "Next page" is the last one
+        indexes = [idx for idx, item in enumerate(self.currList) if PagerKind(item) == kind]
+        if not indexes:
+            return -1
+        return indexes[-1] if kind == CDisplayListItem.TYPE_NEXT else indexes[0]
+
+    def _canPage(self):
+        # the list is shown - not while a list is loading (spinner) or the window is hidden
+        if not self.visible:
+            return False
+        try:
+            return not (self.currList and not self["list"].getVisible())
+        except Exception:
+            printExc()
+            return False
+
+    def _previousPageStep(self):
+        # how CH- goes one page back: ('history', -1) back to the page this one was paged to with "Next page",
+        # ('item', idx) the list's own "Previous page" entry, ('history', -1) back over any other pager step
+        # (jump, first page ...), (None, -1) when the list was not paged at all - EXIT goes a level up
+        kind = getattr(self.categoryList[-1], 'pagerKind', '') if self.categoryList and self.prevSelList else ''
+        if kind == CDisplayListItem.TYPE_NEXT:
+            return 'history', -1
+        idx = self._pagerIndex(CDisplayListItem.TYPE_PREVIOUS)
+        if -1 < idx:
+            return 'item', idx
+        if kind:
+            return 'history', -1
+        return None, -1
+
+    def _openPagerItem(self, idx):
+        # opens a pager entry like OK on its row
+        item = self.currList[idx]
+        self.currItem = item
+        self.currSelIndex = idx
+        if self._itemNeedsPin(item):
+            AskHostPin(self.session, item.pinHost, boundFunction(self.requestListFromHost, 'ForItem', idx, ''))
+        else:
+            self.requestListFromHost('ForItem', idx, '')
+
     def pageup_pressed(self):
+        # CH+: next page
         self.stopAutoPlaySequencer()
-        if self.visible and self.prevSelList and self.prevSelList[-1]:
-            self.nextSelIndex = self.prevSelList.pop() - len(self.currList)
-            self.categoryList.pop()
-            printDBG(f"back_pressed prev sel index {self.nextSelIndex}")
-            self.requestListFromHost('Previous')
+        if self._canPage():
+            idx = self._pagerIndex(CDisplayListItem.TYPE_NEXT)
+            if -1 < idx:
+                self._openPagerItem(idx)
 
     def pagedown_pressed(self):
+        # CH-: one page back
         self.stopAutoPlaySequencer()
-        if self.visible:
-            try:
-                if len(self.currList) > 0 and (not self["list"].getVisible()):
-                    printDBG("pagedown_pressed -> ignored /\\")
-                    return
-            except Exception:
-                printExc()
-
-            if self.currList:
-                lastItem = self.currList[-1]
-                if lastItem.type == CDisplayListItem.TYPE_NEXT:
-                    self.currSelIndex = len(self.currList) - 1
-                    self.requestListFromHost('ForItem', self.currSelIndex, '')
+        if not self._canPage():
+            return
+        step, idx = self._previousPageStep()
+        if step == 'history':
+            self.prevSelList.pop()
+            self.categoryList.pop()
+            self.nextSelIndex = 0
+            printDBG("pagedown_pressed -> previous page")
+            self.requestListFromHost('Previous')
+        elif step == 'item':
+            self._openPagerItem(idx)
 
     @staticmethod
     def _itemNeedsPin(item):
@@ -2468,13 +2507,28 @@ class E2iPlayerWidget(Screen):
         self.displayGroupsList = []
         groupsList = self.groupObj.getGroupsList()
         for item in groupsList:
-            self.displayGroupsList.append((item.title, item.name))
+            self.displayGroupsList.append((self._groupTitleWithCount(item.title, item.name), item.name))
         if not GRIDSUPPORT:
-            self.displayGroupsList.append((_('All'), 'all'))
+            self.displayGroupsList.append((self._groupTitleWithCount(_('All'), 'all'), 'all'))
             self.displayGroupsList.append((_("Configuration"), "config"))
 
         self.newDisplayGroupsList = []
         self.session.openWithCallback(self.selectGroupCallback, PlayerSelectorWidget, inList=self.displayGroupsList, outList=self.newDisplayGroupsList, numOfLockedItems=self.getNumOfSpecialItems(self.displayGroupsList), groupName='selectgroup')
+
+    @staticmethod
+    def _getAllGroupHosts():
+        # the hosts of the "All" group: every enabled host in the host folder (unsorted)
+        return [hostName for hostName in GetHostsList(fromList=False, fromHostFolder=True) if IsHostEnabled(hostName)]
+
+    def _groupTitleWithCount(self, title, groupName):
+        # "German (12)", "All (200)": the hosts the group shows when it is opened (selectHostFromGroup) - read from
+        # the group files and the host folder only, no host is loaded; getHostsList() caches the group for opening it
+        try:
+            count = len(self._getAllGroupHosts() if groupName == 'all' else self.groupObj.getHostsList(groupName))
+        except Exception:
+            printExc()
+            return title
+        return '%s (%d)' % (title, count)
 
     def selectGroupCallback(self, ret):
         printDBG(">> selectGroupCallback")
@@ -2516,11 +2570,7 @@ class E2iPlayerWidget(Screen):
         if self.group != 'all':
             hostsList = self.groupObj.getHostsList(self.group)
         else:
-            hostsList = []
-            sortedList = SortHostsList(GetHostsList(fromList=False, fromHostFolder=True))
-            for hostName in sortedList:
-                if IsHostEnabled(hostName):
-                    hostsList.append(hostName)
+            hostsList = SortHostsList(self._getAllGroupHosts())
 
         brokenHostList = []
         for hostName in hostsList:

@@ -132,7 +132,11 @@ class IPTVMainNavigatorList(IPTVListComponentBase):
         CDisplayListItem.TYPE_CATEGORY: 'CategoryItem.png',
         CDisplayListItem.TYPE_MORE: 'MoreItem.png',
         CDisplayListItem.TYPE_VIDEO: 'VideoItem.png',
+        'SHORT': 'ShortItem.png',  # a YouTube Short: TYPE_VIDEO with image_type 'SHORT'
+        'CHANNEL': 'ChannelItem.png',  # a YouTube channel: TYPE_CATEGORY with image_type 'CHANNEL'
+        'LIVE': 'LiveItem.png',  # a live stream: TYPE_VIDEO marked 'live' / 'is_live' by its host (ihost.converItem)
         CDisplayListItem.TYPE_AUDIO: 'AudioItem.png',
+        'LIVE_AUDIO': 'LiveAudioItem.png',  # a live radio: TYPE_AUDIO marked 'live' / 'is_live' by its host
         CDisplayListItem.TYPE_SEARCH: 'SearchItem.png',
         CDisplayListItem.TYPE_ARTICLE: 'ArticleItem.png',
         CDisplayListItem.TYPE_PICTURE: 'PictureItem.png',
@@ -534,6 +538,7 @@ class IPTVActionChoiceBoxList(IPTVMainNavigatorList):
         'yt_sort_reset': 'ResetGroupItem.png',
         'host_fav_add': 'BookmarkPlusItem.png',
         'host_fav_remove': 'BookmarkMinusItem.png',
+        'host_site_hide': 'RemoveItem.png',
     }
 
     def __init__(self):
@@ -604,6 +609,12 @@ class IPTVDMActionChoiceBoxList(IPTVMainNavigatorList):
         'delet': 'RemoveItem.png',
         'move': 'PromoteItem.png',
         'rename': 'RenameItem.png',
+        # the selection functions below the row actions (MENU), same icons as in the main list's BLUE menu;
+        # "Remove marked items" is the trash can with the tick badge
+        'SELECT_START': 'SelectItem.png',
+        'SELECT_ALL': 'SelectAllItem.png',
+        'SELECT_CLEAR': 'UnselectAllItem.png',
+        'DELETE_MARKED': 'DeleteMarkedItem.png',
     }
 
     def __init__(self):

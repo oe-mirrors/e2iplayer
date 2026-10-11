@@ -62,6 +62,15 @@ CF_PAGE = "<html><head><title>CF test</title></head><body><h1>normal page</h1><s
 CF_PLUS_PAGE = CF_PAGE.replace('testvalue123', 'a~~~~~~b')
 LATE_PAGE = ("<html><head><title>Late</title></head><body><h1>late</h1><script>setTimeout(function(){"
              "fetch('/api/late', {method:'POST', body:'a=1'}); var x=new XMLHttpRequest(); x.open('GET','/api/late2'); x.send(); }, 1500);</script></body></html>")
+# NAV job: an ad gateway imitation - two script redirects (they drop the #e2itnv fragment), then a countdown page
+# whose button gets the tokenised link from a script after 2 s; a hidden decoy link (an anti-scraper "link sink")
+# already carries a token-like address and must not be taken
+NAV_JUMP_PAGE = "<html><body>redirect<script>location.href='%s';</script></body></html>"
+NAV_COUNTDOWN_PAGE = ("<html><body><a id='cs-link-sink' style='display:none' href='/decoy/watching/?token=DECOY'>x</a>"
+                      "<a id='downloadbtn' style='display:none' href='/pig/watching/'>watch</a>"
+                      "<script>setTimeout(function(){var a=document.getElementById('downloadbtn');"
+                      "a.href='/movie/watching/?token=abc%2B123'; a.style.display='';}, 2000);</script></body></html>")
+NAV_FRAGMENT = '#e2itnv_sep_c=1&s=%s&a=href&r=%s' % tuple(urllib.parse.quote(base64.b64encode(v.encode()).decode(), safe='') for v in ('a#downloadbtn', r'/watching/\?token=[^&#\s]+'))
 
 
 # ------------------------------------------------------------ local test site
@@ -99,6 +108,12 @@ class Site(BaseHTTPRequestHandler):
             self._send(200, CF_PLUS_PAGE)
         elif path == '/late.html':
             self._send(200, LATE_PAGE)
+        elif path == '/nav-start':
+            self._send(200, NAV_JUMP_PAGE % '/nav-mid')
+        elif path == '/nav-mid':
+            self._send(200, NAV_JUMP_PAGE % '/nav-countdown')
+        elif path == '/nav-countdown':
+            self._send(200, NAV_COUNTDOWN_PAGE)
         elif path.startswith('/api/'):
             self._send(200, '{"items":[1,2,3]}')
         else:
@@ -393,6 +408,8 @@ CASES = [
      lambda out, err, page: '' if any({'__ddg1_', '__ddg2_'} <= set(cookie_names(r)) for r in token_results(err)) else 'expected __ddg1_ (script) and __ddg2_ (HttpOnly) cookies, got %s' % [cookie_names(r) for r in token_results(err)]),
     ('cookies-anubis', SITE + '/anubis#e2itck_sep_c=1', {'wait': 16},
      lambda out, err, page: '' if any('techaro.lol-anubis-auth' in cookie_names(r) for r in token_results(err)) else 'no anubis cookie'),
+    ('nav-link-after-redirects', SITE + '/nav-start' + NAV_FRAGMENT, {'wait': 14},
+     lambda out, err, page: '' if any(isinstance(r, dict) and r.get('url', '').endswith('/movie/watching/?token=abc%2B123') for r in token_results(err)) else 'tokenised link not sent back, got %s' % token_results(err)),
     ('debug-snapshot', SITE + '/late.html#e2itdbg_sep_c=1', {'wait': 14},
      lambda out, err, page: '' if all(('BEGIN ' + s) in out for s in ('meta', 'dom', 'resources', 'netlog', 'cookies')) and '"url":"/api/late"' in out and '"method":"POST"' in out and '"type": "popup"' in err else 'snapshot sections or POST netlog entry missing'),
     ('turnstile-ok [net]', SITE + '/#e2it?k=%s&st=cf_re' % TURNSTILE_OK, {},

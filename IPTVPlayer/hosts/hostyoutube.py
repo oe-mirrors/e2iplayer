@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 24.09.2026
+# Last Modified: 11.10.2026
+# 11.10.2026 - channel: "Shorts" folder (Shorts tab); Shorts and channels get their own list icons (ShortItem.png, ChannelItem.png);
+#   search type "Shorts" and Trending > Shorts use the search filter "Type: Shorts"
 # 06.08.2026 - Centralized watched helper integration incl. favourite hash sync, Custom menu action handling (mark/unmark watched) added - Kamikaze24
 ###################################################
 # LOCAL import
@@ -335,11 +337,17 @@ class Youtube(CBaseHostClass):
         self.DEFAULT_ICON_URL = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/YouTube_2024.svg/960px-YouTube_2024.svg.png"
         self.MAIN_GROUPED_TAB = [{"category": "from_file", "title": _("User links"), "desc": _("User links stored in the ytlist.txt file.")}, {"category": "feeds", "title": _("Trending"), "desc": _("Browse youtube trending feeds")}]
 
-        self.SEARCH_TYPES = [(_("Video"), "video"), (_("Channel"), "channel"), (_("Playlist"), "playlist"), (_("Movie"), "movie"), (_("Live"), "live")]  # (_("Program"), "show"),... # (_("traylist"), "traylist"),
+        self.SEARCH_TYPES = [(_("Video"), "video"), (_("Channel"), "channel"), (_("Playlist"), "playlist"), (_("Movie"), "movie"), (_("Live"), "live"), (_("Shorts"), "shorts")]  # (_("Program"), "show"),... # (_("traylist"), "traylist"),
         self.ytp = YouTubeParser()
         self.currFileHost = None
         self.userLinks = YouTubeUserLinksManager(self._getUserLinksPath, self._getCategory, self._extractChannelNameFromItem)
         self.watchedHelper = IPTVWatchedHelper('youtube')
+
+    def addDir(self, params):
+        # a channel row (search, user links, lists) gets its own list icon (ChannelItem.png, components/iptvlist.py)
+        if params.get("category", "") == "channel" and "image_type" not in params:
+            params["image_type"] = "CHANNEL"
+        CBaseHostClass.addDir(self, params)
 
     def _getCategory(self, url):
         # printDBG("Youtube._getCategory")
@@ -807,7 +815,7 @@ class Youtube(CBaseHostClass):
             (_("Games"), "games", "video"),
             (_("Live"), "live", "live"),
             (_("News"), "news", "video"),
-            (_("Shorts"), "shorts", "video"),
+            (_("Shorts"), "shorts", "shorts"),  # search filter "Type: Shorts" (Short icon)
             (_("Podcasts"), "podcasts", "video"),
             (_("Sport"), "sport", "video"),
             (_("Knowledge"), "knowledge", "video"),
@@ -827,25 +835,16 @@ class Youtube(CBaseHostClass):
 
         if "channel" == category:
             if "browse" not in url and ("ctoken" not in url):
-                if url.endswith("/videos"):
-                    url = url + "?flow=list&view=0&sort=dd"
-                else:
-                    url = url + "/videos?flow=list&view=0&sort=dd"
-
-                tmp = self.ytp.getVideosFromChannelList(url, category, page, cItem)
-                if len(tmp) > 0:
-                    self._injectChannelNameToItems(tmp, defaultChannel)
-                    self.watchedHelper.updateHostListFlags(self, tmp, self._getWatchedKeyForItem)
-                    params = {"good_for_fav": False, "category": "sub_items", "title": _("Videos"), "sub_items": tmp}
-                    self.addDir(params)
-
-                url = url.replace("videos", "streams")
-                tmp = self.ytp.getVideosFromChannelList(url, category, page, cItem)
-                if len(tmp) > 0:
-                    self._injectChannelNameToItems(tmp, defaultChannel)
-                    self.watchedHelper.updateHostListFlags(self, tmp, self._getWatchedKeyForItem)
-                    params = {"good_for_fav": False, "category": "sub_items", "title": _("Live streams"), "sub_items": tmp}
-                    self.addDir(params)
+                # one folder per channel tab; the tab is put on the channel url itself (a stored ".../videos" or
+                # ".../shorts" link too), not replaced inside it - a channel named e.g. "@bestvideos" stays intact
+                channelUrl = re.sub(r"/(videos|streams|shorts|featured)/?$", "", url.split("?")[0].rstrip("/"))
+                for tab, title in (("videos", _("Videos")), ("streams", _("Live streams")), ("shorts", _("Shorts"))):
+                    # Shorts get their own list icon (youtubeparser.getShortsLockupData)
+                    tmp = self.ytp.getVideosFromChannelList(channelUrl + "/" + tab + "?flow=list&view=0&sort=dd", category, page, cItem)
+                    if len(tmp) > 0:
+                        self._injectChannelNameToItems(tmp, defaultChannel)
+                        self.watchedHelper.updateHostListFlags(self, tmp, self._getWatchedKeyForItem)
+                        self.addDir({"good_for_fav": False, "category": "sub_items", "title": title, "sub_items": tmp})
             else:
                 self.currList = self.ytp.getVideosFromChannelList(url, category, page, cItem)
                 self._injectChannelNameToItems(self.currList, defaultChannel)

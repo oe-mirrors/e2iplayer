@@ -44,7 +44,7 @@ try:
 except ImportError:
 	from urllib import urlencode, urlopen, unquote, quote
 	from urlparse import urlparse, parse_qs
-from Components.config import config, ConfigSelection, ConfigYesNo, getConfigListEntry, ConfigDirectory, ConfigText
+from Components.config import config, ConfigSelection, ConfigYesNo, getConfigListEntry, ConfigDirectory, ConfigText, configfile
 from Screens.MessageBox import MessageBox
 from Tools.Directories import resolveFilename, SCOPE_PLUGINS
 from time import time as time_time, sleep, strftime, localtime
@@ -2700,12 +2700,24 @@ class IPTVHost(IHost):
 		siteName = getattr(self.currList[Index], 'favSite', '') if 0 <= Index < len(self.currList) else ''
 		if not siteName:
 			return RetHost(RetHost.NOT_IMPLEMENTED, value=[])
-		# 'action' host_fav_add / host_fav_remove: the bookmark icons of the action popup (components/iptvlist.py)
+		# 'action' host_fav_add / host_fav_remove / host_site_hide: the icons of the action popup (components/iptvlist.py)
 		if siteName in loadFavorites():
-			return RetHost(RetHost.OK, value=[IPTVChoiceBoxItem(_('Remove from favorites'), "", {'action': 'host_fav_remove', 'xxx_favorite': siteName})])
-		return RetHost(RetHost.OK, value=[IPTVChoiceBoxItem(_('Add item to favorites'), "", {'action': 'host_fav_add', 'xxx_favorite': siteName})])
+			options = [IPTVChoiceBoxItem(_('Remove from favorites'), "", {'action': 'host_fav_remove', 'xxx_favorite': siteName})]
+		else:
+			options = [IPTVChoiceBoxItem(_('Add item to favorites'), "", {'action': 'host_fav_add', 'xxx_favorite': siteName})]
+		# a site that does not work here: its own switch in the hostxxx settings set to off (on again there)
+		options.append(IPTVChoiceBoxItem('Hide site "%s"' % siteName, "", {'action': 'host_site_hide', 'xxx_hide': siteName}))
+		return RetHost(RetHost.OK, value=options)
 
 	def performCustomAction(self, privateData):
+		hideName = privateData.get('xxx_hide', '') if isinstance(privateData, dict) else ''
+		if hideName:
+			ret = self.host.sessionEx.waitForFinishOpen(MessageBox, 'Hide site "%s"?\nIt can be switched on again in the hostxxx settings.' % hideName, type=MessageBox.TYPE_YESNO, default=True)
+			if not ret or not ret[0]:
+				return RetHost(RetHost.NOT_IMPLEMENTED, value=[])
+			if not self.host.hideSite(hideName):
+				return RetHost(RetHost.ERROR, value=['Site "%s" could not be switched off.' % hideName])
+			return RetHost(RetHost.OK, value=['refresh'])
 		siteName = privateData.get('xxx_favorite', '') if isinstance(privateData, dict) else ''
 		if not siteName:
 			return RetHost(RetHost.NOT_IMPLEMENTED, value=[])
@@ -3012,7 +3024,7 @@ class _SelfTestSession(object):
 
 
 class Host(CBaseHostClass, XXXParser):
-	XXXversion = "2026.10.11.1"
+	XXXversion = "2026.10.11.2"
 	currList = []
 	MAIN_URL = ''
 	SEARCH_proc = ''
@@ -3183,6 +3195,32 @@ class Host(CBaseHostClass, XXXParser):
 				printExc()
 			self.favFolderList = folder
 			self.SEARCH_proc, self.oldName = searchProc, oldName
+
+	def hideSite(self, siteName):
+		# MENU "Hide site" on a site row: the site's own switch of the hostxxx settings goes off and is saved; the main menu
+		# and the favorites folder are built again in place (IPTVHost keeps the lists as they were built)
+		cfgItem = getattr(config.plugins.iptvplayer, siteName.replace(' ', '').lower(), None)
+		if cfgItem is None:
+			return False
+		try:
+			# ConfigYesNo (site without a search) or ConfigSelection "0" No / "1" Yes / "2" Yes + Global Search
+			cfgItem.value = False if isinstance(cfgItem.value, bool) else "0"
+			cfgItem.save()
+			configfile.save()
+		except Exception:
+			printExc()
+			return False
+		printDBG('XXX: site "%s" switched off by the user (MENU Hide site)' % siteName)
+		searchProc, oldName = self.SEARCH_proc, getattr(self, 'oldName', '')
+		try:
+			if self.mainMenuList:
+				self.mainMenuList[:] = self.listsItems(-1, '', 'main-menu')
+			if self.favFolderList:
+				self.favFolderList[:] = self.listsItems(-1, '', 'FAVORITES')
+		except Exception:
+			printExc()
+		self.SEARCH_proc, self.oldName = searchProc, oldName
+		return True
 
 	def keepSiteMain(self, items, siteMain):
 		for item in items:
@@ -4179,6 +4217,7 @@ class Host(CBaseHostClass, XXXParser):
 			valTabHentai = []
 			favSites = set()
 			favNames = loadFavorites()
+			offSites = []  # switched off in the settings (or hidden with MENU "Hide site"), for the debug log
 
 			for key, (_url, _name, _search) in sorted(SITEDATA.items()):
 				baseUrl = get_base_url(_url)
@@ -4191,6 +4230,8 @@ class Host(CBaseHostClass, XXXParser):
 					siteItem.hostFavourite = _name in favNames  # favourite marker at the end of the row
 					valTab.append(siteItem)
 					favSites.add(_name)
+				else:
+					offSites.append(_name)
 
 			for key, (_url, _name, _search) in sorted(SITEDATA_CAMS.items()):
 				baseUrl = get_base_url(_url)
@@ -4203,6 +4244,8 @@ class Host(CBaseHostClass, XXXParser):
 					siteItem.hostFavourite = _name in favNames
 					valTabCams.append(siteItem)
 					favSites.add(_name)
+				else:
+					offSites.append(_name)
 
 			for key, (_url, _name, _search) in sorted(SITEDATA_HENTAI.items()):
 				baseUrl = get_base_url(_url)
@@ -4215,6 +4258,12 @@ class Host(CBaseHostClass, XXXParser):
 					siteItem.hostFavourite = _name in favNames
 					valTabHentai.append(siteItem)
 					favSites.add(_name)
+				else:
+					offSites.append(_name)
+
+			# which sites the user found broken on their box
+			if offSites:
+				printDBG('XXX: sites switched off in the settings (%d): %s' % (len(offSites), ', '.join(sorted(offSites))))
 
 			valTab.insert(0, CDisplayListItem(_('----------  Porn Sites  ----------') + ' (%d)' % len(valTab), '', CDisplayListItem.TYPE_ARTICLE, [''], '', '', None))
 

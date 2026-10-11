@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 09.10.2026
+# Last Modified: 11.10.2026
+# 11.10.2026 - "Newest videos": video length in the description (uploads playlist page, one request per channel),
+# Shorts with their own list icon; stored live streams / live radios with the live icon
 # 09.10.2026 - "Newest videos": INFO shows the full YouTube description, no age in the title (file name)
 # 08.10.2026 - favourites of a PIN protected host ask for the host's PIN
 # 01.10.2026 - the "Newest videos (all YouTube channels)" row can be switched off in the host settings
@@ -117,6 +119,13 @@ class Favourites(CBaseHostClass):
             addFun = typesMap.get(item.type, None)
             favUrl, favItem = self._parseFavItem(item)
             params = {'name': 'item', 'title': item.name, 'host': item.hostName, 'icon': item.iconimage, 'desc': item.description, 'group_id': cItem['group_id'], 'item_idx': idx, 'fav_url': favUrl, 'fav_item': favItem}
+            # the YouTube list icons: a channel (also one stored before it had the icon) and a Short
+            if self._isYtChannel(item.hostName, favItem):
+                params['image_type'] = 'CHANNEL'
+            elif item.hostName == 'youtube' and isinstance(favItem, dict) and favItem.get('image_type') == 'SHORT':
+                params['image_type'] = 'SHORT'
+            elif isinstance(favItem, dict) and (favItem.get('live') or favItem.get('is_live')):
+                params['live'] = True  # a stored live stream / live radio: the live icon (ihost.converItem)
             if None is not addFun:
                 rows.append((params, addFun))
 
@@ -253,8 +262,9 @@ class Favourites(CBaseHostClass):
         failed = len([url for url in set(urls) if feeds.get(url) is None])
         now = time.time()
         newest = self._getNewestEntries(feeds)
+        durations = self._getNewestDurations(feeds, newest)
         for entry in newest:
-            self._addNewestVideo(entry, now)
+            self._addNewestVideo(entry, now, durations.get(entry['video_id'], ''))
         if failed or not newest:
             self._addNewestNotice(cItem['group_id'], failed)
 
@@ -267,11 +277,24 @@ class Favourites(CBaseHostClass):
                 videos[entry['video_id']] = entry
         return sorted(videos.values(), key=lambda entry: -entry['published'])[:self.YT_NEWEST_MAX]
 
-    def _addNewestVideo(self, entry, now):
+    @staticmethod
+    def _getNewestDurations(feeds, newest):
+        # {video id: "12:34"} of the listed videos - the feed has no length, the uploads playlist page of a channel has
+        # it (one request per channel that has a video in the list); a channel not read in time shows no length
+        videoIds = set(entry['video_id'] for entry in newest)
+        urls = [url for url, info in feeds.items() if any(entry['video_id'] in videoIds for entry in (info or {}).get('entries', []))]
+        durations = {}
+        for channelDurations in ytchannelfeed.getDurations(urls).values():
+            durations.update(channelDurations or {})
+        return durations
+
+    def _addNewestVideo(self, entry, now, duration=''):
         video = {'type': 'video', 'category': 'video', 'title': entry['title'], 'url': 'https://www.youtube.com/watch?v=' + entry['video_id'],
                  'icon': entry['icon'], 'video_id': entry['video_id'], 'channel': entry['channel']}
         desc = entry['channel'] + "\n" + ytchannelfeed.describeDate(entry['published'], now)
         extra = []
+        if duration:
+            extra.append(_("Duration: %s") % duration)
         if entry['short']:
             extra.append('Short')
         if entry['views']:
@@ -280,8 +303,11 @@ class Favourites(CBaseHostClass):
             desc += "\n" + ' | '.join(extra)
         # no age in the title: it ends up in the download file name; the description shows it
         title = entry['channel'] + ': ' + entry['title']
-        self.addVideo({'name': 'item', 'title': title, 'host': 'youtube', 'icon': entry['icon'], 'desc': desc,
-                       'yt_video': True, 'yt_item': video, 'fav_item': video, 'fav_url': video['url']})
+        params = {'name': 'item', 'title': title, 'host': 'youtube', 'icon': entry['icon'], 'desc': desc,
+                  'yt_video': True, 'yt_item': video, 'fav_item': video, 'fav_url': video['url']}
+        if entry['short']:
+            params['image_type'] = 'SHORT'  # still a video, only the list icon differs (ShortItem.png)
+        self.addVideo(params)
 
     def _addNewestNotice(self, groupId, failed):
         # a row that says so, not a silently shorter list; pressing OK on it asks the feeds again

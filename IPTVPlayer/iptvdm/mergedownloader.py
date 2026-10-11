@@ -223,11 +223,12 @@ class MergeDownloader(BaseDownloader, SidecarMixin):
             if not cleanChannel or not cleanTitle:
                 return filePath
 
-            prefix = cleanChannel + ' - '
-            if cleanTitle.startswith(prefix):
-                newBaseName = cleanTitle + extPart
-            else:
-                newBaseName = prefix + cleanTitle + extPart
+            # the title may start with the channel already: "Channel - Title" or a list row "Channel: Title" (favourites
+            # "Newest videos"), whose ':' is a '-' in the file name by now ("Channel- Title") - no second channel then
+            match = re.match(re.escape(cleanChannel) + r'\s*[-_:]+\s*(\S.*)$', cleanTitle, re.IGNORECASE)
+            if match:
+                cleanTitle = match.group(1)
+            newBaseName = cleanChannel + ' - ' + cleanTitle + extPart
 
             if dirName:
                 newPath = os.path.join(dirName, newBaseName)

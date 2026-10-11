@@ -6,6 +6,9 @@
 #   https://www.youtube.com/feeds/videos.xml?channel_id=UC...
 # - no InnerTube request, no login, so it is not affected by the bot wall and
 # is cheap enough to ask for a whole group of channels at once.
+# The feed has no video length: the channel's uploads playlist page
+#   https://www.youtube.com/playlist?list=UU...
+# shows it for its newest 100 videos (one request per channel, not per video).
 ###################################################
 # LOCAL import
 ###################################################
@@ -23,6 +26,7 @@ import xml.etree.ElementTree as ET
 ###################################################
 
 FEED_URL = "https://www.youtube.com/feeds/videos.xml?channel_id=%s"
+UPLOADS_URL = "https://www.youtube.com/playlist?list=UU%s"  # channel id without its "UC"
 USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"
 
 CACHE_TTL = 600  # seconds a fetched feed is reused
@@ -30,18 +34,22 @@ FAIL_TTL = 60  # seconds a failed channel is not asked again
 MAX_WORKERS = 6
 REQUEST_TIMEOUT = 10
 TOTAL_TIMEOUT = 30  # upper bound for one getFeeds() call
+DURATION_TIMEOUT = 15  # upper bound for one getDurations() call
 
 _ATOM = "{http://www.w3.org/2005/Atom}"
 _YT = "{http://www.youtube.com/xml/schemas/2015}"
 _MEDIA = "{http://search.yahoo.com/mrss/}"
 
 _CHANNEL_ID_RE = re.compile(r"/channel/(UC[A-Za-z0-9_-]{22})")
+# the length badge of a video in the playlist page: {"text":"12:34", ... "animationActivationTargetId":"<video id>"}
+_DURATION_RE = re.compile(r'"thumbnailBadgeViewModel":\{"text":"(\d{1,2}(?::\d{2}){1,2})"[^{}]*?"animationActivationTargetId":"([A-Za-z0-9_-]{11})"')
 _DATE_RE = re.compile(r"^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.\d+)?(Z|[+-]\d{2}:?\d{2})?")
 
 _lock = threading.Lock()
 _idCache = {}  # channel url -> UC... id
 _idFailed = {}  # channel url -> time of the failed lookup
 _feedCache = {}  # UC... id -> (fetchedAt, info or None)
+_durationCache = {}  # UC... id -> (fetchedAt, {video id: "12:34"} or None)
 
 
 def parseTimestamp(text):
@@ -134,10 +142,12 @@ def parseFeed(data):
     return {"channel": channel, "entries": entries}
 
 
-def _getPage(cm, url, cookie=False):
+def _getPage(cm, url, cookie=False, gzip=False):
     header = {"User-Agent": USER_AGENT, "Accept-Language": "en-US,en;q=0.9"}
     if cookie:
         header["Cookie"] = "SOCS=CAI"  # skips the EU consent redirect
+    if gzip:
+        header["Accept-Encoding"] = "gzip"  # the playlist page: ~2 MB, ~300 KB packed (pCommon unpacks it)
     sts, data = cm.getPage(url, {"header": header, "timeout": REQUEST_TIMEOUT})
     printDBG("ytchannelfeed._getPage sts[%s] status[%s] len[%d] url[%s]" % (sts, getattr(cm, "meta", {}).get("status_code", ""), len(data or ""), url))
     return (data if sts else "")
@@ -194,18 +204,46 @@ def getChannelFeed(url, cm=None):
     return info
 
 
+def parseDurations(data):
+    # {video id: "12:34"} from a playlist page (videos without a length badge - live, upcoming - are left out)
+    durations = {}
+    for m in _DURATION_RE.finditer(data or ""):
+        durations.setdefault(m.group(2), m.group(1))
+    return durations
+
+
+def getChannelDurations(url, cm=None):
+    # {video id: "12:34"} of the newest 100 uploads of one channel, {} when the page could not be read
+    cm = cm or common()
+    channelId = resolveChannelId(cm, url)
+    if not channelId:
+        return {}
+    now = time.time()
+    with _lock:
+        cached = _durationCache.get(channelId)
+    if cached and now - cached[0] < (CACHE_TTL if cached[1] else FAIL_TTL):
+        return cached[1] or {}
+    durations = parseDurations(_getPage(cm, UPLOADS_URL % channelId[2:], cookie=True, gzip=True))
+    printDBG("ytchannelfeed.getChannelDurations channel[%s] id[%s] lengths[%d]" % (url, channelId, len(durations)))
+    with _lock:
+        _durationCache[channelId] = (now, durations or None)
+    return durations
+
+
 def clearCache():
     # forget every feed (a refresh should look for new uploads again)
     with _lock:
         _feedCache.clear()
+        _durationCache.clear()
         _idFailed.clear()
 
 
 def clearFailed():
     # forget only what failed, so the next request tries those channels again instead of waiting for FAIL_TTL
     with _lock:
-        for channelId in [key for key, value in _feedCache.items() if value[1] is None]:
-            del _feedCache[channelId]
+        for cache in (_feedCache, _durationCache):
+            for channelId in [key for key, value in cache.items() if value[1] is None]:
+                del cache[channelId]
         _idFailed.clear()
 
 
@@ -220,12 +258,22 @@ def _newWorkerThread(target):
 
 def getFeeds(urls):
     # {url: info or None} for many channels, fetched by a few worker threads
+    return _runParallel(urls, getChannelFeed, None, TOTAL_TIMEOUT)
+
+
+def getDurations(urls):
+    # {url: {video id: "12:34"}} for many channels, fetched by a few worker threads
+    return _runParallel(urls, getChannelDurations, {}, DURATION_TIMEOUT)
+
+
+def _runParallel(urls, fetch, failed, timeout):
+    # {url: fetch(url, cm)} - failed for an url whose fetch raised; an url not finished in time is missing
     urls = list(dict.fromkeys(urls))
     results = {}
     if not urls:
         return results
     state = {"next": 0}
-    deadline = time.time() + TOTAL_TIMEOUT
+    deadline = time.time() + timeout
 
     def worker():
         cm = common()
@@ -236,10 +284,10 @@ def getFeeds(urls):
             if idx >= len(urls):
                 return
             try:
-                info = getChannelFeed(urls[idx], cm)
+                info = fetch(urls[idx], cm)
             except Exception:
                 printExc()
-                info = None
+                info = failed
             with _lock:
                 results[urls[idx]] = info
 

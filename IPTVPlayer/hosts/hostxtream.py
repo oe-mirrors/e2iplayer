@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 06.10.2026
+# Last Modified: 11.10.2026
+# 11.10.2026 - account menu: "Information" row - INFO shows server, status, expiry, connections, creation date, stream
+#   formats, ports and server time of the account (from the cached player_api.php answer)
 # hostxtream.py - Xtream Codes IPTV accounts (player_api.php)
 # 17.10.2025 - popking (odem2014): live channels
 # 03.10.2026 - live + movies + series + catch-up for up to 3 accounts
@@ -523,6 +525,32 @@ class XtreamApiHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
             parts.append(_("Connections: %s of %s") % (_str(ui.get('active_cons')) or '0', maxCons))
         return _str(ui.get('status')).lower() in ('active', ''), ' | '.join(parts)
 
+    def accountInfoText(self, acc):
+        # INFO on the account's "Information" row: everything the panel tells about the account and its server -
+        # from the same cached player_api.php answer, never the login or the password
+        data = self.getAccountData(acc)
+        ui, si = _dict(data.get('user_info')), _dict(data.get('server_info'))
+        lines = [_("Server") + ': ' + acc['host']]
+        lines.extend(self.accountStatus(acc)[1].split(' | '))
+        created = _int(ui.get('created_at'), 0)
+        if created > 0:
+            lines.append(_("Created: %s") % time.strftime('%d.%m.%Y', time.localtime(created)))
+        formats = ui.get('allowed_output_formats')
+        if isinstance(formats, list) and formats:
+            lines.append(_("Stream formats: %s") % ', '.join(_str(f) for f in formats))
+        ports = ', '.join('%s %s' % (name, _str(si.get(key))) for name, key in (('HTTP', 'port'), ('HTTPS', 'https_port'), ('RTMP', 'rtmp_port')) if _str(si.get(key)))
+        if ports:
+            protocol = _str(si.get('server_protocol'))
+            lines.append(_("Ports: %s") % (ports + (' (%s)' % protocol if protocol else '')))
+        serverTime = ' '.join(x for x in (_str(si.get('time_now')), _str(si.get('timezone'))) if x)
+        if serverTime:
+            lines.append(_("Server time: %s") % serverTime)
+        message = _str(ui.get('message'))
+        if message:
+            lines.append('')
+            lines.append(message)
+        return '\n'.join(lines)
+
     def serverOffset(self, acc):
         # server local time - UTC in seconds (the timeshift URL takes the start in server time), None if unknown
         si = _dict(self.getAccountData(acc).get('server_info'))
@@ -593,6 +621,9 @@ class XtreamApiHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
             params = dict(base)
             params.update({'category': 'xt_cats', 'x_kind': kind, 'title': title, 'desc': status})
             self.addDir(params)
+        params = dict(base)
+        params.update({'category': 'xt_accinfo', 'title': _("Information"), 'desc': status})
+        self.addArticle(params)
         for item in self.searchItems():
             params = dict(base)
             params.update(item)
@@ -1066,6 +1097,8 @@ class XtreamApiHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
         acc = self.getAccount(cItem)
         kind = ITEM_KINDS.get(cItem.get('category', ''), '')
         icon = cItem.get('icon', '')
+        if acc is not None and cItem.get('category', '') == 'xt_accinfo':
+            return self._article(cItem, acc['name'], self.accountInfoText(acc), icon, {})
         if acc is None or kind in ('timeshift', 'archive'):
             return self._article(cItem, cItem.get('title', ''), cItem.get('desc', '').replace('[/br]', '\n'), icon, {})
         if kind == 'live':
@@ -1195,4 +1228,4 @@ class IPTVHost(GenericFolderWatchedHostMixin, CHostBase):
         return [(_("Live channels"), 'live'), (_("Movies"), 'movie'), (_("Series"), 'series')]
 
     def withArticleContent(self, cItem):
-        return bool(cItem.get('acc_id')) and cItem.get('category', '') in ITEM_KINDS
+        return bool(cItem.get('acc_id')) and (cItem.get('category', '') in ITEM_KINDS or cItem.get('category', '') == 'xt_accinfo')

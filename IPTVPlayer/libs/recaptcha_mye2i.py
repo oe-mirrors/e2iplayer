@@ -18,6 +18,10 @@ class UnCaptchaReCaptcha:
             title = _("MyE2i Cloudflare solution")
         elif captchaType == 'COOKIES':
             title = _("MyE2i browser check solution")
+        elif captchaType == 'NAV':
+            # a page whose link only the site's scripts build (ad gateway, countdown): captchaData = JSON
+            # {"selector", "attr", "pattern"}, the answer is the usual base64 JSON with the link in "url"
+            title = _("MyE2i: open the page in the browser")
         else:
             title = _("MyE2i reCAPTCHA solution")
         retArg = self.sessionEx.waitForFinishOpen(UnCaptchaReCaptchaMyE2iWidget, title=title, sitekey=sitekey, referer=referer, captchaType=captchaType, captchaAction=captchaAction, captchaData=captchaData)
