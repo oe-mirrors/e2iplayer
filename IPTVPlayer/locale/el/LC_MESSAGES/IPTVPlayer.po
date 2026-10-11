@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-11 14:30+0000\n"
-"PO-Revision-Date: 2026-10-09 23:09+0300\n"
+"PO-Revision-Date: 2026-10-11 18:42+0300\n"
 "Last-Translator: \n"
 "Language-Team: giorbak\n"
 "Language: el\n"
@@ -78,7 +78,7 @@ msgstr "Πρόγραμμα αναπαραγωγής ροών \"Ιστού\""
 
 #, python-format
 msgid "%d added, %d skipped."
-msgstr ""
+msgstr "Προστέθηκαν %d, παραλείφθηκαν %d."
 
 #, python-format
 msgid "%d duplicate entries removed."
@@ -90,11 +90,11 @@ msgstr "Αφαιρέθηκε %d διπλότυπη καταχώρηση."
 
 #, python-format
 msgid "%d items added to the download queue, %d skipped."
-msgstr ""
+msgstr "Προστέθηκαν %d στοιχεία στην ουρά λήψεων, παραλείφθηκαν %d."
 
 #, python-format
 msgid "%d of %d downloaded"
-msgstr ""
+msgstr "Λήφθηκαν %d από %d"
 
 #, python-format
 msgid "%d parts"
@@ -110,7 +110,7 @@ msgstr "%d απαγγελίες"
 
 #, python-format
 msgid "%d removed, %d skipped."
-msgstr ""
+msgstr "Αφαιρέθηκαν %d, παραλείφθηκαν %d."
 
 #, python-format
 msgid "%d videos"
@@ -166,7 +166,7 @@ msgstr "%s ακόλουθοι"
 
 #, python-format
 msgid "%s needs a free account. Enter login and password in the host configuration."
-msgstr ""
+msgstr "Το %s απαιτεί δωρεάν λογαριασμό. Εισάγετε όνομα χρήστη και κωδικό πρόσβασης στις ρυθμίσεις του host."
 
 #, python-format
 msgid "%s password"
@@ -230,7 +230,7 @@ msgstr "%s προβολές"
 
 #, python-format
 msgid "%s: decrypting the stream, this can take a while (%d s)"
-msgstr ""
+msgstr "%s: αποκρυπτογράφηση της ροής, αυτό μπορεί να διαρκέσει λίγο (%d δευτ.)"
 
 #, python-format
 msgid "(%d YouTube channel(s) could not be read)"
@@ -252,19 +252,19 @@ msgid "--"
 msgstr "--"
 
 msgid "----- BASIC CONFIGURATION -----"
-msgstr "----- ΒΑΣΙΚΕΣ ΡΥΘΜΙΣΕΙΣ -----"
+msgstr "----- Βασικές Ρυθμίσεις -----"
 
 msgid "----- BUFFERING CONFIGURATION -----"
-msgstr "----- ΡΥΘΜΙΣΕΙΣ ΠΡΟΣΩΡΙΝΗΣ ΑΠΟΘΗΚΕΥΣΗΣ -----"
+msgstr "----- Ρυθμίσεις Προσωρινής Αποθήκευσης -----"
 
 msgid "----- CAPTCHA CONFIGURATION -----"
-msgstr "----- ΡΥΘΜΙΣΕΙΣ CAPTCHA -----"
+msgstr "----- Ρυθμίσεις Captcha -----"
 
 msgid "----- DEBUG CONFIGURATION -----"
-msgstr "----- ΡΥΘΜΙΣΕΙΣ ΕΝΤΟΠΙΣΜΟΥ ΣΦΑΛΜΑΤΩΝ -----"
+msgstr "----- Ρυθμίσεις Εντοπισμού Σφαλμάτων -----"
 
 msgid "----- DOWNLOADING CONFIGURATION -----"
-msgstr "----- ΡΥΘΜΙΣΕΙΣ ΛΗΨΕΩΝ -----"
+msgstr "----- Ρυθμίσεις Λήψεων -----"
 
 msgid "----- Debug -----"
 msgstr "----- Εντοπισμός σφαλμάτων -----"
@@ -273,34 +273,34 @@ msgid "----- Global HostXXX Configuration -----"
 msgstr "----- Γενικές ρυθμίσεις HostXXX -----"
 
 msgid "----- METADATA PROVIDERS CONFIGURATION -----"
-msgstr "----- ΡΥΘΜΙΣΕΙΣ ΠΑΡΟΧΩΝ ΜΕΤΑΔΕΔΟΜΕΝΩΝ -----"
+msgstr "----- Ρυθμίσεις Παρόχων Μεταδεδομένων -----"
 
 msgid "----- PLAYERS & PLAYBACK CONFIGURATION -----"
-msgstr "----- ΡΥΘΜΙΣΕΙΣ ΠΡΟΓΡΑΜΜΑΤΩΝ ΑΝΑΠΑΡΑΓΩΓΗΣ & ΑΝΑΠΑΡΑΓΩΓΗ -----"
+msgstr "----- Ρυθμίσεις Προγραμμάτων Αναπαραγωγής & Αναπαραγωγή -----"
 
 msgid "----- PROXIES CONFIGURATION -----"
-msgstr "----- ΡΥΘΜΙΣΕΙΣ ΔΙΑΚΟΜΙΣΤΩΝ ΜΕΣΟΛΑΒΗΣΗΣ -----"
+msgstr "----- Ρυθμίσεις Διακομιστών Μεσολάβησης -----"
 
 msgid "----- Porn Site Configuration -----"
 msgstr "----- Ρυθμίσεις ιστοσελίδων για ενήλικες -----"
 
 msgid "----- SCREENSAVER CONFIGURATION -----"
-msgstr "----- ΡΥΘΜΙΣΕΙΣ ΠΡΟΦΥΛΑΞΗΣ ΟΘΟΝΗΣ -----"
+msgstr "----- Ρυθμίσεις Προφύλαξης Οθόνης -----"
 
 msgid "----- SECURITY CONFIGURATION -----"
-msgstr "----- ΡΥΘΜΙΣΕΙΣ ΑΣΦΑΛΕΙΑΣ -----"
+msgstr "----- Ρυθμίσεις Ασφαλείας -----"
 
 msgid "----- SERVICE CONFIGURATION -----"
-msgstr "----- ΡΥΘΜΙΣΕΙΣ ΥΠΗΡΕΣΙΩΝ -----"
+msgstr "----- Ρυθμίσεις Υπηρεσιών -----"
 
 msgid "----- SKIN CONFIGURATION -----"
-msgstr "----- ΡΥΘΜΙΣΕΙΣ ΘΕΜΑΤΩΝ -----"
+msgstr "----- Ρυθμίσεις Θεμάτων -----"
 
 msgid "----- STORAGE CONFIGURATION -----"
-msgstr "----- ΡΥΘΜΙΣΕΙΣ ΑΠΟΘΗΚΕΥΣΗΣ -----"
+msgstr "----- Ρυθμίσεις Αποθήκευσης -----"
 
 msgid "----- SUBTITLES CONFIGURATION -----"
-msgstr "----- ΡΥΘΜΙΣΕΙΣ ΥΠΟΤΙΤΛΩΝ -----"
+msgstr "----- Ρυθμίσεις Υποτίτλων -----"
 
 msgid "----- Show or hide Anime / Hentai -----"
 msgstr "----- Εμφάνιση ή απόκρυψη Άνιμε / Χεντάι -----"
@@ -312,10 +312,10 @@ msgid "----- Show or hide Porn Sites -----"
 msgstr "----- Εμφάνιση ή απόκρυψη ιστοσελίδων για ενήλικες -----"
 
 msgid "----- TORRENT CONFIGURATION -----"
-msgstr ""
+msgstr "----- Ρυθμίσεις Torrent -----"
 
 msgid "----- VIRTUAL KEYBOARD & SEARCH CONFIGURATION -----"
-msgstr "----- ΡΥΘΜΙΣΗ ΕΙΚΟΝΙΚΟΥ ΠΛΗΚΤΡΟΛΟΓΙΟΥ & ΑΝΑΖΗΤΗΣΗΣ -----"
+msgstr "----- Ρυθμίσεις Εικονικού Πληκτρολογίου & Αναζήτησης -----"
 
 msgid "----- XXXList Configuration -----"
 msgstr "----- Ρυθμίσεις λίστας XXX -----"
@@ -472,7 +472,7 @@ msgstr "Ηθοποιοί:"
 
 #, python-format
 msgid "Add %d items to the download queue?"
-msgstr ""
+msgstr "Να προστεθούν %d στοιχεία στην ουρά λήψεων;"
 
 msgid "Add channel name to downloaded file"
 msgstr "Προσθήκη ονόματος καναλιού στο ληφθέν αρχείο"
@@ -489,7 +489,7 @@ msgstr "Προσθήκη στοιχείου στην ομάδα"
 
 #, python-format
 msgid "Add marked items to favourites (%d)"
-msgstr ""
+msgstr "Προσθήκη επιλεγμένων στοιχείων στα αγαπημένα (%d)"
 
 msgid "Add new entry"
 msgstr "Προσθήκη νέας καταχώρησης"
@@ -592,7 +592,7 @@ msgid "Allow host to override suggestions provider"
 msgstr "Επιτρέπεται στον host να παρακάμπτει τον πάροχο προτάσεων"
 
 msgid "Allow upload to other peers (seeding)"
-msgstr ""
+msgstr "Επιτρέπεται η αποστολή δεδομένων σε άλλους peers (seeding)"
 
 msgid "Allow watched flag to be set"
 msgstr "Επιτρέπεται η ρύθμιση της ένδειξης προβολής"
@@ -853,7 +853,7 @@ msgstr "Backspace"
 
 #, python-format
 msgid "Balance: %s"
-msgstr ""
+msgstr "Υπόλοιπο: %s"
 
 msgid "Balkans"
 msgstr "Βαλκάνια"
@@ -949,20 +949,20 @@ msgid "Cache"
 msgstr "Προσωρινή μνήμη"
 
 msgid "Cache folder"
-msgstr ""
+msgstr "Φάκελος προσωρινής μνήμης"
 
 #, python-format
 msgid "Cache folder \"%s\" could not be created. Some data (cookies, subtitles, ...) may not be saved."
 msgstr "Δεν ήταν δυνατή η δημιουργία του φακέλου προσωρινής μνήμης \"%s\". Ορισμένα δεδομένα (cookies, υπότιτλοι, ...) ενδέχεται να μην αποθηκευτούν."
 
 msgid "Cache location"
-msgstr ""
+msgstr "Θέση προσωρινής μνήμης"
 
 msgid "Cache size in RAM"
-msgstr ""
+msgstr "Μέγεθος προσωρινής μνήμης στη RAM"
 
 msgid "Cache size on disk"
-msgstr ""
+msgstr "Μέγεθος προσωρινής μνήμης στον δίσκο"
 
 #, python-format
 msgid ""
@@ -1085,7 +1085,7 @@ msgid "Chinese anime"
 msgstr "Κινεζικά άνιμε"
 
 msgid "Choose the TorrServer binary"
-msgstr ""
+msgstr "Επιλογή του εκτελέσιμου αρχείου TorrServer"
 
 msgid "Cinema History"
 msgstr "Ιστορία κινηματογράφου"
@@ -1127,7 +1127,7 @@ msgid "Close"
 msgstr "Κλείσιμο"
 
 msgid "Close an unused torrent after"
-msgstr ""
+msgstr "Κλείσιμο torrent που δεν χρησιμοποιείται μετά από"
 
 msgid "Closes the host opened in the web interface, clears the search results and stops what the web interface still runs in the background. Use it when a page keeps loading. Settings, downloads and the E2iPlayer on the TV are not touched."
 msgstr "Κλείνει τον host που έχει ανοίξει στο περιβάλλον ιστού, εκκαθαρίζει τα αποτελέσματα αναζήτησης και σταματά ότι εξακολουθεί να εκτελείται στο παρασκήνιο από το περιβάλλον ιστού. Χρησιμοποιήστε το όταν μια σελίδα συνεχίζει να φορτώνει. Οι ρυθμίσεις, οι λήψεις και το E2iPlayer στην TV δεν επηρεάζονται."
@@ -1217,7 +1217,7 @@ msgid "Connection to the weeb.tv server failed."
 msgstr "Η σύνδεση με τον διακομιστή weeb.tv απέτυχε."
 
 msgid "Connections per torrent"
-msgstr ""
+msgstr "Συνδέσεις ανά torrent"
 
 #, python-format
 msgid "Connections: %s of %s"
@@ -1239,7 +1239,7 @@ msgid "Copy"
 msgstr "Αντιγραφή"
 
 msgid "Copy it to /usr/bin/TorrServer (or a folder on HDD/USB) and make it executable (chmod 755)."
-msgstr ""
+msgstr "Αντιγράψτε το στο /usr/bin/TorrServer (ή σε φάκελο HDD/USB) και ορίστε το ως εκτελέσιμο (chmod 755)."
 
 msgid "Could not add the user link."
 msgstr "Δεν ήταν δυνατή η προσθήκη του συνδέσμου χρήστη."
@@ -1297,7 +1297,7 @@ msgstr "Δημιουργία συνοδευτικών αρχείων (.txt/.jpg)
 
 #, python-format
 msgid "Created: %s"
-msgstr ""
+msgstr "Δημιουργήθηκε: %s"
 
 msgid "Creator:"
 msgstr "Δημιουργός:"
@@ -1339,7 +1339,7 @@ msgid "DASH/mpd"
 msgstr "DASH/mpd"
 
 msgid "DLNA server of TorrServer"
-msgstr ""
+msgstr "Διακομιστής DLNA του TorrServer"
 
 msgid "DOWNLOAD ERROR"
 msgstr "ΣΦΑΛΜΑ ΛΗΨΗΣ"
@@ -1489,7 +1489,7 @@ msgid "Delete subtitles cache now"
 msgstr "Διαγραφή προσωρινής μνήμης υποτίτλων τώρα"
 
 msgid "Delete the cache when the torrent is closed"
-msgstr ""
+msgstr "Διαγραφή της προσωρινής μνήμης κατά το κλείσιμο του torrent"
 
 msgid "Delete thumbnails cache now"
 msgstr "Διαγραφή προσωρινής μνήμης μικρογραφιών τώρα"
@@ -1606,7 +1606,7 @@ msgstr "Λήψη"
 
 #, python-format
 msgid "Download \"%s\" (for this receiver) from %s"
-msgstr ""
+msgstr "Λήψη του \"%s\" (για αυτόν τον δέκτη) από το %s"
 
 #, python-format
 msgid "Download (ready in %d seconds)"
@@ -1616,7 +1616,7 @@ msgid "Download again"
 msgstr "Λήψη ξανά"
 
 msgid "Download all items of this page"
-msgstr ""
+msgstr "Λήψη όλων των στοιχείων αυτής της σελίδας"
 
 msgid "Download already exists"
 msgstr "Η λήψη υπάρχει ήδη"
@@ -1655,7 +1655,7 @@ msgstr "Η Διαχείριση λήψεων δεν έχει αρχικοποι�
 
 #, python-format
 msgid "Download marked items (%d)"
-msgstr ""
+msgstr "Λήψη επιλεγμένων στοιχείων (%d)"
 
 msgid "Download new version"
 msgstr "Λήψη νέας έκδοσης"
@@ -1664,7 +1664,7 @@ msgid "Download notification duration"
 msgstr "Διάρκεια ειδοποίησης λήψης"
 
 msgid "Download speed limit"
-msgstr ""
+msgstr "Όριο ταχύτητας λήψης"
 
 msgid "Download subtiles failed."
 msgstr "Αποτυχία λήψης υποτίτλων."
@@ -1674,7 +1674,7 @@ msgstr "Λήψη προτεινόμενων"
 
 #, python-format
 msgid "Download the Linux file for the CPU of this receiver from %s"
-msgstr ""
+msgstr "Κατεβάστε από το %s το αρχείο Linux για τον επεξεργαστή αυτού του δέκτη"
 
 msgid "Downloaded file is too small or corrupted."
 msgstr "Το ληφθέν αρχείο είναι πολύ μικρό ή κατεστραμμένο."
@@ -1878,7 +1878,7 @@ msgid "Enabled hosts"
 msgstr "Ενεργοποιημένοι hosts"
 
 msgid "Encrypted connections only"
-msgstr ""
+msgstr "Μόνο κρυπτογραφημένες συνδέσεις"
 
 msgid "Encrypted stream list - not supported"
 msgstr "Κρυπτογραφημένη λίστα ροών - δεν υποστηρίζεται"
@@ -2240,10 +2240,10 @@ msgid "File format of DASH (MPD) downloads"
 msgstr "Μορφή αρχείων λήψεων DASH (MPD)"
 
 msgid "File format of HLS (M3U8) downloads"
-msgstr ""
+msgstr "Μορφή αρχείου για λήψεις HLS (M3U8)"
 
 msgid "File format of single video files (FFmpeg)"
-msgstr ""
+msgstr "Μορφή αρχείου για μεμονωμένα αρχεία βίντεο (FFmpeg)"
 
 #, python-format
 msgid "File might be corrupted (size: %d bytes)."
@@ -2259,7 +2259,7 @@ msgid "Files"
 msgstr "Αρχεία"
 
 msgid "Fill cache before playback"
-msgstr ""
+msgstr "Συμπλήρωση της προσωρινής μνήμης πριν από την αναπαραγωγή"
 
 msgid "Filler"
 msgstr "Επεισόδια πλήρωσης"
@@ -2324,7 +2324,7 @@ msgid "Folder for temporary data"
 msgstr "Φάκελος για προσωρινά δεδομένα"
 
 msgid "Folder on HDD / USB"
-msgstr ""
+msgstr "Φάκελος σε HDD / USB"
 
 msgid "Followers"
 msgstr "Ακόλουθοι"
@@ -3001,7 +3001,7 @@ msgid "Latest videos from the channels you are subscribed to."
 msgstr "Τελευταία βίντεο από τα κανάλια στα οποία έχετε εγγραφεί."
 
 msgid "Latin American movies"
-msgstr ""
+msgstr "Ταινίες από τη Λατινική Αμερική"
 
 msgid "Latin American series"
 msgstr "Σειρές Λατινικής Αμερικής"
@@ -3165,7 +3165,7 @@ msgid "Login failed."
 msgstr "Η σύνδεση απέτυχε."
 
 msgid "Login needed"
-msgstr ""
+msgstr "Απαιτείται σύνδεση"
 
 #, python-brace-format
 msgid "Login on {0} failed."
@@ -3276,10 +3276,10 @@ msgid "Maximum log file size"
 msgstr "Μέγιστο μέγεθος αρχείου καταγραφής"
 
 msgid "Maximum torrent size:"
-msgstr ""
+msgstr "Μέγιστο μέγεθος torrent:"
 
 msgid "MediaFusion manifest URL (your own):"
-msgstr ""
+msgstr "MediaFusion manifest URL (δικό σας):"
 
 msgid "Medtryx Marketing"
 msgstr "Medtryx Marketing"
@@ -3482,7 +3482,7 @@ msgid "MyE2i: offer to open the page in (Android)"
 msgstr "MyE2i: πρόταση για άνοιγμα της σελίδας στο (Android)"
 
 msgid "MyE2i: open the page in the browser"
-msgstr ""
+msgstr "MyE2i: άνοιγμα της σελίδας στον περιηγητή"
 
 msgid "Mystery"
 msgstr "Μυστήριο"
@@ -3689,14 +3689,14 @@ msgid "Not available yet"
 msgstr "Δεν είναι ακόμη διαθέσιμο"
 
 msgid "Not in /usr/bin: choose the file under \"TorrServer binary\" in the torrent configuration."
-msgstr ""
+msgstr "Αν δεν είναι στο /usr/bin, επιλέξτε το αρχείο από το πεδίο \"Εκτελέσιμο αρχείο TorrServer\" στις ρυθμίσεις torrent."
 
 msgid "Not possible (no enigma2 session)."
 msgstr "Δεν είναι δυνατό (δεν υπάρχει συνεδρία enigma2)."
 
 #, python-format
 msgid "Not removed, still downloading: %d"
-msgstr ""
+msgstr "Δεν αφαιρέθηκαν, συνεχίζουν να κατεβαίνουν: %d"
 
 msgid "Nothing available here at the moment (only upcoming broadcasts)."
 msgstr "Δεν υπάρχει τίποτα διαθέσιμο εδώ αυτή τη στιγμή (μόνο επερχόμενες μεταδόσεις)."
@@ -3749,10 +3749,10 @@ msgid "OK"
 msgstr "ΕΝΤΑΞΕΙ"
 
 msgid "OK marks an item, BLUE shows what can be done with the marked items."
-msgstr ""
+msgstr "Το OK επιλέγει ένα στοιχείο, ενώ το BLUE εμφανίζει τις διαθέσιμες ενέργειες για τα επιλεγμένα στοιχεία."
 
 msgid "OK marks an item, MENU shows what can be done with the marked items."
-msgstr ""
+msgstr "Το OK επιλέγει ένα στοιχείο, ενώ το MENU εμφανίζει τις διαθέσιμες ενέργειες για τα επιλεγμένα στοιχεία."
 
 msgid "OMDb API key (free at omdbapi.com)"
 msgstr "Κλειδί API OMDb (δωρεάν στο omdbapi.com)"
@@ -3803,7 +3803,7 @@ msgid "Open pull requests"
 msgstr "Ανοιχτά pull requests"
 
 msgid "Open the page and get the link"
-msgstr ""
+msgstr "Άνοιγμα της σελίδας και λήψη του συνδέσμου"
 
 #, python-format
 msgid "Open this page in %s"
@@ -3950,7 +3950,7 @@ msgid "Patriotism"
 msgstr "Πατριωτισμός"
 
 msgid "Pause between the batch lookups of one host [s]"
-msgstr ""
+msgstr "Παύση μεταξύ των διαδοχικών αναζητήσεων σε έναν host [δευτ.]"
 
 #, python-format
 msgid "Peak: %s"
@@ -3987,14 +3987,14 @@ msgid "Pin protection for this host"
 msgstr "Προστασία αυτού του host με pin"
 
 msgid "Play all from here"
-msgstr ""
+msgstr "Αναπαραγωγή όλων από εδώ"
 
 #, python-format
 msgid "Play marked items (%d)"
-msgstr ""
+msgstr "Αναπαραγωγή επιλεγμένων στοιχείων (%d)"
 
 msgid "Play torrents with TorrServer"
-msgstr ""
+msgstr "Αναπαραγωγή torrents με το TorrServer"
 
 #, python-format
 msgid "Play with [%s] player"
@@ -4163,7 +4163,7 @@ msgstr "URL πούλης και διεύθυνση MAC στις ρυθμίσει
 
 #, python-format
 msgid "Ports: %s"
-msgstr ""
+msgstr "Θύρες: %s"
 
 msgid "Portuguese"
 msgstr "Πορτογαλικά"
@@ -4262,7 +4262,7 @@ msgid "Quick test: menu and a list with videos"
 msgstr "Γρήγορη δοκιμή: μενού και λίστα με βίντεο"
 
 msgid "RAM"
-msgstr ""
+msgstr "RAM"
 
 msgid "RAM buffer size [MB] for local files"
 msgstr "Μέγεθος προσωρινής αποθήκευσης RAM [MB] για τοπικά αρχεία"
@@ -4330,7 +4330,7 @@ msgid "Rating: %s"
 msgstr "Βαθμολογία: %s"
 
 msgid "Read ahead (share of the cache)"
-msgstr ""
+msgstr "Προφόρτωση δεδομένων (ποσοστό της προσωρινής μνήμης)"
 
 msgid "Read by"
 msgstr "Ανάγνωση από"
@@ -4424,13 +4424,15 @@ msgstr "Αφαίρεση στοιχείου \"%s\""
 
 #, python-format
 msgid "Remove %d items from the favourites?"
-msgstr ""
+msgstr "Να αφαιρεθούν %d στοιχεία από τα αγαπημένα;"
 
 #, python-format
 msgid ""
 "Remove %d marked items?\n"
 "Their files are deleted too."
 msgstr ""
+"Να αφαιρεθούν %d επιλεγμένα στοιχεία;\n"
+"Θα διαγραφούν και τα αρχεία τους."
 
 msgid "Remove file"
 msgstr "Αφαίρεση αρχείου"
@@ -4446,11 +4448,11 @@ msgstr "Αφαίρεση στοιχείου"
 
 #, python-format
 msgid "Remove marked items (%d)"
-msgstr ""
+msgstr "Αφαίρεση επιλεγμένων στοιχείων (%d)"
 
 #, python-format
 msgid "Remove marked items from favourites (%d)"
-msgstr ""
+msgstr "Αφαίρεση επιλεγμένων στοιχείων από τα αγαπημένα (%d)"
 
 msgid "Remove thumbnails"
 msgstr "Αφαίρεση μικρογραφιών"
@@ -4478,7 +4480,7 @@ msgstr "Αναφορά αρχείου"
 
 #, python-format
 msgid "Reset the settings of \"%s\" to their default values?"
-msgstr ""
+msgstr "Να επαναφερθούν οι ρυθμίσεις του \"%s\" στις προεπιλεγμένες τιμές τους;"
 
 msgid "Reset this list to its default layout?"
 msgstr "Να επαναφερθεί αυτή η λίστα στην προεπιλεγμένη διάταξή της;"
@@ -4610,7 +4612,7 @@ msgid "Search History successfully deleted."
 msgstr "Το ιστορικό αναζήτησης διαγράφηκε επιτυχώς."
 
 msgid "Search automatically"
-msgstr ""
+msgstr "Αυτόματη αναζήτηση"
 
 msgid "Search for an artist (exact name) or a Last.fm user"
 msgstr "Αναζήτηση καλλιτέχνη (ακριβές όνομα) ή χρήστη του Last.fm"
@@ -4685,7 +4687,7 @@ msgid "Season %s"
 msgstr "Σεζόν %s"
 
 msgid "Season pack"
-msgstr ""
+msgstr "Πακέτο σεζόν"
 
 msgid "Seasons"
 msgstr "Σεζόν"
@@ -4710,7 +4712,7 @@ msgid "Sections"
 msgstr "Ενότητες"
 
 msgid "Select"
-msgstr ""
+msgstr "Επιλογή"
 
 #, python-format
 msgid "Select %s"
@@ -4720,7 +4722,7 @@ msgid "Select action"
 msgstr "Επιλογή ενέργειας"
 
 msgid "Select all"
-msgstr ""
+msgstr "Επιλογή όλων"
 
 msgid "Select audio track"
 msgstr "Επιλογή κομματιού ήχου"
@@ -4765,7 +4767,7 @@ msgid "Select subtitles track"
 msgstr "Επιλογή κομματιού υποτίτλων"
 
 msgid "Select the TorrServer binary"
-msgstr ""
+msgstr "Επιλογή του εκτελέσιμου αρχείου TorrServer"
 
 msgid "Select the directory"
 msgstr "Επιλέξτε τον κατάλογο"
@@ -4832,7 +4834,7 @@ msgstr "Ο διακομιστής δεν επέστρεψε τίποτα."
 
 #, python-format
 msgid "Server time: %s"
-msgstr ""
+msgstr "Ώρα διακομιστή: %s"
 
 #, python-format
 msgid "Server, user name and password in the host configuration. The server field also takes a get.php link. More accounts: %s with one get.php link per line (X-Streamity format)."
@@ -4968,7 +4970,7 @@ msgid "Show only best quality of streams:"
 msgstr "Εμφάνιση μόνο καλύτερης ποιότητας ροών:"
 
 msgid "Show playlist"
-msgstr ""
+msgstr "Εμφάνιση λίστας αναπαραγωγής"
 
 msgid "Show results"
 msgstr "Εμφάνιση αποτελεσμάτων"
@@ -5159,7 +5161,7 @@ msgid "Stop"
 msgstr "Διακοπή"
 
 msgid "Stop TorrServer when E2iPlayer is closed"
-msgstr ""
+msgstr "Διακοπή του TorrServer κατά το κλείσιμο του E2iPlayer"
 
 msgid "Stop downloading"
 msgstr "Διακοπή λήψης"
@@ -5178,7 +5180,7 @@ msgstr "Ιστορία"
 
 #, python-format
 msgid "Stream formats: %s"
-msgstr ""
+msgstr "Μορφές ροής: %s"
 
 msgid "Stream link"
 msgstr "Σύνδεσμος ροής"
@@ -5322,7 +5324,7 @@ msgid "Swedish"
 msgstr "Σουηδικά"
 
 msgid "Switch on torrent playback?"
-msgstr ""
+msgstr "Να ενεργοποιηθεί η αναπαραγωγή του torrent;"
 
 msgid "Synchronize"
 msgstr "Συγχρονισμός"
@@ -5428,7 +5430,7 @@ msgstr "Εκπομπές συζήτησης"
 
 #, python-format
 msgid "Tariff: %s"
-msgstr ""
+msgstr "Πακέτο χρέωσης: %s"
 
 msgid "Teams"
 msgstr "Ομάδες"
@@ -5748,7 +5750,7 @@ msgstr "Δεν υπάρχει συσκευή αποθήκευσης στο \"%s\
 
 #, python-format
 msgid "There is no storage device under \"%s\". TorrServer keeps its cache in RAM until a HDD or USB stick is mounted there."
-msgstr ""
+msgstr "Δεν υπάρχει συσκευή αποθήκευσης στο \"%s\". Το TorrServer διατηρεί την προσωρινή μνήμη στη RAM μέχρι να προσαρτηθεί εκεί ένας HDD ή ένα USB stick."
 
 msgid "This article has no free video."
 msgstr "Αυτό το άρθρο δεν διαθέτει δωρεάν βίντεο."
@@ -6008,37 +6010,42 @@ msgid "Topics"
 msgstr "Θέματα"
 
 msgid "TorrServer binary (OK = choose, empty = search automatically)"
-msgstr ""
+msgstr "Εκτελέσιμο αρχείο TorrServer (OK = επιλογή, κενό = αυτόματη αναζήτηση)"
 
 #, python-format
 msgid "TorrServer could not be started (%s)."
-msgstr ""
+msgstr "Δεν ήταν δυνατή η εκκίνηση του TorrServer (%s)."
 
 msgid "TorrServer got no file list for this torrent (no peers or a dead link?)."
-msgstr ""
+msgstr "Το TorrServer δεν έλαβε λίστα αρχείων για αυτό το torrent (δεν υπάρχουν peers ή νεκρός σύνδεσμος;)."
 
 msgid "TorrServer port"
-msgstr ""
+msgstr "Θύρα TorrServer"
 
 msgid "TorrServer was not found on the receiver. It is not part of E2iPlayer and not in the image feeds - install it yourself:"
-msgstr ""
+msgstr "Το TorrServer δεν βρέθηκε στον δέκτη. Δεν αποτελεί μέρος του E2iPlayer και δεν περιλαμβάνεται στα αποθετήρια του image - πρέπει να το εγκαταστήσετε μόνοι σας:"
 
 msgid "TorrServer web interface in the home network"
-msgstr ""
+msgstr "Διαδικτυακό περιβάλλον του TorrServer στο τοπικό δίκτυο"
 
 msgid "Torrent"
-msgstr ""
+msgstr "Torrent"
 
 msgid ""
 "Torrent links are played with TorrServer.\n"
 "Switch on \"Play torrents with TorrServer\" in the E2iPlayer settings (Torrent configuration)."
 msgstr ""
+"Οι σύνδεσμοι torrent αναπαράγονται με το TorrServer.\n"
+"Ενεργοποιήστε την επιλογή \"Αναπαραγωγή torrents με το TorrServer\" στις ρυθμίσεις του E2iPlayer (Ρυθμίσεις torrent)."
 
 msgid ""
 "Torrents are peer-to-peer: while a torrent plays, the receiver connects to other users and your IP address is visible to them. Depending on your country, downloading or sharing copyrighted content through torrents may be illegal - you alone are responsible for what you play. Upload to other peers stays off unless you switch it on.\n"
 "\n"
 "TorrServer itself is not part of E2iPlayer, it has to be installed separately."
 msgstr ""
+"Τα torrents λειτουργούν με τεχνολογία peer-to-peer: κατά την αναπαραγωγή ενός torrent, ο δέκτης συνδέεται με άλλους χρήστες και η διεύθυνση IP σας είναι ορατή σε αυτούς. Ανάλογα με τη χώρα σας, η λήψη ή η κοινή χρήση περιεχομένου που προστατεύεται από πνευματικά δικαιώματα μέσω torrents μπορεί να είναι παράνομη - είστε αποκλειστικά υπεύθυνοι για το περιεχόμενο που αναπαράγετε. Η αποστολή δεδομένων σε άλλους peers παραμένει απενεργοποιημένη, εκτός αν την ενεργοποιήσετε εσείς.\n"
+"\n"
+"Το TorrServer δεν αποτελεί μέρος του E2iPlayer και πρέπει να εγκατασταθεί ξεχωριστά."
 
 msgid "Total size:"
 msgstr "Συνολικό μέγεθος:"
@@ -6142,10 +6149,10 @@ msgid "Unable to comply. Search History is empty."
 msgstr "Αδυναμία συμμόρφωσης. Το ιστορικό αναζήτησης είναι κενό."
 
 msgid "Undo reverse"
-msgstr ""
+msgstr "Αναίρεση αντιστροφής σειράς"
 
 msgid "Undo shuffle"
-msgstr ""
+msgstr "Αναίρεση τυχαίας σειράς"
 
 msgid "Unfix jump target"
 msgstr "Αναίρεση διόρθωσης προορισμού μετάβασης"
@@ -6175,7 +6182,7 @@ msgid "Unrar error code[%s]."
 msgstr "Unrar κωδικός σφάλματος[%s]."
 
 msgid "Unselect all"
-msgstr ""
+msgstr "Αποεπιλογή όλων"
 
 msgid "Unset watched"
 msgstr "Αφαίρεση επισήμανσης ως προβληθέν"
@@ -6200,7 +6207,7 @@ msgid "Upload date"
 msgstr "Ημερομηνία μεταφόρτωσης"
 
 msgid "Upload speed limit"
-msgstr ""
+msgstr "Όριο ταχύτητας αποστολής"
 
 #, python-format
 msgid "Uploader: %s"
@@ -6899,7 +6906,7 @@ msgid "manual"
 msgstr "χειροκίνητα"
 
 msgid "marked"
-msgstr ""
+msgstr "επιλεγμένα"
 
 msgid "maroon"
 msgstr "καφέ-μπορντώ"
@@ -6941,7 +6948,7 @@ msgid "next page"
 msgstr "επόμενη σελίδα"
 
 msgid "next page / previous page"
-msgstr ""
+msgstr "επόμενη σελίδα / προηγούμενη σελίδα"
 
 msgid "next page = page 1"
 msgstr "επόμενη σελίδα = σελίδα 1"
@@ -7022,7 +7029,7 @@ msgid "refresh the current list"
 msgstr "ανανέωση της τρέχουσας λίστας"
 
 msgid "reversed"
-msgstr ""
+msgstr "αντιστροφή σειράς"
 
 msgid "rootfs"
 msgstr "rootfs"
@@ -7089,7 +7096,7 @@ msgid "show this help"
 msgstr "εμφάνιση αυτής της βοήθειας"
 
 msgid "shuffled"
-msgstr ""
+msgstr "τυχαία σειρά"
 
 msgid "sign in (subscriptions, playlists, age-restricted videos)"
 msgstr "σύνδεση (εγγραφές, λίστες αναπαραγωγής, βίντεο με περιορισμό ηλικίας)"
