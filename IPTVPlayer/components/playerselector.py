@@ -351,6 +351,21 @@ def _setSelectionPixmap(instance, path):
             instance.setSelectionPixmap(pixmap)
 
 
+def _getSkinSelectedColor(renderer):
+    # the grid's normal (not picked-up) highlight color is the skin's own
+    # backgroundColorSelected - a hard-coded "#24111112" (the embedded
+    # skin's half-transparent value) let the video show through the
+    # selected tile on opaque external skins like MetrixHD
+    for attrib, value in getattr(renderer, "skinAttributes", None) or []:
+        if attrib == "backgroundColorSelected":
+            try:
+                return parseColor(value)
+            except Exception:
+                printExc()
+            break
+    return parseColor("#24111112")
+
+
 class IPTVHostSearchResultList(IPTVRadioButtonList):
     # host logos (icons/logos/<hostkey>logo.png) shown before the name in
     # search results. Raw eListboxPythonMultiContent tuples don't auto-scale
@@ -593,7 +608,7 @@ class _PlayerSelectorListMode:
         # states as list mode's setReorderingHighlight() above
         file = resolveFilename(SCOPE_PLUGINS, f'Extensions/IPTVPlayer/icons/PlayerSelector/marker/marker{"Sel" if self.reorderingMode else ""}{self.iconSize + 45}.png')
         _setSelectionPixmap(self["grid"].master.master.instance, file)
-        self["grid"].master.master.instance.setBackgroundColorSelected(parseColor("#ffcc00" if move == "Sel" else "#24111112"))
+        self["grid"].master.master.instance.setBackgroundColorSelected(parseColor("#ffcc00") if move == "Sel" else _getSkinSelectedColor(self["grid"].master.master))
 
     def keySelect(self):
         if self.reorderingMode:
