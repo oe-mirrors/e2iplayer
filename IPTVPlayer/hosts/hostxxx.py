@@ -3038,7 +3038,7 @@ class _SelfTestSession(object):
 
 
 class Host(CBaseHostClass, XXXParser):
-	XXXversion = "2026.10.11.3"
+	XXXversion = "2026.10.11.4"
 	currList = []
 	MAIN_URL = ''
 	SEARCH_proc = ''
