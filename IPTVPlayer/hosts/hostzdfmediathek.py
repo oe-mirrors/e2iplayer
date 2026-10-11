@@ -15,7 +15,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFo
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import normalizeMediathekTitle
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
@@ -576,7 +576,9 @@ class ZDFmediathek(GenericFolderWatchedScraperMixin, CBaseHostClass):
                     if onelinkmode:
                         break
             if not isLive:
-                urlTab = applySidecarToLinks(urlTab, buildSidecarFromItem(cItem, IsSidecarEnabled(), synopsis))
+                # the moviemeta query of INFO: the year must match (+-1)
+                metaQuery = sidecarMetaQuery(cItem.get('meta_type', ''), cItem.get('meta_title', ''), cItem.get('meta_year', ''), skip=(), maxYearDiff=1)
+                urlTab = applySidecarToLinks(urlTab, buildSidecarFromItem(cItem, IsSidecarEnabled(), synopsis, metaQuery))
             printDBG(tmpUrlTab)
         except Exception:
             printExc()

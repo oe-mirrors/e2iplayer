@@ -19,7 +19,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, sidecarMetaQuery, decorateResolvedLinkItems
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, getMetaByImdbId
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
@@ -402,7 +402,11 @@ class HiAnime(GenericFolderWatchedScraperMixin, CBaseHostClass):
             meta = {"Referer": self.MAIN_URL}
             urltab.append({"name": "MegaVid %s" % label, "url": strwithmeta("%s/ani/%s/%s/%s" % (self.MEGAVID_URL, anilist, epNum, kind), meta), "need_resolve": 1})
         sidecarTxt = cItem.get("desc", "").replace("[/br]", "\n")
-        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), sidecarTxt))
+        # moviemeta query of INFO: the IMDb id of the site mapping (cached info, else the item's), else the title
+        data = (self.infoCache.get(animeId) or {}).get("data") or {}
+        imdb = self._str((data.get("mappings") or {}).get("imdb") or "") or cItem.get("imdb", "")
+        metaQuery = sidecarMetaQuery(cItem.get("meta_type", "tv"), cItem.get("meta_title", ""), cItem.get("meta_year", ""), imdb, skip=())
+        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), sidecarTxt, metaQuery=metaQuery))
 
     def _getReCloud(self, embedUrl):
         params = dict(self.defaultParams)

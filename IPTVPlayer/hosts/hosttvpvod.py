@@ -21,7 +21,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHel
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsMediaNamingNormalized
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist, getMPDLinksWithMeta
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
 from Plugins.Extensions.IPTVPlayer.libs import ph
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
@@ -785,7 +785,9 @@ class TvpVod(GenericFolderWatchedScraperMixin, CBaseHostClass, CaptchaHelper):
             asset_id = str(cItem.get('object_id', '') or cItem.get('f_asset', '')) or self.getObjectID(url)
             videoTab = self.getVideoLink(asset_id)
         if not cItem.get('live'):
-            videoTab = applySidecarToLinks(videoTab, buildSidecarFromItem(cItem, IsSidecarEnabled()))
+            # the moviemeta query of INFO: +-1 year
+            metaQuery = sidecarMetaQuery(cItem.get('meta_type', ''), cItem.get('meta_title', ''), cItem.get('meta_year', ''), skip=(), maxYearDiff=1)
+            videoTab = applySidecarToLinks(videoTab, buildSidecarFromItem(cItem, IsSidecarEnabled(), '', metaQuery))
         return videoTab
 
     ###################################################

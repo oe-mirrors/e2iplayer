@@ -31,7 +31,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.libs.botprotection import remembered_user_agent
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps, loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import LATIN_ONLY, getMeta, isLatinTitle
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIconDir
@@ -514,7 +514,10 @@ class WeCimaCx(GenericFolderWatchedScraperMixin, CBaseHostClass):
             add(_("Trailer"), trailer)
         if not urltab:
             SetIPTVPlayerLastHostError(_("No stream available"))
-        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), self._siteInfo(data)[0]))
+        story, info = self._siteInfo(data)
+        # the moviemeta query of INFO: the page's year, +-1 year
+        metaQuery = sidecarMetaQuery(cItem.get("meta_type", ""), self._infoMetaTitle(cItem, info), cItem.get("meta_year") or info.get("year", ""), maxYearDiff=1)
+        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), story, metaQuery))
 
     def getVideoLinks(self, videoUrl):
         printDBG("WeCimaCx.getVideoLinks [%s]" % videoUrl)
@@ -525,6 +528,15 @@ class WeCimaCx(GenericFolderWatchedScraperMixin, CBaseHostClass):
     ###################################################
     # INFO
     ###################################################
+    @staticmethod
+    def _infoMetaTitle(cItem, info):
+        # the moviemeta title of INFO and the download sidecar: the site's original name of an Arabic-titled film / series
+        metaTitle = cItem.get("meta_title", "")
+        original = info.get("original_title", "")
+        if original and isLatinTitle(original) and not isLatinTitle(metaTitle):
+            metaTitle = original
+        return metaTitle
+
     def getArticleContent(self, cItem):
         printDBG("WeCimaCx.getArticleContent [%s]" % cItem.get("url", ""))
         story, info = "", {}
@@ -534,10 +546,7 @@ class WeCimaCx(GenericFolderWatchedScraperMixin, CBaseHostClass):
             # episode pages have no story: their full site title instead
             story = story or self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, "<h1", "</h1>", True)[1])
         meta = {}
-        metaTitle = cItem.get("meta_title", "")
-        original = info.get("original_title", "")
-        if original and isLatinTitle(original) and not isLatinTitle(metaTitle):
-            metaTitle = original  # the site's original name of an Arabic-titled film / series
+        metaTitle = self._infoMetaTitle(cItem, info)
         if cItem.get("meta_type") and metaTitle:
             try:
                 skip = () if isLatinTitle(metaTitle) else LATIN_ONLY

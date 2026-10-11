@@ -225,8 +225,10 @@ class SpacePowerFan(GenericFolderWatchedScraperMixin, CBaseHostClass):
             SetIPTVPlayerLastHostError(_("No stream available"))
             return
         episodes.sort(key=lambda e: e[0])
+        # the year INFO takes from this show page: the moviemeta query of the download sidecar
+        year = self._siteInfo(data)[2].get("year", "")
         if cItem.get("meta_type") == "movie" and len(episodes) == 1:
-            params = dict(cItem, category="spf_video", url=episodes[0][1], show_url=cItem["url"])
+            params = dict(cItem, category="spf_video", url=episodes[0][1], show_url=cItem["url"], meta_year=year)
             self.addVideo(params)
             return
         page = cItem.get("page", 1)
@@ -238,7 +240,8 @@ class SpacePowerFan(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 title = "%s - %s" % (folderTitle, label or number)
             self.addVideo({"name": "category", "category": "spf_video", "good_for_fav": True, "url": href, "title": title,
                            "icon": icon or cItem.get("icon", ""), "desc": label, "show_url": cItem["url"], "s_title": show,
-                           "s_season": season, "s_episode": str(number), "meta_type": "tv", "meta_title": cItem.get("meta_title", show)})
+                           "s_season": season, "s_episode": str(number), "meta_type": "tv", "meta_title": cItem.get("meta_title", show),
+                           "meta_year": year})
         if len(episodes) > LOCAL_PAGE_SIZE:
             lastPage = (len(episodes) + LOCAL_PAGE_SIZE - 1) // LOCAL_PAGE_SIZE
             addPagingItems(self, dict(cItem, folder_title=folderTitle), page, page < lastPage, lastPage)

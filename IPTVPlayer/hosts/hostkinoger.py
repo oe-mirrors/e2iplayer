@@ -3,11 +3,16 @@
 # 05.04.2026 - Mr.X
 # 10.10.2026 - kinoger.ch: Cloudflare + HostAdmin.online WAF, both through MyE2i (pCommon asks the cookie mode after
 #              the Cloudflare one); default icon from the plugin, covers on the site with the solving User-Agent
+# 11.10.2026 - moviemeta: meta_type / meta_title / meta_year on the items, INFO merged with libs/moviemeta (the site's
+#              fields stay), download sidecar (the item's text + cover + the moviemeta query)
 import re
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.libs.botprotection import remembered_user_agent
+from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, decorateResolvedLinkItems, sidecarFromUrlMeta
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import GetIconDir, printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
@@ -24,6 +29,10 @@ def GetConfigList():
 
 def gettytul():
     return "https://kinoger.ch/"
+
+
+# moviemeta fields the site already shows under another key
+SITE_INFO_KEYS = {"cast": "actors", "directors": "director"}
 
 
 class KinoGer(CBaseHostClass):
@@ -53,6 +62,22 @@ class KinoGer(CBaseHostClass):
         userAgent = remembered_user_agent(self.COOKIE_FILE) or self.HEADER.get("User-Agent")
         return strwithmeta(url, {"Cookie": cookieHeader, "User-Agent": userAgent})
 
+    def _metaParams(self, title, isSeries):
+        # "Title (2026)" -> title + year; a series row may carry its season ("... Staffel 2" / "S01-S03"),
+        # whose year is the season's, not the show's
+        title = self.cleanHtmlStr(title)
+        year = re.search(r"\s*\(((?:19|20)\d{2})\)", title)
+        if year:
+            title = (title[:year.start()] + title[year.end():]).strip()
+            year = year.group(1)
+        else:
+            year = ""
+        if isSeries:
+            season = re.search(r"[\s\-]*\b(?:Staffel|Season)\b.*$|\s+S\d+(?:\s*-\s*S?\d+)?\s*$", title, re.IGNORECASE)
+            if season:
+                title, year = title[:season.start()], ""
+        return {"meta_type": "tv" if isSeries else "movie", "meta_title": title.strip(" -"), "meta_year": year}
+
     def listItems(self, cItem):
         printDBG("KinoGer.listItems |%s|" % cItem)
         sts, data = self.getPage(cItem["url"])
@@ -68,9 +93,12 @@ class KinoGer(CBaseHostClass):
             params = dict(cItem)
             params.update({"good_for_fav": True, "category": "video", "title": self.cleanHtmlStr(title), "url": url, "icon": icon, "desc": self.cleanHtmlStr(desc[0]) if desc else ""})
             if "taffel" in title or "serie" in cItem["url"] or ">S0" in dummy:
+                # seasons and episodes are copies of this row: they keep the show's meta keys
                 params.update({"category": "list_seasons"})
+                params.update(self._metaParams(title, True))
                 self.addDir(params)
             else:
+                params.update(self._metaParams(title, False))
                 self.addVideo(params)
         if nextPage:
             params = dict(cItem)
@@ -151,12 +179,13 @@ class KinoGer(CBaseHostClass):
             data = re.compile(r"show[^>]\d,[^>][^>]'([^']+)", re.DOTALL).findall(data)
         for url in data:
             urltab.append({"name": self.up.getHostName(url).capitalize(), "url": strwithmeta(self.getFullUrl(url), {"Referer": gettytul()}), "need_resolve": 1})
-        return urltab
+        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled()))
 
     def getVideoLinks(self, videoUrl):
         printDBG("KinoGer.getVideoLinks [%s]" % videoUrl)
         if self.cm.isValidUrl(videoUrl):
-            urlTab = self.up.getVideoLinkExt(videoUrl)
+            sidecar = sidecarFromUrlMeta(videoUrl, IsSidecarEnabled())
+            urlTab = decorateResolvedLinkItems(self.up.getVideoLinkExt(videoUrl), sidecar)
             for idx in range(len(urlTab)):
                 try:
                     item = urlTab[idx]
@@ -203,7 +232,19 @@ class KinoGer(CBaseHostClass):
         duration = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, ">Spielzeit:([^<]+)")[0])
         if duration:
             otherInfo["duration"] = duration
-        icon = cItem.get("icon", self.DEFAULT_ICON_URL)
+        # moviemeta: the site's fields stay, the services fill what the page does not show
+        meta = {}
+        if cItem.get("meta_title"):
+            try:
+                meta = getMeta(cItem.get("meta_type", ""), cItem["meta_title"], cItem.get("meta_year", ""))
+            except Exception:
+                printExc()
+        for key, value in meta.get("info", {}).items():
+            if key not in otherInfo and SITE_INFO_KEYS.get(key) not in otherInfo:
+                otherInfo[key] = value
+        if not desc:
+            desc = meta.get("plot", "")
+        icon = cItem.get("icon", "") or meta.get("poster", "") or self.DEFAULT_ICON_URL
         return [{"title": cItem["title"], "text": self.cleanHtmlStr(desc), "images": [{"title": "", "url": self.getFullUrl(icon)}], "other_info": otherInfo}]
 
     def handleService(self, index, refresh=0, searchPattern="", searchType=""):

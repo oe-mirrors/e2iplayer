@@ -13,7 +13,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEna
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
@@ -261,8 +261,10 @@ class ShoofMax(GenericFolderWatchedScraperMixin, CBaseHostClass):
             urltab.append({"name": "MP4", "url": strwithmeta("%s/fallback.mp4" % base, meta), "need_resolve": 0})
         if "/fallback-240p.mp4" in data:
             urltab.append({"name": "240p MP4", "url": strwithmeta("%s/fallback-240p.mp4" % base, meta), "need_resolve": 0})
-        sidecarTxt = self._parseProgramPage(data)["desc"]
-        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), sidecarTxt))
+        info = self._parseProgramPage(data)
+        # the moviemeta query of INFO: the year of the program page, all services also for an Arabic title
+        metaQuery = sidecarMetaQuery(cItem.get("meta_type", ""), cItem.get("meta_title", ""), info["year"], skip=())
+        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), info["desc"], metaQuery))
 
     ###################################################
     # info / favourites

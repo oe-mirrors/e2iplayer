@@ -19,7 +19,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, sidecarMetaQuery, decorateResolvedLinkItems
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus, urllib_unquote
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
@@ -467,7 +467,9 @@ class IFilmArabicHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
             links = self._hlsLinks(media, "iFilm")
         else:
             links = [{"name": "iFilm MP4", "url": strwithmeta(self._plainHttp(media), meta), "need_resolve": 0}]
-        return applySidecarToLinks(links, buildSidecarFromItem(cItem, IsSidecarEnabled(), story))
+        # moviemeta query of INFO: all services, also for an Arabic title
+        metaQuery = sidecarMetaQuery(cItem.get("meta_type", ""), cItem.get("meta_title", ""), cItem.get("meta_year", ""), skip=())
+        return applySidecarToLinks(links, buildSidecarFromItem(cItem, IsSidecarEnabled(), story, metaQuery))
 
     def getVideoLinks(self, videoUrl):
         printDBG("IFilm.getVideoLinks [%s]" % videoUrl)

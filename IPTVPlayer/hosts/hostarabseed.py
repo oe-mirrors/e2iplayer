@@ -22,7 +22,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, getMetaByImdbId
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus, urllib_unquote, urllib_urlencode
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
@@ -479,7 +479,10 @@ class MySeed(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 name = "%s (%d)" % (name, names[name])
             urlTab.append({"name": name, "url": url, "need_resolve": 1})
         story = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'(?s)<div class="post__story[^"]*">(.*?)</div>')[0])
-        return applySidecarToLinks(urlTab, buildSidecarFromItem(dict(cItem, desc=_stripColors(cItem.get("desc", ""))), IsSidecarEnabled(), story))
+        # the INFO title search, all services (the IMDb id / kind / year row are only on the details page, not on this watch page)
+        parsed = self._parseTitle(cItem.get("title", ""))
+        metaQuery = sidecarMetaQuery(cItem.get("meta_type", ""), cItem.get("meta_title") or parsed["name"], cItem.get("meta_year") or parsed["year"], skip=())
+        return applySidecarToLinks(urlTab, buildSidecarFromItem(dict(cItem, desc=_stripColors(cItem.get("desc", ""))), IsSidecarEnabled(), story, metaQuery))
 
     def _resolveOwnServer(self, url):
         # /vids.php?t=.. -> <iframe> d.myseed.tv/player-gateway.php -> <video><source src=".mp4|.m3u8">

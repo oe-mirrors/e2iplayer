@@ -24,7 +24,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.libs.botprotection import remembered_user_agent
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, getMetaByImdbId
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, decorateResolvedLinkItems, sidecarFromUrlMeta
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, decorateResolvedLinkItems, sidecarFromUrlMeta, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
@@ -361,6 +361,7 @@ class Ask4Movie(GenericFolderWatchedScraperMixin, CBaseHostClass):
     def getLinksForVideo(self, cItem):
         printDBG("Ask4Movie.getLinksForVideo [%s]" % cItem)
         urltab = []
+        imdb = ""
         if cItem.get("category") == "episode":
             mid = cItem.get("tv_id", "")
             if not mid:
@@ -378,6 +379,8 @@ class Ask4Movie(GenericFolderWatchedScraperMixin, CBaseHostClass):
                     continue
                 if VIDSRC_RE.search(url):
                     kind, mid, season, episode = self._embedId(url)
+                    if not imdb and mid.startswith("tt"):
+                        imdb = mid  # the IMDb id INFO uses
                     if kind == "tv" and not (season and episode):
                         continue  # a whole series / season: no film to play
                     if mid:
@@ -395,7 +398,15 @@ class Ask4Movie(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not urltab:
             SetIPTVPlayerLastHostError(_("No streams are available for this title yet."))
             return []
-        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), cItem.get("desc", "")))
+        # the INFO lookup: a film by default, a series without the season's year
+        mediaType = cItem.get("meta_type", "") or "movie"
+        year = cItem.get("meta_year", "") or cItem.get("s_year", "")
+        if mediaType == "tv":
+            year = ""
+            if not imdb and str(cItem.get("tv_id", "")).startswith("tt"):
+                imdb = cItem["tv_id"]
+        metaQuery = sidecarMetaQuery(mediaType, cItem.get("meta_title", "") or cItem.get("s_title", "") or cItem.get("title", ""), year, imdb, skip=())
+        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), cItem.get("desc", ""), metaQuery))
 
     def getVideoLinks(self, videoUrl):
         printDBG("Ask4Movie.getVideoLinks [%s]" % videoUrl)

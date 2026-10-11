@@ -100,6 +100,13 @@ def test_find_items_of_keys_in_every_group(fav):
     assert set(key for gid, idx, key in found) == {_key(fav, a), _key(fav, c)}
 
 
+def test_meta_keys_are_no_identity(fav):
+    # a favourite stored before its host set the moviemeta keys stays the same item
+    old = _item('a')
+    new = _item('a', extra={'meta_type': 'movie', 'meta_title': 'A', 'meta_year': '2026', 'meta_imdb': 'tt1234567'})
+    assert _key(fav, old) == _key(fav, new)
+
+
 def test_find_items_of_keys_other_host_or_nothing(fav):
     a = _item('a')
     helper = _helper(fav, [('one', [a])])

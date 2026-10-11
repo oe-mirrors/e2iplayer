@@ -19,7 +19,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, sidecarMetaQuery, decorateResolvedLinkItems
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
@@ -361,7 +361,9 @@ class DramaQueenPL(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not urltab:
             # old pages only link to hosters that closed down years ago (openload, streamango, fembed, ...)
             SetIPTVPlayerLastHostError(_("This video is only on hosters E2iPlayer cannot play."))
-        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), page["desc"]))
+        # moviemeta query of INFO: series by default, the page's year when the item has none
+        metaQuery = sidecarMetaQuery(cItem.get("meta_type", "tv"), cItem.get("meta_title", ""), cItem.get("meta_year", "") or page["year"], skip=())
+        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), page["desc"], metaQuery=metaQuery))
 
     def _getBunnyLinks(self, videoUrl):
         # DQ-Player = Bunny Stream embed; plays only with the site as referer, the HLS wants the embed host

@@ -43,15 +43,21 @@ def _clearSidecarMeta(meta):
     meta.pop("e2i_sidecar_enabled", None)
     meta.pop("e2i_sidecar_txt", None)
     meta.pop("e2i_sidecar_img", None)
+    meta.pop("e2i_sidecar_meta", None)
     return meta
 
 
-def _setSidecarMeta(meta, enabled, txt, img):
+def _setSidecarMeta(meta, sidecar):
+    # sidecar: buildSidecar() dict; its "meta" (sidecarMetaQuery) goes along as e2i_sidecar_meta
     meta = dict(meta)
-    if enabled:
+    if sidecar.get("enabled", False):
         meta["e2i_sidecar_enabled"] = True
-        meta["e2i_sidecar_txt"] = txt
-        meta["e2i_sidecar_img"] = img
+        meta["e2i_sidecar_txt"] = sidecar.get("txt", "")
+        meta["e2i_sidecar_img"] = sidecar.get("img", "")
+        if sidecar.get("meta"):
+            meta["e2i_sidecar_meta"] = dict(sidecar["meta"])
+        else:
+            meta.pop("e2i_sidecar_meta", None)
     else:
         _clearSidecarMeta(meta)
     return meta
@@ -89,11 +95,77 @@ def _setMkvMeta(meta, itemUrl, enabled):
     return meta
 
 
-def buildSidecar(enabled, txt, img):
-    return {"enabled": bool(enabled), "txt": txt or "", "img": img or ""}
+def _autoSkip(title):
+    # LATIN_ONLY for a title in Arabic (or another script) only, as the hosts do
+    from Plugins.Extensions.IPTVPlayer.libs.moviemeta import LATIN_ONLY, isLatinTitle
+    return () if isLatinTitle(title) else LATIN_ONLY
 
 
-def mergeSidecar(baseSidecar, enabled=None, txt=None, img=None):
+def sidecarMetaQuery(mediaType, title="", year="", imdbId="", skip=None, maxYearDiff=None, altTitles=()):
+    # what the download manager looks up in libs/moviemeta for the sidecar of a download (iptvdm/downloaderhelpers.py,
+    # in a thread while the file downloads - playing a link costs no lookup). Give it the arguments of the host's own
+    # getMeta() / getMetaByImdbId() call of its INFO view: an INFO opened before answers from the moviemeta cache.
+    # skip None: _autoSkip() of each title. altTitles: the titles INFO tries next when the first one finds nothing
+    # (original / local title). {} = no lookup.
+    try:
+        title = str(title or "").strip()
+        imdbId = str(imdbId or "").strip()
+        if not re.match(r"^tt\d+$", imdbId):
+            imdbId = ""
+        if mediaType not in ("movie", "tv") or not (title or imdbId):
+            return {}
+        query = {"type": mediaType, "title": title, "year": str(year or "").strip()[:4]}
+        if imdbId:
+            query["imdb"] = imdbId
+        titleSkip = _autoSkip(title) if skip is None else skip
+        if titleSkip:
+            query["skip"] = list(titleSkip)
+        if maxYearDiff is not None:
+            query["maxYearDiff"] = int(maxYearDiff)
+        alts = []
+        for alt in altTitles or ():
+            alt = str(alt or "").strip()
+            if alt and alt != title and alt not in [a[0] for a in alts]:
+                alts.append([alt, list(_autoSkip(alt) if skip is None else skip)])
+        if alts:
+            query["alt"] = alts
+        return query
+    except Exception:
+        printExc()
+        return {}
+
+
+def sidecarMetaQueryFromItem(cItem):
+    # the moviemeta convention of the list items: meta_type ("movie" / "tv"), meta_title, meta_year, meta_imdb
+    try:
+        cItem = cItem or {}
+        return sidecarMetaQuery(cItem.get("meta_type", ""), cItem.get("meta_title", ""), cItem.get("meta_year", ""), cItem.get("meta_imdb", ""))
+    except Exception:
+        printExc()
+        return {}
+
+
+def infoSidecarMetaQuery(cItem, default=None):
+    # the moviemeta lookup that answered on the INFO of cItem in this session (moviemeta.getInfoQuery), else default
+    try:
+        from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getInfoQuery
+        query = getInfoQuery(cItem)
+        if query:
+            return query
+    except Exception:
+        printExc()
+    return default
+
+
+def buildSidecar(enabled, txt, img, meta=None):
+    # meta: sidecarMetaQuery() - the download manager adds the moviemeta details to txt / img
+    sidecar = {"enabled": bool(enabled), "txt": txt or "", "img": img or ""}
+    if meta:
+        sidecar["meta"] = dict(meta)
+    return sidecar
+
+
+def mergeSidecar(baseSidecar, enabled=None, txt=None, img=None, meta=None):
     sidecar = {"enabled": False, "txt": "", "img": ""}
 
     try:
@@ -101,6 +173,8 @@ def mergeSidecar(baseSidecar, enabled=None, txt=None, img=None):
             sidecar["enabled"] = bool(baseSidecar.get("enabled", False))
             sidecar["txt"] = baseSidecar.get("txt", "")
             sidecar["img"] = baseSidecar.get("img", "")
+            if baseSidecar.get("meta"):
+                sidecar["meta"] = dict(baseSidecar["meta"])
 
         if enabled is not None:
             sidecar["enabled"] = bool(enabled)
@@ -108,6 +182,10 @@ def mergeSidecar(baseSidecar, enabled=None, txt=None, img=None):
             sidecar["txt"] = txt
         if img is not None:
             sidecar["img"] = img
+        if meta is not None:
+            sidecar.pop("meta", None)
+            if meta:
+                sidecar["meta"] = dict(meta)
     except Exception:
         printExc()
 
@@ -123,9 +201,66 @@ def sidecarFromUrlMeta(url, cfgEnabled=True):
         if enabled:
             sidecar["txt"] = meta.get("e2i_sidecar_txt", "")
             sidecar["img"] = meta.get("e2i_sidecar_img", "")
+            if isinstance(meta.get("e2i_sidecar_meta"), dict) and meta["e2i_sidecar_meta"]:
+                sidecar["meta"] = dict(meta["e2i_sidecar_meta"])
     except Exception:
         printExc()
     return sidecar
+
+
+# moviemeta info keys in the order of the sidecar's lines (labels: ArticleContent.RICH_DESC_LABELS, as on INFO)
+SIDECAR_META_FIELDS = ("original_title", "imdb_rating", "tmdb_rating", "rating", "genres", "duration", "released", "first_air_date",
+                       "seasons", "episodes", "age_limit", "country", "station", "directors", "creators", "writers", "cast", "awards")
+
+
+def formatSidecarText(meta, siteTxt="", siteTextFirst=False):
+    # sidecar text of a moviemeta answer: "Title (year)", one "Label: value" line per known field, a blank line,
+    # the plot (the site's text when moviemeta has none). siteTextFirst: the site's text when there is one -
+    # for a series, whose episodes have their own text while moviemeta knows the show's plot only
+    try:
+        from Plugins.Extensions.IPTVPlayer.components.ihost import ArticleContent
+        from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
+        info = meta.get("info") or {}
+        title = _normSidecarText(meta.get("title", ""))
+        year = _normSidecarText(info.get("year", ""))
+        lines = []
+        if title:
+            lines.append("%s (%s)" % (title, year) if year else title)
+        for key in SIDECAR_META_FIELDS:
+            value = _normSidecarText(info.get(key, ""))
+            if value:
+                lines.append("%s %s" % (_(ArticleContent.RICH_DESC_LABELS.get(key, key)), value))
+        plot, site = _normSidecarText(meta.get("plot", "")), _normSidecarText(siteTxt)
+        text = (site or plot) if siteTextFirst else (plot or site)
+        if text:
+            lines.extend(["", text])
+        return "\n".join(lines).strip()
+    except Exception:
+        printExc()
+        return _normSidecarText(siteTxt)
+
+
+def lookupSidecarMeta(query, siteTxt="", siteImg=""):
+    # (txt, img) of a sidecar with the moviemeta details of query (sidecarMetaQuery); the poster replaces the
+    # site's picture as on the INFO screen. Blocks (network): the download manager calls it in a thread.
+    try:
+        from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, getMetaByImdbId
+        meta = {}
+        if query.get("imdb"):
+            meta = getMetaByImdbId(query.get("type", ""), query["imdb"])
+        if not meta and query.get("title"):
+            meta = getMeta(query.get("type", ""), query["title"], query.get("year", ""), tuple(query.get("skip") or ()), query.get("maxYearDiff"))
+        for alt, altSkip in query.get("alt") or ():
+            if meta:
+                break
+            meta = getMeta(query.get("type", ""), alt, query.get("year", ""), tuple(altSkip or ()), query.get("maxYearDiff"))
+        if not meta:
+            printDBG("urlmetahelper sidecar: no moviemeta details for %r" % (query,))
+            return siteTxt, siteImg
+        return formatSidecarText(meta, siteTxt, query.get("type") == "tv"), meta.get("poster") or siteImg
+    except Exception:
+        printExc()
+        return siteTxt, siteImg
 
 
 def sidecarFromMeta(url, cfgEnabled=True):
@@ -141,11 +276,14 @@ def _normSidecarText(value):
         return ""
 
 
-def buildSidecarFromItem(cItem, enabled=True, extraText=""):
+def buildSidecarFromItem(cItem, enabled=True, extraText="", metaQuery=None):
     # convenience for hosts: assemble a sidecar straight from a list item's own
     # metadata - an optional richer text first (e.g. a real synopsis the host
     # already fetched), then the item's [/br]-joined desc, plus its icon as the
     # poster. Whether it is actually written is still governed by `enabled`.
+    # metaQuery: the moviemeta lookup of the download (sidecarMetaQuery); None = from the
+    # item's meta_type / meta_title / meta_year / meta_imdb, {} = none. The lookup that answered
+    # on the item's INFO in this session goes first (infoSidecarMetaQuery).
     try:
         cItem = cItem or {}
         head = _normSidecarText(extraText)
@@ -154,7 +292,11 @@ def buildSidecarFromItem(cItem, enabled=True, extraText=""):
             txt = (head + "\n\n" + body).strip() if head else body
         else:
             txt = head
-        return buildSidecar(enabled, txt, str(cItem.get("icon", "") or ""))
+        if not enabled:
+            metaQuery = {}
+        else:
+            metaQuery = infoSidecarMetaQuery(cItem, sidecarMetaQueryFromItem(cItem) if metaQuery is None else metaQuery)
+        return buildSidecar(enabled, txt, str(cItem.get("icon", "") or ""), metaQuery)
     except Exception:
         printExc()
         return buildSidecar(False, "", "")
@@ -184,7 +326,7 @@ def decorateUrl(url, referer=None, sidecar=None, mkvEnabled=False, extraMeta=Non
             meta["Referer"] = referer
 
         if sidecar is not None:
-            meta = _setSidecarMeta(meta, sidecar.get("enabled", False), sidecar.get("txt", ""), sidecar.get("img", ""))
+            meta = _setSidecarMeta(meta, sidecar)
 
         meta = _setMkvMeta(meta, url, mkvEnabled)
 
@@ -204,7 +346,7 @@ def decorateCachedLinkItem(item, sidecar=None):
         itemMeta = getUrlMeta(itemUrl)
 
         if sidecar is not None:
-            itemMeta = _setSidecarMeta(itemMeta, sidecar.get("enabled", False), sidecar.get("txt", ""), sidecar.get("img", ""))
+            itemMeta = _setSidecarMeta(itemMeta, sidecar)
 
         newItem["url"] = setUrlMeta(itemUrl, itemMeta)
         return newItem
@@ -227,7 +369,7 @@ def decorateResolvedLinkItem(item, sidecar=None, mkvEnabled=False):
         itemMeta = getUrlMeta(itemUrl)
 
         if sidecar is not None:
-            itemMeta = _setSidecarMeta(itemMeta, sidecar.get("enabled", False), sidecar.get("txt", ""), sidecar.get("img", ""))
+            itemMeta = _setSidecarMeta(itemMeta, sidecar)
 
         itemMeta = _setMkvMeta(itemMeta, itemUrl, mkvEnabled)
         newItem["url"] = setUrlMeta(itemUrl, itemMeta)
@@ -305,7 +447,7 @@ def decorateYoutubeUrl(url, referer=None, sidecar=None, mkvEnabled=False, extraM
             meta["Referer"] = referer
 
         if sidecar is not None:
-            meta = _setSidecarMeta(meta, sidecar.get("enabled", False), sidecar.get("txt", ""), sidecar.get("img", ""))
+            meta = _setSidecarMeta(meta, sidecar)
 
         meta = _setMkvMeta(meta, url, mkvEnabled)
 

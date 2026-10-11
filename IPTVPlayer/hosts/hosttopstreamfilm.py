@@ -14,7 +14,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEna
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.libs.meinecloud import MeineCloud, MOVIE_IFRAME_RE, isPlayerUrl
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, getMetaByImdbId
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
@@ -244,7 +244,10 @@ class TopStreamFilm(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not urltab:
             SetIPTVPlayerLastHostError(_("No streams are available for this title yet."))
             return []
-        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), cItem.get("ep_desc", "") or cItem.get("desc", "")))
+        # the moviemeta query of INFO: the IMDb id of the player first
+        imdb = cItem.get("mc_movie", "") or cItem.get("mc_imdb", "") or cItem.get("mc_episode", "").split("/")[0]
+        metaQuery = sidecarMetaQuery(cItem.get("meta_type", "") or "movie", cItem.get("meta_title", ""), cItem.get("meta_year", ""), imdb, skip=())
+        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), cItem.get("ep_desc", "") or cItem.get("desc", ""), metaQuery))
 
     def getVideoLinks(self, url):
         printDBG("TopStreamFilm.getVideoLinks [%s]" % url)

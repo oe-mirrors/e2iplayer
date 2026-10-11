@@ -18,7 +18,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps, loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
@@ -469,10 +469,19 @@ class JetAnimes(GenericFolderWatchedScraperMixin, CBaseHostClass):
             SetIPTVPlayerLastHostError(_("No stream available"))
             return []
         urltab.sort(key=self._linkRank)  # fix 071026: reliable servers first
-        story = self._siteInfo(data)[0]
-        urltab = applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), story))
+        story, _poster, siteInfo, original = self._siteInfo(data)
+        mediaType, metaTitle, year = self._metaArgs(cItem, siteInfo)
+        # INFO's getMeta() without skip, then the original title
+        metaQuery = sidecarMetaQuery(mediaType, metaTitle, year, skip=(), altTitles=[original])
+        urltab = applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), story, metaQuery))
         self.cacheLinks[url] = urltab
         return urltab
+
+    @staticmethod
+    def _metaArgs(cItem, siteInfo):
+        # moviemeta query of INFO (type, title, year): a movie when untyped, no year for an episode (the show's lookup)
+        year = "" if cItem.get("s_episode") else (cItem.get("meta_year") or siteInfo.get("year", ""))
+        return cItem.get("meta_type") or "movie", cItem.get("meta_title") or cItem.get("s_title") or cItem.get("title", ""), year
 
     def _linkRank(self, item):
         # fix 071026: Byse (hdsplay2) and ok.ru first; the VidHide/FileLions/StreamWish family (hdsplay) last:
@@ -498,9 +507,7 @@ class JetAnimes(GenericFolderWatchedScraperMixin, CBaseHostClass):
         sts, data = self.getPage(cItem.get("url", ""))
         if sts:
             story, poster, info, original = self._siteInfo(data)
-        mediaType = cItem.get("meta_type") or "movie"
-        metaTitle = cItem.get("meta_title") or cItem.get("s_title") or cItem.get("title", "")
-        year = "" if cItem.get("s_episode") else (cItem.get("meta_year") or info.get("year", ""))
+        mediaType, metaTitle, year = self._metaArgs(cItem, info)
         meta = {}
         try:
             meta = getMeta(mediaType, metaTitle, year)

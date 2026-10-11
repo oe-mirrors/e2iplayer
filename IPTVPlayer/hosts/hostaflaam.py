@@ -18,7 +18,7 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHost
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, getMetaByImdbId
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus, urllib_unquote
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
@@ -288,7 +288,11 @@ class Aflaam(GenericFolderWatchedScraperMixin, CBaseHostClass):
             urltab.append({"name": name, "url": strwithmeta(sources[key], dict(meta)), "need_resolve": 0})
         if not urltab and forbidden:
             SetIPTVPlayerLastHostError(_("The video file of this title is not available on the server (HTTP 403)."))
-        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), story))
+        # the INFO lookup: IMDb id / year of this page, all services for the title
+        metaQuery = sidecarMetaQuery(cItem.get("meta_type", ""), cItem.get("meta_title", ""),
+                                     self.cm.ph.getSearchGroups(data, r"سنة الإنتاج\s*:\s*(\d{4})")[0] or cItem.get("meta_year", ""),
+                                     self.cm.ph.getSearchGroups(data, r"imdb\.com/title/(tt\d+)")[0] or cItem.get("meta_imdb", ""), skip=())
+        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), story, metaQuery))
 
     def _isForbidden(self, url):
         # some uploads on af3.downet.net answer 403 for everybody (the origin's file permissions, whatever

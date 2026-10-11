@@ -28,7 +28,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.libs.botprotection import KIND_BLOCK, detect as detectProtection, remembered_user_agent
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import LATIN_ONLY, getMeta, isLatinTitle
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus, urllib_unquote
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
@@ -441,7 +441,6 @@ class ARADrama(GenericFolderWatchedScraperMixin, CBaseHostClass):
         printDBG("ARADrama.getLinksForVideo [%s]" % url)
         if not self.cm.isValidUrl(url):
             return []
-        sidecar = buildSidecarFromItem(dict(cItem, desc=StripColorCodes(cItem.get("desc", ""))), IsSidecarEnabled())
         if cItem.get("trailer") or "Trailer" in cItem.get("title", "") or not self._isSiteUrl(url):
             # the trailer (youtube) or a hoster url
             return [{"name": self.up.getHostName(url, True), "url": url, "need_resolve": 1}]
@@ -449,6 +448,8 @@ class ARADrama(GenericFolderWatchedScraperMixin, CBaseHostClass):
         sts, data = self.getPage(pageUrl)
         if not sts:
             return []
+        sidecar = buildSidecarFromItem(dict(cItem, desc=StripColorCodes(cItem.get("desc", ""))), IsSidecarEnabled(), "",
+                                       sidecarMetaQuery(*self._metaArgs(cItem, self._siteInfo(data)[2])))
         linksTab = []
         for u in self._servers(data):
             linksTab.append({"name": self.up.getHostName(u, True), "url": strwithmeta(u, {"Referer": pageUrl}), "need_resolve": 1})
@@ -469,6 +470,16 @@ class ARADrama(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return decorateResolvedLinkItems(self.up.getVideoLinkExt(videoUrl), sidecar)
 
     # -------------------- INFO --------------------
+    def _metaArgs(self, cItem, info):
+        # (type, title, year) of the moviemeta lookup of INFO and of the download sidecar (info: _siteInfo of the page)
+        title = _noColors(cItem.get("title", ""))
+        metaTitle = cItem.get("meta_title") or _latinTitle(title) or _clean(title)
+        if info.get("original_title") and isLatinTitle(info["original_title"]):
+            metaTitle = info["original_title"]
+        metaType = cItem.get("meta_type") or ("movie" if title.startswith("فيلم") else "tv")
+        year = cItem.get("meta_year") or self.cm.ph.getSearchGroups(info.get("broadcast", ""), r"((?:19|20)\d{2})")[0]
+        return metaType, metaTitle, year
+
     def _siteInfo(self, data):
         # (story, poster, info incl. the cast) of the item page's info block
         block = self.cm.ph.getDataBeetwenMarkers(data, "b_block s-desc", "</div>", False)[1]
@@ -508,11 +519,7 @@ class ARADrama(GenericFolderWatchedScraperMixin, CBaseHostClass):
             if sts:
                 story, poster, info = self._siteInfo(data)
         title = _noColors(cItem.get("title", ""))
-        metaTitle = cItem.get("meta_title") or _latinTitle(title) or _clean(title)
-        if info.get("original_title") and isLatinTitle(info["original_title"]):
-            metaTitle = info["original_title"]
-        metaType = cItem.get("meta_type") or ("movie" if title.startswith("فيلم") else "tv")
-        year = cItem.get("meta_year") or self.cm.ph.getSearchGroups(info.get("broadcast", ""), r"((?:19|20)\d{2})")[0]
+        metaType, metaTitle, year = self._metaArgs(cItem, info)
         meta = {}
         if metaTitle:
             try:

@@ -22,7 +22,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.meinecloud import CAPTCHA_HOSTERS, MeineCloud, isPlayerUrl
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, getMetaByImdbId
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, decorateResolvedLinkItems, sidecarFromUrlMeta
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, decorateResolvedLinkItems, sidecarFromUrlMeta, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
@@ -358,7 +358,15 @@ class StreamKinos(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not urltab:
             SetIPTVPlayerLastHostError(_("No streams are available for this title yet."))
             return []
-        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), cItem.get("desc", "")))
+        # the moviemeta query of INFO: the IMDb id of the page, the year only for a film
+        mediaType = cItem.get("meta_type", "") or "movie"
+        year = ""
+        if not episode:
+            imdb = cItem.get("imdb", "") or self._imdbOfPage(data)
+            year = cItem.get("meta_year", "") or self._siteInfo(data)[0].get("year", "")
+        title = cItem.get("meta_title", "") or self._splitSeason(cItem.get("title", ""))[0]
+        metaQuery = sidecarMetaQuery(mediaType, title, "" if mediaType == "tv" else year, imdb, skip=())
+        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), cItem.get("desc", ""), metaQuery))
 
     def getVideoLinks(self, videoUrl):
         printDBG("StreamKinos.getVideoLinks [%s]" % videoUrl)

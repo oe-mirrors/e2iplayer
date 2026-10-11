@@ -33,7 +33,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.libs.botprotection import remember_user_agent, remembered_user_agent
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, decorateResolvedLinkItems, sidecarFromUrlMeta
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, decorateResolvedLinkItems, sidecarFromUrlMeta, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
@@ -414,12 +414,18 @@ class Cb01(GenericFolderWatchedScraperMixin, CBaseHostClass):
             links.append((url, "%s [HD]" % name if "HD" in section.upper() else name))
         return links
 
+    def _metaQuery(self, cItem, data=""):
+        # the download sidecar's moviemeta lookup: the getMeta() arguments of getArticleContent (data: the item's page)
+        mediaType = cItem.get("meta_type", "") or ("tv" if "/serietv/" in cItem.get("url", "") else "movie")
+        year = cItem.get("s_year", "") or (self._siteInfo(data)[2] if data else "")
+        return sidecarMetaQuery(mediaType, cItem.get("s_title", "") or cItem.get("title", ""), year, skip=())
+
     def getLinksForVideo(self, cItem):
         printDBG("cb01uno.getLinksForVideo [%s]" % cItem)
         if cItem.get("uprot_url"):
             # an episode of a MaxStream folder (listUprotFolder)
             urltab = [{"name": "MaxStream", "url": strwithmeta(cItem["uprot_url"], {"Referer": cItem.get("folder_url", self.MAIN_URL)}), "need_resolve": 1}]
-            return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), cItem.get("desc", "")))
+            return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), cItem.get("desc", ""), self._metaQuery(cItem)))
         sts, data = self.getPage(cItem["url"])
         if not sts:
             return []
@@ -443,7 +449,7 @@ class Cb01(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not urltab:
             SetIPTVPlayerLastHostError(_("No streams are available for this title yet."))
             return []
-        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), cItem.get("desc", "")))
+        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), cItem.get("desc", ""), self._metaQuery(cItem, data)))
 
     def getVideoLinks(self, videoUrl):
         printDBG("cb01uno.getVideoLinks [%s]" % videoUrl)

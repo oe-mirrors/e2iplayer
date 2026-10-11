@@ -12,7 +12,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, getMetaByImdbId
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, sidecarMetaQuery, decorateResolvedLinkItems
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
@@ -300,7 +300,11 @@ class Dmdamedia(GenericFolderWatchedScraperMixin, CBaseHostClass):
         sts, data = self.getPage(pageUrl)
         if not sts:
             return []
-        sidecarTxt = self._parseTitlePage(data)["desc"]
+        pageInfo = self._parseTitlePage(data)
+        sidecarTxt = pageInfo["desc"]
+        # moviemeta query of INFO: the page's IMDb id / original title
+        metaQuery = sidecarMetaQuery(cItem.get("meta_type", ""), pageInfo["original_title"] or cItem.get("meta_title", ""),
+                                     cItem.get("meta_year", "") or pageInfo["year"], pageInfo["imdb"], skip=())
 
         # provider buttons: "?a=<key>#lejatszo"; the active one is already in the page's <iframe>
         providers = []
@@ -339,7 +343,7 @@ class Dmdamedia(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not urltab:
             SetIPTVPlayerLastHostError(_("No stream available"))
             return []
-        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), sidecarTxt))
+        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), sidecarTxt, metaQuery=metaQuery))
 
     def getVideoLinks(self, videoUrl):
         printDBG("Dmdamedia.getVideoLinks [%s]" % videoUrl)

@@ -2,9 +2,13 @@
 # Last Modified: 10.10.2026
 # 23.08.2026 - getSuggestionsProvider() added (forces Google search suggestions) - Kamikaze24
 # 10.10.2026 - links are no longer renamed to "*name*" after use - that broke the link list's own used mark (tick + colour)
+# 11.10.2026 - moviemeta: meta_type / meta_title / meta_year on the items, INFO merged with libs/moviemeta (the site's
+#              fields stay), sidecar = the site's plot + poster + the moviemeta query (no extra INFO request any more)
 ###################################################
 # LOCAL import
 ###################################################
+import re
+
 from Components.config import config, ConfigYesNo, getConfigListEntry
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass, RetHost
@@ -12,7 +16,8 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, rm
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs import ph
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecar, sidecarFromUrlMeta, decorateUrl, decorateCachedLinkItems, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecar, sidecarFromUrlMeta, sidecarMetaQuery, infoSidecarMetaQuery, decorateUrl, decorateCachedLinkItems, decorateResolvedLinkItems
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhostmixin import WatchedFlagHostMixin
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled
@@ -27,6 +32,9 @@ from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin
 ###################################################
 
 config.plugins.iptvplayer.filmpalast_mkv = ConfigYesNo(default=True)
+
+# moviemeta fields the site already shows under another key
+SITE_INFO_KEYS = {"genres": "genre", "cast": "actors", "directors": "director", "year": "released"}
 
 
 def GetConfigList():
@@ -59,6 +67,7 @@ class FilmPalastTo(CBaseHostClass):
         self.cacheSeries = {}
         self.cacheSeasons = {}
         self.cacheLinks = {}
+        self.cachePageInfo = {}
         self.watchedHelper = IPTVWatchedHelper('filmpalastto')
 
     def selectDomain(self):
@@ -93,6 +102,29 @@ class FilmPalastTo(CBaseHostClass):
             return ""
         cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE)
         return strwithmeta(url, {"Cookie": cookieHeader, "User-Agent": self.USER_AGENT})
+
+    def _metaParams(self, title, mediaType=""):
+        # moviemeta keys of a row: "Show S02E07" = series, "Title (2024)" / "Title *2016*" = film of that year
+        title = self.cleanHtmlStr(title)
+        episode = re.search(r"^(.+?)\s+[Ss]\d+\s*[Ee]\d+", title)
+        if episode or mediaType == "tv":
+            return {"meta_type": "tv", "meta_title": (episode.group(1) if episode else title).strip(" -"), "meta_year": ""}
+        year = re.search(r"\s*[(*]((?:19|20)\d{2})[)*]\s*$", title)
+        if year:
+            return {"meta_type": "movie", "meta_title": title[:year.start()].strip(" -"), "meta_year": year.group(1)}
+        return {"meta_type": "movie", "meta_title": title, "meta_year": ""}
+
+    def _metaQueryArgs(self, cItem, released=""):
+        # (type, title, year) of the moviemeta lookup - INFO and the download sidecar ask the same;
+        # rows from before the meta keys (favourites) get them from their title
+        params = {"meta_type": cItem.get("meta_type", ""), "meta_title": cItem.get("meta_title", ""), "meta_year": cItem.get("meta_year", "")}
+        if not params["meta_type"] or not params["meta_title"]:
+            params = self._metaParams(cItem.get("title", ""))
+        year = params["meta_year"]
+        if params["meta_type"] == "movie" and not year:
+            # a film's "Veröffentlicht:" on its page is its year
+            year = self.cm.ph.getSearchGroups(released, r"((?:19|20)\d{2})")[0]
+        return params["meta_type"], params["meta_title"], year
 
     def _getWatchedKeyForItem(self, cItem):
         try:
@@ -174,6 +206,7 @@ class FilmPalastTo(CBaseHostClass):
                 params.update(item)
                 params["icon"] = self.getFullIconUrl("/files/movies/450/%s.jpg" % item["url"].split("/")[-1])
                 params["category"] = nextCategory
+                params.update(self._metaParams(item["title"], "tv"))
                 self.addDir(params)
 
     def listCats(self, cItem, nextCategory, m1, m2):
@@ -235,6 +268,7 @@ class FilmPalastTo(CBaseHostClass):
 
             params = dict(cItem)
             params.update({"good_for_fav": True, "category": nextCategory, "title": title, "url": url, "icon": icon, "desc": desc})
+            params.update(self._metaParams(title))
             self.watchedHelper.updateHostItemFlag(self, params, self._getWatchedKeyForItem)
             self.addDir(params)
 
@@ -326,6 +360,8 @@ class FilmPalastTo(CBaseHostClass):
                     params = dict(cItem)
                     params.pop("isWatched", None)
                     params.update({"good_for_fav": False, "category": nextCategory, "title": seasonTitles.get(seasonId, seasonId), "f_season": seasonId})
+                    # a page with seasons is a series: its episodes (copies of this row) are "tv" of the show
+                    params.update(self._metaParams(cItem.get("meta_title", "") or cItem.get("title", ""), "tv"))
                     params["isWatched"] = False
                     seasonParams[seasonId] = params
                     self.addDir(params)
@@ -355,71 +391,19 @@ class FilmPalastTo(CBaseHostClass):
         # streaming AND downloading, and can also fail/return nothing, so marking
         # here would (and used to) tag failed attempts and downloads as "started" too.
         linksTab = []
-        sidecarTxt = ""
-        sidecarImg = ""
         sidecarEnabled = IsSidecarEnabled()
-        imdb_rating = cItem.get("imdb_rating", "")
-        sidecarYear = ""
-        sidecarDuration = ""
-        sidecarGenre = ""
-
-        if sidecarEnabled or config.plugins.iptvplayer.filmpalast_mkv.value:
-            try:
-                article = self.getArticleContent(cItem)
-                if article and isinstance(article, list):
-                    articleItem = article[0]
-                    sidecarTxt = articleItem.get("text", "")
-                    images = articleItem.get("images", [])
-                    if images and images[0].get("url"):
-                        sidecarImg = images[0].get("url")
-
-                    otherInfo = articleItem.get("other_info", {})
-                    if not imdb_rating or imdb_rating == "-":
-                        imdb_rating = otherInfo.get("imdb_rating", "")
-                    sidecarYear = otherInfo.get("year", "") or otherInfo.get("released", "")
-                    sidecarDuration = otherInfo.get("duration", "")
-                    sidecarGenre = otherInfo.get("genre", "")
-            except Exception:
-                printExc("getArticleContent for sidecar failed")
-
-        if not sidecarTxt:
-            sidecarTxt = cItem.get("desc", "")
-        if not sidecarImg:
-            sidecarImg = cItem.get("icon", "")
-
-        sidecarLines = []
-
-        if imdb_rating and imdb_rating != "-":
-            sidecarLines.append(u"IMDb: %s" % imdb_rating)
-
-        infoLine = []
-        if sidecarYear:
-            infoLine.append(u"Jahr: %s" % sidecarYear)
-        if sidecarDuration:
-            infoLine.append(u"Spielzeit: %s" % sidecarDuration)
-        if infoLine:
-            sidecarLines.append(u" / ".join(infoLine))
-
-        if sidecarGenre:
-            sidecarLines.append(sidecarGenre)
-
-        if sidecarLines:
-            prefix = u"\n".join(sidecarLines)
-            if sidecarTxt:
-                if not sidecarTxt.startswith("IMDb:"):
-                    sidecarTxt = prefix + u"\n\n" + sidecarTxt
-            else:
-                sidecarTxt = prefix
-
-        sidecar = buildSidecar(sidecarEnabled, sidecarTxt, sidecarImg)
 
         linksTab = self.cacheLinks.get(cItem["url"], [])
         if len(linksTab) > 0:
-            return decorateCachedLinkItems(linksTab, sidecar)
+            return decorateCachedLinkItems(linksTab, self._linksSidecar(cItem, sidecarEnabled, self.cachePageInfo.get(cItem["url"], ("", "", ""))))
 
         sts, data = self.getPage(cItem["url"], self.defaultParams)
         if not sts:
             return []
+
+        # sidecar: the site's plot + poster from this page; the download manager adds the moviemeta details
+        pageInfo = self._pageInfo(self.cm.ph.getDataBeetwenMarkers(data, '<div id="content" role="main">', "</ul>")[1])
+        sidecar = self._linksSidecar(cItem, sidecarEnabled, pageInfo)
 
         data = ph.findall(data, ("<ul", ">", "currentStreamLinks"), "</ul>", flags=0)
         for item in data:
@@ -434,8 +418,21 @@ class FilmPalastTo(CBaseHostClass):
 
         if len(linksTab):
             self.cacheLinks[cItem["url"]] = linksTab
+            self.cachePageInfo[cItem["url"]] = pageInfo
 
         return linksTab
+
+    def _pageInfo(self, data):
+        # (plot, poster, "Veröffentlicht:") of a title page's content block - for INFO and the download sidecar
+        desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<span class="hidden', "</span>")[1])
+        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, r"""src=['"]([^"^']+\.jpe?g)['"]""")[0])
+        released = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, "Ver&ouml;ffentlicht:", "<", False)[1])
+        return desc, icon, released
+
+    def _linksSidecar(self, cItem, enabled, pageInfo):
+        desc, icon, released = pageInfo
+        query = infoSidecarMetaQuery(cItem, sidecarMetaQuery(*self._metaQueryArgs(cItem, released))) if enabled else {}
+        return buildSidecar(enabled, desc or cItem.get("desc", ""), icon or cItem.get("icon", ""), query)
 
     def getVideoLinks(self, videoUrl):
         printDBG("FilmPalastTo.getVideoLinks [%s]" % videoUrl)
@@ -493,8 +490,7 @@ class FilmPalastTo(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div id="content" role="main">', "</ul>")[1]
 
         title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, "<h2", "</h2>")[1])
-        desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<span class="hidden', "</span>")[1])
-        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, r"""src=['"]([^"^']+\.jpe?g)['"]""")[0])
+        desc, icon, released = self._pageInfo(data)
 
         tmpTab = []
         tmp = self.cm.ph.getDataBeetwenMarkers(data, "enre</p>", "</li>", False)[1]
@@ -532,9 +528,8 @@ class FilmPalastTo(CBaseHostClass):
         if tmp != "":
             otherInfo["views"] = tmp
 
-        tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, "Ver&ouml;ffentlicht:", "<", False)[1])
-        if tmp != "":
-            otherInfo["released"] = tmp
+        if released != "":
+            otherInfo["released"] = released
 
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, "<em>", "</em>", False)[1])
         if tmp != "":
@@ -548,12 +543,24 @@ class FilmPalastTo(CBaseHostClass):
         if tmp != "":
             otherInfo["rating"] = tmp
 
+        # moviemeta: the site's fields stay, the services fill what the page does not show
+        meta = {}
+        mediaType, metaTitle, metaYear = self._metaQueryArgs(cItem, released)
+        if metaTitle:
+            try:
+                meta = getMeta(mediaType, metaTitle, metaYear)
+            except Exception:
+                printExc()
+        for key, value in meta.get("info", {}).items():
+            if key not in otherInfo and SITE_INFO_KEYS.get(key) not in otherInfo:
+                otherInfo[key] = value
+
         if title == "":
             title = cItem["title"]
         if desc == "":
-            desc = cItem.get("desc", "")
+            desc = meta.get("plot", "") or cItem.get("desc", "")
         if icon == "":
-            icon = cItem.get("icon", self.DEFAULT_ICON_URL)
+            icon = meta.get("poster", "") or cItem.get("icon", self.DEFAULT_ICON_URL)
 
         return [{"title": self.cleanHtmlStr(title), "text": self.cleanHtmlStr(desc), "images": [{"title": "", "url": self.getFullUrl(icon)}], "other_info": otherInfo}]
 

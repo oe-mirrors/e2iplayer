@@ -16,7 +16,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, getMetaByImdbId
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, decorateResolvedLinkItems, sidecarFromUrlMeta
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, decorateResolvedLinkItems, sidecarFromUrlMeta, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
@@ -326,6 +326,9 @@ class AniWorld(GenericFolderWatchedScraperMixin, CBaseHostClass):
         sts, data = self.getPage(cItem["url"])
         if not sts:
             return []
+        # the INFO lookup: always a series, the page's IMDb id / year
+        _desc, _icon, year, imdb = self._seriesInfo(data)
+        metaQuery = sidecarMetaQuery("tv", cItem.get("s_title") or cItem.get("meta_title"), year, imdb, skip=())
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'changeLanguageBox"', "</ul>")
         data = re.compile(r'<li[^>]*?data-lang-key\s*=\s*"(\d+)".*?data-link-target="([^"]+).*?<h4>(.*?)</h4>', re.DOTALL).findall(data[0] if data else "")
         for lang, url, title in data:
@@ -336,7 +339,7 @@ class AniWorld(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not urltab:
             SetIPTVPlayerLastHostError(_("No stream available"))
             return []
-        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled()))
+        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), "", metaQuery))
 
     def getVideoLinks(self, url):
         printDBG("AniWorld.getVideoLinks [%s]" % url)

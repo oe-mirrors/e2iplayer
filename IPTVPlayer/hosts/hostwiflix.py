@@ -20,7 +20,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
@@ -332,6 +332,14 @@ class WiFlix(GenericFolderWatchedScraperMixin, CBaseHostClass):
                     info[key] = value
         return story, poster, info
 
+    def _metaArgs(self, cItem, info):
+        # type, title and year of the moviemeta lookup (the page's original title first, the type from the url,
+        # the page's year) - INFO and the download sidecar ask the same
+        mediaType = cItem.get("meta_type") or ("tv" if SERIES_URL_RE.search(cItem.get("url", "")) else "movie")
+        metaTitle = info.get("original_title") or cItem.get("meta_title") or cItem.get("s_title") or cItem.get("title", "")
+        year = cItem.get("meta_year") or self.cm.ph.getSearchGroups(info.get("year", ""), r"((?:19|20)\d{2})")[0]
+        return mediaType, metaTitle, year
+
     def getLinksForVideo(self, cItem):
         url = cItem.get("url", "")
         printDBG("WiFlix.getLinksForVideo [%s]" % url)
@@ -363,8 +371,10 @@ class WiFlix(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not urltab:
             SetIPTVPlayerLastHostError(_("No stream available"))
             return []
-        story = self._siteInfo(data)[0]
-        urltab = applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), story))
+        story, _poster, info = self._siteInfo(data)
+        mediaType, metaTitle, year = self._metaArgs(cItem, info)
+        metaQuery = sidecarMetaQuery(mediaType, metaTitle, year, skip=())
+        urltab = applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), story, metaQuery))
         self.cacheLinks[url] = urltab
         return urltab
 
@@ -384,12 +394,9 @@ class WiFlix(GenericFolderWatchedScraperMixin, CBaseHostClass):
         sts, data = self.getPage(cItem.get("url", ""))
         if sts:
             story, poster, info = self._siteInfo(data)
-        mediaType = cItem.get("meta_type") or ("tv" if SERIES_URL_RE.search(cItem.get("url", "")) else "movie")
-        metaTitle = info.get("original_title") or cItem.get("meta_title") or cItem.get("s_title") or cItem.get("title", "")
-        year = self.cm.ph.getSearchGroups(info.get("year", ""), r"((?:19|20)\d{2})")[0]
         meta = {}
         try:
-            meta = getMeta(mediaType, metaTitle, cItem.get("meta_year") or year)
+            meta = getMeta(*self._metaArgs(cItem, info))
         except Exception:
             printExc()
         info.update(meta.get("info", {}))

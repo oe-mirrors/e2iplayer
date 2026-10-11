@@ -17,7 +17,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFo
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import normalizeMediathekTitle
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
@@ -486,7 +486,9 @@ class ORFON(GenericFolderWatchedScraperMixin, CBaseHostClass):
             if mx > 0:
                 urlTab = [u for u in urlTab if res(u) == mx] or urlTab[:1]
         if not live:
-            urlTab = applySidecarToLinks(urlTab, buildSidecarFromItem(cItem, IsSidecarEnabled(), synopsis))
+            # moviemeta query of INFO: the year must match (other films of the same name)
+            metaQuery = sidecarMetaQuery(cItem.get('meta_type', ''), cItem.get('meta_title', ''), cItem.get('meta_year', ''), skip=(), maxYearDiff=1)
+            urlTab = applySidecarToLinks(urlTab, buildSidecarFromItem(cItem, IsSidecarEnabled(), synopsis, metaQuery))
         return urlTab
 
     ###################################################

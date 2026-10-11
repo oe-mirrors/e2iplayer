@@ -34,7 +34,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFo
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, decorateResolvedLinkItems, sidecarFromUrlMeta
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, decorateResolvedLinkItems, sidecarFromUrlMeta, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 from Components.config import config, ConfigSelection, getConfigListEntry
@@ -405,7 +405,9 @@ class TrailersApple(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not urlTab:
             SetIPTVPlayerLastHostError(_("No stream available"))
             return []
-        return applySidecarToLinks(urlTab, buildSidecarFromItem(cItem, IsSidecarEnabled(), cItem.get('plot', '')))
+        # the INFO lookup: a film, a year off by one still matches
+        metaQuery = sidecarMetaQuery('movie', cItem.get('meta_title', ''), cItem.get('meta_year', ''), skip=(), maxYearDiff=1)
+        return applySidecarToLinks(urlTab, buildSidecarFromItem(cItem, IsSidecarEnabled(), cItem.get('plot', ''), metaQuery))
 
     def getVideoLinks(self, videoUrl):
         printDBG("TrailersApple.getVideoLinks [%s]" % videoUrl)

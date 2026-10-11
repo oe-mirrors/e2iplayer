@@ -23,7 +23,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import SetIPTVPlaye
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
@@ -382,7 +382,10 @@ class Netzkino(GenericFolderWatchedScraperMixin, CBaseHostClass):
             link = self._link(PMD_RATE_RE.sub(r"_1000000\2", pmd))
             if self._probe(str(link["url"])) in (200, 206):
                 links.append(link)
-        return applySidecarToLinks(links, buildSidecarFromItem(cItem, IsSidecarEnabled(), cItem.get("desc", "")))
+        # moviemeta query of INFO: the original title, then the German one, a year off by at most one
+        metaQuery = sidecarMetaQuery("movie" if cItem.get("category") == "nk_movie" else "tv", cItem.get("meta_title", "") or cItem.get("s_title", ""),
+                                     cItem.get("s_year", ""), skip=(), maxYearDiff=1, altTitles=[cItem.get("s_title", "")])
+        return applySidecarToLinks(links, buildSidecarFromItem(cItem, IsSidecarEnabled(), cItem.get("desc", ""), metaQuery))
 
     ###################################################
     # INFO

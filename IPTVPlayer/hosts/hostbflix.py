@@ -22,7 +22,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import SetIPTVPlaye
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps, loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, decorateResolvedLinkItems, sidecarFromUrlMeta
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, decorateResolvedLinkItems, sidecarFromUrlMeta, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus, urllib_unquote
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
@@ -278,6 +278,11 @@ class Bflix(GenericFolderWatchedScraperMixin, CBaseHostClass):
         sts, data = self.getPage(cItem["url"])
         if not sts:
             return []
+        # the INFO lookup (the items carry no meta_title / meta_year): name and year of the list or the page
+        _info, _plot, title, year = self._siteInfo(data)
+        metaQuery = sidecarMetaQuery(cItem.get("meta_type", "") or ("tv" if "/series/" in cItem.get("url", "") else "movie"),
+                                     cItem.get("s_title", "") or cItem.get("meta_title", "") or title or cItem.get("title", ""),
+                                     cItem.get("s_year", "") or cItem.get("meta_year", "") or year, skip=())
         plUrl = self.cm.ph.getSearchGroups(data, r"const pl_url = '([^']+)")[0]
         if not plUrl:
             SetIPTVPlayerLastHostError(_("No stream available"))
@@ -300,7 +305,7 @@ class Bflix(GenericFolderWatchedScraperMixin, CBaseHostClass):
             urltab.append({"name": "%s - %s" % (self.cleanHtmlStr(srv), self.up.getHostName(url).capitalize()), "url": strwithmeta(url, meta), "need_resolve": 1})
         if not urltab:
             SetIPTVPlayerLastHostError(_("No stream available"))
-        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), cItem.get("desc", "")))
+        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), cItem.get("desc", ""), metaQuery))
 
     def getVideoLinks(self, videoUrl):
         printDBG("Bflix.getVideoLinks [%s]" % videoUrl)

@@ -1141,7 +1141,9 @@ class StalkerPortalHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
         urltab = [{'name': 'MAG', 'url': strwithmeta(url, {'User-Agent': MAG_UA}), 'need_resolve': 0}]
         if kind in ('live', 'timeshift'):
             return urltab
-        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), ''))
+        # INFO asks libs/moviemeta only when the portal has no plot or no picture - the download sidecar the same
+        metaQuery = {} if self._portalPlot(cItem) and cItem.get('icon', '') else None
+        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), '', metaQuery))
 
     def getVideoLinks(self, videoUrl):
         sidecar = sidecarFromUrlMeta(videoUrl, IsSidecarEnabled())
@@ -1162,6 +1164,14 @@ class StalkerPortalHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
         except Exception:
             printExc()
         return {}
+
+    def _portalPlot(self, cItem):
+        # desc: "year | genres | rating[/br]plot" of describe() for movies / series, the own plot of a season or
+        # an episode (which carry the st_info of their series) - the plot without the describe() head
+        desc = cItem.get('desc', '')
+        head = self.describe(_dict(cItem.get('st_info')), '')
+        text = desc[len(head):] if head and desc.startswith(head) else desc
+        return text.replace('[/br]', '\n').strip()
 
     def _article(self, cItem, text, icon, otherInfo):
         otherInfo = dict((k, _str(v)) for k, v in otherInfo.items() if _str(v))
@@ -1190,12 +1200,7 @@ class StalkerPortalHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 lines.append(_("Catch-up: %d days") % _int(cItem.get('archive_days'), 0))
             return self._article(cItem, '\n'.join(lines).strip(), icon, {'station': cItem.get('title', '')})
         other = dict(_dict(cItem.get('st_info')))
-        # desc: "year | genres | rating[/br]plot" of describe() for movies / series, the own plot of a season or
-        # an episode (which carry the st_info of their series)
-        desc = cItem.get('desc', '')
-        head = self.describe(other, '')
-        text = desc[len(head):] if head and desc.startswith(head) else desc
-        text = text.replace('[/br]', '\n').strip()
+        text = self._portalPlot(cItem)
         if not (text and icon) and cItem.get('meta_title'):
             # libs/moviemeta only when the portal itself has no plot or no picture
             meta = self._moviemeta('movie' if kind == 'movie' else 'tv', cItem.get('meta_title', ''), cItem.get('meta_year', ''))
