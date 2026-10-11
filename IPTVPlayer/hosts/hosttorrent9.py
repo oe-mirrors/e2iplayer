@@ -18,7 +18,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.libs import ph
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
@@ -386,9 +386,19 @@ class Torrent9(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not icon.startswith("http"):
             icon = ""  # fix 091026: not the file:// default icon of the row
         urltab = [{"name": name or release, "url": strwithmeta(magnet, {"title": release, "icon": icon}), "need_resolve": 1}]
-        urltab = applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), info["story"]))
+        metaType, year, titles = self._metaArgs(cItem)
+        metaQuery = sidecarMetaQuery(metaType, titles[0] if titles else "", year, skip=(), maxYearDiff=1 if year else None, altTitles=titles[1:])
+        urltab = applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), info["story"], metaQuery))
         self.cacheLinks[url] = urltab
         return urltab
+
+    @staticmethod
+    def _metaArgs(cItem):
+        # moviemeta lookups of INFO: the year only for a film (+-1 year); the English title in brackets first, the
+        # French title often has no match in the English databases
+        metaType = cItem.get("meta_type", "movie")
+        year = cItem.get("meta_year", "") if metaType == "movie" else ""
+        return metaType, year, [t for t in (cItem.get("meta_alt_title", ""), cItem.get("meta_title", "")) if t]
 
     def getVideoLinks(self, videoUrl):
         printDBG("Torrent9.getVideoLinks [%s]" % videoUrl)
@@ -414,16 +424,13 @@ class Torrent9(GenericFolderWatchedScraperMixin, CBaseHostClass):
             info["quality"] = " - ".join(x for x in (_qualityLabel(cItem.get("release", "")), site["size"]) if x)
         if cItem.get("meta_year"):
             info["year"] = cItem["meta_year"]
-        metaType = cItem.get("meta_type", "movie")
-        year = cItem.get("meta_year", "") if metaType == "movie" else ""
+        metaType, year, titles = self._metaArgs(cItem)
         meta = {}
         try:
-            # the English title in brackets first: the French title often has no match in the English databases
-            for title in (cItem.get("meta_alt_title", ""), cItem.get("meta_title", "")):
-                if title:
-                    meta = getMeta(metaType, title, year, maxYearDiff=1 if year else None)
-                    if meta:
-                        break
+            for title in titles:
+                meta = getMeta(metaType, title, year, maxYearDiff=1 if year else None)
+                if meta:
+                    break
         except Exception:
             printExc()
         info.update(meta.get("info", {}))

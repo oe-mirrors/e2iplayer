@@ -29,7 +29,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMetaByImdbId
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import common
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems, getUrlMeta
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems, getUrlMeta, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str, ensure_str_deep
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
@@ -741,7 +741,9 @@ class TorrentDB(GenericFolderWatchedScraperMixin, CBaseHostClass):
             names.add(name)
             meta = {"title": title, "icon": icon, "torrentdb_file": torrent["file"], "torrentdb_sxe": sxe}
             urltab.append({"name": name, "url": strwithmeta(magnet, meta), "need_resolve": 1})
-        urltab = applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled()))
+        # the moviemeta query of INFO: the IMDb id only
+        metaQuery = sidecarMetaQuery("tv" if isEpisode else "movie", imdbId=imdbId)
+        urltab = applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), "", metaQuery))
         self.cacheLinks[url] = urltab
         return urltab
 

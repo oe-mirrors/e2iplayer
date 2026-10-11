@@ -32,7 +32,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhostmixin import WatchedFlagHostMixin
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, sidecarMetaQuery, decorateResolvedLinkItems
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import extractNum, formatSxxExx
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
 
@@ -376,20 +376,13 @@ class HDFilme(CBaseHostClass):
             return linksTab
 
         sidecarEnabled = IsSidecarEnabled()
-        extraText = ""
+        # sidecar: the item's text + picture; the download manager adds the moviemeta details INFO looks up
+        # (IMDb id of the player, else the title)
+        sidecarMeta = {}
         if sidecarEnabled:
-            try:
-                article = self.getArticleContent(cItem)
-                if article and isinstance(article, list):
-                    articleItem = article[0]
-                    extraText = articleItem.get("text", "") or ""
-                    otherInfo = articleItem.get("other_info", {}) or {}
-                    head = [str(otherInfo[k]) for k in ("released", "duration", "actors") if otherInfo.get(k)]
-                    if head:
-                        extraText = " / ".join(head) + (("\n\n" + extraText) if extraText else "")
-            except Exception:
-                printExc("HDFilme getArticleContent for sidecar failed")
-        sidecar = buildSidecarFromItem(cItem, sidecarEnabled, extraText)
+            sidecarMeta = sidecarMetaQuery(cItem.get("meta_type", "") or "movie", cItem.get("meta_title", "") or cItem.get("s_title", ""),
+                                           cItem.get("meta_year", ""), cItem.get("imdb", ""), skip=())
+        sidecar = buildSidecarFromItem(cItem, sidecarEnabled, metaQuery=sidecarMeta)
 
         streamType = cItem.get("stream_type")
         if streamType == "movie":

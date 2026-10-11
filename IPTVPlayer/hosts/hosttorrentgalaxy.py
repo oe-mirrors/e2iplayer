@@ -20,7 +20,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.libs import ph
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, getMetaByImdbId
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
@@ -327,7 +327,10 @@ class TorrentGalaxy(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not icon.startswith("http"):
             icon = info["poster"] if info["poster"] and not info["poster"].endswith(NO_POSTER) else ""
         urltab = [{"name": name or release, "url": strwithmeta(magnet, {"title": release, "icon": icon}), "need_resolve": 1}]
-        urltab = applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), info.get("imdb Plot", "")))
+        # the moviemeta query of INFO: the IMDb code of the post first
+        metaQuery = sidecarMetaQuery(cItem.get("meta_type", "movie"), cItem.get("meta_title", ""), cItem.get("meta_year", ""),
+                                     cItem.get("imdb_code") or info.get("imdb_code", ""), skip=())
+        urltab = applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), info.get("imdb Plot", ""), metaQuery))
         self.cacheLinks[url] = urltab
         return urltab
 

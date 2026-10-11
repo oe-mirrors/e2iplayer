@@ -20,8 +20,8 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHost
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import GetAlternativeProxyChoices, GetAlternativeProxyUrl, IsSidecarEnabled, IsMediaNamingNormalized
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps, loads as json_loads
-from Plugins.Extensions.IPTVPlayer.libs.moviemeta import LATIN_ONLY, getMeta, isLatinTitle
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, isLatinTitle
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, sidecarMetaQuery, decorateResolvedLinkItems
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
@@ -423,7 +423,10 @@ class CimaTN(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not urltab:
             SetIPTVPlayerLastHostError(_("No stream available"))
             return []
-        return applySidecarToLinks(urltab, buildSidecarFromItem(dict(cItem, desc=StripColorCodes(cItem.get("desc", ""))), IsSidecarEnabled()))
+        # moviemeta query of INFO: Latin titles only (an Arabic one gets unrelated hits), all services
+        metaTitle = cItem.get("meta_title", "")
+        metaQuery = sidecarMetaQuery(cItem.get("meta_type", "movie"), metaTitle, cItem.get("meta_year", ""), skip=()) if metaTitle and isLatinTitle(metaTitle) else {}
+        return applySidecarToLinks(urltab, buildSidecarFromItem(dict(cItem, desc=StripColorCodes(cItem.get("desc", ""))), IsSidecarEnabled(), metaQuery=metaQuery))
 
     def getVideoLinks(self, videoUrl):
         printDBG("CimaTN.getVideoLinks [%s]" % videoUrl)
@@ -438,9 +441,10 @@ class CimaTN(GenericFolderWatchedScraperMixin, CBaseHostClass):
     def getArticleContent(self, cItem):
         printDBG("CimaTN.getArticleContent [%s]" % cItem.get("url", ""))
         meta = {}
+        # Latin titles only: those are the ones IMDb / Cinemeta / OMDb know (skip=LATIN_ONLY is for Arabic titles)
         if cItem.get("meta_title") and isLatinTitle(cItem["meta_title"]):
             try:
-                meta = getMeta(cItem.get("meta_type", "movie"), cItem["meta_title"], cItem.get("meta_year", ""), LATIN_ONLY)
+                meta = getMeta(cItem.get("meta_type", "movie"), cItem["meta_title"], cItem.get("meta_year", ""))
             except Exception:
                 printExc()
         content = self._postContent(cItem.get("post_id", ""))

@@ -24,7 +24,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps, loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, getMetaByImdbId
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
@@ -471,7 +471,10 @@ class SerijeBalkan(GenericFolderWatchedScraperMixin, CBaseHostClass):
             SetIPTVPlayerLastHostError(_("Only unsupported hosters available: %s") % ", ".join(unsupported))
             return []
         story = self._plot(show.get("desc"))
-        urltab = applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), story))
+        # moviemeta query of INFO (_lookupMeta): the show's IMDb id first, then its original title / year
+        mediaType, metaTitle, imdbId = self._metaArgs(cItem, show)
+        metaQuery = sidecarMetaQuery(mediaType, metaTitle, self._siteInfo(show).get("year", "") or cItem.get("meta_year", ""), imdbId, skip=())
+        urltab = applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), story, metaQuery))
         self.cacheLinks[url] = urltab
         return urltab
 
@@ -528,14 +531,18 @@ class SerijeBalkan(GenericFolderWatchedScraperMixin, CBaseHostClass):
             info["actors"] = ", ".join(cast[:6])
         return info
 
-    def _lookupMeta(self, cItem, show, year):
+    def _metaArgs(self, cItem, show):
+        # type, title and IMDb id of the moviemeta lookup - INFO and the download sidecar ask the same
         mediaType = "tv" if _str(show.get("type")) == "Serija" or cItem.get("meta_type") == "tv" else "movie"
-        imdbId = _str(show.get("imdbId")) or cItem.get("imdb_id", "")
+        metaTitle = _str(show.get("originalTitle")) or _str(show.get("title")) or cItem.get("meta_title", "") or cItem.get("s_title", "")
+        return mediaType, metaTitle, _str(show.get("imdbId")) or cItem.get("imdb_id", "")
+
+    def _lookupMeta(self, cItem, show, year):
+        mediaType, metaTitle, imdbId = self._metaArgs(cItem, show)
         meta = {}
         try:
             if imdbId:
                 meta = getMetaByImdbId(mediaType, imdbId)
-            metaTitle = _str(show.get("originalTitle")) or _str(show.get("title")) or cItem.get("meta_title", "") or cItem.get("s_title", "")
             if not meta and metaTitle:
                 meta = getMeta(mediaType, metaTitle, year)
         except Exception:

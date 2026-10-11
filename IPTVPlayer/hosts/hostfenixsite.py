@@ -13,7 +13,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, getMetaByImdbId
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, sidecarMetaQuery, decorateResolvedLinkItems
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
@@ -352,7 +352,12 @@ class Fenixsite(GenericFolderWatchedScraperMixin, CBaseHostClass):
         sts, data = self.getPage(pageUrl)
         if not sts:
             return []
-        sidecarTxt = self._parseTitlePage(data)["desc"]
+        pageInfo = self._parseTitlePage(data)
+        sidecarTxt = pageInfo["desc"]
+        # moviemeta query of INFO: the page's IMDb id, else the title (the page's year for a film)
+        mediaType = cItem.get("meta_type", "")
+        metaQuery = sidecarMetaQuery(mediaType, cItem.get("meta_title", "") or cItem.get("s_title", ""),
+                                     cItem.get("meta_year", "") or (pageInfo["year"] if mediaType == "movie" else ""), pageInfo["imdb"], skip=())
 
         labels = {}
         for tabId, label in re.findall(r'<li data-id="([^"]+)"[^>]*>\s*<span class="title">([^<]*)<', data):
@@ -399,7 +404,7 @@ class Fenixsite(GenericFolderWatchedScraperMixin, CBaseHostClass):
         urltab.extend(lastTab)
         if not urltab and skipped:
             SetIPTVPlayerLastHostError(_("Only unsupported hosters available: %s") % ", ".join(sorted(set(skipped))))
-        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), sidecarTxt))
+        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), sidecarTxt, metaQuery=metaQuery))
 
     def getVideoLinks(self, videoUrl):
         printDBG("Fenixsite.getVideoLinks [%s]" % videoUrl)

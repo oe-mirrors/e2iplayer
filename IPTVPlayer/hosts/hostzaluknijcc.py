@@ -24,7 +24,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEna
 from Plugins.Extensions.IPTVPlayer.libs.botprotection import remembered_user_agent
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
@@ -437,6 +437,13 @@ class Zaluknij(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 rows.append((self.getFullUrl(playerUrl), version, quality))
         return rows
 
+    def _metaArgs(self, cItem, info):
+        # type, title and year of the moviemeta lookup (type from the url, the page's year) - INFO and the
+        # download sidecar ask the same; old favourites have no meta_title: the title without " (Year)" / " [S01 E04]"
+        mediaType = cItem.get("meta_type", "") or ("tv" if "/serial-online/" in cItem.get("url", "") else "movie")
+        metaTitle = cItem.get("meta_title", "") or _metaTitle(re.sub(r"\s*[(\[][^)\]]*[)\]]$", "", cItem.get("s_title", "") or cItem.get("title", "")))
+        return mediaType, metaTitle, cItem.get("meta_year", "") or info.get("year", "")
+
     def getLinksForVideo(self, cItem):
         url = cItem.get("url", "")
         printDBG("Zaluknij.getLinksForVideo [%s]" % url)
@@ -456,8 +463,10 @@ class Zaluknij(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not urltab:
             SetIPTVPlayerLastHostError(_("No stream available"))
             return []
-        story = self._siteInfo(data)[0]
-        urltab = applySidecarToLinks(urltab, buildSidecarFromItem(dict(cItem, desc=_stripColors(cItem.get("desc", ""))), IsSidecarEnabled(), story))
+        story, _poster, info = self._siteInfo(data)
+        mediaType, metaTitle, year = self._metaArgs(cItem, info)
+        metaQuery = sidecarMetaQuery(mediaType, metaTitle, year, skip=())
+        urltab = applySidecarToLinks(urltab, buildSidecarFromItem(dict(cItem, desc=_stripColors(cItem.get("desc", ""))), IsSidecarEnabled(), story, metaQuery))
         self.cacheLinks[url] = urltab
         return urltab
 
@@ -478,12 +487,10 @@ class Zaluknij(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if sts:
             story, poster, info = self._siteInfo(data)
         meta = {}
-        mediaType = cItem.get("meta_type", "") or ("tv" if "/serial-online/" in cItem.get("url", "") else "movie")
-        # old favourites have no meta_title: the title without " (Year)" / " [S01 E04]"
-        metaTitle = cItem.get("meta_title", "") or _metaTitle(re.sub(r"\s*[(\[][^)\]]*[)\]]$", "", cItem.get("s_title", "") or cItem.get("title", "")))
+        mediaType, metaTitle, year = self._metaArgs(cItem, info)
         try:
             if metaTitle:
-                meta = getMeta(mediaType, metaTitle, cItem.get("meta_year", "") or info.get("year", ""))
+                meta = getMeta(mediaType, metaTitle, year)
         except Exception:
             printExc()
         info.update(meta.get("info", {}))

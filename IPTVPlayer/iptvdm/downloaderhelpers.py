@@ -13,6 +13,7 @@ from Tools.BoundFunction import boundFunction
 from enigma import eConsoleAppContainer
 import os
 import signal
+import threading
 ###################################################
 
 try:
@@ -209,12 +210,15 @@ class SidecarMixin(object):
         self.sidecarImg = ''
         self.waitingForSidecar = False
         self.sidecarImgTmpPath = ''
+        self.sidecarMetaLock = threading.Lock()
+        self.sidecarMetaState = {}
 
     def _clearSidecarData(self):
         self.sidecarEnabled = False
         self.sidecarTxt = ''
         self.sidecarImg = ''
         self.waitingForSidecar = False
+        self.sidecarMetaState = {}
 
     def _prepareSidecarData(self, meta):
         self._clearSidecarData()
@@ -224,11 +228,54 @@ class SidecarMixin(object):
                 self.sidecarTxt = meta.get('e2i_sidecar_txt', '')
                 self.sidecarImg = meta.get('e2i_sidecar_img', '')
                 printDBG("%s sidecar enabled" % self.__class__.__name__)
+                self._startSidecarMetaLookup(meta.get('e2i_sidecar_meta'))
         except Exception:
             printExc()
 
+    def _startSidecarMetaLookup(self, query):
+        # e2i_sidecar_meta (urlmetahelper.sidecarMetaQuery): the moviemeta details (rating, genres, cast, plot,
+        # poster) are looked up now, in a thread while the file downloads - not when the links are listed, so
+        # playing costs no lookup. _writeTxtSidecar() takes the answer; one that comes after the download is done
+        # rewrites the .txt itself. Each download gets its own state dict (a restart starts a new one).
+        if not isinstance(query, dict) or not query:
+            return
+        state = {'result': None, 'txtPath': ''}
+        self.sidecarMetaState = state
+        siteTxt, siteImg, name, lock = self.sidecarTxt, self.sidecarImg, self.__class__.__name__, self.sidecarMetaLock
+
+        def sidecarMetaLookup():
+            from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import lookupSidecarMeta
+            result = lookupSidecarMeta(query, siteTxt, siteImg)
+            with lock:
+                state['result'] = result
+                txtPath = state['txtPath']
+            if txtPath and result[0] and result[0] != siteTxt:
+                # the download finished first: its .txt has the site text only
+                if writeUtf8TextFile(txtPath, ensureText(result[0])):
+                    printDBG("%s sidecar TXT rewritten with the moviemeta details [%s]" % (name, txtPath))
+
+        printDBG("%s sidecar moviemeta lookup %r" % (name, query))
+        # an E2iPlayer work thread (asynccall): pCommon's pycurl requests need its kill state, a plain thread's fail
+        from Plugins.Extensions.IPTVPlayer.components.asynccall import AsyncMethod
+        AsyncMethod(sidecarMetaLookup)()
+
+    def _takeSidecarMetaResult(self, txtPath):
+        # the moviemeta answer when it is there; else txtPath is noted for the thread's own rewrite
+        state = self.sidecarMetaState
+        if not state:
+            return
+        with self.sidecarMetaLock:
+            result = state.get('result')
+            if result is None:
+                state['txtPath'] = txtPath
+        if result is None:
+            printDBG("%s sidecar moviemeta lookup still running, site text first" % self.__class__.__name__)
+        else:
+            self.sidecarTxt, self.sidecarImg = result
+
     def _writeTxtSidecar(self, filePath):
         try:
+            self._takeSidecarMetaResult(ensureText(filePath).rsplit('.', 1)[0] + '.txt')
             if not self.sidecarTxt:
                 printDBG("%s sidecar TXT skipped: empty content" % self.__class__.__name__)
                 return
@@ -272,6 +319,12 @@ class SidecarMixin(object):
                 else:
                     safeRemoveFile(jpgPath)
                     os.rename(fsPath(tmpPath), fsPath(jpgPath))
+                    try:
+                        # wget gives the file the server's date (the poster's upload, years ago): the
+                        # download's time instead, so the picture sorts next to its video
+                        os.utime(fsPath(jpgPath), None)
+                    except Exception:
+                        printExc()
                     printDBG("%s sidecar JPG saved [%s]" % (self.__class__.__name__, jpgPath))
             else:
                 printDBG("%s sidecar JPG failed [%s]" % (self.__class__.__name__, jpgPath))

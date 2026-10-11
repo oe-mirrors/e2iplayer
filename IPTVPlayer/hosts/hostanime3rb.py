@@ -355,7 +355,8 @@ class Anime3rb(GenericFolderWatchedScraperMixin, CBaseHostClass):
             self.addVideo({"name": "category", "category": "r3_video", "good_for_fav": True, "url": href,
                            "title": self._episodeTitle(show, season, episode, rawTitle), "icon": self.getFullIconUrl(icon) if icon else cItem.get("icon", ""),
                            "desc": " | ".join(x for x in (subtitle, duration) if x), "show_url": cItem["url"], "s_title": show,
-                           "s_season": season, "s_episode": str(episode), "meta_type": "tv", "meta_title": cItem.get("meta_title", show)})
+                           "s_season": season, "s_episode": str(episode), "meta_type": "tv", "meta_title": cItem.get("meta_title", show),
+                           "meta_year": cItem.get("meta_year", "")})
         if len(episodes) > LOCAL_PAGE_SIZE:
             lastPage = (len(episodes) + LOCAL_PAGE_SIZE - 1) // LOCAL_PAGE_SIZE
             addPagingItems(self, dict(cItem), page, page < lastPage, lastPage)

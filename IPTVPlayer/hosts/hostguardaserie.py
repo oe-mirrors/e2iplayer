@@ -18,7 +18,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsMediaNamin
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, decorateResolvedLinkItems, sidecarFromUrlMeta
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, decorateResolvedLinkItems, sidecarFromUrlMeta, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
@@ -264,10 +264,11 @@ class GuardaSerie(GenericFolderWatchedScraperMixin, CBaseHostClass):
     def getLinksForVideo(self, cItem):
         printDBG("GuardaSerie.getLinksForVideo [%s]" % cItem)
         tmdb = str(cItem.get("tmdb_id", "") or cItem.get("tmdbID", "") or "")
+        year = cItem.get("s_year", "")
         if not tmdb:
             sts, data = self.getPage(cItem["url"])
             if sts:
-                tmdb = self._siteInfo(data)[3]
+                _info, _plot, year, tmdb = self._siteInfo(data)
         if not tmdb:
             SetIPTVPlayerLastHostError(_("No streams are available for this title yet."))
             return []
@@ -278,7 +279,9 @@ class GuardaSerie(GenericFolderWatchedScraperMixin, CBaseHostClass):
             url = "%smovie/%s?lang=it" % (PLAYER_URL, tmdb)
         # parserVIXSRC: token playlist with the audio / video variants
         urltab = [{"name": "VixSrc", "url": strwithmeta(url, {"Referer": self.MAIN_URL}), "need_resolve": 1}]
-        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), cItem.get("desc", "")))
+        # moviemeta query of INFO: series by default, the page's year when the page was fetched here
+        metaQuery = sidecarMetaQuery(cItem.get("meta_type", "") or "tv", cItem.get("s_title", "") or cItem.get("title", ""), year, skip=())
+        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), cItem.get("desc", ""), metaQuery=metaQuery))
 
     def getVideoLinks(self, videoUrl):
         printDBG("GuardaSerie.getVideoLinks [%s]" % videoUrl)

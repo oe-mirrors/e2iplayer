@@ -23,7 +23,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFo
 from Plugins.Extensions.IPTVPlayer.components.captcha_helper import CaptchaHelper
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, getMetaByImdbId
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, sidecarMetaQuery, decorateResolvedLinkItems
 
 ###################################################
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
@@ -616,7 +616,14 @@ class Filman(GenericFolderWatchedScraperMixin, CBaseHostClass, CaptchaHelper):
 
                 retTab.append({"name": name, "url": strwithmeta(link_id, {"Referer": cItem["url"], "link_id": link_id, "pending": True}), "need_resolve": 1})
         if retTab:
-            retTab = applySidecarToLinks(retTab, buildSidecarFromItem(cItem, IsSidecarEnabled(), cItem.get("desc", "")))
+            # moviemeta query of INFO: the IMDb id when the page links it, else the original title ("Pacjent / The Patient")
+            mediaType = cItem.get("meta_type", "") or ("tv" if re.search(r"/(?:s|e|serial)/", cItem["url"]) else "movie")
+            name = cItem.get("s_title", "") or cItem.get("title", "")
+            if mediaType == "tv":
+                name = self._seriesName(name)
+            metaQuery = sidecarMetaQuery(mediaType, name.split("/")[-1].strip(), "" if mediaType == "tv" else cItem.get("s_year", ""),
+                                         self.cm.ph.getSearchGroups(data, r"imdb\.com/title/(tt\d+)")[0], skip=())
+            retTab = applySidecarToLinks(retTab, buildSidecarFromItem(cItem, IsSidecarEnabled(), cItem.get("desc", ""), metaQuery=metaQuery))
             self.cacheLinks[cacheKey] = retTab
         elif links_section and "/premium" in links_section:
             SetIPTVPlayerLastHostError("Only premium links are available for this title.")

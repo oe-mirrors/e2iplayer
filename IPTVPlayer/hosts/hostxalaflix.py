@@ -19,7 +19,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import SetIPTVPlaye
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, decorateResolvedLinkItems, sidecarFromUrlMeta
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, decorateResolvedLinkItems, sidecarFromUrlMeta, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
@@ -263,7 +263,11 @@ class XalaFlix(GenericFolderWatchedScraperMixin, CBaseHostClass):
             urlTab.append({"name": name, "url": strwithmeta(url, {"Referer": self.MAIN_URL}), "need_resolve": 1})
         if not urlTab:
             SetIPTVPlayerLastHostError(_("No stream available"))
-        return applySidecarToLinks(urlTab, buildSidecarFromItem(cItem, IsSidecarEnabled()))
+        # the moviemeta query of INFO (the rows carry no meta_title; INFO's year of the page is not fetched here)
+        mediaType = cItem.get("meta_type", "") or ("tv" if cItem.get("category") == "list_episodes" or cItem.get("episode") else "movie")
+        title = cItem.get("s_title", "") or self._splitSeason(cItem.get("title", ""))[0]
+        metaQuery = sidecarMetaQuery(mediaType, title, cItem.get("meta_year", ""), skip=())
+        return applySidecarToLinks(urlTab, buildSidecarFromItem(cItem, IsSidecarEnabled(), "", metaQuery))
 
     def _redirect(self, url):
         # kakaflix ".../voe3/newPlayer.php?id=..." answers with a 302 to the hoster; "" when it does not answer

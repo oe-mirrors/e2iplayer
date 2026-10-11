@@ -21,7 +21,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFo
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import normalizeMediathekTitle
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
 ###################################################
@@ -654,7 +654,7 @@ class Raiplay(GenericFolderWatchedScraperMixin, CBaseHostClass):
         printDBG("Raiplay.getLinksForVideo [%s]" % cItem.get('url', ''))
         url = cItem.get('url', '')
         live = bool(cItem.get('live'))
-        relinker, synopsis, subTracks = '', '', []
+        relinker, synopsis, subTracks, metaQuery = '', '', [], {}
         if '/relinker/' in url:
             relinker = url
         elif url.endswith('.json'):
@@ -662,6 +662,10 @@ class Raiplay(GenericFolderWatchedScraperMixin, CBaseHostClass):
             video = data.get('video') or {}
             relinker = video.get('content_url') or ''
             synopsis = self._clean(data.get('description'))
+            # moviemeta query of INFO: only the full film of a "Film" programme, the year must match
+            prog = data.get('program_info') or {}
+            if (prog.get('typology') or '') == 'Film' and (data.get('form') or '') == 'Integrale' and prog.get('name'):
+                metaQuery = sidecarMetaQuery('movie', self._clean(prog['name']), self._clean(prog.get('year'))[:4], skip=(), maxYearDiff=1)
             for sub in (video.get('subtitlesArray') or video.get('subtitleList') or []):
                 subUrl = (sub or {}).get('url') or ''
                 if subUrl:
@@ -705,7 +709,7 @@ class Raiplay(GenericFolderWatchedScraperMixin, CBaseHostClass):
             name = 'mpd' if ('mpd' in ct or '.mpd' in streamUrl) else (ct or 'mp4')
             urlTab.append({'name': name, 'url': strwithmeta(streamUrl, meta), 'need_resolve': 0})
         if not live:
-            urlTab = applySidecarToLinks(urlTab, buildSidecarFromItem(cItem, IsSidecarEnabled(), synopsis))
+            urlTab = applySidecarToLinks(urlTab, buildSidecarFromItem(cItem, IsSidecarEnabled(), synopsis, metaQuery))
         return urlTab
 
     ###################################################

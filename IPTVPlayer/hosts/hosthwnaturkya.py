@@ -18,7 +18,7 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHost
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, getMetaByImdbId
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, sidecarMetaQuery, decorateResolvedLinkItems
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_unquote
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
@@ -297,7 +297,14 @@ class HwnaTurkya(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not links and skipped:
             SetIPTVPlayerLastHostError(_("Only unsupported hosters available: %s") % ", ".join(skipped))
         story = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'(?s)<h3 class="story">(.*?)</h3>')[0])
-        return applySidecarToLinks(links, buildSidecarFromItem(cItem, IsSidecarEnabled(), story))
+        # moviemeta query of INFO: the IMDb id / year of the page (when this page has them), all services for the Arabic title
+        year = ""
+        for section in re.findall(r'<ul[^>]*class="single-info[^"]*"[^>]*>(.*?)</ul>', data, re.S):
+            values = [x for x in [self.cleanHtmlStr(v) for v in re.findall(r"<a[^>]*>(.*?)</a>", section, re.S)] if x and x != ","]
+            if INFO_FIELDS[0][0] in self.cleanHtmlStr(section.split(":", 1)[0]) and values:
+                year = values[0][:4]
+        metaQuery = sidecarMetaQuery(cItem.get("meta_type", ""), cItem.get("meta_title", ""), year, self.cm.ph.getSearchGroups(data, r'imdb\.com/title/(tt\d+)')[0], skip=())
+        return applySidecarToLinks(links, buildSidecarFromItem(cItem, IsSidecarEnabled(), story, metaQuery=metaQuery))
 
     def getVideoLinks(self, videoUrl):
         printDBG("HwnaTurkya.getVideoLinks [%s]" % videoUrl)

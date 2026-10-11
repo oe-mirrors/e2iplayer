@@ -15,7 +15,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import normalizeMediathekTitle
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
@@ -238,7 +238,10 @@ class DocumentaryArea(GenericFolderWatchedScraperMixin, CBaseHostClass):
             if info["subs"]:
                 meta["external_sub_tracks"] = info["subs"]
             urltab.append({"name": "MP4 %s" % label if label else "MP4", "url": strwithmeta(self.getFullUrl(src), meta), "need_resolve": 0})
-        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), info["desc"]))
+        # moviemeta query of INFO: the item's "year", for a film only
+        metaType = cItem.get("meta_type", "")
+        metaQuery = sidecarMetaQuery(metaType, cItem.get("meta_title", ""), cItem.get("year", "") if metaType == "movie" else "", skip=())
+        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), info["desc"], metaQuery=metaQuery))
 
     ###################################################
     # info / favourites

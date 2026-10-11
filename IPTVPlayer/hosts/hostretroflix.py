@@ -18,7 +18,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import SetIPTVPlaye
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, getMetaByImdbId
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, decorateResolvedLinkItems, sidecarFromUrlMeta
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, decorateResolvedLinkItems, sidecarFromUrlMeta, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
@@ -192,7 +192,12 @@ class RetroFlix(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not sts:
             return []
         nodes = self._jsonLd(data)
-        sidecarTxt = self._text(nodes.get("Movie", {}).get("description", "") or nodes.get("VideoObject", {}).get("description", ""))
+        movie = nodes.get("Movie", {})
+        sidecarTxt = self._text(movie.get("description", "") or nodes.get("VideoObject", {}).get("description", ""))
+        # moviemeta query of INFO: the page's IMDb id first, then its title / year (off by at most one)
+        metaQuery = sidecarMetaQuery("movie", self._text(movie.get("name", "")) or cItem.get("meta_title", "") or re.sub(r"\s*\(\d{4}\)$", "", cItem.get("title", "")),
+                                     self._text(movie.get("datePublished", ""))[:4] or cItem.get("meta_year", ""),
+                                     self.cm.ph.getSearchGroups(self._text(movie.get("sameAs", "")) or data, r"imdb\.com/title/(tt\d+)")[0], skip=(), maxYearDiff=1)
         videoUrl = self._text(nodes.get("VideoObject", {}).get("contentUrl", ""))
         if not videoUrl:
             # the film's own player page
@@ -214,7 +219,7 @@ class RetroFlix(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not urltab:
             SetIPTVPlayerLastHostError(_("No stream available"))
             return []
-        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), sidecarTxt))
+        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), sidecarTxt, metaQuery))
 
     def getVideoLinks(self, videoUrl):
         printDBG("RetroFlix.getVideoLinks [%s]" % videoUrl)

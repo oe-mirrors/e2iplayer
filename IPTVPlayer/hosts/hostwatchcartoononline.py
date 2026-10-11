@@ -15,7 +15,7 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostC
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
@@ -494,6 +494,7 @@ class WatchCartoonOnline(GenericFolderWatchedScraperMixin, CBaseHostClass):
         urlTab = []
         embed = cItem.get('embed', '')
         sidecarTxt = ''
+        metaQuery = None
         if not embed:
             # recently added cards and favourites: look the episode up in the series page
             sts, data = self.getPage(cItem['url'])
@@ -504,7 +505,11 @@ class WatchCartoonOnline(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 SetIPTVPlayerLastHostError(_('Content not available'))
                 return []
             embed = entry['embed']
-            sidecarTxt = self._parseSeriesInfo(data).get('desc', '')
+            info = self._parseSeriesInfo(data)
+            sidecarTxt = info.get('desc', '')
+            # the moviemeta query of INFO: the series page's title and year
+            metaQuery = sidecarMetaQuery('tv', info.get('title') or cItem.get('s_title', '') or cItem.get('title', ''),
+                                         info.get('year', '') or cItem.get('meta_year', ''), skip=())
 
         path, sep, rest = embed.replace('\\/', '/').partition('&')
         url = self.getFullUrl('data-video/?v=%s%s%s' % (urllib_quote(path, safe='/'), sep, rest))
@@ -531,7 +536,7 @@ class WatchCartoonOnline(GenericFolderWatchedScraperMixin, CBaseHostClass):
             if evid and evid not in seen:
                 seen.add(evid)
                 urlTab.append({'name': name, 'url': strwithmeta('%s/getvid?evid=%s' % (server, evid), {'Referer': self.MAIN_URL}), 'need_resolve': 1})
-        return applySidecarToLinks(urlTab, buildSidecarFromItem(cItem, IsSidecarEnabled(), sidecarTxt))
+        return applySidecarToLinks(urlTab, buildSidecarFromItem(cItem, IsSidecarEnabled(), sidecarTxt, metaQuery))
 
     def getVideoLinks(self, videoUrl):
         printDBG('WatchCartoonOnline.getVideoLinks [%s]' % videoUrl)

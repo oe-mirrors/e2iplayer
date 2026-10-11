@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 28.09.2026
+# Last Modified: 11.10.2026
 # MovieBox (officialmoviebox.com)
 # Catalogue: Nuxt pages of officialmoviebox.com (__NUXT_DATA__) + the wefeed H5 API on h5-api.aoneroom.com
 # Football Live: h5-sport-api.aoneroom.com (the sportslive.wine web app)
+# 11.10.2026 - meta_type/meta_title/meta_year on movies and series; INFO: the API's fields, libs/moviemeta fills the gaps;
+#   story of a title with an apostrophe was cut to "Watch So What"
 ###################################################
 # LOCAL import
 ###################################################
@@ -14,7 +16,8 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, E2
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarMetaQuery
+from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_urlencode, urllib_unquote
@@ -60,6 +63,8 @@ class MovieBox(GenericFolderWatchedScraperMixin, CBaseHostClass):
     ]
     # the favourite data of a title: what identifies it and is needed to open it again (see getFavouriteData)
     FAV_FIELDS = ("name", "category", "type", "url", "subjectId", "subjectType", "detailPath", "s_title", "season", "episode", "desc", "icon")
+    # subjectType -> meta_type of libs/moviemeta
+    META_TYPES = {1: "movie", 2: "tv"}
     # tabId in the query of a "Categories" entry -> channelId of /subject/filter
     FILTER_TAB_CHANNELS = {"2": 1, "5": 2}
     # devalue wrappers Nuxt puts around reactive values: ["Reactive", <index>]
@@ -304,6 +309,8 @@ class MovieBox(GenericFolderWatchedScraperMixin, CBaseHostClass):
             "trailer_url": trailerUrl,
             "good_for_fav": True,
         })
+        if subjectType in self.META_TYPES:
+            item.update({"meta_type": self.META_TYPES[subjectType], "meta_title": self._metaTitle(title), "meta_year": year})
         if subjectType == 2:
             item["category"] = "list_seasons"
             self.addDir(item)
@@ -358,6 +365,17 @@ class MovieBox(GenericFolderWatchedScraperMixin, CBaseHostClass):
             printExc()
         return CBaseHostClass.getFavouriteData(self, cItem)
 
+    def _metaArgs(self, cItem):
+        # moviemeta type / title / year of a title; a favourite keeps only FAV_FIELDS: type and title from those, no year
+        if cItem.get("meta_type"):
+            return cItem["meta_type"], cItem.get("meta_title", ""), cItem.get("meta_year", "")
+        return self.META_TYPES.get(cItem.get("subjectType"), ""), self._metaTitle(cItem.get("s_title", "")), ""
+
+    @staticmethod
+    def _metaTitle(title):
+        # "Forgotten Island[CAM]": the release tag is no part of the title
+        return re.sub(r"\s*\[[^\]]*\]\s*$", "", title or "")
+
     def getArticleContent(self, cItem):
         printDBG("MovieBox.getArticleContent [%s]" % cItem.get("url", ""))
         title = cItem.get("s_title") or cItem.get("title", "")
@@ -377,9 +395,19 @@ class MovieBox(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 other[key] = str(cItem[field])
         if cItem.get("duration"):
             other["duration"] = "%d min" % cItem["duration"]
+        meta = {}
+        mediaType, metaTitle, metaYear = self._metaArgs(cItem)
+        if mediaType and metaTitle:
+            try:
+                meta = getMeta(mediaType, metaTitle, metaYear)
+            except Exception:
+                printExc()
+        for key, value in meta.get("info", {}).items():
+            # the API's fields stay, the services fill the gaps
+            other.setdefault(key, value)
         # the article view shows the first image as its cover: the poster, then the scene still
-        images = [{"title": "", "url": url} for url in (cItem.get("icon"), cItem.get("stills")) if url]
-        return [{"title": title, "text": text or cItem.get("desc", ""), "images": images, "other_info": other}]
+        images = [{"title": "", "url": url} for url in (cItem.get("icon"), cItem.get("stills"), meta.get("poster")) if url]
+        return [{"title": title, "text": text or meta.get("plot", "") or cItem.get("desc", ""), "images": images, "other_info": other}]
 
     ###################################################
     # Home / Sections
@@ -634,7 +662,8 @@ class MovieBox(GenericFolderWatchedScraperMixin, CBaseHostClass):
         sts, data = self.getPage("%s/moviesDetail/%s?id=%s&type=/movie/detail" % (self.MAIN_URL, detailPath, subjectId))
         if not sts:
             return detail
-        story = self.cm.ph.getSearchGroups(data, r'''<meta\s+name=["']description["'][^>]+content=["']([^"']+)["']''')[0].strip()
+        # double-quoted content holds apostrophes ("Watch So What's Wrong ...")
+        story = "".join(x or "" for x in self.cm.ph.getSearchGroups(data, r'''<meta\s+name=["']description["'][^>]+content=(?:"([^"]+)"|'([^']+)')''', 2)).strip()
         story = re.sub(r"^Watch\s+.*?free streaming online on\s+\w+\.?\s*", "", story, flags=re.IGNORECASE)
         story = re.sub(r"\s*Enjoy HD quality, no ads, and free downloads\.?\s*", " ", story, flags=re.IGNORECASE).strip()
         if len(story) > 10:
@@ -777,7 +806,7 @@ class MovieBox(GenericFolderWatchedScraperMixin, CBaseHostClass):
             trailerUrl = cItem.get("trailer_url", "")
             if trailerUrl:
                 links.append({"name": _("Trailer"), "url": strwithmeta(trailerUrl, {"Referer": self.MAIN_URL + "/", "User-Agent": self.USER_AGENT}), "need_resolve": 0})
-        return applySidecarToLinks(links, buildSidecarFromItem(cItem, IsSidecarEnabled()))
+        return applySidecarToLinks(links, buildSidecarFromItem(cItem, IsSidecarEnabled(), metaQuery=sidecarMetaQuery(*self._metaArgs(cItem), skip=())))
 
     ###################################################
     # subtitle files (MENU "Save subtitles"; the same subtitles are also attached to every stream)

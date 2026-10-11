@@ -18,7 +18,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
@@ -481,6 +481,7 @@ class AnimeOdcinkiPL(GenericFolderWatchedScraperMixin, CBaseHostClass):
         printDBG("AnimeOdcinkiPL.getLinksForVideo [%s]" % cItem)
         url = cItem.get("url", "")
         sidecarTxt = cItem.get("desc", "")
+        metaQuery = None
         urltab = []
         if self._seriesUrl(url) == url:
             # a film is listed with its title page - the player sits on the page of its (first) episode
@@ -491,6 +492,9 @@ class AnimeOdcinkiPL(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 SetIPTVPlayerLastHostError(_("anime-odcinki.pl shows this title only to logged-in users."))
                 return []
             sidecarTxt = series["desc"] or sidecarTxt
+            # the INFO lookup of a title page: its kind and year
+            metaQuery = sidecarMetaQuery("movie" if series["is_movie"] else cItem.get("meta_type", "tv"), cItem.get("meta_title", ""),
+                                         cItem.get("meta_year", "") or series["year"], skip=())
             episodes = series["episodes"][:self.MAX_FILM_PARTS]
             for ep in episodes:
                 urltab.extend(self._getEpisodeLinks(ep["url"], ep["label"] if len(episodes) > 1 else ""))
@@ -498,7 +502,7 @@ class AnimeOdcinkiPL(GenericFolderWatchedScraperMixin, CBaseHostClass):
             urltab = self._getEpisodeLinks(url)
         if not urltab:
             SetIPTVPlayerLastHostError(_("This video is only on hosters E2iPlayer cannot play."))
-        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), sidecarTxt))
+        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), sidecarTxt, metaQuery))
 
     def getVideoLinks(self, videoUrl):
         printDBG("AnimeOdcinkiPL.getVideoLinks [%s]" % videoUrl)

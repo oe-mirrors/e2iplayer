@@ -16,7 +16,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsMediaNamin
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, decorateResolvedLinkItems, sidecarFromUrlMeta
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, decorateResolvedLinkItems, sidecarFromUrlMeta, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
@@ -240,7 +240,13 @@ class MegaKino(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not urltab:
             SetIPTVPlayerLastHostError(_("No stream available"))
             return []
-        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), sidecarTxt))
+        # INFO's getMeta() without skip, then the original title of the page
+        metaQuery = sidecarMetaQuery(cItem.get("meta_type", ""), cItem.get("meta_title", ""), cItem.get("meta_year", ""), skip=(),
+                                     altTitles=[self._origTitle(data)])
+        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), sidecarTxt, metaQuery))
+
+    def _origTitle(self, data):
+        return self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'itemprop="alternativeHeadline">([^<]+)<')[0])
 
     def getVideoLinks(self, videoUrl):
         printDBG("MegaKino.getVideoLinks [%s]" % videoUrl)
@@ -260,7 +266,7 @@ class MegaKino(GenericFolderWatchedScraperMixin, CBaseHostClass):
         sts, data = self.getPage(cItem.get("url", ""))
         if sts:
             desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'itemprop="description"\s*data-rows="\d+">(.*?)</div>')[0])
-            origTitle = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'itemprop="alternativeHeadline">([^<]+)<')[0])
+            origTitle = self._origTitle(data)
             yearRow = self.cm.ph.getSearchGroups(data, r'(?s)class="pmovie__year">(.*?)</div>')[0]
             fields = {"duration": r"(\d+ min)\s*$", "country": r'itemprop="countryOfOrigin">([^<]+)</span>'}
             for key, pattern in fields.items():

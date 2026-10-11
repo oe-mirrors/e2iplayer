@@ -22,7 +22,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHel
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, getMetaByImdbId
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str_deep
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 ###################################################
@@ -276,7 +276,12 @@ class Premiumsmarteu(GenericFolderWatchedScraperMixin, CBaseHostClass):
         linksTab = full + trailers
         if not full:
             SetIPTVPlayerLastHostError(_('No streams are available for this title yet.'))
-        return applySidecarToLinks(linksTab, buildSidecarFromItem(cItem, IsSidecarEnabled()))
+        # moviemeta query of INFO: the title's IMDb id first, then its original title (an episode answer may lack the title block)
+        title = data.get('title') or {}
+        mediaType = 'tv' if (title.get('is_series') or cItem.get('meta_type') == 'tv' or cItem.get('category') in ('list_seasons', 'list_episodes')) else 'movie'
+        metaQuery = sidecarMetaQuery(mediaType, title.get('original_title') or cItem.get('s_title', '') or cItem.get('title', ''), self._year(title) or cItem.get('s_year', ''),
+                                     title.get('imdb_id') or cItem.get('imdb_id', ''), skip=())
+        return applySidecarToLinks(linksTab, buildSidecarFromItem(cItem, IsSidecarEnabled(), metaQuery=metaQuery))
 
     def getVideoLinks(self, videoUrl):
         printDBG("Premiumsmarteu.getVideoLinks [%s]" % videoUrl)

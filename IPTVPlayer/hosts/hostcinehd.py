@@ -22,7 +22,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsExternalRe
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, getMetaByImdbId
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, sidecarMetaQuery, decorateResolvedLinkItems
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_urlencode
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
@@ -355,7 +355,9 @@ class CineHD(GenericFolderWatchedScraperMixin, CBaseHostClass):
             if needsExternal and not external:
                 continue
             urltab.append({"name": label, "url": strwithmeta(tpl % fields, {"Referer": self.getMainUrl()}), "need_resolve": 1})
-        sidecar = buildSidecarFromItem(dict(cItem, desc=cItem.get("overview", "") or cItem.get("ep_overview", "")), IsSidecarEnabled())
+        # moviemeta query of INFO without its TMDb request for the IMDb id: the title search
+        metaQuery = sidecarMetaQuery(kind, cItem.get("s_title", ""), cItem.get("s_year", ""), skip=(), maxYearDiff=1)
+        sidecar = buildSidecarFromItem(dict(cItem, desc=cItem.get("overview", "") or cItem.get("ep_overview", "")), IsSidecarEnabled(), metaQuery=metaQuery)
         return applySidecarToLinks(urltab, sidecar)
 
     def getVideoLinks(self, videoUrl):

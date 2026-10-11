@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 02.10.2026
+# Last Modified: 11.10.2026
 # 7reels (7reels.cc) - TMDb-indexed movie/series aggregator
 # based on a community host by "alawa m2"
+# 11.10.2026 - meta_type/meta_title/meta_year on the titles; INFO: the site's TMDb fields, libs/moviemeta fills the gaps
 import json
 import re
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
+from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
@@ -179,6 +181,8 @@ class SevenReels(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 'backdrop': (self.BACKDROP_URL + backdrop) if backdrop else '',
                 'desc': self.cleanHtmlStr(item.get('overview', '')),
             })
+            if mediaType in ('movie', 'tv'):
+                params.update({'meta_type': mediaType, 'meta_title': title, 'meta_year': year})
             self.addVideo(params)
             count += 1
 
@@ -235,8 +239,19 @@ class SevenReels(GenericFolderWatchedScraperMixin, CBaseHostClass):
             otherInfo['genres'] = cItem['genres']
         if cItem.get('orig_title') and cItem['orig_title'] != title:
             otherInfo['original_title'] = cItem['orig_title']
+        meta = {}
+        if cItem.get('meta_title'):
+            try:
+                meta = getMeta(cItem.get('meta_type', ''), cItem['meta_title'], cItem.get('meta_year', ''))
+            except Exception:
+                printExc()
+        for key, value in meta.get('info', {}).items():
+            # the site's TMDb fields stay, the services fill the gaps
+            otherInfo.setdefault(key, value)
         images = [{'title': '', 'url': u} for u in (cItem.get('backdrop'), cItem.get('icon')) if u]
-        return [{'title': title, 'text': cItem.get('desc', ''), 'images': images, 'other_info': otherInfo}]
+        if not images and meta.get('poster'):
+            images = [{'title': '', 'url': meta['poster']}]
+        return [{'title': title, 'text': cItem.get('desc', '') or meta.get('plot', ''), 'images': images, 'other_info': otherInfo}]
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('SevenReels.handleService start')

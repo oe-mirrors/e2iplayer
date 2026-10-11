@@ -24,7 +24,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import SetIPTVPlaye
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, decorateResolvedLinkItems, sidecarFromUrlMeta
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, decorateResolvedLinkItems, sidecarFromUrlMeta, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
@@ -332,7 +332,11 @@ class Filmaon(GenericFolderWatchedScraperMixin, CBaseHostClass):
         sts, data = self.getPage(url)
         if not sts:
             return []
-        plot = self._siteInfo(data)[1]
+        info, plot, siteYear = self._siteInfo(data)
+        # moviemeta query of INFO: the page's original title (same type / year rules)
+        mediaType = cItem.get("meta_type", "") or ("movie" if "/filma/" in cItem.get("url", "") else "tv")
+        title = cItem.get("s_title", "") or self._splitTitle(cItem.get("title", ""))[0]
+        metaQuery = sidecarMetaQuery(mediaType, info.get("original_title", "") or title, cItem.get("s_year", "") or siteYear, skip=(), maxYearDiff=1)
         urltab = []
         params = dict(self.defaultParams)
         params["header"] = dict(self.HEADER, Referer=url, Origin=self.MAIN_URL.rstrip("/"), Accept="*/*")
@@ -354,7 +358,7 @@ class Filmaon(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not urltab:
             SetIPTVPlayerLastHostError(_("No streams are available for this title yet."))
             return []
-        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), plot))
+        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), plot, metaQuery=metaQuery))
 
     def getVideoLinks(self, videoUrl):
         printDBG("Filmaon.getVideoLinks [%s]" % videoUrl)

@@ -26,7 +26,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJum
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, sidecarMetaQuery, decorateResolvedLinkItems
 ###################################################
 # FOREIGN import
 ###################################################
@@ -267,7 +267,23 @@ class FilmVilag(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not urlTab:
             SetIPTVPlayerLastHostError(_("No streams are available for this title yet."))
             return []
-        return applySidecarToLinks(urlTab, buildSidecarFromItem(cItem, IsSidecarEnabled()))
+        # moviemeta query of INFO: the original title, then the Hungarian one
+        isSeries = cItem.get('category') in ('fv_season', 'episode')
+        local, original = self._metaTitleParts(cItem, cItem.get('raw_title', '') or cItem.get('title', ''), isSeries)[:2]
+        names = self._metaNames(original, local) or ['']
+        metaQuery = sidecarMetaQuery('tv' if isSeries else 'movie', names[0], cItem.get('s_year', ''), skip=(), altTitles=names[1:])
+        return applySidecarToLinks(urlTab, buildSidecarFromItem(cItem, IsSidecarEnabled(), metaQuery=metaQuery))
+
+    def _metaTitleParts(self, cItem, rawTitle, isSeries):
+        # (local, original, quality) of the movie / the show of a season or episode
+        if isSeries:
+            rawTitle = cItem.get('s_title', '') or self._seasonOf(rawTitle)[0] or rawTitle
+        return self._splitTitle(rawTitle)
+
+    @staticmethod
+    def _metaNames(original, local):
+        # the titles INFO looks up in moviemeta, in order, without a trailing "(year)"
+        return [re.sub(r'\s*\((?:19|20)\d{2}\)\s*$', '', name) for name in (original, local) if name]
 
     def getVideoLinks(self, videoUrl):
         printDBG("FilmVilag.getVideoLinks [%s]" % videoUrl)
@@ -314,19 +330,14 @@ class FilmVilag(GenericFolderWatchedScraperMixin, CBaseHostClass):
                     for part in parts:
                         if 'perc' in part:
                             info['duration'] = part
-        if isSeries:
-            show = cItem.get('s_title', '') or self._seasonOf(rawTitle)[0] or rawTitle
-            local, original, quality = self._splitTitle(show)
-        else:
-            local, original, quality = self._splitTitle(rawTitle)
+        local, original, quality = self._metaTitleParts(cItem, rawTitle, isSeries)
         year = cItem.get('s_year', '')
         meta = {}
         try:
-            for name in (original, local):
-                if name:
-                    meta = getMeta('tv' if isSeries else 'movie', re.sub(r'\s*\((?:19|20)\d{2}\)\s*$', '', name), year)
-                    if meta:
-                        break
+            for name in self._metaNames(original, local):
+                meta = getMeta('tv' if isSeries else 'movie', name, year)
+                if meta:
+                    break
         except Exception:
             printExc()
         merged = dict(meta.get('info', {}))

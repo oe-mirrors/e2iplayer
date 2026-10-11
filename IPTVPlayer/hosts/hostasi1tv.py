@@ -19,7 +19,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEna
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.jsunpack import get_packed_data
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus, urllib_unquote
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
@@ -330,6 +330,12 @@ class Asi1TV(GenericFolderWatchedScraperMixin, CBaseHostClass):
         sts, data = self.getPage(cItem.get("url", ""))
         if not sts:
             return []
+        # the INFO lookup: the original name of the drama page (when this is it), all services
+        title = ""
+        if (cItem.get("s_url") or cItem.get("url", "")) == cItem.get("url", ""):
+            wrapper = self.cm.ph.getDataBeetwenMarkers(data, '<div class="wrapper-info">', '<div class="description">', False)[1]
+            title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(wrapper, r"(?s)<span>\s*%s[^<]*</span>(.*?)</div>" % "اسم العمل")[0])
+        metaQuery = sidecarMetaQuery(cItem.get("meta_type", ""), title or cItem.get("meta_title", ""), cItem.get("meta_year", ""), skip=())
         epId = self._epWatchId(data)
         if not epId:
             # a movie row keyed on its drama page: the (only) episode page holds the player
@@ -366,7 +372,7 @@ class Asi1TV(GenericFolderWatchedScraperMixin, CBaseHostClass):
             if name in [x["name"] for x in links]:
                 name = "%s %d" % (name, len(links) + 1)
             links.append({"name": name, "url": link, "need_resolve": 1})
-        return applySidecarToLinks(links, buildSidecarFromItem(cItem, IsSidecarEnabled(), story))
+        return applySidecarToLinks(links, buildSidecarFromItem(cItem, IsSidecarEnabled(), story, metaQuery))
 
     def getVideoLinks(self, url):
         printDBG("Asi1TV.getVideoLinks [%s]" % url)

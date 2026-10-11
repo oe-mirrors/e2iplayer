@@ -21,7 +21,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps, loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, getMetaByImdbId
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
@@ -407,7 +407,12 @@ class MoviesJoy(GenericFolderWatchedScraperMixin, CBaseHostClass):
             SetIPTVPlayerLastHostError(_("Only unsupported hosters available: %s") % ", ".join(unsupported) if unsupported else _("No stream available"))
             return []
         story = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'(?s)<div class="description[^"]*">(.*?)</div>')[0])
-        urltab = applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), story))
+        # moviemeta query of INFO: the page's IMDb id first, then title / year (cfg: the config read above)
+        episodesCfg = cfg if m else self._pageConfig(data, "Episodes")
+        isTv = cItem.get("meta_type") == "tv" or bool(episodesCfg)
+        imdbId = _str(episodesCfg.get("tvimdbid") if isTv else (self._pageConfig(data, "Servers") if m else cfg).get("imdb_id"))
+        metaQuery = sidecarMetaQuery("tv" if isTv else "movie", cItem.get("meta_title", ""), cItem.get("meta_year", "") or self._siteInfo(data).get("year", ""), imdbId, skip=())
+        urltab = applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), story, metaQuery))
         self.cacheLinks[url] = urltab
         return urltab
 

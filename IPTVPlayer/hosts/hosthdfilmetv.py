@@ -14,7 +14,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEna
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.libs.meinecloud import MeineCloud, MAIN_URL as MC_URL, isPlayerUrl
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, getMetaByImdbId
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, sidecarMetaQuery, decorateResolvedLinkItems
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
@@ -225,6 +225,7 @@ class HDFilmeTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
     def getLinksForVideo(self, cItem):
         printDBG("HDFilmeTV.getLinksForVideo [%s]" % cItem)
         urltab = []
+        imdb = cItem.get("imdb", "")
         mc = MeineCloud(self.cm, self.defaultParams, gettytul())
         if cItem.get("episode") and not cItem.get("e_num"):
             # favourites saved before 07.10.2026: {"title": "Show - Staffel 1 - Episoden 3", "episode": "Episoden 3"}
@@ -242,6 +243,7 @@ class HDFilmeTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
             sts, data = self.getPage(_pageUrl(cItem["url"]))
             if not sts:
                 return []
+            imdb = imdb or self._imdb(data)
             for url in re.findall(r'data-link="([^"]+)', COMMENT_RE.sub("", data)):
                 url = "https:" + url if url.startswith("//") else url
                 if "/vod/" in url or not self.cm.isValidUrl(url):
@@ -254,7 +256,9 @@ class HDFilmeTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not urltab:
             SetIPTVPlayerLastHostError(_("No streams are available for this title yet."))
             return []
-        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), cItem.get("desc", "")))
+        # moviemeta query of INFO: the IMDb id, else the item's title (a film by default)
+        metaQuery = sidecarMetaQuery(cItem.get("meta_type", "") or "movie", cItem.get("meta_title", ""), cItem.get("meta_year", ""), imdb, skip=())
+        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), cItem.get("desc", ""), metaQuery=metaQuery))
 
     def getVideoLinks(self, url):
         printDBG("HDFilmeTV.getVideoLinks [%s]" % url)

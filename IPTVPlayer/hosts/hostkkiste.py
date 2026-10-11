@@ -18,7 +18,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import SetIPTVPlaye
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.libs.meinecloud import isPlayerUrl
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, decorateResolvedLinkItems, sidecarFromUrlMeta
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, decorateResolvedLinkItems, sidecarFromUrlMeta, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
@@ -232,6 +232,9 @@ class KKisteAG(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not sts:
             return []
         sidecarTxt = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '<meta name="description" content="([^"]+)')[0]) or cItem.get("desc", "")
+        # moviemeta query of INFO: the page's year first
+        year = self.cm.ph.getSearchGroups(self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r"Jahr:(.*?)</div>")[0]), r"((?:19|20)\d\d)")[0] or cItem.get("meta_year", "")
+        metaQuery = sidecarMetaQuery(cItem.get("meta_type", ""), cItem.get("meta_title", ""), year, skip=())
         ep = self.cm.ph.getSearchGroups(url, r"#s\d+e(\d+)$")[0]
         if ep:
             data = "".join(item for num, _label, item in self._episodeChunks(data) if num == ep)
@@ -252,7 +255,7 @@ class KKisteAG(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not urltab:
             SetIPTVPlayerLastHostError(_("No stream available"))
             return []
-        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), sidecarTxt))
+        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), sidecarTxt, metaQuery))
 
     def getVideoLinks(self, videoUrl):
         printDBG("KKisteAG.getVideoLinks [%s]" % videoUrl)

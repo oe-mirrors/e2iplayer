@@ -14,7 +14,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
@@ -362,7 +362,12 @@ class TukTukCam(GenericFolderWatchedScraperMixin, CBaseHostClass):
         sts, data = self.getPage(pageUrl)
         if not sts:
             return []
-        sidecarTxt = self._parsePage(data)["desc"]
+        pageInfo = self._parsePage(data)
+        sidecarTxt = pageInfo["desc"]
+        # the moviemeta query of INFO: the year of this page unless INFO reads the series page, all services
+        # also for an Arabic title
+        year = cItem.get("meta_year", "") or ("" if cItem.get("series_url") else pageInfo["year"])
+        metaQuery = sidecarMetaQuery(cItem.get("meta_type", ""), cItem.get("meta_title", "") or cItem.get("s_title", ""), year, skip=())
 
         embeds = []
         for attrs in re.findall(r'<li([^>]+data-link="[^"]+"[^>]*)>', data):
@@ -382,7 +387,7 @@ class TukTukCam(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 embed = "https:" + embed
             if self.cm.isValidUrl(embed) and embed not in [x["url"] for x in urltab]:
                 urltab.append({"name": self.up.getHostName(embed), "url": strwithmeta(embed, {"Referer": self.MAIN_URL}), "need_resolve": 1})
-        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), sidecarTxt))
+        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), sidecarTxt, metaQuery))
 
     def getVideoLinks(self, videoUrl):
         printDBG("TukTukCam.getVideoLinks [%s]" % videoUrl)

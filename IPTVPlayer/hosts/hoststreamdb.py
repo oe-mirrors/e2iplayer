@@ -33,7 +33,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMetaByImdbId
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import common
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str_deep
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
@@ -664,7 +664,9 @@ class StreamDB(GenericFolderWatchedScraperMixin, CBaseHostClass):
             if names[name] > 1:
                 name = "%s #%d" % (name, names[name])
             urltab.append({"name": name, "url": link, "need_resolve": 0})
-        urltab = applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled()))
+        # the moviemeta query of INFO: the IMDb id only
+        metaQuery = sidecarMetaQuery("tv" if isEpisode else "movie", imdbId=imdbId)
+        urltab = applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), "", metaQuery))
         self.cacheLinks[url] = (time.time(), urltab)
         return urltab
 

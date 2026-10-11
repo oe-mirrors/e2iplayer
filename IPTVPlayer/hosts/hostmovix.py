@@ -18,7 +18,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps, loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
@@ -312,8 +312,14 @@ class Movix(GenericFolderWatchedScraperMixin, CBaseHostClass):
         trailer = self.cm.ph.getSearchGroups(data, r"""iframeSrc\s*=\s*['"](https?://[^'"]+)['"]""")[0]
         if trailer:
             urltab.append({"name": _("Trailer"), "url": trailer, "need_resolve": 1})
-        story = self._siteInfo(data)[0]
-        urltab = applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), story))
+        story, _poster, info = self._siteInfo(data)
+        # moviemeta query of INFO: the page's year (INFO reads the series page for an episode - not loaded here)
+        if cItem.get("series_url"):
+            info = {}
+        metaUrl = cItem.get("series_url") or url
+        metaQuery = sidecarMetaQuery(cItem.get("meta_type") or ("tv" if "/tv-show/" in metaUrl else "movie"), cItem.get("meta_title") or cItem.get("s_title") or cItem.get("title", ""),
+                                     cItem.get("meta_year") or info.get("year", ""), skip=())
+        urltab = applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), story, metaQuery))
         self.cacheLinks[url] = urltab
         return urltab
 

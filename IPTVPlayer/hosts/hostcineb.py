@@ -7,6 +7,8 @@
 # 10.10.2026 - links: the watch page has no window.__OPT server list any more, the servers are a form
 # (/api/go?t=..&slug=..[&s=..&e=..]&x=N -> embed url of server N, like vumoo of the same network); the site's
 # "Quick check" page is passed like the vumoo host does it
+# 11.10.2026 - meta_type/meta_title/meta_year on movies, series, seasons and episodes; INFO: the site's fields,
+# libs/moviemeta fills the gaps (IMDb rating, country, creators under the keys the info view shows)
 import hashlib
 import struct
 
@@ -18,6 +20,7 @@ from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
+from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhostmixin import WatchedFlagHostMixin
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
@@ -32,6 +35,16 @@ _EP_STATUS_RE = re.compile(r"\s*\((?:trailer only|coming soon|not released|no so
 
 def _cleanSeriesTitle(title):
     return _SERIES_SUFFIX_RE.sub("", title or "").strip()
+
+
+def _metaKeys(title, isSeries):
+    # moviemeta keys of a list entry: "Title (1995)" for a movie, "Show - Season 2" (or a cut "Show ..Season 2") for a series
+    if isSeries:
+        return {"meta_type": "tv", "meta_title": re.sub(r"\s*\.\.\s*Season\s+\d+\s*$", "", _cleanSeriesTitle(title), flags=re.I).strip()}
+    match = re.match(r"^(.*?)\s*\((\d{4})\)\s*$", title or "")
+    if match:
+        return {"meta_type": "movie", "meta_title": match.group(1).strip(), "meta_year": match.group(2)}
+    return {"meta_type": "movie", "meta_title": (title or "").strip()}
 
 
 # servers of the site that urlparser resolves, best first: (label of the site's button, lowercase), needs enc-dec.app
@@ -243,7 +256,9 @@ class Cineb(CBaseHostClass):
                 continue
             params = dict(cItem)
             params.update({"good_for_fav": True, "title": title, "url": itemUrl, "icon": icon, "desc": desc})
-            if "/watch/tv-" in itemUrl or "/tv/" in itemUrl:
+            isSeries = "/watch/tv-" in itemUrl or "/tv/" in itemUrl
+            params.update(_metaKeys(title, isSeries))
+            if isSeries:
                 params["category"] = "list_seasons"
                 params["s_title"] = _cleanSeriesTitle(title)
                 self.watchedHelper.updateHostItemFlag(self, params, self._getWatchedKeyForItem)
@@ -412,7 +427,7 @@ class Cineb(CBaseHostClass):
             return []
         otherInfo = {}
         if info["imdb"]:
-            otherInfo["imdb"] = info["imdb"]
+            otherInfo["imdb_rating"] = "%s/10" % info["imdb"]
         if info["released"]:
             otherInfo["released"] = info["released"]
         if info["duration"]:
@@ -420,16 +435,27 @@ class Cineb(CBaseHostClass):
         if info["genres"]:
             otherInfo["genres"] = ", ".join(info["genres"])
         if info["countries"]:
-            otherInfo["countries"] = ", ".join(info["countries"])
+            otherInfo["country"] = ", ".join(info["countries"])
         if info["directors"]:
             otherInfo["directors"] = ", ".join(info["directors"])
         elif info["creators"]:
-            otherInfo["directors"] = ", ".join(info["creators"])
+            otherInfo["creators"] = ", ".join(info["creators"])
         if info["casts"]:
             otherInfo["actors"] = ", ".join(info["casts"])
+        meta = {}
+        if cItem.get("meta_title"):
+            try:
+                meta = getMeta(cItem.get("meta_type", ""), cItem["meta_title"], cItem.get("meta_year", ""))
+            except Exception:
+                printExc()
+        for key, value in meta.get("info", {}).items():
+            # the site's fields stay, the services fill the gaps
+            otherInfo.setdefault(key, value)
+        if "actors" in otherInfo:
+            otherInfo.pop("cast", None)
         title = cItem.get("title", "")
-        icon = cItem.get("icon", self.DEFAULT_ICON_URL)
-        return [{"title": title, "text": info["description"], "images": [{"url": self.getFullIconUrl(icon)}], "other_info": otherInfo}]
+        icon = cItem.get("icon") or meta.get("poster") or self.DEFAULT_ICON_URL
+        return [{"title": title, "text": info["description"] or meta.get("plot", ""), "images": [{"url": self.getFullIconUrl(icon)}], "other_info": otherInfo}]
 
     def _embedTitleYear(self, cItem):
         title = cItem.get("s_title") or cItem.get("title", "") or ""

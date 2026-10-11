@@ -19,7 +19,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHel
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx, extractNum
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, sidecarMetaQuery, decorateResolvedLinkItems
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
 
 
@@ -356,7 +356,10 @@ class Filmoviplex(GenericFolderWatchedScraperMixin, CBaseHostClass):
             else:
                 SetIPTVPlayerLastHostError(_("No streams are available for this title yet."))
             return []
-        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), sidecarTxt))
+        # moviemeta query of INFO: the page's IMDb id, else the item's title
+        metaQuery = sidecarMetaQuery(cItem.get("meta_type", ""), cItem.get("meta_title", ""), cItem.get("meta_year", ""),
+                                     self.cm.ph.getSearchGroups(data, r'imdb\.com/title/(tt\d+)')[0], skip=())
+        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), sidecarTxt, metaQuery=metaQuery))
 
     def getVideoLinks(self, videoUrl):
         printDBG("Filmoviplex.getVideoLinks [%s]" % videoUrl)

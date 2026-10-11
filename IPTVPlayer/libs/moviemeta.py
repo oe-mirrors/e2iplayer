@@ -560,7 +560,14 @@ def getMeta(mediaType, title, year="", skip=(), maxYearDiff=None):
 
         def accept(meta):
             return _yearFits(meta, year, maxYearDiff)
-    return _lookup(providers, what, lambda p: p.find(mediaType, title, year), accept)
+    meta = _lookup(providers, what, lambda p: p.find(mediaType, title, year), accept)
+    query = {"type": mediaType, "title": title, "year": year}
+    if skip:
+        query["skip"] = list(skip)
+    if maxYearDiff is not None:
+        query["maxYearDiff"] = maxYearDiff
+    _recordInfoQuery(query, meta)
+    return meta
 
 
 def getMetaByImdbId(mediaType, imdbId):
@@ -571,7 +578,51 @@ def getMetaByImdbId(mediaType, imdbId):
     providers = [p for p in _getProviders(mediaType) if hasattr(p, "findById")]
     if not providers:
         return {}
-    return _lookup(providers, "|".join((mediaType, imdbId)), lambda p: p.findById(mediaType, imdbId))
+    meta = _lookup(providers, "|".join((mediaType, imdbId)), lambda p: p.findById(mediaType, imdbId))
+    _recordInfoQuery({"type": mediaType, "title": "", "year": "", "imdb": imdbId}, meta)
+    return meta
+
+
+# The lookup that answered on an item's INFO screen: CHostBase.getArticleContent (components/ihost.py) names the
+# item with setInfoItem() while the host builds its INFO, getMeta() / getMetaByImdbId() note their first call
+# with an answer. The download sidecar of that item asks the same (urlmetahelper.buildSidecarFromItem), also
+# when INFO read the year / IMDb id / original title from a page the host's links do not load.
+INFO_QUERIES_MAX = 300
+_infoLocal = threading.local()
+_infoQueries = {}
+_infoLock = threading.Lock()
+
+
+def _infoItemKey(cItem):
+    return "%s|%s" % (cItem.get("url", ""), cItem.get("title", ""))
+
+
+def setInfoItem(cItem):
+    # cItem: the item whose INFO is built now in this thread, None when done
+    key = _infoItemKey(cItem) if isinstance(cItem, dict) else None
+    _infoLocal.key = key
+    if key:
+        with _infoLock:
+            _infoQueries.pop(key, None)  # this INFO run answers anew
+
+
+def _recordInfoQuery(query, meta):
+    key = getattr(_infoLocal, "key", None)
+    if not key or not meta:
+        return
+    with _infoLock:
+        if key in _infoQueries:
+            return  # the first lookup with an answer is the one INFO shows
+        _infoQueries[key] = query
+        while len(_infoQueries) > INFO_QUERIES_MAX:
+            del _infoQueries[next(iter(_infoQueries))]  # the oldest (dicts keep the insertion order)
+
+
+def getInfoQuery(cItem):
+    # the query of getMeta / getMetaByImdbId that answered on the INFO of cItem in this session, or None
+    with _infoLock:
+        query = _infoQueries.get(_infoItemKey(cItem)) if isinstance(cItem, dict) else None
+    return dict(query) if query else None
 
 
 def _lookup(providers, what, find, accept=None):

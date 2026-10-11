@@ -20,7 +20,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, getMetaByImdbId
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, decorateResolvedLinkItems, sidecarFromUrlMeta
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, decorateResolvedLinkItems, sidecarFromUrlMeta, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
@@ -287,6 +287,7 @@ class MoflixStream(GenericFolderWatchedScraperMixin, CBaseHostClass):
     def getLinksForVideo(self, cItem):
         printDBG('MoflixStream.getLinksForVideo [%s]' % cItem.get('url'))
         urlTab = []
+        title = {}
         videoId = cItem.get('video_id', '')
         if not videoId:
             title = self._loader(cItem['url']).get('title') or {}
@@ -297,7 +298,10 @@ class MoflixStream(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not urlTab:
             SetIPTVPlayerLastHostError(_('No stream available'))
             return []
-        return applySidecarToLinks(urlTab, buildSidecarFromItem(cItem, IsSidecarEnabled()))
+        # moviemeta query of INFO: the title's IMDb id / year when its page was loaded here (a movie)
+        metaQuery = sidecarMetaQuery(cItem.get('meta_type') or ('tv' if title.get('is_series') else 'movie'), cItem.get('meta_title', ''),
+                                     self._year(title) or cItem.get('meta_year', ''), title.get('imdb_id', ''), skip=())
+        return applySidecarToLinks(urlTab, buildSidecarFromItem(cItem, IsSidecarEnabled(), metaQuery=metaQuery))
 
     def getVideoLinks(self, videoUrl):
         printDBG('MoflixStream.getVideoLinks [%s]' % videoUrl)

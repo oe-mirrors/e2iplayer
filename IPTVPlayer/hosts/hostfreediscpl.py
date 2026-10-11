@@ -20,7 +20,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHel
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, sidecarMetaQuery, decorateResolvedLinkItems
 from Plugins.Extensions.IPTVPlayer.libs import ph
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
@@ -356,7 +356,9 @@ class FreeDiscPL(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not self.cm.isValidUrl(url):
             return []
         linksTab = [{"name": "freedisc.pl", "url": url, "need_resolve": 1}]
-        return applySidecarToLinks(linksTab, buildSidecarFromItem(cItem, IsSidecarEnabled()))
+        # moviemeta query of INFO: all services, a result at most a year off
+        metaQuery = sidecarMetaQuery(cItem.get("meta_type", ""), cItem.get("meta_title", ""), cItem.get("meta_year", ""), skip=(), maxYearDiff=1)
+        return applySidecarToLinks(linksTab, buildSidecarFromItem(cItem, IsSidecarEnabled(), metaQuery=metaQuery))
 
     def getVideoLinks(self, url):
         printDBG("FreeDiscPL.getVideoLinks [%s]" % url)

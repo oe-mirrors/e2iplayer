@@ -42,7 +42,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx, parseSx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urlparse, parse_qsl
@@ -987,19 +987,36 @@ class XtreamApiHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
             printDBG('Xtream timeshift %s' % self.mask(urltab[0]['url']))
             return urltab
         sidecarTxt = ''
+        metaQuery = None
         if kind == 'movie':
             url = self.streamUrl(acc, 'movie', '%s.%s' % (sid, cItem.get('ext', '') or 'mp4'))
             if IsSidecarEnabled():
                 info = _dict((self.getVodInfo(acc, sid) or {}).get('info'))
                 sidecarTxt = _str(info.get('plot')) or _str(info.get('description'))
+                # INFO asks libs/moviemeta only when the panel has no plot or no picture - the download sidecar the same
+                if sidecarTxt and (_str(info.get('movie_image')) or _str(info.get('cover_big')) or cItem.get('icon', '')):
+                    metaQuery = {}
+                else:
+                    metaQuery = sidecarMetaQuery('movie', cItem.get('meta_title', '') or cItem.get('s_title', ''), cItem.get('meta_year', ''))
         elif kind == 'episode':
             url = self.streamUrl(acc, 'series', '%s.%s' % (cItem.get('episode_id', ''), cItem.get('ext', '') or 'mp4'))
+            # the series info the episode list was made of, from the host cache only (no request): INFO asks
+            # libs/moviemeta only when the panel has no plot or no picture - the download sidecar the same.
+            # Not cached (e.g. a favourite after a restart): the lookup by the item's meta keys.
+            entry = self.cache.get((acc['ck'], 'series_info', cItem.get('series_id', ''))) if IsSidecarEnabled() else None
+            if entry:
+                data = _dict(entry[1])
+                info = _dict(data.get('info'))
+                epInfo = self._episodeInfo(self.seriesEpisodes(data), cItem) or {}
+                sidecarTxt = _str(epInfo.get('plot')) or _str(info.get('plot'))
+                if sidecarTxt and (_str(epInfo.get('movie_image')) or _str(info.get('cover')) or cItem.get('icon', '')):
+                    metaQuery = {}
         else:
             return []
         printDBG('Xtream stream %s' % self.mask(url))
         name = (cItem.get('ext', '') or 'mp4').upper()
         urltab.append({'name': name, 'url': strwithmeta(url, meta), 'need_resolve': 0})
-        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), sidecarTxt))
+        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), sidecarTxt, metaQuery))
 
     def getVideoLinks(self, videoUrl):
         sidecar = sidecarFromUrlMeta(videoUrl, IsSidecarEnabled())
@@ -1027,6 +1044,13 @@ class XtreamApiHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
         otherInfo = dict((k, _str(v)) for k, v in otherInfo.items() if _str(v))
         return [{'title': title or cItem.get('title', ''), 'text': text or cItem.get('desc', ''),
                  'images': [{'title': '', 'url': icon}] if icon else [], 'other_info': otherInfo}]
+
+    def _episodeInfo(self, seasons, cItem):
+        # the panel's "info" of the episode cItem in seriesEpisodes(); None if the series has no such episode
+        for ep in seasons.get(cItem.get('season', ''), []):
+            if _str(ep.get('id')) == cItem.get('episode_id', ''):
+                return _dict(ep.get('info'))
+        return None
 
     def _enrich(self, mediaType, cItem, text, icon, otherInfo):
         # libs/moviemeta only when the panel itself has no plot or no picture
@@ -1093,14 +1117,12 @@ class XtreamApiHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
             text = _str(info.get('plot'))
             cover = _str(info.get('cover'))
             if kind == 'episode':
-                for ep in seasons.get(cItem.get('season', ''), []):
-                    if _str(ep.get('id')) == cItem.get('episode_id', ''):
-                        epInfo = _dict(ep.get('info'))
-                        text = _str(epInfo.get('plot')) or text
-                        cover = _str(epInfo.get('movie_image')) or cover
-                        other['duration'] = _str(epInfo.get('duration')) or other['duration']
-                        other['released'] = _str(epInfo.get('releasedate')) or _str(epInfo.get('air_date'))
-                        break
+                epInfo = self._episodeInfo(seasons, cItem)
+                if epInfo is not None:
+                    text = _str(epInfo.get('plot')) or text
+                    cover = _str(epInfo.get('movie_image')) or cover
+                    other['duration'] = _str(epInfo.get('duration')) or other['duration']
+                    other['released'] = _str(epInfo.get('releasedate')) or _str(epInfo.get('air_date'))
             elif kind == 'season':
                 cover = icon or cover
             text, cover = self._enrich('tv', cItem, text, cover or icon, other)

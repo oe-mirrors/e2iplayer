@@ -19,7 +19,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsMediaNamin
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, decorateResolvedLinkItems, sidecarFromUrlMeta
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, decorateResolvedLinkItems, sidecarFromUrlMeta, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
@@ -265,7 +265,11 @@ class Filma365(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not urltab:
             SetIPTVPlayerLastHostError(_("No streams are available for this title yet."))
             return []
-        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), self._siteInfo(data)[1]))
+        siteInfo = self._siteInfo(data)
+        # moviemeta query of INFO (same type / title / year rules)
+        mediaType = cItem.get("meta_type", "") or ("movie" if "/movie/" in cItem.get("url", "") else "tv")
+        metaQuery = sidecarMetaQuery(mediaType, cItem.get("s_title", "") or cItem.get("title", ""), cItem.get("s_year", "") or siteInfo[2], skip=(), maxYearDiff=1)
+        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), siteInfo[1], metaQuery=metaQuery))
 
     def getVideoLinks(self, videoUrl):
         printDBG("Filma365.getVideoLinks [%s]" % videoUrl)

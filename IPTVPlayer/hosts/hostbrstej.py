@@ -25,7 +25,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEna
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.jsunpack import get_packed_data
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import LATIN_ONLY, getMeta, isLatinTitle
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
@@ -159,6 +159,21 @@ class Brstej(GenericFolderWatchedScraperMixin, CBaseHostClass):
     @staticmethod
     def _metaTitle(title):
         return re.sub(r"\s+", " ", (title or "").replace(DUB_WORD, " ")).strip()
+
+    @staticmethod
+    def _metaSkip(title):
+        # Arabic-only titles (Ramadan / Arabic series): only TMDb (translated titles) and TVmaze (alternative
+        # names) can find them, IMDb / Cinemeta / OMDb only made INFO slow and gave unrelated hits
+        return () if isLatinTitle(title) else LATIN_ONLY
+
+    @staticmethod
+    def _metaAltTitles(title):
+        # "المداح 2 - اسطورة الوادي" / "المداح 3": a later season with its own subtitle / number, the show is the
+        # part before (TVmaze knows "المداح" only); Arabic titles only
+        if isLatinTitle(title):
+            return []
+        base = title.split(" - ", 1)[0].strip()
+        return [base, re.sub(r"\s+\d{1,2}$", "", base)]
 
     ###################################################
     # watched flag / favourites
@@ -468,7 +483,10 @@ class Brstej(GenericFolderWatchedScraperMixin, CBaseHostClass):
             embed = self.cm.ph.getSearchGroups(data, r'<iframe[^>]+src="([^"]+)"')[0].strip()
             if self.cm.isValidUrl(embed):
                 urltab.append({"name": "%s 1" % _("Server"), "url": strwithmeta(embed, {"Referer": self.MAIN_URL}), "need_resolve": 1})
-        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled()))
+        title = cItem.get("meta_title", "")
+        metaQuery = sidecarMetaQuery(cItem.get("meta_type", ""), title, cItem.get("meta_year", ""), skip=self._metaSkip(title),
+                                     altTitles=self._metaAltTitles(title))
+        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), metaQuery=metaQuery))
 
     def _resolvePackedEmbed(self, embedUrl):
         # film77 / vood78 / hd-vk / hdupNNN: JWPlayer setup inside eval(function(p,a,c,k,e,d)...)
@@ -532,19 +550,14 @@ class Brstej(GenericFolderWatchedScraperMixin, CBaseHostClass):
     def getArticleContent(self, cItem):
         printDBG("Brstej.getArticleContent [%s]" % cItem.get("url", ""))
         meta = {}
-        # Arabic-only titles (Ramadan / Arabic series): only TMDb (translated titles) and TVmaze (alternative
-        # names) can find them, IMDb / Cinemeta / OMDb only made INFO slow and gave unrelated hits
         if cItem.get("meta_type") and cItem.get("meta_title"):
-            skip = () if isLatinTitle(cItem["meta_title"]) else LATIN_ONLY
             try:
                 title = cItem["meta_title"]
+                skip = self._metaSkip(title)
                 meta = getMeta(cItem["meta_type"], title, cItem.get("meta_year", ""), skip)
-                if not meta and skip:
-                    # "المداح 2 - اسطورة الوادي" / "المداح 3": a later season with its own subtitle / number,
-                    # the show is the part before (TVmaze knows "المداح" only)
+                if not meta:
                     tried = [title]
-                    base = title.split(" - ", 1)[0].strip()
-                    for alt in (base, re.sub(r"\s+\d{1,2}$", "", base)):
+                    for alt in self._metaAltTitles(title):
                         if alt and alt not in tried and not meta:
                             tried.append(alt)
                             meta = getMeta(cItem["meta_type"], alt, cItem.get("meta_year", ""), skip)

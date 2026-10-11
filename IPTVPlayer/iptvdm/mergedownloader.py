@@ -174,6 +174,7 @@ class MergeDownloader(BaseDownloader, SidecarMixin):
                 self.sidecarTxt = meta.get('e2i_sidecar_txt', '')
                 self.sidecarImg = meta.get('e2i_sidecar_img', '')
                 printDBG("MergeDownloader sidecar enabled")
+                self._startSidecarMetaLookup(meta.get('e2i_sidecar_meta'))
 
             if meta.get('e2i_mkv_chapters', False):
                 self.makeMkvChapters = True

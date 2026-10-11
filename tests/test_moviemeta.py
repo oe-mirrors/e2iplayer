@@ -383,6 +383,28 @@ def test_article_falls_back_to_site_data(mm):
                                            "images": [{"title": "", "url": "https://site/icon.jpg"}], "other_info": {}}]
 
 
+def test_info_query_is_noted(mm):
+    # while an item's INFO is built, the first lookup with an answer is noted for its download sidecar
+    answers = {"movie|wolf||1": {}, "movie|thewolf|2026|1": {"title": "The Wolf"}, "tv|tt0285403": {"title": "Scrubs"}}
+    mm._lookup = lambda providers, what, find, accept=None: answers.get(what, {})
+    mm.cp.meta_imdb.value = True
+    item = {"url": "https://site/wolf", "title": "Wolf (2026)"}
+    mm.getMeta("movie", "The Wolf", "2026")  # no INFO running: nothing noted
+    assert mm.getInfoQuery(item) is None
+    mm.setInfoItem(item)
+    mm.getMeta("movie", "Wolf", "", ("IMDb",))  # no answer
+    mm.getMeta("movie", "The Wolf", "2026", (), 1)
+    mm.getMetaByImdbId("tv", "tt0285403")  # a later answer does not replace the first one
+    mm.setInfoItem(None)
+    assert mm.getInfoQuery(item) == {"type": "movie", "title": "The Wolf", "year": "2026", "maxYearDiff": 1}
+    assert mm.getInfoQuery(dict(item, title="Other")) is None
+    # the next INFO of the item answers anew
+    mm.setInfoItem(item)
+    mm.getMetaByImdbId("tv", "tt0285403")
+    mm.setInfoItem(None)
+    assert mm.getInfoQuery(item) == {"type": "tv", "title": "", "year": "", "imdb": "tt0285403"}
+
+
 def test_helpers(mm):
     assert mm._formatDuration(45) == "45min"
     assert mm._formatDuration(125) == "2h 05min"

@@ -20,7 +20,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import LATIN_ONLY, getMeta, isLatinTitle
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus, urllib_urlencode
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
@@ -485,7 +485,18 @@ class ShahiidAnime(GenericFolderWatchedScraperMixin, CBaseHostClass):
             urltab.append({"name": name, "url": strwithmeta(url, {"Referer": self.MAIN_URL}), "need_resolve": 1})
         if not urltab:
             SetIPTVPlayerLastHostError(_("This video is only on hosters E2iPlayer cannot play."))
-        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), sidecarTxt))
+        # the moviemeta query of INFO: the page's English name first, then the row's title, the year of its "_years/"
+        # link, skip by script per title
+        head = self.cm.ph.getDataBeetwenMarkers(data, 'class="head-single-movie', 'class="head-s-meta-end', False)[1]
+        english = ""
+        for span in re.findall(r"<span><i[^>]*></i>(.*?)</span></span>", head, re.DOTALL):
+            key, _sep, value = span.partition(":")
+            if _KEY_ENGLISH in _uni(self.cleanHtmlStr(key)) and self.cleanHtmlStr(value):
+                english = self.cleanHtmlStr(value)
+        year = cItem.get("meta_year", "") or self.cm.ph.getSearchGroups(data, r"_years?/(\d{4})/")[0]
+        title = cItem.get("meta_title", "") or cItem.get("title", "")
+        metaQuery = sidecarMetaQuery(cItem.get("meta_type", ""), english or title, year, altTitles=[title] if english else ())
+        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), sidecarTxt, metaQuery))
 
     def getVideoLinks(self, videoUrl):
         printDBG("ShahiidAnime.getVideoLinks [%s]" % videoUrl)

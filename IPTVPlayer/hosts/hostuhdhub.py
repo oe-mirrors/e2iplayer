@@ -23,7 +23,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, decorateResolvedLinkItems, sidecarFromUrlMeta
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, decorateResolvedLinkItems, sidecarFromUrlMeta, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus, urllib_unquote
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
@@ -376,7 +376,11 @@ class UltrahdHub(GenericFolderWatchedScraperMixin, CBaseHostClass):
             SetIPTVPlayerLastHostError(_("No stream available"))
             return []
         story = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'(?s)<p class="mt-4">(.*?)</p>')[0])
-        urltab = applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), story))
+        # the moviemeta query of INFO: the type from the url, the page's release year
+        mediaType = cItem.get("meta_type", "") or ("tv" if "-series-" in url else "movie")
+        year = cItem.get("meta_year", "") or self.cm.ph.getSearchGroups(self._siteInfo(data)[2].get("released", ""), r"\b(\d{4})\b")[0]
+        metaQuery = sidecarMetaQuery(mediaType, cItem.get("meta_title", "") or cItem.get("s_title", ""), year, skip=())
+        urltab = applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), story, metaQuery))
         self.cacheLinks[url] = urltab
         return urltab
 

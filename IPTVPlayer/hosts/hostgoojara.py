@@ -15,7 +15,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, getMetaByImdbId
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, sidecarMetaQuery, decorateResolvedLinkItems
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
@@ -350,7 +350,10 @@ class Goojara(GenericFolderWatchedScraperMixin, CBaseHostClass):
         sts, data = self.getPage(pageUrl)
         if not sts:
             return []
-        sidecarTxt = self._parsePage(data)["desc"]
+        pageInfo = self._parsePage(data)
+        sidecarTxt = pageInfo["desc"]
+        # moviemeta query of INFO: the page's IMDb id, else the item's title
+        metaQuery = sidecarMetaQuery(cItem.get("meta_type", ""), cItem.get("meta_title", ""), cItem.get("meta_year", "") or pageInfo["year"], pageInfo["imdb"], skip=())
         tmp = self.cm.ph.getDataBeetwenMarkers(data, 'id="drl"', "</div>", False)[1]
         links = []
         counts = {}
@@ -372,7 +375,7 @@ class Goojara(GenericFolderWatchedScraperMixin, CBaseHostClass):
         urltab = [x[1] for x in links]
         if not urltab:
             SetIPTVPlayerLastHostError(_("No streams are available for this title yet."))
-        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), sidecarTxt))
+        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), sidecarTxt, metaQuery=metaQuery))
 
     def _resolveGoLink(self, videoUrl):
         # /go.php answers 302 -> hoster only with the PHP session cookie AND the JS cookie, else 404.

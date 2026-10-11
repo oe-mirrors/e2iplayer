@@ -17,7 +17,7 @@ from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMetaByImdbId
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecar, sidecarFromUrlMeta, decorateUrl, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecar, sidecarFromUrlMeta, sidecarMetaQuery, infoSidecarMetaQuery, decorateUrl, decorateResolvedLinkItems
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhostmixin import WatchedFlagHostMixin
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
@@ -60,7 +60,6 @@ class SerienStreamTo(CBaseHostClass):
         self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
         self.MAIN_URL = config.plugins.iptvplayer.serienstreamto_hosts.value
         self.DEFAULT_ICON_URL = "https://raw.githubusercontent.com/oe-mirrors/e2iplayer/gh-pages/Thumbnails/serienstream.to.png"
-        self.imdb_cache = {}
         self.cacheSeriesSeasons = {}
         self.sessionEx = MainSessionWrapper()
         self.watchedHelper = IPTVWatchedHelper('serienstreamto')
@@ -221,16 +220,15 @@ class SerienStreamTo(CBaseHostClass):
 
     def getImdbMeta(self, imdb_id):
         # details for the IMDb id from libs/moviemeta (IMDb and Cinemeta need no key, OMDb as set
-        # under "Metadata providers"): {"title", "plot", "poster", "info": {...}} or {}
+        # under "Metadata providers"): {"title", "plot", "poster", "info": {...}} or {}. moviemeta keeps
+        # its answers itself (and notes the one of an INFO for the item's download sidecar)
         if not imdb_id or not re.match(r"^tt\d{7,10}$", imdb_id):
             return {}
-        if imdb_id not in self.imdb_cache:
-            try:
-                self.imdb_cache[imdb_id] = getMetaByImdbId("tv", imdb_id)
-            except Exception:  # the lists must not fail because of the extra details
-                printExc()
-                return {}
-        return self.imdb_cache[imdb_id]
+        try:
+            return getMetaByImdbId("tv", imdb_id)
+        except Exception:  # the lists must not fail because of the extra details
+            printExc()
+            return {}
 
     def getIMDBRating(self, imdb_id):
         # "8.4" or "-"
@@ -426,88 +424,24 @@ class SerienStreamTo(CBaseHostClass):
         # streaming AND downloading, and can also fail/return nothing, so marking
         # here would (and used to) tag failed attempts and downloads as "started" too.
         urltab = []
-        sidecarTxt = ""
-        sidecarImg = ""
         sidecarEnabled = IsSidecarEnabled()
-        imdb_rating = cItem.get("imdb_rating", "")
-        sidecarYear = ""
-        sidecarGenre = ""
-
-        mkvEnabled = config.plugins.iptvplayer.serienstreamto_mkv.value
-        imdb_id = cItem.get("imdb_id", "")
-        imdb_lookup_url = cItem.get("imdb_lookup_url", "") or cItem.get("url", "")
-
-        if sidecarEnabled or mkvEnabled:
-            try:
-                article = self.getArticleContent(cItem)
-                if article and isinstance(article, list):
-                    articleItem = article[0]
-                    sidecarTxt = articleItem.get("text", "")
-                    images = articleItem.get("images", [])
-                    if images and images[0].get("url"):
-                        sidecarImg = images[0].get("url")
-                    otherInfo = articleItem.get("other_info", {})
-                    if not imdb_rating or imdb_rating == "-":
-                        imdb_rating = otherInfo.get("imdb_rating", "")
-                    sidecarGenre = otherInfo.get("genres", "") or otherInfo.get("genre", "")
-            except Exception:
-                printExc("getArticleContent for sidecar failed")
-
-            if not sidecarTxt:
-                sidecarTxt = cItem.get("desc", "")
-            if not sidecarImg:
-                sidecarImg = cItem.get("icon", "")
-
-            try:
-                if not imdb_id and imdb_lookup_url:
-                    printDBG("||SIDECAR imdb lookup url: [%s]" % imdb_lookup_url)
-                    sts, lookupData = self.getPage(imdb_lookup_url)
-                    if sts:
-                        imdb_id = self.extractImdbId(lookupData)
-                        printDBG("||SIDECAR imdb id from lookup url: [%s]" % imdb_id)
-                if not imdb_id and cItem.get("url", "") != imdb_lookup_url:
-                    sts, pageData = self.getPage(cItem["url"])
-                    if sts:
-                        imdb_id = self.extractImdbId(pageData)
-                        printDBG("||SIDECAR imdb id from item url: [%s]" % imdb_id)
-                if imdb_id:
-                    metaInfo = self.getImdbMeta(imdb_id).get("info", {})
-                    printDBG("||SIDECAR IMDb meta: [%s]" % metaInfo)
-                    if not imdb_rating or imdb_rating in ("-", "", "N/A"):
-                        imdb_rating = metaInfo.get("imdb_rating", "").split("/")[0]
-                    sidecarYear = metaInfo.get("year", "")
-                    if not sidecarGenre:
-                        sidecarGenre = metaInfo.get("genres", "")
-            except Exception:
-                printExc("IMDb sidecar lookup failed")
-        else:
-            if not sidecarTxt:
-                sidecarTxt = cItem.get("desc", "")
-            if not sidecarImg:
-                sidecarImg = cItem.get("icon", "")
-
-        if sidecarTxt.startswith("IMDb:"):
-            sidecarTxt = sidecarTxt.split("\n", 1)[1] if "\n" in sidecarTxt else ""
-        sidecarLines = []
-        if imdb_rating and imdb_rating not in ("-", "N/A", ""):
-            sidecarLines.append(u"IMDb: %s/10" % imdb_rating)
-        infoLine = []
-        if sidecarYear and sidecarYear not in ("N/A", ""):
-            infoLine.append(u"Jahr: %s" % sidecarYear)
-        if infoLine:
-            sidecarLines.append(u" / ".join(infoLine))
-        if sidecarGenre and sidecarGenre not in ("N/A", ""):
-            sidecarLines.append(sidecarGenre)
-        if sidecarLines:
-            prefix = u"\n".join(sidecarLines)
-            if sidecarTxt:
-                sidecarTxt = prefix + u"\n\n" + sidecarTxt
-            else:
-                sidecarTxt = prefix
-        sidecar = buildSidecar(sidecarEnabled, sidecarTxt, sidecarImg)
         sts, data = self.getPage(cItem["url"])
         if not sts:
             return []
+        # sidecar: the site's text + picture of the page fetched for the links (as getArticleContent reads
+        # them); the download manager adds the moviemeta details of the IMDb id INFO looks up (an episode page
+        # without one: the id of its imdb_lookup_url when INFO already fetched that page - no extra request here)
+        sidecarTxt = ""
+        sidecarImg = ""
+        sidecarMeta = {}
+        if sidecarEnabled:
+            sidecarTxt, sidecarImg = self._pageTextIcon(data)
+            sidecarTxt = sidecarTxt or re.sub(r" \| IMDb: \S+$", "", cItem.get("desc", ""))
+            sidecarImg = sidecarImg or cItem.get("icon", "")
+            # "Neueste Episoden" rows have no id of their own: the lookup of their INFO, when it was opened
+            imdb_id = cItem.get("imdb_id", "") or self.extractImdbId(data)
+            sidecarMeta = infoSidecarMetaQuery(cItem, sidecarMetaQuery("tv", imdbId=imdb_id) if re.match(r"^tt\d{7,10}$", imdb_id) else {})
+        sidecar = buildSidecar(sidecarEnabled, sidecarTxt, sidecarImg, meta=sidecarMeta)
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'id="episode-links"', "</article>")
         if not data:
             return []
@@ -547,17 +481,21 @@ class SerienStreamTo(CBaseHostClass):
                 return _addFinalMeta(self.up.getVideoLinkExt(url))
         return []
 
+    def _pageTextIcon(self, data):
+        # the site's description and picture of a show / episode page - for INFO and the download sidecar
+        desc = self.cm.ph.getDataBeetwenMarkers(data, '<div class="small text-body lh-lg mb-3">', "</div>", withMarkers=False)[1]
+        if not desc:
+            desc = self.cm.ph.getSearchGroups(data, 'description-text">([^<]+)')[0]
+        return self.cleanHtmlStr(desc), self.getFullIconUrl(self.cm.ph.getSearchGroups(data, 'data-src="([^"]+)')[0])
+
     def getArticleContent(self, cItem):
         printDBG("SerienStreamTo.getArticleContent [%s]" % cItem)
         otherInfo = {}
         sts, data = self.getPage(cItem["url"])
         if not sts:
             return []
-        desc = self.cm.ph.getDataBeetwenMarkers(data, '<div class="small text-body lh-lg mb-3">', "</div>", withMarkers=False)[1]
-        if not desc:
-            desc = self.cm.ph.getSearchGroups(data, 'description-text">([^<]+)')[0]
-        desc = self.cleanHtmlStr(desc)
-        icon = strwithmeta(self.getFullIconUrl(self.cm.ph.getSearchGroups(data, 'data-src="([^"]+)')[0]) or cItem.get("icon", ""))
+        desc, icon = self._pageTextIcon(data)
+        icon = strwithmeta(icon or cItem.get("icon", ""))
         imdb_id = cItem.get("imdb_id", "") or self.extractImdbId(data)
         if not imdb_id:
             lookup_url = cItem.get("imdb_lookup_url", "")

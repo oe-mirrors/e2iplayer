@@ -19,7 +19,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import GetAlternati
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, getMetaByImdbId
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, decorateResolvedLinkItems, sidecarFromUrlMeta
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, decorateResolvedLinkItems, sidecarFromUrlMeta, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx, parseSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
@@ -373,7 +373,7 @@ class ArabP2P(GenericFolderWatchedScraperMixin, CBaseHostClass):
         sts, data = self.getSitePage(url)
         if not sts:
             return []
-        magnet, trailer, _imdb, poster, story, size, seeds, peers = self._details(data)
+        magnet, trailer, imdbId, poster, story, size, seeds, peers = self._details(data)
         if not magnet:
             SetIPTVPlayerLastHostError(_("No stream available"))
             return []
@@ -392,7 +392,9 @@ class ArabP2P(GenericFolderWatchedScraperMixin, CBaseHostClass):
         urltab = [{"name": " - ".join(p for p in parts if p), "url": strwithmeta(magnet, {"title": title, "icon": str(icon)}), "need_resolve": 1}]
         if trailer:
             urltab.append({"name": _("Trailer"), "url": trailer, "need_resolve": 1})
-        urltab = applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), story))
+        # the INFO lookup: the IMDb id of the details page, a film by default, all services
+        metaQuery = sidecarMetaQuery(cItem.get("meta_type", "movie"), cItem.get("meta_title", ""), cItem.get("meta_year", ""), imdbId, skip=())
+        urltab = applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), story, metaQuery))
         self.cacheLinks[url] = urltab
         return urltab
 

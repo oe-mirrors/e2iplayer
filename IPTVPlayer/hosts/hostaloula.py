@@ -19,7 +19,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEna
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps, loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import LATIN_ONLY, getMeta, isLatinTitle
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
@@ -302,7 +302,9 @@ class Aloula(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not cItem.get("channel_id") and not cItem.get("item_id"):
             SetIPTVPlayerLastHostError(_("No stream available"))
             return []
-        return applySidecarToLinks([{"name": "Aloula HLS", "url": url, "need_resolve": 1}], buildSidecarFromItem(cItem, IsSidecarEnabled(), ""))
+        # the INFO lookup: a show (no meta_* keys on the items), none for a channel
+        metaQuery = {} if cItem.get("category") == "al_channel" else sidecarMetaQuery("tv", cItem.get("s_title", "") or cItem.get("title", ""), cItem.get("meta_year", ""))
+        return applySidecarToLinks([{"name": "Aloula HLS", "url": url, "need_resolve": 1}], buildSidecarFromItem(cItem, IsSidecarEnabled(), "", metaQuery))
 
     def _hlsLinks(self, url, live):
         # no Origin header: the kwikmotion edge answers the variant playlists with 403 when it is sent

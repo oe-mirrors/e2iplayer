@@ -26,7 +26,7 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps, load
 from Plugins.Extensions.IPTVPlayer.libs.botprotection import remembered_user_agent
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus, urllib_unquote
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
@@ -232,12 +232,14 @@ class WitAnime(GenericFolderWatchedScraperMixin, CBaseHostClass):
         episodes = sorted(set(int(num) for name, num in WATCH_RE.findall(data) if name == slug))
         page = cItem.get("page", 1)
         start = (page - 1) * LOCAL_PAGE_SIZE
+        # the year INFO takes from this series page: the moviemeta query of the download sidecar
+        year = self._siteInfo(data)[1].get("year", "")
         for num in episodes[start:start + LOCAL_PAGE_SIZE]:
             self.addVideo({"name": "category", "good_for_fav": True, "category": "wa_video",
                            "url": self.getFullUrl("/watch/%s/%d" % (slug, num)), "icon": cItem.get("icon", ""),
                            "title": self._episodeTitle(show, season, num, "%s - %s %d" % (cItem.get("title", show), _("Episode"), num)),
                            "desc": cItem.get("desc", ""), "series_url": cItem["url"], "s_title": show, "s_season": season,
-                           "s_episode": str(num), "meta_type": "tv", "meta_title": cItem.get("meta_title", show)})
+                           "s_episode": str(num), "meta_type": "tv", "meta_title": cItem.get("meta_title", show), "meta_year": year})
         if len(episodes) > LOCAL_PAGE_SIZE:
             lastPage = (len(episodes) + LOCAL_PAGE_SIZE - 1) // LOCAL_PAGE_SIZE
             addPagingItems(self, dict(cItem), page, page < lastPage, lastPage)
@@ -320,7 +322,9 @@ class WitAnime(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not urltab:
             self._noStream()
             return []
-        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled()))
+        # the moviemeta query of INFO: all services also for an Arabic title
+        metaQuery = sidecarMetaQuery(cItem.get("meta_type", ""), cItem.get("meta_title", ""), cItem.get("meta_year", ""), skip=())
+        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), "", metaQuery))
 
     def _gate(self, watchUrl, key, sources):
         # POST /watch/<kind>-source/<token> opens the server, /watch/<kind>-gate/<token> redirects to the hoster;

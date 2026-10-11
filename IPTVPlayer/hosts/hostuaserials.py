@@ -19,7 +19,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, getMetaByImdbId
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
@@ -409,7 +409,10 @@ class UASerials(GenericFolderWatchedScraperMixin, CBaseHostClass):
             self._reportUnavailable(player)
             return []
         sidecarTxt = page["desc"] or cItem.get("desc", "")
-        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), sidecarTxt))
+        # the moviemeta query of INFO: the page's IMDb id first, its year; all services also for a Cyrillic title
+        metaQuery = sidecarMetaQuery(cItem.get("meta_type", "movie"), cItem.get("meta_title", ""), page.get("year", "") or cItem.get("meta_year", ""),
+                                     page.get("imdb", ""), skip=())
+        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), sidecarTxt, metaQuery))
 
     def getVideoLinks(self, videoUrl):
         printDBG("UASerials.getVideoLinks [%s]" % videoUrl)

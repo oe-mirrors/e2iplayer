@@ -23,7 +23,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.libs.botprotection import remembered_user_agent
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import LATIN_ONLY, getMeta, isLatinTitle
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_unquote
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
@@ -340,15 +340,27 @@ class Krmzy(GenericFolderWatchedScraperMixin, CBaseHostClass):
         printDBG("Krmzy.getLinksForVideo [%s]" % pageUrl)
         if not self.cm.isValidUrl(pageUrl):
             return []
-        sidecar = buildSidecarFromItem(dict(cItem, desc=StripColorCodes(cItem.get("desc", ""))), IsSidecarEnabled())
+        # moviemeta query of INFO: type from the url, title / year from the player's slug (or the Latin run of the story)
+        metaType = cItem.get("meta_type") or ("tv" if self._kind(pageUrl) != "movies" else "movie")
+        metaTitle = cItem.get("meta_title") or _clean(_noColors(cItem.get("title", "")))
+        year = cItem.get("meta_year", "")
+        sidecarItem = dict(cItem, desc=StripColorCodes(cItem.get("desc", "")))
         if not self._isSiteUrl(pageUrl):
             # a server row saved as favourite by the previous version (albaplayer "?serv=N" or a hoster url)
+            sidecar = buildSidecarFromItem(sidecarItem, IsSidecarEnabled(), metaQuery=sidecarMetaQuery(metaType, metaTitle, year))
             return applySidecarToLinks([{"name": self.up.getHostName(pageUrl, True), "url": pageUrl, "need_resolve": 1}], sidecar)
         pageUrl = self._canonUrl(pageUrl)
         sts, data = self.getPage(pageUrl)
         if not sts:
             return []
         frame = self._playerFrame(data)
+        slug = SLUG_RE.search(frame)
+        if slug:
+            metaTitle = slug.group(1).replace("-", " ").strip() or metaTitle
+            year = slug.group(2) or year
+        elif not isLatinTitle(metaTitle):
+            metaTitle = _latinRun(self._siteInfo(data)[0]) or metaTitle
+        sidecar = buildSidecarFromItem(sidecarItem, IsSidecarEnabled(), metaQuery=sidecarMetaQuery(metaType, metaTitle, year))
         if not self.cm.isValidUrl(frame):
             SetIPTVPlayerLastHostError(_("No stream available"))
             return []

@@ -23,8 +23,11 @@ class IPTVFavourites:
     GROUPS_FILE_NAME = FILE_NAME_MACRO % 'groups'
     # fields of a host's item dict that differ between two listings of the same item, or between the
     # folder of a movie and the movie inside it (the host copies the folder's dict, only "type" is
-    # then video instead of category) - the film in a favourite folder counts as the favourite too
-    VOLATILE_ITEM_FIELDS = ('isWatched', 'isStarted', 'desc', 'icon', 'time', 'type', 'good_for_fav')
+    # then video instead of category) - the film in a favourite folder counts as the favourite too.
+    # meta_*: the moviemeta lookup keys (libs/moviemeta.py), derived from the title - a host that starts
+    # setting them must not lose the favourites stored before
+    VOLATILE_ITEM_FIELDS = ('isWatched', 'isStarted', 'desc', 'icon', 'time', 'type', 'good_for_fav',
+                            'meta_type', 'meta_title', 'meta_year', 'meta_imdb')
 
     def __init__(self, favDir):
         self.lastError = ''

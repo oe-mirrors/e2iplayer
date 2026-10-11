@@ -474,7 +474,18 @@ class CHostBase(IHost):
 
         if not self.withArticleContent(cItem):
             return RetHost(retCode, value=retlist)
-        hList = self.host.getArticleContent(cItem)
+        # libs/moviemeta notes the lookup that answers on this INFO - the item's download sidecar asks the same
+        setInfoItem = None
+        try:
+            from Plugins.Extensions.IPTVPlayer.libs.moviemeta import setInfoItem
+            setInfoItem(cItem)
+        except Exception:
+            printExc()
+        try:
+            hList = self.host.getArticleContent(cItem)
+        finally:
+            if setInfoItem is not None:
+                setInfoItem(None)
         if None is hList:
             return RetHost(retCode, value=retlist)
         for item in hList:

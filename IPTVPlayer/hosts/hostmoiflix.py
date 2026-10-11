@@ -25,7 +25,7 @@ from Plugins.Extensions.IPTVPlayer.libs import pyaes
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.jsunpack import get_packed_data
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_binary, ensure_str
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
@@ -322,8 +322,14 @@ class Moiflix(GenericFolderWatchedScraperMixin, CBaseHostClass, CaptchaHelper):
         if not urltab:
             SetIPTVPlayerLastHostError(_("No stream available"))
             return []
-        story = self._siteInfo(data)[0]
-        urltab = applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), story))
+        story, _poster, info = self._siteInfo(data)
+        # moviemeta query of INFO: the page's original title / year (INFO reads the series page for an episode - not loaded here)
+        if "/episode/" in url:
+            info = {}
+        mediaType = cItem.get("meta_type") or ("tv" if "/show/" in url or "/episode/" in url else "movie")
+        metaTitle = info.get("original_title") or cItem.get("meta_title") or cItem.get("s_title") or cItem.get("title", "")
+        metaQuery = sidecarMetaQuery(mediaType, metaTitle, cItem.get("meta_year") or info.get("year", ""), skip=())
+        urltab = applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), story, metaQuery))
         self.cacheLinks[url] = urltab
         return urltab
 

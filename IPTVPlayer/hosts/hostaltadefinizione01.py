@@ -24,7 +24,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsMediaNamin
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, decorateResolvedLinkItems, sidecarFromUrlMeta
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, decorateResolvedLinkItems, sidecarFromUrlMeta, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
@@ -337,7 +337,10 @@ class Altadefinizione(GenericFolderWatchedScraperMixin, CBaseHostClass):
             return []
         # resolved by urlparser (parserVIXSRC: token playlist, audio/video variants)
         urltab = [{"name": "VixSrc", "url": strwithmeta(embedUrl, {"Referer": self.MAIN_URL}), "need_resolve": 1}]
-        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), cItem.get("desc", "")))
+        # the INFO lookup (the items carry no meta_title / meta_year): show / film name and year of the list
+        mediaType = cItem.get("meta_type", "") or ("tv" if "/tv-" in cItem.get("url", "") else "movie")
+        metaQuery = sidecarMetaQuery(mediaType, cItem.get("s_title", "") or cItem.get("title", ""), cItem.get("s_year", ""), skip=())
+        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), cItem.get("desc", ""), metaQuery))
 
     def getVideoLinks(self, videoUrl):
         printDBG("Altadefinizione.getVideoLinks [%s]" % videoUrl)

@@ -23,7 +23,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import SetIPTVPlaye
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps, loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, getMetaByImdbId
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, decorateResolvedLinkItems, sidecarFromUrlMeta
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, decorateResolvedLinkItems, sidecarFromUrlMeta, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus, urllib_unquote
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
@@ -360,7 +360,14 @@ class FilmClub(GenericFolderWatchedScraperMixin, CBaseHostClass):
             urltab.append({"name": "%s %s - %s" % (_("Server"), num, hoster), "url": strwithmeta(url, meta), "need_resolve": 1})
         if not urltab:
             SetIPTVPlayerLastHostError(_("No stream available"))
-        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), cItem.get("desc", "")))
+        # moviemeta query of INFO: a film's IMDb id of the page, else the title (an episode page's h1 / year do not count)
+        _info, _plot, title, year, imdb = self._siteInfo(data)
+        mediaType = cItem.get("meta_type", "") or ("tv" if "/series/" in cItem.get("url", "") else "movie")
+        if mediaType == "tv" and cItem.get("type") == "video":
+            title, year = "", ""
+        metaQuery = sidecarMetaQuery(mediaType, cItem.get("s_title", "") or title or cItem.get("title", ""), cItem.get("s_year", "") or year,
+                                     imdb if mediaType == "movie" else "", skip=())
+        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), cItem.get("desc", ""), metaQuery=metaQuery))
 
     def getVideoLinks(self, videoUrl):
         printDBG("FilmClub.getVideoLinks [%s]" % videoUrl)

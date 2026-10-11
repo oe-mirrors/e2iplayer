@@ -18,7 +18,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import LATIN_ONLY, getMeta, isLatinTitle
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus, urllib_unquote
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
@@ -345,6 +345,12 @@ class OkAnime(GenericFolderWatchedScraperMixin, CBaseHostClass):
         sts, data = self.getPage(url)
         if not sts:
             return []
+        # moviemeta query of INFO: a show when untyped, the anime page's year when that is the page loaded here
+        pageYear = ""
+        if not cItem.get("meta_year") and "/anime/" in url and self.getFullUrl(cItem.get("show_url") or cItem.get("url", "")) == url:
+            pageYear = self.cm.ph.getSearchGroups(self._siteInfo(data)[2].get("year", ""), YEAR_RE.pattern)[0]
+        metaTitle = cItem.get("meta_title") or cItem.get("s_title") or cItem.get("title", "")
+        metaQuery = sidecarMetaQuery(cItem.get("meta_type") or "tv", metaTitle, cItem.get("meta_year") or pageYear)
         if "/anime/" in url:
             # a movie row sits on its anime page: its one episode holds the servers
             episodes = self._episodeLinks(data)
@@ -375,7 +381,7 @@ class OkAnime(GenericFolderWatchedScraperMixin, CBaseHostClass):
             if names.count(link["name"]) > 1:
                 counter[link["name"]] = counter.get(link["name"], 0) + 1
                 link["name"] = "%s (%d)" % (link["name"], counter[link["name"]])
-        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled()))
+        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), metaQuery=metaQuery))
 
     def getVideoLinks(self, videoUrl):
         printDBG("OkAnime.getVideoLinks [%s]" % videoUrl)
