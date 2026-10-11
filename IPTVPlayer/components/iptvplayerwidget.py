@@ -2305,17 +2305,18 @@ class E2iPlayerWidget(Screen):
             self.requestListFromHost('ForItem', idx, '')
 
     def pageup_pressed(self):
-        # CH+: next page
+        # CH+: next page (not while a list loads, the key would be lost anyway)
         self.stopAutoPlaySequencer()
-        if self._canPage():
+        if self._canPage() and not self.isInWorkThread():
             idx = self._pagerIndex(CDisplayListItem.TYPE_NEXT)
             if -1 < idx:
                 self._openPagerItem(idx)
 
     def pagedown_pressed(self):
-        # CH-: one page back
+        # CH-: one page back - not while a list loads: a second CH- then (an empty page shows no spinner check)
+        # would pop the path once more than the host's list stack, which ignores the request meanwhile
         self.stopAutoPlaySequencer()
-        if not self._canPage():
+        if not self._canPage() or self.isInWorkThread():
             return
         step, idx = self._previousPageStep()
         if step == 'history':
