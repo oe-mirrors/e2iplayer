@@ -106,6 +106,19 @@ def offerQualities(choices):
 			_qualityOffers.append(choices)
 
 
+def redirectOffers(picked, realUrl, follow):
+	# the picked link was replaced by the address it redirects to: the quality list it came from gets the real
+	# addresses of all its entries (follow(link) -> real address or ''; the ones that do not answer are left out)
+	if not _qualityOffers:
+		return
+	for index in range(len(_qualityOffers) - 1, -1, -1):
+		choices = _qualityOffers[index]
+		if any(('%s' % link) == ('%s' % picked) for _label, link in choices):
+			followed = [(label, realUrl if ('%s' % link) == ('%s' % picked) else follow(link)) for label, link in choices]
+			_qualityOffers[index] = [c for c in followed if c[1]]
+			return
+
+
 def variantLabel(variant):
 	height, bitrate = int(variant.get('height') or 0), int(variant.get('bitrate') or 0)
 	label = '%dp' % height if height else ''
@@ -268,11 +281,18 @@ class XXXParser:
 		return candidates[0][1]
 
 	def _linkHeight(self, link):
-		# the height a file address names: ..._1080p.mp4, -2160p/, 4k, a bare _2160.mp4 / /1440/ (vcdn, KVS); 0 if none
+		# the height a file address names: ..._1080p.mp4, -2160p/, 4k, a bare _2160.mp4 / /1440/ (vcdn, KVS), a bare
+		# file name ending _1080.mp4 / _720.mp4 (KVS); 0 if none
 		link = ('%s' % link).split('?')[0]
 		height = self._labelHeight(link)
 		if not height:
 			height = int(self.cm.ph.getSearchGroups(link, r'(?<![0-9])(4320|2160|1440)(?![0-9])', 1, True)[0] or 0)
+		if not height:
+			height = int(self.cm.ph.getSearchGroups(link, r'_(1080|720|540|480|360|240)\.(?:mp4|m3u8)', 1, True)[0] or 0)
+		if not height:
+			# ..._1920x1080_4000k.mp4 (pornone)
+			size = self.cm.ph.getSearchGroups(link, r'(?<![0-9])([0-9]{3,4})x([0-9]{3,4})(?![0-9])', 2, True)
+			height = min(int(size[0] or 0), int(size[1] or 0))
 		return height
 
 	def _bestLink(self, links):
@@ -286,6 +306,26 @@ class XXXParser:
 			links = [link for link in links if self._linkHeight(link) <= 1080] or links[:1]
 		offerQualities([(linkLabel(self._linkHeight(link), link), link) for link in reversed(links)])
 		return links[-1]
+
+	def _redirectTarget(self, videoUrl, params):
+		# the address a link redirects to (KVS get_file -> the CDN host); '' when it does not answer
+		params = dict(params)
+		params['return_data'] = False
+		sts, response = self.cm.getPage(videoUrl, params)
+		if not sts or response is None:
+			return ''
+		realUrl = response.geturl()
+		response.close()
+		return realUrl
+
+	def _followRedirect(self, videoUrl, params, picked=None, prepare=None):
+		# the real address of the picked link; with "Use the best quality" off the other qualities of the list it was
+		# picked from are followed too (one request each), so the quality selection offers their real addresses.
+		# picked: the list entry videoUrl was made from, prepare(entry): the same step for the others (KVS decryptHash)
+		realUrl = self._redirectTarget(videoUrl, params)
+		if realUrl:
+			redirectOffers(picked or videoUrl, realUrl, lambda link: self._redirectTarget(prepare(link) if prepare else link, params))
+		return realUrl
 
 	def _turbovidhls(self, embedUrl, referer):
 		# turbovidhls player page (321TUBE, PORN4DAYS server 1): HLS whose segments are TS behind a PNG header on
@@ -372,6 +412,9 @@ class XXXParser:
 						break
 			elif value:
 				entries.append([key, '', value])
+		# slots in AV1 (video_alt_url_codec: 'av1', VIKIPORN 1080p) play on the box with sound only
+		av1 = set(re.findall(r"(video_url|video_alt_url[0-9]*)_codec\s*:\s*'av1'", data))
+		entries = [entry for entry in entries if entry[0] not in av1]
 		if not entries:
 			for tag in re.findall(r'<source\b[^>]*>', data):
 				src = self.cm.ph.getSearchGroups(tag, r'''src=["']([^"']+)["']''', 1, True)[0]
@@ -389,7 +432,7 @@ class XXXParser:
 			if videoUrl in seen or (not videoUrl.startswith('http') and not videoUrl.startswith('/')) or re.search(r'[/?]login/?$', videoUrl):
 				continue
 			seen.add(videoUrl)
-			height = self._labelHeight(label) or self._labelHeight(videoUrl.split('?')[0])
+			height = self._labelHeight(label) or self._linkHeight(videoUrl)
 			if not height and re.search(r'(?i)high|\bhq\b|\bhd\b|original', label):
 				height = 1080
 			bitrate = int(self.cm.ph.getSearchGroups(videoUrl, r'[?&]br=([0-9]+)', 1, True)[0] or 0)
@@ -1920,11 +1963,9 @@ class XXXParser:
 			HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			HTTP_HEADER['Referer'] = url
 			params = {'header': HTTP_HEADER, 'return_data': False}
-			sts, response = self.cm.getPage(videoUrl, params)
-			if not sts or response is None:
+			real_url = self._followRedirect(videoUrl, params)
+			if not real_url:
 				return []
-			real_url = response.geturl()
-			response.close()
 			if not real_url.startswith('http'):
 				return []
 			videoUrl = str(real_url)
@@ -2856,20 +2897,12 @@ class XXXParser:
 			COOKIEFILE = join(GetCookieDir(), 'baddies.cookie')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
 			sts, data = self.getPage(url, 'baddies.cookie', 'baddies.xxx', self.defaultParams)
-			license_code = self.cm.ph.getSearchGroups(data, '''license_code:.['"]([^"^']+?)['"],''')[0].strip()
-			rnd = re.search("rnd:.[']([0-9]+)[']", data).group(1)
-			videoUrl = re.findall("video.{1,6}url.{2,4}['](f[^@]+?)['],", data, re.S)[-1]
-			printDBG('Videolink first: ' + videoUrl)
-			if 'function/0/' in videoUrl:
-				videoUrl = decryptHash(videoUrl, license_code, '16')
-			printDBG('Videolink second: ' + videoUrl)
-			if videoUrl.endswith('/'):
-				videoUrl = videoUrl.rpartition('/')[0]
-			printDBG('Videolink third: ' + videoUrl)
-			try:
-				return urlparser.decorateUrl(videoUrl, {'Referer': url})
-			except Exception:
-				return videoUrl
+			if not sts:
+				return ''
+			# KVS flashvars (decrypted, without the trailing "/"): the best quality, above 1080p only when UHD playback is on
+			videoUrl = self._pickByHeight([(height, link[:-1] if link.endswith('/') else link) for height, link in self._mediaCandidates(data)])
+			printDBG('Videolink: ' + videoUrl)
+			return urlparser.decorateUrl(videoUrl, {'Referer': url}) if videoUrl else ''
 
 		if parser == 'https://www.cuckoldplacetube.com':
 			COOKIEFILE = join(GetCookieDir(), 'cuckoldplacetube.cookie')
@@ -2955,11 +2988,9 @@ class XXXParser:
 			videoUrl = decodeUrl(videoUrl[0])
 			HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			HTTP_HEADER['Referer'] = url
-			sts, response = self.cm.getPage(videoUrl, {'header': HTTP_HEADER, 'return_data': False})
-			if not sts or response is None:
+			real_url = self._followRedirect(videoUrl, {'header': HTTP_HEADER, 'return_data': False})
+			if not real_url:
 				return []
-			real_url = response.geturl()
-			response.close()
 			return urlparser.decorateUrl(real_url, {'Referer': url, 'User-Agent': USER_AGENT})
 
 		if parser == 'https://analpornosex.com':
@@ -3049,11 +3080,9 @@ class XXXParser:
 			videoUrl = videoUrl[0]
 			HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			HTTP_HEADER['Referer'] = url
-			sts, response = self.cm.getPage(videoUrl, {'header': HTTP_HEADER, 'return_data': False})
-			if not sts or response is None:
+			real_url = self._followRedirect(videoUrl, {'header': HTTP_HEADER, 'return_data': False})
+			if not real_url:
 				return []
-			real_url = response.geturl()
-			response.close()
 			return urlparser.decorateUrl(real_url, {'Referer': url, 'User-Agent': USER_AGENT})
 
 		if parser == 'https://bigbumbabes.com':
@@ -3072,11 +3101,9 @@ class XXXParser:
 			if checker:
 				HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 				HTTP_HEADER['Referer'] = url
-				sts, response = self.cm.getPage(videoUrl, {'header': HTTP_HEADER, 'return_data': False})
-				if not sts or response is None:
+				real_url = self._followRedirect(videoUrl, {'header': HTTP_HEADER, 'return_data': False})
+				if not real_url:
 					return []
-				real_url = response.geturl()
-				response.close()
 				return urlparser.decorateUrl(real_url, {'Referer': url, 'User-Agent': USER_AGENT})
 			return videoUrl
 
@@ -3094,11 +3121,9 @@ class XXXParser:
 			videoUrl = self._bestLink(videoUrls)
 			HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			HTTP_HEADER['Referer'] = url
-			sts, response = self.cm.getPage(videoUrl, {'header': HTTP_HEADER, 'return_data': False})
-			if not sts or response is None:
+			real_url = self._followRedirect(videoUrl, {'header': HTTP_HEADER, 'return_data': False})
+			if not real_url:
 				return []
-			real_url = response.geturl()
-			response.close()
 			return urlparser.decorateUrl(real_url, {'Referer': url, 'User-Agent': USER_AGENT})
 
 		if parser == 'https://avexxx.com':
@@ -3113,11 +3138,9 @@ class XXXParser:
 				videoUrl = decryptHash(videoUrl, license_code, '16')
 			HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			HTTP_HEADER['Referer'] = url
-			sts, response = self.cm.getPage(videoUrl, {'header': HTTP_HEADER, 'return_data': False})
-			if not sts or response is None:
+			real_url = self._followRedirect(videoUrl, {'header': HTTP_HEADER, 'return_data': False})
+			if not real_url:
 				return []
-			real_url = response.geturl()
-			response.close()
 			return urlparser.decorateUrl(real_url, {'Referer': url})
 
 		if parser == 'https://cherrygasp.com':
@@ -3126,18 +3149,15 @@ class XXXParser:
 			self.HTTP_HEADER['Referer'] = url
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
 			sts, data = self.getPage(url, 'cherrygasp.cookie', 'cherrygasp.com', self.defaultParams)
-			license_code = self.cm.ph.getSearchGroups(data, r"license_code:\s[']([^']+?)[']")[0].strip()
-			videoUrls = re.findall(r"video.{0,8}url:\s[']([^']+?)[']", data, re.S)
-			videoUrl = self._bestLink(videoUrls)
-			if 'function/0/' in videoUrl:
-				videoUrl = decryptHash(videoUrl, license_code, '16')
+			# KVS flashvars (decrypted): the best quality, above 1080p only when UHD playback is on
+			videoUrl = self._pickByHeight(self._mediaCandidates(data)) if sts else ''
+			if not videoUrl:
+				return ''
 			HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			HTTP_HEADER['Referer'] = url
-			sts, response = self.cm.getPage(videoUrl, {'header': HTTP_HEADER, 'return_data': False})
-			if not sts or response is None:
+			real_url = self._followRedirect(videoUrl, {'header': HTTP_HEADER, 'return_data': False})
+			if not real_url:
 				return []
-			real_url = response.geturl()
-			response.close()
 			return urlparser.decorateUrl(real_url, {'Referer': url, 'User-Agent': USER_AGENT})
 
 		if parser == 'https://18tokyo.com':
@@ -3151,11 +3171,9 @@ class XXXParser:
 				videoUrl = decodeUrl(videoUrl[0])
 			HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			HTTP_HEADER['Referer'] = url
-			sts, response = self.cm.getPage(videoUrl, {'header': HTTP_HEADER, 'return_data': False})
-			if not sts or response is None:
+			real_url = self._followRedirect(videoUrl, {'header': HTTP_HEADER, 'return_data': False})
+			if not real_url:
 				return []
-			real_url = response.geturl()
-			response.close()
 			return urlparser.decorateUrl(real_url, {'Referer': url, 'User-Agent': USER_AGENT})
 
 		if parser == 'https://ebonyplayz.com':
@@ -3171,11 +3189,9 @@ class XXXParser:
 			if checker:
 				HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 				HTTP_HEADER['Referer'] = url
-				sts, response = self.cm.getPage(videoUrl, {'header': HTTP_HEADER, 'return_data': False})
-				if not sts or response is None:
+				real_url = self._followRedirect(videoUrl, {'header': HTTP_HEADER, 'return_data': False})
+				if not real_url:
 					return []
-				real_url = response.geturl()
-				response.close()
 				return urlparser.decorateUrl(real_url, {'Referer': url, 'User-Agent': USER_AGENT})
 			return videoUrl
 
@@ -3193,11 +3209,9 @@ class XXXParser:
 			videoUrl = videoUrl[0]
 			HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			HTTP_HEADER['Referer'] = url
-			sts, response = self.cm.getPage(videoUrl, {'header': HTTP_HEADER, 'return_data': False})
-			if not sts or response is None:
+			real_url = self._followRedirect(videoUrl, {'header': HTTP_HEADER, 'return_data': False})
+			if not real_url:
 				return []
-			real_url = response.geturl()
-			response.close()
 			return urlparser.decorateUrl(real_url, {'Referer': url, 'User-Agent': USER_AGENT})
 
 		if parser == 'https://fukxl.com':
@@ -3212,11 +3226,9 @@ class XXXParser:
 			videoUrl = self._bestLink(videoUrl)
 			HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			HTTP_HEADER['Referer'] = url
-			sts, response = self.cm.getPage(videoUrl, {'header': HTTP_HEADER, 'return_data': False})
-			if not sts or response is None:
+			real_url = self._followRedirect(videoUrl, {'header': HTTP_HEADER, 'return_data': False})
+			if not real_url:
 				return []
-			real_url = response.geturl()
-			response.close()
 			return urlparser.decorateUrl(real_url, {'Referer': url, 'User-Agent': USER_AGENT})
 
 		if parser == 'https://hornyfap.tv':
@@ -3231,11 +3243,9 @@ class XXXParser:
 				videoUrl = decryptHash(videoUrl, license_code, '16')
 			HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			HTTP_HEADER['Referer'] = url
-			sts, response = self.cm.getPage(videoUrl, {'header': HTTP_HEADER, 'return_data': False})
-			if not sts or response is None:
+			real_url = self._followRedirect(videoUrl, {'header': HTTP_HEADER, 'return_data': False})
+			if not real_url:
 				return []
-			real_url = response.geturl()
-			response.close()
 			return urlparser.decorateUrl(real_url, {'Referer': url})
 
 		if parser == 'https://lesb8.com':
@@ -3264,17 +3274,16 @@ class XXXParser:
 			sts, data = self.getPage(url, 'shemaletube.cookie', 'shemaletubevideos.com', self.defaultParams)
 			if not sts:
 				return ''
-			videoUrl = re.findall('type="video/mp4"\\ssrc=["]([^"]+?)["]', data, re.S)
+			# the files best first (.../1080p.mp4, .../hd.mp4, .../default.mp4): the best one, above 1080p only when UHD
+			# playback is on
+			videoUrl = self._pickByHeight([(self._linkHeight(link), link) for link in re.findall('type="video/mp4"\\ssrc=["]([^"]+?)["]', data, re.S)])
 			if not videoUrl:
 				return ''
-			videoUrl = videoUrl[0]
 			HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			HTTP_HEADER['Referer'] = url
-			sts, response = self.cm.getPage(videoUrl, {'header': HTTP_HEADER, 'return_data': False})
-			if not sts or response is None:
+			real_url = self._followRedirect(videoUrl, {'header': HTTP_HEADER, 'return_data': False})
+			if not real_url:
 				return []
-			real_url = response.geturl()
-			response.close()
 			return urlparser.decorateUrl(real_url, {'Referer': url, 'User-Agent': USER_AGENT})
 
 		if parser == 'https://morehardporn.com':
@@ -3289,11 +3298,9 @@ class XXXParser:
 				videoUrl = decryptHash(videoUrl, license_code, '16')
 			HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			HTTP_HEADER['Referer'] = url
-			sts, response = self.cm.getPage(videoUrl, {'header': HTTP_HEADER, 'return_data': False})
-			if not sts or response is None:
+			real_url = self._followRedirect(videoUrl, {'header': HTTP_HEADER, 'return_data': False})
+			if not real_url:
 				return []
-			real_url = response.geturl()
-			response.close()
 			return urlparser.decorateUrl(real_url, {'Referer': url})
 
 		if parser == 'https://www.porntry.com':
@@ -3361,13 +3368,11 @@ class XXXParser:
 			else:
 				HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 				HTTP_HEADER['Referer'] = videoUrl
-				sts, response = self.cm.getPage(videoUrl, {'header': HTTP_HEADER, 'return_data': False})
-				if not sts or response is None:
+				real_url = self._followRedirect(videoUrl, {'header': HTTP_HEADER, 'return_data': False})
+				if not real_url:
 					msg = _('ACCESS DENIED.\nTHIS VIDEO IS DELETED OR NOT AVAILABLE TO YOUR REGION.')
 					self.sessionEx.waitForFinishOpen(MessageBox, msg, type=MessageBox.TYPE_INFO)
 					return None
-				real_url = response.geturl()
-				response.close()
 				return urlparser.decorateUrl(real_url, {'Referer': url, 'User-Agent': USER_AGENT})
 
 		if parser == 'https://throatlust.com':
@@ -3409,11 +3414,9 @@ class XXXParser:
 			videoUrl = decodeUrl(self._bestLink(videoUrl))
 			HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			HTTP_HEADER['Referer'] = url
-			sts, response = self.cm.getPage(videoUrl, {'header': HTTP_HEADER, 'return_data': False})
-			if not sts or response is None:
+			real_url = self._followRedirect(videoUrl, {'header': HTTP_HEADER, 'return_data': False})
+			if not real_url:
 				return []
-			real_url = response.geturl()
-			response.close()
 			return urlparser.decorateUrl(real_url, {'Referer': url, 'User-Agent': USER_AGENT})
 
 		if parser == 'https://www.xxbrits.com':
@@ -3500,12 +3503,9 @@ class XXXParser:
 			COOKIEFILE = join(GetCookieDir(), 'xtits.cookie')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
 			sts, data = self.getPage(url, 'xtits.cookie', 'xtits.com', self.defaultParams)
-			license_code = self.cm.ph.getSearchGroups(data, '''license_code:.['"]([^"^']+?)['"],''')[0].strip()
-			videoUrl = re.findall("video.{1,6}url.{2,4}[']([^@]+?)['],", data, re.S)[-1]
-			printDBG('Videolink first: ' + videoUrl)
-			if 'function/0/' in videoUrl:
-				videoUrl = decryptHash(videoUrl, license_code, '16')
-				printDBG('Videolink second: ' + videoUrl)
+			# KVS flashvars (decrypted): the best quality, above 1080p only when UHD playback is on
+			videoUrl = self._pickByHeight(self._mediaCandidates(data)) if sts else ''
+			printDBG('Videolink: ' + videoUrl)
 			return videoUrl
 
 		if parser == 'https://amateur.red':
@@ -3627,11 +3627,9 @@ class XXXParser:
 			if videoUrl:
 				params = dict(self.defaultParams)
 				params.update({'header': {'User-Agent': USER_AGENT, 'Referer': url}, 'return_data': False})
-				sts, response = self.cm.getPage('https:' + videoUrl, params)
-				if not sts or response is None:
+				videoUrl = self._followRedirect('https:' + videoUrl, params, videoUrl, lambda link: 'https:' + link)
+				if not videoUrl:
 					return ''
-				videoUrl = response.geturl()
-				response.close()
 				return urlparser.decorateUrl(videoUrl, {'Referer': url, 'User-Agent': USER_AGENT})
 			license_code = self.cm.ph.getSearchGroups(data, '''license_code:.['"]([^"^']+?)['"],''')[0].strip()
 			videoUrl = self.cm.ph.getSearchGroups(data, '''video_alt_url:.['"]([^"^']+?)['"]''')[0]
@@ -3806,11 +3804,11 @@ class XXXParser:
 			COOKIEFILE = join(GetCookieDir(), 'worldsex.cookie')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
 			sts, data = self.getPage(url, 'worldsex.cookie', 'worldsex.com', self.defaultParams)
-			videoUrl = re.findall('source.src=["]([^"]+?)["]', data, re.S)
+			videoUrl = re.findall('source.src=["]([^"]+?)["]', data, re.S) if sts else []
 			if videoUrl:
 				printDBG('Video links: ' + str(videoUrl))
-				videoUrl = videoUrl[0]
-				return videoUrl
+				# the sources best first: the first one, all of them for the quality selection
+				return self._bestLink([link for index, link in enumerate(videoUrl) if link not in videoUrl[:index]][::-1])
 
 		if parser == 'https://engorgedtits.com':
 			# watch.html?id=<id> -> the JSON API names the file: free videos are plain MP4, encrypted HLS is premium only
@@ -4005,20 +4003,10 @@ class XXXParser:
 			COOKIEFILE = join(GetCookieDir(), 'hdtube.cookie')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
 			sts, data = self.getPage(url, 'hdtube.cookie', 'hdtube.porn', self.defaultParams)
-			license_code = self.cm.ph.getSearchGroups(data, '''license_code:.['"]([^"^']+?)['"],''')[0].strip()
-			rnd = re.search("rnd:.[']([0-9]+)[']", data).group(1)
-			videoUrl = re.findall("video.{1,6}url.{2,4}['](f[^@]+?)['],", data, re.S)[0]
-			printDBG('Videolink first: ' + videoUrl)
-			if 'function/0/' in videoUrl:
-				videoUrl = decryptHash(videoUrl, license_code, '16')
-			printDBG('Videolink second: ' + videoUrl)
-			if videoUrl.endswith('/'):
-				videoUrl = videoUrl.rpartition('/')[0]
-			printDBG('Videolink third: ' + videoUrl)
-			try:
-				return urlparser.decorateUrl(videoUrl, {'Referer': url})
-			except Exception:
-				return videoUrl
+			# KVS flashvars (decrypted, without the trailing "/"): the best quality, above 1080p only when UHD playback is on
+			videoUrl = self._pickByHeight([(height, link[:-1] if link.endswith('/') else link) for height, link in self._mediaCandidates(data)]) if sts else ''
+			printDBG('Videolink: ' + videoUrl)
+			return urlparser.decorateUrl(videoUrl, {'Referer': url}) if videoUrl else ''
 
 		if parser == 'https://www.pornslash.com':
 			printDBG('PORNSLASH PARSER')
@@ -4154,17 +4142,10 @@ class XXXParser:
 			COOKIEFILE = join(GetCookieDir(), 'xhand.cookie')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
 			sts, data = self.getPage(url, 'xhand.cookie', 'xhand.net', self.defaultParams)
-			license_code = self.cm.ph.getSearchGroups(data, r"license_code:\s[']([^']+?)[']")[0].strip()
-			rnd = re.search("rnd:.[']([0-9]+)[']", data).group(1)
-			videoUrl = re.findall("video.{1,6}url.{2,4}[']([^@]+?)[']", data, re.S)[-1]
-			printDBG('Videolink first: ' + videoUrl)
-			if 'function/0/' in videoUrl:
-				videoUrl = decryptHash(videoUrl, license_code, '16')
-				printDBG('Videolink second: ' + videoUrl)
-			try:
-				return urlparser.decorateUrl(videoUrl, {'Referer': url})
-			except Exception:
-				return videoUrl
+			# KVS flashvars (decrypted): the best quality, above 1080p only when UHD playback is on
+			videoUrl = self._pickByHeight(self._mediaCandidates(data)) if sts else ''
+			printDBG('Videolink: ' + videoUrl)
+			return urlparser.decorateUrl(videoUrl, {'Referer': url}) if videoUrl else ''
 
 		if parser == 'https://www.lesbian8.com':
 			printDBG('LESBIAN8 PARSER')
@@ -4188,14 +4169,11 @@ class XXXParser:
 			COOKIEFILE = join(GetCookieDir(), 'mylust.cookie')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
 			sts, data = self.getPage(url, 'mylust.cookie', 'mylust.com', self.defaultParams)
-			videoUrl = re.findall(r'src=["]([^"]+?)["]\stype="video/mp4', data, re.S)
-			if videoUrl:
-				printDBG('Video links: ' + str(videoUrl))
-				videoUrl = videoUrl[0]
-			try:
-				return urlparser.decorateUrl(videoUrl, {'Referer': url})
-			except Exception:
-				return videoUrl
+			# <source> tags best first (..._1080p.mp4, ..._720p.mp4, ...): the best one, above 1080p only when UHD playback is on
+			videoUrl = re.findall(r'src=["]([^"]+?)["]\stype="video/mp4', data, re.S) if sts else []
+			printDBG('Video links: ' + str(videoUrl))
+			videoUrl = self._pickByHeight([(self._linkHeight(link), link) for link in videoUrl])
+			return urlparser.decorateUrl(videoUrl, {'Referer': url}) if videoUrl else ''
 
 		if parser == 'https://porndreamz.com':
 			printDBG('PORNDREAMZ PARSER')
@@ -4261,17 +4239,10 @@ class XXXParser:
 			COOKIEFILE = join(GetCookieDir(), 'vikiporn.cookie')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
 			sts, data = self.getPage(url, 'vikiporn.cookie', 'vikiporn.com', self.defaultParams)
-			license_code = self.cm.ph.getSearchGroups(data, r"license_code:\s[']([^']+?)[']")[0].strip()
-			rnd = re.search("rnd:.[']([0-9]+)[']", data).group(1)
-			videoUrl = re.findall("video.{1,6}url.{2,4}[']([^@]+?)[']", data, re.S)[0]
-			printDBG('Videolink first: ' + videoUrl)
-			if 'function/0/' in videoUrl:
-				videoUrl = decryptHash(videoUrl, license_code, '16')
-				printDBG('Videolink second: ' + videoUrl)
-			if videoUrl.endswith('/'):
-				videoUrl = videoUrl.rpartition('/')[0]
+			# KVS flashvars (decrypted, without the trailing "/"): the best quality, above 1080p only when UHD playback is on
+			videoUrl = self._pickByHeight([(height, unquote(link[:-1] if link.endswith('/') else link)) for height, link in self._mediaCandidates(data)]) if sts else ''
 			printDBG('Videolink final: ' + videoUrl)
-			return unquote(videoUrl)
+			return videoUrl
 
 		if parser == 'https://maturexy.com':
 			printDBG('MATUREXY PARSER')
@@ -4335,12 +4306,10 @@ class XXXParser:
 			sts, data = self.getPage(url, 'jizzberry.cookie', 'jizzberry.com', self.defaultParams)
 			if not sts:
 				return ''
-			videoUrl = re.findall(r'video_source_."\ssrc=["]([^@]+?)["]', data, re.S)[0]
-			printDBG('Videolink first: ' + videoUrl)
-			try:
-				return urlparser.decorateUrl(videoUrl, {'Referer': url})
-			except Exception:
-				return videoUrl
+			# the video_source_N <source> tags (..._720p.mp4, a plain .mp4): the best one, above 1080p only when UHD playback is on
+			videoUrl = self._pickByHeight([(self._linkHeight(link), link) for link in re.findall(r'video_source_."\ssrc=["]([^@]+?)["]', data, re.S)])
+			printDBG('Videolink: ' + videoUrl)
+			return urlparser.decorateUrl(videoUrl, {'Referer': url}) if videoUrl else ''
 
 		if parser == 'https://moantube.com':
 			printDBG('MOANTUBE PARSER')
@@ -4379,12 +4348,10 @@ class XXXParser:
 			HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			HTTP_HEADER['Referer'] = url
 			params = {'header': HTTP_HEADER, 'return_data': False}
-			sts, response = self.cm.getPage(stream_url, params)
-			if not sts or response is None:
+			real_url = self._followRedirect(stream_url, params)
+			if not real_url:
 				return []
-			real_url = response.geturl()
 			printDBG('REALURL: ' + str(real_url))
-			response.close()
 			if not real_url.startswith('http'):
 				return []
 			videoUrl = str(real_url)
@@ -4417,22 +4384,16 @@ class XXXParser:
 			COOKIEFILE = join(GetCookieDir(), 'ratxxx.cookie')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
 			sts, data = self.getPage(url, 'ratxxx.cookie', 'rat.xxx', self.defaultParams)
-			license_code = self.cm.ph.getSearchGroups(data, "license_code:.[']([^']+?)['],")[0].strip()
-			rnd = re.search("rnd:.[']([0-9]+)[']", data).group(1)
-			try:
-				videoUrl = re.findall("video.{1,6}url.{2,4}['](f[^@]+?)['],", data, re.S)[-1]
-				printDBG('Videolink first: ' + videoUrl)
-			except Exception:
-				embedUrl = re.search('getEmbed.+\n.+\n.+src=["]([a-z:/0-9.]+?)["]', data).group(1)
+			# KVS flashvars of the page, else of its embed player (decrypted, "true" -> "false"): the best quality, above
+			# 1080p only when UHD playback is on
+			candidates = self._mediaCandidates(data) if sts else []
+			if not candidates:
+				embedUrl = self.cm.ph.getSearchGroups(data, r'getEmbed.+\n.+\n.+src=["]([a-z:/0-9.]+?)["]', 1, True)[0]
 				printDBG('EMBEDURL: ' + embedUrl)
-				sts, data2 = self.get_Page(embedUrl)
-				videoUrl = re.findall("video.{1,6}url.{2,4}['](f[^@]+?)['],", data2, re.S)[-1]
-				printDBG('EMBED VIDEOURL: ' + videoUrl)
-			if 'function/0/' in videoUrl:
-				videoUrl = decryptHash(videoUrl, license_code, '16')
-			printDBG('Videolink second: ' + videoUrl)
-			videoUrl = videoUrl.replace('true', 'false')
-			printDBG('Videolink third: ' + videoUrl)
+				sts, data2 = self.get_Page(embedUrl) if embedUrl else (False, '')
+				candidates = self._mediaCandidates(data2) if sts else []
+			videoUrl = self._pickByHeight([(height, link.replace('true', 'false')) for height, link in candidates])
+			printDBG('Videolink: ' + videoUrl)
 			return videoUrl
 
 		if parser == 'https://fapnfuck.com':
@@ -4459,18 +4420,20 @@ class XXXParser:
 			COOKIEFILE = join(GetCookieDir(), 'fapality.cookie')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
 			sts, data = self.getPage(url, 'fapality.cookie', 'fapality.com', self.defaultParams)
-			stream_url = re.findall(r'video_source_."\ssrc=["]([^@]+?)["]', data, re.S)[0]
-			printDBG('EMBED VIDEOURL: ' + videoUrl)
+			# the video_source_N <source> tags (..._1080.mp4, ..._480p.mp4, a plain .mp4): the best one, above 1080p only when
+			# UHD playback is on; get_file links that redirect to the CDN
+			stream_url = self._pickByHeight([(self._linkHeight(link), link) for link in re.findall(r'video_source_."\ssrc=["]([^@]+?)["]', data, re.S)]) if sts else ''
+			printDBG('EMBED VIDEOURL: ' + stream_url)
+			if not stream_url:
+				return ''
 			HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			HTTP_HEADER['Referer'] = url
 			params = {'header': HTTP_HEADER, 'return_data': False}
-			sts, response = self.cm.getPage(stream_url, params)
-			if not sts or response is None:
+			real_url = self._followRedirect(stream_url, params)
+			if not real_url:
 				printDBG("FAPALITY: failed to retrieve the stream URL")
 				return []
-			real_url = response.geturl()
 			printDBG('REAL URL: ' + str(real_url))
-			response.close()
 			if not real_url.startswith('http'):
 				printDBG("FAPALITY: incorrect redirect URL")
 				return []
@@ -4544,14 +4507,9 @@ class XXXParser:
 			COOKIEFILE = join(GetCookieDir(), 'sexsq.cookie')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
 			sts, data = self.getPage(url, 'sexsq.cookie', 'sexsq.com', self.defaultParams)
-			license_code = self.cm.ph.getSearchGroups(data, r"license_code:\s[']([^']+?)[']")[0].strip()
-			videoUrl = re.findall("video.{1,6}url.{2,4}[']([^@]+?)[']", data, re.S)[-1]
-			printDBG('Videolink first: ' + videoUrl)
-			if 'function/0/' in videoUrl:
-				videoUrl = decryptHash(videoUrl, license_code, '16')
-				printDBG('Videolink second: ' + videoUrl)
-			videoUrl = videoUrl.split('/?br')[0]
-			printDBG('Videolink third: ' + videoUrl)
+			# KVS flashvars (decrypted, without the "/?br=" part): the best quality, above 1080p only when UHD playback is on
+			videoUrl = self._pickByHeight([(height, link.split('/?br')[0]) for height, link in self._mediaCandidates(data)]) if sts else ''
+			printDBG('Videolink: ' + videoUrl)
 			if videoUrl:
 				return urlparser.decorateUrl(videoUrl, {'Referer': url})
 
@@ -4564,12 +4522,10 @@ class XXXParser:
 			HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			HTTP_HEADER['Referer'] = url
 			params = {'header': HTTP_HEADER, 'return_data': False}
-			sts, response = self.cm.getPage(stream_url, params)
-			if not sts or response is None:
+			real_url = self._followRedirect(stream_url, params)
+			if not real_url:
 				printDBG("BIGBOOBS: failed to retrieve the stream URL")
 				return []
-			real_url = response.geturl()
-			response.close()
 			tmp = getDirectM3U8Playlist(real_url, checkContent=True, sortWithMaxBitrate=999999999)
 			for item in tmp:
 				return item['url']
@@ -4607,12 +4563,10 @@ class XXXParser:
 			HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			HTTP_HEADER['Referer'] = url
 			params = {'header': HTTP_HEADER, 'return_data': False}
-			sts, response = self.cm.getPage(stream_url, params)
-			if not sts or response is None:
+			real_url = self._followRedirect(stream_url, params)
+			if not real_url:
 				printDBG("LESLEZ: failed to retrieve the stream URL")
 				return []
-			real_url = response.geturl()
-			response.close()
 			# HLS master with 360p first
 			return self._bestM3U8Variant(urlparser.decorateUrl(real_url, {'Referer': url}), checkExt=False) or urlparser.decorateUrl(real_url, {'Referer': url})
 
@@ -4734,13 +4688,11 @@ class XXXParser:
 			HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			HTTP_HEADER['Referer'] = url
 			params = {'header': HTTP_HEADER, 'return_data': False}
-			sts, response = self.cm.getPage(videoUrl, params)
-			if not sts or response is None:
+			real_url = self._followRedirect(videoUrl, params)
+			if not real_url:
 				printDBG("FETISHSHRINE: failed to retrieve the stream URL")
 				return []
-			real_url = response.geturl()
 			printDBG('REALURL: ' + str(real_url))
-			response.close()
 			return urlparser.decorateUrl(real_url, {'Referer': url})
 
 		if parser == 'https://wankgalore.com':
@@ -4768,13 +4720,11 @@ class XXXParser:
 			HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			HTTP_HEADER['Referer'] = url
 			params = {'header': HTTP_HEADER, 'return_data': False}
-			sts, response = self.cm.getPage(videoUrl, params)
-			if not sts or response is None:
+			real_url = self._followRedirect(videoUrl, params)
+			if not real_url:
 				printDBG("UIPORN: failed to retrieve the stream URL")
 				return []
-			real_url = response.geturl()
 			printDBG('REALURL: ' + str(real_url))
-			response.close()
 			return urlparser.decorateUrl(real_url, {'Referer': url})
 
 		if parser == 'https://www.dafreeporn.com':
@@ -4796,13 +4746,11 @@ class XXXParser:
 			HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			HTTP_HEADER['Referer'] = videoUrl
 			params = {'header': HTTP_HEADER, 'return_data': False}
-			sts, response = self.cm.getPage(videoUrl, params)
-			if not sts or response is None:
+			real_url = self._followRedirect(videoUrl, params)
+			if not real_url:
 				printDBG("DAFREEPORN: failed to retrieve the stream URL")
 				return []
-			real_url = response.geturl()
 			printDBG('REALURL: ' + str(real_url))
-			response.close()
 			return urlparser.decorateUrl(real_url, {'Referer': url})
 
 		if parser == 'https://www.cuckoldsporn.com':
@@ -4915,13 +4863,11 @@ class XXXParser:
 			HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			HTTP_HEADER['Referer'] = url
 			params = {'header': HTTP_HEADER, 'return_data': False}
-			sts, response = self.cm.getPage(videoUrl, params)
-			if not sts or response is None:
+			real_url = self._followRedirect(videoUrl, params)
+			if not real_url:
 				printDBG("MONDETUBE: failed to retrieve the stream URL")
 				return []
-			real_url = response.geturl()
 			printDBG('REALURL: ' + str(real_url))
-			response.close()
 			return urlparser.decorateUrl(real_url, {'Referer': url, 'User-Agent': self.USER_AGENT})
 
 		if parser == 'https://pimpbunny.com':
@@ -4933,27 +4879,18 @@ class XXXParser:
 			sts, data = self.getPage(url, 'pimpbunny.cookie', 'pimpbunny.com', self.defaultParams)
 			if not sts:
 				return ''
-			license_code = self.cm.ph.getSearchGroups(data, r"license_code:\s[']([^']+?)[']")[0].strip()
-			rnd = re.search(r"rnd:.[']([0-9]+)[']", data).group(1)
-			videoUrl = re.findall(r"video.{,5}url.{0,1}:\s[']([^']+?\.mp4[^']*)[']", data, re.S)
-			if videoUrl:
-				printDBG('Video links: ' + str(videoUrl))
-				videoUrl = self._bestLink(videoUrl)
+			# KVS flashvars (decrypted): the best quality, above 1080p only when UHD playback is on
+			videoUrl = self._pickByHeight(self._mediaCandidates(data)) if sts else ''
 			if not videoUrl:
 				return ''
-			if 'function/0/' in videoUrl:
-				videoUrl = decryptHash(videoUrl, license_code, '16')
-			printDBG('videoURL: ' + videoUrl)
 			HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			HTTP_HEADER['Referer'] = url
 			params = {'header': HTTP_HEADER, 'return_data': False}
-			sts, response = self.cm.getPage(videoUrl, params)
-			if not sts or response is None:
+			real_url = self._followRedirect(videoUrl, params)
+			if not real_url:
 				printDBG("PIMPBUNNY: failed to retrieve the stream URL")
 				return []
-			real_url = response.geturl()
 			printDBG('REALURL: ' + str(real_url))
-			response.close()
 			return urlparser.decorateUrl(real_url, {'Referer': url, 'User-Agent': self.USER_AGENT})
 
 		if parser == 'https://fyxxr.to':
@@ -4984,13 +4921,11 @@ class XXXParser:
 			HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			HTTP_HEADER['Referer'] = url
 			params = {'header': HTTP_HEADER, 'return_data': False}
-			sts, response = self.cm.getPage(videoUrl, params)
-			if not sts or response is None:
+			real_url = self._followRedirect(videoUrl, params)
+			if not real_url:
 				printDBG("FYXXR: failed to retrieve the stream URL")
 				return []
-			real_url = response.geturl()
 			printDBG('REALURL: ' + str(real_url))
-			response.close()
 			return urlparser.decorateUrl(real_url, {'Referer': url, 'User-Agent': self.USER_AGENT})
 
 		if parser == 'https://www.superporn.com':
@@ -5050,25 +4985,18 @@ class XXXParser:
 			self.HTTP_HEADER['Referer'] = url
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
 			sts, data = self.getPage(url, 'modporn.cookie', 'modporn.com', self.defaultParams)
-			license_code = self.cm.ph.getSearchGroups(data, r"license_code:\s[']([^']+?)[']")[0].strip()
-			rnd = re.search("rnd:.[']([0-9]+)[']", data).group(1)
-			videoUrl = re.findall(r"video.{,5}url.{0,1}:\s[']([^']+?)[']", data, re.S)
-			if videoUrl:
-				printDBG('Video links: ' + str(videoUrl))
-				videoUrl = self._bestLink(videoUrl)
-			if 'function/0/' in videoUrl:
-				videoUrl = decryptHash(videoUrl, license_code, '16')
-			printDBG('videoURL: ' + videoUrl)
+			# KVS flashvars (decrypted): the best quality, above 1080p only when UHD playback is on
+			videoUrl = self._pickByHeight(self._mediaCandidates(data)) if sts else ''
+			if not videoUrl:
+				return ''
 			HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			HTTP_HEADER['Referer'] = url
 			params = {'header': HTTP_HEADER, 'return_data': False}
-			sts, response = self.cm.getPage(videoUrl, params)
-			if not sts or response is None:
+			real_url = self._followRedirect(videoUrl, params)
+			if not real_url:
 				printDBG("MODPORN: failed to retrieve the stream URL")
 				return []
-			real_url = response.geturl()
 			printDBG('REALURL: ' + str(real_url))
-			response.close()
 			return urlparser.decorateUrl(real_url, {'Referer': url, 'User-Agent': self.USER_AGENT})
 
 		if parser == 'https://max.porn':
@@ -5088,13 +5016,11 @@ class XXXParser:
 			HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			HTTP_HEADER['Referer'] = url
 			params = {'header': HTTP_HEADER, 'return_data': False}
-			sts, response = self.cm.getPage(videoUrl, params)
-			if not sts or response is None:
+			real_url = self._followRedirect(videoUrl, params)
+			if not real_url:
 				printDBG("MAXPORN: failed to retrieve the stream URL")
 				return []
-			real_url = response.geturl()
 			printDBG('REALURL: ' + str(real_url))
-			response.close()
 			tmp = getDirectM3U8Playlist(real_url, checkContent=True, sortWithMaxBitrate=999999999)
 			for item in tmp:
 				printDBG('M3U8 END: ' + item['url'])
@@ -5238,13 +5164,11 @@ class XXXParser:
 			HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			HTTP_HEADER['Referer'] = url
 			params = {'header': HTTP_HEADER, 'return_data': False}
-			sts, response = self.cm.getPage(videoUrl, params)
-			if not sts or response is None:
+			real_url = self._followRedirect(videoUrl, params)
+			if not real_url:
 				printDBG("PORNPAPA: failed to retrieve the stream URL")
 				return []
-			real_url = response.geturl()
 			printDBG('REALURL: ' + str(real_url))
-			response.close()
 			return urlparser.decorateUrl(real_url, {'Referer': url, 'User-Agent': self.USER_AGENT})
 
 		if parser == 'https://hqfap.com':
@@ -5331,13 +5255,11 @@ class XXXParser:
 			HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			HTTP_HEADER['Referer'] = url
 			params = {'header': HTTP_HEADER, 'return_data': False}
-			sts, response = self.cm.getPage(videoUrl, params)
-			if not sts or response is None:
+			real_url = self._followRedirect(videoUrl, params)
+			if not real_url:
 				printDBG("JUICYVID: failed to retrieve the stream URL")
 				return []
-			real_url = response.geturl()
 			printDBG('REALURL: ' + str(real_url))
-			response.close()
 			return urlparser.decorateUrl(real_url, {'Referer': url, 'User-Agent': self.USER_AGENT})
 
 		if parser == 'https://www.lapippa.com':
@@ -5418,13 +5340,11 @@ class XXXParser:
 			HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			HTTP_HEADER['Referer'] = url
 			params = {'header': HTTP_HEADER, 'return_data': False}
-			sts, response = self.cm.getPage(videoUrl, params)
-			if not sts or response is None:
+			real_url = self._followRedirect(videoUrl, params)
+			if not real_url:
 				printDBG('FAPLANE: failed to retrieve the stream URL')
 				return urlparser.decorateUrl(videoUrl, {'Referer': url, 'User-Agent': self.USER_AGENT})
-			real_url = response.geturl()
 			printDBG('REALURL: ' + str(real_url))
-			response.close()
 			return urlparser.decorateUrl(real_url, {'Referer': url, 'User-Agent': self.USER_AGENT})
 
 		if parser == 'https://www.inxxx.com':
@@ -5445,13 +5365,11 @@ class XXXParser:
 			HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			HTTP_HEADER['Referer'] = url
 			params = {'header': HTTP_HEADER, 'return_data': False}
-			sts, response = self.cm.getPage(videoUrl, params)
-			if not sts or response is None:
+			real_url = self._followRedirect(videoUrl, params)
+			if not real_url:
 				printDBG("INXXX: failed to retrieve the stream URL")
 				return []
-			real_url = response.geturl()
 			printDBG('REALURL: ' + str(real_url))
-			response.close()
 			return urlparser.decorateUrl(real_url, {'Referer': url, 'User-Agent': self.USER_AGENT})
 
 		if parser == 'https://www.fucker.com':
@@ -5483,13 +5401,11 @@ class XXXParser:
 			HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			HTTP_HEADER['Referer'] = url
 			params = {'header': HTTP_HEADER, 'return_data': False}
-			sts, response = self.cm.getPage(videoUrl, params)
-			if not sts or response is None:
+			real_url = self._followRedirect(videoUrl, params)
+			if not real_url:
 				printDBG("W4NKR: failed to retrieve the stream URL")
 				return []
-			real_url = response.geturl()
 			printDBG('REALURL: ' + str(real_url))
-			response.close()
 			return urlparser.decorateUrl(real_url, {'Referer': url, 'User-Agent': self.USER_AGENT})
 
 		if parser == 'https://femefun.com':
@@ -5509,17 +5425,13 @@ class XXXParser:
 			COOKIEFILE = join(GetCookieDir(), 'pornoreino.cookie')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
 			sts, data = self.getPage(url, 'pornoreino.cookie', 'pornoreino.com', self.defaultParams)
-			license_code = self.cm.ph.getSearchGroups(data, '''license_code:.['"]([^"^']+?)['"],''')[0].strip()
-			rnd = re.search("rnd:.[']([0-9]+)[']", data).group(1)
-			videoUrl = re.findall("video.{1,6}url.{2,4}['](f[^@]+?)['],", data, re.S)[-1]
-			printDBG('Videolink first: ' + videoUrl)
-			if 'function/0/' in videoUrl:
-				videoUrl = decryptHash(videoUrl, license_code, '16')
-			printDBG('Videolink second: ' + videoUrl)
-			if 'mp4/' in videoUrl:
-				videoUrl = videoUrl.replace('mp4/', 'mp4?rnd=') + rnd
-			printDBG('Videolink third: ' + videoUrl)
-			return urlparser.decorateUrl(videoUrl, {'Referer': url})
+			if not sts:
+				return ''
+			rnd = self.cm.ph.getSearchGroups(data, "rnd:.[']([0-9]+)[']", 1, True)[0]
+			# KVS flashvars (decrypted, ".mp4/" -> ".mp4?rnd=<rnd>"): the best quality, above 1080p only when UHD playback is on
+			videoUrl = self._pickByHeight([(height, link.replace('mp4/', 'mp4?rnd=') + rnd if 'mp4/' in link else link) for height, link in self._mediaCandidates(data)])
+			printDBG('Videolink: ' + videoUrl)
+			return urlparser.decorateUrl(videoUrl, {'Referer': url}) if videoUrl else ''
 
 		if parser == 'https://www.whoreshub.com':
 			COOKIEFILE = join(GetCookieDir(), 'whoreshub.cookie')
@@ -6186,10 +6098,11 @@ class XXXParser:
 			COOKIEFILE = join(GetCookieDir(), 'pornone.cookie')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
 			sts, data = self.getPage(url, 'pornone.cookie', 'pornone.com', self.defaultParams)
-			videoUrl = re.findall('source.src=["]([^@]+?)["]', data, re.S)[0]
+			# <source> tags (..._1920x1080_4000k.mp4, ..._720x406_500k.mp4): the best one, above 1080p only when UHD playback is on
+			videoUrl = self._pickByHeight([(self._linkHeight(link), link) for link in re.findall('source.src=["]([^@]+?)["]', data, re.S)]) if sts else ''
 			printDBG('Link 1: ' + videoUrl)
 			if not videoUrl:
-				videoUrl = re.search('contentUrl":.["]([^"]+)["],', data).group(1)
+				videoUrl = self.cm.ph.getSearchGroups(data, 'contentUrl":.["]([^"]+)["],', 1, True)[0]
 			printDBG('Link: ' + videoUrl)
 			return videoUrl
 
@@ -6576,8 +6489,9 @@ class XXXParser:
 			sts, data = self.getPage(url, 'anysex.cookie', 'anysex.com', self.defaultParams)
 			if not sts:
 				return ''
+			# <source> tags best first (..._2160p.mp4, ..._1080.mp4, ...): the best one, above 1080p only when UHD playback is on
 			videoUrl = re.findall('source.{2,5}src="(.*?)"', data, re.S)
-			return videoUrl[0] if videoUrl else ''
+			return self._pickByHeight([(self._linkHeight(link), link) for link in videoUrl])
 
 		if parser == 'https://www.sleazyneasy.com':
 			COOKIEFILE = join(GetCookieDir(), 'sleazyneasy.cookie')
@@ -7129,7 +7043,9 @@ class XXXParser:
 			if parser == 'https://beta.xfreehd.com':
 				# <source src="..." title="SD|HD">, HD first
 				sources = sorted(re.findall(r'''src="([^"]+)"\s*title="(SD|HD)"''', data), key=lambda s: s[1] == 'HD', reverse=True)
-				videoUrl = decodeHtml(sources[0][0]) if sources else ''
+				sources = [(title, decodeHtml(link)) for link, title in sources]
+				offerQualities(sources)
+				videoUrl = sources[0][1] if sources else ''
 			else:
 				videoUrl = self.cm.ph.getSearchGroups(data, r'''<source\s*src="([^"]+)"''', 1, True)[0]
 			if not videoUrl:
@@ -8216,7 +8132,13 @@ class XXXParser:
 				videoUrl = re.findall(r"https?[^\"'\s]+?\.(?:mp4|m3u8)(?:\?[^\"'\s<]*)?", data, re.I)
 			if not videoUrl:
 				return ''
-			hlsUrl = decodeHtml(videoUrl[0]).replace(r'\/', '/')
+			# the files best first (hq_..., plain, m_...): the first one, all of them for the quality selection
+			links = []
+			for link in videoUrl:
+				link = decodeHtml(link).replace(r'\/', '/')
+				if link not in links:
+					links.append(link)
+			hlsUrl = self._bestLink(links[::-1])
 			printDBG('FETISHPAPA VIDEO URL: ' + str(hlsUrl))
 			return urlparser.decorateUrl(hlsUrl, {'Referer': url, 'User-Agent': self.USER_AGENT})
 
@@ -8227,13 +8149,10 @@ class XXXParser:
 			self.HTTP_HEADER['Referer'] = url
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
 			sts, data = self.getPage(url, 'empflix.cookie', 'empflix.com', self.defaultParams)
-			videoUrl = re.findall(r'source\ssrc=["]([^"]+?)["]\stype="video/mp4', data, re.S)
-			if videoUrl:
-				printDBG('Videolinks: ' + str(videoUrl))
-				videoUrl = videoUrl[0]
-				printDBG('End Link: ' + videoUrl)
-				return videoUrl
-			return ''
+			# <source> tags (...-720p.mp4, ...-480p.mp4): the best one, above 1080p only when UHD playback is on
+			videoUrl = re.findall(r'source\ssrc=["]([^"]+?)["]\stype="video/mp4', data, re.S) if sts else []
+			printDBG('Videolinks: ' + str(videoUrl))
+			return self._pickByHeight([(self._linkHeight(link), link) for link in videoUrl])
 
 		if parser == 'https://sexkino.to':
 			videoUrl = re.findall('<iframe.*?src="(.*?)"', data, re.S)
@@ -8262,23 +8181,17 @@ class XXXParser:
 			self.HTTP_HEADER['Referer'] = url
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
 			sts, data = self.getPage(url, 'teenager365.cookie', 'teenager365.to', self.defaultParams)
-			license_code = self.cm.ph.getSearchGroups(data, r"license_code:\s[']([^']+?)[']")[0].strip()
-			videoUrl = re.findall(r"video.{,5}url.{0,1}:\s[']([^']+?)['],", data, re.S)
-			if videoUrl:
-				printDBG('Videolinks: ' + str(videoUrl))
-				videoUrl = videoUrl[0]
-			if 'function/0/' in videoUrl:
-				videoUrl = decryptHash(videoUrl, license_code, '16')
-			printDBG('videoURL: ' + videoUrl)
+			# KVS flashvars (decrypted): the best quality, above 1080p only when UHD playback is on
+			videoUrl = self._pickByHeight(self._mediaCandidates(data)) if sts else ''
+			if not videoUrl:
+				return ''
 			HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			HTTP_HEADER['Referer'] = url
 			params = {'header': HTTP_HEADER, 'return_data': False}
-			sts, response = self.cm.getPage(videoUrl, params)
-			if not sts or response is None:
+			real_url = self._followRedirect(videoUrl, params)
+			if not real_url:
 				return []
-			real_url = response.geturl()
 			printDBG('REALURL: ' + str(real_url))
-			response.close()
 			return urlparser.decorateUrl(real_url, {'Referer': url, 'User-Agent': self.USER_AGENT})
 
 		if parser == 'https://www.freeomovie.to':
