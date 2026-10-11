@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-10 23:37+0000\n"
+"POT-Creation-Date: 2026-10-11 14:30+0000\n"
 "PO-Revision-Date: 2026-10-09 23:09+0300\n"
 "Last-Translator: \n"
 "Language-Team: giorbak\n"
@@ -851,6 +851,10 @@ msgstr "Χρώμα φόντου"
 msgid "Backspace"
 msgstr "Backspace"
 
+#, python-format
+msgid "Balance: %s"
+msgstr ""
+
 msgid "Balkans"
 msgstr "Βαλκάνια"
 
@@ -1290,6 +1294,10 @@ msgstr "Δημιουργία αρχείων καταγραφής εντοπισ�
 
 msgid "Create sidecar files (.txt/.jpg)"
 msgstr "Δημιουργία συνοδευτικών αρχείων (.txt/.jpg)"
+
+#, python-format
+msgid "Created: %s"
+msgstr ""
 
 msgid "Creator:"
 msgstr "Δημιουργός:"
@@ -3473,6 +3481,9 @@ msgstr "MyE2i: κλείσιμο της αρχικής σελίδας όταν ο
 msgid "MyE2i: offer to open the page in (Android)"
 msgstr "MyE2i: πρόταση για άνοιγμα της σελίδας στο (Android)"
 
+msgid "MyE2i: open the page in the browser"
+msgstr ""
+
 msgid "Mystery"
 msgstr "Μυστήριο"
 
@@ -3683,6 +3694,10 @@ msgstr ""
 msgid "Not possible (no enigma2 session)."
 msgstr "Δεν είναι δυνατό (δεν υπάρχει συνεδρία enigma2)."
 
+#, python-format
+msgid "Not removed, still downloading: %d"
+msgstr ""
+
 msgid "Nothing available here at the moment (only upcoming broadcasts)."
 msgstr "Δεν υπάρχει τίποτα διαθέσιμο εδώ αυτή τη στιγμή (μόνο επερχόμενες μεταδόσεις)."
 
@@ -3736,6 +3751,9 @@ msgstr "ΕΝΤΑΞΕΙ"
 msgid "OK marks an item, BLUE shows what can be done with the marked items."
 msgstr ""
 
+msgid "OK marks an item, MENU shows what can be done with the marked items."
+msgstr ""
+
 msgid "OMDb API key (free at omdbapi.com)"
 msgstr "Κλειδί API OMDb (δωρεάν στο omdbapi.com)"
 
@@ -3783,6 +3801,9 @@ msgstr "Ανοιχτά ζητήματα"
 
 msgid "Open pull requests"
 msgstr "Ανοιχτά pull requests"
+
+msgid "Open the page and get the link"
+msgstr ""
 
 #, python-format
 msgid "Open this page in %s"
@@ -4140,6 +4161,10 @@ msgstr "Πύλη %d - URL πύλης ([http://host:port/c/](http://host:port/c/)
 msgid "Portal URL and MAC address in the host configuration, as the provider gives them out. More portals: %s in the EStalker format (portal URL, then its MAC addresses, one per line)."
 msgstr "URL πούλης και διεύθυνση MAC στις ρυθμίσεις του host, όπως παρέχονται από τον πάροχο. Περισσότερες πύλες: %s στη μορφή EStalker (URL πύλης και στη συνέχεια οι διευθύνσεις MAC του, μία ανά γραμμή)."
 
+#, python-format
+msgid "Ports: %s"
+msgstr ""
+
 msgid "Portuguese"
 msgstr "Πορτογαλικά"
 
@@ -4401,6 +4426,12 @@ msgstr "Αφαίρεση στοιχείου \"%s\""
 msgid "Remove %d items from the favourites?"
 msgstr ""
 
+#, python-format
+msgid ""
+"Remove %d marked items?\n"
+"Their files are deleted too."
+msgstr ""
+
 msgid "Remove file"
 msgstr "Αφαίρεση αρχείου"
 
@@ -4412,6 +4443,10 @@ msgstr "Αφαίρεση ομάδας"
 
 msgid "Remove item"
 msgstr "Αφαίρεση στοιχείου"
+
+#, python-format
+msgid "Remove marked items (%d)"
+msgstr ""
 
 #, python-format
 msgid "Remove marked items from favourites (%d)"
@@ -4440,6 +4475,10 @@ msgstr "Αναφορά προβλήματος (GitHub issues)"
 
 msgid "Report file"
 msgstr "Αναφορά αρχείου"
+
+#, python-format
+msgid "Reset the settings of \"%s\" to their default values?"
+msgstr ""
 
 msgid "Reset this list to its default layout?"
 msgstr "Να επαναφερθεί αυτή η λίστα στην προεπιλεγμένη διάταξή της;"
@@ -4792,6 +4831,10 @@ msgid "Server returned nothing."
 msgstr "Ο διακομιστής δεν επέστρεψε τίποτα."
 
 #, python-format
+msgid "Server time: %s"
+msgstr ""
+
+#, python-format
 msgid "Server, user name and password in the host configuration. The server field also takes a get.php link. More accounts: %s with one get.php link per line (X-Streamity format)."
 msgstr "Διακομιστής, όνομα χρήστη και κωδικός πρόσβασης στις ρυθμίσεις του host. Το πεδίο διακομιστή δέχεται επίσης σύνδεσμο get.php. Περισσότεροι λογαριασμοί: %s με έναν σύνδεσμο get.php ανά γραμμή (μορφή X-Streamity)."
 
@@ -5133,6 +5176,10 @@ msgstr "Αποθήκευση"
 msgid "Story"
 msgstr "Ιστορία"
 
+#, python-format
+msgid "Stream formats: %s"
+msgstr ""
+
 msgid "Stream link"
 msgstr "Σύνδεσμος ροής"
 
@@ -5378,6 +5425,10 @@ msgstr "Ταϊβανέζικα"
 
 msgid "Talk shows"
 msgstr "Εκπομπές συζήτησης"
+
+#, python-format
+msgid "Tariff: %s"
+msgstr ""
 
 msgid "Teams"
 msgstr "Ομάδες"
@@ -6642,9 +6693,6 @@ msgstr "διαθέσιμο έως %s"
 msgid "back to host/group selection"
 msgstr "επιστροφή στην επιλογή host/ομάδας"
 
-msgid "back to the previous category / jump to the next page"
-msgstr "επιστροφή στην προηγούμενη κατηγορία / μετάβαση στην επόμενη σελίδα"
-
 msgid "black"
 msgstr "μαύρο"
 
@@ -6891,6 +6939,9 @@ msgstr "ποτέ"
 
 msgid "next page"
 msgstr "επόμενη σελίδα"
+
+msgid "next page / previous page"
+msgstr ""
 
 msgid "next page = page 1"
 msgstr "επόμενη σελίδα = σελίδα 1"
