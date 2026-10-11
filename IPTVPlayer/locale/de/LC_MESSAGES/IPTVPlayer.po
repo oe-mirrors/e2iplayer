@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-11 14:30+0000\n"
-"PO-Revision-Date: 2026-10-11 01:42+0200\n"
+"PO-Revision-Date: 2026-10-11 16:34+0200\n"
 "Last-Translator: Masta2002\n"
 "Language-Team: oATV Team\n"
 "Language: de_DE\n"
@@ -850,7 +850,7 @@ msgstr "Rücktaste"
 
 #, python-format
 msgid "Balance: %s"
-msgstr ""
+msgstr "Guthaben: %s"
 
 msgid "Balkans"
 msgstr "Balkan"
@@ -1294,7 +1294,7 @@ msgstr "Erstelle Sidecar-Dateien (.txt/.jpg)"
 
 #, python-format
 msgid "Created: %s"
-msgstr ""
+msgstr "Erstellt: %s"
 
 msgid "Creator:"
 msgstr "Ersteller:"
@@ -3479,7 +3479,7 @@ msgid "MyE2i: offer to open the page in (Android)"
 msgstr "MyE2i: Öffnen der Seite anbieten in (Android)"
 
 msgid "MyE2i: open the page in the browser"
-msgstr ""
+msgstr "MyE2i: Seite im Browser öffnen"
 
 msgid "Mystery"
 msgstr "Mystery"
@@ -3693,7 +3693,7 @@ msgstr "Nicht möglich (keine enigma2-Sitzung)."
 
 #, python-format
 msgid "Not removed, still downloading: %d"
-msgstr ""
+msgstr "Nicht entfernt, wird noch heruntergeladen: %d"
 
 msgid "Nothing available here at the moment (only upcoming broadcasts)."
 msgstr "Hier ist derzeit nichts verfügbar (nur kommende Sendungen)."
@@ -3749,7 +3749,7 @@ msgid "OK marks an item, BLUE shows what can be done with the marked items."
 msgstr "OK markiert einen Eintrag, BLAU zeigt, was mit den markierten Einträgen möglich ist."
 
 msgid "OK marks an item, MENU shows what can be done with the marked items."
-msgstr ""
+msgstr "OK markiert einen Eintrag, MENU zeigt, was mit den markierten Einträgen möglich ist."
 
 msgid "OMDb API key (free at omdbapi.com)"
 msgstr "OMDb API-Schlüssel (kostenlos bei omdbapi.com)"
@@ -3800,7 +3800,7 @@ msgid "Open pull requests"
 msgstr "Offene Pull-Requests"
 
 msgid "Open the page and get the link"
-msgstr ""
+msgstr "Seite öffnen und Link holen"
 
 #, python-format
 msgid "Open this page in %s"
@@ -4160,7 +4160,7 @@ msgstr "Portal-URL und MAC-Adresse in der Host-Konfiguration, so wie der Anbiete
 
 #, python-format
 msgid "Ports: %s"
-msgstr ""
+msgstr "Ports: %s"
 
 msgid "Portuguese"
 msgstr "Portugiesisch"
@@ -4428,6 +4428,8 @@ msgid ""
 "Remove %d marked items?\n"
 "Their files are deleted too."
 msgstr ""
+"%d markierte Einträge entfernen?\n"
+"Ihre Dateien werden ebenfalls gelöscht."
 
 msgid "Remove file"
 msgstr "Datei löschen"
@@ -4443,7 +4445,7 @@ msgstr "Eintrag entfernen"
 
 #, python-format
 msgid "Remove marked items (%d)"
-msgstr ""
+msgstr "Markierte Einträge entfernen (%d)"
 
 #, python-format
 msgid "Remove marked items from favourites (%d)"
@@ -4475,7 +4477,7 @@ msgstr "Berichtsdatei"
 
 #, python-format
 msgid "Reset the settings of \"%s\" to their default values?"
-msgstr ""
+msgstr "Die Einstellungen von \"%s\" auf die Standardwerte zurücksetzen?"
 
 msgid "Reset this list to its default layout?"
 msgstr "Diese Liste auf die Standardanordnung zurücksetzen?"
@@ -4829,7 +4831,7 @@ msgstr "Server hat nichts zurückgegeben."
 
 #, python-format
 msgid "Server time: %s"
-msgstr ""
+msgstr "Serverzeit: %s"
 
 #, python-format
 msgid "Server, user name and password in the host configuration. The server field also takes a get.php link. More accounts: %s with one get.php link per line (X-Streamity format)."
@@ -5175,7 +5177,7 @@ msgstr "Handlung"
 
 #, python-format
 msgid "Stream formats: %s"
-msgstr ""
+msgstr "Stream-Formate: %s"
 
 msgid "Stream link"
 msgstr "Stream-Link"
@@ -5425,7 +5427,7 @@ msgstr "Talkshows"
 
 #, python-format
 msgid "Tariff: %s"
-msgstr ""
+msgstr "Tarif: %s"
 
 msgid "Teams"
 msgstr "Mannschaften"
@@ -6945,7 +6947,7 @@ msgid "next page"
 msgstr "nächste Seite"
 
 msgid "next page / previous page"
-msgstr ""
+msgstr "nächste Seite / vorherige Seite"
 
 msgid "next page = page 1"
 msgstr "nächste Seite = Seite 1"
