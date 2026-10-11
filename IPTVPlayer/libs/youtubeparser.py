@@ -515,6 +515,45 @@ class YouTubeParser:
             printExc()
         return retData
 
+    @staticmethod
+    def _isShortCommand(command):
+        # a YouTube Short opens with a reelWatchEndpoint / a /shorts/ url instead of /watch
+        if not isinstance(command, dict):
+            return False
+        if "reelWatchEndpoint" in command:
+            return True
+        return "/shorts/" in str(command.get("commandMetadata", {}).get("webCommandMetadata", {}).get("url", ""))
+
+    @staticmethod
+    def _markShort(params):
+        # a Short stays a video, only its list icon differs (ShortItem.png, components/iptvlist.py)
+        params["image_type"] = "SHORT"
+        return params
+
+    def getShortsLockupData(self, shortsJson):
+        # a Short of a channel's Shorts tab or of a search (shortsLockupViewModel)
+        command = shortsJson.get("onTap", {}).get("innertubeCommand", {})
+        videoId = command.get("reelWatchEndpoint", {}).get("videoId", "")
+        if not videoId:
+            videoId = str(shortsJson.get("entityId", "")).replace("shorts-shelf-item-", "")
+        if not re.match(r"^[A-Za-z0-9_-]{11}$", videoId):
+            return {}
+        overlay = shortsJson.get("overlayMetadata", {})
+        title = self._normalizeText(overlay.get("primaryText", {}).get("content", ""))
+        if not title:
+            return {}
+        views = self._normalizeText(overlay.get("secondaryText", {}).get("content", ""))
+        return self._markShort({
+            "type": "video",
+            "category": "video",
+            "title": title,
+            "url": "https://www.youtube.com/watch?v=%s" % videoId,
+            "icon": "https://i.ytimg.com/vi/%s/hqdefault.jpg" % videoId,
+            "time": "",
+            "desc": " | ".join(part for part in ("Short", views) if part),
+            "video_id": ensure_str(videoId),
+        })
+
     # VIDEO DATA PARSER
     def getVideoData(self, videoJson):
         videoId = videoJson.get("videoId", "")
@@ -587,7 +626,7 @@ class YouTubeParser:
             else:
                 desc = extraDesc
         desc = self._normalizeText(desc)
-        return {
+        params = {
             "type": "video",
             "category": "video",
             "title": title,
@@ -597,6 +636,9 @@ class YouTubeParser:
             "desc": desc,
             "video_id": ensure_str(videoId),
         }
+        if self._isShortCommand(videoJson.get("navigationEndpoint", {})):
+            self._markShort(params)
+        return params
 
     # CHANNEL DATA PARSER
     def getChannelData(self, chJson):
@@ -773,7 +815,7 @@ class YouTubeParser:
         except Exception:
             pass
         desc_str = self._normalizeText(" | ".join(desc))
-        return {
+        params = {
             "type": "video",
             "category": "video",
             "title": title,
@@ -783,6 +825,9 @@ class YouTubeParser:
             "desc": desc_str,
             "video_id": ensure_str(videoId),
         }
+        if self._isShortCommand(lockupJson.get("rendererContext", {}).get("commandContext", {}).get("onTap", {}).get("innertubeCommand", {})):
+            self._markShort(params)
+        return params
 
     # Tray List PARSER
     def getVideosFromTraylist(self, url, category, page, cItem):
@@ -1032,8 +1077,14 @@ class YouTubeParser:
             for r5 in r4:
                 nP = r5.get("continuationItemRenderer", "")
                 lockup = r5.get("richItemRenderer", {}).get("content", {}).get("lockupViewModel", {})
+                shortsLockup = r5.get("richItemRenderer", {}).get("content", {}).get("shortsLockupViewModel", {})
                 if lockup:
                     params = self.getLockupVideoData(lockup)
+                    if params:
+                        currList.append(params)
+                elif shortsLockup:
+                    # the channel's Shorts tab
+                    params = self.getShortsLockupData(shortsLockup)
                     if params:
                         currList.append(params)
                 else:
@@ -1124,6 +1175,9 @@ class YouTubeParser:
             url += "CA%sSAhAD" % sortBy
         if searchType == "live":
             url += "EgJAAQ%253D%253D"
+        if searchType == "shorts":
+            # filter "Type: Shorts" - the results come as shortsLockupViewModel (_parseSearchRenderers)
+            url += "EgIQCQ%253D%253D"
         # minimal headers only (a plain page navigation) - built from the
         # pristine HTTP_HEADER, not the session-accumulated self.http_params,
         # and without _applyYoutubeHeaders' Origin / bootstrap / visitor-id
@@ -1158,6 +1212,14 @@ class YouTubeParser:
             params = self.getVideoData(item)
             if params:
                 printDBG(str(params))
+                currList.append(params)
+
+        # search Shorts (filter "Type: Shorts", the Shorts shelf of a plain search): marked with the Short icon
+        known = set(params.get("video_id", "") for params in currList)
+        for item in self.findKeys(response, "shortsLockupViewModel"):
+            params = self.getShortsLockupData(item)
+            if params and params["video_id"] not in known:
+                known.add(params["video_id"])
                 currList.append(params)
 
         # search channels

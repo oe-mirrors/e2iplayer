@@ -48,6 +48,103 @@ chrome.tabs.onRemoved.addListener((tabId) => {
   readyTabs.delete(tabId);
   lastStatus.delete(tabId);
   dbgRemoveTab(tabId);
+  navTakeJob(tabId);
+});
+
+// A result for the receiver goes to the open local e2it.html tab, which passes it on to mye2iserver.py
+// (/response). The token is sent as it is - e2it.js percent-encodes it.
+function e2iRelayResponse(captchaId, token, cb) {
+    chrome.tabs.query({
+        url: [E2IT_TAB_URL]
+    }, function (tabs) {
+        if (tabs !== undefined && tabs.length > 0) {
+            for (const tab of tabs) {
+                chrome.tabs.sendMessage(tab.id, {
+                    action: "SEND_RESPONSE",
+                    data: {captchaId: captchaId, token: token}
+                });
+            }
+        }
+        if (cb) {
+            cb('DONE');
+        }
+    });
+}
+
+// ---- NAV jobs ------------------------------------------------------------
+// A tab opened with "#e2itnv" (contentscripts/rc2ContentscriptProxy.js -> NAV_REGISTER) is followed across the
+// site's own redirects, which drop the fragment: contentscripts/navProbe.js is injected into every finished page
+// of the tab and reports the first link that matches the job's pattern (NAV_FOUND); a top-level navigation to
+// such an address (a click, a script redirect) counts too. The link goes to the receiver as the usual base64
+// JSON result {url, user_agent, cookie, links} and the tab is closed, before the page could use a one-time
+// token itself. Jobs live in chrome.storage.session - the service worker is suspended after ~30 s idle.
+async function navGetJobs() {
+    const stored = await chrome.storage.session.get('navJobs');
+    return stored.navJobs || {};
+}
+
+async function navSetJob(tabId, job) {
+    const jobs = await navGetJobs();
+    jobs[tabId] = job;
+    await chrome.storage.session.set({navJobs: jobs});
+}
+
+async function navTakeJob(tabId) {
+    try {
+        const jobs = await navGetJobs();
+        const job = jobs[tabId];
+        if (job) {
+            delete jobs[tabId];
+            await chrome.storage.session.set({navJobs: jobs});
+        }
+        return job;
+    } catch (e) {
+        e2ilog('nav job cleanup failed: ' + e);
+        return undefined;
+    }
+}
+
+function navInjectProbe(tabId, job) {
+    chrome.scripting.executeScript({
+        target: {tabId},
+        func: (j) => { window.__e2iNavJob = j; },
+        args: [{selector: job.selector || '', attr: job.attr || 'href', pattern: job.pattern || ''}]
+    }).then(() => chrome.scripting.executeScript({
+        target: {tabId},
+        files: ['contentscripts/navProbe.js']
+    })).catch((e) => e2iBoxLog('nav probe injection failed: ' + e));
+}
+
+function navMatches(job, url) {
+    try {
+        return !!job && !!job.pattern && new RegExp(job.pattern).test(url);
+    } catch (e) {
+        return false;
+    }
+}
+
+async function navFinish(tabId, url) {
+    const job = await navTakeJob(tabId);
+    if (!job) {
+        return;
+    }
+    e2iBoxLog('nav job ' + job.captchaId + ': link found');
+    const result = {user_agent: navigator.userAgent, cookie: [], url: url, links: [url]};
+    // UTF-8 first: btoa() throws on anything outside Latin-1
+    const token = btoa(unescape(encodeURIComponent(JSON.stringify(result))));
+    e2iRelayResponse(job.captchaId, token, () => {
+        chrome.tabs.remove(tabId).catch(() => {});
+    });
+}
+
+chrome.webNavigation.onBeforeNavigate.addListener(async (details) => {
+    if (details.frameId !== 0) {
+        return;
+    }
+    const jobs = await navGetJobs();
+    if (navMatches(jobs[details.tabId], details.url)) {
+        navFinish(details.tabId, details.url);
+    }
 });
 
 // ---- Firefox: inject the fragment-triggered content scripts ------------
@@ -153,6 +250,10 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo) => {
     const tabs = await dbgGetTabs();
     if (tabs.includes(tabId)) {
         dbgInjectProbe(tabId);
+    }
+    const jobs = await navGetJobs();
+    if (jobs[tabId]) {
+        navInjectProbe(tabId, jobs[tabId]);
     }
 });
 
@@ -306,6 +407,24 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         return true;
     }
 
+    if (msg.action === "NAV_REGISTER") {
+        navSetJob(tabId, msg.job || {}).then(() => {
+            sendResponse('OK');
+            // the start page may already be loaded (same as DBG_REGISTER) - its probe finds nothing and waits
+            chrome.tabs.get(tabId, (tab) => {
+                if (tab?.status === 'complete') {
+                    navInjectProbe(tabId, msg.job || {});
+                }
+            });
+        });
+        return true;
+    }
+
+    if (msg.action === "NAV_FOUND") {
+        navFinish(tabId, msg.url).then(() => sendResponse('OK'));
+        return true;
+    }
+
     if (msg.action === "DBG_DONE") {
         dbgRemoveTab(tabId).then(() => sendResponse('OK'));
         return true;
@@ -351,19 +470,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
             xhr.responseType = "text";
             xhr.send();
         } else {
-            chrome.tabs.query({
-                url: [E2IT_TAB_URL]
-            }, function (tabs) {
-                if (tabs !== undefined && tabs.length > 0) {
-                    for (const tab of tabs) {
-                        chrome.tabs.sendMessage(tab.id, {
-                            action: "SEND_RESPONSE",
-                            data: {captchaId: response.captchaId, token: response.token}
-                        });
-                    }
-                }
-                sendResponse('DONE');
-            })
+            e2iRelayResponse(response.captchaId, response.token, sendResponse);
         }
         
     }

@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 10.10.2026 - batch download items: "Loading" while their links are looked up, the reason of an ERROR in the info line.
+# Last Modified: 11.10.2026 - OK plays at once with the default player, MENU holds every action of the row plus "Select" /
+#   "Select all"; marked items are removed in one go.
+# 10.10.2026 - batch download items: "Loading" while their links are looked up, the reason of an ERROR in the info line.
 # 03.10.2026 - Archive no longer lists .jpg/.txt sidecars as extra copies of their video; LRM prefix for RTL file names in the list.
 # 2026-07-26 - Updated to resolve renamed video files (.mp4 -> .mkv and similar) for play/remove actions, extend archive video detection, ignore non-subtitle sidecar text files,  and delete related sidecar files with immediate list refresh on remove. - Kamikaze24
 #
@@ -110,6 +112,7 @@ class IPTVDMWidget(Screen):
                 <convert type="TemplatedMultiContent">
                 {"template": [
                     MultiContentEntryPixmapAlphaBlend(pos = (10, 10), size = (42, 42), flags = BT_SCALE, png = 0),  # Flag.
+                    MultiContentEntryPixmapAlphaBlend(pos = (10, 10), size = (42, 42), flags = BT_SCALE, png = 5),  # selection mark
                     MultiContentEntryText(pos = (80, 0), size = (1140, 32), font = 0, flags = RT_HALIGN_LEFT | RT_VALIGN_CENTER, text = 1),  # title
                     MultiContentEntryText(pos = (80, 32), size = (500, 26), font = 1, color=0xa4c400,color_sel=0xffaf17, flags = RT_HALIGN_LEFT | RT_VALIGN_CENTER, text = 3),  # size
                     MultiContentEntryText(pos = (820, 32), size = (300, 26), font = 1, color=0x7e93ae,color_sel=0x19f4eb, flags = RT_HALIGN_RIGHT | RT_VALIGN_CENTER, text = 4),  # status
@@ -131,7 +134,8 @@ class IPTVDMWidget(Screen):
             # jump for the Archive list (see blue_pressed()) - both
             # blanked out via their own key_red/key_blue
             # ConditionalShowHide whenever they don't apply.
-            skinchrome.build_footer_auto(696, iconBase=iconBase, keys=('red', 'green', 'yellow', 'blue'), showNav=False),
+            # MENU: every action of the row and the selection functions (see menu_pressed())
+            skinchrome.build_footer_auto(696, iconBase=iconBase, keys=('red', 'green', 'yellow', 'blue'), showMenu=True, showNav=False),
         )
 
     def __init__(self, session, downloadmanager):
@@ -160,12 +164,19 @@ class IPTVDMWidget(Screen):
         # over whichever list is on screen (downloads or Archive), same
         # ConditionalShowHide-blanks-itself convention as key_red.
         self["key_blue"] = StaticText("")
+        # the footer's MENU icon is shown while key_menu is not empty (skinchrome.build_footer, conditional="key_menu");
+        # the text itself is not displayed
+        self["key_menu"] = StaticText("MENU")
         self.localMode = False
         self.IDS_ENABLE_REORDERING = _("Enable reordering")
         self.IDS_DISABLE_REORDERING = _("Disable reordering")
         self.reorderingMode = False
         self.duringMoving = False
         self.movingDownloadIdx = None
+        # selection mode (MENU): OK marks / unmarks a row, MENU removes the marked ones. Marks are kept by file
+        # name - the download list is rebuilt from the manager every time it changes
+        self.selectMode = False
+        self.markedFiles = set()
 
         self["downloadlist"] = List()
         # self["list"] = IPTVDownloadManagerList()
@@ -189,6 +200,8 @@ class IPTVDMWidget(Screen):
             actionsDict[digit] = self.makeNumberJump(digit)
         self["actions"] = ActionMap(["WizardActions", "DirectionActions", "ColorActions", "NumberActions"],
         actionsDict, -1)
+        # MENU lives in IPTVPlayerListActions (this plugin's keymap.xml), like in the favourites
+        self["menuActions"] = ActionMap(["IPTVPlayerListActions"], {"menu": self.menu_pressed}, -1)
 
         self["titel"] = Label()
         self["titelState"] = Label()
@@ -212,6 +225,12 @@ class IPTVDMWidget(Screen):
                     self.dictPIX[key] = LoadPixmap(cached=True, path=GetIconDir(pixFile))
             except Exception:
                 printExc()
+        # the tick drawn over the status icon of a marked row (the main list's selection mark)
+        try:
+            self.selectMarkPIX = LoadPixmap(cached=True, path=GetIconDir('CheckBadge.png'))
+        except Exception:
+            printExc()
+            self.selectMarkPIX = None
 
         self.DM = downloadmanager
         self.DM.connectListChanged(self.onListChanged)
@@ -540,6 +559,7 @@ class IPTVDMWidget(Screen):
         if self.reorderingMode:
             self._exitReorderingMode()
         else:
+            self._endSelectMode()  # OK picks a row up for moving now, it does not mark it
             self.reorderingMode = True
             self._updateRedLabel()
 
@@ -674,6 +694,8 @@ class IPTVDMWidget(Screen):
         # only inside it - see _updateRedLabel()/_updateBlueLabel().
         if self.iptvclosing:
             return
+        # the marks belong to the list that is left
+        self._endSelectMode()
         if not self.localMode:
             if not self.underRefreshing:
                 self.underRefreshing = True
@@ -701,6 +723,10 @@ class IPTVDMWidget(Screen):
         return
 
     def back_pressed(self):
+        if self.selectMode:
+            # EXIT leaves the selection mode first (the marks are dropped), like in the main list
+            self._endSelectMode()
+            return
         if self.console:
             self.console.sendCtrlC()
         self.close()
@@ -716,7 +742,20 @@ class IPTVDMWidget(Screen):
                 self._toggleReorderPickup(item)
             return
 
-        # wszystkie dostepne opcje
+        if self.selectMode:
+            self._toggleSelectMark()
+            return
+
+        # OK plays at once with the default player; a row without a playable file (waiting, links being looked
+        # up, failed before a download) opens the MENU actions instead
+        item = self.getSelItem()
+        if item is not None and any(opt[1] == 'play' for opt in self._itemActionOptions(item)):
+            self.makeActionOnDownloadItem(IPTVChoiceBoxItem(name='', privateData=('play', GetMoviePlayer(True, False).value)))
+        else:
+            self.menu_pressed()
+
+    def _itemActionOptions(self, item):
+        # [(label, action[, player])] of a row - the actions of the MENU popup above the selection functions
         play = []
         play.append((_('Play with [%s] player') % GetMoviePlayer(True, False).getText(), 'play', GetMoviePlayer(True, False).value))
         play.append((_('Play with [%s] player') % GetMoviePlayer(True, True).getText(), 'play', GetMoviePlayer(True, True).value))
@@ -730,7 +769,6 @@ class IPTVDMWidget(Screen):
         rename = ((_('Rename file'), 'rename'),)  # add lululla 20250911
 
         options = []
-        item = self.getSelItem()
         if item is not None:
             if self.localMode:
                 options.extend(play)
@@ -766,21 +804,7 @@ class IPTVDMWidget(Screen):
                     options.extend(delet)
                 else:
                     options.extend(remove)
-
-            # chrome-skinned IPTVChoiceBoxWidget. The tuple-building above
-            # is untouched; only converted right before opening, into
-            # IPTVChoiceBoxItem(privateData=(action, player)) - `player`
-            # is None for every option except the 2 "play" ones, same
-            # optional-3rd-tuple-element shape as before, just addressed
-            # as privateData[0]/[1] now instead of ret[1]/ret[2].
-            choiceItems = [IPTVChoiceBoxItem(name=opt[0], privateData=(opt[1], opt[2] if len(opt) > 2 else None)) for opt in options]
-            height = self._getActionListHeight(len(choiceItems))
-            # list_class=IPTVDMActionChoiceBoxList shows the matching
-            # icon per row instead of plain text, same pattern as the
-            # "Select action" popup in iptvplayerwidget.py already uses.
-            openChoiceBox(self.session, {'width': 600, 'height': height, 'current_idx': 0, 'title': _("Select action"), 'options': choiceItems, 'list_class': IPTVDMActionChoiceBoxList, 'chrome': True}, self.makeActionOnDownloadItem)
-
-        return
+        return options
 
     def _canContinueHlsdl(self, item):
         # an interrupted hlsdl download can be continued when its run left the resume sidecar and
@@ -854,15 +878,8 @@ class IPTVDMWidget(Screen):
                     self.session.open(MessageBox, _("Error getting file name: %s") % str(e), type=MessageBox.TYPE_ERROR)
             elif self.localMode:
                 if ret[1] == "remove":
-                    try:
-                        self._removeRelatedFiles(playFileName)
-                        for idx in range(len(self.localFiles)):
-                            if playFileName == self.localFiles[idx].fileName or item.fileName == self.localFiles[idx].fileName:
-                                del self.localFiles[idx]
-                                break
-                        self.reloadList(True)
-                    except Exception:
-                        printExc()
+                    self._removeArchiveItem(item)
+                    self.reloadList(True)
             elif ret[1] == "continue":
                 self.DM.continueDownloadItem(item.downloadIdx)
             elif ret[1] == "retry":
@@ -870,17 +887,138 @@ class IPTVDMWidget(Screen):
             elif ret[1] == "stop":
                 self.DM.stopDownloadItem(item.downloadIdx)
             elif ret[1] == "remove":
-                try:
-                    self._removeRelatedFiles(playFileName)
-                    if playFileName != item.fileName:
-                        self._removeRelatedFiles(item.fileName)
-                except Exception:
-                    printExc()
-                self.DM.removeDownloadItem(item.downloadIdx)
+                self._removeFinishedItem(item)
             elif ret[1] == "delet":
                 self.DM.deleteDownloadItem(item.downloadIdx)
             elif ret[1] == "move":
                 self.DM.moveToTopDownloadItem(item.downloadIdx)
+
+    def _removeArchiveItem(self, item):
+        # "Remove file" in the Archive: the video (also under its renamed name) with its sidecars, and its row
+        playFileName = self._getExistingFilePath(item.fileName)
+        try:
+            self._removeRelatedFiles(playFileName)
+            for idx in range(len(self.localFiles)):
+                if playFileName == self.localFiles[idx].fileName or item.fileName == self.localFiles[idx].fileName:
+                    del self.localFiles[idx]
+                    break
+        except Exception:
+            printExc()
+
+    def _removeFinishedItem(self, item):
+        # "Remove file" of a downloaded / aborted / failed item: its files and its entry in the download list
+        playFileName = self._getExistingFilePath(item.fileName)
+        try:
+            self._removeRelatedFiles(playFileName)
+            if playFileName != item.fileName:
+                self._removeRelatedFiles(item.fileName)
+        except Exception:
+            printExc()
+        self.DM.removeDownloadItem(item.downloadIdx)
+
+    # selection mode (MENU): mark rows with OK, remove the marked ones in one go
+    def _isMarkable(self, item):
+        # a running download or a lookup can not be removed (stop it first)
+        return self.localMode or item.status not in (DMHelper.STS.DOWNLOADING, DMHelper.STS.RESOLVING)
+
+    def _getMarkedRows(self):
+        # the marked rows still in the list, in its order
+        return [item for item in self._activeList() if item.fileName in self.markedFiles]
+
+    def _redrawMarks(self):
+        idx = self.getSelIndex()
+        self.reloadList(True)
+        try:
+            self["downloadlist"].setIndex(idx)
+        except Exception:
+            printExc()
+
+    def _endSelectMode(self):
+        if self.selectMode or self.markedFiles:
+            self.selectMode = False
+            self.markedFiles = set()
+            self._redrawMarks()
+
+    def _toggleSelectMark(self):
+        idx = self.getSelIndex()
+        item = self.getSelItem()
+        if item is None or not self._isMarkable(item):
+            return
+        if item.fileName in self.markedFiles:
+            self.markedFiles.discard(item.fileName)
+        else:
+            self.markedFiles.add(item.fileName)
+        self._redrawMarks()
+        # next row, so a run of items is marked with OK, OK, OK
+        if -1 < idx < len(self._activeList()) - 1:
+            self["downloadlist"].setIndex(idx + 1)
+
+    SELECT_ACTIONS = ('SELECT_START', 'SELECT_ALL', 'SELECT_CLEAR', 'DELETE_MARKED')
+
+    def menu_pressed(self):
+        # every action in one popup: the selected row's actions (play with player A / B, continue, retry, stop,
+        # remove, rename, promote) and below them the selection functions; privateData is (action, player) -
+        # player only for the two "play" rows
+        if self.iptvclosing or not self._activeList():
+            return
+        options = []
+        if self.selectMode:
+            numMarked = len(self._getMarkedRows())
+            if numMarked:
+                options.append((_("Remove marked items (%d)") % numMarked, "DELETE_MARKED"))
+            options.append((_("Select all"), "SELECT_ALL"))
+            options.append((_("Unselect all"), "SELECT_CLEAR"))
+        else:
+            options.extend(self._itemActionOptions(self.getSelItem()))
+            options.append((_("Select"), "SELECT_START"))
+            options.append((_("Select all"), "SELECT_ALL"))
+        choiceItems = [IPTVChoiceBoxItem(name=opt[0], privateData=(opt[1], opt[2] if len(opt) > 2 else None)) for opt in options]
+        # list_class=IPTVDMActionChoiceBoxList: an icon per row (components/iptvlist.py)
+        openChoiceBox(self.session, {'width': 600, 'height': self._getActionListHeight(len(choiceItems)), 'current_idx': 0, 'title': _("Select action"), 'options': choiceItems, 'list_class': IPTVDMActionChoiceBoxList, 'chrome': True}, self._menuCallback)
+
+    def _menuCallback(self, ret):
+        privateData = getattr(ret, 'privateData', None)
+        action = privateData[0] if isinstance(privateData, tuple) and privateData else None
+        if action not in self.SELECT_ACTIONS:
+            self.makeActionOnDownloadItem(ret)
+        elif action == 'SELECT_START':
+            if self.reorderingMode:
+                self._exitReorderingMode()
+            self.selectMode = True
+            self.session.open(MessageBox, _("OK marks an item, MENU shows what can be done with the marked items."), type=MessageBox.TYPE_INFO, timeout=5)
+        elif action == 'SELECT_ALL':
+            if self.reorderingMode:
+                self._exitReorderingMode()
+            self.selectMode = True
+            self.markedFiles = set(item.fileName for item in self._activeList() if self._isMarkable(item))
+            self._redrawMarks()
+        elif action == 'SELECT_CLEAR':
+            self._endSelectMode()
+        elif action == 'DELETE_MARKED':
+            rows = self._getMarkedRows()
+            if rows:
+                self.session.openWithCallback(self._removeMarkedConfirmed, MessageBox, _("Remove %d marked items?\nTheir files are deleted too.") % len(rows), type=MessageBox.TYPE_YESNO, default=False)
+
+    def _removeMarkedConfirmed(self, answer):
+        if not answer:
+            return
+        skipped = 0
+        for item in self._getMarkedRows():
+            if self.localMode:
+                self._removeArchiveItem(item)
+            elif not self._isMarkable(item):
+                # started downloading after it was marked
+                skipped += 1
+            elif DMHelper.STS.WAITING == item.status or (DMHelper.STS.ERROR == item.status and self.DM.hasNoFile(item)):
+                self.DM.deleteDownloadItem(item.downloadIdx)
+            else:
+                self._removeFinishedItem(item)
+        printDBG("IPTVDMWidget: marked items removed, %d running ones skipped" % skipped)
+        self.selectMode = False
+        self.markedFiles = set()
+        self.reloadList(True)
+        if skipped:
+            self.session.open(MessageBox, _("Not removed, still downloading: %d") % skipped, type=MessageBox.TYPE_INFO, timeout=5)
 
     def renameFileCallback(self, callback=None):  # add lululla 20250911
         if callback is None or not callback:
@@ -1038,7 +1176,8 @@ class IPTVDMWidget(Screen):
         batchSource = getattr(item, 'batchSource', None)
         if not url and batchSource is not None:
             url = batchSource.get('host', '')
-        return (self.dictPIX.get(item.status, None), ltrDisplayText(fileName), url, info, status)
+        mark = self.selectMarkPIX if item.fileName in self.markedFiles else None
+        return (self.dictPIX.get(item.status, None), ltrDisplayText(fileName), url, info, status, mark)
 
     def buildEnties(self, items):
         listItems = []

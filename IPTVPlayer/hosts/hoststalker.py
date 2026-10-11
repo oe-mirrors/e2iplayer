@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 06.10.2026
+# Last Modified: 11.10.2026
+# 11.10.2026 - portal menu: "Information" row - INFO shows portal, status, expiry, tariff, account holder and balance
+#   (from the cached profile / account_info answer)
 # hoststalker.py - Stalker / Ministra middleware portals (MAG set-top box API, portal URL + MAC address)
 # 05.10.2026 - first version
 #   - up to 3 portal slots (name / portal URL / MAC, the MAC as ConfigSecret); the portal field takes the address
@@ -629,6 +631,30 @@ class StalkerPortalHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
             parts.append(tariff)
         return True, ' | '.join(parts)
 
+    def accountInfoText(self, acc):
+        # INFO on the portal's "Information" row: what the portal tells about the account - from the same cached
+        # profile / account_info answer as accountStatus(), never the MAC address or the box identity
+        ok, status = self.accountStatus(acc)
+        data = _dict(self.cache.get((acc['ck'], 'status'), (0, {}))[1])
+        profile, info = _dict(data.get('profile')), _dict(data.get('info'))
+        lines = [_("Server") + ': ' + acc['host']]
+        if not ok:
+            lines.append(status)
+        else:
+            expiry = _str(info.get('end_date')) or _str(info.get('phone')) or _str(profile.get('expire_billing_date'))
+            if expiry and expiry not in ('0000-00-00 00:00:00', '0'):
+                lines.append(_("Expiry: %s") % expiry)
+            tariff = _str(profile.get('tariff_plan_name')) or _str(info.get('tariff_plan'))
+            if tariff:
+                lines.append(_("Tariff: %s") % tariff)
+        holder = _str(info.get('fname')) or _str(profile.get('fname'))
+        if holder:
+            lines.append(_("Name:") + ' ' + holder)
+        balance = _str(profile.get('account_balance'))
+        if balance:
+            lines.append(_("Balance: %s") % balance)
+        return '\n'.join(lines)
+
     ###################################################
     # lists from the portal, joined from several server pages
     ###################################################
@@ -721,6 +747,9 @@ class StalkerPortalHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
         params = dict(base)
         params.update({'category': 'st_archive_genres', 'title': _("Catch-up"), 'desc': _("Programmes of the last days of the channels with an archive")})
         self.addDir(params)
+        params = dict(base)
+        params.update({'category': 'st_accinfo', 'title': _("Information"), 'desc': status})
+        self.addArticle(params)
         for item in self.searchItems():
             params = dict(base)
             params.update(item)
@@ -1183,6 +1212,8 @@ class StalkerPortalHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
         acc = self.getAccount(cItem)
         kind = ITEM_KINDS.get(cItem.get('category', ''), '')
         icon = cItem.get('icon', '')
+        if acc is not None and cItem.get('category', '') == 'st_accinfo':
+            return self._article(dict(cItem, title=acc['name']), self.accountInfoText(acc), icon, {})
         if acc is None or kind in ('timeshift', 'archive'):
             return self._article(cItem, '', icon, {'station': cItem.get('channel', '')})
         if kind == 'live':
@@ -1277,4 +1308,4 @@ class IPTVHost(GenericFolderWatchedHostMixin, CHostBase):
         return [(_("Live channels"), 'live'), (_("Movies"), 'movie'), (_("Series"), 'series')]
 
     def withArticleContent(self, cItem):
-        return bool(cItem.get('acc_id')) and cItem.get('category', '') in ITEM_KINDS
+        return bool(cItem.get('acc_id')) and (cItem.get('category', '') in ITEM_KINDS or cItem.get('category', '') == 'st_accinfo')

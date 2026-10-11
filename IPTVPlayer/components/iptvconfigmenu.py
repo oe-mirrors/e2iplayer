@@ -31,7 +31,7 @@ from Screens.ChoiceBox import ChoiceBox
 from Screens.MessageBox import MessageBox
 
 from Components.ActionMap import ActionMap
-from Components.config import config, ConfigSelection, ConfigDirectory, ConfigText, getConfigListEntry, configfile
+from Components.config import config, ConfigSelection, ConfigDirectory, getConfigListEntry, configfile
 from Tools.BoundFunction import boundFunction
 ###################################################
 
@@ -142,14 +142,9 @@ class E2iVKQuickSettings(ConfigBaseWidget):
         # scoped to just the keyboard options shown here.
         def keyDefaultsConfirm(result):
             if result:
-                for item in self.list:
-                    if len(item) > 1:
-                        configItem = item[1]
-                        if not isinstance(configItem, ConfigText):
-                            configItem.value = configItem.default
-                self.close()
+                self.resetToDefaults(lambda: GetOskOwnModelConfigList(indent=False))
         message = _("Are you sure you want to reset all settings to their default values?")
-        self.session.openWithCallback(keyDefaultsConfirm, MessageBox, text=message, type=MessageBox.TYPE_YESNO)
+        self.session.openWithCallback(keyDefaultsConfirm, MessageBox, text=message, type=MessageBox.TYPE_YESNO, default=False)
 
 
 class ConfigMenu(ConfigBaseWidget):
@@ -867,17 +862,42 @@ class ConfigMenu(ConfigBaseWidget):
         if ret:
             RemoveAllDirsIconsFromPath(config.plugins.iptvplayer.CacheDir.value)
 
+    def _currentSectionIndex(self):
+        # the section YELLOW resets: the open category, in the long list the one the cursor is in (the
+        # nearest header row above it); None in the category overview = every section
+        if self._categoryView:
+            return self._section
+        try:
+            index = self["config"].getCurrentIndex()
+        except Exception:
+            printExc()
+            return None
+        headers = [header for sectionId, header, fill in ConfigMenu.getSections()]
+        for row in reversed(self.list[:index + 1]):
+            if len(row) == 1 and row[0] in headers:
+                return headers.index(row[0])
+        return None
+
     def keyDefaults(self):
+        sectionIndex = self._currentSectionIndex()
+        if sectionIndex is None:
+            message = _("Are you sure you want to reset all settings to their default values?")
+            getRows = self._getAllConfigItems
+        else:
+            sectionId, header, fill = ConfigMenu.getSections()[sectionIndex]
+            message = _('Reset the settings of "%s" to their default values?') % ConfigMenu.getSectionLabel(header)
+
+            def getRows():
+                rows = []
+                ConfigMenu.fillConfigList(rows, sectionId)
+                return rows
+
         def keyDefaultsConfirm(result):
             if result:
-                for item in self._getAllConfigItems():
-                    if len(item) > 1:
-                        configItem = item[1]
-                        if not isinstance(configItem, ConfigText):
-                            configItem.value = configItem.default
-                self.close()
-        message = _("Are you sure you want to reset all settings to their default values?")
-        self.session.openWithCallback(keyDefaultsConfirm, MessageBox, text=message, type=MessageBox.TYPE_YESNO)
+                self.resetToDefaults(getRows)
+                # the layout option is one of the reset rows: the screen follows it at once
+                self._applyViewMode()
+        self.session.openWithCallback(keyDefaultsConfirm, MessageBox, text=message, type=MessageBox.TYPE_YESNO, default=False)
 
     def keyLeft(self):
         ConfigBaseWidget.keyLeft(self)

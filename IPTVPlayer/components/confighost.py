@@ -10,7 +10,7 @@
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, IsHostEnabled, SaveHostsOrderList, SortHostsList
 from Plugins.Extensions.IPTVPlayer.components.configbase import ConfigBaseWidget
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
-from Plugins.Extensions.IPTVPlayer.components.iptvhostpin import AskHostPin, GetHostPinConfigList, HandleHostPinAction, HostNeedsPin, HOST_PIN_ACTION
+from Plugins.Extensions.IPTVPlayer.components.iptvhostpin import AskHostPin, GetHostDisplayTitle, GetHostPinConfigList, HandleHostPinAction, HostNeedsPin, HOST_PIN_ACTION
 ###################################################
 
 ###################################################
@@ -52,8 +52,24 @@ class ConfigHostMenu(ConfigBaseWidget):
         # the host's own settings, then the PIN protection every host has
         getConfigList = getattr(self.host, 'GetConfigList', None)
         self.list = list(getConfigList()) if callable(getConfigList) else []
+        # a host whose settings come in sections ("----- ... -----" rows, e.g. hostxxx) gets one for the PIN too,
+        # so the PIN rows do not look like part of its last section
+        if any(entry and str(entry[0]).strip().startswith('-----') for entry in self.list):
+            self.list.append(getConfigListEntry(_("----- SECURITY CONFIGURATION -----"),))
         self.list.extend(GetHostPinConfigList(self.hostName))
         ConfigBaseWidget.runSetup(self)
+
+    def keyDefaults(self):
+        # YELLOW: the host's own settings only - its PIN protection stays as it is
+        getConfigList = getattr(self.host, 'GetConfigList', None)
+        if not callable(getConfigList):
+            return
+
+        def keyDefaultsConfirm(result):
+            if result:
+                self.resetToDefaults(lambda: list(getConfigList()))
+        message = _('Reset the settings of "%s" to their default values?') % GetHostDisplayTitle(self.hostName)
+        self.session.openWithCallback(keyDefaultsConfirm, MessageBox, text=message, type=MessageBox.TYPE_YESNO, default=False)
 
     def keyOK(self):
         # A host may expose an "action row" in its GetConfigList() - a config

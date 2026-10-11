@@ -418,6 +418,26 @@ if (document.location.hash.startsWith("#e2itco")) {
     // end the probe.
     E2iSendMsgToBackground({action: 'DBG_REGISTER', origin: document.location.origin}, function () {});
 
+} else if (document.location.hash.startsWith("#e2itnv")) {
+    // NAV job (v1.21): follow this tab across the site's own redirects (they drop this fragment) until a link
+    // matching the pattern shows up - the background script keeps the job and injects
+    // contentscripts/navProbe.js into every page of the tab. Selector and pattern come base64 encoded
+    // (s=, r=), the attribute plain (a=, default href).
+    let params = new ParamsExt(document.location.hash);
+    let b64 = function (value) {
+        try {
+            return value ? atob(decodeURIComponent(value)) : '';
+        } catch (e) {
+            return '';
+        }
+    };
+    E2iSendMsgToBackground({action: 'NAV_REGISTER', job: {
+        captchaId: decodeURIComponent(params.get("c") || ""),
+        selector: b64(params.get("s")),
+        attr: decodeURIComponent(params.get("a") || "href"),
+        pattern: b64(params.get("r"))
+    }}, function () {});
+
 } else if (document.location.hash.startsWith("#e2i")) {
     E2iClearDocument();
 

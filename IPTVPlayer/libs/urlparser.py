@@ -275,6 +275,7 @@ class urlparser:
             "chuckle-tube.com": self.pp.parserVOESX,
             "cilootv.store": self.pp.parserJWPLAYER,  # add 061026
             "cimanow.upns.online": self.pp.parserSBS,  # add 061026
+            "cimanowtv.com": self.pp.parserCIMANOWTV,  # add 111026
             "cindyeyefinal.com": self.pp.parserVOESX,  # add 061026
             "cinegrab.com": self.pp.parserBYSE,
             "cinemathek.online": self.pp.parserJWPLAYER,  # add 061026
@@ -1010,6 +1011,7 @@ class urlparser:
             "wishfast.top": self.pp.parserJWPLAYER,  # add 061026
             "wishonly.site": self.pp.parserJWPLAYER,
             "wolfdyslectic.com": self.pp.parserVOESX,  # add 061026
+            "worldcdn.online": self.pp.parserCIMANOWTV,  # add 111026 (CimaNow's own player since 11.10.2026)
             "wrzucaj.pl": self.pp.parserSST,
             # x
             "xcoic.com": self.pp.parserBYSE,
@@ -2745,6 +2747,28 @@ class pageParser(CaptchaHelper):
         if not urltab and data.get("cfNative"):
             hls = urlparser.decorateUrl(data["cfNative"], {"iptv_proto": "m3u8", "User-Agent": HTTP_HEADER["User-Agent"], "Referer": url, "Origin": url[:-1], "external_sub_tracks": subTracks})
             urltab.extend(getDirectM3U8Playlist(hls, checkContent=True, sortWithMaxBitrate=999999999))
+        return urltab
+
+    def parserCIMANOWTV(self, baseUrl):  # add 111026
+        printDBG("parserCIMANOWTV baseUrl[%s]" % baseUrl)
+        # CimaNow's own player (<x>.cimanowtv.com/e/<id>, <x>.worldcdn.online/e/<id>): Playerjs "file":
+        # ["[720p] /uploads/....mp4", ...] - for hostcimanow and these links from other hosts or the favourites
+        baseUrl = strwithmeta(baseUrl)
+        HTTP_HEADER = self.cm.getDefaultHeader(browser="chrome")
+        HTTP_HEADER["Referer"] = baseUrl.meta.get("Referer", "https://cimanow.cc/")
+        sts, data = self.cm.getPage(baseUrl, {"header": HTTP_HEADER})
+        if not sts:
+            return []
+        base = re.sub(r"^(https?://[^/]+).*$", r"\1", str(baseUrl))
+        files = data[data.find('"file"'):] if '"file"' in data else ""
+        urltab = []
+        for label, path in re.findall(r'"\[([^\]"]*)\]\s*([^"]+\.(?:mp4|m3u8)[^"]*)"', files):
+            url = path.strip() if path.strip().startswith("http") else base + urllib_quote(path.strip(), safe="/%")
+            meta = {"Referer": base + "/", "User-Agent": HTTP_HEADER["User-Agent"]}
+            if ".m3u8" in url:
+                meta["iptv_proto"] = "m3u8"
+            urltab.append({"name": label or "mp4", "url": urlparser.decorateUrl(url, meta)})
+        urltab.reverse()  # best quality first
         return urltab
 
     def parserVINOVO(self, baseUrl):  # fix 15.06.25, update 031026

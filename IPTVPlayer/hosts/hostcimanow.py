@@ -1,5 +1,12 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 09.10.2026
+# Last Modified: 11.10.2026
+# 11.10.2026 - the token API (cimaleech.vercel.app) answers 404: when it gives no link, MyE2i (NAV job, extension
+#   v1.21) opens the watch button's ad gateway in the user's browser and sends back the tokenised watching link
+#   the gateway's scripts build there (obfuscated, with decoys against scrapers - not doable without a browser);
+#   the link is kept for 10 minutes per page; the watching page has a new loader (key = sum of the "_arrX" variables:
+#   hex sums, floor(x / 2), a CSS z-index, a div width; _part1/2/3 are decoys now), the old one stays as fallback;
+#   the own "Cima Now" server moved to <x>.worldcdn.online/e/<id> (same Playerjs file list) and is resolved by urlparser
+#   (parserCIMANOWTV) like every other server - the host's own copy of that code is gone
 # 08.10.2026 - server list fixed: the "ffQualities" forafile object is gone; the page's watch button now leads
 #   through an ad gateway (rm.freex2line.online) to <page>/watching/?token=... (without a valid token the site
 #   redirects home). The token is fetched from the cimaleech.vercel.app API (same as MOHAMED_OS's host), the
@@ -15,7 +22,10 @@
 #   - watched flag (stable series:/season:/video: page-url keys), downloaded flag, favourites,
 #     name normalisation ("Title (Year)", "Show - SxxExx"), sidecar, INFO via moviemeta + the site's
 #     story/poster/fields; no blocking retry loops, no colour codes in titles
+import ast
+import math
 import re
+import time
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
@@ -56,12 +66,30 @@ INFO_FIELDS = (("language", "المحتوي"), ("duration", "مدة العرض")
 # the watch button's ad gateway is a per-request obfuscated anti-bot page; this API returns the tokenised
 # <page>/watching/?token=... url for the gateway link ("upcloud" first, "test" as the fallback endpoint)
 TOKEN_APIS = ("https://cimaleech.vercel.app/api/upcloud", "https://cimaleech.vercel.app/api/test")
+# MyE2i NAV job for the same gateway: the countdown page's watch button, once its scripts put the token in
+WATCH_LINK_JOB = {"selector": "a#downloadbtn", "attr": "href", "pattern": r"/watching/\?token=[^&#\s]+"}
+WATCH_LINK_TTL = 600  # seconds a link from MyE2i is reused for the same page
 NUM_RE = re.compile(r"0x[0-9a-fA-F]+|\d+")
 
 
 def _numSum(expr):
     # the obfuscator's constants are plain sums of hex/decimal literals - add them up instead of eval()
     return sum(int(n, 16) if n.lower().startswith("0x") else int(n) for n in NUM_RE.findall(expr or ""))
+
+
+_JS_NUM_NODES = (ast.Expression, ast.BinOp, ast.UnaryOp, ast.Constant, ast.Add, ast.Sub, ast.Mult, ast.Div, ast.Mod, ast.USub, ast.UAdd, ast.Call, ast.Name, ast.Load)
+
+
+def _jsNum(expr, floorName=""):
+    # a JS arithmetic expression of number literals (hex too), + - * / % and Math.floor (under its alias) -> int;
+    # anything else (a name, a string, a call of something else) is refused - no eval() of page code
+    if floorName:
+        expr = re.sub(r"\b%s\s*\(" % re.escape(floorName), "floor(", expr)
+    tree = ast.parse(expr.strip(), mode="eval")
+    for node in ast.walk(tree):
+        if not isinstance(node, _JS_NUM_NODES) or (isinstance(node, ast.Name) and node.id != "floor") or (isinstance(node, ast.Constant) and not isinstance(node.value, (int, float))):
+            raise ValueError("not a plain number expression: %r" % expr)
+    return int(eval(compile(tree, "js", "eval"), {"__builtins__": {}}, {"floor": math.floor}))
 
 
 def _seasonNum(text):
@@ -83,6 +111,7 @@ class CimaNow(GenericFolderWatchedScraperMixin, CBaseHostClass):
         self.DEFAULT_ICON_URL = "https://raw.githubusercontent.com/oe-mirrors/e2iplayer/gh-pages/Thumbnails/cimanow.png"
         self.HEADER = self.cm.getDefaultHeader(browser="chrome")
         self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
+        self.watchLinks = {}  # gateway link -> (time, tokenised watching link from MyE2i)
 
         def cat(slug):
             return self.getFullUrl("/category/%s/" % slug)
@@ -367,7 +396,8 @@ class CimaNow(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not sts:
             return []
         story = self._siteInfo(data)[0]
-        watchUrl = self._watchingUrl(self.cm.ph.getSearchGroups(data, r'<a[^>]+class="shine"[^>]+href="([^"]+)"')[0])
+        shineUrl = self.cm.ph.getSearchGroups(data, r'<a[^>]+class="shine"[^>]+href="([^"]+)"')[0]
+        watchUrl = self._watchingUrl(shineUrl)
         if not watchUrl:
             SetIPTVPlayerLastHostError(_("No stream available"))
             return []
@@ -378,6 +408,9 @@ class CimaNow(GenericFolderWatchedScraperMixin, CBaseHostClass):
             return []
         if 'id="watch"' not in data:
             data = self._decodeWatching(data)
+        if 'id="watch"' not in data:
+            # the token is no longer accepted (the site sent the start page): ask again next time
+            self.watchLinks.pop(self._gatewayKey(shineUrl), None)
         urltab = []
         token = self.cm.ph.getSearchGroups(data, r"""var\s+tk\s*=\s*['"]([^'"]+)['"]""")[0]
         block = self.cm.ph.getDataBeetwenMarkers(data, 'id="watch">', "</ul>", False)[1]
@@ -408,13 +441,43 @@ class CimaNow(GenericFolderWatchedScraperMixin, CBaseHostClass):
             return []
         return applySidecarToLinks(urltab, buildSidecarFromItem(dict(cItem, desc=StripColorCodes(cItem.get("desc", ""))), IsSidecarEnabled(), story))
 
+    @staticmethod
+    def _gatewayKey(shineUrl):
+        return (shineUrl or "").replace("&amp;", "&").strip()
+
     def _watchingUrl(self, shineUrl):
-        # direct <page>/watching/?token= link, or the ad gateway link -> tokenised url from the API
-        shineUrl = (shineUrl or "").replace("&amp;", "&").strip()
+        # direct <page>/watching/?token= link, or the ad gateway link -> tokenised url from the API, else from the
+        # user's browser through MyE2i
+        shineUrl = self._gatewayKey(shineUrl)
         if not shineUrl:
             return ""
         if "/watching/" in shineUrl and "token=" in shineUrl:
             return self._canonUrl(shineUrl)
+        cached = self.watchLinks.get(shineUrl)
+        if cached and time.time() - cached[0] < WATCH_LINK_TTL:
+            return cached[1]
+        url = self._tokenApiUrl(shineUrl) or self._myE2iWatchingUrl(shineUrl)
+        if url:
+            self.watchLinks[shineUrl] = (time.time(), url)
+        return url
+
+    def _myE2iWatchingUrl(self, shineUrl):
+        # the gateway's countdown page gets its tokenised watch link only from its own (obfuscated) scripts:
+        # MyE2i's NAV job opens the gateway in the user's browser, follows its redirects and sends that link back
+        try:
+            from Plugins.Extensions.IPTVPlayer.libs.recaptcha_mye2i import UnCaptchaReCaptcha
+            answer = UnCaptchaReCaptcha().processCaptcha(time.time(), shineUrl, captchaType="NAV", captchaData=json_dumps(WATCH_LINK_JOB))
+            url = (json_loads(b64Decode(answer)) or {}).get("url", "") if answer else ""
+        except Exception:
+            printExc()
+            url = ""
+        # the browser's absolute, already encoded address as it is - re-quoting could turn a %2B of the token into "+"
+        if url.startswith("http") and "/watching/" in url and "token=" in url:
+            return url
+        printDBG("CimaNow._myE2iWatchingUrl no link for [%s]" % shineUrl)
+        return ""
+
+    def _tokenApiUrl(self, shineUrl):
         params = {"header": {"User-Agent": self.HEADER.get("User-Agent"), "Referer": self.MAIN_URL, "Accept": "application/json"}}
         for api in TOKEN_APIS:
             sts, data = self.cm.getPage(api, params, {"id": shineUrl})
@@ -423,16 +486,76 @@ class CimaNow(GenericFolderWatchedScraperMixin, CBaseHostClass):
             try:
                 url = (json_loads(data) or {}).get("downloadLink") or ""
             except Exception:
-                printExc()
+                # no JSON (the API answers 404 since 11.10.2026): MyE2i takes over, no traceback in the log
                 url = ""
             if "/watching/" in url:
                 return self._canonUrl(url)
-        printDBG("CimaNow._watchingUrl no token for [%s]" % shineUrl)
+        printDBG("CimaNow._tokenApiUrl no token for [%s]" % shineUrl)
         return ""
 
     def _decodeWatching(self, data):
-        # window['<arr>'] = new Array("b64", ...) XORed with String(_part1 + _part2 + _part3 + _tVal + _dVal) + suffix;
-        # the constants sit in an atob("...") loader script
+        # the current loader first, then the one of 08.10.2026
+        decoded = self._decodeWatchingSum(data)
+        return decoded if decoded else self._decodeWatchingParts(data)
+
+    def _decodeWatchingSum(self, data):
+        # loader of 11.10.2026: window["<arr>"] = new (window["Arr"+"ay"])("b64", ...); an atob('...') loader XORs
+        # it with String(sum of the variables of its "_arrX = [a, b, c, ...]") + String.fromCharCode(n) and cuts
+        # .substring(n) off the start. The variables are hex sums, Math.floor(x / 2), a CSS z-index and a div width
+        # set from String(...) expressions, an environment check (1 in a browser); _part1/2/3 are decoys now.
+        # "" when the page is not of this kind
+        try:
+            arr = re.search(r"""window\[['"](\w+)['"]\]\s*=\s*new\s*\(\s*window\[['"]Arr['"]\s*\+\s*['"]ay['"]\]\s*\)\s*\((.*?)\)\s*;""", data, re.S)
+            loader = re.search(r"""\]\(\s*['"]([A-Za-z0-9+/=]{200,})['"]\s*\)""", data)
+            if not arr or not loader:
+                return ""
+            code = b64Decode(loader.group(1))
+            floor = re.search(r"""var\s+(\w+)\s*=\s*\w+\[\s*['"]f['"]\s*\+\s*['"]loor['"]\s*\]""", code) or re.search(r"var\s+(\w+)\s*=\s*Math\.floor\b", code)
+            floorName = floor.group(1) if floor else ""
+            defs = dict(re.findall(r"var\s+(\w+)\s*=\s*([^;]+);", code))
+            zindex = re.search(r"""\.style\[\s*['"]z-i['"]\s*\+\s*['"]ndex['"]\s*\]\s*=\s*String\((.*?)\)\s*;""", code)
+            width = re.search(r"""idth:['"]\s*\+\s*String\((.*?)\)\s*\+\s*['"]px""", code)
+            arrVars = re.search(r"=\s*\[([\w\s,$]+)\]\s*;\s*for", code)
+            if not arrVars:
+                printDBG("CimaNow._decodeWatchingSum: no key variables")
+                return ""
+
+            def value(name, depth=0):
+                expr = defs[name].strip()
+                if "getComputedStyle" in expr and zindex:
+                    return _jsNum(zindex.group(1), floorName)
+                if "offsetWidth" in expr and width:
+                    return _jsNum(width.group(1), floorName)
+                if "?" in expr:  # the environment check: 1 in a browser
+                    return 1
+                if depth < 5:
+                    for other in set(re.findall(r"\b[A-Za-z_$][\w$]*\b", expr)):
+                        if other != floorName and other in defs and other != name:
+                            expr = re.sub(r"\b%s\b" % re.escape(other), str(value(other, depth + 1)), expr)
+                return _jsNum(expr, floorName)
+
+            key = str(sum(value(v.strip()) for v in arrVars.group(1).split(",") if v.strip()))
+            key += "".join(chr(int(n)) for n in re.findall(r"toString\(\)\s*\+\s*String\.fromCharCode\((\d+)\)", code)[:1])
+            raw = bytearray(b64Decode("".join(re.findall(r"""['"]([A-Za-z0-9+/=]+)['"]""", arr.group(2))), binary=True))
+            out = strDecode(bytes(bytearray(b ^ ord(key[i % len(key)]) for i, b in enumerate(raw))), "ignore")
+            # the first .substring() whose argument is a plain number (other code may use substring too)
+            for arg in re.findall(r"\.substring\(([^;]+?)\)\s*;", code):
+                try:
+                    out = out[_jsNum(arg, floorName):]
+                    break
+                except (ValueError, SyntaxError):
+                    continue
+            if 'id="watch"' not in out:
+                printDBG("CimaNow._decodeWatchingSum: key %s gave no server list" % key)
+                return ""
+            return out
+        except Exception:
+            printExc()
+        return ""
+
+    def _decodeWatchingParts(self, data):
+        # loader of 08.10.2026: window['<arr>'] = new Array("b64", ...) XORed with String(_part1 + _part2 + _part3 +
+        # _tVal + _dVal) + suffix; the constants sit in an atob("...") loader script
         code = data
         for b64 in re.findall(r"""\(\s*['"]([A-Za-z0-9+/=]{200,})['"]\s*\)""", data):
             try:
@@ -469,24 +592,9 @@ class CimaNow(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not self.cm.isValidUrl(videoUrl):
             return []
         sidecar = sidecarFromUrlMeta(videoUrl, IsSidecarEnabled())
-        if "cimanowtv.com/" in videoUrl:
-            return decorateResolvedLinkItems(self._ownServerLinks(videoUrl), sidecar)
+        # every server through urlparser - also the site's own "Cima Now" player (cimanowtv.com / worldcdn.online:
+        # parserCIMANOWTV)
         return decorateResolvedLinkItems(self.up.getVideoLinkExt(videoUrl), sidecar)
-
-    def _ownServerLinks(self, videoUrl):
-        # the site's own "Cima Now" server (<x>.cimanowtv.com/e/<id>): Playerjs "file": ["[720p] /uploads/....mp4", ...]
-        params = {"header": dict(self.HEADER, Referer=self.MAIN_URL)}
-        sts, data = self.cm.getPage(videoUrl, params)
-        if not sts:
-            return []
-        base = re.sub(r"^(https?://[^/]+).*$", r"\1", str(videoUrl))
-        files = data[data.find('"file"'):] if '"file"' in data else ""
-        links = []
-        for label, path in re.findall(r'"\[([^\]"]*)\]\s*([^"]+\.(?:mp4|m3u8)[^"]*)"', files):
-            url = path.strip() if path.strip().startswith("http") else base + urllib_quote(path.strip(), safe="/%")
-            links.append({"name": label or "mp4", "url": strwithmeta(url, {"Referer": base + "/", "User-Agent": self.HEADER.get("User-Agent")})})
-        links.reverse()  # best quality first
-        return links
 
     ###################################################
     # INFO

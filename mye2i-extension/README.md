@@ -1,4 +1,4 @@
-# MyE2iV3 - browser extension for E2iPlayer (v1.20)
+# MyE2iV3 - browser extension for E2iPlayer (v1.21)
 
 MyE2iV3 lets a real browser solve what the receiver cannot: Cloudflare challenges, other
 browser checks (DDoS-Guard, Anubis, ...) and captchas (reCAPTCHA, hCaptcha, Turnstile). The
@@ -91,6 +91,29 @@ MyE2i path knows action and cdata):
 | `cf_re`        | -      | Cloudflare Turnstile (`a=` action and `d=` cdata are passed on) |
 | `CF`           | -      | Cloudflare challenge (cookie `cf_clearance`) |
 | `COOKIES`      | -      | any browser check, all cookies come back |
+| `NAV`          | -      | follow the page's redirects to a link (v1.21, see below) |
+
+### Links behind redirects: the `NAV` mode (v1.21)
+
+Some sites build the link a host needs only in the browser: an ad gateway sends the visitor through a
+few script redirects to a countdown page, and that page's own (obfuscated) scripts put the tokenised
+link into a button - with decoy links for scrapers. `processCaptcha(id, <start url>, captchaType='NAV',
+captchaData=json {"selector", "attr", "pattern"})` opens the start URL with the fragment
+`#e2itnv_sep_c=<id>&s=<base64 selector>&a=<attribute>&r=<base64 regex>`.
+
+- The redirects drop the fragment, so `rc2ContentscriptProxy.js` only registers the job
+  (`NAV_REGISTER`); the background script keeps it per tab in `chrome.storage.session` and injects
+  `contentscripts/navProbe.js` into every finished page of that tab.
+- The probe looks every 0.5 s (at most 3 minutes) for an element of the selector whose attribute
+  (default `href`, absolute) matches the regex, then for any `<a href>` that does; hidden "link
+  sink" decoys (`#cs-link-sink`, `#cs-payload`, `[data-qs]`) are skipped. A top-level navigation of
+  the tab to a matching address (a click, a script redirect) counts as well.
+- The result is the usual base64 JSON (`url` = the link, `links`, `user_agent`; UTF-8 safe), and
+  the tab is closed right away, before the page could use a one-time token itself.
+- The server asks for v1.21 for this job (`MIN_NAV_EXTENSION_VERSION`): an older extension would
+  take the unknown fragment for a captcha page. Used by `hostcimanow.py` (watch button gateway).
+- Browser test: `nav-link-after-redirects` (two script redirects, a decoy link, the button gets
+  its link after 2 s).
 
 - A widget error (Turnstile/hCaptcha/reCAPTCHA `error-callback`, a rejected `execute()`: wrong key,
   refused action, ...) is shown as red text "Captcha error: <code>" on the page AND in the debug

@@ -825,6 +825,9 @@ class CHostBase(IHost):
 
         if 'image_type' in cItem:
             imageType = cItem['image_type']
+        elif (cItem.get('live') or cItem.get('is_live')) and type in (CDisplayListItem.TYPE_VIDEO, CDisplayListItem.TYPE_AUDIO):
+            # a live stream / live radio ('live' / 'is_live' of the host's item): its own list icon (components/iptvlist.py)
+            imageType = 'LIVE' if type == CDisplayListItem.TYPE_VIDEO else 'LIVE_AUDIO'
         else:
             imageType = type
 
