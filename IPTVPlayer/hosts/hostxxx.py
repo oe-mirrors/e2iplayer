@@ -12,10 +12,10 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.configsecret import ConfigSecret
 from Plugins.Extensions.IPTVPlayer.components.iptvchoicebox import IPTVChoiceBoxItem
 from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import clean_html
-from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
-from Plugins.Extensions.IPTVPlayer.libs.xxxparser import XXXParser, decodeHtml, decodeUrl
+# getDirectM3U8Playlist of the xxxparser: without variants above Full HD when "Playback UHD" is off
+from Plugins.Extensions.IPTVPlayer.libs.xxxparser import XXXParser, decodeHtml, decodeUrl, getDirectM3U8Playlist, startQualityOffers, stopQualityOffers, qualityChoices
 from Plugins.Extensions.IPTVPlayer.libs import xxxparser as xxxparserModule
 from Plugins.Extensions.IPTVPlayer.components.e2ivkselector import GetVirtualKeyboard
 try:
@@ -708,6 +708,10 @@ SITEDATA_CAMS = {
 'STRIPCHAT': ('https://stripchat.com', '', None),
 
 }
+# the cam sites whose video rows are live rooms (handler name, the part before "-"): their rows get the live icon; the
+# others of SITEDATA_CAMS (CAMBEAUTIES, CAMHUB, CAMSTREAMS, CAMWHORESBAY) are archives of recorded shows
+LIVE_CAM_SITES = frozenset(('ANACAMS', 'BONGACAMS', 'FOTKA', 'xhamsterlive', 'MASTURBATE2GETHER', 'CAMSEX', 'CHATURBATE', 'LEMONCAMS',
+                            'EVERYCAMGIRL', 'YOURLIVE', 'CAM4', 'CAMSODA', 'MYFREECAMS', 'STREAMATE', 'XLOVECAM', 'SINPARTY', 'STRIPCHAT'))
 
 # naiadsystems search API (Streamate, also used by SinParty)
 NAIAD_HEADER = {'platform': 'SCP', 'smtid': 'ffffffff-ffff-ffff-ffff-ffffffffffffG0000000000000', 'smeid': 'ffffffff-ffff-ffff-ffff-ffffffffffffG0000000000000', 'smvid': 'ffffffff-ffff-ffff-ffff-ffffffffffffG0000000000000'}
@@ -2751,7 +2755,17 @@ class IPTVHost(IHost):
 			# the quality switches may have changed since the list was built
 			self.host.format4k = config.plugins.iptvplayer.xxx4k.value
 			self.host.formatbest = config.plugins.iptvplayer.best_quality.value
-			ret = self.host.getResolvedURL(url)
+			# "Use the best quality" off: the qualities the site's pick chose from go to the player's link selection
+			if not self.host.formatbest:
+				startQualityOffers()
+			try:
+				ret = self.host.getResolvedURL(url)
+			finally:
+				offers = stopQualityOffers()
+			choices = qualityChoices(ret, offers) if ret and offers else []
+			if choices:
+				printDBG("getResolvedURL qualities: %d" % len(choices))
+				return RetHost(RetHost.OK, value=[CUrlItem(label, link, 0) for label, link in choices])
 			# many parser branches return [] (not '') on failure - that is no link either
 			if ret:
 				printDBG("getResolvedURL ret: " + str(ret))
@@ -3024,7 +3038,7 @@ class _SelfTestSession(object):
 
 
 class Host(CBaseHostClass, XXXParser):
-	XXXversion = "2026.10.11.2"
+	XXXversion = "2026.10.11.3"
 	currList = []
 	MAIN_URL = ''
 	SEARCH_proc = ''
@@ -3142,6 +3156,11 @@ class Host(CBaseHostClass, XXXParser):
 		finally:
 			self.currList[Index] = sel
 		self.addSiteNextPage(valTab, handler)
+		if not multiSearch and ('%s' % handler).split('-')[0] in LIVE_CAM_SITES and isinstance(valTab, list):
+			# the rooms of a live cam site: the live icon (components/iptvlist.py) instead of the video reel
+			for item in valTab:
+				if item.type == CDisplayListItem.TYPE_VIDEO and item.imageType in (CDisplayListItem.TYPE_VIDEO, '', None):
+					item.imageType = 'LIVE'
 		if not multiSearch:
 			# a search history entry over several sites (global / favorites) gets no Jump / First Page over the results
 			# of all sites, and each site's "Next page" stays below its own results
@@ -4498,10 +4517,7 @@ class Host(CBaseHostClass, XXXParser):
 				if not phTime:
 					phTime = self.cm.ph.getSearchGroups(item, '''<p class="metadata">([^>]+?)-''', 1, True)[0].strip()
 				phTitle = decodeHtml(phTitle)
-				if self.formatbest:
-					valTab.append(CDisplayListItem(phTitle, '[' + phTime + '] ' + phTitle, CDisplayListItem.TYPE_VIDEO, [CUrlItem('', self.MAIN_URL + phUrl, 1)], 0, phImage, None))
-				else:
-					valTab.append(CDisplayListItem(phTitle, '[' + phTime + '] ' + phTitle, CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + phUrl], 'xnxx-serwer', phImage, phImage))
+				valTab.append(CDisplayListItem(phTitle, '[' + phTime + '] ' + phTitle, CDisplayListItem.TYPE_VIDEO, [CUrlItem('', self.MAIN_URL + phUrl, 1)], 0, phImage, None))
 			# pager: <a class="active">1</a> ... <a href="/search/teen/1">2</a> ... <a class="last-page">223</a> <a class="no-page next" href="/search/teen/1">
 			# the site counts from 0 in the URL (page 2 = /search/teen/1), the numbers in the pager are the real pages;
 			# the "best" lists use plain links without <ul>: <a class="current">1</a> ... <a class="dir next" href="/best/2026-09/1">
@@ -4526,22 +4542,6 @@ class Host(CBaseHostClass, XXXParser):
 				# no pager on this list (endless scrolling), but /todays-selection/<n> are its further pages
 				page = int(self.cm.ph.getSearchGroups(url, r'/todays-selection/(\d+)', 1, True)[0] or 0) + 1
 				valTab.append(self.getNextItem(str(page + 1), '%s/todays-selection/%d' % (self.MAIN_URL, page), name))
-			return valTab
-
-		if 'xnxx-serwer' == name:
-			catUrl = self.currList[Index].possibleTypesOfSearch
-			self.defaultParams = self.cookieParams('xnxx.cookie')
-			sts, data = self.getPage(url, 'xnxx.cookie', 'xnxx.com', self.defaultParams)
-			phImage = self.cm.ph.getSearchGroups(data, r'''ThumbUrl169\(['"]([^"^']+?)['"]''', 1, True)[0]
-			phName = self.cm.ph.getSearchGroups(data, r'''Title\(["']([^"^']+?)["']\)''', 1, True)[0].replace("&#039;", "'")
-			phDesc = self.cm.ph.getSearchGroups(data, r'''Name\(["']([^"]+?)['"]\)''', 1, True)[0]
-			Playlist = self.cm.ph.getSearchGroups(data, r'''VideoHLS\(['"]([^ ^#]+?)['"].;''', 1, True)[0]
-			for item in getDirectM3U8Playlist(Playlist, checkContent=True, sortWithMaxBitrate=999999999):
-				phTitle = '%sp' % item.get('height') if item.get('height') else item.get('name', '')
-				phUrl = item.get('url', '')
-				if phUrl:
-					phFull = phName + '  * Resolution: ' + phTitle + '*'
-					valTab.append(CDisplayListItem(decodeHtml(phFull), phName + '\nUploader:  ' + phDesc + '\nResolution: ' + phTitle, CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], 0, decodeHtml(phImage), None))
 			return valTab
 
 		if 'HELLMOMS' == name:
@@ -4986,10 +4986,7 @@ class Host(CBaseHostClass, XXXParser):
 					phImage = self.MAIN_URL + phImage
 				phImage = strwithmeta(checkhttps(phImage), {'Referer': self.MAIN_URL + '/', 'User-Agent': self.cm.getDefaultHeader(browser='chrome')['User-Agent']})
 				phTime = self.cm.ph.getSearchGroups(item, '''duration.+[>]([^>]+?)[<]/p''', 1, True)[0].strip()
-				if self.formatbest:
-					valTab.append(CDisplayListItem(phTitle, '[' + phTime + '] ' + phTitle, CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], 0, phImage, None))
-				else:
-					valTab.append(CDisplayListItem(phTitle, '[' + phTime + '] ' + phTitle, CDisplayListItem.TYPE_CATEGORY, [phUrl], 'HELLOPORN-serwer', phImage, phImage))
+				valTab.append(CDisplayListItem(phTitle, '[' + phTime + '] ' + phTitle, CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], 0, phImage, None))
 			if next:
 				valTab.append(self.getNextItem(next, next, name, "next"))
 			return valTab
@@ -6787,34 +6784,11 @@ class Host(CBaseHostClass, XXXParser):
 				if phUrl.startswith('/'):
 					phUrl = self.MAIN_URL + phUrl
 				phImage = checkhttp(phImage)
-				if self.formatbest:
-					valTab.append(CDisplayListItem(decodeHtml(phTitle) + '  ' + size, '[' + phRuntime + '] ' + decodeHtml(phTitle) + '  ' + size + '\n' + mbrate + mbvie, CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], 0, phImage, None))
-				else:
-					valTab.append(CDisplayListItem(decodeHtml(phTitle) + '  ' + size, '[' + phRuntime + '] ' + decodeHtml(phTitle) + '  ' + size + '\n' + mbrate + mbvie, CDisplayListItem.TYPE_CATEGORY, [phUrl], 'eporner-serwer', phImage, phImage))
+				valTab.append(CDisplayListItem(decodeHtml(phTitle) + '  ' + size, '[' + phRuntime + '] ' + decodeHtml(phTitle) + '  ' + size + '\n' + mbrate + mbvie, CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], 0, phImage, None))
 			if next:
 				if next.startswith('/'):
 					next = self.MAIN_URL + next
 				valTab.append(self.getNextItem(next, next, name, catUrl))
-			return valTab
-
-		if 'eporner-serwer' == name:
-			self.MAIN_URL = 'https://www.eporner.com'
-			catUrl = self.currList[Index].possibleTypesOfSearch
-			self.defaultParams = self.cookieParams('eporner.cookie')
-			sts, data = self.getPage(url, 'eporner.cookie', 'eporner.com', self.defaultParams)
-			phImage = self.cm.ph.getSearchGroups(data, '''og.image".+=['"]([^"^']+?)['"]./>''', 1, True)[0]
-			if not phImage or phImage == '':
-				phImage = self.cm.ph.getSearchGroups(data, '''er.image".+=['"]([^"^']+?)['"]./>''', 1, True)[0]
-			phImage = strwithmeta(phImage, {'Referer': self.MAIN_URL})
-			phName = self.cm.ph.getSearchGroups(data, '''title[>]([^"^']+?)[<]/title''', 1, True)[0]
-			phName = phName.replace(' - EPORNER', '')
-			# every quality of the player API, best first (the download box needs a login from 1080p on);
-			# the entries keep the page, the stream is fetched fresh when played (Kamikaze24)
-			pageUrl = url.split('#')[0]
-			for height, label, _link in (self._epornerSources(pageUrl, data) if sts else []):
-				phTitle = '%s  *Resolution: %s*' % (decodeHtml(phName), label)
-				link = '%s#quality=%d' % (pageUrl, height)
-				valTab.append(CDisplayListItem(phTitle, phTitle, CDisplayListItem.TYPE_VIDEO, [CUrlItem('', link, 1)], 0, decodeHtml(phImage), None))
 			return valTab
 
 		if 'pornhub' == name:
@@ -18803,10 +18777,7 @@ class Host(CBaseHostClass, XXXParser):
 				except Exception:
 					pass
 				if phTitle:
-					if self.formatbest:
-						valTab.append(CDisplayListItem(decodeHtml(phTitle), '[' + Time + '] ' + decodeHtml(phTitle), CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], 0, phImage, None))
-					else:
-						valTab.append(CDisplayListItem(decodeHtml(phTitle), '[' + Time + '] ' + decodeHtml(phTitle), CDisplayListItem.TYPE_CATEGORY, [phUrl], 'hqporner-serwer', phImage, phImage))
+					valTab.append(CDisplayListItem(decodeHtml(phTitle), '[' + Time + '] ' + decodeHtml(phTitle), CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], 0, phImage, None))
 			if next:
 				next = self.RE_HREF_QUOTED.findall(next)[-1]
 				next = next.replace('&amp;', '&')
@@ -20104,35 +20075,13 @@ class Host(CBaseHostClass, XXXParser):
 				Added = self.cm.ph.getSearchGroups(item, r'[\s](\d[^"]+ago)', 1, True)[0]
 				Rate = self.cm.ph.getSearchGroups(item, 'up.{4}\n.+[\\s](\\d[0-9KHM.]+)[\\s]', 1, True)[0]
 				if phTitle:
-					if self.formatbest:
-						valTab.append(CDisplayListItem(decodeHtml(phTitle), '[' + Time + '] ' + decodeHtml(phTitle) + '\nViews: ' + Views + '\nAdded: ' + Added + '\nRating Positive: ' + Rate, CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], '', phImage, None))
-					else:
-						valTab.append(CDisplayListItem(decodeHtml(phTitle), '[' + Time + '] ' + decodeHtml(phTitle) + '\nViews: ' + Views + '\nAdded: ' + Added, CDisplayListItem.TYPE_CATEGORY, [phUrl], '8KPORNER-serwer', phImage, None))
+					valTab.append(CDisplayListItem(decodeHtml(phTitle), '[' + Time + '] ' + decodeHtml(phTitle) + '\nViews: ' + Views + '\nAdded: ' + Added + '\nRating Positive: ' + Rate, CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], '', phImage, None))
 			if next:
 				valTab.append(self.getNextItem(next_number, next, name, catUrl))
 			if last:
 				valTab.append(self.getJumpItem(last_number, root, name))
 			if current.isdigit() and int(current) >= 3:
 				valTab.append(self.getFirstItem('', root, name, 'root'))
-			return valTab
-
-		if '8KPORNER-serwer' == name:
-			catUrl = self.currList[Index].possibleTypesOfSearch
-			catImage = siteLogo
-			self.defaultParams = self.cookieParams('8kporner.cookie')
-			sts, data = self.getPageWithCFBypass(url)
-			phImage = self.cm.ph.getSearchGroups(data, r'image"\scontent=["]([^"]+?)["]', 1, True)[0]
-			phName = self.cm.ph.getSearchGroups(data, r'name":\s["]([^"]+?)["]', 1, True)[0].capitalize()
-			phDesc = self.cm.ph.getSearchGroups(data, r'tion"\scontent=["]([^"]+?)["]', 1, True)[0]
-			links = self.cm.ph.getDataBeetwenMarkers(data, '"sources":', 'playerInstance.setup', False)[1]
-			links = links.split('{ "file')
-			for item in links:
-				phUrl = self.cm.ph.getSearchGroups(item, r'":\s["](https[^"]+?)["],\s"', 1, True)[0]
-				phTitle = self.cm.ph.getSearchGroups(item, r'label":\s["]([0-9pi]+?)["]', 1, True)[0]
-				if phTitle:
-					phTitle = phName + '  *Resolution: ' + phTitle + '*'
-					valTab.append(CDisplayListItem(decodeHtml(phTitle), phDesc, CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], 0, decodeHtml(phImage), None))
-					valTab.sort(key=resolution_key, reverse=True)
 			return valTab
 
 		if 'ANALMEDIA' == name:
@@ -20842,10 +20791,7 @@ class Host(CBaseHostClass, XXXParser):
 				phTime = self.cm.ph.getSearchGroups(item, r'tion"[>]([\s0-9:]+?)[<]', 1, True)[0].strip()
 				Views = self.cm.ph.getSearchGroups(item, 'views"[>]([^$]+?)[<]', 1, True)[0]
 				Quality = self.cm.ph.getSearchGroups(item, 'lity"[>]([^$]+?)[<]', 1, True)[0].strip()
-				if self.formatbest:
-					valTab.append(CDisplayListItem(phTitle, '[' + phTime + '] ' + phTitle, CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], 0, phImage, None))
-				else:
-					valTab.append(CDisplayListItem(decodeHtml(phTitle), '[' + phTime + '] ' + decodeHtml(phTitle) + '\n' + Views + '\nBest Quality: ' + Quality, CDisplayListItem.TYPE_CATEGORY, [phUrl], 'PORNSLASH-server', phImage, phImage))
+				valTab.append(CDisplayListItem(decodeHtml(phTitle), '[' + phTime + '] ' + decodeHtml(phTitle) + '\n' + Views + '\nBest Quality: ' + Quality, CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], 0, phImage, None))
 			if next:
 				next = self.MAIN_URL + next
 				next_number = next.split('=')[-1]
@@ -20872,37 +20818,6 @@ class Host(CBaseHostClass, XXXParser):
 				next = self.MAIN_URL + next
 				next_number = next.split('=')[-1]
 				valTab.append(self.getMoreItem(_("More Pornstars"), next_number, next, name))
-			return valTab
-
-		if 'PORNSLASH-server' == name:
-			printDBG('PORNSLASH PARSER')
-			self.defaultParams = self.cookieParams('pornslash.cookie', return_data=True)
-			sts, data = self.getPage(url, 'pornslash.cookie', 'pornslash.com', self.defaultParams)
-			phName = self.cm.ph.getSearchGroups(data, r'title"\scontent=["]([^"]+?)["]', 1, True)[0].upper()
-			# not upper-cased like the title: the picture path is case-sensitive
-			phImage = self.cm.ph.getSearchGroups(data, r'image"\scontent=["]([^"]+?)["]', 1, True)[0]
-			EmbedUrl = self.cm.ph.getSearchGroups(data, 'loadSource.["](https:[^"]+)["]', 1, True)[0]
-			printDBG('EMBEDURL: ' + str(EmbedUrl))
-			sts, data2 = self.getPageWithCFBypass(EmbedUrl)
-			if not sts or data2 is None or 'code":"2200' in data2:
-				SetIPTVPlayerLastHostError(_('THIS VIDEO IS UNAVAILABLE.\nTRY AGAIN LATER!'))
-				return []
-			data2 = data2 + "#"
-			videoUrls = data2.split('X-STREAM-INF')
-			printDBG('Videolinkek: ' + str(videoUrls))
-			if len(videoUrls):
-				del videoUrls[0]
-			for item in videoUrls:
-				phUrl = self.cm.ph.getSearchGroups(item, '["]([^"]+?)[#]', 1, True)[0].strip()
-				printDBG('Videolink: ' + phUrl)
-				if not phUrl or 'VIDEO-RANGE' in phUrl:
-					phUrl = self.cm.ph.getSearchGroups(item, 'SD[R]([^"]+?)[#]', 1, True)[0].strip()
-				phTitle = self.cm.ph.getSearchGroups(item, 'NAME=["]([^"]+?)["]', 1, True)[0].strip()
-				printDBG('Video Resolution: ' + phTitle)
-				if phTitle:
-					phTitle = phName + '  *Resolution: ' + phTitle + '*'
-					valTab.append(CDisplayListItem(decodeHtml(phTitle), decodeHtml(phTitle), CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], 0, decodeHtml(phImage), decodeHtml(phImage)))
-					valTab.sort(key=resolution_key, reverse=True)
 			return valTab
 
 		if 'REALGFPORN' == name:
@@ -26898,37 +26813,13 @@ class Host(CBaseHostClass, XXXParser):
 				Added = self.cm.ph.getSearchGroups(item, r'[\s](\d[^"]+ago)', 1, True)[0]
 				Rate = self.cm.ph.getSearchGroups(item, r'up.{4}\n.+[\s](\d[0-9KHM.]+)[\s]', 1, True)[0]
 				if phTitle:
-					if self.formatbest:
-						valTab.append(CDisplayListItem(decodeHtml(phTitle), '[' + Time + '] ' + decodeHtml(phTitle) + '\nViews: ' + Views + '\nAdded: ' + Added + '\nRating Positive: ' + Rate, CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], '', phImage, None))
-					else:
-						valTab.append(CDisplayListItem(decodeHtml(phTitle), '[' + Time + '] ' + decodeHtml(phTitle) + '\nViews: ' + Views + '\nAdded: ' + Added, CDisplayListItem.TYPE_CATEGORY, [phUrl], 'HQFAP-serwer', phImage, None))
+					valTab.append(CDisplayListItem(decodeHtml(phTitle), '[' + Time + '] ' + decodeHtml(phTitle) + '\nViews: ' + Views + '\nAdded: ' + Added + '\nRating Positive: ' + Rate, CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], '', phImage, None))
 			if next:
 				valTab.append(self.getNextItem(str(next_number), next, name, catUrl))
 			if last:
 				valTab.append(self.getJumpItem(last_number, root, name))
 			if current.isdigit() and int(current) >= 3:
 				valTab.append(self.getFirstItem('', root, name))
-			return valTab
-
-		if 'HQFAP-serwer' == name:
-			catUrl = self.currList[Index].possibleTypesOfSearch
-			catImage = siteLogo
-			self.defaultParams = self.cookieParams('hqfap.cookie')
-			sts, data = self.getPageWithCFBypass(url)
-			phImage = self.cm.ph.getSearchGroups(data, r'image"\scontent=["]([^"]+?)["]', 1, True)[0]
-			if 'webp' in phImage:
-				phImage = catImage
-			phName = self.cm.ph.getSearchGroups(data, r'name":\s["]([^"]+?)["]', 1, True)[0].capitalize()
-			phDesc = self.cm.ph.getSearchGroups(data, r'tion"\scontent=["]([^"]+?)["]', 1, True)[0]
-			links = self.cm.ph.getDataBeetwenMarkers(data, '"sources":', 'playerInstance.setup', False)[1]
-			links = links.split('{ "file')
-			for item in links:
-				phUrl = self.cm.ph.getSearchGroups(item, r'":\s["](https[^"]+?)["],\s"', 1, True)[0]
-				phTitle = self.cm.ph.getSearchGroups(item, r'label":\s["]([0-9pi]+?)["]', 1, True)[0]
-				if phTitle:
-					phTitle = phName + '  *Resolution: ' + phTitle + '*'
-					valTab.append(CDisplayListItem(decodeHtml(phTitle), phDesc, CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], 0, decodeHtml(phImage), None))
-					valTab.sort(key=resolution_key, reverse=True)
 			return valTab
 
 		if 'NAIJAPORNSITE' == name:
