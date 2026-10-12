@@ -811,6 +811,9 @@ class E2iPlayerWidget(Screen):
         self.t9HistoryInput = NumericalTextInput(handleTimeout=False)
         self.t9MainListInput = NumericalTextInput(handleTimeout=False)
 
+        # before the cache dir test: its warning popup must know it runs on the main thread
+        asynccall.SetMainThreadId()
+
         # test if path for js and cookies temporary files
         # is writable, without this plugin can not works
         try:
@@ -828,7 +831,6 @@ class E2iPlayerWidget(Screen):
 
         self.statusTextValue = ""
         self.enabledHostsListOld = []
-        asynccall.SetMainThreadId()
 
         self.downloadable = False
         self.colorEnabled = parseColor("#FFFFFF")
