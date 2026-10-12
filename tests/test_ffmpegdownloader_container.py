@@ -76,6 +76,9 @@ def ff():
     _stubModule("Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh", DMHelper=helper)
     _stubModule("Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers", SidecarMixin=_Sidecar)
     _stubModule("Plugins.Extensions.IPTVPlayer.components.iptvplayerinit", TranslateTXT=lambda t: t)
+    started = []
+    _stubModule("Plugins.Extensions.IPTVPlayer.components.asynccall", AsyncMethod=lambda fnc: (lambda *a: started.append(fnc)))
+    _stubModule("Plugins.Extensions.IPTVPlayer.p2p3.UrlParse", urljoin=__import__("urllib.parse").parse.urljoin)
     _stubModule("Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings", strDecode=lambda t: t)
     _stubModule("Tools.BoundFunction", boundFunction=lambda *a: None)
     _stubModule("Components.config", config=cfg)
@@ -84,6 +87,7 @@ def ff():
     module.cfg = cfg.plugins.iptvplayer
     module.strwithmeta = types_mod.strwithmeta
     module.written = written
+    module.started = started
     yield module
     sys.modules.clear()
     sys.modules.update(saved)
@@ -158,3 +162,95 @@ def test_command_line(ff):
     cmd = ff.written["/hdd/movie/Film2.mp4.iptv.cmd"].split("|")
     assert "-movflags" not in cmd and cmd[-3:] == ["-f", "matroska", "/hdd/movie/Film2.mp4"]
     assert ff.FFMPEGDownloader.CONTAINER_EXT["mpegts"] == ".ts"
+
+
+def _finished(ff, live, terminated, size=5000):
+    # _cmdFinished of a download with `size` bytes on disk; which steps it takes
+    ff.DMHelper.STS.DOWNLOADED, ff.DMHelper.STS.INTERRUPTED, ff.DMHelper.STS.ERROR = "DOWNLOADED", "INTERRUPTED", "ERROR"
+    ff.DMHelper.getFileSize = lambda path: size
+    dl = _dl(ff, "https://cdn/x/live.m3u8", {"iptv_proto": "m3u8"})
+    dl.filePath, dl.fileCmdPath, dl.console, dl.localFileSize, dl.sidecarEnabled = "/hdd/rec/Cam.mp4", "", None, 0, False
+    dl.liveStream = live
+    steps = []
+    dl._fixFileExtension = lambda: steps.append("rename")
+    dl._finishDownloadFlow = lambda: steps.append("finish")
+    dl._cmdFinished(-1 if terminated else 0, terminated)
+    return dl.status, steps
+
+
+def test_stopping_a_live_recording_finishes_it(ff):
+    # stopping is how a live recording ends: a finished file, named after its container (MPEG-TS -> .ts)
+    # (terminate() reports the finish itself: no finish flow of its own)
+    assert _finished(ff, live=True, terminated=True) == ("DOWNLOADED", ["rename"])
+    # a stopped video download stays interrupted (resume / download again), nothing renamed
+    assert _finished(ff, live=False, terminated=True) == ("INTERRUPTED", [])
+    # a live stop without any data is no recording
+    assert _finished(ff, live=True, terminated=True, size=0)[0] == "INTERRUPTED"
+
+
+def test_speed_from_the_file_without_bitrate(ff):
+    import datetime
+    dl = _dl(ff, "https://cdn/x/live.m3u8")
+    dl.filePath, dl.localFileSize, dl.lastUpadateTime, dl.downloadSpeed = "/hdd/rec/Cam.ts", 0, None, 0
+    sizes = [1000000, 3000000]
+    ff.DMHelper.getFileSize = lambda path: sizes[0]
+    dl.updateStatistic()
+    dl.sizeSample = (dl.sizeSample[0] - datetime.timedelta(seconds=2), dl.sizeSample[1])
+    ff.DMHelper.getFileSize = lambda path: sizes[1]
+    dl.updateStatistic()
+    assert 900000 <= dl.downloadSpeed <= 1100000  # 2 MB in 2 s
+    # ffmpeg's own speed (bitrate x speed) wins when its progress line has it
+    dl.speedFromProgress, dl.downloadSpeed = True, 123
+    dl.updateStatistic()
+    assert dl.downloadSpeed == 123
+
+
+def _pages(answers):
+    # getPage stand-in: url -> playlist text
+    return lambda url, params: (url in answers, answers.get(url, ''))
+
+
+def test_manifest_live_check(ff):
+    live = "#EXTM3U\n#EXT-X-TARGETDURATION:2\n#EXTINF:2,\nseg1.ts\n"
+    vod = live + "#EXT-X-ENDLIST\n"
+    master = "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1\nvideo/720.m3u8\n"
+    assert ff.manifestIsLive("https://c/live.m3u8", _pages({"https://c/live.m3u8": live})) is True
+    assert ff.manifestIsLive("https://c/vod.m3u8", _pages({"https://c/vod.m3u8": vod})) is False
+    assert ff.manifestIsLive("https://c/x.m3u8", _pages({"https://c/x.m3u8": "#EXTM3U\n#EXT-X-PLAYLIST-TYPE:VOD\n"})) is False
+    # master playlist: its first variant decides
+    assert ff.manifestIsLive("https://c/m.m3u8", _pages({"https://c/m.m3u8": master, "https://c/video/720.m3u8": vod})) is False
+    assert ff.manifestIsLive("https://c/m.m3u8", _pages({"https://c/m.m3u8": master, "https://c/video/720.m3u8": live})) is True
+    mpd = '<?xml version="1.0"?>\n<MPD xmlns="urn:mpeg:dash:schema:mpd:2011" type="%s" profiles="x">'
+    assert ff.manifestIsLive("https://c/a.mpd", _pages({"https://c/a.mpd": mpd % "dynamic"})) is True
+    assert ff.manifestIsLive("https://c/a.mpd", _pages({"https://c/a.mpd": mpd % "static"})) is False
+    # unreadable / an error page: no answer
+    assert ff.manifestIsLive("https://c/gone.m3u8", _pages({})) is None
+    assert ff.manifestIsLive("https://c/x.m3u8", _pages({"https://c/x.m3u8": "<html>403</html>"})) is None
+
+
+def test_live_decision(ff):
+    # a single file is never live, also without a duration from ffmpeg
+    dl = _dl(ff, "https://cdn/x/video.mp4")
+    dl._startLiveCheck(dl.url.meta)
+    dl.liveStream = True
+    assert dl.liveState == {"live": False} and dl._isLiveRecording() is False
+    # HLS: checked in a work thread; until it answers ffmpeg's missing duration decides, then the playlist
+    dl = _dl(ff, "https://cdn/x/play.m3u8", {"iptv_proto": "m3u8"})
+    dl._startLiveCheck(dl.url.meta)
+    assert dl.liveState == {"live": None} and ff.started
+    dl.liveStream = True
+    assert dl._isLiveRecording() is True
+    dl.liveState["live"] = False  # a VOD whose duration ffmpeg could not read
+    assert dl._isLiveRecording() is False
+    # merge:// checks its video part; the link's own live mark always wins
+    dl = _dl(ff, "merge://audio_url|video_url", {"audio_url": "https://c/a.m3u8", "video_url": "https://c/v.m3u8"})
+    del ff.started[:]
+    dl._startLiveCheck(dl.url.meta)
+    assert dl.liveState == {"live": None} and len(ff.started) == 1
+    dl = _dl(ff, "https://cdn/x/video.mp4", {"iptv_livestream": True})
+    dl._startLiveCheck(dl.url.meta)
+    assert dl._isLiveRecording() is True
+    # buffered playback: no check at all
+    dl = _dl(ff, "https://cdn/x/play.m3u8", {"iptv_proto": "m3u8"}, download=False)
+    dl._startLiveCheck(dl.url.meta)
+    assert dl.liveState == {}

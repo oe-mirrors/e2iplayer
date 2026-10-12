@@ -823,6 +823,7 @@ class urlparser:
             "up4fun.top": self.pp.parserJWPLAYER,
             "up4stream.com": self.pp.parserJWPLAYER,
             "upbolt.to": self.pp.parserJWPLAYER,  # add 061026 (asia4arabs; /e/ page is a click-to-play form)
+            "upbom.cam": self.pp.parserJWPLAYER,  # add 121026 (movizland)
             "updown.cam": self.pp.parserJWPLAYER,  # add 061026
             "updown.icu": self.pp.parserJWPLAYER,
             "updown.sbs": self.pp.parserJWPLAYER,  # add 061026

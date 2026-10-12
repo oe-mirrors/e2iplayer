@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 10.10.2026
+# Last Modified: 12.10.2026
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.ihost import IHost, CDisplayListItem, RetHost, CUrlItem, CBaseHostClass, ArticleContent
 from Plugins.Extensions.IPTVPlayer.libs import ph
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetCookieDir, GetConfigSubDir, byteify
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetCookieDir, GetConfigSubDir, GetCacheSubDir, byteify
 from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import common
 from Plugins.Extensions.IPTVPlayer.tools.iptvfilehost import IPTVFileHost
@@ -25,6 +25,11 @@ except ImportError:  # E2iPlayer builds without the numeric keypad - full keyboa
 from Plugins.Extensions.IPTVPlayer.components.searchhistoryeditor import SearchHistoryEditor
 from Plugins.Extensions.IPTVPlayer.libs.linklisteditor import openLinkListFileEditor
 from Plugins.Extensions.IPTVPlayer.components.asynccall import IsThreadTerminated
+try:
+	from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import takePresetJumpPage
+except ImportError:  # E2iPlayer builds without the CH- page preset (e.g. zadmario): the Jump always asks
+	def takePresetJumpPage():
+		return None
 
 from itertools import chain
 import re
@@ -2826,6 +2831,57 @@ SELFTEST_TERMS = {'HENTAIOCEAN': 'anal', 'HSTREAM': 'school', 'ZIPORN': 'teen', 
 # sites whose "Next page" URL looks like page numbering but where a built page URL does not work
 NO_AUTO_JUMP = set()
 
+# "Changelog" folder of the main menu: the python3 commits that changed hostxxx or xxxparser (GitHub API, without a
+# login 60 requests an hour per IP - the answer is kept an hour in the cache folder)
+CHANGELOG_API = 'https://api.github.com/repos/oe-mirrors/e2iplayer/commits?sha=python3&per_page=40&path='
+CHANGELOG_PATHS = ('IPTVPlayer/hosts/hostxxx.py', 'IPTVPlayer/libs/xxxparser.py')
+CHANGELOG_MAX_AGE = 3600
+CHANGELOG_TOPIC = re.compile(r'xxx', re.I)
+# a commit about hostxxx itself ("hostxxx: ...", "Update HostXXX", "xxxparser/hostxxx: ...") keeps its whole text
+CHANGELOG_OWN = re.compile(r'^\s*(?:update\s+)?(?:host)?xxx|^\s*xxxparser', re.I)
+
+
+def changelogText(message):
+	# (title, the hostxxx part of the commit message): a commit about hostxxx keeps its whole text; a commit about
+	# several things only the sections whose heading names hostxxx and the hostxxx points of the other sections (with
+	# their heading); '' when nothing of it is about hostxxx. A heading is a plain line at the start or after a blank
+	# line; a plain line right below a point or a heading belongs to that section
+	lines = ('%s' % message).replace('\r', '').split('\n')
+	title = lines[0].strip()
+	body = lines[1:]
+	while body and not body[0].strip():
+		del body[0]
+	if CHANGELOG_OWN.search(title):
+		return title, '\n'.join(body).strip()
+	sections = []  # [heading, [points]], a point = its lines (the "- " line and the lines below it)
+	afterBlank = True
+	for line in body:
+		if not line.strip():
+			afterBlank = True
+			continue
+		if line.startswith('-') or line.startswith('*'):
+			if not sections:
+				sections.append(['', []])
+			sections[-1][1].append([line])
+		elif sections and not afterBlank:
+			if sections[-1][1]:
+				sections[-1][1][-1].append(line)  # the continuation of a point
+			else:
+				sections[-1][1].append([line])  # prose below a heading
+		else:
+			sections.append([line.strip(), []])
+		afterBlank = False
+	parts = []
+	for heading, points in sections:
+		if heading and CHANGELOG_TOPIC.search(heading):
+			kept = points
+		else:
+			kept = [point for point in points if CHANGELOG_TOPIC.search(' '.join(point))]
+		if kept:
+			parts.append('\n'.join(([heading] if heading else []) + ['\n'.join(point) for point in kept]))
+	return title, '\n\n'.join(parts)
+
+
 # sites whose Cloudflare blocks IPv6 clients ("Edge IP Restricted", 403) but lets IPv4 through - their pages are
 # fetched over IPv4 (the video CDN of WANKGALORE has no IPv6 at all)
 # (anacams.com: Cloudflare answers every IPv6 request with error 1034, IPv4 gets the page)
@@ -3009,14 +3065,17 @@ def fixListImages(items):
 	return items
 
 
+PAGER_ORDER = {'FIRST': 0, 'PREVIOUS': 1, 'JUMP': 2, 'LAST': 3, 'NEXT': 4}
+
+
 def nextPageLast(items):
-	# "Next page" always as the last row of a list, the other pager rows (First Page, Jump, Previous ...) above it
+	# the pager rows at the end of a list in one order: First Page, Previous Page, Jump, Last Page, "Next page" last
 	if not isinstance(items, list):
 		return
-	nexts = [i for i in items if getattr(i, 'imageType', '') == 'NEXT']
-	for item in nexts:
+	pager = [i for i in items if getattr(i, 'imageType', '') in PAGER_ORDER]
+	for item in pager:
 		items.remove(item)
-	items.extend(nexts)
+	items.extend(sorted(pager, key=lambda i: PAGER_ORDER[i.imageType]))
 
 
 class _SelfTestSession(object):
@@ -3038,7 +3097,7 @@ class _SelfTestSession(object):
 
 
 class Host(CBaseHostClass, XXXParser):
-	XXXversion = "2026.10.11.4"
+	XXXversion = "2026.10.12.1"
 	currList = []
 	MAIN_URL = ''
 	SEARCH_proc = ''
@@ -3133,8 +3192,9 @@ class Host(CBaseHostClass, XXXParser):
 			return valTab
 		url, handler, page = sel.urlItems[0], sel.urlSeparateRequest, None
 		if getattr(sel, 'pageTemplate', None):
-			# automatic Jump: the page asked for, listed as if its own "Next page" entry had been chosen
-			page = self.askPageNumber(sel)[1]
+			# automatic Jump: the page asked for (Previous Page / Last Page: their own page), listed as if its own
+			# "Next page" entry had been chosen
+			page = getattr(sel, 'fixedPage', None) or self.askPageNumber(sel)[1]
 			if page is None:
 				return self.currList  # keyboard left without a number: the list stays as it is
 			sel.listPage = page  # the page the header path shows for this list
@@ -3142,6 +3202,7 @@ class Host(CBaseHostClass, XXXParser):
 			url = sel.pageTemplate.replace('{page}', str((page - 1) * sel.pageStep if getattr(sel, 'pageStep', 0) else page))
 			pageItem = copy.copy(sel.pageSource)
 			pageItem.urlItems = [url]
+			pageItem.listPage = page  # the page it lists now (handlers that count pages read it)
 			self.currList[Index] = pageItem
 			handler = pageItem.urlSeparateRequest
 		self.listPages = []
@@ -3414,6 +3475,10 @@ class Host(CBaseHostClass, XXXParser):
 		max_page = None
 		if getattr(item, 'possibleTypesOfSearch', None):
 			max_page = int(item.possibleTypesOfSearch)
+		# CH- one page back from a page reached by a jump: the page before, without asking
+		preset = takePresetJumpPage()
+		if preset:
+			return max_page, preset
 		# the same prompt as the other hosts' Jump row (tools/iptvpaging.py), the current page filled in
 		title = _("Jump to a selected page, max: {}").format(max_page) if max_page else _("Jump to a selected page")
 		current = str(getattr(item, 'currentPage', '') or '')
@@ -3451,9 +3516,9 @@ class Host(CBaseHostClass, XXXParser):
 			valTab.append(self.getNextItem(''.join(n for n in number if n) or _('Next page'), nextUrl, handler))
 
 	def addPageItems(self, valTab, sel, url, page):
-		# "Jump" and "First Page" for every list with a "Next page" entry whose URL carries the page number.
-		# A site's own getJumpItem() entry only hands over the highest page (shown in the page prompt); a site's
-		# own First Page entry stays.
+		# First Page, Previous Page, Jump and Last Page for every list with a "Next page" entry whose URL carries the
+		# page number (a site's own First / Previous / Last rows are replaced then). A site's own getJumpItem() entry
+		# only hands over the highest page (shown in the page prompt).
 		if not isinstance(valTab, list):
 			return
 		maxPage = None
@@ -3483,6 +3548,12 @@ class Host(CBaseHostClass, XXXParser):
 		template = None
 		if ('%s' % nxt.urlSeparateRequest).split('-')[0] not in NO_AUTO_JUMP:
 			template = pageUrlTemplate(url, nxt.urlItems[0] if nxt.urlItems else '', page)
+			if not template and getattr(sel, 'pageTemplate', None):
+				# reached over a Jump / Previous Page / Last Page row: its template (this page's URL may not show it)
+				if getattr(sel, 'pageStep', 0):
+					nxt.jumpTemplate, nxt.jumpStep = sel.pageTemplate, sel.pageStep
+				else:
+					template = sel.pageTemplate
 		try:
 			maxPage = int(maxPage) if maxPage and int(maxPage) > 1 else None
 		except (TypeError, ValueError):
@@ -3495,6 +3566,10 @@ class Host(CBaseHostClass, XXXParser):
 			elif template and self.listPages:
 				pageUrl, data = max(self.listPages, key=lambda listPage: len(listPage[1]))
 				maxPage = findLastPage(template, '%s' % pageUrl, data, page)
+		if not maxPage and paging:
+			# the highest page the list knew on the page before (a pager that no longer shows it near the end)
+			known = getattr(sel, 'knownLastPage', None) or getattr(sel, 'lastPage', None)
+			maxPage = known if isinstance(known, int) and known > page else None
 		if maxPage and maxPage > page:
 			# "Next page (2/12)" in the list, "Page: 1/12" in the header path; unknown highest page: as before
 			nxt.lastPage = maxPage
@@ -3504,43 +3579,86 @@ class Host(CBaseHostClass, XXXParser):
 			if getattr(jumpRow, 'imageType', '') == 'JUMP' and getattr(jumpRow, 'pageStep', 0):
 				jumpRow.firstItem = first  # the Jump of an offset site (made by its handler) gets the First Page of this list
 				nxt.jumpTemplate, nxt.jumpStep = jumpRow.pageTemplate, jumpRow.pageStep
-		# like the pager rows of the other hosts (tools/iptvpaging.py): First Page, Jump x/y, Next page (2/y)
-		# (nextPageLast moves "Next page" to the end)
+		if first is not None and (template or getattr(nxt, 'jumpTemplate', None)):
+			# the site's own First / Previous / Last rows give way to the ones built here: the same rows and icons on
+			# every site, and they know their page (the highest page was read from the site's Last row above)
+			self.dropPagerRows(valTab, ('FIRST', 'PREVIOUS', 'LAST'))
+		# like the pager rows of the other hosts (tools/iptvpaging.py): First Page, Previous Page, Jump x/y, Last Page,
+		# Next page (2/y) (nextPageLast puts them in this order)
 		self.addFirstPageItem(valTab, first, page)
 		if template:
 			if not getattr(nxt, 'jumpStep', 0):
 				nxt.jumpTemplate, nxt.jumpStep = template, 0  # the last page (no "Next page" there) builds its Jump from it
 			self.addJumpItem(valTab, template, nxt, first, page, maxPage)
+		if getattr(nxt, 'jumpTemplate', None):
+			self.addStepItems(valTab, nxt.jumpTemplate, nxt, first, page, maxPage, nxt.jumpStep)
 
 	def addFirstPageItem(self, valTab, first, page):
 		if page and page >= 2 and first is not None and first.urlItems and not any(getattr(i, 'imageType', '') == 'FIRST' for i in valTab):
-			firstPage = copy.copy(first)
-			firstPage.name, firstPage.description, firstPage.imageType = _("First Page"), _('Page:') + ' 1', 'FIRST'
-			firstPage.iconimage = ''
-			firstPage.listPage, firstPage.firstItem = 1, first
-			valTab.append(firstPage)
+			valTab.append(self.pageOneRow(first, _("First Page"), 'FIRST'))
+
+	def pageOneRow(self, first, name, kind):
+		# a row that opens page 1 of the list again (First Page; Previous Page on page 2): a copy of the list's first
+		# entry - without the favourite marks a main-menu site row carries (marker, MENU actions)
+		row = copy.copy(first)
+		row.name, row.description, row.imageType, row.iconimage = name, _('Page:') + ' 1', kind, ''
+		row.listPage, row.firstItem = 1, first
+		row.favSite, row.hostFavourite = '', False
+		return row
+
+	@staticmethod
+	def dropPagerRows(valTab, kinds):
+		for item in [i for i in valTab if getattr(i, 'imageType', '') in kinds]:
+			valTab.remove(item)
 
 	def addJumpItem(self, valTab, template, source, first, page, maxPage, step=0):
 		title = _("Jump to a selected page, max: {}").format(maxPage) if maxPage else _("Jump to a selected page")
 		name = '%s %d/%d' % (_("Jump"), page, maxPage) if maxPage else _("Jump")
 		jump = CDisplayListItem(name, title, CDisplayListItem.TYPE_CATEGORY, [template], source.urlSeparateRequest, '', maxPage, imageType="JUMP")
 		jump.pageTemplate, jump.pageSource, jump.firstItem, jump.currentPage = template, source, first, page
+		jump.knownLastPage = maxPage
 		if step:
 			jump.pageStep = step
 		valTab.append(jump)
 
 	def addLastPageItems(self, valTab, sel, first, page):
-		# the last page of a list (no "Next page" any more): First Page and the Jump of the pages before stay; the
-		# highest page is this one. Reached over "Next page" (its jumpTemplate) or over a Jump (its pageTemplate)
-		self.addFirstPageItem(valTab, first, page)
-		if not page or page < 2 or any(getattr(i, 'imageType', '') == 'JUMP' for i in valTab):
-			return
+		# the last page of a list (no "Next page" any more): First Page, Previous Page and the Jump of the pages
+		# before; the highest page is this one. Reached over "Next page" (its jumpTemplate) or over a Jump / Previous /
+		# Last row (its pageTemplate)
 		if getattr(sel, 'pageTemplate', None):
 			template, source, step = sel.pageTemplate, getattr(sel, 'pageSource', None), getattr(sel, 'pageStep', 0)
 		else:
 			template, source, step = getattr(sel, 'jumpTemplate', None), sel, getattr(sel, 'jumpStep', 0)
+		if template and source is not None and first is not None and page and page >= 2:
+			# as on the other pages: the site's own First / Previous / Last / Jump rows give way to the ones built here
+			self.dropPagerRows(valTab, ('FIRST', 'PREVIOUS', 'LAST', 'JUMP'))
+		self.addFirstPageItem(valTab, first, page)
+		if not page or page < 2 or any(getattr(i, 'imageType', '') == 'JUMP' for i in valTab):
+			return
 		if template and source is not None:
 			self.addJumpItem(valTab, template, source, first, page, page, step)
+			self.addStepItems(valTab, template, source, first, page, page, step)  # the last page: its number is the highest
+
+	def addStepItems(self, valTab, template, source, first, page, lastPage, step=0):
+		# "Previous Page" and "Last Page" for every list hostxxx builds page URLs for (a site's own rows only where it
+		# cannot): Jump rows with their page set, opened without the page prompt; page 1 is the list's first page itself
+		kinds = [getattr(i, 'imageType', '') for i in valTab]
+		if page and page >= 2 and 'PREVIOUS' not in kinds:
+			if page == 2 and first is not None and first.urlItems:
+				valTab.append(self.pageOneRow(first, _("Previous Page"), 'PREVIOUS'))
+			else:
+				self.addFixedPageItem(valTab, 'PREVIOUS', page - 1, template, source, first, step, lastPage)
+		if lastPage and page and lastPage > page and 'LAST' not in kinds:
+			self.addFixedPageItem(valTab, 'LAST', lastPage, template, source, first, step, lastPage)
+
+	def addFixedPageItem(self, valTab, kind, target, template, source, first, step=0, lastPage=None):
+		name = _("Previous Page") if kind == 'PREVIOUS' else _("Last Page")
+		row = CDisplayListItem(name, _('Page:') + ' %d' % target, CDisplayListItem.TYPE_CATEGORY, [template], source.urlSeparateRequest, '', None, imageType=kind)
+		row.pageTemplate, row.pageSource, row.firstItem, row.fixedPage, row.listPage = template, source, first, target, target
+		row.knownLastPage = lastPage
+		if step:
+			row.pageStep = step
+		valTab.append(row)
 
 	def cookieParams(self, cookie, load=True, **extra):
 		# the usual page settings of a site: cookies kept in its own file in the cookie folder
@@ -3719,6 +3837,8 @@ class Host(CBaseHostClass, XXXParser):
 	def getArticleInfo(self, cItem):
 		# INFO key: title/text/cover/info rows of a list entry, read from its video page (structured data first,
 		# then the site's own tag/model blocks); None when the page adds nothing to the list entry
+		if cItem.urlSeparateRequest == 'XXXCHANGELOG-entry':
+			return {'title': getattr(cItem, 'changelogTitle', cItem.name), 'text': cItem.description, 'images': [], 'rich': {}}
 		url = ''
 		if cItem.type == CDisplayListItem.TYPE_VIDEO and cItem.urlItems:
 			url = getattr(cItem.urlItems[0], 'url', '')
@@ -4064,6 +4184,73 @@ class Host(CBaseHostClass, XXXParser):
 		except Exception:
 			printExc()
 
+	def _changelogCommits(self):
+		# [{'sha', 'date', 'message'}] newest first, from the cache when it is younger than an hour; an older cache
+		# when GitHub does not answer (rate limit, no internet); None without both
+		path = GetCacheSubDir('hostxxx', 'changelog.json')
+		cached = None
+		try:
+			if os.path.isfile(path):
+				with open(path, 'r') as f:
+					cached = json.load(f)
+				if not isinstance(cached, dict) or not isinstance(cached.get('commits'), list):
+					cached = None  # a broken cache file: as if there were none
+				elif time_time() - cached.get('time', 0) < CHANGELOG_MAX_AGE:
+					return cached['commits']
+		except Exception:
+			printExc()
+			cached = None
+		header = {'User-Agent': 'E2iPlayer', 'Accept': 'application/vnd.github+json'}
+		commits = {}
+		for filePath in CHANGELOG_PATHS:
+			sts, data = self.cm.getPage(CHANGELOG_API + filePath, {'header': header, 'return_data': True, 'timeout': 15})
+			try:
+				items = json.loads(data) if sts else None
+			except Exception:
+				printExc()
+				items = None
+			if not isinstance(items, list):
+				printDBG('XXX changelog: GitHub gave no commit list for %s' % filePath)
+				return cached['commits'] if cached else None
+			for item in items:
+				if len(item.get('parents', [])) > 1:
+					continue  # a merge commit repeats the text of the commit it merges
+				commit = item.get('commit', {})
+				commits[item.get('sha', '')] = {'sha': item.get('sha', ''), 'date': commit.get('committer', {}).get('date', ''), 'message': commit.get('message', '')}
+		result = sorted(commits.values(), key=lambda c: c['date'], reverse=True)
+		try:
+			with open(path, 'w') as f:
+				json.dump({'time': int(time_time()), 'commits': result}, f)
+		except Exception:
+			printExc()
+		return result
+
+	def changelogItems(self):
+		# one row per commit with a hostxxx part; OK / INFO shows that part. Commits of a day after this file's
+		# XXXversion are marked: the feed update has not brought them yet
+		commits = self._changelogCommits()
+		if commits is None:
+			msg = 'GitHub did not answer - please try again later.'
+			return [CDisplayListItem(msg, msg, CDisplayListItem.TYPE_ARTICLE, [''], '', '', None)]
+		try:
+			installedDay = '%04d-%02d-%02d' % tuple(int(part) for part in self.XXXversion.split('.')[:3])
+		except ValueError:
+			installedDay = '9999'
+		valTab = []
+		for commit in commits:
+			# str also on Python 2 (json gives unicode there, the list rows want str)
+			title, text = (ensure_str(part) for part in changelogText(commit.get('message', '')))
+			if not text and not CHANGELOG_TOPIC.search(title):
+				continue
+			day = ensure_str(commit.get('date', ''))[:10]  # UTC, a day of the XXXversion (local) is not marked
+			name = '%s  %s' % (day, title)
+			if day > installedDay:
+				name += '  (not installed yet)'
+			item = CDisplayListItem(name, text or title, CDisplayListItem.TYPE_ARTICLE, [''], 'XXXCHANGELOG-entry', '', None, imageType='INFO')
+			item.changelogTitle = title
+			valTab.append(item)
+		return valTab
+
 	def _selfTestSummary(self, data):
 		sites = data.get('sites', {})
 		failed = len([v for v in sites.values() if not v.get('ok')])
@@ -4077,7 +4264,7 @@ class Host(CBaseHostClass, XXXParser):
 			valTab.append(CDisplayListItem(_('No self-test result yet.'), '', CDisplayListItem.TYPE_ARTICLE, [''], '', '', None))
 			return valTab
 		checks = self._selfTestCheckNames(data.get('checks', [])) or _('menu and list only')
-		valTab.append(CDisplayListItem(_('Self-test') + ' ' + self._selfTestSummary(data), '%s\n%s: %s' % (checks, _('Report file'), self._selfTestReportPath()), CDisplayListItem.TYPE_ARTICLE, [''], '', '', None))
+		valTab.append(CDisplayListItem(_('Self-test') + ' ' + self._selfTestSummary(data), '%s\n%s: %s' % (checks, _('Report file'), self._selfTestReportPath()), CDisplayListItem.TYPE_ARTICLE, [''], '', '', None, imageType='CUSTOM'))
 		allSites = dict(SITEDATA)
 		allSites.update(SITEDATA_CAMS)
 		allSites.update(SITEDATA_HENTAI)
@@ -4113,6 +4300,7 @@ class Host(CBaseHostClass, XXXParser):
 			valTab.append(self.getJumpItem(lastPage, template.replace('{page}', '0'), name))
 			jump = CDisplayListItem('%s %d/%d' % (_('Jump'), curPage, lastPage), _('Jump to a selected page, max: {}').format(lastPage), CDisplayListItem.TYPE_CATEGORY, [template], name, '', lastPage, imageType='JUMP')
 			jump.pageTemplate, jump.pageSource, jump.pageStep, jump.currentPage = template, nextItem, step, curPage
+			jump.knownLastPage = lastPage
 			valTab.append(jump)
 
 	def fourTubePaySite(self, url):
@@ -4128,7 +4316,7 @@ class Host(CBaseHostClass, XXXParser):
 		return bool(re.match(r'(?:joins?|tours?\d*|landing)\.', host))
 
 	def getLastItem(self, last_number, url, name):
-		item = CDisplayListItem(_("Last"), _('Page:') + " " + str(last_number), CDisplayListItem.TYPE_CATEGORY, [url], name, '', 'last_page', imageType="LAST")
+		item = CDisplayListItem(_("Last Page"), _('Page:') + " " + str(last_number), CDisplayListItem.TYPE_CATEGORY, [url], name, '', 'last_page', imageType="LAST")
 		if str(last_number).isdigit():
 			item.listPage = int(last_number)
 		return item
@@ -4203,7 +4391,7 @@ class Host(CBaseHostClass, XXXParser):
 						siteItem.hostFavourite = True
 						rows.append(siteItem)
 				if rows:
-					valTab.append(CDisplayListItem(title + ' (%d)' % len(rows), '', CDisplayListItem.TYPE_ARTICLE, [''], '', '', None))
+					valTab.append(CDisplayListItem(title + ' (%d)' % len(rows), '', CDisplayListItem.TYPE_ARTICLE, [''], '', '', None, imageType='MARKER'))
 					valTab.extend(rows)
 			siteRows = len(valTab)
 			valTab = searchItems(valTab, True)  # SEARCH_proc = 'FAVORITES-search'
@@ -4230,6 +4418,9 @@ class Host(CBaseHostClass, XXXParser):
 			valTab = self.searchSites(hosts, url)
 			self.SEARCH_proc = 'FAVORITES-search'
 			return valTab
+
+		if name == 'XXXCHANGELOG':
+			return self.changelogItems()
 
 		if name == 'main-menu':
 			valTabCams = []
@@ -4284,17 +4475,19 @@ class Host(CBaseHostClass, XXXParser):
 			if offSites:
 				printDBG('XXX: sites switched off in the settings (%d): %s' % (len(offSites), ', '.join(sorted(offSites))))
 
-			valTab.insert(0, CDisplayListItem(_('----------  Porn Sites  ----------') + ' (%d)' % len(valTab), '', CDisplayListItem.TYPE_ARTICLE, [''], '', '', None))
+			valTab.insert(0, CDisplayListItem(_('----------  Porn Sites  ----------') + ' (%d)' % len(valTab), '', CDisplayListItem.TYPE_ARTICLE, [''], '', '', None, imageType='MARKER'))
 
-			valTab.append(CDisplayListItem(_('----------  Live Cams  ----------') + ' (%d)' % len(valTabCams), '', CDisplayListItem.TYPE_ARTICLE, [''], '', '', None))
+			valTab.append(CDisplayListItem(_('----------  Live Cams  ----------') + ' (%d)' % len(valTabCams), '', CDisplayListItem.TYPE_ARTICLE, [''], '', '', None, imageType='MARKER'))
 
 			valTab.extend(valTabCams)
 
-			valTab.append(CDisplayListItem(_('----------  Anime / Hentai  ----------') + ' (%d)' % len(valTabHentai), '', CDisplayListItem.TYPE_ARTICLE, [''], '', '', None))
+			valTab.append(CDisplayListItem(_('----------  Anime / Hentai  ----------') + ' (%d)' % len(valTabHentai), '', CDisplayListItem.TYPE_ARTICLE, [''], '', '', None, imageType='MARKER'))
 			valTab.extend(valTabHentai)
 
-			valTab.append(CDisplayListItem(_('----------  Other  ----------'), '', CDisplayListItem.TYPE_ARTICLE, [''], '', '', None))
-			valTab.append(CDisplayListItem('+++ XXXLIST +++   XXXversion = ' + str(self.XXXversion), '+++ XXXLIST +++   XXXversion = ' + str(self.XXXversion), CDisplayListItem.TYPE_CATEGORY, [''], 'XXXLIST', '', None))
+			valTab.append(CDisplayListItem(_('----------  Other  ----------'), '', CDisplayListItem.TYPE_ARTICLE, [''], '', '', None, imageType='MARKER'))
+			valTab.append(CDisplayListItem('+++ XXXLIST +++', '+++ XXXLIST +++', CDisplayListItem.TYPE_CATEGORY, [''], 'XXXLIST', '', None))
+			valTab.append(CDisplayListItem('+++ Changelog +++', 'hostxxx changes (the last commits on GitHub)', CDisplayListItem.TYPE_CATEGORY, [''], 'XXXCHANGELOG', '', None, imageType='INFO'))
+			valTab.append(CDisplayListItem('+++ XXXversion = %s +++' % self.XXXversion, '+++ XXXversion = %s +++' % self.XXXversion, CDisplayListItem.TYPE_ARTICLE, [''], '', '', None))
 
 			# the favorites folder (only when a favorite site is enabled) on top of the menu
 			self.mainMenuSites = favSites
@@ -4306,7 +4499,7 @@ class Host(CBaseHostClass, XXXParser):
 				valTab = searchItems(valTab)
 
 			if config.plugins.iptvplayer.xxxselftest.value:
-				valTab.append(CDisplayListItem('+++ ' + _('Site self-test') + ' +++', _('Checks every enabled site: menu, a list with videos and, in the full test, the stream link of one video.'), CDisplayListItem.TYPE_CATEGORY, ['menu'], 'XXXTEST', '', None))
+				valTab.append(CDisplayListItem('+++ ' + _('Site self-test') + ' +++', _('Checks every enabled site: menu, a list with videos and, in the full test, the stream link of one video.'), CDisplayListItem.TYPE_CATEGORY, ['menu'], 'XXXTEST', '', None, imageType='CUSTOM'))
 
 			return valTab
 
@@ -4325,14 +4518,14 @@ class Host(CBaseHostClass, XXXParser):
 				return self._selfTestResultItems(self._selfTest(checks, failed))
 			count = len(self._selfTestSites())
 			full = self._selfTestChecks()
-			valTab.append(CDisplayListItem(_('Quick test: menu and a list with videos') + ' (%d)' % count, _('Every enabled site: does the menu open, does a list show videos? Takes a few minutes.'), CDisplayListItem.TYPE_CATEGORY, ['quick|all'], 'XXXTEST', '', None))
-			valTab.append(CDisplayListItem(_('Full test') + ' (%d): %s' % (count, self._selfTestCheckNames(full) or _('menu and list only')), _('Like the quick test, plus the checks chosen in the host settings (Debug). Takes about 20-40 minutes.'), CDisplayListItem.TYPE_CATEGORY, ['full|all'], 'XXXTEST', '', None))
+			valTab.append(CDisplayListItem(_('Quick test: menu and a list with videos') + ' (%d)' % count, _('Every enabled site: does the menu open, does a list show videos? Takes a few minutes.'), CDisplayListItem.TYPE_CATEGORY, ['quick|all'], 'XXXTEST', '', None, imageType='CUSTOM'))
+			valTab.append(CDisplayListItem(_('Full test') + ' (%d): %s' % (count, self._selfTestCheckNames(full) or _('menu and list only')), _('Like the quick test, plus the checks chosen in the host settings (Debug). Takes about 20-40 minutes.'), CDisplayListItem.TYPE_CATEGORY, ['full|all'], 'XXXTEST', '', None, imageType='CUSTOM'))
 			if last.get('sites'):
 				failed = len([v for v in last['sites'].values() if not v.get('ok')])
 				kind = 'full' if last.get('checks') else 'quick'
 				if failed:
-					valTab.append(CDisplayListItem(_('Test the failed sites again') + ' (%d)' % failed, _('Only the sites that failed in the last run, same checks.'), CDisplayListItem.TYPE_CATEGORY, ['%s|failed' % kind], 'XXXTEST', '', None))
-				valTab.append(CDisplayListItem(_('Last result') + ': %s' % self._selfTestSummary(last), _('Report file') + ': ' + self._selfTestReportPath(), CDisplayListItem.TYPE_CATEGORY, ['result'], 'XXXTEST', '', None))
+					valTab.append(CDisplayListItem(_('Test the failed sites again') + ' (%d)' % failed, _('Only the sites that failed in the last run, same checks.'), CDisplayListItem.TYPE_CATEGORY, ['%s|failed' % kind], 'XXXTEST', '', None, imageType='CUSTOM'))
+				valTab.append(CDisplayListItem(_('Last result') + ': %s' % self._selfTestSummary(last), _('Report file') + ': ' + self._selfTestReportPath(), CDisplayListItem.TYPE_CATEGORY, ['result'], 'XXXTEST', '', None, imageType='CUSTOM'))
 			return valTab
 
 		if 'HISTORYDELETE' == name:
@@ -6640,7 +6833,8 @@ class Host(CBaseHostClass, XXXParser):
 			valTab.insert(0, CDisplayListItem(menuHeader(_('Most favourited')), _('Most favourited'), CDisplayListItem.TYPE_CATEGORY, ["https://www.redtube.com/mostfavored?period=alltime"], 'redtube-clips', siteLogo, None))
 			valTab.insert(0, CDisplayListItem(menuHeader(_('Most viewed')), _('Most viewed'), CDisplayListItem.TYPE_CATEGORY, ["https://www.redtube.com/mostviewed?period=alltime"], 'redtube-clips', siteLogo, None))
 			valTab.insert(0, CDisplayListItem(menuHeader(_('Top rated')), _('Top rated'), CDisplayListItem.TYPE_CATEGORY, ["https://www.redtube.com/top?period=alltime"], 'redtube-clips', siteLogo, None))
-			valTab.insert(0, CDisplayListItem(menuHeader(_('Latest')), _('Latest'), CDisplayListItem.TYPE_CATEGORY, ["https://www.redtube.com/"], 'redtube-clips', siteLogo, None))
+			# /newest: the home page lists the same newest videos but ends after page 7
+			valTab.insert(0, CDisplayListItem(menuHeader(_('Latest')), _('Latest'), CDisplayListItem.TYPE_CATEGORY, ["https://www.redtube.com/newest"], 'redtube-clips', siteLogo, None))
 			return searchItems(valTab, True)
 		if 'redtube-clips' == name:
 			self.MAIN_URL = 'https://www.redtube.com'
@@ -9004,7 +9198,8 @@ class Host(CBaseHostClass, XXXParser):
 			if catUrl is None:
 				self.page = 1
 			else:
-				self.page += 1
+				# the page the chosen row leads to (hostxxx's pager sets it): counting on is wrong after going back with CH-
+				self.page = getattr(self.currList[Index], 'listPage', None) or self.page + 1
 			self.defaultParams = self.cookieParams('tubepornclassic.cookie')
 			sts, data = self.getPage(url, 'tubepornclassic.cookie', 'tubepornclassic.com', self.defaultParams)
 			if not sts:
@@ -9946,7 +10141,8 @@ class Host(CBaseHostClass, XXXParser):
 			if catUrl is None:
 				self.page = 1
 			else:
-				self.page += 1
+				# the page the chosen row leads to (hostxxx's pager sets it): counting on is wrong after going back with CH-
+				self.page = getattr(self.currList[Index], 'listPage', None) or self.page + 1
 			self.defaultParams = self.cookieParams('txxx.cookie')
 			sts, data = self.getPage(url, 'txxx.cookie', 'txxx.com', self.defaultParams)
 			if not sts:
@@ -9993,7 +10189,8 @@ class Host(CBaseHostClass, XXXParser):
 			if catUrl is None:
 				self.page = 1
 			else:
-				self.page += 1
+				# the page the chosen row leads to (hostxxx's pager sets it): counting on is wrong after going back with CH-
+				self.page = getattr(self.currList[Index], 'listPage', None) or self.page + 1
 			self.defaultParams = self.cookieParams('hclips.cookie')
 			sts, data = self.getPage(url, 'hclips.cookie', 'hclips.com', self.defaultParams)
 			if not sts:
@@ -10944,7 +11141,8 @@ class Host(CBaseHostClass, XXXParser):
 			if catUrl is None:
 				self.page = 1
 			else:
-				self.page += 1
+				# the page the chosen row leads to (hostxxx's pager sets it): counting on is wrong after going back with CH-
+				self.page = getattr(self.currList[Index], 'listPage', None) or self.page + 1
 			if '/search/' not in url:
 				url = url + '?mode=async&function=get_block&block_id=list_videos_common_videos_list&sort_by=post_date&from=%s' % self.page
 			else:
@@ -12480,12 +12678,12 @@ class Host(CBaseHostClass, XXXParser):
 				else:
 					next_page = currUrl + next + '/'
 				valTab.append(self.getNextItem(next, next_page, name, catUrl))
-			if last and int(last) > int(next):
+			if last and next and int(last) > int(next):
 				if 'search' in url:
 					last_page = url + "?mode=async&function=get_block&block_id=list_videos_videos_list_search_result&from_videos=" + str(last)
 				else:
 					last_page = currUrl + last + '/'
-				valTab.append(CDisplayListItem('LAST', 'Page: ' + str(last), CDisplayListItem.TYPE_CATEGORY, [last_page], name, '', 'last_page'))
+				valTab.append(self.getLastItem(last, last_page, name))
 			if int(curr) > 2:
 				if 'search' in url:
 					first_page = url + "?mode=async&function=get_block&block_id=list_videos_videos_list_search_result&from_videos=1"
@@ -12654,13 +12852,13 @@ class Host(CBaseHostClass, XXXParser):
 				else:
 					next_page = currUrl + next + '/'
 				valTab.append(self.getNextItem(next, next_page, name, catUrl))
-			if last:
+			if last and next:
 				if int(last) > int(next):
 					if 'search' in url:
 						last_page = url + "?mode=async&function=get_block&block_id=list_videos_videos_list_search_result&from_videos=" + str(last)
 					else:
 						last_page = currUrl + last + '/'
-					valTab.append(CDisplayListItem('LAST', 'Page: ' + str(last), CDisplayListItem.TYPE_CATEGORY, [last_page], name, '', 'last_page'))
+					valTab.append(self.getLastItem(last, last_page, name))
 			if int(curr) > 2:
 				if 'search' in url:
 					first_page = url + "?mode=async&function=get_block&block_id=list_videos_videos_list_search_result&from_videos=1"
@@ -14109,7 +14307,8 @@ class Host(CBaseHostClass, XXXParser):
 			if catUrl is None:
 				self.page = 1
 			else:
-				self.page += 1
+				# the page the chosen row leads to (hostxxx's pager sets it): counting on is wrong after going back with CH-
+				self.page = getattr(self.currList[Index], 'listPage', None) or self.page + 1
 			COOKIEFILE = join(GetCookieDir(), 'veporn.cookie')
 			self.MAIN_URL = 'https://veporn.com'
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
@@ -25071,7 +25270,8 @@ class Host(CBaseHostClass, XXXParser):
 			if catUrl != 'Next':
 				self.page = 1
 			else:
-				self.page += 1
+				# the page the chosen row leads to (hostxxx's pager sets it): counting on is wrong after going back with CH-
+				self.page = getattr(self.currList[Index], 'listPage', None) or self.page + 1
 			COOKIEFILE = join(GetCookieDir(), 'bongacams.cookie')
 			if catUrl.startswith('---'):
 				url1 = url
@@ -25125,7 +25325,7 @@ class Host(CBaseHostClass, XXXParser):
 						printDBG('Host ile: ' + str(x))
 				except Exception:
 						printExc()
-			valTab.append(CDisplayListItem('Next', 'Page: ' + str(self.page + 1), CDisplayListItem.TYPE_CATEGORY, [next], name, '', 'Next'))
+			valTab.append(self.getNextItem(str(self.page + 1), next, name, 'Next'))
 			return valTab
 
 		if 'XMEGADRIVE' == name:

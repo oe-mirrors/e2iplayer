@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 11.10.2026 - OK plays at once with the default player, MENU holds every action of the row plus "Select" /
+# Last Modified: 12.10.2026 - the subtitles saved with a download (name.de.srt) are removed / renamed with it.
+# 11.10.2026 - OK plays at once with the default player, MENU holds every action of the row plus "Select" /
 #   "Select all"; marked items are removed in one go.
 # 10.10.2026 - batch download items: "Loading" while their links are looked up, the reason of an ERROR in the info line.
 # 03.10.2026 - Archive no longer lists .jpg/.txt sidecars as extra copies of their video; LRM prefix for RTL file names in the list.
@@ -27,7 +28,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvchoicebox import IPTVChoiceBox
 from Plugins.Extensions.IPTVPlayer.components.iptvlist import IPTVDMActionChoiceBoxList, IPTVPlayerSelectOptionChoiceBoxList
 ###################################################
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
-from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import shellQuote
+from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import shellQuote, subtitleSidecarFiles
 ###################################################
 # FOREIGN import
 ###################################################
@@ -366,7 +367,12 @@ class IPTVDMWidget(Screen):
         # for it instead - baseName is stable across that rename. Escaped
         # since movie titles routinely contain [, ], ? etc., which glob
         # would otherwise interpret as pattern metacharacters.
-        for candidate in glob(glob_escape(baseName) + '.*.iptv.cmd'):
+        # and the temp file of a subtitle mux cut off by a crash or a reboot
+        for candidate in glob(glob_escape(baseName) + '.*.iptv.cmd') + glob(glob_escape(baseName) + '.iptv.remux.tmp.*'):
+            if candidate not in candidates:
+                candidates.append(candidate)
+        # the subtitles saved with the download (name.srt, name.de.srt ...)
+        for candidate in subtitleSidecarFiles(baseName):
             if candidate not in candidates:
                 candidates.append(candidate)
 
@@ -385,9 +391,11 @@ class IPTVDMWidget(Screen):
         newBase = os_path.splitext(newFileName)[0]
         if oldBase == newBase:
             return
-        for ext in ['.txt', '.jpg', '.jpeg']:
-            oldSidecar = oldBase + ext
-            newSidecar = newBase + ext
+        # the subtitles keep their language part: name.de.srt -> new name.de.srt
+        renames = [(oldBase + ext, newBase + ext) for ext in ['.txt', '.jpg', '.jpeg']]
+        oldName = os_path.basename(oldBase)
+        renames.extend((path, newBase + os_path.basename(path)[len(oldName):]) for path in subtitleSidecarFiles(oldBase))
+        for oldSidecar, newSidecar in renames:
             try:
                 if not os_path.isfile(oldSidecar):
                     continue

@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 11.10.2026
+# Last Modified: 12.10.2026
+# 12.10.2026 - watching page loader changed again: its key variables are pushed into the array (_arrX['p'+'ush'](...))
+#   and rounded with Math.round under an alias instead of Math.floor - both read now
 # 11.10.2026 - the token API (cimaleech.vercel.app) answers 404: when it gives no link, MyE2i (NAV job, extension
 #   v1.21) opens the watch button's ad gateway in the user's browser and sends back the tokenised watching link
 #   the gateway's scripts build there (obfuscated, with decoys against scrapers - not doable without a browser);
@@ -77,19 +79,28 @@ def _numSum(expr):
     return sum(int(n, 16) if n.lower().startswith("0x") else int(n) for n in NUM_RE.findall(expr or ""))
 
 
-_JS_NUM_NODES = (ast.Expression, ast.BinOp, ast.UnaryOp, ast.Constant, ast.Add, ast.Sub, ast.Mult, ast.Div, ast.Mod, ast.USub, ast.UAdd, ast.Call, ast.Name, ast.Load)
+# bit operators (<< >> | ^ &) since the loader of 12.10.2026; Python and JS rank them alike, the operands are small ints
+_JS_NUM_NODES = (ast.Expression, ast.BinOp, ast.UnaryOp, ast.Constant, ast.Add, ast.Sub, ast.Mult, ast.Div, ast.Mod, ast.USub, ast.UAdd, ast.Call, ast.Name, ast.Load,
+                 ast.LShift, ast.RShift, ast.BitOr, ast.BitXor, ast.BitAnd)
 
 
-def _jsNum(expr, floorName=""):
-    # a JS arithmetic expression of number literals (hex too), + - * / % and Math.floor (under its alias) -> int;
-    # anything else (a name, a string, a call of something else) is refused - no eval() of page code
+def _jsRound(value):
+    # JS Math.round: halves go up (Python's round() rounds them to even)
+    return math.floor(value + 0.5)
+
+
+def _jsNum(expr, floorName="", roundName=""):
+    # a JS arithmetic expression of number literals (hex too), + - * / % and Math.floor / Math.round (under their
+    # aliases) -> int; anything else (a name, a string, a call of something else) is refused - no eval() of page code
     if floorName:
         expr = re.sub(r"\b%s\s*\(" % re.escape(floorName), "floor(", expr)
+    if roundName:
+        expr = re.sub(r"\b%s\s*\(" % re.escape(roundName), "jsround(", expr)
     tree = ast.parse(expr.strip(), mode="eval")
     for node in ast.walk(tree):
-        if not isinstance(node, _JS_NUM_NODES) or (isinstance(node, ast.Name) and node.id != "floor") or (isinstance(node, ast.Constant) and not isinstance(node.value, (int, float))):
+        if not isinstance(node, _JS_NUM_NODES) or (isinstance(node, ast.Name) and node.id not in ("floor", "jsround")) or (isinstance(node, ast.Constant) and not isinstance(node.value, (int, float))):
             raise ValueError("not a plain number expression: %r" % expr)
-    return int(eval(compile(tree, "js", "eval"), {"__builtins__": {}}, {"floor": math.floor}))
+    return int(eval(compile(tree, "js", "eval"), {"__builtins__": {}}, {"floor": math.floor, "jsround": _jsRound}))
 
 
 def _seasonNum(text):
@@ -512,10 +523,15 @@ class CimaNow(GenericFolderWatchedScraperMixin, CBaseHostClass):
             code = b64Decode(loader.group(1))
             floor = re.search(r"""var\s+(\w+)\s*=\s*\w+\[\s*['"]f['"]\s*\+\s*['"]loor['"]\s*\]""", code) or re.search(r"var\s+(\w+)\s*=\s*Math\.floor\b", code)
             floorName = floor.group(1) if floor else ""
+            rounder = re.search(r"""var\s+(\w+)\s*=\s*\w+\[\s*['"]r['"]\s*\+\s*['"]ound['"]\s*\]""", code) or re.search(r"var\s+(\w+)\s*=\s*Math\.round\b", code)
+            roundName = rounder.group(1) if rounder else ""
             defs = dict(re.findall(r"var\s+(\w+)\s*=\s*([^;]+);", code))
             zindex = re.search(r"""\.style\[\s*['"]z-i['"]\s*\+\s*['"]ndex['"]\s*\]\s*=\s*String\((.*?)\)\s*;""", code)
             width = re.search(r"""idth:['"]\s*\+\s*String\((.*?)\)\s*\+\s*['"]px""", code)
-            arrVars = re.search(r"=\s*\[([\w\s,$]+)\]\s*;\s*for", code)
+            # the key variables: "_arrX = [a, b, ...]; for" (11.10.) or "_arrX['p'+'ush'](a, b, ...); for" (12.10.)
+            arrVars = re.search(r"=\s*\[([\w\s,$]+)\]\s*;\s*for", code) or \
+                re.search(r"""\[\s*['"]p['"]\s*\+\s*['"]ush['"]\s*\]\s*\(([\w\s,$]+)\)\s*;\s*for""", code) or \
+                re.search(r"\.push\(([\w\s,$]+)\)\s*;\s*for", code)
             if not arrVars:
                 printDBG("CimaNow._decodeWatchingSum: no key variables")
                 return ""
@@ -523,16 +539,16 @@ class CimaNow(GenericFolderWatchedScraperMixin, CBaseHostClass):
             def value(name, depth=0):
                 expr = defs[name].strip()
                 if "getComputedStyle" in expr and zindex:
-                    return _jsNum(zindex.group(1), floorName)
+                    return _jsNum(zindex.group(1), floorName, roundName)
                 if "offsetWidth" in expr and width:
-                    return _jsNum(width.group(1), floorName)
+                    return _jsNum(width.group(1), floorName, roundName)
                 if "?" in expr:  # the environment check: 1 in a browser
                     return 1
                 if depth < 5:
                     for other in set(re.findall(r"\b[A-Za-z_$][\w$]*\b", expr)):
-                        if other != floorName and other in defs and other != name:
+                        if other not in (floorName, roundName) and other in defs and other != name:
                             expr = re.sub(r"\b%s\b" % re.escape(other), str(value(other, depth + 1)), expr)
-                return _jsNum(expr, floorName)
+                return _jsNum(expr, floorName, roundName)
 
             key = str(sum(value(v.strip()) for v in arrVars.group(1).split(",") if v.strip()))
             key += "".join(chr(int(n)) for n in re.findall(r"toString\(\)\s*\+\s*String\.fromCharCode\((\d+)\)", code)[:1])
@@ -541,7 +557,7 @@ class CimaNow(GenericFolderWatchedScraperMixin, CBaseHostClass):
             # the first .substring() whose argument is a plain number (other code may use substring too)
             for arg in re.findall(r"\.substring\(([^;]+?)\)\s*;", code):
                 try:
-                    out = out[_jsNum(arg, floorName):]
+                    out = out[_jsNum(arg, floorName, roundName):]
                     break
                 except (ValueError, SyntaxError):
                     continue

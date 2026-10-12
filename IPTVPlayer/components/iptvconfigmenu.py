@@ -387,6 +387,9 @@ class ConfigMenu(ConfigBaseWidget):
         list.append(getConfigListEntry("    " + _("File format of DASH (MPD) downloads"), config.plugins.iptvplayer.dash_out_container))
         list.append(getConfigListEntry("    " + _("File format of HLS (M3U8) downloads"), config.plugins.iptvplayer.hls_out_container))
         list.append(getConfigListEntry("    " + _("File format of single video files (FFmpeg)"), config.plugins.iptvplayer.file_out_container))
+        list.append(getConfigListEntry("    " + _("Subtitles"), config.plugins.iptvplayer.download_subtitles))
+        if config.plugins.iptvplayer.download_subtitles.value != "off":
+            list.append(getConfigListEntry("        " + _("Subtitle languages"), config.plugins.iptvplayer.download_subtitles_lang))
         list.append(getConfigListEntry("    " + _("Show download notification"), config.plugins.iptvplayer.IPTVDMShowNotification))
         if config.plugins.iptvplayer.IPTVDMShowNotification.value:
             list.append(getConfigListEntry("        " + _("Download notification duration"), config.plugins.iptvplayer.IPTVDMNotificationDuration))
@@ -967,6 +970,7 @@ class ConfigMenu(ConfigBaseWidget):
             config.plugins.iptvplayer.hostsListType,
             config.plugins.iptvplayer.skinforceallinternal,
             config.plugins.iptvplayer.IPTVDMShowNotification,
+            config.plugins.iptvplayer.download_subtitles,
             config.plugins.iptvplayer.torrserver_enabled,
             config.plugins.iptvplayer.torrserver_cache_location,
             config.plugins.iptvplayer.torrserver_upload,

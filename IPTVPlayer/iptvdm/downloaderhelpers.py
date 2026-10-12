@@ -1,19 +1,23 @@
 # -*- coding: utf-8 -*-
 # IPTV download manager API
 # # added: 07.08.2026 - Shared helpers for Downloader: Py2/Py3 safe text & path handling, shell quoting, and the sidecar, (.txt description + .jpg poster). - Kamikaze24
+# 12.10.2026 - subtitles of the link saved with a download (name.de.srt) or put into its MKV (setting "Subtitles").
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, eConnectCallback, GetNice, E2PrioFix
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, eConnectCallback, GetNice, E2PrioFix, GetTmpDir, GetDefaultLang
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import common
 ###################################################
 # FOREIGN import
 ###################################################
 from Tools.BoundFunction import boundFunction
+from Components.config import config
 from enigma import eConsoleAppContainer
 import os
+import re
 import signal
 import threading
+import time
 ###################################################
 
 try:
@@ -184,6 +188,127 @@ def safeRemoveFile(path):
         printExc()
 
 
+# language names and ISO 639-2 codes the hosts give their subtitle tracks -> ISO 639-1 (file name "name.de.srt")
+SUBTITLE_LANG_NAMES = {'ger': 'de', 'deu': 'de', 'german': 'de', 'deutsch': 'de', 'eng': 'en', 'english': 'en',
+                       'fre': 'fr', 'fra': 'fr', 'french': 'fr', u'fran\xe7ais': 'fr', 'francais': 'fr',
+                       'spa': 'es', 'spanish': 'es', u'espa\xf1ol': 'es', 'espanol': 'es',
+                       'ita': 'it', 'italian': 'it', 'italiano': 'it', 'pol': 'pl', 'polish': 'pl', 'polski': 'pl',
+                       'ara': 'ar', 'arabic': 'ar', 'tur': 'tr', 'turkish': 'tr', u't\xfcrk\xe7e': 'tr', 'rus': 'ru',
+                       'russian': 'ru', 'por': 'pt', 'portuguese': 'pt', u'portugu\xeas': 'pt', 'dut': 'nl', 'nld': 'nl',
+                       'dutch': 'nl', 'cze': 'cs', 'ces': 'cs', 'czech': 'cs', 'hun': 'hu', 'hungarian': 'hu',
+                       'gre': 'el', 'ell': 'el', 'greek': 'el', 'ukr': 'uk', 'ukrainian': 'uk', 'swe': 'sv',
+                       'swedish': 'sv', 'nor': 'no', 'norwegian': 'no', 'dan': 'da', 'danish': 'da', 'fin': 'fi',
+                       'finnish': 'fi', 'rum': 'ro', 'ron': 'ro', 'romanian': 'ro', 'bul': 'bg', 'bulgarian': 'bg',
+                       'hrv': 'hr', 'croatian': 'hr', 'srp': 'sr', 'serbian': 'sr', 'heb': 'he', 'hebrew': 'he',
+                       'jpn': 'ja', 'japanese': 'ja', 'kor': 'ko', 'korean': 'ko', 'chi': 'zh', 'zho': 'zh',
+                       'chinese': 'zh', 'hin': 'hi', 'hindi': 'hi', 'per': 'fa', 'fas': 'fa', 'persian': 'fa'}
+# ISO 639-1 -> the ISO 639-2 code Matroska expects in a track's language tag; also the 2-letter codes taken as a
+# language at all ("CC", "HI" or "No subtitles" are none)
+MKV_LANG_CODES = {'de': 'ger', 'en': 'eng', 'fr': 'fre', 'es': 'spa', 'it': 'ita', 'pl': 'pol', 'ar': 'ara',
+                  'tr': 'tur', 'ru': 'rus', 'pt': 'por', 'nl': 'dut', 'cs': 'cze', 'hu': 'hun', 'el': 'gre',
+                  'uk': 'ukr', 'sv': 'swe', 'no': 'nor', 'da': 'dan', 'fi': 'fin', 'ro': 'rum', 'bg': 'bul',
+                  'hr': 'hrv', 'sr': 'srp', 'he': 'heb', 'ja': 'jpn', 'ko': 'kor', 'zh': 'chi', 'hi': 'hin',
+                  'fa': 'per'}
+# the extensions of the subtitles saved next to a download (the download manager removes / renames them with it)
+SUBTITLE_SIDECAR_EXT = ('srt', 'ass')
+_CUE_TIME = re.compile(r'(?:(\d+):)?(\d{1,2}):(\d{2})[.,](\d{1,3})')
+# every tag but <i> <b> <u> and their ends; <i.class> becomes <i>
+_CUE_TAG = re.compile(r'<(?!/?[ibu]>)[^>]*>')
+_CUE_CLASS = re.compile(r'<([ibu])\.[^>]*>')
+_CUE_ENTITIES = (('&lt;', '<'), ('&gt;', '>'), ('&nbsp;', ' '), ('&lrm;', u'‎'), ('&rlm;', u'‏'), ('&amp;', '&'))
+
+
+def subtitleLangCode(lang):
+    # 'de' for "de", "de-DE", "ger", "German", "Deutsch (forced)", "Francais" ...; '' when unknown
+    words = re.findall(r'[^\W\d_]+', ensureText(lang).lower(), re.U)
+    if not words:
+        return ''
+    if len(words[0]) == 2:
+        return words[0] if words[0] in MKV_LANG_CODES else ''
+    return SUBTITLE_LANG_NAMES.get(words[0], '')
+
+
+def pickSubtitleTracks(tracks, allLangs, wanted):
+    # the external_sub_tracks ([{'title', 'lang', 'url'}]) to save: all of them, or those in the wanted languages
+    # (in that order); when no track names a known language, all of them (mostly a single untitled track)
+    usable = [t for t in (tracks or []) if isinstance(t, dict) and ensureText(t.get('url', '')).startswith(('http://', 'https://'))]
+    if allLangs:
+        return usable
+    codes = [subtitleLangCode(t.get('lang', '')) or subtitleLangCode(t.get('title', '')) for t in usable]
+    if not any(codes):
+        return usable
+    picked = []
+    for want in wanted:
+        for track, code in zip(usable, codes):
+            if code == want and track not in picked:
+                picked.append(track)
+    return picked
+
+
+def _srtTime(match):
+    hours, minutes, seconds, millis = match.groups()
+    return '%02d:%02d:%02d,%03d' % (int(hours or 0), int(minutes), int(seconds), int(millis.ljust(3, '0')))
+
+
+def _cueLine(line):
+    line = _CUE_TAG.sub('', _CUE_CLASS.sub(r'<\1>', line))
+    for entity, char in _CUE_ENTITIES:  # &amp; last: "&amp;lt;" stays "&lt;"
+        line = line.replace(entity, char)
+    return line.strip()
+
+
+def subtitleToSrt(text):
+    # (text, ext) to save of a downloaded subtitle: WebVTT and SubRip become clean SubRip (numbered cues, comma
+    # times, only <i>/<b>/<u> tags), ASS/SSA stays as it is; ('', '') for anything else (an error page)
+    text = ensureText(text).lstrip(u'﻿').replace('\r\n', '\n').replace('\r', '\n')
+    if '[Script Info]' in text[:300]:
+        return text, 'ass'
+    cues = []
+    for block in re.split(r'\n[ \t]*\n', text):
+        lines = block.strip('\n').split('\n')
+        for idx, line in enumerate(lines):
+            if '-->' in line:
+                break
+        else:
+            continue  # WEBVTT header, NOTE / STYLE / REGION blocks
+        times = list(_CUE_TIME.finditer(lines[idx]))
+        cueText = [line for line in (_cueLine(line) for line in lines[idx + 1:]) if line]
+        if len(times) < 2 or not cueText:
+            continue
+        cues.append('%d\n%s --> %s\n%s' % (len(cues) + 1, _srtTime(times[0]), _srtTime(times[1]), '\n'.join(cueText)))
+    if not cues:
+        return '', ''
+    return '\n\n'.join(cues) + '\n', 'srt'
+
+
+def decodeSubtitle(data, lang=''):
+    # the bytes of a subtitle file as text: UTF-16 by its BOM, UTF-8, else the usual 8-bit code page of the language
+    if data[:2] in (b'\xff\xfe', b'\xfe\xff'):
+        return data.decode('utf-16', 'replace')
+    try:
+        return data.decode('utf-8')
+    except Exception:
+        pass
+    codePage = 'cp1250' if lang in ('pl', 'cs', 'hu', 'hr', 'ro') else 'cp1256' if lang in ('ar', 'fa') else 'cp1251' if lang in ('ru', 'uk', 'bg', 'sr') else 'cp1252'
+    return data.decode(codePage, 'replace')
+
+
+def subtitleSidecarFiles(basePath):
+    # the subtitle files saved next to the download basePath (without extension), as _writeSubtitleFiles names
+    # them: name.srt, name.2.srt, name.de.srt, name.de.2.srt - not "name.2023.srt" or "name.HD.srt" of another video
+    found = []
+    try:
+        folder, name = os.path.split(ensureText(basePath))
+        pattern = re.compile(r'^%s(?:\.[a-z]{2})?(?:\.(?:[2-9]|[1-9]\d))?\.(?:%s)$' % (re.escape(name), '|'.join(SUBTITLE_SIDECAR_EXT)))
+        for entry in os.listdir(fsPath(folder or '.')):
+            entry = ensureText(entry)
+            if pattern.match(entry):
+                found.append(os.path.join(folder, entry))
+    except Exception:
+        printExc()
+    return sorted(found)
+
+
 class SidecarMixin(object):
     """
     Shared .txt / .jpg sidecar handling plus the generic "finish download"
@@ -212,6 +337,15 @@ class SidecarMixin(object):
         self.sidecarImgTmpPath = ''
         self.sidecarMetaLock = threading.Lock()
         self.sidecarMetaState = {}
+        # subtitles of the link (setting "Subtitles"): fetched to temp files while the file downloads
+        self.subConsole = None
+        self.subConsole_appClosed_conn = None
+        self.subJobs = []  # [{'lang', 'title', 'tmp'}]
+        self.subFetching = False
+        self.subWaiting = False  # the download is done and waits for the fetch
+        self.subHandled = False
+        self.subEmbedTmp = ''
+        self.subEmbedFiles = []
 
     def _clearSidecarData(self):
         self.sidecarEnabled = False
@@ -219,6 +353,7 @@ class SidecarMixin(object):
         self.sidecarImg = ''
         self.waitingForSidecar = False
         self.sidecarMetaState = {}
+        self._clearSubtitleData()
 
     def _prepareSidecarData(self, meta):
         self._clearSidecarData()
@@ -231,6 +366,185 @@ class SidecarMixin(object):
                 self._startSidecarMetaLookup(meta.get('e2i_sidecar_meta'))
         except Exception:
             printExc()
+        self._startSubtitleFetch(meta)
+
+    def _clearSubtitleData(self):
+        # ends a running fetch / mux and removes its temp files. The console's Ctrl+C only reaches the shell around
+        # wget / ffmpeg, so the tools are ended by their output file as well (terminateToolsOfFile)
+        if self.subConsole is not None:
+            try:
+                self.subConsole_appClosed_conn = None
+                if hasattr(self.subConsole, "sendCtrlC"):
+                    self.subConsole.sendCtrlC()
+                elif hasattr(self.subConsole, "kill"):
+                    self.subConsole.kill()
+            except Exception:
+                printExc()
+            self.subConsole = None
+            for job in self.subJobs:
+                terminateToolsOfFile(job['tmp'], ('wget',))
+            if self.subEmbedTmp:
+                terminateToolsOfFile(self.subEmbedTmp, ('ffmpeg',))
+        for job in self.subJobs:
+            safeRemoveFile(job['tmp'])
+        if self.subEmbedTmp:
+            safeRemoveFile(self.subEmbedTmp)
+        self.subJobs = []
+        self.subFetching = False
+        self.subWaiting = False
+        self.subHandled = False
+        self.subEmbedTmp = ''
+        self.subEmbedFiles = []
+
+    def _startSubtitleFetch(self, meta):
+        # a real download only (the download manager sets allowFinalRename, buffered playback not): the tracks of the
+        # wanted languages are fetched now with wget, in one console run while the file downloads - the links of a
+        # site's subtitles often expire as the video link does. The video's User-Agent / Referer / Origin go along
+        # (not its Host, Range, Cookie ...: the subtitles mostly sit on another server); the track's own headers win
+        try:
+            mode = config.plugins.iptvplayer.download_subtitles.value
+            if mode == 'off' or not getattr(self, 'allowFinalRename', False):
+                return
+            tracks = pickSubtitleTracks(meta.get('external_sub_tracks'), config.plugins.iptvplayer.download_subtitles_lang.value == 'all', (GetDefaultLang(), 'en'))
+            if not tracks:
+                return
+            from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
+            videoHeaders = dict((key, meta[key]) for key in ('User-Agent', 'Referer', 'Origin') if meta.get(key))
+            stamp = '%d_%d' % (int(time.time() * 1000), id(self) % 100000)
+            cmds = []
+            jobs = []
+            for idx, track in enumerate(tracks):
+                url, params = DMHelper.getDownloaderParamFromUrl(track['url'])
+                params = dict(videoHeaders, **params)
+                tmp = GetTmpDir('.e2i_dlsub_%s_%d' % (stamp, idx))
+                cmds.append(DMHelper.getBaseWgetCmd(params) + ' -T 20 -t 2 "%s" -O "%s" > /dev/null 2>&1' % (shellQuote(url), shellQuote(tmp)))
+                lang = subtitleLangCode(track.get('lang', '')) or subtitleLangCode(track.get('title', ''))
+                jobs.append({'lang': lang, 'title': ensureText(track.get('title', '') or track.get('lang', '')), 'tmp': tmp})
+            printDBG("%s subtitles to fetch: %r" % (self.__class__.__name__, [(job['lang'], job['title']) for job in jobs]))
+            console = eConsoleAppContainer()
+            self.subConsole_appClosed_conn = eConnectCallback(console.appClosed, self._subtitleFetchFinished)
+            self.subConsole = console
+            executeConsoleCmd(console, ' ; '.join(cmds))
+            # only a started fetch is waited for at the end of the download
+            self.subJobs = jobs
+            self.subFetching = True
+        except Exception:
+            printExc()
+            self._clearSubtitleData()
+
+    def _subtitleFetchFinished(self, code=None):
+        printDBG("%s subtitle fetch finished code[%r]" % (self.__class__.__name__, code))
+        self.subConsole_appClosed_conn = None
+        self.subConsole = None
+        self.subFetching = False
+        if self.subWaiting:
+            self.subWaiting = False
+            self._finishDownloadFlow()
+
+    def _subtitleStep(self):
+        # True while the finish waits (for the fetch, or the MKV mux); it calls _finishDownloadFlow() again then
+        if not self.subJobs or self.subHandled:
+            return False
+        from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
+        if self.status != DMHelper.STS.DOWNLOADED:
+            return False
+        if self.subFetching:
+            printDBG("%s download done, waiting for the subtitles" % self.__class__.__name__)
+            self.subWaiting = True
+            return True
+        self.subHandled = True
+        files = self._writeSubtitleFiles(self.filePath)
+        if files and config.plugins.iptvplayer.download_subtitles.value == 'mkv' and ensureText(self.filePath).lower().endswith('.mkv'):
+            return self._startSubtitleEmbed(files)
+        return False
+
+    def _writeSubtitleFiles(self, filePath):
+        # name.de.srt next to the video (name.srt without a known language, name.de.2.srt for a second German track)
+        base = ensureText(filePath).rsplit('.', 1)[0]
+        written = []
+        used = set()
+        for job in self.subJobs:
+            try:
+                with open(fsPath(job['tmp']), 'rb') as f:
+                    data = f.read()
+            except Exception:
+                data = b''
+            text, ext = subtitleToSrt(decodeSubtitle(data, job['lang'])) if data else ('', '')
+            if not text:
+                printDBG("%s subtitle [%s] skipped: no subtitle data (%d bytes)" % (self.__class__.__name__, job['title'], len(data)))
+                continue
+            name = base + ('.' + job['lang'] if job['lang'] else '')
+            path = name + '.' + ext
+            number = 2
+            while path in used:
+                path = '%s.%d.%s' % (name, number, ext)
+                number += 1
+            if writeUtf8TextFile(path, text):
+                used.add(path)
+                written.append({'path': path, 'lang': job['lang'], 'title': job['title']})
+                printDBG("%s subtitle saved [%s]" % (self.__class__.__name__, path))
+        return written
+
+    def _startSubtitleEmbed(self, files):
+        # the subtitles into the MKV (copy, no re-encoding): its own video / audio first, the new subtitles before
+        # the ones it has already, so their numbers for the language tags are known. The status stays DOWNLOADED:
+        # the video is complete, a stop now only ends the mux (_clearSubtitleData) and keeps the .srt files
+        from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
+        video = ensureText(self.filePath)
+        self.subEmbedTmp = video.rsplit('.', 1)[0] + '.iptv.remux.tmp.mkv'
+        self.subEmbedFiles = files
+        count = len(files)
+        cmd = DMHelper.GET_FFMPEG_PATH() + ' -y '
+        for item in files:
+            cmd += ' -i "%s" ' % shellQuote(item['path'])
+        cmd += ' -i "%s" -map %d:v? -map %d:a? ' % (shellQuote(video), count, count)
+        for idx in range(count):
+            cmd += ' -map %d:0 ' % idx
+        cmd += ' -map %d:s? -map %d:t? -map_metadata %d -map_chapters %d -c copy ' % (count, count, count, count)
+        for idx, item in enumerate(files):
+            if item['lang'] in MKV_LANG_CODES:  # Matroska wants ISO 639-2, an unknown code would read as "und"
+                cmd += ' -metadata:s:s:%d language=%s ' % (idx, MKV_LANG_CODES[item['lang']])
+            if item['title']:
+                cmd += ' -metadata:s:s:%d title="%s" ' % (idx, shellQuote(item['title']))
+        cmd += ' -f matroska "%s" >/dev/null 2>&1 ' % shellQuote(self.subEmbedTmp)
+        printDBG("%s subtitle mux cmd[%s]" % (self.__class__.__name__, cmd))
+        try:
+            self.subConsole = eConsoleAppContainer()
+            self.subConsole_appClosed_conn = eConnectCallback(self.subConsole.appClosed, self._subtitleEmbedFinished)
+            executeConsoleCmd(self.subConsole, cmd)
+        except Exception:
+            printExc()
+            self.subConsole = None
+            self.subEmbedTmp = ''
+            return False
+        return True
+
+    def _subtitleEmbedFinished(self, code=None):
+        from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
+        self.subConsole_appClosed_conn = None
+        self.subConsole = None
+        tmp = self.subEmbedTmp
+        self.subEmbedTmp = ''
+        video = ensureText(self.filePath)
+        size = DMHelper.getFileSize(fsPath(tmp))
+        printDBG("%s subtitle mux finished code[%r] size[%r]" % (self.__class__.__name__, code, size))
+        # the muxed file holds the whole video: not (much) smaller than the downloaded one
+        if code == 0 and size > 0 and size >= DMHelper.getFileSize(fsPath(video)) * 0.98:
+            try:
+                # over the video in one step (os.replace; Python 2 has os.rename, which replaces on POSIX too): a
+                # failure leaves the downloaded video as it was
+                getattr(os, 'replace', os.rename)(fsPath(tmp), fsPath(video))
+                for item in self.subEmbedFiles:
+                    safeRemoveFile(item['path'])
+                self.localFileSize = size
+                self.remoteFileSize = size
+            except Exception:
+                printExc()
+        else:
+            printDBG("%s subtitle mux failed, the subtitles stay next to the file" % self.__class__.__name__)
+        safeRemoveFile(tmp)
+        self.subEmbedFiles = []
+        self._finishDownloadFlow()
 
     def _startSidecarMetaLookup(self, query):
         # e2i_sidecar_meta (urlmetahelper.sidecarMetaQuery): the moviemeta details (rating, genres, cast, plot,
@@ -375,13 +689,19 @@ class SidecarMixin(object):
             if self.sidecarImgTmpPath:
                 safeRemoveFile(self.sidecarImgTmpPath)
                 self.sidecarImgTmpPath = ''
+        self._clearSubtitleData()
 
     def _finishDownloadFlow(self):
         # Generic finish-flow used by all three downloaders. Relies on
         # self._cleanUp() being implemented by the downloader subclass
-        # (temp-file cleanup differs per downloader).
+        # (temp-file cleanup differs per downloader). A finished download
+        # first gets its subtitles (setting "Subtitles"), which may wait
+        # for their fetch or the MKV mux and come back here then.
+        if self._subtitleStep():
+            return
         try:
             self.onFinish()
         except Exception:
             printExc()
         self._cleanUp()
+        self._clearSubtitleData()

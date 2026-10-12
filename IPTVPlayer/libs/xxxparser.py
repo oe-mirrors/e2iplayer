@@ -1500,8 +1500,9 @@ class XXXParser:
 			if videoPage:
 				printDBG('Host videoPage: ' + videoPage)
 				# iptv_use_ffmpeg: download (and buffered playback) over the FFmpeg downloader, it opens the TLS 1.3 CDN
-				# where wget/the player of older images fail
-				return strwithmeta(videoPage, {'Referer': url, 'iptv_use_ffmpeg': True})
+				# where wget/the player of older images fail; iptv_buffering: also with a player "without buffering"
+				# (exteplayer3 of VTi: "Input/output error" on that CDN)
+				return strwithmeta(videoPage, {'Referer': url, 'iptv_use_ffmpeg': True, 'iptv_buffering': 'required'})
 			return ''
 
 		if parser == 'https://www.pornoxo.com':
@@ -4025,10 +4026,12 @@ class XXXParser:
 				candidates = [(int(self.cm.ph.getSearchGroups(item, r'RESOLUTION=[0-9]+x([0-9]+)', 1, True)[0] or 0), self.cm.ph.getSearchGroups(item, '["]([^"]+?)[#]', 1, True)[0].strip()) for item in reversed(videoUrls)]
 				videoUrl = self._pickByHeight([c for c in candidates if c[1]])
 				printDBG('Selected URL: ' + str(videoUrl))
-				return strwithmeta(videoUrl, {'iptv_proto': 'm3u8'})  # variant line of the master playlist
+				# playlist and segments without extension (.../playlist/<id>/5, .../media-0): exteplayer3 answers "Invalid
+				# data found", hlsdl plays them -> buffered playback also with a player "without buffering"
+				return strwithmeta(videoUrl, {'iptv_proto': 'm3u8', 'iptv_buffering': 'required'})  # variant line of the master playlist
 			else:
 				printDBG('SELECTED RESOLUTION:\n' + url)
-				return strwithmeta(url, {'iptv_proto': 'm3u8'})  # old favourites: a variant line of the former quality menu
+				return strwithmeta(url, {'iptv_proto': 'm3u8', 'iptv_buffering': 'required'})  # old favourites: a variant line of the former quality menu
 
 		if parser == 'https://www.realgfporn.com':
 			printDBG('REALGFPORN PARSER')
@@ -7055,8 +7058,10 @@ class XXXParser:
 				# LUXURETV streams through Cloudflare, which answers 403 to exteplayer3/ffmpeg sending a browser
 				# User-Agent (the TLS handshake gives it away); a player User-Agent passes, as for CAMSODA
 				meta['User-Agent'] = self.cm.getDefaultHeader(browser='vlc')['User-Agent']
-				# download (and buffered playback) over the FFmpeg downloader, as for PORNTREX (TLS 1.3)
+				# download (and buffered playback) over the FFmpeg downloader, as for PORNTREX (TLS 1.3) - also with a
+				# player "without buffering"
 				meta['iptv_use_ffmpeg'] = True
+				meta['iptv_buffering'] = 'required'
 			return urlparser.decorateUrl(videoUrl, meta)
 
 		if parser == 'https://fullvideosporn.com':

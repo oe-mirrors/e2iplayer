@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 02.10.2026
+# Last Modified: 12.10.2026
 # 23.08.2026 - withArticleContent() now checks type for episodes, fixes wrong Info text on episode press, getSuggestionsProvider() added (forces Google search suggestions) - Kamikaze24
 import re
 
@@ -16,6 +16,11 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMetaByImdbId
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
+try:
+    from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import takePresetJumpPage
+except ImportError:  # E2iPlayer builds without the CH- page preset (e.g. zadmario): the Jump always asks
+    def takePresetJumpPage():
+        return None
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecar, sidecarFromUrlMeta, sidecarMetaQuery, infoSidecarMetaQuery, decorateUrl, decorateResolvedLinkItems
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
@@ -172,7 +177,11 @@ class SerienStreamTo(CBaseHostClass):
         title = _("Jump to a selected page, max: {}").format(max_page) if max_page else _("Jump to a selected page")
         # None: no keypad in this E2iPlayer build, switched off, or the System keyboard selected
         numKeyboard = GetNumericKeyboard() if GetNumericKeyboard is not None else None
-        if numKeyboard is not None:
+        # CH- one page back from a page reached by a jump: the page before, without asking
+        preset = takePresetJumpPage()
+        if preset:
+            ret = str(preset)
+        elif numKeyboard is not None:
             ret = self.sessionEx.waitForFinishOpen(numKeyboard, title=title, text=str(current_page), additionalParams={'min_value': 1, 'max_value': max_page})
         else:
             ret = self.sessionEx.waitForFinishOpen(GetVirtualKeyboard(), title=title, text=str(current_page))

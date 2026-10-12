@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # IPTV download manager API
-# Last Modified: 11.10.2026 - file format setting (hls_out_container): Automatic renames the file to the container hlsdl wrote (.ts/.mp4/.aac), MKV/MP4/TS remux when needed. Earlier: 10.10.2026 - isWorkingCorrectly() checks only hlsdl (cached usage text, no ffmpeg/process start), remux maps 0:v? (audio-only streams). Earlier: 07.08.2026 - Extracted shared helpers (ensureText/fsPath/shellQuote/writeUtf8TextFile) and sidecar logic into downloaderhelpers.SidecarMixin, shared with wgetdownloader.py and mergedownloader.py, instead of duplicating them here - Kamikaze24
+# Last Modified: 12.10.2026 - stopping a live recording is its normal end: renamed to what hlsdl wrote (.ts), its .txt written (was kept as .mp4 over MPEG-TS); no remux / cover / subtitles there, terminate() reports the finish at once. Earlier: 11.10.2026 - file format setting (hls_out_container): Automatic renames the file to the container hlsdl wrote (.ts/.mp4/.aac), MKV/MP4/TS remux when needed. Earlier: 10.10.2026 - isWorkingCorrectly() checks only hlsdl (cached usage text, no ffmpeg/process start), remux maps 0:v? (audio-only streams). Earlier: 07.08.2026 - Extracted shared helpers (ensureText/fsPath/shellQuote/writeUtf8TextFile) and sidecar logic into downloaderhelpers.SidecarMixin, shared with wgetdownloader.py and mergedownloader.py, instead of duplicating them here - Kamikaze24
 ###################################################
 # LOCAL import
 ###################################################
@@ -413,6 +413,22 @@ class HLSDownloader(BaseDownloader, SidecarMixin):
             self.console_appClosed_conn = None
             self.console_stderrAvail_conn = None
             self.console = None
+
+        if terminated and self.liveStream and self.allowFinalRename and self.status != DMHelper.STS.POSTPROCESSING \
+                and DMHelper.getFileSize(fsPath(self.filePath)) > 0:
+            # stopping is how a live recording ends (the download manager already counts it as finished). terminate()
+            # reports the finish itself (onFinish), so only what runs at once: the file named after what hlsdl wrote
+            # (.ts) and the .txt - no remux, cover or subtitles, they would finish after that report
+            printDBG("HLSDownloader live recording stopped -> kept as finished file")
+            self.status = DMHelper.STS.DOWNLOADED
+            ext = self.CONTAINER_EXT.get(self._detectContainer())
+            if ext and not self.filePath.lower().endswith(ext):
+                target = self._getTargetPath(ext)
+                if self._moveFile(self.filePath, target):
+                    self.filePath = target
+            if self.sidecarEnabled:
+                self._writeTxtSidecar(self.filePath)
+            return
 
         if terminated:
             self.status = DMHelper.STS.INTERRUPTED
