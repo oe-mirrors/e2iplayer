@@ -4,7 +4,14 @@
 #
 #  $Id$
 #
-#  Last Modified: 10.10.2026
+#  Last Modified: 12.10.2026
+#   - stopping a live recording is its normal end: DOWNLOADED, renamed to its container and its .txt written (no
+#     cover / subtitles: terminate() reports the finish at once) - live = the link says so, or its playlist (DASH
+#     type "dynamic", HLS without #EXT-X-ENDLIST, read in a work thread at the start), else no duration from
+#     ffmpeg; a single file (by its extension) is never live
+#     (was INTERRUPTED and kept the requested .mp4 name over MPEG-TS); speed from the growing file when
+#     ffmpeg's progress line has no bitrate (bitrate=N/A, live MPEG-TS: the list showed no B/s)
+#  Earlier: 10.10.2026
 #   - _dataAvail(): ffmpeg's lines before the stream mapping and its error lines go to the debug log
 #     (each distinct error line once, capped, per-packet warnings left out).
 #  Earlier: 31.08.2026
@@ -48,6 +55,38 @@ from enigma import eConsoleAppContainer
 import re
 import datetime
 ###################################################
+
+
+def manifestIsLive(url, getPage=None):
+    # whether an HLS / DASH source is live, from its own playlist: a DASH manifest of type "dynamic", an HLS media
+    # playlist without #EXT-X-ENDLIST (a master playlist: its first variant); None when it cannot be read.
+    # getPage: pCommon's (the tests hand in their own)
+    if getPage is None:
+        from Plugins.Extensions.IPTVPlayer.libs.pCommon import common
+        getPage = common().getPage
+    from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin
+    meta = getattr(url, 'meta', None) or {}
+    header = dict((key, meta[key]) for key in ('User-Agent', 'Referer', 'Origin', 'Cookie') if meta.get(key))
+    url = str(url)
+    for _step in range(2):
+        try:
+            sts, data = getPage(url, {'header': header, 'return_data': True, 'timeout': 15})
+        except Exception:
+            printExc()
+            return None
+        data = strDecode(data) if sts and data else ''
+        if '<MPD' in data[:4096]:
+            return re.search(r'<MPD\b[^>]*\btype\s*=\s*["\']dynamic', data) is not None
+        if '#EXTM3U' not in data[:1024]:
+            return None
+        if '#EXT-X-STREAM-INF' not in data:
+            return '#EXT-X-ENDLIST' not in data and '#EXT-X-PLAYLIST-TYPE:VOD' not in data
+        variants = [line.strip() for line in data.splitlines() if line.strip() and not line.strip().startswith('#')]
+        if not variants:
+            return None
+        url = urljoin(url, variants[0])
+    return None
+
 
 ###################################################
 # One instance of this class can be used only for
@@ -96,6 +135,9 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
         self.liveStream = False
         self.headerReceived = False
         self.loggedErrors = set()
+        self.speedFromProgress = False  # ffmpeg's progress line gave a speed (bitrate x speed)
+        self.sizeSample = None  # (time, file size) of the last statistic update, for the speed without it
+        self.liveState = {}  # {'live': True / False / None} from the source's own playlist (_startLiveCheck)
         self.parseReObj = {}
         self.parseReObj['start_time'] = re.compile(r'\sstart\:\s*?([0-9]+?)\.')
         self.parseReObj['duration'] = re.compile(r'[\s=]([0-9]+?)\:([0-9]+?)\:([0-9]+?)\.')
@@ -144,10 +186,13 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
         self.fileExtension = ''  # should be implemented in future
         self.outData = ''
         self.contentType = 'unknown'
+        self.speedFromProgress = False
+        self.sizeSample = None
 
         cmdTab = [DMHelper.GET_FFMPEG_PATH(), '-y']
         tmpUri = strwithmeta(url)
         self._prepareSidecarData(tmpUri.meta)
+        self._startLiveCheck(tmpUri.meta)
 
         if 'iptv_video_rep_idx' in tmpUri.meta:
             cmdTab.extend(['-video_rep_index', str(tmpUri.meta['iptv_video_rep_idx'])])
@@ -320,7 +365,11 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
             if 'frame=' in item:
                 self.lastUpadateTime = datetime.datetime.now()
 
-                self.downloadSpeed = self._getDownloadSpeed(item)
+                # ffmpeg's speed when this line has one, else the growing file's (updateStatistic)
+                speed = self._getDownloadSpeed(item)
+                self.speedFromProgress = bool(speed)
+                if speed:
+                    self.downloadSpeed = speed
 
                 fileSize = self._getFileSize(item)
                 if fileSize > self.localFileSize:
@@ -362,7 +411,12 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
 
         self._refreshLocalFileSize()
 
-        if terminated:
+        # a live recording has no end of its own: stopping it in the download manager is how it ends
+        liveStop = terminated and self.allowFinalRename and 0 < self.localFileSize and self._isLiveRecording()
+        if liveStop:
+            printDBG("FFMPEGDownloader live recording stopped -> kept as finished file")
+            self.status = DMHelper.STS.DOWNLOADED
+        elif terminated:
             self.status = DMHelper.STS.INTERRUPTED
         elif 0 >= self.localFileSize:
             self.status = DMHelper.STS.ERROR
@@ -374,6 +428,14 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
             # whole timeline present -> keep it even if ffmpeg exited non-zero on a
             # trailing segment glitch (common with -c copy of HLS)
             self.status = DMHelper.STS.DOWNLOADED
+
+        if liveStop:
+            # stopped in the download manager: terminate() reports the finish itself (onFinish), so only what runs
+            # at once - the real file name and the .txt; no cover or subtitles, they would finish after that report
+            self._fixFileExtension()
+            if self.sidecarEnabled:
+                self._writeTxtSidecar(self.filePath)
+            return
 
         if not terminated:
             # ffmpeg has stopped writing -> name the file after its real container,
@@ -389,7 +451,8 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
                     return
                 self._finishDownloadFlow()
                 return
-            self.onFinish()
+            # onFinish(), after the subtitles of a download (_cleanUp() has nothing to do here)
+            self._finishDownloadFlow()
 
     def _cleanUp(self):
         # required by SidecarMixin._finishDownloadFlow(); the .iptv.cmd temp
@@ -511,11 +574,59 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
         if diskSize > self.localFileSize:
             self.localFileSize = diskSize
 
+    def _startLiveCheck(self, meta):
+        # a real download only: is the source live? Read from its playlist in a work thread while ffmpeg runs (an
+        # E2iPlayer work thread - pCommon's requests need its kill state). A single file (by its extension) is no
+        # live stream; anything else not known as HLS / DASH stays unknown (ffmpeg's missing duration decides)
+        self.liveState = {}
+        if not self.allowFinalRename or meta.get('iptv_livestream'):
+            return
+        if not (self._isHlsSource(meta) or self._isDashSource(meta)):
+            path = str(self.url).split('?', 1)[0].split('#', 1)[0].lower()
+            if path.endswith(('.mp4', '.mkv', '.webm', '.mov', '.m4v', '.avi', '.flv', '.wmv', '.mp3', '.m4a', '.aac')):
+                self.liveState = {'live': False}
+            return
+        url = self.url
+        if str(url).startswith('merge://'):
+            keys = str(url).split('merge://', 1)[1].split('|')
+            parts = [meta.get(key) for key in sorted(keys, key=lambda key: key != 'video_url') if meta.get(key)]
+            if not parts:
+                return
+            url = parts[0]
+            if not getattr(url, 'meta', None):
+                # a plain part url: the headers of the whole link
+                url = strwithmeta(url, dict((key, meta[key]) for key in ('User-Agent', 'Referer', 'Origin', 'Cookie') if meta.get(key)))
+        state = self.liveState = {'live': None}
+
+        def liveCheck():
+            state['live'] = manifestIsLive(url)
+            printDBG("FFMPEGDownloader live check [%s]: %r" % (str(url)[:120], state['live']))
+
+        from Plugins.Extensions.IPTVPlayer.components.asynccall import AsyncMethod
+        AsyncMethod(liveCheck)()
+
+    def _isLiveRecording(self):
+        # stopping ends a live recording: the link says live, or the source's playlist does (DASH "dynamic", HLS
+        # without end mark); without that answer (not read yet / unreadable) ffmpeg's missing duration decides
+        if strwithmeta(self.url).meta.get('iptv_livestream'):
+            return True
+        live = self.liveState.get('live')
+        if live is not None:
+            return live
+        return self.isLiveStream()
+
     def isLiveStream(self):
         return self.liveStream
 
     def updateStatistic(self):
         self._refreshLocalFileSize()
+        now = datetime.datetime.now()
+        if not self.speedFromProgress and self.sizeSample is not None:
+            # no bitrate in ffmpeg's progress line (bitrate=N/A): the speed from the growing file
+            secs = (now - self.sizeSample[0]).total_seconds()
+            if secs > 0 and self.localFileSize >= self.sizeSample[1]:
+                self.downloadSpeed = int((self.localFileSize - self.sizeSample[1]) / secs)
+        self.sizeSample = (now, self.localFileSize)
         if self.lastUpadateTime is not None:
             d = datetime.datetime.now() - self.lastUpadateTime
             if d.seconds > 3:

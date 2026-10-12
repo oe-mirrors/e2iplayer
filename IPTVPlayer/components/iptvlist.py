@@ -153,6 +153,8 @@ class IPTVMainNavigatorList(IPTVListComponentBase):
         CDisplayListItem.TYPE_FIRST: 'FirstItem.png',
         CDisplayListItem.TYPE_PREVIOUS: 'PreviousItem.png',
         CDisplayListItem.TYPE_LAST: 'LastItem.png',
+        'INFO': 'InfoItem.png',  # an info / changelog row: image_type 'INFO'
+        'CUSTOM': 'CustomItem.png',  # a tool row of a host (hostxxx site self-test): image_type 'CUSTOM'
     }
 
     def __init__(self):

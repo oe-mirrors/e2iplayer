@@ -93,6 +93,10 @@ config.plugins.iptvplayer.dash_out_container = ConfigSelection(default="matroska
 # auto = the one the site delivers
 config.plugins.iptvplayer.hls_out_container = ConfigSelection(default="auto", choices=[("auto", _("Automatic")), ("matroska", "MKV"), ("mp4", "MP4"), ("mpegts", "TS")])
 config.plugins.iptvplayer.file_out_container = ConfigSelection(default="auto", choices=[("auto", _("Automatic")), ("matroska", "MKV"), ("mp4", "MP4"), ("mpegts", "TS")])
+# subtitles a link brings along (external_sub_tracks) saved with a download: next to the file (name.de.srt), or put
+# into the file when it is an MKV (else next to it as well); languages: the box language and English, or all of them
+config.plugins.iptvplayer.download_subtitles = ConfigSelection(default="off", choices=[("off", _("No")), ("srt", ".srt"), ("mkv", "MKV / .srt")])
+config.plugins.iptvplayer.download_subtitles_lang = ConfigSelection(default="auto", choices=[("auto", _("System language") + " + " + _("English")), ("all", _("All"))])
 # same seconds-choices pattern as extplayer_infobar_timeout above - 5s
 # matches the fixed duration IPTVDMNotification.showNotify() used before
 # this was configurable

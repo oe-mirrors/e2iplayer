@@ -180,3 +180,38 @@ def test_fixed_matroska_and_host_meta(hls, tmp_path):
     dl = hls.HLSDownloader()
     dl._preparePostData({"e2i_postprocess_ffmpeg": "1", "e2i_postprocess_container": "mkv"})
     assert dl._getRemuxFormat() == ("matroska", ".mkv")
+
+
+def _stopped(hls, path, content, live, download=True):
+    # "stop" in the download manager on a hlsdl run that wrote <content>
+    with open(path, "wb") as f:
+        f.write(content)
+    dl = hls.HLSDownloader()
+    dl.allowFinalRename = download
+    dl.url = "https://cdn/x/index.m3u8"
+    dl.filePath = path
+    dl.localFileSize = len(content)
+    dl.liveStream = live
+    dl.status = hls.sts.DOWNLOADING
+    dl._clearPostData()
+    dl._cmdFinished(-1, True)
+    return dl
+
+
+def test_stopping_a_live_recording_finishes_it(hls, tmp_path):
+    # live: a finished file named after what hlsdl wrote
+    dl = _stopped(hls, str(tmp_path / "Das Erste.mp4"), TS, live=True)
+    assert dl.status == hls.sts.DOWNLOADED and dl.filePath == str(tmp_path / "Das Erste.ts")
+    # a fixed file format: no remux after a stop (terminate() reports the finish at once), only the real name
+    hls.cfg.hls_out_container.value = "matroska"
+    del hls.commands[:]
+    dl = _stopped(hls, str(tmp_path / "Live2.mp4"), TS, live=True)
+    assert dl.status == hls.sts.DOWNLOADED and not hls.commands and dl.filePath == str(tmp_path / "Live2.ts")
+    assert not getattr(dl, "finished", False)
+    hls.cfg.hls_out_container.value = "auto"
+    # a stopped video download stays interrupted, keeps its name (resume)
+    dl = _stopped(hls, str(tmp_path / "Film.mp4"), TS, live=False)
+    assert dl.status == hls.sts.INTERRUPTED and dl.filePath == str(tmp_path / "Film.mp4")
+    # buffered playback of a live stream: nothing renamed
+    dl = _stopped(hls, str(tmp_path / ".iptv_buffering.mp4"), TS, live=True, download=False)
+    assert dl.status == hls.sts.INTERRUPTED

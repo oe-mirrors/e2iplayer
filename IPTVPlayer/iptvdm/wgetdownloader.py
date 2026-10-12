@@ -278,6 +278,7 @@ class WgetDownloader(BaseDownloader, SidecarMixin):
                 self.sidecarEnabled = False
                 self.sidecarTxt = ''
                 self.sidecarImg = ''
+                self._clearSubtitleData()
 
         if self.infoFrom == WgetDownloader.INFO.FROM_DOTS:
             info = "--progress=dot:default"

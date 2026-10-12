@@ -52,10 +52,14 @@ def env():
 
     for pkg in ("Plugins", "Plugins.Extensions", "Plugins.Extensions.IPTVPlayer", "Plugins.Extensions.IPTVPlayer.tools",
                 "Plugins.Extensions.IPTVPlayer.libs", "Plugins.Extensions.IPTVPlayer.components", "Plugins.Extensions.IPTVPlayer.iptvdm",
-                "Tools"):
+                "Tools", "Components"):
         _stubModule(pkg)
     _stubModule("Plugins.Extensions.IPTVPlayer.tools.iptvtools", printDBG=lambda *a: None, printExc=lambda *a: None,
-                eConnectCallback=lambda *a: None, GetNice=lambda *a: 0, E2PrioFix=lambda cmd, *a: cmd)
+                eConnectCallback=lambda *a: None, GetNice=lambda *a: 0, E2PrioFix=lambda cmd, *a: cmd,
+                GetTmpDir=lambda name="": name, GetDefaultLang=lambda *a: "en")
+    off = types.SimpleNamespace(value="off")
+    _stubModule("Components.config", config=types.SimpleNamespace(plugins=types.SimpleNamespace(iptvplayer=types.SimpleNamespace(
+        download_subtitles=off, download_subtitles_lang=types.SimpleNamespace(value="auto")))))
     _load("Plugins.Extensions.IPTVPlayer.tools.iptvtypes", os.path.join(ROOT, "tools", "iptvtypes.py"))
     infoQueries = {}
     _stubModule("Plugins.Extensions.IPTVPlayer.libs.moviemeta", getMeta=getMeta, getMetaByImdbId=getMetaByImdbId,

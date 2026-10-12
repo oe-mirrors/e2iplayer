@@ -124,6 +124,7 @@ class ImpersonateHLSDownloader(BaseDownloader, SidecarMixin):
             printDBG("ImpersonateHLSDownloader::start not possible: %s" % reason)
             self.lastErrorCode, self.lastErrorDesc = 3, reason
             self.status = DMHelper.STS.ERROR
+            self._clearSubtitleData()
             self.onFinish()
             return BaseDownloader.CODE_WRONG_LINK
 

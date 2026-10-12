@@ -196,6 +196,7 @@ class MergeDownloader(BaseDownloader, SidecarMixin):
                 printDBG("MergeDownloader channel name [%s]" % self.downloadChannelName)
         except Exception:
             printExc()
+        self._startSubtitleFetch(meta)
 
     def _sanitizeFileNamePart(self, value):
         value = ensureText(value)
@@ -570,6 +571,7 @@ class MergeDownloader(BaseDownloader, SidecarMixin):
             self.localFileSize = DMHelper.getFileSize(fsPath(self.filePath))
             self.remoteFileSize = self.localFileSize
             self.preCheckOnly = True
+            self._clearSubtitleData()  # nothing is downloaded: no subtitle fetch either
             self.onFinish()
             return BaseDownloader.CODE_OK
 

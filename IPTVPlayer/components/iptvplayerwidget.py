@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Last Modified: 2026-07-26 - Updated blue_pressed() and blue_pressed_next(), added YouTube user links actions in the blue menu, and fixed deleteFavouriteItem(); fixed missing key_green label display by correcting the Halidri1080p1 playlist.xml key_green binding and set default green button text to "Download".
+# 2026-10-12 - CH- after a jump opens the page before (78 -> 77) over the Jump row; EXIT goes a whole list level back over all paged pages.
 # 2026-10-10 - batch download: BLUE menu "Download all items of this page" / "Select items to download" (OK marks rows);
 #              playVideo()'s folder / free space check moved into _checkDestinationDir(), shared with it.
 # 2026-10-10 - list selection + playlist functions (tools/listselection.py): BLUE menu "Play all from here",
@@ -72,6 +73,7 @@ from Plugins.Extensions.IPTVPlayer.iptvdm.iptvbuffui import E2iPlayerBufferingWi
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdmapi import IPTVDMApi, DMItem
 from Plugins.Extensions.IPTVPlayer.iptvdm import batchdownload
 from Plugins.Extensions.IPTVPlayer.tools import listselection
+from Plugins.Extensions.IPTVPlayer.tools import iptvpaging
 
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, GetIPTVPlayerLastHostError, GetIPTVNotify, GetIPTVSleep
 
@@ -149,6 +151,10 @@ def _ListPageNumber(entry, previousPage, items):
     target = getattr(getattr(entry, 'item', None), 'listPage', None)
     if isinstance(target, int) and 0 < target:
         return target
+    for item in items:
+        # a list without "Next page" (its last page, reached by a jump): its own Jump row knows the page
+        if PagerKind(item) == CDisplayListItem.TYPE_JUMP and isinstance(getattr(item, 'currentPage', None), int):
+            return item.currentPage
     if kind == CDisplayListItem.TYPE_FIRST:
         return 1
     if previousPage and kind == CDisplayListItem.TYPE_NEXT:
@@ -1939,17 +1945,21 @@ class E2iPlayerWidget(Screen):
                 if self.workThread.kill():
                     self.workThread = None
                     self.setStatusTex(_("Operation aborted!"))
+                    # a page CH- preset for a Jump that was cut off must not reach a later jump
+                    iptvpaging.presetJumpPage(None)
                 return
         except Exception:
             return
         if self.visible:
             if len(self.prevSelList) > 0:
-                self.nextSelIndex = self.prevSelList.pop()
-                self.categoryList.pop()
+                steps = self._levelBackSteps()
+                for _step in range(steps):
+                    self.nextSelIndex = self.prevSelList.pop()
+                    self.categoryList.pop()
                 if 'favourites' == self.hostName and len(self.categoryList) == 0:
                     self.favouritesCurrentGroupId = ''
-                printDBG("back_pressed prev sel index %s" % self.nextSelIndex)
-                self.requestListFromHost('Previous')
+                printDBG("back_pressed prev sel index %s, %d list(s) back" % (self.nextSelIndex, steps))
+                self.requestListFromHost('Previous', -1, steps)
             else:
                 # There is no prev categories, so exit
                 # self.close()
@@ -2281,18 +2291,54 @@ class E2iPlayerWidget(Screen):
             return False
 
     def _previousPageStep(self):
-        # how CH- goes one page back: ('history', -1) back to the page this one was paged to with "Next page",
-        # ('item', idx) the list's own "Previous page" entry, ('history', -1) back over any other pager step
-        # (jump, first page ...), (None, -1) when the list was not paged at all - EXIT goes a level up
+        # how CH- goes one page back, to the page number before this one: ('history', -1) back to the page this
+        # one was paged to with "Next page" (or any page step that came from the page before), ('item', idx) the
+        # list's own "Previous page" entry, ('jump', idx) after a jump (78 -> page 77, not back to the page the
+        # jump came from) the list's Jump row with the page before preset; ('history', -1) when the page number is
+        # unknown; (None, -1) on page 1 and when the list was not paged at all - EXIT goes a level up
         kind = getattr(self.categoryList[-1], 'pagerKind', '') if self.categoryList and self.prevSelList else ''
         if kind == CDisplayListItem.TYPE_NEXT:
             return 'history', -1
         idx = self._pagerIndex(CDisplayListItem.TYPE_PREVIOUS)
         if -1 < idx:
             return 'item', idx
-        if kind:
+        if not kind:
+            return None, -1
+        page = getattr(self.categoryList[-1], 'page', None)
+        if not isinstance(page, int):
             return 'history', -1
-        return None, -1
+        if page <= 1:
+            return None, -1
+        previousPage = getattr(self.categoryList[-2], 'page', None) if 1 < len(self.categoryList) else None
+        idx = self._pagerIndex(CDisplayListItem.TYPE_JUMP)
+        if previousPage == page - 1 or idx < 0:
+            return 'history', -1
+        return 'jump', idx
+
+    def _levelBackSteps(self):
+        # EXIT goes a whole list level back: over every page the list was paged to (next page, jump, first page,
+        # CH+ / CH-) to the list its first page was opened from - CH- is the key for one page back
+        steps = 1
+        while steps < min(len(self.categoryList), len(self.prevSelList)) and getattr(self.categoryList[-steps], 'pagerKind', ''):
+            steps += 1
+        return steps
+
+    def _getPrevLists(self, steps):
+        # work thread: the host goes back several of its list levels (its cached lists, no page request). Not
+        # killable meanwhile, the widget has popped all levels already; a step that fails (the host's stack ended
+        # earlier) keeps the list of the last good one
+        asynccall.SetThreadKillable(False)
+        try:
+            ret = None
+            for step in range(steps):
+                stepRet = self.host.getPrevList()
+                if stepRet.status != RetHost.OK:
+                    printDBG("_getPrevLists: the host went back %d of %d lists" % (step, steps))
+                    return ret if ret is not None else stepRet
+                ret = stepRet
+            return ret
+        finally:
+            asynccall.SetThreadKillable(True)
 
     def _openPagerItem(self, idx):
         # opens a pager entry like OK on its row
@@ -2326,6 +2372,11 @@ class E2iPlayerWidget(Screen):
             printDBG("pagedown_pressed -> previous page")
             self.requestListFromHost('Previous')
         elif step == 'item':
+            self._openPagerItem(idx)
+        elif step == 'jump':
+            page = self.categoryList[-1].page - 1
+            printDBG("pagedown_pressed -> jump to page %d" % page)
+            iptvpaging.presetJumpPage(page)
             self._openPagerItem(idx)
 
     @staticmethod
@@ -3402,7 +3453,11 @@ class E2iPlayerWidget(Screen):
                     self.workThread = asynccall.AsyncMethod(self.host.getInitList, boundFunction(self.callbackGetList, {}), True)()
                 elif type == 'Previous':
                     self.setStatusTex(IDS_DOWNLOADING)
-                    self.workThread = asynccall.AsyncMethod(self.host.getPrevList, boundFunction(self.callbackGetList, {}), True)()
+                    if isinstance(privateData, int) and 1 < privateData:
+                        # EXIT over paged lists: several host levels back at once (back_pressed)
+                        self.workThread = asynccall.AsyncMethod(self._getPrevLists, boundFunction(self.callbackGetList, {}), True)(privateData)
+                    else:
+                        self.workThread = asynccall.AsyncMethod(self.host.getPrevList, boundFunction(self.callbackGetList, {}), True)()
                 elif type == 'ForItem':
                     self.setStatusTex(IDS_DOWNLOADING)
                     self.workThread = asynccall.AsyncMethod(self.host.getListForItem, boundFunction(self.callbackGetList, {}), True)(currSelIndex, 0, selItem)
@@ -3650,6 +3705,8 @@ class E2iPlayerWidget(Screen):
 
     def reloadList(self, params):
         printDBG("reloadList")
+        # a page CH- preset for a Jump row is used once - a host whose Jump did not take it must not pass it on
+        iptvpaging.presetJumpPage(None)
         # suppresses _rememberHistorySelection() while the list below is being
         # (re)built and its selection moved around programmatically
         self._isLoadingList = True

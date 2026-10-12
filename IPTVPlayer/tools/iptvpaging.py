@@ -27,6 +27,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 JUMP_CATEGORY = "iptv_paging_jump"
 PAGER_ROW_KEYS = ("page", "last_page", "image_type")
 _PAGER_KEYS = ("image_type", "jump_category", "max_page", "current_page", "page_url_tpl")
+_presetJump = []  # presetJumpPage()
 
 
 def _toInt(value, default=0):
@@ -98,11 +99,22 @@ def isJumpItem(cItem):
     return isinstance(cItem, dict) and cItem.get("category") == JUMP_CATEGORY
 
 
-def jumpTarget(host, cItem):
-    """asks for the page number, returns the item to list that page with (category = the list's own);
-    EXIT / an empty answer lists the current page again (the jump row already opened a list level)"""
-    maxPage = _toInt(cItem.get("max_page"), 0)
-    current = max(1, _toInt(cItem.get("current_page"), 1))
+def presetJumpPage(page):
+    """CH- on a page reached by a jump: the widget opens the list's Jump row with the page before preset, which the
+    Jump takes without asking (jumpTarget here, hostxxx and serienstream.to their own). One use; None clears it -
+    the widget does that when the list is there, in case the host's Jump did not take it."""
+    del _presetJump[:]
+    if page:
+        _presetJump.append(int(page))
+
+
+def takePresetJumpPage():
+    """the page preset by CH- (once), None when there is none"""
+    return _presetJump.pop() if _presetJump else None
+
+
+def askJumpPage(host, current, maxPage):
+    """the page number entered on the keypad (the keyboard when the keypad is off), current when none"""
     title = _("Jump to a selected page, max: {}").format(maxPage) if maxPage else _("Jump to a selected page")
     page = current
     try:
@@ -120,6 +132,18 @@ def jumpTarget(host, cItem):
             page = int(ret)
     except Exception:
         printExc()
+    return page
+
+
+def jumpTarget(host, cItem):
+    """asks for the page number, returns the item to list that page with (category = the list's own);
+    EXIT / an empty answer lists the current page again (the jump row already opened a list level).
+    A page preset by CH- (presetJumpPage) is taken without asking."""
+    maxPage = _toInt(cItem.get("max_page"), 0)
+    current = max(1, _toInt(cItem.get("current_page"), 1))
+    page = takePresetJumpPage()
+    if not page:
+        page = askJumpPage(host, current, maxPage)
     page = max(1, page)
     if maxPage:
         page = min(page, maxPage)

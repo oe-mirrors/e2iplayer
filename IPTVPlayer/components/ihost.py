@@ -852,6 +852,13 @@ class CHostBase(IHost):
                     hostItem.listPage = int(cItem.get('page'))
             except (TypeError, ValueError):
                 pass
+        elif imageType == CDisplayListItem.TYPE_JUMP:
+            # tools/iptvpaging.py: the page of the list the Jump row sits in (the last page has no "Next page")
+            try:
+                if int(cItem.get('current_page')) > 0:
+                    hostItem.currentPage = int(cItem.get('current_page'))
+            except (TypeError, ValueError):
+                pass
         # a host that knows the highest page puts it in its "Next page" entry as 'last_page':
         # "Next page (2/12)" in the list, "Page: 1/12" in the header path
         if type == CDisplayListItem.TYPE_NEXT:

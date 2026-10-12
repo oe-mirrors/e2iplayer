@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 2026-07-26 Updated to ignore non-subtitle sidecar text files during automatic subtitle detection
+# Last Modified: 2026-10-12 - a downloaded file also finds its subtitles saved as name.de.srt (box language, then English).
+# 2026-07-26 Updated to ignore non-subtitle sidecar text files during automatic subtitle detection
 # and to safely handle PLAYBACK_STOP when the exteplayer3 control socket is already gone. - Kamikaze24
 #
 #  IPTVExtMoviePlayer
@@ -12,7 +13,7 @@
 # LOCAL import
 ###################################################
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
-from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import shellQuote
+from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import shellQuote, subtitleSidecarFiles
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.components.cover import Cover3
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetSubtitlesDir, eConnectCallback, \
@@ -1395,9 +1396,23 @@ class IPTVExtMoviePlayer(Screen):
                     subFile = ''
                     try:
                         name, ext = os_path.splitext(fileSRC)
-                        for ext in IPTVSubtitlesHandler.getSupportedFormats():
-                            if fileExists(name + '.' + ext):
-                                subFile = name + '.' + ext
+                        # name.srt / name.vtt ... first, then the ones saved with a download: name.de.srt - the box
+                        # language first, then English, then any. Only files that read as subtitles: name.txt is
+                        # mostly the description sidecar of a download, it must not end the search
+                        boxLang = GetDefaultLang()
+                        langs = ['.%s.' % boxLang] + (['.en.'] if boxLang != 'en' else [])
+
+                        def langRank(path):
+                            suffix = path[len(name):].lower()
+                            for idx, lang in enumerate(langs):
+                                if suffix.startswith(lang):
+                                    return idx
+                            return len(langs)
+                        candidates = [name + '.' + ext for ext in IPTVSubtitlesHandler.getSupportedFormats()]
+                        candidates += [path for path in sorted(subtitleSidecarFiles(name), key=langRank) if path not in candidates]
+                        for candidate in candidates:
+                            if self._detectSubtitleFile(candidate)[0]:  # also checks that the file is there
+                                subFile = candidate
                                 break
                     except Exception:
                         printExc()
