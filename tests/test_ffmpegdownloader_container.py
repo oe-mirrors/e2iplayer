@@ -164,11 +164,11 @@ def test_command_line(ff):
     assert ff.FFMPEGDownloader.CONTAINER_EXT["mpegts"] == ".ts"
 
 
-def _finished(ff, live, terminated, size=5000):
+def _finished(ff, live, terminated, size=5000, url="https://cdn/x/live.m3u8", meta=None):
     # _cmdFinished of a download with `size` bytes on disk; which steps it takes
     ff.DMHelper.STS.DOWNLOADED, ff.DMHelper.STS.INTERRUPTED, ff.DMHelper.STS.ERROR = "DOWNLOADED", "INTERRUPTED", "ERROR"
     ff.DMHelper.getFileSize = lambda path: size
-    dl = _dl(ff, "https://cdn/x/live.m3u8", {"iptv_proto": "m3u8"})
+    dl = _dl(ff, url, {"iptv_proto": "m3u8"} if meta is None else meta)
     dl.filePath, dl.fileCmdPath, dl.console, dl.localFileSize, dl.sidecarEnabled = "/hdd/rec/Cam.mp4", "", None, 0, False
     dl.liveStream = live
     steps = []
@@ -254,3 +254,21 @@ def test_live_decision(ff):
     dl = _dl(ff, "https://cdn/x/play.m3u8", {"iptv_proto": "m3u8"}, download=False)
     dl._startLiveCheck(dl.url.meta)
     assert dl.liveState == {}
+
+
+def test_live_stop_keeps_the_name_of_mp4(ff):
+    # MP4 / MOV: ffmpeg, stopped just now, still reopens the file by name for the index (+faststart) - no rename
+    assert _finished(ff, live=True, terminated=True, url="https://cdn/x/live.mp4", meta={}) == ("DOWNLOADED", [])
+    ff.cfg.hls_out_container.value = "mp4"
+    assert _finished(ff, live=True, terminated=True) == ("DOWNLOADED", [])
+    ff.cfg.hls_out_container.value = "auto"
+
+
+def test_live_check_failure_does_not_stop_the_download(ff):
+    dl = _dl(ff, "https://cdn/x/manifest.mpd")
+
+    def broken(meta):
+        raise ValueError("unexpected")
+    dl._startLiveCheck = broken
+    dl.start(dl.url, "/hdd/movie/Live.mkv")
+    assert "/hdd/movie/Live.mkv.iptv.cmd" in ff.written and dl.liveState == {}

@@ -5,6 +5,8 @@
 #  $Id$
 #
 #  Last Modified: 12.10.2026
+#   - a stopped live recording in MP4 / MOV keeps its name (ffmpeg still reopens the file by name for the index);
+#     the live check also sends Authorization and cannot stop a download from starting
 #   - stopping a live recording is its normal end: DOWNLOADED, renamed to its container and its .txt written (no
 #     cover / subtitles: terminate() reports the finish at once) - live = the link says so, or its playlist (DASH
 #     type "dynamic", HLS without #EXT-X-ENDLIST, read in a work thread at the start), else no duration from
@@ -66,7 +68,7 @@ def manifestIsLive(url, getPage=None):
         getPage = common().getPage
     from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin
     meta = getattr(url, 'meta', None) or {}
-    header = dict((key, meta[key]) for key in ('User-Agent', 'Referer', 'Origin', 'Cookie') if meta.get(key))
+    header = dict((key, meta[key]) for key in ('User-Agent', 'Referer', 'Origin', 'Cookie', 'Authorization') if meta.get(key))
     url = str(url)
     for _step in range(2):
         try:
@@ -192,7 +194,11 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
         cmdTab = [DMHelper.GET_FFMPEG_PATH(), '-y']
         tmpUri = strwithmeta(url)
         self._prepareSidecarData(tmpUri.meta)
-        self._startLiveCheck(tmpUri.meta)
+        try:
+            self._startLiveCheck(tmpUri.meta)  # optional: the download must not depend on it
+        except Exception:
+            printExc()
+            self.liveState = {}
 
         if 'iptv_video_rep_idx' in tmpUri.meta:
             cmdTab.extend(['-video_rep_index', str(tmpUri.meta['iptv_video_rep_idx'])])
@@ -431,8 +437,11 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
 
         if liveStop:
             # stopped in the download manager: terminate() reports the finish itself (onFinish), so only what runs
-            # at once - the real file name and the .txt; no cover or subtitles, they would finish after that report
-            self._fixFileExtension()
+            # at once - the real file name and the .txt; no cover or subtitles, they would finish after that report.
+            # MP4 / MOV keep their name: ffmpeg, stopped just now, still reopens the file by name for the index
+            # (+faststart)
+            if self._outContainer() not in ('mp4', 'mov'):
+                self._fixFileExtension()
             if self.sidecarEnabled:
                 self._writeTxtSidecar(self.filePath)
             return
@@ -595,7 +604,7 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
             url = parts[0]
             if not getattr(url, 'meta', None):
                 # a plain part url: the headers of the whole link
-                url = strwithmeta(url, dict((key, meta[key]) for key in ('User-Agent', 'Referer', 'Origin', 'Cookie') if meta.get(key)))
+                url = strwithmeta(url, dict((key, meta[key]) for key in ('User-Agent', 'Referer', 'Origin', 'Cookie', 'Authorization') if meta.get(key)))
         state = self.liveState = {'live': None}
 
         def liveCheck():
