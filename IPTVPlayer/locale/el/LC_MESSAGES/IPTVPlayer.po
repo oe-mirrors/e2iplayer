@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-11 14:30+0000\n"
+"POT-Creation-Date: 2026-10-12 16:40+0000\n"
 "PO-Revision-Date: 2026-10-11 18:42+0300\n"
 "Last-Translator: \n"
 "Language-Team: giorbak\n"
@@ -2377,6 +2377,9 @@ msgstr "Σχηματισμοί"
 msgid "Fotka.pl stream :"
 msgstr "Ροή Fotka.pl:"
 
+msgid "Free"
+msgstr ""
+
 msgid "Free IPTV list"
 msgstr "Δωρεάν λίστα IPTV"
 
@@ -2913,6 +2916,9 @@ msgstr "Τελευταίο σφάλμα εξαίρεσης: '%s'"
 #, python-format
 msgid "Last Modified: %s"
 msgstr "Τελευταία τροποποίηση: %s"
+
+msgid "Last Page"
+msgstr ""
 
 msgid "Last air date:"
 msgstr "Τελευταία ημερομηνία προβολής:"

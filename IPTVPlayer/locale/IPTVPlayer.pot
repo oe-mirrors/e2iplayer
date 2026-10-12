@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-11 14:30+0000\n"
+"POT-Creation-Date: 2026-10-12 16:40+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2327,6 +2327,9 @@ msgstr ""
 msgid "Fotka.pl stream :"
 msgstr ""
 
+msgid "Free"
+msgstr ""
+
 msgid "Free IPTV list"
 msgstr ""
 
@@ -2856,6 +2859,9 @@ msgstr ""
 
 #, python-format
 msgid "Last Modified: %s"
+msgstr ""
+
+msgid "Last Page"
 msgstr ""
 
 msgid "Last air date:"

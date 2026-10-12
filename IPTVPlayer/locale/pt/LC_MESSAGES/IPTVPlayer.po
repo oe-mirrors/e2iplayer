@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-11 14:30+0000\n"
+"POT-Creation-Date: 2026-10-12 16:40+0000\n"
 "PO-Revision-Date: 2018-03-25 18:50+100\n"
 "Last-Translator: nunigaia\n"
 "Language-Team: BH team\n"
@@ -2375,6 +2375,9 @@ msgstr "Formações"
 msgid "Fotka.pl stream :"
 msgstr "Stream Fotka.pl :"
 
+msgid "Free"
+msgstr ""
+
 msgid "Free IPTV list"
 msgstr "Lista IPTV gratuita"
 
@@ -2911,6 +2914,9 @@ msgstr "Última exceção: '%s'"
 #, python-format
 msgid "Last Modified: %s"
 msgstr "Última modificação: %s"
+
+msgid "Last Page"
+msgstr ""
 
 msgid "Last air date:"
 msgstr "Última emissão:"
