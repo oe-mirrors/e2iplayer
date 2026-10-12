@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: E2iPlayer OE-Mirrors Version\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-11 14:30+0000\n"
+"POT-Creation-Date: 2026-10-12 16:40+0000\n"
 "PO-Revision-Date: 2026-10-05 20:00+0200\n"
 "Last-Translator: polinene\n"
 "Language-Team: polinene\n"
@@ -2379,6 +2379,9 @@ msgstr "Alineaciones"
 msgid "Fotka.pl stream :"
 msgstr "Stream de Fotka.pl :"
 
+msgid "Free"
+msgstr ""
+
 msgid "Free IPTV list"
 msgstr "Lista IPTV gratuita"
 
@@ -2917,6 +2920,9 @@ msgstr "Último error: %s"
 
 #, python-format
 msgid "Last Modified: %s"
+msgstr ""
+
+msgid "Last Page"
 msgstr ""
 
 msgid "Last air date:"

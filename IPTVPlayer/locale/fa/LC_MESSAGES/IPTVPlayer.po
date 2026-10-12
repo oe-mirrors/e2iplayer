@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-11 14:30+0000\n"
+"POT-Creation-Date: 2026-10-12 16:40+0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Persian Prince <persianpros@gmail.com>\n"
 "Language-Team: IPTVPlayer\n"
@@ -2374,6 +2374,9 @@ msgstr "ترکیب‌ها"
 msgid "Fotka.pl stream :"
 msgstr "جریان Fotka.pl :"
 
+msgid "Free"
+msgstr ""
+
 msgid "Free IPTV list"
 msgstr "فهرست IPTV رایگان"
 
@@ -2910,6 +2913,9 @@ msgstr "آخرین خطای استثنا: '%s'"
 #, python-format
 msgid "Last Modified: %s"
 msgstr "آخرین تغییر: %s"
+
+msgid "Last Page"
+msgstr ""
 
 msgid "Last air date:"
 msgstr "تاریخ آخرین پخش:"
