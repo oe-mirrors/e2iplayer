@@ -409,9 +409,12 @@ def _warnIfDirNotCreatable(path, message):
                 return
             AddPopup(message % path, type=MessageBox.TYPE_ERROR, timeout=10)
 
-        if asynccall.IsMainThread():
+        queue = asynccall.gMainFunctionsQueueTab[0]
+        # before SetMainThreadId() only the queue knows the main thread - and
+        # DelegateToMainThread raises a BaseException when called on it
+        if asynccall.IsMainThread() or (queue is not None and queue.mainThreadName == threading.current_thread().name):
             showPopup()
-        elif asynccall.gMainFunctionsQueueTab[0] is not None:
+        elif queue is not None:
             # may run on a worker thread: GUI calls must go through the main thread
             asynccall.DelegateToMainThread(showPopup)()
         # no GUI session (headless web interface): nothing to do
