@@ -2058,7 +2058,9 @@ class IPTVExtMoviePlayer(Screen):
             printDBG('>>>> _mapTrack [%s]' % obj)
             params = {}
             params['id'] = int(obj['id'])
-            params['encode'] = str(obj['e'][2:])
+            # exteplayer3 names start with "A_" / "V_" / "S_" (A_MP3), gstplayer sends the plain name (audio/mpeg)
+            encode = str(obj['e'])
+            params['encode'] = encode[2:] if encode[:2] in ('A_', 'V_', 'S_') else encode
             params['name'] = str(obj['n'])
             if video:
                 params['frame_rate'] = float(obj['f']) / 1000.0

@@ -467,7 +467,8 @@
   "okanime",
   "aloula",
   "royatv",
-  "egyclub"
+  "egyclub",
+  "qoranway"
  ],
  "greek": [
   "youtube",

@@ -654,6 +654,11 @@ class SidecarMixin(object):
                 printDBG("%s sidecar JPG skipped: empty URL" % self.__class__.__name__)
                 self._finishDownloadFlow()
                 return
+            if ensureText(self.sidecarImg).startswith(('file://', '/')):
+                # a host's own icon from the plugin folder (wget can not read file://): no cover of the video
+                printDBG("%s sidecar JPG skipped: local host icon [%s]" % (self.__class__.__name__, self.sidecarImg))
+                self._finishDownloadFlow()
+                return
 
             basePath = ensureText(filePath).rsplit('.', 1)[0]
             jpgPath = basePath + '.jpg'
