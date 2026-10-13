@@ -3,7 +3,7 @@
 #e2iplayer install script - Pike_Bishop from oATV
 
 ## Variables ##
-SCRIPTVERSION=16.0.3_git-oemirrors
+SCRIPTVERSION=16.0.4_git-oemirrors
 STARTDATE="$(date +%a.%d.%b.%Y-%H:%M:%S)"
 BOXIP="http://127.0.0.1"
 WGET=/usr/bin/wget
@@ -24,6 +24,16 @@ E2IPLAYER_BACKUP_DIR=$WORKDIR/e2iplayer_backups
 {
 # If it does not exist create the Working Directory (this is where the Log file are stored).
 mkdir -p $WORKDIR
+
+
+# $TMP (/var/volatile/tmp) is a RAM Disk. On Boxes with little RAM (e.g. DM800SE) the Source Package
+# does not fit there ("No space left on device"), then use a tmp Directory in the Working Directory.
+TMP_NEEDED_KB=100000
+TMP_FREE_KB="$(df -Pk $TMP 2> /dev/null | tail -n 1 | awk '{print $4}')"
+if [ -z "$TMP_FREE_KB" ] || [ "$TMP_FREE_KB" -lt "$TMP_NEEDED_KB" ] ; then
+	TMP=$WORKDIR/tmp
+	mkdir -p $TMP
+fi
 
 
 # To avoid too many E2iPlayer Backups lying around on the Box with (variable BACKUP=yes), delete older Backups.
@@ -104,14 +114,17 @@ fi
 
 
 # Check the Python Version (to distinguish between OpenATV-6.4 and OpenATV-7.0 for the Install/Update).
-PYTHON_VERSION_COMPLETE=$(python -c 'import sys; print(".".join(map(str, sys.version_info[:3])))')
+# Not every python3 Image has a "python" Link, so prefer python3.
+PYTHON=python3
+command -v python3 > /dev/null 2>&1 || PYTHON=python
+PYTHON_VERSION_COMPLETE=$($PYTHON -c 'import sys; print(".".join(map(str, sys.version_info[:3])))')
 echo -e "Python Version = $PYTHON_VERSION_COMPLETE\n\n"
-PYTHON_VERSION=$(python -c "import sys; print(sys.version_info.major)")
+PYTHON_VERSION=$($PYTHON -c "import sys; print(sys.version_info.major)")
 
 
 # Check whether the E2iPlayer oemirrors Version matches the Image (python2/python3).
 echo "Install/Update -> E2iPlayer Version of oemirrors for python3 only."
-if [ $PYTHON_VERSION -ne 3 ] ; then
+if [ "$PYTHON_VERSION" != "3" ] ; then
 	echo -e "\n... ERROR ...\nE2iPlayer Version does not match a python$PYTHON_VERSION Image.\n\n"
 	exit 1
 else
@@ -121,6 +134,8 @@ fi
 # Download the E2iPlayer Source Package into the Directory (Variable TMP).
 echo -e "\n\nDownload E2iPlayer Source Package (*.tar.gz) to;\n$TMP ...\n"
 if ! $WGET -P $TMP $FILE_ADRESS ; then
+	# Remove a partial Download, otherwise wget saves the second try as python3.tar.gz.1
+	rm -f $TMP/python3.tar.gz
 	if ! $WGET "--no-check-certificate" $FILE_ADRESS -P $TMP ; then
 		echo -e "\n... ERROR ...\nDownload E2iPlayer Source Package failed ! \nCheck your Internet Connection\nand restart e2iplayer_install.sh.\n\n" >&2
 		exit 1
@@ -130,16 +145,27 @@ fi
 # Unpack the E2iPlayer Source Package in the Directory (Variable TMP).
 echo -e "\nUnpack E2iPlayer Source Package to;\n$TMP ..."
 if [ -e $TMP/python3.tar.gz ] ; then
-	$EXTRACT $TMP/python3.tar.gz -C $TMP > /dev/null
+	# Only the IPTVPlayer Directory is needed, the rest of the Repository (Backup, tests, ...) is not unpacked.
+	$EXTRACT $TMP/python3.tar.gz -C $TMP e2iplayer-python3/IPTVPlayer > /dev/null
 
 	if [ "$?" != "0" ] ; then
 		echo -e "\n... ERROR ...\nUnpack E2iPlayer Source Package failed ! \nrestart e2iplayer_install.sh.\n\n" >&2
 		exit 1
 	fi
+	rm -f $TMP/python3.tar.gz
+else
+	echo -e "\n... ERROR ...\n$TMP/python3.tar.gz not found ! \nrestart e2iplayer_install.sh.\n\n" >&2
+	exit 1
 fi
 
-# Read the Path to the unpacked E2iPlayer Source Package and assign it to a Variable.
-EXTRACTED_SOURCE_PATH="$($NICE $NICE_ARGS find $TMP -maxdepth 2 -name IPTVPlayer)"
+# Path to the unpacked E2iPlayer Source Package.
+EXTRACTED_SOURCE_PATH=$TMP/e2iplayer-python3/IPTVPlayer
+
+# Check it before the installed E2iPlayer gets deleted, otherwise the Box ends up without E2iPlayer.
+if [ ! -f $EXTRACTED_SOURCE_PATH/plugin.py ] ; then
+	echo -e "\n... ERROR ...\n$EXTRACTED_SOURCE_PATH is missing or incomplete ! \nThe installed E2iPlayer was not touched.\nrestart e2iplayer_install.sh.\n\n" >&2
+	exit 1
+fi
 
 # Delete an already installed E2iPlayer, If BACKUP=yes is set in line 19, a Backup (*.tar.gz) of the
 # already installed E2iPlayer is first created and stored in the Directory (Variable E2IPLAYER_BACKUP_DIR).
@@ -187,6 +213,7 @@ echo -e "\nE2iPlayer installed/updated successfully. -> $ENDDATE\n"
 # Delete the remains.
 echo -e "\nDelete remains (*.tar.gz/*.zip and Directory e2iplayer-*) ...\n"
 $NICE $NICE_ARGS rm -rf $TMP/e2iplayer-* $TMP/python*.gz $TMP/master.* $TMP/opkg-*
+rmdir $WORKDIR/tmp 2> /dev/null
 
 
 # Enigma2 GUI restart, yes or no ?, it's your decision (if there are currently no timer recordings running the answer would be yes).
@@ -194,12 +221,12 @@ while true; do
 	read -p "$(echo -e "\nWould you like to restart the Enigma2 GUI? y/n (Default = yes) ?")" -n 1 yn < /dev/tty
 	case $yn in
 		[yY]* )	echo -e "\n\nEnigma2 GUI restart is executed ...\n"
-				$WGET -q -O - $BOXIP/web/powerstate?newstate=3
+				$WGET -q -O - $BOXIP/web/powerstate?newstate=3 || { init 4 ; sleep 3 ; init 3 ; }
 				echo -e "\n" && break ;;
 		[nN]* ) echo -e "\n" && break ;;
 			* ) if [ -z "$yn" ] ; then
 					echo -e "\n\nEnigma2 GUI restart is executed ...\n"
-					$WGET -q -O - $BOXIP/web/powerstate?newstate=3
+					$WGET -q -O - $BOXIP/web/powerstate?newstate=3 || { init 4 ; sleep 3 ; init 3 ; }
 					echo -e "\n" && break
 				fi
 				echo -e "\n\nPlease answer with y for (yes) or n for (no).\n" ;;
