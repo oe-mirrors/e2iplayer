@@ -29,7 +29,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return "https://shaahiied4u.net/"
+    return "https://sshaahid4u.net/"
 
 
 # Arabic ordinals used in "الموسم الثاني"
@@ -351,7 +351,7 @@ class Shahid44u(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not location:
             # an HTTP layer that followed the redirect anyway: take the final url
             finalUrl = str(self.cm.meta.get("url", "") or "")
-            if self.cm.isValidUrl(finalUrl) and self.up.getHostName(finalUrl) != self.up.getHostName(self.MAIN_URL):
+            if self.cm.isValidUrl(finalUrl) and self.up.getHostName(finalUrl) != self.up.getHostName(str(url)):
                 location = finalUrl
         if location.startswith("//"):
             location = "https:" + location
@@ -364,7 +364,9 @@ class Shahid44u(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not self.cm.isValidUrl(videoUrl):
             return []
         sidecar = sidecarFromUrlMeta(videoUrl, IsSidecarEnabled())
-        if self.up.getHostName(videoUrl) == self.up.getHostName(self.MAIN_URL) and "/m/" in videoUrl:
+        # the site domain changes often (301 chains, server links on yet another domain): match the
+        # /m/<hash> redirect link by its path, not by comparing with MAIN_URL
+        if re.search(r"^https?://[^/]+/m/[0-9a-fA-F]{16,}", videoUrl):
             videoUrl = self._resolveRedirect(videoUrl)
             if not videoUrl:
                 return []
