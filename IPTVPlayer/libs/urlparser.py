@@ -575,6 +575,7 @@ class urlparser:
             "megamax.cam": self.pp.parserMEGAMAX,  # add 031026
             "megamax.me": self.pp.parserMEGAMAX,  # add 031026
             "megatuktuk.store": self.pp.parserMEGAMAX,  # add 031026
+            "megankiddifference.com": self.pp.parserVOESX,
             "meinecloud.click": self.pp.parserMEINECLOUD,
             "metagnathtuggers.com": self.pp.parserVOESX,  # add 061026
             "mfw09.org": self.pp.parserBYSE,
