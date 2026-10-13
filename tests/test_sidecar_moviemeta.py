@@ -257,3 +257,17 @@ def test_late_answer_rewrites_txt(env, tmp_path):
     gate.set()
     _join()
     assert (tmp_path / "film.txt").read_text(encoding="utf-8").startswith("The Wolf and the Lamb (2026)")
+
+
+@pytest.mark.parametrize("icon", ["file:///usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/PlayerSelector/qoranway135.png",
+                                  "/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/logos/qoranwaylogo.png"])
+def test_local_host_icon_is_no_cover(env, tmp_path, icon):
+    # wget can not read file://, and the host's own icon is no cover of the video: no .jpg, the download finishes
+    dl, meta = _downloader(env, None)
+    dl.sidecarImg = icon
+    finished = []
+    dl._finishDownloadFlow = lambda: finished.append(True)
+    dl._startImgSidecarDownload(str(tmp_path / "film.mp3"))
+    assert finished == [True]
+    assert dl.sidecarConsole is None
+    assert not (tmp_path / "film.jpg").exists()
