@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 12.10.2026
+# Last Modified: 14.10.2026
 # 23.08.2026 - withArticleContent() now checks type for episodes, fixes wrong Info text on episode press, getSuggestionsProvider() added (forces Google search suggestions) - Kamikaze24
 import re
 
@@ -70,6 +70,9 @@ class SerienStreamTo(CBaseHostClass):
         self.watchedHelper = IPTVWatchedHelper('serienstreamto')
         self.MENU = [{"category": "list_items", "title": _("Series"), "url": self.getFullUrl("suche")},
                      {"category": "list_newepisodes", "title": "Neueste Episoden"},
+                     {"category": "list_home_cards", "title": "Im Trend", "card": "trend-card"},
+                     {"category": "list_home_cards", "title": "Neu auf S.to", "card": "continue-card"},
+                     {"category": "list_popular", "title": "Beliebte Serien", "url": self.getFullUrl("beliebte-serien")},
                      {"category": "list_items", "title": _("Collections"), "url": self.getFullUrl("sammlungen")},
                      {"category": "list_value", "title": _("Genres"), "s": ">Genres</h2>"},
                      {"category": "list_AZ", "title": "A-Z"},
@@ -402,6 +405,79 @@ class SerienStreamTo(CBaseHostClass):
                 self.watchedHelper.updateHostItemFlag(self, params, self._getWatchedKeyForItem)
                 self.addVideo(params)
 
+    def _addSeriesCard(self, cItem, url, title, icon, desc=""):
+        # season links ("Neue Staffeln diese Woche") open the whole series, so the
+        # watched key stays "series:<url>" like in listItems()
+        url = self.getFullUrl(re.sub(r'/staffel-\d+/?$', '', url))
+        title = self.cleanHtmlStr(title)
+        if not url or not title:
+            return
+        params = dict(cItem)
+        params.update({"good_for_fav": True, "category": "list_seasons", "title": title, "url": url, "icon": self.getFullIconUrl(icon), "desc": desc})
+        self.watchedHelper.updateHostItemFlag(self, params, self._getWatchedKeyForItem)
+        self.addDir(params)
+
+    def _cardIcon(self, item):
+        icon = self.cm.ph.getSearchGroups(item, 'data-src="([^"]+)')[0]
+        if not icon:
+            icon = self.cm.ph.getSearchGroups(item, r'<img[^>]+?src="(?!data:)([^"]+)')[0]
+        return icon
+
+    def listHomeCards(self, cItem):
+        # start page rows "Angesagt" (trend-card) and "Neu auf SerienStream" (continue-card)
+        printDBG("SerienStreamTo.listHomeCards")
+        sts, data = self.getPage(self.getMainUrl())
+        if not sts:
+            return
+        for item in self.cm.ph.getAllItemsBeetwenMarkers(data, '<article class="%s' % cItem["card"], "</article>"):
+            url = self.cm.ph.getSearchGroups(item, 'href="(/serie/[^"]+)')[0]
+            title = self.cm.ph.getSearchGroups(item, 'alt="([^"]+)')[0]
+            rank = self.cm.ph.getSearchGroups(item, r'trend-rank">\s*(\d+)')[0]
+            self._addSeriesCard(cItem, url, title, self._cardIcon(item), ("Platz %d" % int(rank)) if rank else "")
+
+    def _popularSections(self, data):
+        # /beliebte-serien: "Neue Staffeln diese Woche", "Meistgesehen gerade" and one row per genre
+        # (title, cards, is_genre_row) - the genre rows carry <h3>, the two top rows <h2>
+        heads = [(m.start(), self.cleanHtmlStr(m.group(2)), m.group(1) == "3") for m in re.finditer(r'<h([23])[^>]*>(.*?)</h[23]>', data, re.DOTALL)]
+        heads.append((len(data), "", False))
+        sections = []
+        for (start, title, isGenre), (end, _t, _g) in zip(heads, heads[1:]):
+            cards = self.cm.ph.getAllItemsBeetwenMarkers(data[start:end], "<a ", "</a>")
+            cards = [card for card in cards if 'class="show-card' in card]
+            if title and cards:
+                sections.append((title, cards, isGenre))
+        return sections
+
+    def listPopular(self, cItem):
+        printDBG("SerienStreamTo.listPopular")
+        sts, data = self.getPage(cItem["url"])
+        if not sts:
+            return
+        for idx, (title, _cards, isGenre) in enumerate(self._popularSections(data)):
+            if isGenre:
+                title = "Beliebt: %s" % title
+            else:
+                # drop the leading emoji of "🔥 Meistgesehen gerade"
+                title = title.split(" ", 1)[-1] if " " in title and not title[:1].isalnum() else title
+            params = dict(cItem)
+            params.update({"good_for_fav": False, "category": "list_popular_section", "title": title, "section": idx, "desc": ""})
+            self.addDir(params)
+
+    def listPopularSection(self, cItem):
+        printDBG("SerienStreamTo.listPopularSection")
+        sts, data = self.getPage(cItem["url"])
+        if not sts:
+            return
+        sections = self._popularSections(data)
+        idx = cItem.get("section", 0)
+        if idx >= len(sections):
+            return
+        for item in sections[idx][1]:
+            url = self.cm.ph.getSearchGroups(item, 'href="([^"]+)')[0]
+            title = self.cm.ph.getSearchGroups(item, 'alt="([^"]+)')[0]
+            season = self.cm.ph.getSearchGroups(item, r'season-badge">\s*Season\s*(\d+)')[0]
+            self._addSeriesCard(cItem, url, title, self._cardIcon(item), (_("Season") + " " + season) if season else "")
+
     def listValue(self, cItem):
         printDBG("SerienStreamTo.listValue")
         sts, data = self.getPage(self.getFullUrl("suche"))
@@ -587,6 +663,12 @@ class SerienStreamTo(CBaseHostClass):
             self.AZ(self.currItem)
         elif category == "list_newepisodes":
             self.listNewEpisodes(self.currItem)
+        elif category == "list_home_cards":
+            self.listHomeCards(self.currItem)
+        elif category == "list_popular":
+            self.listPopular(self.currItem)
+        elif category == "list_popular_section":
+            self.listPopularSection(self.currItem)
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({"search_item": False, "name": "category"})
