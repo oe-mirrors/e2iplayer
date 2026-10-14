@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026
+# Last Modified: 14.10.2026
 # Ninateka (ninateka.pl) - Polish films, documentaries, theatre, concerts, talks and animation
 # of the Narodowy Instytut Audiowizualny / Filmoteka Narodowa.
 # 03.10.2026 - revival + rewrite for the Redge (RGP) platform the site runs on now:
@@ -7,6 +7,8 @@
 #   search), streams from /api/products/<id>/videos/playlist (plain HLS from redcdn, DRM-only titles
 #   such as the audiobooks -> message) + watched flag / downloaded flag / name normalisation /
 #   sidecar / moviemeta INFO for feature films / favourites / paging (First / Jump / Next from totalCount).
+# 14.10.2026 - playlists with a "drm" block -> DRM message (their HLS is FairPlay SAMPLE-AES, the
+#   download failed); free titles carry video-only TS + a separate AUDIO group -> merge:// (was silent).
 ###################################################
 # LOCAL import
 ###################################################
@@ -337,13 +339,14 @@ class Ninateka(GenericFolderWatchedScraperMixin, CBaseHostClass):
         data = self._json(self._api('products/%s/videos/playlist' % pid, 'videoType=MOVIE'))
         if not isinstance(data, dict):
             return []
+        # with a "drm" block the HLS source is FairPlay SAMPLE-AES too - only the DRM-free titles play
+        if data.get('drm'):
+            SetIPTVPlayerLastHostError(_('Video with DRM protection.'))
+            return []
         sources = data.get('sources') or {}
         hls = [s.get('src') for s in (sources.get('HLS') or []) if s.get('src')]
         if not hls:
-            if data.get('drm'):
-                SetIPTVPlayerLastHostError(_('Video with DRM protection.'))
-            else:
-                SetIPTVPlayerLastHostError(_('No stream available'))
+            SetIPTVPlayerLastHostError(_('No stream available'))
             return []
 
         subTracks = []
@@ -365,12 +368,11 @@ class Ninateka(GenericFolderWatchedScraperMixin, CBaseHostClass):
         for src in hls:
             if src.startswith('//'):
                 src = 'https:' + src
-            # audio is muxed into the TS segments - the AUDIO group is only an alternative copy
+            # the variant TS segments are video only - the sound is the separate AUDIO group -> merge://
             links = getDirectM3U8Playlist(strwithmeta(src, meta), checkExt=False, checkContent=True,
-                                          sortWithMaxBitrate=999999999, mergeAltAudio=False)
+                                          sortWithMaxBitrate=999999999, mergeAltAudio=True)
             for link in links:
                 link['need_resolve'] = 0
-                link.pop('alt_audio_streams', None)
                 if link.get('height'):
                     link['name'] = '%sp (%s kbps)' % (link['height'], int(link.get('bitrate', 0) or 0) // 1000)
                 urlTab.append(link)
