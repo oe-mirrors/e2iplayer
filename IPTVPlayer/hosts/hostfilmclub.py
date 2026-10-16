@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 09.10.2026
+LAST_MODIFIED = "09.10.2026"
 # Update: 06.06.2026 - Mr.X
 # for Panda555
 # 09.10.2026 - host standard:

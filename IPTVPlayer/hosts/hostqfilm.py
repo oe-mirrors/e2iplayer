@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 09.10.2026
+LAST_MODIFIED = "09.10.2026"
 # Qfilm (كيو فيلم) - PHP Melody site with movies with Arabic subtitles (new releases, Arabic/Egyptian,
 # foreign, Indian, Asian, Turkish, animation, dubbed, genres). The domain rotates: qfilm.tv redirects
 # to the current one. Its Ramadan series live on the sister site q-drama (not part of this host).

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 08.10.2026
+LAST_MODIFIED = "08.10.2026"
 # footyroom Host (Created By Dr HYTHAM MAHMOUD)
 # FootyRoom (footyroom.co) - football highlights: latest, countries -> competitions -> matches, search.
 #   Lists come from the site's own infinite-scroll endpoint /posts-pagelet?page=N (&stageTree=<competition id>,

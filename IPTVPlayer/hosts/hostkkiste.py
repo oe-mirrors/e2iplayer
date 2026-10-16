@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 07.10.2026
+LAST_MODIFIED = "07.10.2026"
 # 02.06.2026 - MR.X
 # 07.10.2026 - host standard
 #   kkiste-io.ink (DLE, behind Cloudflare -> getPageCFProtection / MyE2i; the covers get the cf_clearance

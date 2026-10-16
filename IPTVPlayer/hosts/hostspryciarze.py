@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026
+LAST_MODIFIED = "04.10.2026"
 # Spryciarze.pl - Polish how-to video guides (computers, cooking, DIY, hobby, sport, beauty, ...).
 # 03.10.2026 - revival + rewrite for the current site: category tree from /kategorie
 #   (www + the komputery/kulinaria/kobieta/sport sub-domains), "card" grids with "/page:N" pagination,

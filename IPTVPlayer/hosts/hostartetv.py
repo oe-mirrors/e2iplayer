@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 08.10.2026
+LAST_MODIFIED = "08.10.2026"
 # ARTE
 # Rewritten for the api-cdn.arte.tv "emac v4" JSON API + player v2 config
 # 07.10.2026 - INFO (programme/collection details, moviemeta for

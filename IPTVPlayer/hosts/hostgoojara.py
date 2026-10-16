@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026
+LAST_MODIFIED = "04.10.2026"
 # 03.10.2026 - new host for goojara.to (ww1.goojara.to)
 #   English movies and TV series. Lists: /watch-movies[-popular|-genre-X|-year-Y|-az-L]?p=N,
 #   /watch-series[...] (recent/popular = episodes, genre/year/A-Z = shows), search = POST /xmre.php,

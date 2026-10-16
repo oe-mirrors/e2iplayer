@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 09.10.2026
+LAST_MODIFIED = "09.10.2026"
 # Coding: BY MOHAMED_OS
 # 06.10.2026 - ported to the python3 host standard (torrent playback through TorrServer)
 #   - arabp2p.net is an xbtit tracker: every list, search and details page needs an account

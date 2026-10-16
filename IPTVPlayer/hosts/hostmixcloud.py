@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026
+LAST_MODIFIED = "04.10.2026"
 # 03.10.2026 - Mixcloud (mixcloud.com), new host
 #   DJ mixes / radio shows from the public API (api.mixcloud.com): categories -> popular / latest,
 #   search for mixes, users (their uploads) and tags. Stream urls like yt-dlp's mixcloud extractor:

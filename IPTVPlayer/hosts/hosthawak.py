@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 09.10.2026
+LAST_MODIFIED = "09.10.2026"
 # Hawak (فيديو هواك, www.hawak.net): PHP Melody site (Laroza template) with Arabic, Indian, Turkish, Asian and
 # foreign films, dubbed Indian/Turkish series, Arabic and Ramadan series, anime; the catalogue was last
 # extended in December 2025

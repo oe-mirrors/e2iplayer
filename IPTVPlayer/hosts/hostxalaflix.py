@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 09.10.2026
+LAST_MODIFIED = "09.10.2026"
 # 19.09.2025 - Mr.X
 # 09.10.2026 - host standard (old.xalaflix.cv - xalaflix.cv itself moved to a new site, xalaflix.tax):
 #   - links: no KeyError "status_code" when a newPlayer redirect fails (kakaflix.lol is gone - the server is left

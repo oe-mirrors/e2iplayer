@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+LAST_MODIFIED = "16.10.2026"
 # Template of a movie/series host that follows the current host standard:
 #   - movies and series (series -> seasons -> episodes), search with history
 #   - "First page" / "Jump" / "Next page" (with "(2/12)" when the last page is known)
@@ -9,7 +10,7 @@
 #   - runs on Python 2.7 and 3 (p2p3 imports, no f-strings)
 #
 # How to use it: copy it to IPTVPlayer/hosts/host<name>.py, replace "template"/"Template" by the
-# host name, set gettytul() and adapt the markers/regular expressions in the list functions to
+# host name, set LAST_MODIFIED (date of the last change, shown in the host list) and gettytul() and adapt the markers/regular expressions in the list functions to
 # the site. The site it is written for is made up - the HTML it expects is shown above each
 # list function. Explained step by step in the wiki:
 # https://github.com/oe-mirrors/e2iplayer/wiki/Index-on-how-to-create-hosts-and-handle-urlparser

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 09.10.2026
+LAST_MODIFIED = "09.10.2026"
 # 05.05.2026 - update to current url - Masta2002
 # 08.10.2026 - host standard, domain cb01uno.wiki (cb01uno.watch / .club redirect there; rows of an older domain
 #   are moved to the current one):

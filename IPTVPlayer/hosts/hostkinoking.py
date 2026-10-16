@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 08.10.2026
+LAST_MODIFIED = "08.10.2026"
 # 02.09.2026 - rewrite for the redesigned kinoking.cc
 #   (Tailwind "fav-data-source" cards; series.php?id=..&season=.. -> inline allEpisodesData JSON
 #    with video_links) + watched flag / sidecar / name norm.

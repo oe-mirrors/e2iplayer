@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.09.2025
+LAST_MODIFIED = "04.09.2025"
 # 31.08.2022 - Web HU Player
 ###################################################
 HOST_VERSION = "4.0"

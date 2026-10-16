@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 10.10.2026
+LAST_MODIFIED = "10.10.2026"
 # 03.03.2019 - Celeburdi
 # 10.10.2026 - the MinDig TV app api (api.mindigtv.appsters.me) is gone (no DNS) and the HbbTV HD launcher answers
 #   404: channels, radios and videos now come only from the MinDig TV HbbTV portal (hbbtv-as.connectmedia.hu, plain

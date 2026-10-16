@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 10.10.2026
+LAST_MODIFIED = "10.10.2026"
 # Radiostacja.pl: Polish radio stations (Radio ZET group, local stations), music channels by mood and the
 #   RMF ON station list, search by station name
 # 10.10.2026 - host standard: station rows are audio rows with INFO and sidecar, mood / RMF ON folders reopen

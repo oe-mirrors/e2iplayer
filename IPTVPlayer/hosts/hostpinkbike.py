@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026
+LAST_MODIFIED = "04.10.2026"
 # Pinkbike (pinkbike.com) - mountain bike videos: newest, best of today/week/month/all time,
 #   the site's video categories (produced videos, quick clips, non-biking, ...) and the video search.
 # The site sits behind Cloudflare that only lets Chrome's TLS fingerprint through -> pages via

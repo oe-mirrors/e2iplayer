@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026
+LAST_MODIFIED = "04.10.2026"
 # DR TV (dr.dk/drtv) - the streaming service of Danmarks Radio: live channels (DR1, DR2, DR Ramasjang,
 # TV Avisen), series, films, documentaries, the "Gensyn" archive, live sport, search.
 # 03.10.2026 - revival + rewrite for the Massive "AXIS" platform the site runs on now:

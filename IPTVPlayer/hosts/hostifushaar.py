@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 09.10.2026
+LAST_MODIFIED = "09.10.2026"
 # iFushaar (موقع فشار) - films with Arabic subtitles (plus older episodes of a few US series); the site
 # moves between sub-domains of ifushaar.com, t.ifushaar.com redirects to the current one (e.ifushaar.com
 # on 09.10.2026)

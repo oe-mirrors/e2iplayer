@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 09.10.2026
+LAST_MODIFIED = "09.10.2026"
 # 09.10.2026 - moved to 3isq.qist3ishq.site ("قصة عشق الأصلي", the 3isq brand on its own PHP site, no Cloudflare);
 #   we.3isq.cam / b.3isq.cam answer a Cloudflare challenge (MyE2i only) and use other urls + markup
 #   - menus: latest episodes, series, movies, search - all with First page / Jump / Next page (the site's "?page=N")

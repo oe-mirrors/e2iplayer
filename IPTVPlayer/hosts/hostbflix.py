@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 10.10.2026
+LAST_MODIFIED = "10.10.2026"
 # 26.12.2025 - fixed pycurl for py3 version - by Mr.X
 # 09.10.2026 - host standard:
 #   - links: the subdrc.xyz redirect is followed when the links are listed (real hoster name, one row per hoster -

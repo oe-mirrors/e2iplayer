@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 07.10.2026
+LAST_MODIFIED = "07.10.2026"
 # 02.02.2026 - Mr.X
 #   - search: no crash on an empty / non-JSON ajax answer, only series links (no season / episode / page links)
 #   - "All" (2500+ series) and "Latest episodes" are paged here (100 rows), genre / A-Z lists use the site's

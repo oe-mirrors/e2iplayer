@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 09.10.2026
+LAST_MODIFIED = "09.10.2026"
 # Based on the WeCima hosts by popking (odem2014) and MOHAMED_OS
 # 08.10.2026 - revived from Backup for wecima.gripe (wecima.rent redirects there; cima.wecima.show is
 #   gone, wecima.cx sits behind a Cloudflare managed challenge for every request); rewrite against the

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026
+LAST_MODIFIED = "04.10.2026"
 # 03.10.2026 - revived for w.cimacub.com (ciimaclub.club is dead, cimacub.com 301s here)
 #   - categories read live from the site's "القسم" dropdown (movies / series & shows), home page
 #     "latest", search (?s=..&page=n); First Page / Jump / Next page (n/last) from the page-numbers block

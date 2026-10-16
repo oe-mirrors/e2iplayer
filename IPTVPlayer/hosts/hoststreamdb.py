@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 09.10.2026
+LAST_MODIFIED = "09.10.2026"
 # 09.10.2026 - StreamDB: "TorrentDB without torrents" - films and series from the Cinemeta catalogue, links from
 #   HTTP embed providers (idea from MOHAMED_OS's themoviedb host)
 #   - catalogue from Cinemeta (Stremio, no API key): Popular / Featured / New (this year) / genres /

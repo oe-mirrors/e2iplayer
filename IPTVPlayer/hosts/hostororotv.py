@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026
+LAST_MODIFIED = "04.10.2026"
 # 03.10.2026 - revival + rewrite for today's ororo.tv
 #   Without an account ororo.tv only offers its "Channels": ~60 YouTube channels (TED, Kurzgesagt, BBC Learning
 #   English ...) with ororo's own English subtitles. TV shows / movies need a paid subscription and are left out.

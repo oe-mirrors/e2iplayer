@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026
+LAST_MODIFIED = "04.10.2026"
 # ArabSciences (arabsciences.com) - Arabic documentaries (dubbed / subtitled), mostly 2011-2021.
 # WordPress: categories, posts and search come from the REST API (/wp-json/wp/v2/). A post embeds
 # its video as YouTube / Dailymotion / ok.ru / Google Drive iframes (resolved by urlparser) or as

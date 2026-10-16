@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026
+LAST_MODIFIED = "04.10.2026"
 # 04.10.2026 - zaluknij.cc rework (Polish movies and series)
 #   - Cloudflare: every request goes through getPageCFProtection (MyE2i solves the browser check, the
 #     solving User-Agent is remembered next to the cookie jar); the UA pCommon really used is taken

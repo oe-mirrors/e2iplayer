@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 09.10.2026
+LAST_MODIFIED = "09.10.2026"
 # Based on techdealer-xbmc.googlecode.com/svn/trunk/plugin.audio.musicbox/
 # Music charts (iTunes by country, Beatport Top 100, Billboard, the Last.fm user's tracks) played through YouTube
 #   (the first YouTube search hit for "artist title", or the YouTube Data API with an own API key).

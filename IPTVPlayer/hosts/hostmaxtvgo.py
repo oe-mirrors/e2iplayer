@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 10.10.2026
+LAST_MODIFIED = "10.10.2026"
 # MaxTVGO (maxtvgo.com): videos of Max Kolonko's MaxTV - subscription service, needs the user's own account
 #   (e-mail + password in the host configuration)
 # 10.10.2026 - host standard: login through the site's current ajax/login.php (the old login form is gone),

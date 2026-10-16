@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 10.10.2026
+LAST_MODIFIED = "10.10.2026"
 # 10.10.2026 - links are no longer renamed to "*name*" after use - that broke the link list's own used mark (tick + colour)
 # 10.10.2026 - rewrite for www.fasel-hd.co (FaselHD moved there; faselhd.co, faselhds.* and the other old domains
 #   answer 301/302 to it), the whole site sits behind a Cloudflare check

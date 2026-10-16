@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026
+LAST_MODIFIED = "04.10.2026"
 # TV Republika (tvrepublika.pl, formerly telewizjarepublika.pl) - Polish news channel
 # Live: the YouTube live streams embedded on https://tvrepublika.pl/live (main channel + "Republika Plus").
 # Programmes: the programme cards on the home page link to YouTube playlists ("Zobacz odcinki").

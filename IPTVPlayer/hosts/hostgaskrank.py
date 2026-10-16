@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 08.10.2026
+LAST_MODIFIED = "08.10.2026"
 # 07.05.2026 - schwatter
 # 08.10.2026 - host standard: category tree and tags from the site, tag search, First page / Jump / Next page
 #   with the last page, watched flag, downloaded marker, favourites, sidecar, INFO with the site's data,

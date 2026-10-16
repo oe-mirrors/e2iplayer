@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026
+LAST_MODIFIED = "04.10.2026"
 # Al Arabiya (alarabiya.net) - the live channels (Al Arabiya, Al Hadath, Al Arabiya English, Business,
 #   Programmes, FM), the programme archive and the video sections of the site, plus the video search.
 # The site sits behind Cloudflare that only lets Chrome's TLS fingerprint through (and challenges every

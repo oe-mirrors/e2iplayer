@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026
+LAST_MODIFIED = "04.10.2026"
 # Laczy nas pilka - Biblioteka Pilkarstwa Polskiego (laczynaspilka.pl/biblioteka) - the PZPN football library:
 #   matches of the Polish national teams (and cup finals, league classics) with highlights, full halves and
 #   goal clips, the "Wideoteka" collections and the PZPN TV programmes ("Kulisy spotkania", ...)

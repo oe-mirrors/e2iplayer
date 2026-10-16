@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 08.10.2026
+LAST_MODIFIED = "08.10.2026"
 # 09.08.2025 - Codermik (codermik@tuta.io)
 # Orthobullets (orthobullets.com) - orthopaedic video library. The lists are public, every video page
 # needs a (free) Medbullets account: without one only videos with a YouTube cover play (the YouTube video).

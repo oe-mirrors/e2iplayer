@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 07.10.2026
+LAST_MODIFIED = "07.10.2026"
 # 11.01.2026 - Mr.X - Site Fix
 # 07.10.2026 - host standard
 #   JSON API of einschalten.in (api/movies, api/collections, api/genres, api/search, api/movies/<id>/watch):

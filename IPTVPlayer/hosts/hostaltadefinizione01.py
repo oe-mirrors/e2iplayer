@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 08.10.2026
+LAST_MODIFIED = "08.10.2026"
 # Modified: 09.06.2026 - passata
 # 27.09.2026 - paging past page 2, seasons in order, movies/episodes are playable rows (no extra folder),
 # the player url goes straight to urlparser (parserVIXSRC), no "open in browser" dead end; Python 2 safe.

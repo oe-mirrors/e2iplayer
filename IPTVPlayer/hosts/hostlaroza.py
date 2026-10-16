@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 09.10.2026
+LAST_MODIFIED = "09.10.2026"
 # Laroza (فيديو لاروزا) - PHP Melody site with movies, Arabic / Turkish / foreign / Indian / Asian series,
 # anime, Ramadan series, TV programmes and plays. The domain rotates: laroza.now redirects to the current one.
 #   - "Latest", "Most viewed", the series index (one card per show/season), the site's series / movie /

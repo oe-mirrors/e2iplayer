@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 11.10.2026
+LAST_MODIFIED = "11.10.2026"
 # 11.10.2026 - portal menu: "Information" row - INFO shows portal, status, expiry, tariff, account holder and balance
 #   (from the cached profile / account_info answer)
 # hoststalker.py - Stalker / Ministra middleware portals (MAG set-top box API, portal URL + MAC address)

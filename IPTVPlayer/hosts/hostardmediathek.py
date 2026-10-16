@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 02.09.2026
+LAST_MODIFIED = "02.09.2026"
 # ARD Mediathek
 # Rewritten for the api.ardmediathek.de "page-gateway" JSON API
 ###################################################

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 10.10.2026
+LAST_MODIFIED = "10.10.2026"
 # Nuteczki.eu: Polish music portal (tracks, sets / mixes by genre), played from the site's KrakenFiles /
 #   SoundFiles uploads or YouTube; optional login with the user's own account
 # 02.07.2026 - damagic

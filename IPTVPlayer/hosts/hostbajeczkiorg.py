@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026
+LAST_MODIFIED = "04.10.2026"
 # 03.10.2026 - revival of the back online bajeczki.org (WordPress "videonow" theme, https):
 #   latest posts, films (+ genres, A-Z), all cartoons/series grouped by first letter (the site lists
 #   1200+ categories on one page), category listings sorted by name (episodes in order), search;

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026
+LAST_MODIFIED = "04.10.2026"
 # 03.10.2026 - new host for documentaryarea.com (English documentaries)
 #   Lists: recently added / most viewed / by year / A-Z / complete series / genres + search,
 #   all on the site's "wthree-news-left" article cards with the ?page=N pager (4 site pages of 6 cards

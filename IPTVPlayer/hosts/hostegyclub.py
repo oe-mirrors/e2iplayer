@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 09.10.2026
+LAST_MODIFIED = "09.10.2026"
 # EgyClub (ايجي كلوب, my.egy-club.com): WordPress site with older world cinema (1930s-1990s classics,
 # Italian/French/Asian/Hindi films) with Arabic subtitles
 #   - catalogue from the site's WordPress REST API: "Latest", the site categories (largest first) and search,

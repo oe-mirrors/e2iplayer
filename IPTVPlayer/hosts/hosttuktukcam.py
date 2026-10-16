@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026
+LAST_MODIFIED = "04.10.2026"
 # 03.10.2026 - rewrite for the new domain tuktukhd.com (tuk.cam is dead,
 #   www.tuktukcima.com redirects here): "Block--Item" grids with WordPress pager, /series/ pages
 #   with season cards and episode cards, the player servers sit in data-link (reversed base64)

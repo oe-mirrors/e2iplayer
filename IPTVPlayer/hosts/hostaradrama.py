@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 10.10.2026
+LAST_MODIFIED = "10.10.2026"
 # Aradrama Host (Created By Dr HYTHAM MAHMOUD)
 # 10.10.2026 - host standard on the site's markup (WordPress "T20" theme; lists: <article> with a.first_A, details
 #   year / status / type, wp-pagenavi; item page: info block "b_block s-desc", trailer tabs, the "watch" button

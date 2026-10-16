@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 07.10.2026
+LAST_MODIFIED = "07.10.2026"
 # Coding: BY MOHAMED_OS
 # Ported to the python3 framework (06.10.2026):
 #   - shooflive.net: movie and series categories (the site menu) with First page / Jump / Next page

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 09.10.2026
+LAST_MODIFIED = "09.10.2026"
 #
 # trailers.apple.com is gone (the whole domain 301s to tv.apple.com and
 # every /trailers/*.json feed with it). This rebuild targets the Apple TV

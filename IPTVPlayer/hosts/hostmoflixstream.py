@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 07.10.2026
+LAST_MODIFIED = "07.10.2026"
 #   The site's JSON api (/api/v1/...) is behind a Cloudflare challenge now, the html pages are not and carry
 #   the same data as "window.bootstrapData" (loaders: channelPage, searchPage, titlePage, seasonPage, watchPage):
 #   - channels (/channel/<slug>?page=N) with First page / Jump / Next page, collections read from the homepage

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 10.10.2026
+LAST_MODIFIED = "10.10.2026"
 # =========== Created by angel_heart (Mohamed Elsafty) ======== 20260801
 # 24.08.2026 - Fixed search (search_item was False), switched to
 # searchItems()/listsHistory() pattern, added watched/started flag support,

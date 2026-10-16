@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026
+LAST_MODIFIED = "04.10.2026"
 # SPORTEUROPE.TV (formerly sportdeutschland.tv): live streams and replays of German/European club and
 # association sport. Free content only - pay-per-view / pass content is left out of the lists and
 # answered with a message when it is opened anyway (favourite, search).

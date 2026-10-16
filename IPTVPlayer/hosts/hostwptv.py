@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026
+LAST_MODIFIED = "04.10.2026"
 # WP Wideo (wideo.wp.pl, formerly wp.tv) - video programmes of Wirtualna Polska
 # Programmes: the "/<slug>-<id>vc" cycles of the site navigation; their episodes come from
 #   /frontendparts/video-cycle-episodes-load-more?cycleId=<id>&offset=N&limit=24 (HTML teasers + hasMore).

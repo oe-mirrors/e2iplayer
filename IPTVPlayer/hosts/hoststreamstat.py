@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.09.2025
+LAST_MODIFIED = "04.09.2025"
 # 14.04.2021 - Blindspot
 ###################################################
 HOST_VERSION = "1.0"

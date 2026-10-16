@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026
+LAST_MODIFIED = "04.10.2026"
 # 04.10.2026 - new host for cda-hd.cc (Polish movies and series, WordPress "Grifus" theme)
 #   - Cloudflare: every request goes through getPageCFProtection (MyE2i solves the browser check, the
 #     solving User-Agent is remembered next to the cookie jar)

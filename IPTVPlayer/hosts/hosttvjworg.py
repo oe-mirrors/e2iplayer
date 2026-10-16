@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 08.10.2026
+LAST_MODIFIED = "08.10.2026"
 # JW Broadcasting (tv.jw.org / jw.org videos and audio) - JSON API of the jw.org web site:
 #   categories: b.jw-cdn.org/apis/mediator/v1/categories/<lang>/<key>?detailed=1 (subcategories, media, limit/offset)
 #   one item:   .../media-items/<lang>/<languageAgnosticNaturalKey> (links, also for favourites and search hits)

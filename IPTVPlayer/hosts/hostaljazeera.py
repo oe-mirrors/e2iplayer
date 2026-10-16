@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026
+LAST_MODIFIED = "04.10.2026"
 # Al Jazeera - live channels and the programme archive of ajnet.me (Arabic) / aljazeera.com (English).
 # Both sites run the same WordPress GraphQL API (/graphql?wp-site=aja|aje, GET with persisted
 # operation names); an episode carries its Brightcove video id, played through the Brightcove

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026
+LAST_MODIFIED = "04.10.2026"
 # TV Proart (tvproart.pl) - local TV of southern Wielkopolska (Ostrow Wielkopolski): news, sport,
 # magazines and reports as VOD.
 # 03.10.2026 - revival + rewrite for the new WordPress site: JSON API under

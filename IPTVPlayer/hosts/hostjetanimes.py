@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 07.10.2026
+LAST_MODIFIED = "07.10.2026"
 #   - JetAnimes (French anime movies and series, VF / VOSTFR, DooPlay site); the content lives on
 #     on.jetanimes.com, the address is read from the jetanimes.com portal, favourites of an older
 #     address are moved over

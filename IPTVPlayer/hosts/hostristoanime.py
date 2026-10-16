@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 07.10.2026
+LAST_MODIFIED = "07.10.2026"
 # Coding: BY MOHAMED_OS
 # 06.10.2026 - ported to the python3 framework / host standard
 #   - ristoanime.me (Arabic-subtitled anime): latest episodes, anime series, anime movies, most viewed and

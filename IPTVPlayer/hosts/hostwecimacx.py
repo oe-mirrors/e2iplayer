@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 09.10.2026
+LAST_MODIFIED = "09.10.2026"
 # Coding: BY MOHAMED_OS
 # 09.10.2026 - ported to the python3 framework / host standard as a host of its own for wecima.cx (hostwecima
 #   stays on wecima.gripe, a different site of the WeCima family)

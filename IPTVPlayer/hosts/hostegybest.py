@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 09.10.2026
+LAST_MODIFIED = "09.10.2026"
 # Coding: BY MOHAMED_OS
 # 09.10.2026 - menu labels in English (translatable), genre lists on the right TMDb ids (Adventure / War / Sci-Fi
 #   listed nothing or the wrong genre; series have their own TV genre ids), local pages for long seasons

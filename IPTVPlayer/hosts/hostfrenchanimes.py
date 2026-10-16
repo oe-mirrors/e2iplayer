@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 09.10.2026
+LAST_MODIFIED = "09.10.2026"
 # Coding: BY MOHAMED_OS
 # 08.10.2026 - ported to the python3 framework / host standard
 #   - French Anime (french-anime.com, French anime VF / VOSTFR, DataLife Engine site): Animes VF, Animes

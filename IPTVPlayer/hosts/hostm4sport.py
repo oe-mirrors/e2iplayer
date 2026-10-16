@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 10.10.2026
+LAST_MODIFIED = "10.10.2026"
 # 10.12.2022 - Blindspot
 # 10.10.2026 - rework for the current site: the usage counter / box data sent to figyelmeztetes.hu (and its config
 #   options and logos) removed; live channels (M4 Sport, M4 Sport +, M4 Sport 1-5 while they broadcast) with the

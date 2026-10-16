@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 08.10.2026
+LAST_MODIFIED = "08.10.2026"
 # ORF ON (on.orf.at, ehemals ORF TVthek)
 # API: https://api-tvthek.orf.at/api/v4.3/  (HTTP-Basic-Auth, oeffentliche Credentials)
 # 07.10.2026 - INFO (episode/profile details, moviemeta for films),

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 08.10.2026
+LAST_MODIFIED = "08.10.2026"
 # 06.04.2026 - MR.X
 # 08.10.2026 - host standard (guarda-serie.ovh):
 #   - episodes get their own url (series page + "#s<season>e<episode>") - before every episode of a series had the

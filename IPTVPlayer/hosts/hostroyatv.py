@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 09.10.2026
+LAST_MODIFIED = "09.10.2026"
 # Roya TV (roya.tv) - the Jordanian broadcaster's own streaming site.
 #   - all data from the public API the web site itself uses (backend.roya.tv/api/v01), no login:
 #     live channels (Roya TV, Roya News, Roya Sport, Roya Kids, the FAST channels, Al Sharqiya ...),

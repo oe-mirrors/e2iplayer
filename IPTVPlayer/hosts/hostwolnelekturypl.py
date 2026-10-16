@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026
+LAST_MODIFIED = "04.10.2026"
 # Wolne Lektury (wolnelektury.pl) - free Polish e-library of the Fundacja Nowoczesna Polska; this host
 # plays its audiobooks (classic Polish and world literature read by actors).
 # 03.10.2026 - revival + rewrite on the public JSON API: /api/audiobooks/ (all books with

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026
+LAST_MODIFIED = "04.10.2026"
 # 03.10.2026 - revived for the redesigned btolat.com (football clips / highlights)
 #   - one card parser for all video lists (/videos "card xrow video" + LoadMore API, league/team pages
 #     "categoryNewsCard", player pages "vcard xrow video"); relative "video/<id>" links; date from

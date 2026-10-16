@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 09.10.2026
+LAST_MODIFIED = "09.10.2026"
 # Coding: BY MOHAMED_OS
 # 08.10.2026 - ported to the python3 framework / host standard
 #   - Anime4up (w1.anime4up.rest, Arabic-subtitled / dubbed anime, WordPress "Anime4up" theme): latest

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 11.10.2026
+LAST_MODIFIED = "11.10.2026"
 # 7reels (7reels.cc) - TMDb-indexed movie/series aggregator
 # based on a community host by "alawa m2"
 # 11.10.2026 - meta_type/meta_title/meta_year on the titles; INFO: the site's TMDb fields, libs/moviemeta fills the gaps

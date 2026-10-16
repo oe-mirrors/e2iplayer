@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 09.10.2026
+LAST_MODIFIED = "09.10.2026"
 # Coding: BY MOHAMED_OS
 # 06.10.2026 - TorrentGalaxy (torrentgalaxy.info / torrentgalaxy.one)
 #   - movies, TV, anime, documentaries: latest, most seeded, 4K / 1080p / 720p; search per category

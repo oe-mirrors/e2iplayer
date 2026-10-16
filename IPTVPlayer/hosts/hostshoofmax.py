@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026
+LAST_MODIFIED = "04.10.2026"
 # 03.10.2026 - rewrite of the MOHAMED_OS host for the current shoofmax.com
 #   (catalogue = JSON /genre/filter/<genre>/<page>/<sort>?country=&subgenre=, 16 rows a page, First page /
 #    Jump / Next page (no page count),

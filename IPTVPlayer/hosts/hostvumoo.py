@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 10.10.2026
+LAST_MODIFIED = "10.10.2026"
 # Host for vumoo.gd (English films and series, TMDb based, the players are vidsrc-style embeds)
 # 10.10.2026 - new host
 #   - Movies / TV Shows / Trending / New Releases / New Episodes / Top IMDb / Genres / Countries / Year / Search,

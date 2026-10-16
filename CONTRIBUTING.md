@@ -43,6 +43,7 @@ Enjoy and help us improve it today. :)
 - Python compatibility: Ideally, the code should be written so that it runs on both Python 2.7 and Python 3.x.
 - No heavy external dependencies: For HTTP requests, use the tools built into E2iPlayer (pCommon, urllib, etc.) instead of heavy external libraries that require a tedious installation process on the receivers.
 - Try to see if you can open links using one of the existing parsers before you write a new parser
+- Every host has `LAST_MODIFIED = "dd.mm.yyyy"` in line 2 (code, not a comment - it is read from the .pyc on images that install only the compiled hosts); set it to the date of your change. Keep `gettytul()` a plain `return 'https://...'` (or `return _('Name')`), so the host lists can show the title without loading the host
 - Most websites have security measures in place to prevent links from being exported, and you shouldn't try to bypass them in a way that gets noticed; instead, you should get around them without them noticing—as if you were logging in using a browser.
 
 ---
@@ -97,4 +98,4 @@ Here are some general guidelines to follow when submitting a pull request:
 
 ---
 
-Last Modified: 2026-05-20
+Last Modified: 2026-10-16

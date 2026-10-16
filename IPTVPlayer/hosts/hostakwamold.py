@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 06.10.2026
+LAST_MODIFIED = "06.10.2026"
 # 06.10.2026 - the Akwam archive (the site's old design, now under akwam.ss/old/)
 #   - menu: movies / series / other sections read live from the category bar, anime, search;
 #     a category lists its sub-categories first ("All" + each), otherwise its titles directly;

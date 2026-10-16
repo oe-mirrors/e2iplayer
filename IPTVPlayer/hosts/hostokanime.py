@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 09.10.2026
+LAST_MODIFIED = "09.10.2026"
 # OkAnime (اوك انمي) - Arabic-subtitled anime (okanime.tv is gone; okanime.xyz is the landing page that
 # links the current mirror, ww3.okanime.xyz on 09.10.2026)
 #   - menu: latest episodes, airing now, most popular, anime list, movies, genres, types, years and search,

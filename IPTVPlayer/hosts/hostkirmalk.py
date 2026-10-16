@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 07.10.2026
+LAST_MODIFIED = "07.10.2026"
 # Coding: BY MOHAMED_OS
 # 06.10.2026 - ported to the python3 framework / host standard (kirmalk.com, home now /kr20):
 #   - "Latest", latest episodes, movies, series, the site categories and search, with First page /

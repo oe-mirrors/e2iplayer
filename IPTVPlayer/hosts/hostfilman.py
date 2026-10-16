@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 10.10.2026
+LAST_MODIFIED = "10.10.2026"
 # 25.06.2026 - damagic
 # 10.10.2026 - host standard: watched flag (series -> season -> episode; a series with more than one season gets
 #   season folders), favourites reopen without state, downloaded marker on the film / episode url,

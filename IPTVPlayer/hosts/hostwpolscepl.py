@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026
+LAST_MODIFIED = "04.10.2026"
 # 03.10.2026 - wpolsce.pl is now wpolsce24.tv (Nuxt site with a JSON CMS API):
 #   live channel (OnNetwork player), latest video articles, the channel's programmes
 #   (YouTube playlists), news sections (video articles only, /api/cms/articles) and search

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026
+LAST_MODIFIED = "04.10.2026"
 # 03.10.2026 - rewrite for the Next.js "NOW Asharq" site (old version: MOHAMED_OS)
 #   Everything comes from the JSON API behind now.asharq.com (api-now.asharq.com/api):
 #   /dynamic-pages/<channel> (rails), /dynamic-pages/components/<slug>/?page= (full rail),

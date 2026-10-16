@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 11.10.2026
+LAST_MODIFIED = "11.10.2026"
 # MovieBox (officialmoviebox.com)
 # Catalogue: Nuxt pages of officialmoviebox.com (__NUXT_DATA__) + the wefeed H5 API on h5-api.aoneroom.com
 # Football Live: h5-sport-api.aoneroom.com (the sportslive.wine web app)

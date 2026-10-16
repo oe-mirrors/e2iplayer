@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 09.10.2026
+LAST_MODIFIED = "09.10.2026"
 # 09.08.2025 - Lululla - fix for increase getThumbnailUrl2 - sport page show poster - events theatre added
 # 08.10.2026 - catalogue from the current raiplay.it JSON (menu, pages, genres A-Z, programmes,
 # seasons/sets with local paging), search (programmes + videos), live TV from dirette.json and
