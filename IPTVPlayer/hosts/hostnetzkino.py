@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 10.10.2026
+LAST_MODIFIED = "10.10.2026"
 # Netzkino (netzkino.de) - legal, free (ad-funded) German film and series portal.
 # 10.10.2026 - new host
 #   - data from the site's GraphQL API (data.netzkino.de): its category tree (Home page sections, genres,

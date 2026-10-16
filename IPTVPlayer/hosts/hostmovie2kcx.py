@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 07.10.2026
+LAST_MODIFIED = "07.10.2026"
 # 07.10.2026 - First/Jump/Next paging (last page from the pager); "Title (Year)" / "Show - SxxExx";
 #   episodes keyed on their own url (season page + "#<episode id>"); watched flag (series -> season ->
 #   episode), favourites, sidecar, downloaded marker; INFO via moviemeta (the IMDb id is base64 inside

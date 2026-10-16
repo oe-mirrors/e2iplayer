@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 10.10.2026
+LAST_MODIFIED = "10.10.2026"
 # tvgry / GRYOnline.pl video (gry-online.pl/video/): tvgry shows, podcasts and game trailers, played from Dailymotion
 # 10.10.2026 - rewrite for gry-online.pl/video/ (tvgry.pl redirects there since the site move): newest videos,
 #   tvgry, podcasts and trailers with First/Jump/Next paging and the last page, search through the site's video

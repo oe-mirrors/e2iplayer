@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 10.10.2026
+LAST_MODIFIED = "10.10.2026"
 # 17.04.2025 - Blindspot
 # 10.10.2026 - host standard: shows -> seasons -> ribbons -> videos with watched flag (show -> season -> ribbon
 #   -> video), favourites on every level (they reopen from the slug / ribbon id alone), sidecar, INFO from the

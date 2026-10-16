@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 09.10.2026
+LAST_MODIFIED = "09.10.2026"
 # 09.10.2026 - gettytul() returns the address itself (the host list reads it from the file, see GetHostTitle)
 # 03.10.2026 - rewrite of the MOHAMED_OS host for the current site (b.txcima.com, "CimaclubBlocks"
 #   card grids with "?page=N" paging, /series/<slug>/ = flat episode list, <post>/watch/ = server list with the

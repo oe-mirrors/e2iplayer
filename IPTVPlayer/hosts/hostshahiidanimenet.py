@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 09.10.2026
+LAST_MODIFIED = "09.10.2026"
 # 08.10.2026 - the site sits behind a Cloudflare challenge since ~05.10 (MyE2i cookie needed; checked live
 #   with one: markup unchanged). Hardened: season episode list from the <nav class="navbar"> blocks
 #   (first /episodes*/<slug>/ link), server buttons = any element with data-frameserver, admin-ajax url +

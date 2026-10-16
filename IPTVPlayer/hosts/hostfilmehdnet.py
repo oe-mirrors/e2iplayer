@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 10.10.2026
+LAST_MODIFIED = "10.10.2026"
 # 04.09.2025 - filmehd.net
 # 09.10.2026 - rewrite for filmehd.to (filmehd.net is gone; backup domain filmehd.app), DooPlay theme:
 #   - lists: Movies / Series / Top IMDb / Most viewed / genres / years / countries / search with First / Jump /

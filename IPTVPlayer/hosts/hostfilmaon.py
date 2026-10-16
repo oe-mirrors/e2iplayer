@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 10.10.2026
+LAST_MODIFIED = "10.10.2026"
 # 07.12.2025 - Mr.X
 # 09.10.2026 - host standard, filmaon.bz -> filmaon.live (new "film24" card theme on DooPlay):
 #   - cards parsed from the film24 grid (title, year, quality, genre), First / Jump / Next page with the last page

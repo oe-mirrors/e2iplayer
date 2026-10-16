@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 08.10.2026
+LAST_MODIFIED = "08.10.2026"
 # SHOUTcast radio directory (directory.shoutcast.com): top stations, genres -> sub genres -> stations,
 #   search by station name, artist or song that is playing now
 # 08.10.2026 - host standard: top stations, genre folders that reopen from favourites, artist / song search,

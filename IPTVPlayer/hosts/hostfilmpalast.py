@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 10.10.2026
+LAST_MODIFIED = "10.10.2026"
 # 23.08.2026 - getSuggestionsProvider() added (forces Google search suggestions) - Kamikaze24
 # 10.10.2026 - links are no longer renamed to "*name*" after use - that broke the link list's own used mark (tick + colour)
 # 11.10.2026 - moviemeta: meta_type / meta_title / meta_year on the items, INFO merged with libs/moviemeta (the site's

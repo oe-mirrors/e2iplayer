@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026
+LAST_MODIFIED = "04.10.2026"
 # Basketball-Video (basketball-video.com) - NBA / WNBA / EuroLeague / College full game replays
 # Site: uCoz catalogue like nfl-video.com (navigation groups, "?pageN" / "/<cat>-N" paging, /search/ needs the cookie)
 # Game page: "Server #N XX" buttons -> link pages (nbaontv.com, nhlgamestoday.com, ...) with one hoster <iframe>

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 09.10.2026
+LAST_MODIFIED = "09.10.2026"
 # Aloula (aloula.sba.sa) - the streaming platform of the Saudi Broadcasting Authority (SBA).
 #   - all data from the public JSON API the web site itself uses (aloula.faulio.com/api), no login:
 #     live TV channels (Saudia, SBC, Al Ekhbariya, Thikrayat, Quran, Sunna, KSA Sports 1-3 ...) and the

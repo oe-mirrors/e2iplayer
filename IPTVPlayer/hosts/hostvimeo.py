@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026
+LAST_MODIFIED = "04.10.2026"
 # Vimeo (vimeo.com) - Staff Picks, the categories with their curated channels and groups, the videos of
 # a channel / group / user, search.
 # 03.10.2026 - revival + rewrite: vimeo.com serves no browsable HTML any more. Lists come

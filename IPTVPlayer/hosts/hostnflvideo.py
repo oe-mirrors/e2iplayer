@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026
+LAST_MODIFIED = "04.10.2026"
 # NFL Video (nfl-video.com) - NFL / College Football full game replays, condensed games, Super Bowls
 # Site: uCoz catalogue (seasons / teams from the side navigation, "?pageN" paging, /search/ needs the ucz_h cookie)
 # Game page: "Server #N XX" buttons -> link pages (nhlgamestoday.com, nbaontv.com, ...) with one hoster <iframe>

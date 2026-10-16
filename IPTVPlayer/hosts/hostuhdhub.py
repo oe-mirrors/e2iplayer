@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 09.10.2026
+LAST_MODIFIED = "09.10.2026"
 # Coding: BY MOHAMED_OS
 # 06.10.2026 - ported to the python3 host standard
 #   - 4khdhub.one (4K / 1080p WEB-DL and BluRay releases): the menus of the site (movies, series, streaming

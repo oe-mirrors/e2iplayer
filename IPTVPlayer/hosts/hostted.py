@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026
+LAST_MODIFIED = "04.10.2026"
 # 03.10.2026 - rewrite for the current ted.com (Next.js "zenith" frontend):
 #   talk lists (newest / most viewed / topics / subtitle languages / search) come from the
 #   site's Algolia proxy (POST /api/search, sort replicas "newest" / "popular" / "relevance"),

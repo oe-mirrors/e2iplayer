@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 10.10.2026
+LAST_MODIFIED = "10.10.2026"
 # 24.08.2026 - Added PHP iframe HLS link extraction, fixed crash on video open - Blindspot
 # 10.10.2026 - host standard: the categories come from the site menu by their links (the old index list
 #   skipped the wrong entries), paging is "/cikkek/<cat>.N/" with First/Jump/Next and the last page, no

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 10.10.2026
+LAST_MODIFIED = "10.10.2026"
 # 10.10.2026 - new host for streamcloud.date (German films and series, DataLife Engine)
 #   - Movies / Series / Cinema movies / Popular / Upcoming / Genres / Year / Country / Search, First / Jump /
 #     Next page with the last page from the pager (search: from the number of results); "Popular" is one long

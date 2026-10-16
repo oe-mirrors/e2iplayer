@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 09.10.2026
+LAST_MODIFIED = "09.10.2026"
 # Coding: BY MOHAMED_OS
 # 08.10.2026 - revived from Backup, ported to the python3 host standard
 #   - SkStream (French movies and series, DLE site wvw.skstream.rip; the bare domain skstream.rip

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026
+LAST_MODIFIED = "04.10.2026"
 # mediateka.pl - audio portal of the ZPR Media group (Radio ESKA, ESKA2, ESKA Rock, VOX, vibe fm, Radio Super Express)
 # Radio: the brands of https://mediateka.pl/radio/ ("?stream_uid=ra-..."); front-api.grupazprmedia.pl
 #   /radios/v1/radio_station_details/<uid>/ -> site_uid, /radios/v1/radio_stations/<site_uid>/ -> all streams of the

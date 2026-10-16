@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 07.10.2026
+LAST_MODIFIED = "07.10.2026"
 # 09.05.2026 - Mr.X
 # 07.10.2026 - megakino22.com + host standard
 #   DLE site: every page needs the yg_token cookie (index.php?yg=token, the site answers with a small

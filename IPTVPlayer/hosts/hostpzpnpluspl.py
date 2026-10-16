@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026
+LAST_MODIFIED = "04.10.2026"
 # PZPN+ (pzpnplus.pl) - the digital platform of the Polish football federation: free live streams and
 #   replays of Betclic 2. Liga, Ekstraliga Kobiet, STS Puchar Polski, youth national teams, highlights,
 #   magazines and archive matches; team / league pages

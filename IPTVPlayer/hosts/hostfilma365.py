@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 09.10.2026
+LAST_MODIFIED = "09.10.2026"
 # 15.03.2026 - Mr.X
 # 09.10.2026 - host standard (filma365.me, Livewire site):
 #   - cards parsed from the "group" grid (title, year, rating, quality, type) - the old marker also caught the

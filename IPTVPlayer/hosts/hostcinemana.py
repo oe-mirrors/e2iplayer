@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026
+LAST_MODIFIED = "04.10.2026"
 # 03.10.2026 - host standard rework; cinemana.vip -> cinemana.cc -> cinamana.cc (Cloudflare
 #   challenges every non-browser request there, curl-impersonate included: pages need a MyE2i solve on the box)
 #   - parsers follow the 2026 Tailwind theme: list cards "<a href=".../watch=<id>/"> .. <h3>title</h3>",

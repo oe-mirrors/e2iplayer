@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026
+LAST_MODIFIED = "04.10.2026"
 # Based on the preparatory work of odem2014
 # 03.10.2026 - new domain shaahiied4u.net (shahid4uu.day is dead, shed4u1.com is
 #   parked; shaiid4u.co / shhaiid4u.net redirect here): "show-card" grids, ?page=N with rel="next" (First page /

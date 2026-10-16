@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 10.10.2026
+LAST_MODIFIED = "10.10.2026"
 # 10.10.2026 - new host for ask4movie.life (English films, a few series seasons; WordPress behind Cloudflare)
 #   - Latest / Genres / Year (categories of the site, with the number of titles) / Search, First / Jump / Next
 #     page with the last page from the pager

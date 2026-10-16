@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 12.10.2026
+LAST_MODIFIED = "12.10.2026"
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.ihost import IHost, CDisplayListItem, RetHost, CUrlItem, CBaseHostClass, ArticleContent
 from Plugins.Extensions.IPTVPlayer.libs import ph

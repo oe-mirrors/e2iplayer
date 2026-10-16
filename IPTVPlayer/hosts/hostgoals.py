@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 08.10.2026
+LAST_MODIFIED = "08.10.2026"
 # 27.02.2026 - by Mr.X
 # Goals.Zone - football goal clips and highlights (JSON API of gogz.meneses.pt): latest matches, teams, search
 #   (matches of the last week). A match lists its clips (goals, red cards ...), every clip has mirrors on

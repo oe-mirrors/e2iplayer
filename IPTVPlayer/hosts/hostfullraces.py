@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026
+LAST_MODIFIED = "04.10.2026"
 # FullRaces (fullraces.com) - Formula 1 (sessions, archive 2000-2018), NASCAR, IndyCar, WSBK, WRC, F2, F3,
 #   Formula E, F1 Academy and MotoGP ("Other") full race replays
 # Site: uCoz catalogue like basketball-video.com / nfl-video.com (navigation groups, "?pageN" paging, /search/),

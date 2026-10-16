@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 11.10.2026
+LAST_MODIFIED = "11.10.2026"
 # 11.10.2026 - account menu: "Information" row - INFO shows server, status, expiry, connections, creation date, stream
 #   formats, ports and server time of the account (from the cached player_api.php answer)
 # hostxtream.py - Xtream Codes IPTV accounts (player_api.php)

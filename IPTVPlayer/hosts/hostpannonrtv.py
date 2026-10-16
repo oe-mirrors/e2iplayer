@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 10.10.2026
+LAST_MODIFIED = "10.10.2026"
 # Python3 version
 # 24.01.2026 - WhiteWolf
 # 10.10.2026 - host standard: live TV / radios from the site's own pages (no third-party playlist any more), the TV

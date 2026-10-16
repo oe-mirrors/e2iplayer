@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 06.10.2026
+LAST_MODIFIED = "06.10.2026"
 # 03.10.2026 - revived for the redesigned hd1.brstej.com (Brstej / Prestige)
 #   Rewrite against the current site (based on the host by Mohamed Elsafty):
 #   - categories read live from the site menu (no hard-coded yearly slugs), Ramadan seasons grouped;

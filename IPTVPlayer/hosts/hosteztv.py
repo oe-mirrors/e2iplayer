@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 09.10.2026
+LAST_MODIFIED = "09.10.2026"
 # Coding: BY popking (odem2014), angel_heart (Mohamed Elsafty)
 # 08.10.2026 - EZTV (TV series torrents) through the site's JSON API (was hosttorrenteztv)
 #   - the html pages sit behind a Cloudflare challenge, api/get-torrents does not: newest torrents and

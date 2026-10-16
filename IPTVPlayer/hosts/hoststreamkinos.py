@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 10.10.2026
+LAST_MODIFIED = "10.10.2026"
 # 10.10.2026 - new host for streamkinos.lat (German films and series, DataLife Engine)
 #   - Movies / Series / Cinema movies / Upcoming / Latest / Genres / Search, First / Jump / Next page (the site's
 #     pager only links the next page; the search pager gives the number of results -> last page)

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 14.10.2026
+LAST_MODIFIED = "14.10.2026"
 # Ninateka (ninateka.pl) - Polish films, documentaries, theatre, concerts, talks and animation
 # of the Narodowy Instytut Audiowizualny / Filmoteka Narodowa.
 # 03.10.2026 - revival + rewrite for the Redge (RGP) platform the site runs on now:

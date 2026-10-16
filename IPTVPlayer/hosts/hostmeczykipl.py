@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026
+LAST_MODIFIED = "04.10.2026"
 # Meczyki.pl (meczyki.pl/skroty-meczow) - Polish sport portal, section "Skroty meczow": the latest football
 #   match highlights (all leagues or per country / competition category), every match links to its official
 #   YouTube highlight video(s)

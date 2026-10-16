@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 09.10.2026
+LAST_MODIFIED = "09.10.2026"
 # Coding: BY MOHAMED_OS
 # Ported to the python3 framework (08.10.2026):
 #   - Majed Sport (majed-koora.live): the site's JSON API /api/v1/matches?lang=ar&date=<day>&scope=all;

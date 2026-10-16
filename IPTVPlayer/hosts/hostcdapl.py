@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 10.10.2026
+LAST_MODIFIED = "10.10.2026"
 # 10.10.2026 - host standard: video categories, "najnowsze" and "top" lists read from the site (the old kat* ids
 #   are gone), CDA Premium with the site's access / category / sort filters and its json "load more" paging,
 #   channel categories from the site's json (the old parser broke on "&oacute;"), channel folders with the

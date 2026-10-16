@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 09.10.2026
+LAST_MODIFIED = "09.10.2026"
 # Coding: BY MOHAMED_OS
 # 08.10.2026 - ported to the python3 framework / host standard
 #   - Space Power Fan (spacepowerfan.com, Arabic-dubbed cartoons and anime, WordPress "Kiranime" theme): movies,

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026
+LAST_MODIFIED = "04.10.2026"
 # 03.10.2026 - brought to the current host standard
 #   (Asia TV Drama, as1tv.com - Asian dramas with Arabic subtitles - originally by Mohamed Elsafty)
 #   - new domain as1tv.com (asiatvdrama.com redirects there); no sleeping 3x retry wrapper; no

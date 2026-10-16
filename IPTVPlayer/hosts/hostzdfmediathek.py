@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 07.10.2026
+LAST_MODIFIED = "07.10.2026"
 # 07.10.2026 - INFO (document details, moviemeta for films and
 # series), First/Jump/Next paging (A-Z, search), "Show - SxxExx" / "Title (Year)"
 # from the season/episode numbers and production year, watched key per season

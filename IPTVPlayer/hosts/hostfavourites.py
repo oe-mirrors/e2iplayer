@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 11.10.2026
+LAST_MODIFIED = "11.10.2026"
 # 11.10.2026 - "Newest videos": video length in the description (uploads playlist page, one request per channel),
 # Shorts with their own list icon; stored live streams / live radios with the live icon
 # 09.10.2026 - "Newest videos": INFO shows the full YouTube description, no age in the title (file name)

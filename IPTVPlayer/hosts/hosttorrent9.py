@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 09.10.2026
+LAST_MODIFIED = "09.10.2026"
 # 08.10.2026 - Torrent9 (French torrent site; torrent9.fo / torrent9.to, torrent9.wiki as fallback)
 #   - films and series: latest, most seeded, the site's sub-categories (genres, quality, VF / VOSTFR,
 #     series by letter); search (films and series rows of the results); First page / Jump / Next page

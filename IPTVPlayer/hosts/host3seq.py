@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 10.10.2026
+LAST_MODIFIED = "10.10.2026"
 # 09.10.2026 - new host: u.3seq.cam ("قصة عشق", Turkish series with Arabic subtitles / dubbing, WordPress behind
 #   Cloudflare that lets normal requests through)
 #   - menus: latest episodes, series, dubbed (the site's search for "مدبلج"), movies, search - with First page /

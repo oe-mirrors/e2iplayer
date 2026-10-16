@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 09.10.2026
+LAST_MODIFIED = "09.10.2026"
 # CimaTN (سيما تونس, www.cimatn.com): Blogger site with Tunisian films and series (Ramadan series up to 2026)
 #   - catalogue from the Blogger JSON feeds: "Latest", Tunisian films, Tunisian series, Ramadan series, short
 #     films and search, First page / Jump / Next page (count from openSearch$totalResults)

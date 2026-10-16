@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 09.10.2026
+LAST_MODIFIED = "09.10.2026"
 # Coding: BY MOHAMED_OS
 # 06.10.2026 - YTS (YIFY movies) through the official JSON API (was hostytxmx)
 #   - list_movies.json / movie_details.json of the API; the API moves its base url

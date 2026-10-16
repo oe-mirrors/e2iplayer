@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 09.10.2026
+LAST_MODIFIED = "09.10.2026"
 # Coding: BY MOHAMED_OS
 # 08.10.2026 - TorrentDB: one host for films and series from several torrent sources
 #   - catalogue from Cinemeta (Stremio, no API key): Popular / Featured / New (this year) / genres /

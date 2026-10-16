@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 10.10.2026
+LAST_MODIFIED = "10.10.2026"
 # 05.04.2026 - Mr.X
 # 10.10.2026 - kinoger.ch: Cloudflare + HostAdmin.online WAF, both through MyE2i (pCommon asks the cookie mode after
 #              the Cloudflare one); default icon from the plugin, covers on the site with the solving User-Agent

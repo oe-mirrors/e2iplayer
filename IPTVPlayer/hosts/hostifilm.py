@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026
+LAST_MODIFIED = "04.10.2026"
 # 03.10.2026 - brought to the current host standard
 #   (iFilm Arabic, ar.ifilmtv.ir - originally by Mohamed Elsafty)
 #   - live channels over http:// (the https certificate of live.presstv.ir is the one of

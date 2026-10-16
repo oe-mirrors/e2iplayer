@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 10.10.2026
+LAST_MODIFIED = "10.10.2026"
 # 10.10.2026 - host standard: vod.tvp.pl catalogue with First page / Jump / Next page and the last page (it showed
 #   only the first 100 titles), series -> seasons -> episodes (a series with one season lists its episodes),
 #   watched flag (series -> season -> episode), downloaded marker, favourites (also the rows of the old version),

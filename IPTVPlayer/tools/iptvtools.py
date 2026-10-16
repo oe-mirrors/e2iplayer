@@ -1490,25 +1490,39 @@ def _readHostTitleFromFile(path):
         return title
 
 
+def _getFileKey(path):
+    try:
+        st = os.stat(path)
+        return (st.st_mtime, st.st_size)
+    except Exception:
+        return None
+
+
 def GetHostTitle(hostName):
     # gettytul() of a host without loading the host; None when the host is
     # broken (only noticed if its title needs the import). Installs with
-    # only .pyc/.pyo files have nothing to read -> import as before.
+    # only the compiled hosts (openATV feed: .pyc without .py) -> read from
+    # the .pyc, else import as before.
     path = getHostsPath('host%s.py' % hostName)
-    try:
-        st = os.stat(path)
-        key = (st.st_mtime, st.st_size)
-    except Exception:
-        key = None
+    pycPath = None
+    key = _getFileKey(path)
+    if key is None:
+        pycPath = getHostsPath('host%s.pyc' % hostName)
+        key = _getFileKey(pycPath)
     cached = _HOST_TITLE_CACHE.get(hostName)
     if cached and cached[0] == key:
         return cached[1]
     title = None
-    if key is not None:
+    if key is not None and pycPath is None:
         try:
             title = _readHostTitleFromFile(path)
         except Exception:
             printExc()
+    elif key is not None:
+        info = _readHostPyc(pycPath)
+        title = info.get('title')
+        if title is not None and info.get('translate'):
+            title = _(title)
     if title is None:
         try:
             module = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + hostName, globals(), locals(), ['gettytul'], 0)
@@ -1518,6 +1532,151 @@ def GetHostTitle(hostName):
             return None
     _HOST_TITLE_CACHE[hostName] = (key, title)
     return title
+
+
+# 'LAST_MODIFIED = "07.10.2026"' (line 2 of every host) - code, not a comment,
+# so it is still there in a .pyc. Hosts from other sources may still have the
+# old "# Last Modified: ..." comment, also as dd/mm/yyyy or yyyy-mm-dd
+_HOST_DATE = r'''(\d{1,4})[./-](\d{1,2})[./-](\d{2,4})'''
+_HOST_LAST_MODIFIED_RE = re.compile(r'''^LAST_MODIFIED\s*=\s*['"]''' + _HOST_DATE + r'''['"]''', re.MULTILINE)
+_HOST_LAST_MODIFIED_COMMENT_RE = re.compile(r'#\s*Last\s*Modified\s*:?\s*' + _HOST_DATE, re.IGNORECASE)
+# hostxxx: '\tXXXversion = "2026.10.07.1"' in its Host class
+_HOST_XXX_VERSION_RE = re.compile(r'''^\s+XXXversion\s*=\s*['"]([^'"]+)['"]''')
+_HOST_PYC_CACHE = {}
+# opcodes that mean nothing for the patterns read from a .pyc below (and
+# differ between the Python versions)
+_PYC_SKIP_OPS = frozenset(('RESUME', 'CACHE', 'NOP', 'PUSH_NULL', 'PRECALL', 'KW_NAMES', 'EXTENDED_ARG', 'NOT_TAKEN', 'COPY_FREE_VARS', 'MAKE_CELL'))
+_PYC_CALL_OPS = frozenset(('CALL', 'CALL_FUNCTION', 'CALL_METHOD'))
+
+
+def _formatHostDate(day, month, year):
+    if len(day) == 4:
+        day, year = year, day
+    if len(year) == 2:
+        year = '20' + year
+    return '%02d.%02d.%s' % (int(day), int(month), year)
+
+
+def _readHostInfoFromFile(path, withVersion=False):
+    # -> {'modified': 'dd.mm.yyyy', 'version': x} from the host file, keys only
+    # when found. The date is in the header (only its start is read - hostxxx
+    # alone is 1.5 MB), the version only in hostxxx (withVersion: whole file)
+    info = {}
+    with io.open(path, 'r', encoding='utf-8', errors='ignore') as f:
+        head = f.read(4096)
+        match = _HOST_LAST_MODIFIED_RE.search(head) or _HOST_LAST_MODIFIED_COMMENT_RE.search(head)
+        if match:
+            info['modified'] = _formatHostDate(*match.groups())
+        if withVersion:
+            f.seek(0)
+            for line in f:
+                match = _HOST_XXX_VERSION_RE.match(line)
+                if match:
+                    info['version'] = match.group(1)
+                    break
+    return info
+
+
+def _pycOps(code):
+    # (opname, argval) of the code object, generated one by one
+    import dis
+    return ((ins.opname, ins.argval) for ins in dis.get_instructions(code) if ins.opname not in _PYC_SKIP_OPS)
+
+
+def _pycCodeOf(code, name):
+    # code object of the function/class "name" defined at the top level
+    for const in code.co_consts:
+        if hasattr(const, 'co_code') and const.co_name == name:
+            return const
+    return None
+
+
+def _pycStoredText(code, name):
+    # "name = 'text'" at the top level of the code object -> 'text'. Walks the
+    # raw bytecode and stops at the first match (LAST_MODIFIED is line 2, the
+    # rest of a host is not read) - dis would analyse the whole code first
+    from opcode import opmap
+    loadConst, storeName, extendedArg, cache = opmap['LOAD_CONST'], opmap['STORE_NAME'], opmap['EXTENDED_ARG'], opmap.get('CACHE', -1)
+    raw = code.co_code
+    previous = None
+    extended = 0
+    for idx in range(0, len(raw) - 1, 2):
+        op, arg = raw[idx], raw[idx + 1] | extended
+        if op == extendedArg:
+            extended = arg << 8
+            continue
+        extended = 0
+        if op == cache:
+            continue
+        if op == storeName and code.co_names[arg] == name:
+            value = code.co_consts[previous[1]] if previous and previous[0] == loadConst else None
+            return value if isinstance(value, str) else None
+        previous = (op, arg)
+    return None
+
+
+def _pycFixedTitle(code):
+    # gettytul() as "return 'text'" -> ('text', False), "return _('text')" ->
+    # ('text', True), anything else -> (None, False)
+    ops = list(_pycOps(code))
+    if ops and ops[-1][0] == 'RETURN_CONST':
+        # Python 3.12/3.13: one opcode for "return <constant>"
+        ops = ops[:-1] + [('LOAD_CONST', ops[-1][1]), ('RETURN_VALUE', None)]
+    if len(ops) == 2 and ops[0][0] == 'LOAD_CONST' and isinstance(ops[0][1], str) and ops[1][0] == 'RETURN_VALUE':
+        return ops[0][1], False
+    if len(ops) == 4 and ops[0] in (('LOAD_GLOBAL', '_'), ('LOAD_NAME', '_')) and ops[1][0] == 'LOAD_CONST' and isinstance(ops[1][1], str) \
+            and ops[2][0] in _PYC_CALL_OPS and ops[3][0] == 'RETURN_VALUE':
+        return ops[1][1], True
+    return None, False
+
+
+def _readHostPyc(path):
+    # -> {'title': x, 'translate': bool, 'modified': 'dd.mm.yyyy', 'version': x}
+    # of a compiled host (keys only when found), read from the code in the
+    # .pyc - nothing of the host runs, nothing is imported. Cached per file.
+    key = _getFileKey(path)
+    if key is None:
+        return {}
+    cached = _HOST_PYC_CACHE.get(path)
+    if cached and cached[0] == key:
+        return cached[1]
+    info = {}
+    try:
+        import marshal
+        from importlib.util import MAGIC_NUMBER
+        with open(path, 'rb') as f:
+            data = f.read()
+        # a .pyc of another Python version can not be read (nor imported)
+        if data[:4] == MAGIC_NUMBER:
+            code = marshal.loads(data[16:])
+            modified = _pycStoredText(code, 'LAST_MODIFIED')
+            match = re.match(_HOST_DATE + '$', modified or '')
+            if match:
+                info['modified'] = _formatHostDate(*match.groups())
+            function = _pycCodeOf(code, 'gettytul')
+            if function is not None:
+                title, translate = _pycFixedTitle(function)
+                if title is not None:
+                    info['title'] = title
+                    info['translate'] = translate
+            hostClass = _pycCodeOf(code, 'Host')
+            version = _pycStoredText(hostClass, 'XXXversion') if hostClass is not None else None
+            if version:
+                info['version'] = version
+    except Exception:
+        printExc()
+    _HOST_PYC_CACHE[path] = (key, info)
+    return info
+
+
+def GetHostInfo(hostName):
+    # {'modified': 'dd.mm.yyyy', 'version': x} of a host without loading it
+    # (keys only when known): read from its .py, else from its .pyc
+    path = getHostsPath('host%s.py' % hostName)
+    if os.path.isfile(path):
+        return _readHostInfoFromFile(path, withVersion=(hostName == 'xxx'))
+    info = _readHostPyc(getHostsPath('host%s.pyc' % hostName))
+    return dict((k, info[k]) for k in ('modified', 'version') if k in info)
 
 ##############################################################
 # check if we have enough free space

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 12.10.2026
+LAST_MODIFIED = "12.10.2026"
 # 12.10.2026 - watching page loader changed again: its key variables are pushed into the array (_arrX['p'+'ush'](...))
 #   and rounded with Math.round under an alias instead of Math.floor - both read now
 # 11.10.2026 - the token API (cimaleech.vercel.app) answers 404: when it gives no link, MyE2i (NAV job, extension

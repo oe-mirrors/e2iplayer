@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 07.10.2026
+LAST_MODIFIED = "07.10.2026"
 # Coding: BY MOHAMED_OS
 # 06.10.2026 - ported to the python3 host standard
 #   - movix.zip (French movies and series): movies, series, trending, top IMDb, genres, search

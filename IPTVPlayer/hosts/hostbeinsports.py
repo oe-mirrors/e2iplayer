@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 08.10.2026
+LAST_MODIFIED = "08.10.2026"
 # Coding: BY MOHAMED_OS
 # 08.10.2026 - ported to the python3 framework / host standard
 #   - beinsports.com video clips (highlights, news) in Arabic (ar-mena) or English (en-mena)

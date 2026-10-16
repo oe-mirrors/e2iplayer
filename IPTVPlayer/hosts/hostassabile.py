@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 10.10.2026
+LAST_MODIFIED = "10.10.2026"
 # Assabile (assabile.com) - Quran recitations, anasheed, adhan and Islamic lessons.
 # Site languages are sub-domains (www = English, ar, fr, es, tr), same markup, localised slugs.
 #   person lists:  /quran (?pays=<country> / ?riwaya=<riwaya>), /anasheed, /lessons (+ /<list>/<country>),

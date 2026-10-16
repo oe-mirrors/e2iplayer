@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 10.10.2026
+LAST_MODIFIED = "10.10.2026"
 # 10.10.2026 - host standard: the site sits behind a Cloudflare check - pages via getPageCFProtection (MyE2i),
 #   covers / logo on joemonster.org with its cookie + the UA that passed it (img.joemonster.org is free),
 #   main menu icon from the plugin; lists and player for the current markup (entity-encoded links, YouTube

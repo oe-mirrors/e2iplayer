@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 12.10.2026
+LAST_MODIFIED = "12.10.2026"
 # MovizLand (موفيز لاند) - WordPress site with Arabic / foreign / Turkish / Asian movies and series, plays,
 # anime and TV programmes.
 #   - "Latest" (/live/, the site has no further pages there), the site's movie / series / free sections,

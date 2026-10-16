@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026
+LAST_MODIFIED = "04.10.2026"
 # Watch Wrestling (watchwrestling.ae, formerly watchwrestling.la / .uno) - WWE / AEW / TNA / ROH / NJPW / UFC show replays
 # Site: WordPress (menu categories, /page/N/ paging, ?s= search). The server buttons of a show are in a hidden
 #   <textarea> ("episodeRepeater": server name + Part 1..N) -> away.php?to=post.php?id=..&part=.. -> <iframe>

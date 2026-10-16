@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 09.10.2026
+LAST_MODIFIED = "09.10.2026"
 # AhwakTV (اهواك تي في) - PHP Melody site with Egyptian / Arabic / Gulf / Turkish / foreign series
 # (Ramadan series of several years), classic and new Arabic films, foreign / Indian / Asian films, cartoons.
 # The domain rotates: ahwaktv.net redirects to the current one.

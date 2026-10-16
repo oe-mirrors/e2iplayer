@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026
+LAST_MODIFIED = "04.10.2026"
 # 03.10.2026 - revived for mycima.poker (mycima.boo -> .band -> ... -> .poker)
 #   Rewrite against the current site (WeCima theme; the wecima host went to Backup, this is the
 #   one MyCima/WeCima host left):

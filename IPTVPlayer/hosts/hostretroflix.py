@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 09.10.2026
+LAST_MODIFIED = "09.10.2026"
 # RetroFlix Plugin for e2iplayer
 # Created: 13.01.2025
 # 09.10.2026 - host standard + the new site layout

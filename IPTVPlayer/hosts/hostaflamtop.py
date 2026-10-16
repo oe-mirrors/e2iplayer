@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 07.10.2026
+LAST_MODIFIED = "07.10.2026"
 # Coding: BY MOHAMED_OS
 # 06.10.2026 - ported to the python3 framework / host standard:
 #   - "Recently added" (/last/ - the pager of /recent/ led back to page 1), the site's movie categories

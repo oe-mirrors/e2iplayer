@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 10.10.2026
+LAST_MODIFIED = "10.10.2026"
 # 10.10.2026 - host standard: the "newest" / "recently viewed" lists answer only to ajax requests now (the
 #   X-Requested-With header was missing - empty body, json error), First page / Next page, films and music as
 #   VIDEO / AUDIO rows with watched flag (user -> directory -> file), downloaded marker, favourites, sidecar,

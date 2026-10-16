@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 09.10.2026
+LAST_MODIFIED = "09.10.2026"
 # VAVOO.TO: IPTV live channels per country (logic of the Kodi "vavoo" addon).
 # - signature: POST www.vavoo.tv/api/app/ping (anonymous app ping) -> addonSig, valid ~15 min
 # - channel lists: POST vavoo.to/mediahubmx-catalog.json (filter group = country, paged by cursor)

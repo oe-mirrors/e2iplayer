@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 08.10.2026
+LAST_MODIFIED = "08.10.2026"
 # Dailymotion - public REST API (api.dailymotion.com): categories -> sort -> videos, live streams, channels ->
 #   playlists -> videos, search (videos / channels). Playback through urlparser (dailymotion parser).
 # 27.09.2026 - the site's GraphQL search answers only empty lists and the REST playlist search needs a

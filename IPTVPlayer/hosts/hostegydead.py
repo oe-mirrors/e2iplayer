@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 09.10.2026
+LAST_MODIFIED = "09.10.2026"
 # 09.10.2026 - INFO: Arabic-only titles skip IMDb/Cinemeta/OMDb; season folders "Show - Sxx" when normalising
 # 09.10.2026 - the site's Megamax server on throw-away domains (q7v3k8m2p1.top/iframe/<id>, the only server of
 #   the newest titles) goes to megamax.me/iframe/<id> when urlparser does not know the domain

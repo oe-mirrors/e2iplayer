@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 10.10.2026
+LAST_MODIFIED = "10.10.2026"
 # 04.07.2025 - Blindspot
 # 10.10.2026 - rework for the current site: the sections and their maps come from the site's own menu, a map page
 #   gives its animations (video rows) and maps (picture rows) without fetching every file first; webcams: the tag

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 10.10.2026
+LAST_MODIFIED = "10.10.2026"
 # PREMIUMSMART (premiumsmart.eu): Polish films and series (lektor / dubbing / napisy) from the site's JSON API,
 #   played from Byse, Vidara, Streamtape, Abyss, FlyFile ... through urlparser
 # 10.10.2026 - host standard: the API answers only with the session cookie of the site (401 without it - the host

@@ -5,9 +5,7 @@
 #  $Id$
 #  Page Punkte weiter ausseinander - 132
 #  Version dazu gebaut , skin 14 , 227-229
-import io
 import os
-import re
 import sys
 from Screens.Screen import Screen
 from Components.ActionMap import ActionMap, HelpableActionMap
@@ -27,7 +25,7 @@ from Plugins.Extensions.IPTVPlayer.components.cover import Cover3
 from Plugins.Extensions.IPTVPlayer.components.iptvchoicebox import IPTVChoiceBoxWidget, IPTVChoiceBoxItem, openChoiceBox
 from Plugins.Extensions.IPTVPlayer.components.iptvlist import IPTVRadioButtonList, fitPixmapInBox, IPTVPlayerSelectorContextMenuChoiceBoxList
 from Plugins.Extensions.IPTVPlayer.components import skinchrome
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIPTVPlayerVersion, GetIconDir, GetLogoDir, GetAvailableIconSize, GetHostOrderDir, GetPluginDir
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIPTVPlayerVersion, GetIconDir, GetLogoDir, GetAvailableIconSize, GetHostOrderDir, GetHostInfo
 from Plugins.Extensions.IPTVPlayer.__init__ import _, GRIDSUPPORT
 
 
@@ -270,46 +268,23 @@ def _getPlayerSelectorLogoPath(key):
 
 
 _HOST_INFO_CACHE = {}
-# "# Last Modified: 07.10.2026" (line 2 of every host), hosts from other
-# sources may still use dd/mm/yyyy or yyyy-mm-dd
-_HOST_LAST_MODIFIED_RE = re.compile(r'#\s*Last\s*Modified\s*:?\s*(\d{1,4})[./-](\d{1,2})[./-](\d{2,4})', re.IGNORECASE)
-# hostxxx: '\tXXXversion = "2026.10.07.1"' in its Host class
-_HOST_XXX_VERSION_RE = re.compile(r'''^\s+XXXversion\s*=\s*['"]([^'"]+)['"]''')
 
 
 def _getHostInfoText(key):
     # "Host: <key>, Last Modified: dd.mm.yyyy[, Version: x]" for the line
-    # above the host URL. The date comes from the header of the host file
-    # (only its start is read - hostxxx alone is 1.5 MB), the version from
-    # hostxxx's Host.XXXversion - of the loaded module, else read from the
-    # file (the host list does not load the hosts). Cached per session;
-    # empty for groups and "config".
+    # above the host URL. Date and version come from GetHostInfo() (the host
+    # file, or its .pyc on .pyc-only installs); hostxxx's
+    # Host.XXXversion of the loaded module wins when it is loaded. Cached per
+    # session; empty for groups and "config".
     if key in _HOST_INFO_CACHE:
         return _HOST_INFO_CACHE[key]
     text = ""
     try:
         parts = []
-        path = GetPluginDir('hosts/host%s.py' % key)
-        if os.path.isfile(path):
-            with io.open(path, 'r', encoding='utf-8', errors='ignore') as f:
-                match = _HOST_LAST_MODIFIED_RE.search(f.read(4096))
-            if match:
-                day, month, year = match.groups()
-                if len(day) == 4:
-                    day, year = year, day
-                if len(year) == 2:
-                    year = '20' + year
-                parts.append(_("Last Modified: %s") % ('%02d.%02d.%s' % (int(day), int(month), year)))
-        version = getattr(getattr(sys.modules.get('Plugins.Extensions.IPTVPlayer.hosts.host' + key), 'Host', None), 'XXXversion', None)
-        if not version and key == 'xxx' and os.path.isfile(path):
-            # the host list no longer loads the hosts, so read it from the file
-            # (only hostxxx has it - the other files are not scanned)
-            with io.open(path, 'r', encoding='utf-8', errors='ignore') as f:
-                for line in f:
-                    match = _HOST_XXX_VERSION_RE.match(line)
-                    if match:
-                        version = match.group(1)
-                        break
+        info = GetHostInfo(key)
+        if info.get('modified'):
+            parts.append(_("Last Modified: %s") % info['modified'])
+        version = getattr(getattr(sys.modules.get('Plugins.Extensions.IPTVPlayer.hosts.host' + key), 'Host', None), 'XXXversion', None) or info.get('version')
         if version:
             parts.append(_("Version: %s") % version)
         if parts:

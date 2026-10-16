@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 08.10.2026
+LAST_MODIFIED = "08.10.2026"
 # musicmp3.ru - artists, top / new albums by genre -> album -> tracks (128 kbit/s MP3 previews of the site's player),
 #   search for songs, albums and artists
 # 08.10.2026 - host standard: the player key ("boo" of the site's scripts.js) computed in Python (no JS engine,

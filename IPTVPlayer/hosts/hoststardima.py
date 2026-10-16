@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026
+LAST_MODIFIED = "04.10.2026"
 # 03.10.2026 - rewrite for the new stardima.com (Laravel site, the old
 #   stardima.vip WordPress/DooPlay site redirects there):
 #   lists are JSON (/aflam, /mosalsalat, /search?query=, /search/<category> with

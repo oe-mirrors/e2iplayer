@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 10.10.2026
+LAST_MODIFIED = "10.10.2026"
 # 10.10.2026 - rewrite for the new WordPress theme (twentytwentythree, the old "post-item" cards and the
 #   categories sidebar are gone): lists, categories and search from the site's REST API (wp-json/wp/v2,
 #   last page from X-WP-TotalPages), the player is the ok.ru iframe of the post page (many old posts lost

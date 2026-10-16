@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 10.10.2026
+LAST_MODIFIED = "10.10.2026"
 # 10.10.2026 - host standard. TV Trwam: the site is an InsysGo app now (the old html lists and the "sources" of
 #   the player are gone) - live stream, catch-up per day and shows -> episodes come from its api
 #   (api-trwam.app.insysgo.pl, no account needed), streams from its Player/AcquireContent (HLS first, then DASH);

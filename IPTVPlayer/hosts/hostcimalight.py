@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 09.10.2026
+LAST_MODIFIED = "09.10.2026"
 # CimaLight (سيما لايت, cimalight.co -> e.cimalight.co): PHP Melody site with new and classic films, Arabic,
 # Turkish, Asian, Indian and foreign series, anime, plays and TV shows
 #   - "Latest", "Most viewed", Movies / Series / Other (the site categories; "All movies", "Latest episodes"

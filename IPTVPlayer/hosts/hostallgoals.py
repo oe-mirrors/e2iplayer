@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026
+LAST_MODIFIED = "04.10.2026"
 # Allgoals (archiwum.allgoals.in) - archive of Polish sports TV recordings 1991-today (football, F1, MotoGP,
 #   ski jumping, volleyball, ...) of the allgoals.in forum (the forum itself is login-only)
 # Site: one static page per year, dates as <h3>, each recording is a button with "Link 1..N" (= parts) to

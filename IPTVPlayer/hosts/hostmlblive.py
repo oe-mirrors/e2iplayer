@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026
+LAST_MODIFIED = "04.10.2026"
 # MLBLive (mlblive.net) - MLB full game replays, World Series, World Baseball Classic, MLB TV shows
 # Site: uCoz catalogue like basketball-video.com / nfl-video.com (navigation groups, "?pageN" paging, /search/),
 #   behind Cloudflare that only lets Chrome's TLS fingerprint through -> every page via curl-impersonate

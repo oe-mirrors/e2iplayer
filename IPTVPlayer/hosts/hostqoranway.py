@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Coding: BY Angel_heart (Mohamed Elsafty)
-# Last Modified: 13.10.2026
+LAST_MODIFIED = "13.10.2026"
 # 13.10.2026 - new host: Qutuf al-Marjan (m.qoranway.com, Quran recitation / maqamat / nasheed lessons) and the
 #   adhan page of www.qoranway.com. MP3 plays directly; RealMedia (.rm/.ram, cook audio) is converted to WMA and
 #   WMV (WMV2 video, no hardware decoder on the boxes) to MPEG-TS with ffmpeg (gst-launch-1.0 fallback for audio)

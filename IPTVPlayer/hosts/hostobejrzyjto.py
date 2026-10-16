@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 10.10.2026
+LAST_MODIFIED = "10.10.2026"
 # Completely rewritten: 19.02.2026 - Mr.X
 # Fixed Pagination for episodes: 02.05.2026 - SlyceMaster
 # 10.10.2026 - host standard:

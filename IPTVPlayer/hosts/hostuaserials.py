@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026
+LAST_MODIFIED = "04.10.2026"
 # 03.10.2026 - new host for uaserials.my (uaserials.pro), Ukrainian dubbed series, films,
 #   cartoons, anime and dramas (DLE site): category / series genre / year lists with paging, search, title
 #   page (IMDb id, year, genres, cast, description). Playback through the HDVB-UA player (hdvbua.pro/embed):

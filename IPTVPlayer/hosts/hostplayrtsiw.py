@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 08.10.2026
+LAST_MODIFIED = "08.10.2026"
 # SRG SSR (SRF / RTS / RSI / RTR)
 # Rewritten for the il.srgssr.ch integrationlayer 2.0 JSON API
 # 07.10.2026 - INFO (media details, moviemeta for films), First/Next

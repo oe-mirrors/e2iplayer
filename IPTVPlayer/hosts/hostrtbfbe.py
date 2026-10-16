@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 10.10.2026
+LAST_MODIFIED = "10.10.2026"
 # 10.10.2026 - links are no longer renamed to "*name*" after use - that broke the link list's own used mark (tick + colour);
 #   lists repaired for auvio.rtbf.be (the old www.rtbf.be/auvio pages are gone): every menu now reads the site's own
 #   bff-service api (pages -> widgets -> programmes / videos / lives / radios, seasons of a programme, the whole

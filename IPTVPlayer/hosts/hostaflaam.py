@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.10.2026
+LAST_MODIFIED = "04.10.2026"
 # 03.10.2026 - brought to the current host standard (same "O2 CMS" as akwam)
 #   - lists /movies, /series, /search?q=.. and the section / genre / year filters of the home page
 #     (guarded: no IndexError on a page without the block); paging via iptvpaging (First page /

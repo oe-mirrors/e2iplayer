@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 01.10.2026
+LAST_MODIFIED = "01.10.2026"
 # 14.06.2026 - Mr.X
 # 27.09.2026 - domain topstreamfilm.best; meinecloud.click embeds via its token API (libs/meinecloud.py),
 # series seasons/episodes from it too; items keep their page url (INFO), links live in their own key.

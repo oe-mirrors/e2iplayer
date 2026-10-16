@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 10.10.2026
+LAST_MODIFIED = "10.10.2026"
 # ADD: 20.04.2026 - Mr.X
 # 09.10.2026 - host standard, coflix.wales -> coflix.esq (redirect chain coflix.wales -> .click -> .date -> .esq):
 #   - the apiflix JSON API answers HTTP 500 - films / series / animes / dramas / genres / search are read from the

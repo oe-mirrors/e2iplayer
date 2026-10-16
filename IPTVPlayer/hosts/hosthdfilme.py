@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 07.10.2026
+LAST_MODIFIED = "07.10.2026"
 # 07.10.2026 - "no valid links" on every movie: the page now lazy-loads the "custom" DeVideoSRC player
 # (<iframe src="about:blank" data-src="https://devideosrc.co/custom/movie/<imdb>">), the old movie iframe
 # pattern found nothing, so movies had no player url (fixed in libs/meinecloud.py). Also: First/Jump/Next

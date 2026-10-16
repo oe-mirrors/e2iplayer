@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 07.10.2026
+LAST_MODIFIED = "07.10.2026"
 # Coding: BY MOHAMED_OS
 # 06.10.2026 - ported to the python3 framework / host standard:
 #   - latest episodes, movies, series, Ramadan, anime, plays, wrestling, movie / series genres (the old

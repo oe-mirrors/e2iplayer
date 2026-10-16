@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 10.10.2026
+LAST_MODIFIED = "10.10.2026"
 # 15.07.2022 - Blindspot
 # 10.10.2026 - host standard: the lists are read from the list page itself (one request instead of one per
 #   station; a station with several channels opens as a folder), radio / TV / webcam told apart by the stream

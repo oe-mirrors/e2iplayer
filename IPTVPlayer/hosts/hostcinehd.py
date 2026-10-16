@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 09.10.2026
+LAST_MODIFIED = "09.10.2026"
 # CineHD (cinehd.vc / cinehd.cc) - English TMDb-indexed movie / series guide
 #   - the catalogue comes from the site's own JSON API (api/search/discover: trending, popular, now playing,
 #     latest, top rated, most voted, genres, years, search) with First page / Jump / Next page (n/last)

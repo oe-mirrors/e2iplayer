@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 11.10.2026
+LAST_MODIFIED = "11.10.2026"
 # 11.10.2026 - channel: "Shorts" folder (Shorts tab); Shorts and channels get their own list icons (ShortItem.png, ChannelItem.png);
 #   search type "Shorts" and Trending > Shorts use the search filter "Type: Shorts"
 # 06.08.2026 - Centralized watched helper integration incl. favourite hash sync, Custom menu action handling (mark/unmark watched) added - Kamikaze24
