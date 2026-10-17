@@ -296,9 +296,9 @@ class webhuplayer(CBaseHostClass):
                 self.listsHistory({'name': 'history', 'category': 'search'}, 'desc')
             else:
                 printExc()
-            CBaseHostClass.endHandleService(self, index, refresh)
         except Exception:
-            return
+            printExc()
+        CBaseHostClass.endHandleService(self, index, refresh)
 
 
 class IPTVHost(CHostBase):

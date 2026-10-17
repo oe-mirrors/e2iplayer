@@ -207,7 +207,8 @@ class WiTV(CBaseHostClass):
             if not sts or "#EXTM3U" not in playlist:
                 printDBG("WiTV: server %s not answering" % playerId)
                 continue
-            urltab.append({"name": "%s %d" % (_("Server"), len(urltab) + 1), "url": strwithmeta(playerUrl, {"Referer": cItem["url"]}), "need_resolve": 1})
+            # the playlist url rides along, getVideoLinks does not load the player page again
+            urltab.append({"name": "%s %d" % (_("Server"), len(urltab) + 1), "url": strwithmeta(playerUrl, {"Referer": cItem["url"], "wt_hls": hlsUrl}), "need_resolve": 1})
         if not urltab:
             SetIPTVPlayerLastHostError(_("No stream available"))
             return []
@@ -218,9 +219,16 @@ class WiTV(CBaseHostClass):
         if not self.cm.isValidUrl(videoUrl):
             return []
         sidecar = sidecarFromUrlMeta(videoUrl, IsSidecarEnabled())
-        referer = videoUrl.meta.get("Referer", self.getMainUrl()) if hasattr(videoUrl, "meta") else self.getMainUrl()
-        hlsUrl = self._playerHls(str(videoUrl), referer)
-        links = getDirectM3U8Playlist(self._hlsMeta(hlsUrl, str(videoUrl)), checkExt=False, checkContent=True, sortWithMaxBitrate=99999999) if hlsUrl else []
+        meta = videoUrl.meta if hasattr(videoUrl, "meta") else {}
+        referer = meta.get("Referer", self.getMainUrl())
+        links = []
+        hlsUrl = meta.get("wt_hls", "")
+        if hlsUrl:
+            links = getDirectM3U8Playlist(self._hlsMeta(hlsUrl, str(videoUrl)), checkExt=False, checkContent=True, sortWithMaxBitrate=99999999)
+        if not links:
+            # no stored playlist url or it expired meanwhile: ask the player page again
+            hlsUrl = self._playerHls(str(videoUrl), referer)
+            links = getDirectM3U8Playlist(self._hlsMeta(hlsUrl, str(videoUrl)), checkExt=False, checkContent=True, sortWithMaxBitrate=99999999) if hlsUrl else []
         if not links:
             SetIPTVPlayerLastHostError(_("No stream available"))
             return []

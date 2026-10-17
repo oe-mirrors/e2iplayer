@@ -584,7 +584,7 @@ class RTBFBE(GenericFolderWatchedScraperMixin, CBaseHostClass):
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    # HISTORIA SEARCH
+    # SEARCH HISTORY
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc')
         else:

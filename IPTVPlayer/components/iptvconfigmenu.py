@@ -19,6 +19,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvdirbrowser import IPTVDirector
 from Plugins.Extensions.IPTVPlayer.components.configextmovieplayer import ConfigExtMoviePlayer
 from Plugins.Extensions.IPTVPlayer.__init__ import _, GRIDSUPPORT
 from .iptvpin import IPTVPinWidget
+from .asynccall import AsyncMethod
 ###################################################
 
 ###################################################
@@ -834,7 +835,8 @@ class ConfigMenu(ConfigBaseWidget):
                 self.session.open(MessageBox, _('Refusing to empty "%s" - it also holds "%s" (downloads, buffering, cache or config folder). Check the folder paths in the storage configuration.') % (path, conflict), type=MessageBox.TYPE_ERROR, timeout=8)
                 return
             printDBG('Storage: emptying [%s]' % path)
-            RemoveDirContents(path)
+            # in the background - a big cache folder would freeze the GUI
+            AsyncMethod(RemoveDirContents)(path)
 
     @staticmethod
     def _getWipeConflict(path):
@@ -863,7 +865,7 @@ class ConfigMenu(ConfigBaseWidget):
     def deleteIconsCacheNowCallback(self, ret=False):
         # icon batch dirs sit directly under CacheDir, RemoveDirContents() would also wipe cookies etc.
         if ret:
-            RemoveAllDirsIconsFromPath(config.plugins.iptvplayer.CacheDir.value)
+            AsyncMethod(RemoveAllDirsIconsFromPath)(config.plugins.iptvplayer.CacheDir.value)
 
     def _currentSectionIndex(self):
         # the section YELLOW resets: the open category, in the long list the one the cursor is in (the

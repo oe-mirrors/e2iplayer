@@ -277,6 +277,7 @@ class NoRedirection(HTTPRedirectHandler):
     http_error_301 = http_error_302
     http_error_303 = http_error_302
     http_error_307 = http_error_302
+    http_error_308 = http_error_302
 
 
 class MultipartPostHandler(BaseHandler):
@@ -1134,11 +1135,14 @@ class common:
                 self.fillHeaderItems(metadata, responseHeaders, collectAllHeaders=params.get('collect_all_headers'))
 
                 if params['return_data']:
-                    out_data = ensure_str(CurrBuffer.getvalue())
+                    # raw bytes: handleCharset() decodes with the page charset (windows-1256, iso-8859-2, ...)
+                    out_data = CurrBuffer.getvalue()
                 else:
                     out_data = ""
 
                 out_data, metadata = self.handleCharset(params, out_data, metadata)
+                if isinstance(out_data, bytes):
+                    out_data = ensure_str(out_data)
                 if params.get('no_redirection', False) and 300 <= metadata['status_code'] < 400:
                     # fix 071026: a redirect the caller asked not to follow is an answer (target in
                     # meta['location']) - the urllib path (NoRedirection) and curl-impersonate already say True
@@ -1156,7 +1160,7 @@ class common:
                 fileHandler.close()
 
             # metadata stays empty when the request was never sent (thread cancelled)
-            if metadata.get('status_code') == 200 and metadata.get('content-type') == 'image/webp':
+            if metadata.get('status_code') == 200 and metadata.get('content-type') == 'image/webp' and params.get('save_to_file'):
                 new_name = params['save_to_file'].replace(".webp", ".jpg")
                 printDBG("Change extension of webp image: %s" % new_name)
                 try:
@@ -1164,7 +1168,7 @@ class common:
                     self.convertWebp(new_name)
                 except Exception:
                     pass
-            elif metadata.get('status_code') == 200 and 'check_first_bytes' in params and IsConvertibleImage(params['save_to_file']):
+            elif metadata.get('status_code') == 200 and 'check_first_bytes' in params and params.get('save_to_file') and IsConvertibleImage(params['save_to_file']):
                 # an image download (icons) that got WebP/AVIF under another content type or file name
                 self.convertWebp(params['save_to_file'])
 
@@ -1876,14 +1880,15 @@ class common:
 
             if addParams.get('ignore_content_length', False):
                 meta = downHandler.info()
-                contentLength = int(meta.getheaders("Content-Length")[0])
+                contentLength = meta.get("Content-Length")
+                contentLength = int(contentLength) if contentLength else None
             else:
                 contentLength = None
 
             checkFromFirstBytes = addParams.get('check_first_bytes', [])
             OK = True
-            if 'maintype' in addParams and addParams['maintype'] != downHandler.headers.maintype:
-                printDBG("common.getFile wrong maintype! requested[%r], retrieved[%r]" % (addParams['maintype'], downHandler.headers.maintype))
+            if 'maintype' in addParams and addParams['maintype'] != downHandler.headers.get_content_maintype():
+                printDBG("common.getFile wrong maintype! requested[%r], retrieved[%r]" % (addParams['maintype'], downHandler.headers.get_content_maintype()))
                 if 0 == len(checkFromFirstBytes):
                     downHandler.close()
                 OK = False
@@ -1891,7 +1896,7 @@ class common:
             if OK and 'subtypes' in addParams:
                 OK = False
                 for item in addParams['subtypes']:
-                    if item == downHandler.headers.subtype:
+                    if item == downHandler.headers.get_content_subtype():
                         OK = True
                         break
 

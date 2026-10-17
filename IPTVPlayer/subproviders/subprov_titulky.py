@@ -201,9 +201,8 @@ class TitulkyProvider(CBaseSubProviderClass):
         rm(tmpArchFile)
         if not ok:
             return
-        cItem = dict(cItem)
-        cItem.update({'category': '', 'path': tmpDIR, 'imdbid': ''})
-        self.listSupportedFilesFromPath(cItem, self.getSupportedFormats(all=True))
+        # an archive in the archive becomes an 'unpack_archive' item
+        self.listArchiveFiles(dict(cItem, path=tmpDIR, imdbid=''))
 
     def handleService(self, index, refresh=0):
         printDBG('handleService start')
@@ -222,6 +221,8 @@ class TitulkyProvider(CBaseSubProviderClass):
             self.getLink(self.currItem, 'get_files')
         elif category == 'get_files':
             self.getFilesList(self.currItem)
+        elif category == 'unpack_archive':
+            self.unpackInnerArchive(self.currItem)
 
         CBaseSubProviderClass.endHandleService(self, index, refresh)
 

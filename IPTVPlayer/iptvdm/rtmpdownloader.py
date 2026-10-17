@@ -12,7 +12,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, ip
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import enum
 from Plugins.Extensions.IPTVPlayer.iptvdm.basedownloader import BaseDownloader
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
-from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import shellQuote, shellSingleQuote
+from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import shellQuote, shellSingleQuote, terminateToolsOfFile
 ###################################################
 
 ###################################################
@@ -183,6 +183,8 @@ class RtmpDownloader(BaseDownloader):
             if self.console:
                 self.console.kill()  # kill # produce zombies
                 # self.console.sendCtrlC()  # kill # produce zombies
+                # the kill above only reaches the shell around rtmpdump
+                terminateToolsOfFile(self.filePath, ('rtmpdump',))
                 self._cmdFinished(-1, True)
                 return BaseDownloader.CODE_OK
 

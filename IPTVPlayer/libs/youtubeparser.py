@@ -675,10 +675,10 @@ class YouTubeParser:
         try:
             title = self._normalizeText(itemJson["title"]["simpleText"])
             icon = self.getThumbnailUrl(itemJson)
+            cat = "feeds_" + title
             try:
                 feedId = itemJson["navigationEndpoint"]["browseEndpoint"]["params"]
                 url = "https://www.youtube.com/feed/trending?bp=%s&pbj=1" % feedId
-                cat = "feeds_" + title
             except Exception:
                 try:
                     url = "https://www.youtube.com" + itemJson["navigationEndpoint"]["commandMetadata"]["webCommandMetadata"]["url"]
@@ -1047,6 +1047,7 @@ class YouTubeParser:
             self.http_params = self._applyYoutubeHeaders(self.http_params)
             if "post_data" in url.meta:
                 http_params = dict(self.http_params)
+                http_params["header"] = dict(http_params.get("header", {}))  # do not change self.http_params' header
                 http_params["header"]["Content-Type"] = "application/json"
                 http_params["raw_post_data"] = True
                 http_params = self._applyYoutubeHeaders(http_params)
@@ -1150,6 +1151,7 @@ class YouTubeParser:
             url = strwithmeta(url)
             if "post_data" in url.meta:
                 http_params = dict(self.http_params)
+                http_params["header"] = dict(http_params.get("header", {}))  # do not change self.http_params' header
                 http_params["header"]["Content-Type"] = "application/json"
                 http_params["raw_post_data"] = True
                 http_params = self._applyYoutubeHeaders(http_params)

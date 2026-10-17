@@ -7,7 +7,7 @@ LAST_MODIFIED = "07.10.2026"
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
@@ -151,8 +151,6 @@ class ZDFmediathek(GenericFolderWatchedScraperMixin, CBaseHostClass):
         sts, data = self.cm.getPage(url, params, post_data)
         if sts and None is data:
             sts = False
-        if sts and 'Duze obciazenie!' in data:
-            SetIPTVPlayerLastHostError(self.cleanHtmlStr(data))
         return sts, data
 
     def getIconUrl(self, url):
@@ -442,7 +440,8 @@ class ZDFmediathek(GenericFolderWatchedScraperMixin, CBaseHostClass):
     def getLinksForVideo(self, cItem):
         printDBG("ZDFmediathek.getLinksForVideo [%s]" % cItem)
 
-        if 'id' not in cItem and 'url' in cItem:
+        # list rows always carry 'id', but it can be empty
+        if not cItem.get('id') and cItem.get('url'):
             sts, data = self.getPage(cItem['url'])
             if not sts:
                 return []
@@ -673,12 +672,12 @@ class ZDFmediathek(GenericFolderWatchedScraperMixin, CBaseHostClass):
             self.listBrands(self.currItem)
         elif 'list_content' == category:
             self.listContent(self.currItem)
-    # WYSZUKAJ
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category', 'category': 'search_next_page'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    # HISTORIA WYSZUKIWANIA
+    # SEARCH HISTORY
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc')
         else:

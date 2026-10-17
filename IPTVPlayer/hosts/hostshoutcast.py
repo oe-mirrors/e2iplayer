@@ -37,7 +37,6 @@ class ShoutcastCom(CBaseHostClass):
 
     # stable identity of a station row (listeners / current track in desc change)
     FAV_FIELDS = ('name', 'category', 'type', 'url', 'title', 'station_id', 'genre', 'bitrate', 'format', 'website', 'icon')
-    SEARCH_TYPES = [(_('Radio stations'), 'station'), (_('Artist'), 'artist'), (_('Titles'), 'song')]
     PAGE_SIZE = 100
 
     def __init__(self):
@@ -270,7 +269,8 @@ class IPTVHost(CHostBase):
         CHostBase.__init__(self, ShoutcastCom(), True, [])
 
     def getSearchTypes(self):
-        return self.host.SEARCH_TYPES
+        # translated when asked, not at import time
+        return [(_('Radio stations'), 'station'), (_('Artist'), 'artist'), (_('Titles'), 'song')]
 
     def withArticleContent(self, cItem):
         return cItem.get('type', '') == 'audio'

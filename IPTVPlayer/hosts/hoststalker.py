@@ -58,15 +58,19 @@ import time
 ###################################################
 MAX_ACCOUNTS = 3
 
+
 # optional box identity for portals bound to a real MAG (empty: derived from the MAC)
-DEVICE_FIELDS = (('stalker_sn', _("serial number")), ('stalker_devid', _("device ID")), ('stalker_devid2', _("device ID 2")),
-                 ('stalker_sig', _("signature")))
+def deviceFields():
+    # labels translated for the config screen (GetConfigList), the setting names are fixed
+    return (('stalker_sn', _("serial number")), ('stalker_devid', _("device ID")), ('stalker_devid2', _("device ID 2")),
+            ('stalker_sig', _("signature")))
+
 
 for _slot in range(1, MAX_ACCOUNTS + 1):
     setattr(config.plugins.iptvplayer, 'stalker_name%d' % _slot, ConfigText(default='', fixed_size=False))
     setattr(config.plugins.iptvplayer, 'stalker_portal%d' % _slot, ConfigText(default='', fixed_size=False))
     setattr(config.plugins.iptvplayer, 'stalker_mac%d' % _slot, ConfigSecret(default='', fixed_size=False))
-    for _base, _label in DEVICE_FIELDS:
+    for _base, _label in deviceFields():
         setattr(config.plugins.iptvplayer, '%s%d' % (_base, _slot), ConfigText(default='', fixed_size=False))
 config.plugins.iptvplayer.stalker_censored = ConfigYesNo(default=False)
 config.plugins.iptvplayer.stalker_estalker = ConfigYesNo(default=True)
@@ -83,7 +87,7 @@ def GetConfigList():
         optionList.append(getConfigListEntry(_("Portal %d - name (optional):") % slot, _cfg('stalker_name', slot)))
         optionList.append(getConfigListEntry(_("Portal %d - portal URL (http://host:port/c/):") % slot, _cfg('stalker_portal', slot)))
         optionList.append(getConfigListEntry(_("Portal %d - MAC address (00:1A:79:...):") % slot, _cfg('stalker_mac', slot)))
-        for base, label in DEVICE_FIELDS:
+        for base, label in deviceFields():
             optionList.append(getConfigListEntry(_("Portal %d - %s (optional, from the MAG box):") % (slot, label), _cfg(base, slot)))
     optionList.append(getConfigListEntry(_("Also use the portals of EStalker (%s)") % pluginFile(), config.plugins.iptvplayer.stalker_estalker))
     optionList.append(getConfigListEntry(_("Show adult content"), config.plugins.iptvplayer.stalker_censored))

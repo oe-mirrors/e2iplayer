@@ -50,35 +50,40 @@ def gettytul():
 
 EPISODE_RE = re.compile(r"(?:الحلقة|حلقة)\s*(\d+)")
 NET = "networks/media/show/%s"
-# (title, network path) of the app's lists
-MOVIES_TAB = ((_("Trending"), "vide-vide-view-vide-movie"), (_("Latest"), "vide-vide-created-vide-movie"),
-              (_("Top rated"), "vide-vide-toprated-vide-movie"), (_("Foreign movies"), "7093-vide-created-vide-movie"),
-              (_("Arabic Movies"), "7462-vide-created-vide-movie"), (_("Anime Movies"), "7094-vide-created-vide-movie"),
-              (_("Asian movies"), "7095-vide-created-vide-movie"), (_("Indian Movies"), "7096-vide-created-vide-movie"),
-              (_("Turkish Movies"), "7097-vide-created-vide-movie"), (_("Documentary Movies"), "7098-vide-created-vide-movie"))
-SERIES_TAB = ((_("Latest"), "vide-vide-created-vide-serie"), (_("Trending"), "vide-vide-view-vide-serie"),
-              (_("Top rated"), "vide-vide-toprated-vide-serie"), (_("Foreign series"), "7865-vide-created-vide-serie"),
-              (_("Arabic Series"), "7007-vide-created-vide-serie"), (_("Asian TV series"), "7866-vide-created-vide-serie"),
-              (_("Turkish Series"), "7867-vide-created-vide-serie"), (_("Indian TV series"), "7868-vide-created-vide-serie"))
-DUBBED_TAB = ((_("Trending"), "vide-vide-view-vide-modablej"), (_("Latest"), "vide-vide-created-vide-modablej"),
-              (_("Top rated"), "vide-vide-toprated-vide-modablej"), (_("Turkish series (dubbed)"), "7870-vide-created-vide-modablej"),
-              (_("Indian series (dubbed)"), "7875-vide-created-vide-modablej"), (_("Cartoons"), "7884-vide-created-vide-modablej"),
-              (_("Dubbed anime"), "7885-vide-created-vide-modablej"))
-RAMADAN_TAB = tuple(("%s %d" % (_("Ramadan"), year), "%s-vide-created-vide-serie" % net)
-                    for year, net in ((2026, 8618), (2025, 8006), (2024, 7270), (2023, 6394)))
-# TMDb genre ids - movies and series have their own (the series lists of a movie genre id are empty)
-MOVIE_GENRES = ((_("Action"), 28), (_("Adventure"), 12), (_("Animation"), 16), (_("Comedy"), 35), (_("Crime"), 80),
-                (_("Documentary"), 99), (_("Drama"), 18), (_("Family"), 10751), (_("Fantasy"), 14), (_("Sci-Fi"), 878),
-                (_("History"), 36), (_("Horror"), 27), (_("Music"), 10402), (_("Mystery"), 9648), (_("Romance"), 10749),
-                (_("Thriller"), 53), (_("War"), 10752))
-SERIES_GENRES = (("%s & %s" % (_("Action"), _("Adventure")), 10759), (_("Animation"), 16), (_("Comedy"), 35), (_("Crime"), 80),
-                 (_("Documentary"), 99), (_("Drama"), 18), (_("Family"), 10751), (_("Fantasy"), 14), (_("Sci-Fi & Fantasy"), 10765),
-                 (_("Horror"), 27), (_("Mystery"), 9648), (_("Romance"), 10749), ("%s & %s" % (_("War"), _("Politics")), 10768))
-SUB_MENUS = {
-    "eb_movies": MOVIES_TAB, "eb_series": SERIES_TAB, "eb_dubbed": DUBBED_TAB, "eb_ramadan": RAMADAN_TAB,
-    "eb_genre_movie": tuple((title, "vide-vide-created-%d-movie" % gid) for title, gid in MOVIE_GENRES),
-    "eb_genre_serie": tuple((title, "vide-vide-created-%d-serie" % gid) for title, gid in SERIES_GENRES),
-}
+
+
+def subMenus():
+    # (title, network path) of the app's lists - translated when a menu is built, not at import time
+    moviesTab = ((_("Trending"), "vide-vide-view-vide-movie"), (_("Latest"), "vide-vide-created-vide-movie"),
+                 (_("Top rated"), "vide-vide-toprated-vide-movie"), (_("Foreign movies"), "7093-vide-created-vide-movie"),
+                 (_("Arabic Movies"), "7462-vide-created-vide-movie"), (_("Anime Movies"), "7094-vide-created-vide-movie"),
+                 (_("Asian movies"), "7095-vide-created-vide-movie"), (_("Indian Movies"), "7096-vide-created-vide-movie"),
+                 (_("Turkish Movies"), "7097-vide-created-vide-movie"), (_("Documentary Movies"), "7098-vide-created-vide-movie"))
+    seriesTab = ((_("Latest"), "vide-vide-created-vide-serie"), (_("Trending"), "vide-vide-view-vide-serie"),
+                 (_("Top rated"), "vide-vide-toprated-vide-serie"), (_("Foreign series"), "7865-vide-created-vide-serie"),
+                 (_("Arabic Series"), "7007-vide-created-vide-serie"), (_("Asian TV series"), "7866-vide-created-vide-serie"),
+                 (_("Turkish Series"), "7867-vide-created-vide-serie"), (_("Indian TV series"), "7868-vide-created-vide-serie"))
+    dubbedTab = ((_("Trending"), "vide-vide-view-vide-modablej"), (_("Latest"), "vide-vide-created-vide-modablej"),
+                 (_("Top rated"), "vide-vide-toprated-vide-modablej"), (_("Turkish series (dubbed)"), "7870-vide-created-vide-modablej"),
+                 (_("Indian series (dubbed)"), "7875-vide-created-vide-modablej"), (_("Cartoons"), "7884-vide-created-vide-modablej"),
+                 (_("Dubbed anime"), "7885-vide-created-vide-modablej"))
+    ramadanTab = tuple(("%s %d" % (_("Ramadan"), year), "%s-vide-created-vide-serie" % net)
+                       for year, net in ((2026, 8618), (2025, 8006), (2024, 7270), (2023, 6394)))
+    # TMDb genre ids - movies and series have their own (the series lists of a movie genre id are empty)
+    movieGenres = ((_("Action"), 28), (_("Adventure"), 12), (_("Animation"), 16), (_("Comedy"), 35), (_("Crime"), 80),
+                   (_("Documentary"), 99), (_("Drama"), 18), (_("Family"), 10751), (_("Fantasy"), 14), (_("Sci-Fi"), 878),
+                   (_("History"), 36), (_("Horror"), 27), (_("Music"), 10402), (_("Mystery"), 9648), (_("Romance"), 10749),
+                   (_("Thriller"), 53), (_("War"), 10752))
+    seriesGenres = (("%s & %s" % (_("Action"), _("Adventure")), 10759), (_("Animation"), 16), (_("Comedy"), 35), (_("Crime"), 80),
+                    (_("Documentary"), 99), (_("Drama"), 18), (_("Family"), 10751), (_("Fantasy"), 14), (_("Sci-Fi & Fantasy"), 10765),
+                    (_("Horror"), 27), (_("Mystery"), 9648), (_("Romance"), 10749), ("%s & %s" % (_("War"), _("Politics")), 10768))
+    return {
+        "eb_movies": moviesTab, "eb_series": seriesTab, "eb_dubbed": dubbedTab, "eb_ramadan": ramadanTab,
+        "eb_genre_movie": tuple((title, "vide-vide-created-%d-movie" % gid) for title, gid in movieGenres),
+        "eb_genre_serie": tuple((title, "vide-vide-created-%d-serie" % gid) for title, gid in seriesGenres),
+    }
+
+
 LOCAL_PAGE_SIZE = 100
 # API path of the detail of a list row type
 DETAIL_PATH = {"movie": "media/detail/%s", "serie": "series/show/%s", "anime": "animes/show/%s"}
@@ -195,7 +200,7 @@ class EgyBest(GenericFolderWatchedScraperMixin, CBaseHostClass):
         self.listsTab(tab + self.searchItems(), cItem)
 
     def listSubMenu(self, cItem):
-        for title, path in SUB_MENUS.get(cItem.get("menu", ""), ()):
+        for title, path in subMenus().get(cItem.get("menu", ""), ()):
             self.addDir({"name": "category", "category": "list_items", "good_for_fav": True, "title": title, "url": self.getFullUrl(NET % path)})
 
     def _addRow(self, item, normalize):

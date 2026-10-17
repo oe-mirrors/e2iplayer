@@ -117,11 +117,16 @@ class Cineb(CBaseHostClass):
             seed, bits = ensure_str(js.get("seed") or ""), int(js.get("bits") or 0)
             if seed and 0 < bits <= 22:
                 target = 2 ** (32 - bits)
-                for n in range(1, 2 ** (bits + 4)):
+                # ~2^bits tries expected; capped at 2^22 tries (some 10-60 s on a box) - a very high "bits" may then
+                # find nothing and the nc=1 fallback is used
+                maxN = min(2 ** (bits + 4), 2 ** 22)
+                n = 1
+                while n < maxN:
                     digest = hashlib.sha256(ensure_binary("%s:%d" % (seed, n))).digest()
                     if struct.unpack(">I", digest[:4])[0] < target:
                         query = "seed=%s&n=%d" % (seed, n)
                         break
+                    n += 1
         except Exception:
             printExc()
         sts, data = self.cm.getPage("%s?__hvtok=1&%s&r=0" % (path, query), dict(self.defaultParams))
@@ -413,7 +418,7 @@ class Cineb(CBaseHostClass):
         info["productions"] = extractNames("Productions")
         info["casts"] = extractNames("Casts")
         info["lastUpdated"] = self.cm.ph.getSearchGroups(data, r"Last updated:[\s\n]*<time[^>]+>([^<]+)<")[0].strip()
-        description = self.cm.ph.getSearchGroups(data, r'class=["\']description text-expand["\'][^>]*>(.*?)</div>', re.DOTALL)[0]
+        description = self.cm.ph.getSearchGroups(data, r'(?s)class=["\']description text-expand["\'][^>]*>(.*?)</div>')[0]
         info["description"] = self.cleanHtmlStr(description)
         return info
 
@@ -485,22 +490,10 @@ class Cineb(CBaseHostClass):
 
     def getLinksForVideo(self, cItem):
         printDBG("Cineb.getLinksForVideo [%s]" % cItem)
-        urlTab = []
         sts, data = self.getPage(cItem["url"])
         if not sts:
             return []
-        match = re.search(r"window\.__OPT\s*=\s*(\[.*?\]);", data, re.DOTALL)
-        if match:
-            try:
-                serversList = json_loads(match.group(1))
-                if isinstance(serversList, list):
-                    for serverUrl in serversList:
-                        if isinstance(serverUrl, str):
-                            urlTab.append(self._linkItemFromUrl(serverUrl, cItem))
-            except Exception:
-                printExc()
-        if not urlTab:
-            urlTab = self._goLinks(cItem, data)
+        urlTab = self._goLinks(cItem, data)
         if not urlTab:
             iframeList = re.findall(r'<iframe[^>]+src=["\']([^"\']+)["\']', data, re.I)
             for src in iframeList:

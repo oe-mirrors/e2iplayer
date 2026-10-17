@@ -18,6 +18,7 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps, load
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_urlencode
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
@@ -161,12 +162,12 @@ class Noxx(GenericFolderWatchedScraperMixin, CBaseHostClass):
         cnt = 0
         for show in data.get("series", []) or []:
             try:
-                slug = str(show.get("slug", "") or "")
-                title = self.cleanHtmlStr(str(show.get("title", "") or ""))
+                slug = str(ensure_str(show.get("slug", "") or ""))
+                title = self.cleanHtmlStr(str(ensure_str(show.get("title", "") or "")))
                 if not slug or not title:
                     continue
                 year = str(show.get("first_air_date", "") or "")[:4]
-                poster = str(show.get("poster_path", "") or "")
+                poster = str(ensure_str(show.get("poster_path", "") or ""))
                 icon = (TMDB_IMG + poster) if poster.startswith("/") else ""
                 desc = []
                 if year:

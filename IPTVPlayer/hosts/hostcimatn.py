@@ -166,6 +166,9 @@ class CimaTN(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 return "post:%s" % cItem["post_id"]
             if category == "tn_episode" and cItem.get("page_id"):
                 return "page:%s|%s" % (cItem["page_id"], cItem.get("episode", ""))
+            if category == "tn_episode" and cItem.get("post_id") and cItem.get("episode"):
+                # episodes listed in the post itself ("episodeLinks") have no Blogger page
+                return "post:%s|ep%s" % (cItem["post_id"], cItem["episode"])
         except Exception:
             printExc()
         return ""

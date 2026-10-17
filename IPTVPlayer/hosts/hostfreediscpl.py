@@ -158,7 +158,7 @@ class FreeDiscPL(GenericFolderWatchedScraperMixin, CBaseHostClass):
         clean = FILE_EXT_RE.sub("", (name or "").strip())
         season, episode = parseSxxExx(clean)
         if season and episode:
-            show = re.split(r"[\s._\[(-]*S\d+\s*[ .:/x_-]*E\d+[\])]?", clean, 1, flags=re.I)[0]
+            show = re.split(r"[\s._\[(-]*S\d+\s*[ .:/x_-]*E\d+[\])]?", clean, maxsplit=1, flags=re.I)[0]
             label = re.sub(r"[._]+", " ", show).strip(" -[(")
             if not label:
                 # "[S03e15] Descentc vf4 av.mp4": no show name before SxxExx - keep the file's own title
@@ -282,6 +282,7 @@ class FreeDiscPL(GenericFolderWatchedScraperMixin, CBaseHostClass):
             return  # 10.10.2026: an empty 404 outside Poland (like the file pages)
         count = 0
         hasNext = False
+        seenFolders = set()
         try:
             data = json_loads(data)["response"]
             logins = data["logins_translated"]
@@ -299,10 +300,13 @@ class FreeDiscPL(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 params = {"good_for_fav": True, "title": self.cleanHtmlStr(ensure_str(item["name"])), "url": self.getFullUrl(url),
                           "icon": "https://img.freedisc.pl/photo/%s/7/2/%s.png" % (item["id"], nameUrl) if fileType == "7" else "", "desc": desc}
                 self._addFile(params, fileType)
-                # the uploader's root folder and the file's folder
-                self.addDir({"name": "category", "good_for_fav": True, "category": "list_dir", "title": "@%s" % ensure_str(userItem["display"]),
-                             "url": self.getFullUrl("/%s,d-%s,%s" % (ensure_str(userItem["url"]), userItem["userRootDirID"], ensure_str(userItem["url"]))),
-                             "f_user_id": ensure_str(userItem["url"]), "f_dir_id": str(userItem["userRootDirID"]), "desc": desc})
+                # the uploader's root folder (once per uploader)
+                folderKey = (ensure_str(userItem["url"]), str(userItem["userRootDirID"]))
+                if folderKey not in seenFolders:
+                    seenFolders.add(folderKey)
+                    self.addDir({"name": "category", "good_for_fav": True, "category": "list_dir", "title": "@%s" % ensure_str(userItem["display"]),
+                                 "url": self.getFullUrl("/%s,d-%s,%s" % (folderKey[0], folderKey[1], folderKey[0])),
+                                 "f_user_id": folderKey[0], "f_dir_id": folderKey[1], "desc": desc})
                 count += 1
             hasNext = int(data.get("pages", 0) or 0) > page
         except Exception:

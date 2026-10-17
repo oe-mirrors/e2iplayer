@@ -145,7 +145,7 @@ class Shahid44u(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     def _showName(self, text):
         text = _toUnicode(self.cleanHtmlStr(text))
-        text = re.split(u"\\s+(?:الموسم|الحلقة)\\s", u" " + text + u" ", 1)[0].strip()
+        text = re.split(u"\\s+(?:الموسم|الحلقة)\\s", u" " + text + u" ", maxsplit=1)[0].strip()
         text = TITLE_PREFIX_RE.sub(u"", text)
         for _i in range(3):
             text = TITLE_SUFFIX_RE.sub(u"", text).strip()

@@ -248,7 +248,7 @@ class Delegate(object):
                 self.returnValues = None
                 return returnValues
             else:
-                raise BaseException("Delegate cannot be used in MainThread!")
+                raise RuntimeError("Delegate cannot be used in MainThread!")
 
     def finished(self, *args):
         self.returnValues = args
@@ -315,7 +315,7 @@ class MainSessionWrapper(object):
             self.event.wait()
             return self.retVal
         else:
-            raise BaseException("DelegateToMainThread Error")
+            raise RuntimeError("DelegateToMainThread Error")
 
     def _waitForFinishOpen(self, session, *args, **kwargs):
         session.openWithCallback(self._callBack, *args, **kwargs)
@@ -355,7 +355,7 @@ class iptv_execute(object):
             self.retVal = None
             return ret
         else:
-            return {'sts': False}
+            return {'sts': False, 'code': -1, 'data': ''}
 
     def _system(self, session, cmd):
         printDBG("iptv_execute._system: Here we must be in main thread context: [%s]" % threading.current_thread())

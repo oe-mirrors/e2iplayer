@@ -349,10 +349,16 @@ def GetPyScriptCmd(name):
     elif fileExists(baseName + '.pyc'):
         baseName += '.pyc'
     if baseName != '':
-        for item in ['python']:
+        # the interpreter of the running Python first - a .pyc only runs on its own major version,
+        # and OE-A 8.x images have no plain "python" (see impersonatehlsdownloader.getHelperPython())
+        if sys.version_info[0] >= 3:
+            names = ['python3', 'python']
+        else:
+            names = ['python', 'python2']
+        for item in names:
             pyPath = Which(item)
             if '' != pyPath:
-                cmd = '%s %s' % (pyPath, baseName)
+                cmd = '%s "%s"' % (pyPath, baseName)
                 break
     return cmd
 
@@ -2297,13 +2303,12 @@ class CSearchHistoryHelper():
 
         orgLen = len(historyList)
         # remove duplicates
-        # last 50 searches patterns are stored
-        historyList = historyList[:config.plugins.iptvplayer.search_history_size.value]
+        # last 50 searches patterns are stored - de-duplicate first, so repeats don't eat up the size limit
         uniqHistoryList = []
         for i in historyList:
             if i not in uniqHistoryList:
                 uniqHistoryList.append(i)
-        historyList = uniqHistoryList
+        historyList = uniqHistoryList[:config.plugins.iptvplayer.search_history_size.value]
 
         # strip file if it has to big overhead
         if orgLen - len(historyList) > 50:
@@ -2955,7 +2960,7 @@ def readCFG(cfgName, defVal=''):
                     for line in f:
                         line = line.strip()
                         if line.startswith('config.plugins.iptvplayer.%s=' % cfgName):
-                            defVal = line.split('=')[1]
+                            defVal = line.split('=', 1)[1]
                             with open(cfgPath, 'w') as fOut:
                                 fOut.write(defVal)
     return defVal

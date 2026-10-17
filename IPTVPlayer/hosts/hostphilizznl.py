@@ -30,7 +30,9 @@ def gettytul():
     return "https://philizz.nl/"
 
 
-SECTIONS = [("index.htm", _("Latest")), ("yrmx.htm", "Yearmix"), ("decade.htm", "Decademix"),
+def sections():
+    # translated when asked, not at import time
+    return [("index.htm", _("Latest")), ("yrmx.htm", "Yearmix"), ("decade.htm", "Decademix"),
             ("hotz.htm", "Heroes of the Zer00s"), ("90s.htm", "Back to the 90s"), ("80s.htm", "Back to the 80s"),
             ("holland.htm", "Holland in de Mix"), ("mashup.htm", "Mashups"), ("powermix.htm", "The Powermix"),
             ("tropical.htm", "Tropical Summer")]
@@ -145,7 +147,7 @@ class PhilizzNL(GenericFolderWatchedScraperMixin, CBaseHostClass):
     # lists
     ###################################################
     def listMain(self, cItem):
-        for page, label in SECTIONS:
+        for page, label in sections():
             params = dict(cItem)
             params.update({"good_for_fav": True, "category": "list_page", "title": label, "url": self.getFullUrl(page)})
             self.addDir(params)

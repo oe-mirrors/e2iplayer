@@ -72,7 +72,7 @@ def markdownToText(text):
     text = re.sub(r'(?m)^>\s?', '', text)
     text = text.replace('**', '').replace('__', '').replace('`', '')
     # emoji and symbols the skin fonts usually lack
-    text = re.sub(u'[⌀-⏿☀-➿⬀-⯿️‍]', '', text)
+    text = re.sub(u'[\u2300-\u23ff\u2600-\u27bf\u2b00-\u2bff\ufe0f\u200d]', '', text)
     text = u''.join(c for c in text if ord(c) < 0xd800 or 0xe000 <= ord(c) < 0x10000)
     text = re.sub(r'[ \t]+\n', '\n', text)
     text = re.sub(r'\n{3,}', '\n\n', text)

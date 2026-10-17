@@ -74,7 +74,7 @@ def ff():
     helper = types.SimpleNamespace(GET_FFMPEG_PATH=lambda: "ffmpeg", STS=types.SimpleNamespace(DOWNLOADING=1),
                                    getDownloaderParamFromUrlWithMeta=lambda url, b=False: (str(url), {}))
     _stubModule("Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh", DMHelper=helper)
-    _stubModule("Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers", SidecarMixin=_Sidecar)
+    _stubModule("Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers", SidecarMixin=_Sidecar, shellQuote=lambda s: s)
     _stubModule("Plugins.Extensions.IPTVPlayer.components.iptvplayerinit", TranslateTXT=lambda t: t)
     started = []
     _stubModule("Plugins.Extensions.IPTVPlayer.components.asynccall", AsyncMethod=lambda fnc: (lambda *a: started.append(fnc)))

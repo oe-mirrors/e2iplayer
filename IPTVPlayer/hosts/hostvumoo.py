@@ -95,11 +95,14 @@ class Vumoo(GenericFolderWatchedScraperMixin, CBaseHostClass):
             seed, bits = ensure_str(js.get("seed") or ""), int(js.get("bits") or 0)
             if seed and 0 < bits <= 22:
                 target = 2 ** (32 - bits)
-                for n in range(1, 2 ** (bits + 4)):
+                # counter loop: range() would build a list of up to 2^26 ints on Python 2
+                n, maxN = 1, 2 ** (bits + 4)
+                while n < maxN:
                     digest = hashlib.sha256(ensure_binary("%s:%d" % (seed, n))).digest()
                     if struct.unpack(">I", digest[:4])[0] < target:
                         query = "seed=%s&n=%d" % (seed, n)
                         break
+                    n += 1
         except Exception:
             printExc()
         sts, data = self.cm.getPage("%s?__hvtok=1&%s&r=0" % (path, query), dict(self.defaultParams))

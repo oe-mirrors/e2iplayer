@@ -193,7 +193,7 @@ class IPTVDirectorySelectorWidget(Screen):
     def currDirChanged(self):
         printDBG("IPTVDirectorySelectorWidget.currDirChanged")
         self.currDir = self.getCurrentDirectory()
-        self["curr_dir"].setText(_(self.currDir))
+        self["curr_dir"].setText(self.currDir)
         self["list"].setList([])
         self.requestRefresh()
 

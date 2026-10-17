@@ -254,7 +254,7 @@ class ShowBox(GenericFolderWatchedScraperMixin, CBaseHostClass):
             href = self._rebase(href)
             if re.search(r"[?&]page=%d(?:&|$)" % (page + 1), href):
                 hasNext = True
-            tpl = re.sub(r"([?&]page=)\d+", r"\1{page}", href, 1)
+            tpl = re.sub(r"([?&]page=)\d+", r"\1{page}", href, count=1)
             if "{page}" in tpl:
                 pageTpl = tpl
         if hasNext and lastPage <= page:

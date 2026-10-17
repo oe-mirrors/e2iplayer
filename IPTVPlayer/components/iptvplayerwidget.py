@@ -664,10 +664,10 @@ class E2iPlayerWidget(Screen):
                 iptvtools_mkdirs(config.plugins.iptvplayer.CacheDir.value)
 
             if iptvtools_FreeSpace(config.plugins.iptvplayer.CacheDir.value, 10):
-                self.iconMenager = IconMenager(True)
+                self.iconMenager = IconMenager(downloadNew=True)
             else:
                 self.showMessageNoFreeSpaceForIcon = True
-                self.iconMenager = IconMenager(False)
+                self.iconMenager = IconMenager(downloadNew=False)
             self.iconMenager.setUpdateCallBack(self.checkIconCallBack)
         self.showHostsErrorMessage = True
 
@@ -1260,6 +1260,8 @@ class E2iPlayerWidget(Screen):
             return
 
         self.stopAutoPlaySequencer()
+        if self.host is None or self.activePlayer is None:  # no host loaded (loadHost() failed)
+            return
         options = []
 
         canAddUserLink = False
@@ -1923,7 +1925,6 @@ class E2iPlayerWidget(Screen):
         selItem = self.getSelItem()
         if selItem and selItem.description != '':
             data = selItem.description
-            sData = data.replace('\n', '')
             sData = data.replace('[/br]', '\n')
             self["console"].setText(sData)
         else:
@@ -2139,25 +2140,35 @@ class E2iPlayerWidget(Screen):
         self.keyT9Jump('9')
 
     def ok_pressed0(self):
+        if self.activePlayer is None:  # no host loaded (loadHost() failed)
+            return
         self.activePlayer.set({})
         self.ok_pressed(useAlternativePlayer=False)
 
     def ok_pressed1(self):
+        if self.activePlayer is None:
+            return
         player = self.getMoviePlayer(True, False)
         self.activePlayer.set({'buffering': True, 'player': player})
         self.ok_pressed(useAlternativePlayer=True)
 
     def ok_pressed2(self):
+        if self.activePlayer is None:
+            return
         player = self.getMoviePlayer(True, True)
         self.activePlayer.set({'buffering': True, 'player': player})
         self.ok_pressed(useAlternativePlayer=True)
 
     def ok_pressed3(self):
+        if self.activePlayer is None:
+            return
         player = self.getMoviePlayer(False, False)
         self.activePlayer.set({'buffering': False, 'player': player})
         self.ok_pressed(useAlternativePlayer=False)
 
     def ok_pressed4(self):
+        if self.activePlayer is None:
+            return
         player = self.getMoviePlayer(False, True)
         self.activePlayer.set({'buffering': False, 'player': player})
         self.ok_pressed(useAlternativePlayer=True)
@@ -2418,11 +2429,11 @@ class E2iPlayerWidget(Screen):
         if ret.status != RetHost.OK or 0 == len(ret.value):
             item = self.currList[self.currSelIndex]
             if len(item.description):
-                artItem = ArticleContent(title=item.name, text=item.description, images=[{'title': 'Fot.', 'url': item.iconimage}])  # richDescParams={"alternate_title":"***alternate_title", "year":"year", "rating":"rating",  "duration":"duration",  "genre":"genre",  "director":"director",  "actors":"actors",  "awards":"awards"}
+                artItem = ArticleContent(title=item.name, text=item.description, images=[{'title': _('Image'), 'url': item.iconimage}])  # richDescParams={"alternate_title":"***alternate_title", "year":"year", "rating":"rating",  "duration":"duration",  "genre":"genre",  "director":"director",  "actors":"actors",  "awards":"awards"}
         else:
             artItem = ret.value[0]
         if None is not artItem:
-            self.session.openWithCallback(self.leaveArticleView, IPTVArticleView, artItem, {'buffering_path': config.plugins.iptvplayer.bufferingPath.value, 'host_name': self.hostName, 'logo_path': self.hostLogoPath, 'download_dir': self.iconMenager.currDownloadDir})
+            self.session.openWithCallback(self.leaveArticleView, IPTVArticleView, artItem, {'buffering_path': config.plugins.iptvplayer.bufferingPath.value, 'host_name': self.hostName, 'logo_path': self.hostLogoPath, 'download_dir': self.iconMenager.currDownloadDir if self.iconMenager else None})
 
     def selectMainVideoLinks(self, ret):
         printDBG("selectMainVideoLinks")
@@ -2776,7 +2787,6 @@ class E2iPlayerWidget(Screen):
 
     def selectItemCallback(self, ret, type):
         printDBG(">> selectItemCallback ret[%s] type[%s]" % (ret, type))
-        hasIcon = False
         nextFunction = None
         prevFunction = None
         protectedByPin = False
@@ -2823,10 +2833,6 @@ class E2iPlayerWidget(Screen):
                 self.groupDisplayName = ret[0]
                 self.selectHostFromGroup()
                 return
-
-            if self.showMessageNoFreeSpaceForIcon and hasIcon:
-                self.showMessageNoFreeSpaceForIcon = False
-                self.session.open(MessageBox, (_("There is no free space on the drive [%s].") % config.plugins.iptvplayer.CacheDir.value) + "\n" + _("New icons will not be available."), type=MessageBox.TYPE_INFO, timeout=10)
         elif type in ['selecthost', 'selectgroup']:
             self.close()
             return
@@ -2924,6 +2930,10 @@ class E2iPlayerWidget(Screen):
     def loadHostData(self):
         self.session.summary.setText(self.hostName)
         self.activePlayer = CMoviePlayerPerHost(self.hostName)
+        # once per session, after the first host has loaded
+        if self.showMessageNoFreeSpaceForIcon:
+            self.showMessageNoFreeSpaceForIcon = False
+            self.session.open(MessageBox, (_("There is no free space on the drive [%s].") % config.plugins.iptvplayer.CacheDir.value) + "\n" + _("New icons will not be available."), type=MessageBox.TYPE_INFO, timeout=10)
 
         # change logo for player
         self["playerlogo"].hide()
@@ -3105,7 +3115,6 @@ class E2iPlayerWidget(Screen):
 
         # check based on protocol
         protocol = url.meta.get('iptv_proto', '')
-        protocol = url.meta.get('iptv_proto', '')
         if protocol in ['f4m', 'uds']:
             return True  # supported only in buffering mode
         elif protocol in ['http', 'https']:
@@ -3277,7 +3286,7 @@ class E2iPlayerWidget(Screen):
                 gstAdditionalParams['logo_path'] = self.hostLogoPath or ''
                 try:
                     iconUrl = self.currItem.iconimage
-                    if iconUrl and not self.iconMenager.isIconFailed(iconUrl):  # no red X, the logo instead
+                    if iconUrl and self.iconMenager and not self.iconMenager.isIconFailed(iconUrl):  # no red X, the logo instead
                         gstAdditionalParams['cover_path'] = self.iconMenager.getIconPathFromAAueue(iconUrl)
                 except Exception:
                     printExc()
@@ -3818,7 +3827,7 @@ class E2iPlayerWidget(Screen):
         self.requestListFromHost('Refresh', currSelIndex)
 
     def getInitialList(self):
-        self.nexSelIndex = 0
+        self.nextSelIndex = 0
         self.prevSelList = []
         self.categoryList = []
         self.currList = []
@@ -4534,9 +4543,9 @@ class E2iPlayerWidget(Screen):
         self.setStatusTex("")
         self["list"].show()
         if ret.status == RetHost.OK and isinstance(ret.value, list) and 1 == len(ret.value):
-           self.yellow_pressed()
+            self.yellow_pressed()
         elif ret.status == RetHost.ERROR and isinstance(ret.value, list) and 1 == len(ret.value) and isinstance(ret.value[0], str):
-           self.session.open(MessageBox, ret.value[0], type=MessageBox.TYPE_ERROR)
+            self.session.open(MessageBox, ret.value[0], type=MessageBox.TYPE_ERROR)
 
     def markItemAsViewedCallback(self, thread, ret):
         asynccall.gMainFunctionsQueueTab[0].addToQueue("handleMarkItemAsViewedCallback", [thread, ret])
@@ -4550,9 +4559,9 @@ class E2iPlayerWidget(Screen):
             # the watched marker shows when the list is loaded again; a refresh now would lose the zap
             self._zapFromPlayer(zap)
         elif ret.status == RetHost.OK and isinstance(ret.value, list) and 1 == len(ret.value) and 'refresh' in ret.value:
-           self.getRefreshedCurrList()
+            self.getRefreshedCurrList()
         elif ret.status == RetHost.ERROR and isinstance(ret.value, list) and 1 == len(ret.value) and isinstance(ret.value[0], str):
-           self.session.open(MessageBox, ret.value[0], type=MessageBox.TYPE_ERROR)
+            self.session.open(MessageBox, ret.value[0], type=MessageBox.TYPE_ERROR)
         else:
             self.checkAutoPlaySequencer()
 

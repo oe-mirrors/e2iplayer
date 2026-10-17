@@ -120,8 +120,7 @@ class KinoGer(CBaseHostClass):
                 container = container[0]
                 container = container.replace("[", "<").replace("]", ">")
                 season_lists[key] = re.compile(r"<'([^>]+)", re.DOTALL).findall(container)
-                if container:
-                    total = len(season_lists[key])
+                total = max(total, len(season_lists[key]))
         for i in range(total):
             params = dict(cItem)
             title = "%s - Staffel %s" % (cItem.get("title"), i + 1)
@@ -164,7 +163,9 @@ class KinoGer(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("KinoGer.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
-        cItem["url"] = self.getFullUrl("?do=search&subaction=search&titleonly=3&story=%s&x=0&y=0&submit=submit" % urllib_quote_plus(searchPattern))
+        # "Next page" rows keep the search category but carry the next page URL
+        if not cItem.get("url"):
+            cItem["url"] = self.getFullUrl("?do=search&subaction=search&titleonly=3&story=%s&x=0&y=0&submit=submit" % urllib_quote_plus(searchPattern))
         self.listItems(cItem)
 
     def getLinksForVideo(self, cItem):

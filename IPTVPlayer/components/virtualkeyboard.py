@@ -354,7 +354,7 @@ class IPTVVirtualKeyBoardWithCaptcha(Screen):
 
         elif text == "SPACE":
             self["text"].insertChar(" ", self["text"].currPos, False, True)
-            self["text"].innerRight()
+            self["text"].right()  # not innerRight(): innerright on OpenViX, see e2ivk.insertText()
             self["text"].update()
 
         elif text == "OK":
@@ -368,7 +368,7 @@ class IPTVVirtualKeyBoardWithCaptcha(Screen):
 
         else:
             self["text"].insertChar(text, self["text"].currPos, False, True)
-            self["text"].innerRight()
+            self["text"].right()  # not innerRight(): innerright on OpenViX, see e2ivk.insertText()
             self["text"].update()
 
     def ok(self):

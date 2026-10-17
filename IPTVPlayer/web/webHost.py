@@ -43,7 +43,8 @@ def _currentList():
 
 
 def _setList(ret):
-	if ret is None or not isinstance(getattr(ret, 'value', None), list):
+	# a failed call keeps the list shown so far (and the callers' path) - the page shows the error instead
+	if ret is None or getattr(ret, 'status', None) != RetHost.OK or not isinstance(getattr(ret, 'value', None), list):
 		raise WebActionError(_('The host did not return a list.'))
 	settings.retObj = ret
 	_view()['view'] = 'list'
@@ -416,7 +417,11 @@ def getDownloadManager(create=False):
 	widget = iptvplayerwidget
 	if widget.gDownloadManager is None and create:
 		printDBG('============ web interface: Initialize Download Manager ============')
-		widget.gDownloadManager = IPTVDMApi(2, int(config.plugins.iptvplayer.IPTVDMMaxDownloadItem.value))
+		# the same finish notification as the GUI (iptvplayerwidget); it shows nothing without a session
+		from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdmui import GetIPTVDMNotification
+		if settings.session is not None and getattr(GetIPTVDMNotification(), 'session', None) is None:
+			GetIPTVDMNotification().dialogInit(settings.session)
+		widget.gDownloadManager = IPTVDMApi(2, int(config.plugins.iptvplayer.IPTVDMMaxDownloadItem.value), GetIPTVDMNotification)
 		if config.plugins.iptvplayer.IPTVDMRunAtStart.value:
 			widget.gDownloadManager.runWorkThread()
 	return widget.gDownloadManager

@@ -91,19 +91,19 @@ def girc(data, url, co=None):
             co = base64.b64encode((url[:-1] + ":443").encode()).replace(b"=", b"")
         key = key.group(1)
         rurl = "{0}?render={1}".format(rurl, key)
-        sts, data = cm.getPage(rurl, hdrs)
+        sts, data = cm.getPage(rurl, {"header": hdrs})
         if not sts:
             return ""
         v = re.findall("releases/([^/]+)", data)
         v = v[0]
         rdata = {"ar": 1, "k": key, "co": co, "hl": "en", "v": v, "size": "invisible", "cb": "123456789"}
-        sts, data = cm.getPage("{0}/anchor?{1}".format(aurl, urllib_urlencode(rdata)), hdrs)
+        sts, data = cm.getPage("{0}/anchor?{1}".format(aurl, urllib_urlencode(rdata)), {"header": hdrs})
         if not sts:
             return ""
         rtoken = re.search('recaptcha-token.+?="([^"]+)', data)
         pdata = {"v": v, "reason": "q", "k": key, "c": rtoken.group(1), "sa": "", "co": co}
         hdrs.update({"Referer": aurl})
-        sts, data = cm.getPage("{0}/reload?k={1}".format(aurl, key), hdrs, pdata)
+        sts, data = cm.getPage("{0}/reload?k={1}".format(aurl, key), {"header": hdrs}, pdata)
         if not sts:
             return ""
         gtoken = re.search('rresp","([^"]+)', data)
@@ -1098,7 +1098,7 @@ class urlparser:
             # the tracker urls (tr=http://...) inside a magnet link are not its host
             hostName = "magnet"
         elif not hostName:
-            match = re.search("https?://(?:www.)?(.+?)/", url)
+            match = re.search(r"https?://(?:www\.)?([^/?#:]+)", url)
             if match:
                 hostName = match.group(1)
                 if nameOnly:
@@ -1675,7 +1675,7 @@ class pageParser(CaptchaHelper):
             post_data.update({"email": login, "pass": password})
             if not self.cm.isValidUrl(action):
                 return False
-            params["header"]["Referr"] = loginUrl
+            params["header"]["Referer"] = loginUrl
             sts, data = self.cm.getPage(action, params, post_data)
             if not sts:
                 return False
@@ -2162,6 +2162,8 @@ class pageParser(CaptchaHelper):
                     return 0
 
             item = CSelOneLink(item, __getLinkQuality, max_bitrate).getSortedLinks()
+            if not item:
+                continue  # preferred format has no links - fall back to the other one
             if config.plugins.iptvplayer.bbc_use_default_quality.value:
                 videoUrls.append(item[0])
                 break
@@ -2851,7 +2853,7 @@ class pageParser(CaptchaHelper):
         HTTP_HEADER = self.cm.getDefaultHeader()
         urltab = []
         postdata = {"op": "download3", "id": urlparse(baseUrl).path.strip("/"), "ajax": "1", "method_free": "1", "dataType": "json"}
-        sts, data = self.cm.getPage("https://hexload.com/download", HTTP_HEADER, postdata)
+        sts, data = self.cm.getPage("https://hexload.com/download", {"header": HTTP_HEADER}, postdata)
         if not sts:
             return []
         data = json_loads(data)
@@ -3160,7 +3162,7 @@ class pageParser(CaptchaHelper):
         printDBG("parserSHAREVIDEO baseUrl[%s]" % url)
         HTTP_HEADER = self.cm.getDefaultHeader()
         host = urlparser.getDomain(url, False)
-        sts, data = self.cm.getPage("%sapi/v1/videos/%s" % (host, url.split("/")[-1]), HTTP_HEADER)
+        sts, data = self.cm.getPage("%sapi/v1/videos/%s" % (host, url.split("/")[-1]), {"header": HTTP_HEADER})
         if not sts:
             return []
         urltab = []
@@ -4866,9 +4868,12 @@ class pageParser(CaptchaHelper):
                     js = json_loads(data)
                     if js.get("playlist"):
                         js = js.get("playlist")[0]
+                        episode = strwithmeta(baseUrl).meta.get("Episode")
                         for p in js.get("playlist", []):
-                            if p.get("comment", "").endswith(baseUrl.meta.get("Episode")):
+                            if episode and p.get("comment", "").endswith(episode):
                                 url = p.get("file")
+            else:
+                return []
             return urlparser.decorateUrl(url, {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": host, "Origin": host[:-1]})
         return []
 

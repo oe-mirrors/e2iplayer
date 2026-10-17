@@ -1,4 +1,3 @@
-from future.utils import raise_
 from setuptools import Command
 from setuptools.command.build import build as _build
 import os
@@ -24,7 +23,7 @@ class build_trans(Command):
 						dest = os.path.join(lc, f[:-2] + 'mo')
 						print("Language compile %s -> %s" % (src, dest))
 						if os.system("msgfmt '%s' -o '%s'" % (src, dest)) != 0:
-							raise_(Exception, "Failed to compile: " + src)
+							raise Exception("Failed to compile: " + src)
 
 
 class build(_build):

@@ -240,7 +240,7 @@ class AflamTOP(GenericFolderWatchedScraperMixin, CBaseHostClass):
         lastPage = max(nums + [page])
         pageTpl = ""
         for href in re.findall(r'<a[^>]+href="([^"]+)"', pager):
-            tpl = re.sub(r"([?&]paged?=|/page/)\d+", r"\1{page}", self._rebase(href), 1)
+            tpl = re.sub(r"([?&]paged?=|/page/)\d+", r"\1{page}", self._rebase(href), count=1)
             if "{page}" in tpl:
                 pageTpl = tpl
         hasNext = bool(seen) and lastPage > page and bool(pageTpl)

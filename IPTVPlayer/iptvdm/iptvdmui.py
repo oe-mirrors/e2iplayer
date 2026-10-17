@@ -63,7 +63,7 @@ except ImportError:  # Python 2.7 has no glob.escape
 gIPTVDM_listChanged = False
 
 # U+200E LEFT-TO-RIGHT MARK (utf-8 bytes on py2, where list texts are utf-8 str)
-LRM = u"‎" if isinstance("", type(u"")) else "\xe2\x80\x8e"
+LRM = u"\u200e" if isinstance("", type(u"")) else "\xe2\x80\x8e"
 
 
 def ltrDisplayText(text):
@@ -254,6 +254,7 @@ class IPTVDMWidget(Screen):
         self.localFiles = []
         self.tmpList = []
         self.tmpSeen = set()
+        self.tmpDMPaths = {}
         self.tmpData = ''
         self.console = eConsoleAppContainer()
         self.console_appClosed_conn = eConnectCallback(self.console.appClosed, self.refreshFinished)
@@ -274,6 +275,7 @@ class IPTVDMWidget(Screen):
         self.localFiles = self.tmpList
         self.tmpList = []
         self.tmpSeen = set()
+        self.tmpDMPaths = {}
         self.tmpData = ''
         self.underRefreshing = False
         self.reloadList(True)
@@ -290,6 +292,18 @@ class IPTVDMWidget(Screen):
         else:
             self.tmpData = ''
 
+        # existing paths of the DM items, resolved once per scan (the
+        # _getExistingFilePath() stat/glob used to run per file x DM item);
+        # the set is rebuilt per chunk since currList may change mid-scan
+        dmPaths = set()
+        for item2 in self.currList:
+            try:
+                dmPaths.add(self.tmpDMPaths[item2.fileName])
+            except KeyError:
+                item2FileName = self._getExistingFilePath(item2.fileName)
+                self.tmpDMPaths[item2.fileName] = item2FileName
+                dmPaths.add(item2FileName)
+
         for item in newFiles:
             params = item.split('//')
             if 4 > len(params):
@@ -301,14 +315,7 @@ class IPTVDMWidget(Screen):
             if not fileName:
                 continue
 
-            skip = False
-            for item2 in self.currList:
-                item2FileName = self._getExistingFilePath(item2.fileName)
-                printDBG("AAA:[%s]\nBBB:[%s]" % (item2FileName, fileName))
-                if fileName == item2FileName:
-                    skip = True
-                    break
-            if skip:
+            if fileName in dmPaths:
                 continue
             # never list the same file twice in one scan
             if fileName in self.tmpSeen:
@@ -351,9 +358,12 @@ class IPTVDMWidget(Screen):
 
     def _removeRelatedFiles(self, fileName):
         removed = False
+        fileName = ensure_str(fileName)
         baseName = os_path.splitext(fileName)[0]
+        # only this item's own file and its sidecars - never another video
+        # with the same base name (deleting "x.mp4" must keep an unrelated "x.mkv")
         candidates = [fileName]
-        for ext in ['.mp4', '.mkv', '.flv', '.avi', '.ts', '.mov', '.wmv', '.aac', '.txt', '.jpg', '.jpeg']:
+        for ext in ['.txt', '.jpg', '.jpeg']:
             candidate = baseName + ext
             if candidate not in candidates:
                 candidates.append(candidate)
@@ -709,6 +719,7 @@ class IPTVDMWidget(Screen):
                 self.underRefreshing = True
                 self.tmpList = []
                 self.tmpSeen = set()
+                self.tmpDMPaths = {}
                 self.tmpData = ''
                 cmd = '%s "%s" rl r' % ("/usr/bin/lsdir", shellQuote(config.plugins.iptvplayer.DownloadsDir.value))
                 printDBG("cmd[%s]" % cmd)
@@ -902,12 +913,12 @@ class IPTVDMWidget(Screen):
                 self.DM.moveToTopDownloadItem(item.downloadIdx)
 
     def _removeArchiveItem(self, item):
-        # "Remove file" in the Archive: the video (also under its renamed name) with its sidecars, and its row
-        playFileName = self._getExistingFilePath(item.fileName)
+        # "Remove file" in the Archive: exactly this video with its sidecars, and its row
+        # (no _getExistingFilePath() here - its Title.<ext> substitute may be another video)
         try:
-            self._removeRelatedFiles(playFileName)
+            self._removeRelatedFiles(item.fileName)
             for idx in range(len(self.localFiles)):
-                if playFileName == self.localFiles[idx].fileName or item.fileName == self.localFiles[idx].fileName:
+                if item.fileName == self.localFiles[idx].fileName:
                     del self.localFiles[idx]
                     break
         except Exception:
@@ -915,11 +926,9 @@ class IPTVDMWidget(Screen):
 
     def _removeFinishedItem(self, item):
         # "Remove file" of a downloaded / aborted / failed item: its files and its entry in the download list
-        playFileName = self._getExistingFilePath(item.fileName)
+        # (item.fileName is the real path - the DM re-reads it after a rename - so no substitute lookup)
         try:
-            self._removeRelatedFiles(playFileName)
-            if playFileName != item.fileName:
-                self._removeRelatedFiles(item.fileName)
+            self._removeRelatedFiles(item.fileName)
         except Exception:
             printExc()
         self.DM.removeDownloadItem(item.downloadIdx)

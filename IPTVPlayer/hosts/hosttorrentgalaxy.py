@@ -22,6 +22,7 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, getMetaByImdbId
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIconDir
@@ -73,7 +74,7 @@ TAG_NAMES = dict((name.lower().replace(".", ""), name) for name in (
 TAG_NAMES["blu-ray"] = "BluRay"
 # no-break / narrow no-break space as native strings: UTF-8 bytes on py2, where \s does not match them
 # (a u"" class there would also hit the single byte 0xA0 inside other UTF-8 characters)
-WIDE_SPACES = (" ", " ")
+WIDE_SPACES = (ensure_str(u"\u00a0"), ensure_str(u"\u202f"))
 
 
 def _categoryTitle(key):

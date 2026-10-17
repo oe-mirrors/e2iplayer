@@ -137,7 +137,7 @@ class IPTVSubSimpleDownloaderWidget(Screen):
         if self.downloader:
             self.downloader.isWorkingCorrectly(self._startDownloader)
         else:
-            self["console"].setText(_("Download can not be started.\n Incorrect address ('%r')."))
+            self["console"].setText(_("Download can not be started.\n Incorrect address ('%r').") % self.currItem.get('url', ''))
 
     def _startDownloader(self, sts, reason):
         if sts:
@@ -145,7 +145,7 @@ class IPTVSubSimpleDownloaderWidget(Screen):
             url, downloaderParams = DMHelper.getDownloaderParamFromUrl(self.currItem.get('url', ''))
             self.downloader.start(url, GetTmpDir(self._TMP_FILE_NAME), downloaderParams)
         else:
-            self["console"].setText(_("Download can not be started.\nDownloader %s not working correctly.\nStatus[%s]"))
+            self["console"].setText(_("Download can not be started.\nDownloader %s not working correctly.\nStatus[%s]") % (self.downloader.getName(), reason))
 
     def downloadFinished(self, status):
         if status != DMHelper.STS.DOWNLOADED:
@@ -168,7 +168,7 @@ class IPTVSubSimpleDownloaderWidget(Screen):
 
             ext = self.currItem.get('format', '')
             if ext == '':
-                ext = self.currItem.get('url', '').split('?')[-1].split('.')[-1]
+                ext = self.currItem.get('url', '').split('?')[0].split('.')[-1]
             filePath = '{0}_{1}_{2}'.format(self.params['movie_title'], self.currItem.get('title', ''), self.currItem.get('lang', ''))
             filePath = RemoveDisallowedFilenameChars(filePath)
             filePath += '.' + ext

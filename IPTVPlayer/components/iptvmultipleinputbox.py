@@ -43,10 +43,18 @@ class IPTVMultipleInputBox(Screen):
     # fields that don't override label_size themselves (every current
     # caller uses the shared default unmodified).
     DEF_INPUT_PARAMS = {'validator': None, 'title': '', 'useable_chars': None, 'label_font': 'Regular;23', 'label_size': (550, 30), 'input_font': 'Regular;20', 'input_size': (550, 25), 'input': dict(text="", maxSize=False, visible_width=False, type=Input.TEXT)}
-    DEF_PARAMS = {'title': _("Input"), 'with_accept_button': False, 'accep_label': _("Save"), 'list': []}
+    # English source texts on purpose - translated in __init__ so a language
+    # change does not need a restart (class body runs once at import)
+    DEF_PARAMS = {'title': "Input", 'with_accept_button': False, 'accep_label': "Save", 'list': []}
 
     def __init__(self, session, params={}):
         iconBase = skinchrome.getIconBase()
+        title = params.get('title', "Input")
+        if title == "Input":
+            title = _("Input")
+        acceptLabel = params.get('accep_label')
+        if acceptLabel == "Save":
+            acceptLabel = _("Save")
 
         # Skin generator - HD-reference pixel math throughout;
         # `resolution="1280,720"` below lets Enigma2 auto-scale the whole
@@ -128,18 +136,18 @@ class IPTVMultipleInputBox(Screen):
             %s
         </screen>
         """ % (
-            maxWidth, screenHeight, params.get('title', _("Input")),
+            maxWidth, screenHeight, title,
             skinchrome.build_header_auto(iconBase=iconBase),
             skinItems,
             skinchrome.build_footer_auto(screenHeight, iconBase=iconBase, keys=('red', 'green'), showNav=False, showOk=True, showExit=False),
         )
 
-        self["key_green"] = StaticText(params.get('accep_label', _("Save")))
+        self["key_green"] = StaticText(acceptLabel if acceptLabel is not None else _("Save"))
         self["key_red"] = StaticText(_("Cancel"))
         if len(self.statusText):
             self["statustext"] = Label(str(self.statusText))
         if self.withAcceptButton:
-            self["accept_button"] = Label(params.get('accep_label', _("Verify")))
+            self["accept_button"] = Label(acceptLabel if acceptLabel is not None else _("Verify"))
 
         self.params = params
 
@@ -147,7 +155,7 @@ class IPTVMultipleInputBox(Screen):
         # explicit name so an external skin can target the multi-field input
         # dialog (also "Add favourites group" / "Add to favourites")
         self.skinName = skinchrome.forceInternalSkinName(["IPTVMultipleInputBox"])
-        self.setTitle(params.get('title', _("Input")))
+        self.setTitle(title)
         self.onShown.append(self.onStart)
         self.onClose.append(self.__onClose)
 

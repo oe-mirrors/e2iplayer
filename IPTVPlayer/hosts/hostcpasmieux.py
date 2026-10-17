@@ -175,7 +175,7 @@ class CpasMieux(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         page = cItem.get("page", 1)
-        baseUrl = cItem.get("base_url") or self.getFullUrl("search/%s/" % urllib_quote(searchPattern.strip()))
+        baseUrl = cItem.get("base_url") or self.getFullUrl("search/%s/" % urllib_quote(searchPattern.strip(), safe=""))
         url = baseUrl if page <= 1 else "%s%d/" % (baseUrl, page)
         printDBG("CpasMieux.listSearchResult [%s]" % url)
         sts, data = self.getPage(url)

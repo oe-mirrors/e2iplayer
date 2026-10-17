@@ -145,11 +145,11 @@ class CdaHD(GenericFolderWatchedScraperMixin, CBaseHostClass):
             num = self.cm.ph.getSearchGroups(href, r"/page/(\d+)")[0]
             if not num:
                 continue
-            tpl = tpl or re.sub(r"/page/\d+", "/page/{page}", href.replace("{", "{{").replace("}", "}}"), 1)
+            tpl = tpl or re.sub(r"/page/\d+", "/page/{page}", href.replace("{", "{{").replace("}", "}}"), count=1)
             lastPage = max(lastPage, int(num))
         nextUrl = self.cm.ph.getSearchGroups(data, r'href="([^"]+/page/\d+/?[^"]*)"[^>]*>\s*Następna')[0]
         if nextUrl and not tpl:
-            tpl = re.sub(r"/page/\d+", "/page/{page}", nextUrl.replace("{", "{{").replace("}", "}}"), 1)
+            tpl = re.sub(r"/page/\d+", "/page/{page}", nextUrl.replace("{", "{{").replace("}", "}}"), count=1)
         hasNext = lastPage > page or bool(nextUrl)
         return tpl, lastPage, hasNext
 

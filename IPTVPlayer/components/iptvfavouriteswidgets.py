@@ -412,9 +412,10 @@ class IPTVFavouritesMainWidget(Screen):
                 self.session.openWithCallback(self.closeAfterSave, MessageBox, self.favourites.getLastError(), type=MessageBox.TYPE_ERROR, timeout=10)
                 return
             self.closeAfterSave()
+            return
         self.close(False)
 
-    def closeAfterSave(self):
+    def closeAfterSave(self, ret=None):
         self.close(True)
 
     def keyOK(self):

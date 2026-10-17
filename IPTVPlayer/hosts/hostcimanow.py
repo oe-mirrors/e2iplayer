@@ -24,6 +24,7 @@ LAST_MODIFIED = "12.10.2026"
 #   - watched flag (stable series:/season:/video: page-url keys), downloaded flag, favourites,
 #     name normalisation ("Title (Year)", "Show - SxxExx"), sidecar, INFO via moviemeta + the site's
 #     story/poster/fields; no blocking retry loops, no colour codes in titles
+import __future__
 import ast
 import math
 import re
@@ -80,13 +81,21 @@ def _numSum(expr):
 
 
 # bit operators (<< >> | ^ &) since the loader of 12.10.2026; Python and JS rank them alike, the operands are small ints
-_JS_NUM_NODES = (ast.Expression, ast.BinOp, ast.UnaryOp, ast.Constant, ast.Add, ast.Sub, ast.Mult, ast.Div, ast.Mod, ast.USub, ast.UAdd, ast.Call, ast.Name, ast.Load,
+# number literal node: ast.Constant (py3.8+), ast.Num on py2 - ast.Num is only looked up where Constant is missing
+_JS_CONST = getattr(ast, "Constant", None) or ast.Num
+_JS_NUM_TYPES = (int, float, type(2 ** 64))  # type(2 ** 64): long on py2, int on py3
+_JS_NUM_NODES = (ast.Expression, ast.BinOp, ast.UnaryOp, _JS_CONST, ast.Add, ast.Sub, ast.Mult, ast.Div, ast.Mod, ast.USub, ast.UAdd, ast.Call, ast.Name, ast.Load,
                  ast.LShift, ast.RShift, ast.BitOr, ast.BitXor, ast.BitAnd)
 
 
 def _jsRound(value):
     # JS Math.round: halves go up (Python's round() rounds them to even)
-    return math.floor(value + 0.5)
+    return _jsFloor(value + 0.5)
+
+
+def _jsFloor(value):
+    # int() for py2, where math.floor() returns a float (and float << int fails)
+    return int(math.floor(value))
 
 
 def _jsNum(expr, floorName="", roundName=""):
@@ -98,9 +107,11 @@ def _jsNum(expr, floorName="", roundName=""):
         expr = re.sub(r"\b%s\s*\(" % re.escape(roundName), "jsround(", expr)
     tree = ast.parse(expr.strip(), mode="eval")
     for node in ast.walk(tree):
-        if not isinstance(node, _JS_NUM_NODES) or (isinstance(node, ast.Name) and node.id not in ("floor", "jsround")) or (isinstance(node, ast.Constant) and not isinstance(node.value, (int, float))):
+        if not isinstance(node, _JS_NUM_NODES) or (isinstance(node, ast.Name) and node.id not in ("floor", "jsround")) or (isinstance(node, _JS_CONST) and not isinstance(node.value if hasattr(node, "value") else node.n, _JS_NUM_TYPES)):
             raise ValueError("not a plain number expression: %r" % expr)
-    return int(eval(compile(tree, "js", "eval"), {"__builtins__": {}}, {"floor": math.floor, "jsround": _jsRound}))
+    # true division like JS also on py2 (no-op flag on py3)
+    code = compile(tree, "js", "eval", __future__.division.compiler_flag, True)
+    return int(eval(code, {"__builtins__": {}}, {"floor": _jsFloor, "jsround": _jsRound}))
 
 
 def _seasonNum(text):

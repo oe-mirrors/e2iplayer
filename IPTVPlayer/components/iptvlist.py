@@ -527,8 +527,9 @@ class IPTVActionChoiceBoxList(IPTVMainNavigatorList):
     # ...}; the favourites host adds its YouTube sort switch
     # ({'action': 'yt_sort_newest'/'yt_sort_reset'}); a host with favourites of its own (hostxxx: favourite
     # sites) uses {'action': 'host_fav_add'/'host_fav_remove'}, its Watchlist folders {'action': 'host_wl_addto'/
-    # 'host_wl_move'/'host_wl_newfolder'/'host_wl_rename'/'host_wl_delfolder'}. Anything else (e.g. hostlocalmedia.py's own {'action':
-    # 'paste_file', ...}) isn't a known pattern, so it falls back to no
+    # 'host_wl_move'/'host_wl_newfolder'/'host_wl_rename'/'host_wl_delfolder'}, hostlocalmedia.py's file
+    # actions {'action': 'rename_file'/'remove_file'/'copy_file'/'cut_file'/'paste_file'/'umount_iso_file'}.
+    # Anything else isn't a known pattern, so it falls back to no
     # icon - same plain look this screen had before this class existed.
     ICON_MAP = {
         'ADD_FAV': 'BookmarkPlusItem.png',
@@ -548,6 +549,12 @@ class IPTVActionChoiceBoxList(IPTVMainNavigatorList):
         'host_wl_newfolder': 'AddHostToGroupItem.png',
         'host_wl_rename': 'WatchlistRenameFolderItem.png',
         'host_wl_delfolder': 'WatchlistDeleteFolderItem.png',
+        'rename_file': 'RenameItem.png',
+        'remove_file': 'DeleteItem.png',
+        'copy_file': 'WatchlistAddFolderItem.png',
+        'cut_file': 'WatchlistMoveFolderItem.png',
+        'paste_file': 'DownloadFolderItem.png',
+        'umount_iso_file': 'RemoveItem.png',
     }
 
     def __init__(self):

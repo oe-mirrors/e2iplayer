@@ -144,7 +144,7 @@ class TukTukCam(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     def _showName(self, text):
         text = _toUnicode(self.cleanHtmlStr(text))
-        text = re.split(u"\\s+(?:الموسم|الحلقة)\\s", u" " + text + u" ", 1)[0].strip()
+        text = re.split(u"\\s+(?:الموسم|الحلقة)\\s", u" " + text + u" ", maxsplit=1)[0].strip()
         text = TITLE_PREFIX_RE.sub(u"", text)
         for _i in range(3):
             text = TITLE_SUFFIX_RE.sub(u"", text).strip()
@@ -239,7 +239,7 @@ class TukTukCam(GenericFolderWatchedScraperMixin, CBaseHostClass):
         for href in re.findall(r'<a[^>]+href="([^"]+)"', pager):
             href = self.getFullUrl(href.replace("&#038;", "&").replace("&amp;", "&"), url)
             if re.search(r"(?:/page/|[?&]page=)\d+", href):
-                tpl = re.sub(r"(/page/|[?&]page=)\d+", r"\g<1>{page}", href, 1)
+                tpl = re.sub(r"(/page/|[?&]page=)\d+", r"\g<1>{page}", href, count=1)
                 break
         nums = [re.sub(r"\D", "", n) for n in re.findall(r'class="page-numbers[^"]*"[^>]*>([^<]+)<', pager)]
         lastPage = max([int(n) for n in nums if n] + [page])

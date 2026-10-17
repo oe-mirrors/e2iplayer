@@ -115,7 +115,7 @@ class HwnaTurkya(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     def _showName(self, title):
         # "مسلسل الخليفة الحلقة 37 السابعة والثلاثون مترجمة" -> "الخليفة"
-        title = re.split(r"\s+الحلقة\s*", title or "", 1)[0]
+        title = re.split(r"\s+الحلقة\s*", title or "", maxsplit=1)[0]
         return SEASON_RE.split(self._clean(title))[0].strip()
 
     @staticmethod
@@ -258,7 +258,10 @@ class HwnaTurkya(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         cItem = dict(cItem)
-        cItem.update({"category": "hw_list", "url": self._canonUrl("search/%s.html" % searchPattern.strip())})
+        # getPage() runs _canonUrl() (unquote + quote) on every request, so an escaped "/", "?", "#" or "%" would
+        # turn back into URL syntax - the search words go without them
+        pattern = " ".join(re.sub(r"[/?#%]+", " ", searchPattern).split())
+        cItem.update({"category": "hw_list", "url": self._canonUrl("search/%s.html" % pattern)})
         self.listItems(cItem)
 
     ###################################################

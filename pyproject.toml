@@ -1,6 +1,6 @@
 [tool.ruff]
 line-length = 120
-exclude = ["IPTVPlayer/hosts/hostxxx.py", "IPTVPlayer/libs/aesgcm/*.py"]
+extend-exclude = ["Backup", "IPTVPlayer/libs/aesgcm/*.py"]
 
 [tool.ruff.lint]
 select = ["E","F","W"]

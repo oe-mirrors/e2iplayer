@@ -220,7 +220,9 @@ def isThreadRunning(name):
 
 
 def stopRunningThread(name):
-	settings.StopThreads = True
+	# the flag is read by the global search only - stopping another thread must not end a running search
+	if name == 'doGlobalSearch':
+		settings.StopThreads = True
 	for myThread in threading.enumerate():
 		if name == myThread.name and myThread.is_alive():
 			try:

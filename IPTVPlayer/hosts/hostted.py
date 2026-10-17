@@ -308,7 +308,7 @@ class TED(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if hlsUrl:
             metaUrl = hlsUrl.replace("/manifest.m3u8", "/metadata.json")
         if not metaUrl:
-            metaUrl = ((video.get("videoPlayerData") or {}).get("resources") or {}).get("hls", {}).get("metadata", "") or ""
+            metaUrl = (((video.get("videoPlayerData") or {}).get("resources") or {}).get("hls") or {}).get("metadata", "") or ""
         if metaUrl and "/metadata.json" in metaUrl:
             sts, data = self.cm.getPage(metaUrl, self.defaultParams)
             if sts:

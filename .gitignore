@@ -1,5 +1,8 @@
 *.pyc
 .DS_Store
+__pycache__/
+.pytest_cache/
+.vscode/
 
 # transient files from IPTVPlayer/locale/updateallpo.sh
 *.pot.bak

@@ -59,7 +59,7 @@ def JS_FromCharCode(*args):
 
 def unicode_escape(s):
     decoder = codecs.getdecoder('unicode_escape')
-    return re.sub(r'\\u[0-9a-fA-F]{4,}', lambda m: decoder(m.group(0))[0], s).encode('utf-8')
+    return six.ensure_str(re.sub(r'\\u[0-9a-fA-F]{4,}', lambda m: decoder(m.group(0))[0], s))
 
 
 def drdX_fx(e):
@@ -133,7 +133,7 @@ def SAWLIVETV_decryptPlayerParams(p, a, c, k, e, d):
         if c < a:
             ret = ''
         else:
-            ret = e(c / a)
+            ret = e(c // a)
         c = c % a
         if c > 35:
             ret += chr(c + 29)
@@ -171,7 +171,7 @@ def TEAMCASTPL_decryptPlayerParams(p, a, c, k, e=None, d=None):
         if c < a:
             ret = ''
         else:
-            ret = e(c / a)
+            ret = e(c // a)
         c = c % a
         if c > 35:
             ret += chr(c + 29)
@@ -891,6 +891,25 @@ def getMPDLinksWithMeta(manifestUrl, checkExt=True, cookieParams={}, sortWithMax
                 audioItem['url'] = strwithmeta(manifestUrl, {'iptv_proto': 'mpd', 'iptv_audio_rep_idx': audioIdx, 'iptv_livestream': audioItem['livestream']})
                 retPlaylists.append(audioItem)
             audioIdx += 1
+        if not len(representation['audio']):
+            # no separate audio AdaptationSet (muxed or video only) - one item per video representation
+            videoIdx = 0
+            for video in representation['video']:
+                videoItem = {}
+                videoItem['livestream'] = liveStreamDetected
+                videoItem['codecs'] = video['codecs']
+                videoItem['bandwidth'] = video['bandwidth']
+                videoItem['width'] = video['width']
+                videoItem['height'] = video['height']
+                videoItem['frame_rate'] = video['frame_rate']
+                videoItem['name'] = "bitrate: %s %dx%d %s %sfps" % (videoItem['bandwidth'],
+                                                                    videoItem['width'],
+                                                                    videoItem['height'],
+                                                                    videoItem['codecs'],
+                                                                    videoItem['frame_rate'])
+                videoItem['url'] = strwithmeta(manifestUrl, {'iptv_proto': 'mpd', 'iptv_video_rep_idx': videoIdx, 'iptv_livestream': videoItem['livestream']})
+                retPlaylists.append(videoItem)
+                videoIdx += 1
     if sortWithMaxBandwidth > -1:
         def __getLinkQuality(itemLink):
             try:

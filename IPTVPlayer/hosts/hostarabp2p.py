@@ -10,6 +10,7 @@ LAST_MODIFIED = "09.10.2026"
 #   - paging (First page / Jump / Next page), INFO via moviemeta (IMDb id of the details page
 #     when there is one) + the site's poster, watched / downloaded flags, favourites, sidecar,
 #     name normalisation ("Title (Year)", "Show - SxxExx", also from Arabic season/episode labels)
+import os
 import re
 
 from Components.config import ConfigSelection, ConfigText, config, getConfigListEntry
@@ -174,11 +175,23 @@ class ArabP2P(GenericFolderWatchedScraperMixin, CBaseHostClass):
             return url
         meta = {"Referer": self.getMainUrl(), "User-Agent": self.HEADER.get("User-Agent", "")}
         if SITE_HOST_RE.match(url):
-            meta["Cookie"] = self.cm.getCookieHeader(self.COOKIE_FILE)
+            meta["Cookie"] = self._cookieHeader()
         proxy = self.getProxy()
         if proxy is not None:
             meta["iptv_http_proxy"] = proxy
         return strwithmeta(url, meta)
+
+    def _cookieHeader(self):
+        # session cookies, read again only when the cookie file changes (this runs for every row)
+        try:
+            stat = os.stat(self.COOKIE_FILE)
+            key = (stat.st_mtime, stat.st_size)
+        except OSError:
+            key = None  # getCookieHeader logs a traceback for a cookie file that does not exist yet
+        cache = getattr(self, "_cookieCache", None)
+        if cache is None or cache[0] != key:
+            cache = self._cookieCache = (key, self.cm.getCookieHeader(self.COOKIE_FILE) if key is not None else "")
+        return cache[1]
 
     @staticmethod
     def _isLoggedIn(data):

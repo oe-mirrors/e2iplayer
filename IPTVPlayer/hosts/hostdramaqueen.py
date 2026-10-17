@@ -44,13 +44,20 @@ class DramaQueenPL(GenericFolderWatchedScraperMixin, CBaseHostClass):
     # what identifies a favourite and opens it again
     FAV_FIELDS = ("name", "category", "type", "url", "page_id", "s_title", "icon", "meta_type", "meta_title", "meta_year", "season", "ep_num")
 
-    # WordPress page ids of the title lists (drama/koreanska, drama/japonska, drama/pozostale, film/...)
-    DRAMA_PARENTS = ((108288, _("Korean dramas")), (19, _("Japanese dramas")), (94, _("Other dramas (Chinese, Thai, ...)")))
-    FILM_PARENTS = ((29, _("Korean films")), (27, _("Japanese films")), (96, _("Other films")))
     PER_PAGE = 30
     # site field label -> INFO field
     INFO_FIELDS = (("Gatunki", "genres"), ("Liczba odcinków", "episodes"), ("Nadawca", "station"), ("Emisja", "broadcast"),
                    ("Czas trwania", "duration"), ("Produkcja", "country"), ("Projekt grupy", "source"), ("Tłumaczenie", "translation"))
+
+    # WordPress page ids of the title lists (drama/koreanska, drama/japonska, drama/pozostale, film/...) -
+    # titles translated when the menu is built, not at import time
+    @staticmethod
+    def dramaParents():
+        return ((108288, _("Korean dramas")), (19, _("Japanese dramas")), (94, _("Other dramas (Chinese, Thai, ...)")))
+
+    @staticmethod
+    def filmParents():
+        return ((29, _("Korean films")), (27, _("Japanese films")), (96, _("Other films")))
 
     def __init__(self):
         CBaseHostClass.__init__(self, {"history": "DramaQueen.pl", "cookie": "dramaqueenpl.cookie"})
@@ -59,8 +66,8 @@ class DramaQueenPL(GenericFolderWatchedScraperMixin, CBaseHostClass):
         self.MAIN_URL = gettytul()
         self.API_URL = self.getFullUrl("wp-json/wp/v2/")
         self.DEFAULT_ICON_URL = "https://www.dramaqueen.pl/wp-content/uploads/2021/03/logopng.png"
-        self.FILM_IDS = set([x[0] for x in self.FILM_PARENTS])
-        self.ALL_PARENTS = ",".join([str(x[0]) for x in self.DRAMA_PARENTS + self.FILM_PARENTS])
+        self.FILM_IDS = set([x[0] for x in self.filmParents()])
+        self.ALL_PARENTS = ",".join([str(x[0]) for x in self.dramaParents() + self.filmParents()])
         self.MENU = [{"category": "list_titles", "title": _("Latest updates"), "f_parent": self.ALL_PARENTS, "f_order": "modified"},
                      {"category": "sub_menu", "title": _("Drama"), "f_kind": "drama"},
                      {"category": "sub_menu", "title": _("Films"), "f_kind": "film"},
@@ -167,7 +174,7 @@ class DramaQueenPL(GenericFolderWatchedScraperMixin, CBaseHostClass):
     ###################################################
     def listSubMenu(self, cItem):
         printDBG("DramaQueenPL.listSubMenu")
-        parents = self.DRAMA_PARENTS if cItem.get("f_kind") == "drama" else self.FILM_PARENTS
+        parents = self.dramaParents() if cItem.get("f_kind") == "drama" else self.filmParents()
         for parentId, title in parents:
             params = dict(cItem)
             params.update({"good_for_fav": True, "category": "list_titles", "title": title, "f_parent": str(parentId), "f_order": "date"})

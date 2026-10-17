@@ -1156,6 +1156,8 @@ class IPTVExtMoviePlayer(Screen):
             currIdx = 0
         ####################################
 
+        # the row of the active track (embedded tracks are listed before the external ones)
+        selRowIdx = 0
         item = IPTVChoiceBoxItem(_('None'), "", {'other': 'none'})
         if 0 == currIdx and -1 == embeddedTrackId:
             item.type = IPTVChoiceBoxItem.TYPE_ON
@@ -1169,6 +1171,7 @@ class IPTVExtMoviePlayer(Screen):
             item = IPTVChoiceBoxItem(name, "", {'track_id': embeddedTracksTab[trackIdx]['id'], 'track_idx': trackIdx})
             if embeddedTracksTab[trackIdx]['id'] == embeddedTrackId:
                 item.type = IPTVChoiceBoxItem.TYPE_ON
+                selRowIdx = len(options)
             else:
                 item.type = IPTVChoiceBoxItem.TYPE_OFF
             options.append(item)
@@ -1180,6 +1183,7 @@ class IPTVExtMoviePlayer(Screen):
             item = IPTVChoiceBoxItem(name, "", {'track_idx': trackIdx})
             if (trackIdx + 1) == currIdx:
                 item.type = IPTVChoiceBoxItem.TYPE_ON
+                selRowIdx = len(options)
             else:
                 item.type = IPTVChoiceBoxItem.TYPE_OFF
             options.append(item)
@@ -1192,7 +1196,7 @@ class IPTVExtMoviePlayer(Screen):
         options.append(IPTVChoiceBoxItem(_('Load'), "", {'other': 'load'}))
         options.append(IPTVChoiceBoxItem(_('Download'), "", {'other': 'download'}))
         printDBG("IPTVExtMoviePlayer.selectSubtitle options = %s" % str(options))
-        self.openChild(boundFunction(self.childClosed, self.selectSubtitleCallback), IPTVChoiceBoxWidget, {'width': 600, 'height': self._getChoiceBoxHeight(len(options)), 'current_idx': currIdx, 'title': _("Select subtitles track"), 'options': options, 'chrome': True, 'footerMargin': 136})
+        self.openChild(boundFunction(self.childClosed, self.selectSubtitleCallback), IPTVChoiceBoxWidget, {'width': 600, 'height': self._getChoiceBoxHeight(len(options)), 'current_idx': selRowIdx, 'title': _("Select subtitles track"), 'options': options, 'chrome': True, 'footerMargin': 136})
 
     def selectSubtitleCallback(self, ret):
         printDBG("selectSubtitleCallback ret[%r]" % [ret])
@@ -1312,7 +1316,7 @@ class IPTVExtMoviePlayer(Screen):
             except Exception:
                 printExc()
 
-        fileMatch = re.compile(r"^.*?(:?\.%s)$" % r'|\.'.join(IPTVSubtitlesHandler.getSupportedFormats()), re.IGNORECASE)
+        fileMatch = re.compile(r"^.*?(?:\.%s)$" % r'|\.'.join(IPTVSubtitlesHandler.getSupportedFormats()), re.IGNORECASE)
         self.openChild(boundFunction(self.childClosed, self.openSubtitlesFromFileCallback), IPTVFileSelectorWidget, currDir, _("Select subtitles file"), fileMatch)
 
     def openSubtitlesFromFileCallback(self, filePath=None):
@@ -1342,7 +1346,7 @@ class IPTVExtMoviePlayer(Screen):
 
         printDBG("enableSubtitlesFromFile filePath[%s] encoding[%s]" % (filePath, encoding))
         if None is not filePath:
-            lang = CParsingHelper.getSearchGroups(filePath, r"_([a-z]{2})_[0-9]+?_[0-9]+?_[0-9]+?(:?\.%s)$" % r'|\.'.join(IPTVSubtitlesHandler.getSupportedFormats()))[0]
+            lang = CParsingHelper.getSearchGroups(filePath, r"_([a-z]{2})_[0-9]+?_[0-9]+?_[0-9]+?(?:\.%s)$" % r'|\.'.join(IPTVSubtitlesHandler.getSupportedFormats()))[0]
             try:
                 currDir, fileName = os_path.split(filePath)
             except Exception:
@@ -1527,7 +1531,7 @@ class IPTVExtMoviePlayer(Screen):
                 subOnTopHack = False
 
             if self.subLinesNum == 1:
-                lineHeight = self._effectiveSubLineHeight(scale) * text.count('\n')
+                lineHeight = self._effectiveSubLineHeight(scale) * (text.count('\n') + 1)
                 text = [text]
             else:
                 text = text.split('\n')
@@ -1559,7 +1563,7 @@ class IPTVExtMoviePlayer(Screen):
                     printDBG("lines [%d] width[%d] worlds[%d]" % (len(text), textSize[0], lnText.count(' ')))
                     if breakToLongLine and len(text) == 1 and textSize[0] >= dW and lnText.count(' ') > 4:
                         lnText = lnText.split(' ')
-                        splitWord = len(lnText) / 2 + 1
+                        splitWord = len(lnText) // 2 + 1
                         lnText = '%s\n%s' % (' '.join(lnText[:splitWord]), ' '.join(lnText[splitWord:]))
                         self.setSubtitlesText(lnText, False, False)
                         return
@@ -1586,7 +1590,7 @@ class IPTVExtMoviePlayer(Screen):
                 totalDuration = self.downloader.getTotalFileDuration()
                 downloadDuration = self.downloader.getDownloadedFileDuration()
                 if 0 < totalDuration and 0 < downloadDuration:
-                    self.playback['BufferFill'] = (downloadDuration * 100000) / totalDuration
+                    self.playback['BufferFill'] = int(downloadDuration * 100000 // totalDuration)
                     self['bufferingBar'].value = self.playback['BufferFill']
                     if self.playback['Length'] is not None and self.playback['Length'] < totalDuration:
                         self.setPlaybackLength(totalDuration)
@@ -1599,7 +1603,7 @@ class IPTVExtMoviePlayer(Screen):
             if 0 < remoteFileSize:
                 localFileSize = self.downloader.getLocalFileSize(True) - self.availableDataSizeCorrection
                 if 0 < localFileSize:
-                    self.playback['BufferFill'] = (localFileSize * 100000) / remoteFileSize
+                    self.playback['BufferFill'] = int(localFileSize * 100000 // remoteFileSize)
                     self['bufferingBar'].value = self.playback['BufferFill']
 
     def showMessage(self, message, type, callback=None):

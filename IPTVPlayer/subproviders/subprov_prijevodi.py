@@ -295,9 +295,8 @@ class PrijevodiOnline(CBaseSubProviderClass):
             elif status == 429:
                 SetIPTVPlayerLastHostError(_('Too many requests. Please try again later.'))
             return
-        cItem = dict(cItem)
-        cItem.update({'category': '', 'path': tmpDIR})
-        self.listSupportedFilesFromPath(cItem, self.getSupportedFormats(all=True))
+        # an archive in the archive becomes an 'unpack_archive' item
+        self.listArchiveFiles(dict(cItem, path=tmpDIR))
 
     def handleService(self, index, refresh=0):
         printDBG('handleService start')
@@ -320,6 +319,8 @@ class PrijevodiOnline(CBaseSubProviderClass):
             self.listTranslations(self.currItem, 'list_subtitles')
         elif category == 'list_subtitles':
             self.getSubtitlesList(self.currItem)
+        elif category == 'unpack_archive':
+            self.unpackInnerArchive(self.currItem)
 
         CBaseSubProviderClass.endHandleService(self, index, refresh)
 

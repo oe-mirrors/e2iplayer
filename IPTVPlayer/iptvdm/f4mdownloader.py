@@ -12,7 +12,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, ip
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import enum, strwithmeta
 from Plugins.Extensions.IPTVPlayer.iptvdm.basedownloader import BaseDownloader
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
-from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import shellQuote, shellSingleQuote
+from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import ensureText, shellQuote, shellSingleQuote, terminateToolsOfFile
 ###################################################
 
 ###################################################
@@ -120,7 +120,10 @@ class F4mDownloader(BaseDownloader):
     def _dataAvail(self, data):
         if None is data:
             return
-        data = self.outData + data.decode(encoding='utf-8', errors='strict')
+        data = self.outData + ensureText(data)
+        if not data:
+            self.outData = ''
+            return
         if '\n' != data[-1]:
             truncated = True
         else:
@@ -129,6 +132,8 @@ class F4mDownloader(BaseDownloader):
         if truncated:
             self.outData = data[-1]
             del data[-1]
+        else:
+            self.outData = ''
         for item in data:
             printDBG(item)
             if item.startswith('{'):
@@ -151,6 +156,8 @@ class F4mDownloader(BaseDownloader):
             if self.console:
                 self.console.kill()  # kill # produce zombies
                 # self.console.sendCtrlC()  # kill # produce zombies
+                # the kill above only reaches the shell around f4mdump (and its wget)
+                terminateToolsOfFile(self.filePath, ('f4mdump', 'wget'))
                 self._cmdFinished(-1, True)
                 return BaseDownloader.CODE_OK
         return BaseDownloader.CODE_NOT_DOWNLOADING

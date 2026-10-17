@@ -342,7 +342,7 @@ class CimaCity(GenericFolderWatchedScraperMixin, CBaseHostClass):
         lastPage = max(nums + [page])
         pageTpl = ""
         for href in re.findall(r'<a[^>]+href="([^"#]+)"', pager):
-            tpl = re.sub(r"([?&]page=)\d+", r"\1{page}", self._rebase(href), 1)
+            tpl = re.sub(r"([?&]page=)\d+", r"\1{page}", self._rebase(href), count=1)
             if "{page}" in tpl:
                 pageTpl = tpl
         hasNext = count > 0 and lastPage > page and bool(pageTpl)

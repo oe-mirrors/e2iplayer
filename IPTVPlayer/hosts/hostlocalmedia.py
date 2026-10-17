@@ -133,7 +133,7 @@ class LocalMedia(CBaseHostClass):
 
         table = self.getMountsTable()
         for item in table:
-            if config.plugins.iptvplayer.local_showhiddensdir.value:
+            if not config.plugins.iptvplayer.local_showhiddensdir.value:
                 path, name = os_path.split(item['node'])
                 if name.startswith('.'):
                     continue
@@ -305,11 +305,11 @@ class LocalMedia(CBaseHostClass):
         if '' == mountPoint:
             # umount if different image already mounted
             if self.isMountPoint(defaultMountPoint):
-                cmd = 'umount "{0}"'.format(defaultMountPoint) + ' 2>&1'
+                cmd = 'umount "{0}"'.format(ensure_str(shellQuote(defaultMountPoint))) + ' 2>&1'
                 ret = iptv_execute_wrapper(cmd)
                 if ret['sts'] and 0 != ret['code']:
                     # normal umount failed, so detach filesystem only
-                    cmd = 'umount -l "{0}"'.format(defaultMountPoint) + ' 2>&1'
+                    cmd = 'umount -l "{0}"'.format(ensure_str(shellQuote(defaultMountPoint))) + ' 2>&1'
                     ret = iptv_execute_wrapper(cmd)
 
             # now mount the iso file
@@ -318,7 +318,7 @@ class LocalMedia(CBaseHostClass):
                 self.showErrorMessage(message)
                 return
             else:
-                cmd = 'mount -r "{0}" "{1}"'.format(path, defaultMountPoint) + ' 2>&1'
+                cmd = 'mount -r "{0}" "{1}"'.format(ensure_str(shellQuote(path)), ensure_str(shellQuote(defaultMountPoint))) + ' 2>&1'
                 ret = iptv_execute_wrapper(cmd)
                 if ret['sts']:
                     if 0 != ret['code']:
@@ -681,25 +681,29 @@ class IPTVHost(CHostBase):
                 ok = True
                 cutPath, cutFileName = os_path.split(self.cFilePath)
                 newPath = os_path.join(privateData['path'], cutFileName)
+                ret = {'sts': True, 'code': 0, 'data': ''}
                 if os_path.isfile(newPath):
                     retlist = [_('File "%s" already exists') % newPath]
                     ok = False
                 else:
-                    ret = {'sts': True, 'code': 0, 'data': ''}
                     if self.cType == 'cut':
                         try:
                             os_rename(self.cFilePath, newPath)
                             self.needRefresh = cutPath
                         except Exception:
                             printExc()
-                            cmd = 'mv -f "%s" "%s"' % (self.cFilePath, newPath)
+                            cmd = 'mv -f "%s" "%s"' % (ensure_str(shellQuote(self.cFilePath)), ensure_str(shellQuote(newPath)))
                             ret = iptv_execute_wrapper(cmd)
                     elif self.cType == 'copy':
-                        cmd = 'cp "%s" "%s"' % (self.cFilePath, newPath)
+                        cmd = 'cp "%s" "%s"' % (ensure_str(shellQuote(self.cFilePath)), ensure_str(shellQuote(newPath)))
                         ret = iptv_execute_wrapper(cmd)
 
                 if ret['sts'] and 0 != ret['code']:
-                    retlist = [(_('Moving file from "%s" to "%s" failed.\n') % (self.cFilePath, newPath)) + (_('Error code: %s\n') % ret['code']) + (_('Error message: %s\n') % ret['data'])]
+                    if self.cType == 'copy':
+                        errMsg = 'Copying file from "%s" to "%s" failed.\n' % (self.cFilePath, newPath)
+                    else:
+                        errMsg = _('Moving file from "%s" to "%s" failed.\n') % (self.cFilePath, newPath)
+                    retlist = [errMsg + (_('Error code: %s\n') % ret['code']) + (_('Error message: %s\n') % ret['data'])]
                     ok = False
 
                 if ok:
@@ -710,11 +714,11 @@ class IPTVHost(CHostBase):
             except Exception:
                 printExc()
         elif privateData['action'] == 'umount_iso_file':
-            cmd = 'umount "{0}"'.format(privateData['iso_mount_path']) + ' 2>&1'
+            cmd = 'umount "{0}"'.format(ensure_str(shellQuote(privateData['iso_mount_path']))) + ' 2>&1'
             ret = iptv_execute_wrapper(cmd)
             if ret['sts'] and 0 != ret['code']:
                 # normal umount failed, so detach filesystem only
-                cmd = 'umount -l "{0}"'.format(privateData['iso_mount_path']) + ' 2>&1'
+                cmd = 'umount -l "{0}"'.format(ensure_str(shellQuote(privateData['iso_mount_path']))) + ' 2>&1'
                 ret = iptv_execute_wrapper(cmd)
 
         return RetHost(retCode, value=retlist)

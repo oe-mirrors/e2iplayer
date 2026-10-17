@@ -250,7 +250,7 @@ class Zaluknij(GenericFolderWatchedScraperMixin, CBaseHostClass):
         tpl = ""
         for href in (nextUrl, lastUrl):
             if href and re.search(r"page=\d+", href):
-                tpl = re.sub(r"page=\d+", "page={page}", absolute(href).replace("{", "{{").replace("}", "}}"), 1)
+                tpl = re.sub(r"page=\d+", "page={page}", absolute(href).replace("{", "{{").replace("}", "}}"), count=1)
                 break
         hasNext = bool(nextUrl) or lastPage > page
         return tpl, lastPage, hasNext
