@@ -1221,6 +1221,17 @@ class E2iPlayerWidget(Screen):
     def callbackGetList(self, addParam, thread, ret):
         asynccall.gMainFunctionsQueueTab[0].addToQueue("reloadList", [thread, {'add_param': addParam, 'ret': ret}])
 
+    def _requestAbortedList(self):
+        # EXIT cut a list call off: a host with getAbortedList() (hostxxx: the global search over many sites) may list
+        # what it found until then; nothing to show (ERROR) keeps "Operation aborted!" and the hidden list as before
+        getAbortedList = getattr(self.host, 'getAbortedList', None)
+        if callable(getAbortedList):
+            self.workThread = asynccall.AsyncMethod(getAbortedList, self._abortedListCallback, True)()
+
+    def _abortedListCallback(self, thread, ret):
+        if ret is not None and ret.status == RetHost.OK and ret.value:
+            self.callbackGetList({}, thread, ret)
+
     # method called from IconMenager when a new icon has been dowlnoaded
     def checkIconCallBack(self, ret):
         asynccall.gMainFunctionsQueueTab[0].addToQueue("displayIcon", [None, ret])
@@ -1952,6 +1963,7 @@ class E2iPlayerWidget(Screen):
                     self.setStatusTex(_("Operation aborted!"))
                     # a page CH- preset for a Jump that was cut off must not reach a later jump
                     iptvpaging.presetJumpPage(None)
+                    self._requestAbortedList()
                 return
         except Exception:
             return
