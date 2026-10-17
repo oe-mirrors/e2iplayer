@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-12 16:40+0000\n"
+"POT-Creation-Date: 2026-10-17 15:42+0000\n"
 "PO-Revision-Date: 2026-03-13 15:06+0300\n"
 "Last-Translator: audi06_19 <audi06_19@hotmail.com>\n"
 "Language-Team: Turkish\n"
@@ -379,6 +379,10 @@ msgstr "4K filmler"
 msgid "5 seconds"
 msgstr "5 saniye"
 
+#, python-format
+msgid "A folder \"%s\" exists already."
+msgstr ""
+
 msgid "A search is already running."
 msgstr "Zaten bir arama çalışıyor."
 
@@ -497,6 +501,12 @@ msgstr "Yeni favori grubu ekle"
 
 msgid "Add to User Links"
 msgstr "Kullanıcı Bağlantılarına ekle"
+
+msgid "Add to Watchlist"
+msgstr ""
+
+msgid "Add to Watchlist folder..."
+msgstr ""
 
 msgid "Added"
 msgstr "Eklendi"
@@ -1438,6 +1448,9 @@ msgstr "JS önbelleğini şu süreden sonra sil (gün, 0 = asla)"
 msgid "Delete JS cache now"
 msgstr "JS önbelleğini şimdi sil"
 
+msgid "Delete Watchlist folder"
+msgstr ""
+
 msgid "Delete all cache files now"
 msgstr "Tüm önbellek dosyalarını şimdi sil"
 
@@ -1484,6 +1497,10 @@ msgid "Delete subtitles cache now"
 msgstr "Altyazı önbelleğini şimdi sil"
 
 msgid "Delete the cache when the torrent is closed"
+msgstr ""
+
+#, python-format
+msgid "Delete the folder \"%s\"? Its videos go back to the Watchlist."
 msgstr ""
 
 msgid "Delete thumbnails cache now"
@@ -2033,6 +2050,9 @@ msgstr "Dosya yeniden adlandırılırken hata oluştu: %s"
 msgid "Error saving favorites."
 msgstr "Favoriler kaydedilirken hata oluştu."
 
+msgid "Error saving the Watchlist."
+msgstr ""
+
 msgid "Error while loading watch data"
 msgstr "İzleme verileri yüklenirken hata oluştu"
 
@@ -2152,10 +2172,6 @@ msgid "Failed to write file \"%s\"."
 msgstr "\"%s\" dosyası yazılamadı."
 
 #, python-format
-msgid "Failed to write the file \"%s\"."
-msgstr "\"%s\" dosyası yazılamadı."
-
-#, python-format
 msgid "Failed: %s"
 msgstr "Başarısız: %s"
 
@@ -2190,6 +2206,9 @@ msgid "Featured"
 msgstr "Öne çıkanlar"
 
 msgid "FebBox token (\"ui\" cookie of www.febbox.com):"
+msgstr ""
+
+msgid "Female"
 msgstr ""
 
 #, python-format
@@ -3239,9 +3258,15 @@ msgstr "MP3Quran canlı radyo"
 msgid "Main"
 msgstr "Ana sayfa"
 
+msgid "Main menu"
+msgstr ""
+
 #, python-format
 msgid "Make directory [%s]"
 msgstr "[%s] klasörünü oluştur"
+
+msgid "Male"
+msgstr ""
 
 msgid "Manager status:"
 msgstr "Yönetici durumu:"
@@ -3397,6 +3422,9 @@ msgstr "Taşı"
 msgid "Move failed."
 msgstr "Taşıma başarısız."
 
+msgid "Move to Watchlist folder..."
+msgstr ""
+
 msgid "Movie"
 msgstr "Film"
 
@@ -3536,6 +3564,9 @@ msgstr "Ağ hatası."
 msgid "New"
 msgstr "Yeni"
 
+msgid "New Watchlist folder"
+msgstr ""
+
 msgid "New dir"
 msgstr "Yeni klasör"
 
@@ -3550,6 +3581,9 @@ msgstr "Yeni simgeler kullanılamayacak."
 
 msgid "New links"
 msgstr "Yeni bağlantılar"
+
+msgid "New search"
+msgstr ""
 
 msgid "New since installed version"
 msgstr "Yüklü sürümden bu yana yeni"
@@ -4436,6 +4470,9 @@ msgstr ""
 msgid "Remove file"
 msgstr "Dosyayı kaldır"
 
+msgid "Remove from Watchlist"
+msgstr ""
+
 msgid "Remove from favorites"
 msgstr "Favorilerden kaldır"
 
@@ -4458,6 +4495,9 @@ msgstr "Küçük resimleri kaldır"
 
 msgid "Rename"
 msgstr "Yeniden adlandır"
+
+msgid "Rename Watchlist folder"
+msgstr ""
 
 msgid "Rename file"
 msgstr "Dosyayı yeniden adlandır"
@@ -4604,6 +4644,10 @@ msgstr "Betik tamamlandı."
 msgid "Search"
 msgstr "Ara"
 
+#, python-format
+msgid "Search \"%s\" was not finished"
+msgstr ""
+
 msgid "Search History is empty."
 msgstr "Arama geçmişi boş."
 
@@ -4749,9 +4793,6 @@ msgstr "Video oynatıcı seç"
 
 msgid "Select option"
 msgstr "Seçenek seç"
-
-msgid "Select pictures"
-msgstr "Resim seçin"
 
 msgid "Select subtitles file"
 msgstr "Altyazı dosyası seç"
@@ -4973,6 +5014,9 @@ msgstr ""
 
 msgid "Show results"
 msgstr "Sonuçları göster"
+
+msgid "Show results so far"
+msgstr ""
 
 msgid "Show search history"
 msgstr "Arama geçmişini göster"
@@ -5480,6 +5524,9 @@ msgstr "QR kodu, resimli wiki sayfasına ve uzantı indirmesine yönlendirir."
 msgid "The Stalker portal of this entry is not configured (any more)."
 msgstr "Bu girişin Stalker portalı yapılandırılmamış (artık)."
 
+msgid "The Watchlist is empty. MENU key on a video: \"Add to Watchlist\"."
+msgstr ""
+
 msgid "The Xtream account of this entry is not configured (any more)."
 msgstr "Bu girişin Xtream hesabı yapılandırılmamış (artık)."
 
@@ -5645,6 +5692,10 @@ msgid ""
 "Leave this OFF if you do not want that. The other resolvers (VidEasy, VidLink, Peachify, vidrock, VidNest, ...) decrypt their links on the receiver and are not affected."
 msgstr ""
 
+#, python-format
+msgid "The results of %d of %d sites are from the last search for \"%s\" - this asks all sites again"
+msgstr ""
+
 msgid "The same item already exists in this group."
 msgstr "Aynı öğe bu grupta zaten mevcut."
 
@@ -5792,6 +5843,9 @@ msgstr "Bu bölüm bu sunucuda bu sürümde (SUB/DUB) mevcut değil. Başka biri
 
 msgid "This feed is empty, or the YouTube sign-in has expired - sign out and in again."
 msgstr "Bu akış boş veya YouTube oturumunun süresi doldu - oturumu kapatıp tekrar açın."
+
+msgid "This folder is empty. MENU key on a video of the Watchlist: \"Move to Watchlist folder...\"."
+msgstr ""
 
 msgid "This folder is protected by a PIN, open it on the receiver."
 msgstr "Bu klasör PIN ile korumalı, alıcıda açın."
@@ -6052,6 +6106,9 @@ msgstr "Parça listesi"
 
 msgid "Trailer"
 msgstr "Fragman"
+
+msgid "Trans"
+msgstr ""
 
 msgid "Translation:"
 msgstr "Çeviri:"
@@ -6422,6 +6479,15 @@ msgstr "Daha sonra izle"
 msgid "Watch online"
 msgstr "Çevrimiçi izle"
 
+msgid "Watchlist"
+msgstr ""
+
+msgid "Watchlist (no folder)"
+msgstr ""
+
+msgid "Watchlist folder"
+msgstr ""
+
 msgid "WebStreamr / AIOStreams manifest URL (your own):"
 msgstr ""
 
@@ -6597,6 +6663,9 @@ msgstr "'Daha sonra izle' oynatma listeniz."
 #, python-format
 msgid "Your MyE2i extension is outdated or unknown (v%s or newer needed). Please update:"
 msgstr "MyE2i uzantınız eski veya bilinmiyor (v%s veya daha yenisi gerekli). Lütfen güncelleyin:"
+
+msgid "Your own list of videos, in folders of your own (MENU key on a video: \"Add to Watchlist\")"
+msgstr ""
 
 msgid "Your search entry"
 msgstr "Arama girişiniz"

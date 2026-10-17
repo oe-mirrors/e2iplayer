@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-12 16:40+0000\n"
+"POT-Creation-Date: 2026-10-17 15:42+0000\n"
 "PO-Revision-Date: 2026-02-02 21:43+0100\n"
 "Last-Translator: Snoete\n"
 "Language-Team: Dutch\n"
@@ -379,6 +379,10 @@ msgstr "4K-films"
 msgid "5 seconds"
 msgstr "5 seconden"
 
+#, python-format
+msgid "A folder \"%s\" exists already."
+msgstr ""
+
 msgid "A search is already running."
 msgstr "Er wordt al gezocht."
 
@@ -497,6 +501,12 @@ msgstr "Nieuwe groep favorieten toevoegen"
 
 msgid "Add to User Links"
 msgstr "Toevoegen aan gebruikerslinks"
+
+msgid "Add to Watchlist"
+msgstr ""
+
+msgid "Add to Watchlist folder..."
+msgstr ""
 
 msgid "Added"
 msgstr "Toegevoegd"
@@ -1438,6 +1448,9 @@ msgstr "JS-cache verwijderen na (dagen, 0 = nooit)"
 msgid "Delete JS cache now"
 msgstr "JS-cache nu verwijderen"
 
+msgid "Delete Watchlist folder"
+msgstr ""
+
 msgid "Delete all cache files now"
 msgstr "Alle cachebestanden nu verwijderen"
 
@@ -1484,6 +1497,10 @@ msgid "Delete subtitles cache now"
 msgstr "Ondertitelcache nu verwijderen"
 
 msgid "Delete the cache when the torrent is closed"
+msgstr ""
+
+#, python-format
+msgid "Delete the folder \"%s\"? Its videos go back to the Watchlist."
 msgstr ""
 
 msgid "Delete thumbnails cache now"
@@ -2033,6 +2050,9 @@ msgstr "Fout bij het hernoemen van bestand: %s"
 msgid "Error saving favorites."
 msgstr "Fout bij het opslaan van de favorieten."
 
+msgid "Error saving the Watchlist."
+msgstr ""
+
 msgid "Error while loading watch data"
 msgstr "Fout bij het laden van de kijkgegevens"
 
@@ -2152,10 +2172,6 @@ msgid "Failed to write file \"%s\"."
 msgstr "Schrijven van bestand \"%s\" mislukt."
 
 #, python-format
-msgid "Failed to write the file \"%s\"."
-msgstr "Schrijven van het bestand \"%s\" mislukt."
-
-#, python-format
 msgid "Failed: %s"
 msgstr "Mislukt: %s"
 
@@ -2190,6 +2206,9 @@ msgid "Featured"
 msgstr "Uitgelicht"
 
 msgid "FebBox token (\"ui\" cookie of www.febbox.com):"
+msgstr ""
+
+msgid "Female"
 msgstr ""
 
 #, python-format
@@ -3239,9 +3258,15 @@ msgstr "MP3Quran liveradio"
 msgid "Main"
 msgstr "Hoofdpagina"
 
+msgid "Main menu"
+msgstr ""
+
 #, python-format
 msgid "Make directory [%s]"
 msgstr "Map [%s] aanmaken"
+
+msgid "Male"
+msgstr ""
 
 msgid "Manager status:"
 msgstr "Managerstatus:"
@@ -3397,6 +3422,9 @@ msgstr "Verplaatsen"
 msgid "Move failed."
 msgstr "Verplaatsen mislukt."
 
+msgid "Move to Watchlist folder..."
+msgstr ""
+
 msgid "Movie"
 msgstr "Film"
 
@@ -3536,6 +3564,9 @@ msgstr "Netwerkfout."
 msgid "New"
 msgstr "Nieuw"
 
+msgid "New Watchlist folder"
+msgstr ""
+
 msgid "New dir"
 msgstr "Nieuwe map"
 
@@ -3550,6 +3581,9 @@ msgstr "Nieuwe pictogrammen zijn niet beschikbaar."
 
 msgid "New links"
 msgstr "Nieuwe links"
+
+msgid "New search"
+msgstr ""
 
 msgid "New since installed version"
 msgstr "Nieuw sinds geïnstalleerde versie"
@@ -4436,6 +4470,9 @@ msgstr ""
 msgid "Remove file"
 msgstr "Bestand verwijderen"
 
+msgid "Remove from Watchlist"
+msgstr ""
+
 msgid "Remove from favorites"
 msgstr "Uit favorieten verwijderen"
 
@@ -4458,6 +4495,9 @@ msgstr "Miniaturen verwijderen"
 
 msgid "Rename"
 msgstr "Hernoemen"
+
+msgid "Rename Watchlist folder"
+msgstr ""
 
 msgid "Rename file"
 msgstr "Bestand hernoemen"
@@ -4604,6 +4644,10 @@ msgstr "Script gereed."
 msgid "Search"
 msgstr "Zoeken"
 
+#, python-format
+msgid "Search \"%s\" was not finished"
+msgstr ""
+
 msgid "Search History is empty."
 msgstr "Zoekgeschiedenis is leeg."
 
@@ -4749,9 +4793,6 @@ msgstr "Kies een mediaspeler"
 
 msgid "Select option"
 msgstr "Kies een optie"
-
-msgid "Select pictures"
-msgstr "Kies afbeeldingen"
 
 msgid "Select subtitles file"
 msgstr "Kies een ondertitelbestand"
@@ -4973,6 +5014,9 @@ msgstr ""
 
 msgid "Show results"
 msgstr "Resultaten tonen"
+
+msgid "Show results so far"
+msgstr ""
 
 msgid "Show search history"
 msgstr "Zoekgeschiedenis tonen"
@@ -5480,6 +5524,9 @@ msgstr "De QR-code leidt naar de wikipagina met afbeeldingen en de download van 
 msgid "The Stalker portal of this entry is not configured (any more)."
 msgstr "Het Stalker-portaal van dit item is niet (meer) geconfigureerd."
 
+msgid "The Watchlist is empty. MENU key on a video: \"Add to Watchlist\"."
+msgstr ""
+
 msgid "The Xtream account of this entry is not configured (any more)."
 msgstr "Het Xtream-account van dit item is niet (meer) geconfigureerd."
 
@@ -5645,6 +5692,10 @@ msgid ""
 "Leave this OFF if you do not want that. The other resolvers (VidEasy, VidLink, Peachify, vidrock, VidNest, ...) decrypt their links on the receiver and are not affected."
 msgstr ""
 
+#, python-format
+msgid "The results of %d of %d sites are from the last search for \"%s\" - this asks all sites again"
+msgstr ""
+
 msgid "The same item already exists in this group."
 msgstr "Hetzelfde item bestaat al in deze groep."
 
@@ -5792,6 +5843,9 @@ msgstr "Deze aflevering is op deze server niet beschikbaar in deze versie (SUB/D
 
 msgid "This feed is empty, or the YouTube sign-in has expired - sign out and in again."
 msgstr "Deze feed is leeg, of de YouTube-aanmelding is verlopen - meld u af en opnieuw aan."
+
+msgid "This folder is empty. MENU key on a video of the Watchlist: \"Move to Watchlist folder...\"."
+msgstr ""
 
 msgid "This folder is protected by a PIN, open it on the receiver."
 msgstr "Deze map is beveiligd met een pincode, open deze op de receiver."
@@ -6052,6 +6106,9 @@ msgstr "Tracklijst"
 
 msgid "Trailer"
 msgstr "Trailer"
+
+msgid "Trans"
+msgstr ""
 
 msgid "Translation:"
 msgstr "Vertaling:"
@@ -6422,6 +6479,15 @@ msgstr "Later bekijken"
 msgid "Watch online"
 msgstr "Online bekijken"
 
+msgid "Watchlist"
+msgstr ""
+
+msgid "Watchlist (no folder)"
+msgstr ""
+
+msgid "Watchlist folder"
+msgstr ""
+
 msgid "WebStreamr / AIOStreams manifest URL (your own):"
 msgstr ""
 
@@ -6597,6 +6663,9 @@ msgstr "Uw afspeellijst 'Later bekijken'."
 #, python-format
 msgid "Your MyE2i extension is outdated or unknown (v%s or newer needed). Please update:"
 msgstr "Uw MyE2i-extensie is verouderd of onbekend (v%s of nieuwer vereist). Werk deze bij:"
+
+msgid "Your own list of videos, in folders of your own (MENU key on a video: \"Add to Watchlist\")"
+msgstr ""
 
 msgid "Your search entry"
 msgstr "Uw zoekterm"

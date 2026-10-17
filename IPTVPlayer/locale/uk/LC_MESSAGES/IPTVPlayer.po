@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-12 16:40+0000\n"
+"POT-Creation-Date: 2026-10-17 15:42+0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: vovan43 <yuozyo@ukr.net>\n"
 "Language-Team: IPTVPlayer\n"
@@ -381,6 +381,10 @@ msgstr "Фільми 4K"
 msgid "5 seconds"
 msgstr "5 секунд"
 
+#, python-format
+msgid "A folder \"%s\" exists already."
+msgstr ""
+
 msgid "A search is already running."
 msgstr "Пошук уже виконується."
 
@@ -499,6 +503,12 @@ msgstr "Додати нову групу обраного"
 
 msgid "Add to User Links"
 msgstr "Додати до посилань користувача"
+
+msgid "Add to Watchlist"
+msgstr ""
+
+msgid "Add to Watchlist folder..."
+msgstr ""
 
 msgid "Added"
 msgstr "Додано"
@@ -1440,6 +1450,9 @@ msgstr "Видаляти кеш JS через (днів, 0 = ніколи)"
 msgid "Delete JS cache now"
 msgstr "Видалити кеш JS зараз"
 
+msgid "Delete Watchlist folder"
+msgstr ""
+
 msgid "Delete all cache files now"
 msgstr "Видалити всі файли кешу зараз"
 
@@ -1486,6 +1499,10 @@ msgid "Delete subtitles cache now"
 msgstr "Видалити кеш субтитрів зараз"
 
 msgid "Delete the cache when the torrent is closed"
+msgstr ""
+
+#, python-format
+msgid "Delete the folder \"%s\"? Its videos go back to the Watchlist."
 msgstr ""
 
 msgid "Delete thumbnails cache now"
@@ -2035,6 +2052,9 @@ msgstr "Помилка перейменування файлу: %s"
 msgid "Error saving favorites."
 msgstr "Помилка збереження обраного."
 
+msgid "Error saving the Watchlist."
+msgstr ""
+
 msgid "Error while loading watch data"
 msgstr "Помилка завантаження даних перегляду"
 
@@ -2154,10 +2174,6 @@ msgid "Failed to write file \"%s\"."
 msgstr "Не вдалося записати файл \"%s\"."
 
 #, python-format
-msgid "Failed to write the file \"%s\"."
-msgstr "Не вдалося записати файл \"%s\"."
-
-#, python-format
 msgid "Failed: %s"
 msgstr "Помилка: %s"
 
@@ -2192,6 +2208,9 @@ msgid "Featured"
 msgstr "Рекомендоване"
 
 msgid "FebBox token (\"ui\" cookie of www.febbox.com):"
+msgstr ""
+
+msgid "Female"
 msgstr ""
 
 #, python-format
@@ -3241,9 +3260,15 @@ msgstr "MP3Quran радіо наживо"
 msgid "Main"
 msgstr "Головна"
 
+msgid "Main menu"
+msgstr ""
+
 #, python-format
 msgid "Make directory [%s]"
 msgstr "Створити каталог [%s]"
+
+msgid "Male"
+msgstr ""
 
 msgid "Manager status:"
 msgstr "Статус менеджера:"
@@ -3399,6 +3424,9 @@ msgstr "Перемістити"
 msgid "Move failed."
 msgstr "Не вдалося перемістити."
 
+msgid "Move to Watchlist folder..."
+msgstr ""
+
 msgid "Movie"
 msgstr "Фільм"
 
@@ -3538,6 +3566,9 @@ msgstr "Помилка мережі."
 msgid "New"
 msgstr "Нове"
 
+msgid "New Watchlist folder"
+msgstr ""
+
 msgid "New dir"
 msgstr "Новий каталог"
 
@@ -3552,6 +3583,9 @@ msgstr "Нові іконки будуть недоступні."
 
 msgid "New links"
 msgstr "Нові посилання"
+
+msgid "New search"
+msgstr ""
 
 msgid "New since installed version"
 msgstr "Нове з моменту встановленої версії"
@@ -4438,6 +4472,9 @@ msgstr ""
 msgid "Remove file"
 msgstr "Видалити файл"
 
+msgid "Remove from Watchlist"
+msgstr ""
+
 msgid "Remove from favorites"
 msgstr "Видалити з обраного"
 
@@ -4460,6 +4497,9 @@ msgstr "Видалити мініатюри"
 
 msgid "Rename"
 msgstr "Перейменувати"
+
+msgid "Rename Watchlist folder"
+msgstr ""
 
 msgid "Rename file"
 msgstr "Перейменувати файл"
@@ -4606,6 +4646,10 @@ msgstr "Скрипт завершено."
 msgid "Search"
 msgstr "Пошук"
 
+#, python-format
+msgid "Search \"%s\" was not finished"
+msgstr ""
+
 msgid "Search History is empty."
 msgstr "Історія пошуку порожня."
 
@@ -4751,9 +4795,6 @@ msgstr "Виберіть відеоплеєр"
 
 msgid "Select option"
 msgstr "Виберіть параметр"
-
-msgid "Select pictures"
-msgstr "Вибрати зображення"
 
 msgid "Select subtitles file"
 msgstr "Виберіть файл субтитрів"
@@ -4975,6 +5016,9 @@ msgstr ""
 
 msgid "Show results"
 msgstr "Показати результати"
+
+msgid "Show results so far"
+msgstr ""
 
 msgid "Show search history"
 msgstr "Показати історію пошуку"
@@ -5482,6 +5526,9 @@ msgstr "QR-код веде на сторінку вікі із зображен�
 msgid "The Stalker portal of this entry is not configured (any more)."
 msgstr "Портал Stalker цього запису не налаштовано (більше)."
 
+msgid "The Watchlist is empty. MENU key on a video: \"Add to Watchlist\"."
+msgstr ""
+
 msgid "The Xtream account of this entry is not configured (any more)."
 msgstr "Обліковий запис Xtream цього запису не налаштовано (більше)."
 
@@ -5647,6 +5694,10 @@ msgid ""
 "Leave this OFF if you do not want that. The other resolvers (VidEasy, VidLink, Peachify, vidrock, VidNest, ...) decrypt their links on the receiver and are not affected."
 msgstr ""
 
+#, python-format
+msgid "The results of %d of %d sites are from the last search for \"%s\" - this asks all sites again"
+msgstr ""
+
 msgid "The same item already exists in this group."
 msgstr "Такий самий елемент уже існує в цій групі."
 
@@ -5794,6 +5845,9 @@ msgstr "Цей епізод недоступний в цій версії (SUB/D
 
 msgid "This feed is empty, or the YouTube sign-in has expired - sign out and in again."
 msgstr "Ця стрічка порожня, або термін входу в YouTube минув - вийдіть і увійдіть знову."
+
+msgid "This folder is empty. MENU key on a video of the Watchlist: \"Move to Watchlist folder...\"."
+msgstr ""
 
 msgid "This folder is protected by a PIN, open it on the receiver."
 msgstr "Цю папку захищено PIN-кодом, відкрийте її на ресивері."
@@ -6054,6 +6108,9 @@ msgstr "Трекліст"
 
 msgid "Trailer"
 msgstr "Трейлер"
+
+msgid "Trans"
+msgstr ""
 
 msgid "Translation:"
 msgstr "Переклад:"
@@ -6424,6 +6481,15 @@ msgstr "Переглянути пізніше"
 msgid "Watch online"
 msgstr "Дивитися онлайн"
 
+msgid "Watchlist"
+msgstr ""
+
+msgid "Watchlist (no folder)"
+msgstr ""
+
+msgid "Watchlist folder"
+msgstr ""
+
 msgid "WebStreamr / AIOStreams manifest URL (your own):"
 msgstr ""
 
@@ -6599,6 +6665,9 @@ msgstr "Ваш плейлист 'Переглянути пізніше'."
 #, python-format
 msgid "Your MyE2i extension is outdated or unknown (v%s or newer needed). Please update:"
 msgstr "Ваше розширення MyE2i застаріле або невідоме (потрібна v%s або новіша). Оновіть його:"
+
+msgid "Your own list of videos, in folders of your own (MENU key on a video: \"Add to Watchlist\")"
+msgstr ""
 
 msgid "Your search entry"
 msgstr "Ваш пошуковий запит"
