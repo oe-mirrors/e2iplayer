@@ -183,8 +183,8 @@ def checkhttps(url):
 	return url
 
 
-# sites of the txxx network (hostxxx.py TXXX_NETWORK), same videofile API
-TXXX_NETWORK_SITES = ('https://upornia.com', 'https://hdzog.com', 'https://vxxx.com')
+# sites of the txxx network (hostxxx.py TXXX_NETWORK), same videofile API; abxxx ... boobse: only reached over 4TUBE partner links
+TXXX_NETWORK_SITES = ('https://upornia.com', 'https://hdzog.com', 'https://vxxx.com', 'https://abxxx.com', 'https://abebony.com', 'https://ablesbian.com', 'https://bdsmx-porn.com', 'https://bdsmx.tube', 'https://boobse.com')
 
 # plain KVS sites (hostxxx.py KVS_NETWORK), resolved by the shared KVS branch
 KVS_SITES = ('https://freshporno.org', 'https://www.freepornvideos.xxx', 'https://www.fpo.xxx', 'https://heroero.com', 'https://porndd.com', 'https://amateurporn.me', 'https://allclassic.porn', 'https://celebsroulette.com', 'https://watcherotic.com', 'https://www.vipporns.com')
@@ -293,6 +293,31 @@ class XXXParser:
 			size = self.cm.ph.getSearchGroups(link, r'(?<![0-9])([0-9]{3,4})x([0-9]{3,4})(?![0-9])', 2, True)
 			height = min(int(size[0] or 0), int(size[1] or 0))
 		return height
+
+	def _networkPlayerConfig(self, url):
+		# nuvid / proporn / tubeon / yeptube / vivatube / iceporn / pornlib / drtuber (one network): the player's JSON at /player_config_json/?vid=<id> holds the
+		# files lq / hq / 4k - it answers [] without the JSON Accept header. The page's own .mp4 links
+		# (/media/videos/tmb/<id>/<id>.mp4) are only the preview clips
+		# /video/<id>/..., pornlib: /video/<title>-<id>
+		videoID = self.cm.ph.getSearchGroups(url, r'/video/([0-9]+)', 1, True)[0] or self.cm.ph.getSearchGroups(url.split('?')[0], r'/video/[^/]*?-([0-9]+)/?$', 1, True)[0]
+		if not videoID:
+			return ''
+		site = 'https://%s' % urlsplit(url).netloc
+		header = dict(self.HTTP_HEADER, Referer=url, Accept='application/json, text/javascript, */*; q=0.01')
+		header['X-Requested-With'] = 'XMLHttpRequest'
+		sts, data = self.get_Page('%s/player_config_json/?vid=%s&aid=0&domain_id=0&embed=0&ref=null&check_speed=0' % (site, videoID), {'header': header})
+		try:
+			files = (json.loads(data).get('files') or {}) if sts and ('%s' % data).startswith('{') else {}
+		except Exception:
+			printExc()
+			files = {}
+		choices = [(label, (files.get(key) or '').replace(r'\/', '/')) for key, label in (('4k', '2160p'), ('hq', 'HQ'), ('lq', 'LQ'))]
+		choices = [c for c in choices if c[1] and (c[0] != '2160p' or self._uhdAllowed())]
+		printDBG('player_config_json %s: %s' % (videoID, [c[0] for c in choices]))
+		if not choices:
+			return ''
+		offerQualities(choices)
+		return urlparser.decorateUrl(choices[0][1], {'Referer': url, 'User-Agent': self.HTTP_HEADER.get('User-Agent', '')})
 
 	def _bestLink(self, links):
 		# links in rising quality (KVS video_url, video_alt_url, video_alt_url2..., <source> lists): the last one; with UHD
@@ -1043,7 +1068,7 @@ class XXXParser:
 			return 'https://www.faphub.xxx'
 		if url.startswith('https://www.proporn.com'):
 			return 'https://www.proporn.com'
-		if url.startswith('https://www.viptube.com'):
+		if url.startswith(('https://www.viptube.com', 'https://www.tubeon.com', 'https://www.yeptube.com', 'https://www.iceporn.com', 'https://www.pornlib.com')):
 			return 'https://www.nuvid.com'
 		if url.startswith('https://www.jizz.us'):
 			return 'https://www.x3xtube.com'
@@ -2466,7 +2491,7 @@ class XXXParser:
 										# a token stream without a file name (thepornapi: <source src=".../stream?token=..." type="video/mp4">);
 										# the page's <video src=".../native/N.mp4"> loops are ads
 										mediaUrl = self.cm.ph.getSearchGroups(page, r'''<source\b[^>]*?src=["']([^"']+)["'][^>]*type=["']video/mp4["']''', 1, True)[0].replace('&amp;', '&')
-										if re.search(r'(?i)/ads/|/native/|preview|vthumb|[-_]trailer', mediaUrl):
+										if re.search(r'(?i)/ads/|/native/|/tmb/|preview|vthumb|[-_]trailer', mediaUrl):
 											mediaUrl = ''
 									if mediaUrl:
 										printDBG('4TUBE partner player source: ' + mediaUrl)
@@ -2480,9 +2505,10 @@ class XXXParser:
 										media = re.findall(pat, page, re.I)
 										for mediaUrl in reversed(media):
 											# the token URL of the sponsor's CDN sits in the HTML with "&amp;" and only answers with the sponsor
-											# site as Referer (403 otherwise)
+											# site as Referer (403 otherwise); /media/videos/tmb/<id>/<id>.mp4 (tubeon, proporn ...) is the
+											# hover preview of a video, never the video itself
 											mediaUrl = mediaUrl.rstrip('\\').replace('&amp;', '&')
-											if re.search(r'\.(?:mp4|m3u8)(?:\?|$)', mediaUrl, re.I) and not re.search(r'(?i)preview|vthumb|[-_]trailer|/ads/|/native/', mediaUrl):
+											if re.search(r'\.(?:mp4|m3u8)(?:\?|$)', mediaUrl, re.I) and not re.search(r'(?i)preview|vthumb|[-_]trailer|/ads/|/native/|/tmb/', mediaUrl):
 												printDBG('4TUBE direct media fallback: ' + mediaUrl)
 												return urlparser.decorateUrl(mediaUrl, {'Referer': pageUrl, 'User-Agent': USER_AGENT})
 							except Exception:
@@ -5422,6 +5448,9 @@ class XXXParser:
 			COOKIEFILE = join(GetCookieDir(), 'nuvid.cookie')
 			self.HTTP_HEADER['Referer'] = url
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
+			videoUrl = self._networkPlayerConfig(url)
+			if videoUrl:
+				return videoUrl
 			videoID = self.cm.ph.getSearchGroups(url, 'video[/]([0-9]+?)[/]')[0]
 			if videoID:
 				# the mobile play page of the video's own site (nuvid.com, viptube.com, ... one network) links the MP4
@@ -6889,7 +6918,8 @@ class XXXParser:
 			return strwithmeta(videoUrl, {'Referer': url})
 
 		if parser in TXXX_NETWORK_SITES:
-			vid = self.cm.ph.getSearchGroups(url, r'/video/([0-9]+)/', 1, True)[0]
+			# /video/<id>/, vxxx /video-<id>/, boobse /videos/<id>/
+			vid = self.cm.ph.getSearchGroups(url, r'/videos?[/-]([0-9]+)/', 1, True)[0]
 			if not vid:
 				return ''
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
@@ -8191,6 +8221,9 @@ class XXXParser:
 			return ''
 
 		if parser == 'https://www.proporn.com':
+			videoUrl = self._networkPlayerConfig(url)
+			if videoUrl:
+				return videoUrl
 			videoPage = re.findall('source src="(.*?)"', data, re.S)
 			if videoPage:
 				printDBG('Host videoPage:' + videoPage[0])
@@ -8301,6 +8334,9 @@ class XXXParser:
 			return checkhttps(parse.group(1).replace(r'\/', '/')) if parse else ''
 
 		if parser == 'https://vivatube.com':
+			videoUrl = self._networkPlayerConfig(url)
+			if videoUrl:
+				return videoUrl
 			videoUrl = re.search('video_id = "(.*?)"', data, re.S)
 			if videoUrl:
 				xml = 'https://vivatube.com/player_config_json/?vid=%s&aid=0&domain_id=0&embed=0&ref=&check_speed=0' % videoUrl.group(1)

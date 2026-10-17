@@ -3001,6 +3001,7 @@ class IPTVHost(IHost):
 			return RetHost(RetHost.OK, value=self.currList)
 		self.prevIndex.append(Index)
 		self.prevList.append(self.currList)
+		self.host.searchPartial = None  # a search that ended with an error before shows nothing on a later EXIT
 		self.currList = self.markWatchedRows(self.host.getListForItem(Index, refresh, selItem), rebuild=False)
 		printDBG("getListForItem end")
 		return RetHost(RetHost.OK, value=self.currList)
@@ -3142,9 +3143,25 @@ class IPTVHost(IHost):
 		printDBG("getSearchResults pattern: " + pattern)
 		self.prevIndex.append(0)
 		self.prevList.append(self.currList)
+		self.host.searchPartial = None
 		self.currList = self.markWatchedRows(self.host.getSearchResults(pattern, searchType))
 		printDBG("getSearchResults end")
 		return RetHost(RetHost.OK, value=self.currList)
+
+	def getAbortedList(self):
+		# EXIT cut the list call off (components/iptvplayerwidget.py): a global / favorites search lists the results of
+		# the sites asked until then - the level getSearchResults() / getListForItem() opened stays, EXIT goes back as
+		# from the finished search. ERROR: nothing to show (no search, nothing found yet), the widget keeps its message
+		partial, self.host.searchPartial = self.host.searchPartial, None
+		if not partial or not partial[0]:
+			return RetHost(RetHost.ERROR, value=[])
+		rows, searchProc = partial
+		self.host.MAIN_URL = ''
+		self.host.SEARCH_proc = searchProc
+		self.currList = fixListImages(list(rows))
+		self.host.currList = self.currList
+		printDBG("getAbortedList: %d rows of the search cut off" % len(self.currList))
+		return RetHost(RetHost.OK, value=self.markWatchedRows(self.currList, rebuild=False))
 
 ###################################################
 # Additional functions on class IPTVHost
@@ -3473,7 +3490,7 @@ class _SelfTestSession(object):
 
 
 class Host(CBaseHostClass, XXXParser):
-	XXXversion = "2026.10.17.1"
+	XXXversion = "2026.10.17.2"
 	currList = []
 	MAIN_URL = ''
 	SEARCH_proc = ''
@@ -3501,6 +3518,9 @@ class Host(CBaseHostClass, XXXParser):
 		# terms (searchSites())
 		self.searchCache = {}
 		self.searchCacheTerms = []
+		# the rows a global / favorites search found so far and the search menu it ran from, while it runs: EXIT cuts
+		# the search off and the widget shows these (IPTVHost.getAbortedList()); None when no search runs
+		self.searchPartial = None
 		# video URL -> site address of the rows of the last global / favorites search (getResolvedURL() reads it)
 		self.searchSiteMain = {}
 		# the main menu shown and the favorites folder built last: a favorite switch updates their rows in place
@@ -3776,6 +3796,8 @@ class Host(CBaseHostClass, XXXParser):
 			onlyKept = choice == 'show'
 		else:
 			cached.pop(SEARCH_DONE, None)
+		# the menu the search ran from: the sites' own search handlers change SEARCH_proc while they run
+		self.searchPartial = (valTab, self.SEARCH_proc)
 		fromCache = 0
 		savedSession = self.sessionEx
 		self.sessionEx = _SelfTestSession()
@@ -3795,16 +3817,20 @@ class Host(CBaseHostClass, XXXParser):
 						# one broken site must not end the search over all sites (and is asked again next time)
 						printExc()
 						valtemp = None
+					if isinstance(valtemp, list) and all(getattr(item, 'imageType', '') in PAGER_ORDER for item in valtemp):
+						# nothing found but the site's pager rows ("Next page" of an empty search, hclips / txxx ...): no result
+						valtemp = None
 					if isinstance(valtemp, list) and valtemp:
 						cached[Name] = [copy.copy(item) for item in valtemp]
 				if valtemp:
 					nextPageLast(valtemp)  # the site's "Next page" directly below its own results
 					self.tagSearchResults(valtemp, Name, baseUrl)
-					valTab = valTab + valtemp
+					valTab.extend(valtemp)  # in place: searchPartial holds the rows found so far
 			if not onlyKept:
 				cached[SEARCH_DONE] = True  # all sites asked: the same search again asks nothing first
 		finally:
 			self.sessionEx = savedSession
+		self.searchPartial = None
 		self.MAIN_URL = ''
 		if fromCache:
 			desc = _('The results of %d of %d sites are from the last search for "%s" - this asks all sites again') % (fromCache, len(hosts), pattern)
@@ -9696,7 +9722,7 @@ class Host(CBaseHostClass, XXXParser):
 				return ''
 			try:
 				result = byteify(json.loads(data))
-				for item in result["videos"]:
+				for item in result.get("videos") or []:  # a search without results has no "videos"
 					phTitle = str(item["title"])
 					video_id = str(item["video_id"])
 					scr = str(item["scr"])
@@ -10639,7 +10665,7 @@ class Host(CBaseHostClass, XXXParser):
 				return ''
 			try:
 				result = byteify(json.loads(data))
-				for item in result["videos"]:
+				for item in result.get("videos") or []:  # a search without results has no "videos"
 					phTitle = str(item["title"])
 					video_id = str(item["video_id"])
 					scr = str(item["scr"])
@@ -10687,7 +10713,7 @@ class Host(CBaseHostClass, XXXParser):
 				return ''
 			try:
 				result = byteify(json.loads(data))
-				for item in result["videos"]:
+				for item in result.get("videos") or []:  # a search without results has no "videos"
 					phTitle = str(item["title"])
 					video_id = str(item["video_id"])
 					scr = str(item["scr"])
@@ -12779,7 +12805,7 @@ class Host(CBaseHostClass, XXXParser):
 			if not current:
 				current = 1
 			printDBG('CURRENT: ' + str(current))
-			next = None
+			next = last_number = None  # a pager without page links: no Next / Jump
 			match = re.search('ul class="pagination(.*?)</ul>', data, re.S)
 			match = match.group(0) if match else ''
 			if match:
@@ -15179,12 +15205,15 @@ class Host(CBaseHostClass, XXXParser):
 			else:
 				next = self.cm.ph.getSearchGroups(data, '''next">\n.+href=["]([^#]+?)[?]''', 1, True)[0].replace(' ', '').strip()
 				printDBG('Next page: ' + str(next))
-				if next:
-					next_number = re.search('/.+[/]([0-9]{,5})[/]', next).group(1)
+				# the last page of a list has no "next" block: no next page (was a crash)
+				numbers = re.search('/.+[/]([0-9]{,5})[/]', next) if next else None
+				next_number = numbers.group(1) if numbers else ''
+				if not numbers:
+					next = ''
 				printDBG('Next page number: ' + str(next_number))
-				per_page = re.search(r'next">\n.+page[=]([0-9]+?)[\s]', data).group(1)
+				per_page = self.cm.ph.getSearchGroups(data, r'next">\n.+page[=]([0-9]+?)[\s]', 1, True)[0]
 				printDBG('PER PAGES: ' + str(per_page))
-				sort = re.search(r'next">\n.+sort_by[=]([a-z_]+?)[\s]', data).group(1)
+				sort = self.cm.ph.getSearchGroups(data, r'next">\n.+sort_by[=]([a-z_]+?)[\s]', 1, True)[0]
 				printDBG('SORT: ' + str(sort))
 			data = data.split('class="col">')
 			if len(data):
@@ -20877,7 +20906,7 @@ class Host(CBaseHostClass, XXXParser):
 			try:
 				result = byteify(json.loads(data))
 				pages = int(result.get('pages') or 0)
-				for item in result["videos"]:
+				for item in result.get("videos") or []:  # a search without results has no "videos"
 					phTitle = str(item["title"])
 					video_id = str(item["video_id"])
 					scr = str(item["scr"])
@@ -21807,10 +21836,11 @@ class Host(CBaseHostClass, XXXParser):
 			if current:
 				printDBG('CURRENT: ' + str(current))
 			match = re.search('pagination-item(.*)arrow-right', data, re.S)
+			max = max_number = ''  # no pager (one page, a search without results): no Jump
 			if match:
-				max = re.findall('href=["]([^"@#]+?)["]', match.group(1), re.S)
-				if max:
-					max = max[-2]
+				links = re.findall('href=["]([^"@#]+?)["]', match.group(1), re.S)
+				if len(links) > 1 and links[-2].count('/') >= 2:
+					max = links[-2]
 					max_number = max.split('/')[-2]
 			data = data.split('class="card thumb_rel item "')
 			if len(data):
@@ -24146,22 +24176,19 @@ class Host(CBaseHostClass, XXXParser):
 				current = 1
 			printDBG('CURRENT: ' + str(current))
 			next = self.cm.ph.getSearchGroups(data, r'href=["]([^"]+?)["]\stitle="Next"', 1, True)[0]
-			if 'search' in url:
-				next_number = next.split('/')[-3]
-			else:
-				next_number = next.split('/')[-2]
+			# the page number in the pager link (search: .../<term>/<page>/); none without a pager (a search without results)
+			pagePart = -3 if 'search' in url else -2
+			next_number = next.split('/')[pagePart] if next.count('/') >= -pagePart else ''
 			printDBG('NEXT: ' + next_number)
 			max = self.cm.ph.getSearchGroups(data, r'next"\shref=["]([^"]+?)["]\stitle="Next\s([0-9]+)', 1, True)[0]
 			if not max or max == '':
 				max = self.cm.ph.getSearchGroups(data, r'next"\shref=["]([^"]+?)["]\sdata=.{,105}title="Next', 1, True)[0]
+			max_number = ''
 			if max:
-				if 'search' in url:
-					max_number = max.split('/')[-3]
-				else:
-					max_number = max.split('/')[-2]
+				max_number = max.split('/')[pagePart] if max.count('/') >= -pagePart else ''
 				if not max_number and int(current) >= 3:
 					max_number = current
-			if int(approx_number) > int(max_number):
+			if int(approx_number) > int(max_number or 0):
 				max_number = approx_number
 			printDBG('MAX NUMBER: ' + str(max_number))
 			data = self.cm.ph.getDataBeetwenMarkers(data, 'class="thumbs-list">', 'class="bottom', False)[1]
@@ -26433,7 +26460,7 @@ class Host(CBaseHostClass, XXXParser):
 				return self.showNotFoundMessage(name)
 			printDBG('ROOT URL: ' + root)
 			next = self.cm.ph.getSearchGroups(data, r'href=["]([^"^#]+?)["].{,10}Next\sPage', 1, True)[0]
-			next_number = next.split('/')[-2]
+			next_number = next.split('/')[-2] if '/' in next else ''  # no pager (a search without results): no next page
 			current = self.cm.ph.getSearchGroups(data, r'active\sitem.{,20}[>]([0-9]+?)[<]', 1, True)[0]
 			if not current:
 				current = 1
@@ -28618,6 +28645,7 @@ class Host(CBaseHostClass, XXXParser):
 			if not sts or data is None or data == '':
 				return self.showNotFoundMessage(name)
 			mainUrl = self.cm.ph.getSearchGroups(data, r'href=["]([^"]+?)["]\sclass="btn\sactive', 1, True)[0].replace('&amp;', '&')
+			root, current = url, 1  # a page without the sort buttons (a search without results)
 			if mainUrl:
 				mainUrl = self.cm.ph.getSearchGroups(mainUrl, '(/[^"]+?)[&|?]sort', 1, True)[0]
 				root = self.MAIN_URL + mainUrl
