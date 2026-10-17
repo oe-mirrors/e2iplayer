@@ -3,7 +3,7 @@
 #e2iplayer install script - Pike_Bishop from oATV
 
 ## Variables ##
-SCRIPTVERSION=16.0.4_git-oemirrors
+SCRIPTVERSION=16.0.5_git-oemirrors
 STARTDATE="$(date +%a.%d.%b.%Y-%H:%M:%S)"
 BOXIP="http://127.0.0.1"
 WGET=/usr/bin/wget
@@ -21,10 +21,12 @@ BACKUP=no	# parameters yes/no
 E2IPLAYER_BACKUP_DIR=$WORKDIR/e2iplayer_backups
 
 
-{
 # If it does not exist create the Working Directory (this is where the Log file are stored).
+# Before the logged Block, tee opens the Log file at the same Time and needs the Directory.
 mkdir -p $WORKDIR
 
+
+{
 
 # $TMP (/var/volatile/tmp) is a RAM Disk. On Boxes with little RAM (e.g. DM800SE) the Source Package
 # does not fit there ("No space left on device"), then use a tmp Directory in the Working Directory.
