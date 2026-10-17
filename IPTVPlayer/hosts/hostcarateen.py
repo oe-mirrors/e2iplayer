@@ -24,7 +24,7 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps, load
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import LATIN_ONLY, getMeta, isLatinTitle
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist, requireDownloaderForDisguisedHls
-from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str, ensure_str_deep
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIconDir
@@ -140,7 +140,8 @@ class CaraTeen(GenericFolderWatchedScraperMixin, CBaseHostClass):
         except Exception:
             printExc()
             return None
-        return _decrypt(data) if isinstance(data, dict) and "encryptedData" in data else data
+        # utf-8 str values on py2 too (json gives unicode there, the Arabic literals here are byte strings)
+        return ensure_str_deep(_decrypt(data) if isinstance(data, dict) and "encryptedData" in data else data)
 
     def _shows(self, source):
         shows = CaraTeen.SHOWS.get(source)

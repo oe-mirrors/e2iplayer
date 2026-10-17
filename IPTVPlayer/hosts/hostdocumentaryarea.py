@@ -139,7 +139,7 @@ class DocumentaryArea(GenericFolderWatchedScraperMixin, CBaseHostClass):
             currUrl = data.meta.get("url", url) if hasattr(data, "meta") else url
             pager = re.findall(r'href="([^"]*[?&]page=(\d+)&[^"]*)"', data)
             if pager and not siteTpl:
-                siteTpl = re.sub(r"([?&]page=)\d+", r"\g<1>{site_page}", self._normUrl(pager[0][0], currUrl), 1)
+                siteTpl = re.sub(r"([?&]page=)\d+", r"\g<1>{site_page}", self._normUrl(pager[0][0], currUrl), count=1)
             numbers = [int(n) for _href, n in pager]
             lastIdx = max(numbers + [sitePage, lastIdx])
             hasMore = (sitePage + 1) in numbers

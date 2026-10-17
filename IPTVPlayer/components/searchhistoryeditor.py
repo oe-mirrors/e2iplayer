@@ -884,7 +884,10 @@ class SearchHistoryEditor(Screen):
             self.setEntriesList(self.buildDisplayList(), idx)
             self.updateStatus()
 
-    def keySave(self):
+    def keySave(self, closeAfter=False):
+        # closeAfter: EXIT -> "Save now?" -> yes; the editor closes when the info box is gone (closing it
+        # while the info box is still on top would close a non-current screen)
+        callback = self.closeAfterSave if closeAfter else None
         if self.manualReorderMode:
             return
         try:
@@ -898,21 +901,29 @@ class SearchHistoryEditor(Screen):
 
                 if removed:
                     self.openInfoMessage(
-                        _(u'Search history saved. %d duplicate entries removed.') % removed
+                        _(u'Search history saved. %d duplicate entries removed.') % removed, callback=callback
                     )
                 else:
-                    self.openInfoMessage(_(u'Search history saved.'))
+                    self.openInfoMessage(_(u'Search history saved.'), callback=callback)
             else:
-                self.openInfoMessage(_(u'Error while saving.'), MessageBox.TYPE_ERROR)
+                self.openInfoMessage(_(u'Error while saving.'), MessageBox.TYPE_ERROR, callback=callback)
         except Exception:
             printExc()
-            self.openInfoMessage(_(u'Error while saving.'), MessageBox.TYPE_ERROR)
+            self.openInfoMessage(_(u'Error while saving.'), MessageBox.TYPE_ERROR, callback=callback)
 
-    def openInfoMessage(self, text, msgType=MessageBox.TYPE_INFO, timeout=4):
+    def closeAfterSave(self, ret=None):
+        self.close(None)
+
+    def openInfoMessage(self, text, msgType=MessageBox.TYPE_INFO, timeout=4, callback=None):
         try:
-            self.session.open(MessageBox, guiSafeStr(text), type=msgType, timeout=timeout)
+            if callback:
+                self.session.openWithCallback(callback, MessageBox, guiSafeStr(text), type=msgType, timeout=timeout)
+            else:
+                self.session.open(MessageBox, guiSafeStr(text), type=msgType, timeout=timeout)
         except Exception:
             printExc()
+            if callback:
+                callback()
 
     def keyExit(self):
         if self.manualReorderMode:
@@ -930,5 +941,6 @@ class SearchHistoryEditor(Screen):
 
     def exitCallback(self, ret):
         if ret:
-            self.keySave()
-        self.close(None)
+            self.keySave(closeAfter=True)
+        else:
+            self.close(None)

@@ -194,19 +194,35 @@ class FajerShow(GenericFolderWatchedScraperMixin, CBaseHostClass):
         url = CBaseHostClass.getFullIconUrl(self, (url or "").strip(), currUrl)
         return self._withCFMeta(url) if url.startswith("http") else url
 
+    def _cfCookie(self):
+        # cf_clearance + remembered UA, read again only when the cookie file changes (this runs for every row)
+        try:
+            stat = os.stat(self.COOKIE_FILE)
+            key = (stat.st_mtime, stat.st_size)
+        except OSError:
+            key = None  # getCookieHeader logs tracebacks for a cookie file that does not exist yet
+        cache = getattr(self, "_cfCookieCache", None)
+        if cache is None or cache[0] != key:
+            cookieHeader, userAgent = "", ""
+            if key is not None:
+                try:
+                    cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE, ["cf_clearance"]).rstrip("; ")
+                    if cookieHeader:
+                        userAgent = remembered_user_agent(self.COOKIE_FILE)
+                except Exception:
+                    printExc()
+            cache = self._cfCookieCache = (key, cookieHeader, userAgent)
+        return cache[1], cache[2]
+
     def _withCFMeta(self, url):
         # files on the site's own domain (posters, trailers) sit behind the same Cloudflare check as the
         # pages: the download needs the cf_clearance cookie and the User-Agent that passed the check
         meta = {}
         if SITE_URL_RE.match(url):
             meta["Referer"] = self.MAIN_URL or gettytul()
-            try:
-                # getCookieHeader logs tracebacks for a cookie file that does not exist yet
-                cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE, ["cf_clearance"]).rstrip("; ") if os.path.isfile(self.COOKIE_FILE) else ""
-                if cookieHeader:
-                    meta.update({"User-Agent": remembered_user_agent(self.COOKIE_FILE) or self.HEADER.get("User-Agent"), "Cookie": cookieHeader})
-            except Exception:
-                printExc()
+            cookieHeader, userAgent = self._cfCookie()
+            if cookieHeader:
+                meta.update({"User-Agent": userAgent or self.HEADER.get("User-Agent"), "Cookie": cookieHeader})
         proxy = self.getProxy()
         if proxy:
             meta["iptv_http_proxy"] = proxy

@@ -352,6 +352,7 @@ class IPTVHostSearchResultList(IPTVRadioButtonList):
         screenwidth = getDesktop(0).size().width()
         itemHeight = _getSearchResultItemHeight(screenwidth)
         self.l.setItemHeight(itemHeight)
+        self._logoPathCache = {}
         if screenwidth >= 2560:
             self.logoW, self.logoH = 180, 60
         elif screenwidth == 1920:
@@ -368,15 +369,24 @@ class IPTVHostSearchResultList(IPTVRadioButtonList):
         try:
             pix = None
             if item.description:
-                logoPath = _getPlayerSelectorLogoPath(item.description)
-                if not os.path.isfile(logoPath):
-                    # fall back to a generic "coming soon" placeholder when
-                    # there's no real logo file yet for this host/group -
-                    # shared by every screen that shows a host or group
-                    # name with a logo (PlayerSelectorWidget's own list
-                    # view, search results, add-to-group)
-                    logoPath = GetLogoDir('groups/comming-soonlogo.png')
-                if os.path.isfile(logoPath):
+                # resolved path (or None) cached per key for this list's
+                # lifetime - buildEntry() runs on every repaint and the
+                # lookup below costs up to 4 stat() calls per row
+                try:
+                    logoPath = self._logoPathCache[item.description]
+                except KeyError:
+                    logoPath = _getPlayerSelectorLogoPath(item.description)
+                    if not os.path.isfile(logoPath):
+                        # fall back to a generic "coming soon" placeholder when
+                        # there's no real logo file yet for this host/group -
+                        # shared by every screen that shows a host or group
+                        # name with a logo (PlayerSelectorWidget's own list
+                        # view, search results, add-to-group)
+                        logoPath = GetLogoDir('groups/comming-soonlogo.png')
+                    if not os.path.isfile(logoPath):
+                        logoPath = None
+                    self._logoPathCache[item.description] = logoPath
+                if logoPath is not None:
                     pix = LoadPixmap(cached=True, path=logoPath)
             if pix is not None:
                 # fitPixmapInBox() (iptvlist.py): logoW/logoH above
@@ -632,6 +642,7 @@ class _PlayerSelectorListMode:
             self.session.openWithCallback(self.searchCallback, virtualKeyboard, title=_("Search"), text='')
 
     def searchResultCallback(self, ret=None):
+        self._searchResultsDlg = None
         if not isinstance(ret, IPTVChoiceBoxItem):
             return
         idx = ret.privateData
@@ -803,6 +814,11 @@ class _PlayerSelectorListMode:
                 self.addHostToGroup(selItem)
             elif ret == "DEL_ITEM":
                 self.deleteItemAt(idx)
+                # the other results hold currList indexes that just shifted - close the search popup
+                dlg = getattr(self, '_searchResultsDlg', None)
+                self._searchResultsDlg = None
+                if dlg is not None:
+                    dlg.close(None)
 
     def addHostToGroup(self, selItem=None):
         printDBG(">> PlayerSelectorWidget.addHostToGroup")
@@ -1204,9 +1220,9 @@ if GRIDSUPPORT:
             # openContextMenu() never offers "Search" when self.simpleListMode)
             if self.listMode:
                 height = self._getSearchResultsHeight(len(options))
-                self.session.openWithCallback(self.searchResultCallback, IPTVChoiceBoxWidget, {'width': 550, 'height': height, 'current_idx': 0, 'title': _("Search results"), 'options': options, 'list_class': IPTVHostSearchResultList, 'chrome': True, 'footerMargin': 136, 'blue_callback': self.searchResultBlueMenu})
+                self._searchResultsDlg = self.session.openWithCallback(self.searchResultCallback, IPTVChoiceBoxWidget, {'width': 550, 'height': height, 'current_idx': 0, 'title': _("Search results"), 'options': options, 'list_class': IPTVHostSearchResultList, 'chrome': True, 'footerMargin': 136, 'blue_callback': self.searchResultBlueMenu})
             else:
-                self.session.openWithCallback(self.searchResultCallback, SearchResultGridWidget, {'options': options, 'iconSize': self.iconSize, 'title': _("Search results"), 'blue_callback': self.searchResultBlueMenu})
+                self._searchResultsDlg = self.session.openWithCallback(self.searchResultCallback, SearchResultGridWidget, {'options': options, 'iconSize': self.iconSize, 'title': _("Search results"), 'blue_callback': self.searchResultBlueMenu})
 
         def changeReorderingMode(self):
             printDBG(">> PlayerSelectorWidget.changeReorderingMode")
@@ -2063,7 +2079,7 @@ else:
             # group's persisted host list are completely unaffected
             options = [IPTVChoiceBoxItem("%s (%s)" % (name, hostKey), hostKey, idx) for name, hostKey, idx in matches]
             height = self._getSearchResultsHeight(len(options))
-            self.session.openWithCallback(self.searchResultCallback, IPTVChoiceBoxWidget, {'width': 550, 'height': height, 'current_idx': 0, 'title': _("Search results"), 'options': options, 'list_class': IPTVHostSearchResultList, 'chrome': True, 'footerMargin': 136, 'blue_callback': self.searchResultBlueMenu})
+            self._searchResultsDlg = self.session.openWithCallback(self.searchResultCallback, IPTVChoiceBoxWidget, {'width': 550, 'height': height, 'current_idx': 0, 'title': _("Search results"), 'options': options, 'list_class': IPTVHostSearchResultList, 'chrome': True, 'footerMargin': 136, 'blue_callback': self.searchResultBlueMenu})
 
         def deleteItemAt(self, idx):
             # searchResultBlueMenuCallback() can delete a specific search

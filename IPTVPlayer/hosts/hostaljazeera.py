@@ -36,11 +36,8 @@ def gettytul():
 class AlJazeera(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     SITES = {
-        'ar': {'url': 'https://www.ajnet.me', 'wp': 'aja', 'account': '665001584001', 'player': 'nUW9Zv8wm',
-               'categories': [('investigative', _('Investigations')), ('documentaries', _('Documentaries')),
-                              ('discussions', _('Talk shows')), ('digital', _('Digital programmes'))]},
-        'en': {'url': 'https://www.aljazeera.com', 'wp': 'aje', 'account': '665003303001', 'player': '6tKQRAx7lu',
-               'categories': []},
+        'ar': {'url': 'https://www.ajnet.me', 'wp': 'aja', 'account': '665001584001', 'player': 'nUW9Zv8wm'},
+        'en': {'url': 'https://www.aljazeera.com', 'wp': 'aje', 'account': '665003303001', 'player': '6tKQRAx7lu'},
     }
     LIVE = [('Al Jazeera Arabic', 'https://live-hls-web-aja.getaj.net/AJA/index.m3u8'),
             ('Al Jazeera English', 'https://live-hls-web-aje-fa.getaj.net/AJE/index.m3u8'),
@@ -69,6 +66,13 @@ class AlJazeera(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     def site(self, cItem=None):
         return self.SITES[self.siteLang(cItem)]
+
+    def siteCategories(self, lang):
+        # translated when asked, not at import time
+        if lang == 'ar':
+            return [('investigative', _('Investigations')), ('documentaries', _('Documentaries')),
+                    ('discussions', _('Talk shows')), ('digital', _('Digital programmes'))]
+        return []
 
     ###################################################
     # watched flag
@@ -117,7 +121,7 @@ class AlJazeera(GenericFolderWatchedScraperMixin, CBaseHostClass):
         lang = self.siteLang()
         programs = self.site()['url'] + '/programs/'
         self.listsTab([{'category': 'list_live', 'title': _('Live')}], {'name': 'category'})
-        for slug, title in self.site()['categories']:
+        for slug, title in self.siteCategories(lang):
             self.addDir({'name': 'category', 'category': 'list_programs', 'title': title, 'program_cat': slug, 'aj_site': lang, 'url': programs + slug + '/'})
         self.listsTab([{'category': 'list_programs', 'title': _('All programmes'), 'aj_site': lang, 'url': programs}] + self.searchItems(), {'name': 'category'})
 

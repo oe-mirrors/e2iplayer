@@ -358,39 +358,9 @@ class Moiflix(GenericFolderWatchedScraperMixin, CBaseHostClass, CaptchaHelper):
         # CryptoJS-encrypted in an inline script; the usual player patterns and one nested iframe are tried as well
         linksTab = self._extractGatedPlayer(data, url, hostName, 0)
         if not linksTab:
-            # fix 071026: the page structure only goes to the log when nothing was found (Turnstile cannot be solved on the PC)
-            self._debugPlayerPage(url, data)
+            printDBG("Moiflix: no stream found on the player page [%s] size[%d]" % (url, len(data)))
             SetIPTVPlayerLastHostError(_("Hosting \"%s\" not supported.") % hostName)
         return linksTab
-
-    def _debugPlayerPage(self, url, data):
-        # page head without styles/whitespace + every url and script/data hint it holds, for the box log
-        try:
-            text = re.sub(r'(?is)<style[^>]*>.*?</style>', '', data)
-            text = re.sub(r'\s+', ' ', text)
-            printDBG("Moiflix.player page [%s] size[%d] head:\n%s" % (url, len(data), text[:1500]))
-            hints = re.findall(r"""(?:src|href|data-[a-z-]+|file|link|url|action)\s*[=:]\s*['"]([^'"]{6,300})['"]""", data, re.I)
-            hints += re.findall(r"""['"]((?:https?:)?//[^'"\s<>]{4,300})['"]""", data)
-            hints += re.findall(r"""(?:fetch|\$\.(?:get|post|ajax)|axios\.(?:get|post))\s*\(\s*['"`]([^'"`]{2,200})""", data)
-            seen = []
-            for item in hints:
-                if item not in seen and "challenges.cloudflare" not in item:
-                    seen.append(item)
-            printDBG("Moiflix.player page hints: %s" % seen[:60])
-            printDBG("Moiflix.player page markers: packed[%s] jwplayer[%s] atob[%s] jwt[%s] cryptojs[%s] scripts[%d]" % (
-                "eval(function(p,a,c,k,e," in data, "jwplayer" in data.lower(), "atob(" in data,
-                bool(re.search(r'eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}', data)), "CryptoJS" in data, data.lower().count("<script")))
-            # add 071026: the inline scripts in full (box log 07.10. #3: "PlayerBx" page, VideoJS + crypto-js, the source
-            # sits in an inline script) - the next log shows how the encrypted source and its key are passed
-            total = 0
-            for script in re.findall(r'(?is)<script(?![^>]*\bsrc=)[^>]*>(.*?)</script>', data):
-                script = re.sub(r'\s+', ' ', script).strip()
-                if not script or total > 12000:
-                    continue
-                printDBG("Moiflix.player page inline script [%d]:\n%s" % (len(script), script[:4000]))
-                total += min(len(script), 4000)
-        except Exception:
-            printExc()
 
     def _cryptoJsSources(self, data):
         # fix 071026: box log 07.10. #4 - the PlayerBx script is obfuscator.io code: CryptoJS[_0x..(0x2ba)]['decrypt'](a, b)
@@ -521,7 +491,7 @@ class Moiflix(GenericFolderWatchedScraperMixin, CBaseHostClass, CaptchaHelper):
                 linksTab = self._extractGatedPlayer(page, item, self.up.getHostName(item), 1)
                 if linksTab:
                     return linksTab
-                self._debugPlayerPage(item, page)
+                printDBG("Moiflix: no stream found on the nested player page [%s] size[%d]" % (item, len(page)))
         return []
 
     def getVideoLinks(self, videoUrl):

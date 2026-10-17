@@ -29,6 +29,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEna
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 ###################################################
 # FOREIGN import
@@ -177,7 +178,7 @@ class ArteTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 dl = ''
         if dl:
             parts.append('%s: %s' % (_('Duration'), dl))
-        ei = item.get('episodeInfo')
+        ei = ensure_str(item.get('episodeInfo'))
         if isinstance(ei, str) and ei.strip():
             parts.append(self.cleanHtmlStr(ei))
         else:
@@ -185,14 +186,15 @@ class ArteTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
             if season and episode:
                 parts.append('%s %s, %s %s' % (_('Season'), season, _('Episode'), episode))
         for key in ('teaserText', 'shortDescription'):
-            val = item.get(key)
+            val = ensure_str(item.get(key))
             if isinstance(val, str) and val.strip():
                 parts.append(self.cleanHtmlStr(val))
                 break
         avail = (item.get('availability') or {}).get('label') or ''
         if avail:
             parts.append(self.cleanHtmlStr(avail))
-        return '[/br]'.join(parts)
+        # py2: the JSON texts above are utf-8 str, the label may still be unicode - one type for the join
+        return '[/br]'.join(ensure_str(p) for p in parts)
 
     @staticmethod
     def _seasonEpisode(item):
@@ -274,7 +276,7 @@ class ArteTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 if code in ('LIVESTREAM',) or item.get('livestreamRights'):
                     params['live'] = True
                 else:
-                    epInfo = item.get('episodeInfo') or ''
+                    epInfo = ensure_str(item.get('episodeInfo') or '')
                     season, episode = self._seasonEpisode(item)
                     if season and episode:
                         # "Red Light (3/10)" -> "Red Light - S01E03", "Twin Peaks - Staffel 1 (1/8) - Das Geheimnis
@@ -349,7 +351,7 @@ class ArteTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
             items, _pag = self._zoneData(z)
             if not items:
                 continue
-            if all((it.get('kind') or {}).get('code', '').upper() in ('EXTERNAL', 'PAGE') for it in items):
+            if all(((it.get('kind') or {}).get('code') or '').upper() in ('EXTERNAL', 'PAGE') for it in items):
                 continue
             contentZones.append(z)
 
@@ -571,10 +573,10 @@ class ArteTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 info['age_limit'] = '%s+' % int(prog['ageRating'])
         except (TypeError, ValueError):
             pass
-        bcast = prog.get('firstBroadcastDate') or ''
+        bcast = ensure_str(prog.get('firstBroadcastDate') or '')
         if isinstance(bcast, str) and len(bcast) >= 10:
             info['broadcast'] = bcast[:10]
-        end = (prog.get('availability') or {}).get('end') or ''
+        end = ensure_str((prog.get('availability') or {}).get('end') or '')
         if isinstance(end, str) and len(end) >= 10:
             info['remaining'] = _('available until %s') % end[:10]
         return info, year

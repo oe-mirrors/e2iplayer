@@ -99,14 +99,30 @@ class AnimeBlkom(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not url.startswith("http") or "animeblkom" not in self.up.getDomain(url):
             return url
         meta = {"Referer": self.MAIN_URL}
-        try:
-            # getCookieHeader logs a traceback for a cookie file that does not exist yet
-            cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE, ["cf_clearance"]).rstrip("; ") if os.path.isfile(self.COOKIE_FILE) else ""
-            if cookieHeader:
-                meta.update({"User-Agent": remembered_user_agent(self.COOKIE_FILE) or self.HEADER.get("User-Agent"), "Cookie": cookieHeader})
-        except Exception:
-            printExc()
+        cookieHeader, userAgent = self._cfCookie()
+        if cookieHeader:
+            meta.update({"User-Agent": userAgent or self.HEADER.get("User-Agent"), "Cookie": cookieHeader})
         return strwithmeta(url, meta)
+
+    def _cfCookie(self):
+        # cf_clearance + remembered UA, read again only when the cookie file changes (this runs for every row)
+        try:
+            stat = os.stat(self.COOKIE_FILE)
+            key = (stat.st_mtime, stat.st_size)
+        except OSError:
+            key = None  # getCookieHeader logs a traceback for a cookie file that does not exist yet
+        cache = getattr(self, "_cfCookieCache", None)
+        if cache is None or cache[0] != key:
+            cookieHeader, userAgent = "", ""
+            if key is not None:
+                try:
+                    cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE, ["cf_clearance"]).rstrip("; ")
+                    if cookieHeader:
+                        userAgent = remembered_user_agent(self.COOKIE_FILE)
+                except Exception:
+                    printExc()
+            cache = self._cfCookieCache = (key, cookieHeader, userAgent)
+        return cache[1], cache[2]
 
     def getFavouriteData(self, cItem):
         try:

@@ -63,7 +63,8 @@ class IPTVSubtitlesHandler:
             else:
                 split_time = time.split('.')
             msMatch = re.match(r'\d+', split_time[1])
-            minor = int(msMatch.group(0)) if msMatch else 0  # milliseconds
+            # milliseconds - a fraction: ",5" is 500 ms, ",05" 50 ms
+            minor = int(msMatch.group(0)[:3].ljust(3, '0')) if msMatch else 0
             major = split_time[0].split(':')
             if len(major) == 2:  # format: mm:ss,mmm
                 minutes = int(major[0])

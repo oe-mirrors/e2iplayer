@@ -8,18 +8,15 @@ from Plugins.Extensions.IPTVPlayer.components.isubprovider import CSubProviderBa
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import (
     printDBG,
     printExc,
-    GetDefaultLang,
     byteify,
     RemoveDisallowedFilenameChars,
     GetSubtitlesDir,
     GetTmpDir,
     rm,
-    MapUcharEncoding,
-    GetPolishSubEncoding,
 )
 
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus, urllib_unquote_plus
-from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import shellQuote, shellSingleQuote
+from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import shellSingleQuote
 ###################################################
 # FOREIGN import
 ###################################################
@@ -222,7 +219,7 @@ class Napisy24plProvider(CBaseSubProviderClass):
                 dEpizod = self.cm.ph.getSearchGroups(tmpItem, 'data-epizod="([0-9]+?)"')[0]
                 if dNid == '':
                     continue
-                if dSeazon not in self.cacheSeasons:
+                if season not in self.cacheSeasons:
                     self.cacheSeasons[season] = []
                 title = self.cleanHtmlStr(tmpItem)
                 eParams = {'title': title, 'd_id': dId, 'd_nid': dNid, 'd_seazon': dSeazon, 'd_episode': dEpizod}
@@ -357,6 +354,8 @@ class Napisy24plProvider(CBaseSubProviderClass):
 
         if not ret['sts'] or 0 != ret['code']:
             extractDir = GetTmpDir('napisy24_extract_')
+            # no files of an earlier archive in the list below
+            shutil.rmtree(extractDir, ignore_errors=True)
             try:
                 os.makedirs(extractDir, exist_ok=True)
             except Exception:
@@ -412,40 +411,9 @@ class Napisy24plProvider(CBaseSubProviderClass):
             SetIPTVPlayerLastHostError(_('Extracted subtitle file is empty or missing.'))
             return retData
 
-        cmd = '/usr/bin/uchardet "%s"' % shellQuote(tmpFile)
-        ret = self.iptv_execute(cmd)
-        if ret['sts'] and 0 == ret['code']:
-            encoding = MapUcharEncoding(ret['data'])
-            if 0 != ret['code'] or 'unknown' in encoding:
-                encoding = ''
-            else:
-                encoding = encoding.strip()
-        else:
-            encoding = ''
-
-        if GetDefaultLang() == 'pl' and encoding == 'iso-8859-2':
-            encoding = GetPolishSubEncoding(tmpFile)
-        elif '' == encoding:
-            encoding = 'utf-8'
-
-        try:
-            with open(tmpFile, 'rb') as f:
-                data = f.read()
-            try:
-                data = data.decode(encoding).encode('UTF-8')
-                try:
-                    with open(fileName, 'wb') as f:
-                        f.write(data)
-                    retData = {'title': title, 'path': fileName, 'lang': lang, 'imdbid': imdbid, 'sub_id': subId}
-                except Exception:
-                    printExc()
-                    SetIPTVPlayerLastHostError(_('Failed to write the file "%s".') % fileName)
-            except Exception:
-                printExc()
-                SetIPTVPlayerLastHostError(_('Failed to convert the file "%s" to UTF-8.') % tmpFile)
-        except Exception:
-            printExc()
-            SetIPTVPlayerLastHostError(_('Failed to open the file "%s".') % tmpFile)
+        # the shared conversion: BOM / UTF-8 / uchardet (when installed) / Polish code page detection
+        if self.converFileToUtf8(tmpFile, fileName, 'pl'):
+            retData = {'title': title, 'path': fileName, 'lang': lang, 'imdbid': imdbid, 'sub_id': subId}
 
         __cleanFiles()
         return retData

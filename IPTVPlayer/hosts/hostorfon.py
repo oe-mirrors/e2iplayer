@@ -23,6 +23,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 ###################################################
 # FOREIGN import
 ###################################################
@@ -32,6 +33,9 @@ import re
 ###################################################
 
 config.plugins.iptvplayer.orfon_bestonly = ConfigYesNo(default=True)
+
+# json values are unicode on Python 2
+STR_TYPES = (str, type(u''))
 
 
 def GetConfigList():
@@ -120,9 +124,9 @@ class ORFON(GenericFolderWatchedScraperMixin, CBaseHostClass):
         try:
             lk = (item.get('_links') or {}).get(name)
             if isinstance(lk, dict):
-                return lk.get('href') or ''
-            if isinstance(lk, str):
-                return lk
+                return ensure_str(lk.get('href') or '')
+            if isinstance(lk, STR_TYPES):
+                return ensure_str(lk)
         except Exception:
             pass
         return ''
@@ -149,12 +153,12 @@ class ORFON(GenericFolderWatchedScraperMixin, CBaseHostClass):
         except Exception:
             pass
         d = item.get('date') or item.get('episode_date') or ''
-        if isinstance(d, str) and len(d) >= 10:
-            parts.append(d[:10])
+        if isinstance(d, STR_TYPES) and len(d) >= 10:
+            parts.append(ensure_str(d[:10]))
         for key in ('description', 'teaser_text', 'share_subject', 'episode_title'):
             v = item.get(key)
-            if isinstance(v, str) and v.strip():
-                parts.append(self.cleanHtmlStr(v))
+            if isinstance(v, STR_TYPES) and v.strip():
+                parts.append(self.cleanHtmlStr(ensure_str(v)))
                 break
         return '[/br]'.join(parts)
 
@@ -175,11 +179,11 @@ class ORFON(GenericFolderWatchedScraperMixin, CBaseHostClass):
         try:
             nx = (data.get('_links') or {}).get('next')
             if isinstance(nx, dict):
-                return nx.get('href') or ''
-            if isinstance(nx, str):
-                return nx
-            if isinstance(data.get('next'), str):
-                return data['next']
+                return ensure_str(nx.get('href') or '')
+            if isinstance(nx, STR_TYPES):
+                return ensure_str(nx)
+            if isinstance(data.get('next'), STR_TYPES):
+                return ensure_str(data['next'])
         except Exception:
             pass
         return ''
@@ -495,7 +499,7 @@ class ORFON(GenericFolderWatchedScraperMixin, CBaseHostClass):
     # INFO
     ###################################################
     def _text(self, value):
-        lines = [self.cleanHtmlStr(x) for x in str(value or '').split('\n')]
+        lines = [self.cleanHtmlStr(x) for x in str(ensure_str(value or '')).split('\n')]
         return '[/br]'.join([x for x in lines if x])
 
     def getArticleContent(self, cItem):
@@ -515,9 +519,9 @@ class ORFON(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 for key, field in (('station', 'main_channel_name'), ('genre', 'genre_title'), ('year', 'production_year'),
                                    ('country', 'production_country'), ('age_limit', 'age_classification')):
                     if data.get(field):
-                        info[key] = self.cleanHtmlStr(str(data[field]))
+                        info[key] = self.cleanHtmlStr(str(ensure_str(data[field])))
                 for key, field in (('broadcast', 'date'), ('remaining', 'killdate')):
-                    value = str(data.get(field) or '')
+                    value = str(ensure_str(data.get(field) or ''))
                     if len(value) >= 10:
                         info[key] = value[:10] if key == 'broadcast' else _('available until %s') % value[:10]
         elif '/profile/' in cItem.get('url', ''):

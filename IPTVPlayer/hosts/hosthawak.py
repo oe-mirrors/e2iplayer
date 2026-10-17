@@ -265,7 +265,7 @@ class Hawak(GenericFolderWatchedScraperMixin, CBaseHostClass):
         nums = [int(n) for n in re.findall(r"<a[^>]*>\s*(\d+)\s*</a>", pager)]
         pageTpl = ""
         for href in re.findall(r'<a[^>]+href="([^"#]+)"', pager):
-            tpl = re.sub(r"([?&]page=)\d+", r"\1{page}", self._rebase(href), 1)
+            tpl = re.sub(r"([?&]page=)\d+", r"\1{page}", self._rebase(href), count=1)
             if "{page}" in tpl:
                 pageTpl = tpl
         return max(nums + [page]), pageTpl

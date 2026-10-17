@@ -222,6 +222,16 @@ class ImpersonateHLSDownloader(BaseDownloader, SidecarMixin):
             self._dataAvail('\n')
         self.localFileSize = DMHelper.getFileSize(fsPath(self.filePath))
 
+        if terminated and self.liveStream and self.allowFinalRename and 0 < self.localFileSize:
+            # like HLSDownloader: stopping is how a live recording ends - keep it as finished file with its .txt
+            # (terminate() reports the finish itself, so nothing that finishes later: no cover)
+            printDBG("ImpersonateHLSDownloader live recording stopped -> kept as finished file")
+            self.status = DMHelper.STS.DOWNLOADED
+            self._cleanUp()
+            if self.sidecarEnabled:
+                self._writeTxtSidecar(self.filePath)
+            return
+
         if terminated:
             self.status = DMHelper.STS.INTERRUPTED
             self._cleanUp()

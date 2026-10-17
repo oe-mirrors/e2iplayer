@@ -1327,7 +1327,7 @@ msgid "Current item is not a channel."
 msgstr "Der aktuelle Eintrag ist kein Kanal."
 
 msgid "Cut"
-msgstr "Schneiden"
+msgstr "Ausschneiden"
 
 msgid "Czech"
 msgstr "Tschechisch"
@@ -4419,7 +4419,7 @@ msgid "Remember last watched position"
 msgstr "Merke zuletzt gesehene Position"
 
 msgid "Remove"
-msgstr "Entferne"
+msgstr "Entfernen"
 
 #, python-format
 msgid "Remove \"%s\" item"

@@ -11,7 +11,7 @@
 from Plugins.Extensions.IPTVPlayer.components.cover import SimpleAnimatedCover, Cover
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components import skinchrome
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIconDir, eConnectCallback, GetNice, E2PrioFix, GetGstPlayerPath
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, eConnectCallback, GetNice, E2PrioFix, GetGstPlayerPath
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
 from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import shellQuote
@@ -229,10 +229,11 @@ class IPTVPicturePlayerWidget(Screen):
         self["icon"] = SimpleAnimatedCover()
         self["picture"] = Cover()
 
-        # prepare icon frames path
+        # prepare icon frames path - icons/HD|FHD|WQHD/buffering/buffering_N.png, like iptvbuffui.py
+        _iconBase = skinchrome.getIconBase()
         frames = []
         for idx in range(1, self.NUM_OF_ICON_FRAMES + 1):
-            frames.append(GetIconDir('/buffering/buffering_%d.png' % idx))
+            frames.append(_iconBase + '/buffering/buffering_%d.png' % idx)
         self["icon"].loadFrames(frames)
 
         # main Timer
@@ -288,7 +289,8 @@ class IPTVPicturePlayerWidget(Screen):
         return self.filePath + self.refreshPostfixes[self.refreshCount % len(self.refreshPostfixes)]
 
     def closeAfterTimeout(self):
-        if self.canAutoClose:
+        # an error MessageBox on top closes this screen through its own callback
+        if self.canAutoClose and getattr(self.session, 'current_dialog', self) is self:
             self.close()
 
     def onStart(self):
@@ -317,7 +319,9 @@ class IPTVPicturePlayerWidget(Screen):
                 self.session.openWithCallback(self.close, MessageBox, _("Downloading cannot be started.\n Invalid URI[%s].") % self.url, type=MessageBox.TYPE_ERROR, timeout=10)
 
     def _doStart(self, force=False):
-        if self.addParams['seq_mode']:
+        # seq_mode: a forced start (the first one, from _startDownloader) still downloads the picture; the
+        # auto-close timer starts after it has been decoded (decodePictureEnd -> _doStart())
+        if self.addParams['seq_mode'] and not force:
             self.mainTimer.start(self.mainTimerInterval, True)  # single shot
             return
         if self.autoRefresh or force:
@@ -327,7 +331,9 @@ class IPTVPicturePlayerWidget(Screen):
             url, downloaderParams = DMHelper.getDownloaderParamFromUrl(self.url)
             self.downloader.subscribeFor_Finish(self.downloaderEnd)
             self.downloader.start(url, self._getDownloadFilePath(), downloaderParams)
-            self.setMainTimerSts(True)
+            # in seq_mode the main timer is the auto-close timer, not the buffering animation
+            if not self.addParams['seq_mode']:
+                self.setMainTimerSts(True)
         else:
             self.refreshing = False
 

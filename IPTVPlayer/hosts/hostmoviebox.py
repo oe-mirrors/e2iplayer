@@ -22,6 +22,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_urlencode, urllib_unquote
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urlparse, parse_qs
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str, ensure_str_deep
 ###################################################
 # FOREIGN import
 ###################################################
@@ -243,8 +244,10 @@ class MovieBox(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return len(order)
 
     def _addSubject(self, cItem, subj):
+        # py2: all JSON texts as utf-8 str, so genre, country ... and the story mix in the desc
+        subj = ensure_str_deep(subj)
         subjectType = subj.get("subjectType") or 1
-        title = self.cleanHtmlStr(str(subj.get("title") or ""))
+        title = self.cleanHtmlStr(str(ensure_str(subj.get("title") or "")))
         if subjectType == 2:
             # "Breaking Bad S5" / "Prison Break S1-S5": the seasons list covers the whole series
             title = re.sub(r"\s+S\d+(?:\s*-\s*S\d+)?$", "", title)
@@ -279,7 +282,7 @@ class MovieBox(GenericFolderWatchedScraperMixin, CBaseHostClass):
         for value in (releaseDate, subj.get("corner")):
             if value:
                 info.append(str(value))
-        story = self.cleanHtmlStr(str(subj.get("description") or ""))
+        story = self.cleanHtmlStr(str(ensure_str(subj.get("description") or "")))
         desc = " | ".join(info)
         if subj.get("hasResource") is False:
             desc += "\n%s%s" % (OR, _("Not available yet"))
@@ -421,8 +424,11 @@ class MovieBox(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     def _sectionTitle(self, title):
         # emoji in the site's section names ("💓Romance 💓") are empty boxes in the Enigma2 fonts
-        title = "".join(ch for ch in title if ord(ch) < 0x10000 and ch not in u"️‍")
-        title = re.sub(r"\s+", " ", title).strip()
+        # (filtered as text: on py2 the title is UTF-8 bytes)
+        if isinstance(title, bytes):
+            title = title.decode("utf-8", "ignore")
+        title = u"".join(ch for ch in title if (ord(ch) < 0xd800 or 0xe000 <= ord(ch) < 0x10000) and ch not in u"\ufe0f\u200d")
+        title = ensure_str(re.sub(r"\s+", " ", title).strip())
         if title.lower().startswith("banner"):
             # "Banner_movie", "Banner_Africa": the slider at the top of the page
             return _("Featured")
@@ -436,7 +442,7 @@ class MovieBox(GenericFolderWatchedScraperMixin, CBaseHostClass):
             if not isinstance(op, dict):
                 continue
             opType = str(op.get("type") or "")
-            title = self._sectionTitle(str(op.get("title") or ""))
+            title = self._sectionTitle(str(ensure_str(op.get("title") or "")))
             if not title or title in seen or opType in ("SPORT_LIVE", "CUSTOM"):
                 continue
             seen.add(title)
@@ -487,7 +493,7 @@ class MovieBox(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 continue
             channelId = self.FILTER_TAB_CHANNELS.get((query.get("tabId") or [""])[0]) or cItem.get("channel_id") or 1
             image = entry.get("image")
-            result.append({"title": self._sectionTitle(str(entry["title"])), "channel_id": channelId,
+            result.append({"title": self._sectionTitle(str(ensure_str(entry["title"]))), "channel_id": channelId,
                            "anim_filter": dict((str(k), str(v)) for k, v in preset.items() if v and str(v) != "All"),
                            "icon": image.get("url", "") if isinstance(image, dict) else ""})
         return result
@@ -548,9 +554,9 @@ class MovieBox(GenericFolderWatchedScraperMixin, CBaseHostClass):
             if not (isinstance(item, dict) and "filterType" in item and "filterVals" in item):
                 continue
             item = self._nuxtValue(nuxt, idx)
-            options = [{"name": str(v.get("name")), "id": str(v.get("id"))} for v in item.get("filterVals") or [] if isinstance(v, dict) and v.get("name")]
+            options = [{"name": str(ensure_str(v.get("name"))), "id": str(v.get("id"))} for v in item.get("filterVals") or [] if isinstance(v, dict) and v.get("name")]
             if options and item.get("filterType"):
-                groups[str(item["filterType"])] = {"title": str(item.get("title") or item["filterType"]), "options": options}
+                groups[str(item["filterType"])] = {"title": str(ensure_str(item.get("title") or item["filterType"])), "options": options}
         if groups:
             params = dict(cItem)
             params.update({"title": "%s%s" % (Y, _("Filter")), "_filter_groups": groups, "show_filters": True, "good_for_fav": False})
@@ -593,7 +599,7 @@ class MovieBox(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 newFilter[ft] = opt["id"]
             prefix = "✓ " if str(current.get(ft, "")) == opt["id"] else ""
             params = dict(cItem)
-            params.update({"category": "list_filter_page", "title": prefix + opt["name"], "anim_filter": newFilter, "_filter_groups": groups,
+            params.update({"category": "list_filter_page", "title": prefix + ensure_str(opt["name"]), "anim_filter": newFilter, "_filter_groups": groups,
                            "selected_filter_type": "", "show_filters": True, "good_for_fav": False})
             self.addDir(params)
 
@@ -614,9 +620,9 @@ class MovieBox(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 for tab in block.get("rankingList") or []:
                     if isinstance(tab, dict) and tab.get("name") and tab.get("id") and str(tab["id"]) not in seen:
                         seen.add(str(tab["id"]))
-                        name = str(tab["name"])
+                        name = str(ensure_str(tab["name"]))
                         if block.get("title"):
-                            name = "%s - %s" % (block["title"], name)
+                            name = "%s - %s" % (ensure_str(block["title"]), name)
                         tabs.append((name, str(tab["id"])))
         for title, rankingId in tabs:
             params = dict(cItem)
@@ -852,7 +858,7 @@ class MovieBox(GenericFolderWatchedScraperMixin, CBaseHostClass):
     def _listSearchSuggestions(self, cItem, keyword, searchType):
         data = self._api("/subject/search-suggest", post={"keyword": keyword, "perPage": 10})
         for item in data.get("items") or []:
-            word = str(item.get("word") or "").strip()
+            word = str(ensure_str(item.get("word") or "")).strip()
             if word:
                 params = dict(cItem)
                 params.update({"category": "search_suggestion", "title": "%s%s" % (_("Search: "), word), "search_keyword": word,

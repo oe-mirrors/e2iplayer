@@ -920,6 +920,9 @@ class E2iVirtualKeyBoard(Screen):
         # rather than cached once so toggling "Show search history" in
         # Settings takes effect immediately on the already-open keyboard.
         self._explicitSearchHistory = additionalParams.get('search_history')
+        # the history file's list, read once (refreshSearchHistory() runs on
+        # every keystroke); reset after "Clear search history"
+        self._searchHistoryCache = None
         # the text is a search entry: only then it is added to the search
         # history - a password or a file name typed for a setting is not
         self.isSearch = additionalParams.get('is_search', False)
@@ -1092,7 +1095,9 @@ class E2iVirtualKeyBoard(Screen):
             return self._explicitSearchHistory
         if not self.searchHistoryEnabled:
             return []
-        return gVKSearchHistory.getHistoryList()
+        if self._searchHistoryCache is None:
+            self._searchHistoryCache = gVKSearchHistory.getHistoryList()
+        return self._searchHistoryCache
 
     def __onClose(self):
         self.onClose.remove(self.__onClose)
@@ -1559,7 +1564,8 @@ class E2iVirtualKeyBoard(Screen):
             word = ''
         if word:
             matches = [h for h in history if h.lower().startswith(word)]
-            others = [h for h in history if h not in matches]
+            matchSet = set(matches)
+            others = [h for h in history if h not in matchSet]
             history = matches + others
         self['left_list'].setList([(x,) for x in history])
         self['left_list'].moveToIndex(0)
@@ -1769,6 +1775,7 @@ class E2iVirtualKeyBoard(Screen):
         if not ret:
             return
         err, msg = gVKSearchHistory.doRemove()
+        self._searchHistoryCache = None
         if self.searchHistoryEnabled:
             self.showSearchHistory()
         else:

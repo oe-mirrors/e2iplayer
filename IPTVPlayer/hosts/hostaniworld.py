@@ -7,6 +7,7 @@ LAST_MODIFIED = "07.10.2026"
 #   - series -> seasons ("Filme" included) -> episodes; watched flag (stable page-path keys, series -> season ->
 #     episode), downloaded flag on the episode url, favourites, name normalisation ("Show - SxxExx"), sidecar,
 #     INFO via moviemeta (the series' IMDb id) + the site's description / cast / episode synopsis
+import os
 import re
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
@@ -69,12 +70,24 @@ class AniWorld(GenericFolderWatchedScraperMixin, CBaseHostClass):
         addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.HEADER.get("User-Agent")}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
 
-    def getFullIconUrl(self, url):
-        url = self.getFullUrl(url)
-        if url == "":
-            return ""
-        cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE)
-        return strwithmeta(url, {"Cookie": cookieHeader, "User-Agent": self.HEADER.get("User-Agent")})
+    def getFullIconUrl(self, url, currUrl=None):
+        # the covers sit behind the same bot check as the pages: they need its cookies and User-Agent
+        url = CBaseHostClass.getFullIconUrl(self, url, currUrl)
+        if not url.startswith("http") or "aniworld" not in self.up.getDomain(url):
+            return url
+        return strwithmeta(url, {"Cookie": self._cookieHeader(), "User-Agent": self.HEADER.get("User-Agent")})
+
+    def _cookieHeader(self):
+        # read again only when the cookie file changes (this runs for every row)
+        try:
+            stat = os.stat(self.COOKIE_FILE)
+            key = (stat.st_mtime, stat.st_size)
+        except OSError:
+            key = None  # getCookieHeader logs a traceback for a cookie file that does not exist yet
+        cache = getattr(self, "_cookieCache", None)
+        if cache is None or cache[0] != key:
+            cache = self._cookieCache = (key, self.cm.getCookieHeader(self.COOKIE_FILE) if key is not None else "")
+        return cache[1]
 
     @staticmethod
     def _path(url):

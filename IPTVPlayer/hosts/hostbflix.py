@@ -150,7 +150,7 @@ class Bflix(GenericFolderWatchedScraperMixin, CBaseHostClass):
             seen.add(url)
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, 'src="([^"]+)')[0])
             title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'alt="([^"]+)')[0])
-            desc = self.cleanHtmlStr(self.cm.ph.getAllItemsBeetwenMarkers(item, '<div class="start">', "</div>")[0])
+            desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<div class="start">', "</div>")[1])
             # movies show the year there, series "SS 2 EP 2" instead
             year = self.cm.ph.getSearchGroups(item, r'class="dot">\s*(\d{4})\s*<')[0]
             params = stripPagerKeys(dict(cItem), ("no_paging", "s"))

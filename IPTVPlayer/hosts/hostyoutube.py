@@ -14,6 +14,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvfilehost import IPTVFileHost
 from Plugins.Extensions.IPTVPlayer.libs.youtubeparser import YouTubeParser
 from Plugins.Extensions.IPTVPlayer.libs.youtube_oauth import YouTubeOAuth
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecar, buildYoutubeOptions, decorateYoutubeUrl, decorateYoutubeLinkItems
 from Plugins.Extensions.IPTVPlayer.libs.linklisteditor import YouTubeUserLinksManager
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
@@ -420,11 +421,7 @@ class Youtube(CBaseHostClass):
 
         try:
             title = item.get("title", "") or ""
-            if isinstance(title, str):
-                try:
-                    title = title.decode("utf-8")
-                except Exception:
-                    pass
+            title = ensure_str(title)
             title = title.strip()
             if title in invalidTitles:
                 return ""
@@ -447,11 +444,7 @@ class Youtube(CBaseHostClass):
 
         try:
             desc = item.get("desc", "") or ""
-            if isinstance(desc, str):
-                try:
-                    desc = desc.decode("utf-8")
-                except Exception:
-                    pass
+            desc = ensure_str(desc)
             desc = re.sub(r"[\x00-\x1f]+", " ", desc)
             m = re.search(r"Channel\s*:\s*([^\n\r]+)", desc, re.IGNORECASE)
             if m:
@@ -464,16 +457,11 @@ class Youtube(CBaseHostClass):
         return ""
 
     def _cleanChannelCandidate(self, value, invalidTitles):
-        # value may be a PY2 byte-string that needs decoding to text; on PY3
-        # str has no .decode() so this quietly no-ops (AttributeError caught)
-        # - same dance the title/desc checks around this do.
+        # native str on both: PY2 json text (unicode) becomes utf-8 str, so it
+        # compares with the native-str invalid titles - same as title/desc around this.
         if not value:
             return ""
-        if isinstance(value, str):
-            try:
-                value = value.decode("utf-8")
-            except Exception:
-                pass
+        value = ensure_str(value)
         value = value.strip()
         return value if (value and value not in invalidTitles) else ""
 
@@ -489,11 +477,7 @@ class Youtube(CBaseHostClass):
                 return
 
             title = item.get("title", "") or ""
-            if isinstance(title, str):
-                try:
-                    title = title.decode("utf-8")
-                except Exception:
-                    pass
+            title = ensure_str(title)
             title = title.strip()
 
             if title in [_("Next page"), "Next page", "Nächste Seite"]:
@@ -914,11 +898,7 @@ class Youtube(CBaseHostClass):
 
             if not channelName:
                 channelName = workItem.get("channel", "") or ""
-                if isinstance(channelName, str):
-                    try:
-                        channelName = channelName.decode("utf-8")
-                    except Exception:
-                        pass
+                channelName = ensure_str(channelName)
 
             if channelName in [_("Next page"), "Next page", "Nächste Seite"]:
                 channelName = ""

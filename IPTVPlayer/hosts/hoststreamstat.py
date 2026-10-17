@@ -13,6 +13,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
 from Plugins.Extensions.IPTVPlayer.hosts import hosturllist as urllist
 from Plugins.Extensions.IPTVPlayer.libs import ph
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist, getF4MLinksWithMeta, getMPDLinksWithMeta
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 
 ###################################################
 
@@ -20,6 +21,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 # FOREIGN import
 ###################################################
 import os
+import re
 ###################################################
 
 
@@ -51,28 +53,35 @@ class StreamStat(CBaseHostClass):
         printDBG('StreamStat.getLinksForVideo')
         sts, data = self.cm.getPage(cItem['url'])
         if not sts:
-            return
+            return []
         videoUrls = []
-        data = data.split()
-        dat = data[2]
+        # playlist file (m3u / pls): first stream URL line, not a fixed word index
+        dat = ''
+        for line in data.splitlines():
+            m = re.match(r'^\s*(?:File\d+=)?(https?://\S+)', line, re.I)
+            if m:
+                dat = m.group(1)
+                break
+        if not dat:
+            return []
         uri = urlparser.decorateParamsFromUrl(dat)
         protocol = uri.meta.get('iptv_proto', '')
         urlSupport = self.up.checkHostSupport(uri)
         if 1 == urlSupport:
-             retTab = self.up.getVideoLinkExt(uri)
-             videoUrls.extend(retTab)
+            retTab = self.up.getVideoLinkExt(uri)
+            videoUrls.extend(retTab)
         elif 0 == urlSupport and self._uriIsValid(uri):
-           if protocol == 'm3u8':
-               retTab = getDirectM3U8Playlist(uri, checkExt=False, checkContent=True)
-               videoUrls.extend(retTab)
-           elif protocol == 'f4m':
-              retTab = getF4MLinksWithMeta(uri)
-              videoUrls.extend(retTab)
-           elif protocol == 'mpd':
-              retTab = getMPDLinksWithMeta(uri, False)
-              videoUrls.extend(retTab)
-           else:
-              videoUrls.append({'name': 'direct link', 'url': uri})
+            if protocol == 'm3u8':
+                retTab = getDirectM3U8Playlist(uri, checkExt=False, checkContent=True)
+                videoUrls.extend(retTab)
+            elif protocol == 'f4m':
+                retTab = getF4MLinksWithMeta(uri)
+                videoUrls.extend(retTab)
+            elif protocol == 'mpd':
+                retTab = getMPDLinksWithMeta(uri, False)
+                videoUrls.extend(retTab)
+            else:
+                videoUrls.append({'name': 'direct link', 'url': uri})
         return videoUrls
 
     def listMainMenu(self, cItem):
@@ -99,35 +108,28 @@ class StreamStat(CBaseHostClass):
         links = self.cm.ph.getAllItemsBeetwenMarkers(dat, '<div class="logo_logo" style="background-image: url(', ');', False)
         descs = self.cm.ph.getAllItemsBeetwenMarkers(dat, '<p class="allomasnev_mufaj">', '</p>', False)
         quality = self.cm.ph.getAllItemsBeetwenMarkers(dat, '<p class="allomasnev_minoseg hidden-lg"><b>', '</b>', False)
-        icons = []
         printDBG(str(descs))
-        for i in id:
-            try:
-               icons.append({i: links[id.index(i)]})
-            except Exception:
-               pass
-        for i in web:
-            title = titles[web.index(i)]
+        # logos are listed per row number (id), in the same order as the rows
+        icons = links if len(links) == len(id) else []
+        for idx, i in enumerate(web):
+            title = titles[idx] if idx < len(titles) else ''
             title = title.replace('&nbsp;', ' ')
             url = 'https://streamstat.net' + i
+            icon = icons[idx] if idx < len(icons) else None
             try:
-               icon = icons[id.index(web.index(i))]
+                desc = descs[idx]
+                desc = desc.replace("&nbsp;", " ")
             except Exception:
-               icon = None
-            try:
-               desc = descs[web.index(i)]
-               desc = desc.replace("&nbsp;", " ")
-            except Exception:
-               desc = "No description available currently."
+                desc = "No description available currently."
             printDBG(str(desc))
             if title == "":
                 title = "Unnamed"
             params = {'title': title, 'icon': icon, 'url': url, 'desc': desc}
-            if "HLS" in quality[web.index(i)]:
+            if idx < len(quality) and "HLS" in quality[idx]:
                 self.addVideo(params)
             else:
-               self.addAudio(params)
-        if '<li class="disabled"><a><span class="glyphicon glyphicon-chevron-right"' not in dat:
+                self.addAudio(params)
+        if web and '<li class="disabled"><a><span class="glyphicon glyphicon-chevron-right"' not in dat:
             params = {'category': 'list_items', 'title': "Next page", 'icon': None, 'url': cItem['url'], 'page': page + 1}
             self.addDir(params)
 
@@ -163,8 +165,7 @@ class StreamStat(CBaseHostClass):
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("StreamStat.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
-        searchPattern = searchPattern.replace(" ", "+")
-        url = 'https://streamstat.net/main.cgi?mode=all&search=' + searchPattern + '&page=1&fp=50'
+        url = 'https://streamstat.net/main.cgi?mode=all&search=' + urllib_quote_plus(searchPattern) + '&page=1&fp=50'
         cItem['url'] = url
         cItem['page'] = 1
         self.listItems(cItem)

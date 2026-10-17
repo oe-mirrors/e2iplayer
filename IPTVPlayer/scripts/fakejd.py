@@ -461,15 +461,23 @@ def PoolConnection(*args, **kwargs):
     parameters = kwargs['params']
     printDBG("START THREAD")
     while not parameters.captcha_finished:
+        s = None
         try:
             s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             s.connect(('api.jdownloader.org', 80))
             s.send(("DEVICE%s" % parameters.session_token).encode('utf-8'))
 
             tmp = MyjdRequestHandler(s, (None, None), parameters)
-            s.close()
         except Exception:
             printExc()
+            # no busy loop while the server can not be reached
+            time.sleep(2)
+        finally:
+            if s is not None:
+                try:
+                    s.close()
+                except Exception:
+                    pass
 
 
 class Params:

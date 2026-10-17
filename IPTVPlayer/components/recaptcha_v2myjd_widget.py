@@ -8,6 +8,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, by
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.captchascriptwidget import CaptchaScriptWidgetBase
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str, ensure_binary
+from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import shellQuote
 ###################################################
 
 ###################################################
@@ -64,7 +65,10 @@ class UnCaptchaReCaptchaMyJDWidget(CaptchaScriptWidgetBase):
         else:
             debug = 1
 
-        cmd = GetPyScriptCmd('fakejd') + ' "%s" "%s" "%s" "%s" "%s" %d' % (GetPluginDir('libs/'), login, password, jdname, captcha, debug)
+        # the values go inside "..." -> shellQuote() escapes \ " ` $; the log line gets the password masked
+        cmdFmt = GetPyScriptCmd('fakejd') + ' "%s" "%s" "%s" "%s" "%s" %d'
+        cmd = cmdFmt % (GetPluginDir('libs/'), shellQuote(login), shellQuote(password), shellQuote(jdname), captcha, debug)
+        logCmd = cmdFmt % (GetPluginDir('libs/'), shellQuote(login), '***', shellQuote(jdname), captcha, debug)
 
         self["console"].setText(_('JDownloader script execution'))
 
@@ -73,4 +77,4 @@ class UnCaptchaReCaptchaMyJDWidget(CaptchaScriptWidgetBase):
         self.workconsole['stderr_conn'] = eConnectCallback(self.workconsole['console'].stderrAvail, self._scriptStderrAvail)
         self.workconsole['stdout_conn'] = eConnectCallback(self.workconsole['console'].stdoutAvail, self._scriptStdoutAvail)
         self.workconsole["console"].execute(cmd)
-        printDBG(">>> EXEC CMD [%s]" % cmd)
+        printDBG(">>> EXEC CMD [%s]" % logCmd)

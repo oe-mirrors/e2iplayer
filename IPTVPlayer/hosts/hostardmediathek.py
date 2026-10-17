@@ -16,6 +16,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEna
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 ###################################################
@@ -225,10 +226,10 @@ class ARDmediathek(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 meta.append('%d:%02d:%02d' % (h, m, s) if h else '%d:%02d min' % (m, s))
             except Exception:
                 pass
-        bcast = t.get('broadcastedOn') or ''
+        bcast = ensure_str(t.get('broadcastedOn') or '')
         if isinstance(bcast, str) and len(bcast) >= 10:
             meta.append(bcast[:10])
-        avail = t.get('availableTo') or ''
+        avail = ensure_str(t.get('availableTo') or '')
         if isinstance(avail, str) and len(avail) >= 10:
             meta.append(_('available until %s') % avail[:10])
         fsk = t.get('maturityContentRating') or ''
@@ -648,10 +649,10 @@ class ARDmediathek(GenericFolderWatchedScraperMixin, CBaseHostClass):
         show = (widget.get('show') or {}).get('title') or ''
         if show:
             otherInfo['title'] = self.cleanHtmlStr(show)
-        bcast = widget.get('broadcastedOn') or ''
+        bcast = ensure_str(widget.get('broadcastedOn') or '')
         if isinstance(bcast, str) and len(bcast) >= 10:
             otherInfo['premiere'] = bcast[:10]
-        avail = widget.get('availableTo') or ''
+        avail = ensure_str(widget.get('availableTo') or '')
         if isinstance(avail, str) and len(avail) >= 10:
             otherInfo['remaining'] = _('available until %s') % avail[:10]
         fsk = widget.get('maturityContentRating') or ''
@@ -795,7 +796,7 @@ class ARDmediathek(GenericFolderWatchedScraperMixin, CBaseHostClass):
                     descTab.append('%d:%02d' % (m, s))
                 except Exception:
                     pass
-            pub = it.get('publicationStartDateAndTime') or ''
+            pub = ensure_str(it.get('publicationStartDateAndTime') or '')
             if isinstance(pub, str) and len(pub) >= 10:
                 descTab.append(pub[:10])
             syn = self.cleanHtmlStr(it.get('synopsis') or '')

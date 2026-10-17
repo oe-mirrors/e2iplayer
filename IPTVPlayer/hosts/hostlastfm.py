@@ -34,7 +34,6 @@ def gettytul():
 class LastFM(GenericFolderWatchedScraperMixin, CBaseHostClass):
     STATION = "https://www.last.fm/player/station/%s?ajax=1"
     FAV_FIELDS = ("name", "category", "type", "url", "title", "icon", "desc", "station", "artist", "track", "yt_url", "duration")
-    SEARCH_TYPES = [(_("Artist"), "artist"), (_("User"), "user")]
 
     def __init__(self):
         CBaseHostClass.__init__(self, {"history": "lastfm", "cookie": "lastfm.cookie"})
@@ -278,7 +277,8 @@ class IPTVHost(GenericFolderWatchedHostMixin, CHostBase):
         self.watchedHelper = IPTVWatchedHelper("lastfm")
 
     def getSearchTypes(self):
-        return self.host.SEARCH_TYPES
+        # translated when asked, not at import time
+        return [(_("Artist"), "artist"), (_("User"), "user")]
 
     def withArticleContent(self, cItem):
         return cItem.get("type") == "video"

@@ -247,12 +247,18 @@ class ConfigExtMoviePlayer(ConfigBaseWidget, ConfigExtMoviePlayerBase):
         valTab.append(config.plugins.iptvplayer.aac_software_decode.value)
         valTab.append(config.plugins.iptvplayer.dts_software_decode.value)
         valTab.append(config.plugins.iptvplayer.wma_software_decode.value)
+        valTab.append(config.plugins.iptvplayer.ac3_software_decode.value)
+        valTab.append(config.plugins.iptvplayer.eac3_software_decode.value)
+        valTab.append(config.plugins.iptvplayer.mp3_software_decode.value)
         valTab.append(config.plugins.iptvplayer.software_decode_as.value)
         valTab.append(config.plugins.iptvplayer.stereo_software_decode.value)
         valTab.append(config.plugins.iptvplayer.ac3_mix.value)
         valTab.append(config.plugins.iptvplayer.aac_mix.value)
         valTab.append(config.plugins.iptvplayer.extplayer_subtitle_wrapping_enabled.value)
         valTab.append(config.plugins.iptvplayer.show_iframe.value)
+        # handed to the player at start for audio items (use_clear_iframe is read when the player closes)
+        valTab.append(config.plugins.iptvplayer.iframe_file.value)
+        valTab.append(config.plugins.iptvplayer.clear_iframe_file.value)
         return valTab
 
     def runSetup(self):
@@ -335,6 +341,7 @@ class ConfigExtMoviePlayer(ConfigBaseWidget, ConfigExtMoviePlayerBase):
             config.plugins.iptvplayer.show_iframe,
             config.plugins.iptvplayer.use_clear_iframe,
         ]
+        return tab
 
     def changeSubOptions(self):
         self.runSetup()

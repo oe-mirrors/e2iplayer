@@ -576,4 +576,5 @@ class IPTVHost(WatchedFlagHostMixin, CHostBase):
         return ret
 
     def withArticleContent(self, cItem):
-        return cItem.get("category", "") in ["video", "list_seasons", "list_episodes"]
+        # episode rows (meinecloud) carry no category, getArticleContent knows them by their stream_type
+        return cItem.get("category", "") in ["video", "list_seasons", "list_episodes"] or cItem.get("stream_type") == "mc_episode"

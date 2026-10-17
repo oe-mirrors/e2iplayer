@@ -146,7 +146,7 @@ class BaseDownloader:
         # calculate downloaded Speed
         if prevUpdateTime:
             deltaSize = self.localFileSize - self.prevLocalFileSize
-            deltaTime = (newTime - prevUpdateTime).seconds
+            deltaTime = (newTime - prevUpdateTime).total_seconds()
             if deltaTime > 0:
                 self.downloadSpeed = deltaSize / deltaTime
                 self.lastUpadateTime = newTime

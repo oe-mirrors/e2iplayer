@@ -252,7 +252,7 @@ class UltrahdHub(GenericFolderWatchedScraperMixin, CBaseHostClass):
         tpl = ""
         href = self.cm.ph.getSearchGroups(pagination, r"""href=['"]([^'"]*/page/\d+/[^'"]*)['"]""")[0]
         if href:
-            tpl = re.sub(r"/page/\d+/", "/page/{page}/", self.getFullUrl(href.replace("&amp;", "&")).replace("{", "{{").replace("}", "}}"), 1)
+            tpl = re.sub(r"/page/\d+/", "/page/{page}/", self.getFullUrl(href.replace("&amp;", "&")).replace("{", "{{").replace("}", "}}"), count=1)
         addPagingItems(self, dict(cItem, url=url), page, bool(seen) and bool(tpl) and hasNext, lastPage, tpl)
 
     def listSearchResult(self, cItem, searchPattern, searchType):

@@ -23,7 +23,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEna
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus, urllib_unquote
-from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, E2ColoR
@@ -66,7 +66,7 @@ EP_ORDINAL_RE = re.compile(r"^(?:ال(?:اولي|اولى|أولى|ثاني|ثا
 YEAR_RE = re.compile(r"\(?\s*(?<![\d.])((?:19|20)\d{2})(?![\d.])\s*\)?")
 DUB_WORD = "مدبلج"
 # left-to-right / right-to-left marks the site puts in front of some episode names
-BIDI_MARKS = ("\xe2\x80\x8e", "\xe2\x80\x8f") if isPY2() else (u"‎", u"‏")
+BIDI_MARKS = (ensure_str(u"\u200e"), ensure_str(u"\u200f"))
 # "<span>نوع الفيلم : </span> <a>..</a>" fields of a title page -> INFO keys
 INFO_FIELDS = (("genres", ("نوع",)), ("year", ("تاريخ", "السنة")), ("language", ("لغة",)), ("quality", ("جودة",)),
                ("country", ("الدولة", "البلد")), ("duration", ("مدة",)), ("director", ("المخرج",)), ("actors", ("بطولة", "الممثلين")))

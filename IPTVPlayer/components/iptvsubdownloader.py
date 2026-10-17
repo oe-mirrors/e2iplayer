@@ -573,7 +573,7 @@ class IPTVSubDownloaderWidget(Screen):
 
     def getInitialList(self):
         """Get the initial list from the subtitle provider."""
-        self.nexSelIndex = 0
+        self.nextSelIndex = 0
         self.prevSelList = []
         self.categoryList = []
         self.currList = []
@@ -889,7 +889,6 @@ class IPTVSubDownloaderWidget(Screen):
         selItem = self.getSelItem()
         if selItem and selItem.description != "":
             data = selItem.description
-            sData = data.replace("\n", "")
             sData = data.replace("[/br]", "\n")
             self["console"].setText(sData)
         else:
@@ -947,13 +946,13 @@ class IPTVSubDownloaderWidget(Screen):
         # Try to guess season and episode number using SxxExx pattern
         try:
             tmp = CParsingHelper.getSearchGroups(
-                " " + dInfo["movie_title"] + " ", RE_SEASON_EPISODE_SE, 2
+                " " + dInfo["movie_title"] + " ", RE_SEASON_EPISODE_SE, 2, ignoreCase=True
             )
             dInfo.update({"season": int(tmp[0]), "episode": int(tmp[1])})
         except Exception:
             try:
                 tmp = CParsingHelper.getSearchGroups(
-                    " " + dInfo["movie_title"] + " ", RE_SEASON_EPISODE_X, 2
+                    " " + dInfo["movie_title"] + " ", RE_SEASON_EPISODE_X, 2, ignoreCase=True
                 )
                 dInfo.update({"season": int(tmp[0]), "episode": int(tmp[1])})
             except Exception:

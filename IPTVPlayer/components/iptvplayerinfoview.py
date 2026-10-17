@@ -49,7 +49,8 @@ LOG_TAIL_BYTES = 96 * 1024
 LOG_REFRESH_MS = 2000
 
 PAGE_ABOUT, PAGE_SYSTEM, PAGE_LOG = 0, 1, 2
-PAGE_NAMES = {PAGE_ABOUT: _("About"), PAGE_SYSTEM: _("System"), PAGE_LOG: _("Log")}
+# lambdas: translated when shown, not at import (language change without restart)
+PAGE_NAMES = {PAGE_ABOUT: lambda: _("About"), PAGE_SYSTEM: lambda: _("System"), PAGE_LOG: lambda: _("Log")}
 
 _HEADING_COLOR = 0x0066ccff   # same accent blue IPTVArticleView uses for labels
 _TEXT_COLOR = 0x00ffffff
@@ -576,7 +577,7 @@ class IPTVPlayerInfoView(_SystemInfo, Screen):
 
     def _showPage(self):
         self._logTimer.stop()
-        name = PAGE_NAMES.get(self._page, "")
+        name = PAGE_NAMES.get(self._page, lambda: "")()
         self.setTitle("E2iPlayer - %s  (%d/3)" % (name, self._page + 1))
         self._setSplit()
         aboutPage = self._page == PAGE_ABOUT

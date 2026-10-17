@@ -259,9 +259,8 @@ class TitlovicomProvider(CBaseSubProviderClass):
         if None is tmpDIR:
             return
 
-        cItem = dict(cItem)
-        cItem.update({'category': '', 'path': tmpDIR})
-        self.listSupportedFilesFromPath(cItem, self.getSupportedFormats(all=True))
+        # an archive in the archive becomes an 'unpack_archive' item
+        self.listArchiveFiles(dict(cItem, path=tmpDIR))
 
     def downloadSubtitleFile(self, cItem):
         # Serbian Cyrillic ("Cirilica") files without UTF-8 are cp1251 (the code page of 'mk'), not cp1250 like Latin 'sr'
@@ -297,6 +296,8 @@ class TitlovicomProvider(CBaseSubProviderClass):
             self.getSearchList(self.currItem, 'get_subtitles')
         elif category == 'get_subtitles':
             self.getSubtitlesList(self.currItem)
+        elif category == 'unpack_archive':
+            self.unpackInnerArchive(self.currItem)
 
         CBaseSubProviderClass.endHandleService(self, index, refresh)
 

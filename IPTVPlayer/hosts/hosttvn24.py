@@ -41,8 +41,6 @@ def gettytul():
 class TVN24(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     FAV_FIELDS = ('name', 'category', 'type', 'url', 'title', 'icon', 'desc')
-    SECTIONS = [('najnowsze', _('Latest')), ('polska', _('Poland')), ('swiat', _('World')), ('biznes', _('Business')),
-                ('kultura-i-styl', _('Culture and lifestyle')), ('tvnmeteo', 'TVN Meteo'), ('tvnwarszawa', 'TVN Warszawa')]
     REGIONS = [('bialystok', 'Białystok'), ('katowice', 'Katowice'), ('krakow', 'Kraków'), ('lodz', 'Łódź'),
                ('lubuskie', 'Lubuskie'), ('opole', 'Opole'), ('poznan', 'Poznań'), ('rzeszow', 'Rzeszów'),
                ('szczecin', 'Szczecin'), ('trojmiasto', 'Trójmiasto'), ('wroclaw', 'Wrocław')]
@@ -97,8 +95,14 @@ class TVN24(GenericFolderWatchedScraperMixin, CBaseHostClass):
     ###################################################
     # listing
     ###################################################
+    @staticmethod
+    def sections():
+        # translated when the menu is built, not at import time (a language change needs no restart)
+        return [('najnowsze', _('Latest')), ('polska', _('Poland')), ('swiat', _('World')), ('biznes', _('Business')),
+                ('kultura-i-styl', _('Culture and lifestyle')), ('tvnmeteo', 'TVN Meteo'), ('tvnwarszawa', 'TVN Warszawa')]
+
     def listMain(self, cItem):
-        for path, title in self.SECTIONS:
+        for path, title in self.sections():
             params = dict(cItem)
             params.update({'category': 'list_items', 'title': title, 'url': self.getFullUrl('/' + path), 'good_for_fav': True})
             self.addDir(params)

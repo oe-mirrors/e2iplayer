@@ -61,10 +61,11 @@ class UnCaptchaReCaptcha:
                         apiUrl = self.getFullUrl('/index.cgi?apikey=') + apiKey + '&action=usercaptchacorrectdata&json=1&id=' + captchaid
                         sts, data = self.cm.getPage(apiUrl)
                         if not sts:
+                            # network error: retry until the sleep timeout runs out
+                            if sleepObj.getTimeout() == 0:
+                                errorMsgTab.append(_('Network failed %s.') % '2')
+                                break
                             continue
-                            # maybe simple continue here ?
-                            errorMsgTab.append(_('Network failed %s.') % '2')
-                            break
                         else:
                             printDBG('API DATA:\n%s\n' % data)
                             data = json_loads(data)

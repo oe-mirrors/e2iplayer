@@ -49,7 +49,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, ip
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.iptvdm.basedownloader import BaseDownloader
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
-from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import SidecarMixin
+from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import SidecarMixin, shellQuote
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 ###################################################
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import strDecode
@@ -307,7 +307,7 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
         rm(self.fileCmdPath)
         WriteTextFile(self.fileCmdPath, '|'.join(cmdTab))
 
-        cmd = '/usr/bin/cmdwrap' + (' "%s" "|" %s ' % (self.fileCmdPath, GetNice() + 2))
+        cmd = '/usr/bin/cmdwrap' + (' "%s" "|" %s ' % (shellQuote(self.fileCmdPath), GetNice() + 2))
 
         printDBG("FFMPEGDownloader::start cmd[%s]" % cmd)
 
@@ -355,7 +355,7 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
             speedObj = self.parseReObj['speed'].search(data)
             if bitrateObj is None or speedObj is None:
                 return 0
-            return int(float(bitrateObj.group(1)) * float(speedObj.group(1)) * 1024 / 8)
+            return int(float(bitrateObj.group(1)) * float(speedObj.group(1)) * 1000 / 8)
         except Exception:
             printExc()
         return 0

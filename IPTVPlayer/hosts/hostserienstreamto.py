@@ -87,7 +87,6 @@ class SerienStreamTo(CBaseHostClass):
         return not IsMediaNamingNormalized()
 
     def _getWatchedKeyForItem(self, cItem):
-        # printDBG("SerienStreamTo._getWatchedKeyForItem")
         try:
             if not isinstance(cItem, dict):
                 return ""
@@ -380,7 +379,7 @@ class SerienStreamTo(CBaseHostClass):
 
     def listNewEpisodes(self, cItem):
         printDBG("SerienStreamTo.listNewEpisodes")
-        sts, data = self.getPage(gettytul())
+        sts, data = self.getPage(self.getMainUrl())
         if not sts:
             return
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'class="latest-episode', "</a>")
@@ -424,7 +423,7 @@ class SerienStreamTo(CBaseHostClass):
         return icon
 
     def listHomeCards(self, cItem):
-        # start page rows "Angesagt" (trend-card) and "Neu auf SerienStream" (continue-card)
+        # start page rows "Im Trend" (trend-card) and "Neu auf S.to" (continue-card)
         printDBG("SerienStreamTo.listHomeCards")
         sts, data = self.getPage(self.getMainUrl())
         if not sts:
@@ -552,7 +551,7 @@ class SerienStreamTo(CBaseHostClass):
         params = dict(self.defaultParams)
         params["no_redirection"] = True
         sts, data = self.cm.getPage(url, params)
-        if self.cm.meta["status_code"] == 302:
+        if self.cm.meta.get("status_code") == 302:
             if self.cm.meta.get("location"):
                 url = self.cm.meta.get("location")
                 if self.cm.isValidUrl(url):
@@ -634,7 +633,7 @@ class SerienStreamTo(CBaseHostClass):
             params = dict(self.defaultParams)
             params["no_redirection"] = True
             self.cm.getPage(lurl, params, post_data=post)
-            if self.cm.meta["status_code"] == 302 and self.cm.meta.get("location") != lurl:
+            if self.cm.meta.get("status_code") == 302 and self.cm.meta.get("location") != lurl:
                 printDBG("Login OK")
             else:
                 printDBG("Login fehlgeschlagen")

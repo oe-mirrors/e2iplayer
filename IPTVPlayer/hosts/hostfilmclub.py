@@ -132,7 +132,7 @@ class FilmClub(GenericFolderWatchedScraperMixin, CBaseHostClass):
         for href, num in links:
             if num == page:
                 continue
-            tpl = re.sub(r"(page=|page-|-videos-)%d(?=\D|$)" % num, lambda m: m.group(1) + "{page}", href.replace("{", "{{").replace("}", "}}"), 1)
+            tpl = re.sub(r"(page=|page-|-videos-)%d(?=\D|$)" % num, lambda m: m.group(1) + "{page}", href.replace("{", "{{").replace("}", "}}"), count=1)
             if "{page}" in tpl:
                 break
             tpl = ""

@@ -401,9 +401,7 @@ class Favourites(CBaseHostClass):
             if sts:
                 item = data[cItem['item_idx']]
                 if self._setHost(cItem['host']):
-                    ret = self.host.setInitFavouriteItem(item)
-                    if RetHost.OK == ret.status:
-                        ret = True
+                    ret = RetHost.OK == self.host.setInitFavouriteItem(item).status
         except Exception:
             printExc()
         return ret
@@ -807,7 +805,7 @@ class IPTVHost(CHostBase):
                 if ret is not None and hasattr(ret, 'value') and 0 <= Index < len(ret.value) \
                    and ret.value[Index].type in [CDisplayListItem.TYPE_VIDEO, CDisplayListItem.TYPE_AUDIO]:
                     tmp = self.getItemHashData(Index, ret.value[Index])
-                    if tmp != '':
+                    if tmp is not None:
                         isWatched = bool(self.cachedRet.value[Index].isWatched)
                         isStarted = bool(getattr(self.cachedRet.value[Index], 'isStarted', False))
                         if not isWatched:
@@ -898,7 +896,7 @@ class IPTVHost(CHostBase):
             return self.host.getCurrentGuestHost().getLinksForVideo(Index)
         else:
             listLen = len(self.host.currList)
-            if listLen < Index and listLen > 0:
+            if not 0 <= Index < listLen:
                 printDBG("ERROR getLinksForVideo - current list is to short len: %d, Index: %d" % (listLen, Index))
                 return RetHost(RetHost.ERROR, value=[])
 

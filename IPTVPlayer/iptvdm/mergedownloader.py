@@ -16,7 +16,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, ip
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import enum, strwithmeta
 from Plugins.Extensions.IPTVPlayer.iptvdm.basedownloader import BaseDownloader
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
-from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import ensureText, fsPath, shellQuote, writeUtf8TextFile, SidecarMixin
+from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import ensureText, fsPath, shellQuote, writeUtf8TextFile, terminateToolsOfFile, SidecarMixin
 ###################################################
 # FOREIGN import
 ###################################################
@@ -116,17 +116,18 @@ class MergeDownloader(BaseDownloader, SidecarMixin):
             printExc()
 
     def _downloadAlreadyPresent(self, filePath):
+        # the path of the finished file that exists (the target or its chapters MKV), '' if none
         try:
             filePath = ensureText(filePath)
             if os.path.isfile(fsPath(filePath)) and DMHelper.getFileSize(fsPath(filePath)) > 0:
-                return True
+                return filePath
             mkvPath = self._getBasePath(filePath) + '.mkv'
             if os.path.isfile(fsPath(mkvPath)) and DMHelper.getFileSize(fsPath(mkvPath)) > 0:
-                return True
-            return False
+                return mkvPath
+            return ''
         except Exception:
             printExc()
-            return False
+            return ''
 
     def getName(self):
         return "MergeDownloader"
@@ -564,8 +565,11 @@ class MergeDownloader(BaseDownloader, SidecarMixin):
 
         self.filePath = self._applyDownloadChannelToFilePath(self.originalFilePath)
 
-        if self._downloadAlreadyPresent(self.filePath):
-            printDBG("MergeDownloader download already present [%s]" % self.filePath)
+        presentPath = self._downloadAlreadyPresent(self.filePath)
+        if presentPath:
+            printDBG("MergeDownloader download already present [%s]" % presentPath)
+            # the finished file can be the chapters MKV instead of the requested name
+            self.filePath = presentPath
             self.status = DMHelper.STS.DOWNLOADED
             self.finalizedPath = self.filePath
             self.localFileSize = DMHelper.getFileSize(fsPath(self.filePath))
@@ -595,6 +599,15 @@ class MergeDownloader(BaseDownloader, SidecarMixin):
                 idx += 1
         except Exception:
             printExc()
+
+        if not self.multi['urls'] or len(self.multi['urls']) != len(self.multi['files']):
+            # broken merge:// meta - nothing to download
+            printDBG("MergeDownloader wrong merge url [%s]" % self.url)
+            self.multi = {'urls': [], 'files': [], 'remote_size': [], 'remote_content_type': [], 'local_size': []}
+            self.status = DMHelper.STS.ERROR
+            self._clearSubtitleData()
+            self.onFinish()
+            return BaseDownloader.CODE_WRONG_LINK
 
         self.doStartDownload()
         return BaseDownloader.CODE_OK
@@ -730,6 +743,11 @@ class MergeDownloader(BaseDownloader, SidecarMixin):
                     self.console.sendCtrlC()  # kill produce zombies
                 elif hasattr(self.console, "kill"):
                     self.console.kill()  # kill produce zombies
+            # the signal above only reaches the shell around wget / ffmpeg
+            for item in self.multi['files']:
+                terminateToolsOfFile(item)
+            if self.tempMergePath:
+                terminateToolsOfFile(self.tempMergePath)
             self._cmdFinished(-1, True)
             return BaseDownloader.CODE_OK
         return BaseDownloader.CODE_NOT_DOWNLOADING
@@ -852,11 +870,14 @@ class MergeDownloader(BaseDownloader, SidecarMixin):
         if prevUpdateTime:
             localFileSize = self._localFileSize()
             deltaSize = localFileSize - self.prevLocalFileSize
-            deltaTime = (newTime - prevUpdateTime).seconds
+            deltaTime = (newTime - prevUpdateTime).total_seconds()
             if deltaTime > 0:
                 self.downloadSpeed = deltaSize / deltaTime
-        self.lastUpadateTime = newTime
-        self.prevLocalFileSize = self._localFileSize()
+                self.lastUpadateTime = newTime
+                self.prevLocalFileSize = localFileSize
+        else:
+            self.lastUpadateTime = newTime
+            self.prevLocalFileSize = self._localFileSize()
 
     def getRemoteFileSize(self):
         return self._remoteFileSize()

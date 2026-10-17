@@ -64,7 +64,7 @@ WEB_TYPES = (5, 6)
 SKIP_CATEGORIES = ("ALKASS", "SHAHID VIP", "WEYYAK")
 # sources that never play: the closed Alkass bucket
 DEAD_SOURCES = re.compile(r"storage\.googleapis\.com/livealkass")
-CHECK_TIMEOUT = 10  # seconds for the playlist check of a source
+CHECK_TIMEOUT = 5  # seconds for the playlist check of a source (checked one after the other, a playlist answers in well under that)
 # upload.wikimedia.org only renders these thumbnail widths (any other width: HTTP 400 "Use thumbnail sizes
 # listed on https://w.wiki/GHai", 09.10.2026) and wants a descriptive User-Agent from tools
 WIKIMEDIA_THUMB_RE = re.compile(r"^(https?://upload\.wikimedia\.org/.+/thumb/.+/)(\d+)(px-[^/]+)$")

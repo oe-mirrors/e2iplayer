@@ -325,10 +325,14 @@ class NapiProjektProvider(CBaseSubProviderClass):
                     return retData
                 fileName = self._getFileName(title, lang, subId, imdbid, fps, ext)
                 fileName = GetSubtitlesDir(fileName)
-                if not self.converFileToUtf8(tmpFile, fileName):
-                    rm(tmpFile)
+                sts = self.converFileToUtf8(tmpFile, fileName)
+                rm(tmpFile)
+                if not sts:
                     return retData
                 retData = {'title': title, 'path': fileName, 'lang': lang, 'imdbid': imdbid, 'sub_id': subId}
+            else:
+                # without the C subtitle parser: the shared format detection + UTF-8 conversion
+                retData = self.saveSubtitleData(data, title, lang, subId, imdbid, fps=fps)
         except Exception:
             printExc()
             return retData

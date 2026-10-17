@@ -31,7 +31,6 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Components.config import config
 from Tools.BoundFunction import boundFunction
 from enigma import eTimer
-from time import sleep
 import datetime
 import os
 import time
@@ -125,11 +124,10 @@ class IPTVDMApi():
             return
         listUDIdx = self.findIdxInQueueUD(downloadIdx)
         if -1 < listUDIdx and None is not self.queueUD[listUDIdx].downloader:
+            # terminate() reports the finish itself (onFinish -> cmdFinished), no wait on the main thread needed
             self.queueUD[listUDIdx].downloader.terminate()
-            # give some time to finish
-            sleep(1)
-            # manually run endCmd because when killed
-            # appClosed is not called
+            # manually run endCmd for a downloader that was not running any more
+            # (appClosed is not called when killed); no-op once the item is finished
             self.cmdFinished(downloadIdx, -1)
 
     def stopAllDownloadItem(self):
@@ -734,7 +732,8 @@ class IPTVDMApi():
                     shortName += '...'
                 # status gets its own line below the filename, colored
                 # per outcome
-                self.finishNotifyCallback().showNotify(shortName, _('Download already exists'), 'green')
+                if self.finishNotifyCallback is not None:
+                    self.finishNotifyCallback().showNotify(shortName, _('Download already exists'), 'green')
             except Exception:
                 printExc()
             return
@@ -765,7 +764,8 @@ class IPTVDMApi():
             shortName = fileName[:100]
             if len(fileName) > len(shortName):
                 shortName += '...'
-            self.finishNotifyCallback().showNotify(shortName, status, statusColor)
+            if self.finishNotifyCallback is not None:
+                self.finishNotifyCallback().showNotify(shortName, status, statusColor)
         except Exception:
             printExc()
 

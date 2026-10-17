@@ -39,7 +39,8 @@ PROGRAM_RE = re.compile(r'/program/(\d+)')
 
 
 class ShoofMax(GenericFolderWatchedScraperMixin, CBaseHostClass):
-    FAV_FIELDS = ("name", "category", "type", "url", "title", "s_title", "pid", "episode", "episodes",
+    # no "episodes": a favourite series re-reads its episode count, so new episodes show up
+    FAV_FIELDS = ("name", "category", "type", "url", "title", "s_title", "pid", "episode",
                   "series_url", "icon", "meta_type", "meta_title")
 
     def __init__(self):

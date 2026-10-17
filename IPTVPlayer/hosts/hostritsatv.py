@@ -20,6 +20,7 @@ import re
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
@@ -242,7 +243,7 @@ class RitsaTv(CBaseHostClass):
         #     if it isn't clean JSON)
         for arr in re.findall(r'streams\s*=\s*(\[.*?\])\s*;', text, re.DOTALL):
             try:
-                items = [s for s in json.loads(arr) if isinstance(s, str)]
+                items = [ensure_str(s) for s in json.loads(arr) if isinstance(s, (str, type(u'')))]
             except Exception:
                 items = re.findall(r'''["']([^"']+)["']''', arr)
             out.extend(('', s) for s in items if s.strip() and ('http' in s or s.startswith('[')))
@@ -262,7 +263,7 @@ class RitsaTv(CBaseHostClass):
         # VK / OK.ru / Dailymotion / RuTube embeds inside the wrapper page
         for embed in dict.fromkeys(self.EMBED_RE.findall(text)):
             try:
-                if self.up.checkHostSupport(embed):
+                if self.up.checkHostSupport(embed) == 1:
                     links = self.up.getVideoLinkExt(embed)
                     if links:
                         return links
@@ -380,7 +381,7 @@ class RitsaTv(CBaseHostClass):
     def getVideoLinks(self, videoUrl):
         printDBG("RitsaTv.getVideoLinks [%s]" % videoUrl)
         try:
-            if self.up.checkHostSupport(videoUrl):
+            if self.up.checkHostSupport(videoUrl) == 1:
                 return decorateResolvedLinkItems(self.up.getVideoLinkExt(videoUrl), sidecarFromUrlMeta(videoUrl, IsSidecarEnabled()))
         except Exception:
             printExc()

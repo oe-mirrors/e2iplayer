@@ -215,7 +215,7 @@ _CUE_TIME = re.compile(r'(?:(\d+):)?(\d{1,2}):(\d{2})[.,](\d{1,3})')
 # every tag but <i> <b> <u> and their ends; <i.class> becomes <i>
 _CUE_TAG = re.compile(r'<(?!/?[ibu]>)[^>]*>')
 _CUE_CLASS = re.compile(r'<([ibu])\.[^>]*>')
-_CUE_ENTITIES = (('&lt;', '<'), ('&gt;', '>'), ('&nbsp;', ' '), ('&lrm;', u'‎'), ('&rlm;', u'‏'), ('&amp;', '&'))
+_CUE_ENTITIES = (('&lt;', '<'), ('&gt;', '>'), ('&nbsp;', ' '), ('&lrm;', u'\u200e'), ('&rlm;', u'\u200f'), ('&amp;', '&'))
 
 
 def subtitleLangCode(lang):
@@ -260,7 +260,7 @@ def _cueLine(line):
 def subtitleToSrt(text):
     # (text, ext) to save of a downloaded subtitle: WebVTT and SubRip become clean SubRip (numbered cues, comma
     # times, only <i>/<b>/<u> tags), ASS/SSA stays as it is; ('', '') for anything else (an error page)
-    text = ensureText(text).lstrip(u'﻿').replace('\r\n', '\n').replace('\r', '\n')
+    text = ensureText(text).lstrip(u'\ufeff').replace('\r\n', '\n').replace('\r', '\n')
     if '[Script Info]' in text[:300]:
         return text, 'ass'
     cues = []

@@ -290,7 +290,7 @@ class WeCima(GenericFolderWatchedScraperMixin, CBaseHostClass):
         # url of any page with "{page}" in it, from a numbered pager link: /page/N/, ?offset=N or &page=N
         for href, label in re.findall(r'<a[^>]+href="([^"]+)"[^>]*>\s*(\d+)\s*</a>', pagination):
             url = self._canonUrl(href)
-            tpl = re.sub(r"(/page/|[?&](?:page|offset)=)%s(?=/|&|$)" % label, r"\g<1>{page}", url, 1)
+            tpl = re.sub(r"(/page/|[?&](?:page|offset)=)%s(?=/|&|$)" % label, r"\g<1>{page}", url, count=1)
             if "{page}" in tpl:
                 return tpl
         return ""
