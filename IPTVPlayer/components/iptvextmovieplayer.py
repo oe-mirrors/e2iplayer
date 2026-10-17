@@ -1833,7 +1833,11 @@ class IPTVExtMoviePlayer(Screen):
         self.extPlayerCmddDispatcher.play()
 
     def key_pause(self):
-        self.extPlayerCmddDispatcher.pause()
+        # remotes with one play/pause key send pause in both states
+        if 'Pause' == self.playback['Status']:
+            self.extPlayerCmddDispatcher.play()
+        else:
+            self.extPlayerCmddDispatcher.pause()
 
     def key_exit(self):
         self.doExit()
@@ -1920,10 +1924,7 @@ class IPTVExtMoviePlayer(Screen):
             self.extPlayerCmddDispatcher.doGoToSeek(str(int(target)))
 
     def key_ok(self):
-        if 'Pause' == self.playback['Status']:
-            self.extPlayerCmddDispatcher.play()
-        else:
-            self.extPlayerCmddDispatcher.pause()
+        self.key_pause()
 
     def key_loop(self):
         if self.playback['IsLoop']:
