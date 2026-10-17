@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-12 16:40+0000\n"
+"POT-Creation-Date: 2026-10-17 15:42+0000\n"
 "PO-Revision-Date: 2026-10-08 20:17+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Norwegian Bokmål\n"
@@ -378,6 +378,10 @@ msgstr "4K-filmer"
 msgid "5 seconds"
 msgstr "5 sekunder"
 
+#, python-format
+msgid "A folder \"%s\" exists already."
+msgstr ""
+
 msgid "A search is already running."
 msgstr "Et søk pågår allerede."
 
@@ -496,6 +500,12 @@ msgstr "Legg til ny favorittgruppe"
 
 msgid "Add to User Links"
 msgstr "Legg til i brukerlenker"
+
+msgid "Add to Watchlist"
+msgstr ""
+
+msgid "Add to Watchlist folder..."
+msgstr ""
 
 msgid "Added"
 msgstr "Lagt til"
@@ -1437,6 +1447,9 @@ msgstr "Slett JS-hurtigbuffer etter (dager, 0 = aldri)"
 msgid "Delete JS cache now"
 msgstr "Slett JS-hurtigbuffer nå"
 
+msgid "Delete Watchlist folder"
+msgstr ""
+
 msgid "Delete all cache files now"
 msgstr "Slett alle hurtigbufferfiler nå"
 
@@ -1483,6 +1496,10 @@ msgid "Delete subtitles cache now"
 msgstr "Slett hurtigbuffer for undertekster nå"
 
 msgid "Delete the cache when the torrent is closed"
+msgstr ""
+
+#, python-format
+msgid "Delete the folder \"%s\"? Its videos go back to the Watchlist."
 msgstr ""
 
 msgid "Delete thumbnails cache now"
@@ -2032,6 +2049,9 @@ msgstr "Feil ved omdøping av fil: %s"
 msgid "Error saving favorites."
 msgstr "Feil ved lagring av favoritter."
 
+msgid "Error saving the Watchlist."
+msgstr ""
+
 msgid "Error while loading watch data"
 msgstr "Feil ved lasting av seerdata"
 
@@ -2151,10 +2171,6 @@ msgid "Failed to write file \"%s\"."
 msgstr "Kunne ikke skrive filen \"%s\"."
 
 #, python-format
-msgid "Failed to write the file \"%s\"."
-msgstr "Kunne ikke skrive filen \"%s\"."
-
-#, python-format
 msgid "Failed: %s"
 msgstr "Mislyktes: %s"
 
@@ -2189,6 +2205,9 @@ msgid "Featured"
 msgstr "Utvalgt"
 
 msgid "FebBox token (\"ui\" cookie of www.febbox.com):"
+msgstr ""
+
+msgid "Female"
 msgstr ""
 
 #, python-format
@@ -3238,9 +3257,15 @@ msgstr "MP3Quran direkteradio"
 msgid "Main"
 msgstr "Hoved"
 
+msgid "Main menu"
+msgstr ""
+
 #, python-format
 msgid "Make directory [%s]"
 msgstr "Opprett mappe [%s]"
+
+msgid "Male"
+msgstr ""
 
 msgid "Manager status:"
 msgstr "Behandlerstatus:"
@@ -3396,6 +3421,9 @@ msgstr "Flytt"
 msgid "Move failed."
 msgstr "Flytting mislyktes."
 
+msgid "Move to Watchlist folder..."
+msgstr ""
+
 msgid "Movie"
 msgstr "Film"
 
@@ -3535,6 +3563,9 @@ msgstr "Nettverksfeil."
 msgid "New"
 msgstr "Ny"
 
+msgid "New Watchlist folder"
+msgstr ""
+
 msgid "New dir"
 msgstr "Ny mappe"
 
@@ -3549,6 +3580,9 @@ msgstr "Nye ikoner vil ikke være tilgjengelige."
 
 msgid "New links"
 msgstr "Nye lenker"
+
+msgid "New search"
+msgstr ""
 
 msgid "New since installed version"
 msgstr "Nytt siden installert versjon"
@@ -4435,6 +4469,9 @@ msgstr ""
 msgid "Remove file"
 msgstr "Fjern fil"
 
+msgid "Remove from Watchlist"
+msgstr ""
+
 msgid "Remove from favorites"
 msgstr "Fjern fra favoritter"
 
@@ -4457,6 +4494,9 @@ msgstr "Fjern miniatyrbilder"
 
 msgid "Rename"
 msgstr "Gi nytt navn"
+
+msgid "Rename Watchlist folder"
+msgstr ""
 
 msgid "Rename file"
 msgstr "Gi filen nytt navn"
@@ -4603,6 +4643,10 @@ msgstr "Skriptet er ferdig."
 msgid "Search"
 msgstr "Søk"
 
+#, python-format
+msgid "Search \"%s\" was not finished"
+msgstr ""
+
 msgid "Search History is empty."
 msgstr "Søkehistorikken er tom."
 
@@ -4748,9 +4792,6 @@ msgstr "Velg filmavspiller"
 
 msgid "Select option"
 msgstr "Velg alternativ"
-
-msgid "Select pictures"
-msgstr "Velg bilder"
 
 msgid "Select subtitles file"
 msgstr "Velg undertekstfil"
@@ -4972,6 +5013,9 @@ msgstr ""
 
 msgid "Show results"
 msgstr "Vis resultater"
+
+msgid "Show results so far"
+msgstr ""
 
 msgid "Show search history"
 msgstr "Vis søkehistorikk"
@@ -5479,6 +5523,9 @@ msgstr "QR-koden fører til wiki-siden med bilder og nedlasting av utvidelsen."
 msgid "The Stalker portal of this entry is not configured (any more)."
 msgstr "Stalker-portalen for denne oppføringen er ikke konfigurert (lenger)."
 
+msgid "The Watchlist is empty. MENU key on a video: \"Add to Watchlist\"."
+msgstr ""
+
 msgid "The Xtream account of this entry is not configured (any more)."
 msgstr "Xtream-kontoen for denne oppføringen er ikke (lenger) konfigurert."
 
@@ -5644,6 +5691,10 @@ msgid ""
 "Leave this OFF if you do not want that. The other resolvers (VidEasy, VidLink, Peachify, vidrock, VidNest, ...) decrypt their links on the receiver and are not affected."
 msgstr ""
 
+#, python-format
+msgid "The results of %d of %d sites are from the last search for \"%s\" - this asks all sites again"
+msgstr ""
+
 msgid "The same item already exists in this group."
 msgstr "Det samme elementet finnes allerede i denne gruppen."
 
@@ -5791,6 +5842,9 @@ msgstr "Denne episoden er ikke tilgjengelig i denne versjonen (SUB/DUB) på denn
 
 msgid "This feed is empty, or the YouTube sign-in has expired - sign out and in again."
 msgstr "Denne feeden er tom, eller YouTube-påloggingen er utløpt - logg ut og inn igjen."
+
+msgid "This folder is empty. MENU key on a video of the Watchlist: \"Move to Watchlist folder...\"."
+msgstr ""
 
 msgid "This folder is protected by a PIN, open it on the receiver."
 msgstr "Denne mappen er beskyttet med en PIN, åpne den på mottakeren."
@@ -6051,6 +6105,9 @@ msgstr "Sporliste"
 
 msgid "Trailer"
 msgstr "Trailer"
+
+msgid "Trans"
+msgstr ""
 
 msgid "Translation:"
 msgstr "Oversettelse:"
@@ -6421,6 +6478,15 @@ msgstr "Se senere"
 msgid "Watch online"
 msgstr "Se på nett"
 
+msgid "Watchlist"
+msgstr ""
+
+msgid "Watchlist (no folder)"
+msgstr ""
+
+msgid "Watchlist folder"
+msgstr ""
+
 msgid "WebStreamr / AIOStreams manifest URL (your own):"
 msgstr ""
 
@@ -6596,6 +6662,9 @@ msgstr "Spillelisten din «Se senere»."
 #, python-format
 msgid "Your MyE2i extension is outdated or unknown (v%s or newer needed). Please update:"
 msgstr "MyE2i-utvidelsen din er utdatert eller ukjent (v%s eller nyere kreves). Oppdater:"
+
+msgid "Your own list of videos, in folders of your own (MENU key on a video: \"Add to Watchlist\")"
+msgstr ""
 
 msgid "Your search entry"
 msgstr "Søket ditt"

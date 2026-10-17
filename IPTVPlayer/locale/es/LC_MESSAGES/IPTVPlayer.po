@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: E2iPlayer OE-Mirrors Version\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-12 16:40+0000\n"
+"POT-Creation-Date: 2026-10-17 15:42+0000\n"
 "PO-Revision-Date: 2026-10-05 20:00+0200\n"
 "Last-Translator: polinene\n"
 "Language-Team: polinene\n"
@@ -386,6 +386,10 @@ msgstr "Películas 4K"
 msgid "5 seconds"
 msgstr "5 segundos"
 
+#, python-format
+msgid "A folder \"%s\" exists already."
+msgstr ""
+
 msgid "A search is already running."
 msgstr "Ya hay una búsqueda en curso."
 
@@ -504,6 +508,12 @@ msgstr "Añadir nuevo grupo de favoritos"
 
 msgid "Add to User Links"
 msgstr "Añadir a Enlaces del Usuario"
+
+msgid "Add to Watchlist"
+msgstr ""
+
+msgid "Add to Watchlist folder..."
+msgstr ""
 
 msgid "Added"
 msgstr "Añadido"
@@ -1445,6 +1455,9 @@ msgstr "Eliminar caché JS después de (días, 0 = nunca)"
 msgid "Delete JS cache now"
 msgstr "Eliminar caché JS ahora"
 
+msgid "Delete Watchlist folder"
+msgstr ""
+
 msgid "Delete all cache files now"
 msgstr "Eliminar todos los archivos de caché ahora"
 
@@ -1491,6 +1504,10 @@ msgid "Delete subtitles cache now"
 msgstr "Eliminar caché de subtítulos ahora"
 
 msgid "Delete the cache when the torrent is closed"
+msgstr ""
+
+#, python-format
+msgid "Delete the folder \"%s\"? Its videos go back to the Watchlist."
 msgstr ""
 
 msgid "Delete thumbnails cache now"
@@ -2040,6 +2057,9 @@ msgstr "Error renombrando archivo: %s"
 msgid "Error saving favorites."
 msgstr "Error al guardar los favoritos."
 
+msgid "Error saving the Watchlist."
+msgstr ""
+
 msgid "Error while loading watch data"
 msgstr "Error al cargar los datos de visualización"
 
@@ -2159,10 +2179,6 @@ msgid "Failed to write file \"%s\"."
 msgstr "No se pudo escribir el archivo \"%s\"."
 
 #, python-format
-msgid "Failed to write the file \"%s\"."
-msgstr "No se pudo escribir el archivo \"%s\"."
-
-#, python-format
 msgid "Failed: %s"
 msgstr "Fallo: %s"
 
@@ -2197,6 +2213,9 @@ msgid "Featured"
 msgstr "Destacados"
 
 msgid "FebBox token (\"ui\" cookie of www.febbox.com):"
+msgstr ""
+
+msgid "Female"
 msgstr ""
 
 #, python-format
@@ -3247,9 +3266,15 @@ msgstr "Radio en vivo MP3Quran"
 msgid "Main"
 msgstr "Principal"
 
+msgid "Main menu"
+msgstr ""
+
 #, python-format
 msgid "Make directory [%s]"
 msgstr "Hacer directorio [%s]"
+
+msgid "Male"
+msgstr ""
 
 msgid "Manager status:"
 msgstr "Estado del gestor:"
@@ -3405,6 +3430,9 @@ msgstr "Mover"
 msgid "Move failed."
 msgstr "Error al mover."
 
+msgid "Move to Watchlist folder..."
+msgstr ""
+
 msgid "Movie"
 msgstr "Pelìcula"
 
@@ -3546,6 +3574,9 @@ msgstr "Fallo de red."
 msgid "New"
 msgstr "Nuevo"
 
+msgid "New Watchlist folder"
+msgstr ""
+
 msgid "New dir"
 msgstr "Nuevo directorio"
 
@@ -3560,6 +3591,9 @@ msgstr "Nuevos iconos no estan disponibles."
 
 msgid "New links"
 msgstr "Nuevos enlaces"
+
+msgid "New search"
+msgstr ""
 
 msgid "New since installed version"
 msgstr "Novedades desde la versión instalada"
@@ -4446,6 +4480,9 @@ msgstr ""
 msgid "Remove file"
 msgstr "Eliminar archivo"
 
+msgid "Remove from Watchlist"
+msgstr ""
+
 msgid "Remove from favorites"
 msgstr "Eliminar de favoritos"
 
@@ -4468,6 +4505,9 @@ msgstr "Eliminar miniaturas"
 
 msgid "Rename"
 msgstr "Renombrar"
+
+msgid "Rename Watchlist folder"
+msgstr ""
 
 msgid "Rename file"
 msgstr "Renombrar archivo"
@@ -4609,6 +4649,10 @@ msgstr "Script finalizado."
 
 msgid "Search"
 msgstr "Busqueda"
+
+#, python-format
+msgid "Search \"%s\" was not finished"
+msgstr ""
 
 msgid "Search History is empty."
 msgstr "El historial De Búsqueda está vacío."
@@ -4755,9 +4799,6 @@ msgstr "Seleccione el reproductor de películas"
 
 msgid "Select option"
 msgstr "Seleccionar opción"
-
-msgid "Select pictures"
-msgstr "Seleccionar imágenes"
 
 msgid "Select subtitles file"
 msgstr "Seleccione el archivo de subtítulos"
@@ -4977,6 +5018,9 @@ msgstr ""
 
 msgid "Show results"
 msgstr "Mostrar resultados"
+
+msgid "Show results so far"
+msgstr ""
 
 msgid "Show search history"
 msgstr "Mostrar historial de búsqueda"
@@ -5484,6 +5528,9 @@ msgstr "El código QR lleva a la página wiki con imágenes y la descarga de la 
 msgid "The Stalker portal of this entry is not configured (any more)."
 msgstr ""
 
+msgid "The Watchlist is empty. MENU key on a video: \"Add to Watchlist\"."
+msgstr ""
+
 msgid "The Xtream account of this entry is not configured (any more)."
 msgstr "La cuenta Xtream de esta entrada no está configurada (ya)."
 
@@ -5649,6 +5696,10 @@ msgid ""
 "Leave this OFF if you do not want that. The other resolvers (VidEasy, VidLink, Peachify, vidrock, VidNest, ...) decrypt their links on the receiver and are not affected."
 msgstr ""
 
+#, python-format
+msgid "The results of %d of %d sites are from the last search for \"%s\" - this asks all sites again"
+msgstr ""
+
 msgid "The same item already exists in this group."
 msgstr "El mismo elemento ya existe en este grupo."
 
@@ -5794,6 +5845,9 @@ msgstr "Este episodio no está disponible en esta versión (SUB/DUB) en este ser
 
 msgid "This feed is empty, or the YouTube sign-in has expired - sign out and in again."
 msgstr "Este feed está vacío o el inicio de sesión de YouTube ha caducado - cierre sesión y vuelva a iniciarla."
+
+msgid "This folder is empty. MENU key on a video of the Watchlist: \"Move to Watchlist folder...\"."
+msgstr ""
 
 msgid "This folder is protected by a PIN, open it on the receiver."
 msgstr "Esta carpeta está protegida por PIN, ábrala en el receptor."
@@ -6054,6 +6108,9 @@ msgstr "Lista de canciones"
 
 msgid "Trailer"
 msgstr "Trailer"
+
+msgid "Trans"
+msgstr ""
 
 msgid "Translation:"
 msgstr "Traducción:"
@@ -6424,6 +6481,15 @@ msgstr "Ver más tarde"
 msgid "Watch online"
 msgstr ""
 
+msgid "Watchlist"
+msgstr ""
+
+msgid "Watchlist (no folder)"
+msgstr ""
+
+msgid "Watchlist folder"
+msgstr ""
+
 msgid "WebStreamr / AIOStreams manifest URL (your own):"
 msgstr ""
 
@@ -6599,6 +6665,9 @@ msgstr "Su lista de reproducción 'Ver más tarde'."
 #, python-format
 msgid "Your MyE2i extension is outdated or unknown (v%s or newer needed). Please update:"
 msgstr "Su extensión MyE2i está desactualizada o es desconocida (se necesita v%s o superior). Actualícela:"
+
+msgid "Your own list of videos, in folders of your own (MENU key on a video: \"Add to Watchlist\")"
+msgstr ""
 
 msgid "Your search entry"
 msgstr "Su entrada de búsqueda"

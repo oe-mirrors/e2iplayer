@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-12 16:40+0000\n"
+"POT-Creation-Date: 2026-10-17 15:42+0000\n"
 "PO-Revision-Date: 2026-07-27 16:39+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -391,6 +391,10 @@ msgstr ""
 msgid "5 seconds"
 msgstr "sekund"
 
+#, python-format
+msgid "A folder \"%s\" exists already."
+msgstr ""
+
 msgid "A search is already running."
 msgstr ""
 
@@ -509,6 +513,12 @@ msgstr "Přidání nové skupiny oblíbených položek"
 
 msgid "Add to User Links"
 msgstr "Přidat do uživatelských odkazů"
+
+msgid "Add to Watchlist"
+msgstr ""
+
+msgid "Add to Watchlist folder..."
+msgstr ""
 
 msgid "Added"
 msgstr ""
@@ -1480,6 +1490,9 @@ msgstr ""
 msgid "Delete JS cache now"
 msgstr "Smazat historii vyhledávání"
 
+msgid "Delete Watchlist folder"
+msgstr ""
+
 #, fuzzy
 msgid "Delete all cache files now"
 msgstr "Smazat soubor protokolu"
@@ -1533,6 +1546,10 @@ msgid "Delete subtitles cache now"
 msgstr "Vyberte stopu s titulky"
 
 msgid "Delete the cache when the torrent is closed"
+msgstr ""
+
+#, python-format
+msgid "Delete the folder \"%s\"? Its videos go back to the Watchlist."
 msgstr ""
 
 msgid "Delete thumbnails cache now"
@@ -2103,6 +2120,9 @@ msgstr "Chyba při přejmenování souboru: %s"
 msgid "Error saving favorites."
 msgstr "Chyba při ukládání oblíbených položek."
 
+msgid "Error saving the Watchlist."
+msgstr ""
+
 msgid "Error while loading watch data"
 msgstr "Chyba při načítání dat sledování"
 
@@ -2227,10 +2247,6 @@ msgid "Failed to write file \"%s\"."
 msgstr "Nepodařilo se zapsat do souboru \"%s\"."
 
 #, python-format
-msgid "Failed to write the file \"%s\"."
-msgstr "Nepodařilo se zapsat soubor „%s“."
-
-#, python-format
 msgid "Failed: %s"
 msgstr "Selhalo: %s"
 
@@ -2265,6 +2281,9 @@ msgid "Featured"
 msgstr ""
 
 msgid "FebBox token (\"ui\" cookie of www.febbox.com):"
+msgstr ""
+
+msgid "Female"
 msgstr ""
 
 #, python-format
@@ -3346,9 +3365,15 @@ msgstr ""
 msgid "Main"
 msgstr "Hlavní"
 
+msgid "Main menu"
+msgstr ""
+
 #, python-format
 msgid "Make directory [%s]"
 msgstr "Vytvořit adresář [%s]"
+
+msgid "Male"
+msgstr ""
 
 msgid "Manager status:"
 msgstr "Stav manažera:"
@@ -3513,6 +3538,9 @@ msgstr "Přesunout"
 msgid "Move failed."
 msgstr "Přesun se nezdařil."
 
+msgid "Move to Watchlist folder..."
+msgstr ""
+
 msgid "Movie"
 msgstr "Film"
 
@@ -3658,6 +3686,9 @@ msgstr "Selhala síť %s."
 msgid "New"
 msgstr "Nový"
 
+msgid "New Watchlist folder"
+msgstr ""
+
 msgid "New dir"
 msgstr "Nový ředitel"
 
@@ -3672,6 +3703,9 @@ msgid "New icons will not be available."
 msgstr "Nové ikony nebudou k dispozici."
 
 msgid "New links"
+msgstr ""
+
+msgid "New search"
 msgstr ""
 
 #, fuzzy
@@ -4585,6 +4619,9 @@ msgstr ""
 msgid "Remove file"
 msgstr "Odstranit soubor"
 
+msgid "Remove from Watchlist"
+msgstr ""
+
 msgid "Remove from favorites"
 msgstr "Odebrat z oblíbených"
 
@@ -4607,6 +4644,9 @@ msgstr "Odebrání miniatur"
 
 msgid "Rename"
 msgstr "Přejmenovat"
+
+msgid "Rename Watchlist folder"
+msgstr ""
 
 msgid "Rename file"
 msgstr "Přejmenovat soubor"
@@ -4756,6 +4796,10 @@ msgstr "Skript MyE2i dokončen."
 
 msgid "Search"
 msgstr "Hledat"
+
+#, python-format
+msgid "Search \"%s\" was not finished"
+msgstr ""
 
 msgid "Search History is empty."
 msgstr "Historie vyhledávání je prázdná."
@@ -4911,9 +4955,6 @@ msgstr "Vyberte přehrávač videí"
 
 msgid "Select option"
 msgstr "Vybrat možnost"
-
-msgid "Select pictures"
-msgstr "Vyberte obrázky"
 
 msgid "Select subtitles file"
 msgstr "Vyberte soubor s titulky"
@@ -5145,6 +5186,9 @@ msgstr ""
 #, fuzzy
 msgid "Show results"
 msgstr "Výsledky vyhledávání"
+
+msgid "Show results so far"
+msgstr ""
 
 #, fuzzy
 msgid "Show search history"
@@ -5653,6 +5697,9 @@ msgstr ""
 msgid "The Stalker portal of this entry is not configured (any more)."
 msgstr ""
 
+msgid "The Watchlist is empty. MENU key on a video: \"Add to Watchlist\"."
+msgstr ""
+
 msgid "The Xtream account of this entry is not configured (any more)."
 msgstr ""
 
@@ -5816,6 +5863,10 @@ msgid ""
 "Leave this OFF if you do not want that. The other resolvers (VidEasy, VidLink, Peachify, vidrock, VidNest, ...) decrypt their links on the receiver and are not affected."
 msgstr ""
 
+#, python-format
+msgid "The results of %d of %d sites are from the last search for \"%s\" - this asks all sites again"
+msgstr ""
+
 msgid "The same item already exists in this group."
 msgstr "Stejná položka již v této skupině existuje."
 
@@ -5967,6 +6018,9 @@ msgid "This episode is not available in this version (SUB/DUB) on this server. T
 msgstr ""
 
 msgid "This feed is empty, or the YouTube sign-in has expired - sign out and in again."
+msgstr ""
+
+msgid "This folder is empty. MENU key on a video of the Watchlist: \"Move to Watchlist folder...\"."
 msgstr ""
 
 msgid "This folder is protected by a PIN, open it on the receiver."
@@ -6222,6 +6276,9 @@ msgstr ""
 
 msgid "Trailer"
 msgstr "Trailer"
+
+msgid "Trans"
+msgstr ""
 
 msgid "Translation:"
 msgstr "Překlad:"
@@ -6604,6 +6661,15 @@ msgstr "Sledovat"
 msgid "Watch online"
 msgstr ""
 
+msgid "Watchlist"
+msgstr ""
+
+msgid "Watchlist (no folder)"
+msgstr ""
+
+msgid "Watchlist folder"
+msgstr ""
+
 msgid "WebStreamr / AIOStreams manifest URL (your own):"
 msgstr ""
 
@@ -6779,6 +6845,9 @@ msgstr ""
 
 #, python-format
 msgid "Your MyE2i extension is outdated or unknown (v%s or newer needed). Please update:"
+msgstr ""
+
+msgid "Your own list of videos, in folders of your own (MENU key on a video: \"Add to Watchlist\")"
 msgstr ""
 
 msgid "Your search entry"

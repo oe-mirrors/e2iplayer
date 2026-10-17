@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-12 16:40+0000\n"
+"POT-Creation-Date: 2026-10-17 15:42+0000\n"
 "PO-Revision-Date: 2026-10-08 20:17+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Serbian (Latin)\n"
@@ -378,6 +378,10 @@ msgstr "4K filmovi"
 msgid "5 seconds"
 msgstr "5 sekundi"
 
+#, python-format
+msgid "A folder \"%s\" exists already."
+msgstr ""
+
 msgid "A search is already running."
 msgstr "Pretraga je već u toku."
 
@@ -496,6 +500,12 @@ msgstr "Dodaj novu grupu omiljenih"
 
 msgid "Add to User Links"
 msgstr "Dodaj u korisničke linkove"
+
+msgid "Add to Watchlist"
+msgstr ""
+
+msgid "Add to Watchlist folder..."
+msgstr ""
 
 msgid "Added"
 msgstr "Dodato"
@@ -1437,6 +1447,9 @@ msgstr "Obriši JS keš posle (dana, 0 = nikad)"
 msgid "Delete JS cache now"
 msgstr "Obriši JS keš sada"
 
+msgid "Delete Watchlist folder"
+msgstr ""
+
 msgid "Delete all cache files now"
 msgstr "Obriši sve datoteke keša sada"
 
@@ -1483,6 +1496,10 @@ msgid "Delete subtitles cache now"
 msgstr "Obriši keš titlova sada"
 
 msgid "Delete the cache when the torrent is closed"
+msgstr ""
+
+#, python-format
+msgid "Delete the folder \"%s\"? Its videos go back to the Watchlist."
 msgstr ""
 
 msgid "Delete thumbnails cache now"
@@ -2032,6 +2049,9 @@ msgstr "Greška pri preimenovanju datoteke: %s"
 msgid "Error saving favorites."
 msgstr "Greška pri čuvanju omiljenih."
 
+msgid "Error saving the Watchlist."
+msgstr ""
+
 msgid "Error while loading watch data"
 msgstr "Greška pri učitavanju podataka o gledanju"
 
@@ -2151,10 +2171,6 @@ msgid "Failed to write file \"%s\"."
 msgstr "Upisivanje datoteke \"%s\" nije uspelo."
 
 #, python-format
-msgid "Failed to write the file \"%s\"."
-msgstr "Upisivanje datoteke \"%s\" nije uspelo."
-
-#, python-format
 msgid "Failed: %s"
 msgstr "Neuspešno: %s"
 
@@ -2189,6 +2205,9 @@ msgid "Featured"
 msgstr "Izdvojeno"
 
 msgid "FebBox token (\"ui\" cookie of www.febbox.com):"
+msgstr ""
+
+msgid "Female"
 msgstr ""
 
 #, python-format
@@ -3238,9 +3257,15 @@ msgstr "MP3Quran radio uživo"
 msgid "Main"
 msgstr "Glavno"
 
+msgid "Main menu"
+msgstr ""
+
 #, python-format
 msgid "Make directory [%s]"
 msgstr "Napravi direktorijum [%s]"
+
+msgid "Male"
+msgstr ""
 
 msgid "Manager status:"
 msgstr "Status menadžera:"
@@ -3396,6 +3421,9 @@ msgstr "Pomeri"
 msgid "Move failed."
 msgstr "Pomeranje nije uspelo."
 
+msgid "Move to Watchlist folder..."
+msgstr ""
+
 msgid "Movie"
 msgstr "Film"
 
@@ -3535,6 +3563,9 @@ msgstr "Greška mreže."
 msgid "New"
 msgstr "Novo"
 
+msgid "New Watchlist folder"
+msgstr ""
+
 msgid "New dir"
 msgstr "Novi direktorijum"
 
@@ -3549,6 +3580,9 @@ msgstr "Nove ikone neće biti dostupne."
 
 msgid "New links"
 msgstr "Novi linkovi"
+
+msgid "New search"
+msgstr ""
 
 msgid "New since installed version"
 msgstr "Novo od instalirane verzije"
@@ -4435,6 +4469,9 @@ msgstr ""
 msgid "Remove file"
 msgstr "Ukloni datoteku"
 
+msgid "Remove from Watchlist"
+msgstr ""
+
 msgid "Remove from favorites"
 msgstr "Ukloni iz omiljenih"
 
@@ -4457,6 +4494,9 @@ msgstr "Ukloni sličice"
 
 msgid "Rename"
 msgstr "Preimenuj"
+
+msgid "Rename Watchlist folder"
+msgstr ""
 
 msgid "Rename file"
 msgstr "Preimenuj datoteku"
@@ -4603,6 +4643,10 @@ msgstr "Skripta je završena."
 msgid "Search"
 msgstr "Pretraga"
 
+#, python-format
+msgid "Search \"%s\" was not finished"
+msgstr ""
+
 msgid "Search History is empty."
 msgstr "Istorija pretrage je prazna."
 
@@ -4748,9 +4792,6 @@ msgstr "Izaberite plejer"
 
 msgid "Select option"
 msgstr "Izaberite opciju"
-
-msgid "Select pictures"
-msgstr "Izaberite slike"
 
 msgid "Select subtitles file"
 msgstr "Izaberite datoteku titla"
@@ -4972,6 +5013,9 @@ msgstr ""
 
 msgid "Show results"
 msgstr "Prikaži rezultate"
+
+msgid "Show results so far"
+msgstr ""
 
 msgid "Show search history"
 msgstr "Prikaži istoriju pretrage"
@@ -5479,6 +5523,9 @@ msgstr "QR kod vodi na wiki stranicu sa slikama i preuzimanjem proširenja."
 msgid "The Stalker portal of this entry is not configured (any more)."
 msgstr "Stalker portal ove stavke nije (više) konfigurisan."
 
+msgid "The Watchlist is empty. MENU key on a video: \"Add to Watchlist\"."
+msgstr ""
+
 msgid "The Xtream account of this entry is not configured (any more)."
 msgstr "Xtream nalog ovog unosa nije (više) konfigurisan."
 
@@ -5644,6 +5691,10 @@ msgid ""
 "Leave this OFF if you do not want that. The other resolvers (VidEasy, VidLink, Peachify, vidrock, VidNest, ...) decrypt their links on the receiver and are not affected."
 msgstr ""
 
+#, python-format
+msgid "The results of %d of %d sites are from the last search for \"%s\" - this asks all sites again"
+msgstr ""
+
 msgid "The same item already exists in this group."
 msgstr "Ista stavka već postoji u ovoj grupi."
 
@@ -5791,6 +5842,9 @@ msgstr "Ova epizoda nije dostupna u ovoj verziji (SUB/DUB) na ovom serveru. Poku
 
 msgid "This feed is empty, or the YouTube sign-in has expired - sign out and in again."
 msgstr "Ovaj fid je prazan ili je YouTube prijava istekla - odjavite se i ponovo prijavite."
+
+msgid "This folder is empty. MENU key on a video of the Watchlist: \"Move to Watchlist folder...\"."
+msgstr ""
 
 msgid "This folder is protected by a PIN, open it on the receiver."
 msgstr "Ova fascikla je zaštićena PIN-om, otvorite je na risiveru."
@@ -6051,6 +6105,9 @@ msgstr "Lista numera"
 
 msgid "Trailer"
 msgstr "Trejler"
+
+msgid "Trans"
+msgstr ""
 
 msgid "Translation:"
 msgstr "Prevod:"
@@ -6421,6 +6478,15 @@ msgstr "Pogledaj kasnije"
 msgid "Watch online"
 msgstr "Gledaj onlajn"
 
+msgid "Watchlist"
+msgstr ""
+
+msgid "Watchlist (no folder)"
+msgstr ""
+
+msgid "Watchlist folder"
+msgstr ""
+
 msgid "WebStreamr / AIOStreams manifest URL (your own):"
 msgstr ""
 
@@ -6596,6 +6662,9 @@ msgstr "Vaša plejlista 'Pogledaj kasnije'."
 #, python-format
 msgid "Your MyE2i extension is outdated or unknown (v%s or newer needed). Please update:"
 msgstr "Vaše MyE2i proširenje je zastarelo ili nepoznato (potrebna je v%s ili novija). Ažurirajte ga:"
+
+msgid "Your own list of videos, in folders of your own (MENU key on a video: \"Add to Watchlist\")"
+msgstr ""
 
 msgid "Your search entry"
 msgstr "Vaš unos za pretragu"

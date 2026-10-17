@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-12 16:40+0000\n"
+"POT-Creation-Date: 2026-10-17 15:42+0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Persian Prince <persianpros@gmail.com>\n"
 "Language-Team: IPTVPlayer\n"
@@ -381,6 +381,10 @@ msgstr "فیلم‌های 4K"
 msgid "5 seconds"
 msgstr "5 ثانیه"
 
+#, python-format
+msgid "A folder \"%s\" exists already."
+msgstr ""
+
 msgid "A search is already running."
 msgstr "یک جستجو در حال اجراست."
 
@@ -499,6 +503,12 @@ msgstr "افزودن گروه جدید علاقه‌مندی‌ها"
 
 msgid "Add to User Links"
 msgstr "افزودن به پیوندهای کاربر"
+
+msgid "Add to Watchlist"
+msgstr ""
+
+msgid "Add to Watchlist folder..."
+msgstr ""
 
 msgid "Added"
 msgstr "افزوده شد"
@@ -1440,6 +1450,9 @@ msgstr "حذف حافظهٔ نهان JS پس از (روز، 0 = هرگز)"
 msgid "Delete JS cache now"
 msgstr "حذف حافظهٔ نهان JS اکنون"
 
+msgid "Delete Watchlist folder"
+msgstr ""
+
 msgid "Delete all cache files now"
 msgstr "حذف همهٔ فایل‌های حافظهٔ نهان اکنون"
 
@@ -1486,6 +1499,10 @@ msgid "Delete subtitles cache now"
 msgstr "حذف حافظهٔ نهان زیرنویس اکنون"
 
 msgid "Delete the cache when the torrent is closed"
+msgstr ""
+
+#, python-format
+msgid "Delete the folder \"%s\"? Its videos go back to the Watchlist."
 msgstr ""
 
 msgid "Delete thumbnails cache now"
@@ -2035,6 +2052,9 @@ msgstr "خطا در تغییر نام فایل: %s"
 msgid "Error saving favorites."
 msgstr "خطا در ذخیره علاقه‌مندی‌ها."
 
+msgid "Error saving the Watchlist."
+msgstr ""
+
 msgid "Error while loading watch data"
 msgstr "خطا هنگام بارگذاری داده‌های تماشا"
 
@@ -2154,10 +2174,6 @@ msgid "Failed to write file \"%s\"."
 msgstr "نوشتن فایل \"%s\" ناموفق بود."
 
 #, python-format
-msgid "Failed to write the file \"%s\"."
-msgstr "نوشتن فایل \"%s\" ناموفق بود."
-
-#, python-format
 msgid "Failed: %s"
 msgstr "ناموفق: %s"
 
@@ -2192,6 +2208,9 @@ msgid "Featured"
 msgstr "ویژه"
 
 msgid "FebBox token (\"ui\" cookie of www.febbox.com):"
+msgstr ""
+
+msgid "Female"
 msgstr ""
 
 #, python-format
@@ -3241,9 +3260,15 @@ msgstr "رادیوی زنده MP3Quran"
 msgid "Main"
 msgstr "اصلی"
 
+msgid "Main menu"
+msgstr ""
+
 #, python-format
 msgid "Make directory [%s]"
 msgstr "ایجاد پوشه [%s]"
+
+msgid "Male"
+msgstr ""
 
 msgid "Manager status:"
 msgstr "وضعیت مدیر:"
@@ -3399,6 +3424,9 @@ msgstr "جابجایی"
 msgid "Move failed."
 msgstr "جابجایی ناموفق بود."
 
+msgid "Move to Watchlist folder..."
+msgstr ""
+
 msgid "Movie"
 msgstr "فیلم"
 
@@ -3538,6 +3566,9 @@ msgstr "خطای شبکه."
 msgid "New"
 msgstr "جدید"
 
+msgid "New Watchlist folder"
+msgstr ""
+
 msgid "New dir"
 msgstr "پوشه جدید"
 
@@ -3552,6 +3583,9 @@ msgstr "آیکون‌های جدید در دسترس نخواهند بود."
 
 msgid "New links"
 msgstr "پیوندهای جدید"
+
+msgid "New search"
+msgstr ""
 
 msgid "New since installed version"
 msgstr "جدید از نسخه نصب‌شده"
@@ -4438,6 +4472,9 @@ msgstr ""
 msgid "Remove file"
 msgstr "حذف فایل"
 
+msgid "Remove from Watchlist"
+msgstr ""
+
 msgid "Remove from favorites"
 msgstr "حذف از علاقه‌مندی‌ها"
 
@@ -4460,6 +4497,9 @@ msgstr "حذف تصاویر بندانگشتی"
 
 msgid "Rename"
 msgstr "تغییر نام"
+
+msgid "Rename Watchlist folder"
+msgstr ""
 
 msgid "Rename file"
 msgstr "تغییر نام فایل"
@@ -4606,6 +4646,10 @@ msgstr "اسکریپت به پایان رسید."
 msgid "Search"
 msgstr "جستجو"
 
+#, python-format
+msgid "Search \"%s\" was not finished"
+msgstr ""
+
 msgid "Search History is empty."
 msgstr "تاریخچه جستجو خالی است."
 
@@ -4751,9 +4795,6 @@ msgstr "انتخاب پخش‌کننده فیلم"
 
 msgid "Select option"
 msgstr "انتخاب گزینه"
-
-msgid "Select pictures"
-msgstr "انتخاب تصاویر"
 
 msgid "Select subtitles file"
 msgstr "انتخاب فایل زیرنویس"
@@ -4975,6 +5016,9 @@ msgstr ""
 
 msgid "Show results"
 msgstr "نمایش نتایج"
+
+msgid "Show results so far"
+msgstr ""
 
 msgid "Show search history"
 msgstr "نمایش تاریخچه جستجو"
@@ -5482,6 +5526,9 @@ msgstr "کد QR به صفحه ویکی همراه با تصاویر و دانل�
 msgid "The Stalker portal of this entry is not configured (any more)."
 msgstr "پورتال Stalker این مورد (دیگر) پیکربندی نشده است."
 
+msgid "The Watchlist is empty. MENU key on a video: \"Add to Watchlist\"."
+msgstr ""
+
 msgid "The Xtream account of this entry is not configured (any more)."
 msgstr "حساب Xtream این مورد (دیگر) پیکربندی نشده است."
 
@@ -5647,6 +5694,10 @@ msgid ""
 "Leave this OFF if you do not want that. The other resolvers (VidEasy, VidLink, Peachify, vidrock, VidNest, ...) decrypt their links on the receiver and are not affected."
 msgstr ""
 
+#, python-format
+msgid "The results of %d of %d sites are from the last search for \"%s\" - this asks all sites again"
+msgstr ""
+
 msgid "The same item already exists in this group."
 msgstr "همین مورد از قبل در این گروه وجود دارد."
 
@@ -5794,6 +5845,9 @@ msgstr "این قسمت در این نسخه (SUB/DUB) روی این سرور د
 
 msgid "This feed is empty, or the YouTube sign-in has expired - sign out and in again."
 msgstr "این فید خالی است یا ورود به YouTube منقضی شده است - خارج شوید و دوباره وارد شوید."
+
+msgid "This folder is empty. MENU key on a video of the Watchlist: \"Move to Watchlist folder...\"."
+msgstr ""
 
 msgid "This folder is protected by a PIN, open it on the receiver."
 msgstr "این پوشه با PIN محافظت شده است، آن را روی گیرنده باز کنید."
@@ -6054,6 +6108,9 @@ msgstr "فهرست قطعات"
 
 msgid "Trailer"
 msgstr "تریلر"
+
+msgid "Trans"
+msgstr ""
 
 msgid "Translation:"
 msgstr "ترجمه:"
@@ -6424,6 +6481,15 @@ msgstr "بعداً تماشا کنید"
 msgid "Watch online"
 msgstr "تماشای آنلاین"
 
+msgid "Watchlist"
+msgstr ""
+
+msgid "Watchlist (no folder)"
+msgstr ""
+
+msgid "Watchlist folder"
+msgstr ""
+
 msgid "WebStreamr / AIOStreams manifest URL (your own):"
 msgstr ""
 
@@ -6599,6 +6665,9 @@ msgstr "فهرست پخش ویدیوهایی که برای تماشا در زم�
 #, python-format
 msgid "Your MyE2i extension is outdated or unknown (v%s or newer needed). Please update:"
 msgstr "افزونه MyE2i شما قدیمی یا ناشناخته است (نسخه v%s یا جدیدتر لازم است). لطفاً به‌روزرسانی کنید:"
+
+msgid "Your own list of videos, in folders of your own (MENU key on a video: \"Add to Watchlist\")"
+msgstr ""
 
 msgid "Your search entry"
 msgstr "عبارت جستجوی شما"

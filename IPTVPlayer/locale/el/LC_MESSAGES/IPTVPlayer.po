@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-12 16:40+0000\n"
+"POT-Creation-Date: 2026-10-17 15:42+0000\n"
 "PO-Revision-Date: 2026-10-11 18:42+0300\n"
 "Last-Translator: \n"
 "Language-Team: giorbak\n"
@@ -384,6 +384,10 @@ msgstr "Ταινίες 4K"
 msgid "5 seconds"
 msgstr "5 δευτερόλεπτα"
 
+#, python-format
+msgid "A folder \"%s\" exists already."
+msgstr ""
+
 msgid "A search is already running."
 msgstr "Μια αναζήτηση εκτελείται ήδη."
 
@@ -502,6 +506,12 @@ msgstr "Προσθήκη νέας ομάδας αγαπημένων"
 
 msgid "Add to User Links"
 msgstr "Προσθήκη στους συνδέσμους χρήστη"
+
+msgid "Add to Watchlist"
+msgstr ""
+
+msgid "Add to Watchlist folder..."
+msgstr ""
 
 msgid "Added"
 msgstr "Προστέθηκε"
@@ -1443,6 +1453,9 @@ msgstr "Διαγραφή προσωρινής μνήμης JS μετά από (�
 msgid "Delete JS cache now"
 msgstr "Διαγραφή προσωρινής μνήμης JS τώρα"
 
+msgid "Delete Watchlist folder"
+msgstr ""
+
 msgid "Delete all cache files now"
 msgstr "Διαγραφή όλων των αρχείων προσωρινής μνήμης τώρα"
 
@@ -1490,6 +1503,10 @@ msgstr "Διαγραφή προσωρινής μνήμης υποτίτλων τ
 
 msgid "Delete the cache when the torrent is closed"
 msgstr "Διαγραφή της προσωρινής μνήμης κατά το κλείσιμο του torrent"
+
+#, python-format
+msgid "Delete the folder \"%s\"? Its videos go back to the Watchlist."
+msgstr ""
 
 msgid "Delete thumbnails cache now"
 msgstr "Διαγραφή προσωρινής μνήμης μικρογραφιών τώρα"
@@ -2038,6 +2055,9 @@ msgstr "Σφάλμα μετονομασίας αρχείου: %s"
 msgid "Error saving favorites."
 msgstr "Σφάλμα κατά την αποθήκευση των αγαπημένων."
 
+msgid "Error saving the Watchlist."
+msgstr ""
+
 msgid "Error while loading watch data"
 msgstr "Σφάλμα κατά τη φόρτωση των δεδομένων προβολής"
 
@@ -2157,10 +2177,6 @@ msgid "Failed to write file \"%s\"."
 msgstr "Αποτυχία εγγραφής αρχείου \"%s\"."
 
 #, python-format
-msgid "Failed to write the file \"%s\"."
-msgstr "Αποτυχία εγγραφής του αρχείου \"%s\"."
-
-#, python-format
 msgid "Failed: %s"
 msgstr "Αποτυχία: %s"
 
@@ -2196,6 +2212,9 @@ msgstr "Προτεινόμενα"
 
 msgid "FebBox token (\"ui\" cookie of www.febbox.com):"
 msgstr "Token FebBox (cookie \"ui\" του www.febbox.com):"
+
+msgid "Female"
+msgstr ""
 
 #, python-format
 msgid "File \"%s\" already exists"
@@ -3244,9 +3263,15 @@ msgstr "Ζωντανό ραδιόφωνο MP3Quran"
 msgid "Main"
 msgstr "Κύριο"
 
+msgid "Main menu"
+msgstr ""
+
 #, python-format
 msgid "Make directory [%s]"
 msgstr "Δημιουργία καταλόγου [%s]"
+
+msgid "Male"
+msgstr ""
 
 msgid "Manager status:"
 msgstr "Κατάσταση διαχειριστή:"
@@ -3402,6 +3427,9 @@ msgstr "Μετακίνηση"
 msgid "Move failed."
 msgstr "Η μετακίνηση απέτυχε."
 
+msgid "Move to Watchlist folder..."
+msgstr ""
+
 msgid "Movie"
 msgstr "Ταινία"
 
@@ -3541,6 +3569,9 @@ msgstr "Αποτυχία δικτύου."
 msgid "New"
 msgstr "Νέα"
 
+msgid "New Watchlist folder"
+msgstr ""
+
 msgid "New dir"
 msgstr "Νέος κατάλογος"
 
@@ -3555,6 +3586,9 @@ msgstr "Δεν θα είναι διαθέσιμα νέα εικονίδια."
 
 msgid "New links"
 msgstr "Νέοι σύνδεσμοι"
+
+msgid "New search"
+msgstr ""
 
 msgid "New since installed version"
 msgstr "Νέο από την εγκατεστημένη έκδοση"
@@ -4443,6 +4477,9 @@ msgstr ""
 msgid "Remove file"
 msgstr "Αφαίρεση αρχείου"
 
+msgid "Remove from Watchlist"
+msgstr ""
+
 msgid "Remove from favorites"
 msgstr "Αφαίρεση από τα αγαπημένα"
 
@@ -4465,6 +4502,9 @@ msgstr "Αφαίρεση μικρογραφιών"
 
 msgid "Rename"
 msgstr "Μετονομασία"
+
+msgid "Rename Watchlist folder"
+msgstr ""
 
 msgid "Rename file"
 msgstr "Μετονομασία αρχείου"
@@ -4611,6 +4651,10 @@ msgstr "Το script ολοκληρώθηκε."
 msgid "Search"
 msgstr "Αναζήτηση"
 
+#, python-format
+msgid "Search \"%s\" was not finished"
+msgstr ""
+
 msgid "Search History is empty."
 msgstr "Το ιστορικό αναζήτησης είναι κενό."
 
@@ -4756,9 +4800,6 @@ msgstr "Επιλογή αναπαραγωγής ταινιών"
 
 msgid "Select option"
 msgstr "Δώστε μια επιλογή"
-
-msgid "Select pictures"
-msgstr "Επιλογή εικόνων"
 
 msgid "Select subtitles file"
 msgstr "Επιλογή αρχείου υποτίτλων"
@@ -4980,6 +5021,9 @@ msgstr "Εμφάνιση λίστας αναπαραγωγής"
 
 msgid "Show results"
 msgstr "Εμφάνιση αποτελεσμάτων"
+
+msgid "Show results so far"
+msgstr ""
 
 msgid "Show search history"
 msgstr "Εμφάνιση ιστορικού αναζήτησης"
@@ -5487,6 +5531,9 @@ msgstr "Ο κωδικός QR οδηγεί στη σελίδα wiki με εικό
 msgid "The Stalker portal of this entry is not configured (any more)."
 msgstr "Η πύλη Stalker αυτής της καταχώρισης δεν είναι πλέον ρυθμισμένη."
 
+msgid "The Watchlist is empty. MENU key on a video: \"Add to Watchlist\"."
+msgstr ""
+
 msgid "The Xtream account of this entry is not configured (any more)."
 msgstr "Ο λογαριασμός Xtream αυτής της καταχώρισης δεν είναι πλέον ρυθμισμένος."
 
@@ -5657,6 +5704,10 @@ msgstr ""
 "\n"
 "Αφήστε την επιλογή απενεργοποιημένη αν δεν το επιθυμείτε. Οι άλλοι επιλυτές (VidEasy, VidLink, Peachify, vidrock, VidNest, ...) αποκρυπτογραφούν τους συνδέσμους στον δέκτη και δεν επηρεάζονται."
 
+#, python-format
+msgid "The results of %d of %d sites are from the last search for \"%s\" - this asks all sites again"
+msgstr ""
+
 msgid "The same item already exists in this group."
 msgstr "Το ίδιο στοιχείο υπάρχει ήδη σε αυτή την ομάδα."
 
@@ -5802,6 +5853,9 @@ msgstr "Αυτό το επεισόδιο δεν είναι διαθέσιμο σ
 
 msgid "This feed is empty, or the YouTube sign-in has expired - sign out and in again."
 msgstr "Αυτή η ροή είναι κενή ή η σύνδεση στο YouTube έχει λήξει - αποσυνδεθείτε και συνδεθείτε ξανά."
+
+msgid "This folder is empty. MENU key on a video of the Watchlist: \"Move to Watchlist folder...\"."
+msgstr ""
 
 msgid "This folder is protected by a PIN, open it on the receiver."
 msgstr "Αυτός ο φάκελος προστατεύεται με PIN, ανοίξτε τον στον δέκτη."
@@ -6067,6 +6121,9 @@ msgstr "Λίστα κομματιών"
 
 msgid "Trailer"
 msgstr "Τρέιλερ"
+
+msgid "Trans"
+msgstr ""
 
 msgid "Translation:"
 msgstr "Μετάφραση:"
@@ -6437,6 +6494,15 @@ msgstr "Προβολή αργότερα"
 msgid "Watch online"
 msgstr "Προβολή online"
 
+msgid "Watchlist"
+msgstr ""
+
+msgid "Watchlist (no folder)"
+msgstr ""
+
+msgid "Watchlist folder"
+msgstr ""
+
 msgid "WebStreamr / AIOStreams manifest URL (your own):"
 msgstr "WebStreamr / AIOStreams manifest URL (δικό σας):"
 
@@ -6612,6 +6678,9 @@ msgstr "Η λίστα αναπαραγωγής 'Προβολή αργότερα'
 #, python-format
 msgid "Your MyE2i extension is outdated or unknown (v%s or newer needed). Please update:"
 msgstr "Η επέκταση MyE2i είναι παλαιά ή άγνωστη (απαιτείται v%s ή νεότερη). Παρακαλώ ενημερώστε την:"
+
+msgid "Your own list of videos, in folders of your own (MENU key on a video: \"Add to Watchlist\")"
+msgstr ""
 
 msgid "Your search entry"
 msgstr "Η αναζήτησή σας"

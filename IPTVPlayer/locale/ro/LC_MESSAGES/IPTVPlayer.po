@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-12 16:40+0000\n"
+"POT-Creation-Date: 2026-10-17 15:42+0000\n"
 "PO-Revision-Date: 2026-10-08 20:17+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Romanian\n"
@@ -378,6 +378,10 @@ msgstr "Filme 4K"
 msgid "5 seconds"
 msgstr "5 secunde"
 
+#, python-format
+msgid "A folder \"%s\" exists already."
+msgstr ""
+
 msgid "A search is already running."
 msgstr "O căutare este deja în curs."
 
@@ -496,6 +500,12 @@ msgstr "Adăugați un grup nou de favorite"
 
 msgid "Add to User Links"
 msgstr "Adăugați la linkurile utilizatorului"
+
+msgid "Add to Watchlist"
+msgstr ""
+
+msgid "Add to Watchlist folder..."
+msgstr ""
 
 msgid "Added"
 msgstr "Adăugat"
@@ -1437,6 +1447,9 @@ msgstr "Ștergeți cache-ul JS după (zile, 0 = niciodată)"
 msgid "Delete JS cache now"
 msgstr "Ștergeți acum cache-ul JS"
 
+msgid "Delete Watchlist folder"
+msgstr ""
+
 msgid "Delete all cache files now"
 msgstr "Ștergeți acum toate fișierele cache"
 
@@ -1483,6 +1496,10 @@ msgid "Delete subtitles cache now"
 msgstr "Ștergeți acum cache-ul de subtitrări"
 
 msgid "Delete the cache when the torrent is closed"
+msgstr ""
+
+#, python-format
+msgid "Delete the folder \"%s\"? Its videos go back to the Watchlist."
 msgstr ""
 
 msgid "Delete thumbnails cache now"
@@ -2032,6 +2049,9 @@ msgstr "Eroare la redenumirea fișierului: %s"
 msgid "Error saving favorites."
 msgstr "Eroare la salvarea favoritelor."
 
+msgid "Error saving the Watchlist."
+msgstr ""
+
 msgid "Error while loading watch data"
 msgstr "Eroare la încărcarea datelor de vizionare"
 
@@ -2151,10 +2171,6 @@ msgid "Failed to write file \"%s\"."
 msgstr "Scrierea fișierului \"%s\" a eșuat."
 
 #, python-format
-msgid "Failed to write the file \"%s\"."
-msgstr "Scrierea fișierului \"%s\" a eșuat."
-
-#, python-format
 msgid "Failed: %s"
 msgstr "Eșuat: %s"
 
@@ -2189,6 +2205,9 @@ msgid "Featured"
 msgstr "Recomandate"
 
 msgid "FebBox token (\"ui\" cookie of www.febbox.com):"
+msgstr ""
+
+msgid "Female"
 msgstr ""
 
 #, python-format
@@ -3238,9 +3257,15 @@ msgstr "Radio live MP3Quran"
 msgid "Main"
 msgstr "Principal"
 
+msgid "Main menu"
+msgstr ""
+
 #, python-format
 msgid "Make directory [%s]"
 msgstr "Creare director [%s]"
+
+msgid "Male"
+msgstr ""
 
 msgid "Manager status:"
 msgstr "Stare manager:"
@@ -3396,6 +3421,9 @@ msgstr "Mutare"
 msgid "Move failed."
 msgstr "Mutarea a eșuat."
 
+msgid "Move to Watchlist folder..."
+msgstr ""
+
 msgid "Movie"
 msgstr "Film"
 
@@ -3535,6 +3563,9 @@ msgstr "Eroare de rețea."
 msgid "New"
 msgstr "Nou"
 
+msgid "New Watchlist folder"
+msgstr ""
+
 msgid "New dir"
 msgstr "Director nou"
 
@@ -3549,6 +3580,9 @@ msgstr "Pictogramele noi nu vor fi disponibile."
 
 msgid "New links"
 msgstr "Linkuri noi"
+
+msgid "New search"
+msgstr ""
 
 msgid "New since installed version"
 msgstr "Nou de la versiunea instalată"
@@ -4435,6 +4469,9 @@ msgstr ""
 msgid "Remove file"
 msgstr "Ștergeți fișierul"
 
+msgid "Remove from Watchlist"
+msgstr ""
+
 msgid "Remove from favorites"
 msgstr "Eliminați din favorite"
 
@@ -4457,6 +4494,9 @@ msgstr "Eliminați miniaturile"
 
 msgid "Rename"
 msgstr "Redenumiți"
+
+msgid "Rename Watchlist folder"
+msgstr ""
 
 msgid "Rename file"
 msgstr "Redenumiți fișierul"
@@ -4603,6 +4643,10 @@ msgstr "Scriptul s-a încheiat."
 msgid "Search"
 msgstr "Căutare"
 
+#, python-format
+msgid "Search \"%s\" was not finished"
+msgstr ""
+
 msgid "Search History is empty."
 msgstr "Istoricul căutărilor este gol."
 
@@ -4748,9 +4792,6 @@ msgstr "Selectați playerul"
 
 msgid "Select option"
 msgstr "Selectați opțiunea"
-
-msgid "Select pictures"
-msgstr "Selectați imaginile"
 
 msgid "Select subtitles file"
 msgstr "Selectați fișierul de subtitrări"
@@ -4972,6 +5013,9 @@ msgstr ""
 
 msgid "Show results"
 msgstr "Afișați rezultatele"
+
+msgid "Show results so far"
+msgstr ""
 
 msgid "Show search history"
 msgstr "Afișați istoricul căutărilor"
@@ -5479,6 +5523,9 @@ msgstr "Codul QR duce la pagina wiki cu imagini și descărcarea extensiei."
 msgid "The Stalker portal of this entry is not configured (any more)."
 msgstr "Portalul Stalker al acestei intrări nu (mai) este configurat."
 
+msgid "The Watchlist is empty. MENU key on a video: \"Add to Watchlist\"."
+msgstr ""
+
 msgid "The Xtream account of this entry is not configured (any more)."
 msgstr "Contul Xtream al acestei intrări nu (mai) este configurat."
 
@@ -5644,6 +5691,10 @@ msgid ""
 "Leave this OFF if you do not want that. The other resolvers (VidEasy, VidLink, Peachify, vidrock, VidNest, ...) decrypt their links on the receiver and are not affected."
 msgstr ""
 
+#, python-format
+msgid "The results of %d of %d sites are from the last search for \"%s\" - this asks all sites again"
+msgstr ""
+
 msgid "The same item already exists in this group."
 msgstr "Același element există deja în acest grup."
 
@@ -5791,6 +5842,9 @@ msgstr "Acest episod nu este disponibil în această versiune (SUB/DUB) pe acest
 
 msgid "This feed is empty, or the YouTube sign-in has expired - sign out and in again."
 msgstr "Acest feed este gol sau autentificarea YouTube a expirat - deconectați-vă și conectați-vă din nou."
+
+msgid "This folder is empty. MENU key on a video of the Watchlist: \"Move to Watchlist folder...\"."
+msgstr ""
 
 msgid "This folder is protected by a PIN, open it on the receiver."
 msgstr "Acest folder este protejat printr-un PIN, deschideți-l pe receptor."
@@ -6051,6 +6105,9 @@ msgstr "Listă de piese"
 
 msgid "Trailer"
 msgstr "Trailer"
+
+msgid "Trans"
+msgstr ""
 
 msgid "Translation:"
 msgstr "Traducere:"
@@ -6421,6 +6478,15 @@ msgstr "Vizionați mai târziu"
 msgid "Watch online"
 msgstr "Vizionare online"
 
+msgid "Watchlist"
+msgstr ""
+
+msgid "Watchlist (no folder)"
+msgstr ""
+
+msgid "Watchlist folder"
+msgstr ""
+
 msgid "WebStreamr / AIOStreams manifest URL (your own):"
 msgstr ""
 
@@ -6596,6 +6662,9 @@ msgstr "Playlistul dvs. „Vizionați mai târziu”."
 #, python-format
 msgid "Your MyE2i extension is outdated or unknown (v%s or newer needed). Please update:"
 msgstr "Extensia dvs. MyE2i este învechită sau necunoscută (este necesară v%s sau mai nouă). Actualizați:"
+
+msgid "Your own list of videos, in folders of your own (MENU key on a video: \"Add to Watchlist\")"
+msgstr ""
 
 msgid "Your search entry"
 msgstr "Termenul dvs. de căutare"

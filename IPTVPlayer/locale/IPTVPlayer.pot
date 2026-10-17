@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-12 16:40+0000\n"
+"POT-Creation-Date: 2026-10-17 15:42+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -372,6 +372,10 @@ msgstr ""
 msgid "5 seconds"
 msgstr ""
 
+#, python-format
+msgid "A folder \"%s\" exists already."
+msgstr ""
+
 msgid "A search is already running."
 msgstr ""
 
@@ -487,6 +491,12 @@ msgid "Add new group of favorites"
 msgstr ""
 
 msgid "Add to User Links"
+msgstr ""
+
+msgid "Add to Watchlist"
+msgstr ""
+
+msgid "Add to Watchlist folder..."
 msgstr ""
 
 msgid "Added"
@@ -1422,6 +1432,9 @@ msgstr ""
 msgid "Delete JS cache now"
 msgstr ""
 
+msgid "Delete Watchlist folder"
+msgstr ""
+
 msgid "Delete all cache files now"
 msgstr ""
 
@@ -1468,6 +1481,10 @@ msgid "Delete subtitles cache now"
 msgstr ""
 
 msgid "Delete the cache when the torrent is closed"
+msgstr ""
+
+#, python-format
+msgid "Delete the folder \"%s\"? Its videos go back to the Watchlist."
 msgstr ""
 
 msgid "Delete thumbnails cache now"
@@ -1988,6 +2005,9 @@ msgstr ""
 msgid "Error saving favorites."
 msgstr ""
 
+msgid "Error saving the Watchlist."
+msgstr ""
+
 msgid "Error while loading watch data"
 msgstr ""
 
@@ -2107,10 +2127,6 @@ msgid "Failed to write file \"%s\"."
 msgstr ""
 
 #, python-format
-msgid "Failed to write the file \"%s\"."
-msgstr ""
-
-#, python-format
 msgid "Failed: %s"
 msgstr ""
 
@@ -2145,6 +2161,9 @@ msgid "Featured"
 msgstr ""
 
 msgid "FebBox token (\"ui\" cookie of www.febbox.com):"
+msgstr ""
+
+msgid "Female"
 msgstr ""
 
 #, python-format
@@ -3184,8 +3203,14 @@ msgstr ""
 msgid "Main"
 msgstr ""
 
+msgid "Main menu"
+msgstr ""
+
 #, python-format
 msgid "Make directory [%s]"
+msgstr ""
+
+msgid "Male"
 msgstr ""
 
 msgid "Manager status:"
@@ -3339,6 +3364,9 @@ msgstr ""
 msgid "Move failed."
 msgstr ""
 
+msgid "Move to Watchlist folder..."
+msgstr ""
+
 msgid "Movie"
 msgstr ""
 
@@ -3472,6 +3500,9 @@ msgstr ""
 msgid "New"
 msgstr ""
 
+msgid "New Watchlist folder"
+msgstr ""
+
 msgid "New dir"
 msgstr ""
 
@@ -3485,6 +3516,9 @@ msgid "New icons will not be available."
 msgstr ""
 
 msgid "New links"
+msgstr ""
+
+msgid "New search"
 msgstr ""
 
 msgid "New since installed version"
@@ -4367,6 +4401,9 @@ msgstr ""
 msgid "Remove file"
 msgstr ""
 
+msgid "Remove from Watchlist"
+msgstr ""
+
 msgid "Remove from favorites"
 msgstr ""
 
@@ -4388,6 +4425,9 @@ msgid "Remove thumbnails"
 msgstr ""
 
 msgid "Rename"
+msgstr ""
+
+msgid "Rename Watchlist folder"
 msgstr ""
 
 msgid "Rename file"
@@ -4525,6 +4565,10 @@ msgid "Script finished."
 msgstr ""
 
 msgid "Search"
+msgstr ""
+
+#, python-format
+msgid "Search \"%s\" was not finished"
 msgstr ""
 
 msgid "Search History is empty."
@@ -4671,9 +4715,6 @@ msgid "Select movie player"
 msgstr ""
 
 msgid "Select option"
-msgstr ""
-
-msgid "Select pictures"
 msgstr ""
 
 msgid "Select subtitles file"
@@ -4893,6 +4934,9 @@ msgid "Show playlist"
 msgstr ""
 
 msgid "Show results"
+msgstr ""
+
+msgid "Show results so far"
 msgstr ""
 
 msgid "Show search history"
@@ -5387,6 +5431,9 @@ msgstr ""
 msgid "The Stalker portal of this entry is not configured (any more)."
 msgstr ""
 
+msgid "The Watchlist is empty. MENU key on a video: \"Add to Watchlist\"."
+msgstr ""
+
 msgid "The Xtream account of this entry is not configured (any more)."
 msgstr ""
 
@@ -5542,6 +5589,10 @@ msgid ""
 "Leave this OFF if you do not want that. The other resolvers (VidEasy, VidLink, Peachify, vidrock, VidNest, ...) decrypt their links on the receiver and are not affected."
 msgstr ""
 
+#, python-format
+msgid "The results of %d of %d sites are from the last search for \"%s\" - this asks all sites again"
+msgstr ""
+
 msgid "The same item already exists in this group."
 msgstr ""
 
@@ -5686,6 +5737,9 @@ msgid "This episode is not available in this version (SUB/DUB) on this server. T
 msgstr ""
 
 msgid "This feed is empty, or the YouTube sign-in has expired - sign out and in again."
+msgstr ""
+
+msgid "This folder is empty. MENU key on a video of the Watchlist: \"Move to Watchlist folder...\"."
 msgstr ""
 
 msgid "This folder is protected by a PIN, open it on the receiver."
@@ -5934,6 +5988,9 @@ msgid "Tracklist"
 msgstr ""
 
 msgid "Trailer"
+msgstr ""
+
+msgid "Trans"
 msgstr ""
 
 msgid "Translation:"
@@ -6305,6 +6362,15 @@ msgstr ""
 msgid "Watch online"
 msgstr ""
 
+msgid "Watchlist"
+msgstr ""
+
+msgid "Watchlist (no folder)"
+msgstr ""
+
+msgid "Watchlist folder"
+msgstr ""
+
 msgid "WebStreamr / AIOStreams manifest URL (your own):"
 msgstr ""
 
@@ -6479,6 +6545,9 @@ msgstr ""
 
 #, python-format
 msgid "Your MyE2i extension is outdated or unknown (v%s or newer needed). Please update:"
+msgstr ""
+
+msgid "Your own list of videos, in folders of your own (MENU key on a video: \"Add to Watchlist\")"
 msgstr ""
 
 msgid "Your search entry"
