@@ -187,7 +187,7 @@ def env(tmp_path):
     batch = _load(PKG + ".iptvdm.batchdownload", os.path.join(ROOT, "iptvdm", "batchdownload.py"))
     dmapi = _load(PKG + ".iptvdm.iptvdmapi", os.path.join(ROOT, "iptvdm", "iptvdmapi.py"))
     _Downloader.started = []
-    env = types.SimpleNamespace(batch=batch, dmapi=dmapi, STS=iptvdh.DMHelper.STS, strwithmeta=strwithmeta, decorateUrl=decorateUrl,
+    env = types.SimpleNamespace(batch=batch, dmapi=dmapi, STS=iptvdh.DMHelper.STS, DMHelper=iptvdh.DMHelper, strwithmeta=strwithmeta, decorateUrl=decorateUrl,
                                 state=state, marked=marked, asyncQueue=asyncQueue, tmp=str(tmp_path), cfg=cfg)
     yield env
     sys.modules.clear()
@@ -229,6 +229,23 @@ def _source(env, title='Show S01E01', host='fakebatch', itemType='VIDEO'):
 def test_file_title_like_playvideo(env):
     assert env.batch.cleanFileTitle('A/B: C*D?E"F<G>H|I') == 'A-B- C-D-E-F-G-H-I'
     assert env.batch.makeBatchSource({'title': 'Ep 1: Pilot', 'type': 'VIDEO', 'source': ('kinoking', 'x')}, '/hdd/movie')['file'] == '/hdd/movie/Ep 1- Pilot'
+
+
+def test_unique_name_counts_other_video_extensions(env):
+    # the FFmpeg downloader renames Cam.mp4 to Cam.ts afterwards: the next download must not start as "Cam 2.mp4"
+    # once more and end as "Cam 2 2.ts"
+    def touch(name):
+        open(os.path.join(env.tmp, name), 'w').close()
+    path = os.path.join(env.tmp, 'Cam.mp4')
+    touch('Cam.ts')
+    assert env.DMHelper.makeUnikalFileName(path, False, False) == path
+    assert env.DMHelper.makeUnikalFileName(path, False, False, videoSiblings=True) == os.path.join(env.tmp, 'Cam 2.mp4')
+    touch('Cam 2.ts')
+    assert env.DMHelper.makeUnikalFileName(path, False, False, videoSiblings=True) == os.path.join(env.tmp, 'Cam 3.mp4')
+    # side files (cover, info text, subtitles) do not count
+    touch('Cam 3.jpg')
+    touch('Cam 3.txt')
+    assert env.DMHelper.makeUnikalFileName(path, False, False, videoSiblings=True) == os.path.join(env.tmp, 'Cam 3.mp4')
 
 
 def test_file_ext(env):

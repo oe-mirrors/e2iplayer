@@ -424,8 +424,8 @@ class IHost:
     def markItemAsViewed(self, Index=0):
         return RetHost(RetHost.NOT_IMPLEMENTED, value=[])
 
-    # url of a row for the list markers (download state) - CHostBase implements it; hosts
-    # built directly on IHost (hostxxx) have none, so the widget printed a traceback per row
+    # url of a row for the list markers (download state) - CHostBase implements it; a host built directly on
+    # IHost overrides it (hostxxx) or gets '' here (the widget asks it for every row)
     def getRowUrl(self, Index):
         return ''
 

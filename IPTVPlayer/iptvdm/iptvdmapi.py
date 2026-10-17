@@ -7,6 +7,7 @@
 # 12.07.2026 - added preCheckOnly handling to show "Download already exists" instead of FAILED
 # 20.09.2026 - DMItem.itemKey + getActiveItemKeys(), cmdFinished() writes the "downloaded" marker (tools/iptvdownloaded.py)
 # 10.10.2026 - batch download: items without url (DMItem.batchSource) are looked up when their turn comes
+# 17.10.2026 - runCMD(): makeUnikalFileName(videoSiblings=True) - "Name 2.ts" also when "Name.mp4" became "Name.ts"
 #              (queueRS, startResolve/pollResolve, iptvdm/batchdownload.py), one summary notification per batch
 #
 # IPTV download manager API
@@ -597,7 +598,7 @@ class IPTVDMApi():
         printDBG("runCMD for downloadIdx[%d]" % item.downloadIdx)
 
         if DMHelper.DOWNLOAD_TYPE.INITIAL == item.tries:
-           item.fileName = DMHelper.makeUnikalFileName(item.fileName, False, False)
+           item.fileName = DMHelper.makeUnikalFileName(item.fileName, False, False, videoSiblings=True)
 
         printDBG("Downloading started downloadIdx[%s] File[%s] URL[%s]" % (item.downloadIdx, item.fileName, item.url))
 

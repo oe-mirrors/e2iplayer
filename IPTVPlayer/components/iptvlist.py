@@ -153,6 +153,7 @@ class IPTVMainNavigatorList(IPTVListComponentBase):
         CDisplayListItem.TYPE_FIRST: 'FirstItem.png',
         CDisplayListItem.TYPE_PREVIOUS: 'PreviousItem.png',
         CDisplayListItem.TYPE_LAST: 'LastItem.png',
+        'MENU': 'MenuItem.png',  # "Main menu" row of a paged list (tools/iptvpaging.py MENU_IMAGE_TYPE)
         'INFO': 'InfoItem.png',  # an info / changelog row: image_type 'INFO'
         'CUSTOM': 'CustomItem.png',  # a tool row of a host (hostxxx site self-test): image_type 'CUSTOM'
     }
@@ -525,7 +526,8 @@ class IPTVActionChoiceBoxList(IPTVMainNavigatorList):
     # privateData == {'action': 'set_watched_flag'/'unset_watched_flag',
     # ...}; the favourites host adds its YouTube sort switch
     # ({'action': 'yt_sort_newest'/'yt_sort_reset'}); a host with favourites of its own (hostxxx: favourite
-    # sites) uses {'action': 'host_fav_add'/'host_fav_remove'}. Anything else (e.g. hostlocalmedia.py's own {'action':
+    # sites) uses {'action': 'host_fav_add'/'host_fav_remove'}, its Watchlist folders {'action': 'host_wl_addto'/
+    # 'host_wl_move'/'host_wl_newfolder'/'host_wl_rename'/'host_wl_delfolder'}. Anything else (e.g. hostlocalmedia.py's own {'action':
     # 'paste_file', ...}) isn't a known pattern, so it falls back to no
     # icon - same plain look this screen had before this class existed.
     ICON_MAP = {
@@ -541,6 +543,11 @@ class IPTVActionChoiceBoxList(IPTVMainNavigatorList):
         'host_fav_add': 'BookmarkPlusItem.png',
         'host_fav_remove': 'BookmarkMinusItem.png',
         'host_site_hide': 'RemoveItem.png',
+        'host_wl_addto': 'WatchlistAddFolderItem.png',
+        'host_wl_move': 'WatchlistMoveFolderItem.png',
+        'host_wl_newfolder': 'AddHostToGroupItem.png',
+        'host_wl_rename': 'WatchlistRenameFolderItem.png',
+        'host_wl_delfolder': 'WatchlistDeleteFolderItem.png',
     }
 
     def __init__(self):

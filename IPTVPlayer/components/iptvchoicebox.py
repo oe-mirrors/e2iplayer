@@ -17,6 +17,7 @@ from Screens.Screen import Screen
 from Components.Label import Label
 from Components.ActionMap import ActionMap
 from Components.Sources.StaticText import StaticText
+from xml.sax.saxutils import quoteattr
 ###################################################
 
 
@@ -112,12 +113,12 @@ class IPTVChoiceBoxWidget(Screen):
             # that case.
             showOkNav = self.params.get('selectable', True)
             skin = """
-                <screen name="IPTVChoiceBoxWidget" position="center,center" resolution="1280,720" title="%s" size="%d,%d" backgroundColor="#34111112" flags="wfNoBorder">
+                <screen name="IPTVChoiceBoxWidget" position="center,center" resolution="1280,720" title=%s size="%d,%d" backgroundColor="#34111112" flags="wfNoBorder">
                     %s
                     <widget name="list"  position="5,66"  zPosition="2" size="e-10,e-%d" scrollbarMode="showAlways" scrollbarSliderBorderWidth="1" scrollbarForegroundColor="#1b5a91" scrollbarBorderColor="#00b6b6b6" enableWrapAround="1" transparent="1" foregroundColor="white" backgroundColor="black" %s borderWidth="1" borderColor="black"/>
                     %s
                 </screen>""" % (
-                self.params.get('title', _("Select option")),
+                quoteattr(self.params.get('title', _("Select option"))),  # title="..." with " & < > escaped
                 width, height,
                 skinchrome.build_header_auto(iconBase=iconBase),
                 footerMargin,
@@ -126,13 +127,13 @@ class IPTVChoiceBoxWidget(Screen):
             )
         else:
             skin = """
-                <screen name="IPTVChoiceBoxWidget" position="center,center" resolution="1280,720" title="%s" size="%d,%d" backgroundColor="#34111112" flags="wfNoBorder">
+                <screen name="IPTVChoiceBoxWidget" position="center,center" resolution="1280,720" title=%s size="%d,%d" backgroundColor="#34111112" flags="wfNoBorder">
                     <eLabel name="BG_Title" position="0,0" size="1000,50" backgroundColor="#100d0f16" zPosition="-1" />
                     <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/smallshadowline.png" position="0,50" size="e,2" zPosition="2" />
                     <widget name="title" position="10,14" size="e-10,30" foregroundColor="#0066ccff" backgroundColor="black" borderWidth="1" borderColor="black" transparent="1" zPosition="1" font="Regular;24" valign="center" />
                     <widget name="list"  position="5,60"  zPosition="2" size="e-10,e-50" scrollbarMode="showOnDemand" scrollbarSliderBorderWidth="1" scrollbarForegroundColor="#1b5a91" scrollbarBorderColor="#00b6b6b6" enableWrapAround="1" transparent="1" foregroundColor="white" backgroundColor="black" %s borderWidth="1" borderColor="black"/>
                 </screen>""" % (
-                self.params.get('title', _("Select option")),
+                quoteattr(self.params.get('title', _("Select option"))),  # title="..." with " & < > escaped
                 width, height,             # size of screen
                 selColors
             )
