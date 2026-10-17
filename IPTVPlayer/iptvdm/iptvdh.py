@@ -215,11 +215,16 @@ class DMHelper:
         else:
             return DMHelper.getWgetCMD(downItem)
 
+    # the containers a video download may end up in (the FFmpeg/HLS downloaders rename e.g. .mp4 -> .ts afterwards)
+    VIDEO_FILE_EXTS = ('.mp4', '.mkv', '.ts', '.webm', '.mov', '.flv', '.avi', '.m4v')
+
     @staticmethod
-    def makeUnikalFileName(fileName, withTmpFileName=True, addDateToFileName=False):
+    def makeUnikalFileName(fileName, withTmpFileName=True, addDateToFileName=False, videoSiblings=False):
+        # videoSiblings: a name counts as taken when the same name exists with any video extension - the downloader
+        # may still rename the file to its real container, "Name 2.mp4" must not become "Name 2 2.ts" then
         baseName = os.path.basename(fileName).replace('\\', '')
 
-        printDBG("DMHelper::makeUnikalFileName(%s, %s, %s) baseName: %s" % (fileName, withTmpFileName, addDateToFileName, baseName))
+        printDBG("DMHelper::makeUnikalFileName(%s, %s, %s, %s) baseName: %s" % (fileName, withTmpFileName, addDateToFileName, videoSiblings, baseName))
 
         if not addDateToFileName:
             # the number goes before the extension ("Name 2.mp4"), so the copies sort next to the first file
@@ -234,6 +239,10 @@ class DMHelper:
                 newFileName = os.path.dirname(fileName) + os.sep + name + uniqueID + ext
                 if fileExists(newFileName):
                     continue
+                if videoSiblings and ext.lower() in DMHelper.VIDEO_FILE_EXTS:
+                    stem = os.path.dirname(fileName) + os.sep + name + uniqueID
+                    if any(fileExists(stem + other) or fileExists(stem + other.upper()) for other in DMHelper.VIDEO_FILE_EXTS):
+                        continue
                 if withTmpFileName:
                     tmpFileName = os.path.dirname(fileName) + os.sep + "." + name + uniqueID + ext
                     if fileExists(tmpFileName):

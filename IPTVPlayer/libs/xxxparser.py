@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ###################################################
-from Plugins.Extensions.IPTVPlayer.libs import ph
+from Plugins.Extensions.IPTVPlayer.libs import ph, pyaes
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetCookieDir, GetTmpDir, byteify
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
@@ -9,18 +9,15 @@ from Plugins.Extensions.IPTVPlayer.libs.pCommon import common
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist as _getDirectM3U8Playlist, unpackJSPlayerParams, TEAMCASTPL_decryptPlayerParams
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_binary, ensure_str
 import re
 import base64
 import codecs
 import hashlib
+import os
 import random
 import time
 import subprocess
-
-try:
-	import http.client as httplib  # Python 3
-except ImportError:
-	import httplib  # Python 2
 
 try:
 	import json
@@ -84,7 +81,7 @@ def getDirectM3U8Playlist(*args, **kwargs):
 # variants above) note every quality they chose from, qualityChoices() then hands them to the player's link selection
 _qualityOffers = None
 # meta values that belong to one HLS variant (getDirectM3U8Playlist), not to the whole video
-VARIANT_META_KEYS = ('iptv_bitrate', 'audio_url', 'video_url')
+VARIANT_META_KEYS = ('iptv_bitrate', 'audio_url', 'video_url', 'iptv_master_program')
 
 
 def startQualityOffers():
@@ -206,6 +203,8 @@ MIRROR_PLAYER_PAGES = {'mydaddy.cc': 'https://hqporner.com/'}
 
 # live cam sites (hostxxx.py SITEDATA_CAMS), the stream is looked up when it is played
 LIVECAM_SITES = ('https://www.cam4.com', 'https://www.camsoda.com', 'https://www.myfreecams.com', 'https://streamate.com', 'https://www.xlovecam.com', 'https://api.sinparty.com', 'https://stripchat.com')
+# recorded cam shows and amateur clips whose video page names a hoster or the file (XXXParser._camArchiveStream)
+CAM_ARCHIVE_SITES = ('https://archivebate.com', 'https://livecamrips.to', 'https://www.showcamrips.com', 'https://dailypornstreams.com')
 
 # the txxx network hides its base64 video path behind look-alike cyrillic letters
 TXXX_CHARMAP = {
@@ -471,20 +470,125 @@ class XXXParser:
 		# Chaturbate's own embed player page (chaturbate.com/embed/<room>/?...&embed_video_only=1) names the room's HLS
 		# master in hls_source - without login or age check (CHATURBATE, ANACAMS). Every \uXXXX escape is decoded: the
 		# token's "=" comes as \u003D (a half-decoded link got a 403 from the edge). '' when the room is offline/private
-		sts, data = self.cm.getPage(embedUrl, {'header': {'User-Agent': self.cm.getDefaultHeader(browser='chrome')['User-Agent'], 'Referer': referer}})
-		videoUrl = fix_escaped_url(self.cm.ph.getSearchGroups(data, r'''hls_source.{8,15}[2]([^"^']+?)[,]''', 1, True)[0]) if sts else ''
+		videoUrl = self._chaturbateHlsSource(embedUrl, referer)
 		printDBG('Chaturbate hls_source: ' + videoUrl)
 		if not self.cm.isValidUrl(videoUrl):
 			return ''
 		# the best variant; the sound is a separate rendition, so only the merge:// entries (video + audio) play with
 		# sound. The download of a merge:// with HLS parts goes to the FFmpeg downloader (iptvdownloadercreator)
 		variants = getDirectM3U8Playlist(videoUrl, checkExt=False, sortWithMaxBitrate=999999999)
+		self._chaturbateMasterMeta(variants, embedUrl, referer)
 		merged = [v for v in variants if ('%s' % v.get('url', '')).startswith('merge://')]
 		variants = self._uhdVariants(merged or variants)  # some rooms stream in 4K
 		if not variants:
 			return urlparser.decorateUrl(videoUrl, {'iptv_proto': 'm3u8', 'iptv_livestream': True})
 		videoUrl = variants[0]['url']
 		videoUrl.meta['iptv_livestream'] = True
+		return videoUrl
+
+	def _chaturbateHlsSource(self, embedUrl, referer):
+		# the room's HLS master from its embed page, '' when there is none
+		try:
+			sts, data = self.cm.getPage(embedUrl, {'header': {'User-Agent': self.cm.getDefaultHeader(browser='chrome')['User-Agent'], 'Referer': referer}})
+			return fix_escaped_url(self.cm.ph.getSearchGroups(data, r'''hls_source.{8,15}[2]([^"^']+?)[,]''', 1, True)[0]) if sts else ''
+		except Exception:
+			printExc()
+		return ''
+
+	def _chaturbateMasterMeta(self, variants, embedUrl, referer):
+		# the FFmpeg download takes the master instead of the variant's separate video/audio playlists (ffmpeg 5.1.x
+		# stopped after a second on those). The master link above was already fetched once and the edge answers 403 to
+		# a second request with it, so the download gets a fresh one from the embed page (one more request per play).
+		# The variant is program N of the master: ffmpeg numbers the programs in the master's order, and N of the
+		# variant's chunklist_N_video is that position (checked on live rooms). Set on every variant, the quality pick
+		# may take any
+		if not any(('%s' % v.get('url', '')).startswith('merge://') for v in variants):
+			return
+		masterUrl = self._chaturbateHlsSource(embedUrl, referer)
+		if not self.cm.isValidUrl(masterUrl):
+			return
+		meta = {'iptv_master_url': masterUrl, 'iptv_master_referer': embedUrl, 'iptv_master_origin': 'https://chaturbate.com', 'iptv_master_user_agent': self.cm.getDefaultHeader(browser='chrome')['User-Agent']}
+		for v in variants:
+			url = v.get('url')
+			if not ('%s' % url).startswith('merge://'):
+				continue
+			url.meta.update(meta)
+			program = re.search(r'chunklist_(\d+)_video', '%s' % url.meta.get('video_url', ''))
+			if program:
+				url.meta['iptv_master_program'] = program.group(1)
+
+	def _camArchiveStream(self, site, url):
+		# ARCHIVEBATE: MixDrop iframe; LIVECAMRIPS: hoster iframe (vidara); DAILYPORNSTREAMS: the hoster (VOE) link
+		# AES encrypted in the page; SHOWCAMRIPS: own MP4 behind two player pages, the file needs their Referer
+		header = self.cm.getDefaultHeader(browser='chrome')
+		header['Referer'] = site + '/'
+		cookie = site.split('//')[-1].replace('www.', '').split('.')[0] + '.cookie'
+		params = {'header': header, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': join(GetCookieDir(), cookie), 'return_data': True}
+		sts, data = self.cm.getPage(url, params)
+		if not sts:
+			return ''
+		link = ''
+		if site == 'https://dailypornstreams.com':
+			# CryptoJS: key / IV = the first 32 / 16 hex digits of SHA-256 of the two parts of _evitem, AES-CBC
+			parts = self.cm.ph.getSearchGroups(data, r'''_evitem\s*=\s*['"]([^'"]+)['"]''', 1, True)[0].split('.')
+			stored = self.cm.ph.getSearchGroups(data, r'''playerHtml\[['"]player1['"]\]\s*=\s*embedDecrypt\(['"]([^'"]+)['"]''', 1, True)[0]
+			if len(parts) == 2 and stored:
+				try:
+					key = hashlib.sha256(parts[0].encode('utf-8')).hexdigest()[:32].encode('utf-8')
+					iv = hashlib.sha256(parts[1].encode('utf-8')).hexdigest()[:16].encode('utf-8')
+					decrypter = pyaes.Decrypter(pyaes.AESModeOfOperationCBC(key, iv))
+					cipher = base64.b64decode(base64.b64decode(stored))
+					plain = decrypter.feed(cipher) + decrypter.feed()
+					link = (plain if isinstance(plain, str) else plain.decode('utf-8')).strip()  # Py2: bytes are str
+				except Exception:
+					printExc()
+		elif site == 'https://www.showcamrips.com':
+			player = self.cm.ph.getSearchGroups(data, r'''src="([^"]*loading_video\.php\?[^"]+)"''', 1, True)[0]
+			play = videoUrl = ''
+			if player:
+				player = urljoin(url, player.replace('&amp;', '&'))
+				header['Referer'] = url
+				sts, data = self.cm.getPage(player, params)
+				play = self.cm.ph.getSearchGroups(data, r'''['"](play\.php\?[^'"]+)['"]''', 1, True)[0] if sts else ''
+			if play:
+				play = urljoin(player, play.replace('&amp;', '&'))
+				header['Referer'] = player
+				sts, data = self.cm.getPage(play, params)
+				videoUrl = self.cm.ph.getSearchGroups(data, r'''<(?:video|source)[^>]+src=["']([^"']+\.mp4[^"']*)["']''', 1, True)[0] if sts else ''
+			if videoUrl:
+				return urlparser.decorateUrl(urljoin(play, videoUrl.replace('&amp;', '&')), {'Referer': play, 'User-Agent': header['User-Agent']})
+		else:
+			link = self.cm.ph.getSearchGroups(data, r'''<iframe[^>]+id="iframe-video"[^>]+src="([^"]+)"''', 1, True)[0] or \
+				self.cm.ph.getSearchGroups(data, r'''<iframe[^>]+src="((?:https?:)?//mixdrop\.[^"]+)"''', 1, True)[0] or \
+				self.cm.ph.getSearchGroups(data, r'''name="fid" value="((?:https?:)?//[^"]+)"''', 1, True)[0]
+			link = urljoin(url, link.replace('&amp;', '&')) if link else ''
+		if self.cm.isValidUrl(link):
+			return self._playMirror(link, url)
+		SetIPTVPlayerLastHostError(_('Video link not found.'))
+		return ''
+
+	def _pmvhavenStream(self, url):
+		# PMVHAVEN: the video's HLS master from the API (2160p down to 360p - the UHD switch and the quality pick apply),
+		# its MP4 (the uploaded file, up to 4K) when there is none
+		header = self.cm.getDefaultHeader(browser='chrome')
+		header['Referer'] = 'https://pmvhaven.com/'
+		header['Accept'] = 'application/json'
+		videoId = url.rstrip('/').split('/')[-1]
+		sts, data = self.cm.getPage('https://pmvhaven.com/api/videos/' + videoId, {'header': header, 'return_data': True})
+		try:
+			video = (json.loads(data).get('data') or {}) if sts else {}
+		except Exception:
+			printExc()
+			video = {}
+		if not isinstance(video, dict):
+			video = {}
+		master = ensure_str(video.get('hlsMasterPlaylistUrl') or '')
+		videoUrl = self._bestM3U8Variant(master, checkExt=False) if self.cm.isValidUrl(master) else ''
+		fileUrl = ensure_str(video.get('videoUrl') or '')
+		if not videoUrl and self.cm.isValidUrl(fileUrl):
+			videoUrl = urlparser.decorateUrl(fileUrl, {'Referer': 'https://pmvhaven.com/'})
+		if not videoUrl:
+			SetIPTVPlayerLastHostError(_('Video link not found.'))
 		return videoUrl
 
 	def _bestM3U8Variant(self, videoUrl, **kwargs):
@@ -633,11 +737,89 @@ class XXXParser:
 						add(label, sub)
 		return mirrors
 
+	def _xtremestreamRead(self, url, header):
+		# the raw answer (bytes) over urllib, '' on an error
+		sts, response = self.cm.getPage(url, {'header': dict(header, **{'Accept-Encoding': 'identity'}), 'return_data': False})
+		if not sts or response is None:
+			return b''
+		try:
+			return response.read()
+		except Exception:
+			printExc()
+			return b''
+		finally:
+			response.close()
+
+	def _xtremestreamToken(self, base, videoId, token, player, userAgent):
+		# XtremeStream's token player (ftk_engine.js): proto_api.php?op=key gives the AES-128 key (only with the header
+		# X-XS-P: 1), op=manifest the qualities as JSON XORed with SHA-256("M|<id>|<token>") - segment counts, durations
+		# and the CDN hosts. The segments are plain HLS AES-128 (IV = segment number) behind *.html names on those hosts.
+		# hlsdl reads a local playlist and key (a path without "://"): one playlist per quality in the tmp folder.
+		# the token is bound to the client's address (IPv4 / IPv6): the player page, the key and the manifest all over
+		# _xtremestreamRead (pycurl for the page and urllib for the key took different address families: 403, box 10.2026)
+		api = '%s/player/proto_api.php?data=%s&vt=%s&op=' % (base, videoId, token)
+		header = {'User-Agent': userAgent, 'Referer': player}
+		key = self._xtremestreamRead(api + 'key', dict(header, **{'X-XS-P': '1'}))
+		encrypted = bytearray(self._xtremestreamRead(api + 'manifest', header))
+		if len(key) != 16 or not encrypted:
+			SetIPTVPlayerLastHostError(_('Video link not found.'))
+			return ''
+		mask = bytearray(hashlib.sha256(ensure_binary('M|%s|%s' % (videoId, token))).digest())
+		try:
+			manifest = json.loads(ensure_str(bytes(bytearray(b ^ mask[i % 32] for i, b in enumerate(encrypted)))))
+			cdn = manifest.get('cdn') or []
+			hosts = [cdn[k] for k in sorted(cdn, key=int)] if isinstance(cdn, dict) else list(cdn)  # {"0": host, ...} or a list
+		except Exception:
+			printExc()
+			SetIPTVPlayerLastHostError(_('Video link not found.'))
+			return ''
+		keyName = 'xtremestream_%s.key' % videoId
+		try:
+			for old in os.listdir(GetTmpDir()):
+				if old.startswith('xtremestream_'):
+					os.remove(GetTmpDir(old))
+			with open(GetTmpDir(keyName), 'wb') as f:
+				f.write(key)
+		except Exception:
+			printExc()
+			SetIPTVPlayerLastHostError(_('Video link not found.'))
+			return ''
+		meta = {'Referer': player, 'Origin': base, 'User-Agent': userAgent, 'iptv_proto': 'm3u8', 'iptv_buffering': 'required'}
+		candidates = []
+		for quality, variant in manifest.items():
+			if not quality.isdigit() or not isinstance(variant, dict) or not hosts:
+				continue
+			durations = variant.get('durs') or []
+			lines = ['#EXTM3U', '#EXT-X-VERSION:3', '#EXT-X-TARGETDURATION:%s' % variant.get('td', 10), '#EXT-X-MEDIA-SEQUENCE:0',
+				'#EXT-X-PLAYLIST-TYPE:VOD', '#EXT-X-KEY:METHOD=AES-128,URI="%s"' % keyName]  # next to the playlist
+			for nr in range(int(variant.get('n') or len(durations))):
+				lines.append('#EXTINF:%s,' % (durations[nr] if nr < len(durations) else variant.get('td', 10)))
+				lines.append('https://%s/cdn/down/%s/%s_enc/%s%d.html' % (hosts[nr % len(hosts)], videoId, quality, quality, nr))
+			lines.append('#EXT-X-ENDLIST')
+			path = GetTmpDir('xtremestream_%s_%s.m3u8' % (videoId, quality))
+			try:
+				with open(path, 'w') as f:
+					f.write('\n'.join(lines) + '\n')
+			except Exception:
+				printExc()
+				continue
+			candidates.append((int(quality), urlparser.decorateUrl(path, dict(meta))))
+		if not candidates:
+			SetIPTVPlayerLastHostError(_('Video link not found.'))
+			return ''
+		return self._pickByHeight(candidates)
+
 	def _playMirror(self, link, referer):
 		# a link from _pageMirrors: the site's own file directly, a file hoster through urlparser
 		userAgent = self.cm.getDefaultHeader(browser='chrome')['User-Agent']
 		m = re.match(r'(https?://[a-z0-9-]+\.xtremestream\.xyz)/player/index\.php\?data=([0-9a-f]+)', link)
 		if m:
+			# newer servers (pervl6, 10.2026): the player boots a token engine instead of the xs1.php master (403 there)
+			# (over the same client as the token player's requests, see _xtremestreamToken)
+			page = ensure_str(self._xtremestreamRead(link, {'User-Agent': userAgent, 'Referer': referer}))
+			boot = re.search(r'''XSFTK\.boot\(\s*["']([0-9a-f]+)["']\s*,\s*["']([^"']+)["']''', page)
+			if boot:
+				return self._xtremestreamToken(m.group(1), boot.group(1), boot.group(2), link, userAgent)
 			# the HLS master of the player page (variants &q=480..2160); it wants the player as Referer.
 			# The segments are named *.html: exteplayer3's ffmpeg refuses them ("Invalid data found", box log
 			# 10.2026), hlsdl just fetches the bytes -> buffer
@@ -1322,7 +1504,7 @@ class XXXParser:
 				return site
 		if re.match(r'https://v[0-9]+\.erome\.com/', url):
 			return 'https://www.erome.com'
-		for site in LIVECAM_SITES + KVS_SITES + WPTUBE_SITES + MOVIE_SITES + ('https://en.luxuretv.com', 'https://beta.xfreehd.com', 'https://321tube.com', 'https://alpenrammler.com'):
+		for site in LIVECAM_SITES + KVS_SITES + WPTUBE_SITES + MOVIE_SITES + CAM_ARCHIVE_SITES + ('https://en.luxuretv.com', 'https://beta.xfreehd.com', 'https://321tube.com', 'https://alpenrammler.com', 'https://pmvhaven.com', 'https://eroasmr.com'):
 			if url.startswith(site + '/'):
 				return site
 		return self.MAIN_URL
@@ -1556,6 +1738,9 @@ class XXXParser:
 			COOKIEFILE = join(GetCookieDir(), 'emturbovid.cookie')
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
+			sts, data = self.cm.getPage(url, self.defaultParams)
+			if not sts:
+				return ''
 			videoUrl = self.cm.ph.getSearchGroups(data, '''urlPlay.+?['"]([^"^']+?)['"];''')[0]
 			printDBG('End Link: ' + str(videoUrl))
 			return videoUrl
@@ -2049,7 +2234,7 @@ class XXXParser:
 
 		if parser == 'https://pornbolt.com':
 			COOKIEFILE = join(GetCookieDir(), 'pornbolt.cookie')
-			url = url.replace('ä', '%C3%A4').replace('ß', '%C3%9').replace('ü', '%C3%BC')
+			url = url.replace('ä', '%C3%A4').replace('ß', '%C3%9F').replace('ü', '%C3%BC')
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			self.HTTP_HEADER['Referer'] = url
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
@@ -2265,11 +2450,24 @@ class XXXParser:
 										resolved = self.getResolvedURL(landing)
 										if resolved:
 											return resolved
+									# a page with only a fluid player (awm network: fapnow, starwank, transhero ...): its own sources are
+									# the ad clips (/ads/... .mp4), the full video is in the KVS flashvars of the site's /embed/<id> page
+									embedUrl = '' if 'license_code' in page else self.cm.ph.getSearchGroups(page, r'''(https?://%s/embed/[0-9]+)''' % re.escape(urlsplit(pageUrl).netloc), 1, True)[0]
+									if embedUrl:
+										sts, embedPage = self.get_Page(embedUrl, dict(self.defaultParams, header=dict(self.HTTP_HEADER, Referer=pageUrl)))
+										if sts and 'license_code' in embedPage:
+											page, pageUrl = embedPage.replace(r'\/', '/'), embedUrl
 									# the partner page's player: KVS flashvars (fapcat: encrypted function/0/ links) or <source> tags
 									# (fuqster network: ".../get_file/.../<id>.mp4/") hold the full video; its contentUrl is only the
 									# preview clip
 									links = [(h, urljoin(pageUrl, u)) for h, u in self._mediaCandidates(page) if not re.search(r'(?i)preview|vthumb|[-_]trailer', u)] if 'license_code' in page else []
 									mediaUrl = self._pickByHeight(links or self._sourceTagLinks(page, pageUrl))
+									if not mediaUrl:
+										# a token stream without a file name (thepornapi: <source src=".../stream?token=..." type="video/mp4">);
+										# the page's <video src=".../native/N.mp4"> loops are ads
+										mediaUrl = self.cm.ph.getSearchGroups(page, r'''<source\b[^>]*?src=["']([^"']+)["'][^>]*type=["']video/mp4["']''', 1, True)[0].replace('&amp;', '&')
+										if re.search(r'(?i)/ads/|/native/|preview|vthumb|[-_]trailer', mediaUrl):
+											mediaUrl = ''
 									if mediaUrl:
 										printDBG('4TUBE partner player source: ' + mediaUrl)
 										return urlparser.decorateUrl(mediaUrl, {'Referer': pageUrl, 'User-Agent': USER_AGENT})
@@ -2284,7 +2482,7 @@ class XXXParser:
 											# the token URL of the sponsor's CDN sits in the HTML with "&amp;" and only answers with the sponsor
 											# site as Referer (403 otherwise)
 											mediaUrl = mediaUrl.rstrip('\\').replace('&amp;', '&')
-											if re.search(r'\.(?:mp4|m3u8)(?:\?|$)', mediaUrl, re.I) and not re.search(r'(?i)preview|vthumb|[-_]trailer', mediaUrl):
+											if re.search(r'\.(?:mp4|m3u8)(?:\?|$)', mediaUrl, re.I) and not re.search(r'(?i)preview|vthumb|[-_]trailer|/ads/|/native/', mediaUrl):
 												printDBG('4TUBE direct media fallback: ' + mediaUrl)
 												return urlparser.decorateUrl(mediaUrl, {'Referer': pageUrl, 'User-Agent': USER_AGENT})
 							except Exception:
@@ -2449,7 +2647,6 @@ class XXXParser:
 			baseUrl = url
 			printDBG("parserDOOD baseUrl [%s]" % baseUrl)
 			httpParams = {'header': {'User-Agent': USER_AGENT, 'Accept': '*/*', 'Accept-Encoding': 'gzip', 'Referer': baseUrl}, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': GetCookieDir("dood.cookie"), 'max_data_size': 0, 'no_redirection': True}
-			urlsTab = []
 			if '/d/' in baseUrl:
 				baseUrl = baseUrl.replace('/d/', '/e/')
 			sts, data = self.cm.getPage(baseUrl, httpParams)
@@ -2473,20 +2670,21 @@ class XXXParser:
 			pass_md5_url = self.cm.ph.getSearchGroups(data, r'''; \$.get.['"](.+?)['"],''', 1, True)[0]
 			makePlay = self.cm.ph.getSearchGroups(data, r'''(function makePlay\(\) \{.+?\};)''', 1, True)[0]
 			if pass_md5_url and makePlay:
-				pass_md5_url = self.cm.getFullUrl(pass_md5_url, self.cm.getBaseUrl(url))
+				# the page the player came from (url is only the redirect target, '' without a redirect: ":///pass_md5/...")
+				pass_md5_url = self.cm.getFullUrl(pass_md5_url, self.cm.getBaseUrl(baseUrl))
 				sts, new_url = self.cm.getPage(pass_md5_url, httpParams)
 				if sts:
 					code = "var url = '%s';\n%s\nconsole.log(url + makePlay());" % (new_url, makePlay)
 					ret = js_execute(code)
 					newUrl = ret['data'].replace("\n", "")
 					if newUrl:
+						# the link itself like every other branch (urlparser's list format: "wrong resolved url type")
+						meta = {'Referer': baseUrl, 'iptv_format': 'mp4'}
 						if subTracks:
-							newUrl = urlparser.decorateUrl(newUrl, {'Referer': baseUrl, 'external_sub_tracks': subTracks, 'iptv_format': 'mp4'})
-						else:
-							newUrl = urlparser.decorateUrl(newUrl, {'Referer': baseUrl, 'iptv_format': 'mp4'})
-						params = {'name': 'link', 'url': newUrl}
-						urlsTab.append(params)
-			return urlsTab
+							meta['external_sub_tracks'] = subTracks
+						return urlparser.decorateUrl(newUrl, meta)
+			SetIPTVPlayerLastHostError(_('Video link not found.'))
+			return ''
 
 		if parser == 'https://www.playvids.com':
 			COOKIEFILE = join(GetCookieDir(), 'playvids.cookie')
@@ -5978,12 +6176,19 @@ class XXXParser:
 			return ''
 
 		if parser == 'https://hqporner.com':
+			downloadTitle = ''
 			if '/hdporn/' in url:
 				# video page: the best entry of the quality list (all of them with "Use the best quality" off)
+				self.hqpornerDownloadTitle = ''
 				url = self._bestFromQualityList(url, 'hqporner-serwer')
 				if not url:
 					return ''
-			videoUrl = urlparser.decorateUrl(url, {'Referer': url})
+				downloadTitle = getattr(self, 'hqpornerDownloadTitle', '')
+			meta = {'Referer': url}
+			if downloadTitle:
+				# a download is named "<performers> - <title>" (the list shows the title alone)
+				meta['iptv_download_title'] = downloadTitle
+			videoUrl = urlparser.decorateUrl(url, meta)
 			return videoUrl if videoUrl else ''
 
 		if parser == 'https://www.eporner.com' and '/dload/' not in url:
@@ -6247,7 +6452,7 @@ class XXXParser:
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			self.HTTP_HEADER['Referer'] = url
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
-			url = url.replace('ä', '%C3%A4').replace('ß', '%C3%9').replace('ü', '%C3%BC')
+			url = url.replace('ä', '%C3%A4').replace('ß', '%C3%9F').replace('ü', '%C3%BC')
 			printDBG('PORNICOM URL: ' + str(url))
 			sts, data = self.get_Page(url, self.defaultParams)
 			if not sts:
@@ -6983,6 +7188,23 @@ class XXXParser:
 					SetIPTVPlayerLastHostError(_("This video is a private video."))
 				return ''
 			return urlparser.decorateUrl(self._pickByHeight(candidates), {'Referer': url, 'User-Agent': self.HTTP_HEADER.get('User-Agent', '')})
+
+		if parser in CAM_ARCHIVE_SITES:
+			return self._camArchiveStream(parser, url)
+
+		if parser == 'https://pmvhaven.com':
+			return self._pmvhavenStream(url)
+
+		if parser == 'https://eroasmr.com':
+			# the video page's own MP4
+			header = self.cm.getDefaultHeader(browser='chrome')
+			header['Referer'] = parser + '/'
+			sts, data = self.cm.getPage(url, {'header': header, 'return_data': True})
+			videoUrl = self.cm.ph.getSearchGroups(data, r'''<source[^>]+src="([^"]+\.mp4[^"]*)"''', 1, True)[0] if sts else ''
+			if not videoUrl:
+				SetIPTVPlayerLastHostError(_('Video link not found.'))
+				return ''
+			return urlparser.decorateUrl(urljoin(url, videoUrl.replace('&amp;', '&')), {'Referer': url, 'User-Agent': header['User-Agent']})
 
 		# (BRAVOPORNOS is a page of the same lapippa network)
 		if parser in ('https://alpenrammler.com', 'https://www.bravopornos.com'):

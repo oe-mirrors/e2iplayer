@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# Pager rows for CBaseHostClass hosts: "First page", "Jump" (asks for a page number) and
-# "Next page" - "Next page (2/12)" and "Page: 1/12" in the header when the last page is known
+# Pager rows for CBaseHostClass hosts: "Main menu" (like EXIT), "First page", "Jump" (asks for a page number)
+# and "Next page" - "Next page (2/12)" and "Page: 1/12" in the header when the last page is known
 # (see CHostBase.converItem: 'page', 'last_page', 'image_type').
 #
 #   addPagingItems(self, cItem, page, hasNext, lastPage=0, pageUrlTpl='', nextParams=None)
@@ -25,6 +25,9 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 
 JUMP_CATEGORY = "iptv_paging_jump"
+# "Main menu" row of a paged list (image_type): the widget does what EXIT does on it - back to the list the first
+# page was opened from - and never asks the host
+MENU_IMAGE_TYPE = "MENU"
 PAGER_ROW_KEYS = ("page", "last_page", "image_type")
 _PAGER_KEYS = ("image_type", "jump_category", "max_page", "current_page", "page_url_tpl")
 _presetJump = []  # presetJumpPage()
@@ -65,6 +68,11 @@ def addPagingItems(host, cItem, page, hasNext, lastPage=0, pageUrlTpl="", nextPa
     if lastPage and lastPage < page:
         lastPage = 0
     category = cItem.get("category", "")
+
+    if page > 1 or hasNext:
+        params = _base(cItem)
+        params.update({"title": _("Main menu"), "desc": _("Main menu"), "image_type": MENU_IMAGE_TYPE})
+        host.addDir(params)
 
     if page > 1:
         params = _base(cItem)

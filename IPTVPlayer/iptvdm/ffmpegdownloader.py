@@ -4,7 +4,11 @@
 #
 #  $Id$
 #
-#  Last Modified: 12.10.2026
+#  Last Modified: 17.10.2026
+#   - a DM download whose link names iptv_master_url takes that master playlist (program of the variant), the
+#     variant again when the master gives nothing (masterFallback, without a second sidecar / live check);
+#     ffmpeg's "[hls @ ...] Skip ('#EXT-X-...')" lines are left out of the log
+#  12.10.2026
 #   - a stopped live recording in MP4 / MOV keeps its name (ffmpeg still reopens the file by name for the index);
 #     the live check also sends Authorization and cannot stop a download from starting
 #   - stopping a live recording is its normal end: DOWNLOADED, renamed to its container and its .txt written (no
@@ -30,7 +34,8 @@
 #   - HTTP inputs get -reconnect_streamed / -reconnect_delay_max / -rw_timeout so a
 #     dropped or stalled connection recovers or fails instead of hanging.
 #   - merge:// inputs are stream-mapped explicitly (audio_url -> :a, video_url ->
-#     :v) so a stray track in one playlist can't shadow the intended stream.
+#     :v) so a stray track in one playlist can't shadow the intended stream; a DM
+#     download whose link names iptv_master_url takes that master playlist instead.
 #   - _fixFileExtension(): rename the output to the container ffmpeg actually
 #     wrote (-f matroska -> .mkv etc.) instead of leaving it under the .mp4 name
 #     the DM requested; the DM re-reads the path via getFullFileName().
@@ -107,7 +112,7 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
     # ERROR_SPAM lines repeat per packet or per retry and are never logged, each distinct error line is logged
     # once and at most MAX_ERROR_LINES per download
     ERROR_LINE = re.compile(r'(?i)\b(?:error|failed|invalid|forbidden|denied|not found|server returned|unauthorized|timed out|refused|unable to|reset by peer)\b')
-    ERROR_SPAM = re.compile(r'(?i)invalid dts|non-monotonous|will reconnect at')
+    ERROR_SPAM = re.compile(r'(?i)invalid dts|non-monotonous|will reconnect at|\[hls @ [^\]]+\] skip \(')
     MAX_ERROR_LINES = 20
 
     # extra input options for HTTP(S) sources: recover from dropped connections
@@ -153,6 +158,9 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
         # its real container extension; stays False for buffered playback, where
         # the player already holds the file open under the requested name
         self.allowFinalRename = False
+        # the merge:// link to run again when a master playlist gave nothing (start())
+        self.masterFallback = None
+        self.fallbackRun = False  # start() of the variant after a master that gave nothing
 
     def __del__(self):
         printDBG("FFMPEGDownloader.__del__ ----------------------------------")
@@ -193,12 +201,15 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
 
         cmdTab = [DMHelper.GET_FFMPEG_PATH(), '-y']
         tmpUri = strwithmeta(url)
-        self._prepareSidecarData(tmpUri.meta)
-        try:
-            self._startLiveCheck(tmpUri.meta)  # optional: the download must not depend on it
-        except Exception:
-            printExc()
-            self.liveState = {}
+        fallbackRun, self.fallbackRun = getattr(self, 'fallbackRun', False), False
+        if not fallbackRun:
+            # (the variant after a master that gave nothing keeps the sidecar lookup and live check already running)
+            self._prepareSidecarData(tmpUri.meta)
+            try:
+                self._startLiveCheck(tmpUri.meta)  # optional: the download must not depend on it
+            except Exception:
+                printExc()
+                self.liveState = {}
 
         if 'iptv_video_rep_idx' in tmpUri.meta:
             cmdTab.extend(['-video_rep_index', str(tmpUri.meta['iptv_video_rep_idx'])])
@@ -233,6 +244,28 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
                 cmdTab.extend(['-headers', '\r\n'.join(headers) + '\r\n'])
 
         mapOpts = []
+        self.masterFallback = None
+        masterUrl = '%s' % tmpUri.meta.get('iptv_master_url', '')
+        if self.allowFinalRename and masterUrl.lower().startswith(('http://', 'https://')):
+            # DM download of a merge:// HLS variant: some ffmpeg builds (5.1.x) stop after a second on the separate
+            # video/audio media playlists of a low-latency stream, the master runs. iptv_master_program = the
+            # variant's program in the master (its streams optional: "?"; without it ffmpeg picks the best one);
+            # iptv_master_<header> = the headers the master needs. The master link can be used once only: when it
+            # gives nothing (a restart in the download manager), the download runs again with the variant
+            fallbackMeta = dict(tmpUri.meta)
+            fallbackMeta.pop('iptv_master_url', None)
+            self.masterFallback = strwithmeta('%s' % tmpUri, fallbackMeta)
+            masterMeta = dict(tmpUri.meta)
+            for headerName in ('User-Agent', 'Referer', 'Origin', 'Cookie'):
+                headerValue = masterMeta.get('iptv_master_' + headerName.lower().replace('-', '_'))
+                if headerValue:
+                    masterMeta[headerName] = headerValue
+            program = '%s' % tmpUri.meta.get('iptv_master_program', '')
+            if program.isdigit():
+                mapOpts = ['-map', '0:p:%s:v:0?' % program, '-map', '0:p:%s:a:0?' % program]
+            printDBG("FFMPEGDownloader::start master playlist instead of the variant, program[%s]%s" % (program, '' if mapOpts else ' (ffmpeg picks the streams)'))
+            tmpUri = strwithmeta(masterUrl, masterMeta)
+            self.url = tmpUri
         if self.url.startswith("merge://"):
             try:
                 urlsKeys = self.url.split('merge://', 1)[1].split('|')
@@ -285,7 +318,8 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
 
         self.status = DMHelper.STS.DOWNLOADING
 
-        self.onStart()
+        if not fallbackRun:
+            self.onStart()
         return BaseDownloader.CODE_OK
 
     def _getDuration(self, data):
@@ -416,6 +450,14 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
             self.console = None
 
         self._refreshLocalFileSize()
+
+        fallback = getattr(self, 'masterFallback', None)
+        if not terminated and fallback is not None and 0 >= self.localFileSize:
+            # the master link gave nothing (used up already, e.g. a restart in the download manager): the variant
+            printDBG("FFMPEGDownloader master playlist gave nothing -> again with the variant")
+            self.fallbackRun = True
+            self.start(fallback, self.filePath, self.downloaderParams)
+            return
 
         # a live recording has no end of its own: stopping it in the download manager is how it ends
         liveStop = terminated and self.allowFinalRename and 0 < self.localFileSize and self._isLiveRecording()

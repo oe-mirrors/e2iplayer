@@ -272,3 +272,54 @@ def test_live_check_failure_does_not_stop_the_download(ff):
     dl._startLiveCheck = broken
     dl.start(dl.url, "/hdd/movie/Live.mkv")
     assert "/hdd/movie/Live.mkv.iptv.cmd" in ff.written and dl.liveState == {}
+
+
+def _mergeMeta():
+    return {"audio_url": "https://edge/chunklist_4_audio.m3u8", "video_url": "https://edge/chunklist_3_video.m3u8",
+            "iptv_master_url": "https://edge/master.m3u8?token=fresh", "iptv_master_program": "3",
+            "iptv_master_referer": "https://chaturbate.com/embed/room/", "iptv_master_origin": "https://chaturbate.com"}
+
+
+def test_download_takes_the_master_playlist(ff, monkeypatch):
+    # the link's headers as the real DMHelper hands them on: the master's Referer / Origin must reach its input
+    monkeypatch.setattr(ff.DMHelper, "getDownloaderParamFromUrlWithMeta", lambda url, b=False: (str(url), dict(getattr(url, "meta", {}))))
+    dl = _dl(ff, "merge://audio_url|video_url", _mergeMeta())
+    dl.start(dl.url, "/hdd/rec/Cam.mp4")
+    cmd = ff.written["/hdd/rec/Cam.mp4.iptv.cmd"].split("|")
+    assert cmd.count("-i") == 1 and cmd[cmd.index("-i") + 1] == "https://edge/master.m3u8?token=fresh"
+    assert cmd[cmd.index("-map"):cmd.index("-map") + 4] == ["-map", "0:p:3:v:0?", "-map", "0:p:3:a:0?"]
+    assert cmd[cmd.index("-referer") + 1] == "https://chaturbate.com/embed/room/"
+    assert "Origin: https://chaturbate.com" in cmd[cmd.index("-headers") + 1]
+
+
+def test_master_without_program_lets_ffmpeg_pick(ff):
+    meta = _mergeMeta()
+    del meta["iptv_master_program"]
+    dl = _dl(ff, "merge://audio_url|video_url", meta)
+    dl.start(dl.url, "/hdd/rec/Cam2.mp4")
+    cmd = ff.written["/hdd/rec/Cam2.mp4.iptv.cmd"].split("|")
+    assert cmd.count("-i") == 1 and "-map" not in cmd
+
+
+def test_used_up_master_runs_again_with_the_variant(ff):
+    # the master link gave nothing (a restart in the download manager): the same download with the two variant inputs
+    ff.DMHelper.getFileSize = lambda path: 0
+    dl = _dl(ff, "merge://audio_url|video_url", _mergeMeta())
+    dl.downloaderParams = {}
+    dl.start(dl.url, "/hdd/rec/Cam3.mp4")
+    dl.filePath, dl.localFileSize = "/hdd/rec/Cam3.mp4", 0
+    dl._cmdFinished(1, False)
+    cmd = ff.written["/hdd/rec/Cam3.mp4.iptv.cmd"].split("|")
+    assert cmd.count("-i") == 2 and "https://edge/master.m3u8?token=fresh" not in cmd and dl.masterFallback is None
+
+
+def test_playback_keeps_the_merge_inputs(ff):
+    dl = _dl(ff, "merge://audio_url|video_url", _mergeMeta(), download=False)
+    dl.start(dl.url, "/tmp/.iptv_buffering.flv")
+    cmd = ff.written["/tmp/.iptv_buffering.flv.iptv.cmd"].split("|")
+    assert cmd.count("-i") == 2 and "https://edge/master.m3u8?token=fresh" not in cmd
+
+
+def test_hls_skip_lines_are_not_logged(ff):
+    assert ff.FFMPEGDownloader.ERROR_SPAM.search("[hls @ 0xb4c0d0] Skip ('#EXT-X-PART:DURATION=0.5,URI=\"x\"')")
+    assert not ff.FFMPEGDownloader.ERROR_SPAM.search("[hls @ 0xb4c0d0] Opening 'https://edge/x.m3u8' for reading")

@@ -91,19 +91,45 @@ def _minutes(text):
     return int(found.group(0)) if found else 0
 
 
+_ROMAN = {"i": 1, "v": 5, "x": 10}
+
+
+def _titlePart(title):
+    # ("cleaned title without the part number", part number) - the number is the last word: "Title 2", "Title: Part III",
+    # "Title Teil 3"; without one it is part 1. A year ("Blade Runner 2049") is no part number
+    m = re.match(r"(?i)^(.*?)[\s:_-]+(?:part|teil|chapter|vol\.?)?\s*([0-9]{1,2}|x{0,2}(?:ix|iv|v?i{0,3}))\s*$", title or "")
+    if not m or not m.group(2) or not _cleanTitle(m.group(1)):
+        return _cleanTitle(title), 1
+    number = m.group(2).lower()
+    if number.isdigit():
+        return _cleanTitle(m.group(1)), int(number)
+    values = [_ROMAN[c] for c in number]
+    return _cleanTitle(m.group(1)), sum(-v if i + 1 < len(values) and v < values[i + 1] else v for i, v in enumerate(values))
+
+
+def _otherPart(a, b):
+    # True when two titles are different parts of one series: "Title 2" / "Title", "Title 2" / "Title 1",
+    # "Title III" / "Title 2" ("Title 1" / "Title" is the same film)
+    baseA, partA = _titlePart(a)
+    baseB, partB = _titlePart(b)
+    return bool(baseA) and baseA == baseB and partA != partB
+
+
 def _pickResult(results, title, year, titleKeys, dateKey, strict=False):
     # the service's order is its relevance; a result with the same title wins,
     # then the one from the given year. strict: only results whose title is the
     # same or contains the other one (for the fuzzy keyless searches, which
-    # always return something)
+    # always return something). Another part of a series ("Title" for "Title 2")
+    # is never taken
     wanted = _cleanTitle(title)
     best, bestScore = None, -1
     for item in results[:20]:
-        titles = [_cleanTitle(item.get(k)) for k in titleKeys]
+        rawTitles = [item.get(k) or "" for k in titleKeys]
+        titles = [_cleanTitle(t) for t in rawTitles]
         score = 0
         if wanted in titles:
             score += 2
-        elif strict and not any(t and (wanted in t or t in wanted) for t in titles):
+        elif any(_otherPart(title, t) for t in rawTitles) or (strict and not any(t and (wanted in t or t in wanted) for t in titles)):
             continue
         if year and (item.get(dateKey) or "")[:4] == year:
             score += 1

@@ -16,6 +16,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdmapi import IPTVDMApi, DMItem
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdownloadercreator import IsUrlDownloadable
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
+from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import MENU_IMAGE_TYPE
 from Components.config import config
 
 WORKER = 'doUseHostAction'
@@ -92,7 +93,8 @@ def getState():
 	state.update({
 		'host': {'name': host['Name'], 'title': hostDisplayTitle(host['Title']), 'logo': hostLogoUrl(host['Name'])},
 		'view': v['view'], 'path': v['path'],
-		'items': [_itemToDict(item, idx) for idx, item in enumerate(items)],
+		# the "Main menu" pager row is the receiver's EXIT key - the page has its own Back
+		'items': [_itemToDict(item, idx) for idx, item in enumerate(items) if getattr(item, 'imageType', '') != MENU_IMAGE_TYPE],
 		'searchTypes': [[cleanText(label), value] for label, value in (host.get('SearchTypes') or [])],
 		'hasSearch': any(item.type == CDisplayListItem.TYPE_SEARCH for item in items),
 		'links': [_linkToDict(link, idx, playable) for idx, link in enumerate(v['links'])] if v['view'] == 'links' else [],
@@ -147,6 +149,8 @@ def _selectItem(index):
 	item = items[index]
 	obj = settings.activeHost['Obj']
 	v = _view()
+	if getattr(item, 'imageType', '') == MENU_IMAGE_TYPE:
+		return  # not listed (getState), an old page may still send it
 	if item.type in FOLDER_TYPES:
 		if getattr(item, 'pinLocked', False):
 			raise WebActionError(_('This folder is protected by a PIN, open it on the receiver.'))

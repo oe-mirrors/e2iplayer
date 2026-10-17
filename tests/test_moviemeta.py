@@ -416,6 +416,32 @@ def test_helpers(mm):
     assert mm._names([{"name": "a"}, {"name": "a"}, {"name": "b"}, {"name": "c"}, {"name": "d"}]) == "a, b, c"
 
 
+def test_other_part_is_never_picked(mm):
+    first = {"title": "Zauberhafte Schwestern", "year": "1998"}
+    second = {"title": "Zauberhafte Schwestern 2", "year": "2026"}
+    # only the first film is known: no hit instead of the wrong part, also in the strict (keyless) searches
+    assert mm._pickResult([first], "Zauberhafte Schwestern 2", "2026", ("title",), "year", strict=True) is None
+    assert mm._pickResult([first], "Zauberhafte Schwestern 2", "2026", ("title",), "year") is None
+    assert mm._pickResult([first, second], "Zauberhafte Schwestern 2", "2026", ("title",), "year", strict=True) is second
+    assert mm._pickResult([second, first], "Zauberhafte Schwestern", "", ("title",), "year", strict=True) is first
+    # only the part check decides: part 2 alone is no hit for part 1
+    assert mm._pickResult([second], "Zauberhafte Schwestern", "", ("title",), "year") is None
+    assert mm._pickResult([{"title": "Rocky II"}], "Rocky", "", ("title",), "year", strict=True) is None
+    # "Title 1" is the first film, a longer title still counts in the strict searches
+    assert mm._otherPart("Rocky 1", "Rocky") is False
+    assert mm._pickResult([{"title": "Dark Matter"}], "Dark Matter (2024)", "", ("title",), "year", strict=True) is not None
+    # part 2 against part 1, roman numbers, "Part" / "Teil", a year is no part
+    assert mm._otherPart("Rocky 2", "Rocky 1") is True
+    assert mm._otherPart("Rocky XI", "Rocky") is True
+    assert mm._otherPart("Saw X", "Saw 10") is False
+    assert mm._otherPart("Kill Bill: Vol. 2", "Kill Bill: Vol. 1") is True
+    assert mm._otherPart("Der Hobbit Teil 3", "Der Hobbit") is True
+    assert mm._otherPart("Blade Runner 2049", "Blade Runner") is False
+    assert mm._otherPart("2012", "20") is False
+    assert mm._otherPart("Max", "Ma") is False
+    assert mm._pickResult([{"title": "Rocky"}, {"title": "Rocky II"}], "Rocky 2", "", ("title",), "year")["title"] == "Rocky II"
+
+
 def test_source_is_a_known_info_field():
     with open(os.path.join(ROOT, "components", "ihost.py")) as f:
         src = f.read()

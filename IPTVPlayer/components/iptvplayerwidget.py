@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 # Last Modified: 2026-07-26 - Updated blue_pressed() and blue_pressed_next(), added YouTube user links actions in the blue menu, and fixed deleteFavouriteItem(); fixed missing key_green label display by correcting the Halidri1080p1 playlist.xml key_green binding and set default green button text to "Download".
+# 2026-10-17 - MENU "Select action" follows "Force internal skin" (openChoiceBox): the box skin's ChoiceBox with it off;
+#              "Main menu" row of paged lists (OK = EXIT, no INFO); a host's iptv_download_title names the GREEN download.
 # 2026-10-12 - CH- after a jump opens the page before (78 -> 77) over the Jump row; EXIT goes a whole list level back over all paged pages.
 # 2026-10-10 - batch download: BLUE menu "Download all items of this page" / "Select items to download" (OK marks rows);
 #              playVideo()'s folder / free space check moved into _checkDestinationDir(), shared with it.
@@ -875,7 +877,7 @@ class E2iPlayerWidget(Screen):
         # types that are structurally never real content at all (pure
         # pagination/action controls, no underlying host item) rather
         # than guessing which content types have article support.
-        hasInfo = item is not None and item.type not in self.INFO_NEVER_TYPES
+        hasInfo = item is not None and item.type not in self.INFO_NEVER_TYPES and getattr(item, 'imageType', '') != iptvpaging.MENU_IMAGE_TYPE
         if self._usingBuiltinSkin:
             # plain widget, not a ConditionalShowHide Source - its own
             # position depends on MENU too, so it's shown/hidden and
@@ -1981,7 +1983,7 @@ class E2iPlayerWidget(Screen):
             except Exception:
                 printExc()
                 item = None
-            if None is not item:
+            if None is not item and getattr(item, 'imageType', '') != iptvpaging.MENU_IMAGE_TYPE:
                 self.stopAutoPlaySequencer()
                 if self._itemNeedsPin(item):
                     # the article of a favourite comes from its (locked) host
@@ -2205,6 +2207,13 @@ class E2iPlayerWidget(Screen):
 
                 item = self.getSelItem()
                 self.currItem = item
+                if getattr(item, 'imageType', '') == iptvpaging.MENU_IMAGE_TYPE:
+                    # "Main menu" row of a paged list: OK does what EXIT does, back to the list its first page was opened
+                    # from - not on the host's first list (EXIT would leave the host) and not for green, the autoplay
+                    # sequencer or zapping (they call ok_pressed with another eventFrom)
+                    if 'remote' == eventFrom and self.prevSelList:
+                        self.back_pressed()
+                    return
 
                 # Get current selection
                 currSelIndex = self["list"].getCurrentIndex()
@@ -3188,7 +3197,8 @@ class E2iPlayerWidget(Screen):
             else:
                 recorderMode = self.recorderMode
             url = urlparser.decorateUrl(url)
-            titleOfMovie = batchdownload.cleanFileTitle(self.currItem.name)
+            # a host may name the downloaded file differently from the row (hostxxx HQPORNER: "<performers> - <title>")
+            titleOfMovie = batchdownload.cleanFileTitle((url.meta.get('iptv_download_title', '') if recorderMode else '') or self.currItem.name)
             fileExtension = self.getFileExt(url, self.currItem.type)
 
             blocked, reaseon = self.isUrlBlocked(url, self.currItem.type)
@@ -4494,8 +4504,9 @@ class E2iPlayerWidget(Screen):
                 # _getMoviePlayerPickerHeight() (below) is just the generic
                 # IPTVRadioButtonList item-height formula despite its name -
                 # reused as-is instead of a third near-identical copy in
-                # this same class
-                self.session.openWithCallback(self.requestCustomActionFromHost, IPTVChoiceBoxWidget, {'width': 600, 'height': self._getMoviePlayerPickerHeight(len(options)), 'current_idx': 0, 'title': _("Select action"), 'options': options, 'list_class': IPTVActionChoiceBoxList, 'chrome': True, 'footerMargin': 136})
+                # this same class. openChoiceBox: like the other pickers the box skin's ChoiceBox with
+                # "Force internal skin" off
+                openChoiceBox(self.session, {'width': 600, 'height': self._getMoviePlayerPickerHeight(len(options)), 'current_idx': 0, 'title': _("Select action"), 'options': options, 'list_class': IPTVActionChoiceBoxList, 'chrome': True, 'footerMargin': 136}, self.requestCustomActionFromHost)
         except Exception:
             printExc()
 
