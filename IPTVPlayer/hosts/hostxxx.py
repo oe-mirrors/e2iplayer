@@ -1266,7 +1266,6 @@ def resolution_key(item):
 	return 0
 
 
-
 def first(currUrl):
 	first_page = currUrl
 	if not currUrl.endswith('/1') and not currUrl.endswith('/1/'):
