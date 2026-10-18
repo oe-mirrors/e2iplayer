@@ -26,7 +26,7 @@ from Plugins.Extensions.IPTVPlayer.libs.pCommon import common
 from Plugins.Extensions.IPTVPlayer.libs.recaptcha_v2 import UnCaptchaReCaptcha
 from Plugins.Extensions.IPTVPlayer.libs.secretbox import secretbox as nacl_secretbox
 from Plugins.Extensions.IPTVPlayer.libs.torrserver import isTorrentLink
-from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import captchaParser, decorateUrl, getDirectM3U8Playlist, getImpersonateM3U8Playlist, getMPDLinksWithMeta, requireDownloaderForDisguisedHls, unicode_escape, unpackJSPlayerParams, VIDUPME_decryptPlayerParams, safeEvalExpression
+from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import captchaParser, decorateUrl, getDirectM3U8Playlist, getImpersonateM3U8Playlist, getMPDLinksWithMeta, requireDownloaderForDisguisedHls, unpackJSPlayerParams, VIDUPME_decryptPlayerParams, safeEvalExpression
 from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import clean_html
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_binary, ensure_str
 from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
@@ -654,6 +654,7 @@ class urlparser:
             "paulkitchendark.com": self.pp.parserVOESX,  # add 061026
             "peachify.top": self.pp.parserPEACHIFY,
             "peytonepre.com": self.pp.parserJWPLAYER,
+            "pixeldrain.com": self.pp.parserPIXELDRAIN,  # add 171026
             "playembed.online": self.pp.parserJWPLAYER,  # add 061026
             "player.sorozatok.me": self.pp.parserHQQ,  # add 061026
             "player.upn.one": self.pp.parserSBS,
@@ -698,6 +699,7 @@ class urlparser:
             "sendvid.com": self.pp.parserSENDVID,  # fix 071026
             "sethniceletter.com": self.pp.parserVOESX,  # add 061026
             "sfastwish.com": self.pp.parserJWPLAYER,
+            "shadwo.pro": self.pp.parserALBAPLAYER,  # add 181026 (w.shadwo.pro/albaplayer/ -> anaplayer.online, aflamfree series)
             "shannonpersonalcost.com": self.pp.parserVOESX,  # add 061026
             "share4max.com": self.pp.parserMEGAMAX,  # add 031026
             "sharevideo.pl": self.pp.parserSHAREVIDEO,
@@ -2019,62 +2021,45 @@ class pageParser(CaptchaHelper):
             return strwithmeta(data["downloadUrl"], {"Referer": cUrl, "User-Agent": HTTP_HEADER["User-Agent"]})
         return False
 
-    def parserGOOGLE(self, baseUrl):  # Need test
+    def parserGOOGLE(self, baseUrl):  # fix 171026 - Google Drive files (geoarabic and others)
+        # drive/docs.google.com/file/d/<id>, .../uc?id=<id>: Drive no longer has the fmt_stream_map player data;
+        # the public download address (confirm=t skips the "virus scan" page of big files) answers with the file
+        # itself, Range requests work. A page instead of the file = private, removed or over its download quota.
         printDBG("parserGOOGLE baseUrl[%s]" % baseUrl)
-        urltab = []
-        _VALID_URL = r"https?://(?:(?:docs|drive)\.google\.com/(?:uc\?.*?id=|file/d/)|video\.google\.com/get_player\?.*?docid=)(?P<id>[a-zA-Z0-9_-]{28,})"
-        mobj = re.match(_VALID_URL, baseUrl)
-        try:
-            video_id = mobj.group("id")
-            linkUrl = "https://docs.google.com/file/d/" + video_id
-        except Exception:
-            linkUrl = baseUrl
-        _FORMATS_EXT = {
-            "5": "flv",
-            "6": "flv",
-            "13": "3gp",
-            "17": "3gp",
-            "18": "mp4",
-            "22": "mp4",
-            "34": "flv",
-            "35": "flv",
-            "36": "3gp",
-            "37": "mp4",
-            "38": "mp4",
-            "43": "webm",
-            "44": "webm",
-            "45": "webm",
-            "46": "webm",
-            "59": "mp4",
-        }
+        fileId = self.cm.ph.getSearchGroups(baseUrl, r"(?:/file/d/|[?&]id=|[?&]docid=)([A-Za-z0-9_-]{25,})")[0]
+        if not fileId:
+            return []
         HTTP_HEADER = self.cm.getDefaultHeader()
-        HTTP_HEADER["Referer"] = linkUrl
-        COOKIE_FILE = GetCookieDir("google.cookie")
-        defaultParams = {"header": HTTP_HEADER, "use_cookie": True, "load_cookie": False, "save_cookie": True, "cookiefile": COOKIE_FILE}
-        sts, data = self.cm.getPage(linkUrl, defaultParams)
-        if not sts:
-            return False
-        cookieHeader = self.cm.getCookieHeader(COOKIE_FILE)
-        fmtDict = {}
-        fmtList = self.cm.ph.getSearchGroups(data, '"fmt_list"[:,]"([^"]+?)"')[0]
-        fmtList = fmtList.split(",")
-        for item in fmtList:
-            item = self.cm.ph.getSearchGroups(item, "([0-9]+?)/([0-9]+?x[0-9]+?)/", 2)
-            if item[0] != "" and item[1] != "":
-                fmtDict[item[0]] = item[1]
-        data = self.cm.ph.getSearchGroups(data, '"fmt_stream_map"[:,]"([^"]+?)"')[0]
-        data = data.split(",")
-        for item in data:
-            item = item.split("|")
-            printDBG(">> type[%s]" % item[0])
-            if "mp4" in _FORMATS_EXT.get(item[0], ""):
-                try:
-                    quality = int(fmtDict.get(item[0], "").split("x", 1)[-1])
-                except Exception:
-                    quality = 0
-                urltab.append({"name": "drive.google.com: %s" % fmtDict.get(item[0], "").split("x", 1)[-1] + "p", "quality": quality, "url": strwithmeta(unicode_escape(item[1]), {"Cookie": cookieHeader, "Referer": "https://youtube.googleapis.com/", "User-Agent": HTTP_HEADER["User-Agent"]})})
-        urltab.sort(key=lambda item: item["quality"], reverse=True)
-        return urltab
+        url = "https://drive.usercontent.google.com/download?id=%s&export=download&confirm=t" % fileId
+        params = {"header": dict(HTTP_HEADER, Range="bytes=0-1"), "ignore_http_code_ranges": [(206, 206)]}
+        sts, _data = self.cm.getPage(url, params)
+        contentType = self.cm.meta.get("content-type", "")
+        if not sts or not contentType.startswith(("video/", "audio/", "application/octet-stream")):
+            printDBG("parserGOOGLE no file: status[%s] type[%s]" % (self.cm.meta.get("status_code", ""), contentType))
+            SetIPTVPlayerLastHostError(_("Content not available"))
+            return []
+        name = self.cm.ph.getSearchGroups(self.cm.meta.get("content-disposition", ""), r'filename="?([^";]+)')[0]
+        return [{"name": "drive.google.com %s" % name if name else "drive.google.com", "url": strwithmeta(url, {"User-Agent": HTTP_HEADER["User-Agent"]})}]
+
+    def parserPIXELDRAIN(self, baseUrl):  # add 171026 - pixeldrain.com/u/<id> (aflamfree download links)
+        # the file API answers with the file itself (Range works); its info tells when the file is blocked
+        # (abuse, removed) or needs a captcha after the free transfer limit
+        printDBG("parserPIXELDRAIN baseUrl[%s]" % baseUrl)
+        fileId = self.cm.ph.getSearchGroups(baseUrl, r"pixeldrain\.[a-z]+/(?:u|api/file)/([A-Za-z0-9]+)")[0]
+        if not fileId:
+            return []
+        HTTP_HEADER = self.cm.getDefaultHeader()
+        sts, data = self.cm.getPage("https://pixeldrain.com/api/file/%s/info" % fileId, {"header": HTTP_HEADER, "ignore_http_code_ranges": [(400, 499)]})
+        try:
+            info = json_loads(data) if sts else {}
+        except Exception:
+            printExc()
+            info = {}
+        if not info.get("success") or not info.get("can_download", True) or info.get("availability"):
+            SetIPTVPlayerLastHostError(info.get("availability_message") or info.get("message") or _("Content not available"))
+            return []
+        url = strwithmeta("https://pixeldrain.com/api/file/%s" % fileId, {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": "https://pixeldrain.com/u/%s" % fileId})
+        return [{"name": ("pixeldrain %s" % info.get("name", "")).strip(), "url": url}]
 
     def parserARCHIVEORG(self, linkUrl):  # Need test
         printDBG("parserARCHIVEORG linkUrl[%s]" % linkUrl)

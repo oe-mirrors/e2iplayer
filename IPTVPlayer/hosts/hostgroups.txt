@@ -113,7 +113,8 @@
   "cimatn",
   "streamdb",
   "egyclub",
-  "ask4movie"
+  "ask4movie",
+  "tele5"
  ],
  "cartoonsandanime": [
   "aniworld",
@@ -214,7 +215,11 @@
   "ninateka",
   "drdk",
   "ihavenotv",
-  "alarabiya"
+  "alarabiya",
+  "geoarabic",
+  "dmax",
+  "tlc",
+  "hgtv"
  ],
  "science": [
   "dailymotion",
@@ -323,6 +328,10 @@
   "zdfmediathek",
   "orfon",
   "artetv",
+  "dmax",
+  "tlc",
+  "hgtv",
+  "tele5",
   "netzkino",
   "aniworld",
   "serienstreamto",
@@ -468,7 +477,9 @@
   "aloula",
   "royatv",
   "egyclub",
-  "qoranway"
+  "qoranway",
+  "aflamfree",
+  "geoarabic"
  ],
  "greek": [
   "youtube",

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "09.10.2026"
+LAST_MODIFIED = "17.10.2026"
 # Coding: BY MOHAMED_OS
 # 08.10.2026 - ported to the python3 framework / host standard
 #   - animezid.cam (animezid.net redirects there; Arabic anime, cartoons and animation films, subbed and
@@ -13,6 +13,8 @@ LAST_MODIFIED = "09.10.2026"
 #     ("Title (Year)", "Show - SxxExx"), sidecar, INFO via moviemeta + the page's story / info rows
 # 09.10.2026 - links on PyCurl boxes: the play page is loaded like the API calls (the session cookie got lost
 #   between urllib and PyCurl -> every server answered 403); site rate limit (429) shown as such
+# 17.10.2026 - the site moved to animezid.org (animezid.cam redirects there); favourites of the old domains are
+#   mapped to it
 import re
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
@@ -35,7 +37,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return "https://animezid.cam/"
+    return "https://animezid.org/"
 
 
 # "مشاهدة فيلم حكاية لعبة 5 | Toy Story 5 2026 مدبلج سعودي" -> "حكاية لعبة 5 | Toy Story 5", year 2026
@@ -139,7 +141,7 @@ class AnimeZid(GenericFolderWatchedScraperMixin, CBaseHostClass):
             url = "https:" + url
         elif not url.startswith("http"):
             url = CBaseHostClass.getFullUrl(self, url)
-        # favourites / lists from animezid.net -> the current domain
+        # favourites / lists from animezid.net / .cam -> the current domain
         url = re.sub(r"^https?://(?:www\.)?animezid\.[a-z]+/", self.MAIN_URL, url)
         return self._quote(url)
 
