@@ -713,6 +713,12 @@ def requireDownloaderForDisguisedHls(links):
     meta = getattr(url, 'meta', {})
     if meta.get('iptv_proto') != 'm3u8' or meta.get('iptv_buffering'):
         return links
+    if str(url).startswith('merge://'):
+        # separate video / audio playlists (vidara): their segments, not the merge:// link itself
+        url = meta.get('video_url') or meta.get('audio_url') or ''
+        if not str(url).lower().startswith(('http://', 'https://')):
+            return links
+        url = strwithmeta(url, meta)
     cm = common()
     params, postData = cm.getParamsFromUrlWithMeta(url)
     sts, data = cm.getPage(url, params, postData)
