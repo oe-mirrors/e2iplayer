@@ -10,6 +10,8 @@ LAST_MODIFIED = "18.10.2026"
 #     end on the same resolver are listed once, servers urlparser does not know are left out
 #   - watched flag (series -> season -> episode), downloaded flag, favourites, name normalisation
 #     ("Title (Year)", "Show - SxxExx"), sidecar, INFO via moviemeta (IMDb id) + the site's fields
+# 18.10.2026 - countries A -> Z (the site lists them Z -> A); WatchMov (vidsrc.to) is listed again: moviesapi.to
+#   (Filemoon) has its own parser now and no longer counts as the same resolver
 ###################################################
 import re
 import time
@@ -152,11 +154,15 @@ class SFlix(GenericFolderWatchedScraperMixin, CBaseHostClass):
         block = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="%s">' % kind, "</ul>", False)[1]
         path = "category" if kind == "genre" else "country"
         seen = set()
+        entries = []
         for url, label in re.findall(r'<a href="([^"]+/%s/[^"]+)"[^>]*>([^<]+)</a>' % path, block):
             label = self.cleanHtmlStr(label)
             if not label or url in seen:
                 continue
             seen.add(url)
+            entries.append((label, url))
+        # the site lists the countries Z -> A
+        for label, url in sorted(entries, key=lambda entry: entry[0].lower()):
             params = stripPagerKeys(dict(cItem), PAGING_KEYS)
             params.update({"name": "category", "category": "sf_list", "title": label, "url": self.getFullUrl(url), "good_for_fav": True})
             params.pop("filter", None)

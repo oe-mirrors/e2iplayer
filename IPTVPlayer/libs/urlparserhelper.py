@@ -12,6 +12,11 @@ import codecs
 import six
 from urllib.parse import unquote, urljoin
 
+import base64
+import hashlib
+import json
+import struct
+from binascii import hexlify, unhexlify
 from hashlib import md5
 
 
@@ -965,3 +970,59 @@ def getMPDLinksWithMeta(manifestUrl, checkExt=True, cookieParams={}, sortWithMax
 
         retPlaylists = CSelOneLink(retPlaylists, __getLinkQuality, sortWithMaxBandwidth).getSortedLinks()
     return retPlaylists
+
+
+# add 181026: Altcha proof of work (VOE's captcha page, after ResolveURL captcha_lib.AltchaSolver, which credits
+# github.com/opastorello/altcha-solver): SHA-256/384/512 (legacy "challenge" = hash of salt + number, or a hex
+# prefix of hash(nonce + counter)) and PBKDF2/SHA-256/384/512 (prefix of the derived key)
+ALTCHA_MAX_ITERATIONS = 20000
+ALTCHA_KEY_LENGTHS = {'sha256': 32, 'sha384': 48, 'sha512': 64}
+
+
+def _altchaBytes(value):
+    try:
+        return unhexlify(value)
+    except Exception:
+        return six.ensure_binary(value)
+
+
+def altchaSolve(challenge):
+    # the solution dict ({"counter", "hash" / "derivedKey", "time"}) or None
+    params = challenge.get('parameters', challenge) if isinstance(challenge, dict) else {}
+    algorithm = str(params.get('algorithm', 'SHA-256')).upper()
+    hashName = 'sha512' if '512' in algorithm else 'sha384' if '384' in algorithm else 'sha256'
+    start = time.time()
+    try:
+        if 'PBKDF2' in algorithm:
+            nonce, salt = unhexlify(params['nonce']), unhexlify(params['salt'])
+            cost, prefix = int(params['cost']), params['keyPrefix']
+            keyLength = int(params.get('keyLength') or ALTCHA_KEY_LENGTHS[hashName])
+            for counter in range(ALTCHA_MAX_ITERATIONS):
+                key = hexlify(hashlib.pbkdf2_hmac(hashName, nonce + struct.pack('>I', counter), salt, cost, keyLength)).decode('ascii')
+                if key.startswith(prefix):
+                    return {'counter': counter, 'derivedKey': key, 'time': round((time.time() - start) * 1000, 1)}
+        elif 'challenge' in params:
+            salt, target = str(params['salt']), params['challenge']
+            for counter in range(min(int(params.get('maxnumber') or ALTCHA_MAX_ITERATIONS), ALTCHA_MAX_ITERATIONS)):
+                digest = hashlib.new(hashName, six.ensure_binary('%s%d' % (salt, counter))).hexdigest()
+                if digest == target:
+                    return {'counter': counter, 'hash': digest, 'time': round((time.time() - start) * 1000, 1)}
+        else:
+            nonce, prefix = _altchaBytes(params.get('nonce', params.get('salt', ''))), params.get('keyPrefix', '00')
+            for counter in range(ALTCHA_MAX_ITERATIONS):
+                digest = hashlib.new(hashName, nonce + struct.pack('>I', counter)).hexdigest()
+                if digest.startswith(prefix):
+                    return {'counter': counter, 'derivedKey': digest, 'time': round((time.time() - start) * 1000, 1)}
+    except Exception:
+        printExc()
+        return None
+    printDBG("altchaSolve %s: no solution after %d iterations" % (algorithm, ALTCHA_MAX_ITERATIONS))
+    return None
+
+
+def altchaPayload(challenge):
+    # the value of the form's "altcha" field: base64 of {"challenge": <as served>, "solution": ...}; "" when unsolved
+    solution = altchaSolve(challenge)
+    if not solution:
+        return ''
+    return six.ensure_str(base64.b64encode(six.ensure_binary(json.dumps({'challenge': challenge, 'solution': solution}, separators=(',', ':')))))
