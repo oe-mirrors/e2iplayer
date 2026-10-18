@@ -26,6 +26,7 @@ from Plugins.Extensions.IPTVPlayer.components.cover import Cover3, Cover2, Cover
 from Plugins.Extensions.IPTVPlayer.components import skinchrome
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_binary
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import DescribeImageFile
+from Plugins.Extensions.IPTVPlayer.components.iconmenager import SaveInlinePicture, IconLogName
 
 
 class IPTVArticleView(Screen):
@@ -196,6 +197,9 @@ class IPTVArticleView(Screen):
         if 0 == len(self.artItem.images):
             return
         self.cover['src'] = self.artItem.images[0].get('url', '')
+        if self.cover['src'].startswith('data:image/'):
+            self.loadInlineCover()
+            return
         if not self.cover['src'].startswith('http'):
             return
 
@@ -214,6 +218,20 @@ class IPTVArticleView(Screen):
             self.cover['downloader'].isWorkingCorrectly(self.startDownloader)
         else:
             self.session.open(MessageBox, _("Downloading cannot be started.\n Invalid URI[%s].") % self.cover['src'], type=MessageBox.TYPE_ERROR, timeout=10)
+
+    def loadInlineCover(self):
+        # an inline picture (data:image/...;base64,..., hostxxx SHOWCAMRIPS): written to a file, nothing to download;
+        # WebP/AVIF is converted by decodePreparedCover in its worker thread, not here in the GUI thread
+        if self.downloadDir:
+            self.coverPath = os.path.join(self.downloadDir, md5(ensure_binary(self.cover['src'])).hexdigest() + '.jpg')
+        elif not self.cover['image_path']:
+            return
+        filePath = self._getDownloadFilePath()
+        reason = SaveInlinePicture(self.cover['src'], filePath, prepare=False)
+        if reason:
+            self.showCoverError(reason)
+        elif -1 == self["cover"].decodePreparedCover(filePath, self.decodePictureEnd, ' '):
+            self.showCoverError("decoding can not be started, %s" % DescribeImageFile(filePath))
 
     def startDownloader(self, sts, reason):
         if sts:
@@ -276,7 +294,7 @@ class IPTVArticleView(Screen):
     def showCoverError(self, reason):
         # the item has a cover but it failed (dead link, broken file, a format this box can't show):
         # a red X in the cover area instead of an error box. No cover at all stays empty (loadCover).
-        printDBG("IPTVArticleView cover %s - url[%s]" % (reason, self.cover['src']))
+        printDBG("IPTVArticleView cover %s - url[%s]" % (reason, IconLogName(self.cover['src'])))
         if self.coverError:
             return
         self.coverError = True

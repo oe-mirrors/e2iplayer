@@ -3437,10 +3437,22 @@ def analdinImage(url):
 	return re.sub(r'^(https?:)?//i\.analdin\.com/', 'https://www.analdin.com/', url or '')
 
 
+# an inline picture (data:...) shorter than this is a lazy-load placeholder, not a thumbnail (fixListImages())
+INLINE_THUMB_MIN = 1000
+try:
+	# the framework shows inline pictures (IconMenager, INFO); an older one or zadmario without the port showed a
+	# red X for them - the sites then keep their logo
+	from Plugins.Extensions.IPTVPlayer.components.iconmenager import SaveInlinePicture  # noqa: F401
+	INLINE_THUMBS = True
+except Exception:
+	INLINE_THUMBS = False
+
+
 def fixListImages(items):
 	# many list parsers take thumbnail URLs straight from the HTML attribute, "&amp;" and all - signed image
 	# URLs (pix-cdn77, pvvstream ...) then answer 403 and the list shows a red X; the meta (Referer) is kept
-	# lazy-load placeholders (data:image/gif...) are no picture at all (red X), and a space in a file name is sent raw
+	# lazy-load placeholders (a short data:image/gif... or svg) are no picture at all (red X) - a real inline thumbnail
+	# (SHOWCAMRIPS, several KB) is shown by IconMenager like a download; a space in a file name is sent raw
 	for item in items or []:
 		# Python 2: a unicode name/description (from json) crashes eLabel.setText of the list's bottom panel
 		for attr in ('name', 'description'):
@@ -3451,7 +3463,8 @@ def fixListImages(items):
 		if not image:
 			continue
 		if ('%s' % image).startswith('data:'):
-			item.iconimage = ''
+			if not INLINE_THUMBS or len(image) < INLINE_THUMB_MIN or 'svg' in ('%s' % image)[:30].lower():
+				item.iconimage = ''
 		elif '&amp;' in image or ' ' in image:
 			item.iconimage = strwithmeta(('%s' % image).replace('&amp;', '&').replace(' ', '%20'), getattr(image, 'meta', {}))
 	return items
@@ -3500,7 +3513,7 @@ class _SelfTestSession(object):
 
 
 class Host(CBaseHostClass, XXXParser):
-	XXXversion = "2026.10.18.1"
+	XXXversion = "2026.10.18.2"
 	# a Host of a helper thread of the global search (newSearchWorker()): no retries, no "not found" menu
 	searchWorker = False
 	currList = []
@@ -22996,16 +23009,20 @@ class Host(CBaseHostClass, XXXParser):
 			return valTab
 
 		if 'SHOWCAMRIPS-clips' == name:
-			# the thumbnails are inline data: images - the list shows the site logo
+			# the thumbnails have no address: inline WebP pictures in data-tn (lists) or src (model pages), IconMenager
+			# shows them like a download; the site logo without one
 			self.MAIN_URL = 'https://www.showcamrips.com'
 			sts, data = self.cm.getPage(url, self.siteParams('SHOWCAMRIPS'))
 			if not sts:
 				return valTab
-			for phUrl, phTitle in re.findall(r'''<a href="(https://www\.showcamrips\.com/show-cam-sex-movies/[^"]+)"[^>]*?title="([^"]+)"''', data):
+			for phUrl, phTitle, phImage in re.findall(r'''<a href="(https://www\.showcamrips\.com/show-cam-sex-movies/[^"]+)"[^>]*?title="([^"]+)">(?:\s*<img[^>]*?(?:data-tn|src)="(data:image/[^"]+)")?''', data):
 				# " mia_crawford_ Chaturbate webcam rip 2026.10.16_16.22.47"
 				m = re.match(r'\s*(.+?)\s+(\S+)\s+webcam rip\s+(\d{4}\.\d{2}\.\d{2})_(\d{2})\.(\d{2})', decodeHtml(phTitle))
 				title = '%s - %s (%s %s:%s)' % m.groups() if m else decodeHtml(phTitle).strip()
-				valTab.append(CDisplayListItem(title, title, CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], 0, siteLogo, None))
+				# "data:image/png;base64, UklGR..." - the space after the comma left out; the logo when the framework
+				# shows no inline pictures
+				phImage = re.sub(r'\s+', '', phImage) if INLINE_THUMBS else ''
+				valTab.append(CDisplayListItem(title, title, CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], 0, phImage or siteLogo, None))
 			if valTab:
 				self.showcamripsNextPage(valTab, url, data, name)
 			return valTab
