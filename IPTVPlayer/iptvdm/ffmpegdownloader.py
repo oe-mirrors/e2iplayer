@@ -4,7 +4,11 @@
 #
 #  $Id$
 #
-#  Last Modified: 17.10.2026
+#  Last Modified: 18.10.2026
+#   - HLS segments refused by their extension (ffmpeg >= 7.1.1, "not in allowed_segment_extensions", vidara's
+#     .js audio): the same run again with -allowed_segment_extensions ALL -extension_picky 0 for the HLS inputs
+#     (without extension_picky when that build does not know it); older ffmpeg never gets the options
+#  17.10.2026
 #   - a DM download whose link names iptv_master_url takes that master playlist (program of the variant), the
 #     variant again when the master gives nothing (masterFallback, without a second sidecar / live check);
 #     ffmpeg's "[hls @ ...] Skip ('#EXT-X-...')" lines are left out of the log
@@ -121,6 +125,11 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
     HTTP_INPUT_OPTS = ('-reconnect', '1', '-reconnect_streamed', '1',
                        '-reconnect_delay_max', '30', '-rw_timeout', '60000000')
 
+    # ffmpeg >= 7.1.1 refuses HLS segments whose name does not end in a media extension (vidara's audio: .js):
+    # "... is not in allowed_segment_extensions". Only after that error the HLS inputs get these options - older
+    # builds never print it and would stop at an option they do not know
+    SEGMENT_EXT_OPTS = (('-allowed_segment_extensions', 'ALL', '-extension_picky', '0'), ('-allowed_segment_extensions', 'ALL'))
+
     # -f <container> -> the extension the finished file should actually carry
     CONTAINER_EXT = {'matroska': '.mkv', 'webm': '.webm', 'mpegts': '.ts',
                      'mp4': '.mp4', 'mov': '.mp4', 'flv': '.flv'}
@@ -161,6 +170,12 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
         # the merge:// link to run again when a master playlist gave nothing (start())
         self.masterFallback = None
         self.fallbackRun = False  # start() of the variant after a master that gave nothing
+        # HLS segments with other extensions (.js ...): 0 = ffmpeg's defaults, 1 = SEGMENT_EXT_OPTS, 2 = without
+        # extension_picky (ffmpeg builds that have the extension check but not that option)
+        self.segmentExtLevel = 0
+        self.segmentExtRefused = False
+        self.segmentExtUnknownOption = False
+        self.runUrl = None
 
     def __del__(self):
         printDBG("FFMPEGDownloader.__del__ ----------------------------------")
@@ -202,6 +217,13 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
         cmdTab = [DMHelper.GET_FFMPEG_PATH(), '-y']
         tmpUri = strwithmeta(url)
         fallbackRun, self.fallbackRun = getattr(self, 'fallbackRun', False), False
+        self.segmentExtRefused = False
+        self.segmentExtUnknownOption = False
+        self.runUrl = url  # what a run with the segment options starts again
+        if not fallbackRun:
+            self.segmentExtLevel = 0
+        segmentExtOpts = self.SEGMENT_EXT_OPTS[self.segmentExtLevel - 1] if self.segmentExtLevel else ()
+        isHls = tmpUri.meta.get('iptv_proto', '') == 'm3u8'
         if not fallbackRun:
             # (the variant after a master that gave nothing keeps the sidecar lookup and live check already running)
             self._prepareSidecarData(tmpUri.meta)
@@ -275,6 +297,8 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
                     _addHttpOpts(cmdTab, oneMeta)
                     if str(oneUrl).lower().startswith(('http://', 'https://')):
                         cmdTab.extend(self.HTTP_INPUT_OPTS)
+                    if segmentExtOpts and (isHls or '.m3u8' in str(oneUrl).lower()):
+                        cmdTab.extend(segmentExtOpts)
                     cmdTab.extend(['-i', oneUrl])
                     if 'audio' in item:
                         mapOpts += ['-map', '%d:a' % idx]
@@ -293,6 +317,8 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
                     cmdTab.extend(self.HTTP_INPUT_OPTS)
             else:
                 url = self.url
+            if segmentExtOpts and (isHls or '.m3u8' in str(url).lower()):
+                cmdTab.extend(segmentExtOpts)
             cmdTab.extend(['-i', url])
 
         cmdTab.extend(mapOpts)
@@ -392,6 +418,10 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
             # silent) - without them a failed download left no reason behind
             if item.strip() and 'frame=' not in item and not item.lstrip().startswith('size='):
                 self._logOutputLine(item)
+            if 'allowed_segment_extensions' in item:
+                self.segmentExtRefused = True
+            elif 'extension_picky' in item and ('Unrecognized' in item or 'not found' in item):
+                self.segmentExtUnknownOption = True
             if not self.headerReceived:
                 if 'Duration:' in item:
                     duration = self._getDuration(item) - self._getStartTime(item)
@@ -450,6 +480,19 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
             self.console = None
 
         self._refreshLocalFileSize()
+
+        if not terminated and 0 >= self.localFileSize and self.runUrl is not None:
+            level = 0
+            if self.segmentExtRefused and self.segmentExtLevel == 0:
+                level = 1
+            elif self.segmentExtUnknownOption and self.segmentExtLevel == 1:
+                level = 2
+            if level:
+                printDBG("FFMPEGDownloader segments refused by their extension -> again with %s" % ' '.join(self.SEGMENT_EXT_OPTS[level - 1]))
+                self.segmentExtLevel = level
+                self.fallbackRun = True  # same download: no second sidecar / live check / onStart
+                self.start(self.runUrl, self.filePath, self.downloaderParams)
+                return
 
         fallback = getattr(self, 'masterFallback', None)
         if not terminated and fallback is not None and 0 >= self.localFileSize:

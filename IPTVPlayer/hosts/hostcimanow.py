@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "12.10.2026"
+LAST_MODIFIED = "18.10.2026"
+# 18.10.2026 - watching page loader changed again: RC4 instead of XOR, the page sits base64 in a <script
+#   type="application/octet-stream">; key = String(LCG(15000 rounds) of _part1 + _part2 + _part3 + a CSS z-index +
+#   the height of a hidden flex-wrap box) + suffix; the literals are wrapped ({'v': x}).v, [x].pop(), parseInt('x', 16)
 # 12.10.2026 - watching page loader changed again: its key variables are pushed into the array (_arrX['p'+'ush'](...))
 #   and rounded with Math.round under an alias instead of Math.floor - both read now
 # 11.10.2026 - the token API (cimaleech.vercel.app) answers 404: when it gives no link, MyE2i (NAV job, extension
@@ -112,6 +115,56 @@ def _jsNum(expr, floorName="", roundName=""):
     # true division like JS also on py2 (no-op flag on py3)
     code = compile(tree, "js", "eval", __future__.division.compiler_flag, True)
     return int(eval(code, {"__builtins__": {}}, {"floor": _jsFloor, "jsround": _jsRound}))
+
+
+_JS_LIT = r"(0x[0-9a-fA-F]+|\d+)"
+_JS_WRAPPED = (
+    (re.compile(r"""\(\s*\{\s*['"]?v['"]?\s*:\s*%s\s*\}\s*\)\s*\.\s*v""" % _JS_LIT), lambda m: m.group(1)),
+    (re.compile(r"\[\s*%s\s*\]\s*\.\s*pop\(\s*\)" % _JS_LIT), lambda m: m.group(1)),
+    (re.compile(r"""parseInt\(\s*['"](?:0x)?([0-9a-fA-F]+)['"]\s*,\s*16\s*\)"""), lambda m: str(int(m.group(1), 16))),
+    # the environment check of a literal: the browser value
+    (re.compile(r"""\(\s*typeof\s+document\s*!==?\s*['"]undefined['"]\s*\?\s*%s\s*:\s*%s\s*\)""" % (_JS_LIT, _JS_LIT)), lambda m: m.group(1)),
+)
+
+
+def _jsUnwrap(expr):
+    # the loader of 18.10.2026 hides its literals in ({'v': x}).v, [x].pop(), parseInt('x', 16) and a typeof check
+    for regex, repl in _JS_WRAPPED:
+        expr = regex.sub(repl, expr)
+    return expr
+
+
+def _flexHeight(code):
+    # offsetHeight of the loader's hidden flex-wrap box: its children (fixed width/height, no gaps) fill lines of the
+    # box width, every line is as high as its highest child
+    box = re.search(r"display:\s*flex;(.*?)width:\s*(\d+)px", code)
+    if not box:
+        return 0
+    limit = int(box.group(2)) if "wrap" in box.group(1) else float("inf")
+    total = left = line = 0
+    for w, h in re.findall(r"width:\s*(\d+)px;\s*height:\s*(\d+)px", code[box.end():]):
+        w, h = int(w), int(h)
+        if left and left + w > limit:
+            total, left, line = total + line, 0, 0
+        left += w
+        line = max(line, h)
+    return total + line
+
+
+def _rc4(key, data):
+    s = list(range(256))
+    j = 0
+    for i in range(256):
+        j = (j + s[i] + ord(key[i % len(key)])) & 255
+        s[i], s[j] = s[j], s[i]
+    out = bytearray(len(data))
+    i = j = 0
+    for n, c in enumerate(bytearray(data)):
+        i = (i + 1) & 255
+        j = (j + s[i]) & 255
+        s[i], s[j] = s[j], s[i]
+        out[n] = c ^ s[(s[i] + s[j]) & 255]
+    return bytes(out)
 
 
 def _seasonNum(text):
@@ -516,9 +569,66 @@ class CimaNow(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return ""
 
     def _decodeWatching(self, data):
-        # the current loader first, then the one of 08.10.2026
-        decoded = self._decodeWatchingSum(data)
+        # the current loader first, then the ones of 11.10. and 08.10.2026
+        decoded = self._decodeWatchingRc4(data) or self._decodeWatchingSum(data)
         return decoded if decoded else self._decodeWatchingParts(data)
+
+    def _decodeWatchingRc4(self, data):
+        # loader of 18.10.2026 (atob('...') script): RC4 of the base64 text of a <script type="application/
+        # octet-stream" id="p_...">; key = String(kv after N rounds of kv = (kv * a + c) % m) + suffix, kv = sum of
+        # the variables of "var kv = _part1 + _part2 + _part3 + _tVal + _flexVal;" (wrapped literals, Math.floor
+        # under an alias, a CSS z-index, the height of a hidden flex box, an environment check = 1 in a browser);
+        # .substring(n) cuts the start off. "" when the page is not of this kind
+        try:
+            loader = re.search(r"""\]\(\s*['"]([A-Za-z0-9+/=]{200,})['"]\s*\)""", data)
+            if not loader:
+                return ""
+            code = b64Decode(loader.group(1))
+            lcg = re.search(r"var\s+(\w+)\s*=\s*([\w$\s+]+);\s*for\s*\(\s*var\s+\w+\s*=\s*0\s*;\s*\w+\s*<\s*(\d+)\s*;[^)]*\)\s*\{\s*\1\s*=\s*\(\s*\(\s*\1\s*\*\s*(\d+)\s*\)\s*\+\s*(\d+)\s*\)\s*%\s*(\d+)", code)
+            payload = None
+            for elemId in re.findall(r"""getElementById\(\s*['"]([^'"]+)['"]\s*\)""", code):
+                payload = re.search(r"""(?s)<script[^>]+id=["']%s["'][^>]*>\s*([A-Za-z0-9+/=\s]{100,}?)\s*</script>""" % re.escape(elemId), data)
+                if payload:
+                    break
+            if not lcg or not payload:
+                return ""
+            floor = re.search(r"""var\s+(\w+)\s*=\s*\w+\[\s*['"]f['"]\s*\+\s*['"]loor['"]\s*\]""", code) or re.search(r"var\s+(\w+)\s*=\s*Math\.floor\b", code)
+            floorName = floor.group(1) if floor else ""
+            defs = dict(re.findall(r"var\s+(\w+)\s*=\s*([^;]+);", code))
+            zindex = re.search(r"""\.style\[\s*['"]z-i['"]\s*\+\s*['"]ndex['"]\s*\]\s*=\s*String\((.*?)\)\s*;""", code)
+            envNames = [n for n, e in defs.items() if "?" in e and "_h" in e and "documentElement" in e]
+
+            def value(name):
+                expr = defs[name].strip()
+                if "getComputedStyle" in expr:
+                    return _jsNum(_jsUnwrap(zindex.group(1)), floorName) if zindex else 0
+                if "offsetHeight" in expr:
+                    return _flexHeight(code)
+                expr = _jsUnwrap(expr)
+                for env in envNames:
+                    expr = re.sub(r"\b%s\b" % re.escape(env), "1", expr)
+                return _jsNum(expr, floorName)
+
+            kv = sum(value(v.strip()) for v in lcg.group(2).split("+") if v.strip())
+            mul, inc, mod = int(lcg.group(4)), int(lcg.group(5)), int(lcg.group(6))
+            for _ in range(int(lcg.group(3))):
+                kv = (kv * mul + inc) % mod
+            suffix = re.search(r"""=\s*String\(\s*%s\s*\)\s*\+\s*['"]([^'"]*)['"]""" % re.escape(lcg.group(1)), code)
+            key = str(kv) + (suffix.group(1) if suffix else "")
+            out = strDecode(_rc4(key, b64Decode(re.sub(r"\s+", "", payload.group(1)), binary=True)), "ignore")
+            for arg in re.findall(r"\.substring\(([^;]+?)\)\s*;", code):
+                try:
+                    out = out[_jsNum(_jsUnwrap(arg), floorName):]
+                    break
+                except (ValueError, SyntaxError):
+                    continue
+            if 'id="watch"' not in out:
+                printDBG("CimaNow._decodeWatchingRc4: key %s gave no server list" % key)
+                return ""
+            return out
+        except Exception:
+            printExc()
+        return ""
 
     def _decodeWatchingSum(self, data):
         # loader of 11.10.2026: window["<arr>"] = new (window["Arr"+"ay"])("b64", ...); an atob('...') loader XORs

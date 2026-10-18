@@ -934,6 +934,8 @@ class urlparser:
             "vidsrc-me.su": self.pp.parserVIDSRC,
             "vidsrcme.ru": self.pp.parserVIDSRC,
             "vidsrcme.su": self.pp.parserVIDSRC,
+            "vidstorm.ru": self.pp.parserVIDROCK,  # add 181026 (vidrock clone)
+            "vidstorm.to": self.pp.parserVIDROCK,  # add 181026
             "vidtube.cam": self.pp.parserJWPLAYER,
             "vidtube.one": self.pp.parserJWPLAYER,
             "vidtube.pro": self.pp.parserJWPLAYER,
@@ -5298,13 +5300,15 @@ class pageParser(CaptchaHelper):
         return urltab
 
     def parserVIDROCK(self, baseUrl):  # add 030926 - vidrock.net (7reels "AdRock"); per-server AES-256-GCM blobs from a plain JSON API
+        # upd 181026: vidstorm.to (vidstorm.ru redirects there, sflix) is the same player - same API and key
         printDBG("parserVIDROCK baseUrl[%s]" % baseUrl)
-        m = re.search(r"vidrock\.net/(?:api/)?(movie/\d+|tv/\d+/\d+/\d+)", baseUrl)
+        m = re.search(r"(vidrock\.net|vidstorm\.(?:to|ru))/(?:api/)?(movie/\d+|tv/\d+/\d+/\d+)", baseUrl)
         if not m:
             return []
+        site = "https://vidrock.net" if m.group(1) == "vidrock.net" else "https://vidstorm.to"
         HTTP_HEADER = self.cm.getDefaultHeader()
-        HTTP_HEADER["Referer"] = "https://vidrock.net/"
-        sts, data = self.cm.getPage("https://vidrock.net/api/" + m.group(1), {"header": HTTP_HEADER})
+        HTTP_HEADER["Referer"] = site + "/"
+        sts, data = self.cm.getPage("%s/api/%s" % (site, m.group(2)), {"header": HTTP_HEADER})
         if not sts:
             return []
         try:
@@ -5332,7 +5336,7 @@ class pageParser(CaptchaHelper):
                 url = str(plain).strip()
             if not url.startswith("http"):
                 continue
-            url = urlparser.decorateUrl(url, {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": "https://vidrock.net/", "Origin": "https://vidrock.net"})
+            url = urlparser.decorateUrl(url, {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": site + "/", "Origin": site})
             if ".m3u8" in url:
                 for item in getDirectM3U8Playlist(url, sortWithMaxBitrate=99999999):
                     item["name"] = "%s %s" % (name, item.get("name", ""))
