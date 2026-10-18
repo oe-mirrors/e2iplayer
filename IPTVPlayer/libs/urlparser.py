@@ -26,7 +26,7 @@ from Plugins.Extensions.IPTVPlayer.libs.pCommon import common
 from Plugins.Extensions.IPTVPlayer.libs.recaptcha_v2 import UnCaptchaReCaptcha
 from Plugins.Extensions.IPTVPlayer.libs.secretbox import secretbox as nacl_secretbox
 from Plugins.Extensions.IPTVPlayer.libs.torrserver import isTorrentLink
-from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import captchaParser, decorateUrl, getDirectM3U8Playlist, getImpersonateM3U8Playlist, getMPDLinksWithMeta, requireDownloaderForDisguisedHls, unpackJSPlayerParams, VIDUPME_decryptPlayerParams, safeEvalExpression
+from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import altchaPayload, captchaParser, decorateUrl, getDirectM3U8Playlist, getImpersonateM3U8Playlist, getMPDLinksWithMeta, requireDownloaderForDisguisedHls, unpackJSPlayerParams, VIDUPME_decryptPlayerParams, safeEvalExpression
 from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import clean_html
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_binary, ensure_str
 from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
@@ -390,6 +390,7 @@ class urlparser:
             "filemoon.in": self.pp.parserBYSE,
             "filemoon.link": self.pp.parserBYSE,
             "filemoon.nl": self.pp.parserBYSE,
+            "filemoon.org": self.pp.parserFILEMOONORG,  # add 181026 (not byse: /<x>/<id>/embed with data-hls-url)
             "filemoon.sx": self.pp.parserBYSE,
             "filemoon.to": self.pp.parserBYSE,
             "filemoon.wf": self.pp.parserBYSE,
@@ -614,7 +615,7 @@ class urlparser:
             "motvy55.store": self.pp.parserJWPLAYER,  # add 061026
             "movearnpre.com": self.pp.parserJWPLAYER,
             "moviesapi.club": self.pp.parserVIDSRC,
-            "moviesapi.to": self.pp.parserVIDSRC,
+            "moviesapi.to": self.pp.parserMOVIESAPI,  # upd 181026 (own player: Vidora API, then the VidSpark servers)
             "mp4player.site": self.pp.parserSTREAMEMBED,
             "mp4plus.cyou": self.pp.parserJWPLAYER,
             "mp4plus.org": self.pp.parserJWPLAYER,
@@ -910,6 +911,7 @@ class urlparser:
             "vids.st": self.pp.parserVIDSST,
             "vidsonic.net": self.pp.parserVIDSONIC,
             "vidsp.net": self.pp.parserVIDSP,  # add 091026 (v.vidsp.net/embed-<code>.html, 3seq)
+            "vidspark.to": self.pp.parserMOVIESAPI,  # add 181026 (cdn.vidspark.to, the moviesapi.to fallback player)
             "vidspeed.space": self.pp.parserJWPLAYER,
             "vidsrc.bz": self.pp.parserVIDSRC,
             "vidsrc.cc": self.pp.parserMEGAFILES,
@@ -2410,6 +2412,42 @@ class pageParser(CaptchaHelper):
             sts, data = self.cm.getPage(pageUrl)
             if not sts:
                 return False
+        if "altcha-widget" in data:
+            # add 181026: Altcha captcha page in front of the player (after ResolveURL voesx.py, #1523) - the
+            # challenge is solved on the box and posted back with the form's hidden fields (one cookie session)
+            cookieParams = {"header": self.cm.getDefaultHeader(), "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": GetCookieDir("voesx.cookie")}
+            rm(cookieParams["cookiefile"])
+            sts, data = self.cm.getPage(pageUrl, cookieParams)
+            if not sts:
+                return False
+            pageUrl = self.cm.meta.get("url", pageUrl)
+            challengeUrl = ph.search(data, r"""altcha-widget[^>]*?\schallenge(?:url)?=["']([^"']+)""")[0]
+            challenge = None
+            if challengeUrl:
+                hdr = dict(cookieParams["header"], Referer=pageUrl, Accept="application/json")
+                sts, challenge = self.cm.getPage(urljoin(pageUrl, challengeUrl.replace("&amp;", "&")), dict(cookieParams, header=hdr))
+                try:
+                    challenge = json_loads(challenge) if sts else None
+                except Exception:
+                    challenge = None
+            payload = altchaPayload(challenge) if isinstance(challenge, dict) else ""
+            printDBG("parserVOESX altcha challenge[%s] solved[%s]" % (challengeUrl, bool(payload)))
+            if not payload:
+                return []
+            form = ph.search(data, r"""(?s)(<form[^>]*>(?:(?!</form>).)*?altcha-widget.*?</form>)""")[0] or data
+            action = ph.search(form, r"""<form[^>]+action=["']([^"']*)""")[0]
+            post = {}
+            for tag in re.findall(r"<input[^>]+>", form):
+                if re.search(r"""type=["']?hidden""", tag, re.I):
+                    name = ph.search(tag, r"""name=["']([^"']+)""")[0]
+                    if name:
+                        post[name] = ph.search(tag, r"""value=["']([^"']*)""")[0]
+            post["altcha"] = payload
+            postUrl = urljoin(pageUrl, action.replace("&amp;", "&")) if action else pageUrl
+            sts, data = self.cm.getPage(postUrl, dict(cookieParams, header=dict(cookieParams["header"], Referer=pageUrl)), post)
+            if not sts:
+                return False
+            pageUrl = self.cm.meta.get("url", pageUrl)
         if "<title>404" in data:
             SetIPTVPlayerLastHostError(_("The video has been removed."))
             return []
@@ -5297,6 +5335,125 @@ class pageParser(CaptchaHelper):
             else:
                 url = urlparser.decorateUrl(js.get("hls"), {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": host, "Origin": host[:-1]})
                 urltab.extend(getDirectM3U8Playlist(url, sortWithMaxBitrate=99999999))
+        return urltab
+
+    def parserFILEMOONORG(self, baseUrl):  # add 181026 - filemoon.org (after ResolveURL filemoon.py, #1520)
+        # the embed page (/<x>/<id>/embed) carries the playlist in data-hls-url; the playlist needs the page's cookies
+        printDBG("parserFILEMOONORG baseUrl[%s]" % baseUrl)
+        m = re.search(r"filemoon\.org/(\w{1,2}/[0-9a-zA-Z]+)", str(baseUrl))
+        if not m:
+            return []
+        url = "https://filemoon.org/%s/embed" % m.group(1)
+        cookieFile = GetCookieDir("filemoonorg.cookie")
+        HTTP_HEADER = self.cm.getDefaultHeader(browser="chrome")
+        HTTP_HEADER["Referer"] = "https://filemoon.org/"
+        sts, data = self.cm.getPage(url, {"header": HTTP_HEADER, "use_cookie": True, "load_cookie": False, "save_cookie": True, "cookiefile": cookieFile})
+        if not sts:
+            return []
+        src = ph.search(data, r"""data-hls-url=["']([^"']+)""")[0].replace("&amp;", "&")
+        if not src:
+            printDBG("parserFILEMOONORG no data-hls-url (removed file?)")
+            return []
+        meta = {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": HTTP_HEADER["Referer"], "iptv_proto": "m3u8"}
+        cookie = self.cm.getCookieHeader(cookieFile, [], False)
+        if cookie:
+            meta["Cookie"] = cookie
+        src = urlparser.decorateUrl(urljoin(url, src), meta)
+        # a removed file redirects the playlist to an html page -> no playlist content, no links
+        return requireDownloaderForDisguisedHls(getDirectM3U8Playlist(src, checkExt=False, variantCheck=False, checkContent=True, sortWithMaxBitrate=99999999))
+
+    def parserMOVIESAPI(self, baseUrl):  # add 181026 - moviesapi.to (sflix "Filemoon") and its fallback player cdn.vidspark.to
+        # moviesapi.to asks its Vidora API first (/api/vidora/v1/movie/<id>, header x-player-key from the page's script);
+        # without a Vidora link it opens cdn.vidspark.to, which asks the same API per server (?source=scrapify, oreon ...).
+        # The keys and the server list are read from the players' scripts (cached for 6 h).
+        printDBG("parserMOVIESAPI baseUrl[%s]" % baseUrl)
+        baseUrl = str(baseUrl)
+        if baseUrl.startswith("//"):
+            baseUrl = "https:" + baseUrl
+        site = re.match(r"https?://[^/?#]+", baseUrl)
+        m = re.search(r"/(movie|tv)/(tt\d+|\d+)(?:[/-](\d+)[/-](\d+))?", baseUrl.split("?")[0])
+        if not site or not m or (m.group(1) == "tv" and not m.group(3)):
+            return []
+        site = site.group(0)
+        path = "/v1/tv/%s/%s/%s" % m.group(2, 3, 4) if m.group(1) == "tv" else "/v1/movie/%s" % m.group(2)
+        HTTP_HEADER = self.cm.getDefaultHeader(browser="chrome")
+
+        def playerConfig(origin, pageUrl):
+            # (x-player-key, [(server key, label)], VidSpark url) from the player's module script
+            cache = getattr(self.__class__, "_moviesapiCfg", None) or {}
+            if origin in cache and cache[origin][3] > time.time():
+                return cache[origin][:3]
+            hdr = dict(HTTP_HEADER, Referer=origin + "/")
+            sts, data = self.cm.getPage(pageUrl, {"header": hdr})
+            # the app script (index-* / main-*) first; vidspark loads vidstack-* and preload-helper-* before it
+            scripts = re.findall(r"""<script[^>]+src=["']([^"']*/assets/[^"']+\.js)""", data) if sts else []
+            scripts.sort(key=lambda s: not re.search(r"/(?:index|main)-", s))
+            key = ""
+            for script in scripts:
+                sts, data = self.cm.getPage(urljoin(pageUrl, script), {"header": hdr})
+                var = re.search(r'"x-player-key":([\w$]+)', data) if sts else None
+                if var:
+                    km = re.search(r"(?<![\w$])%s=`([0-9a-f]{32,})`" % re.escape(var.group(1)), data)
+                    key = km.group(1) if km else ""
+                    break
+            if not key:
+                return "", [], ""
+            spark = re.search(r"`(https://[\w.-]*vidspark\.[a-z]+)`", data)
+            cfg = (key, re.findall(r"\{key:`(\w+)`,label:`([^`]+)`", data), spark.group(1) if spark else "")
+            printDBG("parserMOVIESAPI %s key[%s] servers%s spark[%s]" % (origin, key[:8], [s[0] for s in cfg[1]], cfg[2]))
+            if key:
+                cache[origin] = cfg + (time.time() + 6 * 3600,)
+                self.__class__._moviesapiCfg = cache
+            return cfg
+
+        def vidora(origin, key, query, label):
+            hdr = dict(HTTP_HEADER, Referer=origin + "/", Accept="application/json")
+            hdr["x-player-key"] = key
+            sts, data = self.cm.getPage("%s/api/vidora%s%s" % (origin, path, query), {"header": hdr})
+            try:
+                js = json_loads(data) if sts else {}
+            except Exception:
+                js = {}
+            if not isinstance(js, dict) or not js.get("result"):
+                return []
+            links = []
+            for src in js.get("sources") or []:
+                if not isinstance(src, dict) or not src.get("url"):
+                    continue
+                meta = {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": origin + "/", "Origin": origin}
+                subs = []
+                for track in src.get("tracks") or []:
+                    if isinstance(track, dict) and track.get("file"):
+                        lang = track.get("label") or "und"
+                        subs.append({"title": lang, "url": urljoin(origin + "/", track["file"]), "lang": lang[:3].lower(), "format": "vtt" if ".vtt" in track["file"] else "srt"})
+                if subs:
+                    meta["external_sub_tracks"] = subs
+                # oreon: one mp4 per quality; the others: one HLS master (or media playlist)
+                quals = sorted((q for q in src.get("qualities") or [] if isinstance(q, dict) and q.get("url") and q.get("height")), key=lambda q: -int(q["height"]))
+                for url, quality in [(q["url"], "%sp" % q["height"]) for q in quals] or [(src["url"], "")]:
+                    url = urlparser.decorateUrl(urljoin(origin + "/", url), meta)
+                    if ".m3u8" in url.lower():
+                        # scrapify: a relay url (/p1/proxy?url=...m3u8), segments disguised as .html / .png -> hlsdl buffering
+                        hls = requireDownloaderForDisguisedHls(getDirectM3U8Playlist(url, checkExt=False, variantCheck=False, checkContent=True, sortWithMaxBitrate=99999999))
+                        for item in hls:
+                            item["name"] = "%s %s" % (label, item.get("name", ""))
+                        links.extend(hls)
+                    else:
+                        links.append({"name": " ".join(x for x in (label, quality, "mp4") if x), "url": url})
+            return links
+
+        sparkUrl = ""
+        if "vidspark." not in site:
+            key, _servers, sparkUrl = playerConfig(site, baseUrl)
+            urltab = vidora(site, key, "", "Vidora") if key else []
+            if urltab:
+                return urltab
+        spark = site if "vidspark." in site else sparkUrl or "https://cdn.vidspark.to"
+        key, servers, _spark = playerConfig(spark, spark + path[3:])
+        urltab = []
+        if key:
+            for server, label in servers:
+                urltab.extend(vidora(spark, key, "?source=" + server, "VidSpark " + label))
         return urltab
 
     def parserVIDROCK(self, baseUrl):  # add 030926 - vidrock.net (7reels "AdRock"); per-server AES-256-GCM blobs from a plain JSON API
