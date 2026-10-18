@@ -42,7 +42,8 @@ import re
 
 
 def GetConfigList():
-    # options shown with the BLUE key in the host list; [] when the host has none. Example:
+    # the host's own settings (inside the host: BLUE -> "Configure host", above its PIN protection); [] when the
+    # host has none. Example:
     #   config.plugins.iptvplayer.template_login = ConfigLogin(default="", fixed_size=False)
     #   config.plugins.iptvplayer.template_password = ConfigSecret(default="", fixed_size=False)
     #   optionList.append(getConfigListEntry(_("login") + ":", config.plugins.iptvplayer.template_login))
