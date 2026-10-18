@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "17.10.2026"
+LAST_MODIFIED = "18.10.2026"
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.ihost import IHost, CDisplayListItem, RetHost, CUrlItem, CBaseHostClass, ArticleContent
 from Plugins.Extensions.IPTVPlayer.libs import ph
@@ -24,13 +24,14 @@ except ImportError:  # E2iPlayer builds without the numeric keypad - full keyboa
 	GetNumericKeyboard = None
 from Plugins.Extensions.IPTVPlayer.components.searchhistoryeditor import SearchHistoryEditor
 from Plugins.Extensions.IPTVPlayer.libs.linklisteditor import openLinkListFileEditor
-from Plugins.Extensions.IPTVPlayer.components.asynccall import IsThreadTerminated
+from Plugins.Extensions.IPTVPlayer.components.asynccall import IsThreadTerminated, AsyncMethod
 try:
 	from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import takePresetJumpPage
 except ImportError:  # E2iPlayer builds without the CH- page preset (e.g. zadmario): the Jump always asks
 	def takePresetJumpPage():
 		return None
 
+from collections import OrderedDict
 from itertools import chain
 import re
 import copy
@@ -44,6 +45,10 @@ try:
 	import json
 except ImportError:
 	import simplejson as json
+try:
+	from queue import Queue, Empty
+except ImportError:
+	from Queue import Queue, Empty
 try:
 	from urllib.parse import urlparse, parse_qs, unquote, quote
 except ImportError:
@@ -749,7 +754,7 @@ MOVIE_NETWORK = {
 		'sorts': (('Latest', '/ajax_search.php?search=&sort=0&date=0&author=0&page=1'), ('Popular', '/ajax_search.php?search=&sort=2&date=0&author=0&page=1'), ('Trending', '/trending-videos/?page=1')),
 		'search': '/ajax_search.php?search=%s&sort=1&date=0&author=0&page=1',
 		'item': r'''<article>\s*(?=<a href=["']/pornvideo/)''', 'title': r'<h1>([^<]+)</h1>', 'time': r'video-length">([0-9:]+)<'},
-	'ALLPORNSTREAM': {'url': 'https://allpornstream.com', 'sorts': (('Latest', '/?page=1'),), 'search': '/?search=%s&page=1',
+	'ALLPORNSTREAM': {'url': 'https://allpornstream.com', 'sorts': (('Latest', '/?page=1'),), 'search': '/posts?search=%s&page=1',
 		'item': r'<div class="group relative flex h-full', 'link': r'''data-href=["']([^"']+)["']''', 'title': r'''data-title=["']([^"']+)["']''',
 		'image': r'''data-images=["']\[&quot;(https?://[^&"]+)&quot;''', 'time': r'''backdrop-blur-sm">([0-9]{1,2}:[0-9]{2}(?::[0-9]{2})?)</span>''',
 		'categories': ('/categories', r'''href=["'](/categories/[^"']+)["']><svg.+?<(?:span|h2) class="truncate[^"]*">([^<]+)<''')},
@@ -1286,6 +1291,11 @@ def menuHeader(text):
 # how many search terms the global / favorites search keeps the results of (Host.searchSites())
 SEARCH_CACHE_TERMS = 5
 SEARCH_DONE = ' done'  # key in a term's kept results: all sites were asked (no site is called so)
+# the global / favorites search asks this many sites at once (Host.searchSites()); one after the other it took over 5 min
+SEARCH_WORKERS = 8
+# seconds a request of a searched site may wait for a connection / stall: without a timeout of its own pCommon leaves
+# curl's 300 s connect timeout, and one dead site held the whole search
+SEARCH_TIMEOUT = 15
 # cookie file and Referer of the sites that want a browser's User-Agent (Host.siteParams())
 SITE_PARAMS = {
 	'ARCHIVEBATE': ('archivebate.cookie', 'https://archivebate.com/'),
@@ -3490,7 +3500,9 @@ class _SelfTestSession(object):
 
 
 class Host(CBaseHostClass, XXXParser):
-	XXXversion = "2026.10.17.2"
+	XXXversion = "2026.10.18.1"
+	# a Host of a helper thread of the global search (newSearchWorker()): no retries, no "not found" menu
+	searchWorker = False
 	currList = []
 	MAIN_URL = ''
 	SEARCH_proc = ''
@@ -3523,6 +3535,9 @@ class Host(CBaseHostClass, XXXParser):
 		self.searchPartial = None
 		# video URL -> site address of the rows of the last global / favorites search (getResolvedURL() reads it)
 		self.searchSiteMain = {}
+		# the Hosts of the helper threads of the global / favorites search (searchSitesAtOnce()), searchBusy while one runs
+		self.searchWorkers = []
+		self.searchBusy = False
 		# the main menu shown and the favorites folder built last: a favorite switch updates their rows in place
 		self.mainMenuList = []
 		self.mainMenuSites = set()
@@ -3798,38 +3813,26 @@ class Host(CBaseHostClass, XXXParser):
 			cached.pop(SEARCH_DONE, None)
 		# the menu the search ran from: the sites' own search handlers change SEARCH_proc while they run
 		self.searchPartial = (valTab, self.SEARCH_proc)
+		order = [Name for Name, URL, baseUrl in hosts]
+		bases = dict((Name, baseUrl) for Name, URL, baseUrl in hosts)
+		found = {}
+
+		def addFound(Name, rows):
+			# in place and in the order of the sites, whichever site answers first: searchPartial holds the rows found so far
+			nextPageLast(rows)  # the site's "Next page" directly below its own results
+			self.tagSearchResults(rows, Name, bases[Name])
+			pos = sum(len(found[name]) for name in order[:order.index(Name)] if name in found)
+			found[Name] = rows
+			valTab[pos:pos] = rows
+
 		fromCache = 0
-		savedSession = self.sessionEx
-		self.sessionEx = _SelfTestSession()
-		try:
-			for number, (Name, URL, baseUrl) in enumerate(hosts, 1):
-				if Name in cached:
-					valtemp = [copy.copy(item) for item in cached[Name]]
-					fromCache += 1
-				elif onlyKept:
-					continue
-				else:
-					self.showProgress(_('Search: %d of %d - now %s (%d found so far)') % (number, len(hosts), Name, len(valTab)), 'xxxsearch')
-					self.MAIN_URL = URL
-					try:
-						valtemp = self.listsItems(-1, pattern, Name + '-search')
-					except Exception:
-						# one broken site must not end the search over all sites (and is asked again next time)
-						printExc()
-						valtemp = None
-					if isinstance(valtemp, list) and all(getattr(item, 'imageType', '') in PAGER_ORDER for item in valtemp):
-						# nothing found but the site's pager rows ("Next page" of an empty search, hclips / txxx ...): no result
-						valtemp = None
-					if isinstance(valtemp, list) and valtemp:
-						cached[Name] = [copy.copy(item) for item in valtemp]
-				if valtemp:
-					nextPageLast(valtemp)  # the site's "Next page" directly below its own results
-					self.tagSearchResults(valtemp, Name, baseUrl)
-					valTab.extend(valtemp)  # in place: searchPartial holds the rows found so far
-			if not onlyKept:
-				cached[SEARCH_DONE] = True  # all sites asked: the same search again asks nothing first
-		finally:
-			self.sessionEx = savedSession
+		for Name, URL, baseUrl in hosts:
+			if Name in cached:
+				addFound(Name, [copy.copy(item) for item in cached[Name]])
+				fromCache += 1
+		jobs = [] if onlyKept else [(Name, URL) for Name, URL, baseUrl in hosts if Name not in cached]
+		if self.searchSitesAtOnce(jobs, pattern, cached, addFound, valTab, len(hosts)) and not onlyKept:
+			cached[SEARCH_DONE] = True  # all sites asked: the same search again asks nothing first
 		self.searchPartial = None
 		self.MAIN_URL = ''
 		if fromCache:
@@ -3838,6 +3841,88 @@ class Host(CBaseHostClass, XXXParser):
 			again.searchHosts = hosts
 			valTab.insert(0, again)
 		return valTab
+
+	def searchSitesAtOnce(self, jobs, pattern, cached, addFound, valTab, total):
+		# the sites of jobs [(name, search URL)] asked SEARCH_WORKERS at a time, each helper thread with a Host of its own
+		# (the site handlers keep MAIN_URL, their params and the last answer on the instance); this list worker thread
+		# hands the rows to addFound(). EXIT cuts the search off: the helpers stop after their current site, what they still
+		# find is kept for the term (searchSites() "Continue"). True: every site was asked
+		if not jobs:
+			return True
+		todo, done, stop = Queue(), Queue(), threading.Event()
+		for job in jobs:
+			todo.put(job)
+		menu = list(self.mainMenuList or self.currList)
+		workers = [worker for worker in self.searchWorkers if not worker.searchBusy]
+		while len(workers) < min(SEARCH_WORKERS, len(jobs)):
+			workers.append(self.newSearchWorker())
+		workers = workers[:min(SEARCH_WORKERS, len(jobs))]
+
+		def work(worker):
+			try:
+				while not stop.is_set():
+					try:
+						Name, URL = todo.get_nowait()
+					except Empty:
+						break
+					worker.MAIN_URL, worker.currList = URL, menu
+					del worker.sessionEx.messages[:]
+					try:
+						rows = worker.listsItems(-1, pattern, Name + '-search')
+					except Exception:
+						# one broken site must not end the search over all sites (and is asked again next time)
+						printExc()
+						rows = None
+					if isinstance(rows, list) and all(getattr(item, 'imageType', '') in PAGER_ORDER for item in rows):
+						# nothing found but the site's pager rows ("Next page" of an empty search, hclips / txxx ...): no result
+						rows = None
+					if isinstance(rows, list) and rows:
+						cached[Name] = [copy.copy(item) for item in rows]
+					done.put((Name, rows))
+			finally:
+				worker.searchBusy = False
+				done.put(None)
+
+		self.showProgress(_('Search: %d of %d - now %s (%d found so far)') % (total - len(jobs), total, jobs[0][0], len(valTab)), 'xxxsearch')
+		for worker in workers:
+			worker.searchBusy = True
+			AsyncMethod(work)(worker)  # pCommon's pycurl requests need the thread data of an AsyncMethod thread
+		running, asked = len(workers), total - len(jobs)
+		try:
+			# EXIT kills this thread (SystemExit, also while it waits here): finally stops the helpers
+			while running:
+				try:
+					item = done.get(timeout=0.5)
+				except Empty:
+					continue
+				if item is None:
+					running -= 1
+					continue
+				Name, rows = item
+				asked += 1
+				if rows:
+					addFound(Name, rows)
+				self.showProgress(_('Search: %d of %d - now %s (%d found so far)') % (asked, total, Name, len(valTab)), 'xxxsearch')
+		finally:
+			stop.set()
+		return asked == total
+
+	def newSearchWorker(self):
+		# a Host for one helper thread of the global search, kept while hostxxx is open: message boxes of the sites are
+		# collected, not shown, and a request without a timeout of its own gets SEARCH_TIMEOUT
+		worker = Host()
+		worker.searchWorker = True
+		worker.sessionEx = _SelfTestSession()
+		fetch = worker.cm.getPage
+
+		def getPage(url, addParams={}, post_data=None):
+			params = dict(addParams or {})
+			if not params.get('timeout'):
+				params['timeout'] = SEARCH_TIMEOUT
+			return fetch(url, params, post_data)
+		worker.cm.getPage = getPage
+		self.searchWorkers.append(worker)
+		return worker
 
 	def getResolvedURL(self, url):
 		# a video of the global search: the parser takes the site of a link it does not know (TXXX: txxx.com/api/...) from
@@ -3910,6 +3995,10 @@ class Host(CBaseHostClass, XXXParser):
 
 	def getPageWithCFBypass(self, url, max_retries=3, params=None):
 		printDBG("getPageWithCFBypass >>> url: " + url)
+		if self.searchWorker:
+			# global search: one try - three tries with 3-7 s pauses held the whole search for minutes on a site that
+			# does not answer (deepfaceporn.com, box log 18.10.2026)
+			max_retries = 1
 		if params is None:
 			params = dict(self.defaultParams) if hasattr(self, 'defaultParams') else {}
 			if 'header' in self.defaultParams:
@@ -3938,10 +4027,12 @@ class Host(CBaseHostClass, XXXParser):
 				else:
 					printDBG("getPageWithCFBypass <<< failed on try %d" % tries)
 					last_data = data
-					if isinstance(data, str) and "503" in data and extra_retries < 3:
+					if isinstance(data, str) and "503" in data and extra_retries < 3 and not self.searchWorker:
 						extra_retries += 1
 			except Exception:
 				printExc()
+			if tries >= max_retries + extra_retries:
+				break  # no pause after the last try
 			delay = random.randint(3, 7)
 			printDBG("getPageWithCFBypass >>> waiting %d sec before retry..." % delay)
 			sleep(delay)
@@ -4895,6 +4986,9 @@ class Host(CBaseHostClass, XXXParser):
 		return item
 
 	def showNotFoundMessage(self, name):
+		if self.searchWorker:
+			# global search: no result - the site's own menu (one more request, often to a site that just failed) is none
+			return []
 		self.sessionEx.waitForFinishOpen(MessageBox, _("THE PAGE YOU ARE LOOKING FOR IS NOT FOUND."), type=MessageBox.TYPE_INFO)
 		return self.listsItems(-1, self.MAIN_URL, name.split('-')[0])
 
@@ -15663,11 +15757,13 @@ class Host(CBaseHostClass, XXXParser):
 			current = self.cm.ph.getSearchGroups(data, r'active"><a href=""\stitle=["]([0-9]+?)["]', 1, True)[0]
 			if not current:
 				current = 1
-			next = self.cm.ph.getSearchGroups(data, r'href=["]([^"]+?)["]\stitle="Siguiente', 1, True)[0]
-			if next:
+			# the whole title: a video called "Últimamenta ..." was taken for the "Última" pager link (int() of its slug
+			# ended the search); the page number only when the link ends in one
+			next = self.cm.ph.getSearchGroups(data, r'href=["]([^"]+?)["]\stitle="Siguiente"', 1, True)[0]
+			if next and next.split('/')[-2].isdigit():
 				next_number = next.split('/')[-2]
-			max = self.cm.ph.getSearchGroups(data, r'href=["]([^"]+?)["]\stitle="Última', 1, True)[0]
-			if max:
+			max = self.cm.ph.getSearchGroups(data, r'href=["]([^"]+?)["]\stitle="Última"', 1, True)[0]
+			if max and max.split('/')[-2].isdigit():
 				max_number = max.split('/')[-2]
 			if not next_number and int(current) > 2:
 				max_number = current
@@ -19198,8 +19294,14 @@ class Host(CBaseHostClass, XXXParser):
 			if len(data):
 				del data[0]
 			for item in data:
-				phTitle = self.cm.ph.getSearchGroups(item, '''alt=['"]([^ß]+?)['"]''', 1, True)[0].replace('\n', '').strip()
-				phImage = self.cm.ph.getSearchGroups(item, r'''<img[^>]+?src=['"]([^"^']+?\.(?:jpe?g|png|webp|gif)(?:\?[^"^']*)?)['"]''', 1, True)[0]  # skip the /star-com.svg, /thumbs-up.svg badges
+				# the title up to the end of the tag: an apostrophe inside alt='...' ("It's") cut it off; the site writes
+				# "\/" for "/" and stray backslashes
+				phTitle = self.cm.ph.getSearchGroups(item, r'''alt=['"](.+?)['"]\s*/?>''', 1, True)[0].replace('\n', '').replace('\\/', '/').replace('\\', '').strip()
+				# the thumbnail is the imgresdif picture - a proxy link without a file extension
+				# (img.pvvstream.pro/preview/.../getVideoPreview?...) otherwise fell back to the /star-com.svg, /thumbs-up.svg badges
+				phImage = self.cm.ph.getSearchGroups(item, r'''<img[^>]+?class=['"]?imgresdif[^>]+?src=['"]([^"']+)['"]''', 1, True)[0]
+				if not phImage:
+					phImage = self.cm.ph.getSearchGroups(item, r'''<img[^>]+?src=['"]([^"^']+?\.(?:jpe?g|png|webp|gif)(?:\?[^"^']*)?)['"]''', 1, True)[0]
 				if not phImage:
 					phImage = self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''', 1, True)[0]
 				phUrl = self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''', 1, True)[0].replace('..', '')
@@ -22772,7 +22874,9 @@ class Host(CBaseHostClass, XXXParser):
 			listing = ''
 			for raw in re.findall(r'wire:initial-data="([^"]+)"', data):
 				try:
-					component = json.loads(decodeHtml(raw))
+					# keep the key order: Livewire checks serverMemo/fingerprint against a checksum over their JSON
+					# as sent, and a Python 2 dict would reorder them (HTTP 500)
+					component = json.loads(decodeHtml(raw), object_pairs_hook=OrderedDict)
 				except Exception:
 					continue
 				fingerprint = component.get('fingerprint') or {}
