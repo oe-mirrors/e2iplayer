@@ -57,6 +57,8 @@ def iconUrl(icon, itemType=''):
 		icon = ''
 	if icon.startswith('http://') or icon.startswith('https://'):
 		return icon
+	if icon.startswith('data:image/'):
+		return icon  # an inline picture (hostxxx SHOWCAMRIPS): the browser shows it as it is
 	iconsDir = GetPluginDir('icons/')
 	if icon and icon.startswith(iconsDir) and os.path.isfile(icon):
 		return '/iptvplayer/icons/' + urllib.parse.quote(icon[len(iconsDir):])
