@@ -1137,19 +1137,23 @@ class E2iPlayerWidget(Screen):
                 elif not self.workThread.isFinished():
                     # marks the spot in the debug log: the host's traceback is right above this line
                     printDBG('=' * 60 + '\nEXCEPTION ABOVE - host "%s" crashed\n' % self.hostName + '=' * 60)
-                    if self.hostName not in GetHostsList(fromList=True, fromHostFolder=False):
-                        message = _('It seems that the host "%s" has crashed.') % self.hostName
-                        message += _('\nThis host is not integral part of the E2iPlayer plugin.\nIt is not supported by E2iPlayer team.')
-                        self.session.open(MessageBox, message, type=MessageBox.TYPE_ERROR)
-                    else:
-                        message = _('It seems that the host "%s" has crashed.') % self.hostName
-                        message += "\n"
-                        message += _('\nMake sure you are using the latest version of the plugin.')
-                        message += _('\nYou can also report problem here: \nhttps://github.com/oe-mirrors/e2iplayer/issues')
-                        self.session.openWithCallback(self.leaveCrashedHost, MessageBox, text=message, type=MessageBox.TYPE_ERROR)
+                    self.handleHostError()
             self.hideSpinner()
         except Exception:
             printExc()
+
+    def handleHostError(self):
+        # A failed host must not leave the UI busy or open a dialog during a screen transition.
+        self.workThread = None
+        self._isLoadingList = False
+        self.hideSpinner()
+        self.stopAutoPlaySequencer()
+        iptvpaging.presetJumpPage(None)
+        self["list"].hide()
+        message = _('It seems that the host "%s" has crashed.') % self.hostName
+        message += "\n" + _("Press EXIT to return to the previous menu.")
+        self.setStatusTex(message)
+        self.updateDownloadButton()
 
     def leaveCrashedHost(self, ret=None):
         # the old report server is gone - the dialog only points to the issue tracker
@@ -1161,6 +1165,9 @@ class E2iPlayerWidget(Screen):
             printExc()
 
     def processIPTVNotify(self, callbackArg1=None, callbackArg2=None):
+        if not getattr(self.session, "in_exec", True):
+            self.processProxyQueue()
+            return
         try:
             notifyObj = GetIPTVNotify()
             if not notifyObj.isEmpty():
@@ -1179,6 +1186,9 @@ class E2iPlayerWidget(Screen):
 
     def processProxyQueue(self):
         if None is not self.mainTimer:
+            if not getattr(self.session, "in_exec", True):
+                self.mainTimer.start(self.mainTimer_interval, True)
+                return
             status = GetIPTVNotify().popStatus()
             if status and self.isInWorkThread():
                 self.setStatusTex(status)
@@ -1198,7 +1208,9 @@ class E2iPlayerWidget(Screen):
         return
 
     def doProcessProxyQueueItem(self, item):
+        hostResult = False
         try:
+            hostResult = item.retValue[0] is not None and self.workThread == item.retValue[0]
             if None is item.retValue[0] or self.workThread == item.retValue[0]:
                 if isinstance(item.retValue[1], asynccall.CPQParamsWrapper):
                     getattr(self, item.clientFunName)(*item.retValue[1])
@@ -1208,6 +1220,8 @@ class E2iPlayerWidget(Screen):
                 printDBG('doProcessProxyQueueItem callback from old workThread[%r][%s]' % (self.workThread, item.retValue))
         except Exception:
             printExc()
+            if hostResult:
+                self.handleHostError()
 
     def getArticleContentCallback(self, thread, ret):
         asynccall.gMainFunctionsQueueTab[0].addToQueue("showArticleContent", [thread, ret])
@@ -3518,6 +3532,7 @@ class E2iPlayerWidget(Screen):
                 self.showSpinner()
             except Exception:
                 printExc('The current host crashed')
+                self.handleHostError()
     # end requestListFromHost(self, type, currSelIndex = -1, privateData = ''):
 
     def startSearchProcedure(self, searchTypes):

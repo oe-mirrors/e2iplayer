@@ -3,8 +3,8 @@
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import iptv_system, printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import SetIPTVPlayerLastHostError
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import iptv_system, printDBG, printExc
 ###################################################
 # FOREIGN import
 ###################################################
@@ -504,6 +504,9 @@ class CFunctionProxyQueue:
             return
 
         while True:
+            # A previous callback may have closed its dialog; keep later results queued until Enigma2 resumes.
+            if not getattr(self.session, "in_exec", True):
+                return
             QueueIsEmpty = False
 
             self.QueueLock.acquire()
