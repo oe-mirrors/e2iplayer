@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "08.10.2026"
+LAST_MODIFIED = "18.10.2026"
 # ARTE
 # Rewritten for the api-cdn.arte.tv "emac v4" JSON API + player v2 config
 # 07.10.2026 - INFO (programme/collection details, moviemeta for
@@ -496,12 +496,11 @@ class ArteTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 continue
             if '.m3u8' in surl.lower() or 'manifest' in surl.lower():
                 if live:
-                    # live masters carry separate audio rendition groups - give the
-                    # master straight to the player (a resolved variant = video only)
-                    urlTab.append({'need_resolve': 0, 'name': label or 'HLS',
+                    # the live master as it is first (the default, also with "best quality only"): the player
+                    # picks video and audio itself; the single qualities follow, muxed with ffmpeg like below
+                    urlTab.append({'need_resolve': 0, 'name': ('%s auto' % label).strip(), 'live_master': True,
                                    'url': self.up.decorateUrl(surl, {'iptv_proto': 'm3u8', 'iptv_livestream': True})})
-                    continue
-                hls = getDirectM3U8Playlist(strwithmeta(surl, {'iptv_proto': 'm3u8'}), checkExt=False, checkContent=True)
+                hls = getDirectM3U8Playlist(strwithmeta(surl, {'iptv_proto': 'm3u8'}), checkExt=False, checkContent=not live)
                 for it in hls:
                     it['name'] = ('%s %s' % (label, it.get('name', ''))).strip()
                     extraMeta = {'iptv_livestream': live}
@@ -516,7 +515,7 @@ class ArteTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
                     it['url'] = self.up.decorateUrl(it['url'], extraMeta)
                     it['need_resolve'] = 0
                     urlTab.append(it)
-                if not hls:
+                if not hls and not live:
                     urlTab.append({'need_resolve': 0, 'name': label or 'HLS', 'url': self.up.decorateUrl(surl, {'iptv_proto': 'm3u8', 'iptv_livestream': live})})
             else:
                 urlTab.append({'need_resolve': 0, 'name': label or 'stream', 'url': self.up.decorateUrl(surl, {'iptv_livestream': live})})
@@ -529,7 +528,8 @@ class ArteTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
                     return 0
             mx = max(_res(u) for u in urlTab)
             if mx > 0:
-                urlTab = [u for u in urlTab if _res(u) == mx] or urlTab
+                # the live master stays (it has no resolution of its own)
+                urlTab = [u for u in urlTab if _res(u) == mx or u.get('live_master')] or urlTab
         if not live:
             urlTab = applySidecarToLinks(urlTab, buildSidecarFromItem(cItem, IsSidecarEnabled(), synopsis))
         return urlTab

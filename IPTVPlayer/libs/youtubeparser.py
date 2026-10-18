@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Last Modified: 01.07.2026 - Change: configurable YouTube display language, configurable channel name for downloaded files, absolute published date in info view
 # LOCAL import
-from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.extractor.youtube import YoutubeIE
+from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.extractor.youtube import YoutubeIE, YT_TV_CLIENT_VERSION
 from Plugins.Extensions.IPTVPlayer.libs.youtube_oauth import YouTubeOAuth
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, IsExecutable
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import common
@@ -922,7 +922,7 @@ class YouTubeParser:
     # InnerTube for the TVHTML5 client; the WEB client answers 400 to it. A
     # TVHTML5 browse reply uses the living-room "tile" renderers, not the web
     # ytInitialData shape, so it gets its own small walk here.
-    YT_TV_CLIENT_VERSION = "7.20250312.16.00"
+    YT_TV_CLIENT_VERSION = YT_TV_CLIENT_VERSION
 
     def _tvBrowse(self, browseId, continuation=None):
         auth = self._getAuthHeader()

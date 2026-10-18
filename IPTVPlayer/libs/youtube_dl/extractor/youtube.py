@@ -29,6 +29,9 @@ from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 YT_ANDROID_CLIENT_VERSION = "20.32.35"
 YT_ANDROID_SDK_VERSION = 35
 YT_ANDROID_OS_VERSION = "15"
+# TVHTML5 = the only client that honours the OAuth bearer token; shared with
+# the signed-in feeds in youtubeparser.py so player and browse stay in step
+YT_TV_CLIENT_VERSION = "7.20250312.16.00"
 
 
 class CYTSignAlgoExtractor:
@@ -538,9 +541,9 @@ class YoutubeIE(object):
             # token is attached to. It honours the token for age-restricted
             # / members content and gets past the bot wall (authenticated),
             # so it is tried even after an anonymous LOGIN_REQUIRED.
-            it_clients.append(("7", "7.20250101.10.00", True,
+            it_clients.append(("7", YT_TV_CLIENT_VERSION, True,
                                "Mozilla/5.0 (ChromiumStylePlatform) Cobalt/Version",
-                               "'clientName': 'TVHTML5', 'clientVersion': '7.20250101.10.00'"))
+                               "'clientName': 'TVHTML5', 'clientVersion': '%s'" % YT_TV_CLIENT_VERSION))
         botWalled = False
         sts = False
         for cname, cver, extraChecks, ua, client_ctx in it_clients:

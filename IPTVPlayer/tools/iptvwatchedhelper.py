@@ -4,19 +4,18 @@
 # LOCAL import
 ###################################################
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetWatchedDir, mkdirs, rm
-from Plugins.Extensions.IPTVPlayer.libs.crypto.hash.md5Hash import MD5
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.ihost import RetHost, CDisplayListItem
 from Plugins.Extensions.IPTVPlayer.components.iptvchoicebox import IPTVChoiceBoxItem
 ###################################################
-from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_binary
 ###################################################
 
 ###################################################
 # FOREIGN import
 ###################################################
 from Tools.Directories import fileExists
-from binascii import hexlify
+from hashlib import md5
 import os
 from Components.config import config
 # favourites_use_watched_flag / watched_item_color are defined centrally in
@@ -92,11 +91,7 @@ class IPTVWatchedHelper(object):
 
     def _hashString(self, value):
         try:
-            hashAlg = MD5()
-            hashData = hexlify(hashAlg(str(value or '')))
-            if not isPY2():
-                hashData = hashData.decode()
-            return hashData
+            return md5(ensure_binary(str(value or ''))).hexdigest()
         except Exception:
             printExc()
         return ''

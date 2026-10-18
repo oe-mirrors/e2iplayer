@@ -167,6 +167,12 @@ class DMHelper:
         return DMHelper.hlsdlVersionInHelp(DMHelper.hlsdlHelpText()) >= (0, 34)
 
     @staticmethod
+    def hlsdlMatchesAudioLang():
+        # hlsdl 0.37+: -A matches the LANGUAGE of an audio rendition case-insensitively ("de" takes "de-DE")
+        # and falls back to the DEFAULT one; older builds compared it exactly
+        return DMHelper.hlsdlVersionInHelp(DMHelper.hlsdlHelpText()) >= (0, 37)
+
+    @staticmethod
     def _hlsdlResumeFiles(filePath):
         from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import fsPath
         sidecar = fsPath(filePath) + DMHelper.HLSDL_RESUME_SUFFIX
@@ -441,5 +447,10 @@ class DMHelper:
                     proxyOptions += ' -p "%s" ' % shellQuote(value)
 
         cmd = DMHelper.GET_HLSDL_PATH() + ' -q -f -b ' + userAgent + headerOptions + proxyOptions
+        if DMHelper.hlsdlMatchesAudioLang():
+            # a master playlist handed to hlsdl itself: its audio rendition in the box language, else the
+            # stream's DEFAULT one (the plugin has no audio language option of its own)
+            from Plugins.Extensions.IPTVPlayer.tools.iptvtools import GetDefaultLang
+            cmd += ' -A "%s" ' % shellQuote(GetDefaultLang())
         printDBG("getBaseHLSDLCmd return cmd[%s]" % cmd)
         return cmd

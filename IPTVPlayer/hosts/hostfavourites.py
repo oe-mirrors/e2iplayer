@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "11.10.2026"
+LAST_MODIFIED = "18.10.2026"
 # 11.10.2026 - "Newest videos": video length in the description (uploads playlist page, one request per channel),
 # Shorts with their own list icon; stored live streams / live radios with the live icon
 # 09.10.2026 - "Newest videos": INFO shows the full YouTube description, no age in the title (file name)
@@ -17,10 +17,9 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvfavourites import IPTVFavourites
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
 from Plugins.Extensions.IPTVPlayer.components.iptvchoicebox import IPTVChoiceBoxItem
 from Plugins.Extensions.IPTVPlayer.components.iptvhostpin import GetHostDisplayTitle, IsHostPinProtected
-from Plugins.Extensions.IPTVPlayer.libs.crypto.hash.md5Hash import MD5
 from Plugins.Extensions.IPTVPlayer.libs import ytchannelfeed
 ###################################################
-from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_binary
 ###################################################
 # FOREIGN import
 ###################################################
@@ -29,7 +28,7 @@ try:
     import simplejson as json
 except Exception:
     import json
-from binascii import hexlify
+from hashlib import md5
 import time
 from Components.config import config, ConfigInteger, ConfigYesNo, getConfigListEntry
 ###################################################
@@ -568,10 +567,7 @@ class IPTVHost(CHostBase):
             hostName = str(self.host.getHostNameFromItem(index))
         if hostName in [None, '']:
             return None
-        hashAlg = MD5()
-        hashData = hexlify(hashAlg('%s_%s' % (str(displayItem.name), str(displayItem.type))))
-        if not isPY2():
-            hashData = hashData.decode()
+        hashData = md5(ensure_binary('%s_%s' % (str(displayItem.name), str(displayItem.type)))).hexdigest()
         return (hostName, hashData)
 
     def _getWatchedDirName(self, hostName):
@@ -601,10 +597,7 @@ class IPTVHost(CHostBase):
         hashSrc = self._getStableItemHashSource(index)
         if hashSrc == '':
             hashSrc = '%s_%s' % (str(displayItem.name), str(displayItem.type))
-        hashAlg = MD5()
-        hashData = hexlify(hashAlg(hashSrc))
-        if not isPY2():
-            hashData = hashData.decode()
+        hashData = md5(ensure_binary(hashSrc)).hexdigest()
         return (hostName, hashData)
 
     def getItemHashData(self, index, displayItem):

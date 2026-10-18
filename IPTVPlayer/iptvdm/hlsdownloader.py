@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # IPTV download manager API
-# Last Modified: 12.10.2026 - stopping a live recording is its normal end: renamed to what hlsdl wrote (.ts), its .txt written (was kept as .mp4 over MPEG-TS); no remux / cover / subtitles there, terminate() reports the finish at once. Earlier: 11.10.2026 - file format setting (hls_out_container): Automatic renames the file to the container hlsdl wrote (.ts/.mp4/.aac), MKV/MP4/TS remux when needed. Earlier: 10.10.2026 - isWorkingCorrectly() checks only hlsdl (cached usage text, no ffmpeg/process start), remux maps 0:v? (audio-only streams). Earlier: 07.08.2026 - Extracted shared helpers (ensureText/fsPath/shellQuote/writeUtf8TextFile) and sidecar logic into downloaderhelpers.SidecarMixin, shared with wgetdownloader.py and mergedownloader.py, instead of duplicating them here - Kamikaze24
+# Last Modified: 18.10.2026 - hlsdl 0.37 "fmp4-alt-audio" (fMP4 video + separate audio it cannot mux): FFMPEGDownloader takes the download over, its state is passed on. Earlier: 12.10.2026 - stopping a live recording is its normal end: renamed to what hlsdl wrote (.ts), its .txt written (was kept as .mp4 over MPEG-TS); no remux / cover / subtitles there, terminate() reports the finish at once. Earlier: 11.10.2026 - file format setting (hls_out_container): Automatic renames the file to the container hlsdl wrote (.ts/.mp4/.aac), MKV/MP4/TS remux when needed. Earlier: 10.10.2026 - isWorkingCorrectly() checks only hlsdl (cached usage text, no ffmpeg/process start), remux maps 0:v? (audio-only streams). Earlier: 07.08.2026 - Extracted shared helpers (ensureText/fsPath/shellQuote/writeUtf8TextFile) and sidecar logic into downloaderhelpers.SidecarMixin, shared with wgetdownloader.py and mergedownloader.py, instead of duplicating them here - Kamikaze24
 ###################################################
 # LOCAL import
 ###################################################
@@ -61,6 +61,10 @@ class HLSDownloader(BaseDownloader, SidecarMixin):
         self.downloadDuration = 0
         self.liveStream = False
         self.lastErrorCode = 0  # last non-zero "error_code" reported by hlsdl (e.g. expired/blocked CDN token)
+        self.lastErrorMsg = ''  # its "error_msg"
+        # FFMPEGDownloader that took the download over when hlsdl could not produce the file (fMP4 video with
+        # a separate audio rendition it cannot mux, "fmp4-alt-audio"); the state is read from it from then on
+        self.fallback = None
 
         # both are set by the download manager (allowFinalRename: a real download, not buffered
         # playback; resumeExisting: "Continue downloading" on an interrupted item)
@@ -378,6 +382,7 @@ class HLSDownloader(BaseDownloader, SidecarMixin):
                         self.liveStream = True
                     if obj.get("error_code"):
                         self.lastErrorCode = obj["error_code"]
+                        self.lastErrorMsg = ensureText(obj.get("error_msg") or '')
                         printDBG("HLSDownloader hlsdl error_code[%r] error_msg[%r]" % (obj.get("error_code"), obj.get("error_msg")))
                     if updateStatistic:
                         BaseDownloader._updateStatistic(self)
@@ -385,8 +390,41 @@ class HLSDownloader(BaseDownloader, SidecarMixin):
                     printExc()
                 continue
 
+    def _startFfmpegFallback(self):
+        # hlsdl 0.37+ reports "fmp4-alt-audio" (before writing any media) for fMP4 video with a separate audio
+        # rendition it cannot mux into one file; ffmpeg can - it takes the download over under the same name
+        try:
+            from Plugins.Extensions.IPTVPlayer.iptvdm.ffmpegdownloader import FFMPEGDownloader
+            fallback = FFMPEGDownloader()
+            fallback.allowFinalRename = self.allowFinalRename
+            fallback.subscribeFor_Finish(self._fallbackFinished)
+            if fallback.start(self.url, self.filePath, self.downloaderParams) != BaseDownloader.CODE_OK:
+                return False
+            printDBG("HLSDownloader hlsdl cannot mux this fMP4 stream -> FFMPEGDownloader takes over")
+            self.fallback = fallback
+            return True
+        except Exception:
+            printExc()
+            return False
+
+    def _fallbackFinished(self, status):
+        fallback = self.fallback
+        if fallback is None:
+            return
+        self.status = status
+        self.filePath = ensureText(fallback.getFullFileName())
+        self.localFileSize = fallback.getLocalFileSize()
+        self.remoteFileSize = fallback.getRemoteFileSize()
+        self.onFinish()
+
     def _terminate(self):
         printDBG("HLSDownloader._terminate")
+        if self.fallback is not None:
+            # BaseDownloader.terminate() reports the finish once - not again through _fallbackFinished
+            self.fallback.unsubscribeFor_Finish(self._fallbackFinished)
+            sts = self.fallback._terminate()
+            self.status = self.fallback.getStatus()
+            return sts
         if None is not self.iptv_sys:
             self.iptv_sys.kill()
             self.iptv_sys = None
@@ -413,6 +451,12 @@ class HLSDownloader(BaseDownloader, SidecarMixin):
             self.console_appClosed_conn = None
             self.console_stderrAvail_conn = None
             self.console = None
+
+        if not terminated and self.fallback is None and self.status == DMHelper.STS.DOWNLOADING \
+                and self.lastErrorMsg == 'fmp4-alt-audio' and 0 >= self.downloadDuration:
+            # nothing but at most the init segment is written yet - ffmpeg starts the file over
+            if self._startFfmpegFallback():
+                return
 
         if terminated and self.liveStream and self.allowFinalRename and self.status != DMHelper.STS.POSTPROCESSING \
                 and DMHelper.getFileSize(fsPath(self.filePath)) > 0:
@@ -491,22 +535,81 @@ class HLSDownloader(BaseDownloader, SidecarMixin):
             return True
         return False
 
+    # after a fallback (_startFfmpegFallback) the FFMPEGDownloader holds the state - the buffering screen and the
+    # download manager keep talking to this object
+    def getStatus(self):
+        if self.fallback is not None:
+            return self.fallback.getStatus()
+        return self.status
+
+    def isDownloading(self):
+        return DMHelper.STS.DOWNLOADING == self.getStatus()
+
+    def getLocalFileSize(self, update=False):
+        if self.fallback is not None:
+            return self.fallback.getLocalFileSize(update)
+        return BaseDownloader.getLocalFileSize(self, update)
+
+    def getPlayableFileSize(self):
+        if self.fallback is not None:
+            return self.fallback.getPlayableFileSize()
+        return BaseDownloader.getPlayableFileSize(self)
+
+    def getRemoteFileSize(self):
+        if self.fallback is not None:
+            return self.fallback.getRemoteFileSize()
+        return self.remoteFileSize
+
+    def getDownloadSpeed(self):
+        if self.fallback is not None:
+            return self.fallback.getDownloadSpeed()
+        return self.downloadSpeed
+
+    def getFullFileName(self):
+        if self.fallback is not None:
+            return self.fallback.getFullFileName()
+        return self.filePath
+
+    def moveFullFileName(self, newPath):
+        if self.fallback is not None:
+            return self.fallback.moveFullFileName(newPath)
+        return BaseDownloader.moveFullFileName(self, newPath)
+
+    def getLastError(self):
+        if self.fallback is not None:
+            return self.fallback.getLastError()
+        return BaseDownloader.getLastError(self)
+
+    def getMimeType(self):
+        if self.fallback is not None:
+            return self.fallback.getMimeType()
+        return BaseDownloader.getMimeType(self)
+
     def isLiveStream(self):
+        if self.fallback is not None:
+            return self.fallback.isLiveStream()
         return self.liveStream
 
     def updateStatistic(self):
-        # BaseDownloader.updateStatistic(self)
-        return
+        # hlsdl reports its statistics itself (_dataAvail)
+        if self.fallback is not None:
+            self.fallback.updateStatistic()
 
     def hasDurationInfo(self):
+        if self.fallback is not None:
+            return self.fallback.hasDurationInfo()
         return True
 
     def getTotalFileDuration(self):
         # total duration in seconds
+        if self.fallback is not None:
+            return self.fallback.getTotalFileDuration()
         if self.isLiveStream():
             return self.downloadDuration
         return self.totalDuration
 
     def getDownloadedFileDuration(self):
         # downloaded duration in seconds
+        if self.fallback is not None:
+            return self.fallback.getDownloadedFileDuration()
         return self.downloadDuration
