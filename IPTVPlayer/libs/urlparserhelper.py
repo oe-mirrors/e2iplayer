@@ -4,7 +4,6 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import CParsingHelper, common
 from Plugins.Extensions.IPTVPlayer.libs import m3u8
 from Plugins.Extensions.IPTVPlayer.libs import curlimpersonate  # add 071026
-from binascii import hexlify
 import ast
 import re
 import time
@@ -13,17 +12,11 @@ import codecs
 import six
 from urllib.parse import unquote, urljoin
 
-try:
-    from hashlib import md5
+from hashlib import md5
 
-    def hex_md5(e):
-        return md5(six.ensure_binary(e)).hexdigest()
-except Exception:
-    from Plugins.Extensions.IPTVPlayer.libs.crypto.hash.md5Hash import MD5
 
-    def hex_md5(e):
-        hashAlg = MD5()
-        return hexlify(hashAlg(e))
+def hex_md5(e):
+    return md5(six.ensure_binary(e)).hexdigest()
 
 
 def int2base(x, base):
@@ -434,10 +427,26 @@ def decorateUrl(url, metaParams={}):
     return retUrl
 
 
+# CODECS base names of audio formats - a variant that lists only these and no RESOLUTION is audio only
+HLS_AUDIO_CODECS = frozenset(('mp4a', 'ac-3', 'ec-3', 'ac-4', 'opus', 'flac', 'alac', 'mp3', 'mhm1', 'mha1', 'dtsc', 'dtse', 'dtsx'))
+# ... and of video formats set-top boxes cannot decode (AV1, Dolby Vision) - like hlsdl -b (0.37+)
+HLS_UNDECODABLE_CODECS = frozenset(('av01', 'dvh1', 'dvhe', 'dva1', 'dvav'))
+
+
+def _hlsUndecodable(item):
+    # a getDirectM3U8Playlist() link with an AV1 / Dolby Vision video (CODECS, or "DV" from SUPPLEMENTAL-CODECS)
+    codecs = set(('%s' % (item.get('codecs') or '')).lower().split(','))
+    return bool(codecs & HLS_UNDECODABLE_CODECS) or 'DV' in ('%s' % item.get('name', '')).split()
+
+
 def _hlsChannelsLabel(channels):
-    # CHANNELS first value is the count, e.g. "2" or "6/JOC" (Atmos)
+    # CHANNELS = count[/coding identifiers[/spatial]], e.g. "2", "6", "16/JOC" (Dolby Atmos -
+    # the count is not a speaker layout then) or "2/-/BINAURAL" (HLS 2nd edition)
+    params = str(channels or '').split('/')
+    if len(params) > 1 and 'JOC' in params[1].upper().split(','):
+        return 'Atmos'
     try:
-        n = int(str(channels).split('/')[0].strip())
+        n = int(params[0].strip())
     except Exception:
         return ''
     return {6: '5.1', 8: '7.1'}.get(n, '%dch' % n if n > 2 else '')
@@ -526,8 +535,10 @@ def getDirectM3U8Playlist(M3U8Url, checkExt=True, variantCheck=True, cookieParam
                 meta['external_sub_tracks'] = list(meta.get('external_sub_tracks', [])) + hlsSubTracks
             for playlist in m3u8Obj.playlists:
                 item = {}
+                # set for every variant - a non-.m3u8 one used to carry the bitrate of the variant before it
+                meta['iptv_bitrate'] = playlist.stream_info.bandwidth
                 if not variantCheck or playlist.absolute_uri.split('?', 1)[0].endswith('.m3u8'):
-                    meta.update({'iptv_proto': 'm3u8', 'iptv_bitrate': playlist.stream_info.bandwidth})
+                    meta['iptv_proto'] = 'm3u8'
                     item['url'] = strwithmeta(playlist.absolute_uri, meta)
                 else:
                     meta.pop('iptv_proto', None)
@@ -551,18 +562,33 @@ def getDirectM3U8Playlist(M3U8Url, checkExt=True, variantCheck=True, cookieParam
                         item['codecs'] = ','.join(codecs)
                 except Exception:
                     item['codecs'] = ''
-                item['name'] = "bitrate: %s res: %dx%d" % (item['bitrate'], item['width'], item['height'])
+                codecNames = set(item['codecs'].lower().split(',')) - set([''])
+                if not item['height'] and codecNames and codecNames <= HLS_AUDIO_CODECS:
+                    # an audio-only variant (CODECS lists only audio, no RESOLUTION)
+                    item['name'] = "bitrate: %s audio only" % item['bitrate']
+                else:
+                    item['name'] = "bitrate: %s res: %dx%d" % (item['bitrate'], item['width'], item['height'])
                 if item['codecs']:
                     item['name'] += ' ' + item['codecs']
                 try:
                     videoRange = playlist.stream_info.video_range
                     if videoRange and videoRange.upper() not in ('SDR', ''):
                         item['name'] += ' ' + videoRange
+                    # Dolby Vision: in CODECS itself or as SUPPLEMENTAL-CODECS ("dvh1.08.07/db4h", HLS 2nd edition)
+                    allCodecs = '%s,%s' % (playlist.stream_info.codecs or '', playlist.stream_info.supplemental_codecs or '')
+                    if re.search(r'(?:^|[,/\s])(?:dvh1|dvhe|dva1|dvav)\.', allCodecs, re.I):
+                        item['name'] += ' DV'
                     if playlist.stream_info.frame_rate:
                         item['name'] += ' %gfps' % float(playlist.stream_info.frame_rate)
                 except Exception:
                     pass
                 if mergeAltAudio and playlist.alt_audio_streams and item['url'].meta.get('iptv_proto') == 'm3u8':
+                    # the audio muxed into the variant itself (EXT-X-MEDIA without URI, usually the original
+                    # language): the variant as it is, no merge needed - it was missing from the list before
+                    for audio_stream in playlist.muxed_audio_streams:
+                        muxedItem = dict(item)
+                        muxedItem['name'] = '[%s] %s' % (_hlsAudioLabel(audio_stream), muxedItem['name'])
+                        retPlaylists.append(muxedItem)
                     for audio_stream in playlist.alt_audio_streams:
                         audioUrl = strwithmeta(audio_stream.absolute_uri, item['url'].meta)
                         altItem = dict(item)
@@ -574,15 +600,28 @@ def getDirectM3U8Playlist(M3U8Url, checkExt=True, variantCheck=True, cookieParam
                 else:
                     item['alt_audio_streams'] = playlist.alt_audio_streams
                     retPlaylists.append(item)
+            # redundant variants (the same quality once more as a fallback, e.g. ZDF live) would show up twice
+            # with the same name - the first one is kept
+            seenNames = set()
+            uniquePlaylists = []
+            for item in retPlaylists:
+                if item['name'] not in seenNames:
+                    seenNames.add(item['name'])
+                    uniquePlaylists.append(item)
+            retPlaylists = uniquePlaylists
             if sortWithMaxBitrate > -1:
                 def __getLinkQuality(itemLink):
                     try:
-                        return int(itemLink['bitrate'])
+                        # a variant without BANDWIDTH (None) counts as 0 without a traceback per link
+                        return int(itemLink['bitrate'] or 0)
                     except Exception:
                         printExc()
                         return 0
 
                 retPlaylists = CSelOneLink(retPlaylists, __getLinkQuality, sortWithMaxBitrate).getSortedLinks()
+                # AV1 / Dolby Vision to the end: set-top boxes do not decode them, so the automatic pick (the
+                # first link) must not land on them - they stay in the list to be chosen by hand
+                retPlaylists = [i for i in retPlaylists if not _hlsUndecodable(i)] + [i for i in retPlaylists if _hlsUndecodable(i)]
         else:
             if checkContent and 0 == len(m3u8Obj.segments):
                 return []

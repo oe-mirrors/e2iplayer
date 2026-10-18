@@ -19,7 +19,6 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import GetIPTVNotif
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
 from Plugins.Extensions.IPTVPlayer.libs import curlimpersonate, ph, pyaes, torrserver  # fix 071026: curlimpersonate (parserVIDZY)
 from Plugins.Extensions.IPTVPlayer.libs.aesgcm import python_aesgcm
-from Plugins.Extensions.IPTVPlayer.libs.crypto.cipher.aes_cbc import AES_CBC
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.ecdsa import NIST256p as ECDSA_NIST256p, SigningKey as ECDSA_SigningKey
 from Plugins.Extensions.IPTVPlayer.libs.jsunpack import get_packed_data
@@ -34,7 +33,7 @@ from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_unquote, urllib_urlencode
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import parse_qs, urljoin, urlparse
 from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute, js_execute_ext
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import CSelOneLink, GetCookieDir, GetDefaultLang, GetJSScriptFile, GetPluginDir, GetTmpDir, b64urlEncode, printDBG, printExc, rm
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import CSelOneLink, GetCookieDir, GetDefaultLang, GetJSScriptFile, GetTmpDir, b64urlEncode, printDBG, printExc, rm
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 
 if not isPY2():
@@ -110,16 +109,6 @@ def girc(data, url, co=None):
         if gtoken:
             return gtoken.group(1)
     return ""
-
-
-def InternalCipher(data, encrypt=True):
-    tmp = sha256("|".join(GetPluginDir().split("/")[-2:])).digest()
-    key = tmp[:16]
-    iv = tmp[16:]
-    cipher = AES_CBC(key=key, keySize=16)
-    if encrypt:
-        return cipher.encrypt(data, iv)
-    return cipher.decrypt(data, iv)
 
 
 def cryptoJSAesDecrypt(encrypted, passphrase):

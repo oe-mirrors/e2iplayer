@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "08.10.2026"
+LAST_MODIFIED = "18.10.2026"
 # ORF ON (on.orf.at, ehemals ORF TVthek)
 # API: https://api-tvthek.orf.at/api/v4.3/  (HTTP-Basic-Auth, oeffentliche Credentials)
 # 07.10.2026 - INFO (episode/profile details, moviemeta for films),
@@ -459,8 +459,13 @@ class ORFON(GenericFolderWatchedScraperMixin, CBaseHostClass):
             meta = {'iptv_livestream': live, 'iptv_proto': 'm3u8'}
             if subTracks:
                 meta['external_sub_tracks'] = subTracks
-            if 'QX' in name.upper() and not live:
-                for it in getDirectM3U8Playlist(strwithmeta(surl, {'iptv_proto': 'm3u8'}), checkExt=False, checkContent=True):
+            if 'QX' in name.upper():
+                if live:
+                    # the live master as it is first (the default, also with "best quality only"): the player
+                    # picks video and audio itself; the single qualities follow - with a separate audio
+                    # rendition they are merge:// links (always buffered)
+                    urlTab.append({'need_resolve': 0, 'name': '%s auto' % name, 'live_master': True, 'url': self.up.decorateUrl(surl, meta)})
+                for it in getDirectM3U8Playlist(strwithmeta(surl, {'iptv_proto': 'm3u8'}), checkExt=False, checkContent=not live):
                     it['need_resolve'] = 0
                     # "QXB 1800k 1280x720 [Deutsch]" (QXB/QXA variants share bitrates) instead of the generic
                     # "bitrate: 1800000 res: 0x0" label
@@ -488,7 +493,8 @@ class ORFON(GenericFolderWatchedScraperMixin, CBaseHostClass):
                     return 0
             mx = max(res(u) for u in urlTab)
             if mx > 0:
-                urlTab = [u for u in urlTab if res(u) == mx] or urlTab[:1]
+                # the live master stays (it has no resolution of its own)
+                urlTab = [u for u in urlTab if res(u) == mx or u.get('live_master')] or urlTab[:1]
         if not live:
             # moviemeta query of INFO: the year must match (other films of the same name)
             metaQuery = sidecarMetaQuery(cItem.get('meta_type', ''), cItem.get('meta_title', ''), cItem.get('meta_year', ''), skip=(), maxYearDiff=1)

@@ -9,13 +9,11 @@
 # LOCAL import
 ###################################################
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printExc, GetDownloadedDir, mkdirs, rm
-from Plugins.Extensions.IPTVPlayer.libs.crypto.hash.md5Hash import MD5
-from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_binary, ensure_str
 ###################################################
 # FOREIGN import
 ###################################################
-from binascii import hexlify
+from hashlib import md5
 import os
 ###################################################
 
@@ -36,9 +34,7 @@ def getItemKey(hostName, url, name):
 
 def _getMarkerPath(key):
     hostName, source = key.split('|', 1)
-    hashData = hexlify(MD5()(source))
-    if not isPY2():
-        hashData = hashData.decode()
+    hashData = md5(ensure_binary(source)).hexdigest()
     return GetDownloadedDir('%s/.%s.iptvdl' % (hostName, hashData))
 
 
