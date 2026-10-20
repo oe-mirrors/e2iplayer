@@ -1,5 +1,10 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "18.10.2026"
+LAST_MODIFIED = "20.10.2026"
+# 20.10.2026 - watching page loader changed again: loader and page sit reversed base64 in data-* attributes, RC4 with
+#   an extra XOR of (i + n) & 255, key from a summed list + a second LCG register; new literal wrappers
+#   ((function(a){return a^x;})(y), parseInt('x', 32), ('0x2b' - 0), [0, x][+!!window.document]); "x / 6 | 0" now
+#   evaluated like JS (own evaluator instead of eval). The server token "tk" is hidden the same way, the server
+#   <li> carry data-id before data-index
 # 18.10.2026 - watching page loader changed again: RC4 instead of XOR, the page sits base64 in a <script
 #   type="application/octet-stream">; key = String(LCG(15000 rounds) of _part1 + _part2 + _part3 + a CSS z-index +
 #   the height of a hidden flex-wrap box) + suffix; the literals are wrapped ({'v': x}).v, [x].pop(), parseInt('x', 16)
@@ -27,7 +32,6 @@ LAST_MODIFIED = "18.10.2026"
 #   - watched flag (stable series:/season:/video: page-url keys), downloaded flag, favourites,
 #     name normalisation ("Title (Year)", "Show - SxxExx"), sidecar, INFO via moviemeta + the site's
 #     story/poster/fields; no blocking retry loops, no colour codes in titles
-import __future__
 import ast
 import math
 import re
@@ -101,6 +105,46 @@ def _jsFloor(value):
     return int(math.floor(value))
 
 
+def _jsInt32(value):
+    # JS ToInt32 of a bit operator's operand (truncated, 32 bit, signed) - "x / 6 | 0" floors a float in JS
+    value = int(value) & 0xFFFFFFFF
+    return value - 0x100000000 if value & 0x80000000 else value
+
+
+def _jsMod(a, b):
+    # JS %: the sign of the dividend (Python's % takes the divisor's)
+    return math.fmod(a, b) if isinstance(a, float) or isinstance(b, float) else (abs(a) % abs(b)) * (1 if a >= 0 else -1)
+
+
+_JS_BINOPS = {
+    ast.Add: lambda a, b: a + b,
+    ast.Sub: lambda a, b: a - b,
+    ast.Mult: lambda a, b: a * b,
+    ast.Div: lambda a, b: float(a) / b,  # true division like JS, also on py2
+    ast.Mod: _jsMod,
+    ast.LShift: lambda a, b: _jsInt32(_jsInt32(a) << (_jsInt32(b) & 31)),
+    ast.RShift: lambda a, b: _jsInt32(a) >> (_jsInt32(b) & 31),
+    ast.BitOr: lambda a, b: _jsInt32(a) | _jsInt32(b),
+    ast.BitXor: lambda a, b: _jsInt32(a) ^ _jsInt32(b),
+    ast.BitAnd: lambda a, b: _jsInt32(a) & _jsInt32(b),
+}
+_JS_FUNCS = {"floor": _jsFloor, "jsround": _jsRound}
+
+
+def _jsEval(node):
+    # evaluates the checked tree of _jsNum (numbers, + - * / % << >> | ^ &, unary +/-, floor() / jsround())
+    if isinstance(node, ast.Expression):
+        return _jsEval(node.body)
+    if isinstance(node, ast.BinOp):
+        return _JS_BINOPS[type(node.op)](_jsEval(node.left), _jsEval(node.right))
+    if isinstance(node, ast.UnaryOp):
+        value = _jsEval(node.operand)
+        return -value if isinstance(node.op, ast.USub) else value
+    if isinstance(node, ast.Call):
+        return _JS_FUNCS[node.func.id](*[_jsEval(arg) for arg in node.args])
+    return node.value if hasattr(node, "value") else node.n
+
+
 def _jsNum(expr, floorName="", roundName=""):
     # a JS arithmetic expression of number literals (hex too), + - * / % and Math.floor / Math.round (under their
     # aliases) -> int; anything else (a name, a string, a call of something else) is refused - no eval() of page code
@@ -110,20 +154,41 @@ def _jsNum(expr, floorName="", roundName=""):
         expr = re.sub(r"\b%s\s*\(" % re.escape(roundName), "jsround(", expr)
     tree = ast.parse(expr.strip(), mode="eval")
     for node in ast.walk(tree):
-        if not isinstance(node, _JS_NUM_NODES) or (isinstance(node, ast.Name) and node.id not in ("floor", "jsround")) or (isinstance(node, _JS_CONST) and not isinstance(node.value if hasattr(node, "value") else node.n, _JS_NUM_TYPES)):
+        if not isinstance(node, _JS_NUM_NODES) or (isinstance(node, ast.Name) and node.id not in _JS_FUNCS) or (isinstance(node, _JS_CONST) and not isinstance(node.value if hasattr(node, "value") else node.n, _JS_NUM_TYPES)) or \
+                (isinstance(node, ast.Call) and (not isinstance(node.func, ast.Name) or getattr(node, "keywords", None))):
             raise ValueError("not a plain number expression: %r" % expr)
-    # true division like JS also on py2 (no-op flag on py3)
-    code = compile(tree, "js", "eval", __future__.division.compiler_flag, True)
-    return int(eval(code, {"__builtins__": {}}, {"floor": _jsFloor, "jsround": _jsRound}))
+    return int(_jsEval(tree))
+
+
+def _jsParseInt(match):
+    # parseInt('<digits>', base) like JS: a "0x" prefix for base 16, the digits up to the first one invalid in the base;
+    # no digit at all (NaN) leaves the call in place (the expression is then refused)
+    digits, base = match.group(1), int(match.group(2))
+    if base == 16 and digits.lower().startswith("0x"):
+        digits = digits[2:]
+    valid = re.match(r"[0-9a-z]*", digits.lower()).group(0)
+    for pos, char in enumerate(valid):
+        if int(char, 36) >= base:
+            valid = valid[:pos]
+            break
+    return str(int(valid, base)) if valid and 2 <= base <= 36 else match.group(0)
 
 
 _JS_LIT = r"(0x[0-9a-fA-F]+|\d+)"
+# loader property assignment of the hidden element's z-index: style['z-i' + 'ndex'], style['z' + 'Index'], style['zIndex']
+_ZINDEX_RE = re.compile(r"""\.style\[\s*(?:['"]z-i['"]\s*\+\s*['"]ndex['"]|['"]z['"]\s*\+\s*['"]Index['"]|['"]zIndex['"])\s*\]\s*=\s*String\((.*?)\)\s*;""")
 _JS_WRAPPED = (
     (re.compile(r"""\(\s*\{\s*['"]?v['"]?\s*:\s*%s\s*\}\s*\)\s*\.\s*v""" % _JS_LIT), lambda m: m.group(1)),
     (re.compile(r"\[\s*%s\s*\]\s*\.\s*pop\(\s*\)" % _JS_LIT), lambda m: m.group(1)),
-    (re.compile(r"""parseInt\(\s*['"](?:0x)?([0-9a-fA-F]+)['"]\s*,\s*16\s*\)"""), lambda m: str(int(m.group(1), 16))),
+    # parseInt('x', 16) since 18.10.2026, parseInt('ga', 32) since 20.10.2026
+    (re.compile(r"""parseInt\(\s*['"]([0-9a-zA-Z]+)['"]\s*,\s*(\d+)\s*\)"""), _jsParseInt),
     # the environment check of a literal: the browser value
     (re.compile(r"""\(\s*typeof\s+document\s*!==?\s*['"]undefined['"]\s*\?\s*%s\s*:\s*%s\s*\)""" % (_JS_LIT, _JS_LIT)), lambda m: m.group(1)),
+    # loader of 20.10.2026: (function(a){return a^x;})(y), ('0x2b' - 0), [0x0, x][+!!window.document], document.nodeType (9)
+    (re.compile(r"\(\s*function\s*\(\s*(\w+)\s*\)\s*\{\s*return\s+\1\s*\^\s*%s\s*;?\s*\}\s*\)\s*\(\s*%s\s*\)" % (_JS_LIT, _JS_LIT)), lambda m: "(%s ^ %s)" % (m.group(3), m.group(2))),
+    (re.compile(r"""\(\s*['"]%s['"]\s*-\s*0\s*\)""" % _JS_LIT), lambda m: m.group(1)),
+    (re.compile(r"\[\s*%s\s*,\s*%s\s*\]\s*\[\s*\+\s*!!\s*(?:window\.)?document\s*\]" % (_JS_LIT, _JS_LIT)), lambda m: m.group(2)),
+    (re.compile(r"\bdocument\.nodeType\b"), lambda m: "9"),
 )
 
 
@@ -132,6 +197,89 @@ def _jsUnwrap(expr):
     for regex, repl in _JS_WRAPPED:
         expr = regex.sub(repl, expr)
     return expr
+
+
+def _jsVars(code):
+    # {name: expression} of the "var a = x, b = y;" statements; commas / semicolons inside brackets or strings do
+    # not split (a declaration with a regex literal can come out wrong - not one the decoders read)
+    found = {}
+    for match in re.finditer(r"\bvar\s+", code):
+        pos = start = match.end()
+        depth, quote, parts = 0, None, []
+        while pos < len(code):
+            char = code[pos]
+            if quote:
+                if char == "\\":
+                    pos += 1
+                elif char == quote:
+                    quote = None
+            elif char in "'\"`":
+                quote = char
+            elif char in "([{":
+                depth += 1
+            elif char in ")]}" and depth:
+                depth -= 1
+            elif depth == 0 and char in ",;)}":
+                parts.append(code[start:pos])
+                start = pos + 1
+                if char != ",":
+                    break
+            pos += 1
+        for part in parts:
+            name, eq, expr = part.partition("=")
+            if eq and re.match(r"^\s*[\w$]+\s*$", name) and not expr.startswith("="):
+                found[name.strip()] = expr.strip()
+    return found
+
+
+def _jsSplit(expr):
+    # the top-level comma separated items of "a, f(b, c), [d, e]"
+    items, depth, start = [], 0, 0
+    for pos, char in enumerate(expr):
+        if char in "([{":
+            depth += 1
+        elif char in ")]}":
+            depth -= 1
+        elif char == "," and depth == 0:
+            items.append(expr[start:pos])
+            start = pos + 1
+    items.append(expr[start:])
+    return [item.strip() for item in items if item.strip()]
+
+
+def _flexStyledHeight(code):
+    # loader of 20.10.2026: <x-fx style='display:flex; flex-wrap:wrap; width:490px'> with <x-i style='order:n;
+    # height; width or flex-basis; display:block|none'> children - laid out in "order" (CSS order, stable), hidden
+    # ones take no space; every line is as high as its highest child
+    def px(value):
+        found = re.match(r"\s*(\d+)", value or "")
+        return int(found.group(1)) if found else 0
+
+    box, items = None, []
+    for tag, style in re.findall(r"""<([\w-]+)\s+style=\\?['"]([^'"\\]*)""", code):
+        props = {}
+        for decl in style.split(";"):
+            key, _sep, value = decl.partition(":")
+            props[key.strip().lower()] = value.replace("!important", "").strip()
+        if box is None:
+            if props.get("display") == "flex":
+                box = props
+                end = code.find("</%s>" % tag)
+                code = code[:end] if end > 0 else code
+            continue
+        if props.get("display") != "none":
+            items.append(props)
+    if box is None or not items:
+        return 0
+    limit = px(box.get("width")) if box.get("flex-wrap", "").startswith("wrap") else float("inf")
+    total = left = line = 0
+    for props in sorted(items, key=lambda p: int(p.get("order") or 0)):
+        width = px(props.get("flex-basis")) or px(props.get("width"))
+        if left and left + width > limit:
+            total, left, line = total + line, 0, 0
+        left += width
+        line = max(line, px(props.get("height")))
+    return total + line
 
 
 def _flexHeight(code):
@@ -151,7 +299,8 @@ def _flexHeight(code):
     return total + line
 
 
-def _rc4(key, data):
+def _rc4(key, data, tweak=None):
+    # tweak (loader of 20.10.2026): every byte is also XORed with (i + tweak) & 255
     s = list(range(256))
     j = 0
     for i in range(256):
@@ -163,7 +312,7 @@ def _rc4(key, data):
         i = (i + 1) & 255
         j = (j + s[i]) & 255
         s[i], s[j] = s[j], s[i]
-        out[n] = c ^ s[(s[i] + s[j]) & 255]
+        out[n] = c ^ s[(s[i] + s[j]) & 255] ^ (((i + tweak) & 255) if tweak is not None else 0)
     return bytes(out)
 
 
@@ -487,13 +636,20 @@ class CimaNow(GenericFolderWatchedScraperMixin, CBaseHostClass):
             # the token is no longer accepted (the site sent the start page): ask again next time
             self.watchLinks.pop(self._gatewayKey(shineUrl), None)
         urltab = []
-        token = self.cm.ph.getSearchGroups(data, r"""var\s+tk\s*=\s*['"]([^'"]+)['"]""")[0]
+        token = self.cm.ph.getSearchGroups(data, r"""var\s+tk\s*=\s*['"]([^'"]+)['"]""")[0] or self._hiddenToken(data)
         block = self.cm.ph.getDataBeetwenMarkers(data, 'id="watch">', "</ul>", False)[1]
         coreUrl = self.getFullUrl("/wp-content/themes/Cima%20Now%20New/core.php")
         params = dict(self.defaultParams)
         params["header"] = dict(self.HEADER, Referer=watchUrl)
         seen = set()
-        for index, serverId, label in re.findall(r'(?s)<li[^>]+data-index="([^"]+)"[^>]+data-id="([^"]+)"[^>]*>(.*?)</li>', block):
+        servers = []
+        for attrs, label in re.findall(r"(?s)<li([^>]*\sdata-index=[^>]*)>(.*?)</li>", block):
+            # data-index / data-id in any order (data-id first since 20.10.2026)
+            index = self.cm.ph.getSearchGroups(attrs, r'data-index="([^"]+)"')[0]
+            serverId = self.cm.ph.getSearchGroups(attrs, r'data-id="([^"]+)"')[0]
+            if index and serverId:
+                servers.append((index, serverId, label))
+        for index, serverId, label in servers:
             sts, frame = self.getPage("%s?%s" % (coreUrl, urllib_urlencode([("action", "switch"), ("index", index), ("id", serverId), ("token", token)])), params)
             url = self.cm.ph.getSearchGroups(frame, r"""<iframe[^>]+src=['"]([^'"]+)['"]""", ignoreCase=True)[0] if sts else ""
             if url.startswith("//"):
@@ -515,6 +671,18 @@ class CimaNow(GenericFolderWatchedScraperMixin, CBaseHostClass):
             SetIPTVPlayerLastHostError(_("No stream available"))
             return []
         return applySidecarToLinks(urltab, buildSidecarFromItem(dict(cItem, desc=StripColorCodes(cItem.get("desc", ""))), IsSidecarEnabled(), story))
+
+    @staticmethod
+    def _hiddenToken(data):
+        # since 20.10.2026: var tk = window[String.fromCharCode(97,116,111,98)](("..." + "...").split("").reverse().join(""))
+        found = re.search(r"""var\s+tk\s*=\s*window\[[^\]]+\]\(\s*\(?\s*((?:['"][A-Za-z0-9+/=]*['"]\s*\+?\s*)+)\)?\s*\.split\(""", data)
+        if not found:
+            return ""
+        try:
+            return strDecode(b64Decode("".join(re.findall(r"""['"]([A-Za-z0-9+/=]*)['"]""", found.group(1)))[::-1], binary=True), "ignore").strip()
+        except Exception:
+            printExc()
+            return ""
 
     @staticmethod
     def _gatewayKey(shineUrl):
@@ -569,9 +737,82 @@ class CimaNow(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return ""
 
     def _decodeWatching(self, data):
-        # the current loader first, then the ones of 11.10. and 08.10.2026
-        decoded = self._decodeWatchingRc4(data) or self._decodeWatchingSum(data)
+        # the current loader first, then the ones of 18.10., 11.10. and 08.10.2026
+        decoded = self._decodeWatchingRev(data) or self._decodeWatchingRc4(data) or self._decodeWatchingSum(data)
         return decoded if decoded else self._decodeWatchingParts(data)
+
+    def _decodeWatchingRev(self, data):
+        # loader of 20.10.2026: the loader script sits reversed base64 in a data-* attribute of its own <script>
+        # (getAttribute(..).split('').reverse().join('') -> atob -> new Function), the page reversed base64 in a
+        # data-* attribute of a <script type="text/plain" id="p_...">. RC4 (every byte also XORed with (i + tw) & 255)
+        # with key = String((sA + sB) % m) + suffix: sA = sum of the "_acc" list (wrapped literals, a CSS z-index,
+        # the height of a hidden flex box, an environment check = 1), then r rounds of sA = (sA * a + c) % m;
+        # sB = ((sB ^ sA) + (r & 255)) % m. .slice(n) cuts the start off. "" when the page is not of this kind
+        try:
+            code = ""
+            for attrs, body in re.findall(r"(?s)<script([^>]*)>(.*?)</script>", data):
+                attr = re.search(r"""getAttribute\(\s*['"]([\w-]+)['"]\s*\)\s*\.split\(\s*['"]{2}\s*\)\s*\.reverse\(\s*\)""", body)
+                value = re.search(r"""\s%s=["']([A-Za-z0-9+/=]{200,})["']""" % re.escape(attr.group(1)), attrs) if attr else None
+                if value:
+                    code = _jsUnwrap(b64Decode(value.group(1)[::-1]))
+                    break
+            if not code:
+                return ""
+            payload = None
+            for name in re.findall(r"""getAttribute\(\s*['"](data-[\w-]+)['"]\s*\)""", code):
+                payload = re.search(r"""<script[^>]+\s%s=["']([A-Za-z0-9+/=]{100,})["']""" % re.escape(name), data)
+                if payload:
+                    break
+            accSum = re.search(r"(\w+)\s*\+=\s*(\w+)\s*\[\s*\w+\s*\]", code)
+            loop = re.search(r"while\s*\(\s*(\w+)\s*>\s*0\s*\)\s*\{\s*(\w+)\s*=\s*\(\s*\(\s*\2\s*\*\s*(\d+)\s*\)\s*\+\s*(\d+)\s*\)\s*%\s*(\d+)\s*;"
+                             r"\s*(\w+)\s*=\s*\(\s*\(\s*\6\s*\^\s*\2\s*\)\s*\+\s*\(\s*\1\s*&\s*(\d+)\s*\)\s*\)\s*%\s*(\d+)\s*;", code)
+            if not payload or not accSum or not loop:
+                return ""
+            defs = _jsVars(code)
+            zindex = _ZINDEX_RE.search(code)
+            envNames = [n for n, e in defs.items() if "?" in e and "_h" in e and "documentElement" in e]
+
+            def value(expr, depth=0):
+                expr = expr.strip()
+                if "getComputedStyle" in expr:
+                    return _jsNum(zindex.group(1)) if zindex else 0
+                if "offsetHeight" in expr:
+                    return _flexStyledHeight(code) or _flexHeight(code)
+                for name in set(re.findall(r"\b[A-Za-z_$][\w$]*\b", expr)):
+                    if name in envNames:
+                        expr = re.sub(r"\b%s\b" % re.escape(name), "1", expr)
+                    elif name in defs and depth < 5:
+                        expr = re.sub(r"\b%s\b" % re.escape(name), "(%d)" % value(defs[name], depth + 1), expr)
+                return _jsNum(expr)
+
+            accExpr = defs.get(accSum.group(2), "").strip()
+            if not (accExpr.startswith("[") and accExpr.endswith("]")):
+                return ""
+            sA = value(defs.get(accSum.group(1), "0")) + sum(value(item) for item in _jsSplit(accExpr[1:-1]))
+            sB, rounds = value(defs[loop.group(6)]), value(defs[loop.group(1)])
+            mul, inc, mod, mask, modB = (int(loop.group(n)) for n in (3, 4, 5, 7, 8))
+            while rounds > 0:
+                sA = (sA * mul + inc) % mod
+                sB = ((sB ^ sA) + (rounds & mask)) % modB
+                rounds -= 1
+            kv = re.search(r"var\s+(\w+)\s*=\s*\(\s*%s\s*\+\s*%s\s*\)\s*%%\s*(\d+)" % (loop.group(2), loop.group(6)), code)
+            if not kv:
+                return ""
+            suffix = re.search(r"""=\s*String\(\s*%s\s*\)\s*\+\s*['"]([^'"]*)['"]""" % re.escape(kv.group(1)), code)
+            key = str((sA + sB) % int(kv.group(2))) + (suffix.group(1) if suffix else "")
+            tweak = re.search(r"\^\s*\(\s*\(\s*\w+\s*\+\s*(\w+)\s*\)\s*&\s*255\s*\)", code)
+            tweak = value(defs[tweak.group(1)]) if tweak and tweak.group(1) in defs else None
+            out = strDecode(_rc4(key, b64Decode(payload.group(1)[::-1], binary=True), tweak), "ignore")
+            cut = re.search(r"\.slice\(([^;]+?)\)\s*;", code)
+            if cut:
+                out = out[_jsNum(cut.group(1)):]
+            if 'id="watch"' not in out:
+                printDBG("CimaNow._decodeWatchingRev: key %s gave no server list" % key)
+                return ""
+            return out
+        except Exception:
+            printExc()
+        return ""
 
     def _decodeWatchingRc4(self, data):
         # loader of 18.10.2026 (atob('...') script): RC4 of the base64 text of a <script type="application/
@@ -595,7 +836,7 @@ class CimaNow(GenericFolderWatchedScraperMixin, CBaseHostClass):
             floor = re.search(r"""var\s+(\w+)\s*=\s*\w+\[\s*['"]f['"]\s*\+\s*['"]loor['"]\s*\]""", code) or re.search(r"var\s+(\w+)\s*=\s*Math\.floor\b", code)
             floorName = floor.group(1) if floor else ""
             defs = dict(re.findall(r"var\s+(\w+)\s*=\s*([^;]+);", code))
-            zindex = re.search(r"""\.style\[\s*['"]z-i['"]\s*\+\s*['"]ndex['"]\s*\]\s*=\s*String\((.*?)\)\s*;""", code)
+            zindex = _ZINDEX_RE.search(code)
             envNames = [n for n, e in defs.items() if "?" in e and "_h" in e and "documentElement" in e]
 
             def value(name):
@@ -647,7 +888,7 @@ class CimaNow(GenericFolderWatchedScraperMixin, CBaseHostClass):
             rounder = re.search(r"""var\s+(\w+)\s*=\s*\w+\[\s*['"]r['"]\s*\+\s*['"]ound['"]\s*\]""", code) or re.search(r"var\s+(\w+)\s*=\s*Math\.round\b", code)
             roundName = rounder.group(1) if rounder else ""
             defs = dict(re.findall(r"var\s+(\w+)\s*=\s*([^;]+);", code))
-            zindex = re.search(r"""\.style\[\s*['"]z-i['"]\s*\+\s*['"]ndex['"]\s*\]\s*=\s*String\((.*?)\)\s*;""", code)
+            zindex = _ZINDEX_RE.search(code)
             width = re.search(r"""idth:['"]\s*\+\s*String\((.*?)\)\s*\+\s*['"]px""", code)
             # the key variables: "_arrX = [a, b, ...]; for" (11.10.) or "_arrX['p'+'ush'](a, b, ...); for" (12.10.)
             arrVars = re.search(r"=\s*\[([\w\s,$]+)\]\s*;\s*for", code) or \
