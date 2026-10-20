@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-18 16:54+0000\n"
+"POT-Creation-Date: 2026-10-20 20:10+0000\n"
 "PO-Revision-Date: 2018-03-25 18:50+100\n"
 "Last-Translator: nunigaia\n"
 "Language-Team: BH team\n"
@@ -1052,6 +1052,9 @@ msgstr "Categoria:"
 msgid "Change active movie player"
 msgstr "Mudar o leitor de filmes ativo"
 
+msgid "Change folder icon"
+msgstr ""
+
 msgid "Change own pin"
 msgstr "Alterar PIN próprio"
 
@@ -1463,6 +1466,9 @@ msgstr "Eliminar entrada"
 msgid "Delete favourites and watched status now"
 msgstr "Eliminar favoritos e estado de visualização agora"
 
+msgid "Delete folder"
+msgstr ""
+
 msgid "Delete host order and groups now"
 msgstr "Eliminar ordem dos hosts e grupos agora"
 
@@ -1491,6 +1497,10 @@ msgid "Delete subtitles cache now"
 msgstr "Eliminar cache de legendas agora"
 
 msgid "Delete the cache when the torrent is closed"
+msgstr ""
+
+#, python-format
+msgid "Delete the folder \"%s\"? Its hosts go back to the group."
 msgstr ""
 
 #, python-format
@@ -2367,6 +2377,9 @@ msgstr "Forçar skin interna: todos os ecrãs do E2iPlayer"
 msgid "Force internal skin: main screen only"
 msgstr "Forçar skin interna: apenas o ecrã principal"
 
+msgid "Force legacy grid"
+msgstr ""
+
 msgid "Foreign movies"
 msgstr "Filmes estrangeiros"
 
@@ -2595,6 +2608,9 @@ msgstr "Terror"
 
 msgid "Host"
 msgstr "Host"
+
+msgid "Host titles in lists"
+msgstr ""
 
 #, python-format
 msgid "Host: %s"
@@ -3419,6 +3435,9 @@ msgstr "Falha ao mover."
 msgid "Move to Watchlist folder..."
 msgstr ""
 
+msgid "Move to folder..."
+msgstr ""
+
 msgid "Movie"
 msgstr "Filme"
 
@@ -3569,6 +3588,9 @@ msgstr "Nova entrada"
 
 msgid "New episodes"
 msgstr "Novos episódios"
+
+msgid "New folder..."
+msgstr ""
 
 msgid "New icons will not be available."
 msgstr "Os novos ícones não estarão disponíveis."
@@ -4473,6 +4495,9 @@ msgstr ""
 msgid "Remove from favorites"
 msgstr "Remover dos favoritos"
 
+msgid "Remove from folder"
+msgstr ""
+
 msgid "Remove group"
 msgstr "Remover grupo"
 
@@ -4520,6 +4545,9 @@ msgstr ""
 
 msgid "Reset this list to its default layout?"
 msgstr "Repor esta lista na disposição predefinida?"
+
+msgid "Reset this list to its default layout? Its folders are deleted too."
+msgstr ""
 
 msgid "Reset to defaults"
 msgstr "Repor predefinições"
@@ -4779,6 +4807,9 @@ msgstr "Selecionar grupo de favoritos"
 msgid "Select group"
 msgstr "Selecionar grupo"
 
+msgid "Select hosts for this folder..."
+msgstr ""
+
 msgid "Select language"
 msgstr "Selecionar idioma"
 
@@ -4929,6 +4960,9 @@ msgid "Short Movies"
 msgstr "Curtas-metragens"
 
 msgid "Short films"
+msgstr ""
+
+msgid "Short name"
 msgstr ""
 
 msgid "Short series"
@@ -6486,6 +6520,9 @@ msgid "Watchlist folder"
 msgstr ""
 
 msgid "WebStreamr / AIOStreams manifest URL (your own):"
+msgstr ""
+
+msgid "Website address"
 msgstr ""
 
 #, python-format

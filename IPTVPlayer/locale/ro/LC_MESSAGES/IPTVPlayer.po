@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-18 16:54+0000\n"
+"POT-Creation-Date: 2026-10-20 20:10+0000\n"
 "PO-Revision-Date: 2026-10-08 20:17+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Romanian\n"
@@ -1048,6 +1048,9 @@ msgstr "Categorie:"
 msgid "Change active movie player"
 msgstr "Schimbați playerul video activ"
 
+msgid "Change folder icon"
+msgstr ""
+
 msgid "Change own pin"
 msgstr "Schimbați PIN-ul propriu"
 
@@ -1459,6 +1462,9 @@ msgstr "Ștergeți intrarea"
 msgid "Delete favourites and watched status now"
 msgstr "Ștergeți acum favoritele și starea de vizionare"
 
+msgid "Delete folder"
+msgstr ""
+
 msgid "Delete host order and groups now"
 msgstr "Ștergeți acum ordinea hosturilor și grupurile"
 
@@ -1487,6 +1493,10 @@ msgid "Delete subtitles cache now"
 msgstr "Ștergeți acum cache-ul de subtitrări"
 
 msgid "Delete the cache when the torrent is closed"
+msgstr ""
+
+#, python-format
+msgid "Delete the folder \"%s\"? Its hosts go back to the group."
 msgstr ""
 
 #, python-format
@@ -2363,6 +2373,9 @@ msgstr "Forțare skin intern: toate ecranele E2iPlayer"
 msgid "Force internal skin: main screen only"
 msgstr "Forțare skin intern: doar ecranul principal"
 
+msgid "Force legacy grid"
+msgstr ""
+
 msgid "Foreign movies"
 msgstr "Filme străine"
 
@@ -2591,6 +2604,9 @@ msgstr "Horror"
 
 msgid "Host"
 msgstr "Host"
+
+msgid "Host titles in lists"
+msgstr ""
 
 #, python-format
 msgid "Host: %s"
@@ -3415,6 +3431,9 @@ msgstr "Mutarea a eșuat."
 msgid "Move to Watchlist folder..."
 msgstr ""
 
+msgid "Move to folder..."
+msgstr ""
+
 msgid "Movie"
 msgstr "Film"
 
@@ -3565,6 +3584,9 @@ msgstr "Intrare nouă"
 
 msgid "New episodes"
 msgstr "Episoade noi"
+
+msgid "New folder..."
+msgstr ""
 
 msgid "New icons will not be available."
 msgstr "Pictogramele noi nu vor fi disponibile."
@@ -4469,6 +4491,9 @@ msgstr ""
 msgid "Remove from favorites"
 msgstr "Eliminați din favorite"
 
+msgid "Remove from folder"
+msgstr ""
+
 msgid "Remove group"
 msgstr "Eliminați grupul"
 
@@ -4516,6 +4541,9 @@ msgstr ""
 
 msgid "Reset this list to its default layout?"
 msgstr "Resetați această listă la aranjamentul implicit?"
+
+msgid "Reset this list to its default layout? Its folders are deleted too."
+msgstr ""
 
 msgid "Reset to defaults"
 msgstr "Resetare la valorile implicite"
@@ -4775,6 +4803,9 @@ msgstr "Selectați grupul de favorite"
 msgid "Select group"
 msgstr "Selectați grupul"
 
+msgid "Select hosts for this folder..."
+msgstr ""
+
 msgid "Select language"
 msgstr "Selectați limba"
 
@@ -4925,6 +4956,9 @@ msgid "Short Movies"
 msgstr "Scurtmetraje"
 
 msgid "Short films"
+msgstr ""
+
+msgid "Short name"
 msgstr ""
 
 msgid "Short series"
@@ -6482,6 +6516,9 @@ msgid "Watchlist folder"
 msgstr ""
 
 msgid "WebStreamr / AIOStreams manifest URL (your own):"
+msgstr ""
+
+msgid "Website address"
 msgstr ""
 
 #, python-format

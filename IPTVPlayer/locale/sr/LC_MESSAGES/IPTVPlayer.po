@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-18 16:54+0000\n"
+"POT-Creation-Date: 2026-10-20 20:10+0000\n"
 "PO-Revision-Date: 2026-10-08 20:17+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Serbian (Latin)\n"
@@ -1048,6 +1048,9 @@ msgstr "Kategorija:"
 msgid "Change active movie player"
 msgstr "Promeni aktivni plejer filmova"
 
+msgid "Change folder icon"
+msgstr ""
+
 msgid "Change own pin"
 msgstr "Promeni sopstveni PIN"
 
@@ -1459,6 +1462,9 @@ msgstr "Obriši stavku"
 msgid "Delete favourites and watched status now"
 msgstr "Obriši omiljene i status gledanja sada"
 
+msgid "Delete folder"
+msgstr ""
+
 msgid "Delete host order and groups now"
 msgstr "Obriši redosled hostova i grupe sada"
 
@@ -1487,6 +1493,10 @@ msgid "Delete subtitles cache now"
 msgstr "Obriši keš titlova sada"
 
 msgid "Delete the cache when the torrent is closed"
+msgstr ""
+
+#, python-format
+msgid "Delete the folder \"%s\"? Its hosts go back to the group."
 msgstr ""
 
 #, python-format
@@ -2363,6 +2373,9 @@ msgstr "Nametni interni skin: svi E2iPlayer ekrani"
 msgid "Force internal skin: main screen only"
 msgstr "Nametni interni skin: samo glavni ekran"
 
+msgid "Force legacy grid"
+msgstr ""
+
 msgid "Foreign movies"
 msgstr "Strani filmovi"
 
@@ -2591,6 +2604,9 @@ msgstr "Horor"
 
 msgid "Host"
 msgstr "Host"
+
+msgid "Host titles in lists"
+msgstr ""
 
 #, python-format
 msgid "Host: %s"
@@ -3415,6 +3431,9 @@ msgstr "Pomeranje nije uspelo."
 msgid "Move to Watchlist folder..."
 msgstr ""
 
+msgid "Move to folder..."
+msgstr ""
+
 msgid "Movie"
 msgstr "Film"
 
@@ -3565,6 +3584,9 @@ msgstr "Novi unos"
 
 msgid "New episodes"
 msgstr "Nove epizode"
+
+msgid "New folder..."
+msgstr ""
 
 msgid "New icons will not be available."
 msgstr "Nove ikone neće biti dostupne."
@@ -4469,6 +4491,9 @@ msgstr ""
 msgid "Remove from favorites"
 msgstr "Ukloni iz omiljenih"
 
+msgid "Remove from folder"
+msgstr ""
+
 msgid "Remove group"
 msgstr "Ukloni grupu"
 
@@ -4516,6 +4541,9 @@ msgstr ""
 
 msgid "Reset this list to its default layout?"
 msgstr "Vratiti ovu listu na podrazumevani raspored?"
+
+msgid "Reset this list to its default layout? Its folders are deleted too."
+msgstr ""
 
 msgid "Reset to defaults"
 msgstr "Vrati na podrazumevano"
@@ -4775,6 +4803,9 @@ msgstr "Izaberite grupu omiljenih"
 msgid "Select group"
 msgstr "Izaberite grupu"
 
+msgid "Select hosts for this folder..."
+msgstr ""
+
 msgid "Select language"
 msgstr "Izaberite jezik"
 
@@ -4925,6 +4956,9 @@ msgid "Short Movies"
 msgstr "Kratki filmovi"
 
 msgid "Short films"
+msgstr ""
+
+msgid "Short name"
 msgstr ""
 
 msgid "Short series"
@@ -6482,6 +6516,9 @@ msgid "Watchlist folder"
 msgstr ""
 
 msgid "WebStreamr / AIOStreams manifest URL (your own):"
+msgstr ""
+
+msgid "Website address"
 msgstr ""
 
 #, python-format
