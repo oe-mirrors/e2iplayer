@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-18 16:54+0000\n"
+"POT-Creation-Date: 2026-10-20 20:10+0000\n"
 "PO-Revision-Date: 2026-10-05 15:43+0300\n"
 "Last-Translator: Mohamed Elsafty [angel_heart150@yahoo.com]\n"
 "Language-Team: \n"
@@ -1052,6 +1052,9 @@ msgstr "الفئة:"
 msgid "Change active movie player"
 msgstr "تغيير مشغل الأفلام النشط"
 
+msgid "Change folder icon"
+msgstr ""
+
 msgid "Change own pin"
 msgstr "تغيير رمز PIN الخاص بك"
 
@@ -1463,6 +1466,9 @@ msgstr "حذف سجل البحث"
 msgid "Delete favourites and watched status now"
 msgstr "حذف المفضلة وحالة المشاهدة الآن"
 
+msgid "Delete folder"
+msgstr ""
+
 msgid "Delete host order and groups now"
 msgstr "حذف ترتيب الـ host والمجموعات الآن"
 
@@ -1492,6 +1498,10 @@ msgstr "حذف ذاكرة التخزين المؤقت للترجمة الآن"
 
 msgid "Delete the cache when the torrent is closed"
 msgstr "حذف ذاكرة التخزين المؤقت عند إغلاق التورنت"
+
+#, python-format
+msgid "Delete the folder \"%s\"? Its hosts go back to the group."
+msgstr ""
 
 #, python-format
 msgid "Delete the folder \"%s\"? Its videos go back to the Watchlist."
@@ -2367,6 +2377,9 @@ msgstr "فرض استخدام السكين الداخلي: جميع شاشات E
 msgid "Force internal skin: main screen only"
 msgstr "فرض استخدام السكين الداخلي: الشاشة الرئيسية فقط"
 
+msgid "Force legacy grid"
+msgstr ""
+
 msgid "Foreign movies"
 msgstr "أفلام أجنبية"
 
@@ -2595,6 +2608,9 @@ msgstr "رعب"
 
 msgid "Host"
 msgstr "الـ host"
+
+msgid "Host titles in lists"
+msgstr ""
 
 #, python-format
 msgid "Host: %s"
@@ -3419,6 +3435,9 @@ msgstr "فشل النقل."
 msgid "Move to Watchlist folder..."
 msgstr ""
 
+msgid "Move to folder..."
+msgstr ""
+
 msgid "Movie"
 msgstr "فيلم"
 
@@ -3569,6 +3588,9 @@ msgstr "إدخال جديد"
 
 msgid "New episodes"
 msgstr "حلقات جديدة"
+
+msgid "New folder..."
+msgstr ""
 
 msgid "New icons will not be available."
 msgstr "لن تكون الأيقونات الجديدة متاحة."
@@ -4473,6 +4495,9 @@ msgstr ""
 msgid "Remove from favorites"
 msgstr "إزالة من المفضلة"
 
+msgid "Remove from folder"
+msgstr ""
+
 msgid "Remove group"
 msgstr "إزالة المجموعة"
 
@@ -4520,6 +4545,9 @@ msgstr ""
 
 msgid "Reset this list to its default layout?"
 msgstr "هل تريد إعادة هذه القائمة إلى التخطيط الافتراضي؟"
+
+msgid "Reset this list to its default layout? Its folders are deleted too."
+msgstr ""
 
 msgid "Reset to defaults"
 msgstr "إعادة التعيين إلى الإعدادات الافتراضية"
@@ -4779,6 +4807,9 @@ msgstr "اختر مجموعة المفضلة"
 msgid "Select group"
 msgstr "اختر المجموعة"
 
+msgid "Select hosts for this folder..."
+msgstr ""
+
 msgid "Select language"
 msgstr "اختر اللغة"
 
@@ -4930,6 +4961,9 @@ msgstr "أفلام قصيرة"
 
 msgid "Short films"
 msgstr "أفلام قصيرة"
+
+msgid "Short name"
+msgstr ""
 
 msgid "Short series"
 msgstr "مسلسلات قصيرة"
@@ -6497,6 +6531,9 @@ msgstr ""
 
 msgid "WebStreamr / AIOStreams manifest URL (your own):"
 msgstr "رابط ملف manifest الخاص بك في WebStreamr / AIOStreams:"
+
+msgid "Website address"
+msgstr ""
 
 #, python-format
 msgid "Weeks on chart: %s"

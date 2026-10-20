@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-18 16:54+0000\n"
+"POT-Creation-Date: 2026-10-20 20:10+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1038,6 +1038,9 @@ msgstr ""
 msgid "Change active movie player"
 msgstr ""
 
+msgid "Change folder icon"
+msgstr ""
+
 msgid "Change own pin"
 msgstr ""
 
@@ -1447,6 +1450,9 @@ msgstr ""
 msgid "Delete favourites and watched status now"
 msgstr ""
 
+msgid "Delete folder"
+msgstr ""
+
 msgid "Delete host order and groups now"
 msgstr ""
 
@@ -1475,6 +1481,10 @@ msgid "Delete subtitles cache now"
 msgstr ""
 
 msgid "Delete the cache when the torrent is closed"
+msgstr ""
+
+#, python-format
+msgid "Delete the folder \"%s\"? Its hosts go back to the group."
 msgstr ""
 
 #, python-format
@@ -2322,6 +2332,9 @@ msgstr ""
 msgid "Force internal skin: main screen only"
 msgstr ""
 
+msgid "Force legacy grid"
+msgstr ""
+
 msgid "Foreign movies"
 msgstr ""
 
@@ -2549,6 +2562,9 @@ msgid "Horror"
 msgstr ""
 
 msgid "Host"
+msgstr ""
+
+msgid "Host titles in lists"
 msgstr ""
 
 #, python-format
@@ -3361,6 +3377,9 @@ msgstr ""
 msgid "Move to Watchlist folder..."
 msgstr ""
 
+msgid "Move to folder..."
+msgstr ""
+
 msgid "Movie"
 msgstr ""
 
@@ -3504,6 +3523,9 @@ msgid "New entry"
 msgstr ""
 
 msgid "New episodes"
+msgstr ""
+
+msgid "New folder..."
 msgstr ""
 
 msgid "New icons will not be available."
@@ -4404,6 +4426,9 @@ msgstr ""
 msgid "Remove from favorites"
 msgstr ""
 
+msgid "Remove from folder"
+msgstr ""
+
 msgid "Remove group"
 msgstr ""
 
@@ -4450,6 +4475,9 @@ msgid "Reset the settings of \"%s\" to their default values?"
 msgstr ""
 
 msgid "Reset this list to its default layout?"
+msgstr ""
+
+msgid "Reset this list to its default layout? Its folders are deleted too."
 msgstr ""
 
 msgid "Reset to defaults"
@@ -4702,6 +4730,9 @@ msgstr ""
 msgid "Select group"
 msgstr ""
 
+msgid "Select hosts for this folder..."
+msgstr ""
+
 msgid "Select language"
 msgstr ""
 
@@ -4850,6 +4881,9 @@ msgid "Short Movies"
 msgstr ""
 
 msgid "Short films"
+msgstr ""
+
+msgid "Short name"
 msgstr ""
 
 msgid "Short series"
@@ -6369,6 +6403,9 @@ msgid "Watchlist folder"
 msgstr ""
 
 msgid "WebStreamr / AIOStreams manifest URL (your own):"
+msgstr ""
+
+msgid "Website address"
 msgstr ""
 
 #, python-format

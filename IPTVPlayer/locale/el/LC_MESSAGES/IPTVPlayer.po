@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-18 16:54+0000\n"
+"POT-Creation-Date: 2026-10-20 20:10+0000\n"
 "PO-Revision-Date: 2026-10-17 20:46+0300\n"
 "Last-Translator: \n"
 "Language-Team: giorbak\n"
@@ -1054,6 +1054,9 @@ msgstr "Κατηγορία:"
 msgid "Change active movie player"
 msgstr "Αλλαγή ενεργής αναπαραγωγής ταινιών"
 
+msgid "Change folder icon"
+msgstr ""
+
 msgid "Change own pin"
 msgstr "Αλλαγή προσωπικού pin"
 
@@ -1465,6 +1468,9 @@ msgstr "Διαγραφή καταχώρησης"
 msgid "Delete favourites and watched status now"
 msgstr "Διαγραφή αγαπημένων και κατάστασης προβολής τώρα"
 
+msgid "Delete folder"
+msgstr ""
+
 msgid "Delete host order and groups now"
 msgstr "Διαγραφή σειράς host και ομάδων τώρα"
 
@@ -1494,6 +1500,10 @@ msgstr "Διαγραφή προσωρινής μνήμης υποτίτλων τ
 
 msgid "Delete the cache when the torrent is closed"
 msgstr "Διαγραφή της προσωρινής μνήμης κατά το κλείσιμο του torrent"
+
+#, python-format
+msgid "Delete the folder \"%s\"? Its hosts go back to the group."
+msgstr ""
 
 #, python-format
 msgid "Delete the folder \"%s\"? Its videos go back to the Watchlist."
@@ -2369,6 +2379,9 @@ msgstr "Επιβολή εσωτερικού θέματος: όλες οι οθό
 msgid "Force internal skin: main screen only"
 msgstr "Επιβολή εσωτερικού θέματος: μόνο η κύρια οθόνη"
 
+msgid "Force legacy grid"
+msgstr ""
+
 msgid "Foreign movies"
 msgstr "Ξένες ταινίες"
 
@@ -2597,6 +2610,9 @@ msgstr "Τρόμου"
 
 msgid "Host"
 msgstr "Host"
+
+msgid "Host titles in lists"
+msgstr ""
 
 #, python-format
 msgid "Host: %s"
@@ -3421,6 +3437,9 @@ msgstr "Η μετακίνηση απέτυχε."
 msgid "Move to Watchlist folder..."
 msgstr "Μετακίνηση σε φάκελο της λίστας προβολής..."
 
+msgid "Move to folder..."
+msgstr ""
+
 msgid "Movie"
 msgstr "Ταινία"
 
@@ -3571,6 +3590,9 @@ msgstr "Νέα καταχώρηση"
 
 msgid "New episodes"
 msgstr "Νέα επεισόδια"
+
+msgid "New folder..."
+msgstr ""
 
 msgid "New icons will not be available."
 msgstr "Δεν θα είναι διαθέσιμα νέα εικονίδια."
@@ -4477,6 +4499,9 @@ msgstr "Αφαίρεση από τη λίστα προβολής"
 msgid "Remove from favorites"
 msgstr "Αφαίρεση από τα αγαπημένα"
 
+msgid "Remove from folder"
+msgstr ""
+
 msgid "Remove group"
 msgstr "Αφαίρεση ομάδας"
 
@@ -4524,6 +4549,9 @@ msgstr "Να επαναφερθούν οι ρυθμίσεις του \"%s\" στ
 
 msgid "Reset this list to its default layout?"
 msgstr "Να επαναφερθεί αυτή η λίστα στην προεπιλεγμένη διάταξή της;"
+
+msgid "Reset this list to its default layout? Its folders are deleted too."
+msgstr ""
 
 msgid "Reset to defaults"
 msgstr "Επαναφορά προεπιλογών"
@@ -4783,6 +4811,9 @@ msgstr "Επιλογή αγαπημένης ομάδας"
 msgid "Select group"
 msgstr "Επιλογή ομάδας"
 
+msgid "Select hosts for this folder..."
+msgstr ""
+
 msgid "Select language"
 msgstr "Επιλογή γλώσσας"
 
@@ -4934,6 +4965,9 @@ msgstr "Ταινίες μικρού μήκους"
 
 msgid "Short films"
 msgstr "Ταινίες μικρού μήκους"
+
+msgid "Short name"
+msgstr ""
 
 msgid "Short series"
 msgstr "Σύντομες σειρές"
@@ -6499,6 +6533,9 @@ msgstr "Φάκελος λίστας προβολής"
 
 msgid "WebStreamr / AIOStreams manifest URL (your own):"
 msgstr "WebStreamr / AIOStreams manifest URL (δικό σας):"
+
+msgid "Website address"
+msgstr ""
 
 #, python-format
 msgid "Weeks on chart: %s"

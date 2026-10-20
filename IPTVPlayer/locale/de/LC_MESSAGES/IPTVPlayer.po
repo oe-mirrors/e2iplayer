@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-18 16:54+0000\n"
+"POT-Creation-Date: 2026-10-20 20:10+0000\n"
 "PO-Revision-Date: 2026-10-18 18:58+0200\n"
 "Last-Translator: Masta2002\n"
 "Language-Team: oATV Team\n"
@@ -1051,6 +1051,9 @@ msgstr "Kategorie:"
 msgid "Change active movie player"
 msgstr "Aktiven Movie Player wechseln"
 
+msgid "Change folder icon"
+msgstr ""
+
 msgid "Change own pin"
 msgstr "Eigenen PIN ändern"
 
@@ -1462,6 +1465,9 @@ msgstr "Eintrag löschen"
 msgid "Delete favourites and watched status now"
 msgstr "Favoriten und Gesehen-Status jetzt löschen"
 
+msgid "Delete folder"
+msgstr ""
+
 msgid "Delete host order and groups now"
 msgstr "Host-Reihenfolge und Gruppen jetzt löschen"
 
@@ -1491,6 +1497,10 @@ msgstr "Untertitel-Cache jetzt löschen"
 
 msgid "Delete the cache when the torrent is closed"
 msgstr "Cache löschen, wenn der Torrent geschlossen wird"
+
+#, python-format
+msgid "Delete the folder \"%s\"? Its hosts go back to the group."
+msgstr ""
 
 #, python-format
 msgid "Delete the folder \"%s\"? Its videos go back to the Watchlist."
@@ -2366,6 +2376,9 @@ msgstr "Erzwinge internen Skin: Alle E2iPlayer-Screens"
 msgid "Force internal skin: main screen only"
 msgstr "Erzwinge internen Skin: Nur Hauptscreen"
 
+msgid "Force legacy grid"
+msgstr ""
+
 msgid "Foreign movies"
 msgstr "Ausländische Filme"
 
@@ -2594,6 +2607,9 @@ msgstr "Horror"
 
 msgid "Host"
 msgstr "Host"
+
+msgid "Host titles in lists"
+msgstr ""
 
 #, python-format
 msgid "Host: %s"
@@ -3418,6 +3434,9 @@ msgstr "Verschieben ist fehlgeschlagen."
 msgid "Move to Watchlist folder..."
 msgstr "In Watchlist-Ordner verschieben..."
 
+msgid "Move to folder..."
+msgstr ""
+
 msgid "Movie"
 msgstr "Film"
 
@@ -3568,6 +3587,9 @@ msgstr "Neuer Eintrag"
 
 msgid "New episodes"
 msgstr "Neue Episoden"
+
+msgid "New folder..."
+msgstr ""
 
 msgid "New icons will not be available."
 msgstr "Neue Icons werden nicht verfügbar sein."
@@ -4474,6 +4496,9 @@ msgstr "Aus der Watchlist entfernen"
 msgid "Remove from favorites"
 msgstr "Von Favoriten entfernen"
 
+msgid "Remove from folder"
+msgstr ""
+
 msgid "Remove group"
 msgstr "Gruppe entfernen"
 
@@ -4521,6 +4546,9 @@ msgstr "Die Einstellungen von \"%s\" auf die Standardwerte zurücksetzen?"
 
 msgid "Reset this list to its default layout?"
 msgstr "Diese Liste auf die Standardanordnung zurücksetzen?"
+
+msgid "Reset this list to its default layout? Its folders are deleted too."
+msgstr ""
 
 msgid "Reset to defaults"
 msgstr "Auf Standard zurücksetzen"
@@ -4780,6 +4808,9 @@ msgstr "Wählen Sie die Favoriten Gruppe"
 msgid "Select group"
 msgstr "Wähle Gruppe"
 
+msgid "Select hosts for this folder..."
+msgstr ""
+
 msgid "Select language"
 msgstr "Wähle Sprache"
 
@@ -4931,6 +4962,9 @@ msgstr "Kurzfilme"
 
 msgid "Short films"
 msgstr "Kurzfilme"
+
+msgid "Short name"
+msgstr ""
 
 msgid "Short series"
 msgstr "Kurzserien"
@@ -6498,6 +6532,9 @@ msgstr "Watchlist-Ordner"
 
 msgid "WebStreamr / AIOStreams manifest URL (your own):"
 msgstr "WebStreamr / AIOStreams-Manifest-URL (Ihre eigene):"
+
+msgid "Website address"
+msgstr ""
 
 #, python-format
 msgid "Weeks on chart: %s"

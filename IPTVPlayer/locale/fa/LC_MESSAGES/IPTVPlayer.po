@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-18 16:54+0000\n"
+"POT-Creation-Date: 2026-10-20 20:10+0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Persian Prince <persianpros@gmail.com>\n"
 "Language-Team: IPTVPlayer\n"
@@ -1051,6 +1051,9 @@ msgstr "دسته:"
 msgid "Change active movie player"
 msgstr "تغییر پخش‌کنندهٔ فعال فیلم"
 
+msgid "Change folder icon"
+msgstr ""
+
 msgid "Change own pin"
 msgstr "تغییر PIN شخصی"
 
@@ -1462,6 +1465,9 @@ msgstr "حذف مورد"
 msgid "Delete favourites and watched status now"
 msgstr "حذف علاقه‌مندی‌ها و وضعیت تماشا اکنون"
 
+msgid "Delete folder"
+msgstr ""
+
 msgid "Delete host order and groups now"
 msgstr "حذف ترتیب میزبان‌ها و گروه‌ها اکنون"
 
@@ -1490,6 +1496,10 @@ msgid "Delete subtitles cache now"
 msgstr "حذف حافظهٔ نهان زیرنویس اکنون"
 
 msgid "Delete the cache when the torrent is closed"
+msgstr ""
+
+#, python-format
+msgid "Delete the folder \"%s\"? Its hosts go back to the group."
 msgstr ""
 
 #, python-format
@@ -2366,6 +2376,9 @@ msgstr "اجبار پوسته داخلی: همه صفحه‌های E2iPlayer"
 msgid "Force internal skin: main screen only"
 msgstr "اجبار پوسته داخلی: فقط صفحه اصلی"
 
+msgid "Force legacy grid"
+msgstr ""
+
 msgid "Foreign movies"
 msgstr "فیلم‌های خارجی"
 
@@ -2594,6 +2607,9 @@ msgstr "ترسناک"
 
 msgid "Host"
 msgstr "میزبان"
+
+msgid "Host titles in lists"
+msgstr ""
 
 #, python-format
 msgid "Host: %s"
@@ -3418,6 +3434,9 @@ msgstr "جابجایی ناموفق بود."
 msgid "Move to Watchlist folder..."
 msgstr ""
 
+msgid "Move to folder..."
+msgstr ""
+
 msgid "Movie"
 msgstr "فیلم"
 
@@ -3568,6 +3587,9 @@ msgstr "مورد جدید"
 
 msgid "New episodes"
 msgstr "قسمت‌های جدید"
+
+msgid "New folder..."
+msgstr ""
 
 msgid "New icons will not be available."
 msgstr "آیکون‌های جدید در دسترس نخواهند بود."
@@ -4472,6 +4494,9 @@ msgstr ""
 msgid "Remove from favorites"
 msgstr "حذف از علاقه‌مندی‌ها"
 
+msgid "Remove from folder"
+msgstr ""
+
 msgid "Remove group"
 msgstr "حذف گروه"
 
@@ -4519,6 +4544,9 @@ msgstr ""
 
 msgid "Reset this list to its default layout?"
 msgstr "این فهرست به چیدمان پیش‌فرض بازنشانی شود؟"
+
+msgid "Reset this list to its default layout? Its folders are deleted too."
+msgstr ""
 
 msgid "Reset to defaults"
 msgstr "بازنشانی به پیش‌فرض"
@@ -4778,6 +4806,9 @@ msgstr "انتخاب گروه علاقه‌مندی‌ها"
 msgid "Select group"
 msgstr "انتخاب گروه"
 
+msgid "Select hosts for this folder..."
+msgstr ""
+
 msgid "Select language"
 msgstr "انتخاب زبان"
 
@@ -4928,6 +4959,9 @@ msgid "Short Movies"
 msgstr "فیلم‌های کوتاه"
 
 msgid "Short films"
+msgstr ""
+
+msgid "Short name"
 msgstr ""
 
 msgid "Short series"
@@ -6485,6 +6519,9 @@ msgid "Watchlist folder"
 msgstr ""
 
 msgid "WebStreamr / AIOStreams manifest URL (your own):"
+msgstr ""
+
+msgid "Website address"
 msgstr ""
 
 #, python-format
