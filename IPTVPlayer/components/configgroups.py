@@ -7,7 +7,7 @@
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetHostTitle
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetHostTitle, GetHostListTitle
 from Plugins.Extensions.IPTVPlayer.components.configbase import ConfigBaseWidget
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.tools.iptvhostgroups import IPTVHostsGroups, IsFolderKey
@@ -195,7 +195,8 @@ class ConfigGroupFolderMenu(ConfigBaseWidget):
         for host, folderTitle in rows + others:
             if host in self.hosts:
                 continue
-            title = GetHostTitle(host) or host
+            # as in the list view: "title (key)", the title as set in "Host titles in lists"
+            title = '%s (%s)' % (GetHostListTitle(GetHostTitle(host) or host), host)
             if folderTitle:
                 title = '%s  [%s]' % (title, folderTitle)
             optionEntry = ConfigYesNo(default=host in inFolder)

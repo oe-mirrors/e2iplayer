@@ -25,7 +25,7 @@ from Plugins.Extensions.IPTVPlayer.components.cover import Cover3
 from Plugins.Extensions.IPTVPlayer.components.iptvchoicebox import IPTVChoiceBoxWidget, IPTVChoiceBoxItem, openChoiceBox
 from Plugins.Extensions.IPTVPlayer.components.iptvlist import IPTVRadioButtonList, fitPixmapInBox, IPTVPlayerSelectorContextMenuChoiceBoxList
 from Plugins.Extensions.IPTVPlayer.components import skinchrome
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIPTVPlayerVersion, GetIconDir, GetLogoDir, GetAvailableIconSize, GetHostOrderDir, GetHostInfo, GetHostTitle
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIPTVPlayerVersion, GetIconDir, GetLogoDir, GetAvailableIconSize, GetHostOrderDir, GetHostInfo, GetHostTitle, GetHostListTitle
 from Plugins.Extensions.IPTVPlayer.tools.iptvhostgroups import IsFolderKey
 from Plugins.Extensions.IPTVPlayer.__init__ import _, GRIDSUPPORT
 
@@ -693,7 +693,7 @@ class _PlayerSelectorListMode:
         # shows/hides matches for this one search - it never touches
         # currList/pixmapList/outList itself, so reordering and the
         # group's persisted host list are completely unaffected
-        options = [IPTVChoiceBoxItem(name if IsFolderKey(hostKey) else "%s (%s)" % (name, hostKey), self._itemIconKey(hostKey), idx) for name, hostKey, idx in matches]
+        options = [IPTVChoiceBoxItem(name if IsFolderKey(hostKey) else "%s (%s)" % (GetHostListTitle(name), hostKey), self._itemIconKey(hostKey), idx) for name, hostKey, idx in matches]
         self._showSearchResults(options, [self._itemLabel(hostKey) for _name, hostKey, _idx in matches])
 
     def _showSearchResults(self, options, labels):
@@ -950,9 +950,10 @@ class _PlayerSelectorListMode:
         return ''
 
     def _itemDisplayName(self, name, key):
-        # list views: "name (key)" for a host, a folder with its name only
+        # list views: "name (key)" for a host (web address or short name, GetHostListTitle()), a folder
+        # with its name only
         if key and self["grid"].showHostKey and not IsFolderKey(key):
-            return "%s (%s)" % (name, key)
+            return "%s (%s)" % (GetHostListTitle(name), key)
         return name
 
     def _sortKey(self, item):
@@ -971,7 +972,7 @@ class _PlayerSelectorListMode:
                 for hostName in self.groupObj.getFolderHosts(self.groupName, folder['key']):
                     title = GetHostTitle(hostName) or hostName
                     if query in title.lower() or query in hostName.lower():
-                        matches.append(('%s [%s]' % (title, folder['title']), hostName, (title, hostName)))
+                        matches.append(('%s [%s]' % (GetHostListTitle(title), folder['title']), hostName, (title, hostName)))
         except Exception:
             printExc()
         return matches

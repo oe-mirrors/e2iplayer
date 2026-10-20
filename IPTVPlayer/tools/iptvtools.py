@@ -1504,6 +1504,24 @@ def _getFileKey(path):
         return None
 
 
+_HOST_TITLE_URL_RE = re.compile(r'^https?://(?:www\.)?([^\s?#]+?)/?$')
+
+
+def GetHostListTitle(title):
+    # a host's title in the host lists (list view, simple list, search results, folder tick list): with
+    # "Host titles in lists" = "Short name" a web address title is shown without "https://", "www." and the
+    # closing "/" ("https://www.arte.tv/" -> "arte.tv", "https://www.dr.dk/drtv/" -> "dr.dk/drtv");
+    # names ("ARADrama") always stay as they are
+    try:
+        if config.plugins.iptvplayer.host_list_titles.value == "short":
+            match = _HOST_TITLE_URL_RE.match(title.strip())
+            if match:
+                return match.group(1)
+    except AttributeError:
+        pass  # option not defined yet (iptvconfig not loaded) or no text title
+    return title
+
+
 def GetHostTitle(hostName):
     # gettytul() of a host without loading the host; None when the host is
     # broken (only noticed if its title needs the import). Installs with

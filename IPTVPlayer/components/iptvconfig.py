@@ -59,6 +59,9 @@ config.plugins.iptvplayer.showinMainMenu = ConfigYesNo(default=False)
 config.plugins.iptvplayer.showinSystemMenu = ConfigYesNo(default=True)
 # config.plugins.iptvplayer.ListaGraficzna = ConfigYesNo(default=True)
 config.plugins.iptvplayer.group_hosts = ConfigYesNo(default=True)
+# host titles in the host lists (list view, simple list, search results, folder tick list): most hosts
+# have their web address as title - "short" shows it without "https://", "www." and the closing "/"
+config.plugins.iptvplayer.host_list_titles = ConfigSelection(default="url", choices=[("url", _("Website address")), ("short", _("Short name"))])
 # layout of the settings screen itself: a list of categories that each open their own rows (default,
 # see ConfigMenu) or the one long list it always was before
 config.plugins.iptvplayer.configMenuView = ConfigSelection(default="categories", choices=[("list", _("Long list")), ("categories", _("Categories"))])
