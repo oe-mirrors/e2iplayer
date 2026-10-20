@@ -324,6 +324,8 @@ class ConfigMenu(ConfigBaseWidget):
         # if config.plugins.iptvplayer.ListaGraficzna.value is True:
         list.append(getConfigListEntry(_("Hosts list type"), config.plugins.iptvplayer.hostsListType))
         list.append(getConfigListEntry("    " + _("Enable hosts groups"), config.plugins.iptvplayer.group_hosts))
+        # also in the grid view: search results and "Select hosts for this folder..." are lists
+        list.append(getConfigListEntry("    " + _("Host titles in lists"), config.plugins.iptvplayer.host_list_titles))
         if config.plugins.iptvplayer.hostsListType.value == "G":
             list.append(getConfigListEntry("    " + _("Service icon size"), config.plugins.iptvplayer.IconsSize))
             if GRIDSUPPORT_NATIVE:
