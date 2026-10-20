@@ -237,6 +237,9 @@ def _defaultIconsSize():
 config.plugins.iptvplayer.IconsSize = ConfigSelection(default=_defaultIconsSize(), choices=[("100", "100x100"), ("120", "120x120"), ("135", "135x135")])
 config.plugins.iptvplayer.numOfRow = ConfigSelection(default="0", choices=[("1", "1"), ("2", "2"), ("3", "3"), ("4", "4"), ("0", "auto")])
 config.plugins.iptvplayer.numOfCol = ConfigSelection(default="0", choices=[("1", "1"), ("2", "2"), ("3", "3"), ("4", "4"), ("5", "5"), ("6", "6"), ("7", "7"), ("8", "8"), ("0", "auto")])
+# images with the native grid list (GRIDSUPPORT): the older hand-made icon grid instead. __init__.py reads
+# it straight from the settings file when the plugin is loaded - takes effect after a GUI restart
+config.plugins.iptvplayer.force_legacy_grid = ConfigYesNo(default=False)
 
 config.plugins.iptvplayer.skinforceinternal = ConfigYesNo(default=False)
 # "all screens" variant of skinforceinternal: also drives openChoiceBox()

@@ -25,8 +25,12 @@ from Plugins.Extensions.IPTVPlayer.components.cover import Cover3
 from Plugins.Extensions.IPTVPlayer.components.iptvchoicebox import IPTVChoiceBoxWidget, IPTVChoiceBoxItem, openChoiceBox
 from Plugins.Extensions.IPTVPlayer.components.iptvlist import IPTVRadioButtonList, fitPixmapInBox, IPTVPlayerSelectorContextMenuChoiceBoxList
 from Plugins.Extensions.IPTVPlayer.components import skinchrome
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIPTVPlayerVersion, GetIconDir, GetLogoDir, GetAvailableIconSize, GetHostOrderDir, GetHostInfo
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIPTVPlayerVersion, GetIconDir, GetLogoDir, GetAvailableIconSize, GetHostOrderDir, GetHostInfo, GetHostTitle
+from Plugins.Extensions.IPTVPlayer.tools.iptvhostgroups import IsFolderKey
 from Plugins.Extensions.IPTVPlayer.__init__ import _, GRIDSUPPORT
+
+# icons a folder inside a group can get (group icons of PlayerSelector/groups/), "folder" is the plain one
+_FOLDER_ICONS = ('folder', 'moviesandseries', 'cartoonsandanime', 'documentary', 'sport', 'music', 'live', 'iptv', 'science', 'worldwide', 'others')
 
 
 def _getSearchResultItemHeight(screenwidth):
@@ -84,16 +88,30 @@ def _getSearchResultsHeight(numItems):
 # fixed pixel size regardless of tier (see the HD/FHD/WQHD skin strings
 # below). Shared by both grid screens that use this exact cell shape
 # (PlayerSelectorWidget's own grid mode and SearchResultGridWidget).
+# Row tuple: (pixmap, name, idx, key, label) - the label (index 4) is the name
+# of an own folder written over the lower part of its icon, "" for every
+# other entry, drawn twice: black 2 px down/right as a shadow, then white.
+# The texts end where the icon ends (the widest element of a mode must stay
+# the pixmap, XmlMultiContent turns a widest text into a "rest of the row"
+# width). No textBorderColor: XmlMultiContent passes it on as a string,
+# which eListboxPythonMultiContent reads as a row-data colour index
+# (IndexError on every repaint).
 _GRID_TEMPLATES = """<templates>
-                        <template name="Default" fonts="Regular;20">
+                        <template name="Default" fonts="Regular;19,Regular;22,Regular;25">
                             <mode name="default" itemHeight="145" itemWidth="145">
                                 <pixmap index="0" position="22,22" size="100,100" alpha="blend" scale="centerScaled" />
+                                <text index="4" position="24,72" size="98,50" font="0" horizontalAlignment="center" verticalAlignment="bottom" wrap="wrap" foregroundColor="#000000" foregroundColorSelected="#000000" />
+                                <text index="4" position="22,70" size="100,50" font="0" horizontalAlignment="center" verticalAlignment="bottom" wrap="wrap" foregroundColor="#ffffff" foregroundColorSelected="#ffffff" />
                             </mode>
                             <mode name="120" itemHeight="165" itemWidth="165">
                                 <pixmap index="0" position="22,22" size="120,120" alpha="blend" scale="centerScaled" />
+                                <text index="4" position="24,84" size="118,58" font="1" horizontalAlignment="center" verticalAlignment="bottom" wrap="wrap" foregroundColor="#000000" foregroundColorSelected="#000000" />
+                                <text index="4" position="22,82" size="120,58" font="1" horizontalAlignment="center" verticalAlignment="bottom" wrap="wrap" foregroundColor="#ffffff" foregroundColorSelected="#ffffff" />
                             </mode>
                             <mode name="135" itemHeight="180" itemWidth="180">
                                 <pixmap index="0" position="22,22" size="135,135" alpha="blend" scale="centerScaled" />
+                                <text index="4" position="24,93" size="133,64" font="2" horizontalAlignment="center" verticalAlignment="bottom" wrap="wrap" foregroundColor="#000000" foregroundColorSelected="#000000" />
+                                <text index="4" position="22,91" size="135,64" font="2" horizontalAlignment="center" verticalAlignment="bottom" wrap="wrap" foregroundColor="#ffffff" foregroundColorSelected="#ffffff" />
                             </mode>
                         </template>
                     </templates>"""
@@ -278,6 +296,8 @@ def _getHostInfoText(key):
     # session; empty for groups and "config".
     if key in _HOST_INFO_CACHE:
         return _HOST_INFO_CACHE[key]
+    if IsFolderKey(key):
+        return ""
     text = ""
     try:
         parts = []
@@ -610,7 +630,7 @@ class _PlayerSelectorListMode:
             return
 
         idx = self["grid"].getSelectedIndex()
-        PlayerSelectorWidget.LAST_SELECTION[self.groupName] = idx
+        PlayerSelectorWidget.LAST_SELECTION[self.lastSelectionKey] = idx
 
         if idx < self.numOfItems:
             self.close(self.currList[idx])
@@ -646,7 +666,11 @@ class _PlayerSelectorListMode:
         if not isinstance(ret, IPTVChoiceBoxItem):
             return
         idx = ret.privateData
-        PlayerSelectorWidget.LAST_SELECTION[self.groupName] = idx
+        if isinstance(idx, tuple):
+            # a host inside one of the group's folders (_folderHostMatches)
+            self.close(idx)
+            return
+        PlayerSelectorWidget.LAST_SELECTION[self.lastSelectionKey] = idx
         self.close(self.currList[idx])
 
     def _getSearchResultsHeight(self, numItems):
@@ -729,8 +753,10 @@ class _PlayerSelectorListMode:
         if self.currList:
             options = []
             selItem = self.getSelectedItem()
-            if not self.simpleListMode and self.groupObj is not None and selItem is not None and len(self.groupObj.getGroupsWithoutHost(selItem[1])):
+            selFolder = selItem is not None and IsFolderKey(selItem[1])
+            if not self.simpleListMode and not selFolder and self.groupObj is not None and selItem is not None and len(self.groupObj.getGroupsWithoutHost(selItem[1])):
                 options.append((_("Add host %s to group") % selItem[0], "ADD_HOST_TO_GROUP"))
+            options.extend(self._folderOptions(selItem))
 
             if not self.simpleListMode:
                 # ids split into :ON/:OFF for
@@ -753,17 +779,18 @@ class _PlayerSelectorListMode:
                 elif self.groupName in ['selectgroup']:
                     options.append((_("Disable/Enable groups"), "config_groups"))
                 # only offered once this view actually has a persisted
-                # order / hidden-group state to undo (see _hasCustomizedLayout)
-                if self._hasCustomizedLayout():
+                # order / hidden-group state to undo (see _hasCustomizedLayout);
+                # not inside a folder - it resets the whole group
+                if self._hasCustomizedLayout() and not self.folderKey:
                     options.append((_("Reset to defaults"), "reset_group"))
 
-            if not self.simpleListMode:
+            if not self.simpleListMode and selItem is not None:
                 if self.groupName == 'selecthost':
                     pass
                 elif self.groupName == 'selectgroup':
                     if selItem[1] not in ['update', 'config', 'all']:
                         options.append((_('Hide "%s" group') % selItem[0], "DEL_ITEM"))
-                elif self.groupName not in ['all']:
+                elif self.groupName not in ['all'] and not selFolder:
                     options.append((_('Remove "%s" item') % selItem[0], "DEL_ITEM"))
 
             options.append((_("Settings"), "SETTINGS"))
@@ -788,9 +815,11 @@ class _PlayerSelectorListMode:
         if not isinstance(item, IPTVChoiceBoxItem):
             return
         idx = item.privateData
-        if idx >= self.numOfItems:
+        if not isinstance(idx, int) or idx >= self.numOfItems:
             return
         selItem = self.currList[idx]
+        if IsFolderKey(selItem[1]):
+            return
         options = []
         if self.groupObj is not None and len(self.groupObj.getGroupsWithoutHost(selItem[1])):
             options.append((_("Add host %s to group") % selItem[0], "ADD_HOST_TO_GROUP"))
@@ -845,7 +874,188 @@ class _PlayerSelectorListMode:
             ret = ret.privateData
             self.groupObj.addHostToGroup(ret, selItem[1])
 
-    def _initListMode(self, session, inList, outList, numOfLockedItems, groupName, groupObj, groupDisplayName):
+    # own folders inside a group: the entries "folder:<id>" of the group view (iptvhostgroups.py). Every
+    # change closes this screen with ('', 'FOLDER_ACTION', {...}) - E2iPlayerWidget saves the order shown
+    # here first, then does the change and opens the group / folder again
+
+    def _foldersEnabled(self):
+        # inside a real group - not the group list, the single host list or "All"
+        return self.groupObj is not None and self.groupName not in ('', 'selectgroup', 'selecthost', 'all')
+
+    def _itemIconKey(self, key):
+        # the icon/logo key of a list entry: a folder shows its own icon or the plain folder icon
+        if IsFolderKey(key):
+            try:
+                folder = self.groupObj.getFolder(self.groupName, key) if self.groupObj is not None else None
+                if folder is not None and folder.get('icon') in _FOLDER_ICONS:
+                    return folder['icon']
+            except Exception:
+                printExc()
+            return 'folder'
+        return key
+
+    def _itemIcon(self, key, iconSize):
+        return _getPlayerSelectorIcon(self._itemIconKey(key), iconSize)
+
+    def _itemLabel(self, key):
+        # the text over a grid icon: an own folder's name while it shows the plain folder icon (the group
+        # icons carry their own label), nothing for every other entry
+        if IsFolderKey(key) and self.groupObj is not None and self._itemIconKey(key) == 'folder':
+            try:
+                folder = self.groupObj.getFolder(self.groupName, key)
+                if folder is not None:
+                    return folder['title']
+            except Exception:
+                printExc()
+        return ''
+
+    def _itemDisplayName(self, name, key):
+        # list views: "name (key)" for a host, a folder with its name only
+        if key and self["grid"].showHostKey and not IsFolderKey(key):
+            return "%s (%s)" % (name, key)
+        return name
+
+    def _sortKey(self, item):
+        # "Sort by name": folders first (by their name), then the hosts (by key)
+        if IsFolderKey(item[1]):
+            return (0, item[0].lower())
+        return (1, item[1])
+
+    def _folderHostMatches(self, query):
+        # BLUE "Search" in the group view also finds the hosts inside its folders: (title, key, (title, key))
+        matches = []
+        if not self._foldersEnabled() or self.folderKey:
+            return matches
+        try:
+            for folder in self.groupObj.getFolders(self.groupName):
+                for hostName in self.groupObj.getFolderHosts(self.groupName, folder['key']):
+                    title = GetHostTitle(hostName) or hostName
+                    if query in title.lower() or query in hostName.lower():
+                        matches.append(('%s [%s]' % (title, folder['title']), hostName, (title, hostName)))
+        except Exception:
+            printExc()
+        return matches
+
+    def _resetMessage(self):
+        if self._foldersEnabled() and self.groupObj.getFolders(self.groupName):
+            return _("Reset this list to its default layout? Its folders are deleted too.")
+        return _("Reset this list to its default layout?")
+
+    def _folderOptions(self, selItem):
+        if not self._foldersEnabled():
+            return []
+        options = []
+        if selItem is not None and IsFolderKey(selItem[1]):
+            options.append((_("Select hosts for this folder..."), "FOLDER_SELECT"))
+            options.append((_("Rename"), "FOLDER_RENAME"))
+            options.append((_("Change folder icon"), "FOLDER_ICON"))
+            options.append((_("Delete folder"), "FOLDER_DELETE"))
+        elif selItem is not None:
+            options.append((_("Move to folder..."), "FOLDER_MOVE"))
+            if self.folderKey:
+                options.append((_("Remove from folder"), "FOLDER_OUT"))
+        if self.folderKey:
+            options.append((_("Select hosts for this folder..."), "FOLDER_SELECT"))
+        else:
+            options.append((_("New folder..."), "FOLDER_NEW"))
+        return options
+
+    def _folderOption(self, option):
+        selItem = self.getSelectedItem()
+        selFolder = None
+        if selItem is not None and IsFolderKey(selItem[1]):
+            selFolder = self.groupObj.getFolder(self.groupName, selItem[1])
+        if option == "FOLDER_NEW":
+            self._askFolderName(_("New folder..."), '', boundFunction(self._newFolderCallback, []))
+        elif option == "FOLDER_MOVE" and selItem is not None and selFolder is None:
+            self._moveToFolderMenu([selItem[1]])
+        elif option == "FOLDER_OUT" and selItem is not None and selFolder is None:
+            self._closeWithFolderAction({'op': 'move', 'hosts': [selItem[1]], 'key': None})
+        elif option == "FOLDER_SELECT":
+            key = selFolder['key'] if selFolder is not None else self.folderKey
+            if key:
+                self._closeWithFolderAction({'op': 'select', 'key': key})
+        elif selFolder is None:
+            return
+        elif option == "FOLDER_RENAME":
+            self._askFolderName(_("Rename"), selFolder['title'], boundFunction(self._renameFolderCallback, selFolder['key']))
+        elif option == "FOLDER_ICON":
+            # the group icons with the names of their groups, the plain folder icon as "Default"
+            titles = self.groupObj.PREDEFINED_GROUPS_TITLES
+            items = [IPTVChoiceBoxItem(name=_("Default") if icon == 'folder' else titles.get(icon, icon), description=icon, privateData=icon) for icon in _FOLDER_ICONS]
+            current = self._itemIconKey(selFolder['key'])
+            self._openFolderChoiceBox(_("Change folder icon"), items, _FOLDER_ICONS.index(current) if current in _FOLDER_ICONS else 0, boundFunction(self._folderIconCallback, selFolder['key']))
+        elif option == "FOLDER_DELETE":
+            message = _('Delete the folder "%s"? Its hosts go back to the group.') % selFolder['title']
+            self.session.openWithCallback(boundFunction(self._deleteFolderCallback, selFolder['key']), MessageBox, text=message, type=MessageBox.TYPE_YESNO)
+
+    def _closeWithFolderAction(self, action):
+        self.close(('', 'FOLDER_ACTION', action))
+
+    def _askFolderName(self, title, text, callback):
+        from Plugins.Extensions.IPTVPlayer.components.e2ivkselector import GetVirtualKeyboard
+        self.session.openWithCallback(callback, GetVirtualKeyboard(), title=title, text=text)
+
+    def _checkFolderName(self, name, ownKey=None):
+        # -> the name to use, or None (empty / another folder of this group has it already)
+        if not isinstance(name, str):
+            return None
+        name = name.strip()
+        if not name:
+            self.session.open(MessageBox, _("Name cannot be empty."), type=MessageBox.TYPE_INFO, timeout=5)
+            return None
+        for folder in self.groupObj.getFolders(self.groupName):
+            if folder['key'] != ownKey and folder['title'].lower() == name.lower():
+                self.session.open(MessageBox, _('A folder "%s" exists already.') % name, type=MessageBox.TYPE_INFO, timeout=5)
+                return None
+        return name
+
+    def _newFolderCallback(self, hosts, name=None):
+        name = self._checkFolderName(name)
+        if name is not None:
+            self._closeWithFolderAction({'op': 'new', 'title': name, 'hosts': hosts})
+
+    def _renameFolderCallback(self, key, name=None):
+        name = self._checkFolderName(name, key)
+        if name is not None:
+            self._closeWithFolderAction({'op': 'rename', 'key': key, 'title': name})
+
+    def _folderIconCallback(self, key, ret=None):
+        if ret:
+            self._closeWithFolderAction({'op': 'icon', 'key': key, 'icon': ret.privateData})
+
+    def _deleteFolderCallback(self, key, ret=None):
+        if ret:
+            self._closeWithFolderAction({'op': 'delete', 'key': key})
+
+    def _moveToFolderMenu(self, hosts):
+        # "Move to folder...": a new folder, the folders of the group (logo = their icon), out of the folder
+        # logos/groups/foldernewlogo.png, folderoutlogo.png
+        items = [IPTVChoiceBoxItem(name=_("New folder..."), description='foldernew', privateData='__new__')]
+        for folder in self.groupObj.getFolders(self.groupName):
+            if folder['key'] != self.folderKey:
+                items.append(IPTVChoiceBoxItem(name=folder['title'], description=self._itemIconKey(folder['key']), privateData=folder['key']))
+        if self.folderKey:
+            items.append(IPTVChoiceBoxItem(name=_("Remove from folder"), description='folderout', privateData='__out__'))
+        currentIdx = 1 if len(items) > 1 and IsFolderKey(items[1].privateData) else 0
+        self._openFolderChoiceBox(_("Move to folder..."), items, currentIdx, boundFunction(self._moveToFolderCallback, hosts))
+
+    def _openFolderChoiceBox(self, title, items, currentIdx, callback):
+        # rows with a logo in front of the name (logos/groups/<description>logo.png), as "Select group"
+        openChoiceBox(self.session, {'width': 550, 'height': _getSearchResultsHeight(len(items)), 'current_idx': currentIdx, 'title': title, 'options': items, 'list_class': IPTVHostSearchResultList, 'chrome': True, 'footerMargin': 136}, callback)
+
+    def _moveToFolderCallback(self, hosts, ret=None):
+        if not ret:
+            return
+        target = ret.privateData
+        if target == '__new__':
+            self._askFolderName(_("New folder..."), '', boundFunction(self._newFolderCallback, hosts))
+        elif target == '__out__':
+            self._closeWithFolderAction({'op': 'move', 'hosts': hosts, 'key': None})
+        else:
+            self._closeWithFolderAction({'op': 'move', 'hosts': hosts, 'key': target})
+
+    def _initListMode(self, session, inList, outList, numOfLockedItems, groupName, groupObj, groupDisplayName, folderKey=None):
         # Shared List-view/Simple-list constructor for BOTH
         # PlayerSelectorWidget variants. List/Simple-list mode never uses
         # any real GRIDSUPPORT-exclusive skin feature (plain
@@ -868,11 +1078,13 @@ class _PlayerSelectorListMode:
         self.outList = outList
         self.groupName = groupName
         self.groupObj = groupObj
+        self.folderKey = folderKey
+        self.lastSelectionKey = groupName + '/' + folderKey if folderKey else groupName
         self.numOfLockedItems = numOfLockedItems
         self.reorderingMode = False
         self.reorderingItemSelected = False
         self.moveIndex = -1
-        self.lastSelection = PlayerSelectorWidget.LAST_SELECTION.get(self.groupName, 0)
+        self.lastSelection = PlayerSelectorWidget.LAST_SELECTION.get(self.lastSelectionKey, 0)
         # placeholder, not real icons - list mode's own (inherited)
         # buildEntry() never reads the pixmap field of its content tuples
         # at all, but GRIDSUPPORT's OWN updateIcons()/deleteItemAt()/
@@ -971,7 +1183,7 @@ if GRIDSUPPORT:
     class PlayerSelectorWidget(_PlayerSelectorListMode, Screen):
         LAST_SELECTION = {}
 
-        def __init__(self, session, inList, outList, numOfLockedItems=0, groupName='', groupObj=None, groupDisplayName=None):
+        def __init__(self, session, inList, outList, numOfLockedItems=0, groupName='', groupObj=None, groupDisplayName=None, folderKey=None):
             printDBG("PlayerSelectorWidget.__init__ --------------------------------")
             self.iconSize = GetAvailableIconSize()
             # "S" (List view) and "P" (Simple list) both use the list skin
@@ -986,7 +1198,7 @@ if GRIDSUPPORT:
                 # Icon-grid mode (the rest of this method) is the only
                 # mode that actually needs this class to differ from
                 # Legacy's.
-                self._initListMode(session, inList, outList, numOfLockedItems, groupName, groupObj, groupDisplayName)
+                self._initListMode(session, inList, outList, numOfLockedItems, groupName, groupObj, groupDisplayName, folderKey)
                 self.onClose.append(self.__onClose)
                 return
             screenwidth = getDesktop(0).size().width()
@@ -999,16 +1211,18 @@ if GRIDSUPPORT:
 
             self.groupName = groupName
             self.groupObj = groupObj
+            self.folderKey = folderKey
+            self.lastSelectionKey = groupName + '/' + folderKey if folderKey else groupName
             self.numOfLockedItems = numOfLockedItems
             self.reorderingMode = False
             self.reorderingItemSelected = False
 
-            self.lastSelection = PlayerSelectorWidget.LAST_SELECTION.get(self.groupName, 0)
+            self.lastSelection = PlayerSelectorWidget.LAST_SELECTION.get(self.lastSelectionKey, 0)
 
             # load icons
             self.pixmapList = []
             for idx in range(self.numOfItems):
-                icon = _getPlayerSelectorIcon(self.currList[idx][1], self.iconSize)
+                icon = self._itemIcon(self.currList[idx][1], self.iconSize)
                 self.pixmapList.append(LoadPixmap(icon))
 
             # grid content geometry (statustext/categorytext/grid position,
@@ -1075,8 +1289,8 @@ if GRIDSUPPORT:
                 items = []
                 for idx in range(self.numOfItems):
                     name, key = self.currList[idx][0], self.currList[idx][1]
-                    displayName = "%s (%s)" % (name, key) if (key and self["grid"].showHostKey) else name
-                    items.append((IPTVChoiceBoxItem(name=displayName, description=key, privateData=idx),))
+                    displayName = self._itemDisplayName(name, key)
+                    items.append((IPTVChoiceBoxItem(name=displayName, description=self._itemIconKey(key), privateData=idx),))
                 self["grid"].updateList(items)
                 return
             if self.simpleListMode:
@@ -1086,15 +1300,15 @@ if GRIDSUPPORT:
                 items = []
                 for idx in range(self.numOfItems):
                     name, key = self.currList[idx][0], self.currList[idx][1]
-                    displayName = "%s (%s)" % (name, key) if (key and self["grid"].showHostKey) else name
-                    items.append((IPTVChoiceBoxItem(name=displayName, description=key, privateData=idx),))
+                    displayName = self._itemDisplayName(name, key)
+                    items.append((IPTVChoiceBoxItem(name=displayName, description=self._itemIconKey(key), privateData=idx),))
                 self["grid"].updateList(items)
                 return
             # Icon-grid mode (Components.Sources.List, its own <templates>
-            # block) needs the 4-tuple shape (pixmap/name/idx/key)
+            # block) needs the 5-tuple shape (pixmap/name/idx/key/label)
             items = []
             for idx in range(0, self.numOfItems):
-                items.append((self.pixmapList[idx], self.currList[idx][0], idx, self.currList[idx][1]))
+                items.append((self.pixmapList[idx], self.currList[idx][0], idx, self.currList[idx][1], self._itemLabel(self.currList[idx][1])))
 
             self["grid"].updateList(items)
 
@@ -1110,7 +1324,7 @@ if GRIDSUPPORT:
             except Exception:
                 printExc()
             idx = self["grid"].getSelectedIndex()
-            PlayerSelectorWidget.LAST_SELECTION[self.groupName] = idx
+            PlayerSelectorWidget.LAST_SELECTION[self.lastSelectionKey] = idx
 
         def keyUp(self):
             # explicit up/down bindings instead of relying on eListbox's
@@ -1168,12 +1382,12 @@ if GRIDSUPPORT:
                     self.moveIndex = -1
                     self.reorderingMode = False
                     beforeOrder = [x[1] for x in self.currList]
-                    self.currList = sorted(self.currList, key=lambda x: x[1])
+                    self.currList = sorted(self.currList, key=self._sortKey)
                     if [x[1] for x in self.currList] != beforeOrder:
                         self._markLayoutDirty()
                     self.pixmapList = []
                     for idx in range(self.numOfItems):
-                        icon = _getPlayerSelectorIcon(self.currList[idx][1], self.iconSize)
+                        icon = self._itemIcon(self.currList[idx][1], self.iconSize)
                         self.pixmapList.append(LoadPixmap(icon))
                     self.reInitDisplayList()
                 elif ret in ("CHANGE_REORDERING_MODE:ON", "CHANGE_REORDERING_MODE:OFF"):
@@ -1184,7 +1398,7 @@ if GRIDSUPPORT:
                     def keyDefaultsConfirm(result):
                         if result:
                             self.close((_("Disable not used services"), "reset_group", self.groupName))
-                    message = _("Reset this list to its default layout?")
+                    message = self._resetMessage()
                     self.session.openWithCallback(keyDefaultsConfirm, MessageBox, text=message, type=MessageBox.TYPE_YESNO)
                 elif ret in ["config_hosts", "config_groups"]:
                     self.close((_("Disable not used services"), ret))
@@ -1198,6 +1412,8 @@ if GRIDSUPPORT:
                     self.keySetup()
                 elif ret == 'SEARCH':
                     self.openSearch()
+                elif ret.startswith('FOLDER_'):
+                    self._folderOption(ret)
 
         def searchCallback(self, searchText=None):
             if not searchText:
@@ -1205,7 +1421,9 @@ if GRIDSUPPORT:
             query = searchText.strip().lower()
             if not query:
                 return
-            matches = [(item[0], item[1], idx) for idx, item in enumerate(self.currList) if query in item[0].lower() or query in item[1].lower()]
+            # a folder only by its name, not by its key "folder:<id>"
+            matches = [(item[0], item[1], idx) for idx, item in enumerate(self.currList) if query in item[0].lower() or (query in item[1].lower() and not IsFolderKey(item[1]))]
+            matches.extend(self._folderHostMatches(query))
             if not matches:
                 self.session.open(MessageBox, _("No matching entries found."), type=MessageBox.TYPE_INFO, timeout=5)
                 return
@@ -1213,7 +1431,7 @@ if GRIDSUPPORT:
             # shows/hides matches for this one search - it never touches
             # currList/pixmapList/outList itself, so reordering and the
             # group's persisted host list are completely unaffected
-            options = [IPTVChoiceBoxItem("%s (%s)" % (name, hostKey), hostKey, idx) for name, hostKey, idx in matches]
+            options = [IPTVChoiceBoxItem(name if IsFolderKey(hostKey) else "%s (%s)" % (name, hostKey), self._itemIconKey(hostKey), idx) for name, hostKey, idx in matches]
             # self.listMode, not a direct "S" check - "P" (Simple list) is
             # also list-style and should get the same popup if this is ever
             # reached for it (currently unreachable in practice:
@@ -1222,7 +1440,7 @@ if GRIDSUPPORT:
                 height = self._getSearchResultsHeight(len(options))
                 self._searchResultsDlg = self.session.openWithCallback(self.searchResultCallback, IPTVChoiceBoxWidget, {'width': 550, 'height': height, 'current_idx': 0, 'title': _("Search results"), 'options': options, 'list_class': IPTVHostSearchResultList, 'chrome': True, 'footerMargin': 136, 'blue_callback': self.searchResultBlueMenu})
             else:
-                self._searchResultsDlg = self.session.openWithCallback(self.searchResultCallback, SearchResultGridWidget, {'options': options, 'iconSize': self.iconSize, 'title': _("Search results"), 'blue_callback': self.searchResultBlueMenu})
+                self._searchResultsDlg = self.session.openWithCallback(self.searchResultCallback, SearchResultGridWidget, {'options': options, 'labels': [self._itemLabel(hostKey) for _name, hostKey, _idx in matches], 'iconSize': self.iconSize, 'title': _("Search results"), 'blue_callback': self.searchResultBlueMenu})
 
         def changeReorderingMode(self):
             printDBG(">> PlayerSelectorWidget.changeReorderingMode")
@@ -1293,6 +1511,7 @@ if GRIDSUPPORT:
         def __init__(self, session, params):
             self.params = params
             self.options = params.get('options', [])
+            self.labels = params.get('labels', [])
             self.numOfItems = len(self.options)
             self.iconSize = params.get('iconSize') or GetAvailableIconSize()
             screenwidth = getDesktop(0).size().width()
@@ -1381,7 +1600,8 @@ if GRIDSUPPORT:
         def updateIcons(self):
             items = []
             for idx in range(self.numOfItems):
-                items.append((self.pixmapList[idx], self.options[idx].name, idx))
+                # same 5-tuple shape as PlayerSelectorWidget's grid (_GRID_TEMPLATES): a folder's name over its icon
+                items.append((self.pixmapList[idx], self.options[idx].name, idx, '', self.labels[idx] if idx < len(self.labels) else ''))
             self["grid"].updateList(items)
 
         def selectionChanged(self):
@@ -1413,7 +1633,7 @@ else:
     class PlayerSelectorWidget(_PlayerSelectorListMode, Screen):
         LAST_SELECTION = {}
 
-        def __init__(self, session, inList, outList, numOfLockedItems=0, groupName='', groupObj=None, groupDisplayName=None):
+        def __init__(self, session, inList, outList, numOfLockedItems=0, groupName='', groupObj=None, groupDisplayName=None, folderKey=None):
             printDBG("PlayerSelectorWidget.__init__ --------------------------------")
             screenwidth = getDesktop(0).size().width()
             screenheight = getDesktop(0).size().height()
@@ -1434,12 +1654,14 @@ else:
 
             self.groupName = groupName
             self.groupObj = groupObj
+            self.folderKey = folderKey
+            self.lastSelectionKey = groupName + '/' + folderKey if folderKey else groupName
             self.numOfLockedItems = numOfLockedItems
 
             self.IconsSize = iconSize  # do ladowania ikon
             self.MarkerSize = self.IconsSize + 45
 
-            self.lastSelection = PlayerSelectorWidget.LAST_SELECTION.get(self.groupName, 0)
+            self.lastSelection = PlayerSelectorWidget.LAST_SELECTION.get(self.lastSelectionKey, 0)
 
             self.session = session
             self.reorderingMode = False
@@ -1454,7 +1676,7 @@ else:
                 # class's icon-grid mode/__onClose() still reference -
                 # kept here rather than in the shared method, which the
                 # GRIDSUPPORT class has no __event() to call at all.
-                self._initListMode(session, inList, outList, numOfLockedItems, groupName, groupObj, groupDisplayName)
+                self._initListMode(session, inList, outList, numOfLockedItems, groupName, groupObj, groupDisplayName, folderKey)
                 self.session.nav.event.append(self.__event)
                 self.onClose.append(self.__onClose)
                 return
@@ -1674,6 +1896,9 @@ else:
             self.pageItemSize, self.pageItemSize,
             )
 
+            # name of an own folder over the lower part of its icon (_itemLabel()), empty otherwise
+            labelHeight = int(coverHeight / 2)
+            labelFont = max(16, int(coverHeight * 0.19))
             for y in range(1, numOfRow + 1):
                 for x in range(1, numOfCol + 1):
                     skinCoverLine = """<widget name="cover_%s%s" zPosition="4" position="%d,%d" size="%d,%d" transparent="1" alphatest="blend" />""" % (x, y,
@@ -1683,6 +1908,13 @@ else:
                         coverHeight
                     )
                     skin += '\n' + skinCoverLine
+                    skin += '\n' + """<widget name="label_%s%s" zPosition="5" position="%d,%d" size="%d,%d" font="Regular;%d" halign="center" valign="bottom" foregroundColor="#ffffff" borderWidth="2" borderColor="#000000" transparent="1" />""" % (x, y,
+                        (gridOffsetX + tmpX * (x - 1)),
+                        (offsetCoverY + tmpY * (y - 1)) + coverHeight - labelHeight,
+                        coverWidth,
+                        labelHeight,
+                        labelFont
+                    )
 
             # add pagination items
             for pageItemOffset in range(self.numOfPages):
@@ -1703,7 +1935,7 @@ else:
             # load icons
             self.pixmapList = []
             for idx in range(0, self.numOfItems):
-                icon = _getPlayerSelectorIcon(self.currList[idx][1], self.IconsSize)
+                icon = self._itemIcon(self.currList[idx][1], self.IconsSize)
                 self.pixmapList.append(LoadPixmap(icon))
 
             self.markerPixmap = LoadPixmap(GetIconDir('PlayerSelector/marker/marker%i.png' % self.MarkerSize))
@@ -1735,6 +1967,7 @@ else:
                 for x in range(1, self.numOfCol + 1):
                     strIndex = "cover_%s%s" % (x, y)
                     self[strIndex] = Cover3()
+                    self["label_%s%s" % (x, y)] = Label("")
 
             self["statustext"] = Label(self.currList[0][0])
             self["hostinfo"] = Label("")
@@ -1765,7 +1998,7 @@ else:
             except Exception:
                 printExc()
             idx = self.lastSelection if self.listMode else (self.currLine * self.numOfCol + self.dispX)
-            PlayerSelectorWidget.LAST_SELECTION[self.groupName] = idx
+            PlayerSelectorWidget.LAST_SELECTION[self.lastSelectionKey] = idx
 
         # Calculate marker position Y
         def calcMarkerPosY(self):
@@ -1867,6 +2100,7 @@ else:
                         strIndex = "cover_%s%s" % (x, y)
                         printDBG("updateIconsList [%s]" % strIndex)
                         self[strIndex].setPixmap(self.pixmapList[idx])
+                        self["label_%s%s" % (x, y)].setText(self._itemLabel(self.currList[idx][1]))
                     idx += 1
 
         def updateIcons(self):
@@ -1876,8 +2110,8 @@ else:
                 items = []
                 for idx in range(self.numOfItems):
                     name, key = self.currList[idx][0], self.currList[idx][1]
-                    displayName = "%s (%s)" % (name, key) if (key and self["grid"].showHostKey) else name
-                    items.append((IPTVChoiceBoxItem(name=displayName, description=key, privateData=idx),))
+                    displayName = self._itemDisplayName(name, key)
+                    items.append((IPTVChoiceBoxItem(name=displayName, description=self._itemIconKey(key), privateData=idx),))
                 self["grid"].updateList(items)
                 return
             if self.simpleListMode:
@@ -1887,8 +2121,8 @@ else:
                 items = []
                 for idx in range(self.numOfItems):
                     name, key = self.currList[idx][0], self.currList[idx][1]
-                    displayName = "%s (%s)" % (name, key) if (key and self["grid"].showHostKey) else name
-                    items.append((IPTVChoiceBoxItem(name=displayName, description=key, privateData=idx),))
+                    displayName = self._itemDisplayName(name, key)
+                    items.append((IPTVChoiceBoxItem(name=displayName, description=self._itemIconKey(key), privateData=idx),))
                 self["grid"].updateList(items)
                 return
             idx = int(self.currPage * (self.numOfCol * self.numOfRow))
@@ -1899,9 +2133,11 @@ else:
                     if idx < self.numOfItems:
                         self[strIndex].setPixmap(self.pixmapList[idx])
                         self[strIndex].show()
+                        self["label_%s%s" % (x, y)].setText(self._itemLabel(self.currList[idx][1]))
                         idx += 1
                     else:
                         self[strIndex].hide()
+                        self["label_%s%s" % (x, y)].setText("")
             x = self.pageItemStartX + self.currPage * self.pageItemSize
             y = self.pageItemStartY
             self["page_marker"].instance.move(ePoint(int(x), y))
@@ -1996,7 +2232,7 @@ else:
                 return
 
             idx = int(self.currLine * self.numOfCol + self.dispX)
-            PlayerSelectorWidget.LAST_SELECTION[self.groupName] = idx
+            PlayerSelectorWidget.LAST_SELECTION[self.lastSelectionKey] = idx
 
             if idx < self.numOfItems:
                 self.close(self.currList[idx])
@@ -2030,13 +2266,13 @@ else:
                     self.moveIndex = -1
                     self.reorderingMode = False
                     beforeOrder = [x[1] for x in self.currList]
-                    self.currList = sorted(self.currList, key=lambda x: x[1])
+                    self.currList = sorted(self.currList, key=self._sortKey)
                     if [x[1] for x in self.currList] != beforeOrder:
                         self._markLayoutDirty()
                     if not self.listMode:
                         self.pixmapList = []
                         for idx in range(self.numOfItems):
-                            icon = _getPlayerSelectorIcon(self.currList[idx][1], self.IconsSize)
+                            icon = self._itemIcon(self.currList[idx][1], self.IconsSize)
                             self.pixmapList.append(LoadPixmap(icon))
                     self.reInitDisplayList()
                 elif ret in ("CHANGE_REORDERING_MODE:ON", "CHANGE_REORDERING_MODE:OFF"):
@@ -2047,7 +2283,7 @@ else:
                     def keyDefaultsConfirm(result):
                         if result:
                             self.close((_("Disable not used services"), "reset_group", self.groupName))
-                    message = _("Reset this list to its default layout?")
+                    message = self._resetMessage()
                     self.session.openWithCallback(keyDefaultsConfirm, MessageBox, text=message, type=MessageBox.TYPE_YESNO)
                 elif ret in ["config_hosts", "config_groups"]:
                     self.close((_("Disable not used services"), ret))
@@ -2062,6 +2298,8 @@ else:
                     self.keySetup()
                 elif ret == 'SEARCH':
                     self.openSearch()
+                elif ret.startswith('FOLDER_'):
+                    self._folderOption(ret)
 
         def searchCallback(self, searchText=None):
             if not searchText:
@@ -2069,7 +2307,9 @@ else:
             query = searchText.strip().lower()
             if not query:
                 return
-            matches = [(item[0], item[1], idx) for idx, item in enumerate(self.currList) if query in item[0].lower() or query in item[1].lower()]
+            # a folder only by its name, not by its key "folder:<id>"
+            matches = [(item[0], item[1], idx) for idx, item in enumerate(self.currList) if query in item[0].lower() or (query in item[1].lower() and not IsFolderKey(item[1]))]
+            matches.extend(self._folderHostMatches(query))
             if not matches:
                 self.session.open(MessageBox, _("No matching entries found."), type=MessageBox.TYPE_INFO, timeout=5)
                 return
@@ -2077,7 +2317,7 @@ else:
             # shows/hides matches for this one search - it never touches
             # currList/pixmapList/outList itself, so reordering and the
             # group's persisted host list are completely unaffected
-            options = [IPTVChoiceBoxItem("%s (%s)" % (name, hostKey), hostKey, idx) for name, hostKey, idx in matches]
+            options = [IPTVChoiceBoxItem(name if IsFolderKey(hostKey) else "%s (%s)" % (name, hostKey), self._itemIconKey(hostKey), idx) for name, hostKey, idx in matches]
             height = self._getSearchResultsHeight(len(options))
             self._searchResultsDlg = self.session.openWithCallback(self.searchResultCallback, IPTVChoiceBoxWidget, {'width': 550, 'height': height, 'current_idx': 0, 'title': _("Search results"), 'options': options, 'list_class': IPTVHostSearchResultList, 'chrome': True, 'footerMargin': 136, 'blue_callback': self.searchResultBlueMenu})
 

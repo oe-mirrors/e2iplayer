@@ -17,7 +17,7 @@ from Plugins.Extensions.IPTVPlayer.components.configbase import ConfigBaseWidget
 from Plugins.Extensions.IPTVPlayer.components.confighost import ConfigHostsMenu
 from Plugins.Extensions.IPTVPlayer.components.iptvdirbrowser import IPTVDirectorySelectorWidget, IPTVFileSelectorWidget
 from Plugins.Extensions.IPTVPlayer.components.configextmovieplayer import ConfigExtMoviePlayer
-from Plugins.Extensions.IPTVPlayer.__init__ import _, GRIDSUPPORT
+from Plugins.Extensions.IPTVPlayer.__init__ import _, GRIDSUPPORT_NATIVE
 from .iptvpin import IPTVPinWidget
 from .asynccall import AsyncMethod
 ###################################################
@@ -326,7 +326,11 @@ class ConfigMenu(ConfigBaseWidget):
         list.append(getConfigListEntry("    " + _("Enable hosts groups"), config.plugins.iptvplayer.group_hosts))
         if config.plugins.iptvplayer.hostsListType.value == "G":
             list.append(getConfigListEntry("    " + _("Service icon size"), config.plugins.iptvplayer.IconsSize))
-        if not GRIDSUPPORT and config.plugins.iptvplayer.hostsListType.value == "G":
+            if GRIDSUPPORT_NATIVE:
+                # the older icon grid (rows/columns below) on an image with the native grid list - after a GUI restart
+                list.append(getConfigListEntry("    " + _("Force legacy grid"), config.plugins.iptvplayer.force_legacy_grid))
+        # rows/columns: legacy icon grid only - with "Force legacy grid" already before the restart that switches to it
+        if (not GRIDSUPPORT_NATIVE or config.plugins.iptvplayer.force_legacy_grid.value) and config.plugins.iptvplayer.hostsListType.value == "G":
             list.append(getConfigListEntry("    " + _("Number of rows"), config.plugins.iptvplayer.numOfRow))
             list.append(getConfigListEntry("    " + _("Number of columns"), config.plugins.iptvplayer.numOfCol))
         # list.append(getConfigListEntry(_("VFD set current title:"), config.plugins.iptvplayer.set_curr_title))
@@ -721,6 +725,8 @@ class ConfigMenu(ConfigBaseWidget):
         valTab.append(config.plugins.iptvplayer.skin.value)
         valTab.append(config.plugins.iptvplayer.skinforceinternal.value)
         valTab.append(config.plugins.iptvplayer.skinforceallinternal.value)
+        # the legacy grid is only forced with the icon grid (__init__.py) - restart note when that changes
+        valTab.append(config.plugins.iptvplayer.force_legacy_grid.value and config.plugins.iptvplayer.hostsListType.value == "G")
         return valTab
 
     def getMessageAfterSave(self):
@@ -970,6 +976,7 @@ class ConfigMenu(ConfigBaseWidget):
             config.plugins.iptvplayer.mye2i_browser,
             config.plugins.iptvplayer.storageExpertMode,
             config.plugins.iptvplayer.hostsListType,
+            config.plugins.iptvplayer.force_legacy_grid,
             config.plugins.iptvplayer.skinforceallinternal,
             config.plugins.iptvplayer.IPTVDMShowNotification,
             config.plugins.iptvplayer.download_subtitles,

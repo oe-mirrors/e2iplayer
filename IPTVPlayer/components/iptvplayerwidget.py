@@ -44,7 +44,7 @@ from enigma import getDesktop, eTimer, ePoint
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import ConfigMenu, GetMoviePlayer, GetAvailableMoviePlayers, GetMoviePlayerName, GetListOfHostsNames, GetConfigExpectedPin
 from Plugins.Extensions.IPTVPlayer.components.confighost import ConfigHostMenu, ConfigHostsMenu
 from Plugins.Extensions.IPTVPlayer.components.iptvdirbrowser import IPTVDirectorySelectorWidget
-from Plugins.Extensions.IPTVPlayer.components.configgroups import ConfigGroupsMenu
+from Plugins.Extensions.IPTVPlayer.components.configgroups import ConfigGroupsMenu, ConfigGroupFolderMenu
 
 from Plugins.Extensions.IPTVPlayer.components.iptvfavouriteswidgets import IPTVFavouritesAddItemWidget, IPTVFavouritesMainWidget
 
@@ -69,7 +69,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import FreeSpace as iptvtools
                                                           ClearTmpCookieDir, ClearTmpJSCacheDir, SetTmpCookieDir, SetTmpJSCacheDir, \
                                                           GetEnabledHostsList, SaveHostsOrderList, formatBytes, getExcMSG, \
                                                           findT9JumpIndex
-from Plugins.Extensions.IPTVPlayer.tools.iptvhostgroups import IPTVHostsGroups
+from Plugins.Extensions.IPTVPlayer.tools.iptvhostgroups import IPTVHostsGroups, IsFolderKey
 from Plugins.Extensions.IPTVPlayer.components.iptvhostpin import AskHostPin, ClearUnlockedHosts, HostNeedsPin, IsHostUnlocked
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvbuffui import E2iPlayerBufferingWidget
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdmapi import IPTVDMApi, DMItem
@@ -681,6 +681,8 @@ class E2iPlayerWidget(Screen):
         self.workThread = None
         self.group = None
         self.groupDisplayName = None
+        # own folder of the group that is open ("folder:<id>", iptvhostgroups.py), None: the group itself
+        self.folder = None
         self.groupObj = None
         self.host = None
         self.hostName = ''
@@ -2588,6 +2590,7 @@ class E2iPlayerWidget(Screen):
         # self.groupObj = None
         self.groupDisplayName = None
         self.group = None
+        self.folder = None
         self.host = None
         self.hostName = ''
         self.nextSelIndex = 0
@@ -2667,13 +2670,24 @@ class E2iPlayerWidget(Screen):
 
         self.displayHostsList = []
         startTime = time.time()
-        if self.group != 'all':
-            hostsList = self.groupObj.getHostsList(self.group)
-        else:
+        if self.folder is not None and (self.group == 'all' or self.groupObj.getFolder(self.group, self.folder) is None or not self.groupObj.getFolderHosts(self.group, self.folder)):
+            # the folder is gone or empty: the group itself
+            self.folder = None
+        if self.group == 'all':
             hostsList = SortHostsList(self._getAllGroupHosts())
+        elif self.folder is not None:
+            hostsList = self.groupObj.getFolderHosts(self.group, self.folder)
+        else:
+            # the group's own hosts and its folders
+            hostsList = self.groupObj.getGroupLayout(self.group)
 
         brokenHostList = []
         for hostName in hostsList:
+            if IsFolderKey(hostName):
+                folder = self.groupObj.getFolder(self.group, hostName)
+                if folder is not None:
+                    self.displayHostsList.append(('%s (%d)' % (folder['title'], len(self.groupObj.getFolderHosts(self.group, hostName))), hostName))
+                continue
             # read from the host file: the host itself is only loaded when it is opened
             title = GetHostTitle(hostName)
             if title is None:
@@ -2705,7 +2719,13 @@ class E2iPlayerWidget(Screen):
         printDBG(">> displayListOfHostsFromGroup")
         self.newDisplayHostsList = []
         if len(self.displayHostsList):
-            self.session.openWithCallback(self.selectHostFromGroupCallback, PlayerSelectorWidget, inList=self.displayHostsList, outList=self.newDisplayHostsList, numOfLockedItems=0, groupName=self.group, groupObj=self.groupObj, groupDisplayName=self.groupDisplayName)
+            displayName = self.groupDisplayName
+            if self.folder is not None:
+                # "Arabic (42) / Sport"
+                folder = self.groupObj.getFolder(self.group, self.folder)
+                if folder is not None:
+                    displayName = '%s / %s' % (displayName, folder['title']) if displayName else folder['title']
+            self.session.openWithCallback(self.selectHostFromGroupCallback, PlayerSelectorWidget, inList=self.displayHostsList, outList=self.newDisplayHostsList, numOfLockedItems=0, groupName=self.group, groupObj=self.groupObj, groupDisplayName=displayName, folderKey=self.folder)
         else:
             msg = _('There is no hosts in this group.')
             self.session.openWithCallback(self.selectHost, MessageBox, msg, type=MessageBox.TYPE_INFO, timeout=10)
@@ -2718,12 +2738,70 @@ class E2iPlayerWidget(Screen):
             hostsList = []
             for idx in range(len(self.newDisplayHostsList)):
                 hostsList.append(self.newDisplayHostsList[idx][1])
-            if self.group != 'all':
-                self.groupObj.setHostsList(self.group, hostsList)
-            else:
+            if self.group == 'all':
                 SaveHostsOrderList(hostsList)
+            elif self.folder is not None:
+                self.groupObj.setFolderHostsList(self.group, self.folder, hostsList)
+            else:
+                self.groupObj.setHostsList(self.group, hostsList)
         self.groupObj.flushAddedHosts()
-        self.selectItemCallback(ret, 'selecthostfromgroup')
+        if ret and len(ret) > 2 and ret[1] == 'FOLDER_ACTION':
+            self.runFolderAction(ret[2])
+        elif ret and IsFolderKey(ret[1]):
+            # OK on a folder: its hosts, an empty one opens "Select hosts for this folder..." straight away
+            if self.groupObj.getFolderHosts(self.group, ret[1]):
+                self.folder = ret[1]
+                self.selectHostFromGroup()
+            else:
+                self.openFolderHostsMenu(ret[1], True)
+        elif not ret and self.folder is not None:
+            # EXIT in a folder: back to the group
+            self.folder = None
+            self.selectHostFromGroup()
+        else:
+            self.selectItemCallback(ret, 'selecthostfromgroup')
+
+    def runFolderAction(self, action):
+        # a change of the group's own folders asked in PlayerSelectorWidget (_closeWithFolderAction())
+        printDBG(">> runFolderAction %s" % action)
+        op = action.get('op')
+        key = action.get('key')
+        try:
+            if op == 'new':
+                key = self.groupObj.createFolder(self.group, action['title'], action.get('hosts'))
+                if key and not action.get('hosts'):
+                    # a new empty folder: choose its hosts right away
+                    self.openFolderHostsMenu(key, True)
+                    return
+            elif op == 'rename':
+                self.groupObj.renameFolder(self.group, key, action['title'])
+            elif op == 'icon':
+                self.groupObj.setFolderIcon(self.group, key, action['icon'])
+            elif op == 'delete':
+                self.groupObj.deleteFolder(self.group, key)
+            elif op == 'move':
+                self.groupObj.moveHostsToFolder(self.group, action['hosts'], key)
+            elif op == 'select':
+                self.openFolderHostsMenu(key)
+                return
+        except Exception:
+            printExc()
+        self.selectHostFromGroup()
+
+    def openFolderHostsMenu(self, key, openFolder=False):
+        # "Select hosts for this folder...": tick the hosts of the group that belong into the folder
+        folder = self.groupObj.getFolder(self.group, key)
+        if folder is None:
+            self.selectHostFromGroup()
+            return
+        title = '%s / %s' % (self.groupDisplayName, folder['title']) if self.groupDisplayName else folder['title']
+        self.session.openWithCallback(boundFunction(self.folderHostsMenuCallback, key, openFolder), ConfigGroupFolderMenu, self.groupObj, self.group, key, title)
+
+    def folderHostsMenuCallback(self, key, openFolder, arg=None):
+        # openFolder: opened from OK on the empty folder / a new folder - show it now it has hosts
+        if openFolder and self.groupObj.getFolderHosts(self.group, key):
+            self.folder = key
+        self.selectHostFromGroup()
 
     def _logHostListBuilt(self, startTime, listName):
         # how long a host list took and how many hosts are loaded so far (debug log):
