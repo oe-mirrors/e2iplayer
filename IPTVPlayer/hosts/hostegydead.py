@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "09.10.2026"
+LAST_MODIFIED = "20.10.2026"
+# 20.10.2026 - Anime / Cartoons: the current anime seasons of the site's menu ("Anime Autumn 2026", /tag/...),
+#   Others: World Cup 2022
 # 09.10.2026 - INFO: Arabic-only titles skip IMDb/Cinemeta/OMDb; season folders "Show - Sxx" when normalising
 # 09.10.2026 - the site's Megamax server on throw-away domains (q7v3k8m2p1.top/iframe/<id>, the only server of
 #   the newest titles) goes to megamax.me/iframe/<id> when urlparser does not know the domain
@@ -64,6 +66,8 @@ JUNK_RE = re.compile(r"(?:^|\s)(?:مشاهدة|فيلم|مسلسل|انمي|أن
 INFO_FIELDS = (("category", "القسم"), ("genres", "النوع"), ("language", "اللغه"), ("country", "البلد"),
                ("year", "السنه"), ("duration", "مده العرض"), ("quality", "الجوده"), ("station", "القناه"))
 PAGE_SIZE = 48
+# season words of the site's anime season tags ("انميات خريف 2026")
+ANIME_SEASONS = {"ربيع": "Spring", "صيف": "Summer", "خريف": "Autumn", "شتاء": "Winter"}
 
 
 class EgyDead(GenericFolderWatchedScraperMixin, CBaseHostClass):
@@ -132,8 +136,10 @@ class EgyDead(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 (_("Shows and concerts"), "/category/عروض-وحفلات/"),
                 (_("Sport"), "/category/رياضة/"),
                 (_("TV Shows"), "/series-category/tv-shows/"),
+                ("World Cup 2022", "/tag/كاس-العالم-2022/"),
             ],
         }
+        self.animeSeasonTags = None
 
     ###################################################
     # helpers
@@ -247,8 +253,29 @@ class EgyDead(GenericFolderWatchedScraperMixin, CBaseHostClass):
     # menus
     ###################################################
     def listSection(self, cItem):
-        for title, path in self.SECTIONS.get(cItem.get("section", ""), []):
+        section = cItem.get("section", "")
+        entries = list(self.SECTIONS.get(section, []))
+        if section == "anime":
+            entries[2:2] = self._animeSeasonTags()
+        for title, path in entries:
             self.addDir({"name": "category", "category": "eg_list", "good_for_fav": True, "title": title, "url": self._canonUrl(path)})
+
+    def _animeSeasonTags(self):
+        # the site's menu links the current anime seasons ("انميات خريف 2026" -> /tag/انميات-خريف-2026/), the
+        # tags change every season - read from the home page once per session
+        if self.animeSeasonTags is None:
+            tags = []
+            sts, data = self.getPage(self.MAIN_URL)
+            if sts:
+                for url, label in re.findall(r'<a href="([^"]+/tag/[^"]+)"[^>]*>([^<]+)</a>', data):
+                    m = re.match(r"^\s*انميات\s+(\S+)\s+((?:19|20)\d\d)\s*$", self.cleanHtmlStr(label))
+                    if m and m.group(1) in ANIME_SEASONS:
+                        entry = ("%s %s %s" % (_("Anime"), ANIME_SEASONS[m.group(1)], m.group(2)), url)
+                        if entry not in tags:
+                            tags.append(entry)
+                self.animeSeasonTags = tags
+            return tags
+        return self.animeSeasonTags
 
     def listTypes(self, cItem):
         sts, data = self.getPage(cItem["url"])
