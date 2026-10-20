@@ -49,7 +49,7 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dump
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urlparse, parse_qsl
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str, ensure_binary
-from Components.config import config, ConfigText, ConfigYesNo, getConfigListEntry
+from Components.config import config, ConfigText, ConfigYesNo, ConfigSelection, getConfigListEntry
 import calendar
 import hashlib
 import os
@@ -74,6 +74,7 @@ for _slot in range(1, MAX_ACCOUNTS + 1):
 config.plugins.iptvplayer.xtream_useragent = ConfigText(default='', fixed_size=False)
 config.plugins.iptvplayer.xtream_xstreamity = ConfigYesNo(default=True)
 config.plugins.iptvplayer.xtream_adult = ConfigYesNo(default=False)
+config.plugins.iptvplayer.xtream_sort = ConfigSelection(default='original', choices=[('original', _("Default")), ('az', _("A-Z")), ('za', _("Z-A"))])
 FILE_SLOT = 101  # accounts from the playlists.txt files
 
 
@@ -91,6 +92,7 @@ def GetConfigList():
     optionList.append(getConfigListEntry(_("User-Agent (leave empty for the default):"), config.plugins.iptvplayer.xtream_useragent))
     optionList.append(getConfigListEntry(_("Also use the accounts of X-Streamity (%s)") % pluginFile(), config.plugins.iptvplayer.xtream_xstreamity))
     optionList.append(getConfigListEntry(_("Show adult content"), config.plugins.iptvplayer.xtream_adult))
+    optionList.append(getConfigListEntry(_("Sort the list:"), config.plugins.iptvplayer.xtream_sort))
     return optionList
 
 
@@ -330,6 +332,14 @@ def _accountLines(path):
 def _splitMark(text, mark):
     return text.split(mark, 1) if mark in text else (text, '')
 # -- end of the shared part
+
+
+def _sorted(rows, nameKey):
+    # "Sort the list:" - a sorted copy (the panel lists are cached), Default = the panel's order
+    mode = config.plugins.iptvplayer.xtream_sort.value
+    if mode not in ('az', 'za'):
+        return rows
+    return sorted(rows, key=lambda x: (_str(_dict(x).get(nameKey)) or _str(_dict(x).get('title'))).lower(), reverse=(mode == 'za'))
 
 
 def readXtreamAccounts(withPlugin=True):
@@ -643,7 +653,7 @@ class XtreamApiHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
         params.update({'title': _("All"), 'cat_id': '', 'url': 'xtream://%s/%s/cat/' % (acc['id'], kind)})
         self.addDir(params)
         adultCats = self.adultCategories(acc, kind)
-        for cat in data:
+        for cat in _sorted(data, 'category_name'):
             cat = _dict(cat)
             title = _str(cat.get('category_name'))
             catId = _str(cat.get('category_id'))
@@ -679,6 +689,7 @@ class XtreamApiHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
         data = self.getStreams(acc, kind, catId)
         if data is None:
             return
+        data = _sorted(data, 'name')
         page = max(1, _int(cItem.get('page', 1), 1))
         if kind == 'live' and page == 1:
             archived = [x for x in data if _int(_dict(x).get('tv_archive'), 0) == 1]

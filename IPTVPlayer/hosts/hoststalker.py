@@ -47,7 +47,7 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dump
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urlparse
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str, ensure_binary
-from Components.config import config, ConfigText, ConfigYesNo, getConfigListEntry
+from Components.config import config, ConfigText, ConfigYesNo, ConfigSelection, getConfigListEntry
 import hashlib
 import os
 import re
@@ -74,6 +74,7 @@ for _slot in range(1, MAX_ACCOUNTS + 1):
         setattr(config.plugins.iptvplayer, '%s%d' % (_base, _slot), ConfigText(default='', fixed_size=False))
 config.plugins.iptvplayer.stalker_censored = ConfigYesNo(default=False)
 config.plugins.iptvplayer.stalker_estalker = ConfigYesNo(default=True)
+config.plugins.iptvplayer.stalker_sort = ConfigSelection(default='original', choices=[('original', _("Default")), ('az', _("A-Z")), ('za', _("Z-A"))])
 FILE_SLOT = 101  # portals from the e-portals.txt files
 
 
@@ -91,6 +92,7 @@ def GetConfigList():
             optionList.append(getConfigListEntry(_("Portal %d - %s (optional, from the MAG box):") % (slot, label), _cfg(base, slot)))
     optionList.append(getConfigListEntry(_("Also use the portals of EStalker (%s)") % pluginFile(), config.plugins.iptvplayer.stalker_estalker))
     optionList.append(getConfigListEntry(_("Show adult content"), config.plugins.iptvplayer.stalker_censored))
+    optionList.append(getConfigListEntry(_("Sort the list:"), config.plugins.iptvplayer.stalker_sort))
     return optionList
 
 
@@ -686,6 +688,30 @@ class StalkerPortalHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 break
         return rows, (serverPages + SERVER_PAGES - 1) // SERVER_PAGES
 
+    def pagedListReversed(self, acc, query, page):
+        # Z-A: the portal only sorts A-Z (sortby=name) - its pages from the back, each one turned around,
+        # so a list page costs the same requests as with A-Z
+        js = self.apiCached(acc, list(query) + [('p', '1')])
+        if js is None:
+            return None, 0
+        js = _dict(js)
+        data = _list(js.get('data'))
+        total = _int(js.get('total_items'))
+        perPage = _int(js.get('max_page_items')) or len(data) or 1
+        if not total:
+            # no total_items: no last page to start from, the whole list (capped) turned around
+            rows = self.allPages(acc, query, maxPages=60)
+            rows.reverse()
+            pageSize = SERVER_PAGES * perPage
+            return rows[(page - 1) * pageSize:page * pageSize], (len(rows) + pageSize - 1) // pageSize
+        serverPages = (total + perPage - 1) // perPage
+        rows = []
+        last = serverPages - (page - 1) * SERVER_PAGES
+        for p in range(last, max(0, last - SERVER_PAGES), -1):
+            pageData = data if p == 1 else _list(_dict(self.apiCached(acc, list(query) + [('p', '%d' % p)])).get('data'))
+            rows.extend(_dict(x) for x in reversed(pageData))
+        return rows, (serverPages + SERVER_PAGES - 1) // SERVER_PAGES
+
     def showCensored(self):
         return config.plugins.iptvplayer.stalker_censored.value
 
@@ -769,7 +795,13 @@ class StalkerPortalHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if data is None:
             return
         base = self.accParams(acc, {'name': 'category', 'category': 'st_list', 'x_kind': kind, 'page': 1, 'good_for_fav': True})
-        for cat in _list(data):
+        cats = _list(data)
+        mode = config.plugins.iptvplayer.stalker_sort.value
+        if mode in ('az', 'za'):
+            # a sorted copy (the answer is cached), the portal's "All" (id *) stays on top
+            cats = sorted(cats, key=lambda x: _str(_dict(x).get('title')).lower(), reverse=(mode == 'za'))
+            cats.sort(key=lambda x: _str(_dict(x).get('id')) != '*')
+        for cat in cats:
             cat = _dict(cat)
             title = _str(cat.get('title'))
             catId = _str(cat.get('id'))
@@ -783,10 +815,12 @@ class StalkerPortalHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not self.currList:
             self.addMarker({'title': _("No items found")})
 
-    def listQuery(self, kind, catId):
+    def listQuery(self, kind, catId, byName=False):
         if kind == 'live':
-            return [('type', 'itv'), ('action', 'get_ordered_list'), ('genre', catId or '*'), ('force_ch_link_check', ''), ('fav', '0'), ('sortby', 'number')]
-        query = [('type', KIND_TYPES[kind]), ('action', 'get_ordered_list'), ('category', catId or '*'), ('genre', '*'), ('sortby', 'added')]
+            return [('type', 'itv'), ('action', 'get_ordered_list'), ('genre', catId or '*'), ('force_ch_link_check', ''), ('fav', '0'),
+                    ('sortby', 'name' if byName else 'number')]
+        query = [('type', KIND_TYPES[kind]), ('action', 'get_ordered_list'), ('category', catId or '*'), ('genre', '*'),
+                 ('sortby', 'name' if byName else 'added')]
         if kind == 'series':
             query += [('movie_id', '0'), ('season_id', '0'), ('episode_id', '0')]
         return query
@@ -797,7 +831,12 @@ class StalkerPortalHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
             return
         kind = cItem.get('x_kind', 'live')
         page = max(1, _int(cItem.get('page', 1), 1))
-        rows, lastPage = self.pagedList(acc, self.listQuery(kind, cItem.get('cat_id', '')), page)
+        mode = config.plugins.iptvplayer.stalker_sort.value
+        query = self.listQuery(kind, cItem.get('cat_id', ''), mode in ('az', 'za'))
+        if mode == 'za':
+            rows, lastPage = self.pagedListReversed(acc, query, page)
+        else:
+            rows, lastPage = self.pagedList(acc, query, page)
         if rows is None:
             return
         hiddenGenres = self.hiddenGenres(acc) if kind == 'live' else set()
