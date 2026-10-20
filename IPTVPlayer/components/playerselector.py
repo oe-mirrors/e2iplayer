@@ -514,7 +514,7 @@ class PlayerSelectorSimpleList(PlayerSelectorHostList):
     # buildEntry() takes the same single-item form
     # IPTVHostSearchResultList.buildEntry() uses (rather than an older
     # 4-param shape) but still renders plain text only, no logo - "name
-    # (key)" formatting happens in updateIcons() instead. Unlike
+    # (key)" formatting happens in _listModeItems() instead. Unlike
     # PlayerSelectorHostList, this class keeps its own onCreate() override
     # (no marker overlay, by design).
     def buildEntry(self, item):
@@ -676,6 +676,46 @@ class _PlayerSelectorListMode:
     def _getSearchResultsHeight(self, numItems):
         # module-level helper, shared by both PlayerSelectorWidget variants
         return _getSearchResultsHeight(numItems)
+
+    def searchCallback(self, searchText=None):
+        # BLUE "Search" of both PlayerSelectorWidget variants: the entries whose name or key has the text,
+        # a folder only by its name (not by its key "folder:<id>"), in a group view also the hosts inside
+        # its folders (_folderHostMatches())
+        query = (searchText or '').strip().lower()
+        if not query:
+            return
+        matches = [(item[0], item[1], idx) for idx, item in enumerate(self.currList) if query in item[0].lower() or (query in item[1].lower() and not IsFolderKey(item[1]))]
+        matches.extend(self._folderHostMatches(query))
+        if not matches:
+            self.session.open(MessageBox, _("No matching entries found."), type=MessageBox.TYPE_INFO, timeout=5)
+            return
+        # picks straight from self.currList by index, so this only ever
+        # shows/hides matches for this one search - it never touches
+        # currList/pixmapList/outList itself, so reordering and the
+        # group's persisted host list are completely unaffected
+        options = [IPTVChoiceBoxItem(name if IsFolderKey(hostKey) else "%s (%s)" % (name, hostKey), self._itemIconKey(hostKey), idx) for name, hostKey, idx in matches]
+        self._showSearchResults(options, [self._itemLabel(hostKey) for _name, hostKey, _idx in matches])
+
+    def _showSearchResults(self, options, labels):
+        # the results as a list popup (GRIDSUPPORT's icon grid shows them as a grid, see its own copy)
+        height = self._getSearchResultsHeight(len(options))
+        self._searchResultsDlg = self.session.openWithCallback(self.searchResultCallback, IPTVChoiceBoxWidget, {'width': 550, 'height': height, 'current_idx': 0, 'title': _("Search results"), 'options': options, 'list_class': IPTVHostSearchResultList, 'chrome': True, 'footerMargin': 136, 'blue_callback': self.searchResultBlueMenu})
+
+    def _initGroupContext(self, groupName, groupObj, folderKey):
+        # shared by the three constructors (list mode, GRIDSUPPORT grid, legacy grid)
+        self.groupName = groupName
+        self.groupObj = groupObj
+        # own folder of the group this list shows, None: the group itself - the position is remembered per folder
+        self.folderKey = folderKey
+        self.lastSelectionKey = groupName + '/' + folderKey if folderKey else groupName
+
+    def _listModeItems(self):
+        # "List view" (PlayerSelectorHostList, buildEntry() inherited from
+        # IPTVHostSearchResultList) and "Simple list"
+        # (PlayerSelectorSimpleList) both take single-item
+        # IPTVChoiceBoxItem tuples; "name (key)" (showHostKey) is applied
+        # here since neither buildEntry() does it itself
+        return [(IPTVChoiceBoxItem(name=self._itemDisplayName(item[0], item[1]), description=self._itemIconKey(item[1]), privateData=idx),) for idx, item in enumerate(self.currList[:self.numOfItems])]
 
     def showInfo(self):
         try:
@@ -1076,10 +1116,7 @@ class _PlayerSelectorListMode:
         self.currList = self.inList
         self.numOfItems = len(self.currList)
         self.outList = outList
-        self.groupName = groupName
-        self.groupObj = groupObj
-        self.folderKey = folderKey
-        self.lastSelectionKey = groupName + '/' + folderKey if folderKey else groupName
+        self._initGroupContext(groupName, groupObj, folderKey)
         self.numOfLockedItems = numOfLockedItems
         self.reorderingMode = False
         self.reorderingItemSelected = False
@@ -1209,10 +1246,7 @@ if GRIDSUPPORT:
             self.numOfItems = len(self.currList)
             self.outList = outList
 
-            self.groupName = groupName
-            self.groupObj = groupObj
-            self.folderKey = folderKey
-            self.lastSelectionKey = groupName + '/' + folderKey if folderKey else groupName
+            self._initGroupContext(groupName, groupObj, folderKey)
             self.numOfLockedItems = numOfLockedItems
             self.reorderingMode = False
             self.reorderingItemSelected = False
@@ -1278,31 +1312,9 @@ if GRIDSUPPORT:
         # below.
 
         def updateIcons(self):
-            if self.listMode and not self.simpleListMode:
-                # "List view" ("S") only, NOT "Simple list" ("P" - own
-                # branch below). PlayerSelectorHostList doesn't override
-                # buildEntry() (see its own class comment), so this feeds
-                # the single-item IPTVChoiceBoxItem tuples
-                # IPTVHostSearchResultList.buildEntry() expects - "name
-                # (key)" formatting (showHostKey) happens here since that
-                # inherited buildEntry() doesn't apply it itself.
-                items = []
-                for idx in range(self.numOfItems):
-                    name, key = self.currList[idx][0], self.currList[idx][1]
-                    displayName = self._itemDisplayName(name, key)
-                    items.append((IPTVChoiceBoxItem(name=displayName, description=self._itemIconKey(key), privateData=idx),))
-                self["grid"].updateList(items)
-                return
-            if self.simpleListMode:
-                # "Simple list" ("P") - PlayerSelectorSimpleList's own
-                # buildEntry() also takes the single-item form, so builds
-                # the same kind of tuples as "List view" above.
-                items = []
-                for idx in range(self.numOfItems):
-                    name, key = self.currList[idx][0], self.currList[idx][1]
-                    displayName = self._itemDisplayName(name, key)
-                    items.append((IPTVChoiceBoxItem(name=displayName, description=self._itemIconKey(key), privateData=idx),))
-                self["grid"].updateList(items)
+            if self.listMode:
+                # "List view" ("S") and "Simple list" ("P") - see _listModeItems()
+                self["grid"].updateList(self._listModeItems())
                 return
             # Icon-grid mode (Components.Sources.List, its own <templates>
             # block) needs the 5-tuple shape (pixmap/name/idx/key/label)
@@ -1415,32 +1427,15 @@ if GRIDSUPPORT:
                 elif ret.startswith('FOLDER_'):
                     self._folderOption(ret)
 
-        def searchCallback(self, searchText=None):
-            if not searchText:
-                return
-            query = searchText.strip().lower()
-            if not query:
-                return
-            # a folder only by its name, not by its key "folder:<id>"
-            matches = [(item[0], item[1], idx) for idx, item in enumerate(self.currList) if query in item[0].lower() or (query in item[1].lower() and not IsFolderKey(item[1]))]
-            matches.extend(self._folderHostMatches(query))
-            if not matches:
-                self.session.open(MessageBox, _("No matching entries found."), type=MessageBox.TYPE_INFO, timeout=5)
-                return
-            # picks straight from self.currList by index, so this only ever
-            # shows/hides matches for this one search - it never touches
-            # currList/pixmapList/outList itself, so reordering and the
-            # group's persisted host list are completely unaffected
-            options = [IPTVChoiceBoxItem(name if IsFolderKey(hostKey) else "%s (%s)" % (name, hostKey), self._itemIconKey(hostKey), idx) for name, hostKey, idx in matches]
+        def _showSearchResults(self, options, labels):
             # self.listMode, not a direct "S" check - "P" (Simple list) is
             # also list-style and should get the same popup if this is ever
             # reached for it (currently unreachable in practice:
             # openContextMenu() never offers "Search" when self.simpleListMode)
             if self.listMode:
-                height = self._getSearchResultsHeight(len(options))
-                self._searchResultsDlg = self.session.openWithCallback(self.searchResultCallback, IPTVChoiceBoxWidget, {'width': 550, 'height': height, 'current_idx': 0, 'title': _("Search results"), 'options': options, 'list_class': IPTVHostSearchResultList, 'chrome': True, 'footerMargin': 136, 'blue_callback': self.searchResultBlueMenu})
+                _PlayerSelectorListMode._showSearchResults(self, options, labels)
             else:
-                self._searchResultsDlg = self.session.openWithCallback(self.searchResultCallback, SearchResultGridWidget, {'options': options, 'labels': [self._itemLabel(hostKey) for _name, hostKey, _idx in matches], 'iconSize': self.iconSize, 'title': _("Search results"), 'blue_callback': self.searchResultBlueMenu})
+                self._searchResultsDlg = self.session.openWithCallback(self.searchResultCallback, SearchResultGridWidget, {'options': options, 'labels': labels, 'iconSize': self.iconSize, 'title': _("Search results"), 'blue_callback': self.searchResultBlueMenu})
 
         def changeReorderingMode(self):
             printDBG(">> PlayerSelectorWidget.changeReorderingMode")
@@ -1499,7 +1494,7 @@ if GRIDSUPPORT:
             self.updateIcons()
 
     class SearchResultGridWidget(Screen):
-        # grid-mode counterpart to searchCallback()'s IPTVChoiceBoxWidget
+        # grid-mode counterpart to _showSearchResults()'s IPTVChoiceBoxWidget
         # popup (list mode) - used instead when hostsListType is "Graphic
         # services selector". Reuses PlayerSelectorWidget's own grid Listbox
         # widget/template block verbatim (same skin, position and sizing),
@@ -1652,10 +1647,7 @@ else:
             self.outList = outList
             self.numOfItems = len(self.currList)
 
-            self.groupName = groupName
-            self.groupObj = groupObj
-            self.folderKey = folderKey
-            self.lastSelectionKey = groupName + '/' + folderKey if folderKey else groupName
+            self._initGroupContext(groupName, groupObj, folderKey)
             self.numOfLockedItems = numOfLockedItems
 
             self.IconsSize = iconSize  # do ladowania ikon
@@ -2104,26 +2096,9 @@ else:
                     idx += 1
 
         def updateIcons(self):
-            if self.listMode and not self.simpleListMode:
-                # see GRIDSUPPORT's own copy of this comment for the full
-                # reasoning. "Simple list" ("P") has its own branch below.
-                items = []
-                for idx in range(self.numOfItems):
-                    name, key = self.currList[idx][0], self.currList[idx][1]
-                    displayName = self._itemDisplayName(name, key)
-                    items.append((IPTVChoiceBoxItem(name=displayName, description=self._itemIconKey(key), privateData=idx),))
-                self["grid"].updateList(items)
-                return
-            if self.simpleListMode:
-                # see GRIDSUPPORT's own copy of this comment for the full
-                # reasoning - matching single-item tuple shape as "List
-                # view" above.
-                items = []
-                for idx in range(self.numOfItems):
-                    name, key = self.currList[idx][0], self.currList[idx][1]
-                    displayName = self._itemDisplayName(name, key)
-                    items.append((IPTVChoiceBoxItem(name=displayName, description=self._itemIconKey(key), privateData=idx),))
-                self["grid"].updateList(items)
+            if self.listMode:
+                # "List view" ("S") and "Simple list" ("P") - see _listModeItems()
+                self["grid"].updateList(self._listModeItems())
                 return
             idx = int(self.currPage * (self.numOfCol * self.numOfRow))
             for y in range(1, self.numOfRow + 1):
@@ -2300,26 +2275,6 @@ else:
                     self.openSearch()
                 elif ret.startswith('FOLDER_'):
                     self._folderOption(ret)
-
-        def searchCallback(self, searchText=None):
-            if not searchText:
-                return
-            query = searchText.strip().lower()
-            if not query:
-                return
-            # a folder only by its name, not by its key "folder:<id>"
-            matches = [(item[0], item[1], idx) for idx, item in enumerate(self.currList) if query in item[0].lower() or (query in item[1].lower() and not IsFolderKey(item[1]))]
-            matches.extend(self._folderHostMatches(query))
-            if not matches:
-                self.session.open(MessageBox, _("No matching entries found."), type=MessageBox.TYPE_INFO, timeout=5)
-                return
-            # picks straight from self.currList by index, so this only ever
-            # shows/hides matches for this one search - it never touches
-            # currList/pixmapList/outList itself, so reordering and the
-            # group's persisted host list are completely unaffected
-            options = [IPTVChoiceBoxItem(name if IsFolderKey(hostKey) else "%s (%s)" % (name, hostKey), self._itemIconKey(hostKey), idx) for name, hostKey, idx in matches]
-            height = self._getSearchResultsHeight(len(options))
-            self._searchResultsDlg = self.session.openWithCallback(self.searchResultCallback, IPTVChoiceBoxWidget, {'width': 550, 'height': height, 'current_idx': 0, 'title': _("Search results"), 'options': options, 'list_class': IPTVHostSearchResultList, 'chrome': True, 'footerMargin': 136, 'blue_callback': self.searchResultBlueMenu})
 
         def deleteItemAt(self, idx):
             # searchResultBlueMenuCallback() can delete a specific search
