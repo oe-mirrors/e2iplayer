@@ -63,7 +63,7 @@ msgstr "Plejer za \"Web\" strimove"
 
 #, python-format
 msgid "%d added, %d skipped."
-msgstr ""
+msgstr "Dodato: %d, preskočeno: %d."
 
 #, python-format
 msgid "%d duplicate entries removed."
@@ -75,11 +75,11 @@ msgstr "Uklonjena je %d dupla stavka."
 
 #, python-format
 msgid "%d items added to the download queue, %d skipped."
-msgstr ""
+msgstr "U red za preuzimanje dodato je %d stavki, preskočeno %d."
 
 #, python-format
 msgid "%d of %d downloaded"
-msgstr ""
+msgstr "Preuzeto %d od %d"
 
 #, python-format
 msgid "%d parts"
@@ -95,7 +95,7 @@ msgstr "%d recitacija"
 
 #, python-format
 msgid "%d removed, %d skipped."
-msgstr ""
+msgstr "Uklonjeno: %d, preskočeno: %d."
 
 #, python-format
 msgid "%d videos"
@@ -151,7 +151,7 @@ msgstr "%s pratilaca"
 
 #, python-format
 msgid "%s needs a free account. Enter login and password in the host configuration."
-msgstr ""
+msgstr "%s zahteva besplatan nalog. Unesite korisničko ime i lozinku u konfiguraciji hosta."
 
 #, python-format
 msgid "%s password"
@@ -215,7 +215,7 @@ msgstr "%s pregleda"
 
 #, python-format
 msgid "%s: decrypting the stream, this can take a while (%d s)"
-msgstr ""
+msgstr "%s: strim se dešifruje, ovo može potrajati (%d s)"
 
 #, python-format
 msgid "(%d YouTube channel(s) could not be read)"
@@ -297,7 +297,7 @@ msgid "----- Show or hide Porn Sites -----"
 msgstr "----- Prikaži ili sakrij porno sajtove -----"
 
 msgid "----- TORRENT CONFIGURATION -----"
-msgstr ""
+msgstr "----- KONFIGURACIJA TORENTA -----"
 
 msgid "----- VIRTUAL KEYBOARD & SEARCH CONFIGURATION -----"
 msgstr "----- KONFIGURACIJA VIRTUELNE TASTATURE I PRETRAGE -----"
@@ -371,7 +371,7 @@ msgstr "5 sekundi"
 
 #, python-format
 msgid "A folder \"%s\" exists already."
-msgstr ""
+msgstr "Fascikla \"%s\" već postoji."
 
 msgid "A search is already running."
 msgstr "Pretraga je već u toku."
@@ -461,7 +461,7 @@ msgstr "Glumci:"
 
 #, python-format
 msgid "Add %d items to the download queue?"
-msgstr ""
+msgstr "Dodati %d stavki u red za preuzimanje?"
 
 msgid "Add channel name to downloaded file"
 msgstr "Dodaj naziv kanala preuzetoj datoteci"
@@ -478,7 +478,7 @@ msgstr "Dodaj stavku u grupu"
 
 #, python-format
 msgid "Add marked items to favourites (%d)"
-msgstr ""
+msgstr "Dodaj označene stavke u omiljene (%d)"
 
 msgid "Add new entry"
 msgstr "Dodaj novu stavku"
@@ -493,10 +493,10 @@ msgid "Add to User Links"
 msgstr "Dodaj u korisničke linkove"
 
 msgid "Add to Watchlist"
-msgstr ""
+msgstr "Dodaj na listu za gledanje"
 
 msgid "Add to Watchlist folder..."
-msgstr ""
+msgstr "Dodaj u fasciklu liste za gledanje..."
 
 msgid "Added"
 msgstr "Dodato"
@@ -587,7 +587,7 @@ msgid "Allow host to override suggestions provider"
 msgstr "Dozvoli hostu da zameni dobavljača predloga"
 
 msgid "Allow upload to other peers (seeding)"
-msgstr ""
+msgstr "Dozvoli slanje drugim korisnicima (sidovanje)"
 
 msgid "Allow watched flag to be set"
 msgstr "Dozvoli postavljanje oznake \"pogledano\""
@@ -628,7 +628,7 @@ msgid "Alternative proxy server (5)"
 msgstr "Alternativni proksi server (5)"
 
 msgid "American football"
-msgstr ""
+msgstr "Američki fudbal"
 
 msgid "An API key from subsource.net can be entered in the E2iPlayer settings (Subtitles)."
 msgstr "API ključ sa subsource.net možete uneti u podešavanjima E2iPlayer (Titlovi)."
@@ -848,7 +848,7 @@ msgstr "Backspace"
 
 #, python-format
 msgid "Balance: %s"
-msgstr ""
+msgstr "Stanje: %s"
 
 msgid "Balkans"
 msgstr "Balkan"
@@ -857,7 +857,7 @@ msgid "Basic Science"
 msgstr "Osnovne nauke"
 
 msgid "Basketball"
-msgstr ""
+msgstr "Košarka"
 
 msgid "Being watched"
 msgstr "Trenutno se gleda"
@@ -909,7 +909,7 @@ msgid "Box"
 msgstr "Box"
 
 msgid "Boxing"
-msgstr ""
+msgstr "Boks"
 
 msgid "Broadcast:"
 msgstr "Emitovanje:"
@@ -944,20 +944,20 @@ msgid "Cache"
 msgstr "Keš"
 
 msgid "Cache folder"
-msgstr ""
+msgstr "Fascikla keša"
 
 #, python-format
 msgid "Cache folder \"%s\" could not be created. Some data (cookies, subtitles, ...) may not be saved."
 msgstr "Fascikla keša \"%s\" nije mogla da se kreira. Neki podaci (kolačići, titlovi, ...) možda neće biti sačuvani."
 
 msgid "Cache location"
-msgstr ""
+msgstr "Lokacija keša"
 
 msgid "Cache size in RAM"
-msgstr ""
+msgstr "Veličina keša u RAM-u"
 
 msgid "Cache size on disk"
-msgstr ""
+msgstr "Veličina keša na disku"
 
 #, python-format
 msgid ""
@@ -1049,7 +1049,7 @@ msgid "Change active movie player"
 msgstr "Promeni aktivni plejer filmova"
 
 msgid "Change folder icon"
-msgstr ""
+msgstr "Promeni ikonu fascikle"
 
 msgid "Change own pin"
 msgstr "Promeni sopstveni PIN"
@@ -1083,7 +1083,7 @@ msgid "Chinese anime"
 msgstr "Kineski anime"
 
 msgid "Choose the TorrServer binary"
-msgstr ""
+msgstr "Izaberite izvršnu datoteku TorrServer"
 
 msgid "Cinema History"
 msgstr "Istorija filma"
@@ -1125,7 +1125,7 @@ msgid "Close"
 msgstr "Zatvori"
 
 msgid "Close an unused torrent after"
-msgstr ""
+msgstr "Zatvori nekorišćeni torent nakon"
 
 msgid "Closes the host opened in the web interface, clears the search results and stops what the web interface still runs in the background. Use it when a page keeps loading. Settings, downloads and the E2iPlayer on the TV are not touched."
 msgstr "Zatvara host otvoren u veb-interfejsu, briše rezultate pretrage i zaustavlja ono što veb-interfejs još izvršava u pozadini. Koristite ovo kada se stranica stalno učitava. Podešavanja, preuzimanja i E2iPlayer na televizoru ostaju netaknuti."
@@ -1155,7 +1155,7 @@ msgid "Comedy"
 msgstr "Komedija"
 
 msgid "Commentator"
-msgstr ""
+msgstr "Komentator"
 
 msgid "Comments"
 msgstr "Komentari"
@@ -1215,7 +1215,7 @@ msgid "Connection to the weeb.tv server failed."
 msgstr "Povezivanje sa weeb.tv serverom nije uspelo."
 
 msgid "Connections per torrent"
-msgstr ""
+msgstr "Veza po torentu"
 
 #, python-format
 msgid "Connections: %s of %s"
@@ -1237,7 +1237,7 @@ msgid "Copy"
 msgstr "Kopiraj"
 
 msgid "Copy it to /usr/bin/TorrServer (or a folder on HDD/USB) and make it executable (chmod 755)."
-msgstr ""
+msgstr "Kopirajte je u /usr/bin/TorrServer (ili u fasciklu na HDD/USB) i učinite je izvršnom (chmod 755)."
 
 msgid "Could not add the user link."
 msgstr "Korisnički link nije mogao da se doda."
@@ -1295,7 +1295,7 @@ msgstr "Kreiraj prateće datoteke (.txt/.jpg)"
 
 #, python-format
 msgid "Created: %s"
-msgstr ""
+msgstr "Napravljeno: %s"
 
 msgid "Creator:"
 msgstr "Autor:"
@@ -1304,7 +1304,7 @@ msgid "Creators:"
 msgstr "Autori:"
 
 msgid "Cricket"
-msgstr ""
+msgstr "Kriket"
 
 msgid "Crime"
 msgstr "Krimi"
@@ -1337,7 +1337,7 @@ msgid "DASH/mpd"
 msgstr "DASH/mpd"
 
 msgid "DLNA server of TorrServer"
-msgstr ""
+msgstr "DLNA server TorrServer-a"
 
 msgid "DOWNLOAD ERROR"
 msgstr "GREŠKA PRI PREUZIMANJU"
@@ -1358,7 +1358,7 @@ msgid "Darkgray"
 msgstr "Tamnosiva"
 
 msgid "Darts"
-msgstr ""
+msgstr "Pikado"
 
 msgid "Date"
 msgstr "Datum"
@@ -1442,7 +1442,7 @@ msgid "Delete JS cache now"
 msgstr "Obriši JS keš sada"
 
 msgid "Delete Watchlist folder"
-msgstr ""
+msgstr "Obriši fasciklu liste za gledanje"
 
 msgid "Delete all cache files now"
 msgstr "Obriši sve datoteke keša sada"
@@ -1463,7 +1463,7 @@ msgid "Delete favourites and watched status now"
 msgstr "Obriši omiljene i status gledanja sada"
 
 msgid "Delete folder"
-msgstr ""
+msgstr "Obriši fasciklu"
 
 msgid "Delete host order and groups now"
 msgstr "Obriši redosled hostova i grupe sada"
@@ -1493,15 +1493,15 @@ msgid "Delete subtitles cache now"
 msgstr "Obriši keš titlova sada"
 
 msgid "Delete the cache when the torrent is closed"
-msgstr ""
+msgstr "Obriši keš kada se torent zatvori"
 
 #, python-format
 msgid "Delete the folder \"%s\"? Its hosts go back to the group."
-msgstr ""
+msgstr "Obrisati fasciklu \"%s\"? Njeni hostovi se vraćaju u grupu."
 
 #, python-format
 msgid "Delete the folder \"%s\"? Its videos go back to the Watchlist."
-msgstr ""
+msgstr "Obrisati fasciklu \"%s\"? Njeni video snimci se vraćaju na listu za gledanje."
 
 msgid "Delete thumbnails cache now"
 msgstr "Obriši keš sličica sada"
@@ -1618,7 +1618,7 @@ msgstr "Preuzmi"
 
 #, python-format
 msgid "Download \"%s\" (for this receiver) from %s"
-msgstr ""
+msgstr "Preuzmite \"%s\" (za ovaj risiver) sa %s"
 
 #, python-format
 msgid "Download (ready in %d seconds)"
@@ -1628,7 +1628,7 @@ msgid "Download again"
 msgstr "Preuzmi ponovo"
 
 msgid "Download all items of this page"
-msgstr ""
+msgstr "Preuzmi sve stavke sa ove strane"
 
 msgid "Download already exists"
 msgstr "Preuzimanje već postoji"
@@ -1667,7 +1667,7 @@ msgstr "Menadžer preuzimanja nije inicijalizovan"
 
 #, python-format
 msgid "Download marked items (%d)"
-msgstr ""
+msgstr "Preuzmi označene stavke (%d)"
 
 msgid "Download new version"
 msgstr "Preuzmi novu verziju"
@@ -1676,7 +1676,7 @@ msgid "Download notification duration"
 msgstr "Trajanje obaveštenja o preuzimanju"
 
 msgid "Download speed limit"
-msgstr ""
+msgstr "Ograničenje brzine preuzimanja"
 
 msgid "Download subtiles failed."
 msgstr "Preuzimanje titlova nije uspelo."
@@ -1686,7 +1686,7 @@ msgstr "Preporučeno preuzimanje"
 
 #, python-format
 msgid "Download the Linux file for the CPU of this receiver from %s"
-msgstr ""
+msgstr "Preuzmite Linux datoteku za procesor ovog risivera sa %s"
 
 msgid "Downloaded file is too small or corrupted."
 msgstr "Preuzeta datoteka je premala ili oštećena."
@@ -1890,7 +1890,7 @@ msgid "Enabled hosts"
 msgstr "Omogućeni hostovi"
 
 msgid "Encrypted connections only"
-msgstr ""
+msgstr "Samo šifrovane veze"
 
 msgid "Encrypted stream list - not supported"
 msgstr "Šifrovana lista strimova - nije podržano"
@@ -2051,7 +2051,7 @@ msgid "Error saving favorites."
 msgstr "Greška pri čuvanju omiljenih."
 
 msgid "Error saving the Watchlist."
-msgstr ""
+msgstr "Greška pri čuvanju liste za gledanje."
 
 msgid "Error while loading watch data"
 msgstr "Greška pri učitavanju podataka o gledanju"
@@ -2206,10 +2206,10 @@ msgid "Featured"
 msgstr "Izdvojeno"
 
 msgid "FebBox token (\"ui\" cookie of www.febbox.com):"
-msgstr ""
+msgstr "FebBox token (\"ui\" kolačić sa www.febbox.com):"
 
 msgid "Female"
-msgstr ""
+msgstr "Žene"
 
 #, python-format
 msgid "File \"%s\" already exists"
@@ -2254,10 +2254,10 @@ msgid "File format of DASH (MPD) downloads"
 msgstr "Format datoteke za DASH (MPD) preuzimanja"
 
 msgid "File format of HLS (M3U8) downloads"
-msgstr ""
+msgstr "Format datoteke za HLS (M3U8) preuzimanja"
 
 msgid "File format of single video files (FFmpeg)"
-msgstr ""
+msgstr "Format datoteke za pojedinačne video datoteke (FFmpeg)"
 
 #, python-format
 msgid "File might be corrupted (size: %d bytes)."
@@ -2273,7 +2273,7 @@ msgid "Files"
 msgstr "Datoteke"
 
 msgid "Fill cache before playback"
-msgstr ""
+msgstr "Napuni keš pre reprodukcije"
 
 msgid "Filler"
 msgstr "Filer"
@@ -2338,7 +2338,7 @@ msgid "Folder for temporary data"
 msgstr "Fascikla za privremene podatke"
 
 msgid "Folder on HDD / USB"
-msgstr ""
+msgstr "Fascikla na HDD / USB"
 
 msgid "Followers"
 msgstr "Pratioci"
@@ -2356,7 +2356,7 @@ msgid "Foot & Ankle"
 msgstr "Stopalo i skočni zglob"
 
 msgid "Football"
-msgstr ""
+msgstr "Fudbal"
 
 msgid "Football Live"
 msgstr "Fudbal uživo"
@@ -2374,7 +2374,7 @@ msgid "Force internal skin: main screen only"
 msgstr "Nametni interni skin: samo glavni ekran"
 
 msgid "Force legacy grid"
-msgstr ""
+msgstr "Nametni staru mrežu ikona"
 
 msgid "Foreign movies"
 msgstr "Strani filmovi"
@@ -2395,7 +2395,7 @@ msgid "Fotka.pl stream :"
 msgstr "Fotka.pl strim :"
 
 msgid "Free"
-msgstr ""
+msgstr "Besplatno"
 
 msgid "Free IPTV list"
 msgstr "Besplatna IPTV lista"
@@ -2431,7 +2431,7 @@ msgid "Full test checks thumbnails :"
 msgstr "Potpuni test proverava sličice :"
 
 msgid "Futsal"
-msgstr ""
+msgstr "Futsal"
 
 msgid "GREEN"
 msgstr "ZELENI"
@@ -2551,7 +2551,7 @@ msgid "Hand"
 msgstr "Šaka"
 
 msgid "Handball"
-msgstr ""
+msgstr "Rukomet"
 
 msgid "Health"
 msgstr "Zdravlje"
@@ -2588,7 +2588,7 @@ msgid "History of searched phrases."
 msgstr "Istorija pretraženih izraza."
 
 msgid "Hockey"
-msgstr ""
+msgstr "Hokej"
 
 msgid "Home"
 msgstr "Početna"
@@ -2606,7 +2606,7 @@ msgid "Host"
 msgstr "Host"
 
 msgid "Host titles in lists"
-msgstr ""
+msgstr "Naslovi hostova u listama"
 
 #, python-format
 msgid "Host: %s"
@@ -2938,7 +2938,7 @@ msgid "Last Modified: %s"
 msgstr "Poslednja izmena: %s"
 
 msgid "Last Page"
-msgstr ""
+msgstr "Poslednja strana"
 
 msgid "Last air date:"
 msgstr "Datum poslednjeg emitovanja:"
@@ -2972,7 +2972,7 @@ msgstr "Prošla nedelja"
 
 #, python-format
 msgid "Last week: %s"
-msgstr ""
+msgstr "Prošle nedelje: %s"
 
 msgid "Last.fm charts and tag pages are behind a browser check, only the radio stations can be used."
 msgstr "Last.fm top liste i stranice oznaka su iza provere pregledača, mogu se koristiti samo radio stanice."
@@ -3027,7 +3027,7 @@ msgid "Latest videos from the channels you are subscribed to."
 msgstr "Najnoviji video snimci sa kanala na koje ste pretplaćeni."
 
 msgid "Latin American movies"
-msgstr ""
+msgstr "Latinoamerički filmovi"
 
 msgid "Latin American series"
 msgstr "Latinoameričke serije"
@@ -3191,7 +3191,7 @@ msgid "Login failed."
 msgstr "Prijava nije uspela."
 
 msgid "Login needed"
-msgstr ""
+msgstr "Potrebna je prijava"
 
 #, python-brace-format
 msgid "Login on {0} failed."
@@ -3225,7 +3225,7 @@ msgid "Longest"
 msgstr "Najduže"
 
 msgid "Loved tracks"
-msgstr ""
+msgstr "Omiljene pesme"
 
 msgid "Low"
 msgstr "Nizak"
@@ -3265,14 +3265,14 @@ msgid "Main"
 msgstr "Glavno"
 
 msgid "Main menu"
-msgstr ""
+msgstr "Glavni meni"
 
 #, python-format
 msgid "Make directory [%s]"
 msgstr "Napravi direktorijum [%s]"
 
 msgid "Male"
-msgstr ""
+msgstr "Muškarci"
 
 msgid "Manager status:"
 msgstr "Status menadžera:"
@@ -3302,16 +3302,16 @@ msgid "Max number of parallel downloads has been reached."
 msgstr "Dostignut je maksimalan broj paralelnih preuzimanja."
 
 msgid "MaxStream (uprot.net) asks for its image captcha: solve it in MyE2i, then open the video again."
-msgstr ""
+msgstr "MaxStream (uprot.net) traži svoju captcha sliku: rešite je u MyE2i, a zatim ponovo otvorite video."
 
 msgid "Maximum log file size"
 msgstr "Maksimalna veličina log datoteke"
 
 msgid "Maximum torrent size:"
-msgstr ""
+msgstr "Najveća veličina torenta:"
 
 msgid "MediaFusion manifest URL (your own):"
-msgstr ""
+msgstr "URL MediaFusion manifesta (vaš sopstveni):"
 
 msgid "Medtryx Marketing"
 msgstr "Medtryx marketing"
@@ -3407,10 +3407,10 @@ msgid "Most viewed series"
 msgstr "Najgledanije serije"
 
 msgid "Most voted"
-msgstr ""
+msgstr "Najviše glasova"
 
 msgid "Motorsport"
-msgstr ""
+msgstr "Moto-sport"
 
 #, python-format
 msgid ""
@@ -3429,10 +3429,10 @@ msgid "Move failed."
 msgstr "Pomeranje nije uspelo."
 
 msgid "Move to Watchlist folder..."
-msgstr ""
+msgstr "Premesti u fasciklu liste za gledanje..."
 
 msgid "Move to folder..."
-msgstr ""
+msgstr "Premesti u fasciklu..."
 
 msgid "Movie"
 msgstr "Film"
@@ -3488,7 +3488,7 @@ msgid "MyE2i browser check solution"
 msgstr "MyE2i rešenje provere pregledača"
 
 msgid "MyE2i captcha: solve it, then Job (no CONTINUE)"
-msgstr ""
+msgstr "MyE2i captcha: rešite je, zatim Job (bez CONTINUE)"
 
 msgid "MyE2i debug snapshot received - see the debug log."
 msgstr "MyE2i debug snimak stanja je primljen - pogledajte debug log."
@@ -3520,10 +3520,10 @@ msgid "MyE2i: offer to open the page in (Android)"
 msgstr "MyE2i: ponudi otvaranje stranice u (Android)"
 
 msgid "MyE2i: open the page in the browser"
-msgstr ""
+msgstr "MyE2i: otvori stranicu u pregledaču"
 
 msgid "Mystery"
-msgstr ""
+msgstr "Misterija"
 
 msgid ""
 "NO VIDEOS FOUND FOR NOW! \n"
@@ -3574,7 +3574,7 @@ msgid "New"
 msgstr "Novo"
 
 msgid "New Watchlist folder"
-msgstr ""
+msgstr "Nova fascikla liste za gledanje"
 
 msgid "New dir"
 msgstr "Novi direktorijum"
@@ -3586,7 +3586,7 @@ msgid "New episodes"
 msgstr "Nove epizode"
 
 msgid "New folder..."
-msgstr ""
+msgstr "Nova fascikla..."
 
 msgid "New icons will not be available."
 msgstr "Nove ikone neće biti dostupne."
@@ -3595,7 +3595,7 @@ msgid "New links"
 msgstr "Novi linkovi"
 
 msgid "New search"
-msgstr ""
+msgstr "Nova pretraga"
 
 msgid "New since installed version"
 msgstr "Novo od instalirane verzije"
@@ -3736,14 +3736,14 @@ msgid "Not available yet"
 msgstr "Još nije dostupno"
 
 msgid "Not in /usr/bin: choose the file under \"TorrServer binary\" in the torrent configuration."
-msgstr ""
+msgstr "Nije u /usr/bin: izaberite datoteku pod \"Izvršna datoteka TorrServer\" u konfiguraciji torenta."
 
 msgid "Not possible (no enigma2 session)."
 msgstr "Nije moguće (nema enigma2 sesije)."
 
 #, python-format
 msgid "Not removed, still downloading: %d"
-msgstr ""
+msgstr "Nije uklonjeno, još se preuzima: %d"
 
 msgid "Nothing available here at the moment (only upcoming broadcasts)."
 msgstr "Trenutno ovde ništa nije dostupno (samo predstojeće emisije)."
@@ -3764,11 +3764,11 @@ msgid "Now"
 msgstr "Sada"
 
 msgid "Now playing"
-msgstr ""
+msgstr "Sada u bioskopima"
 
 #, python-format
 msgid "Now playing: %s"
-msgstr ""
+msgstr "Trenutno se reprodukuje: %s"
 
 msgid "Number of columns"
 msgstr "Broj kolona"
@@ -3796,10 +3796,10 @@ msgid "OK"
 msgstr "OK"
 
 msgid "OK marks an item, BLUE shows what can be done with the marked items."
-msgstr ""
+msgstr "OK označava stavku, PLAVI prikazuje šta može da se uradi sa označenim stavkama."
 
 msgid "OK marks an item, MENU shows what can be done with the marked items."
-msgstr ""
+msgstr "OK označava stavku, MENU prikazuje šta može da se uradi sa označenim stavkama."
 
 msgid "OMDb API key (free at omdbapi.com)"
 msgstr "OMDb API ključ (besplatno na omdbapi.com)"
@@ -3850,7 +3850,7 @@ msgid "Open pull requests"
 msgstr "Otvoreni pull request-ovi"
 
 msgid "Open the page and get the link"
-msgstr ""
+msgstr "Otvori stranicu i preuzmi link"
 
 #, python-format
 msgid "Open this page in %s"
@@ -3997,11 +3997,11 @@ msgid "Patriotism"
 msgstr "Patriotizam"
 
 msgid "Pause between the batch lookups of one host [s]"
-msgstr ""
+msgstr "Pauza između grupnih upita jednog hosta [s]"
 
 #, python-format
 msgid "Peak: %s"
-msgstr ""
+msgstr "Najbolja pozicija: %s"
 
 msgid "Pediatrics"
 msgstr "Pedijatrija"
@@ -4034,14 +4034,14 @@ msgid "Pin protection for this host"
 msgstr "PIN zaštita za ovaj host"
 
 msgid "Play all from here"
-msgstr ""
+msgstr "Reprodukuj sve odavde"
 
 #, python-format
 msgid "Play marked items (%d)"
-msgstr ""
+msgstr "Reprodukuj označene stavke (%d)"
 
 msgid "Play torrents with TorrServer"
-msgstr ""
+msgstr "Reprodukuj torente pomoću TorrServer-a"
 
 #, python-format
 msgid "Play with [%s] player"
@@ -4210,7 +4210,7 @@ msgstr "URL portala i MAC adresa u konfiguraciji hosta, onako kako ih provajder 
 
 #, python-format
 msgid "Ports: %s"
-msgstr ""
+msgstr "Portovi: %s"
 
 msgid "Portuguese"
 msgstr "Portugalski"
@@ -4243,7 +4243,7 @@ msgid "Premium user"
 msgstr "Premium korisnik"
 
 msgid "Press EXIT to return to the previous menu."
-msgstr ""
+msgstr "Pritisnite EXIT za povratak u prethodni meni."
 
 msgid "Previous Page"
 msgstr "Prethodna strana"
@@ -4312,7 +4312,7 @@ msgid "Quick test: menu and a list with videos"
 msgstr "Brzi test: meni i lista sa video snimcima"
 
 msgid "RAM"
-msgstr ""
+msgstr "RAM memorija"
 
 msgid "RAM buffer size [MB] for local files"
 msgstr "Veličina RAM bafera [MB] za lokalne datoteke"
@@ -4380,7 +4380,7 @@ msgid "Rating: %s"
 msgstr "Ocena: %s"
 
 msgid "Read ahead (share of the cache)"
-msgstr ""
+msgstr "Unapred učitavanje (udeo keša)"
 
 msgid "Read by"
 msgstr "Čita"
@@ -4430,7 +4430,7 @@ msgid "Regions"
 msgstr "Regioni"
 
 msgid "Related seasons and works"
-msgstr ""
+msgstr "Povezane sezone i dela"
 
 msgid "Release"
 msgstr "Izdanje"
@@ -4474,25 +4474,27 @@ msgstr "Ukloni stavku \"%s\""
 
 #, python-format
 msgid "Remove %d items from the favourites?"
-msgstr ""
+msgstr "Ukloniti %d stavki iz omiljenih?"
 
 #, python-format
 msgid ""
 "Remove %d marked items?\n"
 "Their files are deleted too."
 msgstr ""
+"Ukloniti %d označenih stavki?\n"
+"Njihove datoteke se takođe brišu."
 
 msgid "Remove file"
 msgstr "Ukloni datoteku"
 
 msgid "Remove from Watchlist"
-msgstr ""
+msgstr "Ukloni sa liste za gledanje"
 
 msgid "Remove from favorites"
 msgstr "Ukloni iz omiljenih"
 
 msgid "Remove from folder"
-msgstr ""
+msgstr "Ukloni iz fascikle"
 
 msgid "Remove group"
 msgstr "Ukloni grupu"
@@ -4502,11 +4504,11 @@ msgstr "Ukloni stavku"
 
 #, python-format
 msgid "Remove marked items (%d)"
-msgstr ""
+msgstr "Ukloni označene stavke (%d)"
 
 #, python-format
 msgid "Remove marked items from favourites (%d)"
-msgstr ""
+msgstr "Ukloni označene stavke iz omiljenih (%d)"
 
 msgid "Remove thumbnails"
 msgstr "Ukloni sličice"
@@ -4515,7 +4517,7 @@ msgid "Rename"
 msgstr "Preimenuj"
 
 msgid "Rename Watchlist folder"
-msgstr ""
+msgstr "Preimenuj fasciklu liste za gledanje"
 
 msgid "Rename file"
 msgstr "Preimenuj datoteku"
@@ -4537,13 +4539,13 @@ msgstr "Datoteka izveštaja"
 
 #, python-format
 msgid "Reset the settings of \"%s\" to their default values?"
-msgstr ""
+msgstr "Vratiti podešavanja za \"%s\" na podrazumevane vrednosti?"
 
 msgid "Reset this list to its default layout?"
 msgstr "Vratiti ovu listu na podrazumevani raspored?"
 
 msgid "Reset this list to its default layout? Its folders are deleted too."
-msgstr ""
+msgstr "Vratiti ovu listu na podrazumevani raspored? Njene fascikle se takođe brišu."
 
 msgid "Reset to defaults"
 msgstr "Vrati na podrazumevano"
@@ -4667,7 +4669,7 @@ msgstr "Pretraga"
 
 #, python-format
 msgid "Search \"%s\" was not finished"
-msgstr ""
+msgstr "Pretraga \"%s\" nije završena"
 
 msgid "Search History is empty."
 msgstr "Istorija pretrage je prazna."
@@ -4676,7 +4678,7 @@ msgid "Search History successfully deleted."
 msgstr "Istorija pretrage je uspešno obrisana."
 
 msgid "Search automatically"
-msgstr ""
+msgstr "Traži automatski"
 
 msgid "Search for an artist (exact name) or a Last.fm user"
 msgstr "Pretražite izvođača (tačan naziv) ili Last.fm korisnika"
@@ -4751,7 +4753,7 @@ msgid "Season %s"
 msgstr "Sezona %s"
 
 msgid "Season pack"
-msgstr ""
+msgstr "Paket sezone"
 
 msgid "Seasons"
 msgstr "Sezone"
@@ -4776,7 +4778,7 @@ msgid "Sections"
 msgstr "Odeljci"
 
 msgid "Select"
-msgstr ""
+msgstr "Izaberi"
 
 #, python-format
 msgid "Select %s"
@@ -4786,7 +4788,7 @@ msgid "Select action"
 msgstr "Izaberite radnju"
 
 msgid "Select all"
-msgstr ""
+msgstr "Izaberi sve"
 
 msgid "Select audio track"
 msgstr "Izaberite audio zapis"
@@ -4804,7 +4806,7 @@ msgid "Select group"
 msgstr "Izaberite grupu"
 
 msgid "Select hosts for this folder..."
-msgstr ""
+msgstr "Izaberi hostove za ovu fasciklu..."
 
 msgid "Select language"
 msgstr "Izaberite jezik"
@@ -4831,7 +4833,7 @@ msgid "Select subtitles track"
 msgstr "Izaberite zapis titla"
 
 msgid "Select the TorrServer binary"
-msgstr ""
+msgstr "Izaberite izvršnu datoteku TorrServer"
 
 msgid "Select the directory"
 msgstr "Izaberite direktorijum"
@@ -4898,7 +4900,7 @@ msgstr "Server nije vratio ništa."
 
 #, python-format
 msgid "Server time: %s"
-msgstr ""
+msgstr "Vreme servera: %s"
 
 #, python-format
 msgid "Server, user name and password in the host configuration. The server field also takes a get.php link. More accounts: %s with one get.php link per line (X-Streamity format)."
@@ -4956,10 +4958,10 @@ msgid "Short Movies"
 msgstr "Kratki filmovi"
 
 msgid "Short films"
-msgstr ""
+msgstr "Kratki filmovi"
 
 msgid "Short name"
-msgstr ""
+msgstr "Kratko ime"
 
 msgid "Short series"
 msgstr "Kratke serije"
@@ -5037,13 +5039,13 @@ msgid "Show only best quality of streams:"
 msgstr "Prikaži samo strimove najboljeg kvaliteta:"
 
 msgid "Show playlist"
-msgstr ""
+msgstr "Prikaži plejlistu"
 
 msgid "Show results"
 msgstr "Prikaži rezultate"
 
 msgid "Show results so far"
-msgstr ""
+msgstr "Prikaži dosadašnje rezultate"
 
 msgid "Show search history"
 msgstr "Prikaži istoriju pretrage"
@@ -5052,7 +5054,7 @@ msgid "Show suggestions"
 msgstr "Prikaži predloge"
 
 msgid "ShowBox streams need a FebBox login: enter the \"ui\" cookie of your FebBox account in the host configuration."
-msgstr ""
+msgstr "ShowBox strimovi zahtevaju FebBox prijavu: unesite \"ui\" kolačić vašeg FebBox naloga u konfiguraciji hosta."
 
 msgid "Shows"
 msgstr "Šou programi"
@@ -5113,7 +5115,7 @@ msgid "Skip video shorter than [min]"
 msgstr "Preskoči video kraći od [min]"
 
 msgid "Snooker"
-msgstr ""
+msgstr "Snuker"
 
 msgid "Society"
 msgstr "Društvo"
@@ -5215,7 +5217,7 @@ msgid "Station:"
 msgstr "Stanica:"
 
 msgid "Status"
-msgstr ""
+msgstr "Stanje"
 
 msgid "Status:"
 msgstr "Status:"
@@ -5231,7 +5233,7 @@ msgid "Stop"
 msgstr "Zaustavi"
 
 msgid "Stop TorrServer when E2iPlayer is closed"
-msgstr ""
+msgstr "Zaustavi TorrServer kada se E2iPlayer zatvori"
 
 msgid "Stop downloading"
 msgstr "Zaustavi preuzimanje"
@@ -5250,7 +5252,7 @@ msgstr "Radnja"
 
 #, python-format
 msgid "Stream formats: %s"
-msgstr ""
+msgstr "Formati strima: %s"
 
 msgid "Stream link"
 msgstr "Link strima"
@@ -5394,7 +5396,7 @@ msgid "Swedish"
 msgstr "Švedski"
 
 msgid "Switch on torrent playback?"
-msgstr ""
+msgstr "Uključiti reprodukciju torenata?"
 
 msgid "Synchronize"
 msgstr "Sinhronizuj"
@@ -5500,7 +5502,7 @@ msgstr "Tok-šou programi"
 
 #, python-format
 msgid "Tariff: %s"
-msgstr ""
+msgstr "Tarifa: %s"
 
 msgid "Teams"
 msgstr "Timovi"
@@ -5515,7 +5517,7 @@ msgid "Temp"
 msgstr "Temp"
 
 msgid "Tennis"
-msgstr ""
+msgstr "Tenis"
 
 msgid "Test the failed sites again"
 msgstr "Ponovo testiraj neuspele sajtove"
@@ -5552,7 +5554,7 @@ msgid "The Stalker portal of this entry is not configured (any more)."
 msgstr "Stalker portal ove stavke nije (više) konfigurisan."
 
 msgid "The Watchlist is empty. MENU key on a video: \"Add to Watchlist\"."
-msgstr ""
+msgstr "Lista za gledanje je prazna. Taster MENU na videu: \"Dodaj na listu za gledanje\"."
 
 msgid "The Xtream account of this entry is not configured (any more)."
 msgstr "Xtream nalog ovog unosa nije (više) konfigurisan."
@@ -5674,7 +5676,7 @@ msgid "The link could not be resolved."
 msgstr "Link nije mogao biti razrešen."
 
 msgid "The link has expired. Please open the video again."
-msgstr ""
+msgstr "Link je istekao. Ponovo otvorite video."
 
 msgid "The list has changed, please try again."
 msgstr "Lista se promenila, pokušajte ponovo."
@@ -5718,10 +5720,15 @@ msgid ""
 "\n"
 "Leave this OFF if you do not want that. The other resolvers (VidEasy, VidLink, Peachify, vidrock, VidNest, ...) decrypt their links on the receiver and are not affected."
 msgstr ""
+"Resolveri 'VidCore', 'VidUp' i 'VidFast' ne mogu da dešifruju svoje linkove na risiveru.\n"
+"\n"
+"Kada je ova opcija UKLJUČENA, svaki put kada otvorite neki od njih, E2iPlayer šalje šifrovani token strima sa sajta - koji sadrži TMDb id filma ili epizode koju otvarate - spoljnom veb-servisu enc-dec.app (koji vodi privatno lice). Taj server tada pri svakoj reprodukciji vidi id i vašu IP adresu. Ništa drugo se ne prenosi, i to se koristi samo za ova tri resolvera.\n"
+"\n"
+"Ostavite opciju ISKLJUČENOM ako to ne želite. Ostali resolveri (VidEasy, VidLink, Peachify, vidrock, VidNest, ...) dešifruju svoje linkove na risiveru i nisu pogođeni."
 
 #, python-format
 msgid "The results of %d of %d sites are from the last search for \"%s\" - this asks all sites again"
-msgstr ""
+msgstr "Rezultati %d od %d sajtova potiču iz poslednje pretrage za \"%s\" - ovim se svi sajtovi ponovo pretražuju"
 
 msgid "The same item already exists in this group."
 msgstr "Ista stavka već postoji u ovoj grupi."
@@ -5743,7 +5750,7 @@ msgstr "Podešavanja su zaštićena PIN-om, promenite ih na risiveru."
 
 #, python-format
 msgid "The site did not answer with data (HTTP %s). It may be down or have moved."
-msgstr ""
+msgstr "Sajt nije vratio podatke (HTTP %s). Možda ne radi ili je premešten."
 
 msgid "The site has no player for this video (it only shows a cam advert)."
 msgstr "Sajt nema plejer za ovaj video snimak (prikazuje samo kam reklamu)."
@@ -5755,7 +5762,7 @@ msgid "The site rejected the search request."
 msgstr "Sajt je odbio zahtev za pretragu."
 
 msgid "The site's browser check (Cloudflare) could not be passed. The site may also be blocked in your country."
-msgstr ""
+msgstr "Provera pregledača na sajtu (Cloudflare) nije prošla. Sajt može biti i blokiran u vašoj zemlji."
 
 msgid "The site's browser check could not be passed."
 msgstr "Provera pregledača na sajtu nije mogla biti prođena."
@@ -5824,7 +5831,7 @@ msgstr ""
 
 #, python-format
 msgid "There is no storage device under \"%s\". TorrServer keeps its cache in RAM until a HDD or USB stick is mounted there."
-msgstr ""
+msgstr "Pod \"%s\" nema uređaja za skladištenje. TorrServer drži svoj keš u RAM-u dok se tamo ne montira HDD ili USB stik."
 
 msgid "This article has no free video."
 msgstr "Ovaj članak nema besplatan video snimak."
@@ -5872,7 +5879,7 @@ msgid "This feed is empty, or the YouTube sign-in has expired - sign out and in 
 msgstr "Ovaj fid je prazan ili je YouTube prijava istekla - odjavite se i ponovo prijavite."
 
 msgid "This folder is empty. MENU key on a video of the Watchlist: \"Move to Watchlist folder...\"."
-msgstr ""
+msgstr "Ova fascikla je prazna. Taster MENU na videu sa liste za gledanje: \"Premesti u fasciklu liste za gledanje...\"."
 
 msgid "This folder is protected by a PIN, open it on the receiver."
 msgstr "Ova fascikla je zaštićena PIN-om, otvorite je na risiveru."
@@ -6087,37 +6094,42 @@ msgid "Topics"
 msgstr "Teme"
 
 msgid "TorrServer binary (OK = choose, empty = search automatically)"
-msgstr ""
+msgstr "Izvršna datoteka TorrServer (OK = izaberi, prazno = traži automatski)"
 
 #, python-format
 msgid "TorrServer could not be started (%s)."
-msgstr ""
+msgstr "TorrServer nije mogao da se pokrene (%s)."
 
 msgid "TorrServer got no file list for this torrent (no peers or a dead link?)."
-msgstr ""
+msgstr "TorrServer nije dobio listu datoteka za ovaj torent (nema korisnika ili je link mrtav?)."
 
 msgid "TorrServer port"
-msgstr ""
+msgstr "TorrServer port"
 
 msgid "TorrServer was not found on the receiver. It is not part of E2iPlayer and not in the image feeds - install it yourself:"
-msgstr ""
+msgstr "TorrServer nije pronađen na risiveru. Nije deo E2iPlayer-a niti se nalazi u fidovima image-a - instalirajte ga sami:"
 
 msgid "TorrServer web interface in the home network"
-msgstr ""
+msgstr "TorrServer veb-interfejs u kućnoj mreži"
 
 msgid "Torrent"
-msgstr ""
+msgstr "Torent"
 
 msgid ""
 "Torrent links are played with TorrServer.\n"
 "Switch on \"Play torrents with TorrServer\" in the E2iPlayer settings (Torrent configuration)."
 msgstr ""
+"Torent linkovi se reprodukuju pomoću TorrServer-a.\n"
+"Uključite \"Reprodukuj torente pomoću TorrServer-a\" u podešavanjima E2iPlayer-a (Konfiguracija torenta)."
 
 msgid ""
 "Torrents are peer-to-peer: while a torrent plays, the receiver connects to other users and your IP address is visible to them. Depending on your country, downloading or sharing copyrighted content through torrents may be illegal - you alone are responsible for what you play. Upload to other peers stays off unless you switch it on.\n"
 "\n"
 "TorrServer itself is not part of E2iPlayer, it has to be installed separately."
 msgstr ""
+"Torenti rade po principu peer-to-peer: dok se torent reprodukuje, risiver se povezuje sa drugim korisnicima i vaša IP adresa im je vidljiva. U zavisnosti od vaše zemlje, preuzimanje ili deljenje sadržaja zaštićenog autorskim pravima putem torenata može biti nezakonito - samo ste vi odgovorni za ono što reprodukujete. Slanje drugim korisnicima ostaje isključeno dok ga ne uključite.\n"
+"\n"
+"Sam TorrServer nije deo E2iPlayer-a i mora se instalirati posebno."
 
 msgid "Total size:"
 msgstr "Ukupna veličina:"
@@ -6126,7 +6138,7 @@ msgid "Tourism"
 msgstr "Turizam"
 
 msgid "Tournament"
-msgstr ""
+msgstr "Turnir"
 
 msgid "Tracklist"
 msgstr "Lista numera"
@@ -6135,7 +6147,7 @@ msgid "Trailer"
 msgstr "Trejler"
 
 msgid "Trans"
-msgstr ""
+msgstr "Trans osobe"
 
 msgid "Translation:"
 msgstr "Prevod:"
@@ -6224,10 +6236,10 @@ msgid "Unable to comply. Search History is empty."
 msgstr "Nije moguće izvršiti. Istorija pretrage je prazna."
 
 msgid "Undo reverse"
-msgstr ""
+msgstr "Poništi obrtanje"
 
 msgid "Undo shuffle"
-msgstr ""
+msgstr "Poništi mešanje"
 
 msgid "Unfix jump target"
 msgstr "Ukloni fiksiranje cilja skoka"
@@ -6257,7 +6269,7 @@ msgid "Unrar error code[%s]."
 msgstr "Unrar kod greške[%s]."
 
 msgid "Unselect all"
-msgstr ""
+msgstr "Poništi izbor svih"
 
 msgid "Unset watched"
 msgstr "Ukloni oznaku pogledano"
@@ -6282,7 +6294,7 @@ msgid "Upload date"
 msgstr "Datum otpremanja"
 
 msgid "Upload speed limit"
-msgstr ""
+msgstr "Ograničenje brzine slanja"
 
 #, python-format
 msgid "Uploader: %s"
@@ -6483,7 +6495,7 @@ msgid "Voice-over"
 msgstr "Glas preko (voice-over)"
 
 msgid "Volleyball"
-msgstr ""
+msgstr "Odbojka"
 
 msgid "WWE shows"
 msgstr "WWE šou programi"
@@ -6507,23 +6519,23 @@ msgid "Watch online"
 msgstr "Gledaj onlajn"
 
 msgid "Watchlist"
-msgstr ""
+msgstr "Lista za gledanje"
 
 msgid "Watchlist (no folder)"
-msgstr ""
+msgstr "Lista za gledanje (bez fascikle)"
 
 msgid "Watchlist folder"
-msgstr ""
+msgstr "Fascikla liste za gledanje"
 
 msgid "WebStreamr / AIOStreams manifest URL (your own):"
-msgstr ""
+msgstr "URL WebStreamr / AIOStreams manifesta (vaš sopstveni):"
 
 msgid "Website address"
-msgstr ""
+msgstr "Adresa veb-sajta"
 
 #, python-format
 msgid "Weeks on chart: %s"
-msgstr ""
+msgstr "Nedelja na top-listi: %s"
 
 msgid "Western"
 msgstr "Vestern"
@@ -6547,7 +6559,7 @@ msgid "Winter"
 msgstr "Zima"
 
 msgid "Winter sports"
-msgstr ""
+msgstr "Zimski sportovi"
 
 msgid "With an API key from subdl.com (E2iPlayer settings, Subtitles) the official SubDL API is searched as well."
 msgstr "Sa API ključem sa subdl.com (E2iPlayer podešavanja, Titlovi) pretražuje se i zvanični SubDL API."
@@ -6695,7 +6707,7 @@ msgid "Your MyE2i extension is outdated or unknown (v%s or newer needed). Please
 msgstr "Vaše MyE2i proširenje je zastarelo ili nepoznato (potrebna je v%s ili novija). Ažurirajte ga:"
 
 msgid "Your own list of videos, in folders of your own (MENU key on a video: \"Add to Watchlist\")"
-msgstr ""
+msgstr "Vaša sopstvena lista video snimaka, u vašim fasciklama (taster MENU na videu: \"Dodaj na listu za gledanje\")"
 
 msgid "Your search entry"
 msgstr "Vaš unos za pretragu"
@@ -6936,10 +6948,10 @@ msgid "https - validate SSL certificates"
 msgstr "https - proveravaj SSL sertifikate"
 
 msgid "iTunes - Top albums by country"
-msgstr ""
+msgstr "iTunes - Najbolji albumi po zemlji"
 
 msgid "iTunes - Top songs by country"
-msgstr ""
+msgstr "iTunes - Najbolje pesme po zemlji"
 
 msgid "insert space"
 msgstr "umetni razmak"
@@ -6996,7 +7008,7 @@ msgid "manual"
 msgstr "ručno"
 
 msgid "marked"
-msgstr ""
+msgstr "označeno"
 
 msgid "maroon"
 msgstr "kestenjasta"
@@ -7038,7 +7050,7 @@ msgid "next page"
 msgstr "sledeća strana"
 
 msgid "next page / previous page"
-msgstr ""
+msgstr "sledeća strana / prethodna strana"
 
 msgid "next page = page 1"
 msgstr "sledeća strana = strana 1"
@@ -7119,7 +7131,7 @@ msgid "refresh the current list"
 msgstr "osveži trenutnu listu"
 
 msgid "reversed"
-msgstr ""
+msgstr "obrnuto"
 
 msgid "rootfs"
 msgstr "rootfs"
@@ -7186,7 +7198,7 @@ msgid "show this help"
 msgstr "prikaži ovu pomoć"
 
 msgid "shuffled"
-msgstr ""
+msgstr "izmešano"
 
 msgid "sign in (subscriptions, playlists, age-restricted videos)"
 msgstr "prijava (pretplate, plejliste, video snimci sa starosnim ograničenjem)"

@@ -67,7 +67,7 @@ msgstr "Odtwarzacz strumieni z Internetu"
 
 #, python-format
 msgid "%d added, %d skipped."
-msgstr ""
+msgstr "Dodano: %d, pominięto: %d."
 
 #, python-format
 msgid "%d duplicate entries removed."
@@ -79,11 +79,11 @@ msgstr "Usunięto zduplikowany wpis: %d."
 
 #, python-format
 msgid "%d items added to the download queue, %d skipped."
-msgstr ""
+msgstr "Dodano do kolejki pobierania: %d, pominięto: %d."
 
 #, python-format
 msgid "%d of %d downloaded"
-msgstr ""
+msgstr "Pobrano %d z %d"
 
 #, python-format
 msgid "%d parts"
@@ -99,7 +99,7 @@ msgstr "Recytacje: %d"
 
 #, python-format
 msgid "%d removed, %d skipped."
-msgstr ""
+msgstr "Usunięto: %d, pominięto: %d."
 
 #, python-format
 msgid "%d videos"
@@ -155,7 +155,7 @@ msgstr "%s obserwujących"
 
 #, python-format
 msgid "%s needs a free account. Enter login and password in the host configuration."
-msgstr ""
+msgstr "%s wymaga darmowego konta. Wpisz login i hasło w konfiguracji hosta."
 
 #, python-format
 msgid "%s password"
@@ -219,7 +219,7 @@ msgstr "%s wyświetleń"
 
 #, python-format
 msgid "%s: decrypting the stream, this can take a while (%d s)"
-msgstr ""
+msgstr "%s: odszyfrowywanie strumienia, to może chwilę potrwać (%d s)"
 
 #, python-format
 msgid "(%d YouTube channel(s) could not be read)"
@@ -301,7 +301,7 @@ msgid "----- Show or hide Porn Sites -----"
 msgstr "----- Pokaż lub ukryj strony porno -----"
 
 msgid "----- TORRENT CONFIGURATION -----"
-msgstr ""
+msgstr "----- KONFIGURACJA TORRENTÓW -----"
 
 msgid "----- VIRTUAL KEYBOARD & SEARCH CONFIGURATION -----"
 msgstr "----- USTAWIENIA KLAWIATURY WIRTUALNEJ I WYSZUKIWANIA -----"
@@ -375,7 +375,7 @@ msgstr "5 sekund"
 
 #, python-format
 msgid "A folder \"%s\" exists already."
-msgstr ""
+msgstr "Folder \"%s\" już istnieje."
 
 msgid "A search is already running."
 msgstr "Wyszukiwanie już trwa."
@@ -470,7 +470,7 @@ msgstr "Aktorzy:"
 
 #, python-format
 msgid "Add %d items to the download queue?"
-msgstr ""
+msgstr "Dodać %d pozycji do kolejki pobierania?"
 
 msgid "Add channel name to downloaded file"
 msgstr "Dodaj nazwę kanału do pobranego pliku"
@@ -487,7 +487,7 @@ msgstr "Dodaj element do grupy"
 
 #, python-format
 msgid "Add marked items to favourites (%d)"
-msgstr ""
+msgstr "Dodaj zaznaczone pozycje do ulubionych (%d)"
 
 msgid "Add new entry"
 msgstr "Dodaj nowy wpis"
@@ -502,10 +502,10 @@ msgid "Add to User Links"
 msgstr "Dodaj do linków użytkownika"
 
 msgid "Add to Watchlist"
-msgstr ""
+msgstr "Dodaj do listy do obejrzenia"
 
 msgid "Add to Watchlist folder..."
-msgstr ""
+msgstr "Dodaj do folderu listy do obejrzenia..."
 
 msgid "Added"
 msgstr "Dodano"
@@ -596,7 +596,7 @@ msgid "Allow host to override suggestions provider"
 msgstr "Zezwól hostowi na zmianę dostawcy podpowiedzi"
 
 msgid "Allow upload to other peers (seeding)"
-msgstr ""
+msgstr "Zezwalaj na wysyłanie do innych peerów (seeding)"
 
 msgid "Allow watched flag to be set"
 msgstr "Pozwól na oznaczaczanie materiałów jako obejrzane"
@@ -637,7 +637,7 @@ msgid "Alternative proxy server (5)"
 msgstr "Alternatywny serwer proxy (5)"
 
 msgid "American football"
-msgstr ""
+msgstr "Futbol amerykański"
 
 msgid "An API key from subsource.net can be entered in the E2iPlayer settings (Subtitles)."
 msgstr "Klucz API z subsource.net można wpisać w ustawieniach E2iPlayer (Napisy)."
@@ -857,7 +857,7 @@ msgstr "Backspace"
 
 #, python-format
 msgid "Balance: %s"
-msgstr ""
+msgstr "Saldo: %s"
 
 msgid "Balkans"
 msgstr "Bałkany"
@@ -866,7 +866,7 @@ msgid "Basic Science"
 msgstr "Nauka podstawowa"
 
 msgid "Basketball"
-msgstr ""
+msgstr "Koszykówka"
 
 msgid "Being watched"
 msgstr "Teraz oglądane"
@@ -918,7 +918,7 @@ msgid "Box"
 msgstr "Box"
 
 msgid "Boxing"
-msgstr ""
+msgstr "Boks"
 
 msgid "Broadcast:"
 msgstr "Emisja:"
@@ -953,20 +953,20 @@ msgid "Cache"
 msgstr "Pamięć podręczna"
 
 msgid "Cache folder"
-msgstr ""
+msgstr "Folder pamięci podręcznej"
 
 #, python-format
 msgid "Cache folder \"%s\" could not be created. Some data (cookies, subtitles, ...) may not be saved."
 msgstr "Nie udało się utworzyć folderu pamięci podręcznej \"%s\". Niektóre dane (ciasteczka, napisy, ...) mogą nie zostać zapisane."
 
 msgid "Cache location"
-msgstr ""
+msgstr "Lokalizacja pamięci podręcznej"
 
 msgid "Cache size in RAM"
-msgstr ""
+msgstr "Rozmiar pamięci podręcznej w RAM"
 
 msgid "Cache size on disk"
-msgstr ""
+msgstr "Rozmiar pamięci podręcznej na dysku"
 
 #, python-format
 msgid ""
@@ -1058,7 +1058,7 @@ msgid "Change active movie player"
 msgstr "Zmiana aktywnego odtwarzacza"
 
 msgid "Change folder icon"
-msgstr ""
+msgstr "Zmień ikonę folderu"
 
 msgid "Change own pin"
 msgstr "Zmień własny PIN"
@@ -1092,7 +1092,7 @@ msgid "Chinese anime"
 msgstr "Chińskie anime"
 
 msgid "Choose the TorrServer binary"
-msgstr ""
+msgstr "Wybierz plik programu TorrServer"
 
 msgid "Cinema History"
 msgstr "Historia kina"
@@ -1134,7 +1134,7 @@ msgid "Close"
 msgstr "Zamknij"
 
 msgid "Close an unused torrent after"
-msgstr ""
+msgstr "Zamknij nieużywany torrent po"
 
 msgid "Closes the host opened in the web interface, clears the search results and stops what the web interface still runs in the background. Use it when a page keeps loading. Settings, downloads and the E2iPlayer on the TV are not touched."
 msgstr "Zamyka host otwarty w interfejsie WWW, czyści wyniki wyszukiwania i zatrzymuje to, co interfejs WWW jeszcze wykonuje w tle. Użyj tego, gdy strona ciągle się wczytuje. Ustawienia, pobierania i E2iPlayer na TV pozostają nienaruszone."
@@ -1164,7 +1164,7 @@ msgid "Comedy"
 msgstr "Komedia"
 
 msgid "Commentator"
-msgstr ""
+msgstr "Komentator"
 
 msgid "Comments"
 msgstr "Komentarze"
@@ -1224,7 +1224,7 @@ msgid "Connection to the weeb.tv server failed."
 msgstr "Połączenie z serwerem weeb.tv nie powiodło się."
 
 msgid "Connections per torrent"
-msgstr ""
+msgstr "Połączenia na torrent"
 
 #, python-format
 msgid "Connections: %s of %s"
@@ -1246,7 +1246,7 @@ msgid "Copy"
 msgstr "Kopiuj"
 
 msgid "Copy it to /usr/bin/TorrServer (or a folder on HDD/USB) and make it executable (chmod 755)."
-msgstr ""
+msgstr "Skopiuj go do /usr/bin/TorrServer (lub do folderu na HDD/USB) i nadaj mu prawo wykonywania (chmod 755)."
 
 msgid "Could not add the user link."
 msgstr "Nie udało się dodać linku użytkownika."
@@ -1304,7 +1304,7 @@ msgstr "Twórz pliki towarzyszące (.txt/.jpg)"
 
 #, python-format
 msgid "Created: %s"
-msgstr ""
+msgstr "Utworzono: %s"
 
 msgid "Creator:"
 msgstr "Twórca:"
@@ -1313,7 +1313,7 @@ msgid "Creators:"
 msgstr "Twórcy:"
 
 msgid "Cricket"
-msgstr ""
+msgstr "Krykiet"
 
 msgid "Crime"
 msgstr "Kryminał"
@@ -1346,7 +1346,7 @@ msgid "DASH/mpd"
 msgstr "DASH/mpd"
 
 msgid "DLNA server of TorrServer"
-msgstr ""
+msgstr "Serwer DLNA TorrServera"
 
 msgid "DOWNLOAD ERROR"
 msgstr "BŁĄD POBIERANIA"
@@ -1367,7 +1367,7 @@ msgid "Darkgray"
 msgstr "Ciemno szare"
 
 msgid "Darts"
-msgstr ""
+msgstr "Rzutki"
 
 msgid "Date"
 msgstr "Data"
@@ -1451,7 +1451,7 @@ msgid "Delete JS cache now"
 msgstr "Usuń teraz pamięć podręczną JS"
 
 msgid "Delete Watchlist folder"
-msgstr ""
+msgstr "Usuń folder listy do obejrzenia"
 
 msgid "Delete all cache files now"
 msgstr "Usuń teraz wszystkie pliki pamięci podręcznej"
@@ -1472,7 +1472,7 @@ msgid "Delete favourites and watched status now"
 msgstr "Usuń teraz ulubione i status obejrzenia"
 
 msgid "Delete folder"
-msgstr ""
+msgstr "Usuń folder"
 
 msgid "Delete host order and groups now"
 msgstr "Usuń teraz kolejność hostów i grupy"
@@ -1502,15 +1502,15 @@ msgid "Delete subtitles cache now"
 msgstr "Usuń teraz pamięć podręczną napisów"
 
 msgid "Delete the cache when the torrent is closed"
-msgstr ""
+msgstr "Usuń pamięć podręczną po zamknięciu torrenta"
 
 #, python-format
 msgid "Delete the folder \"%s\"? Its hosts go back to the group."
-msgstr ""
+msgstr "Usunąć folder \"%s\"? Jego hosty wrócą do grupy."
 
 #, python-format
 msgid "Delete the folder \"%s\"? Its videos go back to the Watchlist."
-msgstr ""
+msgstr "Usunąć folder \"%s\"? Jego filmy wrócą do listy do obejrzenia."
 
 msgid "Delete thumbnails cache now"
 msgstr "Usuń teraz pamięć podręczną miniatur"
@@ -1627,7 +1627,7 @@ msgstr "Pobierz"
 
 #, python-format
 msgid "Download \"%s\" (for this receiver) from %s"
-msgstr ""
+msgstr "Pobierz \"%s\" (dla tego odbiornika) z %s"
 
 #, python-format
 msgid "Download (ready in %d seconds)"
@@ -1637,7 +1637,7 @@ msgid "Download again"
 msgstr "Pobierz ponownie"
 
 msgid "Download all items of this page"
-msgstr ""
+msgstr "Pobierz wszystkie pozycje z tej strony"
 
 msgid "Download already exists"
 msgstr "Pobrany plik już istnieje"
@@ -1676,7 +1676,7 @@ msgstr "Menedżer pobierania nie został zainicjowany"
 
 #, python-format
 msgid "Download marked items (%d)"
-msgstr ""
+msgstr "Pobierz zaznaczone pozycje (%d)"
 
 msgid "Download new version"
 msgstr "Pobierz nową wersję"
@@ -1685,7 +1685,7 @@ msgid "Download notification duration"
 msgstr "Czas wyświetlania powiadomienia o pobieraniu"
 
 msgid "Download speed limit"
-msgstr ""
+msgstr "Limit prędkości pobierania"
 
 msgid "Download subtiles failed."
 msgstr "Pobieranie napisów nie powiodło się."
@@ -1695,7 +1695,7 @@ msgstr "Pobierz sugerowane"
 
 #, python-format
 msgid "Download the Linux file for the CPU of this receiver from %s"
-msgstr ""
+msgstr "Pobierz plik Linux dla procesora tego odbiornika z %s"
 
 msgid "Downloaded file is too small or corrupted."
 msgstr "Pobrany plik jest zbyt mały lub uszkodzony."
@@ -1899,7 +1899,7 @@ msgid "Enabled hosts"
 msgstr "Włączone hosty"
 
 msgid "Encrypted connections only"
-msgstr ""
+msgstr "Tylko szyfrowane połączenia"
 
 msgid "Encrypted stream list - not supported"
 msgstr "Zaszyfrowana lista strumieni - nieobsługiwana"
@@ -2060,7 +2060,7 @@ msgid "Error saving favorites."
 msgstr "Błąd zapisywania ulubionych."
 
 msgid "Error saving the Watchlist."
-msgstr ""
+msgstr "Błąd zapisu listy do obejrzenia."
 
 msgid "Error while loading watch data"
 msgstr "Błąd wczytywania danych oglądania"
@@ -2215,10 +2215,10 @@ msgid "Featured"
 msgstr "Polecane"
 
 msgid "FebBox token (\"ui\" cookie of www.febbox.com):"
-msgstr ""
+msgstr "Token FebBox (ciasteczko \"ui\" z www.febbox.com):"
 
 msgid "Female"
-msgstr ""
+msgstr "Kobiety"
 
 #, python-format
 msgid "File \"%s\" already exists"
@@ -2263,10 +2263,10 @@ msgid "File format of DASH (MPD) downloads"
 msgstr "Format plików pobierania DASH (MPD)"
 
 msgid "File format of HLS (M3U8) downloads"
-msgstr ""
+msgstr "Format plików pobieranych HLS (M3U8)"
 
 msgid "File format of single video files (FFmpeg)"
-msgstr ""
+msgstr "Format pojedynczych plików wideo (FFmpeg)"
 
 #, python-format
 msgid "File might be corrupted (size: %d bytes)."
@@ -2282,7 +2282,7 @@ msgid "Files"
 msgstr "Pliki"
 
 msgid "Fill cache before playback"
-msgstr ""
+msgstr "Wypełnij pamięć podręczną przed odtwarzaniem"
 
 msgid "Filler"
 msgstr "Filler"
@@ -2347,7 +2347,7 @@ msgid "Folder for temporary data"
 msgstr "Folder na dane tymczasowe (tmp)"
 
 msgid "Folder on HDD / USB"
-msgstr ""
+msgstr "Folder na HDD / USB"
 
 msgid "Followers"
 msgstr "Obserwujący"
@@ -2365,7 +2365,7 @@ msgid "Foot & Ankle"
 msgstr "Stopa i kostka"
 
 msgid "Football"
-msgstr ""
+msgstr "Piłka nożna"
 
 msgid "Football Live"
 msgstr "Football Live"
@@ -2383,7 +2383,7 @@ msgid "Force internal skin: main screen only"
 msgstr "Wymuś wewnętrzną skórę: tylko ekran główny"
 
 msgid "Force legacy grid"
-msgstr ""
+msgstr "Wymuś starą siatkę ikon"
 
 msgid "Foreign movies"
 msgstr "Filmy zagraniczne"
@@ -2404,7 +2404,7 @@ msgid "Fotka.pl stream :"
 msgstr "Strumień Fotka.pl :"
 
 msgid "Free"
-msgstr ""
+msgstr "Darmowe"
 
 msgid "Free IPTV list"
 msgstr "Darmowa lista IPTV"
@@ -2440,7 +2440,7 @@ msgid "Full test checks thumbnails :"
 msgstr "Pełny test sprawdza miniatury :"
 
 msgid "Futsal"
-msgstr ""
+msgstr "Futsal"
 
 msgid "GREEN"
 msgstr "ZIELONY"
@@ -2560,7 +2560,7 @@ msgid "Hand"
 msgstr "Dłoń"
 
 msgid "Handball"
-msgstr ""
+msgstr "Piłka ręczna"
 
 msgid "Health"
 msgstr "Zdrowie"
@@ -2597,7 +2597,7 @@ msgid "History of searched phrases."
 msgstr "Historia wyszukiwanych fraz."
 
 msgid "Hockey"
-msgstr ""
+msgstr "Hokej na lodzie"
 
 msgid "Home"
 msgstr "Głowna strona"
@@ -2615,7 +2615,7 @@ msgid "Host"
 msgstr "Host"
 
 msgid "Host titles in lists"
-msgstr ""
+msgstr "Tytuły hostów na listach"
 
 #, python-format
 msgid "Host: %s"
@@ -2947,7 +2947,7 @@ msgid "Last Modified: %s"
 msgstr "Ostatnia modyfikacja: %s"
 
 msgid "Last Page"
-msgstr ""
+msgstr "Ostatnia strona"
 
 msgid "Last air date:"
 msgstr "Data ostatniej emisji:"
@@ -2981,7 +2981,7 @@ msgstr "Ostatni tydzień"
 
 #, python-format
 msgid "Last week: %s"
-msgstr ""
+msgstr "Poprzedni tydzień: %s"
 
 msgid "Last.fm charts and tag pages are behind a browser check, only the radio stations can be used."
 msgstr "Listy przebojów i strony tagów Last.fm są za weryfikacją przeglądarki, można używać tylko stacji radiowych."
@@ -3036,7 +3036,7 @@ msgid "Latest videos from the channels you are subscribed to."
 msgstr "Najnowsze filmy z subskrybowanych kanałów."
 
 msgid "Latin American movies"
-msgstr ""
+msgstr "Filmy latynoamerykańskie"
 
 msgid "Latin American series"
 msgstr "Seriale latynoamerykańskie"
@@ -3200,7 +3200,7 @@ msgid "Login failed."
 msgstr "Logowanie nieudane."
 
 msgid "Login needed"
-msgstr ""
+msgstr "Wymagane logowanie"
 
 #, python-brace-format
 msgid "Login on {0} failed."
@@ -3234,7 +3234,7 @@ msgid "Longest"
 msgstr "Najdłuższe"
 
 msgid "Loved tracks"
-msgstr ""
+msgstr "Ulubione utwory"
 
 msgid "Low"
 msgstr "Niska"
@@ -3274,14 +3274,14 @@ msgid "Main"
 msgstr "Główna strona"
 
 msgid "Main menu"
-msgstr ""
+msgstr "Menu główne"
 
 #, python-format
 msgid "Make directory [%s]"
 msgstr "Utwórz folder [%s]"
 
 msgid "Male"
-msgstr ""
+msgstr "Mężczyźni"
 
 msgid "Manager status:"
 msgstr "Stan Menadżera:"
@@ -3311,16 +3311,16 @@ msgid "Max number of parallel downloads has been reached."
 msgstr "Osiągnięto maksymalną liczbę równoczesnych pobierań."
 
 msgid "MaxStream (uprot.net) asks for its image captcha: solve it in MyE2i, then open the video again."
-msgstr ""
+msgstr "MaxStream (uprot.net) wymaga rozwiązania captcha obrazkowej: rozwiąż ją w MyE2i, a potem otwórz film ponownie."
 
 msgid "Maximum log file size"
 msgstr "Maksymalny rozmiar pliku logu"
 
 msgid "Maximum torrent size:"
-msgstr ""
+msgstr "Maksymalny rozmiar torrenta:"
 
 msgid "MediaFusion manifest URL (your own):"
-msgstr ""
+msgstr "URL manifestu MediaFusion (własny):"
 
 msgid "Medtryx Marketing"
 msgstr "Marketing Medtrix"
@@ -3416,10 +3416,10 @@ msgid "Most viewed series"
 msgstr "Najczęściej oglądane seriale"
 
 msgid "Most voted"
-msgstr ""
+msgstr "Najwięcej głosów"
 
 msgid "Motorsport"
-msgstr ""
+msgstr "Sporty motorowe"
 
 #, python-format
 msgid ""
@@ -3438,10 +3438,10 @@ msgid "Move failed."
 msgstr "Przenoszenie nie powiodło się."
 
 msgid "Move to Watchlist folder..."
-msgstr ""
+msgstr "Przenieś do folderu listy do obejrzenia..."
 
 msgid "Move to folder..."
-msgstr ""
+msgstr "Przenieś do folderu..."
 
 msgid "Movie"
 msgstr "Film"
@@ -3497,7 +3497,7 @@ msgid "MyE2i browser check solution"
 msgstr "MyE2i - rozwiązanie weryfikacji przeglądarki"
 
 msgid "MyE2i captcha: solve it, then Job (no CONTINUE)"
-msgstr ""
+msgstr "Captcha MyE2i: rozwiąż, potem Job (bez CONTINUE)"
 
 msgid "MyE2i debug snapshot received - see the debug log."
 msgstr "Otrzymano migawkę debugowania MyE2i - zobacz log debugowania."
@@ -3529,10 +3529,10 @@ msgid "MyE2i: offer to open the page in (Android)"
 msgstr "MyE2i: proponuj otwarcie strony w (Android)"
 
 msgid "MyE2i: open the page in the browser"
-msgstr ""
+msgstr "MyE2i: otwórz stronę w przeglądarce"
 
 msgid "Mystery"
-msgstr ""
+msgstr "Tajemnica"
 
 msgid ""
 "NO VIDEOS FOUND FOR NOW! \n"
@@ -3583,7 +3583,7 @@ msgid "New"
 msgstr "Nowe"
 
 msgid "New Watchlist folder"
-msgstr ""
+msgstr "Nowy folder listy do obejrzenia"
 
 msgid "New dir"
 msgstr "Nowy folder"
@@ -3595,7 +3595,7 @@ msgid "New episodes"
 msgstr "Nowe odcinki"
 
 msgid "New folder..."
-msgstr ""
+msgstr "Nowy folder..."
 
 msgid "New icons will not be available."
 msgstr "Nowe ikony nie będą dostępne."
@@ -3604,7 +3604,7 @@ msgid "New links"
 msgstr "Nowe linki"
 
 msgid "New search"
-msgstr ""
+msgstr "Nowe wyszukiwanie"
 
 msgid "New since installed version"
 msgstr "Nowości od zainstalowanej wersji"
@@ -3745,14 +3745,14 @@ msgid "Not available yet"
 msgstr "Jeszcze niedostępne"
 
 msgid "Not in /usr/bin: choose the file under \"TorrServer binary\" in the torrent configuration."
-msgstr ""
+msgstr "Brak w /usr/bin: wybierz plik w \"Plik programu TorrServer\" w konfiguracji torrentów."
 
 msgid "Not possible (no enigma2 session)."
 msgstr "Niemożliwe (brak sesji enigma2)."
 
 #, python-format
 msgid "Not removed, still downloading: %d"
-msgstr ""
+msgstr "Nie usunięto, nadal pobierane: %d"
 
 msgid "Nothing available here at the moment (only upcoming broadcasts)."
 msgstr "Obecnie nic tu nie jest dostępne (tylko nadchodzące transmisje)."
@@ -3773,11 +3773,11 @@ msgid "Now"
 msgstr "Teraz"
 
 msgid "Now playing"
-msgstr ""
+msgstr "Teraz w kinach"
 
 #, python-format
 msgid "Now playing: %s"
-msgstr ""
+msgstr "Teraz odtwarzane: %s"
 
 msgid "Number of columns"
 msgstr "Liczba kolumn"
@@ -3805,10 +3805,10 @@ msgid "OK"
 msgstr "OK"
 
 msgid "OK marks an item, BLUE shows what can be done with the marked items."
-msgstr ""
+msgstr "OK zaznacza pozycję, NIEBIESKI pokazuje, co można zrobić z zaznaczonymi pozycjami."
 
 msgid "OK marks an item, MENU shows what can be done with the marked items."
-msgstr ""
+msgstr "OK zaznacza pozycję, MENU pokazuje, co można zrobić z zaznaczonymi pozycjami."
 
 msgid "OMDb API key (free at omdbapi.com)"
 msgstr "Klucz API OMDb (darmowy na omdbapi.com)"
@@ -3859,7 +3859,7 @@ msgid "Open pull requests"
 msgstr "Otwarte pull requesty"
 
 msgid "Open the page and get the link"
-msgstr ""
+msgstr "Otwórz stronę i pobierz link"
 
 #, python-format
 msgid "Open this page in %s"
@@ -4006,11 +4006,11 @@ msgid "Patriotism"
 msgstr "Patriotyzm"
 
 msgid "Pause between the batch lookups of one host [s]"
-msgstr ""
+msgstr "Przerwa między zbiorczymi zapytaniami jednego hosta [s]"
 
 #, python-format
 msgid "Peak: %s"
-msgstr ""
+msgstr "Najwyższa pozycja: %s"
 
 msgid "Pediatrics"
 msgstr "Pediatria"
@@ -4043,14 +4043,14 @@ msgid "Pin protection for this host"
 msgstr "Ochrona kodem PIN dla tego hosta"
 
 msgid "Play all from here"
-msgstr ""
+msgstr "Odtwórz wszystko od tego miejsca"
 
 #, python-format
 msgid "Play marked items (%d)"
-msgstr ""
+msgstr "Odtwórz zaznaczone pozycje (%d)"
 
 msgid "Play torrents with TorrServer"
-msgstr ""
+msgstr "Odtwarzaj torrenty przez TorrServer"
 
 #, python-format
 msgid "Play with [%s] player"
@@ -4219,7 +4219,7 @@ msgstr "URL portalu i adres MAC w konfiguracji hosta, tak jak podaje je dostawca
 
 #, python-format
 msgid "Ports: %s"
-msgstr ""
+msgstr "Porty: %s"
 
 msgid "Portuguese"
 msgstr "Portugalski"
@@ -4252,7 +4252,7 @@ msgid "Premium user"
 msgstr "Użytkownik Premium"
 
 msgid "Press EXIT to return to the previous menu."
-msgstr ""
+msgstr "Naciśnij EXIT, aby wrócić do poprzedniego menu."
 
 msgid "Previous Page"
 msgstr "Poprzednia strona"
@@ -4321,7 +4321,7 @@ msgid "Quick test: menu and a list with videos"
 msgstr "Szybki test: menu i lista z filmami"
 
 msgid "RAM"
-msgstr ""
+msgstr "RAM"
 
 msgid "RAM buffer size [MB] for local files"
 msgstr "Rozmiar bufora w RAM dla plików lokalnych"
@@ -4389,7 +4389,7 @@ msgid "Rating: %s"
 msgstr "Ocena: %s"
 
 msgid "Read ahead (share of the cache)"
-msgstr ""
+msgstr "Odczyt z wyprzedzeniem (część pamięci podręcznej)"
 
 msgid "Read by"
 msgstr "Czyta"
@@ -4439,7 +4439,7 @@ msgid "Regions"
 msgstr "Regiony"
 
 msgid "Related seasons and works"
-msgstr ""
+msgstr "Powiązane sezony i dzieła"
 
 msgid "Release"
 msgstr "Data wydania"
@@ -4483,25 +4483,27 @@ msgstr "Usuń \"%s\" element"
 
 #, python-format
 msgid "Remove %d items from the favourites?"
-msgstr ""
+msgstr "Usunąć %d pozycji z ulubionych?"
 
 #, python-format
 msgid ""
 "Remove %d marked items?\n"
 "Their files are deleted too."
 msgstr ""
+"Usunąć %d zaznaczonych pozycji?\n"
+"Ich pliki również zostaną usunięte."
 
 msgid "Remove file"
 msgstr "Usuń plik"
 
 msgid "Remove from Watchlist"
-msgstr ""
+msgstr "Usuń z listy do obejrzenia"
 
 msgid "Remove from favorites"
 msgstr "Usuń z ulubionych"
 
 msgid "Remove from folder"
-msgstr ""
+msgstr "Usuń z folderu"
 
 msgid "Remove group"
 msgstr "Usuń grupę"
@@ -4511,11 +4513,11 @@ msgstr "Usuń pozycje"
 
 #, python-format
 msgid "Remove marked items (%d)"
-msgstr ""
+msgstr "Usuń zaznaczone pozycje (%d)"
 
 #, python-format
 msgid "Remove marked items from favourites (%d)"
-msgstr ""
+msgstr "Usuń zaznaczone pozycje z ulubionych (%d)"
 
 msgid "Remove thumbnails"
 msgstr "Usunąć miniatury"
@@ -4524,7 +4526,7 @@ msgid "Rename"
 msgstr "Zmień nazwę"
 
 msgid "Rename Watchlist folder"
-msgstr ""
+msgstr "Zmień nazwę folderu listy do obejrzenia"
 
 msgid "Rename file"
 msgstr "Zmień nazwę pliku"
@@ -4546,13 +4548,13 @@ msgstr "Plik raportu"
 
 #, python-format
 msgid "Reset the settings of \"%s\" to their default values?"
-msgstr ""
+msgstr "Przywrócić domyślne wartości ustawień \"%s\"?"
 
 msgid "Reset this list to its default layout?"
 msgstr "Przywrócić domyślny układ tej listy?"
 
 msgid "Reset this list to its default layout? Its folders are deleted too."
-msgstr ""
+msgstr "Przywrócić domyślny układ tej listy? Jej foldery również zostaną usunięte."
 
 msgid "Reset to defaults"
 msgstr "Przywróć domyślne"
@@ -4676,7 +4678,7 @@ msgstr "Wyszukaj"
 
 #, python-format
 msgid "Search \"%s\" was not finished"
-msgstr ""
+msgstr "Wyszukiwanie \"%s\" nie zostało zakończone"
 
 msgid "Search History is empty."
 msgstr "Historia wyszukiwania jest pusta."
@@ -4685,7 +4687,7 @@ msgid "Search History successfully deleted."
 msgstr "Historia wyszukiwania została pomyślnie usunięta."
 
 msgid "Search automatically"
-msgstr ""
+msgstr "Szukaj automatycznie"
 
 msgid "Search for an artist (exact name) or a Last.fm user"
 msgstr "Szukaj wykonawcy (dokładna nazwa) lub użytkownika Last.fm"
@@ -4760,7 +4762,7 @@ msgid "Season %s"
 msgstr "Sezon %s"
 
 msgid "Season pack"
-msgstr ""
+msgstr "Paczka sezonu"
 
 msgid "Seasons"
 msgstr "Sezony"
@@ -4785,7 +4787,7 @@ msgid "Sections"
 msgstr "Sekcje"
 
 msgid "Select"
-msgstr ""
+msgstr "Zaznacz"
 
 #, python-format
 msgid "Select %s"
@@ -4795,7 +4797,7 @@ msgid "Select action"
 msgstr "Wybierz działanie"
 
 msgid "Select all"
-msgstr ""
+msgstr "Zaznacz wszystko"
 
 msgid "Select audio track"
 msgstr "Wybierz ścieżkę audio"
@@ -4813,7 +4815,7 @@ msgid "Select group"
 msgstr "Wybór grupy"
 
 msgid "Select hosts for this folder..."
-msgstr ""
+msgstr "Wybierz hosty dla tego folderu..."
 
 msgid "Select language"
 msgstr "Wybierz język"
@@ -4840,7 +4842,7 @@ msgid "Select subtitles track"
 msgstr "Wybierz ścieżkę napisów"
 
 msgid "Select the TorrServer binary"
-msgstr ""
+msgstr "Wybierz plik programu TorrServer"
 
 msgid "Select the directory"
 msgstr "Wybierz katalog"
@@ -4907,7 +4909,7 @@ msgstr "Serwer nic nie zwrócił."
 
 #, python-format
 msgid "Server time: %s"
-msgstr ""
+msgstr "Czas serwera: %s"
 
 #, python-format
 msgid "Server, user name and password in the host configuration. The server field also takes a get.php link. More accounts: %s with one get.php link per line (X-Streamity format)."
@@ -4965,10 +4967,10 @@ msgid "Short Movies"
 msgstr "Filmy krótkometrażowe"
 
 msgid "Short films"
-msgstr ""
+msgstr "Filmy krótkometrażowe"
 
 msgid "Short name"
-msgstr ""
+msgstr "Krótka nazwa"
 
 msgid "Short series"
 msgstr "Krótkie seriale"
@@ -5046,13 +5048,13 @@ msgid "Show only best quality of streams:"
 msgstr "Pokaż tylko najlepszą jakość strumieni:"
 
 msgid "Show playlist"
-msgstr ""
+msgstr "Pokaż listę odtwarzania"
 
 msgid "Show results"
 msgstr "Pokaż wyniki"
 
 msgid "Show results so far"
-msgstr ""
+msgstr "Pokaż dotychczasowe wyniki"
 
 msgid "Show search history"
 msgstr "Pokaż historię wyszukiwania"
@@ -5061,7 +5063,7 @@ msgid "Show suggestions"
 msgstr "Wyświetl sugestie"
 
 msgid "ShowBox streams need a FebBox login: enter the \"ui\" cookie of your FebBox account in the host configuration."
-msgstr ""
+msgstr "Strumienie ShowBox wymagają logowania FebBox: wpisz ciasteczko \"ui\" swojego konta FebBox w konfiguracji hosta."
 
 msgid "Shows"
 msgstr "Shows"
@@ -5122,7 +5124,7 @@ msgid "Skip video shorter than [min]"
 msgstr "Pomiń wideo krótsze niż [min]"
 
 msgid "Snooker"
-msgstr ""
+msgstr "Snooker"
 
 msgid "Society"
 msgstr "Społeczeństwo"
@@ -5225,7 +5227,7 @@ msgid "Station:"
 msgstr "Stacja:"
 
 msgid "Status"
-msgstr ""
+msgstr "Stan"
 
 msgid "Status:"
 msgstr "Status:"
@@ -5241,7 +5243,7 @@ msgid "Stop"
 msgstr "Zatrzymaj"
 
 msgid "Stop TorrServer when E2iPlayer is closed"
-msgstr ""
+msgstr "Zatrzymaj TorrServer po zamknięciu E2iPlayer"
 
 msgid "Stop downloading"
 msgstr "Zatrzymaj pobieranie"
@@ -5260,7 +5262,7 @@ msgstr "Fabuła"
 
 #, python-format
 msgid "Stream formats: %s"
-msgstr ""
+msgstr "Formaty strumieni: %s"
 
 msgid "Stream link"
 msgstr "Link do strumienia"
@@ -5404,7 +5406,7 @@ msgid "Swedish"
 msgstr "Szwedzkie"
 
 msgid "Switch on torrent playback?"
-msgstr ""
+msgstr "Włączyć odtwarzanie torrentów?"
 
 msgid "Synchronize"
 msgstr "Synchronizacja"
@@ -5510,7 +5512,7 @@ msgstr "Talk-show"
 
 #, python-format
 msgid "Tariff: %s"
-msgstr ""
+msgstr "Taryfa: %s"
 
 msgid "Teams"
 msgstr "Drużyny"
@@ -5525,7 +5527,7 @@ msgid "Temp"
 msgstr "Temp"
 
 msgid "Tennis"
-msgstr ""
+msgstr "Tenis"
 
 msgid "Test the failed sites again"
 msgstr "Sprawdź ponownie strony z błędami"
@@ -5562,7 +5564,7 @@ msgid "The Stalker portal of this entry is not configured (any more)."
 msgstr "Portal Stalker tej pozycji nie jest (już) skonfigurowany."
 
 msgid "The Watchlist is empty. MENU key on a video: \"Add to Watchlist\"."
-msgstr ""
+msgstr "Lista do obejrzenia jest pusta. Przycisk MENU na filmie: \"Dodaj do listy do obejrzenia\"."
 
 msgid "The Xtream account of this entry is not configured (any more)."
 msgstr "Konto Xtream tego wpisu nie jest (już) skonfigurowane."
@@ -5684,7 +5686,7 @@ msgid "The link could not be resolved."
 msgstr "Nie udało się rozwiązać linku."
 
 msgid "The link has expired. Please open the video again."
-msgstr ""
+msgstr "Link wygasł. Otwórz film ponownie."
 
 msgid "The list has changed, please try again."
 msgstr "Lista uległa zmianie, spróbuj ponownie."
@@ -5728,10 +5730,15 @@ msgid ""
 "\n"
 "Leave this OFF if you do not want that. The other resolvers (VidEasy, VidLink, Peachify, vidrock, VidNest, ...) decrypt their links on the receiver and are not affected."
 msgstr ""
+"Resolvery 'VidCore', 'VidUp' i 'VidFast' nie potrafią odszyfrować swoich linków na odbiorniku.\n"
+"\n"
+"Gdy ta opcja jest WŁĄCZONA, przy każdym otwarciu jednego z nich E2iPlayer wysyła zaszyfrowany token strumienia strony - zawierający identyfikator TMDb otwieranego filmu lub odcinka - do zewnętrznej usługi internetowej enc-dec.app (prowadzonej przez osobę prywatną). Ten serwer widzi wtedy przy każdym odtworzeniu identyfikator i twój adres IP. Nic więcej nie jest przesyłane i jest to używane tylko dla tych trzech resolverów.\n"
+"\n"
+"Pozostaw opcję WYŁĄCZONĄ, jeśli tego nie chcesz. Pozostałe resolvery (VidEasy, VidLink, Peachify, vidrock, VidNest, ...) odszyfrowują swoje linki na odbiorniku i nie są tym objęte."
 
 #, python-format
 msgid "The results of %d of %d sites are from the last search for \"%s\" - this asks all sites again"
-msgstr ""
+msgstr "Wyniki %d z %d stron pochodzą z ostatniego wyszukiwania \"%s\" - to odpytuje ponownie wszystkie strony"
 
 msgid "The same item already exists in this group."
 msgstr "Ten sam element już istnieje w tej grupie."
@@ -5753,7 +5760,7 @@ msgstr "Ustawienia są chronione kodem PIN, zmień je na odbiorniku."
 
 #, python-format
 msgid "The site did not answer with data (HTTP %s). It may be down or have moved."
-msgstr ""
+msgstr "Strona nie zwróciła danych (HTTP %s). Może być niedostępna lub przeniesiona."
 
 msgid "The site has no player for this video (it only shows a cam advert)."
 msgstr "Strona nie ma odtwarzacza dla tego wideo (pokazuje tylko reklamę kamerki)."
@@ -5765,7 +5772,7 @@ msgid "The site rejected the search request."
 msgstr "Strona odrzuciła zapytanie wyszukiwania."
 
 msgid "The site's browser check (Cloudflare) could not be passed. The site may also be blocked in your country."
-msgstr ""
+msgstr "Nie udało się przejść sprawdzenia przeglądarki (Cloudflare) na stronie. Strona może też być zablokowana w twoim kraju."
 
 msgid "The site's browser check could not be passed."
 msgstr "Nie udało się przejść weryfikacji przeglądarki na stronie."
@@ -5834,7 +5841,7 @@ msgstr ""
 
 #, python-format
 msgid "There is no storage device under \"%s\". TorrServer keeps its cache in RAM until a HDD or USB stick is mounted there."
-msgstr ""
+msgstr "Pod \"%s\" nie ma urządzenia pamięci masowej. TorrServer trzyma pamięć podręczną w RAM, dopóki nie zostanie tam zamontowany dysk HDD lub pendrive USB."
 
 msgid "This article has no free video."
 msgstr "Ten artykuł nie ma darmowego wideo."
@@ -5882,7 +5889,7 @@ msgid "This feed is empty, or the YouTube sign-in has expired - sign out and in 
 msgstr "Ten kanał jest pusty lub logowanie do YouTube wygasło - wyloguj się i zaloguj ponownie."
 
 msgid "This folder is empty. MENU key on a video of the Watchlist: \"Move to Watchlist folder...\"."
-msgstr ""
+msgstr "Ten folder jest pusty. Przycisk MENU na filmie z listy do obejrzenia: \"Przenieś do folderu listy do obejrzenia...\"."
 
 msgid "This folder is protected by a PIN, open it on the receiver."
 msgstr "Ten folder jest chroniony kodem PIN, otwórz go na odbiorniku."
@@ -6097,37 +6104,42 @@ msgid "Topics"
 msgstr "Tematy"
 
 msgid "TorrServer binary (OK = choose, empty = search automatically)"
-msgstr ""
+msgstr "Plik programu TorrServer (OK = wybierz, puste = szukaj automatycznie)"
 
 #, python-format
 msgid "TorrServer could not be started (%s)."
-msgstr ""
+msgstr "Nie udało się uruchomić TorrServera (%s)."
 
 msgid "TorrServer got no file list for this torrent (no peers or a dead link?)."
-msgstr ""
+msgstr "TorrServer nie otrzymał listy plików dla tego torrenta (brak peerów lub martwy link?)."
 
 msgid "TorrServer port"
-msgstr ""
+msgstr "Port TorrServera"
 
 msgid "TorrServer was not found on the receiver. It is not part of E2iPlayer and not in the image feeds - install it yourself:"
-msgstr ""
+msgstr "Nie znaleziono TorrServera na odbiorniku. Nie jest częścią E2iPlayer i nie ma go w feedach image'u - zainstaluj go samodzielnie:"
 
 msgid "TorrServer web interface in the home network"
-msgstr ""
+msgstr "Interfejs WWW TorrServera w sieci domowej"
 
 msgid "Torrent"
-msgstr ""
+msgstr "Torrent"
 
 msgid ""
 "Torrent links are played with TorrServer.\n"
 "Switch on \"Play torrents with TorrServer\" in the E2iPlayer settings (Torrent configuration)."
 msgstr ""
+"Linki torrent są odtwarzane przez TorrServer.\n"
+"Włącz \"Odtwarzaj torrenty przez TorrServer\" w ustawieniach E2iPlayer (konfiguracja torrentów)."
 
 msgid ""
 "Torrents are peer-to-peer: while a torrent plays, the receiver connects to other users and your IP address is visible to them. Depending on your country, downloading or sharing copyrighted content through torrents may be illegal - you alone are responsible for what you play. Upload to other peers stays off unless you switch it on.\n"
 "\n"
 "TorrServer itself is not part of E2iPlayer, it has to be installed separately."
 msgstr ""
+"Torrenty działają w trybie peer-to-peer: podczas odtwarzania torrenta odbiornik łączy się z innymi użytkownikami, a twój adres IP jest dla nich widoczny. W zależności od kraju pobieranie lub udostępnianie treści chronionych prawem autorskim przez torrenty może być nielegalne - wyłącznie ty odpowiadasz za to, co odtwarzasz. Wysyłanie do innych peerów pozostaje wyłączone, dopóki go nie włączysz.\n"
+"\n"
+"Sam TorrServer nie jest częścią E2iPlayer i trzeba go zainstalować osobno."
 
 msgid "Total size:"
 msgstr "Całkowity rozmiar:"
@@ -6136,7 +6148,7 @@ msgid "Tourism"
 msgstr "Turystyka"
 
 msgid "Tournament"
-msgstr ""
+msgstr "Turniej"
 
 msgid "Tracklist"
 msgstr "Lista utworów"
@@ -6145,7 +6157,7 @@ msgid "Trailer"
 msgstr "Zwiastuny"
 
 msgid "Trans"
-msgstr ""
+msgstr "Trans"
 
 msgid "Translation:"
 msgstr "Tłumaczenie:"
@@ -6234,10 +6246,10 @@ msgid "Unable to comply. Search History is empty."
 msgstr "Nie można spełnić. Historia wyszukiwania jest pusta."
 
 msgid "Undo reverse"
-msgstr ""
+msgstr "Cofnij odwrócenie"
 
 msgid "Undo shuffle"
-msgstr ""
+msgstr "Cofnij mieszanie"
 
 msgid "Unfix jump target"
 msgstr "Odepnij cel skoku"
@@ -6267,7 +6279,7 @@ msgid "Unrar error code[%s]."
 msgstr "Unrar kod błędu [%s]."
 
 msgid "Unselect all"
-msgstr ""
+msgstr "Odznacz wszystko"
 
 msgid "Unset watched"
 msgstr "Odznacz jako oglądany"
@@ -6292,7 +6304,7 @@ msgid "Upload date"
 msgstr "Data przesłania"
 
 msgid "Upload speed limit"
-msgstr ""
+msgstr "Limit prędkości wysyłania"
 
 #, python-format
 msgid "Uploader: %s"
@@ -6493,7 +6505,7 @@ msgid "Voice-over"
 msgstr "Lektor"
 
 msgid "Volleyball"
-msgstr ""
+msgstr "Siatkówka"
 
 msgid "WWE shows"
 msgstr "Programy WWE"
@@ -6517,23 +6529,23 @@ msgid "Watch online"
 msgstr "Oglądaj online"
 
 msgid "Watchlist"
-msgstr ""
+msgstr "Lista do obejrzenia"
 
 msgid "Watchlist (no folder)"
-msgstr ""
+msgstr "Lista do obejrzenia (bez folderu)"
 
 msgid "Watchlist folder"
-msgstr ""
+msgstr "Folder listy do obejrzenia"
 
 msgid "WebStreamr / AIOStreams manifest URL (your own):"
-msgstr ""
+msgstr "URL manifestu WebStreamr / AIOStreams (własny):"
 
 msgid "Website address"
-msgstr ""
+msgstr "Adres strony"
 
 #, python-format
 msgid "Weeks on chart: %s"
-msgstr ""
+msgstr "Tygodnie na liście: %s"
 
 msgid "Western"
 msgstr "Western"
@@ -6557,7 +6569,7 @@ msgid "Winter"
 msgstr "Zima"
 
 msgid "Winter sports"
-msgstr ""
+msgstr "Sporty zimowe"
 
 msgid "With an API key from subdl.com (E2iPlayer settings, Subtitles) the official SubDL API is searched as well."
 msgstr "Z kluczem API z subdl.com (ustawienia E2iPlayer, Napisy) przeszukiwane jest także oficjalne API SubDL."
@@ -6707,7 +6719,7 @@ msgid "Your MyE2i extension is outdated or unknown (v%s or newer needed). Please
 msgstr "Twoje rozszerzenie MyE2i jest nieaktualne lub nieznane (wymagana wersja v%s lub nowsza). Zaktualizuj je:"
 
 msgid "Your own list of videos, in folders of your own (MENU key on a video: \"Add to Watchlist\")"
-msgstr ""
+msgstr "Twoja własna lista filmów, we własnych folderach (przycisk MENU na filmie: \"Dodaj do listy do obejrzenia\")"
 
 msgid "Your search entry"
 msgstr "Wprowadź wzorzec wyszukiwania"
@@ -6948,10 +6960,10 @@ msgid "https - validate SSL certificates"
 msgstr "https - weryfikuj certyfikaty SSL"
 
 msgid "iTunes - Top albums by country"
-msgstr ""
+msgstr "iTunes - Najpopularniejsze albumy według kraju"
 
 msgid "iTunes - Top songs by country"
-msgstr ""
+msgstr "iTunes - Najpopularniejsze utwory według kraju"
 
 msgid "insert space"
 msgstr "wstaw spację"
@@ -7008,7 +7020,7 @@ msgid "manual"
 msgstr "ręcznie"
 
 msgid "marked"
-msgstr ""
+msgstr "zaznaczone"
 
 msgid "maroon"
 msgstr "kasztanowy"
@@ -7050,7 +7062,7 @@ msgid "next page"
 msgstr "następna strona"
 
 msgid "next page / previous page"
-msgstr ""
+msgstr "następna strona / poprzednia strona"
 
 msgid "next page = page 1"
 msgstr "następna strona = strona 1"
@@ -7131,7 +7143,7 @@ msgid "refresh the current list"
 msgstr "odśwież bieżącą listę"
 
 msgid "reversed"
-msgstr ""
+msgstr "odwrócone"
 
 msgid "rootfs"
 msgstr "root"
@@ -7198,7 +7210,7 @@ msgid "show this help"
 msgstr "pokaż tę pomoc"
 
 msgid "shuffled"
-msgstr ""
+msgstr "pomieszane"
 
 msgid "sign in (subscriptions, playlists, age-restricted videos)"
 msgstr "zaloguj się (subskrypcje, playlisty, filmy z ograniczeniem wiekowym)"

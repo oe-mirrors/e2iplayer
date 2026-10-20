@@ -63,7 +63,7 @@ msgstr "Player pentru streamuri \"Web\""
 
 #, python-format
 msgid "%d added, %d skipped."
-msgstr ""
+msgstr "%d adăugate, %d omise."
 
 #, python-format
 msgid "%d duplicate entries removed."
@@ -75,11 +75,11 @@ msgstr "%d intrare duplicată eliminată."
 
 #, python-format
 msgid "%d items added to the download queue, %d skipped."
-msgstr ""
+msgstr "%d elemente adăugate în coada de descărcare, %d omise."
 
 #, python-format
 msgid "%d of %d downloaded"
-msgstr ""
+msgstr "%d din %d descărcate"
 
 #, python-format
 msgid "%d parts"
@@ -95,7 +95,7 @@ msgstr "%d recitări"
 
 #, python-format
 msgid "%d removed, %d skipped."
-msgstr ""
+msgstr "%d eliminate, %d omise."
 
 #, python-format
 msgid "%d videos"
@@ -151,7 +151,7 @@ msgstr "%s urmăritori"
 
 #, python-format
 msgid "%s needs a free account. Enter login and password in the host configuration."
-msgstr ""
+msgstr "%s necesită un cont gratuit. Introduceți numele de utilizator și parola în configurarea hostului."
 
 #, python-format
 msgid "%s password"
@@ -215,7 +215,7 @@ msgstr "%s vizualizări"
 
 #, python-format
 msgid "%s: decrypting the stream, this can take a while (%d s)"
-msgstr ""
+msgstr "%s: se decriptează fluxul, poate dura un timp (%d s)"
 
 #, python-format
 msgid "(%d YouTube channel(s) could not be read)"
@@ -297,7 +297,7 @@ msgid "----- Show or hide Porn Sites -----"
 msgstr "----- Afișare sau ascundere site-uri porno -----"
 
 msgid "----- TORRENT CONFIGURATION -----"
-msgstr ""
+msgstr "----- CONFIGURARE TORRENT -----"
 
 msgid "----- VIRTUAL KEYBOARD & SEARCH CONFIGURATION -----"
 msgstr "----- CONFIGURARE TASTATURĂ VIRTUALĂ ȘI CĂUTARE -----"
@@ -371,7 +371,7 @@ msgstr "5 secunde"
 
 #, python-format
 msgid "A folder \"%s\" exists already."
-msgstr ""
+msgstr "Un folder \"%s\" există deja."
 
 msgid "A search is already running."
 msgstr "O căutare este deja în curs."
@@ -461,7 +461,7 @@ msgstr "Actori:"
 
 #, python-format
 msgid "Add %d items to the download queue?"
-msgstr ""
+msgstr "Adăugați %d elemente în coada de descărcare?"
 
 msgid "Add channel name to downloaded file"
 msgstr "Adăugați numele canalului la fișierul descărcat"
@@ -478,7 +478,7 @@ msgstr "Adăugați elementul în grup"
 
 #, python-format
 msgid "Add marked items to favourites (%d)"
-msgstr ""
+msgstr "Adăugați elementele marcate la favorite (%d)"
 
 msgid "Add new entry"
 msgstr "Adăugați o intrare nouă"
@@ -493,10 +493,10 @@ msgid "Add to User Links"
 msgstr "Adăugați la linkurile utilizatorului"
 
 msgid "Add to Watchlist"
-msgstr ""
+msgstr "Adăugați în lista de vizionare"
 
 msgid "Add to Watchlist folder..."
-msgstr ""
+msgstr "Adăugați într-un folder al listei de vizionare..."
 
 msgid "Added"
 msgstr "Adăugat"
@@ -587,7 +587,7 @@ msgid "Allow host to override suggestions provider"
 msgstr "Permiteți hostului să înlocuiască furnizorul de sugestii"
 
 msgid "Allow upload to other peers (seeding)"
-msgstr ""
+msgstr "Permiteți încărcarea către alți peers (seeding)"
 
 msgid "Allow watched flag to be set"
 msgstr "Permiteți setarea marcajului de vizionat"
@@ -628,7 +628,7 @@ msgid "Alternative proxy server (5)"
 msgstr "Server proxy alternativ (5)"
 
 msgid "American football"
-msgstr ""
+msgstr "Fotbal american"
 
 msgid "An API key from subsource.net can be entered in the E2iPlayer settings (Subtitles)."
 msgstr "O cheie API de la subsource.net poate fi introdusă în setările E2iPlayer (Subtitrări)."
@@ -848,7 +848,7 @@ msgstr "Backspace"
 
 #, python-format
 msgid "Balance: %s"
-msgstr ""
+msgstr "Sold: %s"
 
 msgid "Balkans"
 msgstr "Balcani"
@@ -857,7 +857,7 @@ msgid "Basic Science"
 msgstr "Științe fundamentale"
 
 msgid "Basketball"
-msgstr ""
+msgstr "Baschet"
 
 msgid "Being watched"
 msgstr "Se vizionează acum"
@@ -909,7 +909,7 @@ msgid "Box"
 msgstr "Box"
 
 msgid "Boxing"
-msgstr ""
+msgstr "Box"
 
 msgid "Broadcast:"
 msgstr "Difuzare:"
@@ -944,20 +944,20 @@ msgid "Cache"
 msgstr "Cache"
 
 msgid "Cache folder"
-msgstr ""
+msgstr "Folder cache"
 
 #, python-format
 msgid "Cache folder \"%s\" could not be created. Some data (cookies, subtitles, ...) may not be saved."
 msgstr "Folderul cache \"%s\" nu a putut fi creat. Este posibil ca unele date (cookie-uri, subtitrări, ...) să nu fie salvate."
 
 msgid "Cache location"
-msgstr ""
+msgstr "Locația cache-ului"
 
 msgid "Cache size in RAM"
-msgstr ""
+msgstr "Dimensiunea cache-ului în RAM"
 
 msgid "Cache size on disk"
-msgstr ""
+msgstr "Dimensiunea cache-ului pe disc"
 
 #, python-format
 msgid ""
@@ -1049,7 +1049,7 @@ msgid "Change active movie player"
 msgstr "Schimbați playerul video activ"
 
 msgid "Change folder icon"
-msgstr ""
+msgstr "Schimbați pictograma folderului"
 
 msgid "Change own pin"
 msgstr "Schimbați PIN-ul propriu"
@@ -1083,7 +1083,7 @@ msgid "Chinese anime"
 msgstr "Anime chinezesc"
 
 msgid "Choose the TorrServer binary"
-msgstr ""
+msgstr "Alegeți fișierul executabil TorrServer"
 
 msgid "Cinema History"
 msgstr "Istoria cinematografiei"
@@ -1125,7 +1125,7 @@ msgid "Close"
 msgstr "Închidere"
 
 msgid "Close an unused torrent after"
-msgstr ""
+msgstr "Închideți un torrent nefolosit după"
 
 msgid "Closes the host opened in the web interface, clears the search results and stops what the web interface still runs in the background. Use it when a page keeps loading. Settings, downloads and the E2iPlayer on the TV are not touched."
 msgstr "Închide hostul deschis în interfața web, golește rezultatele căutării și oprește ceea ce interfața web încă rulează în fundal. Utilizați această opțiune când o pagină se încarcă la nesfârșit. Setările, descărcările și E2iPlayer de pe televizor nu sunt afectate."
@@ -1155,7 +1155,7 @@ msgid "Comedy"
 msgstr "Comedie"
 
 msgid "Commentator"
-msgstr ""
+msgstr "Comentator"
 
 msgid "Comments"
 msgstr "Comentarii"
@@ -1215,7 +1215,7 @@ msgid "Connection to the weeb.tv server failed."
 msgstr "Conectarea la serverul weeb.tv a eșuat."
 
 msgid "Connections per torrent"
-msgstr ""
+msgstr "Conexiuni per torrent"
 
 #, python-format
 msgid "Connections: %s of %s"
@@ -1237,7 +1237,7 @@ msgid "Copy"
 msgstr "Copiere"
 
 msgid "Copy it to /usr/bin/TorrServer (or a folder on HDD/USB) and make it executable (chmod 755)."
-msgstr ""
+msgstr "Copiați-l în /usr/bin/TorrServer (sau într-un folder de pe HDD/USB) și faceți-l executabil (chmod 755)."
 
 msgid "Could not add the user link."
 msgstr "Linkul utilizatorului nu a putut fi adăugat."
@@ -1295,7 +1295,7 @@ msgstr "Creați fișiere însoțitoare (.txt/.jpg)"
 
 #, python-format
 msgid "Created: %s"
-msgstr ""
+msgstr "Creat: %s"
 
 msgid "Creator:"
 msgstr "Creator:"
@@ -1304,7 +1304,7 @@ msgid "Creators:"
 msgstr "Creatori:"
 
 msgid "Cricket"
-msgstr ""
+msgstr "Cricket"
 
 msgid "Crime"
 msgstr "Polițist"
@@ -1337,7 +1337,7 @@ msgid "DASH/mpd"
 msgstr "DASH/mpd"
 
 msgid "DLNA server of TorrServer"
-msgstr ""
+msgstr "Serverul DLNA al TorrServer"
 
 msgid "DOWNLOAD ERROR"
 msgstr "EROARE LA DESCĂRCARE"
@@ -1358,7 +1358,7 @@ msgid "Darkgray"
 msgstr "Gri închis"
 
 msgid "Darts"
-msgstr ""
+msgstr "Darts"
 
 msgid "Date"
 msgstr "Dată"
@@ -1442,7 +1442,7 @@ msgid "Delete JS cache now"
 msgstr "Ștergeți acum cache-ul JS"
 
 msgid "Delete Watchlist folder"
-msgstr ""
+msgstr "Ștergeți folderul listei de vizionare"
 
 msgid "Delete all cache files now"
 msgstr "Ștergeți acum toate fișierele cache"
@@ -1463,7 +1463,7 @@ msgid "Delete favourites and watched status now"
 msgstr "Ștergeți acum favoritele și starea de vizionare"
 
 msgid "Delete folder"
-msgstr ""
+msgstr "Ștergeți folderul"
 
 msgid "Delete host order and groups now"
 msgstr "Ștergeți acum ordinea hosturilor și grupurile"
@@ -1493,15 +1493,15 @@ msgid "Delete subtitles cache now"
 msgstr "Ștergeți acum cache-ul de subtitrări"
 
 msgid "Delete the cache when the torrent is closed"
-msgstr ""
+msgstr "Ștergeți cache-ul la închiderea torrentului"
 
 #, python-format
 msgid "Delete the folder \"%s\"? Its hosts go back to the group."
-msgstr ""
+msgstr "Ștergeți folderul \"%s\"? Hosturile sale revin în grup."
 
 #, python-format
 msgid "Delete the folder \"%s\"? Its videos go back to the Watchlist."
-msgstr ""
+msgstr "Ștergeți folderul \"%s\"? Videoclipurile sale revin în lista de vizionare."
 
 msgid "Delete thumbnails cache now"
 msgstr "Ștergeți acum cache-ul de miniaturi"
@@ -1618,7 +1618,7 @@ msgstr "Descărcare"
 
 #, python-format
 msgid "Download \"%s\" (for this receiver) from %s"
-msgstr ""
+msgstr "Descărcați \"%s\" (pentru acest receptor) de pe %s"
 
 #, python-format
 msgid "Download (ready in %d seconds)"
@@ -1628,7 +1628,7 @@ msgid "Download again"
 msgstr "Descărcați din nou"
 
 msgid "Download all items of this page"
-msgstr ""
+msgstr "Descărcați toate elementele acestei pagini"
 
 msgid "Download already exists"
 msgstr "Descărcarea există deja"
@@ -1667,7 +1667,7 @@ msgstr "Managerul de descărcări nu este inițializat"
 
 #, python-format
 msgid "Download marked items (%d)"
-msgstr ""
+msgstr "Descărcați elementele marcate (%d)"
 
 msgid "Download new version"
 msgstr "Descărcați versiunea nouă"
@@ -1676,7 +1676,7 @@ msgid "Download notification duration"
 msgstr "Durata notificării de descărcare"
 
 msgid "Download speed limit"
-msgstr ""
+msgstr "Limita vitezei de descărcare"
 
 msgid "Download subtiles failed."
 msgstr "Descărcarea subtitrărilor a eșuat."
@@ -1686,7 +1686,7 @@ msgstr "Descărcare recomandată"
 
 #, python-format
 msgid "Download the Linux file for the CPU of this receiver from %s"
-msgstr ""
+msgstr "Descărcați fișierul Linux pentru procesorul acestui receptor de pe %s"
 
 msgid "Downloaded file is too small or corrupted."
 msgstr "Fișierul descărcat este prea mic sau corupt."
@@ -1890,7 +1890,7 @@ msgid "Enabled hosts"
 msgstr "Hosturi activate"
 
 msgid "Encrypted connections only"
-msgstr ""
+msgstr "Doar conexiuni criptate"
 
 msgid "Encrypted stream list - not supported"
 msgstr "Listă de streamuri criptată - neacceptată"
@@ -2051,7 +2051,7 @@ msgid "Error saving favorites."
 msgstr "Eroare la salvarea favoritelor."
 
 msgid "Error saving the Watchlist."
-msgstr ""
+msgstr "Eroare la salvarea listei de vizionare."
 
 msgid "Error while loading watch data"
 msgstr "Eroare la încărcarea datelor de vizionare"
@@ -2206,10 +2206,10 @@ msgid "Featured"
 msgstr "Recomandate"
 
 msgid "FebBox token (\"ui\" cookie of www.febbox.com):"
-msgstr ""
+msgstr "Token FebBox (cookie-ul \"ui\" de pe www.febbox.com):"
 
 msgid "Female"
-msgstr ""
+msgstr "Feminin"
 
 #, python-format
 msgid "File \"%s\" already exists"
@@ -2254,10 +2254,10 @@ msgid "File format of DASH (MPD) downloads"
 msgstr "Formatul fișierului pentru descărcările DASH (MPD)"
 
 msgid "File format of HLS (M3U8) downloads"
-msgstr ""
+msgstr "Formatul fișierelor pentru descărcările HLS (M3U8)"
 
 msgid "File format of single video files (FFmpeg)"
-msgstr ""
+msgstr "Formatul fișierelor video individuale (FFmpeg)"
 
 #, python-format
 msgid "File might be corrupted (size: %d bytes)."
@@ -2273,7 +2273,7 @@ msgid "Files"
 msgstr "Fișiere"
 
 msgid "Fill cache before playback"
-msgstr ""
+msgstr "Umpleți cache-ul înainte de redare"
 
 msgid "Filler"
 msgstr "Episoade de umplutură"
@@ -2338,7 +2338,7 @@ msgid "Folder for temporary data"
 msgstr "Folder pentru datele temporare"
 
 msgid "Folder on HDD / USB"
-msgstr ""
+msgstr "Folder pe HDD / USB"
 
 msgid "Followers"
 msgstr "Urmăritori"
@@ -2356,7 +2356,7 @@ msgid "Foot & Ankle"
 msgstr "Picior și gleznă"
 
 msgid "Football"
-msgstr ""
+msgstr "Fotbal"
 
 msgid "Football Live"
 msgstr "Fotbal live"
@@ -2374,7 +2374,7 @@ msgid "Force internal skin: main screen only"
 msgstr "Forțare skin intern: doar ecranul principal"
 
 msgid "Force legacy grid"
-msgstr ""
+msgstr "Forțați grila veche de pictograme"
 
 msgid "Foreign movies"
 msgstr "Filme străine"
@@ -2395,7 +2395,7 @@ msgid "Fotka.pl stream :"
 msgstr "Fotka.pl stream :"
 
 msgid "Free"
-msgstr ""
+msgstr "Gratuit"
 
 msgid "Free IPTV list"
 msgstr "Listă IPTV gratuită"
@@ -2431,7 +2431,7 @@ msgid "Full test checks thumbnails :"
 msgstr "Testul complet verifică miniaturile :"
 
 msgid "Futsal"
-msgstr ""
+msgstr "Futsal"
 
 msgid "GREEN"
 msgstr "VERDE"
@@ -2551,7 +2551,7 @@ msgid "Hand"
 msgstr "Mână"
 
 msgid "Handball"
-msgstr ""
+msgstr "Handbal"
 
 msgid "Health"
 msgstr "Sănătate"
@@ -2588,7 +2588,7 @@ msgid "History of searched phrases."
 msgstr "Istoricul frazelor căutate."
 
 msgid "Hockey"
-msgstr ""
+msgstr "Hochei pe gheață"
 
 msgid "Home"
 msgstr "Acasă"
@@ -2606,7 +2606,7 @@ msgid "Host"
 msgstr "Host"
 
 msgid "Host titles in lists"
-msgstr ""
+msgstr "Titlurile hosturilor în liste"
 
 #, python-format
 msgid "Host: %s"
@@ -2938,7 +2938,7 @@ msgid "Last Modified: %s"
 msgstr "Ultima modificare: %s"
 
 msgid "Last Page"
-msgstr ""
+msgstr "Ultima pagină"
 
 msgid "Last air date:"
 msgstr "Data ultimei difuzări:"
@@ -2972,7 +2972,7 @@ msgstr "Ultima săptămână"
 
 #, python-format
 msgid "Last week: %s"
-msgstr ""
+msgstr "Săptămâna trecută: %s"
 
 msgid "Last.fm charts and tag pages are behind a browser check, only the radio stations can be used."
 msgstr "Topurile și paginile de etichete Last.fm sunt protejate de o verificare a browserului, se pot folosi doar posturile de radio."
@@ -3027,7 +3027,7 @@ msgid "Latest videos from the channels you are subscribed to."
 msgstr "Cele mai noi videoclipuri de pe canalele la care sunteți abonat."
 
 msgid "Latin American movies"
-msgstr ""
+msgstr "Filme latino-americane"
 
 msgid "Latin American series"
 msgstr "Seriale latino-americane"
@@ -3191,7 +3191,7 @@ msgid "Login failed."
 msgstr "Autentificarea a eșuat."
 
 msgid "Login needed"
-msgstr ""
+msgstr "Autentificare necesară"
 
 #, python-brace-format
 msgid "Login on {0} failed."
@@ -3225,7 +3225,7 @@ msgid "Longest"
 msgstr "Cele mai lungi"
 
 msgid "Loved tracks"
-msgstr ""
+msgstr "Piese preferate"
 
 msgid "Low"
 msgstr "Scăzută"
@@ -3265,14 +3265,14 @@ msgid "Main"
 msgstr "Principal"
 
 msgid "Main menu"
-msgstr ""
+msgstr "Meniul principal"
 
 #, python-format
 msgid "Make directory [%s]"
 msgstr "Creare director [%s]"
 
 msgid "Male"
-msgstr ""
+msgstr "Masculin"
 
 msgid "Manager status:"
 msgstr "Stare manager:"
@@ -3302,16 +3302,16 @@ msgid "Max number of parallel downloads has been reached."
 msgstr "S-a atins numărul maxim de descărcări paralele."
 
 msgid "MaxStream (uprot.net) asks for its image captcha: solve it in MyE2i, then open the video again."
-msgstr ""
+msgstr "MaxStream (uprot.net) cere captcha-ul cu imagine: rezolvați-l în MyE2i, apoi deschideți din nou videoclipul."
 
 msgid "Maximum log file size"
 msgstr "Dimensiunea maximă a fișierului jurnal"
 
 msgid "Maximum torrent size:"
-msgstr ""
+msgstr "Dimensiunea maximă a torrentului:"
 
 msgid "MediaFusion manifest URL (your own):"
-msgstr ""
+msgstr "URL-ul manifestului MediaFusion (al dvs.):"
 
 msgid "Medtryx Marketing"
 msgstr "Medtryx Marketing"
@@ -3407,10 +3407,10 @@ msgid "Most viewed series"
 msgstr "Cele mai vizionate seriale"
 
 msgid "Most voted"
-msgstr ""
+msgstr "Cele mai votate"
 
 msgid "Motorsport"
-msgstr ""
+msgstr "Motorsport"
 
 #, python-format
 msgid ""
@@ -3429,10 +3429,10 @@ msgid "Move failed."
 msgstr "Mutarea a eșuat."
 
 msgid "Move to Watchlist folder..."
-msgstr ""
+msgstr "Mutați într-un folder al listei de vizionare..."
 
 msgid "Move to folder..."
-msgstr ""
+msgstr "Mutați în folder..."
 
 msgid "Movie"
 msgstr "Film"
@@ -3488,7 +3488,7 @@ msgid "MyE2i browser check solution"
 msgstr "Soluție verificare browser MyE2i"
 
 msgid "MyE2i captcha: solve it, then Job (no CONTINUE)"
-msgstr ""
+msgstr "Captcha MyE2i: rezolvați-l, apoi Job (nu CONTINUE)"
 
 msgid "MyE2i debug snapshot received - see the debug log."
 msgstr "Snapshot de depanare MyE2i primit - consultați jurnalul de depanare."
@@ -3520,10 +3520,10 @@ msgid "MyE2i: offer to open the page in (Android)"
 msgstr "MyE2i: oferă deschiderea paginii în (Android)"
 
 msgid "MyE2i: open the page in the browser"
-msgstr ""
+msgstr "MyE2i: deschideți pagina în browser"
 
 msgid "Mystery"
-msgstr ""
+msgstr "Mister"
 
 msgid ""
 "NO VIDEOS FOUND FOR NOW! \n"
@@ -3574,7 +3574,7 @@ msgid "New"
 msgstr "Nou"
 
 msgid "New Watchlist folder"
-msgstr ""
+msgstr "Folder nou în lista de vizionare"
 
 msgid "New dir"
 msgstr "Director nou"
@@ -3586,7 +3586,7 @@ msgid "New episodes"
 msgstr "Episoade noi"
 
 msgid "New folder..."
-msgstr ""
+msgstr "Folder nou..."
 
 msgid "New icons will not be available."
 msgstr "Pictogramele noi nu vor fi disponibile."
@@ -3595,7 +3595,7 @@ msgid "New links"
 msgstr "Linkuri noi"
 
 msgid "New search"
-msgstr ""
+msgstr "Căutare nouă"
 
 msgid "New since installed version"
 msgstr "Nou de la versiunea instalată"
@@ -3736,14 +3736,14 @@ msgid "Not available yet"
 msgstr "Încă indisponibil"
 
 msgid "Not in /usr/bin: choose the file under \"TorrServer binary\" in the torrent configuration."
-msgstr ""
+msgstr "Nu este în /usr/bin: alegeți fișierul la \"Fișier executabil TorrServer\" în configurarea torrent."
 
 msgid "Not possible (no enigma2 session)."
 msgstr "Imposibil (nicio sesiune enigma2)."
 
 #, python-format
 msgid "Not removed, still downloading: %d"
-msgstr ""
+msgstr "Neeliminate, încă se descarcă: %d"
 
 msgid "Nothing available here at the moment (only upcoming broadcasts)."
 msgstr "Momentan nu este nimic disponibil aici (doar emisiuni viitoare)."
@@ -3764,11 +3764,11 @@ msgid "Now"
 msgstr "Acum"
 
 msgid "Now playing"
-msgstr ""
+msgstr "Acum în cinematografe"
 
 #, python-format
 msgid "Now playing: %s"
-msgstr ""
+msgstr "Se redă acum: %s"
 
 msgid "Number of columns"
 msgstr "Număr de coloane"
@@ -3796,10 +3796,10 @@ msgid "OK"
 msgstr "OK"
 
 msgid "OK marks an item, BLUE shows what can be done with the marked items."
-msgstr ""
+msgstr "OK marchează un element, ALBASTRU arată ce se poate face cu elementele marcate."
 
 msgid "OK marks an item, MENU shows what can be done with the marked items."
-msgstr ""
+msgstr "OK marchează un element, MENU arată ce se poate face cu elementele marcate."
 
 msgid "OMDb API key (free at omdbapi.com)"
 msgstr "Cheie API OMDb (gratuită la omdbapi.com)"
@@ -3850,7 +3850,7 @@ msgid "Open pull requests"
 msgstr "Pull requests deschise"
 
 msgid "Open the page and get the link"
-msgstr ""
+msgstr "Deschideți pagina și obțineți linkul"
 
 #, python-format
 msgid "Open this page in %s"
@@ -3997,11 +3997,11 @@ msgid "Patriotism"
 msgstr "Patriotism"
 
 msgid "Pause between the batch lookups of one host [s]"
-msgstr ""
+msgstr "Pauză între interogările în lot ale unui host [s]"
 
 #, python-format
 msgid "Peak: %s"
-msgstr ""
+msgstr "Cea mai bună poziție: %s"
 
 msgid "Pediatrics"
 msgstr "Pediatrie"
@@ -4034,14 +4034,14 @@ msgid "Pin protection for this host"
 msgstr "Protecție cu PIN pentru acest host"
 
 msgid "Play all from here"
-msgstr ""
+msgstr "Redați tot de aici"
 
 #, python-format
 msgid "Play marked items (%d)"
-msgstr ""
+msgstr "Redați elementele marcate (%d)"
 
 msgid "Play torrents with TorrServer"
-msgstr ""
+msgstr "Redați torrentele cu TorrServer"
 
 #, python-format
 msgid "Play with [%s] player"
@@ -4210,7 +4210,7 @@ msgstr "URL-ul portalului și adresa MAC în configurarea hostului, așa cum le 
 
 #, python-format
 msgid "Ports: %s"
-msgstr ""
+msgstr "Porturi: %s"
 
 msgid "Portuguese"
 msgstr "Portugheză"
@@ -4243,7 +4243,7 @@ msgid "Premium user"
 msgstr "Utilizator premium"
 
 msgid "Press EXIT to return to the previous menu."
-msgstr ""
+msgstr "Apăsați EXIT pentru a reveni la meniul anterior."
 
 msgid "Previous Page"
 msgstr "Pagina anterioară"
@@ -4312,7 +4312,7 @@ msgid "Quick test: menu and a list with videos"
 msgstr "Test rapid: meniu și o listă cu videoclipuri"
 
 msgid "RAM"
-msgstr ""
+msgstr "RAM"
 
 msgid "RAM buffer size [MB] for local files"
 msgstr "Dimensiunea bufferului RAM [MB] pentru fișiere locale"
@@ -4380,7 +4380,7 @@ msgid "Rating: %s"
 msgstr "Evaluare: %s"
 
 msgid "Read ahead (share of the cache)"
-msgstr ""
+msgstr "Citire în avans (cotă din cache)"
 
 msgid "Read by"
 msgstr "Citit de"
@@ -4430,7 +4430,7 @@ msgid "Regions"
 msgstr "Regiuni"
 
 msgid "Related seasons and works"
-msgstr ""
+msgstr "Sezoane și lucrări înrudite"
 
 msgid "Release"
 msgstr "Lansare"
@@ -4474,25 +4474,27 @@ msgstr "Eliminați elementul \"%s\""
 
 #, python-format
 msgid "Remove %d items from the favourites?"
-msgstr ""
+msgstr "Eliminați %d elemente din favorite?"
 
 #, python-format
 msgid ""
 "Remove %d marked items?\n"
 "Their files are deleted too."
 msgstr ""
+"Eliminați %d elemente marcate?\n"
+"Fișierele lor vor fi șterse și ele."
 
 msgid "Remove file"
 msgstr "Ștergeți fișierul"
 
 msgid "Remove from Watchlist"
-msgstr ""
+msgstr "Eliminați din lista de vizionare"
 
 msgid "Remove from favorites"
 msgstr "Eliminați din favorite"
 
 msgid "Remove from folder"
-msgstr ""
+msgstr "Eliminați din folder"
 
 msgid "Remove group"
 msgstr "Eliminați grupul"
@@ -4502,11 +4504,11 @@ msgstr "Eliminați elementul"
 
 #, python-format
 msgid "Remove marked items (%d)"
-msgstr ""
+msgstr "Eliminați elementele marcate (%d)"
 
 #, python-format
 msgid "Remove marked items from favourites (%d)"
-msgstr ""
+msgstr "Eliminați elementele marcate din favorite (%d)"
 
 msgid "Remove thumbnails"
 msgstr "Eliminați miniaturile"
@@ -4515,7 +4517,7 @@ msgid "Rename"
 msgstr "Redenumiți"
 
 msgid "Rename Watchlist folder"
-msgstr ""
+msgstr "Redenumiți folderul listei de vizionare"
 
 msgid "Rename file"
 msgstr "Redenumiți fișierul"
@@ -4537,13 +4539,13 @@ msgstr "Fișier raport"
 
 #, python-format
 msgid "Reset the settings of \"%s\" to their default values?"
-msgstr ""
+msgstr "Resetați setările pentru \"%s\" la valorile implicite?"
 
 msgid "Reset this list to its default layout?"
 msgstr "Resetați această listă la aranjamentul implicit?"
 
 msgid "Reset this list to its default layout? Its folders are deleted too."
-msgstr ""
+msgstr "Resetați această listă la aranjamentul implicit? Folderele sale vor fi șterse și ele."
 
 msgid "Reset to defaults"
 msgstr "Resetare la valorile implicite"
@@ -4667,7 +4669,7 @@ msgstr "Căutare"
 
 #, python-format
 msgid "Search \"%s\" was not finished"
-msgstr ""
+msgstr "Căutarea \"%s\" nu a fost finalizată"
 
 msgid "Search History is empty."
 msgstr "Istoricul căutărilor este gol."
@@ -4676,7 +4678,7 @@ msgid "Search History successfully deleted."
 msgstr "Istoricul căutărilor a fost șters cu succes."
 
 msgid "Search automatically"
-msgstr ""
+msgstr "Căutare automată"
 
 msgid "Search for an artist (exact name) or a Last.fm user"
 msgstr "Căutați un artist (numele exact) sau un utilizator Last.fm"
@@ -4751,7 +4753,7 @@ msgid "Season %s"
 msgstr "Sezonul %s"
 
 msgid "Season pack"
-msgstr ""
+msgstr "Pachet sezon"
 
 msgid "Seasons"
 msgstr "Sezoane"
@@ -4776,7 +4778,7 @@ msgid "Sections"
 msgstr "Secțiuni"
 
 msgid "Select"
-msgstr ""
+msgstr "Selectați"
 
 #, python-format
 msgid "Select %s"
@@ -4786,7 +4788,7 @@ msgid "Select action"
 msgstr "Selectați acțiunea"
 
 msgid "Select all"
-msgstr ""
+msgstr "Selectați tot"
 
 msgid "Select audio track"
 msgstr "Selectați pista audio"
@@ -4804,7 +4806,7 @@ msgid "Select group"
 msgstr "Selectați grupul"
 
 msgid "Select hosts for this folder..."
-msgstr ""
+msgstr "Selectați hosturile pentru acest folder..."
 
 msgid "Select language"
 msgstr "Selectați limba"
@@ -4831,7 +4833,7 @@ msgid "Select subtitles track"
 msgstr "Selectați pista de subtitrări"
 
 msgid "Select the TorrServer binary"
-msgstr ""
+msgstr "Selectați fișierul executabil TorrServer"
 
 msgid "Select the directory"
 msgstr "Selectați directorul"
@@ -4898,7 +4900,7 @@ msgstr "Serverul nu a returnat nimic."
 
 #, python-format
 msgid "Server time: %s"
-msgstr ""
+msgstr "Ora serverului: %s"
 
 #, python-format
 msgid "Server, user name and password in the host configuration. The server field also takes a get.php link. More accounts: %s with one get.php link per line (X-Streamity format)."
@@ -4956,10 +4958,10 @@ msgid "Short Movies"
 msgstr "Scurtmetraje"
 
 msgid "Short films"
-msgstr ""
+msgstr "Scurtmetraje"
 
 msgid "Short name"
-msgstr ""
+msgstr "Nume scurt"
 
 msgid "Short series"
 msgstr "Seriale scurte"
@@ -5037,13 +5039,13 @@ msgid "Show only best quality of streams:"
 msgstr "Afișați doar cea mai bună calitate a streamurilor:"
 
 msgid "Show playlist"
-msgstr ""
+msgstr "Afișați playlistul"
 
 msgid "Show results"
 msgstr "Afișați rezultatele"
 
 msgid "Show results so far"
-msgstr ""
+msgstr "Afișați rezultatele de până acum"
 
 msgid "Show search history"
 msgstr "Afișați istoricul căutărilor"
@@ -5052,7 +5054,7 @@ msgid "Show suggestions"
 msgstr "Afișați sugestiile"
 
 msgid "ShowBox streams need a FebBox login: enter the \"ui\" cookie of your FebBox account in the host configuration."
-msgstr ""
+msgstr "Fluxurile ShowBox necesită autentificare FebBox: introduceți cookie-ul \"ui\" al contului dvs. FebBox în configurarea hostului."
 
 msgid "Shows"
 msgstr "Emisiuni"
@@ -5113,7 +5115,7 @@ msgid "Skip video shorter than [min]"
 msgstr "Omiteți videoclipurile mai scurte de [min]"
 
 msgid "Snooker"
-msgstr ""
+msgstr "Snooker"
 
 msgid "Society"
 msgstr "Societate"
@@ -5215,7 +5217,7 @@ msgid "Station:"
 msgstr "Post:"
 
 msgid "Status"
-msgstr ""
+msgstr "Stare"
 
 msgid "Status:"
 msgstr "Stare:"
@@ -5231,7 +5233,7 @@ msgid "Stop"
 msgstr "Stop"
 
 msgid "Stop TorrServer when E2iPlayer is closed"
-msgstr ""
+msgstr "Opriți TorrServer la închiderea E2iPlayer"
 
 msgid "Stop downloading"
 msgstr "Opriți descărcarea"
@@ -5250,7 +5252,7 @@ msgstr "Poveste"
 
 #, python-format
 msgid "Stream formats: %s"
-msgstr ""
+msgstr "Formate de flux: %s"
 
 msgid "Stream link"
 msgstr "Link stream"
@@ -5394,7 +5396,7 @@ msgid "Swedish"
 msgstr "Suedeză"
 
 msgid "Switch on torrent playback?"
-msgstr ""
+msgstr "Activați redarea torrentelor?"
 
 msgid "Synchronize"
 msgstr "Sincronizați"
@@ -5500,7 +5502,7 @@ msgstr "Talk-show-uri"
 
 #, python-format
 msgid "Tariff: %s"
-msgstr ""
+msgstr "Tarif: %s"
 
 msgid "Teams"
 msgstr "Echipe"
@@ -5515,7 +5517,7 @@ msgid "Temp"
 msgstr "Temp"
 
 msgid "Tennis"
-msgstr ""
+msgstr "Tenis"
 
 msgid "Test the failed sites again"
 msgstr "Testați din nou site-urile eșuate"
@@ -5552,7 +5554,7 @@ msgid "The Stalker portal of this entry is not configured (any more)."
 msgstr "Portalul Stalker al acestei intrări nu (mai) este configurat."
 
 msgid "The Watchlist is empty. MENU key on a video: \"Add to Watchlist\"."
-msgstr ""
+msgstr "Lista de vizionare este goală. Tasta MENU pe un videoclip: \"Adăugați în lista de vizionare\"."
 
 msgid "The Xtream account of this entry is not configured (any more)."
 msgstr "Contul Xtream al acestei intrări nu (mai) este configurat."
@@ -5674,7 +5676,7 @@ msgid "The link could not be resolved."
 msgstr "Linkul nu a putut fi rezolvat."
 
 msgid "The link has expired. Please open the video again."
-msgstr ""
+msgstr "Linkul a expirat. Deschideți din nou videoclipul."
 
 msgid "The list has changed, please try again."
 msgstr "Lista s-a modificat, încercați din nou."
@@ -5718,10 +5720,15 @@ msgid ""
 "\n"
 "Leave this OFF if you do not want that. The other resolvers (VidEasy, VidLink, Peachify, vidrock, VidNest, ...) decrypt their links on the receiver and are not affected."
 msgstr ""
+"Resolverele 'VidCore', 'VidUp' și 'VidFast' nu își pot decripta linkurile pe receptor.\n"
+"\n"
+"Cu această opțiune ACTIVATĂ, de fiecare dată când deschideți unul dintre ele, E2iPlayer trimite tokenul criptat al fluxului site-ului - care conține ID-ul TMDb al filmului sau episodului deschis - către serviciul web terț enc-dec.app (operat de o persoană fizică). Serverul respectiv vede astfel la fiecare redare ID-ul și adresa dvs. IP. Nimic altceva nu este transmis, iar acest lucru se folosește doar pentru aceste trei resolvere.\n"
+"\n"
+"Lăsați opțiunea DEZACTIVATĂ dacă nu doriți acest lucru. Celelalte resolvere (VidEasy, VidLink, Peachify, vidrock, VidNest, ...) își decriptează linkurile pe receptor și nu sunt afectate."
 
 #, python-format
 msgid "The results of %d of %d sites are from the last search for \"%s\" - this asks all sites again"
-msgstr ""
+msgstr "Rezultatele a %d din %d site-uri provin din ultima căutare pentru \"%s\" - astfel se interoghează din nou toate site-urile"
 
 msgid "The same item already exists in this group."
 msgstr "Același element există deja în acest grup."
@@ -5743,7 +5750,7 @@ msgstr "Setările sunt protejate printr-un PIN, modificați-le pe receptor."
 
 #, python-format
 msgid "The site did not answer with data (HTTP %s). It may be down or have moved."
-msgstr ""
+msgstr "Site-ul nu a răspuns cu date (HTTP %s). Este posibil să fie offline sau să se fi mutat."
 
 msgid "The site has no player for this video (it only shows a cam advert)."
 msgstr "Site-ul nu are player pentru acest videoclip (afișează doar o reclamă cam)."
@@ -5755,7 +5762,7 @@ msgid "The site rejected the search request."
 msgstr "Site-ul a respins cererea de căutare."
 
 msgid "The site's browser check (Cloudflare) could not be passed. The site may also be blocked in your country."
-msgstr ""
+msgstr "Verificarea browserului (Cloudflare) a site-ului nu a putut fi trecută. Este posibil și ca site-ul să fie blocat în țara dvs."
 
 msgid "The site's browser check could not be passed."
 msgstr "Verificarea de browser a site-ului nu a putut fi trecută."
@@ -5824,7 +5831,7 @@ msgstr ""
 
 #, python-format
 msgid "There is no storage device under \"%s\". TorrServer keeps its cache in RAM until a HDD or USB stick is mounted there."
-msgstr ""
+msgstr "Nu există niciun dispozitiv de stocare la \"%s\". TorrServer își păstrează cache-ul în RAM până când acolo este montat un HDD sau un stick USB."
 
 msgid "This article has no free video."
 msgstr "Acest articol nu are un videoclip gratuit."
@@ -5872,7 +5879,7 @@ msgid "This feed is empty, or the YouTube sign-in has expired - sign out and in 
 msgstr "Acest feed este gol sau autentificarea YouTube a expirat - deconectați-vă și conectați-vă din nou."
 
 msgid "This folder is empty. MENU key on a video of the Watchlist: \"Move to Watchlist folder...\"."
-msgstr ""
+msgstr "Acest folder este gol. Tasta MENU pe un videoclip din lista de vizionare: \"Mutați într-un folder al listei de vizionare...\"."
 
 msgid "This folder is protected by a PIN, open it on the receiver."
 msgstr "Acest folder este protejat printr-un PIN, deschideți-l pe receptor."
@@ -6087,37 +6094,42 @@ msgid "Topics"
 msgstr "Subiecte"
 
 msgid "TorrServer binary (OK = choose, empty = search automatically)"
-msgstr ""
+msgstr "Fișier executabil TorrServer (OK = alegere, gol = căutare automată)"
 
 #, python-format
 msgid "TorrServer could not be started (%s)."
-msgstr ""
+msgstr "TorrServer nu a putut fi pornit (%s)."
 
 msgid "TorrServer got no file list for this torrent (no peers or a dead link?)."
-msgstr ""
+msgstr "TorrServer nu a primit nicio listă de fișiere pentru acest torrent (niciun peer sau link mort?)."
 
 msgid "TorrServer port"
-msgstr ""
+msgstr "Port TorrServer"
 
 msgid "TorrServer was not found on the receiver. It is not part of E2iPlayer and not in the image feeds - install it yourself:"
-msgstr ""
+msgstr "TorrServer nu a fost găsit pe receptor. Nu face parte din E2iPlayer și nu se află în feed-urile imaginii - instalați-l singur:"
 
 msgid "TorrServer web interface in the home network"
-msgstr ""
+msgstr "Interfața web TorrServer în rețeaua locală"
 
 msgid "Torrent"
-msgstr ""
+msgstr "Torrent"
 
 msgid ""
 "Torrent links are played with TorrServer.\n"
 "Switch on \"Play torrents with TorrServer\" in the E2iPlayer settings (Torrent configuration)."
 msgstr ""
+"Linkurile torrent sunt redate cu TorrServer.\n"
+"Activați \"Redați torrentele cu TorrServer\" în setările E2iPlayer (Configurare torrent)."
 
 msgid ""
 "Torrents are peer-to-peer: while a torrent plays, the receiver connects to other users and your IP address is visible to them. Depending on your country, downloading or sharing copyrighted content through torrents may be illegal - you alone are responsible for what you play. Upload to other peers stays off unless you switch it on.\n"
 "\n"
 "TorrServer itself is not part of E2iPlayer, it has to be installed separately."
 msgstr ""
+"Torrentele sunt peer-to-peer: în timp ce un torrent este redat, receptorul se conectează la alți utilizatori, iar adresa dvs. IP le este vizibilă. În funcție de țara dvs., descărcarea sau partajarea prin torrente a conținutului protejat de drepturi de autor poate fi ilegală - doar dvs. sunteți responsabil pentru ceea ce redați. Încărcarea către alți peers rămâne dezactivată dacă nu o activați.\n"
+"\n"
+"TorrServer în sine nu face parte din E2iPlayer, trebuie instalat separat."
 
 msgid "Total size:"
 msgstr "Dimensiune totală:"
@@ -6126,7 +6138,7 @@ msgid "Tourism"
 msgstr "Turism"
 
 msgid "Tournament"
-msgstr ""
+msgstr "Turneu"
 
 msgid "Tracklist"
 msgstr "Listă de piese"
@@ -6135,7 +6147,7 @@ msgid "Trailer"
 msgstr "Trailer"
 
 msgid "Trans"
-msgstr ""
+msgstr "Trans"
 
 msgid "Translation:"
 msgstr "Traducere:"
@@ -6224,10 +6236,10 @@ msgid "Unable to comply. Search History is empty."
 msgstr "Operațiune imposibilă. Istoricul căutărilor este gol."
 
 msgid "Undo reverse"
-msgstr ""
+msgstr "Anulați inversarea"
 
 msgid "Undo shuffle"
-msgstr ""
+msgstr "Anulați amestecarea"
 
 msgid "Unfix jump target"
 msgstr "Anulare fixare țintă salt"
@@ -6257,7 +6269,7 @@ msgid "Unrar error code[%s]."
 msgstr "Cod de eroare Unrar[%s]."
 
 msgid "Unselect all"
-msgstr ""
+msgstr "Deselectați tot"
 
 msgid "Unset watched"
 msgstr "Anulare marcaj vizionat"
@@ -6282,7 +6294,7 @@ msgid "Upload date"
 msgstr "Data încărcării"
 
 msgid "Upload speed limit"
-msgstr ""
+msgstr "Limita vitezei de încărcare"
 
 #, python-format
 msgid "Uploader: %s"
@@ -6483,7 +6495,7 @@ msgid "Voice-over"
 msgstr "Voice-over"
 
 msgid "Volleyball"
-msgstr ""
+msgstr "Volei"
 
 msgid "WWE shows"
 msgstr "Show-uri WWE"
@@ -6507,23 +6519,23 @@ msgid "Watch online"
 msgstr "Vizionare online"
 
 msgid "Watchlist"
-msgstr ""
+msgstr "Listă de vizionare"
 
 msgid "Watchlist (no folder)"
-msgstr ""
+msgstr "Listă de vizionare (fără folder)"
 
 msgid "Watchlist folder"
-msgstr ""
+msgstr "Folderul listei de vizionare"
 
 msgid "WebStreamr / AIOStreams manifest URL (your own):"
-msgstr ""
+msgstr "URL-ul manifestului WebStreamr / AIOStreams (al dvs.):"
 
 msgid "Website address"
-msgstr ""
+msgstr "Adresa site-ului"
 
 #, python-format
 msgid "Weeks on chart: %s"
-msgstr ""
+msgstr "Săptămâni în clasament: %s"
 
 msgid "Western"
 msgstr "Western"
@@ -6547,7 +6559,7 @@ msgid "Winter"
 msgstr "Iarnă"
 
 msgid "Winter sports"
-msgstr ""
+msgstr "Sporturi de iarnă"
 
 msgid "With an API key from subdl.com (E2iPlayer settings, Subtitles) the official SubDL API is searched as well."
 msgstr "Cu o cheie API de la subdl.com (setări E2iPlayer, Subtitrări) se caută și în API-ul oficial SubDL."
@@ -6695,7 +6707,7 @@ msgid "Your MyE2i extension is outdated or unknown (v%s or newer needed). Please
 msgstr "Extensia dvs. MyE2i este învechită sau necunoscută (este necesară v%s sau mai nouă). Actualizați:"
 
 msgid "Your own list of videos, in folders of your own (MENU key on a video: \"Add to Watchlist\")"
-msgstr ""
+msgstr "Propria dvs. listă de videoclipuri, în propriile foldere (tasta MENU pe un videoclip: \"Adăugați în lista de vizionare\")"
 
 msgid "Your search entry"
 msgstr "Termenul dvs. de căutare"
@@ -6936,10 +6948,10 @@ msgid "https - validate SSL certificates"
 msgstr "https - validare certificate SSL"
 
 msgid "iTunes - Top albums by country"
-msgstr ""
+msgstr "iTunes - Top albume pe țări"
 
 msgid "iTunes - Top songs by country"
-msgstr ""
+msgstr "iTunes - Top melodii pe țări"
 
 msgid "insert space"
 msgstr "inserare spațiu"
@@ -6996,7 +7008,7 @@ msgid "manual"
 msgstr "manual"
 
 msgid "marked"
-msgstr ""
+msgstr "marcat"
 
 msgid "maroon"
 msgstr "grena"
@@ -7038,7 +7050,7 @@ msgid "next page"
 msgstr "pagina următoare"
 
 msgid "next page / previous page"
-msgstr ""
+msgstr "pagina următoare / pagina anterioară"
 
 msgid "next page = page 1"
 msgstr "pagina următoare = pagina 1"
@@ -7119,7 +7131,7 @@ msgid "refresh the current list"
 msgstr "reîmprospătare listă curentă"
 
 msgid "reversed"
-msgstr ""
+msgstr "inversat"
 
 msgid "rootfs"
 msgstr "rootfs"
@@ -7186,7 +7198,7 @@ msgid "show this help"
 msgstr "afișare acest ajutor"
 
 msgid "shuffled"
-msgstr ""
+msgstr "amestecat"
 
 msgid "sign in (subscriptions, playlists, age-restricted videos)"
 msgstr "conectare (abonamente, playlisturi, videoclipuri cu restricție de vârstă)"

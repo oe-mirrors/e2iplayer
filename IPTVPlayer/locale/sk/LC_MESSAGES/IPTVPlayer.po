@@ -43,68 +43,68 @@ msgstr ""
 "https://github.com/oe-mirrors/e2iplayer/issues"
 
 msgid "  • Fixed: order never changes - useful for browsing by letter jump (0-9)."
-msgstr ""
+msgstr "  • Pevné: poradie sa nikdy nemení - užitočné pri prechádzaní skokom na písmeno (0-9)."
 
 msgid "  • Sorting or reordering fixes this automatically, so your order stays."
-msgstr ""
+msgstr "  • Triedenie alebo zmena poradia to zafixuje automaticky, takže vaše poradie zostane."
 
 msgid "  • Unfixed (default): the entry jumps back to the top of the list."
-msgstr ""
+msgstr "  • Nepevné (predvolené): položka skočí späť na začiatok zoznamu."
 
 #, python-format
 msgid "\"%s\" Virtual Keyboard layout not available."
 msgstr "Rozloženie virtuálnej klávesnice \"%s\" nie je k dispozícii."
 
-#, fuzzy, python-format
+#, python-format
 msgid "\"%s\" has been added to the favourites group \"%s\"."
-msgstr "Neexistujú žiadne iné obľúbené skupiny"
+msgstr "\"%s\" bolo pridané do skupiny obľúbených \"%s\"."
 
 #, python-format
 msgid "\"%s\" is playing on the TV."
-msgstr ""
+msgstr "\"%s\" sa prehráva na televízore."
 
 msgid "\"Web\" streams player"
 msgstr "Prehrávač streamov \"Web\""
 
 #, python-format
 msgid "%d added, %d skipped."
-msgstr ""
+msgstr "%d pridaných, %d preskočených."
 
 #, python-format
 msgid "%d duplicate entries removed."
-msgstr ""
+msgstr "Odstránených duplicitných položiek: %d."
 
 #, python-format
 msgid "%d duplicate entry removed."
-msgstr ""
+msgstr "Odstránená %d duplicitná položka."
 
 #, python-format
 msgid "%d items added to the download queue, %d skipped."
-msgstr ""
+msgstr "Do frontu sťahovania pridaných %d položiek, %d preskočených."
 
 #, python-format
 msgid "%d of %d downloaded"
-msgstr ""
+msgstr "Stiahnuté %d z %d"
 
 #, python-format
 msgid "%d parts"
-msgstr ""
+msgstr "%d častí"
 
 #, python-format
 msgid "%d programmes"
-msgstr ""
+msgstr "%d relácií"
 
 #, python-format
 msgid "%d recitations"
-msgstr ""
+msgstr "%d recitácií"
 
 #, python-format
 msgid "%d removed, %d skipped."
-msgstr ""
+msgstr "%d odstránených, %d preskočených."
 
-#, fuzzy, python-format
+#, python-format
 msgid "%d videos"
-msgstr "Prehliadanie videí"
+msgstr "%d videí"
 
 #, python-format
 msgid "%s - service overview"
@@ -116,23 +116,23 @@ msgstr "%s - poskytovateľ titulkov"
 
 #, python-format
 msgid "%s blocks the connection of the receiver (HTTP 403). It only plays with curl-impersonate installed on the receiver - otherwise please choose another server."
-msgstr ""
+msgstr "%s blokuje pripojenie prijímača (HTTP 403). Prehrá sa iba s nainštalovaným curl-impersonate na prijímači - inak zvoľte iný server."
 
 #, python-format
 msgid "%s blocks the connection of the receiver (HTTP 403). Please choose another server."
-msgstr ""
+msgstr "%s blokuje pripojenie prijímača (HTTP 403). Zvoľte iný server."
 
-#, fuzzy, python-format
+#, python-format
 msgid "%s buffering..."
-msgstr "[%s] s vyrovnávacou pamäťou"
+msgstr "%s načítava do vyrovnávacej pamäte..."
 
 #, python-format
 msgid "%s cannot solve this type of captcha."
-msgstr ""
+msgstr "%s nedokáže vyriešiť tento typ captcha."
 
 #, python-format
 msgid "%s could not solve the captcha."
-msgstr ""
+msgstr "%s nedokázal vyriešiť captcha."
 
 #, python-format
 msgid "%s device name"
@@ -144,7 +144,7 @@ msgstr "Správca sťahovania %s"
 
 #, python-format
 msgid "%s e-mail"
-msgstr "%s e-mailu"
+msgstr "%s e-mail"
 
 #, python-format
 msgid "%s episodes"
@@ -152,11 +152,11 @@ msgstr "%s epizód"
 
 #, python-format
 msgid "%s followers"
-msgstr ""
+msgstr "%s sledujúcich"
 
 #, python-format
 msgid "%s needs a free account. Enter login and password in the host configuration."
-msgstr ""
+msgstr "%s potrebuje bezplatný účet. Zadajte prihlasovacie meno a heslo v konfigurácii hostiteľa."
 
 #, python-format
 msgid "%s password"
@@ -164,23 +164,23 @@ msgstr "%s heslo"
 
 #, python-format
 msgid "%s plays"
-msgstr ""
+msgstr "%s prehratí"
 
 #, python-format
 msgid "%s posts"
-msgstr ""
+msgstr "%s príspevkov"
 
 #, python-format
 msgid "%s refused the download. Please set your login and password in the configuration."
-msgstr ""
+msgstr "%s odmietol sťahovanie. Nastavte prihlasovacie meno a heslo v konfigurácii."
 
 #, python-format
 msgid "%s refused the request (Cloudflare check, HTTP %s). This host needs curl-impersonate on the receiver."
-msgstr ""
+msgstr "%s odmietol požiadavku (kontrola Cloudflare, HTTP %s). Tento hostiteľ potrebuje curl-impersonate na prijímači."
 
 #, python-format
 msgid "%s returned %s: %s"
-msgstr "%s vrátený %s: %s"
+msgstr "%s vrátil %s: %s"
 
 #, python-format
 msgid "%s services configuration"
@@ -188,11 +188,11 @@ msgstr "Konfigurácia služieb %s"
 
 #, python-format
 msgid "%s subtitles download - how to"
-msgstr "%s stiahnutie titulkov - ako"
+msgstr "%s sťahovanie titulkov - návod"
 
 #, python-format
 msgid "%s talks"
-msgstr ""
+msgstr "%s prednášok"
 
 #, python-format
 msgid "%s timeout."
@@ -200,7 +200,7 @@ msgstr "%s časový limit."
 
 #, python-format
 msgid "%s uploads"
-msgstr ""
+msgstr "%s nahrávok"
 
 #, python-format
 msgid ""
@@ -210,31 +210,30 @@ msgstr ""
 "%s používa opatrenia \"geografického blokovania\", aby vám zabránil v prístupe k službám zo zahraničia.\n"
 " Hostiteľská krajina: %s, vaša krajina: %s"
 
-#, fuzzy, python-format
+#, python-format
 msgid "%s viewers"
-msgstr "Najviac videné"
+msgstr "%s divákov"
 
-#, fuzzy, python-format
+#, python-format
 msgid "%s views"
-msgstr "zobrazení"
+msgstr "%s zhliadnutí"
 
 #, python-format
 msgid "%s: decrypting the stream, this can take a while (%d s)"
-msgstr ""
+msgstr "%s: dešifruje sa stream, môže to chvíľu trvať (%d s)"
 
 #, python-format
 msgid "(%d YouTube channel(s) could not be read)"
-msgstr ""
+msgstr "(Nepodarilo sa načítať kanály YouTube: %d)"
 
 msgid "(no videos found)"
-msgstr ""
+msgstr "(nenašli sa žiadne videá)"
 
 msgid "(nothing here yet)"
-msgstr ""
+msgstr "(zatiaľ tu nič nie je)"
 
-#, fuzzy
 msgid "(reading...)"
-msgstr "Trendy"
+msgstr "(načítava sa...)"
 
 msgid "++"
 msgstr "++"
@@ -246,26 +245,25 @@ msgid "----- BASIC CONFIGURATION -----"
 msgstr "----- ZÁKLADNÁ KONFIGURÁCIA -----"
 
 msgid "----- BUFFERING CONFIGURATION -----"
-msgstr "----- KONFIGURÁCIA UKLADANIA DO VYROVNANEJ BUFFERINGU -----"
+msgstr "----- KONFIGURÁCIA VYROVNÁVACEJ PAMÄTE -----"
 
 msgid "----- CAPTCHA CONFIGURATION -----"
 msgstr "----- KONFIGURÁCIA CAPTCHA -----"
 
-#, fuzzy
 msgid "----- DEBUG CONFIGURATION -----"
-msgstr "----- KONFIGURÁCIA UKLADANIA DO VYROVNANEJ BUFFERINGU -----"
+msgstr "----- KONFIGURÁCIA LADENIA -----"
 
 msgid "----- DOWNLOADING CONFIGURATION -----"
-msgstr "----- STIAHNUTIE KONFIGURÁCIE -----"
+msgstr "----- KONFIGURÁCIA SŤAHOVANIA -----"
 
 msgid "----- Debug -----"
-msgstr ""
+msgstr "----- Ladenie -----"
 
 msgid "----- Global HostXXX Configuration -----"
 msgstr "----- Globálna konfigurácia HostXXX -----"
 
 msgid "----- METADATA PROVIDERS CONFIGURATION -----"
-msgstr ""
+msgstr "----- KONFIGURÁCIA POSKYTOVATEĽOV METADÁT -----"
 
 msgid "----- PLAYERS & PLAYBACK CONFIGURATION -----"
 msgstr "----- KONFIGURÁCIA PREHRÁVAČOV A PREHRÁVANIA -----"
@@ -277,7 +275,7 @@ msgid "----- Porn Site Configuration -----"
 msgstr "----- Konfigurácia porno stránok -----"
 
 msgid "----- SCREENSAVER CONFIGURATION -----"
-msgstr ""
+msgstr "----- KONFIGURÁCIA ŠETRIČA OBRAZOVKY -----"
 
 msgid "----- SECURITY CONFIGURATION -----"
 msgstr "----- KONFIGURÁCIA BEZPEČNOSTI -----"
@@ -294,9 +292,8 @@ msgstr "----- KONFIGURÁCIA ÚLOŽISKA -----"
 msgid "----- SUBTITLES CONFIGURATION -----"
 msgstr "----- KONFIGURÁCIA TITULKOV -----"
 
-#, fuzzy
 msgid "----- Show or hide Anime / Hentai -----"
-msgstr "----- Zobraziť alebo skryť živé kamery -----"
+msgstr "----- Zobraziť alebo skryť Anime / Hentai -----"
 
 msgid "----- Show or hide Live Cams -----"
 msgstr "----- Zobraziť alebo skryť živé kamery -----"
@@ -305,24 +302,22 @@ msgid "----- Show or hide Porn Sites -----"
 msgstr "----- Zobraziť alebo skryť porno stránky -----"
 
 msgid "----- TORRENT CONFIGURATION -----"
-msgstr ""
+msgstr "----- KONFIGURÁCIA TORRENTOV -----"
 
-#, fuzzy
 msgid "----- VIRTUAL KEYBOARD & SEARCH CONFIGURATION -----"
-msgstr "----- ZÁKLADNÁ KONFIGURÁCIA -----"
+msgstr "----- KONFIGURÁCIA VIRTUÁLNEJ KLÁVESNICE A VYHĽADÁVANIA -----"
 
 msgid "----- XXXList Configuration -----"
 msgstr "----- Konfigurácia XXXList -----"
 
-#, fuzzy
 msgid "----------  Anime / Hentai  ----------"
-msgstr "----------  Živé kamery  ----------"
+msgstr "----------  Anime / Hentai  ----------"
 
 msgid "----------  Live Cams  ----------"
 msgstr "----------  Živé kamery  ----------"
 
 msgid "----------  Other  ----------"
-msgstr "---------- Iné ----------"
+msgstr "----------  Iné  ----------"
 
 msgid "----------  Porn Sites  ----------"
 msgstr "----------  Porno stránky  ----------"
@@ -332,62 +327,59 @@ msgid "----------  Search \"%s\"  ----------"
 msgstr "----------  Hľadať \"%s\"  ----------"
 
 msgid "----------------- External exteplayer3 options -----------------"
-msgstr "----------------- Možnosti externého prehrávača3 -----------------"
+msgstr "----------------- Možnosti externého exteplayer3 -----------------"
 
 msgid "--All Episodes--"
-msgstr "--Všetky epizódy --"
+msgstr "--Všetky epizódy--"
 
 msgid "--All--"
 msgstr "--Všetko--"
 
 msgid "--Other--"
-msgstr "--Iný--"
+msgstr "--Iné--"
 
 msgid "... and that the stream delivers video :"
-msgstr ""
+msgstr "... a že stream dodáva video :"
 
 msgid "0-9"
-msgstr ""
+msgstr "0-9"
 
 msgid "1 minute"
-msgstr ""
+msgstr "1 minúta"
 
 msgid "1. On a phone or PC in the same network, open the address shown in the captcha window (or scan its QR code) in a browser with the MyE2i extension installed. If it asks for a code, you find it in the title of the captcha window."
-msgstr ""
+msgstr "1. Na telefóne alebo PC v tej istej sieti otvorte adresu zobrazenú v okne captcha (alebo naskenujte jej QR kód) v prehliadači s nainštalovaným rozšírením MyE2i. Ak sa vyžaduje kód, nájdete ho v názve okna captcha."
 
 msgid "12 hour format"
 msgstr "12-hodinový formát"
 
-#, fuzzy
 msgid "15 seconds"
-msgstr "sekunda"
+msgstr "15 sekúnd"
 
 msgid "2. Click the big green button on that page. A new tab opens with the captcha or the website's browser check."
-msgstr ""
+msgstr "2. Na tejto stránke kliknite na veľké zelené tlačidlo. Otvorí sa nová karta s captcha alebo s kontrolou prehliadača webovej stránky."
 
 msgid "24 hour format"
 msgstr "24-hodinový formát"
 
 msgid "3. Solve it. The result goes back to the receiver by itself and the captcha window closes."
-msgstr ""
+msgstr "3. Vyriešte ju. Výsledok sa sám odošle späť do prijímača a okno captcha sa zatvorí."
 
-#, fuzzy
 msgid "30 seconds"
-msgstr "sekunda"
+msgstr "30 sekúnd"
 
 msgid "4K movies"
-msgstr ""
+msgstr "4K filmy"
 
-#, fuzzy
 msgid "5 seconds"
-msgstr "sekunda"
+msgstr "5 sekúnd"
 
 #, python-format
 msgid "A folder \"%s\" exists already."
-msgstr ""
+msgstr "Priečinok \"%s\" už existuje."
 
 msgid "A search is already running."
-msgstr ""
+msgstr "Vyhľadávanie už prebieha."
 
 msgid "A-Z"
 msgstr "A-Z"
@@ -405,6 +397,8 @@ msgid ""
 "ACCESS DENIED.\n"
 "THIS VIDEO IS DELETED OR NOT AVAILABLE TO YOUR REGION."
 msgstr ""
+"PRÍSTUP ZAMIETNUTÝ.\n"
+"TOTO VIDEO BOLO ODSTRÁNENÉ ALEBO NIE JE DOSTUPNÉ VO VAŠOM REGIÓNE."
 
 msgid "ALBUMS"
 msgstr "ALBUMY"
@@ -413,7 +407,7 @@ msgid "API Key"
 msgstr "Kľúč API"
 
 msgid "ARTISTS"
-msgstr "UMELCOV"
+msgstr "UMELCI"
 
 msgid "ATTENTION!"
 msgstr "POZOR!"
@@ -422,7 +416,7 @@ msgid "Aborted"
 msgstr "Prerušená"
 
 msgid "About"
-msgstr ""
+msgstr "O programe"
 
 msgid "Accept"
 msgstr "Súhlasím"
@@ -431,56 +425,55 @@ msgid "Access Forbidden"
 msgstr "Prístup zakázaný"
 
 msgid "Access denied - open the page with the QR code or the code shown on the receiver screen."
-msgstr ""
+msgstr "Prístup zamietnutý - otvorte stránku cez QR kód alebo pomocou kódu zobrazeného na obrazovke prijímača."
 
 msgid "Access denied. Please check password."
 msgstr "Prístup bol odmietnutý. Skontrolujte heslo."
 
-#, fuzzy
 msgid "Accessible"
-msgstr "Prístup zakázaný"
+msgstr "Bezbariérové"
 
 #, python-format
 msgid "Account %d - name (optional):"
-msgstr ""
+msgstr "Účet %d - názov (voliteľné):"
 
 #, python-format
 msgid "Account %d - password:"
-msgstr ""
+msgstr "Účet %d - heslo:"
 
 #, python-format
 msgid "Account %d - server (http://host:port or get.php link):"
-msgstr ""
+msgstr "Účet %d - server (http://host:port alebo odkaz get.php):"
 
 #, python-format
 msgid "Account %d - user name:"
-msgstr ""
+msgstr "Účet %d - používateľské meno:"
 
 msgid "Accounts & API keys"
-msgstr ""
+msgstr "Účty a kľúče API"
 
 msgid "Action"
-msgstr ""
+msgstr "Akčné"
 
 msgid "Action & Thriller"
-msgstr ""
+msgstr "Akčné a thrillery"
 
 msgid "Actors"
-msgstr "Aktérov"
+msgstr "Herci"
 
 msgid "Actors:"
-msgstr "Aktérov:"
+msgstr "Herci:"
 
 #, python-format
 msgid "Add %d items to the download queue?"
-msgstr ""
+msgstr "Pridať %d položiek do frontu sťahovania?"
 
 msgid "Add channel name to downloaded file"
 msgstr "Pridať názov kanála do stiahnutého súboru"
 
 #, python-format
 msgid "Add host %s to group"
-msgstr "Pridanie %s hostiteľa do skupiny"
+msgstr "Pridať hostiteľa %s do skupiny"
 
 msgid "Add item to favorites"
 msgstr "Pridanie položky do obľúbených"
@@ -490,11 +483,10 @@ msgstr "Pridanie položky do skupiny"
 
 #, python-format
 msgid "Add marked items to favourites (%d)"
-msgstr ""
+msgstr "Pridať označené položky do obľúbených (%d)"
 
-#, fuzzy
 msgid "Add new entry"
-msgstr "Pridať novú skupinu"
+msgstr "Pridať novú položku"
 
 msgid "Add new group"
 msgstr "Pridať novú skupinu"
@@ -506,38 +498,38 @@ msgid "Add to User Links"
 msgstr "Pridať do používateľských odkazov"
 
 msgid "Add to Watchlist"
-msgstr ""
+msgstr "Pridať do zoznamu na pozretie"
 
 msgid "Add to Watchlist folder..."
-msgstr ""
+msgstr "Pridať do priečinka zoznamu na pozretie..."
 
 msgid "Added"
-msgstr ""
+msgstr "Pridané"
 
 #, python-format
 msgid "Added by: %s, directory: %s"
 msgstr "Pridal: %s, adresár: %s"
 
 msgid "Adhan"
-msgstr ""
+msgstr "Adhan"
 
 msgid "Adventure"
-msgstr ""
+msgstr "Dobrodružné"
 
 msgid "African series"
-msgstr ""
+msgstr "Africké seriály"
 
 msgid "Age limit:"
 msgstr "Vekový limit:"
 
 msgid "Aired"
-msgstr ""
+msgstr "Odvysielané"
 
 msgid "Aired this week"
-msgstr ""
+msgstr "Odvysielané tento týždeň"
 
 msgid "Airing now"
-msgstr ""
+msgstr "Práve vysiela"
 
 msgid "All"
 msgstr "Všetko"
@@ -546,83 +538,78 @@ msgid "All Sports"
 msgstr "Všetky športy"
 
 msgid "All audiobooks"
-msgstr ""
+msgstr "Všetky audioknihy"
 
-#, fuzzy
 msgid "All categories"
-msgstr "Kategórie"
+msgstr "Všetky kategórie"
 
 msgid "All in one"
 msgstr "Všetko v jednom"
 
 msgid "All movies"
-msgstr ""
+msgstr "Všetky filmy"
 
 msgid "All programmes"
-msgstr ""
+msgstr "Všetky relácie"
 
-#, fuzzy
 msgid "All results"
-msgstr "Viac výsledkov"
+msgstr "Všetky výsledky"
 
 msgid "All seasons"
-msgstr ""
+msgstr "Všetky sezóny"
 
 msgid "All series"
-msgstr ""
+msgstr "Všetky seriály"
 
-#, fuzzy
 msgid "All shows"
-msgstr "zobraziť"
+msgstr "Všetky šou"
 
 msgid "All stations"
-msgstr ""
+msgstr "Všetky stanice"
 
 msgid "All streams"
 msgstr "Všetky streamy"
 
-#, fuzzy
 msgid "All time"
-msgstr "Všetko v jednom"
+msgstr "Celé obdobie"
 
 msgid "All titles A-Z"
-msgstr ""
+msgstr "Všetky tituly A-Z"
 
 msgid "All videos"
-msgstr ""
+msgstr "Všetky videá"
 
 msgid "Allow VP9 codec:"
 msgstr "Povoliť kodek VP9:"
 
 msgid "Allow dash format:"
-msgstr "Povoliť formát pomlčky:"
+msgstr "Povoliť formát DASH:"
 
 msgid "Allow external link-decryption service (enc-dec.app)"
-msgstr ""
+msgstr "Povoliť externú službu na dešifrovanie odkazov (enc-dec.app)"
 
-#, fuzzy
 msgid "Allow host to override suggestions provider"
-msgstr "Predvolený poskytovateľ návrhov"
+msgstr "Povoliť hostiteľovi prepísať poskytovateľa návrhov"
 
 msgid "Allow upload to other peers (seeding)"
-msgstr ""
+msgstr "Povoliť odosielanie ostatným peerom (seeding)"
 
 msgid "Allow watched flag to be set"
-msgstr "Povoliť nastavenie sledovaného príznaku"
+msgstr "Povoliť nastavenie príznaku pozretia"
 
 msgid "Alphabetically"
 msgstr "Abecedne"
 
 #, python-format
 msgid "Also use the accounts of X-Streamity (%s)"
-msgstr ""
+msgstr "Používať aj účty z X-Streamity (%s)"
 
 #, python-format
 msgid "Also use the portals of EStalker (%s)"
-msgstr ""
+msgstr "Používať aj portály z EStalker (%s)"
 
 msgid "AltGr"
-msgstr ""
+msgstr "AltGr"
 
 msgid "Alternate Title:"
 msgstr "Alternatívny názov:"
@@ -636,23 +623,20 @@ msgstr "Alternatívny proxy server (1)"
 msgid "Alternative proxy server (2)"
 msgstr "Alternatívny proxy server (2)"
 
-#, fuzzy
 msgid "Alternative proxy server (3)"
-msgstr "Alternatívny proxy server (1)"
+msgstr "Alternatívny proxy server (3)"
 
-#, fuzzy
 msgid "Alternative proxy server (4)"
-msgstr "Alternatívny proxy server (1)"
+msgstr "Alternatívny proxy server (4)"
 
-#, fuzzy
 msgid "Alternative proxy server (5)"
-msgstr "Alternatívny proxy server (1)"
+msgstr "Alternatívny proxy server (5)"
 
 msgid "American football"
-msgstr ""
+msgstr "Americký futbal"
 
 msgid "An API key from subsource.net can be entered in the E2iPlayer settings (Subtitles)."
-msgstr ""
+msgstr "Kľúč API zo subsource.net môžete zadať v nastaveniach E2iPlayer (Titulky)."
 
 #, python-format
 msgid "An error occurred while loading a subtitle from [%s]."
@@ -660,22 +644,22 @@ msgstr "Pri načítavaní titulkov z [%s] sa vyskytla chyba."
 
 #, python-format
 msgid "An error occurred while writing into: %s"
-msgstr "Pri zápise do: %s"
+msgstr "Chyba pri zápise do: %s"
 
 msgid "An opensubtitles.com account (login and password in the E2iPlayer settings) raises the limit."
-msgstr ""
+msgstr "Účet opensubtitles.com (prihlasovacie meno a heslo v nastaveniach E2iPlayer) zvyšuje limit."
 
 msgid "Anatomy"
 msgstr "Anatómia"
 
 msgid "Animals"
-msgstr ""
+msgstr "Zvieratá"
 
 msgid "Animated movies"
-msgstr ""
+msgstr "Animované filmy"
 
 msgid "Animated series"
-msgstr ""
+msgstr "Animované seriály"
 
 msgid "Animation"
 msgstr "Animácia"
@@ -684,7 +668,7 @@ msgid "Anime"
 msgstr "Anime"
 
 msgid "Anime A-Z"
-msgstr ""
+msgstr "Anime A-Z"
 
 msgid "Anime Movies"
 msgstr "Anime filmy"
@@ -696,7 +680,7 @@ msgid "Anime TV series"
 msgstr "Anime televízny seriál"
 
 msgid "Anime genres"
-msgstr ""
+msgstr "Žánre anime"
 
 msgid "Anime list"
 msgstr "Zoznam anime"
@@ -705,13 +689,13 @@ msgid "Anime movies"
 msgstr "Anime filmy"
 
 msgid "Anime movies A-Z"
-msgstr ""
+msgstr "Anime filmy A-Z"
 
 msgid "Anime series (dubbed)"
-msgstr ""
+msgstr "Anime seriály (dabované)"
 
 msgid "Anime series A-Z"
-msgstr ""
+msgstr "Anime seriály A-Z"
 
 msgid "Answer"
 msgstr "Odpoveď"
@@ -723,7 +707,7 @@ msgid "Apply"
 msgstr "Použiť"
 
 msgid "Approaches"
-msgstr "Priblíženia"
+msgstr "Prístupy"
 
 msgid "Arabic"
 msgstr "Arabčina"
@@ -738,10 +722,10 @@ msgid "Arabic movies"
 msgstr "Arabské filmy"
 
 msgid "Arabic plays"
-msgstr ""
+msgstr "Arabské divadelné hry"
 
 msgid "Arabic songs"
-msgstr ""
+msgstr "Arabské piesne"
 
 msgid "Archive"
 msgstr "Archív"
@@ -757,23 +741,23 @@ msgid "Are you sure you want to reset all settings to their default values?"
 msgstr "Naozaj chcete obnoviť všetky nastavenia na ich predvolené hodnoty?"
 
 msgid "Art"
-msgstr ""
+msgstr "Umenie"
 
 msgid "Articles"
-msgstr ""
+msgstr "Články"
 
 msgid "Artist"
-msgstr ""
+msgstr "Interpret"
 
 #, python-format
 msgid "Artist \"%s\" not found on Last.fm - the exact artist name is needed."
-msgstr ""
+msgstr "Interpret \"%s\" sa na Last.fm nenašiel - je potrebný presný názov interpreta."
 
 msgid "Artists"
-msgstr ""
+msgstr "Interpreti"
 
 msgid "Asian"
-msgstr ""
+msgstr "Ázijské"
 
 msgid "Asian TV series"
 msgstr "Ázijské televízne seriály"
@@ -782,19 +766,19 @@ msgid "Asian movies"
 msgstr "Ázijské filmy"
 
 msgid "Asian series (dubbed)"
-msgstr ""
+msgstr "Ázijské seriály (dabované)"
 
 msgid "Aspect"
-msgstr "Oblasť"
+msgstr "Pomer strán"
 
 msgid "At least one of plugin browser, extension list and main menu has to stay on, otherwise E2iPlayer could no longer be started."
-msgstr ""
+msgstr "Aspoň jedna z možností prehliadač pluginov, zoznam rozšírení a hlavné menu musí zostať zapnutá, inak by sa E2iPlayer už nedal spustiť."
 
 msgid "At the live edge"
-msgstr ""
+msgstr "Na živom bode"
 
 msgid "Atheer radio (Arabic)"
-msgstr ""
+msgstr "Rádio Atheer (arabsky)"
 
 msgid "Audio"
 msgstr "Audio"
@@ -803,31 +787,30 @@ msgid "Audio buffer size [KB]"
 msgstr "Veľkosť vyrovnávacej pamäte zvuku [KB]"
 
 msgid "Audio description"
-msgstr ""
+msgstr "Zvukový popis"
 
 msgid "Audio programme"
-msgstr ""
+msgstr "Rozhlasová relácia"
 
-#, fuzzy
 msgid "Audio track"
-msgstr "Zvukové stopy"
+msgstr "Zvuková stopa"
 
 msgid "Audio tracks"
 msgstr "Zvukové stopy"
 
 #, python-format
 msgid "Author: %s"
-msgstr ""
+msgstr "Autor: %s"
 
 msgid "Authors"
-msgstr ""
+msgstr "Autori"
 
 msgid "Auto"
 msgstr "Auto"
 
 #, python-format
 msgid "Auto refresh: %s"
-msgstr ""
+msgstr "Automatická obnova: %s"
 
 msgid "Auto selection based on the settings"
 msgstr "Automatický výber na základe nastavení"
@@ -836,42 +819,41 @@ msgid "Auto start method"
 msgstr "Metóda automatického spustenia"
 
 msgid "Auto-generated"
-msgstr ""
+msgstr "Automaticky vytvorené"
 
-#, fuzzy
 msgid "Automatic"
-msgstr "Auto"
+msgstr "Automaticky"
 
 msgid "Automatically turn on external subtitles"
 msgstr "Automatické zapínanie externých titulkov"
 
 msgid "Automotive"
-msgstr ""
+msgstr "Auto-moto"
 
 msgid "Autoplay start delay"
 msgstr "Oneskorenie spustenia automatického prehrávania"
 
 msgid "Autumn"
-msgstr ""
+msgstr "Jeseň"
 
 msgid "Available worldwide"
-msgstr ""
+msgstr "Dostupné celosvetovo"
 
 msgid "Awards:"
 msgstr "Ocenenia:"
 
 msgid "BLUE"
-msgstr ""
+msgstr "MODRÉ"
 
 msgid "Background color"
 msgstr "Farba pozadia"
 
 msgid "Backspace"
-msgstr ""
+msgstr "Backspace"
 
 #, python-format
 msgid "Balance: %s"
-msgstr ""
+msgstr "Zostatok: %s"
 
 msgid "Balkans"
 msgstr "Balkán"
@@ -880,33 +862,31 @@ msgid "Basic Science"
 msgstr "Základná veda"
 
 msgid "Basketball"
-msgstr ""
+msgstr "Basketbal"
 
-#, fuzzy
 msgid "Being watched"
-msgstr "Sada sledovaných"
+msgstr "Práve sa pozerá"
 
 msgid "Best"
 msgstr "Najlepší"
 
 msgid "Best Pinkbike videos"
-msgstr ""
+msgstr "Najlepšie videá Pinkbike"
 
 msgid "Best movies"
-msgstr ""
+msgstr "Najlepšie filmy"
 
 msgid "Best series"
-msgstr ""
+msgstr "Najlepšie seriály"
 
 msgid "Binaries"
-msgstr ""
+msgstr "Binárne súbory"
 
-#, fuzzy
 msgid "Bing Suggestions"
-msgstr "Návrhy Google"
+msgstr "Návrhy Bing"
 
 msgid "Biography"
-msgstr ""
+msgstr "Životopisné"
 
 #, python-format
 msgid "Bitrate: %s"
@@ -919,28 +899,28 @@ msgid "Black iframe file"
 msgstr "Čierny súbor iframe"
 
 msgid "Black screensaver"
-msgstr ""
+msgstr "Čierny šetrič obrazovky"
 
 msgid "Block wmv files"
 msgstr "Blokovanie súborov wmv"
 
 msgid "Board Review"
-msgstr "Preskúmanie predstavenstva"
+msgstr "Príprava na skúšky"
 
 msgid "Books"
-msgstr ""
+msgstr "Knihy"
 
 msgid "Box"
-msgstr ""
+msgstr "Box"
 
 msgid "Boxing"
-msgstr ""
+msgstr "Box"
 
 msgid "Broadcast:"
 msgstr "Vysielanie:"
 
 msgid "Browse by genre"
-msgstr ""
+msgstr "Prehliadať podľa žánru"
 
 msgid "Browse youtube trending feeds"
 msgstr "Prehliadanie populárnych informačných kanálov na youtube"
@@ -952,37 +932,37 @@ msgid "Buffering location"
 msgstr "Umiestnenie vyrovnávacej pamäte"
 
 msgid "Business"
-msgstr ""
+msgstr "Biznis"
 
 #, python-format
 msgid "By %s"
-msgstr ""
+msgstr "Od %s"
 
 msgid "CME SAE"
 msgstr "CME SAE"
 
 #, python-format
 msgid "CUMLOUDER can only search its tags (e.g. milf, step sister, big tits) - there is no tag \"%s\"."
-msgstr ""
+msgstr "CUMLOUDER dokáže vyhľadávať iba vo svojich tagoch (napr. milf, step sister, big tits) - tag \"%s\" neexistuje."
 
 msgid "Cache"
-msgstr ""
+msgstr "Vyrovnávacia pamäť"
 
 msgid "Cache folder"
-msgstr ""
+msgstr "Priečinok vyrovnávacej pamäte"
 
 #, python-format
 msgid "Cache folder \"%s\" could not be created. Some data (cookies, subtitles, ...) may not be saved."
-msgstr ""
+msgstr "Priečinok vyrovnávacej pamäte \"%s\" sa nepodarilo vytvoriť. Niektoré údaje (cookies, titulky, ...) sa nemusia uložiť."
 
 msgid "Cache location"
-msgstr ""
+msgstr "Umiestnenie vyrovnávacej pamäte"
 
 msgid "Cache size in RAM"
-msgstr ""
+msgstr "Veľkosť vyrovnávacej pamäte v RAM"
 
 msgid "Cache size on disk"
-msgstr ""
+msgstr "Veľkosť vyrovnávacej pamäte na disku"
 
 #, python-format
 msgid ""
@@ -990,23 +970,21 @@ msgid ""
 "Return code[%s].\n"
 "Return data[%s]."
 msgstr ""
-"Nie je možné získať montážne body - montáž cmd zlyhala.\n"
+"Nie je možné získať body pripojenia - príkaz mount zlyhal.\n"
 "Návratový kód[%s].\n"
-"Vrátenie údajov[%s]."
+"Vrátené údaje[%s]."
 
 msgid "Cancel"
 msgstr "Zrušiť"
 
-#, fuzzy
 msgid "Cancelled."
-msgstr "Zrušiť"
+msgstr "Zrušené."
 
 msgid "Captcha"
 msgstr "Captcha"
 
-#, fuzzy
 msgid "Captcha error:"
-msgstr "Captcha"
+msgstr "Chyba captcha:"
 
 msgid ""
 "Captcha solved.\n"
@@ -1016,49 +994,49 @@ msgstr ""
 "Čaká sa na oznámenie."
 
 msgid "Captcha solving service"
-msgstr "Služba riešenia problémov Captcha"
+msgstr "Služba na riešenie captcha"
 
 msgid "Captcha was not entered."
-msgstr ""
+msgstr "Captcha nebola zadaná."
 
 #, python-format
 msgid "Carrying: %s | UP/DOWN=Move, OK=Drop"
-msgstr ""
+msgstr "Presúva sa: %s | HORE/DOLE = Presunúť, OK = Pustiť"
 
 msgid "Cartoon genres"
-msgstr ""
+msgstr "Žánre kreslených rozprávok"
 
 msgid "Cartoon series (dubbed)"
-msgstr ""
+msgstr "Kreslené seriály (dabované)"
 
 msgid "Cartoons"
 msgstr "Kreslené filmy"
 
 msgid "Cartoons A-Z"
-msgstr ""
+msgstr "Kreslené rozprávky A-Z"
 
 msgid "Cartoons and anime"
-msgstr "Karikatúry a anime"
+msgstr "Kreslené filmy a anime"
 
 msgid "Cartoons and series"
-msgstr ""
+msgstr "Kreslené rozprávky a seriály"
 
 msgid "Cast:"
 msgstr "Obsadenie:"
 
 msgid "Catch-up"
-msgstr ""
+msgstr "Archív"
 
 #, python-format
 msgid "Catch-up (%d channels)"
-msgstr ""
+msgstr "Archív (%d kanálov)"
 
 msgid "Catch-up (timeshift.php)"
-msgstr ""
+msgstr "Archív (timeshift.php)"
 
 #, python-format
 msgid "Catch-up: %d days"
-msgstr ""
+msgstr "Archív: %d dní"
 
 msgid "Categories"
 msgstr "Kategórie"
@@ -1067,7 +1045,7 @@ msgid "Categories:"
 msgstr "Kategórie:"
 
 msgid "Category"
-msgstr ""
+msgstr "Kategória"
 
 msgid "Category:"
 msgstr "Kategória:"
@@ -1076,10 +1054,10 @@ msgid "Change active movie player"
 msgstr "Zmena aktívneho prehrávača filmov"
 
 msgid "Change folder icon"
-msgstr ""
+msgstr "Zmeniť ikonu priečinka"
 
 msgid "Change own pin"
-msgstr ""
+msgstr "Zmeniť vlastný PIN"
 
 msgid "Channel"
 msgstr "Kanál"
@@ -1089,29 +1067,28 @@ msgid "Channel: %s"
 msgstr "Kanál: %s"
 
 msgid "Channels"
-msgstr "KANÁLY"
+msgstr "Kanály"
 
 msgid "Checking for updates"
-msgstr ""
+msgstr "Hľadajú sa aktualizácie"
 
 msgid "Checks every enabled site: menu, a list with videos and, in the full test, the stream link of one video."
-msgstr ""
+msgstr "Skontroluje každú povolenú stránku: menu, zoznam s videami a pri úplnom teste odkaz na stream jedného videa."
 
 msgid "Children"
 msgstr "Deti"
 
-#, fuzzy
 msgid "Children & Family"
-msgstr "Deti"
+msgstr "Deti a rodina"
 
 msgid "Chinese"
-msgstr ""
+msgstr "Čínske"
 
 msgid "Chinese anime"
-msgstr ""
+msgstr "Čínske anime"
 
 msgid "Choose the TorrServer binary"
-msgstr ""
+msgstr "Vyberte spustiteľný súbor TorrServer"
 
 msgid "Cinema History"
 msgstr "Dejiny kinematografie"
@@ -1120,31 +1097,31 @@ msgid "Cinema movies"
 msgstr "Kino filmy"
 
 msgid "Classic"
-msgstr ""
+msgstr "Klasika"
 
 msgid "Classic movies"
-msgstr ""
+msgstr "Klasické filmy"
 
 msgid "Clear"
-msgstr "Jasno"
+msgstr "Vymazať"
 
-#, fuzzy
 msgid "Clear log"
-msgstr "Jasno"
+msgstr "Vymazať denník"
 
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Clear the debug log file?\n"
 "%s"
-msgstr "Odstránenie súboru denníka"
+msgstr ""
+"Vymazať súbor ladiaceho denníka?\n"
+"%s"
 
-#, fuzzy
 msgid "Clear the log file at plugin start"
-msgstr "Zakázať naživo pri spustení pluginu"
+msgstr "Vymazať súbor denníka pri spustení pluginu"
 
 #, python-format
 msgid "Clipped by: %s"
-msgstr ""
+msgstr "Klip vytvoril: %s"
 
 msgid "Clips"
 msgstr "Klipy"
@@ -1153,19 +1130,19 @@ msgid "Close"
 msgstr "Zatvoriť"
 
 msgid "Close an unused torrent after"
-msgstr ""
+msgstr "Zavrieť nepoužívaný torrent po"
 
 msgid "Closes the host opened in the web interface, clears the search results and stops what the web interface still runs in the background. Use it when a page keeps loading. Settings, downloads and the E2iPlayer on the TV are not touched."
-msgstr ""
+msgstr "Zatvorí hostiteľa otvoreného vo webovom rozhraní, vymaže výsledky vyhľadávania a zastaví to, čo webové rozhranie ešte vykonáva na pozadí. Použite to, keď sa stránka stále načítava. Nastavenia, sťahovania a E2iPlayer na televízore zostanú nedotknuté."
 
 msgid "Closing. Please wait..."
-msgstr "Uzatvárací. Prosím počkajte..."
+msgstr "Zatvára sa. Prosím počkajte..."
 
 msgid "Clubs and athletes"
-msgstr ""
+msgstr "Kluby a športovci"
 
 msgid "Code"
-msgstr ""
+msgstr "Kód"
 
 msgid "Collected streams only"
 msgstr "Iba zozbierané streamy"
@@ -1174,46 +1151,44 @@ msgid "Collections"
 msgstr "Zbierky"
 
 msgid "Colored text in titles and descriptions"
-msgstr ""
+msgstr "Farebný text v názvoch a popisoch"
 
 msgid "Combine pull request merges with their commit"
-msgstr ""
+msgstr "Zlúčiť merge pull requestov s ich commitom"
 
 msgid "Comedy"
-msgstr ""
+msgstr "Komédia"
 
 msgid "Commentator"
-msgstr ""
+msgstr "Komentátor"
 
-#, fuzzy
 msgid "Comments"
-msgstr "Zaväzuje"
+msgstr "Komentáre"
 
 msgid "Commits"
-msgstr "Zaväzuje"
+msgstr "Commity"
 
 msgid "Competitions"
-msgstr ""
+msgstr "Súťaže"
 
 msgid "Complete Quran"
-msgstr ""
+msgstr "Celý Korán"
 
 msgid "Complete series"
-msgstr ""
+msgstr "Kompletné seriály"
 
 msgid "Completed"
-msgstr ""
+msgstr "Dokončené"
 
 msgid "Concert"
-msgstr ""
+msgstr "Koncert"
 
-#, fuzzy
 msgid "Config"
-msgstr "Konfigurácia %s"
+msgstr "Konfigurácia"
 
 #, python-format
 msgid "Config folder \"%s\" could not be created. Some data (host order, search history, favourites, movie player preferences, ...) may not be saved."
-msgstr ""
+msgstr "Priečinok konfigurácie \"%s\" sa nepodarilo vytvoriť. Niektoré údaje (poradie hostiteľov, história vyhľadávania, obľúbené, predvoľby prehrávača filmov, ...) sa nemusia uložiť."
 
 msgid "Configuration"
 msgstr "Konfigurácia"
@@ -1241,62 +1216,54 @@ msgstr "Potvrďte názov filmu"
 msgid "Confirmation error."
 msgstr "Chyba potvrdenia."
 
-#, fuzzy
 msgid "Connection to the weeb.tv server failed."
-msgstr "Pripojenie k serveru zlyhalo!"
+msgstr "Pripojenie k serveru weeb.tv zlyhalo."
 
 msgid "Connections per torrent"
-msgstr ""
+msgstr "Pripojenia na torrent"
 
 #, python-format
 msgid "Connections: %s of %s"
-msgstr ""
+msgstr "Pripojenia: %s z %s"
 
-#, fuzzy
 msgid "Content not available"
-msgstr "Úplný popis nie je k dispozícii"
+msgstr "Obsah nie je dostupný"
 
 msgid "Continue"
-msgstr ""
+msgstr "Pokračovať"
 
 msgid "Continue downloading"
 msgstr "Pokračovať v sťahovaní"
 
 msgid "Cooking"
-msgstr ""
+msgstr "Varenie"
 
 msgid "Copy"
 msgstr "Kopírovať"
 
 msgid "Copy it to /usr/bin/TorrServer (or a folder on HDD/USB) and make it executable (chmod 755)."
-msgstr ""
+msgstr "Skopírujte ho do /usr/bin/TorrServer (alebo do priečinka na HDD/USB) a nastavte ho ako spustiteľný (chmod 755)."
 
 msgid "Could not add the user link."
 msgstr "Nepodarilo sa pridať odkaz používateľa."
 
-#, fuzzy
 msgid "Could not load the wiki page."
-msgstr "Nepodarilo sa pridať odkaz používateľa."
+msgstr "Stránku wiki sa nepodarilo načítať."
 
-#, fuzzy
 msgid "Could not resolve host."
-msgstr "Nepodarilo sa napísať súbor \"%s\"."
+msgstr "Názov servera sa nepodarilo preložiť."
 
-#, fuzzy
 msgid "Could not resolve proxy."
-msgstr "Nepodarilo sa napísať súbor \"%s\"."
+msgstr "Proxy sa nepodarilo preložiť."
 
-#, fuzzy
 msgid "Could not sort the user links."
-msgstr "Nepodarilo sa pridať odkaz používateľa."
+msgstr "Používateľské odkazy sa nepodarilo zoradiť."
 
-#, fuzzy
 msgid "Could not start the YouTube sign-in."
-msgstr "Nepodarilo sa pridať odkaz používateľa."
+msgstr "Prihlásenie do YouTube sa nepodarilo spustiť."
 
-#, fuzzy
 msgid "Could not write the file."
-msgstr "Nepodarilo sa napísať súbor \"%s\"."
+msgstr "Súbor sa nepodarilo zapísať."
 
 msgid "Countries"
 msgstr "Krajiny"
@@ -1304,15 +1271,14 @@ msgstr "Krajiny"
 msgid "Country"
 msgstr "Krajina"
 
-#, fuzzy
 msgid "Country / store:"
-msgstr "Krajina:"
+msgstr "Krajina / obchod:"
 
 msgid "Country:"
 msgstr "Krajina:"
 
 msgid "Couples"
-msgstr ""
+msgstr "Páry"
 
 msgid "Create Enigma2 .cuts chapter marks"
 msgstr "Vytvoriť značky kapitol Enigma2 .cuts"
@@ -1326,16 +1292,15 @@ msgstr "Vytvoriť MKV"
 msgid "Create MKV with chapter marks from description"
 msgstr "Vytvoriť MKV so značkami kapitol z popisu"
 
-#, fuzzy
 msgid "Create debug logs"
-msgstr "Odstránenie súboru denníka"
+msgstr "Vytvárať ladiace denníky"
 
 msgid "Create sidecar files (.txt/.jpg)"
 msgstr "Vytvoriť sprievodné súbory (.txt/.jpg)"
 
 #, python-format
 msgid "Created: %s"
-msgstr ""
+msgstr "Vytvorené: %s"
 
 msgid "Creator:"
 msgstr "Autor:"
@@ -1344,25 +1309,25 @@ msgid "Creators:"
 msgstr "Autori:"
 
 msgid "Cricket"
-msgstr ""
+msgstr "Kriket"
 
 msgid "Crime"
-msgstr ""
+msgstr "Krimi"
 
 msgid "Critical Error - cookie can't be saved!"
 msgstr "Kritická chyba - súbor cookie nie je možné uložiť!"
 
 msgid "Critical Error – Content-Encoding gzip cannot be handled!"
-msgstr "Kritická chyba - gzip kódovania obsahu nie je možné spracovať!"
+msgstr "Kritická chyba - Content-Encoding gzip nie je možné spracovať!"
 
 msgid "Culture"
-msgstr ""
+msgstr "Kultúra"
 
 msgid "Culture and lifestyle"
-msgstr ""
+msgstr "Kultúra a životný štýl"
 
 msgid "Culture and pop"
-msgstr ""
+msgstr "Kultúra a pop"
 
 msgid "Current item is not a channel."
 msgstr "Aktuálna položka nie je kanál."
@@ -1371,34 +1336,34 @@ msgid "Cut"
 msgstr "Vystrihnúť"
 
 msgid "Czech"
-msgstr ""
+msgstr "Čeština"
 
 msgid "DASH/mpd"
 msgstr "DASH/mpd"
 
 msgid "DLNA server of TorrServer"
-msgstr ""
+msgstr "Server DLNA z TorrServer"
 
 msgid "DOWNLOAD ERROR"
-msgstr "Chyba sťahovania: Žiadna odpoveď, skúste to znova"
+msgstr "CHYBA SŤAHOVANIA"
 
 msgid "DOWNLOADED"
 msgstr "STIAHNUTÉ"
 
 msgid "DOWNLOADING"
-msgstr "Sťahovanie"
+msgstr "SŤAHOVANIE"
 
 msgid "DRM protection detected."
 msgstr "Zistená ochrana DRM."
 
 msgid "Daily download limit reached - type the code"
-msgstr ""
+msgstr "Dosiahnutý denný limit sťahovania - zadajte kód"
 
 msgid "Darkgray"
 msgstr "Tmavo-sivá"
 
 msgid "Darts"
-msgstr ""
+msgstr "Šípky"
 
 msgid "Date"
 msgstr "Dátum"
@@ -1406,9 +1371,8 @@ msgstr "Dátum"
 msgid "Debug file does not exist - nothing to delete"
 msgstr "Ladiaci súbor neexistuje - nič na odstránenie"
 
-#, fuzzy
 msgid "Debug log"
-msgstr "Denníky ladenia"
+msgstr "Ladiaci denník"
 
 msgid "Debug logs"
 msgstr "Denníky ladenia"
@@ -1416,20 +1380,19 @@ msgstr "Denníky ladenia"
 msgid "Debug option is disabled - nothing to display"
 msgstr "Možnosť ladenia je zakázaná - nič na zobrazenie"
 
-#, fuzzy
 msgid "Debug snapshot"
-msgstr "Denníky ladenia"
+msgstr "Ladiaci snímok"
 
 msgid "Debug snapshot (for site development)"
-msgstr ""
+msgstr "Ladiaci snímok (pre vývoj stránok)"
 
 #, python-format
 msgid "Debug snapshot: \"%s\" received by the box"
-msgstr ""
+msgstr "Ladiaci snímok: \"%s\" prijatý prijímačom"
 
 #, python-format
 msgid "Debug snapshot: sending \"%s\" failed"
-msgstr ""
+msgstr "Ladiaci snímok: odoslanie \"%s\" zlyhalo"
 
 #, python-format
 msgid "Decode file [%s] problem."
@@ -1442,13 +1405,13 @@ msgid "Default"
 msgstr "Predvolený"
 
 msgid "Default (2 minutes)"
-msgstr ""
+msgstr "Predvolené (2 minúty)"
 
 msgid "Default browser"
-msgstr ""
+msgstr "Predvolený prehliadač"
 
 msgid "Default captcha bypass"
-msgstr "Predvolený obtok captcha"
+msgstr "Predvolené obídenie captcha"
 
 msgid "Default suggestions provider"
 msgstr "Predvolený poskytovateľ návrhov"
@@ -1478,104 +1441,96 @@ msgid "Delete"
 msgstr "Odstrániť"
 
 msgid "Delete JS cache after (days, 0 = never)"
-msgstr ""
+msgstr "Vymazať vyrovnávaciu pamäť JS po (dni, 0 = nikdy)"
 
-#, fuzzy
 msgid "Delete JS cache now"
-msgstr "Odstrániť históriu vyhľadávania"
+msgstr "Vymazať vyrovnávaciu pamäť JS teraz"
 
 msgid "Delete Watchlist folder"
-msgstr ""
+msgstr "Odstrániť priečinok zoznamu na pozretie"
 
-#, fuzzy
 msgid "Delete all cache files now"
-msgstr "Odstránenie súboru denníka"
+msgstr "Vymazať všetky súbory vyrovnávacej pamäte teraz"
 
-#, fuzzy
 msgid "Delete all config files now"
-msgstr "Odstránenie súboru denníka"
+msgstr "Vymazať všetky konfiguračné súbory teraz"
 
 msgid "Delete cookies cache after (days, 0 = never)"
-msgstr ""
+msgstr "Vymazať vyrovnávaciu pamäť cookies po (dni, 0 = nikdy)"
 
 msgid "Delete cookies cache now"
-msgstr ""
+msgstr "Vymazať vyrovnávaciu pamäť cookies teraz"
 
-#, fuzzy
 msgid "Delete entry"
-msgstr "Odstrániť históriu vyhľadávania"
+msgstr "Odstrániť položku"
 
 msgid "Delete favourites and watched status now"
-msgstr ""
+msgstr "Vymazať obľúbené a stav pozretia teraz"
 
 msgid "Delete folder"
-msgstr ""
+msgstr "Odstrániť priečinok"
 
 msgid "Delete host order and groups now"
-msgstr ""
+msgstr "Vymazať poradie hostiteľov a skupiny teraz"
 
 msgid "Delete movie metadata cache after (days, 0 = never)"
-msgstr ""
+msgstr "Vymazať vyrovnávaciu pamäť metadát filmov po (dni, 0 = nikdy)"
 
 msgid "Delete movie metadata cache now"
-msgstr ""
+msgstr "Vymazať vyrovnávaciu pamäť metadát filmov teraz"
 
-#, fuzzy
 msgid "Delete movie player preferences now"
-msgstr "Vyberte prehrávač videozáznamov"
+msgstr "Vymazať predvoľby prehrávača filmov teraz"
 
-#, fuzzy
 msgid "Delete now"
-msgstr "Odstrániť"
+msgstr "Vymazať teraz"
 
 msgid "Delete search history"
 msgstr "Odstrániť históriu vyhľadávania"
 
-#, fuzzy
 msgid "Delete search history now"
-msgstr "Odstrániť históriu vyhľadávania"
+msgstr "Vymazať históriu vyhľadávania teraz"
 
 msgid "Delete subtitles cache after (days, 0 = never)"
-msgstr ""
+msgstr "Vymazať vyrovnávaciu pamäť titulkov po (dni, 0 = nikdy)"
 
-#, fuzzy
 msgid "Delete subtitles cache now"
-msgstr "Výber stopy titulkov"
+msgstr "Vymazať vyrovnávaciu pamäť titulkov teraz"
 
 msgid "Delete the cache when the torrent is closed"
-msgstr ""
+msgstr "Vymazať vyrovnávaciu pamäť po zatvorení torrentu"
 
 #, python-format
 msgid "Delete the folder \"%s\"? Its hosts go back to the group."
-msgstr ""
+msgstr "Odstrániť priečinok \"%s\"? Jeho hostitelia sa vrátia do skupiny."
 
 #, python-format
 msgid "Delete the folder \"%s\"? Its videos go back to the Watchlist."
-msgstr ""
+msgstr "Odstrániť priečinok \"%s\"? Jeho videá sa vrátia do zoznamu na pozretie."
 
 msgid "Delete thumbnails cache now"
-msgstr ""
+msgstr "Vymazať vyrovnávaciu pamäť miniatúr teraz"
 
 msgid "Denmark"
-msgstr ""
+msgstr "Dánsko"
 
 msgid "Description:"
 msgstr "Popis:"
 
 msgid "Detail/expert mode"
-msgstr ""
+msgstr "Podrobný/expertný režim"
 
 msgid "Detective"
-msgstr ""
+msgstr "Detektívka"
 
 msgid "Developers:"
 msgstr "Vývojári:"
 
 msgid "Digital programmes"
-msgstr ""
+msgstr "Digitálne relácie"
 
 msgid "Direct"
-msgstr ""
+msgstr "Priamo"
 
 msgid "Director:"
 msgstr "Režisér:"
@@ -1584,22 +1539,20 @@ msgid "Directors"
 msgstr "Režiséri"
 
 msgid "Directors:"
-msgstr "Riaditeľov:"
+msgstr "Režiséri:"
 
 #, python-format
 msgid "Directory \"%s\" does not exists."
 msgstr "Adresár \"%s\" neexistuje."
 
-#, fuzzy
 msgid "Directory browser"
-msgstr "Režiséri"
+msgstr "Prehliadač priečinkov"
 
-#, fuzzy
 msgid "Disable all groups"
-msgstr "Zakázať/povoliť skupiny"
+msgstr "Zakázať všetky skupiny"
 
 msgid "Disable live at plugin start"
-msgstr "Zakázať naživo pri spustení pluginu"
+msgstr "Vypnúť živé TV vysielanie pri spustení pluginu"
 
 msgid "Disable not used services"
 msgstr "Zakázať nepoužívané služby"
@@ -1617,10 +1570,10 @@ msgid "Disable/Enable services"
 msgstr "Zakázať/povoliť služby"
 
 msgid "Discovery"
-msgstr ""
+msgstr "Objavovanie"
 
 msgid "Disney cartoon movies (Egyptian dub)"
-msgstr ""
+msgstr "Disney animované filmy (egyptský dabing)"
 
 msgid "Display language:"
 msgstr "Jazyk zobrazenia:"
@@ -1629,30 +1582,29 @@ msgid "Display thumbnails"
 msgstr "Zobraziť miniatúry"
 
 msgid "Do you really want to delete ALL cache data now? This includes cookies, subtitles, movie metadata and thumbnails, and cannot be undone."
-msgstr ""
+msgstr "Naozaj chcete teraz vymazať VŠETKY údaje vyrovnávacej pamäte? Patria sem cookies, titulky, metadáta filmov a miniatúry a nedá sa to vrátiť späť."
 
 msgid "Do you really want to delete ALL config data now? This is real user data, not just cache - it includes favourites, watched status, search history, movie player preferences and host order/groups, and cannot be undone."
-msgstr ""
+msgstr "Naozaj chcete teraz vymazať VŠETKY konfiguračné údaje? Sú to skutočné používateľské údaje, nielen vyrovnávacia pamäť - patria sem obľúbené, stav pozretia, história vyhľadávania, predvoľby prehrávača filmov a poradie/skupiny hostiteľov a nedá sa to vrátiť späť."
 
 msgid "Do you really want to delete ALL favourites and watched status now? This is real user data, not just cache, and cannot be undone."
-msgstr ""
+msgstr "Naozaj chcete teraz vymazať VŠETKY obľúbené a stav pozretia? Sú to skutočné používateľské údaje, nielen vyrovnávacia pamäť, a nedá sa to vrátiť späť."
 
-#, fuzzy, python-format
+#, python-format
 msgid "Do you really want to delete the %s now?"
-msgstr "Naozaj chcete vymazať históriu vyhľadávania?"
+msgstr "Naozaj chcete teraz vymazať %s?"
 
-#, fuzzy
 msgid "Do you really want to delete the thumbnails cache now?"
-msgstr "Naozaj chcete vymazať históriu vyhľadávania?"
+msgstr "Naozaj chcete teraz vymazať vyrovnávaciu pamäť miniatúr?"
 
 msgid "Do you want to finish?"
 msgstr "Chcete dokončiť?"
 
 msgid "Documentaries"
-msgstr "Dokumentárne"
+msgstr "Dokumentárne filmy"
 
 msgid "Documentaries A-Z"
-msgstr ""
+msgstr "Dokumenty A-Z"
 
 msgid "Documentary"
 msgstr "Dokumentárny film"
@@ -1661,27 +1613,27 @@ msgid "Documentary Movies"
 msgstr "Dokumentárne filmy"
 
 msgid "Documentary series"
-msgstr ""
+msgstr "Dokumentárne seriály"
 
 msgid "Done - the result was sent to the box, you can close this page."
-msgstr ""
+msgstr "Hotovo - výsledok bol odoslaný do prijímača, túto stránku môžete zatvoriť."
 
 msgid "Download"
 msgstr "Stiahnuť"
 
 #, python-format
 msgid "Download \"%s\" (for this receiver) from %s"
-msgstr ""
+msgstr "Stiahnite \"%s\" (pre tento prijímač) z %s"
 
 #, python-format
 msgid "Download (ready in %d seconds)"
-msgstr ""
+msgstr "Stiahnuť (pripravené o %d sekúnd)"
 
 msgid "Download again"
 msgstr "Stiahnuť znova"
 
 msgid "Download all items of this page"
-msgstr ""
+msgstr "Stiahnuť všetky položky tejto stránky"
 
 msgid "Download already exists"
 msgstr "Sťahovanie už existuje"
@@ -1691,8 +1643,8 @@ msgid ""
 "Download can not be started.\n"
 " Incorrect address ('%r')."
 msgstr ""
-"Preberanie sa nedá spustiť.\n"
-" Nesprávna adresa (\"%r\")."
+"Sťahovanie sa nedá spustiť.\n"
+" Nesprávna adresa ('%r')."
 
 #, python-format
 msgid ""
@@ -1700,7 +1652,7 @@ msgid ""
 "Downloader %s not working correctly.\n"
 "Status[%s]"
 msgstr ""
-"Preberanie sa nedá spustiť.\n"
+"Sťahovanie sa nedá spustiť.\n"
 "Downloader %s nefunguje správne.\n"
 "Stav[%s]"
 
@@ -1713,35 +1665,33 @@ msgstr ""
 "Stav[%s]"
 
 msgid "Download manager"
-msgstr "Správca na preberanie"
+msgstr "Správca sťahovania"
 
 msgid "Download manager is not initialized"
 msgstr "Správca sťahovania nie je inicializovaný"
 
 #, python-format
 msgid "Download marked items (%d)"
-msgstr ""
+msgstr "Stiahnuť označené položky (%d)"
 
-#, fuzzy
 msgid "Download new version"
-msgstr "Správca na preberanie"
+msgstr "Stiahnuť novú verziu"
 
-#, fuzzy
 msgid "Download notification duration"
-msgstr "Umiestnenie sťahovaných súborov"
+msgstr "Trvanie upozornenia na sťahovanie"
 
 msgid "Download speed limit"
-msgstr ""
+msgstr "Obmedzenie rýchlosti sťahovania"
 
 msgid "Download subtiles failed."
-msgstr "Sťahovanie subdlaždíc zlyhalo."
+msgstr "Sťahovanie titulkov zlyhalo."
 
 msgid "Download suggested"
 msgstr "Stiahnuť navrhované"
 
 #, python-format
 msgid "Download the Linux file for the CPU of this receiver from %s"
-msgstr ""
+msgstr "Stiahnite súbor pre Linux pre CPU tohto prijímača z %s"
 
 msgid "Downloaded file is too small or corrupted."
 msgstr "Stiahnutý súbor je príliš malý alebo poškodený."
@@ -1755,7 +1705,7 @@ msgid ""
 " Downloader %s does not work properly.\n"
 "Status[%s]"
 msgstr ""
-"Preberanie nie je možné spustiť.\n"
+"Sťahovanie nie je možné spustiť.\n"
 " Downloader %s nefunguje správne.\n"
 "Stav[%s]"
 
@@ -1764,8 +1714,8 @@ msgid ""
 "Downloading can not be started.\n"
 " The address ('%r') is incorrect."
 msgstr ""
-"Preberanie nie je možné spustiť.\n"
-" Adresa (\"%r\") je nesprávna."
+"Sťahovanie nie je možné spustiť.\n"
+" Adresa ('%r') je nesprávna."
 
 #, python-format
 msgid ""
@@ -1773,7 +1723,7 @@ msgid ""
 " Downloader [%s] not working properly.\n"
 " Status[%s]"
 msgstr ""
-"Preberanie sa nedá spustiť.\n"
+"Sťahovanie sa nedá spustiť.\n"
 " Downloader [%s] nefunguje správne.\n"
 " Stav[%s]"
 
@@ -1782,7 +1732,7 @@ msgid ""
 "Downloading cannot be started.\n"
 " Invalid URI[%s]."
 msgstr ""
-"Preberanie sa nedá spustiť.\n"
+"Sťahovanie sa nedá spustiť.\n"
 " Neplatný identifikátor URI[%s]."
 
 #, python-format
@@ -1790,7 +1740,7 @@ msgid "Downloading file [%s] problem."
 msgstr "Problém so sťahovaním súboru [%s]."
 
 msgid "Downloading from prijevodi-online.org needs a free account. Enter login and password in the E2iPlayer settings."
-msgstr ""
+msgstr "Sťahovanie z prijevodi-online.org vyžaduje bezplatný účet. Zadajte prihlasovacie meno a heslo v nastaveniach E2iPlayer."
 
 #, python-format
 msgid ""
@@ -1808,32 +1758,31 @@ msgstr "Umiestnenie sťahovaných súborov"
 
 #, python-format
 msgid "Downloads: %s"
-msgstr ""
+msgstr "Stiahnutia: %s"
 
 msgid "Draft"
-msgstr ""
+msgstr "Koncept"
 
 msgid "Drama"
-msgstr ""
+msgstr "Dráma"
 
 msgid "Dramas (Asian)"
-msgstr ""
+msgstr "Drámy (ázijské)"
 
 msgid "Dubbed"
-msgstr ""
+msgstr "Dabované"
 
 msgid "Dubbed anime"
-msgstr ""
+msgstr "Dabované anime"
 
 msgid "Dubbed movies"
-msgstr ""
+msgstr "Dabované filmy"
 
 msgid "Dubbed series"
-msgstr ""
+msgstr "Dabované seriály"
 
-#, fuzzy
 msgid "DuckDuckGo Suggestions"
-msgstr "Návrhy Google"
+msgstr "Návrhy DuckDuckGo"
 
 msgid "Duration"
 msgstr "Trvanie"
@@ -1846,18 +1795,16 @@ msgid "Duration: %s"
 msgstr "Doba trvania: %s"
 
 msgid "Dutch"
-msgstr ""
+msgstr "Holandčina"
 
 msgid "E-mail (free TBN GO account):"
-msgstr ""
+msgstr "E-mail (bezplatný účet TBN GO):"
 
-#, fuzzy
 msgid "E2iPlayer"
-msgstr "Hráč %s"
+msgstr "E2iPlayer"
 
-#, fuzzy
 msgid "E2iPlayer - keyboard settings"
-msgstr "E2iPlayer - nastavenia"
+msgstr "E2iPlayer - nastavenia klávesnice"
 
 msgid "E2iPlayer - settings"
 msgstr "E2iPlayer - nastavenia"
@@ -1865,35 +1812,33 @@ msgstr "E2iPlayer - nastavenia"
 msgid "E2iPlayer auto start at Enigma2 start"
 msgstr "Automatické spustenie E2iPlayeru pri spustení Enigmy2"
 
-#, fuzzy
 msgid "E2iPlayer config folder"
-msgstr "Sťahovač E2iPlayeru"
+msgstr "Priečinok konfigurácie E2iPlayer"
 
 msgid "E2iPlayer downloader"
 msgstr "Sťahovač E2iPlayeru"
 
 msgid "E2iPlayer enable/disabled groups"
-msgstr "Skupiny s povolenou/vypnutou aplikáciou E2iPlayer"
+msgstr "E2iPlayer povolené/zakázané skupiny"
 
 msgid "E2iPlayer is only a specialized web browser. It does not host any materials."
-msgstr ""
+msgstr "E2iPlayer je iba špecializovaný webový prehliadač. Sám neposkytuje žiadny obsah."
 
-#, fuzzy
 msgid "E2iPlayer virtual keyboard"
-msgstr "Virtuálna kľúčová tabuľa"
+msgstr "Virtuálna klávesnica E2iPlayer"
 
 msgid ""
 "ERROR: pipeline could not be constructed: no element \"playbin2\" \n"
 "Please check if gstreamer plugins are available in your system."
 msgstr ""
-"CHYBA: potrubie sa nepodarilo skonštruovať: žiadny prvok \"playbin2\" \n"
+"CHYBA: pipeline sa nepodarilo vytvoriť: žiadny prvok \"playbin2\" \n"
 "Skontrolujte, či sú vo vašom systéme k dispozícii doplnky gstreamer."
 
 msgid "EXIT"
-msgstr ""
+msgstr "EXIT"
 
 msgid "Economy"
-msgstr ""
+msgstr "Ekonomika"
 
 msgid "Edit"
 msgstr "Upraviť"
@@ -1913,33 +1858,29 @@ msgstr "Upraviť obľúbenú položku"
 msgid "Edit favorites"
 msgstr "Úprava obľúbených položiek"
 
-#, fuzzy
 msgid "Edit search history"
-msgstr "Odstrániť históriu vyhľadávania"
+msgstr "Upraviť históriu vyhľadávania"
 
-#, fuzzy
 msgid "Edit title"
-msgstr "Úprava zlyhala."
+msgstr "Upraviť názov"
 
-#, fuzzy
 msgid "Edit, sort and delete search history entries"
-msgstr "Naozaj chcete vymazať históriu vyhľadávania?"
+msgstr "Upraviť, zoradiť a odstrániť položky histórie vyhľadávania"
 
 msgid "Education"
-msgstr ""
+msgstr "Vzdelávanie"
 
 msgid "Educational Animation"
 msgstr "Vzdelávacia animácia"
 
 msgid "Egyptian series"
-msgstr ""
+msgstr "Egyptské seriály"
 
 msgid "Empty title is not allowed."
-msgstr ""
+msgstr "Prázdny názov nie je povolený."
 
-#, fuzzy
 msgid "Enable all groups"
-msgstr "Povolenie skupín hostiteľov"
+msgstr "Povoliť všetky skupiny"
 
 msgid "Enable hosts groups"
 msgstr "Povolenie skupín hostiteľov"
@@ -1950,23 +1891,22 @@ msgstr "Povoliť zmenu poradia"
 msgid "Enable reordering mode"
 msgstr "Povoliť režim zmeny poradia"
 
-#, fuzzy
 msgid "Enabled hosts"
-msgstr "Povolenie skupín hostiteľov"
+msgstr "Povolení hostitelia"
 
 msgid "Encrypted connections only"
-msgstr ""
+msgstr "Iba šifrované pripojenia"
 
 msgid "Encrypted stream list - not supported"
-msgstr ""
+msgstr "Šifrovaný zoznam streamov - nepodporované"
 
 #, python-format
 msgid ""
 "Encryption function body extraction failed!\n"
 "Please report the problem to %s"
 msgstr ""
-"Šifrovacia funkcia extrakcie tela zlyhala!\n"
-"Nahláste problém %s"
+"Extrakcia tela šifrovacej funkcie zlyhala!\n"
+"Nahláste problém na %s"
 
 #, python-format
 msgid ""
@@ -1974,7 +1914,7 @@ msgid ""
 "Please report the problem to %s"
 msgstr ""
 "Extrakcia názvu šifrovacej funkcie zlyhala!\n"
-"Nahláste problém %s"
+"Nahláste problém na %s"
 
 msgid "English"
 msgstr "Angličtina"
@@ -1983,26 +1923,25 @@ msgid "English TV series"
 msgstr "Anglické televízne seriály"
 
 msgid "English dubbed"
-msgstr ""
+msgstr "Anglický dabing"
 
 msgid "English movies"
 msgstr "Anglické filmy"
 
 msgid "English movies (dubbed)"
-msgstr ""
+msgstr "Anglické filmy (dabované)"
 
 msgid "English series (dubbed)"
-msgstr ""
+msgstr "Anglické seriály (dabované)"
 
 msgid "English subbed"
-msgstr ""
+msgstr "Anglické titulky"
 
-#, fuzzy
 msgid "Enter"
-msgstr "na stred"
+msgstr "Enter"
 
 msgid "Enter (confirm and close)"
-msgstr ""
+msgstr "Enter (potvrdiť a zavrieť)"
 
 msgid "Enter a value"
 msgstr "Zadajte hodnotu"
@@ -2014,30 +1953,30 @@ msgid "Enter new pin"
 msgstr "Zadajte nový PIN kód"
 
 msgid "Enter old pin"
-msgstr "Zadajte starý špendlík"
+msgstr "Zadajte starý PIN kód"
 
 msgid "Enter pin"
 msgstr "Zadajte PIN kód"
 
 msgid "Enter the code shown in the title of the window on your receiver's screen (or scan the QR code shown there - no code needed then):"
-msgstr ""
+msgstr "Zadajte kód zobrazený v názve okna na obrazovke vášho prijímača (alebo naskenujte tam zobrazený QR kód - potom kód nie je potrebný):"
 
 msgid "Enter the text"
 msgstr "Zadajte text"
 
 msgid "Entertainment"
-msgstr ""
+msgstr "Zábava"
 
 #, python-format
 msgid "Entries: %d | Sort: %s | Status: %s | Jump target: %s"
-msgstr ""
+msgstr "Položky: %d | Triedenie: %s | Stav: %s | Cieľ skoku: %s"
 
 msgid "Episode"
 msgstr "Epizóda"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Episode %d"
-msgstr "Epizóda"
+msgstr "Epizóda %d"
 
 msgid "Episodes"
 msgstr "Epizódy"
@@ -2047,13 +1986,13 @@ msgstr "Epizódy:"
 
 #, python-format
 msgid "Episodes: %s"
-msgstr ""
+msgstr "Epizódy: %s"
 
 msgid "Epochs"
-msgstr ""
+msgstr "Epochy"
 
 msgid "Error"
-msgstr ""
+msgstr "Chyba"
 
 #, python-format
 msgid "Error code: %s\n"
@@ -2097,14 +2036,13 @@ msgid "Error message: %s\n"
 msgstr "Chybové hlásenie: %s\n"
 
 msgid "Error occurs"
-msgstr "Vyskytne sa chyba"
+msgstr "Vyskytla sa chyba"
 
 msgid "Error occurs during download."
-msgstr "Počas preberania sa vyskytne chyba."
+msgstr "Počas sťahovania sa vyskytla chyba."
 
-#, fuzzy
 msgid "Error occurs:"
-msgstr "Vyskytne sa chyba"
+msgstr "Vyskytla sa chyba:"
 
 #, python-format
 msgid "Error reading file \"%s\".\n"
@@ -2118,39 +2056,38 @@ msgid "Error saving favorites."
 msgstr "Chyba pri ukladaní obľúbených položiek."
 
 msgid "Error saving the Watchlist."
-msgstr ""
+msgstr "Chyba pri ukladaní zoznamu na pozretie."
 
 msgid "Error while loading watch data"
 msgstr "Chyba pri načítavaní údajov o sledovaní"
 
-#, fuzzy
 msgid "Error while saving."
-msgstr "Chyba pri načítavaní údajov o sledovaní"
+msgstr "Chyba pri ukladaní."
 
 #, python-format
 msgid "Error writing file \"%s\".\n"
-msgstr "Chyba pri zápise súboru: %s\n"
+msgstr "Chyba pri zápise súboru \"%s\".\n"
 
 msgid "Ethical & Legal"
 msgstr "Etické a právne"
 
 msgid "European movies"
-msgstr ""
+msgstr "Európske filmy"
 
 msgid "Events"
-msgstr ""
+msgstr "Udalosti"
 
 msgid "Every enabled site: does the menu open, does a list show videos? Takes a few minutes."
-msgstr ""
+msgstr "Každá povolená stránka: otvorí sa menu, zobrazí zoznam videá? Trvá to niekoľko minút."
 
 msgid "Exam Review"
 msgstr "Prehľad skúšky"
 
 msgid "Exception occurs"
-msgstr "Výnimka sa vyskytuje"
+msgstr "Vyskytla sa výnimka"
 
 msgid "Exclusive"
-msgstr ""
+msgstr "Exkluzívne"
 
 msgid "Exit"
 msgstr "Ukončiť"
@@ -2160,7 +2097,7 @@ msgid "Expiry: %s"
 msgstr "Platnosť do: %s"
 
 msgid "Extended"
-msgstr ""
+msgstr "Rozšírený"
 
 msgid "External movie player config"
 msgstr "Konfigurácia externého prehrávača filmov"
@@ -2172,24 +2109,23 @@ msgid "FAILED"
 msgstr "ZLYHALO"
 
 msgid "FAST FORWARD"
-msgstr ""
+msgstr "PREVÍJANIE DOPREDU"
 
 msgid "FREE"
 msgstr "Bezplatné"
 
 msgid "FUCKER sorting by :"
-msgstr "KOKOT triedenie podľa :"
+msgstr "FUCKER triedenie podľa :"
 
 #, python-format
 msgid "Fail to get \"%s\"."
-msgstr "Nepodarilo sa vám získať \"%s\"."
+msgstr "Nepodarilo sa získať \"%s\"."
 
 msgid "Fail to get captcha data."
 msgstr "Nepodarilo sa získať údaje captcha."
 
-#, fuzzy
 msgid "Failed to connect to host."
-msgstr "Nepodarilo sa pripojiť k serveru \"%s\"."
+msgstr "Nepodarilo sa pripojiť k serveru."
 
 #, python-format
 msgid "Failed to connect to server \"%s\"."
@@ -2210,24 +2146,23 @@ msgid "Failed to download subtitle."
 msgstr "Nepodarilo sa stiahnuť titulky."
 
 msgid "Failed to download the subtitles."
-msgstr ""
+msgstr "Titulky sa nepodarilo stiahnuť."
 
 msgid "Failed to get the download link."
-msgstr ""
+msgstr "Nepodarilo sa získať odkaz na stiahnutie."
 
 #, python-format
 msgid "Failed to get the file list from %s."
-msgstr ""
+msgstr "Nepodarilo sa získať zoznam súborov z %s."
 
 msgid "Failed to gzip."
-msgstr "Nepodarilo sa gzip."
+msgstr "Gzip zlyhal."
 
 msgid "Failed to initialize (unknown option or old curl version?)."
-msgstr ""
+msgstr "Inicializácia zlyhala (neznáma voľba alebo stará verzia curl?)."
 
-#, fuzzy
 msgid "Failed to load the match list"
-msgstr "Nepodarilo sa načítať kanály"
+msgstr "Zoznam zápasov sa nepodarilo načítať"
 
 #, python-format
 msgid "Failed to log in user \"%s\". Please check your login and password."
@@ -2246,16 +2181,16 @@ msgid "Failed: %s"
 msgstr "Neúspešné: %s"
 
 msgid "Family"
-msgstr ""
+msgstr "Rodinný"
 
 msgid "Fantasy"
-msgstr ""
+msgstr "Fantasy"
 
 msgid "Fashion"
-msgstr ""
+msgstr "Móda"
 
 msgid "Fatal error: consoleWrite failed!"
-msgstr "Závažná chyba: konzolaZápis zlyhal!"
+msgstr "Závažná chyba: consoleWrite zlyhal!"
 
 msgid "Favorite group not found."
 msgstr "Skupina obľúbených sa nenašla."
@@ -2273,13 +2208,13 @@ msgid "Favorites manager"
 msgstr "Správca obľúbených"
 
 msgid "Featured"
-msgstr ""
+msgstr "Odporúčané"
 
 msgid "FebBox token (\"ui\" cookie of www.febbox.com):"
-msgstr ""
+msgstr "Token FebBox (cookie \"ui\" z www.febbox.com):"
 
 msgid "Female"
-msgstr ""
+msgstr "Ženy"
 
 #, python-format
 msgid "File \"%s\" already exists"
@@ -2290,45 +2225,44 @@ msgid "File \"%s\" already exists!"
 msgstr "Súbor \"%s\" už existuje!"
 
 msgid "File I/O error (write)."
-msgstr ""
+msgstr "Chyba vstupu/výstupu súboru (zápis)."
 
 msgid "File I/O error."
-msgstr ""
+msgstr "Chyba vstupu/výstupu súboru."
 
 msgid "File Not Found."
 msgstr "Súbor sa nenašiel."
 
-#, fuzzy, python-format
+#, python-format
 msgid "File [%s] has been added to the downloading queue."
 msgstr "Súbor [%s] bol pridaný do frontu sťahovania."
 
-#, fuzzy, python-format
+#, python-format
 msgid "File [%s] is already in the downloading queue."
-msgstr "Súbor [%s] bol pridaný do frontu sťahovania."
+msgstr "Súbor [%s] už je vo fronte sťahovania."
 
 #, python-format
 msgid "File [%s] was added to downloading queue."
 msgstr "Súbor [%s] bol pridaný do frontu sťahovania."
 
 msgid "File browser"
-msgstr ""
+msgstr "Prehliadač súborov"
 
-#, fuzzy
 msgid "File can not be downloaded. Download manager is not available."
-msgstr "Súbor nie je možné stiahnuť. Protokol [%s] nie je podporovaný"
+msgstr "Súbor nie je možné stiahnuť. Správca sťahovania nie je k dispozícii."
 
 #, python-format
 msgid "File can not be downloaded. Protocol [%s] is unsupported"
 msgstr "Súbor nie je možné stiahnuť. Protokol [%s] nie je podporovaný"
 
 msgid "File format of DASH (MPD) downloads"
-msgstr ""
+msgstr "Formát súborov pre sťahovanie DASH (MPD)"
 
 msgid "File format of HLS (M3U8) downloads"
-msgstr ""
+msgstr "Formát súborov pre sťahovanie HLS (M3U8)"
 
 msgid "File format of single video files (FFmpeg)"
-msgstr ""
+msgstr "Formát jednotlivých video súborov (FFmpeg)"
 
 #, python-format
 msgid "File might be corrupted (size: %d bytes)."
@@ -2341,39 +2275,37 @@ msgid "File renamed successfully!"
 msgstr "Súbor bol úspešne premenovaný!"
 
 msgid "Files"
-msgstr ""
+msgstr "Súbory"
 
 msgid "Fill cache before playback"
-msgstr ""
+msgstr "Naplniť vyrovnávaciu pamäť pred prehrávaním"
 
 msgid "Filler"
-msgstr ""
+msgstr "Výplňová epizóda"
 
-#, fuzzy
 msgid "Films"
-msgstr "Film"
+msgstr "Filmy"
 
 msgid "Films by genre"
-msgstr ""
+msgstr "Filmy podľa žánru"
 
 msgid "Filmweb Suggestions"
 msgstr "Návrhy spoločnosti Filmweb"
 
 msgid "Filter"
-msgstr ""
+msgstr "Filter"
 
-#, fuzzy
 msgid "Filter settings"
-msgstr "E2iPlayer - nastavenia"
+msgstr "Nastavenia filtra"
 
 msgid "Find item"
-msgstr ""
+msgstr "Nájsť položku"
 
 msgid "Find out more."
-msgstr ""
+msgstr "Viac informácií."
 
 msgid "Finished matches with a full replay, highlights or match cuts, newest first (usually a few days after the match)."
-msgstr ""
+msgstr "Odohrané zápasy s celým záznamom, zostrihmi alebo scénami zo zápasu, najnovšie ako prvé (zvyčajne niekoľko dní po zápase)."
 
 msgid "First Page"
 msgstr "Prvá strana"
@@ -2382,7 +2314,7 @@ msgid "First air date:"
 msgstr "Dátum prvého vysielania:"
 
 msgid "First aired"
-msgstr ""
+msgstr "Prvé vysielanie"
 
 msgid "First movie player in buffering mode"
 msgstr "Prvý prehrávač filmov v režime vyrovnávacej pamäte"
@@ -2391,87 +2323,84 @@ msgid "First movie player without buffering mode"
 msgstr "Prvý prehrávač videozáznamov bez režimu vyrovnávacej pamäte"
 
 msgid "Fix jump target"
-msgstr ""
+msgstr "Zafixovať cieľ skoku"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Folder \"%s\" can not be created."
-msgstr "Pomôcka \"%s\" sa nedá nájsť."
+msgstr "Priečinok \"%s\" nie je možné vytvoriť."
 
-#, fuzzy, python-format
+#, python-format
 msgid "Folder \"%s\" has been created."
-msgstr "Pin bol zmenený."
+msgstr "Priečinok \"%s\" bol vytvorený."
 
 msgid "Folder for cache data"
 msgstr "Priečinok pre údaje vyrovnávacej pamäte"
 
-#, fuzzy
 msgid "Folder for config data"
-msgstr "Priečinok pre údaje vyrovnávacej pamäte"
+msgstr "Priečinok pre konfiguračné údaje"
 
 msgid "Folder for temporary data"
 msgstr "Priečinok pre dočasné údaje"
 
 msgid "Folder on HDD / USB"
-msgstr ""
+msgstr "Priečinok na HDD / USB"
 
 msgid "Followers"
-msgstr ""
+msgstr "Sledovatelia"
 
 msgid "Following host are broken or additional python modules are needed."
-msgstr "Nasledujúci hostiteľ je poškodený alebo sú potrebné ďalšie moduly jazyka Python."
+msgstr "Nasledujúci hostitelia sú poškodení alebo potrebujú ďalšie moduly jazyka Python."
 
 msgid "Font size offset"
-msgstr ""
+msgstr "Posun veľkosti písma"
 
 msgid "Food"
-msgstr ""
+msgstr "Jedlo"
 
 msgid "Foot & Ankle"
 msgstr "Chodidlo a členok"
 
 msgid "Football"
-msgstr ""
+msgstr "Futbal"
 
 msgid "Football Live"
-msgstr ""
+msgstr "Futbal naživo"
 
 msgid "For continuous playing, please press 8!"
 msgstr "Pre nepretržité prehrávanie stlačte 8!"
 
-#, fuzzy
 msgid "For developers"
-msgstr "Vývojári:"
+msgstr "Pre vývojárov"
 
 msgid "Force internal skin: all E2iPlayer screens"
-msgstr ""
+msgstr "Vynútiť interný skin: všetky obrazovky E2iPlayer"
 
-#, fuzzy
 msgid "Force internal skin: main screen only"
-msgstr "Vynútiť vnútorný povrch"
+msgstr "Vynútiť interný skin: iba hlavná obrazovka"
 
 msgid "Force legacy grid"
-msgstr ""
+msgstr "Vynútiť starú mriežku ikon"
 
 msgid "Foreign movies"
-msgstr ""
+msgstr "Zahraničné filmy"
 
 msgid "Foreign parts only"
-msgstr ""
+msgstr "Iba cudzojazyčné časti"
 
 msgid "Foreign series"
-msgstr ""
+msgstr "Zahraničné seriály"
 
 msgid "Format 'wmv' blocked in configuration."
 msgstr "Formát \"wmv\" blokovaný v konfigurácii."
 
 msgid "Formations"
-msgstr ""
+msgstr "Zostavy"
 
 msgid "Fotka.pl stream :"
 msgstr "Fotka.pl stream :"
 
 msgid "Free"
-msgstr ""
+msgstr "Zadarmo"
 
 msgid "Free IPTV list"
 msgstr "Zoznam bezplatných IPTV"
@@ -2480,7 +2409,7 @@ msgid "French"
 msgstr "Francúzština"
 
 msgid "From E2 settings"
-msgstr "Z nastavení plánu E2"
+msgstr "Z nastavení E2"
 
 msgid "Full description loaded"
 msgstr "Úplný popis načítaný"
@@ -2489,45 +2418,44 @@ msgid "Full description not available"
 msgstr "Úplný popis nie je k dispozícii"
 
 msgid "Full test"
-msgstr ""
+msgstr "Úplný test"
 
 msgid "Full test checks the INFO window :"
-msgstr ""
+msgstr "Úplný test kontroluje okno INFO :"
 
 msgid "Full test checks the next page :"
-msgstr ""
+msgstr "Úplný test kontroluje ďalšiu stránku :"
 
 msgid "Full test checks the search :"
-msgstr ""
+msgstr "Úplný test kontroluje vyhľadávanie :"
 
 msgid "Full test checks the stream link :"
-msgstr ""
+msgstr "Úplný test kontroluje odkaz na stream :"
 
 msgid "Full test checks thumbnails :"
-msgstr ""
+msgstr "Úplný test kontroluje miniatúry :"
 
 msgid "Futsal"
-msgstr ""
+msgstr "Futsal"
 
 msgid "GREEN"
-msgstr ""
+msgstr "ZELENÉ"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Game: %s"
-msgstr "Hry"
+msgstr "Hra: %s"
 
 msgid "Games"
 msgstr "Hry"
 
 msgid "Gaming"
-msgstr ""
+msgstr "Hry"
 
 msgid "General"
 msgstr "Všeobecné"
 
-#, fuzzy
 msgid "Generic error code."
-msgstr "Unrar kód chyby[%s]."
+msgstr "Všeobecný kód chyby."
 
 msgid "Genre"
 msgstr "Žáner"
@@ -2540,33 +2468,31 @@ msgid "Genre: %s"
 msgstr "Žáner: %s"
 
 msgid "Genres"
-msgstr "Žánrov"
+msgstr "Žánre"
 
 msgid "Genres:"
-msgstr "Žánrov:"
+msgstr "Žánre:"
 
 msgid "German"
 msgstr "Nemčina"
 
-#, fuzzy
 msgid "Get Cloudflare job"
-msgstr "Riešenie MyE2i Cloudflare"
+msgstr "Načítať úlohu Cloudflare"
 
-#, fuzzy
 msgid "Get captcha job"
-msgstr "Predvolený obtok captcha"
+msgstr "Načítať úlohu captcha"
 
 msgid "Get cookies job"
-msgstr ""
+msgstr "Načítať úlohu cookies"
 
 msgid "Get languages failed!"
-msgstr "Zlyhanie jazykov!"
+msgstr "Získanie jazykov zlyhalo!"
 
 msgid "Get token failed!"
 msgstr "Získanie tokenu zlyhalo!"
 
 msgid "GitHub API error"
-msgstr ""
+msgstr "Chyba GitHub API"
 
 msgid "Global"
 msgstr "Globálne"
@@ -2581,7 +2507,7 @@ msgid "Google Suggestions"
 msgstr "Návrhy Google"
 
 msgid "Google account"
-msgstr ""
+msgstr "Účet Google"
 
 msgid "Graphic services selector"
 msgstr "Výber grafických služieb"
@@ -2605,22 +2531,22 @@ msgid "Group with id[%s] not found."
 msgstr "Skupina s id[%s] sa nenašla."
 
 msgid "Groups"
-msgstr ""
+msgstr "Skupiny"
 
 msgid "HIDDEN CAM SHOW IN PROGRESS. TRY AGAIN LATER!"
-msgstr ""
+msgstr "PREBIEHA SKRYTÁ CAM SHOW. SKÚSTE TO NESKÔR!"
 
 msgid "HLS with subtitles"
-msgstr ""
+msgstr "HLS s titulkami"
 
 msgid "HLS/m3u8"
 msgstr "HLS/m3u8"
 
 msgid "HTTP/2 framing layer error."
-msgstr ""
+msgstr "Chyba rámcovej vrstvy HTTP/2."
 
 msgid "HTTP/2 stream error."
-msgstr ""
+msgstr "Chyba streamu HTTP/2."
 
 #, python-format
 msgid "HTTPS connection error \"%s\"\n"
@@ -2630,68 +2556,66 @@ msgid "Hand"
 msgstr "Ruka"
 
 msgid "Handball"
-msgstr ""
+msgstr "Hádzaná"
 
 msgid "Health"
-msgstr ""
+msgstr "Zdravie"
 
 msgid "Hearing impaired"
-msgstr ""
+msgstr "Pre sluchovo postihnutých"
 
 msgid "Help"
-msgstr ""
+msgstr "Pomocník"
 
 #, python-format
 msgid "Hide \"%s\" group"
 msgstr "Skryť skupinu \"%s\""
 
 msgid "Hide the menu (live TV visible)"
-msgstr ""
+msgstr "Skryť menu (živé TV viditeľné)"
 
 msgid "Hide titles only available in Sweden"
-msgstr ""
+msgstr "Skryť tituly dostupné iba vo Švédsku"
 
 msgid "Hide/Active Group"
-msgstr "Skryť/Aktívna skupina"
+msgstr "Skryť/aktivovať skupinu"
 
 msgid "High (or HD)"
 msgstr "Vysoká (alebo HD)"
 
 msgid "Highlights"
-msgstr ""
+msgstr "Zostrihy"
 
-#, fuzzy
 msgid "History"
-msgstr "Dejiny kinematografie"
+msgstr "História"
 
 msgid "History of searched phrases."
 msgstr "História hľadaných fráz."
 
 msgid "Hockey"
-msgstr ""
+msgstr "Hokej"
 
 msgid "Home"
 msgstr "Domov"
 
-#, fuzzy
 msgid "Home / Sections"
-msgstr "Výber"
+msgstr "Domov / Sekcie"
 
 msgid "Home page"
 msgstr "Domovská stránka"
 
 msgid "Horror"
-msgstr ""
+msgstr "Horor"
 
 msgid "Host"
-msgstr ""
+msgstr "Hostiteľ"
 
 msgid "Host titles in lists"
-msgstr ""
+msgstr "Názvy hostiteľov v zoznamoch"
 
 #, python-format
 msgid "Host: %s"
-msgstr ""
+msgstr "Hostiteľ: %s"
 
 #, python-format
 msgid "Hosting \"%s\" not supported."
@@ -2706,17 +2630,16 @@ msgid "Hosting: %s, %s"
 msgstr "Hosting: %s, %s"
 
 msgid "Hosts"
-msgstr ""
+msgstr "Hostitelia"
 
-#, fuzzy
 msgid "Hosts list type"
-msgstr "Nastavenia hostov"
+msgstr "Typ zoznamu hostiteľov"
 
 msgid "Hot"
-msgstr ""
+msgstr "Populárne"
 
 msgid "How to solve a captcha:"
-msgstr ""
+msgstr "Ako vyriešiť captcha:"
 
 msgid "Humanitarian"
 msgstr "Humanitárne"
@@ -2725,10 +2648,10 @@ msgid "Hungarian"
 msgstr "Maďarčina"
 
 msgid "I am no robot"
-msgstr ""
+msgstr "Nie som robot"
 
 msgid "IMDb"
-msgstr ""
+msgstr "IMDb"
 
 msgid "IMDb Rating:"
 msgstr "Hodnotenie IMDb:"
@@ -2737,57 +2660,56 @@ msgid "IMDb Suggestions"
 msgstr "Návrhy IMDb"
 
 msgid "INFO"
-msgstr ""
+msgstr "INFO"
 
 #, python-format
 msgid "INFO %d rows"
-msgstr ""
+msgstr "INFO %d riadkov"
 
 msgid "INFO list text"
-msgstr ""
+msgstr "Text zoznamu INFO"
 
 msgid "INFO opens no window"
-msgstr ""
+msgstr "INFO neotvára okno"
 
 msgid "INFO window"
-msgstr ""
+msgstr "Okno INFO"
 
 msgid "INTERRUPTED"
 msgstr "PRERUŠENÉ"
 
 msgid "IPTV Portals"
-msgstr ""
+msgstr "IPTV portály"
 
 msgid "Icon type"
 msgstr "Typ ikony"
 
-#, fuzzy
 msgid "Icons quality"
-msgstr "kvalita"
+msgstr "Kvalita ikon"
 
 msgid "Icons size"
 msgstr "Veľkosť ikon"
 
 msgid "Image"
-msgstr ""
+msgstr "Image systému"
 
 msgid "Indian"
-msgstr ""
+msgstr "Indické"
 
 msgid "Indian Movies"
 msgstr "Indické Filmy"
 
 msgid "Indian TV series"
-msgstr "Indický televízny seriál"
+msgstr "Indické televízne seriály"
 
 msgid "Indian movies"
 msgstr "Indické filmy"
 
 msgid "Indian movies (dubbed)"
-msgstr ""
+msgstr "Indické filmy (dabované)"
 
 msgid "Indian series (dubbed)"
-msgstr ""
+msgstr "Indické seriály (dabované)"
 
 msgid "Industry"
 msgstr "Priemysel"
@@ -2813,42 +2735,40 @@ msgstr "Vloženie čierneho prvku iframe po dokončení prehrávania videa"
 msgid "Input"
 msgstr "Vstup"
 
-#, fuzzy
 msgid "Install E2iPlayer"
-msgstr "Hráč %s"
+msgstr "Nainštalovať E2iPlayer"
 
-#, fuzzy
 msgid "Installed version"
-msgstr "Verzia webového rozhrania"
+msgstr "Nainštalovaná verzia"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Installed: v%s"
-msgstr "Neúspešné: %s"
+msgstr "Nainštalované: v%s"
 
 #, python-format
 msgid "Installed: v%s - %d commits behind %s"
-msgstr ""
+msgstr "Nainštalované: v%s - %d commitov za %s"
 
 #, python-format
 msgid "Installed: v%s - no matching release tag (local build?)"
-msgstr ""
+msgstr "Nainštalované: v%s - žiadny zodpovedajúci release tag (lokálny build?)"
 
 #, python-format
 msgid "Installed: v%s - up to date"
-msgstr ""
+msgstr "Nainštalované: v%s - aktuálne"
 
 msgid "Interactive Learning Center(ILC)"
 msgstr "Interaktívne vzdelávacie centrum (ILC)"
 
 msgid "Intervention"
-msgstr ""
+msgstr "Intervencia"
 
 msgid "Interviews"
-msgstr ""
+msgstr "Rozhovory"
 
 #, python-format
 msgid "Invalid answer from %s."
-msgstr ""
+msgstr "Neplatná odpoveď od %s."
 
 msgid "Invalid email."
 msgstr "Neplatný email."
@@ -2856,12 +2776,11 @@ msgstr "Neplatný email."
 msgid "Invalid name."
 msgstr "Neplatné meno."
 
-#, fuzzy
 msgid "Invalid value."
-msgstr "Neplatné meno."
+msgstr "Neplatná hodnota."
 
 msgid "Investigations"
-msgstr ""
+msgstr "Investigatíva"
 
 msgid "Is this message displayed correctly?"
 msgstr "Zobrazuje sa toto hlásenie správne?"
@@ -2880,9 +2799,9 @@ msgstr "Vyzerá to, že vaša aktuálna konfigurácia neumožňuje pripojenie k 
 msgid "It seems that the host \"%s\" has crashed."
 msgstr "Zdá sa, že hostiteľ \"%s\" havaroval."
 
-#, fuzzy, python-format
+#, python-format
 msgid "It seems that the subtitle's provider \"%s\" has crashed."
-msgstr "Zdá sa, že hostiteľ \"%s\" havaroval."
+msgstr "Zdá sa, že poskytovateľ titulkov \"%s\" zlyhal."
 
 #, python-format
 msgid ""
@@ -2903,7 +2822,7 @@ msgid "It seems that unzip utility is not installed."
 msgstr "Zdá sa, že nástroj na rozbalenie nie je nainštalovaný."
 
 msgid "Italian"
-msgstr "Taliansky"
+msgstr "Taliančina"
 
 #, python-format
 msgid "Item idx[%d] not found in group[%s]."
@@ -2928,16 +2847,16 @@ msgid "JDownloader script finished."
 msgstr "Skript JDownloader bol dokončený."
 
 msgid "JS cache"
-msgstr ""
+msgstr "Vyrovnávacia pamäť JS"
 
 msgid "Japanese"
-msgstr ""
+msgstr "Japonské"
 
 msgid "Japanese dramas"
-msgstr ""
+msgstr "Japonské drámy"
 
 msgid "Japanese films"
-msgstr ""
+msgstr "Japonské filmy"
 
 msgid "Jobs & Positions"
 msgstr "Pracovné miesta a pozície"
@@ -2947,10 +2866,10 @@ msgstr "Klub denníka"
 
 # GPT: “Jump” can be a noun (“a jump” = „skok“) or a verb/button command; I chose the imperative verb form „Skoč“ as the most likely UI/game action.
 msgid "Jump"
-msgstr "Skoč"
+msgstr "Prejsť"
 
 msgid "Jump target was fixed so the sort order is preserved."
-msgstr ""
+msgstr "Cieľ skoku bol zafixovaný, takže poradie zoradenia zostane zachované."
 
 msgid "Jump to a selected page"
 msgstr "Prejsť na vybranú stránku"
@@ -2959,16 +2878,16 @@ msgid "Jump to a selected page, max: {}"
 msgstr "Prejsť na vybranú stránku, max.: {}"
 
 msgid "Keep FFmpeg command files (.iptv.cmd)"
-msgstr ""
+msgstr "Ponechať súbory príkazov FFmpeg (.iptv.cmd)"
 
 msgid "Keep temporary JS scripts"
-msgstr ""
+msgstr "Ponechať dočasné skripty JS"
 
 msgid "Kids"
-msgstr ""
+msgstr "Deti"
 
 msgid "Kinds"
-msgstr ""
+msgstr "Druhy"
 
 msgid "Knee & Sports"
 msgstr "Koleno a šport"
@@ -2976,36 +2895,35 @@ msgstr "Koleno a šport"
 msgid "Knowledge"
 msgstr "Vedomosti"
 
-#, fuzzy
 msgid "Knowledge & Nature"
-msgstr "Vedomosti"
+msgstr "Veda a príroda"
 
 msgid "Korean"
-msgstr ""
+msgstr "Kórejské"
 
 msgid "Korean TV series"
-msgstr "Kórejský televízny seriál"
+msgstr "Kórejské televízne seriály"
 
 msgid "Korean anime"
-msgstr ""
+msgstr "Kórejské anime"
 
 msgid "Korean dramas"
-msgstr ""
+msgstr "Kórejské drámy"
 
 msgid "Korean films"
-msgstr ""
+msgstr "Kórejské filmy"
 
 msgid "Korean movies"
-msgstr ""
+msgstr "Kórejské filmy"
 
 msgid "LEFT/RIGHT at start/end of text - alternative way to switch panels"
-msgstr ""
+msgstr "VĽAVO/VPRAVO na začiatku/konci textu - alternatívny spôsob prepínania panelov"
 
 msgid "Language"
 msgstr "Jazyk"
 
 msgid "Language of the details (TMDb, IMDb)"
-msgstr ""
+msgstr "Jazyk podrobností (TMDb, IMDb)"
 
 msgid "Language:"
 msgstr "Jazyk:"
@@ -3023,20 +2941,19 @@ msgstr "Posledná chyba výnimky: '%s'"
 
 #, python-format
 msgid "Last Modified: %s"
-msgstr ""
+msgstr "Naposledy zmenené: %s"
 
 msgid "Last Page"
-msgstr ""
+msgstr "Posledná stránka"
 
 msgid "Last air date:"
 msgstr "Dátum posledného vysielania:"
 
 msgid "Last chance"
-msgstr ""
+msgstr "Posledná šanca"
 
-#, fuzzy
 msgid "Last day"
-msgstr "Zoznam podľa dňa"
+msgstr "Posledný deň"
 
 #, python-format
 msgid ""
@@ -3051,29 +2968,27 @@ msgid "Last error: \"%s\""
 msgstr "Posledná chyba: \"%s\""
 
 msgid "Last month"
-msgstr ""
+msgstr "Posledný mesiac"
 
-#, fuzzy
 msgid "Last result"
-msgstr "Posledný"
+msgstr "Posledný výsledok"
 
-#, fuzzy
 msgid "Last week"
-msgstr "po týždni"
+msgstr "Posledný týždeň"
 
 #, python-format
 msgid "Last week: %s"
-msgstr ""
+msgstr "Posledný týždeň: %s"
 
 msgid "Last.fm charts and tag pages are behind a browser check, only the radio stations can be used."
-msgstr ""
+msgstr "Rebríčky a stránky tagov Last.fm sú za kontrolou prehliadača, použiť sa dajú iba rozhlasové stanice."
 
 #, python-format
 msgid "Last.fm user \"%s\" not found."
-msgstr ""
+msgstr "Používateľ Last.fm \"%s\" sa nenašiel."
 
 msgid "Last.fm user name:"
-msgstr ""
+msgstr "Používateľské meno Last.fm:"
 
 msgid "Latest"
 msgstr "Najnovšie"
@@ -3082,102 +2997,98 @@ msgid "Latest added"
 msgstr "Najnovšie pridané"
 
 msgid "Latest anime episodes"
-msgstr ""
+msgstr "Najnovšie epizódy anime"
 
 msgid "Latest cartoon episodes"
-msgstr ""
+msgstr "Najnovšie epizódy kreslených seriálov"
 
 msgid "Latest dubbed episodes"
-msgstr ""
+msgstr "Najnovšie dabované epizódy"
 
 msgid "Latest episodes"
-msgstr ""
+msgstr "Najnovšie epizódy"
 
 msgid "Latest episodes (airing)"
-msgstr ""
+msgstr "Najnovšie epizódy (vysielané)"
 
 msgid "Latest episodes (finished series)"
-msgstr ""
+msgstr "Najnovšie epizódy (ukončené seriály)"
 
 msgid "Latest highlights"
-msgstr ""
+msgstr "Najnovšie zostrihy"
 
 msgid "Latest update"
 msgstr "Najnovšia aktualizácia"
 
-#, fuzzy
 msgid "Latest updates"
-msgstr "Najnovšia aktualizácia"
+msgstr "Najnovšie aktualizácie"
 
-#, fuzzy
 msgid "Latest video"
-msgstr "Najnovšie pridané"
+msgstr "Najnovšie video"
 
 msgid "Latest videos"
-msgstr ""
+msgstr "Najnovšie videá"
 
 msgid "Latest videos from the channels you are subscribed to."
-msgstr ""
+msgstr "Najnovšie videá z kanálov, ktoré odoberáte."
 
 msgid "Latin American movies"
-msgstr ""
+msgstr "Latinskoamerické filmy"
 
 msgid "Latin American series"
-msgstr ""
+msgstr "Latinskoamerické seriály"
 
 msgid "Latin American series (dubbed)"
-msgstr ""
+msgstr "Latinskoamerické seriály (dabované)"
 
 msgid "Latino"
-msgstr "Latinoameričan"
+msgstr "Latinskoamerické"
 
 #, python-brace-format
 msgid "Launcher URI ({url} or {address} = address of the box)"
-msgstr ""
+msgstr "URI spúšťača ({url} alebo {address} = adresa prijímača)"
 
 msgid "Law"
-msgstr ""
+msgstr "Právo"
 
 msgid "League and cup matches"
-msgstr ""
+msgstr "Ligové a pohárové zápasy"
 
 msgid "Leagues"
-msgstr ""
+msgstr "Ligy"
 
 msgid "Leagues, clubs and events"
-msgstr ""
+msgstr "Ligy, kluby a podujatia"
 
 msgid "Lecturers"
-msgstr ""
+msgstr "Prednášajúci"
 
 msgid "Left"
-msgstr ""
+msgstr "Vľavo"
 
 msgid "Library"
-msgstr ""
+msgstr "Knižnica"
 
 msgid "Lifestyle"
-msgstr ""
+msgstr "Životný štýl"
 
 msgid "Light / dark design"
-msgstr ""
+msgstr "Svetlý / tmavý vzhľad"
 
 msgid "Lightgray"
 msgstr "Svetlo sivá"
 
 msgid "Like the quick test, plus the checks chosen in the host settings (Debug). Takes about 20-40 minutes."
-msgstr ""
+msgstr "Ako rýchly test, navyše kontroly zvolené v nastaveniach hostiteľa (Debug). Trvá približne 20-40 minút."
 
-#, fuzzy
 msgid "Liked videos"
-msgstr "Prehliadanie videí"
+msgstr "Videá, ktoré sa mi páčia"
 
 msgid "Line Spacing"
 msgstr "Riadkovanie"
 
-#, fuzzy
 msgid "Link"
-msgstr "Pevné odkazy"
+msgstr "Odkaz"
 
 msgid "Link is not supported by the gstplayer. Please use the extelayer3 if available."
 msgstr "Gstplayer odkaz nepodporuje. Použite extelayer3, ak je k dispozícii."
@@ -3195,16 +3106,14 @@ msgstr "Odkazy zo všetkých súborov bez kategórií"
 msgid "Links from the file %s"
 msgstr "Odkazy zo súboru %s"
 
-#, fuzzy
 msgid "List"
-msgstr "Najviac videné"
+msgstr "Zoznam"
 
 msgid "List by day"
 msgstr "Zoznam podľa dňa"
 
-#, fuzzy
 msgid "List view"
-msgstr "Najviac videné"
+msgstr "Zobrazenie zoznamu"
 
 #, python-format
 msgid "Listeners: %s"
@@ -3213,42 +3122,41 @@ msgstr "Poslucháči: %s"
 msgid "Live"
 msgstr "Naživo"
 
-#, fuzzy
 msgid "Live channels"
-msgstr "Offline kanály"
+msgstr "Živé kanály"
 
 msgid "Live radio"
-msgstr ""
+msgstr "Živé rádio"
 
 #, python-format
 msgid "Live stream of the %s channel"
-msgstr ""
+msgstr "Živý prenos kanála %s"
 
 msgid "Live stream on YouTube"
-msgstr ""
+msgstr "Živý prenos na YouTube"
 
 #, python-format
 msgid "Live stream starts %s"
-msgstr ""
+msgstr "Živý prenos začína %s"
 
 msgid "Live streams"
 msgstr "Priame prenosy"
 
 msgid "Live streams by day"
-msgstr ""
+msgstr "Živé prenosy podľa dňa"
 
 msgid "Live-action series episodes"
-msgstr ""
+msgstr "Epizódy hraných seriálov"
 
 msgid "Load"
-msgstr "Načitať"
+msgstr "Načítať"
 
 #, python-format
 msgid "Load of the Virtual Keyboard layout \"%s\" failed due to the following error: \"%s\""
 msgstr "Načítanie rozloženia virtuálnej klávesnice \"%s\" zlyhalo z dôvodu nasledujúcej chyby: \"%s\""
 
 msgid "Loading"
-msgstr "Nahrávam"
+msgstr "Načítava sa"
 
 #, python-format
 msgid "Loading %s failed due to following error:"
@@ -3260,9 +3168,8 @@ msgstr "Načítanie zlyhalo."
 msgid "Loading watch data..."
 msgstr "Načítavajú sa údaje o sledovaní..."
 
-#, fuzzy
 msgid "Loading..."
-msgstr "Nahrávam"
+msgstr "Načítava sa..."
 
 msgid "LocalMedia"
 msgstr "Miestne médiá"
@@ -3271,19 +3178,17 @@ msgstr "Miestne médiá"
 msgid "Locale ID mismatched! %s <> %s"
 msgstr "Identifikátor miestneho nastavenia sa nezhoduje! %s <> %s"
 
-#, fuzzy
 msgid "Locality:"
-msgstr "Kvalita:"
+msgstr "Lokalita:"
 
 msgid "Localization"
 msgstr "Lokalizácia"
 
 msgid "Lodynet offers this video only on its subscription servers (Lody Plus / VIP) for now - the free servers usually follow later."
-msgstr ""
+msgstr "Lodynet zatiaľ ponúka toto video iba na svojich predplatiteľských serveroch (Lody Plus / VIP) - bezplatné servery zvyčajne nasledujú neskôr."
 
-#, fuzzy
 msgid "Log"
-msgstr "Logy"
+msgstr "Denník"
 
 msgid "Login failed!"
 msgstr "Prihlásenie zlyhalo!"
@@ -3292,21 +3197,21 @@ msgid "Login failed."
 msgstr "Prihlásenie zlyhalo."
 
 msgid "Login needed"
-msgstr ""
+msgstr "Vyžaduje sa prihlásenie"
 
 #, python-brace-format
 msgid "Login on {0} failed."
 msgstr "Prihlásenie na {0} zlyhalo."
 
 msgid "Login or password is wrong."
-msgstr ""
+msgstr "Prihlasovacie meno alebo heslo je nesprávne."
 
 #, python-format
 msgid "Login to prijevodi-online.org failed: %s"
-msgstr ""
+msgstr "Prihlásenie na prijevodi-online.org zlyhalo: %s"
 
 msgid "Login to prijevodi-online.org failed: the site asks for a captcha, which E2iPlayer cannot solve. Series subtitles download without an account."
-msgstr ""
+msgstr "Prihlásenie na prijevodi-online.org zlyhalo: stránka vyžaduje captcha, ktorú E2iPlayer nedokáže vyriešiť. Titulky k seriálom sa dajú stiahnuť aj bez účtu."
 
 #, python-format
 msgid ""
@@ -3319,87 +3224,82 @@ msgstr ""
 msgid "Logs"
 msgstr "Logy"
 
-#, fuzzy
 msgid "Long list"
-msgstr "Najdlhšia"
+msgstr "Dlhý zoznam"
 
 msgid "Longest"
 msgstr "Najdlhšia"
 
 msgid "Loved tracks"
-msgstr ""
+msgstr "Obľúbené skladby"
 
 msgid "Low"
 msgstr "Nízka"
 
 msgid "MENU"
-msgstr "Menu"
+msgstr "MENU"
 
 msgid "MENU → Add new entry: type a new search term to add to the history."
-msgstr ""
+msgstr "MENU → Pridať novú položku: zadajte nový hľadaný výraz, ktorý sa pridá do histórie."
 
 msgid "MENU → Enable/Disable reordering: same as GREEN (pick up/move/drop with OK, UP/DOWN)."
-msgstr ""
+msgstr "MENU → Povoliť/vypnúť zmenu poradia: rovnako ako ZELENÉ (zdvihnúť/presunúť/položiť pomocou OK, HORE/DOLE)."
 
 msgid "MENU → Fix/Unfix jump target: sets what happens when an entry is reused elsewhere."
-msgstr ""
+msgstr "MENU → Zafixovať/uvoľniť cieľ skoku: určuje, čo sa stane, keď sa položka znova použije inde."
 
 msgid "MENU → Reset to saved order: undo unsaved changes, reload from disk."
-msgstr ""
+msgstr "MENU → Obnoviť uložené poradie: zrušiť neuložené zmeny, znova načítať z disku."
 
 msgid "MENU → Sort A-Z / Sort Z-A: sort all entries alphabetically."
-msgstr ""
+msgstr "MENU → Zoradiť A-Z / Zoradiť Z-A: zoradiť všetky položky abecedne."
 
-#, fuzzy
 msgid "MENU=Options"
-msgstr "Možnosti videa"
+msgstr "MENU=Možnosti"
 
 #, python-format
 msgid "MOVE: %s"
 msgstr "PRESUNÚŤ: %s"
 
 msgid "MOVING"
-msgstr ""
+msgstr "PRESÚVANIE"
 
 msgid "MP3Quran live radio"
-msgstr ""
+msgstr "MP3Quran živé rádio"
 
 msgid "Main"
 msgstr "Hlavné"
 
 msgid "Main menu"
-msgstr ""
+msgstr "Hlavné menu"
 
 #, python-format
 msgid "Make directory [%s]"
 msgstr "Vytvorenie adresára [%s]"
 
 msgid "Male"
-msgstr ""
+msgstr "Muži"
 
 msgid "Manager status:"
-msgstr "Stav manažéra:"
+msgstr "Stav správcu:"
 
 msgid "Mark downloaded items"
-msgstr ""
+msgstr "Označiť stiahnuté položky"
 
-#, fuzzy
 msgid "Mark favourite items"
-msgstr "Upraviť obľúbenú položku"
+msgstr "Označiť obľúbené položky"
 
-#, fuzzy
 msgid "Match cuts"
-msgstr "Služba riešenia problémov Captcha"
+msgstr "Scény zo zápasu"
 
 msgid "Match not started yet"
-msgstr ""
+msgstr "Zápas sa ešte nezačal"
 
 msgid "Matches of the national teams"
-msgstr ""
+msgstr "Zápasy národných tímov"
 
-#, fuzzy
 msgid "Matching entries"
-msgstr "Služba riešenia problémov Captcha"
+msgstr "Zhody"
 
 msgid "Max items per page"
 msgstr "Maximálny počet položiek na stranu"
@@ -3408,17 +3308,16 @@ msgid "Max number of parallel downloads has been reached."
 msgstr "Bol dosiahnutý maximálny počet paralelných stiahnutí."
 
 msgid "MaxStream (uprot.net) asks for its image captcha: solve it in MyE2i, then open the video again."
-msgstr ""
+msgstr "MaxStream (uprot.net) vyžaduje svoju obrázkovú captcha: vyriešte ju v MyE2i a potom video otvorte znova."
 
-#, fuzzy
 msgid "Maximum log file size"
-msgstr "Zobraziť veľkosť súboru"
+msgstr "Maximálna veľkosť súboru denníka"
 
 msgid "Maximum torrent size:"
-msgstr ""
+msgstr "Maximálna veľkosť torrentu:"
 
 msgid "MediaFusion manifest URL (your own):"
-msgstr ""
+msgstr "URL manifestu MediaFusion (vaša vlastná):"
 
 msgid "Medtryx Marketing"
 msgstr "Medtryx Marketing"
@@ -3427,36 +3326,35 @@ msgid "Meetings"
 msgstr "Stretnutia"
 
 msgid "Members"
-msgstr ""
+msgstr "Členovia"
 
 msgid "Menu"
 msgstr "Menu"
 
 msgid "Military"
-msgstr ""
+msgstr "Vojenské"
 
 msgid "Mini series"
-msgstr ""
+msgstr "Minisériály"
 
 msgid "Missed the show?"
-msgstr "Zmeškali ste predstavenie?"
+msgstr "Zmeškali ste reláciu?"
 
 msgid "Missing API key - set it in Settings, Web streams, Windy Webcams"
-msgstr ""
+msgstr "Chýba kľúč API - nastavte ho v Nastavenia, Webové streamy, Windy Webcams"
 
 msgid "Mix"
-msgstr ""
+msgstr "Mix"
 
 msgid "MixDrop: this file is not available as a video stream (deleted or download only)."
-msgstr ""
+msgstr "MixDrop: tento súbor nie je dostupný ako video stream (odstránený alebo iba na stiahnutie)."
 
 msgid "Mixes"
-msgstr ""
+msgstr "Mixy"
 
 # GPT: “More” could mean “more/additional” (viac/ďalšie); I chose “Viac modelov” as a common concise UI label.
-#, fuzzy
 msgid "Models"
-msgstr "Viac modelov"
+msgstr "Modelky"
 
 msgid "More"
 msgstr "Viac"
@@ -3484,27 +3382,23 @@ msgstr "Viac výsledkov"
 msgid "Most Popular"
 msgstr "Najpopulárnejšie"
 
-#, fuzzy
 msgid "Most Watched"
-msgstr "Najviac hodnotené"
+msgstr "Najsledovanejšie"
 
-#, fuzzy
 msgid "Most commented"
-msgstr "Najnovšie"
+msgstr "Najkomentovanejšie"
 
-#, fuzzy
 msgid "Most discussed"
-msgstr "Najviac videné"
+msgstr "Najdiskutovanejšie"
 
-#, fuzzy
 msgid "Most favourited"
-msgstr "Najviac hodnotené"
+msgstr "Najčastejšie obľúbené"
 
 msgid "Most listened anasheed"
-msgstr ""
+msgstr "Najpočúvanejšie anašídy"
 
 msgid "Most listened recitations"
-msgstr ""
+msgstr "Najpočúvanejšie recitácie"
 
 msgid "Most popular"
 msgstr "Najpopulárnejšie"
@@ -3516,16 +3410,16 @@ msgid "Most viewed"
 msgstr "Najviac videné"
 
 msgid "Most viewed movies"
-msgstr ""
+msgstr "Najsledovanejšie filmy"
 
 msgid "Most viewed series"
-msgstr ""
+msgstr "Najsledovanejšie seriály"
 
 msgid "Most voted"
-msgstr ""
+msgstr "Najviac hlasov"
 
 msgid "Motorsport"
-msgstr ""
+msgstr "Motoršport"
 
 #, python-format
 msgid ""
@@ -3535,7 +3429,7 @@ msgid ""
 msgstr ""
 "Pripojenie súboru ISO [%s] na [%s] zlyhalo.\n"
 "Návratový kód[%s].\n"
-"Vrátenie údajov[%s]."
+"Návratové údaje[%s]."
 
 msgid "Move"
 msgstr "Presunúť"
@@ -3544,20 +3438,19 @@ msgid "Move failed."
 msgstr "Presun zlyhal."
 
 msgid "Move to Watchlist folder..."
-msgstr ""
+msgstr "Presunúť do priečinka zoznamu na pozretie..."
 
 msgid "Move to folder..."
-msgstr ""
+msgstr "Presunúť do priečinka..."
 
 msgid "Movie"
 msgstr "Film"
 
 msgid "Movie collections"
-msgstr ""
+msgstr "Filmové kolekcie"
 
-#, fuzzy
 msgid "Movie player selection list"
-msgstr "Zobraziť IPTVPlayer v zozname rozšírení"
+msgstr "Zoznam výberu prehrávača filmov"
 
 msgid "Movies"
 msgstr "Filmy"
@@ -3570,52 +3463,50 @@ msgstr "Filmové žánre"
 
 #, python-format
 msgid "Moving file from \"%s\" to \"%s\" failed.\n"
-msgstr "Presunutie súboru z %s na %s zlyhalo.\n"
+msgstr "Presunutie súboru z \"%s\" do \"%s\" zlyhalo.\n"
 
 #, python-format
 msgid "Moving playback buffer to the download manager failed with the following error \"%s\""
-msgstr "Presunutie vyrovnávacej pamäte prehrávania do správcu preberania zlyhalo s nasledujúcou chybou \"%s\""
+msgstr "Presunutie vyrovnávacej pamäte prehrávania do správcu sťahovania zlyhalo s nasledujúcou chybou \"%s\""
 
 msgid "Munshids"
-msgstr ""
+msgstr "Munšidi"
 
 msgid "Music"
 msgstr "Hudba"
 
 msgid "My JDownloader reCAPTCHA v2 solution"
-msgstr "Moje riešenie JDownloader reCAPTCHA v2"
+msgstr "Riešenie reCAPTCHA v2 cez My JDownloader"
 
 msgid "My list"
 msgstr "Môj zoznam"
 
-#, fuzzy
 msgid "My subscriptions"
-msgstr "Popis:"
+msgstr "Moje odbery"
 
 msgid "MyE2i (solve on your phone/PC)"
-msgstr ""
+msgstr "MyE2i (vyriešiť na telefóne/PC)"
 
 msgid "MyE2i - how to solve a captcha"
-msgstr ""
+msgstr "MyE2i - ako vyriešiť captcha"
 
 msgid "MyE2i Cloudflare solution"
 msgstr "Riešenie MyE2i Cloudflare"
 
-#, fuzzy
 msgid "MyE2i browser check solution"
-msgstr "Riešenie MyE2i Cloudflare"
+msgstr "MyE2i riešenie kontroly prehliadača"
 
 msgid "MyE2i captcha: solve it, then Job (no CONTINUE)"
-msgstr ""
+msgstr "MyE2i captcha: vyriešte ju, potom Job (nie CONTINUE)"
 
 msgid "MyE2i debug snapshot received - see the debug log."
-msgstr ""
+msgstr "Prijatý ladiaci snímok MyE2i - pozrite ladiaci denník."
 
 msgid "MyE2i extension is outdated - please update it."
-msgstr ""
+msgstr "Rozšírenie MyE2i je zastarané - aktualizujte ho, prosím."
 
 msgid "MyE2i extension: increase security"
-msgstr ""
+msgstr "Rozšírenie MyE2i: zvýšiť zabezpečenie"
 
 msgid "MyE2i reCAPTCHA solution"
 msgstr "Riešenie MyE2i reCAPTCHA"
@@ -3632,16 +3523,16 @@ msgid "MyE2i script finished."
 msgstr "Skript MyE2i bol dokončený."
 
 msgid "MyE2i: close the start page when done"
-msgstr ""
+msgstr "MyE2i: po dokončení zatvoriť úvodnú stránku"
 
 msgid "MyE2i: offer to open the page in (Android)"
-msgstr ""
+msgstr "MyE2i: ponúknuť otvorenie stránky v (Android)"
 
 msgid "MyE2i: open the page in the browser"
-msgstr ""
+msgstr "MyE2i: otvoriť stránku v prehliadači"
 
 msgid "Mystery"
-msgstr ""
+msgstr "Mysteriózne"
 
 msgid ""
 "NO VIDEOS FOUND FOR NOW! \n"
@@ -3664,82 +3555,77 @@ msgid "Name:"
 msgstr "Meno:"
 
 msgid "Needs extension v1.18+. Opens the page in this browser, waits until it is fully rendered (Cloudflare challenge included, solve it if it shows up) and sends the rendered HTML, the fetch/XHR calls and the cookie names to the box debug log."
-msgstr ""
+msgstr "Vyžaduje rozšírenie v1.18+. Otvorí stránku v tomto prehliadači, počká, kým sa úplne vykreslí (vrátane kontroly Cloudflare - ak sa zobrazí, vyriešte ju), a odošle vykreslené HTML, volania fetch/XHR a názvy cookies do denníka ladenia prijímača."
 
 msgid "Netflix movies"
-msgstr ""
+msgstr "Filmy Netflix"
 
 msgid "Netflix series"
-msgstr ""
+msgstr "Seriály Netflix"
 
 msgid "Network"
-msgstr ""
+msgstr "TV stanica"
 
 #, python-format
 msgid "Network failed %s."
 msgstr "Sieť zlyhala %s."
 
-#, fuzzy
 msgid "Network failure (receive)."
-msgstr "Sieť zlyhala %s."
+msgstr "Chyba siete (príjem)."
 
-#, fuzzy
 msgid "Network failure (send)."
-msgstr "Sieť zlyhala %s."
+msgstr "Chyba siete (odosielanie)."
 
-#, fuzzy
 msgid "Network failure."
-msgstr "Sieť zlyhala %s."
+msgstr "Chyba siete."
 
 msgid "New"
 msgstr "Nový"
 
 msgid "New Watchlist folder"
-msgstr ""
+msgstr "Nový priečinok zoznamu na pozretie"
 
 msgid "New dir"
 msgstr "Nový adresár"
 
-#, fuzzy
 msgid "New entry"
-msgstr "Nový adresár"
+msgstr "Nová položka"
 
 msgid "New episodes"
-msgstr ""
+msgstr "Nové epizódy"
 
 msgid "New folder..."
-msgstr ""
+msgstr "Nový priečinok..."
 
 msgid "New icons will not be available."
 msgstr "Nové ikony nebudú k dispozícii."
 
 msgid "New links"
-msgstr ""
+msgstr "Nové odkazy"
 
 msgid "New search"
-msgstr ""
+msgstr "Nové vyhľadávanie"
 
-#, fuzzy
 msgid "New since installed version"
-msgstr "Verzia webového rozhrania"
+msgstr "Novinky od nainštalovanej verzie"
 
 msgid "Newest Episodes"
 msgstr "Najnovšie epizódy"
 
 msgid "Newest videos (all YouTube channels)"
-msgstr ""
+msgstr "Najnovšie videá (všetky kanály YouTube)"
 
 msgid "Newest videos of a YouTube channel in a group"
-msgstr ""
+msgstr "Najnovšie videá kanála YouTube v skupine"
 
 msgid "News"
 msgstr "Aktuality"
 
 msgid "News (tagesschau)"
-msgstr ""
+msgstr "Správy (tagesschau)"
 
 msgid "News Poland"
-msgstr ""
+msgstr "Správy Poľsko"
 
 msgid "Next"
 msgstr "Ďalej"
@@ -3751,94 +3637,91 @@ msgid "No"
 msgstr "Nie"
 
 msgid "No YouTube video found for this track."
-msgstr ""
+msgstr "Pre túto skladbu sa nenašlo žiadne video YouTube."
 
 msgid "No channels with an archive on this portal."
-msgstr ""
+msgstr "Na tomto portáli nie sú žiadne kanály s archívom."
 
-#, fuzzy
 msgid "No description available."
-msgstr "Úplný popis nie je k dispozícii"
+msgstr "Popis nie je k dispozícii."
 
 msgid "No episodes available yet."
-msgstr ""
+msgstr "Zatiaľ nie sú k dispozícii žiadne epizódy."
 
 msgid "No episodes found."
-msgstr ""
+msgstr "Nenašli sa žiadne epizódy."
 
 msgid "No free player available for this title."
-msgstr ""
+msgstr "Pre tento titul nie je k dispozícii žiadny bezplatný prehrávač."
 
 msgid "No free videos or live streams here at the moment."
-msgstr ""
+msgstr "Momentálne tu nie sú žiadne bezplatné videá ani živé prenosy."
 
 msgid "No host is open."
-msgstr ""
+msgstr "Nie je otvorený žiadny hostiteľ."
 
 msgid ""
 "No item to display. \n"
 "Press OK to refresh.\n"
 msgstr ""
 "Žiadna položka na zobrazenie. \n"
-"Stlačením tlačidla OK obnovte operáciu.\n"
+"Stlačením OK obnovíte zoznam.\n"
 
 msgid "No items found"
-msgstr ""
+msgstr "Nenašli sa žiadne položky"
 
 msgid "No matching entries found."
-msgstr ""
+msgstr "Nenašli sa žiadne zodpovedajúce položky."
 
 msgid "No player found for this title."
-msgstr ""
+msgstr "Pre tento titul sa nenašiel žiadny prehrávač."
 
 msgid "No problems occurred."
-msgstr ""
+msgstr "Nevyskytli sa žiadne problémy."
 
 msgid "No programme guide for this channel."
-msgstr ""
+msgstr "Pre tento kanál nie je k dispozícii programový sprievodca."
 
 msgid "No recorded programmes on this day."
-msgstr ""
+msgstr "V tento deň nie sú žiadne nahrané relácie."
 
 msgid "No replays in these days"
-msgstr ""
+msgstr "V týchto dňoch nie sú žiadne záznamy"
 
 #, python-format
 msgid "No results found for: %s"
 msgstr "Nenašli sa žiadne výsledky pre: %s"
 
 msgid "No self-test result yet."
-msgstr ""
+msgstr "Zatiaľ žiadny výsledok autotestu."
 
 msgid "No storage found for the cache folder. The cache folder will be switched to the plugin's own cache directory."
-msgstr ""
+msgstr "Pre priečinok vyrovnávacej pamäte sa nenašlo žiadne úložisko. Priečinok vyrovnávacej pamäte sa prepne na vlastný priečinok vyrovnávacej pamäte pluginu."
 
 msgid "No storage found for the downloads location. Where would you like to save your downloads?"
-msgstr ""
+msgstr "Pre umiestnenie sťahovaní sa nenašlo žiadne úložisko. Kam chcete ukladať stiahnuté súbory?"
 
-#, fuzzy
 msgid "No stream available"
-msgstr "Žiadny životopis nie je k dispozícii"
+msgstr "Žiadny stream nie je k dispozícii"
 
 msgid "No streams are available for this title yet."
-msgstr ""
+msgstr "Pre tento titul zatiaľ nie sú k dispozícii žiadne streamy."
 
 msgid "No subtitle file found in the archive."
 msgstr "V archíve sa nenašiel žiadny súbor s titulkami."
 
-#, fuzzy
 msgid "No subtitles available for this title."
-msgstr "V archíve sa nenašiel žiadny súbor s titulkami."
+msgstr "Pre tento titul nie sú k dispozícii žiadne titulky."
 
 msgid "No subtitles found."
-msgstr ""
+msgstr "Nenašli sa žiadne titulky."
 
-#, fuzzy, python-format
+#, python-format
 msgid "No subtitles in %s. Available: %s"
-msgstr "Použitie rozšírenia analyzátora titulkov, ak je k dispozícii"
+msgstr "Žiadne titulky v jazyku %s. K dispozícii: %s"
 
 msgid "No title to search for."
-msgstr ""
+msgstr "Nie je zadaný žiadny titul na vyhľadávanie."
 
 msgid "No valid entitlement found for asset."
 msgstr "Pre dielo sa nenašiel žiadny platný nárok."
@@ -3853,219 +3736,212 @@ msgid "None"
 msgstr "Žiadne"
 
 msgid "Normalize item / file names (Show - SxxExx - Title)"
-msgstr ""
+msgstr "Normalizovať názvy položiek / súborov (Seriál - SxxExx - Názov)"
 
 msgid "Not available in your country (geo-blocking)."
-msgstr ""
+msgstr "Vo vašej krajine nie je dostupné (geoblokovanie)."
 
-#, fuzzy
 msgid "Not available yet"
-msgstr "Úplný popis nie je k dispozícii"
+msgstr "Zatiaľ nedostupné"
 
 msgid "Not in /usr/bin: choose the file under \"TorrServer binary\" in the torrent configuration."
-msgstr ""
+msgstr "Nie je v /usr/bin: vyberte súbor v položke \"Spustiteľný súbor TorrServer\" v konfigurácii torrentov."
 
 msgid "Not possible (no enigma2 session)."
-msgstr ""
+msgstr "Nie je možné (žiadna relácia enigma2)."
 
 #, python-format
 msgid "Not removed, still downloading: %d"
-msgstr ""
+msgstr "Neodstránené, stále sa sťahuje: %d"
 
 msgid "Nothing available here at the moment (only upcoming broadcasts)."
-msgstr ""
+msgstr "Momentálne tu nie je nič dostupné (iba nadchádzajúce vysielania)."
 
 msgid "Nothing found on subdl.com."
-msgstr ""
+msgstr "Na subdl.com sa nič nenašlo."
 
 msgid "Nothing found. This site only finds Russian (Cyrillic) search terms."
-msgstr ""
+msgstr "Nič sa nenašlo. Táto stránka vyhľadáva iba ruské (cyrilické) výrazy."
 
 msgid "Nothing open"
-msgstr ""
+msgstr "Nič nie je otvorené"
 
 msgid "Nothing to save - the debug log is not active."
-msgstr ""
+msgstr "Nie je čo uložiť - ladiaci denník nie je aktívny."
 
-#, fuzzy
 msgid "Now"
-msgstr "Nie"
+msgstr "Teraz"
 
 msgid "Now playing"
-msgstr ""
+msgstr "Teraz v kinách"
 
 #, python-format
 msgid "Now playing: %s"
-msgstr ""
+msgstr "Práve hrá: %s"
 
 msgid "Number of columns"
 msgstr "Počet stĺpcov"
 
 msgid "Number of downloaded files simultaneously"
-msgstr "Počet stiahnutých súborov súčasne"
+msgstr "Počet súčasne sťahovaných súborov"
 
 #, python-format
 msgid "Number of items in search history: %d"
 msgstr "Počet položiek v histórii vyhľadávania: %d"
 
-#, fuzzy
 msgid "Number of rotated files to keep"
-msgstr "Počet stiahnutých súborov súčasne"
+msgstr "Počet uchovaných rotovaných súborov"
 
 msgid "Number of rows"
 msgstr "Počet riadkov"
 
 msgid "Numeric keypad for numbers"
-msgstr ""
+msgstr "Numerická klávesnica pre čísla"
 
 msgid "OFFLINE"
-msgstr ""
+msgstr "OFFLINE"
 
 msgid "OK"
 msgstr "OK"
 
 msgid "OK marks an item, BLUE shows what can be done with the marked items."
-msgstr ""
+msgstr "OK označí položku, MODRÉ ukáže, čo sa dá s označenými položkami urobiť."
 
 msgid "OK marks an item, MENU shows what can be done with the marked items."
-msgstr ""
+msgstr "OK označí položku, MENU ukáže, čo sa dá s označenými položkami urobiť."
 
 msgid "OMDb API key (free at omdbapi.com)"
-msgstr ""
+msgstr "Kľúč API OMDb (zadarmo na omdbapi.com)"
 
 msgid "Off"
-msgstr ""
+msgstr "Vypnuté"
 
 msgid "Offline channels"
 msgstr "Offline kanály"
 
-#, fuzzy
 msgid "Older days"
-msgstr "po dni"
+msgstr "Staršie dni"
 
 msgid "Older replays"
-msgstr ""
+msgstr "Staršie záznamy"
 
 msgid "On Air"
 msgstr "Na živo"
 
 msgid "One link mode"
-msgstr "Režim jedného prepojenia"
+msgstr "Režim jedného odkazu"
 
 #, python-format
 msgid "Only available in %s"
-msgstr ""
+msgstr "Dostupné iba v %s"
 
 msgid "Only files in the downloads folder can be deleted."
-msgstr ""
+msgstr "Odstrániť je možné iba súbory v priečinku sťahovaní."
 
 msgid "Only links can be moved to a group."
-msgstr ""
+msgstr "Do skupiny je možné presunúť iba odkazy."
 
 #, python-format
 msgid "Only the %d oldest new commits are shown"
-msgstr ""
+msgstr "Zobrazuje sa iba %d najstarších nových commitov"
 
 msgid "Only the sites that failed in the last run, same checks."
-msgstr ""
+msgstr "Iba stránky, ktoré zlyhali v poslednom behu, s rovnakými kontrolami."
 
 #, python-format
 msgid "Only unsupported hosters available: %s"
-msgstr ""
+msgstr "K dispozícii sú iba nepodporovaní hosteri: %s"
 
 msgid "Open issues"
-msgstr ""
+msgstr "Otvorené issues"
 
 msgid "Open pull requests"
-msgstr ""
+msgstr "Otvorené pull requesty"
 
 msgid "Open the page and get the link"
-msgstr ""
+msgstr "Otvoriť stránku a získať odkaz"
 
 #, python-format
 msgid "Open this page in %s"
-msgstr ""
+msgstr "Otvoriť túto stránku v %s"
 
 msgid "Open this page in the chosen browser"
-msgstr ""
+msgstr "Otvoriť túto stránku vo zvolenom prehliadači"
 
 #, python-format
 msgid "OpenSubtitles.com login failed for user \"%s\". Please check your login and password."
-msgstr ""
+msgstr "Prihlásenie na OpenSubtitles.com pre používateľa \"%s\" zlyhalo. Skontrolujte prihlasovacie meno a heslo."
 
 msgid "OpenSubtitles.com needs an API key. Create a free API consumer at https://www.opensubtitles.com/consumers and enter its key in the E2iPlayer settings (Subtitles)."
-msgstr ""
+msgstr "OpenSubtitles.com vyžaduje kľúč API. Na https://www.opensubtitles.com/consumers si bezplatne vytvorte API consumer a jeho kľúč zadajte v nastaveniach E2iPlayer (Titulky)."
 
 #, python-format
 msgid "OpenSubtitles.com rejected the request (HTTP %s). Please check the API key in the E2iPlayer settings."
-msgstr ""
+msgstr "OpenSubtitles.com odmietol požiadavku (HTTP %s). Skontrolujte kľúč API v nastaveniach E2iPlayer."
 
 msgid "OpenSubtitles.org sent a \"become VIP member\" note instead of the subtitle (download limit reached?)."
-msgstr ""
+msgstr "OpenSubtitles.org namiesto titulkov poslal výzvu \"staňte sa VIP členom\" (dosiahnutý limit sťahovania?)."
 
 msgid "Opening. Please wait..."
-msgstr "Otvorenie. Prosím počkajte..."
+msgstr "Otvára sa. Prosím počkajte..."
 
 msgid "Operation aborted!"
 msgstr "Operácia prerušená!"
 
-#, fuzzy
 msgid "Operation timed out."
-msgstr "Operácia prerušená!"
+msgstr "Časový limit operácie vypršal."
 
-#, fuzzy
 msgid "Options"
-msgstr "Možnosti videa"
+msgstr "Možnosti"
 
 msgid "Options (select language, clear search history, settings)"
-msgstr ""
+msgstr "Možnosti (výber jazyka, vymazanie histórie vyhľadávania, nastavenia)"
 
-#, fuzzy
 msgid "Order of user links:"
-msgstr "Pridať do používateľských odkazov"
+msgstr "Poradie používateľských odkazov:"
 
 msgid "Order stays fixed - useful for T9 browsing."
-msgstr ""
+msgstr "Poradie zostáva pevné - užitočné pri prechádzaní pomocou T9."
 
 msgid "Original Title:"
 msgstr "Pôvodný názov:"
 
 #, python-format
 msgid "Original language: %s"
-msgstr ""
+msgstr "Pôvodný jazyk: %s"
 
 msgid "Original title"
-msgstr ""
+msgstr "Pôvodný názov"
 
 msgid "Original version"
-msgstr ""
+msgstr "Pôvodná verzia"
 
 msgid "Other"
 msgstr "Iné"
 
 msgid "Other dramas (Chinese, Thai, ...)"
-msgstr ""
+msgstr "Iné drámy (čínske, thajské, ...)"
 
 msgid "Other films"
-msgstr ""
+msgstr "Iné filmy"
 
 msgid "Other seasons"
-msgstr ""
+msgstr "Ďalšie sezóny"
 
 msgid "Others"
 msgstr "Iné"
 
 msgid "Out of memory."
-msgstr ""
+msgstr "Nedostatok pamäte."
 
 msgid "Own launcher URI"
-msgstr ""
+msgstr "Vlastné URI spúšťača"
 
 msgid "Own model"
 msgstr "Vlastný model"
 
 msgid "PAGE UP/PAGE DOWN"
-msgstr ""
+msgstr "STRANA HORE/STRANA DOLE"
 
 msgid "PAY"
 msgstr "PLATIŤ"
@@ -4074,45 +3950,41 @@ msgid "PENDING"
 msgstr "ČAKÁ"
 
 msgid "PLAY"
-msgstr ""
+msgstr "PREHRAŤ"
 
 msgid "PREVIOUS/NEXT"
-msgstr ""
+msgstr "PREDCHÁDZAJÚCE/ĎALŠIE"
 
-#, fuzzy, python-format
+#, python-format
 msgid "PRIVATE - wait %s seconds"
-msgstr "počkajte %s sekúnd"
+msgstr "SÚKROMNÉ - počkajte %s sekúnd"
 
-#, fuzzy
 msgid "PRIVATE - wait a few seconds"
-msgstr "počkajte %s sekúnd"
+msgstr "SÚKROMNÉ - počkajte niekoľko sekúnd"
 
 msgid "Page not found - please check the address."
-msgstr ""
+msgstr "Stránka sa nenašla - skontrolujte adresu."
 
 msgid "Page:"
 msgstr "Strana:"
 
 msgid "Paid content"
-msgstr ""
+msgstr "Platený obsah"
 
-#, fuzzy
 msgid "Parse error."
-msgstr ""
-"Posledná chyba:\n"
-"%s"
+msgstr "Chyba analýzy."
 
 msgid "Part"
-msgstr ""
+msgstr "Časť"
 
 msgid "Partial file - transfer ended early."
-msgstr ""
+msgstr "Neúplný súbor - prenos skončil predčasne."
 
 msgid "Password:"
 msgstr "Heslo:"
 
 msgid "Past premieres"
-msgstr ""
+msgstr "Minulé premiéry"
 
 #, python-format
 msgid "Paste \"%s\""
@@ -4122,85 +3994,85 @@ msgid "Path to xxxlist.txt :"
 msgstr "Cesta k súboru xxxlist.txt:"
 
 msgid "Path to ytlist.txt, urllist.txt"
-msgstr "Cesta k ytlistu.txt, urllistu.txt"
+msgstr "Cesta k ytlist.txt, urllist.txt"
 
 msgid "Pathology"
 msgstr "Patológia"
 
 msgid "Pathology Rounds"
-msgstr "Patologické kolá"
+msgstr "Patologické vizity"
 
 msgid "Patriotism"
-msgstr ""
+msgstr "Vlastenectvo"
 
 msgid "Pause between the batch lookups of one host [s]"
-msgstr ""
+msgstr "Pauza medzi hromadnými dopytmi jedného hostiteľa [s]"
 
 #, python-format
 msgid "Peak: %s"
-msgstr ""
+msgstr "Najvyššie umiestnenie: %s"
 
 msgid "Pediatrics"
 msgstr "Pediatria"
 
 msgid "People"
-msgstr ""
+msgstr "Osoby"
 
 msgid "Persons"
 msgstr "Osoby"
 
 msgid "Philosophy"
-msgstr ""
+msgstr "Filozofia"
 
 msgid "Physical Exam"
 msgstr "Fyzikálne vyšetrenie"
 
 msgid "Pin has been changed."
-msgstr "Pin bol zmenený."
+msgstr "PIN bol zmenený."
 
 msgid "Pin incorrect!"
-msgstr "Pripnúť nesprávne!"
+msgstr "Nesprávny PIN!"
 
 msgid "Pin protection for configuration"
-msgstr "Ochrana Pinov pre konfiguráciu"
+msgstr "Ochrana PIN pre konfiguráciu"
 
 msgid "Pin protection for plugin"
-msgstr "Ochrana Pinov pre plugin"
+msgstr "Ochrana PIN pre plugin"
 
 msgid "Pin protection for this host"
-msgstr ""
+msgstr "Ochrana PIN pre tohto hostiteľa"
 
 msgid "Play all from here"
-msgstr ""
+msgstr "Prehrať všetko odtiaľto"
 
 #, python-format
 msgid "Play marked items (%d)"
-msgstr ""
+msgstr "Prehrať označené položky (%d)"
 
 msgid "Play torrents with TorrServer"
-msgstr ""
+msgstr "Prehrávať torrenty cez TorrServer"
 
 #, python-format
 msgid "Play with [%s] player"
-msgstr "Hrajte s [%s] hráčom"
+msgstr "Prehrať pomocou prehrávača [%s]"
 
 msgid "Playback UHD :"
 msgstr "Prehrávanie v UHD:"
 
 msgid "Player Skin"
-msgstr "Skin hráča"
+msgstr "Vzhľad prehrávača"
 
 msgid "Playing on the TV is not possible (no enigma2 session)."
-msgstr ""
+msgstr "Prehrávanie na televízore nie je možné (žiadna relácia enigma2)."
 
 msgid "Playlist"
 msgstr "Zoznam skladieb"
 
 msgid "Playlists"
-msgstr ""
+msgstr "Zoznamy skladieb"
 
 msgid "Plays"
-msgstr ""
+msgstr "Divadelné hry"
 
 #, python-brace-format
 msgid ""
@@ -4216,22 +4088,21 @@ msgid "Please configure Xtream (blue button)"
 msgstr "Prosím, nakonfigurujte Xtream (modré tlačidlo)"
 
 msgid "Please configure the Stalker portal (blue button)"
-msgstr ""
+msgstr "Nakonfigurujte portál Stalker (modré tlačidlo)"
 
 #, python-format
 msgid "Please consider restart your Engima2 and agree to install the %s utlity when the %s will propose this."
-msgstr "Zvážte reštartovanie zariadenia Engima2 a dohodnite sa na inštalácii %s utlity, keď to %s navrhne."
+msgstr "Zvážte reštartovanie Enigma2 a súhlaste s inštaláciou nástroja %s, keď to %s navrhne."
 
-#, fuzzy
 msgid "Please enter a search text."
-msgstr "Odstrániť históriu vyhľadávania"
+msgstr "Zadajte hľadaný text."
 
 msgid "Please enter a valid link (http:// or https://)."
-msgstr ""
+msgstr "Zadajte platný odkaz (http:// alebo https://)."
 
 #, python-format
 msgid "Please enter the %s login and password in the E2iPlayer settings (Captcha)."
-msgstr ""
+msgstr "Zadajte prihlasovacie meno a heslo pre %s v nastaveniach E2iPlayer (Captcha)."
 
 msgid "Please make sure that the folder for cache data (set in the configuration) is writable."
 msgstr "Uistite sa, že priečinok pre údaje vyrovnávacej pamäte (nastavený v konfigurácii) je zapisovateľný."
@@ -4239,22 +4110,21 @@ msgstr "Uistite sa, že priečinok pre údaje vyrovnávacej pamäte (nastavený 
 msgid "Please register and set login and password in the host configuration, to solve this problems permanently."
 msgstr "Zaregistrujte sa a nastavte prihlasovacie meno a heslo v konfigurácii hostiteľa, aby ste tieto problémy vyriešili natrvalo."
 
-#, fuzzy
 msgid "Please select a group of favourites."
-msgstr "Pridanie novej skupiny obľúbených položiek"
+msgstr "Vyberte skupinu obľúbených."
 
 msgid "Please select an entry."
-msgstr ""
+msgstr "Vyberte položku."
 
 msgid "Please select the link first."
-msgstr ""
+msgstr "Najprv vyberte odkaz."
 
 #, python-format
 msgid "Please set valid %s in the %s configuration."
 msgstr "V %s konfigurácii nastavte platné %s."
 
 msgid "Please solve to continue downloads with:"
-msgstr ""
+msgstr "Vyriešte, aby sa pokračovalo v sťahovaní s:"
 
 #, python-format
 msgid "Please visit \"%s\" and confirm that you are human."
@@ -4265,97 +4135,95 @@ msgid "Please visit %s to learn how to redirect this task to the external device
 msgstr "Navštívte stránku %s a zistite, ako presmerovať túto úlohu na externé zariadenie."
 
 msgid "Please wait - downloading initialization data."
-msgstr "Počkajte prosím - stiahnutie inicializačných údajov."
+msgstr "Počkajte prosím - sťahujú sa inicializačné údaje."
 
 msgid "Please wait for initialization data."
 msgstr "Počkajte na inicializačné údaje."
 
 msgid "Please wait, the previous action is still running."
-msgstr ""
+msgstr "Počkajte, predchádzajúca akcia ešte prebieha."
 
-#, fuzzy
 msgid "Please wait..."
-msgstr "Uzatvárací. Prosím počkajte..."
+msgstr "Prosím počkajte..."
 
 msgid "Podcasts"
 msgstr "Podcasty"
 
 msgid "Podcasts by category"
-msgstr ""
+msgstr "Podcasty podľa kategórie"
 
 msgid "Podcasts by station"
-msgstr ""
+msgstr "Podcasty podľa stanice"
 
 msgid "Poland"
-msgstr ""
+msgstr "Poľsko"
 
 msgid "Polish"
 msgstr "Poľština"
 
 msgid "Polish dubbing"
-msgstr ""
+msgstr "Poľský dabing"
 
 msgid "Polish films"
-msgstr ""
+msgstr "Poľské filmy"
 
 msgid "Polish subtitles"
-msgstr ""
+msgstr "Poľské titulky"
 
 msgid "Polish voice-over"
-msgstr ""
+msgstr "Poľský hlasový komentár"
 
 msgid "Politics"
-msgstr ""
+msgstr "Politika"
 
 msgid "Popular"
-msgstr "Obľúbené"
+msgstr "Populárne"
 
 msgid "Popular episodes"
-msgstr ""
+msgstr "Populárne epizódy"
 
 msgid "Popular movies"
-msgstr ""
+msgstr "Populárne filmy"
 
 msgid "Popular series"
-msgstr ""
+msgstr "Populárne seriály"
 
 msgid "Popular sports"
-msgstr ""
+msgstr "Populárne športy"
 
 msgid "Popularity"
-msgstr ""
+msgstr "Popularita"
 
 # GPT: “More” could mean either “additional” (more items) or “a greater amount”; I chose the generic UI-style meaning (“more items”).
-#, fuzzy
 msgid "Pornstars"
-msgstr "Viac pornohviezd"
+msgstr "Pornohviezdy"
 
 #, python-format
 msgid "Portal %d - %s (optional, from the MAG box):"
-msgstr ""
+msgstr "Portál %d - %s (voliteľné, z MAG boxu):"
 
 #, python-format
 msgid "Portal %d - MAC address (00:1A:79:...):"
-msgstr ""
+msgstr "Portál %d - MAC adresa (00:1A:79:...):"
 
 #, python-format
 msgid "Portal %d - name (optional):"
-msgstr ""
+msgstr "Portál %d - názov (voliteľné):"
 
 #, python-format
 msgid "Portal %d - portal URL (http://host:port/c/):"
-msgstr ""
+msgstr "Portál %d - URL portálu (http://host:port/c/):"
 
 #, python-format
 msgid "Portal URL and MAC address in the host configuration, as the provider gives them out. More portals: %s in the EStalker format (portal URL, then its MAC addresses, one per line)."
-msgstr ""
+msgstr "URL portálu a MAC adresa v konfigurácii hostiteľa, tak ako ich vydáva poskytovateľ. Ďalšie portály: %s vo formáte EStalker (URL portálu, potom jeho MAC adresy, jedna na riadok)."
 
 #, python-format
 msgid "Ports: %s"
-msgstr ""
+msgstr "Porty: %s"
 
 msgid "Portuguese"
-msgstr ""
+msgstr "Portugalčina"
 
 msgid "Powerpoint Presentation"
 msgstr "PowerPointová prezentácia"
@@ -4364,7 +4232,7 @@ msgid "Practice Management"
 msgstr "Manažment praxe"
 
 msgid "Prefer MP4 over HLS:"
-msgstr ""
+msgstr "Uprednostniť MP4 pred HLS:"
 
 msgid "Prefered format"
 msgstr "Preferovaný formát"
@@ -4385,20 +4253,19 @@ msgid "Premium user"
 msgstr "Prémiový používateľ"
 
 msgid "Press EXIT to return to the previous menu."
-msgstr ""
+msgstr "Stlačte EXIT pre návrat do predchádzajúceho menu."
 
 msgid "Previous Page"
 msgstr "Predošlá stránka"
 
-#, fuzzy
 msgid "Previous days"
-msgstr "Predošlá stránka"
+msgstr "Predchádzajúce dni"
 
 msgid "Price:"
 msgstr "Cena:"
 
 msgid "Pro wrestling"
-msgstr ""
+msgstr "Profesionálny wrestling"
 
 msgid "Production:"
 msgstr "Produkcia:"
@@ -4407,7 +4274,7 @@ msgid "Professional Networks"
 msgstr "Profesionálne siete"
 
 msgid "Professionals"
-msgstr ""
+msgstr "Profesionáli"
 
 msgid "Program"
 msgstr "Program"
@@ -4416,46 +4283,46 @@ msgid "Program A-Z"
 msgstr "Program A-Z"
 
 msgid "Program for file downloads (HTTP/FTP)"
-msgstr ""
+msgstr "Program na sťahovanie súborov (HTTP/FTP)"
 
 msgid "Programme archive (last 7 days)"
-msgstr ""
+msgstr "Archív relácií (posledných 7 dní)"
 
 msgid "Programme archive:"
-msgstr ""
+msgstr "Archív relácií:"
 
 msgid "Programmes"
-msgstr "Programov"
+msgstr "Relácie"
 
 msgid "Programmes of the last days of the channels with an archive"
-msgstr ""
+msgstr "Relácie z posledných dní na kanáloch s archívom"
 
 msgid "Promote item"
-msgstr "Zvýšenie úrovne položky"
+msgstr "Uprednostniť položku"
 
 msgid "Protocol errors."
-msgstr ""
+msgstr "Chyby protokolu."
 
 msgid "Published"
 msgstr "Zverejnené"
 
 msgid "Python modules"
-msgstr ""
+msgstr "Moduly Python"
 
 msgid "Python was not found on the receiver."
-msgstr ""
+msgstr "Python sa na prijímači nenašiel."
 
 msgid "Quality"
-msgstr ""
+msgstr "Kvalita"
 
 msgid "Quality:"
 msgstr "Kvalita:"
 
 msgid "Quick test: menu and a list with videos"
-msgstr ""
+msgstr "Rýchly test: menu a zoznam s videami"
 
 msgid "RAM"
-msgstr ""
+msgstr "RAM"
 
 msgid "RAM buffer size [MB] for local files"
 msgstr "Veľkosť vyrovnávacej pamäte RAM [MB] pre lokálne súbory"
@@ -4463,33 +4330,32 @@ msgstr "Veľkosť vyrovnávacej pamäte RAM [MB] pre lokálne súbory"
 msgid "RAM buffer size [MB] for network protocols"
 msgstr "Veľkosť vyrovnávacej pamäte RAM [MB] pre sieťové protokoly"
 
-#, fuzzy
 msgid "RED"
-msgstr "PRERUŠENÁ"
+msgstr "ČERVENÉ"
 
 msgid "REWIND"
-msgstr ""
+msgstr "PREVÍJANIE SPÄŤ"
 
 msgid "Radio"
-msgstr "Zaklikávací krúžol"
+msgstr "Rádio"
 
 msgid "Radio iframe file"
 msgstr "Súbor Radio iframe"
 
 msgid "Radio station - live stream"
-msgstr ""
+msgstr "Rozhlasová stanica - živý stream"
 
 msgid "Radio stations"
 msgstr "Rozhlasové stanice"
 
 msgid "Radiology Rounds"
-msgstr "Rádiologické obhliadky"
+msgstr "Rádiologické vizity"
 
 msgid "Ramadan"
-msgstr ""
+msgstr "Ramadán"
 
 msgid "Ramadan series"
-msgstr ""
+msgstr "Ramadánske seriály"
 
 msgid "Random"
 msgstr "Náhodné"
@@ -4501,10 +4367,10 @@ msgid "Randomize a playlist"
 msgstr "Náhodné vytvorenie zoznamu skladieb"
 
 msgid "Range request not supported (resume failed)."
-msgstr ""
+msgstr "Požiadavka Range nie je podporovaná (pokračovanie zlyhalo)."
 
 msgid "Rated"
-msgstr ""
+msgstr "Vekové obmedzenie"
 
 msgid "Rated:"
 msgstr "Hodnotenie:"
@@ -4521,44 +4387,40 @@ msgstr "Hodnotenie:"
 
 #, python-format
 msgid "Rating: %s"
-msgstr ""
+msgstr "Hodnotenie: %s"
 
 msgid "Read ahead (share of the cache)"
-msgstr ""
+msgstr "Čítanie dopredu (podiel vyrovnávacej pamäte)"
 
 msgid "Read by"
-msgstr ""
+msgstr "Číta"
 
 msgid "Read error."
-msgstr ""
+msgstr "Chyba čítania."
 
 msgid "Reading binaries..."
-msgstr ""
+msgstr "Čítanie binárnych súborov..."
 
-#, fuzzy
 msgid "Reading..."
-msgstr "Trendy"
+msgstr "Načítava sa..."
 
-#, fuzzy
 msgid "Recent"
-msgstr "na stred"
+msgstr "Najnovšie"
 
-#, fuzzy
 msgid "Recently added"
-msgstr "Najnovšie pridané"
+msgstr "Nedávno pridané"
 
 msgid "Reciters"
-msgstr ""
+msgstr "Recitátori"
 
-#, fuzzy
 msgid "Recommended"
-msgstr "Prieskum"
+msgstr "Odporúčané"
 
 msgid "Recon"
-msgstr "Prieskum"
+msgstr "Rekonštrukcia"
 
 msgid "Referee"
-msgstr ""
+msgstr "Rozhodca"
 
 msgid "Refresh"
 msgstr "Aktualizovať"
@@ -4568,50 +4430,47 @@ msgstr "Obnovenie"
 
 #, python-format
 msgid "Refusing to empty \"%s\" - it also holds \"%s\" (downloads, buffering, cache or config folder). Check the folder paths in the storage configuration."
-msgstr ""
+msgstr "Vyprázdnenie \"%s\" bolo odmietnuté - obsahuje aj \"%s\" (priečinok sťahovania, vyrovnávania, vyrovnávacej pamäte alebo konfigurácie). Skontrolujte cesty k priečinkom v konfigurácii úložiska."
 
 #, python-format
 msgid "Refusing to empty \"%s\" - this does not look like a dedicated cache/config folder. Check the folder paths in the storage configuration."
-msgstr ""
+msgstr "Vyprázdnenie \"%s\" bolo odmietnuté - nevyzerá to ako vyhradený priečinok vyrovnávacej pamäte/konfigurácie. Skontrolujte cesty k priečinkom v konfigurácii úložiska."
 
 msgid "Regions"
-msgstr ""
+msgstr "Regióny"
 
 msgid "Related seasons and works"
-msgstr ""
+msgstr "Súvisiace sezóny a diela"
 
 msgid "Release"
-msgstr "Uvoľniť"
+msgstr "Vydanie"
 
 msgid "Released"
-msgstr ""
+msgstr "Vydané"
 
 msgid "Released:"
 msgstr "Dátum vydania:"
 
-#, fuzzy
 msgid "Releases"
-msgstr "Uvoľniť"
+msgstr "Vydania"
 
 msgid "Relevance"
 msgstr "Relevantnosť"
 
 msgid "Religion"
-msgstr ""
+msgstr "Náboženstvo"
 
 msgid "Remaining:"
 msgstr "Ostáva:"
 
 msgid "Remember a host's pin until E2iPlayer is closed"
-msgstr ""
+msgstr "Zapamätať si PIN hostiteľa do zatvorenia E2iPlayer"
 
-#, fuzzy
 msgid "Remember last search entry"
-msgstr "Zapamätať si naposledy sledovanú pozíciu"
+msgstr "Zapamätať si posledný hľadaný výraz"
 
-#, fuzzy
 msgid "Remember last search history selection"
-msgstr "Zapamätať si naposledy sledovanú pozíciu"
+msgstr "Zapamätať si posledný výber z histórie vyhľadávania"
 
 msgid "Remember last watched position"
 msgstr "Zapamätať si naposledy sledovanú pozíciu"
@@ -4625,25 +4484,27 @@ msgstr "Odstránenie položky \"%s\""
 
 #, python-format
 msgid "Remove %d items from the favourites?"
-msgstr ""
+msgstr "Odstrániť %d položiek z obľúbených?"
 
 #, python-format
 msgid ""
 "Remove %d marked items?\n"
 "Their files are deleted too."
 msgstr ""
+"Odstrániť %d označených položiek?\n"
+"Ich súbory sa tiež vymažú."
 
 msgid "Remove file"
 msgstr "Odstrániť súbor"
 
 msgid "Remove from Watchlist"
-msgstr ""
+msgstr "Odstrániť zo zoznamu na pozretie"
 
 msgid "Remove from favorites"
-msgstr "Vyradiť z oblúbených"
+msgstr "Odstrániť z obľúbených"
 
 msgid "Remove from folder"
-msgstr ""
+msgstr "Odstrániť z priečinka"
 
 msgid "Remove group"
 msgstr "Odstránenie skupiny"
@@ -4653,11 +4514,11 @@ msgstr "Odstrániť položku"
 
 #, python-format
 msgid "Remove marked items (%d)"
-msgstr ""
+msgstr "Odstrániť označené položky (%d)"
 
 #, python-format
 msgid "Remove marked items from favourites (%d)"
-msgstr ""
+msgstr "Odstrániť označené položky z obľúbených (%d)"
 
 msgid "Remove thumbnails"
 msgstr "Odstránenie miniatúr"
@@ -4666,47 +4527,44 @@ msgid "Rename"
 msgstr "Premenovať"
 
 msgid "Rename Watchlist folder"
-msgstr ""
+msgstr "Premenovať priečinok zoznamu na pozretie"
 
 msgid "Rename file"
 msgstr "Premenovať súbor"
 
 msgid "Reordering: UP/DOWN moves the row, OK saves, EXIT cancels."
-msgstr ""
+msgstr "Zmena poradia: HORE/DOLE presúva riadok, OK uloží, EXIT zruší."
 
 msgid "Replay"
-msgstr ""
+msgstr "Záznam"
 
 msgid "Replays & highlights"
-msgstr ""
+msgstr "Záznamy a zostrihy"
 
 msgid "Report a problem (GitHub issues)"
-msgstr ""
+msgstr "Nahlásiť problém (GitHub issues)"
 
-#, fuzzy
 msgid "Report file"
-msgstr "Odstrániť súbor"
+msgstr "Súbor správy"
 
 #, python-format
 msgid "Reset the settings of \"%s\" to their default values?"
-msgstr ""
+msgstr "Obnoviť nastavenia \"%s\" na predvolené hodnoty?"
 
 msgid "Reset this list to its default layout?"
-msgstr ""
+msgstr "Obnoviť predvolené usporiadanie tohto zoznamu?"
 
 msgid "Reset this list to its default layout? Its folders are deleted too."
-msgstr ""
+msgstr "Obnoviť predvolené usporiadanie tohto zoznamu? Jeho priečinky sa tiež vymažú."
 
-#, fuzzy
 msgid "Reset to defaults"
-msgstr "Obnoviť stav"
+msgstr "Obnoviť predvolené"
 
 msgid "Reset to saved order"
-msgstr ""
+msgstr "Obnoviť uložené poradie"
 
-#, fuzzy
 msgid "Reset web interface"
-msgstr "Inicializácia webového rozhrania"
+msgstr "Resetovať webové rozhranie"
 
 #, python-format
 msgid ""
@@ -4725,29 +4583,28 @@ msgstr ""
 "\n"
 
 msgid "Restart GUI"
-msgstr ""
+msgstr "Reštartovať GUI"
 
 msgid "Reused entries move back to the top again."
-msgstr ""
+msgstr "Znova použité položky sa opäť presunú na začiatok."
 
 msgid "Reverse a playlist"
-msgstr "Obrátenie playlistu"
+msgstr "Obrátenie zoznamu skladieb"
 
 msgid "Reverting to unsorted order will discard unsaved changes. Continue?"
-msgstr ""
+msgstr "Návrat k nezoradenému poradiu zahodí neuložené zmeny. Pokračovať?"
 
 msgid "Right"
-msgstr ""
+msgstr "Vpravo"
 
-#, fuzzy
 msgid "Romance"
-msgstr "Relevantnosť"
+msgstr "Romantika"
 
 msgid "Round"
-msgstr ""
+msgstr "Kolo"
 
 msgid "Runtime"
-msgstr ""
+msgstr "Dĺžka"
 
 msgid "Russian"
 msgstr "Ruština"
@@ -4756,23 +4613,22 @@ msgid "SOME.PORN sorting by :"
 msgstr "Triedenie SOME.PORN podľa:"
 
 msgid "SONGS"
-msgstr "Odstránenie všetkých skladieb zo zoznamu skladieb"
+msgstr "SKLADBY"
 
-#, fuzzy
 msgid "SSL connect error."
-msgstr "Chyba pripojenia HTTPS \"%s\"\n"
+msgstr "Chyba pripojenia SSL."
 
 msgid "SSL verification failure."
-msgstr ""
+msgstr "Overenie SSL zlyhalo."
 
 msgid "STARTED"
-msgstr "Nezačaté"
+msgstr "SPUSTENÝ"
 
 msgid "STOPPED"
 msgstr "ZASTAVENÝ"
 
 msgid "Safe search (restricted mode):"
-msgstr ""
+msgstr "Bezpečné vyhľadávanie (obmedzený režim):"
 
 msgid "Save"
 msgstr "Uložiť"
@@ -4780,49 +4636,50 @@ msgstr "Uložiť"
 msgid "Save changes?"
 msgstr "Uložiť zmeny?"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Save subtitles (%s)"
-msgstr "Titulky pre: %s"
+msgstr "Uložiť titulky (%s)"
 
 #, python-format
 msgid ""
 "Saved to:\n"
 "%s"
 msgstr ""
+"Uložené do:\n"
+"%s"
 
 msgid "Sci-Fi"
-msgstr ""
+msgstr "Sci-fi"
 
 msgid "Sci-Fi & Fantasy"
-msgstr ""
+msgstr "Sci-fi a fantasy"
 
 msgid "Science"
 msgstr "Veda"
 
 msgid "Screensaver during audio playback"
-msgstr ""
+msgstr "Šetrič obrazovky pri prehrávaní zvuku"
 
 msgid "Screensaver in E2iPlayer menus"
-msgstr ""
+msgstr "Šetrič obrazovky v menu E2iPlayer"
 
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Script execution failed.\n"
 "Error code: %s\n"
 msgstr ""
-"Spustenie skriptu MyE2i zlyhalo.\n"
+"Spustenie skriptu zlyhalo.\n"
 "Kód chyby: %s\n"
 
-#, fuzzy
 msgid "Script finished."
-msgstr "Skript MyE2i bol dokončený."
+msgstr "Skript dokončený."
 
 msgid "Search"
 msgstr "Hľadať"
 
 #, python-format
 msgid "Search \"%s\" was not finished"
-msgstr ""
+msgstr "Vyhľadávanie \"%s\" nebolo dokončené"
 
 msgid "Search History is empty."
 msgstr "História vyhľadávania je prázdna."
@@ -4831,67 +4688,60 @@ msgid "Search History successfully deleted."
 msgstr "História vyhľadávania bola úspešne odstránená."
 
 msgid "Search automatically"
-msgstr ""
+msgstr "Hľadať automaticky"
 
 msgid "Search for an artist (exact name) or a Last.fm user"
-msgstr ""
+msgstr "Hľadať interpreta (presný názov) alebo používateľa Last.fm"
 
 msgid "Search history"
 msgstr "História vyhľadávania"
 
-#, fuzzy
 msgid "Search history - options"
-msgstr "História vyhľadávania"
+msgstr "História vyhľadávania - možnosti"
 
 msgid "Search history is not available for this host."
-msgstr ""
+msgstr "História vyhľadávania nie je pre tohto hostiteľa dostupná."
 
-#, fuzzy
 msgid "Search history saved."
-msgstr "História vyhľadávania"
+msgstr "História vyhľadávania uložená."
 
 #, python-format
 msgid "Search history saved. %d duplicate entries removed."
-msgstr ""
+msgstr "História vyhľadávania uložená. Odstránené duplicitné položky: %d."
 
 msgid "Search in all active hosts"
 msgstr "Vyhľadávanie vo všetkých aktívnych hostiteľoch"
 
 msgid "Search is not available right now."
-msgstr ""
+msgstr "Vyhľadávanie momentálne nie je dostupné."
 
-#, fuzzy
 msgid "Search next page"
-msgstr "Typ vyhľadávania"
+msgstr "Hľadať ďalšiu stranu"
 
 msgid "Search results"
 msgstr "Výsledky vyhľadávania"
 
-#, fuzzy
 msgid "Search results region:"
-msgstr "Výsledky vyhľadávania"
+msgstr "Región výsledkov vyhľadávania:"
 
 msgid "Search string must have at least 4 characters."
-msgstr ""
+msgstr "Hľadaný výraz musí mať aspoň 4 znaky."
 
-#, fuzzy
 msgid "Search term :"
-msgstr "Typ vyhľadávania"
+msgstr "Hľadaný výraz :"
 
-#, fuzzy
 msgid "Search text"
-msgstr "Typ vyhľadávania"
+msgstr "Hľadaný text"
 
 msgid "Search type"
 msgstr "Typ vyhľadávania"
 
-#, fuzzy
 msgid "Search: "
-msgstr "Hľadať"
+msgstr "Hľadať: "
 
 #, python-format
 msgid "Search: %d of %d - now %s (%d found so far)"
-msgstr ""
+msgstr "Hľadanie: %d z %d - teraz %s (zatiaľ nájdené: %d)"
 
 #, python-format
 msgid "Searching subtitles for \"%s\""
@@ -4900,30 +4750,30 @@ msgstr "Vyhľadávanie titulkov pre \"%s\""
 msgid "Season"
 msgstr "Sezóna"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Season %d"
-msgstr "Sezóna %s"
+msgstr "Sezóna %d"
 
 #, python-format
 msgid "Season %d (%d episodes)"
-msgstr ""
+msgstr "Sezóna %d (%d epizód)"
 
 #, python-format
 msgid "Season %s"
 msgstr "Sezóna %s"
 
 msgid "Season pack"
-msgstr ""
+msgstr "Balík sezóny"
 
 msgid "Seasons"
-msgstr ""
+msgstr "Sezóny"
 
 msgid "Seasons:"
 msgstr "Sezóny:"
 
 #, python-format
 msgid "Seasons: %s"
-msgstr ""
+msgstr "Sezóny: %s"
 
 msgid "Second movie player in buffering mode"
 msgstr "Druhý prehrávač videozáznamov v režime vyrovnávacej pamäte"
@@ -4931,15 +4781,14 @@ msgstr "Druhý prehrávač videozáznamov v režime vyrovnávacej pamäte"
 msgid "Second movie player without buffering mode"
 msgstr "Druhý prehrávač videozáznamov bez režimu vyrovnávacej pamäte"
 
-#, fuzzy
 msgid "Section"
-msgstr "Výber"
+msgstr "Sekcia"
 
 msgid "Sections"
-msgstr ""
+msgstr "Rubriky"
 
 msgid "Select"
-msgstr ""
+msgstr "Vybrať"
 
 #, python-format
 msgid "Select %s"
@@ -4949,14 +4798,13 @@ msgid "Select action"
 msgstr "Vybrať akciu"
 
 msgid "Select all"
-msgstr ""
+msgstr "Vybrať všetko"
 
 msgid "Select audio track"
 msgstr "Vyberte zvukovú stopu"
 
-#, fuzzy
 msgid "Select best available quality"
-msgstr "Predvolená kvalita videa"
+msgstr "Vybrať najlepšiu dostupnú kvalitu"
 
 msgid "Select directory"
 msgstr "Vyberte adresár"
@@ -4968,7 +4816,7 @@ msgid "Select group"
 msgstr "Vyberte skupinu"
 
 msgid "Select hosts for this folder..."
-msgstr ""
+msgstr "Vybrať hostiteľov pre tento priečinok..."
 
 msgid "Select language"
 msgstr "Vybrať jazyk"
@@ -4995,13 +4843,13 @@ msgid "Select subtitles track"
 msgstr "Výber stopy titulkov"
 
 msgid "Select the TorrServer binary"
-msgstr ""
+msgstr "Vyberte spustiteľný súbor TorrServer"
 
 msgid "Select the directory"
-msgstr "Vyberte tento adresár"
+msgstr "Vyberte adresár"
 
 msgid "Select the file"
-msgstr "Vyberte súbor so zoznamom skladieb"
+msgstr "Vyberte súbor"
 
 msgid "Select video option"
 msgstr "Vyberte možnosť videa"
@@ -5010,78 +4858,77 @@ msgid "Selection"
 msgstr "Výber"
 
 msgid "Self-test"
-msgstr ""
+msgstr "Autotest"
 
 msgid "Self-test report :"
-msgstr ""
+msgstr "Správa autotestu :"
 
 msgid "Send"
 msgstr "Odoslať"
 
 msgid "Send data to enc-dec.app on every link resolve?"
-msgstr ""
+msgstr "Pri každom spracovaní odkazu odosielať údaje na enc-dec.app?"
 
 msgid "Sending the result to the box failed."
-msgstr ""
+msgstr "Odoslanie výsledku do prijímača zlyhalo."
 
 msgid "Series"
-msgstr "Séria"
+msgstr "Seriály"
 
 msgid "Series - latest episodes"
-msgstr ""
+msgstr "Seriály - najnovšie epizódy"
 
 msgid "Series - seasons"
-msgstr ""
+msgstr "Seriály - sezóny"
 
 msgid "Series A-Z"
-msgstr ""
+msgstr "Seriály A-Z"
 
 msgid "Series by genre"
-msgstr ""
+msgstr "Seriály podľa žánru"
 
 msgid "Series by year"
-msgstr ""
+msgstr "Seriály podľa roku"
 
 msgid "Series genres"
-msgstr ""
+msgstr "Žánre seriálov"
 
 msgid "Server"
 msgstr "Server"
 
 msgid "Server issued an error response (HTTP 4xx/5xx)."
-msgstr ""
+msgstr "Server vrátil chybovú odpoveď (HTTP 4xx/5xx)."
 
 msgid "Server issued an error response."
-msgstr ""
+msgstr "Server vrátil chybovú odpoveď."
 
 msgid "Server return 404 - Not Found."
-msgstr "Návrat servera 404 - Nenašiel sa."
+msgstr "Server vrátil 404 - Nenájdené."
 
-#, fuzzy
 msgid "Server returned nothing."
-msgstr "Návrat servera 404 - Nenašiel sa."
+msgstr "Server nevrátil nič."
 
 #, python-format
 msgid "Server time: %s"
-msgstr ""
+msgstr "Čas servera: %s"
 
 #, python-format
 msgid "Server, user name and password in the host configuration. The server field also takes a get.php link. More accounts: %s with one get.php link per line (X-Streamity format)."
-msgstr ""
+msgstr "Server, používateľské meno a heslo v konfigurácii hostiteľa. Pole servera prijme aj odkaz get.php. Ďalšie účty: %s s jedným odkazom get.php na riadok (formát X-Streamity)."
 
 #, python-format
 msgid ""
 "Service %s requires registration. \n"
 "Please fill your login and password in the %s configuration."
 msgstr ""
-"Servis %s vyžaduje registráciu. \n"
+"Služba %s vyžaduje registráciu. \n"
 "Vyplňte svoje prihlasovacie meno a heslo v konfigurácii %s."
 
 msgid "Service icon size"
 msgstr "Veľkosť ikony služby"
 
 msgid "Services configuration"
-msgstr "Konfigurácia služieb %s"
+msgstr "Konfigurácia služieb"
 
 msgid "Services management"
 msgstr "Riadenie služieb"
@@ -5092,75 +4939,69 @@ msgstr "Nastavenie aktívneho prehrávača filmov"
 msgid "Set file name"
 msgstr "Nastavenie názvu súboru"
 
-#, fuzzy
 msgid "Set own configuration pin code"
-msgstr "Konfigurácia služieb %s"
+msgstr "Nastaviť vlastný PIN konfigurácie"
 
-#, fuzzy
 msgid "Set own pin"
-msgstr "Nastavenie PIN kódu"
+msgstr "Nastaviť vlastný PIN"
 
 msgid "Set pin code"
 msgstr "Nastavenie PIN kódu"
 
 msgid "Set watched"
-msgstr "Sada sledovaných"
+msgstr "Označiť ako pozreté"
 
 msgid "Settings"
 msgstr "Nastavenia"
 
 #, python-format
 msgid "Settings of service [%s] cannot be opened."
-msgstr ""
+msgstr "Nastavenia služby [%s] nie je možné otvoriť."
 
 msgid "Settings screen layout"
-msgstr ""
+msgstr "Rozloženie obrazovky nastavení"
 
 msgid "Shift"
-msgstr ""
+msgstr "Shift"
 
 msgid "Short Movies"
 msgstr "Krátke filmy"
 
 msgid "Short films"
-msgstr ""
+msgstr "Krátke filmy"
 
 msgid "Short name"
-msgstr ""
+msgstr "Krátky názov"
 
 msgid "Short series"
-msgstr ""
+msgstr "Krátke seriály"
 
 msgid "Shorts"
-msgstr "Šortky"
+msgstr "Shorts"
 
 msgid "Shoulder & Elbow"
 msgstr "Rameno a lakeť"
 
-#, fuzzy
 msgid "Show"
-msgstr "Relácie"
+msgstr "Šou"
 
 msgid "Show \"Newest videos\" of all YouTube channels in a group"
-msgstr ""
+msgstr "Zobraziť \"Najnovšie videá\" všetkých kanálov YouTube v skupine"
 
 msgid "Show & Comedy"
-msgstr ""
+msgstr "Šou a komédia"
 
-#, fuzzy
 msgid "Show E2iPlayer settings in system menu"
-msgstr "Zobraziť IPTVPlayer v hlavnom menu"
+msgstr "Zobraziť nastavenia E2iPlayer v systémovom menu"
 
-#, fuzzy
 msgid "Show IPTVPlayer in extension list (blue button)"
-msgstr "Zobraziť IPTVPlayer v zozname rozšírení"
+msgstr "Zobraziť E2iPlayer v zozname rozšírení (modré tlačidlo)"
 
 msgid "Show IPTVPlayer in main menu"
 msgstr "Zobraziť IPTVPlayer v hlavnom menu"
 
-#, fuzzy
 msgid "Show IPTVPlayer in plugin browser"
-msgstr "Zobraziť IPTVPlayer v hlavnom menu"
+msgstr "Zobraziť E2iPlayer v prehliadači pluginov"
 
 msgid "Show Profiles in ZBIORNIK MINI :"
 msgstr "Zobraziť profily v ZBIORNIK MINI :"
@@ -5169,30 +5010,28 @@ msgid "Show Youtube Api Key warnings"
 msgstr "Zobraziť upozornenia kľúča API YouTube"
 
 msgid "Show adult content"
-msgstr ""
+msgstr "Zobraziť obsah pre dospelých"
 
 msgid "Show all channels"
 msgstr "Zobraziť všetky kanály"
 
 msgid "Show clock in header"
-msgstr ""
+msgstr "Zobraziť hodiny v záhlaví"
 
 msgid "Show download manager after adding new item"
 msgstr "Zobraziť správcu sťahovania po pridaní novej položky"
 
-#, fuzzy
 msgid "Show download notification"
-msgstr "umiestnenie sťahovania"
+msgstr "Zobraziť oznámenie o sťahovaní"
 
 msgid "Show file size"
 msgstr "Zobraziť veľkosť súboru"
 
-#, fuzzy
 msgid "Show flags"
-msgstr "Zobraziť veľkosť súboru"
+msgstr "Zobraziť vlajky"
 
 msgid "Show global search :"
-msgstr "Globálne vyhľadávanie:"
+msgstr "Zobraziť globálne vyhľadávanie :"
 
 msgid "Show hiddens catalogs"
 msgstr "Zobraziť skryté katalógy"
@@ -5210,52 +5049,49 @@ msgid "Show only best quality of streams:"
 msgstr "Zobraziť iba streamy v najlepšej kvalite:"
 
 msgid "Show playlist"
-msgstr ""
+msgstr "Zobraziť zoznam skladieb"
 
-#, fuzzy
 msgid "Show results"
-msgstr "Výsledky vyhľadávania"
+msgstr "Zobraziť výsledky"
 
 msgid "Show results so far"
-msgstr ""
+msgstr "Zobraziť doterajšie výsledky"
 
-#, fuzzy
 msgid "Show search history"
-msgstr "História vyhľadávania"
+msgstr "Zobraziť históriu vyhľadávania"
 
 msgid "Show suggestions"
 msgstr "Zobraziť návrhy"
 
 msgid "ShowBox streams need a FebBox login: enter the \"ui\" cookie of your FebBox account in the host configuration."
-msgstr ""
+msgstr "Streamy ShowBox vyžadujú prihlásenie do FebBox: zadajte cookie \"ui\" vášho účtu FebBox v konfigurácii hostiteľa."
 
 msgid "Shows"
 msgstr "Relácie"
 
-#, fuzzy
 msgid "Shows A-Z"
-msgstr "Relácie"
+msgstr "Šou A-Z"
 
 msgid "Shows and concerts"
-msgstr ""
+msgstr "Šou a koncerty"
 
 msgid "Shows with new episodes"
-msgstr ""
+msgstr "Šou s novými epizódami"
 
 msgid "Sign-in was not completed."
-msgstr ""
+msgstr "Prihlásenie nebolo dokončené."
 
 msgid "Signed in to YouTube."
-msgstr ""
+msgstr "Prihlásené do YouTube."
 
 msgid "Signed out of YouTube."
-msgstr ""
+msgstr "Odhlásené z YouTube."
 
 msgid "Similar artists"
-msgstr ""
+msgstr "Podobní interpreti"
 
 msgid "Similar artists mix"
-msgstr ""
+msgstr "Mix podobných interpretov"
 
 msgid "Simple list"
 msgstr "Jednoduchý zoznam"
@@ -5267,17 +5103,17 @@ msgid "Simplify the title and try again."
 msgstr "Zjednodušte názov a skúste to znova."
 
 msgid "Site self-test"
-msgstr ""
+msgstr "Autotest stránok"
 
 msgid "Site self-test in the main menu :"
-msgstr ""
+msgstr "Autotest stránok v hlavnom menu :"
 
 #, python-format
 msgid "Site self-test: %d of %d - now %s (%d failed so far)"
-msgstr ""
+msgstr "Autotest stránok: %d z %d - teraz %s (zatiaľ zlyhalo: %d)"
 
 msgid "Size:"
-msgstr ""
+msgstr "Veľkosť:"
 
 msgid "Skin"
 msgstr "Vzhľad"
@@ -5289,23 +5125,22 @@ msgid "Skip video shorter than [min]"
 msgstr "Preskočiť video kratšie ako [min]"
 
 msgid "Snooker"
-msgstr ""
+msgstr "Snooker"
 
 msgid "Society"
-msgstr ""
+msgstr "Spoločnosť"
 
 msgid "Software decoding as"
-msgstr "Dekódovanie softvéru ako"
+msgstr "Softvérové dekódovanie ako"
 
 msgid "Solve Cloudflare, hCaptcha and reCAPTCHA with MyE2i"
-msgstr ""
+msgstr "Riešiť Cloudflare, hCaptcha a reCAPTCHA pomocou MyE2i"
 
 msgid "Solve Google reCAPTCHA v2 with My JDownloader"
-msgstr ""
+msgstr "Riešiť Google reCAPTCHA v2 pomocou My JDownloader"
 
-#, fuzzy
 msgid "Solver"
-msgstr "strieborný"
+msgstr "Riešiteľ"
 
 msgid "Some changes will be applied only after movie player restart."
 msgstr "Niektoré zmeny sa použijú až po reštartovaní prehrávača videozáznamov."
@@ -5313,28 +5148,26 @@ msgstr "Niektoré zmeny sa použijú až po reštartovaní prehrávača videozá
 msgid "Some settings will be applied only after GUI restart."
 msgstr "Niektoré nastavenia sa použijú až po reštarte grafického rozhrania."
 
-#, fuzzy
 msgid "Sort A-Z"
-msgstr "Program A-Z"
+msgstr "Zoradiť A-Z"
 
 msgid "Sort Myfreecams :"
 msgstr "Zoradiť Myfreecams :"
 
-#, fuzzy
 msgid "Sort Z-A"
-msgstr "Zoradiť podľa:"
+msgstr "Zoradiť Z-A"
 
 msgid "Sort alphabetically"
 msgstr "Zoradiť podľa abecedy"
 
 msgid "Sort by name"
-msgstr "Zoradiť podľa _Názov"
+msgstr "Zoradiť podľa názvu"
 
 msgid "Sort by:"
 msgstr "Zoradiť podľa:"
 
 msgid "Sort the links now? The order of the lines in the file will change."
-msgstr ""
+msgstr "Zoradiť odkazy teraz? Poradie riadkov v súbore sa zmení."
 
 msgid "Sort the list:"
 msgstr "Zoradiť zoznam:"
@@ -5352,31 +5185,31 @@ msgid "Sorted most viewed channels now [live]"
 msgstr "Zoradené najsledovanejšie kanály teraz [naživo]"
 
 msgid "Source:"
-msgstr ""
+msgstr "Zdroj:"
 
 msgid "Spanish"
-msgstr ""
+msgstr "Španielčina"
 
 msgid "Specials"
-msgstr ""
+msgstr "Špeciály"
 
 msgid "Spine"
 msgstr "Chrbtica"
 
 msgid "Spoken subtitles"
-msgstr ""
+msgstr "Hovorené titulky"
 
 msgid "Sport"
 msgstr "Šport"
 
 msgid "Spring"
-msgstr ""
+msgstr "Jar"
 
 msgid "Squad"
-msgstr ""
+msgstr "Káder"
 
 msgid "Stadium:"
-msgstr ""
+msgstr "Štadión:"
 
 msgid "Standard"
 msgstr "Štandardný"
@@ -5394,7 +5227,7 @@ msgid "Station:"
 msgstr "Stanica:"
 
 msgid "Status"
-msgstr ""
+msgstr "Stav"
 
 msgid "Status:"
 msgstr "Stav:"
@@ -5410,7 +5243,7 @@ msgid "Stop"
 msgstr "Zastaviť"
 
 msgid "Stop TorrServer when E2iPlayer is closed"
-msgstr ""
+msgstr "Ukončiť TorrServer pri zatvorení E2iPlayer"
 
 msgid "Stop downloading"
 msgstr "Zastavenie sťahovania"
@@ -5419,40 +5252,38 @@ msgid "Stop playback with buffer save"
 msgstr "Zastavenie prehrávania pomocou uloženia vyrovnávacej pamäte"
 
 msgid "Stop playing?"
-msgstr "Prestať hrať?"
+msgstr "Zastaviť prehrávanie?"
 
 msgid "Storage"
-msgstr ""
+msgstr "Úložisko"
 
 msgid "Story"
-msgstr ""
+msgstr "Dej"
 
 #, python-format
 msgid "Stream formats: %s"
-msgstr ""
+msgstr "Formáty streamu: %s"
 
-#, fuzzy
 msgid "Stream link"
-msgstr "Vybrať prepojenie"
+msgstr "Odkaz na stream"
 
 msgid "Streamed"
 msgstr "Streamované"
 
 msgid "Streaming platforms"
-msgstr ""
+msgstr "Streamovacie platformy"
 
-#, fuzzy
 msgid "Studios"
-msgstr "Audio"
+msgstr "Štúdiá"
 
 msgid "Study Plan"
 msgstr "Študijný plán"
 
 msgid "Subbed anime"
-msgstr ""
+msgstr "Anime s titulkami"
 
 msgid "Subscribers"
-msgstr ""
+msgstr "Odberatelia"
 
 msgid "Subspecialities"
 msgstr "Subšpecializácie"
@@ -5485,7 +5316,7 @@ msgid "Subtitle font size"
 msgstr "Veľkosť písma titulkov"
 
 msgid "Subtitle languages"
-msgstr ""
+msgstr "Jazyky titulkov"
 
 msgid "Subtitle line height"
 msgstr "Výška riadka titulkov"
@@ -5516,7 +5347,7 @@ msgid "Subtitles \"%s\" downloaded correctly."
 msgstr "Titulky \"%s\" stiahnuté správne."
 
 msgid "Subtitles by Islam El-Gizawy"
-msgstr ""
+msgstr "Titulky od Islam El-Gizawy"
 
 msgid "Subtitles conversion to UTF-8 failed."
 msgstr "Konverzia titulkov na UTF-8 zlyhala."
@@ -5529,30 +5360,32 @@ msgstr "Titulky boli úspešne stiahnuté. [%s], konverzia na UTF-8."
 msgid "Subtitles for: %s"
 msgstr "Titulky pre: %s"
 
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Subtitles saved:\n"
 "%s"
-msgstr "Titulky pre: %s"
+msgstr ""
+"Titulky uložené:\n"
+"%s"
 
 msgid "Subtitles:"
 msgstr "Titulky:"
 
 #, python-format
 msgid "Subtitles: %s"
-msgstr ""
+msgstr "Titulky: %s"
 
 msgid "Summer"
-msgstr ""
+msgstr "Leto"
 
 msgid "Support forum (opena.tv)"
-msgstr ""
+msgstr "Fórum podpory (opena.tv)"
 
 msgid "Support package"
-msgstr ""
+msgstr "Balík podpory"
 
 msgid "Surahs"
-msgstr ""
+msgstr "Súry"
 
 msgid "Surgical Approaches"
 msgstr "Chirurgické prístupy"
@@ -5567,13 +5400,13 @@ msgid "Surgical Techniques"
 msgstr "Chirurgické techniky"
 
 msgid "Sweden"
-msgstr ""
+msgstr "Švédsko"
 
 msgid "Swedish"
 msgstr "Švédčina"
 
 msgid "Switch on torrent playback?"
-msgstr ""
+msgstr "Zapnúť prehrávanie torrentov?"
 
 msgid "Synchronize"
 msgstr "Synchronizovať"
@@ -5585,12 +5418,14 @@ msgid "System language"
 msgstr "Jazyk systému"
 
 msgid "T9 letter jump in lists"
-msgstr ""
+msgstr "Skok na písmeno T9 v zoznamoch"
 
 msgid ""
 "TBN GO needs a free account to play programmes.\n"
 "Register on https://tbngo.pl/ and enter the e-mail and password in the host settings."
 msgstr ""
+"TBN GO vyžaduje na prehrávanie relácií bezplatný účet.\n"
+"Zaregistrujte sa na https://tbngo.pl/ a zadajte e-mail a heslo v nastaveniach hostiteľa."
 
 msgid "THE PAGE YOU ARE LOOKING FOR IS NOT FOUND."
 msgstr "STRÁNKA, KTORÚ HĽADÁTE, SA NENAŠLA."
@@ -5609,11 +5444,15 @@ msgid ""
 "THIS LINK CONTAINS PHOTOS ONLY.\n"
 " PLEASE CHOOSE ANOTHER ONE!"
 msgstr ""
+"TENTO ODKAZ OBSAHUJE IBA FOTOGRAFIE.\n"
+" VYBERTE SI INÝ!"
 
 msgid ""
 "THIS VIDEO HAS BEEN REMOVED DUE TO COPYRIGHT INFRINGEMENT.\n"
 " PLEASE CHOOSE ANOTHER ONE!"
 msgstr ""
+"TOTO VIDEO BOLO ODSTRÁNENÉ Z DÔVODU PORUŠENIA AUTORSKÝCH PRÁV.\n"
+" VYBERTE SI INÉ!"
 
 msgid ""
 "THIS VIDEO IS JUST A PREVIEW ON EXTERNAL STORAGE.\n"
@@ -5630,16 +5469,16 @@ msgstr ""
 "SKÚSTE TO NESKÔR!"
 
 msgid "TMDb API key (free at themoviedb.org)"
-msgstr ""
+msgstr "API kľúč TMDb (zadarmo na themoviedb.org)"
 
 msgid "TMDb Rating:"
 msgstr "Hodnotenie TMDb:"
 
 msgid "TODAY"
-msgstr ""
+msgstr "DNES"
 
 msgid "TOMORROW"
-msgstr ""
+msgstr "ZAJTRA"
 
 msgid "TV Series"
 msgstr "TV seriál"
@@ -5657,95 +5496,93 @@ msgid "TV series"
 msgstr "Televízne seriály"
 
 msgid "Tadabor"
-msgstr ""
+msgstr "Tadabor"
 
 msgid "Tafsir (Arabic)"
-msgstr ""
+msgstr "Tafsír (arabsky)"
 
 msgid "Tags"
-msgstr ""
+msgstr "Tagy"
 
 msgid "Taiwanese"
-msgstr ""
+msgstr "Taiwanské"
 
 msgid "Talk shows"
-msgstr ""
+msgstr "Talkšou"
 
 #, python-format
 msgid "Tariff: %s"
-msgstr ""
+msgstr "Tarifa: %s"
 
 msgid "Teams"
-msgstr ""
+msgstr "Tímy"
 
 msgid "Techniques"
 msgstr "Techniky"
 
 msgid "Technology"
-msgstr ""
+msgstr "Technológie"
 
 msgid "Temp"
-msgstr ""
+msgstr "Temp"
 
 msgid "Tennis"
-msgstr ""
+msgstr "Tenis"
 
 msgid "Test the failed sites again"
-msgstr ""
+msgstr "Znova otestovať zlyhané stránky"
 
-#, fuzzy
 msgid "Testers:"
-msgstr "Autori:"
+msgstr "Testeri:"
 
-#, fuzzy
 msgid "Text field alignment"
-msgstr "Nastavenie názvu súboru"
+msgstr "Zarovnanie textových polí"
 
 msgid "Text files ytlist and urllist are in:"
 msgstr "Textové súbory ytlist a urllist sú v:"
 
 msgid "Thai"
-msgstr ""
+msgstr "Thajské"
 
 #, python-format
 msgid "The %s utility is necessary here but it was not detected."
 msgstr "Pomôcka %s je tu potrebná, ale nebola zistená."
 
 msgid "The 100 tags with the most videos"
-msgstr ""
+msgstr "100 tagov s najväčším počtom videí"
 
 msgid "The OpenSubtitles v3 server did not answer. Please try again later."
-msgstr ""
+msgstr "Server OpenSubtitles v3 neodpovedal. Skúste to neskôr."
 
 msgid "The OpenSubtitles.com server did not answer. Please try again later."
-msgstr ""
+msgstr "Server OpenSubtitles.com neodpovedal. Skúste to neskôr."
 
 msgid "The QR code leads to the wiki page with pictures and the extension download."
-msgstr ""
+msgstr "QR kód vedie na wiki stránku s obrázkami a stiahnutím rozšírenia."
 
 msgid "The Stalker portal of this entry is not configured (any more)."
-msgstr ""
+msgstr "Portál Stalker tejto položky nie je (už) nakonfigurovaný."
 
 msgid "The Watchlist is empty. MENU key on a video: \"Add to Watchlist\"."
-msgstr ""
+msgstr "Zoznam na pozretie je prázdny. Tlačidlo MENU na videu: \"Pridať do zoznamu na pozretie\"."
 
 msgid "The Xtream account of this entry is not configured (any more)."
-msgstr ""
+msgstr "Účet Xtream tejto položky nie je (už) nakonfigurovaný."
 
 msgid "The YouTube channels of this group have no videos."
-msgstr ""
+msgstr "Kanály YouTube tejto skupiny nemajú žiadne videá."
 
 msgid "The YouTube video ID is invalid."
 msgstr "Identifikátor videa YouTube je neplatný."
 
 msgid "The account is banned."
-msgstr ""
+msgstr "Účet je zablokovaný."
 
 msgid "The balance of the account is too low."
-msgstr ""
+msgstr "Zostatok na účte je príliš nízky."
 
 msgid "The best short films on the internet, handpicked by Vimeo staff"
-msgstr ""
+msgstr "Najlepšie krátke filmy na internete, ručne vybrané tímom Vimeo"
 
 msgid "The channel already exists in User Links."
 msgstr "Kanál už existuje v Používateľských odkazoch."
@@ -5753,119 +5590,119 @@ msgstr "Kanál už existuje v Používateľských odkazoch."
 msgid "The color of the current version"
 msgstr "Farba aktuálnej verzie"
 
-#, fuzzy
 msgid "The color of the downloaded item"
-msgstr "Farba zobrazenej položky"
+msgstr "Farba stiahnutej položky"
 
-#, fuzzy
 msgid "The color of the favourite item"
-msgstr "Farba zobrazenej položky"
+msgstr "Farba obľúbenej položky"
 
-#, fuzzy
 msgid "The color of the started item"
-msgstr "Farba zobrazenej položky"
+msgstr "Farba spustenej položky"
 
 msgid "The color of the viewed item"
 msgstr "Farba zobrazenej položky"
 
 msgid "The connection limit for your weeb.tv account has been reached."
-msgstr ""
+msgstr "Bol dosiahnutý limit pripojení pre váš účet weeb.tv."
 
 msgid "The daily download limit is reached."
-msgstr ""
+msgstr "Denný limit sťahovania bol dosiahnutý."
 
 msgid "The data is too large."
-msgstr ""
+msgstr "Údaje sú príliš veľké."
 
 #, python-format
 msgid ""
 "The debug log file is empty:\n"
 "%s"
 msgstr ""
+"Súbor ladiaceho denníka je prázdny:\n"
+"%s"
 
 msgid ""
 "The debug log is disabled or set to console output.\n"
 "\n"
 "Enable it in the E2iPlayer configuration (Debug -> log to file) and reproduce the problem, then come back here."
 msgstr ""
+"Ladiaci denník je vypnutý alebo nastavený na výstup do konzoly.\n"
+"\n"
+"Zapnite ho v konfigurácii E2iPlayer (Debug -> zapisovať do súboru), zopakujte problém a potom sa sem vráťte."
 
 msgid "The debug log is not active."
-msgstr ""
+msgstr "Ladiaci denník nie je aktívny."
 
 msgid "The download is not ready yet. Please try again in a few seconds."
-msgstr ""
+msgstr "Sťahovanie ešte nie je pripravené. Skúste to znova o niekoľko sekúnd."
 
 #, python-format
 msgid "The download is ready in %d seconds. Please try again then."
-msgstr ""
+msgstr "Sťahovanie bude pripravené o %d sekúnd. Skúste to potom znova."
 
 msgid "The download manager is stopped, start it on the download page."
-msgstr ""
+msgstr "Správca sťahovania je zastavený, spustite ho na stránke sťahovania."
 
 msgid "The element already exists in User Links."
 msgstr "Prvok už existuje v Používateľských odkazoch."
 
 msgid "The feed of these channels could not be read - press OK to try again."
-msgstr ""
+msgstr "Feed týchto kanálov sa nepodarilo načítať - stlačte OK pre nový pokus."
 
 msgid "The helper process ended unexpectedly."
-msgstr ""
+msgstr "Pomocný proces sa neočakávane ukončil."
 
 #, python-format
 msgid "The helper script %s is missing."
-msgstr ""
+msgstr "Pomocný skript %s chýba."
 
 #, python-format
 msgid "The host \"%s\" cannot be used from the web interface (disabled, unknown or protected by PIN)."
-msgstr ""
+msgstr "Hostiteľa \"%s\" nie je možné použiť z webového rozhrania (vypnutý, neznámy alebo chránený PIN-om)."
 
 #, python-format
 msgid ""
 "The host %s requires registration. \n"
 "Please fill your login and password in the host configuration. Available under blue button."
 msgstr ""
-"Hostiteľský %s vyžaduje registráciu. \n"
-"Vyplňte svoje prihlasovacie meno a heslo v konfigurácii hostiteľa. K dispozícii pod modrým tlačidlom."
+"Hostiteľ %s vyžaduje registráciu. \n"
+"Vyplňte svoje prihlasovacie meno a heslo v konfigurácii hostiteľa. K dispozícii pod MODRÝM tlačidlom."
 
 msgid "The host asks for a captcha. It can only be solved on the receiver (or with MyE2i there)."
-msgstr ""
+msgstr "Hostiteľ vyžaduje captcha. Dá sa vyriešiť iba na prijímači (alebo tam pomocou MyE2i)."
 
 msgid "The host did not return a list."
-msgstr ""
+msgstr "Hostiteľ nevrátil zoznam."
 
 #, python-format
 msgid "The host wanted to open a window on the TV (%s) - that only works on the receiver."
-msgstr ""
+msgstr "Hostiteľ chcel otvoriť okno na televízore (%s) - to funguje iba na prijímači."
 
 msgid "The hoster sends an advert redirect instead of the video at the moment. Try another hoster."
-msgstr ""
+msgstr "Hoster momentálne namiesto videa posiela presmerovanie na reklamu. Skúste iný hoster."
 
 msgid "The latest uploads of all YouTube channels in this group, newest first."
-msgstr ""
+msgstr "Najnovšie nahrávky všetkých kanálov YouTube v tejto skupine, od najnovších."
 
-#, fuzzy
 msgid "The link could not be resolved."
-msgstr "Používateľský odkaz sa nepodarilo odstrániť."
+msgstr "Odkaz sa nepodarilo spracovať."
 
 msgid "The link has expired. Please open the video again."
-msgstr ""
+msgstr "Platnosť odkazu vypršala. Otvorte video znova."
 
 msgid "The list has changed, please try again."
-msgstr ""
+msgstr "Zoznam sa zmenil, skúste to znova."
 
 msgid "The live stream is not available at the moment."
-msgstr ""
+msgstr "Živý stream momentálne nie je dostupný."
 
-#, fuzzy
 msgid "The model is offline or in a private show."
-msgstr "Toto video je súkromné video."
+msgstr "Modelka je offline alebo v súkromnej šou."
 
 msgid "The number of items in the search history"
 msgstr "Počet položiek v histórii vyhľadávania"
 
 #, python-format
 msgid "The page layout of %s has changed."
-msgstr ""
+msgstr "Rozloženie stránky %s sa zmenilo."
 
 #, python-format
 msgid ""
@@ -5878,13 +5715,13 @@ msgstr ""
 "\"%s\""
 
 msgid "The portal did not hand out a link for this entry."
-msgstr ""
+msgstr "Portál pre túto položku nevydal odkaz."
 
 msgid "The recordings of this page were on the site's old media server, which is offline."
-msgstr ""
+msgstr "Záznamy tejto stránky boli na starom mediálnom serveri stránky, ktorý je offline."
 
 msgid "The request has no valid length."
-msgstr ""
+msgstr "Požiadavka nemá platnú dĺžku."
 
 msgid ""
 "The resolvers 'VidCore', 'VidUp' and 'VidFast' cannot decrypt their links on the receiver.\n"
@@ -5893,53 +5730,58 @@ msgid ""
 "\n"
 "Leave this OFF if you do not want that. The other resolvers (VidEasy, VidLink, Peachify, vidrock, VidNest, ...) decrypt their links on the receiver and are not affected."
 msgstr ""
+"Resolvery 'VidCore', 'VidUp' a 'VidFast' nedokážu dešifrovať svoje odkazy na prijímači.\n"
+"\n"
+"Keď je táto možnosť ZAPNUTÁ, E2iPlayer pri každom otvorení niektorého z nich odošle zašifrovaný token streamu stránky - obsahuje TMDb id otváraného filmu alebo epizódy - webovej službe tretej strany enc-dec.app (prevádzkuje ju súkromná osoba). Tento server potom pri každom prehrávaní vidí id a vašu IP adresu. Nič iné sa neprenáša a používa sa to iba pre tieto tri resolvery.\n"
+"\n"
+"Ak to nechcete, nechajte túto možnosť VYPNUTÚ. Ostatné resolvery (VidEasy, VidLink, Peachify, vidrock, VidNest, ...) dešifrujú svoje odkazy na prijímači a nie sú dotknuté."
 
 #, python-format
 msgid "The results of %d of %d sites are from the last search for \"%s\" - this asks all sites again"
-msgstr ""
+msgstr "Výsledky %d z %d stránok pochádzajú z posledného vyhľadávania \"%s\" - týmto sa znova opýtajú všetky stránky"
 
 msgid "The same item already exists in this group."
 msgstr "V tejto skupine už existuje rovnaká položka."
 
 msgid "The server did not return a subtitle file (download limit reached?)."
-msgstr ""
+msgstr "Server nevrátil súbor titulkov (dosiahnutý limit sťahovania?)."
 
 msgid "The server did not send a subtitle file."
-msgstr ""
+msgstr "Server neodoslal súbor titulkov."
 
 msgid "The server limits the number of requests. Please try again in a few seconds."
-msgstr ""
+msgstr "Server obmedzuje počet požiadaviek. Skúste to znova o niekoľko sekúnd."
 
 msgid "The service is overloaded. Please try again later."
-msgstr ""
+msgstr "Služba je preťažená. Skúste to neskôr."
 
 msgid "The settings are protected by a PIN, change them on the receiver."
-msgstr ""
+msgstr "Nastavenia sú chránené PIN-om, zmeňte ich na prijímači."
 
 #, python-format
 msgid "The site did not answer with data (HTTP %s). It may be down or have moved."
-msgstr ""
+msgstr "Stránka neodpovedala údajmi (HTTP %s). Môže byť nedostupná alebo presťahovaná."
 
 msgid "The site has no player for this video (it only shows a cam advert)."
-msgstr ""
+msgstr "Stránka nemá pre toto video prehrávač (zobrazuje iba reklamu na kamery)."
 
 msgid "The site refuses all qualities of this video at the moment (HTTP 403). Try again later."
-msgstr ""
+msgstr "Stránka momentálne odmieta všetky kvality tohto videa (HTTP 403). Skúste to neskôr."
 
 msgid "The site rejected the search request."
-msgstr ""
+msgstr "Stránka odmietla požiadavku na vyhľadávanie."
 
 msgid "The site's browser check (Cloudflare) could not be passed. The site may also be blocked in your country."
-msgstr ""
+msgstr "Kontrolu prehliadača stránky (Cloudflare) sa nepodarilo prejsť. Stránka môže byť vo vašej krajine aj zablokovaná."
 
 msgid "The site's browser check could not be passed."
-msgstr ""
+msgstr "Kontrolu prehliadača stránky sa nepodarilo prejsť."
 
 msgid "The site's catalogue could not be loaded."
-msgstr ""
+msgstr "Katalóg stránky sa nepodarilo načítať."
 
 msgid "The support package holds the versions, the system information, the enabled hosts and the end of the debug log in one text file for a problem report. Look through it before posting it - the log can contain addresses of the sites you opened."
-msgstr ""
+msgstr "Balík podpory obsahuje verzie, systémové informácie, povolených hostiteľov a koniec ladiaceho denníka v jednom textovom súbore pre hlásenie problému. Pred zverejnením si ho prezrite - denník môže obsahovať adresy stránok, ktoré ste otvorili."
 
 msgid "The user link could not be deleted."
 msgstr "Používateľský odkaz sa nepodarilo odstrániť."
@@ -5949,32 +5791,32 @@ msgstr "Používateľský odkaz sa nepodarilo aktualizovať."
 
 #, python-format
 msgid "The value must be between %d and %d."
-msgstr ""
+msgstr "Hodnota musí byť medzi %d a %d."
 
 msgid "The video could not be resolved (it may be private, ended or not available in your country)."
-msgstr ""
+msgstr "Video sa nepodarilo získať (môže byť súkromné, ukončené alebo nedostupné vo vašej krajine)."
 
 msgid "The video file of this title is not available on the server (HTTP 403)."
-msgstr ""
+msgstr "Videosúbor tohto titulu nie je na serveri k dispozícii (HTTP 403)."
 
 msgid "The video has been removed."
-msgstr ""
+msgstr "Video bolo odstránené."
 
 msgid "The video player of this site (hdvbua.pro) does not offer this title in your country (licence area, mainly Ukraine)."
-msgstr ""
+msgstr "Videoprehrávač tejto stránky (hdvbua.pro) neponúka tento titul vo vašej krajine (licenčná oblasť, hlavne Ukrajina)."
 
 msgid "The website returned a server error for this request."
-msgstr ""
+msgstr "Webová stránka vrátila pri tejto požiadavke chybu servera."
 
 msgid "There are no other favorite groups"
 msgstr "Neexistujú žiadne iné obľúbené skupiny"
 
 msgid "There are unsaved changes. Save now?"
-msgstr ""
+msgstr "Existujú neuložené zmeny. Uložiť teraz?"
 
 #, python-format
 msgid "There is no enough free space in the folder \"%s\"."
-msgstr "V priečinku \"%s nie je dostatok voľného miesta\"."
+msgstr "V priečinku \"%s\" nie je dostatok voľného miesta."
 
 #, python-format
 msgid "There is no free space on the drive [%s]."
@@ -5984,134 +5826,127 @@ msgid "There is no hosts in this group."
 msgstr "V tejto skupine nie sú žiadni hostitelia."
 
 msgid "There is no next item in this list."
-msgstr ""
+msgstr "V tomto zozname nie je žiadna ďalšia položka."
 
 msgid "There is no previous item in this list."
-msgstr ""
+msgstr "V tomto zozname nie je žiadna predchádzajúca položka."
 
 #, python-format
 msgid ""
 "There is no storage device under \"%s\" (%s free). E2iPlayer will switch this folder back to \"%s\" at the next start.\n"
 "Please choose a folder on a mounted HDD or USB stick."
 msgstr ""
+"Pod \"%s\" nie je žiadne úložné zariadenie (%s voľných). E2iPlayer pri ďalšom spustení prepne tento priečinok späť na \"%s\".\n"
+"Zvoľte priečinok na pripojenom HDD alebo USB kľúči."
 
 #, python-format
 msgid "There is no storage device under \"%s\". TorrServer keeps its cache in RAM until a HDD or USB stick is mounted there."
-msgstr ""
+msgstr "Pod \"%s\" nie je žiadne úložné zariadenie. TorrServer uchováva svoju vyrovnávaciu pamäť v RAM, kým tam nebude pripojený HDD alebo USB kľúč."
 
 msgid "This article has no free video."
-msgstr ""
+msgstr "Tento článok nemá žiadne bezplatné video."
 
-#, fuzzy
 msgid "This channel does not exist."
-msgstr "Adresár \"%s\" neexistuje."
+msgstr "Tento kanál neexistuje."
 
-#, fuzzy
 msgid "This channel is currently offline."
-msgstr "Tento model je offline."
+msgstr "Tento kanál je momentálne offline."
 
-#, fuzzy
 msgid "This channel is not available in your country (geo-blocking)."
-msgstr "%s povedal: Táto stránka momentálne nie je k dispozícii vo vašom regióne"
+msgstr "Tento kanál nie je vo vašej krajine k dispozícii (geografické blokovanie)."
 
-#, fuzzy
 msgid "This channel is temporarily unavailable. Please try again later."
-msgstr "Táto relácia je súkromná. Skúste to znova neskôr!"
+msgstr "Tento kanál je dočasne nedostupný. Skúste to znova neskôr."
 
 msgid "This channel requires a premium account, or the free connection limit has been reached. Enter your weeb.tv login data in the host configuration."
-msgstr ""
+msgstr "Tento kanál vyžaduje prémiový účet alebo bol dosiahnutý limit bezplatných pripojení. Zadajte svoje prihlasovacie údaje weeb.tv v konfigurácii hostiteľa."
 
-#, fuzzy
 msgid "This content is not available in your region."
-msgstr "%s povedal: Táto stránka momentálne nie je k dispozícii vo vašom regióne"
+msgstr "Tento obsah nie je vo vašom regióne k dispozícii."
 
 msgid "This content is only available in Switzerland."
-msgstr ""
+msgstr "Tento obsah je k dispozícii iba vo Švajčiarsku."
 
 msgid "This content needs a login - not supported."
-msgstr ""
+msgstr "Tento obsah vyžaduje prihlásenie - nepodporované."
 
-#, fuzzy
 msgid "This entry cannot be added to the favourites."
-msgstr "Neexistujú žiadne iné obľúbené skupiny"
+msgstr "Túto položku nie je možné pridať do obľúbených."
 
-#, fuzzy
 msgid "This entry cannot be opened."
-msgstr "Pomôcka \"%s\" sa nedá nájsť."
+msgstr "Túto položku nie je možné otvoriť."
 
 msgid "This entry is only an advert, there is no video."
-msgstr ""
+msgstr "Táto položka je iba reklama, nie je tu žiadne video."
 
 msgid "This entry is protected by a PIN, open it on the receiver."
-msgstr ""
+msgstr "Táto položka je chránená PIN-om, otvorte ju na prijímači."
 
 msgid "This episode is not available in this version (SUB/DUB) on this server. Try another one."
-msgstr ""
+msgstr "Táto epizóda nie je na tomto serveri k dispozícii v tejto verzii (SUB/DUB). Skúste iný."
 
 msgid "This feed is empty, or the YouTube sign-in has expired - sign out and in again."
-msgstr ""
+msgstr "Tento feed je prázdny alebo vypršalo prihlásenie do YouTube - odhláste sa a znova sa prihláste."
 
 msgid "This folder is empty. MENU key on a video of the Watchlist: \"Move to Watchlist folder...\"."
-msgstr ""
+msgstr "Tento priečinok je prázdny. Tlačidlo MENU na videu zo zoznamu na pozretie: \"Presunúť do priečinka zoznamu na pozretie...\"."
 
 msgid "This folder is protected by a PIN, open it on the receiver."
-msgstr ""
+msgstr "Tento priečinok je chránený PIN-om, otvorte ho na prijímači."
 
 msgid "This host has been added already to this group."
 msgstr "Tento hostiteľ už bol pridaný do tejto skupiny."
 
 msgid "This is only an advert for a paid clip (clips4sale), there is no free video."
-msgstr ""
+msgstr "Toto je iba reklama na platený klip (clips4sale), nie je tu žiadne bezplatné video."
 
 msgid "This is paid content of PZPN+, it needs a purchase on the website."
-msgstr ""
+msgstr "Toto je platený obsah PZPN+, je potrebné ho zakúpiť na webovej stránke."
 
 msgid "This mix is only available with a Mixcloud Select subscription."
-msgstr ""
+msgstr "Tento mix je k dispozícii iba s predplatným Mixcloud Select."
 
 msgid "This model is offline."
 msgstr "Tento model je offline."
 
 msgid "This option cannot be changed from the web interface."
-msgstr ""
+msgstr "Túto možnosť nie je možné zmeniť cez webové rozhranie."
 
 msgid "This page has no video (blog article)."
-msgstr ""
+msgstr "Táto stránka neobsahuje žiadne video (článok blogu)."
 
 msgid "This player is not available any more - reload the links."
-msgstr ""
+msgstr "Tento prehrávač už nie je k dispozícii - znova načítajte odkazy."
 
-#, fuzzy
 msgid "This room is currently offline or unavailable."
-msgstr "Táto miestnosť je offline. Skúste to znova neskôr!"
+msgstr "Táto miestnosť je momentálne offline alebo nedostupná."
 
 msgid "This room is offline. Try again later!"
 msgstr "Táto miestnosť je offline. Skúste to znova neskôr!"
 
 msgid "This section is no longer on the main page."
-msgstr ""
+msgstr "Táto sekcia už nie je na hlavnej stránke."
 
 msgid "This session has no code - scan the QR code on the receiver screen."
-msgstr ""
+msgstr "Táto relácia nemá žiadny kód - naskenujte QR kód na obrazovke prijímača."
 
 msgid "This show is private. Try again later!"
 msgstr "Táto relácia je súkromná. Skúste to znova neskôr!"
 
 msgid "This source is offline at the moment. Try another source of the channel."
-msgstr ""
+msgstr "Tento zdroj je momentálne offline. Skúste iný zdroj kanála."
 
 msgid "This stream can only be played with buffering - please start it on the receiver."
-msgstr ""
+msgstr "Tento stream je možné prehrať iba s vyrovnávaním - spustite ho na prijímači."
 
 msgid "This subtitle provider has subtitles for movies only."
-msgstr ""
+msgstr "Tento poskytovateľ titulkov má titulky iba pre filmy."
 
 msgid "This video has been deleted."
 msgstr "Toto video bolo odstránené."
 
-#, fuzzy
 msgid "This video is Premium-only content."
-msgstr "Toto video je súkromné."
+msgstr "Toto video je obsah iba pre Premium."
 
 msgid "This video is a private video."
 msgstr "Toto video je súkromné video."
@@ -6120,61 +5955,59 @@ msgid "This video is a private."
 msgstr "Toto video je súkromné."
 
 msgid "This video is only on hosters E2iPlayer cannot play."
-msgstr ""
+msgstr "Toto video je iba na hosteroch, ktoré E2iPlayer nedokáže prehrať."
 
 msgid "This video is only on the netu.tv player (pbtube.net), which E2iPlayer cannot play."
-msgstr ""
+msgstr "Toto video je iba v prehrávači netu.tv (pbtube.net), ktorý E2iPlayer nedokáže prehrať."
 
 msgid "This video needs a paid ororo.tv subscription."
-msgstr ""
+msgstr "Toto video vyžaduje platené predplatné ororo.tv."
 
 msgid "This video requires you to sign in to a YouTube account."
-msgstr ""
+msgstr "Toto video vyžaduje prihlásenie do účtu YouTube."
 
 msgid "This video was embedded from Pornhub and is no longer available there."
-msgstr ""
+msgstr "Toto video bolo vložené z Pornhub a tam už nie je k dispozícii."
 
-#, fuzzy
 msgid "This video was embedded from xHamster and has been deleted there."
-msgstr "Toto video bolo odstránené."
+msgstr "Toto video bolo vložené z xHamster a tam bolo odstránené."
 
 msgid "Thriller"
-msgstr ""
+msgstr "Triler"
 
-#, fuzzy
 msgid "Thumbnails"
-msgstr "Odstránenie miniatúr"
+msgstr "Miniatúry"
 
 msgid "Time"
-msgstr ""
+msgstr "Čas"
 
 msgid "Tip! You can connect USB flash drive to fix this problem."
 msgstr "Tip! Tento problém môžete vyriešiť pripojením disku USB flash."
 
 msgid "Titles"
-msgstr ""
+msgstr "Tituly"
 
 #, python-format
 msgid "Titlovi.com login failed (HTTP %s)."
-msgstr ""
+msgstr "Prihlásenie do Titlovi.com zlyhalo (HTTP %s)."
 
 #, python-format
 msgid "Titlovi.com login failed for user \"%s\". Please check your login and password."
-msgstr ""
+msgstr "Prihlásenie do Titlovi.com pre používateľa \"%s\" zlyhalo. Skontrolujte prihlasovacie meno a heslo."
 
 msgid "Titlovi.com needs a free titlovi.com account. Enter login and password in the E2iPlayer settings."
-msgstr ""
+msgstr "Titlovi.com vyžaduje bezplatný účet titlovi.com. Zadajte prihlasovacie meno a heslo v nastaveniach E2iPlayer."
 
 #, python-format
 msgid "Titlovi.com search failed (HTTP %s)."
-msgstr ""
+msgstr "Vyhľadávanie na Titlovi.com zlyhalo (HTTP %s)."
 
 #, python-format
 msgid "Titlovi.com: API access is disabled for the account \"%s\". See titlovi.com/donacije."
-msgstr ""
+msgstr "Titlovi.com: Prístup k API je pre účet \"%s\" zakázaný. Pozrite titlovi.com/donacije."
 
 msgid "Titlovi.com: invalid server response."
-msgstr ""
+msgstr "Titlovi.com: Neplatná odpoveď servera."
 
 #, python-format
 msgid ""
@@ -6189,6 +6022,16 @@ msgid ""
 "\n"
 "3. Approve the access, then select OK here."
 msgstr ""
+"Prihlásenie do YouTube:\n"
+"\n"
+"1. Na telefóne alebo počítači otvorte:\n"
+"     %s\n"
+"\n"
+"2. Zadajte tento kód:\n"
+"\n"
+"     %s\n"
+"\n"
+"3. Schváľte prístup a potom tu zvoľte OK."
 
 msgid ""
 "To watch videos from https://vk.com/ you need to login.\n"
@@ -6201,122 +6044,127 @@ msgid "Today"
 msgstr "Dnes"
 
 msgid "Tomorrow"
-msgstr ""
+msgstr "Zajtra"
 
 msgid "Too many redirects."
-msgstr ""
+msgstr "Príliš veľa presmerovaní."
 
 msgid "Too many requests. Please try again later."
-msgstr ""
+msgstr "Príliš veľa požiadaviek. Skúste to znova neskôr."
 
 msgid "Too many wrong codes - scan the QR code on the receiver screen instead."
-msgstr ""
+msgstr "Príliš veľa nesprávnych kódov - namiesto toho naskenujte QR kód na obrazovke prijímača."
 
 msgid "Top"
-msgstr "Hore"
+msgstr "Top"
 
 msgid "Top 10"
-msgstr ""
+msgstr "Top 10"
 
 msgid "Top IMDb"
-msgstr ""
+msgstr "Top IMDb"
 
 msgid "Top airing"
-msgstr ""
+msgstr "Najpopulárnejšie vysielané"
 
 msgid "Top in your country"
-msgstr ""
+msgstr "Top vo vašej krajine"
 
 msgid "Top leagues and clubs"
-msgstr ""
+msgstr "Top ligy a kluby"
 
 msgid "Top rated"
 msgstr "Najlepšie hodnotené"
 
 msgid "Top rated movies"
-msgstr ""
+msgstr "Najlepšie hodnotené filmy"
 
 msgid "Top rated series"
-msgstr ""
+msgstr "Najlepšie hodnotené seriály"
 
 msgid "Top scorers"
-msgstr ""
+msgstr "Najlepší strelci"
 
 msgid "Top series"
 msgstr "Top série"
 
 msgid "Top stations"
-msgstr ""
+msgstr "Top stanice"
 
 msgid "Top tracks"
-msgstr ""
+msgstr "Top skladby"
 
 msgid "Top upcoming"
-msgstr ""
+msgstr "Najočakávanejšie"
 
 msgid "Top-IMDB"
 msgstr "Top-IMDB"
 
 msgid "Topics"
-msgstr ""
+msgstr "Témy"
 
 msgid "TorrServer binary (OK = choose, empty = search automatically)"
-msgstr ""
+msgstr "Spustiteľný súbor TorrServer (OK = vybrať, prázdne = hľadať automaticky)"
 
 #, python-format
 msgid "TorrServer could not be started (%s)."
-msgstr ""
+msgstr "TorrServer sa nepodarilo spustiť (%s)."
 
 msgid "TorrServer got no file list for this torrent (no peers or a dead link?)."
-msgstr ""
+msgstr "TorrServer nedostal pre tento torrent žiadny zoznam súborov (žiadni peeri alebo nefunkčný odkaz?)."
 
 msgid "TorrServer port"
-msgstr ""
+msgstr "Port TorrServer"
 
 msgid "TorrServer was not found on the receiver. It is not part of E2iPlayer and not in the image feeds - install it yourself:"
-msgstr ""
+msgstr "TorrServer sa na prijímači nenašiel. Nie je súčasťou E2iPlayer ani feedov image - nainštalujte ho sami:"
 
 msgid "TorrServer web interface in the home network"
-msgstr ""
+msgstr "Webové rozhranie TorrServer v domácej sieti"
 
 msgid "Torrent"
-msgstr ""
+msgstr "Torrent"
 
 msgid ""
 "Torrent links are played with TorrServer.\n"
 "Switch on \"Play torrents with TorrServer\" in the E2iPlayer settings (Torrent configuration)."
 msgstr ""
+"Torrentové odkazy sa prehrávajú cez TorrServer.\n"
+"Zapnite \"Prehrávať torrenty cez TorrServer\" v nastaveniach E2iPlayer (konfigurácia torrentov)."
 
 msgid ""
 "Torrents are peer-to-peer: while a torrent plays, the receiver connects to other users and your IP address is visible to them. Depending on your country, downloading or sharing copyrighted content through torrents may be illegal - you alone are responsible for what you play. Upload to other peers stays off unless you switch it on.\n"
 "\n"
 "TorrServer itself is not part of E2iPlayer, it has to be installed separately."
 msgstr ""
+"Torrenty fungujú na princípe peer-to-peer: počas prehrávania torrentu sa prijímač pripája k ostatným používateľom a vaša IP adresa je pre nich viditeľná. V závislosti od vašej krajiny môže byť sťahovanie alebo zdieľanie obsahu chráneného autorskými právami cez torrenty nezákonné - za to, čo prehrávate, zodpovedáte výhradne vy. Odosielanie ostatným peerom zostáva vypnuté, kým ho nezapnete.\n"
+"\n"
+"Samotný TorrServer nie je súčasťou E2iPlayer, musí sa nainštalovať samostatne."
 
 msgid "Total size:"
 msgstr "Celková veľkosť:"
 
 msgid "Tourism"
-msgstr ""
+msgstr "Cestovný ruch"
 
 msgid "Tournament"
-msgstr ""
+msgstr "Turnaj"
 
 msgid "Tracklist"
-msgstr ""
+msgstr "Zoznam skladieb"
 
 msgid "Trailer"
-msgstr "Príves"
+msgstr "Trailer"
 
 msgid "Trans"
-msgstr ""
+msgstr "Transgender"
 
 msgid "Translation:"
 msgstr "Preklad:"
 
 #, python-format
 msgid "Translator: %s"
-msgstr ""
+msgstr "Prekladateľ: %s"
 
 msgid "Transparent"
 msgstr "Priehľadná"
@@ -6325,30 +6173,28 @@ msgid "Trauma"
 msgstr "Trauma"
 
 msgid "Travel"
-msgstr ""
+msgstr "Cestovanie"
 
 msgid "Treatment Consult"
-msgstr "Konzultácia s liečbou"
+msgstr "Konzultácia k liečbe"
 
 msgid "Trending"
 msgstr "Trendy"
 
-#, fuzzy
 msgid "Trending this week"
-msgstr "Trendy"
+msgstr "Trendy tohto týždňa"
 
 msgid "Trial"
-msgstr ""
+msgstr "Skúšobný prístup"
 
 msgid "Troubleshooting"
-msgstr ""
+msgstr "Riešenie problémov"
 
-#, fuzzy
 msgid "Try to change extplayer or reinstall gst-ifdsrc"
-msgstr "Pokúste sa zmeniť extplayer alebo zakázať IFD v konfigurácii GSTplayer"
+msgstr "Skúste zmeniť extplayer alebo preinštalovať gst-ifdsrc"
 
 msgid "Turkish"
-msgstr ""
+msgstr "Turečtina"
 
 msgid "Turkish Movies"
 msgstr "Turecké filmy"
@@ -6360,62 +6206,59 @@ msgid "Turkish TV series"
 msgstr "Turecké TV seriály"
 
 msgid "Turkish movies (dubbed)"
-msgstr ""
+msgstr "Turecké filmy (dabované)"
 
 msgid "Turkish series (dubbed)"
-msgstr ""
+msgstr "Turecké seriály (dabované)"
 
 msgid "Tutorials"
 msgstr "Návody"
 
 msgid "Type"
-msgstr ""
+msgstr "Typ"
 
 msgid "Type:"
 msgstr "Typ:"
 
-#, fuzzy
 msgid "Type: "
-msgstr "Typ:"
+msgstr "Typ: "
 
 #, python-format
 msgid "Type: %s"
 msgstr "Typ: %s"
 
 msgid "Types"
-msgstr ""
+msgstr "Typy"
 
 msgid "UNKNOWN"
 msgstr "NEZNÁME"
 
 msgid "URL malformed."
-msgstr ""
+msgstr "Chybná URL."
 
 msgid "Ukrainian"
-msgstr ""
+msgstr "Ukrajinčina"
 
 msgid "Umount iso file"
-msgstr "Umount iso file"
+msgstr "Odpojiť súbor ISO"
 
 msgid "Unable to comply. Search History is empty."
-msgstr "Nedá sa splniť požiadavky. História vyhľadávania je prázdna."
+msgstr "Požiadavku nemožno splniť. História vyhľadávania je prázdna."
 
 msgid "Undo reverse"
-msgstr ""
+msgstr "Zrušiť obrátenie"
 
 msgid "Undo shuffle"
-msgstr ""
+msgstr "Zrušiť zamiešanie"
 
 msgid "Unfix jump target"
-msgstr ""
+msgstr "Uvoľniť cieľ skoku"
 
-#, fuzzy
 msgid "Unknown action."
-msgstr "Neznáma chyba."
+msgstr "Neznáma akcia."
 
-#, fuzzy
 msgid "Unknown error code."
-msgstr "Neznáma chyba."
+msgstr "Neznámy kód chyby."
 
 msgid "Unknown error."
 msgstr "Neznáma chyba."
@@ -6436,62 +6279,60 @@ msgid "Unrar error code[%s]."
 msgstr "Unrar kód chyby[%s]."
 
 msgid "Unselect all"
-msgstr ""
+msgstr "Zrušiť výber všetkých"
 
 msgid "Unset watched"
-msgstr "Nenastavené sledované"
+msgstr "Zrušiť označenie ako pozreté"
 
 msgid "Unsupported protocol."
-msgstr ""
+msgstr "Nepodporovaný protokol."
 
 #, python-format
 msgid "Unzip error code[%s]."
 msgstr "Kód chyby dekomprimovania[%s]."
 
 msgid "Upbringing"
-msgstr ""
+msgstr "Výchova"
 
 msgid "Upcoming"
-msgstr ""
+msgstr "Pripravované"
 
-#, fuzzy
 msgid "Updates"
-msgstr "Dátum nahrania"
+msgstr "Aktualizácie"
 
 msgid "Upload date"
 msgstr "Dátum nahrania"
 
 msgid "Upload speed limit"
-msgstr ""
+msgstr "Limit rýchlosti odosielania"
 
 #, python-format
 msgid "Uploader: %s"
-msgstr ""
+msgstr "Nahral: %s"
 
-#, fuzzy
 msgid "Uploads"
-msgstr "Dátum nahrania"
+msgstr "Nahrané videá"
 
 msgid "Urllists player"
 msgstr "Prehrávač URL adries"
 
 msgid "Use Cinemeta (no key, English)"
-msgstr ""
+msgstr "Použiť Cinemeta (bez kľúča, anglicky)"
 
 msgid "Use HLS streams (adaptive):"
-msgstr ""
+msgstr "Použiť HLS streamy (adaptívne):"
 
 msgid "Use IMDb (no key)"
-msgstr ""
+msgstr "Použiť IMDb (bez kľúča)"
 
 msgid "Use OMDb"
-msgstr ""
+msgstr "Použiť OMDb"
 
 msgid "Use TMDb"
-msgstr ""
+msgstr "Použiť TMDb"
 
 msgid "Use TVmaze for series (no key, English)"
-msgstr ""
+msgstr "Použiť TVmaze pre seriály (bez kľúča, anglicky)"
 
 msgid "Use default video quality"
 msgstr "Použitie predvolenej kvality videa"
@@ -6502,12 +6343,11 @@ msgstr "Použite predvolenú kvalitu videa:"
 msgid "Use login"
 msgstr "Použiť prihlásenie"
 
-#, fuzzy
 msgid "Use own pin for configuration"
-msgstr "Ochrana Pinov pre konfiguráciu"
+msgstr "Vlastný PIN pre konfiguráciu"
 
 msgid "Use own pin instead of the player pin"
-msgstr ""
+msgstr "Vlastný PIN namiesto PIN-u prehrávača"
 
 msgid "Use proxy server:"
 msgstr "Použiť proxy server:"
@@ -6526,7 +6366,7 @@ msgid "Use the best quality :"
 msgstr "Použiť najlepšiu kvalitu :"
 
 msgid "User"
-msgstr ""
+msgstr "Používateľ"
 
 msgid "User defined"
 msgstr "Definované užívateľom"
@@ -6544,50 +6384,49 @@ msgid "User link updated."
 msgstr "Používateľský odkaz bol aktualizovaný."
 
 msgid "User links"
-msgstr "Odkazy na používateľov"
+msgstr "Používateľské odkazy"
 
-#, fuzzy
 msgid "User links sorted."
-msgstr "Používateľský odkaz bol odstránený."
+msgstr "Používateľské odkazy zoradené."
 
 msgid "User links stored in the ytlist.txt file."
-msgstr "Odkazy na používateľov uložené v súbore ytlist.txt."
+msgstr "Používateľské odkazy uložené v súbore ytlist.txt."
 
 msgid "User-Agent (leave empty for the default):"
-msgstr ""
+msgstr "User-Agent (nechajte prázdne pre predvolený):"
 
 #, python-format
 msgid "User-Links: %d"
 msgstr "Používateľské odkazy: %d"
 
 msgid "Username/password authentication failure."
-msgstr ""
+msgstr "Overenie používateľského mena/hesla zlyhalo."
 
 msgid "Username:"
 msgstr "Používateľské meno:"
 
 msgid "Users"
-msgstr ""
+msgstr "Používatelia"
 
 #, python-format
 msgid "Utility \"%s\" can not be found."
 msgstr "Pomôcka \"%s\" sa nedá nájsť."
 
 msgid "VAVOO did not hand out a session signature. Try again later."
-msgstr ""
+msgstr "VAVOO nevydal podpis relácie. Skúste to znova neskôr."
 
 msgid "Venue"
-msgstr ""
+msgstr "Miesto konania"
 
 msgid "Verify"
-msgstr "Over"
+msgstr "Overiť"
 
 msgid "Version"
-msgstr ""
+msgstr "Verzia"
 
 #, python-format
 msgid "Version: %s"
-msgstr ""
+msgstr "Verzia: %s"
 
 msgid "Video"
 msgstr "Video"
@@ -6596,10 +6435,10 @@ msgid "Video buffer size [MB]"
 msgstr "Veľkosť vyrovnávacej pamäte videa [MB]"
 
 msgid "Video library"
-msgstr ""
+msgstr "Videotéka"
 
 msgid "Video link not found."
-msgstr ""
+msgstr "Odkaz na video sa nenašiel."
 
 msgid "Video mode"
 msgstr "Režim Videa"
@@ -6607,9 +6446,8 @@ msgstr "Režim Videa"
 msgid "Video options"
 msgstr "Možnosti videa"
 
-#, fuzzy
 msgid "Video player OSD clock format"
-msgstr "Formát hodín informačného panela"
+msgstr "Formát hodín v OSD prehrávača"
 
 msgid "Video policy"
 msgstr "Pravidlá pre videá"
@@ -6618,7 +6456,7 @@ msgid "Video policy for 4:3"
 msgstr "Pravidlá pre videá pre 4:3"
 
 msgid "Video recitations"
-msgstr ""
+msgstr "Video recitácie"
 
 msgid "Video with DRM protection."
 msgstr "Video s ochranou DRM."
@@ -6626,15 +6464,15 @@ msgstr "Video s ochranou DRM."
 msgid "Videos"
 msgstr "Videá"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Videos %s"
-msgstr "videá: %s"
+msgstr "Videá %s"
 
 msgid "Videos you have liked."
-msgstr ""
+msgstr "Videá, ktoré sa vám páčia."
 
 msgid "Videos you have recently watched."
-msgstr ""
+msgstr "Videá, ktoré ste nedávno pozerali."
 
 msgid "View count"
 msgstr "Počet zobrazení"
@@ -6646,115 +6484,113 @@ msgid "Views:"
 msgstr "Zobrazení:"
 
 msgid "Vimeo does not offer this list to anonymous users in your region."
-msgstr ""
+msgstr "Vimeo neponúka tento zoznam anonymným používateľom vo vašom regióne."
 
 msgid "Vimeo live event: the live transmission (while on air) and the past transmissions."
-msgstr ""
+msgstr "Živá udalosť Vimeo: živý prenos (počas vysielania) a minulé prenosy."
 
 msgid "Vimeo playlist with the recordings of this page."
-msgstr ""
+msgstr "Zoznam skladieb Vimeo so záznamami tejto stránky."
 
 msgid "Vimeo: this video is private, removed or may only be played on the site that embeds it."
-msgstr ""
+msgstr "Vimeo: Toto video je súkromné, odstránené alebo sa smie prehrávať iba na stránke, ktorá ho vkladá."
 
 msgid "Virtual Keyboard"
-msgstr "Virtuálna kľúčová tabuľa"
+msgstr "Virtuálna klávesnica"
 
 msgid "Virtual Keyboard type"
 msgstr "Typ virtuálnej klávesnice"
 
 msgid "Voice-over"
-msgstr ""
+msgstr "Hlasový komentár"
 
 msgid "Volleyball"
-msgstr ""
+msgstr "Volejbal"
 
 msgid "WWE shows"
-msgstr ""
+msgstr "Relácie WWE"
 
 msgid "Waiting for the result ..."
-msgstr ""
+msgstr "Čaká sa na výsledok ..."
 
 msgid "War"
-msgstr ""
+msgstr "Vojnový"
 
 msgid "Watch Videos Online"
 msgstr "Pozrite si videá online"
 
-#, fuzzy
 msgid "Watch history"
-msgstr "História vyhľadávania"
+msgstr "História pozerania"
 
-#, fuzzy
 msgid "Watch later"
-msgstr "Sleduj"
+msgstr "Pozrieť neskôr"
 
 msgid "Watch online"
-msgstr ""
+msgstr "Pozerať online"
 
 msgid "Watchlist"
-msgstr ""
+msgstr "Zoznam na pozretie"
 
 msgid "Watchlist (no folder)"
-msgstr ""
+msgstr "Zoznam na pozretie (bez priečinka)"
 
 msgid "Watchlist folder"
-msgstr ""
+msgstr "Priečinok zoznamu na pozretie"
 
 msgid "WebStreamr / AIOStreams manifest URL (your own):"
-msgstr ""
+msgstr "URL manifestu WebStreamr / AIOStreams (vaša vlastná):"
 
 msgid "Website address"
-msgstr ""
+msgstr "Adresa webovej stránky"
 
 #, python-format
 msgid "Weeks on chart: %s"
-msgstr ""
+msgstr "Týždne v rebríčku: %s"
 
 msgid "Western"
-msgstr ""
+msgstr "Western"
 
 msgid "What's happening?"
-msgstr ""
+msgstr "Čo sa deje?"
 
 msgid "When the maximum is reached"
-msgstr ""
+msgstr "Pri dosiahnutí maxima"
 
 msgid "While live TV is running"
-msgstr ""
+msgstr "Počas sledovania živej TV"
 
 msgid "Whole file must be downloaded to start playback!"
 msgstr "Na spustenie prehrávania je potrebné stiahnuť celý súbor!"
 
 msgid "Wiki"
-msgstr ""
+msgstr "Wiki"
 
 msgid "Winter"
-msgstr ""
+msgstr "Zima"
 
 msgid "Winter sports"
-msgstr ""
+msgstr "Zimné športy"
 
 msgid "With an API key from subdl.com (E2iPlayer settings, Subtitles) the official SubDL API is searched as well."
-msgstr ""
+msgstr "S kľúčom API zo subdl.com (nastavenia E2iPlayer, Titulky) sa prehľadáva aj oficiálne API SubDL."
 
 msgid "With subtitles"
 msgstr "S titulkami"
 
 msgid "World"
-msgstr ""
+msgstr "Svet"
 
 msgid "Worldwide"
-msgstr ""
+msgstr "Celosvetovo"
 
 msgid "Wrestling"
-msgstr ""
+msgstr "Wrestling"
 
 msgid "Wrestling shows"
-msgstr ""
+msgstr "Wrestlingové relácie"
 
 msgid "Write current title to file:"
-msgstr "Napíšte aktuálny názov súboru:"
+msgstr "Zapísať aktuálny názov do súboru:"
 
 msgid "Writer:"
 msgstr "Autor:"
@@ -6763,17 +6599,16 @@ msgid "Writers:"
 msgstr "Autori:"
 
 msgid "Written Boards Review"
-msgstr "Preskúmanie písomných fór"
+msgstr "Opakovanie na písomnú atestačnú skúšku"
 
 msgid "Wrong Youtube Api Key length"
 msgstr "Nesprávna dĺžka kľúča rozhrania API služby YouTube"
 
 msgid "Wrong captcha code."
-msgstr ""
+msgstr "Nesprávny kód captcha."
 
-#, fuzzy
 msgid "Wrong code."
-msgstr "Nesprávne indexy."
+msgstr "Nesprávny kód."
 
 msgid "Wrong format of rar archive."
 msgstr "Nesprávny formát archívu rar."
@@ -6788,23 +6623,23 @@ msgid "Wrong uri."
 msgstr "Nesprávne uri."
 
 msgid "Wrong weeb.tv username or password."
-msgstr ""
+msgstr "Nesprávne používateľské meno alebo heslo weeb.tv."
 
 #, python-format
 msgid "Wyzie Subs API key rejected: %s"
-msgstr ""
+msgstr "Kľúč API Wyzie Subs bol odmietnutý: %s"
 
 msgid "Wyzie Subs needs an API key. You can get a free one at https://store.wyzie.io/redeem and enter it in the E2iPlayer configuration."
-msgstr ""
+msgstr "Wyzie Subs vyžaduje kľúč API. Bezplatný získate na https://store.wyzie.io/redeem a zadajte ho v konfigurácii E2iPlayer."
 
 msgid "Wyzie Subs: the daily request limit of the API key is reached."
-msgstr ""
+msgstr "Wyzie Subs: Bol dosiahnutý denný limit požiadaviek kľúča API."
 
 msgid "YELLOW"
-msgstr ""
+msgstr "ŽLTÉ"
 
 msgid "YESTERDAY"
-msgstr ""
+msgstr "VČERA"
 
 msgid "YP connected"
 msgstr "YP pripojený"
@@ -6826,19 +6661,19 @@ msgid "Yes + Global Search"
 msgstr "Áno + globálne vyhľadávanie"
 
 msgid "Yes, to console"
-msgstr "Áno, na útechu"
+msgstr "Áno, do konzoly"
 
 msgid "Yes, to file /hdd/iptv.dbg"
 msgstr "Áno, do súboru /hdd/iptv.dbg"
 
 msgid "Yes, to file /home/root/logs/iptv.dbg"
-msgstr "Ano, do súboru /home/root/logs/iptv.dbg"
+msgstr "Áno, do súboru /home/root/logs/iptv.dbg"
 
 msgid "Yes, to file /tmp/iptv.dbg"
 msgstr "Áno, do súboru /tmp/iptv.dbg"
 
 msgid "Yesterday"
-msgstr ""
+msgstr "Včera"
 
 msgid "You can disable HTTPS certificates validation in the E2iPlayer configuration to suppress this problem."
 msgstr "Overenie certifikátov HTTPS môžete zakázať v konfigurácii prehrávača E2iPlayer, aby ste tento problém potlačili."
@@ -6860,7 +6695,7 @@ msgid "You do not have a premium account. Starting a sponsored broadcast."
 msgstr "Nemáte prémiový účet. Spustenie sponzorovaného vysielania."
 
 msgid "You have reached the play limit for this mix."
-msgstr ""
+msgstr "Dosiahli ste limit prehrávania pre tento mix."
 
 msgid "You should never perform block I/O operations in the __init__."
 msgstr "Nikdy by ste nemali vykonávať blokové vstupno-výstupné operácie v __init__."
@@ -6869,27 +6704,27 @@ msgid "YouTube User Links Editor"
 msgstr "Editor používateľských odkazov YouTube"
 
 msgid "YouTube channels: original order"
-msgstr ""
+msgstr "Kanály YouTube: pôvodné poradie"
 
 msgid "YouTube channels: sort by newest upload"
-msgstr ""
+msgstr "Kanály YouTube: zoradiť podľa najnovšieho videa"
 
 msgid "Your 'Watch later' playlist."
-msgstr ""
+msgstr "Váš zoznam skladieb 'Pozrieť neskôr'."
 
 #, python-format
 msgid "Your MyE2i extension is outdated or unknown (v%s or newer needed). Please update:"
-msgstr ""
+msgstr "Vaše rozšírenie MyE2i je zastarané alebo neznáme (vyžaduje sa v%s alebo novšie). Aktualizujte ho:"
 
 msgid "Your own list of videos, in folders of your own (MENU key on a video: \"Add to Watchlist\")"
-msgstr ""
+msgstr "Váš vlastný zoznam videí vo vlastných priečinkoch (tlačidlo MENU na videu: \"Pridať do zoznamu na pozretie\")"
 
 msgid "Your search entry"
 msgstr "Váš vyhľadávací záznam"
 
 #, python-format
 msgid "Youth protection: only available between %s and %s."
-msgstr ""
+msgstr "Ochrana mládeže: k dispozícii iba medzi %s a %s."
 
 msgid "Youtube Suggestions"
 msgstr "Návrhy služby YouTube"
@@ -6898,11 +6733,11 @@ msgid "Youtube searches are quicker, if you fill API key in setting menu"
 msgstr "Vyhľadávanie na YouTube je rýchlejšie, ak vyplníte API kľúč v ponuke nastavení"
 
 msgid "Z-A"
-msgstr ""
+msgstr "Z-A"
 
 #, python-format
 msgid "[%s CD]"
-msgstr ""
+msgstr "[%s CD]"
 
 #, python-format
 msgid "[%s] - configuration"
@@ -6920,7 +6755,7 @@ msgid "[HLS/M3U8] buffering"
 msgstr "[HLS/M3U8] vyrovnávacia pamäť"
 
 msgid "[HLS/M3U8] live stream starts behind live"
-msgstr ""
+msgstr "[HLS/M3U8] živý stream začína za živým bodom"
 
 msgid "[HTTP] buffering"
 msgstr "[HTTP] vyrovnávacia pamäť"
@@ -6935,7 +6770,7 @@ msgid "[pl]"
 msgstr "[pl]"
 
 msgid "_checkStatus except error"
-msgstr "_checkStatus okrem chyby"
+msgstr "_checkStatus - chyba výnimky"
 
 msgid "after a week"
 msgstr "po týždni"
@@ -6949,35 +6784,33 @@ msgstr "po dni"
 msgid "after three days"
 msgstr "po troch dňoch"
 
-#, fuzzy
 msgid "all"
-msgstr "malé"
+msgstr "všetko"
 
-#, fuzzy
 msgid "alphabetical"
-msgstr "Abecedne"
+msgstr "abecedne"
 
 msgid "anime-odcinki.pl shows this title only to logged-in users."
-msgstr ""
+msgstr "anime-odcinki.pl zobrazuje tento titul iba prihláseným používateľom."
 
 msgid "aqua"
-msgstr "aqua"
+msgstr "azúrová"
 
 msgid "as Chrome this session"
-msgstr ""
+msgstr "ako Chrome v tejto relácii"
 
 msgid "as in ytlist.txt"
-msgstr ""
+msgstr "ako v ytlist.txt"
 
 msgid "auto"
 msgstr "automaticky"
 
 #, python-format
 msgid "available until %s"
-msgstr ""
+msgstr "k dispozícii do %s"
 
 msgid "back to host/group selection"
-msgstr ""
+msgstr "späť na výber hostiteľa/skupiny"
 
 msgid "black"
 msgstr "čierna"
@@ -6997,56 +6830,51 @@ msgstr "umiestnenie vyrovnávacej pamäte"
 msgid "center"
 msgstr "na stred"
 
-#, fuzzy
 msgid "changed"
-msgstr "Uložiť zmeny?"
+msgstr "zmenené"
 
 msgid "close the editor - or stop manual reordering if it's active"
-msgstr ""
+msgstr "zatvoriť editor - alebo ukončiť ručnú zmenu poradia, ak je aktívna"
 
 msgid "cobalt"
 msgstr "kobalt"
 
 msgid "cookies cache"
-msgstr ""
+msgstr "vyrovnávacia pamäť cookies"
 
 msgid "could not run the probe"
-msgstr ""
+msgstr "test sa nepodarilo spustiť"
 
 #, python-format
 msgid "curl-impersonate is not installed on the receiver (%s). This stream only plays with it."
-msgstr ""
+msgstr "curl-impersonate nie je na prijímači nainštalovaný (%s). Tento stream sa prehrá iba s ním."
 
 msgid "debug"
-msgstr ""
+msgstr "ladenie"
 
 msgid "default"
 msgstr "predvolené"
 
-#, fuzzy
 msgid "delete entered text"
-msgstr "Odstrániť históriu vyhľadávania"
+msgstr "vymazať zadaný text"
 
-#, fuzzy
 msgid "delete the selected entry"
-msgstr "Vyberte tento adresár"
+msgstr "odstrániť vybranú položku"
 
 msgid "device ID"
-msgstr ""
+msgstr "ID zariadenia"
 
 msgid "device ID 2"
-msgstr ""
+msgstr "ID zariadenia 2"
 
 msgid "direct link"
 msgstr "priamy odkaz"
 
-#, fuzzy
 msgid "direct number input"
-msgstr "priamy odkaz"
+msgstr "priame zadanie čísla"
 
-#, fuzzy
 msgid "download the selected item"
-msgstr "Farba zobrazenej položky"
+msgstr "stiahnuť vybranú položku"
 
 msgid "downloads location"
 msgstr "umiestnenie sťahovania"
@@ -7055,14 +6883,13 @@ msgid "e-mail"
 msgstr "e-mail"
 
 msgid "edit the selected entry (same as BLUE) - or drop it while manually reordering"
-msgstr ""
+msgstr "upraviť vybranú položku (ako MODRÉ) - alebo ju pri ručnej zmene poradia položiť"
 
 msgid "edit the selected entry (same as OK)"
-msgstr ""
+msgstr "upraviť vybranú položku (ako OK)"
 
-#, fuzzy
 msgid "enable / disable manual reordering"
-msgstr "Vypnutie zmeny poradia"
+msgstr "zapnúť / vypnúť ručnú zmenu poradia"
 
 msgid "external eplayer3"
 msgstr "externý eplayer3"
@@ -7070,33 +6897,32 @@ msgstr "externý eplayer3"
 msgid "external gstplayer"
 msgstr "externý gstplayer"
 
-#, fuzzy
 msgid "failed"
-msgstr "Úprava zlyhala."
+msgstr "zlyhalo"
 
 msgid "file"
-msgstr ""
+msgstr "súbor"
 
 msgid "fixed"
-msgstr ""
+msgstr "zafixované"
 
 msgid "format"
 msgstr "formát"
 
 msgid "free"
-msgstr ""
+msgstr "voľné"
 
 msgid "from E2 settings"
-msgstr "z nastavení plánu E2"
+msgstr "z nastavení E2"
 
 msgid "fuchsia"
-msgstr "fuchsia"
+msgstr "fuchsiová"
 
 msgid "go back / close"
-msgstr ""
+msgstr "späť / zatvoriť"
 
 msgid "goals"
-msgstr ""
+msgstr "góly"
 
 msgid "gray"
 msgstr "sivá"
@@ -7108,13 +6934,13 @@ msgid "hd"
 msgstr "hd"
 
 msgid "hearing impaired"
-msgstr ""
+msgstr "pre sluchovo postihnutých"
 
 msgid "high"
 msgstr "vysoký"
 
 msgid "hint: the site shows a next page link"
-msgstr ""
+msgstr "tip: stránka zobrazuje odkaz na ďalšiu stránku"
 
 msgid "horizontal"
 msgstr "horizontálna"
@@ -7123,7 +6949,7 @@ msgid "host"
 msgstr "hostiteľ"
 
 msgid "host order and groups"
-msgstr ""
+msgstr "poradie hostiteľov a skupiny"
 
 msgid "https"
 msgstr "https"
@@ -7132,34 +6958,34 @@ msgid "https - validate SSL certificates"
 msgstr "https - overenie SSL certifikátov"
 
 msgid "iTunes - Top albums by country"
-msgstr ""
+msgstr "iTunes - Top albumy podľa krajiny"
 
 msgid "iTunes - Top songs by country"
-msgstr ""
+msgstr "iTunes - Top skladby podľa krajiny"
 
 msgid "insert space"
-msgstr ""
+msgstr "vložiť medzeru"
 
 msgid "installed"
-msgstr ""
+msgstr "nainštalované"
 
 msgid "internal"
-msgstr "interne"
+msgstr "interný"
 
 msgid "item actions (favorites, host-specific actions)"
-msgstr ""
+msgstr "akcie položky (obľúbené, akcie špecifické pre hostiteľa)"
 
 msgid "jersey"
-msgstr "dres"
+msgstr "jersey"
 
 msgid "jump to entries starting with that letter (if enabled in the settings)"
-msgstr ""
+msgstr "prejsť na položky začínajúce týmto písmenom (ak je to povolené v nastaveniach)"
 
 msgid "jump to items starting with that letter, or launch a specific player directly"
-msgstr ""
+msgstr "prejsť na položky začínajúce týmto písmenom alebo priamo spustiť konkrétny prehrávač"
 
 msgid "kernel reports"
-msgstr ""
+msgstr "jadro hlási"
 
 msgid "large"
 msgstr "veľké"
@@ -7168,13 +6994,13 @@ msgid "leave movie player..."
 msgstr "opustiť prehrávač filmov..."
 
 msgid "lime"
-msgstr "limetka"
+msgstr "limetková"
 
 msgid "line"
 msgstr "riadok"
 
 msgid "loaded (no version)"
-msgstr ""
+msgstr "načítané (bez verzie)"
 
 msgid "login"
 msgstr "prihlásiť sa"
@@ -7183,16 +7009,16 @@ msgid "low"
 msgstr "nízky"
 
 msgid "machine translated"
-msgstr ""
+msgstr "strojovo preložené"
 
 msgid "main"
 msgstr "hlavný obsah"
 
 msgid "manual"
-msgstr ""
+msgstr "ručne"
 
 msgid "marked"
-msgstr ""
+msgstr "označené"
 
 msgid "maroon"
 msgstr "gaštanovo hnedá"
@@ -7201,115 +7027,106 @@ msgid "medium"
 msgstr "stredný"
 
 msgid "menu and list only"
-msgstr ""
+msgstr "iba menu a zoznam"
 
 msgid "minutes"
-msgstr ""
+msgstr "minúty"
 
 msgid "more options (this menu)"
-msgstr ""
+msgstr "ďalšie možnosti (toto menu)"
 
 msgid "move cursor right/left"
-msgstr ""
+msgstr "posunúť kurzor doprava/doľava"
 
 msgid "move the selection - or move it while manually reordering"
-msgstr ""
+msgstr "posunúť výber - alebo presunúť položku pri ručnej zmene poradia"
 
 msgid "movie metadata cache"
-msgstr ""
+msgstr "vyrovnávacia pamäť metadát filmov"
 
-#, fuzzy
 msgid "movie player preferences"
-msgstr "Zobraziť IPTVPlayer v zozname rozšírení"
+msgstr "predvoľby prehrávača filmov"
 
 msgid "navy"
-msgstr "námorníctvo"
+msgstr "námornícka modrá"
 
 msgid "netu/hqq: the player check failed, try again later."
-msgstr ""
+msgstr "netu/hqq: Kontrola prehrávača zlyhala, skúste to znova neskôr."
 
 msgid "never"
-msgstr ""
+msgstr "nikdy"
 
-#, fuzzy
 msgid "next page"
-msgstr "Ďalšia stránka"
+msgstr "ďalšia stránka"
 
 msgid "next page / previous page"
-msgstr ""
+msgstr "ďalšia stránka / predchádzajúca stránka"
 
 msgid "next page = page 1"
-msgstr ""
+msgstr "ďalšia stránka = stránka 1"
 
-#, fuzzy
 msgid "next page empty"
-msgstr "Ďalšia stránka"
+msgstr "ďalšia stránka prázdna"
 
-#, fuzzy
 msgid "next page ok"
-msgstr "Ďalšia stránka"
+msgstr "ďalšia stránka ok"
 
 msgid "no answer"
-msgstr ""
+msgstr "žiadna odpoveď"
 
-#, fuzzy
 msgid "no next page"
-msgstr "Ďalšia stránka"
+msgstr "žiadna ďalšia stránka"
 
 msgid "no stream link"
-msgstr ""
+msgstr "žiadny odkaz na stream"
 
 msgid "no videos in the first lists"
-msgstr ""
+msgstr "žiadne videá v prvých zoznamoch"
 
 msgid "not available (the Python parser is used)"
-msgstr ""
+msgstr "nedostupné (použije sa parser Python)"
 
 msgid "not found"
-msgstr ""
+msgstr "nenájdené"
 
 msgid "not installed"
-msgstr ""
+msgstr "nenainštalované"
 
 msgid "not loadable"
-msgstr ""
+msgstr "nedá sa načítať"
 
 msgid "off"
-msgstr ""
+msgstr "vyp."
 
-#, fuzzy
 msgid "off / console"
-msgstr "Áno, na útechu"
+msgstr "vyp. / konzola"
 
 msgid "olive"
-msgstr "oliva"
+msgstr "olivová"
 
-#, fuzzy
 msgid "on"
-msgstr "Žiadne"
+msgstr "zap."
 
-#, fuzzy
 msgid "only on the receiver"
-msgstr "Farba zobrazenej položky"
+msgstr "iba na prijímači"
 
-#, fuzzy
 msgid "open / play the selected item"
-msgstr "Zobraziť IPTVPlayer v zozname rozšírení"
+msgstr "otvoriť / prehrať vybranú položku"
 
 msgid "open the options menu - see below"
-msgstr ""
+msgstr "otvoriť menu možností - pozri nižšie"
 
 msgid "or"
 msgstr "alebo"
 
 msgid "other binaries"
-msgstr ""
+msgstr "ostatné binárne súbory"
 
 msgid "password"
 msgstr "heslo"
 
 msgid "prijevodi-online.org refused the download for this account."
-msgstr ""
+msgstr "prijevodi-online.org odmietol sťahovanie pre tento účet."
 
 msgid "purple"
 msgstr "fialová"
@@ -7321,216 +7138,202 @@ msgid "red"
 msgstr "červená"
 
 msgid "refresh the current list"
-msgstr ""
+msgstr "obnoviť aktuálny zoznam"
 
 msgid "reversed"
-msgstr ""
+msgstr "obrátené"
 
 msgid "rootfs"
 msgstr "rootfs"
 
 msgid "rotate (keep the old one as iptv-<date>.dbg)"
-msgstr ""
+msgstr "rotovať (starý ponechať ako iptv-<dátum>.dbg)"
 
 msgid "rtmp"
 msgstr "rtmp"
 
 msgid "save all changes to disk"
-msgstr ""
+msgstr "uložiť všetky zmeny na disk"
 
 msgid "saved"
-msgstr ""
+msgstr "uložené"
 
 msgid "saved in the temporary data folder"
-msgstr ""
+msgstr "uložené v priečinku dočasných údajov"
 
-#, fuzzy
 msgid "saved next to the downloaded video file"
-msgstr "Pridať názov kanála do stiahnutého súboru"
+msgstr "uložené vedľa stiahnutého videosúboru"
 
-#, fuzzy
 msgid "search"
-msgstr "Hľadať"
+msgstr "hľadať"
 
-#, fuzzy, python-format
+#, python-format
 msgid "search %d"
-msgstr "Vyhľadávanie v"
+msgstr "hľadanie %d"
 
-#, fuzzy
 msgid "search found nothing"
-msgstr "Návrat servera 404 - Nenašiel sa."
+msgstr "hľadanie nič nenašlo"
 
-#, fuzzy
 msgid "search history"
-msgstr "História vyhľadávania"
+msgstr "história vyhľadávania"
 
 msgid "search next page = page 1"
-msgstr ""
+msgstr "hľadanie ďalšia stránka = stránka 1"
 
-#, fuzzy
 msgid "search next page empty"
-msgstr "História vyhľadávania je prázdna."
+msgstr "hľadanie ďalšia stránka prázdna"
 
-#, fuzzy
 msgid "search next page ok"
-msgstr "Typ vyhľadávania"
+msgstr "hľadanie ďalšia stránka ok"
 
 msgid "season pack"
-msgstr ""
+msgstr "balík sezóny"
 
 msgid "second"
 msgstr "sekunda"
 
 msgid "seconds"
-msgstr "sekunda"
+msgstr "sekúnd"
 
-#, fuzzy
 msgid "select to sign out"
-msgstr "Vyberte skupinu"
+msgstr "zvoľte na odhlásenie"
 
 msgid "serial number"
-msgstr ""
+msgstr "sériové číslo"
 
 msgid "show more details about the selected item"
-msgstr ""
+msgstr "zobraziť viac podrobností o vybranej položke"
 
 msgid "show this help"
-msgstr ""
+msgstr "zobraziť túto pomoc"
 
 msgid "shuffled"
-msgstr ""
+msgstr "zamiešané"
 
 msgid "sign in (subscriptions, playlists, age-restricted videos)"
-msgstr ""
+msgstr "prihlásiť sa (odbery, zoznamy skladieb, videá s vekovým obmedzením)"
 
 msgid "signature"
-msgstr ""
+msgstr "podpis"
 
 msgid "signed in"
-msgstr ""
+msgstr "prihlásený"
 
 msgid "silver"
-msgstr "strieborný"
+msgstr "strieborná"
 
 msgid "small"
 msgstr "malé"
 
 msgid "sources"
-msgstr ""
+msgstr "zdroje"
 
 msgid "standard"
 msgstr "štandard"
 
 msgid "start auto-play (plays through the list automatically)"
-msgstr ""
+msgstr "spustiť automatické prehrávanie (prehrá zoznam automaticky)"
 
-#, fuzzy
 msgid "status"
-msgstr "Stav:"
+msgstr "stav"
 
-#, fuzzy
 msgid "stream data"
-msgstr "Streamované"
+msgstr "údaje streamu"
 
 msgid "stream data ok"
-msgstr ""
+msgstr "údaje streamu ok"
 
 msgid "stream data ok (HLS)"
-msgstr ""
+msgstr "údaje streamu ok (HLS)"
 
 #, python-format
 msgid "stream is a web page, not video (HTTP %s)"
-msgstr ""
+msgstr "stream je webová stránka, nie video (HTTP %s)"
 
-#, fuzzy
 msgid "stream link"
-msgstr "Odkazy na používateľov"
+msgstr "odkaz na stream"
 
 msgid "stream link ok"
-msgstr ""
+msgstr "odkaz na stream ok"
 
 #, python-format
 msgid "stream not checked (%s)"
-msgstr ""
+msgstr "stream nekontrolovaný (%s)"
 
 msgid "stream not checked (HTTP 429, too many requests)"
-msgstr ""
+msgstr "stream nekontrolovaný (HTTP 429, príliš veľa požiadaviek)"
 
-#, fuzzy, python-format
+#, python-format
 msgid "stream: %s"
-msgstr "Všetky streamy"
+msgstr "stream: %s"
 
 #, python-format
 msgid "stream: no data (HTTP %s)"
-msgstr ""
+msgstr "stream: žiadne údaje (HTTP %s)"
 
 msgid "subs.ro does not answer."
-msgstr ""
+msgstr "subs.ro neodpovedá."
 
 msgid "subsource.net does not answer."
-msgstr ""
+msgstr "subsource.net neodpovedá."
 
 msgid "subtitles"
-msgstr ""
+msgstr "titulky"
 
-#, fuzzy
 msgid "subtitles cache"
-msgstr "Titulky"
+msgstr "vyrovnávacia pamäť titulkov"
 
 msgid "switch between keyboard, suggestions and search history"
-msgstr ""
+msgstr "prepínať medzi klávesnicou, návrhmi a históriou vyhľadávania"
 
 msgid "teal"
-msgstr "ryrkysová"
+msgstr "modrozelená"
 
 msgid "the best"
 msgstr "najlepší"
 
 msgid "the menu has no lists"
-msgstr ""
+msgstr "menu nemá žiadne zoznamy"
 
 msgid "the menu is empty"
-msgstr ""
+msgstr "menu je prázdne"
 
 msgid "the worst"
 msgstr "najhoršie"
 
-#, fuzzy
 msgid "thumbnails"
-msgstr "Odstránenie miniatúr"
+msgstr "miniatúry"
 
-#, fuzzy, python-format
+#, python-format
 msgid "thumbnails %d/%d"
-msgstr "Odstránenie miniatúr"
+msgstr "miniatúry %d/%d"
 
 msgid "thumbnails do not load"
-msgstr ""
+msgstr "miniatúry sa nenačítajú"
 
 msgid "to top"
-msgstr ""
+msgstr "na začiatok"
 
 msgid "top"
 msgstr "hore"
 
-#, fuzzy
 msgid "truncate the file"
-msgstr "Vyberte súbor so zoznamom skladieb"
+msgstr "skrátiť súbor"
 
 msgid "type selected character / confirm selection"
-msgstr ""
+msgstr "zadať vybraný znak / potvrdiť výber"
 
 msgid "unknown"
 msgstr "neznáme"
 
 msgid "unlimited"
-msgstr ""
+msgstr "neobmedzene"
 
-#, fuzzy
 msgid "unsorted"
-msgstr "Prerušená"
+msgstr "nezoradené"
 
 msgid "upzone.cc: free transfer limit reached - PREMIUM account required."
-msgstr ""
+msgstr "upzone.cc: Dosiahnutý limit bezplatného prenosu - vyžaduje sa PREMIUM účet."
 
 msgid "version"
 msgstr "verzia"
@@ -7557,17 +7360,17 @@ msgid "wait %s seconds"
 msgstr "počkajte %s sekúnd"
 
 msgid "wants you to solve a captcha. Only after solving this captcha, you are allowed to continue with your downloads. E2iPlayer is not able to auto-solve these captchas, so we need to pass the captcha to you."
-msgstr ""
+msgstr "vyžaduje vyriešenie captcha. Až po vyriešení tejto captcha môžete pokračovať v sťahovaní. E2iPlayer nedokáže tieto captcha vyriešiť automaticky, preto vám ju musíme odovzdať."
 
 #, python-format
 msgid "weeb.tv did not return a valid stream (error %s)."
-msgstr ""
+msgstr "weeb.tv nevrátil platný stream (chyba %s)."
 
 msgid "weeb.tv did not return a valid stream for this channel."
-msgstr ""
+msgstr "weeb.tv nevrátil pre tento kanál platný stream."
 
 msgid "weeb.tv streams need a weeb.tv account - enter the login in the host configuration (Web streams, WeebTV)"
-msgstr ""
+msgstr "Streamy weeb.tv vyžadujú účet weeb.tv - zadajte prihlasovacie údaje v konfigurácii hostiteľa (Web streams, WeebTV)"
 
 msgid "white"
 msgstr "biela"

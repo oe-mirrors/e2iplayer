@@ -903,7 +903,7 @@ msgid "Block wmv files"
 msgstr "Blockiere WMV Dateien"
 
 msgid "Board Review"
-msgstr "Forumsbewertung"
+msgstr "Facharztprüfung-Vorbereitung"
 
 msgid "Books"
 msgstr "Bücher"
@@ -1052,7 +1052,7 @@ msgid "Change active movie player"
 msgstr "Aktiven Movie Player wechseln"
 
 msgid "Change folder icon"
-msgstr ""
+msgstr "Ordner-Symbol ändern"
 
 msgid "Change own pin"
 msgstr "Eigenen PIN ändern"
@@ -1466,7 +1466,7 @@ msgid "Delete favourites and watched status now"
 msgstr "Favoriten und Gesehen-Status jetzt löschen"
 
 msgid "Delete folder"
-msgstr ""
+msgstr "Ordner löschen"
 
 msgid "Delete host order and groups now"
 msgstr "Host-Reihenfolge und Gruppen jetzt löschen"
@@ -1500,7 +1500,7 @@ msgstr "Cache löschen, wenn der Torrent geschlossen wird"
 
 #, python-format
 msgid "Delete the folder \"%s\"? Its hosts go back to the group."
-msgstr ""
+msgstr "Ordner \"%s\" löschen? Seine Hosts kommen zurück in die Gruppe."
 
 #, python-format
 msgid "Delete the folder \"%s\"? Its videos go back to the Watchlist."
@@ -2377,7 +2377,7 @@ msgid "Force internal skin: main screen only"
 msgstr "Erzwinge internen Skin: Nur Hauptscreen"
 
 msgid "Force legacy grid"
-msgstr ""
+msgstr "Altes Symbolraster erzwingen"
 
 msgid "Foreign movies"
 msgstr "Ausländische Filme"
@@ -2609,7 +2609,7 @@ msgid "Host"
 msgstr "Host"
 
 msgid "Host titles in lists"
-msgstr ""
+msgstr "Host-Titel in Listen"
 
 #, python-format
 msgid "Host: %s"
@@ -3435,7 +3435,7 @@ msgid "Move to Watchlist folder..."
 msgstr "In Watchlist-Ordner verschieben..."
 
 msgid "Move to folder..."
-msgstr ""
+msgstr "In Ordner verschieben..."
 
 msgid "Movie"
 msgstr "Film"
@@ -3589,7 +3589,7 @@ msgid "New episodes"
 msgstr "Neue Episoden"
 
 msgid "New folder..."
-msgstr ""
+msgstr "Neuer Ordner..."
 
 msgid "New icons will not be available."
 msgstr "Neue Icons werden nicht verfügbar sein."
@@ -4410,7 +4410,7 @@ msgid "Recommended"
 msgstr "Empfohlen"
 
 msgid "Recon"
-msgstr "Aufklärung"
+msgstr "Rekonstruktion"
 
 msgid "Referee"
 msgstr "Schiedsrichter"
@@ -4497,7 +4497,7 @@ msgid "Remove from favorites"
 msgstr "Von Favoriten entfernen"
 
 msgid "Remove from folder"
-msgstr ""
+msgstr "Aus Ordner entfernen"
 
 msgid "Remove group"
 msgstr "Gruppe entfernen"
@@ -4548,7 +4548,7 @@ msgid "Reset this list to its default layout?"
 msgstr "Diese Liste auf die Standardanordnung zurücksetzen?"
 
 msgid "Reset this list to its default layout? Its folders are deleted too."
-msgstr ""
+msgstr "Diese Liste auf die Standardanordnung zurücksetzen? Ihre Ordner werden ebenfalls gelöscht."
 
 msgid "Reset to defaults"
 msgstr "Auf Standard zurücksetzen"
@@ -4809,7 +4809,7 @@ msgid "Select group"
 msgstr "Wähle Gruppe"
 
 msgid "Select hosts for this folder..."
-msgstr ""
+msgstr "Hosts für diesen Ordner auswählen..."
 
 msgid "Select language"
 msgstr "Wähle Sprache"
@@ -4964,7 +4964,7 @@ msgid "Short films"
 msgstr "Kurzfilme"
 
 msgid "Short name"
-msgstr ""
+msgstr "Kurzname"
 
 msgid "Short series"
 msgstr "Kurzserien"
@@ -6534,7 +6534,7 @@ msgid "WebStreamr / AIOStreams manifest URL (your own):"
 msgstr "WebStreamr / AIOStreams-Manifest-URL (Ihre eigene):"
 
 msgid "Website address"
-msgstr ""
+msgstr "Webseiten-Adresse"
 
 #, python-format
 msgid "Weeks on chart: %s"

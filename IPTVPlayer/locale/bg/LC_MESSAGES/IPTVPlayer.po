@@ -63,7 +63,7 @@ msgstr "Плейър за \"Web\" потоци"
 
 #, python-format
 msgid "%d added, %d skipped."
-msgstr ""
+msgstr "Добавени: %d, пропуснати: %d."
 
 #, python-format
 msgid "%d duplicate entries removed."
@@ -75,11 +75,11 @@ msgstr "Премахнат е %d дублиран запис."
 
 #, python-format
 msgid "%d items added to the download queue, %d skipped."
-msgstr ""
+msgstr "%d записа са добавени към опашката за изтегляне, %d са пропуснати."
 
 #, python-format
 msgid "%d of %d downloaded"
-msgstr ""
+msgstr "Изтеглени %d от %d"
 
 #, python-format
 msgid "%d parts"
@@ -95,7 +95,7 @@ msgstr "%d рецитации"
 
 #, python-format
 msgid "%d removed, %d skipped."
-msgstr ""
+msgstr "Премахнати: %d, пропуснати: %d."
 
 #, python-format
 msgid "%d videos"
@@ -151,7 +151,7 @@ msgstr "%s последователи"
 
 #, python-format
 msgid "%s needs a free account. Enter login and password in the host configuration."
-msgstr ""
+msgstr "%s изисква безплатен акаунт. Въведете потребителско име и парола в конфигурацията на хоста."
 
 #, python-format
 msgid "%s password"
@@ -215,7 +215,7 @@ msgstr "%s преглеждания"
 
 #, python-format
 msgid "%s: decrypting the stream, this can take a while (%d s)"
-msgstr ""
+msgstr "%s: потокът се дешифрира, това може да отнеме известно време (%d s)"
 
 #, python-format
 msgid "(%d YouTube channel(s) could not be read)"
@@ -297,7 +297,7 @@ msgid "----- Show or hide Porn Sites -----"
 msgstr "----- Показване или скриване на порно сайтове -----"
 
 msgid "----- TORRENT CONFIGURATION -----"
-msgstr ""
+msgstr "----- КОНФИГУРАЦИЯ НА TORRENT -----"
 
 msgid "----- VIRTUAL KEYBOARD & SEARCH CONFIGURATION -----"
 msgstr "----- КОНФИГУРАЦИЯ НА ВИРТУАЛНАТА КЛАВИАТУРА И ТЪРСЕНЕТО -----"
@@ -371,7 +371,7 @@ msgstr "5 секунди"
 
 #, python-format
 msgid "A folder \"%s\" exists already."
-msgstr ""
+msgstr "Папка \"%s\" вече съществува."
 
 msgid "A search is already running."
 msgstr "Вече се изпълнява търсене."
@@ -461,7 +461,7 @@ msgstr "Актьори:"
 
 #, python-format
 msgid "Add %d items to the download queue?"
-msgstr ""
+msgstr "Да се добавят ли %d записа към опашката за изтегляне?"
 
 msgid "Add channel name to downloaded file"
 msgstr "Добавяне на името на канала към изтегления файл"
@@ -478,7 +478,7 @@ msgstr "Добавяне на записа към група"
 
 #, python-format
 msgid "Add marked items to favourites (%d)"
-msgstr ""
+msgstr "Добавяне на маркираните записи към любими (%d)"
 
 msgid "Add new entry"
 msgstr "Добавяне на нов запис"
@@ -493,10 +493,10 @@ msgid "Add to User Links"
 msgstr "Добавяне към потребителските връзки"
 
 msgid "Add to Watchlist"
-msgstr ""
+msgstr "Добавяне в списъка за гледане"
 
 msgid "Add to Watchlist folder..."
-msgstr ""
+msgstr "Добавяне в папка на списъка за гледане..."
 
 msgid "Added"
 msgstr "Добавено"
@@ -587,7 +587,7 @@ msgid "Allow host to override suggestions provider"
 msgstr "Разрешаване на хоста да замени доставчика на предложения"
 
 msgid "Allow upload to other peers (seeding)"
-msgstr ""
+msgstr "Разрешаване на качване към други пиъри (сийдване)"
 
 msgid "Allow watched flag to be set"
 msgstr "Разрешаване на маркирането като гледано"
@@ -628,7 +628,7 @@ msgid "Alternative proxy server (5)"
 msgstr "Алтернативен прокси сървър (5)"
 
 msgid "American football"
-msgstr ""
+msgstr "Американски футбол"
 
 msgid "An API key from subsource.net can be entered in the E2iPlayer settings (Subtitles)."
 msgstr "API ключ от subsource.net може да бъде въведен в настройките на E2iPlayer (Субтитри)."
@@ -848,7 +848,7 @@ msgstr "Backspace"
 
 #, python-format
 msgid "Balance: %s"
-msgstr ""
+msgstr "Баланс: %s"
 
 msgid "Balkans"
 msgstr "Балкани"
@@ -857,7 +857,7 @@ msgid "Basic Science"
 msgstr "Фундаментални науки"
 
 msgid "Basketball"
-msgstr ""
+msgstr "Баскетбол"
 
 msgid "Being watched"
 msgstr "Гледани в момента"
@@ -909,7 +909,7 @@ msgid "Box"
 msgstr "Box"
 
 msgid "Boxing"
-msgstr ""
+msgstr "Бокс"
 
 msgid "Broadcast:"
 msgstr "Излъчване:"
@@ -944,20 +944,20 @@ msgid "Cache"
 msgstr "Кеш"
 
 msgid "Cache folder"
-msgstr ""
+msgstr "Папка за кеша"
 
 #, python-format
 msgid "Cache folder \"%s\" could not be created. Some data (cookies, subtitles, ...) may not be saved."
 msgstr "Папката за кеш \"%s\" не можа да бъде създадена. Някои данни (бисквитки, субтитри, ...) може да не бъдат запазени."
 
 msgid "Cache location"
-msgstr ""
+msgstr "Местоположение на кеша"
 
 msgid "Cache size in RAM"
-msgstr ""
+msgstr "Размер на кеша в RAM"
 
 msgid "Cache size on disk"
-msgstr ""
+msgstr "Размер на кеша на диска"
 
 #, python-format
 msgid ""
@@ -1049,7 +1049,7 @@ msgid "Change active movie player"
 msgstr "Смяна на активния плейър"
 
 msgid "Change folder icon"
-msgstr ""
+msgstr "Смяна на иконата на папката"
 
 msgid "Change own pin"
 msgstr "Смяна на собствения ПИН"
@@ -1083,7 +1083,7 @@ msgid "Chinese anime"
 msgstr "Китайско аниме"
 
 msgid "Choose the TorrServer binary"
-msgstr ""
+msgstr "Изберете изпълнимия файл на TorrServer"
 
 msgid "Cinema History"
 msgstr "История на киното"
@@ -1125,7 +1125,7 @@ msgid "Close"
 msgstr "Затваряне"
 
 msgid "Close an unused torrent after"
-msgstr ""
+msgstr "Затваряне на неизползван торент след"
 
 msgid "Closes the host opened in the web interface, clears the search results and stops what the web interface still runs in the background. Use it when a page keeps loading. Settings, downloads and the E2iPlayer on the TV are not touched."
 msgstr "Затваря хоста, отворен в уеб интерфейса, изчиства резултатите от търсенето и спира това, което уеб интерфейсът все още изпълнява във фонов режим. Използвайте го, когато дадена страница не спира да се зарежда. Настройките, изтеглянията и E2iPlayer на телевизора не се засягат."
@@ -1155,7 +1155,7 @@ msgid "Comedy"
 msgstr "Комедия"
 
 msgid "Commentator"
-msgstr ""
+msgstr "Коментатор"
 
 msgid "Comments"
 msgstr "Коментари"
@@ -1215,7 +1215,7 @@ msgid "Connection to the weeb.tv server failed."
 msgstr "Връзката със сървъра на weeb.tv е неуспешна."
 
 msgid "Connections per torrent"
-msgstr ""
+msgstr "Връзки на торент"
 
 #, python-format
 msgid "Connections: %s of %s"
@@ -1237,7 +1237,7 @@ msgid "Copy"
 msgstr "Копиране"
 
 msgid "Copy it to /usr/bin/TorrServer (or a folder on HDD/USB) and make it executable (chmod 755)."
-msgstr ""
+msgstr "Копирайте го в /usr/bin/TorrServer (или в папка на HDD/USB) и го направете изпълним (chmod 755)."
 
 msgid "Could not add the user link."
 msgstr "Потребителската връзка не можа да бъде добавена."
@@ -1295,7 +1295,7 @@ msgstr "Създаване на придружаващи файлове (.txt/.j
 
 #, python-format
 msgid "Created: %s"
-msgstr ""
+msgstr "Създаден: %s"
 
 msgid "Creator:"
 msgstr "Създател:"
@@ -1304,7 +1304,7 @@ msgid "Creators:"
 msgstr "Създатели:"
 
 msgid "Cricket"
-msgstr ""
+msgstr "Крикет"
 
 msgid "Crime"
 msgstr "Криминален"
@@ -1337,7 +1337,7 @@ msgid "DASH/mpd"
 msgstr "DASH/mpd"
 
 msgid "DLNA server of TorrServer"
-msgstr ""
+msgstr "DLNA сървър на TorrServer"
 
 msgid "DOWNLOAD ERROR"
 msgstr "ГРЕШКА ПРИ ИЗТЕГЛЯНЕ"
@@ -1358,7 +1358,7 @@ msgid "Darkgray"
 msgstr "Тъмносив"
 
 msgid "Darts"
-msgstr ""
+msgstr "Дартс"
 
 msgid "Date"
 msgstr "Дата"
@@ -1442,7 +1442,7 @@ msgid "Delete JS cache now"
 msgstr "Изтриване на JS кеша сега"
 
 msgid "Delete Watchlist folder"
-msgstr ""
+msgstr "Изтриване на папка от списъка за гледане"
 
 msgid "Delete all cache files now"
 msgstr "Изтриване на всички кеш файлове сега"
@@ -1463,7 +1463,7 @@ msgid "Delete favourites and watched status now"
 msgstr "Изтриване на любимите и статуса на гледане сега"
 
 msgid "Delete folder"
-msgstr ""
+msgstr "Изтриване на папката"
 
 msgid "Delete host order and groups now"
 msgstr "Изтриване на реда на хостовете и групите сега"
@@ -1493,15 +1493,15 @@ msgid "Delete subtitles cache now"
 msgstr "Изтриване на кеша на субтитрите сега"
 
 msgid "Delete the cache when the torrent is closed"
-msgstr ""
+msgstr "Изтриване на кеша при затваряне на торента"
 
 #, python-format
 msgid "Delete the folder \"%s\"? Its hosts go back to the group."
-msgstr ""
+msgstr "Да се изтрие ли папката \"%s\"? Хостовете в нея се връщат в групата."
 
 #, python-format
 msgid "Delete the folder \"%s\"? Its videos go back to the Watchlist."
-msgstr ""
+msgstr "Да се изтрие ли папката \"%s\"? Видеата в нея се връщат в списъка за гледане."
 
 msgid "Delete thumbnails cache now"
 msgstr "Изтриване на кеша на миниатюрите сега"
@@ -1618,7 +1618,7 @@ msgstr "Изтегляне"
 
 #, python-format
 msgid "Download \"%s\" (for this receiver) from %s"
-msgstr ""
+msgstr "Изтеглете \"%s\" (за този приемник) от %s"
 
 #, python-format
 msgid "Download (ready in %d seconds)"
@@ -1628,7 +1628,7 @@ msgid "Download again"
 msgstr "Повторно изтегляне"
 
 msgid "Download all items of this page"
-msgstr ""
+msgstr "Изтегляне на всички записи от тази страница"
 
 msgid "Download already exists"
 msgstr "Изтеглянето вече съществува"
@@ -1667,7 +1667,7 @@ msgstr "Мениджърът на изтеглянията не е инициа�
 
 #, python-format
 msgid "Download marked items (%d)"
-msgstr ""
+msgstr "Изтегляне на маркираните записи (%d)"
 
 msgid "Download new version"
 msgstr "Изтегляне на новата версия"
@@ -1676,7 +1676,7 @@ msgid "Download notification duration"
 msgstr "Продължителност на известието за изтегляне"
 
 msgid "Download speed limit"
-msgstr ""
+msgstr "Ограничение на скоростта на изтегляне"
 
 msgid "Download subtiles failed."
 msgstr "Изтеглянето на субтитрите е неуспешно."
@@ -1686,7 +1686,7 @@ msgstr "Предложено изтегляне"
 
 #, python-format
 msgid "Download the Linux file for the CPU of this receiver from %s"
-msgstr ""
+msgstr "Изтеглете Linux файла за процесора на този приемник от %s"
 
 msgid "Downloaded file is too small or corrupted."
 msgstr "Изтегленият файл е твърде малък или повреден."
@@ -1890,7 +1890,7 @@ msgid "Enabled hosts"
 msgstr "Активирани хостове"
 
 msgid "Encrypted connections only"
-msgstr ""
+msgstr "Само шифровани връзки"
 
 msgid "Encrypted stream list - not supported"
 msgstr "Шифрован списък с потоци - не се поддържа"
@@ -2051,7 +2051,7 @@ msgid "Error saving favorites."
 msgstr "Грешка при запазване на любимите."
 
 msgid "Error saving the Watchlist."
-msgstr ""
+msgstr "Грешка при запазване на списъка за гледане."
 
 msgid "Error while loading watch data"
 msgstr "Грешка при зареждане на данните за гледане"
@@ -2206,10 +2206,10 @@ msgid "Featured"
 msgstr "Препоръчани"
 
 msgid "FebBox token (\"ui\" cookie of www.febbox.com):"
-msgstr ""
+msgstr "FebBox токен (бисквитка \"ui\" от www.febbox.com):"
 
 msgid "Female"
-msgstr ""
+msgstr "Жени"
 
 #, python-format
 msgid "File \"%s\" already exists"
@@ -2254,10 +2254,10 @@ msgid "File format of DASH (MPD) downloads"
 msgstr "Файлов формат на DASH (MPD) изтеглянията"
 
 msgid "File format of HLS (M3U8) downloads"
-msgstr ""
+msgstr "Файлов формат на HLS (M3U8) изтеглянията"
 
 msgid "File format of single video files (FFmpeg)"
-msgstr ""
+msgstr "Файлов формат на единични видео файлове (FFmpeg)"
 
 #, python-format
 msgid "File might be corrupted (size: %d bytes)."
@@ -2273,7 +2273,7 @@ msgid "Files"
 msgstr "Файлове"
 
 msgid "Fill cache before playback"
-msgstr ""
+msgstr "Запълване на кеша преди възпроизвеждане"
 
 msgid "Filler"
 msgstr "Пълнеж"
@@ -2338,7 +2338,7 @@ msgid "Folder for temporary data"
 msgstr "Папка за временни данни"
 
 msgid "Folder on HDD / USB"
-msgstr ""
+msgstr "Папка на HDD / USB"
 
 msgid "Followers"
 msgstr "Последователи"
@@ -2356,7 +2356,7 @@ msgid "Foot & Ankle"
 msgstr "Стъпало и глезен"
 
 msgid "Football"
-msgstr ""
+msgstr "Футбол"
 
 msgid "Football Live"
 msgstr "Футбол на живо"
@@ -2374,7 +2374,7 @@ msgid "Force internal skin: main screen only"
 msgstr "Принудителен вграден скин: само главният екран"
 
 msgid "Force legacy grid"
-msgstr ""
+msgstr "Налагане на старата мрежа с икони"
 
 msgid "Foreign movies"
 msgstr "Чуждестранни филми"
@@ -2395,7 +2395,7 @@ msgid "Fotka.pl stream :"
 msgstr "Fotka.pl поток :"
 
 msgid "Free"
-msgstr ""
+msgstr "Безплатни"
 
 msgid "Free IPTV list"
 msgstr "Безплатен IPTV списък"
@@ -2431,7 +2431,7 @@ msgid "Full test checks thumbnails :"
 msgstr "Пълният тест проверява миниатюрите :"
 
 msgid "Futsal"
-msgstr ""
+msgstr "Футзал"
 
 msgid "GREEN"
 msgstr "ЗЕЛЕН"
@@ -2551,7 +2551,7 @@ msgid "Hand"
 msgstr "Ръка"
 
 msgid "Handball"
-msgstr ""
+msgstr "Хандбал"
 
 msgid "Health"
 msgstr "Здраве"
@@ -2588,7 +2588,7 @@ msgid "History of searched phrases."
 msgstr "История на търсените фрази."
 
 msgid "Hockey"
-msgstr ""
+msgstr "Хокей"
 
 msgid "Home"
 msgstr "Начало"
@@ -2606,7 +2606,7 @@ msgid "Host"
 msgstr "Хост"
 
 msgid "Host titles in lists"
-msgstr ""
+msgstr "Заглавия на хостовете в списъците"
 
 #, python-format
 msgid "Host: %s"
@@ -2938,7 +2938,7 @@ msgid "Last Modified: %s"
 msgstr "Последна промяна: %s"
 
 msgid "Last Page"
-msgstr ""
+msgstr "Последна страница"
 
 msgid "Last air date:"
 msgstr "Последно излъчване:"
@@ -2972,7 +2972,7 @@ msgstr "Последната седмица"
 
 #, python-format
 msgid "Last week: %s"
-msgstr ""
+msgstr "Миналата седмица: %s"
 
 msgid "Last.fm charts and tag pages are behind a browser check, only the radio stations can be used."
 msgstr "Класациите и страниците с тагове на Last.fm са зад проверка на браузъра, могат да се използват само радиостанциите."
@@ -3027,7 +3027,7 @@ msgid "Latest videos from the channels you are subscribed to."
 msgstr "Най-нови видеа от каналите, за които сте абонирани."
 
 msgid "Latin American movies"
-msgstr ""
+msgstr "Латиноамерикански филми"
 
 msgid "Latin American series"
 msgstr "Латиноамерикански сериали"
@@ -3191,7 +3191,7 @@ msgid "Login failed."
 msgstr "Неуспешно влизане."
 
 msgid "Login needed"
-msgstr ""
+msgstr "Необходимо е влизане"
 
 #, python-brace-format
 msgid "Login on {0} failed."
@@ -3225,7 +3225,7 @@ msgid "Longest"
 msgstr "Най-дълги"
 
 msgid "Loved tracks"
-msgstr ""
+msgstr "Любими песни"
 
 msgid "Low"
 msgstr "Ниско"
@@ -3265,14 +3265,14 @@ msgid "Main"
 msgstr "Основно"
 
 msgid "Main menu"
-msgstr ""
+msgstr "Главно меню"
 
 #, python-format
 msgid "Make directory [%s]"
 msgstr "Създаване на директория [%s]"
 
 msgid "Male"
-msgstr ""
+msgstr "Мъже"
 
 msgid "Manager status:"
 msgstr "Състояние на мениджъра:"
@@ -3302,16 +3302,16 @@ msgid "Max number of parallel downloads has been reached."
 msgstr "Достигнат е максималният брой паралелни изтегляния."
 
 msgid "MaxStream (uprot.net) asks for its image captcha: solve it in MyE2i, then open the video again."
-msgstr ""
+msgstr "MaxStream (uprot.net) изисква своята captcha с изображение: решете я в MyE2i и след това отворете видеото отново."
 
 msgid "Maximum log file size"
 msgstr "Максимален размер на лог файла"
 
 msgid "Maximum torrent size:"
-msgstr ""
+msgstr "Максимален размер на торента:"
 
 msgid "MediaFusion manifest URL (your own):"
-msgstr ""
+msgstr "URL адрес на манифеста на MediaFusion (ваш собствен):"
 
 msgid "Medtryx Marketing"
 msgstr "Medtryx Marketing"
@@ -3407,10 +3407,10 @@ msgid "Most viewed series"
 msgstr "Най-гледани сериали"
 
 msgid "Most voted"
-msgstr ""
+msgstr "С най-много гласове"
 
 msgid "Motorsport"
-msgstr ""
+msgstr "Моторни спортове"
 
 #, python-format
 msgid ""
@@ -3429,10 +3429,10 @@ msgid "Move failed."
 msgstr "Преместването е неуспешно."
 
 msgid "Move to Watchlist folder..."
-msgstr ""
+msgstr "Преместване в папка на списъка за гледане..."
 
 msgid "Move to folder..."
-msgstr ""
+msgstr "Преместване в папка..."
 
 msgid "Movie"
 msgstr "Филм"
@@ -3488,7 +3488,7 @@ msgid "MyE2i browser check solution"
 msgstr "Решение на проверката на браузъра чрез MyE2i"
 
 msgid "MyE2i captcha: solve it, then Job (no CONTINUE)"
-msgstr ""
+msgstr "MyE2i captcha: решете я, след това Job (без CONTINUE)"
 
 msgid "MyE2i debug snapshot received - see the debug log."
 msgstr "Получена е дебъг снимка от MyE2i - вижте дебъг лога."
@@ -3520,10 +3520,10 @@ msgid "MyE2i: offer to open the page in (Android)"
 msgstr "MyE2i: предлагане на отваряне на страницата в (Android)"
 
 msgid "MyE2i: open the page in the browser"
-msgstr ""
+msgstr "MyE2i: отваряне на страницата в браузъра"
 
 msgid "Mystery"
-msgstr ""
+msgstr "Мистерия"
 
 msgid ""
 "NO VIDEOS FOUND FOR NOW! \n"
@@ -3574,7 +3574,7 @@ msgid "New"
 msgstr "Нови"
 
 msgid "New Watchlist folder"
-msgstr ""
+msgstr "Нова папка в списъка за гледане"
 
 msgid "New dir"
 msgstr "Нова директория"
@@ -3586,7 +3586,7 @@ msgid "New episodes"
 msgstr "Нови епизоди"
 
 msgid "New folder..."
-msgstr ""
+msgstr "Нова папка..."
 
 msgid "New icons will not be available."
 msgstr "Новите икони няма да бъдат налични."
@@ -3595,7 +3595,7 @@ msgid "New links"
 msgstr "Нови връзки"
 
 msgid "New search"
-msgstr ""
+msgstr "Ново търсене"
 
 msgid "New since installed version"
 msgstr "Ново спрямо инсталираната версия"
@@ -3736,14 +3736,14 @@ msgid "Not available yet"
 msgstr "Все още не е налично"
 
 msgid "Not in /usr/bin: choose the file under \"TorrServer binary\" in the torrent configuration."
-msgstr ""
+msgstr "Не е в /usr/bin: изберете файла в \"Изпълним файл на TorrServer\" в конфигурацията на торентите."
 
 msgid "Not possible (no enigma2 session)."
 msgstr "Не е възможно (няма enigma2 сесия)."
 
 #, python-format
 msgid "Not removed, still downloading: %d"
-msgstr ""
+msgstr "Не са премахнати, още се изтеглят: %d"
 
 msgid "Nothing available here at the moment (only upcoming broadcasts)."
 msgstr "В момента тук няма нищо налично (само предстоящи предавания)."
@@ -3764,11 +3764,11 @@ msgid "Now"
 msgstr "Сега"
 
 msgid "Now playing"
-msgstr ""
+msgstr "Сега в кината"
 
 #, python-format
 msgid "Now playing: %s"
-msgstr ""
+msgstr "В момента: %s"
 
 msgid "Number of columns"
 msgstr "Брой колони"
@@ -3796,10 +3796,10 @@ msgid "OK"
 msgstr "OK"
 
 msgid "OK marks an item, BLUE shows what can be done with the marked items."
-msgstr ""
+msgstr "OK маркира запис, СИН показва какво може да се направи с маркираните записи."
 
 msgid "OK marks an item, MENU shows what can be done with the marked items."
-msgstr ""
+msgstr "OK маркира запис, MENU показва какво може да се направи с маркираните записи."
 
 msgid "OMDb API key (free at omdbapi.com)"
 msgstr "OMDb API ключ (безплатен от omdbapi.com)"
@@ -3850,7 +3850,7 @@ msgid "Open pull requests"
 msgstr "Отворени pull заявки"
 
 msgid "Open the page and get the link"
-msgstr ""
+msgstr "Отваряне на страницата и вземане на линка"
 
 #, python-format
 msgid "Open this page in %s"
@@ -3997,11 +3997,11 @@ msgid "Patriotism"
 msgstr "Патриотизъм"
 
 msgid "Pause between the batch lookups of one host [s]"
-msgstr ""
+msgstr "Пауза между груповите заявки на един хост [s]"
 
 #, python-format
 msgid "Peak: %s"
-msgstr ""
+msgstr "Най-висока позиция: %s"
 
 msgid "Pediatrics"
 msgstr "Педиатрия"
@@ -4034,14 +4034,14 @@ msgid "Pin protection for this host"
 msgstr "Защита с ПИН код за този хост"
 
 msgid "Play all from here"
-msgstr ""
+msgstr "Възпроизвеждане на всички от тук"
 
 #, python-format
 msgid "Play marked items (%d)"
-msgstr ""
+msgstr "Възпроизвеждане на маркираните записи (%d)"
 
 msgid "Play torrents with TorrServer"
-msgstr ""
+msgstr "Възпроизвеждане на торенти с TorrServer"
 
 #, python-format
 msgid "Play with [%s] player"
@@ -4210,7 +4210,7 @@ msgstr "URL на портала и MAC адрес в конфигурацият�
 
 #, python-format
 msgid "Ports: %s"
-msgstr ""
+msgstr "Портове: %s"
 
 msgid "Portuguese"
 msgstr "Португалски"
@@ -4243,7 +4243,7 @@ msgid "Premium user"
 msgstr "Premium потребител"
 
 msgid "Press EXIT to return to the previous menu."
-msgstr ""
+msgstr "Натиснете EXIT, за да се върнете към предишното меню."
 
 msgid "Previous Page"
 msgstr "Предишна страница"
@@ -4312,7 +4312,7 @@ msgid "Quick test: menu and a list with videos"
 msgstr "Бърз тест: меню и списък с видеа"
 
 msgid "RAM"
-msgstr ""
+msgstr "RAM памет"
 
 msgid "RAM buffer size [MB] for local files"
 msgstr "Размер на RAM буфера [MB] за локални файлове"
@@ -4380,7 +4380,7 @@ msgid "Rating: %s"
 msgstr "Оценка: %s"
 
 msgid "Read ahead (share of the cache)"
-msgstr ""
+msgstr "Предварително четене (дял от кеша)"
 
 msgid "Read by"
 msgstr "Чете"
@@ -4430,7 +4430,7 @@ msgid "Regions"
 msgstr "Региони"
 
 msgid "Related seasons and works"
-msgstr ""
+msgstr "Свързани сезони и творби"
 
 msgid "Release"
 msgstr "Издание"
@@ -4474,25 +4474,27 @@ msgstr "Премахване на записа \"%s\""
 
 #, python-format
 msgid "Remove %d items from the favourites?"
-msgstr ""
+msgstr "Да се премахнат ли %d записа от любимите?"
 
 #, python-format
 msgid ""
 "Remove %d marked items?\n"
 "Their files are deleted too."
 msgstr ""
+"Да се премахнат ли %d маркирани записа?\n"
+"Файловете им също ще бъдат изтрити."
 
 msgid "Remove file"
 msgstr "Изтриване на файла"
 
 msgid "Remove from Watchlist"
-msgstr ""
+msgstr "Премахване от списъка за гледане"
 
 msgid "Remove from favorites"
 msgstr "Премахване от любими"
 
 msgid "Remove from folder"
-msgstr ""
+msgstr "Премахване от папката"
 
 msgid "Remove group"
 msgstr "Премахване на групата"
@@ -4502,11 +4504,11 @@ msgstr "Премахване на записа"
 
 #, python-format
 msgid "Remove marked items (%d)"
-msgstr ""
+msgstr "Премахване на маркираните записи (%d)"
 
 #, python-format
 msgid "Remove marked items from favourites (%d)"
-msgstr ""
+msgstr "Премахване на маркираните записи от любими (%d)"
 
 msgid "Remove thumbnails"
 msgstr "Изтриване на миниатюрите"
@@ -4515,7 +4517,7 @@ msgid "Rename"
 msgstr "Преименуване"
 
 msgid "Rename Watchlist folder"
-msgstr ""
+msgstr "Преименуване на папка от списъка за гледане"
 
 msgid "Rename file"
 msgstr "Преименуване на файла"
@@ -4537,13 +4539,13 @@ msgstr "Файл с отчет"
 
 #, python-format
 msgid "Reset the settings of \"%s\" to their default values?"
-msgstr ""
+msgstr "Да се възстановят ли настройките на \"%s\" към стойностите по подразбиране?"
 
 msgid "Reset this list to its default layout?"
 msgstr "Да се върне ли този списък към подредбата по подразбиране?"
 
 msgid "Reset this list to its default layout? Its folders are deleted too."
-msgstr ""
+msgstr "Да се възстанови ли подредбата по подразбиране на този списък? Папките в него също ще бъдат изтрити."
 
 msgid "Reset to defaults"
 msgstr "Връщане към стойностите по подразбиране"
@@ -4667,7 +4669,7 @@ msgstr "Търсене"
 
 #, python-format
 msgid "Search \"%s\" was not finished"
-msgstr ""
+msgstr "Търсенето на \"%s\" не е завършено"
 
 msgid "Search History is empty."
 msgstr "Историята на търсенето е празна."
@@ -4676,7 +4678,7 @@ msgid "Search History successfully deleted."
 msgstr "Историята на търсенето е изтрита успешно."
 
 msgid "Search automatically"
-msgstr ""
+msgstr "Автоматично търсене"
 
 msgid "Search for an artist (exact name) or a Last.fm user"
 msgstr "Търсене на изпълнител (точно име) или потребител на Last.fm"
@@ -4751,7 +4753,7 @@ msgid "Season %s"
 msgstr "Сезон %s"
 
 msgid "Season pack"
-msgstr ""
+msgstr "Пакет със сезон"
 
 msgid "Seasons"
 msgstr "Сезони"
@@ -4776,7 +4778,7 @@ msgid "Sections"
 msgstr "Рубрики"
 
 msgid "Select"
-msgstr ""
+msgstr "Избиране"
 
 #, python-format
 msgid "Select %s"
@@ -4786,7 +4788,7 @@ msgid "Select action"
 msgstr "Изберете действие"
 
 msgid "Select all"
-msgstr ""
+msgstr "Избиране на всички"
 
 msgid "Select audio track"
 msgstr "Изберете аудио писта"
@@ -4804,7 +4806,7 @@ msgid "Select group"
 msgstr "Изберете група"
 
 msgid "Select hosts for this folder..."
-msgstr ""
+msgstr "Избор на хостове за тази папка..."
 
 msgid "Select language"
 msgstr "Изберете език"
@@ -4831,7 +4833,7 @@ msgid "Select subtitles track"
 msgstr "Изберете писта със субтитри"
 
 msgid "Select the TorrServer binary"
-msgstr ""
+msgstr "Изберете изпълнимия файл на TorrServer"
 
 msgid "Select the directory"
 msgstr "Изберете директорията"
@@ -4898,7 +4900,7 @@ msgstr "Сървърът не върна нищо."
 
 #, python-format
 msgid "Server time: %s"
-msgstr ""
+msgstr "Време на сървъра: %s"
 
 #, python-format
 msgid "Server, user name and password in the host configuration. The server field also takes a get.php link. More accounts: %s with one get.php link per line (X-Streamity format)."
@@ -4956,10 +4958,10 @@ msgid "Short Movies"
 msgstr "Късометражни филми"
 
 msgid "Short films"
-msgstr ""
+msgstr "Късометражни филми"
 
 msgid "Short name"
-msgstr ""
+msgstr "Кратко име"
 
 msgid "Short series"
 msgstr "Кратки сериали"
@@ -5037,13 +5039,13 @@ msgid "Show only best quality of streams:"
 msgstr "Показване само на потоци с най-добро качество:"
 
 msgid "Show playlist"
-msgstr ""
+msgstr "Показване на плейлиста"
 
 msgid "Show results"
 msgstr "Показване на резултатите"
 
 msgid "Show results so far"
-msgstr ""
+msgstr "Показване на досегашните резултати"
 
 msgid "Show search history"
 msgstr "Показване на историята на търсенето"
@@ -5052,7 +5054,7 @@ msgid "Show suggestions"
 msgstr "Показване на предложения"
 
 msgid "ShowBox streams need a FebBox login: enter the \"ui\" cookie of your FebBox account in the host configuration."
-msgstr ""
+msgstr "Потоците на ShowBox изискват вход във FebBox: въведете бисквитката \"ui\" на вашия FebBox акаунт в конфигурацията на хоста."
 
 msgid "Shows"
 msgstr "Предавания"
@@ -5113,7 +5115,7 @@ msgid "Skip video shorter than [min]"
 msgstr "Пропускане на видеа, по-кратки от [мин]"
 
 msgid "Snooker"
-msgstr ""
+msgstr "Снукър"
 
 msgid "Society"
 msgstr "Общество"
@@ -5215,7 +5217,7 @@ msgid "Station:"
 msgstr "Станция:"
 
 msgid "Status"
-msgstr ""
+msgstr "Състояние"
 
 msgid "Status:"
 msgstr "Състояние:"
@@ -5231,7 +5233,7 @@ msgid "Stop"
 msgstr "Стоп"
 
 msgid "Stop TorrServer when E2iPlayer is closed"
-msgstr ""
+msgstr "Спиране на TorrServer при затваряне на E2iPlayer"
 
 msgid "Stop downloading"
 msgstr "Спиране на изтеглянето"
@@ -5250,7 +5252,7 @@ msgstr "Сюжет"
 
 #, python-format
 msgid "Stream formats: %s"
-msgstr ""
+msgstr "Формати на потока: %s"
 
 msgid "Stream link"
 msgstr "Връзка към потока"
@@ -5394,7 +5396,7 @@ msgid "Swedish"
 msgstr "Шведски"
 
 msgid "Switch on torrent playback?"
-msgstr ""
+msgstr "Да се включи ли възпроизвеждането на торенти?"
 
 msgid "Synchronize"
 msgstr "Синхронизиране"
@@ -5500,7 +5502,7 @@ msgstr "Токшоута"
 
 #, python-format
 msgid "Tariff: %s"
-msgstr ""
+msgstr "Тарифа: %s"
 
 msgid "Teams"
 msgstr "Отбори"
@@ -5515,7 +5517,7 @@ msgid "Temp"
 msgstr "Temp"
 
 msgid "Tennis"
-msgstr ""
+msgstr "Тенис"
 
 msgid "Test the failed sites again"
 msgstr "Повторно тестване на неуспешните сайтове"
@@ -5552,7 +5554,7 @@ msgid "The Stalker portal of this entry is not configured (any more)."
 msgstr "Stalker порталът на този запис не е конфигуриран (вече)."
 
 msgid "The Watchlist is empty. MENU key on a video: \"Add to Watchlist\"."
-msgstr ""
+msgstr "Списъкът за гледане е празен. Бутон MENU върху видео: \"Добавяне в списъка за гледане\"."
 
 msgid "The Xtream account of this entry is not configured (any more)."
 msgstr "Акаунтът Xtream на този запис не е конфигуриран (вече)."
@@ -5674,7 +5676,7 @@ msgid "The link could not be resolved."
 msgstr "Връзката не можа да бъде разрешена."
 
 msgid "The link has expired. Please open the video again."
-msgstr ""
+msgstr "Линкът е изтекъл. Моля, отворете видеото отново."
 
 msgid "The list has changed, please try again."
 msgstr "Списъкът е променен, моля, опитайте отново."
@@ -5718,10 +5720,15 @@ msgid ""
 "\n"
 "Leave this OFF if you do not want that. The other resolvers (VidEasy, VidLink, Peachify, vidrock, VidNest, ...) decrypt their links on the receiver and are not affected."
 msgstr ""
+"Резолверите 'VidCore', 'VidUp' и 'VidFast' не могат да дешифрират своите линкове на приемника.\n"
+"\n"
+"Когато тази опция е ВКЛ., при всяко отваряне на някой от тях E2iPlayer изпраща шифрования токен на потока от сайта - той съдържа TMDb id на филма или епизода, който отваряте - към външната уеб услуга enc-dec.app (поддържана от частно лице). Този сървър вижда id и вашия IP адрес при всяко възпроизвеждане. Нищо друго не се изпраща и това се използва само за тези три резолвера.\n"
+"\n"
+"Оставете опцията ИЗКЛ., ако не искате това. Другите резолвери (VidEasy, VidLink, Peachify, vidrock, VidNest, ...) дешифрират линковете си на приемника и не са засегнати."
 
 #, python-format
 msgid "The results of %d of %d sites are from the last search for \"%s\" - this asks all sites again"
-msgstr ""
+msgstr "Резултатите на %d от %d сайта са от последното търсене на \"%s\" - това прави нова заявка към всички сайтове"
 
 msgid "The same item already exists in this group."
 msgstr "Същият елемент вече съществува в тази група."
@@ -5743,7 +5750,7 @@ msgstr "Настройките са защитени с ПИН, променет
 
 #, python-format
 msgid "The site did not answer with data (HTTP %s). It may be down or have moved."
-msgstr ""
+msgstr "Сайтът не върна данни (HTTP %s). Може да не работи или да е преместен."
 
 msgid "The site has no player for this video (it only shows a cam advert)."
 msgstr "Сайтът няма плейър за това видео (показва само реклама за камери)."
@@ -5755,7 +5762,7 @@ msgid "The site rejected the search request."
 msgstr "Сайтът отхвърли заявката за търсене."
 
 msgid "The site's browser check (Cloudflare) could not be passed. The site may also be blocked in your country."
-msgstr ""
+msgstr "Проверката на браузъра на сайта (Cloudflare) не беше премината. Сайтът може също да е блокиран във вашата държава."
 
 msgid "The site's browser check could not be passed."
 msgstr "Проверката на браузъра от сайта не можа да бъде премината."
@@ -5824,7 +5831,7 @@ msgstr ""
 
 #, python-format
 msgid "There is no storage device under \"%s\". TorrServer keeps its cache in RAM until a HDD or USB stick is mounted there."
-msgstr ""
+msgstr "Няма устройство за съхранение в \"%s\". TorrServer държи кеша си в RAM, докато там не бъде монтиран HDD или USB стик."
 
 msgid "This article has no free video."
 msgstr "Тази статия няма безплатно видео."
@@ -5872,7 +5879,7 @@ msgid "This feed is empty, or the YouTube sign-in has expired - sign out and in 
 msgstr "Тази емисия е празна или входът в YouTube е изтекъл - излезте и влезте отново."
 
 msgid "This folder is empty. MENU key on a video of the Watchlist: \"Move to Watchlist folder...\"."
-msgstr ""
+msgstr "Тази папка е празна. Бутон MENU върху видео от списъка за гледане: \"Преместване в папка на списъка за гледане...\"."
 
 msgid "This folder is protected by a PIN, open it on the receiver."
 msgstr "Тази папка е защитена с ПИН, отворете я на приемника."
@@ -6087,37 +6094,42 @@ msgid "Topics"
 msgstr "Теми"
 
 msgid "TorrServer binary (OK = choose, empty = search automatically)"
-msgstr ""
+msgstr "Изпълним файл на TorrServer (OK = избор, празно = автоматично търсене)"
 
 #, python-format
 msgid "TorrServer could not be started (%s)."
-msgstr ""
+msgstr "TorrServer не можа да бъде стартиран (%s)."
 
 msgid "TorrServer got no file list for this torrent (no peers or a dead link?)."
-msgstr ""
+msgstr "TorrServer не получи списък с файлове за този торент (няма пиъри или линкът е мъртъв?)."
 
 msgid "TorrServer port"
-msgstr ""
+msgstr "Порт на TorrServer"
 
 msgid "TorrServer was not found on the receiver. It is not part of E2iPlayer and not in the image feeds - install it yourself:"
-msgstr ""
+msgstr "TorrServer не е намерен на приемника. Той не е част от E2iPlayer и го няма във фийдовете на имиджа - инсталирайте го сами:"
 
 msgid "TorrServer web interface in the home network"
-msgstr ""
+msgstr "Уеб интерфейс на TorrServer в домашната мрежа"
 
 msgid "Torrent"
-msgstr ""
+msgstr "Торент"
 
 msgid ""
 "Torrent links are played with TorrServer.\n"
 "Switch on \"Play torrents with TorrServer\" in the E2iPlayer settings (Torrent configuration)."
 msgstr ""
+"Торент линковете се възпроизвеждат с TorrServer.\n"
+"Включете \"Възпроизвеждане на торенти с TorrServer\" в настройките на E2iPlayer (конфигурация на торентите)."
 
 msgid ""
 "Torrents are peer-to-peer: while a torrent plays, the receiver connects to other users and your IP address is visible to them. Depending on your country, downloading or sharing copyrighted content through torrents may be illegal - you alone are responsible for what you play. Upload to other peers stays off unless you switch it on.\n"
 "\n"
 "TorrServer itself is not part of E2iPlayer, it has to be installed separately."
 msgstr ""
+"Торентите са peer-to-peer: докато се възпроизвежда торент, приемникът се свързва с други потребители и вашият IP адрес е видим за тях. В зависимост от държавата ви изтеглянето или споделянето на защитено с авторско право съдържание чрез торенти може да е незаконно - единствено вие носите отговорност за това, което възпроизвеждате. Качването към други пиъри остава изключено, докато не го включите.\n"
+"\n"
+"Самият TorrServer не е част от E2iPlayer и трябва да бъде инсталиран отделно."
 
 msgid "Total size:"
 msgstr "Общ размер:"
@@ -6126,7 +6138,7 @@ msgid "Tourism"
 msgstr "Туризъм"
 
 msgid "Tournament"
-msgstr ""
+msgstr "Турнир"
 
 msgid "Tracklist"
 msgstr "Списък с песни"
@@ -6135,7 +6147,7 @@ msgid "Trailer"
 msgstr "Трейлър"
 
 msgid "Trans"
-msgstr ""
+msgstr "Транс"
 
 msgid "Translation:"
 msgstr "Превод:"
@@ -6224,10 +6236,10 @@ msgid "Unable to comply. Search History is empty."
 msgstr "Действието не може да бъде изпълнено. Историята на търсенето е празна."
 
 msgid "Undo reverse"
-msgstr ""
+msgstr "Отмяна на обръщането"
 
 msgid "Undo shuffle"
-msgstr ""
+msgstr "Отмяна на разбъркването"
 
 msgid "Unfix jump target"
 msgstr "Освобождаване на целта на прехода"
@@ -6257,7 +6269,7 @@ msgid "Unrar error code[%s]."
 msgstr "Unrar код на грешка[%s]."
 
 msgid "Unselect all"
-msgstr ""
+msgstr "Отмяна на избора на всички"
 
 msgid "Unset watched"
 msgstr "Премахване на отметката за гледано"
@@ -6282,7 +6294,7 @@ msgid "Upload date"
 msgstr "Дата на качване"
 
 msgid "Upload speed limit"
-msgstr ""
+msgstr "Ограничение на скоростта на качване"
 
 #, python-format
 msgid "Uploader: %s"
@@ -6483,7 +6495,7 @@ msgid "Voice-over"
 msgstr "Озвучаване"
 
 msgid "Volleyball"
-msgstr ""
+msgstr "Волейбол"
 
 msgid "WWE shows"
 msgstr "WWE шоута"
@@ -6507,23 +6519,23 @@ msgid "Watch online"
 msgstr "Гледане онлайн"
 
 msgid "Watchlist"
-msgstr ""
+msgstr "Списък за гледане"
 
 msgid "Watchlist (no folder)"
-msgstr ""
+msgstr "Списък за гледане (без папка)"
 
 msgid "Watchlist folder"
-msgstr ""
+msgstr "Папка в списъка за гледане"
 
 msgid "WebStreamr / AIOStreams manifest URL (your own):"
-msgstr ""
+msgstr "URL адрес на манифеста на WebStreamr / AIOStreams (ваш собствен):"
 
 msgid "Website address"
-msgstr ""
+msgstr "Адрес на уебсайта"
 
 #, python-format
 msgid "Weeks on chart: %s"
-msgstr ""
+msgstr "Седмици в класацията: %s"
 
 msgid "Western"
 msgstr "Уестърн"
@@ -6547,7 +6559,7 @@ msgid "Winter"
 msgstr "Зима"
 
 msgid "Winter sports"
-msgstr ""
+msgstr "Зимни спортове"
 
 msgid "With an API key from subdl.com (E2iPlayer settings, Subtitles) the official SubDL API is searched as well."
 msgstr "С API ключ от subdl.com (настройки на E2iPlayer, Субтитри) се търси и в официалния SubDL API."
@@ -6695,7 +6707,7 @@ msgid "Your MyE2i extension is outdated or unknown (v%s or newer needed). Please
 msgstr "Вашето разширение MyE2i е остаряло или неизвестно (необходима е v%s или по-нова). Моля, актуализирайте:"
 
 msgid "Your own list of videos, in folders of your own (MENU key on a video: \"Add to Watchlist\")"
-msgstr ""
+msgstr "Ваш собствен списък с видеа, в ваши собствени папки (бутон MENU върху видео: \"Добавяне в списъка за гледане\")"
 
 msgid "Your search entry"
 msgstr "Вашето търсене"
@@ -6936,10 +6948,10 @@ msgid "https - validate SSL certificates"
 msgstr "https - проверка на SSL сертификатите"
 
 msgid "iTunes - Top albums by country"
-msgstr ""
+msgstr "iTunes - Топ албуми по държава"
 
 msgid "iTunes - Top songs by country"
-msgstr ""
+msgstr "iTunes - Топ песни по държава"
 
 msgid "insert space"
 msgstr "вмъкване на интервал"
@@ -6996,7 +7008,7 @@ msgid "manual"
 msgstr "ръчно"
 
 msgid "marked"
-msgstr ""
+msgstr "маркиран"
 
 msgid "maroon"
 msgstr "кестеняво"
@@ -7038,7 +7050,7 @@ msgid "next page"
 msgstr "следваща страница"
 
 msgid "next page / previous page"
-msgstr ""
+msgstr "следваща страница / предишна страница"
 
 msgid "next page = page 1"
 msgstr "следваща страница = страница 1"
@@ -7119,7 +7131,7 @@ msgid "refresh the current list"
 msgstr "опресняване на текущия списък"
 
 msgid "reversed"
-msgstr ""
+msgstr "обърнат"
 
 msgid "rootfs"
 msgstr "rootfs"
@@ -7186,7 +7198,7 @@ msgid "show this help"
 msgstr "показване на тази помощ"
 
 msgid "shuffled"
-msgstr ""
+msgstr "разбъркан"
 
 msgid "sign in (subscriptions, playlists, age-restricted videos)"
 msgstr "вход (абонаменти, плейлисти, видеа с възрастово ограничение)"

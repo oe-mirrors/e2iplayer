@@ -64,7 +64,7 @@ msgstr "\"Web\" yayın oynatıcısı"
 
 #, python-format
 msgid "%d added, %d skipped."
-msgstr ""
+msgstr "%d eklendi, %d atlandı."
 
 #, python-format
 msgid "%d duplicate entries removed."
@@ -76,11 +76,11 @@ msgstr "%d yinelenen giriş kaldırıldı."
 
 #, python-format
 msgid "%d items added to the download queue, %d skipped."
-msgstr ""
+msgstr "İndirme kuyruğuna %d öğe eklendi, %d atlandı."
 
 #, python-format
 msgid "%d of %d downloaded"
-msgstr ""
+msgstr "%d / %d indirildi"
 
 #, python-format
 msgid "%d parts"
@@ -96,7 +96,7 @@ msgstr "%d tilavet"
 
 #, python-format
 msgid "%d removed, %d skipped."
-msgstr ""
+msgstr "%d kaldırıldı, %d atlandı."
 
 #, python-format
 msgid "%d videos"
@@ -152,7 +152,7 @@ msgstr "%s takipçi"
 
 #, python-format
 msgid "%s needs a free account. Enter login and password in the host configuration."
-msgstr ""
+msgstr "%s ücretsiz bir hesap gerektiriyor. Kullanıcı adını ve şifreyi host yapılandırmasına girin."
 
 #, python-format
 msgid "%s password"
@@ -216,7 +216,7 @@ msgstr "%s görüntülenme"
 
 #, python-format
 msgid "%s: decrypting the stream, this can take a while (%d s)"
-msgstr ""
+msgstr "%s: yayının şifresi çözülüyor, bu biraz sürebilir (%d sn)"
 
 #, python-format
 msgid "(%d YouTube channel(s) could not be read)"
@@ -298,7 +298,7 @@ msgid "----- Show or hide Porn Sites -----"
 msgstr "----- Porno Sitelerini göster veya gizle -----"
 
 msgid "----- TORRENT CONFIGURATION -----"
-msgstr ""
+msgstr "----- TORRENT YAPILANDIRMASI -----"
 
 msgid "----- VIRTUAL KEYBOARD & SEARCH CONFIGURATION -----"
 msgstr "----- SANAL KLAVYE VE ARAMA YAPILANDIRMASI -----"
@@ -372,7 +372,7 @@ msgstr "5 saniye"
 
 #, python-format
 msgid "A folder \"%s\" exists already."
-msgstr ""
+msgstr "\"%s\" adlı bir klasör zaten var."
 
 msgid "A search is already running."
 msgstr "Zaten bir arama çalışıyor."
@@ -462,7 +462,7 @@ msgstr "Oyuncular:"
 
 #, python-format
 msgid "Add %d items to the download queue?"
-msgstr ""
+msgstr "%d öğe indirme kuyruğuna eklensin mi?"
 
 msgid "Add channel name to downloaded file"
 msgstr "İndirilen dosyaya kanal adını ekle"
@@ -479,7 +479,7 @@ msgstr "Öğeyi gruba ekle"
 
 #, python-format
 msgid "Add marked items to favourites (%d)"
-msgstr ""
+msgstr "İşaretli öğeleri favorilere ekle (%d)"
 
 msgid "Add new entry"
 msgstr "Yeni giriş ekle"
@@ -494,10 +494,10 @@ msgid "Add to User Links"
 msgstr "Kullanıcı Bağlantılarına ekle"
 
 msgid "Add to Watchlist"
-msgstr ""
+msgstr "İzleme listesine ekle"
 
 msgid "Add to Watchlist folder..."
-msgstr ""
+msgstr "İzleme listesi klasörüne ekle..."
 
 msgid "Added"
 msgstr "Eklendi"
@@ -588,7 +588,7 @@ msgid "Allow host to override suggestions provider"
 msgstr "Host'un öneri sağlayıcısını geçersiz kılmasına izin ver"
 
 msgid "Allow upload to other peers (seeding)"
-msgstr ""
+msgstr "Diğer eşlere yüklemeye izin ver (seeding)"
 
 msgid "Allow watched flag to be set"
 msgstr "İzlendi işaretinin ayarlanmasına izin ver"
@@ -629,7 +629,7 @@ msgid "Alternative proxy server (5)"
 msgstr "Alternatif proxy sunucusu (5)"
 
 msgid "American football"
-msgstr ""
+msgstr "Amerikan futbolu"
 
 msgid "An API key from subsource.net can be entered in the E2iPlayer settings (Subtitles)."
 msgstr "subsource.net'ten alınan bir API anahtarı E2iPlayer ayarlarına (Altyazılar) girilebilir."
@@ -849,7 +849,7 @@ msgstr "Geri sil"
 
 #, python-format
 msgid "Balance: %s"
-msgstr ""
+msgstr "Bakiye: %s"
 
 msgid "Balkans"
 msgstr "Balkanlar"
@@ -858,7 +858,7 @@ msgid "Basic Science"
 msgstr "Temel Bilimler"
 
 msgid "Basketball"
-msgstr ""
+msgstr "Basketbol"
 
 msgid "Being watched"
 msgstr "İzleniyor"
@@ -910,7 +910,7 @@ msgid "Box"
 msgstr "Alıcı"
 
 msgid "Boxing"
-msgstr ""
+msgstr "Boks"
 
 msgid "Broadcast:"
 msgstr "Yayın:"
@@ -945,20 +945,20 @@ msgid "Cache"
 msgstr "Önbellek"
 
 msgid "Cache folder"
-msgstr ""
+msgstr "Önbellek klasörü"
 
 #, python-format
 msgid "Cache folder \"%s\" could not be created. Some data (cookies, subtitles, ...) may not be saved."
 msgstr "Önbellek klasörü \"%s\" oluşturulamadı. Bazı veriler (çerezler, altyazılar, ...) kaydedilemeyebilir."
 
 msgid "Cache location"
-msgstr ""
+msgstr "Önbellek konumu"
 
 msgid "Cache size in RAM"
-msgstr ""
+msgstr "RAM'deki önbellek boyutu"
 
 msgid "Cache size on disk"
-msgstr ""
+msgstr "Diskteki önbellek boyutu"
 
 #, python-format
 msgid ""
@@ -1050,7 +1050,7 @@ msgid "Change active movie player"
 msgstr "Etkin film oynatıcısını değiştir"
 
 msgid "Change folder icon"
-msgstr ""
+msgstr "Klasör simgesini değiştir"
 
 msgid "Change own pin"
 msgstr "Kendi PIN'ini değiştir"
@@ -1084,7 +1084,7 @@ msgid "Chinese anime"
 msgstr "Çin animesi"
 
 msgid "Choose the TorrServer binary"
-msgstr ""
+msgstr "TorrServer program dosyasını seçin"
 
 msgid "Cinema History"
 msgstr "Sinema Tarihi"
@@ -1126,7 +1126,7 @@ msgid "Close"
 msgstr "Kapat"
 
 msgid "Close an unused torrent after"
-msgstr ""
+msgstr "Kullanılmayan torrenti kapatma süresi"
 
 msgid "Closes the host opened in the web interface, clears the search results and stops what the web interface still runs in the background. Use it when a page keeps loading. Settings, downloads and the E2iPlayer on the TV are not touched."
 msgstr "Web arayüzünde açılan host'u kapatır, arama sonuçlarını temizler ve web arayüzünün arka planda hâlâ çalıştırdıklarını durdurur. Bir sayfa yüklenmeye devam ettiğinde kullanın. Ayarlar, indirmeler ve TV'deki E2iPlayer etkilenmez."
@@ -1156,7 +1156,7 @@ msgid "Comedy"
 msgstr "Komedi"
 
 msgid "Commentator"
-msgstr ""
+msgstr "Spiker"
 
 msgid "Comments"
 msgstr "Yorumlar"
@@ -1216,7 +1216,7 @@ msgid "Connection to the weeb.tv server failed."
 msgstr "weeb.tv sunucusuna bağlantı başarısız oldu."
 
 msgid "Connections per torrent"
-msgstr ""
+msgstr "Torrent başına bağlantı"
 
 #, python-format
 msgid "Connections: %s of %s"
@@ -1238,7 +1238,7 @@ msgid "Copy"
 msgstr "Kopyala"
 
 msgid "Copy it to /usr/bin/TorrServer (or a folder on HDD/USB) and make it executable (chmod 755)."
-msgstr ""
+msgstr "Dosyayı /usr/bin/TorrServer konumuna (veya HDD/USB üzerindeki bir klasöre) kopyalayın ve çalıştırılabilir yapın (chmod 755)."
 
 msgid "Could not add the user link."
 msgstr "Kullanıcı bağlantısı eklenemedi."
@@ -1296,7 +1296,7 @@ msgstr "Yan dosyalar oluştur (.txt/.jpg)"
 
 #, python-format
 msgid "Created: %s"
-msgstr ""
+msgstr "Oluşturuldu: %s"
 
 msgid "Creator:"
 msgstr "Yaratıcı:"
@@ -1305,7 +1305,7 @@ msgid "Creators:"
 msgstr "Yaratıcılar:"
 
 msgid "Cricket"
-msgstr ""
+msgstr "Kriket"
 
 msgid "Crime"
 msgstr "Suç"
@@ -1338,7 +1338,7 @@ msgid "DASH/mpd"
 msgstr "DASH/mpd"
 
 msgid "DLNA server of TorrServer"
-msgstr ""
+msgstr "TorrServer DLNA sunucusu"
 
 msgid "DOWNLOAD ERROR"
 msgstr "İNDİRME HATASI"
@@ -1359,7 +1359,7 @@ msgid "Darkgray"
 msgstr "Koyu gri"
 
 msgid "Darts"
-msgstr ""
+msgstr "Dart"
 
 msgid "Date"
 msgstr "Tarih"
@@ -1443,7 +1443,7 @@ msgid "Delete JS cache now"
 msgstr "JS önbelleğini şimdi sil"
 
 msgid "Delete Watchlist folder"
-msgstr ""
+msgstr "İzleme listesi klasörünü sil"
 
 msgid "Delete all cache files now"
 msgstr "Tüm önbellek dosyalarını şimdi sil"
@@ -1464,7 +1464,7 @@ msgid "Delete favourites and watched status now"
 msgstr "Favorileri ve izlenme durumunu şimdi sil"
 
 msgid "Delete folder"
-msgstr ""
+msgstr "Klasörü sil"
 
 msgid "Delete host order and groups now"
 msgstr "Host sırasını ve gruplarını şimdi sil"
@@ -1494,15 +1494,15 @@ msgid "Delete subtitles cache now"
 msgstr "Altyazı önbelleğini şimdi sil"
 
 msgid "Delete the cache when the torrent is closed"
-msgstr ""
+msgstr "Torrent kapatıldığında önbelleği sil"
 
 #, python-format
 msgid "Delete the folder \"%s\"? Its hosts go back to the group."
-msgstr ""
+msgstr "\"%s\" klasörü silinsin mi? İçindeki host'lar gruba geri döner."
 
 #, python-format
 msgid "Delete the folder \"%s\"? Its videos go back to the Watchlist."
-msgstr ""
+msgstr "\"%s\" klasörü silinsin mi? İçindeki videolar izleme listesine geri döner."
 
 msgid "Delete thumbnails cache now"
 msgstr "Küçük resim önbelleğini şimdi sil"
@@ -1619,7 +1619,7 @@ msgstr "İndir"
 
 #, python-format
 msgid "Download \"%s\" (for this receiver) from %s"
-msgstr ""
+msgstr "\"%s\" dosyasını (bu alıcı için) %s adresinden indirin"
 
 #, python-format
 msgid "Download (ready in %d seconds)"
@@ -1629,7 +1629,7 @@ msgid "Download again"
 msgstr "Tekrar indir"
 
 msgid "Download all items of this page"
-msgstr ""
+msgstr "Bu sayfadaki tüm öğeleri indir"
 
 msgid "Download already exists"
 msgstr "İndirme zaten mevcut"
@@ -1668,7 +1668,7 @@ msgstr "İndirme yöneticisi başlatılmadı"
 
 #, python-format
 msgid "Download marked items (%d)"
-msgstr ""
+msgstr "İşaretli öğeleri indir (%d)"
 
 msgid "Download new version"
 msgstr "Yeni sürümü indir"
@@ -1677,7 +1677,7 @@ msgid "Download notification duration"
 msgstr "İndirme bildirimi süresi"
 
 msgid "Download speed limit"
-msgstr ""
+msgstr "İndirme hızı sınırı"
 
 msgid "Download subtiles failed."
 msgstr "Altyazılar indirilemedi."
@@ -1687,7 +1687,7 @@ msgstr "Önerilenleri indir"
 
 #, python-format
 msgid "Download the Linux file for the CPU of this receiver from %s"
-msgstr ""
+msgstr "Bu alıcının işlemcisine uygun Linux dosyasını %s adresinden indirin"
 
 msgid "Downloaded file is too small or corrupted."
 msgstr "İndirilen dosya çok küçük veya bozuk."
@@ -1891,7 +1891,7 @@ msgid "Enabled hosts"
 msgstr "Etkin host'lar"
 
 msgid "Encrypted connections only"
-msgstr ""
+msgstr "Yalnızca şifreli bağlantılar"
 
 msgid "Encrypted stream list - not supported"
 msgstr "Şifreli yayın listesi - desteklenmiyor"
@@ -2052,7 +2052,7 @@ msgid "Error saving favorites."
 msgstr "Favoriler kaydedilirken hata oluştu."
 
 msgid "Error saving the Watchlist."
-msgstr ""
+msgstr "İzleme listesi kaydedilirken hata oluştu."
 
 msgid "Error while loading watch data"
 msgstr "İzleme verileri yüklenirken hata oluştu"
@@ -2207,10 +2207,10 @@ msgid "Featured"
 msgstr "Öne çıkanlar"
 
 msgid "FebBox token (\"ui\" cookie of www.febbox.com):"
-msgstr ""
+msgstr "FebBox token'ı (www.febbox.com \"ui\" çerezi):"
 
 msgid "Female"
-msgstr ""
+msgstr "Kadınlar"
 
 #, python-format
 msgid "File \"%s\" already exists"
@@ -2255,10 +2255,10 @@ msgid "File format of DASH (MPD) downloads"
 msgstr "DASH (MPD) indirmelerinin dosya biçimi"
 
 msgid "File format of HLS (M3U8) downloads"
-msgstr ""
+msgstr "HLS (M3U8) indirmelerinin dosya biçimi"
 
 msgid "File format of single video files (FFmpeg)"
-msgstr ""
+msgstr "Tekil video dosyalarının dosya biçimi (FFmpeg)"
 
 #, python-format
 msgid "File might be corrupted (size: %d bytes)."
@@ -2274,7 +2274,7 @@ msgid "Files"
 msgstr "Dosyalar"
 
 msgid "Fill cache before playback"
-msgstr ""
+msgstr "Oynatmadan önce önbelleği doldur"
 
 msgid "Filler"
 msgstr "Dolgu bölüm"
@@ -2339,7 +2339,7 @@ msgid "Folder for temporary data"
 msgstr "Geçici veriler için klasör"
 
 msgid "Folder on HDD / USB"
-msgstr ""
+msgstr "HDD / USB üzerinde klasör"
 
 msgid "Followers"
 msgstr "Takipçiler"
@@ -2357,7 +2357,7 @@ msgid "Foot & Ankle"
 msgstr "Ayak ve ayak bileği"
 
 msgid "Football"
-msgstr ""
+msgstr "Futbol"
 
 msgid "Football Live"
 msgstr "Canlı futbol"
@@ -2375,7 +2375,7 @@ msgid "Force internal skin: main screen only"
 msgstr "Dahili görünümü zorla: yalnızca ana ekran"
 
 msgid "Force legacy grid"
-msgstr ""
+msgstr "Eski simge ızgarasını zorla"
 
 msgid "Foreign movies"
 msgstr "Yabancı filmler"
@@ -2396,7 +2396,7 @@ msgid "Fotka.pl stream :"
 msgstr "Fotka.pl yayını :"
 
 msgid "Free"
-msgstr ""
+msgstr "Ücretsiz"
 
 msgid "Free IPTV list"
 msgstr "Ücretsiz IPTV listesi"
@@ -2432,7 +2432,7 @@ msgid "Full test checks thumbnails :"
 msgstr "Tam test küçük resimleri kontrol eder :"
 
 msgid "Futsal"
-msgstr ""
+msgstr "Futsal"
 
 msgid "GREEN"
 msgstr "YEŞİL"
@@ -2552,7 +2552,7 @@ msgid "Hand"
 msgstr "El"
 
 msgid "Handball"
-msgstr ""
+msgstr "Hentbol"
 
 msgid "Health"
 msgstr "Sağlık"
@@ -2589,7 +2589,7 @@ msgid "History of searched phrases."
 msgstr "Aranan ifadelerin geçmişi."
 
 msgid "Hockey"
-msgstr ""
+msgstr "Buz hokeyi"
 
 msgid "Home"
 msgstr "Ana Sayfa"
@@ -2607,7 +2607,7 @@ msgid "Host"
 msgstr "Host"
 
 msgid "Host titles in lists"
-msgstr ""
+msgstr "Listelerde host başlıkları"
 
 #, python-format
 msgid "Host: %s"
@@ -2939,7 +2939,7 @@ msgid "Last Modified: %s"
 msgstr "Son değişiklik: %s"
 
 msgid "Last Page"
-msgstr ""
+msgstr "Son sayfa"
 
 msgid "Last air date:"
 msgstr "Son yayın tarihi:"
@@ -2973,7 +2973,7 @@ msgstr "Geçen hafta"
 
 #, python-format
 msgid "Last week: %s"
-msgstr ""
+msgstr "Geçen hafta: %s"
 
 msgid "Last.fm charts and tag pages are behind a browser check, only the radio stations can be used."
 msgstr "Last.fm listeleri ve etiket sayfaları bir tarayıcı kontrolünün arkasında, yalnızca radyo istasyonları kullanılabilir."
@@ -3028,7 +3028,7 @@ msgid "Latest videos from the channels you are subscribed to."
 msgstr "Abone olduğunuz kanallardan en yeni videolar."
 
 msgid "Latin American movies"
-msgstr ""
+msgstr "Latin Amerika filmleri"
 
 msgid "Latin American series"
 msgstr "Latin Amerika dizileri"
@@ -3192,7 +3192,7 @@ msgid "Login failed."
 msgstr "Giriş başarısız."
 
 msgid "Login needed"
-msgstr ""
+msgstr "Giriş gerekli"
 
 #, python-brace-format
 msgid "Login on {0} failed."
@@ -3226,7 +3226,7 @@ msgid "Longest"
 msgstr "En uzun"
 
 msgid "Loved tracks"
-msgstr ""
+msgstr "Sevilen parçalar"
 
 msgid "Low"
 msgstr "Düşük"
@@ -3266,14 +3266,14 @@ msgid "Main"
 msgstr "Ana sayfa"
 
 msgid "Main menu"
-msgstr ""
+msgstr "Ana menü"
 
 #, python-format
 msgid "Make directory [%s]"
 msgstr "[%s] klasörünü oluştur"
 
 msgid "Male"
-msgstr ""
+msgstr "Erkekler"
 
 msgid "Manager status:"
 msgstr "Yönetici durumu:"
@@ -3303,16 +3303,16 @@ msgid "Max number of parallel downloads has been reached."
 msgstr "En fazla paralel indirme sayısına ulaşıldı."
 
 msgid "MaxStream (uprot.net) asks for its image captcha: solve it in MyE2i, then open the video again."
-msgstr ""
+msgstr "MaxStream (uprot.net) resimli captcha istiyor: MyE2i'de çözün, ardından videoyu yeniden açın."
 
 msgid "Maximum log file size"
 msgstr "En fazla günlük dosyası boyutu"
 
 msgid "Maximum torrent size:"
-msgstr ""
+msgstr "Azami torrent boyutu:"
 
 msgid "MediaFusion manifest URL (your own):"
-msgstr ""
+msgstr "MediaFusion manifest URL'si (kendinize ait):"
 
 msgid "Medtryx Marketing"
 msgstr "Medtryx Marketing"
@@ -3408,10 +3408,10 @@ msgid "Most viewed series"
 msgstr "En çok izlenen diziler"
 
 msgid "Most voted"
-msgstr ""
+msgstr "En çok oy alan"
 
 msgid "Motorsport"
-msgstr ""
+msgstr "Motor sporları"
 
 #, python-format
 msgid ""
@@ -3430,10 +3430,10 @@ msgid "Move failed."
 msgstr "Taşıma başarısız."
 
 msgid "Move to Watchlist folder..."
-msgstr ""
+msgstr "İzleme listesi klasörüne taşı..."
 
 msgid "Move to folder..."
-msgstr ""
+msgstr "Klasöre taşı..."
 
 msgid "Movie"
 msgstr "Film"
@@ -3489,7 +3489,7 @@ msgid "MyE2i browser check solution"
 msgstr "MyE2i tarayıcı kontrolü çözümü"
 
 msgid "MyE2i captcha: solve it, then Job (no CONTINUE)"
-msgstr ""
+msgstr "MyE2i captcha: çözün, ardından Job (CONTINUE değil)"
 
 msgid "MyE2i debug snapshot received - see the debug log."
 msgstr "MyE2i hata ayıklama anlık görüntüsü alındı - hata ayıklama günlüğüne bakın."
@@ -3521,10 +3521,10 @@ msgid "MyE2i: offer to open the page in (Android)"
 msgstr "MyE2i: sayfayı şurada açmayı öner (Android)"
 
 msgid "MyE2i: open the page in the browser"
-msgstr ""
+msgstr "MyE2i: sayfayı tarayıcıda aç"
 
 msgid "Mystery"
-msgstr ""
+msgstr "Gizem"
 
 msgid ""
 "NO VIDEOS FOUND FOR NOW! \n"
@@ -3575,7 +3575,7 @@ msgid "New"
 msgstr "Yeni"
 
 msgid "New Watchlist folder"
-msgstr ""
+msgstr "Yeni izleme listesi klasörü"
 
 msgid "New dir"
 msgstr "Yeni klasör"
@@ -3587,7 +3587,7 @@ msgid "New episodes"
 msgstr "Yeni bölümler"
 
 msgid "New folder..."
-msgstr ""
+msgstr "Yeni klasör..."
 
 msgid "New icons will not be available."
 msgstr "Yeni simgeler kullanılamayacak."
@@ -3596,7 +3596,7 @@ msgid "New links"
 msgstr "Yeni bağlantılar"
 
 msgid "New search"
-msgstr ""
+msgstr "Yeni arama"
 
 msgid "New since installed version"
 msgstr "Yüklü sürümden bu yana yeni"
@@ -3737,14 +3737,14 @@ msgid "Not available yet"
 msgstr "Henüz mevcut değil"
 
 msgid "Not in /usr/bin: choose the file under \"TorrServer binary\" in the torrent configuration."
-msgstr ""
+msgstr "/usr/bin içinde yok: Dosyayı torrent yapılandırmasındaki \"TorrServer program dosyası\" altında seçin."
 
 msgid "Not possible (no enigma2 session)."
 msgstr "Mümkün değil (enigma2 oturumu yok)."
 
 #, python-format
 msgid "Not removed, still downloading: %d"
-msgstr ""
+msgstr "Kaldırılmadı, hâlâ indiriliyor: %d"
 
 msgid "Nothing available here at the moment (only upcoming broadcasts)."
 msgstr "Şu anda burada mevcut bir şey yok (yalnızca yaklaşan yayınlar)."
@@ -3765,11 +3765,11 @@ msgid "Now"
 msgstr "Şimdi"
 
 msgid "Now playing"
-msgstr ""
+msgstr "Vizyondakiler"
 
 #, python-format
 msgid "Now playing: %s"
-msgstr ""
+msgstr "Şimdi oynatılıyor: %s"
 
 msgid "Number of columns"
 msgstr "Sütun sayısı"
@@ -3797,10 +3797,10 @@ msgid "OK"
 msgstr "Tamam"
 
 msgid "OK marks an item, BLUE shows what can be done with the marked items."
-msgstr ""
+msgstr "OK bir öğeyi işaretler, MAVİ işaretli öğelerle neler yapılabileceğini gösterir."
 
 msgid "OK marks an item, MENU shows what can be done with the marked items."
-msgstr ""
+msgstr "OK bir öğeyi işaretler, MENU işaretli öğelerle neler yapılabileceğini gösterir."
 
 msgid "OMDb API key (free at omdbapi.com)"
 msgstr "OMDb API anahtarı (omdbapi.com'da ücretsiz)"
@@ -3851,7 +3851,7 @@ msgid "Open pull requests"
 msgstr "Açık pull request'ler"
 
 msgid "Open the page and get the link"
-msgstr ""
+msgstr "Sayfayı aç ve bağlantıyı al"
 
 #, python-format
 msgid "Open this page in %s"
@@ -3998,11 +3998,11 @@ msgid "Patriotism"
 msgstr "Vatanseverlik"
 
 msgid "Pause between the batch lookups of one host [s]"
-msgstr ""
+msgstr "Bir host'un toplu sorguları arasındaki bekleme [sn]"
 
 #, python-format
 msgid "Peak: %s"
-msgstr ""
+msgstr "En yüksek sıra: %s"
 
 msgid "Pediatrics"
 msgstr "Pediatri"
@@ -4035,14 +4035,14 @@ msgid "Pin protection for this host"
 msgstr "Bu host için PIN koruması"
 
 msgid "Play all from here"
-msgstr ""
+msgstr "Buradan itibaren tümünü oynat"
 
 #, python-format
 msgid "Play marked items (%d)"
-msgstr ""
+msgstr "İşaretli öğeleri oynat (%d)"
 
 msgid "Play torrents with TorrServer"
-msgstr ""
+msgstr "Torrentleri TorrServer ile oynat"
 
 #, python-format
 msgid "Play with [%s] player"
@@ -4211,7 +4211,7 @@ msgstr "Portal URL'si ve MAC adresi, sağlayıcının verdiği şekilde host yap
 
 #, python-format
 msgid "Ports: %s"
-msgstr ""
+msgstr "Portlar: %s"
 
 msgid "Portuguese"
 msgstr "Portekizce"
@@ -4244,7 +4244,7 @@ msgid "Premium user"
 msgstr "Premium kullanıcı"
 
 msgid "Press EXIT to return to the previous menu."
-msgstr ""
+msgstr "Önceki menüye dönmek için EXIT tuşuna basın."
 
 msgid "Previous Page"
 msgstr "Önceki Sayfa"
@@ -4313,7 +4313,7 @@ msgid "Quick test: menu and a list with videos"
 msgstr "Hızlı test: menü ve videolu bir liste"
 
 msgid "RAM"
-msgstr ""
+msgstr "RAM"
 
 msgid "RAM buffer size [MB] for local files"
 msgstr "Yerel dosyalar için RAM arabellek boyutu [MB]"
@@ -4381,7 +4381,7 @@ msgid "Rating: %s"
 msgstr "Puan: %s"
 
 msgid "Read ahead (share of the cache)"
-msgstr ""
+msgstr "Önceden okuma (önbellek payı)"
 
 msgid "Read by"
 msgstr "Okuyan"
@@ -4431,7 +4431,7 @@ msgid "Regions"
 msgstr "Bölgeler"
 
 msgid "Related seasons and works"
-msgstr ""
+msgstr "İlgili sezonlar ve eserler"
 
 msgid "Release"
 msgstr "Yayınlanma"
@@ -4475,25 +4475,27 @@ msgstr "\"%s\" öğesini kaldır"
 
 #, python-format
 msgid "Remove %d items from the favourites?"
-msgstr ""
+msgstr "%d öğe favorilerden kaldırılsın mı?"
 
 #, python-format
 msgid ""
 "Remove %d marked items?\n"
 "Their files are deleted too."
 msgstr ""
+"%d işaretli öğe kaldırılsın mı?\n"
+"Dosyaları da silinir."
 
 msgid "Remove file"
 msgstr "Dosyayı kaldır"
 
 msgid "Remove from Watchlist"
-msgstr ""
+msgstr "İzleme listesinden kaldır"
 
 msgid "Remove from favorites"
 msgstr "Favorilerden kaldır"
 
 msgid "Remove from folder"
-msgstr ""
+msgstr "Klasörden kaldır"
 
 msgid "Remove group"
 msgstr "Grubu kaldır"
@@ -4503,11 +4505,11 @@ msgstr "Öğeyi kaldır"
 
 #, python-format
 msgid "Remove marked items (%d)"
-msgstr ""
+msgstr "İşaretli öğeleri kaldır (%d)"
 
 #, python-format
 msgid "Remove marked items from favourites (%d)"
-msgstr ""
+msgstr "İşaretli öğeleri favorilerden kaldır (%d)"
 
 msgid "Remove thumbnails"
 msgstr "Küçük resimleri kaldır"
@@ -4516,7 +4518,7 @@ msgid "Rename"
 msgstr "Yeniden adlandır"
 
 msgid "Rename Watchlist folder"
-msgstr ""
+msgstr "İzleme listesi klasörünü yeniden adlandır"
 
 msgid "Rename file"
 msgstr "Dosyayı yeniden adlandır"
@@ -4538,13 +4540,13 @@ msgstr "Rapor dosyası"
 
 #, python-format
 msgid "Reset the settings of \"%s\" to their default values?"
-msgstr ""
+msgstr "\"%s\" ayarları varsayılan değerlerine sıfırlansın mı?"
 
 msgid "Reset this list to its default layout?"
 msgstr "Bu liste varsayılan düzenine sıfırlansın mı?"
 
 msgid "Reset this list to its default layout? Its folders are deleted too."
-msgstr ""
+msgstr "Bu liste varsayılan düzenine sıfırlansın mı? Klasörleri de silinir."
 
 msgid "Reset to defaults"
 msgstr "Varsayılanlara sıfırla"
@@ -4668,7 +4670,7 @@ msgstr "Ara"
 
 #, python-format
 msgid "Search \"%s\" was not finished"
-msgstr ""
+msgstr "\"%s\" araması tamamlanmadı"
 
 msgid "Search History is empty."
 msgstr "Arama geçmişi boş."
@@ -4677,7 +4679,7 @@ msgid "Search History successfully deleted."
 msgstr "Arama geçmişi başarıyla silindi."
 
 msgid "Search automatically"
-msgstr ""
+msgstr "Otomatik ara"
 
 msgid "Search for an artist (exact name) or a Last.fm user"
 msgstr "Sanatçı (tam ad) veya Last.fm kullanıcısı ara"
@@ -4752,7 +4754,7 @@ msgid "Season %s"
 msgstr "Sezon %s"
 
 msgid "Season pack"
-msgstr ""
+msgstr "Sezon paketi"
 
 msgid "Seasons"
 msgstr "Sezonlar"
@@ -4777,7 +4779,7 @@ msgid "Sections"
 msgstr "Bölümler"
 
 msgid "Select"
-msgstr ""
+msgstr "Seç"
 
 #, python-format
 msgid "Select %s"
@@ -4787,7 +4789,7 @@ msgid "Select action"
 msgstr "İşlem seç"
 
 msgid "Select all"
-msgstr ""
+msgstr "Tümünü seç"
 
 msgid "Select audio track"
 msgstr "Ses parçası seç"
@@ -4805,7 +4807,7 @@ msgid "Select group"
 msgstr "Grup seç"
 
 msgid "Select hosts for this folder..."
-msgstr ""
+msgstr "Bu klasör için host'ları seç..."
 
 msgid "Select language"
 msgstr "Dil seç"
@@ -4832,7 +4834,7 @@ msgid "Select subtitles track"
 msgstr "Altyazı parçası seç"
 
 msgid "Select the TorrServer binary"
-msgstr ""
+msgstr "TorrServer program dosyasını seçin"
 
 msgid "Select the directory"
 msgstr "Klasörü seç"
@@ -4899,7 +4901,7 @@ msgstr "Sunucu hiçbir şey döndürmedi."
 
 #, python-format
 msgid "Server time: %s"
-msgstr ""
+msgstr "Sunucu saati: %s"
 
 #, python-format
 msgid "Server, user name and password in the host configuration. The server field also takes a get.php link. More accounts: %s with one get.php link per line (X-Streamity format)."
@@ -4957,10 +4959,10 @@ msgid "Short Movies"
 msgstr "Kısa filmler"
 
 msgid "Short films"
-msgstr ""
+msgstr "Kısa filmler"
 
 msgid "Short name"
-msgstr ""
+msgstr "Kısa ad"
 
 msgid "Short series"
 msgstr "Kısa diziler"
@@ -5038,13 +5040,13 @@ msgid "Show only best quality of streams:"
 msgstr "Yayınların yalnızca en iyi kalitesini göster:"
 
 msgid "Show playlist"
-msgstr ""
+msgstr "Oynatma listesini göster"
 
 msgid "Show results"
 msgstr "Sonuçları göster"
 
 msgid "Show results so far"
-msgstr ""
+msgstr "Şimdiye kadarki sonuçları göster"
 
 msgid "Show search history"
 msgstr "Arama geçmişini göster"
@@ -5053,7 +5055,7 @@ msgid "Show suggestions"
 msgstr "Önerileri göster"
 
 msgid "ShowBox streams need a FebBox login: enter the \"ui\" cookie of your FebBox account in the host configuration."
-msgstr ""
+msgstr "ShowBox yayınları FebBox girişi gerektirir: FebBox hesabınızın \"ui\" çerezini host yapılandırmasına girin."
 
 msgid "Shows"
 msgstr "Şovlar"
@@ -5114,7 +5116,7 @@ msgid "Skip video shorter than [min]"
 msgstr "[dk] değerinden kısa videoları atla"
 
 msgid "Snooker"
-msgstr ""
+msgstr "Snooker"
 
 msgid "Society"
 msgstr "Toplum"
@@ -5216,7 +5218,7 @@ msgid "Station:"
 msgstr "İstasyon:"
 
 msgid "Status"
-msgstr ""
+msgstr "Durum"
 
 msgid "Status:"
 msgstr "Durum:"
@@ -5232,7 +5234,7 @@ msgid "Stop"
 msgstr "Durdur"
 
 msgid "Stop TorrServer when E2iPlayer is closed"
-msgstr ""
+msgstr "E2iPlayer kapatıldığında TorrServer'ı durdur"
 
 msgid "Stop downloading"
 msgstr "İndirmeyi durdur"
@@ -5251,7 +5253,7 @@ msgstr "Hikâye"
 
 #, python-format
 msgid "Stream formats: %s"
-msgstr ""
+msgstr "Yayın biçimleri: %s"
 
 msgid "Stream link"
 msgstr "Yayın bağlantısı"
@@ -5395,7 +5397,7 @@ msgid "Swedish"
 msgstr "İsveççe"
 
 msgid "Switch on torrent playback?"
-msgstr ""
+msgstr "Torrent oynatma açılsın mı?"
 
 msgid "Synchronize"
 msgstr "Eşitle"
@@ -5501,7 +5503,7 @@ msgstr "Talk şovlar"
 
 #, python-format
 msgid "Tariff: %s"
-msgstr ""
+msgstr "Tarife: %s"
 
 msgid "Teams"
 msgstr "Takımlar"
@@ -5516,7 +5518,7 @@ msgid "Temp"
 msgstr "Geçici"
 
 msgid "Tennis"
-msgstr ""
+msgstr "Tenis"
 
 msgid "Test the failed sites again"
 msgstr "Başarısız siteleri tekrar test et"
@@ -5553,7 +5555,7 @@ msgid "The Stalker portal of this entry is not configured (any more)."
 msgstr "Bu girişin Stalker portalı yapılandırılmamış (artık)."
 
 msgid "The Watchlist is empty. MENU key on a video: \"Add to Watchlist\"."
-msgstr ""
+msgstr "İzleme listesi boş. Bir videoda MENU tuşu: \"İzleme listesine ekle\"."
 
 msgid "The Xtream account of this entry is not configured (any more)."
 msgstr "Bu girişin Xtream hesabı yapılandırılmamış (artık)."
@@ -5675,7 +5677,7 @@ msgid "The link could not be resolved."
 msgstr "Bağlantı çözümlenemedi."
 
 msgid "The link has expired. Please open the video again."
-msgstr ""
+msgstr "Bağlantının süresi doldu. Lütfen videoyu yeniden açın."
 
 msgid "The list has changed, please try again."
 msgstr "Liste değişti, lütfen tekrar deneyin."
@@ -5719,10 +5721,15 @@ msgid ""
 "\n"
 "Leave this OFF if you do not want that. The other resolvers (VidEasy, VidLink, Peachify, vidrock, VidNest, ...) decrypt their links on the receiver and are not affected."
 msgstr ""
+"'VidCore', 'VidUp' ve 'VidFast' çözücüleri bağlantılarının şifresini alıcıda çözemez.\n"
+"\n"
+"Bu seçenek AÇIK olduğunda, bunlardan birini her açtığınızda E2iPlayer sitenin şifreli yayın token'ını - açtığınız filmin veya bölümün TMDb kimliğini içerir - üçüncü taraf web hizmeti enc-dec.app'e (bir özel kişi tarafından işletilir) gönderir. Bu sunucu her oynatmada kimliği ve IP adresinizi görür. Başka hiçbir şey aktarılmaz ve yalnızca bu üç çözücü için kullanılır.\n"
+"\n"
+"Bunu istemiyorsanız seçeneği KAPALI bırakın. Diğer çözücüler (VidEasy, VidLink, Peachify, vidrock, VidNest, ...) bağlantılarının şifresini alıcıda çözer ve etkilenmez."
 
 #, python-format
 msgid "The results of %d of %d sites are from the last search for \"%s\" - this asks all sites again"
-msgstr ""
+msgstr "%d / %d sitenin sonuçları son \"%s\" aramasından geliyor - bu, tüm sitelere yeniden sorar"
 
 msgid "The same item already exists in this group."
 msgstr "Aynı öğe bu grupta zaten mevcut."
@@ -5744,7 +5751,7 @@ msgstr "Ayarlar PIN ile korumalı, alıcıda değiştirin."
 
 #, python-format
 msgid "The site did not answer with data (HTTP %s). It may be down or have moved."
-msgstr ""
+msgstr "Site veri döndürmedi (HTTP %s). Erişilemiyor veya taşınmış olabilir."
 
 msgid "The site has no player for this video (it only shows a cam advert)."
 msgstr "Sitenin bu video için oynatıcısı yok (yalnızca bir kamera reklamı gösteriyor)."
@@ -5756,7 +5763,7 @@ msgid "The site rejected the search request."
 msgstr "Site arama isteğini reddetti."
 
 msgid "The site's browser check (Cloudflare) could not be passed. The site may also be blocked in your country."
-msgstr ""
+msgstr "Sitenin tarayıcı denetimi (Cloudflare) geçilemedi. Site ülkenizde engellenmiş de olabilir."
 
 msgid "The site's browser check could not be passed."
 msgstr "Sitenin tarayıcı denetimi geçilemedi."
@@ -5825,7 +5832,7 @@ msgstr ""
 
 #, python-format
 msgid "There is no storage device under \"%s\". TorrServer keeps its cache in RAM until a HDD or USB stick is mounted there."
-msgstr ""
+msgstr "\"%s\" altında depolama aygıtı yok. TorrServer, oraya bir HDD veya USB bellek bağlanana kadar önbelleğini RAM'de tutar."
 
 msgid "This article has no free video."
 msgstr "Bu makalede ücretsiz video yok."
@@ -5873,7 +5880,7 @@ msgid "This feed is empty, or the YouTube sign-in has expired - sign out and in 
 msgstr "Bu akış boş veya YouTube oturumunun süresi doldu - oturumu kapatıp tekrar açın."
 
 msgid "This folder is empty. MENU key on a video of the Watchlist: \"Move to Watchlist folder...\"."
-msgstr ""
+msgstr "Bu klasör boş. İzleme listesindeki bir videoda MENU tuşu: \"İzleme listesi klasörüne taşı...\"."
 
 msgid "This folder is protected by a PIN, open it on the receiver."
 msgstr "Bu klasör PIN ile korumalı, alıcıda açın."
@@ -6088,37 +6095,42 @@ msgid "Topics"
 msgstr "Konular"
 
 msgid "TorrServer binary (OK = choose, empty = search automatically)"
-msgstr ""
+msgstr "TorrServer program dosyası (OK = seç, boş = otomatik ara)"
 
 #, python-format
 msgid "TorrServer could not be started (%s)."
-msgstr ""
+msgstr "TorrServer başlatılamadı (%s)."
 
 msgid "TorrServer got no file list for this torrent (no peers or a dead link?)."
-msgstr ""
+msgstr "TorrServer bu torrent için dosya listesi alamadı (eş yok veya ölü bağlantı?)."
 
 msgid "TorrServer port"
-msgstr ""
+msgstr "TorrServer portu"
 
 msgid "TorrServer was not found on the receiver. It is not part of E2iPlayer and not in the image feeds - install it yourself:"
-msgstr ""
+msgstr "TorrServer alıcıda bulunamadı. E2iPlayer'ın bir parçası değildir ve imaj beslemelerinde yoktur - kendiniz kurun:"
 
 msgid "TorrServer web interface in the home network"
-msgstr ""
+msgstr "Ev ağında TorrServer web arayüzü"
 
 msgid "Torrent"
-msgstr ""
+msgstr "Torrent"
 
 msgid ""
 "Torrent links are played with TorrServer.\n"
 "Switch on \"Play torrents with TorrServer\" in the E2iPlayer settings (Torrent configuration)."
 msgstr ""
+"Torrent bağlantıları TorrServer ile oynatılır.\n"
+"E2iPlayer ayarlarında (Torrent yapılandırması) \"Torrentleri TorrServer ile oynat\" seçeneğini açın."
 
 msgid ""
 "Torrents are peer-to-peer: while a torrent plays, the receiver connects to other users and your IP address is visible to them. Depending on your country, downloading or sharing copyrighted content through torrents may be illegal - you alone are responsible for what you play. Upload to other peers stays off unless you switch it on.\n"
 "\n"
 "TorrServer itself is not part of E2iPlayer, it has to be installed separately."
 msgstr ""
+"Torrentler eşler arasıdır: Bir torrent oynatılırken alıcı diğer kullanıcılara bağlanır ve IP adresiniz onlar tarafından görülebilir. Ülkenize bağlı olarak, telif hakkıyla korunan içeriği torrent üzerinden indirmek veya paylaşmak yasa dışı olabilir - oynattıklarınızdan yalnızca siz sorumlusunuz. Diğer eşlere yükleme, siz açmadıkça kapalı kalır.\n"
+"\n"
+"TorrServer'ın kendisi E2iPlayer'ın bir parçası değildir, ayrıca kurulması gerekir."
 
 msgid "Total size:"
 msgstr "Toplam boyut:"
@@ -6127,7 +6139,7 @@ msgid "Tourism"
 msgstr "Turizm"
 
 msgid "Tournament"
-msgstr ""
+msgstr "Turnuva"
 
 msgid "Tracklist"
 msgstr "Parça listesi"
@@ -6136,7 +6148,7 @@ msgid "Trailer"
 msgstr "Fragman"
 
 msgid "Trans"
-msgstr ""
+msgstr "Trans"
 
 msgid "Translation:"
 msgstr "Çeviri:"
@@ -6225,10 +6237,10 @@ msgid "Unable to comply. Search History is empty."
 msgstr "İşlem yapılamıyor. Arama geçmişi boş."
 
 msgid "Undo reverse"
-msgstr ""
+msgstr "Ters çevirmeyi geri al"
 
 msgid "Undo shuffle"
-msgstr ""
+msgstr "Karıştırmayı geri al"
 
 msgid "Unfix jump target"
 msgstr "Atlama hedefinin sabitlemesini kaldır"
@@ -6258,7 +6270,7 @@ msgid "Unrar error code[%s]."
 msgstr "Unrar hata kodu[%s]."
 
 msgid "Unselect all"
-msgstr ""
+msgstr "Tüm seçimi kaldır"
 
 msgid "Unset watched"
 msgstr "İzlendi işaretini kaldır"
@@ -6283,7 +6295,7 @@ msgid "Upload date"
 msgstr "Yükleme tarihi"
 
 msgid "Upload speed limit"
-msgstr ""
+msgstr "Yükleme hızı sınırı"
 
 #, python-format
 msgid "Uploader: %s"
@@ -6484,7 +6496,7 @@ msgid "Voice-over"
 msgstr "Seslendirme"
 
 msgid "Volleyball"
-msgstr ""
+msgstr "Voleybol"
 
 msgid "WWE shows"
 msgstr "WWE şovları"
@@ -6508,23 +6520,23 @@ msgid "Watch online"
 msgstr "Çevrimiçi izle"
 
 msgid "Watchlist"
-msgstr ""
+msgstr "İzleme listesi"
 
 msgid "Watchlist (no folder)"
-msgstr ""
+msgstr "İzleme listesi (klasörsüz)"
 
 msgid "Watchlist folder"
-msgstr ""
+msgstr "İzleme listesi klasörü"
 
 msgid "WebStreamr / AIOStreams manifest URL (your own):"
-msgstr ""
+msgstr "WebStreamr / AIOStreams manifest URL'si (kendinize ait):"
 
 msgid "Website address"
-msgstr ""
+msgstr "Web sitesi adresi"
 
 #, python-format
 msgid "Weeks on chart: %s"
-msgstr ""
+msgstr "Listede kalınan hafta: %s"
 
 msgid "Western"
 msgstr "Western"
@@ -6548,7 +6560,7 @@ msgid "Winter"
 msgstr "Kış"
 
 msgid "Winter sports"
-msgstr ""
+msgstr "Kış sporları"
 
 msgid "With an API key from subdl.com (E2iPlayer settings, Subtitles) the official SubDL API is searched as well."
 msgstr "subdl.com'dan alınan bir API anahtarıyla (E2iPlayer ayarları, Altyazılar) resmi SubDL API'sinde de arama yapılır."
@@ -6696,7 +6708,7 @@ msgid "Your MyE2i extension is outdated or unknown (v%s or newer needed). Please
 msgstr "MyE2i uzantınız eski veya bilinmiyor (v%s veya daha yenisi gerekli). Lütfen güncelleyin:"
 
 msgid "Your own list of videos, in folders of your own (MENU key on a video: \"Add to Watchlist\")"
-msgstr ""
+msgstr "Kendi klasörlerinizde kendi video listeniz (bir videoda MENU tuşu: \"İzleme listesine ekle\")"
 
 msgid "Your search entry"
 msgstr "Arama girişiniz"
@@ -6937,10 +6949,10 @@ msgid "https - validate SSL certificates"
 msgstr "https - SSL sertifikalarını doğrula"
 
 msgid "iTunes - Top albums by country"
-msgstr ""
+msgstr "iTunes - Ülkeye göre en iyi albümler"
 
 msgid "iTunes - Top songs by country"
-msgstr ""
+msgstr "iTunes - Ülkeye göre en iyi şarkılar"
 
 msgid "insert space"
 msgstr "boşluk ekle"
@@ -6997,7 +7009,7 @@ msgid "manual"
 msgstr "elle"
 
 msgid "marked"
-msgstr ""
+msgstr "işaretli"
 
 msgid "maroon"
 msgstr "bordo"
@@ -7039,7 +7051,7 @@ msgid "next page"
 msgstr "sonraki sayfa"
 
 msgid "next page / previous page"
-msgstr ""
+msgstr "sonraki sayfa / önceki sayfa"
 
 msgid "next page = page 1"
 msgstr "sonraki sayfa = sayfa 1"
@@ -7120,7 +7132,7 @@ msgid "refresh the current list"
 msgstr "geçerli listeyi yenile"
 
 msgid "reversed"
-msgstr ""
+msgstr "ters çevrildi"
 
 msgid "rootfs"
 msgstr "rootfs"
@@ -7187,7 +7199,7 @@ msgid "show this help"
 msgstr "bu yardımı göster"
 
 msgid "shuffled"
-msgstr ""
+msgstr "karıştırıldı"
 
 msgid "sign in (subscriptions, playlists, age-restricted videos)"
 msgstr "oturum aç (abonelikler, oynatma listeleri, yaş kısıtlamalı videolar)"
