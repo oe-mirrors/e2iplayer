@@ -1716,6 +1716,9 @@ class pageParser(CaptchaHelper):
                 if not sts:
                     return False
         movieUrls = []
+        # fix 201026: "trailer": {"mp4_240": ..., "mp4_1080": ...} next to the video's "files" is the short silent hover
+        # preview - its links looked like a second set of qualities and played a few seconds without sound (box log)
+        data = re.sub(r'''"trailer"\s*:\s*\{[^{}]*\}''', '"trailer":{}', data)
         item = self.cm.ph.getSearchGroups(data, r"""['"]?cache([0-9]+?)['"]?[=:]['"]?(http[^"]+?\.mp4[^;^"^']*)[;"']""", 2)
         if item[1] != "":
             cacheItem = {"name": "vk.com: " + item[0] + "p (cache)", "url": item[1].replace("\\/", "/")}
@@ -3877,8 +3880,11 @@ class pageParser(CaptchaHelper):
         if "1vid.xyz/" in baseUrl:
             # add 041026: same IP binding (i=<IPv6 /64> instead of i=<IPv4 /16>), *.1vid.online is IPv4 only -> 404
             urlParams["ipv4_only"] = True
-        if "rubyvidhub.com" in baseUrl or "rubystm.com" in baseUrl or "streamruby" in baseUrl:
+        if "rubyvidhub.com" in baseUrl or "rubystm.com" in baseUrl or "streamruby" in baseUrl or "stmruby.com" in baseUrl:
             HTTP_HEADER.pop("Referer", None)  # embed is refused ("restricted for this domain") whenever a Referer is sent
+            # fix 201026: the token is bound to the client address (i=<IPv4 /16> or <IPv6 /64>) and the CDN
+            # (*.streamruby.net) is IPv4 only - a page fetched over IPv6 gives a playlist that answers 403 (box log)
+            urlParams["ipv4_only"] = True
         if "dropload." in baseUrl:
             baseUrl = re.sub(r"dropload\.co/embed-([^./]+)\.html", r"dr0pstream.com/e/\1", baseUrl)
             baseUrl = baseUrl.replace("dropload.tv", "dr0pstream.com").replace("dropload.io", "dr0pstream.com")
@@ -3946,16 +3952,34 @@ class pageParser(CaptchaHelper):
             for src, label in sub:
                 src = src.replace(r"\/", "/")
                 subTracks.append({"title": "", "url": "https:" + src if src.startswith("//") else src, "lang": label})
-        if url:
-            url = url.group(1).replace("&amp;", "&")  # fix 071026: <source src="...?md5=..&amp;expires=.."> (luvstream.cc)
-            url = "https:" + url if url.startswith("//") else url
-            url = urlparser.decorateUrl(url, {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": host, "Origin": host[:-1], "external_sub_tracks": subTracks})
+        # fix 201026: StreamWish / StreamHG players list their sources as links = {"hls4": "/stream/...", "hls3": ...,
+        # "hls2": ...} and play links.hls4 || links.hls3 || links.hls2 - the same order here, the next one when a
+        # playlist does not load (hls2 alone sat on a dead CDN node, box log 20.10.: premilkyway.com)
+        hlsLinks = dict(re.findall(r"""["'](hls\d)["']\s*:\s*["']([^"']+)["']""", data))
+        candidates = [urljoin(host, hlsLinks[key].replace("\\/", "/")) for key in ("hls4", "hls3", "hls2") if hlsLinks.get(key)]
+
+        def jwUrl(src):
+            src = "https:" + src if src.startswith("//") else src
+            src = urlparser.decorateUrl(src, {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": host, "Origin": host[:-1], "external_sub_tracks": subTracks})
             # fix 041026: StreamHG HLS and the same CDN family (*.acek-cdn.com, *.premilkyway.com, *.cdn-centaurus.com:
             # "/hls2/...&i=0.4&sp=500", also behind fastvid.cam, hlswish.com and vidhideplus.com): exteplayer3 fails on
             # it on the box ("Invalid data found when processing input" or no picture) while gstplayer and hlsdl play
             # it; the playlist and the TS segments are clean, ffmpeg 8.1 (schannel) on a PC plays it too
-            if ".m3u8" in url and ("hglamioz.com" in host or ("/hls2/" in url and re.search(r"[?&]sp=500(?:&|$)", url))):
-                url.meta["iptv_buffering"] = "required"
+            if ".m3u8" in src and ("hglamioz.com" in host or ("/hls2/" in src and re.search(r"[?&]sp=500(?:&|$)", src))):
+                src.meta["iptv_buffering"] = "required"
+            return src
+
+        if candidates:
+            links = []
+            for candidate in candidates:
+                # hls4 segments are MPEG-TS behind a PNG header (".image" names) - hlsdl cuts it off
+                links = requireDownloaderForDisguisedHls(getDirectM3U8Playlist(jwUrl(candidate), checkExt=False, checkContent=True, sortWithMaxBitrate=99999999))
+                if links:
+                    break
+                printDBG("parserJWPLAYER no playlist from [%s]" % candidate)
+            urltab.extend(links)
+        elif url:
+            url = jwUrl(url.group(1).replace("&amp;", "&"))  # fix 071026: <source src="...?md5=..&amp;expires=.."> (luvstream.cc)
             if ".m3u8" in url and "serversicuro." in url:
                 # fix 081026: the supervideo CDN (*.serversicuro.cc) answers part of the playlist requests with an
                 # ad redirect (.../zokvisitor/...), a "Loading..." JS page or 429 instead of the playlist - handed on
@@ -4486,6 +4510,19 @@ class pageParser(CaptchaHelper):
         if not sts:
             urlParams["header"] = dict(HTTP_HEADER)
             sts, data = self.cm.getPage(url, urlParams)
+        path = re.sub(r"^https?://[^/]+", "", url)
+        if not sts and not data and path.startswith("/"):
+            # the throw-away domains (q7v3k8m2p1.top, ...) do not resolve on every network: the same id on the
+            # fixed Megamax domains
+            for domain in ("megamax.me", "share4max.com", "megatuktuk.store"):
+                if "://%s/" % domain in url:
+                    continue
+                printDBG("parserMEGAMAX %s not reachable -> %s" % (origin, domain))
+                sts, data = self.cm.getPage("https://%s%s" % (domain, path), urlParams)
+                if sts and data:
+                    url = "https://%s%s" % (domain, path)
+                    origin = urlparser.getDomain(url, False)
+                    break
         if not sts or not data:
             return []
         page = data.replace("&quot;", '"').replace("\\/", "/")
@@ -4520,33 +4557,37 @@ class pageParser(CaptchaHelper):
         up = urlparser()
         urltab = []
         tried = 0
+        working = 0
         start = time.time()
 
         def mirrorCost(mirror):
             # morencius.com (VidHide) answers every request only after ~20 s: try it after the other hosters
             return 1 if "morencius." in str(mirror.get("link") or "") else 0
 
+        mirrors = []
         for quality in streams.get("data") or []:
             label = str(quality.get("label") or quality.get("resolution") or "").replace(" (source)", "").strip()
-            found = 0
-            for mirror in sorted(quality.get("mirrors") or [], key=mirrorCost):
-                if found >= 3 or tried >= 12:
-                    break  # every mirror costs requests: three working hosters per quality are plenty
-                if urltab and time.time() - start > 10:
-                    break  # links resolve one after another - do not keep the user waiting for more mirrors
-                link = str(mirror.get("link") or "").strip()
-                if link.startswith("//"):
-                    link = "https:" + link
-                if not self.cm.isValidUrl(link) or up.checkHostSupport(link) != 1 or up.getParser(link) == up.pp.parserMEGAMAX:
-                    continue
-                tried += 1
-                driver = str(mirror.get("driver") or "").strip() or up.getHostName(link, True)
-                links = up.getVideoLinkExt(strwithmeta(link, {"Referer": origin}))
-                if links:
-                    found += 1
-                for item in links:
-                    item["name"] = ("%s %s %s" % (label, driver, item.get("name", ""))).strip()
-                    urltab.append(item)
+            mirrors.extend((label, mirror) for mirror in sorted(quality.get("mirrors") or [], key=mirrorCost))
+        for label, mirror in mirrors:
+            if tried >= 12 or working >= 3:
+                # every mirror costs requests: three working hosters are plenty (their HLS masters carry the
+                # qualities); on a box each resolve takes seconds and the user gives up on a long wait
+                break
+            if urltab and time.time() - start > 8:
+                break  # links resolve one after another - do not keep the user waiting for more mirrors
+            link = str(mirror.get("link") or "").strip()
+            if link.startswith("//"):
+                link = "https:" + link
+            if not self.cm.isValidUrl(link) or up.checkHostSupport(link) != 1 or up.getParser(link) == up.pp.parserMEGAMAX:
+                continue
+            tried += 1
+            driver = str(mirror.get("driver") or "").strip() or up.getHostName(link, True)
+            links = up.getVideoLinkExt(strwithmeta(link, {"Referer": origin}))
+            if links:
+                working += 1
+            for item in links:
+                item["name"] = ("%s %s %s" % (label, driver, item.get("name", ""))).strip()
+                urltab.append(item)
         return urltab
 
     def _megamaxLeechLinks(self, page, encrypted, origin, urlParams):  # add 031026

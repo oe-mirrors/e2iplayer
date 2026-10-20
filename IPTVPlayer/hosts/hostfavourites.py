@@ -719,10 +719,11 @@ class IPTVHost(CHostBase):
                 if not callable(keyProvider) or not (0 <= Index < len(guestList)):
                     return
                 item = guestList[Index]
-                if guestHost.watchedHelper.markHostItemAsStarted(rawGuestHost, item, keyProvider):
-                    propagate = getattr(rawGuestHost, '_propagateEpisodeWatchedState', None)
-                    if callable(propagate):
-                        propagate(item)
+                if not guestHost.watchedHelper.markHostItemAsStarted(rawGuestHost, item, keyProvider):
+                    return  # no watched key (live stream): not started
+                propagate = getattr(rawGuestHost, '_propagateEpisodeWatchedState', None)
+                if callable(propagate):
+                    propagate(item)
             else:
                 if not (0 <= Index < len(self.host.currList)):
                     return
@@ -736,10 +737,11 @@ class IPTVHost(CHostBase):
                 watchedHelper = getattr(rawHost, 'watchedHelper', None)
                 if not callable(keyProvider) or watchedHelper is None:
                     return
-                if watchedHelper.markHostItemAsStarted(rawHost, favItem, keyProvider):
-                    propagate = getattr(rawHost, '_propagateEpisodeWatchedState', None)
-                    if callable(propagate):
-                        propagate(favItem)
+                if not watchedHelper.markHostItemAsStarted(rawHost, favItem, keyProvider):
+                    return  # no watched key (live stream): not started
+                propagate = getattr(rawHost, '_propagateEpisodeWatchedState', None)
+                if callable(propagate):
+                    propagate(favItem)
             if self.cachedRet is not None and hasattr(self.cachedRet, 'value') and 0 <= Index < len(self.cachedRet.value):
                 if not self.cachedRet.value[Index].isWatched:
                     self.cachedRet.value[Index].isStarted = True

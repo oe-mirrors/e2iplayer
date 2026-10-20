@@ -404,9 +404,12 @@ class IPTVWatchedHelper(object):
         try:
             if not self.isMarkingAllowed():
                 return False
+            # no key (live streams, navigation rows): nothing is marked - False, so the caller does not show the
+            # row as started either
             watchedKey = keyProvider(cItem)
-            if watchedKey != '':
-                self.markItemStarted(cItem, watchedKey)
+            if watchedKey == '':
+                return False
+            self.markItemStarted(cItem, watchedKey)
             return True
         except Exception:
             printExc()
@@ -418,8 +421,9 @@ class IPTVWatchedHelper(object):
             if not self.isMarkingAllowed():
                 return False
             watchedKey = keyProvider(cItem)
-            if watchedKey != '':
-                self.markItemWatched(cItem, watchedKey)
+            if watchedKey == '':
+                return False
+            self.markItemWatched(cItem, watchedKey)
             return True
         except Exception:
             printExc()
