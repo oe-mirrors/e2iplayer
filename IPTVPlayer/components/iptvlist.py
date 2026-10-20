@@ -811,6 +811,14 @@ class IPTVPlayerSelectorContextMenuChoiceBoxList(IPTVMainNavigatorList):
         'DEL_ITEM': 'RemoveItem.png',
         'SETTINGS': 'SettingsItem.png',
         'INFO': 'InfoItem.png',
+        # own folders inside a group - the Watchlist folder icons of hostxxx
+        'FOLDER_NEW': 'WatchlistAddFolderItem.png',
+        'FOLDER_MOVE': 'WatchlistMoveFolderItem.png',
+        'FOLDER_RENAME': 'WatchlistRenameFolderItem.png',
+        'FOLDER_DELETE': 'WatchlistDeleteFolderItem.png',
+        'FOLDER_SELECT': 'SelectAllItem.png',
+        'FOLDER_ICON': 'PictureItem.png',
+        'FOLDER_OUT': 'RemoveItem.png',
     }
 
     def __init__(self):
