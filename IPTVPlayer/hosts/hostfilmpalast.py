@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "10.10.2026"
+LAST_MODIFIED = "20.10.2026"
 # 23.08.2026 - getSuggestionsProvider() added (forces Google search suggestions) - Kamikaze24
 # 10.10.2026 - links are no longer renamed to "*name*" after use - that broke the link list's own used mark (tick + colour)
 # 11.10.2026 - moviemeta: meta_type / meta_title / meta_year on the items, INFO merged with libs/moviemeta (the site's
 #              fields stay), sidecar = the site's plot + poster + the moviemeta query (no extra INFO request any more)
+# 20.10.2026 - sidecar: the release name of the title page ("release_text") as "Quality:" line
 ###################################################
 # LOCAL import
 ###################################################
@@ -395,7 +396,7 @@ class FilmPalastTo(CBaseHostClass):
 
         linksTab = self.cacheLinks.get(cItem["url"], [])
         if len(linksTab) > 0:
-            return decorateCachedLinkItems(linksTab, self._linksSidecar(cItem, sidecarEnabled, self.cachePageInfo.get(cItem["url"], ("", "", ""))))
+            return decorateCachedLinkItems(linksTab, self._linksSidecar(cItem, sidecarEnabled, self.cachePageInfo.get(cItem["url"], ("", "", "", ""))))
 
         sts, data = self.getPage(cItem["url"], self.defaultParams)
         if not sts:
@@ -423,15 +424,25 @@ class FilmPalastTo(CBaseHostClass):
         return linksTab
 
     def _pageInfo(self, data):
-        # (plot, poster, "Veröffentlicht:") of a title page's content block - for INFO and the download sidecar
+        # (plot, poster, "Veröffentlicht:", release name) of a title page's content block - for INFO and the download sidecar
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<span class="hidden', "</span>")[1])
         icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, r"""src=['"]([^"^']+\.jpe?g)['"]""")[0])
         released = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, "Ver&ouml;ffentlicht:", "<", False)[1])
-        return desc, icon, released
+        return desc, icon, released, self._releaseName(data)
+
+    @staticmethod
+    def _releaseName(data):
+        # <span id="release_text" ...>Aufputzt.is.2025.GERMAN.1080p.WEB.H264-MGE&#8203;&nbsp;... - the name ends
+        # before the zero-width space (a raw U+200B or the entity)
+        match = re.search(r'id="release_text"[^>]*>\s*([\w.+\-]+)', data or "")
+        return match.group(1) if match else ""
 
     def _linksSidecar(self, cItem, enabled, pageInfo):
-        desc, icon, released = pageInfo
+        desc, icon, released, release = pageInfo
         query = infoSidecarMetaQuery(cItem, sidecarMetaQuery(*self._metaQueryArgs(cItem, released))) if enabled else {}
+        if query and release:
+            # the release name as "Quality:" line of the sidecar (urlmetahelper.lookupSidecarMeta)
+            query = dict(query, info={"quality": release})
         return buildSidecar(enabled, desc or cItem.get("desc", ""), icon or cItem.get("icon", ""), query)
 
     def getVideoLinks(self, videoUrl):
@@ -490,7 +501,7 @@ class FilmPalastTo(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div id="content" role="main">', "</ul>")[1]
 
         title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, "<h2", "</h2>")[1])
-        desc, icon, released = self._pageInfo(data)
+        desc, icon, released = self._pageInfo(data)[:3]
 
         tmpTab = []
         tmp = self.cm.ph.getDataBeetwenMarkers(data, "enre</p>", "</li>", False)[1]

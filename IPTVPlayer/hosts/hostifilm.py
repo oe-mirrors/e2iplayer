@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "04.10.2026"
+LAST_MODIFIED = "20.10.2026"
+# 20.10.2026 - movie, clip and trailer MP4s from video.ifilmtv.ir/ifilm/ (ar./fa.ifilmtv.ir answer 403 now)
 # 03.10.2026 - brought to the current host standard
 #   (iFilm Arabic, ar.ifilmtv.ir - originally by Mohamed Elsafty)
 #   - live channels over http:// (the https certificate of live.presstv.ir is the one of
@@ -40,11 +41,12 @@ def gettytul():
 
 LIVE_URL = "http://live.presstv.ir/hls/"  # NOSONAR - the live HLS is served over plain http only
 VOD_HLS = "https://vod.ifilmtv.ir/hls/%s%s/,%s,%s_320,.mp4.urlset/master.m3u8"
-VIDEO_BASE = "https://video.ifilmtv.ir/ifilm/"
+VIDEO_BASE = "http://video.ifilmtv.ir/ifilm/"  # NOSONAR - certificate of video.ifilmtv.ir expired, see _videoUrl
 PER_PAGE = 18  # cards per page of /Series and /Film (the site's own divisor of its item counter)
 JSON_PAGE = 30
 TITLE_YEAR_RE = re.compile(r"^(.*?)\s*\(\s*((?:19|20)\d{2})\s*\)\s*$")
 HTTP_HOSTS_RE = re.compile(r"^https://((?:ar|fa|fa2)\.ifilmtv\.ir)/", re.I)
+UPLOADED_MP4_RE = re.compile(r"^(?:https?:)?//(?:ar|fa|fa2|video)\.ifilmtv\.ir(?:/ifilm)?/+(UploadedFiles/.+)$", re.I)
 
 
 class IFilmArabicHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
@@ -91,6 +93,14 @@ class IFilmArabicHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
         # row urls themselves (watched / favourite keys) stay https. vod.ifilmtv.ir redirects http to https, so
         # the series HLS cannot avoid it.
         return HTTP_HOSTS_RE.sub(r"http://\1/", url or "")  # NOSONAR - expired certificate, see above
+
+    @staticmethod
+    def _videoUrl(url):
+        # since ~10.2026 ar./fa.ifilmtv.ir answer 403 for the MP4s the pages link (movies, clips, trailers);
+        # the same file is served by video.ifilmtv.ir/ifilm/ - over plain http, its certificate expired on
+        # 02.10.2026 (no redirect to https there)
+        match = UPLOADED_MP4_RE.match(url or "")
+        return VIDEO_BASE + match.group(1) if match else url
 
     def _iconUrl(self, url):
         return self._plainHttp(self._fullUrl(url))
@@ -466,7 +476,7 @@ class IFilmArabicHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if ".m3u8" in media:
             links = self._hlsLinks(media, "iFilm")
         else:
-            links = [{"name": "iFilm MP4", "url": strwithmeta(self._plainHttp(media), meta), "need_resolve": 0}]
+            links = [{"name": "iFilm MP4", "url": strwithmeta(self._videoUrl(self._plainHttp(media)), meta), "need_resolve": 0}]
         # moviemeta query of INFO: all services, also for an Arabic title
         metaQuery = sidecarMetaQuery(cItem.get("meta_type", ""), cItem.get("meta_title", ""), cItem.get("meta_year", ""), skip=())
         return applySidecarToLinks(links, buildSidecarFromItem(cItem, IsSidecarEnabled(), story, metaQuery))

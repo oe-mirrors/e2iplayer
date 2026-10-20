@@ -209,7 +209,7 @@ def sidecarFromUrlMeta(url, cfgEnabled=True):
 
 
 # moviemeta info keys in the order of the sidecar's lines (labels: ArticleContent.RICH_DESC_LABELS, as on INFO)
-SIDECAR_META_FIELDS = ("original_title", "imdb_rating", "tmdb_rating", "rating", "genres", "duration", "released", "first_air_date",
+SIDECAR_META_FIELDS = ("original_title", "quality", "imdb_rating", "tmdb_rating", "rating", "genres", "duration", "released", "first_air_date",
                        "seasons", "episodes", "age_limit", "country", "station", "directors", "creators", "writers", "cast", "awards")
 
 
@@ -256,7 +256,18 @@ def lookupSidecarMeta(query, siteTxt="", siteImg=""):
             meta = getMeta(query.get("type", ""), alt, query.get("year", ""), tuple(altSkip or ()), query.get("maxYearDiff"))
         if not meta:
             printDBG("urlmetahelper sidecar: no moviemeta details for %r" % (query,))
-            return siteTxt, siteImg
+            if not query.get("info"):
+                return siteTxt, siteImg
+            meta = {"title": "", "info": {}}
+        if query.get("info"):
+            # query["info"]: the host's own fields of this download (e.g. "quality": the release name, see
+            # hostfilmpalast) - also without a moviemeta answer; moviemeta's own value of a key wins
+            meta = dict(meta)
+            info = dict(meta.get("info") or {})
+            for key, value in query["info"].items():
+                if value:
+                    info.setdefault(key, value)
+            meta["info"] = info
         return formatSidecarText(meta, siteTxt, query.get("type") == "tv"), meta.get("poster") or siteImg
     except Exception:
         printExc()
