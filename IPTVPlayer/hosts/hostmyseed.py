@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "04.10.2026"
+LAST_MODIFIED = "21.10.2026"
+# 21.10.2026 - update url and change name
 # 03.10.2026 - rewrite for the current m.myseed.pics layout and the current host standard
 #   (earlier versions: popking (odem2014), M.Elsafty (angel_heart))
 #   - menus read the site's current category paths (the old "-14"/"-7"/"-2" slugs only redirect now);
@@ -38,7 +39,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return "https://m.myseed.pics/"
+    return "https://m.myseed.tv/"
 
 
 # Enigma2 colour codes ("\c00RRGGBB") - only for the list description, never in titles / sidecar / INFO text
@@ -80,7 +81,7 @@ class MySeed(GenericFolderWatchedScraperMixin, CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(self, {"history": "MySeed", "cookie": "MySeed.cookie"})
         self.MAIN_URL = gettytul()
-        self.DEFAULT_ICON_URL = "https://m.myseed.pics/lgo222.png"
+        self.DEFAULT_ICON_URL = self.getFullUrl("lgo222.png", gettytul())
         self.HEADER = self.cm.getDefaultHeader(browser="chrome")
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({"X-Requested-With": "XMLHttpRequest", "Accept": "application/json, text/javascript, */*; q=0.01",
