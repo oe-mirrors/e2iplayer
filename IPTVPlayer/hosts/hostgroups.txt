@@ -50,6 +50,7 @@
   "hdfilme",
   "movie2kcx",
   "kinox",
+  "kellerkino",
   "einschalten",
   "megakino",
   "streamkinos",
@@ -356,6 +357,7 @@
   "hdfilme",
   "movie2kcx",
   "kinox",
+  "kellerkino",
   "sportdeutschland",
   "vavooto"
  ],
