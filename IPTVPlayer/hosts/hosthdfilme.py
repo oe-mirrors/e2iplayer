@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "07.10.2026"
+LAST_MODIFIED = "21.10.2026"
 # 07.10.2026 - "no valid links" on every movie: the page now lazy-loads the "custom" DeVideoSRC player
 # (<iframe src="about:blank" data-src="https://devideosrc.co/custom/movie/<imdb>">), the old movie iframe
 # pattern found nothing, so movies had no player url (fixed in libs/meinecloud.py). Also: First/Jump/Next
@@ -68,7 +68,8 @@ def _trimTrailingDashPart(title):
     """Drop a trailing ' – <type>' marker the listing appends after the real title (en/em dash
     only, never a plain hyphen). Runs on already-HTML-decoded text so it works whether the site
     emits a literal dash or the &#8211; entity."""
-    return re.split(r"\s+[–—]\s*", title, maxsplit=1)[0].strip()
+    # alternatives, not a character class - on Python 2 the class held single UTF-8 bytes
+    return re.split(r"\s+(?:–|—)\s*", title, maxsplit=1)[0].strip()
 
 
 PAGING_KEYS = ("base_url", "page_tpl")

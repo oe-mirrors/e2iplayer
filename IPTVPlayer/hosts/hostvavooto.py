@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "09.10.2026"
+LAST_MODIFIED = "21.10.2026"
 # VAVOO.TO: IPTV live channels per country (logic of the Kodi "vavoo" addon).
 # - signature: POST www.vavoo.tv/api/app/ping (anonymous app ping) -> addonSig, valid ~15 min
 # - channel lists: POST vavoo.to/mediahubmx-catalog.json (filter group = country, paged by cursor)
@@ -79,13 +79,15 @@ class VavooTo(CBaseHostClass):
             if not sig:
                 return None
             header['mediahubmx-signature'] = sig
-        params = {'header': header, 'raw_post_data': True}
+        # with_metadata: the meta (pycurl_error) is only on the answer with it
+        params = {'header': header, 'raw_post_data': True, 'with_metadata': True}
         sts, data = self.cm.getPage(url, params, json_dumps(body))
-        if not sts and (getattr(data, 'meta', None) or {}).get('pycurl_error'):
+        # also without an answer at all (the urllib path has no pycurl_error)
+        if not sts and (data is None or (getattr(data, 'meta', None) or {}).get('pycurl_error')):
             # box log 09.10.2026: vavoo.to reset the box's TLS connection ("Connection reset by peer") while the
             # PC got the list - once more as Chrome (curl-impersonate: Chrome's TLS fingerprint and User-Agent, the
             # other headers incl. the signature stay; the catalog answers any User-Agent)
-            printDBG('VavooTo._post: %s - retrying with curl-impersonate' % str(data.meta['pycurl_error']))
+            printDBG('VavooTo._post: %s - retrying with curl-impersonate' % str((getattr(data, 'meta', None) or {}).get('pycurl_error', 'no answer')))
             sts, data = self.cm.getPage(url, dict(params, impersonate=True), json_dumps(body))
         if not sts or not data:
             return None
