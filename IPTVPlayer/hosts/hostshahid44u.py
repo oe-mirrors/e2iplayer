@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "04.10.2026"
+LAST_MODIFIED = "21.10.2026"
 # Based on the preparatory work of odem2014
+# 21.10.2026 - the /watch/ page lists "const servers = [...]" without urls: each server is resolved by a POST to
+#   /watch/resolve (one-time watchResolveKey + csrfToken + the server's resolve_token) -> /m/<hash> as before
 # 03.10.2026 - new domain shaahiied4u.net (shahid4uu.day is dead, shed4u1.com is
 #   parked; shaiid4u.co / shhaiid4u.net redirect here): "show-card" grids, ?page=N with rel="next" (First page /
 #   Jump / Next page, also for the episodes of a season - no blocking loop over all pages),
@@ -318,22 +320,72 @@ class Shahid44u(GenericFolderWatchedScraperMixin, CBaseHostClass):
         sts, data = self.getPage(watchUrl, params)
         if not sts:
             return []
-        servers = []
-        try:
-            servers = json_loads(self.cm.ph.getSearchGroups(data, r"let servers\s*=\s*(\[.*?\]);")[0] or "[]")
-        except Exception:
-            printExc()
         urltab = []
-        for server in sorted(servers, key=lambda s: s.get("rank", 99) or 99):
+        for server in sorted(self._watchServers(data), key=lambda s: s.get("rank", 99) or 99):
+            name = str(server.get("name", "") or "").strip()
+            if server.get("resolve_token"):
+                # since ~20.10.2026 no url in the list: POST /watch/resolve per server (see _resolveServer); the
+                # pseudo url keeps the server id, the tokens of a fresh page load are matched by it
+                sid = str(server.get("id", "") or "")
+                if not sid:
+                    continue
+                link = "%s#server=%s" % (watchUrl, sid)
+                urltab.append({"name": name or sid, "url": strwithmeta(link, {"Referer": pageUrl, "server_name": name}), "need_resolve": 1})
+                continue
             link = self._fullUrl(str(server.get("url", "") or ""), watchUrl)
             if not self.cm.isValidUrl(link):
                 continue
-            name = str(server.get("name", "") or "").strip() or self.up.getHostName(link)
-            urltab.append({"name": name, "url": strwithmeta(link, {"Referer": watchUrl}), "need_resolve": 1})
+            urltab.append({"name": name or self.up.getHostName(link), "url": strwithmeta(link, {"Referer": watchUrl}), "need_resolve": 1})
         sidecarTxt = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<div class="description">', "</div>", False)[1])
         # moviemeta query of INFO (title lookup, all services - the page with the IMDb id is not loaded here)
         metaQuery = sidecarMetaQuery(cItem.get("meta_type", ""), cItem.get("meta_title", "") or cItem.get("s_title", ""), cItem.get("meta_year", ""), skip=())
         return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), sidecarTxt, metaQuery))
+
+    def _watchServers(self, data):
+        # "const servers = [...]" (resolve_token per server) or the older "let servers = [...]" (url per server)
+        try:
+            servers = json_loads(self.cm.ph.getSearchGroups(data, r"(?:const|let|var)\s+servers\s*=\s*(\[.*?\]);")[0] or "[]")
+        except Exception:
+            printExc()
+            return []
+        return [s for s in servers if isinstance(s, dict)] if isinstance(servers, list) else []
+
+    def _resolveServer(self, videoUrl):
+        # watch page -> watchResolveKey + csrfToken + the server's resolve_token -> POST JSON to resolveUrl ->
+        # {"ok": true, "url": "/m/<hash>"}; the key works for ONE resolve only, so the page is loaded again
+        url = strwithmeta(videoUrl)
+        watchUrl, sid = str(url).split("#server=", 1)
+        params = dict(self.defaultParams)
+        params["header"] = dict(self.HEADER, Referer=url.meta.get("Referer", self.MAIN_URL))
+        sts, data = self.getPage(watchUrl, params)
+        if not sts:
+            return ""
+        key = self.cm.ph.getSearchGroups(data, r'watchResolveKey\s*=\s*"([^"]+)"')[0]
+        csrf = self.cm.ph.getSearchGroups(data, r'csrfToken\s*=\s*"([^"]+)"')[0]
+        resolveUrl = self.cm.ph.getSearchGroups(data, r'resolveUrl\s*=\s*"([^"]+)"')[0].replace("\\/", "/")
+        servers = self._watchServers(data)
+        server = [s for s in servers if str(s.get("id", "")) == sid] or \
+            [s for s in servers if str(s.get("name", "")) == url.meta.get("server_name", "")]
+        token = str(server[0].get("resolve_token", "") or "") if server else ""
+        if not key or not token:
+            printDBG("Shahid44u._resolveServer: no key / token for server %s" % sid)
+            return ""
+        resolveUrl = self._fullUrl(resolveUrl or "/watch/resolve", watchUrl)
+        params = dict(self.defaultParams)
+        params["header"] = dict(self.HEADER)
+        params["header"].update({"Referer": watchUrl, "Origin": self.up.getDomain(watchUrl, False).rstrip("/"), "Accept": "application/json",
+                                 "Content-Type": "application/json", "X-CSRF-TOKEN": csrf, "X-Requested-With": "XMLHttpRequest"})
+        params["raw_post_data"] = True
+        sts, data = self.getPage(resolveUrl, params, json_dumps({"key": key, "token": token}))
+        try:
+            js = json_loads(data) if sts else {}
+        except Exception:
+            js = {}
+        link = str(js.get("url", "") or "") if isinstance(js, dict) and js.get("ok") is True else ""
+        if not link:
+            printDBG("Shahid44u._resolveServer: no url [%s]" % data)
+            return ""
+        return strwithmeta(self._fullUrl(link, watchUrl), {"Referer": watchUrl})
 
     def _resolveRedirect(self, videoUrl):
         # /m/<hash> answers 302 to the hoster embed, but only for an iframe request from the watch page
@@ -364,6 +416,10 @@ class Shahid44u(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not self.cm.isValidUrl(videoUrl):
             return []
         sidecar = sidecarFromUrlMeta(videoUrl, IsSidecarEnabled())
+        if "#server=" in videoUrl:
+            videoUrl = self._resolveServer(videoUrl)
+            if not videoUrl:
+                return []
         # the site domain changes often (301 chains, server links on yet another domain): match the
         # /m/<hash> redirect link by its path, not by comparing with MAIN_URL
         if re.search(r"^https?://[^/]+/m/[0-9a-fA-F]{16,}", videoUrl):

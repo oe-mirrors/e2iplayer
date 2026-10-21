@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "04.10.2026"
+LAST_MODIFIED = "21.10.2026"
+# 21.10.2026 - ViD LO back: the embed plays with the page's signed token "?st=..&e=.." (PageData.TokenVidlo);
+#   "Megamx": every hoster mirror of its page as an own server row, resolved only when picked
 # 03.10.2026 - brought to the current host standard
 #   Lodynet host originally by Mohamed Elsafty (angel_heart)
 #   - lodynet.watch redirects to lodynet.top: the main menu follows the redirect and takes the
@@ -12,8 +14,8 @@ LAST_MODIFIED = "04.10.2026"
 #   - network only through self.cm (no requests module), Python 2.7 + 3 (no f-strings)
 #   - movies / episodes / clips are VIDEO rows keyed on their page url; the hoster embeds
 #     (PostData.ServersWatch) are read in getLinksForVideo; "Lody Plus" premium servers
-#     (no embed, subscription only) are hidden, ViD LO (vidlo.us, 404 for every signed embed)
-#     dropped; every other server incl. "Megamx" (megamax) goes to urlparser
+#     (no embed, subscription only) are hidden, ViD LO (vidlo.us) gets the page's signed
+#     token (PageData.TokenVidlo); every other server incl. "Megamx" (megamax) goes to urlparser
 #   - watched flag (post:/cat: slugs, series -> season -> episode), downloaded flag,
 #     favourites, sidecar, name normalisation ("Title (Year)", "Show - SxxExx"), INFO via
 #     moviemeta + the site's story/poster/cast/genres
@@ -71,9 +73,10 @@ JUNK_RE = re.compile(r"(?:^|\s)(?:مترجم|مترجمة|مترجم للعرب�
 JUNK_TAIL_RE = re.compile(r"\s+(?:بجودة\s+\S+.*|مترجم\s+عربي.*)$")
 MOVIE_WORDS = ("فيلم",)
 SERIES_WORDS = ("مسلسل", "موسم", "برنامج")
-# hoster ids of the site: 116413 = ViD LO (vidlo.us, dead); "Lody Plus" (subscription) has no embed and is skipped in _servers
-DEAD_SERVER_IDS = ("116413",)
-DEAD_SERVER_HOSTS = ("vidlo.us", "viidshar.com", "govad.xyz", "vadbam.net")
+# hoster ids of the site: 116413 = ViD LO (vidlo.us, its embed needs the page's signed token PageData.TokenVidlo),
+# 73 = Lody Plus (subscription, PageData.TokenPlus1, no embed for free users - skipped in _servers)
+VIDLO_SERVER_ID = "116413"
+DEAD_SERVER_HOSTS = ("viidshar.com", "govad.xyz", "vadbam.net")
 
 
 def _staticMenu():
@@ -493,9 +496,16 @@ class Lodynet(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 continue
             if not url.startswith("http"):
                 continue
-            if sid in DEAD_SERVER_IDS or any(h in url for h in DEAD_SERVER_HOSTS):
+            if any(h in url for h in DEAD_SERVER_HOSTS):
                 printDBG("Lodynet: skip dead server %s [%s]" % (name, url))
                 continue
+            if sid == VIDLO_SERVER_ID:
+                # the site's SwitchServer() appends "?st=<sig>&e=<expiry>" - without it vidlo.us answers 404
+                token = self.cm.ph.getSearchGroups(data, r'"TokenVidlo"\s*:\s*"([^"]*)"')[0].replace("\\/", "/")
+                if not token:
+                    printDBG("Lodynet: skip %s without TokenVidlo [%s]" % (name, url))
+                    continue
+                url += token
             servers.append((name, sid, url))
         return servers
 
@@ -530,6 +540,7 @@ class Lodynet(GenericFolderWatchedScraperMixin, CBaseHostClass):
             names[name] = names.get(name, 0) + 1
             label = name if names[name] == 1 else "%s (%d)" % (name, names[name])
             urltab.append({"name": label, "url": strwithmeta(url, {"Referer": self.MAIN_URL, "User-Agent": self.HEADER.get("User-Agent")}), "need_resolve": 1})
+        urltab = self._expandMegamax(urltab)
         if not urltab:
             printDBG("Lodynet: no free server on [%s]" % pageUrl)
             if "ServersWatch" in data:
@@ -537,6 +548,24 @@ class Lodynet(GenericFolderWatchedScraperMixin, CBaseHostClass):
         # moviemeta query of INFO: all services, also for an Arabic title
         metaQuery = sidecarMetaQuery(cItem.get("meta_type", ""), cItem.get("meta_title", ""), cItem.get("meta_year", ""), skip=())
         return applySidecarToLinks(urltab, buildSidecarFromItem(dict(cItem, desc=_stripColors(cItem.get("desc", ""))), IsSidecarEnabled(), story, metaQuery))
+
+    def _expandMegamax(self, urltab):
+        # every hoster mirror of the "Megamx" server as its own row like on the site (resolved only when picked);
+        # the Megamax row stays when it lists none
+        result = []
+        seen = set()
+        for item in urltab:
+            mirrors = self.up.getMegamaxMirrors(item["url"])
+            if not mirrors:
+                result.append(item)
+                continue
+            base = item["name"].split(" [")[0]
+            for mirror in mirrors:
+                if mirror["url"] in seen:
+                    continue
+                seen.add(mirror["url"])
+                result.append({"name": "%s %s" % (base, mirror["name"]), "url": mirror["url"], "need_resolve": 1})
+        return result
 
     def getVideoLinks(self, videoUrl):
         printDBG("Lodynet.getVideoLinks [%s]" % videoUrl)

@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "20.10.2026"
+LAST_MODIFIED = "21.10.2026"
+# 21.10.2026 - MegaMax: every hoster mirror of its page as an own server row ("MegaMax 1080p voe", like on the site),
+#   resolved only when picked (urlparser getMegamaxMirrors); watch + download link of one file listed once
 # 20.10.2026 - Anime / Cartoons: the current anime seasons of the site's menu ("Anime Autumn 2026", /tag/...),
 #   Others: World Cup 2022
 # 09.10.2026 - INFO: Arabic-only titles skip IMDb/Cinemeta/OMDb; season folders "Show - Sxx" when normalising
@@ -512,10 +514,29 @@ class EgyDead(GenericFolderWatchedScraperMixin, CBaseHostClass):
             if url and self.up.checkHostSupport(self._megamaxMirror(self.getFullUrl(url))) == 1:
                 name = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ("<span", ">", "ser-name"), ("</span", ">"), False)[1])
                 addLink(url, "%s (%s)" % (name or self.up.getDomain(self.getFullUrl(url), onlyDomain=True), _("Download")))
+        urltab = self._expandMegamax(urltab)
         if not urltab:
             SetIPTVPlayerLastHostError(_("No stream available"))
             return []
         return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), story))
+
+    def _expandMegamax(self, urltab):
+        # every hoster mirror of a Megamax server as its own row like on the site (resolved only when picked);
+        # watch + download link of one file list the same mirrors -> once; the Megamax row stays when it lists none
+        result = []
+        seen = set()
+        for item in urltab:
+            mirrors = self.up.getMegamaxMirrors(item["url"])
+            if not mirrors:
+                result.append(item)
+                continue
+            base = re.sub(r"\s*\(%s\)$" % re.escape(_("Download")), "", item["name"])
+            for mirror in mirrors:
+                if mirror["url"] in seen:
+                    continue
+                seen.add(mirror["url"])
+                result.append({"name": "%s %s" % (base, mirror["name"]), "url": mirror["url"], "need_resolve": 1})
+        return result
 
     def getVideoLinks(self, videoUrl):
         printDBG("EgyDead.getVideoLinks [%s]" % videoUrl)

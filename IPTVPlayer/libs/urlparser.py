@@ -895,6 +895,7 @@ class urlparser:
             "videzz.net": self.pp.parserJWPLAYER,
             "vidhidehub.com": self.pp.parserJWPLAYER,
             "vidload.co": self.pp.parserVIDLOADCO,
+            "vidlo.us": self.pp.parserJWPLAYER,  # add 211026
             "vidmoly.biz": self.pp.parserVIDMOLYME,
             "vidmoly.me": self.pp.parserVIDMOLYME,
             "vidmoly.net": self.pp.parserVIDMOLYME,
@@ -1136,6 +1137,16 @@ class urlparser:
 
     def isHostsNotSupported(self, host):
         return host in ["rapidgator.net", "oboom.com"]
+
+    def getMegamaxMirrors(self, url):
+        # the hoster mirrors of a Megamax link, unresolved ([] for any other link): hosts list them as own servers
+        if self.getParser(url) != self.pp.parserMEGAMAX:
+            return []
+        try:
+            return self.pp.megamaxMirrors(url)
+        except Exception:
+            printExc()
+            return []
 
     def getVideoLinkExt(self, url):
         urltab = []
@@ -4493,12 +4504,88 @@ class pageParser(CaptchaHelper):
         # "Leech" player pages (/e/<id>, component files/leech/video) send the stream list CryptoJS-AES encrypted;
         # the passphrase is a constant of the player chunk (read again from the page's scripts when it changed)
         printDBG("parserMEGAMAX baseUrl[%s]" % baseUrl)
+        ret = self._megamaxStreams(baseUrl)
+        if not ret:
+            return []
+        url, origin, page, component, streams, urlParams = ret
+        if streams.get("status", "success") != "success":
+            if component == "files/leech/video" and "/e/" in url:
+                # the leech backend often answers "something went wrong" - the mirror page of the same id
+                # lists the hosters the file was uploaded to
+                links = self.parserMEGAMAX(strwithmeta(url.replace("/e/", "/iframe/"), strwithmeta(baseUrl).meta))
+                if links:
+                    return links
+            SetIPTVPlayerLastHostError(streams.get("msg", "") or _("Content not available"))
+            return []
+        if component == "files/leech/video":
+            return self._megamaxLeechLinks(page, streams.get("data"), origin, urlParams)
+        up = urlparser()
+        urltab = []
+        tried = 0
+        working = 0
+        start = time.time()
+        for name, link in self._megamaxMirrorList(streams, up):
+            if tried >= 12 or working >= 3:
+                # every mirror costs requests: three working hosters are plenty (their HLS masters carry the
+                # qualities); on a box each resolve takes seconds and the user gives up on a long wait
+                break
+            if urltab and time.time() - start > 8:
+                break  # links resolve one after another - do not keep the user waiting for more mirrors
+            tried += 1
+            links = up.getVideoLinkExt(strwithmeta(link, {"Referer": origin}))
+            if links:
+                working += 1
+            for item in links:
+                item["name"] = ("%s %s" % (name, item.get("name", ""))).strip()
+                urltab.append(item)
+        return urltab
+
+    def megamaxMirrors(self, baseUrl):  # add 211026
+        # the hoster mirrors of a Megamax mirror page as [{'name': '<quality> <hoster>', 'url': <embed>}], NOT
+        # resolved - for hosts that list every mirror as its own server (only the picked one is resolved);
+        # [] for a leech player page / an error (the caller keeps the Megamax link itself)
+        ret = self._megamaxStreams(baseUrl)
+        if not ret:
+            return []
+        url, origin, page, component, streams, urlParams = ret
+        if component == "files/leech/video" or streams.get("status", "success") != "success":
+            return []
+        return [{"name": name, "url": strwithmeta(link, {"Referer": origin})} for name, link in self._megamaxMirrorList(streams, urlparser())]
+
+    def _megamaxMirrorList(self, streams, up):
+        # [(name, link)] of the mirrors urlparser can resolve, slow hosters last
+        def mirrorCost(mirror):
+            # morencius.com (VidHide) answers every request only after ~20 s: try it after the other hosters
+            return 1 if "morencius." in str(mirror.get("link") or "") else 0
+
+        mirrors = []
+        for quality in streams.get("data") or []:
+            if not isinstance(quality, dict):
+                continue
+            label = str(quality.get("label") or quality.get("resolution") or "").replace(" (source)", "").strip()
+            mirrors.extend((label, mirror) for mirror in sorted([m for m in quality.get("mirrors") or [] if isinstance(m, dict)], key=mirrorCost))
+        result = []
+        for label, mirror in mirrors:
+            link = str(mirror.get("link") or "").strip()
+            if link.startswith("//"):
+                link = "https:" + link
+            if not self.cm.isValidUrl(link) or up.checkHostSupport(link) != 1 or up.getParser(link) == up.pp.parserMEGAMAX:
+                continue
+            driver = str(mirror.get("driver") or "").strip() or up.getHostName(link, True)
+            result.append((("%s %s" % (label, driver)).strip(), link))
+        return result
+
+    def _megamaxStreams(self, baseUrl):
+        # (url, origin, page, component, streams, urlParams) of a Megamax page or None
         baseUrl = strwithmeta(baseUrl)
         referer = baseUrl.meta.get("Referer", "")
         # download pages: /download/<id> -> mirror page /iframe/<id>, "leech" download /d/<id> -> player /e/<id>
         url = str(baseUrl).replace("/download/", "/iframe/").replace("/d/", "/e/")
         if url.startswith("//"):
             url = "https:" + url
+        # lodynet links http://megamax.me:8000/iframe/<id>: the port is closed (connect timeout ~2 min each), the
+        # same page is served on https without a port
+        url = re.sub(r"^https?://(megamax\.me|share4max\.com|megatuktuk\.store):\d+/", r"https://\1/", url)
         origin = urlparser.getDomain(url, False)
         HTTP_HEADER = self.cm.getDefaultHeader(browser="chrome")
         urlParams = {"header": dict(HTTP_HEADER), "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": GetCookieDir("megamax.cookie")}
@@ -4507,7 +4594,8 @@ class pageParser(CaptchaHelper):
             # a Referer outside the video's allow_domain list is answered with 403, none at all always passes
             urlParams["header"]["Referer"] = referer
             sts, data = self.cm.getPage(url, urlParams)
-        if not sts:
+        if not sts and not (referer and self.cm.meta.get("pycurl_error")):
+            # without a Referer only after an HTTP answer (403) - not again after a connection error
             urlParams["header"] = dict(HTTP_HEADER)
             sts, data = self.cm.getPage(url, urlParams)
         path = re.sub(r"^https?://[^/]+", "", url)
@@ -4524,7 +4612,7 @@ class pageParser(CaptchaHelper):
                     origin = urlparser.getDomain(url, False)
                     break
         if not sts or not data:
-            return []
+            return None
         page = data.replace("&quot;", '"').replace("\\/", "/")
         version = self.cm.ph.getSearchGroups(page, r'"version"\s*:\s*"([^"]+)"')[0]
         component = self.cm.ph.getSearchGroups(page, r'"component"\s*:\s*"([^"]+)"')[0] or "files/mirror/video"
@@ -4535,60 +4623,15 @@ class pageParser(CaptchaHelper):
             header["X-Inertia-Version"] = version
         sts, data = self.cm.getPage(url, dict(urlParams, header=header))
         if not sts or not data:
-            return []
+            return None
         try:
             streams = json_loads(data).get("props", {}).get("streams") or {}
         except Exception:
             printExc()
-            return []
+            return None
         if not isinstance(streams, dict):
-            return []
-        if streams.get("status", "success") != "success":
-            if component == "files/leech/video" and "/e/" in url:
-                # the leech backend often answers "something went wrong" - the mirror page of the same id
-                # lists the hosters the file was uploaded to
-                links = self.parserMEGAMAX(strwithmeta(url.replace("/e/", "/iframe/"), baseUrl.meta))
-                if links:
-                    return links
-            SetIPTVPlayerLastHostError(streams.get("msg", "") or _("Content not available"))
-            return []
-        if component == "files/leech/video":
-            return self._megamaxLeechLinks(page, streams.get("data"), origin, urlParams)
-        up = urlparser()
-        urltab = []
-        tried = 0
-        working = 0
-        start = time.time()
-
-        def mirrorCost(mirror):
-            # morencius.com (VidHide) answers every request only after ~20 s: try it after the other hosters
-            return 1 if "morencius." in str(mirror.get("link") or "") else 0
-
-        mirrors = []
-        for quality in streams.get("data") or []:
-            label = str(quality.get("label") or quality.get("resolution") or "").replace(" (source)", "").strip()
-            mirrors.extend((label, mirror) for mirror in sorted(quality.get("mirrors") or [], key=mirrorCost))
-        for label, mirror in mirrors:
-            if tried >= 12 or working >= 3:
-                # every mirror costs requests: three working hosters are plenty (their HLS masters carry the
-                # qualities); on a box each resolve takes seconds and the user gives up on a long wait
-                break
-            if urltab and time.time() - start > 8:
-                break  # links resolve one after another - do not keep the user waiting for more mirrors
-            link = str(mirror.get("link") or "").strip()
-            if link.startswith("//"):
-                link = "https:" + link
-            if not self.cm.isValidUrl(link) or up.checkHostSupport(link) != 1 or up.getParser(link) == up.pp.parserMEGAMAX:
-                continue
-            tried += 1
-            driver = str(mirror.get("driver") or "").strip() or up.getHostName(link, True)
-            links = up.getVideoLinkExt(strwithmeta(link, {"Referer": origin}))
-            if links:
-                working += 1
-            for item in links:
-                item["name"] = ("%s %s %s" % (label, driver, item.get("name", ""))).strip()
-                urltab.append(item)
-        return urltab
+            return None
+        return url, origin, page, component, streams, urlParams
 
     def _megamaxLeechLinks(self, page, encrypted, origin, urlParams):  # add 031026
         # "data": JSON string {ct, iv, s} -> {"file": <HLS master / MP4>, "type", "label"} (or a list of them)
