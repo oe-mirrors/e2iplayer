@@ -268,6 +268,7 @@ class urlparser:
             "cindyeyefinal.com": self.pp.parserVOESX,  # add 061026
             "cinegrab.com": self.pp.parserBYSE,
             "cinemathek.online": self.pp.parserJWPLAYER,  # add 061026
+            "claireguessthousand.com": self.pp.parserVOESX,  # add 211026
             "cloud.mail.ru": self.pp.parserCOUDMAILRU,
             "cloudorchestranova.com": self.pp.parserVIDSRC,
             "coflix.upn.one": self.pp.parserSBS,
@@ -290,6 +291,7 @@ class urlparser:
             "darkibox.com": self.pp.parserJWPLAYER,
             "dancima.shop": self.pp.parserJWPLAYER,
             "davioad.com": self.pp.parserJWPLAYER,
+            "derricknationtop.com": self.pp.parserVOESX,  # add 211026
             "devideosrc.co": self.pp.parserMEINECLOUD,
             "dhcplay.com": self.pp.parserJWPLAYER,
             "dhtpre.com": self.pp.parserJWPLAYER,
