@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "07.10.2026"
+LAST_MODIFIED = "21.10.2026"
 # 11.01.2026 - Mr.X - Site Fix
 # 07.10.2026 - host standard
 #   JSON API of einschalten.in (api/movies, api/collections, api/genres, api/search, api/movies/<id>/watch):
@@ -17,13 +17,18 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import SetIPTVPlaye
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, getMetaByImdbId
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, decorateResolvedLinkItems, sidecarFromUrlMeta
-from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str, ensure_str_deep
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedHostMixin, GenericFolderWatchedScraperMixin
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
+
+
+def _jsonLoads(text):
+    # stdlib json gives unicode on Python 2 - as UTF-8 str like the rest of the host's texts
+    return ensure_str_deep(json.loads(text))
 
 
 def GetConfigList():
@@ -57,7 +62,7 @@ class Einschalten(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not sts or not data:
             return None
         try:
-            return json.loads(data)
+            return _jsonLoads(data)
         except Exception:
             printDBG("Einschalten: no JSON from [%s]" % url)
         return None

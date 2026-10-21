@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "18.10.2026"
+LAST_MODIFIED = "21.10.2026"
 # 18.10.2026 - new host (rewrite of the old Backup host)
 #   lists: Latest / Popular / Kino pages (static), All films / series / documentaries and genres through
 #   POST /aGET/List/ (First / Jump / Next page), search; series: season folder -> episodes
@@ -19,6 +19,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import GetIPTVSleep
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, decorateResolvedLinkItems, sidecarFromUrlMeta, sidecarMetaQuery
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str_deep
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
@@ -26,6 +27,11 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedHostMixin, GenericFolderWatchedScraperMixin
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
+
+
+def _jsonLoads(text):
+    # stdlib json gives unicode on Python 2 - as UTF-8 str like the rest of the host's texts
+    return ensure_str_deep(json.loads(text))
 
 
 def GetConfigList():
@@ -325,7 +331,7 @@ class Kinox(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 self._addRows(data, fType)
                 return
         try:
-            params = json.loads(listParams)
+            params = _jsonLoads(listParams)
         except Exception:
             printExc()
             return
@@ -338,7 +344,7 @@ class Kinox(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not sts:
             return
         try:
-            data = json.loads(data)
+            data = _jsonLoads(data)
             total = int(data.get("Total", 0) or 0)
             content = data.get("Content") or ""
         except Exception:
@@ -507,7 +513,7 @@ class Kinox(GenericFolderWatchedScraperMixin, CBaseHostClass):
             if not sts:
                 return []
             try:
-                stream = json.loads(data).get("Stream", "")
+                stream = _jsonLoads(data).get("Stream", "")
             except Exception:
                 printExc()
                 return []

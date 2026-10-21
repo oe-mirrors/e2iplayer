@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "08.10.2026"
+LAST_MODIFIED = "21.10.2026"
 # 02.09.2026 - rewrite for the redesigned kinoking.cc
 #   (Tailwind "fav-data-source" cards; series.php?id=..&season=.. -> inline allEpisodesData JSON
 #    with video_links) + watched flag / sidecar / name norm.
@@ -27,6 +27,12 @@ from Plugins.Extensions.IPTVPlayer.libs.meinecloud import MeineCloud, MAIN_URL a
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, getMetaByImdbId
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str_deep
+
+
+def _jsonLoads(text):
+    # stdlib json gives unicode on Python 2 - as UTF-8 str like the rest of the host's texts
+    return ensure_str_deep(json.loads(text))
 
 
 def GetConfigList():
@@ -96,7 +102,7 @@ class KinoKing(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not sts:
             return []
         try:
-            data = json.loads(data)
+            data = _jsonLoads(data)
         except Exception:
             return []
         return data if isinstance(data, list) else []
@@ -160,7 +166,7 @@ class KinoKing(GenericFolderWatchedScraperMixin, CBaseHostClass):
             return [], ""
         m = re.search(r'allEpisodesData\s*=\s*(\[.*?\])\s*;', data, re.DOTALL)
         try:
-            episodes = json.loads(m.group(1)) if m else []
+            episodes = _jsonLoads(m.group(1)) if m else []
         except Exception:
             printExc()
             episodes = []
@@ -254,7 +260,7 @@ class KinoKing(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if videoLinks:
             # own links of the site: comma separated (old favourites: a json list)
             try:
-                parsed = json.loads(videoLinks)
+                parsed = _jsonLoads(videoLinks)
                 raw = parsed if isinstance(parsed, list) else [str(parsed)]
             except Exception:
                 raw = re.split(r"[\s,;|]+", str(videoLinks))
@@ -279,7 +285,7 @@ class KinoKing(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not sts:
             return ""
         try:
-            servers = json.loads(self.cm.ph.getSearchGroups(data, r"const SERVERS\s*=\s*(\[.*?\]);\s*\n")[0] or "[]")
+            servers = _jsonLoads(self.cm.ph.getSearchGroups(data, r"const SERVERS\s*=\s*(\[.*?\]);\s*\n")[0] or "[]")
         except Exception:
             printExc()
             servers = []

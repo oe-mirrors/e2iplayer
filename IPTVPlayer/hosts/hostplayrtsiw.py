@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "08.10.2026"
+LAST_MODIFIED = "21.10.2026"
 # SRG SSR (SRF / RTS / RSI / RTR)
 # Rewritten for the il.srgssr.ch integrationlayer 2.0 JSON API
 # 07.10.2026 - INFO (media details, moviemeta for films), First/Next
@@ -171,7 +171,8 @@ class PlayRTSIW(GenericFolderWatchedScraperMixin, CBaseHostClass):
                     params['title'] = normalizeMediathekTitle(params['title'], date=media.get('date') or '', sxeHint=title)
                 if isFilm:
                     # "<<Vortex>> - French drama" (French quotation marks) -> "Vortex"
-                    m = re.search(u'\u00ab([^\u00bb]+)\u00bb', media.get('title') or '')
+                    # no unicode pattern - on Python 2 it cut the title off before a UTF-8 byte ("Vortex\xc2")
+                    m = re.search('«(.+?)»', media.get('title') or '')
                     params.update({'meta_type': 'movie', 'meta_title': self.cleanHtmlStr(m.group(1) if m else (media.get('title') or ''))})
             if isAudio:
                 self.addAudio(params)
