@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "09.10.2026"
+LAST_MODIFIED = "21.10.2026"
 # Coding: BY MOHAMED_OS
-# 08.10.2026 - ported to the python3 framework / host standard (AlDrama app API, dwapp.arabypros.com/api):
+# 21.10.2026 - MegaMax: every hoster mirror of its page as an own server row ("MegaMax 1080p voe", like on the site),
+#   resolved only when picked (urlparser getMegamaxMirrors); watch + download link of one file listed once
+#   - ported to the python3 framework / host standard (AlDrama app API, dwapp.arabypros.com/api):
 #   - movies / series / Netflix / Ramadan / TV shows / genres from the app's filter ids and search,
 #     with First page / Jump / Next page (30 rows per API page, no page count)
 #   - series -> seasons (only when there are more than one) -> episodes; movies and episodes are VIDEO
@@ -322,10 +324,30 @@ class AlDrama(GenericFolderWatchedScraperMixin, CBaseHostClass):
         trailer = cItem.get("trailer", "")
         if self.cm.isValidUrl(trailer):
             urltab.append({"name": "%s (YouTube)" % _("Trailer"), "url": trailer, "need_resolve": 1})
+
+        urltab = self._expandMegamax(urltab)
         if not urltab:
             SetIPTVPlayerLastHostError(_("No stream available"))
             return []
         return applySidecarToLinks(urltab, buildSidecarFromItem(dict(cItem, desc=StripColorCodes(cItem.get("desc", ""))), IsSidecarEnabled()))
+
+    def _expandMegamax(self, urltab):
+        # every hoster mirror of a Megamax server as its own row like on the site (resolved only when picked);
+        # watch + download link of one file list the same mirrors -> once; the Megamax row stays when it lists none
+        result = []
+        seen = set()
+        for item in urltab:
+            mirrors = self.up.getMegamaxMirrors(item["url"])
+            if not mirrors:
+                result.append(item)
+                continue
+            base = re.sub(r"\s*\(%s\)$" % re.escape(_("Download")), "", item["name"])
+            for mirror in mirrors:
+                if mirror["url"] in seen:
+                    continue
+                seen.add(mirror["url"])
+                result.append({"name": "%s %s" % (base, mirror["name"]), "url": mirror["url"], "need_resolve": 1})
+        return result
 
     def getVideoLinks(self, videoUrl):
         printDBG("AlDrama.getVideoLinks [%s]" % videoUrl)
