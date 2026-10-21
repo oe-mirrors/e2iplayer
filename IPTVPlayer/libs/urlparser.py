@@ -705,6 +705,7 @@ class urlparser:
             "shadwo.pro": self.pp.parserALBAPLAYER,  # add 181026 (w.shadwo.pro/albaplayer/ -> anaplayer.online, aflamfree series)
             "shannonpersonalcost.com": self.pp.parserVOESX,  # add 061026
             "share4max.com": self.pp.parserMEGAMAX,  # add 031026
+            "share4max.org": self.pp.parserMEGAMAX,  # add 211026 (cimalina: its only server, "Hosting unknown" before)
             "sharevideo.pl": self.pp.parserSHAREVIDEO,
             "shavetape.cash": self.pp.parserSTREAMTAPE,
             "shiid4u.upn.one": self.pp.parserSBS,
@@ -4502,7 +4503,7 @@ class pageParser(CaptchaHelper):
         return urltab
 
     def parserMEGAMAX(self, baseUrl):  # add 031026
-        # Megamax mirror page (megamax.me / share4max.com / megatuktuk.store, Laravel + Inertia.js): the page JSON
+        # Megamax mirror page (megamax.me / share4max.com/.org / megatuktuk.store, Laravel + Inertia.js): the page JSON
         # gives the Inertia version, a partial Inertia request for the "streams" prop gives the hoster mirrors per
         # quality -> each mirror resolved through urlparser, the mirror name goes into the link name.
         # "Leech" player pages (/e/<id>, component files/leech/video) send the stream list CryptoJS-AES encrypted;
@@ -4589,7 +4590,7 @@ class pageParser(CaptchaHelper):
             url = "https:" + url
         # lodynet links http://megamax.me:8000/iframe/<id>: the port is closed (connect timeout ~2 min each), the
         # same page is served on https without a port
-        url = re.sub(r"^https?://(megamax\.me|share4max\.com|megatuktuk\.store):\d+/", r"https://\1/", url)
+        url = re.sub(r"^https?://(megamax\.me|share4max\.(?:com|org)|megatuktuk\.store):\d+/", r"https://\1/", url)
         origin = urlparser.getDomain(url, False)
         HTTP_HEADER = self.cm.getDefaultHeader(browser="chrome")
         urlParams = {"header": dict(HTTP_HEADER), "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": GetCookieDir("megamax.cookie")}

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "09.10.2026"
+LAST_MODIFIED = "21.10.2026"
 # OkAnime (اوك انمي) - Arabic-subtitled anime (okanime.tv is gone; okanime.xyz is the landing page that
 # links the current mirror, ww3.okanime.xyz on 09.10.2026)
 #   - menu: latest episodes, airing now, most popular, anime list, movies, genres, types, years and search,
@@ -8,7 +8,8 @@ LAST_MODIFIED = "09.10.2026"
 #     its own anime on the site, its number ("2nd Season", "Season 2") goes into the episode names; a movie
 #     is one VIDEO row on its anime page
 #   - links: the episode page's server list (mp4upload, vkvideo, share4max, streamruby, uqload, videa ...)
-#     handed to urlparser, servers without a parser (mega) are left out
+#     handed to urlparser, servers without a parser (mega) are left out; since 21.10.2026 every hoster mirror
+#     of the Megamax server (share4max) as its own row, sorted by its quality, resolved only when picked
 #   - watched flag (anime -> episode), downloaded flag, favourites (urls re-based on the current mirror),
 #     name normalisation ("Title (Year)", "Show - SxxExx"), sidecar, INFO via moviemeta + the anime page
 import re
@@ -366,6 +367,17 @@ class OkAnime(GenericFolderWatchedScraperMixin, CBaseHostClass):
             seen.add(link)
             server = self.cm.ph.getSearchGroups(block, r'data-server="([^"]*)"')[0].replace("_", " ")
             quality = self.cm.ph.getSearchGroups(block, r'data-umami-event-quality="([^"]*)"')[0]
+            mirrors = self.up.getMegamaxMirrors(link)
+            if mirrors:
+                # every hoster mirror of the Megamax server as its own row ("megamax 1080p voe", resolved only when
+                # picked), sorted in by its own quality; the Megamax row stays when it lists none
+                for mirror in mirrors:
+                    if mirror["url"] in seen:
+                        continue
+                    seen.add(mirror["url"])
+                    height = self.cm.ph.getSearchGroups(mirror["name"], r"(\d+)p")[0]
+                    urltab.append((-int(height or 0), len(urltab), {"name": "%s %s" % (server or "Megamax", mirror["name"]), "url": mirror["url"], "need_resolve": 1}))
+                continue
             name = " ".join(x for x in (server or self.up.getHostName(link, True), quality) if x)
             height = self.cm.ph.getSearchGroups(quality, r"(\d+)")[0]
             urltab.append((-int(height or 0), len(urltab), {"name": name, "url": strwithmeta(link, {"Referer": self.getMainUrl()}), "need_resolve": 1}))

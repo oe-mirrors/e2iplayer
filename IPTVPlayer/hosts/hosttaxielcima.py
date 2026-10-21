@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "09.10.2026"
+LAST_MODIFIED = "21.10.2026"
+# 21.10.2026 - every hoster mirror of a Megamax server as an own server row, resolved only when picked (urlparser
+#   getMegamaxMirrors)
 # 09.10.2026 - gettytul() returns the address itself (the host list reads it from the file, see GetHostTitle)
 # 03.10.2026 - rewrite of the MOHAMED_OS host for the current site (b.txcima.com, "CimaclubBlocks"
 #   card grids with "?page=N" paging, /series/<slug>/ = flat episode list, <post>/watch/ = server list with the
@@ -384,6 +386,7 @@ class TaxiElCima(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 continue
             name = "%s (%s)" % (label, hostName) if label else hostName
             urltab.append({"name": name, "url": strwithmeta(url, {"Referer": watchUrl}), "need_resolve": 1})
+        urltab = self._expandMegamax(urltab)
         urltab.extend(trailers)
         if not urltab:
             SetIPTVPlayerLastHostError(_("No stream available"))
@@ -393,6 +396,23 @@ class TaxiElCima(GenericFolderWatchedScraperMixin, CBaseHostClass):
         # the moviemeta query of INFO: all services also for an Arabic title
         metaQuery = sidecarMetaQuery(cItem.get("meta_type", ""), cItem.get("meta_title", ""), cItem.get("meta_year", ""), skip=())
         return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), sidecarTxt, metaQuery))
+
+    def _expandMegamax(self, urltab):
+        # every hoster mirror of a Megamax server as its own row like on the site (resolved only when picked);
+        # the Megamax row stays when it lists none (a "leech" page /d/<id> never does)
+        result = []
+        seen = set()
+        for item in urltab:
+            mirrors = self.up.getMegamaxMirrors(item["url"])
+            if not mirrors:
+                result.append(item)
+                continue
+            for mirror in mirrors:
+                if mirror["url"] in seen:
+                    continue
+                seen.add(mirror["url"])
+                result.append({"name": "%s %s" % (item["name"], mirror["name"]), "url": mirror["url"], "need_resolve": 1})
+        return result
 
     def getVideoLinks(self, videoUrl):
         printDBG("TaxiElCima.getVideoLinks [%s]" % videoUrl)

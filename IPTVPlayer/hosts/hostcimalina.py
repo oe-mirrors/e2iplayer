@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "04.10.2026"
+LAST_MODIFIED = "21.10.2026"
+# 21.10.2026 - the "multi server" (Megamax page on share4max.org, the only server of the pages now) plays again
+#   (urlparser knows the domain); every hoster mirror of it as an own server row ("Megamax 1080p voe"),
+#   resolved only when picked (urlparser getMegamaxMirrors)
 # 03.10.2026 - current standard (cimalina host created by Dr HYTHAM MAHMOUD)
 #   - domain: cema-lin.shop (2.cema-lin.shop is a parked cPanel page now), own "Alternative domain" first
 #   - movie / series categories read live from the site menu, collections (/assemblies/), search;
@@ -432,11 +435,29 @@ class CimaLina(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 numbers[name] = numbers.get(name, 0) + 1
                 name = "%s #%d" % (name, numbers[name])
             urltab.append({"name": name, "url": strwithmeta(link, {"Referer": self.MAIN_URL}), "need_resolve": 1})
+        urltab = self._expandMegamax(urltab)
         story = self._siteInfo(data)[0]
         # the INFO lookup: the page's release year, all services also for an Arabic title
         year = cItem.get("meta_year") or self.cm.ph.getSearchGroups(data, r"/release-year/(\d{4})/")[0]
         metaQuery = sidecarMetaQuery(cItem.get("meta_type", ""), cItem.get("meta_title", ""), year, skip=())
         return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), story, metaQuery))
+
+    def _expandMegamax(self, urltab):
+        # every hoster mirror of the "multi server" (Megamax page, share4max.org) as its own row ("Megamax 1080p
+        # voe", resolved only when picked); the Megamax row stays when it lists none
+        result = []
+        seen = set()
+        for item in urltab:
+            mirrors = self.up.getMegamaxMirrors(item["url"])
+            if not mirrors:
+                result.append(item)
+                continue
+            for mirror in mirrors:
+                if mirror["url"] in seen:
+                    continue
+                seen.add(mirror["url"])
+                result.append({"name": "Megamax %s" % mirror["name"], "url": mirror["url"], "need_resolve": 1})
+        return result
 
     def getVideoLinks(self, videoUrl):
         printDBG("CimaLina.getVideoLinks [%s]" % videoUrl)

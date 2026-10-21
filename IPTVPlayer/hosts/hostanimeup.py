@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "09.10.2026"
+LAST_MODIFIED = "21.10.2026"
 # Coding: BY MOHAMED_OS
+# 21.10.2026 - every hoster mirror of the Megamax server (share4max.com/iframe/<id>) as an own server row,
+#   resolved only when picked (urlparser getMegamaxMirrors); its "leech" player (/e/<id>) stays one row
 # 08.10.2026 - ported to the python3 framework / host standard
 #   - Anime4up (w1.anime4up.rest, Arabic-subtitled / dubbed anime, WordPress "Anime4up" theme): latest
 #     episodes, anime list, movies, dubbed, subtitled, genres, seasons, A-Z and search, each with First page /
@@ -442,12 +444,30 @@ class Anime4up(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 continue
             hostName = self.up.getHostName(link)
             urltab.append({"name": "%s - %s" % (hostName, label) if label else hostName, "url": strwithmeta(link, {"Referer": self.MAIN_URL}), "need_resolve": 1})
+        urltab = self._expandMegamax(urltab)
         if not urltab:
             SetIPTVPlayerLastHostError(_("No stream available"))
             return []
         urltab = applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled()))
         self.cacheLinks[url] = urltab
         return urltab
+
+    def _expandMegamax(self, urltab):
+        # every hoster mirror of a Megamax server as its own row like on the site (resolved only when picked);
+        # the Megamax row stays when it lists none (the leech player /e/<id> never does)
+        result = []
+        seen = set()
+        for item in urltab:
+            mirrors = self.up.getMegamaxMirrors(item["url"])
+            if not mirrors:
+                result.append(item)
+                continue
+            for mirror in mirrors:
+                if mirror["url"] in seen:
+                    continue
+                seen.add(mirror["url"])
+                result.append({"name": "%s %s" % (item["name"], mirror["name"]), "url": mirror["url"], "need_resolve": 1})
+        return result
 
     def getVideoLinks(self, videoUrl):
         printDBG("Anime4up.getVideoLinks [%s]" % videoUrl)

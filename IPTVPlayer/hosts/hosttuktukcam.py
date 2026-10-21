@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "04.10.2026"
+LAST_MODIFIED = "21.10.2026"
+# 21.10.2026 - every hoster mirror of the TukTuk/Megamax page as an own server row ("Megamax 1080p voe"),
+#   resolved only when picked (urlparser getMegamaxMirrors)
 # 03.10.2026 - rewrite for the new domain tuktukhd.com (tuk.cam is dead,
 #   www.tuktukcima.com redirects here): "Block--Item" grids with WordPress pager, /series/ pages
 #   with season cards and episode cards, the player servers sit in data-link (reversed base64)
@@ -387,7 +389,25 @@ class TukTukCam(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 embed = "https:" + embed
             if self.cm.isValidUrl(embed) and embed not in [x["url"] for x in urltab]:
                 urltab.append({"name": self.up.getHostName(embed), "url": strwithmeta(embed, {"Referer": self.MAIN_URL}), "need_resolve": 1})
+        urltab = self._expandMegamax(urltab)
         return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), sidecarTxt, metaQuery))
+
+    def _expandMegamax(self, urltab):
+        # every hoster mirror of the TukTuk/Megamax page as its own row ("Megamax 1080p voe", resolved only when
+        # picked); the Megamax row stays when it lists none
+        result = []
+        seen = set()
+        for item in urltab:
+            mirrors = self.up.getMegamaxMirrors(item["url"])
+            if not mirrors:
+                result.append(item)
+                continue
+            for mirror in mirrors:
+                if mirror["url"] in seen:
+                    continue
+                seen.add(mirror["url"])
+                result.append({"name": "Megamax %s" % mirror["name"], "url": mirror["url"], "need_resolve": 1})
+        return result
 
     def getVideoLinks(self, videoUrl):
         printDBG("TukTukCam.getVideoLinks [%s]" % videoUrl)
