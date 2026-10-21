@@ -11,7 +11,7 @@ import re
 from Screens.Screen import Screen
 from Screens.MessageBox import MessageBox
 from Components.ActionMap import NumberActionMap
-from enigma import ePoint, eSize, gRGB, eListboxPythonMultiContent, gFont, RT_HALIGN_LEFT, RT_VALIGN_CENTER, getDesktop, getPrevAsciiCode, BT_SCALE
+from enigma import ePoint, eSize, gRGB, eListboxPythonMultiContent, gFont, RT_HALIGN_LEFT, RT_VALIGN_CENTER, getDesktop, getPrevAsciiCode, eRCInput, BT_SCALE
 from Tools.LoadPixmap import LoadPixmap
 from Tools.Directories import fileExists
 from Components.Label import Label
@@ -945,6 +945,12 @@ class E2iVirtualKeyBoard(Screen):
         self.onLayoutFinish.append(self.setGraphics)
         self.onShown.append(self.onWindowShow)
         self.onClose.append(self.__onClose)
+        # USB keyboard: enigma2 only hands out typed characters (gotAsciiCode) in ASCII mode, else
+        # letters come as raw key codes nothing maps. Restored whenever another screen takes over
+        # (sub dialogs, close) - left on, it breaks the number keys of the next screens
+        self.prevKeyboardMode = None
+        self.onExecBegin.append(self.__setKeyboardModeAscii)
+        self.onExecEnd.append(self.__restoreKeyboardMode)
 
         self["actions"] = NumberActionMap(["WizardActions", "DirectionActions", "ColorActions", "MenuActions", "E2iPlayerVKActions", "KeyboardInputActions", "InputBoxActions", "InputAsciiActions"],
         {
@@ -1109,6 +1115,22 @@ class E2iVirtualKeyBoard(Screen):
             config.plugins.iptvplayer.osk_layout.value = self.selectedVKLayoutId
             config.plugins.iptvplayer.osk_layout.save()
             configfile.save()
+
+    def __setKeyboardModeAscii(self):
+        try:
+            rcinput = eRCInput.getInstance()
+            self.prevKeyboardMode = rcinput.getKeyboardMode()
+            rcinput.setKeyboardMode(rcinput.kmAscii)
+        except Exception:
+            printExc()
+
+    def __restoreKeyboardMode(self):
+        if self.prevKeyboardMode is not None:
+            try:
+                eRCInput.getInstance().setKeyboardMode(self.prevKeyboardMode)
+            except Exception:
+                printExc()
+            self.prevKeyboardMode = None
 
     def getKeyboardLayoutItem(self, vkLayoutId):
         retItem = None
@@ -1818,10 +1840,7 @@ class E2iVirtualKeyBoard(Screen):
                 self.setText(text)
                 # belongs to the text before this one
                 self.pendingSuggestions = None
-            self.currentKeyId = 0
-            self.rowIdx = 0
-            self.colIdx = 7
-            self.switchToKayboard()
+            self._focusTextField()
         elif self.focus == self.FOCUS_KEYBOARD:
             self.handleKeyId(self.currentKeyId)
         else:
@@ -1967,12 +1986,29 @@ class E2iVirtualKeyBoard(Screen):
             except Exception:
                 printExc()
 
-    def keyGotAscii(self):
+    def _focusTextField(self):
+        # puts the marker on the text field, from a key or one of the lists
         if self._isTextFieldActive():
-            try:
-                self["text"].handleAscii(getPrevAsciiCode())
-            except Exception:
-                printExc()
+            return
+        oldKeyId = self.currentKeyId if self.focus == self.FOCUS_KEYBOARD else -1
+        self.currentKeyId = 0
+        self.rowIdx = 0
+        self.colIdx = 7
+        if oldKeyId == -1:
+            self.switchToKayboard()
+        else:
+            self.moveKeyMarker(oldKeyId, 0)
+
+    def keyGotAscii(self):
+        # USB keyboard: typed characters always go to the text field, the
+        # marker moves there so Enter/arrows/Backspace work on the text next
+        try:
+            code = getPrevAsciiCode()
+            self._focusTextField()
+            self["text"].handleAscii(code)
+            self.textUpdated()
+        except Exception:
+            printExc()
 
     def setSuggestionVisible(self, visible):
         if self.isAutocompleteEnabled and self.isSuggestionVisible != visible:

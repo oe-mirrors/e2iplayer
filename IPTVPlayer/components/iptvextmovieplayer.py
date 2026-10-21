@@ -40,7 +40,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 
 # FOREIGN import
-from enigma import eConsoleAppContainer, getDesktop, eTimer, eLabel, gFont, ePoint, eSize, gRGB, BT_SCALE
+from enigma import eConsoleAppContainer, getDesktop, eTimer, eLabel, gFont, ePoint, eSize, gRGB
 from Screens.Screen import Screen
 from Components.ActionMap import ActionMap
 from Components.config import config
@@ -59,10 +59,14 @@ try:
 except Exception:
     printExc()
 
-from os import path as os_path
+from os import path as os_path, rename as os_rename
 import re
 import time
 import json
+try:
+    from PIL import Image
+except ImportError:
+    Image = None
 
 ###################################################
 
@@ -377,13 +381,19 @@ class IPTVExtMoviePlayer(Screen):
             screenW, screenH = dw, getDesktop(0).size().height()
             scaledBars = None
 
+        # kept for initGuiComponentsPos(), which swaps in pre-scaled copies
+        self.progressBarFiles = (
+            self._progressBarPixmapPath("playback_progress", scaledBars, 0, dw),
+            self._progressBarPixmapPath("playback_cbuff_progress", scaledBars, 1, dw),
+            self._progressBarPixmapPath("playback_buff_progress", scaledBars, 2, dw),
+        )
         skin = skin % (
             screenW,
             screenH,
             self.playerSkinFolder + "/playback_banner.png",
-            self._progressBarPixmapPath("playback_progress", scaledBars, 0, dw),
-            self._progressBarPixmapPath("playback_cbuff_progress", scaledBars, 1, dw),
-            self._progressBarPixmapPath("playback_buff_progress", scaledBars, 2, dw),
+            self.progressBarFiles[0],
+            self.progressBarFiles[1],
+            self.progressBarFiles[2],
             self.playerSkinFolder + "/playback_pointer.png",
             clockWidget,
             subSkin
@@ -465,36 +475,73 @@ class IPTVExtMoviePlayer(Screen):
         # WQHD). SCALED_BAR_IMAGES points every non-"sd" theme at
         # pre-scaled _1920/_2560 copies (full-width gradients must match
         # the bar width, not just cover it); anything else falls back to
-        # the theme's own image, which OpenATV's setPixmapScale
-        # (initGuiComponentsPos) still stretches.
+        # the theme's own image, which initGuiComponentsPos() replaces by a
+        # copy resized once with PIL (_prescaledPixmap).
         if scaledBars:
             path = GetPlayerSkinDir("_scaled/%s_%d.png" % (scaledBars[idx], dw))
             if os_path.exists(path):
                 return path
         return "%s/%s.png" % (self.playerSkinFolder, name)
 
-    def _setScaledIconPixmap(self, widgetName, pixmap):
-        # logoIcon/statusIcon/loopIcon/subSynchroIcon are Cover3 widgets
-        # (cover.py) - Cover3.setPixmap() is a thin
-        # self.instance.setPixmap(ptr) with no scale flag, so the loaded
-        # PNG always rendered at its native pixel size, anchored to the
-        # widget's top-left corner, regardless of the widget's own
-        # (correctly resolution="1280,720"-scaled) box size - looks fine
-        # at HD (native size == box size, scale 1:1) but would be
-        # undersized/misplaced at FHD/WQHD once the surrounding boxes
-        # scale up while the icon graphics themselves don't.
-        # setScale(1) tells the instance to stretch its pixmap to
-        # fill the widget's current (already-scaled) size instead - same
-        # API IPTVPlayerLCDScreen.LCD_showPic() already uses for the same
-        # reason. Kept local to this file/these 4 widgets rather than
-        # changed on Cover3 itself, which 14 other files also use and
-        # already rely on its current native-size behavior.
-        widget = self[widgetName]
+    def _prescaledPixmap(self, widgetName, path):
+        # Enigma2 draws a pixmap at its native size, so on FHD/WQHD the
+        # images of the 1280x720 reference skin stayed small inside their
+        # resolution="1280,720"-scaled widgets. The scale flag
+        # (setScale/setPixmapScale) makes every redraw a scaled blit, which
+        # froze the OSD after a few pause/play presses on some boxes
+        # (Octagon SF3038) while the stream kept running - so the PNG is
+        # resized once with PIL and then drawn 1:1. None = keep the native
+        # pixmap (HD, "sd" theme, image already fits, no PIL).
+        if Image is None or not self.skinUsesRefCanvas or getDesktop(0).size().width() == self.REF_W:
+            return None
         try:
-            widget.instance.setScale(1)
+            size = self[widgetName].instance.size()
+            w, h = size.width(), size.height()
+            if w <= 0 or h <= 0:
+                return None
+            theme = os_path.basename(os_path.dirname(path))
+            name = os_path.splitext(os_path.basename(path))[0]
+            outPath = GetTmpDir('e2i_playerskin_%s_%s_%dx%d_%d.png' % (theme, name, w, h, int(os_path.getmtime(path))))
+            if not os_path.exists(outPath):
+                with Image.open(path) as img:
+                    if img.size == (w, h):
+                        return None
+                    # written under a temporary name first: a cut-off file
+                    # (full disk, power loss) must not be found as finished
+                    img.convert('RGBA').resize((w, h), Image.LANCZOS).save(outPath + '.part', format='png')
+                os_rename(outPath + '.part', outPath)
+            return LoadPixmap(outPath)
         except Exception:
             printExc()
-        widget.setPixmap(pixmap)
+        return None
+
+    def _prescaleSkinPixmaps(self):
+        # see _prescaledPixmap() - icons are swapped in their dicts (set on
+        # status changes later), the skin-loaded images directly
+        folder = self.playerSkinFolder + "/"
+        statusIcons = self.playback['statusIcons']
+        loopIcons = self.playback['loopIcons']
+        logoFile = "playback_gstreamer_logo" if 'gstplayer' == self.player else "playback_ffmpeg_logo"
+        for widgetName, icons, key, fileName in (('statusIcon', statusIcons, 'Play', "playback_a_play"),
+                                                 ('statusIcon', statusIcons, 'Pause', "playback_a_pause"),
+                                                 ('statusIcon', statusIcons, 'FastForward', "playback_a_ff"),
+                                                 ('loopIcon', loopIcons, 'On', "playback_loop_on"),
+                                                 ('loopIcon', loopIcons, 'Off', "playback_loop_off"),
+                                                 ('logoIcon', self.playback, 'logoIcon', logoFile),
+                                                 ('subSynchroIcon', self.subHandler['synchro'], 'icon', "sub_synchro")):
+            pixmap = self._prescaledPixmap(widgetName, folder + fileName + ".png")
+            if pixmap:
+                icons[key] = pixmap
+        statusIcons['SlowMotion'] = statusIcons['FastForward']
+
+        for widgetName, path in (('playbackInfoBaner', folder + "playback_banner.png"),
+                                 ('goToSeekPointer', folder + "playback_pointer.png"),
+                                 ('progressBar', self.progressBarFiles[0]),
+                                 ('bufferingCBar', self.progressBarFiles[1]),
+                                 ('bufferingBar', self.progressBarFiles[2])):
+            pixmap = self._prescaledPixmap(widgetName, path)
+            if pixmap:
+                self[widgetName].instance.setPixmap(pixmap)
 
     def _subtitleScale(self):
         # setSubtitlesText()/runConfigMoviePlayerCallback()'s subtitle
@@ -1721,14 +1768,14 @@ class IPTVExtMoviePlayer(Screen):
                         elif val[0] in ['Pause', 'FastForward', 'SlowMotion']:
                             self.showPlaybackInfoBar(blocked=True)
                         self.playback['Status'] = val[0]
-                        self._setScaledIconPixmap('statusIcon', self.playback['statusIcons'].get(val[0], None))
+                        self['statusIcon'].setPixmap(self.playback['statusIcons'].get(val[0], None))
                 elif 'IsLoop' == key:
                     if self.playback['IsLoop'] != val:
                         self.playback['IsLoop'] = val
                         icon = 'Off'
                         if val:
                             icon = 'On'
-                        self._setScaledIconPixmap('loopIcon', self.playback['loopIcons'].get(icon, None))
+                        self['loopIcon'].setPixmap(self.playback['loopIcons'].get(icon, None))
                         self.showPlaybackInfoBar()
 
                 elif 'VideoTrack' == key:
@@ -2696,10 +2743,10 @@ class IPTVExtMoviePlayer(Screen):
             self.console.execute(cmd)
         else:
             self.console.execute(E2PrioFix(cmd, 1))
-        self._setScaledIconPixmap('statusIcon', self.playback['statusIcons']['Play'])  # sulge for test
-        self._setScaledIconPixmap('loopIcon', self.playback['loopIcons']['Off'])
-        self._setScaledIconPixmap('logoIcon', self.playback['logoIcon'])
-        self._setScaledIconPixmap('subSynchroIcon', self.subHandler['synchro']['icon'])
+        self['statusIcon'].setPixmap(self.playback['statusIcons']['Play'])  # sulge for test
+        self['loopIcon'].setPixmap(self.playback['loopIcons']['Off'])
+        self['logoIcon'].setPixmap(self.playback['logoIcon'])
+        self['subSynchroIcon'].setPixmap(self.subHandler['synchro']['icon'])
         # at least the stream type until the player reports the video track ("v_c" overwrites it) -
         # gstplayer2 reports none for a buffer file ffmpeg is still writing (merged audio/video)
         streamType = self._getStreamTypeLabel()
@@ -2782,34 +2829,11 @@ class IPTVExtMoviePlayer(Screen):
             printExc()
 
     def initGuiComponentsPos(self):
-        # playbackInfoBaner/goToSeekPointer - unlike
-        # logoIcon/statusIcon/loopIcon/subSynchroIcon (_setScaledIconPixmap
-        # above), these two Cover3 widgets never get a setPixmap() call
-        # from this file at all - their pixmap comes
-        # straight from the skin's own pixmap="%s" attribute
-        # (playback_banner.png/playback_pointer.png), applied by Enigma2's
-        # own skin engine before this method ever runs. That path doesn't
-        # set a scale flag either, so the same native-pixel-size problem
-        # applied to them too, just unnoticed until now since a banner-
-        # sized image still roughly covers a scaled-up box. setScale(1)
-        # here (after the skin has definitely been applied, unlike right
-        # after self['...'] = Cover3() in __init__, where .instance
-        # doesn't exist yet) retroactively stretches whatever pixmap
-        # Enigma2 already loaded to the widget's current (already
-        # resolution="1280,720"-scaled) box size.
-        for elem in ('playbackInfoBaner', 'goToSeekPointer'):
-            try:
-                self[elem].instance.setScale(1)
-            except Exception:
-                printExc()
-
-        # eSlider.setPixmapScale only exists on OpenATV - elsewhere the
-        # pre-scaled bar images picked by _progressBarPixmapPath() apply
-        for elem in ('progressBar', 'bufferingCBar', 'bufferingBar'):
-            try:
-                self[elem].instance.setPixmapScale(BT_SCALE)
-            except Exception:
-                pass
+        # widget sizes are final here (the instances don't exist in __init__)
+        try:
+            self._prescaleSkinPixmaps()
+        except Exception:
+            printExc()
 
         # info bar gui elements
         # calculate offset
@@ -2986,7 +3010,9 @@ class IPTVExtMoviePlayer(Screen):
             # so we first send command to resume playback
             self.consoleWrite("c\n")
 
-            if 'PLAYBACK_PAUSE' == command:
+            if 'PLAYBACK_CONTINUE' == command:
+                pass  # the "c" above already resumed
+            elif 'PLAYBACK_PAUSE' == command:
                 self.consoleWrite("p\n")
             elif 'PLAYBACK_SET_AUDIO_TRACK' == command:
                 self.consoleWrite("a%s\n" % arg1)
