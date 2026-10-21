@@ -445,6 +445,10 @@ class XXXParser:
 				if src:
 					label = ' '.join(self.cm.ph.getSearchGroups(tag, r'''%s=["']([^"']*)["']''' % attr, 1, True)[0] for attr in ('label', 'res', 'size', 'title', 'data-quality'))
 					entries.append(['source', label, decodeHtml(src)])
+		if not entries:
+			# an own video.js player fed from the KVS settings (ALLCLASSIC since 10.2026): cfg = {videoUrl: '...'}
+			for src in re.findall(r"\bvideoUrl\s*:\s*'([^']+)'", data):
+				entries.append(['videoUrl', '', src])
 		licenseCode = self.cm.ph.getSearchGroups(data, r"license_code\s*:\s*'([^']+)'", 1, True)[0]
 		candidates, seen = [], set()
 		for order, (_key, label, videoUrl) in enumerate(entries):
