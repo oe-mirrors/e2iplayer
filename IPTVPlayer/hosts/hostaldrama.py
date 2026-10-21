@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 LAST_MODIFIED = "21.10.2026"
 # Coding: BY MOHAMED_OS
-# 21.10.2026 - MegaMax: every hoster mirror of its page as an own server row ("MegaMax 1080p voe", like on the site),
-#   resolved only when picked (urlparser getMegamaxMirrors); watch + download link of one file listed once
-#   - ported to the python3 framework / host standard (AlDrama app API, dwapp.arabypros.com/api):
+# 21.10.2026 - MegaMax: every hoster mirror of its page as an own server row ("megamax.me 1080p voe", like on the
+#   site), resolved only when picked (urlparser getMegamaxMirrors); watch + download link of one file listed once
+# 08.10.2026 - ported to the python3 framework / host standard (AlDrama app API, dwapp.arabypros.com/api):
 #   - movies / series / Netflix / Ramadan / TV shows / genres from the app's filter ids and search,
 #     with First page / Jump / Next page (30 rows per API page, no page count)
 #   - series -> seasons (only when there are more than one) -> episodes; movies and episodes are VIDEO
@@ -341,7 +341,8 @@ class AlDrama(GenericFolderWatchedScraperMixin, CBaseHostClass):
             if not mirrors:
                 result.append(item)
                 continue
-            base = re.sub(r"\s*\(%s\)$" % re.escape(_("Download")), "", item["name"])
+            # "<domain> [<quality>] (n)" -> "<domain>": the mirror name carries its own quality
+            base = item["name"].split(" [")[0]
             for mirror in mirrors:
                 if mirror["url"] in seen:
                     continue
