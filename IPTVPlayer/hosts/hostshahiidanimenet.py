@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "09.10.2026"
+LAST_MODIFIED = "21.10.2026"
 # 08.10.2026 - the site sits behind a Cloudflare challenge since ~05.10 (MyE2i cookie needed; checked live
 #   with one: markup unchanged). Hardened: season episode list from the <nav class="navbar"> blocks
 #   (first /episodes*/<slug>/ link), server buttons = any element with data-frameserver, admin-ajax url +
@@ -483,6 +483,7 @@ class ShahiidAnime(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 continue
             name = self.cleanHtmlStr(label) or self.up.getHostName(url)
             urltab.append({"name": name, "url": strwithmeta(url, {"Referer": self.MAIN_URL}), "need_resolve": 1})
+        urltab = self._expandMegamax(urltab)
         if not urltab:
             SetIPTVPlayerLastHostError(_("This video is only on hosters E2iPlayer cannot play."))
         # the moviemeta query of INFO: the page's English name first, then the row's title, the year of its "_years/"
@@ -497,6 +498,23 @@ class ShahiidAnime(GenericFolderWatchedScraperMixin, CBaseHostClass):
         title = cItem.get("meta_title", "") or cItem.get("title", "")
         metaQuery = sidecarMetaQuery(cItem.get("meta_type", ""), english or title, year, altTitles=[title] if english else ())
         return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), sidecarTxt, metaQuery))
+
+    def _expandMegamax(self, urltab):
+        # every hoster mirror of a Megamax server as its own row ("<button> 1080p voe", resolved only when picked);
+        # the Megamax row stays when it lists none
+        result = []
+        seen = set()
+        for item in urltab:
+            mirrors = self.up.getMegamaxMirrors(item["url"])
+            if not mirrors:
+                result.append(item)
+                continue
+            for mirror in mirrors:
+                if mirror["url"] in seen:
+                    continue
+                seen.add(mirror["url"])
+                result.append({"name": "%s %s" % (item["name"], mirror["name"]), "url": mirror["url"], "need_resolve": 1})
+        return result
 
     def getVideoLinks(self, videoUrl):
         printDBG("ShahiidAnime.getVideoLinks [%s]" % videoUrl)
