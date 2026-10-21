@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-20 20:10+0000\n"
-"PO-Revision-Date: 2026-10-17 20:46+0300\n"
+"PO-Revision-Date: 2026-10-21 08:53+0300\n"
 "Last-Translator: \n"
 "Language-Team: giorbak\n"
 "Language: el\n"
@@ -141,7 +141,7 @@ msgstr "%s - Όνομα συσκευής"
 
 #, python-format
 msgid "%s download manager"
-msgstr "%s - Διαχείριση λήψεων"
+msgstr "%s - Διαχειριστής λήψεων"
 
 #, python-format
 msgid "%s e-mail"
@@ -1055,7 +1055,7 @@ msgid "Change active movie player"
 msgstr "Αλλαγή ενεργής αναπαραγωγής ταινιών"
 
 msgid "Change folder icon"
-msgstr ""
+msgstr "Αλλαγή εικονιδίου φακέλου"
 
 msgid "Change own pin"
 msgstr "Αλλαγή προσωπικού pin"
@@ -1469,7 +1469,7 @@ msgid "Delete favourites and watched status now"
 msgstr "Διαγραφή αγαπημένων και κατάστασης προβολής τώρα"
 
 msgid "Delete folder"
-msgstr ""
+msgstr "Διαγραφή φακέλου"
 
 msgid "Delete host order and groups now"
 msgstr "Διαγραφή σειράς host και ομάδων τώρα"
@@ -1503,7 +1503,7 @@ msgstr "Διαγραφή της προσωρινής μνήμης κατά το 
 
 #, python-format
 msgid "Delete the folder \"%s\"? Its hosts go back to the group."
-msgstr ""
+msgstr "Να διαγραφεί ο φάκελος \"%s\"; Οι hosts που περιέχει επιστρέφουν στην ομάδα."
 
 #, python-format
 msgid "Delete the folder \"%s\"? Its videos go back to the Watchlist."
@@ -1666,10 +1666,10 @@ msgstr ""
 "Κατάσταση[%s]"
 
 msgid "Download manager"
-msgstr "Διαχείριση λήψεων"
+msgstr "Διαχειριστής λήψεων"
 
 msgid "Download manager is not initialized"
-msgstr "Η Διαχείριση λήψεων δεν έχει αρχικοποιηθεί"
+msgstr "Ο Διαχειριστής λήψεων δεν έχει αρχικοποιηθεί"
 
 #, python-format
 msgid "Download marked items (%d)"
@@ -2206,7 +2206,7 @@ msgid "Favorites groups"
 msgstr "Ομάδες αγαπημένων"
 
 msgid "Favorites manager"
-msgstr "Διαχείριση αγαπημένων"
+msgstr "Διαχειριστής αγαπημένων"
 
 msgid "Featured"
 msgstr "Προτεινόμενα"
@@ -2250,7 +2250,7 @@ msgid "File browser"
 msgstr "Περιηγητής αρχείων"
 
 msgid "File can not be downloaded. Download manager is not available."
-msgstr "Δεν είναι δυνατή η λήψη του αρχείου. Η Διαχείριση λήψεων δεν είναι διαθέσιμη."
+msgstr "Δεν είναι δυνατή η λήψη του αρχείου. Ο Διαχειριστής λήψεων δεν είναι διαθέσιμος."
 
 #, python-format
 msgid "File can not be downloaded. Protocol [%s] is unsupported"
@@ -2380,7 +2380,7 @@ msgid "Force internal skin: main screen only"
 msgstr "Επιβολή εσωτερικού θέματος: μόνο η κύρια οθόνη"
 
 msgid "Force legacy grid"
-msgstr ""
+msgstr "Επιβολή παλιού πλέγματος"
 
 msgid "Foreign movies"
 msgstr "Ξένες ταινίες"
@@ -2612,7 +2612,7 @@ msgid "Host"
 msgstr "Host"
 
 msgid "Host titles in lists"
-msgstr ""
+msgstr "Τίτλοι host στις λίστες"
 
 #, python-format
 msgid "Host: %s"
@@ -2677,7 +2677,7 @@ msgid "INFO window"
 msgstr "Παράθυρο INFO"
 
 msgid "INTERRUPTED"
-msgstr "ΔΙΑΚΟΠΗΚΕ"
+msgstr "ΔΙΕΚΟΠΗ"
 
 msgid "IPTV Portals"
 msgstr "Πύλες IPTV"
@@ -3228,7 +3228,7 @@ msgid "Long list"
 msgstr "Μεγάλη λίστα"
 
 msgid "Longest"
-msgstr "Μεγαλύτερη"
+msgstr "Μεγαλύτερα"
 
 msgid "Loved tracks"
 msgstr "Αγαπημένα κομμάτια"
@@ -3237,7 +3237,7 @@ msgid "Low"
 msgstr "Χαμηλό"
 
 msgid "MENU"
-msgstr "ΜΕΝΟΥ"
+msgstr "MENU"
 
 msgid "MENU → Add new entry: type a new search term to add to the history."
 msgstr "MENU → Προσθήκη νέας καταχώρησης: πληκτρολογήστε έναν νέο όρο αναζήτησης για να τον προσθέσετε στο ιστορικό."
@@ -3281,7 +3281,7 @@ msgid "Male"
 msgstr "Άνδρας"
 
 msgid "Manager status:"
-msgstr "Κατάσταση διαχειριστή:"
+msgstr "Κατάσταση Διαχειριστή:"
 
 msgid "Mark downloaded items"
 msgstr "Επισήμανση ληφθέντων στοιχείων"
@@ -3438,7 +3438,7 @@ msgid "Move to Watchlist folder..."
 msgstr "Μετακίνηση σε φάκελο της λίστας προβολής..."
 
 msgid "Move to folder..."
-msgstr ""
+msgstr "Μετακίνηση σε φάκελο..."
 
 msgid "Movie"
 msgstr "Ταινία"
@@ -3464,7 +3464,7 @@ msgstr "Η μετακίνηση του αρχείου από \"%s\" σε \"%s\" 
 
 #, python-format
 msgid "Moving playback buffer to the download manager failed with the following error \"%s\""
-msgstr "Η μετακίνηση της προσωρινής αποθήκευσης αναπαραγωγής στη Διαχείριση λήψεων απέτυχε με το εξής σφάλμα: \"%s\""
+msgstr "Η μετακίνηση της προσωρινής αποθήκευσης αναπαραγωγής στον Διαχειριστή λήψεων απέτυχε με το εξής σφάλμα: \"%s\""
 
 msgid "Munshids"
 msgstr "Munshids"
@@ -3592,7 +3592,7 @@ msgid "New episodes"
 msgstr "Νέα επεισόδια"
 
 msgid "New folder..."
-msgstr ""
+msgstr "Νέος φάκελος..."
 
 msgid "New icons will not be available."
 msgstr "Δεν θα είναι διαθέσιμα νέα εικονίδια."
@@ -4249,7 +4249,7 @@ msgid "Premium user"
 msgstr "Premium χρήστης"
 
 msgid "Press EXIT to return to the previous menu."
-msgstr ""
+msgstr "Πατήστε EXIT για να επιστρέψετε στο προηγούμενο μενού."
 
 msgid "Previous Page"
 msgstr "Προηγούμενη σελίδα"
@@ -4500,7 +4500,7 @@ msgid "Remove from favorites"
 msgstr "Αφαίρεση από τα αγαπημένα"
 
 msgid "Remove from folder"
-msgstr ""
+msgstr "Αφαίρεση από τον φάκελο"
 
 msgid "Remove group"
 msgstr "Αφαίρεση ομάδας"
@@ -4551,7 +4551,7 @@ msgid "Reset this list to its default layout?"
 msgstr "Να επαναφερθεί αυτή η λίστα στην προεπιλεγμένη διάταξή της;"
 
 msgid "Reset this list to its default layout? Its folders are deleted too."
-msgstr ""
+msgstr "Να επαναφερθεί η προεπιλεγμένη διάταξη αυτής της λίστας; Θα διαγραφούν και οι φάκελοί της."
 
 msgid "Reset to defaults"
 msgstr "Επαναφορά προεπιλογών"
@@ -4812,7 +4812,7 @@ msgid "Select group"
 msgstr "Επιλογή ομάδας"
 
 msgid "Select hosts for this folder..."
-msgstr ""
+msgstr "Επιλογή hosts για αυτόν τον φάκελο..."
 
 msgid "Select language"
 msgstr "Επιλογή γλώσσας"
@@ -4967,7 +4967,7 @@ msgid "Short films"
 msgstr "Ταινίες μικρού μήκους"
 
 msgid "Short name"
-msgstr ""
+msgstr "Σύντομο όνομα"
 
 msgid "Short series"
 msgstr "Σύντομες σειρές"
@@ -5015,7 +5015,7 @@ msgid "Show clock in header"
 msgstr "Εμφάνιση ρολογιού στην κεφαλίδα"
 
 msgid "Show download manager after adding new item"
-msgstr "Εμφάνιση Διαχείρισης λήψεων μετά την προσθήκη νέου στοιχείου"
+msgstr "Εμφάνιση Διαχειριστή λήψεων μετά την προσθήκη νέου στοιχείου"
 
 msgid "Show download notification"
 msgstr "Εμφάνιση ειδοποίησης λήψης"
@@ -5217,7 +5217,7 @@ msgid "Start"
 msgstr "Έναρξη"
 
 msgid "Start download manager per default"
-msgstr "Έναρξη Διαχείρισης λήψεων από προεπιλογή"
+msgstr "Έναρξη Διαχειριστή λήψεων από προεπιλογή"
 
 msgid "Station:"
 msgstr "Σταθμός:"
@@ -5635,7 +5635,7 @@ msgid "The download is ready in %d seconds. Please try again then."
 msgstr "Η λήψη είναι έτοιμη σε %d δευτερόλεπτα. Παρακαλώ δοκιμάστε ξανά τότε."
 
 msgid "The download manager is stopped, start it on the download page."
-msgstr "Η Διαχείριση λήψεων έχει σταματήσει, εκκινήστε την από τη σελίδα λήψεων."
+msgstr "Ο Διαχειριστής λήψεων έχει σταματήσει, εκκινήστε την από τη σελίδα λήψεων."
 
 msgid "The element already exists in User Links."
 msgstr "Το στοιχείο υπάρχει ήδη στους συνδέσμους χρήστη."
@@ -5706,7 +5706,7 @@ msgid ""
 "It will be saved in the file:\n"
 "\"%s\""
 msgstr ""
-"Η προσωρινή αποθήκευση αναπαραγωγής έχει μεταφερθεί στη Διαχείριση λήψεων.\n"
+"Η προσωρινή αποθήκευση αναπαραγωγής έχει μεταφερθεί στον Διαχειριστή λήψεων.\n"
 "Θα αποθηκευτεί στο αρχείο:\n"
 "\"%s\""
 
@@ -6535,7 +6535,7 @@ msgid "WebStreamr / AIOStreams manifest URL (your own):"
 msgstr "WebStreamr / AIOStreams manifest URL (δικό σας):"
 
 msgid "Website address"
-msgstr ""
+msgstr "Διεύθυνση ιστότοπου"
 
 #, python-format
 msgid "Weeks on chart: %s"
@@ -7330,7 +7330,7 @@ msgid "upzone.cc: free transfer limit reached - PREMIUM account required."
 msgstr "upzone.cc: επιτεύχθηκε το δωρεάν όριο μεταφοράς - απαιτείται λογαριασμός PREMIUM."
 
 msgid "version"
-msgstr "έκδοση"
+msgstr "Έκδοση"
 
 msgid "vertical"
 msgstr "κάθετο"

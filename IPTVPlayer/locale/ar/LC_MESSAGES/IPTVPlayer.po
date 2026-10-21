@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-20 20:10+0000\n"
-"PO-Revision-Date: 2026-10-05 15:43+0300\n"
+"PO-Revision-Date: 2026-10-21 12:33+0300\n"
 "Last-Translator: Mohamed Elsafty [angel_heart150@yahoo.com]\n"
 "Language-Team: \n"
 "Language: ar\n"
@@ -67,7 +67,7 @@ msgstr "مشغل البث عبر الويب"
 
 #, python-format
 msgid "%d added, %d skipped."
-msgstr ""
+msgstr "تمت إضافة %d، وتخطي %d."
 
 #, python-format
 msgid "%d duplicate entries removed."
@@ -79,11 +79,11 @@ msgstr "تمت إزالة إدخال مكرر واحد من أصل %d."
 
 #, python-format
 msgid "%d items added to the download queue, %d skipped."
-msgstr ""
+msgstr "تمت إضافة %d من العناصر إلى قائمة انتظار التنزيل، وتخطي %d."
 
 #, python-format
 msgid "%d of %d downloaded"
-msgstr ""
+msgstr "تم تنزيل %d من أصل %d"
 
 #, python-format
 msgid "%d parts"
@@ -99,7 +99,7 @@ msgstr "%d تلاوات"
 
 #, python-format
 msgid "%d removed, %d skipped."
-msgstr ""
+msgstr "تمت إزالة %d، وتخطي %d."
 
 #, python-format
 msgid "%d videos"
@@ -219,7 +219,7 @@ msgstr "%s مشاهدة"
 
 #, python-format
 msgid "%s: decrypting the stream, this can take a while (%d s)"
-msgstr ""
+msgstr "%s: جارٍ فك تشفير البث، قد يستغرق ذلك بعض الوقت (%d ثانية)"
 
 #, python-format
 msgid "(%d YouTube channel(s) could not be read)"
@@ -375,7 +375,7 @@ msgstr "5 ثوانٍ"
 
 #, python-format
 msgid "A folder \"%s\" exists already."
-msgstr ""
+msgstr "يوجد مجلد باسم \"%s\" بالفعل."
 
 msgid "A search is already running."
 msgstr "يوجد بحث قيد التشغيل بالفعل."
@@ -465,10 +465,10 @@ msgstr "الممثلون:"
 
 #, python-format
 msgid "Add %d items to the download queue?"
-msgstr ""
+msgstr "هل تريد إضافة %d من العناصر إلى قائمة انتظار التنزيل؟"
 
 msgid "Add channel name to downloaded file"
-msgstr "إضافة إلى مدير التنزيل"
+msgstr "إضافة اسم القناة إلى الملف الذي تم تنزيله"
 
 #, python-format
 msgid "Add host %s to group"
@@ -482,10 +482,10 @@ msgstr "إضافة العنصر إلى المجموعة"
 
 #, python-format
 msgid "Add marked items to favourites (%d)"
-msgstr ""
+msgstr "إضافة العناصر المحددة إلى المفضلة (%d)"
 
 msgid "Add new entry"
-msgstr "إضافة مجموعة جديدة"
+msgstr "إضافة عنصر جديد"
 
 msgid "Add new group"
 msgstr "إضافة مجموعة جديدة"
@@ -494,13 +494,13 @@ msgid "Add new group of favorites"
 msgstr "إضافة مجموعة جديدة من المفضلة"
 
 msgid "Add to User Links"
-msgstr "روابط المستخدم"
+msgstr "إضافة إلى روابط المستخدم"
 
 msgid "Add to Watchlist"
-msgstr ""
+msgstr "إضافة إلى قائمة المشاهدة"
 
 msgid "Add to Watchlist folder..."
-msgstr ""
+msgstr "إضافة إلى مجلد قائمة المشاهدة..."
 
 msgid "Added"
 msgstr "تمت الإضافة"
@@ -852,7 +852,7 @@ msgstr "مسح"
 
 #, python-format
 msgid "Balance: %s"
-msgstr ""
+msgstr "الرصيد: %s"
 
 msgid "Balkans"
 msgstr "البلقان"
@@ -1053,7 +1053,7 @@ msgid "Change active movie player"
 msgstr "تغيير مشغل الأفلام النشط"
 
 msgid "Change folder icon"
-msgstr ""
+msgstr "تغيير أيقونة المجلد"
 
 msgid "Change own pin"
 msgstr "تغيير رمز PIN الخاص بك"
@@ -1299,7 +1299,7 @@ msgstr "إنشاء ملفات جانبية (.txt/.jpg)"
 
 #, python-format
 msgid "Created: %s"
-msgstr ""
+msgstr "تاريخ الإنشاء: %s"
 
 msgid "Creator:"
 msgstr "المنشئ:"
@@ -1446,7 +1446,7 @@ msgid "Delete JS cache now"
 msgstr "حذف ذاكرة التخزين المؤقت لـ JS الآن"
 
 msgid "Delete Watchlist folder"
-msgstr ""
+msgstr "حذف مجلد قائمة المشاهدة"
 
 msgid "Delete all cache files now"
 msgstr "حذف جميع ملفات ذاكرة التخزين المؤقت الآن"
@@ -1461,16 +1461,16 @@ msgid "Delete cookies cache now"
 msgstr "حذف ذاكرة التخزين المؤقت لملفات تعريف الارتباط الآن"
 
 msgid "Delete entry"
-msgstr "حذف سجل البحث"
+msgstr "حذف السجل"
 
 msgid "Delete favourites and watched status now"
 msgstr "حذف المفضلة وحالة المشاهدة الآن"
 
 msgid "Delete folder"
-msgstr ""
+msgstr "حذف المجلد"
 
 msgid "Delete host order and groups now"
-msgstr "حذف ترتيب الـ host والمجموعات الآن"
+msgstr "حذف ترتيب المضيفين والمجموعات الآن"
 
 msgid "Delete movie metadata cache after (days, 0 = never)"
 msgstr "حذف ذاكرة التخزين المؤقت لبيانات الأفلام بعد (بالأيام، 0 = أبدًا)"
@@ -1482,7 +1482,7 @@ msgid "Delete movie player preferences now"
 msgstr "حذف تفضيلات مشغل الأفلام الآن"
 
 msgid "Delete now"
-msgstr "حذف"
+msgstr "حذف الآن"
 
 msgid "Delete search history"
 msgstr "حذف سجل البحث"
@@ -1501,11 +1501,11 @@ msgstr "حذف ذاكرة التخزين المؤقت عند إغلاق التو
 
 #, python-format
 msgid "Delete the folder \"%s\"? Its hosts go back to the group."
-msgstr ""
+msgstr "هل تريد حذف المجلد \"%s\"؟ ستعود المضيفات الموجودة فيه إلى المجموعة."
 
 #, python-format
 msgid "Delete the folder \"%s\"? Its videos go back to the Watchlist."
-msgstr ""
+msgstr "هل تريد حذف المجلد \"%s\"؟ ستعود مقاطع الفيديو الموجودة فيه إلى قائمة المشاهدة."
 
 msgid "Delete thumbnails cache now"
 msgstr "حذف ذاكرة التخزين المؤقت للصور المصغرة الآن"
@@ -1632,18 +1632,18 @@ msgid "Download again"
 msgstr "إعادة التحميل"
 
 msgid "Download all items of this page"
-msgstr ""
+msgstr "تنزيل جميع عناصر هذه الصفحة"
 
 msgid "Download already exists"
-msgstr "الملف \"%s\" موجود بالفعل"
+msgstr "التنزيل موجود بالفعل"
 
 #, python-format
 msgid ""
 "Download can not be started.\n"
 " Incorrect address ('%r')."
 msgstr ""
-"لا يمكن بدء التحميل.\n"
-"العنوان غير صحيح ('%r')."
+"لا يمكن بدء التنزيل.\n"
+" العنوان غير صحيح ('%r')."
 
 #, python-format
 msgid ""
@@ -1651,8 +1651,8 @@ msgid ""
 "Downloader %s not working correctly.\n"
 "Status[%s]"
 msgstr ""
-"لا يمكن بدء التحميل.\n"
-"المحمل %s لا يعمل بشكل صحيح.\n"
+"لا يمكن بدء التنزيل.\n"
+"برنامج التنزيل %s لا يعمل بشكل صحيح.\n"
 "الحالة [%s]"
 
 #, python-format
@@ -1660,21 +1660,21 @@ msgid ""
 "Download failed.\n"
 "Status[%s]"
 msgstr ""
-"فشل التحميل.\n"
+"فشل التنزيل.\n"
 "الحالة [%s]"
 
 msgid "Download manager"
-msgstr "مدير التحميل"
+msgstr "مدير التنزيل"
 
 msgid "Download manager is not initialized"
-msgstr "لم يتم تهيئة مدير التحميل"
+msgstr "لم تتم تهيئة مدير التنزيل"
 
 #, python-format
 msgid "Download marked items (%d)"
-msgstr ""
+msgstr "تنزيل العناصر المحددة (%d)"
 
 msgid "Download new version"
-msgstr "تحميل الإصدار الجديد"
+msgstr "تنزيل الإصدار الجديد"
 
 msgid "Download notification duration"
 msgstr "مدة إشعار التنزيل"
@@ -2055,7 +2055,7 @@ msgid "Error saving favorites."
 msgstr "حدث خطأ أثناء حفظ المفضلة."
 
 msgid "Error saving the Watchlist."
-msgstr ""
+msgstr "حدث خطأ أثناء حفظ قائمة المشاهدة."
 
 msgid "Error while loading watch data"
 msgstr "خطأ أثناء تحميل بيانات المشاهدة"
@@ -2213,7 +2213,7 @@ msgid "FebBox token (\"ui\" cookie of www.febbox.com):"
 msgstr ""
 
 msgid "Female"
-msgstr ""
+msgstr "أنثى"
 
 #, python-format
 msgid "File \"%s\" already exists"
@@ -2258,10 +2258,10 @@ msgid "File format of DASH (MPD) downloads"
 msgstr "تنسيق ملفات تنزيل DASH (MPD)"
 
 msgid "File format of HLS (M3U8) downloads"
-msgstr ""
+msgstr "تنسيق ملفات تنزيل HLS (M3U8)"
 
 msgid "File format of single video files (FFmpeg)"
-msgstr ""
+msgstr "تنسيق ملفات الفيديو الفردية (FFmpeg)"
 
 #, python-format
 msgid "File might be corrupted (size: %d bytes)."
@@ -2378,7 +2378,7 @@ msgid "Force internal skin: main screen only"
 msgstr "فرض استخدام السكين الداخلي: الشاشة الرئيسية فقط"
 
 msgid "Force legacy grid"
-msgstr ""
+msgstr "فرض استخدام الشبكة القديمة"
 
 msgid "Foreign movies"
 msgstr "أفلام أجنبية"
@@ -2399,7 +2399,7 @@ msgid "Fotka.pl stream :"
 msgstr "بث Fotka.pl :"
 
 msgid "Free"
-msgstr ""
+msgstr "مجاني"
 
 msgid "Free IPTV list"
 msgstr "قائمة IPTV المجانية"
@@ -2610,7 +2610,7 @@ msgid "Host"
 msgstr "الـ host"
 
 msgid "Host titles in lists"
-msgstr ""
+msgstr "عناوين المواقع في القوائم"
 
 #, python-format
 msgid "Host: %s"
@@ -2942,7 +2942,7 @@ msgid "Last Modified: %s"
 msgstr "آخر تعديل: %s"
 
 msgid "Last Page"
-msgstr ""
+msgstr "الصفحة الأخيرة"
 
 msgid "Last air date:"
 msgstr "تاريخ آخر عرض:"
@@ -3269,14 +3269,14 @@ msgid "Main"
 msgstr "الرئيسية"
 
 msgid "Main menu"
-msgstr ""
+msgstr "القائمة الرئيسية"
 
 #, python-format
 msgid "Make directory [%s]"
 msgstr "إنشاء مجلد [%s]"
 
 msgid "Male"
-msgstr ""
+msgstr "ذكر"
 
 msgid "Manager status:"
 msgstr "حالة المدير:"
@@ -3524,7 +3524,7 @@ msgid "MyE2i: offer to open the page in (Android)"
 msgstr "MyE2i: اقتراح فتح الصفحة في (Android)"
 
 msgid "MyE2i: open the page in the browser"
-msgstr ""
+msgstr "MyE2i: فتح الصفحة في المتصفح"
 
 msgid "Mystery"
 msgstr "غموض"
@@ -3578,7 +3578,7 @@ msgid "New"
 msgstr "جديد"
 
 msgid "New Watchlist folder"
-msgstr ""
+msgstr "مجلد جديد لقائمة المشاهدة"
 
 msgid "New dir"
 msgstr "مجلد جديد"
@@ -3590,7 +3590,7 @@ msgid "New episodes"
 msgstr "حلقات جديدة"
 
 msgid "New folder..."
-msgstr ""
+msgstr "مجلد جديد..."
 
 msgid "New icons will not be available."
 msgstr "لن تكون الأيقونات الجديدة متاحة."
@@ -3599,7 +3599,7 @@ msgid "New links"
 msgstr "روابط جديدة"
 
 msgid "New search"
-msgstr ""
+msgstr "بحث جديد"
 
 msgid "New since installed version"
 msgstr "الجديد منذ الإصدار المثبت"
@@ -3747,7 +3747,7 @@ msgstr "غير ممكن (لا توجد جلسة Enigma2)."
 
 #, python-format
 msgid "Not removed, still downloading: %d"
-msgstr ""
+msgstr "لم تتم الإزالة، لا يزال التنزيل جاريًا: %d"
 
 msgid "Nothing available here at the moment (only upcoming broadcasts)."
 msgstr "لا يوجد شيء متاح هنا في الوقت الحالي (البثوث القادمة فقط)."
@@ -3800,10 +3800,10 @@ msgid "OK"
 msgstr "موافق"
 
 msgid "OK marks an item, BLUE shows what can be done with the marked items."
-msgstr ""
+msgstr "زر OK لتحديد عنصر، وزر BLUE لعرض الإجراءات المتاحة للعناصر المحددة."
 
 msgid "OK marks an item, MENU shows what can be done with the marked items."
-msgstr ""
+msgstr "زر OK لتحديد عنصر، وزر MENU لعرض الإجراءات المتاحة للعناصر المحددة."
 
 msgid "OMDb API key (free at omdbapi.com)"
 msgstr "مفتاح OMDb API (مجاني من omdbapi.com)"
@@ -3854,7 +3854,7 @@ msgid "Open pull requests"
 msgstr "طلبات السحب المفتوحة"
 
 msgid "Open the page and get the link"
-msgstr ""
+msgstr "افتح الصفحة واحصل على الرابط"
 
 #, python-format
 msgid "Open this page in %s"
@@ -4001,7 +4001,7 @@ msgid "Patriotism"
 msgstr "الوطنية"
 
 msgid "Pause between the batch lookups of one host [s]"
-msgstr ""
+msgstr "مدة التوقف بين عمليات البحث المتتالية للمضيف نفسه [بالثواني]"
 
 #, python-format
 msgid "Peak: %s"
@@ -4038,11 +4038,11 @@ msgid "Pin protection for this host"
 msgstr "الحماية برمز PIN لهذا الهوست"
 
 msgid "Play all from here"
-msgstr ""
+msgstr "تشغيل الكل من هنا"
 
 #, python-format
 msgid "Play marked items (%d)"
-msgstr ""
+msgstr "تشغيل العناصر المحددة (%d)"
 
 msgid "Play torrents with TorrServer"
 msgstr "تشغيل التورنت باستخدام TorrServer"
@@ -4198,7 +4198,7 @@ msgstr "البوابة %d - %s (اختياري، من جهاز MAG):"
 
 #, python-format
 msgid "Portal %d - MAC address (00:1A:79:...):"
-msgstr ""
+msgstr "البوابة %d - عنوان MAC (00:1A:79:...):"
 
 #, python-format
 msgid "Portal %d - name (optional):"
@@ -4214,7 +4214,7 @@ msgstr "أدخل رابط البوابة وعنوان MAC في إعدادات ا
 
 #, python-format
 msgid "Ports: %s"
-msgstr ""
+msgstr "المنافذ: %s"
 
 msgid "Portuguese"
 msgstr "البرتغالية"
@@ -4247,7 +4247,7 @@ msgid "Premium user"
 msgstr "مستخدم مميز"
 
 msgid "Press EXIT to return to the previous menu."
-msgstr ""
+msgstr "اضغط على زر EXIT للعودة إلى القائمة السابقة."
 
 msgid "Previous Page"
 msgstr "الصفحة السابقة"
@@ -4478,25 +4478,27 @@ msgstr "إزالة العنصر \"%s\""
 
 #, python-format
 msgid "Remove %d items from the favourites?"
-msgstr ""
+msgstr "هل تريد إزالة %d من العناصر من المفضلة؟"
 
 #, python-format
 msgid ""
 "Remove %d marked items?\n"
 "Their files are deleted too."
 msgstr ""
+"هل تريد إزالة %d من العناصر المحددة؟\n"
+"سيتم حذف ملفاتها أيضًا."
 
 msgid "Remove file"
 msgstr "إزالة الملف"
 
 msgid "Remove from Watchlist"
-msgstr ""
+msgstr "إزالة من قائمة المشاهدة"
 
 msgid "Remove from favorites"
 msgstr "إزالة من المفضلة"
 
 msgid "Remove from folder"
-msgstr ""
+msgstr "إزالة من المجلد"
 
 msgid "Remove group"
 msgstr "إزالة المجموعة"
@@ -4506,11 +4508,11 @@ msgstr "إزالة العنصر"
 
 #, python-format
 msgid "Remove marked items (%d)"
-msgstr ""
+msgstr "إزالة العناصر المحددة (%d)"
 
 #, python-format
 msgid "Remove marked items from favourites (%d)"
-msgstr ""
+msgstr "إزالة العناصر المحددة من المفضلة (%d)"
 
 msgid "Remove thumbnails"
 msgstr "إزالة الصور المصغرة"
@@ -4519,7 +4521,7 @@ msgid "Rename"
 msgstr "إعادة التسمية"
 
 msgid "Rename Watchlist folder"
-msgstr ""
+msgstr "إعادة تسمية مجلد قائمة المشاهدة"
 
 msgid "Rename file"
 msgstr "إعادة تسمية الملف"
@@ -4541,13 +4543,13 @@ msgstr "الإبلاغ عن الملف"
 
 #, python-format
 msgid "Reset the settings of \"%s\" to their default values?"
-msgstr ""
+msgstr "هل تريد إعادة إعدادات \"%s\" إلى قيمها الافتراضية؟"
 
 msgid "Reset this list to its default layout?"
 msgstr "هل تريد إعادة هذه القائمة إلى التخطيط الافتراضي؟"
 
 msgid "Reset this list to its default layout? Its folders are deleted too."
-msgstr ""
+msgstr "هل تريد إعادة هذه القائمة إلى التخطيط الافتراضي؟ سيتم حذف مجلداتها أيضًا."
 
 msgid "Reset to defaults"
 msgstr "إعادة التعيين إلى الإعدادات الافتراضية"
@@ -4671,7 +4673,7 @@ msgstr "بحث"
 
 #, python-format
 msgid "Search \"%s\" was not finished"
-msgstr ""
+msgstr "لم يكتمل البحث عن \"%s\""
 
 msgid "Search History is empty."
 msgstr "سجل البحث فارغ."
@@ -4780,7 +4782,7 @@ msgid "Sections"
 msgstr "الأقسام"
 
 msgid "Select"
-msgstr ""
+msgstr "تحديد"
 
 #, python-format
 msgid "Select %s"
@@ -4790,7 +4792,7 @@ msgid "Select action"
 msgstr "اختر الإجراء"
 
 msgid "Select all"
-msgstr ""
+msgstr "تحديد الكل"
 
 msgid "Select audio track"
 msgstr "اختر المسار الصوتي"
@@ -4808,7 +4810,7 @@ msgid "Select group"
 msgstr "اختر المجموعة"
 
 msgid "Select hosts for this folder..."
-msgstr ""
+msgstr "تحديد المضيفين لهذا المجلد..."
 
 msgid "Select language"
 msgstr "اختر اللغة"
@@ -4902,7 +4904,7 @@ msgstr "لم يُرجع الخادم أي بيانات."
 
 #, python-format
 msgid "Server time: %s"
-msgstr ""
+msgstr "وقت الخادم: %s"
 
 #, python-format
 msgid "Server, user name and password in the host configuration. The server field also takes a get.php link. More accounts: %s with one get.php link per line (X-Streamity format)."
@@ -4963,7 +4965,7 @@ msgid "Short films"
 msgstr "أفلام قصيرة"
 
 msgid "Short name"
-msgstr ""
+msgstr "الاسم المختصر"
 
 msgid "Short series"
 msgstr "مسلسلات قصيرة"
@@ -5041,13 +5043,13 @@ msgid "Show only best quality of streams:"
 msgstr "عرض أفضل جودة للبث فقط:"
 
 msgid "Show playlist"
-msgstr ""
+msgstr "عرض قائمة التشغيل"
 
 msgid "Show results"
 msgstr "عرض النتائج"
 
 msgid "Show results so far"
-msgstr ""
+msgstr "عرض النتائج التي تم العثور عليها حتى الآن"
 
 msgid "Show search history"
 msgstr "عرض سجل البحث"
@@ -5254,7 +5256,7 @@ msgstr "قصة"
 
 #, python-format
 msgid "Stream formats: %s"
-msgstr ""
+msgstr "تنسيقات البث: %s"
 
 msgid "Stream link"
 msgstr "رابط البث"
@@ -5504,7 +5506,7 @@ msgstr "برامج حوارية"
 
 #, python-format
 msgid "Tariff: %s"
-msgstr ""
+msgstr "التعرفة: %s"
 
 msgid "Teams"
 msgstr "الفرق"
@@ -5556,7 +5558,7 @@ msgid "The Stalker portal of this entry is not configured (any more)."
 msgstr "لم تعد بوابة Stalker الخاصة بهذا الإدخال مُعدّة."
 
 msgid "The Watchlist is empty. MENU key on a video: \"Add to Watchlist\"."
-msgstr ""
+msgstr "قائمة المشاهدة فارغة. اضغط على زر MENU على أحد مقاطع الفيديو واختر \"إضافة إلى قائمة المشاهدة\"."
 
 msgid "The Xtream account of this entry is not configured (any more)."
 msgstr "لم يعد حساب Xtream لهذا الإدخال مُعدًا."
@@ -5730,7 +5732,7 @@ msgstr ""
 
 #, python-format
 msgid "The results of %d of %d sites are from the last search for \"%s\" - this asks all sites again"
-msgstr ""
+msgstr "نتائج %d من أصل %d موقعًا مأخوذة من البحث السابق عن \"%s\" - سيؤدي هذا إلى إعادة البحث في جميع المواقع."
 
 msgid "The same item already exists in this group."
 msgstr "العنصر نفسه موجود بالفعل في هذه المجموعة."
@@ -5881,7 +5883,7 @@ msgid "This feed is empty, or the YouTube sign-in has expired - sign out and in 
 msgstr "هذا الموجز فارغ، أو انتهت صلاحية تسجيل الدخول إلى YouTube - سجّل الخروج ثم سجّل الدخول مرة أخرى."
 
 msgid "This folder is empty. MENU key on a video of the Watchlist: \"Move to Watchlist folder...\"."
-msgstr ""
+msgstr "هذا المجلد فارغ. اضغط على زر MENU على أحد مقاطع الفيديو في قائمة المشاهدة واختر \"نقل إلى مجلد قائمة المشاهدة...\"."
 
 msgid "This folder is protected by a PIN, open it on the receiver."
 msgstr "هذا المجلد محمي برمز PIN، افتحه على جهاز الاستقبال."
@@ -6149,7 +6151,7 @@ msgid "Trailer"
 msgstr "إعلان تشويقي"
 
 msgid "Trans"
-msgstr ""
+msgstr "متحول جنسيًا"
 
 msgid "Translation:"
 msgstr "الترجمة:"
@@ -6238,10 +6240,10 @@ msgid "Unable to comply. Search History is empty."
 msgstr "تعذر تنفيذ العملية. سجل البحث فارغ."
 
 msgid "Undo reverse"
-msgstr ""
+msgstr "إلغاء الترتيب العكسي"
 
 msgid "Undo shuffle"
-msgstr ""
+msgstr "إلغاء الترتيب العشوائي"
 
 msgid "Unfix jump target"
 msgstr "إلغاء تثبيت هدف الانتقال"
@@ -6271,7 +6273,7 @@ msgid "Unrar error code[%s]."
 msgstr "رمز خطأ فك الضغط Unrar [%s]."
 
 msgid "Unselect all"
-msgstr ""
+msgstr "إلغاء تحديد الكل"
 
 msgid "Unset watched"
 msgstr "إلغاء تعيين كمشاهد"
@@ -6521,19 +6523,19 @@ msgid "Watch online"
 msgstr "المشاهدة عبر الإنترنت"
 
 msgid "Watchlist"
-msgstr ""
+msgstr "قائمة المشاهدة"
 
 msgid "Watchlist (no folder)"
-msgstr ""
+msgstr "قائمة المشاهدة (بدون مجلد)"
 
 msgid "Watchlist folder"
-msgstr ""
+msgstr "مجلد قائمة المشاهدة"
 
 msgid "WebStreamr / AIOStreams manifest URL (your own):"
 msgstr "رابط ملف manifest الخاص بك في WebStreamr / AIOStreams:"
 
 msgid "Website address"
-msgstr ""
+msgstr "عنوان الموقع الإلكتروني"
 
 #, python-format
 msgid "Weeks on chart: %s"
@@ -6709,7 +6711,7 @@ msgid "Your MyE2i extension is outdated or unknown (v%s or newer needed). Please
 msgstr "إضافة MyE2i لديك قديمة أو غير معروفة (يلزم الإصدار v%s أو أحدث). يرجى التحديث:"
 
 msgid "Your own list of videos, in folders of your own (MENU key on a video: \"Add to Watchlist\")"
-msgstr ""
+msgstr "قائمة مقاطع الفيديو الخاصة بك، منظمة في مجلدات من اختيارك (اضغط على زر MENU على أحد مقاطع الفيديو واختر \"إضافة إلى قائمة المشاهدة\")"
 
 msgid "Your search entry"
 msgstr "إدخال البحث الخاص بك"
@@ -7010,7 +7012,7 @@ msgid "manual"
 msgstr "يدوي"
 
 msgid "marked"
-msgstr ""
+msgstr "محدد"
 
 msgid "maroon"
 msgstr "خمري"
@@ -7052,7 +7054,7 @@ msgid "next page"
 msgstr "الصفحة التالية"
 
 msgid "next page / previous page"
-msgstr ""
+msgstr "الصفحة التالية / الصفحة السابقة"
 
 msgid "next page = page 1"
 msgstr "الصفحة التالية = الصفحة 1"
@@ -7133,7 +7135,7 @@ msgid "refresh the current list"
 msgstr "تحديث القائمة الحالية"
 
 msgid "reversed"
-msgstr ""
+msgstr "معكوس"
 
 msgid "rootfs"
 msgstr "rootfs"
@@ -7200,7 +7202,7 @@ msgid "show this help"
 msgstr "عرض هذه المساعدة"
 
 msgid "shuffled"
-msgstr ""
+msgstr "عشوائي الترتيب"
 
 msgid "sign in (subscriptions, playlists, age-restricted videos)"
 msgstr "تسجيل الدخول (الاشتراكات، قوائم التشغيل، الفيديوهات المقيّدة بالعمر)"
