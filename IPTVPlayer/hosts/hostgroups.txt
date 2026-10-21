@@ -407,7 +407,7 @@
   "brstej",
   "cimanow",
   "cinemana",
-  "arabseed",
+  "myseed",
   "egydead",
   "movizhome",
   "hwnaturkya",
