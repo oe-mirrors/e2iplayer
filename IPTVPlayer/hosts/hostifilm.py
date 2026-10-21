@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "20.10.2026"
+LAST_MODIFIED = "21.10.2026"
+# 21.10.2026 - MP4s played without buffering: their moov atom sits at the end of the file, the buffered start
+#   alone does not play
 # 20.10.2026 - site and images over https again (some networks reset plain http to ifilmtv.ir), MP4s over https
 #   with a plain http second link (expired certificate of video.ifilmtv.ir); live channels over https from
 #   live.presstv.co.uk (the same streams as live.presstv.ir, whose certificate is the one of presstv.co.uk)
@@ -108,6 +110,10 @@ class IFilmArabicHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
     def _mp4Links(self, media, meta):
         # the certificate of video.ifilmtv.ir expired on 02.10.2026: the ffmpeg based players do not check it,
         # a player / box that does gets the same file over plain http as second link
+        # fix 211026: the MP4s carry their moov atom at the end of the file - buffered with wget the player starts
+        # without it ("Invalid data found when processing input", box log 21.10.: also with the moov tail downloaded
+        # separately); played directly the player reads it with a range request (the server answers 206)
+        meta = dict(meta, iptv_buffering="forbidden")
         url = self._videoUrl(self._httpsUrl(media))
         links = [{"name": "iFilm MP4", "url": strwithmeta(url, meta), "need_resolve": 0}]
         if url.startswith(VIDEO_BASE):

@@ -3986,7 +3986,9 @@ class pageParser(CaptchaHelper):
             links = []
             for candidate in candidates:
                 # hls4 segments are MPEG-TS behind a PNG header (".image" names) - hlsdl cuts it off
-                links = requireDownloaderForDisguisedHls(getDirectM3U8Playlist(jwUrl(candidate), checkExt=False, checkContent=True, sortWithMaxBitrate=99999999))
+                # fix 211026: variantCheck=False - fastvid.cam (earnvids) names its playlists master.txt / index-v1-a1.txt;
+                # a variant not ending in .m3u8 lost iptv_proto and was buffered with wget as a plain file (box log: FF_ERROR)
+                links = requireDownloaderForDisguisedHls(getDirectM3U8Playlist(jwUrl(candidate), checkExt=False, variantCheck=False, checkContent=True, sortWithMaxBitrate=99999999))
                 if links:
                     break
                 printDBG("parserJWPLAYER no playlist from [%s]" % candidate)
