@@ -182,6 +182,71 @@ def test_fixed_matroska_and_host_meta(hls, tmp_path):
     assert dl._getRemuxFormat() == ("matroska", ".mkv")
 
 
+def test_remux_log(hls, tmp_path):
+    # ffmpeg writes to <name>.iptv.remux.log: removed after the remux, its text in the debug log when it failed
+    logged = []
+    hls.printDBG = logged.append
+    hls.cfg.hls_out_container.value = "matroska"
+    for ok in (True, False):
+        dl = _finished(hls, str(tmp_path / "Film.mp4"), TS)
+        log = str(tmp_path / "Film.iptv.remux.log")
+        assert '>"%s" 2>&1' % log in hls.commands[-1]
+        with open(log, "w") as f:
+            f.write("Packet corrupt")
+        if ok:
+            with open(dl.tempRemuxPath, "wb") as f:
+                f.write(b"\x1a\x45\xdf\xa3" + b"\x00" * 100)
+        dl._cmdFinished(0 if ok else 1)
+        assert not os.path.exists(log) and dl.status == hls.sts.DOWNLOADED
+        assert any("Packet corrupt" in m for m in logged) != ok
+    # stopped during the remux: temp file and log removed
+    dl = _finished(hls, str(tmp_path / "Show.mp4"), TS)
+    for path in (dl.tempRemuxPath, str(tmp_path / "Show.iptv.remux.log")):
+        open(path, "w").close()
+    dl._cmdFinished(-1, True)
+    assert not os.path.exists(dl.tempRemuxPath) and not os.path.exists(str(tmp_path / "Show.iptv.remux.log"))
+    hls.cfg.hls_out_container.value = "auto"
+
+
+def _tsPacket(pid, payload, start=True):
+    head = bytes([0x47, (0x40 if start else 0) | (pid >> 8), pid & 0xff, 0x10])
+    return head + payload + b"\xff" * (184 - len(payload))
+
+
+def _ptsBytes(value, marker):
+    return bytes([(marker << 4) | ((value >> 29) & 0x0e) | 1, (value >> 22) & 0xff, ((value >> 14) & 0xfe) | 1,
+                  (value >> 7) & 0xff, ((value << 1) & 0xfe) | 1])
+
+
+def _videoTs(steps, frames=120):
+    # PAT -> PMT 0x1000 -> H.264 on 0x100, one PES per frame with PTS + DTS spaced by <steps> (repeated)
+    pat = b"\x00" + b"\x00\xb0\x0d\x00\x01\xc1\x00\x00" + b"\x00\x01\xf0\x00" + b"\x00" * 4
+    pmt = b"\x00" + b"\x02\xb0\x12\x00\x01\xc1\x00\x00" + b"\xe1\x00\xf0\x00" + b"\x1b\xe1\x00\xf0\x00" + b"\x00" * 4
+    out = _tsPacket(0, pat) + _tsPacket(0x1000, pmt)
+    dts = 900000
+    for i in range(frames):
+        pes = b"\x00\x00\x01\xe0\x00\x00\x80\xc0\x0a" + _ptsBytes(dts + 3000, 3) + _ptsBytes(dts, 1) + b"\x00\x00\x00\x01\x09"
+        out += _tsPacket(0x100, pes) + _tsPacket(0x100, b"\x00" * 184, start=False)
+        dts += steps[i % len(steps)]
+    return out
+
+
+def test_irregular_frame_times_keep_ts(hls, tmp_path):
+    # 24 fps film on a 30 fps raster (VOE): remuxed to MKV it is black on the box -> stays TS, no ffmpeg run
+    hls.cfg.hls_out_container.value = "matroska"
+    dl = _finished(hls, str(tmp_path / "Film.mp4"), _videoTs([3000, 3000, 3000, 6000]))
+    assert dl.status == hls.sts.DOWNLOADED and hls.commands == [] and dl.filePath == str(tmp_path / "Film.ts")
+    # evenly spaced (25 fps, 23.976 fps alternating 3753 / 3754, a jump between two segments): remuxed
+    for name, steps in (("A", [3600]), ("B", [3753, 3754]), ("C", [3600] * 59 + [450000])):
+        dl = _finished(hls, str(tmp_path / ("%s.mp4" % name)), _videoTs(steps))
+        assert dl.status == hls.sts.POSTPROCESSING and "-f matroska" in hls.commands[-1]
+    # too few frames to tell: remuxed as before
+    del hls.commands[:]
+    dl = _finished(hls, str(tmp_path / "Short.mp4"), _videoTs([3000, 3000, 3000, 6000], frames=20))
+    assert dl.status == hls.sts.POSTPROCESSING and len(hls.commands) == 1
+    hls.cfg.hls_out_container.value = "auto"
+
+
 def _stopped(hls, path, content, live, download=True):
     # "stop" in the download manager on a hlsdl run that wrote <content>
     with open(path, "wb") as f:
