@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 LAST_MODIFIED = "22.10.2026"
-# 22.10.2026 - update new url and  fix _pageId
+# 22.10.2026 - update new url and fix _pageId
 # 06.10.2026 - the Akwam archive (the site's old design, now under akwam.ss/old/)
 #   - menu: movies / series / other sections read live from the category bar, anime, search;
 #     a category lists its sub-categories first ("All" + each), otherwise its titles directly;
@@ -119,7 +119,7 @@ class AkwamOld(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     @staticmethod
     def _pageId(url):
-        m = re.search(r"/(\d+)(?:/|$)", url or "")
+        m = re.search(r"^https?://[^/]+/(?:old/)?(\d+)(?:/|$)", url or "")
         return m.group(1) if m else ""
 
     def _pageUrl(self, url):
