@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "06.10.2026"
+LAST_MODIFIED = "22.10.2026"
+# 22.10.2026 - update new url and fix _pageId
 # 06.10.2026 - the Akwam archive (the site's old design, now under akwam.ss/old/)
 #   - menu: movies / series / other sections read live from the category bar, anime, search;
 #     a category lists its sub-categories first ("All" + each), otherwise its titles directly;
@@ -35,7 +36,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return "https://akwam.ss/old/"
+    return "https://old.akwam.ss/"
 
 
 # Enigma2 colour codes ("\c00RRGGBB") - only for the list description, never in sidecar / INFO text
@@ -118,11 +119,11 @@ class AkwamOld(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     @staticmethod
     def _pageId(url):
-        m = re.search(r"/old/(\d+)(?:/|$)", url or "")
+        m = re.search(r"^https?://[^/]+/(?:old/)?(\d+)(?:/|$)", url or "")
         return m.group(1) if m else ""
 
     def _pageUrl(self, url):
-        # "https://akwam.ss/old/184415/<slug>" -> "https://akwam.ss/old/184415/": the slug is optional
+        # "https://old.akwam.ss/184415/<slug>" -> "https://old.akwam.ss/184415/": the slug is optional
         pid = self._pageId(url)
         return "%s%s/" % (self.MAIN_URL, pid) if pid else self._canonUrl(url)
 
