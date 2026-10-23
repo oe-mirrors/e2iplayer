@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "09.10.2026"
+LAST_MODIFIED = "23.10.2026"
+# 23.10.2026 - update to current url
 # AhwakTV (اهواك تي في) - PHP Melody site with Egyptian / Arabic / Gulf / Turkish / foreign series
 # (Ramadan series of several years), classic and new Arabic films, foreign / Indian / Asian films, cartoons.
 # The domain rotates: ahwaktv.net redirects to the current one.
@@ -45,7 +46,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return "https://ahwaktv.net/"
+    return "https://yam.ahwaktv.net/"
 
 
 # Arabic ordinals of season labels ("الموسم الثاني")

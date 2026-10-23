@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "21.10.2026"
+LAST_MODIFIED = "23.10.2026"
+# 23.10.2026 - update to current url
 # 21.10.2026 - update url and change name
 # 03.10.2026 - rewrite for the current m.myseed.pics layout and the current host standard
 #   (earlier versions: popking (odem2014), M.Elsafty (angel_heart))
@@ -39,7 +40,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return "https://m.myseed.tv/"
+    return "https://m.myseed.pics/"
 
 
 # Enigma2 colour codes ("\c00RRGGBB") - only for the list description, never in titles / sidecar / INFO text

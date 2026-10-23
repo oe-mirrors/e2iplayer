@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "09.10.2026"
+LAST_MODIFIED = "23.10.2026"
+# 23.10.2026 - update to current url
 # 05.05.2026 - update to current url - Masta2002
 # 08.10.2026 - host standard, domain cb01uno.wiki (cb01uno.watch / .club redirect there; rows of an older domain
 #   are moved to the current one):
@@ -48,7 +49,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return "https://cb01uno.wiki/"
+    return "https://cb01one.com/"
 
 
 STAYONLINE_URL = "https://stayonline.pro/"

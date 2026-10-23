@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "09.10.2026"
+LAST_MODIFIED = "23.10.2026"
 # Coding: BY MOHAMED_OS
+# 23.10.2026 - update to current url
 # 08.10.2026 - ported to the python3 framework / host standard
 #   - AnimeRco (det.animerco.org, Arabic-subtitled anime, WordPress): anime, movies and search; First page /
 #     Jump / Next page over /page/N/ (last page from the pagination)
@@ -37,7 +38,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return "https://det.animerco.org/"
+    return "https://eva.animerco.org/"
 
 
 LOCAL_PAGE_SIZE = 100

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "09.10.2026"
+LAST_MODIFIED = "23.10.2026"
+# 23.10.2026 - update to current url
 # Qfilm (كيو فيلم) - PHP Melody site with movies with Arabic subtitles (new releases, Arabic/Egyptian,
 # foreign, Indian, Asian, Turkish, animation, dubbed, genres). The domain rotates: qfilm.tv redirects
 # to the current one. Its Ramadan series live on the sister site q-drama (not part of this host).
@@ -41,7 +42,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return "https://www.qfilm.tv/"
+    return "https://a.qfilm.tv/"
 
 
 YEAR_RE = re.compile(r"(?:^|\s|\()((?:19|20)\d{2})(?=\s|\)|$)")
