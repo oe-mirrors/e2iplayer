@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "07.10.2026"
+LAST_MODIFIED = "23.10.2026"
+# 23.10.2026 - update to current url
 # 07.10.2026 - domain hd-filme.vip (hd-filme.blog redirects there); list cards, genre/year/country menus
 #   (new dropdown markup); series pages are one season each ("Show - Staffel 2"): seasons + episodes come
 #   from the DeVideoSRC player API (IMDb id of the page, libs/meinecloud.py), the site's own episode list
@@ -29,7 +30,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return "https://hd-filme.vip/"
+    return "https://hd-filme.beer/"
 
 
 PAGING_KEYS = ("base_url", "page_tpl")

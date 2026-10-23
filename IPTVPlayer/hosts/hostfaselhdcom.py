@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "10.10.2026"
+LAST_MODIFIED = "23.10.2026"
+# 23.10.2026 - lists read only the site's list grid, the "most viewed" slider repeated its cards on every page
 # 10.10.2026 - links are no longer renamed to "*name*" after use - that broke the link list's own used mark (tick + colour)
 # 10.10.2026 - rewrite for www.fasel-hd.co (FaselHD moved there; faselhd.co, faselhds.* and the other old domains
 #   answer 301/302 to it), the whole site sits behind a Cloudflare check
@@ -305,6 +306,10 @@ class FaselhdCOM(GenericFolderWatchedScraperMixin, CBaseHostClass):
         # (url, label, icon, desc) of the "postDiv" cards of a list / search page
         out = []
         seen = set()
+        # the "most viewed" slider above the list repeats the same cards on every page - only the list itself
+        start = data.find('id="postList"')
+        if start >= 0:
+            data = data[start:]
         for block in data.split('class="postDiv')[1:]:
             href = self.cm.ph.getSearchGroups(block, r'<a[^>]+href="([^"]+)"')[0]
             url = self._canonUrl(href) if href else ""

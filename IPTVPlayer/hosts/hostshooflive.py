@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "07.10.2026"
+LAST_MODIFIED = "23.10.2026"
 # Coding: BY MOHAMED_OS
+# 23.10.2026 - update to current url
 # Ported to the python3 framework (06.10.2026):
 #   - shooflive.net: movie and series categories (the site menu) with First page / Jump / Next page
 #     (last page from the pager), series -> episodes (ascending)
@@ -33,7 +34,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return "https://shooflive.net/"
+    return "https://shooflive.watch/"
 
 
 LOCAL_PAGE_SIZE = 100

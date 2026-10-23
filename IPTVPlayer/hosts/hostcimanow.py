@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "21.10.2026"
+LAST_MODIFIED = "23.10.2026"
+# 23.10.2026 - watching page loader changed again (reversed base64 blocks, new RC4 variant, hex server tabs)
 # 21.10.2026 - watching page loader changed again: loader and page sit base64 with swapped halves in data-*
 #   attributes; RC4 variant (S-box shifted, key schedule adds (i * 7) & 255, every byte also XORed with
 #   (n + tw) & 255 and j & 31), key = 'd' + String((sA ^ sB) % m) after a two-register LCG; the hidden box's CSS
@@ -167,10 +168,9 @@ def _jsNum(expr, floorName="", roundName=""):
     return int(_jsEval(tree))
 
 
-def _jsParseInt(match):
+def _jsParseIntValue(digits, base):
     # parseInt('<digits>', base) like JS: a "0x" prefix for base 16, the digits up to the first one invalid in the base;
-    # no digit at all (NaN) leaves the call in place (the expression is then refused)
-    digits, base = match.group(1), _jsNum(match.group(2))
+    # no digit at all (NaN) -> None
     if base == 16 and digits.lower().startswith("0x"):
         digits = digits[2:]
     valid = re.match(r"[0-9a-z]*", digits.lower()).group(0)
@@ -178,15 +178,63 @@ def _jsParseInt(match):
         if int(char, 36) >= base:
             valid = valid[:pos]
             break
-    return str(int(valid, base)) if valid and 2 <= base <= 36 else match.group(0)
+    return str(int(valid, base)) if valid and 2 <= base <= 36 else None
+
+
+def _jsParseInt(match):
+    # NaN leaves the call in place (the expression is then refused)
+    return _jsParseIntValue(match.group(1), _jsNum(match.group(2))) or match.group(0)
+
+
+_PARSEINT_RE = re.compile(r"""(?:\bNumber\s*\.\s*)?\bparseInt\(\s*(['"])([0-9a-zA-Z]+)\1\s*,""")
+
+
+def _jsParseInts(expr):
+    # loader of 23.10.2026: parseInt('x', <base>) with a base bracketed to any depth, e.g. parseInt('103', ((5 + 6)))
+    pos = 0
+    while True:
+        found = _PARSEINT_RE.search(expr, pos)
+        if not found:
+            return expr
+        depth, end = 0, found.end()
+        while end < len(expr):
+            if expr[end] == "(":
+                depth += 1
+            elif expr[end] == ")":
+                if not depth:
+                    break
+                depth -= 1
+            end += 1
+        try:
+            value = _jsParseIntValue(found.group(2), _jsNum(expr[found.end():end]))
+        except Exception:
+            value = None
+        if value is None:
+            pos = found.end()
+            continue
+        expr = expr[:found.start()] + value + expr[end + 1:]
 
 
 _JS_LIT = r"(0x[0-9a-fA-F]+|\d+)"
+# an already unwrapped number expression as a call argument (digits, brackets, operators)
+_JS_NUMEXPR = r"[\d\s()+\-*^|&<>/%]+?"
 # loader property assignment of the hidden element's z-index: style['z-i' + 'ndex'], style['z' + 'Index'], style['zIndex']
 _ZINDEX_RE = re.compile(r"""\.style\[\s*(?:['"]z-i['"]\s*\+\s*['"]ndex['"]|['"]z['"]\s*\+\s*['"]Index['"]|['"]zIndex['"])\s*\]\s*=\s*String\((.*?)\)\s*;""")
 # loader of 21.10.2026: the hidden element's CSS order, set in its cssText ('...order:' + String(x) + '!important;')
 _ORDER_RE = re.compile(r"""order:['"]\s*\+\s*String\((.*?)\)\s*\+\s*['"]!important""")
 _JS_WRAPPED = (
+    # loader of 23.10.2026: 'aG'.charCodeAt(1), 'sss'.split('').length, Number('164'), [0, x].slice(1)[0],
+    # [a, b].reduce(function(p,c){return p+c;}, 0), (function(x,y){return x+y;})(a, b),
+    # (typeof window.atob === 'function' ? 1 : 0)
+    (re.compile(r"""(['"])([^'"\\]*)\1\s*\.\s*charCodeAt\(\s*([1-9]\d*)\s*\)"""), lambda m: str(ord(m.group(2)[int(m.group(3))])) if int(m.group(3)) < len(m.group(2)) else m.group(0)),
+    (re.compile(r"""(['"])([^'"\\]*)\1\s*\.\s*split\(\s*(['"])\3\s*\)\s*\.\s*length\b"""), lambda m: str(len(m.group(2)))),
+    (re.compile(r"""\bNumber\(\s*(['"])(\d+)\1\s*\)"""), lambda m: m.group(2)),
+    (re.compile(r"\[\s*%s\s*,\s*%s\s*\]\s*\.\s*slice\(\s*1\s*\)\s*\[\s*0\s*\]" % (_JS_LIT, _JS_LIT)), lambda m: m.group(2)),
+    (re.compile(r"\[\s*%s\s*,\s*%s\s*\]\s*\.\s*reduce\(\s*function\s*\(\s*(\w+)\s*,\s*(\w+)\s*\)\s*\{\s*return\s+\3\s*\+\s*\4\s*;?\s*\}\s*,\s*0\s*\)" % (_JS_LIT, _JS_LIT)),
+     lambda m: "(%s + %s)" % (m.group(1), m.group(2))),
+    (re.compile(r"\(\s*function\s*\(\s*(\w+)\s*,\s*(\w+)\s*\)\s*\{\s*return\s+\1\s*\+\s*\2\s*;?\s*\}\s*\)\s*\(\s*(%s)\s*,\s*(%s)\s*\)(?=\s*[)+\-*^|&,;]|\s*$)" % (_JS_NUMEXPR, _JS_NUMEXPR)),
+     lambda m: "((%s) + (%s))" % (m.group(3), m.group(4))),
+    (re.compile(r"""\(\s*typeof\s+window\s*\.\s*atob\s*===?\s*['"]function['"]\s*\?\s*%s\s*:\s*%s\s*\)""" % (_JS_LIT, _JS_LIT)), lambda m: m.group(1)),
     # loader of 21.10.2026: 'J'.charCodeAt(0), 'abc'.length, Math.imul(a, b), [x].map(function(z){return z^y;})[0],
     # (window.Navigator ? x : y); first, the base of a parseInt can be one of them
     (re.compile(r"""(['"])([^'"\\])\1\s*\.\s*charCodeAt\(\s*0?\s*\)"""), lambda m: str(ord(m.group(2)))),
@@ -208,9 +256,15 @@ _JS_WRAPPED = (
 
 
 def _jsUnwrap(expr):
-    # the loader of 18.10.2026 hides its literals in ({'v': x}).v, [x].pop(), parseInt('x', 16) and a typeof check
-    for regex, repl in _JS_WRAPPED:
-        expr = regex.sub(repl, expr)
+    # the loader of 18.10.2026 hides its literals in ({'v': x}).v, [x].pop(), parseInt('x', 16) and a typeof check;
+    # since 23.10.2026 the wrappers are nested - repeated until nothing changes
+    for _round in range(12):
+        old = expr
+        for regex, repl in _JS_WRAPPED:
+            expr = regex.sub(repl, expr)
+        expr = _jsParseInts(expr)
+        if expr == old:
+            break
     return expr
 
 
@@ -270,6 +324,14 @@ def _flexStyledHeight(code):
         found = re.match(r"\s*(\d+)", value or "")
         return int(found.group(1)) if found else 0
 
+    def sides(props, name):
+        # "padding: 10px 7px" shorthand (1 to 4 values) and its -top/-right/-bottom/-left longhands
+        values = [px(v) for v in (props.get(name) or "").split()] or [0]
+        values = (values * 4)[:4] if len(values) == 1 else values
+        values = (values * 2)[:4] if len(values) == 2 else values
+        values = values + [values[1]] if len(values) == 3 else values
+        return [px(props.get("%s-%s" % (name, side))) or values[n] for n, side in enumerate(("top", "right", "bottom", "left"))]
+
     box, items = None, []
     for tag, style in re.findall(r"""<([\w-]+)\s+style=\\?['"]([^'"\\]*)""", code):
         props = {}
@@ -297,7 +359,15 @@ def _flexStyledHeight(code):
         height = px(props.get("height"))
         if props.get("max-height"):
             height = min(height, px(props.get("max-height")))
-        height = max(height, px(props.get("min-height")), px(props.get("padding-top")) + px(props.get("padding-bottom")))
+        height = max(height, px(props.get("min-height")))
+        # since 23.10.2026 box-sizing content-box (padding adds to the size) or border-box, and side margins
+        padTop, padRight, padBottom, padLeft = sides(props, "padding")
+        marTop, marRight, marBottom, marLeft = sides(props, "margin")
+        if props.get("box-sizing") == "content-box":
+            width, height = width + padLeft + padRight, height + padTop + padBottom
+        else:
+            width, height = max(width, padLeft + padRight), max(height, padTop + padBottom)
+        width, height = width + marLeft + marRight, height + marTop + marBottom
         if left and left + width > limit:
             total, left, line = total + line, 0, 0
         left += width
@@ -355,6 +425,42 @@ def _rc4Mixed(key, data, sboxAdd, keyMul, tweak, jMask):
         s[i], s[j] = s[j], s[i]
         out[n] = c ^ s[(s[i] + s[j]) & 255] ^ ((n + tweak) & 255) ^ (j & jMask)
     return bytes(out)
+
+
+def _rc4Stepped(key, data, sboxMul, sboxAdd, posMul, tweak, jMask):
+    # loader of 23.10.2026: S[i] = (i * sboxMul + sboxAdd) & 255, the key schedule also adds (i ^ sboxAdd) & 255,
+    # every byte is also XORed with (n * posMul + tweak) & 255 (n = byte position) and with (j + i) & jMask
+    s = [(i * sboxMul + sboxAdd) & 255 for i in range(256)]
+    j = 0
+    for i in range(256):
+        j = (j + s[i] + ord(key[i % len(key)]) + ((i ^ sboxAdd) & 255)) & 255
+        s[i], s[j] = s[j], s[i]
+    out = bytearray(len(data))
+    i = j = 0
+    for n, c in enumerate(bytearray(data)):
+        i = (i + 1) & 255
+        j = (j + s[i]) & 255
+        s[i], s[j] = s[j], s[i]
+        out[n] = c ^ s[(s[i] + s[j]) & 255] ^ ((n * posMul + tweak) & 255) ^ ((j + i) & jMask)
+    return bytes(out)
+
+
+def _unchunk(text, size):
+    # loader of 23.10.2026: base64 cut in blocks of "size" characters, each one reversed
+    return "".join(text[pos:pos + size][::-1] for pos in range(0, len(text), size))
+
+
+def _restoreHexTabs(html, attr, mask):
+    # since 23.10.2026 the server <li> carry <attr>="9d-9a-..." (attr from the loader's li[data-...] selector) = hex
+    # bytes of "index:id", byte n XORed with mask ^ ((n * 7) & 255)
+    def repl(match):
+        try:
+            text = "".join(chr(int(byte, 16) ^ mask ^ ((n * 7) & 255)) for n, byte in enumerate(match.group(2).split("-")))
+            index, serverId = text.split(":")[:2]
+        except Exception:
+            return match.group(0)
+        return 'data-index="%s" data-id="%s"' % (index, serverId)
+    return re.sub(r"""\b%s=(["'])((?:[0-9a-fA-F]{1,2}-)*[0-9a-fA-F]{1,2})\1""" % re.escape(attr), repl, html)
 
 
 def _unrotate(text):
@@ -801,9 +907,104 @@ class CimaNow(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return ""
 
     def _decodeWatching(self, data):
-        # the current loader first, then the ones of 20.10., 18.10., 11.10. and 08.10.2026
-        decoded = self._decodeWatchingRot(data) or self._decodeWatchingRev(data) or self._decodeWatchingRc4(data) or self._decodeWatchingSum(data)
+        # the current loader first, then the ones of 21.10., 20.10., 18.10., 11.10. and 08.10.2026
+        decoded = self._decodeWatchingChunk(data) or self._decodeWatchingRot(data) or self._decodeWatchingRev(data) or self._decodeWatchingRc4(data) or \
+            self._decodeWatchingSum(data)
         return decoded if decoded else self._decodeWatchingParts(data)
+
+    def _decodeWatchingChunk(self, data):
+        # loader of 23.10.2026: loader and page sit in data-* attributes as base64 cut in reversed blocks (_unchunk).
+        # RC4 variant (_rc4Stepped) with key = prefix + String(kv) + suffix, kv = ((sA ^ sB) + r) % m after a
+        # do-while LCG: sA = (sA * a + c + ((st * x) & y)) % m; sB = ((sB ^ sA) + ((st * u) & v)) % m. sA = the sum of
+        # a list (the hidden element's margin-top, the height of a hidden flex box, wrapped literals). The server <li>
+        # carry the hex "index:id" (_restoreHexTabs), the token "tk" is an XOR array - both with kv & 255.
+        # "" when the page is not of this kind
+        try:
+            code = ""
+            for attrs, body in re.findall(r"(?s)<script([^>]*)>(.*?)</script>", data):
+                attr = re.search(r"""getAttribute\(\s*['"]([\w-]+)['"]\s*\)\s*,\s*\w+\s*=\s*['"]{2}\s*,\s*\w+\s*=\s*(\d+)\s*;""", body)
+                value = re.search(r"""\s%s=["']([A-Za-z0-9+/=]{200,})["']""" % re.escape(attr.group(1)), attrs) if attr else None
+                if value:
+                    code = _jsUnwrap(b64Decode(_unchunk(value.group(1), int(attr.group(2)))))
+                    break
+            if not code:
+                return ""
+            name = re.search(r"""getAttribute\(\s*['"](data-[\w-]+)['"]\s*\)\s*\|\|""", code)
+            payload = re.search(r"""\s%s=["']([A-Za-z0-9+/=]{100,})["']""" % re.escape(name.group(1)), data) if name else None
+            loop = re.search(r"do\s*\{\s*(\w+)\s*=\s*\(\s*\(\s*\1\s*\*\s*(\w+)\s*\)\s*\+\s*(\w+)\s*\+\s*\(\s*\(\s*(\w+)\s*\*\s*(\d+)\s*\)\s*&\s*(\d+)\s*\)\s*\)\s*%\s*(\d+)\s*;"
+                             r"\s*(\w+)\s*=\s*\(\s*\(\s*\(\s*\8\s*\^\s*\1\s*\)\s*>>>\s*0\s*\)\s*\+\s*\(\s*\(\s*\4\s*\*\s*(\d+)\s*\)\s*&\s*(\d+)\s*\)\s*\)\s*%\s*(\d+)\s*;"
+                             r"\s*\4\s*\+\+\s*;?\s*\}\s*while\s*\(\s*\4\s*<\s*(\w+)\s*\)", code)
+            if not payload or not loop:
+                return ""
+            kv = re.search(r"var\s+(\w+)\s*=\s*\(\s*\(\s*\(\s*%s\s*\^\s*%s\s*\)\s*>>>\s*0\s*\)\s*\+\s*(\w+)\s*\)\s*%%\s*(\d+)" % (loop.group(1), loop.group(8)), code)
+            chunk = re.search(r"""\.substr\(\s*\w+\s*,\s*(\w+)\s*\)\s*\.split\(\s*['"]{2}\s*\)\s*\.reverse\(\)""", code)
+            sbox = re.search(r"\w+\[(\w+)\]\s*=\s*\(\s*\(\s*\1\s*\*\s*(\w+)\s*\)\s*\+\s*(\w+)\s*\)\s*&\s*255", code)
+            mixer = re.search(r"\^\s*\(\s*\(\s*\(\s*\w+\s*\*\s*(\d+)\s*\)\s*\+\s*(\w+)\s*\)\s*&\s*255\s*\)\s*\^\s*\(\s*\(\s*\w+\s*\+\s*\w+\s*\)\s*&\s*(\w+)\s*\)", code)
+            if not kv or not chunk or not sbox or not mixer:
+                return ""
+            defs = _jsVars(code)
+            css = re.search(r"""(?:margin-top|order|z-index):['"]\s*\+\s*String\((.*?)\)\s*\+\s*['"]""", code)
+            envNames = [n for n, e in defs.items() if "?" in e and "_h" in e and "documentElement" in e]
+            sumRe = re.compile(r"(?s)^\[(.*)\]\s*\.\s*reduce\(\s*function\s*\(\s*(\w+)\s*,\s*(\w+)\s*\)\s*\{\s*return\s+\2\s*\+\s*\3\s*;?\s*\}\s*,\s*0\s*\)$")
+
+            def value(expr, depth=0):
+                expr = expr.strip()
+                if "getComputedStyle" in expr:
+                    return _jsNum(css.group(1)) if css else 0
+                if "offsetHeight" in expr:
+                    return _flexStyledHeight(code)
+                items = sumRe.match(expr)
+                if items:
+                    return sum(value(item, depth + 1) for item in _jsSplit(items.group(1)))
+                for word in set(re.findall(r"\b[A-Za-z_$][\w$]*\b", expr)):
+                    if word in envNames:
+                        expr = re.sub(r"\b%s\b" % re.escape(word), "1", expr)
+                    elif word in defs and word not in _JS_FUNCS and depth < 5:
+                        expr = re.sub(r"\b%s\b" % re.escape(word), "(%d)" % value(defs[word], depth + 1), expr)
+                return _jsNum(expr)
+
+            def ref(word):
+                # a variable of the loader or a number literal in its place
+                return int(word) if word.isdigit() else value(defs[word])
+
+            sA, sB, rounds = ref(loop.group(1)), ref(loop.group(8)), ref(loop.group(12))
+            mul, inc, st = ref(loop.group(2)), ref(loop.group(3)), value(defs.get(loop.group(4), "0"))
+            mulA, maskA, mod, mulB, maskB, modB = (int(loop.group(n)) for n in (5, 6, 7, 9, 10, 11))
+            while True:
+                # float like JS: sA * a can pass 2^53
+                sA = int(math.fmod(float(sA) * mul + inc + ((st * mulA) & maskA), mod))
+                sB = (((_jsInt32(sB) ^ _jsInt32(sA)) & 0xFFFFFFFF) + ((st * mulB) & maskB)) % modB
+                st += 1
+                if st >= rounds:
+                    break
+            kvValue = (((_jsInt32(sA) ^ _jsInt32(sB)) & 0xFFFFFFFF) + ref(kv.group(2))) % int(kv.group(3))
+            keyParts = re.search(r"""=\s*(?:['"]([^'"]*)['"]\s*\+\s*)?String\(\s*%s\s*\)(?:\s*\+\s*['"]([^'"]*)['"])?""" % re.escape(kv.group(1)), code)
+            key = (keyParts.group(1) or "") + str(kvValue) + (keyParts.group(2) or "") if keyParts else str(kvValue)
+            mask = re.search(r"var\s+(\w+)\s*=\s*%s\s*&\s*(\d+)\s*;" % re.escape(kv.group(1)), code)
+            maskValue = kvValue & int(mask.group(2)) if mask else kvValue & 255
+            raw = b64Decode(_unchunk(payload.group(1), ref(chunk.group(1))), binary=True)
+            out = strDecode(_rc4Stepped(key, raw, ref(sbox.group(2)), ref(sbox.group(3)), int(mixer.group(1)), ref(mixer.group(2)), ref(mixer.group(3))), "ignore")
+            cut = re.search(r"(\w+)\s*=\s*\1\.substring\(([^;]+?)\)\s*;", code)
+            if cut:
+                out = out[_jsNum(cut.group(2)):]
+            if 'id="watch"' not in out:
+                printDBG("CimaNow._decodeWatchingChunk: key %s gave no server list" % key)
+                return ""
+            tabs = re.search(r"""querySelectorAll\(\s*['"]li\[([\w-]+)\]['"]\s*\)""", code)
+            if tabs:
+                out = _restoreHexTabs(out, tabs.group(1), maskValue)
+            # var tk = window.<resolver> ? window.<resolver>(window["<array>"]) : "" -> the plain token
+            tkCall = re.search(r"""var\s+tk\s*=\s*window\.(\w+)\s*\?\s*window\.\1\(\s*window\[["'](\w+)["']\]\s*\)\s*:\s*["']{2}""", out)
+            tkStep = re.search(r"fromCharCode\(\s*\w+\[(\w+)\]\s*\^\s*\w+\s*\^\s*\(\s*\(\s*\1\s*\*\s*(\d+)\s*\)\s*&\s*255\s*\)", code)
+            tkArray = re.search(r"""window\[["']%s["']\]\s*=\s*\[([\d\s,]+)\]""" % re.escape(tkCall.group(2)), out) if tkCall else None
+            if tkCall and tkArray:
+                step = int(tkStep.group(2)) if tkStep else 13
+                token = "".join(chr(int(n) ^ maskValue ^ ((i * step) & 255)) for i, n in enumerate(tkArray.group(1).split(",")))
+                out = out[:tkCall.start()] + 'var tk = "%s"' % token + out[tkCall.end():]
+            return out
+        except Exception:
+            printExc()
+        return ""
 
     def _decodeWatchingRot(self, data):
         # loader of 21.10.2026: loader and page sit in data-* attributes as base64 with swapped halves (_unrotate).

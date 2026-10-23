@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "21.10.2026"
+LAST_MODIFIED = "23.10.2026"
 # Based on the preparatory work of odem2014
+# 23.10.2026 - domain shaahidd4u.net (sshaahid4u.net -> shahid4u.mobile -> shaahidd4u.net)
 # 21.10.2026 - the /watch/ page lists "const servers = [...]" without urls: each server is resolved by a POST to
 #   /watch/resolve (one-time watchResolveKey + csrfToken + the server's resolve_token) -> /m/<hash> as before
 # 03.10.2026 - new domain shaahiied4u.net (shahid4uu.day is dead, shed4u1.com is
@@ -31,7 +32,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return "https://sshaahid4u.net/"
+    return "https://shaahidd4u.net/"
 
 
 # Arabic ordinals used in "الموسم الثاني"

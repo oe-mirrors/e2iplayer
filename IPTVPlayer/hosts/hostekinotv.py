@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "04.10.2026"
+LAST_MODIFIED = "23.10.2026"
 # 03.10.2026 - ekino-tv.pl moved to ekino.ws: movies (latest / genres / years /
 #   version), series (sections of /serie/, A-Z catalogue -> seasons -> episodes), search
 #   (movies + series), players via /watch/f/<host>/<id> (session bound ids, Cloudflare Turnstile
@@ -36,6 +36,8 @@ def gettytul():
 EPISODE_RE = re.compile(r'/serie/watch/([^/+"\[\]]+)\+season\[(\d+)\]\+episode\[(\d+)\]')
 # " - HD", " - CAM", " - HD AI" ... behind the Polish title
 QUALITY_RE = re.compile(r'\s+-\s+((?:HD|CAM|TS|AI|4K|FHD|UHD|SD)(?:\s+(?:HD|CAM|AI|4K))*)\s*$', re.IGNORECASE)
+# Animacja, Baśń, Dla dzieci, Dla młodzieży - the site combines categories with a comma
+KIDS_CATS = "2,3,5,6"
 
 
 class EkinoTv(GenericFolderWatchedScraperMixin, CBaseHostClass, CaptchaHelper):
@@ -54,6 +56,8 @@ class EkinoTv(GenericFolderWatchedScraperMixin, CBaseHostClass, CaptchaHelper):
                      {"category": "list_genres", "title": _("Movies") + " - " + _("Genres"), "url": self.getFullUrl("movie/cat/+")},
                      {"category": "list_years", "title": _("Movies") + " - " + _("Year"), "url": self.getFullUrl("movie/cat/+")},
                      {"category": "list_versions", "title": _("Movies") + " - " + _("Version"), "url": self.getFullUrl("movie/cat/+")},
+                     {"category": "list_filter_genre", "title": _("Movies") + " - " + _("Filter"), "url": self.getFullUrl("movie/cat/+")},
+                     {"category": "list_filter_version", "title": _("Movies") + " - " + _("Kids"), "url": self.getFullUrl("movie/cat/+"), "f_cat": KIDS_CATS},
                      {"category": "list_serie_sections", "title": _("Series"), "url": self.getFullUrl("serie/")},
                      {"category": "list_serie_az", "title": _("Series") + " - A-Z", "url": self.getFullUrl("serie/")}] + self.searchItems()
 
@@ -151,7 +155,15 @@ class EkinoTv(GenericFolderWatchedScraperMixin, CBaseHostClass, CaptchaHelper):
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, 'class="movieDesc">', "</div>", False)[1])
         epMatch = EPISODE_RE.search(item)
         return {"url": url, "title": title, "orig_title": origTitle, "icon": icon, "year": year, "version": version,
-                "genres": genres, "plot": desc, "is_movie": "/movie/show/" in url, "ep_match": epMatch}
+                "genres": genres, "plot": desc, "is_movie": "/movie/show/" in url, "ep_match": epMatch, "rating": self._parseRating(item)}
+
+    def _parseRating(self, item):
+        # <div class="sum-vote"><div ...>7.7</div></div> ... Ocen</font><br /><font ...>3</font>; 0 votes = not rated
+        score = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'class="sum-vote">\s*<div[^>]*>([^<]*)</div>')[0])
+        votes = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'>Ocen</font>\s*<br\s*/?>\s*<font[^>]*>([^<]*)</font>')[0])
+        if not re.match(r'^\d{1,2}(?:[.,]\d{1,2})?$', score) or not votes.isdigit() or votes == "0":
+            return ""
+        return _("Rating: %s") % ("%s/10 (%s)" % (score.replace(",", "."), votes))
 
     def _addCard(self, cItem, card, asEpisode=False):
         title = card["title"]
@@ -164,6 +176,8 @@ class EkinoTv(GenericFolderWatchedScraperMixin, CBaseHostClass, CaptchaHelper):
             info.append(", ".join([g for g in card["genres"] if g]))
         if card["orig_title"] and card["orig_title"] != title:
             info.insert(0, card["orig_title"])
+        if card["rating"]:
+            info.insert(0, card["rating"])
         desc = " | ".join(info)
         if card["plot"]:
             desc = "%s[/br]%s" % (desc, card["plot"]) if desc else card["plot"]
@@ -249,14 +263,63 @@ class EkinoTv(GenericFolderWatchedScraperMixin, CBaseHostClass, CaptchaHelper):
             params.update({"good_for_fav": True, "category": "list_items", "title": year, "url": self.getFullUrl("movie/cat/rok[%s]+" % year)})
             self.addDir(params)
 
+    def _versions(self):
+        return [("Lektor", _("Voice-over")), ("Napisy", _("Subtitles")), ("Dubbing", _("Dubbed")),
+                ("PL", _("Polish films")), ("ENG", _("Original version"))]
+
     def listVersions(self, cItem):
         printDBG("EkinoTv.listVersions")
-        versions = [("Lektor", _("Voice-over")), ("Napisy", _("Subtitles")), ("Dubbing", _("Dubbed")),
-                    ("PL", _("Polish films")), ("ENG", _("Original version"))]
-        for key, title in versions:
+        for key, title in self._versions():
             params = dict(cItem)
             params.update({"good_for_fav": True, "category": "list_items", "title": title, "url": self.getFullUrl("movie/cat/wersja[%s]+" % key)})
             self.addDir(params)
+
+    ###################################################
+    # combined filter: genre -> version -> year (the site joins them in one url)
+    ###################################################
+    def _filterUrl(self, cItem):
+        url = "movie/cat/"
+        for key, name in (("f_cat", "kategoria"), ("f_version", "wersja"), ("f_year", "rok")):
+            if cItem.get(key):
+                url += "%s[%s]+" % (name, cItem[key])
+        return self.getFullUrl(url if url.endswith("+") else url + "+")
+
+    def _addFilterItem(self, cItem, category, title, key, value):
+        params = dict(cItem)
+        params.update({"good_for_fav": True, "category": category, "title": title, key: value})
+        if category == "list_items":
+            params["url"] = self._filterUrl(params)
+        self.addDir(params)
+
+    def listFilterGenre(self, cItem):
+        printDBG("EkinoTv.listFilterGenre")
+        sts, data = self.getPage(cItem["url"])
+        if not sts:
+            return
+        data = self.cm.ph.getDataBeetwenMarkers(data, 'class="movieCategories"', "</ul>", False)[1]
+        data = re.sub(r'<!--.*?-->', '', data, flags=re.DOTALL)
+        self._addFilterItem(cItem, "list_filter_version", _("All"), "f_cat", "")
+        self._addFilterItem(cItem, "list_filter_version", _("Kids"), "f_cat", KIDS_CATS)
+        for code, title in re.findall(r'<a href="[^"]*kategoria\[(\d+)\][^"]*">([^<]+)</a>', data):
+            title = self.cleanHtmlStr(title)
+            if title:
+                self._addFilterItem(cItem, "list_filter_version", title, "f_cat", code)
+
+    def listFilterVersion(self, cItem):
+        printDBG("EkinoTv.listFilterVersion")
+        self._addFilterItem(cItem, "list_filter_year", _("All"), "f_version", "")
+        for key, title in self._versions():
+            self._addFilterItem(cItem, "list_filter_year", title, "f_version", key)
+
+    def listFilterYear(self, cItem):
+        printDBG("EkinoTv.listFilterYear")
+        sts, data = self.getPage(cItem["url"])
+        if not sts:
+            return
+        data = self.cm.ph.getDataBeetwenMarkers(data, 'class="filtyear"', "</ul>", False)[1]
+        self._addFilterItem(cItem, "list_items", _("All"), "f_year", "")
+        for year in re.findall(r'data-id="(\d{4})"', data):
+            self._addFilterItem(cItem, "list_items", year, "f_year", year)
 
     def _serieSections(self, data):
         # [(title, html)] of the /serie/ start page (<h4> headed blocks)
@@ -548,6 +611,12 @@ class EkinoTv(GenericFolderWatchedScraperMixin, CBaseHostClass, CaptchaHelper):
             self.listYears(self.currItem)
         elif category == "list_versions":
             self.listVersions(self.currItem)
+        elif category == "list_filter_genre":
+            self.listFilterGenre(self.currItem)
+        elif category == "list_filter_version":
+            self.listFilterVersion(self.currItem)
+        elif category == "list_filter_year":
+            self.listFilterYear(self.currItem)
         elif category == "list_serie_sections":
             self.listSerieSections(self.currItem)
         elif category == "list_serie_section":
