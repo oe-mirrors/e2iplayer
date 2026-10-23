@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "04.10.2026"
+LAST_MODIFIED = "23.10.2026"
+# 23.10.2026 - update to current url
 # 03.10.2026 - brought to the current host standard
 #   (Asia TV Drama, as1tv.com - Asian dramas with Arabic subtitles - originally by Mohamed Elsafty)
 #   - new domain as1tv.com (asiatvdrama.com redirects there); no sleeping 3x retry wrapper; no
@@ -34,7 +35,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return "https://as1tv.com/"
+    return "https://astvd.com/"
 
 
 AJAX_URL = "https://asiawiki.me/wp-admin/admin-ajax.php?action=fetch_episode&id=%s"
@@ -55,7 +56,7 @@ class Asi1TV(GenericFolderWatchedScraperMixin, CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(self, {"history": "asi1tv", "cookie": "asi1tv.cookie"})
         self.MAIN_URL = gettytul()
-        self.DEFAULT_ICON_URL = "https://as1tv.com/wp-content/uploads/2021/09/cropped-asiadrama-192x192.png"
+        self.DEFAULT_ICON_URL = self.getFullUrl("/wp-content/uploads/2021/09/cropped-asiadrama-192x192.png")
         self.HEADER = self.cm.getDefaultHeader(browser="chrome")
         self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
         self.DRAMA_TAB = [

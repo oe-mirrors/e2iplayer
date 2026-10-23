@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "04.10.2026"
+LAST_MODIFIED = "23.10.2026"
+# 23.10.2026 - update to current url
 # 03.10.2026 - revived for mycima.poker (mycima.boo -> .band -> ... -> .poker)
 #   Rewrite against the current site (WeCima theme; the wecima host went to Backup, this is the
 #   one MyCima/WeCima host left):
@@ -38,7 +39,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return "https://mycima.poker/"
+    return "https://mycima.agency/"
 
 
 # Arabic ordinals used in season labels ("الموسم الثاني"), compound ones first

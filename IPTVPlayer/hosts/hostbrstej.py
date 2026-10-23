@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "06.10.2026"
+LAST_MODIFIED = "23.10.2026"
+# 23.10.2026 - update to current url
 # 03.10.2026 - revived for the redesigned hd1.brstej.com (Brstej / Prestige)
 #   Rewrite against the current site (based on the host by Mohamed Elsafty):
 #   - categories read live from the site menu (no hard-coded yearly slugs), Ramadan seasons grouped;
@@ -42,7 +43,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return "https://hd1.brstej.com/"
+    return "https://brstej.com/"
 
 
 # Arabic ordinals used in season labels ("الموسم الثاني"), compound ones first
@@ -73,7 +74,7 @@ class Brstej(GenericFolderWatchedScraperMixin, CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(self, {"history": "brstej", "cookie": "brstej.cookie"})
         self.MAIN_URL = gettytul()
-        self.DEFAULT_ICON_URL = "https://hd1.brstej.com/22.png"
+        self.DEFAULT_ICON_URL = self.getFullUrl("/22.png")
         self.HEADER = self.cm.getDefaultHeader(browser="chrome")
         self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
         self.menuCache = None

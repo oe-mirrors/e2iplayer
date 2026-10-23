@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "07.10.2026"
+LAST_MODIFIED = "23.10.2026"
 # Coding: BY MOHAMED_OS
+# 23.10.2026 - update to current url
 # 06.10.2026 - ported to the python3 framework / host standard (site now "سيما وبس", cimawbs.cfd):
 #   - "Latest" (newvideos.php), the site categories grouped into Movies / Series / Other (the old
 #     'programmes' entry crashed: a tuple was tested with `in` against a string) and search, with
@@ -45,7 +46,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return "https://cimawbs.cfd/"
+    return "https://cimawbs.best/"
 
 
 # Arabic ordinals of season labels ("الموسم الثاني")
