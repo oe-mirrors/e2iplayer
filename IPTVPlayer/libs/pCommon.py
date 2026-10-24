@@ -1114,7 +1114,8 @@ class common:
                     if e.args[0] != pycurl.E_WRITE_ERROR:
                         raise e
                     elif maxDataSize >= 0:
-                        printExc()
+                        # _breakConnection stopped the transfer after max_data_size bytes on purpose
+                        printDBG('pCommon - getPageWithPyCurl() -> transfer stopped after max_data_size %d' % maxDataSize)
 
                 metadata['url'] = curlSession.getinfo(pycurl.EFFECTIVE_URL)
                 metadata['status_code'] = curlSession.getinfo(pycurl.HTTP_CODE)
