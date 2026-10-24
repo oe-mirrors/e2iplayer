@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "23.10.2026"
+LAST_MODIFIED = "24.10.2026"
+# 24.10.2026 - fix show menu item
 # 23.10.2026 - lists read only the site's list grid, the "most viewed" slider repeated its cards on every page
 # 10.10.2026 - links are no longer renamed to "*name*" after use - that broke the link list's own used mark (tick + colour)
 # 10.10.2026 - rewrite for www.fasel-hd.co (FaselHD moved there; faselhd.co, faselhds.* and the other old domains
@@ -342,7 +343,7 @@ class FaselhdCOM(GenericFolderWatchedScraperMixin, CBaseHostClass):
         # the sub-lists of one dropdown of the site's menu (labels as the site writes them)
         printDBG("FaselhdCOM.listMenu [%s]" % cItem.get("group", ""))
         key = dict(MENU_GROUPS).get(cItem.get("group", ""), "")
-        sts, data = self.getPage(self.MAIN_URL)
+        sts, data = self.getPage(self.getFullUrl("/main"))
         if not sts:
             return
         menu = self.cm.ph.getDataBeetwenNodes(data, ("<ul", ">", "menu-primary"), ("</ul", ">"), False)[1]
