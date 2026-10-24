@@ -377,6 +377,10 @@ config.plugins.iptvplayer.search_history_size = ConfigInteger(50, (0, 1000000))
 config.plugins.iptvplayer.enableT9MainList = ConfigYesNo(default=True)
 config.plugins.iptvplayer.rememberHistorySelection = ConfigYesNo(default=True)
 config.plugins.iptvplayer.autoplay_start_delay = ConfigInteger(3, (0, 9))
+# "Select link" list: the quality of a link list closest to this wish starts without asking ('' = ask);
+# auto_select_link tries the mirrors one after the other until one resolves and plays (tools/linkpicker.py)
+config.plugins.iptvplayer.preferred_quality = ConfigSelection(default="", choices=[("", _("Ask")), ("max", _("Best")), ("2160", "2160p"), ("1080", "1080p"), ("720", "720p"), ("480", "480p"), ("360", "360p")])
+config.plugins.iptvplayer.auto_select_link = ConfigYesNo(default=False)
 
 config.plugins.iptvplayer.favourites_use_watched_flag = ConfigYesNo(default=True)
 config.plugins.iptvplayer.watched_item_color = ConfigSelection(default="#808080", choices=COLORS_DEFINITONS)

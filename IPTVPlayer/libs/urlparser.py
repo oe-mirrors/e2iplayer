@@ -3445,7 +3445,13 @@ class pageParser(CaptchaHelper):
             url = data.get(key)
             if not url:
                 continue
-            url = urlparser.decorateUrl(url, {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": host, "Origin": host[:-1]})
+            meta = {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": host, "Origin": host[:-1]}
+            if ".m3u8" in url:
+                # the CDN sends the (100+ KB) playlist chunked; exteplayer3 (oe-alliance, HLS with
+                # multiple_requests=1) then reads it cut off in a segment name and ffmpeg 9 stops with
+                # "Invalid data found" - hlsdl fetches it with curl
+                meta.update({"iptv_proto": "m3u8", "iptv_buffering": "required"})
+            url = urlparser.decorateUrl(url, meta)
             if ".m3u8" in url:
                 urltab.extend(getDirectM3U8Playlist(url))
             else:
