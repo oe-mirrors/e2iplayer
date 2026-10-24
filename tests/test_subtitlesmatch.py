@@ -63,3 +63,11 @@ def test_release_ranking():
     # nothing known about the played release: order unchanged
     assert sm.sortByRelease(items, "") == items
     assert sm.downloadRating(0) == "1" and sm.downloadRating(10000) == "10" and sm.downloadRating("x") == "1"
+
+
+def test_player_lists_language_names_for_xgettext():
+    # iptvextmovieplayer.py translates langName() results dynamically; its LANGUAGE_NAMES literals must cover LANGUAGES
+    import re
+    src = open(os.path.join(ROOT, "components", "iptvextmovieplayer.py"), encoding="utf-8").read()
+    block = re.search(r"LANGUAGE_NAMES = \((.*?)\n    \)", src, re.S).group(1)
+    assert re.findall(r'_\("([^"]+)"\)', block) == [n for n, _c, _b in sm.LANGUAGES]

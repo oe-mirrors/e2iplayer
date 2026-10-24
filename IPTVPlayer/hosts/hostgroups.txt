@@ -37,6 +37,7 @@
   "retroflix",
   "filmpalast",
   "serienstreamto",
+  "burningseries",
   "hdfilmetv",
   "cineto",
   "faselhdcom",
@@ -51,6 +52,7 @@
   "movie2kcx",
   "kinox",
   "kellerkino",
+  "filmo",
   "einschalten",
   "megakino",
   "streamkinos",
@@ -121,7 +123,9 @@
  ],
  "cartoonsandanime": [
   "aniworld",
+  "animetoast",
   "animeodcinki",
+  "docchi",
   "shahiidanimenet",
   "bajeczkiorg",
   "watchcartoononline",
@@ -139,7 +143,11 @@
   "animerco",
   "frenchanimes",
   "spacepowerfan",
-  "okanime"
+  "okanime",
+  "tioanime",
+  "latanime",
+  "animeav1",
+  "kidstubenl"
  ],
  "sport": [
   "webstream",
@@ -182,6 +190,9 @@
   "tbngopl",
   "pzpnpluspl",
   "drdk",
+  "plutotv",
+  "servustv",
+  "dw",
   "alarabiya",
   "timstreams",
   "yacinetv",
@@ -190,7 +201,10 @@
   "livewatch",
   "rdlive",
   "aloula",
-  "royatv"
+  "royatv",
+  "tv8",
+  "kanald",
+  "atvtr"
  ],
  "iptv": [
   "xtream",
@@ -222,7 +236,8 @@
   "geoarabic",
   "dmax",
   "tlc",
-  "hgtv"
+  "hgtv",
+  "dw"
  ],
  "science": [
   "dailymotion",
@@ -232,6 +247,9 @@
   "ted",
   "nasaplus",
   "ihavenotv"
+ ],
+ "adult": [
+  "xxx"
  ],
  "polish": [
   "youtube",
@@ -243,6 +261,7 @@
   "zaluknijcc",
   "filman",
   "obejrzyjto",
+  "serialevip",
   "tvpvod",
   "freediscpl",
   "tvjworg",
@@ -258,7 +277,9 @@
   "joemonsterorg",
   "premiumsmarteu",
   "animeodcinki",
+  "docchi",
   "bajeczkiorg",
+  "bajeczki24",
   "kabarety",
   "christusvincit",
   "virpe",
@@ -332,13 +353,17 @@
   "zdfmediathek",
   "orfon",
   "artetv",
+  "servustv",
+  "dw",
   "dmax",
   "tlc",
   "hgtv",
   "tele5",
   "netzkino",
   "aniworld",
+  "animetoast",
   "serienstreamto",
+  "burningseries",
   "hdfilmetv",
   "cineto",
   "kinoking",
@@ -358,7 +383,9 @@
   "movie2kcx",
   "kinox",
   "kellerkino",
+  "filmo",
   "sportdeutschland",
+  "plutotv",
   "vavooto"
  ],
  "french": [
@@ -489,10 +516,23 @@
  ],
  "greek": [
   "youtube",
+  "greektv",
+  "gamatotv",
+  "greekmovies",
+  "filmatic",
+  "tainiomania",
+  "teniesonline",
   "dailymotion"
  ],
  "latino": [
   "youtube",
+  "sololatino",
+  "cuevana3",
+  "pelisplushd",
+  "cinecalidad",
+  "tioanime",
+  "latanime",
+  "animeav1",
   "artetv",
   "dailymotion"
  ],
@@ -508,7 +548,25 @@
  "swedish": [
   "youtube",
   "dailymotion",
-  "svtplayse"
+  "svtplayse",
+  "urplay",
+  "nrktv",
+  "yleareena",
+  "drdk"
+ ],
+ "dutch": [
+  "youtube",
+  "kidstubenl",
+  "philizznl"
+ ],
+ "turkish": [
+  "youtube",
+  "tv8",
+  "kanald",
+  "atvtr",
+  "dizibox",
+  "hdfilmcehennemi",
+  "fullhdfilmizlesene"
  ],
  "balkans": [
   "youtube",
@@ -552,7 +610,6 @@
   "tvproart",
   "spryciarze",
   "wolnelekturypl",
-  "vimeo",
-  "drdk"
+  "vimeo"
  ]
 }

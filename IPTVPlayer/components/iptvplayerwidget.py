@@ -36,7 +36,7 @@ from Tools.BoundFunction import boundFunction
 from Tools.LoadPixmap import LoadPixmap
 from Tools.Directories import fileExists
 from Tools.NumericalTextInput import NumericalTextInput
-from enigma import getDesktop, eTimer, ePoint
+from enigma import getDesktop, eTimer, ePoint, gFont
 
 ####################################################
 #                   IPTV components
@@ -166,12 +166,11 @@ def _ListPageNumber(entry, previousPage, items):
     return None
 
 
-def CategoryPath(title, categoryList, pageLabel, lastLabel, maxLen=0):
+def CategoryPath(title, categoryList, pageLabel, lastLabel, maxLen=0, skip=0):
     # the header path: repeated names as "(xN)", pager steps left out, the current page at the end;
-    # maxLen > 0 shortens every longer name to maxLen characters
+    # maxLen > 0 shortens every longer name to maxLen characters, skip > 0 replaces the first skip names
+    # with one "…" (the last name always stays)
     def _getCat(cat, num):
-        if '' == cat:
-            return ''
         if 0 < maxLen < len(cat):
             cat = cat[:maxLen - 1].rstrip() + '…'
         cat = ' > ' + cat
@@ -179,19 +178,18 @@ def CategoryPath(title, categoryList, pageLabel, lastLabel, maxLen=0):
             cat += (' (x%d)' % num)
         return cat
 
-    path = title
-    prevCat = ''
-    prevNum = 0
+    cats = []
     for cat in categoryList:
-        if getattr(cat, 'pagerKind', ''):
+        if getattr(cat, 'pagerKind', '') or '' == cat:
             continue
-        if prevCat != cat:
-            path += _getCat(prevCat, prevNum)
-            prevCat = cat
-            prevNum = 1
+        if cats and cats[-1][0] == cat:
+            cats[-1][1] += 1
         else:
-            prevNum += 1
-    path += _getCat(prevCat, prevNum)
+            cats.append([cat, 1])
+    skip = min(skip, len(cats) - 1)
+    path = title + (' > …' if 0 < skip else '')
+    for cat, num in cats[max(skip, 0):]:
+        path += _getCat(cat, num)
     entry = categoryList[-1] if categoryList else None
     page = getattr(entry, 'page', None)
     if getattr(entry, 'last', False):
@@ -531,6 +529,7 @@ class E2iPlayerWidget(Screen):
         }, -1)
 
         self["headertext"] = Label()
+        self._headerFontsCache = None
         self["console"] = Label()
         self["sequencer"] = Label()
 
@@ -3910,17 +3909,46 @@ class E2iPlayerWidget(Screen):
             self.autoPlaySequencerNext()
     # end reloadList(self, ret):
 
-    def getCategoryPath(self, maxLen=0):
-        return CategoryPath(self.hostTitle, self.categoryList, _('Page:'), _('Last'), maxLen)
+    def getCategoryPath(self, maxLen=0, skip=0):
+        return CategoryPath(self.hostTitle, self.categoryList, _('Page:'), _('Last'), maxLen, skip)
+
+    def _headerFonts(self):
+        # the skin font of the header and two smaller ones that fit a path in two lines into the same height
+        # (the list below keeps its place); the skin font is rebuilt from the label's font attribute with the
+        # skin's own parseFont and this screen's scale, exactly as Enigma2 applied it (a short path keeps the
+        # full size) - [] when a skin gives nothing to go by (the header then stays one line)
+        label = self["headertext"]
+        if label.instance is None:  # before the skin is applied
+            return []
+        if self._headerFontsCache is None:
+            self._headerFontsCache = []
+            try:
+                from skin import parseFont
+                font = parseFont(dict(label.skinAttributes or [])['font'], getattr(self, 'scale', ((1, 1), (1, 1))))
+                self._headerFontsCache = [font] + [gFont(font.family, int(font.pointSize * factor)) for factor in (0.8, 0.7)]
+            except Exception:
+                printExc()
+        return self._headerFontsCache
 
     def setHeaderText(self):
-        # the header is one line high: long names (a video title, a search phrase) are shortened until
-        # the path fits, measured on the label so it works with every skin. A shuffled / reversed list says so
-        # at the end (_getListOrderMarker).
+        # the header path in the skin font; too long for one line: in two lines with a smaller font, then
+        # long names (a video title, a search phrase) are shortened and a deep path loses its first levels
+        # ("Host > … > last levels") until it fits - measured on the label so it works with every skin.
+        # A shuffled / reversed list says so at the end (_getListOrderMarker).
         label = self["headertext"]
         marker = self._getListOrderMarker()
-        for maxLen in (0, 60, 40, 25, 15):
-            label.setText(self.getCategoryPath(maxLen) + marker)
+        fonts = self._headerFonts()
+        small = fonts[-1] if fonts else None
+        steps = [(font, 0, 0) for font in (fonts or [None])]
+        steps += [(small, maxLen, 0) for maxLen in (60, 40, 25, 15)]
+        steps += [(small, 15, skip) for skip in range(1, len(self.categoryList))]
+        for font, maxLen, skip in steps:
+            try:
+                if font is not None:
+                    label.instance.setFont(font)
+            except Exception:
+                printExc()
+            label.setText(self.getCategoryPath(maxLen, skip) + marker)
             try:
                 if label.instance.calculateSize().height() <= label.instance.size().height():
                     break

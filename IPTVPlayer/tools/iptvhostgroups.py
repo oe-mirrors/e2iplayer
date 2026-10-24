@@ -42,8 +42,8 @@ class IPTVHostsGroups:
         self.GROUPS_FILE = GetMigratedHostOrderFile('iptvplayerhostsgroups.json')
 
         # groups
-        self.PREDEFINED_GROUPS = ["userdefined", "worldwide", "moviesandseries", "cartoonsandanime", "music", "sport", "live", "iptv", "torrent", "documentary", "science",
-                                  "polish", "english", "german", "french", "russian", "hungarian", "arabic", "greek", "latino", "italian", "swedish", "balkans", "others", "all"]
+        self.PREDEFINED_GROUPS = ["userdefined", "worldwide", "moviesandseries", "cartoonsandanime", "music", "sport", "live", "iptv", "torrent", "documentary", "science", "adult",
+                                  "polish", "english", "german", "french", "russian", "hungarian", "arabic", "greek", "latino", "italian", "swedish", "dutch", "turkish", "balkans", "others", "all"]
         self.PREDEFINED_GROUPS_TITLES = {"userdefined": _("User defined"),
                                          "worldwide": _("Worldwide"),
                                          "moviesandseries": _("Movies and series"),
@@ -55,6 +55,7 @@ class IPTVHostsGroups:
                                          "torrent": _("Torrent"),
                                          "documentary": _("Documentary"),
                                          "science": _("Science"),
+                                         "adult": _("Adult"),
                                          "polish": _("Polish"),
                                          "english": _("English"),
                                          "german": _("German"),
@@ -65,7 +66,9 @@ class IPTVHostsGroups:
                                          "greek": _("Greek"),
                                          "latino": _("Latino"),
                                          "italian": _("Italian"),
-                                         'swedish': _("Swedish"),
+                                         'swedish': _("Nordic"),
+                                         "dutch": _("Dutch"),
+                                         "turkish": _("Turkish"),
                                          "balkans": _("Balkans"),
                                          "others": _("Others"),
                                          "all": _("All")

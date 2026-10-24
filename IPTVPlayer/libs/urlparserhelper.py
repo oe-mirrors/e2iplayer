@@ -511,6 +511,9 @@ def getDirectM3U8Playlist(M3U8Url, checkExt=True, variantCheck=True, cookieParam
             # Merge SUBTITLES renditions declared in the master playlist into
             # external_sub_tracks (kept alongside any the caller already
             # passed). The player exposes them as "Download suggested".
+            # The url is the subtitle media playlist ('hls': True) - its
+            # .vtt segments are fetched only where the track is used
+            # (downloaderhelpers.hlsSubtitleSegmentUrls), not here.
             hlsSubTracks = []
             seenSubUrls = set()
             subMeta = dict((k, v) for k, v in meta.items() if k not in ('external_sub_tracks', 'iptv_proto', 'iptv_bitrate', 'iptv_m3u8_custom_base_link'))
@@ -535,7 +538,8 @@ def getDirectM3U8Playlist(M3U8Url, checkExt=True, variantCheck=True, cookieParam
                     hlsSubTracks.append({'title': subTitle,
                                          'lang': subStream.language or '',
                                          'url': strwithmeta(subUrl, subMeta),
-                                         'format': 'vtt'})
+                                         'format': 'vtt',
+                                         'hls': True})
             if hlsSubTracks:
                 meta['external_sub_tracks'] = list(meta.get('external_sub_tracks', [])) + hlsSubTracks
             for playlist in m3u8Obj.playlists:

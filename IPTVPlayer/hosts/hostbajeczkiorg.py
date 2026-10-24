@@ -1,12 +1,7 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "04.10.2026"
-# 03.10.2026 - revival of the back online bajeczki.org (WordPress "videonow" theme, https):
-#   latest posts, films (+ genres, A-Z), all cartoons/series grouped by first letter (the site lists
-#   1200+ categories on one page), category listings sorted by name (episodes in order), search;
-#   First page / Jump / Next page over WordPress ".../page/N/";
-#   players are plain <iframe>s in the post (flyf.lat, goodstream.vip, cloud.strp2p.site, ebd.cda.pl)
-#   resolved by urlparser;
-#   + watched flag / sidecar / name normalisation (SxxExx, "Title (Year)") / moviemeta INFO.
+LAST_MODIFIED = "24.10.2026"
+# bajeczki.org and bajeczki.tv (both WordPress "videonow", own databases): cartoons, series and films in
+# Polish; the players are plain <iframe>s in the post, resolved by urlparser
 import re
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
@@ -15,6 +10,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEna
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
@@ -47,6 +43,9 @@ MULTI_DASH_RE = re.compile(r"(?:\s+(?:-|" + DASH + r")){2,}\s+")
 YEAR_TAG_RE = re.compile(r"[\[(]\s*((?:19|20)\d{2})\b")
 DEFAULT_THUMB = "thumbnail-default."
 CATS_PER_PAGE = 100
+# the two sites: same theme, own databases; bajeczki.org first (its items keep their keys)
+SITES = (("https://bajeczki.org/", {"movies": "/pelnometrazowe/", "genres": True}),
+         ("https://bajeczki.tv/", {"movies": "/filmy/", "top": "/filmy-top-20/"}))
 
 
 class BajeczkiOrg(GenericFolderWatchedScraperMixin, CBaseHostClass):
@@ -58,7 +57,7 @@ class BajeczkiOrg(GenericFolderWatchedScraperMixin, CBaseHostClass):
         self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
         self.MAIN_URL = gettytul()
         self.DEFAULT_ICON_URL = self.getFullUrl("/wp-content/uploads/2026/06/logo.png")
-        self.allCats = []
+        self.allCats = {}
         self.postCache = ("", "")
 
         self.watchedHelper = IPTVWatchedHelper("bajeczkiorg")
@@ -101,7 +100,28 @@ class BajeczkiOrg(GenericFolderWatchedScraperMixin, CBaseHostClass):
     def getFullIconUrl(self, url, currUrl=None):
         if DEFAULT_THUMB in url:
             return ""
-        return CBaseHostClass.getFullIconUrl(self, url, currUrl)
+        url = CBaseHostClass.getFullIconUrl(self, url, currUrl)
+        if not url:
+            return ""
+        # bajeczki.tv answers 403 to pictures without its own Referer
+        return strwithmeta(url, {"Referer": self._site({"url": url}), "User-Agent": self.HEADER["User-Agent"]})
+
+    def _site(self, cItem):
+        # site of an item: set by the site menu, else from its url (favourites of older versions)
+        site = cItem.get("site", "")
+        if site:
+            return site
+        url = cItem.get("url", "") or ""
+        for base, _cfg in SITES:
+            if url.startswith(base) or url.startswith(base.replace("https://", "https://www.")):
+                return base
+        return self.MAIN_URL
+
+    def _siteCfg(self, site):
+        return dict(SITES).get(site, SITES[0][1])
+
+    def _isMoviePath(self, url):
+        return self._siteCfg(self._site({"url": url}))["movies"] in url
 
     ###################################################
     # titles
@@ -141,7 +161,7 @@ class BajeczkiOrg(GenericFolderWatchedScraperMixin, CBaseHostClass):
         params = {"url": url, "icon": icon}
         normalize = IsMediaNamingNormalized()
         sxe = SXE_RE.match(raw) or SEZON_RE.match(raw)
-        if not sxe and ("/pelnometrazowe/" in url or YEAR_TAG_RE.search(raw)):
+        if not sxe and (self._isMoviePath(url) or YEAR_TAG_RE.search(raw)):
             # films also sit in other categories ("/swiateczne/10-przykazan-2007-pldub/")
             title, year, lang = self._parseMovieTitle(raw)
             metaTitle = title.split(" / ")[-1].strip() if " / " in title else title
@@ -166,13 +186,30 @@ class BajeczkiOrg(GenericFolderWatchedScraperMixin, CBaseHostClass):
     ###################################################
     # lists
     ###################################################
+    def listSites(self, cItem):
+        for site, _cfg in SITES:
+            params = dict(cItem)
+            params.update({"good_for_fav": True, "category": "site_menu", "title": site.split("//", 1)[1].strip("/"), "site": site, "url": site})
+            self.addDir(params)
+
     def listMainMenu(self, cItem):
-        menu = [{"category": "list_items", "title": _("Latest"), "url": self.getFullUrl("/?s=")},
-                {"category": "list_letters", "title": _("Cartoons and series"), "url": self.getFullUrl("/all-categories/")},
-                {"category": "list_items", "title": _("Movies"), "url": self.getFullUrl("/pelnometrazowe/")},
-                {"category": "list_items", "title": "%s (A-Z)" % _("Movies"), "url": self.getFullUrl("/pelnometrazowe/?orderby=name&order=asc")},
-                {"category": "list_genres", "title": _("Genres"), "url": self.getFullUrl("/pelnometrazowe/")}] + self.searchItems()
-        self.listsTab(menu, cItem)
+        site = self._site(cItem)
+        cfg = self._siteCfg(site)
+        movies = urljoin(site, cfg["movies"])
+        menu = [{"category": "list_items", "title": _("Latest"), "url": urljoin(site, "/?s=")},
+                {"category": "list_letters", "title": _("Cartoons and series"), "url": urljoin(site, "/all-categories/")},
+                {"category": "list_items", "title": _("Movies"), "url": movies}]
+        if cfg.get("genres"):
+            menu.extend([{"category": "list_items", "title": "%s (A-Z)" % _("Movies"), "url": movies + "?orderby=name&order=asc"},
+                         {"category": "list_genres", "title": _("Genres"), "url": movies}])
+        if cfg.get("top"):
+            menu.append({"category": "list_items", "title": "Top 20", "url": urljoin(site, cfg["top"])})
+        menu.extend(self.searchItems())
+        if site != SITES[0][0]:
+            # bajeczki.org rows stay as before (no "site": the favourite identity of its folders is unchanged)
+            for item in menu:
+                item["site"] = site
+        self.listsTab(menu, {"name": "category"})
 
     def listGenres(self, cItem):
         printDBG("BajeczkiOrg.listGenres")
@@ -182,18 +219,19 @@ class BajeczkiOrg(GenericFolderWatchedScraperMixin, CBaseHostClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, "Wybierz kategori", "</div>", False)[1]
         for url, title in re.findall(r'<a[^>]+href="([^"]+/pelnometrazowe/[^"/]+/)"[^>]*>([^<]+)</a>', data):
             params = dict(cItem)
-            params.update({"good_for_fav": True, "category": "list_items", "title": self.cleanHtmlStr(title), "url": self.getFullUrl(url)})
+            params.update({"good_for_fav": True, "category": "list_items", "title": self.cleanHtmlStr(title), "url": self.getFullUrl(url, cItem["url"])})
             self.addDir(params)
 
     def _getAllCats(self, url):
-        if self.allCats:
-            return self.allCats
+        # one list per site
+        if self.allCats.get(url):
+            return self.allCats[url]
         sts, data = self.getPage(url)
         if not sts:
             return []
         cats = []
         for item in self.cm.ph.getAllItemsBeetwenNodes(data, ("<div", ">", "category-bar"), ("</div", ">"), False):
-            catUrl = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'href="([^"]+)"')[0])
+            catUrl = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'href="([^"]+)"')[0], url)
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ("<span", ">", "category-name"), ("</span", ">"), False)[1])
             if not catUrl or not title:
                 continue
@@ -201,7 +239,7 @@ class BajeczkiOrg(GenericFolderWatchedScraperMixin, CBaseHostClass):
             count = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ("<span", ">", "video-count"), ("</span", ">"), False)[1])
             count = self.cm.ph.getSearchGroups(count, r"(\d+)")[0]
             cats.append({"title": title, "url": catUrl, "desc": desc, "count": count})
-        self.allCats = cats
+        self.allCats[url] = cats
         return cats
 
     def _letter(self, title):
@@ -271,14 +309,14 @@ class BajeczkiOrg(GenericFolderWatchedScraperMixin, CBaseHostClass):
         catName = cItem.get("cat_name", "")
         seen = set()
         for item in items:
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'<h2[^>]*>\s*<a[^>]+href="([^"]+)"')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'<h2[^>]*>\s*<a[^>]+href="([^"]+)"')[0], baseUrl)
             if not url or url in seen:
                 continue
             seen.add(url)
             raw = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ("<h2", ">"), ("</h2", ">"), False)[1])
             if not raw:
                 continue
-            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, r'<img[^>]+src="([^"]+)"')[0])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, r'<img[^>]+src="([^"]+)"')[0], baseUrl)
             cat = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ("<span", ">", "entry-category"), ("</span", ">"), False)[1])
             length = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ("<span", ">", "video-length"), ("</span", ">"), False)[1])
             date = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ("<span", ">", "entry-date"), ("</span", ">"), False)[1])
@@ -302,7 +340,7 @@ class BajeczkiOrg(GenericFolderWatchedScraperMixin, CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("BajeczkiOrg.listSearchResult [%s]" % searchPattern)
         cItem = dict(cItem)
-        cItem.update({"category": "list_items", "url": self.getFullUrl("/?s=") + urllib_quote_plus(searchPattern)})
+        cItem.update({"category": "list_items", "url": urljoin(self._site(cItem), "/?s=") + urllib_quote_plus(searchPattern)})
         self.listItems(cItem)
 
     ###################################################
@@ -311,7 +349,7 @@ class BajeczkiOrg(GenericFolderWatchedScraperMixin, CBaseHostClass):
     def _postContent(self, data):
         data = self.cm.ph.getDataBeetwenNodes(data, ("<div", ">", "entry-content"), ("<div", ">", "entry-tags"), False)[1]
         data = re.sub(r"<!--[\s\S]*?-->", "", data)
-        return data.split("wp-post-navigation", 1)[0]
+        return re.split(r'<div[^>]+class="[^"]*\bwp-post-navigation', data, maxsplit=1)[0]
 
     def getLinksForVideo(self, cItem):
         printDBG("BajeczkiOrg.getLinksForVideo [%s]" % cItem["url"])
@@ -337,7 +375,7 @@ class BajeczkiOrg(GenericFolderWatchedScraperMixin, CBaseHostClass):
             meta = {"Referer": referer}
             if host.endswith("strp2p.site"):
                 # the API wants the embedding site as r= (urlparser parserSBS reads it from the Referer)
-                meta["Referer"] = self.MAIN_URL
+                meta["Referer"] = self._site(cItem)
                 name = "Strp2p"
             elif re.search(r"\.(?:mp4|m3u8)(?:\?|$)", url):
                 meta["direct_link"] = True
@@ -417,7 +455,9 @@ class BajeczkiOrg(GenericFolderWatchedScraperMixin, CBaseHostClass):
         printDBG("BajeczkiOrg.handleService name[%s] category[%s]" % (name, category))
         self.currList = []
         if name is None:
-            self.listMainMenu({"name": "category"})
+            self.listSites({"name": "category"})
+        elif category == "site_menu":
+            self.listMainMenu(self.currItem)
         elif category == "list_items":
             self.listItems(self.currItem)
         elif category == "list_letters":
@@ -431,7 +471,10 @@ class BajeczkiOrg(GenericFolderWatchedScraperMixin, CBaseHostClass):
             cItem.update({"search_item": False, "name": "category"})
             self.listSearchResult(cItem, searchPattern, searchType)
         elif category == "search_history":
-            self.listsHistory({"name": "history", "category": "search"}, "desc", _("Type: "))
+            historyItem = {"name": "history", "category": "search"}
+            if self.currItem.get("site"):
+                historyItem["site"] = self.currItem["site"]
+            self.listsHistory(historyItem, "desc", _("Type: "))
         else:
             printExc()
         CBaseHostClass.endHandleService(self, index, refresh)

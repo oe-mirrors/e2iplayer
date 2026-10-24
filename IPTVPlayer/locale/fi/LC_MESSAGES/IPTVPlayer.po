@@ -1,0 +1,7372 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: IPTVPlayer\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-20 20:10+0000\n"
+"PO-Revision-Date: 2026-10-24 23:30+0000\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: Finnish\n"
+"Language: fi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#, python-format
+msgid "\tDisk space available: %s"
+msgstr "\tVapaa levytila: %s"
+
+#, python-format
+msgid "\tDisk space required: %s"
+msgstr "\tTarvittava levytila: %s"
+
+msgid ""
+"\n"
+"Make sure you are using the latest version of the plugin."
+msgstr ""
+"\n"
+"Varmista, että käytät lisäosan uusinta versiota."
+
+msgid ""
+"\n"
+"You can also report problem here: \n"
+"https://github.com/oe-mirrors/e2iplayer/issues"
+msgstr ""
+"\n"
+"Voit myös ilmoittaa ongelmasta täällä: \n"
+"https://github.com/oe-mirrors/e2iplayer/issues"
+
+msgid "  • Fixed: order never changes - useful for browsing by letter jump (0-9)."
+msgstr "  • Kiinnitetty: järjestys ei koskaan muutu - hyödyllinen selattaessa kirjainhypyllä (0-9)."
+
+msgid "  • Sorting or reordering fixes this automatically, so your order stays."
+msgstr "  • Lajittelu tai uudelleenjärjestäminen kiinnittää tämän automaattisesti, joten järjestyksesi säilyy."
+
+msgid "  • Unfixed (default): the entry jumps back to the top of the list."
+msgstr "  • Kiinnittämätön (oletus): kohde hyppää takaisin luettelon alkuun."
+
+#, python-format
+msgid "\"%s\" Virtual Keyboard layout not available."
+msgstr "Virtuaalinäppäimistön asettelu \"%s\" ei ole käytettävissä."
+
+#, python-format
+msgid "\"%s\" has been added to the favourites group \"%s\"."
+msgstr "\"%s\" on lisätty suosikkiryhmään \"%s\"."
+
+#, python-format
+msgid "\"%s\" is playing on the TV."
+msgstr "\"%s\" toistetaan televisiossa."
+
+msgid "\"Web\" streams player"
+msgstr "\"Web\"-suoratoistojen soitin"
+
+#, python-format
+msgid "%d added, %d skipped."
+msgstr "%d lisätty, %d ohitettu."
+
+#, python-format
+msgid "%d duplicate entries removed."
+msgstr "%d päällekkäistä kohdetta poistettu."
+
+#, python-format
+msgid "%d duplicate entry removed."
+msgstr "%d päällekkäinen kohde poistettu."
+
+#, python-format
+msgid "%d items added to the download queue, %d skipped."
+msgstr "%d kohdetta lisätty latausjonoon, %d ohitettu."
+
+#, python-format
+msgid "%d of %d downloaded"
+msgstr "%d / %d ladattu"
+
+#, python-format
+msgid "%d parts"
+msgstr "%d osaa"
+
+#, python-format
+msgid "%d programmes"
+msgstr "%d ohjelmaa"
+
+#, python-format
+msgid "%d recitations"
+msgstr "%d resitaatiota"
+
+#, python-format
+msgid "%d removed, %d skipped."
+msgstr "%d poistettu, %d ohitettu."
+
+#, python-format
+msgid "%d videos"
+msgstr "%d videota"
+
+#, python-format
+msgid "%s - service overview"
+msgstr "%s - palvelun yleiskatsaus"
+
+#, python-format
+msgid "%s - subtitles provider"
+msgstr "%s - tekstitysten tarjoaja"
+
+#, python-format
+msgid "%s blocks the connection of the receiver (HTTP 403). It only plays with curl-impersonate installed on the receiver - otherwise please choose another server."
+msgstr "%s estää vastaanottimen yhteyden (HTTP 403). Toisto onnistuu vain, jos vastaanottimeen on asennettu curl-impersonate - muussa tapauksessa valitse toinen palvelin."
+
+#, python-format
+msgid "%s blocks the connection of the receiver (HTTP 403). Please choose another server."
+msgstr "%s estää vastaanottimen yhteyden (HTTP 403). Valitse toinen palvelin."
+
+#, python-format
+msgid "%s buffering..."
+msgstr "%s puskuroi..."
+
+#, python-format
+msgid "%s cannot solve this type of captcha."
+msgstr "%s ei pysty ratkaisemaan tämäntyyppistä captchaa."
+
+#, python-format
+msgid "%s could not solve the captcha."
+msgstr "%s ei pystynyt ratkaisemaan captchaa."
+
+#, python-format
+msgid "%s device name"
+msgstr "%s laitteen nimi"
+
+#, python-format
+msgid "%s download manager"
+msgstr "%s latausten hallinta"
+
+#, python-format
+msgid "%s e-mail"
+msgstr "%s sähköposti"
+
+#, python-format
+msgid "%s episodes"
+msgstr "%s jaksoa"
+
+#, python-format
+msgid "%s followers"
+msgstr "%s seuraajaa"
+
+#, python-format
+msgid "%s needs a free account. Enter login and password in the host configuration."
+msgstr "%s vaatii ilmaisen tilin. Anna käyttäjätunnus ja salasana palvelun asetuksissa."
+
+#, python-format
+msgid "%s password"
+msgstr "%s salasana"
+
+#, python-format
+msgid "%s plays"
+msgstr "%s toistoa"
+
+#, python-format
+msgid "%s posts"
+msgstr "%s julkaisua"
+
+#, python-format
+msgid "%s refused the download. Please set your login and password in the configuration."
+msgstr "%s hylkäsi latauksen. Aseta käyttäjätunnus ja salasana asetuksissa."
+
+#, python-format
+msgid "%s refused the request (Cloudflare check, HTTP %s). This host needs curl-impersonate on the receiver."
+msgstr "%s hylkäsi pyynnön (Cloudflare-tarkistus, HTTP %s). Tämä palvelu tarvitsee vastaanottimeen curl-impersonaten."
+
+#, python-format
+msgid "%s returned %s: %s"
+msgstr "%s palautti %s: %s"
+
+#, python-format
+msgid "%s services configuration"
+msgstr "%s palveluiden asetukset"
+
+#, python-format
+msgid "%s subtitles download - how to"
+msgstr "%s tekstitysten lataus - ohjeet"
+
+#, python-format
+msgid "%s talks"
+msgstr "%s esitelmää"
+
+#, python-format
+msgid "%s timeout."
+msgstr "%s aikakatkaisu."
+
+#, python-format
+msgid "%s uploads"
+msgstr "%s latausta"
+
+#, python-format
+msgid ""
+"%s uses \"geo-blocking\" measures to prevent you from accessing the services from abroad.\n"
+" Host country: %s, your country: %s"
+msgstr ""
+"%s käyttää \"maantieteellistä estoa\" estääkseen palveluiden käytön ulkomailta.\n"
+" Palvelun maa: %s, sinun maasi: %s"
+
+#, python-format
+msgid "%s viewers"
+msgstr "%s katsojaa"
+
+#, python-format
+msgid "%s views"
+msgstr "%s katselukertaa"
+
+#, python-format
+msgid "%s: decrypting the stream, this can take a while (%d s)"
+msgstr "%s: suoratoiston salausta puretaan, tämä voi kestää hetken (%d s)"
+
+#, python-format
+msgid "(%d YouTube channel(s) could not be read)"
+msgstr "(%d YouTube-kanavaa ei voitu lukea)"
+
+msgid "(no videos found)"
+msgstr "(videoita ei löytynyt)"
+
+msgid "(nothing here yet)"
+msgstr "(täällä ei ole vielä mitään)"
+
+msgid "(reading...)"
+msgstr "(luetaan...)"
+
+msgid "++"
+msgstr "++"
+
+msgid "--"
+msgstr "--"
+
+msgid "----- BASIC CONFIGURATION -----"
+msgstr "----- PERUSASETUKSET -----"
+
+msgid "----- BUFFERING CONFIGURATION -----"
+msgstr "----- PUSKUROINNIN ASETUKSET -----"
+
+msgid "----- CAPTCHA CONFIGURATION -----"
+msgstr "----- CAPTCHA-ASETUKSET -----"
+
+msgid "----- DEBUG CONFIGURATION -----"
+msgstr "----- VIANETSINNÄN ASETUKSET -----"
+
+msgid "----- DOWNLOADING CONFIGURATION -----"
+msgstr "----- LATAUSASETUKSET -----"
+
+msgid "----- Debug -----"
+msgstr "----- Vianetsintä -----"
+
+msgid "----- Global HostXXX Configuration -----"
+msgstr "----- Yleiset HostXXX-asetukset -----"
+
+msgid "----- METADATA PROVIDERS CONFIGURATION -----"
+msgstr "----- METATIETOJEN TARJOAJIEN ASETUKSET -----"
+
+msgid "----- PLAYERS & PLAYBACK CONFIGURATION -----"
+msgstr "----- SOITTIMIEN JA TOISTON ASETUKSET -----"
+
+msgid "----- PROXIES CONFIGURATION -----"
+msgstr "----- VÄLITYSPALVELINTEN ASETUKSET -----"
+
+msgid "----- Porn Site Configuration -----"
+msgstr "----- Pornosivustojen asetukset -----"
+
+msgid "----- SCREENSAVER CONFIGURATION -----"
+msgstr "----- NÄYTÖNSÄÄSTÄJÄN ASETUKSET -----"
+
+msgid "----- SECURITY CONFIGURATION -----"
+msgstr "----- SUOJAUSASETUKSET -----"
+
+msgid "----- SERVICE CONFIGURATION -----"
+msgstr "----- PALVELUN ASETUKSET -----"
+
+msgid "----- SKIN CONFIGURATION -----"
+msgstr "----- ULKOASUN ASETUKSET -----"
+
+msgid "----- STORAGE CONFIGURATION -----"
+msgstr "----- TALLENNUSTILAN ASETUKSET -----"
+
+msgid "----- SUBTITLES CONFIGURATION -----"
+msgstr "----- TEKSTITYSTEN ASETUKSET -----"
+
+msgid "----- Show or hide Anime / Hentai -----"
+msgstr "----- Näytä tai piilota Anime / Hentai -----"
+
+msgid "----- Show or hide Live Cams -----"
+msgstr "----- Näytä tai piilota live-kamerat -----"
+
+msgid "----- Show or hide Porn Sites -----"
+msgstr "----- Näytä tai piilota pornosivustot -----"
+
+msgid "----- TORRENT CONFIGURATION -----"
+msgstr "----- TORRENT-ASETUKSET -----"
+
+msgid "----- VIRTUAL KEYBOARD & SEARCH CONFIGURATION -----"
+msgstr "----- VIRTUAALINÄPPÄIMISTÖN JA HAUN ASETUKSET -----"
+
+msgid "----- XXXList Configuration -----"
+msgstr "----- XXXList-asetukset -----"
+
+msgid "----------  Anime / Hentai  ----------"
+msgstr "----------  Anime / Hentai  ----------"
+
+msgid "----------  Live Cams  ----------"
+msgstr "----------  Live-kamerat  ----------"
+
+msgid "----------  Other  ----------"
+msgstr "----------  Muut  ----------"
+
+msgid "----------  Porn Sites  ----------"
+msgstr "----------  Pornosivustot  ----------"
+
+#, python-format
+msgid "----------  Search \"%s\"  ----------"
+msgstr "----------  Haku \"%s\"  ----------"
+
+msgid "----------------- External exteplayer3 options -----------------"
+msgstr "----------------- Ulkoisen exteplayer3:n asetukset -----------------"
+
+msgid "--All Episodes--"
+msgstr "--Kaikki jaksot--"
+
+msgid "--All--"
+msgstr "--Kaikki--"
+
+msgid "--Other--"
+msgstr "--Muut--"
+
+msgid "... and that the stream delivers video :"
+msgstr "... ja että suoratoisto toimittaa videota :"
+
+msgid "0-9"
+msgstr "0-9"
+
+msgid "1 minute"
+msgstr "1 minuutti"
+
+msgid "1. On a phone or PC in the same network, open the address shown in the captcha window (or scan its QR code) in a browser with the MyE2i extension installed. If it asks for a code, you find it in the title of the captcha window."
+msgstr "1. Avaa puhelimella tai tietokoneella samassa verkossa captcha-ikkunassa näkyvä osoite (tai skannaa sen QR-koodi) selaimessa, johon on asennettu MyE2i-laajennus. Jos koodia kysytään, löydät sen captcha-ikkunan otsikosta."
+
+msgid "12 hour format"
+msgstr "12 tunnin muoto"
+
+msgid "15 seconds"
+msgstr "15 sekuntia"
+
+msgid "2. Click the big green button on that page. A new tab opens with the captcha or the website's browser check."
+msgstr "2. Napsauta sivun suurta vihreää painiketta. Uuteen välilehteen avautuu captcha tai sivuston selaintarkistus."
+
+msgid "24 hour format"
+msgstr "24 tunnin muoto"
+
+msgid "3. Solve it. The result goes back to the receiver by itself and the captcha window closes."
+msgstr "3. Ratkaise se. Tulos palautuu vastaanottimeen itsestään ja captcha-ikkuna sulkeutuu."
+
+msgid "30 seconds"
+msgstr "30 sekuntia"
+
+msgid "4K movies"
+msgstr "4K-elokuvat"
+
+msgid "5 seconds"
+msgstr "5 sekuntia"
+
+#, python-format
+msgid "A folder \"%s\" exists already."
+msgstr "Kansio \"%s\" on jo olemassa."
+
+msgid "A search is already running."
+msgstr "Haku on jo käynnissä."
+
+msgid "A-Z"
+msgstr "A-Z"
+
+msgid "AAC downmix mode"
+msgstr "AAC-alasmiksaustila"
+
+msgid "ABORTED"
+msgstr "KESKEYTETTY"
+
+msgid "AC3 downmix mode"
+msgstr "AC3-alasmiksaustila"
+
+msgid ""
+"ACCESS DENIED.\n"
+"THIS VIDEO IS DELETED OR NOT AVAILABLE TO YOUR REGION."
+msgstr ""
+"PÄÄSY ESTETTY.\n"
+"TÄMÄ VIDEO ON POISTETTU TAI SE EI OLE SAATAVILLA ALUEELLASI."
+
+msgid "ALBUMS"
+msgstr "ALBUMIT"
+
+msgid "API Key"
+msgstr "API-avain"
+
+msgid "ARTISTS"
+msgstr "ARTISTIT"
+
+msgid "ATTENTION!"
+msgstr "HUOMIO!"
+
+msgid "Aborted"
+msgstr "Keskeytetty"
+
+msgid "About"
+msgstr "Tietoja"
+
+msgid "Accept"
+msgstr "Hyväksy"
+
+msgid "Access Forbidden"
+msgstr "Pääsy kielletty"
+
+msgid "Access denied - open the page with the QR code or the code shown on the receiver screen."
+msgstr "Pääsy estetty - avaa sivu QR-koodilla tai vastaanottimen näytöllä näkyvällä koodilla."
+
+msgid "Access denied. Please check password."
+msgstr "Pääsy estetty. Tarkista salasana."
+
+msgid "Accessible"
+msgstr "Esteetön"
+
+#, python-format
+msgid "Account %d - name (optional):"
+msgstr "Tili %d - nimi (valinnainen):"
+
+#, python-format
+msgid "Account %d - password:"
+msgstr "Tili %d - salasana:"
+
+#, python-format
+msgid "Account %d - server (http://host:port or get.php link):"
+msgstr "Tili %d - palvelin (http://host:port tai get.php-linkki):"
+
+#, python-format
+msgid "Account %d - user name:"
+msgstr "Tili %d - käyttäjätunnus:"
+
+msgid "Accounts & API keys"
+msgstr "Tilit ja API-avaimet"
+
+msgid "Action"
+msgstr "Toiminta"
+
+msgid "Action & Thriller"
+msgstr "Toiminta ja trilleri"
+
+msgid "Actors"
+msgstr "Näyttelijät"
+
+msgid "Actors:"
+msgstr "Näyttelijät:"
+
+#, python-format
+msgid "Add %d items to the download queue?"
+msgstr "Lisätäänkö %d kohdetta latausjonoon?"
+
+msgid "Add channel name to downloaded file"
+msgstr "Lisää kanavan nimi ladattuun tiedostoon"
+
+#, python-format
+msgid "Add host %s to group"
+msgstr "Lisää palvelu %s ryhmään"
+
+msgid "Add item to favorites"
+msgstr "Lisää kohde suosikkeihin"
+
+msgid "Add item to group"
+msgstr "Lisää kohde ryhmään"
+
+#, python-format
+msgid "Add marked items to favourites (%d)"
+msgstr "Lisää merkityt kohteet suosikkeihin (%d)"
+
+msgid "Add new entry"
+msgstr "Lisää uusi kohde"
+
+msgid "Add new group"
+msgstr "Lisää uusi ryhmä"
+
+msgid "Add new group of favorites"
+msgstr "Lisää uusi suosikkiryhmä"
+
+msgid "Add to User Links"
+msgstr "Lisää käyttäjälinkkeihin"
+
+msgid "Add to Watchlist"
+msgstr "Lisää katselulistalle"
+
+msgid "Add to Watchlist folder..."
+msgstr "Lisää katselulistan kansioon..."
+
+msgid "Added"
+msgstr "Lisätty"
+
+#, python-format
+msgid "Added by: %s, directory: %s"
+msgstr "Lisääjä: %s, hakemisto: %s"
+
+msgid "Adhan"
+msgstr "Adhan"
+
+msgid "Adventure"
+msgstr "Seikkailu"
+
+msgid "African series"
+msgstr "Afrikkalaiset sarjat"
+
+msgid "Age limit:"
+msgstr "Ikäraja:"
+
+msgid "Aired"
+msgstr "Esitetty"
+
+msgid "Aired this week"
+msgstr "Esitetty tällä viikolla"
+
+msgid "Airing now"
+msgstr "Esitetään nyt"
+
+msgid "All"
+msgstr "Kaikki"
+
+msgid "All Sports"
+msgstr "Kaikki urheilulajit"
+
+msgid "All audiobooks"
+msgstr "Kaikki äänikirjat"
+
+msgid "All categories"
+msgstr "Kaikki kategoriat"
+
+msgid "All in one"
+msgstr "Kaikki yhdessä"
+
+msgid "All movies"
+msgstr "Kaikki elokuvat"
+
+msgid "All programmes"
+msgstr "Kaikki ohjelmat"
+
+msgid "All results"
+msgstr "Kaikki tulokset"
+
+msgid "All seasons"
+msgstr "Kaikki kaudet"
+
+msgid "All series"
+msgstr "Kaikki sarjat"
+
+msgid "All shows"
+msgstr "Kaikki viihdeohjelmat"
+
+msgid "All stations"
+msgstr "Kaikki kanavat"
+
+msgid "All streams"
+msgstr "Kaikki suoratoistot"
+
+msgid "All time"
+msgstr "Kaikkien aikojen"
+
+msgid "All titles A-Z"
+msgstr "Kaikki nimikkeet A-Z"
+
+msgid "All videos"
+msgstr "Kaikki videot"
+
+msgid "Allow VP9 codec:"
+msgstr "Salli VP9-koodekki:"
+
+msgid "Allow dash format:"
+msgstr "Salli DASH-muoto:"
+
+msgid "Allow external link-decryption service (enc-dec.app)"
+msgstr "Salli ulkoinen linkkien salauksenpurkupalvelu (enc-dec.app)"
+
+msgid "Allow host to override suggestions provider"
+msgstr "Salli palvelun ohittaa ehdotusten tarjoaja"
+
+msgid "Allow upload to other peers (seeding)"
+msgstr "Salli lähetys muille vertaisille (jakaminen)"
+
+msgid "Allow watched flag to be set"
+msgstr "Salli katsottu-merkinnän asettaminen"
+
+msgid "Alphabetically"
+msgstr "Aakkosjärjestyksessä"
+
+#, python-format
+msgid "Also use the accounts of X-Streamity (%s)"
+msgstr "Käytä myös X-Streamityn tilejä (%s)"
+
+#, python-format
+msgid "Also use the portals of EStalker (%s)"
+msgstr "Käytä myös EStalkerin portaaleja (%s)"
+
+msgid "AltGr"
+msgstr "AltGr"
+
+msgid "Alternate Title:"
+msgstr "Vaihtoehtoinen nimi:"
+
+msgid "Alternative domain:"
+msgstr "Vaihtoehtoinen verkkotunnus:"
+
+msgid "Alternative proxy server (1)"
+msgstr "Vaihtoehtoinen välityspalvelin (1)"
+
+msgid "Alternative proxy server (2)"
+msgstr "Vaihtoehtoinen välityspalvelin (2)"
+
+msgid "Alternative proxy server (3)"
+msgstr "Vaihtoehtoinen välityspalvelin (3)"
+
+msgid "Alternative proxy server (4)"
+msgstr "Vaihtoehtoinen välityspalvelin (4)"
+
+msgid "Alternative proxy server (5)"
+msgstr "Vaihtoehtoinen välityspalvelin (5)"
+
+msgid "American football"
+msgstr "Amerikkalainen jalkapallo"
+
+msgid "An API key from subsource.net can be entered in the E2iPlayer settings (Subtitles)."
+msgstr "subsource.net-palvelun API-avaimen voi syöttää E2iPlayerin asetuksissa (Tekstitykset)."
+
+#, python-format
+msgid "An error occurred while loading a subtitle from [%s]."
+msgstr "Virhe ladattaessa tekstitystä lähteestä [%s]."
+
+#, python-format
+msgid "An error occurred while writing into: %s"
+msgstr "Virhe kirjoitettaessa kohteeseen: %s"
+
+msgid "An opensubtitles.com account (login and password in the E2iPlayer settings) raises the limit."
+msgstr "opensubtitles.com-tili (käyttäjätunnus ja salasana E2iPlayerin asetuksissa) nostaa rajaa."
+
+msgid "Anatomy"
+msgstr "Anatomia"
+
+msgid "Animals"
+msgstr "Eläimet"
+
+msgid "Animated movies"
+msgstr "Animaatioelokuvat"
+
+msgid "Animated series"
+msgstr "Animaatiosarjat"
+
+msgid "Animation"
+msgstr "Animaatio"
+
+msgid "Anime"
+msgstr "Anime"
+
+msgid "Anime A-Z"
+msgstr "Anime A-Z"
+
+msgid "Anime Movies"
+msgstr "Anime-elokuvat"
+
+msgid "Anime Series"
+msgstr "Anime-sarjat"
+
+msgid "Anime TV series"
+msgstr "Anime-TV-sarjat"
+
+msgid "Anime genres"
+msgstr "Anime-lajityypit"
+
+msgid "Anime list"
+msgstr "Anime-luettelo"
+
+msgid "Anime movies"
+msgstr "Anime-elokuvat"
+
+msgid "Anime movies A-Z"
+msgstr "Anime-elokuvat A-Z"
+
+msgid "Anime series (dubbed)"
+msgstr "Anime-sarjat (dubatut)"
+
+msgid "Anime series A-Z"
+msgstr "Anime-sarjat A-Z"
+
+msgid "Answer"
+msgstr "Vastaus"
+
+msgid "Any"
+msgstr "Mikä tahansa"
+
+msgid "Apply"
+msgstr "Käytä"
+
+msgid "Approaches"
+msgstr "Lähestymistavat"
+
+msgid "Arabic"
+msgstr "Arabia"
+
+msgid "Arabic Movies"
+msgstr "Arabialaiset elokuvat"
+
+msgid "Arabic Series"
+msgstr "Arabialaiset sarjat"
+
+msgid "Arabic movies"
+msgstr "Arabialaiset elokuvat"
+
+msgid "Arabic plays"
+msgstr "Arabialaiset näytelmät"
+
+msgid "Arabic songs"
+msgstr "Arabialaiset laulut"
+
+msgid "Archive"
+msgstr "Arkisto"
+
+msgid "Are you sure you want to delete search history?"
+msgstr "Haluatko varmasti poistaa hakuhistorian?"
+
+#, python-format
+msgid "Are you sure you want to remove file \"%s\"?"
+msgstr "Haluatko varmasti poistaa tiedoston \"%s\"?"
+
+msgid "Are you sure you want to reset all settings to their default values?"
+msgstr "Haluatko varmasti palauttaa kaikki asetukset oletusarvoihin?"
+
+msgid "Art"
+msgstr "Taide"
+
+msgid "Articles"
+msgstr "Artikkelit"
+
+msgid "Artist"
+msgstr "Artisti"
+
+#, python-format
+msgid "Artist \"%s\" not found on Last.fm - the exact artist name is needed."
+msgstr "Artistia \"%s\" ei löytynyt Last.fm:stä - tarvitaan artistin tarkka nimi."
+
+msgid "Artists"
+msgstr "Artistit"
+
+msgid "Asian"
+msgstr "Aasialainen"
+
+msgid "Asian TV series"
+msgstr "Aasialaiset TV-sarjat"
+
+msgid "Asian movies"
+msgstr "Aasialaiset elokuvat"
+
+msgid "Asian series (dubbed)"
+msgstr "Aasialaiset sarjat (dubatut)"
+
+msgid "Aspect"
+msgstr "Kuvasuhde"
+
+msgid "At least one of plugin browser, extension list and main menu has to stay on, otherwise E2iPlayer could no longer be started."
+msgstr "Ainakin yhden seuraavista on oltava käytössä: lisäosaselain, laajennusluettelo tai päävalikko, muuten E2iPlayeria ei voi enää käynnistää."
+
+msgid "At the live edge"
+msgstr "Suoran lähetyksen kohdalla"
+
+msgid "Atheer radio (Arabic)"
+msgstr "Atheer radio (arabia)"
+
+msgid "Audio"
+msgstr "Ääni"
+
+msgid "Audio buffer size [KB]"
+msgstr "Äänipuskurin koko [KB]"
+
+msgid "Audio description"
+msgstr "Kuvailutulkkaus"
+
+msgid "Audio programme"
+msgstr "Ääniohjelma"
+
+msgid "Audio track"
+msgstr "Ääniraita"
+
+msgid "Audio tracks"
+msgstr "Ääniraidat"
+
+#, python-format
+msgid "Author: %s"
+msgstr "Tekijä: %s"
+
+msgid "Authors"
+msgstr "Tekijät"
+
+msgid "Auto"
+msgstr "Automaattinen"
+
+#, python-format
+msgid "Auto refresh: %s"
+msgstr "Automaattinen päivitys: %s"
+
+msgid "Auto selection based on the settings"
+msgstr "Automaattinen valinta asetusten perusteella"
+
+msgid "Auto start method"
+msgstr "Automaattisen käynnistyksen tapa"
+
+msgid "Auto-generated"
+msgstr "Automaattisesti luotu"
+
+msgid "Automatic"
+msgstr "Automaattinen"
+
+msgid "Automatically turn on external subtitles"
+msgstr "Ota ulkoiset tekstitykset käyttöön automaattisesti"
+
+msgid "Automotive"
+msgstr "Autot ja moottorit"
+
+msgid "Autoplay start delay"
+msgstr "Automaattisen toiston aloitusviive"
+
+msgid "Autumn"
+msgstr "Syksy"
+
+msgid "Available worldwide"
+msgstr "Saatavilla maailmanlaajuisesti"
+
+msgid "Awards:"
+msgstr "Palkinnot:"
+
+msgid "BLUE"
+msgstr "SININEN"
+
+msgid "Background color"
+msgstr "Taustaväri"
+
+msgid "Backspace"
+msgstr "Askelpalautin"
+
+#, python-format
+msgid "Balance: %s"
+msgstr "Saldo: %s"
+
+msgid "Balkans"
+msgstr "Balkan"
+
+msgid "Basic Science"
+msgstr "Perustieteet"
+
+msgid "Basketball"
+msgstr "Koripallo"
+
+msgid "Being watched"
+msgstr "Katsotaan parhaillaan"
+
+msgid "Best"
+msgstr "Paras"
+
+msgid "Best Pinkbike videos"
+msgstr "Parhaat Pinkbike-videot"
+
+msgid "Best movies"
+msgstr "Parhaat elokuvat"
+
+msgid "Best series"
+msgstr "Parhaat sarjat"
+
+msgid "Binaries"
+msgstr "Binääritiedostot"
+
+msgid "Bing Suggestions"
+msgstr "Bing-ehdotukset"
+
+msgid "Biography"
+msgstr "Elämäkerta"
+
+#, python-format
+msgid "Bitrate: %s"
+msgstr "Bittinopeus: %s"
+
+msgid "Black"
+msgstr "Musta"
+
+msgid "Black iframe file"
+msgstr "Musta iframe-tiedosto"
+
+msgid "Black screensaver"
+msgstr "Musta näytönsäästäjä"
+
+msgid "Block wmv files"
+msgstr "Estä WMV-tiedostot"
+
+msgid "Board Review"
+msgstr "Erikoislääkärikokeeseen valmistautuminen"
+
+msgid "Books"
+msgstr "Kirjat"
+
+msgid "Box"
+msgstr "Boksi"
+
+msgid "Boxing"
+msgstr "Nyrkkeily"
+
+msgid "Broadcast:"
+msgstr "Lähetys:"
+
+msgid "Browse by genre"
+msgstr "Selaa lajityypeittäin"
+
+msgid "Browse youtube trending feeds"
+msgstr "Selaa YouTuben trendisyötteitä"
+
+msgid "Budget:"
+msgstr "Budjetti:"
+
+msgid "Buffering location"
+msgstr "Puskuroinnin sijainti"
+
+msgid "Business"
+msgstr "Talous"
+
+#, python-format
+msgid "By %s"
+msgstr "Tekijä %s"
+
+msgid "CME SAE"
+msgstr "CME SAE"
+
+#, python-format
+msgid "CUMLOUDER can only search its tags (e.g. milf, step sister, big tits) - there is no tag \"%s\"."
+msgstr "CUMLOUDER voi hakea vain tunnisteistaan (esim. milf, step sister, big tits) - tunnistetta \"%s\" ei ole."
+
+msgid "Cache"
+msgstr "Välimuisti"
+
+msgid "Cache folder"
+msgstr "Välimuistikansio"
+
+#, python-format
+msgid "Cache folder \"%s\" could not be created. Some data (cookies, subtitles, ...) may not be saved."
+msgstr "Välimuistikansiota \"%s\" ei voitu luoda. Joitakin tietoja (evästeet, tekstitykset, ...) ei ehkä tallenneta."
+
+msgid "Cache location"
+msgstr "Välimuistin sijainti"
+
+msgid "Cache size in RAM"
+msgstr "Välimuistin koko RAM-muistissa"
+
+msgid "Cache size on disk"
+msgstr "Välimuistin koko levyllä"
+
+#, python-format
+msgid ""
+"Can not get mount points - cmd mount failed.\n"
+"Return code[%s].\n"
+"Return data[%s]."
+msgstr ""
+"Liitospisteitä ei saatu - mount-komento epäonnistui.\n"
+"Paluukoodi[%s].\n"
+"Paluutiedot[%s]."
+
+msgid "Cancel"
+msgstr "Peruuta"
+
+msgid "Cancelled."
+msgstr "Peruutettu."
+
+msgid "Captcha"
+msgstr "Captcha"
+
+msgid "Captcha error:"
+msgstr "Captcha-virhe:"
+
+msgid ""
+"Captcha solved.\n"
+"Waiting for notification."
+msgstr ""
+"Captcha ratkaistu.\n"
+"Odotetaan ilmoitusta."
+
+msgid "Captcha solving service"
+msgstr "Captchan ratkaisupalvelu"
+
+msgid "Captcha was not entered."
+msgstr "Captchaa ei syötetty."
+
+#, python-format
+msgid "Carrying: %s | UP/DOWN=Move, OK=Drop"
+msgstr "Siirretään: %s | YLÖS/ALAS=Siirrä, OK=Pudota"
+
+msgid "Cartoon genres"
+msgstr "Piirrossarjojen lajityypit"
+
+msgid "Cartoon series (dubbed)"
+msgstr "Piirrossarjat (dubatut)"
+
+msgid "Cartoons"
+msgstr "Piirretyt"
+
+msgid "Cartoons A-Z"
+msgstr "Piirretyt A-Z"
+
+msgid "Cartoons and anime"
+msgstr "Piirretyt ja anime"
+
+msgid "Cartoons and series"
+msgstr "Piirretyt ja sarjat"
+
+msgid "Cast:"
+msgstr "Näyttelijät:"
+
+msgid "Catch-up"
+msgstr "Jälkikatselu"
+
+#, python-format
+msgid "Catch-up (%d channels)"
+msgstr "Jälkikatselu (%d kanavaa)"
+
+msgid "Catch-up (timeshift.php)"
+msgstr "Jälkikatselu (timeshift.php)"
+
+#, python-format
+msgid "Catch-up: %d days"
+msgstr "Jälkikatselu: %d päivää"
+
+msgid "Categories"
+msgstr "Kategoriat"
+
+msgid "Categories:"
+msgstr "Kategoriat:"
+
+msgid "Category"
+msgstr "Kategoria"
+
+msgid "Category:"
+msgstr "Kategoria:"
+
+msgid "Change active movie player"
+msgstr "Vaihda aktiivinen elokuvasoitin"
+
+msgid "Change folder icon"
+msgstr "Vaihda kansion kuvake"
+
+msgid "Change own pin"
+msgstr "Vaihda oma PIN"
+
+msgid "Channel"
+msgstr "Kanava"
+
+#, python-format
+msgid "Channel: %s"
+msgstr "Kanava: %s"
+
+msgid "Channels"
+msgstr "Kanavat"
+
+msgid "Checking for updates"
+msgstr "Tarkistetaan päivityksiä"
+
+msgid "Checks every enabled site: menu, a list with videos and, in the full test, the stream link of one video."
+msgstr "Tarkistaa jokaisen käytössä olevan sivuston: valikon, videoluettelon ja täydessä testissä yhden videon suoratoistolinkin."
+
+msgid "Children"
+msgstr "Lapset"
+
+msgid "Children & Family"
+msgstr "Lapset ja perhe"
+
+msgid "Chinese"
+msgstr "Kiina"
+
+msgid "Chinese anime"
+msgstr "Kiinalainen anime"
+
+msgid "Choose the TorrServer binary"
+msgstr "Valitse TorrServer-ohjelmatiedosto"
+
+msgid "Cinema History"
+msgstr "Elokuvahistoria"
+
+msgid "Cinema movies"
+msgstr "Elokuvateatterielokuvat"
+
+msgid "Classic"
+msgstr "Klassinen"
+
+msgid "Classic movies"
+msgstr "Klassiset elokuvat"
+
+msgid "Clear"
+msgstr "Tyhjennä"
+
+msgid "Clear log"
+msgstr "Tyhjennä loki"
+
+#, python-format
+msgid ""
+"Clear the debug log file?\n"
+"%s"
+msgstr ""
+"Tyhjennetäänkö vianetsintälokitiedosto?\n"
+"%s"
+
+msgid "Clear the log file at plugin start"
+msgstr "Tyhjennä lokitiedosto lisäosan käynnistyessä"
+
+#, python-format
+msgid "Clipped by: %s"
+msgstr "Leikkeen teki: %s"
+
+msgid "Clips"
+msgstr "Leikkeet"
+
+msgid "Close"
+msgstr "Sulje"
+
+msgid "Close an unused torrent after"
+msgstr "Sulje käyttämätön torrent, kun on kulunut"
+
+msgid "Closes the host opened in the web interface, clears the search results and stops what the web interface still runs in the background. Use it when a page keeps loading. Settings, downloads and the E2iPlayer on the TV are not touched."
+msgstr "Sulkee verkkokäyttöliittymässä avatun palvelun, tyhjentää hakutulokset ja pysäyttää sen, mitä verkkokäyttöliittymä vielä suorittaa taustalla. Käytä tätä, kun sivu ei lakkaa latautumasta. Asetuksiin, latauksiin ja television E2iPlayeriin ei kosketa."
+
+msgid "Closing. Please wait..."
+msgstr "Suljetaan. Odota..."
+
+msgid "Clubs and athletes"
+msgstr "Seurat ja urheilijat"
+
+msgid "Code"
+msgstr "Koodi"
+
+msgid "Collected streams only"
+msgstr "Vain kerätyt suoratoistot"
+
+msgid "Collections"
+msgstr "Kokoelmat"
+
+msgid "Colored text in titles and descriptions"
+msgstr "Värillinen teksti otsikoissa ja kuvauksissa"
+
+msgid "Combine pull request merges with their commit"
+msgstr "Yhdistä pull requestien yhdistämiset niiden committiin"
+
+msgid "Comedy"
+msgstr "Komedia"
+
+msgid "Commentator"
+msgstr "Selostaja"
+
+msgid "Comments"
+msgstr "Kommentit"
+
+msgid "Commits"
+msgstr "Commitit"
+
+msgid "Competitions"
+msgstr "Kilpailut"
+
+msgid "Complete Quran"
+msgstr "Koko Koraani"
+
+msgid "Complete series"
+msgstr "Kokonaiset sarjat"
+
+msgid "Completed"
+msgstr "Valmis"
+
+msgid "Concert"
+msgstr "Konsertti"
+
+msgid "Config"
+msgstr "Asetukset"
+
+#, python-format
+msgid "Config folder \"%s\" could not be created. Some data (host order, search history, favourites, movie player preferences, ...) may not be saved."
+msgstr "Asetuskansiota \"%s\" ei voitu luoda. Joitakin tietoja (palveluiden järjestys, hakuhistoria, suosikit, elokuvasoittimen asetukset, ...) ei ehkä tallenneta."
+
+msgid "Configuration"
+msgstr "Asetukset"
+
+#, python-format
+msgid "Configuration [%s] service"
+msgstr "Palvelun [%s] asetukset"
+
+#, python-format
+msgid "Configure %s"
+msgstr "Määritä %s"
+
+msgid "Configure host"
+msgstr "Määritä palvelu"
+
+msgid "Configuring an external movie player"
+msgstr "Ulkoisen elokuvasoittimen määrittäminen"
+
+msgid "Confirm new pin"
+msgstr "Vahvista uusi PIN"
+
+msgid "Confirm the title of the movie"
+msgstr "Vahvista elokuvan nimi"
+
+msgid "Confirmation error."
+msgstr "Vahvistusvirhe."
+
+msgid "Connection to the weeb.tv server failed."
+msgstr "Yhteys weeb.tv-palvelimeen epäonnistui."
+
+msgid "Connections per torrent"
+msgstr "Yhteyksiä torrentia kohden"
+
+#, python-format
+msgid "Connections: %s of %s"
+msgstr "Yhteydet: %s / %s"
+
+msgid "Content not available"
+msgstr "Sisältö ei ole saatavilla"
+
+msgid "Continue"
+msgstr "Jatka"
+
+msgid "Continue downloading"
+msgstr "Jatka latausta"
+
+msgid "Cooking"
+msgstr "Ruoanlaitto"
+
+msgid "Copy"
+msgstr "Kopioi"
+
+msgid "Copy it to /usr/bin/TorrServer (or a folder on HDD/USB) and make it executable (chmod 755)."
+msgstr "Kopioi se kohteeseen /usr/bin/TorrServer (tai kansioon HDD:llä/USB:llä) ja tee siitä suoritettava (chmod 755)."
+
+msgid "Could not add the user link."
+msgstr "Käyttäjälinkkiä ei voitu lisätä."
+
+msgid "Could not load the wiki page."
+msgstr "Wikisivua ei voitu ladata."
+
+msgid "Could not resolve host."
+msgstr "Palvelimen nimeä ei voitu selvittää."
+
+msgid "Could not resolve proxy."
+msgstr "Välityspalvelimen nimeä ei voitu selvittää."
+
+msgid "Could not sort the user links."
+msgstr "Käyttäjälinkkejä ei voitu lajitella."
+
+msgid "Could not start the YouTube sign-in."
+msgstr "YouTube-kirjautumista ei voitu aloittaa."
+
+msgid "Could not write the file."
+msgstr "Tiedostoa ei voitu kirjoittaa."
+
+msgid "Countries"
+msgstr "Maat"
+
+msgid "Country"
+msgstr "Maa"
+
+msgid "Country / store:"
+msgstr "Maa / kauppa:"
+
+msgid "Country:"
+msgstr "Maa:"
+
+msgid "Couples"
+msgstr "Pariskunnat"
+
+msgid "Create Enigma2 .cuts chapter marks"
+msgstr "Luo Enigma2 .cuts -kappalemerkit"
+
+msgid "Create LCD/VFD summary screen"
+msgstr "Luo LCD/VFD-yhteenvetonäyttö"
+
+msgid "Create MKV"
+msgstr "Luo MKV"
+
+msgid "Create MKV with chapter marks from description"
+msgstr "Luo MKV, jossa kappalemerkit kuvauksesta"
+
+msgid "Create debug logs"
+msgstr "Luo vianetsintälokeja"
+
+msgid "Create sidecar files (.txt/.jpg)"
+msgstr "Luo sivutiedostot (.txt/.jpg)"
+
+#, python-format
+msgid "Created: %s"
+msgstr "Luotu: %s"
+
+msgid "Creator:"
+msgstr "Luoja:"
+
+msgid "Creators:"
+msgstr "Luojat:"
+
+msgid "Cricket"
+msgstr "Kriketti"
+
+msgid "Crime"
+msgstr "Rikos"
+
+msgid "Critical Error - cookie can't be saved!"
+msgstr "Kriittinen virhe - evästettä ei voi tallentaa!"
+
+msgid "Critical Error – Content-Encoding gzip cannot be handled!"
+msgstr "Kriittinen virhe – Content-Encoding gzip -koodausta ei voi käsitellä!"
+
+msgid "Culture"
+msgstr "Kulttuuri"
+
+msgid "Culture and lifestyle"
+msgstr "Kulttuuri ja elämäntapa"
+
+msgid "Culture and pop"
+msgstr "Kulttuuri ja pop"
+
+msgid "Current item is not a channel."
+msgstr "Nykyinen kohde ei ole kanava."
+
+msgid "Cut"
+msgstr "Leikkaa"
+
+msgid "Czech"
+msgstr "Tšekki"
+
+msgid "DASH/mpd"
+msgstr "DASH/mpd"
+
+msgid "DLNA server of TorrServer"
+msgstr "TorrServerin DLNA-palvelin"
+
+msgid "DOWNLOAD ERROR"
+msgstr "LATAUSVIRHE"
+
+msgid "DOWNLOADED"
+msgstr "LADATTU"
+
+msgid "DOWNLOADING"
+msgstr "LADATAAN"
+
+msgid "DRM protection detected."
+msgstr "DRM-suojaus havaittu."
+
+msgid "Daily download limit reached - type the code"
+msgstr "Päivittäinen latausraja saavutettu - syötä koodi"
+
+msgid "Darkgray"
+msgstr "Tummanharmaa"
+
+msgid "Darts"
+msgstr "Tikanheitto"
+
+msgid "Date"
+msgstr "Päivämäärä"
+
+msgid "Debug file does not exist - nothing to delete"
+msgstr "Vianetsintätiedostoa ei ole - ei mitään poistettavaa"
+
+msgid "Debug log"
+msgstr "Vianetsintäloki"
+
+msgid "Debug logs"
+msgstr "Vianetsintälokit"
+
+msgid "Debug option is disabled - nothing to display"
+msgstr "Vianetsintä on poistettu käytöstä - ei mitään näytettävää"
+
+msgid "Debug snapshot"
+msgstr "Vianetsinnän tilannevedos"
+
+msgid "Debug snapshot (for site development)"
+msgstr "Vianetsinnän tilannevedos (sivustokehitykseen)"
+
+#, python-format
+msgid "Debug snapshot: \"%s\" received by the box"
+msgstr "Vianetsinnän tilannevedos: \"%s\" saapui vastaanottimeen"
+
+#, python-format
+msgid "Debug snapshot: sending \"%s\" failed"
+msgstr "Vianetsinnän tilannevedos: kohteen \"%s\" lähetys epäonnistui"
+
+#, python-format
+msgid "Decode file [%s] problem."
+msgstr "Ongelma tiedoston [%s] dekoodauksessa."
+
+msgid "Decrypt Signatures Error"
+msgstr "Virhe allekirjoitusten salauksen purussa"
+
+msgid "Default"
+msgstr "Oletus"
+
+msgid "Default (2 minutes)"
+msgstr "Oletus (2 minuuttia)"
+
+msgid "Default browser"
+msgstr "Oletusselain"
+
+msgid "Default captcha bypass"
+msgstr "Captchan oletusohitustapa"
+
+msgid "Default suggestions provider"
+msgstr "Ehdotusten oletustarjoaja"
+
+msgid "Default video aspect ratio"
+msgstr "Videon oletuskuvasuhde"
+
+msgid "Default video policy for 16:9"
+msgstr "Videon oletusskaalaus 16:9-kuvalle"
+
+msgid "Default video policy for 4:3"
+msgstr "Videon oletusskaalaus 4:3-kuvalle"
+
+msgid "Default video quality"
+msgstr "Videon oletuslaatu"
+
+msgid "Default video quality:"
+msgstr "Videon oletuslaatu:"
+
+msgid "Defaults"
+msgstr "Oletusarvot"
+
+msgid "Definitely remove from favorites?"
+msgstr "Poistetaanko varmasti suosikeista?"
+
+msgid "Delete"
+msgstr "Poista"
+
+msgid "Delete JS cache after (days, 0 = never)"
+msgstr "Poista JS-välimuisti (päivän kuluttua, 0 = ei koskaan)"
+
+msgid "Delete JS cache now"
+msgstr "Poista JS-välimuisti nyt"
+
+msgid "Delete Watchlist folder"
+msgstr "Poista katselulistan kansio"
+
+msgid "Delete all cache files now"
+msgstr "Poista kaikki välimuistitiedostot nyt"
+
+msgid "Delete all config files now"
+msgstr "Poista kaikki asetustiedostot nyt"
+
+msgid "Delete cookies cache after (days, 0 = never)"
+msgstr "Poista evästevälimuisti (päivän kuluttua, 0 = ei koskaan)"
+
+msgid "Delete cookies cache now"
+msgstr "Poista evästevälimuisti nyt"
+
+msgid "Delete entry"
+msgstr "Poista kohde"
+
+msgid "Delete favourites and watched status now"
+msgstr "Poista suosikit ja katselutila nyt"
+
+msgid "Delete folder"
+msgstr "Poista kansio"
+
+msgid "Delete host order and groups now"
+msgstr "Poista palveluiden järjestys ja ryhmät nyt"
+
+msgid "Delete movie metadata cache after (days, 0 = never)"
+msgstr "Poista elokuvien metatietovälimuisti (päivän kuluttua, 0 = ei koskaan)"
+
+msgid "Delete movie metadata cache now"
+msgstr "Poista elokuvien metatietovälimuisti nyt"
+
+msgid "Delete movie player preferences now"
+msgstr "Poista elokuvasoittimen asetukset nyt"
+
+msgid "Delete now"
+msgstr "Poista nyt"
+
+msgid "Delete search history"
+msgstr "Poista hakuhistoria"
+
+msgid "Delete search history now"
+msgstr "Poista hakuhistoria nyt"
+
+msgid "Delete subtitles cache after (days, 0 = never)"
+msgstr "Poista tekstitysvälimuisti (päivän kuluttua, 0 = ei koskaan)"
+
+msgid "Delete subtitles cache now"
+msgstr "Poista tekstitysvälimuisti nyt"
+
+msgid "Delete the cache when the torrent is closed"
+msgstr "Poista välimuisti, kun torrent suljetaan"
+
+#, python-format
+msgid "Delete the folder \"%s\"? Its hosts go back to the group."
+msgstr "Poistetaanko kansio \"%s\"? Sen palvelut palaavat ryhmään."
+
+#, python-format
+msgid "Delete the folder \"%s\"? Its videos go back to the Watchlist."
+msgstr "Poistetaanko kansio \"%s\"? Sen videot palaavat katselulistalle."
+
+msgid "Delete thumbnails cache now"
+msgstr "Poista pikkukuvien välimuisti nyt"
+
+msgid "Denmark"
+msgstr "Tanska"
+
+msgid "Description:"
+msgstr "Kuvaus:"
+
+msgid "Detail/expert mode"
+msgstr "Yksityiskohtainen/asiantuntijatila"
+
+msgid "Detective"
+msgstr "Salapoliisi"
+
+msgid "Developers:"
+msgstr "Kehittäjät:"
+
+msgid "Digital programmes"
+msgstr "Digitaaliset ohjelmat"
+
+msgid "Direct"
+msgstr "Suora"
+
+msgid "Director:"
+msgstr "Ohjaaja:"
+
+msgid "Directors"
+msgstr "Ohjaajat"
+
+msgid "Directors:"
+msgstr "Ohjaajat:"
+
+#, python-format
+msgid "Directory \"%s\" does not exists."
+msgstr "Hakemistoa \"%s\" ei ole olemassa."
+
+msgid "Directory browser"
+msgstr "Hakemistoselain"
+
+msgid "Disable all groups"
+msgstr "Poista kaikki ryhmät käytöstä"
+
+msgid "Disable live at plugin start"
+msgstr "Poista suora TV käytöstä lisäosan käynnistyessä"
+
+msgid "Disable not used services"
+msgstr "Poista käyttämättömät palvelut käytöstä"
+
+msgid "Disable reordering"
+msgstr "Poista järjestely käytöstä"
+
+msgid "Disable reordering mode"
+msgstr "Poista järjestelytila käytöstä"
+
+msgid "Disable/Enable groups"
+msgstr "Poista käytöstä/ota käyttöön ryhmiä"
+
+msgid "Disable/Enable services"
+msgstr "Poista käytöstä/ota käyttöön palveluja"
+
+msgid "Discovery"
+msgstr "Löydöt"
+
+msgid "Disney cartoon movies (Egyptian dub)"
+msgstr "Disneyn animaatioelokuvat (egyptiläinen dubbaus)"
+
+msgid "Display language:"
+msgstr "Näyttökieli:"
+
+msgid "Display thumbnails"
+msgstr "Näytä pikkukuvat"
+
+msgid "Do you really want to delete ALL cache data now? This includes cookies, subtitles, movie metadata and thumbnails, and cannot be undone."
+msgstr "Haluatko varmasti poistaa KAIKKI välimuistitiedot nyt? Tämä sisältää evästeet, tekstitykset, elokuvien metatiedot ja pikkukuvat, eikä sitä voi kumota."
+
+msgid "Do you really want to delete ALL config data now? This is real user data, not just cache - it includes favourites, watched status, search history, movie player preferences and host order/groups, and cannot be undone."
+msgstr "Haluatko varmasti poistaa KAIKKI asetustiedot nyt? Nämä ovat todellisia käyttäjätietoja, eivät pelkkää välimuistia - niihin kuuluvat suosikit, katselutila, hakuhistoria, elokuvasoittimen asetukset sekä palvelujen järjestys/ryhmät, eikä poistoa voi kumota."
+
+msgid "Do you really want to delete ALL favourites and watched status now? This is real user data, not just cache, and cannot be undone."
+msgstr "Haluatko varmasti poistaa KAIKKI suosikit ja katselutilan nyt? Nämä ovat todellisia käyttäjätietoja, eivät pelkkää välimuistia, eikä poistoa voi kumota."
+
+#, python-format
+msgid "Do you really want to delete the %s now?"
+msgstr "Haluatko varmasti poistaa kohteen %s nyt?"
+
+msgid "Do you really want to delete the thumbnails cache now?"
+msgstr "Haluatko varmasti poistaa pikkukuvien välimuistin nyt?"
+
+msgid "Do you want to finish?"
+msgstr "Haluatko lopettaa?"
+
+msgid "Documentaries"
+msgstr "Dokumentit"
+
+msgid "Documentaries A-Z"
+msgstr "Dokumentit A-Z"
+
+msgid "Documentary"
+msgstr "Dokumentti"
+
+msgid "Documentary Movies"
+msgstr "Dokumenttielokuvat"
+
+msgid "Documentary series"
+msgstr "Dokumenttisarjat"
+
+msgid "Done - the result was sent to the box, you can close this page."
+msgstr "Valmis - tulos lähetettiin vastaanottimeen, voit sulkea tämän sivun."
+
+msgid "Download"
+msgstr "Lataa"
+
+#, python-format
+msgid "Download \"%s\" (for this receiver) from %s"
+msgstr "Lataa \"%s\" (tälle vastaanottimelle) osoitteesta %s"
+
+#, python-format
+msgid "Download (ready in %d seconds)"
+msgstr "Lataa (valmis %d sekunnin kuluttua)"
+
+msgid "Download again"
+msgstr "Lataa uudelleen"
+
+msgid "Download all items of this page"
+msgstr "Lataa kaikki tämän sivun kohteet"
+
+msgid "Download already exists"
+msgstr "Lataus on jo olemassa"
+
+#, python-format
+msgid ""
+"Download can not be started.\n"
+" Incorrect address ('%r')."
+msgstr ""
+"Latausta ei voi aloittaa.\n"
+" Virheellinen osoite ('%r')."
+
+#, python-format
+msgid ""
+"Download can not be started.\n"
+"Downloader %s not working correctly.\n"
+"Status[%s]"
+msgstr ""
+"Latausta ei voi aloittaa.\n"
+"Lataaja %s ei toimi oikein.\n"
+"Tila[%s]"
+
+#, python-format
+msgid ""
+"Download failed.\n"
+"Status[%s]"
+msgstr ""
+"Lataus epäonnistui.\n"
+"Tila[%s]"
+
+msgid "Download manager"
+msgstr "Latausten hallinta"
+
+msgid "Download manager is not initialized"
+msgstr "Latausten hallintaa ei ole alustettu"
+
+#, python-format
+msgid "Download marked items (%d)"
+msgstr "Lataa merkityt kohteet (%d)"
+
+msgid "Download new version"
+msgstr "Lataa uusi versio"
+
+msgid "Download notification duration"
+msgstr "Latausilmoituksen kesto"
+
+msgid "Download speed limit"
+msgstr "Latausnopeuden rajoitus"
+
+msgid "Download subtiles failed."
+msgstr "Tekstitysten lataus epäonnistui."
+
+msgid "Download suggested"
+msgstr "Lataus suositeltu"
+
+#, python-format
+msgid "Download the Linux file for the CPU of this receiver from %s"
+msgstr "Lataa tämän vastaanottimen suorittimelle sopiva Linux-tiedosto osoitteesta %s"
+
+msgid "Downloaded file is too small or corrupted."
+msgstr "Ladattu tiedosto on liian pieni tai vioittunut."
+
+msgid "Downloading"
+msgstr "Ladataan"
+
+#, python-format
+msgid ""
+"Downloading can not be started.\n"
+" Downloader %s does not work properly.\n"
+"Status[%s]"
+msgstr ""
+"Latausta ei voi aloittaa.\n"
+" Lataaja %s ei toimi oikein.\n"
+"Tila[%s]"
+
+#, python-format
+msgid ""
+"Downloading can not be started.\n"
+" The address ('%r') is incorrect."
+msgstr ""
+"Latausta ei voi aloittaa.\n"
+" Osoite ('%r') on virheellinen."
+
+#, python-format
+msgid ""
+"Downloading cannot be started.\n"
+" Downloader [%s] not working properly.\n"
+" Status[%s]"
+msgstr ""
+"Latausta ei voi aloittaa.\n"
+" Lataaja [%s] ei toimi oikein.\n"
+" Tila[%s]"
+
+#, python-format
+msgid ""
+"Downloading cannot be started.\n"
+" Invalid URI[%s]."
+msgstr ""
+"Latausta ei voi aloittaa.\n"
+" Virheellinen URI[%s]."
+
+#, python-format
+msgid "Downloading file [%s] problem."
+msgstr "Ongelma tiedoston [%s] latauksessa."
+
+msgid "Downloading from prijevodi-online.org needs a free account. Enter login and password in the E2iPlayer settings."
+msgstr "Lataaminen sivustolta prijevodi-online.org vaatii ilmaisen tilin. Anna käyttäjätunnus ja salasana E2iPlayerin asetuksissa."
+
+#, python-format
+msgid ""
+"Downloading subtitles.\n"
+" ('%r')."
+msgstr ""
+"Ladataan tekstityksiä.\n"
+" ('%r')."
+
+msgid "Downloads"
+msgstr "Lataukset"
+
+msgid "Downloads location"
+msgstr "Latausten sijainti"
+
+#, python-format
+msgid "Downloads: %s"
+msgstr "Lataukset: %s"
+
+msgid "Draft"
+msgstr "Luonnos"
+
+msgid "Drama"
+msgstr "Draama"
+
+msgid "Dramas (Asian)"
+msgstr "Draamat (aasialaiset)"
+
+msgid "Dubbed"
+msgstr "Dubattu"
+
+msgid "Dubbed anime"
+msgstr "Dubattu anime"
+
+msgid "Dubbed movies"
+msgstr "Dubatut elokuvat"
+
+msgid "Dubbed series"
+msgstr "Dubatut sarjat"
+
+msgid "DuckDuckGo Suggestions"
+msgstr "DuckDuckGo-ehdotukset"
+
+msgid "Duration"
+msgstr "Kesto"
+
+msgid "Duration:"
+msgstr "Kesto:"
+
+#, python-format
+msgid "Duration: %s"
+msgstr "Kesto: %s"
+
+msgid "Dutch"
+msgstr "Hollanti"
+
+msgid "E-mail (free TBN GO account):"
+msgstr "Sähköposti (ilmainen TBN GO -tili):"
+
+msgid "E2iPlayer"
+msgstr "E2iPlayer"
+
+msgid "E2iPlayer - keyboard settings"
+msgstr "E2iPlayer - näppäimistön asetukset"
+
+msgid "E2iPlayer - settings"
+msgstr "E2iPlayer - asetukset"
+
+msgid "E2iPlayer auto start at Enigma2 start"
+msgstr "E2iPlayerin automaattinen käynnistys Enigma2:n käynnistyessä"
+
+msgid "E2iPlayer config folder"
+msgstr "E2iPlayerin asetuskansio"
+
+msgid "E2iPlayer downloader"
+msgstr "E2iPlayer-lataaja"
+
+msgid "E2iPlayer enable/disabled groups"
+msgstr "E2iPlayer käytössä olevat/käytöstä poistetut ryhmät"
+
+msgid "E2iPlayer is only a specialized web browser. It does not host any materials."
+msgstr "E2iPlayer on vain erikoistunut verkkoselain. Se ei itse tarjoa mitään sisältöä."
+
+msgid "E2iPlayer virtual keyboard"
+msgstr "E2iPlayerin virtuaalinäppäimistö"
+
+msgid ""
+"ERROR: pipeline could not be constructed: no element \"playbin2\" \n"
+"Please check if gstreamer plugins are available in your system."
+msgstr ""
+"VIRHE: putkea ei voitu muodostaa: ei elementtiä \"playbin2\" \n"
+"Tarkista, onko gstreamer-lisäosia saatavilla järjestelmässäsi."
+
+msgid "EXIT"
+msgstr "POISTU"
+
+msgid "Economy"
+msgstr "Talous"
+
+msgid "Edit"
+msgstr "Muokkaa"
+
+msgid "Edit User Links"
+msgstr "Muokkaa käyttäjälinkkejä"
+
+msgid "Edit failed."
+msgstr "Muokkaus epäonnistui."
+
+msgid "Edit favorite group"
+msgstr "Muokkaa suosikkiryhmää"
+
+msgid "Edit favorite item"
+msgstr "Muokkaa suosikkikohdetta"
+
+msgid "Edit favorites"
+msgstr "Muokkaa suosikkeja"
+
+msgid "Edit search history"
+msgstr "Muokkaa hakuhistoriaa"
+
+msgid "Edit title"
+msgstr "Muokkaa otsikkoa"
+
+msgid "Edit, sort and delete search history entries"
+msgstr "Muokkaa, lajittele ja poista hakuhistorian merkintöjä"
+
+msgid "Education"
+msgstr "Koulutus"
+
+msgid "Educational Animation"
+msgstr "Opetusanimaatio"
+
+msgid "Egyptian series"
+msgstr "Egyptiläiset sarjat"
+
+msgid "Empty title is not allowed."
+msgstr "Tyhjä otsikko ei ole sallittu."
+
+msgid "Enable all groups"
+msgstr "Ota kaikki ryhmät käyttöön"
+
+msgid "Enable hosts groups"
+msgstr "Ota palveluryhmät käyttöön"
+
+msgid "Enable reordering"
+msgstr "Ota järjestely käyttöön"
+
+msgid "Enable reordering mode"
+msgstr "Ota järjestelytila käyttöön"
+
+msgid "Enabled hosts"
+msgstr "Käytössä olevat palvelut"
+
+msgid "Encrypted connections only"
+msgstr "Vain salatut yhteydet"
+
+msgid "Encrypted stream list - not supported"
+msgstr "Salattu suoratoistoluettelo - ei tuettu"
+
+#, python-format
+msgid ""
+"Encryption function body extraction failed!\n"
+"Please report the problem to %s"
+msgstr ""
+"Salausfunktion rungon poiminta epäonnistui!\n"
+"Ilmoita ongelmasta osoitteeseen %s"
+
+#, python-format
+msgid ""
+"Encryption function name extraction failed!\n"
+"Please report the problem to %s"
+msgstr ""
+"Salausfunktion nimen poiminta epäonnistui!\n"
+"Ilmoita ongelmasta osoitteeseen %s"
+
+msgid "English"
+msgstr "Englanti"
+
+msgid "English TV series"
+msgstr "Englanninkieliset TV-sarjat"
+
+msgid "English dubbed"
+msgstr "Englanniksi dubattu"
+
+msgid "English movies"
+msgstr "Englanninkieliset elokuvat"
+
+msgid "English movies (dubbed)"
+msgstr "Englanninkieliset elokuvat (dubatut)"
+
+msgid "English series (dubbed)"
+msgstr "Englanninkieliset sarjat (dubatut)"
+
+msgid "English subbed"
+msgstr "Englanninkielinen tekstitys"
+
+msgid "Enter"
+msgstr "Enter"
+
+msgid "Enter (confirm and close)"
+msgstr "Enter (vahvista ja sulje)"
+
+msgid "Enter a value"
+msgstr "Anna arvo"
+
+msgid "Enter name"
+msgstr "Anna nimi"
+
+msgid "Enter new pin"
+msgstr "Anna uusi PIN"
+
+msgid "Enter old pin"
+msgstr "Anna vanha PIN"
+
+msgid "Enter pin"
+msgstr "Anna PIN"
+
+msgid "Enter the code shown in the title of the window on your receiver's screen (or scan the QR code shown there - no code needed then):"
+msgstr "Anna koodi, joka näkyy vastaanottimen näytöllä ikkunan otsikossa (tai skannaa siellä näkyvä QR-koodi - silloin koodia ei tarvita):"
+
+msgid "Enter the text"
+msgstr "Anna teksti"
+
+msgid "Entertainment"
+msgstr "Viihde"
+
+#, python-format
+msgid "Entries: %d | Sort: %s | Status: %s | Jump target: %s"
+msgstr "Merkinnät: %d | Lajittelu: %s | Tila: %s | Hyppykohde: %s"
+
+msgid "Episode"
+msgstr "Jakso"
+
+#, python-format
+msgid "Episode %d"
+msgstr "Jakso %d"
+
+msgid "Episodes"
+msgstr "Jaksot"
+
+msgid "Episodes:"
+msgstr "Jaksot:"
+
+#, python-format
+msgid "Episodes: %s"
+msgstr "Jaksot: %s"
+
+msgid "Epochs"
+msgstr "Aikakaudet"
+
+msgid "Error"
+msgstr "Virhe"
+
+#, python-format
+msgid "Error code: %s\n"
+msgstr "Virhekoodi: %s\n"
+
+#, python-format
+msgid ""
+"Error code: %s\n"
+"Error message: %s"
+msgstr ""
+"Virhekoodi: %s\n"
+"Virheilmoitus: %s"
+
+msgid "Error deleting favorite item."
+msgstr "Virhe suosikkikohteen poistamisessa."
+
+#, python-format
+msgid "Error deleting file \"%s\".\n"
+msgstr "Virhe tiedoston \"%s\" poistamisessa.\n"
+
+msgid "Error during deletion of the debug file."
+msgstr "Virhe vianetsintätiedoston poistamisessa."
+
+#, python-format
+msgid "Error getting file name: %s"
+msgstr "Virhe tiedostonimen hakemisessa: %s"
+
+msgid "Error loading favorites."
+msgstr "Virhe suosikkien lataamisessa."
+
+#, python-format
+msgid ""
+"Error message: \"%s\".\n"
+"Error code: \"%s\"."
+msgstr ""
+"Virheilmoitus: \"%s\".\n"
+"Virhekoodi: \"%s\"."
+
+#, python-format
+msgid "Error message: %s\n"
+msgstr "Virheilmoitus: %s\n"
+
+msgid "Error occurs"
+msgstr "Tapahtui virhe"
+
+msgid "Error occurs during download."
+msgstr "Latauksen aikana tapahtui virhe."
+
+msgid "Error occurs:"
+msgstr "Tapahtui virhe:"
+
+#, python-format
+msgid "Error reading file \"%s\".\n"
+msgstr "Virhe tiedoston \"%s\" lukemisessa.\n"
+
+#, python-format
+msgid "Error renaming file: %s"
+msgstr "Virhe tiedoston uudelleennimeämisessä: %s"
+
+msgid "Error saving favorites."
+msgstr "Virhe suosikkien tallentamisessa."
+
+msgid "Error saving the Watchlist."
+msgstr "Virhe katselulistan tallentamisessa."
+
+msgid "Error while loading watch data"
+msgstr "Virhe katselutietojen lataamisessa"
+
+msgid "Error while saving."
+msgstr "Virhe tallennettaessa."
+
+#, python-format
+msgid "Error writing file \"%s\".\n"
+msgstr "Virhe tiedoston \"%s\" kirjoittamisessa.\n"
+
+msgid "Ethical & Legal"
+msgstr "Etiikka & laki"
+
+msgid "European movies"
+msgstr "Eurooppalaiset elokuvat"
+
+msgid "Events"
+msgstr "Tapahtumat"
+
+msgid "Every enabled site: does the menu open, does a list show videos? Takes a few minutes."
+msgstr "Jokainen käytössä oleva sivusto: avautuuko valikko, näyttääkö luettelo videoita? Kestää muutaman minuutin."
+
+msgid "Exam Review"
+msgstr "Tenttikertaus"
+
+msgid "Exception occurs"
+msgstr "Tapahtui poikkeus"
+
+msgid "Exclusive"
+msgstr "Eksklusiivinen"
+
+msgid "Exit"
+msgstr "Poistu"
+
+#, python-format
+msgid "Expiry: %s"
+msgstr "Vanhenee: %s"
+
+msgid "Extended"
+msgstr "Laajennettu"
+
+msgid "External movie player config"
+msgstr "Ulkoisen elokuvasoittimen asetukset"
+
+msgid "Extracted subtitle file is empty or missing."
+msgstr "Purettu tekstitystiedosto on tyhjä tai puuttuu."
+
+msgid "FAILED"
+msgstr "EPÄONNISTUI"
+
+msgid "FAST FORWARD"
+msgstr "PIKAKELAUS ETEENPÄIN"
+
+msgid "FREE"
+msgstr "VAPAA"
+
+msgid "FUCKER sorting by :"
+msgstr "FUCKER lajittelu :"
+
+#, python-format
+msgid "Fail to get \"%s\"."
+msgstr "Kohteen \"%s\" hakeminen epäonnistui."
+
+msgid "Fail to get captcha data."
+msgstr "Captcha-tietojen hakeminen epäonnistui."
+
+msgid "Failed to connect to host."
+msgstr "Yhteyden muodostaminen palvelimeen epäonnistui."
+
+#, python-format
+msgid "Failed to connect to server \"%s\"."
+msgstr "Yhteyden muodostaminen palvelimeen \"%s\" epäonnistui."
+
+#, python-format
+msgid "Failed to convert the file \"%s\" to UTF-8."
+msgstr "Tiedoston \"%s\" muuntaminen UTF-8:ksi epäonnistui."
+
+#, python-format
+msgid "Failed to create directory \"%s\"."
+msgstr "Hakemiston \"%s\" luominen epäonnistui."
+
+msgid "Failed to create extraction directory."
+msgstr "Purkuhakemiston luominen epäonnistui."
+
+msgid "Failed to download subtitle."
+msgstr "Tekstityksen lataus epäonnistui."
+
+msgid "Failed to download the subtitles."
+msgstr "Tekstitysten lataus epäonnistui."
+
+msgid "Failed to get the download link."
+msgstr "Latauslinkin hakeminen epäonnistui."
+
+#, python-format
+msgid "Failed to get the file list from %s."
+msgstr "Tiedostoluettelon hakeminen kohteesta %s epäonnistui."
+
+msgid "Failed to gzip."
+msgstr "Gzip-pakkaus epäonnistui."
+
+msgid "Failed to initialize (unknown option or old curl version?)."
+msgstr "Alustus epäonnistui (tuntematon valinta tai vanha curl-versio?)."
+
+msgid "Failed to load the match list"
+msgstr "Otteluluettelon lataaminen epäonnistui"
+
+#, python-format
+msgid "Failed to log in user \"%s\". Please check your login and password."
+msgstr "Käyttäjän \"%s\" kirjautuminen epäonnistui. Tarkista käyttäjätunnus ja salasana."
+
+#, python-format
+msgid "Failed to open the file \"%s\"."
+msgstr "Tiedoston \"%s\" avaaminen epäonnistui."
+
+#, python-format
+msgid "Failed to write file \"%s\"."
+msgstr "Tiedoston \"%s\" kirjoittaminen epäonnistui."
+
+#, python-format
+msgid "Failed: %s"
+msgstr "Epäonnistui: %s"
+
+msgid "Family"
+msgstr "Perhe"
+
+msgid "Fantasy"
+msgstr "Fantasia"
+
+msgid "Fashion"
+msgstr "Muoti"
+
+msgid "Fatal error: consoleWrite failed!"
+msgstr "Vakava virhe: consoleWrite epäonnistui!"
+
+msgid "Favorite group not found."
+msgstr "Suosikkiryhmää ei löytynyt."
+
+msgid "Favorite item not found."
+msgstr "Suosikkikohdetta ei löytynyt."
+
+msgid "Favorites"
+msgstr "Suosikit"
+
+msgid "Favorites groups"
+msgstr "Suosikkiryhmät"
+
+msgid "Favorites manager"
+msgstr "Suosikkien hallinta"
+
+msgid "Featured"
+msgstr "Esittelyssä"
+
+msgid "FebBox token (\"ui\" cookie of www.febbox.com):"
+msgstr "FebBox-tunnus (sivuston www.febbox.com \"ui\"-eväste):"
+
+msgid "Female"
+msgstr "Naiset"
+
+#, python-format
+msgid "File \"%s\" already exists"
+msgstr "Tiedosto \"%s\" on jo olemassa"
+
+#, python-format
+msgid "File \"%s\" already exists!"
+msgstr "Tiedosto \"%s\" on jo olemassa!"
+
+msgid "File I/O error (write)."
+msgstr "Tiedoston I/O-virhe (kirjoitus)."
+
+msgid "File I/O error."
+msgstr "Tiedoston I/O-virhe."
+
+msgid "File Not Found."
+msgstr "Tiedostoa ei löytynyt."
+
+#, python-format
+msgid "File [%s] has been added to the downloading queue."
+msgstr "Tiedosto [%s] on lisätty latausjonoon."
+
+#, python-format
+msgid "File [%s] is already in the downloading queue."
+msgstr "Tiedosto [%s] on jo latausjonossa."
+
+#, python-format
+msgid "File [%s] was added to downloading queue."
+msgstr "Tiedosto [%s] lisättiin latausjonoon."
+
+msgid "File browser"
+msgstr "Tiedostoselain"
+
+msgid "File can not be downloaded. Download manager is not available."
+msgstr "Tiedostoa ei voi ladata. Latausten hallinta ei ole käytettävissä."
+
+#, python-format
+msgid "File can not be downloaded. Protocol [%s] is unsupported"
+msgstr "Tiedostoa ei voi ladata. Protokollaa [%s] ei tueta"
+
+msgid "File format of DASH (MPD) downloads"
+msgstr "DASH (MPD) -latausten tiedostomuoto"
+
+msgid "File format of HLS (M3U8) downloads"
+msgstr "HLS (M3U8) -latausten tiedostomuoto"
+
+msgid "File format of single video files (FFmpeg)"
+msgstr "Yksittäisten videotiedostojen tiedostomuoto (FFmpeg)"
+
+#, python-format
+msgid "File might be corrupted (size: %d bytes)."
+msgstr "Tiedosto saattaa olla vioittunut (koko: %d tavua)."
+
+msgid "File name cannot be empty!"
+msgstr "Tiedostonimi ei voi olla tyhjä!"
+
+msgid "File renamed successfully!"
+msgstr "Tiedosto nimettiin uudelleen!"
+
+msgid "Files"
+msgstr "Tiedostot"
+
+msgid "Fill cache before playback"
+msgstr "Täytä välimuisti ennen toistoa"
+
+msgid "Filler"
+msgstr "Täytejaksot"
+
+msgid "Films"
+msgstr "Elokuvat"
+
+msgid "Films by genre"
+msgstr "Elokuvat lajityypeittäin"
+
+msgid "Filmweb Suggestions"
+msgstr "Filmweb-ehdotukset"
+
+msgid "Filter"
+msgstr "Suodatin"
+
+msgid "Filter settings"
+msgstr "Suodatinasetukset"
+
+msgid "Find item"
+msgstr "Etsi kohde"
+
+msgid "Find out more."
+msgstr "Lue lisää."
+
+msgid "Finished matches with a full replay, highlights or match cuts, newest first (usually a few days after the match)."
+msgstr "Päättyneet ottelut, joista on koko uusinta, kohokohdat tai otteluleikkeet, uusimmat ensin (yleensä muutama päivä ottelun jälkeen)."
+
+msgid "First Page"
+msgstr "Ensimmäinen sivu"
+
+msgid "First air date:"
+msgstr "Ensiesityspäivä:"
+
+msgid "First aired"
+msgstr "Ensiesitys"
+
+msgid "First movie player in buffering mode"
+msgstr "Ensimmäinen elokuvasoitin puskurointitilassa"
+
+msgid "First movie player without buffering mode"
+msgstr "Ensimmäinen elokuvasoitin ilman puskurointitilaa"
+
+msgid "Fix jump target"
+msgstr "Kiinnitä hyppykohde"
+
+#, python-format
+msgid "Folder \"%s\" can not be created."
+msgstr "Kansiota \"%s\" ei voi luoda."
+
+#, python-format
+msgid "Folder \"%s\" has been created."
+msgstr "Kansio \"%s\" on luotu."
+
+msgid "Folder for cache data"
+msgstr "Välimuistitietojen kansio"
+
+msgid "Folder for config data"
+msgstr "Asetustietojen kansio"
+
+msgid "Folder for temporary data"
+msgstr "Väliaikaisten tietojen kansio"
+
+msgid "Folder on HDD / USB"
+msgstr "Kansio HDD:llä / USB:llä"
+
+msgid "Followers"
+msgstr "Seuraajat"
+
+msgid "Following host are broken or additional python modules are needed."
+msgstr "Seuraavat palvelut eivät toimi tai tarvitsevat lisää Python-moduuleja."
+
+msgid "Font size offset"
+msgstr "Fonttikoon siirtymä"
+
+msgid "Food"
+msgstr "Ruoka"
+
+msgid "Foot & Ankle"
+msgstr "Jalka & nilkka"
+
+msgid "Football"
+msgstr "Jalkapallo"
+
+msgid "Football Live"
+msgstr "Jalkapallo suorana"
+
+msgid "For continuous playing, please press 8!"
+msgstr "Paina 8 jatkuvaa toistoa varten!"
+
+msgid "For developers"
+msgstr "Kehittäjille"
+
+msgid "Force internal skin: all E2iPlayer screens"
+msgstr "Pakota sisäinen ulkoasu: kaikki E2iPlayerin näkymät"
+
+msgid "Force internal skin: main screen only"
+msgstr "Pakota sisäinen ulkoasu: vain päänäkymä"
+
+msgid "Force legacy grid"
+msgstr "Pakota vanha kuvakeruudukko"
+
+msgid "Foreign movies"
+msgstr "Ulkomaiset elokuvat"
+
+msgid "Foreign parts only"
+msgstr "Vain vieraskieliset osuudet"
+
+msgid "Foreign series"
+msgstr "Ulkomaiset sarjat"
+
+msgid "Format 'wmv' blocked in configuration."
+msgstr "Muoto 'wmv' on estetty asetuksissa."
+
+msgid "Formations"
+msgstr "Kokoonpanot"
+
+msgid "Fotka.pl stream :"
+msgstr "Fotka.pl-suoratoisto :"
+
+msgid "Free"
+msgstr "Ilmainen"
+
+msgid "Free IPTV list"
+msgstr "Ilmainen IPTV-luettelo"
+
+msgid "French"
+msgstr "Ranska"
+
+msgid "From E2 settings"
+msgstr "E2-asetuksista"
+
+msgid "Full description loaded"
+msgstr "Koko kuvaus ladattu"
+
+msgid "Full description not available"
+msgstr "Koko kuvaus ei ole saatavilla"
+
+msgid "Full test"
+msgstr "Täysi testi"
+
+msgid "Full test checks the INFO window :"
+msgstr "Täysi testi tarkistaa INFO-ikkunan :"
+
+msgid "Full test checks the next page :"
+msgstr "Täysi testi tarkistaa seuraavan sivun :"
+
+msgid "Full test checks the search :"
+msgstr "Täysi testi tarkistaa haun :"
+
+msgid "Full test checks the stream link :"
+msgstr "Täysi testi tarkistaa suoratoistolinkin :"
+
+msgid "Full test checks thumbnails :"
+msgstr "Täysi testi tarkistaa pikkukuvat :"
+
+msgid "Futsal"
+msgstr "Futsal"
+
+msgid "GREEN"
+msgstr "VIHREÄ"
+
+#, python-format
+msgid "Game: %s"
+msgstr "Ottelu: %s"
+
+msgid "Games"
+msgstr "Pelit"
+
+msgid "Gaming"
+msgstr "Pelaaminen"
+
+msgid "General"
+msgstr "Yleiset"
+
+msgid "Generic error code."
+msgstr "Yleinen virhekoodi."
+
+msgid "Genre"
+msgstr "Lajityyppi"
+
+msgid "Genre:"
+msgstr "Lajityyppi:"
+
+#, python-format
+msgid "Genre: %s"
+msgstr "Lajityyppi: %s"
+
+msgid "Genres"
+msgstr "Lajityypit"
+
+msgid "Genres:"
+msgstr "Lajityypit:"
+
+msgid "German"
+msgstr "Saksa"
+
+msgid "Get Cloudflare job"
+msgstr "Hae Cloudflare-tehtävä"
+
+msgid "Get captcha job"
+msgstr "Hae captcha-tehtävä"
+
+msgid "Get cookies job"
+msgstr "Hae evästetehtävä"
+
+msgid "Get languages failed!"
+msgstr "Kielten hakeminen epäonnistui!"
+
+msgid "Get token failed!"
+msgstr "Tunnuksen hakeminen epäonnistui!"
+
+msgid "GitHub API error"
+msgstr "GitHub API -virhe"
+
+msgid "Global"
+msgstr "Maailmanlaajuinen"
+
+msgid "Global Search mode :"
+msgstr "Yleishaun tila :"
+
+msgid "Go to the host configuration available under blue button."
+msgstr "Siirry palvelun asetuksiin SINISELLÄ painikkeella."
+
+msgid "Google Suggestions"
+msgstr "Google-ehdotukset"
+
+msgid "Google account"
+msgstr "Google-tili"
+
+msgid "Graphic services selector"
+msgstr "Graafinen palveluvalitsin"
+
+msgid "Greek"
+msgstr "Kreikka"
+
+#, python-format
+msgid "Group \"%s\" already exists."
+msgstr "Ryhmä \"%s\" on jo olemassa."
+
+#, python-format
+msgid "Group %d"
+msgstr "Ryhmä %d"
+
+msgid "Group links into categories:"
+msgstr "Ryhmittele linkit kategorioihin:"
+
+#, python-format
+msgid "Group with id[%s] not found."
+msgstr "Ryhmää, jonka id on [%s], ei löytynyt."
+
+msgid "Groups"
+msgstr "Ryhmät"
+
+msgid "HIDDEN CAM SHOW IN PROGRESS. TRY AGAIN LATER!"
+msgstr "PIILOTETTU CAM-SHOW KÄYNNISSÄ. YRITÄ MYÖHEMMIN UUDELLEEN!"
+
+msgid "HLS with subtitles"
+msgstr "HLS tekstityksillä"
+
+msgid "HLS/m3u8"
+msgstr "HLS/m3u8"
+
+msgid "HTTP/2 framing layer error."
+msgstr "HTTP/2-kehyskerroksen virhe."
+
+msgid "HTTP/2 stream error."
+msgstr "HTTP/2-virran virhe."
+
+#, python-format
+msgid "HTTPS connection error \"%s\"\n"
+msgstr "HTTPS-yhteysvirhe \"%s\"\n"
+
+msgid "Hand"
+msgstr "Käsi"
+
+msgid "Handball"
+msgstr "Käsipallo"
+
+msgid "Health"
+msgstr "Terveys"
+
+msgid "Hearing impaired"
+msgstr "Kuulovammaisille"
+
+msgid "Help"
+msgstr "Ohje"
+
+#, python-format
+msgid "Hide \"%s\" group"
+msgstr "Piilota ryhmä \"%s\""
+
+msgid "Hide the menu (live TV visible)"
+msgstr "Piilota valikko (suora TV näkyvissä)"
+
+msgid "Hide titles only available in Sweden"
+msgstr "Piilota vain Ruotsissa saatavilla olevat nimikkeet"
+
+msgid "Hide/Active Group"
+msgstr "Piilota/aktivoi ryhmä"
+
+msgid "High (or HD)"
+msgstr "Korkea (tai HD)"
+
+msgid "Highlights"
+msgstr "Kohokohdat"
+
+msgid "History"
+msgstr "Historia"
+
+msgid "History of searched phrases."
+msgstr "Haettujen hakulausekkeiden historia."
+
+msgid "Hockey"
+msgstr "Jääkiekko"
+
+msgid "Home"
+msgstr "Etusivu"
+
+msgid "Home / Sections"
+msgstr "Etusivu / Osiot"
+
+msgid "Home page"
+msgstr "Kotisivu"
+
+msgid "Horror"
+msgstr "Kauhu"
+
+msgid "Host"
+msgstr "Palvelu"
+
+msgid "Host titles in lists"
+msgstr "Palvelujen nimet luetteloissa"
+
+#, python-format
+msgid "Host: %s"
+msgstr "Palvelu: %s"
+
+#, python-format
+msgid "Hosting \"%s\" not supported."
+msgstr "Videopalvelua \"%s\" ei tueta."
+
+#, python-format
+msgid "Hosting \"%s\" unknown."
+msgstr "Videopalvelu \"%s\" on tuntematon."
+
+#, python-format
+msgid "Hosting: %s, %s"
+msgstr "Videopalvelu: %s, %s"
+
+msgid "Hosts"
+msgstr "Palvelut"
+
+msgid "Hosts list type"
+msgstr "Palveluluettelon tyyppi"
+
+msgid "Hot"
+msgstr "Kuumat"
+
+msgid "How to solve a captcha:"
+msgstr "Näin ratkaiset captchan:"
+
+msgid "Humanitarian"
+msgstr "Humanitaarinen"
+
+msgid "Hungarian"
+msgstr "Unkari"
+
+msgid "I am no robot"
+msgstr "En ole robotti"
+
+msgid "IMDb"
+msgstr "IMDb"
+
+msgid "IMDb Rating:"
+msgstr "IMDb-arvio:"
+
+msgid "IMDb Suggestions"
+msgstr "IMDb-ehdotukset"
+
+msgid "INFO"
+msgstr "INFO"
+
+#, python-format
+msgid "INFO %d rows"
+msgstr "INFO %d riviä"
+
+msgid "INFO list text"
+msgstr "INFO-luettelon teksti"
+
+msgid "INFO opens no window"
+msgstr "INFO ei avaa ikkunaa"
+
+msgid "INFO window"
+msgstr "INFO-ikkuna"
+
+msgid "INTERRUPTED"
+msgstr "KESKEYTETTY"
+
+msgid "IPTV Portals"
+msgstr "IPTV-portaalit"
+
+msgid "Icon type"
+msgstr "Kuvaketyyppi"
+
+msgid "Icons quality"
+msgstr "Kuvakkeiden laatu"
+
+msgid "Icons size"
+msgstr "Kuvakkeiden koko"
+
+msgid "Image"
+msgstr "Image"
+
+msgid "Indian"
+msgstr "Intialainen"
+
+msgid "Indian Movies"
+msgstr "Intialaiset elokuvat"
+
+msgid "Indian TV series"
+msgstr "Intialaiset TV-sarjat"
+
+msgid "Indian movies"
+msgstr "Intialaiset elokuvat"
+
+msgid "Indian movies (dubbed)"
+msgstr "Intialaiset elokuvat (dubatut)"
+
+msgid "Indian series (dubbed)"
+msgstr "Intialaiset sarjat (dubatut)"
+
+msgid "Industry"
+msgstr "Teollisuus"
+
+msgid "Info"
+msgstr "Info"
+
+msgid "Info bar timeout"
+msgstr "Infopalkin aikakatkaisu"
+
+msgid "Information"
+msgstr "Tiedot"
+
+msgid "Information about audio tracks not available."
+msgstr "Tietoja ääniraidoista ei ole saatavilla."
+
+msgid "Initialize web interface"
+msgstr "Alusta verkkokäyttöliittymä"
+
+msgid "Inject black iframe at video playback finish"
+msgstr "Lisää musta iframe videon toiston päättyessä"
+
+msgid "Input"
+msgstr "Syöte"
+
+msgid "Install E2iPlayer"
+msgstr "Asenna E2iPlayer"
+
+msgid "Installed version"
+msgstr "Asennettu versio"
+
+#, python-format
+msgid "Installed: v%s"
+msgstr "Asennettu: v%s"
+
+#, python-format
+msgid "Installed: v%s - %d commits behind %s"
+msgstr "Asennettu: v%s - %d committia jäljessä versiosta %s"
+
+#, python-format
+msgid "Installed: v%s - no matching release tag (local build?)"
+msgstr "Asennettu: v%s - ei vastaavaa julkaisutagia (paikallinen käännös?)"
+
+#, python-format
+msgid "Installed: v%s - up to date"
+msgstr "Asennettu: v%s - ajan tasalla"
+
+msgid "Interactive Learning Center(ILC)"
+msgstr "Interaktiivinen oppimiskeskus (ILC)"
+
+msgid "Intervention"
+msgstr "Interventio"
+
+msgid "Interviews"
+msgstr "Haastattelut"
+
+#, python-format
+msgid "Invalid answer from %s."
+msgstr "Virheellinen vastaus kohteesta %s."
+
+msgid "Invalid email."
+msgstr "Virheellinen sähköpostiosoite."
+
+msgid "Invalid name."
+msgstr "Virheellinen nimi."
+
+msgid "Invalid value."
+msgstr "Virheellinen arvo."
+
+msgid "Investigations"
+msgstr "Tutkivat jutut"
+
+msgid "Is this message displayed correctly?"
+msgstr "Näkyykö tämä viesti oikein?"
+
+msgid "It is not allowed to call getURLRequestData from main thread."
+msgstr "getURLRequestData-kutsua ei saa tehdä pääsäikeestä."
+
+msgid "It looks like some kind of protection. Try again later."
+msgstr "Kyseessä näyttää olevan jonkinlainen suojaus. Yritä myöhemmin uudelleen."
+
+#, python-format
+msgid "It looks like your current configuration do not allow to connect to the https://%s/.\n"
+msgstr "Nykyiset asetuksesi eivät näytä sallivan yhteyttä osoitteeseen https://%s/.\n"
+
+#, python-format
+msgid "It seems that the host \"%s\" has crashed."
+msgstr "Palvelu \"%s\" näyttää kaatuneen."
+
+#, python-format
+msgid "It seems that the subtitle's provider \"%s\" has crashed."
+msgstr "Tekstitysten tarjoaja \"%s\" näyttää kaatuneen."
+
+#, python-format
+msgid ""
+"It seems that the video player \"%s\" does not work properly.\n"
+"\n"
+"STS: %s\n"
+"ERROR CODE: %r"
+msgstr ""
+"Videosoitin \"%s\" ei näytä toimivan oikein.\n"
+"\n"
+"STS: %s\n"
+"VIRHEKOODI: %r"
+
+msgid "It seems that unrar utility is not installed."
+msgstr "unrar-apuohjelmaa ei näytä olevan asennettu."
+
+msgid "It seems that unzip utility is not installed."
+msgstr "unzip-apuohjelmaa ei näytä olevan asennettu."
+
+msgid "Italian"
+msgstr "Italia"
+
+#, python-format
+msgid "Item idx[%d] not found in group[%s]."
+msgstr "Kohdetta idx[%d] ei löytynyt ryhmästä[%s]."
+
+#, python-format
+msgid "Items in group \"%s\""
+msgstr "Ryhmän \"%s\" kohteet"
+
+msgid "JDownloader script execution"
+msgstr "JDownloader-skriptin suoritus"
+
+#, python-format
+msgid ""
+"JDownloader script execution failed.\n"
+"Error code: %s\n"
+msgstr ""
+"JDownloader-skriptin suoritus epäonnistui.\n"
+"Virhekoodi: %s\n"
+
+msgid "JDownloader script finished."
+msgstr "JDownloader-skripti valmis."
+
+msgid "JS cache"
+msgstr "JS-välimuisti"
+
+msgid "Japanese"
+msgstr "Japani"
+
+msgid "Japanese dramas"
+msgstr "Japanilaiset draamat"
+
+msgid "Japanese films"
+msgstr "Japanilaiset elokuvat"
+
+msgid "Jobs & Positions"
+msgstr "Työpaikat & tehtävät"
+
+msgid "Journal Club"
+msgstr "Journal Club"
+
+msgid "Jump"
+msgstr "Hyppää"
+
+msgid "Jump target was fixed so the sort order is preserved."
+msgstr "Hyppykohde kiinnitettiin, joten lajittelujärjestys säilyy."
+
+msgid "Jump to a selected page"
+msgstr "Hyppää valitulle sivulle"
+
+msgid "Jump to a selected page, max: {}"
+msgstr "Hyppää valitulle sivulle, enintään: {}"
+
+msgid "Keep FFmpeg command files (.iptv.cmd)"
+msgstr "Säilytä FFmpeg-komentotiedostot (.iptv.cmd)"
+
+msgid "Keep temporary JS scripts"
+msgstr "Säilytä väliaikaiset JS-skriptit"
+
+msgid "Kids"
+msgstr "Lapset"
+
+msgid "Kinds"
+msgstr "Tyypit"
+
+msgid "Knee & Sports"
+msgstr "Polvi & urheilu"
+
+msgid "Knowledge"
+msgstr "Tieto"
+
+msgid "Knowledge & Nature"
+msgstr "Tieto & luonto"
+
+msgid "Korean"
+msgstr "Korea"
+
+msgid "Korean TV series"
+msgstr "Korealaiset TV-sarjat"
+
+msgid "Korean anime"
+msgstr "Korealainen anime"
+
+msgid "Korean dramas"
+msgstr "Korealaiset draamat"
+
+msgid "Korean films"
+msgstr "Korealaiset elokuvat"
+
+msgid "Korean movies"
+msgstr "Korealaiset elokuvat"
+
+msgid "LEFT/RIGHT at start/end of text - alternative way to switch panels"
+msgstr "VASEN/OIKEA tekstin alussa/lopussa - vaihtoehtoinen tapa vaihtaa paneelia"
+
+msgid "Language"
+msgstr "Kieli"
+
+msgid "Language of the details (TMDb, IMDb)"
+msgstr "Tietojen kieli (TMDb, IMDb)"
+
+msgid "Language:"
+msgstr "Kieli:"
+
+msgid "Last"
+msgstr "Viimeinen"
+
+#, python-format
+msgid "Last Exception error: \"%s\""
+msgstr "Viimeisin poikkeusvirhe: \"%s\""
+
+#, python-format
+msgid "Last Exception error: '%s'"
+msgstr "Viimeisin poikkeusvirhe: '%s'"
+
+#, python-format
+msgid "Last Modified: %s"
+msgstr "Muokattu viimeksi: %s"
+
+msgid "Last Page"
+msgstr "Viimeinen sivu"
+
+msgid "Last air date:"
+msgstr "Viimeinen esityspäivä:"
+
+msgid "Last chance"
+msgstr "Viimeinen mahdollisuus"
+
+msgid "Last day"
+msgstr "Viimeinen vuorokausi"
+
+#, python-format
+msgid ""
+"Last error:\n"
+"%s"
+msgstr ""
+"Viimeisin virhe:\n"
+"%s"
+
+#, python-format
+msgid "Last error: \"%s\""
+msgstr "Viimeisin virhe: \"%s\""
+
+msgid "Last month"
+msgstr "Viimeinen kuukausi"
+
+msgid "Last result"
+msgstr "Viimeisin tulos"
+
+msgid "Last week"
+msgstr "Viimeinen viikko"
+
+#, python-format
+msgid "Last week: %s"
+msgstr "Viime viikko: %s"
+
+msgid "Last.fm charts and tag pages are behind a browser check, only the radio stations can be used."
+msgstr "Last.fm-listat ja tagisivut ovat selaintarkistuksen takana, vain radioasemia voi käyttää."
+
+#, python-format
+msgid "Last.fm user \"%s\" not found."
+msgstr "Last.fm-käyttäjää \"%s\" ei löytynyt."
+
+msgid "Last.fm user name:"
+msgstr "Last.fm-käyttäjätunnus:"
+
+msgid "Latest"
+msgstr "Uusimmat"
+
+msgid "Latest added"
+msgstr "Viimeksi lisätyt"
+
+msgid "Latest anime episodes"
+msgstr "Uusimmat animejaksot"
+
+msgid "Latest cartoon episodes"
+msgstr "Uusimmat piirrossarjajaksot"
+
+msgid "Latest dubbed episodes"
+msgstr "Uusimmat dubatut jaksot"
+
+msgid "Latest episodes"
+msgstr "Uusimmat jaksot"
+
+msgid "Latest episodes (airing)"
+msgstr "Uusimmat jaksot (esityksessä)"
+
+msgid "Latest episodes (finished series)"
+msgstr "Uusimmat jaksot (päättyneet sarjat)"
+
+msgid "Latest highlights"
+msgstr "Uusimmat kohokohdat"
+
+msgid "Latest update"
+msgstr "Viimeisin päivitys"
+
+msgid "Latest updates"
+msgstr "Uusimmat päivitykset"
+
+msgid "Latest video"
+msgstr "Uusin video"
+
+msgid "Latest videos"
+msgstr "Uusimmat videot"
+
+msgid "Latest videos from the channels you are subscribed to."
+msgstr "Uusimmat videot tilaamiltasi kanavilta."
+
+msgid "Latin American movies"
+msgstr "Latinalaisamerikkalaiset elokuvat"
+
+msgid "Latin American series"
+msgstr "Latinalaisamerikkalaiset sarjat"
+
+msgid "Latin American series (dubbed)"
+msgstr "Latinalaisamerikkalaiset sarjat (dubatut)"
+
+msgid "Latino"
+msgstr "Latino"
+
+#, python-brace-format
+msgid "Launcher URI ({url} or {address} = address of the box)"
+msgstr "Käynnistimen URI ({url} tai {address} = boksin osoite)"
+
+msgid "Law"
+msgstr "Oikeustiede"
+
+msgid "League and cup matches"
+msgstr "Liiga- ja cup-ottelut"
+
+msgid "Leagues"
+msgstr "Liigat"
+
+msgid "Leagues, clubs and events"
+msgstr "Liigat, seurat ja tapahtumat"
+
+msgid "Lecturers"
+msgstr "Luennoitsijat"
+
+msgid "Left"
+msgstr "Vasen"
+
+msgid "Library"
+msgstr "Kirjasto"
+
+msgid "Lifestyle"
+msgstr "Elämäntapa"
+
+msgid "Light / dark design"
+msgstr "Vaalea / tumma ulkoasu"
+
+msgid "Lightgray"
+msgstr "Vaaleanharmaa"
+
+msgid "Like the quick test, plus the checks chosen in the host settings (Debug). Takes about 20-40 minutes."
+msgstr "Kuten pikatesti, lisäksi palvelun asetuksissa (Vianetsintä) valitut tarkistukset. Kestää noin 20-40 minuuttia."
+
+msgid "Liked videos"
+msgstr "Tykätyt videot"
+
+msgid "Line Spacing"
+msgstr "Riviväli"
+
+msgid "Link"
+msgstr "Linkki"
+
+msgid "Link is not supported by the gstplayer. Please use the extelayer3 if available."
+msgstr "gstplayer ei tue linkkiä. Käytä exteplayer3:a, jos se on saatavilla."
+
+msgid "Link protected with Google ReCaptcha v2"
+msgstr "Linkki on suojattu Google ReCaptcha v2:lla"
+
+msgid "Link protected with google recaptcha v2."
+msgstr "Linkki on suojattu Google reCaptcha v2:lla."
+
+msgid "Links from all files without categories"
+msgstr "Linkit kaikista tiedostoista ilman kategorioita"
+
+#, python-format
+msgid "Links from the file %s"
+msgstr "Linkit tiedostosta %s"
+
+msgid "List"
+msgstr "Luettelo"
+
+msgid "List by day"
+msgstr "Luettelo päivittäin"
+
+msgid "List view"
+msgstr "Luettelonäkymä"
+
+#, python-format
+msgid "Listeners: %s"
+msgstr "Kuuntelijat: %s"
+
+msgid "Live"
+msgstr "Suora"
+
+msgid "Live channels"
+msgstr "Suorat kanavat"
+
+msgid "Live radio"
+msgstr "Suora radio"
+
+#, python-format
+msgid "Live stream of the %s channel"
+msgstr "Kanavan %s suora lähetys"
+
+msgid "Live stream on YouTube"
+msgstr "Suora lähetys YouTubessa"
+
+#, python-format
+msgid "Live stream starts %s"
+msgstr "Suora lähetys alkaa %s"
+
+msgid "Live streams"
+msgstr "Suorat lähetykset"
+
+msgid "Live streams by day"
+msgstr "Suorat lähetykset päivittäin"
+
+msgid "Live-action series episodes"
+msgstr "Näyteltyjen sarjojen jaksot"
+
+msgid "Load"
+msgstr "Lataa"
+
+#, python-format
+msgid "Load of the Virtual Keyboard layout \"%s\" failed due to the following error: \"%s\""
+msgstr "Virtuaalinäppäimistön asettelun \"%s\" lataus epäonnistui seuraavan virheen vuoksi: \"%s\""
+
+msgid "Loading"
+msgstr "Ladataan"
+
+#, python-format
+msgid "Loading %s failed due to following error:"
+msgstr "Kohteen %s lataus epäonnistui seuraavan virheen vuoksi:"
+
+msgid "Loading failed."
+msgstr "Lataus epäonnistui."
+
+msgid "Loading watch data..."
+msgstr "Ladataan katselutietoja..."
+
+msgid "Loading..."
+msgstr "Ladataan..."
+
+msgid "LocalMedia"
+msgstr "Paikallinen media"
+
+#, python-format
+msgid "Locale ID mismatched! %s <> %s"
+msgstr "Kielialueen tunnus ei täsmää! %s <> %s"
+
+msgid "Locality:"
+msgstr "Paikkakunta:"
+
+msgid "Localization"
+msgstr "Lokalisointi"
+
+msgid "Lodynet offers this video only on its subscription servers (Lody Plus / VIP) for now - the free servers usually follow later."
+msgstr "Lodynet tarjoaa tämän videon toistaiseksi vain tilauspalvelimillaan (Lody Plus / VIP) - ilmaiset palvelimet seuraavat yleensä myöhemmin."
+
+msgid "Log"
+msgstr "Loki"
+
+msgid "Login failed!"
+msgstr "Kirjautuminen epäonnistui!"
+
+msgid "Login failed."
+msgstr "Kirjautuminen epäonnistui."
+
+msgid "Login needed"
+msgstr "Kirjautuminen vaaditaan"
+
+#, python-brace-format
+msgid "Login on {0} failed."
+msgstr "Kirjautuminen palveluun {0} epäonnistui."
+
+msgid "Login or password is wrong."
+msgstr "Käyttäjätunnus tai salasana on väärin."
+
+#, python-format
+msgid "Login to prijevodi-online.org failed: %s"
+msgstr "Kirjautuminen palveluun prijevodi-online.org epäonnistui: %s"
+
+msgid "Login to prijevodi-online.org failed: the site asks for a captcha, which E2iPlayer cannot solve. Series subtitles download without an account."
+msgstr "Kirjautuminen palveluun prijevodi-online.org epäonnistui: sivusto pyytää captchaa, jota E2iPlayer ei pysty ratkaisemaan. Sarjojen tekstitykset voi ladata ilman tiliä."
+
+#, python-format
+msgid ""
+"Login user \"%s\" to https://vk.com/ failed!\n"
+"Please check your login data in the IPTVPlayer configuration."
+msgstr ""
+"Käyttäjän \"%s\" kirjautuminen osoitteeseen https://vk.com/ epäonnistui!\n"
+"Tarkista kirjautumistietosi IPTVPlayerin asetuksista."
+
+msgid "Logs"
+msgstr "Lokit"
+
+msgid "Long list"
+msgstr "Pitkä luettelo"
+
+msgid "Longest"
+msgstr "Pisimmät"
+
+msgid "Loved tracks"
+msgstr "Rakastetut kappaleet"
+
+msgid "Low"
+msgstr "Matala"
+
+msgid "MENU"
+msgstr "MENU"
+
+msgid "MENU → Add new entry: type a new search term to add to the history."
+msgstr "MENU → Lisää uusi kohde: kirjoita uusi hakusana lisättäväksi historiaan."
+
+msgid "MENU → Enable/Disable reordering: same as GREEN (pick up/move/drop with OK, UP/DOWN)."
+msgstr "MENU → Ota järjestely käyttöön / Poista järjestely käytöstä: sama kuin VIHREÄ (poimi/siirrä/pudota OK:lla, YLÖS/ALAS)."
+
+msgid "MENU → Fix/Unfix jump target: sets what happens when an entry is reused elsewhere."
+msgstr "MENU → Kiinnitä/vapauta hyppykohde: määrittää, mitä tapahtuu, kun merkintää käytetään uudelleen muualla."
+
+msgid "MENU → Reset to saved order: undo unsaved changes, reload from disk."
+msgstr "MENU → Palauta tallennettu järjestys: kumoa tallentamattomat muutokset, lataa uudelleen levyltä."
+
+msgid "MENU → Sort A-Z / Sort Z-A: sort all entries alphabetically."
+msgstr "MENU → Lajittele A-Z / Lajittele Z-A: lajittele kaikki merkinnät aakkosjärjestykseen."
+
+msgid "MENU=Options"
+msgstr "MENU=Valinnat"
+
+#, python-format
+msgid "MOVE: %s"
+msgstr "SIIRRÄ: %s"
+
+msgid "MOVING"
+msgstr "SIIRRETÄÄN"
+
+msgid "MP3Quran live radio"
+msgstr "MP3Quran suora radio"
+
+msgid "Main"
+msgstr "Etusivu"
+
+msgid "Main menu"
+msgstr "Päävalikko"
+
+#, python-format
+msgid "Make directory [%s]"
+msgstr "Luo hakemisto [%s]"
+
+msgid "Male"
+msgstr "Miehet"
+
+msgid "Manager status:"
+msgstr "Hallinnan tila:"
+
+msgid "Mark downloaded items"
+msgstr "Merkitse ladatut kohteet"
+
+msgid "Mark favourite items"
+msgstr "Merkitse suosikkikohteet"
+
+msgid "Match cuts"
+msgstr "Otteluleikkeet"
+
+msgid "Match not started yet"
+msgstr "Ottelu ei ole vielä alkanut"
+
+msgid "Matches of the national teams"
+msgstr "Maajoukkueiden ottelut"
+
+msgid "Matching entries"
+msgstr "Vastaavat merkinnät"
+
+msgid "Max items per page"
+msgstr "Kohteita enintään sivulla"
+
+msgid "Max number of parallel downloads has been reached."
+msgstr "Rinnakkaisten latausten enimmäismäärä on saavutettu."
+
+msgid "MaxStream (uprot.net) asks for its image captcha: solve it in MyE2i, then open the video again."
+msgstr "MaxStream (uprot.net) pyytää kuvacaptchaa: ratkaise se MyE2i:ssä ja avaa video sitten uudelleen."
+
+msgid "Maximum log file size"
+msgstr "Lokitiedoston enimmäiskoko"
+
+msgid "Maximum torrent size:"
+msgstr "Torrentin enimmäiskoko:"
+
+msgid "MediaFusion manifest URL (your own):"
+msgstr "MediaFusion-manifestin URL (oma):"
+
+msgid "Medtryx Marketing"
+msgstr "Medtryx-markkinointi"
+
+msgid "Meetings"
+msgstr "Kokoukset"
+
+msgid "Members"
+msgstr "Jäsenet"
+
+msgid "Menu"
+msgstr "Valikko"
+
+msgid "Military"
+msgstr "Sotilas"
+
+msgid "Mini series"
+msgstr "Minisarjat"
+
+msgid "Missed the show?"
+msgstr "Jäikö ohjelma näkemättä?"
+
+msgid "Missing API key - set it in Settings, Web streams, Windy Webcams"
+msgstr "API-avain puuttuu - aseta se kohdassa Asetukset, Verkkolähetykset, Windy Webcams"
+
+msgid "Mix"
+msgstr "Miksaus"
+
+msgid "MixDrop: this file is not available as a video stream (deleted or download only)."
+msgstr "MixDrop: tämä tiedosto ei ole saatavilla videovirtana (poistettu tai vain ladattavissa)."
+
+msgid "Mixes"
+msgstr "Miksaukset"
+
+msgid "Models"
+msgstr "Mallit"
+
+msgid "More"
+msgstr "Lisää"
+
+msgid "More Categories"
+msgstr "Lisää kategorioita"
+
+msgid "More Channels"
+msgstr "Lisää kanavia"
+
+msgid "More Models"
+msgstr "Lisää malleja"
+
+msgid "More Pornstars"
+msgstr "Lisää pornotähtiä"
+
+msgid "More important"
+msgstr "Tärkeämmät"
+
+msgid "More results"
+msgstr "Lisää tuloksia"
+
+msgid "Most Popular"
+msgstr "Suosituimmat"
+
+msgid "Most Watched"
+msgstr "Katsotuimmat"
+
+msgid "Most commented"
+msgstr "Kommentoiduimmat"
+
+msgid "Most discussed"
+msgstr "Keskustelluimmat"
+
+msgid "Most favourited"
+msgstr "Eniten suosikeissa"
+
+msgid "Most listened anasheed"
+msgstr "Kuunnelluimmat anasheedit"
+
+msgid "Most listened recitations"
+msgstr "Kuunnelluimmat resitaatiot"
+
+msgid "Most popular"
+msgstr "Suosituimmat"
+
+msgid "Most recent"
+msgstr "Uusimmat"
+
+msgid "Most viewed"
+msgstr "Katsotuimmat"
+
+msgid "Most viewed movies"
+msgstr "Katsotuimmat elokuvat"
+
+msgid "Most viewed series"
+msgstr "Katsotuimmat sarjat"
+
+msgid "Most voted"
+msgstr "Eniten ääniä"
+
+msgid "Motorsport"
+msgstr "Moottoriurheilu"
+
+#, python-format
+msgid ""
+"Mount ISO file [%s] on [%s] failed.\n"
+"Return code[%s].\n"
+"Return data[%s]."
+msgstr ""
+"ISO-tiedoston [%s] liittäminen kohteeseen [%s] epäonnistui.\n"
+"Paluukoodi[%s].\n"
+"Paluutiedot[%s]."
+
+msgid "Move"
+msgstr "Siirrä"
+
+msgid "Move failed."
+msgstr "Siirto epäonnistui."
+
+msgid "Move to Watchlist folder..."
+msgstr "Siirrä katselulistan kansioon..."
+
+msgid "Move to folder..."
+msgstr "Siirrä kansioon..."
+
+msgid "Movie"
+msgstr "Elokuva"
+
+msgid "Movie collections"
+msgstr "Elokuvakokoelmat"
+
+msgid "Movie player selection list"
+msgstr "Elokuvasoittimen valintaluettelo"
+
+msgid "Movies"
+msgstr "Elokuvat"
+
+msgid "Movies and series"
+msgstr "Elokuvat ja sarjat"
+
+msgid "Movies genres"
+msgstr "Elokuvien lajityypit"
+
+#, python-format
+msgid "Moving file from \"%s\" to \"%s\" failed.\n"
+msgstr "Tiedoston siirto kohteesta \"%s\" kohteeseen \"%s\" epäonnistui.\n"
+
+#, python-format
+msgid "Moving playback buffer to the download manager failed with the following error \"%s\""
+msgstr "Toistopuskurin siirto latausten hallintaan epäonnistui seuraavalla virheellä \"%s\""
+
+msgid "Munshids"
+msgstr "Munshidit"
+
+msgid "Music"
+msgstr "Musiikki"
+
+msgid "My JDownloader reCAPTCHA v2 solution"
+msgstr "My JDownloader reCAPTCHA v2 -ratkaisu"
+
+msgid "My list"
+msgstr "Oma lista"
+
+msgid "My subscriptions"
+msgstr "Omat tilaukset"
+
+msgid "MyE2i (solve on your phone/PC)"
+msgstr "MyE2i (ratkaise puhelimella/tietokoneella)"
+
+msgid "MyE2i - how to solve a captcha"
+msgstr "MyE2i - captchan ratkaiseminen"
+
+msgid "MyE2i Cloudflare solution"
+msgstr "MyE2i Cloudflare -ratkaisu"
+
+msgid "MyE2i browser check solution"
+msgstr "MyE2i-selaintarkistuksen ratkaisu"
+
+msgid "MyE2i captcha: solve it, then Job (no CONTINUE)"
+msgstr "MyE2i-captcha: ratkaise se, sitten Job (ei CONTINUE)"
+
+msgid "MyE2i debug snapshot received - see the debug log."
+msgstr "MyE2i-vianetsinnän tilannevedos vastaanotettu - katso vianetsintäloki."
+
+msgid "MyE2i extension is outdated - please update it."
+msgstr "MyE2i-laajennus on vanhentunut - päivitä se."
+
+msgid "MyE2i extension: increase security"
+msgstr "MyE2i-laajennus: paranna tietoturvaa"
+
+msgid "MyE2i reCAPTCHA solution"
+msgstr "MyE2i reCAPTCHA -ratkaisu"
+
+#, python-format
+msgid ""
+"MyE2i script execution failed.\n"
+"Error code: %s\n"
+msgstr ""
+"MyE2i-skriptin suoritus epäonnistui.\n"
+"Virhekoodi: %s\n"
+
+msgid "MyE2i script finished."
+msgstr "MyE2i-skripti valmis."
+
+msgid "MyE2i: close the start page when done"
+msgstr "MyE2i: sulje aloitussivu, kun valmis"
+
+msgid "MyE2i: offer to open the page in (Android)"
+msgstr "MyE2i: tarjoa sivun avaamista sovelluksessa (Android)"
+
+msgid "MyE2i: open the page in the browser"
+msgstr "MyE2i: avaa sivu selaimessa"
+
+msgid "Mystery"
+msgstr "Mysteeri"
+
+msgid ""
+"NO VIDEOS FOUND FOR NOW! \n"
+"CHECK BELOW ADVANCE SEARCH RESULTS!"
+msgstr ""
+"VIDEOITA EI TOISTAISEKSI LÖYTYNYT! \n"
+"KATSO ALLA OLEVAT LAAJENNETUN HAUN TULOKSET!"
+
+msgid "Name cannot be empty."
+msgstr "Nimi ei voi olla tyhjä."
+
+msgid ""
+"Name is not valid.\n"
+"Please remove special characters."
+msgstr ""
+"Nimi ei kelpaa.\n"
+"Poista erikoismerkit."
+
+msgid "Name:"
+msgstr "Nimi:"
+
+msgid "Needs extension v1.18+. Opens the page in this browser, waits until it is fully rendered (Cloudflare challenge included, solve it if it shows up) and sends the rendered HTML, the fetch/XHR calls and the cookie names to the box debug log."
+msgstr "Vaatii laajennuksen v1.18+. Avaa sivun tässä selaimessa, odottaa, kunnes se on täysin piirretty (Cloudflare-tarkistus mukaan lukien, ratkaise se, jos se tulee näkyviin) ja lähettää piirretyn HTML:n, fetch/XHR-kutsut ja evästeiden nimet boksin vianetsintälokiin."
+
+msgid "Netflix movies"
+msgstr "Netflix-elokuvat"
+
+msgid "Netflix series"
+msgstr "Netflix-sarjat"
+
+msgid "Network"
+msgstr "Kanava"
+
+#, python-format
+msgid "Network failed %s."
+msgstr "Verkkovirhe %s."
+
+msgid "Network failure (receive)."
+msgstr "Verkkovirhe (vastaanotto)."
+
+msgid "Network failure (send)."
+msgstr "Verkkovirhe (lähetys)."
+
+msgid "Network failure."
+msgstr "Verkkovirhe."
+
+msgid "New"
+msgstr "Uusi"
+
+msgid "New Watchlist folder"
+msgstr "Uusi katselulistan kansio"
+
+msgid "New dir"
+msgstr "Uusi hakemisto"
+
+msgid "New entry"
+msgstr "Uusi merkintä"
+
+msgid "New episodes"
+msgstr "Uudet jaksot"
+
+msgid "New folder..."
+msgstr "Uusi kansio..."
+
+msgid "New icons will not be available."
+msgstr "Uudet kuvakkeet eivät ole käytettävissä."
+
+msgid "New links"
+msgstr "Uudet linkit"
+
+msgid "New search"
+msgstr "Uusi haku"
+
+msgid "New since installed version"
+msgstr "Uutta asennetun version jälkeen"
+
+msgid "Newest Episodes"
+msgstr "Uusimmat jaksot"
+
+msgid "Newest videos (all YouTube channels)"
+msgstr "Uusimmat videot (kaikki YouTube-kanavat)"
+
+msgid "Newest videos of a YouTube channel in a group"
+msgstr "YouTube-kanavan uusimmat videot ryhmässä"
+
+msgid "News"
+msgstr "Uutiset"
+
+msgid "News (tagesschau)"
+msgstr "Uutiset (tagesschau)"
+
+msgid "News Poland"
+msgstr "Uutiset Puola"
+
+msgid "Next"
+msgstr "Seuraava"
+
+msgid "Next page"
+msgstr "Seuraava sivu"
+
+msgid "No"
+msgstr "Ei"
+
+msgid "No YouTube video found for this track."
+msgstr "Tälle kappaleelle ei löytynyt YouTube-videota."
+
+msgid "No channels with an archive on this portal."
+msgstr "Tässä portaalissa ei ole arkistollisia kanavia."
+
+msgid "No description available."
+msgstr "Kuvausta ei ole saatavilla."
+
+msgid "No episodes available yet."
+msgstr "Jaksoja ei ole vielä saatavilla."
+
+msgid "No episodes found."
+msgstr "Jaksoja ei löytynyt."
+
+msgid "No free player available for this title."
+msgstr "Tälle nimikkeelle ei ole saatavilla ilmaista soitinta."
+
+msgid "No free videos or live streams here at the moment."
+msgstr "Täällä ei ole tällä hetkellä ilmaisia videoita tai suoria lähetyksiä."
+
+msgid "No host is open."
+msgstr "Mikään palvelu ei ole auki."
+
+msgid ""
+"No item to display. \n"
+"Press OK to refresh.\n"
+msgstr ""
+"Ei näytettäviä kohteita. \n"
+"Päivitä painamalla OK.\n"
+
+msgid "No items found"
+msgstr "Kohteita ei löytynyt"
+
+msgid "No matching entries found."
+msgstr "Vastaavia merkintöjä ei löytynyt."
+
+msgid "No player found for this title."
+msgstr "Tälle nimikkeelle ei löytynyt soitinta."
+
+msgid "No problems occurred."
+msgstr "Ongelmia ei ilmennyt."
+
+msgid "No programme guide for this channel."
+msgstr "Tälle kanavalle ei ole ohjelmaopasta."
+
+msgid "No recorded programmes on this day."
+msgstr "Tältä päivältä ei ole tallennettuja ohjelmia."
+
+msgid "No replays in these days"
+msgstr "Ei uusintoja näinä päivinä"
+
+#, python-format
+msgid "No results found for: %s"
+msgstr "Ei tuloksia haulle: %s"
+
+msgid "No self-test result yet."
+msgstr "Itsetestin tulosta ei ole vielä."
+
+msgid "No storage found for the cache folder. The cache folder will be switched to the plugin's own cache directory."
+msgstr "Välimuistikansiolle ei löytynyt tallennustilaa. Välimuistikansioksi vaihdetaan lisäosan oma välimuistihakemisto."
+
+msgid "No storage found for the downloads location. Where would you like to save your downloads?"
+msgstr "Latauskohteelle ei löytynyt tallennustilaa. Minne haluat tallentaa lataukset?"
+
+msgid "No stream available"
+msgstr "Suoratoistoa ei ole saatavilla"
+
+msgid "No streams are available for this title yet."
+msgstr "Tälle nimikkeelle ei ole vielä saatavilla suoratoistoja."
+
+msgid "No subtitle file found in the archive."
+msgstr "Arkistosta ei löytynyt tekstitystiedostoa."
+
+msgid "No subtitles available for this title."
+msgstr "Tälle nimikkeelle ei ole saatavilla tekstityksiä."
+
+msgid "No subtitles found."
+msgstr "Tekstityksiä ei löytynyt."
+
+#, python-format
+msgid "No subtitles in %s. Available: %s"
+msgstr "Ei tekstityksiä kielellä %s. Saatavilla: %s"
+
+msgid "No title to search for."
+msgstr "Ei haettavaa nimikettä."
+
+msgid "No valid entitlement found for asset."
+msgstr "Sisällölle ei löytynyt voimassa olevaa käyttöoikeutta."
+
+msgid "No valid links available."
+msgstr "Kelvollisia linkkejä ei ole saatavilla."
+
+msgid "No video ID available"
+msgstr "Videon tunnusta ei ole saatavilla"
+
+msgid "None"
+msgstr "Ei mitään"
+
+msgid "Normalize item / file names (Show - SxxExx - Title)"
+msgstr "Yhtenäistä kohteiden / tiedostojen nimet (Sarja - SxxExx - Nimi)"
+
+msgid "Not available in your country (geo-blocking)."
+msgstr "Ei saatavilla maassasi (maantieteellinen esto)."
+
+msgid "Not available yet"
+msgstr "Ei vielä saatavilla"
+
+msgid "Not in /usr/bin: choose the file under \"TorrServer binary\" in the torrent configuration."
+msgstr "Ei hakemistossa /usr/bin: valitse tiedosto kohdassa \"TorrServer-ohjelmatiedosto\" torrent-asetuksissa."
+
+msgid "Not possible (no enigma2 session)."
+msgstr "Ei mahdollista (ei enigma2-istuntoa)."
+
+#, python-format
+msgid "Not removed, still downloading: %d"
+msgstr "Ei poistettu, lataus on yhä käynnissä: %d"
+
+msgid "Nothing available here at the moment (only upcoming broadcasts)."
+msgstr "Täällä ei ole tällä hetkellä mitään saatavilla (vain tulevia lähetyksiä)."
+
+msgid "Nothing found on subdl.com."
+msgstr "subdl.com-palvelusta ei löytynyt mitään."
+
+msgid "Nothing found. This site only finds Russian (Cyrillic) search terms."
+msgstr "Mitään ei löytynyt. Tämä sivusto löytää vain venäjänkielisiä (kyrillisiä) hakusanoja."
+
+msgid "Nothing open"
+msgstr "Mitään ei ole auki"
+
+msgid "Nothing to save - the debug log is not active."
+msgstr "Ei tallennettavaa - vianetsintäloki ei ole käytössä."
+
+msgid "Now"
+msgstr "Nyt"
+
+msgid "Now playing"
+msgstr "Nyt teattereissa"
+
+#, python-format
+msgid "Now playing: %s"
+msgstr "Nyt toistetaan: %s"
+
+msgid "Number of columns"
+msgstr "Sarakkeiden määrä"
+
+msgid "Number of downloaded files simultaneously"
+msgstr "Samanaikaisesti ladattavien tiedostojen määrä"
+
+#, python-format
+msgid "Number of items in search history: %d"
+msgstr "Hakuhistorian kohteiden määrä: %d"
+
+msgid "Number of rotated files to keep"
+msgstr "Säilytettävien kierrätettyjen tiedostojen määrä"
+
+msgid "Number of rows"
+msgstr "Rivien määrä"
+
+msgid "Numeric keypad for numbers"
+msgstr "Numeronäppäimistö numeroille"
+
+msgid "OFFLINE"
+msgstr "OFFLINE"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "OK marks an item, BLUE shows what can be done with the marked items."
+msgstr "OK merkitsee kohteen, SININEN näyttää, mitä merkityille kohteille voi tehdä."
+
+msgid "OK marks an item, MENU shows what can be done with the marked items."
+msgstr "OK merkitsee kohteen, MENU näyttää, mitä merkityille kohteille voi tehdä."
+
+msgid "OMDb API key (free at omdbapi.com)"
+msgstr "OMDb API -avain (ilmainen osoitteessa omdbapi.com)"
+
+msgid "Off"
+msgstr "Pois"
+
+msgid "Offline channels"
+msgstr "Offline-kanavat"
+
+msgid "Older days"
+msgstr "Vanhemmat päivät"
+
+msgid "Older replays"
+msgstr "Vanhemmat uusinnat"
+
+msgid "On Air"
+msgstr "Lähetyksessä"
+
+msgid "One link mode"
+msgstr "Yhden linkin tila"
+
+#, python-format
+msgid "Only available in %s"
+msgstr "Saatavilla vain kohteessa %s"
+
+msgid "Only files in the downloads folder can be deleted."
+msgstr "Vain latauskansion tiedostoja voi poistaa."
+
+msgid "Only links can be moved to a group."
+msgstr "Vain linkkejä voi siirtää ryhmään."
+
+#, python-format
+msgid "Only the %d oldest new commits are shown"
+msgstr "Vain %d vanhinta uutta committia näytetään"
+
+msgid "Only the sites that failed in the last run, same checks."
+msgstr "Vain viime ajossa epäonnistuneet sivustot, samat tarkistukset."
+
+#, python-format
+msgid "Only unsupported hosters available: %s"
+msgstr "Saatavilla vain tukemattomia videopalveluja: %s"
+
+msgid "Open issues"
+msgstr "Avoimet issuet"
+
+msgid "Open pull requests"
+msgstr "Avoimet pull requestit"
+
+msgid "Open the page and get the link"
+msgstr "Avaa sivu ja hae linkki"
+
+#, python-format
+msgid "Open this page in %s"
+msgstr "Avaa tämä sivu sovelluksessa %s"
+
+msgid "Open this page in the chosen browser"
+msgstr "Avaa tämä sivu valitussa selaimessa"
+
+#, python-format
+msgid "OpenSubtitles.com login failed for user \"%s\". Please check your login and password."
+msgstr "OpenSubtitles.com-kirjautuminen epäonnistui käyttäjälle \"%s\". Tarkista käyttäjätunnus ja salasana."
+
+msgid "OpenSubtitles.com needs an API key. Create a free API consumer at https://www.opensubtitles.com/consumers and enter its key in the E2iPlayer settings (Subtitles)."
+msgstr "OpenSubtitles.com vaatii API-avaimen. Luo ilmainen API consumer osoitteessa https://www.opensubtitles.com/consumers ja syötä sen avain E2iPlayerin asetuksiin (Tekstitykset)."
+
+#, python-format
+msgid "OpenSubtitles.com rejected the request (HTTP %s). Please check the API key in the E2iPlayer settings."
+msgstr "OpenSubtitles.com hylkäsi pyynnön (HTTP %s). Tarkista API-avain E2iPlayerin asetuksista."
+
+msgid "OpenSubtitles.org sent a \"become VIP member\" note instead of the subtitle (download limit reached?)."
+msgstr "OpenSubtitles.org lähetti tekstityksen sijaan \"ryhdy VIP-jäseneksi\" -ilmoituksen (latausraja täynnä?)."
+
+msgid "Opening. Please wait..."
+msgstr "Avataan. Odota..."
+
+msgid "Operation aborted!"
+msgstr "Toiminto keskeytettiin!"
+
+msgid "Operation timed out."
+msgstr "Toiminnon aikakatkaisu."
+
+msgid "Options"
+msgstr "Valinnat"
+
+msgid "Options (select language, clear search history, settings)"
+msgstr "Valinnat (valitse kieli, tyhjennä hakuhistoria, asetukset)"
+
+msgid "Order of user links:"
+msgstr "Käyttäjälinkkien järjestys:"
+
+msgid "Order stays fixed - useful for T9 browsing."
+msgstr "Järjestys pysyy kiinteänä - kätevä T9-selaukseen."
+
+msgid "Original Title:"
+msgstr "Alkuperäinen nimi:"
+
+#, python-format
+msgid "Original language: %s"
+msgstr "Alkuperäinen kieli: %s"
+
+msgid "Original title"
+msgstr "Alkuperäinen nimi"
+
+msgid "Original version"
+msgstr "Alkuperäisversio"
+
+msgid "Other"
+msgstr "Muu"
+
+msgid "Other dramas (Chinese, Thai, ...)"
+msgstr "Muut draamat (kiinalaiset, thaimaalaiset, ...)"
+
+msgid "Other films"
+msgstr "Muut elokuvat"
+
+msgid "Other seasons"
+msgstr "Muut kaudet"
+
+msgid "Others"
+msgstr "Muut"
+
+msgid "Out of memory."
+msgstr "Muisti loppui."
+
+msgid "Own launcher URI"
+msgstr "Oma käynnistimen URI"
+
+msgid "Own model"
+msgstr "Oma malli"
+
+msgid "PAGE UP/PAGE DOWN"
+msgstr "SIVU YLÖS/SIVU ALAS"
+
+msgid "PAY"
+msgstr "MAKSULLINEN"
+
+msgid "PENDING"
+msgstr "ODOTTAA"
+
+msgid "PLAY"
+msgstr "TOISTA"
+
+msgid "PREVIOUS/NEXT"
+msgstr "EDELLINEN/SEURAAVA"
+
+#, python-format
+msgid "PRIVATE - wait %s seconds"
+msgstr "YKSITYINEN - odota %s sekuntia"
+
+msgid "PRIVATE - wait a few seconds"
+msgstr "YKSITYINEN - odota muutama sekunti"
+
+msgid "Page not found - please check the address."
+msgstr "Sivua ei löytynyt - tarkista osoite."
+
+msgid "Page:"
+msgstr "Sivu:"
+
+msgid "Paid content"
+msgstr "Maksullinen sisältö"
+
+msgid "Parse error."
+msgstr "Jäsennysvirhe."
+
+msgid "Part"
+msgstr "Osa"
+
+msgid "Partial file - transfer ended early."
+msgstr "Keskeneräinen tiedosto - siirto päättyi ennenaikaisesti."
+
+msgid "Password:"
+msgstr "Salasana:"
+
+msgid "Past premieres"
+msgstr "Menneet ensi-illat"
+
+#, python-format
+msgid "Paste \"%s\""
+msgstr "Liitä \"%s\""
+
+msgid "Path to xxxlist.txt :"
+msgstr "Polku tiedostoon xxxlist.txt :"
+
+msgid "Path to ytlist.txt, urllist.txt"
+msgstr "Polku tiedostoihin ytlist.txt, urllist.txt"
+
+msgid "Pathology"
+msgstr "Patologia"
+
+msgid "Pathology Rounds"
+msgstr "Patologian kierrot"
+
+msgid "Patriotism"
+msgstr "Isänmaallisuus"
+
+msgid "Pause between the batch lookups of one host [s]"
+msgstr "Tauko saman palvelun eräkyselyjen välillä [s]"
+
+#, python-format
+msgid "Peak: %s"
+msgstr "Huippusijoitus: %s"
+
+msgid "Pediatrics"
+msgstr "Lastentaudit"
+
+msgid "People"
+msgstr "Henkilöt"
+
+msgid "Persons"
+msgstr "Henkilöt"
+
+msgid "Philosophy"
+msgstr "Filosofia"
+
+msgid "Physical Exam"
+msgstr "Kliininen tutkimus"
+
+msgid "Pin has been changed."
+msgstr "PIN-koodi on vaihdettu."
+
+msgid "Pin incorrect!"
+msgstr "Väärä PIN-koodi!"
+
+msgid "Pin protection for configuration"
+msgstr "PIN-suojaus asetuksille"
+
+msgid "Pin protection for plugin"
+msgstr "PIN-suojaus lisäosalle"
+
+msgid "Pin protection for this host"
+msgstr "PIN-suojaus tälle palvelulle"
+
+msgid "Play all from here"
+msgstr "Toista kaikki tästä alkaen"
+
+#, python-format
+msgid "Play marked items (%d)"
+msgstr "Toista merkityt kohteet (%d)"
+
+msgid "Play torrents with TorrServer"
+msgstr "Toista torrentit TorrServerillä"
+
+#, python-format
+msgid "Play with [%s] player"
+msgstr "Toista soittimella [%s]"
+
+msgid "Playback UHD :"
+msgstr "UHD-toisto :"
+
+msgid "Player Skin"
+msgstr "Soittimen ulkoasu"
+
+msgid "Playing on the TV is not possible (no enigma2 session)."
+msgstr "Toisto televisiossa ei ole mahdollista (ei enigma2-istuntoa)."
+
+msgid "Playlist"
+msgstr "Soittolista"
+
+msgid "Playlists"
+msgstr "Soittolistat"
+
+msgid "Plays"
+msgstr "Näytelmät"
+
+#, python-brace-format
+msgid ""
+"Please Open site:\n"
+"http://{0}:{1}\n"
+"in a web browser with the MyE2i extension installed"
+msgstr ""
+"Avaa sivu:\n"
+"http://{0}:{1}\n"
+"selaimessa, johon on asennettu MyE2i-laajennus"
+
+msgid "Please configure Xtream (blue button)"
+msgstr "Määritä Xtream (sininen painike)"
+
+msgid "Please configure the Stalker portal (blue button)"
+msgstr "Määritä Stalker-portaali (sininen painike)"
+
+#, python-format
+msgid "Please consider restart your Engima2 and agree to install the %s utlity when the %s will propose this."
+msgstr "Harkitse Enigma2:n uudelleenkäynnistystä ja hyväksy apuohjelman %s asennus, kun %s ehdottaa sitä."
+
+msgid "Please enter a search text."
+msgstr "Anna hakuteksti."
+
+msgid "Please enter a valid link (http:// or https://)."
+msgstr "Anna kelvollinen linkki (http:// tai https://)."
+
+#, python-format
+msgid "Please enter the %s login and password in the E2iPlayer settings (Captcha)."
+msgstr "Anna palvelun %s käyttäjätunnus ja salasana E2iPlayerin asetuksissa (Captcha)."
+
+msgid "Please make sure that the folder for cache data (set in the configuration) is writable."
+msgstr "Varmista, että välimuistitietojen kansioon (asetetaan asetuksissa) voi kirjoittaa."
+
+msgid "Please register and set login and password in the host configuration, to solve this problems permanently."
+msgstr "Rekisteröidy ja aseta käyttäjätunnus ja salasana palvelun asetuksissa ratkaistaksesi nämä ongelmat pysyvästi."
+
+msgid "Please select a group of favourites."
+msgstr "Valitse suosikkiryhmä."
+
+msgid "Please select an entry."
+msgstr "Valitse merkintä."
+
+msgid "Please select the link first."
+msgstr "Valitse ensin linkki."
+
+#, python-format
+msgid "Please set valid %s in the %s configuration."
+msgstr "Aseta kelvollinen %s asetuksissa: %s."
+
+msgid "Please solve to continue downloads with:"
+msgstr "Ratkaise jatkaaksesi latauksia:"
+
+#, python-format
+msgid "Please visit \"%s\" and confirm that you are human."
+msgstr "Käy sivulla \"%s\" ja vahvista, että olet ihminen."
+
+#, python-format
+msgid "Please visit %s to learn how to redirect this task to the external device."
+msgstr "Käy sivulla %s saadaksesi ohjeet tämän tehtävän ohjaamiseen ulkoiselle laitteelle."
+
+msgid "Please wait - downloading initialization data."
+msgstr "Odota - ladataan alustustietoja."
+
+msgid "Please wait for initialization data."
+msgstr "Odota alustustietoja."
+
+msgid "Please wait, the previous action is still running."
+msgstr "Odota, edellinen toiminto on yhä käynnissä."
+
+msgid "Please wait..."
+msgstr "Odota..."
+
+msgid "Podcasts"
+msgstr "Podcastit"
+
+msgid "Podcasts by category"
+msgstr "Podcastit kategorioittain"
+
+msgid "Podcasts by station"
+msgstr "Podcastit asemittain"
+
+msgid "Poland"
+msgstr "Puola"
+
+msgid "Polish"
+msgstr "Puola"
+
+msgid "Polish dubbing"
+msgstr "Puolalainen dubbaus"
+
+msgid "Polish films"
+msgstr "Puolalaiset elokuvat"
+
+msgid "Polish subtitles"
+msgstr "Puolankieliset tekstitykset"
+
+msgid "Polish voice-over"
+msgstr "Puolankielinen selostus"
+
+msgid "Politics"
+msgstr "Politiikka"
+
+msgid "Popular"
+msgstr "Suositut"
+
+msgid "Popular episodes"
+msgstr "Suositut jaksot"
+
+msgid "Popular movies"
+msgstr "Suositut elokuvat"
+
+msgid "Popular series"
+msgstr "Suositut sarjat"
+
+msgid "Popular sports"
+msgstr "Suositut urheilulajit"
+
+msgid "Popularity"
+msgstr "Suosio"
+
+msgid "Pornstars"
+msgstr "Pornotähdet"
+
+#, python-format
+msgid "Portal %d - %s (optional, from the MAG box):"
+msgstr "Portaali %d - %s (valinnainen, MAG-boksista):"
+
+#, python-format
+msgid "Portal %d - MAC address (00:1A:79:...):"
+msgstr "Portaali %d - MAC-osoite (00:1A:79:...):"
+
+#, python-format
+msgid "Portal %d - name (optional):"
+msgstr "Portaali %d - nimi (valinnainen):"
+
+#, python-format
+msgid "Portal %d - portal URL (http://host:port/c/):"
+msgstr "Portaali %d - portaalin URL (http://host:port/c/):"
+
+#, python-format
+msgid "Portal URL and MAC address in the host configuration, as the provider gives them out. More portals: %s in the EStalker format (portal URL, then its MAC addresses, one per line)."
+msgstr "Portaalin URL ja MAC-osoite palvelun asetuksissa, sellaisina kuin palveluntarjoaja ne antaa. Lisää portaaleja: %s EStalker-muodossa (portaalin URL, sitten sen MAC-osoitteet, yksi riviä kohden)."
+
+#, python-format
+msgid "Ports: %s"
+msgstr "Portit: %s"
+
+msgid "Portuguese"
+msgstr "Portugali"
+
+msgid "Powerpoint Presentation"
+msgstr "PowerPoint-esitys"
+
+msgid "Practice Management"
+msgstr "Vastaanoton johtaminen"
+
+msgid "Prefer MP4 over HLS:"
+msgstr "Suosi MP4:ää HLS:n sijaan:"
+
+msgid "Prefered format"
+msgstr "Ensisijainen muoto"
+
+msgid "Prefered quality"
+msgstr "Ensisijainen laatu"
+
+msgid "Preferred streaming protocol"
+msgstr "Ensisijainen suoratoistoprotokolla"
+
+msgid "Preferred video quality:"
+msgstr "Ensisijainen videon laatu:"
+
+msgid "Premium"
+msgstr "Premium"
+
+msgid "Premium user"
+msgstr "Premium-käyttäjä"
+
+msgid "Press EXIT to return to the previous menu."
+msgstr "Palaa edelliseen valikkoon painamalla EXIT."
+
+msgid "Previous Page"
+msgstr "Edellinen sivu"
+
+msgid "Previous days"
+msgstr "Edelliset päivät"
+
+msgid "Price:"
+msgstr "Hinta:"
+
+msgid "Pro wrestling"
+msgstr "Ammattilaispaini"
+
+msgid "Production:"
+msgstr "Tuotanto:"
+
+msgid "Professional Networks"
+msgstr "Ammatilliset verkostot"
+
+msgid "Professionals"
+msgstr "Ammattilaiset"
+
+msgid "Program"
+msgstr "Ohjelma"
+
+msgid "Program A-Z"
+msgstr "Ohjelmat A-Z"
+
+msgid "Program for file downloads (HTTP/FTP)"
+msgstr "Ohjelma tiedostolatauksiin (HTTP/FTP)"
+
+msgid "Programme archive (last 7 days)"
+msgstr "Ohjelma-arkisto (viimeiset 7 päivää)"
+
+msgid "Programme archive:"
+msgstr "Ohjelma-arkisto:"
+
+msgid "Programmes"
+msgstr "Ohjelmat"
+
+msgid "Programmes of the last days of the channels with an archive"
+msgstr "Arkistollisten kanavien viime päivien ohjelmat"
+
+msgid "Promote item"
+msgstr "Nosta kohdetta"
+
+msgid "Protocol errors."
+msgstr "Protokollavirheitä."
+
+msgid "Published"
+msgstr "Julkaistu"
+
+msgid "Python modules"
+msgstr "Python-moduulit"
+
+msgid "Python was not found on the receiver."
+msgstr "Pythonia ei löytynyt vastaanottimesta."
+
+msgid "Quality"
+msgstr "Laatu"
+
+msgid "Quality:"
+msgstr "Laatu:"
+
+msgid "Quick test: menu and a list with videos"
+msgstr "Pikatesti: valikko ja videoluettelo"
+
+msgid "RAM"
+msgstr "RAM"
+
+msgid "RAM buffer size [MB] for local files"
+msgstr "RAM-puskurin koko [MB] paikallisille tiedostoille"
+
+msgid "RAM buffer size [MB] for network protocols"
+msgstr "RAM-puskurin koko [MB] verkkoprotokollille"
+
+msgid "RED"
+msgstr "PUNAINEN"
+
+msgid "REWIND"
+msgstr "KELAA TAAKSE"
+
+msgid "Radio"
+msgstr "Radio"
+
+msgid "Radio iframe file"
+msgstr "Radion iframe-tiedosto"
+
+msgid "Radio station - live stream"
+msgstr "Radioasema - suora lähetys"
+
+msgid "Radio stations"
+msgstr "Radioasemat"
+
+msgid "Radiology Rounds"
+msgstr "Radiologian kierrot"
+
+msgid "Ramadan"
+msgstr "Ramadan"
+
+msgid "Ramadan series"
+msgstr "Ramadan-sarjat"
+
+msgid "Random"
+msgstr "Satunnainen"
+
+msgid "Random selection"
+msgstr "Satunnainen valikoima"
+
+msgid "Randomize a playlist"
+msgstr "Sekoita soittolista"
+
+msgid "Range request not supported (resume failed)."
+msgstr "Range-pyyntöä ei tueta (jatkaminen epäonnistui)."
+
+msgid "Rated"
+msgstr "Ikäraja"
+
+msgid "Rated:"
+msgstr "Ikäraja:"
+
+msgid "Rating"
+msgstr "Arvosana"
+
+#, python-format
+msgid "Rating %s"
+msgstr "Arvosana %s"
+
+msgid "Rating:"
+msgstr "Arvosana:"
+
+#, python-format
+msgid "Rating: %s"
+msgstr "Arvosana: %s"
+
+msgid "Read ahead (share of the cache)"
+msgstr "Ennakkoluku (osuus välimuistista)"
+
+msgid "Read by"
+msgstr "Lukija"
+
+msgid "Read error."
+msgstr "Lukuvirhe."
+
+msgid "Reading binaries..."
+msgstr "Luetaan ohjelmatiedostoja..."
+
+msgid "Reading..."
+msgstr "Luetaan..."
+
+msgid "Recent"
+msgstr "Viimeisimmät"
+
+msgid "Recently added"
+msgstr "Äskettäin lisätyt"
+
+msgid "Reciters"
+msgstr "Resitoijat"
+
+msgid "Recommended"
+msgstr "Suositellut"
+
+msgid "Recon"
+msgstr "Rekonstruktio"
+
+msgid "Referee"
+msgstr "Erotuomari"
+
+msgid "Refresh"
+msgstr "Päivitä"
+
+msgid "Refreshing"
+msgstr "Päivitetään"
+
+#, python-format
+msgid "Refusing to empty \"%s\" - it also holds \"%s\" (downloads, buffering, cache or config folder). Check the folder paths in the storage configuration."
+msgstr "Kansiota \"%s\" ei tyhjennetä - se sisältää myös kansion \"%s\" (lataus-, puskuri-, välimuisti- tai asetuskansio). Tarkista kansiopolut tallennustilan asetuksista."
+
+#, python-format
+msgid "Refusing to empty \"%s\" - this does not look like a dedicated cache/config folder. Check the folder paths in the storage configuration."
+msgstr "Kansiota \"%s\" ei tyhjennetä - se ei näytä erilliseltä välimuisti-/asetuskansiolta. Tarkista kansiopolut tallennustilan asetuksista."
+
+msgid "Regions"
+msgstr "Alueet"
+
+msgid "Related seasons and works"
+msgstr "Aiheeseen liittyvät kaudet ja teokset"
+
+msgid "Release"
+msgstr "Julkaisu"
+
+msgid "Released"
+msgstr "Julkaistu"
+
+msgid "Released:"
+msgstr "Julkaistu:"
+
+msgid "Releases"
+msgstr "Julkaisut"
+
+msgid "Relevance"
+msgstr "Osuvuus"
+
+msgid "Religion"
+msgstr "Uskonto"
+
+msgid "Remaining:"
+msgstr "Jäljellä:"
+
+msgid "Remember a host's pin until E2iPlayer is closed"
+msgstr "Muista palvelun PIN-koodi, kunnes E2iPlayer suljetaan"
+
+msgid "Remember last search entry"
+msgstr "Muista viimeisin haku"
+
+msgid "Remember last search history selection"
+msgstr "Muista viimeisin valinta hakuhistoriasta"
+
+msgid "Remember last watched position"
+msgstr "Muista viimeisin katselukohta"
+
+msgid "Remove"
+msgstr "Poista"
+
+#, python-format
+msgid "Remove \"%s\" item"
+msgstr "Poista kohde \"%s\""
+
+#, python-format
+msgid "Remove %d items from the favourites?"
+msgstr "Poistetaanko %d kohdetta suosikeista?"
+
+#, python-format
+msgid ""
+"Remove %d marked items?\n"
+"Their files are deleted too."
+msgstr ""
+"Poistetaanko %d merkittyä kohdetta?\n"
+"Myös niiden tiedostot poistetaan."
+
+msgid "Remove file"
+msgstr "Poista tiedosto"
+
+msgid "Remove from Watchlist"
+msgstr "Poista katselulistalta"
+
+msgid "Remove from favorites"
+msgstr "Poista suosikeista"
+
+msgid "Remove from folder"
+msgstr "Poista kansiosta"
+
+msgid "Remove group"
+msgstr "Poista ryhmä"
+
+msgid "Remove item"
+msgstr "Poista kohde"
+
+#, python-format
+msgid "Remove marked items (%d)"
+msgstr "Poista merkityt kohteet (%d)"
+
+#, python-format
+msgid "Remove marked items from favourites (%d)"
+msgstr "Poista merkityt kohteet suosikeista (%d)"
+
+msgid "Remove thumbnails"
+msgstr "Poista pikkukuvat"
+
+msgid "Rename"
+msgstr "Nimeä uudelleen"
+
+msgid "Rename Watchlist folder"
+msgstr "Nimeä katselulistan kansio uudelleen"
+
+msgid "Rename file"
+msgstr "Nimeä tiedosto uudelleen"
+
+msgid "Reordering: UP/DOWN moves the row, OK saves, EXIT cancels."
+msgstr "Järjestely: YLÖS/ALAS siirtää riviä, OK tallentaa, EXIT peruuttaa."
+
+msgid "Replay"
+msgstr "Uusinta"
+
+msgid "Replays & highlights"
+msgstr "Uusinnat ja kohokohdat"
+
+msgid "Report a problem (GitHub issues)"
+msgstr "Ilmoita ongelmasta (GitHub issues)"
+
+msgid "Report file"
+msgstr "Raporttitiedosto"
+
+#, python-format
+msgid "Reset the settings of \"%s\" to their default values?"
+msgstr "Palautetaanko kohteen \"%s\" asetukset oletusarvoihin?"
+
+msgid "Reset this list to its default layout?"
+msgstr "Palautetaanko tämä luettelo oletusasetteluun?"
+
+msgid "Reset this list to its default layout? Its folders are deleted too."
+msgstr "Palautetaanko tämä luettelo oletusasetteluun? Myös sen kansiot poistetaan."
+
+msgid "Reset to defaults"
+msgstr "Palauta oletukset"
+
+msgid "Reset to saved order"
+msgstr "Palauta tallennettu järjestys"
+
+msgid "Reset web interface"
+msgstr "Nollaa verkkokäyttöliittymä"
+
+#, python-format
+msgid ""
+"Resolving hCaptcha with %s failed!\n"
+"\n"
+msgstr ""
+"hCaptchan ratkaiseminen palvelulla %s epäonnistui!\n"
+"\n"
+
+#, python-format
+msgid ""
+"Resolving reCaptcha with %s failed!\n"
+"\n"
+msgstr ""
+"reCaptchan ratkaiseminen palvelulla %s epäonnistui!\n"
+"\n"
+
+msgid "Restart GUI"
+msgstr "Käynnistä GUI uudelleen"
+
+msgid "Reused entries move back to the top again."
+msgstr "Uudelleen käytetyt merkinnät siirtyvät taas kärkeen."
+
+msgid "Reverse a playlist"
+msgstr "Käännä soittolistan järjestys"
+
+msgid "Reverting to unsorted order will discard unsaved changes. Continue?"
+msgstr "Lajittelemattomaan järjestykseen palaaminen hylkää tallentamattomat muutokset. Jatketaanko?"
+
+msgid "Right"
+msgstr "Oikea"
+
+msgid "Romance"
+msgstr "Romantiikka"
+
+msgid "Round"
+msgstr "Kierros"
+
+msgid "Runtime"
+msgstr "Kesto"
+
+msgid "Russian"
+msgstr "Venäjä"
+
+msgid "SOME.PORN sorting by :"
+msgstr "SOME.PORN lajittelu :"
+
+msgid "SONGS"
+msgstr "KAPPALEET"
+
+msgid "SSL connect error."
+msgstr "SSL-yhteysvirhe."
+
+msgid "SSL verification failure."
+msgstr "SSL-varmennus epäonnistui."
+
+msgid "STARTED"
+msgstr "KÄYNNISSÄ"
+
+msgid "STOPPED"
+msgstr "PYSÄYTETTY"
+
+msgid "Safe search (restricted mode):"
+msgstr "Turvallinen haku (rajoitettu tila):"
+
+msgid "Save"
+msgstr "Tallenna"
+
+msgid "Save changes?"
+msgstr "Tallennetaanko muutokset?"
+
+#, python-format
+msgid "Save subtitles (%s)"
+msgstr "Tallenna tekstitykset (%s)"
+
+#, python-format
+msgid ""
+"Saved to:\n"
+"%s"
+msgstr ""
+"Tallennettu kohteeseen:\n"
+"%s"
+
+msgid "Sci-Fi"
+msgstr "Scifi"
+
+msgid "Sci-Fi & Fantasy"
+msgstr "Scifi ja fantasia"
+
+msgid "Science"
+msgstr "Tiede"
+
+msgid "Screensaver during audio playback"
+msgstr "Näytönsäästäjä äänentoiston aikana"
+
+msgid "Screensaver in E2iPlayer menus"
+msgstr "Näytönsäästäjä E2iPlayerin valikoissa"
+
+#, python-format
+msgid ""
+"Script execution failed.\n"
+"Error code: %s\n"
+msgstr ""
+"Skriptin suoritus epäonnistui.\n"
+"Virhekoodi: %s\n"
+
+msgid "Script finished."
+msgstr "Skripti valmis."
+
+msgid "Search"
+msgstr "Haku"
+
+#, python-format
+msgid "Search \"%s\" was not finished"
+msgstr "Haku \"%s\" ei valmistunut"
+
+msgid "Search History is empty."
+msgstr "Hakuhistoria on tyhjä."
+
+msgid "Search History successfully deleted."
+msgstr "Hakuhistoria poistettiin."
+
+msgid "Search automatically"
+msgstr "Hae automaattisesti"
+
+msgid "Search for an artist (exact name) or a Last.fm user"
+msgstr "Hae artistia (tarkka nimi) tai Last.fm-käyttäjää"
+
+msgid "Search history"
+msgstr "Hakuhistoria"
+
+msgid "Search history - options"
+msgstr "Hakuhistoria - valinnat"
+
+msgid "Search history is not available for this host."
+msgstr "Hakuhistoria ei ole käytettävissä tälle palvelulle."
+
+msgid "Search history saved."
+msgstr "Hakuhistoria tallennettu."
+
+#, python-format
+msgid "Search history saved. %d duplicate entries removed."
+msgstr "Hakuhistoria tallennettu. %d päällekkäistä merkintää poistettiin."
+
+msgid "Search in all active hosts"
+msgstr "Hae kaikista aktiivisista palveluista"
+
+msgid "Search is not available right now."
+msgstr "Haku ei ole juuri nyt käytettävissä."
+
+msgid "Search next page"
+msgstr "Hae seuraava sivu"
+
+msgid "Search results"
+msgstr "Hakutulokset"
+
+msgid "Search results region:"
+msgstr "Hakutulosten alue:"
+
+msgid "Search string must have at least 4 characters."
+msgstr "Hakutekstissä on oltava vähintään 4 merkkiä."
+
+msgid "Search term :"
+msgstr "Hakusana :"
+
+msgid "Search text"
+msgstr "Hakuteksti"
+
+msgid "Search type"
+msgstr "Hakutyyppi"
+
+msgid "Search: "
+msgstr "Haku: "
+
+#, python-format
+msgid "Search: %d of %d - now %s (%d found so far)"
+msgstr "Haku: %d / %d - nyt %s (%d löydetty tähän mennessä)"
+
+#, python-format
+msgid "Searching subtitles for \"%s\""
+msgstr "Haetaan tekstityksiä kohteelle \"%s\""
+
+msgid "Season"
+msgstr "Kausi"
+
+#, python-format
+msgid "Season %d"
+msgstr "Kausi %d"
+
+#, python-format
+msgid "Season %d (%d episodes)"
+msgstr "Kausi %d (%d jaksoa)"
+
+#, python-format
+msgid "Season %s"
+msgstr "Kausi %s"
+
+msgid "Season pack"
+msgstr "Kausipaketti"
+
+msgid "Seasons"
+msgstr "Kaudet"
+
+msgid "Seasons:"
+msgstr "Kaudet:"
+
+#, python-format
+msgid "Seasons: %s"
+msgstr "Kaudet: %s"
+
+msgid "Second movie player in buffering mode"
+msgstr "Toinen elokuvasoitin puskurointitilassa"
+
+msgid "Second movie player without buffering mode"
+msgstr "Toinen elokuvasoitin ilman puskurointitilaa"
+
+msgid "Section"
+msgstr "Osio"
+
+msgid "Sections"
+msgstr "Osiot"
+
+msgid "Select"
+msgstr "Valitse"
+
+#, python-format
+msgid "Select %s"
+msgstr "Valitse %s"
+
+msgid "Select action"
+msgstr "Valitse toiminto"
+
+msgid "Select all"
+msgstr "Valitse kaikki"
+
+msgid "Select audio track"
+msgstr "Valitse ääniraita"
+
+msgid "Select best available quality"
+msgstr "Valitse paras saatavilla oleva laatu"
+
+msgid "Select directory"
+msgstr "Valitse kansio"
+
+msgid "Select favorite group"
+msgstr "Valitse suosikkiryhmä"
+
+msgid "Select group"
+msgstr "Valitse ryhmä"
+
+msgid "Select hosts for this folder..."
+msgstr "Valitse palvelut tälle kansiolle..."
+
+msgid "Select language"
+msgstr "Valitse kieli"
+
+msgid "Select link"
+msgstr "Valitse linkki"
+
+msgid "Select movie player"
+msgstr "Valitse elokuvasoitin"
+
+msgid "Select option"
+msgstr "Valitse vaihtoehto"
+
+msgid "Select subtitles file"
+msgstr "Valitse tekstitystiedosto"
+
+msgid "Select subtitles provider:"
+msgstr "Valitse tekstitysten tarjoaja:"
+
+msgid "Select subtitles to download"
+msgstr "Valitse ladattavat tekstitykset"
+
+msgid "Select subtitles track"
+msgstr "Valitse tekstitysraita"
+
+msgid "Select the TorrServer binary"
+msgstr "Valitse TorrServer-ohjelmatiedosto"
+
+msgid "Select the directory"
+msgstr "Valitse kansio"
+
+msgid "Select the file"
+msgstr "Valitse tiedosto"
+
+msgid "Select video option"
+msgstr "Valitse videovaihtoehto"
+
+msgid "Selection"
+msgstr "Valinta"
+
+msgid "Self-test"
+msgstr "Itsetesti"
+
+msgid "Self-test report :"
+msgstr "Itsetestin raportti :"
+
+msgid "Send"
+msgstr "Lähetä"
+
+msgid "Send data to enc-dec.app on every link resolve?"
+msgstr "Lähetetäänkö tietoja palveluun enc-dec.app jokaisen linkin selvityksen yhteydessä?"
+
+msgid "Sending the result to the box failed."
+msgstr "Tuloksen lähettäminen vastaanottimeen epäonnistui."
+
+msgid "Series"
+msgstr "Sarjat"
+
+msgid "Series - latest episodes"
+msgstr "Sarjat - uusimmat jaksot"
+
+msgid "Series - seasons"
+msgstr "Sarjat - kaudet"
+
+msgid "Series A-Z"
+msgstr "Sarjat A-Z"
+
+msgid "Series by genre"
+msgstr "Sarjat lajityypeittäin"
+
+msgid "Series by year"
+msgstr "Sarjat vuosittain"
+
+msgid "Series genres"
+msgstr "Sarjojen lajityypit"
+
+msgid "Server"
+msgstr "Palvelin"
+
+msgid "Server issued an error response (HTTP 4xx/5xx)."
+msgstr "Palvelin vastasi virheellä (HTTP 4xx/5xx)."
+
+msgid "Server issued an error response."
+msgstr "Palvelin vastasi virheellä."
+
+msgid "Server return 404 - Not Found."
+msgstr "Palvelin palautti 404 - Ei löytynyt."
+
+msgid "Server returned nothing."
+msgstr "Palvelin ei palauttanut mitään."
+
+#, python-format
+msgid "Server time: %s"
+msgstr "Palvelimen aika: %s"
+
+#, python-format
+msgid "Server, user name and password in the host configuration. The server field also takes a get.php link. More accounts: %s with one get.php link per line (X-Streamity format)."
+msgstr "Palvelin, käyttäjätunnus ja salasana palvelun asetuksissa. Palvelin-kenttään voi antaa myös get.php-linkin. Lisää tilejä: %s, yksi get.php-linkki riviä kohden (X-Streamity-muoto)."
+
+#, python-format
+msgid ""
+"Service %s requires registration. \n"
+"Please fill your login and password in the %s configuration."
+msgstr ""
+"Palvelu %s vaatii rekisteröitymisen. \n"
+"Anna käyttäjätunnus ja salasana palvelun %s asetuksissa."
+
+msgid "Service icon size"
+msgstr "Palvelujen kuvakkeiden koko"
+
+msgid "Services configuration"
+msgstr "Palvelujen asetukset"
+
+msgid "Services management"
+msgstr "Palvelujen hallinta"
+
+msgid "Set active movie player"
+msgstr "Aseta aktiivinen elokuvasoitin"
+
+msgid "Set file name"
+msgstr "Aseta tiedostonimi"
+
+msgid "Set own configuration pin code"
+msgstr "Aseta oma asetusten PIN-koodi"
+
+msgid "Set own pin"
+msgstr "Aseta oma PIN-koodi"
+
+msgid "Set pin code"
+msgstr "Aseta PIN-koodi"
+
+msgid "Set watched"
+msgstr "Merkitse katsotuksi"
+
+msgid "Settings"
+msgstr "Asetukset"
+
+#, python-format
+msgid "Settings of service [%s] cannot be opened."
+msgstr "Palvelun [%s] asetuksia ei voi avata."
+
+msgid "Settings screen layout"
+msgstr "Asetusnäkymän asettelu"
+
+msgid "Shift"
+msgstr "Shift"
+
+msgid "Short Movies"
+msgstr "Lyhytelokuvat"
+
+msgid "Short films"
+msgstr "Lyhytelokuvat"
+
+msgid "Short name"
+msgstr "Lyhyt nimi"
+
+msgid "Short series"
+msgstr "Lyhytsarjat"
+
+msgid "Shorts"
+msgstr "Shorts"
+
+msgid "Shoulder & Elbow"
+msgstr "Olkapää ja kyynärpää"
+
+msgid "Show"
+msgstr "Show"
+
+msgid "Show \"Newest videos\" of all YouTube channels in a group"
+msgstr "Näytä ryhmän kaikkien YouTube-kanavien \"Uusimmat videot\""
+
+msgid "Show & Comedy"
+msgstr "Show ja komedia"
+
+msgid "Show E2iPlayer settings in system menu"
+msgstr "Näytä E2iPlayerin asetukset järjestelmävalikossa"
+
+msgid "Show IPTVPlayer in extension list (blue button)"
+msgstr "Näytä IPTVPlayer laajennusluettelossa (sininen painike)"
+
+msgid "Show IPTVPlayer in main menu"
+msgstr "Näytä IPTVPlayer päävalikossa"
+
+msgid "Show IPTVPlayer in plugin browser"
+msgstr "Näytä IPTVPlayer lisäosaselaimessa"
+
+msgid "Show Profiles in ZBIORNIK MINI :"
+msgstr "Näytä profiilit ZBIORNIK MINI -palvelussa :"
+
+msgid "Show Youtube Api Key warnings"
+msgstr "Näytä YouTube API -avaimen varoitukset"
+
+msgid "Show adult content"
+msgstr "Näytä aikuissisältö"
+
+msgid "Show all channels"
+msgstr "Näytä kaikki kanavat"
+
+msgid "Show clock in header"
+msgstr "Näytä kello otsikkopalkissa"
+
+msgid "Show download manager after adding new item"
+msgstr "Näytä latausten hallinta uuden kohteen lisäämisen jälkeen"
+
+msgid "Show download notification"
+msgstr "Näytä latausilmoitus"
+
+msgid "Show file size"
+msgstr "Näytä tiedostokoko"
+
+msgid "Show flags"
+msgstr "Näytä liput"
+
+msgid "Show global search :"
+msgstr "Näytä yleinen haku :"
+
+msgid "Show hiddens catalogs"
+msgstr "Näytä piilotetut kansiot"
+
+msgid "Show hiddens files"
+msgstr "Näytä piilotetut tiedostot"
+
+msgid "Show iframe during audio playback"
+msgstr "Näytä iframe äänentoiston aikana"
+
+msgid "Show only audio in selected language:"
+msgstr "Näytä vain valitun kielen ääni:"
+
+msgid "Show only best quality of streams:"
+msgstr "Näytä vain parhaan laadun suoratoistot:"
+
+msgid "Show playlist"
+msgstr "Näytä soittolista"
+
+msgid "Show results"
+msgstr "Näytä tulokset"
+
+msgid "Show results so far"
+msgstr "Näytä tähänastiset tulokset"
+
+msgid "Show search history"
+msgstr "Näytä hakuhistoria"
+
+msgid "Show suggestions"
+msgstr "Näytä ehdotukset"
+
+msgid "ShowBox streams need a FebBox login: enter the \"ui\" cookie of your FebBox account in the host configuration."
+msgstr "ShowBox-suoratoistot vaativat FebBox-kirjautumisen: anna FebBox-tilisi \"ui\"-eväste palvelun asetuksissa."
+
+msgid "Shows"
+msgstr "Ohjelmat"
+
+msgid "Shows A-Z"
+msgstr "Ohjelmat A-Z"
+
+msgid "Shows and concerts"
+msgstr "Ohjelmat ja konsertit"
+
+msgid "Shows with new episodes"
+msgstr "Ohjelmat, joissa on uusia jaksoja"
+
+msgid "Sign-in was not completed."
+msgstr "Kirjautuminen ei valmistunut."
+
+msgid "Signed in to YouTube."
+msgstr "Kirjauduttu YouTubeen."
+
+msgid "Signed out of YouTube."
+msgstr "Kirjauduttu ulos YouTubesta."
+
+msgid "Similar artists"
+msgstr "Samankaltaiset artistit"
+
+msgid "Similar artists mix"
+msgstr "Samankaltaisten artistien miksaus"
+
+msgid "Simple list"
+msgstr "Yksinkertainen luettelo"
+
+msgid "Simple subtitles downloader"
+msgstr "Yksinkertainen tekstitysten lataaja"
+
+msgid "Simplify the title and try again."
+msgstr "Yksinkertaista nimeä ja yritä uudelleen."
+
+msgid "Site self-test"
+msgstr "Sivustojen itsetesti"
+
+msgid "Site self-test in the main menu :"
+msgstr "Sivustojen itsetesti päävalikossa :"
+
+#, python-format
+msgid "Site self-test: %d of %d - now %s (%d failed so far)"
+msgstr "Sivustojen itsetesti: %d / %d - nyt %s (%d epäonnistunut tähän mennessä)"
+
+msgid "Size:"
+msgstr "Koko:"
+
+msgid "Skin"
+msgstr "Ulkoasu"
+
+msgid "Skinners:"
+msgstr "Ulkoasujen tekijät:"
+
+msgid "Skip video shorter than [min]"
+msgstr "Ohita videot, jotka ovat lyhyempiä kuin [min]"
+
+msgid "Snooker"
+msgstr "Snooker"
+
+msgid "Society"
+msgstr "Yhteiskunta"
+
+msgid "Software decoding as"
+msgstr "Ohjelmistodekoodaus muodossa"
+
+msgid "Solve Cloudflare, hCaptcha and reCAPTCHA with MyE2i"
+msgstr "Ratkaise Cloudflare, hCaptcha ja reCAPTCHA MyE2i:n avulla"
+
+msgid "Solve Google reCAPTCHA v2 with My JDownloader"
+msgstr "Ratkaise Google reCAPTCHA v2 My JDownloaderin avulla"
+
+msgid "Solver"
+msgstr "Ratkaisija"
+
+msgid "Some changes will be applied only after movie player restart."
+msgstr "Osa muutoksista tulee voimaan vasta elokuvasoittimen uudelleenkäynnistyksen jälkeen."
+
+msgid "Some settings will be applied only after GUI restart."
+msgstr "Osa asetuksista tulee voimaan vasta GUI:n uudelleenkäynnistyksen jälkeen."
+
+msgid "Sort A-Z"
+msgstr "Lajittele A-Z"
+
+msgid "Sort Myfreecams :"
+msgstr "Lajittele Myfreecams :"
+
+msgid "Sort Z-A"
+msgstr "Lajittele Z-A"
+
+msgid "Sort alphabetically"
+msgstr "Lajittele aakkosjärjestykseen"
+
+msgid "Sort by name"
+msgstr "Lajittele nimen mukaan"
+
+msgid "Sort by:"
+msgstr "Lajitteluperuste:"
+
+msgid "Sort the links now? The order of the lines in the file will change."
+msgstr "Lajitellaanko linkit nyt? Tiedoston rivien järjestys muuttuu."
+
+msgid "Sort the list:"
+msgstr "Lajittele luettelo:"
+
+msgid "Sort xxxlist :"
+msgstr "Lajittele xxxlist :"
+
+msgid "Sorted channels A-Z [live]"
+msgstr "Kanavat lajiteltuna A-Z [suora]"
+
+msgid "Sorted most viewed channels general [live]"
+msgstr "Katsotuimmat kanavat kaikkiaan, lajiteltuna [suora]"
+
+msgid "Sorted most viewed channels now [live]"
+msgstr "Katsotuimmat kanavat juuri nyt, lajiteltuna [suora]"
+
+msgid "Source:"
+msgstr "Lähde:"
+
+msgid "Spanish"
+msgstr "Espanja"
+
+msgid "Specials"
+msgstr "Erikoisjaksot"
+
+msgid "Spine"
+msgstr "Selkäranka"
+
+msgid "Spoken subtitles"
+msgstr "Puhutut tekstitykset"
+
+msgid "Sport"
+msgstr "Urheilu"
+
+msgid "Spring"
+msgstr "Kevät"
+
+msgid "Squad"
+msgstr "Joukkue"
+
+msgid "Stadium:"
+msgstr "Stadion:"
+
+msgid "Standard"
+msgstr "Vakio"
+
+msgid "Stars:"
+msgstr "Tähdet:"
+
+msgid "Start"
+msgstr "Käynnistä"
+
+msgid "Start download manager per default"
+msgstr "Käynnistä latausten hallinta oletuksena"
+
+msgid "Station:"
+msgstr "Asema:"
+
+msgid "Status"
+msgstr "Tila"
+
+msgid "Status:"
+msgstr "Tila:"
+
+#, python-format
+msgid "Status: %s"
+msgstr "Tila: %s"
+
+msgid "Stereo downmix mode for software decoder"
+msgstr "Stereoalasmiksauksen tila ohjelmistodekooderille"
+
+msgid "Stop"
+msgstr "Pysäytä"
+
+msgid "Stop TorrServer when E2iPlayer is closed"
+msgstr "Pysäytä TorrServer, kun E2iPlayer suljetaan"
+
+msgid "Stop downloading"
+msgstr "Pysäytä lataus"
+
+msgid "Stop playback with buffer save"
+msgstr "Pysäytä toisto ja tallenna puskuri"
+
+msgid "Stop playing?"
+msgstr "Pysäytetäänkö toisto?"
+
+msgid "Storage"
+msgstr "Tallennustila"
+
+msgid "Story"
+msgstr "Juoni"
+
+#, python-format
+msgid "Stream formats: %s"
+msgstr "Suoratoistomuodot: %s"
+
+msgid "Stream link"
+msgstr "Suoratoistolinkki"
+
+msgid "Streamed"
+msgstr "Suoratoistettu"
+
+msgid "Streaming platforms"
+msgstr "Suoratoistopalvelut"
+
+msgid "Studios"
+msgstr "Studiot"
+
+msgid "Study Plan"
+msgstr "Opintosuunnitelma"
+
+msgid "Subbed anime"
+msgstr "Tekstitetty anime"
+
+msgid "Subscribers"
+msgstr "Tilaajat"
+
+msgid "Subspecialities"
+msgstr "Erikoisalat"
+
+msgid "Subtitle background"
+msgstr "Tekstityksen tausta"
+
+msgid "Subtitle border color"
+msgstr "Tekstityksen reunuksen väri"
+
+msgid "Subtitle border enabled"
+msgstr "Tekstityksen reunus käytössä"
+
+msgid "Subtitle border width"
+msgstr "Tekstityksen reunuksen leveys"
+
+msgid "Subtitle box height"
+msgstr "Tekstitysruudun korkeus"
+
+msgid "Subtitle box position"
+msgstr "Tekstitysruudun sijainti"
+
+msgid "Subtitle font"
+msgstr "Tekstityksen fontti"
+
+msgid "Subtitle font color"
+msgstr "Tekstityksen fontin väri"
+
+msgid "Subtitle font size"
+msgstr "Tekstityksen fonttikoko"
+
+msgid "Subtitle languages"
+msgstr "Tekstityskielet"
+
+msgid "Subtitle line height"
+msgstr "Tekstityksen rivikorkeus"
+
+msgid "Subtitle line wrapping"
+msgstr "Tekstityksen rivitys"
+
+msgid "Subtitle shadow X offset"
+msgstr "Tekstityksen varjon X-siirtymä"
+
+msgid "Subtitle shadow Y offset"
+msgstr "Tekstityksen varjon Y-siirtymä"
+
+msgid "Subtitle shadow color"
+msgstr "Tekstityksen varjon väri"
+
+msgid "Subtitle shadow enabled"
+msgstr "Tekstityksen varjo käytössä"
+
+msgid "Subtitle vertical alignment"
+msgstr "Tekstityksen pystysuuntainen tasaus"
+
+msgid "Subtitles"
+msgstr "Tekstitykset"
+
+#, python-format
+msgid "Subtitles \"%s\" downloaded correctly."
+msgstr "Tekstitykset \"%s\" ladattiin onnistuneesti."
+
+msgid "Subtitles by Islam El-Gizawy"
+msgstr "Tekstitykset: Islam El-Gizawy"
+
+msgid "Subtitles conversion to UTF-8 failed."
+msgstr "Tekstitysten muuntaminen UTF-8-muotoon epäonnistui."
+
+#, python-format
+msgid "Subtitles downloaded successfully. [%s], conversion to UTF-8."
+msgstr "Tekstitykset ladattiin onnistuneesti. [%s], muunnos UTF-8-muotoon."
+
+#, python-format
+msgid "Subtitles for: %s"
+msgstr "Tekstitykset kohteelle: %s"
+
+#, python-format
+msgid ""
+"Subtitles saved:\n"
+"%s"
+msgstr ""
+"Tekstitykset tallennettu:\n"
+"%s"
+
+msgid "Subtitles:"
+msgstr "Tekstitykset:"
+
+#, python-format
+msgid "Subtitles: %s"
+msgstr "Tekstitykset: %s"
+
+msgid "Summer"
+msgstr "Kesä"
+
+msgid "Support forum (opena.tv)"
+msgstr "Tukifoorumi (opena.tv)"
+
+msgid "Support package"
+msgstr "Tukipaketti"
+
+msgid "Surahs"
+msgstr "Suurat"
+
+msgid "Surgical Approaches"
+msgstr "Kirurgiset lähestymistavat"
+
+msgid "Surgical Cases"
+msgstr "Kirurgiset tapaukset"
+
+msgid "Surgical Complications"
+msgstr "Kirurgiset komplikaatiot"
+
+msgid "Surgical Techniques"
+msgstr "Kirurgiset tekniikat"
+
+msgid "Sweden"
+msgstr "Ruotsi"
+
+msgid "Swedish"
+msgstr "Ruotsi"
+
+msgid "Switch on torrent playback?"
+msgstr "Otetaanko torrent-toisto käyttöön?"
+
+msgid "Synchronize"
+msgstr "Synkronoi"
+
+msgid "System"
+msgstr "Järjestelmä"
+
+msgid "System language"
+msgstr "Järjestelmän kieli"
+
+msgid "T9 letter jump in lists"
+msgstr "T9-kirjainhyppy luetteloissa"
+
+msgid ""
+"TBN GO needs a free account to play programmes.\n"
+"Register on https://tbngo.pl/ and enter the e-mail and password in the host settings."
+msgstr ""
+"TBN GO vaatii ilmaisen tilin ohjelmien toistamiseen.\n"
+"Rekisteröidy osoitteessa https://tbngo.pl/ ja anna sähköpostiosoite ja salasana palvelun asetuksissa."
+
+msgid "THE PAGE YOU ARE LOOKING FOR IS NOT FOUND."
+msgstr "ETSIMÄÄSI SIVUA EI LÖYDY."
+
+msgid ""
+"THIS IS A PREMIUM VIDEO.\n"
+"LOGIN OR PREMIUM REQUIRED."
+msgstr ""
+"TÄMÄ ON PREMIUM-VIDEO.\n"
+"KIRJAUTUMINEN TAI PREMIUM VAADITAAN."
+
+msgid "THIS IS A PRIVATE VIDEO."
+msgstr "TÄMÄ ON YKSITYINEN VIDEO."
+
+msgid ""
+"THIS LINK CONTAINS PHOTOS ONLY.\n"
+" PLEASE CHOOSE ANOTHER ONE!"
+msgstr ""
+"TÄMÄ LINKKI SISÄLTÄÄ VAIN KUVIA.\n"
+" VALITSE TOINEN!"
+
+msgid ""
+"THIS VIDEO HAS BEEN REMOVED DUE TO COPYRIGHT INFRINGEMENT.\n"
+" PLEASE CHOOSE ANOTHER ONE!"
+msgstr ""
+"TÄMÄ VIDEO ON POISTETTU TEKIJÄNOIKEUSLOUKKAUKSEN VUOKSI.\n"
+" VALITSE TOINEN!"
+
+msgid ""
+"THIS VIDEO IS JUST A PREVIEW ON EXTERNAL STORAGE.\n"
+"VIEWING IT HERE IS NOT SUPPORTED."
+msgstr ""
+"TÄMÄ VIDEO ON VAIN ESIKATSELU ULKOISESSA TALLENNUSTILASSA.\n"
+"SEN KATSOMISTA TÄÄLLÄ EI TUETA."
+
+msgid ""
+"THIS VIDEO IS UNAVAILABLE.\n"
+"TRY AGAIN LATER!"
+msgstr ""
+"TÄMÄ VIDEO EI OLE SAATAVILLA.\n"
+"YRITÄ MYÖHEMMIN UUDELLEEN!"
+
+msgid "TMDb API key (free at themoviedb.org)"
+msgstr "TMDb API -avain (ilmainen osoitteessa themoviedb.org)"
+
+msgid "TMDb Rating:"
+msgstr "TMDb-arvosana:"
+
+msgid "TODAY"
+msgstr "TÄNÄÄN"
+
+msgid "TOMORROW"
+msgstr "HUOMENNA"
+
+msgid "TV Series"
+msgstr "TV-sarjat"
+
+msgid "TV Show"
+msgstr "TV-ohjelma"
+
+msgid "TV Shows"
+msgstr "TV-ohjelmat"
+
+msgid "TV channels"
+msgstr "TV-kanavat"
+
+msgid "TV series"
+msgstr "TV-sarjat"
+
+msgid "Tadabor"
+msgstr "Tadabor"
+
+msgid "Tafsir (Arabic)"
+msgstr "Tafsir (arabia)"
+
+msgid "Tags"
+msgstr "Tunnisteet"
+
+msgid "Taiwanese"
+msgstr "Taiwanilainen"
+
+msgid "Talk shows"
+msgstr "Keskusteluohjelmat"
+
+#, python-format
+msgid "Tariff: %s"
+msgstr "Tilaus: %s"
+
+msgid "Teams"
+msgstr "Joukkueet"
+
+msgid "Techniques"
+msgstr "Tekniikat"
+
+msgid "Technology"
+msgstr "Teknologia"
+
+msgid "Temp"
+msgstr "Temp"
+
+msgid "Tennis"
+msgstr "Tennis"
+
+msgid "Test the failed sites again"
+msgstr "Testaa epäonnistuneet sivustot uudelleen"
+
+msgid "Testers:"
+msgstr "Testaajat:"
+
+msgid "Text field alignment"
+msgstr "Tekstikentän tasaus"
+
+msgid "Text files ytlist and urllist are in:"
+msgstr "Tekstitiedostot ytlist ja urllist sijaitsevat kansiossa:"
+
+msgid "Thai"
+msgstr "Thai"
+
+#, python-format
+msgid "The %s utility is necessary here but it was not detected."
+msgstr "Apuohjelma %s tarvitaan tässä, mutta sitä ei havaittu."
+
+msgid "The 100 tags with the most videos"
+msgstr "100 tunnistetta, joilla on eniten videoita"
+
+msgid "The OpenSubtitles v3 server did not answer. Please try again later."
+msgstr "OpenSubtitles v3 -palvelin ei vastannut. Yritä myöhemmin uudelleen."
+
+msgid "The OpenSubtitles.com server did not answer. Please try again later."
+msgstr "OpenSubtitles.com-palvelin ei vastannut. Yritä myöhemmin uudelleen."
+
+msgid "The QR code leads to the wiki page with pictures and the extension download."
+msgstr "QR-koodi johtaa wikisivulle, jossa on kuvia ja laajennuksen lataus."
+
+msgid "The Stalker portal of this entry is not configured (any more)."
+msgstr "Tämän merkinnän Stalker-portaalia ei ole (enää) määritetty."
+
+msgid "The Watchlist is empty. MENU key on a video: \"Add to Watchlist\"."
+msgstr "Katselulista on tyhjä. MENU-painike videon kohdalla: \"Lisää katselulistalle\"."
+
+msgid "The Xtream account of this entry is not configured (any more)."
+msgstr "Tämän merkinnän Xtream-tiliä ei ole (enää) määritetty."
+
+msgid "The YouTube channels of this group have no videos."
+msgstr "Tämän ryhmän YouTube-kanavilla ei ole videoita."
+
+msgid "The YouTube video ID is invalid."
+msgstr "YouTube-videon tunnus on virheellinen."
+
+msgid "The account is banned."
+msgstr "Tili on estetty."
+
+msgid "The balance of the account is too low."
+msgstr "Tilin saldo on liian pieni."
+
+msgid "The best short films on the internet, handpicked by Vimeo staff"
+msgstr "Internetin parhaat lyhytelokuvat, Vimeon henkilökunnan käsin valitsemat"
+
+msgid "The channel already exists in User Links."
+msgstr "Kanava on jo käyttäjälinkeissä."
+
+msgid "The color of the current version"
+msgstr "Nykyisen version väri"
+
+msgid "The color of the downloaded item"
+msgstr "Ladatun kohteen väri"
+
+msgid "The color of the favourite item"
+msgstr "Suosikkikohteen väri"
+
+msgid "The color of the started item"
+msgstr "Aloitetun kohteen väri"
+
+msgid "The color of the viewed item"
+msgstr "Katsotun kohteen väri"
+
+msgid "The connection limit for your weeb.tv account has been reached."
+msgstr "weeb.tv-tilisi yhteysraja on saavutettu."
+
+msgid "The daily download limit is reached."
+msgstr "Päivittäinen latausraja on saavutettu."
+
+msgid "The data is too large."
+msgstr "Tiedot ovat liian suuria."
+
+#, python-format
+msgid ""
+"The debug log file is empty:\n"
+"%s"
+msgstr ""
+"Vianetsintälokitiedosto on tyhjä:\n"
+"%s"
+
+msgid ""
+"The debug log is disabled or set to console output.\n"
+"\n"
+"Enable it in the E2iPlayer configuration (Debug -> log to file) and reproduce the problem, then come back here."
+msgstr ""
+"Vianetsintäloki on poistettu käytöstä tai ohjattu konsoliin.\n"
+"\n"
+"Ota se käyttöön E2iPlayerin asetuksissa (Vianetsintä -> loki tiedostoon), toista ongelma ja palaa sitten tänne."
+
+msgid "The debug log is not active."
+msgstr "Vianetsintäloki ei ole käytössä."
+
+msgid "The download is not ready yet. Please try again in a few seconds."
+msgstr "Lataus ei ole vielä valmis. Yritä uudelleen muutaman sekunnin kuluttua."
+
+#, python-format
+msgid "The download is ready in %d seconds. Please try again then."
+msgstr "Lataus on valmis %d sekunnin kuluttua. Yritä silloin uudelleen."
+
+msgid "The download manager is stopped, start it on the download page."
+msgstr "Latausten hallinta on pysäytetty, käynnistä se lataussivulla."
+
+msgid "The element already exists in User Links."
+msgstr "Kohde on jo käyttäjälinkeissä."
+
+msgid "The feed of these channels could not be read - press OK to try again."
+msgstr "Näiden kanavien syötettä ei voitu lukea - yritä uudelleen painamalla OK."
+
+msgid "The helper process ended unexpectedly."
+msgstr "Apuprosessi päättyi odottamatta."
+
+#, python-format
+msgid "The helper script %s is missing."
+msgstr "Apuskripti %s puuttuu."
+
+#, python-format
+msgid "The host \"%s\" cannot be used from the web interface (disabled, unknown or protected by PIN)."
+msgstr "Palvelua \"%s\" ei voi käyttää verkkokäyttöliittymästä (poistettu käytöstä, tuntematon tai PIN-suojattu)."
+
+#, python-format
+msgid ""
+"The host %s requires registration. \n"
+"Please fill your login and password in the host configuration. Available under blue button."
+msgstr ""
+"Palvelu %s vaatii rekisteröitymisen. \n"
+"Anna käyttäjätunnus ja salasana palvelun asetuksissa. Saatavilla sinisellä painikkeella."
+
+msgid "The host asks for a captcha. It can only be solved on the receiver (or with MyE2i there)."
+msgstr "Palvelu pyytää captchaa. Sen voi ratkaista vain vastaanottimella (tai siellä MyE2i:n avulla)."
+
+msgid "The host did not return a list."
+msgstr "Palvelu ei palauttanut luetteloa."
+
+#, python-format
+msgid "The host wanted to open a window on the TV (%s) - that only works on the receiver."
+msgstr "Palvelu halusi avata ikkunan televisiossa (%s) - se toimii vain vastaanottimella."
+
+msgid "The hoster sends an advert redirect instead of the video at the moment. Try another hoster."
+msgstr "Videopalvelu lähettää tällä hetkellä mainosuudelleenohjauksen videon sijaan. Kokeile toista videopalvelua."
+
+msgid "The latest uploads of all YouTube channels in this group, newest first."
+msgstr "Tämän ryhmän kaikkien YouTube-kanavien uusimmat lataukset, uusimmat ensin."
+
+msgid "The link could not be resolved."
+msgstr "Linkkiä ei voitu selvittää."
+
+msgid "The link has expired. Please open the video again."
+msgstr "Linkki on vanhentunut. Avaa video uudelleen."
+
+msgid "The list has changed, please try again."
+msgstr "Luettelo on muuttunut, yritä uudelleen."
+
+msgid "The live stream is not available at the moment."
+msgstr "Suora lähetys ei ole tällä hetkellä saatavilla."
+
+msgid "The model is offline or in a private show."
+msgstr "Malli on offline-tilassa tai yksityisessä showssa."
+
+msgid "The number of items in the search history"
+msgstr "Hakuhistorian kohteiden määrä"
+
+#, python-format
+msgid "The page layout of %s has changed."
+msgstr "Sivuston %s sivuasettelu on muuttunut."
+
+#, python-format
+msgid ""
+"The playback buffer has been moved to the download manager.\n"
+"It will be saved in the file:\n"
+"\"%s\""
+msgstr ""
+"Toiston puskuri on siirretty latausten hallintaan.\n"
+"Se tallennetaan tiedostoon:\n"
+"\"%s\""
+
+msgid "The portal did not hand out a link for this entry."
+msgstr "Portaali ei antanut linkkiä tälle merkinnälle."
+
+msgid "The recordings of this page were on the site's old media server, which is offline."
+msgstr "Tämän sivun tallenteet olivat sivuston vanhalla mediapalvelimella, joka ei ole enää toiminnassa."
+
+msgid "The request has no valid length."
+msgstr "Pyynnöllä ei ole kelvollista pituutta."
+
+msgid ""
+"The resolvers 'VidCore', 'VidUp' and 'VidFast' cannot decrypt their links on the receiver.\n"
+"\n"
+"With this option ON, every time you open one of them E2iPlayer sends the site's encrypted stream token - which contains the TMDb id of the movie or episode you are opening - to the third-party web service enc-dec.app (operated by a private individual). That server then sees the id and your IP address on each play. Nothing else is transmitted, and it is only used for these three resolvers.\n"
+"\n"
+"Leave this OFF if you do not want that. The other resolvers (VidEasy, VidLink, Peachify, vidrock, VidNest, ...) decrypt their links on the receiver and are not affected."
+msgstr ""
+"Selvittimet 'VidCore', 'VidUp' ja 'VidFast' eivät pysty purkamaan linkkiensä salausta vastaanottimella.\n"
+"\n"
+"Kun tämä asetus on PÄÄLLÄ, E2iPlayer lähettää aina jonkin niistä avattaessa sivuston salatun suoratoistotunnisteen - joka sisältää avattavan elokuvan tai jakson TMDb-tunnuksen - kolmannen osapuolen verkkopalveluun enc-dec.app (yksityishenkilön ylläpitämä). Kyseinen palvelin näkee tällöin tunnuksen ja IP-osoitteesi jokaisella toistokerralla. Mitään muuta ei lähetetä, ja tätä käytetään vain näille kolmelle selvittimelle.\n"
+"\n"
+"Pidä asetus POIS PÄÄLTÄ, jos et halua tätä. Muut selvittimet (VidEasy, VidLink, Peachify, vidrock, VidNest, ...) purkavat linkkiensä salauksen vastaanottimella, eikä asetus vaikuta niihin."
+
+#, python-format
+msgid "The results of %d of %d sites are from the last search for \"%s\" - this asks all sites again"
+msgstr "%d / %d sivuston tulokset ovat viimeisimmästä hausta \"%s\" - tämä hakee kaikilta sivustoilta uudelleen"
+
+msgid "The same item already exists in this group."
+msgstr "Sama kohde on jo tässä ryhmässä."
+
+msgid "The server did not return a subtitle file (download limit reached?)."
+msgstr "Palvelin ei palauttanut tekstitystiedostoa (latausraja saavutettu?)."
+
+msgid "The server did not send a subtitle file."
+msgstr "Palvelin ei lähettänyt tekstitystiedostoa."
+
+msgid "The server limits the number of requests. Please try again in a few seconds."
+msgstr "Palvelin rajoittaa pyyntöjen määrää. Yritä uudelleen muutaman sekunnin kuluttua."
+
+msgid "The service is overloaded. Please try again later."
+msgstr "Palvelu on ylikuormitettu. Yritä myöhemmin uudelleen."
+
+msgid "The settings are protected by a PIN, change them on the receiver."
+msgstr "Asetukset on suojattu PIN-koodilla, muuta niitä vastaanottimella."
+
+#, python-format
+msgid "The site did not answer with data (HTTP %s). It may be down or have moved."
+msgstr "Sivusto ei vastannut tiedoilla (HTTP %s). Se voi olla poissa käytöstä tai siirtynyt."
+
+msgid "The site has no player for this video (it only shows a cam advert)."
+msgstr "Sivustolla ei ole soitinta tälle videolle (se näyttää vain kameramainoksen)."
+
+msgid "The site refuses all qualities of this video at the moment (HTTP 403). Try again later."
+msgstr "Sivusto torjuu tällä hetkellä kaikki tämän videon laadut (HTTP 403). Yritä myöhemmin uudelleen."
+
+msgid "The site rejected the search request."
+msgstr "Sivusto hylkäsi hakupyynnön."
+
+msgid "The site's browser check (Cloudflare) could not be passed. The site may also be blocked in your country."
+msgstr "Sivuston selaintarkistuksen (Cloudflare) läpäiseminen ei onnistunut. Sivusto voi myös olla estetty maassasi."
+
+msgid "The site's browser check could not be passed."
+msgstr "Sivuston selaintarkistuksen läpäiseminen ei onnistunut."
+
+msgid "The site's catalogue could not be loaded."
+msgstr "Sivuston luetteloa ei voitu ladata."
+
+msgid "The support package holds the versions, the system information, the enabled hosts and the end of the debug log in one text file for a problem report. Look through it before posting it - the log can contain addresses of the sites you opened."
+msgstr "Tukipaketti kokoaa versiot, järjestelmätiedot, käytössä olevat palvelut ja vianetsintälokin lopun yhteen tekstitiedostoon ongelmaraporttia varten. Käy se läpi ennen julkaisemista - loki voi sisältää avaamiesi sivustojen osoitteita."
+
+msgid "The user link could not be deleted."
+msgstr "Käyttäjälinkkiä ei voitu poistaa."
+
+msgid "The user link could not be updated."
+msgstr "Käyttäjälinkkiä ei voitu päivittää."
+
+#, python-format
+msgid "The value must be between %d and %d."
+msgstr "Arvon on oltava välillä %d - %d."
+
+msgid "The video could not be resolved (it may be private, ended or not available in your country)."
+msgstr "Videota ei voitu selvittää (se voi olla yksityinen, päättynyt tai ei saatavilla maassasi)."
+
+msgid "The video file of this title is not available on the server (HTTP 403)."
+msgstr "Tämän nimikkeen videotiedosto ei ole saatavilla palvelimella (HTTP 403)."
+
+msgid "The video has been removed."
+msgstr "Video on poistettu."
+
+msgid "The video player of this site (hdvbua.pro) does not offer this title in your country (licence area, mainly Ukraine)."
+msgstr "Tämän sivuston videosoitin (hdvbua.pro) ei tarjoa tätä nimikettä maassasi (lisenssialue, pääasiassa Ukraina)."
+
+msgid "The website returned a server error for this request."
+msgstr "Sivusto palautti palvelinvirheen tähän pyyntöön."
+
+msgid "There are no other favorite groups"
+msgstr "Muita suosikkiryhmiä ei ole"
+
+msgid "There are unsaved changes. Save now?"
+msgstr "Tallentamattomia muutoksia on. Tallennetaanko nyt?"
+
+#, python-format
+msgid "There is no enough free space in the folder \"%s\"."
+msgstr "Kansiossa \"%s\" ei ole tarpeeksi vapaata tilaa."
+
+#, python-format
+msgid "There is no free space on the drive [%s]."
+msgstr "Asemalla [%s] ei ole vapaata tilaa."
+
+msgid "There is no hosts in this group."
+msgstr "Tässä ryhmässä ei ole palveluja."
+
+msgid "There is no next item in this list."
+msgstr "Tässä luettelossa ei ole seuraavaa kohdetta."
+
+msgid "There is no previous item in this list."
+msgstr "Tässä luettelossa ei ole edellistä kohdetta."
+
+#, python-format
+msgid ""
+"There is no storage device under \"%s\" (%s free). E2iPlayer will switch this folder back to \"%s\" at the next start.\n"
+"Please choose a folder on a mounted HDD or USB stick."
+msgstr ""
+"Polussa \"%s\" ei ole tallennuslaitetta (%s vapaana). E2iPlayer palauttaa tämän kansion arvoon \"%s\" seuraavalla käynnistyskerralla.\n"
+"Valitse kansio liitetyltä kiintolevyltä tai USB-tikulta."
+
+#, python-format
+msgid "There is no storage device under \"%s\". TorrServer keeps its cache in RAM until a HDD or USB stick is mounted there."
+msgstr "Polussa \"%s\" ei ole tallennuslaitetta. TorrServer pitää välimuistinsa RAM-muistissa, kunnes sinne liitetään kiintolevy tai USB-tikku."
+
+msgid "This article has no free video."
+msgstr "Tässä artikkelissa ei ole ilmaista videota."
+
+msgid "This channel does not exist."
+msgstr "Tätä kanavaa ei ole olemassa."
+
+msgid "This channel is currently offline."
+msgstr "Tämä kanava on tällä hetkellä offline-tilassa."
+
+msgid "This channel is not available in your country (geo-blocking)."
+msgstr "Tämä kanava ei ole saatavilla maassasi (maantieteellinen esto)."
+
+msgid "This channel is temporarily unavailable. Please try again later."
+msgstr "Tämä kanava ei ole tilapäisesti käytettävissä. Yritä myöhemmin uudelleen."
+
+msgid "This channel requires a premium account, or the free connection limit has been reached. Enter your weeb.tv login data in the host configuration."
+msgstr "Tämä kanava vaatii premium-tilin, tai ilmaisten yhteyksien raja on saavutettu. Anna weeb.tv-kirjautumistietosi palvelun asetuksissa."
+
+msgid "This content is not available in your region."
+msgstr "Tämä sisältö ei ole saatavilla alueellasi."
+
+msgid "This content is only available in Switzerland."
+msgstr "Tämä sisältö on saatavilla vain Sveitsissä."
+
+msgid "This content needs a login - not supported."
+msgstr "Tämä sisältö vaatii kirjautumisen - ei tuettu."
+
+msgid "This entry cannot be added to the favourites."
+msgstr "Tätä merkintää ei voi lisätä suosikkeihin."
+
+msgid "This entry cannot be opened."
+msgstr "Tätä merkintää ei voi avata."
+
+msgid "This entry is only an advert, there is no video."
+msgstr "Tämä merkintä on pelkkä mainos, videota ei ole."
+
+msgid "This entry is protected by a PIN, open it on the receiver."
+msgstr "Tämä merkintä on suojattu PIN-koodilla, avaa se vastaanottimella."
+
+msgid "This episode is not available in this version (SUB/DUB) on this server. Try another one."
+msgstr "Tämä jakso ei ole saatavilla tässä versiossa (SUB/DUB) tällä palvelimella. Kokeile toista."
+
+msgid "This feed is empty, or the YouTube sign-in has expired - sign out and in again."
+msgstr "Tämä syöte on tyhjä tai YouTube-kirjautuminen on vanhentunut - kirjaudu ulos ja uudelleen sisään."
+
+msgid "This folder is empty. MENU key on a video of the Watchlist: \"Move to Watchlist folder...\"."
+msgstr "Tämä kansio on tyhjä. MENU-painike katselulistan videon kohdalla: \"Siirrä katselulistan kansioon...\"."
+
+msgid "This folder is protected by a PIN, open it on the receiver."
+msgstr "Tämä kansio on suojattu PIN-koodilla, avaa se vastaanottimella."
+
+msgid "This host has been added already to this group."
+msgstr "Tämä palvelu on jo lisätty tähän ryhmään."
+
+msgid "This is only an advert for a paid clip (clips4sale), there is no free video."
+msgstr "Tämä on vain mainos maksulliselle leikkeelle (clips4sale), ilmaista videota ei ole."
+
+msgid "This is paid content of PZPN+, it needs a purchase on the website."
+msgstr "Tämä on PZPN+:n maksullista sisältöä, se on ostettava sivustolta."
+
+msgid "This mix is only available with a Mixcloud Select subscription."
+msgstr "Tämä miksaus on saatavilla vain Mixcloud Select -tilauksella."
+
+msgid "This model is offline."
+msgstr "Tämä malli on offline-tilassa."
+
+msgid "This option cannot be changed from the web interface."
+msgstr "Tätä asetusta ei voi muuttaa verkkokäyttöliittymästä."
+
+msgid "This page has no video (blog article)."
+msgstr "Tällä sivulla ei ole videota (blogiartikkeli)."
+
+msgid "This player is not available any more - reload the links."
+msgstr "Tämä soitin ei ole enää saatavilla - lataa linkit uudelleen."
+
+msgid "This room is currently offline or unavailable."
+msgstr "Tämä huone on tällä hetkellä offline-tilassa tai ei käytettävissä."
+
+msgid "This room is offline. Try again later!"
+msgstr "Tämä huone on offline-tilassa. Yritä myöhemmin uudelleen!"
+
+msgid "This section is no longer on the main page."
+msgstr "Tämä osio ei ole enää pääsivulla."
+
+msgid "This session has no code - scan the QR code on the receiver screen."
+msgstr "Tällä istunnolla ei ole koodia - skannaa QR-koodi vastaanottimen näytöltä."
+
+msgid "This show is private. Try again later!"
+msgstr "Tämä show on yksityinen. Yritä myöhemmin uudelleen!"
+
+msgid "This source is offline at the moment. Try another source of the channel."
+msgstr "Tämä lähde on tällä hetkellä offline-tilassa. Kokeile kanavan toista lähdettä."
+
+msgid "This stream can only be played with buffering - please start it on the receiver."
+msgstr "Tämän suoratoiston voi toistaa vain puskuroinnilla - käynnistä se vastaanottimella."
+
+msgid "This subtitle provider has subtitles for movies only."
+msgstr "Tällä tekstitysten tarjoajalla on tekstityksiä vain elokuviin."
+
+msgid "This video has been deleted."
+msgstr "Tämä video on poistettu."
+
+msgid "This video is Premium-only content."
+msgstr "Tämä video on vain Premium-sisältöä."
+
+msgid "This video is a private video."
+msgstr "Tämä video on yksityinen video."
+
+msgid "This video is a private."
+msgstr "Tämä video on yksityinen."
+
+msgid "This video is only on hosters E2iPlayer cannot play."
+msgstr "Tämä video on vain videopalveluissa, joita E2iPlayer ei pysty toistamaan."
+
+msgid "This video is only on the netu.tv player (pbtube.net), which E2iPlayer cannot play."
+msgstr "Tämä video on vain netu.tv-soittimessa (pbtube.net), jota E2iPlayer ei pysty toistamaan."
+
+msgid "This video needs a paid ororo.tv subscription."
+msgstr "Tämä video vaatii maksullisen ororo.tv-tilauksen."
+
+msgid "This video requires you to sign in to a YouTube account."
+msgstr "Tämä video vaatii kirjautumisen YouTube-tilille."
+
+msgid "This video was embedded from Pornhub and is no longer available there."
+msgstr "Tämä video oli upotettu Pornhubista, eikä se ole siellä enää saatavilla."
+
+msgid "This video was embedded from xHamster and has been deleted there."
+msgstr "Tämä video oli upotettu xHamsterista, ja se on poistettu sieltä."
+
+msgid "Thriller"
+msgstr "Trilleri"
+
+msgid "Thumbnails"
+msgstr "Pikkukuvat"
+
+msgid "Time"
+msgstr "Aika"
+
+msgid "Tip! You can connect USB flash drive to fix this problem."
+msgstr "Vinkki! Voit korjata ongelman liittämällä USB-muistitikun."
+
+msgid "Titles"
+msgstr "Nimikkeet"
+
+#, python-format
+msgid "Titlovi.com login failed (HTTP %s)."
+msgstr "Titlovi.com-kirjautuminen epäonnistui (HTTP %s)."
+
+#, python-format
+msgid "Titlovi.com login failed for user \"%s\". Please check your login and password."
+msgstr "Titlovi.com-kirjautuminen epäonnistui käyttäjälle \"%s\". Tarkista käyttäjätunnus ja salasana."
+
+msgid "Titlovi.com needs a free titlovi.com account. Enter login and password in the E2iPlayer settings."
+msgstr "Titlovi.com vaatii ilmaisen titlovi.com-tilin. Anna käyttäjätunnus ja salasana E2iPlayerin asetuksissa."
+
+#, python-format
+msgid "Titlovi.com search failed (HTTP %s)."
+msgstr "Titlovi.com-haku epäonnistui (HTTP %s)."
+
+#, python-format
+msgid "Titlovi.com: API access is disabled for the account \"%s\". See titlovi.com/donacije."
+msgstr "Titlovi.com: API-käyttö on poistettu käytöstä tililtä \"%s\". Katso titlovi.com/donacije."
+
+msgid "Titlovi.com: invalid server response."
+msgstr "Titlovi.com: virheellinen palvelimen vastaus."
+
+#, python-format
+msgid ""
+"To sign in to YouTube:\n"
+"\n"
+"1. On a phone or computer open:\n"
+"     %s\n"
+"\n"
+"2. Enter this code:\n"
+"\n"
+"     %s\n"
+"\n"
+"3. Approve the access, then select OK here."
+msgstr ""
+"Kirjautuminen YouTubeen:\n"
+"\n"
+"1. Avaa puhelimella tai tietokoneella:\n"
+"     %s\n"
+"\n"
+"2. Anna tämä koodi:\n"
+"\n"
+"     %s\n"
+"\n"
+"3. Hyväksy käyttöoikeus ja valitse sitten tässä OK."
+
+msgid ""
+"To watch videos from https://vk.com/ you need to login.\n"
+"Please fill your login and password in the IPTVPlayer configuration."
+msgstr ""
+"Videoiden katsominen sivustolta https://vk.com/ vaatii kirjautumisen.\n"
+"Anna käyttäjätunnus ja salasana IPTVPlayerin asetuksissa."
+
+msgid "Today"
+msgstr "Tänään"
+
+msgid "Tomorrow"
+msgstr "Huomenna"
+
+msgid "Too many redirects."
+msgstr "Liian monta uudelleenohjausta."
+
+msgid "Too many requests. Please try again later."
+msgstr "Liian monta pyyntöä. Yritä myöhemmin uudelleen."
+
+msgid "Too many wrong codes - scan the QR code on the receiver screen instead."
+msgstr "Liian monta väärää koodia - skannaa sen sijaan QR-koodi vastaanottimen näytöltä."
+
+msgid "Top"
+msgstr "Suosituimmat"
+
+msgid "Top 10"
+msgstr "Top 10"
+
+msgid "Top IMDb"
+msgstr "Top IMDb"
+
+msgid "Top airing"
+msgstr "Suosittua nyt"
+
+msgid "Top in your country"
+msgstr "Suosituimmat maassasi"
+
+msgid "Top leagues and clubs"
+msgstr "Huippusarjat ja -seurat"
+
+msgid "Top rated"
+msgstr "Parhaiksi arvioidut"
+
+msgid "Top rated movies"
+msgstr "Parhaiksi arvioidut elokuvat"
+
+msgid "Top rated series"
+msgstr "Parhaiksi arvioidut sarjat"
+
+msgid "Top scorers"
+msgstr "Maalipörssi"
+
+msgid "Top series"
+msgstr "Suosituimmat sarjat"
+
+msgid "Top stations"
+msgstr "Suosituimmat asemat"
+
+msgid "Top tracks"
+msgstr "Suosituimmat kappaleet"
+
+msgid "Top upcoming"
+msgstr "Suosittua pian"
+
+msgid "Top-IMDB"
+msgstr "Top-IMDB"
+
+msgid "Topics"
+msgstr "Aiheet"
+
+msgid "TorrServer binary (OK = choose, empty = search automatically)"
+msgstr "TorrServer-ohjelmatiedosto (OK = valitse, tyhjä = etsi automaattisesti)"
+
+#, python-format
+msgid "TorrServer could not be started (%s)."
+msgstr "TorrServeria ei voitu käynnistää (%s)."
+
+msgid "TorrServer got no file list for this torrent (no peers or a dead link?)."
+msgstr "TorrServer ei saanut tiedostoluetteloa tälle torrentille (ei vertaisia tai kuollut linkki?)."
+
+msgid "TorrServer port"
+msgstr "TorrServer-portti"
+
+msgid "TorrServer was not found on the receiver. It is not part of E2iPlayer and not in the image feeds - install it yourself:"
+msgstr "TorrServeria ei löytynyt vastaanottimesta. Se ei ole osa E2iPlayeria eikä sitä ole imagen syötteissä - asenna se itse:"
+
+msgid "TorrServer web interface in the home network"
+msgstr "TorrServerin verkkokäyttöliittymä kotiverkossa"
+
+msgid "Torrent"
+msgstr "Torrent"
+
+msgid ""
+"Torrent links are played with TorrServer.\n"
+"Switch on \"Play torrents with TorrServer\" in the E2iPlayer settings (Torrent configuration)."
+msgstr ""
+"Torrent-linkit toistetaan TorrServerillä.\n"
+"Ota käyttöön \"Toista torrentit TorrServerillä\" E2iPlayerin asetuksissa (Torrent-asetukset)."
+
+msgid ""
+"Torrents are peer-to-peer: while a torrent plays, the receiver connects to other users and your IP address is visible to them. Depending on your country, downloading or sharing copyrighted content through torrents may be illegal - you alone are responsible for what you play. Upload to other peers stays off unless you switch it on.\n"
+"\n"
+"TorrServer itself is not part of E2iPlayer, it has to be installed separately."
+msgstr ""
+"Torrentit ovat vertaisverkkoja: kun torrentia toistetaan, vastaanotin muodostaa yhteyden muihin käyttäjiin ja IP-osoitteesi näkyy heille. Maastasi riippuen tekijänoikeudella suojatun sisällön lataaminen tai jakaminen torrenttien kautta voi olla laitonta - vastaat yksin siitä, mitä toistat. Lähetys muille vertaisille pysyy pois päältä, ellet ota sitä käyttöön.\n"
+"\n"
+"TorrServer itse ei ole osa E2iPlayeria, vaan se on asennettava erikseen."
+
+msgid "Total size:"
+msgstr "Kokonaiskoko:"
+
+msgid "Tourism"
+msgstr "Matkailu"
+
+msgid "Tournament"
+msgstr "Turnaus"
+
+msgid "Tracklist"
+msgstr "Kappalelista"
+
+msgid "Trailer"
+msgstr "Traileri"
+
+msgid "Trans"
+msgstr "Trans"
+
+msgid "Translation:"
+msgstr "Käännös:"
+
+#, python-format
+msgid "Translator: %s"
+msgstr "Kääntäjä: %s"
+
+msgid "Transparent"
+msgstr "Läpinäkyvä"
+
+msgid "Trauma"
+msgstr "Trauma"
+
+msgid "Travel"
+msgstr "Matkat"
+
+msgid "Treatment Consult"
+msgstr "Hoitokonsultaatio"
+
+msgid "Trending"
+msgstr "Trendaavat"
+
+msgid "Trending this week"
+msgstr "Trendaavat tällä viikolla"
+
+msgid "Trial"
+msgstr "Kokeilutili"
+
+msgid "Troubleshooting"
+msgstr "Vianmääritys"
+
+msgid "Try to change extplayer or reinstall gst-ifdsrc"
+msgstr "Kokeile vaihtaa extplayeria tai asenna gst-ifdsrc uudelleen"
+
+msgid "Turkish"
+msgstr "Turkki"
+
+msgid "Turkish Movies"
+msgstr "Turkkilaiset elokuvat"
+
+msgid "Turkish Series"
+msgstr "Turkkilaiset sarjat"
+
+msgid "Turkish TV series"
+msgstr "Turkkilaiset TV-sarjat"
+
+msgid "Turkish movies (dubbed)"
+msgstr "Turkkilaiset elokuvat (dubatut)"
+
+msgid "Turkish series (dubbed)"
+msgstr "Turkkilaiset sarjat (dubatut)"
+
+msgid "Tutorials"
+msgstr "Opetusohjelmat"
+
+msgid "Type"
+msgstr "Tyyppi"
+
+msgid "Type:"
+msgstr "Tyyppi:"
+
+msgid "Type: "
+msgstr "Tyyppi: "
+
+#, python-format
+msgid "Type: %s"
+msgstr "Tyyppi: %s"
+
+msgid "Types"
+msgstr "Tyypit"
+
+msgid "UNKNOWN"
+msgstr "TUNTEMATON"
+
+msgid "URL malformed."
+msgstr "Virheellinen URL."
+
+msgid "Ukrainian"
+msgstr "Ukraina"
+
+msgid "Umount iso file"
+msgstr "Irrota iso-tiedosto"
+
+msgid "Unable to comply. Search History is empty."
+msgstr "Ei voida suorittaa. Hakuhistoria on tyhjä."
+
+msgid "Undo reverse"
+msgstr "Kumoa käänteinen järjestys"
+
+msgid "Undo shuffle"
+msgstr "Kumoa sekoitus"
+
+msgid "Unfix jump target"
+msgstr "Vapauta hyppykohde"
+
+msgid "Unknown action."
+msgstr "Tuntematon toiminto."
+
+msgid "Unknown error code."
+msgstr "Tuntematon virhekoodi."
+
+msgid "Unknown error."
+msgstr "Tuntematon virhe."
+
+#, python-format
+msgid "Unknown protocol [%s]"
+msgstr "Tuntematon protokolla [%s]"
+
+msgid "Unknown server response."
+msgstr "Tuntematon palvelimen vastaus."
+
+#, python-format
+msgid "Unknown subtitle parser for format \"%s\"."
+msgstr "Tuntematon tekstitysjäsennin muodolle \"%s\"."
+
+#, python-format
+msgid "Unrar error code[%s]."
+msgstr "Unrar-virhekoodi[%s]."
+
+msgid "Unselect all"
+msgstr "Poista kaikki valinnat"
+
+msgid "Unset watched"
+msgstr "Poista katsottu-merkintä"
+
+msgid "Unsupported protocol."
+msgstr "Protokollaa ei tueta."
+
+#, python-format
+msgid "Unzip error code[%s]."
+msgstr "Unzip-virhekoodi[%s]."
+
+msgid "Upbringing"
+msgstr "Kasvatus"
+
+msgid "Upcoming"
+msgstr "Tulossa"
+
+msgid "Updates"
+msgstr "Päivitykset"
+
+msgid "Upload date"
+msgstr "Latauspäivä"
+
+msgid "Upload speed limit"
+msgstr "Lähetysnopeuden rajoitus"
+
+#, python-format
+msgid "Uploader: %s"
+msgstr "Lisääjä: %s"
+
+msgid "Uploads"
+msgstr "Lataukset"
+
+msgid "Urllists player"
+msgstr "Urllists-soitin"
+
+msgid "Use Cinemeta (no key, English)"
+msgstr "Käytä Cinemetaa (ei avainta, englanniksi)"
+
+msgid "Use HLS streams (adaptive):"
+msgstr "Käytä HLS-suoratoistoja (mukautuva):"
+
+msgid "Use IMDb (no key)"
+msgstr "Käytä IMDb:tä (ei avainta)"
+
+msgid "Use OMDb"
+msgstr "Käytä OMDb:tä"
+
+msgid "Use TMDb"
+msgstr "Käytä TMDb:tä"
+
+msgid "Use TVmaze for series (no key, English)"
+msgstr "Käytä TVmazea sarjoille (ei avainta, englanniksi)"
+
+msgid "Use default video quality"
+msgstr "Käytä oletusvideolaatua"
+
+msgid "Use default video quality:"
+msgstr "Käytä oletusvideolaatua:"
+
+msgid "Use login"
+msgstr "Käytä kirjautumista"
+
+msgid "Use own pin for configuration"
+msgstr "Käytä omaa PIN-koodia asetuksille"
+
+msgid "Use own pin instead of the player pin"
+msgstr "Käytä omaa PIN-koodia soittimen PIN-koodin sijaan"
+
+msgid "Use proxy server:"
+msgstr "Käytä välityspalvelinta:"
+
+#, python-format
+msgid "Use software decoder for the %s"
+msgstr "Käytä ohjelmistodekooderia kohteelle %s"
+
+msgid "Use subtitles parser extension if available"
+msgstr "Käytä tekstitysjäsentimen laajennusta, jos saatavilla"
+
+msgid "Use the PyCurl for HTTP(S) requests"
+msgstr "Käytä PyCurlia HTTP(S)-pyyntöihin"
+
+msgid "Use the best quality :"
+msgstr "Käytä parasta laatua :"
+
+msgid "User"
+msgstr "Käyttäjä"
+
+msgid "User defined"
+msgstr "Käyttäjän määrittämä"
+
+msgid "User files"
+msgstr "Käyttäjän tiedostot"
+
+msgid "User link added."
+msgstr "Käyttäjälinkki lisätty."
+
+msgid "User link deleted."
+msgstr "Käyttäjälinkki poistettu."
+
+msgid "User link updated."
+msgstr "Käyttäjälinkki päivitetty."
+
+msgid "User links"
+msgstr "Käyttäjälinkit"
+
+msgid "User links sorted."
+msgstr "Käyttäjälinkit lajiteltu."
+
+msgid "User links stored in the ytlist.txt file."
+msgstr "Käyttäjälinkit tallennettu tiedostoon ytlist.txt."
+
+msgid "User-Agent (leave empty for the default):"
+msgstr "User-Agent (jätä tyhjäksi oletusta varten):"
+
+#, python-format
+msgid "User-Links: %d"
+msgstr "Käyttäjälinkit: %d"
+
+msgid "Username/password authentication failure."
+msgstr "Todennus käyttäjätunnuksella/salasanalla epäonnistui."
+
+msgid "Username:"
+msgstr "Käyttäjätunnus:"
+
+msgid "Users"
+msgstr "Käyttäjät"
+
+#, python-format
+msgid "Utility \"%s\" can not be found."
+msgstr "Apuohjelmaa \"%s\" ei löydy."
+
+msgid "VAVOO did not hand out a session signature. Try again later."
+msgstr "VAVOO ei antanut istunnon allekirjoitusta. Yritä myöhemmin uudelleen."
+
+msgid "Venue"
+msgstr "Tapahtumapaikka"
+
+msgid "Verify"
+msgstr "Vahvista"
+
+msgid "Version"
+msgstr "Versio"
+
+#, python-format
+msgid "Version: %s"
+msgstr "Versio: %s"
+
+msgid "Video"
+msgstr "Video"
+
+msgid "Video buffer size [MB]"
+msgstr "Videopuskurin koko [MB]"
+
+msgid "Video library"
+msgstr "Videokirjasto"
+
+msgid "Video link not found."
+msgstr "Videolinkkiä ei löytynyt."
+
+msgid "Video mode"
+msgstr "Videotila"
+
+msgid "Video options"
+msgstr "Videoasetukset"
+
+msgid "Video player OSD clock format"
+msgstr "Videosoittimen OSD-kellon muoto"
+
+msgid "Video policy"
+msgstr "Videon skaalaus"
+
+msgid "Video policy for 4:3"
+msgstr "Videon skaalaus 4:3-kuvalle"
+
+msgid "Video recitations"
+msgstr "Videoresitaatiot"
+
+msgid "Video with DRM protection."
+msgstr "DRM-suojattu video."
+
+msgid "Videos"
+msgstr "Videot"
+
+#, python-format
+msgid "Videos %s"
+msgstr "Videot %s"
+
+msgid "Videos you have liked."
+msgstr "Videot, joista olet tykännyt."
+
+msgid "Videos you have recently watched."
+msgstr "Äskettäin katsomasi videot."
+
+msgid "View count"
+msgstr "Katselukerrat"
+
+msgid "Views"
+msgstr "Katselukerrat"
+
+msgid "Views:"
+msgstr "Katselukerrat:"
+
+msgid "Vimeo does not offer this list to anonymous users in your region."
+msgstr "Vimeo ei tarjoa tätä luetteloa anonyymeille käyttäjille alueellasi."
+
+msgid "Vimeo live event: the live transmission (while on air) and the past transmissions."
+msgstr "Vimeo-livetapahtuma: livelähetys (lähetyksen aikana) ja aiemmat lähetykset."
+
+msgid "Vimeo playlist with the recordings of this page."
+msgstr "Vimeo-soittolista tämän sivun tallenteista."
+
+msgid "Vimeo: this video is private, removed or may only be played on the site that embeds it."
+msgstr "Vimeo: tämä video on yksityinen, poistettu tai sitä voi toistaa vain sen upottavalla sivustolla."
+
+msgid "Virtual Keyboard"
+msgstr "Virtuaalinäppäimistö"
+
+msgid "Virtual Keyboard type"
+msgstr "Virtuaalinäppäimistön tyyppi"
+
+msgid "Voice-over"
+msgstr "Selostus"
+
+msgid "Volleyball"
+msgstr "Lentopallo"
+
+msgid "WWE shows"
+msgstr "WWE-ohjelmat"
+
+msgid "Waiting for the result ..."
+msgstr "Odotetaan tulosta ..."
+
+msgid "War"
+msgstr "Sota"
+
+msgid "Watch Videos Online"
+msgstr "Katso videoita verkossa"
+
+msgid "Watch history"
+msgstr "Katseluhistoria"
+
+msgid "Watch later"
+msgstr "Katso myöhemmin"
+
+msgid "Watch online"
+msgstr "Katso verkossa"
+
+msgid "Watchlist"
+msgstr "Katselulista"
+
+msgid "Watchlist (no folder)"
+msgstr "Katselulista (ei kansiota)"
+
+msgid "Watchlist folder"
+msgstr "Katselulistan kansio"
+
+msgid "WebStreamr / AIOStreams manifest URL (your own):"
+msgstr "WebStreamr / AIOStreams -manifestin URL (oma):"
+
+msgid "Website address"
+msgstr "Verkkosivuston osoite"
+
+#, python-format
+msgid "Weeks on chart: %s"
+msgstr "Viikkoja listalla: %s"
+
+msgid "Western"
+msgstr "Lännenelokuva"
+
+msgid "What's happening?"
+msgstr "Mitä tapahtuu?"
+
+msgid "When the maximum is reached"
+msgstr "Kun enimmäismäärä saavutetaan"
+
+msgid "While live TV is running"
+msgstr "Kun suora TV on käynnissä"
+
+msgid "Whole file must be downloaded to start playback!"
+msgstr "Koko tiedosto on ladattava ennen toiston aloittamista!"
+
+msgid "Wiki"
+msgstr "Wiki"
+
+msgid "Winter"
+msgstr "Talvi"
+
+msgid "Winter sports"
+msgstr "Talviurheilu"
+
+msgid "With an API key from subdl.com (E2iPlayer settings, Subtitles) the official SubDL API is searched as well."
+msgstr "Kun käytössä on subdl.comin API-avain (E2iPlayerin asetukset, Tekstitykset), haetaan myös virallisesta SubDL-API:sta."
+
+msgid "With subtitles"
+msgstr "Tekstitetty"
+
+msgid "World"
+msgstr "Maailma"
+
+msgid "Worldwide"
+msgstr "Maailmanlaajuisesti"
+
+msgid "Wrestling"
+msgstr "Wrestling"
+
+msgid "Wrestling shows"
+msgstr "Wrestling-ohjelmat"
+
+msgid "Write current title to file:"
+msgstr "Kirjoita nykyinen nimike tiedostoon:"
+
+msgid "Writer:"
+msgstr "Käsikirjoittaja:"
+
+msgid "Writers:"
+msgstr "Käsikirjoittajat:"
+
+msgid "Written Boards Review"
+msgstr "Kirjallisen erikoislääkärikokeen kertaus"
+
+msgid "Wrong Youtube Api Key length"
+msgstr "Youtube API -avaimen pituus on väärä"
+
+msgid "Wrong captcha code."
+msgstr "Väärä captcha-koodi."
+
+msgid "Wrong code."
+msgstr "Väärä koodi."
+
+msgid "Wrong format of rar archive."
+msgstr "Rar-arkiston muoto on virheellinen."
+
+msgid "Wrong format of zip archive."
+msgstr "Zip-arkiston muoto on virheellinen."
+
+msgid "Wrong indexes."
+msgstr "Virheelliset indeksit."
+
+msgid "Wrong uri."
+msgstr "Virheellinen uri."
+
+msgid "Wrong weeb.tv username or password."
+msgstr "Väärä weeb.tv-käyttäjätunnus tai -salasana."
+
+#, python-format
+msgid "Wyzie Subs API key rejected: %s"
+msgstr "Wyzie Subs hylkäsi API-avaimen: %s"
+
+msgid "Wyzie Subs needs an API key. You can get a free one at https://store.wyzie.io/redeem and enter it in the E2iPlayer configuration."
+msgstr "Wyzie Subs vaatii API-avaimen. Voit hankkia ilmaisen avaimen osoitteesta https://store.wyzie.io/redeem ja syöttää sen E2iPlayerin asetuksiin."
+
+msgid "Wyzie Subs: the daily request limit of the API key is reached."
+msgstr "Wyzie Subs: API-avaimen päivittäinen pyyntöraja on saavutettu."
+
+msgid "YELLOW"
+msgstr "KELTAINEN"
+
+msgid "YESTERDAY"
+msgstr "EILEN"
+
+msgid "YP connected"
+msgstr "YP yhdistetty"
+
+msgid "Year"
+msgstr "Vuosi"
+
+#, python-format
+msgid "Year %s"
+msgstr "Vuosi %s"
+
+msgid "Year:"
+msgstr "Vuosi:"
+
+msgid "Yes"
+msgstr "Kyllä"
+
+msgid "Yes + Global Search"
+msgstr "Kyllä + yleinen haku"
+
+msgid "Yes, to console"
+msgstr "Kyllä, konsoliin"
+
+msgid "Yes, to file /hdd/iptv.dbg"
+msgstr "Kyllä, tiedostoon /hdd/iptv.dbg"
+
+msgid "Yes, to file /home/root/logs/iptv.dbg"
+msgstr "Kyllä, tiedostoon /home/root/logs/iptv.dbg"
+
+msgid "Yes, to file /tmp/iptv.dbg"
+msgstr "Kyllä, tiedostoon /tmp/iptv.dbg"
+
+msgid "Yesterday"
+msgstr "Eilen"
+
+msgid "You can disable HTTPS certificates validation in the E2iPlayer configuration to suppress this problem."
+msgstr "Voit ohittaa tämän ongelman poistamalla HTTPS-varmenteiden tarkistuksen käytöstä E2iPlayerin asetuksissa."
+
+msgid "You can enable PyCurl in the E2iPlayer configuration to fix this problem."
+msgstr "Voit korjata tämän ongelman ottamalla PyCurlin käyttöön E2iPlayerin asetuksissa."
+
+msgid "You can install PyCurl package with TLS 1.3 support from the feed to fix this problem."
+msgstr "Voit korjata tämän ongelman asentamalla syötteestä PyCurl-paketin, jossa on TLS 1.3 -tuki."
+
+#, python-format
+msgid "You can use \"%s\" or \"%s\" services for automatic solution."
+msgstr "Voit käyttää palveluita \"%s\" tai \"%s\" automaattiseen ratkaisuun."
+
+msgid "You can use external eplayer to start playback faster."
+msgstr "Voit käyttää ulkoista eplayeria toiston nopeampaan aloittamiseen."
+
+msgid "You do not have a premium account. Starting a sponsored broadcast."
+msgstr "Sinulla ei ole premium-tiliä. Aloitetaan sponsoroitu lähetys."
+
+msgid "You have reached the play limit for this mix."
+msgstr "Tämän miksauksen toistoraja on täynnä."
+
+msgid "You should never perform block I/O operations in the __init__."
+msgstr "Estäviä I/O-toimintoja ei pidä koskaan suorittaa __init__-metodissa."
+
+msgid "YouTube User Links Editor"
+msgstr "YouTube-käyttäjälinkkien muokkain"
+
+msgid "YouTube channels: original order"
+msgstr "YouTube-kanavat: alkuperäinen järjestys"
+
+msgid "YouTube channels: sort by newest upload"
+msgstr "YouTube-kanavat: lajittele uusimman latauksen mukaan"
+
+msgid "Your 'Watch later' playlist."
+msgstr "\"Katso myöhemmin\" -soittolistasi."
+
+#, python-format
+msgid "Your MyE2i extension is outdated or unknown (v%s or newer needed). Please update:"
+msgstr "MyE2i-laajennuksesi on vanhentunut tai tuntematon (vaaditaan v%s tai uudempi). Päivitä:"
+
+msgid "Your own list of videos, in folders of your own (MENU key on a video: \"Add to Watchlist\")"
+msgstr "Oma videoluettelosi omissa kansioissasi (MENU-painike videon kohdalla: \"Lisää katselulistalle\")"
+
+msgid "Your search entry"
+msgstr "Hakusanasi"
+
+#, python-format
+msgid "Youth protection: only available between %s and %s."
+msgstr "Ikärajasuojaus: saatavilla vain klo %s - %s."
+
+msgid "Youtube Suggestions"
+msgstr "Youtube-ehdotukset"
+
+msgid "Youtube searches are quicker, if you fill API key in setting menu"
+msgstr "Youtube-haut ovat nopeampia, jos syötät API-avaimen asetusvalikossa"
+
+msgid "Z-A"
+msgstr "Z-A"
+
+#, python-format
+msgid "[%s CD]"
+msgstr "[%s CD]"
+
+#, python-format
+msgid "[%s] - configuration"
+msgstr "[%s] - asetukset"
+
+#, python-format
+msgid "[%s] with buffering"
+msgstr "[%s] puskuroinnilla"
+
+#, python-format
+msgid "[%s] without buffering"
+msgstr "[%s] ilman puskurointia"
+
+msgid "[HLS/M3U8] buffering"
+msgstr "[HLS/M3U8] puskurointi"
+
+msgid "[HLS/M3U8] live stream starts behind live"
+msgstr "[HLS/M3U8] suora lähetys alkaa jäljessä reaaliajasta"
+
+msgid "[HTTP] buffering"
+msgstr "[HTTP] puskurointi"
+
+msgid "[RTMP] buffering (rtmpdump required)"
+msgstr "[RTMP] puskurointi (vaatii rtmpdumpin)"
+
+msgid "[en]"
+msgstr "[en]"
+
+msgid "[pl]"
+msgstr "[pl]"
+
+msgid "_checkStatus except error"
+msgstr "_checkStatus except error"
+
+msgid "after a week"
+msgstr "viikon kuluttua"
+
+msgid "after closing"
+msgstr "sulkemisen jälkeen"
+
+msgid "after day"
+msgstr "päivän kuluttua"
+
+msgid "after three days"
+msgstr "kolmen päivän kuluttua"
+
+msgid "all"
+msgstr "kaikki"
+
+msgid "alphabetical"
+msgstr "aakkosjärjestys"
+
+msgid "anime-odcinki.pl shows this title only to logged-in users."
+msgstr "anime-odcinki.pl näyttää tämän nimikkeen vain kirjautuneille käyttäjille."
+
+msgid "aqua"
+msgstr "akvamariini"
+
+msgid "as Chrome this session"
+msgstr "Chromena tämän istunnon ajan"
+
+msgid "as in ytlist.txt"
+msgstr "kuten tiedostossa ytlist.txt"
+
+msgid "auto"
+msgstr "automaattinen"
+
+#, python-format
+msgid "available until %s"
+msgstr "saatavilla %s asti"
+
+msgid "back to host/group selection"
+msgstr "takaisin palvelun/ryhmän valintaan"
+
+msgid "black"
+msgstr "musta"
+
+msgid "black&white"
+msgstr "mustavalkoinen"
+
+msgid "blue"
+msgstr "sininen"
+
+msgid "bottom"
+msgstr "alhaalla"
+
+msgid "buffering location"
+msgstr "puskurointisijainti"
+
+msgid "center"
+msgstr "keskellä"
+
+msgid "changed"
+msgstr "muutettu"
+
+msgid "close the editor - or stop manual reordering if it's active"
+msgstr "sulje muokkain - tai lopeta käsin järjestäminen, jos se on käynnissä"
+
+msgid "cobalt"
+msgstr "koboltti"
+
+msgid "cookies cache"
+msgstr "evästevälimuisti"
+
+msgid "could not run the probe"
+msgstr "testiä ei voitu suorittaa"
+
+#, python-format
+msgid "curl-impersonate is not installed on the receiver (%s). This stream only plays with it."
+msgstr "curl-impersonate ei ole asennettuna vastaanottimeen (%s). Tämä suoratoisto toimii vain sen avulla."
+
+msgid "debug"
+msgstr "vianetsintä"
+
+msgid "default"
+msgstr "oletus"
+
+msgid "delete entered text"
+msgstr "poista syötetty teksti"
+
+msgid "delete the selected entry"
+msgstr "poista valittu kohde"
+
+msgid "device ID"
+msgstr "laitetunnus"
+
+msgid "device ID 2"
+msgstr "laitetunnus 2"
+
+msgid "direct link"
+msgstr "suora linkki"
+
+msgid "direct number input"
+msgstr "suora numeron syöttö"
+
+msgid "download the selected item"
+msgstr "lataa valittu kohde"
+
+msgid "downloads location"
+msgstr "lataussijainti"
+
+msgid "e-mail"
+msgstr "sähköposti"
+
+msgid "edit the selected entry (same as BLUE) - or drop it while manually reordering"
+msgstr "muokkaa valittua kohdetta (sama kuin SININEN) - tai pudota se käsin järjestettäessä"
+
+msgid "edit the selected entry (same as OK)"
+msgstr "muokkaa valittua kohdetta (sama kuin OK)"
+
+msgid "enable / disable manual reordering"
+msgstr "ota käyttöön / poista käytöstä käsin järjestäminen"
+
+msgid "external eplayer3"
+msgstr "ulkoinen eplayer3"
+
+msgid "external gstplayer"
+msgstr "ulkoinen gstplayer"
+
+msgid "failed"
+msgstr "epäonnistui"
+
+msgid "file"
+msgstr "tiedosto"
+
+msgid "fixed"
+msgstr "kiinteä"
+
+msgid "format"
+msgstr "muoto"
+
+msgid "free"
+msgstr "vapaana"
+
+msgid "from E2 settings"
+msgstr "E2-asetuksista"
+
+msgid "fuchsia"
+msgstr "fuksia"
+
+msgid "go back / close"
+msgstr "takaisin / sulje"
+
+msgid "goals"
+msgstr "maalit"
+
+msgid "gray"
+msgstr "harmaa"
+
+msgid "green"
+msgstr "vihreä"
+
+msgid "hd"
+msgstr "HD"
+
+msgid "hearing impaired"
+msgstr "kuulovammaisille"
+
+msgid "high"
+msgstr "korkea"
+
+msgid "hint: the site shows a next page link"
+msgstr "vihje: sivusto näyttää seuraavan sivun linkin"
+
+msgid "horizontal"
+msgstr "vaakasuora"
+
+msgid "host"
+msgstr "palvelu"
+
+msgid "host order and groups"
+msgstr "palvelujen järjestys ja ryhmät"
+
+msgid "https"
+msgstr "https"
+
+msgid "https - validate SSL certificates"
+msgstr "https - tarkista SSL-varmenteet"
+
+msgid "iTunes - Top albums by country"
+msgstr "iTunes - Suosituimmat albumit maittain"
+
+msgid "iTunes - Top songs by country"
+msgstr "iTunes - Suosituimmat kappaleet maittain"
+
+msgid "insert space"
+msgstr "lisää välilyönti"
+
+msgid "installed"
+msgstr "asennettu"
+
+msgid "internal"
+msgstr "sisäinen"
+
+msgid "item actions (favorites, host-specific actions)"
+msgstr "kohteen toiminnot (suosikit, palvelukohtaiset toiminnot)"
+
+msgid "jersey"
+msgstr "pelipaita"
+
+msgid "jump to entries starting with that letter (if enabled in the settings)"
+msgstr "siirry kohteisiin, jotka alkavat kyseisellä kirjaimella (jos käytössä asetuksissa)"
+
+msgid "jump to items starting with that letter, or launch a specific player directly"
+msgstr "siirry kohteisiin, jotka alkavat kyseisellä kirjaimella, tai käynnistä tietty soitin suoraan"
+
+msgid "kernel reports"
+msgstr "ydin ilmoittaa"
+
+msgid "large"
+msgstr "suuri"
+
+msgid "leave movie player..."
+msgstr "poistutaan elokuvasoittimesta..."
+
+msgid "lime"
+msgstr "limetinvihreä"
+
+msgid "line"
+msgstr "viiva"
+
+msgid "loaded (no version)"
+msgstr "ladattu (ei versiota)"
+
+msgid "login"
+msgstr "kirjautuminen"
+
+msgid "low"
+msgstr "matala"
+
+msgid "machine translated"
+msgstr "konekäännetty"
+
+msgid "main"
+msgstr "main"
+
+msgid "manual"
+msgstr "manuaalinen"
+
+msgid "marked"
+msgstr "merkitty"
+
+msgid "maroon"
+msgstr "kastanjanruskea"
+
+msgid "medium"
+msgstr "keskitaso"
+
+msgid "menu and list only"
+msgstr "vain valikko ja luettelo"
+
+msgid "minutes"
+msgstr "minuuttia"
+
+msgid "more options (this menu)"
+msgstr "lisää vaihtoehtoja (tämä valikko)"
+
+msgid "move cursor right/left"
+msgstr "siirrä kohdistinta oikealle/vasemmalle"
+
+msgid "move the selection - or move it while manually reordering"
+msgstr "siirrä valintaa - tai siirrä kohdetta käsin järjestettäessä"
+
+msgid "movie metadata cache"
+msgstr "elokuvien metatietojen välimuisti"
+
+msgid "movie player preferences"
+msgstr "elokuvasoittimen asetukset"
+
+msgid "navy"
+msgstr "laivastonsininen"
+
+msgid "netu/hqq: the player check failed, try again later."
+msgstr "netu/hqq: soittimen tarkistus epäonnistui, yritä myöhemmin uudelleen."
+
+msgid "never"
+msgstr "ei koskaan"
+
+msgid "next page"
+msgstr "seuraava sivu"
+
+msgid "next page / previous page"
+msgstr "seuraava sivu / edellinen sivu"
+
+msgid "next page = page 1"
+msgstr "seuraava sivu = sivu 1"
+
+msgid "next page empty"
+msgstr "seuraava sivu tyhjä"
+
+msgid "next page ok"
+msgstr "seuraava sivu ok"
+
+msgid "no answer"
+msgstr "ei vastausta"
+
+msgid "no next page"
+msgstr "ei seuraavaa sivua"
+
+msgid "no stream link"
+msgstr "ei suoratoistolinkkiä"
+
+msgid "no videos in the first lists"
+msgstr "ei videoita ensimmäisissä luetteloissa"
+
+msgid "not available (the Python parser is used)"
+msgstr "ei saatavilla (käytetään Python-jäsennintä)"
+
+msgid "not found"
+msgstr "ei löytynyt"
+
+msgid "not installed"
+msgstr "ei asennettu"
+
+msgid "not loadable"
+msgstr "ei voida ladata"
+
+msgid "off"
+msgstr "pois"
+
+msgid "off / console"
+msgstr "pois / konsoli"
+
+msgid "olive"
+msgstr "oliivinvihreä"
+
+msgid "on"
+msgstr "päällä"
+
+msgid "only on the receiver"
+msgstr "vain vastaanottimessa"
+
+msgid "open / play the selected item"
+msgstr "avaa / toista valittu kohde"
+
+msgid "open the options menu - see below"
+msgstr "avaa valintavalikko - katso alla"
+
+msgid "or"
+msgstr "tai"
+
+msgid "other binaries"
+msgstr "muut ohjelmatiedostot"
+
+msgid "password"
+msgstr "salasana"
+
+msgid "prijevodi-online.org refused the download for this account."
+msgstr "prijevodi-online.org esti latauksen tälle tilille."
+
+msgid "purple"
+msgstr "violetti"
+
+msgid "quality"
+msgstr "laatu"
+
+msgid "red"
+msgstr "punainen"
+
+msgid "refresh the current list"
+msgstr "päivitä nykyinen luettelo"
+
+msgid "reversed"
+msgstr "käänteinen"
+
+msgid "rootfs"
+msgstr "rootfs"
+
+msgid "rotate (keep the old one as iptv-<date>.dbg)"
+msgstr "kierrätä (säilytä vanha nimellä iptv-<päivämäärä>.dbg)"
+
+msgid "rtmp"
+msgstr "rtmp"
+
+msgid "save all changes to disk"
+msgstr "tallenna kaikki muutokset levylle"
+
+msgid "saved"
+msgstr "tallennettu"
+
+msgid "saved in the temporary data folder"
+msgstr "tallennetaan väliaikaisten tietojen kansioon"
+
+msgid "saved next to the downloaded video file"
+msgstr "tallennetaan ladatun videotiedoston viereen"
+
+msgid "search"
+msgstr "haku"
+
+#, python-format
+msgid "search %d"
+msgstr "haku %d"
+
+msgid "search found nothing"
+msgstr "haku ei löytänyt mitään"
+
+msgid "search history"
+msgstr "hakuhistoria"
+
+msgid "search next page = page 1"
+msgstr "haun seuraava sivu = sivu 1"
+
+msgid "search next page empty"
+msgstr "haun seuraava sivu tyhjä"
+
+msgid "search next page ok"
+msgstr "haun seuraava sivu ok"
+
+msgid "season pack"
+msgstr "kausipaketti"
+
+msgid "second"
+msgstr "sekunti"
+
+msgid "seconds"
+msgstr "sekuntia"
+
+msgid "select to sign out"
+msgstr "valitse kirjautuaksesi ulos"
+
+msgid "serial number"
+msgstr "sarjanumero"
+
+msgid "show more details about the selected item"
+msgstr "näytä lisätietoja valitusta kohteesta"
+
+msgid "show this help"
+msgstr "näytä tämä ohje"
+
+msgid "shuffled"
+msgstr "sekoitettu"
+
+msgid "sign in (subscriptions, playlists, age-restricted videos)"
+msgstr "kirjaudu sisään (tilaukset, soittolistat, ikärajoitetut videot)"
+
+msgid "signature"
+msgstr "allekirjoitus"
+
+msgid "signed in"
+msgstr "kirjautunut"
+
+msgid "silver"
+msgstr "hopea"
+
+msgid "small"
+msgstr "pieni"
+
+msgid "sources"
+msgstr "lähteet"
+
+msgid "standard"
+msgstr "vakio"
+
+msgid "start auto-play (plays through the list automatically)"
+msgstr "aloita automaattinen toisto (toistaa luettelon automaattisesti)"
+
+msgid "status"
+msgstr "tila"
+
+msgid "stream data"
+msgstr "suoratoiston tiedot"
+
+msgid "stream data ok"
+msgstr "suoratoiston tiedot ok"
+
+msgid "stream data ok (HLS)"
+msgstr "suoratoiston tiedot ok (HLS)"
+
+#, python-format
+msgid "stream is a web page, not video (HTTP %s)"
+msgstr "suoratoisto on verkkosivu, ei video (HTTP %s)"
+
+msgid "stream link"
+msgstr "suoratoistolinkki"
+
+msgid "stream link ok"
+msgstr "suoratoistolinkki ok"
+
+#, python-format
+msgid "stream not checked (%s)"
+msgstr "suoratoistoa ei tarkistettu (%s)"
+
+msgid "stream not checked (HTTP 429, too many requests)"
+msgstr "suoratoistoa ei tarkistettu (HTTP 429, liian monta pyyntöä)"
+
+#, python-format
+msgid "stream: %s"
+msgstr "suoratoisto: %s"
+
+#, python-format
+msgid "stream: no data (HTTP %s)"
+msgstr "suoratoisto: ei tietoja (HTTP %s)"
+
+msgid "subs.ro does not answer."
+msgstr "subs.ro ei vastaa."
+
+msgid "subsource.net does not answer."
+msgstr "subsource.net ei vastaa."
+
+msgid "subtitles"
+msgstr "tekstitykset"
+
+msgid "subtitles cache"
+msgstr "tekstitysten välimuisti"
+
+msgid "switch between keyboard, suggestions and search history"
+msgstr "vaihda näppäimistön, ehdotusten ja hakuhistorian välillä"
+
+msgid "teal"
+msgstr "sinivihreä"
+
+msgid "the best"
+msgstr "paras"
+
+msgid "the menu has no lists"
+msgstr "valikossa ei ole luetteloita"
+
+msgid "the menu is empty"
+msgstr "valikko on tyhjä"
+
+msgid "the worst"
+msgstr "huonoin"
+
+msgid "thumbnails"
+msgstr "pikkukuvat"
+
+#, python-format
+msgid "thumbnails %d/%d"
+msgstr "pikkukuvat %d/%d"
+
+msgid "thumbnails do not load"
+msgstr "pikkukuvat eivät lataudu"
+
+msgid "to top"
+msgstr "alkuun"
+
+msgid "top"
+msgstr "ylhäällä"
+
+msgid "truncate the file"
+msgstr "tyhjennä tiedosto"
+
+msgid "type selected character / confirm selection"
+msgstr "kirjoita valittu merkki / vahvista valinta"
+
+msgid "unknown"
+msgstr "tuntematon"
+
+msgid "unlimited"
+msgstr "rajoittamaton"
+
+msgid "unsorted"
+msgstr "lajittelematon"
+
+msgid "upzone.cc: free transfer limit reached - PREMIUM account required."
+msgstr "upzone.cc: ilmaisen siirron raja saavutettu - vaaditaan PREMIUM-tili."
+
+msgid "version"
+msgstr "versio"
+
+msgid "vertical"
+msgstr "pystysuora"
+
+msgid "very high"
+msgstr "erittäin korkea"
+
+#, python-format
+msgid "videos: %s"
+msgstr "videot: %s"
+
+msgid "views"
+msgstr "katselukerrat"
+
+#, python-format
+msgid "wait %s second"
+msgstr "odota %s sekunti"
+
+#, python-format
+msgid "wait %s seconds"
+msgstr "odota %s sekuntia"
+
+msgid "wants you to solve a captcha. Only after solving this captcha, you are allowed to continue with your downloads. E2iPlayer is not able to auto-solve these captchas, so we need to pass the captcha to you."
+msgstr "haluaa, että ratkaiset captchan. Vasta captchan ratkaisemisen jälkeen voit jatkaa latauksiasi. E2iPlayer ei pysty ratkaisemaan näitä captchoja automaattisesti, joten captcha välitetään sinulle."
+
+#, python-format
+msgid "weeb.tv did not return a valid stream (error %s)."
+msgstr "weeb.tv ei palauttanut kelvollista suoratoistoa (virhe %s)."
+
+msgid "weeb.tv did not return a valid stream for this channel."
+msgstr "weeb.tv ei palauttanut kelvollista suoratoistoa tälle kanavalle."
+
+msgid "weeb.tv streams need a weeb.tv account - enter the login in the host configuration (Web streams, WeebTV)"
+msgstr "weeb.tv-suoratoistot vaativat weeb.tv-tilin - anna kirjautumistiedot palvelun asetuksissa (Verkkolähetykset, WeebTV)"
+
+msgid "white"
+msgstr "valkoinen"
+
+msgid "www:"
+msgstr "www:"
+
+msgid "yellow"
+msgstr "keltainen"

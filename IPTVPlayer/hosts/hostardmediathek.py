@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "18.10.2026"
+LAST_MODIFIED = "24.10.2026"
 # ARD Mediathek
 # Rewritten for the api.ardmediathek.de "page-gateway" JSON API
 ###################################################
@@ -89,6 +89,27 @@ class ARDmediathek(GenericFolderWatchedScraperMixin, CBaseHostClass):
         (_('All categories'), 'compilation/alle-rubriken'),
     ]
 
+    # "Network" menu: the same page-gateway API per station client (the 'ard' client stays the default)
+    SENDERS = [
+        ('Das Erste', 'daserste'),
+        ('KiKA', 'kika'),
+        ('phoenix', 'phoenix'),
+        ('BR', 'br'),
+        ('SWR', 'swr'),
+        ('NDR', 'ndr'),
+        ('ONE', 'one'),
+        ('ARD alpha', 'alpha'),
+        ('funk', 'funk'),
+        ('WDR', 'wdr'),
+        ('MDR', 'mdr'),
+        ('hr', 'hr'),
+        ('rbb', 'rbb'),
+        ('SR', 'sr'),
+        ('Radio Bremen', 'radiobremen'),
+        ('tagesschau24', 'tagesschau24'),
+        ('3sat', '3sat'),
+    ]
+
     def __init__(self):
         printDBG("ARDmediathek.__init__")
         CBaseHostClass.__init__(self, {'history': 'ARDmediathek', 'cookie': 'ardmediathek.cookie'})
@@ -100,6 +121,7 @@ class ARDmediathek(GenericFolderWatchedScraperMixin, CBaseHostClass):
             {'category': 'list_az', 'title': _('Program A-Z'), 'url': self._pageUrl('editorial/experiment-a-z')},
             {'category': 'list_rubriken', 'title': _('Categories')},
             {'category': 'list_live', 'title': _('Live')},
+            {'category': 'list_senders', 'title': _('Network')},
             {'category': 'audio_menu', 'title': _('Radio') + ' (ARD Audiothek)'},
         ]
         self.MAIN_CAT_TAB += self.searchItems()
@@ -113,7 +135,7 @@ class ARDmediathek(GenericFolderWatchedScraperMixin, CBaseHostClass):
     # nav rows that are not real content containers - keep them out of the folder tree
     # list_widget_inline / list_page(home) carry no own url - dict(cItem) leaves the
     # enclosing page's url on them, which would collide with the page's own key
-    WF_SKIP_CATEGORIES = ('list_az', 'list_live', 'list_rubriken', 'list_widget_inline',
+    WF_SKIP_CATEGORIES = ('list_az', 'list_live', 'list_rubriken', 'list_widget_inline', 'list_senders', 'sender_menu',
                           'audio_menu', 'audio_categories', 'audio_live', 'audio_live_variants',
                           'search', 'search_next_page', 'search_history')
 
@@ -142,8 +164,8 @@ class ARDmediathek(GenericFolderWatchedScraperMixin, CBaseHostClass):
     ###################################################
     # helpers
     ###################################################
-    def _pageUrl(self, path):
-        return '%spages/%s/%s?embedded=false' % (self.API, self.CLIENT, path)
+    def _pageUrl(self, path, client=None):
+        return '%spages/%s/%s?embedded=false' % (self.API, client or self.CLIENT, path)
 
     @staticmethod
     def _normHref(href):
@@ -405,6 +427,28 @@ class ARDmediathek(GenericFolderWatchedScraperMixin, CBaseHostClass):
             self.addDir(params)
 
     ###################################################
+    # Network (station clients)
+    ###################################################
+    def listSenders(self, cItem):
+        for title, client in self.SENDERS:
+            params = dict(cItem)
+            params.pop('page', None)
+            params.update({'category': 'sender_menu', 'title': title, 'client': client, 'good_for_fav': True, 'icon': ''})
+            self.addDir(params)
+
+    def listSenderMenu(self, cItem):
+        client = cItem.get('client') or self.CLIENT
+        for cat, title, path in (('list_page', _('Home page'), 'home'), ('list_az', _('Program A-Z'), 'editorial/experiment-a-z')):
+            params = dict(cItem)
+            params.update({'category': cat, 'title': title, 'url': self._pageUrl(path, client), 'good_for_fav': cat == 'list_page'})
+            self.addDir(params)
+        for it in self.searchItems():
+            params = dict(cItem)
+            params.update(it)
+            params.update({'client': client, 'good_for_fav': False})
+            self.addDir(params)
+
+    ###################################################
     # Live
     ###################################################
     def listLive(self, cItem):
@@ -437,7 +481,8 @@ class ARDmediathek(GenericFolderWatchedScraperMixin, CBaseHostClass):
         printDBG("ARDmediathek.listSearchResult [%s]" % searchPattern)
         page = cItem.get('page', 0)
         query = cItem.get('query') or urllib_quote_plus(searchPattern)
-        url = '%spages/%s/search?searchString=%s&embedded=false&vodPageNumber=%d&showPageNumber=%d' % (self.API, self.CLIENT, query, page, page)
+        client = cItem.get('client') or self.CLIENT
+        url = '%spages/%s/search?searchString=%s&embedded=false&vodPageNumber=%d&showPageNumber=%d' % (self.API, client, query, page, page)
         data = self._json(url)
         if not data:
             return
@@ -870,6 +915,10 @@ class ARDmediathek(GenericFolderWatchedScraperMixin, CBaseHostClass):
             self.listRubriken(self.currItem)
         elif category == 'list_live':
             self.listLive(self.currItem)
+        elif category == 'list_senders':
+            self.listSenders(self.currItem)
+        elif category == 'sender_menu':
+            self.listSenderMenu(self.currItem)
         elif category == 'audio_menu':
             self.listAudioMenu(self.currItem)
         elif category == 'audio_categories':
@@ -893,6 +942,8 @@ class ARDmediathek(GenericFolderWatchedScraperMixin, CBaseHostClass):
             baseItem = {'name': 'history', 'category': 'search'}
             if self.currItem.get('f_audio'):
                 baseItem['f_audio'] = True
+            if self.currItem.get('client'):
+                baseItem['client'] = self.currItem['client']
             self.listsHistory(baseItem, 'desc', _("Type:") + " ")
         else:
             printExc()

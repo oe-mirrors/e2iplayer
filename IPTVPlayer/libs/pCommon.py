@@ -547,6 +547,9 @@ class common:
                 outParams['proxy_gateway'] = url.meta['iptv_proxy_gateway']
             if 'iptv_http_proxy' in url.meta:
                 outParams['http_proxy'] = url.meta['iptv_http_proxy']
+            if url.meta.get('iptv_ipv4_only'):
+                # a site whose Cloudflare blocks IPv6 clients: its covers are fetched over IPv4 too (pycurl path)
+                outParams['ipv4_only'] = True
         return outParams, postData
 
     @staticmethod
