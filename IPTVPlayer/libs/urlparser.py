@@ -4,10 +4,12 @@ import base64
 from binascii import hexlify, unhexlify
 import codecs
 from hashlib import md5, sha256
+import os
 from random import choice as random_choice, randint, uniform
 import re
 import string
 import struct
+import subprocess
 import time
 import zlib
 from os import urandom
@@ -33,7 +35,7 @@ from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_unquote, urllib_urlencode
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import parse_qs, urljoin, urlparse
 from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute, js_execute_ext
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import CSelOneLink, GetCookieDir, GetDefaultLang, GetJSScriptFile, GetTmpDir, b64urlEncode, printDBG, printExc, rm
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import CSelOneLink, GetCookieDir, GetDefaultLang, GetJSScriptFile, GetTmpDir, Which, b64urlEncode, printDBG, printExc, rm
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 
 if not isPY2():
@@ -3263,6 +3265,7 @@ class pageParser(CaptchaHelper):
             }
 
         # Proof of work of the player (assets/pow-*.js: gr/wr/Er): find a counter s so that the custom
+        # (in-process fallback of scripts/bysepow.py: keep powBytes/grAbsorb/gr identical, tests/test_bysepow.py)
         # 512-word ChaCha-style hash of "<pow_nonce>:<s>" starts with pow_difficulty zero bits. Pure Python
         # is ~100x slower than the browser, so the solver is written flat: the ChaCha quarter round (ye) is
         # inlined on local variables (no function calls or list writes per round), the constant
@@ -3411,6 +3414,91 @@ class pageParser(CaptchaHelper):
             except Exception:
                 return None
 
+        def cpuCores():
+            try:
+                with open("/proc/cpuinfo") as f:
+                    return len(re.findall(r"(?m)^processor\s*:", f.read()))
+            except Exception:
+                return 1
+
+        def erParallel(t, e, timeout, progress=None):
+            # add 241026: the same search in one scripts/bysepow.py process per core (Python threads would
+            # share one core because of the GIL), worker k tries k, k+n, k+2n, ...; returns (solution or
+            # None, workers) - workers 0: not started or all failed, the caller solves in-process then
+            cores = min(4, cpuCores())
+            script = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "scripts", "bysepow.py")
+            if not os.path.isfile(script):
+                script += "c"
+            python = ""
+            for name in ("python", "python2") if isPY2() else ("python3", "python"):
+                python = Which(name)
+                if python:
+                    break
+            if cores < 2 or not python or not os.path.isfile(script):
+                return None, 0
+            procs = []
+            failed = 0
+            try:
+                for k in range(cores):
+                    procs.append(subprocess.Popen([python, script, t, str(e), str(k), str(cores), "%d" % timeout], stdout=subprocess.PIPE, stderr=subprocess.PIPE))
+                start = shown = time.time()
+                while procs:
+                    for p in procs[:]:
+                        if p.poll() is None:
+                            continue
+                        procs.remove(p)
+                        out, err = p.communicate()
+                        solution = (tryJson(ensure_str(out)) or {}).get("solution") if p.returncode == 0 else None
+                        if solution is not None:
+                            return str(solution), cores
+                        if p.returncode != 3:
+                            printDBG("parserBYSE bysepow worker failed: %s [%s]" % (p.returncode, ensure_str(err)))
+                            failed += 1
+                    now = time.time()
+                    if now - start > timeout + 10:
+                        break
+                    if progress and now - shown >= 1.0:
+                        shown = now
+                        progress(int(now - start))
+                    time.sleep(0.2)
+            except Exception:
+                printExc()
+                failed = cores
+            finally:
+                for p in procs:
+                    try:
+                        p.kill()
+                        p.wait()
+                    except Exception:
+                        pass
+            return None, (0 if failed >= cores else cores)
+
+        def accessFile():
+            return GetTmpDir("byse_access.json")
+
+        def loadAccess():
+            # add 241026: solved captchas are kept in the temp dir too, so after a GUI restart the next
+            # byse video within expires_in needs no new proof of work
+            if self.BYSE_ACCESS:
+                return
+            try:
+                with open(accessFile()) as f:
+                    stored = json_loads(f.read())
+                now = time.time()
+                for key, value in stored.items():
+                    if isinstance(value, list) and len(value) == 3 and value[0] > now:
+                        self.BYSE_ACCESS[ensure_str(key)] = tuple(value)
+            except Exception:
+                pass
+
+        def saveAccess():
+            try:
+                now = time.time()
+                with open(accessFile(), "w") as f:
+                    f.write(json_dumps(dict((key, list(value)) for key, value in self.BYSE_ACCESS.items() if value[0] > now)))
+            except Exception:
+                printExc()
+
         def jsonPost():
             # params for the API POST endpoints (challenge/attest/captcha/
             # verify/playback). Send a real JSON Content-Type (pycurl otherwise
@@ -3507,6 +3595,7 @@ class pageParser(CaptchaHelper):
             # a solved captcha stays valid for the player domain for a while (verify expires_in, 1800 s):
             # reuse it for the next video instead of solving the proof of work again (minutes on a slow box)
             sts = False
+            loadAccess()
             access = self.BYSE_ACCESS.get(ref)
             if access and access[0] > time.time():
                 HTTP_HEADER["X-Captcha-Token"] = access[2]
@@ -3515,6 +3604,7 @@ class pageParser(CaptchaHelper):
                 if not sts or tryJson(data) is None:
                     sts = False
                     self.BYSE_ACCESS.pop(ref, None)
+                    saveAccess()
             if not sts:
                 challengeUrl = "%sapi/videos/access/challenge" % ref
                 sts, data = self.cm.getPage(challengeUrl, jsonPost(), "")
@@ -3545,8 +3635,12 @@ class pageParser(CaptchaHelper):
                 timeLimit = min(180.0, max(20.0, float(captcha.get("expires_in") or 300) - 60.0))
                 powStart = time.time()
                 powProgress(0)
-                solution, hashes = er(captcha.get("pow_nonce") or "", difficulty, timeLimit, powProgress)
-                printDBG("parserBYSE proof of work difficulty %d: %s after %d hashes in %.1fs" % (difficulty, solution, hashes, time.time() - powStart))
+                solution, workers = erParallel(captcha.get("pow_nonce") or "", difficulty, timeLimit, powProgress)
+                if workers:
+                    printDBG("parserBYSE proof of work difficulty %d: %s with %d processes in %.1fs" % (difficulty, solution, workers, time.time() - powStart))
+                else:
+                    solution, hashes = er(captcha.get("pow_nonce") or "", difficulty, timeLimit, powProgress)
+                    printDBG("parserBYSE proof of work difficulty %d: %s after %d hashes in %.1fs" % (difficulty, solution, hashes, time.time() - powStart))
                 if solution is None:
                     SetIPTVPlayerLastHostError(_("%s could not solve the captcha.") % "Byse")
                     return []
@@ -3563,6 +3657,7 @@ class pageParser(CaptchaHelper):
                 lifetime = min(float(verify.get("expires_in") or 0), 1800.0) - 60.0
                 if lifetime > 0:
                     self.BYSE_ACCESS[ref] = (time.time() + lifetime, fingerprint, verify["token"])
+                    saveAccess()
 
                 sts, data = self.cm.getPage(playbackUrl, jsonPost(), json_dumps({"fingerprint": fingerprint}))
         if not sts:
