@@ -92,7 +92,7 @@ LIVE_CHANNELS = (
         ("4E", "http://eu2.tv4e.gr:1935/live/myStream.sdp/playlist.m3u8"),  # NOSONAR - the Wowza server has no https
         ("Open Ekklisia", "https://liveopen.siliconweb.com/openTvLive/openEcclessia/chunks.m3u8"))),
 )
-FOLDERS =("skai_show", "skai_season", "open_show", "open_cat", "open_vids", "alpha_show", "alpha_season")
+FOLDERS = ("skai_show", "skai_season", "open_show", "open_cat", "open_vids", "alpha_show", "alpha_season")
 
 
 class GreekTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
