@@ -3810,7 +3810,7 @@ class _SelfTestSession(object):
 
 
 class Host(CBaseHostClass, XXXParser):
-	XXXversion = "2026.10.24.1"
+	XXXversion = "2026.10.24.2"
 	# a Host of a helper thread of the global search (newSearchWorker()): no retries, no "not found" menu
 	searchWorker = False
 	# while the site self-test runs: the time the current site's requests stop (SELFTEST_SITE_SECONDS), 0 otherwise
@@ -4588,6 +4588,15 @@ class Host(CBaseHostClass, XXXParser):
 		header = self.cm.getDefaultHeader(browser='chrome')
 		header['Referer'] = referer
 		return self.cookieParams(cookie, header=header, return_data=True)
+
+	def sitePage(self, site, url):
+		# a page of a SITE_PARAMS site; refused (Cloudflare's check answers some boxes with a 403, LIVECAMRIPS box log
+		# 24.10.2026) once more through the Cloudflare handling: Chrome's fingerprint, then MyE2i - not in the global search
+		params = self.siteParams(site)
+		sts, data = self.cm.getPage(url, params)
+		if not sts and not self.searchWorker:
+			sts, data = self.cm.getPageCFProtection(url, params)
+		return sts, data
 
 	def livecamripsNextPage(self, valTab, url, data, name):
 		# LIVECAMRIPS pages: <list>/N, page 1 without the number - but /models/0 is a letter and /search/123 a term
@@ -23368,7 +23377,7 @@ class Host(CBaseHostClass, XXXParser):
 		if 'LIVECAMRIPS' == name:
 			# recorded cam shows: Featured / All / Female / Couple / Trans, the cam sites, the models A-Z and the tags
 			self.MAIN_URL = 'https://livecamrips.to'
-			sts, data = self.cm.getPage(self.MAIN_URL + '/category/Featured', self.siteParams('LIVECAMRIPS'))
+			sts, data = self.sitePage('LIVECAMRIPS', self.MAIN_URL + '/category/Featured')
 			if not sts:
 				return valTab
 			for link in uniqueList(re.findall(r'href="(https://livecamrips\.to/category/[A-Za-z]+)"', data)):
@@ -23382,7 +23391,7 @@ class Host(CBaseHostClass, XXXParser):
 			return searchItems(valTab, True)
 
 		if 'LIVECAMRIPS-tags' == name:
-			sts, data = self.cm.getPage(url, self.siteParams('LIVECAMRIPS'))
+			sts, data = self.sitePage('LIVECAMRIPS', url)
 			for link in (uniqueList(re.findall(r'href="(https://livecamrips\.to/tag/[^"/]+)"', data)) if sts else []):
 				title = '#' + unquote(link.split('/')[-1])
 				valTab.append(CDisplayListItem(title, title, CDisplayListItem.TYPE_CATEGORY, [link], 'LIVECAMRIPS-clips', siteLogo, None))
@@ -23390,7 +23399,7 @@ class Host(CBaseHostClass, XXXParser):
 			return valTab
 
 		if 'LIVECAMRIPS-letters' == name:
-			sts, data = self.cm.getPage(url, self.siteParams('LIVECAMRIPS'))
+			sts, data = self.sitePage('LIVECAMRIPS', url)
 			for link in (uniqueList(re.findall(r'href="(https://livecamrips\.to/models/[^"/]+)"', data)) if sts else []):
 				title = link.split('/')[-1]
 				valTab.append(CDisplayListItem(title, title, CDisplayListItem.TYPE_CATEGORY, [link], 'LIVECAMRIPS-models', siteLogo, None))
@@ -23399,7 +23408,7 @@ class Host(CBaseHostClass, XXXParser):
 		if 'LIVECAMRIPS-models' == name:
 			# a page of models (A-Z or the search): each one opens its recordings
 			self.MAIN_URL = 'https://livecamrips.to'
-			sts, data = self.cm.getPage(url, self.siteParams('LIVECAMRIPS'))
+			sts, data = self.sitePage('LIVECAMRIPS', url)
 			if not sts:
 				return valTab
 			for link, model in uniqueList(re.findall(r'href="(https://livecamrips\.to/model/\d+/([^"/]+))"', data)):
@@ -23411,7 +23420,7 @@ class Host(CBaseHostClass, XXXParser):
 
 		if 'LIVECAMRIPS-clips' == name:
 			self.MAIN_URL = 'https://livecamrips.to'
-			sts, data = self.cm.getPage(url, self.siteParams('LIVECAMRIPS'))
+			sts, data = self.sitePage('LIVECAMRIPS', url)
 			if not sts:
 				return valTab
 			for item in re.findall(r'''(?s)<figure class="tm-video-item"(.+?)(?=<figure class="tm-video-item"|<nav|<ul class="pagination|$)''', data):
@@ -29406,9 +29415,9 @@ class Host(CBaseHostClass, XXXParser):
 					next_number = int(current) + 1
 				printDBG('NEXT NUMBER: ' + str(next_number))
 			if '/?s=' in url:
-				data = data.split('DYtdVq__roundedTop')
+				data = re.split(r'[\w-]+?_{1,2}roundedTop', data)
 			else:
-				data = data.split('Xqy2-G__video"')
+				data = re.split(r'class="[\w-]+?_{1,2}video"', data)
 			if len(data):
 				del data[0]
 			for item in data:

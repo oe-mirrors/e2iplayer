@@ -606,6 +606,9 @@ class XXXParser:
 		params = {'header': header, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': join(GetCookieDir(), cookie), 'return_data': True}
 		sts, data = self.cm.getPage(url, params)
 		if not sts:
+			# Cloudflare's check (403 on some boxes, LIVECAMRIPS 24.10.2026): Chrome's fingerprint, then MyE2i
+			sts, data = self.cm.getPageCFProtection(url, params)
+		if not sts:
 			return ''
 		link = ''
 		if site == 'https://dailypornstreams.com':
