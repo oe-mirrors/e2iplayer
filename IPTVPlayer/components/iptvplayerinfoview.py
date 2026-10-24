@@ -6,8 +6,10 @@
 #  settings INFO key. Three pages, switched with LEFT / RIGHT:
 #
 #    About   - version, project link, credits (the old MessageBox content)
-#    System  - E2iPlayer / Python / image / box, every externally loaded
-#              tool and its version, free space, the debug-log setting
+#    System  - E2iPlayer / Python / image / box / CPU / RAM / clock / IPv6,
+#              every external tool and Python module with its version (or
+#              what does not work without it), free space of the config,
+#              temp, download and buffering folders, the debug-log setting
 #    Log     - a live tail of the E2iPlayer debug log (if enabled)
 #
 #  GREEN  saves the current page to /tmp (sysinfo.txt or debug.txt).
@@ -22,9 +24,11 @@
 import os
 import re
 import sys
+import time
 
 from enigma import eTimer
 from Components.ActionMap import ActionMap
+from Components.config import config
 from Components.ScrollLabel import ScrollLabel
 from Components.Sources.StaticText import StaticText
 from Screens.Screen import Screen
@@ -52,6 +56,9 @@ PAGE_ABOUT, PAGE_SYSTEM, PAGE_LOG = 0, 1, 2
 # lambdas: translated when shown, not at import (language change without restart)
 PAGE_NAMES = {PAGE_ABOUT: lambda: _("About"), PAGE_SYSTEM: lambda: _("System"), PAGE_LOG: lambda: _("Log")}
 
+# label column of the System page (HD reference pixels): room for "Puffer-Verzeichnis" / "curl-impersonate"
+_SPLIT_POSITION = 185
+
 _HEADING_COLOR = 0x0066ccff   # same accent blue IPTVArticleView uses for labels
 _TEXT_COLOR = 0x00ffffff
 
@@ -63,34 +70,42 @@ _TEXT_COLOR = 0x00ffffff
 # and would otherwise block); `timeout` guards the rest if it exists.
 # duktape's `duk` has no --version flag, so run a one-line script that
 # prints Duktape.version (e.g. 20700 -> shown as 2.7.0). quickjs' `qjs
-# --version` prints the bare version (e.g. 0.16.2).
+# --version` prints the bare version (e.g. 0.16.2). The tools the plugin
+# runs from a fixed /usr/bin path are probed there, only when present;
+# every section ends with the path ("-" = missing). unzip / unrar without
+# arguments print their banner (unrar after an empty line), so the first
+# non-empty line is taken.
 _PROBE_SCRIPT_PATH = "/tmp/.e2i_sysprobe.sh"
 
 _P = '</dev/null 2>&1'
 _PROBE_SCRIPT = (
     'T=""; command -v timeout >/dev/null 2>&1 && T="timeout 4"; '
     'w(){ command -v "$1" 2>/dev/null || echo "-"; }; '
-    'echo "@@hlsdl";       ($T hlsdl %s            || true) | head -n 2; '
-    'echo "@@cmdwrap";     ($T cmdwrap %s          || true) | head -n 1; '
-    'echo "@@lsdir";       ($T lsdir --version %s  || true) | head -n 1; w lsdir; '
-    'echo "@@f4mdump";     ($T f4mdump %s          || true) | head -n 1; '
-    'echo "@@ffmpeg";      ($T ffmpeg -version %s   || true) | head -n 1; '
-    'echo "@@wget";        ($T wget --version %s    || true) | head -n 1; '
-    'echo "@@curl";        ($T curl --version %s    || true) | head -n 1; '
+    'p(){ [ -x "$1" ] && echo "$1" || echo "-"; }; '
+    'echo "@@hlsdl";       X=/usr/bin/hlsdl;    [ -x $X ] && ($T $X %s || true) | head -n 2; p $X; '
+    'echo "@@cmdwrap";     X=/usr/bin/cmdwrap;  [ -x $X ] && ($T $X %s || true) | head -n 1; p $X; '
+    'echo "@@lsdir";       X=/usr/bin/lsdir;    [ -x $X ] && ($T $X --version %s || true) | head -n 1; p $X; '
+    'echo "@@f4mdump";     X=/usr/bin/f4mdump;  [ -x $X ] && ($T $X %s || true) | head -n 1; p $X; '
+    'echo "@@ffmpeg";      X=/usr/bin/ffmpeg;   [ -x $X ] && ($T $X -version %s || true) | head -n 1; p $X; '
+    'echo "@@wget";        X=/usr/bin/wget;     [ -x $X ] && ($T $X --version %s || true) | head -n 1; p $X; '
+    'echo "@@curl";        X=/usr/bin/curl;     [ -x $X ] && ($T $X --version %s || true) | head -n 1; p $X; '
     'echo "@@curlimp";     C=$(w curl-impersonate); [ "$C" = "-" ] && [ -x /usr/local/bin/curl-impersonate ] && C=/usr/local/bin/curl-impersonate; '
     '  [ "$C" != "-" ] && ($T "$C" --version %s || true) | head -n 1; echo "$C"; '
-    'echo "@@rtmpdump";    ($T rtmpdump --help %s   || true) | grep -i rtmpdump | head -n 1; '
-    'echo "@@exteplayer3"; ($T exteplayer3 %s       || true) | head -n 2; '
-    'echo "@@gstplayer";   ($T gstplayer %s         || true) | head -n 2; '
-    'echo "@@gstplayer2";  ($T gstplayer2 %s        || true) | head -n 2; '
-    'echo "@@duktape";     D=/tmp/.e2i_dukver.js; '
+    'echo "@@rtmpdump";    X=/usr/bin/rtmpdump; [ -x $X ] && ($T $X --help %s || true) | grep -i rtmpdump | head -n 1; p $X; '
+    'echo "@@exteplayer3"; X=/usr/bin/exteplayer3; [ -x $X ] && ($T $X %s || true) | head -n 2; p $X; '
+    'echo "@@gstplayer";   X=/usr/bin/gstplayer;  [ -x $X ] && ($T $X %s || true) | head -n 2; p $X; '
+    'echo "@@gstplayer2";  X=/usr/bin/gstplayer2; [ -x $X ] && ($T $X %s || true) | head -n 2; p $X; '
+    'echo "@@duktape";     X=/usr/bin/duk; D=/tmp/.e2i_dukver.js; '
     '  printf "%%s" \'try{var v=Duktape.version;print(Math.floor(v/10000)+"."+(Math.floor(v/100)%%100)+"."+(v%%100))}catch(e){print("?")}\' > $D; '
-    '  ($T duk $D %s || true) | head -n 1; rm -f $D; '
-    'echo "@@quickjs";     ($T qjs --version %s     || true) | head -n 1; '
+    '  [ -x $X ] && ($T $X $D %s || true) | head -n 1; rm -f $D; p $X; '
+    'echo "@@quickjs";     X=/usr/bin/qjs;      [ -x $X ] && ($T $X --version %s || true) | head -n 1; p $X; '
+    'echo "@@uchardet";    X=/usr/bin/uchardet; [ -x $X ] && ($T $X --version %s || true) | grep -i "version" | head -n 1; p $X; '
+    'echo "@@unzip";       U=$(w unzip); [ "$U" != "-" ] && ($T unzip %s || true) | grep "[^[:space:]]" | head -n 1; echo "$U"; '
+    'echo "@@unrar";       U=$(w unrar); [ "$U" != "-" ] && ($T unrar %s || true) | grep "[^[:space:]]" | head -n 1; echo "$U"; '
     'echo "@@deps";        (opkg list-installed 2>/dev/null | grep -i e2iplayer-deps || true); '
     'echo "@@ifdsrc";      (opkg list-installed 2>/dev/null | grep "^gst-ifdsrc " || true); '
     'echo "@@end"\n'
-) % ((_P,) * 14)
+) % ((_P,) * 17)
 
 _PROBE_CACHE = None       # parsed binary block, reused for the whole session
 _PROBE_KEEPALIVE = None   # holds the iptv_system object until its callback fires
@@ -120,6 +135,51 @@ def _free_space(path):
             formatBytes(st.f_bavail * st.f_frsize, 1), _("free"),
             formatBytes(st.f_blocks * st.f_frsize, 1),
         )
+    except Exception:
+        return "?"
+
+
+def _ram():
+    # MemAvailable: what programs can still get without swapping (page cache counts as free)
+    kv = {}
+    try:
+        with open("/proc/meminfo") as f:
+            for line in f:
+                parts = line.split()
+                if len(parts) >= 2 and parts[1].isdigit():
+                    kv[parts[0].rstrip(":")] = int(parts[1]) * 1024
+    except Exception:
+        return "?"
+    total = kv.get("MemTotal", 0)
+    free = kv.get("MemAvailable", kv.get("MemFree", 0))
+    if not total:
+        return "?"
+    return "%s %s / %s" % (formatBytes(free, 1), _("free"), formatBytes(total, 1))
+
+
+def _clock():
+    # a clock that is not set (no NTP yet) makes every HTTPS certificate look invalid
+    now = time.time()
+    text = time.strftime("%Y-%m-%d %H:%M:%S %Z", time.localtime(now))
+    if time.gmtime(now).tm_year < 2025:
+        text += "  (%s)" % _("clock not set")
+    return text
+
+
+def _ipv6():
+    # in use when the box has a global IPv6 address and a default route that is not on lo
+    try:
+        with open("/proc/net/if_inet6") as f:
+            hasAddr = any(p[3] == "00" and p[5] != "lo" for p in (line.split() for line in f) if len(p) >= 6)
+        hasRoute = False
+        if hasAddr:
+            with open("/proc/net/ipv6_route") as f:
+                for line in f:
+                    p = line.split()
+                    if len(p) >= 10 and p[0] == "0" * 32 and p[1] == "00" and p[9] != "lo" and int(p[8], 16) & 1:
+                        hasRoute = True
+                        break
+        return _("Yes") if hasAddr and hasRoute else _("No")
     except Exception:
         return "?"
 
@@ -247,7 +307,7 @@ class _SystemInfo(object):
             import pycurl
             return pycurl.version.split()[0] if getattr(pycurl, "version", "") else "?"
         except Exception:
-            return _("not installed")
+            return _("not installed (urllib is used)")
 
     def _ifdsrcState(self, pkg):
         # gstplayer only buffers via ifd:// when the plugin is loadable
@@ -257,13 +317,23 @@ class _SystemInfo(object):
         version = pkg[0].split(" - ", 1)[-1] if pkg else _("installed")
         return version if usable else "%s (%s)" % (version, _("not loadable"))
 
-    def _pilVersion(self):
+    def _moduleVersion(self, name, oldVersionAttr=""):
+        # oldVersionAttr: where old releases keep the version (Pillow < 6: PILLOW_VERSION)
         try:
-            import PIL
-            v = getattr(PIL, "__version__", "") or getattr(PIL, "PILLOW_VERSION", "")
-            return str(v) if v else _("installed")
+            mod = __import__(name)
         except Exception:
             return _("not installed")
+        v = getattr(mod, "__version__", "") or (getattr(mod, oldVersionAttr, "") if oldVersionAttr else "")
+        return str(v) if v else _("installed")
+
+    def _torrserverPath(self):
+        # only the path: running the binary for a version could start the server
+        try:
+            from Plugins.Extensions.IPTVPlayer.libs import torrserver
+            return torrserver.findBinary() or _("not installed (no torrent playback)")
+        except Exception:
+            printExc()
+            return "?"
 
     def _subparserVersion(self):
         try:
@@ -305,54 +375,76 @@ class _SystemInfo(object):
             if cur and cur in sections and line.strip():
                 sections[cur].append(line.strip())
 
-        def first(key):
+        def tool(key):
+            # (the output lines, the path - '' when the tool is missing); the path is the last line of a section
             v = sections.get(key) or []
-            return v[0] if v else _("not found")
+            path = v[-1] if v else "-"
+            return v[:-1], ("" if path == "-" else path)
 
-        def ver_line(key):
-            v = sections.get(key) or []
-            for line in v:
+        # every renderer gets the text for a missing tool: what the user loses without it
+        def first(key, missing):
+            lines, path = tool(key)
+            if not path:
+                return missing
+            return lines[0] if lines else _("installed")
+
+        def ver_line(key, missing):
+            lines, path = tool(key)
+            if not path:
+                return missing
+            for line in lines:
                 low = line.lower()
                 if line.startswith("{") or "version" in low or " v0." in low or " v1." in low:
                     return line
-            return v[0] if v else _("not found")
+            return lines[0] if lines else _("installed")
 
-        def lsdir_val():
-            v = sections.get("lsdir") or []
-            for line in v:
+        def lsdir_val(missing):
+            lines, path = tool("lsdir")
+            if not path:
+                return missing
+            for line in lines:
                 if line.lower().startswith("lsdir v"):
                     return line
-            tail = v[-1] if v else "-"
-            return _("installed") if tail and tail != "-" else _("not installed")
+            return _("installed")
 
-        def banner(key):
-            v = sections.get(key) or []
-            if not v:
-                return _("not installed")
-            line = v[0].strip()
+        def banner(key, missing):
+            lines, path = tool(key)
+            if not path:
+                return missing
+            line = lines[0] if lines else ""
             if line.lower().startswith("version:"):
                 line = "v" + line.split(":", 1)[1].strip()
             return line or _("installed")
 
+        def path_val(key, missing):
+            # a version line (or none) + the path, e.g. "curl 8.22.0-IMPERSONATE (arm-...) libcurl/...",
+            # "UnZip 6.00 of 20 April 2009, by ...", "BusyBox v1.36.1 (2024-...) multi-call binary.",
+            # "UNRAR 7.00 freeware      Copyright (c) ...", "Version 0.0.8" (uchardet)
+            lines, path = tool(key)
+            if not path:
+                return missing
+            ver = " ".join(lines[0].split()) if lines else ""
+            for sep in (" (", " of ", " freeware", " Copyright"):
+                ver = ver.split(sep, 1)[0]
+            return "%s (%s)" % (ver, path) if ver else "%s (%s)" % (_("installed"), path)
+
         def row(name, value):
             return "%s|%s" % (name, value)
 
-        def curlimp_val():
-            # "curl 8.22.0-IMPERSONATE (arm-...) libcurl/8.22.0-IMPERSONATE BoringSSL ..." + the path (or "-")
-            v = sections.get("curlimp") or []
-            path = v[-1] if v else "-"
-            if not path or path == "-":
-                return _("not installed")
-            ver = v[0].split(" (", 1)[0] if len(v) > 1 else ""
-            return "%s (%s)" % (ver, path) if ver else "%s (%s)" % (_("installed"), path)
+        notInstalled = _("not installed")
+        # one JavaScript engine / one external player is enough: the reason only when all are missing
+        noJs = not tool("duktape")[1] and not tool("quickjs")[1]
+        jsMissing = _("not installed (hosts that need JavaScript fail)") if noJs else notInstalled
+        noPlayer = not any(tool(key)[1] for key in ("exteplayer3", "gstplayer", "gstplayer2"))
+        playerMissing = _("not installed (only the Enigma2 players)") if noPlayer else notInstalled
 
         out = ["--- e2iplayer-deps ---"]
-        out.append(row("hlsdl", first("hlsdl")))
+        out.append(row("hlsdl", first("hlsdl", _("not installed (no HLS downloads or buffering)"))))
         out.append(row("_subparser", self._subparserVersion()))
-        out.append(row("cmdwrap", banner("cmdwrap")))
-        out.append(row("lsdir", lsdir_val()))
-        out.append(row("f4mdump", banner("f4mdump")))
-        out.append(row("curl-impersonate", curlimp_val()))
+        out.append(row("cmdwrap", banner("cmdwrap", _("not installed (no ffmpeg downloads)"))))
+        out.append(row("lsdir", lsdir_val(_("not installed (no local media / folder browser)"))))
+        out.append(row("f4mdump", banner("f4mdump", _("not installed (no HDS/F4M streams)"))))
+        out.append(row("curl-impersonate", path_val("curlimp", _("not installed (sites with bot protection may fail)"))))
         imp = self._impersonateState()
         if imp:
             out.append(row("  " + _("as Chrome this session"), imp))
@@ -362,21 +454,27 @@ class _SystemInfo(object):
 
         out.append("")
         out.append("--- " + _("other binaries") + " ---")
-        out.append(row("ffmpeg", first("ffmpeg")))
-        out.append(row("wget", first("wget")))
-        out.append(row("curl", first("curl")))
-        out.append(row("rtmpdump", first("rtmpdump")))
-        out.append(row("duktape", first("duktape")))
-        out.append(row("quickjs", first("quickjs")))
-        out.append(row("exteplayer3", ver_line("exteplayer3")))
-        out.append(row("gstplayer", ver_line("gstplayer")))
-        out.append(row("gstplayer2", ver_line("gstplayer2")))
+        out.append(row("ffmpeg", first("ffmpeg", _("not installed (no DASH / ffmpeg downloads)"))))
+        out.append(row("wget", first("wget", _("not installed (no file, cover or subtitle downloads)"))))
+        out.append(row("curl", first("curl", _("not installed (wget is used)"))))
+        out.append(row("rtmpdump", first("rtmpdump", _("not installed (no RTMP downloads)"))))
+        out.append(row("duktape", first("duktape", jsMissing)))
+        out.append(row("quickjs", first("quickjs", jsMissing)))
+        out.append(row("exteplayer3", ver_line("exteplayer3", playerMissing)))
+        out.append(row("gstplayer", ver_line("gstplayer", playerMissing)))
+        out.append(row("gstplayer2", ver_line("gstplayer2", playerMissing)))
         out.append(row("gst-ifdsrc", self._ifdsrcState(sections.get("ifdsrc") or [])))
+        out.append(row("uchardet", path_val("uchardet", _("not installed (subtitles: code page of the language)"))))
+        out.append(row("unzip", path_val("unzip", _("not installed (no ZIP subtitles)"))))
+        out.append(row("unrar", path_val("unrar", _("not installed (no RAR subtitles)"))))
+        out.append(row("TorrServer", self._torrserverPath()))
 
         out.append("")
         out.append("--- " + _("Python modules") + " ---")
         out.append(row("pycurl", self._pycurlVersion()))
-        out.append(row("Pillow (PIL)", self._pilVersion()))
+        out.append(row("Pillow (PIL)", self._moduleVersion("PIL", "PILLOW_VERSION")))
+        out.append(row("websocket-client", self._moduleVersion("websocket")))
+        out.append(row("pycryptodome", self._moduleVersion("Crypto")))
         return "\n".join(out)
 
     def buildSystemText(self, withBinaries=True):
@@ -395,6 +493,12 @@ class _SystemInfo(object):
         lines.append("--- " + _("System") + " ---")
         row(_("Image"), self._image())
         row(_("Box"), self._boxtype())
+        uname = os.uname()
+        row("CPU", uname[4])
+        row("Kernel", uname[2])
+        row(_("RAM"), _ram())
+        row(_("Time"), _clock())
+        row("IPv6", _ipv6())
 
         lines.append("")
         lines.append("--- " + _("Storage") + " ---")
@@ -402,6 +506,14 @@ class _SystemInfo(object):
                             (_("Temp"), self._safeDir(GetTmpDir))):
             if path:
                 row(label, "%s  [%s]" % (_free_space(path), path))
+        # the folders set in the settings: a full or unmounted disk is a common cause of failed downloads
+        for label, cfg in ((_("Downloads"), "DownloadsDir"), (_("Buffering location"), "bufferingPath")):
+            try:
+                path = getattr(config.plugins.iptvplayer, cfg).value
+            except Exception:
+                continue
+            if path:
+                row(label, "%s  [%s]" % (_free_space(path) if os.path.isdir(path) else _("not found"), path))
 
         lines.append("")
         lines.append("--- " + _("Debug log") + " ---")
@@ -429,7 +541,7 @@ class _SystemInfo(object):
         for line in _strip_markup(text).split("\n"):
             if "|" in line and not line.lstrip().startswith("-"):
                 a, b = line.split("|", 1)
-                out.append("%-15s %s" % (a + ":", b))
+                out.append("%-19s %s" % (a + ":", b))
             else:
                 out.append(line)
         return "\n".join(out)
@@ -477,15 +589,19 @@ class IPTVPlayerInfoView(_SystemInfo, Screen):
 
     def __prepareSkin(self):
         iconBase = skinchrome.getIconBase()
+        # splitPosition is not scaled by the skin's resolution (openATV's ScrollLabel has no setSplitPosition
+        # either, so _setSplit() cannot fix it later): the scaled width goes into the skin
+        split = skinchrome.scalePixels(_SPLIT_POSITION, skinchrome.getScale())
         return """
         <screen name="IPTVPlayerInfoView" position="center,center" size="1200,620" resolution="1280,720" title="E2iPlayer" backgroundColor="#34111112" flags="wfNoBorder">
             %s
-            <widget name="text" position="20,80" size="1160,468" font="Regular;20" splitPosition="230" transparent="1" backgroundColor="black" foregroundColor="white" />
+            <widget name="text" position="20,80" size="1160,468" font="Regular;20" splitPosition="%d" transparent="1" backgroundColor="black" foregroundColor="white" />
             <widget name="about" position="20,80" size="1160,468" font="Regular;20" halign="center" transparent="1" backgroundColor="black" foregroundColor="white" />
             %s
         </screen>
         """ % (
             skinchrome.build_header_auto(iconBase=iconBase),
+            split,
             skinchrome.build_footer_auto(620, iconBase=iconBase, keys=('green', 'yellow', 'blue')),
         )
 
@@ -571,7 +687,7 @@ class IPTVPlayerInfoView(_SystemInfo, Screen):
             inst = self["text"].instance
             if inst and hasattr(inst, "setSplitPosition"):
                 on = self._page == PAGE_SYSTEM
-                inst.setSplitPosition(skinchrome.scalePixels(230, skinchrome.getScale()) if on else 0)
+                inst.setSplitPosition(skinchrome.scalePixels(_SPLIT_POSITION, skinchrome.getScale()) if on else 0)
         except Exception:
             printExc()
 
