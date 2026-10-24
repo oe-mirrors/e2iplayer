@@ -196,10 +196,10 @@ def checkhttps(url):
 TXXX_NETWORK_SITES = ('https://upornia.com', 'https://hdzog.com', 'https://vxxx.com', 'https://abxxx.com', 'https://abebony.com', 'https://ablesbian.com', 'https://bdsmx-porn.com', 'https://bdsmx.tube', 'https://boobse.com')
 
 # plain KVS sites (hostxxx.py KVS_NETWORK), resolved by the shared KVS branch
-KVS_SITES = ('https://freshporno.org', 'https://www.freepornvideos.xxx', 'https://www.fpo.xxx', 'https://heroero.com', 'https://porndd.com', 'https://amateurporn.me', 'https://allclassic.porn', 'https://celebsroulette.com', 'https://watcherotic.com', 'https://www.vipporns.com', 'https://pornve.com', 'https://www.bigtitslust.com')
+KVS_SITES = ('https://freshporno.org', 'https://www.freepornvideos.xxx', 'https://www.fpo.xxx', 'https://heroero.com', 'https://porndd.com', 'https://amateurporn.me', 'https://allclassic.porn', 'https://celebsroulette.com', 'https://watcherotic.com', 'https://www.vipporns.com', 'https://pornve.com', 'https://www.bigtitslust.com', 'https://bigassporn.tv', 'https://blowjobs.pro', 'https://lesbianporn8.net', 'https://saintporn.com', 'https://allmatureporn.tv', 'https://blackporn24.com', 'https://footstockings.com', 'https://milfporn8.net', 'https://porno24.to', 'https://yourlesbians.com', 'https://www1.yabuchka.xyz', 'https://www.fulleroticmovies.net', 'https://wvw.ruporno.net', 'https://fuqster.com')
 
 # WordPress tube theme sites (hostxxx.py WPTUBE_NETWORK): own player page or a file hoster iframe
-WPTUBE_SITES = ('https://pornmz.com', 'https://www.hitprn.net', 'https://pornobae.com', 'https://vintagepornfun.com')
+WPTUBE_SITES = ('https://pornmz.com', 'https://www.hitprn.net', 'https://pornobae.com', 'https://vintagepornfun.com', 'https://cumdrinkingclips.com')
 
 # movie and full-scene sites (hostxxx.py MOVIE_NETWORK): own video file or file hoster mirrors, see _pageMirrors
 MOVIE_SITES = ()
@@ -341,15 +341,15 @@ class XXXParser:
 		return links[-1]
 
 	def _redirectTarget(self, videoUrl, params):
-		# the address a link redirects to (KVS get_file -> the CDN host); '' when it does not answer
-		params = dict(params)
-		params['return_data'] = False
-		sts, response = self.cm.getPage(videoUrl, params)
-		if not sts or response is None:
+		# the address a link redirects to (KVS get_file -> the CDN host); '' when it does not answer.
+		# Through pycurl like the page itself (return_data False goes through urllib, which may pick the other IP family:
+		# porno24.to's get_file token is bound to the page's address -> 403); max_data_size 0 stops at the first video byte
+		params = dict(params, return_data=True, max_data_size=0, with_metadata=True)
+		sts, data = self.cm.getPage(videoUrl, params)
+		meta = getattr(data, 'meta', {}) if sts else {}
+		if meta.get('status_code') != 200:
 			return ''
-		realUrl = response.geturl()
-		response.close()
-		return realUrl
+		return meta.get('url', '')
 
 	def _followRedirect(self, videoUrl, params, picked=None, prepare=None):
 		# the real address of the picked link; with "Use the best quality" off the other qualities of the list it was
@@ -359,6 +359,41 @@ class XXXParser:
 		if realUrl:
 			redirectOffers(picked or videoUrl, realUrl, lambda link: self._redirectTarget(prepare(link) if prepare else link, params))
 		return realUrl
+
+	def _generateMp4Stream(self, pageUrl, data):
+		# fulleroticmovies.net: its own get_stream links answer "error", the player plays an ok.ru video -
+		# generate_mp4('<base64 JSON: salt / iv / ciphertext / iterations>', '<password>', '<ok.ru id>', '<site id>'):
+		# PBKDF2-SHA512 key, AES-CBC -> an ok.ru session key for the API's video.get (MP4 links on vkuser.net)
+		match = re.search(r'''generate_mp4\(\s*['"]([^'"]+)['"]\s*,\s*['"]([^'"]+)['"]\s*,\s*['"]([^'"]+)['"]''', data)
+		if not match:
+			return ''
+		try:
+			config = json.loads(base64.b64decode(match.group(1)))
+			iterations = int(config.get('iterations', 999))
+			if not 0 < iterations <= 10000:
+				return ''
+			key = hashlib.pbkdf2_hmac('sha512', ensure_binary(match.group(2)), codecs.decode(config['salt'], 'hex'), iterations, 32)
+			decrypter = pyaes.Decrypter(pyaes.AESModeOfOperationCBC(key, codecs.decode(config['iv'], 'hex')))
+			sessionKey = ensure_str(decrypter.feed(base64.b64decode(config['ciphertext'])) + decrypter.feed()).strip()
+		except Exception:
+			printExc()
+			return ''
+		fields = ','.join('video.url_%s' % name for name in ('tiny', 'low', 'high', 'medium', 'quadhd', 'mobile', 'ultrahd', 'fullhd'))
+		query = urlencode({'application_key': 'CBAFJIICABABABABA', 'fields': fields, 'method': 'video.get', 'session_key': sessionKey, 'vids': match.group(3)})
+		header = dict(self.cm.getDefaultHeader(browser='chrome'), Referer=pageUrl, Accept='application/json, */*;q=0.8')
+		sts, answer = self.cm.getPage('https://api.ok.ru/fb.do?' + query, {'header': header, 'return_data': True})
+		try:
+			videos = (json.loads(answer).get('videos') or []) if sts else []
+		except Exception:
+			printExc()
+			videos = []
+		video = videos[0] if videos and isinstance(videos[0], dict) else {}
+		heights = {'mobile': 144, 'tiny': 240, 'low': 360, 'medium': 480, 'high': 720, 'fullhd': 1080, 'quadhd': 1440, 'ultrahd': 2160}
+		candidates = [(height, video['url_' + name]) for name, height in heights.items() if ('%s' % video.get('url_' + name)).startswith('https://')]
+		if not candidates:
+			SetIPTVPlayerLastHostError(_('Video link not found.'))
+			return ''
+		return urlparser.decorateUrl(self._pickByHeight(candidates), {'Referer': 'https://ok.ru/', 'User-Agent': header['User-Agent']})
 
 	def _turbovidhls(self, embedUrl, referer):
 		# turbovidhls player page (321TUBE, PORN4DAYS server 1): HLS whose segments are TS behind a PNG header on
@@ -7286,6 +7321,9 @@ class XXXParser:
 			sts, data = self.cm.getPage(url, self.defaultParams)
 			if not sts:
 				return ''
+			if 'generate_mp4(' in data:
+				# (fulleroticmovies.net: an ok.ru video behind the KVS player)
+				return self._generateMp4Stream(url, data)
 			# a plain <source src="/contents/videos/...mp4"> (amateurporn.me since 10.2026) is relative to the page
 			candidates = [(c[0], urljoin(url, c[1])) for c in self._mediaCandidates(data)]
 			candidates = [c for c in candidates if c[1].startswith('http')]
@@ -7305,7 +7343,17 @@ class XXXParser:
 					# KVS private videos: shown to logged-in members only, even with a free account
 					SetIPTVPlayerLastHostError(_("This video is a private video."))
 				return ''
-			return urlparser.decorateUrl(self._pickByHeight(candidates), {'Referer': url, 'User-Agent': self.HTTP_HEADER.get('User-Agent', '')})
+			videoUrl = self._pickByHeight(candidates)
+			# the get_file token (v-acctoken) is bound to the address the page was fetched from: over IPv4 for the page and
+			# IPv6 for the player (or the other way round) it answers 403 (allmatureporn.tv, saintporn.com on the box) -
+			# the CDN address it redirects to plays from both. Not when that address names the IP itself
+			# (freepornvideos.xxx: .../key=...,ip=<address>,...): the get_file link stays
+			params = {'header': dict(self.HTTP_HEADER, Referer=url), 'return_data': False}
+			realUrl = self._redirectTarget(videoUrl, params)
+			if realUrl and not re.search(r'[?&,/]ip=', realUrl):
+				redirectOffers(videoUrl, realUrl, lambda link: self._redirectTarget(link, params))
+				videoUrl = realUrl
+			return urlparser.decorateUrl(videoUrl, {'Referer': url, 'User-Agent': self.HTTP_HEADER.get('User-Agent', '')})
 
 		if parser in CAM_ARCHIVE_SITES:
 			return self._camArchiveStream(parser, url)

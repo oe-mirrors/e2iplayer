@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "22.10.2026"
+LAST_MODIFIED = "24.10.2026"
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.ihost import IHost, CDisplayListItem, RetHost, CUrlItem, CBaseHostClass, ArticleContent
 from Plugins.Extensions.IPTVPlayer.libs import ph
@@ -692,6 +692,21 @@ SITEDATA = {
 'BIGTITSLUST': ('https://www.bigtitslust.com', '', ''),
 'VINTAGEPORNFUN': ('https://vintagepornfun.com', '', ''),
 'PORNFLIP': ('https://www.pornflip.com', '', ''),
+'BIGASSPORN': ('https://bigassporn.tv', '', ''),
+'BLOWJOBSPRO': ('https://blowjobs.pro', '', ''),
+'LESBIANPORN8': ('https://lesbianporn8.net', '', ''),
+'SAINTPORN': ('https://saintporn.com', '', ''),
+'ALLMATUREPORN': ('https://allmatureporn.tv', '', ''),
+'BLACKPORN24': ('https://blackporn24.com', '', ''),
+'FOOTSTOCKINGS': ('https://footstockings.com', '', ''),
+'MILFPORN8': ('https://milfporn8.net', '', ''),
+'PORNO24': ('https://porno24.to', '', ''),
+'YOURLESBIANS': ('https://yourlesbians.com', '', ''),
+'YABUCHKA': ('https://www1.yabuchka.xyz', '', ''),
+'FULLEROTICMOVIES': ('https://www.fulleroticmovies.net', '', ''),
+'RUPORNO': ('https://wvw.ruporno.net', '', ''),
+'FUQSTER': ('https://fuqster.com', '', ''),
+'CUMDRINKINGCLIPS': ('https://cumdrinkingclips.com', '', ''),
 }
 
 # sites of the txxx network, they all share the same JSON API
@@ -702,10 +717,12 @@ TXXX_NETWORK = {
 }
 
 # plain KVS (Kernel Video Sharing) sites: list pages /<path>/<page>/, categories /categories/<slug>/,
-# the resolver is the shared KVS one in xxxparser.py (KVS_SITES)
+# the resolver is the shared KVS one in xxxparser.py (KVS_SITES); numericCategories: the site serves categories named
+# by a number (/categories/69/) - elsewhere that address is page 69 of the categories overview, so they are left out;
+# catPage / catPath: the categories overview and the path of its links when they are not /categories/
 KVS_NETWORK = {
 	'FRESHPORNO': {'url': 'https://freshporno.org', 'sorts': (('Latest', '/latest-updates/'), ('Most popular', '/most-popular/'), ('Top rated', '/top-rated/')), 'search': None},
-	'FREEPORNVIDEOS': {'url': 'https://www.freepornvideos.xxx', 'sorts': (('Latest', '/latest-updates/'), ('Most popular', '/most-popular/'), ('Top rated', '/top-rated/')), 'search': '/search/%s/'},
+	'FREEPORNVIDEOS': {'url': 'https://www.freepornvideos.xxx', 'sorts': (('Latest', '/latest-updates/'), ('Most popular', '/most-popular/'), ('Top rated', '/top-rated/')), 'search': '/search/%s/', 'numericCategories': True},
 	'FPOXXX': {'url': 'https://www.fpo.xxx', 'sorts': (('Latest', '/new-1/'), ('Popular', '/popular-1/')), 'search': '/search/%s/?from_videos=1'},
 	'HEROERO': {'url': 'https://heroero.com', 'sorts': (('Latest', '/latest-updates/'), ('Most popular', '/most-popular/'), ('Top rated', '/top-rated/')), 'search': '/search/%s/'},
 	'PORNDD': {'url': 'https://porndd.com', 'sorts': (('Latest', '/latest-updates/'), ('Most popular', '/most-popular/'), ('Top rated', '/top-rated/')), 'search': '/search/%s/'},
@@ -716,6 +733,20 @@ KVS_NETWORK = {
 	'VIPPORNS': {'url': 'https://www.vipporns.com', 'sorts': (('Latest', '/new-videos/'), ('Most viewed', '/most-viewed/'), ('Top rated', '/top-rated/')), 'search': '/search/%s/'},
 	'PORNVE': {'url': 'https://pornve.com', 'sorts': (('Latest', '/latest-updates/'), ('Most popular', '/most-popular/'), ('Top rated', '/top-rated/')), 'search': '/search/%s/'},
 	'BIGTITSLUST': {'url': 'https://www.bigtitslust.com', 'sorts': (('Latest', '/latest-updates/'), ('Most popular', '/most-popular/'), ('Top rated', '/top-rated/')), 'search': '/search/%s/'},
+	'BIGASSPORN': {'url': 'https://bigassporn.tv', 'sorts': (('Latest', '/latest-updates/'), ('Most popular', '/most-popular/'), ('Top rated', '/top-rated/')), 'search': '/search/%s/'},
+	'BLOWJOBSPRO': {'url': 'https://blowjobs.pro', 'sorts': (('Latest', '/latest-updates/'), ('Most popular', '/most-popular/'), ('Top rated', '/top-rated/')), 'search': '/search/%s/'},
+	'LESBIANPORN8': {'url': 'https://lesbianporn8.net', 'sorts': (('Latest', '/latest-updates/'), ('Most popular', '/most-popular/'), ('Top rated', '/top-rated/')), 'search': '/search/%s/'},
+	'SAINTPORN': {'url': 'https://saintporn.com', 'sorts': (('Latest', '/latest-updates/'), ('Most popular', '/most-popular/'), ('Top rated', '/top-rated/')), 'search': '/search/%s/'},
+	'ALLMATUREPORN': {'url': 'https://allmatureporn.tv', 'sorts': (('Latest', '/latest-updates/'), ('Most popular', '/most-popular/'), ('Top rated', '/top-rated/')), 'search': '/search/%s/'},
+	'BLACKPORN24': {'url': 'https://blackporn24.com', 'sorts': (('Latest', '/latest-updates/'), ('Most popular', '/most-popular/'), ('Top rated', '/top-rated/')), 'search': '/search/%s/'},
+	'FOOTSTOCKINGS': {'url': 'https://footstockings.com', 'sorts': (('Latest', '/latest-updates/'), ('Most popular', '/most-popular/'), ('Top rated', '/top-rated/')), 'search': '/search/%s/'},
+	'MILFPORN8': {'url': 'https://milfporn8.net', 'sorts': (('Latest', '/latest-updates/'), ('Most popular', '/most-popular/'), ('Top rated', '/top-rated/')), 'search': '/search/%s/'},
+	'PORNO24': {'url': 'https://porno24.to', 'sorts': (('Latest', '/latest-updates/'), ('Most popular', '/most-popular/'), ('Top rated', '/top-rated/')), 'search': '/search/%s/'},
+	'YOURLESBIANS': {'url': 'https://yourlesbians.com', 'sorts': (('Latest', '/lesbian-videos/'), ('Most popular', '/most-popular/'), ('Top rated', '/top-rated/')), 'search': '/search/%s/'},
+	'YABUCHKA': {'url': 'https://www1.yabuchka.xyz', 'sorts': (('Latest', '/latest-updates/'), ('Most popular', '/most-popular/'), ('Top rated', '/top-rated/')), 'search': '/search/%s/'},
+	'FULLEROTICMOVIES': {'url': 'https://www.fulleroticmovies.net', 'sorts': (('Latest', '/videos/'), ('Most viewed', '/most-viewed/'), ('Top rated', '/top-rated/')), 'search': '/search/%s/', 'catPath': 'category'},
+	'RUPORNO': {'url': 'https://wvw.ruporno.net', 'sorts': (('Latest', '/latest-updates/'), ('Most popular', '/most-popular/'), ('Top rated', '/top-rated/')), 'search': '/search/%s/', 'catPage': '/category/'},
+	'FUQSTER': {'url': 'https://fuqster.com', 'sorts': (('Latest', '/latest-updates/'), ('Most popular', '/most-popular/'), ('Top rated', '/top-rated/')), 'search': '/search/%s/'},
 }
 
 # WordPress tube theme sites (<article data-video-id>, ?filter= sort, /page/<n>/ paging),
@@ -726,6 +757,7 @@ WPTUBE_NETWORK = {
 	'PORNOBAE': {'url': 'https://pornobae.com', 'categories': '/categories/'},
 	# (its start page shows page 1 for every /page/<n>/: the sorted lists come from an empty search, which pages)
 	'VINTAGEPORNFUN': {'url': 'https://vintagepornfun.com', 'categories': '/categories/', 'sort': '/page/1/?s=&filter='},
+	'CUMDRINKINGCLIPS': {'url': 'https://cumdrinkingclips.com', 'categories': '/categories/'},
 }
 
 # movie sites of one WordPress theme (pictures on pandanetwork.club): <article class="card"> lists with <link rel="next">,
@@ -3530,7 +3562,8 @@ def changelogText(message):
 # sites whose Cloudflare blocks IPv6 clients ("Edge IP Restricted", 403) but lets IPv4 through - their pages are
 # fetched over IPv4 (the video CDN of WANKGALORE has no IPv6 at all)
 # (anacams.com: Cloudflare answers every IPv6 request with error 1034, IPv4 gets the page)
-IPV4_ONLY_SITES = ('wankgalore.com', 'anacams.com')
+# (fyxxr.to: every page and get_file takes ~20 s over IPv6, 0.2 s over IPv4; its video CDN has no IPv6)
+IPV4_ONLY_SITES = ('wankgalore.com', 'anacams.com', 'fyxxr.to')
 
 
 _ipv4Lookup = {'calls': 0, 'original': None}
@@ -3777,7 +3810,7 @@ class _SelfTestSession(object):
 
 
 class Host(CBaseHostClass, XXXParser):
-	XXXversion = "2026.10.22.1"
+	XXXversion = "2026.10.24.1"
 	# a Host of a helper thread of the global search (newSearchWorker()): no retries, no "not found" menu
 	searchWorker = False
 	# while the site self-test runs: the time the current site's requests stop (SELFTEST_SITE_SECONDS), 0 otherwise
@@ -22858,13 +22891,14 @@ class Host(CBaseHostClass, XXXParser):
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			self.HTTP_HEADER['Referer'] = self.MAIN_URL + '/'
 			self.defaultParams = {'header': self.HTTP_HEADER, 'return_data': True}
-			sts, data = self.cm.getPage(self.MAIN_URL + '/categories/', self.defaultParams)
+			sts, data = self.cm.getPage(self.MAIN_URL + site.get('catPage', '/categories/'), self.defaultParams)
 			if sts:
 				seen = set()
-				for m in re.finditer(r'href="((?:https?://[^"/]+)?/categories/([^"/?#]+)/)"', data):
+				# (blowjobs.pro: /categories/a/ letter index pages, saintporn.com: a JS template '+c.dir+')
+				for m in re.finditer(r'''href="((?:https?://[^"/]+)?/%s/([^"'/?#]{2,})/)"''' % site.get('catPath', 'categories'), data):
 					slug = m.group(2)
 					catTitle = unquote(slug).replace('-', ' ').title()
-					if slug in seen or isBlockedContent(catTitle):
+					if slug in seen or isBlockedContent(catTitle) or (slug.isdigit() and not site.get('numericCategories')):
 						continue
 					seen.add(slug)
 					valTab.append(CDisplayListItem(catTitle, catTitle, CDisplayListItem.TYPE_CATEGORY, [urljoin(self.MAIN_URL + '/', m.group(1))], name + '-clips', siteLogo, None))
@@ -22886,8 +22920,8 @@ class Host(CBaseHostClass, XXXParser):
 			if not sts:
 				return valTab
 			seen = set()
-			# (vipporns.com: /porn-videos/<id>/)
-			for m in re.finditer(r'(?s)<a[^>]+href="((?:https?://[^"/]+)?/(?:porn-)?videos?/[^"]+)"([^>]*)>(.{0,3000}?)</a>', data):
+			# (vipporns.com: /porn-videos/<id>/; yourlesbians.com: a card is over 3000 characters of white space)
+			for m in re.finditer(r'(?s)<a[^>]+href="((?:https?://[^"/]+)?/(?:porn-)?videos?/[^"]+)"([^>]*)>(.{0,6000}?)</a>', data):
 				phUrl = urljoin(self.MAIN_URL + '/', m.group(1))
 				item = m.group(3)
 				phImage = self.cm.ph.getSearchGroups(item, r'''<img[^>]+?(?:data-original|data-src|src)="([^"]+\.(?:jpg|jpeg|webp|png)[^"]*)"''', 1, True)[0]
@@ -25450,8 +25484,8 @@ class Host(CBaseHostClass, XXXParser):
 		if 'FYXXR' == name:
 			self.MAIN_URL = 'https://fyxxr.to'
 			catImage = siteLogo
-			# the site holds a browser request from the box for about 20 s before it answers (curl on the box, 22.10.):
-			# 40 s instead of 10 (pycurl "Operation too slow"), with a full browser header (Accept, Accept-Encoding)
+			# over IPv6 the site answers after about 20 s (IPV4_ONLY_SITES); 40 s instead of 10 stays as a margin,
+			# with a full browser header (Accept, Accept-Encoding)
 			self.HTTP_HEADER = dict(self.cm.getDefaultHeader(browser='chrome'), Referer=self.MAIN_URL + '/')
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'return_data': True, 'timeout': 40}
 			sts, data = self.getPageWithCFBypass(url)
