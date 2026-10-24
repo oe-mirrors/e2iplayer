@@ -14,7 +14,8 @@ from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdownloadercreator import DownloaderCreator
 ###################################################
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
-from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import shellQuote
+from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import shellQuote, isHlsSubtitleTrack, hlsSubtitleSegmentUrls, joinWebVttSegments, hlsSubtitleWgetCmd, writeUtf8TextFile, decodeSubtitle, fsPath, terminateToolsOfFile, safeRemoveFile
+from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 ###################################################
 # FOREIGN import
 ###################################################
@@ -109,6 +110,11 @@ class IPTVSubSimpleDownloaderWidget(Screen):
         self.downloadedSubFilePath = ""
         self.currItem = {}
         self.downloader = None
+        self.hlsConsole = None
+        self.subUrl = ''  # the url downloaded: the track's, or the segment of its HLS playlist
+        self.subTmpPath = ''
+        self.hlsChecked = False
+        self.hlsJoined = False
         self.cleanDownloader()
         self.workconsole = None
 
@@ -126,35 +132,106 @@ class IPTVSubSimpleDownloaderWidget(Screen):
             self.downloader.unsubscribeFor_Finish(self.downloadFinished)
             self.downloader.terminate()
         self.downloader = None
+        self._stopHls()
+        self.subUrl = ''
+        self.subTmpPath = ''
+        self.hlsChecked = False
+        self.hlsJoined = False
+
+    def _stopHls(self):
+        # Ctrl+C reaches only the shell around wget: the segment wget is ended by its output file as well
+        if self.hlsConsole is not None:
+            self.hlsConsole.kill()
+            if self.subTmpPath:
+                terminateToolsOfFile(self.subTmpPath, ('wget',))
+                safeRemoveFile(self.subTmpPath + '.list')
+        self.hlsConsole = None
 
     def startDownload(self, item):
         self.setListMode(False)
         self.cleanDownloader()
         self.currItem = item
-        self["console"].setText(_("Downloading subtitles.\n ('%r').") % self.currItem.get('url', ''))
-        # create downloader
-        self.downloader = DownloaderCreator(self.currItem.get('url', ''))
+        self.subUrl = self.currItem.get('url', '')
+        self["console"].setText(_("Downloading subtitles.\n ('%r').") % self.subUrl)
+        if isHlsSubtitleTrack(item):
+            # the url of an HLS subtitle playlist: its segments are the subtitles
+            self.hlsChecked = True
+            url, downloaderParams = DMHelper.getDownloaderParamFromUrl(self.subUrl)
+            cmd = DMHelper.getBaseWgetCmd(downloaderParams) + ' -T 20 -t 2 -q -O - "%s" 2>/dev/null' % shellQuote(url)
+            self.hlsConsole = iptv_system(cmd, self._hlsPlaylistFetched)
+        else:
+            self._createDownloader()
+
+    def _createDownloader(self):
+        if self.downloader is not None:
+            # the one that fetched an HLS playlist (convertSubtitles)
+            self.downloader.unsubscribeFor_Finish(self.downloadFinished)
+            self.downloader.terminate()
+        self.downloader = DownloaderCreator(self.subUrl)
         if self.downloader:
             self.downloader.isWorkingCorrectly(self._startDownloader)
         else:
-            self["console"].setText(_("Download can not be started.\n Incorrect address ('%r').") % self.currItem.get('url', ''))
+            self["console"].setText(_("Download can not be started.\n Incorrect address ('%r').") % self.subUrl)
 
     def _startDownloader(self, sts, reason):
         if sts:
             self.downloader.subscribeFor_Finish(self.downloadFinished)
-            url, downloaderParams = DMHelper.getDownloaderParamFromUrl(self.currItem.get('url', ''))
+            url, downloaderParams = DMHelper.getDownloaderParamFromUrl(self.subUrl)
             self.downloader.start(url, GetTmpDir(self._TMP_FILE_NAME), downloaderParams)
         else:
             self["console"].setText(_("Download can not be started.\nDownloader %s not working correctly.\nStatus[%s]") % (self.downloader.getName(), reason))
+
+    def _hlsPlaylistFetched(self, code, data):
+        self.hlsConsole = None
+        self._startHlsSegments(data)
+
+    def _startHlsSegments(self, data):
+        # one segment: downloaded as any subtitle file; several: all in one wget run into the temp file, joined then
+        playlistUrl, downloaderParams = DMHelper.getDownloaderParamFromUrl(self.subUrl)
+        urls = hlsSubtitleSegmentUrls(data, playlistUrl)
+        printDBG("IPTVSubSimpleDownloaderWidget HLS subtitle playlist [%s]: %d segments" % (playlistUrl, len(urls)))
+        if not urls:
+            self["console"].setText(_("Download can not be started.\n Incorrect address ('%r').") % playlistUrl)
+            return
+        if len(urls) == 1:
+            # the headers of the playlist go along
+            self.subUrl = strwithmeta(urls[0], getattr(self.subUrl, 'meta', None) or downloaderParams)
+            self._createDownloader()
+            return
+        self.subTmpPath = GetTmpDir(self._TMP_FILE_NAME)
+        listFile = self.subTmpPath + '.list'
+        if not writeUtf8TextFile(listFile, '\n'.join(urls) + '\n'):
+            self["console"].setText(_("Download failed.\nStatus[%s]") % -1)
+            return
+        self.hlsConsole = iptv_system(hlsSubtitleWgetCmd(downloaderParams, listFile, self.subTmpPath) + ' > /dev/null 2>&1', self._hlsSegmentsFetched)
+
+    def _hlsSegmentsFetched(self, code, data):
+        self.hlsConsole = None
+        text = ''
+        try:
+            with open(fsPath(self.subTmpPath), 'rb') as f:
+                text = joinWebVttSegments(decodeSubtitle(f.read(), self.currItem.get('lang', '')))
+        except Exception:
+            printExc()
+        safeRemoveFile(self.subTmpPath + '.list')
+        if '-->' not in text or not writeUtf8TextFile(self.subTmpPath, text):
+            self["console"].setText(_("Download failed.\nStatus[%s]") % code)
+            return
+        self.hlsJoined = True
+        self._subtitlesDownloaded(self.subTmpPath)
 
     def downloadFinished(self, status):
         if status != DMHelper.STS.DOWNLOADED:
             self["console"].setText(_("Download failed.\nStatus[%s]") % status)
         else:
-            self["console"].setText(_('Subtitles downloaded successfully. [%s], conversion to UTF-8.') % self.downloader.getFullFileName())
-            cmd = '/usr/bin/uchardet "%s"' % shellQuote(self.downloader.getFullFileName())
-            printDBG("cmd[%s]" % cmd)
-            self.workconsole = iptv_system(cmd, self.convertSubtitles)
+            self._subtitlesDownloaded(self.downloader.getFullFileName())
+
+    def _subtitlesDownloaded(self, filePath):
+        self.subTmpPath = filePath
+        self["console"].setText(_('Subtitles downloaded successfully. [%s], conversion to UTF-8.') % filePath)
+        cmd = '/usr/bin/uchardet "%s"' % shellQuote(filePath)
+        printDBG("cmd[%s]" % cmd)
+        self.workconsole = iptv_system(cmd, self.convertSubtitles)
 
     def convertSubtitles(self, code=127, encoding=""):
         encoding = MapUcharEncoding(encoding)
@@ -163,12 +240,20 @@ class IPTVSubSimpleDownloaderWidget(Screen):
         else:
             encoding = encoding.strip()
         try:
-            with io.open(self.downloader.getFullFileName(), 'r', encoding=encoding, errors='replace', newline='') as fp:
+            with io.open(self.subTmpPath, 'r', encoding=encoding, errors='replace', newline='') as fp:
                 subText = ensure_str(fp.read()).strip()
 
+            if not self.hlsChecked and subText.startswith('#EXTM3U'):
+                # a host's subtitle link without .m3u8 that serves an HLS playlist
+                self.hlsChecked = True
+                self._startHlsSegments(subText)
+                return
+
             ext = self.currItem.get('format', '')
+            if ext == '' and self.hlsJoined:
+                ext = 'vtt'
             if ext == '':
-                ext = self.currItem.get('url', '').split('?')[0].split('.')[-1]
+                ext = self.subUrl.split('?')[0].split('.')[-1]
             filePath = '{0}_{1}_{2}'.format(self.params['movie_title'], self.currItem.get('title', ''), self.currItem.get('lang', ''))
             filePath = RemoveDisallowedFilenameChars(filePath)
             filePath += '.' + ext
@@ -248,6 +333,10 @@ class IPTVSubSimpleDownloaderWidget(Screen):
         if False is self.listMode:
             if self.downloader is not None and self.downloader.isDownloading():
                 self.downloader.terminate()
+            elif self.hlsConsole is not None:
+                # the HLS playlist / its segments: stopped, the screen stays as after a stopped download
+                self._stopHls()
+                self["console"].setText(_("Download failed.\nStatus[%s]") % -1)
             else:
                 tmpList = self.params.get('sub_list', [])
                 if len(tmpList) > 1:

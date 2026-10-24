@@ -188,6 +188,30 @@ def test_stopping_a_live_recording_finishes_it(ff):
     assert _finished(ff, live=True, terminated=True, size=0)[0] == "INTERRUPTED"
 
 
+def _fastFinished(ff, download, outData=""):
+    # a clean ffmpeg exit whose last progress line said 22:17 of 23:07 (96.4 %, below DURATION_COMPLETE_RATIO)
+    ff.DMHelper.STS.DOWNLOADED, ff.DMHelper.STS.INTERRUPTED, ff.DMHelper.STS.ERROR = "DOWNLOADED", "INTERRUPTED", "ERROR"
+    ff.DMHelper.getFileSize = lambda path: 252182906
+    dl = _dl(ff, "merge://audio_url|video_url", {"audio_url": "https://cdn/a.m3u8", "video_url": "https://cdn/v.m3u8"}, download=download)
+    dl.filePath, dl.fileCmdPath, dl.console, dl.localFileSize, dl.sidecarEnabled = "/hdd/movie/.iptv_buffering.flv", "", None, 0, False
+    dl.liveStream, dl.headerReceived, dl.totalDuration, dl.downloadDuration = False, True, 1387, 1337
+    dl.outData, dl.loggedErrors = outData, set()
+    dl._fixFileExtension = lambda: None
+    dl._finishDownloadFlow = lambda: None
+    dl._cmdFinished(0, False)
+    return dl.status
+
+
+def test_fast_download_counts_as_finished(ff):
+    # box log 24.10.2026 (cda + ffmpeg 9: a 23 min episode in 9 s): buffered playback plays what a clean exit left
+    assert _fastFinished(ff, download=False) == "DOWNLOADED"
+    # the download manager keeps the strict check ...
+    assert _fastFinished(ff, download=True) == "INTERRUPTED"
+    # ... but the final progress line still held back in outData is parsed first
+    last = "frame=33293 fps=4173 q=-1.0 Lsize=  246272KiB time=00:23:07.12 bitrate=1454.4kbits/s speed= 174x"
+    assert _fastFinished(ff, download=True, outData=last) == "DOWNLOADED"
+
+
 def test_speed_from_the_file_without_bitrate(ff):
     import datetime
     dl = _dl(ff, "https://cdn/x/live.m3u8")

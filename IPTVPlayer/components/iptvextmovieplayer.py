@@ -37,6 +37,7 @@ from Plugins.Extensions.IPTVPlayer.components.configextmovieplayer import Config
 from Plugins.Extensions.IPTVPlayer.components import skinchrome
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import CParsingHelper
 from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
+from Plugins.Extensions.IPTVPlayer.libs.subtitlesmatch import langCode, langName
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 
 # FOREIGN import
@@ -1162,6 +1163,34 @@ class IPTVExtMoviePlayer(Screen):
         self.videoOptionSelectionChanged(ret)
         self.selectVideoOptions()
 
+    # _trackLabel() translates the names of subtitlesmatch.LANGUAGES through _(langName(...)) - a dynamic
+    # call, invisible to xgettext. Listing them as literals makes the translation template pick them up
+    # (tests/test_subtitlesmatch.py keeps this list in sync with LANGUAGES).
+    LANGUAGE_NAMES = (
+        _("Albanian"), _("Arabic"), _("Armenian"), _("Basque"), _("Bengali"), _("Bosnian"), _("Bulgarian"),
+        _("Catalan"), _("Chinese"), _("Croatian"), _("Czech"), _("Danish"), _("Dutch"), _("English"),
+        _("Estonian"), _("Persian"), _("Finnish"), _("French"), _("Galician"), _("Georgian"), _("German"),
+        _("Greek"), _("Hebrew"), _("Hindi"), _("Hungarian"), _("Icelandic"), _("Indonesian"), _("Italian"),
+        _("Japanese"), _("Korean"), _("Kurdish"), _("Latvian"), _("Lithuanian"), _("Macedonian"), _("Malay"),
+        _("Norwegian"), _("Polish"), _("Portuguese"), _("Brazilian Portuguese"), _("Romanian"), _("Russian"),
+        _("Serbian"), _("Sinhala"), _("Slovak"), _("Slovenian"), _("Spanish"), _("Swedish"), _("Tamil"),
+        _("Thai"), _("Turkish"), _("Ukrainian"), _("Urdu"), _("Vietnamese"),
+    )
+
+    @staticmethod
+    def _trackLabel(track, trackIdx, count):
+        # "[AAC] German" for a stream language tag "ger"/"deu"; the tag "und" (ISO 639-2: undetermined, set by
+        # many encoders when nobody entered a language) or an empty one leaves just the codec - with the track
+        # number when there are several; any other name (a stream title like "Deutsch (AD)") as it is
+        name = str(track.get('name', '')).strip()
+        if name.lower() in ('', 'und', 'unknown', 'n/a'):
+            name = '%d' % (trackIdx + 1) if count > 1 else ''
+        elif len(name) <= 3 and langCode(name):
+            name = _(langName(name))
+        else:
+            name = _(name)
+        return ('[%s] %s' % (track.get('encode', ''), name)).strip()
+
     def selectAudioTrack(self):
         printDBG("selectAudioTrack")
         tracksTab = self.playback['AudioTracks']
@@ -1171,7 +1200,7 @@ class IPTVExtMoviePlayer(Screen):
             currentId = self.playback['AudioTrack'].get('id', -1)
             currIdx = 0
             for trackIdx in range(len(tracksTab)):
-                name = '[{0}] {1}'.format(tracksTab[trackIdx]['encode'], _(tracksTab[trackIdx]['name']))
+                name = self._trackLabel(tracksTab[trackIdx], trackIdx, len(tracksTab))
                 item = IPTVChoiceBoxItem(name, "", {'track_id': tracksTab[trackIdx]['id'], 'track_idx': trackIdx})
                 if tracksTab[trackIdx]['id'] == currentId:
                     item.type = IPTVChoiceBoxItem.TYPE_ON
@@ -1214,7 +1243,7 @@ class IPTVExtMoviePlayer(Screen):
 
         #####################################
         for trackIdx in range(len(embeddedTracksTab)):
-            name = '[{0}] {1}'.format(embeddedTracksTab[trackIdx]['encode'], _(embeddedTracksTab[trackIdx]['name']))
+            name = self._trackLabel(embeddedTracksTab[trackIdx], trackIdx, len(embeddedTracksTab))
             item = IPTVChoiceBoxItem(name, "", {'track_id': embeddedTracksTab[trackIdx]['id'], 'track_idx': trackIdx})
             if embeddedTracksTab[trackIdx]['id'] == embeddedTrackId:
                 item.type = IPTVChoiceBoxItem.TYPE_ON

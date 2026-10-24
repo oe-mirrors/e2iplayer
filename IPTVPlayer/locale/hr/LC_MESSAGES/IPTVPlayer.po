@@ -1,0 +1,7372 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: IPTVPlayer\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-20 20:10+0000\n"
+"PO-Revision-Date: 2026-10-24 23:30+0000\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: Croatian\n"
+"Language: hr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#, python-format
+msgid "\tDisk space available: %s"
+msgstr "\tDostupan prostor na disku: %s"
+
+#, python-format
+msgid "\tDisk space required: %s"
+msgstr "\tPotreban prostor na disku: %s"
+
+msgid ""
+"\n"
+"Make sure you are using the latest version of the plugin."
+msgstr ""
+"\n"
+"Provjerite koristite li najnoviju verziju dodatka."
+
+msgid ""
+"\n"
+"You can also report problem here: \n"
+"https://github.com/oe-mirrors/e2iplayer/issues"
+msgstr ""
+"\n"
+"Problem možete prijaviti i ovdje: \n"
+"https://github.com/oe-mirrors/e2iplayer/issues"
+
+msgid "  • Fixed: order never changes - useful for browsing by letter jump (0-9)."
+msgstr "  • Fiksirano: redoslijed se nikada ne mijenja - korisno za pregledavanje skokom po slovu (0-9)."
+
+msgid "  • Sorting or reordering fixes this automatically, so your order stays."
+msgstr "  • Sortiranje ili premještanje ovo automatski fiksira, tako da vaš redoslijed ostaje."
+
+msgid "  • Unfixed (default): the entry jumps back to the top of the list."
+msgstr "  • Nefiksirano (zadano): unos se vraća na vrh popisa."
+
+#, python-format
+msgid "\"%s\" Virtual Keyboard layout not available."
+msgstr "Raspored virtualne tipkovnice \"%s\" nije dostupan."
+
+#, python-format
+msgid "\"%s\" has been added to the favourites group \"%s\"."
+msgstr "\"%s\" je dodano u grupu favorita \"%s\"."
+
+#, python-format
+msgid "\"%s\" is playing on the TV."
+msgstr "\"%s\" se reproducira na televizoru."
+
+msgid "\"Web\" streams player"
+msgstr "Player za \"Web\" streamove"
+
+#, python-format
+msgid "%d added, %d skipped."
+msgstr "Dodano: %d, preskočeno: %d."
+
+#, python-format
+msgid "%d duplicate entries removed."
+msgstr "Uklonjeno je %d dvostrukih stavki."
+
+#, python-format
+msgid "%d duplicate entry removed."
+msgstr "Uklonjena je %d dvostruka stavka."
+
+#, python-format
+msgid "%d items added to the download queue, %d skipped."
+msgstr "U red za preuzimanje dodano je %d stavki, preskočeno %d."
+
+#, python-format
+msgid "%d of %d downloaded"
+msgstr "Preuzeto %d od %d"
+
+#, python-format
+msgid "%d parts"
+msgstr "%d dijelova"
+
+#, python-format
+msgid "%d programmes"
+msgstr "%d emisija"
+
+#, python-format
+msgid "%d recitations"
+msgstr "%d recitacija"
+
+#, python-format
+msgid "%d removed, %d skipped."
+msgstr "Uklonjeno: %d, preskočeno: %d."
+
+#, python-format
+msgid "%d videos"
+msgstr "%d videozapisa"
+
+#, python-format
+msgid "%s - service overview"
+msgstr "%s - pregled servisa"
+
+#, python-format
+msgid "%s - subtitles provider"
+msgstr "%s - pružatelj titlova"
+
+#, python-format
+msgid "%s blocks the connection of the receiver (HTTP 403). It only plays with curl-impersonate installed on the receiver - otherwise please choose another server."
+msgstr "%s blokira vezu prijamnika (HTTP 403). Reproducira se samo ako je na prijamniku instaliran curl-impersonate - u suprotnom odaberite drugi poslužitelj."
+
+#, python-format
+msgid "%s blocks the connection of the receiver (HTTP 403). Please choose another server."
+msgstr "%s blokira vezu prijamnika (HTTP 403). Odaberite drugi poslužitelj."
+
+#, python-format
+msgid "%s buffering..."
+msgstr "%s međuspremanje..."
+
+#, python-format
+msgid "%s cannot solve this type of captcha."
+msgstr "%s ne može riješiti ovu vrstu captche."
+
+#, python-format
+msgid "%s could not solve the captcha."
+msgstr "%s nije uspio riješiti captchu."
+
+#, python-format
+msgid "%s device name"
+msgstr "%s naziv uređaja"
+
+#, python-format
+msgid "%s download manager"
+msgstr "%s upravitelj preuzimanja"
+
+#, python-format
+msgid "%s e-mail"
+msgstr "%s e-pošta"
+
+#, python-format
+msgid "%s episodes"
+msgstr "%s epizoda"
+
+#, python-format
+msgid "%s followers"
+msgstr "%s pratitelja"
+
+#, python-format
+msgid "%s needs a free account. Enter login and password in the host configuration."
+msgstr "%s zahtijeva besplatan račun. Unesite korisničko ime i lozinku u konfiguraciji hosta."
+
+#, python-format
+msgid "%s password"
+msgstr "%s lozinka"
+
+#, python-format
+msgid "%s plays"
+msgstr "%s reprodukcija"
+
+#, python-format
+msgid "%s posts"
+msgstr "%s objava"
+
+#, python-format
+msgid "%s refused the download. Please set your login and password in the configuration."
+msgstr "%s je odbio preuzimanje. Unesite korisničko ime i lozinku u konfiguraciji."
+
+#, python-format
+msgid "%s refused the request (Cloudflare check, HTTP %s). This host needs curl-impersonate on the receiver."
+msgstr "%s je odbio zahtjev (Cloudflare provjera, HTTP %s). Ovaj host zahtijeva curl-impersonate na prijamniku."
+
+#, python-format
+msgid "%s returned %s: %s"
+msgstr "%s je vratio %s: %s"
+
+#, python-format
+msgid "%s services configuration"
+msgstr "%s konfiguracija servisa"
+
+#, python-format
+msgid "%s subtitles download - how to"
+msgstr "%s preuzimanje titlova - upute"
+
+#, python-format
+msgid "%s talks"
+msgstr "%s predavanja"
+
+#, python-format
+msgid "%s timeout."
+msgstr "%s - isteklo vrijeme."
+
+#, python-format
+msgid "%s uploads"
+msgstr "%s prijenosa"
+
+#, python-format
+msgid ""
+"%s uses \"geo-blocking\" measures to prevent you from accessing the services from abroad.\n"
+" Host country: %s, your country: %s"
+msgstr ""
+"%s koristi mjere \"geo-blokiranja\" kako bi spriječio pristup servisima iz inozemstva.\n"
+" Zemlja hosta: %s, vaša zemlja: %s"
+
+#, python-format
+msgid "%s viewers"
+msgstr "%s gledatelja"
+
+#, python-format
+msgid "%s views"
+msgstr "%s pregleda"
+
+#, python-format
+msgid "%s: decrypting the stream, this can take a while (%d s)"
+msgstr "%s: stream se dešifrira, ovo može potrajati (%d s)"
+
+#, python-format
+msgid "(%d YouTube channel(s) could not be read)"
+msgstr "(YouTube kanali koje nije bilo moguće pročitati: %d)"
+
+msgid "(no videos found)"
+msgstr "(nisu pronađeni videozapisi)"
+
+msgid "(nothing here yet)"
+msgstr "(ovdje još nema ničega)"
+
+msgid "(reading...)"
+msgstr "(čitanje...)"
+
+msgid "++"
+msgstr "++"
+
+msgid "--"
+msgstr "--"
+
+msgid "----- BASIC CONFIGURATION -----"
+msgstr "----- OSNOVNA KONFIGURACIJA -----"
+
+msgid "----- BUFFERING CONFIGURATION -----"
+msgstr "----- KONFIGURACIJA MEĐUSPREMANJA -----"
+
+msgid "----- CAPTCHA CONFIGURATION -----"
+msgstr "----- KONFIGURACIJA CAPTCHE -----"
+
+msgid "----- DEBUG CONFIGURATION -----"
+msgstr "----- KONFIGURACIJA ZA DEBUG -----"
+
+msgid "----- DOWNLOADING CONFIGURATION -----"
+msgstr "----- KONFIGURACIJA PREUZIMANJA -----"
+
+msgid "----- Debug -----"
+msgstr "----- Debug -----"
+
+msgid "----- Global HostXXX Configuration -----"
+msgstr "----- Globalna HostXXX konfiguracija -----"
+
+msgid "----- METADATA PROVIDERS CONFIGURATION -----"
+msgstr "----- KONFIGURACIJA PRUŽATELJA METAPODATAKA -----"
+
+msgid "----- PLAYERS & PLAYBACK CONFIGURATION -----"
+msgstr "----- KONFIGURACIJA PLAYERA I REPRODUKCIJE -----"
+
+msgid "----- PROXIES CONFIGURATION -----"
+msgstr "----- KONFIGURACIJA PROXY POSLUŽITELJA -----"
+
+msgid "----- Porn Site Configuration -----"
+msgstr "----- Konfiguracija porno stranica -----"
+
+msgid "----- SCREENSAVER CONFIGURATION -----"
+msgstr "----- KONFIGURACIJA ČUVARA ZASLONA -----"
+
+msgid "----- SECURITY CONFIGURATION -----"
+msgstr "----- KONFIGURACIJA SIGURNOSTI -----"
+
+msgid "----- SERVICE CONFIGURATION -----"
+msgstr "----- KONFIGURACIJA SERVISA -----"
+
+msgid "----- SKIN CONFIGURATION -----"
+msgstr "----- KONFIGURACIJA SKINA -----"
+
+msgid "----- STORAGE CONFIGURATION -----"
+msgstr "----- KONFIGURACIJA POHRANE -----"
+
+msgid "----- SUBTITLES CONFIGURATION -----"
+msgstr "----- KONFIGURACIJA TITLOVA -----"
+
+msgid "----- Show or hide Anime / Hentai -----"
+msgstr "----- Prikaži ili sakrij Anime / Hentai -----"
+
+msgid "----- Show or hide Live Cams -----"
+msgstr "----- Prikaži ili sakrij Live Cams -----"
+
+msgid "----- Show or hide Porn Sites -----"
+msgstr "----- Prikaži ili sakrij porno stranice -----"
+
+msgid "----- TORRENT CONFIGURATION -----"
+msgstr "----- KONFIGURACIJA TORRENTA -----"
+
+msgid "----- VIRTUAL KEYBOARD & SEARCH CONFIGURATION -----"
+msgstr "----- KONFIGURACIJA VIRTUALNE TIPKOVNICE I PRETRAGE -----"
+
+msgid "----- XXXList Configuration -----"
+msgstr "----- XXXList konfiguracija -----"
+
+msgid "----------  Anime / Hentai  ----------"
+msgstr "----------  Anime / Hentai  ----------"
+
+msgid "----------  Live Cams  ----------"
+msgstr "----------  Live Cams  ----------"
+
+msgid "----------  Other  ----------"
+msgstr "----------  Ostalo  ----------"
+
+msgid "----------  Porn Sites  ----------"
+msgstr "----------  Porno stranice  ----------"
+
+#, python-format
+msgid "----------  Search \"%s\"  ----------"
+msgstr "----------  Pretraga \"%s\"  ----------"
+
+msgid "----------------- External exteplayer3 options -----------------"
+msgstr "----------------- Opcije vanjskog exteplayer3 -----------------"
+
+msgid "--All Episodes--"
+msgstr "--Sve epizode--"
+
+msgid "--All--"
+msgstr "--Sve--"
+
+msgid "--Other--"
+msgstr "--Ostalo--"
+
+msgid "... and that the stream delivers video :"
+msgstr "... i da stream isporučuje video :"
+
+msgid "0-9"
+msgstr "0-9"
+
+msgid "1 minute"
+msgstr "1 minuta"
+
+msgid "1. On a phone or PC in the same network, open the address shown in the captcha window (or scan its QR code) in a browser with the MyE2i extension installed. If it asks for a code, you find it in the title of the captcha window."
+msgstr "1. Na telefonu ili računalu u istoj mreži otvorite adresu prikazanu u prozoru captche (ili skenirajte njezin QR kod) u pregledniku s instaliranim proširenjem MyE2i. Ako se traži kod, naći ćete ga u naslovu prozora captche."
+
+msgid "12 hour format"
+msgstr "12-satni format"
+
+msgid "15 seconds"
+msgstr "15 sekundi"
+
+msgid "2. Click the big green button on that page. A new tab opens with the captcha or the website's browser check."
+msgstr "2. Kliknite veliki zeleni gumb na toj stranici. Otvorit će se nova kartica s captchom ili provjerom preglednika web-stranice."
+
+msgid "24 hour format"
+msgstr "24-satni format"
+
+msgid "3. Solve it. The result goes back to the receiver by itself and the captcha window closes."
+msgstr "3. Riješite je. Rezultat se sam vraća na prijamnik i prozor captche se zatvara."
+
+msgid "30 seconds"
+msgstr "30 sekundi"
+
+msgid "4K movies"
+msgstr "4K filmovi"
+
+msgid "5 seconds"
+msgstr "5 sekundi"
+
+#, python-format
+msgid "A folder \"%s\" exists already."
+msgstr "Mapa \"%s\" već postoji."
+
+msgid "A search is already running."
+msgstr "Pretraga je već u tijeku."
+
+msgid "A-Z"
+msgstr "A-Z"
+
+msgid "AAC downmix mode"
+msgstr "AAC način downmixa"
+
+msgid "ABORTED"
+msgstr "PREKINUTO"
+
+msgid "AC3 downmix mode"
+msgstr "AC3 način downmixa"
+
+msgid ""
+"ACCESS DENIED.\n"
+"THIS VIDEO IS DELETED OR NOT AVAILABLE TO YOUR REGION."
+msgstr ""
+"PRISTUP ODBIJEN.\n"
+"OVAJ VIDEO JE IZBRISAN ILI NIJE DOSTUPAN U VAŠOJ REGIJI."
+
+msgid "ALBUMS"
+msgstr "ALBUMI"
+
+msgid "API Key"
+msgstr "API ključ"
+
+msgid "ARTISTS"
+msgstr "IZVOĐAČI"
+
+msgid "ATTENTION!"
+msgstr "PAŽNJA!"
+
+msgid "Aborted"
+msgstr "Prekinuto"
+
+msgid "About"
+msgstr "O programu"
+
+msgid "Accept"
+msgstr "Prihvati"
+
+msgid "Access Forbidden"
+msgstr "Pristup zabranjen"
+
+msgid "Access denied - open the page with the QR code or the code shown on the receiver screen."
+msgstr "Pristup odbijen - otvorite stranicu pomoću QR koda ili koda prikazanog na zaslonu prijamnika."
+
+msgid "Access denied. Please check password."
+msgstr "Pristup odbijen. Provjerite lozinku."
+
+msgid "Accessible"
+msgstr "Pristupačno"
+
+#, python-format
+msgid "Account %d - name (optional):"
+msgstr "Račun %d - naziv (neobavezno):"
+
+#, python-format
+msgid "Account %d - password:"
+msgstr "Račun %d - lozinka:"
+
+#, python-format
+msgid "Account %d - server (http://host:port or get.php link):"
+msgstr "Račun %d - poslužitelj (http://host:port ili get.php poveznica):"
+
+#, python-format
+msgid "Account %d - user name:"
+msgstr "Račun %d - korisničko ime:"
+
+msgid "Accounts & API keys"
+msgstr "Računi i API ključevi"
+
+msgid "Action"
+msgstr "Akcija"
+
+msgid "Action & Thriller"
+msgstr "Akcija i triler"
+
+msgid "Actors"
+msgstr "Glumci"
+
+msgid "Actors:"
+msgstr "Glumci:"
+
+#, python-format
+msgid "Add %d items to the download queue?"
+msgstr "Dodati %d stavki u red za preuzimanje?"
+
+msgid "Add channel name to downloaded file"
+msgstr "Dodaj naziv kanala preuzetoj datoteci"
+
+#, python-format
+msgid "Add host %s to group"
+msgstr "Dodaj host %s u grupu"
+
+msgid "Add item to favorites"
+msgstr "Dodaj stavku u favorite"
+
+msgid "Add item to group"
+msgstr "Dodaj stavku u grupu"
+
+#, python-format
+msgid "Add marked items to favourites (%d)"
+msgstr "Dodaj označene stavke u favorite (%d)"
+
+msgid "Add new entry"
+msgstr "Dodaj novi unos"
+
+msgid "Add new group"
+msgstr "Dodaj novu grupu"
+
+msgid "Add new group of favorites"
+msgstr "Dodaj novu grupu favorita"
+
+msgid "Add to User Links"
+msgstr "Dodaj u korisničke poveznice"
+
+msgid "Add to Watchlist"
+msgstr "Dodaj na popis za gledanje"
+
+msgid "Add to Watchlist folder..."
+msgstr "Dodaj u mapu popisa za gledanje..."
+
+msgid "Added"
+msgstr "Dodano"
+
+#, python-format
+msgid "Added by: %s, directory: %s"
+msgstr "Dodao: %s, direktorij: %s"
+
+msgid "Adhan"
+msgstr "Ezan"
+
+msgid "Adventure"
+msgstr "Avantura"
+
+msgid "African series"
+msgstr "Afričke serije"
+
+msgid "Age limit:"
+msgstr "Dobno ograničenje:"
+
+msgid "Aired"
+msgstr "Emitirano"
+
+msgid "Aired this week"
+msgstr "Emitirano ovaj tjedan"
+
+msgid "Airing now"
+msgstr "Upravo se emitira"
+
+msgid "All"
+msgstr "Sve"
+
+msgid "All Sports"
+msgstr "Svi sportovi"
+
+msgid "All audiobooks"
+msgstr "Sve audioknjige"
+
+msgid "All categories"
+msgstr "Sve kategorije"
+
+msgid "All in one"
+msgstr "Sve zajedno"
+
+msgid "All movies"
+msgstr "Svi filmovi"
+
+msgid "All programmes"
+msgstr "Sve emisije"
+
+msgid "All results"
+msgstr "Svi rezultati"
+
+msgid "All seasons"
+msgstr "Sve sezone"
+
+msgid "All series"
+msgstr "Sve serije"
+
+msgid "All shows"
+msgstr "Sve emisije"
+
+msgid "All stations"
+msgstr "Sve postaje"
+
+msgid "All streams"
+msgstr "Svi streamovi"
+
+msgid "All time"
+msgstr "Svih vremena"
+
+msgid "All titles A-Z"
+msgstr "Svi naslovi A-Z"
+
+msgid "All videos"
+msgstr "Svi videozapisi"
+
+msgid "Allow VP9 codec:"
+msgstr "Dopusti VP9 kodek:"
+
+msgid "Allow dash format:"
+msgstr "Dopusti DASH format:"
+
+msgid "Allow external link-decryption service (enc-dec.app)"
+msgstr "Dopusti vanjski servis za dešifriranje poveznica (enc-dec.app)"
+
+msgid "Allow host to override suggestions provider"
+msgstr "Dopusti hostu da zamijeni pružatelja prijedloga"
+
+msgid "Allow upload to other peers (seeding)"
+msgstr "Dopusti slanje drugim korisnicima (seeding)"
+
+msgid "Allow watched flag to be set"
+msgstr "Dopusti postavljanje oznake \"pogledano\""
+
+msgid "Alphabetically"
+msgstr "Abecedno"
+
+#, python-format
+msgid "Also use the accounts of X-Streamity (%s)"
+msgstr "Koristi i račune iz X-Streamity (%s)"
+
+#, python-format
+msgid "Also use the portals of EStalker (%s)"
+msgstr "Koristi i portale iz EStalker (%s)"
+
+msgid "AltGr"
+msgstr "AltGr"
+
+msgid "Alternate Title:"
+msgstr "Alternativni naslov:"
+
+msgid "Alternative domain:"
+msgstr "Alternativna domena:"
+
+msgid "Alternative proxy server (1)"
+msgstr "Alternativni proxy poslužitelj (1)"
+
+msgid "Alternative proxy server (2)"
+msgstr "Alternativni proxy poslužitelj (2)"
+
+msgid "Alternative proxy server (3)"
+msgstr "Alternativni proxy poslužitelj (3)"
+
+msgid "Alternative proxy server (4)"
+msgstr "Alternativni proxy poslužitelj (4)"
+
+msgid "Alternative proxy server (5)"
+msgstr "Alternativni proxy poslužitelj (5)"
+
+msgid "American football"
+msgstr "Američki nogomet"
+
+msgid "An API key from subsource.net can be entered in the E2iPlayer settings (Subtitles)."
+msgstr "API ključ sa subsource.net možete unijeti u postavkama E2iPlayera (Titlovi)."
+
+#, python-format
+msgid "An error occurred while loading a subtitle from [%s]."
+msgstr "Došlo je do pogreške pri učitavanju titla s [%s]."
+
+#, python-format
+msgid "An error occurred while writing into: %s"
+msgstr "Došlo je do pogreške pri upisivanju u: %s"
+
+msgid "An opensubtitles.com account (login and password in the E2iPlayer settings) raises the limit."
+msgstr "Račun na opensubtitles.com (korisničko ime i lozinka u postavkama E2iPlayera) povećava ograničenje."
+
+msgid "Anatomy"
+msgstr "Anatomija"
+
+msgid "Animals"
+msgstr "Životinje"
+
+msgid "Animated movies"
+msgstr "Animirani filmovi"
+
+msgid "Animated series"
+msgstr "Animirane serije"
+
+msgid "Animation"
+msgstr "Animacija"
+
+msgid "Anime"
+msgstr "Anime"
+
+msgid "Anime A-Z"
+msgstr "Anime A-Z"
+
+msgid "Anime Movies"
+msgstr "Anime filmovi"
+
+msgid "Anime Series"
+msgstr "Anime serije"
+
+msgid "Anime TV series"
+msgstr "Anime TV serije"
+
+msgid "Anime genres"
+msgstr "Anime žanrovi"
+
+msgid "Anime list"
+msgstr "Popis animea"
+
+msgid "Anime movies"
+msgstr "Anime filmovi"
+
+msgid "Anime movies A-Z"
+msgstr "Anime filmovi A-Z"
+
+msgid "Anime series (dubbed)"
+msgstr "Anime serije (sinkronizirane)"
+
+msgid "Anime series A-Z"
+msgstr "Anime serije A-Z"
+
+msgid "Answer"
+msgstr "Odgovor"
+
+msgid "Any"
+msgstr "Bilo koji"
+
+msgid "Apply"
+msgstr "Primijeni"
+
+msgid "Approaches"
+msgstr "Pristupi"
+
+msgid "Arabic"
+msgstr "Arapski"
+
+msgid "Arabic Movies"
+msgstr "Arapski filmovi"
+
+msgid "Arabic Series"
+msgstr "Arapske serije"
+
+msgid "Arabic movies"
+msgstr "Arapski filmovi"
+
+msgid "Arabic plays"
+msgstr "Arapske kazališne predstave"
+
+msgid "Arabic songs"
+msgstr "Arapske pjesme"
+
+msgid "Archive"
+msgstr "Arhiva"
+
+msgid "Are you sure you want to delete search history?"
+msgstr "Jeste li sigurni da želite izbrisati povijest pretrage?"
+
+#, python-format
+msgid "Are you sure you want to remove file \"%s\"?"
+msgstr "Jeste li sigurni da želite ukloniti datoteku \"%s\"?"
+
+msgid "Are you sure you want to reset all settings to their default values?"
+msgstr "Jeste li sigurni da želite vratiti sve postavke na zadane vrijednosti?"
+
+msgid "Art"
+msgstr "Umjetnost"
+
+msgid "Articles"
+msgstr "Članci"
+
+msgid "Artist"
+msgstr "Izvođač"
+
+#, python-format
+msgid "Artist \"%s\" not found on Last.fm - the exact artist name is needed."
+msgstr "Izvođač \"%s\" nije pronađen na Last.fm - potreban je točan naziv izvođača."
+
+msgid "Artists"
+msgstr "Izvođači"
+
+msgid "Asian"
+msgstr "Azijsko"
+
+msgid "Asian TV series"
+msgstr "Azijske TV serije"
+
+msgid "Asian movies"
+msgstr "Azijski filmovi"
+
+msgid "Asian series (dubbed)"
+msgstr "Azijske serije (sinkronizirane)"
+
+msgid "Aspect"
+msgstr "Omjer slike"
+
+msgid "At least one of plugin browser, extension list and main menu has to stay on, otherwise E2iPlayer could no longer be started."
+msgstr "Barem jedno od sljedećeg mora ostati uključeno: preglednik dodataka, popis proširenja ili glavni izbornik, inače se E2iPlayer više ne bi mogao pokrenuti."
+
+msgid "At the live edge"
+msgstr "Na live poziciji"
+
+msgid "Atheer radio (Arabic)"
+msgstr "Atheer radio (arapski)"
+
+msgid "Audio"
+msgstr "Audio"
+
+msgid "Audio buffer size [KB]"
+msgstr "Veličina audio međuspremnika [KB]"
+
+msgid "Audio description"
+msgstr "Audio-deskripcija"
+
+msgid "Audio programme"
+msgstr "Audio emisija"
+
+msgid "Audio track"
+msgstr "Audio zapis"
+
+msgid "Audio tracks"
+msgstr "Audio zapisi"
+
+#, python-format
+msgid "Author: %s"
+msgstr "Autor: %s"
+
+msgid "Authors"
+msgstr "Autori"
+
+msgid "Auto"
+msgstr "Auto"
+
+#, python-format
+msgid "Auto refresh: %s"
+msgstr "Automatsko osvježavanje: %s"
+
+msgid "Auto selection based on the settings"
+msgstr "Automatski odabir na temelju postavki"
+
+msgid "Auto start method"
+msgstr "Način automatskog pokretanja"
+
+msgid "Auto-generated"
+msgstr "Automatski generirano"
+
+msgid "Automatic"
+msgstr "Automatski"
+
+msgid "Automatically turn on external subtitles"
+msgstr "Automatski uključi vanjske titlove"
+
+msgid "Automotive"
+msgstr "Automobili"
+
+msgid "Autoplay start delay"
+msgstr "Odgoda početka automatske reprodukcije"
+
+msgid "Autumn"
+msgstr "Jesen"
+
+msgid "Available worldwide"
+msgstr "Dostupno diljem svijeta"
+
+msgid "Awards:"
+msgstr "Nagrade:"
+
+msgid "BLUE"
+msgstr "PLAVA"
+
+msgid "Background color"
+msgstr "Boja pozadine"
+
+msgid "Backspace"
+msgstr "Backspace"
+
+#, python-format
+msgid "Balance: %s"
+msgstr "Stanje: %s"
+
+msgid "Balkans"
+msgstr "Balkan"
+
+msgid "Basic Science"
+msgstr "Temeljne znanosti"
+
+msgid "Basketball"
+msgstr "Košarka"
+
+msgid "Being watched"
+msgstr "Trenutno se gleda"
+
+msgid "Best"
+msgstr "Najbolje"
+
+msgid "Best Pinkbike videos"
+msgstr "Najbolji Pinkbike videozapisi"
+
+msgid "Best movies"
+msgstr "Najbolji filmovi"
+
+msgid "Best series"
+msgstr "Najbolje serije"
+
+msgid "Binaries"
+msgstr "Binarne datoteke"
+
+msgid "Bing Suggestions"
+msgstr "Bing prijedlozi"
+
+msgid "Biography"
+msgstr "Biografija"
+
+#, python-format
+msgid "Bitrate: %s"
+msgstr "Brzina prijenosa: %s"
+
+msgid "Black"
+msgstr "Crna"
+
+msgid "Black iframe file"
+msgstr "Datoteka crnog iframea"
+
+msgid "Black screensaver"
+msgstr "Crni čuvar zaslona"
+
+msgid "Block wmv files"
+msgstr "Blokiraj WMV datoteke"
+
+msgid "Board Review"
+msgstr "Priprema za specijalistički ispit"
+
+msgid "Books"
+msgstr "Knjige"
+
+msgid "Box"
+msgstr "Box"
+
+msgid "Boxing"
+msgstr "Boks"
+
+msgid "Broadcast:"
+msgstr "Emitiranje:"
+
+msgid "Browse by genre"
+msgstr "Pregled po žanru"
+
+msgid "Browse youtube trending feeds"
+msgstr "Pregledajte YouTube feedove u trendu"
+
+msgid "Budget:"
+msgstr "Proračun:"
+
+msgid "Buffering location"
+msgstr "Lokacija međuspremanja"
+
+msgid "Business"
+msgstr "Poslovanje"
+
+#, python-format
+msgid "By %s"
+msgstr "Od %s"
+
+msgid "CME SAE"
+msgstr "CME SAE"
+
+#, python-format
+msgid "CUMLOUDER can only search its tags (e.g. milf, step sister, big tits) - there is no tag \"%s\"."
+msgstr "CUMLOUDER može pretraživati samo svoje oznake (npr. milf, step sister, big tits) - oznaka \"%s\" ne postoji."
+
+msgid "Cache"
+msgstr "Predmemorija"
+
+msgid "Cache folder"
+msgstr "Mapa predmemorije"
+
+#, python-format
+msgid "Cache folder \"%s\" could not be created. Some data (cookies, subtitles, ...) may not be saved."
+msgstr "Mapu predmemorije \"%s\" nije bilo moguće stvoriti. Neki podaci (kolačići, titlovi, ...) možda neće biti spremljeni."
+
+msgid "Cache location"
+msgstr "Lokacija predmemorije"
+
+msgid "Cache size in RAM"
+msgstr "Veličina predmemorije u RAM-u"
+
+msgid "Cache size on disk"
+msgstr "Veličina predmemorije na disku"
+
+#, python-format
+msgid ""
+"Can not get mount points - cmd mount failed.\n"
+"Return code[%s].\n"
+"Return data[%s]."
+msgstr ""
+"Nije moguće dohvatiti točke montiranja - naredba mount nije uspjela.\n"
+"Povratni kod[%s].\n"
+"Povratni podaci[%s]."
+
+msgid "Cancel"
+msgstr "Odustani"
+
+msgid "Cancelled."
+msgstr "Otkazano."
+
+msgid "Captcha"
+msgstr "Captcha"
+
+msgid "Captcha error:"
+msgstr "Pogreška captche:"
+
+msgid ""
+"Captcha solved.\n"
+"Waiting for notification."
+msgstr ""
+"Captcha je riješena.\n"
+"Čeka se obavijest."
+
+msgid "Captcha solving service"
+msgstr "Servis za rješavanje captche"
+
+msgid "Captcha was not entered."
+msgstr "Captcha nije unesena."
+
+#, python-format
+msgid "Carrying: %s | UP/DOWN=Move, OK=Drop"
+msgstr "Premješta se: %s | GORE/DOLJE=Pomakni, OK=Spusti"
+
+msgid "Cartoon genres"
+msgstr "Žanrovi crtanih filmova"
+
+msgid "Cartoon series (dubbed)"
+msgstr "Crtane serije (sinkronizirane)"
+
+msgid "Cartoons"
+msgstr "Crtani filmovi"
+
+msgid "Cartoons A-Z"
+msgstr "Crtani filmovi A-Z"
+
+msgid "Cartoons and anime"
+msgstr "Crtani filmovi i anime"
+
+msgid "Cartoons and series"
+msgstr "Crtani filmovi i serije"
+
+msgid "Cast:"
+msgstr "Uloge:"
+
+msgid "Catch-up"
+msgstr "Propušteni program"
+
+#, python-format
+msgid "Catch-up (%d channels)"
+msgstr "Propušteni program (%d kanala)"
+
+msgid "Catch-up (timeshift.php)"
+msgstr "Propušteni program (timeshift.php)"
+
+#, python-format
+msgid "Catch-up: %d days"
+msgstr "Propušteni program: %d dana"
+
+msgid "Categories"
+msgstr "Kategorije"
+
+msgid "Categories:"
+msgstr "Kategorije:"
+
+msgid "Category"
+msgstr "Kategorija"
+
+msgid "Category:"
+msgstr "Kategorija:"
+
+msgid "Change active movie player"
+msgstr "Promijeni aktivni player filmova"
+
+msgid "Change folder icon"
+msgstr "Promijeni ikonu mape"
+
+msgid "Change own pin"
+msgstr "Promijeni vlastiti PIN"
+
+msgid "Channel"
+msgstr "Kanal"
+
+#, python-format
+msgid "Channel: %s"
+msgstr "Kanal: %s"
+
+msgid "Channels"
+msgstr "Kanali"
+
+msgid "Checking for updates"
+msgstr "Provjera ažuriranja"
+
+msgid "Checks every enabled site: menu, a list with videos and, in the full test, the stream link of one video."
+msgstr "Provjerava svaku omogućenu stranicu: izbornik, popis s videozapisima i, u potpunom testu, poveznicu streama jednog videozapisa."
+
+msgid "Children"
+msgstr "Djeca"
+
+msgid "Children & Family"
+msgstr "Djeca i obitelj"
+
+msgid "Chinese"
+msgstr "Kineski"
+
+msgid "Chinese anime"
+msgstr "Kineski anime"
+
+msgid "Choose the TorrServer binary"
+msgstr "Odaberite izvršnu datoteku TorrServer"
+
+msgid "Cinema History"
+msgstr "Povijest filma"
+
+msgid "Cinema movies"
+msgstr "Kino filmovi"
+
+msgid "Classic"
+msgstr "Klasika"
+
+msgid "Classic movies"
+msgstr "Klasični filmovi"
+
+msgid "Clear"
+msgstr "Izbriši"
+
+msgid "Clear log"
+msgstr "Izbriši zapisnik"
+
+#, python-format
+msgid ""
+"Clear the debug log file?\n"
+"%s"
+msgstr ""
+"Izbrisati datoteku debug zapisnika?\n"
+"%s"
+
+msgid "Clear the log file at plugin start"
+msgstr "Izbriši datoteku zapisnika pri pokretanju dodatka"
+
+#, python-format
+msgid "Clipped by: %s"
+msgstr "Isječak izradio: %s"
+
+msgid "Clips"
+msgstr "Isječci"
+
+msgid "Close"
+msgstr "Zatvori"
+
+msgid "Close an unused torrent after"
+msgstr "Zatvori nekorišteni torrent nakon"
+
+msgid "Closes the host opened in the web interface, clears the search results and stops what the web interface still runs in the background. Use it when a page keeps loading. Settings, downloads and the E2iPlayer on the TV are not touched."
+msgstr "Zatvara host otvoren u web-sučelju, briše rezultate pretrage i zaustavlja ono što web-sučelje još izvršava u pozadini. Koristite ovo kada se stranica neprestano učitava. Postavke, preuzimanja i E2iPlayer na televizoru ostaju netaknuti."
+
+msgid "Closing. Please wait..."
+msgstr "Zatvaranje. Pričekajte..."
+
+msgid "Clubs and athletes"
+msgstr "Klubovi i sportaši"
+
+msgid "Code"
+msgstr "Kod"
+
+msgid "Collected streams only"
+msgstr "Samo prikupljeni streamovi"
+
+msgid "Collections"
+msgstr "Kolekcije"
+
+msgid "Colored text in titles and descriptions"
+msgstr "Obojeni tekst u naslovima i opisima"
+
+msgid "Combine pull request merges with their commit"
+msgstr "Spoji merge-ove pull requestova s njihovim commitom"
+
+msgid "Comedy"
+msgstr "Komedija"
+
+msgid "Commentator"
+msgstr "Komentator"
+
+msgid "Comments"
+msgstr "Komentari"
+
+msgid "Commits"
+msgstr "Commitovi"
+
+msgid "Competitions"
+msgstr "Natjecanja"
+
+msgid "Complete Quran"
+msgstr "Cijeli Kuran"
+
+msgid "Complete series"
+msgstr "Cjelovite serije"
+
+msgid "Completed"
+msgstr "Završeno"
+
+msgid "Concert"
+msgstr "Koncert"
+
+msgid "Config"
+msgstr "Konfiguracija"
+
+#, python-format
+msgid "Config folder \"%s\" could not be created. Some data (host order, search history, favourites, movie player preferences, ...) may not be saved."
+msgstr "Mapu konfiguracije \"%s\" nije bilo moguće stvoriti. Neki podaci (redoslijed hostova, povijest pretrage, favoriti, postavke playera filmova, ...) možda neće biti spremljeni."
+
+msgid "Configuration"
+msgstr "Konfiguracija"
+
+#, python-format
+msgid "Configuration [%s] service"
+msgstr "Konfiguracija servisa [%s]"
+
+#, python-format
+msgid "Configure %s"
+msgstr "Konfiguriraj %s"
+
+msgid "Configure host"
+msgstr "Konfiguriraj host"
+
+msgid "Configuring an external movie player"
+msgstr "Konfiguriranje vanjskog playera filmova"
+
+msgid "Confirm new pin"
+msgstr "Potvrdite novi PIN"
+
+msgid "Confirm the title of the movie"
+msgstr "Potvrdite naslov filma"
+
+msgid "Confirmation error."
+msgstr "Pogreška pri potvrdi."
+
+msgid "Connection to the weeb.tv server failed."
+msgstr "Povezivanje s weeb.tv poslužiteljem nije uspjelo."
+
+msgid "Connections per torrent"
+msgstr "Veza po torrentu"
+
+#, python-format
+msgid "Connections: %s of %s"
+msgstr "Veze: %s od %s"
+
+msgid "Content not available"
+msgstr "Sadržaj nije dostupan"
+
+msgid "Continue"
+msgstr "Nastavi"
+
+msgid "Continue downloading"
+msgstr "Nastavi preuzimanje"
+
+msgid "Cooking"
+msgstr "Kuhanje"
+
+msgid "Copy"
+msgstr "Kopiraj"
+
+msgid "Copy it to /usr/bin/TorrServer (or a folder on HDD/USB) and make it executable (chmod 755)."
+msgstr "Kopirajte je u /usr/bin/TorrServer (ili u mapu na HDD/USB) i učinite je izvršnom (chmod 755)."
+
+msgid "Could not add the user link."
+msgstr "Korisničku poveznicu nije bilo moguće dodati."
+
+msgid "Could not load the wiki page."
+msgstr "Wiki stranicu nije bilo moguće učitati."
+
+msgid "Could not resolve host."
+msgstr "Host nije bilo moguće razriješiti."
+
+msgid "Could not resolve proxy."
+msgstr "Proxy nije bilo moguće razriješiti."
+
+msgid "Could not sort the user links."
+msgstr "Korisničke poveznice nije bilo moguće sortirati."
+
+msgid "Could not start the YouTube sign-in."
+msgstr "YouTube prijavu nije bilo moguće pokrenuti."
+
+msgid "Could not write the file."
+msgstr "Datoteku nije bilo moguće zapisati."
+
+msgid "Countries"
+msgstr "Zemlje"
+
+msgid "Country"
+msgstr "Zemlja"
+
+msgid "Country / store:"
+msgstr "Zemlja / trgovina:"
+
+msgid "Country:"
+msgstr "Zemlja:"
+
+msgid "Couples"
+msgstr "Parovi"
+
+msgid "Create Enigma2 .cuts chapter marks"
+msgstr "Stvori Enigma2 .cuts oznake poglavlja"
+
+msgid "Create LCD/VFD summary screen"
+msgstr "Stvori zaslon sažetka za LCD/VFD"
+
+msgid "Create MKV"
+msgstr "Stvori MKV"
+
+msgid "Create MKV with chapter marks from description"
+msgstr "Stvori MKV s oznakama poglavlja iz opisa"
+
+msgid "Create debug logs"
+msgstr "Stvaraj debug zapisnike"
+
+msgid "Create sidecar files (.txt/.jpg)"
+msgstr "Stvori prateće datoteke (.txt/.jpg)"
+
+#, python-format
+msgid "Created: %s"
+msgstr "Stvoreno: %s"
+
+msgid "Creator:"
+msgstr "Autor:"
+
+msgid "Creators:"
+msgstr "Autori:"
+
+msgid "Cricket"
+msgstr "Kriket"
+
+msgid "Crime"
+msgstr "Krimi"
+
+msgid "Critical Error - cookie can't be saved!"
+msgstr "Kritična pogreška - kolačić nije moguće spremiti!"
+
+msgid "Critical Error – Content-Encoding gzip cannot be handled!"
+msgstr "Kritična pogreška – Content-Encoding gzip nije moguće obraditi!"
+
+msgid "Culture"
+msgstr "Kultura"
+
+msgid "Culture and lifestyle"
+msgstr "Kultura i životni stil"
+
+msgid "Culture and pop"
+msgstr "Kultura i pop"
+
+msgid "Current item is not a channel."
+msgstr "Trenutna stavka nije kanal."
+
+msgid "Cut"
+msgstr "Izreži"
+
+msgid "Czech"
+msgstr "Češki"
+
+msgid "DASH/mpd"
+msgstr "DASH/mpd"
+
+msgid "DLNA server of TorrServer"
+msgstr "DLNA poslužitelj TorrServera"
+
+msgid "DOWNLOAD ERROR"
+msgstr "POGREŠKA PRI PREUZIMANJU"
+
+msgid "DOWNLOADED"
+msgstr "PREUZETO"
+
+msgid "DOWNLOADING"
+msgstr "PREUZIMANJE"
+
+msgid "DRM protection detected."
+msgstr "Otkrivena je DRM zaštita."
+
+msgid "Daily download limit reached - type the code"
+msgstr "Dosegnuto je dnevno ograničenje preuzimanja - unesite kod"
+
+msgid "Darkgray"
+msgstr "Tamnosiva"
+
+msgid "Darts"
+msgstr "Pikado"
+
+msgid "Date"
+msgstr "Datum"
+
+msgid "Debug file does not exist - nothing to delete"
+msgstr "Debug datoteka ne postoji - nema se što izbrisati"
+
+msgid "Debug log"
+msgstr "Debug zapisnik"
+
+msgid "Debug logs"
+msgstr "Debug zapisnici"
+
+msgid "Debug option is disabled - nothing to display"
+msgstr "Opcija debug je onemogućena - nema se što prikazati"
+
+msgid "Debug snapshot"
+msgstr "Debug snimka stanja"
+
+msgid "Debug snapshot (for site development)"
+msgstr "Debug snimka stanja (za razvoj stranica)"
+
+#, python-format
+msgid "Debug snapshot: \"%s\" received by the box"
+msgstr "Debug snimka stanja: prijamnik je primio \"%s\""
+
+#, python-format
+msgid "Debug snapshot: sending \"%s\" failed"
+msgstr "Debug snimka stanja: slanje \"%s\" nije uspjelo"
+
+#, python-format
+msgid "Decode file [%s] problem."
+msgstr "Problem pri dekodiranju datoteke [%s]."
+
+msgid "Decrypt Signatures Error"
+msgstr "Pogreška pri dešifriranju potpisa"
+
+msgid "Default"
+msgstr "Zadano"
+
+msgid "Default (2 minutes)"
+msgstr "Zadano (2 minute)"
+
+msgid "Default browser"
+msgstr "Zadani preglednik"
+
+msgid "Default captcha bypass"
+msgstr "Zadano zaobilaženje captche"
+
+msgid "Default suggestions provider"
+msgstr "Zadani pružatelj prijedloga"
+
+msgid "Default video aspect ratio"
+msgstr "Zadani omjer slike videozapisa"
+
+msgid "Default video policy for 16:9"
+msgstr "Zadani način prikaza videozapisa za 16:9"
+
+msgid "Default video policy for 4:3"
+msgstr "Zadani način prikaza videozapisa za 4:3"
+
+msgid "Default video quality"
+msgstr "Zadana kvaliteta videozapisa"
+
+msgid "Default video quality:"
+msgstr "Zadana kvaliteta videozapisa:"
+
+msgid "Defaults"
+msgstr "Zadane vrijednosti"
+
+msgid "Definitely remove from favorites?"
+msgstr "Sigurno ukloniti iz favorita?"
+
+msgid "Delete"
+msgstr "Izbriši"
+
+msgid "Delete JS cache after (days, 0 = never)"
+msgstr "Izbriši JS predmemoriju nakon (dana, 0 = nikad)"
+
+msgid "Delete JS cache now"
+msgstr "Izbriši JS predmemoriju sada"
+
+msgid "Delete Watchlist folder"
+msgstr "Izbriši mapu popisa za gledanje"
+
+msgid "Delete all cache files now"
+msgstr "Izbriši sve datoteke predmemorije sada"
+
+msgid "Delete all config files now"
+msgstr "Izbriši sve konfiguracijske datoteke sada"
+
+msgid "Delete cookies cache after (days, 0 = never)"
+msgstr "Izbriši predmemoriju kolačića nakon (dana, 0 = nikad)"
+
+msgid "Delete cookies cache now"
+msgstr "Izbriši predmemoriju kolačića sada"
+
+msgid "Delete entry"
+msgstr "Izbriši unos"
+
+msgid "Delete favourites and watched status now"
+msgstr "Izbriši favorite i status gledanja sada"
+
+msgid "Delete folder"
+msgstr "Izbriši mapu"
+
+msgid "Delete host order and groups now"
+msgstr "Izbriši redoslijed hostova i grupe sada"
+
+msgid "Delete movie metadata cache after (days, 0 = never)"
+msgstr "Izbriši predmemoriju metapodataka filmova nakon (dana, 0 = nikad)"
+
+msgid "Delete movie metadata cache now"
+msgstr "Izbriši predmemoriju metapodataka filmova sada"
+
+msgid "Delete movie player preferences now"
+msgstr "Izbriši postavke playera filmova sada"
+
+msgid "Delete now"
+msgstr "Izbriši sada"
+
+msgid "Delete search history"
+msgstr "Izbriši povijest pretrage"
+
+msgid "Delete search history now"
+msgstr "Izbriši povijest pretrage sada"
+
+msgid "Delete subtitles cache after (days, 0 = never)"
+msgstr "Izbriši predmemoriju titlova nakon (dana, 0 = nikad)"
+
+msgid "Delete subtitles cache now"
+msgstr "Izbriši predmemoriju titlova sada"
+
+msgid "Delete the cache when the torrent is closed"
+msgstr "Izbriši predmemoriju kada se torrent zatvori"
+
+#, python-format
+msgid "Delete the folder \"%s\"? Its hosts go back to the group."
+msgstr "Izbrisati mapu \"%s\"? Njezini hostovi vraćaju se u grupu."
+
+#, python-format
+msgid "Delete the folder \"%s\"? Its videos go back to the Watchlist."
+msgstr "Izbrisati mapu \"%s\"? Njezini videozapisi vraćaju se na popis za gledanje."
+
+msgid "Delete thumbnails cache now"
+msgstr "Izbriši predmemoriju sličica sada"
+
+msgid "Denmark"
+msgstr "Danska"
+
+msgid "Description:"
+msgstr "Opis:"
+
+msgid "Detail/expert mode"
+msgstr "Detaljni/stručni način"
+
+msgid "Detective"
+msgstr "Detektivski"
+
+msgid "Developers:"
+msgstr "Programeri:"
+
+msgid "Digital programmes"
+msgstr "Digitalne emisije"
+
+msgid "Direct"
+msgstr "Izravno"
+
+msgid "Director:"
+msgstr "Redatelj:"
+
+msgid "Directors"
+msgstr "Redatelji"
+
+msgid "Directors:"
+msgstr "Redatelji:"
+
+#, python-format
+msgid "Directory \"%s\" does not exists."
+msgstr "Direktorij \"%s\" ne postoji."
+
+msgid "Directory browser"
+msgstr "Preglednik direktorija"
+
+msgid "Disable all groups"
+msgstr "Onemogući sve grupe"
+
+msgid "Disable live at plugin start"
+msgstr "Onemogući TV uživo pri pokretanju dodatka"
+
+msgid "Disable not used services"
+msgstr "Onemogući servise koji se ne koriste"
+
+msgid "Disable reordering"
+msgstr "Onemogući premještanje"
+
+msgid "Disable reordering mode"
+msgstr "Onemogući način premještanja"
+
+msgid "Disable/Enable groups"
+msgstr "Onemogući/omogući grupe"
+
+msgid "Disable/Enable services"
+msgstr "Onemogući/omogući servise"
+
+msgid "Discovery"
+msgstr "Otkrivanje"
+
+msgid "Disney cartoon movies (Egyptian dub)"
+msgstr "Disneyjevi crtani filmovi (egipatska sinkronizacija)"
+
+msgid "Display language:"
+msgstr "Jezik prikaza:"
+
+msgid "Display thumbnails"
+msgstr "Prikaži sličice"
+
+msgid "Do you really want to delete ALL cache data now? This includes cookies, subtitles, movie metadata and thumbnails, and cannot be undone."
+msgstr "Želite li zaista sada izbrisati SVE podatke predmemorije? To uključuje kolačiće, titlove, metapodatke filmova i sličice i ne može se poništiti."
+
+msgid "Do you really want to delete ALL config data now? This is real user data, not just cache - it includes favourites, watched status, search history, movie player preferences and host order/groups, and cannot be undone."
+msgstr "Želite li zaista sada izbrisati SVE konfiguracijske podatke? To su stvarni korisnički podaci, ne samo predmemorija - uključuju favorite, status gledanja, povijest pretrage, postavke playera filmova te redoslijed/grupe hostova i ne mogu se vratiti."
+
+msgid "Do you really want to delete ALL favourites and watched status now? This is real user data, not just cache, and cannot be undone."
+msgstr "Želite li zaista sada izbrisati SVE favorite i status gledanja? To su stvarni korisnički podaci, ne samo predmemorija, i ne mogu se vratiti."
+
+#, python-format
+msgid "Do you really want to delete the %s now?"
+msgstr "Želite li zaista sada izbrisati %s?"
+
+msgid "Do you really want to delete the thumbnails cache now?"
+msgstr "Želite li zaista sada izbrisati predmemoriju sličica?"
+
+msgid "Do you want to finish?"
+msgstr "Želite li završiti?"
+
+msgid "Documentaries"
+msgstr "Dokumentarni filmovi"
+
+msgid "Documentaries A-Z"
+msgstr "Dokumentarci A-Z"
+
+msgid "Documentary"
+msgstr "Dokumentarni"
+
+msgid "Documentary Movies"
+msgstr "Dokumentarni filmovi"
+
+msgid "Documentary series"
+msgstr "Dokumentarne serije"
+
+msgid "Done - the result was sent to the box, you can close this page."
+msgstr "Gotovo - rezultat je poslan na prijamnik, možete zatvoriti ovu stranicu."
+
+msgid "Download"
+msgstr "Preuzmi"
+
+#, python-format
+msgid "Download \"%s\" (for this receiver) from %s"
+msgstr "Preuzmite \"%s\" (za ovaj prijamnik) s %s"
+
+#, python-format
+msgid "Download (ready in %d seconds)"
+msgstr "Preuzmi (spremno za %d sekundi)"
+
+msgid "Download again"
+msgstr "Preuzmi ponovno"
+
+msgid "Download all items of this page"
+msgstr "Preuzmi sve stavke s ove stranice"
+
+msgid "Download already exists"
+msgstr "Preuzimanje već postoji"
+
+#, python-format
+msgid ""
+"Download can not be started.\n"
+" Incorrect address ('%r')."
+msgstr ""
+"Preuzimanje se ne može pokrenuti.\n"
+" Neispravna adresa ('%r')."
+
+#, python-format
+msgid ""
+"Download can not be started.\n"
+"Downloader %s not working correctly.\n"
+"Status[%s]"
+msgstr ""
+"Preuzimanje se ne može pokrenuti.\n"
+"Program za preuzimanje %s ne radi ispravno.\n"
+"Status[%s]"
+
+#, python-format
+msgid ""
+"Download failed.\n"
+"Status[%s]"
+msgstr ""
+"Preuzimanje nije uspjelo.\n"
+"Status[%s]"
+
+msgid "Download manager"
+msgstr "Upravitelj preuzimanja"
+
+msgid "Download manager is not initialized"
+msgstr "Upravitelj preuzimanja nije inicijaliziran"
+
+#, python-format
+msgid "Download marked items (%d)"
+msgstr "Preuzmi označene stavke (%d)"
+
+msgid "Download new version"
+msgstr "Preuzmi novu verziju"
+
+msgid "Download notification duration"
+msgstr "Trajanje obavijesti o preuzimanju"
+
+msgid "Download speed limit"
+msgstr "Ograničenje brzine preuzimanja"
+
+msgid "Download subtiles failed."
+msgstr "Preuzimanje titlova nije uspjelo."
+
+msgid "Download suggested"
+msgstr "Preporučeno preuzimanje"
+
+#, python-format
+msgid "Download the Linux file for the CPU of this receiver from %s"
+msgstr "Preuzmite Linux datoteku za procesor ovog prijamnika s %s"
+
+msgid "Downloaded file is too small or corrupted."
+msgstr "Preuzeta datoteka je premala ili oštećena."
+
+msgid "Downloading"
+msgstr "Preuzimanje"
+
+#, python-format
+msgid ""
+"Downloading can not be started.\n"
+" Downloader %s does not work properly.\n"
+"Status[%s]"
+msgstr ""
+"Preuzimanje se ne može pokrenuti.\n"
+" Program za preuzimanje %s ne radi ispravno.\n"
+"Status[%s]"
+
+#, python-format
+msgid ""
+"Downloading can not be started.\n"
+" The address ('%r') is incorrect."
+msgstr ""
+"Preuzimanje se ne može pokrenuti.\n"
+" Adresa ('%r') je neispravna."
+
+#, python-format
+msgid ""
+"Downloading cannot be started.\n"
+" Downloader [%s] not working properly.\n"
+" Status[%s]"
+msgstr ""
+"Preuzimanje se ne može pokrenuti.\n"
+" Program za preuzimanje [%s] ne radi ispravno.\n"
+" Status[%s]"
+
+#, python-format
+msgid ""
+"Downloading cannot be started.\n"
+" Invalid URI[%s]."
+msgstr ""
+"Preuzimanje se ne može pokrenuti.\n"
+" Neispravan URI[%s]."
+
+#, python-format
+msgid "Downloading file [%s] problem."
+msgstr "Problem pri preuzimanju datoteke [%s]."
+
+msgid "Downloading from prijevodi-online.org needs a free account. Enter login and password in the E2iPlayer settings."
+msgstr "Za preuzimanje s prijevodi-online.org potreban je besplatan račun. Unesite korisničko ime i lozinku u postavkama E2iPlayera."
+
+#, python-format
+msgid ""
+"Downloading subtitles.\n"
+" ('%r')."
+msgstr ""
+"Preuzimanje titlova.\n"
+" ('%r')."
+
+msgid "Downloads"
+msgstr "Preuzimanja"
+
+msgid "Downloads location"
+msgstr "Lokacija preuzimanja"
+
+#, python-format
+msgid "Downloads: %s"
+msgstr "Preuzimanja: %s"
+
+msgid "Draft"
+msgstr "Nacrt"
+
+msgid "Drama"
+msgstr "Drama"
+
+msgid "Dramas (Asian)"
+msgstr "Drame (azijske)"
+
+msgid "Dubbed"
+msgstr "Sinkronizirano"
+
+msgid "Dubbed anime"
+msgstr "Sinkronizirani anime"
+
+msgid "Dubbed movies"
+msgstr "Sinkronizirani filmovi"
+
+msgid "Dubbed series"
+msgstr "Sinkronizirane serije"
+
+msgid "DuckDuckGo Suggestions"
+msgstr "DuckDuckGo prijedlozi"
+
+msgid "Duration"
+msgstr "Trajanje"
+
+msgid "Duration:"
+msgstr "Trajanje:"
+
+#, python-format
+msgid "Duration: %s"
+msgstr "Trajanje: %s"
+
+msgid "Dutch"
+msgstr "Nizozemski"
+
+msgid "E-mail (free TBN GO account):"
+msgstr "E-pošta (besplatan TBN GO račun):"
+
+msgid "E2iPlayer"
+msgstr "E2iPlayer"
+
+msgid "E2iPlayer - keyboard settings"
+msgstr "E2iPlayer - postavke tipkovnice"
+
+msgid "E2iPlayer - settings"
+msgstr "E2iPlayer - postavke"
+
+msgid "E2iPlayer auto start at Enigma2 start"
+msgstr "Automatsko pokretanje E2iPlayera pri pokretanju Enigma2"
+
+msgid "E2iPlayer config folder"
+msgstr "Mapa konfiguracije E2iPlayera"
+
+msgid "E2iPlayer downloader"
+msgstr "E2iPlayer program za preuzimanje"
+
+msgid "E2iPlayer enable/disabled groups"
+msgstr "E2iPlayer omogućene/onemogućene grupe"
+
+msgid "E2iPlayer is only a specialized web browser. It does not host any materials."
+msgstr "E2iPlayer je samo specijalizirani web-preglednik. On ne pohranjuje nikakve materijale."
+
+msgid "E2iPlayer virtual keyboard"
+msgstr "E2iPlayer virtualna tipkovnica"
+
+msgid ""
+"ERROR: pipeline could not be constructed: no element \"playbin2\" \n"
+"Please check if gstreamer plugins are available in your system."
+msgstr ""
+"POGREŠKA: pipeline nije moguće izgraditi: nema elementa \"playbin2\" \n"
+"Provjerite jesu li gstreamer dodaci dostupni na vašem sustavu."
+
+msgid "EXIT"
+msgstr "EXIT"
+
+msgid "Economy"
+msgstr "Ekonomija"
+
+msgid "Edit"
+msgstr "Uredi"
+
+msgid "Edit User Links"
+msgstr "Uredi korisničke poveznice"
+
+msgid "Edit failed."
+msgstr "Uređivanje nije uspjelo."
+
+msgid "Edit favorite group"
+msgstr "Uredi grupu favorita"
+
+msgid "Edit favorite item"
+msgstr "Uredi stavku favorita"
+
+msgid "Edit favorites"
+msgstr "Uredi favorite"
+
+msgid "Edit search history"
+msgstr "Uredi povijest pretrage"
+
+msgid "Edit title"
+msgstr "Uredi naslov"
+
+msgid "Edit, sort and delete search history entries"
+msgstr "Uređivanje, sortiranje i brisanje unosa povijesti pretrage"
+
+msgid "Education"
+msgstr "Obrazovanje"
+
+msgid "Educational Animation"
+msgstr "Obrazovna animacija"
+
+msgid "Egyptian series"
+msgstr "Egipatske serije"
+
+msgid "Empty title is not allowed."
+msgstr "Prazan naslov nije dopušten."
+
+msgid "Enable all groups"
+msgstr "Omogući sve grupe"
+
+msgid "Enable hosts groups"
+msgstr "Omogući grupe hostova"
+
+msgid "Enable reordering"
+msgstr "Omogući premještanje"
+
+msgid "Enable reordering mode"
+msgstr "Omogući način premještanja"
+
+msgid "Enabled hosts"
+msgstr "Omogućeni hostovi"
+
+msgid "Encrypted connections only"
+msgstr "Samo šifrirane veze"
+
+msgid "Encrypted stream list - not supported"
+msgstr "Šifrirani popis streamova - nije podržano"
+
+#, python-format
+msgid ""
+"Encryption function body extraction failed!\n"
+"Please report the problem to %s"
+msgstr ""
+"Izdvajanje tijela funkcije šifriranja nije uspjelo!\n"
+"Prijavite problem na %s"
+
+#, python-format
+msgid ""
+"Encryption function name extraction failed!\n"
+"Please report the problem to %s"
+msgstr ""
+"Izdvajanje imena funkcije šifriranja nije uspjelo!\n"
+"Prijavite problem na %s"
+
+msgid "English"
+msgstr "Engleski"
+
+msgid "English TV series"
+msgstr "Engleske TV serije"
+
+msgid "English dubbed"
+msgstr "Sinkronizirano na engleski"
+
+msgid "English movies"
+msgstr "Engleski filmovi"
+
+msgid "English movies (dubbed)"
+msgstr "Engleski filmovi (sinkronizirani)"
+
+msgid "English series (dubbed)"
+msgstr "Engleske serije (sinkronizirane)"
+
+msgid "English subbed"
+msgstr "S engleskim titlovima"
+
+msgid "Enter"
+msgstr "Enter"
+
+msgid "Enter (confirm and close)"
+msgstr "Enter (potvrdi i zatvori)"
+
+msgid "Enter a value"
+msgstr "Unesite vrijednost"
+
+msgid "Enter name"
+msgstr "Unesite ime"
+
+msgid "Enter new pin"
+msgstr "Unesite novi PIN"
+
+msgid "Enter old pin"
+msgstr "Unesite stari PIN"
+
+msgid "Enter pin"
+msgstr "Unesite PIN"
+
+msgid "Enter the code shown in the title of the window on your receiver's screen (or scan the QR code shown there - no code needed then):"
+msgstr "Unesite kod prikazan u naslovu prozora na zaslonu vašeg prijamnika (ili skenirajte ondje prikazani QR kod - tada kod nije potreban):"
+
+msgid "Enter the text"
+msgstr "Unesite tekst"
+
+msgid "Entertainment"
+msgstr "Zabava"
+
+#, python-format
+msgid "Entries: %d | Sort: %s | Status: %s | Jump target: %s"
+msgstr "Unosi: %d | Sortiranje: %s | Status: %s | Cilj skoka: %s"
+
+msgid "Episode"
+msgstr "Epizoda"
+
+#, python-format
+msgid "Episode %d"
+msgstr "Epizoda %d"
+
+msgid "Episodes"
+msgstr "Epizode"
+
+msgid "Episodes:"
+msgstr "Epizode:"
+
+#, python-format
+msgid "Episodes: %s"
+msgstr "Epizode: %s"
+
+msgid "Epochs"
+msgstr "Epohe"
+
+msgid "Error"
+msgstr "Pogreška"
+
+#, python-format
+msgid "Error code: %s\n"
+msgstr "Kod pogreške: %s\n"
+
+#, python-format
+msgid ""
+"Error code: %s\n"
+"Error message: %s"
+msgstr ""
+"Kod pogreške: %s\n"
+"Poruka o pogrešci: %s"
+
+msgid "Error deleting favorite item."
+msgstr "Pogreška pri brisanju stavke favorita."
+
+#, python-format
+msgid "Error deleting file \"%s\".\n"
+msgstr "Pogreška pri brisanju datoteke \"%s\".\n"
+
+msgid "Error during deletion of the debug file."
+msgstr "Pogreška pri brisanju debug datoteke."
+
+#, python-format
+msgid "Error getting file name: %s"
+msgstr "Pogreška pri dohvaćanju imena datoteke: %s"
+
+msgid "Error loading favorites."
+msgstr "Pogreška pri učitavanju favorita."
+
+#, python-format
+msgid ""
+"Error message: \"%s\".\n"
+"Error code: \"%s\"."
+msgstr ""
+"Poruka o pogrešci: \"%s\".\n"
+"Kod pogreške: \"%s\"."
+
+#, python-format
+msgid "Error message: %s\n"
+msgstr "Poruka o pogrešci: %s\n"
+
+msgid "Error occurs"
+msgstr "Došlo je do pogreške"
+
+msgid "Error occurs during download."
+msgstr "Došlo je do pogreške tijekom preuzimanja."
+
+msgid "Error occurs:"
+msgstr "Došlo je do pogreške:"
+
+#, python-format
+msgid "Error reading file \"%s\".\n"
+msgstr "Pogreška pri čitanju datoteke \"%s\".\n"
+
+#, python-format
+msgid "Error renaming file: %s"
+msgstr "Pogreška pri preimenovanju datoteke: %s"
+
+msgid "Error saving favorites."
+msgstr "Pogreška pri spremanju favorita."
+
+msgid "Error saving the Watchlist."
+msgstr "Pogreška pri spremanju popisa za gledanje."
+
+msgid "Error while loading watch data"
+msgstr "Pogreška pri učitavanju podataka o gledanju"
+
+msgid "Error while saving."
+msgstr "Pogreška pri spremanju."
+
+#, python-format
+msgid "Error writing file \"%s\".\n"
+msgstr "Pogreška pri zapisivanju datoteke \"%s\".\n"
+
+msgid "Ethical & Legal"
+msgstr "Etika i pravo"
+
+msgid "European movies"
+msgstr "Europski filmovi"
+
+msgid "Events"
+msgstr "Događaji"
+
+msgid "Every enabled site: does the menu open, does a list show videos? Takes a few minutes."
+msgstr "Svaka omogućena stranica: otvara li se izbornik, prikazuje li popis videozapise? Traje nekoliko minuta."
+
+msgid "Exam Review"
+msgstr "Priprema za ispit"
+
+msgid "Exception occurs"
+msgstr "Došlo je do iznimke"
+
+msgid "Exclusive"
+msgstr "Ekskluzivno"
+
+msgid "Exit"
+msgstr "Izlaz"
+
+#, python-format
+msgid "Expiry: %s"
+msgstr "Istječe: %s"
+
+msgid "Extended"
+msgstr "Prošireno"
+
+msgid "External movie player config"
+msgstr "Konfiguracija vanjskog playera filmova"
+
+msgid "Extracted subtitle file is empty or missing."
+msgstr "Izdvojena datoteka titlova je prazna ili nedostaje."
+
+msgid "FAILED"
+msgstr "NEUSPJELO"
+
+msgid "FAST FORWARD"
+msgstr "PREMOTAVANJE NAPRIJED"
+
+msgid "FREE"
+msgstr "BESPLATNO"
+
+msgid "FUCKER sorting by :"
+msgstr "FUCKER sortiranje po :"
+
+#, python-format
+msgid "Fail to get \"%s\"."
+msgstr "Dohvaćanje \"%s\" nije uspjelo."
+
+msgid "Fail to get captcha data."
+msgstr "Dohvaćanje captcha podataka nije uspjelo."
+
+msgid "Failed to connect to host."
+msgstr "Povezivanje s hostom nije uspjelo."
+
+#, python-format
+msgid "Failed to connect to server \"%s\"."
+msgstr "Povezivanje s poslužiteljem \"%s\" nije uspjelo."
+
+#, python-format
+msgid "Failed to convert the file \"%s\" to UTF-8."
+msgstr "Pretvaranje datoteke \"%s\" u UTF-8 nije uspjelo."
+
+#, python-format
+msgid "Failed to create directory \"%s\"."
+msgstr "Stvaranje direktorija \"%s\" nije uspjelo."
+
+msgid "Failed to create extraction directory."
+msgstr "Stvaranje direktorija za raspakiravanje nije uspjelo."
+
+msgid "Failed to download subtitle."
+msgstr "Preuzimanje titla nije uspjelo."
+
+msgid "Failed to download the subtitles."
+msgstr "Preuzimanje titlova nije uspjelo."
+
+msgid "Failed to get the download link."
+msgstr "Dohvaćanje poveznice za preuzimanje nije uspjelo."
+
+#, python-format
+msgid "Failed to get the file list from %s."
+msgstr "Dohvaćanje popisa datoteka s %s nije uspjelo."
+
+msgid "Failed to gzip."
+msgstr "Gzip nije uspio."
+
+msgid "Failed to initialize (unknown option or old curl version?)."
+msgstr "Inicijalizacija nije uspjela (nepoznata opcija ili stara verzija curla?)."
+
+msgid "Failed to load the match list"
+msgstr "Učitavanje popisa utakmica nije uspjelo"
+
+#, python-format
+msgid "Failed to log in user \"%s\". Please check your login and password."
+msgstr "Prijava korisnika \"%s\" nije uspjela. Provjerite korisničko ime i lozinku."
+
+#, python-format
+msgid "Failed to open the file \"%s\"."
+msgstr "Otvaranje datoteke \"%s\" nije uspjelo."
+
+#, python-format
+msgid "Failed to write file \"%s\"."
+msgstr "Zapisivanje datoteke \"%s\" nije uspjelo."
+
+#, python-format
+msgid "Failed: %s"
+msgstr "Neuspjelo: %s"
+
+msgid "Family"
+msgstr "Obiteljski"
+
+msgid "Fantasy"
+msgstr "Fantastika"
+
+msgid "Fashion"
+msgstr "Moda"
+
+msgid "Fatal error: consoleWrite failed!"
+msgstr "Kritična pogreška: consoleWrite nije uspio!"
+
+msgid "Favorite group not found."
+msgstr "Grupa favorita nije pronađena."
+
+msgid "Favorite item not found."
+msgstr "Stavka favorita nije pronađena."
+
+msgid "Favorites"
+msgstr "Favoriti"
+
+msgid "Favorites groups"
+msgstr "Grupe favorita"
+
+msgid "Favorites manager"
+msgstr "Upravljanje favoritima"
+
+msgid "Featured"
+msgstr "Izdvojeno"
+
+msgid "FebBox token (\"ui\" cookie of www.febbox.com):"
+msgstr "FebBox token (\"ui\" kolačić s www.febbox.com):"
+
+msgid "Female"
+msgstr "Žene"
+
+#, python-format
+msgid "File \"%s\" already exists"
+msgstr "Datoteka \"%s\" već postoji"
+
+#, python-format
+msgid "File \"%s\" already exists!"
+msgstr "Datoteka \"%s\" već postoji!"
+
+msgid "File I/O error (write)."
+msgstr "U/I pogreška datoteke (zapisivanje)."
+
+msgid "File I/O error."
+msgstr "U/I pogreška datoteke."
+
+msgid "File Not Found."
+msgstr "Datoteka nije pronađena."
+
+#, python-format
+msgid "File [%s] has been added to the downloading queue."
+msgstr "Datoteka [%s] dodana je u red za preuzimanje."
+
+#, python-format
+msgid "File [%s] is already in the downloading queue."
+msgstr "Datoteka [%s] već je u redu za preuzimanje."
+
+#, python-format
+msgid "File [%s] was added to downloading queue."
+msgstr "Datoteka [%s] dodana je u red za preuzimanje."
+
+msgid "File browser"
+msgstr "Preglednik datoteka"
+
+msgid "File can not be downloaded. Download manager is not available."
+msgstr "Datoteka se ne može preuzeti. Upravitelj preuzimanja nije dostupan."
+
+#, python-format
+msgid "File can not be downloaded. Protocol [%s] is unsupported"
+msgstr "Datoteka se ne može preuzeti. Protokol [%s] nije podržan"
+
+msgid "File format of DASH (MPD) downloads"
+msgstr "Format datoteke za DASH (MPD) preuzimanja"
+
+msgid "File format of HLS (M3U8) downloads"
+msgstr "Format datoteke za HLS (M3U8) preuzimanja"
+
+msgid "File format of single video files (FFmpeg)"
+msgstr "Format datoteke za pojedinačne videodatoteke (FFmpeg)"
+
+#, python-format
+msgid "File might be corrupted (size: %d bytes)."
+msgstr "Datoteka je možda oštećena (veličina: %d bajtova)."
+
+msgid "File name cannot be empty!"
+msgstr "Ime datoteke ne može biti prazno!"
+
+msgid "File renamed successfully!"
+msgstr "Datoteka je uspješno preimenovana!"
+
+msgid "Files"
+msgstr "Datoteke"
+
+msgid "Fill cache before playback"
+msgstr "Napuni predmemoriju prije reprodukcije"
+
+msgid "Filler"
+msgstr "Filler"
+
+msgid "Films"
+msgstr "Filmovi"
+
+msgid "Films by genre"
+msgstr "Filmovi po žanru"
+
+msgid "Filmweb Suggestions"
+msgstr "Filmweb prijedlozi"
+
+msgid "Filter"
+msgstr "Filtar"
+
+msgid "Filter settings"
+msgstr "Postavke filtra"
+
+msgid "Find item"
+msgstr "Pronađi stavku"
+
+msgid "Find out more."
+msgstr "Saznajte više."
+
+msgid "Finished matches with a full replay, highlights or match cuts, newest first (usually a few days after the match)."
+msgstr "Završene utakmice s cijelom snimkom, najzanimljivijim trenucima ili isječcima, najnovije prvo (obično nekoliko dana nakon utakmice)."
+
+msgid "First Page"
+msgstr "Prva stranica"
+
+msgid "First air date:"
+msgstr "Datum prvog emitiranja:"
+
+msgid "First aired"
+msgstr "Prvo emitiranje"
+
+msgid "First movie player in buffering mode"
+msgstr "Primarni player u načinu međuspremanja"
+
+msgid "First movie player without buffering mode"
+msgstr "Primarni player bez načina međuspremanja"
+
+msgid "Fix jump target"
+msgstr "Fiksiraj cilj skoka"
+
+#, python-format
+msgid "Folder \"%s\" can not be created."
+msgstr "Mapa \"%s\" ne može se stvoriti."
+
+#, python-format
+msgid "Folder \"%s\" has been created."
+msgstr "Mapa \"%s\" je stvorena."
+
+msgid "Folder for cache data"
+msgstr "Mapa za podatke predmemorije"
+
+msgid "Folder for config data"
+msgstr "Mapa za konfiguracijske podatke"
+
+msgid "Folder for temporary data"
+msgstr "Mapa za privremene podatke"
+
+msgid "Folder on HDD / USB"
+msgstr "Mapa na HDD / USB"
+
+msgid "Followers"
+msgstr "Pratitelji"
+
+msgid "Following host are broken or additional python modules are needed."
+msgstr "Sljedeći hostovi ne rade ili su potrebni dodatni Python moduli."
+
+msgid "Font size offset"
+msgstr "Pomak veličine fonta"
+
+msgid "Food"
+msgstr "Hrana"
+
+msgid "Foot & Ankle"
+msgstr "Stopalo i gležanj"
+
+msgid "Football"
+msgstr "Nogomet"
+
+msgid "Football Live"
+msgstr "Nogomet uživo"
+
+msgid "For continuous playing, please press 8!"
+msgstr "Za neprekidnu reprodukciju pritisnite 8!"
+
+msgid "For developers"
+msgstr "Za programere"
+
+msgid "Force internal skin: all E2iPlayer screens"
+msgstr "Nametni interni skin: svi E2iPlayer zasloni"
+
+msgid "Force internal skin: main screen only"
+msgstr "Nametni interni skin: samo glavni zaslon"
+
+msgid "Force legacy grid"
+msgstr "Nametni staru mrežu ikona"
+
+msgid "Foreign movies"
+msgstr "Strani filmovi"
+
+msgid "Foreign parts only"
+msgstr "Samo dijelovi na stranom jeziku"
+
+msgid "Foreign series"
+msgstr "Strane serije"
+
+msgid "Format 'wmv' blocked in configuration."
+msgstr "Format 'wmv' blokiran je u konfiguraciji."
+
+msgid "Formations"
+msgstr "Formacije"
+
+msgid "Fotka.pl stream :"
+msgstr "Fotka.pl stream :"
+
+msgid "Free"
+msgstr "Besplatno"
+
+msgid "Free IPTV list"
+msgstr "Besplatni IPTV popis"
+
+msgid "French"
+msgstr "Francuski"
+
+msgid "From E2 settings"
+msgstr "Iz E2 postavki"
+
+msgid "Full description loaded"
+msgstr "Cijeli opis je učitan"
+
+msgid "Full description not available"
+msgstr "Cijeli opis nije dostupan"
+
+msgid "Full test"
+msgstr "Potpuni test"
+
+msgid "Full test checks the INFO window :"
+msgstr "Potpuni test provjerava INFO prozor :"
+
+msgid "Full test checks the next page :"
+msgstr "Potpuni test provjerava sljedeću stranicu :"
+
+msgid "Full test checks the search :"
+msgstr "Potpuni test provjerava pretragu :"
+
+msgid "Full test checks the stream link :"
+msgstr "Potpuni test provjerava poveznicu streama :"
+
+msgid "Full test checks thumbnails :"
+msgstr "Potpuni test provjerava sličice :"
+
+msgid "Futsal"
+msgstr "Futsal"
+
+msgid "GREEN"
+msgstr "ZELENA"
+
+#, python-format
+msgid "Game: %s"
+msgstr "Igra: %s"
+
+msgid "Games"
+msgstr "Igre"
+
+msgid "Gaming"
+msgstr "Gaming"
+
+msgid "General"
+msgstr "Općenito"
+
+msgid "Generic error code."
+msgstr "Opći kod pogreške."
+
+msgid "Genre"
+msgstr "Žanr"
+
+msgid "Genre:"
+msgstr "Žanr:"
+
+#, python-format
+msgid "Genre: %s"
+msgstr "Žanr: %s"
+
+msgid "Genres"
+msgstr "Žanrovi"
+
+msgid "Genres:"
+msgstr "Žanrovi:"
+
+msgid "German"
+msgstr "Njemački"
+
+msgid "Get Cloudflare job"
+msgstr "Dohvati Cloudflare zadatak"
+
+msgid "Get captcha job"
+msgstr "Dohvati captcha zadatak"
+
+msgid "Get cookies job"
+msgstr "Dohvati zadatak za kolačiće"
+
+msgid "Get languages failed!"
+msgstr "Dohvaćanje jezika nije uspjelo!"
+
+msgid "Get token failed!"
+msgstr "Dohvaćanje tokena nije uspjelo!"
+
+msgid "GitHub API error"
+msgstr "GitHub API pogreška"
+
+msgid "Global"
+msgstr "Globalno"
+
+msgid "Global Search mode :"
+msgstr "Način globalne pretrage :"
+
+msgid "Go to the host configuration available under blue button."
+msgstr "Idite na konfiguraciju hosta dostupnu pod plavom tipkom."
+
+msgid "Google Suggestions"
+msgstr "Google prijedlozi"
+
+msgid "Google account"
+msgstr "Google račun"
+
+msgid "Graphic services selector"
+msgstr "Grafički odabir servisa"
+
+msgid "Greek"
+msgstr "Grčki"
+
+#, python-format
+msgid "Group \"%s\" already exists."
+msgstr "Grupa \"%s\" već postoji."
+
+#, python-format
+msgid "Group %d"
+msgstr "Grupa %d"
+
+msgid "Group links into categories:"
+msgstr "Grupiraj poveznice u kategorije:"
+
+#, python-format
+msgid "Group with id[%s] not found."
+msgstr "Grupa s id[%s] nije pronađena."
+
+msgid "Groups"
+msgstr "Grupe"
+
+msgid "HIDDEN CAM SHOW IN PROGRESS. TRY AGAIN LATER!"
+msgstr "SKRIVENI CAM SHOW U TIJEKU. POKUŠAJTE PONOVNO KASNIJE!"
+
+msgid "HLS with subtitles"
+msgstr "HLS s titlovima"
+
+msgid "HLS/m3u8"
+msgstr "HLS/m3u8"
+
+msgid "HTTP/2 framing layer error."
+msgstr "HTTP/2 pogreška u sloju okvira."
+
+msgid "HTTP/2 stream error."
+msgstr "HTTP/2 pogreška streama."
+
+#, python-format
+msgid "HTTPS connection error \"%s\"\n"
+msgstr "HTTPS pogreška veze \"%s\"\n"
+
+msgid "Hand"
+msgstr "Šaka"
+
+msgid "Handball"
+msgstr "Rukomet"
+
+msgid "Health"
+msgstr "Zdravlje"
+
+msgid "Hearing impaired"
+msgstr "Za osobe oštećena sluha"
+
+msgid "Help"
+msgstr "Pomoć"
+
+#, python-format
+msgid "Hide \"%s\" group"
+msgstr "Sakrij grupu \"%s\""
+
+msgid "Hide the menu (live TV visible)"
+msgstr "Sakrij izbornik (TV uživo vidljiv)"
+
+msgid "Hide titles only available in Sweden"
+msgstr "Sakrij naslove dostupne samo u Švedskoj"
+
+msgid "Hide/Active Group"
+msgstr "Sakrij/aktiviraj grupu"
+
+msgid "High (or HD)"
+msgstr "Visoka (ili HD)"
+
+msgid "Highlights"
+msgstr "Najzanimljiviji trenuci"
+
+msgid "History"
+msgstr "Povijest"
+
+msgid "History of searched phrases."
+msgstr "Povijest pretraživanih izraza."
+
+msgid "Hockey"
+msgstr "Hokej"
+
+msgid "Home"
+msgstr "Početna"
+
+msgid "Home / Sections"
+msgstr "Početna / Odjeljci"
+
+msgid "Home page"
+msgstr "Početna stranica"
+
+msgid "Horror"
+msgstr "Horor"
+
+msgid "Host"
+msgstr "Host"
+
+msgid "Host titles in lists"
+msgstr "Naslovi hostova na popisima"
+
+#, python-format
+msgid "Host: %s"
+msgstr "Host: %s"
+
+#, python-format
+msgid "Hosting \"%s\" not supported."
+msgstr "Hosting \"%s\" nije podržan."
+
+#, python-format
+msgid "Hosting \"%s\" unknown."
+msgstr "Hosting \"%s\" je nepoznat."
+
+#, python-format
+msgid "Hosting: %s, %s"
+msgstr "Hosting: %s, %s"
+
+msgid "Hosts"
+msgstr "Hostovi"
+
+msgid "Hosts list type"
+msgstr "Vrsta popisa hostova"
+
+msgid "Hot"
+msgstr "Popularno"
+
+msgid "How to solve a captcha:"
+msgstr "Kako riješiti captchu:"
+
+msgid "Humanitarian"
+msgstr "Humanitarno"
+
+msgid "Hungarian"
+msgstr "Mađarski"
+
+msgid "I am no robot"
+msgstr "Nisam robot"
+
+msgid "IMDb"
+msgstr "IMDb"
+
+msgid "IMDb Rating:"
+msgstr "IMDb ocjena:"
+
+msgid "IMDb Suggestions"
+msgstr "IMDb prijedlozi"
+
+msgid "INFO"
+msgstr "INFO"
+
+#, python-format
+msgid "INFO %d rows"
+msgstr "INFO %d redaka"
+
+msgid "INFO list text"
+msgstr "INFO tekst popisa"
+
+msgid "INFO opens no window"
+msgstr "INFO ne otvara prozor"
+
+msgid "INFO window"
+msgstr "INFO prozor"
+
+msgid "INTERRUPTED"
+msgstr "PREKINUTO"
+
+msgid "IPTV Portals"
+msgstr "IPTV portali"
+
+msgid "Icon type"
+msgstr "Vrsta ikona"
+
+msgid "Icons quality"
+msgstr "Kvaliteta ikona"
+
+msgid "Icons size"
+msgstr "Veličina ikona"
+
+msgid "Image"
+msgstr "Image"
+
+msgid "Indian"
+msgstr "Indijski"
+
+msgid "Indian Movies"
+msgstr "Indijski filmovi"
+
+msgid "Indian TV series"
+msgstr "Indijske TV serije"
+
+msgid "Indian movies"
+msgstr "Indijski filmovi"
+
+msgid "Indian movies (dubbed)"
+msgstr "Indijski filmovi (sinkronizirani)"
+
+msgid "Indian series (dubbed)"
+msgstr "Indijske serije (sinkronizirane)"
+
+msgid "Industry"
+msgstr "Industrija"
+
+msgid "Info"
+msgstr "Info"
+
+msgid "Info bar timeout"
+msgstr "Vrijeme prikaza info trake"
+
+msgid "Information"
+msgstr "Informacije"
+
+msgid "Information about audio tracks not available."
+msgstr "Informacije o audiozapisima nisu dostupne."
+
+msgid "Initialize web interface"
+msgstr "Inicijaliziraj web-sučelje"
+
+msgid "Inject black iframe at video playback finish"
+msgstr "Umetni crni iframe na kraju reprodukcije videa"
+
+msgid "Input"
+msgstr "Unos"
+
+msgid "Install E2iPlayer"
+msgstr "Instaliraj E2iPlayer"
+
+msgid "Installed version"
+msgstr "Instalirana verzija"
+
+#, python-format
+msgid "Installed: v%s"
+msgstr "Instalirano: v%s"
+
+#, python-format
+msgid "Installed: v%s - %d commits behind %s"
+msgstr "Instalirano: v%s - %d commitova iza %s"
+
+#, python-format
+msgid "Installed: v%s - no matching release tag (local build?)"
+msgstr "Instalirano: v%s - nema odgovarajuće oznake izdanja (lokalni build?)"
+
+#, python-format
+msgid "Installed: v%s - up to date"
+msgstr "Instalirano: v%s - ažurno"
+
+msgid "Interactive Learning Center(ILC)"
+msgstr "Interaktivni centar za učenje (ILC)"
+
+msgid "Intervention"
+msgstr "Intervencija"
+
+msgid "Interviews"
+msgstr "Intervjui"
+
+#, python-format
+msgid "Invalid answer from %s."
+msgstr "Neispravan odgovor od %s."
+
+msgid "Invalid email."
+msgstr "Neispravna e-pošta."
+
+msgid "Invalid name."
+msgstr "Neispravno ime."
+
+msgid "Invalid value."
+msgstr "Neispravna vrijednost."
+
+msgid "Investigations"
+msgstr "Istraživanja"
+
+msgid "Is this message displayed correctly?"
+msgstr "Prikazuje li se ova poruka ispravno?"
+
+msgid "It is not allowed to call getURLRequestData from main thread."
+msgstr "Nije dopušteno pozivati getURLRequestData iz glavne niti."
+
+msgid "It looks like some kind of protection. Try again later."
+msgstr "Izgleda da je riječ o nekoj vrsti zaštite. Pokušajte ponovno kasnije."
+
+#, python-format
+msgid "It looks like your current configuration do not allow to connect to the https://%s/.\n"
+msgstr "Izgleda da vaša trenutna konfiguracija ne dopušta povezivanje s https://%s/.\n"
+
+#, python-format
+msgid "It seems that the host \"%s\" has crashed."
+msgstr "Izgleda da se host \"%s\" srušio."
+
+#, python-format
+msgid "It seems that the subtitle's provider \"%s\" has crashed."
+msgstr "Izgleda da se pružatelj titlova \"%s\" srušio."
+
+#, python-format
+msgid ""
+"It seems that the video player \"%s\" does not work properly.\n"
+"\n"
+"STS: %s\n"
+"ERROR CODE: %r"
+msgstr ""
+"Izgleda da video player \"%s\" ne radi ispravno.\n"
+"\n"
+"STS: %s\n"
+"KOD POGREŠKE: %r"
+
+msgid "It seems that unrar utility is not installed."
+msgstr "Izgleda da alat unrar nije instaliran."
+
+msgid "It seems that unzip utility is not installed."
+msgstr "Izgleda da alat unzip nije instaliran."
+
+msgid "Italian"
+msgstr "Talijanski"
+
+#, python-format
+msgid "Item idx[%d] not found in group[%s]."
+msgstr "Stavka idx[%d] nije pronađena u grupi[%s]."
+
+#, python-format
+msgid "Items in group \"%s\""
+msgstr "Stavke u grupi \"%s\""
+
+msgid "JDownloader script execution"
+msgstr "Izvršavanje JDownloader skripte"
+
+#, python-format
+msgid ""
+"JDownloader script execution failed.\n"
+"Error code: %s\n"
+msgstr ""
+"Izvršavanje JDownloader skripte nije uspjelo.\n"
+"Kod pogreške: %s\n"
+
+msgid "JDownloader script finished."
+msgstr "JDownloader skripta je završena."
+
+msgid "JS cache"
+msgstr "JS predmemorija"
+
+msgid "Japanese"
+msgstr "Japanski"
+
+msgid "Japanese dramas"
+msgstr "Japanske drame"
+
+msgid "Japanese films"
+msgstr "Japanski filmovi"
+
+msgid "Jobs & Positions"
+msgstr "Poslovi i pozicije"
+
+msgid "Journal Club"
+msgstr "Journal Club"
+
+msgid "Jump"
+msgstr "Skok"
+
+msgid "Jump target was fixed so the sort order is preserved."
+msgstr "Cilj skoka je fiksiran kako bi se sačuvao redoslijed sortiranja."
+
+msgid "Jump to a selected page"
+msgstr "Skok na odabranu stranicu"
+
+msgid "Jump to a selected page, max: {}"
+msgstr "Skok na odabranu stranicu, maks.: {}"
+
+msgid "Keep FFmpeg command files (.iptv.cmd)"
+msgstr "Zadrži FFmpeg naredbene datoteke (.iptv.cmd)"
+
+msgid "Keep temporary JS scripts"
+msgstr "Zadrži privremene JS skripte"
+
+msgid "Kids"
+msgstr "Djeca"
+
+msgid "Kinds"
+msgstr "Vrste"
+
+msgid "Knee & Sports"
+msgstr "Koljeno i sport"
+
+msgid "Knowledge"
+msgstr "Znanje"
+
+msgid "Knowledge & Nature"
+msgstr "Znanje i priroda"
+
+msgid "Korean"
+msgstr "Korejski"
+
+msgid "Korean TV series"
+msgstr "Korejske TV serije"
+
+msgid "Korean anime"
+msgstr "Korejski anime"
+
+msgid "Korean dramas"
+msgstr "Korejske drame"
+
+msgid "Korean films"
+msgstr "Korejski filmovi"
+
+msgid "Korean movies"
+msgstr "Korejski filmovi"
+
+msgid "LEFT/RIGHT at start/end of text - alternative way to switch panels"
+msgstr "LIJEVO/DESNO na početku/kraju teksta - alternativni način za prebacivanje između panela"
+
+msgid "Language"
+msgstr "Jezik"
+
+msgid "Language of the details (TMDb, IMDb)"
+msgstr "Jezik detalja (TMDb, IMDb)"
+
+msgid "Language:"
+msgstr "Jezik:"
+
+msgid "Last"
+msgstr "Posljednje"
+
+#, python-format
+msgid "Last Exception error: \"%s\""
+msgstr "Posljednja pogreška iznimke: \"%s\""
+
+#, python-format
+msgid "Last Exception error: '%s'"
+msgstr "Posljednja pogreška iznimke: '%s'"
+
+#, python-format
+msgid "Last Modified: %s"
+msgstr "Posljednja izmjena: %s"
+
+msgid "Last Page"
+msgstr "Posljednja stranica"
+
+msgid "Last air date:"
+msgstr "Datum posljednjeg emitiranja:"
+
+msgid "Last chance"
+msgstr "Posljednja prilika"
+
+msgid "Last day"
+msgstr "Posljednji dan"
+
+#, python-format
+msgid ""
+"Last error:\n"
+"%s"
+msgstr ""
+"Posljednja pogreška:\n"
+"%s"
+
+#, python-format
+msgid "Last error: \"%s\""
+msgstr "Posljednja pogreška: \"%s\""
+
+msgid "Last month"
+msgstr "Prošli mjesec"
+
+msgid "Last result"
+msgstr "Posljednji rezultat"
+
+msgid "Last week"
+msgstr "Prošli tjedan"
+
+#, python-format
+msgid "Last week: %s"
+msgstr "Prošli tjedan: %s"
+
+msgid "Last.fm charts and tag pages are behind a browser check, only the radio stations can be used."
+msgstr "Last.fm ljestvice i stranice oznaka nalaze se iza provjere preglednika, mogu se koristiti samo radijske postaje."
+
+#, python-format
+msgid "Last.fm user \"%s\" not found."
+msgstr "Last.fm korisnik \"%s\" nije pronađen."
+
+msgid "Last.fm user name:"
+msgstr "Last.fm korisničko ime:"
+
+msgid "Latest"
+msgstr "Najnovije"
+
+msgid "Latest added"
+msgstr "Posljednje dodano"
+
+msgid "Latest anime episodes"
+msgstr "Najnovije anime epizode"
+
+msgid "Latest cartoon episodes"
+msgstr "Najnovije epizode crtanih filmova"
+
+msgid "Latest dubbed episodes"
+msgstr "Najnovije sinkronizirane epizode"
+
+msgid "Latest episodes"
+msgstr "Najnovije epizode"
+
+msgid "Latest episodes (airing)"
+msgstr "Najnovije epizode (u emitiranju)"
+
+msgid "Latest episodes (finished series)"
+msgstr "Najnovije epizode (završene serije)"
+
+msgid "Latest highlights"
+msgstr "Najnoviji najzanimljiviji trenuci"
+
+msgid "Latest update"
+msgstr "Posljednje ažuriranje"
+
+msgid "Latest updates"
+msgstr "Najnovija ažuriranja"
+
+msgid "Latest video"
+msgstr "Najnoviji videozapis"
+
+msgid "Latest videos"
+msgstr "Najnoviji videozapisi"
+
+msgid "Latest videos from the channels you are subscribed to."
+msgstr "Najnoviji videozapisi s kanala na koje ste pretplaćeni."
+
+msgid "Latin American movies"
+msgstr "Latinoamerički filmovi"
+
+msgid "Latin American series"
+msgstr "Latinoameričke serije"
+
+msgid "Latin American series (dubbed)"
+msgstr "Latinoameričke serije (sinkronizirane)"
+
+msgid "Latino"
+msgstr "Latino"
+
+#, python-brace-format
+msgid "Launcher URI ({url} or {address} = address of the box)"
+msgstr "URI pokretača ({url} ili {address} = adresa prijamnika)"
+
+msgid "Law"
+msgstr "Pravo"
+
+msgid "League and cup matches"
+msgstr "Ligaške i kup utakmice"
+
+msgid "Leagues"
+msgstr "Lige"
+
+msgid "Leagues, clubs and events"
+msgstr "Lige, klubovi i događaji"
+
+msgid "Lecturers"
+msgstr "Predavači"
+
+msgid "Left"
+msgstr "Lijevo"
+
+msgid "Library"
+msgstr "Knjižnica"
+
+msgid "Lifestyle"
+msgstr "Životni stil"
+
+msgid "Light / dark design"
+msgstr "Svijetli / tamni dizajn"
+
+msgid "Lightgray"
+msgstr "Svijetlosiva"
+
+msgid "Like the quick test, plus the checks chosen in the host settings (Debug). Takes about 20-40 minutes."
+msgstr "Kao brzi test, uz provjere odabrane u postavkama hosta (Debug). Traje oko 20-40 minuta."
+
+msgid "Liked videos"
+msgstr "Videozapisi koji su vam se svidjeli"
+
+msgid "Line Spacing"
+msgstr "Prored"
+
+msgid "Link"
+msgstr "Poveznica"
+
+msgid "Link is not supported by the gstplayer. Please use the extelayer3 if available."
+msgstr "Gstplayer ne podržava ovu poveznicu. Koristite exteplayer3 ako je dostupan."
+
+msgid "Link protected with Google ReCaptcha v2"
+msgstr "Poveznica je zaštićena s Google ReCaptcha v2"
+
+msgid "Link protected with google recaptcha v2."
+msgstr "Poveznica je zaštićena s Google reCAPTCHA v2."
+
+msgid "Links from all files without categories"
+msgstr "Poveznice iz svih datoteka bez kategorija"
+
+#, python-format
+msgid "Links from the file %s"
+msgstr "Poveznice iz datoteke %s"
+
+msgid "List"
+msgstr "Popis"
+
+msgid "List by day"
+msgstr "Popis po danu"
+
+msgid "List view"
+msgstr "Prikaz popisa"
+
+#, python-format
+msgid "Listeners: %s"
+msgstr "Slušatelji: %s"
+
+msgid "Live"
+msgstr "Uživo"
+
+msgid "Live channels"
+msgstr "Kanali uživo"
+
+msgid "Live radio"
+msgstr "Radio uživo"
+
+#, python-format
+msgid "Live stream of the %s channel"
+msgstr "Stream uživo kanala %s"
+
+msgid "Live stream on YouTube"
+msgstr "Stream uživo na YouTubeu"
+
+#, python-format
+msgid "Live stream starts %s"
+msgstr "Stream uživo počinje %s"
+
+msgid "Live streams"
+msgstr "Streamovi uživo"
+
+msgid "Live streams by day"
+msgstr "Streamovi uživo po danu"
+
+msgid "Live-action series episodes"
+msgstr "Epizode igranih serija"
+
+msgid "Load"
+msgstr "Učitaj"
+
+#, python-format
+msgid "Load of the Virtual Keyboard layout \"%s\" failed due to the following error: \"%s\""
+msgstr "Učitavanje rasporeda virtualne tipkovnice \"%s\" nije uspjelo zbog sljedeće pogreške: \"%s\""
+
+msgid "Loading"
+msgstr "Učitavanje"
+
+#, python-format
+msgid "Loading %s failed due to following error:"
+msgstr "Učitavanje %s nije uspjelo zbog sljedeće pogreške:"
+
+msgid "Loading failed."
+msgstr "Učitavanje nije uspjelo."
+
+msgid "Loading watch data..."
+msgstr "Učitavanje podataka o gledanju..."
+
+msgid "Loading..."
+msgstr "Učitavanje..."
+
+msgid "LocalMedia"
+msgstr "Lokalni mediji"
+
+#, python-format
+msgid "Locale ID mismatched! %s <> %s"
+msgstr "Locale ID se ne podudara! %s <> %s"
+
+msgid "Locality:"
+msgstr "Mjesto:"
+
+msgid "Localization"
+msgstr "Lokalizacija"
+
+msgid "Lodynet offers this video only on its subscription servers (Lody Plus / VIP) for now - the free servers usually follow later."
+msgstr "Lodynet zasad nudi ovaj videozapis samo na svojim poslužiteljima uz pretplatu (Lody Plus / VIP) - besplatni poslužitelji obično slijede kasnije."
+
+msgid "Log"
+msgstr "Zapisnik"
+
+msgid "Login failed!"
+msgstr "Prijava nije uspjela!"
+
+msgid "Login failed."
+msgstr "Prijava nije uspjela."
+
+msgid "Login needed"
+msgstr "Potrebna je prijava"
+
+#, python-brace-format
+msgid "Login on {0} failed."
+msgstr "Prijava na {0} nije uspjela."
+
+msgid "Login or password is wrong."
+msgstr "Korisničko ime ili lozinka nisu ispravni."
+
+#, python-format
+msgid "Login to prijevodi-online.org failed: %s"
+msgstr "Prijava na prijevodi-online.org nije uspjela: %s"
+
+msgid "Login to prijevodi-online.org failed: the site asks for a captcha, which E2iPlayer cannot solve. Series subtitles download without an account."
+msgstr "Prijava na prijevodi-online.org nije uspjela: stranica traži captchu koju E2iPlayer ne može riješiti. Titlovi za serije preuzimaju se bez računa."
+
+#, python-format
+msgid ""
+"Login user \"%s\" to https://vk.com/ failed!\n"
+"Please check your login data in the IPTVPlayer configuration."
+msgstr ""
+"Prijava korisnika \"%s\" na https://vk.com/ nije uspjela!\n"
+"Provjerite podatke za prijavu u konfiguraciji IPTVPlayera."
+
+msgid "Logs"
+msgstr "Zapisnici"
+
+msgid "Long list"
+msgstr "Dugi popis"
+
+msgid "Longest"
+msgstr "Najdulje"
+
+msgid "Loved tracks"
+msgstr "Omiljene pjesme"
+
+msgid "Low"
+msgstr "Nisko"
+
+msgid "MENU"
+msgstr "MENU"
+
+msgid "MENU → Add new entry: type a new search term to add to the history."
+msgstr "MENU → Dodaj novi unos: upišite novi pojam za pretragu koji će se dodati u povijest."
+
+msgid "MENU → Enable/Disable reordering: same as GREEN (pick up/move/drop with OK, UP/DOWN)."
+msgstr "MENU → Omogući/onemogući premještanje: isto kao ZELENA (uzmite/pomaknite/spustite pomoću OK, GORE/DOLJE)."
+
+msgid "MENU → Fix/Unfix jump target: sets what happens when an entry is reused elsewhere."
+msgstr "MENU → Fiksiraj/ukloni fiksiranje cilja skoka: određuje što se događa kada se unos ponovno koristi na drugom mjestu."
+
+msgid "MENU → Reset to saved order: undo unsaved changes, reload from disk."
+msgstr "MENU → Vrati na spremljeni redoslijed: poništite nespremljene promjene i ponovno učitajte s diska."
+
+msgid "MENU → Sort A-Z / Sort Z-A: sort all entries alphabetically."
+msgstr "MENU → Sortiraj A-Z / Sortiraj Z-A: sortirajte sve unose abecedno."
+
+msgid "MENU=Options"
+msgstr "MENU=Opcije"
+
+#, python-format
+msgid "MOVE: %s"
+msgstr "PREMJESTI: %s"
+
+msgid "MOVING"
+msgstr "PREMJEŠTANJE"
+
+msgid "MP3Quran live radio"
+msgstr "MP3Quran radio uživo"
+
+msgid "Main"
+msgstr "Glavno"
+
+msgid "Main menu"
+msgstr "Glavni izbornik"
+
+#, python-format
+msgid "Make directory [%s]"
+msgstr "Stvori direktorij [%s]"
+
+msgid "Male"
+msgstr "Muškarci"
+
+msgid "Manager status:"
+msgstr "Status upravitelja:"
+
+msgid "Mark downloaded items"
+msgstr "Označi preuzete stavke"
+
+msgid "Mark favourite items"
+msgstr "Označi stavke iz favorita"
+
+msgid "Match cuts"
+msgstr "Isječci utakmice"
+
+msgid "Match not started yet"
+msgstr "Utakmica još nije počela"
+
+msgid "Matches of the national teams"
+msgstr "Utakmice reprezentacija"
+
+msgid "Matching entries"
+msgstr "Odgovarajući unosi"
+
+msgid "Max items per page"
+msgstr "Maks. broj stavki po stranici"
+
+msgid "Max number of parallel downloads has been reached."
+msgstr "Dosegnut je najveći broj istodobnih preuzimanja."
+
+msgid "MaxStream (uprot.net) asks for its image captcha: solve it in MyE2i, then open the video again."
+msgstr "MaxStream (uprot.net) traži svoju slikovnu captchu: riješite je u MyE2i, a zatim ponovno otvorite videozapis."
+
+msgid "Maximum log file size"
+msgstr "Najveća veličina datoteke zapisnika"
+
+msgid "Maximum torrent size:"
+msgstr "Najveća veličina torrenta:"
+
+msgid "MediaFusion manifest URL (your own):"
+msgstr "URL MediaFusion manifesta (vaš vlastiti):"
+
+msgid "Medtryx Marketing"
+msgstr "Medtryx marketing"
+
+msgid "Meetings"
+msgstr "Sastanci"
+
+msgid "Members"
+msgstr "Članovi"
+
+msgid "Menu"
+msgstr "Izbornik"
+
+msgid "Military"
+msgstr "Vojska"
+
+msgid "Mini series"
+msgstr "Mini serije"
+
+msgid "Missed the show?"
+msgstr "Propustili ste emisiju?"
+
+msgid "Missing API key - set it in Settings, Web streams, Windy Webcams"
+msgstr "Nedostaje API ključ - postavite ga u Postavke, Web streamovi, Windy Webcams"
+
+msgid "Mix"
+msgstr "Miks"
+
+msgid "MixDrop: this file is not available as a video stream (deleted or download only)."
+msgstr "MixDrop: ova datoteka nije dostupna kao video stream (izbrisana ili samo za preuzimanje)."
+
+msgid "Mixes"
+msgstr "Miksevi"
+
+msgid "Models"
+msgstr "Modeli"
+
+msgid "More"
+msgstr "Više"
+
+msgid "More Categories"
+msgstr "Više kategorija"
+
+msgid "More Channels"
+msgstr "Više kanala"
+
+msgid "More Models"
+msgstr "Više modela"
+
+msgid "More Pornstars"
+msgstr "Više porno zvijezda"
+
+msgid "More important"
+msgstr "Važnije"
+
+msgid "More results"
+msgstr "Više rezultata"
+
+msgid "Most Popular"
+msgstr "Najpopularnije"
+
+msgid "Most Watched"
+msgstr "Najgledanije"
+
+msgid "Most commented"
+msgstr "Najkomentiranije"
+
+msgid "Most discussed"
+msgstr "Najviše raspravljano"
+
+msgid "Most favourited"
+msgstr "Najčešće u favoritima"
+
+msgid "Most listened anasheed"
+msgstr "Najslušaniji anašidi"
+
+msgid "Most listened recitations"
+msgstr "Najslušanije recitacije"
+
+msgid "Most popular"
+msgstr "Najpopularnije"
+
+msgid "Most recent"
+msgstr "Najnovije"
+
+msgid "Most viewed"
+msgstr "Najgledanije"
+
+msgid "Most viewed movies"
+msgstr "Najgledaniji filmovi"
+
+msgid "Most viewed series"
+msgstr "Najgledanije serije"
+
+msgid "Most voted"
+msgstr "Najviše glasova"
+
+msgid "Motorsport"
+msgstr "Motosport"
+
+#, python-format
+msgid ""
+"Mount ISO file [%s] on [%s] failed.\n"
+"Return code[%s].\n"
+"Return data[%s]."
+msgstr ""
+"Montiranje ISO datoteke [%s] na [%s] nije uspjelo.\n"
+"Povratni kod[%s].\n"
+"Povratni podaci[%s]."
+
+msgid "Move"
+msgstr "Premjesti"
+
+msgid "Move failed."
+msgstr "Premještanje nije uspjelo."
+
+msgid "Move to Watchlist folder..."
+msgstr "Premjesti u mapu popisa za gledanje..."
+
+msgid "Move to folder..."
+msgstr "Premjesti u mapu..."
+
+msgid "Movie"
+msgstr "Film"
+
+msgid "Movie collections"
+msgstr "Kolekcije filmova"
+
+msgid "Movie player selection list"
+msgstr "Popis za odabir playera"
+
+msgid "Movies"
+msgstr "Filmovi"
+
+msgid "Movies and series"
+msgstr "Filmovi i serije"
+
+msgid "Movies genres"
+msgstr "Žanrovi filmova"
+
+#, python-format
+msgid "Moving file from \"%s\" to \"%s\" failed.\n"
+msgstr "Premještanje datoteke iz \"%s\" u \"%s\" nije uspjelo.\n"
+
+#, python-format
+msgid "Moving playback buffer to the download manager failed with the following error \"%s\""
+msgstr "Premještanje međuspremnika reprodukcije u upravitelj preuzimanja nije uspjelo zbog sljedeće pogreške \"%s\""
+
+msgid "Munshids"
+msgstr "Munšidi"
+
+msgid "Music"
+msgstr "Glazba"
+
+msgid "My JDownloader reCAPTCHA v2 solution"
+msgstr "My JDownloader reCAPTCHA v2 rješenje"
+
+msgid "My list"
+msgstr "Moj popis"
+
+msgid "My subscriptions"
+msgstr "Moje pretplate"
+
+msgid "MyE2i (solve on your phone/PC)"
+msgstr "MyE2i (riješite na mobitelu/računalu)"
+
+msgid "MyE2i - how to solve a captcha"
+msgstr "MyE2i - kako riješiti captchu"
+
+msgid "MyE2i Cloudflare solution"
+msgstr "MyE2i Cloudflare rješenje"
+
+msgid "MyE2i browser check solution"
+msgstr "MyE2i rješenje provjere preglednika"
+
+msgid "MyE2i captcha: solve it, then Job (no CONTINUE)"
+msgstr "MyE2i captcha: riješite je, zatim Job (bez CONTINUE)"
+
+msgid "MyE2i debug snapshot received - see the debug log."
+msgstr "MyE2i debug snimka stanja primljena - pogledajte debug zapisnik."
+
+msgid "MyE2i extension is outdated - please update it."
+msgstr "MyE2i proširenje je zastarjelo - ažurirajte ga."
+
+msgid "MyE2i extension: increase security"
+msgstr "MyE2i proširenje: povećaj sigurnost"
+
+msgid "MyE2i reCAPTCHA solution"
+msgstr "MyE2i reCAPTCHA rješenje"
+
+#, python-format
+msgid ""
+"MyE2i script execution failed.\n"
+"Error code: %s\n"
+msgstr ""
+"Izvršavanje MyE2i skripte nije uspjelo.\n"
+"Kod pogreške: %s\n"
+
+msgid "MyE2i script finished."
+msgstr "MyE2i skripta je završena."
+
+msgid "MyE2i: close the start page when done"
+msgstr "MyE2i: zatvori početnu stranicu po završetku"
+
+msgid "MyE2i: offer to open the page in (Android)"
+msgstr "MyE2i: ponudi otvaranje stranice u (Android)"
+
+msgid "MyE2i: open the page in the browser"
+msgstr "MyE2i: otvori stranicu u pregledniku"
+
+msgid "Mystery"
+msgstr "Misterij"
+
+msgid ""
+"NO VIDEOS FOUND FOR NOW! \n"
+"CHECK BELOW ADVANCE SEARCH RESULTS!"
+msgstr ""
+"TRENUTNO NIJE PRONAĐEN NIJEDAN VIDEOZAPIS! \n"
+"POGLEDAJTE REZULTATE NAPREDNE PRETRAGE U NASTAVKU!"
+
+msgid "Name cannot be empty."
+msgstr "Naziv ne može biti prazan."
+
+msgid ""
+"Name is not valid.\n"
+"Please remove special characters."
+msgstr ""
+"Naziv nije valjan.\n"
+"Uklonite posebne znakove."
+
+msgid "Name:"
+msgstr "Naziv:"
+
+msgid "Needs extension v1.18+. Opens the page in this browser, waits until it is fully rendered (Cloudflare challenge included, solve it if it shows up) and sends the rendered HTML, the fetch/XHR calls and the cookie names to the box debug log."
+msgstr "Potrebno je proširenje v1.18+. Otvara stranicu u ovom pregledniku, čeka da se potpuno prikaže (uključujući Cloudflare provjeru - riješite je ako se pojavi) i šalje prikazani HTML, fetch/XHR pozive i nazive kolačića u debug zapisnik prijamnika."
+
+msgid "Netflix movies"
+msgstr "Netflix filmovi"
+
+msgid "Netflix series"
+msgstr "Netflix serije"
+
+msgid "Network"
+msgstr "Mreža"
+
+#, python-format
+msgid "Network failed %s."
+msgstr "Pogreška mreže %s."
+
+msgid "Network failure (receive)."
+msgstr "Pogreška mreže (primanje)."
+
+msgid "Network failure (send)."
+msgstr "Pogreška mreže (slanje)."
+
+msgid "Network failure."
+msgstr "Pogreška mreže."
+
+msgid "New"
+msgstr "Novo"
+
+msgid "New Watchlist folder"
+msgstr "Nova mapa popisa za gledanje"
+
+msgid "New dir"
+msgstr "Novi direktorij"
+
+msgid "New entry"
+msgstr "Novi unos"
+
+msgid "New episodes"
+msgstr "Nove epizode"
+
+msgid "New folder..."
+msgstr "Nova mapa..."
+
+msgid "New icons will not be available."
+msgstr "Nove ikone neće biti dostupne."
+
+msgid "New links"
+msgstr "Nove poveznice"
+
+msgid "New search"
+msgstr "Nova pretraga"
+
+msgid "New since installed version"
+msgstr "Novo od instalirane verzije"
+
+msgid "Newest Episodes"
+msgstr "Najnovije epizode"
+
+msgid "Newest videos (all YouTube channels)"
+msgstr "Najnoviji videozapisi (svi YouTube kanali)"
+
+msgid "Newest videos of a YouTube channel in a group"
+msgstr "Najnoviji videozapisi YouTube kanala u grupi"
+
+msgid "News"
+msgstr "Vijesti"
+
+msgid "News (tagesschau)"
+msgstr "Vijesti (tagesschau)"
+
+msgid "News Poland"
+msgstr "Vijesti Poljska"
+
+msgid "Next"
+msgstr "Sljedeće"
+
+msgid "Next page"
+msgstr "Sljedeća stranica"
+
+msgid "No"
+msgstr "Ne"
+
+msgid "No YouTube video found for this track."
+msgstr "Za ovu pjesmu nije pronađen YouTube videozapis."
+
+msgid "No channels with an archive on this portal."
+msgstr "Na ovom portalu nema kanala s arhivom."
+
+msgid "No description available."
+msgstr "Opis nije dostupan."
+
+msgid "No episodes available yet."
+msgstr "Još nema dostupnih epizoda."
+
+msgid "No episodes found."
+msgstr "Nisu pronađene epizode."
+
+msgid "No free player available for this title."
+msgstr "Za ovaj naslov nema besplatnog playera."
+
+msgid "No free videos or live streams here at the moment."
+msgstr "Trenutno ovdje nema besplatnih videozapisa ni streamova uživo."
+
+msgid "No host is open."
+msgstr "Nijedan host nije otvoren."
+
+msgid ""
+"No item to display. \n"
+"Press OK to refresh.\n"
+msgstr ""
+"Nema stavki za prikaz. \n"
+"Pritisnite OK za osvježavanje.\n"
+
+msgid "No items found"
+msgstr "Nisu pronađene stavke"
+
+msgid "No matching entries found."
+msgstr "Nisu pronađeni odgovarajući unosi."
+
+msgid "No player found for this title."
+msgstr "Za ovaj naslov nije pronađen player."
+
+msgid "No problems occurred."
+msgstr "Nije bilo problema."
+
+msgid "No programme guide for this channel."
+msgstr "Za ovaj kanal nema programskog vodiča."
+
+msgid "No recorded programmes on this day."
+msgstr "Nema snimljenih emisija tog dana."
+
+msgid "No replays in these days"
+msgstr "Nema snimki ovih dana"
+
+#, python-format
+msgid "No results found for: %s"
+msgstr "Nema rezultata za: %s"
+
+msgid "No self-test result yet."
+msgstr "Još nema rezultata samotestiranja."
+
+msgid "No storage found for the cache folder. The cache folder will be switched to the plugin's own cache directory."
+msgstr "Nije pronađena pohrana za mapu predmemorije. Mapa predmemorije bit će prebačena na vlastiti direktorij predmemorije dodatka."
+
+msgid "No storage found for the downloads location. Where would you like to save your downloads?"
+msgstr "Nije pronađena pohrana za lokaciju preuzimanja. Gdje želite spremati preuzimanja?"
+
+msgid "No stream available"
+msgstr "Nema dostupnog streama"
+
+msgid "No streams are available for this title yet."
+msgstr "Za ovaj naslov još nema dostupnih streamova."
+
+msgid "No subtitle file found in the archive."
+msgstr "U arhivi nije pronađena datoteka titlova."
+
+msgid "No subtitles available for this title."
+msgstr "Za ovaj naslov nema dostupnih titlova."
+
+msgid "No subtitles found."
+msgstr "Nisu pronađeni titlovi."
+
+#, python-format
+msgid "No subtitles in %s. Available: %s"
+msgstr "Nema titlova na jeziku %s. Dostupno: %s"
+
+msgid "No title to search for."
+msgstr "Nema naslova za pretragu."
+
+msgid "No valid entitlement found for asset."
+msgstr "Nije pronađeno valjano pravo pristupa za ovaj sadržaj."
+
+msgid "No valid links available."
+msgstr "Nema dostupnih valjanih poveznica."
+
+msgid "No video ID available"
+msgstr "ID videozapisa nije dostupan"
+
+msgid "None"
+msgstr "Ništa"
+
+msgid "Normalize item / file names (Show - SxxExx - Title)"
+msgstr "Normaliziraj nazive stavki / datoteka (Serija - SxxExx - Naslov)"
+
+msgid "Not available in your country (geo-blocking)."
+msgstr "Nije dostupno u vašoj zemlji (geoblokiranje)."
+
+msgid "Not available yet"
+msgstr "Još nije dostupno"
+
+msgid "Not in /usr/bin: choose the file under \"TorrServer binary\" in the torrent configuration."
+msgstr "Nije u /usr/bin: odaberite datoteku pod \"Izvršna datoteka TorrServer\" u konfiguraciji torrenta."
+
+msgid "Not possible (no enigma2 session)."
+msgstr "Nije moguće (nema enigma2 sesije)."
+
+#, python-format
+msgid "Not removed, still downloading: %d"
+msgstr "Nije uklonjeno, još se preuzima: %d"
+
+msgid "Nothing available here at the moment (only upcoming broadcasts)."
+msgstr "Trenutno ovdje ništa nije dostupno (samo nadolazeće emisije)."
+
+msgid "Nothing found on subdl.com."
+msgstr "Na subdl.com ništa nije pronađeno."
+
+msgid "Nothing found. This site only finds Russian (Cyrillic) search terms."
+msgstr "Ništa nije pronađeno. Ova stranica pronalazi samo ruske (ćirilične) pojmove za pretragu."
+
+msgid "Nothing open"
+msgstr "Ništa nije otvoreno"
+
+msgid "Nothing to save - the debug log is not active."
+msgstr "Nema se što spremiti - debug zapisnik nije aktivan."
+
+msgid "Now"
+msgstr "Sada"
+
+msgid "Now playing"
+msgstr "Sada u kinima"
+
+#, python-format
+msgid "Now playing: %s"
+msgstr "Trenutno se reproducira: %s"
+
+msgid "Number of columns"
+msgstr "Broj stupaca"
+
+msgid "Number of downloaded files simultaneously"
+msgstr "Broj istodobnih preuzimanja"
+
+#, python-format
+msgid "Number of items in search history: %d"
+msgstr "Broj stavki u povijesti pretrage: %d"
+
+msgid "Number of rotated files to keep"
+msgstr "Broj rotiranih datoteka koje se čuvaju"
+
+msgid "Number of rows"
+msgstr "Broj redaka"
+
+msgid "Numeric keypad for numbers"
+msgstr "Numerička tipkovnica za unos brojeva"
+
+msgid "OFFLINE"
+msgstr "OFFLINE"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "OK marks an item, BLUE shows what can be done with the marked items."
+msgstr "OK označava stavku, PLAVA prikazuje što se može učiniti s označenim stavkama."
+
+msgid "OK marks an item, MENU shows what can be done with the marked items."
+msgstr "OK označava stavku, MENU prikazuje što se može učiniti s označenim stavkama."
+
+msgid "OMDb API key (free at omdbapi.com)"
+msgstr "OMDb API ključ (besplatno na omdbapi.com)"
+
+msgid "Off"
+msgstr "Isključeno"
+
+msgid "Offline channels"
+msgstr "Kanali izvan mreže"
+
+msgid "Older days"
+msgstr "Stariji dani"
+
+msgid "Older replays"
+msgstr "Starije snimke"
+
+msgid "On Air"
+msgstr "U eteru"
+
+msgid "One link mode"
+msgstr "Način jedne poveznice"
+
+#, python-format
+msgid "Only available in %s"
+msgstr "Dostupno samo u %s"
+
+msgid "Only files in the downloads folder can be deleted."
+msgstr "Mogu se brisati samo datoteke u mapi za preuzimanja."
+
+msgid "Only links can be moved to a group."
+msgstr "Samo se poveznice mogu premjestiti u grupu."
+
+#, python-format
+msgid "Only the %d oldest new commits are shown"
+msgstr "Prikazano je samo %d najstarijih novih commitova"
+
+msgid "Only the sites that failed in the last run, same checks."
+msgstr "Samo stranice koje nisu prošle u posljednjem pokretanju, s istim provjerama."
+
+#, python-format
+msgid "Only unsupported hosters available: %s"
+msgstr "Dostupni su samo nepodržani hosteri: %s"
+
+msgid "Open issues"
+msgstr "Otvoreni issueovi"
+
+msgid "Open pull requests"
+msgstr "Otvoreni pull requestovi"
+
+msgid "Open the page and get the link"
+msgstr "Otvori stranicu i dohvati poveznicu"
+
+#, python-format
+msgid "Open this page in %s"
+msgstr "Otvorite ovu stranicu u %s"
+
+msgid "Open this page in the chosen browser"
+msgstr "Otvorite ovu stranicu u odabranom pregledniku"
+
+#, python-format
+msgid "OpenSubtitles.com login failed for user \"%s\". Please check your login and password."
+msgstr "Prijava na OpenSubtitles.com za korisnika \"%s\" nije uspjela. Provjerite korisničko ime i lozinku."
+
+msgid "OpenSubtitles.com needs an API key. Create a free API consumer at https://www.opensubtitles.com/consumers and enter its key in the E2iPlayer settings (Subtitles)."
+msgstr "OpenSubtitles.com zahtijeva API ključ. Besplatno izradite API consumer na https://www.opensubtitles.com/consumers i unesite njegov ključ u postavkama E2iPlayera (Titlovi)."
+
+#, python-format
+msgid "OpenSubtitles.com rejected the request (HTTP %s). Please check the API key in the E2iPlayer settings."
+msgstr "OpenSubtitles.com je odbio zahtjev (HTTP %s). Provjerite API ključ u postavkama E2iPlayera."
+
+msgid "OpenSubtitles.org sent a \"become VIP member\" note instead of the subtitle (download limit reached?)."
+msgstr "OpenSubtitles.org je umjesto titla poslao napomenu \"postanite VIP član\" (dosegnuto ograničenje preuzimanja?)."
+
+msgid "Opening. Please wait..."
+msgstr "Otvaranje. Pričekajte..."
+
+msgid "Operation aborted!"
+msgstr "Operacija prekinuta!"
+
+msgid "Operation timed out."
+msgstr "Isteklo je vrijeme za operaciju."
+
+msgid "Options"
+msgstr "Opcije"
+
+msgid "Options (select language, clear search history, settings)"
+msgstr "Opcije (odabir jezika, brisanje povijesti pretrage, postavke)"
+
+msgid "Order of user links:"
+msgstr "Redoslijed korisničkih poveznica:"
+
+msgid "Order stays fixed - useful for T9 browsing."
+msgstr "Redoslijed ostaje nepromijenjen - korisno za pregledavanje pomoću T9."
+
+msgid "Original Title:"
+msgstr "Izvorni naslov:"
+
+#, python-format
+msgid "Original language: %s"
+msgstr "Izvorni jezik: %s"
+
+msgid "Original title"
+msgstr "Izvorni naslov"
+
+msgid "Original version"
+msgstr "Izvorna verzija"
+
+msgid "Other"
+msgstr "Ostalo"
+
+msgid "Other dramas (Chinese, Thai, ...)"
+msgstr "Ostale drame (kineske, tajlandske, ...)"
+
+msgid "Other films"
+msgstr "Ostali filmovi"
+
+msgid "Other seasons"
+msgstr "Ostale sezone"
+
+msgid "Others"
+msgstr "Ostali"
+
+msgid "Out of memory."
+msgstr "Nedovoljno memorije."
+
+msgid "Own launcher URI"
+msgstr "Vlastiti URI pokretača"
+
+msgid "Own model"
+msgstr "Vlastiti model"
+
+msgid "PAGE UP/PAGE DOWN"
+msgstr "STRANICA GORE/STRANICA DOLJE"
+
+msgid "PAY"
+msgstr "PLAĆENO"
+
+msgid "PENDING"
+msgstr "NA ČEKANJU"
+
+msgid "PLAY"
+msgstr "PLAY"
+
+msgid "PREVIOUS/NEXT"
+msgstr "PRETHODNO/SLJEDEĆE"
+
+#, python-format
+msgid "PRIVATE - wait %s seconds"
+msgstr "PRIVATNO - pričekajte %s sekundi"
+
+msgid "PRIVATE - wait a few seconds"
+msgstr "PRIVATNO - pričekajte nekoliko sekundi"
+
+msgid "Page not found - please check the address."
+msgstr "Stranica nije pronađena - provjerite adresu."
+
+msgid "Page:"
+msgstr "Stranica:"
+
+msgid "Paid content"
+msgstr "Sadržaj koji se plaća"
+
+msgid "Parse error."
+msgstr "Pogreška pri raščlanjivanju."
+
+msgid "Part"
+msgstr "Dio"
+
+msgid "Partial file - transfer ended early."
+msgstr "Nepotpuna datoteka - prijenos je prerano završio."
+
+msgid "Password:"
+msgstr "Lozinka:"
+
+msgid "Past premieres"
+msgstr "Prošle premijere"
+
+#, python-format
+msgid "Paste \"%s\""
+msgstr "Zalijepi \"%s\""
+
+msgid "Path to xxxlist.txt :"
+msgstr "Putanja do xxxlist.txt :"
+
+msgid "Path to ytlist.txt, urllist.txt"
+msgstr "Putanja do ytlist.txt, urllist.txt"
+
+msgid "Pathology"
+msgstr "Patologija"
+
+msgid "Pathology Rounds"
+msgstr "Patološke vizite"
+
+msgid "Patriotism"
+msgstr "Domoljublje"
+
+msgid "Pause between the batch lookups of one host [s]"
+msgstr "Stanka između skupnih upita jednog hosta [s]"
+
+#, python-format
+msgid "Peak: %s"
+msgstr "Najviša pozicija: %s"
+
+msgid "Pediatrics"
+msgstr "Pedijatrija"
+
+msgid "People"
+msgstr "Osobe"
+
+msgid "Persons"
+msgstr "Osobe"
+
+msgid "Philosophy"
+msgstr "Filozofija"
+
+msgid "Physical Exam"
+msgstr "Fizikalni pregled"
+
+msgid "Pin has been changed."
+msgstr "PIN je promijenjen."
+
+msgid "Pin incorrect!"
+msgstr "Neispravan PIN!"
+
+msgid "Pin protection for configuration"
+msgstr "PIN zaštita za konfiguraciju"
+
+msgid "Pin protection for plugin"
+msgstr "PIN zaštita za dodatak"
+
+msgid "Pin protection for this host"
+msgstr "PIN zaštita za ovaj host"
+
+msgid "Play all from here"
+msgstr "Reproduciraj sve odavde"
+
+#, python-format
+msgid "Play marked items (%d)"
+msgstr "Reproduciraj označene stavke (%d)"
+
+msgid "Play torrents with TorrServer"
+msgstr "Reproduciraj torrente pomoću TorrServera"
+
+#, python-format
+msgid "Play with [%s] player"
+msgstr "Reproduciraj pomoću playera [%s]"
+
+msgid "Playback UHD :"
+msgstr "Reprodukcija UHD :"
+
+msgid "Player Skin"
+msgstr "Skin playera"
+
+msgid "Playing on the TV is not possible (no enigma2 session)."
+msgstr "Reprodukcija na televizoru nije moguća (nema enigma2 sesije)."
+
+msgid "Playlist"
+msgstr "Playlista"
+
+msgid "Playlists"
+msgstr "Playliste"
+
+msgid "Plays"
+msgstr "Kazališne predstave"
+
+#, python-brace-format
+msgid ""
+"Please Open site:\n"
+"http://{0}:{1}\n"
+"in a web browser with the MyE2i extension installed"
+msgstr ""
+"Otvorite stranicu:\n"
+"http://{0}:{1}\n"
+"u web-pregledniku s instaliranim MyE2i proširenjem"
+
+msgid "Please configure Xtream (blue button)"
+msgstr "Konfigurirajte Xtream (plava tipka)"
+
+msgid "Please configure the Stalker portal (blue button)"
+msgstr "Konfigurirajte Stalker portal (plava tipka)"
+
+#, python-format
+msgid "Please consider restart your Engima2 and agree to install the %s utlity when the %s will propose this."
+msgstr "Razmislite o ponovnom pokretanju sustava Enigma2 i prihvatite instalaciju alata %s kada %s to predloži."
+
+msgid "Please enter a search text."
+msgstr "Unesite tekst za pretragu."
+
+msgid "Please enter a valid link (http:// or https://)."
+msgstr "Unesite valjanu poveznicu (http:// ili https://)."
+
+#, python-format
+msgid "Please enter the %s login and password in the E2iPlayer settings (Captcha)."
+msgstr "Unesite korisničko ime i lozinku za %s u postavkama E2iPlayera (Captcha)."
+
+msgid "Please make sure that the folder for cache data (set in the configuration) is writable."
+msgstr "Provjerite je li u mapu za podatke predmemorije (postavljenu u konfiguraciji) moguće pisati."
+
+msgid "Please register and set login and password in the host configuration, to solve this problems permanently."
+msgstr "Registrirajte se i unesite korisničko ime i lozinku u konfiguraciji hosta kako biste trajno riješili ove probleme."
+
+msgid "Please select a group of favourites."
+msgstr "Odaberite grupu favorita."
+
+msgid "Please select an entry."
+msgstr "Odaberite unos."
+
+msgid "Please select the link first."
+msgstr "Najprije odaberite poveznicu."
+
+#, python-format
+msgid "Please set valid %s in the %s configuration."
+msgstr "Postavite valjano %s u konfiguraciji %s."
+
+msgid "Please solve to continue downloads with:"
+msgstr "Riješite kako biste nastavili preuzimanja s:"
+
+#, python-format
+msgid "Please visit \"%s\" and confirm that you are human."
+msgstr "Posjetite \"%s\" i potvrdite da ste čovjek."
+
+#, python-format
+msgid "Please visit %s to learn how to redirect this task to the external device."
+msgstr "Posjetite %s kako biste saznali kako ovaj zadatak preusmjeriti na vanjski uređaj."
+
+msgid "Please wait - downloading initialization data."
+msgstr "Pričekajte - preuzimaju se podaci za inicijalizaciju."
+
+msgid "Please wait for initialization data."
+msgstr "Pričekajte podatke za inicijalizaciju."
+
+msgid "Please wait, the previous action is still running."
+msgstr "Pričekajte, prethodna radnja još je u tijeku."
+
+msgid "Please wait..."
+msgstr "Pričekajte..."
+
+msgid "Podcasts"
+msgstr "Podcasti"
+
+msgid "Podcasts by category"
+msgstr "Podcasti po kategoriji"
+
+msgid "Podcasts by station"
+msgstr "Podcasti po postaji"
+
+msgid "Poland"
+msgstr "Poljska"
+
+msgid "Polish"
+msgstr "Poljski"
+
+msgid "Polish dubbing"
+msgstr "Poljska sinkronizacija"
+
+msgid "Polish films"
+msgstr "Poljski filmovi"
+
+msgid "Polish subtitles"
+msgstr "Poljski titlovi"
+
+msgid "Polish voice-over"
+msgstr "Poljski voice-over"
+
+msgid "Politics"
+msgstr "Politika"
+
+msgid "Popular"
+msgstr "Popularno"
+
+msgid "Popular episodes"
+msgstr "Popularne epizode"
+
+msgid "Popular movies"
+msgstr "Popularni filmovi"
+
+msgid "Popular series"
+msgstr "Popularne serije"
+
+msgid "Popular sports"
+msgstr "Popularni sportovi"
+
+msgid "Popularity"
+msgstr "Popularnost"
+
+msgid "Pornstars"
+msgstr "Porno zvijezde"
+
+#, python-format
+msgid "Portal %d - %s (optional, from the MAG box):"
+msgstr "Portal %d - %s (neobavezno, s MAG uređaja):"
+
+#, python-format
+msgid "Portal %d - MAC address (00:1A:79:...):"
+msgstr "Portal %d - MAC adresa (00:1A:79:...):"
+
+#, python-format
+msgid "Portal %d - name (optional):"
+msgstr "Portal %d - naziv (neobavezno):"
+
+#, python-format
+msgid "Portal %d - portal URL (http://host:port/c/):"
+msgstr "Portal %d - URL portala (http://host:port/c/):"
+
+#, python-format
+msgid "Portal URL and MAC address in the host configuration, as the provider gives them out. More portals: %s in the EStalker format (portal URL, then its MAC addresses, one per line)."
+msgstr "URL portala i MAC adresa u konfiguraciji hosta, onako kako ih pružatelj usluge izdaje. Više portala: %s u EStalker formatu (URL portala, zatim njegove MAC adrese, jedna po retku)."
+
+#, python-format
+msgid "Ports: %s"
+msgstr "Portovi: %s"
+
+msgid "Portuguese"
+msgstr "Portugalski"
+
+msgid "Powerpoint Presentation"
+msgstr "PowerPoint prezentacija"
+
+msgid "Practice Management"
+msgstr "Upravljanje praksom"
+
+msgid "Prefer MP4 over HLS:"
+msgstr "Daj prednost MP4 pred HLS:"
+
+msgid "Prefered format"
+msgstr "Željeni format"
+
+msgid "Prefered quality"
+msgstr "Željena kvaliteta"
+
+msgid "Preferred streaming protocol"
+msgstr "Željeni protokol za streaming"
+
+msgid "Preferred video quality:"
+msgstr "Željena kvaliteta videa:"
+
+msgid "Premium"
+msgstr "Premium"
+
+msgid "Premium user"
+msgstr "Premium korisnik"
+
+msgid "Press EXIT to return to the previous menu."
+msgstr "Pritisnite EXIT za povratak u prethodni izbornik."
+
+msgid "Previous Page"
+msgstr "Prethodna stranica"
+
+msgid "Previous days"
+msgstr "Prethodni dani"
+
+msgid "Price:"
+msgstr "Cijena:"
+
+msgid "Pro wrestling"
+msgstr "Profesionalno hrvanje"
+
+msgid "Production:"
+msgstr "Produkcija:"
+
+msgid "Professional Networks"
+msgstr "Profesionalne mreže"
+
+msgid "Professionals"
+msgstr "Profesionalci"
+
+msgid "Program"
+msgstr "Program"
+
+msgid "Program A-Z"
+msgstr "Emisije A-Z"
+
+msgid "Program for file downloads (HTTP/FTP)"
+msgstr "Program za preuzimanje datoteka (HTTP/FTP)"
+
+msgid "Programme archive (last 7 days)"
+msgstr "Arhiva emisija (posljednjih 7 dana)"
+
+msgid "Programme archive:"
+msgstr "Arhiva emisija:"
+
+msgid "Programmes"
+msgstr "Emisije"
+
+msgid "Programmes of the last days of the channels with an archive"
+msgstr "Emisije iz posljednjih dana s kanala koji imaju arhivu"
+
+msgid "Promote item"
+msgstr "Istakni stavku"
+
+msgid "Protocol errors."
+msgstr "Pogreške protokola."
+
+msgid "Published"
+msgstr "Objavljeno"
+
+msgid "Python modules"
+msgstr "Python moduli"
+
+msgid "Python was not found on the receiver."
+msgstr "Python nije pronađen na prijamniku."
+
+msgid "Quality"
+msgstr "Kvaliteta"
+
+msgid "Quality:"
+msgstr "Kvaliteta:"
+
+msgid "Quick test: menu and a list with videos"
+msgstr "Brzi test: izbornik i popis s videozapisima"
+
+msgid "RAM"
+msgstr "RAM memorija"
+
+msgid "RAM buffer size [MB] for local files"
+msgstr "Veličina RAM međuspremnika [MB] za lokalne datoteke"
+
+msgid "RAM buffer size [MB] for network protocols"
+msgstr "Veličina RAM međuspremnika [MB] za mrežne protokole"
+
+msgid "RED"
+msgstr "CRVENA"
+
+msgid "REWIND"
+msgstr "PREMOTAVANJE UNATRAG"
+
+msgid "Radio"
+msgstr "Radio"
+
+msgid "Radio iframe file"
+msgstr "Iframe datoteka za radio"
+
+msgid "Radio station - live stream"
+msgstr "Radijska postaja - stream uživo"
+
+msgid "Radio stations"
+msgstr "Radijske postaje"
+
+msgid "Radiology Rounds"
+msgstr "Radiološke vizite"
+
+msgid "Ramadan"
+msgstr "Ramazan"
+
+msgid "Ramadan series"
+msgstr "Ramazanske serije"
+
+msgid "Random"
+msgstr "Nasumično"
+
+msgid "Random selection"
+msgstr "Nasumičan odabir"
+
+msgid "Randomize a playlist"
+msgstr "Nasumično izmiješaj playlistu"
+
+msgid "Range request not supported (resume failed)."
+msgstr "Range zahtjev nije podržan (nastavak nije uspio)."
+
+msgid "Rated"
+msgstr "Dobna oznaka"
+
+msgid "Rated:"
+msgstr "Dobna oznaka:"
+
+msgid "Rating"
+msgstr "Ocjena"
+
+#, python-format
+msgid "Rating %s"
+msgstr "Ocjena %s"
+
+msgid "Rating:"
+msgstr "Ocjena:"
+
+#, python-format
+msgid "Rating: %s"
+msgstr "Ocjena: %s"
+
+msgid "Read ahead (share of the cache)"
+msgstr "Učitavanje unaprijed (udio predmemorije)"
+
+msgid "Read by"
+msgstr "Čita"
+
+msgid "Read error."
+msgstr "Pogreška pri čitanju."
+
+msgid "Reading binaries..."
+msgstr "Čitanje binarnih datoteka..."
+
+msgid "Reading..."
+msgstr "Čitanje..."
+
+msgid "Recent"
+msgstr "Najnovije"
+
+msgid "Recently added"
+msgstr "Nedavno dodano"
+
+msgid "Reciters"
+msgstr "Učači"
+
+msgid "Recommended"
+msgstr "Preporučeno"
+
+msgid "Recon"
+msgstr "Rekonstrukcija"
+
+msgid "Referee"
+msgstr "Sudac"
+
+msgid "Refresh"
+msgstr "Osvježi"
+
+msgid "Refreshing"
+msgstr "Osvježavanje"
+
+#, python-format
+msgid "Refusing to empty \"%s\" - it also holds \"%s\" (downloads, buffering, cache or config folder). Check the folder paths in the storage configuration."
+msgstr "Pražnjenje \"%s\" je odbijeno - u njoj se nalazi i \"%s\" (mapa za preuzimanja, međuspremanje, predmemoriju ili konfiguraciju). Provjerite putanje mapa u konfiguraciji pohrane."
+
+#, python-format
+msgid "Refusing to empty \"%s\" - this does not look like a dedicated cache/config folder. Check the folder paths in the storage configuration."
+msgstr "Pražnjenje \"%s\" je odbijeno - ovo ne izgleda kao namjenska mapa za predmemoriju/konfiguraciju. Provjerite putanje mapa u konfiguraciji pohrane."
+
+msgid "Regions"
+msgstr "Regije"
+
+msgid "Related seasons and works"
+msgstr "Povezane sezone i djela"
+
+msgid "Release"
+msgstr "Izdanje"
+
+msgid "Released"
+msgstr "Objavljeno"
+
+msgid "Released:"
+msgstr "Objavljeno:"
+
+msgid "Releases"
+msgstr "Izdanja"
+
+msgid "Relevance"
+msgstr "Relevantnost"
+
+msgid "Religion"
+msgstr "Religija"
+
+msgid "Remaining:"
+msgstr "Preostalo:"
+
+msgid "Remember a host's pin until E2iPlayer is closed"
+msgstr "Zapamti PIN hosta dok se E2iPlayer ne zatvori"
+
+msgid "Remember last search entry"
+msgstr "Zapamti zadnji unos pretrage"
+
+msgid "Remember last search history selection"
+msgstr "Zapamti zadnji odabir iz povijesti pretrage"
+
+msgid "Remember last watched position"
+msgstr "Zapamti zadnji gledani položaj"
+
+msgid "Remove"
+msgstr "Ukloni"
+
+#, python-format
+msgid "Remove \"%s\" item"
+msgstr "Ukloni stavku \"%s\""
+
+#, python-format
+msgid "Remove %d items from the favourites?"
+msgstr "Ukloniti %d stavki iz favorita?"
+
+#, python-format
+msgid ""
+"Remove %d marked items?\n"
+"Their files are deleted too."
+msgstr ""
+"Ukloniti %d označenih stavki?\n"
+"Njihove datoteke također se brišu."
+
+msgid "Remove file"
+msgstr "Ukloni datoteku"
+
+msgid "Remove from Watchlist"
+msgstr "Ukloni s popisa za gledanje"
+
+msgid "Remove from favorites"
+msgstr "Ukloni iz favorita"
+
+msgid "Remove from folder"
+msgstr "Ukloni iz mape"
+
+msgid "Remove group"
+msgstr "Ukloni grupu"
+
+msgid "Remove item"
+msgstr "Ukloni stavku"
+
+#, python-format
+msgid "Remove marked items (%d)"
+msgstr "Ukloni označene stavke (%d)"
+
+#, python-format
+msgid "Remove marked items from favourites (%d)"
+msgstr "Ukloni označene stavke iz favorita (%d)"
+
+msgid "Remove thumbnails"
+msgstr "Ukloni sličice"
+
+msgid "Rename"
+msgstr "Preimenuj"
+
+msgid "Rename Watchlist folder"
+msgstr "Preimenuj mapu popisa za gledanje"
+
+msgid "Rename file"
+msgstr "Preimenuj datoteku"
+
+msgid "Reordering: UP/DOWN moves the row, OK saves, EXIT cancels."
+msgstr "Promjena redoslijeda: GORE/DOLJE pomiče redak, OK sprema, EXIT odustaje."
+
+msgid "Replay"
+msgstr "Snimka"
+
+msgid "Replays & highlights"
+msgstr "Snimke i najzanimljiviji trenuci"
+
+msgid "Report a problem (GitHub issues)"
+msgstr "Prijavite problem (GitHub issues)"
+
+msgid "Report file"
+msgstr "Datoteka izvješća"
+
+#, python-format
+msgid "Reset the settings of \"%s\" to their default values?"
+msgstr "Vratiti postavke za \"%s\" na zadane vrijednosti?"
+
+msgid "Reset this list to its default layout?"
+msgstr "Vratiti ovaj popis na zadani raspored?"
+
+msgid "Reset this list to its default layout? Its folders are deleted too."
+msgstr "Vratiti ovaj popis na zadani raspored? Njegove mape također se brišu."
+
+msgid "Reset to defaults"
+msgstr "Vrati na zadano"
+
+msgid "Reset to saved order"
+msgstr "Vrati na spremljeni redoslijed"
+
+msgid "Reset web interface"
+msgstr "Resetiraj web-sučelje"
+
+#, python-format
+msgid ""
+"Resolving hCaptcha with %s failed!\n"
+"\n"
+msgstr ""
+"Rješavanje hCaptcha pomoću %s nije uspjelo!\n"
+"\n"
+
+#, python-format
+msgid ""
+"Resolving reCaptcha with %s failed!\n"
+"\n"
+msgstr ""
+"Rješavanje reCaptcha pomoću %s nije uspjelo!\n"
+"\n"
+
+msgid "Restart GUI"
+msgstr "Ponovno pokreni GUI"
+
+msgid "Reused entries move back to the top again."
+msgstr "Ponovno korišteni unosi ponovno se pomiču na vrh."
+
+msgid "Reverse a playlist"
+msgstr "Obrni playlistu"
+
+msgid "Reverting to unsorted order will discard unsaved changes. Continue?"
+msgstr "Vraćanjem na nesortirani redoslijed odbacuju se nespremljene izmjene. Nastaviti?"
+
+msgid "Right"
+msgstr "Desno"
+
+msgid "Romance"
+msgstr "Romantika"
+
+msgid "Round"
+msgstr "Kolo"
+
+msgid "Runtime"
+msgstr "Trajanje"
+
+msgid "Russian"
+msgstr "Ruski"
+
+msgid "SOME.PORN sorting by :"
+msgstr "SOME.PORN sortiranje po :"
+
+msgid "SONGS"
+msgstr "PJESME"
+
+msgid "SSL connect error."
+msgstr "Pogreška pri SSL povezivanju."
+
+msgid "SSL verification failure."
+msgstr "SSL provjera nije uspjela."
+
+msgid "STARTED"
+msgstr "POKRENUTO"
+
+msgid "STOPPED"
+msgstr "ZAUSTAVLJENO"
+
+msgid "Safe search (restricted mode):"
+msgstr "Sigurna pretraga (ograničeni način):"
+
+msgid "Save"
+msgstr "Spremi"
+
+msgid "Save changes?"
+msgstr "Spremiti izmjene?"
+
+#, python-format
+msgid "Save subtitles (%s)"
+msgstr "Spremi titlove (%s)"
+
+#, python-format
+msgid ""
+"Saved to:\n"
+"%s"
+msgstr ""
+"Spremljeno u:\n"
+"%s"
+
+msgid "Sci-Fi"
+msgstr "Znanstvena fantastika"
+
+msgid "Sci-Fi & Fantasy"
+msgstr "Znanstvena fantastika i fantazija"
+
+msgid "Science"
+msgstr "Znanost"
+
+msgid "Screensaver during audio playback"
+msgstr "Čuvar zaslona tijekom reprodukcije zvuka"
+
+msgid "Screensaver in E2iPlayer menus"
+msgstr "Čuvar zaslona u E2iPlayer izbornicima"
+
+#, python-format
+msgid ""
+"Script execution failed.\n"
+"Error code: %s\n"
+msgstr ""
+"Izvršavanje skripte nije uspjelo.\n"
+"Kod pogreške: %s\n"
+
+msgid "Script finished."
+msgstr "Skripta je završena."
+
+msgid "Search"
+msgstr "Pretraga"
+
+#, python-format
+msgid "Search \"%s\" was not finished"
+msgstr "Pretraga \"%s\" nije završena"
+
+msgid "Search History is empty."
+msgstr "Povijest pretrage je prazna."
+
+msgid "Search History successfully deleted."
+msgstr "Povijest pretrage uspješno je izbrisana."
+
+msgid "Search automatically"
+msgstr "Traži automatski"
+
+msgid "Search for an artist (exact name) or a Last.fm user"
+msgstr "Pretražite izvođača (točan naziv) ili Last.fm korisnika"
+
+msgid "Search history"
+msgstr "Povijest pretrage"
+
+msgid "Search history - options"
+msgstr "Povijest pretrage - opcije"
+
+msgid "Search history is not available for this host."
+msgstr "Povijest pretrage nije dostupna za ovaj host."
+
+msgid "Search history saved."
+msgstr "Povijest pretrage je spremljena."
+
+#, python-format
+msgid "Search history saved. %d duplicate entries removed."
+msgstr "Povijest pretrage je spremljena. Uklonjeno duplikata: %d."
+
+msgid "Search in all active hosts"
+msgstr "Pretraga u svim aktivnim hostovima"
+
+msgid "Search is not available right now."
+msgstr "Pretraga trenutno nije dostupna."
+
+msgid "Search next page"
+msgstr "Pretraga sljedeće stranice"
+
+msgid "Search results"
+msgstr "Rezultati pretrage"
+
+msgid "Search results region:"
+msgstr "Regija rezultata pretrage:"
+
+msgid "Search string must have at least 4 characters."
+msgstr "Pojam za pretragu mora imati najmanje 4 znaka."
+
+msgid "Search term :"
+msgstr "Pojam za pretragu :"
+
+msgid "Search text"
+msgstr "Tekst za pretragu"
+
+msgid "Search type"
+msgstr "Vrsta pretrage"
+
+msgid "Search: "
+msgstr "Pretraga: "
+
+#, python-format
+msgid "Search: %d of %d - now %s (%d found so far)"
+msgstr "Pretraga: %d od %d - sada %s (dosad pronađeno %d)"
+
+#, python-format
+msgid "Searching subtitles for \"%s\""
+msgstr "Pretraga titlova za \"%s\""
+
+msgid "Season"
+msgstr "Sezona"
+
+#, python-format
+msgid "Season %d"
+msgstr "Sezona %d"
+
+#, python-format
+msgid "Season %d (%d episodes)"
+msgstr "Sezona %d (epizoda: %d)"
+
+#, python-format
+msgid "Season %s"
+msgstr "Sezona %s"
+
+msgid "Season pack"
+msgstr "Paket sezone"
+
+msgid "Seasons"
+msgstr "Sezone"
+
+msgid "Seasons:"
+msgstr "Sezone:"
+
+#, python-format
+msgid "Seasons: %s"
+msgstr "Sezone: %s"
+
+msgid "Second movie player in buffering mode"
+msgstr "Drugi player u načinu međuspremanja"
+
+msgid "Second movie player without buffering mode"
+msgstr "Drugi player bez načina međuspremanja"
+
+msgid "Section"
+msgstr "Odjeljak"
+
+msgid "Sections"
+msgstr "Odjeljci"
+
+msgid "Select"
+msgstr "Odaberi"
+
+#, python-format
+msgid "Select %s"
+msgstr "Odaberite %s"
+
+msgid "Select action"
+msgstr "Odaberite radnju"
+
+msgid "Select all"
+msgstr "Odaberi sve"
+
+msgid "Select audio track"
+msgstr "Odaberite audiozapis"
+
+msgid "Select best available quality"
+msgstr "Odaberi najbolju dostupnu kvalitetu"
+
+msgid "Select directory"
+msgstr "Odaberite direktorij"
+
+msgid "Select favorite group"
+msgstr "Odaberite grupu favorita"
+
+msgid "Select group"
+msgstr "Odaberite grupu"
+
+msgid "Select hosts for this folder..."
+msgstr "Odaberi hostove za ovu mapu..."
+
+msgid "Select language"
+msgstr "Odaberite jezik"
+
+msgid "Select link"
+msgstr "Odaberite poveznicu"
+
+msgid "Select movie player"
+msgstr "Odaberite player"
+
+msgid "Select option"
+msgstr "Odaberite opciju"
+
+msgid "Select subtitles file"
+msgstr "Odaberite datoteku titlova"
+
+msgid "Select subtitles provider:"
+msgstr "Odaberite pružatelja titlova:"
+
+msgid "Select subtitles to download"
+msgstr "Odaberite titlove za preuzimanje"
+
+msgid "Select subtitles track"
+msgstr "Odaberite zapis titlova"
+
+msgid "Select the TorrServer binary"
+msgstr "Odaberite izvršnu datoteku TorrServer"
+
+msgid "Select the directory"
+msgstr "Odaberite direktorij"
+
+msgid "Select the file"
+msgstr "Odaberite datoteku"
+
+msgid "Select video option"
+msgstr "Odaberite opciju videa"
+
+msgid "Selection"
+msgstr "Odabir"
+
+msgid "Self-test"
+msgstr "Samotest"
+
+msgid "Self-test report :"
+msgstr "Izvješće samotesta :"
+
+msgid "Send"
+msgstr "Pošalji"
+
+msgid "Send data to enc-dec.app on every link resolve?"
+msgstr "Slati podatke servisu enc-dec.app pri svakom razrješavanju poveznice?"
+
+msgid "Sending the result to the box failed."
+msgstr "Slanje rezultata na prijamnik nije uspjelo."
+
+msgid "Series"
+msgstr "Serije"
+
+msgid "Series - latest episodes"
+msgstr "Serije - najnovije epizode"
+
+msgid "Series - seasons"
+msgstr "Serije - sezone"
+
+msgid "Series A-Z"
+msgstr "Serije A-Z"
+
+msgid "Series by genre"
+msgstr "Serije po žanru"
+
+msgid "Series by year"
+msgstr "Serije po godini"
+
+msgid "Series genres"
+msgstr "Žanrovi serija"
+
+msgid "Server"
+msgstr "Poslužitelj"
+
+msgid "Server issued an error response (HTTP 4xx/5xx)."
+msgstr "Poslužitelj je vratio odgovor s pogreškom (HTTP 4xx/5xx)."
+
+msgid "Server issued an error response."
+msgstr "Poslužitelj je vratio odgovor s pogreškom."
+
+msgid "Server return 404 - Not Found."
+msgstr "Poslužitelj je vratio 404 - Nije pronađeno."
+
+msgid "Server returned nothing."
+msgstr "Poslužitelj nije vratio ništa."
+
+#, python-format
+msgid "Server time: %s"
+msgstr "Vrijeme poslužitelja: %s"
+
+#, python-format
+msgid "Server, user name and password in the host configuration. The server field also takes a get.php link. More accounts: %s with one get.php link per line (X-Streamity format)."
+msgstr "Poslužitelj, korisničko ime i lozinka u konfiguraciji hosta. Polje za poslužitelj prihvaća i get.php poveznicu. Više računa: %s s jednom get.php poveznicom po retku (X-Streamity format)."
+
+#, python-format
+msgid ""
+"Service %s requires registration. \n"
+"Please fill your login and password in the %s configuration."
+msgstr ""
+"Servis %s zahtijeva registraciju. \n"
+"Unesite korisničko ime i lozinku u konfiguraciji %s."
+
+msgid "Service icon size"
+msgstr "Veličina ikone servisa"
+
+msgid "Services configuration"
+msgstr "Konfiguracija servisa"
+
+msgid "Services management"
+msgstr "Upravljanje servisima"
+
+msgid "Set active movie player"
+msgstr "Postavi aktivni player"
+
+msgid "Set file name"
+msgstr "Postavi naziv datoteke"
+
+msgid "Set own configuration pin code"
+msgstr "Postavi vlastiti PIN za konfiguraciju"
+
+msgid "Set own pin"
+msgstr "Postavi vlastiti PIN"
+
+msgid "Set pin code"
+msgstr "Postavi PIN"
+
+msgid "Set watched"
+msgstr "Označi kao pogledano"
+
+msgid "Settings"
+msgstr "Postavke"
+
+#, python-format
+msgid "Settings of service [%s] cannot be opened."
+msgstr "Postavke servisa [%s] ne mogu se otvoriti."
+
+msgid "Settings screen layout"
+msgstr "Raspored zaslona postavki"
+
+msgid "Shift"
+msgstr "Shift"
+
+msgid "Short Movies"
+msgstr "Kratki filmovi"
+
+msgid "Short films"
+msgstr "Kratki filmovi"
+
+msgid "Short name"
+msgstr "Kratko ime"
+
+msgid "Short series"
+msgstr "Kratke serije"
+
+msgid "Shorts"
+msgstr "Shorts"
+
+msgid "Shoulder & Elbow"
+msgstr "Rame i lakat"
+
+msgid "Show"
+msgstr "Show"
+
+msgid "Show \"Newest videos\" of all YouTube channels in a group"
+msgstr "Prikaži \"Najnoviji videozapisi\" svih YouTube kanala u grupi"
+
+msgid "Show & Comedy"
+msgstr "Show i komedija"
+
+msgid "Show E2iPlayer settings in system menu"
+msgstr "Prikaži E2iPlayer postavke u izborniku sustava"
+
+msgid "Show IPTVPlayer in extension list (blue button)"
+msgstr "Prikaži IPTVPlayer na popisu proširenja (plava tipka)"
+
+msgid "Show IPTVPlayer in main menu"
+msgstr "Prikaži IPTVPlayer u glavnom izborniku"
+
+msgid "Show IPTVPlayer in plugin browser"
+msgstr "Prikaži IPTVPlayer u pregledniku dodataka"
+
+msgid "Show Profiles in ZBIORNIK MINI :"
+msgstr "Prikaži profile u ZBIORNIK MINI :"
+
+msgid "Show Youtube Api Key warnings"
+msgstr "Prikaži upozorenja za YouTube API ključ"
+
+msgid "Show adult content"
+msgstr "Prikaži sadržaj za odrasle"
+
+msgid "Show all channels"
+msgstr "Prikaži sve kanale"
+
+msgid "Show clock in header"
+msgstr "Prikaži sat u zaglavlju"
+
+msgid "Show download manager after adding new item"
+msgstr "Prikaži upravitelj preuzimanja nakon dodavanja nove stavke"
+
+msgid "Show download notification"
+msgstr "Prikaži obavijest o preuzimanju"
+
+msgid "Show file size"
+msgstr "Prikaži veličinu datoteke"
+
+msgid "Show flags"
+msgstr "Prikaži zastave"
+
+msgid "Show global search :"
+msgstr "Prikaži globalnu pretragu :"
+
+msgid "Show hiddens catalogs"
+msgstr "Prikaži skrivene kataloge"
+
+msgid "Show hiddens files"
+msgstr "Prikaži skrivene datoteke"
+
+msgid "Show iframe during audio playback"
+msgstr "Prikaži iframe tijekom reprodukcije zvuka"
+
+msgid "Show only audio in selected language:"
+msgstr "Prikaži samo zvuk na odabranom jeziku:"
+
+msgid "Show only best quality of streams:"
+msgstr "Prikaži samo streamove najbolje kvalitete:"
+
+msgid "Show playlist"
+msgstr "Prikaži playlistu"
+
+msgid "Show results"
+msgstr "Prikaži rezultate"
+
+msgid "Show results so far"
+msgstr "Prikaži dosadašnje rezultate"
+
+msgid "Show search history"
+msgstr "Prikaži povijest pretrage"
+
+msgid "Show suggestions"
+msgstr "Prikaži prijedloge"
+
+msgid "ShowBox streams need a FebBox login: enter the \"ui\" cookie of your FebBox account in the host configuration."
+msgstr "ShowBox streamovi zahtijevaju FebBox prijavu: unesite \"ui\" kolačić svojeg FebBox računa u konfiguraciji hosta."
+
+msgid "Shows"
+msgstr "Showovi"
+
+msgid "Shows A-Z"
+msgstr "Showovi A-Z"
+
+msgid "Shows and concerts"
+msgstr "Showovi i koncerti"
+
+msgid "Shows with new episodes"
+msgstr "Showovi s novim epizodama"
+
+msgid "Sign-in was not completed."
+msgstr "Prijava nije dovršena."
+
+msgid "Signed in to YouTube."
+msgstr "Prijavljeni ste na YouTube."
+
+msgid "Signed out of YouTube."
+msgstr "Odjavljeni ste s YouTubea."
+
+msgid "Similar artists"
+msgstr "Slični izvođači"
+
+msgid "Similar artists mix"
+msgstr "Miks sličnih izvođača"
+
+msgid "Simple list"
+msgstr "Jednostavan popis"
+
+msgid "Simple subtitles downloader"
+msgstr "Jednostavan alat za preuzimanje titlova"
+
+msgid "Simplify the title and try again."
+msgstr "Pojednostavite naslov i pokušajte ponovno."
+
+msgid "Site self-test"
+msgstr "Samotest stranica"
+
+msgid "Site self-test in the main menu :"
+msgstr "Samotest stranica u glavnom izborniku :"
+
+#, python-format
+msgid "Site self-test: %d of %d - now %s (%d failed so far)"
+msgstr "Samotest stranica: %d od %d - sada %s (dosad neuspješno %d)"
+
+msgid "Size:"
+msgstr "Veličina:"
+
+msgid "Skin"
+msgstr "Skin"
+
+msgid "Skinners:"
+msgstr "Autori skinova:"
+
+msgid "Skip video shorter than [min]"
+msgstr "Preskoči video kraći od [min]"
+
+msgid "Snooker"
+msgstr "Snooker"
+
+msgid "Society"
+msgstr "Društvo"
+
+msgid "Software decoding as"
+msgstr "Softversko dekodiranje kao"
+
+msgid "Solve Cloudflare, hCaptcha and reCAPTCHA with MyE2i"
+msgstr "Rješavajte Cloudflare, hCaptcha i reCAPTCHA pomoću MyE2i"
+
+msgid "Solve Google reCAPTCHA v2 with My JDownloader"
+msgstr "Rješavajte Google reCAPTCHA v2 pomoću My JDownloader"
+
+msgid "Solver"
+msgstr "Rješavač"
+
+msgid "Some changes will be applied only after movie player restart."
+msgstr "Neke izmjene primijenit će se tek nakon ponovnog pokretanja playera."
+
+msgid "Some settings will be applied only after GUI restart."
+msgstr "Neke postavke primijenit će se tek nakon ponovnog pokretanja GUI-ja."
+
+msgid "Sort A-Z"
+msgstr "Sortiraj A-Z"
+
+msgid "Sort Myfreecams :"
+msgstr "Sortiranje Myfreecams :"
+
+msgid "Sort Z-A"
+msgstr "Sortiraj Z-A"
+
+msgid "Sort alphabetically"
+msgstr "Sortiraj abecedno"
+
+msgid "Sort by name"
+msgstr "Sortiraj po nazivu"
+
+msgid "Sort by:"
+msgstr "Sortiraj po:"
+
+msgid "Sort the links now? The order of the lines in the file will change."
+msgstr "Sortirati poveznice sada? Redoslijed redaka u datoteci promijenit će se."
+
+msgid "Sort the list:"
+msgstr "Sortiranje popisa:"
+
+msgid "Sort xxxlist :"
+msgstr "Sortiranje xxxlist :"
+
+msgid "Sorted channels A-Z [live]"
+msgstr "Kanali sortirani A-Z [uživo]"
+
+msgid "Sorted most viewed channels general [live]"
+msgstr "Kanali sortirani po ukupnoj gledanosti [uživo]"
+
+msgid "Sorted most viewed channels now [live]"
+msgstr "Kanali sortirani po trenutnoj gledanosti [uživo]"
+
+msgid "Source:"
+msgstr "Izvor:"
+
+msgid "Spanish"
+msgstr "Španjolski"
+
+msgid "Specials"
+msgstr "Specijali"
+
+msgid "Spine"
+msgstr "Kralježnica"
+
+msgid "Spoken subtitles"
+msgstr "Izgovoreni titlovi"
+
+msgid "Sport"
+msgstr "Sport"
+
+msgid "Spring"
+msgstr "Proljeće"
+
+msgid "Squad"
+msgstr "Sastav"
+
+msgid "Stadium:"
+msgstr "Stadion:"
+
+msgid "Standard"
+msgstr "Standardno"
+
+msgid "Stars:"
+msgstr "Zvijezde:"
+
+msgid "Start"
+msgstr "Pokreni"
+
+msgid "Start download manager per default"
+msgstr "Zadano pokreni upravitelj preuzimanja"
+
+msgid "Station:"
+msgstr "Postaja:"
+
+msgid "Status"
+msgstr "Status"
+
+msgid "Status:"
+msgstr "Status:"
+
+#, python-format
+msgid "Status: %s"
+msgstr "Status: %s"
+
+msgid "Stereo downmix mode for software decoder"
+msgstr "Način stereo downmixa za softverski dekoder"
+
+msgid "Stop"
+msgstr "Zaustavi"
+
+msgid "Stop TorrServer when E2iPlayer is closed"
+msgstr "Zaustavi TorrServer kada se E2iPlayer zatvori"
+
+msgid "Stop downloading"
+msgstr "Zaustavi preuzimanje"
+
+msgid "Stop playback with buffer save"
+msgstr "Zaustavi reprodukciju uz spremanje međuspremnika"
+
+msgid "Stop playing?"
+msgstr "Zaustaviti reprodukciju?"
+
+msgid "Storage"
+msgstr "Pohrana"
+
+msgid "Story"
+msgstr "Radnja"
+
+#, python-format
+msgid "Stream formats: %s"
+msgstr "Formati streama: %s"
+
+msgid "Stream link"
+msgstr "Poveznica streama"
+
+msgid "Streamed"
+msgstr "Streamano"
+
+msgid "Streaming platforms"
+msgstr "Platforme za streaming"
+
+msgid "Studios"
+msgstr "Studiji"
+
+msgid "Study Plan"
+msgstr "Plan učenja"
+
+msgid "Subbed anime"
+msgstr "Anime s titlovima"
+
+msgid "Subscribers"
+msgstr "Pretplatnici"
+
+msgid "Subspecialities"
+msgstr "Supspecijalnosti"
+
+msgid "Subtitle background"
+msgstr "Pozadina titlova"
+
+msgid "Subtitle border color"
+msgstr "Boja ruba titlova"
+
+msgid "Subtitle border enabled"
+msgstr "Rub titlova uključen"
+
+msgid "Subtitle border width"
+msgstr "Širina ruba titlova"
+
+msgid "Subtitle box height"
+msgstr "Visina okvira titlova"
+
+msgid "Subtitle box position"
+msgstr "Položaj okvira titlova"
+
+msgid "Subtitle font"
+msgstr "Font titlova"
+
+msgid "Subtitle font color"
+msgstr "Boja fonta titlova"
+
+msgid "Subtitle font size"
+msgstr "Veličina fonta titlova"
+
+msgid "Subtitle languages"
+msgstr "Jezici titlova"
+
+msgid "Subtitle line height"
+msgstr "Visina retka titlova"
+
+msgid "Subtitle line wrapping"
+msgstr "Prelamanje redaka titlova"
+
+msgid "Subtitle shadow X offset"
+msgstr "X pomak sjene titlova"
+
+msgid "Subtitle shadow Y offset"
+msgstr "Y pomak sjene titlova"
+
+msgid "Subtitle shadow color"
+msgstr "Boja sjene titlova"
+
+msgid "Subtitle shadow enabled"
+msgstr "Sjena titlova uključena"
+
+msgid "Subtitle vertical alignment"
+msgstr "Okomito poravnanje titlova"
+
+msgid "Subtitles"
+msgstr "Titlovi"
+
+#, python-format
+msgid "Subtitles \"%s\" downloaded correctly."
+msgstr "Titlovi \"%s\" uspješno su preuzeti."
+
+msgid "Subtitles by Islam El-Gizawy"
+msgstr "Titlovi: Islam El-Gizawy"
+
+msgid "Subtitles conversion to UTF-8 failed."
+msgstr "Pretvorba titlova u UTF-8 nije uspjela."
+
+#, python-format
+msgid "Subtitles downloaded successfully. [%s], conversion to UTF-8."
+msgstr "Titlovi su uspješno preuzeti. [%s], pretvorba u UTF-8."
+
+#, python-format
+msgid "Subtitles for: %s"
+msgstr "Titlovi za: %s"
+
+#, python-format
+msgid ""
+"Subtitles saved:\n"
+"%s"
+msgstr ""
+"Titlovi spremljeni:\n"
+"%s"
+
+msgid "Subtitles:"
+msgstr "Titlovi:"
+
+#, python-format
+msgid "Subtitles: %s"
+msgstr "Titlovi: %s"
+
+msgid "Summer"
+msgstr "Ljeto"
+
+msgid "Support forum (opena.tv)"
+msgstr "Forum podrške (opena.tv)"
+
+msgid "Support package"
+msgstr "Paket za podršku"
+
+msgid "Surahs"
+msgstr "Sure"
+
+msgid "Surgical Approaches"
+msgstr "Kirurški pristupi"
+
+msgid "Surgical Cases"
+msgstr "Kirurški slučajevi"
+
+msgid "Surgical Complications"
+msgstr "Kirurške komplikacije"
+
+msgid "Surgical Techniques"
+msgstr "Kirurške tehnike"
+
+msgid "Sweden"
+msgstr "Švedska"
+
+msgid "Swedish"
+msgstr "Švedski"
+
+msgid "Switch on torrent playback?"
+msgstr "Uključiti reprodukciju torrenta?"
+
+msgid "Synchronize"
+msgstr "Sinkroniziraj"
+
+msgid "System"
+msgstr "Sustav"
+
+msgid "System language"
+msgstr "Jezik sustava"
+
+msgid "T9 letter jump in lists"
+msgstr "T9 skok po slovima u popisima"
+
+msgid ""
+"TBN GO needs a free account to play programmes.\n"
+"Register on https://tbngo.pl/ and enter the e-mail and password in the host settings."
+msgstr ""
+"TBN GO zahtijeva besplatan račun za reprodukciju emisija.\n"
+"Registrirajte se na https://tbngo.pl/ i unesite e-poštu i lozinku u postavkama hosta."
+
+msgid "THE PAGE YOU ARE LOOKING FOR IS NOT FOUND."
+msgstr "STRANICA KOJU TRAŽITE NIJE PRONAĐENA."
+
+msgid ""
+"THIS IS A PREMIUM VIDEO.\n"
+"LOGIN OR PREMIUM REQUIRED."
+msgstr ""
+"OVO JE PREMIUM VIDEO.\n"
+"POTREBNA JE PRIJAVA ILI PREMIUM."
+
+msgid "THIS IS A PRIVATE VIDEO."
+msgstr "OVO JE PRIVATNI VIDEO."
+
+msgid ""
+"THIS LINK CONTAINS PHOTOS ONLY.\n"
+" PLEASE CHOOSE ANOTHER ONE!"
+msgstr ""
+"OVA POVEZNICA SADRŽI SAMO FOTOGRAFIJE.\n"
+" ODABERITE DRUGU!"
+
+msgid ""
+"THIS VIDEO HAS BEEN REMOVED DUE TO COPYRIGHT INFRINGEMENT.\n"
+" PLEASE CHOOSE ANOTHER ONE!"
+msgstr ""
+"OVAJ VIDEO UKLONJEN JE ZBOG KRŠENJA AUTORSKIH PRAVA.\n"
+" ODABERITE DRUGI!"
+
+msgid ""
+"THIS VIDEO IS JUST A PREVIEW ON EXTERNAL STORAGE.\n"
+"VIEWING IT HERE IS NOT SUPPORTED."
+msgstr ""
+"OVAJ VIDEO SAMO JE PREGLED NA VANJSKOJ POHRANI.\n"
+"GLEDANJE OVDJE NIJE PODRŽANO."
+
+msgid ""
+"THIS VIDEO IS UNAVAILABLE.\n"
+"TRY AGAIN LATER!"
+msgstr ""
+"OVAJ VIDEO NIJE DOSTUPAN.\n"
+"POKUŠAJTE PONOVNO KASNIJE!"
+
+msgid "TMDb API key (free at themoviedb.org)"
+msgstr "TMDb API ključ (besplatno na themoviedb.org)"
+
+msgid "TMDb Rating:"
+msgstr "TMDb ocjena:"
+
+msgid "TODAY"
+msgstr "DANAS"
+
+msgid "TOMORROW"
+msgstr "SUTRA"
+
+msgid "TV Series"
+msgstr "TV serije"
+
+msgid "TV Show"
+msgstr "TV show"
+
+msgid "TV Shows"
+msgstr "TV showovi"
+
+msgid "TV channels"
+msgstr "TV kanali"
+
+msgid "TV series"
+msgstr "TV serije"
+
+msgid "Tadabor"
+msgstr "Tadabor"
+
+msgid "Tafsir (Arabic)"
+msgstr "Tefsir (arapski)"
+
+msgid "Tags"
+msgstr "Oznake"
+
+msgid "Taiwanese"
+msgstr "Tajvanski"
+
+msgid "Talk shows"
+msgstr "Talk showovi"
+
+#, python-format
+msgid "Tariff: %s"
+msgstr "Tarifa: %s"
+
+msgid "Teams"
+msgstr "Timovi"
+
+msgid "Techniques"
+msgstr "Tehnike"
+
+msgid "Technology"
+msgstr "Tehnologija"
+
+msgid "Temp"
+msgstr "Temp"
+
+msgid "Tennis"
+msgstr "Tenis"
+
+msgid "Test the failed sites again"
+msgstr "Ponovno testiraj neuspjele stranice"
+
+msgid "Testers:"
+msgstr "Testeri:"
+
+msgid "Text field alignment"
+msgstr "Poravnanje tekstnih polja"
+
+msgid "Text files ytlist and urllist are in:"
+msgstr "Tekstne datoteke ytlist i urllist nalaze se u:"
+
+msgid "Thai"
+msgstr "Tajlandski"
+
+#, python-format
+msgid "The %s utility is necessary here but it was not detected."
+msgstr "Alat %s ovdje je neophodan, ali nije pronađen."
+
+msgid "The 100 tags with the most videos"
+msgstr "100 oznaka s najviše videozapisa"
+
+msgid "The OpenSubtitles v3 server did not answer. Please try again later."
+msgstr "OpenSubtitles v3 poslužitelj nije odgovorio. Pokušajte ponovno kasnije."
+
+msgid "The OpenSubtitles.com server did not answer. Please try again later."
+msgstr "OpenSubtitles.com poslužitelj nije odgovorio. Pokušajte ponovno kasnije."
+
+msgid "The QR code leads to the wiki page with pictures and the extension download."
+msgstr "QR kod vodi na wiki stranicu sa slikama i preuzimanjem proširenja."
+
+msgid "The Stalker portal of this entry is not configured (any more)."
+msgstr "Stalker portal ove stavke nije (više) konfiguriran."
+
+msgid "The Watchlist is empty. MENU key on a video: \"Add to Watchlist\"."
+msgstr "Popis za gledanje je prazan. Tipka MENU na videozapisu: \"Dodaj na popis za gledanje\"."
+
+msgid "The Xtream account of this entry is not configured (any more)."
+msgstr "Xtream račun ove stavke nije (više) konfiguriran."
+
+msgid "The YouTube channels of this group have no videos."
+msgstr "YouTube kanali ove grupe nemaju videozapisa."
+
+msgid "The YouTube video ID is invalid."
+msgstr "YouTube ID videozapisa nije valjan."
+
+msgid "The account is banned."
+msgstr "Račun je blokiran."
+
+msgid "The balance of the account is too low."
+msgstr "Stanje na računu je prenisko."
+
+msgid "The best short films on the internet, handpicked by Vimeo staff"
+msgstr "Najbolji kratki filmovi na internetu, koje je ručno odabrao Vimeo tim"
+
+msgid "The channel already exists in User Links."
+msgstr "Kanal već postoji u korisničkim poveznicama."
+
+msgid "The color of the current version"
+msgstr "Boja trenutne verzije"
+
+msgid "The color of the downloaded item"
+msgstr "Boja preuzete stavke"
+
+msgid "The color of the favourite item"
+msgstr "Boja stavke iz favorita"
+
+msgid "The color of the started item"
+msgstr "Boja započete stavke"
+
+msgid "The color of the viewed item"
+msgstr "Boja pogledane stavke"
+
+msgid "The connection limit for your weeb.tv account has been reached."
+msgstr "Dosegnuto je ograničenje veza za vaš weeb.tv račun."
+
+msgid "The daily download limit is reached."
+msgstr "Dosegnuto je dnevno ograničenje preuzimanja."
+
+msgid "The data is too large."
+msgstr "Podaci su preveliki."
+
+#, python-format
+msgid ""
+"The debug log file is empty:\n"
+"%s"
+msgstr ""
+"Datoteka debug zapisnika je prazna:\n"
+"%s"
+
+msgid ""
+"The debug log is disabled or set to console output.\n"
+"\n"
+"Enable it in the E2iPlayer configuration (Debug -> log to file) and reproduce the problem, then come back here."
+msgstr ""
+"Debug zapisnik je isključen ili postavljen na izlaz u konzolu.\n"
+"\n"
+"Uključite ga u E2iPlayer konfiguraciji (Debug -> zapis u datoteku) i ponovite problem, a zatim se vratite ovamo."
+
+msgid "The debug log is not active."
+msgstr "Debug zapisnik nije aktivan."
+
+msgid "The download is not ready yet. Please try again in a few seconds."
+msgstr "Preuzimanje još nije spremno. Pokušajte ponovno za nekoliko sekundi."
+
+#, python-format
+msgid "The download is ready in %d seconds. Please try again then."
+msgstr "Preuzimanje će biti spremno za %d sekundi. Tada pokušajte ponovno."
+
+msgid "The download manager is stopped, start it on the download page."
+msgstr "Upravitelj preuzimanja je zaustavljen, pokrenite ga na stranici preuzimanja."
+
+msgid "The element already exists in User Links."
+msgstr "Element već postoji u korisničkim poveznicama."
+
+msgid "The feed of these channels could not be read - press OK to try again."
+msgstr "Feed ovih kanala nije se mogao pročitati - pritisnite OK za ponovni pokušaj."
+
+msgid "The helper process ended unexpectedly."
+msgstr "Pomoćni proces neočekivano je završio."
+
+#, python-format
+msgid "The helper script %s is missing."
+msgstr "Nedostaje pomoćna skripta %s."
+
+#, python-format
+msgid "The host \"%s\" cannot be used from the web interface (disabled, unknown or protected by PIN)."
+msgstr "Host \"%s\" ne može se koristiti iz web-sučelja (isključen, nepoznat ili zaštićen PIN-om)."
+
+#, python-format
+msgid ""
+"The host %s requires registration. \n"
+"Please fill your login and password in the host configuration. Available under blue button."
+msgstr ""
+"Host %s zahtijeva registraciju. \n"
+"Unesite korisničko ime i lozinku u konfiguraciji hosta. Dostupno preko plave tipke."
+
+msgid "The host asks for a captcha. It can only be solved on the receiver (or with MyE2i there)."
+msgstr "Host traži captchu. Može se riješiti samo na prijamniku (ili tamo pomoću MyE2i)."
+
+msgid "The host did not return a list."
+msgstr "Host nije vratio popis."
+
+#, python-format
+msgid "The host wanted to open a window on the TV (%s) - that only works on the receiver."
+msgstr "Host je htio otvoriti prozor na televizoru (%s) - to radi samo na prijamniku."
+
+msgid "The hoster sends an advert redirect instead of the video at the moment. Try another hoster."
+msgstr "Hoster trenutno umjesto videozapisa šalje preusmjeravanje na reklamu. Pokušajte drugi hoster."
+
+msgid "The latest uploads of all YouTube channels in this group, newest first."
+msgstr "Najnoviji prijenosi svih YouTube kanala u ovoj grupi, najnoviji prvi."
+
+msgid "The link could not be resolved."
+msgstr "Poveznica se nije mogla razriješiti."
+
+msgid "The link has expired. Please open the video again."
+msgstr "Poveznica je istekla. Ponovno otvorite videozapis."
+
+msgid "The list has changed, please try again."
+msgstr "Popis se promijenio, pokušajte ponovno."
+
+msgid "The live stream is not available at the moment."
+msgstr "Prijenos uživo trenutno nije dostupan."
+
+msgid "The model is offline or in a private show."
+msgstr "Model je izvan mreže ili u privatnom showu."
+
+msgid "The number of items in the search history"
+msgstr "Broj stavki u povijesti pretrage"
+
+#, python-format
+msgid "The page layout of %s has changed."
+msgstr "Raspored stranice %s se promijenio."
+
+#, python-format
+msgid ""
+"The playback buffer has been moved to the download manager.\n"
+"It will be saved in the file:\n"
+"\"%s\""
+msgstr ""
+"Međuspremnik reprodukcije premješten je u upravitelj preuzimanja.\n"
+"Bit će spremljen u datoteku:\n"
+"\"%s\""
+
+msgid "The portal did not hand out a link for this entry."
+msgstr "Portal nije dao poveznicu za ovu stavku."
+
+msgid "The recordings of this page were on the site's old media server, which is offline."
+msgstr "Snimke ove stranice nalazile su se na starom medijskom poslužitelju stranice, koji je izvan mreže."
+
+msgid "The request has no valid length."
+msgstr "Zahtjev nema valjanu duljinu."
+
+msgid ""
+"The resolvers 'VidCore', 'VidUp' and 'VidFast' cannot decrypt their links on the receiver.\n"
+"\n"
+"With this option ON, every time you open one of them E2iPlayer sends the site's encrypted stream token - which contains the TMDb id of the movie or episode you are opening - to the third-party web service enc-dec.app (operated by a private individual). That server then sees the id and your IP address on each play. Nothing else is transmitted, and it is only used for these three resolvers.\n"
+"\n"
+"Leave this OFF if you do not want that. The other resolvers (VidEasy, VidLink, Peachify, vidrock, VidNest, ...) decrypt their links on the receiver and are not affected."
+msgstr ""
+"Resolveri 'VidCore', 'VidUp' i 'VidFast' ne mogu dešifrirati svoje poveznice na prijamniku.\n"
+"\n"
+"Kada je ova opcija UKLJUČENA, svaki put kada otvorite neki od njih, E2iPlayer šalje šifrirani token streama sa stranice - koji sadrži TMDb id filma ili epizode koju otvarate - vanjskom web-servisu enc-dec.app (kojim upravlja privatna osoba). Taj poslužitelj tada pri svakoj reprodukciji vidi id i vašu IP adresu. Ništa drugo se ne prenosi, a to se koristi samo za ova tri resolvera.\n"
+"\n"
+"Ostavite opciju ISKLJUČENOM ako to ne želite. Ostali resolveri (VidEasy, VidLink, Peachify, vidrock, VidNest, ...) dešifriraju svoje poveznice na prijamniku i nisu pogođeni."
+
+#, python-format
+msgid "The results of %d of %d sites are from the last search for \"%s\" - this asks all sites again"
+msgstr "Rezultati %d od %d stranica potječu iz zadnje pretrage za \"%s\" - ovime se sve stranice ponovno pretražuju"
+
+msgid "The same item already exists in this group."
+msgstr "Ista stavka već postoji u ovoj grupi."
+
+msgid "The server did not return a subtitle file (download limit reached?)."
+msgstr "Poslužitelj nije vratio datoteku titlova (dosegnuto ograničenje preuzimanja?)."
+
+msgid "The server did not send a subtitle file."
+msgstr "Poslužitelj nije poslao datoteku titlova."
+
+msgid "The server limits the number of requests. Please try again in a few seconds."
+msgstr "Poslužitelj ograničava broj zahtjeva. Pokušajte ponovno za nekoliko sekundi."
+
+msgid "The service is overloaded. Please try again later."
+msgstr "Servis je preopterećen. Pokušajte ponovno kasnije."
+
+msgid "The settings are protected by a PIN, change them on the receiver."
+msgstr "Postavke su zaštićene PIN-om, promijenite ih na prijamniku."
+
+#, python-format
+msgid "The site did not answer with data (HTTP %s). It may be down or have moved."
+msgstr "Stranica nije vratila podatke (HTTP %s). Možda ne radi ili je premještena."
+
+msgid "The site has no player for this video (it only shows a cam advert)."
+msgstr "Stranica nema player za ovaj videozapis (prikazuje samo cam reklamu)."
+
+msgid "The site refuses all qualities of this video at the moment (HTTP 403). Try again later."
+msgstr "Stranica trenutno odbija sve kvalitete ovog videozapisa (HTTP 403). Pokušajte ponovno kasnije."
+
+msgid "The site rejected the search request."
+msgstr "Stranica je odbila zahtjev za pretragu."
+
+msgid "The site's browser check (Cloudflare) could not be passed. The site may also be blocked in your country."
+msgstr "Provjera preglednika na stranici (Cloudflare) nije prošla. Stranica može biti i blokirana u vašoj zemlji."
+
+msgid "The site's browser check could not be passed."
+msgstr "Provjera preglednika na stranici nije se mogla proći."
+
+msgid "The site's catalogue could not be loaded."
+msgstr "Katalog stranice nije se mogao učitati."
+
+msgid "The support package holds the versions, the system information, the enabled hosts and the end of the debug log in one text file for a problem report. Look through it before posting it - the log can contain addresses of the sites you opened."
+msgstr "Paket za podršku sadrži verzije, informacije o sustavu, uključene hostove i kraj debug zapisnika u jednoj tekstnoj datoteci za prijavu problema. Pregledajte ga prije objavljivanja - zapisnik može sadržavati adrese stranica koje ste otvarali."
+
+msgid "The user link could not be deleted."
+msgstr "Korisnička poveznica nije se mogla izbrisati."
+
+msgid "The user link could not be updated."
+msgstr "Korisnička poveznica nije se mogla ažurirati."
+
+#, python-format
+msgid "The value must be between %d and %d."
+msgstr "Vrijednost mora biti između %d i %d."
+
+msgid "The video could not be resolved (it may be private, ended or not available in your country)."
+msgstr "Videozapis se nije mogao razriješiti (možda je privatan, završen ili nije dostupan u vašoj zemlji)."
+
+msgid "The video file of this title is not available on the server (HTTP 403)."
+msgstr "Video datoteka ovog naslova nije dostupna na poslužitelju (HTTP 403)."
+
+msgid "The video has been removed."
+msgstr "Videozapis je uklonjen."
+
+msgid "The video player of this site (hdvbua.pro) does not offer this title in your country (licence area, mainly Ukraine)."
+msgstr "Video player ove stranice (hdvbua.pro) ne nudi ovaj naslov u vašoj zemlji (licencno područje, uglavnom Ukrajina)."
+
+msgid "The website returned a server error for this request."
+msgstr "Web-stranica je vratila pogrešku poslužitelja za ovaj zahtjev."
+
+msgid "There are no other favorite groups"
+msgstr "Nema drugih grupa favorita"
+
+msgid "There are unsaved changes. Save now?"
+msgstr "Postoje nespremljene izmjene. Spremiti sada?"
+
+#, python-format
+msgid "There is no enough free space in the folder \"%s\"."
+msgstr "Nema dovoljno slobodnog prostora u mapi \"%s\"."
+
+#, python-format
+msgid "There is no free space on the drive [%s]."
+msgstr "Nema slobodnog prostora na disku [%s]."
+
+msgid "There is no hosts in this group."
+msgstr "U ovoj grupi nema hostova."
+
+msgid "There is no next item in this list."
+msgstr "Na ovom popisu nema sljedeće stavke."
+
+msgid "There is no previous item in this list."
+msgstr "Na ovom popisu nema prethodne stavke."
+
+#, python-format
+msgid ""
+"There is no storage device under \"%s\" (%s free). E2iPlayer will switch this folder back to \"%s\" at the next start.\n"
+"Please choose a folder on a mounted HDD or USB stick."
+msgstr ""
+"Pod \"%s\" nema uređaja za pohranu (%s slobodno). E2iPlayer će pri sljedećem pokretanju vratiti ovu mapu na \"%s\".\n"
+"Odaberite mapu na montiranom tvrdom disku ili USB sticku."
+
+#, python-format
+msgid "There is no storage device under \"%s\". TorrServer keeps its cache in RAM until a HDD or USB stick is mounted there."
+msgstr "Pod \"%s\" nema uređaja za pohranu. TorrServer drži svoju predmemoriju u RAM-u dok se ondje ne montira HDD ili USB stick."
+
+msgid "This article has no free video."
+msgstr "Ovaj članak nema besplatan videozapis."
+
+msgid "This channel does not exist."
+msgstr "Ovaj kanal ne postoji."
+
+msgid "This channel is currently offline."
+msgstr "Ovaj kanal trenutno je izvan mreže."
+
+msgid "This channel is not available in your country (geo-blocking)."
+msgstr "Ovaj kanal nije dostupan u vašoj zemlji (geoblokiranje)."
+
+msgid "This channel is temporarily unavailable. Please try again later."
+msgstr "Ovaj kanal privremeno je nedostupan. Pokušajte ponovno kasnije."
+
+msgid "This channel requires a premium account, or the free connection limit has been reached. Enter your weeb.tv login data in the host configuration."
+msgstr "Ovaj kanal zahtijeva premium račun ili je dosegnuto ograničenje besplatnih veza. Unesite podatke za prijavu na weeb.tv u konfiguraciji hosta."
+
+msgid "This content is not available in your region."
+msgstr "Ovaj sadržaj nije dostupan u vašoj regiji."
+
+msgid "This content is only available in Switzerland."
+msgstr "Ovaj sadržaj dostupan je samo u Švicarskoj."
+
+msgid "This content needs a login - not supported."
+msgstr "Ovaj sadržaj zahtijeva prijavu - nije podržano."
+
+msgid "This entry cannot be added to the favourites."
+msgstr "Ova se stavka ne može dodati u favorite."
+
+msgid "This entry cannot be opened."
+msgstr "Ova se stavka ne može otvoriti."
+
+msgid "This entry is only an advert, there is no video."
+msgstr "Ova je stavka samo reklama, nema videozapisa."
+
+msgid "This entry is protected by a PIN, open it on the receiver."
+msgstr "Ova je stavka zaštićena PIN-om, otvorite je na prijamniku."
+
+msgid "This episode is not available in this version (SUB/DUB) on this server. Try another one."
+msgstr "Ova epizoda nije dostupna u ovoj verziji (SUB/DUB) na ovom poslužitelju. Pokušajte drugi."
+
+msgid "This feed is empty, or the YouTube sign-in has expired - sign out and in again."
+msgstr "Ovaj feed je prazan ili je YouTube prijava istekla - odjavite se i ponovno prijavite."
+
+msgid "This folder is empty. MENU key on a video of the Watchlist: \"Move to Watchlist folder...\"."
+msgstr "Ova mapa je prazna. Tipka MENU na videozapisu s popisa za gledanje: \"Premjesti u mapu popisa za gledanje...\"."
+
+msgid "This folder is protected by a PIN, open it on the receiver."
+msgstr "Ova mapa zaštićena je PIN-om, otvorite je na prijamniku."
+
+msgid "This host has been added already to this group."
+msgstr "Ovaj host već je dodan u ovu grupu."
+
+msgid "This is only an advert for a paid clip (clips4sale), there is no free video."
+msgstr "Ovo je samo reklama za plaćeni klip (clips4sale), nema besplatnog videozapisa."
+
+msgid "This is paid content of PZPN+, it needs a purchase on the website."
+msgstr "Ovo je plaćeni sadržaj servisa PZPN+, potrebno ga je kupiti na web-stranici."
+
+msgid "This mix is only available with a Mixcloud Select subscription."
+msgstr "Ovaj miks dostupan je samo uz Mixcloud Select pretplatu."
+
+msgid "This model is offline."
+msgstr "Ovaj model je izvan mreže."
+
+msgid "This option cannot be changed from the web interface."
+msgstr "Ova se opcija ne može promijeniti iz web-sučelja."
+
+msgid "This page has no video (blog article)."
+msgstr "Ova stranica nema videozapis (članak na blogu)."
+
+msgid "This player is not available any more - reload the links."
+msgstr "Ovaj player više nije dostupan - ponovno učitajte poveznice."
+
+msgid "This room is currently offline or unavailable."
+msgstr "Ova soba trenutno je izvan mreže ili nedostupna."
+
+msgid "This room is offline. Try again later!"
+msgstr "Ova soba je izvan mreže. Pokušajte ponovno kasnije!"
+
+msgid "This section is no longer on the main page."
+msgstr "Ovaj odjeljak više nije na glavnoj stranici."
+
+msgid "This session has no code - scan the QR code on the receiver screen."
+msgstr "Ova sesija nema kod - skenirajte QR kod na zaslonu prijamnika."
+
+msgid "This show is private. Try again later!"
+msgstr "Ovaj show je privatan. Pokušajte ponovno kasnije!"
+
+msgid "This source is offline at the moment. Try another source of the channel."
+msgstr "Ovaj izvor trenutno je izvan mreže. Pokušajte drugi izvor kanala."
+
+msgid "This stream can only be played with buffering - please start it on the receiver."
+msgstr "Ovaj stream može se reproducirati samo uz međuspremanje - pokrenite ga na prijamniku."
+
+msgid "This subtitle provider has subtitles for movies only."
+msgstr "Ovaj pružatelj titlova ima titlove samo za filmove."
+
+msgid "This video has been deleted."
+msgstr "Ovaj videozapis je izbrisan."
+
+msgid "This video is Premium-only content."
+msgstr "Ovaj videozapis isključivo je premium sadržaj."
+
+msgid "This video is a private video."
+msgstr "Ovaj videozapis je privatni videozapis."
+
+msgid "This video is a private."
+msgstr "Ovaj videozapis je privatan."
+
+msgid "This video is only on hosters E2iPlayer cannot play."
+msgstr "Ovaj videozapis nalazi se samo na hosterima koje E2iPlayer ne može reproducirati."
+
+msgid "This video is only on the netu.tv player (pbtube.net), which E2iPlayer cannot play."
+msgstr "Ovaj videozapis nalazi se samo u netu.tv playeru (pbtube.net), koji E2iPlayer ne može reproducirati."
+
+msgid "This video needs a paid ororo.tv subscription."
+msgstr "Ovaj videozapis zahtijeva plaćenu ororo.tv pretplatu."
+
+msgid "This video requires you to sign in to a YouTube account."
+msgstr "Za ovaj videozapis morate se prijaviti na YouTube račun."
+
+msgid "This video was embedded from Pornhub and is no longer available there."
+msgstr "Ovaj videozapis ugrađen je s Pornhuba i ondje više nije dostupan."
+
+msgid "This video was embedded from xHamster and has been deleted there."
+msgstr "Ovaj videozapis ugrađen je s xHamstera i ondje je izbrisan."
+
+msgid "Thriller"
+msgstr "Triler"
+
+msgid "Thumbnails"
+msgstr "Sličice"
+
+msgid "Time"
+msgstr "Vrijeme"
+
+msgid "Tip! You can connect USB flash drive to fix this problem."
+msgstr "Savjet! Ovaj problem možete riješiti priključivanjem USB flash pogona."
+
+msgid "Titles"
+msgstr "Naslovi"
+
+#, python-format
+msgid "Titlovi.com login failed (HTTP %s)."
+msgstr "Prijava na Titlovi.com nije uspjela (HTTP %s)."
+
+#, python-format
+msgid "Titlovi.com login failed for user \"%s\". Please check your login and password."
+msgstr "Prijava na Titlovi.com nije uspjela za korisnika \"%s\". Provjerite korisničko ime i lozinku."
+
+msgid "Titlovi.com needs a free titlovi.com account. Enter login and password in the E2iPlayer settings."
+msgstr "Titlovi.com zahtijeva besplatan titlovi.com račun. Unesite korisničko ime i lozinku u postavkama E2iPlayera."
+
+#, python-format
+msgid "Titlovi.com search failed (HTTP %s)."
+msgstr "Pretraga na Titlovi.com nije uspjela (HTTP %s)."
+
+#, python-format
+msgid "Titlovi.com: API access is disabled for the account \"%s\". See titlovi.com/donacije."
+msgstr "Titlovi.com: API pristup onemogućen je za račun \"%s\". Pogledajte titlovi.com/donacije."
+
+msgid "Titlovi.com: invalid server response."
+msgstr "Titlovi.com: nevažeći odgovor poslužitelja."
+
+#, python-format
+msgid ""
+"To sign in to YouTube:\n"
+"\n"
+"1. On a phone or computer open:\n"
+"     %s\n"
+"\n"
+"2. Enter this code:\n"
+"\n"
+"     %s\n"
+"\n"
+"3. Approve the access, then select OK here."
+msgstr ""
+"Prijava na YouTube:\n"
+"\n"
+"1. Na telefonu ili računalu otvorite:\n"
+"     %s\n"
+"\n"
+"2. Unesite ovaj kod:\n"
+"\n"
+"     %s\n"
+"\n"
+"3. Odobrite pristup, a zatim ovdje odaberite OK."
+
+msgid ""
+"To watch videos from https://vk.com/ you need to login.\n"
+"Please fill your login and password in the IPTVPlayer configuration."
+msgstr ""
+"Za gledanje videozapisa s https://vk.com/ morate se prijaviti.\n"
+"Unesite korisničko ime i lozinku u konfiguraciji IPTVPlayera."
+
+msgid "Today"
+msgstr "Danas"
+
+msgid "Tomorrow"
+msgstr "Sutra"
+
+msgid "Too many redirects."
+msgstr "Previše preusmjeravanja."
+
+msgid "Too many requests. Please try again later."
+msgstr "Previše zahtjeva. Pokušajte ponovno kasnije."
+
+msgid "Too many wrong codes - scan the QR code on the receiver screen instead."
+msgstr "Previše pogrešnih kodova - umjesto toga skenirajte QR kod na zaslonu prijamnika."
+
+msgid "Top"
+msgstr "Top"
+
+msgid "Top 10"
+msgstr "Top 10"
+
+msgid "Top IMDb"
+msgstr "Top IMDb"
+
+msgid "Top airing"
+msgstr "Trenutno popularno"
+
+msgid "Top in your country"
+msgstr "Top u vašoj zemlji"
+
+msgid "Top leagues and clubs"
+msgstr "Top lige i klubovi"
+
+msgid "Top rated"
+msgstr "Najbolje ocijenjeno"
+
+msgid "Top rated movies"
+msgstr "Najbolje ocijenjeni filmovi"
+
+msgid "Top rated series"
+msgstr "Najbolje ocijenjene serije"
+
+msgid "Top scorers"
+msgstr "Najbolji strijelci"
+
+msgid "Top series"
+msgstr "Top serije"
+
+msgid "Top stations"
+msgstr "Top postaje"
+
+msgid "Top tracks"
+msgstr "Top pjesme"
+
+msgid "Top upcoming"
+msgstr "Uskoro popularno"
+
+msgid "Top-IMDB"
+msgstr "Top-IMDB"
+
+msgid "Topics"
+msgstr "Teme"
+
+msgid "TorrServer binary (OK = choose, empty = search automatically)"
+msgstr "Izvršna datoteka TorrServer (OK = odaberi, prazno = traži automatski)"
+
+#, python-format
+msgid "TorrServer could not be started (%s)."
+msgstr "TorrServer se nije mogao pokrenuti (%s)."
+
+msgid "TorrServer got no file list for this torrent (no peers or a dead link?)."
+msgstr "TorrServer nije dobio popis datoteka za ovaj torrent (nema korisnika ili je poveznica mrtva?)."
+
+msgid "TorrServer port"
+msgstr "TorrServer port"
+
+msgid "TorrServer was not found on the receiver. It is not part of E2iPlayer and not in the image feeds - install it yourself:"
+msgstr "TorrServer nije pronađen na prijamniku. Nije dio E2iPlayera niti se nalazi u feedovima imagea - instalirajte ga sami:"
+
+msgid "TorrServer web interface in the home network"
+msgstr "TorrServer web-sučelje u kućnoj mreži"
+
+msgid "Torrent"
+msgstr "Torrent"
+
+msgid ""
+"Torrent links are played with TorrServer.\n"
+"Switch on \"Play torrents with TorrServer\" in the E2iPlayer settings (Torrent configuration)."
+msgstr ""
+"Torrent poveznice reproduciraju se pomoću TorrServera.\n"
+"Uključite \"Reproduciraj torrente pomoću TorrServera\" u postavkama E2iPlayera (Konfiguracija torrenta)."
+
+msgid ""
+"Torrents are peer-to-peer: while a torrent plays, the receiver connects to other users and your IP address is visible to them. Depending on your country, downloading or sharing copyrighted content through torrents may be illegal - you alone are responsible for what you play. Upload to other peers stays off unless you switch it on.\n"
+"\n"
+"TorrServer itself is not part of E2iPlayer, it has to be installed separately."
+msgstr ""
+"Torrenti rade po načelu peer-to-peer: dok se torrent reproducira, prijamnik se povezuje s drugim korisnicima i vaša IP adresa im je vidljiva. Ovisno o vašoj zemlji, preuzimanje ili dijeljenje sadržaja zaštićenog autorskim pravima putem torrenata može biti nezakonito - samo ste vi odgovorni za ono što reproducirate. Slanje drugim korisnicima ostaje isključeno dok ga ne uključite.\n"
+"\n"
+"Sam TorrServer nije dio E2iPlayera i mora se instalirati zasebno."
+
+msgid "Total size:"
+msgstr "Ukupna veličina:"
+
+msgid "Tourism"
+msgstr "Turizam"
+
+msgid "Tournament"
+msgstr "Turnir"
+
+msgid "Tracklist"
+msgstr "Popis pjesama"
+
+msgid "Trailer"
+msgstr "Trailer"
+
+msgid "Trans"
+msgstr "Trans osobe"
+
+msgid "Translation:"
+msgstr "Prijevod:"
+
+#, python-format
+msgid "Translator: %s"
+msgstr "Prevoditelj: %s"
+
+msgid "Transparent"
+msgstr "Prozirno"
+
+msgid "Trauma"
+msgstr "Trauma"
+
+msgid "Travel"
+msgstr "Putovanja"
+
+msgid "Treatment Consult"
+msgstr "Savjetovanje o liječenju"
+
+msgid "Trending"
+msgstr "U trendu"
+
+msgid "Trending this week"
+msgstr "U trendu ovaj tjedan"
+
+msgid "Trial"
+msgstr "Probni pristup"
+
+msgid "Troubleshooting"
+msgstr "Rješavanje problema"
+
+msgid "Try to change extplayer or reinstall gst-ifdsrc"
+msgstr "Pokušajte promijeniti extplayer ili ponovno instalirati gst-ifdsrc"
+
+msgid "Turkish"
+msgstr "Turski"
+
+msgid "Turkish Movies"
+msgstr "Turski filmovi"
+
+msgid "Turkish Series"
+msgstr "Turske serije"
+
+msgid "Turkish TV series"
+msgstr "Turske TV serije"
+
+msgid "Turkish movies (dubbed)"
+msgstr "Turski filmovi (sinkronizirani)"
+
+msgid "Turkish series (dubbed)"
+msgstr "Turske serije (sinkronizirane)"
+
+msgid "Tutorials"
+msgstr "Upute"
+
+msgid "Type"
+msgstr "Vrsta"
+
+msgid "Type:"
+msgstr "Vrsta:"
+
+msgid "Type: "
+msgstr "Vrsta: "
+
+#, python-format
+msgid "Type: %s"
+msgstr "Vrsta: %s"
+
+msgid "Types"
+msgstr "Vrste"
+
+msgid "UNKNOWN"
+msgstr "NEPOZNATO"
+
+msgid "URL malformed."
+msgstr "Neispravan URL."
+
+msgid "Ukrainian"
+msgstr "Ukrajinski"
+
+msgid "Umount iso file"
+msgstr "Demontiraj iso datoteku"
+
+msgid "Unable to comply. Search History is empty."
+msgstr "Nije moguće izvršiti. Povijest pretrage je prazna."
+
+msgid "Undo reverse"
+msgstr "Poništi obrtanje"
+
+msgid "Undo shuffle"
+msgstr "Poništi miješanje"
+
+msgid "Unfix jump target"
+msgstr "Ukloni fiksiranje cilja skoka"
+
+msgid "Unknown action."
+msgstr "Nepoznata radnja."
+
+msgid "Unknown error code."
+msgstr "Nepoznat kod pogreške."
+
+msgid "Unknown error."
+msgstr "Nepoznata pogreška."
+
+#, python-format
+msgid "Unknown protocol [%s]"
+msgstr "Nepoznat protokol [%s]"
+
+msgid "Unknown server response."
+msgstr "Nepoznat odgovor poslužitelja."
+
+#, python-format
+msgid "Unknown subtitle parser for format \"%s\"."
+msgstr "Nepoznat parser titlova za format \"%s\"."
+
+#, python-format
+msgid "Unrar error code[%s]."
+msgstr "Unrar kod pogreške[%s]."
+
+msgid "Unselect all"
+msgstr "Poništi odabir svih"
+
+msgid "Unset watched"
+msgstr "Ukloni oznaku pogledano"
+
+msgid "Unsupported protocol."
+msgstr "Nepodržan protokol."
+
+#, python-format
+msgid "Unzip error code[%s]."
+msgstr "Unzip kod pogreške[%s]."
+
+msgid "Upbringing"
+msgstr "Odgoj"
+
+msgid "Upcoming"
+msgstr "Uskoro"
+
+msgid "Updates"
+msgstr "Ažuriranja"
+
+msgid "Upload date"
+msgstr "Datum prijenosa"
+
+msgid "Upload speed limit"
+msgstr "Ograničenje brzine slanja"
+
+#, python-format
+msgid "Uploader: %s"
+msgstr "Prenio: %s"
+
+msgid "Uploads"
+msgstr "Prijenosi"
+
+msgid "Urllists player"
+msgstr "Urllists player"
+
+msgid "Use Cinemeta (no key, English)"
+msgstr "Koristi Cinemeta (bez ključa, engleski)"
+
+msgid "Use HLS streams (adaptive):"
+msgstr "Koristi HLS streamove (adaptivno):"
+
+msgid "Use IMDb (no key)"
+msgstr "Koristi IMDb (bez ključa)"
+
+msgid "Use OMDb"
+msgstr "Koristi OMDb"
+
+msgid "Use TMDb"
+msgstr "Koristi TMDb"
+
+msgid "Use TVmaze for series (no key, English)"
+msgstr "Koristi TVmaze za serije (bez ključa, engleski)"
+
+msgid "Use default video quality"
+msgstr "Koristi zadanu kvalitetu videa"
+
+msgid "Use default video quality:"
+msgstr "Koristi zadanu kvalitetu videa:"
+
+msgid "Use login"
+msgstr "Koristi prijavu"
+
+msgid "Use own pin for configuration"
+msgstr "Koristi vlastiti PIN za konfiguraciju"
+
+msgid "Use own pin instead of the player pin"
+msgstr "Koristi vlastiti PIN umjesto PIN-a playera"
+
+msgid "Use proxy server:"
+msgstr "Koristi proxy poslužitelj:"
+
+#, python-format
+msgid "Use software decoder for the %s"
+msgstr "Koristi softverski dekoder za %s"
+
+msgid "Use subtitles parser extension if available"
+msgstr "Koristi proširenje parsera titlova ako je dostupno"
+
+msgid "Use the PyCurl for HTTP(S) requests"
+msgstr "Koristi PyCurl za HTTP(S) zahtjeve"
+
+msgid "Use the best quality :"
+msgstr "Koristi najbolju kvalitetu :"
+
+msgid "User"
+msgstr "Korisnik"
+
+msgid "User defined"
+msgstr "Korisnički definirano"
+
+msgid "User files"
+msgstr "Korisničke datoteke"
+
+msgid "User link added."
+msgstr "Korisnička poveznica je dodana."
+
+msgid "User link deleted."
+msgstr "Korisnička poveznica je izbrisana."
+
+msgid "User link updated."
+msgstr "Korisnička poveznica je ažurirana."
+
+msgid "User links"
+msgstr "Korisničke poveznice"
+
+msgid "User links sorted."
+msgstr "Korisničke poveznice su sortirane."
+
+msgid "User links stored in the ytlist.txt file."
+msgstr "Korisničke poveznice spremljene u datoteci ytlist.txt."
+
+msgid "User-Agent (leave empty for the default):"
+msgstr "User-Agent (ostavite prazno za zadani):"
+
+#, python-format
+msgid "User-Links: %d"
+msgstr "Korisničke poveznice: %d"
+
+msgid "Username/password authentication failure."
+msgstr "Neuspješna prijava korisničkim imenom/lozinkom."
+
+msgid "Username:"
+msgstr "Korisničko ime:"
+
+msgid "Users"
+msgstr "Korisnici"
+
+#, python-format
+msgid "Utility \"%s\" can not be found."
+msgstr "Alat \"%s\" nije pronađen."
+
+msgid "VAVOO did not hand out a session signature. Try again later."
+msgstr "VAVOO nije izdao potpis sesije. Pokušajte ponovno kasnije."
+
+msgid "Venue"
+msgstr "Mjesto održavanja"
+
+msgid "Verify"
+msgstr "Provjeri"
+
+msgid "Version"
+msgstr "Verzija"
+
+#, python-format
+msgid "Version: %s"
+msgstr "Verzija: %s"
+
+msgid "Video"
+msgstr "Video"
+
+msgid "Video buffer size [MB]"
+msgstr "Veličina video međuspremnika [MB]"
+
+msgid "Video library"
+msgstr "Videoteka"
+
+msgid "Video link not found."
+msgstr "Poveznica na video nije pronađena."
+
+msgid "Video mode"
+msgstr "Video način"
+
+msgid "Video options"
+msgstr "Video opcije"
+
+msgid "Video player OSD clock format"
+msgstr "Format sata u OSD-u video playera"
+
+msgid "Video policy"
+msgstr "Način prikaza videa"
+
+msgid "Video policy for 4:3"
+msgstr "Način prikaza videa za 4:3"
+
+msgid "Video recitations"
+msgstr "Video recitacije"
+
+msgid "Video with DRM protection."
+msgstr "Video s DRM zaštitom."
+
+msgid "Videos"
+msgstr "Videozapisi"
+
+#, python-format
+msgid "Videos %s"
+msgstr "Videozapisi %s"
+
+msgid "Videos you have liked."
+msgstr "Videozapisi koji su vam se svidjeli."
+
+msgid "Videos you have recently watched."
+msgstr "Videozapisi koje ste nedavno gledali."
+
+msgid "View count"
+msgstr "Broj pregleda"
+
+msgid "Views"
+msgstr "Pregledi"
+
+msgid "Views:"
+msgstr "Pregledi:"
+
+msgid "Vimeo does not offer this list to anonymous users in your region."
+msgstr "Vimeo ne nudi ovaj popis anonimnim korisnicima u vašoj regiji."
+
+msgid "Vimeo live event: the live transmission (while on air) and the past transmissions."
+msgstr "Vimeo događaj uživo: prijenos uživo (dok traje emitiranje) i prethodni prijenosi."
+
+msgid "Vimeo playlist with the recordings of this page."
+msgstr "Vimeo playlista sa snimkama ove stranice."
+
+msgid "Vimeo: this video is private, removed or may only be played on the site that embeds it."
+msgstr "Vimeo: ovaj videozapis je privatan, uklonjen ili se smije reproducirati samo na stranici koja ga ugrađuje."
+
+msgid "Virtual Keyboard"
+msgstr "Virtualna tipkovnica"
+
+msgid "Virtual Keyboard type"
+msgstr "Vrsta virtualne tipkovnice"
+
+msgid "Voice-over"
+msgstr "Glas preko (voice-over)"
+
+msgid "Volleyball"
+msgstr "Odbojka"
+
+msgid "WWE shows"
+msgstr "WWE emisije"
+
+msgid "Waiting for the result ..."
+msgstr "Čekanje rezultata ..."
+
+msgid "War"
+msgstr "Ratni"
+
+msgid "Watch Videos Online"
+msgstr "Gledajte videozapise online"
+
+msgid "Watch history"
+msgstr "Povijest gledanja"
+
+msgid "Watch later"
+msgstr "Pogledaj kasnije"
+
+msgid "Watch online"
+msgstr "Gledaj online"
+
+msgid "Watchlist"
+msgstr "Popis za gledanje"
+
+msgid "Watchlist (no folder)"
+msgstr "Popis za gledanje (bez mape)"
+
+msgid "Watchlist folder"
+msgstr "Mapa popisa za gledanje"
+
+msgid "WebStreamr / AIOStreams manifest URL (your own):"
+msgstr "URL WebStreamr / AIOStreams manifesta (vaš vlastiti):"
+
+msgid "Website address"
+msgstr "Adresa web-stranice"
+
+#, python-format
+msgid "Weeks on chart: %s"
+msgstr "Tjedana na top-listi: %s"
+
+msgid "Western"
+msgstr "Vestern"
+
+msgid "What's happening?"
+msgstr "Što se događa?"
+
+msgid "When the maximum is reached"
+msgstr "Kada se dosegne maksimum"
+
+msgid "While live TV is running"
+msgstr "Dok je TV uživo pokrenut"
+
+msgid "Whole file must be downloaded to start playback!"
+msgstr "Cijela datoteka mora biti preuzeta da bi reprodukcija počela!"
+
+msgid "Wiki"
+msgstr "Wiki"
+
+msgid "Winter"
+msgstr "Zima"
+
+msgid "Winter sports"
+msgstr "Zimski sportovi"
+
+msgid "With an API key from subdl.com (E2iPlayer settings, Subtitles) the official SubDL API is searched as well."
+msgstr "S API ključem sa subdl.com (postavke E2iPlayera, Titlovi) pretražuje se i službeni SubDL API."
+
+msgid "With subtitles"
+msgstr "S titlovima"
+
+msgid "World"
+msgstr "Svijet"
+
+msgid "Worldwide"
+msgstr "Diljem svijeta"
+
+msgid "Wrestling"
+msgstr "Hrvanje"
+
+msgid "Wrestling shows"
+msgstr "Hrvačke emisije"
+
+msgid "Write current title to file:"
+msgstr "Upiši trenutni naslov u datoteku:"
+
+msgid "Writer:"
+msgstr "Scenarist:"
+
+msgid "Writers:"
+msgstr "Scenaristi:"
+
+msgid "Written Boards Review"
+msgstr "Ponavljanje za pismeni specijalistički ispit"
+
+msgid "Wrong Youtube Api Key length"
+msgstr "Pogrešna duljina Youtube API ključa"
+
+msgid "Wrong captcha code."
+msgstr "Pogrešan captcha kod."
+
+msgid "Wrong code."
+msgstr "Pogrešan kod."
+
+msgid "Wrong format of rar archive."
+msgstr "Pogrešan format RAR arhive."
+
+msgid "Wrong format of zip archive."
+msgstr "Pogrešan format ZIP arhive."
+
+msgid "Wrong indexes."
+msgstr "Pogrešni indeksi."
+
+msgid "Wrong uri."
+msgstr "Pogrešan uri."
+
+msgid "Wrong weeb.tv username or password."
+msgstr "Pogrešno weeb.tv korisničko ime ili lozinka."
+
+#, python-format
+msgid "Wyzie Subs API key rejected: %s"
+msgstr "Wyzie Subs API ključ je odbijen: %s"
+
+msgid "Wyzie Subs needs an API key. You can get a free one at https://store.wyzie.io/redeem and enter it in the E2iPlayer configuration."
+msgstr "Wyzie Subs zahtijeva API ključ. Besplatan ključ možete dobiti na https://store.wyzie.io/redeem i unijeti ga u konfiguraciji E2iPlayera."
+
+msgid "Wyzie Subs: the daily request limit of the API key is reached."
+msgstr "Wyzie Subs: dosegnuto je dnevno ograničenje zahtjeva za API ključ."
+
+msgid "YELLOW"
+msgstr "ŽUTA"
+
+msgid "YESTERDAY"
+msgstr "JUČER"
+
+msgid "YP connected"
+msgstr "YP povezan"
+
+msgid "Year"
+msgstr "Godina"
+
+#, python-format
+msgid "Year %s"
+msgstr "Godina %s"
+
+msgid "Year:"
+msgstr "Godina:"
+
+msgid "Yes"
+msgstr "Da"
+
+msgid "Yes + Global Search"
+msgstr "Da + globalna pretraga"
+
+msgid "Yes, to console"
+msgstr "Da, u konzolu"
+
+msgid "Yes, to file /hdd/iptv.dbg"
+msgstr "Da, u datoteku /hdd/iptv.dbg"
+
+msgid "Yes, to file /home/root/logs/iptv.dbg"
+msgstr "Da, u datoteku /home/root/logs/iptv.dbg"
+
+msgid "Yes, to file /tmp/iptv.dbg"
+msgstr "Da, u datoteku /tmp/iptv.dbg"
+
+msgid "Yesterday"
+msgstr "Jučer"
+
+msgid "You can disable HTTPS certificates validation in the E2iPlayer configuration to suppress this problem."
+msgstr "Ovaj problem možete otkloniti isključivanjem provjere HTTPS certifikata u konfiguraciji E2iPlayera."
+
+msgid "You can enable PyCurl in the E2iPlayer configuration to fix this problem."
+msgstr "Ovaj problem možete riješiti uključivanjem PyCurla u konfiguraciji E2iPlayera."
+
+msgid "You can install PyCurl package with TLS 1.3 support from the feed to fix this problem."
+msgstr "Ovaj problem možete riješiti instaliranjem PyCurl paketa s podrškom za TLS 1.3 iz feeda."
+
+#, python-format
+msgid "You can use \"%s\" or \"%s\" services for automatic solution."
+msgstr "Za automatsko rješavanje možete koristiti servise \"%s\" ili \"%s\"."
+
+msgid "You can use external eplayer to start playback faster."
+msgstr "Možete koristiti vanjski eplayer za brže pokretanje reprodukcije."
+
+msgid "You do not have a premium account. Starting a sponsored broadcast."
+msgstr "Nemate premium račun. Pokreće se sponzorirani prijenos."
+
+msgid "You have reached the play limit for this mix."
+msgstr "Dosegnuli ste ograničenje reprodukcija za ovaj miks."
+
+msgid "You should never perform block I/O operations in the __init__."
+msgstr "Nikada ne biste trebali izvršavati blokirajuće I/O operacije u __init__."
+
+msgid "YouTube User Links Editor"
+msgstr "YouTube uređivač korisničkih poveznica"
+
+msgid "YouTube channels: original order"
+msgstr "YouTube kanali: izvorni redoslijed"
+
+msgid "YouTube channels: sort by newest upload"
+msgstr "YouTube kanali: sortiraj po najnovijem prijenosu"
+
+msgid "Your 'Watch later' playlist."
+msgstr "Vaša playlista 'Pogledaj kasnije'."
+
+#, python-format
+msgid "Your MyE2i extension is outdated or unknown (v%s or newer needed). Please update:"
+msgstr "Vaše MyE2i proširenje je zastarjelo ili nepoznato (potrebna je v%s ili novija). Ažurirajte ga:"
+
+msgid "Your own list of videos, in folders of your own (MENU key on a video: \"Add to Watchlist\")"
+msgstr "Vaš vlastiti popis videozapisa, u vašim vlastitim mapama (tipka MENU na videozapisu: \"Dodaj na popis za gledanje\")"
+
+msgid "Your search entry"
+msgstr "Vaš unos za pretragu"
+
+#, python-format
+msgid "Youth protection: only available between %s and %s."
+msgstr "Zaštita maloljetnika: dostupno samo između %s i %s."
+
+msgid "Youtube Suggestions"
+msgstr "Youtube prijedlozi"
+
+msgid "Youtube searches are quicker, if you fill API key in setting menu"
+msgstr "YouTube pretrage su brže ako unesete API ključ u izborniku postavki"
+
+msgid "Z-A"
+msgstr "Z-A"
+
+#, python-format
+msgid "[%s CD]"
+msgstr "[%s CD]"
+
+#, python-format
+msgid "[%s] - configuration"
+msgstr "[%s] - konfiguracija"
+
+#, python-format
+msgid "[%s] with buffering"
+msgstr "[%s] s međuspremanjem"
+
+#, python-format
+msgid "[%s] without buffering"
+msgstr "[%s] bez međuspremanja"
+
+msgid "[HLS/M3U8] buffering"
+msgstr "[HLS/M3U8] međuspremanje"
+
+msgid "[HLS/M3U8] live stream starts behind live"
+msgstr "[HLS/M3U8] prijenos uživo počinje iza točke uživo"
+
+msgid "[HTTP] buffering"
+msgstr "[HTTP] međuspremanje"
+
+msgid "[RTMP] buffering (rtmpdump required)"
+msgstr "[RTMP] međuspremanje (potreban rtmpdump)"
+
+msgid "[en]"
+msgstr "[en]"
+
+msgid "[pl]"
+msgstr "[pl]"
+
+msgid "_checkStatus except error"
+msgstr "_checkStatus except pogreška"
+
+msgid "after a week"
+msgstr "nakon tjedan dana"
+
+msgid "after closing"
+msgstr "nakon zatvaranja"
+
+msgid "after day"
+msgstr "nakon jednog dana"
+
+msgid "after three days"
+msgstr "nakon tri dana"
+
+msgid "all"
+msgstr "sve"
+
+msgid "alphabetical"
+msgstr "abecedno"
+
+msgid "anime-odcinki.pl shows this title only to logged-in users."
+msgstr "anime-odcinki.pl prikazuje ovaj naslov samo prijavljenim korisnicima."
+
+msgid "aqua"
+msgstr "akva"
+
+msgid "as Chrome this session"
+msgstr "kao Chrome u ovoj sesiji"
+
+msgid "as in ytlist.txt"
+msgstr "kao u ytlist.txt"
+
+msgid "auto"
+msgstr "automatski"
+
+#, python-format
+msgid "available until %s"
+msgstr "dostupno do %s"
+
+msgid "back to host/group selection"
+msgstr "natrag na odabir hosta/grupe"
+
+msgid "black"
+msgstr "crna"
+
+msgid "black&white"
+msgstr "crno-bijela"
+
+msgid "blue"
+msgstr "plava"
+
+msgid "bottom"
+msgstr "dolje"
+
+msgid "buffering location"
+msgstr "lokacija međuspremanja"
+
+msgid "center"
+msgstr "centrirano"
+
+msgid "changed"
+msgstr "promijenjeno"
+
+msgid "close the editor - or stop manual reordering if it's active"
+msgstr "zatvori uređivač - ili zaustavi ručno premještanje ako je aktivno"
+
+msgid "cobalt"
+msgstr "kobaltna"
+
+msgid "cookies cache"
+msgstr "predmemorija kolačića"
+
+msgid "could not run the probe"
+msgstr "provjera se nije mogla pokrenuti"
+
+#, python-format
+msgid "curl-impersonate is not installed on the receiver (%s). This stream only plays with it."
+msgstr "curl-impersonate nije instaliran na prijamniku (%s). Ovaj stream reproducira se samo uz njega."
+
+msgid "debug"
+msgstr "debug"
+
+msgid "default"
+msgstr "zadano"
+
+msgid "delete entered text"
+msgstr "izbriši uneseni tekst"
+
+msgid "delete the selected entry"
+msgstr "izbriši odabrani unos"
+
+msgid "device ID"
+msgstr "ID uređaja"
+
+msgid "device ID 2"
+msgstr "ID uređaja 2"
+
+msgid "direct link"
+msgstr "izravna poveznica"
+
+msgid "direct number input"
+msgstr "izravan unos broja"
+
+msgid "download the selected item"
+msgstr "preuzmi odabranu stavku"
+
+msgid "downloads location"
+msgstr "lokacija preuzimanja"
+
+msgid "e-mail"
+msgstr "e-pošta"
+
+msgid "edit the selected entry (same as BLUE) - or drop it while manually reordering"
+msgstr "uredi odabrani unos (isto kao PLAVA) - ili ga spusti tijekom ručnog premještanja"
+
+msgid "edit the selected entry (same as OK)"
+msgstr "uredi odabrani unos (isto kao OK)"
+
+msgid "enable / disable manual reordering"
+msgstr "uključi / isključi ručno premještanje"
+
+msgid "external eplayer3"
+msgstr "vanjski eplayer3"
+
+msgid "external gstplayer"
+msgstr "vanjski gstplayer"
+
+msgid "failed"
+msgstr "neuspješno"
+
+msgid "file"
+msgstr "datoteka"
+
+msgid "fixed"
+msgstr "fiksirano"
+
+msgid "format"
+msgstr "format"
+
+msgid "free"
+msgstr "slobodno"
+
+msgid "from E2 settings"
+msgstr "iz E2 postavki"
+
+msgid "fuchsia"
+msgstr "fuksija"
+
+msgid "go back / close"
+msgstr "natrag / zatvori"
+
+msgid "goals"
+msgstr "golovi"
+
+msgid "gray"
+msgstr "siva"
+
+msgid "green"
+msgstr "zelena"
+
+msgid "hd"
+msgstr "HD"
+
+msgid "hearing impaired"
+msgstr "za osobe oštećena sluha"
+
+msgid "high"
+msgstr "visoka"
+
+msgid "hint: the site shows a next page link"
+msgstr "napomena: stranica prikazuje poveznicu na sljedeću stranicu"
+
+msgid "horizontal"
+msgstr "vodoravno"
+
+msgid "host"
+msgstr "host"
+
+msgid "host order and groups"
+msgstr "redoslijed hostova i grupe"
+
+msgid "https"
+msgstr "https"
+
+msgid "https - validate SSL certificates"
+msgstr "https - provjeravaj SSL certifikate"
+
+msgid "iTunes - Top albums by country"
+msgstr "iTunes - Najbolji albumi po zemlji"
+
+msgid "iTunes - Top songs by country"
+msgstr "iTunes - Najbolje pjesme po zemlji"
+
+msgid "insert space"
+msgstr "umetni razmak"
+
+msgid "installed"
+msgstr "instalirano"
+
+msgid "internal"
+msgstr "interni"
+
+msgid "item actions (favorites, host-specific actions)"
+msgstr "radnje za stavku (favoriti, radnje specifične za host)"
+
+msgid "jersey"
+msgstr "dres"
+
+msgid "jump to entries starting with that letter (if enabled in the settings)"
+msgstr "skok na unose koji počinju tim slovom (ako je uključeno u postavkama)"
+
+msgid "jump to items starting with that letter, or launch a specific player directly"
+msgstr "skok na stavke koje počinju tim slovom ili izravno pokretanje određenog playera"
+
+msgid "kernel reports"
+msgstr "kernel javlja"
+
+msgid "large"
+msgstr "veliko"
+
+msgid "leave movie player..."
+msgstr "napuštanje playera filmova..."
+
+msgid "lime"
+msgstr "limeta zelena"
+
+msgid "line"
+msgstr "linija"
+
+msgid "loaded (no version)"
+msgstr "učitano (bez verzije)"
+
+msgid "login"
+msgstr "prijava"
+
+msgid "low"
+msgstr "niska"
+
+msgid "machine translated"
+msgstr "strojno prevedeno"
+
+msgid "main"
+msgstr "main"
+
+msgid "manual"
+msgstr "ručno"
+
+msgid "marked"
+msgstr "označeno"
+
+msgid "maroon"
+msgstr "kestenjasta"
+
+msgid "medium"
+msgstr "srednja"
+
+msgid "menu and list only"
+msgstr "samo izbornik i popis"
+
+msgid "minutes"
+msgstr "minuta"
+
+msgid "more options (this menu)"
+msgstr "više opcija (ovaj izbornik)"
+
+msgid "move cursor right/left"
+msgstr "pomakni pokazivač desno/lijevo"
+
+msgid "move the selection - or move it while manually reordering"
+msgstr "pomakni odabir - ili pomakni stavku tijekom ručnog premještanja"
+
+msgid "movie metadata cache"
+msgstr "predmemorija metapodataka filmova"
+
+msgid "movie player preferences"
+msgstr "postavke playera filmova"
+
+msgid "navy"
+msgstr "tamnoplava"
+
+msgid "netu/hqq: the player check failed, try again later."
+msgstr "netu/hqq: provjera playera nije uspjela, pokušajte ponovno kasnije."
+
+msgid "never"
+msgstr "nikada"
+
+msgid "next page"
+msgstr "sljedeća stranica"
+
+msgid "next page / previous page"
+msgstr "sljedeća stranica / prethodna stranica"
+
+msgid "next page = page 1"
+msgstr "sljedeća stranica = stranica 1"
+
+msgid "next page empty"
+msgstr "sljedeća stranica prazna"
+
+msgid "next page ok"
+msgstr "sljedeća stranica ok"
+
+msgid "no answer"
+msgstr "nema odgovora"
+
+msgid "no next page"
+msgstr "nema sljedeće stranice"
+
+msgid "no stream link"
+msgstr "nema poveznice na stream"
+
+msgid "no videos in the first lists"
+msgstr "nema videozapisa u prvim popisima"
+
+msgid "not available (the Python parser is used)"
+msgstr "nije dostupno (koristi se Python parser)"
+
+msgid "not found"
+msgstr "nije pronađeno"
+
+msgid "not installed"
+msgstr "nije instalirano"
+
+msgid "not loadable"
+msgstr "ne može se učitati"
+
+msgid "off"
+msgstr "isključeno"
+
+msgid "off / console"
+msgstr "isključeno / konzola"
+
+msgid "olive"
+msgstr "maslinasta"
+
+msgid "on"
+msgstr "uključeno"
+
+msgid "only on the receiver"
+msgstr "samo na prijamniku"
+
+msgid "open / play the selected item"
+msgstr "otvori / reproduciraj odabranu stavku"
+
+msgid "open the options menu - see below"
+msgstr "otvori izbornik opcija - pogledajte ispod"
+
+msgid "or"
+msgstr "ili"
+
+msgid "other binaries"
+msgstr "ostale binarne datoteke"
+
+msgid "password"
+msgstr "lozinka"
+
+msgid "prijevodi-online.org refused the download for this account."
+msgstr "prijevodi-online.org odbio je preuzimanje za ovaj račun."
+
+msgid "purple"
+msgstr "ljubičasta"
+
+msgid "quality"
+msgstr "kvaliteta"
+
+msgid "red"
+msgstr "crvena"
+
+msgid "refresh the current list"
+msgstr "osvježi trenutni popis"
+
+msgid "reversed"
+msgstr "obrnuto"
+
+msgid "rootfs"
+msgstr "rootfs"
+
+msgid "rotate (keep the old one as iptv-<date>.dbg)"
+msgstr "rotiraj (staru spremi kao iptv-<datum>.dbg)"
+
+msgid "rtmp"
+msgstr "rtmp"
+
+msgid "save all changes to disk"
+msgstr "spremi sve promjene na disk"
+
+msgid "saved"
+msgstr "spremljeno"
+
+msgid "saved in the temporary data folder"
+msgstr "spremljeno u mapi privremenih podataka"
+
+msgid "saved next to the downloaded video file"
+msgstr "spremljeno pokraj preuzete video datoteke"
+
+msgid "search"
+msgstr "pretraga"
+
+#, python-format
+msgid "search %d"
+msgstr "pretraga %d"
+
+msgid "search found nothing"
+msgstr "pretraga nije ništa pronašla"
+
+msgid "search history"
+msgstr "povijest pretrage"
+
+msgid "search next page = page 1"
+msgstr "pretraga sljedeće stranice = stranica 1"
+
+msgid "search next page empty"
+msgstr "pretraga sljedeće stranice prazna"
+
+msgid "search next page ok"
+msgstr "pretraga sljedeće stranice ok"
+
+msgid "season pack"
+msgstr "paket sezone"
+
+msgid "second"
+msgstr "sekunda"
+
+msgid "seconds"
+msgstr "sekundi"
+
+msgid "select to sign out"
+msgstr "odaberite za odjavu"
+
+msgid "serial number"
+msgstr "serijski broj"
+
+msgid "show more details about the selected item"
+msgstr "prikaži više pojedinosti o odabranoj stavci"
+
+msgid "show this help"
+msgstr "prikaži ovu pomoć"
+
+msgid "shuffled"
+msgstr "izmiješano"
+
+msgid "sign in (subscriptions, playlists, age-restricted videos)"
+msgstr "prijava (pretplate, playliste, videozapisi s dobnim ograničenjem)"
+
+msgid "signature"
+msgstr "potpis"
+
+msgid "signed in"
+msgstr "prijavljeni ste"
+
+msgid "silver"
+msgstr "srebrna"
+
+msgid "small"
+msgstr "malo"
+
+msgid "sources"
+msgstr "izvori"
+
+msgid "standard"
+msgstr "standardno"
+
+msgid "start auto-play (plays through the list automatically)"
+msgstr "pokreni automatsku reprodukciju (automatski reproducira popis redom)"
+
+msgid "status"
+msgstr "status"
+
+msgid "stream data"
+msgstr "podaci streama"
+
+msgid "stream data ok"
+msgstr "podaci streama ok"
+
+msgid "stream data ok (HLS)"
+msgstr "podaci streama ok (HLS)"
+
+#, python-format
+msgid "stream is a web page, not video (HTTP %s)"
+msgstr "stream je web-stranica, a ne video (HTTP %s)"
+
+msgid "stream link"
+msgstr "poveznica na stream"
+
+msgid "stream link ok"
+msgstr "poveznica na stream ok"
+
+#, python-format
+msgid "stream not checked (%s)"
+msgstr "stream nije provjeren (%s)"
+
+msgid "stream not checked (HTTP 429, too many requests)"
+msgstr "stream nije provjeren (HTTP 429, previše zahtjeva)"
+
+#, python-format
+msgid "stream: %s"
+msgstr "stream: %s"
+
+#, python-format
+msgid "stream: no data (HTTP %s)"
+msgstr "stream: nema podataka (HTTP %s)"
+
+msgid "subs.ro does not answer."
+msgstr "subs.ro ne odgovara."
+
+msgid "subsource.net does not answer."
+msgstr "subsource.net ne odgovara."
+
+msgid "subtitles"
+msgstr "titlovi"
+
+msgid "subtitles cache"
+msgstr "predmemorija titlova"
+
+msgid "switch between keyboard, suggestions and search history"
+msgstr "prebacivanje između tipkovnice, prijedloga i povijesti pretrage"
+
+msgid "teal"
+msgstr "plavozelena"
+
+msgid "the best"
+msgstr "najbolja"
+
+msgid "the menu has no lists"
+msgstr "izbornik nema popisa"
+
+msgid "the menu is empty"
+msgstr "izbornik je prazan"
+
+msgid "the worst"
+msgstr "najlošija"
+
+msgid "thumbnails"
+msgstr "sličice"
+
+#, python-format
+msgid "thumbnails %d/%d"
+msgstr "sličice %d/%d"
+
+msgid "thumbnails do not load"
+msgstr "sličice se ne učitavaju"
+
+msgid "to top"
+msgstr "na vrh"
+
+msgid "top"
+msgstr "gore"
+
+msgid "truncate the file"
+msgstr "skrati datoteku"
+
+msgid "type selected character / confirm selection"
+msgstr "unesi odabrani znak / potvrdi odabir"
+
+msgid "unknown"
+msgstr "nepoznato"
+
+msgid "unlimited"
+msgstr "neograničeno"
+
+msgid "unsorted"
+msgstr "nesortirano"
+
+msgid "upzone.cc: free transfer limit reached - PREMIUM account required."
+msgstr "upzone.cc: dosegnuto ograničenje besplatnog prijenosa - potreban je PREMIUM račun."
+
+msgid "version"
+msgstr "verzija"
+
+msgid "vertical"
+msgstr "okomito"
+
+msgid "very high"
+msgstr "vrlo visoka"
+
+#, python-format
+msgid "videos: %s"
+msgstr "videozapisi: %s"
+
+msgid "views"
+msgstr "pregledi"
+
+#, python-format
+msgid "wait %s second"
+msgstr "pričekajte %s sekundu"
+
+#, python-format
+msgid "wait %s seconds"
+msgstr "pričekajte %s sekundi"
+
+msgid "wants you to solve a captcha. Only after solving this captcha, you are allowed to continue with your downloads. E2iPlayer is not able to auto-solve these captchas, so we need to pass the captcha to you."
+msgstr "traži da riješite captchu. Tek nakon rješavanja ove captche možete nastaviti s preuzimanjima. E2iPlayer ne može automatski rješavati ove captche, pa vam ih moramo proslijediti."
+
+#, python-format
+msgid "weeb.tv did not return a valid stream (error %s)."
+msgstr "weeb.tv nije vratio važeći stream (pogreška %s)."
+
+msgid "weeb.tv did not return a valid stream for this channel."
+msgstr "weeb.tv nije vratio važeći stream za ovaj kanal."
+
+msgid "weeb.tv streams need a weeb.tv account - enter the login in the host configuration (Web streams, WeebTV)"
+msgstr "weeb.tv streamovi zahtijevaju weeb.tv račun - unesite podatke za prijavu u konfiguraciji hosta (Web streamovi, WeebTV)"
+
+msgid "white"
+msgstr "bijela"
+
+msgid "www:"
+msgstr "www:"
+
+msgid "yellow"
+msgstr "žuta"

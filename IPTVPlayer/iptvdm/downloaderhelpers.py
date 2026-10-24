@@ -245,6 +245,98 @@ def pickSubtitleTracks(tracks, allLangs, wanted):
     return picked
 
 
+# HLS subtitle tracks: getDirectM3U8Playlist() lists the SUBTITLES renditions of a master with the url of their
+# media playlist (marked 'hls'), hosts sometimes as a plain .m3u8 link. The playlist names the .vtt segments; they
+# are fetched where the track is used (player "Download suggested", subtitles of a download), in one wget run
+# (-i list: one connection for all of them) and joined to one WebVTT text
+_VTT_HEADER = re.compile(r'^WEBVTT(?:[ \t].*)?$')
+_BOM = chr(0xFEFF)
+
+
+def isHlsSubtitleTrack(track):
+    # the playlist url of an HLS subtitle rendition, not a subtitle file
+    try:
+        if track.get('hls'):
+            return True
+        return ensureText(track.get('url', '')).split('?', 1)[0].split('#', 1)[0].lower().endswith('.m3u8')
+    except Exception:
+        return False
+
+
+def hlsSubtitleSegmentUrls(data, playlistUrl):
+    # the segment urls of an HLS subtitle media playlist (data: its text), absolute - relative ones against
+    # playlistUrl - in order and each once (some playlists list one whole .vtt for every segment, or byte ranges
+    # of one file: that file once). [] when data is no media playlist (a .vtt, an error page, a master)
+    text = ensureText(data).lstrip(_BOM + u' \t\r\n')
+    if not text.startswith(u'#EXTM3U'):
+        return []
+    try:
+        from Plugins.Extensions.IPTVPlayer.libs import m3u8
+        playlist = m3u8.inits(text, str(ensureText(playlistUrl)))
+        if playlist.is_variant:
+            return []
+        urls = []
+        seen = set()
+        for segment in playlist.segments:
+            url = segment.absolute_uri
+            if url and url not in seen:
+                seen.add(url)
+                urls.append(url)
+        return urls
+    except Exception:
+        printExc()
+        return []
+
+
+def joinWebVttSegments(parts):
+    # one WebVTT text of the segments of an HLS subtitle playlist (a list of texts, or the file wget -O wrote them
+    # all into): the first WEBVTT header block stays, the WEBVTT / X-TIMESTAMP-MAP headers and STYLE / REGION
+    # blocks of the later segments go, the cues keep their order and one that spans a segment boundary (in both
+    # segments) is kept once. X-TIMESTAMP-MAP is not applied: in VOD playlists it maps the cues to the MPEG-TS
+    # time of the stream start (e.g. MPEGTS:900000,LOCAL:00:00:00.000 with the video PTS from 10 s), so the cue
+    # times already count from the start of the video as the player does; a map that differs per segment (live
+    # windows) stays unshifted
+    if isinstance(parts, (list, tuple)):
+        text = u'\n\n'.join(ensureText(part) for part in parts)
+    else:
+        text = ensureText(parts)
+    text = text.replace(_BOM, u'').replace('\r\n', '\n').replace('\r', '\n')
+    # a segment without a trailing blank line (or newline: "last cueWEBVTT"): the header of the next one still
+    # starts a block of its own
+    text = re.sub(r'(?<=[^\n])(?=WEBVTT\n)', '\n', text)
+    text = re.sub(r'(?m)^(?=WEBVTT(?:[ \t]|$))', '\n', text)
+    header = None
+    blocks = []
+    seen = set()
+    for block in re.split(r'\n[ \t]*\n', text):
+        block = block.strip('\n')
+        if not block.strip():
+            continue
+        lines = block.split('\n')
+        if _VTT_HEADER.match(lines[0]):
+            if header is None:
+                header = block
+            continue
+        if lines[0].split(' ', 1)[0] in ('STYLE', 'REGION') and '-->' not in block:
+            if header is not None and not blocks:
+                header += '\n\n' + block  # belongs between the header and the first cue
+            continue
+        timing = [idx for idx, line in enumerate(lines) if '-->' in line]
+        key = '\n'.join(lines[timing[0]:] if timing else lines)  # timing and text, not the cue id (counted per segment)
+        if key in seen:
+            continue
+        seen.add(key)
+        blocks.append(block)
+    out = ([header] if header is not None else []) + blocks
+    return u'\n\n'.join(out) + u'\n' if out else u''
+
+
+def hlsSubtitleWgetCmd(downloaderParams, listFile, outFile):
+    # wget of all segment urls in listFile into the one file outFile (with -O wget appends them one after the other)
+    from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
+    return DMHelper.getBaseWgetCmd(downloaderParams) + ' -T 20 -t 2 -i "%s" -O "%s"' % (shellQuote(listFile), shellQuote(outFile))
+
+
 def _srtTime(match):
     hours, minutes, seconds, millis = match.groups()
     return '%02d:%02d:%02d,%03d' % (int(hours or 0), int(minutes), int(seconds), int(millis.ljust(3, '0')))
@@ -340,8 +432,9 @@ class SidecarMixin(object):
         # subtitles of the link (setting "Subtitles"): fetched to temp files while the file downloads
         self.subConsole = None
         self.subConsole_appClosed_conn = None
-        self.subJobs = []  # [{'lang', 'title', 'tmp'}]
+        self.subJobs = []  # [{'lang', 'title', 'tmp', 'url', 'params', 'hls'}]
         self.subFetching = False
+        self.subHlsChecked = False  # the fetched files were checked for HLS subtitle playlists
         self.subWaiting = False  # the download is done and waits for the fetch
         self.subHandled = False
         self.subEmbedTmp = ''
@@ -387,10 +480,12 @@ class SidecarMixin(object):
                 terminateToolsOfFile(self.subEmbedTmp, ('ffmpeg',))
         for job in self.subJobs:
             safeRemoveFile(job['tmp'])
+            safeRemoveFile(job['tmp'] + '.list')  # an HLS track's segment list (also one written only partly)
         if self.subEmbedTmp:
             safeRemoveFile(self.subEmbedTmp)
         self.subJobs = []
         self.subFetching = False
+        self.subHlsChecked = False
         self.subWaiting = False
         self.subHandled = False
         self.subEmbedTmp = ''
@@ -419,7 +514,9 @@ class SidecarMixin(object):
                 tmp = GetTmpDir('.e2i_dlsub_%s_%d' % (stamp, idx))
                 cmds.append(DMHelper.getBaseWgetCmd(params) + ' -T 20 -t 2 "%s" -O "%s" > /dev/null 2>&1' % (shellQuote(url), shellQuote(tmp)))
                 lang = subtitleLangCode(track.get('lang', '')) or subtitleLangCode(track.get('title', ''))
-                jobs.append({'lang': lang, 'title': ensureText(track.get('title', '') or track.get('lang', '')), 'tmp': tmp})
+                # an HLS track's playlist lands in tmp first, its segments follow (_startHlsSubtitleSegments)
+                jobs.append({'lang': lang, 'title': ensureText(track.get('title', '') or track.get('lang', '')), 'tmp': tmp,
+                             'url': url, 'params': params, 'hls': False})
             printDBG("%s subtitles to fetch: %r" % (self.__class__.__name__, [(job['lang'], job['title']) for job in jobs]))
             console = eConsoleAppContainer()
             self.subConsole_appClosed_conn = eConnectCallback(console.appClosed, self._subtitleFetchFinished)
@@ -436,10 +533,48 @@ class SidecarMixin(object):
         printDBG("%s subtitle fetch finished code[%r]" % (self.__class__.__name__, code))
         self.subConsole_appClosed_conn = None
         self.subConsole = None
+        if not self.subHlsChecked:
+            self.subHlsChecked = True
+            if self._startHlsSubtitleSegments():
+                return
         self.subFetching = False
         if self.subWaiting:
             self.subWaiting = False
             self._finishDownloadFlow()
+
+    def _startHlsSubtitleSegments(self):
+        # a fetched file that is an HLS subtitle playlist (getDirectM3U8Playlist's SUBTITLES renditions, a host's
+        # .m3u8 link): its segments are fetched into the same temp file in a second console run, joined in
+        # _writeSubtitleFiles. True while that run goes
+        try:
+            cmds = []
+            for job in self.subJobs:
+                try:
+                    with open(fsPath(job['tmp']), 'rb') as f:
+                        head = f.read(16)
+                        if b'#EXTM3U' not in head:
+                            continue
+                        data = head + f.read()
+                except Exception:
+                    continue
+                urls = hlsSubtitleSegmentUrls(decodeSubtitle(data), job['url'])
+                if not urls:
+                    continue
+                listFile = job['tmp'] + '.list'
+                if writeUtf8TextFile(listFile, '\n'.join(urls) + '\n'):
+                    job['hls'] = True
+                    cmds.append(hlsSubtitleWgetCmd(job['params'], listFile, job['tmp']) + ' > /dev/null 2>&1')
+                    printDBG("%s subtitle [%s]: HLS playlist, %d segments" % (self.__class__.__name__, job['title'], len(urls)))
+            if not cmds:
+                return False
+            console = eConsoleAppContainer()
+            self.subConsole_appClosed_conn = eConnectCallback(console.appClosed, self._subtitleFetchFinished)
+            self.subConsole = console
+            executeConsoleCmd(console, ' ; '.join(cmds))
+            return True
+        except Exception:
+            printExc()
+            return False
 
     def _subtitleStep(self):
         # True while the finish waits (for the fetch, or the MKV mux); it calls _finishDownloadFlow() again then
@@ -469,7 +604,10 @@ class SidecarMixin(object):
                     data = f.read()
             except Exception:
                 data = b''
-            text, ext = subtitleToSrt(decodeSubtitle(data, job['lang'])) if data else ('', '')
+            text = decodeSubtitle(data, job['lang']) if data else ''
+            if text and job.get('hls'):
+                text = joinWebVttSegments(text)
+            text, ext = subtitleToSrt(text) if text else ('', '')
             if not text:
                 printDBG("%s subtitle [%s] skipped: no subtitle data (%d bytes)" % (self.__class__.__name__, job['title'], len(data)))
                 continue

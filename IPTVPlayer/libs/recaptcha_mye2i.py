@@ -12,7 +12,9 @@ class UnCaptchaReCaptcha:
     def __init__(self, lang='en'):
         self.sessionEx = MainSessionWrapper()
 
-    def processCaptcha(self, sitekey, referer='', captchaType='', captchaAction='', captchaData=''):
+    def processCaptcha(self, sitekey, referer='', captchaType='', captchaAction='', captchaData='', hint=''):
+        # hint: what the user has to do on the opened page (e.g. click the player of a NAV job's page) - shown on
+        # the box and on the browser's start page
         answer = ''
         if captchaType == 'CF':
             title = _("MyE2i Cloudflare solution")
@@ -24,7 +26,7 @@ class UnCaptchaReCaptcha:
             title = _("MyE2i: open the page in the browser")
         else:
             title = _("MyE2i reCAPTCHA solution")
-        retArg = self.sessionEx.waitForFinishOpen(UnCaptchaReCaptchaMyE2iWidget, title=title, sitekey=sitekey, referer=referer, captchaType=captchaType, captchaAction=captchaAction, captchaData=captchaData)
+        retArg = self.sessionEx.waitForFinishOpen(UnCaptchaReCaptchaMyE2iWidget, title=title, sitekey=sitekey, referer=referer, captchaType=captchaType, captchaAction=captchaAction, captchaData=captchaData, hint=hint)
 
         if retArg is not None and len(retArg) and retArg[0]:
             answer = retArg[0]

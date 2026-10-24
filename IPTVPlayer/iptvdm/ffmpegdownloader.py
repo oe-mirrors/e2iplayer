@@ -470,6 +470,12 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
     def _cmdFinished(self, code, terminated=False):
         printDBG("FFMPEGDownloader._cmdFinished code[%r] terminated[%r]" % (code, terminated))
 
+        # fix 241026: the last progress line ("... Lsize= ... time=<end>") may still sit in the held-back chunk -
+        # parse it, else a fast download (ffmpeg 9 at 170x speed: ~90 s of media between two progress lines) ends
+        # below DURATION_COMPLETE_RATIO and counts as interrupted although the whole file is there (box log, cda)
+        if getattr(self, 'outData', ''):
+            self._dataAvail('\r')
+
         if not KeepDebugArtifact('debug_keep_ffmpeg_cmd'):
             rm(self.fileCmdPath)
 
@@ -511,9 +517,11 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
             self.status = DMHelper.STS.INTERRUPTED
         elif 0 >= self.localFileSize:
             self.status = DMHelper.STS.ERROR
-        elif not self._looksComplete():
+        elif not self._looksComplete() and (self.allowFinalRename or code not in (0, None)):
             # short file: a clean ffmpeg exit here is odd, a non-zero one is a real
-            # failure - either way it is not a finished download
+            # failure - either way it is not a finished download. fix 241026: buffered playback
+            # (allowFinalRename unset) plays what a clean exit left - the progress count can lag
+            # behind a very fast download, and the player shows itself where the file ends
             self.status = DMHelper.STS.INTERRUPTED if code in (0, None) else DMHelper.STS.ERROR
         else:
             # whole timeline present -> keep it even if ffmpeg exited non-zero on a
