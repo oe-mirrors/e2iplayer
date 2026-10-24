@@ -92,6 +92,7 @@ class HLSDownloader(BaseDownloader, SidecarMixin):
     def _cleanUp(self):
         if self.tempRemuxPath:
             self._safeRm(self.tempRemuxPath)
+            self._safeRm(self._getRemuxLogPath())
 
     def _removeSourceFile(self):
         try:
@@ -180,12 +181,73 @@ class HLSDownloader(BaseDownloader, SidecarMixin):
             self.ffmpegPostEnabled = True
             self.ffmpegContainer = choice
             return
+        self._renameToContainer(found)
+
+    def _renameToContainer(self, found):
+        # the file named after the container hlsdl wrote (_detectContainer)
         ext = self.CONTAINER_EXT.get(found)
         if ext and not self.filePath.lower().endswith(ext):
             target = self._getTargetPath(ext)
             if self._moveFile(self.filePath, target):
                 printDBG("HLSDownloader renamed output to match container -> %s" % target)
                 self.filePath = target
+
+    def _keepTsForIrregularFrames(self):
+        # a remux of MPEG-TS whose video frames are not evenly spaced (24 fps film on a 30 fps raster: 3,3,3,6
+        # frame times of 1/30 s, the H.264 header says 30 fps - seen on VOE) gives a black picture on the box as
+        # MKV, the TS itself plays: such a file stays TS. Read from the PES time stamps of the first 4 MB
+        if self._getRemuxFormat()[0] == 'mpegts' or self._detectContainer() != 'mpegts':
+            return False
+        try:
+            with open(fsPath(self.filePath), 'rb') as f:
+                data = bytearray(f.read(4 * 1024 * 1024))
+            pmtPid = videoPid = None
+            stamps = []
+            for pos in range(0, len(data) - 187, 188):
+                if data[pos] != 0x47:
+                    break
+                if not data[pos + 1] & 0x40 or not data[pos + 3] & 0x10:
+                    # only packets that start a section / PES and carry a payload
+                    continue
+                pid = ((data[pos + 1] & 0x1f) << 8) | data[pos + 2]
+                off = pos + 4
+                if data[pos + 3] & 0x20:
+                    off += 1 + data[off]
+                if pid == 0 and pmtPid is None:
+                    off += 1 + data[off]  # pointer field
+                    end = min(off + 3 + (((data[off + 1] & 0x0f) << 8) | data[off + 2]) - 4, pos + 188)
+                    for p in range(off + 8, end - 3, 4):
+                        if (data[p] << 8) | data[p + 1]:
+                            pmtPid = ((data[p + 2] & 0x1f) << 8) | data[p + 3]
+                            break
+                elif pid == pmtPid and videoPid is None:
+                    off += 1 + data[off]
+                    end = min(off + 3 + (((data[off + 1] & 0x0f) << 8) | data[off + 2]) - 4, pos + 188)
+                    p = off + 12 + (((data[off + 10] & 0x0f) << 8) | data[off + 11])
+                    while p + 5 <= end:
+                        # MPEG-2 / H.264 / HEVC video
+                        if data[p] in (0x02, 0x1b, 0x24):
+                            videoPid = ((data[p + 1] & 0x1f) << 8) | data[p + 2]
+                            break
+                        p += 5 + (((data[p + 3] & 0x0f) << 8) | data[p + 4])
+                elif pid == videoPid and data[off:off + 3] == b'\x00\x00\x01' and data[off + 7] & 0x80:
+                    # DTS when there is one (B-frames), else PTS
+                    t = off + (14 if data[off + 7] & 0x40 else 9)
+                    stamps.append(((data[t] & 0x0e) << 29) | (data[t + 1] << 22) | ((data[t + 2] & 0xfe) << 14) | (data[t + 3] << 7) | (data[t + 4] >> 1))
+                    if len(stamps) > 300:
+                        break
+        except Exception:
+            printExc()
+            return False
+        # a jump between two segments or the 33 bit wrap is no frame time
+        steps = [b - a for a, b in zip(stamps, stamps[1:]) if 0 < b - a < 90000]
+        if len(steps) < 50:
+            return False
+        common = max(set(steps), key=steps.count)
+        # 23.976 / 59.94 fps alternate by one tick (3753 / 3754)
+        odd = len([s for s in steps if abs(s - common) > 2])
+        printDBG("HLSDownloader video frame times: %d of %d differ from %d" % (odd, len(steps), common))
+        return odd * 10 > len(steps)
 
     def _moveFile(self, src, dst):
         try:
@@ -201,20 +263,37 @@ class HLSDownloader(BaseDownloader, SidecarMixin):
             printExc()
             return False
 
+    def _getRemuxLogPath(self):
+        return self._getBasePath(self.tempRemuxPath).rsplit('.iptv.remux.tmp', 1)[0] + '.iptv.remux.log'
+
+    def _remuxLogText(self):
+        # the end of ffmpeg's output of the remux; the file is removed, it would stay next to the video otherwise
+        text = ''
+        path = fsPath(self._getRemuxLogPath())
+        try:
+            if os.path.isfile(path):
+                with open(path, 'rb') as f:
+                    text = ensureText(f.read())[-1500:].strip()
+        except Exception:
+            printExc()
+        self._safeRm(path)
+        return text
+
     def doStartPostProcess(self):
         self.postProcessMode = 'remux'
         fmt, ext = self._getRemuxFormat()
         self.tempRemuxPath = self._getBasePath(self.filePath) + '.iptv.remux.tmp' + ext
 
         # -y: a leftover temp file from an aborted run must not make ffmpeg wait for an overwrite answer
-        cmd = DMHelper.GET_FFMPEG_PATH() + ' -y '
+        cmd = DMHelper.GET_FFMPEG_PATH() + ' -y -nostdin -hide_banner -loglevel warning '
         cmd += ' -i "%s" ' % shellQuote(self.filePath)
         # 0:v? too: an audio-only stream (radio) has no video, "-map 0:v" would abort the remux
         cmd += ' -map 0:v? -map 0:a? -vcodec copy -acodec copy '
         if fmt == 'mp4':
             # index at the start of the finished file, so players can seek in it right away
             cmd += ' -movflags +faststart '
-        cmd += ' -f %s "%s" >/dev/null 2>&1 ' % (fmt, shellQuote(self.tempRemuxPath))
+        # ffmpeg's warnings / errors go to the debug log when the remux fails (_remuxLogText)
+        cmd += ' -f %s "%s" >"%s" 2>&1 ' % (fmt, shellQuote(self.tempRemuxPath), shellQuote(self._getRemuxLogPath()))
 
         printDBG("HLSDownloader doStartPostProcess cmd[%s]" % cmd)
 
@@ -465,11 +544,7 @@ class HLSDownloader(BaseDownloader, SidecarMixin):
             # (.ts) and the .txt - no remux, cover or subtitles, they would finish after that report
             printDBG("HLSDownloader live recording stopped -> kept as finished file")
             self.status = DMHelper.STS.DOWNLOADED
-            ext = self.CONTAINER_EXT.get(self._detectContainer())
-            if ext and not self.filePath.lower().endswith(ext):
-                target = self._getTargetPath(ext)
-                if self._moveFile(self.filePath, target):
-                    self.filePath = target
+            self._renameToContainer(self._detectContainer())
             if self.sidecarEnabled:
                 self._writeTxtSidecar(self.filePath)
             return
@@ -482,6 +557,7 @@ class HLSDownloader(BaseDownloader, SidecarMixin):
             targetPath = self._getTargetPath(self._getRemuxFormat()[1])
             remuxSize = DMHelper.getFileSize(fsPath(self.tempRemuxPath))
             printDBG("POSTPROCESSING remux finished tempPath[%s] localFileSize[%r] code[%r]" % (self.tempRemuxPath, remuxSize, code))
+            remuxLog = self._remuxLogText()
 
             if remuxSize > 0 and code == 0:
                 # the remuxed file may keep the name of the downloaded one (TS remuxed to a file asked for as .mp4)
@@ -492,7 +568,7 @@ class HLSDownloader(BaseDownloader, SidecarMixin):
                     self._finalizeSuccess(targetPath)
                     return
 
-            printDBG("HLSDownloader remux failed -> fallback to original target")
+            printDBG("HLSDownloader remux failed -> fallback to original target, ffmpeg:\n%s" % remuxLog)
             if self._finalizeMp4Fallback():
                 return
             self.status = DMHelper.STS.INTERRUPTED
@@ -509,6 +585,10 @@ class HLSDownloader(BaseDownloader, SidecarMixin):
             if not self.ffmpegPostEnabled and self.allowFinalRename:
                 # a download in the download manager (a host's own remux container above wins)
                 self._applyFormatSetting()
+            if self.ffmpegPostEnabled and self.allowFinalRename and self._keepTsForIrregularFrames():
+                printDBG("HLSDownloader irregular video frame times -> kept as TS, no remux")
+                self.ffmpegPostEnabled = False
+                self._renameToContainer('mpegts')
             if self.ffmpegPostEnabled:
                 self.status = DMHelper.STS.POSTPROCESSING
                 self.doStartPostProcess()
