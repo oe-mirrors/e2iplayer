@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "09.10.2026"
+LAST_MODIFIED = "25.10.2026"
 # 03.10.2026 - new host for noxx.gg (noxx.to), free TV series (English, TMDb catalogue)
 #   Every visit first lands on /verify: a cookie check (token in the page, POST /verified -> PHPSESSID,
-#   valid ~2 hours) that is passed here automatically, no captcha. Browse / genres / years / sort /
+#   valid ~2 hours), now with a Cloudflare Turnstile solved through the captcha service. Browse / genres / years / sort /
 #   search through the JSON endpoint /api/load-more-browse, "Aired this week" from /timeline,
 #   series page /tv/<slug> carries all seasons and episodes, episode page /tv/<slug>/<s>/<e> the
 #   servers: Doodstream (myvidplay/playmogo) and SeekStreaming (seekplayer.vip) first, then videasy;
@@ -11,6 +11,8 @@ LAST_MODIFIED = "09.10.2026"
 #   paging (First / Jump / Next, the endpoint only tells whether there is more).
 import re
 
+from Components.config import config
+from Plugins.Extensions.IPTVPlayer.components.captcha_helper import CaptchaHelper
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized, IsExternalResolveAllowed
@@ -42,7 +44,7 @@ TMDB_IMG = "https://image.tmdb.org/t/p/w342"
 YEAR_RANGES = ("2025-2026", "2020-2024", "2015-2019", "2010-2014", "2005-2009", "2000-2004")
 
 
-class Noxx(GenericFolderWatchedScraperMixin, CBaseHostClass):
+class Noxx(GenericFolderWatchedScraperMixin, CBaseHostClass, CaptchaHelper):
     # what identifies a row and is needed to open it again
     FAV_FIELDS = ("name", "category", "type", "url", "title", "s_title", "slug", "season", "episode", "series_url",
                   "icon", "desc", "meta_type", "meta_title", "meta_year")
@@ -58,6 +60,8 @@ class Noxx(GenericFolderWatchedScraperMixin, CBaseHostClass):
                      {"category": "list_browse", "title": _("Alphabetically"), "filters": {"s": "alphabetical"}},
                      {"category": "list_genres", "title": _("Genres"), "url": self.getFullUrl("/browse")},
                      {"category": "list_years", "title": _("Year")}] + self.searchItems()
+
+        self.verifyError = ""
 
         self.watchedHelper = IPTVWatchedHelper("noxx")
         self.wfInitFolderCache()
@@ -95,10 +99,21 @@ class Noxx(GenericFolderWatchedScraperMixin, CBaseHostClass):
         endpoint = self.cm.ph.getSearchGroups(data, r'var\s+verifyEndpoint\s*=\s*"([^"]+)"')[0] or "/verified"
         if not token:
             return False
+        post = {"token": token}
+        # since 10.2026 the check can carry a Cloudflare Turnstile (action "verify", cData = the page token)
+        tsKey = self.cm.ph.getSearchGroups(data, r'var\s+tsKey\s*=\s*"([^"]+)"')[0]
+        if tsKey:
+            bypass = config.plugins.iptvplayer.captcha_bypass.value or "mye2i"
+            cf = self.processCaptcha(tsKey, pageUrl or self.MAIN_URL, bypassCaptchaService=bypass, captchaType="cf_re", captchaAction="verify", captchaData=token)[0]
+            if not cf:
+                # cancelled / no captcha service: nothing is posted, the next request asks again
+                self.verifyError = _("Captcha was not entered.")
+                return False
+            post.update({"cf": cf, "cferr": "", "ms": "4000", "tl": "800", "ti": "0", "hid": "0"})
         params = dict(self.defaultParams)
         params["header"] = dict(self.HEADER)
         params["header"].update({"Referer": pageUrl or self.MAIN_URL, "Origin": self.MAIN_URL.rstrip("/")})
-        sts, resp = self.cm.getPage(self.getFullUrl(endpoint), params, {"token": token})
+        sts, resp = self.cm.getPage(self.getFullUrl(endpoint), params, post)
         printDBG("Noxx._passVerify -> %s" % (resp[:100] if sts else sts))
         return bool(sts and '"ok":true' in resp.replace(" ", ""))
 
@@ -107,6 +122,7 @@ class Noxx(GenericFolderWatchedScraperMixin, CBaseHostClass):
             addParams = dict(self.defaultParams)
         sts, data = self.cm.getPage(baseUrl, addParams, post_data)
         if sts and self._isVerifyPage(data):
+            self.verifyError = ""
             if self._passVerify(data, self.cm.meta.get("url", "") or baseUrl):
                 sts, data = self.cm.getPage(baseUrl, addParams, post_data)
                 if sts and self._isVerifyPage(data):
@@ -114,7 +130,7 @@ class Noxx(GenericFolderWatchedScraperMixin, CBaseHostClass):
             else:
                 sts, data = False, ""
             if not sts:
-                SetIPTVPlayerLastHostError(_("The site's browser check could not be passed."))
+                SetIPTVPlayerLastHostError(self.verifyError or _("The site's browser check could not be passed."))
         return sts, data
 
     def _getJson(self, url):

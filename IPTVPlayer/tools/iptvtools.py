@@ -228,6 +228,10 @@ class eConnectCallbackObj:
                     self.obj.get().remove(self.connectHandler)
                 else:
                     self.obj.remove(self.connectHandler)
+            elif callable(getattr(self.connectHandler, 'disconnect', None)):
+                # OpenATV (since 10.2026, HbbTV glue) adds connect() to its list based signals: that connection only
+                # leaves the callback list on disconnect(), not on deletion as the DreamOS connection objects do
+                self.connectHandler.disconnect()
             else:
                 del self.connectHandler
         except Exception:

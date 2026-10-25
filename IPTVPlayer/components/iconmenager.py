@@ -7,6 +7,7 @@ from .asynccall import AsyncMethod
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import common, ConvertibleImageFirstBytes, ImageFileNeedsPreparing, PrepareImageFile, \
     DescribeImageFile, MatchFirstBytes
 from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
+from Plugins.Extensions.IPTVPlayer.libs.botprotection import remembered_user_agent
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import mkdirs, \
                       FreeSpace as iptvtools_FreeSpace, \
                       printDBG, printExc, RemoveOldDirsIcons, RemoveAllFilesIconsFromPath, \
@@ -386,10 +387,18 @@ class IconMenager:
 
         if img_url.endswith('|cf'):
             img_url = img_url[:-3]
-            params_cfad = {'with_metadata': True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True}
+            # CFProtection: the urllib way like the host's getPageCFProtection pages (cf_clearance is bound to its TLS
+            # fingerprint, pycurl gets 403)
+            params_cfad = {'with_metadata': True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'CFProtection': True}
             domain = urlparser.getDomain(img_url, onlyDomain=True)
 
             params_cfad['cookiefile'] = GetCookieDir('{0}.cookie'.format(domain))
+            # cf_clearance only counts together with the User-Agent that solved the check (MyE2i): the host's
+            # requests remember it next to the jar, the cover has to send the same one
+            solvedUserAgent = remembered_user_agent(params_cfad['cookiefile'])
+            if solvedUserAgent:
+                params_cfad['header'] = {'User-Agent': solvedUserAgent, 'Referer': '/'.join(img_url.split('/')[:3]) + '/',
+                                         'Accept': 'image/avif,image/webp,image/apng,image/*,*/*;q=0.8'}
 
         else:
             params_cfad = {}

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "09.10.2026"
+LAST_MODIFIED = "25.10.2026"
 # Coding: BY MOHAMED_OS
 # Ported to the python3 framework (08.10.2026):
 #   - Ostora TV (Android app): its API (/api/v6.2/main | category/<id>?page=<n>) on hashed *.sa0xx.shop hosts
@@ -84,6 +84,17 @@ def _decrypt(data):
     except Exception:
         printExc()
     return ""
+
+
+def _wrappedKey(data):
+    # "data:...;base64,<ENC:...>": the AES key of the segments is itself encrypted with a key inside the app
+    keyUri = re.search(r'#EXT-X-KEY:[^\n]*URI="data:[^,"]*;base64,([^"]+)"', data or "")
+    if not keyUri:
+        return False
+    try:
+        return base64.b64decode(keyUri.group(1)).startswith(b"ENC:")
+    except Exception:
+        return False
 
 
 def _parseSource(source):
@@ -276,25 +287,27 @@ class OstoraTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
         sts, data = self.cm.getPage(url, {"header": header})
         if not sts or "#EXTM3U" not in data:
             return []
-        keyUri = self.cm.ph.getSearchGroups(data, r'#EXT-X-KEY:[^\n]*URI="data:[^,"]*;base64,([^"]+)"')[0]
-        if keyUri:
-            try:
-                wrapped = base64.b64decode(keyUri).startswith(b"ENC:")
-            except Exception:
-                wrapped = False
-            if wrapped:
-                # the AES key of the segments is itself encrypted with a key inside the app
-                SetIPTVPlayerLastHostError(_("DRM protection detected."))
-                return None
+        if _wrappedKey(data):
+            SetIPTVPlayerLastHostError(_("DRM protection detected."))
+            return None
         url = self.cm.meta.get("url") or url
         meta = dict(meta, iptv_proto="m3u8")
         links = getDirectM3U8Playlist(strwithmeta(url, meta), checkExt=False, checkContent=True, sortWithMaxBitrate=99999999)
-        if links and "#EXT-X-STREAM-INF" in data and str(links[0]["url"]) != url:
+        first = links[0]["url"] if links else ""
+        if str(first).startswith("merge://"):
+            # own audio track: check the video variant, not the merge:// link
+            first = getattr(first, "meta", {}).get("video_url", "")
+        if first and "#EXT-X-STREAM-INF" in data and str(first) != url:
             # a master whose variant playlists are gone (MBC outside its region: 404) never plays
-            sts, variant = self.cm.getPage(links[0]["url"], {"header": header})
+            sts, variant = self.cm.getPage(first, {"header": header})
             if not sts or "#EXTM3U" not in (variant or ""):
-                printDBG("OstoraTV: variant playlist not answering (HTTP %s) [%s]" % (self.cm.meta.get("status_code", 0), links[0]["url"]))
+                printDBG("OstoraTV: variant playlist not answering (HTTP %s) [%s]" % (self.cm.meta.get("status_code", 0), first))
                 SetIPTVPlayerLastHostError(_("This content is not available in your region."))
+                return None
+            if _wrappedKey(variant):
+                # ON Sport / ON Sport Max masters (manar3 x1/14.json, 15.json) carry the wrapped key only in the
+                # variant playlist (exteplayer3: "Invalid data found when processing input")
+                SetIPTVPlayerLastHostError(_("DRM protection detected."))
                 return None
         return requireDownloaderForDisguisedHls(links)
 

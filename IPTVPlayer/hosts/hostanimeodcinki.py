@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "04.10.2026"
+LAST_MODIFIED = "25.10.2026"
 # 03.10.2026 - revival for the redesigned anime-odcinki.pl ("VOD Dashboard", Cloudflare):
 #   catalogue from the hex encoded JSON of /anime-lista/ (series / movies A-Z, airing now), latest
 #   episodes via admin-ajax ao_get_latest_episodes (First page / Next page), genre / season / search pages
@@ -12,7 +12,7 @@ LAST_MODIFIED = "04.10.2026"
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetTmpDir
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
@@ -21,12 +21,15 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFo
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
+from Plugins.Extensions.IPTVPlayer.libs.botprotection import remembered_user_agent
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 ###################################################
 # FOREIGN import
 ###################################################
 from binascii import a2b_base64, unhexlify
+import base64
+import os
 import re
 import time
 ###################################################
@@ -59,7 +62,8 @@ class AnimeOdcinkiPL(GenericFolderWatchedScraperMixin, CBaseHostClass):
     MAX_FILM_PARTS = 3
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {"history": "AnimeOdcinki.pl", "cookie": "animeodcinkipl.cookie"})
+        # cookie file named after the domain: the cover loader ("|cf" icons) looks for <domain>.cookie
+        CBaseHostClass.__init__(self, {"history": "AnimeOdcinki.pl", "cookie": "anime-odcinki.pl.cookie"})
         self.HEADER = self.cm.getDefaultHeader()
         self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
         self.MAIN_URL = gettytul()
@@ -114,14 +118,44 @@ class AnimeOdcinkiPL(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
 
     def _icon(self, url):
-        # one stable, small poster url for the same picture from every list (i0.wp.com resizer)
+        # one stable poster url for the same picture from every list. The site's own file with "|cf": the
+        # i0.wp.com resizer cannot get new uploads past the site's Cloudflare (403), the cover loader fetches
+        # it with this host's cf_clearance + solving User-Agent (cookie file named after the domain)
         url = ensure_str(url or "").replace("&amp;", "&").replace("&#038;", "&").strip()
         if not url:
             return ""
         url = self.getFullIconUrl(url)
-        m = re.match(r"https?://(?:i\d\.wp\.com/)?(anime-odcinki\.pl/wp-content/[^?#]+)", url)
+        m = re.match(r"https?://(?:i\d\.wp\.com/)?(anime-odcinki\.pl/wp-content/[^?#|]+)", url)
         if m:
-            return "https://i0.wp.com/%s?w=300" % m.group(1)
+            return "https://%s|cf" % m.group(1)
+        return url
+
+    def _sidecarIcon(self, icon):
+        # the sidecar poster is a plain wget (no cookie jar): the resizer copy, which works for older uploads
+        m = re.match(r"https://(anime-odcinki\.pl/wp-content/[^|]+)\|cf$", icon or "")
+        return ("https://i0.wp.com/%s?w=300" % m.group(1)) if m else icon
+
+    def _infoIcon(self, icon):
+        # the INFO view downloads its picture with wget/curl - another TLS fingerprint than the one the cf_clearance
+        # belongs to (403). The picture is fetched here the CFProtection (urllib) way and handed over inline.
+        if not (icon or "").endswith("|cf"):
+            return icon
+        url = icon[:-3]
+        params = dict(self.defaultParams, CFProtection=True)
+        params["header"] = dict(self.HEADER, **{"User-Agent": remembered_user_agent(self.COOKIE_FILE) or self.HEADER.get("User-Agent", ""),
+                                                "Referer": self.MAIN_URL, "Accept": "image/avif,image/webp,image/apng,image/*,*/*;q=0.8"})
+        tmpFile = GetTmpDir("animeodcinki_info.img")
+        try:
+            if self.cm.saveWebFile(tmpFile, url, params).get("sts"):
+                with open(tmpFile, "rb") as f:
+                    data = f.read()
+                mime = "image/webp" if data[:4] == b"RIFF" else "image/png" if data[:4] == b"\x89PNG" else "image/jpeg"
+                return "data:%s;base64,%s" % (mime, ensure_str(base64.b64encode(data)))
+        except Exception:
+            printExc()
+        finally:
+            if os.path.isfile(tmpFile):
+                os.remove(tmpFile)
         return url
 
     @staticmethod
@@ -502,7 +536,7 @@ class AnimeOdcinkiPL(GenericFolderWatchedScraperMixin, CBaseHostClass):
             urltab = self._getEpisodeLinks(url)
         if not urltab:
             SetIPTVPlayerLastHostError(_("This video is only on hosters E2iPlayer cannot play."))
-        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), sidecarTxt, metaQuery))
+        return applySidecarToLinks(urltab, buildSidecarFromItem(dict(cItem, icon=self._sidecarIcon(cItem.get("icon", ""))), IsSidecarEnabled(), sidecarTxt, metaQuery))
 
     def getVideoLinks(self, videoUrl):
         printDBG("AnimeOdcinkiPL.getVideoLinks [%s]" % videoUrl)
@@ -552,6 +586,7 @@ class AnimeOdcinkiPL(GenericFolderWatchedScraperMixin, CBaseHostClass):
             icon = meta.get("poster", "")
         if cItem.get("category") == "episode":
             title = cItem.get("title", title)
+        icon = self._infoIcon(icon)
         return [{"title": title, "text": text, "images": [{"title": "", "url": icon}] if icon else [], "other_info": otherInfo}]
 
     ###################################################

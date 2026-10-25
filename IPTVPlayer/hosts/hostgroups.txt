@@ -77,6 +77,7 @@
   "dramaqueen",
   "uaserials",
   "eneyida",
+  "filmix",
   "ninateka",
   "drdk",
   "serijebalkan",
@@ -119,7 +120,8 @@
   "streamdb",
   "egyclub",
   "ask4movie",
-  "tele5"
+  "tele5",
+  "maxvod"
  ],
  "cartoonsandanime": [
   "aniworld",
@@ -172,7 +174,8 @@
   "rdlive",
   "witv",
   "aloula",
-  "royatv"
+  "royatv",
+  "capitanstrims"
  ],
  "live": [
   "webstream",
@@ -205,7 +208,8 @@
   "tv8",
   "kanald",
   "atvtr",
-  "showtv"
+  "showtv",
+  "rakutentv"
  ],
  "iptv": [
   "xtream",
@@ -300,7 +304,8 @@
   "tvproart",
   "spryciarze",
   "wolnelekturypl",
-  "polskieradio"
+  "polskieradio",
+  "maxvod"
  ],
  "english": [
   "youtube",
@@ -344,7 +349,8 @@
   "showbox",
   "cinehd",
   "streamdb",
-  "ask4movie"
+  "ask4movie",
+  "rakutentv"
  ],
  "german": [
   "youtube",
@@ -387,7 +393,8 @@
   "filmo",
   "sportdeutschland",
   "plutotv",
-  "vavooto"
+  "vavooto",
+  "rakutentv"
  ],
  "french": [
   "youtube",
@@ -412,7 +419,8 @@
   "dailymotion",
   "ritsatv",
   "uaserials",
-  "eneyida"
+  "eneyida",
+  "filmix"
  ],
  "hungarian": [
   "youtube",
