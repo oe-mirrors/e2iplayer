@@ -89,6 +89,8 @@ _PROBE_SCRIPT = (
     'echo "@@cmdwrap";     X=/usr/bin/cmdwrap;  [ -x $X ] && r 1 $X; p $X; '
     'echo "@@lsdir";       X=/usr/bin/lsdir;    [ -x $X ] && r 1 $X --version; p $X; '
     'echo "@@f4mdump";     X=/usr/bin/f4mdump;  [ -x $X ] && r 1 $X; p $X; '
+    'echo "@@e2ipow";      X=/usr/bin/e2ipow;   [ -x $X ] && r 1 $X --version; p $X; '
+    'echo "@@ext3png";     X=-; for L in /usr/lib/exteplayer3png.so /lib/exteplayer3png.so; do [ -f $L ] && X=$L && break; done; echo "$X"; '
     'echo "@@ffmpeg";      X=/usr/bin/ffmpeg;   [ -x $X ] && r 1 $X -version; p $X; '
     'echo "@@wget";        X=/usr/bin/wget;     [ -x $X ] && r 1 $X --version; p $X; '
     'echo "@@curl";        X=/usr/bin/curl;     [ -x $X ] && r 1 $X --version; p $X; '
@@ -476,6 +478,8 @@ class _SystemInfo(object):
         out.append(row("cmdwrap", banner("cmdwrap", _("not installed (no ffmpeg downloads)"))))
         out.append(row("lsdir", lsdir_val(_("not installed (no local media / folder browser)"))))
         out.append(row("f4mdump", banner("f4mdump", _("not installed (no HDS/F4M streams)"))))
+        out.append(row("e2ipow", first("e2ipow", _("not installed (Byse: slower captcha check)"))))
+        out.append(row("exteplayer3png", tool("ext3png")[1] or _("not installed (no image subtitles in exteplayer3)")))
         out.append(row("curl-impersonate", path_val("curlimp", _("not installed (sites with bot protection may fail)"))))
         imp = self._impersonateState()
         if imp:

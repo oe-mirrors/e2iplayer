@@ -3730,21 +3730,27 @@ class pageParser(CaptchaHelper):
             # share one core because of the GIL), worker k tries k, k+n, k+2n, ...; returns (solution or
             # None, workers) - workers 0: not started or all failed, the caller solves in-process then
             cores = min(4, cpuCores())
-            script = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "scripts", "bysepow.py")
-            if not os.path.isfile(script):
-                script += "c"
-            python = ""
-            for name in ("python", "python2") if isPY2() else ("python3", "python"):
-                python = Which(name)
-                if python:
-                    break
-            if cores < 2 or not python or not os.path.isfile(script):
-                return None, 0
+            # add 251026: "e2ipow byse" of e2iplayer-deps (same arguments and output) is about 100x faster,
+            # worth it on one core too
+            command = [Which("e2ipow"), "byse"]
+            if not command[0]:
+                script = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "scripts", "bysepow.py")
+                if not os.path.isfile(script):
+                    script += "c"
+                python = ""
+                for name in ("python", "python2") if isPY2() else ("python3", "python"):
+                    python = Which(name)
+                    if python:
+                        break
+                if cores < 2 or not python or not os.path.isfile(script):
+                    return None, 0
+                command = [python, script]
+            printDBG("parserBYSE proof of work: %s, %d workers" % (" ".join(command), cores))
             procs = []
             failed = 0
             try:
                 for k in range(cores):
-                    procs.append(subprocess.Popen([python, script, t, str(e), str(k), str(cores), "%d" % timeout], stdout=subprocess.PIPE, stderr=subprocess.PIPE))
+                    procs.append(subprocess.Popen(command + [t, str(e), str(k), str(cores), "%d" % timeout], stdout=subprocess.PIPE, stderr=subprocess.PIPE))
                 start = shown = time.time()
                 while procs:
                     for p in procs[:]:

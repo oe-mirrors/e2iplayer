@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 2026-10-17 - buffering: the skip keys stop at the end of the part downloaded so far (bufferedEnd()), the
+# Last Modified: 2026-10-25 - image subtitles (PGS / DVB / XSUB) of exteplayer3 with the exteplayer3png.so plugin.
+# 2026-10-17 - buffering: the skip keys stop at the end of the part downloaded so far (bufferedEnd()), the
 #              watched mark takes the clip length only from a finished download.
 # 2026-10-12 - a downloaded file also finds its subtitles saved as name.de.srt (box language, then English).
 # 2026-07-26 Updated to ignore non-subtitle sidecar text files during automatic subtitle detection
@@ -23,8 +24,8 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, Ge
                                                           GetE2VideoPolicy, SetE2VideoPolicy, GetDefaultLang, GetPolishSubEncoding, iptv_system, \
                                                           GetE2AudioCodecMixOption, SetE2AudioCodecMixOption, CreateTmpFile, GetTmpDir, IsExecutable, GetGstIfdSrc, GetGstPlayerPath, MapUcharEncoding, \
                                                           GetE2VideoModeChoices, GetE2VideoMode, SetE2VideoMode, GetPlayerSkinDir, GetNice, E2PrioFix, \
-                                                          StripColorCodes
-from Plugins.Extensions.IPTVPlayer.tools.iptvsubtitles import IPTVSubtitlesHandler, IPTVEmbeddedSubtitlesHandler
+                                                          StripColorCodes, mkdirs
+from Plugins.Extensions.IPTVPlayer.tools.iptvsubtitles import IPTVSubtitlesHandler, IPTVEmbeddedSubtitlesHandler, IPTVGraphicSubtitlesHandler
 from Plugins.Extensions.IPTVPlayer.tools.iptvmoviemetadata import IPTVMovieMetaDataHandler
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.iptvsubdownloader import IPTVSubDownloaderWidget
@@ -60,7 +61,7 @@ try:
 except Exception:
     printExc()
 
-from os import path as os_path, rename as os_rename
+from os import path as os_path, rename as os_rename, stat as os_stat, listdir as os_listdir, remove as os_remove
 import re
 import time
 import json
@@ -70,6 +71,38 @@ except ImportError:
     Image = None
 
 ###################################################
+
+# exteplayer3 saves image subtitles (PGS / DVB / XSUB) as PNG files with -G <directory>, through the
+# exteplayer3png.so plugin of e2iplayer-deps (dlopen, found in the library path); without -G it does not
+# even list those tracks. Builds that do not know -G stop at the unknown option, so the getopt string
+# (the one with "9:", the subtitle track option) is looked up in the binary first. The OE-A feed packs
+# exteplayer3 with UPX on 32-bit boxes, the string is not readable then - those builds are recent and
+# know -G (it came with the graphic subtitles in 2019).
+EXTEPLAYER3PNG_PATHS = ['/usr/lib/exteplayer3png.so', '/lib/exteplayer3png.so']
+graphicSubsCache = (None, False)
+
+
+def GraphicSubtitlesSupported(exteplayer3path):
+    global graphicSubsCache
+    if not any(os_path.isfile(path) for path in EXTEPLAYER3PNG_PATHS):
+        return False
+    try:
+        st = os_stat(exteplayer3path)
+        key = (exteplayer3path, st.st_mtime, st.st_size)
+        if key != graphicSubsCache[0]:
+            with open(exteplayer3path, 'rb') as f:
+                data = f.read()
+            if b'UPX!' in data[:4096]:
+                supported, how = True, 'UPX packed'
+            else:
+                supported = any(b'G:' in opts for opts in re.findall(b'[0-9A-Za-z:]{20,}', data) if b'9:' in opts)
+                how = 'getopt string'
+            graphicSubsCache = (key, supported)
+            printDBG("exteplayer3: image subtitles supported[%s] (%s)" % (supported, how))
+        return graphicSubsCache[1]
+    except Exception:
+        printExc()
+    return False
 
 
 class ExtPlayerCommandsDispatcher():
@@ -198,6 +231,8 @@ class IPTVExtMoviePlayer(Screen):
     # canvas - see resolution="1280,720" on their <screen> tags
     REF_W = 1280
     REF_H = 720
+    # rectangles of one image subtitle (MAX_RECT_DESC in exteplayer3's graphic_subtitle.c)
+    GRAPHIC_SUB_RECTS = 4
 
     # theme -> (progress, cbuff, buff) bar image in playerskins/_scaled/,
     # shipped as <name>_1920.png/<name>_2560.png - see
@@ -274,6 +309,9 @@ class IPTVExtMoviePlayer(Screen):
         subSkin = ''
         for idx in range(self.subLinesNum):
             subSkin += subSkinPart.format(idx + 1)
+        # image subtitles: placed and sized in real pixels by updateGraphicSubtitles()
+        for idx in range(self.GRAPHIC_SUB_RECTS):
+            subSkin += '<widget name="subGraphic%d" position="0,0" size="1,1" zPosition="1" transparent="1" alphatest="blend" />' % (idx + 1)
 
         self.playbackBannerFile = "playback_banner.png"
 
@@ -776,6 +814,12 @@ class IPTVExtMoviePlayer(Screen):
         self.subHandler['marker'] = None
         self.subHandler['synchro'] = {'visible': False, 'guiElemNames': ['subSynchroLabel', 'subSynchroIcon'], 'icon': None}
         self.subHandler['pos_y_offset'] = 0
+        # image subtitles, 'enabled' when exteplayer3 runs with -G
+        graphicDir = GetTmpDir('e2i_graphic_subs')
+        self.graphicSubs = {'enabled': False, 'dir': graphicDir, 'handler': IPTVGraphicSubtitlesHandler(graphicDir), 'marker': None}
+        for idx in range(self.GRAPHIC_SUB_RECTS):
+            self['subGraphic%d' % (idx + 1)] = Cover3()
+            self['subGraphic%d' % (idx + 1)].hide()
         self['subSynchroLabel'] = Label("0.0s")
         self['subSynchroIcon'] = Cover3()
         try:
@@ -1308,6 +1352,7 @@ class IPTVExtMoviePlayer(Screen):
                 self.metaHandler.setEmbeddedSubtileTrackIdx(-1)
                 self.extPlayerCmddDispatcher.setSubtitleTrack(-1)
                 self.subHandler['embedded_handler'].flushSubtitles()
+                self.flushGraphicSubtitles()
                 self.enableSubtitles()
 
     def _looksLikeSubtitleFile(self, filePath):
@@ -1449,6 +1494,7 @@ class IPTVExtMoviePlayer(Screen):
         self.playback['SubtitleTrack'] = {'id': -1}
         self.extPlayerCmddDispatcher.setSubtitleTrack(-1)
         self.subHandler['embedded_handler'].flushSubtitles()
+        self.flushGraphicSubtitles()
         self.hideSubtitles()
         self.subHandler['enabled'] = False
         self.updateSubSynchroControl()
@@ -1457,6 +1503,7 @@ class IPTVExtMoviePlayer(Screen):
         printDBG("enableEmbeddedSubtitles")
         if self.playback['SubtitleTrack'].get('id', -1) != id:
             self.subHandler['embedded_handler'].flushSubtitles()
+            self.flushGraphicSubtitles()
             self.extPlayerCmddDispatcher.setSubtitleTrack(id)
         self.subHandler['handler_type'] = 'embedded_handler'
         self.subHandler['marker'] = None
@@ -1564,6 +1611,7 @@ class IPTVExtMoviePlayer(Screen):
             delay_ms = self.metaHandler.getSubtitleTrackDelay()
         else:
             delay_ms = 0
+            self.updateGraphicSubtitles(timeMS, force)
         marker, text = self.subHandler[handler_type].getSubtitles(timeMS + delay_ms, prevMarker)
         if None is not text:
             self.subHandler['marker'] = marker
@@ -1578,6 +1626,64 @@ class IPTVExtMoviePlayer(Screen):
     def hideSubtitles(self):
         for idx in range(self.subLinesNum):
             self['subLabel%d' % (idx + 1)].hide()
+
+    def addGraphicSubAtom(self, obj):
+        # {"id":..,"s":<ms>,"e":<ms> or null,"r":[{"x","y","w","h","f":<png in the -G directory>}]}
+        if not self.graphicSubs['enabled']:
+            return
+        try:
+            rects = []
+            for rect in obj['r']:
+                rects.append({'x': int(rect['x']), 'y': int(rect['y']), 'w': int(rect['w']), 'h': int(rect['h']), 'f': os_path.basename(str(rect['f']))})
+            end = obj.get('e')
+            self.graphicSubs['handler'].addAtom(int(obj['s']), None if end is None else int(end), rects)
+        except Exception:
+            printExc()
+
+    def updateGraphicSubtitles(self, timeMS, force=False):
+        if not self.graphicSubs['enabled']:
+            return
+        handler = self.graphicSubs['handler']
+        marker, rects = handler.getRects(timeMS, None if force else self.graphicSubs['marker'])
+        if rects is None:
+            return
+        self.graphicSubs['marker'] = marker
+        for idx in range(self.GRAPHIC_SUB_RECTS):
+            widget = self['subGraphic%d' % (idx + 1)]
+            pixmap = None
+            if idx < len(rects):
+                rect = rects[idx]
+                try:
+                    # every picture is a new file: openATV would keep each one in its pixmap cache otherwise
+                    pixmap = LoadPixmap(path=handler.getPath(rect), cached=False)
+                except Exception:
+                    printExc()
+            if pixmap and widget.instance:
+                # the rectangles already are in screen pixels (exteplayer3 -W/-H)
+                widget.instance.move(ePoint(rect['x'], rect['y']))
+                widget.instance.resize(eSize(rect['w'], rect['h']))
+                widget.setPixmap(pixmap)
+                widget.show()
+            else:
+                widget.hide()
+
+    def hideGraphicSubtitles(self):
+        self.graphicSubs['marker'] = None
+        for idx in range(self.GRAPHIC_SUB_RECTS):
+            self['subGraphic%d' % (idx + 1)].hide()
+
+    def flushGraphicSubtitles(self):
+        self.graphicSubs['handler'].flushSubtitles()
+        self.hideGraphicSubtitles()
+
+    def clearGraphicSubtitlesDir(self):
+        # PNG files left by an exteplayer3 that was killed
+        try:
+            for name in os_listdir(self.graphicSubs['dir']):
+                if name.endswith('.png'):
+                    os_remove(os_path.join(self.graphicSubs['dir'], name))
+        except Exception:
+            pass
 
     def setSubtitlesText(self, text, stripLine=True, breakToLongLine=True):
         # back = True
@@ -2287,10 +2393,17 @@ class IPTVExtMoviePlayer(Screen):
                     self.playbackUpdateInfo({'SubtitleTracks': tracks})
                 elif "s_a" == key:
                     if self.subHandler['enabled']:
-                        subAtom = _mapSubAtom(obj)
-                        self.subHandler['embedded_handler'].addSubAtom(subAtom)
+                        if 'r' in obj:
+                            self.addGraphicSubAtom(obj)
+                        else:
+                            subAtom = _mapSubAtom(obj)
+                            self.subHandler['embedded_handler'].addSubAtom(subAtom)
                 elif "s_f" == key:
                     self.subHandler['embedded_handler'].flushSubtitles()
+                    self.flushGraphicSubtitles()
+                elif "e_plugin" == key:
+                    # the PNG plugin could not be loaded: image subtitles stay empty
+                    printDBG("exteplayer3 plugin error %s" % obj)
                 elif "N" == key:
                     self.playbackUpdateInfo({'IsLoop': obj['isLoop']})
                 elif "PLAYBACK_INFO" == key:
@@ -2389,6 +2502,9 @@ class IPTVExtMoviePlayer(Screen):
             self.console_stdoutAvail_conn = None
             self.console.sendCtrlC()
             self.console = None
+        if self.graphicSubs['enabled']:
+            self.graphicSubs['handler'].flushSubtitles()
+            self.clearGraphicSubtitlesDir()
         if None is not self.downloader:
             self.downloader.unsubscribeFor_Finish(self.onDownloadFinished)
         self.downloader = None
@@ -2674,6 +2790,12 @@ class IPTVExtMoviePlayer(Screen):
         else:
             exteplayer3path = "/usr/bin/exteplayer3"  # config.plugins.iptvplayer.exteplayer3path.value
             cmd = exteplayer3path
+            if GraphicSubtitlesSupported(exteplayer3path) and mkdirs(self.graphicSubs['dir']):
+                # image subtitles as PNG files, the rectangles scaled to the screen
+                self.graphicSubs['enabled'] = True
+                self.clearGraphicSubtitlesDir()
+                desktopSize = getDesktop(0).size()
+                cmd += ' -G "%s" -W %d -H %d' % (shellQuote(self.graphicSubs['dir']), desktopSize.width(), desktopSize.height())
             tmpUri = strwithmeta(self.fileSRC)
 
             audioUri = ''
