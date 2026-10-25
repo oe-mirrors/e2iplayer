@@ -235,6 +235,7 @@ def browserHeader(referer):
 	header['Origin'] = '/'.join(referer.split('/')[:3])
 	return header
 
+
 # the txxx network hides its base64 video path behind look-alike cyrillic letters
 TXXX_CHARMAP = {
 	u'А': 'A', u'В': 'B', u'С': 'C', u'Е': 'E', u'Н': 'H', u'К': 'K',
