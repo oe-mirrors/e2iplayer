@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-20 20:10+0000\n"
+"POT-Creation-Date: 2026-10-25 00:38+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -503,6 +503,9 @@ msgstr ""
 msgid "Adhan"
 msgstr ""
 
+msgid "Adult"
+msgstr ""
+
 msgid "Adventure"
 msgstr ""
 
@@ -519,6 +522,9 @@ msgid "Aired this week"
 msgstr ""
 
 msgid "Airing now"
+msgstr ""
+
+msgid "Albanian"
 msgstr ""
 
 msgid "All"
@@ -730,6 +736,9 @@ msgstr ""
 msgid "Are you sure you want to reset all settings to their default values?"
 msgstr ""
 
+msgid "Armenian"
+msgstr ""
+
 msgid "Art"
 msgstr ""
 
@@ -756,6 +765,9 @@ msgid "Asian movies"
 msgstr ""
 
 msgid "Asian series (dubbed)"
+msgstr ""
+
+msgid "Ask"
 msgstr ""
 
 msgid "Aspect"
@@ -854,7 +866,13 @@ msgstr ""
 msgid "Basketball"
 msgstr ""
 
+msgid "Basque"
+msgstr ""
+
 msgid "Being watched"
+msgstr ""
+
+msgid "Bengali"
 msgstr ""
 
 msgid "Best"
@@ -900,10 +918,16 @@ msgstr ""
 msgid "Books"
 msgstr ""
 
+msgid "Bosnian"
+msgstr ""
+
 msgid "Box"
 msgstr ""
 
 msgid "Boxing"
+msgstr ""
+
+msgid "Brazilian Portuguese"
 msgstr ""
 
 msgid "Broadcast:"
@@ -919,6 +943,9 @@ msgid "Budget:"
 msgstr ""
 
 msgid "Buffering location"
+msgstr ""
+
+msgid "Bulgarian"
 msgstr ""
 
 msgid "Business"
@@ -1007,6 +1034,9 @@ msgid "Cartoons and series"
 msgstr ""
 
 msgid "Cast:"
+msgstr ""
+
+msgid "Catalan"
 msgstr ""
 
 msgid "Catch-up"
@@ -1303,6 +1333,9 @@ msgstr ""
 msgid "Critical Error – Content-Encoding gzip cannot be handled!"
 msgstr ""
 
+msgid "Croatian"
+msgstr ""
+
 msgid "Culture"
 msgstr ""
 
@@ -1340,6 +1373,9 @@ msgid "DRM protection detected."
 msgstr ""
 
 msgid "Daily download limit reached - type the code"
+msgstr ""
+
+msgid "Danish"
 msgstr ""
 
 msgid "Darkgray"
@@ -1485,6 +1521,10 @@ msgstr ""
 
 #, python-format
 msgid "Delete the folder \"%s\"? Its hosts go back to the group."
+msgstr ""
+
+#, python-format
+msgid "Delete the folder \"%s\"? Its videos and subfolders move up one level."
 msgstr ""
 
 #, python-format
@@ -2022,6 +2062,9 @@ msgstr ""
 msgid "Error writing file \"%s\".\n"
 msgstr ""
 
+msgid "Estonian"
+msgstr ""
+
 msgid "Ethical & Legal"
 msgstr ""
 
@@ -2261,6 +2304,9 @@ msgstr ""
 msgid "Finished matches with a full replay, highlights or match cuts, newest first (usually a few days after the match)."
 msgstr ""
 
+msgid "Finnish"
+msgstr ""
+
 msgid "First Page"
 msgstr ""
 
@@ -2395,6 +2441,9 @@ msgstr ""
 msgid "GREEN"
 msgstr ""
 
+msgid "Galician"
+msgstr ""
+
 #, python-format
 msgid "Game: %s"
 msgstr ""
@@ -2425,6 +2474,9 @@ msgid "Genres"
 msgstr ""
 
 msgid "Genres:"
+msgstr ""
+
+msgid "Georgian"
 msgstr ""
 
 msgid "German"
@@ -2518,6 +2570,9 @@ msgstr ""
 msgid "Hearing impaired"
 msgstr ""
 
+msgid "Hebrew"
+msgstr ""
+
 msgid "Help"
 msgstr ""
 
@@ -2538,6 +2593,9 @@ msgid "High (or HD)"
 msgstr ""
 
 msgid "Highlights"
+msgstr ""
+
+msgid "Hindi"
 msgstr ""
 
 msgid "History"
@@ -2635,6 +2693,9 @@ msgstr ""
 msgid "IPTV Portals"
 msgstr ""
 
+msgid "Icelandic"
+msgstr ""
+
 msgid "Icon type"
 msgstr ""
 
@@ -2663,6 +2724,9 @@ msgid "Indian movies (dubbed)"
 msgstr ""
 
 msgid "Indian series (dubbed)"
+msgstr ""
+
+msgid "Indonesian"
 msgstr ""
 
 msgid "Industry"
@@ -2827,6 +2891,9 @@ msgstr ""
 msgid "Keep FFmpeg command files (.iptv.cmd)"
 msgstr ""
 
+msgid "Keep global search results :"
+msgstr ""
+
 msgid "Keep temporary JS scripts"
 msgstr ""
 
@@ -2861,6 +2928,9 @@ msgid "Korean films"
 msgstr ""
 
 msgid "Korean movies"
+msgstr ""
+
+msgid "Kurdish"
 msgstr ""
 
 msgid "LEFT/RIGHT at start/end of text - alternative way to switch panels"
@@ -2989,6 +3059,9 @@ msgstr ""
 msgid "Latino"
 msgstr ""
 
+msgid "Latvian"
+msgstr ""
+
 #, python-brace-format
 msgid "Launcher URI ({url} or {address} = address of the box)"
 msgstr ""
@@ -3062,6 +3135,9 @@ msgstr ""
 
 #, python-format
 msgid "Listeners: %s"
+msgstr ""
+
+msgid "Lithuanian"
 msgstr ""
 
 msgid "Live"
@@ -3210,6 +3286,9 @@ msgstr ""
 msgid "MP3Quran live radio"
 msgstr ""
 
+msgid "Macedonian"
+msgstr ""
+
 msgid "Main"
 msgstr ""
 
@@ -3218,6 +3297,9 @@ msgstr ""
 
 #, python-format
 msgid "Make directory [%s]"
+msgstr ""
+
+msgid "Malay"
 msgstr ""
 
 msgid "Male"
@@ -3664,7 +3746,13 @@ msgstr ""
 msgid "None"
 msgstr ""
 
+msgid "Nordic"
+msgstr ""
+
 msgid "Normalize item / file names (Show - SxxExx - Title)"
+msgstr ""
+
+msgid "Norwegian"
 msgstr ""
 
 msgid "Not available in your country (geo-blocking)."
@@ -3785,6 +3873,9 @@ msgid "Open issues"
 msgstr ""
 
 msgid "Open pull requests"
+msgstr ""
+
+msgid "Open the page and click the video player there"
 msgstr ""
 
 msgid "Open the page and get the link"
@@ -3945,6 +4036,9 @@ msgid "Pediatrics"
 msgstr ""
 
 msgid "People"
+msgstr ""
+
+msgid "Persian"
 msgstr ""
 
 msgid "Persons"
@@ -4519,6 +4613,9 @@ msgstr ""
 msgid "Romance"
 msgstr ""
 
+msgid "Romanian"
+msgstr ""
+
 msgid "Round"
 msgstr ""
 
@@ -4739,6 +4836,9 @@ msgstr ""
 msgid "Select link"
 msgstr ""
 
+msgid "Select link automatically"
+msgstr ""
+
 msgid "Select movie player"
 msgstr ""
 
@@ -4785,6 +4885,9 @@ msgid "Send data to enc-dec.app on every link resolve?"
 msgstr ""
 
 msgid "Sending the result to the box failed."
+msgstr ""
+
+msgid "Serbian"
 msgstr ""
 
 msgid "Series"
@@ -5015,6 +5118,9 @@ msgstr ""
 msgid "Simplify the title and try again."
 msgstr ""
 
+msgid "Sinhala"
+msgstr ""
+
 msgid "Site self-test"
 msgstr ""
 
@@ -5035,6 +5141,12 @@ msgid "Skinners:"
 msgstr ""
 
 msgid "Skip video shorter than [min]"
+msgstr ""
+
+msgid "Slovak"
+msgstr ""
+
+msgid "Slovenian"
 msgstr ""
 
 msgid "Snooker"
@@ -5407,6 +5519,9 @@ msgid "Taiwanese"
 msgstr ""
 
 msgid "Talk shows"
+msgstr ""
+
+msgid "Tamil"
 msgstr ""
 
 #, python-format
@@ -5812,9 +5927,6 @@ msgstr ""
 msgid "This session has no code - scan the QR code on the receiver screen."
 msgstr ""
 
-msgid "This show is private. Try again later!"
-msgstr ""
-
 msgid "This source is offline at the moment. Try another source of the channel."
 msgstr ""
 
@@ -5861,6 +5973,9 @@ msgid "Thumbnails"
 msgstr ""
 
 msgid "Time"
+msgstr ""
+
+msgid "Time limit"
 msgstr ""
 
 msgid "Tip! You can connect USB flash drive to fix this problem."
@@ -6058,6 +6173,10 @@ msgstr ""
 msgid "Try to change extplayer or reinstall gst-ifdsrc"
 msgstr ""
 
+#, python-format
+msgid "Trying link %d of %d"
+msgstr ""
+
 msgid "Turkish"
 msgstr ""
 
@@ -6176,6 +6295,9 @@ msgid "Uploader: %s"
 msgstr ""
 
 msgid "Uploads"
+msgstr ""
+
+msgid "Urdu"
 msgstr ""
 
 msgid "Urllists player"
@@ -6337,6 +6459,9 @@ msgid "Videos you have liked."
 msgstr ""
 
 msgid "Videos you have recently watched."
+msgstr ""
+
+msgid "Vietnamese"
 msgstr ""
 
 msgid "View count"
@@ -6692,10 +6817,17 @@ msgstr ""
 msgid "buffering location"
 msgstr ""
 
+#, python-format
+msgid "cancelled after %d of %d sites"
+msgstr ""
+
 msgid "center"
 msgstr ""
 
 msgid "changed"
+msgstr ""
+
+msgid "clock not set"
 msgstr ""
 
 msgid "close the editor - or stop manual reordering if it's active"
@@ -6939,6 +7071,10 @@ msgstr ""
 msgid "no answer"
 msgstr ""
 
+#, python-format
+msgid "no answer within %d s"
+msgstr ""
+
 msgid "no next page"
 msgstr ""
 
@@ -6955,6 +7091,54 @@ msgid "not found"
 msgstr ""
 
 msgid "not installed"
+msgstr ""
+
+msgid "not installed (hosts that need JavaScript fail)"
+msgstr ""
+
+msgid "not installed (no DASH / ffmpeg downloads)"
+msgstr ""
+
+msgid "not installed (no HDS/F4M streams)"
+msgstr ""
+
+msgid "not installed (no HLS downloads or buffering)"
+msgstr ""
+
+msgid "not installed (no RAR subtitles)"
+msgstr ""
+
+msgid "not installed (no RTMP downloads)"
+msgstr ""
+
+msgid "not installed (no ZIP subtitles)"
+msgstr ""
+
+msgid "not installed (no ffmpeg downloads)"
+msgstr ""
+
+msgid "not installed (no file, cover or subtitle downloads)"
+msgstr ""
+
+msgid "not installed (no local media / folder browser)"
+msgstr ""
+
+msgid "not installed (no torrent playback)"
+msgstr ""
+
+msgid "not installed (only the Enigma2 players)"
+msgstr ""
+
+msgid "not installed (sites with bot protection may fail)"
+msgstr ""
+
+msgid "not installed (subtitles: code page of the language)"
+msgstr ""
+
+msgid "not installed (urllib is used)"
+msgstr ""
+
+msgid "not installed (wget is used)"
 msgstr ""
 
 msgid "not loadable"
