@@ -17,6 +17,7 @@ from Plugins.Extensions.IPTVPlayer.iptvdm.rtmpdownloader import RtmpDownloader
 from Plugins.Extensions.IPTVPlayer.iptvdm.f4mdownloader import F4mDownloader
 from Plugins.Extensions.IPTVPlayer.iptvdm.mergedownloader import MergeDownloader
 from Plugins.Extensions.IPTVPlayer.iptvdm.ffmpegdownloader import FFMPEGDownloader
+from Plugins.Extensions.IPTVPlayer.iptvdm.dashdownloader import DASHDownloader
 from Plugins.Extensions.IPTVPlayer.iptvdm.impersonatehlsdownloader import ImpersonateHLSDownloader  # add 071026
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
 ###################################################
@@ -230,8 +231,13 @@ def DownloaderCreator(url, forDownload=False):
             downloader = HLSDownloader()
 
         elif proto in ['mpd', 'dash']:
-            printDBG("DownloaderCreator: MPD/DASH -> FFMPEGDownloader")
-            downloader = FFMPEGDownloader()
+            if forDownload and urlMeta.get('iptv_dash_sel') and not urlMeta.get('iptv_livestream'):
+                # a VOD link with a chosen quality: the segments loaded by the plugin, ffmpeg only puts them together
+                printDBG("DownloaderCreator: MPD/DASH VOD download -> DASHDownloader")
+                downloader = DASHDownloader()
+            else:
+                printDBG("DownloaderCreator: MPD/DASH -> FFMPEGDownloader")
+                downloader = FFMPEGDownloader()
 
         elif proto in ['f4m']:
             printDBG("DownloaderCreator: F4M -> F4mDownloader")

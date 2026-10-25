@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "25.10.2026"
+LAST_MODIFIED = "28.10.2026"
 # Coding: BY MOHAMED_OS
 # Ported to the python3 framework (08.10.2026):
 #   - Ostora TV (Android app): its API (/api/v6.2/main | category/<id>?page=<n>) on hashed *.sa0xx.shop hosts
@@ -19,11 +19,14 @@ LAST_MODIFIED = "25.10.2026"
 #     mbc1-enc.edgenextcdn.net) answers the master playlist but every variant playlist with 404 outside the
 #     broadcaster's region (hlsdl "error_code 404"): the first variant is checked before the player starts,
 #     a dead one gives a clear message instead of a buffering error
+# 28.10.2026 - a DASH stream that fails keeps the reason of getMPDLinksWithMeta (STC: "HTTP 403 (Forbidden)", DRM)
+#     instead of "No stream available"; a category with only ClearKey channels (STC TV SPORTS) shows a row "Video
+#     with DRM protection." instead of an empty list without a word
 import base64
 import re
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
-from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError, GetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
 from Plugins.Extensions.IPTVPlayer.libs import pyaes
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps, loads as json_loads
@@ -229,18 +232,28 @@ class OstoraTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
         entries = [e for e in data.get("items") or [] if isinstance(e, dict)]
         normalize = IsMediaNamingNormalized()
         titles = {}
+        listed = drmOnly = 0
         for entry in entries[offset:offset + PAGE_SIZE]:
             if "source" in entry:
                 row = self._streamRow(cItem, entry, apiPage, normalize)
+                if not row and "###" in str(entry.get("source", "")):
+                    drmOnly += 1
                 if row:
+                    listed += 1
                     # the same channel twice (another source): "Name (2)"
                     titles[row["title"]] = titles.get(row["title"], 0) + 1
                     if titles[row["title"]] > 1:
                         row["title"] = "%s (%d)" % (row["title"], titles[row["title"]])
                     self.addVideo(row)
             elif entry.get("id") and entry.get("name"):
+                listed += 1
                 self.addDir({"name": "category", "category": "os_cat", "good_for_fav": True, "title": entry["name"].strip(),
                              "cat_id": str(entry["id"]), "level": cItem.get("level", 0) + 1, "icon": self._icon(entry.get("image")) or cItem.get("icon", "")})
+        printDBG("OstoraTV.listCategory [%s]: %d entries, %d listed, %d ClearKey only" % (cItem.get("cat_id"), len(entries), listed, drmOnly))
+        if not listed and drmOnly:
+            # only ClearKey channels (STC TV SPORTS: 4 of 4): an empty list said nothing - a row says why (the last
+            # host error did not reach the empty list's text on the box, 28.10.)
+            self.addMarker({"title": _("Video with DRM protection."), "desc": ""})
         pagination = data.get("pagination") or {}
         try:
             total = int(pagination.get("total") or 0)
@@ -326,7 +339,11 @@ class OstoraTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
             if links is None:
                 return []
         elif ".mpd" in path:
+            SetIPTVPlayerLastHostError("")
             links = getMPDLinksWithMeta(strwithmeta(url, meta), False, sortWithMaxBandwidth=99999999)
+            if not links and GetIPTVPlayerLastHostError(False):
+                # getMPDLinksWithMeta told why (HTTP 403 of a CDN for one country only, DRM): not "No stream available"
+                return []
         else:
             links = [{"name": _domain(url), "url": strwithmeta(url, meta)}]
         if not links:

@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 2026-10-25 - image subtitles (PGS / DVB / XSUB) of exteplayer3 with the exteplayer3png.so plugin.
+# Last Modified: 2026-10-28 - a remembered subtitle file that is gone (put into the MKV by the download manager) is
+#              dropped without an error message, the search next to the video runs instead.
+# 2026-10-25 - image subtitles (PGS / DVB / XSUB) of exteplayer3 with the exteplayer3png.so plugin.
+#            - DASH links of getMPDLinksWithMeta (iptv_dash_sel) play the local filtered MPD of libs/dashmpd.py
+#              (only the chosen video / audio); exteplayer3's -0 / -1 needed an ffmpeg patch OE-A dropped.
 # 2026-10-17 - buffering: the skip keys stop at the end of the part downloaded so far (bufferedEnd()), the
 #              watched mark takes the clip length only from a finished download.
 # 2026-10-12 - a downloaded file also finds its subtitles saved as name.de.srt (box language, then English).
@@ -38,6 +42,7 @@ from Plugins.Extensions.IPTVPlayer.components.configextmovieplayer import Config
 from Plugins.Extensions.IPTVPlayer.components import skinchrome
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import CParsingHelper
 from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
+from Plugins.Extensions.IPTVPlayer.libs import dashmpd
 from Plugins.Extensions.IPTVPlayer.libs.subtitlesmatch import langCode, langName
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 
@@ -1529,47 +1534,62 @@ class IPTVExtMoviePlayer(Screen):
             self.setMoviePlayerConfig = False
             self.runConfigMoviePlayerCallback(True)
 
+    def _autoEnableSubtitleFile(self):
+        # setting "auto enable": a subtitle file next to a played file
+        if not self.subConfig['auto_enable']:
+            return
+        fileSRC = self.fileSRC
+        tmpMatch = 'file://'
+        if fileSRC.startswith(tmpMatch):
+            fileSRC = fileSRC[len(tmpMatch):].replace('//', '/')
+        if not fileExists(fileSRC) or fileSRC.endswith('/.iptv_buffering.flv'):
+            return
+        subFile = ''
+        try:
+            name, ext = os_path.splitext(fileSRC)
+            # name.srt / name.vtt ... first, then the ones saved with a download: name.de.srt - the box
+            # language first, then English, then any. Only files that read as subtitles: name.txt is
+            # mostly the description sidecar of a download, it must not end the search
+            boxLang = GetDefaultLang()
+            langs = ['.%s.' % boxLang] + (['.en.'] if boxLang != 'en' else [])
+
+            def langRank(path):
+                suffix = path[len(name):].lower()
+                for idx, lang in enumerate(langs):
+                    if suffix.startswith(lang):
+                        return idx
+                return len(langs)
+            candidates = [name + '.' + ext for ext in IPTVSubtitlesHandler.getSupportedFormats()]
+            candidates += [path for path in sorted(subtitleSidecarFiles(name), key=langRank) if path not in candidates]
+            for candidate in candidates:
+                if self._detectSubtitleFile(candidate)[0]:  # also checks that the file is there
+                    subFile = candidate
+                    break
+        except Exception:
+            printExc()
+        if '' != subFile:
+            self.openSubtitlesFromFileCallback(subFile)
+
     def enableSubtitles(self, encoding='utf-8'):
         printDBG("enableSubtitles")
         if self.isClosing:
             return
         track = self.metaHandler.getSubtitleTrack()
         if None is track:
-            if not self.metaHandler.hasSubtitlesTracks() and self.subConfig['auto_enable']:
-                fileSRC = self.fileSRC
-                tmpMatch = 'file://'
-                if fileSRC.startswith(tmpMatch):
-                    fileSRC = fileSRC[len(tmpMatch):].replace('//', '/')
-                if fileExists(fileSRC) and not fileSRC.endswith('/.iptv_buffering.flv'):
-                    subFile = ''
-                    try:
-                        name, ext = os_path.splitext(fileSRC)
-                        # name.srt / name.vtt ... first, then the ones saved with a download: name.de.srt - the box
-                        # language first, then English, then any. Only files that read as subtitles: name.txt is
-                        # mostly the description sidecar of a download, it must not end the search
-                        boxLang = GetDefaultLang()
-                        langs = ['.%s.' % boxLang] + (['.en.'] if boxLang != 'en' else [])
-
-                        def langRank(path):
-                            suffix = path[len(name):].lower()
-                            for idx, lang in enumerate(langs):
-                                if suffix.startswith(lang):
-                                    return idx
-                            return len(langs)
-                        candidates = [name + '.' + ext for ext in IPTVSubtitlesHandler.getSupportedFormats()]
-                        candidates += [path for path in sorted(subtitleSidecarFiles(name), key=langRank) if path not in candidates]
-                        for candidate in candidates:
-                            if self._detectSubtitleFile(candidate)[0]:  # also checks that the file is there
-                                subFile = candidate
-                                break
-                    except Exception:
-                        printExc()
-                    if '' != subFile:
-                        self.openSubtitlesFromFileCallback(subFile)
+            if not self.metaHandler.hasSubtitlesTracks():
+                self._autoEnableSubtitleFile()
             return
 
         printDBG("enableSubtitles track[%s]" % track)
         path = track['path']
+        if path and not fileExists(path):
+            # a remembered subtitle file that is gone (the download manager put it into the MKV, or it was deleted):
+            # forgotten without an error, the search for one next to the video runs instead (also when other tracks
+            # are remembered - none of them was the chosen one)
+            printDBG("enableSubtitles file gone, track dropped [%s]" % path)
+            self.metaHandler.removeSubtitleTrack(self.metaHandler.getSubtitleIdx())
+            self._autoEnableSubtitleFile()
+            return
         sts = self.subHandler['handler'].loadSubtitles(path, encoding)
         if not sts:
             # we will remove this subtitles track as it is can not be used
@@ -1941,9 +1961,17 @@ class IPTVExtMoviePlayer(Screen):
                     elif False is val['progressive']:
                         text += 'i'
                     fps = val['frame_rate']
+                    if not 0 < fps <= 120:
+                        # exteplayer3 takes ffmpeg's guess, for a DASH time base of 1/200 (BBC) that is 200 fps - the
+                        # frame rate of the link list then, else none
+                        try:
+                            fps = float(strwithmeta(self.fileSRC).meta.get('iptv_frame_rate') or 0)
+                        except Exception:
+                            fps = 0
                     if fps == floor(fps):
                         fps = int(fps)
-                    text += ', %sfps' % fps
+                    if fps:
+                        text += ', %sfps' % fps
                     text += ', %s' % val['aspect_ratio'].replace('_', ':')
                     streamType = self._getStreamTypeLabel()
                     if streamType:
@@ -2307,17 +2335,19 @@ class IPTVExtMoviePlayer(Screen):
 
                 except Exception:
                     printExc(WarnOnly=True)
-                try:
-                    DAR = float(obj.get('an', 1) * params['width']) / float(obj.get('ad', 1) * params['height'])
-                    aTab = []
-                    for item in [(16, 9, '16_9'), (4, 3, '4_3'), (16, 10, '16_10'), (3, 2, '3_2'), (5, 4, '5_4'), (1.85, 1, '1.85'), (2.35, 1, '2.35')]:
-                        diff = fabs(float(item[0]) / item[1] - DAR)
-                        aTab.append((diff, item[2]))
-                    aTab.sort(key=lambda item: item[0])
-                    params['aspect_ratio'] = aTab[0][1]
-                except Exception:
-                    params['aspect_ratio'] = 'unknown'
-                    printExc()
+                params['aspect_ratio'] = 'unknown'
+                # gstplayer2 reports a DASH video track first without its size (0x0), the size follows
+                if params['width'] and params['height']:
+                    try:
+                        DAR = float(obj.get('an', 1) * params['width']) / float(obj.get('ad', 1) * params['height'])
+                        aTab = []
+                        for item in [(16, 9, '16_9'), (4, 3, '4_3'), (16, 10, '16_10'), (3, 2, '3_2'), (5, 4, '5_4'), (1.85, 1, '1.85'), (2.35, 1, '2.35')]:
+                            diff = fabs(float(item[0]) / item[1] - DAR)
+                            aTab.append((diff, item[2]))
+                        aTab.sort(key=lambda item: item[0])
+                        params['aspect_ratio'] = aTab[0][1]
+                    except Exception:
+                        printExc()
 
             return params
 
@@ -2773,8 +2803,10 @@ class IPTVExtMoviePlayer(Screen):
                             httpFields.append(('proxy', tmp))
 
             gstplayerPath = GetGstPlayerPath()
+            # a DASH link: the MPD with only the chosen video / audio representation
+            playSrc = dashmpd.localManifestUrl(self.fileSRC) or self.fileSRC
             # 'export GST_DEBUG="*:6" &&' +
-            cmd = gstplayerPath + ' "%s"' % shellQuote(self.fileSRC)
+            cmd = gstplayerPath + ' "%s"' % shellQuote(playSrc)
             if gstplayerPath.endswith('gstplayer2'):
                 # getopt command line; buffer options are only passed when set,
                 # gstplayer2 treats 0 as "turned off" and takes the ring buffer in KB
@@ -2830,6 +2862,9 @@ class IPTVExtMoviePlayer(Screen):
                 if not sts:
                     msg = _("An error occurred while writing into: %s") % GetTmpDir()
                     self.showMessage(msg, MessageBox.TYPE_ERROR)
+            elif tmpUri.meta.get('iptv_dash_sel'):
+                # the MPD with only the chosen video / audio representation (dashdec opens all of them otherwise)
+                videoUri = dashmpd.localManifestUrl(tmpUri) or videoUri
             if "://" in self.fileSRC:
                 ramBufferSizeMB = config.plugins.iptvplayer.rambuffer_sizemb_network_proto.value
                 url, httpParams = DMHelper.getDownloaderParamFromUrlWithMeta(tmpUri, True)
@@ -2893,12 +2928,6 @@ class IPTVExtMoviePlayer(Screen):
 
             if audioUri != '':
                 cmd += ' -x "%s" ' % shellQuote(audioUri)
-
-            if 'iptv_video_rep_idx' in tmpUri.meta:
-                cmd += ' -0 "%s" ' % shellQuote(tmpUri.meta['iptv_video_rep_idx'])
-
-            if 'iptv_audio_rep_idx' in tmpUri.meta:
-                cmd += ' -1 "%s" ' % shellQuote(tmpUri.meta['iptv_audio_rep_idx'])
 
             if 'iptv_m3u8_live_start_index' in tmpUri.meta:
                 cmd += ' -f "live_start_index=%s" ' % shellQuote(tmpUri.meta['iptv_m3u8_live_start_index'])

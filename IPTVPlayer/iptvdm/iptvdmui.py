@@ -778,6 +778,9 @@ class IPTVDMWidget(Screen):
         play = []
         play.append((_('Play with [%s] player') % GetMoviePlayer(True, False).getText(), 'play', GetMoviePlayer(True, False).value))
         play.append((_('Play with [%s] player') % GetMoviePlayer(True, True).getText(), 'play', GetMoviePlayer(True, True).value))
+        if item is not None and item.downloaderName == 'dash' and not os_path.isfile(item.fileName):
+            # the DASH downloader writes part files, the file to play exists only after they are put together
+            play = []
 
         cont = ((_('Continue downloading'), 'continue'),)
         retry = ((_('Download again'), 'retry'),)
@@ -801,8 +804,9 @@ class IPTVDMWidget(Screen):
             elif DMHelper.STS.INTERRUPTED == item.status:
                 options.extend(play)
                 # wget/curl can resume a partial file; hlsdl only when the interrupted run left its
-                # resume sidecar and the installed hlsdl knows -R. The other downloaders start over.
-                if item.downloaderName in ('wget', 'curl') or self._canContinueHlsdl(item):
+                # resume sidecar and the installed hlsdl knows -R, the DASH downloader when it left its
+                # resume state. The other downloaders start over.
+                if item.downloaderName in ('wget', 'curl') or self._canContinueHlsdl(item) or (item.downloaderName == 'dash' and DMHelper.hasDashResumeFile(item.fileName)):
                     options.extend(cont)
                 options.extend(retry)
                 options.extend(remove)

@@ -63,8 +63,12 @@ def ff():
     written = {}
     for pkg in ("Components", "Tools", "Plugins", "Plugins.Extensions", "Plugins.Extensions.IPTVPlayer",
                 "Plugins.Extensions.IPTVPlayer.tools", "Plugins.Extensions.IPTVPlayer.iptvdm",
-                "Plugins.Extensions.IPTVPlayer.components", "Plugins.Extensions.IPTVPlayer.p2p3"):
+                "Plugins.Extensions.IPTVPlayer.components", "Plugins.Extensions.IPTVPlayer.p2p3",
+                "Plugins.Extensions.IPTVPlayer.libs"):
         _stubModule(pkg)
+    # the local filtered MPD of a DASH link with a chosen quality
+    _stubModule("Plugins.Extensions.IPTVPlayer.libs.dashmpd",
+                localManifestUrl=lambda url, startDelay=0: "http://127.0.0.1:8001/dash/t%s.mpd" % (startDelay or "") if getattr(url, "meta", {}).get("iptv_dash_sel") else None)
     types_mod = _load("Plugins.Extensions.IPTVPlayer.tools.iptvtypes", os.path.join(ROOT, "tools", "iptvtypes.py"))
     sys.modules["Plugins.Extensions.IPTVPlayer.tools.iptvtypes"] = types_mod
     _stubModule("Plugins.Extensions.IPTVPlayer.tools.iptvtools", printDBG=lambda *a: None, printExc=lambda *a: None,
@@ -106,6 +110,18 @@ def test_dash_download_uses_setting(ff):
         assert _dl(ff, "https://cdn/x/manifest.mpd")._outContainer() == value
         assert _dl(ff, "https://cdn/x/play", {"iptv_proto": "mpd"})._outContainer() == value
         assert _dl(ff, "merge://audio_url|video_url", {"audio_url": "https://cdn/a.mpd", "video_url": "https://cdn/v.mpd"})._outContainer() == value
+
+
+def test_host_create_mkv_wins_over_auto(ff):
+    # urlmetahelper's "Create MKV" meta (S.to & co.): HLS with "auto" became .ts before
+    mkv = {"e2i_postprocess_ffmpeg": "1", "e2i_postprocess_container": "mkv", "e2i_download_ext": "mkv"}
+    ff.cfg.hls_out_container.value = "auto"
+    assert _dl(ff, "https://cdn/x/master.m3u8", mkv)._outContainer() == "matroska"
+    assert _dl(ff, "https://cdn/x/video.mp4", mkv)._outContainer() == "matroska"
+    assert _dl(ff, "https://cdn/x/master.m3u8", dict(mkv, e2i_postprocess_container="mp4"))._outContainer() == "mp4"
+    # without the switch the setting still decides; ff_out_container still wins
+    assert _dl(ff, "https://cdn/x/master.m3u8", {"e2i_postprocess_container": "mkv"})._outContainer() == "mpegts"
+    assert _dl(ff, "https://cdn/x/master.m3u8", dict(mkv, ff_out_container="mpegts"))._outContainer() == "mpegts"
 
 
 def test_host_container_wins_and_playback_stays_matroska(ff):
@@ -162,6 +178,52 @@ def test_command_line(ff):
     cmd = ff.written["/hdd/movie/Film2.mp4.iptv.cmd"].split("|")
     assert "-movflags" not in cmd and cmd[-3:] == ["-f", "matroska", "/hdd/movie/Film2.mp4"]
     assert ff.FFMPEGDownloader.CONTAINER_EXT["mpegts"] == ".ts"
+
+
+def test_dash_quality_reads_the_local_filtered_mpd(ff):
+    # a chosen DASH quality: the input is the local MPD with only that video / audio, no -video_rep_index
+    # (an option of an old ffmpeg patch - ffmpeg 9 stops with "Unrecognized option")
+    dl = _dl(ff, "https://cdn/x/manifest.mpd", {"iptv_proto": "mpd", "iptv_dash_sel": "v=720|vi=0.1|vh=720|a=en|ai=1.0"})
+    dl.start(dl.url, "/hdd/movie/Dash.mkv")
+    cmd = ff.written["/hdd/movie/Dash.mkv.iptv.cmd"].split("|")
+    assert cmd[cmd.index("-i") + 1] == "http://127.0.0.1:8001/dash/t.mpd"
+    assert not [c for c in cmd if "rep_index" in c]
+    dl = _dl(ff, "https://cdn/x/manifest.mpd", {"iptv_proto": "mpd"})
+    dl.start(dl.url, "/hdd/movie/Dash2.mkv")
+    cmd = ff.written["/hdd/movie/Dash2.mkv.iptv.cmd"].split("|")
+    assert cmd[cmd.index("-i") + 1] == "https://cdn/x/manifest.mpd"
+    assert "-re" not in cmd
+    # live DASH at its own pace (dashdec would run past the live edge: 425 Too Early)
+    dl = _dl(ff, "https://cdn/x/live.mpd", {"iptv_proto": "mpd", "iptv_livestream": True, "iptv_dash_sel": "v=1|vi=0.0|vh=720"})
+    dl.start(dl.url, "/hdd/movie/Live.mkv")
+    cmd = ff.written["/hdd/movie/Live.mkv.iptv.cmd"].split("|")
+    assert cmd[cmd.index("-i") - 1] == "-re"
+
+
+def test_live_dash_buffering_reads_a_start_at_once(ff):
+    live = {"iptv_proto": "mpd", "iptv_livestream": True, "iptv_dash_sel": "v=1|vi=0.0|vh=720"}
+    # ffmpeg -version tells the version (isWorkingCorrectly)
+    dl = ff.FFMPEGDownloader()
+    dl._checkWorkingCallBack(lambda sts, reason: None, 0, "ffmpeg version 9.0.2 Copyright (c) 2000-2026 the FFmpeg developers")
+    assert ff.FFMPEGDownloader.FFMPEG_VERSION == (9, 0)
+    # buffering (no final rename): 30 s behind the edge, read at once, then at its own pace
+    dl = _dl(ff, "https://cdn/x/live.mpd", live, download=False)
+    dl.start(dl.url, "/hdd/movie/.iptv_buffering.flv")
+    cmd = ff.written["/hdd/movie/.iptv_buffering.flv.iptv.cmd"].split("|")
+    assert cmd[cmd.index("-i") - 4:cmd.index("-i")] == ["-readrate", "1", "-readrate_initial_burst", "30"]
+    assert cmd[cmd.index("-i") + 1] == "http://127.0.0.1:8001/dash/t30.mpd" and "-re" not in cmd
+    # a recording in the download manager keeps -re (and the plain local MPD)
+    dl = _dl(ff, "https://cdn/x/live.mpd", live, download=True)
+    dl.start(dl.url, "/hdd/movie/Rec.mkv")
+    cmd = ff.written["/hdd/movie/Rec.mkv.iptv.cmd"].split("|")
+    assert cmd[cmd.index("-i") - 1] == "-re" and cmd[cmd.index("-i") + 1] == "http://127.0.0.1:8001/dash/t.mpd"
+    # an ffmpeg before 6.1 (or a git build) does not know the option: -re
+    dl._checkWorkingCallBack(lambda sts, reason: None, 0, "ffmpeg version 4.4.2")
+    dl = _dl(ff, "https://cdn/x/live.mpd", live, download=False)
+    dl.start(dl.url, "/hdd/movie/.iptv_buffering.flv")
+    cmd = ff.written["/hdd/movie/.iptv_buffering.flv.iptv.cmd"].split("|")
+    assert cmd[cmd.index("-i") - 1] == "-re" and "-readrate" not in cmd
+    ff.FFMPEGDownloader.FFMPEG_VERSION = (0, 0)
 
 
 def _finished(ff, live, terminated, size=5000, url="https://cdn/x/live.m3u8", meta=None):

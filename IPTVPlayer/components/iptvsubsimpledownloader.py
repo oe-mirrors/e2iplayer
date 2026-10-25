@@ -4,7 +4,7 @@
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetDefaultLang, GetTmpDir, GetSubtitlesDir, RemoveDisallowedFilenameChars, iptv_system, MapUcharEncoding
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetDefaultLang, GetTmpDir, GetSubtitlesDir, RemoveDisallowedFilenameChars, iptv_system, MapUcharEncoding, eConnectCallback
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.ihost import CDisplayListItem
 from Plugins.Extensions.IPTVPlayer.components.iptvlist import IPTVMainNavigatorList
@@ -16,11 +16,14 @@ from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdownloadercreator import Downloade
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import shellQuote, isHlsSubtitleTrack, hlsSubtitleSegmentUrls, joinWebVttSegments, hlsSubtitleWgetCmd, writeUtf8TextFile, decodeSubtitle, fsPath, terminateToolsOfFile, safeRemoveFile
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
+from Plugins.Extensions.IPTVPlayer.libs import dashmpd
 ###################################################
 # FOREIGN import
 ###################################################
+from enigma import eTimer
 from Screens.Screen import Screen
 from Components.Label import Label
+from Components.ProgressBar import ProgressBar
 from Components.Sources.StaticText import StaticText
 from Components.ActionMap import ActionMap
 
@@ -60,6 +63,7 @@ class IPTVSubSimpleDownloaderWidget(Screen):
             <widget name="status" position="20,68" size="1040,30" font="Regular;24" halign="left" valign="center" foregroundColor="white" backgroundColor="black" borderWidth="1" borderColor="black" zPosition="1" transparent="1" />
             <widget name="list" position="20,108" size="1040,%d" itemHeight="36" font="Regular;20" scrollbarMode="showOnDemand" scrollbarSliderBorderWidth="1" scrollbarForegroundColor="#1b5a91" scrollbarBorderColor="#00b6b6b6" enableWrapAround="1" foregroundColor="white" backgroundColor="black" foregroundColorSelected="white" backgroundColorSelected="#1b5a91" borderWidth="1" borderColor="black" transparent="1" />
             <widget name="console" position="20,108" size="1040,%d" font="Regular;24" halign="center" valign="center" transparent="0" foregroundColor="white" backgroundColor="black" />
+            <widget name="progress" position="120,%d" size="840,14" zPosition="2" borderWidth="1" borderColor="#888888" foregroundColor="#1b5a91" backgroundColor="black" />
             %s
         </screen>
         """ % (
@@ -68,6 +72,7 @@ class IPTVSubSimpleDownloaderWidget(Screen):
             skinchrome.build_header_auto(iconBase=iconBase),
             contentH,
             contentH,
+            108 + contentH - 40,
             skinchrome.build_footer_auto(HEIGHT, iconBase=iconBase, keys=('red', 'green')),
         )
 
@@ -84,6 +89,11 @@ class IPTVSubSimpleDownloaderWidget(Screen):
 
         self["status"] = Label(" ")
         self["console"] = Label(" ")
+        # segments done of a DASH subtitle track the local server joins (dashmpd.subtitleProgress)
+        self["progress"] = ProgressBar()
+        self.progressTimer = eTimer()
+        self.progressTimer_conn = eConnectCallback(self.progressTimer.timeout, self._updateProgress)
+        self.consoleText = ''
 
         self._keyLabels = {'red': _("Cancel"), 'green': _("Apply")}
         self["key_red"] = StaticText(self._keyLabels['red'])
@@ -124,8 +134,11 @@ class IPTVSubSimpleDownloaderWidget(Screen):
             self.workconsole.kill()
         self.workconsole = None
         self.cleanDownloader()
+        self.progressTimer_conn = None
+        self.progressTimer = None
 
     def cleanDownloader(self):
+        self._stopProgress()
         self.downloadedSubFilePath = ""
         self.currItem = {}
         if self.downloader is not None:
@@ -137,6 +150,24 @@ class IPTVSubSimpleDownloaderWidget(Screen):
         self.subTmpPath = ''
         self.hlsChecked = False
         self.hlsJoined = False
+
+    def _updateProgress(self):
+        progress = dashmpd.subtitleProgress(self.subUrl)
+        if progress is None:
+            return
+        done, total = progress
+        percent = min(100, 100 * done // total)
+        self["progress"].setValue(percent)
+        self["progress"].show()
+        self["console"].setText('%s\n\n%d%% (%d / %d)' % (self.consoleText, percent, done, total))
+        if done >= total:
+            self._stopProgress()
+
+    def _stopProgress(self):
+        if getattr(self, 'progressTimer', None) is not None:
+            self.progressTimer.stop()
+        if 'progress' in self:
+            self["progress"].hide()
 
     def _stopHls(self):
         # Ctrl+C reaches only the shell around wget: the segment wget is ended by its output file as well
@@ -152,7 +183,12 @@ class IPTVSubSimpleDownloaderWidget(Screen):
         self.cleanDownloader()
         self.currItem = item
         self.subUrl = self.currItem.get('url', '')
-        self["console"].setText(_("Downloading subtitles.\n ('%r').") % self.subUrl)
+        self.consoleText = _("Downloading subtitles.\n ('%r').") % self.subUrl
+        self["console"].setText(self.consoleText)
+        if dashmpd.isLocalSubtitleUrl(self.subUrl):
+            self["progress"].setValue(0)
+            self["progress"].show()
+            self.progressTimer.start(500)
         if isHlsSubtitleTrack(item):
             # the url of an HLS subtitle playlist: its segments are the subtitles
             self.hlsChecked = True
@@ -221,6 +257,7 @@ class IPTVSubSimpleDownloaderWidget(Screen):
         self._subtitlesDownloaded(self.subTmpPath)
 
     def downloadFinished(self, status):
+        self._stopProgress()
         if status != DMHelper.STS.DOWNLOADED:
             self["console"].setText(_("Download failed.\nStatus[%s]") % status)
         else:

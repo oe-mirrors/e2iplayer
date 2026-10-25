@@ -69,6 +69,7 @@ class _FakeCommon(object):
     def getPage(self, url, params={}, post_data=None):
         _FakeCommon.requests.append(url)
         if url not in _FakeCommon.pages:
+            self.meta = {"status_code": _FakeCommon.failStatus} if getattr(_FakeCommon, "failStatus", None) else {}
             return False, ""
         return True, sys.modules[PKG + ".tools.iptvtypes"].strwithmeta(_FakeCommon.pages[url], {"url": url})
 
@@ -103,7 +104,8 @@ def env(tmp_path):
     _stubModule("Components.config", config=_Config())
     _stubModule("Tools.BoundFunction", boundFunction=lambda f, *a: f)
     _stubModule("enigma", eConsoleAppContainer=_Console)
-    _stubModule(PKG + ".components.iptvplayerinit", TranslateTXT=lambda text: text)
+    hostErrors = []
+    _stubModule(PKG + ".components.iptvplayerinit", TranslateTXT=lambda text: text, SetIPTVPlayerLastHostError=hostErrors.append)
     _stubModule(PKG + ".libs.pCommon", common=_FakeCommon, CParsingHelper=object)
     _stubModule(PKG + ".libs.curlimpersonate")
     try:
@@ -112,6 +114,7 @@ def env(tmp_path):
         _stubModule("six", ensure_binary=lambda s, *a: s.encode("utf-8") if isinstance(s, str) else s,
                     ensure_str=lambda s, *a: s.decode("utf-8") if isinstance(s, bytes) else s)
     _load(PKG + ".tools.iptvtypes", os.path.join(ROOT, "tools", "iptvtypes.py"))
+    _load(PKG + ".libs.dashmpd", os.path.join(ROOT, "libs", "dashmpd.py"))
     m3u8 = _load(PKG + ".libs.m3u8", os.path.join(ROOT, "libs", "m3u8", "__init__.py"), package=True)
     sys.modules[PKG + ".libs"].m3u8 = m3u8
     _stubModule(PKG + ".iptvdm.iptvdh", DMHelper=types.SimpleNamespace(
@@ -122,8 +125,9 @@ def env(tmp_path):
     uph = _load(PKG + ".libs.urlparserhelper", os.path.join(ROOT, "libs", "urlparserhelper.py"))
     _FakeCommon.pages = {}
     _FakeCommon.requests = []
+    _FakeCommon.failStatus = None
     _Console.instances = []
-    yield types.SimpleNamespace(dh=dh, uph=uph, strwithmeta=sys.modules[PKG + ".tools.iptvtypes"].strwithmeta, tmp=tmp_path)
+    yield types.SimpleNamespace(dh=dh, uph=uph, strwithmeta=sys.modules[PKG + ".tools.iptvtypes"].strwithmeta, tmp=tmp_path, hostErrors=hostErrors)
     sys.modules.clear()
     sys.modules.update(saved)
 
@@ -236,3 +240,40 @@ def test_plain_vtt_track_needs_no_second_run(env):
         f.write(SEG0)
     d._subtitleFetchFinished(0)
     assert not d.subFetching and len(_Console.instances) == 1 and not d.subJobs[0]["hls"]
+
+
+def test_failed_mpd_request_tells_why(env):
+    # an MPD the site refused: the empty link list gets the HTTP status as message (livesim: 429)
+    _FakeCommon.failStatus = 429
+    assert env.uph.getMPDLinksWithMeta("https://livesim.example/live/Manifest.mpd", checkExt=False) == []
+    assert env.hostErrors == ["Loading livesim.example failed due to following error: HTTP 429 (Too Many Requests)"]
+    # no answer at all (no status): no message
+    _FakeCommon.failStatus = None
+    del env.hostErrors[:]
+    assert env.uph.getMPDLinksWithMeta("https://down.example/a.mpd", checkExt=False) == []
+    assert env.hostErrors == []
+
+
+def test_drm_only_mpd_tells_why(env):
+    # an MPD with encrypted representations only: no links, the DRM message
+    url = "https://drm.example/a.mpd"
+    _FakeCommon.pages[url] = ('<MPD xmlns="urn:mpeg:dash:schema:mpd:2011" type="static" mediaPresentationDuration="PT1M"><Period>'
+                              '<AdaptationSet contentType="video" mimeType="video/mp4"><ContentProtection schemeIdUri="urn:mpeg:dash:mp4protection:2011"/>'
+                              '<Representation id="v" bandwidth="1" width="1280" height="720" codecs="avc1.4d401f"/></AdaptationSet></Period></MPD>')
+    assert env.uph.getMPDLinksWithMeta(url, checkExt=False) == []
+    assert env.hostErrors == ["Video with DRM protection."]
+
+
+def test_vp9_last_also_without_sorting(env):
+    # the URL list asks without sortWithMaxBandwidth: VP9 still behind every H.264 link (Shaka angel-one had it from
+    # row 6 on, between the audio tracks - box log 28.10.)
+    url = "https://vp9.example/a.mpd"
+    sets = ''.join('<AdaptationSet contentType="audio" mimeType="audio/mp4" lang="%s" codecs="mp4a.40.2"><Representation id="%s" bandwidth="1"/></AdaptationSet>' % (lang, lang)
+                   for lang in ("de", "en"))
+    _FakeCommon.pages[url] = ('<MPD xmlns="urn:mpeg:dash:schema:mpd:2011" type="static" mediaPresentationDuration="PT1M"><Period>'
+                              '<AdaptationSet contentType="video" mimeType="video/mp4">'
+                              '<Representation id="h" bandwidth="2" width="720" height="576" codecs="avc1.4d401e"/>'
+                              '<Representation id="v" bandwidth="1" width="720" height="576" codecs="vp09.00.30.08"/></AdaptationSet>'
+                              + sets + '</Period></MPD>')
+    names = [lk["name"] for lk in env.uph.getMPDLinksWithMeta(url, checkExt=False)]
+    assert [n.split()[-1] for n in names] == ["H.264", "H.264", "VP9", "VP9"], names

@@ -4,13 +4,15 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import CParsingHelper, common
 from Plugins.Extensions.IPTVPlayer.libs import m3u8
 from Plugins.Extensions.IPTVPlayer.libs import curlimpersonate  # add 071026
+from Plugins.Extensions.IPTVPlayer.libs import dashmpd  # add 251026
 import ast
 import re
 import time
 import string
 import codecs
 import six
-from urllib.parse import unquote, urljoin
+from urllib.parse import unquote, urljoin, urlparse
+from http.client import responses as HTTP_REASONS
 
 import base64
 import hashlib
@@ -851,119 +853,54 @@ def getF4MLinksWithMeta(manifestUrl, checkExt=True, cookieParams={}, sortWithMax
     return retPlaylists
 
 
+def _toStatus(value):
+    try:
+        return int(value)
+    except Exception:
+        return 0
+
+
+def _setLastHostError(makeText):
+    # the message shown when a link list stays empty; makeText gets the translation function
+    try:
+        from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import SetIPTVPlayerLastHostError, TranslateTXT as _
+        SetIPTVPlayerLastHostError(makeText(_).strip())
+    except Exception:
+        printExc()
+
+
 def getMPDLinksWithMeta(manifestUrl, checkExt=True, cookieParams={}, sortWithMaxBandwidth=-1):
+    # update 251026: real XML reading (libs/dashmpd.py) - one link per video x audio track of the period that
+    # plays, subtitle files of the MPD as external_sub_tracks (segmented ones of a VOD as a local .vtt joined by
+    # dashmpd, update 261026), DRM representations left out; the players and the
+    # downloader get the MPD cut down to the chosen representations (iptv_dash_sel, dashmpd.localManifestUrl)
     if checkExt and not manifestUrl.split('?')[0].endswith('.mpd'):
         return []
     cm = common()
-
-    def _getNumAttrib(data, name, default=0):
-        try:
-            return int(cm.ph.getSearchGroups(data, r'[\s]' + name + '''=['"]([^'^"]+?)['"]''')[0])
-        except Exception:
-            return default
-
     headerParams, postData = cm.getParamsFromUrlWithMeta(manifestUrl)
     headerParams.update(cookieParams)
-    retPlaylists = []
+    headerParams['with_metadata'] = True
     sts, data = cm.getPage(manifestUrl, headerParams, postData)
-    if sts:
-        liveStreamDetected = False
-        if 'type="dynamic"' in data:
-            liveStreamDetected = True
-        representation = {'audio': [], 'video': []}
-        tmp = cm.ph.getAllItemsBeetwenMarkers(data, "<Period", '</Period>', withMarkers=True)
-        if len(tmp):
-            data = tmp[-1]
-        # TODO!!! select period based on duration
-        data = cm.ph.getAllItemsBeetwenMarkers(data, "<AdaptationSet", '</AdaptationSet>', withMarkers=True)
-        for item in data:
-            type = ''
-            if re.compile('''=['"]audio['"/]''').search(item):
-                type = 'audio'
-            elif re.compile('''=['"]video['"/]''').search(item):
-                type = 'video'
-            else:
-                continue
-            tmp = cm.ph.getAllItemsBeetwenMarkers(item, '<Representation', '>', withMarkers=True)
-            for rep in tmp:
-                repParam = {}
-                repParam['bandwidth'] = _getNumAttrib(rep, 'bandwidth')
-                repParam['codecs'] = cm.ph.getSearchGroups(rep, '''codecs=['"]([^'^"]+?)['"]''')[0]
-                if '' == repParam['codecs']:
-                    repParam['codecs'] = cm.ph.getSearchGroups(item, '''codecs=['"]([^'^"]+?)['"]''')[0]
-
-                repParam['codecs'] = repParam['codecs'].split('.')[0]
-                if 'vp9' in repParam['codecs']:
-                    continue
-                if type == 'video':
-                    repParam['width'] = _getNumAttrib(rep, 'width')
-                    if 0 == repParam['width']:
-                        repParam['width'] = _getNumAttrib(item, 'width')
-
-                    repParam['height'] = _getNumAttrib(rep, 'height')
-                    if 0 == repParam['height']:
-                        repParam['height'] = _getNumAttrib(item, 'height')
-
-                    repParam['frame_rate'] = cm.ph.getSearchGroups(rep, '''frameRate=['"]([^'^"]+?)['"]''')[0]
-                    if '' == repParam['frame_rate']:
-                        repParam['frame_rate'] = cm.ph.getSearchGroups(item, '''frameRate=['"]([^'^"]+?)['"]''')[0]
-                else:
-                    repParam['lang'] = cm.ph.getSearchGroups(rep, '''lang=['"]([^'^"]+?)['"]''')[0]
-                    if '' == repParam['lang']:
-                        repParam['lang'] = cm.ph.getSearchGroups(item, '''lang=['"]([^'^"]+?)['"]''')[0]
-                representation[type].append(repParam)
-        audioIdx = 0
-        for audio in representation['audio']:
-            audioItem = {}
-            audioItem['livestream'] = liveStreamDetected
-            audioItem['codecs'] = audio['codecs']
-            audioItem['bandwidth'] = audio['bandwidth']
-            audioItem['lang'] = audio['lang']
-            audioItem['audio_rep_idx'] = audioIdx
-            if len(representation['video']):
-                videoIdx = 0
-                for video in representation['video']:
-                    videoItem = dict(audioItem)
-                    videoItem['codecs'] += ',' + video['codecs']
-                    videoItem['bandwidth'] += video['bandwidth']
-                    videoItem['width'] = video['width']
-                    videoItem['height'] = video['height']
-                    videoItem['frame_rate'] = video['frame_rate']
-                    videoItem['name'] = "[%s] bitrate: %s %dx%d %s %sfps" % (videoItem['lang'],
-                                                                             videoItem['bandwidth'],
-                                                                             videoItem['width'],
-                                                                             videoItem['height'],
-                                                                             videoItem['codecs'],
-                                                                             videoItem['frame_rate'])
-                    videoItem['url'] = strwithmeta(manifestUrl, {'iptv_proto': 'mpd', 'iptv_audio_rep_idx': audioIdx, 'iptv_video_rep_idx': videoIdx, 'iptv_livestream': videoItem['livestream']})
-                    retPlaylists.append(videoItem)
-                    videoIdx += 1
-            else:
-                audioItem['name'] = "[%s] bandwidth: %s %s" % (audioItem['lang'],
-                                                               audioItem['bandwidth'],
-                                                               audioItem['codecs'])
-                audioItem['url'] = strwithmeta(manifestUrl, {'iptv_proto': 'mpd', 'iptv_audio_rep_idx': audioIdx, 'iptv_livestream': audioItem['livestream']})
-                retPlaylists.append(audioItem)
-            audioIdx += 1
-        if not len(representation['audio']):
-            # no separate audio AdaptationSet (muxed or video only) - one item per video representation
-            videoIdx = 0
-            for video in representation['video']:
-                videoItem = {}
-                videoItem['livestream'] = liveStreamDetected
-                videoItem['codecs'] = video['codecs']
-                videoItem['bandwidth'] = video['bandwidth']
-                videoItem['width'] = video['width']
-                videoItem['height'] = video['height']
-                videoItem['frame_rate'] = video['frame_rate']
-                videoItem['name'] = "bitrate: %s %dx%d %s %sfps" % (videoItem['bandwidth'],
-                                                                    videoItem['width'],
-                                                                    videoItem['height'],
-                                                                    videoItem['codecs'],
-                                                                    videoItem['frame_rate'])
-                videoItem['url'] = strwithmeta(manifestUrl, {'iptv_proto': 'mpd', 'iptv_video_rep_idx': videoIdx, 'iptv_livestream': videoItem['livestream']})
-                retPlaylists.append(videoItem)
-                videoIdx += 1
+    if not sts:
+        printDBG("getMPDLinksWithMeta manifest request failed [%s]" % manifestUrl)
+        # an empty link list said nothing (e.g. HTTP 429 of a site that limits requests): the status as message
+        status = _toStatus(getattr(data, 'meta', {}).get('status_code') or getattr(cm, 'meta', {}).get('status_code'))
+        if status:
+            reason = ' (%s)' % HTTP_REASONS[status] if status in HTTP_REASONS else ''
+            site = urlparse(manifestUrl).netloc
+            _setLastHostError(lambda _: '%s HTTP %d%s' % (_('Loading %s failed due to following error:') % site, status, reason))
+        return []
+    finalUrl = getattr(data, 'meta', {}).get('url') or manifestUrl
+    try:
+        mpd = dashmpd.parseMpd(data, finalUrl)
+    except Exception:
+        printExc()
+        return []
+    if mpd['drm_only']:
+        _setLastHostError(lambda _: _('Video with DRM protection.'))
+        return []
+    dashmpd.rememberManifest(manifestUrl, finalUrl, str(data), mpd['dynamic'])
+    retPlaylists = dashmpd.buildLinks(mpd, manifestUrl)
     if sortWithMaxBandwidth > -1:
         def __getLinkQuality(itemLink):
             try:
@@ -973,7 +910,9 @@ def getMPDLinksWithMeta(manifestUrl, checkExt=True, cookieParams={}, sortWithMax
                 return 0
 
         retPlaylists = CSelOneLink(retPlaylists, __getLinkQuality, sortWithMaxBandwidth).getSortedLinks()
-    return retPlaylists
+    # VP9 / AV1 / Dolby Vision to the end, like the HLS list: the automatic pick must not land on them - also for a
+    # caller without sorting (the URL list: angel-one had VP9 from row 6 on, between the audio tracks)
+    return [i for i in retPlaylists if not i.get('undecodable')] + [i for i in retPlaylists if i.get('undecodable')]
 
 
 # add 181026: Altcha proof of work (VOE's captcha page, after ResolveURL captcha_lib.AltchaSolver, which credits
