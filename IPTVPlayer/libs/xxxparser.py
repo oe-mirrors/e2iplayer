@@ -215,6 +215,26 @@ LIVECAM_SITES = ('https://www.cam4.com', 'https://www.camsoda.com', 'https://www
 # recorded cam shows and amateur clips whose video page names a hoster or the file (XXXParser._camArchiveStream)
 CAM_ARCHIVE_SITES = ('https://archivebate.com', 'https://livecamrips.to', 'https://www.showcamrips.com', 'https://dailypornstreams.com')
 
+# a whole browser request (Edge on Windows): Cloudflare answers some boxes (VTi, Python 2 urllib or libcurl with
+# OpenSSL 3) with its 403 when only a User-Agent comes along, with all of these they are let through
+# (LIVECAMRIPS, Kamikaze24's Python 2 code 25.10.2026)
+BROWSER_HEADER = {
+	'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36 Edg/122.0.0.0',
+	'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+	'Accept-Language': 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7',
+	'Accept-Encoding': 'gzip, deflate',
+	'DNT': '1',
+	'Upgrade-Insecure-Requests': '1',
+}
+
+
+def browserHeader(referer):
+	# BROWSER_HEADER with the site's Referer and Origin
+	header = dict(BROWSER_HEADER)
+	header['Referer'] = referer
+	header['Origin'] = '/'.join(referer.split('/')[:3])
+	return header
+
 # the txxx network hides its base64 video path behind look-alike cyrillic letters
 TXXX_CHARMAP = {
 	u'А': 'A', u'В': 'B', u'С': 'C', u'Е': 'E', u'Н': 'H', u'К': 'K',
@@ -606,7 +626,11 @@ class XXXParser:
 		params = {'header': header, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': join(GetCookieDir(), cookie), 'return_data': True}
 		sts, data = self.cm.getPage(url, params)
 		if not sts:
-			# Cloudflare's check (403 on some boxes, LIVECAMRIPS 24.10.2026): Chrome's fingerprint, then MyE2i
+			# Cloudflare's check (403 on some boxes, LIVECAMRIPS 24.10.2026): a whole browser request, then Chrome's
+			# fingerprint and MyE2i
+			params['header'] = browserHeader(site + '/')
+			sts, data = self.cm.getPage(url, params)
+		if not sts:
 			sts, data = self.cm.getPageCFProtection(url, params)
 		if not sts:
 			return ''

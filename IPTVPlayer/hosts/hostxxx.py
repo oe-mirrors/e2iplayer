@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "24.10.2026"
+LAST_MODIFIED = "25.10.2026"
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.ihost import IHost, CDisplayListItem, RetHost, CUrlItem, CBaseHostClass, ArticleContent
 from Plugins.Extensions.IPTVPlayer.libs import ph
@@ -15,7 +15,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvchoicebox import IPTVChoiceBox
 from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import clean_html
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str, ensure_str_deep
-from Plugins.Extensions.IPTVPlayer.libs.xxxparser import XXXParser, decodeHtml, decodeUrl, startQualityOffers, stopQualityOffers, qualityChoices
+from Plugins.Extensions.IPTVPlayer.libs.xxxparser import XXXParser, decodeHtml, decodeUrl, startQualityOffers, stopQualityOffers, qualityChoices, browserHeader
 from Plugins.Extensions.IPTVPlayer.libs import xxxparser as xxxparserModule
 from Plugins.Extensions.IPTVPlayer.components.e2ivkselector import GetVirtualKeyboard
 try:
@@ -3810,7 +3810,7 @@ class _SelfTestSession(object):
 
 
 class Host(CBaseHostClass, XXXParser):
-	XXXversion = "2026.10.24.2"
+	XXXversion = "2026.10.25.1"
 	# a Host of a helper thread of the global search (newSearchWorker()): no retries, no "not found" menu
 	searchWorker = False
 	# while the site self-test runs: the time the current site's requests stop (SELFTEST_SITE_SECONDS), 0 otherwise
@@ -4591,9 +4591,13 @@ class Host(CBaseHostClass, XXXParser):
 
 	def sitePage(self, site, url):
 		# a page of a SITE_PARAMS site; refused (Cloudflare's check answers some boxes with a 403, LIVECAMRIPS box log
-		# 24.10.2026) once more through the Cloudflare handling: Chrome's fingerprint, then MyE2i - not in the global search
+		# 24.10.2026) once more as a whole browser request, then through the Cloudflare handling: Chrome's fingerprint,
+		# then MyE2i - not in the global search
 		params = self.siteParams(site)
 		sts, data = self.cm.getPage(url, params)
+		if not sts:
+			params['header'] = browserHeader(SITE_PARAMS[site][1])
+			sts, data = self.cm.getPage(url, params)
 		if not sts and not self.searchWorker:
 			sts, data = self.cm.getPageCFProtection(url, params)
 		return sts, data
