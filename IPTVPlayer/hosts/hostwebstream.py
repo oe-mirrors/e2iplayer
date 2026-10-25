@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "04.10.2026"
-# 03.10.2026 - sport365.live, ustvnow.com and the Teledunet code removed (dead);
-#   nhl24all.ir on the v4 stateshot API; weeb.tv account hint; favourites on the playable rows
-#   (the source APIs are created on demand, a favourite opens without its list); getLinksForVideo
-#   alias for the harness
+LAST_MODIFIED = "25.10.2026"
+# 25.10.2026 - new webcam sources: worldcam.live, lookcam.com, San Diego Zoo, bieszczady.live,
+#   nadmorski24.pl, lantech.com.pl (LiveSzczecin), korbielow.net, szczyrkowski.pl; 40mediagroup.com channels
 ###################################################
 # LOCAL import
 ###################################################
@@ -19,6 +17,7 @@ from Plugins.Extensions.IPTVPlayer.libs.weebtv import WeebTvApi, GetConfigList a
 from Plugins.Extensions.IPTVPlayer.libs.meteopl import MeteoPLApi, GetConfigList as MeteoPL_GetConfigList
 from Plugins.Extensions.IPTVPlayer.libs.skylinewebcamscom import WkylinewebcamsComApi, GetConfigList as WkylinewebcamsCom_GetConfigList
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
+from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
 from Plugins.Extensions.IPTVPlayer.libs.djingcom import DjingComApi
 ###################################################
 from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
@@ -29,6 +28,7 @@ from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 # FOREIGN import
 ###################################################
 import re
+from base64 import b64decode
 from Components.config import config, ConfigSelection, getConfigListEntry
 from Plugins.Extensions.IPTVPlayer.components.configsecret import ConfigSecret
 ############################################
@@ -93,6 +93,16 @@ class WebStreamHost(CBaseHostClass):
                         {'alias_id': 'djing.com', 'name': 'djing.com', 'title': 'https://djing.com/', 'url': 'https://djing.com/', 'icon': 'https://djing.com/img/logoog2048.png'},
                         {'alias_id': 'nhl24all.ir', 'name': 'nhl24all.ir', 'title': 'https://nhl24all.ir/', 'url': 'https://api.nhl24all.ir/api/v4/stateshot', 'icon': 'https://upload.wikimedia.org/wikipedia/en/thumb/3/3a/05_NHL_Shield.svg/250px-05_NHL_Shield.svg.png'},
                         {'alias_id': 'livemass.net', 'name': 'livemass.net', 'title': 'https://livemass.net/', 'url': 'https://livemass.net/locations/index.html', 'icon': 'https://livemass.net/images/live/iconclr@2x.png'},
+                        {'alias_id': 'worldcam.live', 'name': 'worldcam_root', 'title': 'https://worldcam.live/', 'url': '', 'icon': 'https://worldcam.live/img/logo-wcam.png'},
+                        {'alias_id': 'lookcam.com', 'name': 'lookcam_root', 'title': 'https://lookcam.com/', 'url': '', 'icon': 'https://lookcam.com/apple-icon.png'},
+                        {'alias_id': 'nadmorski24.pl', 'name': 'nadmorski24_root', 'title': 'https://nadmorski24.pl/kamery', 'url': '', 'icon': 'https://nadmorski24.pl/public/img/n24_logo.png'},
+                        {'alias_id': 'bieszczady.live', 'name': 'bieszczady_list', 'title': 'https://www.bieszczady.live/kamery', 'url': '', 'icon': 'https://static.bieszczady.live/images/logo/logo-tr-150px.png'},
+                        {'alias_id': 'lantech.com.pl', 'name': 'lantech_list', 'title': 'https://lantech.com.pl/liveszczecin/', 'url': '', 'icon': 'https://lantech.com.pl/wp-content/uploads/2021/07/malelogo.png'},
+                        {'alias_id': 'sandiegozoo.org', 'name': 'sdzoo_list', 'title': 'https://zoo.sandiegozoo.org/live-cameras', 'url': '', 'icon': 'https://zoo.sandiegozoo.org/sites/default/files/teaser_image/live_cameras_thumb.jpg'},
+                        {'alias_id': 'korbielow.net', 'name': 'korbielow_list', 'title': 'https://korbielow.net/', 'url': '', 'icon': 'https://korbielownet.b-cdn.net/images/apple-touch-icon.png'},
+                        {'alias_id': 'szczyrkowski.pl', 'name': 'szczyrk_list', 'title': 'https://www.szczyrkowski.pl/resort/kamery', 'url': '',
+                         'icon': 'https://www.szczyrkowski.pl/typo3temp/assets/_processed_/f/3/csm_favicon-192x192_1c23e19e1c.png'},
+                        {'alias_id': '40mediagroup.com', 'name': 'media40_list', 'title': 'https://www.40mediagroup.com/', 'url': '', 'icon': 'https://www.40mediagroup.com/images/logo/40media-logo-color.png'},
                         {'alias_id': 'windy.com', 'name': 'windy_root', 'title': 'https://www.windy.com/webcams/', 'url': '', 'icon': 'https://img.windy.com/albums/icons/logo-full.png?w=180'},
                         {'alias_id': 'iptv-org', 'name': 'iptvorg_root', 'title': 'https://github.com/iptv-org/iptv', 'url': '', 'icon': 'https://avatars.githubusercontent.com/u/64318809'},
                         {'alias_id': 'freecasthub', 'name': 'freecasthub_root', 'title': 'https://github.com/freecasthub/public-iptv', 'url': '', 'icon': 'https://avatars.githubusercontent.com/u/193939969'},
@@ -639,6 +649,406 @@ class WebStreamHost(CBaseHostClass):
                 return [{'name': 'windy.com', 'url': strwithmeta(m.group(1), {'Referer': 'https://www.windy.com/'})}]
         return []
 
+    #############################################################
+    # Webcam sites below: every row keeps the camera page (or the API id) as
+    # 'url' and the stream is fetched fresh at play time (worldcam/lookcam
+    # links carry a short-lived token), so a favourite plays without its list.
+    def _camHeader(self, referer='', accept='*/*'):
+        header = {'User-Agent': self.cm.getDefaultUserAgent(), 'Accept': accept}
+        if referer:
+            header['Referer'] = referer
+        return header
+
+    def _camGetPage(self, url, referer=''):
+        return self.cm.getPage(url, {'header': self._camHeader(referer)})
+
+    @staticmethod
+    def _camAbsUrl(base, url):
+        return (base + url) if url.startswith('/') else url
+
+    @staticmethod
+    def _camUnique(items):
+        # order kept, a page lists the same camera / player more than once
+        ret = []
+        for item in items:
+            if item not in ret:
+                ret.append(item)
+        return ret
+
+    def _camHlsLinks(self, name, m3u8Url, referer=''):
+        meta = {'User-Agent': self.cm.getDefaultUserAgent()}
+        if referer:
+            meta['Referer'] = referer
+        retlist = []
+        # checkContent: an offline camera answers with an empty playlist - no link then
+        for item in getDirectM3U8Playlist(strwithmeta(m3u8Url, meta), checkExt=False, checkContent=True):
+            retlist.append({'name': ('%s %s' % (name, item.get('name', ''))).strip(), 'url': item['url']})
+        return retlist
+
+    def _camMultiHlsLinks(self, name, streams, referer=''):
+        # streams: (label, m3u8 url) of every player on one camera page; the label only when there are several
+        retlist = []
+        for label, m3u8Url in streams:
+            retlist.extend(self._camHlsLinks(name if len(streams) == 1 else '%s [%s]' % (name, label), m3u8Url, referer))
+        return retlist
+
+    # worldcam.live - IP cameras (mostly Poland); /en/webcams lists all of them,
+    # /en/webcams/<category> a part. The camera page has playerSettings.source =
+    # base64 of the HLS url with a fresh token (without the token: 403).
+    WORLDCAM_URL = 'https://worldcam.live'
+
+    def getWorldcamRoot(self):
+        printDBG("getWorldcamRoot start")
+        sts, data = self._camGetPage(self.WORLDCAM_URL + '/en/webcams')
+        if not sts:
+            return
+        self.addDir({'name': 'worldcam_list', 'title': _('All'), 'url': self.WORLDCAM_URL + '/en/webcams'})
+        seen = set()
+        for href, title in re.findall(r'href="(https://worldcam\.live/en/webcams/[a-z0-9-]+)"[^>]*>([^<]+)<', data):
+            if href in seen:
+                continue
+            seen.add(href)
+            self.addDir({'name': 'worldcam_list', 'title': self.cleanHtmlStr(title), 'url': href})
+
+    def getWorldcamList(self, cItem):
+        printDBG("getWorldcamList start")
+        sts, data = self._camGetPage(cItem.get('url') or (self.WORLDCAM_URL + '/en/webcams'))
+        if not sts:
+            return
+        seen = set()
+        titles = {}
+        # the list only names the town (several cameras can share it, they get a number); the
+        # <a title> has town + country, the <p class="location"> text is cut ("Polan...")
+        for href, linkTitle, block in re.findall(r'<a href="(/en/webcam/[^"]+)"[^>]*?title="([^"]*)"[^>]*>(.*?)</a>\s*<p class="location">', data, re.S):
+            if href in seen:
+                continue
+            seen.add(href)
+            title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(block, r'''alt=['"]([^'"]+)['"]''')[0])
+            title = re.sub(r'^Webcam\s*-\s*', '', title) or href.rsplit('/', 1)[-1]
+            titles[title] = titles.get(title, 0) + 1
+            if titles[title] > 1:
+                title = '%s (%d)' % (title, titles[title])
+            icon = self.cm.ph.getSearchGroups(block, r'''data-src=['"]([^'"]+\.jpg)['"]''')[0]
+            self.addVideo({'name': 'worldcam_video', 'title': title, 'url': self.WORLDCAM_URL + href,
+                           'icon': self._camAbsUrl(self.WORLDCAM_URL, icon),
+                           'desc': re.sub(r'^Webcam\s*-\s*', '', self.cleanHtmlStr(linkTitle))})
+
+    def getWorldcamLink(self, cItem):
+        printDBG("getWorldcamLink [%s]" % cItem.get('url', ''))
+        sts, data = self._camGetPage(cItem['url'], self.WORLDCAM_URL + '/')
+        if not sts:
+            return []
+        # no playerSettings = camera offline (archive only)
+        m = re.search(r'"source"\s*:\s*"([^"]+)"', data)
+        if not m:
+            return []
+        try:
+            url = ensure_str(b64decode(m.group(1).replace('\\/', '/')))
+        except Exception:
+            printExc()
+            return []
+        if not url.startswith('http'):
+            return []
+        return self._camHlsLinks('worldcam.live', url, self.WORLDCAM_URL + '/')
+
+    # lookcam.com - public API (lookcam.com/developers, no key for browse and
+    # playback): /browse/streams lists the live cameras (18+ streams are left
+    # out by default), /streams/<id>/playback gives the signed Streamway manifest.
+    LOOKCAM_API = 'https://api.lookcam.com/v1'
+    LOOKCAM_PAGE_SIZE = 50
+
+    def _lookcamGet(self, path):
+        header = self._camHeader('https://lookcam.com/', 'application/json')
+        header['Origin'] = 'https://lookcam.com'
+        sts, data = self.cm.getPage(self.LOOKCAM_API + path, {'header': header})
+        if not sts:
+            return None
+        try:
+            return json_loads(data)
+        except Exception:
+            printExc()
+            return None
+
+    def getLookcamRoot(self):
+        printDBG("getLookcamRoot start")
+        self.addDir({'name': 'lookcam_list', 'title': _('All'), 'lookcam_lang': '', 'page': 1})
+        data = self._lookcamGet('/browse/languages')
+        if not isinstance(data, list):
+            return
+        # the API names the languages in Polish only (no lang parameter)
+        for lang in data:
+            if not isinstance(lang, dict) or not lang.get('code'):
+                continue
+            self.addDir({'name': 'lookcam_list', 'title': '%s (%s)' % (ensure_str(lang.get('name') or lang['code']), lang.get('live_count', 0)),
+                         'lookcam_lang': ensure_str(lang['code']), 'page': 1})
+
+    def getLookcamList(self, cItem):
+        printDBG("getLookcamList start")
+        try:
+            page = max(1, int(cItem.get('page', 1)))
+        except (TypeError, ValueError):
+            page = 1
+        lang = cItem.get('lookcam_lang', '')
+        # also the Jump template of the pager (the list itself is built from 'page')
+        urlTpl = self.LOOKCAM_API + '/browse/streams?page={page}&per_page=%d&sort=viewers' % self.LOOKCAM_PAGE_SIZE
+        if lang:
+            urlTpl += '&language=' + lang
+        data = self._lookcamGet(urlTpl.format(page=page)[len(self.LOOKCAM_API):])
+        if not isinstance(data, dict):
+            return
+        for stream in data.get('items') or []:
+            if not isinstance(stream, dict) or not stream.get('id') or stream.get('is_mature'):
+                continue
+            user = stream.get('user') or {}
+            # every camera name starts with "LIVE: " - the list is live-only anyway
+            title = re.sub(r'^LIVE:\s*', '', ensure_str(stream.get('name') or user.get('username_title') or stream['id']))
+            tags = ', '.join(ensure_str(t) for t in (stream.get('tags') or []) if t)
+            self.addVideo({'name': 'lookcam_video', 'title': title, 'url': ensure_str(stream['id']),
+                           'lookcam_user': ensure_str(user.get('username') or ''),
+                           'icon': ensure_str(stream.get('thumbnail_url') or ''), 'desc': tags})
+        # total counts the 18+ streams too, so the last page can be a short one
+        try:
+            lastPage = (int(data.get('total') or 0) + self.LOOKCAM_PAGE_SIZE - 1) // self.LOOKCAM_PAGE_SIZE
+        except (TypeError, ValueError):
+            lastPage = 0
+        addPagingItems(self, cItem, page, bool(data.get('has_more')), lastPage, urlTpl)
+
+    def getLookcamLink(self, cItem):
+        printDBG("getLookcamLink [%s]" % cItem.get('url', ''))
+        data = self._lookcamGet('/streams/%s/playback' % cItem.get('url', ''))
+        if not (isinstance(data, dict) and data.get('manifest_url')) and cItem.get('lookcam_user'):
+            # the stream id can change when a camera restarts - a favourite asks its channel for the current one
+            channel = self._lookcamGet('/channels/%s' % cItem['lookcam_user'])
+            stream = channel.get('stream') if isinstance(channel, dict) else None
+            if isinstance(stream, dict) and stream.get('id'):
+                data = self._lookcamGet('/streams/%s/playback' % stream['id'])
+        if not (isinstance(data, dict) and data.get('manifest_url')):
+            return []
+        # api.streamway.io/.../manifest redirects to the signed edge .m3u8
+        return self._camHlsLinks('lookcam.com', ensure_str(data['manifest_url']), 'https://lookcam.com/')
+
+    # nadmorski24.pl - Baltic coast cameras; one page with all cameras, the
+    # category filter (<option class="jsCameraCategory">) is client side.
+    # player.nadmorski24.pl/_camera?id=<n> has the HLS url in <source>.
+    NADMORSKI24_URL = 'https://nadmorski24.pl'
+
+    def getNadmorski24Root(self):
+        printDBG("getNadmorski24Root start")
+        sts, data = self._camGetPage(self.NADMORSKI24_URL + '/kamery')
+        if not sts:
+            return
+        cats = re.findall(r'<option class="jsCameraCategory"[^>]*data-category="([^"]+)"[^>]*>([^<]+)</option>', data)
+        if not cats:
+            cats = [('category_all', _('All'))]
+        for catId, title in cats:
+            self.addDir({'name': 'nadmorski24_list', 'title': self.cleanHtmlStr(title), 'nadmorski24_cat': catId})
+
+    def getNadmorski24List(self, cItem):
+        printDBG("getNadmorski24List start")
+        cat = cItem.get('nadmorski24_cat', 'category_all')
+        sts, data = self._camGetPage(self.NADMORSKI24_URL + '/kamery')
+        if not sts:
+            return
+        seen = set()
+        for item in re.findall(r'(<a\s[^>]*class="jsCameraItem.*?</a>)', data, re.S):
+            camId = self.cm.ph.getSearchGroups(item, r'''href=['"]/kamery/([0-9]+)-''')[0]
+            if not camId or camId in seen:
+                continue
+            if cat != 'category_all' and self.cm.ph.getSearchGroups(item, r'''data-category=['"]([^'"]+)['"]''')[0] != cat:
+                continue
+            seen.add(camId)
+            title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'''data-camera-name=['"]([^'"]+)['"]''')[0]) or camId
+            icon = self.cm.ph.getSearchGroups(item, r'''<img[^>]+src=['"](/publicTmp/[^'"]+)['"]''')[0]
+            self.addVideo({'name': 'nadmorski24_video', 'title': title,
+                           'url': 'https://player.nadmorski24.pl/_camera?id=%s' % camId,
+                           'icon': self._camAbsUrl(self.NADMORSKI24_URL, icon)})
+
+    def getNadmorski24Link(self, cItem):
+        printDBG("getNadmorski24Link [%s]" % cItem.get('url', ''))
+        sts, data = self._camGetPage(cItem['url'], self.NADMORSKI24_URL + '/')
+        if not sts:
+            return []
+        url = self.cm.ph.getSearchGroups(data, r'''<source[^>]+src=['"]([^'"]+\.m3u8[^'"]*)['"]''')[0]
+        if not url:
+            return []
+        return self._camHlsLinks('nadmorski24.pl', url, 'https://player.nadmorski24.pl/')
+
+    # bieszczady.live - Bieszczady mountains; the camera page embeds
+    # player.bieszczady.live/kamera/<slug>, which has streamUrl = the HLS url.
+    def getBieszczadyList(self, cItem):
+        printDBG("getBieszczadyList start")
+        sts, data = self._camGetPage('https://www.bieszczady.live/kamery')
+        if not sts:
+            return
+        seen = set()
+        for slug, icon, title, rest in re.findall(r'<a href="/kamery-bieszczady/([^"]+)"><img[^>]+?data-src="([^"]+)".*?<h6><a[^>]*>([^<]+)</a></h6>(.*?)</a>', data, re.S):
+            if slug in seen:
+                continue
+            seen.add(slug)
+            self.addVideo({'name': 'bieszczady_video', 'title': self.cleanHtmlStr(title), 'url': 'https://player.bieszczady.live/kamera/' + slug,
+                           'icon': icon, 'desc': self.cleanHtmlStr(rest)})
+
+    def getBieszczadyLink(self, cItem):
+        printDBG("getBieszczadyLink [%s]" % cItem.get('url', ''))
+        sts, data = self._camGetPage(cItem['url'], 'https://www.bieszczady.live/')
+        if not sts:
+            return []
+        url = self.cm.ph.getSearchGroups(data, r'''streamUrl\s*=\s*['"]([^'"]+)['"]''')[0]
+        if not url:
+            url = self.cm.ph.getSearchGroups(data, r'''<source[^>]+src=['"]([^'"]+\.m3u8[^'"]*)['"]''')[0]
+        if not url:
+            return []
+        return self._camHlsLinks('bieszczady.live', url, 'https://player.bieszczady.live/')
+
+    # lantech.com.pl LiveSzczecin - Szczecin and the coast; a camera page embeds
+    # one or more _lantech/kamery*.php?cam=<id> players with
+    # serverip + cam -> https://<serverip>/hls/<cam>/index.m3u8.
+    def getLantechList(self, cItem):
+        printDBG("getLantechList start")
+        sts, data = self._camGetPage('https://lantech.com.pl/liveszczecin/')
+        if not sts:
+            return
+        seen = set()
+        for href, icon, title in re.findall(r'<a href="(https://lantech\.com\.pl/[^"]+)" target="_self"><img[^>]+?src="([^"]+)"[^>]*></a><p[^>]*>(.*?)</p>', data, re.S):
+            # the fibre TV offer is in the same grid but has no camera
+            if href in seen or 'telewizja-swiatlowodowa' in href:
+                continue
+            seen.add(href)
+            self.addVideo({'name': 'lantech_video', 'title': self.cleanHtmlStr(title), 'url': href, 'icon': icon})
+
+    def getLantechLink(self, cItem):
+        printDBG("getLantechLink [%s]" % cItem.get('url', ''))
+        sts, data = self._camGetPage(cItem['url'])
+        if not sts:
+            return []
+        streams = []
+        for playerUrl in self._camUnique(re.findall(r'''src=['"](https?://lantech\.com\.pl/_lantech/kamery[^'"]*?\.php\?cam=[^'"&]+)''', data)):
+            sts, html = self._camGetPage(playerUrl, cItem['url'])
+            if not sts:
+                continue
+            server = self.cm.ph.getSearchGroups(html, r'''serverip\s*=\s*['"]([^'"]+)['"]''')[0]
+            cam = self.cm.ph.getSearchGroups(html, r'''var\s+cam\s*=\s*['"]([^'"]+)['"]''')[0]
+            if server and cam:
+                streams.append((cam, 'https://%s/hls/%s/index.m3u8' % (server, cam)))
+        return self._camMultiHlsLinks('lantech.com.pl', streams, 'https://lantech.com.pl/')
+
+    # San Diego Zoo - the camera pages embed Camzone players
+    # (<channel>.secureplayer.camzonecdn.com/...?channel=<channel>), the stream is
+    # <channel>.hls.camzonecdn.com/CamzoneStreams/<channel>/Playlist.m3u8 (open, no token).
+    SDZOO_URL = 'https://zoo.sandiegozoo.org'
+
+    def getSdZooList(self, cItem):
+        printDBG("getSdZooList start")
+        sts, data = self._camGetPage(self.SDZOO_URL + '/live-cameras')
+        if not sts:
+            return
+        seen = set()
+        for href, icon, title in re.findall(r'<a href="(/cams/[^"]+)"[^>]*><img[^>]+?src="([^"]+)".*?<h3><a[^>]*>([^<]+)</a></h3>', data, re.S):
+            if href in seen:
+                continue
+            seen.add(href)
+            icon = icon.replace('&amp;', '&')
+            self.addVideo({'name': 'sdzoo_video', 'title': self.cleanHtmlStr(title), 'url': self.SDZOO_URL + href,
+                           'icon': self._camAbsUrl(self.SDZOO_URL, icon)})
+
+    def getSdZooLink(self, cItem):
+        printDBG("getSdZooLink [%s]" % cItem.get('url', ''))
+        sts, data = self._camGetPage(cItem['url'])
+        if not sts:
+            return []
+        # a page can still carry a retired channel next to the current one (giant panda) - its playlist is a 404
+        channels = self._camUnique(re.findall(r'''camzonecdn\.com/[^'"]*?[?&](?:amp;)?channel=([a-zA-Z0-9_-]+)''', data))
+        streams = [(channel, 'https://%s.hls.camzonecdn.com/CamzoneStreams/%s/Playlist.m3u8' % (channel, channel)) for channel in channels]
+        return self._camMultiHlsLinks('sandiegozoo.org', streams)
+
+    # 40mediagroup.com - Latin American Spanish channels (ENT, TotalMusic); every
+    # /canales/<slug>/ page carries the open HLS master as data-src.
+    MEDIA40_URL = 'https://www.40mediagroup.com'
+
+    def getMedia40List(self, cItem):
+        printDBG("getMedia40List start")
+        sts, data = self._camGetPage(self.MEDIA40_URL + '/canales/')
+        if not sts:
+            return
+        # not every channel has a tile (TotalMusic Dance / Concerts only a plain link): every
+        # aria-label link counts, the logo follows the /images/channels/<slug>.png scheme
+        seen = set()
+        for slug, title in re.findall(r'<a href="/canales/([a-z0-9-]+)/"[^>]*?aria-label="([^"]+)"', data):
+            if slug in seen:
+                continue
+            seen.add(slug)
+            # some buttons are labelled "Ver <channel>" (watch ...)
+            title = re.sub(r'^Ver\s+', '', self.cleanHtmlStr(title))
+            self.addVideo({'name': 'media40_video', 'title': title, 'url': '%s/canales/%s/' % (self.MEDIA40_URL, slug),
+                           'icon': '%s/images/channels/%s.png' % (self.MEDIA40_URL, slug)})
+
+    def getMedia40Link(self, cItem):
+        printDBG("getMedia40Link [%s]" % cItem.get('url', ''))
+        sts, data = self._camGetPage(cItem['url'])
+        if not sts:
+            return []
+        url = self.cm.ph.getSearchGroups(data, r'''data-src=['"](https?://[^'"]+\.m3u8[^'"]*)['"]''')[0]
+        if not url:
+            return []
+        return self._camHlsLinks('40mediagroup.com', url, self.MEDIA40_URL + '/')
+
+    # korbielow.net - Pilsko / Korbielów ski area; the camera pages (linked from
+    # every one of them) embed Flussonic players <base>/embed.html, the stream
+    # is <base>/index.m3u8.
+    KORBIELOW_URL = 'https://korbielow.net'
+
+    def getKorbielowList(self, cItem):
+        printDBG("getKorbielowList start")
+        sts, data = self._camGetPage(self.KORBIELOW_URL + '/kamery-solisko/')
+        if not sts:
+            return
+        seen = set()
+        for href, title in re.findall(r'<a href="(https://korbielow\.net/[^"]*kamer[^"]*)"[^>]*>([^<]+)</a>', data):
+            if href in seen:
+                continue
+            seen.add(href)
+            self.addVideo({'name': 'korbielow_video', 'title': self.cleanHtmlStr(title), 'url': href,
+                           'icon': cItem.get('icon', '')})
+
+    def getKorbielowLink(self, cItem):
+        printDBG("getKorbielowLink [%s]" % cItem.get('url', ''))
+        sts, data = self._camGetPage(cItem['url'])
+        if not sts:
+            return []
+        bases = self._camUnique(re.findall(r'''<iframe[^>]+src=['"](https?://[^'"]+?)/embed\.html''', data))
+        streams = [(str(idx + 1), base + '/index.m3u8') for idx, base in enumerate(bases)]
+        return self._camMultiHlsLinks('korbielow.net', streams, self.KORBIELOW_URL + '/')
+
+    # szczyrkowski.pl (Szczyrk Mountain Resort) - the camera pages embed
+    # player.webcamera.pl, resolved by urlparser (parserWEBCAMERAPL).
+    SZCZYRK_URL = 'https://www.szczyrkowski.pl'
+
+    def getSzczyrkList(self, cItem):
+        printDBG("getSzczyrkList start")
+        sts, data = self._camGetPage(self.SZCZYRK_URL + '/resort/kamery')
+        if not sts:
+            return
+        seen = set()
+        for href, block, title in re.findall(r'<a href="(/resort/kamery/[^"]+)">(.*?)</a>\s*<figcaption[^>]*>(.*?)</figcaption>', data, re.S):
+            if href in seen:
+                continue
+            seen.add(href)
+            icon = self.cm.ph.getSearchGroups(block, r'''<img[^>]+src=['"]([^'"]+)['"]''')[0]
+            self.addVideo({'name': 'szczyrk_video', 'title': self.cleanHtmlStr(title), 'url': self.SZCZYRK_URL + href,
+                           'icon': self._camAbsUrl(self.SZCZYRK_URL, icon)})
+
+    def getSzczyrkLink(self, cItem):
+        printDBG("getSzczyrkLink [%s]" % cItem.get('url', ''))
+        sts, data = self._camGetPage(cItem['url'])
+        if not sts:
+            return []
+        url = self.cm.ph.getSearchGroups(data, r'''<iframe[^>]+src=['"]((?:https?:)?//player\.webcamera\.pl/[^'"]+)['"]''')[0]
+        if not url:
+            return []
+        if url.startswith('//'):
+            url = 'https:' + url
+        return self.up.getVideoLinkExt(url)
+
     @staticmethod
     def _itemUrlWithHeaders(url, cItem):
         headers = cItem.get('http_headers') or {}
@@ -671,6 +1081,24 @@ class WebStreamHost(CBaseHostClass):
             urlList = self.getLiveMassLink(cItem)
         elif name == 'windy_video':
             urlList = self.getWindyLink(cItem)
+        elif name == 'worldcam_video':
+            urlList = self.getWorldcamLink(cItem)
+        elif name == 'lookcam_video':
+            urlList = self.getLookcamLink(cItem)
+        elif name == 'nadmorski24_video':
+            urlList = self.getNadmorski24Link(cItem)
+        elif name == 'bieszczady_video':
+            urlList = self.getBieszczadyLink(cItem)
+        elif name == 'lantech_video':
+            urlList = self.getLantechLink(cItem)
+        elif name == 'sdzoo_video':
+            urlList = self.getSdZooLink(cItem)
+        elif name == 'media40_video':
+            urlList = self.getMedia40Link(cItem)
+        elif name == 'korbielow_video':
+            urlList = self.getKorbielowLink(cItem)
+        elif name == 'szczyrk_video':
+            urlList = self.getSzczyrkLink(cItem)
 
         if isinstance(urlList, list):
             return urlList
@@ -731,6 +1159,10 @@ class WebStreamHost(CBaseHostClass):
         self.currList = []
         if name is not None:
             self.currItem = self._dropMainMenuImageType(self.currItem)
+        if isJumpItem(self.currItem):
+            # "Jump" row of a paged list (lookcam.com): asks for the page, the list keeps its own name
+            self.currItem = jumpTarget(self, self.currItem)
+            name = self.currItem.get('name', '')
 
         if name is None:
             self.listsMainMenu(self.MAIN_GROUPED_TAB, {'image_type': self.MAIN_MENU_IMAGE_TYPE})
@@ -758,6 +1190,30 @@ class WebStreamHost(CBaseHostClass):
             self.getWindyTaxonomy(self.currItem)
         elif name == 'windy_list':
             self.getWindyList(self.currItem)
+        elif name == 'worldcam_root':
+            self.getWorldcamRoot()
+        elif name == 'worldcam_list':
+            self.getWorldcamList(self.currItem)
+        elif name == 'lookcam_root':
+            self.getLookcamRoot()
+        elif name == 'lookcam_list':
+            self.getLookcamList(self.currItem)
+        elif name == 'nadmorski24_root':
+            self.getNadmorski24Root()
+        elif name == 'nadmorski24_list':
+            self.getNadmorski24List(self.currItem)
+        elif name == 'bieszczady_list':
+            self.getBieszczadyList(self.currItem)
+        elif name == 'lantech_list':
+            self.getLantechList(self.currItem)
+        elif name == 'sdzoo_list':
+            self.getSdZooList(self.currItem)
+        elif name == 'media40_list':
+            self.getMedia40List(self.currItem)
+        elif name == 'korbielow_list':
+            self.getKorbielowList(self.currItem)
+        elif name == 'szczyrk_list':
+            self.getSzczyrkList(self.currItem)
         elif name == 'iptvorg_root':
             self.getIptvOrgRoot()
         elif name == 'iptvorg_taxonomy':

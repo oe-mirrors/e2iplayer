@@ -1854,8 +1854,9 @@ class common:
             if ret is not None:
                 return ret
 
-        # if curl should and can be used
-        if self.usePyCurl():
+        # if curl should and can be used - not for a file behind a solved browser check: like getPage with
+        # CFProtection it goes the urllib way, the cf_clearance is bound to that TLS fingerprint
+        if self.usePyCurl() and not addParams.get('CFProtection', False):
             return self.saveWebFileWithPyCurl(file_path, url, addParams, post_data)
 
         bRet = False

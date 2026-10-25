@@ -4,7 +4,10 @@
 #
 #  $Id$
 #
-#  Last Modified: 18.10.2026
+#  Last Modified: 25.10.2026
+#   - a clean ffmpeg exit (code 0) of a fast download counts as finished when the last progress line plus its
+#     speed (speed=167x) reaches the end (the final "Lsize=" line can get lost at the exit: was INTERRUPTED)
+#  18.10.2026
 #   - HLS segments refused by their extension (ffmpeg >= 7.1.1, "not in allowed_segment_extensions", vidara's
 #     .js audio): the same run again with -allowed_segment_extensions ALL -extension_picky 0 for the HLS inputs
 #     (without extension_picky when that build does not know it); older ffmpeg never gets the options
@@ -111,6 +114,11 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
     # reached - ffmpeg's segment-summed duration and its final time= often differ
     # by a segment, so an exact match must not be required
     DURATION_COMPLETE_RATIO = 0.97
+    # a clean exit (code 0) may lose ffmpeg's final progress line: the last one plus speed x max(1, seconds since
+    # it) also counts - only while that line is at most this many seconds old (else the download had stalled)
+    PROGRESS_EXTRAPOLATE_SECS = 3
+    # ... and only when that line is already this close to the end (box: 96.9 % at 167x)
+    PROGRESS_EXTRAPOLATE_MIN_RATIO = 0.95
 
     # ffmpeg output lines written to the debug log after the stream mapping (before it every line is logged);
     # ERROR_SPAM lines repeat per packet or per retry and are never logged, each distinct error line is logged
@@ -152,6 +160,9 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
         self.headerReceived = False
         self.loggedErrors = set()
         self.speedFromProgress = False  # ffmpeg's progress line gave a speed (bitrate x speed)
+        self.progressSpeed = 0.0  # speed factor of the last progress line (speed=167x), for _looksComplete
+        self.progressTime = None  # when the last progress line came
+        self.lastProgressLine = ''
         self.sizeSample = None  # (time, file size) of the last statistic update, for the speed without it
         self.liveState = {}  # {'live': True / False / None} from the source's own playlist (_startLiveCheck)
         self.parseReObj = {}
@@ -212,6 +223,9 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
         self.outData = ''
         self.contentType = 'unknown'
         self.speedFromProgress = False
+        self.progressSpeed = 0.0
+        self.progressTime = None
+        self.lastProgressLine = ''
         self.sizeSample = None
 
         cmdTab = [DMHelper.GET_FFMPEG_PATH(), '-y']
@@ -433,7 +447,10 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
                         self.liveStream = True
 
             if 'frame=' in item:
-                self.lastUpadateTime = datetime.datetime.now()
+                self.lastUpadateTime = self.progressTime = datetime.datetime.now()
+                self.lastProgressLine = item.strip()
+                speedObj = self.parseReObj['speed'].search(item)
+                self.progressSpeed = float(speedObj.group(1)) if speedObj else 0.0
 
                 # ffmpeg's speed when this line has one, else the growing file's (updateStatistic)
                 speed = self._getDownloadSpeed(item)
@@ -486,6 +503,7 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
             self.console = None
 
         self._refreshLocalFileSize()
+        printDBG("FFMPEGDownloader._cmdFinished total[%s] downloaded[%s] size[%s] speed[%sx] last[%s]" % (self.totalDuration, self.downloadDuration, self.localFileSize, getattr(self, 'progressSpeed', 0), getattr(self, 'lastProgressLine', '')[-200:]))
 
         if not terminated and 0 >= self.localFileSize and self.runUrl is not None:
             level = 0
@@ -517,7 +535,7 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
             self.status = DMHelper.STS.INTERRUPTED
         elif 0 >= self.localFileSize:
             self.status = DMHelper.STS.ERROR
-        elif not self._looksComplete() and (self.allowFinalRename or code not in (0, None)):
+        elif not self._looksComplete(code) and (self.allowFinalRename or code not in (0, None)):
             # short file: a clean ffmpeg exit here is odd, a non-zero one is a real
             # failure - either way it is not a finished download. fix 241026: buffered playback
             # (allowFinalRename unset) plays what a clean exit left - the progress count can lag
@@ -630,11 +648,25 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
                     return True
         return False
 
-    def _looksComplete(self):
+    def _looksComplete(self, code=None):
         # unknown duration (livestream / no header) -> nothing to compare against
         if self.totalDuration <= 0:
             return True
-        return self.downloadDuration >= self.totalDuration * self.DURATION_COMPLETE_RATIO
+        needed = self.totalDuration * self.DURATION_COMPLETE_RATIO
+        if self.downloadDuration >= needed:
+            return True
+        # a clean exit only: ffmpeg's final progress line ("Lsize= ... time=<end>") can get lost at the exit - a fast
+        # download (ffmpeg 9: ~90 s of media between two lines at 170x) then stopped short of the ratio although the
+        # whole file is there. The last line plus what its speed adds until now counts, while that line is recent
+        speed = getattr(self, 'progressSpeed', 0)
+        progressTime = getattr(self, 'progressTime', None)
+        # only the last stretch: a clean exit well before the end (HLS playlist cut short) stays interrupted
+        if code != 0 or speed <= 0 or progressTime is None or self.downloadDuration < self.totalDuration * self.PROGRESS_EXTRAPOLATE_MIN_RATIO:
+            return False
+        secs = (datetime.datetime.now() - progressTime).total_seconds()
+        if secs > self.PROGRESS_EXTRAPOLATE_SECS:
+            return False
+        return self.downloadDuration + speed * max(1, secs) >= needed
 
     def _fixFileExtension(self):
         # ffmpeg writes the container chosen by -f, which need not match the name

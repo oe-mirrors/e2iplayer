@@ -726,6 +726,9 @@ class SidecarMixin(object):
             self.sidecarTxt, self.sidecarImg = result
 
     def _writeTxtSidecar(self, filePath):
+        # no sidecar for this download (covers, buffered playback): nothing to write and nothing to log
+        if not self.sidecarEnabled:
+            return
         try:
             self._takeSidecarMetaResult(ensureText(filePath).rsplit('.', 1)[0] + '.txt')
             if not self.sidecarTxt:

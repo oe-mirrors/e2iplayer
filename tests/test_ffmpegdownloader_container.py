@@ -212,6 +212,53 @@ def test_fast_download_counts_as_finished(ff):
     assert _fastFinished(ff, download=True, outData=last) == "DOWNLOADED"
 
 
+_FF9_HEADER = ("Input #0, hls, from 'https://cdn/v.m3u8':\n  Duration: 00:22:23.17, start: -0.021333, bitrate: 0 kb/s\n"
+               "Input #1, hls, from 'https://cdn/a.m3u8':\n  Duration: 00:22:23.34, start: 0.065983, bitrate: 0 kb/s\n"
+               "Stream mapping:\n  Stream #0:0 -> #0:0 (copy)\n  Stream #1:0 -> #0:1 (copy)\n")
+_FF9_LINE = "frame=%d fps=5422 q=-1.0 size=  %dKiB time=%s bitrate=1430.4kbits/s speed= %sx elapsed=0:00:04.11    \r"
+
+
+def _ff9Finished(ff, times, speed, code=0, terminated=False, age=0):
+    # box log 25.10.2026 (cda merge://, ffmpeg 9.0.2, VU+): a 22:23 episode in ~9 s; the final "Lsize=" line never
+    # arrived, the last progress line said 21:41 (96.9 %). The real parser reads the stderr, then ffmpeg exits
+    import datetime
+    ff.DMHelper.STS.DOWNLOADED, ff.DMHelper.STS.INTERRUPTED, ff.DMHelper.STS.ERROR = "DOWNLOADED", "INTERRUPTED", "ERROR"
+    ff.DMHelper.getFileSize = lambda path: 230000000
+    dl = _dl(ff, "merge://audio_url|video_url", {"audio_url": "https://cdn/a.m3u8", "video_url": "https://cdn/v.m3u8"})
+    dl.filePath, dl.fileCmdPath, dl.console, dl.localFileSize, dl.sidecarEnabled = "/hdd/movie/Slayers - S01E13.mkv", "", None, 0, False
+    dl.outData, dl.loggedErrors = "", set()
+    dl._fixFileExtension = lambda: None
+    dl._finishDownloadFlow = lambda: None
+    dl._dataAvail(_FF9_HEADER)
+    for idx, time in enumerate(times):
+        dl._dataAvail(_FF9_LINE % (1000 * (idx + 1), 10000 * (idx + 1), time, speed))
+    assert dl.totalDuration == 1343
+    if age:
+        dl.progressTime -= datetime.timedelta(seconds=age)
+    dl._cmdFinished(code, terminated)
+    return dl.status
+
+
+def test_fast_clean_exit_near_the_end_counts_as_finished(ff):
+    # last progress line 21:41 = 96.9 % (< DURATION_COMPLETE_RATIO), 167x: + 167 s -> the end is reached
+    assert _ff9Finished(ff, ["00:20:10.00", "00:21:41.50"], "167") == "DOWNLOADED"
+    # a non-zero exit keeps the strict check (an ffmpeg failure), a stop in the download manager stays interrupted
+    assert _ff9Finished(ff, ["00:20:10.00", "00:21:41.50"], "167", code=1) == "ERROR"
+    assert _ff9Finished(ff, ["00:20:10.00", "00:21:41.50"], "167", code=-1, terminated=True) == "INTERRUPTED"
+    # a stalled download: the last line is too old to extrapolate from
+    assert _ff9Finished(ff, ["00:20:10.00", "00:21:41.50"], "167", age=10) == "INTERRUPTED"
+
+
+def test_truncated_clean_exit_stays_interrupted(ff):
+    # an HLS that ended at 60 %: neither a slow nor a fast run reaches the end with one more second
+    assert _ff9Finished(ff, ["00:12:00.00", "00:13:26.00"], "1.02") == "INTERRUPTED"
+    assert _ff9Finished(ff, ["00:12:00.00", "00:13:26.00"], "167") == "INTERRUPTED"
+    # 90 % at 180x: one second of that speed would reach the end, but it is below the extrapolation floor
+    assert _ff9Finished(ff, ["00:18:40.00", "00:20:09.00"], "180") == "INTERRUPTED"
+    # without a speed in the line (speed=N/A) nothing is extrapolated
+    assert _ff9Finished(ff, ["00:20:10.00", "00:21:41.50"], "N/A") == "INTERRUPTED"
+
+
 def test_speed_from_the_file_without_bitrate(ff):
     import datetime
     dl = _dl(ff, "https://cdn/x/live.m3u8")
