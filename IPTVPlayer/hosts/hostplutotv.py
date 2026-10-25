@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "24.10.2026"
+LAST_MODIFIED = "25.10.2026"
 # Pluto TV - free ad-supported streaming (catalogue of the country the box is in, Germany: ~200 channels):
 # live channels by category with now / next, on-demand categories -> films / series -> seasons -> episodes,
 # search. JSON API of the web app (boot.pluto.tv v4 session token), plain HLS from the stitcher.
@@ -157,6 +157,16 @@ class PlutoTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
         data = self._cached('live_cats', 'channels', '/v2/guide/categories')
         return [c for c in ((data or {}).get('data') or []) if isinstance(c, dict) and c.get('id') and c.get('channelIDs')]
 
+    def _setGeoError(self, cacheKey):
+        # countries without Pluto TV get a valid session but empty channel / on-demand lists; a failed request
+        # (no answer, nothing cached) is no geo-blocking
+        if not self.session or not self.cache.get(cacheKey):
+            return
+        session = (self.session or {}).get('session') or {}
+        country = session.get('countryCode') or session.get('activeRegion') or ''
+        printDBG('PlutoTV empty catalogue, country[%s] region[%s]' % (session.get('countryCode', ''), session.get('activeRegion', '')))
+        SetIPTVPlayerLastHostError(_('Not available in your country (geo-blocking).') + (' [%s]' % country if country else ''))
+
     ###################################################
     # helpers
     ###################################################
@@ -288,6 +298,8 @@ class PlutoTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
             params = dict(cItem)
             params.update({'category': 'list_live', 'title': _('All stations'), 'cat_id': '', 'good_for_fav': True, 'icon': '', 'desc': ''})
             self.addDir(params)
+        else:
+            self._setGeoError('live_cats')
 
     def listLive(self, cItem):
         channels = self._channels()
@@ -368,6 +380,8 @@ class PlutoTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
             params = dict(cItem)
             params.update({'category': 'list_vod', 'title': title, 'cat_id': cat['_id'], 'good_for_fav': True, 'icon': '', 'desc': ''})
             self.addDir(params)
+        if not self.currList:
+            self._setGeoError('vod_cats')
 
     def listVod(self, cItem):
         page = self._page(cItem)

@@ -77,35 +77,38 @@ _TEXT_COLOR = 0x00ffffff
 # non-empty line is taken.
 _PROBE_SCRIPT_PATH = "/tmp/.e2i_sysprobe.sh"
 
-_P = '</dev/null 2>&1'
+# r N TOOL ARGS: runs the tool (stdin /dev/null, output and errors), prints at most
+# N lines of it and "@rc <exit code>" - the code tells a tool that crashes or cannot
+# be executed (126/127, or killed by a signal) from one that only prints its usage
 _PROBE_SCRIPT = (
     'T=""; command -v timeout >/dev/null 2>&1 && T="timeout 4"; '
     'w(){ command -v "$1" 2>/dev/null || echo "-"; }; '
     'p(){ [ -x "$1" ] && echo "$1" || echo "-"; }; '
-    'echo "@@hlsdl";       X=/usr/bin/hlsdl;    [ -x $X ] && ($T $X %s || true) | head -n 2; p $X; '
-    'echo "@@cmdwrap";     X=/usr/bin/cmdwrap;  [ -x $X ] && ($T $X %s || true) | head -n 1; p $X; '
-    'echo "@@lsdir";       X=/usr/bin/lsdir;    [ -x $X ] && ($T $X --version %s || true) | head -n 1; p $X; '
-    'echo "@@f4mdump";     X=/usr/bin/f4mdump;  [ -x $X ] && ($T $X %s || true) | head -n 1; p $X; '
-    'echo "@@ffmpeg";      X=/usr/bin/ffmpeg;   [ -x $X ] && ($T $X -version %s || true) | head -n 1; p $X; '
-    'echo "@@wget";        X=/usr/bin/wget;     [ -x $X ] && ($T $X --version %s || true) | head -n 1; p $X; '
-    'echo "@@curl";        X=/usr/bin/curl;     [ -x $X ] && ($T $X --version %s || true) | head -n 1; p $X; '
+    'r(){ n=$1; shift; o=$($T "$@" </dev/null 2>&1); c=$?; printf "%s\n" "$o" | head -n $n; echo "@rc $c"; }; '
+    'echo "@@hlsdl";       X=/usr/bin/hlsdl;    [ -x $X ] && r 2 $X; p $X; '
+    'echo "@@cmdwrap";     X=/usr/bin/cmdwrap;  [ -x $X ] && r 1 $X; p $X; '
+    'echo "@@lsdir";       X=/usr/bin/lsdir;    [ -x $X ] && r 1 $X --version; p $X; '
+    'echo "@@f4mdump";     X=/usr/bin/f4mdump;  [ -x $X ] && r 1 $X; p $X; '
+    'echo "@@ffmpeg";      X=/usr/bin/ffmpeg;   [ -x $X ] && r 1 $X -version; p $X; '
+    'echo "@@wget";        X=/usr/bin/wget;     [ -x $X ] && r 1 $X --version; p $X; '
+    'echo "@@curl";        X=/usr/bin/curl;     [ -x $X ] && r 1 $X --version; p $X; '
     'echo "@@curlimp";     C=$(w curl-impersonate); [ "$C" = "-" ] && [ -x /usr/local/bin/curl-impersonate ] && C=/usr/local/bin/curl-impersonate; '
-    '  [ "$C" != "-" ] && ($T "$C" --version %s || true) | head -n 1; echo "$C"; '
-    'echo "@@rtmpdump";    X=/usr/bin/rtmpdump; [ -x $X ] && ($T $X --help %s || true) | grep -i rtmpdump | head -n 1; p $X; '
-    'echo "@@exteplayer3"; X=/usr/bin/exteplayer3; [ -x $X ] && ($T $X %s || true) | head -n 2; p $X; '
-    'echo "@@gstplayer";   X=/usr/bin/gstplayer;  [ -x $X ] && ($T $X %s || true) | head -n 2; p $X; '
-    'echo "@@gstplayer2";  X=/usr/bin/gstplayer2; [ -x $X ] && ($T $X %s || true) | head -n 2; p $X; '
+    '  [ "$C" != "-" ] && r 1 "$C" --version; echo "$C"; '
+    'echo "@@rtmpdump";    X=/usr/bin/rtmpdump; [ -x $X ] && r 5 $X --help; p $X; '
+    'echo "@@exteplayer3"; X=/usr/bin/exteplayer3; [ -x $X ] && r 2 $X; p $X; '
+    'echo "@@gstplayer";   X=/usr/bin/gstplayer;  [ -x $X ] && r 2 $X; p $X; '
+    'echo "@@gstplayer2";  X=/usr/bin/gstplayer2; [ -x $X ] && r 2 $X; p $X; '
     'echo "@@duktape";     X=/usr/bin/duk; D=/tmp/.e2i_dukver.js; '
-    '  printf "%%s" \'try{var v=Duktape.version;print(Math.floor(v/10000)+"."+(Math.floor(v/100)%%100)+"."+(v%%100))}catch(e){print("?")}\' > $D; '
-    '  [ -x $X ] && ($T $X $D %s || true) | head -n 1; rm -f $D; p $X; '
-    'echo "@@quickjs";     X=/usr/bin/qjs;      [ -x $X ] && ($T $X --version %s || true) | head -n 1; p $X; '
-    'echo "@@uchardet";    X=/usr/bin/uchardet; [ -x $X ] && ($T $X --version %s || true) | grep -i "version" | head -n 1; p $X; '
-    'echo "@@unzip";       U=$(w unzip); [ "$U" != "-" ] && ($T unzip %s || true) | grep "[^[:space:]]" | head -n 1; echo "$U"; '
-    'echo "@@unrar";       U=$(w unrar); [ "$U" != "-" ] && ($T unrar %s || true) | grep "[^[:space:]]" | head -n 1; echo "$U"; '
+    '  printf "%s" \'try{var v=Duktape.version;print(Math.floor(v/10000)+"."+(Math.floor(v/100)%100)+"."+(v%100))}catch(e){print("?")}\' > $D; '
+    '  [ -x $X ] && r 1 $X $D; rm -f $D; p $X; '
+    'echo "@@quickjs";     X=/usr/bin/qjs;      [ -x $X ] && r 1 $X --version; p $X; '
+    'echo "@@uchardet";    X=/usr/bin/uchardet; [ -x $X ] && r 5 $X --version; p $X; '
+    'echo "@@unzip";       U=$(w unzip); [ "$U" != "-" ] && r 3 unzip; echo "$U"; '
+    'echo "@@unrar";       U=$(w unrar); [ "$U" != "-" ] && r 3 unrar; echo "$U"; '
     'echo "@@deps";        (opkg list-installed 2>/dev/null | grep -i e2iplayer-deps || true); '
     'echo "@@ifdsrc";      (opkg list-installed 2>/dev/null | grep "^gst-ifdsrc " || true); '
     'echo "@@end"\n'
-) % ((_P,) * 17)
+)
 
 _PROBE_CACHE = None       # parsed binary block, reused for the whole session
 _PROBE_KEEPALIVE = None   # holds the iptv_system object until its callback fires
@@ -376,22 +379,50 @@ class _SystemInfo(object):
                 sections[cur].append(line.strip())
 
         def tool(key):
-            # (the output lines, the path - '' when the tool is missing); the path is the last line of a section
+            # (the output lines, the path - '' when the tool is missing); the path is the last line of a section,
+            # "@rc <code>" the exit code of the probe run (see r() in the probe script)
             v = sections.get(key) or []
             path = v[-1] if v else "-"
-            return v[:-1], ("" if path == "-" else path)
+            lines = [line for line in v[:-1] if not line.startswith("@rc ")]
+            return lines, ("" if path == "-" else path)
 
-        # every renderer gets the text for a missing tool: what the user loses without it
-        def first(key, missing):
+        def state(key, missing):
+            # (the output lines, the path, a text that replaces the version): missing for a missing tool,
+            # "installed, does not start (path)" when the probe run could not be executed (126/127) or was
+            # killed by a signal (129-192, e.g. 139 = segmentation fault) - not when only the timeout stopped
+            # it (143, GNU timeout 124) and not for exit(-1) (255)
             lines, path = tool(key)
             if not path:
-                return missing
+                return lines, path, missing
+            codes = [line[4:] for line in (sections.get(key) or []) if line.startswith("@rc ")]
+            try:
+                code = int(codes[-1]) if codes else 0
+            except ValueError:
+                code = 0
+            if code in (126, 127) or (128 < code <= 192 and code != 143):
+                printDBG("System info: %s (%s) does not start, exit code %d, output %r" % (key, path, code, lines[:3]))
+                return lines, path, "%s (%s)" % (_("installed, does not start"), path)
+            return lines, path, ""
+
+        def pick(lines, word):
+            # the output lines from the first one that contains word on (rtmpdump --help, uchardet --version)
+            for i, line in enumerate(lines):
+                if word in line.lower():
+                    return lines[i:]
+            return lines
+
+        # every renderer gets the text for a missing tool: what the user loses without it
+        def first(key, missing, word=""):
+            lines, path, text = state(key, missing)
+            if text:
+                return text
+            lines = pick(lines, word) if word else lines
             return lines[0] if lines else _("installed")
 
         def ver_line(key, missing):
-            lines, path = tool(key)
-            if not path:
-                return missing
+            lines, path, text = state(key, missing)
+            if text:
+                return text
             for line in lines:
                 low = line.lower()
                 if line.startswith("{") or "version" in low or " v0." in low or " v1." in low:
@@ -399,30 +430,31 @@ class _SystemInfo(object):
             return lines[0] if lines else _("installed")
 
         def lsdir_val(missing):
-            lines, path = tool("lsdir")
-            if not path:
-                return missing
+            lines, path, text = state("lsdir", missing)
+            if text:
+                return text
             for line in lines:
                 if line.lower().startswith("lsdir v"):
                     return line
             return _("installed")
 
         def banner(key, missing):
-            lines, path = tool(key)
-            if not path:
-                return missing
+            lines, path, text = state(key, missing)
+            if text:
+                return text
             line = lines[0] if lines else ""
             if line.lower().startswith("version:"):
                 line = "v" + line.split(":", 1)[1].strip()
             return line or _("installed")
 
-        def path_val(key, missing):
+        def path_val(key, missing, word=""):
             # a version line (or none) + the path, e.g. "curl 8.22.0-IMPERSONATE (arm-...) libcurl/...",
             # "UnZip 6.00 of 20 April 2009, by ...", "BusyBox v1.36.1 (2024-...) multi-call binary.",
             # "UNRAR 7.00 freeware      Copyright (c) ...", "Version 0.0.8" (uchardet)
-            lines, path = tool(key)
-            if not path:
-                return missing
+            lines, path, text = state(key, missing)
+            if text:
+                return text
+            lines = pick(lines, word) if word else lines
             ver = " ".join(lines[0].split()) if lines else ""
             for sep in (" (", " of ", " freeware", " Copyright"):
                 ver = ver.split(sep, 1)[0]
@@ -457,14 +489,14 @@ class _SystemInfo(object):
         out.append(row("ffmpeg", first("ffmpeg", _("not installed (no DASH / ffmpeg downloads)"))))
         out.append(row("wget", first("wget", _("not installed (no file, cover or subtitle downloads)"))))
         out.append(row("curl", first("curl", _("not installed (wget is used)"))))
-        out.append(row("rtmpdump", first("rtmpdump", _("not installed (no RTMP downloads)"))))
+        out.append(row("rtmpdump", first("rtmpdump", _("not installed (no RTMP downloads)"), "rtmpdump")))
         out.append(row("duktape", first("duktape", jsMissing)))
         out.append(row("quickjs", first("quickjs", jsMissing)))
         out.append(row("exteplayer3", ver_line("exteplayer3", playerMissing)))
         out.append(row("gstplayer", ver_line("gstplayer", playerMissing)))
         out.append(row("gstplayer2", ver_line("gstplayer2", playerMissing)))
         out.append(row("gst-ifdsrc", self._ifdsrcState(sections.get("ifdsrc") or [])))
-        out.append(row("uchardet", path_val("uchardet", _("not installed (subtitles: code page of the language)"))))
+        out.append(row("uchardet", path_val("uchardet", _("not installed (subtitles: code page of the language)"), "version")))
         out.append(row("unzip", path_val("unzip", _("not installed (no ZIP subtitles)"))))
         out.append(row("unrar", path_val("unrar", _("not installed (no RAR subtitles)"))))
         out.append(row("TorrServer", self._torrserverPath()))

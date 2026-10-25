@@ -204,7 +204,8 @@
   "royatv",
   "tv8",
   "kanald",
-  "atvtr"
+  "atvtr",
+  "showtv"
  ],
  "iptv": [
   "xtream",
@@ -564,6 +565,7 @@
   "tv8",
   "kanald",
   "atvtr",
+  "showtv",
   "dizibox",
   "hdfilmcehennemi",
   "fullhdfilmizlesene"
