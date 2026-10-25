@@ -641,6 +641,9 @@ class IPTVExtMoviePlayer(Screen):
         self.fileSRC = strwithmeta(filesrcLocation)
         self.title = FileName
         self.hostName = additionalParams.get('host_name', '')
+        # "Select link automatically" has further links: an error before the first second of playback
+        # closes the player without a message, E2iPlayer goes on with the next link
+        self.quietStartErrors = additionalParams.get('quiet_start_errors', False)
         if lastPosition:
             self.lastPosition = lastPosition
         else:
@@ -2343,7 +2346,12 @@ class IPTVExtMoviePlayer(Screen):
                 # u'isSubtitle': False,
                 # u'isDvbSubtitle': False}}
         if msgText != '':
-            self.showMessage(msgText, msgType, None)
+            if MessageBox.TYPE_ERROR == msgType and self.quietStartErrors and not self.playback.get('ConfirmedCTime', 0):
+                printDBG("IPTVExtMoviePlayer error before playback, next link follows - message not shown")
+                self.quietStartErrors = False
+                self.waitCloseTimeoutCallback()
+            else:
+                self.showMessage(msgText, msgType, None)
 
     def onDownloadFinished(self, sts):
         printDBG("IPTVExtMoviePlayer.onDownloadFinished sts[%s]" % sts)
