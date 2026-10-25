@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-20 20:10+0000\n"
+"POT-Creation-Date: 2026-10-25 00:38+0000\n"
 "PO-Revision-Date: 2026-07-27 16:28+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -513,6 +513,9 @@ msgstr "Pridal: %s, adresár: %s"
 msgid "Adhan"
 msgstr "Adhan"
 
+msgid "Adult"
+msgstr ""
+
 msgid "Adventure"
 msgstr "Dobrodružné"
 
@@ -530,6 +533,9 @@ msgstr "Odvysielané tento týždeň"
 
 msgid "Airing now"
 msgstr "Práve vysiela"
+
+msgid "Albanian"
+msgstr ""
 
 msgid "All"
 msgstr "Všetko"
@@ -740,6 +746,9 @@ msgstr "Naozaj chcete odstrániť súbor \"%s\"?"
 msgid "Are you sure you want to reset all settings to their default values?"
 msgstr "Naozaj chcete obnoviť všetky nastavenia na ich predvolené hodnoty?"
 
+msgid "Armenian"
+msgstr ""
+
 msgid "Art"
 msgstr "Umenie"
 
@@ -767,6 +776,9 @@ msgstr "Ázijské filmy"
 
 msgid "Asian series (dubbed)"
 msgstr "Ázijské seriály (dabované)"
+
+msgid "Ask"
+msgstr ""
 
 msgid "Aspect"
 msgstr "Pomer strán"
@@ -864,8 +876,14 @@ msgstr "Základná veda"
 msgid "Basketball"
 msgstr "Basketbal"
 
+msgid "Basque"
+msgstr ""
+
 msgid "Being watched"
 msgstr "Práve sa pozerá"
+
+msgid "Bengali"
+msgstr ""
 
 msgid "Best"
 msgstr "Najlepší"
@@ -910,11 +928,17 @@ msgstr "Príprava na skúšky"
 msgid "Books"
 msgstr "Knihy"
 
+msgid "Bosnian"
+msgstr ""
+
 msgid "Box"
 msgstr "Box"
 
 msgid "Boxing"
 msgstr "Box"
+
+msgid "Brazilian Portuguese"
+msgstr ""
 
 msgid "Broadcast:"
 msgstr "Vysielanie:"
@@ -930,6 +954,9 @@ msgstr "Rozpočet:"
 
 msgid "Buffering location"
 msgstr "Umiestnenie vyrovnávacej pamäte"
+
+msgid "Bulgarian"
+msgstr ""
 
 msgid "Business"
 msgstr "Biznis"
@@ -1023,6 +1050,9 @@ msgstr "Kreslené rozprávky a seriály"
 
 msgid "Cast:"
 msgstr "Obsadenie:"
+
+msgid "Catalan"
+msgstr ""
 
 msgid "Catch-up"
 msgstr "Archív"
@@ -1320,6 +1350,9 @@ msgstr "Kritická chyba - súbor cookie nie je možné uložiť!"
 msgid "Critical Error – Content-Encoding gzip cannot be handled!"
 msgstr "Kritická chyba - Content-Encoding gzip nie je možné spracovať!"
 
+msgid "Croatian"
+msgstr ""
+
 msgid "Culture"
 msgstr "Kultúra"
 
@@ -1358,6 +1391,9 @@ msgstr "Zistená ochrana DRM."
 
 msgid "Daily download limit reached - type the code"
 msgstr "Dosiahnutý denný limit sťahovania - zadajte kód"
+
+msgid "Danish"
+msgstr ""
 
 msgid "Darkgray"
 msgstr "Tmavo-sivá"
@@ -1503,6 +1539,10 @@ msgstr "Vymazať vyrovnávaciu pamäť po zatvorení torrentu"
 #, python-format
 msgid "Delete the folder \"%s\"? Its hosts go back to the group."
 msgstr "Odstrániť priečinok \"%s\"? Jeho hostitelia sa vrátia do skupiny."
+
+#, python-format
+msgid "Delete the folder \"%s\"? Its videos and subfolders move up one level."
+msgstr ""
 
 #, python-format
 msgid "Delete the folder \"%s\"? Its videos go back to the Watchlist."
@@ -2068,6 +2108,9 @@ msgstr "Chyba pri ukladaní."
 msgid "Error writing file \"%s\".\n"
 msgstr "Chyba pri zápise súboru \"%s\".\n"
 
+msgid "Estonian"
+msgstr ""
+
 msgid "Ethical & Legal"
 msgstr "Etické a právne"
 
@@ -2307,6 +2350,9 @@ msgstr "Viac informácií."
 msgid "Finished matches with a full replay, highlights or match cuts, newest first (usually a few days after the match)."
 msgstr "Odohrané zápasy s celým záznamom, zostrihmi alebo scénami zo zápasu, najnovšie ako prvé (zvyčajne niekoľko dní po zápase)."
 
+msgid "Finnish"
+msgstr ""
+
 msgid "First Page"
 msgstr "Prvá strana"
 
@@ -2441,6 +2487,9 @@ msgstr "Futsal"
 msgid "GREEN"
 msgstr "ZELENÉ"
 
+msgid "Galician"
+msgstr ""
+
 #, python-format
 msgid "Game: %s"
 msgstr "Hra: %s"
@@ -2472,6 +2521,9 @@ msgstr "Žánre"
 
 msgid "Genres:"
 msgstr "Žánre:"
+
+msgid "Georgian"
+msgstr ""
 
 msgid "German"
 msgstr "Nemčina"
@@ -2564,6 +2616,9 @@ msgstr "Zdravie"
 msgid "Hearing impaired"
 msgstr "Pre sluchovo postihnutých"
 
+msgid "Hebrew"
+msgstr ""
+
 msgid "Help"
 msgstr "Pomocník"
 
@@ -2585,6 +2640,9 @@ msgstr "Vysoká (alebo HD)"
 
 msgid "Highlights"
 msgstr "Zostrihy"
+
+msgid "Hindi"
+msgstr ""
 
 msgid "History"
 msgstr "História"
@@ -2681,6 +2739,9 @@ msgstr "PRERUŠENÉ"
 msgid "IPTV Portals"
 msgstr "IPTV portály"
 
+msgid "Icelandic"
+msgstr ""
+
 msgid "Icon type"
 msgstr "Typ ikony"
 
@@ -2710,6 +2771,9 @@ msgstr "Indické filmy (dabované)"
 
 msgid "Indian series (dubbed)"
 msgstr "Indické seriály (dabované)"
+
+msgid "Indonesian"
+msgstr ""
 
 msgid "Industry"
 msgstr "Priemysel"
@@ -2880,6 +2944,9 @@ msgstr "Prejsť na vybranú stránku, max.: {}"
 msgid "Keep FFmpeg command files (.iptv.cmd)"
 msgstr "Ponechať súbory príkazov FFmpeg (.iptv.cmd)"
 
+msgid "Keep global search results :"
+msgstr ""
+
 msgid "Keep temporary JS scripts"
 msgstr "Ponechať dočasné skripty JS"
 
@@ -2915,6 +2982,9 @@ msgstr "Kórejské filmy"
 
 msgid "Korean movies"
 msgstr "Kórejské filmy"
+
+msgid "Kurdish"
+msgstr ""
 
 msgid "LEFT/RIGHT at start/end of text - alternative way to switch panels"
 msgstr "VĽAVO/VPRAVO na začiatku/konci textu - alternatívny spôsob prepínania panelov"
@@ -3044,6 +3114,9 @@ msgstr "Latinskoamerické seriály (dabované)"
 msgid "Latino"
 msgstr "Latinskoamerické"
 
+msgid "Latvian"
+msgstr ""
+
 #, python-brace-format
 msgid "Launcher URI ({url} or {address} = address of the box)"
 msgstr "URI spúšťača ({url} alebo {address} = adresa prijímača)"
@@ -3118,6 +3191,9 @@ msgstr "Zobrazenie zoznamu"
 #, python-format
 msgid "Listeners: %s"
 msgstr "Poslucháči: %s"
+
+msgid "Lithuanian"
+msgstr ""
 
 msgid "Live"
 msgstr "Naživo"
@@ -3267,6 +3343,9 @@ msgstr "PRESÚVANIE"
 msgid "MP3Quran live radio"
 msgstr "MP3Quran živé rádio"
 
+msgid "Macedonian"
+msgstr ""
+
 msgid "Main"
 msgstr "Hlavné"
 
@@ -3276,6 +3355,9 @@ msgstr "Hlavné menu"
 #, python-format
 msgid "Make directory [%s]"
 msgstr "Vytvorenie adresára [%s]"
+
+msgid "Malay"
+msgstr ""
 
 msgid "Male"
 msgstr "Muži"
@@ -3735,8 +3817,14 @@ msgstr "Nie je k dispozícii žiadne ID videa"
 msgid "None"
 msgstr "Žiadne"
 
+msgid "Nordic"
+msgstr ""
+
 msgid "Normalize item / file names (Show - SxxExx - Title)"
 msgstr "Normalizovať názvy položiek / súborov (Seriál - SxxExx - Názov)"
+
+msgid "Norwegian"
+msgstr ""
 
 msgid "Not available in your country (geo-blocking)."
 msgstr "Vo vašej krajine nie je dostupné (geoblokovanie)."
@@ -3857,6 +3945,9 @@ msgstr "Otvorené issues"
 
 msgid "Open pull requests"
 msgstr "Otvorené pull requesty"
+
+msgid "Open the page and click the video player there"
+msgstr ""
 
 msgid "Open the page and get the link"
 msgstr "Otvoriť stránku a získať odkaz"
@@ -4017,6 +4108,9 @@ msgstr "Pediatria"
 
 msgid "People"
 msgstr "Osoby"
+
+msgid "Persian"
+msgstr ""
 
 msgid "Persons"
 msgstr "Osoby"
@@ -4600,6 +4694,9 @@ msgstr "Vpravo"
 msgid "Romance"
 msgstr "Romantika"
 
+msgid "Romanian"
+msgstr ""
+
 msgid "Round"
 msgstr "Kolo"
 
@@ -4824,6 +4921,9 @@ msgstr "Vybrať jazyk"
 msgid "Select link"
 msgstr "Vybrať prepojenie"
 
+msgid "Select link automatically"
+msgstr ""
+
 msgid "Select movie player"
 msgstr "Vyberte prehrávač videozáznamov"
 
@@ -4871,6 +4971,9 @@ msgstr "Pri každom spracovaní odkazu odosielať údaje na enc-dec.app?"
 
 msgid "Sending the result to the box failed."
 msgstr "Odoslanie výsledku do prijímača zlyhalo."
+
+msgid "Serbian"
+msgstr ""
 
 msgid "Series"
 msgstr "Seriály"
@@ -5102,6 +5205,9 @@ msgstr "Jednoduchý sťahovač titulkov"
 msgid "Simplify the title and try again."
 msgstr "Zjednodušte názov a skúste to znova."
 
+msgid "Sinhala"
+msgstr ""
+
 msgid "Site self-test"
 msgstr "Autotest stránok"
 
@@ -5123,6 +5229,12 @@ msgstr "Skinners:"
 
 msgid "Skip video shorter than [min]"
 msgstr "Preskočiť video kratšie ako [min]"
+
+msgid "Slovak"
+msgstr ""
+
+msgid "Slovenian"
+msgstr ""
 
 msgid "Snooker"
 msgstr "Snooker"
@@ -5509,6 +5621,9 @@ msgstr "Taiwanské"
 
 msgid "Talk shows"
 msgstr "Talkšou"
+
+msgid "Tamil"
+msgstr ""
 
 #, python-format
 msgid "Tariff: %s"
@@ -5930,9 +6045,6 @@ msgstr "Táto sekcia už nie je na hlavnej stránke."
 msgid "This session has no code - scan the QR code on the receiver screen."
 msgstr "Táto relácia nemá žiadny kód - naskenujte QR kód na obrazovke prijímača."
 
-msgid "This show is private. Try again later!"
-msgstr "Táto relácia je súkromná. Skúste to znova neskôr!"
-
 msgid "This source is offline at the moment. Try another source of the channel."
 msgstr "Tento zdroj je momentálne offline. Skúste iný zdroj kanála."
 
@@ -5980,6 +6092,9 @@ msgstr "Miniatúry"
 
 msgid "Time"
 msgstr "Čas"
+
+msgid "Time limit"
+msgstr ""
 
 msgid "Tip! You can connect USB flash drive to fix this problem."
 msgstr "Tip! Tento problém môžete vyriešiť pripojením disku USB flash."
@@ -6193,6 +6308,10 @@ msgstr "Riešenie problémov"
 msgid "Try to change extplayer or reinstall gst-ifdsrc"
 msgstr "Skúste zmeniť extplayer alebo preinštalovať gst-ifdsrc"
 
+#, python-format
+msgid "Trying link %d of %d"
+msgstr ""
+
 msgid "Turkish"
 msgstr "Turečtina"
 
@@ -6312,6 +6431,9 @@ msgstr "Nahral: %s"
 
 msgid "Uploads"
 msgstr "Nahrané videá"
+
+msgid "Urdu"
+msgstr ""
 
 msgid "Urllists player"
 msgstr "Prehrávač URL adries"
@@ -6473,6 +6595,9 @@ msgstr "Videá, ktoré sa vám páčia."
 
 msgid "Videos you have recently watched."
 msgstr "Videá, ktoré ste nedávno pozerali."
+
+msgid "Vietnamese"
+msgstr ""
 
 msgid "View count"
 msgstr "Počet zobrazení"
@@ -6827,11 +6952,18 @@ msgstr "dole"
 msgid "buffering location"
 msgstr "umiestnenie vyrovnávacej pamäte"
 
+#, python-format
+msgid "cancelled after %d of %d sites"
+msgstr ""
+
 msgid "center"
 msgstr "na stred"
 
 msgid "changed"
 msgstr "zmenené"
+
+msgid "clock not set"
+msgstr ""
 
 msgid "close the editor - or stop manual reordering if it's active"
 msgstr "zatvoriť editor - alebo ukončiť ručnú zmenu poradia, ak je aktívna"
@@ -7074,6 +7206,10 @@ msgstr "ďalšia stránka ok"
 msgid "no answer"
 msgstr "žiadna odpoveď"
 
+#, python-format
+msgid "no answer within %d s"
+msgstr ""
+
 msgid "no next page"
 msgstr "žiadna ďalšia stránka"
 
@@ -7091,6 +7227,54 @@ msgstr "nenájdené"
 
 msgid "not installed"
 msgstr "nenainštalované"
+
+msgid "not installed (hosts that need JavaScript fail)"
+msgstr ""
+
+msgid "not installed (no DASH / ffmpeg downloads)"
+msgstr ""
+
+msgid "not installed (no HDS/F4M streams)"
+msgstr ""
+
+msgid "not installed (no HLS downloads or buffering)"
+msgstr ""
+
+msgid "not installed (no RAR subtitles)"
+msgstr ""
+
+msgid "not installed (no RTMP downloads)"
+msgstr ""
+
+msgid "not installed (no ZIP subtitles)"
+msgstr ""
+
+msgid "not installed (no ffmpeg downloads)"
+msgstr ""
+
+msgid "not installed (no file, cover or subtitle downloads)"
+msgstr ""
+
+msgid "not installed (no local media / folder browser)"
+msgstr ""
+
+msgid "not installed (no torrent playback)"
+msgstr ""
+
+msgid "not installed (only the Enigma2 players)"
+msgstr ""
+
+msgid "not installed (sites with bot protection may fail)"
+msgstr ""
+
+msgid "not installed (subtitles: code page of the language)"
+msgstr ""
+
+msgid "not installed (urllib is used)"
+msgstr ""
+
+msgid "not installed (wget is used)"
+msgstr ""
 
 msgid "not loadable"
 msgstr "nedá sa načítať"

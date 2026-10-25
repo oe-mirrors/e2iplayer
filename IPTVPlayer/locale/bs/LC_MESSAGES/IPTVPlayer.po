@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-20 20:10+0000\n"
+"POT-Creation-Date: 2026-10-25 00:38+0000\n"
 "PO-Revision-Date: 2026-10-24 23:30+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Bosnian\n"
@@ -508,6 +508,9 @@ msgstr "Dodao: %s, direktorij: %s"
 msgid "Adhan"
 msgstr "Ezan"
 
+msgid "Adult"
+msgstr ""
+
 msgid "Adventure"
 msgstr "Avantura"
 
@@ -525,6 +528,9 @@ msgstr "Emitovano ove sedmice"
 
 msgid "Airing now"
 msgstr "Upravo se emituje"
+
+msgid "Albanian"
+msgstr ""
 
 msgid "All"
 msgstr "Sve"
@@ -735,6 +741,9 @@ msgstr "Da li ste sigurni da želite ukloniti datoteku \"%s\"?"
 msgid "Are you sure you want to reset all settings to their default values?"
 msgstr "Da li ste sigurni da želite vratiti sve postavke na zadane vrijednosti?"
 
+msgid "Armenian"
+msgstr ""
+
 msgid "Art"
 msgstr "Umjetnost"
 
@@ -762,6 +771,9 @@ msgstr "Azijski filmovi"
 
 msgid "Asian series (dubbed)"
 msgstr "Azijske serije (sinhronizirane)"
+
+msgid "Ask"
+msgstr ""
 
 msgid "Aspect"
 msgstr "Omjer slike"
@@ -859,8 +871,14 @@ msgstr "Osnovne nauke"
 msgid "Basketball"
 msgstr "Košarka"
 
+msgid "Basque"
+msgstr ""
+
 msgid "Being watched"
 msgstr "Trenutno se gleda"
+
+msgid "Bengali"
+msgstr ""
 
 msgid "Best"
 msgstr "Najbolje"
@@ -905,11 +923,17 @@ msgstr "Priprema za specijalistički ispit"
 msgid "Books"
 msgstr "Knjige"
 
+msgid "Bosnian"
+msgstr ""
+
 msgid "Box"
 msgstr "Box"
 
 msgid "Boxing"
 msgstr "Boks"
+
+msgid "Brazilian Portuguese"
+msgstr ""
 
 msgid "Broadcast:"
 msgstr "Emitovanje:"
@@ -925,6 +949,9 @@ msgstr "Budžet:"
 
 msgid "Buffering location"
 msgstr "Lokacija baferovanja"
+
+msgid "Bulgarian"
+msgstr ""
 
 msgid "Business"
 msgstr "Biznis"
@@ -1018,6 +1045,9 @@ msgstr "Crtani filmovi i serije"
 
 msgid "Cast:"
 msgstr "Uloge:"
+
+msgid "Catalan"
+msgstr ""
 
 msgid "Catch-up"
 msgstr "Propušteni program"
@@ -1315,6 +1345,9 @@ msgstr "Kritična greška - kolačić ne može biti spremljen!"
 msgid "Critical Error – Content-Encoding gzip cannot be handled!"
 msgstr "Kritična greška – Content-Encoding gzip ne može biti obrađen!"
 
+msgid "Croatian"
+msgstr ""
+
 msgid "Culture"
 msgstr "Kultura"
 
@@ -1353,6 +1386,9 @@ msgstr "Otkrivena je DRM zaštita."
 
 msgid "Daily download limit reached - type the code"
 msgstr "Dostignuto je dnevno ograničenje preuzimanja - unesite kod"
+
+msgid "Danish"
+msgstr ""
 
 msgid "Darkgray"
 msgstr "Tamnosiva"
@@ -1498,6 +1534,10 @@ msgstr "Obriši keš kada se torrent zatvori"
 #, python-format
 msgid "Delete the folder \"%s\"? Its hosts go back to the group."
 msgstr "Obrisati folder \"%s\"? Njegovi hostovi se vraćaju u grupu."
+
+#, python-format
+msgid "Delete the folder \"%s\"? Its videos and subfolders move up one level."
+msgstr ""
 
 #, python-format
 msgid "Delete the folder \"%s\"? Its videos go back to the Watchlist."
@@ -2063,6 +2103,9 @@ msgstr "Greška pri spremanju."
 msgid "Error writing file \"%s\".\n"
 msgstr "Greška pri upisivanju datoteke \"%s\".\n"
 
+msgid "Estonian"
+msgstr ""
+
 msgid "Ethical & Legal"
 msgstr "Etika i pravo"
 
@@ -2302,6 +2345,9 @@ msgstr "Saznajte više."
 msgid "Finished matches with a full replay, highlights or match cuts, newest first (usually a few days after the match)."
 msgstr "Završene utakmice sa cijelim snimkom, najzanimljivijim trenucima ili isječcima, najnovije prvo (obično nekoliko dana nakon utakmice)."
 
+msgid "Finnish"
+msgstr ""
+
 msgid "First Page"
 msgstr "Prva stranica"
 
@@ -2436,6 +2482,9 @@ msgstr "Futsal"
 msgid "GREEN"
 msgstr "ZELENA"
 
+msgid "Galician"
+msgstr ""
+
 #, python-format
 msgid "Game: %s"
 msgstr "Igra: %s"
@@ -2467,6 +2516,9 @@ msgstr "Žanrovi"
 
 msgid "Genres:"
 msgstr "Žanrovi:"
+
+msgid "Georgian"
+msgstr ""
 
 msgid "German"
 msgstr "Njemački"
@@ -2559,6 +2611,9 @@ msgstr "Zdravlje"
 msgid "Hearing impaired"
 msgstr "Za osobe oštećenog sluha"
 
+msgid "Hebrew"
+msgstr ""
+
 msgid "Help"
 msgstr "Pomoć"
 
@@ -2580,6 +2635,9 @@ msgstr "Visok (ili HD)"
 
 msgid "Highlights"
 msgstr "Najzanimljiviji trenuci"
+
+msgid "Hindi"
+msgstr ""
 
 msgid "History"
 msgstr "Historija"
@@ -2676,6 +2734,9 @@ msgstr "PREKINUTO"
 msgid "IPTV Portals"
 msgstr "IPTV portali"
 
+msgid "Icelandic"
+msgstr ""
+
 msgid "Icon type"
 msgstr "Tip ikona"
 
@@ -2705,6 +2766,9 @@ msgstr "Indijski filmovi (sinhronizirani)"
 
 msgid "Indian series (dubbed)"
 msgstr "Indijske serije (sinhronizirane)"
+
+msgid "Indonesian"
+msgstr ""
 
 msgid "Industry"
 msgstr "Industrija"
@@ -2874,6 +2938,9 @@ msgstr "Skok na odabranu stranicu, maks.: {}"
 msgid "Keep FFmpeg command files (.iptv.cmd)"
 msgstr "Zadrži FFmpeg komandne datoteke (.iptv.cmd)"
 
+msgid "Keep global search results :"
+msgstr ""
+
 msgid "Keep temporary JS scripts"
 msgstr "Zadrži privremene JS skripte"
 
@@ -2909,6 +2976,9 @@ msgstr "Korejski filmovi"
 
 msgid "Korean movies"
 msgstr "Korejski filmovi"
+
+msgid "Kurdish"
+msgstr ""
 
 msgid "LEFT/RIGHT at start/end of text - alternative way to switch panels"
 msgstr "LIJEVO/DESNO na početku/kraju teksta - alternativni način za prebacivanje između panela"
@@ -3038,6 +3108,9 @@ msgstr "Latinoameričke serije (sinhronizirane)"
 msgid "Latino"
 msgstr "Latino"
 
+msgid "Latvian"
+msgstr ""
+
 #, python-brace-format
 msgid "Launcher URI ({url} or {address} = address of the box)"
 msgstr "URI pokretača ({url} ili {address} = adresa prijemnika)"
@@ -3112,6 +3185,9 @@ msgstr "Prikaz liste"
 #, python-format
 msgid "Listeners: %s"
 msgstr "Slušaoci: %s"
+
+msgid "Lithuanian"
+msgstr ""
 
 msgid "Live"
 msgstr "Uživo"
@@ -3261,6 +3337,9 @@ msgstr "POMJERANJE"
 msgid "MP3Quran live radio"
 msgstr "MP3Quran radio uživo"
 
+msgid "Macedonian"
+msgstr ""
+
 msgid "Main"
 msgstr "Glavno"
 
@@ -3270,6 +3349,9 @@ msgstr "Glavni meni"
 #, python-format
 msgid "Make directory [%s]"
 msgstr "Napravi direktorij [%s]"
+
+msgid "Malay"
+msgstr ""
 
 msgid "Male"
 msgstr "Muškarci"
@@ -3726,8 +3808,14 @@ msgstr "ID videa nije dostupan"
 msgid "None"
 msgstr "Nijedan"
 
+msgid "Nordic"
+msgstr ""
+
 msgid "Normalize item / file names (Show - SxxExx - Title)"
 msgstr "Normalizuj nazive stavki / datoteka (Serija - SxxExx - Naslov)"
+
+msgid "Norwegian"
+msgstr ""
 
 msgid "Not available in your country (geo-blocking)."
 msgstr "Nije dostupno u vašoj zemlji (geo-blokiranje)."
@@ -3848,6 +3936,9 @@ msgstr "Otvoreni issues"
 
 msgid "Open pull requests"
 msgstr "Otvoreni pull requestovi"
+
+msgid "Open the page and click the video player there"
+msgstr ""
 
 msgid "Open the page and get the link"
 msgstr "Otvori stranicu i preuzmi link"
@@ -4008,6 +4099,9 @@ msgstr "Pedijatrija"
 
 msgid "People"
 msgstr "Osobe"
+
+msgid "Persian"
+msgstr ""
 
 msgid "Persons"
 msgstr "Osobe"
@@ -4590,6 +4684,9 @@ msgstr "Desno"
 msgid "Romance"
 msgstr "Romansa"
 
+msgid "Romanian"
+msgstr ""
+
 msgid "Round"
 msgstr "Kolo"
 
@@ -4814,6 +4911,9 @@ msgstr "Odaberite jezik"
 msgid "Select link"
 msgstr "Odaberite link"
 
+msgid "Select link automatically"
+msgstr ""
+
 msgid "Select movie player"
 msgstr "Odaberite plejer"
 
@@ -4861,6 +4961,9 @@ msgstr "Slati podatke servisu enc-dec.app pri svakom razrješavanju linka?"
 
 msgid "Sending the result to the box failed."
 msgstr "Slanje rezultata na prijemnik nije uspjelo."
+
+msgid "Serbian"
+msgstr ""
 
 msgid "Series"
 msgstr "Serije"
@@ -5092,6 +5195,9 @@ msgstr "Jednostavni preuzimač titlova"
 msgid "Simplify the title and try again."
 msgstr "Pojednostavite naslov i pokušajte ponovo."
 
+msgid "Sinhala"
+msgstr ""
+
 msgid "Site self-test"
 msgstr "Samotest sajtova"
 
@@ -5113,6 +5219,12 @@ msgstr "Autori skinova:"
 
 msgid "Skip video shorter than [min]"
 msgstr "Preskoči video kraći od [min]"
+
+msgid "Slovak"
+msgstr ""
+
+msgid "Slovenian"
+msgstr ""
 
 msgid "Snooker"
 msgstr "Snuker"
@@ -5499,6 +5611,9 @@ msgstr "Tajvanski"
 
 msgid "Talk shows"
 msgstr "Tok-šou programi"
+
+msgid "Tamil"
+msgstr ""
 
 #, python-format
 msgid "Tariff: %s"
@@ -5920,9 +6035,6 @@ msgstr "Ovaj odjeljak više nije na glavnoj stranici."
 msgid "This session has no code - scan the QR code on the receiver screen."
 msgstr "Ova sesija nema kod - skenirajte QR kod na ekranu prijemnika."
 
-msgid "This show is private. Try again later!"
-msgstr "Ovaj šou je privatan. Pokušajte ponovo kasnije!"
-
 msgid "This source is offline at the moment. Try another source of the channel."
 msgstr "Ovaj izvor je trenutno offline. Pokušajte drugi izvor kanala."
 
@@ -5970,6 +6082,9 @@ msgstr "Sličice"
 
 msgid "Time"
 msgstr "Vrijeme"
+
+msgid "Time limit"
+msgstr ""
 
 msgid "Tip! You can connect USB flash drive to fix this problem."
 msgstr "Savjet! Ovaj problem možete riješiti priključivanjem USB fleš diska."
@@ -6183,6 +6298,10 @@ msgstr "Rješavanje problema"
 msgid "Try to change extplayer or reinstall gst-ifdsrc"
 msgstr "Pokušajte promijeniti extplayer ili ponovo instalirati gst-ifdsrc"
 
+#, python-format
+msgid "Trying link %d of %d"
+msgstr ""
+
 msgid "Turkish"
 msgstr "Turski"
 
@@ -6302,6 +6421,9 @@ msgstr "Postavio: %s"
 
 msgid "Uploads"
 msgstr "Postavljeno"
+
+msgid "Urdu"
+msgstr ""
 
 msgid "Urllists player"
 msgstr "Urllists plejer"
@@ -6463,6 +6585,9 @@ msgstr "Videi koji su vam se svidjeli."
 
 msgid "Videos you have recently watched."
 msgstr "Videi koje ste nedavno gledali."
+
+msgid "Vietnamese"
+msgstr ""
 
 msgid "View count"
 msgstr "Broj pregleda"
@@ -6817,11 +6942,18 @@ msgstr "dolje"
 msgid "buffering location"
 msgstr "lokacija baferovanja"
 
+#, python-format
+msgid "cancelled after %d of %d sites"
+msgstr ""
+
 msgid "center"
 msgstr "centrirano"
 
 msgid "changed"
 msgstr "promijenjeno"
+
+msgid "clock not set"
+msgstr ""
 
 msgid "close the editor - or stop manual reordering if it's active"
 msgstr "zatvori uređivač - ili zaustavi ručno premještanje ako je aktivno"
@@ -7064,6 +7196,10 @@ msgstr "sljedeća stranica ok"
 msgid "no answer"
 msgstr "nema odgovora"
 
+#, python-format
+msgid "no answer within %d s"
+msgstr ""
+
 msgid "no next page"
 msgstr "nema sljedeće stranice"
 
@@ -7081,6 +7217,54 @@ msgstr "nije pronađeno"
 
 msgid "not installed"
 msgstr "nije instalirano"
+
+msgid "not installed (hosts that need JavaScript fail)"
+msgstr ""
+
+msgid "not installed (no DASH / ffmpeg downloads)"
+msgstr ""
+
+msgid "not installed (no HDS/F4M streams)"
+msgstr ""
+
+msgid "not installed (no HLS downloads or buffering)"
+msgstr ""
+
+msgid "not installed (no RAR subtitles)"
+msgstr ""
+
+msgid "not installed (no RTMP downloads)"
+msgstr ""
+
+msgid "not installed (no ZIP subtitles)"
+msgstr ""
+
+msgid "not installed (no ffmpeg downloads)"
+msgstr ""
+
+msgid "not installed (no file, cover or subtitle downloads)"
+msgstr ""
+
+msgid "not installed (no local media / folder browser)"
+msgstr ""
+
+msgid "not installed (no torrent playback)"
+msgstr ""
+
+msgid "not installed (only the Enigma2 players)"
+msgstr ""
+
+msgid "not installed (sites with bot protection may fail)"
+msgstr ""
+
+msgid "not installed (subtitles: code page of the language)"
+msgstr ""
+
+msgid "not installed (urllib is used)"
+msgstr ""
+
+msgid "not installed (wget is used)"
+msgstr ""
 
 msgid "not loadable"
 msgstr "ne može se učitati"

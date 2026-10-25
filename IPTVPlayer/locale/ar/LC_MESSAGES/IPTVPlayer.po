@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-20 20:10+0000\n"
+"POT-Creation-Date: 2026-10-25 00:38+0000\n"
 "PO-Revision-Date: 2026-10-21 12:33+0300\n"
 "Last-Translator: Mohamed Elsafty [angel_heart150@yahoo.com]\n"
 "Language-Team: \n"
@@ -512,6 +512,9 @@ msgstr "أضيف بواسطة: %s، المجلد: %s"
 msgid "Adhan"
 msgstr "الأذان"
 
+msgid "Adult"
+msgstr ""
+
 msgid "Adventure"
 msgstr "مغامرات"
 
@@ -529,6 +532,9 @@ msgstr "تم بثه هذا الأسبوع"
 
 msgid "Airing now"
 msgstr "يُبث الآن"
+
+msgid "Albanian"
+msgstr ""
 
 msgid "All"
 msgstr "الكل"
@@ -739,6 +745,9 @@ msgstr "هل أنت متأكد أنك تريد حذف الملف \"%s\"؟"
 msgid "Are you sure you want to reset all settings to their default values?"
 msgstr "هل أنت متأكد أنك تريد حذف سجل البحث؟"
 
+msgid "Armenian"
+msgstr ""
+
 msgid "Art"
 msgstr "فن"
 
@@ -766,6 +775,9 @@ msgstr "أفلام آسيوية"
 
 msgid "Asian series (dubbed)"
 msgstr "مسلسلات آسيوية (مدبلجة)"
+
+msgid "Ask"
+msgstr ""
 
 msgid "Aspect"
 msgstr "نسبة العرض إلى الارتفاع"
@@ -863,8 +875,14 @@ msgstr "العلوم الأساسية"
 msgid "Basketball"
 msgstr "كرة السلة"
 
+msgid "Basque"
+msgstr ""
+
 msgid "Being watched"
 msgstr "قيد المشاهدة"
+
+msgid "Bengali"
+msgstr ""
 
 msgid "Best"
 msgstr "الأفضل"
@@ -909,11 +927,17 @@ msgstr "مراجعة المجلس"
 msgid "Books"
 msgstr "الكتب"
 
+msgid "Bosnian"
+msgstr ""
+
 msgid "Box"
 msgstr "الصندوق"
 
 msgid "Boxing"
 msgstr "الملاكمة"
+
+msgid "Brazilian Portuguese"
+msgstr ""
 
 msgid "Broadcast:"
 msgstr "البث:"
@@ -929,6 +953,9 @@ msgstr "الميزانية:"
 
 msgid "Buffering location"
 msgstr "مكان التخزين المؤقت"
+
+msgid "Bulgarian"
+msgstr ""
 
 msgid "Business"
 msgstr "أعمال"
@@ -1022,6 +1049,9 @@ msgstr "الرسوم المتحركة والمسلسلات"
 
 msgid "Cast:"
 msgstr "طاقم التمثيل:"
+
+msgid "Catalan"
+msgstr ""
 
 msgid "Catch-up"
 msgstr "إعادة المشاهدة"
@@ -1319,6 +1349,9 @@ msgstr "خطأ خطير - لا يمكن حفظ ملف تعريف الارتبا�
 msgid "Critical Error – Content-Encoding gzip cannot be handled!"
 msgstr "خطأ خطير – لا يمكن التعامل مع ترميز المحتوى gzip!"
 
+msgid "Croatian"
+msgstr ""
+
 msgid "Culture"
 msgstr "الثقافة"
 
@@ -1357,6 +1390,9 @@ msgstr "تم الكشف عن حماية DRM."
 
 msgid "Daily download limit reached - type the code"
 msgstr "تم الوصول إلى حد التنزيل اليومي - أدخل الرمز"
+
+msgid "Danish"
+msgstr ""
 
 msgid "Darkgray"
 msgstr "رمادي داكن"
@@ -1502,6 +1538,10 @@ msgstr "حذف ذاكرة التخزين المؤقت عند إغلاق التو
 #, python-format
 msgid "Delete the folder \"%s\"? Its hosts go back to the group."
 msgstr "هل تريد حذف المجلد \"%s\"؟ ستعود المضيفات الموجودة فيه إلى المجموعة."
+
+#, python-format
+msgid "Delete the folder \"%s\"? Its videos and subfolders move up one level."
+msgstr ""
 
 #, python-format
 msgid "Delete the folder \"%s\"? Its videos go back to the Watchlist."
@@ -2067,6 +2107,9 @@ msgstr "حدث خطأ أثناء الحفظ."
 msgid "Error writing file \"%s\".\n"
 msgstr "حدث خطأ أثناء كتابة الملف \"%s\".\n"
 
+msgid "Estonian"
+msgstr ""
+
 msgid "Ethical & Legal"
 msgstr "أخلاقي وقانوني"
 
@@ -2306,6 +2349,9 @@ msgstr "معرفة المزيد."
 msgid "Finished matches with a full replay, highlights or match cuts, newest first (usually a few days after the match)."
 msgstr "المباريات المكتملة مع إعادة كاملة أو ملخصات أو مقتطفات من المباراة، الأحدث أولًا (عادةً بعد بضعة أيام من المباراة)."
 
+msgid "Finnish"
+msgstr ""
+
 msgid "First Page"
 msgstr "الصفحة الأولى"
 
@@ -2440,6 +2486,9 @@ msgstr "كرة القدم داخل الصالات"
 msgid "GREEN"
 msgstr "أخضر"
 
+msgid "Galician"
+msgstr ""
+
 #, python-format
 msgid "Game: %s"
 msgstr "المباراة: %s"
@@ -2471,6 +2520,9 @@ msgstr "الأنواع"
 
 msgid "Genres:"
 msgstr "الأنواع:"
+
+msgid "Georgian"
+msgstr ""
 
 msgid "German"
 msgstr "الألمانية"
@@ -2563,6 +2615,9 @@ msgstr "الصحة"
 msgid "Hearing impaired"
 msgstr "ضعاف السمع"
 
+msgid "Hebrew"
+msgstr ""
+
 msgid "Help"
 msgstr "مساعدة"
 
@@ -2584,6 +2639,9 @@ msgstr "عالية (أو HD)"
 
 msgid "Highlights"
 msgstr "أبرز المحتويات"
+
+msgid "Hindi"
+msgstr ""
 
 msgid "History"
 msgstr "التاريخ"
@@ -2680,6 +2738,9 @@ msgstr "تم الإيقاف"
 msgid "IPTV Portals"
 msgstr "بوابات IPTV"
 
+msgid "Icelandic"
+msgstr ""
+
 msgid "Icon type"
 msgstr "نوع الأيقونة"
 
@@ -2709,6 +2770,9 @@ msgstr "أفلام هندية (مدبلجة)"
 
 msgid "Indian series (dubbed)"
 msgstr "مسلسلات هندية (مدبلجة)"
+
+msgid "Indonesian"
+msgstr ""
 
 msgid "Industry"
 msgstr "الصناعة"
@@ -2878,6 +2942,9 @@ msgstr "الانتقال إلى صفحة محددة، الحد الأقصى: {}"
 msgid "Keep FFmpeg command files (.iptv.cmd)"
 msgstr "الاحتفاظ بملفات أوامر FFmpeg ‏(.iptv.cmd)"
 
+msgid "Keep global search results :"
+msgstr ""
+
 msgid "Keep temporary JS scripts"
 msgstr "الاحتفاظ ببرامج JS النصية المؤقتة"
 
@@ -2913,6 +2980,9 @@ msgstr "أفلام كورية"
 
 msgid "Korean movies"
 msgstr "أفلام كورية"
+
+msgid "Kurdish"
+msgstr ""
 
 msgid "LEFT/RIGHT at start/end of text - alternative way to switch panels"
 msgstr "يسار/يمين عند بداية/نهاية النص - طريقة بديلة للتبديل بين اللوحات"
@@ -3042,6 +3112,9 @@ msgstr "مسلسلات أمريكية لاتينية (مدبلجة)"
 msgid "Latino"
 msgstr "لاتيني"
 
+msgid "Latvian"
+msgstr ""
+
 #, python-brace-format
 msgid "Launcher URI ({url} or {address} = address of the box)"
 msgstr "عنوان URI للمشغّل ({url} أو {address} = عنوان الجهاز)"
@@ -3116,6 +3189,9 @@ msgstr "عرض القائمة"
 #, python-format
 msgid "Listeners: %s"
 msgstr "المستمعون: %s"
+
+msgid "Lithuanian"
+msgstr ""
 
 msgid "Live"
 msgstr "مباشر"
@@ -3265,6 +3341,9 @@ msgstr "جارٍ النقل"
 msgid "MP3Quran live radio"
 msgstr "إذاعة MP3Quran المباشرة"
 
+msgid "Macedonian"
+msgstr ""
+
 msgid "Main"
 msgstr "الرئيسية"
 
@@ -3274,6 +3353,9 @@ msgstr "القائمة الرئيسية"
 #, python-format
 msgid "Make directory [%s]"
 msgstr "إنشاء مجلد [%s]"
+
+msgid "Malay"
+msgstr ""
 
 msgid "Male"
 msgstr "ذكر"
@@ -3730,8 +3812,14 @@ msgstr "معرّف الفيديو غير متاح"
 msgid "None"
 msgstr "لا شيء"
 
+msgid "Nordic"
+msgstr ""
+
 msgid "Normalize item / file names (Show - SxxExx - Title)"
 msgstr "توحيد أسماء العناصر / الملفات (العرض - SxxExx - العنوان)"
+
+msgid "Norwegian"
+msgstr ""
 
 msgid "Not available in your country (geo-blocking)."
 msgstr "غير متاح في بلدك (حظر جغرافي)."
@@ -3852,6 +3940,9 @@ msgstr "المشكلات المفتوحة"
 
 msgid "Open pull requests"
 msgstr "طلبات السحب المفتوحة"
+
+msgid "Open the page and click the video player there"
+msgstr ""
 
 msgid "Open the page and get the link"
 msgstr "افتح الصفحة واحصل على الرابط"
@@ -4012,6 +4103,9 @@ msgstr "طب الأطفال"
 
 msgid "People"
 msgstr "الأشخاص"
+
+msgid "Persian"
+msgstr ""
 
 msgid "Persons"
 msgstr "الأشخاص"
@@ -4594,6 +4688,9 @@ msgstr "يمين"
 msgid "Romance"
 msgstr "رومانسية"
 
+msgid "Romanian"
+msgstr ""
+
 msgid "Round"
 msgstr "جولة"
 
@@ -4818,6 +4915,9 @@ msgstr "اختر اللغة"
 msgid "Select link"
 msgstr "اختر الرابط"
 
+msgid "Select link automatically"
+msgstr ""
+
 msgid "Select movie player"
 msgstr "اختر مشغل الأفلام"
 
@@ -4865,6 +4965,9 @@ msgstr "إرسال البيانات إلى enc-dec.app عند كل محاولة 
 
 msgid "Sending the result to the box failed."
 msgstr "فشل إرسال النتيجة إلى الجهاز."
+
+msgid "Serbian"
+msgstr ""
 
 msgid "Series"
 msgstr "مسلسلات"
@@ -5096,6 +5199,9 @@ msgstr "أداة تحميل ترجمات بسيطة"
 msgid "Simplify the title and try again."
 msgstr "بسّط العنوان وحاول مرة أخرى."
 
+msgid "Sinhala"
+msgstr ""
+
 msgid "Site self-test"
 msgstr "الاختبار الذاتي للموقع"
 
@@ -5117,6 +5223,12 @@ msgstr "مصممو السكين:"
 
 msgid "Skip video shorter than [min]"
 msgstr "تخطي الفيديو الأقصر من [دقيقة]"
+
+msgid "Slovak"
+msgstr ""
+
+msgid "Slovenian"
+msgstr ""
 
 msgid "Snooker"
 msgstr "السنوكر"
@@ -5503,6 +5615,9 @@ msgstr "تايواني"
 
 msgid "Talk shows"
 msgstr "برامج حوارية"
+
+msgid "Tamil"
+msgstr ""
 
 #, python-format
 msgid "Tariff: %s"
@@ -5924,9 +6039,6 @@ msgstr "لم يعد هذا القسم موجودًا في الصفحة الرئ�
 msgid "This session has no code - scan the QR code on the receiver screen."
 msgstr "لا تحتوي هذه الجلسة على رمز - امسح رمز QR الظاهر على شاشة جهاز الاستقبال."
 
-msgid "This show is private. Try again later!"
-msgstr "هذا العرض خاص. حاول مرة أخرى لاحقًا!"
-
 msgid "This source is offline at the moment. Try another source of the channel."
 msgstr "هذا المصدر غير متصل حاليًا. جرّب مصدرًا آخر للقناة."
 
@@ -5974,6 +6086,9 @@ msgstr "الصور المصغرة"
 
 msgid "Time"
 msgstr "الوقت"
+
+msgid "Time limit"
+msgstr ""
 
 msgid "Tip! You can connect USB flash drive to fix this problem."
 msgstr "نصيحة! يمكنك توصيل وحدة تخزين USB لحل هذه المشكلة."
@@ -6187,6 +6302,10 @@ msgstr "استكشاف الأخطاء وإصلاحها"
 msgid "Try to change extplayer or reinstall gst-ifdsrc"
 msgstr "حاول تغيير extplayer أو إعادة تثبيت gst-ifdsrc"
 
+#, python-format
+msgid "Trying link %d of %d"
+msgstr ""
+
 msgid "Turkish"
 msgstr "تركي"
 
@@ -6306,6 +6425,9 @@ msgstr "الرافع: %s"
 
 msgid "Uploads"
 msgstr "التحميلات"
+
+msgid "Urdu"
+msgstr ""
 
 msgid "Urllists player"
 msgstr "مشغل قوائم الروابط"
@@ -6467,6 +6589,9 @@ msgstr "الفيديوهات التي أعجبتك."
 
 msgid "Videos you have recently watched."
 msgstr "الفيديوهات التي شاهدتها مؤخرًا."
+
+msgid "Vietnamese"
+msgstr ""
 
 msgid "View count"
 msgstr "عدد المشاهدات"
@@ -6821,11 +6946,18 @@ msgstr "أسفل"
 msgid "buffering location"
 msgstr "مكان التخزين المؤقت"
 
+#, python-format
+msgid "cancelled after %d of %d sites"
+msgstr ""
+
 msgid "center"
 msgstr "الوسط"
 
 msgid "changed"
 msgstr "تم التغيير"
+
+msgid "clock not set"
+msgstr ""
 
 msgid "close the editor - or stop manual reordering if it's active"
 msgstr "إغلاق المحرر - أو إيقاف إعادة الترتيب اليدوي إذا كانت مفعّلة"
@@ -7068,6 +7200,10 @@ msgstr "الصفحة التالية متاحة"
 msgid "no answer"
 msgstr "لا توجد استجابة"
 
+#, python-format
+msgid "no answer within %d s"
+msgstr ""
+
 msgid "no next page"
 msgstr "لا توجد صفحة تالية"
 
@@ -7085,6 +7221,54 @@ msgstr "غير موجود"
 
 msgid "not installed"
 msgstr "غير مثبت"
+
+msgid "not installed (hosts that need JavaScript fail)"
+msgstr ""
+
+msgid "not installed (no DASH / ffmpeg downloads)"
+msgstr ""
+
+msgid "not installed (no HDS/F4M streams)"
+msgstr ""
+
+msgid "not installed (no HLS downloads or buffering)"
+msgstr ""
+
+msgid "not installed (no RAR subtitles)"
+msgstr ""
+
+msgid "not installed (no RTMP downloads)"
+msgstr ""
+
+msgid "not installed (no ZIP subtitles)"
+msgstr ""
+
+msgid "not installed (no ffmpeg downloads)"
+msgstr ""
+
+msgid "not installed (no file, cover or subtitle downloads)"
+msgstr ""
+
+msgid "not installed (no local media / folder browser)"
+msgstr ""
+
+msgid "not installed (no torrent playback)"
+msgstr ""
+
+msgid "not installed (only the Enigma2 players)"
+msgstr ""
+
+msgid "not installed (sites with bot protection may fail)"
+msgstr ""
+
+msgid "not installed (subtitles: code page of the language)"
+msgstr ""
+
+msgid "not installed (urllib is used)"
+msgstr ""
+
+msgid "not installed (wget is used)"
+msgstr ""
 
 msgid "not loadable"
 msgstr "غير قابل للتحميل"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-20 20:10+0000\n"
+"POT-Creation-Date: 2026-10-25 00:38+0000\n"
 "PO-Revision-Date: 2026-10-21 08:53+0300\n"
 "Last-Translator: \n"
 "Language-Team: giorbak\n"
@@ -514,6 +514,9 @@ msgstr "Προστέθηκε από: %s, κατάλογος: %s"
 msgid "Adhan"
 msgstr "Αντάν"
 
+msgid "Adult"
+msgstr ""
+
 msgid "Adventure"
 msgstr "Περιπέτεια"
 
@@ -531,6 +534,9 @@ msgstr "Προβλήθηκε αυτή την εβδομάδα"
 
 msgid "Airing now"
 msgstr "Προβάλλεται τώρα"
+
+msgid "Albanian"
+msgstr ""
 
 msgid "All"
 msgstr "Όλα"
@@ -741,6 +747,9 @@ msgstr "Είστε βέβαιοι ότι θέλετε να αφαιρέσετε 
 msgid "Are you sure you want to reset all settings to their default values?"
 msgstr "Είστε βέβαιοι ότι θέλετε να επαναφέρετε όλες τις ρυθμίσεις στις προεπιλεγμένες τιμές;"
 
+msgid "Armenian"
+msgstr ""
+
 msgid "Art"
 msgstr "Τέχνη"
 
@@ -768,6 +777,9 @@ msgstr "Ασιατικές ταινίες"
 
 msgid "Asian series (dubbed)"
 msgstr "Ασιατικές σειρές (με μεταγλώττιση)"
+
+msgid "Ask"
+msgstr ""
 
 msgid "Aspect"
 msgstr "Αναλογία"
@@ -865,8 +877,14 @@ msgstr "Βασικές επιστήμες"
 msgid "Basketball"
 msgstr "Μπάσκετ"
 
+msgid "Basque"
+msgstr ""
+
 msgid "Being watched"
 msgstr "Γίνεται προβολή"
+
+msgid "Bengali"
+msgstr ""
 
 msgid "Best"
 msgstr "Καλύτερο"
@@ -911,11 +929,17 @@ msgstr "Επισκόπηση πίνακα"
 msgid "Books"
 msgstr "Βιβλία"
 
+msgid "Bosnian"
+msgstr ""
+
 msgid "Box"
 msgstr "Δέκτης"
 
 msgid "Boxing"
 msgstr "Πυγμαχία"
+
+msgid "Brazilian Portuguese"
+msgstr ""
 
 msgid "Broadcast:"
 msgstr "Μετάδοση:"
@@ -931,6 +955,9 @@ msgstr "Προϋπολογισμός:"
 
 msgid "Buffering location"
 msgstr "Τοποθεσία προσωρινής αποθήκευσης"
+
+msgid "Bulgarian"
+msgstr ""
 
 msgid "Business"
 msgstr "Επιχειρήσεις"
@@ -1024,6 +1051,9 @@ msgstr "Κινούμενα σχέδια και σειρές"
 
 msgid "Cast:"
 msgstr "Ηθοποιοί:"
+
+msgid "Catalan"
+msgstr ""
 
 msgid "Catch-up"
 msgstr "Catch-up"
@@ -1321,6 +1351,9 @@ msgstr "Κρίσιμο σφάλμα - το cookie δεν μπορεί να απ�
 msgid "Critical Error – Content-Encoding gzip cannot be handled!"
 msgstr "Κρίσιμο σφάλμα – Η κωδικοποίηση περιεχομένου gzip δεν μπορεί να υποστηριχθεί!"
 
+msgid "Croatian"
+msgstr ""
+
 msgid "Culture"
 msgstr "Πολιτισμός"
 
@@ -1359,6 +1392,9 @@ msgstr "Εντοπίστηκε προστασία DRM."
 
 msgid "Daily download limit reached - type the code"
 msgstr "Συμπληρώθηκε το ημερήσιο όριο λήψεων - πληκτρολογήστε τον κωδικό"
+
+msgid "Danish"
+msgstr ""
 
 msgid "Darkgray"
 msgstr "Σκούρο γκρι"
@@ -1504,6 +1540,10 @@ msgstr "Διαγραφή της προσωρινής μνήμης κατά το 
 #, python-format
 msgid "Delete the folder \"%s\"? Its hosts go back to the group."
 msgstr "Να διαγραφεί ο φάκελος \"%s\"; Οι hosts που περιέχει επιστρέφουν στην ομάδα."
+
+#, python-format
+msgid "Delete the folder \"%s\"? Its videos and subfolders move up one level."
+msgstr ""
 
 #, python-format
 msgid "Delete the folder \"%s\"? Its videos go back to the Watchlist."
@@ -2069,6 +2109,9 @@ msgstr "Σφάλμα κατά την αποθήκευση."
 msgid "Error writing file \"%s\".\n"
 msgstr "Σφάλμα εγγραφής του αρχείου \"%s\".\n"
 
+msgid "Estonian"
+msgstr ""
+
 msgid "Ethical & Legal"
 msgstr "Ηθικά & Νομικά"
 
@@ -2308,6 +2351,9 @@ msgstr "Μάθετε περισσότερα."
 msgid "Finished matches with a full replay, highlights or match cuts, newest first (usually a few days after the match)."
 msgstr "Ολοκληρωμένοι αγώνες με πλήρη επανάληψη, στιγμιότυπα ή αποσπάσματα αγώνα, με τα νεότερα πρώτα (συνήθως λίγες ημέρες μετά τον αγώνα)."
 
+msgid "Finnish"
+msgstr ""
+
 msgid "First Page"
 msgstr "Πρώτη σελίδα"
 
@@ -2442,6 +2488,9 @@ msgstr "Ποδόσφαιρο σάλας"
 msgid "GREEN"
 msgstr "GREEN"
 
+msgid "Galician"
+msgstr ""
+
 #, python-format
 msgid "Game: %s"
 msgstr "Παιχνίδι: %s"
@@ -2473,6 +2522,9 @@ msgstr "Είδη"
 
 msgid "Genres:"
 msgstr "Είδη:"
+
+msgid "Georgian"
+msgstr ""
 
 msgid "German"
 msgstr "Γερμανικά"
@@ -2565,6 +2617,9 @@ msgstr "Υγεία"
 msgid "Hearing impaired"
 msgstr "Άτομα με προβλήματα ακοής"
 
+msgid "Hebrew"
+msgstr ""
+
 msgid "Help"
 msgstr "Help"
 
@@ -2586,6 +2641,9 @@ msgstr "Υψηλή (ή HD)"
 
 msgid "Highlights"
 msgstr "Κύρια σημεία"
+
+msgid "Hindi"
+msgstr ""
 
 msgid "History"
 msgstr "Ιστορικό"
@@ -2682,6 +2740,9 @@ msgstr "ΔΙΕΚΟΠΗ"
 msgid "IPTV Portals"
 msgstr "Πύλες IPTV"
 
+msgid "Icelandic"
+msgstr ""
+
 msgid "Icon type"
 msgstr "Τύπος εικονιδίου"
 
@@ -2711,6 +2772,9 @@ msgstr "Ινδικές ταινίες (με μεταγλώττιση)"
 
 msgid "Indian series (dubbed)"
 msgstr "Ινδικές σειρές (με μεταγλώττιση)"
+
+msgid "Indonesian"
+msgstr ""
 
 msgid "Industry"
 msgstr "Βιομηχανία"
@@ -2880,6 +2944,9 @@ msgstr "Μετάβαση σε επιλεγμένη σελίδα, μέγιστο:
 msgid "Keep FFmpeg command files (.iptv.cmd)"
 msgstr "Διατήρηση αρχείων εντολών FFmpeg (.iptv.cmd)"
 
+msgid "Keep global search results :"
+msgstr ""
+
 msgid "Keep temporary JS scripts"
 msgstr "Διατήρηση προσωρινών JS scripts"
 
@@ -2915,6 +2982,9 @@ msgstr "Κορεατικές ταινίες"
 
 msgid "Korean movies"
 msgstr "Κορεατικές ταινίες"
+
+msgid "Kurdish"
+msgstr ""
 
 msgid "LEFT/RIGHT at start/end of text - alternative way to switch panels"
 msgstr "LEFT/RIGHT στην αρχή/τέλος του κειμένου - εναλλακτικός τρόπος εναλλαγής πάνελ"
@@ -3044,6 +3114,9 @@ msgstr "Σειρές Λατινικής Αμερικής (με μεταγλώτ�
 msgid "Latino"
 msgstr "Λατινοαμερικάνικα"
 
+msgid "Latvian"
+msgstr ""
+
 #, python-brace-format
 msgid "Launcher URI ({url} or {address} = address of the box)"
 msgstr "URI εκκίνησης ({url} ή {address} = διεύθυνση του δέκτη)"
@@ -3118,6 +3191,9 @@ msgstr "Προβολή λίστας"
 #, python-format
 msgid "Listeners: %s"
 msgstr "Ακροατές: %s"
+
+msgid "Lithuanian"
+msgstr ""
 
 msgid "Live"
 msgstr "Ζωντανά"
@@ -3267,6 +3343,9 @@ msgstr "ΜΕΤΑΚΙΝΗΣΗ"
 msgid "MP3Quran live radio"
 msgstr "Ζωντανό ραδιόφωνο MP3Quran"
 
+msgid "Macedonian"
+msgstr ""
+
 msgid "Main"
 msgstr "Κύριο"
 
@@ -3276,6 +3355,9 @@ msgstr "Κύριο μενού"
 #, python-format
 msgid "Make directory [%s]"
 msgstr "Δημιουργία καταλόγου [%s]"
+
+msgid "Malay"
+msgstr ""
 
 msgid "Male"
 msgstr "Άνδρας"
@@ -3732,8 +3814,14 @@ msgstr "Δεν υπάρχει διαθέσιμο ID βίντεο"
 msgid "None"
 msgstr "Καμία"
 
+msgid "Nordic"
+msgstr ""
+
 msgid "Normalize item / file names (Show - SxxExx - Title)"
 msgstr "Κανονικοποίηση ονομάτων στοιχείων / αρχείων (Εκπομπή - SxxExx - Τίτλος)"
+
+msgid "Norwegian"
+msgstr ""
 
 msgid "Not available in your country (geo-blocking)."
 msgstr "Δεν είναι διαθέσιμο στη χώρα σας (γεωγραφικός αποκλεισμός)."
@@ -3854,6 +3942,9 @@ msgstr "Ανοιχτά ζητήματα"
 
 msgid "Open pull requests"
 msgstr "Ανοιχτά pull requests"
+
+msgid "Open the page and click the video player there"
+msgstr ""
 
 msgid "Open the page and get the link"
 msgstr "Άνοιγμα της σελίδας και λήψη του συνδέσμου"
@@ -4014,6 +4105,9 @@ msgstr "Παιδιατρική"
 
 msgid "People"
 msgstr "Άτομα"
+
+msgid "Persian"
+msgstr ""
 
 msgid "Persons"
 msgstr "Πρόσωπα"
@@ -4596,6 +4690,9 @@ msgstr "Right"
 msgid "Romance"
 msgstr "Ρομαντική"
 
+msgid "Romanian"
+msgstr ""
+
 msgid "Round"
 msgstr "Γύρος"
 
@@ -4820,6 +4917,9 @@ msgstr "Επιλογή γλώσσας"
 msgid "Select link"
 msgstr "Επιλογή συνδέσμου"
 
+msgid "Select link automatically"
+msgstr ""
+
 msgid "Select movie player"
 msgstr "Επιλογή αναπαραγωγής ταινιών"
 
@@ -4867,6 +4967,9 @@ msgstr "Να αποστέλλονται δεδομένα στο enc-dec.app σε
 
 msgid "Sending the result to the box failed."
 msgstr "Η αποστολή του αποτελέσματος στον δέκτη απέτυχε."
+
+msgid "Serbian"
+msgstr ""
 
 msgid "Series"
 msgstr "Σειρές"
@@ -5098,6 +5201,9 @@ msgstr "Απλό πρόγραμμα λήψης υποτίτλων"
 msgid "Simplify the title and try again."
 msgstr "Απλοποιήστε τον τίτλο και δοκιμάστε ξανά."
 
+msgid "Sinhala"
+msgstr ""
+
 msgid "Site self-test"
 msgstr "Αυτοέλεγχος ιστότοπου"
 
@@ -5119,6 +5225,12 @@ msgstr "Δημιουργοί θεμάτων:"
 
 msgid "Skip video shorter than [min]"
 msgstr "Παράλειψη βίντεο μικρότερου από [λεπτά]"
+
+msgid "Slovak"
+msgstr ""
+
+msgid "Slovenian"
+msgstr ""
 
 msgid "Snooker"
 msgstr "Σνούκερ"
@@ -5505,6 +5617,9 @@ msgstr "Ταϊβανέζικα"
 
 msgid "Talk shows"
 msgstr "Εκπομπές συζήτησης"
+
+msgid "Tamil"
+msgstr ""
 
 #, python-format
 msgid "Tariff: %s"
@@ -5924,9 +6039,6 @@ msgstr "Αυτή η ενότητα δεν βρίσκεται πλέον στην
 msgid "This session has no code - scan the QR code on the receiver screen."
 msgstr "Αυτή η συνεδρία δεν έχει κωδικό - σαρώστε τον κωδικό QR στην οθόνη του δέκτη."
 
-msgid "This show is private. Try again later!"
-msgstr "Αυτή η εκπομπή είναι ιδιωτική. Δοκιμάστε ξανά αργότερα!"
-
 msgid "This source is offline at the moment. Try another source of the channel."
 msgstr "Αυτή η πηγή είναι εκτός σύνδεσης αυτή τη στιγμή. Δοκιμάστε άλλη πηγή του καναλιού."
 
@@ -5974,6 +6086,9 @@ msgstr "Μικρογραφίες"
 
 msgid "Time"
 msgstr "Ώρα"
+
+msgid "Time limit"
+msgstr ""
 
 msgid "Tip! You can connect USB flash drive to fix this problem."
 msgstr "Συμβουλή! Μπορείτε να συνδέσετε ένα USB flash drive για να διορθώσετε αυτό το πρόβλημα."
@@ -6187,6 +6302,10 @@ msgstr "Αντιμετώπιση προβλημάτων"
 msgid "Try to change extplayer or reinstall gst-ifdsrc"
 msgstr "Δοκιμάστε να αλλάξετε το extplayer ή να επανεγκαταστήσετε το gst-ifdsrc"
 
+#, python-format
+msgid "Trying link %d of %d"
+msgstr ""
+
 msgid "Turkish"
 msgstr "Τουρκικά"
 
@@ -6306,6 +6425,9 @@ msgstr "Μεταφορτωτής: %s"
 
 msgid "Uploads"
 msgstr "Μεταφορτώσεις"
+
+msgid "Urdu"
+msgstr ""
 
 msgid "Urllists player"
 msgstr "Πρόγραμμα αναπαραγωγής urllists"
@@ -6467,6 +6589,9 @@ msgstr "Βίντεο που σας αρέσουν."
 
 msgid "Videos you have recently watched."
 msgstr "Βίντεο που προβάλλατε πρόσφατα."
+
+msgid "Vietnamese"
+msgstr ""
 
 msgid "View count"
 msgstr "Μετρητής προβολών"
@@ -6821,11 +6946,18 @@ msgstr "κάτω"
 msgid "buffering location"
 msgstr "τοποθεσία προσωρινής αποθήκευσης"
 
+#, python-format
+msgid "cancelled after %d of %d sites"
+msgstr ""
+
 msgid "center"
 msgstr "κέντρο"
 
 msgid "changed"
 msgstr "τροποποιήθηκε"
+
+msgid "clock not set"
+msgstr ""
 
 msgid "close the editor - or stop manual reordering if it's active"
 msgstr "κλείσιμο του επεξεργαστή - ή διακοπή της χειροκίνητης αναδιάταξης εάν είναι ενεργή"
@@ -7068,6 +7200,10 @@ msgstr "η επόμενη σελίδα είναι εντάξει"
 msgid "no answer"
 msgstr "καμία απάντηση"
 
+#, python-format
+msgid "no answer within %d s"
+msgstr ""
+
 msgid "no next page"
 msgstr "δεν υπάρχει επόμενη σελίδα"
 
@@ -7085,6 +7221,54 @@ msgstr "δεν βρέθηκε"
 
 msgid "not installed"
 msgstr "δεν εγκαταστάθηκε"
+
+msgid "not installed (hosts that need JavaScript fail)"
+msgstr ""
+
+msgid "not installed (no DASH / ffmpeg downloads)"
+msgstr ""
+
+msgid "not installed (no HDS/F4M streams)"
+msgstr ""
+
+msgid "not installed (no HLS downloads or buffering)"
+msgstr ""
+
+msgid "not installed (no RAR subtitles)"
+msgstr ""
+
+msgid "not installed (no RTMP downloads)"
+msgstr ""
+
+msgid "not installed (no ZIP subtitles)"
+msgstr ""
+
+msgid "not installed (no ffmpeg downloads)"
+msgstr ""
+
+msgid "not installed (no file, cover or subtitle downloads)"
+msgstr ""
+
+msgid "not installed (no local media / folder browser)"
+msgstr ""
+
+msgid "not installed (no torrent playback)"
+msgstr ""
+
+msgid "not installed (only the Enigma2 players)"
+msgstr ""
+
+msgid "not installed (sites with bot protection may fail)"
+msgstr ""
+
+msgid "not installed (subtitles: code page of the language)"
+msgstr ""
+
+msgid "not installed (urllib is used)"
+msgstr ""
+
+msgid "not installed (wget is used)"
+msgstr ""
 
 msgid "not loadable"
 msgstr "δεν είναι δυνατή η φόρτωση"
