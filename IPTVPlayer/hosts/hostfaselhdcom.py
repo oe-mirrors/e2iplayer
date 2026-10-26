@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "24.10.2026"
+LAST_MODIFIED = "26.10.2026"
+# 26.10.2026 - links on boxes with duktape only (no QuickJS): the player scripts hung in the obfuscator's self check
 # 24.10.2026 - fix show menu item
 # 23.10.2026 - lists read only the site's list grid, the "most viewed" slider repeated its cards on every page
 # 10.10.2026 - links are no longer renamed to "*name*" after use - that broke the link list's own used mark (tick + colour)
@@ -82,7 +83,11 @@ INFO_KEYS = (("تصنيف", "genres"), ("جودة", "quality"), ("مستوى ا�
              ("مدة", "duration"), ("توقيت", "duration"), ("إخراج", "director"), ("اخراج", "director"), ("بطولة", "actors"),
              ("حالة", "status"), ("اللغة", "language"), ("عدد الحلقات", "episodes"), ("المواسم", "seasons"))
 # minimal DOM for the player page's scripts: they write the quality buttons (document.write) and set up jwplayer
-PLAYER_JS_STUB = """var window = this; var self = this; var top = this; var parent = this;
+# duktape has no function source ("function f() { [ecmascript code] }"): the obfuscator's self check regex-tests
+# this.newState.toString() and grows an array forever when it fails - give it a source shaped string
+PLAYER_JS_STUB = """(function () { var ts = Function.prototype.toString;
+    Function.prototype.toString = function () { var s = ts.call(this); return s.indexOf('[ecmascript code]') < 0 ? s : "function(){return'newState';}"; }; })();
+var window = this; var self = this; var top = this; var parent = this;
 var navigator = {userAgent: 'Mozilla/5.0', platform: 'Win32', language: 'ar'};
 var location = {href: '', hostname: '', protocol: 'https:', search: ''};
 var __el = {setAttribute: function () {}, getAttribute: function () { return ''; }, appendChild: function () {}, insertBefore: function () {},
