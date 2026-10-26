@@ -3078,8 +3078,18 @@ class E2iPlayerWidget(Screen):
         else:
             self.loadHostData()
 
+    def lcdSummaryCall(self, method, *args):
+        # session.summary belongs to the top screen: while a MessageBox is open
+        # it is a MessageBoxSummary without the E2iPlayer LCD methods
+        func = getattr(self.session.summary, method, None)
+        if func is not None:
+            try:
+                func(*args)
+            except Exception:
+                printExc()
+
     def loadHostData(self):
-        self.session.summary.setText(self.hostName)
+        self.lcdSummaryCall('setText', self.hostName)
         self.activePlayer = CMoviePlayerPerHost(self.hostName)
         # once per session, after the first host has loaded
         if self.showMessageNoFreeSpaceForIcon:
@@ -3088,7 +3098,7 @@ class E2iPlayerWidget(Screen):
 
         # change logo for player
         self["playerlogo"].hide()
-        self.session.summary.LCD_hide('LCDlogo')
+        self.lcdSummaryCall('LCD_hide', 'LCDlogo')
         self.hostLogoPath = None
         try:
             hRet = self.host.getLogoPath()
@@ -3101,7 +3111,7 @@ class E2iPlayerWidget(Screen):
                         self["playerlogo"].show()
                     else:
                         self["playerlogo"].decodeCover(logoPath, self.updateCover, "playerlogo")
-                    self.session.summary.LCD_showPic('LCDlogo', logoPath)
+                    self.lcdSummaryCall('LCD_showPic', 'LCDlogo', logoPath)
         except Exception:
             printExc()
 
