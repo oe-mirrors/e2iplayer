@@ -18,6 +18,7 @@ from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 import re
 import io
 import json
+from bisect import bisect_right
 from os import remove as os_remove, path as os_path
 ###################################################
 
@@ -541,3 +542,52 @@ class IPTVEmbeddedSubtitlesHandler:
     def flushSubtitles(self):
         self.subAtoms = []
         self.pailsOfAtoms = {}
+
+
+class IPTVGraphicSubtitlesHandler:
+    # image subtitles (PGS / DVB / XSUB) of exteplayer3 -G: each atom is a list of PNG files the player
+    # wrote into directory, with their rectangle in screen pixels. An atom without an end time stays until
+    # the next one (PGS / DVB), an atom without rectangles clears the picture. exteplayer3 itself deletes
+    # the files only on a flush (seek) and at the end, so the ones that were shown are deleted here.
+    def __init__(self, directory):
+        self.directory = directory
+        self.starts = []
+        self.atoms = []
+
+    def addAtom(self, start, end, rects):
+        idx = bisect_right(self.starts, start)
+        self.starts.insert(idx, start)
+        self.atoms.insert(idx, {'start': start, 'end': end, 'rects': rects})
+
+    def getRects(self, currTimeMS, prevMarker=None):
+        # (marker, rectangles) - rectangles is None when the marker did not change
+        idx = bisect_right(self.starts, currTimeMS) - 1
+        marker, rects = -1, []
+        if idx >= 0:
+            atom = self.atoms[idx]
+            if atom['end'] is None or currTimeMS < atom['end']:
+                marker, rects = atom['start'], atom['rects']
+            # one atom before the shown one is kept for small jumps back of the clock
+            if idx > 1:
+                self._removeFiles(self.atoms[:idx - 1])
+                del self.atoms[:idx - 1]
+                del self.starts[:idx - 1]
+        if marker == prevMarker:
+            return marker, None
+        return marker, rects
+
+    def getPath(self, rect):
+        return os_path.join(self.directory, os_path.basename(rect['f']))
+
+    def _removeFiles(self, atoms):
+        for atom in atoms:
+            for rect in atom['rects']:
+                try:
+                    os_remove(self.getPath(rect))
+                except Exception:
+                    pass
+
+    def flushSubtitles(self):
+        self._removeFiles(self.atoms)
+        self.starts = []
+        self.atoms = []
