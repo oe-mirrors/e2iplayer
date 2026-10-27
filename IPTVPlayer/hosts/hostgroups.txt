@@ -410,6 +410,7 @@
   "wiflix",
   "jetanimes",
   "frenchanimes",
+  "frenchstream",
   "witv",
   "skstream",
   "dulourd"

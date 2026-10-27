@@ -482,6 +482,11 @@ class IconMenager:
             return False
 
         params = MergeDicts(params, params_cfad)
+        if 'header' not in params:
+            # a picture request like a browser's <img>: with the text/html Accept of a page request i.imgur.com
+            # answers 302 to its HTML page instead of the picture. jpeg / png first: a CDN that has them sends no
+            # AVIF / WebP that would need a conversion per picture (convertWebp, ffmpeg); image/* keeps them possible
+            params['header'] = {'User-Agent': self.cm.HOST, 'Accept': 'image/jpeg,image/png,image/gif,image/*;q=0.8,*/*;q=0.5'}
 
         ret = self.cm.saveWebFile(file_path, img_url, addParams=params)
         if not ret['sts']:

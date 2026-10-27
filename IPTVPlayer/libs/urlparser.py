@@ -1043,6 +1043,7 @@ class urlparser:
             # y
             "yadi.sk": self.pp.parserYANDEXDISK,
             "yadmalik.sbs": self.pp.parserJWPLAYER,  # add 061026
+            "ykfrtza.com": self.pp.parserSTREAMUP,  # add 261026 (kokoflix grandline_go "Filmoon", /api/stream like vidara)
             "yodelswartlike.com": self.pp.parserVOESX,  # add 061026
             "younetu.com": self.pp.parserHQQ,
             "younetu.org": self.pp.parserHQQ,  # add 081026
@@ -3345,6 +3346,14 @@ class pageParser(CaptchaHelper):
             sts, data = self.cm.getPage(pageUrl, {"header": HTTP_HEADER})
             if not sts:
                 continue
+            # upd 261026: the player now lists the stream as plain videojs sources ({src: ".../master.m3u8"}), the
+            # "/troll/" urls stay decoys; the kk decoding below is kept for pages that still use it
+            for src in re.findall(r"sources\s*:\s*\[\s*\{\s*src\s*:\s*[\"'](https?://[^\"']+)[\"']", data):
+                if "/troll/" not in src:
+                    streamUrl = src.replace("\\/", "/")
+                    break
+            if streamUrl:
+                break
             for block in re.finditer(r"kk\s*=\s*\(\s*(0x[0-9a-fA-F]+|\d+)\s*\+\s*i\s*\*\s*(\d+)\s*\+\s*H\s*\+\s*BC\s*\)\s*&\s*255.*?\}\)\(\s*[\"']([A-Za-z0-9+/=]+)[\"']\s*\)", data, re.S):
                 base = block.group(1)
                 base, step = int(base, 16) if base[:2].lower() == "0x" else int(base), int(block.group(2))
