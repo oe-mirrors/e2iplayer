@@ -709,6 +709,8 @@ class IPTVPlayerSelectOptionChoiceBoxList(IPTVMainNavigatorList):
         'EDIT_USER_LINKS': 'LinkEditItem.png',
         'HELP': 'HelpItem.png',
         'CLOSE': 'ExitItem.png',
+        # "Poster grid on / off": the picture item icon
+        'POSTER_GRID': 'PictureItem.png',
         # list functions: shuffle / reverse and their undo (an undo badge), "Download all items of this page" the
         # "downloading" row marker, "Add marked items to favourites" the add-favourite star; "Play / Download
         # marked items" carry a tick badge, "Unselect all" is the "Select all" list with a cross badge

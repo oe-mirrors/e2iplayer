@@ -45,6 +45,8 @@ config.plugins.iptvplayer.set_curr_title = ConfigYesNo(default=False)
 config.plugins.iptvplayer.curr_title_file = ConfigText(default="", fixed_size=False)
 
 config.plugins.iptvplayer.showcover = ConfigYesNo(default=True)
+# lists whose items bring their own pictures as a grid of posters (components/iptvpostergrid.py)
+config.plugins.iptvplayer.poster_grid = ConfigYesNo(default=False)
 # negative = never (RemoveOldDirsIcons only deletes for values >= 0)
 config.plugins.iptvplayer.deleteIcons = ConfigSelection(default="3", choices=[("0", _("after closing")), ("1", _("after day")), ("3", _("after three days")), ("7", _("after a week")), ("-1", _("never"))])
 # config.plugins.iptvplayer.allowedcoverformats = ConfigSelection(default="jpeg,png", choices=[("jpeg,png,gif", _("jpeg,png,gif")), ("jpeg,png", _("jpeg,png")), ("jpeg", _("jpeg")), ("all", _("all"))])

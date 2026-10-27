@@ -36,7 +36,7 @@ from Tools.BoundFunction import boundFunction
 from Tools.LoadPixmap import LoadPixmap
 from Tools.Directories import fileExists
 from Tools.NumericalTextInput import NumericalTextInput
-from enigma import getDesktop, eTimer, ePoint, gFont
+from enigma import getDesktop, eTimer, ePoint, eSize, gFont
 
 ####################################################
 #                   IPTV components
@@ -83,7 +83,8 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.iptvplayer import IPTVStandardMoviePlayer, IPTVMiniMoviePlayer
 from Plugins.Extensions.IPTVPlayer.components.iptvextmovieplayer import IPTVExtMoviePlayer
 from Plugins.Extensions.IPTVPlayer.components.iptvpictureplayer import IPTVPicturePlayerWidget
-from Plugins.Extensions.IPTVPlayer.components.iptvlist import IPTVMainNavigatorList, IPTVLinkChoiceBoxList, IPTVMoviePlayerChoiceBoxList, IPTVActionChoiceBoxList, IPTVPlayerSelectOptionChoiceBoxList
+from Plugins.Extensions.IPTVPlayer.components.iptvlist import IPTVLinkChoiceBoxList, IPTVMoviePlayerChoiceBoxList, IPTVActionChoiceBoxList, IPTVPlayerSelectOptionChoiceBoxList
+from Plugins.Extensions.IPTVPlayer.components.iptvpostergrid import IPTVPosterGridList
 from Plugins.Extensions.IPTVPlayer.components import skinchrome
 from Plugins.Extensions.IPTVPlayer.components.iptvarticleview import IPTVArticleView
 from Plugins.Extensions.IPTVPlayer.components.ihost import IHost, CDisplayListItem, RetHost, CUrlItem, ArticleContent, CFavItem
@@ -239,24 +240,25 @@ class E2iPlayerWidget(Screen):
     )
 
     @staticmethod
-    def _footerSlots(hasMenu, hasPrevNext, hasPlay, hasInfo, downloadable):
+    def _footerSlots(hasMenu, hasPrevNext, hasPlay, hasInfo, downloadable, hasText=False):
         # Single source of truth for the footer's slot-assignment math -
         # shared by __prepareSkin() (build-time initial position) and
         # _repositionFooterKeys() (runtime, on every selection/list
         # change) so the two can never drift into disagreement.
-        # Sequence: menu?, nav, num, prevnext?, play?, info?, ok, exit,
-        # then red, green?, yellow, blue.
+        # Sequence: menu?, nav, num, prevnext?, play?, info?, text?, ok,
+        # exit, then red, green?, yellow, blue.
         navSlot = 1 if hasMenu else 0
         numSlot = navSlot + 1
         prevNextSlot = numSlot + 1
         playSlot = prevNextSlot + (1 if hasPrevNext else 0)
         infoSlot = playSlot + (1 if hasPlay else 0)
-        okSlot = infoSlot + (1 if hasInfo else 0)
+        textSlot = infoSlot + (1 if hasInfo else 0)
+        okSlot = textSlot + (1 if hasText else 0)
         exitSlot = okSlot + 1
         yellowSlot = 1 + (1 if downloadable else 0)
         return {
             'nav': navSlot, 'num': numSlot, 'prevNext': prevNextSlot, 'play': playSlot,
-            'info': infoSlot, 'ok': okSlot, 'exit': exitSlot, 'leftIconCount': exitSlot + 1,
+            'info': infoSlot, 'text': textSlot, 'ok': okSlot, 'exit': exitSlot, 'leftIconCount': exitSlot + 1,
             'yellow': yellowSlot, 'blue': yellowSlot + 1,
         }
 
@@ -298,6 +300,7 @@ class E2iPlayerWidget(Screen):
         geomPrevNext = skinchrome.leftIconGeometry(self.HEIGHT, slots['prevNext'], 1.0)
         geomPlay = skinchrome.leftIconGeometry(self.HEIGHT, slots['prevNext'], 1.0)
         geomInfo = skinchrome.leftIconGeometry(self.HEIGHT, slots['prevNext'], 1.0)
+        geomText = skinchrome.leftIconGeometry(self.HEIGHT, slots['prevNext'], 1.0)
         geomOk = skinchrome.leftIconGeometry(self.HEIGHT, slots['ok'], 1.0)
         geomExit = skinchrome.leftIconGeometry(self.HEIGHT, slots['exit'], 1.0)
         # header clock/date is an opt-out via
@@ -325,7 +328,8 @@ class E2iPlayerWidget(Screen):
                 <widget name="spinner_2" zPosition="1" position="774,200" size="16,16" transparent="1" alphatest="blend" />
                 <widget name="spinner_3" zPosition="1" position="790,200" size="16,16" transparent="1" alphatest="blend" />
                 <widget name="spinner_4" zPosition="1" position="806,200" size="16,16" transparent="1" alphatest="blend" />
-                <ePixmap pixmap="%s/smallshadowline.png" position="20,494" size="1240,2" zPosition="2" />
+                <!-- a named widget: it moves down together with the poster grid (_onListModeChanged) -->
+                <widget name="separator" pixmap="%s/smallshadowline.png" position="20,494" size="1240,2" zPosition="2" />
                 <!-- zPosition 2, above the header's own Title label (1) -
                      that label's black background now spans much wider
                      than the old hand-written title box did, and would
@@ -344,6 +348,7 @@ class E2iPlayerWidget(Screen):
                 <widget name="key_prevnext_icon" position="%d,%d" size="%d,%d" zPosition="1" transparent="1" alphatest="blend" />
                 <widget name="key_play_icon" position="%d,%d" size="%d,%d" zPosition="1" transparent="1" alphatest="blend" />
                 <widget name="key_info_icon" position="%d,%d" size="%d,%d" zPosition="1" transparent="1" alphatest="blend" />
+                <widget name="key_text_icon" position="%d,%d" size="%d,%d" zPosition="1" transparent="1" alphatest="blend" />
                 <widget name="key_ok_icon" position="%d,%d" size="%d,%d" zPosition="1" transparent="1" alphatest="blend" />
                 <widget name="key_exit_icon" position="%d,%d" size="%d,%d" zPosition="1" transparent="1" alphatest="blend" />
                 %s
@@ -367,6 +372,7 @@ class E2iPlayerWidget(Screen):
             geomPrevNext['x'], geomPrevNext['y'], geomPrevNext['w'], geomPrevNext['h'],
             geomPlay['x'], geomPlay['y'], geomPlay['w'], geomPlay['h'],
             geomInfo['x'], geomInfo['y'], geomInfo['w'], geomInfo['h'],
+            geomText['x'], geomText['y'], geomText['w'], geomText['h'],
             geomOk['x'], geomOk['y'], geomOk['w'], geomOk['h'],
             geomExit['x'], geomExit['y'], geomExit['w'], geomExit['h'],
             # build_footer() directly, not build_footer_auto() - the auto
@@ -480,8 +486,13 @@ class E2iPlayerWidget(Screen):
             self["key_play_icon"].hide()
             self["key_info_icon"] = Cover3()
             self["key_info_icon"].hide()
+            # TEXT = poster grid on / off - conditional, shown only for a list that can show as grid
+            self["key_text_icon"] = Cover3()
+            self["key_text_icon"].hide()
             self["key_ok_icon"] = Cover3()
             self["key_exit_icon"] = Cover3()
+            # the line above the description, moved with the poster grid
+            self["separator"] = Cover3()
         else:
             self["key_red"] = StaticText(_("Close"))
             self["key_green"] = StaticText(_("Download"))
@@ -498,8 +509,12 @@ class E2iPlayerWidget(Screen):
         # position - unlike menu's - also depends on menu's visibility).
         self["key_menu"] = StaticText("")
 
-        self["list"] = IPTVMainNavigatorList()
+        self["list"] = IPTVPosterGridList()
         self["list"].connectSelChanged(self.onSelectionChanged)
+        self["list"].onModeChanged.append(self._onListModeChanged)
+        # the skin's geometry of list, description and the line between them, while the poster grid also uses the
+        # cover's place and part of the description's
+        self._gridGeometry = None
         self["statustext"] = Label(_("Loading..."))
 
         self["actions"] = ActionMap(["IPTVPlayerListActions", "ColorActions", "NumberActions"],
@@ -526,8 +541,24 @@ class E2iPlayerWidget(Screen):
             "tools": self.blue_pressed,
             "record": self.green_pressed,
             "pageUp": self.pageup_pressed,
-            "pageDown": self.pagedown_pressed
+            "pageDown": self.pagedown_pressed,
+            "postergrid": self.togglePosterGrid,
         }, -1)
+        # the arrow keys in the poster grid (before the listbox's own ones), only on while a list shows as grid
+        # (xxxRepeated: OpenPLi maps the held key to its own action)
+        gridList = self["list"]
+        self["gridActions"] = ActionMap(["DirectionActions"],
+        {
+            "up": boundFunction(gridList.moveRow, -1),
+            "upRepeated": boundFunction(gridList.moveRow, -1),
+            "down": boundFunction(gridList.moveRow, 1),
+            "downRepeated": boundFunction(gridList.moveRow, 1),
+            "left": boundFunction(gridList.moveColumn, -1),
+            "leftRepeated": boundFunction(gridList.moveColumn, -1),
+            "right": boundFunction(gridList.moveColumn, 1),
+            "rightRepeated": boundFunction(gridList.moveColumn, 1),
+        }, -2)
+        self["gridActions"].setEnabled(False)
 
         self["headertext"] = Label()
         self._headerFontsCache = None
@@ -669,6 +700,7 @@ class E2iPlayerWidget(Screen):
                 self.showMessageNoFreeSpaceForIcon = True
                 self.iconMenager = IconMenager(downloadNew=False)
             self.iconMenager.setUpdateCallBack(self.checkIconCallBack)
+            self["list"].setPosterSource(self.getCoverPathOfUrl, self.posterNotShown, Cover.getErrorCoverPath())
         self.showHostsErrorMessage = True
 
         self.onClose.append(self.__onClose)
@@ -936,9 +968,17 @@ class E2iPlayerWidget(Screen):
         hasMenu = len(self._getMenuOptions()) > 0
         self["key_menu"].setText(_("Menu") if hasMenu else "")
 
-        self._repositionFooterKeys(hasMenu, hasPrevNext, hasPlay, hasInfo)
+        # TEXT: poster grid on / off - only where it changes something (thumbnails on, a list with pictures)
+        hasText = self.iconMenager is not None and self["list"].postersInList
+        if self._usingBuiltinSkin:
+            if hasText:
+                self["key_text_icon"].show()
+            else:
+                self["key_text_icon"].hide()
 
-    def _repositionFooterKeys(self, hasMenu, hasPrevNext, hasPlay, hasInfo):
+        self._repositionFooterKeys(hasMenu, hasPrevNext, hasPlay, hasInfo, hasText)
+
+    def _repositionFooterKeys(self, hasMenu, hasPrevNext, hasPlay, hasInfo, hasText=False):
         # ConditionalShowHide only hides a widget in place, it never
         # reflows the others - covers both clusters that can shrink here:
         # gray menu/nav/num/prevnext/play/info/ok/exit and the red/green/
@@ -970,7 +1010,7 @@ class E2iPlayerWidget(Screen):
         # none of them actually changed since the last call. Scrolling
         # through a run of same-type items (e.g. one folder) otherwise
         # redid this on every row for no visible effect.
-        flags = (hasMenu, hasPrevNext, hasPlay, hasInfo, self.downloadable)
+        flags = (hasMenu, hasPrevNext, hasPlay, hasInfo, hasText, self.downloadable)
         if flags == self._lastFooterKeyFlags:
             return
         self._lastFooterKeyFlags = flags
@@ -981,7 +1021,7 @@ class E2iPlayerWidget(Screen):
         # (optional) / play(optional) / info(optional) / ok / exit -
         # slot math shared with __prepareSkin() via _footerSlots(), see
         # its own comment
-        slots = self._footerSlots(hasMenu, hasPrevNext, hasPlay, hasInfo, self.downloadable)
+        slots = self._footerSlots(hasMenu, hasPrevNext, hasPlay, hasInfo, self.downloadable, hasText)
         geomNav = skinchrome.leftIconGeometry(height, slots['nav'], scale)
         geomNum = skinchrome.leftIconGeometry(height, slots['num'], scale)
         geomOk = skinchrome.leftIconGeometry(height, slots['ok'], scale)
@@ -999,6 +1039,9 @@ class E2iPlayerWidget(Screen):
         if hasInfo:
             geomInfo = skinchrome.leftIconGeometry(height, slots['info'], scale)
             self["key_info_icon"].instance.move(ePoint(geomInfo['x'], geomInfo['y']))
+        if hasText:
+            geomText = skinchrome.leftIconGeometry(height, slots['text'], scale)
+            self["key_text_icon"].instance.move(ePoint(geomText['x'], geomText['y']))
 
         # color keys: how many gray icons actually precede them (4 fixed
         # - nav/num/ok/exit - plus menu/prevnext/play/info if currently
@@ -1341,6 +1384,11 @@ class E2iPlayerWidget(Screen):
         except Exception:
             printExc()
 
+        # the poster grid on / off for every list (also the TEXT key) - only with thumbnails
+        if self.iconMenager is not None:
+            gridOn = config.plugins.iptvplayer.poster_grid.value
+            options.append((_("Poster grid off") if gridOn else _("Poster grid on"), "POSTER_GRID"))
+
         self._hostActions = []
         # every host has settings: at least its PIN protection
         options.append((_("Configure host"), "HostConfig"))
@@ -1483,6 +1531,8 @@ class E2iPlayerWidget(Screen):
                 self.runIPTVDM()
             elif ret[1] == "HELP":
                 self.keyHelp()
+            elif ret[1] == "POSTER_GRID":
+                self.togglePosterGrid()
             elif ret[1] == "CLOSE":
                 self.close()
             elif ret[1] == "HostConfig":
@@ -1645,6 +1695,8 @@ class E2iPlayerWidget(Screen):
             GetKeyHelpItem('updown', _("next page / previous page"), icon('key_updown')),
             GetKeyHelpItem('play', _("start auto-play (plays through the list automatically)"), icon('play')),
         ]
+        if self.iconMenager is not None:
+            options.append(GetKeyHelpItem('text', _("poster grid on / off"), LoadPixmap(GetIconDir('PictureItem.png'))))
         height = self._getOptionsPickerHeight(len(options))
         self.session.open(IPTVChoiceBoxWidget, {'width': 900, 'height': height, 'current_idx': 0, 'title': _("Help"), 'options': options, 'list_class': E2iVKOptionsList, 'selectable': False, 'chrome': True})
 
@@ -1865,6 +1917,14 @@ class E2iPlayerWidget(Screen):
         # check if displays icon is enabled in options
         if not config.plugins.iptvplayer.showcover.value or None is self.iconMenager:
             return
+        if self["list"].gridMode:
+            # the grid shows the pictures itself
+            if ret is not None:
+                self["list"].posterChanged(ret)
+            if self._usingBuiltinSkin:
+                # the grid has the cover's place; another skin keeps its cover box: the selected tile's picture
+                self["cover"].hide()
+                return
 
         selItem = self.getSelItem()
         # when ret is != None the method is called from IconMenager
@@ -1905,6 +1965,10 @@ class E2iPlayerWidget(Screen):
         if retDict:
             printDBG("updateCover retDict for Ident: %s " % retDict["Ident"])
             updateIcon = False
+            if 'cover' == retDict["Ident"] and self["list"].gridMode and self._usingBuiltinSkin:
+                # a decode started before the list became a grid (that has the cover's place)
+                self["cover"].hide()
+                return
             if 'cover' == retDict["Ident"]:
                 # check if we have icon for right item on list
                 selItem = self.getSelItem()
@@ -1957,6 +2021,78 @@ class E2iPlayerWidget(Screen):
             return Cover.getErrorCoverPath()
         return self.iconMenager.getIconPathFromAAueue(selItem.iconimage)
 
+    def getCoverPathOfUrl(self, url):
+        # a poster of the grid: like getCoverPath(); a picture that is not on disk yet is downloaded, the
+        # IconMenager's callback then reaches the grid through displayIcon()
+        if self.iconMenager.isIconFailed(url):
+            return Cover.getErrorCoverPath()
+        path = self.iconMenager.getIconPathFromAAueue(url)
+        if not path:
+            self.iconMenager.addToDQueue([url])
+        return path
+
+    def posterNotShown(self, url, fileName):
+        # a poster of the grid the picture loader can't show: like showCoverFailed() the red X, the file is
+        # dropped so a later try downloads it again. A local picture or the X itself stays as it is
+        if url.startswith('file://') or fileName == Cover.getErrorCoverPath():
+            return False
+        self.iconMenager.markIconFailed(url, "can not be shown, %s" % DescribeImageFile(fileName), removeFile=True)
+        return True
+
+    # share of the description's height the poster grid takes (about three lines of description stay)
+    GRID_CONSOLE_SHARE = 0.45
+
+    def _onListModeChanged(self, grid):
+        # poster grid on / off: the arrow keys and - with the built-in skin - the grid also takes the cover's
+        # place on the left and part of the description below (with the line between them); another skin keeps
+        # its cover box and description where they are
+        self["gridActions"].setEnabled(grid)
+        if grid and self._usingBuiltinSkin:
+            self["cover"].hide()
+        elif self.decodeCoverTimer:
+            # back to a list: its cover once the new list and its selection are set (the switch runs inside setList)
+            self.decodeCoverTimer.start(self.decodeCoverTimer_interval, True)
+        if not self._usingBuiltinSkin:
+            return
+        try:
+            listInstance = self["list"].instance
+            consoleInstance = self["console"].instance
+            separatorInstance = self["separator"].instance
+            if self._gridGeometry is None:
+                self._gridGeometry = [(widget.position().x(), widget.position().y(),
+                                       widget.size().width(), widget.size().height())
+                                      for widget in (listInstance, consoleInstance, separatorInstance)]
+            (x, y, w, h), (consoleX, consoleY, consoleW, consoleH), (lineX, lineY, _, _) = self._gridGeometry
+            extra = 0
+            if grid:
+                coverX = self["cover"].instance.position().x()
+                if coverX < x:
+                    w += x - coverX
+                    x = coverX
+                extra = int(consoleH * self.GRID_CONSOLE_SHARE)
+            listInstance.move(ePoint(x, y))
+            listInstance.resize(eSize(w, h + extra))
+            consoleInstance.move(ePoint(consoleX, consoleY + extra))
+            consoleInstance.resize(eSize(consoleW, consoleH - extra))
+            separatorInstance.move(ePoint(lineX, lineY + extra))
+        except Exception:
+            printExc()
+
+    def togglePosterGrid(self):
+        # TEXT / BLUE "Poster grid on|off": the option itself, the list on screen follows at once
+        if self.iconMenager is None or not self.visible:
+            return
+        option = config.plugins.iptvplayer.poster_grid
+        option.value = not option.value
+        option.save()
+        configfile.save()
+        printDBG("togglePosterGrid -> %s" % option.value)
+        self["list"].setList([(x,) for x in self.currList])
+        self.changeBottomPanel()
+        # a short hint in the description until the selection moves - no message box: a queued one would pop up
+        # only after the next key (two quick TEXT presses showed both, one after the other)
+        self["console"].setText(_("Poster grid on") if option.value else _("Poster grid off"))
+
     def changeBottomPanel(self):
         self.displayIcon()
         selItem = self.getSelItem()
@@ -1964,8 +2100,43 @@ class E2iPlayerWidget(Screen):
             data = selItem.description
             sData = data.replace('[/br]', '\n')
             self["console"].setText(sData)
+            if self["list"].gridMode and self._usingBuiltinSkin:
+                self._fitConsoleText(sData)
         else:
             self["console"].setText('')
+
+    def _fitConsoleText(self, text):
+        # the shorter description below the poster grid: only whole lines, a cut text ends with "…" (a label
+        # higher than its text draws half a line at the bottom). Measured a little narrower than the label: the
+        # drawing wraps a few pixels earlier than calculateSize(), the "…" would land in a hidden line
+        def cut(length):
+            part = text[:length]
+            if length < len(text) and ' ' in part:
+                # at a word boundary
+                part = part.rsplit(' ', 1)[0]
+            return part.rstrip() + '…'
+
+        try:
+            label = self["console"].instance
+            size = label.size()
+            maxH = size.height()
+            label.resize(eSize(size.width() * 97 // 100, maxH))
+            try:
+                if label.calculateSize().height() <= maxH:
+                    return
+                shortest, longest = 0, len(text)
+                while shortest < longest:
+                    middle = (shortest + longest + 1) // 2
+                    label.setText(cut(middle))
+                    if label.calculateSize().height() <= maxH:
+                        shortest = middle
+                    else:
+                        longest = middle - 1
+            finally:
+                label.resize(size)
+            self["console"].setText(cut(shortest))
+        except Exception:
+            printExc()
 
     def onSelectionChanged(self):
         # debounced - see footerKeysTimer's own comment in __init__.
@@ -2235,8 +2406,7 @@ class E2iPlayerWidget(Screen):
                 printExc()
 
             try:
-                sel = self["list"].l.getCurrentSelection()
-                sel = sel[0] if sel else None
+                sel = self["list"].getCurrent()
             except Exception:
                 printExc()
                 self.getRefreshedCurrList()
@@ -2586,7 +2756,7 @@ class E2iPlayerWidget(Screen):
     def getSelectedItem(self):
         sel = None
         try:
-            sel = self["list"].l.getCurrentSelection()[0]
+            sel = self["list"].getCurrent()
         except Exception:
             return None
         return sel
@@ -2620,6 +2790,7 @@ class E2iPlayerWidget(Screen):
             self["key_prevnext_icon"].setPixmap(LoadPixmap(_footerIconBase + '/key_updown.png'))
             self["key_play_icon"].setPixmap(LoadPixmap(_footerIconBase + '/play.png'))
             self["key_info_icon"].setPixmap(LoadPixmap(_footerIconBase + '/info.png'))
+            self["key_text_icon"].setPixmap(LoadPixmap(_footerIconBase + '/text.png'))
             self["key_ok_icon"].setPixmap(LoadPixmap(_footerIconBase + '/ok.png'))
             self["key_exit_icon"].setPixmap(LoadPixmap(_footerIconBase + '/exit.png'))
         self._runStartupStorageSteps()
@@ -4526,7 +4697,7 @@ class E2iPlayerWidget(Screen):
         # whole list as well (an image whose invalidate() does not rebuild the visible entries gets them anyway)
         try:
             if -1 < idx:
-                self["list"].l.invalidateEntry(idx)
+                self["list"].invalidateItem(idx)
         except Exception:
             printExc()
         try:

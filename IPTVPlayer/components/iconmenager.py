@@ -176,6 +176,16 @@ class IconMenager:
         if 0 == len(iconsFiles):
             RemoveIconsDirByPath(path)
         for item in iconsFiles:
+            # an empty file (a download cut off, e.g. by a restart) would count as the picture for good
+            filePath = os_path.join(path, item)
+            try:
+                if 0 == os_stat(filePath).st_size:
+                    printDBG('IconMenager.loadIconsFromPath empty file removed [%s]' % filePath)
+                    os_remove(filePath)
+                    continue
+            except Exception:
+                printExc()
+                continue
             self.addItemToAAueue(path, item)
             # printDBG('IconMenager.loadIconsFromPath path[%s], name[%s] loaded' % (path, item))
 
@@ -379,6 +389,8 @@ class IconMenager:
 
         # + AVIF (ftyp brand at offset 4) when this box can convert it to JPEG after the download, like WebP
         params['check_first_bytes'] = PictureFirstBytes()
+        # a missing picture (HTTP 404 / 500) is a failed download with its reason, not an empty "success"
+        params['ignore_http_code_ranges'] = []
 
         if img_url.startswith('data:'):
             # an inline picture: written to the cache, nothing to download
@@ -491,4 +503,11 @@ class IconMenager:
         ret = self.cm.saveWebFile(file_path, img_url, addParams=params)
         if not ret['sts']:
             self.lastError = ret.get('reason') or 'download failed'
+        elif not os_path.isfile(file_path) or 0 == os_stat(file_path).st_size:
+            self.lastError = 'empty file'
+            try:
+                os_remove(file_path)
+            except Exception:
+                pass
+            return False
         return ret['sts']

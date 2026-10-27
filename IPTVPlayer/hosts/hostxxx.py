@@ -15908,10 +15908,11 @@ class Host(CBaseHostClass, XXXParser):
 				del data[0]
 			for item in data:
 				phUrl = self.MAIN_URL + self.cm.ph.getSearchGroups(item, r'href=["]([^"]+?)["]', 1, True)[0]
-				phTitle = self.cm.ph.getSearchGroups(item, r'title=["]([^,/"]+?)["]><', 1, True)[0].upper()
+				# card markup since 10/2026: <a ... title="Anal" data-wrap=...>, the count in the "u-card-chip"
+				phTitle = self.cm.ph.getSearchGroups(item, r'\stitle=["]([^,/"]+?)["]', 1, True)[0].upper()
 				phImage = self.cm.ph.getSearchGroups(item, r'src=["]([^"]+?)["]', 1, True)[0]
 				phImage = phImage.replace('webp', 'jpg')
-				Videos = self.cm.ph.getSearchGroups(item, r'--[>]([0-9,\s]+?)[<]!-', 1, True)[0]
+				Videos = self.cm.ph.getSearchGroups(item, r'u-card-chip[^>]*?[>]([0-9,\s]+?)[<]', 1, True)[0]
 				valTab.append(CDisplayListItem(phTitle, phTitle + '\n' + Videos + ' videos', CDisplayListItem.TYPE_CATEGORY, [phUrl], '24PORN-clips', phImage, None))
 			if url.endswith('videos/'):
 				valTab.sort(key=lambda poz: poz.name)
@@ -15931,6 +15932,9 @@ class Host(CBaseHostClass, XXXParser):
 				return self.showNotFoundMessage(name)
 			root = re.sub(r'/\d+/?$', '/', url)
 			current = self.cm.ph.getSearchGroups(data, r'current="page"[>]([^"]+?)[<]', 1, True)[0]
+			if not current.isdigit():
+				# the pager no longer marks the page: the page number of the address (/videos/anal/3/)
+				current = self.cm.ph.getSearchGroups(url, r'/(\d+)/?$', 1, True)[0]
 			if not current.isdigit():
 				current = 1
 			printDBG('CURRENT: ' + str(current))
@@ -15954,13 +15958,15 @@ class Host(CBaseHostClass, XXXParser):
 				del data[0]
 			for item in data:
 				phUrl = self.MAIN_URL + self.cm.ph.getSearchGroups(item, r'href=["]([^"]+?)["]\s', 1, True)[0]
-				phTitle = self.cm.ph.getSearchGroups(item, r'title=["]([^"]+?)["]></a', 1, True)[0]
+				# card markup since 10/2026: <a ... title="..." data-wrap=...> (\stitle: not data-url-title, the address
+				# slug), the duration in the "u-card-chip", the views in "u-meta-right" behind an svg icon
+				phTitle = self.cm.ph.getSearchGroups(item, r'\stitle=["]([^"]+?)["]', 1, True)[0]
 				# the thumbnails are .webp now: the same address with .jpg answers with a JPEG (as in the category list)
 				phImage = self.cm.ph.getSearchGroups(item, r'<img\ssrc=["]([^"]+?\.(?:jpg|webp))["]', 1, True)[0]
 				phImage = re.sub(r'\.webp$', '.jpg', phImage)
-				Time = self.cm.ph.getSearchGroups(item, r'--[>]([0-9:]+?)[<]!--', 1, True)[0]
-				Views = self.cm.ph.getSearchGroups(item, r'--[>]([0-9\s]+?)[<]!--', 1, True)[0]
-				Added = self.cm.ph.getSearchGroups(item, r'[>]([^"]+?ago)[<]/time', 1, True)[0]
+				Time = self.cm.ph.getSearchGroups(item, r'u-card-chip[^>]*?[>]([0-9:]+?)[<]', 1, True)[0]
+				Views = self.cm.ph.getSearchGroups(item, r'u-meta-right[^>]*?[>](?:\s*<svg.*?</svg>)?\s*([0-9.,KkMm]+?)\s*[<]', 1, True)[0]
+				Added = self.cm.ph.getSearchGroups(item, r'[>]([^<>"]+?ago)[<]/time', 1, True)[0]
 				valTab.append(CDisplayListItem(decodeHtml(phTitle), '[' + Time + '] ' + decodeHtml(phTitle) + '\nViews: ' + Views + '\nAdded: ' + Added, CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], '', phImage, None))
 			if next:
 				next = urljoin(self.MAIN_URL + '/', next)
