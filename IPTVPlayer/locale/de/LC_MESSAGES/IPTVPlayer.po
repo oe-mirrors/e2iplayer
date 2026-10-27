@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-27 21:29+0000\n"
-"PO-Revision-Date: 2026-10-25 02:44+0200\n"
+"PO-Revision-Date: 2026-10-27 23:00+0100\n"
 "Last-Translator: Masta2002\n"
 "Language-Team: oATV Team\n"
 "Language: de_DE\n"
@@ -4313,13 +4313,13 @@ msgid "Portuguese"
 msgstr "Portugiesisch"
 
 msgid "Poster grid for lists with pictures"
-msgstr ""
+msgstr "Poster-Ansicht für Listen mit Bildern"
 
 msgid "Poster grid off"
-msgstr ""
+msgstr "Poster-Ansicht aus"
 
 msgid "Poster grid on"
-msgstr ""
+msgstr "Poster-Ansicht an"
 
 msgid "Powerpoint Presentation"
 msgstr "PowerPoint Präsentation"
@@ -5542,7 +5542,7 @@ msgstr ""
 "Registrieren Sie sich auf https://tbngo.pl/ und geben Sie E-Mail und Passwort in den Host-Einstellungen ein."
 
 msgid "TEXT"
-msgstr ""
+msgstr "TEXT"
 
 msgid "THE PAGE YOU ARE LOOKING FOR IS NOT FOUND."
 msgstr "DIE GESUCHTE SEITE WURDE NICHT GEFUNDEN."
@@ -7107,7 +7107,7 @@ msgid "installed"
 msgstr "installiert"
 
 msgid "installed, does not start"
-msgstr ""
+msgstr "installiert, startet nicht"
 
 msgid "internal"
 msgstr "interner"
@@ -7237,7 +7237,7 @@ msgid "not installed"
 msgstr "nicht installiert"
 
 msgid "not installed (Byse: slower captcha check)"
-msgstr ""
+msgstr "nicht installiert (Byse: langsamere Captcha-Prüfung)"
 
 msgid "not installed (hosts that need JavaScript fail)"
 msgstr "nicht installiert (Hosts, die JavaScript brauchen, schlagen fehl)"
@@ -7267,7 +7267,7 @@ msgid "not installed (no file, cover or subtitle downloads)"
 msgstr "nicht installiert (keine Datei-, Cover- oder Untertitel-Downloads)"
 
 msgid "not installed (no image subtitles in exteplayer3)"
-msgstr ""
+msgstr "nicht installiert (keine Bild-Untertitel in exteplayer3)"
 
 msgid "not installed (no local media / folder browser)"
 msgstr "nicht installiert (keine lokalen Medien / kein Ordner-Browser)"
@@ -7324,7 +7324,7 @@ msgid "password"
 msgstr "Passwort"
 
 msgid "poster grid on / off"
-msgstr ""
+msgstr "Poster-Ansicht an / aus"
 
 msgid "prijevodi-online.org refused the download for this account."
 msgstr "prijevodi-online.org hat den Download für dieses Konto abgelehnt."
