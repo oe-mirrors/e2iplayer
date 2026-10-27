@@ -5,6 +5,7 @@ LAST_MODIFIED = "27.10.2026"
 import base64
 import datetime
 import re
+import unicodedata
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
@@ -61,6 +62,15 @@ def _str(value):
     return ensure_str(value) if _isText(value) else ""
 
 
+def _sortKey(label):
+    # "Écoles" next to "Ecoles": accents and case do not count
+    try:
+        text = label.decode("utf-8") if isinstance(label, bytes) else label
+        return u"".join(c for c in unicodedata.normalize("NFKD", text) if not unicodedata.combining(c)).lower()
+    except Exception:
+        return label.lower()
+
+
 class FrenchStream(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     FAV_FIELDS = ("name", "category", "type", "url", "title", "icon", "desc", "s_title", "s_season", "s_episode",
@@ -84,7 +94,8 @@ class FrenchStream(GenericFolderWatchedScraperMixin, CBaseHostClass):
             {"category": "fs_filter", "title": "Genres Séries", "filter": "series-genre"},
             {"category": "fs_filter", "title": "Plateformes", "filter": "platforms"},
             {"category": "fs_filter", "title": "Langues", "filter": "languages"},
-            {"category": "fs_filter", "title": "Thèmes", "filter": "themes"},
+            {"category": "fs_filter", "title": "Thèmes Films", "filter": "themes"},
+            {"category": "fs_filter", "title": "Thèmes Séries", "filter": "series-themes"},
             {"category": "fs_filter", "title": "Années", "filter": "date-de-sortie"},
         ] + self.searchItems()
         self.watchedHelper = IPTVWatchedHelper("frenchstream")
@@ -251,7 +262,9 @@ class FrenchStream(GenericFolderWatchedScraperMixin, CBaseHostClass):
         elif kind == "languages":
             pattern = r'href="(/xfsearch/lang/[^"]+)"[^>]*>(?:<[^>]+>)*([^<]+)</a>'
         elif kind == "themes":
-            pattern = r'href="(/xfsearch/(?:ftagz|xx89)/[^"]+)"[^>]*>(?:<[^>]+>)*([^<]+)</a>'
+            pattern = r'href="(/xfsearch/ftagz/[^"]+)"[^>]*>(?:<[^>]+>)*([^<]+)</a>'
+        elif kind == "series-themes":
+            pattern = r'href="(/xfsearch/xx89/[^"]+)"[^>]*>(?:<[^>]+>)*([^<]+)</a>'
         else:
             # years: the ones the menu links first, then every year back to 1980
             years = sorted({int(y) for y in re.findall(r"/xfsearch/date-de-sortie/(\d{4})/", data)}, reverse=True)
@@ -259,11 +272,12 @@ class FrenchStream(GenericFolderWatchedScraperMixin, CBaseHostClass):
             for year in years:
                 self._addFilterItem(cItem, "/xfsearch/date-de-sortie/%d/" % year, "Année %d" % year, seen)
             return
-        for url, label in re.findall(pattern, data, re.I):
-            self._addFilterItem(cItem, url, label, seen)
-        if not seen:
-            for url, label in fallback:
+        # the site menus follow no order (themes go by their English slug), so every list is sorted by its label
+        for found in (re.findall(pattern, data, re.I), fallback):
+            for url, label in sorted(found, key=lambda x: _sortKey(self.cleanHtmlStr(x[1]))):
                 self._addFilterItem(cItem, url, label, seen)
+            if seen:
+                break
 
     ###################################################
     # lists
