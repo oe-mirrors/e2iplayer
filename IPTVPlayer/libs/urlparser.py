@@ -231,8 +231,8 @@ class urlparser:
             "brittneystandardwestern.com": self.pp.parserVOESX,  # add 061026
             "brucevotewithin.com": self.pp.parserVOESX,  # add 061026
             "btg549.filmoviplex.com": self.pp.parserABYSS,
-            "bullstream.xyz": self.pp.parserSTREAMEMBED,  # add 061026
             "bufsao.com": self.pp.parserSTREAMUP,  # add 271026
+            "bullstream.xyz": self.pp.parserSTREAMEMBED,  # add 061026
             "byse.sx": self.pp.parserBYSE,
             "bysebuho.com": self.pp.parserBYSE,
             "bysedikamoum.com": self.pp.parserBYSE,
@@ -604,6 +604,7 @@ class urlparser:
             "mixdrop.ch": self.pp.parserMIXDROP,
             "mixdrop.club": self.pp.parserMIXDROP,
             "mixdrop.co": self.pp.parserMIXDROP,
+            "mixdrop.cv": self.pp.parserMIXDROP,  # add 271026
             "mixdrop.gl": self.pp.parserMIXDROP,
             "mixdrop.is": self.pp.parserMIXDROP,
             "mixdrop.ms": self.pp.parserMIXDROP,
@@ -638,11 +639,10 @@ class urlparser:
             "mp4upload.com": self.pp.parserJWPLAYER,
             "mwdy.cc": self.pp.parserJWPLAYER,  # add 081026
             "mwish.pro": self.pp.parserJWPLAYER,  # add 061026
+            "mxdrop.click": self.pp.parserMIXDROP,  # add 271026
             "mxdrop.sx": self.pp.parserMIXDROP,
             "mxdrop.to": self.pp.parserMIXDROP,
             "mxdrop.top": self.pp.parserMIXDROP,
-            "mxdrop.click": self.pp.parserMIXDROP, # add 271026
-            "mixdrop.cv": self.pp.parserMIXDROP, # add 271026            
             "mysportzfy.com": self.pp.parserJWPLAYER,
             "myvidplay.com": self.pp.parserDOOD,
             # n
