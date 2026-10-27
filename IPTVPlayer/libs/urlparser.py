@@ -197,6 +197,7 @@ class urlparser:
             "arabveturk.com": self.pp.parserJWPLAYER,
             "archive.org": self.pp.parserARCHIVEORG,
             "ashortl.ink": self.pp.parserVIDMOLYME,
+            "ashleyhardat.com": self.pp.parserVOESX,  # add 271026
             "asianembed.cam": self.pp.parserSBS,  # add 061026
             "asjp1j93c1.sbs": self.pp.parserJWPLAYER,  # add 061026
             "asnwish.com": self.pp.parserJWPLAYER,
@@ -231,6 +232,7 @@ class urlparser:
             "brucevotewithin.com": self.pp.parserVOESX,  # add 061026
             "btg549.filmoviplex.com": self.pp.parserABYSS,
             "bullstream.xyz": self.pp.parserSTREAMEMBED,  # add 061026
+            "bufsao.com": self.pp.parserSTREAMUP,  # add 271026
             "byse.sx": self.pp.parserBYSE,
             "bysebuho.com": self.pp.parserBYSE,
             "bysedikamoum.com": self.pp.parserBYSE,
@@ -486,6 +488,7 @@ class urlparser:
             "isbfga.store": self.pp.parserSTREAMUP,  # add 061026
             # j
             "jamesbornmain.com": self.pp.parserVOESX,  # add 061026
+            "jamespatterncamera.com": self.pp.parserVOESX,  # add 271026
             "jamessoundcost.com": self.pp.parserVOESX,  # add 061026
             "jamiesamewalk.com": self.pp.parserVOESX,  # add 061026
             "jasminetesttry.com": self.pp.parserVOESX,  # add 061026
@@ -638,6 +641,8 @@ class urlparser:
             "mxdrop.sx": self.pp.parserMIXDROP,
             "mxdrop.to": self.pp.parserMIXDROP,
             "mxdrop.top": self.pp.parserMIXDROP,
+            "mxdrop.click": self.pp.parserMIXDROP, # add 271026
+            "mixdrop.cv": self.pp.parserMIXDROP, # add 271026            
             "mysportzfy.com": self.pp.parserJWPLAYER,
             "myvidplay.com": self.pp.parserDOOD,
             # n
