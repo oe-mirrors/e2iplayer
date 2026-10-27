@@ -196,6 +196,7 @@ class urlparser:
             "apinchcaseation.com": self.pp.parserVOESX,  # add 061026
             "arabveturk.com": self.pp.parserJWPLAYER,
             "archive.org": self.pp.parserARCHIVEORG,
+            "ashleyhardat.com": self.pp.parserVOESX,  # add 271026
             "ashortl.ink": self.pp.parserVIDMOLYME,
             "asianembed.cam": self.pp.parserSBS,  # add 061026
             "asjp1j93c1.sbs": self.pp.parserJWPLAYER,  # add 061026
@@ -230,6 +231,7 @@ class urlparser:
             "brittneystandardwestern.com": self.pp.parserVOESX,  # add 061026
             "brucevotewithin.com": self.pp.parserVOESX,  # add 061026
             "btg549.filmoviplex.com": self.pp.parserABYSS,
+            "bufsao.com": self.pp.parserSTREAMUP,  # add 271026
             "bullstream.xyz": self.pp.parserSTREAMEMBED,  # add 061026
             "byse.sx": self.pp.parserBYSE,
             "bysebuho.com": self.pp.parserBYSE,
@@ -486,6 +488,7 @@ class urlparser:
             "isbfga.store": self.pp.parserSTREAMUP,  # add 061026
             # j
             "jamesbornmain.com": self.pp.parserVOESX,  # add 061026
+            "jamespatterncamera.com": self.pp.parserVOESX,  # add 271026
             "jamessoundcost.com": self.pp.parserVOESX,  # add 061026
             "jamiesamewalk.com": self.pp.parserVOESX,  # add 061026
             "jasminetesttry.com": self.pp.parserVOESX,  # add 061026
@@ -601,6 +604,7 @@ class urlparser:
             "mixdrop.ch": self.pp.parserMIXDROP,
             "mixdrop.club": self.pp.parserMIXDROP,
             "mixdrop.co": self.pp.parserMIXDROP,
+            "mixdrop.cv": self.pp.parserMIXDROP,  # add 271026
             "mixdrop.gl": self.pp.parserMIXDROP,
             "mixdrop.is": self.pp.parserMIXDROP,
             "mixdrop.ms": self.pp.parserMIXDROP,
@@ -635,6 +639,7 @@ class urlparser:
             "mp4upload.com": self.pp.parserJWPLAYER,
             "mwdy.cc": self.pp.parserJWPLAYER,  # add 081026
             "mwish.pro": self.pp.parserJWPLAYER,  # add 061026
+            "mxdrop.click": self.pp.parserMIXDROP,  # add 271026
             "mxdrop.sx": self.pp.parserMIXDROP,
             "mxdrop.to": self.pp.parserMIXDROP,
             "mxdrop.top": self.pp.parserMIXDROP,
