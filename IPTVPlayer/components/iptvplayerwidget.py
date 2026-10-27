@@ -4034,9 +4034,14 @@ class E2iPlayerWidget(Screen):
             return []
         if self._headerFontsCache is None:
             self._headerFontsCache = []
+            # a skin without a font attribute on the header (Enigma2's default font): nothing to go by, and no
+            # KeyError in the log - printExc made it the "Last Exception error" of every later host message
+            fontAttr = dict(label.skinAttributes or []).get('font')
+            if not fontAttr:
+                return self._headerFontsCache
             try:
                 from skin import parseFont
-                font = parseFont(dict(label.skinAttributes or [])['font'], getattr(self, 'scale', ((1, 1), (1, 1))))
+                font = parseFont(fontAttr, getattr(self, 'scale', ((1, 1), (1, 1))))
                 self._headerFontsCache = [font] + [gFont(font.family, int(font.pointSize * factor)) for factor in (0.8, 0.7)]
             except Exception:
                 printExc()

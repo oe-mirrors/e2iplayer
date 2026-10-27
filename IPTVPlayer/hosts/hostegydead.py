@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "21.10.2026"
+LAST_MODIFIED = "27.10.2026"
+# 27.10.2026 - servers moved to an own page (<title page>/watch/, the site's "watch and download" button)
 # 21.10.2026 - MegaMax: every hoster mirror of its page as an own server row ("MegaMax 1080p voe", like on the site),
 #   resolved only when picked (urlparser getMegamaxMirrors); watch + download link of one file listed once
 # 20.10.2026 - Anime / Cartoons: the current anime seasons of the site's menu ("Anime Autumn 2026", /tag/...),
@@ -474,8 +475,9 @@ class EgyDead(GenericFolderWatchedScraperMixin, CBaseHostClass):
         params = dict(self.defaultParams)
         params["header"] = dict(self.HEADER, Referer=pageUrl)
         params["header"]["Content-Type"] = "application/x-www-form-urlencoded"
+        watchRe = r"""class=['"]watchNow['"][^>]*>\s*<a[^>]+href=['"]([^'"]+/watch/?)['"]"""
         sts, data = self.getPage(pageUrl, params, {"View": "1"})
-        if sts and "data-link=" not in data:
+        if sts and "data-link=" not in data and not self.cm.ph.getSearchGroups(data, watchRe)[0]:
             # the POST answer came back without the player (fresh Cloudflare cookie, redirect) - load the
             # page once like the browser does and send the form again
             self.getPage(pageUrl)
@@ -483,6 +485,14 @@ class EgyDead(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not sts:
             return []
         story = self._siteInfo(data)[0]
+        # since 27.10.2026 the title page only links its servers ("watch and download" -> <page>/watch/)
+        watchUrl = self.cm.ph.getSearchGroups(data, watchRe)[0]
+        if "data-link=" not in data and watchUrl:
+            params = dict(self.defaultParams)
+            params["header"] = dict(self.HEADER, Referer=pageUrl)
+            sts, data = self.getPage(self.getFullUrl(watchUrl), params)
+            if not sts:
+                return []
         urltab = []
         names = {}
         seen = set()

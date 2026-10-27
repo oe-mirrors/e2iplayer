@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "23.10.2026"
+LAST_MODIFIED = "27.10.2026"
+# 27.10.2026 - film lists: the cards link video.php?vid= instead of watch.php?vid=
 # 23.10.2026 - update to current url
 # 03.10.2026 - revived for the redesigned hd1.brstej.com (Brstej / Prestige)
 #   Rewrite against the current site (based on the host by Mohamed Elsafty):
@@ -100,6 +101,9 @@ class Brstej(GenericFolderWatchedScraperMixin, CBaseHostClass):
         url = re.sub(r"/cat67\.php", "/cat03.php", url)
         url = re.sub(r"/newvideos?\.php", "/new-videos.php", url)
         url = url.replace("/moslsalat.php", "/moslslat.php").replace("/view-serie.php", "/series1.php")
+        # the film cards link video.php?vid= since 27.10.2026 (watch.php answers with a 301 to it): rows stay
+        # on watch.php so watched / downloaded / favourite keys of older rows keep matching
+        url = url.replace("/video.php?vid=", "/watch.php?vid=")
         url = url.split("#", 1)[0]
         try:
             if any(ord(c) > 127 for c in url):
@@ -307,7 +311,7 @@ class Brstej(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     def _parseCards(self, data, seen, normalize):
         for card in CARD_RE.findall(data):
-            href = self.cm.ph.getSearchGroups(card, r'href="([^"]*(?:watch\.php\?vid=|series1\.php\?id=)[^"]+)"')[0]
+            href = self.cm.ph.getSearchGroups(card, r'href="([^"]*(?:(?:watch|video)\.php\?vid=|series1\.php\?id=)[^"]+)"')[0]
             url = self._canonUrl(href)
             if not url or url in seen:
                 continue

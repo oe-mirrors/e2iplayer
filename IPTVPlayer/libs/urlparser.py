@@ -4302,6 +4302,7 @@ class pageParser(CaptchaHelper):
                 mirrors = STREAMWISH_MIRRORS_HG[:2] + STREAMWISH_MIRRORS[:1]
             else:
                 mirrors = STREAMWISH_MIRRORS[:2] + STREAMWISH_MIRRORS_HG[:1]
+            deletedData = None
             for mirror in mirrors if fileId else ():
                 mirrorUrl = "https://%s/e/%s" % (mirror, fileId)
                 stsM, dataM = self.cm.getPage(mirrorUrl, urlParams)
@@ -4312,6 +4313,14 @@ class pageParser(CaptchaHelper):
                     baseUrl = strwithmeta(mirrorUrl, baseUrl.meta)
                     mirrorData = dataM
                     break
+                if stsM and "File is no longer available" in dataM:
+                    deletedData = dataM
+            if mirrorData is None and deletedData:
+                # fix 271026: the file is deleted on the mirrors ("File is no longer available as it expired or has been
+                # deleted") - keep that page for the message below; the original link (hglink.to: a JS loader page)
+                # gave 0 links without any message
+                printDBG("parserJWPLAYER StreamWish %s: file deleted on the mirrors" % hostOnly)
+                mirrorData = deletedData
         elif hostOnly in FILELIONS_DEAD_DOMAINS:
             # add 061026 (after ResolveURL filelions.py): dead FileLions / VidHide domains, same path on the live host
             baseUrl = strwithmeta(baseUrl.replace(urlparse(baseUrl).netloc, FILELIONS_LIVE_HOST, 1), baseUrl.meta)
