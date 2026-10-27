@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-25 00:38+0000\n"
+"POT-Creation-Date: 2026-10-27 21:29+0000\n"
 "PO-Revision-Date: 2026-09-27 08:11+0200\n"
 "Last-Translator: Lululla <ekekaz@gmail.com>\n"
 "Language-Team: lululla <ekekaz@gmail.com>\n"
@@ -4316,6 +4316,15 @@ msgstr "Porte: %s"
 msgid "Portuguese"
 msgstr "Portoghese"
 
+msgid "Poster grid for lists with pictures"
+msgstr ""
+
+msgid "Poster grid off"
+msgstr ""
+
+msgid "Poster grid on"
+msgstr ""
+
 msgid "Powerpoint Presentation"
 msgstr "Presentazione Powerpoint"
 
@@ -5535,6 +5544,9 @@ msgid ""
 msgstr ""
 "TBN GO richiede un account gratuito per riprodurre i programmi.\n"
 "Registrati su https://tbngo.pl/ e inserisci e-mail e password nelle impostazioni dell'host."
+
+msgid "TEXT"
+msgstr ""
 
 msgid "THE PAGE YOU ARE LOOKING FOR IS NOT FOUND."
 msgstr "LA PAGINA CHE CERCHI NON È STATA TROVATA."
@@ -7098,6 +7110,9 @@ msgstr "inserisci spazio"
 msgid "installed"
 msgstr "installato"
 
+msgid "installed, does not start"
+msgstr ""
+
 msgid "internal"
 msgstr "interno"
 
@@ -7225,6 +7240,9 @@ msgstr "non trovato"
 msgid "not installed"
 msgstr "non installato"
 
+msgid "not installed (Byse: slower captcha check)"
+msgstr ""
+
 msgid "not installed (hosts that need JavaScript fail)"
 msgstr ""
 
@@ -7250,6 +7268,9 @@ msgid "not installed (no ffmpeg downloads)"
 msgstr ""
 
 msgid "not installed (no file, cover or subtitle downloads)"
+msgstr ""
+
+msgid "not installed (no image subtitles in exteplayer3)"
 msgstr ""
 
 msgid "not installed (no local media / folder browser)"
@@ -7305,6 +7326,9 @@ msgstr "altri binari"
 
 msgid "password"
 msgstr "password"
+
+msgid "poster grid on / off"
+msgstr ""
 
 msgid "prijevodi-online.org refused the download for this account."
 msgstr "prijevodi-online.org ha rifiutato il download per questo account."

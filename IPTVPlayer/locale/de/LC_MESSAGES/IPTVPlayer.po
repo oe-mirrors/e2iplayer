@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-25 00:38+0000\n"
+"POT-Creation-Date: 2026-10-27 21:29+0000\n"
 "PO-Revision-Date: 2026-10-25 02:44+0200\n"
 "Last-Translator: Masta2002\n"
 "Language-Team: oATV Team\n"
@@ -4312,6 +4312,15 @@ msgstr "Ports: %s"
 msgid "Portuguese"
 msgstr "Portugiesisch"
 
+msgid "Poster grid for lists with pictures"
+msgstr ""
+
+msgid "Poster grid off"
+msgstr ""
+
+msgid "Poster grid on"
+msgstr ""
+
 msgid "Powerpoint Presentation"
 msgstr "PowerPoint Präsentation"
 
@@ -5531,6 +5540,9 @@ msgid ""
 msgstr ""
 "TBN GO benötigt ein kostenloses Konto zum Abspielen von Sendungen.\n"
 "Registrieren Sie sich auf https://tbngo.pl/ und geben Sie E-Mail und Passwort in den Host-Einstellungen ein."
+
+msgid "TEXT"
+msgstr ""
 
 msgid "THE PAGE YOU ARE LOOKING FOR IS NOT FOUND."
 msgstr "DIE GESUCHTE SEITE WURDE NICHT GEFUNDEN."
@@ -7094,6 +7106,9 @@ msgstr "Leerzeichen einfügen"
 msgid "installed"
 msgstr "installiert"
 
+msgid "installed, does not start"
+msgstr ""
+
 msgid "internal"
 msgstr "interner"
 
@@ -7221,6 +7236,9 @@ msgstr "nicht gefunden"
 msgid "not installed"
 msgstr "nicht installiert"
 
+msgid "not installed (Byse: slower captcha check)"
+msgstr ""
+
 msgid "not installed (hosts that need JavaScript fail)"
 msgstr "nicht installiert (Hosts, die JavaScript brauchen, schlagen fehl)"
 
@@ -7247,6 +7265,9 @@ msgstr "nicht installiert (keine ffmpeg-Downloads)"
 
 msgid "not installed (no file, cover or subtitle downloads)"
 msgstr "nicht installiert (keine Datei-, Cover- oder Untertitel-Downloads)"
+
+msgid "not installed (no image subtitles in exteplayer3)"
+msgstr ""
 
 msgid "not installed (no local media / folder browser)"
 msgstr "nicht installiert (keine lokalen Medien / kein Ordner-Browser)"
@@ -7301,6 +7322,9 @@ msgstr "andere Binärdateien"
 
 msgid "password"
 msgstr "Passwort"
+
+msgid "poster grid on / off"
+msgstr ""
 
 msgid "prijevodi-online.org refused the download for this account."
 msgstr "prijevodi-online.org hat den Download für dieses Konto abgelehnt."

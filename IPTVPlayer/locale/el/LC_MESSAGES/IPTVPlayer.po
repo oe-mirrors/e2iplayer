@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-25 00:38+0000\n"
+"POT-Creation-Date: 2026-10-27 21:29+0000\n"
 "PO-Revision-Date: 2026-10-25 21:43+0200\n"
 "Last-Translator: \n"
 "Language-Team: giorbak\n"
@@ -4315,6 +4315,15 @@ msgstr "Θύρες: %s"
 msgid "Portuguese"
 msgstr "Πορτογαλικά"
 
+msgid "Poster grid for lists with pictures"
+msgstr ""
+
+msgid "Poster grid off"
+msgstr ""
+
+msgid "Poster grid on"
+msgstr ""
+
 msgid "Powerpoint Presentation"
 msgstr "Παρουσίαση PowerPoint"
 
@@ -5534,6 +5543,9 @@ msgid ""
 msgstr ""
 "Το TBN GO απαιτεί δωρεάν λογαριασμό για την αναπαραγωγή προγραμμάτων.\n"
 "Εγγραφείτε στο https://tbngo.pl/ και εισάγετε το e-mail και τον κωδικό πρόσβασης στις ρυθμίσεις του host."
+
+msgid "TEXT"
+msgstr ""
 
 msgid "THE PAGE YOU ARE LOOKING FOR IS NOT FOUND."
 msgstr "Η ΣΕΛΙΔΑ ΠΟΥ ΑΝΑΖΗΤΑΤΕ ΔΕΝ ΒΡΕΘΗΚΕ."
@@ -7095,6 +7107,9 @@ msgstr "εισαγωγή κενού διαστήματος"
 msgid "installed"
 msgstr "εγκαταστάθηκε"
 
+msgid "installed, does not start"
+msgstr ""
+
 msgid "internal"
 msgstr "εσωτερικό"
 
@@ -7222,6 +7237,9 @@ msgstr "δεν βρέθηκε"
 msgid "not installed"
 msgstr "δεν εγκαταστάθηκε"
 
+msgid "not installed (Byse: slower captcha check)"
+msgstr ""
+
 msgid "not installed (hosts that need JavaScript fail)"
 msgstr "δεν εγκαταστάθηκε (οι ιστότοποι που απαιτούν JavaScript δεν λειτουργούν)"
 
@@ -7248,6 +7266,9 @@ msgstr "δεν εγκαταστάθηκε (δεν υποστηρίζονται �
 
 msgid "not installed (no file, cover or subtitle downloads)"
 msgstr "δεν εγκαταστάθηκε (δεν υποστηρίζονται λήψεις αρχείων, εξωφύλλων ή υποτίτλων)"
+
+msgid "not installed (no image subtitles in exteplayer3)"
+msgstr ""
 
 msgid "not installed (no local media / folder browser)"
 msgstr "δεν εγκαταστάθηκε (δεν υποστηρίζονται τοπικά πολυμέσα / περιήγηση φακέλων)"
@@ -7302,6 +7323,9 @@ msgstr "άλλα δυαδικά αρχεία"
 
 msgid "password"
 msgstr "- Κωδικός πρόσβασης"
+
+msgid "poster grid on / off"
+msgstr ""
 
 msgid "prijevodi-online.org refused the download for this account."
 msgstr "Το prijevodi-online.org αρνήθηκε τη λήψη για αυτόν τον λογαριασμό."

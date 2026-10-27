@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-25 00:38+0000\n"
+"POT-Creation-Date: 2026-10-27 21:29+0000\n"
 "PO-Revision-Date: 2026-10-21 12:33+0300\n"
 "Last-Translator: Mohamed Elsafty [angel_heart150@yahoo.com]\n"
 "Language-Team: \n"
@@ -4313,6 +4313,15 @@ msgstr "المنافذ: %s"
 msgid "Portuguese"
 msgstr "البرتغالية"
 
+msgid "Poster grid for lists with pictures"
+msgstr ""
+
+msgid "Poster grid off"
+msgstr ""
+
+msgid "Poster grid on"
+msgstr ""
+
 msgid "Powerpoint Presentation"
 msgstr "عرض باوربوينت"
 
@@ -5532,6 +5541,9 @@ msgid ""
 msgstr ""
 "يحتاج TBN GO إلى حساب مجاني لتشغيل البرامج.\n"
 "سجّل في https://tbngo.pl/ وأدخل البريد الإلكتروني وكلمة المرور في إعدادات الـ host."
+
+msgid "TEXT"
+msgstr ""
 
 msgid "THE PAGE YOU ARE LOOKING FOR IS NOT FOUND."
 msgstr "الصفحة التي تبحث عنها غير موجودة."
@@ -7095,6 +7107,9 @@ msgstr "إدخال مسافة"
 msgid "installed"
 msgstr "مثبت"
 
+msgid "installed, does not start"
+msgstr ""
+
 msgid "internal"
 msgstr "داخلي"
 
@@ -7222,6 +7237,9 @@ msgstr "غير موجود"
 msgid "not installed"
 msgstr "غير مثبت"
 
+msgid "not installed (Byse: slower captcha check)"
+msgstr ""
+
 msgid "not installed (hosts that need JavaScript fail)"
 msgstr ""
 
@@ -7247,6 +7265,9 @@ msgid "not installed (no ffmpeg downloads)"
 msgstr ""
 
 msgid "not installed (no file, cover or subtitle downloads)"
+msgstr ""
+
+msgid "not installed (no image subtitles in exteplayer3)"
 msgstr ""
 
 msgid "not installed (no local media / folder browser)"
@@ -7302,6 +7323,9 @@ msgstr "ملفات ثنائية أخرى"
 
 msgid "password"
 msgstr "كلمة المرور"
+
+msgid "poster grid on / off"
+msgstr ""
 
 msgid "prijevodi-online.org refused the download for this account."
 msgstr "رفض prijevodi-online.org التنزيل لهذا الحساب."
