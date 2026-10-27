@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "04.10.2026"
+LAST_MODIFIED = "27.10.2026"
+# 27.10.2026 - movearnpre.com (no DNS any more) no longer offered as a server
 # 03.10.2026 - brought to the current host standard
 #   (HwnaTurkya, Turkish series/movies with Arabic subtitles/dubbing - originally by Mohamed Elsafty)
 #   - no sleeping 3x retry wrapper, no start-up domain probe; the AJAX header is a copy (the
@@ -42,7 +43,7 @@ def gettytul():
 
 DEFAULT_DOMAIN = "https://www.hwnaturkya.com/"
 # server domains the site still links that urlparser knows but that are gone (checked 04.10.2026)
-DEAD_HOSTS = ("mivalyo.com", "listeamed.net")
+DEAD_HOSTS = ("mivalyo.com", "listeamed.net", "movearnpre.com")
 SEASON_ORDINALS = [
     ("الحادي عشر", 11), ("الثاني عشر", 12), ("الثالث عشر", 13), ("الرابع عشر", 14), ("الخامس عشر", 15),
     ("الأولى", 1), ("الاولى", 1), ("الأول", 1), ("الاول", 1), ("الثانية", 2), ("الثاني", 2), ("الثانى", 2),

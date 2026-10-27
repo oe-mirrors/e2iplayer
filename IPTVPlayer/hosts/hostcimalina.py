@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "21.10.2026"
+LAST_MODIFIED = "27.10.2026"
+# 27.10.2026 - Movies / Series categories found by their menu label (the site renumbered its menu)
 # 21.10.2026 - the "multi server" (Megamax page on share4max.org, the only server of the pages now) plays again
 #   (urlparser knows the domain); every hoster mirror of it as an own server row ("Megamax 1080p voe"),
 #   resolved only when picked (urlparser getMegamaxMirrors)
@@ -50,7 +51,6 @@ def gettytul():
 DOMAINS = ["https://cema-lin.shop/", "https://1.cema-lin.shop/", "https://cimalina.live/"]
 # the site's own domains (current and former) - their urls are re-based on the domain in use
 SITE_RE = re.compile(r"^https?://(?:[a-z0-9-]+\.)*(?:cema-lin\.shop|cimalina\.live|cimalena\.cfd)/", re.I)
-MENU_IDS = {"movies": "menu-item-380427", "series": "menu-item-380436"}
 STR_TYPES = (type(""), type(u""))
 
 SEASON_ORDINALS = [
@@ -125,7 +125,7 @@ class CimaLina(GenericFolderWatchedScraperMixin, CBaseHostClass):
             domains.insert(0, altDomain.rstrip("/") + "/")
         for domain in domains:
             sts, data = self.getPage(domain)
-            if sts and ("moviesBlocks" in data or MENU_IDS["movies"] in data):
+            if sts and "moviesBlocks" in data:
                 self.MAIN_URL = self.cm.getBaseUrl(self.cm.meta.get("url", domain) or domain)
                 break
             printDBG("CimaLina.selectDomain: %s is not the site" % domain)
@@ -227,16 +227,14 @@ class CimaLina(GenericFolderWatchedScraperMixin, CBaseHostClass):
         sts, data = self.getPage(self.MAIN_URL)
         if not sts:
             return
-        menuId = MENU_IDS.get(cItem.get("media_type", ""), "")
-        start = data.find(menuId) if menuId else -1
-        if start < 0:
-            return
-        block = data[start:data.find("</ul>", start)]
+        # the category links of the site menu, series / movies told apart by their label ("مسلسلات ..."): the
+        # menu item ids change whenever the site edits its menu (27.10.2026: new movies parent, no series parent)
+        series = cItem.get("media_type", "") == "series"
         seen = set()
-        for url, title in re.findall(r'<a[^>]+href="([^"]+)"[^>]*>([^<]+)<', block):
+        for url, title in re.findall(r'<li[^>]+menu-item[^>]*>\s*<a[^>]+href="([^"]+)"[^>]*>([^<]+)<', data):
             title = self.cleanHtmlStr(title)
             url = self._rebase(url)
-            if not title or url in seen or not ("/category/" in url or "/assemblies" in url):
+            if not title or url in seen or not ("/category/" in url or "/assemblies" in url) or ("مسلسل" in title) != series:
                 continue
             seen.add(url)
             params = dict(cItem)

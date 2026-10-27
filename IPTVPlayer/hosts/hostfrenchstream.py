@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "26.10.2026"
+LAST_MODIFIED = "27.10.2026"
 # Created By angel_heart (Mohamed elsafty) 26.10.2026
 # french-stream.net (films / series) + french-manga.net (anime), both DataLife Engine sites
 import base64
@@ -186,18 +186,39 @@ class FrenchStream(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not label or len(label) > 40 or url in seen:
             return
         seen.add(url)
+        anime = cItem.get("filter", "").startswith("anime-")
         params = stripPagerKeys(dict(cItem), PAGING_KEYS)
         params.pop("filter", None)
-        params.update({"name": "category", "category": "fs_list", "title": label, "url": self._absUrl(url), "good_for_fav": True})
+        params.update({"name": "category", "category": "fs_anime_list" if anime else "fs_list", "title": label,
+                       "url": self._absUrl(url, ANIME_URL if anime else MAIN_URL), "good_for_fav": True})
         self.addDir(params)
 
     def listFilter(self, cItem):
-        sts, data = self.getPage(MAIN_URL + "/")
-        data = data if sts else ""
         kind = cItem.get("filter", "genre")
+        sts, data = self.getPage((ANIME_URL if kind.startswith("anime-") else MAIN_URL) + "/")
+        data = data if sts else ""
         seen = set()
         fallback = []
-        if kind == "genre":
+        if kind == "anime-genre":
+            pattern = r'href="(/xfsearch/manga_genre/[^"]+)"[^>]*>(?:<[^>]+>)*([^<]+)</a>'
+            fallback = [("/xfsearch/manga_genre/Action/", "Action"), ("/xfsearch/manga_genre/Action+%26+Adventure/", "Action & Aventure"),
+                        ("/xfsearch/manga_genre/Aventure/", "Aventure"), ("/xfsearch/manga_genre/Com%C3%A9die/", "Comédie"),
+                        ("/xfsearch/manga_genre/Crime/", "Crime"), ("/xfsearch/manga_genre/Drame/", "Drame"),
+                        ("/xfsearch/manga_genre/Fantastique/", "Fantastique"), ("/xfsearch/manga_genre/Myst%C3%A8re/", "Mystère"),
+                        ("/xfsearch/manga_genre/Romance/", "Romance"), ("/xfsearch/manga_genre/Science-Fiction/", "Science-Fiction"),
+                        ("/xfsearch/manga_genre/Science-Fiction+%26+Fantastique/", "Science-Fiction & Fantastique"),
+                        ("/xfsearch/manga_genre/Thriller/", "Thriller"), ("/xfsearch/manga_genre/War+%26+Politics/", "Guerre & Politique")]
+        elif kind == "anime-version":
+            pattern = r'href="(/(?:mangas-vf|mangas-vostfr)/|/xfsearch/version-serie/[^"]+)"[^>]*>(?:<[^>]+>)*([^<]+)</a>'
+            fallback = [("/mangas-vf/", "VF"), ("/mangas-vostfr/", "VOSTFR"), ("/xfsearch/version-serie/VF+VOSTFR/", "VF + VOSTFR"),
+                        ("/xfsearch/version-serie/VOSTENG/", "VOSTENG")]
+        elif kind == "anime-status":
+            pattern = r'href="(/xfsearch/serie-statut/[^"]+)"[^>]*>(?:<[^>]+>)*([^<]+)</a>'
+            fallback = [("/xfsearch/serie-statut/En+cours/", "En cours"), ("/xfsearch/serie-statut/Termin%C3%A9/", "Terminé"),
+                        ("/xfsearch/serie-statut/Film/", "Films")]
+        elif kind == "anime-themes":
+            pattern = r'href="(/xfsearch/tagz/[^"]+)"[^>]*>(?:<[^>]+>)*([^<]+)</a>'
+        elif kind == "genre":
             for section in re.findall(r'(?s)<div class="menu-section">.*?</div>\s*</div>', data)[:10]:
                 if "Par Genre" in section or "fa-tags" in section:
                     data = section
@@ -314,21 +335,11 @@ class FrenchStream(GenericFolderWatchedScraperMixin, CBaseHostClass):
             params = stripPagerKeys(dict(cItem), PAGING_KEYS)
             params.update({"name": "category", "category": "fs_anime_list", "title": title, "url": ANIME_URL + path, "good_for_fav": True})
             self.addDir(params)
-        sts, data = self.getPage(ANIME_URL + "/")
-        if not sts:
-            return
-        seen = set()
-        # genres, VF / VOSTFR, status, tags
-        for pattern in (r'/xfsearch/manga_genre/[^"]+', r'/(?:mangas-vf|mangas-vostfr)/|/xfsearch/version-serie/[^"]+',
-                        r'/xfsearch/serie-statut/[^"]+', r'/xfsearch/tagz/[^"]+'):
-            for url, label in re.findall(r'href="(%s)"[^>]*>(?:<[^>]+>)*([^<]+)</a>' % pattern, data, re.I):
-                label = self.cleanHtmlStr(label)
-                if url in seen or not label:
-                    continue
-                seen.add(url)
-                params = stripPagerKeys(dict(cItem), PAGING_KEYS)
-                params.update({"name": "category", "category": "fs_anime_list", "title": label, "url": ANIME_URL + url, "good_for_fav": True})
-                self.addDir(params)
+        # the filters as folders like on french-stream (the site has no year filter)
+        for title, kind in (("Genres", "anime-genre"), ("Versions", "anime-version"), ("Statut", "anime-status"), ("Thèmes", "anime-themes")):
+            params = stripPagerKeys(dict(cItem), PAGING_KEYS)
+            params.update({"name": "category", "category": "fs_filter", "title": title, "filter": kind})
+            self.addDir(params)
 
     ###################################################
     # search
