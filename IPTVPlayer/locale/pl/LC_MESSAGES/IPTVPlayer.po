@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-25 00:38+0000\n"
+"POT-Creation-Date: 2026-10-27 21:29+0000\n"
 "PO-Revision-Date: 2026-10-05 20:00+0200\n"
 "Last-Translator: damagic-pl\n"
 "Language-Team: IPTVPlayer\n"
@@ -4318,6 +4318,15 @@ msgstr "Porty: %s"
 msgid "Portuguese"
 msgstr "Portugalski"
 
+msgid "Poster grid for lists with pictures"
+msgstr ""
+
+msgid "Poster grid off"
+msgstr ""
+
+msgid "Poster grid on"
+msgstr ""
+
 msgid "Powerpoint Presentation"
 msgstr "Prezentacja Powerpoint"
 
@@ -5538,6 +5547,9 @@ msgid ""
 msgstr ""
 "TBN GO wymaga darmowego konta do odtwarzania programów.\n"
 "Zarejestruj się na https://tbngo.pl/ i wpisz e-mail oraz hasło w ustawieniach hosta."
+
+msgid "TEXT"
+msgstr ""
 
 msgid "THE PAGE YOU ARE LOOKING FOR IS NOT FOUND."
 msgstr "NIE ZNALEZIONO SZUKANEJ STRONY."
@@ -7103,6 +7115,9 @@ msgstr "wstaw spację"
 msgid "installed"
 msgstr "zainstalowany"
 
+msgid "installed, does not start"
+msgstr ""
+
 msgid "internal"
 msgstr "wewnętrzny"
 
@@ -7230,6 +7245,9 @@ msgstr "nie znaleziono"
 msgid "not installed"
 msgstr "nie zainstalowano"
 
+msgid "not installed (Byse: slower captcha check)"
+msgstr ""
+
 msgid "not installed (hosts that need JavaScript fail)"
 msgstr ""
 
@@ -7255,6 +7273,9 @@ msgid "not installed (no ffmpeg downloads)"
 msgstr ""
 
 msgid "not installed (no file, cover or subtitle downloads)"
+msgstr ""
+
+msgid "not installed (no image subtitles in exteplayer3)"
 msgstr ""
 
 msgid "not installed (no local media / folder browser)"
@@ -7310,6 +7331,9 @@ msgstr "inne pliki binarne"
 
 msgid "password"
 msgstr "hasło"
+
+msgid "poster grid on / off"
+msgstr ""
 
 msgid "prijevodi-online.org refused the download for this account."
 msgstr "prijevodi-online.org odmówił pobrania dla tego konta."

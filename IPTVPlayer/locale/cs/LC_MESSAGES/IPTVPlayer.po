@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-25 00:38+0000\n"
+"POT-Creation-Date: 2026-10-27 21:29+0000\n"
 "PO-Revision-Date: 2026-07-27 16:39+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -4314,6 +4314,15 @@ msgstr "Porty: %s"
 msgid "Portuguese"
 msgstr "Portugalština"
 
+msgid "Poster grid for lists with pictures"
+msgstr ""
+
+msgid "Poster grid off"
+msgstr ""
+
+msgid "Poster grid on"
+msgstr ""
+
 msgid "Powerpoint Presentation"
 msgstr "PowerPointová prezentace"
 
@@ -5533,6 +5542,9 @@ msgid ""
 msgstr ""
 "TBN GO vyžaduje k přehrávání pořadů bezplatný účet.\n"
 "Zaregistrujte se na https://tbngo.pl/ a zadejte e-mail a heslo v nastavení hostitele."
+
+msgid "TEXT"
+msgstr ""
 
 msgid "THE PAGE YOU ARE LOOKING FOR IS NOT FOUND."
 msgstr "STRÁNKA, KTEROU HLEDÁTE, NEBYLA NALEZENA."
@@ -7096,6 +7108,9 @@ msgstr "vložit mezeru"
 msgid "installed"
 msgstr "nainstalováno"
 
+msgid "installed, does not start"
+msgstr ""
+
 msgid "internal"
 msgstr "vnitřní"
 
@@ -7223,6 +7238,9 @@ msgstr "nenalezeno"
 msgid "not installed"
 msgstr "nenainstalováno"
 
+msgid "not installed (Byse: slower captcha check)"
+msgstr ""
+
 msgid "not installed (hosts that need JavaScript fail)"
 msgstr ""
 
@@ -7248,6 +7266,9 @@ msgid "not installed (no ffmpeg downloads)"
 msgstr ""
 
 msgid "not installed (no file, cover or subtitle downloads)"
+msgstr ""
+
+msgid "not installed (no image subtitles in exteplayer3)"
 msgstr ""
 
 msgid "not installed (no local media / folder browser)"
@@ -7303,6 +7324,9 @@ msgstr "další binární soubory"
 
 msgid "password"
 msgstr "heslo"
+
+msgid "poster grid on / off"
+msgstr ""
 
 msgid "prijevodi-online.org refused the download for this account."
 msgstr "prijevodi-online.org odmítl stažení pro tento účet."
