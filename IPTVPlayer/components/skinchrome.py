@@ -60,13 +60,14 @@ LEFT_TO_KEY_GAP = 12
 # 16 is MENU's own slot, matching its original standalone x position so a
 # MENU-only footer still renders at the same spot. 54px spacing is a bit
 # tighter than iptvchoicebox.py's 58px (that reference chrome only ever
-# shows 2 of these icons at once). Slots 5-8 (232/286/340/394) cover
+# shows 2 of these icons at once). Slots 5-9 (232/286/340/394/448) cover
 # IPTVPinWidget's numpad hint and callers that need extra plain
-# repositionable icons on their own side (info/T9/page-up-down/play
-# hints) - each caller places those itself via leftIconGeometry() rather
-# than build_footer() owning them, since their visibility can depend on
-# other icons being hidden too.
-LEFT_ICON_SLOTS = [16, 70, 124, 178, 232, 286, 340, 394]
+# repositionable icons on their own side (info/T9/page-up-down/play/
+# poster-grid TEXT hints) - each caller places those itself via
+# leftIconGeometry() rather than build_footer() owning them, since their
+# visibility can depend on other icons being hidden too. All 9 shown
+# (E2iPlayerWidget) still fit: the 4 color keys then end at 1275 of 1280.
+LEFT_ICON_SLOTS = [16, 70, 124, 178, 232, 286, 340, 394, 448]
 LEFT_ICON_W = 40
 
 

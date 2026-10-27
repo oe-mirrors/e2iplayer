@@ -319,6 +319,8 @@ class ConfigMenu(ConfigBaseWidget):
         list.append(getConfigListEntry(_("Video player OSD clock format"), config.plugins.iptvplayer.extplayer_infobanner_clockformat))
         list.append(getConfigListEntry(_("Player Skin"), config.plugins.iptvplayer.extplayer_skin))
         list.append(getConfigListEntry(_("Display thumbnails"), config.plugins.iptvplayer.showcover))
+        if config.plugins.iptvplayer.showcover.value:
+            list.append(getConfigListEntry("    " + _("Poster grid for lists with pictures"), config.plugins.iptvplayer.poster_grid))
         # list.append(getConfigListEntry("Sort the lists?", config.plugins.iptvplayer.sortuj))
         # list.append(getConfigListEntry(_("Graphic services selector"), config.plugins.iptvplayer.ListaGraficzna))
         # if config.plugins.iptvplayer.ListaGraficzna.value is True:

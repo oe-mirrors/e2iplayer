@@ -80,6 +80,7 @@ def _keyHelpLabels():
         'prevnext': _("PREVIOUS/NEXT"),
         'fastforward': _("FAST FORWARD"),
         'rewind': _("REWIND"),
+        'text': _("TEXT"),
     }
 
 
