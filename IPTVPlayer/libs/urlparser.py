@@ -196,8 +196,8 @@ class urlparser:
             "apinchcaseation.com": self.pp.parserVOESX,  # add 061026
             "arabveturk.com": self.pp.parserJWPLAYER,
             "archive.org": self.pp.parserARCHIVEORG,
-            "ashortl.ink": self.pp.parserVIDMOLYME,
             "ashleyhardat.com": self.pp.parserVOESX,  # add 271026
+            "ashortl.ink": self.pp.parserVIDMOLYME,
             "asianembed.cam": self.pp.parserSBS,  # add 061026
             "asjp1j93c1.sbs": self.pp.parserJWPLAYER,  # add 061026
             "asnwish.com": self.pp.parserJWPLAYER,
