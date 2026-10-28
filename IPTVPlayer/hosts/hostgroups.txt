@@ -534,6 +534,7 @@
   "filmatic",
   "tainiomania",
   "teniesonline",
+  "voody",
   "dailymotion"
  ],
  "latino": [
