@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-27 21:29+0000\n"
-"PO-Revision-Date: 2026-10-25 21:43+0200\n"
+"PO-Revision-Date: 2026-10-28 12:46+0200\n"
 "Last-Translator: \n"
 "Language-Team: giorbak\n"
 "Language: el\n"
@@ -2621,7 +2621,7 @@ msgid "Hebrew"
 msgstr "Εβραϊκά"
 
 msgid "Help"
-msgstr "Help"
+msgstr "Βοήθεια"
 
 #, python-format
 msgid "Hide \"%s\" group"
@@ -3887,7 +3887,7 @@ msgid "OFFLINE"
 msgstr "ΕΚΤΟΣ ΣΥΝΔΕΣΗΣ"
 
 msgid "OK"
-msgstr "ΕΝΤΑΞΕΙ"
+msgstr "OK"
 
 msgid "OK marks an item, BLUE shows what can be done with the marked items."
 msgstr "Το OK επιλέγει ένα στοιχείο, ενώ το BLUE εμφανίζει τις διαθέσιμες ενέργειες για τα επιλεγμένα στοιχεία."
@@ -4316,13 +4316,13 @@ msgid "Portuguese"
 msgstr "Πορτογαλικά"
 
 msgid "Poster grid for lists with pictures"
-msgstr ""
+msgstr "Πλέγμα αφισών για λίστες με εικόνες"
 
 msgid "Poster grid off"
-msgstr ""
+msgstr "Απενεργοποίηση πλέγματος αφισών"
 
 msgid "Poster grid on"
-msgstr ""
+msgstr "Ενεργοποίηση πλέγματος αφισών"
 
 msgid "Powerpoint Presentation"
 msgstr "Παρουσίαση PowerPoint"
@@ -5545,7 +5545,7 @@ msgstr ""
 "Εγγραφείτε στο https://tbngo.pl/ και εισάγετε το e-mail και τον κωδικό πρόσβασης στις ρυθμίσεις του host."
 
 msgid "TEXT"
-msgstr ""
+msgstr "TEXT"
 
 msgid "THE PAGE YOU ARE LOOKING FOR IS NOT FOUND."
 msgstr "Η ΣΕΛΙΔΑ ΠΟΥ ΑΝΑΖΗΤΑΤΕ ΔΕΝ ΒΡΕΘΗΚΕ."
@@ -7108,7 +7108,7 @@ msgid "installed"
 msgstr "εγκαταστάθηκε"
 
 msgid "installed, does not start"
-msgstr ""
+msgstr "εγκαταστάθηκε, αλλά δεν εκκινείται"
 
 msgid "internal"
 msgstr "εσωτερικό"
@@ -7123,7 +7123,7 @@ msgid "jump to entries starting with that letter (if enabled in the settings)"
 msgstr "μετάβαση στις καταχωρίσεις που ξεκινούν με αυτό το γράμμα (εάν είναι ενεργοποιημένο στις ρυθμίσεις)"
 
 msgid "jump to items starting with that letter, or launch a specific player directly"
-msgstr "μετάβαση στα στοιχεία που ξεκινούν με αυτό το γράμμα ή άμεση εκκίνηση συγκεκριμένου προγράμματος αναπαραγωγής"
+msgstr "μετάβαση στα στοιχεία που ξεκινούν με το γράμμα ή άμεση εκκίνηση συγκεκριμένης αναπαραγωγής"
 
 msgid "kernel reports"
 msgstr "αναφορές kernel"
@@ -7238,7 +7238,7 @@ msgid "not installed"
 msgstr "δεν εγκαταστάθηκε"
 
 msgid "not installed (Byse: slower captcha check)"
-msgstr ""
+msgstr "δεν είναι εγκαταστάθηκε (Byse: πιο αργός έλεγχος CAPTCHA)"
 
 msgid "not installed (hosts that need JavaScript fail)"
 msgstr "δεν εγκαταστάθηκε (οι ιστότοποι που απαιτούν JavaScript δεν λειτουργούν)"
@@ -7268,7 +7268,7 @@ msgid "not installed (no file, cover or subtitle downloads)"
 msgstr "δεν εγκαταστάθηκε (δεν υποστηρίζονται λήψεις αρχείων, εξωφύλλων ή υποτίτλων)"
 
 msgid "not installed (no image subtitles in exteplayer3)"
-msgstr ""
+msgstr "δεν είναι εγκαταστάθηκε (δεν υποστηρίζονται υπότιτλοι εικόνας στο exteplayer3)"
 
 msgid "not installed (no local media / folder browser)"
 msgstr "δεν εγκαταστάθηκε (δεν υποστηρίζονται τοπικά πολυμέσα / περιήγηση φακέλων)"
@@ -7325,7 +7325,7 @@ msgid "password"
 msgstr "- Κωδικός πρόσβασης"
 
 msgid "poster grid on / off"
-msgstr ""
+msgstr "ενεργοποίηση / απενεργοποίηση πλέγματος αφισών"
 
 msgid "prijevodi-online.org refused the download for this account."
 msgstr "Το prijevodi-online.org αρνήθηκε τη λήψη για αυτόν τον λογαριασμό."
