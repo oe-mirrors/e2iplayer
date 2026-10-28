@@ -2347,8 +2347,13 @@ class pageParser(CaptchaHelper):
             printExc()
         return vidTab
 
-    def parserBBC(self, baseUrl):  # Need test
+    def parserBBC(self, baseUrl):  # update 251026 (a direct manifest of a bbc.co.uk host, e.g. rdmedia test cards)
         printDBG("parserBBC baseUrl[%r]" % baseUrl)
+        path = baseUrl.split("?", 1)[0].lower()
+        if path.endswith(".mpd"):
+            return getMPDLinksWithMeta(baseUrl, False)
+        if path.endswith(".m3u8"):
+            return getDirectM3U8Playlist(baseUrl, False, checkContent=True)
         vpid = self.cm.ph.getSearchGroups(baseUrl, "/vpid/([^/]+?)/")[0]
         if vpid == "":
             data = self.getBBCIE()._real_extract(baseUrl)
@@ -2362,7 +2367,7 @@ class pageParser(CaptchaHelper):
         videoUrls = []
         hlsLinks = []
         mpdLinks = []
-        for vidItem in data["formats"]:
+        for vidItem in data.get("formats", []):
             if "url" in vidItem:
                 url = self.getBBCIE().getFullUrl(vidItem["url"].replace("&amp;", "&"))
                 if vidItem.get("ext", "") == "hls" and len(hlsLinks) == 0:

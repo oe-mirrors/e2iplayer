@@ -4,7 +4,18 @@
 #
 #  $Id$
 #
-#  Last Modified: 25.10.2026
+#  Last Modified: 28.10.2026
+#   - buffering live DASH starts 30 s behind the edge and reads those at once (-readrate_initial_burst, ffmpeg 6.1+;
+#     older ones keep -re): with -re alone the 2 MB buffer of a 200 kbit/s stream took 80 s
+#  26.10.2026
+#   - a host's "Create MKV" (e2i_postprocess_container) sets the output container (HLS with "auto" became .ts)
+#   - live DASH is read with -re: dashdec runs past the live edge otherwise (425 Too Early, buffering / recording
+#     stopped after a few seconds)
+#   - _execute(): the ffmpeg run on its own, DASHDownloader (dashdownloader.py) puts its parts together with it
+#  25.10.2026
+#   - a DASH link of getMPDLinksWithMeta (iptv_dash_sel) is read from the local filtered MPD (libs/dashmpd.py)
+#     with only the chosen representations - -video_rep_index / -audio_rep_index came from an ffmpeg patch OE-A
+#     no longer carries, ffmpeg 9 stopped at once with "Unrecognized option"
 #   - a clean ffmpeg exit (code 0) of a fast download counts as finished when the last progress line plus its
 #     speed (speed=167x) reaches the end (the final "Lsize=" line can get lost at the exit: was INTERRUPTED)
 #  18.10.2026
@@ -58,6 +69,7 @@ from Plugins.Extensions.IPTVPlayer.iptvdm.basedownloader import BaseDownloader
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
 from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import SidecarMixin, shellQuote
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
+from Plugins.Extensions.IPTVPlayer.libs import dashmpd
 ###################################################
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import strDecode
 ###################################################
@@ -138,10 +150,19 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
     # builds never print it and would stop at an option they do not know
     SEGMENT_EXT_OPTS = (('-allowed_segment_extensions', 'ALL', '-extension_picky', '0'), ('-allowed_segment_extensions', 'ALL'))
 
+    # buffering live DASH: the start this many seconds behind the edge, read at once (_liveBufferBurst); the
+    # option came with ffmpeg 6.1, the version is read by isWorkingCorrectly() (ffmpeg -version)
+    LIVE_BUFFER_BURST = 30
+    READRATE_BURST_FFMPEG = (6, 1)
+    FFMPEG_VERSION = (0, 0)
+
     # -f <container> -> the extension the finished file should actually carry
     CONTAINER_EXT = {'matroska': '.mkv', 'webm': '.webm', 'mpegts': '.ts',
                      'mp4': '.mp4', 'mov': '.mp4', 'flv': '.flv'}
     KNOWN_EXT = ('.mp4', '.mkv', '.ts', '.webm', '.mov', '.flv', '.avi', '.m4v')
+    # e2i_postprocess_container of a host link -> -f <container>
+    POSTPROCESS_CONTAINER = {'mkv': 'matroska', 'matroska': 'matroska', 'mp4': 'mp4',
+                             'ts': 'mpegts', 'mpegts': 'mpegts', 'webm': 'webm'}
     # file extension of a source -> its container (the "auto" output format)
     SOURCE_CONTAINER = (('.mp4', 'mp4'), ('.m4v', 'mp4'), ('.mov', 'mp4'), ('.webm', 'webm'),
                         ('.flv', 'flv'), ('.ts', 'mpegts'), ('.mkv', 'matroska'))
@@ -200,6 +221,11 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
     def _checkWorkingCallBack(self, callBackFun, code, data):
         reason = ''
         sts = True
+        if code == 0:
+            # "ffmpeg version 9.0.2" / "n6.1.1"; a git build ("N-12345-g...") stays unknown
+            match = re.search(r'ffmpeg version n?(\d+)\.(\d+)', strDecode(data or ''))
+            if match:
+                FFMPEGDownloader.FFMPEG_VERSION = (int(match.group(1)), int(match.group(2)))
         if code != 0:
             ffmpegBinaryName = DMHelper.GET_FFMPEG_PATH()
             if ffmpegBinaryName == '':
@@ -246,12 +272,6 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
             except Exception:
                 printExc()
                 self.liveState = {}
-
-        if 'iptv_video_rep_idx' in tmpUri.meta:
-            cmdTab.extend(['-video_rep_index', str(tmpUri.meta['iptv_video_rep_idx'])])
-
-        if 'iptv_audio_rep_idx' in tmpUri.meta:
-            cmdTab.extend(['-audio_rep_index', str(tmpUri.meta['iptv_audio_rep_idx'])])
 
         if 'iptv_m3u8_live_start_index' in tmpUri.meta:
             cmdTab.extend(['-live_start_index', str(tmpUri.meta['iptv_m3u8_live_start_index'])])
@@ -331,6 +351,17 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
                     cmdTab.extend(self.HTTP_INPUT_OPTS)
             else:
                 url = self.url
+            burst = self._liveBufferBurst(tmpUri.meta)
+            if tmpUri.meta.get('iptv_dash_sel'):
+                # the MPD with only the chosen video / audio representation (dashdec opens all of them otherwise)
+                url = dashmpd.localManifestUrl(tmpUri, startDelay=burst) or url
+            if burst:
+                # buffering: the start that much behind the live edge, read at once - then at its own pace
+                cmdTab.extend(['-readrate', '1', '-readrate_initial_burst', str(burst)])
+            elif tmpUri.meta.get('iptv_livestream') and self._isDashSource(tmpUri.meta):
+                # live DASH at its own pace: dashdec does not wait at the live edge, a copy as fast as ffmpeg can
+                # asks for segments that do not exist yet (livesim: 425 Too Early until it gives up after 100)
+                cmdTab.append('-re')
             if segmentExtOpts and (isHls or '.m3u8' in str(url).lower()):
                 cmdTab.extend(segmentExtOpts)
             cmdTab.extend(['-i', url])
@@ -342,7 +373,15 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
             # index at the start of the finished file, so players can seek in it right away
             cmdTab.extend(['-movflags', '+faststart'])
         cmdTab.extend(['-f', outContainer, self.filePath])
+        self._execute(cmdTab)
 
+        if not fallbackRun:
+            self.onStart()
+        return BaseDownloader.CODE_OK
+
+    def _execute(self, cmdTab):
+        # ffmpeg with these arguments (through cmdwrap: no shell quoting), its output to _dataAvail, its end to
+        # _cmdFinished
         self.fileCmdPath = self.filePath + '.iptv.cmd'
         rm(self.fileCmdPath)
         WriteTextFile(self.fileCmdPath, '|'.join(cmdTab))
@@ -358,9 +397,14 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
 
         self.status = DMHelper.STS.DOWNLOADING
 
-        if not fallbackRun:
-            self.onStart()
-        return BaseDownloader.CODE_OK
+    def _liveBufferBurst(self, meta):
+        # seconds of a live DASH link read at once when buffering (-readrate_initial_burst, ffmpeg 6.1+): with -re
+        # alone the buffer filled only as fast as the stream plays (livesim 200 kbit/s: 80 s to the 2 MB start)
+        if self.allowFinalRename or not meta.get('iptv_livestream') or not meta.get('iptv_dash_sel'):
+            return 0
+        if self.FFMPEG_VERSION < self.READRATE_BURST_FFMPEG:
+            return 0
+        return self.LIVE_BUFFER_BURST
 
     def _getDuration(self, data):
         try:
@@ -592,6 +636,11 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
             return str(meta['ff_out_container']).lower()
         if not self.allowFinalRename:
             return self.ffmpegOutputContener
+        # the host's "Create MKV" (urlmetahelper: e2i_postprocess_container), as hlsdl / wget honour it
+        if str(meta.get('e2i_postprocess_ffmpeg', '')) in ('1', 'True'):
+            wanted = self.POSTPROCESS_CONTAINER.get(str(meta.get('e2i_postprocess_container', 'mkv')).strip().lower())
+            if wanted:
+                return wanted
         if self._isDashSource(meta):
             try:
                 return str(config.plugins.iptvplayer.dash_out_container.value).lower()

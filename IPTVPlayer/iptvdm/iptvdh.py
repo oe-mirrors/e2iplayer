@@ -186,11 +186,45 @@ class DMHelper:
             printExc()
             return False
 
+    # the DASH downloader keeps its resume state and the video / audio part next to the output until ffmpeg has put
+    # them together
+    DASH_RESUME_SUFFIX = '.dash.resume'
+
+    @staticmethod
+    def dashPartFiles(filePath):
+        from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import fsPath
+        base = fsPath(filePath)
+        return [base + DMHelper.DASH_RESUME_SUFFIX, base + '.dash-v.part', base + '.dash-a.part']
+
+    @staticmethod
+    def hasDashResumeFile(filePath):
+        try:
+            return bool(filePath) and os.path.isfile(DMHelper.dashPartFiles(filePath)[0])
+        except Exception:
+            printExc()
+            return False
+
     @staticmethod
     def removeHlsdlResumeFiles(filePath):
         try:
             if filePath:
                 for path in DMHelper._hlsdlResumeFiles(filePath):
+                    if os.path.isfile(path):
+                        os.remove(path)
+        except Exception:
+            printExc()
+
+    @staticmethod
+    def removeResumeFiles(filePath):
+        # what a download leaves to be continued: hlsdl's resume sidecar, the DASH downloader's parts and resume state
+        # (a DASH work thread still finishing its segment removes them itself when it ends)
+        DMHelper.removeHlsdlResumeFiles(filePath)
+        try:
+            if filePath:
+                from Plugins.Extensions.IPTVPlayer.iptvdm.dashdownloader import discardLoader
+                discardLoader(filePath)
+                parts = DMHelper.dashPartFiles(filePath)
+                for path in parts + [parts[0] + '.tmp']:
                     if os.path.isfile(path):
                         os.remove(path)
         except Exception:

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "09.10.2026"
+LAST_MODIFIED = "28.10.2026"
 # Coding: BY MOHAMED_OS
 # Ported to the python3 framework (08.10.2026):
 #   - Majed Sport (majed-koora.live): the site's JSON API /api/v1/matches?lang=ar&date=<day>&scope=all;
@@ -15,6 +15,7 @@ LAST_MODIFIED = "09.10.2026"
 # 09.10.2026 - the player pages (player.majed-koora.live) answer 403 unless the Referer is the watch page
 #     (the match's watch_url, live.<idn>.com - the only frame ancestor the player allows): Referer = watch page;
 #     the stream hosts behind it want the player's origin (smarter.majedcss.site: 403 "origin denied" else)
+# 28.10.2026 - majedcss HLS disguised as .css playlists / .js segments: played buffered (was "Invalid data found")
 import calendar
 import hashlib
 import re
@@ -235,7 +236,9 @@ class MajedKoora(CBaseHostClass):
         if path.endswith(".mp4"):
             return [{"name": _domain(url), "url": strwithmeta(url, meta)}]
         meta["iptv_proto"] = "m3u8"
-        return requireDownloaderForDisguisedHls(getDirectM3U8Playlist(strwithmeta(url, meta), checkExt=False, checkContent=True, sortWithMaxBitrate=99999999))
+        # variantCheck off: the variants of majedcss are HLS under another name (v_stream_06.css with .js segments) -
+        # without iptv_proto the disguise check skipped them and exteplayer3 got "Invalid data found"
+        return requireDownloaderForDisguisedHls(getDirectM3U8Playlist(strwithmeta(url, meta), checkExt=False, variantCheck=False, checkContent=True, sortWithMaxBitrate=99999999))
 
     def _pageStream(self, url):
         # an iframe page without a parser: the first stream address in it
