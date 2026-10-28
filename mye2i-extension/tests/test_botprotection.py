@@ -35,6 +35,18 @@ def test_cloudflare_waf_block_is_not_solvable():
     assert kind(403, {"Server": "cloudflare"}, body) == ("Cloudflare WAF block", bp.KIND_BLOCK)
 
 
+def test_cloudflare_origin_down_is_no_waf_block():
+    # 52x: the site's own server is down - the error page has cf-error-details too (box log 28.10., voody 522);
+    # still a block (no MyE2i), but named as what it is
+    body = '<div id="cf-error-details"><h1>Connection timed out</h1> Error code 522 Visit cloudflare.com</div>'
+    down = ("Cloudflare: site server down", bp.KIND_BLOCK)
+    assert kind(522, {"Server": "cloudflare"}, body) == down
+    assert kind("521", {"Server": "cloudflare"}, body) == down
+    # pCommon's urllib error path keeps no Server header (box log 28.10. 18:22)
+    assert kind(522, {"content-type": "text/html"}, body) == down
+    assert kind(403, {"Server": "cloudflare"}, body) == ("Cloudflare WAF block", bp.KIND_BLOCK)
+
+
 def test_ddos_guard_by_server_header():
     assert kind(403, {"Server": "ddos-guard"}) == ("DDoS-Guard", bp.KIND_COOKIE_GATE)
 

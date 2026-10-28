@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "04.10.2026"
+LAST_MODIFIED = "28.10.2026"
 # WP Wideo (wideo.wp.pl, formerly wp.tv) - video programmes of Wirtualna Polska
 # Programmes: the "/<slug>-<id>vc" cycles of the site navigation; their episodes come from
 #   /frontendparts/video-cycle-episodes-load-more?cycleId=<id>&offset=N&limit=24 (HTML teasers + hasMore).
@@ -7,6 +7,7 @@ LAST_MODIFIED = "04.10.2026"
 #   -> https://wideo.wp.pl/player/mid,<mid>,embed.json -> MP4 HQ/LQ + HLS.
 # Search: /szukaj?q=<words>&s=newest&p=<page>.
 # 03.10.2026 - rewrite for wideo.wp.pl: programmes, search, watched flag, naming, sidecar, INFO
+# 28.10.2026 - newer episode pages embed wideo.wp.pl/mid,<mid>,klip.html
 ###################################################
 # LOCAL import
 ###################################################
@@ -182,10 +183,14 @@ class WpTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
             sts, data = self.getPage(cItem['url'])
             if not sts:
                 return None, ''
-            mid = self.cm.ph.getSearchGroups(data, r'get\.wp\.tv/\?mid=(\d+)')[0]
+            # the player embed: get.wp.tv/?mid=<mid> or (newer pages) wideo.wp.pl/mid,<mid>,klip.html
+            mid = self.cm.ph.getSearchGroups(data, r'(?:get\.wp\.tv/\?mid=|wideo\.wp\.pl/mid,)(\d+)')[0]
             if not mid:
                 mid = self.cm.ph.getSearchGroups(data, r'"mid"\s*:\s*"?(\d{4,9})"?[,}]')[0]
         if not mid:
+            if self.cm.ph.getSearchGroups(data, r'wideo\.wp\.pl/lid,(\d+),klip')[0]:
+                # the live broadcast's page: no clip until WP adds the recording
+                printDBG("WpTV._getClip: live embed (lid), no clip yet")
             return None, data
         sts, raw = self.getPage(self.getFullUrl('/player/mid,%s,embed.json' % mid))
         if not sts:

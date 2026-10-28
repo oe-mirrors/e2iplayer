@@ -607,13 +607,26 @@ class HLSDownloader(BaseDownloader, SidecarMixin):
     def _isIncompleteDownload(self, code):
         if self.liveStream:
             return False
-        if code != 0 or self.lastErrorCode:
+        if self.lastErrorCode:
+            return True
+        if code != 0:
+            # some hlsdl builds exit 1 after the last segment of a complete download
+            if self._reportedComplete():
+                printDBG("HLSDownloader hlsdl exit code[%r] after the whole duration -> counted as complete" % code)
+                return False
             return True
         # hlsdl exited 0 but the downloaded duration is far short of the playlist
         # duration -> it stopped early (rejected segment, throttled CDN, ...)
         if self.totalDuration > 0 and self.downloadDuration < self.totalDuration * 0.90:
             return True
         return False
+
+    def _reportedComplete(self):
+        # hlsdl reported the whole playlist duration and the file holds every byte it reported
+        # (a full disk fails only the final write, the file is shorter then)
+        if self.totalDuration <= 0 or self.downloadDuration < self.totalDuration or self.localFileSize <= 0:
+            return False
+        return DMHelper.getFileSize(fsPath(self.filePath)) >= self.localFileSize
 
     # after a fallback (_startFfmpegFallback) the FFMPEGDownloader holds the state - the buffering screen and the
     # download manager keep talking to this object

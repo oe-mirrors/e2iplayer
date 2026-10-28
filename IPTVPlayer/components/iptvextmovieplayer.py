@@ -82,6 +82,22 @@ EXTEPLAYER3PNG_PATHS = ['/usr/lib/exteplayer3png.so', '/lib/exteplayer3png.so']
 graphicSubsCache = (None, False)
 
 
+def LoadPlayerMessage(item):
+    # one status line of the player as JSON. exteplayer3 cuts its PLAYBACK_OPEN message at about 2 KB (the url of a
+    # Pluto TV stream is longer) and puts that unclosed text in front of every later message: the message is then
+    # the first '{"' from which the rest of the line is valid JSON
+    try:
+        return json.loads(item)
+    except ValueError:
+        pos = item.find('{"', 1)
+        while pos > 0:
+            try:
+                return json.loads(item[pos:])
+            except ValueError:
+                pos = item.find('{"', pos + 1)
+        raise
+
+
 def GraphicSubtitlesSupported(exteplayer3path):
     global graphicSubsCache
     if not any(os_path.isfile(path) for path in EXTEPLAYER3PNG_PATHS):
@@ -2339,7 +2355,7 @@ class IPTVExtMoviePlayer(Screen):
                 item = item[:-1]
             if item.startswith('{'):
                 try:
-                    obj = json.loads(item)
+                    obj = LoadPlayerMessage(item)
                     # printDBG("Status object [%r]" % obj)
                     key = list(obj.keys())[0]
                     obj = obj[key]
@@ -2355,6 +2371,10 @@ class IPTVExtMoviePlayer(Screen):
                     self.updateInfoTimer.start(1000)
                     if 0 == obj['sts']:
                         self.playbackUpdateInfo({'Status': ['Play', '1']})
+                        # the stream is open: some live streams (Pluto TV without buffering) never report a
+                        # playback time, which is what hid "Opening. Please wait..." until now
+                        if not self.isClosing:
+                            self['pleaseWait'].hide()
                 elif "PLAYBACK_STOP" == key:
                     self.onLeavePlayer()
                 elif "PLAYBACK_LENGTH" == key and 0 == obj['sts']:

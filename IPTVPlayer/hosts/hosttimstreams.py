@@ -1,17 +1,19 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "07.10.2026"
+LAST_MODIFIED = "28.10.2026"
 # Coding: BY MOHAMED_OS
 # Ported to the python3 framework (06.10.2026):
-#   - TimStreams (timst.top, mirror tim-streams.com - the site's own fallback): the JSON API
+#   - TimStreams (tim-streams.com, mirror timst.top - NXDOMAIN since 28.10.2026): the JSON API
 #     <domain>/api/channels | /api/live-upcoming | /api/replays
 #   - live TV channels per genre (the API's genres, local paging), events (start time converted from
 #     America/New_York to the box time, "Live" once started), replays (VOD, watched flag)
-#   - grandemx.org players: the page evals an XOR-obfuscated script holding SIGNED_URL (HLS) - decoded
-#     here; other stream urls (voe.sx ... on replays) go through urlparser; VIP streams are marked
+#   - grandemx.org players: the page evals an XOR-obfuscated script holding SIGNED_URL (HLS) or a
+#     .../p/<token> url that answers the XOR-ed HLS url (28.10.2026) - both decoded here; other stream
+#     urls (voe.sx ... on replays) go through urlparser; VIP streams are marked
 #   - favourites re-open from the API (stored streams as fallback), INFO with the site's event info
 #   - removed: the unused AES-GCM SECRET_KEY / decrypt_url, the unused *.pages.dev worker url and the
 #     dead api.vixnuvew.uk base (NXDOMAIN), the hard-coded genre table (the API sends its own)
 import calendar
+import os
 import re
 import time
 
@@ -22,7 +24,7 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps, load
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist, requireDownloaderForDisguisedHls
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, E2ColoR, GetIconDir, StripColorCodes
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, E2ColoR, GetIconDir, GetTmpDir, StripColorCodes
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
@@ -33,10 +35,10 @@ def GetConfigList():
 
 
 def gettytul():
-    return "https://timst.top/"
+    return "https://tim-streams.com/"
 
 
-MIRROR_URL = "https://tim-streams.com/"
+MIRROR_URL = "https://timst.top/"
 PAGE_SIZE = 100
 # kind -> (API endpoint, list key)
 API = {"channel": ("channels", "channels"), "event": ("live-upcoming", "events"), "replay": ("replays", "replays")}
@@ -49,6 +51,15 @@ DECODE_RE = re.compile(r"\(\(\s*(\w+)\s*\[\s*\w+\s*\]\s*\^\s*(\w+)\s*\)\s*-\s*(\
 def _domain(url):
     m = re.match(r"^https?://(?:www\.)?([^/:?#]+)", url or "")
     return m.group(1).lower() if m else ""
+
+
+def _decodeSignedUrl(data, token):
+    # .../p/<token> answers the HLS url XOR-ed: byte 0 = seed, then byte[i] ^ token[(i-1) % len] ^ ((seed + i - 1) & 255)
+    data = bytearray(data or b"")
+    if len(data) < 2 or not token:
+        return ""
+    seed = data[0]
+    return "".join(chr(data[i] ^ ord(token[(i - 1) % len(token)]) ^ ((seed + i - 1) & 255)) for i in range(1, len(data))).strip()
 
 
 def _nthSunday(year, month, nth):
@@ -257,18 +268,40 @@ class TimStreams(GenericFolderWatchedScraperMixin, CBaseHostClass):
         xorC, subC = int(values[1]), int(values[2])
         return "".join(chr(((int(v) ^ xorC) - subC) % 256) for v in values[0].split(",") if v.strip())
 
+    def _getBytes(self, url, playerUrl):
+        # binary answer: getPage hands back text (pycurl decodes it as UTF-8), the file keeps the bytes
+        params = dict(self.defaultParams)
+        params["header"] = dict(self.HEADER, Referer=playerUrl, Origin=playerUrl[:-1])
+        tmpFile = GetTmpDir("timstreams_token.bin")
+        try:
+            if self.cm.saveWebFile(tmpFile, url, params).get("sts"):
+                with open(tmpFile, "rb") as f:
+                    return f.read()
+        except Exception:
+            printExc()
+        finally:
+            if os.path.isfile(tmpFile):
+                os.remove(tmpFile)
+        return b""
+
     def _resolvePlayer(self, videoUrl):
         params = dict(self.defaultParams)
         params["header"] = dict(self.HEADER, Referer=self.MAIN_URL)
         sts, data = self.cm.getPage(videoUrl, params)
         if not sts:
             return []
-        script = self._decodePlayer(data)
-        hlsUrl = self.cm.ph.getSearchGroups(script, r"SIGNED_URL\s*=\s*[\"']([^\"']+)[\"']")[0] or self.cm.ph.getSearchGroups(data, r"data-signed-url=[\"']([^\"']+)[\"']")[0]
-        if not self.cm.isValidUrl(hlsUrl):
-            return None  # not this player
         playerUrl = "https://%s/" % _domain(self.cm.meta.get("url", "") or str(videoUrl))
         meta = {"iptv_proto": "m3u8", "iptv_livestream": True, "User-Agent": self.HEADER.get("User-Agent"), "Referer": playerUrl, "Origin": playerUrl[:-1]}
+        script = self._decodePlayer(data)
+        hlsUrl = self.cm.ph.getSearchGroups(script, r"SIGNED_URL\s*=\s*[\"']([^\"']+)[\"']")[0]
+        # fix 281026: the script holds a .../p/<token> url instead, its answer is the XOR-ed HLS url
+        tokenUrl = "" if hlsUrl else self.cm.ph.getSearchGroups(script, r"[\"'](https?://[^\"']+/p/[^\"'/?#]+)[\"']")[0]
+        if tokenUrl:
+            hlsUrl = _decodeSignedUrl(self._getBytes(tokenUrl, playerUrl), tokenUrl.rsplit("/", 1)[-1])
+            printDBG("TimStreams._resolvePlayer token [%s] -> [%s]" % (tokenUrl, hlsUrl))
+        hlsUrl = hlsUrl or self.cm.ph.getSearchGroups(data, r"data-signed-url=[\"']([^\"']+)[\"']")[0]
+        if not self.cm.isValidUrl(hlsUrl):
+            return None  # not this player
         # fix 071026: the segments are WEBP images with the MPEG-TS data behind (box log 07.10. #4, no player opened
         # them) - the check sends such streams to the curl-impersonate helper, which cuts the image header off
         return requireDownloaderForDisguisedHls(getDirectM3U8Playlist(strwithmeta(hlsUrl, meta), checkExt=False, checkContent=True, sortWithMaxBitrate=99999999))
