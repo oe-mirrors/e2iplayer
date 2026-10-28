@@ -280,3 +280,31 @@ def test_stopping_a_live_recording_finishes_it(hls, tmp_path):
     # buffered playback of a live stream: nothing renamed
     dl = _stopped(hls, str(tmp_path / ".iptv_buffering.mp4"), TS, live=True, download=False)
     assert dl.status == hls.sts.INTERRUPTED
+
+
+def _exited(hls, path, content, code, done, total, reported=None):
+    # a hlsdl run that ended with <code> after reporting <done>/<total> seconds and <reported> bytes
+    with open(path, "wb") as f:
+        f.write(content)
+    dl = hls.HLSDownloader()
+    dl.allowFinalRename = True
+    dl.url = "https://cdn/x/index.m3u8"
+    dl.filePath = path
+    dl.localFileSize = len(content) if reported is None else reported
+    dl.downloadDuration, dl.totalDuration = done, total
+    dl.status = hls.sts.DOWNLOADING
+    dl._clearPostData()
+    dl._cmdFinished(code)
+    return dl
+
+
+def test_exit_code_after_the_whole_duration(hls, tmp_path):
+    # some hlsdl builds exit 1 after the last segment: the whole duration and every reported byte -> complete
+    assert _exited(hls, str(tmp_path / "Film.mp4"), TS, 1, 7808, 7808).status == hls.sts.DOWNLOADED
+    # stopped early, or the file shorter than reported (full disk) -> interrupted
+    assert _exited(hls, str(tmp_path / "Early.mp4"), TS, 1, 7000, 7808).status == hls.sts.INTERRUPTED
+    assert _exited(hls, str(tmp_path / "Disk.mp4"), TS, 1, 7808, 7808, len(TS) + 1).status == hls.sts.INTERRUPTED
+    # an HTTP error reported by hlsdl stays interrupted
+    dl = hls.HLSDownloader()
+    dl.lastErrorCode, dl.liveStream = 403, False
+    assert dl._isIncompleteDownload(1)

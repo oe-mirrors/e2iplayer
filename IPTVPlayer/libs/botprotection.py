@@ -101,6 +101,16 @@ def detect(status=0, headers=None, body='', url=''):
         return Protection('HostAdmin.online WAF', KIND_COOKIE_GATE, has('runwafengine', '__waf_i18n__') or 'access denied page')
 
     # --- Cloudflare -------------------------------------------------------
+    # fix 281026: 520-530 = Cloudflare can't reach the site's own server (site down, box log 28.10. voody 522) - its
+    # error page has cf-error-details too, but it is no WAF block. Still KIND_BLOCK: a browser can't solve it either
+    # (pCommon would start MyE2i for an unknown answer)
+    try:
+        status = int(status or 0)
+    except (TypeError, ValueError):
+        status = 0
+    # the urllib error path of pCommon keeps no Server header - the page itself names Cloudflare then
+    if 520 <= status <= 530 and ('cloudflare' in server or 'cloudflare' in b):
+        return Protection('Cloudflare: site server down', KIND_BLOCK, 'HTTP %d' % status)
     marker = has('sorry, you have been blocked', 'cf-error-details', 'error 1020')
     if marker and ('cloudflare' in server or 'cloudflare' in b):
         return Protection('Cloudflare WAF block', KIND_BLOCK, marker)
