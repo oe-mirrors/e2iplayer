@@ -274,7 +274,7 @@ class IPTVFavouritesMainWidget(Screen):
         self.IDS_ENABLE_REORDERING = _('Enable reordering')
         self.IDS_DISABLE_REORDERING = _('Disable reordering')
         self.reorderingMode = False
-        self.t9Input = NumericalTextInput(handleTimeout=False)
+        self.t9Input = NumericalTextInput()
 
         self["title"] = Label(_("Favorites groups"))
         self["key_red"] = StaticText(_("Remove group"))

@@ -214,7 +214,7 @@ class SearchHistoryEditor(Screen):
         self.entries = []
         self.sortMode = 0
         self.dirty = False
-        self.numberInput = NumericalTextInput(handleTimeout=False)
+        self.numberInput = NumericalTextInput()
         self.reorderOnReuse = getReorderOnReuseEnabled(self.historyFile)
         self.manualReorderMode = False
         self.manualReorderItemPicked = False
