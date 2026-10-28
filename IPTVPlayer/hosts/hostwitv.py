@@ -1,24 +1,29 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "09.10.2026"
+LAST_MODIFIED = "28.10.2026"
 # Coding: BY MOHAMED_OS
 # 08.10.2026 - ported to the python3 framework / host standard
-#   - WiTv (witv.football, French live TV; DLE site): the channel groups of the site menu, the
-#     "Matchs du jour" schedule (today / tomorrow, each match opens its channel) and the site search
-#     (POST, 20 per page, First page / Next page)
-#   - a channel page holds 1-6 player pages (/player/source2/?id=...): Vavoo players carry the HLS
-#     playlist behind the site's own proxy (var m3u8Url) -> playable; DaddyLive players (short numeric
-#     ids, dlive.sx -> dembed.top) send PNG images with the MPEG-TS hidden in the pixel data, which no
-#     player on the box can open -> skipped; the servers whose playlist does not answer right now
-#     (Vavoo node down: 503 / "temporairement inaccessible") are left out of the link list
+#   - WiTv (witv.eu, was witv.football until 10.2026; French live TV; DLE site): the channel groups of the site menu, the
+#     "Matchs du jour" schedule (today / tomorrow, each match opens its channel) and the search in the
+#     site's channel catalog (/ajax_search.php, base64 + XOR mask)
+#   - a channel page holds 1-6 sealed player tokens (data-v="wt1_..."), the page's XOR-sealed script maps
+#     them to the player pages /player/source2/?id=... (decoys from /ajax_player.php without its signature);
+#     the player page is loaded like the site's iframe (Sec-Fetch-Dest, _t, h_check cookie), its real HLS
+#     playlist is _wtPayload (var m3u8Url is a decoy notice video); playlist and segments need
+#     Referer = player page + Sec-Fetch-Site; DaddyLive players (short numeric ids, iframe to wideiptv /
+#     matchora, MPEG-TS hidden in PNG images) are skipped; servers not answering right now are left out
 #   - DADDY_ONLY: channels that only have DaddyLive players (survey 08.10.2026, 41 of 161) are not listed
 #   - removed: the proxy option, the remote mohamed_os icon, cu.Cleantitlename, the broken search call
+import base64
+import time
+
 from Components.config import ConfigText, config, getConfigListEntry
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
+from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
-from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
-from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
+from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist, requireDownloaderForDisguisedHls
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, E2ColoR, GetIconDir, StripColorCodes
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 
@@ -33,14 +38,15 @@ def GetConfigList():
 
 
 def gettytul():
-    return "https://witv.football/"
+    return "https://witv.eu/"
 
 
-SEARCH_PAGE_SIZE = 20
 VIDEO_CATEGORIES = ("wt_channel", "wt_event")
 # channel numbers (/chaines-live/<n>-...) with DaddyLive players only - nothing the box can play
 DADDY_ONLY = frozenset((51, 137, 145, 151, 169, 171, 174, 176, 177, 179, 181, 182, 183, 187, 188, 189, 190, 191, 192, 193,
                         194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 212, 214, 215, 222, 223, 231, 245))
+# the player page sends the stream only to an iframe of the site
+IFRAME_HEADER = {"Sec-Fetch-Dest": "iframe", "Sec-Fetch-Mode": "navigate", "Sec-Fetch-Site": "same-origin"}
 
 
 class WiTV(CBaseHostClass):
@@ -50,7 +56,10 @@ class WiTV(CBaseHostClass):
         self.MAIN_URL = None
         self.DEFAULT_ICON_URL = "file://" + GetIconDir("PlayerSelector/witv135.png")
         self.HEADER = self.cm.getDefaultHeader(browser="chrome")
-        self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
+        # h_check: set by the site on the first real click, the player and the catalog need it
+        self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE,
+                              "cookie_items": {"h_check": "25"}}
+        self.catalog = None
 
     ###################################################
     # helpers
@@ -63,6 +72,11 @@ class WiTV(CBaseHostClass):
     def _params(self, referer):
         params = dict(self.defaultParams)
         params["header"] = dict(self.HEADER, Referer=referer)
+        return params
+
+    def _xhrParams(self, referer):
+        params = self._params(referer)
+        params["header"].update({"Origin": self.getMainUrl()[:-1], "X-Requested-With": "XMLHttpRequest"})
         return params
 
     def selectDomain(self):
@@ -150,39 +164,83 @@ class WiTV(CBaseHostClass):
         if not self.currList:
             SetIPTVPlayerLastHostError(_("No stream available"))
 
-    def listSearchResult(self, cItem, searchPattern, searchType):
-        cItem = dict(cItem)
-        cItem.update({"category": "wt_search", "query": searchPattern.strip(), "page": 1})
-        self.listSearch(cItem)
-
-    def listSearch(self, cItem):
-        page = cItem.get("page", 1)
-        post = {"do": "search", "subaction": "search", "story": cItem.get("query", "")}
-        if page > 1:
-            post.update({"search_start": str(page), "full_search": "0", "result_from": str((page - 1) * SEARCH_PAGE_SIZE + 1)})
-        sts, data = self.getPage(self.getMainUrl(), self._params(self.getMainUrl()), post)
+    def _getCatalog(self):
+        # every channel of the site: [{"t": title, "u": url, "l": logo, "c": group}], base64 + XOR mask "m"
+        if self.catalog:
+            return self.catalog
+        sts, data = self.getPage(self.getFullUrl("/ajax_search.php"), self._xhrParams(self.getMainUrl()), {"t": "1"})
         if not sts:
-            return
-        self._listChannels(data)
-        pager = self.cm.ph.getDataBeetwenMarkers(data, 'class="navigation"', "</div>", False)[1]
-        pages = [int(n) for n in self.cm.ph.getAllItemsBeetwenMarkers(pager, "list_submit(", ")", False) if n.isdigit()]
-        lastPage = max(pages + [page])
-        addPagingItems(self, dict(cItem), page, lastPage > page, lastPage)
+            return []
+        try:
+            res = json_loads(data)
+            mask = int(res.get("m", 0))
+            raw = bytes(bytearray(b ^ mask for b in bytearray(base64.b64decode(res.get("d", "")))))
+            self.catalog = [item for item in json_loads(raw.decode("utf-8")) if isinstance(item, dict)]
+        except Exception:
+            printExc()
+            return []
+        return self.catalog
+
+    def listSearchResult(self, cItem, searchPattern, searchType):
+        query = ensure_str(searchPattern).strip().lower()
+        for item in self._getCatalog():
+            title = ensure_str(item.get("t", ""))
+            url = self.getFullUrl(ensure_str(item.get("u", "")))
+            if not title or query not in title.lower() or "/chaines-live/" not in url or not self._isPlayable(url):
+                continue
+            icon = ensure_str(item.get("l", ""))
+            group = ensure_str(item.get("c", ""))
+            desc = "%s%s:%s %s" % (E2ColoR("yellow"), _("Category"), E2ColoR("white"), group) if group else ""
+            self.addVideo({"name": "category", "category": "wt_channel", "good_for_fav": True, "title": title, "url": url,
+                           "icon": self.getFullIconUrl(icon) if icon else self.DEFAULT_ICON_URL, "desc": desc})
 
     ###################################################
     # links
     ###################################################
+    def _playerMap(self, data):
+        # the channel page's sealed script: XOR(_m) of "key|salt|base64 JSON {token: player url}" (window._wt_vmap);
+        # /ajax_player.php without the page's signature answers with decoy players
+        nums = self.cm.ph.getSearchGroups(data, r"_a=\[([\d,]+)\],_m=(\d+)", 2)
+        if not nums[0] or not nums[1]:
+            return {}
+        try:
+            mask = int(nums[1])
+            parts = "".join(chr(int(n) ^ mask) for n in nums[0].split(",")).split("|")
+            vmap = parts[2] if len(parts) > 2 else ""
+            return dict((ensure_str(k), ensure_str(v)) for k, v in json_loads(ensure_str(base64.b64decode(vmap + "=" * (-len(vmap) % 4)))).items()) if vmap else {}
+        except Exception:
+            printExc()
+            return {}
+
     def _playerHls(self, playerUrl, referer):
-        # the Vavoo player page -> its HLS playlist behind the site's proxy ("" for DaddyLive / "no stream")
-        sts, data = self.getPage(playerUrl, self._params(referer))
-        if not sts:
-            return ""
-        url = self.cm.ph.getSearchGroups(data, r'var\s+m3u8Url\s*=\s*"([^"]+)"')[0].replace("\\/", "/")
-        return self.getFullUrl(url, playerUrl) if url else ""
+        # the player page -> (HLS playlist behind the site's proxy, player page url = Referer of the stream);
+        # "var m3u8Url" is a decoy (notice video), the real playlist is _wtPayload = reversed base64
+        pageUrl = "%s%s_t=%d" % (playerUrl, "&" if "?" in playerUrl else "?", int(time.time() * 1000))
+        params = self._params(referer)
+        params["header"].update(IFRAME_HEADER)
+        sts, data = self.getPage(pageUrl, params)
+        if not sts or "temporairement inaccessible" in data:
+            return "", pageUrl
+        payload = self.cm.ph.getSearchGroups(data, r'''_wtPayload\s*=\s*["']([^"']+)["']''')[0]
+        try:
+            url = ensure_str(base64.b64decode(payload[::-1] + "=" * (-len(payload) % 4))) if payload else ""
+        except Exception:
+            url = ""
+        if not url or "vc=notice" in url:
+            return "", pageUrl
+        return self.getFullUrl(url, playerUrl), pageUrl
+
+    def _isLive(self, hlsUrl, pageUrl):
+        # a live playlist; an expired / refused one comes as the site's notice video (vc=notice, #EXT-X-ENDLIST)
+        params = self._params(pageUrl)
+        params["header"]["Sec-Fetch-Site"] = "same-origin"
+        sts, playlist = self.getPage(hlsUrl, params)
+        return sts and "#EXTM3U" in playlist and "vc=notice" not in playlist and "#EXT-X-ENDLIST" not in playlist
 
     def _hlsMeta(self, url, referer):
+        # playlist and segments answer with the notice video unless Referer = player page + Sec-Fetch-Site
         return strwithmeta(url, {"iptv_proto": "m3u8", "iptv_livestream": True, "User-Agent": self.HEADER["User-Agent"],
-                                 "Referer": referer, "Origin": self.getMainUrl()[:-1]})
+                                 "Referer": referer, "Sec-Fetch-Site": "same-origin"})
 
     def getLinksForVideo(self, cItem):
         printDBG("WiTV.getLinksForVideo [%s]" % cItem.get("url", ""))
@@ -193,22 +251,24 @@ class WiTV(CBaseHostClass):
             return []
         urltab = []
         seen = set()
-        for playerId in self.cm.ph.getAllItemsBeetwenMarkers(data, 'data-src="/player/source2/?id=', '"', False):
-            playerId = playerId.replace("&amp;", "&")
-            if not playerId or playerId in seen or (playerId.isdigit() and len(playerId) <= 5):
-                continue  # DaddyLive player (short numeric id)
+        players = self._playerMap(data)
+        for token in self.cm.ph.getAllItemsBeetwenMarkers(data, 'data-v="', '"', False):
+            token = token.replace("&amp;", "&")
+            playerUrl = self.getFullUrl(players.get(token, "" if token.startswith("wt1_") else token))
+            playerId = self.cm.ph.getSearchGroups(playerUrl, r"[?&]id=([^&]+)")[0]
+            if "/player/source2/" not in playerUrl or not playerId or playerId in seen or (playerId.isdigit() and len(playerId) <= 5):
+                continue  # foreign / DaddyLive player (short numeric id, iframe to wideiptv / matchora) or a server listed twice
             seen.add(playerId)
-            playerUrl = self.getFullUrl("/player/source2/?id=" + playerId)
-            hlsUrl = self._playerHls(playerUrl, cItem["url"])
+            hlsUrl, pageUrl = self._playerHls(playerUrl, cItem["url"])
             if not hlsUrl:
+                printDBG("WiTV: server %s has no stream" % playerId)
                 continue
-            # the Vavoo node behind the proxy is often down (503): only servers that answer now
-            sts, playlist = self.getPage(hlsUrl, self._params(playerUrl))
-            if not sts or "#EXTM3U" not in playlist:
+            # the node behind the proxy is often down (404 / 503): only servers that answer now
+            if not self._isLive(hlsUrl, pageUrl):
                 printDBG("WiTV: server %s not answering" % playerId)
                 continue
             # the playlist url rides along, getVideoLinks does not load the player page again
-            urltab.append({"name": "%s %d" % (_("Server"), len(urltab) + 1), "url": strwithmeta(playerUrl, {"Referer": cItem["url"], "wt_hls": hlsUrl}), "need_resolve": 1})
+            urltab.append({"name": "%s %d" % (_("Server"), len(urltab) + 1), "url": strwithmeta(playerUrl, {"Referer": cItem["url"], "wt_hls": hlsUrl, "wt_page": pageUrl}), "need_resolve": 1})
         if not urltab:
             SetIPTVPlayerLastHostError(_("No stream available"))
             return []
@@ -222,17 +282,19 @@ class WiTV(CBaseHostClass):
         meta = videoUrl.meta if hasattr(videoUrl, "meta") else {}
         referer = meta.get("Referer", self.getMainUrl())
         links = []
-        hlsUrl = meta.get("wt_hls", "")
+        hlsUrl, pageUrl = meta.get("wt_hls", ""), meta.get("wt_page", str(videoUrl))
+        if not hlsUrl or not self._isLive(hlsUrl, pageUrl):
+            # no stored playlist url or it expired meanwhile (the site then sends its notice video): ask the player page again
+            hlsUrl, pageUrl = self._playerHls(str(videoUrl), referer)
+            if hlsUrl and not self._isLive(hlsUrl, pageUrl):
+                hlsUrl = ""
         if hlsUrl:
-            links = getDirectM3U8Playlist(self._hlsMeta(hlsUrl, str(videoUrl)), checkExt=False, checkContent=True, sortWithMaxBitrate=99999999)
-        if not links:
-            # no stored playlist url or it expired meanwhile: ask the player page again
-            hlsUrl = self._playerHls(str(videoUrl), referer)
-            links = getDirectM3U8Playlist(self._hlsMeta(hlsUrl, str(videoUrl)), checkExt=False, checkContent=True, sortWithMaxBitrate=99999999) if hlsUrl else []
+            links = getDirectM3U8Playlist(self._hlsMeta(hlsUrl, pageUrl), checkExt=False, checkContent=True, sortWithMaxBitrate=99999999)
         if not links:
             SetIPTVPlayerLastHostError(_("No stream available"))
             return []
-        return decorateResolvedLinkItems(links, sidecar)
+        # segments /player/source2/?vp=... without media extension: exteplayer3's ffmpeg refuses them -> hlsdl
+        return decorateResolvedLinkItems(requireDownloaderForDisguisedHls(links), sidecar)
 
     ###################################################
     # INFO
@@ -249,8 +311,6 @@ class WiTV(CBaseHostClass):
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
         if self.MAIN_URL is None:
             self.selectDomain()
-        if isJumpItem(self.currItem):
-            self.currItem = jumpTarget(self, self.currItem)
         name = self.currItem.get("name", "")
         category = self.currItem.get("category", "")
         printDBG("WiTV.handleService name[%s] category[%s]" % (name, category))
@@ -261,8 +321,6 @@ class WiTV(CBaseHostClass):
             self.listChannels(self.currItem)
         elif category == "wt_schedule":
             self.listSchedule(self.currItem)
-        elif category == "wt_search":
-            self.listSearch(self.currItem)
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({"search_item": False, "name": "category"})
