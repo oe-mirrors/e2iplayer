@@ -186,7 +186,7 @@ class IPTVDMWidget(Screen):
         # config.plugins.iptvplayer.enableT9MainList global switch and
         # findT9JumpIndex() helper the host content lists/favourites/
         # search history already use, see keyNumberJump().
-        self.t9Input = NumericalTextInput(handleTimeout=False)
+        self.t9Input = NumericalTextInput()
         actionsDict = {
             "ok": self.ok_pressed,
             "back": self.back_pressed,

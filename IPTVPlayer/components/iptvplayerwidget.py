@@ -845,17 +845,20 @@ class E2iPlayerWidget(Screen):
         self.canRandomizeList = False
 
         self.prevVideoMode = None
-        # no handleTimeout: we act on every press immediately (list jump,
-        # not text composition), so the commit-after-timeout callback and
-        # its eTimer aren't needed - only the digit-cycling in getKey() is.
-        # Separate instances per list context: NumericalTextInput only resets
-        # its letter-cycle position when a DIFFERENT digit is pressed, so
-        # sharing one instance between the search-history and main-list T9
-        # jump would leak cycle state across an unrelated list switch (e.g.
-        # pressing '2' in the history list, then '2' again in the main list,
-        # would resume the cycle at 'b' instead of restarting at 'a').
-        self.t9HistoryInput = NumericalTextInput(handleTimeout=False)
-        self.t9MainListInput = NumericalTextInput(handleTimeout=False)
+        # with the 1 s timeout (like PlayerSelector and Enigma2's movie list):
+        # every press still jumps at once, the timer only restarts the key at
+        # "a" after a pause - so 2, pause, 2 steps through the entries with A.
+        # Without it the key just cycles a b c ... 2 A B C and never gets past
+        # the first match of a letter.
+        # Separate instances per list context: before the timeout
+        # NumericalTextInput only resets its letter-cycle position when a
+        # DIFFERENT digit is pressed, so sharing one instance between the
+        # search-history and main-list T9 jump would leak cycle state across
+        # a quick list switch (e.g. pressing '2' in the history list, then
+        # '2' again in the main list, would resume the cycle at 'b' instead
+        # of restarting at 'a').
+        self.t9HistoryInput = NumericalTextInput()
+        self.t9MainListInput = NumericalTextInput()
 
         # before the cache dir test: its warning popup must know it runs on the main thread
         asynccall.SetMainThreadId()

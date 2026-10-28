@@ -1101,7 +1101,7 @@ class _PlayerSelectorListMode:
         # digits 1-9 jump to the next entry whose name starts with one of the key's letters (2 = a/b/c,
         # pressed again quickly = next letter) - same config.plugins.iptvplayer.enableT9MainList switch
         # and findT9JumpIndex() as the host content lists, favourites and download manager. With the 1 s
-        # timeout (unlike those lists): after a pause the key starts at "a" again, so 2, pause, 2 steps
+        # timeout (like those lists): after a pause the key starts at "a" again, so 2, pause, 2 steps
         # through the hosts with A - without it the key only cycles a b c 2 A B C and never gets past
         # the first match of a letter
         self.t9Input = NumericalTextInput()
