@@ -20,12 +20,13 @@ from Components.Sources.List import List
 from Components.Sources.StaticText import StaticText
 from Tools.Directories import resolveFilename, SCOPE_PLUGINS
 from Tools.BoundFunction import boundFunction
+from Tools.NumericalTextInput import NumericalTextInput
 
 from Plugins.Extensions.IPTVPlayer.components.cover import Cover3
 from Plugins.Extensions.IPTVPlayer.components.iptvchoicebox import IPTVChoiceBoxWidget, IPTVChoiceBoxItem, openChoiceBox
 from Plugins.Extensions.IPTVPlayer.components.iptvlist import IPTVRadioButtonList, fitPixmapInBox, IPTVPlayerSelectorContextMenuChoiceBoxList
 from Plugins.Extensions.IPTVPlayer.components import skinchrome
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIPTVPlayerVersion, GetIconDir, GetLogoDir, GetAvailableIconSize, GetHostOrderDir, GetHostInfo, GetHostTitle, GetHostListTitle
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIPTVPlayerVersion, GetIconDir, GetLogoDir, GetAvailableIconSize, GetHostOrderDir, GetHostInfo, GetHostTitle, GetHostListTitle, findT9JumpIndex
 from Plugins.Extensions.IPTVPlayer.tools.iptvhostgroups import IsFolderKey
 from Plugins.Extensions.IPTVPlayer.__init__ import _, GRIDSUPPORT
 
@@ -1096,6 +1097,37 @@ class _PlayerSelectorListMode:
         else:
             self._closeWithFolderAction({'op': 'move', 'hosts': hosts, 'key': target})
 
+    def _initT9Jump(self):
+        # digits 1-9 jump to the next entry whose name starts with one of the key's letters (2 = a/b/c,
+        # pressed again quickly = next letter) - same config.plugins.iptvplayer.enableT9MainList switch
+        # and findT9JumpIndex() as the host content lists, favourites and download manager. With the 1 s
+        # timeout (unlike those lists): after a pause the key starts at "a" again, so 2, pause, 2 steps
+        # through the hosts with A - without it the key only cycles a b c 2 A B C and never gets past
+        # the first match of a letter
+        self.t9Input = NumericalTextInput()
+        self["t9Actions"] = ActionMap(["NumberActions"], dict((digit, boundFunction(self.keyT9Jump, digit)) for digit in '123456789'), 0)
+
+    def keyT9Jump(self, digit):
+        # not while reordering: the jump would carry a picked-up entry along
+        if self.reorderingMode or not self.currList or not config.plugins.iptvplayer.enableT9MainList.value:
+            return
+        letter = self.t9Input.getKey(int(digit))
+        if not letter:
+            return
+        try:
+            idx = findT9JumpIndex(self.numOfItems, self._t9GetIndex(), letter, lambda i: GetHostListTitle(self.currList[i][0]))
+            if idx >= 0:
+                self._t9SetIndex(idx)
+        except Exception:
+            printExc()
+
+    def _t9GetIndex(self):
+        return self["grid"].getSelectedIndex()
+
+    def _t9SetIndex(self, idx):
+        self["grid"].setCurrentIndex(idx)
+        self["grid"].instance.invalidate()
+
     def _initListMode(self, session, inList, outList, numOfLockedItems, groupName, groupObj, groupDisplayName, folderKey=None):
         # Shared List-view/Simple-list constructor for BOTH
         # PlayerSelectorWidget variants. List/Simple-list mode never uses
@@ -1179,6 +1211,7 @@ class _PlayerSelectorListMode:
         }, prio=0, description="")
         # INFO / EPG / HELP open the info screen straight away (also in the BLUE menu)
         self["infoActions"] = ActionMap(["IPTVPlayerListActions"], {"info": self.showInfo}, 0)
+        self._initT9Jump()
 
         # NOT self.onClose.append(self.__onClose) here - name-mangling
         # would bind it as self._PlayerSelectorListMode__onClose, which
@@ -1303,6 +1336,7 @@ if GRIDSUPPORT:
             }, prio=0, description="")
             # INFO / EPG / HELP open the info screen straight away (also in the BLUE menu)
             self["infoActions"] = ActionMap(["IPTVPlayerListActions"], {"info": self.showInfo}, 0)
+            self._initT9Jump()
 
             self.onClose.append(self.__onClose)
             self.onLayoutFinish.append(self.layoutFinished)
@@ -1373,6 +1407,10 @@ if GRIDSUPPORT:
         # plain alias is enough here - zero behavior change.
         listKeyUp = keyUp
         listKeyDown = keyDown
+
+        def _t9SetIndex(self, idx):
+            self["grid"].setCurrentIndex(idx)
+            self._invalidateGrid()
 
         def _invalidateGrid(self):
             # setCurrentIndex() moves the eListbox's internal selection
@@ -1947,6 +1985,7 @@ else:
                 "menu": self.keySetup,
                 "info": self.showInfo,
             }, -1)
+            self._initT9Jump()
 
             self["key_menu"] = StaticText(_("MENU"))
             # MENU -> keySetup() (config), BLUE -> openContextMenu() (options
@@ -2185,6 +2224,18 @@ else:
             self["statustext"].setText(self.currList[new_idx][0])
             self["hostinfo"].setText(_getHostInfoText(self.currList[new_idx][1]))
             return
+
+        def _t9GetIndex(self):
+            if self.listMode:
+                return self["grid"].getSelectedIndex()
+            return self.currLine * self.numOfCol + self.dispX
+
+        def _t9SetIndex(self, idx):
+            if self.listMode:
+                _PlayerSelectorListMode._t9SetIndex(self, idx)
+            else:
+                # Cover3 grid: setIdx() also turns the page and moves the marker
+                self.setIdx(idx)
 
         def getSelectedItem(self):
             printDBG(">> PlayerSelectorWidget.getSelectedItem")
