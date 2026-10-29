@@ -6,7 +6,7 @@ LAST_MODIFIED = "25.10.2026"
 #   search through the JSON endpoint /api/load-more-browse, "Aired this week" from /timeline,
 #   series page /tv/<slug> carries all seasons and episodes, episode page /tv/<slug>/<s>/<e> the
 #   servers: Doodstream (myvidplay/playmogo) and SeekStreaming (seekplayer.vip) first, then videasy;
-#   vidcore / vidup / vidfast only when the opt-in enc-dec.app resolving is switched on; the vidsrc player is skipped.
+#   vidcore / vidup / vidfast only with the package quickjs or the opt-in enc-dec.app resolving; the vidsrc player is skipped.
 #   Watched flag / downloaded flag / name normalisation / sidecar / moviemeta INFO / favourites /
 #   paging (First / Jump / Next, the endpoint only tells whether there is more).
 import re
@@ -15,7 +15,7 @@ from Components.config import config
 from Plugins.Extensions.IPTVPlayer.components.captcha_helper import CaptchaHelper
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
-from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized, IsExternalResolveAllowed
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized, IsVidcoreResolvable
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps, loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems, sidecarMetaQuery
@@ -334,7 +334,7 @@ class Noxx(GenericFolderWatchedScraperMixin, CBaseHostClass, CaptchaHelper):
             return []
         urltab = []
         skipped = []
-        externalOk = IsExternalResolveAllowed()
+        externalOk = IsVidcoreResolvable()
         servers = self.cm.ph.getDataBeetwenMarkers(data, '<div class="server-buttons">', '<div class="server-backdrop"', False)[1] or data
         for value, server, label in re.findall(r'<button value="([^"]+)" data-server="([^"]*)" data-name="([^"]*)"', servers):
             url = value.replace("&amp;", "&")
@@ -344,7 +344,7 @@ class Noxx(GenericFolderWatchedScraperMixin, CBaseHostClass, CaptchaHelper):
                 continue
             label = self.cleanHtmlStr(label) or server
             hostName = self.up.getHostName(url)
-            # upd 091026: only the vidcore family still resolves through the opt-in enc-dec.app service
+            # upd 291026: the vidcore family needs quickjs (player run on the box) or the opt-in enc-dec.app service
             # (videasy decrypts on the box)
             external = "vidcore" in hostName or "vidup" in hostName or "vidfast" in hostName
             if self.up.checkHostSupport(url) != 1 or (external and not externalOk):

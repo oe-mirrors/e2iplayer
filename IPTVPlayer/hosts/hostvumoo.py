@@ -6,7 +6,7 @@ LAST_MODIFIED = "10.10.2026"
 #     First / Jump / Next page (the site lists at most 50 pages, the last page from its pager where shown)
 #   - series: show -> seasons -> episodes (the season pages of the site), not yet aired episodes left out
 #   - links: the site's servers (/api/go?t=..&slug=..[&s=..&e=..]&x=N answers with the embed url of server N);
-#     only servers urlparser knows are listed (vidcore / vidup / vidfast only with external link decryption on)
+#     only servers urlparser knows are listed (vidcore / vidup / vidfast only with quickjs or the external link decryption)
 #   - the site's "Quick check" page (cookies + a small SHA-256 proof of work) is passed like the browser does
 #   - watched flag (show -> season -> episode), favourites reopen without state, downloaded marker on the watch
 #     page url (episodes: ?s=N&e=M), "Title (Year)" / "Show - SxxExx" names, sidecar on the links
@@ -43,7 +43,7 @@ def gettytul():
 
 # the site never lists more than 50 pages (a higher page shows page 50 again)
 MAX_PAGES = 50
-# servers of the site that urlparser resolves, best first: (label of the site's button, lowercase), needs enc-dec.app
+# servers of the site that urlparser resolves, best first: (label of the site's button, lowercase), needs quickjs or enc-dec.app
 SERVERS = (("vidsrc.mov", False), ("vidsrc-v1", False), ("vidrock", False), ("vixsrc", False), ("vidlink", False),
            ("vidsrc.fyi", False), ("vidnest", False), ("peachify", False),
            ("vidfast", True), ("vidup", True), ("vidcore-v2", True))
@@ -404,8 +404,8 @@ class Vumoo(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not servers:
             servers = list(SERVER_FALLBACK)
         try:
-            from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsExternalResolveAllowed
-            external = IsExternalResolveAllowed()
+            from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsVidcoreResolvable
+            external = IsVidcoreResolvable()
         except Exception:
             external = False
         needsExternal = dict(SERVERS)

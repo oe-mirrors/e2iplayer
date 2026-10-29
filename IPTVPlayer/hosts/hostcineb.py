@@ -47,7 +47,7 @@ def _metaKeys(title, isSeries):
     return {"meta_type": "movie", "meta_title": (title or "").strip()}
 
 
-# servers of the site that urlparser resolves, best first: (label of the site's button, lowercase), needs enc-dec.app
+# servers of the site that urlparser resolves, best first: (label of the site's button, lowercase), needs quickjs or enc-dec.app
 SERVERS = (("vidsrc.mov", False), ("vidsrc-v1", False), ("vidrock", False), ("vixsrc", False), ("vidlink", False),
            ("vidsrc.fyi", False), ("vidnest", False), ("peachify", False),
            ("vidfast", True), ("vidup", True), ("vidcore-v2", True))
@@ -154,8 +154,8 @@ class Cineb(CBaseHostClass):
             return []
         servers = self._servers(data) or list(SERVER_FALLBACK)
         try:
-            from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsExternalResolveAllowed
-            external = IsExternalResolveAllowed()
+            from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsVidcoreResolvable
+            external = IsVidcoreResolvable()
         except Exception:
             external = False
         needsExternal = dict(SERVERS)
