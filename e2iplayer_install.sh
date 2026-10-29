@@ -169,6 +169,10 @@ if [ ! -f $EXTRACTED_SOURCE_PATH/plugin.py ] ; then
 	exit 1
 fi
 
+IPTVSUBPARSER="$TARGET_PATH/IPTVPlayer/libs/iptvsubparser"
+SUBPARSER_BACKUP="$TMP/_subparser.so"
+rm -f "$SUBPARSER_BACKUP"
+
 # Delete an already installed E2iPlayer, If BACKUP=yes is set in line 19, a Backup (*.tar.gz) of the
 # already installed E2iPlayer is first created and stored in the Directory (Variable E2IPLAYER_BACKUP_DIR).
 if [ -d $TARGET_PATH/IPTVPlayer ] ; then
@@ -185,10 +189,12 @@ if [ -d $TARGET_PATH/IPTVPlayer ] ; then
 		fi
 	fi
 
-	IPTVSUBPARSER="$TARGET_PATH/IPTVPlayer/libs/iptvsubparser"
-	
+	# keep the native subtitles parser (_subparser.so), it is not part of the source archive
+	if [ -e "$IPTVSUBPARSER/_subparser.so" ] ; then
+		$NICE $NICE_ARGS cp -f "$IPTVSUBPARSER/_subparser.so" "$SUBPARSER_BACKUP"
+	fi
+
 	echo -e "\n\nDelete the already installed E2iPlayer in;\n$TARGET_PATH/IPTVPlayer ..."
-	[ -e "$IPTVSUBPARSER/_subparser.so" ] && $NICE $NICE_ARGS cp -rf "$IPTVSUBPARSER/_subparser.so" ${TMP}
 	$NICE $NICE_ARGS rm -rf  $TARGET_PATH/IPTVPlayer
 
 	if [ "$?" != "0" ] ; then
@@ -197,13 +203,17 @@ if [ -d $TARGET_PATH/IPTVPlayer ] ; then
 	fi
 fi
 
-[ -e "${TMP}/_subparser.so" ] && $NICE $NICE_ARGS cp -rf "${TMP}/_subparser.so" $IPTVSUBPARSER
-
 # Copy Directory (Variable TMP)/e2iplayer-*/IPTVPlayer or (Variable EXTRACTED_SOURCE_PATH) recursively into the Directory (Variable TARGET_PATH).
 echo -e "\n\nCopy;\n$EXTRACTED_SOURCE_PATH\nto;\n$TARGET_PATH ...\n"
 if ! $NICE $NICE_ARGS cp -rf $EXTRACTED_SOURCE_PATH $TARGET_PATH ; then
 	echo -e "\n... ERROR ...\nCopy;\n$EXTRACTED_SOURCE_PATH failed ! \n\n"
 	exit 1
+fi
+
+# restore the native subtitles parser saved above, unless the new E2iPlayer brings its own
+if [ -e "$SUBPARSER_BACKUP" -a ! -e "$IPTVSUBPARSER/_subparser.so" ] ; then
+	mkdir -p "$IPTVSUBPARSER"
+	$NICE $NICE_ARGS cp -f "$SUBPARSER_BACKUP" "$IPTVSUBPARSER/_subparser.so"
 fi
 
 # link duktape, only if duk (duktape binary) exists in /usr/bin and not in the .../IPTVPlayer/bin directory, link it there.
@@ -219,7 +229,7 @@ echo -e "\nE2iPlayer installed/updated successfully. -> $ENDDATE\n"
 
 # Delete the remains.
 echo -e "\nDelete remains (*.tar.gz/*.zip and Directory e2iplayer-*) ...\n"
-$NICE $NICE_ARGS rm -rf $TMP/e2iplayer-* $TMP/python*.gz $TMP/master.* $TMP/opkg-* "${TMP}/_subparser.so"
+$NICE $NICE_ARGS rm -rf $TMP/e2iplayer-* $TMP/python*.gz $TMP/master.* $TMP/opkg-* "$SUBPARSER_BACKUP"
 rmdir $WORKDIR/tmp 2> /dev/null
 
 
