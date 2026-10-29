@@ -350,7 +350,7 @@ class Zaluknij(GenericFolderWatchedScraperMixin, CBaseHostClass):
             if not sts:
                 return
             episodes = self._seasons(data).get(season, [])
-        episodes = sorted(episodes)
+        episodes = sorted(episodes, reverse=True)
         # long running soaps have thousands of episodes in one season - 100 per page
         page = cItem.get("page", 1)
         lastPage = (len(episodes) + EPISODES_PER_PAGE - 1) // EPISODES_PER_PAGE
