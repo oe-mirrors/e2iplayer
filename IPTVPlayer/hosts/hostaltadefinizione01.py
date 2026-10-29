@@ -1,34 +1,28 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "08.10.2026"
-# Modified: 09.06.2026 - passata
-# 27.09.2026 - paging past page 2, seasons in order, movies/episodes are playable rows (no extra folder),
-# the player url goes straight to urlparser (parserVIXSRC), no "open in browser" dead end; Python 2 safe.
-# Default icon = the bundled PNG logo instead of the site's favicon.ico (red X on the box). Domain alta-definizione.beer.
-# 08.10.2026 - host standard (alta-definizione.beer):
-#   - episodes get their own url (series page + "#s<season>e<episode>") - before every episode had the series url
-#     (one downloaded marker for all of them); seasons are the page url + "#s<season>" and read the page again
-#     (a favourite season no longer carries a frozen episode list)
-#   - watched flag (series -> season -> episode), favourites reopen without state (also the old rows), downloaded
-#     marker, "Show - SxxExx" names, sidecar on the links, INFO via moviemeta merged with the site's fields
-#     (rating, year, duration, language, genres, cast, budget) instead of the unknown custom_items_list
-#   - First / Jump / Next page with the last page from the pager (also for the search), local pages for the home
-#     page (no title twice any more), Recently added / Top rated / Genres / Year menus ("Title (Year)" in the year
-#     lists - the cards have no year), English menu labels, search history
-#   - the vixsrc player url comes from the TMDb id in the row url (no page request when playing)
-#   - default user agent instead of a fixed Chrome 120, covers with the cookie / UA of a Cloudflare check
-import os
+LAST_MODIFIED = "29.10.2026"
+# 29.10.2026 - rewritten for altadefinizionex.vip (alta-definizione.beer is gone; Next.js site, ~30000 movies and
+#   ~6400 series in Italian):
+#   - lists from the site's archive api (/api/v1/web/archive: tipo / genere / sort / q, 30 per page, the total
+#     count gives the last page): Movies, Series, Recently added, Most viewed, Top rated, genres, search
+#   - seasons and episodes (with their plot) from the series page's Next.js data
+#   - links: VixSrc by the IMDb id and the site's own player vidxgo
+#   - watched flag (series -> season -> episode), favourites, downloaded marker, "Title (Year)" / "Show - SxxExx"
+#     names, sidecar, INFO via moviemeta merged with the site's fields
+import json
 import re
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsMediaNamingNormalized, IsSidecarEnabled
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
-from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
+from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
+from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, getMetaByImdbId
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, decorateResolvedLinkItems, sidecarFromUrlMeta, sidecarMetaQuery
-from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_urlencode
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import GetIconDir, printDBG, printExc
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIconDir
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedHostMixin, GenericFolderWatchedScraperMixin
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
@@ -39,11 +33,12 @@ def GetConfigList():
 
 
 def gettytul():
-    return "https://alta-definizione.beer/"
+    return "https://altadefinizionex.vip/"
 
 
-PLAYER_URL = "https://vixsrc.to/"
-LOCAL_PAGE_SIZE = 50
+VIXSRC_URL = "https://vixsrc.to/"
+VIDXGO_URL = "https://v.vidxgo.co/"
+PAGE_SIZE = 30
 
 
 class Altadefinizione(GenericFolderWatchedScraperMixin, CBaseHostClass):
@@ -51,20 +46,18 @@ class Altadefinizione(GenericFolderWatchedScraperMixin, CBaseHostClass):
     def __init__(self):
         # named after the host, not the domain: search history and cookies survive the next domain move
         CBaseHostClass.__init__(self, {"history": "altadefinizione01", "cookie": "altadefinizione01.cookie"})
-        self.HEADER = self.cm.getDefaultHeader()
+        self.HEADER = self.cm.getDefaultHeader(browser="chrome")
         self.USER_AGENT = self.HEADER.get("User-Agent", "")
         self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
         self.MAIN_URL = gettytul()
-        # the site only has a 16x16 favicon.ico, which the box can't draw (red X on the categories) - use our own logo
         self.DEFAULT_ICON_URL = "file://" + GetIconDir("PlayerSelector/altadefinizione01135.png")
-        self.MENU = [{"category": "list_items", "title": _("Home"), "url": self.MAIN_URL},
-                     {"category": "list_items", "title": _("Movies"), "url": self.getFullUrl("archive?type=movie")},
-                     {"category": "list_items", "title": _("Series"), "url": self.getFullUrl("archive?type=tv")},
-                     {"category": "list_items", "title": _("Recently added"), "url": self.getFullUrl("archive?sort=date")},
-                     {"category": "list_items", "title": _("Top rated"), "url": self.getFullUrl("archive?sort=vote")},
-                     {"category": "list_items", "title": _("Archive"), "url": self.getFullUrl("archive")},
-                     {"category": "list_genres", "title": _("Genres")},
-                     {"category": "list_years", "title": _("Year")}] + self.searchItems()
+        # filters of the archive api: the site's labels
+        self.MENU = [{"category": "list_items", "title": _("Movies"), "filters": {"tipo": "Film"}},
+                     {"category": "list_items", "title": _("Series"), "filters": {"tipo": "Serie TV"}},
+                     {"category": "list_items", "title": _("Recently added"), "filters": {"sort": "Data di aggiunta"}},
+                     {"category": "list_items", "title": _("Most viewed"), "filters": {"sort": "Views"}},
+                     {"category": "list_items", "title": _("Top rated"), "filters": {"sort": "Valutazione"}},
+                     {"category": "list_genres", "title": _("Genres")}] + self.searchItems()
         self.watchedHelper = IPTVWatchedHelper("altadefinizione01")
         self.wfInitFolderCache()
 
@@ -74,38 +67,6 @@ class Altadefinizione(GenericFolderWatchedScraperMixin, CBaseHostClass):
         addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.USER_AGENT}
         return self.cm.getPageCFProtection(baseUrl.split("#", 1)[0], addParams, post_data)
 
-    def getFullIconUrl(self, url, currUrl=None):
-        # the covers sit behind the same Cloudflare check as the pages: cf_clearance + the UA that passed it
-        url = CBaseHostClass.getFullIconUrl(self, url, currUrl)
-        if not url.startswith("http"):
-            return url
-        meta = {"Referer": self.MAIN_URL, "User-Agent": self.USER_AGENT}
-        cookieHeader, userAgent = self._cfCookie()
-        if cookieHeader:
-            meta.update({"User-Agent": userAgent or self.USER_AGENT, "Cookie": cookieHeader})
-        return strwithmeta(url, meta)
-
-    def _cfCookie(self):
-        # cf_clearance + remembered UA, read again only when the cookie file changes (this runs for every row)
-        try:
-            stat = os.stat(self.COOKIE_FILE)
-            key = (stat.st_mtime, stat.st_size)
-        except OSError:
-            key = None  # getCookieHeader logs tracebacks for a cookie file that does not exist yet
-        cache = getattr(self, "_cfCookieCache", None)
-        if cache is None or cache[0] != key:
-            cookieHeader, userAgent = "", ""
-            if key is not None:
-                try:
-                    cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE, ["cf_clearance"]).rstrip("; ")
-                    if cookieHeader:
-                        from Plugins.Extensions.IPTVPlayer.libs.botprotection import remembered_user_agent
-                        userAgent = remembered_user_agent(self.COOKIE_FILE)
-                except Exception:
-                    printExc()
-            cache = self._cfCookieCache = (key, cookieHeader, userAgent)
-        return cache[1], cache[2]
-
     ###################################################
     # watched flag
     ###################################################
@@ -113,16 +74,10 @@ class Altadefinizione(GenericFolderWatchedScraperMixin, CBaseHostClass):
         try:
             if not isinstance(cItem, dict):
                 return ""
-            prefix = {"explore_item": "series", "list_episodes": "season"}.get(cItem.get("category", ""), "")
+            prefix = {"list_seasons": "series", "list_episodes": "season"}.get(cItem.get("category", ""), "")
             if cItem.get("type", "") == "video":
                 prefix = "video"
             url = re.sub(r"^https?://[^/]+", "", str(cItem.get("url", "") or "").strip())
-            if "#" not in url:
-                # season / episode rows from before 08.10.2026 carried the plain series url
-                if prefix == "season":
-                    url = "%s#s%s" % (url, cItem.get("season", ""))
-                elif prefix == "video" and cItem.get("season") and cItem.get("episode"):
-                    url = "%s#s%se%s" % (url, cItem["season"], cItem["episode"])
             return "%s:%s" % (prefix, url) if (prefix and url) else ""
         except Exception:
             printExc()
@@ -132,231 +87,197 @@ class Altadefinizione(GenericFolderWatchedScraperMixin, CBaseHostClass):
     # helpers
     ###################################################
     @staticmethod
-    def _pageUrlTpl(url):
-        # the list url with "{page}" in its page parameter
-        url = re.sub(r"[?&]page=-?\d+", "", url).replace("{", "{{").replace("}", "}}")
-        return url + ("&" if "?" in url else "?") + "page={page}"
+    def _jsonArray(text, start):
+        # the JSON array that begins at text[start] ("[") - brackets inside strings do not count
+        depth, inString, escape = 0, False, False
+        for pos in range(start, len(text)):
+            char = text[pos]
+            if inString:
+                if escape:
+                    escape = False
+                elif char == "\\":
+                    escape = True
+                elif char == '"':
+                    inString = False
+            elif char == '"':
+                inString = True
+            elif char == "[":
+                depth += 1
+            elif char == "]":
+                depth -= 1
+                if depth == 0:
+                    return text[start:pos + 1]
+        return ""
 
-    @staticmethod
-    def _tmdbId(url, data=""):
-        # /detail/film-936075-michael, /detail/tv-108978-reacher: the TMDb id is in the url (and in the page script)
-        match = re.search(r"/detail/(?:film|tv)-(\d+)", url or "") or re.search(r"var\s+tmdbID\s*=\s*(\d+)", data or "")
-        return match.group(1) if match else ""
+    def _pageData(self, url):
+        # the Next.js data of a title page (self.__next_f.push chunks, JSON-escaped strings)
+        sts, data = self.getPage(url)
+        if not sts:
+            return ""
+        chunks = []
+        for raw in re.findall(r'self\.__next_f\.push\(\[1,"(.*?)"\]\)', data, re.S):
+            try:
+                chunks.append(ensure_str(json.loads('"%s"' % raw)))
+            except Exception:
+                continue
+        return "".join(chunks)
 
-    def _siteInfo(self, data):
-        # the fields of a detail page: (info dict, plot, year)
+    def _titleInfo(self, text):
+        # (imdb id, vidxgo token, seasons [{number, episodes: [{number, title, plot}]}], info dict) of a title page
+        imdb = self.cm.ph.getSearchGroups(text, r'"imdbId":"(tt\d+)"')[0]
+        token = self.cm.ph.getSearchGroups(text, r'"token":"(\d+)"')[0] or imdb[2:]
+        seasons = []
+        pos = text.find('"seasons":[')
+        if pos > -1:
+            try:
+                seasons = json_loads(self._jsonArray(text, pos + len('"seasons":'))) or []
+            except Exception:
+                printExc()
         info = {}
-        meta = self.cm.ph.getDataBeetwenMarkers(data, 'class="detail-meta"', "</div>", False)[1]
-        rating = self.cm.ph.getSearchGroups(meta, r'class="label rate">([^<]+)<')[0].strip()
-        if rating:
-            info["rating"] = rating + "/10"
-        year = ""
-        for value in re.findall(r'class="meta-item">([^<]+)<', meta):
-            value = value.strip()
-            if re.match(r"^(?:19|20)\d\d$", value):
-                year = info["year"] = value
-            elif re.match(r"^(?:\d+h\s*)?\d+m$", value):
-                info["duration"] = value
-            elif re.match(r"^[A-Z]{2}$", value):
-                info["language"] = value
-        genres = ", ".join(self.cleanHtmlStr(g) for g in re.findall(r'class="genre-badge">([^<]+)<', data))
-        if genres:
-            info["genres"] = genres
-        cast = ", ".join(self.cleanHtmlStr(c) for c in re.findall(r'class="cast-item">.*?<strong>([^<]+)</strong>', data, re.DOTALL)[:6])
-        if cast:
-            info["cast"] = cast
-        budget = self.cm.ph.getSearchGroups(data, r'field-label">Budget</span>\s*<span>([^<]+)<')[0]
-        if budget:
-            info["budget"] = budget
-        plot = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'<p class="detail-overview">(.*?)</p>')[0])
-        if not plot:
-            plot = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'<meta name="description" content="([^"]+)')[0])
-            plot = re.sub(r"^Guarda .+? streaming gratis,\s*", "", plot)
-        tagline = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'<p class="detail-tagline">(.*?)</p>')[0])
-        if tagline and plot:
-            plot = "%s[/br]%s" % (tagline, plot)
-        return info, plot, year
+        for key, field in (("rating", "rating"), ("duration", "durationMin"), ("country", "country"), ("director", "director"), ("cast", "cast")):
+            # a JSON string ("Robert Carlyle (Ray), Ray Winstone (Dave)") or a number
+            value = self.cm.ph.getSearchGroups(text, r'"%s":(?:"((?:[^"\\]|\\.)*)"|(\d+))' % field, 2)
+            value = value[0] or value[1]
+            if key == "cast":
+                value = ", ".join(value.split(", ")[:6])
+            if value:
+                info[key] = value + (" min" if key == "duration" else "")
+        return imdb, token, [s for s in seasons if isinstance(s, dict) and s.get("number")], info
 
     ###################################################
     # lists
     ###################################################
+    def _archiveUrl(self, filters):
+        return self.getFullUrl("api/v1/web/archive?" + urllib_urlencode(filters))
+
+    def _archive(self, filters, page):
+        # one page of the archive api: (items, total count)
+        sts, data = self.getPage("%s&offset=%d&limit=%d&count=1" % (self._archiveUrl(filters), (page - 1) * PAGE_SIZE, PAGE_SIZE))
+        if not sts:
+            return [], 0
+        try:
+            res = json_loads(data)
+            return res.get("items") or [], int(res.get("count") or 0)
+        except Exception:
+            printExc()
+            return [], 0
+
     def listItems(self, cItem):
         printDBG("Altadefinizione.listItems |%s|" % cItem)
-        try:
-            page = max(1, int(cItem.get("page", 1) or 1))
-        except (TypeError, ValueError):
-            page = 1
-        url = cItem["url"]
-        localPaging = cItem.get("local_paging", False)
-        pageUrlTpl = self._pageUrlTpl(url)
-        sts, data = self.getPage(pageUrlTpl.format(page=page) if (page > 1 and not localPaging) else url)
-        if not sts or not data:
-            return
-        pager = self.cm.ph.getDataBeetwenMarkers(data, 'class="pagination"', "</nav>", False)[1]
-        cards = []
-        for itemUrl, block in re.findall(r'<a href="([^"]+)" class="movie-card">(.*?)</a>', data, re.DOTALL):
-            # the home page shows a title in several rows
-            if itemUrl not in [c[0] for c in cards]:
-                cards.append((itemUrl, block))
-        localPaging = not pager and (localPaging or len(cards) > LOCAL_PAGE_SIZE)
-        if localPaging:
-            # the home page (no pager, ~150 titles): local pages
-            lastPage = max(1, (len(cards) + LOCAL_PAGE_SIZE - 1) // LOCAL_PAGE_SIZE)
-            page = min(page, lastPage)
-            cards = cards[(page - 1) * LOCAL_PAGE_SIZE:page * LOCAL_PAGE_SIZE]
-        listYear = self.cm.ph.getSearchGroups(url, r"[?&]year=((?:19|20)\d\d)")[0]
+        page = max(1, int(cItem.get("page", 1) or 1))
+        items, count = self._archive(cItem.get("filters", {}), page)
         normalize = IsMediaNamingNormalized()
-        for itemUrl, block in cards:
-            title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(block, r'<h6 class="movie-card-title">(.*?)</h6>')[0]) or \
-                self.cleanHtmlStr(self.cm.ph.getSearchGroups(block, r'alt="([^"]+)"')[0])
-            if title in ("", "None"):
-                # "None": a card of the site without data (Top rated)
+        for item in items:
+            title, slug, itemId = ensure_str(item.get("title", "")), ensure_str(item.get("slug", "")), item.get("id")
+            if not title or not itemId:
                 continue
-            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(block, r'<img[^>]+src="([^"]+)"')[0])
-            rating = self.cm.ph.getSearchGroups(block, r'class="label rate">([^<]+)<')[0].strip()
-            isTv = "/tv-" in itemUrl
-            desc = " | ".join(x for x in ("%s: %s" % (_("Rating"), rating) if rating else "", _("Series") if isTv else _("Movies")) if x)
-            params = stripPagerKeys(dict(cItem), ("local_paging",))
-            params.update({"good_for_fav": True, "title": title, "s_title": title, "s_year": listYear, "url": self.getFullUrl(itemUrl), "icon": icon,
-                           "desc": desc, "tmdb_id": self._tmdbId(itemUrl), "meta_type": "tv" if isTv else "movie"})
-            if isTv:
-                params["category"] = "explore_item"
+            series = item.get("kind") == "series"
+            year = str(item.get("year") or "")
+            plot = ensure_str(item.get("plot") or "")
+            genres = ", ".join(ensure_str(g) for g in item.get("genres") or [])
+            desc = " | ".join("%s: %s" % (k, v) for k, v in ((_("Year"), year), (_("Genre"), genres), (_("Rating"), item.get("rating") or "")) if v)
+            params = stripPagerKeys(dict(cItem))
+            params.pop("filters", None)
+            params.update({"good_for_fav": True, "url": self.getFullUrl("%s/%s-%s-streaming.html" % ("serie-tv" if series else "film", itemId, urllib_quote(slug))),
+                           "icon": ensure_str(item.get("posterUrl") or "") or self.DEFAULT_ICON_URL, "desc": "%s[/br]%s" % (desc, plot) if plot else desc,
+                           "imdb": ensure_str(item.get("imdbId") or ""), "s_year": year, "plot": plot, "s_title": title})
+            if series:
+                params.update({"category": "list_seasons", "title": title, "meta_type": "tv"})
                 self.addDir(params)
             else:
-                if listYear and normalize:
-                    # the cards carry no year - only the year lists know it
-                    params["title"] = "%s (%s)" % (title, listYear)
-                params["category"] = "video"
+                withYear = year and normalize and not title.endswith("(%s)" % year)
+                params.update({"category": "video", "title": "%s (%s)" % (title, year) if withYear else title, "meta_type": "movie"})
                 self.addVideo(params)
-        if localPaging:
-            addPagingItems(self, dict(cItem, local_paging=True), page, page < lastPage, lastPage)
-            return
-        # the pager links every page ("<", 1, 2, ... 580, ">") - the next page is page + 1, the last the highest number
-        pages = [int(n) for n in re.findall(r"[?&]page=(\d+)", pager)]
-        hasNext = page + 1 in pages
-        addPagingItems(self, cItem, page, hasNext, max(pages + [page]) if hasNext else page, pageUrlTpl if pager else "")
-
-    def listSeasons(self, cItem):
-        printDBG("Altadefinizione.listSeasons - %s" % cItem["url"])
-        url = cItem["url"].split("#", 1)[0]
-        sts, data = self.getPage(url)
-        if not sts or not data:
-            return
-        if "/tv-" not in url:
-            # a film (an old favourite of the former film folder): its playable row
-            self.addVideo(dict(cItem, category="video", url=url, meta_type="movie"))
-            return
-        _info, plot, year = self._siteInfo(data)
-        seasons = sorted(set(re.findall(r'data-season="(\d+)"', data)), key=int)
-        sTitle = cItem.get("s_title", "") or cItem["title"]
-        fields = {"s_title": sTitle, "s_year": year, "tmdb_id": self._tmdbId(url, data), "desc": plot, "meta_type": "tv"}
-        if not seasons:
-            SetIPTVPlayerLastHostError(_("No streams are available for this title yet."))
-            return
-        if len(seasons) == 1:
-            self.listEpisodes(dict(cItem, category="list_episodes", season=seasons[0], url="%s#s%s" % (url, seasons[0]), **fields), data)
-            return
-        normalize = IsMediaNamingNormalized()
-        for season in seasons:
-            count = len(set(re.findall(r'data-episode="%s-(\d+)"' % season, data)))
-            if not count:
-                continue
-            seasonTag = formatSxxExx(season) if normalize else "%s %s" % (_("Season"), season)
-            params = dict(cItem)
-            params.update({"good_for_fav": True, "category": "list_episodes", "title": "%s - %s" % (sTitle, seasonTag), "season": season,
-                           "url": "%s#s%s" % (url, season)})
-            params.update(fields)
-            params["desc"] = "%s: %d\n%s" % (_("Episodes"), count, plot)
-            self.addDir(params)
-
-    def listEpisodes(self, cItem, data=None):
-        printDBG("Altadefinizione.listEpisodes - season %s" % cItem.get("season"))
-        url = cItem["url"].split("#", 1)[0]
-        season = str(cItem.get("season", "") or "1")
-        if data is None:
-            sts, data = self.getPage(url)
-            if not sts or not data:
-                return
-            _info, plot, year = self._siteInfo(data)
-            # s_title: old favourites ("Stagione 2") have no show name - the one of the page
-            cItem = dict(cItem, tmdb_id=self._tmdbId(url, data) or cItem.get("tmdb_id", ""), s_year=year, desc=plot,
-                         s_title=cItem.get("s_title", "") or self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'<h1 class="detail-title">(.*?)</h1>')[0]))
-        sTitle = cItem.get("s_title", "") or cItem["title"]
-        normalize = IsMediaNamingNormalized()
-        group = re.search(r'data-group-season="%s"[^>]*>(.*?)</div>' % re.escape(season), data, re.DOTALL)
-        episodes = sorted(set(int(e) for e in re.findall(r'data-episode="%s-(\d+)"' % re.escape(season), group.group(1) if group else data)))
-        for episode in episodes:
-            if normalize:
-                title = "%s - %s" % (sTitle, formatSxxExx(season, episode))
-            else:
-                title = "%s - %s %s - %s %d" % (sTitle, _("Season"), season, _("Episode"), episode)
-            params = stripPagerKeys(dict(cItem))
-            params.pop("episodes", None)
-            params.update({"good_for_fav": True, "category": "video", "title": title, "s_title": sTitle, "url": "%s#s%se%d" % (url, season, episode),
-                           "season": season, "episode": str(episode), "meta_type": "tv"})
-            self.addVideo(params)
+        lastPage = (count + PAGE_SIZE - 1) // PAGE_SIZE
+        # the list reads its page from cItem["page"]; the template only gives the pager rows a url and the Jump row
+        url = self._archiveUrl(cItem.get("filters", {}))
+        addPagingItems(self, dict(cItem, url=url), page, lastPage > page, lastPage, url.replace("{", "{{").replace("}", "}}") + "&page={page}")
 
     def listGenres(self, cItem):
-        printDBG("Altadefinizione.listGenres")
         sts, data = self.getPage(self.MAIN_URL)
         if not sts:
             return
-        seen = set()
-        for url, title in re.findall(r'<a href="(/archive\?type=movie&(?:amp;)?genre_id=\d+)"[^>]*>([^<]+)</a>', data):
-            if url in seen:
-                continue
-            seen.add(url)
-            params = dict(cItem)
-            params.update({"good_for_fav": True, "category": "list_items", "title": self.cleanHtmlStr(title), "url": self.getFullUrl(url.replace("&amp;", "&"))})
-            self.addDir(params)
-
-    def listYears(self, cItem):
-        printDBG("Altadefinizione.listYears")
-        sts, data = self.getPage(self.getFullUrl("archive"))
-        if not sts:
-            return
-        select = self.cm.ph.getDataBeetwenMarkers(data, 'id="year-filter"', "</select>", False)[1]
-        for year in re.findall(r'<option value="(\d{4})"', select):
-            params = dict(cItem)
-            params.update({"good_for_fav": True, "category": "list_items", "title": year, "url": self.getFullUrl("archive?year=%s" % year)})
-            self.addDir(params)
+        menu = self.cm.ph.getDataBeetwenMarkers(data, '<div class="dropdown-menu p-3">', "</nav>", False)[1]
+        for title in re.findall(r'class="nav-link">([^<]+)</a>', menu):
+            title = self.cleanHtmlStr(title)
+            self.addDir(dict(cItem, good_for_fav=True, category="list_items", title=title, filters={"genere": title}))
 
     def listSearchResult(self, cItem, searchPattern, searchType):
-        printDBG("Altadefinizione.listSearchResult - Pattern: %s" % searchPattern)
-        cItem = dict(cItem)
-        cItem.update({"category": "list_items", "url": self.getFullUrl("search?q=%s" % urllib_quote_plus(searchPattern))})
-        self.listItems(cItem)
+        printDBG("Altadefinizione.listSearchResult [%s]" % searchPattern)
+        pattern = cItem.get("s_pattern") or searchPattern.strip()
+        self.listItems(dict(cItem, category="search_next_page", s_pattern=pattern, filters={"q": pattern}))
+
+    def listSeasons(self, cItem):
+        printDBG("Altadefinizione.listSeasons |%s|" % cItem)
+        url = cItem["url"].split("#", 1)[0]
+        imdb, token, seasons, _info = self._titleInfo(self._pageData(url))
+        if not seasons:
+            SetIPTVPlayerLastHostError(_("No streams are available for this title yet."))
+            return
+        sTitle = cItem.get("s_title", "") or cItem["title"]
+        fields = {"s_title": sTitle, "imdb": imdb or cItem.get("imdb", ""), "token": token}
+        if len(seasons) == 1:
+            self.listEpisodes(dict(cItem, category="list_episodes", season=str(seasons[0]["number"]), url="%s#s%s" % (url, seasons[0]["number"]), **fields), seasons)
+            return
+        normalize = IsMediaNamingNormalized()
+        for season in seasons:
+            number = season["number"]
+            seasonTag = formatSxxExx(number) if normalize else "%s %s" % (_("Season"), number)
+            params = stripPagerKeys(dict(cItem))
+            params.update(fields)
+            params.update({"good_for_fav": True, "category": "list_episodes", "title": "%s - %s" % (sTitle, seasonTag), "season": str(number),
+                           "url": "%s#s%s" % (url, number), "desc": "%s: %d[/br]%s" % (_("Episodes"), len(season.get("episodes") or []), cItem.get("plot", ""))})
+            self.addDir(params)
+
+    def listEpisodes(self, cItem, seasons=None):
+        printDBG("Altadefinizione.listEpisodes |%s|" % cItem)
+        url = cItem["url"].split("#", 1)[0]
+        season = str(cItem.get("season", "") or self.cm.ph.getSearchGroups(cItem["url"], r"#s(\d+)")[0])
+        if seasons is None:
+            imdb, token, seasons, _info = self._titleInfo(self._pageData(url))
+            cItem = dict(cItem, imdb=imdb or cItem.get("imdb", ""), token=token)
+        episodes = []
+        for item in seasons:
+            if str(item["number"]) == season:
+                episodes = [e for e in item.get("episodes") or [] if isinstance(e, dict) and e.get("number")]
+        if not episodes:
+            SetIPTVPlayerLastHostError(_("No streams are available for this title yet."))
+            return
+        sTitle = cItem.get("s_title", "") or cItem["title"]
+        normalize = IsMediaNamingNormalized()
+        for item in episodes:
+            episode, name = item["number"], ensure_str(item.get("title") or "")
+            if normalize:
+                title = "%s - %s" % (sTitle, formatSxxExx(season, episode))
+            else:
+                title = "%s - %s %s - %s %s" % (sTitle, _("Season"), season, _("Episode"), episode)
+            if name and not re.match(r"^Episodio\s*\d+$", name, re.I):
+                title = "%s - %s" % (title, name)
+            params = stripPagerKeys(dict(cItem))
+            params.update({"good_for_fav": True, "category": "video", "title": title, "s_title": sTitle, "url": "%s#s%se%s" % (url, season, episode),
+                           "season": season, "episode": str(episode), "desc": ensure_str(item.get("plot") or "") or cItem.get("plot", ""), "meta_type": "tv"})
+            self.addVideo(params)
 
     ###################################################
     # links
     ###################################################
-    def getPlayerUrl(self, cItem):
-        """vixsrc.to embed url of a film / episode, or '' (the TMDb id + media type, like the site's own player script)"""
-        tmdb = str(cItem.get("tmdb_id", "") or "") or self._tmdbId(cItem.get("url", ""))
-        if not tmdb:
-            sts, data = self.getPage(cItem["url"])
-            if not sts:
-                return ""
-            tmdb = self._tmdbId("", data)
-        if not tmdb:
-            return ""
-        season, episode = str(cItem.get("season", "") or ""), str(cItem.get("episode", "") or "")
-        if season and episode:
-            return "%stv/%s/%s/%s?lang=it" % (PLAYER_URL, tmdb, season, episode)
-        return "%smovie/%s?lang=it" % (PLAYER_URL, tmdb)
-
     def getLinksForVideo(self, cItem):
-        printDBG("Altadefinizione.getLinksForVideo [%s]" % cItem.get("url"))
-        embedUrl = self.getPlayerUrl(cItem)
-        if not embedUrl:
-            SetIPTVPlayerLastHostError(_("No player found for this title."))
+        printDBG("Altadefinizione.getLinksForVideo [%s]" % cItem.get("url", ""))
+        imdb, token = cItem.get("imdb", ""), cItem.get("token", "")
+        if not imdb:
+            imdb, token, _seasons, _info = self._titleInfo(self._pageData(cItem["url"]))
+        token = token or imdb[2:]
+        if not token:
+            SetIPTVPlayerLastHostError(_("No streams are available for this title yet."))
             return []
-        # resolved by urlparser (parserVIXSRC: token playlist, audio/video variants)
-        urltab = [{"name": "VixSrc", "url": strwithmeta(embedUrl, {"Referer": self.MAIN_URL}), "need_resolve": 1}]
-        # the INFO lookup (the items carry no meta_title / meta_year): show / film name and year of the list
-        mediaType = cItem.get("meta_type", "") or ("tv" if "/tv-" in cItem.get("url", "") else "movie")
-        metaQuery = sidecarMetaQuery(mediaType, cItem.get("s_title", "") or cItem.get("title", ""), cItem.get("s_year", ""), skip=())
-        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), cItem.get("desc", ""), metaQuery))
+        season, episode = str(cItem.get("season", "") or ""), str(cItem.get("episode", "") or "")
+        path = "/%s/%s" % (season, episode) if (season and episode) else ""
+        urltab = []
+        if imdb:
+            vixsrc = "%stv/%s%s?lang=it" % (VIXSRC_URL, imdb, path) if path else "%smovie/%s?lang=it" % (VIXSRC_URL, imdb)
+            urltab.append({"name": "VixSrc", "url": strwithmeta(vixsrc, {"Referer": self.MAIN_URL}), "need_resolve": 1})
+        urltab.append({"name": "vidxgo", "url": strwithmeta(VIDXGO_URL + token + path, {"Referer": self.MAIN_URL}), "need_resolve": 1})
+        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), cItem.get("plot", ""), metaQuery=self._metaQuery(cItem, imdb)))
 
     def getVideoLinks(self, videoUrl):
         printDBG("Altadefinizione.getVideoLinks [%s]" % videoUrl)
@@ -368,25 +289,33 @@ class Altadefinizione(GenericFolderWatchedScraperMixin, CBaseHostClass):
     ###################################################
     # INFO
     ###################################################
+    @staticmethod
+    def _metaQuery(cItem, imdb):
+        # the lookup of the INFO view (getMetaByImdbId, else getMeta by title) for the download sidecar
+        return sidecarMetaQuery(cItem.get("meta_type", "") or "movie", cItem.get("s_title", "") or cItem.get("title", ""), cItem.get("s_year", ""), imdbId=imdb, skip=())
+
     def getArticleContent(self, cItem):
-        printDBG("Altadefinizione.getArticleContent [%s]" % cItem.get("url"))
-        info, plot, year = {}, "", cItem.get("s_year", "")
-        sts, data = self.getPage(cItem.get("url", "") or cItem.get("prev_url", ""))
-        if sts and data:
-            info, plot, year = self._siteInfo(data)
-        mediaType = cItem.get("meta_type", "") or ("tv" if "/tv-" in cItem.get("url", "") else "movie")
-        title = cItem.get("s_title", "") or cItem.get("title", "")
-        if sts and data:
-            title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'<h1 class="detail-title">(.*?)</h1>')[0]) or title
+        printDBG("Altadefinizione.getArticleContent [%s]" % cItem.get("url", ""))
+        imdb, _token, _seasons, info = self._titleInfo(self._pageData(cItem.get("url", "")))
+        imdb = imdb or cItem.get("imdb", "")
+        mediaType = cItem.get("meta_type", "") or "movie"
+        year = cItem.get("s_year", "")
+        if year:
+            info["year"] = year
         meta = {}
         try:
-            meta = getMeta(mediaType, title, year)
+            if imdb:
+                meta = getMetaByImdbId(mediaType, imdb)
+            if not meta:
+                meta = getMeta(mediaType, cItem.get("s_title", "") or cItem.get("title", ""), year)
         except Exception:
             printExc()
         info.update(meta.get("info", {}))
+        if "directors" in info:
+            info.pop("director", None)
+        text = cItem.get("desc", "") if cItem.get("episode") else cItem.get("plot", "")
         metaPlot = meta.get("plot", "")
-        text = plot or cItem.get("desc", "")
-        if metaPlot and text and metaPlot not in text:
+        if metaPlot and text and metaPlot != text:
             text = "%s[/br][/br]%s" % (text, metaPlot)
         else:
             text = text or metaPlot
@@ -399,24 +328,19 @@ class Altadefinizione(GenericFolderWatchedScraperMixin, CBaseHostClass):
             self.currItem = jumpTarget(self, self.currItem)
         name = self.currItem.get("name", "")
         category = self.currItem.get("category", "")
-        printDBG("handleService: name[%s], category[%s]" % (name, category))
+        printDBG("Altadefinizione.handleService name[%s], category[%s]" % (name, category))
         self.currList = []
         if name is None:
             self.listsTab(self.MENU, {"name": "category"})
-        elif category == "list_items":
+        elif category in ("list_items", "search_next_page"):
             self.listItems(self.currItem)
-        elif category == "explore_item":
+        elif category == "list_seasons":
             self.listSeasons(self.currItem)
         elif category == "list_episodes":
             self.listEpisodes(self.currItem)
         elif category == "list_genres":
             self.listGenres(self.currItem)
-        elif category == "list_years":
-            self.listYears(self.currItem)
-        elif category in ("play_video", "video"):
-            # folder favourites from before 27.09.2026 (episode / film folders) - now the playable row itself
-            self.addVideo(dict(self.currItem, category="video"))
-        elif category in ["search", "search_next_page"]:
+        elif category == "search":
             cItem = dict(self.currItem)
             cItem.update({"search_item": False, "name": "category"})
             self.listSearchResult(cItem, searchPattern, searchType)
@@ -436,4 +360,4 @@ class IPTVHost(GenericFolderWatchedHostMixin, CHostBase):
         self.watchedHelper = IPTVWatchedHelper("altadefinizione01")
 
     def withArticleContent(self, cItem):
-        return cItem.get("type") == "video" or cItem.get("category", "") in ("explore_item", "list_episodes", "play_video", "video")
+        return cItem.get("type") == "video" or cItem.get("category", "") in ("list_seasons", "list_episodes")

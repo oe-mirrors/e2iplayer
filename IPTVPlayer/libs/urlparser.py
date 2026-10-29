@@ -870,6 +870,7 @@ class urlparser:
             # v
             "v-o-e-unblock.com": self.pp.parserVOESX,  # add 061026
             "v.turkvearab.com": self.pp.parserJWPLAYER,
+            "v.vidxgo.co": self.pp.parserVIDXGO,  # add 291026 (altadefinizionex, guardaseriex)
             "valeronevijao.com": self.pp.parserVOESX,  # add 061026
             "veev.pro": self.pp.parserVEEV,  # add 061026
             "veev.to": self.pp.parserVEEV,
@@ -982,6 +983,7 @@ class urlparser:
             "vimeo.com": self.pp.parserVIMEO,
             "vimeos.net": self.pp.parserJWPLAYER,  # add 241026 (packed jwplayer, hls2; cinecalidad)
             "vixeo.io": self.pp.parserVIXEO,
+            "vixcloud.cc": self.pp.parserVIXSRC,  # add 291026 (StreamingCommunity embeds)
             "vixsrc.to": self.pp.parserVIXSRC,
             "vk.ru": self.pp.parserVK,
             "voe-un-block.com": self.pp.parserVOESX,  # add 061026
@@ -5835,20 +5837,25 @@ class pageParser(CaptchaHelper):
             urltab.extend(getDirectM3U8Playlist(url))
         return urltab
 
-    def parserVIXSRC(self, baseUrl):  # fix 300526
+    def parserVIXSRC(self, baseUrl):  # fix 300526, update 291026 - vixcloud.cc embed urls (StreamingCommunity)
         printDBG("parserVIXSRC baseUrl[%s]" % baseUrl)
         urltab = []
+        baseUrl = strwithmeta(baseUrl)
         host = urlparser.getDomain(baseUrl, False)
         HTTP_HEADER = self.cm.getDefaultHeader()
         HTTP_HEADER["Referer"] = baseUrl.meta.get("Referer", host)
-        sts, data = self.cm.getPage(baseUrl.replace(host, host + "api/"), {"header": HTTP_HEADER})
-        if not sts:
-            return []
-        try:
-            src = json_loads(data).get("src", "")
-        except Exception:
-            printDBG("parserVIXSRC: no JSON from the api (title not on vixsrc?)")
-            return []
+        if "/embed/" in baseUrl:
+            # a ready embed url with its token (vixcloud.cc of StreamingCommunity's iframe)
+            src = str(baseUrl).replace("&amp;", "&")
+        else:
+            sts, data = self.cm.getPage(baseUrl.replace(host, host + "api/"), {"header": HTTP_HEADER})
+            if not sts:
+                return []
+            try:
+                src = json_loads(data).get("src", "")
+            except Exception:
+                printDBG("parserVIXSRC: no JSON from the api (title not on vixsrc?)")
+                return []
         if src.startswith("/"):
             src = host[:-1] + src
         HTTP_HEADER["Referer"] = host
@@ -5861,14 +5868,28 @@ class pageParser(CaptchaHelper):
         hurl = re.search(r"url:\s*'([^']+)", data)
         if not all([tok, exp, hurl]):
             return []
-        url = "%s%s&token=%s&expires=%s&h=1" % (hurl.group(1), "&" if "?" in hurl.group(1) else "?", tok.group(1), exp.group(1))
-        if "?lang=it" in baseUrl:
+        url = "%s%s&token=%s&expires=%s" % (hurl.group(1), "&" if "?" in hurl.group(1) else "?", tok.group(1), exp.group(1))
+        # h=1 (full HD) only where the player allows it: vixcloud answers 403 with canPlayFHD = false
+        if not re.search(r"canPlayFHD\s*=\s*false", data):
+            url += "&h=1"
+        if "lang=it" in baseUrl:
             url += "&lang=it"
         if url.startswith("/"):
             url = host + url
         url = strwithmeta(url, {"iptv_proto": "m3u8", "User-Agent": HTTP_HEADER["User-Agent"], "Referer": src, "Accept": "*/*"})
         urltab.extend(getDirectM3U8Playlist(url, checkExt=False, variantCheck=False, sortWithMaxBitrate=99999999))
         return urltab
+
+    def parserVIDXGO(self, baseUrl):  # add 291026
+        # the token of /t/<id> runs out after ~180 s, also for the segments: the playlist is served by the local
+        # relay of vidxgorelay, which asks for a new token while the film plays
+        printDBG("parserVIDXGO baseUrl[%s]" % baseUrl)
+        from Plugins.Extensions.IPTVPlayer.libs import vidxgorelay
+        local = vidxgorelay.localUrl(baseUrl)
+        if not local:
+            SetIPTVPlayerLastHostError(_("No streams are available for this title yet."))
+            return []
+        return [{"name": "vidxgo", "url": strwithmeta(local, {"iptv_proto": "m3u8"})}]
 
     def parserFLYFILE(self, baseUrl):  # add 030626, update 031026 - flyf.lat is the same player, its API is on flyfile.app; fallback for files without master.m3u8
         printDBG("parserFLYFILE baseUrl[%s]" % baseUrl)

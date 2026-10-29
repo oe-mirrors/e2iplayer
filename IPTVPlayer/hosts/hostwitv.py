@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "28.10.2026"
+LAST_MODIFIED = "29.10.2026"
 # Coding: BY MOHAMED_OS
 # 08.10.2026 - ported to the python3 framework / host standard
 #   - WiTv (witv.eu, was witv.football until 10.2026; French live TV; DLE site): the channel groups of the site menu, the
@@ -11,9 +11,12 @@ LAST_MODIFIED = "28.10.2026"
 #     playlist is _wtPayload (var m3u8Url is a decoy notice video); playlist and segments need
 #     Referer = player page + Sec-Fetch-Site; DaddyLive players (short numeric ids, iframe to wideiptv /
 #     matchora, MPEG-TS hidden in PNG images) are skipped; servers not answering right now are left out
+#   - each player page has a server bar (switchWitvStream ids, "Serveur 1 (FHD Direct)" ...): all of them are listed;
+#     a dead server answers with the stream of another one (vc = other id) and is left out
 #   - DADDY_ONLY: channels that only have DaddyLive players (survey 08.10.2026, 41 of 161) are not listed
 #   - removed: the proxy option, the remote mohamed_os icon, cu.Cleantitlename, the broken search call
 import base64
+import re
 import time
 
 from Components.config import ConfigText, config, getConfigListEntry
@@ -47,6 +50,8 @@ DADDY_ONLY = frozenset((51, 137, 145, 151, 169, 171, 174, 176, 177, 179, 181, 18
                         194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 212, 214, 215, 222, 223, 231, 245))
 # the player page sends the stream only to an iframe of the site
 IFRAME_HEADER = {"Sec-Fetch-Dest": "iframe", "Sec-Fetch-Mode": "navigate", "Sec-Fetch-Site": "same-origin"}
+# player pages loaded per channel at most (sources + the servers of their server bars)
+MAX_SERVERS = 16
 
 
 class WiTV(CBaseHostClass):
@@ -213,22 +218,37 @@ class WiTV(CBaseHostClass):
             return {}
 
     def _playerHls(self, playerUrl, referer):
-        # the player page -> (HLS playlist behind the site's proxy, player page url = Referer of the stream);
+        # the player page -> (HLS playlist behind the site's proxy, player page url = Referer of the stream, page html);
         # "var m3u8Url" is a decoy (notice video), the real playlist is _wtPayload = reversed base64
         pageUrl = "%s%s_t=%d" % (playerUrl, "&" if "?" in playerUrl else "?", int(time.time() * 1000))
         params = self._params(referer)
         params["header"].update(IFRAME_HEADER)
         sts, data = self.getPage(pageUrl, params)
         if not sts or "temporairement inaccessible" in data:
-            return "", pageUrl
+            return "", pageUrl, ""
         payload = self.cm.ph.getSearchGroups(data, r'''_wtPayload\s*=\s*["']([^"']+)["']''')[0]
         try:
             url = ensure_str(base64.b64decode(payload[::-1] + "=" * (-len(payload) % 4))) if payload else ""
         except Exception:
             url = ""
         if not url or "vc=notice" in url:
-            return "", pageUrl
-        return self.getFullUrl(url, playerUrl), pageUrl
+            return "", pageUrl, data
+        # a dead server falls back to the stream of another server of the group (vc = its id): no duplicate links
+        playerId = self.cm.ph.getSearchGroups(playerUrl, r"[?&]id=([^&]+)")[0]
+        streamId = self.cm.ph.getSearchGroups(url, r"[?&]vc=([^&]+)")[0]
+        if playerId and streamId and streamId != playerId:
+            return "", pageUrl, data
+        return self.getFullUrl(url, playerUrl), pageUrl, data
+
+    def _playerServers(self, data):
+        # the player's server bar: [(player id, label)]: "Serveur 4 (FHD Direct)" -> "FHD Direct",
+        # "Serveur 1 (B) HD" -> "B HD" (box log 29.10.); mirror buttons (data-url, DaddyLive iframes) are not taken
+        servers = []
+        for item in self.cm.ph.getAllItemsBeetwenMarkers(data, "switchWitvStream('", "</button>", False):
+            playerId = item.split("'", 1)[0]
+            label = re.sub(r"(?i)^serveur\s*\d*", "", self.cleanHtmlStr(item.split(">", 1)[-1]))
+            servers.append((playerId, " ".join(label.replace("(", " ").replace(")", " ").split())))
+        return servers
 
     def _isLive(self, hlsUrl, pageUrl):
         # a live playlist; an expired / refused one comes as the site's notice video (vc=notice, #EXT-X-ENDLIST)
@@ -250,16 +270,29 @@ class WiTV(CBaseHostClass):
         if not sts:
             return []
         urltab = []
-        seen = set()
         players = self._playerMap(data)
+        # the page's sources first, then the servers each player lists in its server bar (Serveur 1 (FHD Direct) ...)
+        queue = []
+        labels = {}
         for token in self.cm.ph.getAllItemsBeetwenMarkers(data, 'data-v="', '"', False):
             token = token.replace("&amp;", "&")
             playerUrl = self.getFullUrl(players.get(token, "" if token.startswith("wt1_") else token))
-            playerId = self.cm.ph.getSearchGroups(playerUrl, r"[?&]id=([^&]+)")[0]
-            if "/player/source2/" not in playerUrl or not playerId or playerId in seen or (playerId.isdigit() and len(playerId) <= 5):
-                continue  # foreign / DaddyLive player (short numeric id, iframe to wideiptv / matchora) or a server listed twice
-            seen.add(playerId)
-            hlsUrl, pageUrl = self._playerHls(playerUrl, cItem["url"])
+            if "/player/source2/" in playerUrl:
+                queue.append(self.cm.ph.getSearchGroups(playerUrl, r"[?&]id=([^&]+)")[0])
+        idx = 0
+        while idx < len(queue) and idx < MAX_SERVERS:
+            playerId = queue[idx]
+            idx += 1
+            if not playerId or queue.index(playerId) < idx - 1 or (playerId.isdigit() and len(playerId) <= 5):
+                continue  # DaddyLive player (short numeric id, iframe to wideiptv / matchora) or a server listed twice
+            playerUrl = self.getFullUrl("/player/source2/?id=%s" % playerId)
+            hlsUrl, pageUrl, page = self._playerHls(playerUrl, cItem["url"])
+            for serverId, label in self._playerServers(page):
+                # the same server has other labels in other groups: its own bar names it
+                if serverId == playerId or serverId not in labels:
+                    labels[serverId] = label
+                if serverId not in queue:
+                    queue.append(serverId)
             if not hlsUrl:
                 printDBG("WiTV: server %s has no stream" % playerId)
                 continue
@@ -268,7 +301,10 @@ class WiTV(CBaseHostClass):
                 printDBG("WiTV: server %s not answering" % playerId)
                 continue
             # the playlist url rides along, getVideoLinks does not load the player page again
-            urltab.append({"name": "%s %d" % (_("Server"), len(urltab) + 1), "url": strwithmeta(playerUrl, {"Referer": cItem["url"], "wt_hls": hlsUrl, "wt_page": pageUrl}), "need_resolve": 1})
+            name = "%s %d" % (_("Server"), len(urltab) + 1)
+            if labels.get(playerId):
+                name += " (%s)" % labels[playerId]
+            urltab.append({"name": name, "url": strwithmeta(playerUrl, {"Referer": cItem["url"], "wt_hls": hlsUrl, "wt_page": pageUrl}), "need_resolve": 1})
         if not urltab:
             SetIPTVPlayerLastHostError(_("No stream available"))
             return []
@@ -285,7 +321,7 @@ class WiTV(CBaseHostClass):
         hlsUrl, pageUrl = meta.get("wt_hls", ""), meta.get("wt_page", str(videoUrl))
         if not hlsUrl or not self._isLive(hlsUrl, pageUrl):
             # no stored playlist url or it expired meanwhile (the site then sends its notice video): ask the player page again
-            hlsUrl, pageUrl = self._playerHls(str(videoUrl), referer)
+            hlsUrl, pageUrl = self._playerHls(str(videoUrl), referer)[:2]
             if hlsUrl and not self._isLive(hlsUrl, pageUrl):
                 hlsUrl = ""
         if hlsUrl:

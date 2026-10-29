@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "07.10.2026"
+LAST_MODIFIED = "29.10.2026"
 # Coding: BY MOHAMED_OS
 # 06.10.2026 - ported to the python3 host standard
 #   - Wiflix / Flemmix (French movies and series, DLE site); the current address comes from
@@ -8,7 +8,9 @@ LAST_MODIFIED = "07.10.2026"
 #   - First page / Jump / Next page on every list (/page/N/) and the search (20 per page, last page known)
 #   - the site lists a series per season page: season -> episodes (VF and VOSTFR links of an episode
 #     on one row, keyed on "<season page>#ep<N>")
-#   - links: the player buttons of the page (data-v / loadVideo()) -> urlparser
+#   - links: the player buttons of the page (data-v / loadVideo()) -> urlparser; fx1_ tokens (10.2026) are asked from
+#     /ajax_player.php with the page's sealed key and signature (unsigned requests get decoy links)
+#   - the address finder sends atob(_SAFE_PAYLOAD) since 10.2026 (flemmix.studio)
 #   - watched flag, downloaded flag, favourites, name normalisation ("Title (Year)", "Show - SxxExx"),
 #     sidecar, INFO via moviemeta + the site's fields
 ###################################################
@@ -18,7 +20,7 @@ import re
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
-from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
+from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps, loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
@@ -35,7 +37,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return "https://flemmix.eu/"
+    return "https://flemmix.studio/"
 
 
 ADDRESS_FINDER = "https://www.wiflix-nouvelle-adresse.site/"
@@ -114,6 +116,13 @@ class WiFlix(GenericFolderWatchedScraperMixin, CBaseHostClass):
         sts, data = self.cm.getPage(ADDRESS_FINDER, dict(self.defaultParams))
         if sts:
             url = self.cm.ph.getSearchGroups(data, r"""location\.href\s*=\s*['"](https?://[^'"]+)['"]""")[0]
+            # 10.2026: location.href = atob(_SAFE_PAYLOAD)
+            payload = self.cm.ph.getSearchGroups(data, r"""_SAFE_PAYLOAD\s*=\s*['"]([A-Za-z0-9+/=]+)['"]""")[0]
+            if not url and payload:
+                try:
+                    url = b64Decode(payload)
+                except Exception:
+                    printExc()
         if not self.setMainUrl(url):
             self.MAIN_URL = gettytul()
         printDBG("WiFlix.selectDomain [%s]" % self.MAIN_URL)
@@ -184,7 +193,7 @@ class WiFlix(GenericFolderWatchedScraperMixin, CBaseHostClass):
         seen = set()
         for block in data.split('<div class="mov clearfix">')[1:]:
             url = self.cm.ph.getSearchGroups(block, r'class="mov-t nowrap" href="([^"]+)"')[0]
-            title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(block, r'(?s)class="mov-t nowrap" href="[^"]+">(.*?)</a>')[0])
+            title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(block, r'(?s)class="mov-t nowrap" href="[^"]+"[^>]*>(.*?)</a>')[0])
             if not url or not title or url in seen:
                 continue
             seen.add(url)
@@ -263,7 +272,9 @@ class WiFlix(GenericFolderWatchedScraperMixin, CBaseHostClass):
         players = []
         for match in PLAYER_RE.finditer(block):
             url = match.group(1) or match.group(2)
-            if match.group(2) and not re.match(r"(?:https?:)?//", url):
+            if url.startswith("fx1_"):
+                pass  # sealed token (10.2026): asked from /ajax_player.php when the links of a title are listed
+            elif match.group(2) and not re.match(r"(?:https?:)?//", url):
                 # fix 071026: the site's decodeStream(): base64 -> rot13 (new player buttons, no links on any title)
                 try:
                     url = codecs.encode(b64Decode(url), "rot13")
@@ -340,6 +351,38 @@ class WiFlix(GenericFolderWatchedScraperMixin, CBaseHostClass):
         year = cItem.get("meta_year") or self.cm.ph.getSearchGroups(info.get("year", ""), r"((?:19|20)\d{2})")[0]
         return mediaType, metaTitle, year
 
+    def _playerSeal(self, data):
+        # the page's sealed script: XOR(_m) of "key|salt"; the request signature is a hash seeded with _in, factor _mu
+        nums = self.cm.ph.getSearchGroups(data, r"_a=\[([\d,]+)\],_m=(\d+),_in=(\d+),_mu=(\d+)", 4)
+        if not all(nums):
+            return None
+        try:
+            mask = int(nums[1])
+            parts = "".join(chr(int(n) ^ mask) for n in nums[0].split(",")).split("|")
+            return parts[0], parts[1] if len(parts) > 1 else "", int(nums[2]), int(nums[3])
+        except Exception:
+            printExc()
+            return None
+
+    def _resolveToken(self, token, seal, referer):
+        # fx1_ token -> hoster url; without the page's signature the site answers with decoy links
+        if not seal:
+            return ""
+        key, salt, seed, factor = seal
+        sign = seed
+        for char in "%s|%s|%s" % (token, key, salt):
+            sign = (sign * factor + ord(char)) & 0x7fffffff
+        params = dict(self.defaultParams)
+        params["header"] = dict(self.HEADER, Referer=referer, Origin=self.getMainUrl()[:-1], **{"X-Requested-With": "XMLHttpRequest"})
+        sts, data = self.getPage(self.getFullUrl("/ajax_player.php"), params, {"v": token, "k": key, "b": "1", "s": "%08x" % sign, "t": "1"})
+        if not sts:
+            return ""
+        try:
+            return json_loads(data).get("u", "") or ""
+        except Exception:
+            printExc()
+            return ""
+
     def getLinksForVideo(self, cItem):
         url = cItem.get("url", "")
         printDBG("WiFlix.getLinksForVideo [%s]" % url)
@@ -358,7 +401,10 @@ class WiFlix(GenericFolderWatchedScraperMixin, CBaseHostClass):
             for pos, playerUrl, label in self._players(block):
                 links.append(("VOSTFR" if -1 < vostfr < pos else "", playerUrl, label))
         urltab, seen = [], set()
+        seal = self._playerSeal(data)
         for lang, playerUrl, label in links:
+            if playerUrl.startswith("fx1_"):
+                playerUrl = self._resolveToken(playerUrl, seal, url)
             playerUrl = self.getFullUrl(playerUrl)
             if playerUrl in seen or not self.cm.isValidUrl(playerUrl):
                 continue
