@@ -516,7 +516,7 @@ msgid "Adhan"
 msgstr "Adhan"
 
 msgid "Adult"
-msgstr ""
+msgstr "Adulti"
 
 msgid "Adventure"
 msgstr "Avventura"
@@ -537,7 +537,7 @@ msgid "Airing now"
 msgstr "In onda ora"
 
 msgid "Albanian"
-msgstr ""
+msgstr "Albanese"
 
 msgid "All"
 msgstr "Tutti"
@@ -749,7 +749,7 @@ msgid "Are you sure you want to reset all settings to their default values?"
 msgstr "Vuoi davvero ripristinare tutte le impostazioni ai valori predefiniti?"
 
 msgid "Armenian"
-msgstr ""
+msgstr "Armeno"
 
 msgid "Art"
 msgstr "Arte"
@@ -780,7 +780,7 @@ msgid "Asian series (dubbed)"
 msgstr "Serie asiatiche (doppiate)"
 
 msgid "Ask"
-msgstr ""
+msgstr "Chiedi"
 
 msgid "Aspect"
 msgstr "Proporzioni"
@@ -879,13 +879,13 @@ msgid "Basketball"
 msgstr "Basket"
 
 msgid "Basque"
-msgstr ""
+msgstr "Basco"
 
 msgid "Being watched"
 msgstr "In visione ora"
 
 msgid "Bengali"
-msgstr ""
+msgstr "Bengalese"
 
 msgid "Best"
 msgstr "Migliori"
@@ -931,7 +931,7 @@ msgid "Books"
 msgstr "Libri"
 
 msgid "Bosnian"
-msgstr ""
+msgstr "Bosniaco"
 
 msgid "Box"
 msgstr "Box"
@@ -940,7 +940,7 @@ msgid "Boxing"
 msgstr "Boxe"
 
 msgid "Brazilian Portuguese"
-msgstr ""
+msgstr "Portoghese brasiliano"
 
 msgid "Broadcast:"
 msgstr "Trasmissione:"
@@ -958,7 +958,7 @@ msgid "Buffering location"
 msgstr "Percorso del buffer"
 
 msgid "Bulgarian"
-msgstr ""
+msgstr "Bulgaro"
 
 msgid "Business"
 msgstr "Economia"
@@ -1054,7 +1054,7 @@ msgid "Cast:"
 msgstr "Cast:"
 
 msgid "Catalan"
-msgstr ""
+msgstr "Catalano"
 
 msgid "Catch-up"
 msgstr "Catch-up"
@@ -1353,7 +1353,7 @@ msgid "Critical Error – Content-Encoding gzip cannot be handled!"
 msgstr "Errore critico - impossibile gestire il Content-Encoding gzip!"
 
 msgid "Croatian"
-msgstr ""
+msgstr "Croato"
 
 msgid "Culture"
 msgstr "Cultura"
@@ -1395,7 +1395,7 @@ msgid "Daily download limit reached - type the code"
 msgstr "Limite di download giornaliero raggiunto - inserisci il codice"
 
 msgid "Danish"
-msgstr ""
+msgstr "Danese"
 
 msgid "Darkgray"
 msgstr "Grigio scuro"
@@ -1544,7 +1544,7 @@ msgstr "Eliminare la cartella \"%s\"? I suoi host tornano nel gruppo."
 
 #, python-format
 msgid "Delete the folder \"%s\"? Its videos and subfolders move up one level."
-msgstr ""
+msgstr "Eliminare la cartella \"%s\"? I suoi video e le sottocartelle salgono di un livello."
 
 #, python-format
 msgid "Delete the folder \"%s\"? Its videos go back to the Watchlist."
@@ -2111,7 +2111,7 @@ msgid "Error writing file \"%s\".\n"
 msgstr "Errore scrittura file \"%s\".\n"
 
 msgid "Estonian"
-msgstr ""
+msgstr "Estone"
 
 msgid "Ethical & Legal"
 msgstr "Etica e diritto"
@@ -2353,7 +2353,7 @@ msgid "Finished matches with a full replay, highlights or match cuts, newest fir
 msgstr "Partite concluse con replay completo, highlights o sintesi, dalle più recenti (di solito alcuni giorni dopo la partita)."
 
 msgid "Finnish"
-msgstr ""
+msgstr "Finlandese"
 
 msgid "First Page"
 msgstr "Prima pagina"
@@ -2490,7 +2490,7 @@ msgid "GREEN"
 msgstr "VERDE"
 
 msgid "Galician"
-msgstr ""
+msgstr "Galiziano"
 
 #, python-format
 msgid "Game: %s"
@@ -2525,7 +2525,7 @@ msgid "Genres:"
 msgstr "Generi:"
 
 msgid "Georgian"
-msgstr ""
+msgstr "Georgiano"
 
 msgid "German"
 msgstr "Tedesco"
@@ -2619,7 +2619,7 @@ msgid "Hearing impaired"
 msgstr "Per non udenti"
 
 msgid "Hebrew"
-msgstr ""
+msgstr "Ebraico"
 
 msgid "Help"
 msgstr "Aiuto"
@@ -2644,7 +2644,7 @@ msgid "Highlights"
 msgstr "Highlights"
 
 msgid "Hindi"
-msgstr ""
+msgstr "Hindi"
 
 msgid "History"
 msgstr "Storia"
@@ -2742,7 +2742,7 @@ msgid "IPTV Portals"
 msgstr "Portali IPTV"
 
 msgid "Icelandic"
-msgstr ""
+msgstr "Islandese"
 
 msgid "Icon type"
 msgstr "Tipo di icona"
@@ -2775,7 +2775,7 @@ msgid "Indian series (dubbed)"
 msgstr "Serie indiane (doppiate)"
 
 msgid "Indonesian"
-msgstr ""
+msgstr "Indonesiano"
 
 msgid "Industry"
 msgstr "Industria"
@@ -2946,7 +2946,7 @@ msgid "Keep FFmpeg command files (.iptv.cmd)"
 msgstr "Conserva i file di comando FFmpeg (.iptv.cmd)"
 
 msgid "Keep global search results :"
-msgstr ""
+msgstr "Conserva i risultati della ricerca globale :"
 
 msgid "Keep temporary JS scripts"
 msgstr "Conserva gli script JS temporanei"
@@ -2985,7 +2985,7 @@ msgid "Korean movies"
 msgstr "Film coreani"
 
 msgid "Kurdish"
-msgstr ""
+msgstr "Curdo"
 
 msgid "LEFT/RIGHT at start/end of text - alternative way to switch panels"
 msgstr "SINISTRA/DESTRA a inizio/fine testo - modo alternativo per cambiare pannello"
@@ -3116,7 +3116,7 @@ msgid "Latino"
 msgstr "Latino"
 
 msgid "Latvian"
-msgstr ""
+msgstr "Lettone"
 
 #, python-brace-format
 msgid "Launcher URI ({url} or {address} = address of the box)"
@@ -3194,7 +3194,7 @@ msgid "Listeners: %s"
 msgstr "Ascoltatori: %s"
 
 msgid "Lithuanian"
-msgstr ""
+msgstr "Lituano"
 
 msgid "Live"
 msgstr "Live"
@@ -3345,7 +3345,7 @@ msgid "MP3Quran live radio"
 msgstr "Radio live MP3Quran"
 
 msgid "Macedonian"
-msgstr ""
+msgstr "Macedone"
 
 msgid "Main"
 msgstr "Pagina principale"
@@ -3358,7 +3358,7 @@ msgid "Make directory [%s]"
 msgstr "Creazione della cartella [%s]"
 
 msgid "Malay"
-msgstr ""
+msgstr "Malese"
 
 msgid "Male"
 msgstr "Uomini"
@@ -3816,13 +3816,13 @@ msgid "None"
 msgstr "Nessuno"
 
 msgid "Nordic"
-msgstr ""
+msgstr "Nordico"
 
 msgid "Normalize item / file names (Show - SxxExx - Title)"
 msgstr "Normalizza nomi di elementi / file (Serie - SxxExx - Titolo)"
 
 msgid "Norwegian"
-msgstr ""
+msgstr "Norvegese"
 
 msgid "Not available in your country (geo-blocking)."
 msgstr "Non disponibile nel tuo paese (geoblocco)."
@@ -3945,7 +3945,7 @@ msgid "Open pull requests"
 msgstr "Pull request aperte"
 
 msgid "Open the page and click the video player there"
-msgstr ""
+msgstr "Apri la pagina e clicca lì sul lettore video"
 
 msgid "Open the page and get the link"
 msgstr "Apri la pagina e ottieni il link"
@@ -4108,7 +4108,7 @@ msgid "People"
 msgstr "Persone"
 
 msgid "Persian"
-msgstr ""
+msgstr "Persiano"
 
 msgid "Persons"
 msgstr "Persone"
@@ -4317,13 +4317,13 @@ msgid "Portuguese"
 msgstr "Portoghese"
 
 msgid "Poster grid for lists with pictures"
-msgstr ""
+msgstr "Griglia di locandine per le liste con immagini"
 
 msgid "Poster grid off"
-msgstr ""
+msgstr "Griglia di locandine disattivata"
 
 msgid "Poster grid on"
-msgstr ""
+msgstr "Griglia di locandine attivata"
 
 msgid "Powerpoint Presentation"
 msgstr "Presentazione Powerpoint"
@@ -4701,7 +4701,7 @@ msgid "Romance"
 msgstr "Romantico"
 
 msgid "Romanian"
-msgstr ""
+msgstr "Rumeno"
 
 msgid "Round"
 msgstr "Giornata"
@@ -4928,7 +4928,7 @@ msgid "Select link"
 msgstr "Seleziona Link"
 
 msgid "Select link automatically"
-msgstr ""
+msgstr "Seleziona il link automaticamente"
 
 msgid "Select movie player"
 msgstr "Seleziona movie player"
@@ -4979,7 +4979,7 @@ msgid "Sending the result to the box failed."
 msgstr "Invio del risultato al box non riuscito."
 
 msgid "Serbian"
-msgstr ""
+msgstr "Serbo"
 
 msgid "Series"
 msgstr "Serie"
@@ -5212,7 +5212,7 @@ msgid "Simplify the title and try again."
 msgstr "Semplifica il titolo e riprova."
 
 msgid "Sinhala"
-msgstr ""
+msgstr "Singalese"
 
 msgid "Site self-test"
 msgstr "Autotest dei siti"
@@ -5237,10 +5237,10 @@ msgid "Skip video shorter than [min]"
 msgstr "Salta i video più corti di [min]"
 
 msgid "Slovak"
-msgstr ""
+msgstr "Slovacco"
 
 msgid "Slovenian"
-msgstr ""
+msgstr "Sloveno"
 
 msgid "Snooker"
 msgstr "Biliardo (snooker)"
@@ -5546,7 +5546,7 @@ msgstr ""
 "Registrati su https://tbngo.pl/ e inserisci e-mail e password nelle impostazioni dell'host."
 
 msgid "TEXT"
-msgstr ""
+msgstr "TESTO"
 
 msgid "THE PAGE YOU ARE LOOKING FOR IS NOT FOUND."
 msgstr "LA PAGINA CHE CERCHI NON È STATA TROVATA."
@@ -5632,7 +5632,7 @@ msgid "Talk shows"
 msgstr "Talk show"
 
 msgid "Tamil"
-msgstr ""
+msgstr "Tamil"
 
 #, python-format
 msgid "Tariff: %s"
@@ -6103,7 +6103,7 @@ msgid "Time"
 msgstr "Ora"
 
 msgid "Time limit"
-msgstr ""
+msgstr "Tempo scaduto"
 
 msgid "Tip! You can connect USB flash drive to fix this problem."
 msgstr "Suggerimento! Puoi collegare una flash drive USB per risolvere il problema."
@@ -6319,7 +6319,7 @@ msgstr "Prova a cambiare extplayer o a reinstallare gst-ifdsrc"
 
 #, python-format
 msgid "Trying link %d of %d"
-msgstr ""
+msgstr "Provo il link %d di %d"
 
 msgid "Turkish"
 msgstr "Turco"
@@ -6442,7 +6442,7 @@ msgid "Uploads"
 msgstr "Caricamenti"
 
 msgid "Urdu"
-msgstr ""
+msgstr "Urdu"
 
 msgid "Urllists player"
 msgstr "Riproduttore Urllists"
@@ -6606,7 +6606,7 @@ msgid "Videos you have recently watched."
 msgstr "Video che hai guardato di recente."
 
 msgid "Vietnamese"
-msgstr ""
+msgstr "Vietnamita"
 
 msgid "View count"
 msgstr "Numero di visualizzazioni"
@@ -6963,7 +6963,7 @@ msgstr "posizione buffer"
 
 #, python-format
 msgid "cancelled after %d of %d sites"
-msgstr ""
+msgstr "annullato dopo %d di %d siti"
 
 msgid "center"
 msgstr "centro"
@@ -6972,7 +6972,7 @@ msgid "changed"
 msgstr "modificato"
 
 msgid "clock not set"
-msgstr ""
+msgstr "orologio non impostato"
 
 msgid "close the editor - or stop manual reordering if it's active"
 msgstr "chiudi l'editor - o interrompi il riordino manuale se è attivo"
@@ -7111,7 +7111,7 @@ msgid "installed"
 msgstr "installato"
 
 msgid "installed, does not start"
-msgstr ""
+msgstr "installato, non si avvia"
 
 msgid "internal"
 msgstr "interno"
@@ -7220,7 +7220,7 @@ msgstr "nessuna risposta"
 
 #, python-format
 msgid "no answer within %d s"
-msgstr ""
+msgstr "nessuna risposta entro %d s"
 
 msgid "no next page"
 msgstr "nessuna pagina successiva"
@@ -7241,58 +7241,58 @@ msgid "not installed"
 msgstr "non installato"
 
 msgid "not installed (Byse: slower captcha check)"
-msgstr ""
+msgstr "non installato (Byse: verifica captcha più lenta)"
 
 msgid "not installed (hosts that need JavaScript fail)"
-msgstr ""
+msgstr "non installato (gli host che richiedono JavaScript non funzionano)"
 
 msgid "not installed (no DASH / ffmpeg downloads)"
-msgstr ""
+msgstr "non installato (nessun download DASH / ffmpeg)"
 
 msgid "not installed (no HDS/F4M streams)"
-msgstr ""
+msgstr "non installato (nessuno stream HDS/F4M)"
 
 msgid "not installed (no HLS downloads or buffering)"
-msgstr ""
+msgstr "non installato (nessun download o buffering HLS)"
 
 msgid "not installed (no RAR subtitles)"
-msgstr ""
+msgstr "non installato (nessun sottotitolo RAR)"
 
 msgid "not installed (no RTMP downloads)"
-msgstr ""
+msgstr "non installato (nessun download RTMP)"
 
 msgid "not installed (no ZIP subtitles)"
-msgstr ""
+msgstr "non installato (nessun sottotitolo ZIP)"
 
 msgid "not installed (no ffmpeg downloads)"
-msgstr ""
+msgstr "non installato (nessun download ffmpeg)"
 
 msgid "not installed (no file, cover or subtitle downloads)"
-msgstr ""
+msgstr "non installato (nessun download di file, copertine o sottotitoli)"
 
 msgid "not installed (no image subtitles in exteplayer3)"
-msgstr ""
+msgstr "non installato (nessun sottotitolo grafico in exteplayer3)"
 
 msgid "not installed (no local media / folder browser)"
-msgstr ""
+msgstr "non installato (nessun media locale / browser delle cartelle)"
 
 msgid "not installed (no torrent playback)"
-msgstr ""
+msgstr "non installato (nessuna riproduzione torrent)"
 
 msgid "not installed (only the Enigma2 players)"
-msgstr ""
+msgstr "non installato (solo i player di Enigma2)"
 
 msgid "not installed (sites with bot protection may fail)"
-msgstr ""
+msgstr "non installato (i siti con protezione anti-bot possono non funzionare)"
 
 msgid "not installed (subtitles: code page of the language)"
-msgstr ""
+msgstr "non installato (sottotitoli: code page della lingua)"
 
 msgid "not installed (urllib is used)"
-msgstr ""
+msgstr "non installato (viene usato urllib)"
 
 msgid "not installed (wget is used)"
-msgstr ""
+msgstr "non installato (viene usato wget)"
 
 msgid "not loadable"
 msgstr "non caricabile"
@@ -7328,7 +7328,7 @@ msgid "password"
 msgstr "password"
 
 msgid "poster grid on / off"
-msgstr ""
+msgstr "griglia di locandine on / off"
 
 msgid "prijevodi-online.org refused the download for this account."
 msgstr "prijevodi-online.org ha rifiutato il download per questo account."
