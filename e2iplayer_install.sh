@@ -185,7 +185,10 @@ if [ -d $TARGET_PATH/IPTVPlayer ] ; then
 		fi
 	fi
 
+	IPTVSUBPARSER="$TARGET_PATH/IPTVPlayer/libs/iptvsubparser"
+	
 	echo -e "\n\nDelete the already installed E2iPlayer in;\n$TARGET_PATH/IPTVPlayer ..."
+	[ -e "$IPTVSUBPARSER/_subparser.so" ] && $NICE $NICE_ARGS cp -rf "$IPTVSUBPARSER/_subparser.so" ${TMP}
 	$NICE $NICE_ARGS rm -rf  $TARGET_PATH/IPTVPlayer
 
 	if [ "$?" != "0" ] ; then
@@ -193,6 +196,8 @@ if [ -d $TARGET_PATH/IPTVPlayer ] ; then
 		echo -e "The new E2iPlayer is then simply copied over.\n"
 	fi
 fi
+
+[ -e "${TMP}/_subparser.so" ] && $NICE $NICE_ARGS cp -rf "${TMP}/_subparser.so" $IPTVSUBPARSER
 
 # Copy Directory (Variable TMP)/e2iplayer-*/IPTVPlayer or (Variable EXTRACTED_SOURCE_PATH) recursively into the Directory (Variable TARGET_PATH).
 echo -e "\n\nCopy;\n$EXTRACTED_SOURCE_PATH\nto;\n$TARGET_PATH ...\n"
@@ -214,7 +219,7 @@ echo -e "\nE2iPlayer installed/updated successfully. -> $ENDDATE\n"
 
 # Delete the remains.
 echo -e "\nDelete remains (*.tar.gz/*.zip and Directory e2iplayer-*) ...\n"
-$NICE $NICE_ARGS rm -rf $TMP/e2iplayer-* $TMP/python*.gz $TMP/master.* $TMP/opkg-*
+$NICE $NICE_ARGS rm -rf $TMP/e2iplayer-* $TMP/python*.gz $TMP/master.* $TMP/opkg-* "${TMP}/_subparser.so"
 rmdir $WORKDIR/tmp 2> /dev/null
 
 
