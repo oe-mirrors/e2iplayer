@@ -1607,11 +1607,18 @@ class pageParser(CaptchaHelper):
                             continue
                         media_url = urlparser.decorateUrl(media_url, {"Referer": baseUrl})
                         if media_type == "application/x-mpegURL":
-                            tmpTab = getDirectM3U8Playlist(media_url, False, checkContent=True, sortWithMaxBitrate=99999999, cookieParams={"header": HTTP_HEADER, "cookiefile": COOKIE_FILE, "use_cookie": True, "save_cookie": True, "load_cookie": True})
+                            # variantCheck=False: the variants end in "#cell=...", without it their separate audio (live) is lost
+                            tmpTab = getDirectM3U8Playlist(media_url, False, variantCheck=False, checkContent=True, sortWithMaxBitrate=99999999, cookieParams={"header": HTTP_HEADER, "cookiefile": COOKIE_FILE, "use_cookie": True, "save_cookie": True, "load_cookie": True})
                             cookieHeader = self.cm.getCookieHeader(COOKIE_FILE)
                             for tmp in tmpTab:
-                                hlsUrl = self.cm.ph.getSearchGroups(tmp["url"], r"""(https?://[^'^"]+?\.m3u8[^'^"]*?)#?""")[0]
-                                redirectUrl = strwithmeta(hlsUrl, {"iptv_proto": "m3u8", "Cookie": cookieHeader, "User-Agent": HTTP_HEADER["User-Agent"]})
+                                hlsMeta = {"iptv_proto": "m3u8", "Cookie": cookieHeader, "User-Agent": HTTP_HEADER["User-Agent"]}
+                                urlMeta = getattr(tmp["url"], "meta", {})
+                                if tmp["url"].startswith("merge://") and urlMeta.get("video_url") and urlMeta.get("audio_url"):
+                                    hlsMeta.update({"video_url": strwithmeta(urlMeta["video_url"].split("#", 1)[0], hlsMeta), "audio_url": strwithmeta(urlMeta["audio_url"].split("#", 1)[0], hlsMeta), "ff_out_container": "mpegts"})
+                                    redirectUrl = urlparser.decorateUrl("merge://audio_url|video_url", hlsMeta)
+                                else:
+                                    hlsUrl = self.cm.ph.getSearchGroups(tmp["url"], r"""(https?://[^'^"]+?\.m3u8[^'^"]*?)#?""")[0]
+                                    redirectUrl = strwithmeta(hlsUrl, hlsMeta)
                                 urlsTab.append({"name": "dailymotion.com: %sp hls" % (tmp.get("heigth", "0")), "url": redirectUrl, "quality": tmp.get("heigth", "0")})
                         else:
                             urlsTab.append({"name": quality, "url": media_url})

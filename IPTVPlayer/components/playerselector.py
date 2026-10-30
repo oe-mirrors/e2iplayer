@@ -31,7 +31,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvhostgroups import IsFolderKey
 from Plugins.Extensions.IPTVPlayer.__init__ import _, GRIDSUPPORT
 
 # icons a folder inside a group can get (group icons of PlayerSelector/groups/), "folder" is the plain one
-_FOLDER_ICONS = ('folder', 'moviesandseries', 'cartoonsandanime', 'documentary', 'sport', 'music', 'live', 'iptv', 'science', 'worldwide', 'others')
+_FOLDER_ICONS = ('folder', 'moviesandseries', 'cartoonsandanime', 'documentary', 'sport', 'music', 'live', 'news', 'iptv', 'science', 'worldwide', 'others')
 
 
 def _getSearchResultItemHeight(screenwidth):

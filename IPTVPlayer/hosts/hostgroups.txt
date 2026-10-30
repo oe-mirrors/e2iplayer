@@ -211,7 +211,18 @@
   "kanald",
   "atvtr",
   "showtv",
-  "rakutentv"
+  "rakutentv",
+  "euronews",
+  "francetv",
+  "rtpplay"
+ ],
+ "news": [
+  "euronews",
+  "aljazeera",
+  "dw",
+  "tvn24",
+  "youtube",
+  "dailymotion"
  ],
  "iptv": [
   "xtream",
@@ -308,7 +319,8 @@
   "spryciarze",
   "wolnelekturypl",
   "polskieradio",
-  "maxvod"
+  "maxvod",
+  "euronews"
  ],
  "english": [
   "youtube",
@@ -353,7 +365,8 @@
   "cinehd",
   "streamdb",
   "ask4movie",
-  "rakutentv"
+  "rakutentv",
+  "euronews"
  ],
  "german": [
   "youtube",
@@ -397,7 +410,8 @@
   "sportdeutschland",
   "plutotv",
   "vavooto",
-  "rakutentv"
+  "rakutentv",
+  "euronews"
  ],
  "french": [
   "youtube",
@@ -416,7 +430,9 @@
   "frenchstream",
   "witv",
   "skstream",
-  "dulourd"
+  "dulourd",
+  "francetv",
+  "euronews"
  ],
  "russian": [
   "youtube",
@@ -424,7 +440,8 @@
   "ritsatv",
   "uaserials",
   "eneyida",
-  "filmix"
+  "filmix",
+  "euronews"
  ],
  "hungarian": [
   "youtube",
@@ -438,7 +455,8 @@
   "streamstat",
   "idokep",
   "dailymotion",
-  "dmdamedia"
+  "dmdamedia",
+  "euronews"
  ],
  "arabic": [
   "youtube",
@@ -525,7 +543,8 @@
   "egyclub",
   "qoranway",
   "aflamfree",
-  "geoarabic"
+  "geoarabic",
+  "euronews"
  ],
  "greek": [
   "youtube",
@@ -536,7 +555,8 @@
   "tainiomania",
   "teniesonline",
   "voody",
-  "dailymotion"
+  "dailymotion",
+  "euronews"
  ],
  "latino": [
   "youtube",
@@ -548,7 +568,8 @@
   "latanime",
   "animeav1",
   "artetv",
-  "dailymotion"
+  "dailymotion",
+  "euronews"
  ],
  "italian": [
   "youtube",
@@ -558,7 +579,14 @@
   "cb01uno",
   "dailymotion",
   "playrtsiw",
-  "raiplay"
+  "raiplay",
+  "euronews"
+ ],
+ "portuguese": [
+  "rtpplay",
+  "euronews",
+  "youtube",
+  "dailymotion"
  ],
  "swedish": [
   "youtube",
@@ -582,7 +610,8 @@
   "showtv",
   "dizibox",
   "hdfilmcehennemi",
-  "fullhdfilmizlesene"
+  "fullhdfilmizlesene",
+  "euronews"
  ],
  "balkans": [
   "youtube",
