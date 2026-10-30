@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 12.10.2026 - the subtitles saved with a download (name.de.srt) are removed / renamed with it.
+# Last Modified: 31.10.2026 - colour LCD: the running download, otherwise the marked row of the list.
+# 12.10.2026 - the subtitles saved with a download (name.de.srt) are removed / renamed with it.
 # 11.10.2026 - OK plays at once with the default player, MENU holds every action of the row plus "Select" /
 #   "Select all"; marked items are removed in one go.
 # 10.10.2026 - batch download items: "Loading" while their links are looked up, the reason of an ERROR in the info line.
@@ -16,7 +17,7 @@
 ###################################################
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, eConnectCallback, GetIconDir, GetNice, formatBytes, E2PrioFix, findT9JumpIndex
 from Plugins.Extensions.IPTVPlayer.components.iptvplayer import IPTVStandardMoviePlayer, IPTVMiniMoviePlayer
-from Plugins.Extensions.IPTVPlayer.components.iptvextmovieplayer import IPTVExtMoviePlayer
+from Plugins.Extensions.IPTVPlayer.components.iptvextmovieplayer import IPTVExtMoviePlayer, addLcdSources, colorSummaryIfWanted
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import GetMoviePlayer
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 
@@ -207,6 +208,9 @@ class IPTVDMWidget(Screen):
         self["titel"] = Label()
         self["titelState"] = Label()
         self["titelStateIcon"] = Pixmap()
+        # the colour LCD, same screen as the player: position in the list | percent | speed, size or state, see updateLcd()
+        addLcdSources(self, _("E2iPlayer downloader"))
+        self.lcdLastState = None
         # the running/stopped icon next to the status word - kept as pixmaps
         # so setManagerStatus() can swap it without a skin reload
         self._statePIX = {}
@@ -1206,6 +1210,40 @@ class IPTVDMWidget(Screen):
             listItems.append(self.buildEntry(x))
         return listItems
 
+    def createSummary(self):
+        return colorSummaryIfWanted()
+
+    def updateLcd(self):
+        # outside the Archive a running download: the marked one, else the first; without one the marked row;
+        # the manager's state on an empty list. Runs on every timer tick: the display is only written on a change
+        try:
+            items = self._activeList()
+            idx = self["downloadlist"].getIndex() or 0
+            marked = items[idx] if idx < len(items) else None
+            running = [] if self.localMode else [item for item in items if item.status == DMHelper.STS.DOWNLOADING]
+            item = marked if not running or marked in running else running[0]
+            if item is None:
+                state = (_("E2iPlayer downloader"), -1, "", _("STARTED") if self.DM.isRunning() else _("STOPPED"))
+            else:
+                if item.status == DMHelper.STS.DOWNLOADING and not self.localMode:
+                    right = formatBytes(item.downloadedSpeed, 1) + "/s"
+                else:
+                    size = item.fileSize if item.fileSize > 0 else item.downloadedSize
+                    states = {DMHelper.STS.WAITING: _("PENDING"), DMHelper.STS.INTERRUPTED: _("ABORTED"),
+                              DMHelper.STS.ERROR: _("DOWNLOAD ERROR"), DMHelper.STS.RESOLVING: _("Loading")}
+                    right = formatBytes(float(size), 1) if size > 0 else states.get(item.status, "")
+                state = (self._displayName(item), int(item.downloadedProcent), "%d/%d" % (items.index(item) + 1, len(items)), right)
+            if state != self.lcdLastState:
+                self.lcdLastState = state
+                title, percent, position, right = state
+                self["lcdTitle"].setText(title)
+                self["lcdProgress"].value = max(0, min(100, percent))
+                self["lcdPercent"].setText("%d%%" % percent if percent >= 0 else "")
+                self["lcdCurrTime"].setText(position)
+                self["lcdRemained"].setText(right)
+        except Exception:
+            printExc()
+
     def reloadList(self, force=False):
         if not self.localMode:
             global gIPTVDM_listChanged
@@ -1226,6 +1264,7 @@ class IPTVDMWidget(Screen):
             # self["list"].hide()
             # self["list"].setList([(x,) for x in self.localFiles])
             # self["list"].show()
+        self.updateLcd()
     # end reloadList
 
     def hideWindow(self):

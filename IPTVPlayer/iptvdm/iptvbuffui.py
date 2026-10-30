@@ -10,9 +10,9 @@
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.cover import SimpleAnimatedCover
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta, enum
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, formatBytes, touch, eConnectCallback, ReadUint32
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, formatBytes, eConnectCallback, ReadUint32
 from Plugins.Extensions.IPTVPlayer.components.iptvplayer import IPTVStandardMoviePlayer, IPTVMiniMoviePlayer
-from Plugins.Extensions.IPTVPlayer.components.iptvextmovieplayer import IPTVExtMoviePlayer
+from Plugins.Extensions.IPTVPlayer.components.iptvextmovieplayer import IPTVExtMoviePlayer, addLcdSources, colorSummaryIfWanted
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdownloadercreator import DownloaderCreator
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
@@ -184,6 +184,8 @@ class E2iPlayerBufferingWidget(Screen):
         self["console"] = Label()
         self["percentage"] = Label()
         self["addinfo"] = Label()
+        # the colour LCD, same screen as the player: buffered so far | percent | speed
+        addLcdSources(self, movieTitle, percent="0%")
         self['ok_button'] = Cover3()
         self['rec_button'] = Cover3()
         self['exit_button'] = Cover3()
@@ -442,6 +444,9 @@ class E2iPlayerBufferingWidget(Screen):
         except Exception:
             printDBG("setMainTimerSts status[%r] EXCEPTION" % start)
 
+    def createSummary(self):
+        return colorSummaryIfWanted()
+
     def updateRecButton(self):
         if self.canRunMoviePlayer:  # and self.downloader.getPlayableFileSize() > 0:
             self['rec_button'].show()
@@ -651,6 +656,11 @@ class E2iPlayerBufferingWidget(Screen):
         # the icon behind it.
         self["percentage"].setText(str(int(percentage)))
         self["icon"].nextFrame()
+        lcdPercent = max(0, min(100, int(percentage)))
+        self["lcdProgress"].value = lcdPercent
+        self["lcdPercent"].setText("%d%%" % lcdPercent)
+        self["lcdCurrTime"].setText('' if '??' == lFileSize else lFileSize)
+        self["lcdRemained"].setText(formatBytes(float(speed), 1) + '/s' if speed > -1 and localSize > 0 else '')
 
         # check if we start movie player
         if self.canRunMoviePlayer:

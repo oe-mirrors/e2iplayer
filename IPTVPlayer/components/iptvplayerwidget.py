@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 2026-07-26 - Updated blue_pressed() and blue_pressed_next(), added YouTube user links actions in the blue menu, and fixed deleteFavouriteItem(); fixed missing key_green label display by correcting the Halidri1080p1 playlist.xml key_green binding and set default green button text to "Download".
+# Last Modified: 2026-10-31 - LCD: the layout follows the display size, shows the host's display name and the marked row.
+# 2026-07-26 - Updated blue_pressed() and blue_pressed_next(), added YouTube user links actions in the blue menu, and fixed deleteFavouriteItem(); fixed missing key_green label display by correcting the Halidri1080p1 playlist.xml key_green binding and set default green button text to "Download".
 # 2026-10-17 - MENU "Select action" follows "Force internal skin" (openChoiceBox): the box skin's ChoiceBox with it off;
 #              "Main menu" row of paged lists (OK = EXIT, no INFO); a host's iptv_download_title names the GREEN download.
 # 2026-10-12 - CH- after a jump opens the page before (78 -> 77) over the Jump row; EXIT goes a whole list level back over all paged pages.
@@ -59,7 +60,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import FreeSpace as iptvtools
                                                           IsPathWritable as iptvtools_IsPathWritable, \
                                                           IsSameDir as iptvtools_IsSameDir, IsSameOrSubDir as iptvtools_IsSameOrSubDir, \
                                                           CleanOldFilesInDir as iptvtools_CleanOldFilesInDir, StartStorageMigrations as iptvtools_StartStorageMigrations, \
-                                                          GetIPTVPlayerVersion, GetShortSystemInfo, \
+                                                          GetIPTVPlayerVersion, GetShortSystemInfo, StripColorCodes, GetHostListTitle, \
                                                           printDBG, printExc, GetHostsList, IsHostEnabled, GetHostTitle, \
                                                           eConnectCallback, GetSkinsDir, GetIconDir, GetPluginDir, \
                                                           SortHostsList, GetHostsOrderList, CSearchHistoryHelper, \
@@ -706,6 +707,7 @@ class E2iPlayerWidget(Screen):
         self.onClose.append(self.__onClose)
         # self.onLayoutFinish.append(self.onStart)
         self.onShow.append(self.onStart)
+        self.onShown.append(self.updateLcdItem)
 
         # Defs
         self.searchPattern = CSearchHistoryHelper.loadLastPattern()[1]
@@ -2096,8 +2098,15 @@ class E2iPlayerWidget(Screen):
         # only after the next key (two quick TEXT presses showed both, one after the other)
         self["console"].setText(_("Poster grid on") if option.value else _("Poster grid off"))
 
+    def updateLcdItem(self):
+        # the summary of the top screen: only this screen's own, not the one of a screen above it
+        if self.session.current_dialog is self:
+            selItem = self.getSelItem() if self.currList else None
+            self.lcdSummaryCall('setItem', StripColorCodes(getattr(selItem, 'name', '')))
+
     def changeBottomPanel(self):
         self.displayIcon()
+        self.updateLcdItem()
         selItem = self.getSelItem()
         if selItem and selItem.description != '':
             data = selItem.description
@@ -3263,7 +3272,7 @@ class E2iPlayerWidget(Screen):
                 printExc()
 
     def loadHostData(self):
-        self.lcdSummaryCall('setText', self.hostName)
+        self.lcdSummaryCall('setText', GetHostListTitle(self.hostTitle) or self.hostName)
         self.activePlayer = CMoviePlayerPerHost(self.hostName)
         # once per session, after the first host has loaded
         if self.showMessageNoFreeSpaceForIcon:
@@ -4272,7 +4281,7 @@ class E2iPlayerWidget(Screen):
         self.restoreLiveAfterZap()
 
     def createSummary(self):
-        return IPTVPlayerLCDScreen
+        return listSummaryIfWanted()
 
     def canByAddedToFavourites(self):
         cItem = None
@@ -4992,6 +5001,11 @@ class E2iPlayerWidget(Screen):
 # class E2iPlayerWidget
 
 
+def listSummaryIfWanted():
+    # createSummary() of the main list and the PlayerSelector
+    return IPTVPlayerLCDScreen if config.plugins.iptvplayer.extplayer_summary.value != 'no' else None
+
+
 class IPTVPlayerLCDScreen(Screen):
     try:
         summary_screenwidth = getDesktop(1).size().width()
@@ -4999,27 +5013,26 @@ class IPTVPlayerLCDScreen(Screen):
     except Exception:
         summary_screenwidth = 132
         summary_screenheight = 64
-    if summary_screenwidth >= 800 and summary_screenheight >= 480:
+    if summary_screenwidth >= 220 and summary_screenheight >= 176:
+        # colour LCD: the layout follows the display size, the logo keeps the 3:1 of the host logos
+        margin = summary_screenwidth // 40
+        textW = summary_screenwidth - 2 * margin
+        logoH = min(textW // 3, summary_screenheight // 2)
+        logoW = logoH * 3
+        logoY = summary_screenheight - logoH - margin
+        text1H = (logoY - margin) * 2 // 5
+        text2H = logoY - margin - text1H
+        # a tall display has the height, "E2iPlayer" must still fit the width
+        font1 = min(text1H * 3 // 4, textW // 7)
         skin = """
-    <screen position="0,0" size="800,480" title="E2iPlayer">
-        <widget name="text1" position="10,0"  size="800,70" font="Regular;50" halign="center" valign="center" foregroundColor="#05F7F3"/>
-        <widget name="text2" position="10,80" size="800,70" font="Regular;40" halign="center" valign="center" foregroundColor="#FFFF00"/>
-        <widget name="LCDlogo" position="0,210" zPosition="4" size="800,267" alphatest="blend" />
-    </screen>"""
-    elif summary_screenwidth >= 480 and summary_screenheight >= 320:
-        skin = """
-    <screen position="0,0" size="480,320" title="E2iPlayer">
-        <widget name="text1" position="10,0" size="460,70" font="Regular;50" halign="center" valign="center" foregroundColor="#05F7F3"/>
-        <widget name="text2" position="10,80" size="460,70" font="Regular;40" halign="center" valign="center" foregroundColor="#FFFF00"/>
-        <widget name="LCDlogo" position="0,160" zPosition="4" size="480,160" alphatest="blend" />
-    </screen>"""
-    elif summary_screenwidth >= 220 and summary_screenheight >= 176:
-        skin = """
-    <screen position="0,0" size="220,176" title="E2iPlayer">
-        <widget name="text1" position="5,0" size="210,26" font="Regular;24" halign="center" valign="center" foregroundColor="#05F7F3"/>
-        <widget name="text2" position="5,30" size="210,65" font="Regular;22" halign="center" valign="center" foregroundColor="#FFFF00"/>
-        <widget name="LCDlogo" position="5,106" size="210,70" zPosition="4" alphatest="blend" />
-    </screen>"""
+    <screen position="0,0" size="%(w)d,%(h)d" title="E2iPlayer">
+        <widget name="text1" position="%(m)d,%(text1Y)d" size="%(textW)d,%(text1H)d" font="Regular;%(font1)d" halign="center" valign="center" foregroundColor="#05F7F3"/>
+        <widget name="text2" position="%(m)d,%(text2Y)d" size="%(textW)d,%(text2H)d" font="Regular;%(font2)d" halign="center" valign="center" foregroundColor="#FFFF00"/>
+        <widget name="LCDlogo" position="%(logoX)d,%(logoY)d" zPosition="4" size="%(logoW)d,%(logoH)d" alphatest="blend" />
+    </screen>""" % {'w': summary_screenwidth, 'h': summary_screenheight, 'm': margin, 'textW': textW,
+                    'text1Y': margin // 2, 'text1H': text1H, 'font1': font1,
+                    'text2Y': margin // 2 + text1H, 'text2H': text2H, 'font2': font1 * 4 // 5,
+                    'logoX': (summary_screenwidth - logoW) // 2, 'logoY': logoY, 'logoW': logoW, 'logoH': logoH}
     else:
         skin = """
     <screen position="0,0" size="132,64" title="E2iPlayer">
@@ -5030,6 +5043,7 @@ class IPTVPlayerLCDScreen(Screen):
 
     def __init__(self, session, parent):
         Screen.__init__(self, session)
+        self.hostText = ""
         try:
             self["text1"] = Label("E2iPlayer")
             self["text2"] = Label("")
@@ -5039,14 +5053,23 @@ class IPTVPlayerLCDScreen(Screen):
 
     def setText(self, text):
         try:
-            self["text2"].setText(text[0:39])
+            self.hostText = text[0:39]
+            self["text2"].setText(self.hostText)
+        except Exception:
+            pass
+
+    def setItem(self, text):
+        # the marked row of a host: the host moves up to the first line, without a row "E2iPlayer" and the host
+        try:
+            self["text1"].setText(self.hostText if text and self.hostText else "E2iPlayer")
+            self["text2"].setText(text[0:120] if text else self.hostText)
         except Exception:
             pass
 
     def LCD_showPic(self, widgetName, picPath):
         try:
             self[widgetName].instance.setScale(1)
-            self[widgetName].instance.setPixmap(LoadPixmap(picPath))
+            self[widgetName].instance.setPixmap(LoadPixmap(picPath, cached=True))
             self[widgetName].show()
         except Exception:
             pass
