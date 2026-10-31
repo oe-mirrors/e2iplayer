@@ -42,8 +42,8 @@ class IPTVHostsGroups:
         self.GROUPS_FILE = GetMigratedHostOrderFile('iptvplayerhostsgroups.json')
 
         # groups
-        self.PREDEFINED_GROUPS = ["userdefined", "worldwide", "moviesandseries", "cartoonsandanime", "music", "sport", "live", "iptv", "torrent", "documentary", "science", "adult",
-                                  "polish", "english", "german", "french", "russian", "hungarian", "arabic", "greek", "latino", "italian", "swedish", "dutch", "turkish", "balkans", "others", "all"]
+        self.PREDEFINED_GROUPS = ["userdefined", "worldwide", "moviesandseries", "cartoonsandanime", "music", "sport", "live", "news", "iptv", "torrent", "documentary", "science", "adult",
+                                  "polish", "english", "german", "french", "russian", "hungarian", "arabic", "greek", "latino", "italian", "portuguese", "swedish", "dutch", "turkish", "balkans", "others", "all"]
         self.PREDEFINED_GROUPS_TITLES = {"userdefined": _("User defined"),
                                          "worldwide": _("Worldwide"),
                                          "moviesandseries": _("Movies and series"),
@@ -51,6 +51,7 @@ class IPTVHostsGroups:
                                          "music": _("Music"),
                                          "sport": _("Sport"),
                                          "live": _("Live"),
+                                         "news": _("News"),
                                          "iptv": _("IPTV Portals"),
                                          "torrent": _("Torrent"),
                                          "documentary": _("Documentary"),
@@ -66,6 +67,7 @@ class IPTVHostsGroups:
                                          "greek": _("Greek"),
                                          "latino": _("Latino"),
                                          "italian": _("Italian"),
+                                         "portuguese": _("Portuguese"),
                                          'swedish': _("Nordic"),
                                          "dutch": _("Dutch"),
                                          "turkish": _("Turkish"),
