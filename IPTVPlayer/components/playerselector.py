@@ -595,6 +595,29 @@ class _PlayerSelectorListMode:
             return
         self["statustext"].setText(self.currList[idx][0])
         self["hostinfo"].setText(_getHostInfoText(self.currList[idx][1]))
+        self.updateLcd()
+
+    def createSummary(self):
+        # the screen of the main list; imported here because iptvplayerwidget imports this module
+        from Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget import listSummaryIfWanted
+        return listSummaryIfWanted()
+
+    def updateLcd(self):
+        # name and logo of the selected group/host; session.summary belongs to the top screen: during
+        # the layout that is still the opening screen, above this one it is the summary of a dialog
+        summary = self.session.summary
+        if not self.currList or self.session.current_dialog is not self or not hasattr(summary, 'LCD_showPic'):
+            return
+        try:
+            item = self.currList[self._t9GetIndex()]
+            summary.setText(item[0])
+            logoPath = _getPlayerSelectorLogoPath(item[1])
+            if os.path.isfile(logoPath):
+                summary.LCD_showPic('LCDlogo', logoPath)
+            else:
+                summary.LCD_hide('LCDlogo')
+        except Exception:
+            printExc()
 
     def setSelectionImage(self, move):
         if self.simpleListMode:
@@ -1224,6 +1247,7 @@ class _PlayerSelectorListMode:
         # self.session.nav.event.append(self.__event), which GRIDSUPPORT
         # has no __event() to call at all.
         self.onLayoutFinish.append(self.layoutFinished)
+        self.onShown.append(self.updateLcd)
 
     def listKeyUp(self):
         # one shared name for both PlayerSelectorWidget variants' list-mode
@@ -1340,6 +1364,7 @@ if GRIDSUPPORT:
 
             self.onClose.append(self.__onClose)
             self.onLayoutFinish.append(self.layoutFinished)
+            self.onShown.append(self.updateLcd)
 
         # layoutFinished()/selectionChanged()/setSelectionImage()/
         # keySelect()/keyGreen()/openContextMenu() (BLUE) live on
@@ -2005,6 +2030,7 @@ else:
             self["hostinfo"] = Label("")
 
             self.onLayoutFinish.append(self.onStart)
+            self.onShown.append(self.updateLcd)
             self.visible = True
 
         # List view/Simple list mode's own constructor/listKeyUp()/
@@ -2223,6 +2249,7 @@ else:
             self["marker"].instance.move(ePoint(x, y))
             self["statustext"].setText(self.currList[new_idx][0])
             self["hostinfo"].setText(_getHostInfoText(self.currList[new_idx][1]))
+            self.updateLcd()
             return
 
         def _t9GetIndex(self):
