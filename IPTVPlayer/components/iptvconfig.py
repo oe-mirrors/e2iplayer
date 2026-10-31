@@ -426,8 +426,15 @@ def IsPluginBrowserEntryShown():
 
 def IsExternalResolveAllowed():
     # asked by parserVIDCORE (vidcore / vidup / vidfast) before it contacts
-    # enc-dec.app, and by the hosts that offer those links
+    # enc-dec.app
     return config.plugins.iptvplayer.allow_external_resolve.value
+
+
+def IsVidcoreResolvable():
+    # asked by the hosts that offer vidcore / vidup / vidfast links: parserVIDCORE runs
+    # their player in QuickJS (package quickjs), enc-dec.app is only the fallback
+    from Plugins.Extensions.IPTVPlayer.tools.e2ijs import quickjs_available
+    return quickjs_available() or config.plugins.iptvplayer.allow_external_resolve.value
 
 
 def IsSidecarEnabled():

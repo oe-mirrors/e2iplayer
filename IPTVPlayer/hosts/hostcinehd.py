@@ -7,7 +7,7 @@ LAST_MODIFIED = "09.10.2026"
 #     with the user's own TMDb key (metadata settings), numbered episodes from the site's episode count without it
 #   - the site's player only iframes TMDb-keyed embed providers: the ones urlparser resolves are offered
 #     (vixsrc incl. the Italian audio, vidrock, vidnest, videasy, peachify; vidfast / vidcore only
-#     when the external link decryption is switched on in the settings); vidlink.pro is not offered: its
+#     with the package quickjs or the external link decryption); vidlink.pro is not offered: its
 #     MovieBox CDN mp4s (bcdn.hakunaymatata.com) answer 429 to every request (box + PC, 09.10.2026)
 #   - watched flag (series -> season -> episode), downloaded flag on stable page urls, favourites (rows
 #     re-open from their TMDb id), name normalisation, sidecar, INFO via moviemeta (by IMDb id when the user's
@@ -18,7 +18,7 @@ import time
 
 from Components.config import config
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
-from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsExternalResolveAllowed, IsMediaNamingNormalized, IsSidecarEnabled
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsVidcoreResolvable, IsMediaNamingNormalized, IsSidecarEnabled
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, getMetaByImdbId
@@ -47,7 +47,7 @@ STILL_URL = "https://image.tmdb.org/t/p/w300"
 EPISODES_PER_PAGE = 100
 FIRST_YEAR = 1950
 
-# (label, url template, needs the external link decryption) - %(kind)s movie|tv, %(id)s TMDb id,
+# (label, url template, needs quickjs or the external link decryption) - %(kind)s movie|tv, %(id)s TMDb id,
 # %(se)s "/<season>/<episode>" for an episode; the url shapes urlparser expects for these providers
 EMBEDS = (
     ("Vidpro (vixsrc.to)", "https://vixsrc.to/%(kind)s/%(id)s%(se)s", False),
@@ -349,7 +349,7 @@ class CineHD(GenericFolderWatchedScraperMixin, CBaseHostClass):
         fields = {"kind": kind, "id": tmdbId, "se": "", "title": urllib_quote(cItem.get("s_title", ""), safe=""), "year": cItem.get("s_year", "")}
         if kind == "tv":
             fields["se"] = "/%s/%s" % (cItem.get("s_season", 1), cItem.get("s_episode", 1))
-        external = IsExternalResolveAllowed()
+        external = IsVidcoreResolvable()
         urltab = []
         for label, tpl, needsExternal in EMBEDS:
             if needsExternal and not external:

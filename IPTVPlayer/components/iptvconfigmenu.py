@@ -45,7 +45,7 @@ from Tools.BoundFunction import boundFunction
 # from this module.
 from Plugins.Extensions.IPTVPlayer.components.iptvconfig import GetMoviePlayerName, ConfigPlayer, \
                                                                 GetAlternativeProxyList, GetAlternativeProxyChoices, GetAlternativeProxyUrl, \
-                                                                IsPluginBrowserEntryShown, IsExternalResolveAllowed, IsSidecarEnabled, \
+                                                                IsPluginBrowserEntryShown, IsExternalResolveAllowed, IsVidcoreResolvable, IsSidecarEnabled, \
                                                                 GetConfigExpectedPin, IsMediaNamingNormalized, \
                                                                 ConfigIPTVHostOnOff, GetListOfHostsNames  # noqa: F401
 
@@ -946,9 +946,10 @@ class ConfigMenu(ConfigBaseWidget):
                     text=_("Send data to enc-dec.app on every link resolve?"),
                     type=MessageBox.TYPE_YESNO, default=False)
 
-            info = _("The resolvers 'VidCore', 'VidUp' and 'VidFast' cannot decrypt "
-                     "their links on the receiver.\n\n"
-                     "With this option ON, every time you open one of them E2iPlayer "
+            info = _("The resolvers 'VidCore', 'VidUp' and 'VidFast' decrypt their links "
+                     "on the receiver when the package 'quickjs' is installed. This option "
+                     "is only a fallback for receivers without it, or when that fails.\n\n"
+                     "With this option ON, every time such a fallback is needed E2iPlayer "
                      "sends the site's encrypted stream token - which contains the "
                      "TMDb id of the movie or episode you are opening - to the "
                      "third-party web service enc-dec.app (operated by a private "

@@ -477,7 +477,8 @@ class StreamDB(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if ctx["kind"] != "movie":
             fields["se"] = "/%d/%d" % (ctx["season"], ctx["episode"])
         links = []
-        for item in urlparser().getVideoLinkExt(strwithmeta(tpl % fields)) or []:
+        # vidcore_no_local: running the player of VidCore on the box takes far longer than TOTAL_TIMEOUT
+        for item in urlparser().getVideoLinkExt(strwithmeta(tpl % fields, {"vidcore_no_local": True})) or []:
             url = item.get("url", "")
             if not url:
                 continue

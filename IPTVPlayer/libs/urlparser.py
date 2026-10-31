@@ -10,6 +10,7 @@ import re
 import string
 import struct
 import subprocess
+import threading
 import time
 import zlib
 from os import urandom
@@ -34,8 +35,8 @@ from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_binary, 
 from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_unquote, urllib_urlencode
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import parse_qs, urljoin, urlparse
-from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute, js_execute_ext
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import CSelOneLink, GetCookieDir, GetDefaultLang, GetJSScriptFile, GetTmpDir, Which, b64urlEncode, printDBG, printExc, rm
+from Plugins.Extensions.IPTVPlayer.tools.e2ijs import QJS_PATH, js_execute, js_execute_ext, quickjs_available
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import CSelOneLink, GetCookieDir, GetDefaultLang, GetJSCacheDir, GetJSScriptFile, GetTmpDir, Which, b64urlEncode, printDBG, printExc, rm
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 
 if not isPY2():
@@ -6592,10 +6593,10 @@ class pageParser(CaptchaHelper):
         return urltab
 
     def _externalResolveAllowed(self, who):
-        # upd 091026: only parserVIDCORE (vidcore / vidup / vidfast) still needs the
-        # third-party enc-dec.app service (its player runs a per-build bytecode VM);
-        # VidLink / Peachify / Videasy decrypt on the box. Opt-in (off by default),
-        # the settings screen makes the user confirm twice - see iptvconfigmenu.
+        # upd 291026: only parserVIDCORE (vidcore / vidup / vidfast) still knows the third-party
+        # enc-dec.app service, as fallback for its QuickJS run; VidLink / Peachify / Videasy
+        # decrypt on the box. Opt-in (off by default), the settings screen makes the user
+        # confirm twice - see iptvconfigmenu.
         try:
             from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsExternalResolveAllowed
             if not IsExternalResolveAllowed():
@@ -6903,31 +6904,249 @@ class pageParser(CaptchaHelper):
                 urltab.append({"name": ("Vidlink %sp" % qualities[url]) if qualities.get(url) else "Vidlink", "url": decoUrl})
         return urltab
 
-    def parserVIDCORE(self, baseUrl):  # add 030926 / upd 060926 / fix 091026 - vidcore.net/.io + vidup.to + vidfast.pro/.vc (shared codebase); page token -> enc-dec.app two-stage enc/dec chain
+    VIDCORE_CACHE_TTL = 1800
+    VIDCORE_MAX_RUN = 120
+    _vidcoreCache = {}  # page url -> (time, streams), shared by all pageParser objects
+
+    def parserVIDCORE(self, baseUrl):  # add 030926 / upd 060926 / fix 091026 / upd 291026 - vidcore.net/.io + vidup.to + vidfast.pro/.vc (shared codebase)
+        # upd 291026: resolved on the box - QuickJS runs the site's own player chunk (its bytecode VMs build the
+        # requests and decrypt the answers, jsscripts/vidcore_*.js); enc-dec.app only without qjs or when that fails
         printDBG("parserVIDCORE baseUrl[%s]" % baseUrl)
-        if not self._externalResolveAllowed("parserVIDCORE"):
-            return []
-        urltab = []
+        t0 = time.time()
         m = re.search(r"/(movie|tv)/([A-Za-z0-9]+)(?:/(\d+)/(\d+))?", baseUrl)
         if not m:
             return []
         mediaType, mid, season, episode = m.group(1), m.group(2), m.group(3), m.group(4)
         lowUrl = baseUrl.lower()
         if "vidfast" in lowUrl:
-            host = "vidfast.vc" if "vidfast.vc" in lowUrl else "vidfast.pro"
-            name = "vidfast"
+            host, name = "vidfast.vc", "vidfast"  # vidfast.pro redirects there
         elif "vidup" in lowUrl:
             host, name = "vidup.to", "vidup"
         else:
             host, name = "vidcore.io", "vidcore"
         ref = "https://%s/" % host
+        if mediaType == "tv" and season and episode:
+            pageUrl = "%stv/%s/%s/%s" % (ref, mid, season, episode)
+        else:
+            pageUrl = "%smovie/%s" % (ref, mid)
+        # no "Chrome" in the agent: with one the player adds a devtools timing check before it starts
+        userAgent = "Mozilla/5.0 (X11; Linux armv7l) AppleWebKit/537.36 (KHTML, like Gecko) Safari/537.36"
+        # upd 311026: a box needs about 40 s for the player, so the answer is kept for a while. Only the streams are
+        # kept: their playlists are read again below, a dead one means a new run instead of an empty list
+        now = time.time()
+        for key, item in list(self._vidcoreCache.items()):
+            if now - item[0] > self.VIDCORE_CACHE_TTL:
+                self._vidcoreCache.pop(key, None)
+        cached = self._vidcoreCache.get(pageUrl)
+        urltab = self._vidcoreLinks(cached[1], name, ref, userAgent) if cached else []
+        if urltab:
+            printDBG("parserVIDCORE: %d link(s) from the cache after %.1fs" % (len(urltab), time.time() - t0))
+            return urltab
+        self._vidcoreCache.pop(pageUrl, None)
+        streams = None
+        # vidcore_no_local: a caller whose time limit is far below the run time on a box (StreamDB: 25 s)
+        if getattr(baseUrl, "meta", {}).get("vidcore_no_local"):
+            printDBG("parserVIDCORE: only the external service was asked for")
+        elif quickjs_available():
+            streams = self._vidcoreLocal(name.capitalize(), pageUrl, userAgent)
+        else:
+            printDBG("parserVIDCORE: no /usr/bin/qjs (package quickjs) - only the external service is left")
+        if not streams and self._externalResolveAllowed("parserVIDCORE"):
+            streams = self._vidcoreEncDec(name, ref, pageUrl)
+        urltab = self._vidcoreLinks(streams, name, ref, userAgent)
+        if urltab:
+            self._vidcoreCache[pageUrl] = (time.time(), streams)
+        printDBG("parserVIDCORE: %d link(s) after %.1fs" % (len(urltab), time.time() - t0))
+        return urltab
+
+    def _vidcoreLocal(self, label, pageUrl, userAgent, maxServers=5):
+        # one second tick while the player runs: the loading line tells why it takes so long and counts the seconds
+        # (like parserBYSE; a framework without the status line, zadmario, just waits). qjs is stopped when the user
+        # cancels (the blocked readline would keep this thread alive) and when a stuck player runs too long
+        job = {"proc": None}
+        notify = GetIPTVNotify()
+        hasStatus = hasattr(notify, "setStatus")
+        ext = getattr(threading.current_thread(), "_iptvplayer_ext", None)
+        stop = threading.Event()
+        start = time.time()
+
+        def ticker():
+            while not stop.is_set():
+                seconds = time.time() - start
+                terminated = ext is not None and ext.get("terminated")
+                if terminated or seconds > self.VIDCORE_MAX_RUN:
+                    proc = job["proc"]
+                    if proc is not None:
+                        proc.kill()
+                elif hasStatus:
+                    notify.setStatus("%s\n%s" % (_("Loading"), _("%s: decrypting the stream, this can take a while (%d s)") % (label, int(seconds))))
+                stop.wait(1.0)
+
+        thread = threading.Thread(target=ticker)
+        thread.daemon = True
+        thread.start()
+        try:
+            return self._vidcoreRun(job, pageUrl, userAgent, maxServers)
+        finally:
+            stop.set()
+            if hasStatus:
+                notify.setStatus(None)
+
+    def _vidcoreLinks(self, streams, name, ref, userAgent):
+        urltab = []
+        for res in streams or []:
+            streamUrl = res.get("url", "")
+            label = ("%s %s" % (name.capitalize(), res.get("server", ""))).strip()
+            # the CDN (moon.goldenkite.top / stormhive.top ...) checks the player's Referer; the
+            # stream answer flags the few servers that must be fetched without one
+            deco = {"User-Agent": userAgent, "iptv_use_ffmpeg": True}
+            if not res.get("noReferrer"):
+                deco.update({"Referer": ref, "Origin": ref[:-1]})
+            subTracks = []
+            for track in res.get("tracks") or []:
+                if isinstance(track, dict) and track.get("file") and track.get("kind", "captions") in ("captions", "subtitles"):
+                    subTracks.append({"title": track.get("label", ""), "url": track["file"], "lang": track.get("label", "")})
+            if subTracks:
+                deco["external_sub_tracks"] = subTracks
+            decoUrl = urlparser.decorateUrl(streamUrl, deco)
+            if ".m3u8" in streamUrl:
+                # checkContent: a dead server answers an html error page instead of a playlist
+                for item in getDirectM3U8Playlist(decoUrl, checkContent=True, sortWithMaxBitrate=99999999):
+                    item["name"] = ("%s %s" % (label, item.get("name", ""))).strip()
+                    urltab.append(item)
+            else:
+                urltab.append({"name": label, "url": decoUrl})
+        # the "Euro" server has repeatedly been observed serving short ad clips
+        # instead of the real movie/episode - push it to the back so it isn't
+        # the first thing the user tries, without dropping it as a fallback.
+        urltab.sort(key=lambda item: 1 if "euro" in item.get("name", "").lower() else 0)
+        return urltab
+
+    def _vidcoreRun(self, job, pageUrl, userAgent, maxServers):
+        # add 291026: page -> "en" token + the site's webpack chunks (cached by their content-hash names) ->
+        # qjs renders the player component with fake React hooks; its fetch() calls come here line by line
+        # ("@@F {json}" -> one json answer line), "@@S" servers, "@@R" one stream per server, "@@D" done
+        t0 = time.time()
+        sts, data = self.cm.getPage(pageUrl, {"header": {"User-Agent": userAgent}})
+        if not sts:
+            return None
+        pageUrl = self.cm.meta.get("url", pageUrl)
+        token = self.cm.ph.getSearchGroups(data, r'\\"en\\":\\"([^\\"]+)')[0]
+        chunks = [c for c in sorted(set(re.findall(r'(/_next/static/chunks/[^"\'\s]+?\.js)', data))) if not re.search(r"/(webpack|polyfills)-", c)]
+        if not token or not chunks:
+            printDBG("_vidcoreLocal: no player token[%s] / chunks[%d] on the page" % (bool(token), len(chunks)))
+            return None
+        origin = "https://%s" % urlparser.getDomain(pageUrl)
+        files = []
+        for chunk in chunks:
+            path = GetJSCacheDir("vidcore_" + re.sub(r"[^A-Za-z0-9._-]", "_", chunk.rsplit("/", 1)[-1]))
+            if not os.path.isfile(path):
+                sts, js = self.cm.getPage(origin + chunk, {"header": {"User-Agent": userAgent, "Referer": pageUrl}})
+                if not sts or "webpackChunk" not in js:
+                    printDBG("_vidcoreLocal: chunk %s not loaded" % chunk)
+                    return None
+                part = "%s.%s.part" % (path, threading.current_thread().ident)
+                with open(part, "wb") as f:
+                    f.write(ensure_binary(js))
+                os.rename(part, path)
+            files.append(path)
+        # chunks of older builds: drop after a week
+        try:
+            cacheDir = GetJSCacheDir()
+            for fn in os.listdir(cacheDir):
+                full = os.path.join(cacheDir, fn)
+                if fn.startswith("vidcore_") and full not in files and time.time() - os.path.getmtime(full) > 7 * 86400:
+                    rm(full)
+        except Exception:
+            printExc()
+        mm = re.search(r"/(?:movie|tv)/([A-Za-z0-9]+)(?:/(\d+)/(\d+))?", pageUrl)
+        mid, season, episode = (mm.group(1), mm.group(2) or "", mm.group(3) or "") if mm else ("", "", "")
+        params = os.path.join(GetTmpDir(), "vidcore_params_%s.js" % threading.current_thread().ident)
+        with open(params, "wb") as f:
+            f.write(ensure_binary("var G=globalThis;G.__UA=%s;G.__PAGE=%s;G.__EN=%s;G.__TMDB=%s;G.__SEASON=%s;G.__EPISODE=%s;G.__MAXSRV=%d;\n" % (
+                json_dumps(userAgent), json_dumps(pageUrl), json_dumps(token), json_dumps(mid), json_dumps(season), json_dumps(episode), maxServers)))
+        cmd = [QJS_PATH, "--std", "-C", "--memory-limit", "96m", "-I", params, "-I", GetJSScriptFile("vidcore_env.js")]
+        for path in files:
+            cmd += ["-I", path]
+        cmd.append(GetJSScriptFile("vidcore_run.js"))
+        streams = []
+        try:
+            proc = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+        except Exception:
+            printExc()
+            rm(params)
+            return None
+        job["proc"] = proc
+        try:
+            while True:
+                line = proc.stdout.readline()
+                if not line:
+                    break
+                line = ensure_str(line, errors="replace").strip()
+                if line.startswith("@@F "):
+                    # every server carries the whole quality ladder: two are enough, and servers
+                    # without the title can take the full timeout to answer their 404
+                    if len(streams) >= 2:
+                        break
+                    try:
+                        req = json_loads(line[4:])
+                    except Exception:
+                        req = {}
+                    reqUrl = req.get("url", "")
+                    # code of a website: no local files or other machines through our request function
+                    if reqUrl.startswith(origin + "/"):
+                        hdr = {"User-Agent": userAgent, "Referer": pageUrl, "Origin": origin, "Accept": "*/*"}
+                        hdr.update(req.get("headers") or {})
+                        params2 = {"header": hdr, "timeout": 10, "ignore_http_code_ranges": [(300, 599)]}
+                        if req.get("method") == "POST":
+                            params2["raw_post_data"] = True
+                            sts, body = self.cm.getPage(reqUrl, params2, req.get("body") or "")
+                        else:
+                            sts, body = self.cm.getPage(reqUrl, params2)
+                        status = (self.cm.meta.get("status_code") or 200) if sts else 0
+                    else:
+                        status, body = 0, ""
+                    printDBG("_vidcoreLocal: %s %s -> %s (%d) after %.1fs" % (req.get("method"), reqUrl[:90], status, len(body or ""), time.time() - t0))
+                    proc.stdin.write(ensure_binary(json_dumps({"status": status, "body": ensure_str(body or "")}) + "\n"))
+                    proc.stdin.flush()
+                elif line.startswith("@@S "):
+                    printDBG("_vidcoreLocal: servers %s" % line[4:])
+                elif line.startswith("@@R "):
+                    try:
+                        streams.append(json_loads(line[4:]))
+                    except Exception:
+                        printExc()
+                    # slow box: every further server costs at least 2 s + about 1 s per KB of its answer
+                    if streams and time.time() - t0 > 30:
+                        break
+                elif line.startswith("@@E "):
+                    printDBG("_vidcoreLocal: %s" % line[4:])
+                    if streams:
+                        break
+                elif line.startswith("@@D"):
+                    break
+        except Exception:
+            printExc()
+        finally:
+            # also on the SystemExit of a cancelled thread
+            job["proc"] = None
+            try:
+                proc.kill()
+                proc.stdin.close()
+                proc.stdout.close()
+                proc.wait()
+            except Exception:
+                pass
+            rm(params)
+        printDBG("_vidcoreLocal: %d stream(s) in %.1fs" % (len(streams), time.time() - t0))
+        return streams
+
+    def _vidcoreEncDec(self, name, ref, pageUrl):
+        # the third-party enc-dec.app chain (opt-in): returns [{"server", "url", "noReferrer", "tracks"}]
+        streams = []
         api = "https://enc-dec.app/api"
         HTTP_HEADER = self.cm.getDefaultHeader()
         HTTP_HEADER["Referer"] = ref
-        if mediaType == "tv" and season and episode:
-            pageUrl = "%stv/%s/%s/%s/" % (ref, mid, season, episode)
-        else:
-            pageUrl = "%smovie/%s/" % (ref, mid)
         sts, data = self.cm.getPage(pageUrl, {"header": HTTP_HEADER})
         if not sts:
             return []
@@ -7003,31 +7222,8 @@ class pageParser(CaptchaHelper):
                 continue
             if not streamUrl:
                 continue
-            label = ("%s %s" % (name.capitalize(), srv.get("name", ""))).strip()
-            # the CDN (moon.zenoak.top / stormhive.top ...) checks the player's Referer; the
-            # stream answer flags the few servers that must be fetched without one
-            deco = {"User-Agent": HTTP_HEADER["User-Agent"], "iptv_use_ffmpeg": True}
-            if not res.get("noReferrer"):
-                deco.update({"Referer": ref, "Origin": ref[:-1]})
-            subTracks = []
-            for track in res.get("tracks") or []:
-                if isinstance(track, dict) and track.get("file") and track.get("kind", "captions") in ("captions", "subtitles"):
-                    subTracks.append({"title": track.get("label", ""), "url": track["file"], "lang": track.get("label", "")})
-            if subTracks:
-                deco["external_sub_tracks"] = subTracks
-            decoUrl = urlparser.decorateUrl(streamUrl, deco)
-            if ".m3u8" in streamUrl:
-                # checkContent: a dead server answers an html error page instead of a playlist
-                for item in getDirectM3U8Playlist(decoUrl, checkContent=True, sortWithMaxBitrate=99999999):
-                    item["name"] = ("%s %s" % (label, item.get("name", ""))).strip()
-                    urltab.append(item)
-            else:
-                urltab.append({"name": label, "url": decoUrl})
-        # the "Euro" server has repeatedly been observed serving short ad clips
-        # instead of the real movie/episode - push it to the back so it isn't
-        # the first thing the user tries, without dropping it as a fallback.
-        urltab.sort(key=lambda item: 1 if "euro" in item.get("name", "").lower() else 0)
-        return urltab
+            streams.append({"server": srv.get("name", ""), "url": streamUrl, "noReferrer": res.get("noReferrer"), "tracks": res.get("tracks") or []})
+        return streams
 
     def parserVIDSST(self, baseUrl):  # add 050926 - vids.st (premiumsmart.eu "VidsST" mirror), bespoke ArtPlayer host
         printDBG("parserVIDSST baseUrl[%s]" % baseUrl)
