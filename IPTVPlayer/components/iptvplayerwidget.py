@@ -83,6 +83,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 
 from Plugins.Extensions.IPTVPlayer.components.iptvplayer import IPTVStandardMoviePlayer, IPTVMiniMoviePlayer
 from Plugins.Extensions.IPTVPlayer.components.iptvextmovieplayer import IPTVExtMoviePlayer
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinfopanel import fitLabelText, hostDisplayName, linkDisplayName
 from Plugins.Extensions.IPTVPlayer.components.iptvpictureplayer import IPTVPicturePlayerWidget
 from Plugins.Extensions.IPTVPlayer.components.iptvlist import IPTVLinkChoiceBoxList, IPTVMoviePlayerChoiceBoxList, IPTVActionChoiceBoxList, IPTVPlayerSelectOptionChoiceBoxList
 from Plugins.Extensions.IPTVPlayer.components.iptvpostergrid import IPTVPosterGridList
@@ -810,6 +811,9 @@ class E2iPlayerWidget(Screen):
         # whenever a fresh mirror list is fetched from the host.
         self._currentLinkOptions = None
         self._resolvingLinkItem = None
+        # what INFO in the player names: the mirror being resolved, the name of the link played
+        self._playLinkMirror = ''
+        self._playLinkName = ''
         # "Select link automatically": the mirrors still to try when resolving or playing the current
         # one fails, how many the run started with (status line "Trying link 2 of 5"), the whole mirror
         # list and its video key (the quality list of a resolved mirror replaces both) and the mirror
@@ -2118,35 +2122,10 @@ class E2iPlayerWidget(Screen):
             self["console"].setText('')
 
     def _fitConsoleText(self, text):
-        # the shorter description below the poster grid: only whole lines, a cut text ends with "…" (a label
-        # higher than its text draws half a line at the bottom). Measured a little narrower than the label: the
-        # drawing wraps a few pixels earlier than calculateSize(), the "…" would land in a hidden line
-        def cut(length):
-            part = text[:length]
-            if length < len(text) and ' ' in part:
-                # at a word boundary
-                part = part.rsplit(' ', 1)[0]
-            return part.rstrip() + '…'
-
+        # the shorter description below the poster grid: a label higher than its text draws half a line at the bottom
         try:
             label = self["console"].instance
-            size = label.size()
-            maxH = size.height()
-            label.resize(eSize(size.width() * 97 // 100, maxH))
-            try:
-                if label.calculateSize().height() <= maxH:
-                    return
-                shortest, longest = 0, len(text)
-                while shortest < longest:
-                    middle = (shortest + longest + 1) // 2
-                    label.setText(cut(middle))
-                    if label.calculateSize().height() <= maxH:
-                        shortest = middle
-                    else:
-                        longest = middle - 1
-            finally:
-                label.resize(size)
-            self["console"].setText(cut(shortest))
+            self["console"].setText(fitLabelText(label, text, label.size().height()))
         except Exception:
             printExc()
 
@@ -2743,6 +2722,7 @@ class E2iPlayerWidget(Screen):
     def _startAutoLink(self, link):
         self._restoreAutoLinkMirrors()
         self._autoLinkCurrent = link
+        self._playLinkMirror = ''
         self._playLink(link)
         if self._autoLinkTotal > 1 and str(link.urlNeedsResolve) == '1':
             # replaces the "Loading" of the resolve request just started
@@ -3337,6 +3317,7 @@ class E2iPlayerWidget(Screen):
         if mirrorLevel:
             self._autoLinkQueue = []
             self._autoLinkCurrent = None
+            self._playLinkMirror = ''
         elif allowAuto and self._isAutoLinkChoice():
             # the qualities of a mirror chosen automatically: H.264 wider than the receiver decodes is left
             # out; with nothing else left the next mirror is tried (the last one plays it anyway)
@@ -3470,8 +3451,10 @@ class E2iPlayerWidget(Screen):
                 if str(link.urlNeedsResolve) == '1':
                     # call resolve link from host
                     self._resolvingLinkItem = link
+                    self._playLinkMirror = link.name
                     self.requestListFromHost('ResolveURL', -1, videoUrl)
                 else:
+                    self._playLinkName = linkDisplayName(self._playLinkMirror, link.name)
                     list = []
                     list.append(videoUrl)
                     self.playVideo(RetHost(status=RetHost.OK, value=list))
@@ -3682,6 +3665,15 @@ class E2iPlayerWidget(Screen):
                 if playlist:
                     gstAdditionalParams['playlist'] = playlist
 
+                # INFO in the player: where the video comes from and the texts of the host's INFO page
+                gstAdditionalParams['link_name'] = self._playLinkName
+                gstAdditionalParams['info_provider'] = boundFunction(self._requestPlayerArticle, self._getSelHostIndex())
+                try:
+                    gstAdditionalParams['host_title'] = self._getPlayerHostTitle()
+                    gstAdditionalParams['info_description'] = self.currItem.description
+                except Exception:
+                    printExc()
+
                 self.writeCurrentTitleToFile(titleOfMovie)
                 self.zapLivePending = False
                 self._autoLinkQuietPlayer = False
@@ -3717,6 +3709,23 @@ class E2iPlayerWidget(Screen):
                 self.restoreLiveAfterZap()
                 self.session.open(MessageBox, _("No valid links available."), type=MessageBox.TYPE_INFO, timeout=10)
     # end playVideo(self, ret):
+
+    def _getPlayerHostTitle(self):
+        # a row of another host (result of hostgroupsearch) only has that host's name
+        name = self._getRowsHostName()
+        if name != self.hostName or not self.hostTitle:
+            return name
+        site = ''
+        if 'xxx' == name and self.categoryList:
+            # its main menu lists the sites; the watchlist (+++ ... +++) and a search result are none
+            first = self.categoryList[0]
+            if not first.startswith('+++') and first != _("Search results"):
+                site = StripColorCodes(first)
+        return hostDisplayName(self.hostTitle, site)
+
+    def _requestPlayerArticle(self, hostIndex, callback):
+        # not as self.workThread: while it runs, CH+/CH- in the player could not start the next item
+        return asynccall.AsyncMethod(self.host.getArticleContent, callback)(hostIndex)
 
     def leaveMoviePlayer(self, answer=None, lastPosition=None, clipLength=None, *args, **kwargs):
         self.writeCurrentTitleToFile("")

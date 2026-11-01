@@ -92,6 +92,7 @@ _PROBE_SCRIPT = (
     'echo "@@e2ipow";      X=/usr/bin/e2ipow;   [ -x $X ] && r 1 $X --version; p $X; '
     'echo "@@ext3png";     X=-; for L in /usr/lib/exteplayer3png.so /lib/exteplayer3png.so; do [ -f $L ] && X=$L && break; done; echo "$X"; '
     'echo "@@ffmpeg";      X=/usr/bin/ffmpeg;   [ -x $X ] && r 1 $X -version; p $X; '
+    'echo "@@ffprobe";     X=/usr/bin/ffprobe;  [ -x $X ] && r 1 $X -version; p $X; '
     'echo "@@wget";        X=/usr/bin/wget;     [ -x $X ] && r 1 $X --version; p $X; '
     'echo "@@curl";        X=/usr/bin/curl;     [ -x $X ] && r 1 $X --version; p $X; '
     'echo "@@curlimp";     C=$(w curl-impersonate); [ "$C" = "-" ] && [ -x /usr/local/bin/curl-impersonate ] && C=/usr/local/bin/curl-impersonate; '
@@ -491,6 +492,7 @@ class _SystemInfo(object):
         out.append("")
         out.append("--- " + _("other binaries") + " ---")
         out.append(row("ffmpeg", first("ffmpeg", _("not installed (no DASH / ffmpeg downloads)"))))
+        out.append(row("ffprobe", first("ffprobe", _("not installed (no file details on INFO in the player)"))))
         out.append(row("wget", first("wget", _("not installed (no file, cover or subtitle downloads)"))))
         out.append(row("curl", first("curl", _("not installed (wget is used)"))))
         out.append(row("rtmpdump", first("rtmpdump", _("not installed (no RTMP downloads)"), "rtmpdump")))

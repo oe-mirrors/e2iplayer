@@ -134,6 +134,19 @@ def test_host_container_wins_and_playback_stays_matroska(ff):
     assert _dl(ff, "https://cdn/x/video.mp4", download=False)._outContainer() == "matroska"
 
 
+def test_buffered_hls_is_always_mpegts(ff):
+    # box 01.11. (TED): a growing Matroska has no CodecPrivate for ADTS audio yet, exteplayer3 played no sound
+    merge = {"audio_url": "https://cdn/a.m3u8", "video_url": "https://cdn/v.m3u8", "iptv_proto": "m3u8", "ff_out_container": "matroska"}
+    assert _dl(ff, "merge://audio_url|video_url", merge, download=False)._outContainer() == "mpegts"
+    noProto = {"audio_url": "https://cdn/a.m3u8", "video_url": "https://cdn/v.m3u8", "ff_out_container": "matroska"}
+    assert _dl(ff, "merge://audio_url|video_url", noProto, download=False)._outContainer() == "mpegts"
+    assert _dl(ff, "https://cdn/x/master.m3u8", download=False)._outContainer() == "mpegts"
+    # the download keeps the host's container, DASH (codec data in its init segment) stays Matroska when buffered
+    assert _dl(ff, "merge://audio_url|video_url", merge)._outContainer() == "matroska"
+    dash = {"audio_url": "https://cdn/a.mpd", "video_url": "https://cdn/v.mpd", "ff_out_container": "matroska"}
+    assert _dl(ff, "merge://audio_url|video_url", dash, download=False)._outContainer() == "matroska"
+
+
 def test_auto_follows_the_source(ff):
     assert _dl(ff, "https://www.porntrex.com/get_file/19/ab/3359675_1080p.mp4/")._outContainer() == "mp4"
     assert _dl(ff, "https://cdn/x/clip.webm?token=1")._outContainer() == "webm"

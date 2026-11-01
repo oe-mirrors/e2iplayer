@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 2026-10-31 - colour front displays (LCD) show title, progress bar and times during playback;
+# Last Modified: 2026-11-01 - INFO shows a panel over the running video (iptvplayerinfopanel.py).
+# 2026-10-31 - colour front displays (LCD) show title, progress bar and times during playback;
 #              the same screen serves the buffering screen and the download manager.
 # 2026-10-28 - a remembered subtitle file that is gone (put into the MKV by the download manager) is
 #              dropped without an error message, the search next to the video runs instead.
@@ -37,6 +38,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.iptvsubdownloader import IPTVSubDownloaderWidget
 from Plugins.Extensions.IPTVPlayer.components.iptvsubsimpledownloader import IPTVSubSimpleDownloaderWidget
 from Plugins.Extensions.IPTVPlayer.components.iptvchoicebox import IPTVChoiceBoxWidget, IPTVChoiceBoxItem
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinfopanel import PlayerInfoPanel
 from Plugins.Extensions.IPTVPlayer.components.iptvlist import IPTVPlaylistChoiceBoxList
 from Plugins.Extensions.IPTVPlayer.tools import listselection
 from Plugins.Extensions.IPTVPlayer.components.iptvdirbrowser import IPTVFileSelectorWidget
@@ -462,6 +464,8 @@ class IPTVExtMoviePlayer(Screen):
             clockWidget,
             subSkin
         )  # 00000000 bottom
+        # added here, not in the playerskin.xml files: every player skin gets the panel of the INFO key
+        skin = skin.replace('</screen>', PlayerInfoPanel.skinWidgets(1.0 if self.skinUsesRefCanvas else dw / float(self.REF_W)) + '</screen>')
 
         sub = None
         return skin
@@ -470,16 +474,24 @@ class IPTVExtMoviePlayer(Screen):
                            'rtmp': 'RTMP', 'rtsp': 'RTSP', 'mms': 'MMS', 'mmsh': 'MMS'}
     STREAM_CONTAINERS = ('mp4', 'm4v', 'mkv', 'webm', 'flv', 'ts', 'm2ts', 'avi', 'mov', 'wmv', 'mpg', 'mpeg', 'vob', 'divx', '3gp', 'ogv')
 
+    def getStreamSourceUrl(self):
+        # in buffering mode fileSRC is the local buffer file, the downloader has the source
+        if self.downloader is not None:
+            return strwithmeta(self.downloader.getUrl())
+        return self.fileSRC
+
+    def getLocalFilePath(self):
+        # the file the player reads when it is one here: a download or the buffer file
+        path = self.fileSRC
+        if path.startswith('file://'):
+            path = path[len('file://'):].replace('//', '/')
+        return str(path) if '://' not in path and os_path.isfile(path) else ''
+
     def _getStreamTypeLabel(self, url=None):
         # short delivery type for the info bar ("HLS", "DASH", "MP4", ...)
-        # - in buffering mode fileSRC is the local buffer file, so the
-        # downloader's source URL is the one that tells how it's streamed
         try:
             if url is None:
-                if self.downloader is not None:
-                    url = self.downloader.getUrl()
-                else:
-                    url = self.fileSRC
+                url = self.getStreamSourceUrl()
             url = strwithmeta(url)
             proto = url.meta.get('iptv_proto', '')
             urlLower = url.lower()
@@ -940,6 +952,9 @@ class IPTVExtMoviePlayer(Screen):
             self.autoHideTime = 1000 * int(self.configObj.getInfoBarTimeout())
         except Exception:
             self.autoHideTime = 1000
+
+        # INFO: the panel over the running video
+        self.infoPanel = PlayerInfoPanel(self, additionalParams)
 
         self.fatalErrorOccurs = False
         self.delayedClosure = None
@@ -2030,6 +2045,8 @@ class IPTVExtMoviePlayer(Screen):
                 else:
                     self.playback[key] = val
                     printDBG(">>> playback[%s] = %s" % (key, val))
+            if 'VideoTrack' in stsObj or 'AudioTrack' in stsObj:
+                self.infoPanel.updateStream()
         except Exception:
             printExc(WarnOnly=True)
 
@@ -2310,19 +2327,20 @@ class IPTVExtMoviePlayer(Screen):
     def doExit(self, fromInfo=False):
         if not fromInfo and self.subHandler['synchro']['visible']:
             self.hideSubSynchroControl()
-        elif self.playbackInfoBar['visible']:
+        elif self.playbackInfoBar['visible'] or self.infoPanel.visible:
+            self.infoPanel.hide()
             self.playbackInfoBar['blocked'] = False
             self.hidePlaybackInfoBar()
         else:
             self.key_stop("key_exit")
 
     def doInfo(self):
-        if not self.playbackInfoBar['visible']:
-            if self.isStarted and not self.isClosing:
-                self.playbackInfoBar['blocked'] = True
-                self.showPlaybackInfoBar()
-        else:
+        if self.infoPanel.visible:
             self.doExit(True)
+        elif self.isStarted and not self.isClosing:
+            self.playbackInfoBar['blocked'] = True
+            self.showPlaybackInfoBar()
+            self.infoPanel.show()
 
     def eplayer3Finished(self, code):
         printDBG("IPTVExtMoviePlayer.eplayer3Finished code[%r]" % code)
@@ -2389,9 +2407,9 @@ class IPTVExtMoviePlayer(Screen):
                 # gstplayer2 reports a DASH video track first without its size (0x0), the size follows
                 if params['width'] and params['height']:
                     try:
-                        DAR = float(obj.get('an', 1) * params['width']) / float(obj.get('ad', 1) * params['height'])
+                        DAR = float((obj.get('an') or 1) * params['width']) / float((obj.get('ad') or 1) * params['height'])
                         aTab = []
-                        for item in [(16, 9, '16_9'), (4, 3, '4_3'), (16, 10, '16_10'), (3, 2, '3_2'), (5, 4, '5_4'), (1.85, 1, '1.85'), (2.35, 1, '2.35')]:
+                        for item in [(16, 9, '16_9'), (4, 3, '4_3'), (16, 10, '16_10'), (3, 2, '3_2'), (5, 4, '5_4'), (1.85, 1, '1.85'), (2.35, 1, '2.35'), (1, 1, '1_1'), (3, 4, '3_4'), (9, 16, '9_16')]:
                             diff = fabs(float(item[0]) / item[1] - DAR)
                             aTab.append((diff, item[2]))
                         aTab.sort(key=lambda item: item[0])
@@ -2669,6 +2687,7 @@ class IPTVExtMoviePlayer(Screen):
             self.waitCloseFix['timer'].stop()
         self.updateInfoTimer.stop()
         self.subHandler['timer'].stop()
+        self.infoPanel.close()
         self.playbackInfoBar['blocked'] = False
         self.hidePlaybackInfoBar()
 
