@@ -12,14 +12,16 @@
 # No enigma2 imports - covered by tests/test_impersonate.py. Python 2.7 compatible.
 import math
 import os
+import re
+import socket
 import subprocess
 import tempfile
 import time
 
 try:
-    from urllib.parse import urljoin
+    from urllib.parse import urljoin, urlsplit
 except ImportError:  # Python 2
-    from urlparse import urljoin
+    from urlparse import urljoin, urlsplit
 
 # where the box has the binary (the OE-A recipe installs a static build to /usr/bin)
 BINARY_CANDIDATES = ['/usr/bin/curl-impersonate', '/usr/local/bin/curl-impersonate']
@@ -50,17 +52,24 @@ WRITEOUT = '%{stderr}\n' + WRITEOUT_MARKER + ' %{http_code} %{url_effective}\n'
 # 43 (bad function argument), 48 (unknown option)
 _BAD_TARGET_CODES = (2, 43, 48)
 
+# curl exit code "could not resolve host". The binary has its own resolver (c-ares), which some routers
+# answer with SERVFAIL while the box's normal lookups work - the name then comes from the system (--resolve)
+_RESOLVE_FAILED_CODE = 6
+_RESOLVE_FAILED_RE = re.compile(r'Could not resolve host:\s*([^\s()]+)')
+MAX_RESOLVE_ADDRESSES = 4
+
 
 class ImpersonateUnavailable(Exception):
     """the binary is missing or cannot run on this box - use the normal HTTP path"""
 
 
-_state = {'binary': None, 'profile': None}
+_state = {'binary': None, 'profile': None, 'systemDns': False}
 
 
 def resetCache():
     _state['binary'] = None
     _state['profile'] = None
+    _state['systemDns'] = False
 
 
 def _isExecutable(path):
@@ -93,6 +102,68 @@ def getProfiles():
     if _state['profile']:
         return [_state['profile']] + [p for p in PROFILES if p != _state['profile']]
     return list(PROFILES)
+
+
+def _urlHostPort(url):
+    """host and port of a URL: ('', None) when it has none or the port is invalid"""
+    try:
+        parts = urlsplit(url)
+        return parts.hostname or '', parts.port
+    except ValueError:
+        return '', None
+
+
+def _systemAddresses(host, ipv4Only=False, ipv6Only=False):
+    """the host's addresses from the box's normal resolver, IPv6 ones in brackets for --resolve"""
+    family = socket.AF_INET if ipv4Only else (socket.AF_INET6 if ipv6Only else socket.AF_UNSPEC)
+    try:
+        infos = socket.getaddrinfo(host, None, family, socket.SOCK_STREAM)
+    except (socket.error, UnicodeError):
+        return []
+    out = []
+    for info in infos:
+        address = info[4][0].split('%')[0]  # no scope id of a link-local address
+        address = '[%s]' % address if ':' in address else address
+        if address not in out:
+            out.append(address)
+    return out[:MAX_RESOLVE_ADDRESSES]
+
+
+def _resolveEntries(host, ports=None, ipv4Only=False, ipv6Only=False):
+    """--resolve values host:port:addr,addr, [] when the system does not know the host either.
+    80 and 443 always: a redirect may change the scheme"""
+    addresses = _systemAddresses(host, ipv4Only, ipv6Only) if host else []
+    if not addresses:
+        return []
+    allPorts = [80, 443] + [port for port in (ports or []) if port and port not in (80, 443)]
+    return ['%s:%d:%s' % (host, port, ','.join(addresses)) for port in sorted(set(allPorts))]
+
+
+def failedHost(returncode, error):
+    """the host curl could not resolve (lower case), '' for any other result"""
+    match = _RESOLVE_FAILED_RE.search(error or '') if returncode == _RESOLVE_FAILED_CODE else None
+    return match.group(1).lower() if match else ''
+
+
+def useSystemDns():
+    _state['systemDns'] = True
+
+
+def systemDnsArgs(urls, ipv4Only=False, ipv6Only=False):
+    """--resolve options for the hosts of these URLs once this process found curl's own resolver not
+    working, else []"""
+    if not _state['systemDns']:
+        return []
+    ports = {}
+    for url in urls:
+        host, port = _urlHostPort(url)
+        if host:
+            ports.setdefault(host, set()).add(port)
+    args = []
+    for host in sorted(ports):
+        for entry in _resolveEntries(host, ports[host], ipv4Only, ipv6Only):
+            args.extend(['--resolve', entry])
+    return args
 
 
 def _headerText(value):
@@ -181,9 +252,10 @@ def normalizeCookieFile(path):
 
 def buildArgs(binary, profile, url, headers=None, cookieIn='', cookieOut='', cookieString='', dataFile='',
               noRedirection=False, timeout=None, proxy='', insecure=False, cacert='', ipv4Only=False, headerFile='',
-              outFile='', ipv6Only=False):
+              outFile='', ipv6Only=False, resolveArgs=None):
     """outFile: write the body to this file (downloads) instead of stdout.
-    ipv4Only / ipv6Only: curl -4 / -6; ipv4Only wins when both are set"""
+    ipv4Only / ipv6Only: curl -4 / -6; ipv4Only wins when both are set.
+    resolveArgs: --resolve options (the names curl must not look up itself)"""
     # whole seconds: --speed-time takes an integer only (a host's 'timeout': 7.5 would make curl exit 2)
     try:
         timeout = int(math.ceil(float(timeout))) if timeout else DEFAULT_TIMEOUT
@@ -220,6 +292,7 @@ def buildArgs(binary, profile, url, headers=None, cookieIn='', cookieOut='', coo
         args.append('-4')
     elif ipv6Only:
         args.append('-6')
+    args.extend(resolveArgs or [])
     args.extend(['--', url])
     return args
 
@@ -444,12 +517,18 @@ def fetch(binary, url, tmpDir, headers=None, cookieFile='', loadCookie=False, sa
             with open(dataFile, 'wb') as f:
                 f.write(postBody)
         result = None
-        for profile in getProfiles():
+        profiles = getProfiles()
+        # with a proxy the proxy resolves the target
+        urlHost, urlPort = _urlHostPort(url)
+        resolveArgs = systemDnsArgs([url], ipv4Only, ipv6Only) if not proxy else []
+        triedHosts = [urlHost] if resolveArgs else []
+        while profiles:
+            profile = profiles[0]
             _remove(headerFile)
             args = buildArgs(binary, profile, url, headers, cookieIn=cookieIn, cookieOut=cookieFile if (cookieFile and saveCookie) else '',
                              cookieString=cookieItemsString(cookieItems), dataFile=dataFile, noRedirection=noRedirection,
                              timeout=timeout, proxy=proxy, insecure=insecure, cacert=cacert, ipv4Only=ipv4Only, headerFile=headerFile,
-                             outFile=outFile, ipv6Only=ipv6Only)
+                             outFile=outFile, ipv6Only=ipv6Only, resolveArgs=resolveArgs)
             if log is not None:
                 log('curl-impersonate: %s' % ' '.join(args[1:-1]))
             if outFile:
@@ -463,6 +542,20 @@ def fetch(binary, url, tmpDir, headers=None, cookieFile='', loadCookie=False, sa
             if code:
                 status = code
             dropEncodingHeaders(respHeaders)
+            # curl names the failed host, a redirect may have led there. Each retry adds a new host, so
+            # this ends. A POST that was redirected is sent again - only on a box with this problem.
+            host = failedHost(returncode, error) if stop is None and not proxy else ''
+            if host and host not in triedHosts:
+                triedHosts.append(host)
+                entries = _resolveEntries(host, [urlPort] if host == urlHost else None, ipv4Only, ipv6Only)
+                if entries:
+                    if log is not None:
+                        log('curl-impersonate: %s - using the system resolver: %s' % (error, ' '.join(entries)))
+                    for entry in entries:
+                        resolveArgs = resolveArgs + ['--resolve', entry]
+                    useSystemDns()
+                    continue
+            profiles.pop(0)
             if not blocks and returncode in _BAD_TARGET_CODES and 'imperson' in error.lower():
                 if log is not None:
                     log('curl-impersonate: profile %s rejected (%s), trying the next one' % (profile, error))

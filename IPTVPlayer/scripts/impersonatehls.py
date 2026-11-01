@@ -258,6 +258,7 @@ class Downloader(object):
         self.partsDir = opts['out'] + '.parts'
         self.total = sum(d for _, d in segments)
         self.done = 0  # segments appended to the output
+        self.failedHosts = set()  # hosts curl could not resolve, e.g. the target of a segment's redirect
         self.bytes = 0
         self.seconds = 0.0
         self.proc = None
@@ -286,6 +287,9 @@ class Downloader(object):
             args.extend(['--cacert', curlimpersonate.CA_BUNDLE])
         for line in curlimpersonate.filterHeaders(self.opts['headers']):
             args.extend(['-H', line])
+        # curl's own resolver failed on this box (playlist request or an earlier run): names from the system
+        urls = set(segment[0] for segment in self.segments[self.done:])
+        args.extend(curlimpersonate.systemDnsArgs(sorted(urls) + ['https://%s/' % host for host in self.failedHosts]))
         args.extend(['-K', cfgPath])
         return args
 
@@ -441,6 +445,10 @@ class Downloader(object):
             if self.done >= len(self.segments):
                 break
             log('curl run ended at segment %d/%d (exit %s, failed %r) %s' % (self.done + 1, len(self.segments), code, failed, lastError))
+            host = curlimpersonate.failedHost(code, lastError)
+            if host:
+                curlimpersonate.useSystemDns()
+                self.failedHosts.add(host)
             if failed is not None and failed[1] in (401, 403, 404, 410) and tries >= 2:
                 if self.live:
                     self._skip(failed[0], 'HTTP %s' % failed[1])
