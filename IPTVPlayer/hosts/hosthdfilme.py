@@ -1,30 +1,13 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "21.10.2026"
-# 07.10.2026 - "no valid links" on every movie: the page now lazy-loads the "custom" DeVideoSRC player
-# (<iframe src="about:blank" data-src="https://devideosrc.co/custom/movie/<imdb>">), the old movie iframe
-# pattern found nothing, so movies had no player url (fixed in libs/meinecloud.py). Also: First/Jump/Next
-# paging (lists + search), "Title (Year)" names, episodes keyed on their own url (download marker),
-# INFO via moviemeta (IMDb id of the player) merged with the site's fields.
-# 01.10.2026 - domain hdfilme.ceo; the player iframe moved from meinecloud.click to devideosrc.co.
-# 27.09.2026 - meinecloud.click was rebuilt ("DeVideoSRC"): no data-link lists any more, the hoster
-# embeds come from its token API (libs/meinecloud.py) - movies and episodes; domain hdfilme.cafe.
-# 09.09.2026 - the meinecloud player now base64-encodes its data-link values, so the choice box
-# showed empty (unresolvable) entries; _decodeDataLink() decodes them back to //host/e/id before
-# they reach getHostName()/getVideoLinkExt().
-# 05.09.2026 - added "Create MKV" option (config.plugins.iptvplayer.hdfilme_mkv),
-# mirroring hostfilmpalast.py's MKV toggle: GetConfigList() now exposes it and getVideoLinks()
-# passes it straight through to decorateResolvedLinkItems(), which already wires the correct
-# postprocess meta for WgetDownloader to remux to mkv after the download finishes - same as
-# filmpalast, no extra downloader-forcing needed.
-# 25.08.2026 - strip the leading "S<n> E<n>" NUMBERS from the site's raw episode label and keep whatever separator character the site itself already uses (dash or em-dash) untouched, instead of re-building a custom separator; removed the unnecessary EM_DASH/EN_DASH constants and literal-unicode-escape decoding machinery from the previous iteration.
+LAST_MODIFIED = "01.11.2026"
+# 01.11.2026 - the site moved to hd-filme.one and was rebuilt: new cards, ?page=N paging, /suche search, player and IMDb id in the page data.
 
-import base64
 import re
 
 from Components.config import config, ConfigYesNo, getConfigListEntry
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase, RetHost
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
-from Plugins.Extensions.IPTVPlayer.libs.meinecloud import MeineCloud, MOVIE_IFRAME_RE, isPlayerUrl
+from Plugins.Extensions.IPTVPlayer.libs.meinecloud import MeineCloud, isPlayerUrl
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, getMetaByImdbId
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
@@ -46,33 +29,13 @@ def GetConfigList():
 
 
 def gettytul():
-    return "https://hdfilme.ceo/"
-
-
-def _decodeDataLink(raw):
-    """The meinecloud player now base64-encodes its data-link values (e.g. 'Ly9teGRyb3AudG8v...'
-    -> '//mxdrop.to/e/...'); older pages still ship a plain //host/e/id. Decode only when the
-    value isn't already a URL."""
-    if not raw or raw.startswith(("http", "//")):
-        return raw
-    try:
-        decoded = base64.b64decode(raw + "=" * (-len(raw) % 4)).decode("utf-8", "ignore").strip()
-        if decoded.startswith(("http", "//")):
-            return decoded
-    except Exception:
-        pass
-    return raw
-
-
-def _trimTrailingDashPart(title):
-    """Drop a trailing ' – <type>' marker the listing appends after the real title (en/em dash
-    only, never a plain hyphen). Runs on already-HTML-decoded text so it works whether the site
-    emits a literal dash or the &#8211; entity."""
-    # alternatives, not a character class - on Python 2 the class held single UTF-8 bytes
-    return re.split(r"\s+(?:–|—)\s*", title, maxsplit=1)[0].strip()
+    return "https://hd-filme.one/"
 
 
 PAGING_KEYS = ("base_url", "page_tpl")
+# the page data of the player: \"src\":\"https://devideosrc.co/custom/movie/tt123\" (movie), \"imdb\":\"tt123\" (series)
+MOVIE_PLAYER_RE = r'(https://(?:devideosrc\.co|meinecloud\.click)/(?:custom/)?movie/tt\d+)'
+SERIES_IMDB_RE = r'\\?"imdb\\?":\\?"(tt\d+)'
 
 
 def _pageUrl(url):
@@ -86,14 +49,14 @@ class HDFilme(CBaseHostClass):
         CBaseHostClass.__init__(self, {"history": "HDFilme", "cookie": "HDFilme.cookie"})
         self.HEADER = self.cm.getDefaultHeader()
         self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
-        self.DEFAULT_ICON_URL = gettytul() + "templates/hdfilme/images/apple-touch-icon.png"
+        self.DEFAULT_ICON_URL = gettytul() + "brand/hdfilme/logo-footer.png"
         self.MAIN_URL = gettytul()
         self.cacheSeasons = {}
         self.watchedHelper = IPTVWatchedHelper("hdfilme")
         self.MENU = [
-            {"category": "list_items", "title": _("New"), "url": self.getFullUrl("filme1/")},
-            {"category": "list_items", "title": _("Cinema movies"), "url": self.getFullUrl("kinofilme/")},
-            {"category": "list_items", "title": _("Series"), "url": self.getFullUrl("serien/")},
+            {"category": "list_items", "title": _("New"), "url": self.getFullUrl("filme1")},
+            {"category": "list_items", "title": _("Cinema movies"), "url": self.getFullUrl("kinofilme")},
+            {"category": "list_items", "title": _("Series"), "url": self.getFullUrl("serien")},
             {"category": "list_genres", "title": _("Genres")}] + self.searchItems()
 
     def getPage(self, baseUrl, addParams=None, post_data=None):
@@ -158,12 +121,15 @@ class HDFilme(CBaseHostClass):
         except Exception:
             printExc()
 
-    def _lastPage(self, data):
-        # highest page number of the pager: <a href=".../page/1405/">1405</a>, <span>3</span> (current),
-        # search: <a onclick="javascript:list_submit(3)" ...>3</a>
-        block = self.cm.ph.getDataBeetwenMarkers(data, 'class="pages"', "</div>", False)[1]
-        nums = [int(n) for n in re.findall(r"(?:>|list_submit\()(\d+)(?:<|\))", block)]
-        return max(nums) if nums else 0
+    def _story(self, data):
+        # the plot; og:description starts with the site's own "<title> stream online ..." text
+        return self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'(?s)class="dsyn[^"]*">(.*?)</p>')[0])
+
+    def _detailField(self, data, label):
+        # <p class="dato"><strong>Regisseur<!-- -->:</strong><span><a ...>Name</a></span>...</p>, or the plain text
+        block = self.cm.ph.getSearchGroups(data, r'(?s)<p class="dato"><strong>%s<.*?</strong>(.*?)</p>' % label)[0]
+        names = re.findall(r">([^<]+)</a>", block)
+        return ", ".join(self.cleanHtmlStr(name) for name in names) if names else self.cleanHtmlStr(block)
 
     def listItems(self, cItem):
         printDBG("HDFilme.listItems |%s|" % cItem)
@@ -171,48 +137,43 @@ class HDFilme(CBaseHostClass):
         baseUrl = cItem.get("base_url") or cItem["url"]
         tpl = cItem.get("page_tpl", "")
         if not tpl:
-            # category lists: <list>/page/<n>/
-            tpl = re.sub(r"/page/\d+/?$", "/", baseUrl).rstrip("/").replace("{", "{{").replace("}", "}}") + "/page/{page}/"
+            # <list>?page=<n>
+            tpl = baseUrl.replace("{", "{{").replace("}", "}}") + ("&" if "?" in baseUrl else "?") + "page={page}"
         sts, data = self.getPage(baseUrl if page <= 1 else tpl.format(page=page))
         if not sts:
             return
-        if "Fatal error: Uncaught" in data[:2000]:
-            SetIPTVPlayerLastHostError(_("The website returned a server error for this request."))
-            return
         normalize = IsMediaNamingNormalized()
-        isSeriesList = "/serien" in baseUrl
         count = 0
-        for item in self.cm.ph.getAllItemsBeetwenMarkers(data, 'class="item relative', 'class="absolute'):
+        for item in self.cm.ph.getAllItemsBeetwenMarkers(data, '<a class="cv"', '</a>'):
             itemUrl = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+)')[0])
-            title = self.cm.ph.getSearchGroups(item, 'title="([^"]+)')[0]
-            if not title:
-                title = self.cm.ph.getSearchGroups(item, '<strong>(.*?)</strong>')[0]
-            title = _trimTrailingDashPart(self.cleanHtmlStr(title))
+            title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'title="([^"]+)')[0])
             if not title or not self.cm.isValidUrl(itemUrl):
                 continue
-            icon = self.cm.ph.getSearchGroups(item, 'data-src="([^"]+)')[0]
-            # titles without a poster carry the site's own placeholder text ("Erroe: wrong image")
-            icon = self.getFullIconUrl(icon) if icon.startswith(("/", "http")) else self.DEFAULT_ICON_URL
-            duration = self.cm.ph.getSearchGroups(item, r'<span[^>]*>(\d+ min)</span>')[0]
-            year = self.cm.ph.getSearchGroups(item, r'<span[^>]*>(\d{4})</span>')[0]
-            desc = "\n".join("%s: %s" % (label, value) for label, value in ((_("Year"), year), (_("Duration"), duration)) if value)
-            # series show the year of their first season - no "(Year)" for them (it would end up in every episode name)
-            dispTitle = "%s (%s)" % (title, year) if (normalize and year and not isSeriesList) else title
+            icon = self.cm.ph.getSearchGroups(item, '<img src="([^"]+)')[0]
+            icon = self.getFullIconUrl(icon) if icon else self.DEFAULT_ICON_URL
+            # below the title: the year of a movie, "2 Staffeln" of a series
+            info = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'class="cv-m">(.*?)</div>')[0])
+            isSeries = "/serie/" in itemUrl
+            year = "" if isSeries else self.cm.ph.getSearchGroups(info, r"(\d{4})")[0]
+            desc = "%s: %s" % (_("Year"), year) if year else info
+            # series show no "(Year)" (it would end up in every episode name)
+            dispTitle = "%s (%s)" % (title, year) if (normalize and year) else title
             params = stripPagerKeys(dict(cItem), PAGING_KEYS)
             params.update({"good_for_fav": True, "category": "list_seasons", "title": dispTitle, "s_title": title, "url": itemUrl, "icon": icon,
-                           "desc": desc, "meta_type": "tv" if isSeriesList else "", "meta_title": title, "meta_year": year})
+                           "desc": desc, "meta_type": "tv" if isSeries else "", "meta_title": title, "meta_year": year})
             self.watchedHelper.updateHostItemFlag(self, params, self._getWatchedKeyForItem)
             self.addDir(params)
             count += 1
-        lastPage = self._lastPage(data)
+        # the list only links the next page ("weitere Titel"), its last page is unknown
+        hasNext = bool(count) and re.search(r'href="[^"]*[?&]page=%d"' % (page + 1), data) is not None
         listItem = dict(cItem, base_url=baseUrl, url=baseUrl, page_tpl=tpl)
-        addPagingItems(self, listItem, page, bool(count) and page < lastPage, lastPage, tpl)
+        addPagingItems(self, listItem, page, hasNext, 0, tpl)
 
     def _resolveMeineCloud(self, data):
-        movieUrl = self.cm.ph.getSearchGroups(data, MOVIE_IFRAME_RE)[0]
+        movieUrl = self.cm.ph.getSearchGroups(data, MOVIE_PLAYER_RE)[0]
         if movieUrl:
             return "movie", movieUrl
-        imdb = self.cm.ph.getSearchGroups(data, r"var imdb = '([^']+)'")[0]
+        imdb = self.cm.ph.getSearchGroups(data, SERIES_IMDB_RE)[0]
         if imdb:
             return "series", imdb
         return None, None
@@ -263,11 +224,7 @@ class HDFilme(CBaseHostClass):
         sts, data = self.getPage(url)
         if not sts:
             return
-        if "Fatal error: Uncaught" in data[:2000]:
-            # some new titles only answer with a PHP error of the site itself
-            SetIPTVPlayerLastHostError(_("The website returned a server error for this request."))
-            return
-        desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, 'og:description" content="([^"]+)')[0])
+        desc = self._story(data)
         kind, target = self._resolveMeineCloud(data)
         if kind is None:
             SetIPTVPlayerLastHostError(_("No streams are available for this title yet."))
@@ -336,7 +293,7 @@ class HDFilme(CBaseHostClass):
         if kind != "series":
             return
         icon = cItem.get("icon", "") or self.DEFAULT_ICON_URL
-        desc = cItem.get("desc", "") or self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, 'og:description" content="([^"]+)')[0])
+        desc = cItem.get("desc", "") or self._story(data)
         self._loadSeriesCache(target, seriesName, seriesUrl, icon, desc)
 
     def listGenres(self, cItem):
@@ -344,19 +301,11 @@ class HDFilme(CBaseHostClass):
         sts, data = self.getPage(self.MAIN_URL)
         if not sts:
             return
-        pos = data.find('class="mr-1">Genre<')
-        if pos != -1:
-            pos = data.find("dropdown-content", pos)
-        if pos == -1:
-            return
-        block = self.cm.ph.getDataBeetwenMarkers(data[pos:], ">", "</div>", False)[1]
+        block = self.cm.ph.getDataBeetwenMarkers(data, 'class="panel p-genres"', "</div>", False)[1]
         for url, title in re.findall(r'<a\s+href="([^"]+)"[^>]*>([^<]+)</a>', block):
             title = self.cleanHtmlStr(title).strip()
             url = self.getFullUrl(url)
             if not title or not self.cm.isValidUrl(url):
-                continue
-            # the genre dropdown also carries a few plain nav links (Serien, Demnächst, kinofilme)
-            if "ino" in title or "erien" in title or "chst" in title:
                 continue
             params = dict(cItem)
             params.update({"good_for_fav": True, "category": "list_items", "title": title, "url": url})
@@ -364,10 +313,8 @@ class HDFilme(CBaseHostClass):
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("HDFilme.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
-        story = urllib_quote_plus(searchPattern).replace("{", "{{").replace("}", "}}")
-        url = self.getFullUrl("index.php?do=search&subaction=search&search_start={page}&story=%s" % story)
-        # the pager rows open as an ordinary list (no search pattern needed)
-        self.listItems(dict(cItem, category="list_items", url=url.format(page=1), base_url=url.format(page=1), page_tpl=url))
+        # one page of results; the pager rows of listItems would open as an ordinary list
+        self.listItems(dict(cItem, category="list_items", url=self.getFullUrl("suche?q=%s" % urllib_quote_plus(searchPattern))))
 
     def getLinksForVideo(self, cItem):
         printDBG("HDFilme.getLinksForVideo [%s]" % cItem)
@@ -385,20 +332,17 @@ class HDFilme(CBaseHostClass):
                                            cItem.get("meta_year", ""), cItem.get("imdb", ""), skip=())
         sidecar = buildSidecarFromItem(cItem, sidecarEnabled, metaQuery=sidecarMeta)
 
-        streamType = cItem.get("stream_type")
-        if streamType == "movie":
-            data = self._meineCloud().movieLinks(MeineCloud.imdbFromUrl(streamUrl))
-        elif streamType == "mc_episode":
+        if cItem.get("stream_type") == "mc_episode":
             imdb, season, episode = streamUrl[3:].split("/")
             data = self._meineCloud().episodeLinks(imdb, season, episode) or [cItem.get("mc_url", "")]
         else:
-            data = [_decodeDataLink(streamUrl)]
+            data = self._meineCloud().movieLinks(MeineCloud.imdbFromUrl(streamUrl))
         for url in data:
             if not url or isPlayerUrl(url) or "player.php" in url:
                 continue
             url = "https:" + url if url.startswith("//") else url
             linksTab.append({"name": self.up.getHostName(url).capitalize(), "url": strwithmeta(url, {"Referer": gettytul()}), "need_resolve": 1})
-        if not linksTab and streamType in ("movie", "mc_episode"):
+        if not linksTab:
             SetIPTVPlayerLastHostError(_("No streams are available for this title yet."))
         return applySidecarToLinks(linksTab, sidecar)
 
@@ -418,18 +362,18 @@ class HDFilme(CBaseHostClass):
         mediaType = cItem.get("meta_type", "")
         sts, data = self.getPage(_pageUrl(cItem["url"]))
         if sts:
-            story = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, 'og:description" content="([^"]+)')[0])
-            actors = self.cm.ph.getAllItemsBeetwenMarkers(data, "Schauspieler:", "</li>")
-            if actors:
-                names = re.findall('>([^<]+)</a>', actors[0], re.DOTALL)
-                if names:
-                    otherInfo["actors"] = ", ".join(names)
-            released = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'<span[^>]*>(\d{4})</span>')[0])
+            story = self._story(data)
+            for key, label in (("original_title", "Originaltitel"), ("director", "Regisseur"), ("actors", "Schauspieler")):
+                value = self._detailField(data, label)
+                if value:
+                    otherInfo[key] = value
+            # <i class="dsep">|</i>2027<i class="dsep">|</i>92<!-- --> Min.
+            released = self.cm.ph.getSearchGroups(data, r"</i>(\d{4})<i")[0]
             if released:
                 otherInfo["released"] = released
-            duration = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r"(\d+ min)")[0])
+            duration = self.cm.ph.getSearchGroups(data, r"</i>(\d+)<!-- --> Min\.")[0]
             if duration:
-                otherInfo["duration"] = duration
+                otherInfo["duration"] = "%s min" % duration
             kind, target = self._resolveMeineCloud(data)
             if kind:
                 mediaType = mediaType or ("tv" if kind == "series" else "movie")

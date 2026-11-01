@@ -630,8 +630,12 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
         # A host's ff_out_container wins; a download in the download manager
         # uses the setting of its source (DASH, HLS or a single file; "auto" =
         # the container of the source); buffered playback, whose file the
-        # player holds under its name, Matroska
+        # player holds under its name, Matroska. Buffered HLS is always MPEG-TS, also against the host: its ADTS
+        # audio gives no codec data before the first packet, so ffmpeg writes the Matroska track's CodecPrivate only
+        # when the file is finished - exteplayer3 reads the growing file before that and stays without sound
         meta = strwithmeta(self.url).meta
+        if not self.allowFinalRename and self._isHlsSource(meta):
+            return 'mpegts'
         if 'ff_out_container' in meta:
             return str(meta['ff_out_container']).lower()
         if not self.allowFinalRename:
