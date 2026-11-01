@@ -1,21 +1,27 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "14.10.2026"
+LAST_MODIFIED = "01.11.2026"
 # 23.08.2026 - withArticleContent() now checks type for episodes, fixes wrong Info text on episode press, getSuggestionsProvider() added (forces Google search suggestions) - Kamikaze24
+import os
 import re
+import threading
+import time
 
 from Plugins.Extensions.IPTVPlayer.components.e2ivkselector import GetVirtualKeyboard
 try:
     from Plugins.Extensions.IPTVPlayer.components.e2ivkselector import GetNumericKeyboard
 except ImportError:  # E2iPlayer builds without the numeric keypad - full keyboard instead
     GetNumericKeyboard = None
-from Plugins.Extensions.IPTVPlayer.components.asynccall import MainSessionWrapper
+from Plugins.Extensions.IPTVPlayer.components.asynccall import AsyncMethod, MainSessionWrapper
 from Components.config import ConfigSelection, config, getConfigListEntry, ConfigYesNo
 from Plugins.Extensions.IPTVPlayer.components.configsecret import ConfigLogin, ConfigSecret
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase, RetHost
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
+from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMetaByImdbId
+from Plugins.Extensions.IPTVPlayer.libs.pCommon import common
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetCacheSubDir
 try:
     from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import takePresetJumpPage
 except ImportError:  # E2iPlayer builds without the CH- page preset (e.g. zadmario): the Jump always asks
@@ -53,7 +59,7 @@ def gettytul():
 
 
 def language(item):
-    lang_map = {"german": "(DE)", "english": "(EN)", "english-german": "(EN/DE-UT)"}
+    lang_map = {"german": "(DE)", "english": "(EN)", "english-german": "(EN/DE-UT)", "japanese-english": "(JP/EN-UT)"}
     flags = re.findall(r'<use href="#icon-flag-([^"]+)', item)
     return "" if not flags else " ".join(lang_map.get(f, f) for f in flags)
 
@@ -66,6 +72,12 @@ class SerienStreamTo(CBaseHostClass):
         self.MAIN_URL = config.plugins.iptvplayer.serienstreamto_hosts.value
         self.DEFAULT_ICON_URL = "https://raw.githubusercontent.com/oe-mirrors/e2iplayer/gh-pages/Thumbnails/serienstream.to.png"
         self.cacheSeriesSeasons = {}
+        # "Neueste Episoden" covers: series path -> [cover path, imdb id, time], kept on disk across restarts
+        self.COVER_FILE = GetCacheSubDir("SerienStreamTo", "covers.json")
+        self.COVER_MAX_AGE = 30 * 24 * 3600  # a renewed cover gets a new address
+        self.coverLock = threading.Lock()
+        self.coverPending = set()
+        self.coverCache = self._loadCoverCache()
         self.sessionEx = MainSessionWrapper()
         self.watchedHelper = IPTVWatchedHelper('serienstreamto')
         self.MENU = [{"category": "list_items", "title": _("Series"), "url": self.getFullUrl("suche")},
@@ -266,22 +278,29 @@ class SerienStreamTo(CBaseHostClass):
             data = self.cm.ph.getAllItemsBeetwenMarkers(htm, 'class="collection-item-cover', "</small>")
         if data is None:
             data = []
+        seen = set()  # /suche renders its result grid twice
         for item in data:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+)')[0])
+            if url in seen:
+                continue
+            seen.add(url)
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, 'src="([^"]+)')[0])
-            title1 = self.cm.ph.getSearchGroups(item, 'data-search="([^"]+)')[0]
-            title2 = self.cm.ph.getSearchGroups(item, 'title="([^"]+)')[0]
-            title = title1 or title2
+            if 'class="series-item"' in item:
+                # /serien: data-search is the lower-case search text with the alternative names, the link text the title
+                title = self.cm.ph.getSearchGroups(item, r'<a[^>]+>([^<]+)</a>')[0] or self.cm.ph.getSearchGroups(item, 'data-search="([^"]+)')[0]
+            else:
+                title = self.cm.ph.getSearchGroups(item, 'title="([^"]+)')[0]
             params = dict(baseItem)
             params.update({"good_for_fav": True, "category": "list_seasons", "title": self.cleanHtmlStr(title), "url": url, "icon": icon, "desc": ""})
-            if "sammlung" in url:
+            if "/sammlung/" in url:
                 params.update({"category": "list_items"})
             self.watchedHelper.updateHostItemFlag(self, params, self._getWatchedKeyForItem)
             self.addDir(params)
         if max_page and max_page > 1:
             self.addDir({"title": "************************", "category": "empty"})
             self.addDir(self.getJumpItem(max_page, page, cItem["url"], baseItem.get("name", "category")))
-            nextPage = self.cm.ph.getSearchGroups(htm, r'class="page-link"\s*href="([^"]+?)"\s*rel="next"')[0]
+            # the search answers "/suche?term=x&amp;page=2"
+            nextPage = self.cm.ph.getSearchGroups(htm, r'class="page-link"\s*href="([^"]+?)"\s*rel="next"')[0].replace("&amp;", "&")
             if nextPage:
                 next_params = dict(baseItem)
                 next_params.update({"page": page + 1, "title": _("Next page"), "max_page": max_page, "current_page": page + 1, "category": "list_items", "url": self.getFullUrl(nextPage)})
@@ -302,7 +321,7 @@ class SerienStreamTo(CBaseHostClass):
             return
         trailer = self.cm.ph.getSearchGroups(data, 'data-trailer-url="([^"]+)')[0]
         desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, 'description-text">([^<]+)')[0])
-        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, 'data-src="([^"]+)')[0])
+        icon = self.getFullIconUrl(self._seriesCover(data))
         imdb_id = self.extractImdbId(data)
         printDBG("IMDb DEBUG listSeasons id=[%s]" % imdb_id)
         imdb_rating = self.getIMDBRating(imdb_id) if imdb_id else "-"
@@ -321,7 +340,7 @@ class SerienStreamTo(CBaseHostClass):
             params.update({"good_for_fav": True, "category": "list_episodes", "title": title,
             "url": self.getFullUrl(url), "icon": icon, "desc": desc_show,
             "imdb_rating": imdb_rating, "imdb_id": imdb_id, "imdb_lookup_url": self.getFullUrl(url),
-            "series_url": seriesUrl, "season_num": str(se)})
+            "series_url": seriesUrl, "series_title": cItem["title"], "season_num": str(se)})
             if trailer:
                 params.update({"trailer": trailer})
             self.watchedHelper.updateHostItemFlag(self, params, self._getWatchedKeyForItem)
@@ -355,7 +374,7 @@ class SerienStreamTo(CBaseHostClass):
                 if not season_num:
                     season_num = self.cm.ph.getSearchGroups(cItem.get("url", ""), r'/staffel-(\d+)')[0]
                 season_num = int(season_num) if str(season_num).isdigit() else 0
-                series_title = cItem.get("title", "").split(" - Staffel")[0].strip()
+                series_title = cItem.get("series_title", "") or cItem.get("title", "").split(" - Staffel")[0].strip()
                 ep_num = int(ep) if ep.isdigit() else 0
                 se_tag = formatSxxExx(season_num, ep_num) if season_num > 0 and ep_num > 0 else ""
                 lang = language(item)
@@ -377,32 +396,138 @@ class SerienStreamTo(CBaseHostClass):
             seasonParent = {"category": "list_episodes", "series_url": episodeItems[0].get("series_url", ""), "season_num": episodeItems[0].get("season_num", "")}
             self.watchedHelper.updateParentWatchedState(seasonParent, episodeItems, self._getWatchedKeyForItem)
 
+    def _seriesCover(self, data):
+        # the portrait cover of a series or episode page; the first data-src is the 16:9 backdrop, kept as
+        # the fallback, and the covers of the recommended series below carry no data-srcset
+        return self.cm.ph.getSearchGroups(data, r'data-src="([^"]*/images/channel/[^"]+)"\s+data-srcset=')[0] or self.cm.ph.getSearchGroups(data, 'data-src="([^"]+)')[0]
+
+    def _coverKey(self, seriesUrl):
+        # the path only ("/serie/fire-country/"), so the cache survives a change of the host address
+        return re.sub(r"^https?://[^/]+", "", seriesUrl or "").rstrip("/") + "/"
+
+    def _loadCoverCache(self):
+        cache = {}
+        try:
+            if os.path.isfile(self.COVER_FILE):
+                with open(self.COVER_FILE, "r") as f:
+                    data = json_loads(f.read())
+                oldest = time.time() - self.COVER_MAX_AGE
+                for key, value in data.items():
+                    if len(value) == 3 and value[2] > oldest:
+                        cache[ensure_str(key)] = [ensure_str(value[0]), ensure_str(value[1]), value[2]]
+        except Exception:
+            printExc()
+        return cache
+
+    def _saveCoverCache(self):
+        # a backdrop fallback stays for this session only, the series may get its cover later
+        try:
+            with self.coverLock:
+                data = dict((k, v) for k, v in self.coverCache.items() if "/images/channel/" in v[0])
+                tmp = self.COVER_FILE + ".tmp"
+                with open(tmp, "w") as f:
+                    f.write(json_dumps(data))
+                os.rename(tmp, self.COVER_FILE)
+        except Exception:
+            printExc()
+
+    def _cachedCover(self, seriesUrl):
+        with self.coverLock:
+            return self.coverCache.get(self._coverKey(seriesUrl))
+
+    def _coverWorker(self, todo, state):
+        # one of the parallel cover loaders, with its own connection object (self.cm is not shared between
+        # threads). A plain getPage on purpose: getPageCFProtection would open the MyE2i browser check from
+        # the background and always write the cookie file. An error answer leaves the series for the next time.
+        try:
+            cm = common()
+            params = {"header": dict(self.HEADER), "use_cookie": True, "load_cookie": True, "save_cookie": False, "cookiefile": self.COOKIE_FILE, "ignore_http_code_ranges": []}
+            while True:
+                with self.coverLock:
+                    if not todo:
+                        break
+                    seriesUrl = todo.pop(0)
+                try:
+                    sts, data = cm.getPage(seriesUrl, dict(params))
+                    if sts:
+                        entry = [self._seriesCover(data), self.extractImdbId(data), time.time()]
+                        printDBG("SerienStreamTo._coverWorker [%s] %s" % (seriesUrl, entry))
+                        with self.coverLock:
+                            self.coverCache[self._coverKey(seriesUrl)] = entry
+                except Exception:
+                    printExc()
+        finally:
+            with self.coverLock:
+                state["running"] -= 1
+                last = state["running"] <= 0
+                if last:
+                    self.coverPending.difference_update(state["urls"])
+            if last:  # the last worker of the batch writes the cache file once
+                self._saveCoverCache()
+                state["done"].set()
+
+    def _fetchCovers(self, seriesUrls, maxWait=3.0, maxWorkers=6):
+        # loads the missing covers in parallel and waits at most maxWait seconds; what is not done by
+        # then keeps loading in the background and shows the next time the list is opened
+        with self.coverLock:
+            todo = [url for url in seriesUrls if url not in self.coverPending]
+            self.coverPending.update(todo)
+        if not todo:
+            return
+        state = {"running": min(maxWorkers, len(todo)), "urls": list(todo), "done": threading.Event()}
+        try:
+            for _i in range(state["running"]):
+                AsyncMethod(self._coverWorker)(todo, state)
+        except Exception:  # the list is shown without the covers
+            printExc()
+            return
+        state["done"].wait(maxWait)
+
     def listNewEpisodes(self, cItem):
         printDBG("SerienStreamTo.listNewEpisodes")
-        sts, data = self.getPage(self.getMainUrl())
+        sts, data = self.getPage(self.getFullUrl("neue-episoden"))
         if not sts:
             return
-        data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'class="latest-episode', "</a>")
-        if data:
-            for item in data:
-                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+)')[0])
-                name = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'ep-title"\stitle="([^"]+)')[0])
-                se = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'ep-season">([^<]+)')[0])
-                ep = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'ep-episode">([^<]+)')[0])
-                icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, 'src="([^"]+)')[0])
-                lang = language(item)
-                if self._useLegacyTitles():
-                    title = "%s - %s - %s%s" % (name, se, ep, (" %s" % lang if lang else ""))
-                else:
-                    season_num = self.cm.ph.getSearchGroups(se, r'(\d+)')[0]
-                    episode_num = self.cm.ph.getSearchGroups(ep, r'(\d+)')[0]
-                    season_ep = formatSxxExx(season_num, episode_num) if season_num and episode_num else "%s %s" % (se, ep)
-                    title = "%s - %s%s" % (name, season_ep, (" - %s" % lang) if lang else "")
-                imdb_lookup_url = re.sub(r'/staffel-\d+/episode-\d+/?$', '/', url)
-                params = dict(cItem)
-                params.update({"good_for_fav": False, "title": title, "url": url, "icon": icon, "imdb_id": "", "imdb_rating": "-", "imdb_lookup_url": imdb_lookup_url})
-                self.watchedHelper.updateHostItemFlag(self, params, self._getWatchedKeyForItem)
-                self.addVideo(params)
+        # the site's full table of the last days; an episode added in two languages has two rows
+        rows = []
+        byUrl = {}
+        for item in self.cm.ph.getAllItemsBeetwenMarkers(data, "<tr>", "</tr>"):
+            href = self.cm.ph.getSearchGroups(item, r'href="(/serie/[^"]+/staffel-\d+/episode-\d+)')[0]
+            if not href:
+                continue
+            url = self.getFullUrl(href)
+            lang = language(item)
+            row = byUrl.get(url)
+            if row is not None:
+                if lang and lang not in row["lang"]:
+                    row["lang"].append(lang)
+                continue
+            badges = re.findall(r'class="badge[^"]*">([^<]+)', item)
+            byUrl[url] = row = {"url": url, "name": self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'fw-medium">([^<]+)')[0]), "se": self.cleanHtmlStr(badges[0]) if badges else "", "ep": self.cleanHtmlStr(badges[1]) if len(badges) > 1 else "",
+                                "date": self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'text-white">([^<]+)')[0]), "lang": [lang] if lang else []}
+            rows.append(row)
+        missing = []
+        for row in rows:
+            row["series_url"] = re.sub(r'/staffel-\d+/episode-\d+/?$', '/', row["url"])
+            if row["series_url"] not in missing and self._cachedCover(row["series_url"]) is None:
+                missing.append(row["series_url"])
+        if missing:
+            self._fetchCovers(missing)
+        for row in rows:
+            name, se, ep = row["name"], row["se"], row["ep"]
+            lang = " ".join(row["lang"])
+            if self._useLegacyTitles():
+                title = "%s - %s - %s%s" % (name, se, ep, (" %s" % lang if lang else ""))
+            else:
+                season_num = self.cm.ph.getSearchGroups(se, r'(\d+)')[0]
+                episode_num = self.cm.ph.getSearchGroups(ep, r'(\d+)')[0]
+                season_ep = formatSxxExx(season_num, episode_num) if season_num and episode_num else "%s %s" % (se, ep)
+                title = "%s - %s%s" % (name, season_ep, (" - %s" % lang) if lang else "")
+            cover = self._cachedCover(row["series_url"])
+            params = dict(cItem)
+            params.update({"good_for_fav": False, "title": title, "url": row["url"], "icon": self.getFullIconUrl(cover[0]) if cover else "", "desc": row["date"], "imdb_id": cover[1] if cover else "", "imdb_rating": "-", "imdb_lookup_url": row["series_url"]})
+            self.watchedHelper.updateHostItemFlag(self, params, self._getWatchedKeyForItem)
+            self.addVideo(params)
 
     def _addSeriesCard(self, cItem, url, title, icon, desc=""):
         # season links ("Neue Staffeln diese Woche") open the whole series, so the
@@ -522,7 +647,7 @@ class SerienStreamTo(CBaseHostClass):
             sidecarTxt, sidecarImg = self._pageTextIcon(data)
             sidecarTxt = sidecarTxt or re.sub(r" \| IMDb: \S+$", "", cItem.get("desc", ""))
             sidecarImg = sidecarImg or cItem.get("icon", "")
-            # "Neueste Episoden" rows have no id of their own: the lookup of their INFO, when it was opened
+            # "Neueste Episoden" rows without a cached cover have no id of their own: the lookup of their INFO, when it was opened
             imdb_id = cItem.get("imdb_id", "") or self.extractImdbId(data)
             sidecarMeta = infoSidecarMetaQuery(cItem, sidecarMetaQuery("tv", imdbId=imdb_id) if re.match(r"^tt\d{7,10}$", imdb_id) else {})
         sidecar = buildSidecar(sidecarEnabled, sidecarTxt, sidecarImg, meta=sidecarMeta)
@@ -570,7 +695,7 @@ class SerienStreamTo(CBaseHostClass):
         desc = self.cm.ph.getDataBeetwenMarkers(data, '<div class="small text-body lh-lg mb-3">', "</div>", withMarkers=False)[1]
         if not desc:
             desc = self.cm.ph.getSearchGroups(data, 'description-text">([^<]+)')[0]
-        return self.cleanHtmlStr(desc), self.getFullIconUrl(self.cm.ph.getSearchGroups(data, 'data-src="([^"]+)')[0])
+        return self.cleanHtmlStr(desc), self.getFullIconUrl(self._seriesCover(data))
 
     def getArticleContent(self, cItem):
         printDBG("SerienStreamTo.getArticleContent [%s]" % cItem)
@@ -596,7 +721,7 @@ class SerienStreamTo(CBaseHostClass):
         bc = self.cm.ph.getAllItemsBeetwenMarkers(data, 'class="flex-grow-1">', "</span>")
         if bc:
             bc = self.cm.ph.getSearchGroups(bc[0], 'title="([^"]+)')[0]
-            if bc:
+            if bc and "-0001" not in bc:  # "Nov 30, -0001 00:00": the site has no date for the episode
                 otherInfo["broadcast"] = bc
         fields = {"country": '<strong class="me-1">Land:</strong>', "director": '<strong class="me-1">Regisseur:</strong>', "actors": '<strong class="me-1">Besetzung:</strong>', "genres": '<strong class="me-1">Genre:</strong>', "production": '<strong class="me-1">Produzent:</strong>'}
         for key, pattern in fields.items():
@@ -717,7 +842,7 @@ class IPTVHost(WatchedFlagHostMixin, CHostBase):
                     if not season_num:
                         season_num = self.host.cm.ph.getSearchGroups(seasonItem.get('url', ''), r'/staffel-(\d+)')[0]
                     season_num = int(season_num) if str(season_num).isdigit() else 0
-                    series_title = (seasonItem.get('title', '') or self.host.currItem.get('title', '')).split(" - Staffel")[0].strip()
+                    series_title = seasonItem.get('series_title', '') or (seasonItem.get('title', '') or self.host.currItem.get('title', '')).split(" - Staffel")[0].strip()
                     ep_num = int(ep) if ep.isdigit() else 0
                     se_tag = formatSxxExx(season_num, ep_num) if season_num > 0 and ep_num > 0 else ""
                     lang = language(item)

@@ -3695,7 +3695,7 @@ msgid "Newest videos of a YouTube channel in a group"
 msgstr "Neueste Videos pro YouTube-Kanal in einer Gruppe"
 
 msgid "News"
-msgstr "Neuigkeiten"
+msgstr "Nachrichten"
 
 msgid "News (tagesschau)"
 msgstr "Nachrichten (Tagesschau)"

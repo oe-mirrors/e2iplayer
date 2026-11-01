@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "27.10.2026"
+LAST_MODIFIED = "01.11.2026"
+# 01.11.2026 - covers sit behind the site's Cloudflare like its pages (HTTP 403): "|cf" icons + cookie file named after the domain
 # 27.10.2026 - servers moved to an own page (<title page>/watch/, the site's "watch and download" button)
 # 21.10.2026 - MegaMax: every hoster mirror of its page as an own server row ("MegaMax 1080p voe", like on the site),
 #   resolved only when picked (urlparser getMegamaxMirrors); watch + download link of one file listed once
@@ -25,18 +26,22 @@ LAST_MODIFIED = "27.10.2026"
 #     url), favourites, sidecar, INFO via moviemeta + the site's story/poster/fields,
 #     name normalisation ("Title (Year)", "Show - SxxExx"; raw site labels when off)
 #   - no colour codes in titles, no retry/sleep loops
+import base64
+import os
 import re
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
+from Plugins.Extensions.IPTVPlayer.libs.botprotection import remembered_user_agent
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import LATIN_ONLY, getMeta, isLatinTitle
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus, urllib_unquote
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetTmpDir
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
@@ -79,7 +84,8 @@ class EgyDead(GenericFolderWatchedScraperMixin, CBaseHostClass):
                   "meta_type", "meta_title", "meta_year")
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {"history": "egydead", "cookie": "egydead.cookie"})
+        # cookie file named after the domain: the cover loader ("|cf" icons) looks for <domain>.cookie
+        CBaseHostClass.__init__(self, {"history": "egydead", "cookie": "%s.cookie" % gettytul().split("/")[2]})
         self.MAIN_URL = gettytul()
         self.DEFAULT_ICON_URL = "https://raw.githubusercontent.com/oe-mirrors/e2iplayer/gh-pages/Thumbnails/egydead.png"
         self.HEADER = self.cm.getDefaultHeader(browser="chrome")
@@ -164,6 +170,42 @@ class EgyDead(GenericFolderWatchedScraperMixin, CBaseHostClass):
             url = urllib_quote(urllib_unquote(url), safe=":/?&=#+,;@%")
         except Exception:
             printExc()
+        return url
+
+    def _icon(self, url):
+        # the site's covers sit behind its Cloudflare like the pages: "|cf" = the cover loader fetches them with this
+        # host's cf_clearance + solving User-Agent (the i0.wp.com resizer gets a 403 from the site, too)
+        url = self._canonUrl(url)
+        if url.startswith(self.MAIN_URL):
+            return url + "|cf"
+        return url
+
+    @staticmethod
+    def _sidecarIcon(icon):
+        # the sidecar poster is a plain wget without cookie jar and does not know the "|cf" mark
+        return icon[:-3] if (icon or "").endswith("|cf") else icon
+
+    def _infoIcon(self, icon):
+        # the INFO view downloads its picture with wget/curl - another TLS fingerprint than the one the cf_clearance
+        # belongs to (403). The picture is fetched here the CFProtection (urllib) way and handed over inline.
+        if not (icon or "").endswith("|cf"):
+            return icon
+        url = icon[:-3]
+        params = dict(self.defaultParams, CFProtection=True)
+        params["header"] = dict(self.HEADER, **{"User-Agent": remembered_user_agent(self.COOKIE_FILE) or self.HEADER.get("User-Agent", ""),
+                                                "Referer": self.MAIN_URL, "Accept": "image/avif,image/webp,image/apng,image/*,*/*;q=0.8"})
+        tmpFile = GetTmpDir("egydead_info.img")
+        try:
+            if self.cm.saveWebFile(tmpFile, url, params).get("sts"):
+                with open(tmpFile, "rb") as f:
+                    data = f.read()
+                mime = "image/webp" if data[:4] == b"RIFF" else "image/png" if data[:4] == b"\x89PNG" else "image/jpeg"
+                return "data:%s;base64,%s" % (mime, ensure_str(base64.b64encode(data)))
+        except Exception:
+            printExc()
+        finally:
+            if os.path.isfile(tmpFile):
+                os.remove(tmpFile)
         return url
 
     @staticmethod
@@ -297,7 +339,7 @@ class EgyDead(GenericFolderWatchedScraperMixin, CBaseHostClass):
         raw = self.cleanHtmlStr(title)
         name, year, season, episode = self._parseTitle(raw, url)
         normalize = IsMediaNamingNormalized()
-        params = {"name": "category", "good_for_fav": True, "url": url, "icon": self._canonUrl(icon) if icon else cItem.get("icon", ""),
+        params = {"name": "category", "good_for_fav": True, "url": url, "icon": self._icon(icon) if icon else cItem.get("icon", ""),
                   "desc": desc, "kind": kind}
         if kind == "movie":
             title = ("%s (%s)" % (name, year) if year else name) if normalize else raw
@@ -458,7 +500,7 @@ class EgyDead(GenericFolderWatchedScraperMixin, CBaseHostClass):
         poster = self.cm.ph.getSearchGroups(data, r'<div class="single-thumbnail">.*?<img[^>]+src="([^"]+)"')[0]
         if not poster:
             poster = self.cm.ph.getSearchGroups(data, r'<meta property="og:image" content="([^"]+)"')[0]
-        return story, self._canonUrl(poster) if poster else ""
+        return story, self._icon(poster) if poster else ""
 
     def _megamaxMirror(self, url):
         # the site's own Megamax server sits on throw-away domains (q7v3k8m2p1.top/iframe/<id>, /download/<id>)
@@ -528,7 +570,7 @@ class EgyDead(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not urltab:
             SetIPTVPlayerLastHostError(_("No stream available"))
             return []
-        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), story))
+        return applySidecarToLinks(urltab, buildSidecarFromItem(dict(cItem, icon=self._sidecarIcon(cItem.get("icon", ""))), IsSidecarEnabled(), story))
 
     def _expandMegamax(self, urltab):
         # every hoster mirror of a Megamax server as its own row like on the site (resolved only when picked);
@@ -593,7 +635,7 @@ class EgyDead(GenericFolderWatchedScraperMixin, CBaseHostClass):
         text = plot or story or cItem.get("desc", "")
         if plot and story and story != plot:
             text = "%s[/br][/br]%s" % (plot, story)
-        icon = meta.get("poster") or poster or cItem.get("icon", "")
+        icon = self._infoIcon(meta.get("poster") or poster or cItem.get("icon", ""))
         return [{"title": cItem.get("title", "") or title, "text": text, "images": [{"title": "", "url": icon}] if icon else [], "other_info": info}]
 
     ###################################################

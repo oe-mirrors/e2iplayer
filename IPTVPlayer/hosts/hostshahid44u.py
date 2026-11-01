@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "23.10.2026"
+LAST_MODIFIED = "01.11.2026"
 # Based on the preparatory work of odem2014
+# 01.11.2026 - domain shahid4us.com (shaahidd4u.net -> shah4u.name -> shahid4us.com); /m/<hash> answers a page with the
+#   hoster iframe instead of a 302; several rows of one server id are different files: each row keeps its own token;
+#   a 403 of /watch/resolve is the site's JSON answer, no Cloudflare challenge
 # 23.10.2026 - domain shaahidd4u.net (sshaahid4u.net -> shahid4u.mobile -> shaahidd4u.net)
 # 21.10.2026 - the /watch/ page lists "const servers = [...]" without urls: each server is resolved by a POST to
 #   /watch/resolve (one-time watchResolveKey + csrfToken + the server's resolve_token) -> /m/<hash> as before
@@ -32,7 +35,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return "https://shaahidd4u.net/"
+    return "https://shahid4us.com/"
 
 
 # Arabic ordinals used in "الموسم الثاني"
@@ -322,16 +325,20 @@ class Shahid44u(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not sts:
             return []
         urltab = []
+        rows = {}
         for server in sorted(self._watchServers(data), key=lambda s: s.get("rank", 99) or 99):
             name = str(server.get("name", "") or "").strip()
             if server.get("resolve_token"):
                 # since ~20.10.2026 no url in the list: POST /watch/resolve per server (see _resolveServer); the
-                # pseudo url keeps the server id, the tokens of a fresh page load are matched by it
+                # pseudo url keeps the server id + its row (one id can list several files), the tokens of a fresh
+                # page load are matched by them
                 sid = str(server.get("id", "") or "")
                 if not sid:
                     continue
-                link = "%s#server=%s" % (watchUrl, sid)
-                urltab.append({"name": name or sid, "url": strwithmeta(link, {"Referer": pageUrl, "server_name": name}), "need_resolve": 1})
+                rows[sid] = rows.get(sid, 0) + 1
+                link = "%s#server=%s.%d" % (watchUrl, sid, rows[sid])
+                label = "%s %d" % (name or sid, rows[sid]) if rows[sid] > 1 else name or sid
+                urltab.append({"name": label, "url": strwithmeta(link, {"Referer": pageUrl, "server_name": name}), "need_resolve": 1})
                 continue
             link = self._fullUrl(str(server.get("url", "") or ""), watchUrl)
             if not self.cm.isValidUrl(link):
@@ -356,6 +363,7 @@ class Shahid44u(GenericFolderWatchedScraperMixin, CBaseHostClass):
         # {"ok": true, "url": "/m/<hash>"}; the key works for ONE resolve only, so the page is loaded again
         url = strwithmeta(videoUrl)
         watchUrl, sid = str(url).split("#server=", 1)
+        sid, _sep, row = sid.partition(".")
         params = dict(self.defaultParams)
         params["header"] = dict(self.HEADER, Referer=url.meta.get("Referer", self.MAIN_URL))
         sts, data = self.getPage(watchUrl, params)
@@ -367,7 +375,8 @@ class Shahid44u(GenericFolderWatchedScraperMixin, CBaseHostClass):
         servers = self._watchServers(data)
         server = [s for s in servers if str(s.get("id", "")) == sid] or \
             [s for s in servers if str(s.get("name", "")) == url.meta.get("server_name", "")]
-        token = str(server[0].get("resolve_token", "") or "") if server else ""
+        row = int(row or 1)
+        token = str(server[row - 1 if row <= len(server) else 0].get("resolve_token", "") or "") if server else ""
         if not key or not token:
             printDBG("Shahid44u._resolveServer: no key / token for server %s" % sid)
             return ""
@@ -377,6 +386,8 @@ class Shahid44u(GenericFolderWatchedScraperMixin, CBaseHostClass):
         params["header"].update({"Referer": watchUrl, "Origin": self.up.getDomain(watchUrl, False).rstrip("/"), "Accept": "application/json",
                                  "Content-Type": "application/json", "X-CSRF-TOKEN": csrf, "X-Requested-With": "XMLHttpRequest"})
         params["raw_post_data"] = True
+        # a dead server answers 403 + JSON: must not reach the Cloudflare handling of getPage (MyE2i job, other User-Agent)
+        params["ignore_http_code_ranges"] = [(403, 404), (500, 500)]
         sts, data = self.getPage(resolveUrl, params, json_dumps({"key": key, "token": token}))
         try:
             js = json_loads(data) if sts else {}
@@ -389,7 +400,8 @@ class Shahid44u(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return strwithmeta(self._fullUrl(link, watchUrl), {"Referer": watchUrl})
 
     def _resolveRedirect(self, videoUrl):
-        # /m/<hash> answers 302 to the hoster embed, but only for an iframe request from the watch page
+        # /m/<hash> -> the hoster embed, only for an iframe request from the watch page: since ~31.10.2026 a page with
+        # the embed as iframe, before a 302
         url = strwithmeta(videoUrl)
         params = dict(self.defaultParams)
         params["header"] = dict(self.HEADER)
@@ -400,7 +412,8 @@ class Shahid44u(GenericFolderWatchedScraperMixin, CBaseHostClass):
         sts, data = self.getPage(str(url), params)
         location = self.cm.meta.get("location", "") or ""
         if not location and sts:
-            location = self.cm.ph.getSearchGroups(data, r'''http-equiv="refresh" content="0;url='([^']+)'"''')[0]
+            location = self.cm.ph.getSearchGroups(data, r'''http-equiv="refresh" content="0;url='([^']+)'"''')[0] or \
+                self.cm.ph.getSearchGroups(data, r'''<iframe[^>]+src=["']([^"']+)["']''')[0].replace("&amp;", "&")
         if not location:
             # an HTTP layer that followed the redirect anyway: take the final url
             finalUrl = str(self.cm.meta.get("url", "") or "")
