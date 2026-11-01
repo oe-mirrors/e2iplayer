@@ -247,6 +247,15 @@ def _items(n, icons=True):
     return [_Item('Film %d' % i, ('http://x/%d.jpg' % i) if icons else '') for i in range(n)]
 
 
+def test_rect_uses_rectangle_entry_where_the_image_has_one(pg, monkeypatch):
+    rect = pg.IPTVPosterGridList._rect
+    # OpenPLi: no TYPE_RECT, a text entry without text on its background colour
+    assert rect(1, 2, 3, 4, 0x123) == (TYPE_TEXT, 1, 2, 3, 4, 2, 0, '', None, None, 0x123, 0x123)
+    # openATV, OpenViX: (TYPE_RECT, x, y, w, h, backColor, backColorSelected)
+    monkeypatch.setattr(pg.eListboxPythonMultiContent, 'TYPE_RECT', 7, raising=False)
+    assert rect(1, 2, 3, 4, 0x123) == (7, 1, 2, 3, 4, 0x123, 0x123)
+
+
 def test_list_has_posters(pg):
     assert pg.ListHasPosters(_items(5))
     assert not pg.ListHasPosters(_items(5, icons=False))

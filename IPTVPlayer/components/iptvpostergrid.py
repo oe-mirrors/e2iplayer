@@ -499,8 +499,11 @@ class IPTVPosterGridList(IPTVMainNavigatorList):
 
     @staticmethod
     def _rect(x, y, w, h, color):
-        # a filled box: a text entry without text on its background colour (the framebuffer images draw it; the
-        # GLES/EGL backend of the experimental openATV WQHD build does not, to be checked again with openATV 8.1)
+        # a filled box: a rectangle entry where the image has one (openATV 8.1 with GLES skips the background of a
+        # text entry in a transparent list), else a text entry without text on its background colour
+        typeRect = getattr(eListboxPythonMultiContent, 'TYPE_RECT', None)
+        if typeRect is not None:
+            return (typeRect, x, y, w, h, color, color)
         return (eListboxPythonMultiContent.TYPE_TEXT, x, y, w, h, 2, 0, '', None, None, color, color)
 
     @staticmethod
