@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-27 21:29+0000\n"
+"POT-Creation-Date: 2026-11-01 21:03+0000\n"
 "PO-Revision-Date: 2026-07-27 16:39+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -85,6 +85,10 @@ msgstr "Do fronty stahování přidáno položek: %d, přeskočeno: %d."
 #, python-format
 msgid "%d of %d downloaded"
 msgstr "Staženo %d z %d"
+
+#, python-format
+msgid "%d of %d hosts asked, %d with results"
+msgstr ""
 
 #, python-format
 msgid "%d parts"
@@ -2577,6 +2581,9 @@ msgstr "Skupina %d"
 
 msgid "Group links into categories:"
 msgstr "Seskupte odkazy do kategorií:"
+
+msgid "Group search"
+msgstr ""
 
 #, python-format
 msgid "Group with id[%s] not found."
@@ -5846,17 +5853,12 @@ msgid "The request has no valid length."
 msgstr "Požadavek nemá platnou délku."
 
 msgid ""
-"The resolvers 'VidCore', 'VidUp' and 'VidFast' cannot decrypt their links on the receiver.\n"
+"The resolvers 'VidCore', 'VidUp' and 'VidFast' decrypt their links on the receiver when the package 'quickjs' is installed. This option is only a fallback for receivers without it, or when that fails.\n"
 "\n"
-"With this option ON, every time you open one of them E2iPlayer sends the site's encrypted stream token - which contains the TMDb id of the movie or episode you are opening - to the third-party web service enc-dec.app (operated by a private individual). That server then sees the id and your IP address on each play. Nothing else is transmitted, and it is only used for these three resolvers.\n"
+"With this option ON, every time such a fallback is needed E2iPlayer sends the site's encrypted stream token - which contains the TMDb id of the movie or episode you are opening - to the third-party web service enc-dec.app (operated by a private individual). That server then sees the id and your IP address on each play. Nothing else is transmitted, and it is only used for these three resolvers.\n"
 "\n"
 "Leave this OFF if you do not want that. The other resolvers (VidEasy, VidLink, Peachify, vidrock, VidNest, ...) decrypt their links on the receiver and are not affected."
 msgstr ""
-"Resolvery 'VidCore', 'VidUp' a 'VidFast' nedokážou dešifrovat své odkazy na přijímači.\n"
-"\n"
-"Je-li tato možnost ZAPNUTA, E2iPlayer při každém otevření některého z nich odešle zašifrovaný token streamu stránky - obsahuje TMDb ID otevíraného filmu nebo epizody - na webovou službu třetí strany enc-dec.app (provozovanou soukromou osobou). Tento server pak při každém přehrání vidí ID a vaši IP adresu. Nic jiného se nepřenáší a používá se to pouze pro tyto tři resolvery.\n"
-"\n"
-"Pokud si to nepřejete, ponechte tuto možnost VYPNUTOU. Ostatní resolvery (VidEasy, VidLink, Peachify, vidrock, VidNest, ...) dešifrují své odkazy na přijímači a nejsou dotčeny."
 
 #, python-format
 msgid "The results of %d of %d sites are from the last search for \"%s\" - this asks all sites again"
@@ -5926,9 +5928,6 @@ msgstr "Video bylo odstraněno."
 
 msgid "The video player of this site (hdvbua.pro) does not offer this title in your country (licence area, mainly Ukraine)."
 msgstr "Videopřehrávač tohoto webu (hdvbua.pro) tento titul ve vaší zemi nenabízí (licenční oblast, hlavně Ukrajina)."
-
-msgid "The website returned a server error for this request."
-msgstr "Webová stránka vrátila u tohoto požadavku chybu serveru."
 
 msgid "There are no other favorite groups"
 msgstr "Neexistují žádné další oblíbené skupiny"
@@ -7263,6 +7262,9 @@ msgid "not installed (no ZIP subtitles)"
 msgstr ""
 
 msgid "not installed (no ffmpeg downloads)"
+msgstr ""
+
+msgid "not installed (no file details on INFO in the player)"
 msgstr ""
 
 msgid "not installed (no file, cover or subtitle downloads)"
