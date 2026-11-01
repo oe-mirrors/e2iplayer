@@ -273,6 +273,113 @@ def test_fetch_unknown_profile_falls_back(ci, tmp_path, monkeypatch):
     assert fake.calls[-1][0][2] == "chrome145"  # remembered
 
 
+def _dnsFail(host):
+    return {"status": 0, "returncode": 6, "error": "(6) Could not resolve host: %s (DNS server returned general failure)" % host}
+
+
+def _resolved(args):
+    return [args[i + 1] for i, a in enumerate(args) if a == "--resolve"]
+
+
+def _systemDns(ci, monkeypatch, known):
+    lookups = []
+
+    def getaddrinfo(host, port, family=0, socktype=0):
+        lookups.append((host, family))
+        if host not in known:
+            raise ci.socket.gaierror(-2, "Name or service not known")
+        return [(family, socktype, 6, "", (ip, 0)) for ip in known[host]]
+    monkeypatch.setattr(ci.socket, "getaddrinfo", getaddrinfo)
+    return lookups
+
+
+def test_fetch_resolver_failure_uses_system_dns(ci, tmp_path, monkeypatch):
+    lookups = _systemDns(ci, monkeypatch, {"a.example": ["104.21.55.32", "104.21.55.32", "2606:4700::1"]})
+    fake = _fake(ci, tmp_path, monkeypatch, lambda args, info: {"status": 200, "body": b"ok"} if "--resolve" in args else _dnsFail("a.example"))
+    res = ci.fetch("/bin/ci", "https://a.example:8443/x", str(tmp_path))
+    assert res["status"] == 200 and res["exitcode"] == 0 and res["body"] == b"ok"
+    assert len(fake.calls) == 2 and _resolved(fake.calls[0][0]) == []
+    addresses = "104.21.55.32,[2606:4700::1]"
+    assert _resolved(fake.calls[1][0]) == ["a.example:%d:%s" % (port, addresses) for port in (80, 443, 8443)]
+    assert fake.calls[1][0][-2:] == ["--", "https://a.example:8443/x"]  # the options stay before the URL
+    # remembered: the next request does not start with a failing curl
+    del lookups[:]
+    res = ci.fetch("/bin/ci", "https://a.example/y", str(tmp_path))
+    assert res["status"] == 200 and len(fake.calls) == 3 and len(lookups) == 1
+
+
+def test_fetch_resolver_failure_system_dns_fails_too(ci, tmp_path, monkeypatch):
+    _systemDns(ci, monkeypatch, {})
+    fake = _fake(ci, tmp_path, monkeypatch, lambda args, info: _dnsFail("gone.example"))
+    res = ci.fetch("/bin/ci", "https://gone.example/", str(tmp_path))
+    assert res["exitcode"] == 6 and res["status"] == 0 and "Could not resolve host" in res["error"]
+    assert len(fake.calls) == 1 and not ci.systemDnsArgs(["https://gone.example/"])
+
+
+def test_fetch_resolver_failure_redirect_target(ci, tmp_path, monkeypatch):
+    _systemDns(ci, monkeypatch, {"a.example": ["1.1.1.1"], "cdn.example": ["2.2.2.2"]})
+
+    def answer(args, info):
+        given = " ".join(_resolved(args))
+        if "a.example" not in given:
+            return _dnsFail("A.example")
+        return {"status": 200, "body": b"ok"} if "cdn.example" in given else _dnsFail("cdn.example")
+    fake = _fake(ci, tmp_path, monkeypatch, answer)
+    res = ci.fetch("/bin/ci", "https://a.example/", str(tmp_path))
+    assert res["body"] == b"ok" and len(fake.calls) == 3
+    assert _resolved(fake.calls[2][0]) == ["a.example:80:1.1.1.1", "a.example:443:1.1.1.1", "cdn.example:80:2.2.2.2", "cdn.example:443:2.2.2.2"]
+
+
+def test_fetch_resolver_failure_same_host_ends(ci, tmp_path, monkeypatch):
+    _systemDns(ci, monkeypatch, {"a.example": ["1.1.1.1"]})
+    fake = _fake(ci, tmp_path, monkeypatch, lambda args, info: _dnsFail("a.example"))
+    res = ci.fetch("/bin/ci", "https://a.example/", str(tmp_path))
+    assert res["exitcode"] == 6 and len(fake.calls) == 2
+
+
+def test_fetch_resolver_failure_ip_family_and_proxy(ci, tmp_path, monkeypatch):
+    lookups = _systemDns(ci, monkeypatch, {"a.example": ["1.1.1.1"]})
+    fake = _fake(ci, tmp_path, monkeypatch, lambda args, info: {"status": 200} if "--resolve" in args else _dnsFail("a.example"))
+    ci.fetch("/bin/ci", "https://a.example/", str(tmp_path), ipv4Only=True)
+    assert lookups[0] == ("a.example", ci.socket.AF_INET)
+    # through a proxy: nothing of it, the proxy resolves the target
+    del fake.calls[:]
+    res = ci.fetch("/bin/ci", "https://a.example/", str(tmp_path), proxy="http://p:1")
+    assert res["exitcode"] == 6 and len(fake.calls) == 1 and _resolved(fake.calls[0][0]) == []
+
+
+def test_failed_host_only_for_exit_6(ci):
+    assert ci.failedHost(6, "curl: (6) Could not resolve host: A.Example (DNS server returned general failure)") == "a.example"
+    assert ci.failedHost(6, "curl: (6) Could not resolve host: a.example") == "a.example"
+    assert ci.failedHost(7, "Could not resolve host: a.example") == ""
+    assert ci.failedHost(6, "") == ""
+
+
+def test_hls_helper_segments_use_system_dns(ci, tmp_path, monkeypatch):
+    helper = _load("impersonatehls_under_test", os.path.join(ROOT, "scripts", "impersonatehls.py"))
+    helper.curlimpersonate.resetCache()
+    _systemDns(helper.curlimpersonate, monkeypatch, {"seg.example": ["1.1.1.1"], "cdn.example": ["2.2.2.2"]})
+    opts = {"out": str(tmp_path / "out.ts"), "timeout": 5, "insecure": True, "headers": {}, "binary": "/bin/ci"}
+    down = helper.Downloader(opts, [("https://seg.example/1.ts", 4.0), ("https://seg.example/2.ts", 4.0)], "chrome150")
+    assert _resolved(down._curlArgs("cfg")) == []  # curl's own resolver works: nothing changes
+
+    # a run stops because a segment redirects to a host curl cannot resolve -> the next run has it too
+    runs = []
+
+    def runOnce(start):
+        runs.append(down._curlArgs("cfg"))
+        if len(runs) == 1:
+            return 6, None, "curl: (6) Could not resolve host: cdn.example (DNS server returned general failure)"
+        down.done = len(down.segments)
+        return 0, None, ""
+    monkeypatch.setattr(down, "_runOnce", runOnce)
+    monkeypatch.setattr(helper.time, "sleep", lambda s: None)
+    down.download()
+    assert len(runs) == 2 and _resolved(runs[0]) == []
+    assert _resolved(runs[1]) == ["cdn.example:80:2.2.2.2", "cdn.example:443:2.2.2.2", "seg.example:80:1.1.1.1", "seg.example:443:1.1.1.1"]
+    assert runs[1][-2:] == ["-K", "cfg"]
+
+
 def test_fetch_binary_cannot_run(ci, tmp_path, monkeypatch):
     def popen(*a, **k):
         raise OSError(8, "Exec format error")
