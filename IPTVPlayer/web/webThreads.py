@@ -171,7 +171,7 @@ class doGlobalSearch(WebThread):
 			return
 		hosts = []
 		for hostName in SortHostsList(GetHostsList()):
-			if hostName in ['localmedia', 'urllist', 'favourites', 'e2iplayerinfo', 'iptvplayerinfo']:  # nothing to search there
+			if hostName in ['localmedia', 'urllist', 'favourites', 'e2iplayerinfo', 'iptvplayerinfo', 'groupsearch']:  # nothing to search there
 				continue
 			elif hostName in ['seriesonline']:  # those hosts have issues wth global search, need more investigation
 				continue

@@ -2653,7 +2653,7 @@ class E2iPlayerWidget(Screen):
         else:
             artItem = ret.value[0]
         if None is not artItem:
-            self.session.openWithCallback(self.leaveArticleView, IPTVArticleView, artItem, {'buffering_path': config.plugins.iptvplayer.bufferingPath.value, 'host_name': self.hostName, 'logo_path': self.hostLogoPath, 'download_dir': self.iconMenager.currDownloadDir if self.iconMenager else None})
+            self.session.openWithCallback(self.leaveArticleView, IPTVArticleView, artItem, {'buffering_path': config.plugins.iptvplayer.bufferingPath.value, 'host_name': self._getRowsHostName(), 'logo_path': self.hostLogoPath, 'download_dir': self.iconMenager.currDownloadDir if self.iconMenager else None})
 
     def selectMainVideoLinks(self, ret):
         printDBG("selectMainVideoLinks")
@@ -3660,7 +3660,7 @@ class E2iPlayerWidget(Screen):
 
                 self.prevVideoMode = GetE2VideoMode()
                 printDBG("Current video mode [%s]" % self.prevVideoMode)
-                gstAdditionalParams = {'defaul_videomode': self.prevVideoMode, 'host_name': self.hostName, 'external_sub_tracks': url.meta.get('external_sub_tracks', []), 'iptv_refresh_cmd': url.meta.get('iptv_refresh_cmd', '')}  # default_player_videooptions
+                gstAdditionalParams = {'defaul_videomode': self.prevVideoMode, 'host_name': self._getRowsHostName(), 'external_sub_tracks': url.meta.get('external_sub_tracks', []), 'iptv_refresh_cmd': url.meta.get('iptv_refresh_cmd', '')}  # default_player_videooptions
                 # CH+/CH- in the player -> leaveMoviePlayer('zap_next'/'zap_prev'); cover/logo for its screensaver
                 gstAdditionalParams['zap_enabled'] = True
                 gstAdditionalParams['audio_item'] = self.currItem.type == CDisplayListItem.TYPE_AUDIO
@@ -4309,12 +4309,17 @@ class E2iPlayerWidget(Screen):
         else:
             self.session.open(MessageBox, _("No valid links available."), type=MessageBox.TYPE_INFO, timeout=10)
 
+    def _getRowsHostName(self):
+        # the host the rows of the current list belong to: another one than the open host in a result of hostgroupsearch
+        getName = getattr(self.host, 'getGuestHostName', None)
+        return (getName() if callable(getName) else '') or self.hostName
+
     def _completeFavItem(self, favItem):
         # a favourite of the current host: its own name where the host left it open
         if CFavItem.RESOLVER_SELF == favItem.resolver:
-            favItem.resolver = self.hostName
+            favItem.resolver = self._getRowsHostName()
         if '' == favItem.hostName:
-            favItem.hostName = self.hostName
+            favItem.hostName = self._getRowsHostName()
 
     def _getMenuOptions(self):
         # shared by menu_pressed() and the footer's key_menu visibility
@@ -4374,7 +4379,7 @@ class E2iPlayerWidget(Screen):
             data = self.host.getFavouriteDataOfRow(index)
             if data is None:
                 return
-            itemInfo = {'host_name': self.hostName, 'resolver': self.hostName, 'data': data}
+            itemInfo = {'host_name': self._getRowsHostName(), 'resolver': self._getRowsHostName(), 'data': data}
             found = self._findFavouriteItems(itemInfo)
             if found:
                 groupNames = []
@@ -4419,7 +4424,7 @@ class E2iPlayerWidget(Screen):
         # (tools/iptvdownloaded.py) - the same in the host's own list, in the favourites and inside a favourite.
         # The url comes from the host's own list: item.urlItems is replaced by the resolved links once
         # the links of the item were requested, so it differs between the moment of the download and a later listing.
-        hostName = self.hostName
+        hostName = self._getRowsHostName()
         url = ''
         try:
             if 'favourites' == self.hostName:
@@ -4459,7 +4464,7 @@ class E2iPlayerWidget(Screen):
                 if favKeys and (item.isGoodForFavourites or item.type in self.hostFavTypes):
                     data = self.host.getFavouriteDataOfRow(idx)
                     if data is not None:
-                        item.isFavourite = item.isFavourite or IPTVFavourites.getItemIdentityKey(self.hostName, self.hostName, data) in favKeys
+                        item.isFavourite = item.isFavourite or IPTVFavourites.getItemIdentityKey(self._getRowsHostName(), self._getRowsHostName(), data) in favKeys
                 if markDownloads and self.isDownloadableType(item.type):
                     hostName, url = self._getRowSource(idx, item)
                     item.downloadState = iptvdownloaded.getState(iptvdownloaded.getItemKey(hostName, url, item.name), activeKeys)
@@ -4524,7 +4529,7 @@ class E2iPlayerWidget(Screen):
                 if not resolver or resolver in (CFavItem.RESOLVER_DIRECT_LINK, CFavItem.RESOLVER_URLLPARSER) or not favItem.data:
                     return None
                 return resolver, favItem.data
-            return self._getBatchHostRowSource(self.hostName, self.host, idx)
+            return self._getBatchHostRowSource(self._getRowsHostName(), self.host, idx)
         except Exception:
             printExc()
         return None
@@ -4789,7 +4794,7 @@ class E2iPlayerWidget(Screen):
         data = self.host.getFavouriteDataOfRow(self._getRowHostIndex(item, self._getListPos(item)))
         if data is None:
             return None
-        return IPTVFavourites.getItemIdentityKey(self.hostName, self.hostName, data)
+        return IPTVFavourites.getItemIdentityKey(self._getRowsHostName(), self._getRowsHostName(), data)
 
     def _getMarkedFavouriteRows(self, marked=None):
         # the marked rows "Remove marked items from favourites" takes: inside a favourites group its stored

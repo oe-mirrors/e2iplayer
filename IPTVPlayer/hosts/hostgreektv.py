@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "24.10.2026"
+LAST_MODIFIED = "01.11.2026"
 # 24.10.2026 - new host
 #   catch-up TV of three Greek channels: SKAI (skai.gr/tv), OPEN (tvopen.gr) and ALPHA (alphatv.gr);
 #   shows -> seasons -> episodes, newest first, direct HLS / MP4 of the channels' own CDNs (no hosters);
@@ -45,6 +45,8 @@ OPEN_CAT_PAGE = 8  # templates/data/videos: 8 videos a page
 OPEN_VIDS_PAGE = 10  # templates/data/showVideos: 11-12 videos a page (an ad slot takes one)
 OPEN_SEARCH_MAX = 100
 GEO_GR = "Greece / Cyprus"
+GEO_CY = "Cyprus"
+GEO_CY_LIVE = "/rikct/"  # the RIK channels answer HTTP 451 outside Cyprus
 # live channels: the stations' own public HLS streams (ERT, ANT1, Alpha, Open, Skai, Star, Mega, Cyprus, regional / music / church)
 LIVE_CHANNELS = (
     ("Πανελλαδικά", (
@@ -68,7 +70,22 @@ LIVE_CHANNELS = (
     ("Παιδικά", (
         ("ERT Kids", "https://ert-live.siliconweb.com/bpk-tv/ERTKids/default/index.m3u8"),)),
     ("Παγκύπρια", (
-        ("SIGMA", "https://ottstream4.primetel.com.cy/streaming-web/SigmaLive/playlist_2000.m3u8"),)),
+        ("RIK 1", "https://l6.cloudskep.com/rikct/rik1/playlist.m3u8"),
+        ("RIK 2", "https://l6.cloudskep.com/rikct/rik2/playlist.m3u8"),
+        ("RIK HD", "https://l6.cloudskep.com/rikct/rikhd/playlist.m3u8"),
+        ("RIK Sat", "https://l3.cloudskep.com/cybcsat/abr/playlist.m3u8"),
+        ("ANT1 Cyprus", "https://l2.cloudskep.com/ant1cm2/abr/playlist.m3u8"),
+        ("SIGMA", "https://ottstream4.primetel.com.cy/streaming-web/SigmaLive/playlist_2000.m3u8"),
+        # no m3u8: the live page of the station hands out the signed stream url
+        ("OMEGA", "https://www.omegatv.com.cy/live/?cs=1"),
+        ("ALPHA Cyprus", "https://www.alphacyprus.com.cy/live"),
+        ("VERGINA", "https://verginanews.gr:8443/hls_live/stream2.m3u8"),
+        ("Faros TV 1", "https://s1.cystream.net/live/faros1/playlist.m3u8"),
+        ("Faros TV 2", "https://s1.cystream.net/live/faros2/playlist.m3u8"),
+        ("Diaspora", "https://l5.cloudskep.com/hellenictv/htv/playlist.m3u8"),
+        ("Groovy TV", "http://web.onair-radio.eu:1935/groovytv/groovytv/playlist.m3u8"),  # NOSONAR - the Wowza server has no https
+        ("Xplore", "http://web.onair-radio.eu:1935/explorecy/explorecy/playlist.m3u8"),  # NOSONAR - the Wowza server has no https
+        ("Reboot TV", "http://web.onair-radio.eu:1935/video/video/playlist.m3u8"))),  # NOSONAR - the Wowza server has no https
     ("Περιφερειακά", (
         ("Delta TV", "http://81.171.10.42:1935/liveD/DStream.sdp/playlist.m3u8"),  # NOSONAR - the Wowza server has no https
         ("Ionian Channel", "https://stream.ioniantv.gr/ionian/live_abr/ionian/live_1080p/chunks.m3u8"))),
@@ -796,11 +813,24 @@ class GreekTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
         for group, channels in LIVE_CHANNELS:
             if group == cItem.get("group"):
                 for name, url in channels:
-                    self.addVideo(self._child(cItem, {"category": "live", "title": name, "url": url, "desc": group}))
+                    desc = "%s | %s" % (group, _("Only available in %s") % GEO_CY) if GEO_CY_LIVE in url else group
+                    self.addVideo(self._child(cItem, {"category": "live", "title": name, "url": url, "desc": desc}))
 
     def _liveLinks(self, cItem):
         meta = {"iptv_proto": "m3u8", "iptv_livestream": True, "User-Agent": self.HEADER["User-Agent"]}
         url = cItem.get("url", "")
+        if ".m3u8" not in url:
+            # OMEGA / ALPHA Cyprus: the signed url of the stream is on the station's live page
+            sts, data = self.getPage(url)
+            url = self.cm.ph.getSearchGroups(data.replace("\\/", "/"), r"""(https?://[^"'\s<>)]+?\.m3u8[^"'\s<>)]*)""")[0] if sts else ""
+            if not url:
+                SetIPTVPlayerLastHostError(_("No stream available"))
+                return []
+        elif GEO_CY_LIVE in url:
+            sts, data = self.getPage(url)
+            if not sts or "#EXTM3U" not in data:
+                SetIPTVPlayerLastHostError(_("This content is not available in your region.") + " (%s)" % GEO_CY)
+                return []
         # ERT / ANT1: fMP4 variants with a separate audio playlist - getDirectM3U8Playlist merges them (ffmpeg)
         urlTab = getDirectM3U8Playlist(strwithmeta(url, dict(meta)), checkExt=False, checkContent=True, sortWithMaxBitrate=999999999)
         for item in urlTab:

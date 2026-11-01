@@ -3,7 +3,8 @@
   "favourites",
   "localmedia",
   "urllist",
-  "e2iplayerinfo"
+  "e2iplayerinfo",
+  "groupsearch"
  ],
  "worldwide": [
   "youtube",
