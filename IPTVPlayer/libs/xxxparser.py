@@ -193,10 +193,10 @@ def checkhttps(url):
 
 
 # sites of the txxx network (hostxxx.py TXXX_NETWORK), same videofile API; abxxx ... boobse: only reached over 4TUBE partner links
-TXXX_NETWORK_SITES = ('https://upornia.com', 'https://hdzog.com', 'https://vxxx.com', 'https://abxxx.com', 'https://abebony.com', 'https://ablesbian.com', 'https://bdsmx-porn.com', 'https://bdsmx.tube', 'https://boobse.com')
+TXXX_NETWORK_SITES = ('https://hotmovs.com', 'https://vjav.com', 'https://upornia.com', 'https://hdzog.com', 'https://vxxx.com', 'https://abxxx.com', 'https://abebony.com', 'https://ablesbian.com', 'https://bdsmx-porn.com', 'https://bdsmx.tube', 'https://boobse.com')
 
 # plain KVS sites (hostxxx.py KVS_NETWORK), resolved by the shared KVS branch
-KVS_SITES = ('https://freshporno.org', 'https://www.freepornvideos.xxx', 'https://www.fpo.xxx', 'https://heroero.com', 'https://porndd.com', 'https://amateurporn.me', 'https://allclassic.porn', 'https://celebsroulette.com', 'https://watcherotic.com', 'https://www.vipporns.com', 'https://pornve.com', 'https://www.bigtitslust.com', 'https://bigassporn.tv', 'https://blowjobs.pro', 'https://lesbianporn8.net', 'https://saintporn.com', 'https://allmatureporn.tv', 'https://blackporn24.com', 'https://footstockings.com', 'https://milfporn8.net', 'https://porno24.to', 'https://yourlesbians.com', 'https://www1.yabuchka.xyz', 'https://www.fulleroticmovies.net', 'https://wvw.ruporno.net', 'https://fuqster.com')
+KVS_SITES = ('https://x-x-x.tube', 'https://camgirlfap.com', 'https://pornditt.com', 'https://v.pornditt.com', 'https://myporntape.com', 'https://b.terebon.net', 'https://r14.mixporn.space', 'https://www.analegg.com', 'https://javmix.com', 'https://area51.porn', 'https://ikisoda.com', 'https://porno1.hu', 'https://freshporno.org', 'https://www.freepornvideos.xxx', 'https://www.fpo.xxx', 'https://heroero.com', 'https://porndd.com', 'https://amateurporn.me', 'https://allclassic.porn', 'https://celebsroulette.com', 'https://watcherotic.com', 'https://www.vipporns.com', 'https://pornve.com', 'https://www.bigtitslust.com', 'https://bigassporn.tv', 'https://blowjobs.pro', 'https://lesbianporn8.net', 'https://saintporn.com', 'https://allmatureporn.tv', 'https://blackporn24.com', 'https://footstockings.com', 'https://milfporn8.net', 'https://porno24.to', 'https://yourlesbians.com', 'https://www1.yabuchka.xyz', 'https://www.fulleroticmovies.net', 'https://wvw.ruporno.net', 'https://fuqster.com')
 
 # WordPress tube theme sites (hostxxx.py WPTUBE_NETWORK): own player page or a file hoster iframe
 WPTUBE_SITES = ('https://pornmz.com', 'https://www.hitprn.net', 'https://pornobae.com', 'https://vintagepornfun.com', 'https://cumdrinkingclips.com')
@@ -1143,7 +1143,8 @@ class XXXParser:
 		if url.startswith('https://www.watchmygf.me'):
 			return 'https://mangovideo'
 		if 'mix-porn' in url or 'mixporn' in url:
-			return 'https://rusporn.tv'
+			# the same site as MIXPORN (KVS_NETWORK): a row of that list goes to the KVS resolver, RUSPORN's params hold its cookie file
+			return self.MAIN_URL if self.MAIN_URL in KVS_SITES else 'https://rusporn.tv'
 		if url.startswith(('https://www.slutsxmovies.com/embed/', 'https://www.cumyvideos.com/embed/', 'https://www.nuvid.com', 'https://porneo.com')):
 			return 'https://www.nuvid.com'
 		if url.startswith('https://www.sleazyneasy.com'):
@@ -1549,6 +1550,10 @@ class XXXParser:
 			return 'https://shareanynudes.com'
 		if url.startswith('https://24porn.com'):
 			return 'https://24porn.com'
+		if url.startswith('https://wanktube.tv'):
+			return 'https://wanktube.tv'
+		if url.startswith('https://analpornvids.com'):
+			return 'https://analpornvids.com'
 		if url.startswith('https://adultxhub.com'):
 			return 'https://adultxhub.com'
 		if url.startswith('https://analpornosex.com'):
@@ -2580,6 +2585,10 @@ class XXXParser:
 									if mediaUrl:
 										printDBG('4TUBE partner player source: ' + mediaUrl)
 										return urlparser.decorateUrl(mediaUrl, {'Referer': pageUrl, 'User-Agent': USER_AGENT})
+									# kams.com: the page's own stream comes first, the related videos' streams follow
+									ownStream = self.cm.ph.getSearchGroups(page, r'''(https://[^"'\s<>\\]+/master\.m3u8[^"'\s<>\\]*)''', 1, True)[0] if 'kams.com' in pageUrl else ''
+									if ownStream:
+										return urlparser.decorateUrl(ownStream, {'Referer': pageUrl, 'User-Agent': USER_AGENT})
 									patterns = [
 										r'contentUrl\s*[=:]\s*[\"\'](https?://[^\"\']+)',
 										r'(?:videoUrl|video_url|file|src)\s*[=:]\s*[\"\'](https?://[^\"\']+)',
@@ -3268,12 +3277,35 @@ class XXXParser:
 			printDBG('Videolink second: ' + videoUrl)
 			return urlparser.decorateUrl(videoUrl, {'Referer': url})
 
-		if parser == 'https://24porn.com':
-			COOKIEFILE = join(GetCookieDir(), '24porn.cookie')
+		if parser == 'https://analpornvids.com':
+			COOKIEFILE = join(GetCookieDir(), 'analpornvids.cookie')
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			self.HTTP_HEADER['Referer'] = url
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
-			sts, data = self.getPage(url, '24porn.cookie', '24porn.com', self.defaultParams)
+			sts, data = self.getPage(url, 'analpornvids.cookie', 'analpornvids.com', self.defaultParams)
+			if sts and (data or '').strip().lower().startswith('internal server error'):
+				# an error answer kept by Cloudflare (see Host.analpornvidsPage)
+				sts, data = self.getPage('%s?nocache=%d' % (url, time.time()), 'analpornvids.cookie', 'analpornvids.com', self.defaultParams)
+			if not sts or not data:
+				return ''
+			videoUrl = self.cm.ph.getSearchGroups(data, r'''video:url"\s+content=["]([^"]+?)["]''', 1, True)[0]
+			if not videoUrl:
+				return ''
+			meta = {'Referer': url, 'User-Agent': self.USER_AGENT}
+			videoUrl = urlparser.decorateUrl(videoUrl, meta)
+			if '.m3u8' in videoUrl:
+				# its CDN does not always answer: without a limit the box waited over 2 minutes for the connection
+				return self._bestM3U8Variant(videoUrl, checkExt=False, cookieParams={'timeout': 15}) or videoUrl
+			return videoUrl
+
+		if parser in ('https://24porn.com', 'https://wanktube.tv'):
+			siteDomain = parser.split('//')[1]
+			siteCookie = siteDomain.split('.')[0] + '.cookie'
+			COOKIEFILE = join(GetCookieDir(), siteCookie)
+			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
+			self.HTTP_HEADER['Referer'] = url
+			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
+			sts, data = self.getPage(url, siteCookie, siteDomain, self.defaultParams)
 			if not sts or not data:
 				return ''
 			# the player data ({"hls":N},"https://vcdn..."; '/' escaped) names the vcdn template URL
@@ -7343,6 +7375,8 @@ class XXXParser:
 			return urlparser.decorateUrl(videoUrl, {'Referer': url, 'User-Agent': self.HTTP_HEADER.get('User-Agent', '')})
 
 		if parser in KVS_SITES:
+			# (pornditt.com lists its videos under v.pornditt.com, whose file links answer 403 more often)
+			url = url.replace('//v.pornditt.com/', '//pornditt.com/')
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			self.HTTP_HEADER['Referer'] = parser + '/'
 			self.defaultParams = {'header': self.HTTP_HEADER, 'return_data': True}
@@ -8665,7 +8699,19 @@ def decodeHtml(text):
 		'&commmat;': ' ', '&#58;': ':'}
 	for key, value in replacements.items():
 		text = text.replace(key, value)
-	return text
+	# the numeric entities not listed above (&#34; in x-x-x.tube titles)
+	return re.sub(r'&#([0-9]{2,7});', _numericEntity, text)
+
+
+def _numericEntity(match):
+	try:
+		code = int(match.group(1))
+		try:
+			return unichr(code).encode('utf-8')  # Py2: the text is bytes  # noqa: F821
+		except NameError:
+			return chr(code)
+	except (ValueError, OverflowError):
+		return ''
 
 
 def decryptHash(videoUrl, licenseCode, hashRange):

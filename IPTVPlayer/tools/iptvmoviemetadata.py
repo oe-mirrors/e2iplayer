@@ -10,6 +10,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, by
 ###################################################
 # FOREIGN import
 ###################################################
+import hashlib
 import io
 try:
     import json
@@ -42,6 +43,18 @@ from copy import deepcopy
 # }
 
 
+def shortMetaFileName(fileName, maxBytes=250):
+    # a file system takes 255 bytes for a name, a long title of a list gave OSError 36 and no saved position:
+    # the start of the name and a hash of all of it (shorter names stay as they are, so their files are still found)
+    raw = fileName.encode('utf-8')
+    if len(raw) <= maxBytes:
+        return fileName
+    stem, _sep, ext = fileName.rpartition('.')
+    digest = hashlib.md5(raw).hexdigest()
+    keep = maxBytes - len(digest) - len(ext.encode('utf-8')) - 2
+    return '%s_%s.%s' % (stem.encode('utf-8')[:keep].decode('utf-8', 'ignore'), digest, ext)
+
+
 def localPrintDBG(txt):
     # printDBG(txt)
     pass
@@ -61,7 +74,7 @@ class IPTVMovieMetaDataHandler():
         else:
             fileName = filePath.split('/')[-1] + '.' + self.EXTENSION
 
-        self.filePath = GetMovieMetaDataDir(RemoveDisallowedFilenameChars(fileName))
+        self.filePath = GetMovieMetaDataDir(shortMetaFileName(RemoveDisallowedFilenameChars(fileName)))
         self.data = deepcopy(self.META_DATA)
         self.data.update({"host": host, "title": title, "file_path": filePath})
         self.isModified = False
