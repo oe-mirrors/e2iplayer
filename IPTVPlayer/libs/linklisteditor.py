@@ -582,7 +582,7 @@ class LinkListManager(object):
                     # a line that is not UTF-8 (old latin-1 lists) is read as
                     # latin-1, so saving converts it instead of writing U+FFFD
                     try:
-                        line = line.decode("utf-8")
+                        line = line.decode("utf-8-sig")
                     except UnicodeDecodeError:
                         line = line.decode("latin-1")
                     row = self.parseRow(line)

@@ -344,6 +344,7 @@ class iptv_execute(object):
         self.event = threading.Event()
         self.mainThreadIdx = mainThreadIdx
         self.Thread = threading.current_thread()
+        self.outErrors = 'ignore'  # 'surrogateescape' keeps output that is not UTF-8 (file names) restorable
 
     def __call__(self, cmd):
         printDBG("iptv_execute.__call__: Here we must not be in main thread context: [%s]" % threading.current_thread())
@@ -371,7 +372,7 @@ class iptv_execute(object):
                 self.Thread._iptvplayer_ext['iptv_execute'] = self
             except Exception:
                 printExc()
-            self.iptv_system = iptv_system(cmd, self._callBack)
+            self.iptv_system = iptv_system(cmd, self._callBack, self.outErrors)
 
             return iptv_execute.WAIT_RET
         return

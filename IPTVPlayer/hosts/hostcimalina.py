@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "27.10.2026"
+LAST_MODIFIED = "02.11.2026"
 # 27.10.2026 - Movies / Series categories found by their menu label (the site renumbered its menu)
 # 21.10.2026 - the "multi server" (Megamax page on share4max.org, the only server of the pages now) plays again
 #   (urlparser knows the domain); every hoster mirror of it as an own server row ("Megamax 1080p voe"),
@@ -99,9 +99,9 @@ class CimaLina(GenericFolderWatchedScraperMixin, CBaseHostClass):
         proxy = config.plugins.iptvplayer.cimalina_proxy.value
         try:
             if proxy == "proxy_1":
-                return config.plugins.iptvplayer.alternativeproxy1.value
+                return config.plugins.iptvplayer.alternative_proxy1.value
             if proxy == "proxy_2":
-                return config.plugins.iptvplayer.alternativeproxy2.value
+                return config.plugins.iptvplayer.alternative_proxy2.value
         except Exception:
             printExc()
         return None
