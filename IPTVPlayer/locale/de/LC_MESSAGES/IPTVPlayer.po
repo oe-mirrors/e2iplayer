@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-01 21:03+0000\n"
-"PO-Revision-Date: 2026-10-27 23:00+0100\n"
+"PO-Revision-Date: 2026-11-01 22:08+0100\n"
 "Last-Translator: Masta2002\n"
 "Language-Team: oATV Team\n"
 "Language: de_DE\n"
@@ -86,7 +86,7 @@ msgstr "%d von %d heruntergeladen"
 
 #, python-format
 msgid "%d of %d hosts asked, %d with results"
-msgstr ""
+msgstr "%d von %d Hosts abgefragt, %d mit Ergebnissen"
 
 #, python-format
 msgid "%d parts"
@@ -2581,7 +2581,7 @@ msgid "Group links into categories:"
 msgstr "Links in Kategorien gliedern:"
 
 msgid "Group search"
-msgstr ""
+msgstr "Gruppensuche"
 
 #, python-format
 msgid "Group with id[%s] not found."
@@ -5857,6 +5857,11 @@ msgid ""
 "\n"
 "Leave this OFF if you do not want that. The other resolvers (VidEasy, VidLink, Peachify, vidrock, VidNest, ...) decrypt their links on the receiver and are not affected."
 msgstr ""
+"Die Resolver 'VidCore', 'VidUp' und 'VidFast' entschlüsseln ihre Links auf dem Receiver, wenn das Paket 'quickjs' installiert ist. Diese Option ist nur eine Ausweichlösung für Receiver ohne dieses Paket oder wenn das fehlschlägt.\n"
+"\n"
+"Ist diese Option EIN, sendet E2iPlayer jedes Mal, wenn die Ausweichlösung nötig ist, das verschlüsselte Stream-Token der Seite - es enthält die TMDb-ID des Films oder der Folge, die Sie öffnen - an den fremden Webdienst enc-dec.app (betrieben von einer Privatperson). Dieser Server sieht dann bei jeder Wiedergabe die ID und Ihre IP-Adresse. Sonst wird nichts übertragen, und das gilt nur für diese drei Resolver.\n"
+"\n"
+"Lassen Sie diese Option AUS, wenn Sie das nicht möchten. Die anderen Resolver (VidEasy, VidLink, Peachify, vidrock, VidNest, ...) entschlüsseln ihre Links auf dem Receiver und sind nicht betroffen."
 
 #, python-format
 msgid "The results of %d of %d sites are from the last search for \"%s\" - this asks all sites again"
@@ -7263,7 +7268,7 @@ msgid "not installed (no ffmpeg downloads)"
 msgstr "nicht installiert (keine ffmpeg-Downloads)"
 
 msgid "not installed (no file details on INFO in the player)"
-msgstr ""
+msgstr "nicht installiert (keine Dateidetails bei INFO im Player)"
 
 msgid "not installed (no file, cover or subtitle downloads)"
 msgstr "nicht installiert (keine Datei-, Cover- oder Untertitel-Downloads)"
