@@ -185,7 +185,7 @@ class E2iPlayerBufferingWidget(Screen):
         self["percentage"] = Label()
         self["addinfo"] = Label()
         # the colour LCD, same screen as the player: buffered so far | percent | speed
-        addLcdSources(self, movieTitle, percent="0%")
+        addLcdSources(self, movieTitle, percent="0%", coverFile=playerAdditionalParams.get('cover_path'))
         self['ok_button'] = Cover3()
         self['rec_button'] = Cover3()
         self['exit_button'] = Cover3()
