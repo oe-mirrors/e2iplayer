@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-01 21:03+0000\n"
-"PO-Revision-Date: 2026-10-29 13:36+0300\n"
+"PO-Revision-Date: 2026-11-02 20:48+0200\n"
 "Last-Translator: Mohamed Elsafty [angel_heart150@yahoo.com]\n"
 "Language-Team: \n"
 "Language: ar\n"
@@ -87,7 +87,7 @@ msgstr "تم تنزيل %d من أصل %d"
 
 #, python-format
 msgid "%d of %d hosts asked, %d with results"
-msgstr ""
+msgstr "تم سؤال %d من أصل %d من الـ hosts، و%d منها أعادت نتائج"
 
 #, python-format
 msgid "%d parts"
@@ -621,7 +621,7 @@ msgid "AltGr"
 msgstr "AltGr"
 
 msgid "Alternate Title:"
-msgstr "نطاق بديل:"
+msgstr "العنوان البديل:"
 
 msgid "Alternative domain:"
 msgstr "نطاق بديل:"
@@ -747,7 +747,7 @@ msgid "Are you sure you want to remove file \"%s\"?"
 msgstr "هل أنت متأكد أنك تريد حذف الملف \"%s\"؟"
 
 msgid "Are you sure you want to reset all settings to their default values?"
-msgstr "هل أنت متأكد أنك تريد حذف سجل البحث؟"
+msgstr "هل أنت متأكد أنك تريد إعادة تعيين جميع الإعدادات إلى قيمها الافتراضية؟"
 
 msgid "Armenian"
 msgstr "الأرمينية"
@@ -1890,19 +1890,19 @@ msgid "Edit User Links"
 msgstr "روابط المستخدم"
 
 msgid "Edit failed."
-msgstr "فشل تسجيل الدخول."
+msgstr "فشل التحرير."
 
 msgid "Edit favorite group"
-msgstr "اختر مجموعة المفضلة"
+msgstr "تحرير مجموعة مفضلة"
 
 msgid "Edit favorite item"
-msgstr "تعديل المفضلة"
+msgstr "تحرير عنصر مفضلة"
 
 msgid "Edit favorites"
 msgstr "تعديل المفضلة"
 
 msgid "Edit search history"
-msgstr "حذف سجل البحث"
+msgstr "تحرير سجل البحث"
 
 msgid "Edit title"
 msgstr "تحرير العنوان"
@@ -2582,7 +2582,7 @@ msgid "Group links into categories:"
 msgstr "تجميع الروابط في فئات:"
 
 msgid "Group search"
-msgstr ""
+msgstr "البحث الجماعي"
 
 #, python-format
 msgid "Group with id[%s] not found."
@@ -3534,7 +3534,7 @@ msgid "Movie collections"
 msgstr "مجموعات الأفلام"
 
 msgid "Movie player selection list"
-msgstr "عرض IPTVPlayer في قائمة الإضافات"
+msgstr "قائمة اختيار مشغل الأفلام"
 
 msgid "Movies"
 msgstr "أفلام"
@@ -4291,7 +4291,7 @@ msgid "Popularity"
 msgstr "الشعبية"
 
 msgid "Pornstars"
-msgstr "مجرمي الإباحية"
+msgstr "مجرمي اشاهدهم اتقي الله"
 
 #, python-format
 msgid "Portal %d - %s (optional, from the MAG box):"
@@ -5858,6 +5858,11 @@ msgid ""
 "\n"
 "Leave this OFF if you do not want that. The other resolvers (VidEasy, VidLink, Peachify, vidrock, VidNest, ...) decrypt their links on the receiver and are not affected."
 msgstr ""
+"تقوم أدوات الحل 'VidCore' و'VidUp' و'VidFast' بفك تشفير روابطها على جهاز الاستقبال عندما تكون حزمة 'quickjs' مثبتة. هذا الخيار هو مجرد بديل احتياطي لأجهزة الاستقبال التي لا تحتوي عليها، أو عندما يفشل ذلك.\\n\"\n"
+"\"\\n\"\n"
+"\"عند تفعيل هذا الخيار، في كل مرة يُحتاج فيها إلى هذا البديل الاحتياطي، يرسل E2iPlayer رمز البث المشفّر الخاص بالموقع - والذي يحتوي على معرّف TMDb للفيلم أو الحلقة التي تفتحها - إلى خدمة الويب الخارجية enc-dec.app (التي يديرها شخص خاص). يرى ذلك الخادم حينها المعرّف وعنوان IP الخاص بك عند كل تشغيل. لا يتم إرسال أي شيء آخر، ويُستخدم هذا الخيار فقط مع أدوات الحل الثلاث هذه.\\n\"\n"
+"\"\\n\"\n"
+"\"اترك هذا الخيار معطّلًا (OFF) إذا كنت لا تريد ذلك. أما أدوات الحل الأخرى (VidEasy، VidLink، Peachify، vidrock، VidNest، ...) فتفك تشفير روابطها على جهاز الاستقبال ولا تتأثر بهذا الخيار."
 
 #, python-format
 msgid "The results of %d of %d sites are from the last search for \"%s\" - this asks all sites again"
@@ -7264,7 +7269,7 @@ msgid "not installed (no ffmpeg downloads)"
 msgstr "غير مثبّت (لا يدعم التنزيل باستخدام ffmpeg)"
 
 msgid "not installed (no file details on INFO in the player)"
-msgstr ""
+msgstr "غير مثبّت (لا تظهر تفاصيل الملف عند الضغط على INFO في المشغل)"
 
 msgid "not installed (no file, cover or subtitle downloads)"
 msgstr "غير مثبّت (لا يدعم تنزيل الملفات أو الأغلفة أو الترجمات)"
