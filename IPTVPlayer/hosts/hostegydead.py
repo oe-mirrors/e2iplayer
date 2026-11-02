@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "01.11.2026"
+LAST_MODIFIED = "02.11.2026"
 # 01.11.2026 - covers sit behind the site's Cloudflare like its pages (HTTP 403): "|cf" icons + cookie file named after the domain
 # 27.10.2026 - servers moved to an own page (<title page>/watch/, the site's "watch and download" button)
 # 21.10.2026 - MegaMax: every hoster mirror of its page as an own server row ("MegaMax 1080p voe", like on the site),
@@ -52,7 +52,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return "https://tv10.egydead.live/"
+    return "https://a1.egydead.media/"
 
 
 # Arabic ordinals used in season labels ("الموسم الثاني"), compound ones first
