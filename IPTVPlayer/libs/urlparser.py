@@ -6432,8 +6432,10 @@ class pageParser(CaptchaHelper):
             if not url.startswith("http"):
                 continue
             url = urlparser.decorateUrl(url, {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": site + "/", "Origin": site})
-            if ".m3u8" in url:
-                for item in getDirectM3U8Playlist(url, sortWithMaxBitrate=99999999):
+            if info.get("type") == "hls" or ".m3u8" in url:
+                # fix 021126: playlists and segments without an extension (Nova: TS behind a PNG head, Luna: plain TS),
+                # exteplayer3's ffmpeg refuses them ("Invalid data found") -> hlsdl buffering
+                for item in requireDownloaderForDisguisedHls(getDirectM3U8Playlist(url, checkExt=False, variantCheck=False, checkContent=True, sortWithMaxBitrate=99999999)):
                     item["name"] = "%s %s" % (name, item.get("name", ""))
                     urltab.append(item)
             else:
@@ -6481,23 +6483,14 @@ class pageParser(CaptchaHelper):
         return urltab
 
     def parserVIDNEST(self, baseUrl):  # add 250826
-        def vidnestB64Decode(s):
-            alphabet = "RB0fpH8ZEyVLkv7c2i6MAJ5u3IKFDxlS1NTsnGaqmXYdUrtzjwObCgQP94hoeW+/="
-            rev = {c: i for i, c in enumerate(alphabet)}
-            s = s + "=" * ((-len(s)) % 4)
-            out = bytearray()
-            for i in range(0, len(s), 4):
-                chunk = s[i:i + 4]
-                c0 = rev.get(chunk[0], 64)
-                c1 = rev.get(chunk[1], 64)
-                c2 = 64 if chunk[2] == "=" else rev.get(chunk[2], 64)
-                c3 = 64 if chunk[3] == "=" else rev.get(chunk[3], 64)
-                out.append(((c0 << 2) | (c1 >> 4)) & 0xFF)
-                if c2 != 64:
-                    out.append((((c1 & 0x0F) << 4) | (c2 >> 2)) & 0xFF)
-                if c3 != 64:
-                    out.append((((c2 & 0x03) << 6) | c3) & 0xFF)
-            return bytes(out).decode("utf-8", "replace")
+        # upd 021126: every request needs a random _n, the answer {"v":2,"d","n"} is AES-256-GCM (key: sha256 of
+        # "<n>|<static key>" from the player chunk); server list as in the player
+        def vidnestDecrypt(resp):
+            d = resp["d"].replace("-", "+").replace("_", "/")
+            blob = base64.b64decode(d + "=" * (-len(d) % 4))
+            key = sha256(("%s|%s" % (resp["n"], "K3p8vQ2mX9rL5wZ0fN7bG1sH4tJ6dC9_y8S3wM1nQ5pL2")).encode("utf-8")).digest()
+            plain = python_aesgcm.new(key).open(blob[:12], blob[12:])
+            return json_loads(plain.decode("utf-8", "ignore") if isinstance(plain, (bytes, bytearray)) else plain)
 
         def extractLinks(root):
             # upd 091026: the servers now answer {"streams":[{"url","quality","language","type","headers":{"Referer"}}]}
@@ -6510,10 +6503,11 @@ class pageParser(CaptchaHelper):
                 stream = root.get("data")
                 stream = stream.get("stream") if isinstance(stream, dict) else None
                 if isinstance(stream, dict) and stream.get("playlist"):
-                    links.append((stream["playlist"], "", "", True))
+                    links.append((stream["playlist"], "", {}, True))
                 items = root.get("streams") or root.get("sources") or root.get("url") or []
                 if isinstance(items, (str, type(u""))):
-                    items = [dict(root, url=items)]
+                    # flixhq / rogflix: HLS unless the answer says mp4 (rogflix has no type, its playlist is a master.txt)
+                    items = [dict(root, url=items, type=root.get("type") or "hls")]
                 elif isinstance(items, dict):
                     items = [items]
                 for item in items:
@@ -6527,12 +6521,10 @@ class pageParser(CaptchaHelper):
                         val = item.get(key)
                         if val and isinstance(val, (str, type(u""))) and val.lower() != "auto" and val not in label:
                             label.append(val)
-                    ref = ""
                     headers = item.get("headers")
-                    if isinstance(headers, dict):
-                        ref = headers.get("Referer") or headers.get("referer") or ""
+                    headers = headers if isinstance(headers, dict) else {}
                     isHls = str(item.get("type", "")).lower() == "hls" or ".m3u8" in link.lower()
-                    links.append((link, " ".join(label), ref, isHls))
+                    links.append((link, " ".join(label), headers, isHls))
             except Exception:
                 printExc()
             return links
@@ -6546,30 +6538,29 @@ class pageParser(CaptchaHelper):
         HTTP_HEADER = self.cm.getDefaultHeader()
         HTTP_HEADER["Referer"] = "https://vidnest.fun/"
         HTTP_HEADER["Origin"] = "https://vidnest.fun"
-        servers = ["moviebox", "allmovies", "catflix", "purstream", "hollymoviehd", "lamda", "flixhq", "vidlink", "onehd", "klikxxi"]
+        servers = ["yflix", "rogflix", "vidzee", "ophim", "flixhq", "onehd", "rpmvid", "nextgencloudfabric", "klikxxi", "hollymoviehd", "vidlink", "allmovies"]
         for server in servers:
             if mediaType == "tv" and season and episode:
                 apiUrl = "https://new.vidnest.fun/%s/tv/%s/%s/%s" % (server, tmdbId, season, episode)
             else:
                 apiUrl = "https://new.vidnest.fun/%s/movie/%s" % (server, tmdbId)
-            if server == "onehd":
-                apiUrl += "?server=upcloud"
+            apiUrl += "?_n=" + ensure_str(base64.urlsafe_b64encode(os.urandom(16))).rstrip("=")
             sts, data = self.cm.getPage(apiUrl, {"header": dict(HTTP_HEADER), "timeout": 10})
             if not sts:
                 continue
             try:
-                resp = json_loads(data)
-                payload = resp.get("data")
-                if not payload:
-                    continue
-                if resp.get("encrypted"):
-                    payload = vidnestB64Decode(payload)
-                root = json_loads(payload)
+                root = json_loads(data)
+                if root.get("v") == 2 and root.get("d"):
+                    root = vidnestDecrypt(root)
             except Exception:
+                printExc()
                 continue
-            for url, label, ref, isHls in extractLinks(root):
+            for url, label, headers, isHls in extractLinks(root):
                 if url.startswith("//"):
                     url = "https:" + url
+                elif url.startswith("/"):
+                    # onehd: a path on the player's relay workers
+                    url = "https://long-night-d802.streamed-5.workers.dev" + url
                 if not url.startswith("http"):
                     printDBG("parserVIDNEST %s: skip relative url [%s]" % (server, url))
                     continue
@@ -6577,7 +6568,9 @@ class pageParser(CaptchaHelper):
                 if "/embed" in path or path.endswith((".php", ".html")):
                     printDBG("parserVIDNEST %s: skip player page [%s]" % (server, url))
                     continue
-                params = {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": ref or "https://vidnest.fun/"}
+                params = {"User-Agent": headers.get("User-Agent") or HTTP_HEADER["User-Agent"], "Referer": headers.get("Referer") or "https://vidnest.fun/"}
+                if headers.get("Origin"):
+                    params["Origin"] = headers["Origin"].rstrip("/")
                 if isHls:
                     params["iptv_proto"] = "m3u8"
                 decoUrl = urlparser.decorateUrl(url, params)
@@ -6585,7 +6578,8 @@ class pageParser(CaptchaHelper):
                 if label:
                     name += " %s" % label
                 if isHls:
-                    for item in getDirectM3U8Playlist(decoUrl, checkExt=False, checkContent=True, sortWithMaxBitrate=99999999):
+                    # most servers have playlists / segments without a usable extension -> hlsdl buffering
+                    for item in requireDownloaderForDisguisedHls(getDirectM3U8Playlist(decoUrl, checkExt=False, variantCheck=False, checkContent=True, sortWithMaxBitrate=99999999)):
                         item["name"] = ("%s %s" % (name, item.get("name", ""))).strip()
                         urltab.append(item)
                 else:
