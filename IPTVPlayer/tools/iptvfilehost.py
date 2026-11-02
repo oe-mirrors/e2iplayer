@@ -45,6 +45,7 @@ class IPTVFileHost:
         try:
             with io.open(filePath, 'r', encoding=encoding, errors='replace', newline='') as fp:
                 lineNum = 0
+                sectionGroup = ''
                 while True:
                     lineNum += 1
                     line = fp.readline()
@@ -54,6 +55,13 @@ class IPTVFileHost:
                     if 0 == len(line) or '#' == line[0]:
                         continue
                     idx1 = line.find(';')
+                    if -1 == idx1:
+                        # "[group]" alone on a line: the group of the following lines without an own one; "=====" only separates
+                        if 2 < len(line) and '[' == line[0] and ']' == line[-1]:
+                            sectionGroup = line[1:-1].strip()
+                            continue
+                        if not line.strip('=-_*~ '):
+                            continue
                     if -1 == idx1 and titleForUrl:
                         line = ';' + line
                         idx1 = 0
@@ -78,6 +86,8 @@ class IPTVFileHost:
                         if '' != fullTitle and url != '':
                             # get group
                             groupTitle, titleInGroup = self._getGroup(fullTitle)
+                            if '' == groupTitle and sectionGroup:
+                                groupTitle, titleInGroup = sectionGroup, fullTitle
                             if groupTitle not in self.groups:
                                 self.groups.append(groupTitle)
                             params = {'full_title': fullTitle, 'url': url, 'icon': icon, 'desc': desc, 'group': groupTitle, 'title_in_group': titleInGroup}
