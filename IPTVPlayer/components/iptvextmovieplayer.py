@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 2026-11-01 - INFO shows a panel over the running video (iptvplayerinfopanel.py).
+# Last Modified: 2026-11-02 - LCD skins get remaining minutes and times without seconds; playback tells
+#              other plugins whether the player is open, the title, the cover and whether it is live.
+# 2026-11-01 - INFO shows a panel over the running video (iptvplayerinfopanel.py).
 # 2026-10-31 - colour front displays (LCD) show title, progress bar and times during playback;
 #              the same screen serves the buffering screen and the download manager.
 # 2026-10-28 - a remembered subtitle file that is gone (put into the MKV by the download manager) is
@@ -25,7 +27,7 @@
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
 from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import shellQuote, subtitleSidecarFiles
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
-from Plugins.Extensions.IPTVPlayer.components.cover import Cover3
+from Plugins.Extensions.IPTVPlayer.components.cover import Cover, Cover3
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetSubtitlesDir, eConnectCallback, \
                                                           GetE2VideoAspectChoices, GetE2VideoAspect, SetE2VideoAspect, GetE2VideoPolicyChoices, \
                                                           GetE2VideoPolicy, SetE2VideoPolicy, GetDefaultLang, GetPolishSubEncoding, iptv_system, \
@@ -824,7 +826,8 @@ class IPTVExtMoviePlayer(Screen):
         self['currTimeLabel'] = Label("0:00:00")
         self['remainedLabel'] = Label("-0:00:00")
         self['lengthTimeLabel'] = Label("0:00:00")
-        addLcdSources(self, self.title, currTime="0:00:00", remained="-0:00:00", length="0:00:00", percent="0%")
+        addLcdSources(self, self.title, currTime="0:00:00", remained="-0:00:00", length="0:00:00", percent="0%",
+                      currTimeHM="0:00", remainedHM="0:00", lengthHM="0:00", remainedMin="0", coverFile=additionalParams.get('cover_path'))
         self.lcdLastState = None
         self.lcdLastLength = 0
         self.lcdLengthGrowth = 0
@@ -901,7 +904,13 @@ class IPTVExtMoviePlayer(Screen):
             "AudioTrack": {},
             "AudioTracks": [],
             "SubtitleTrack": {},
-            "SubtitleTracks": []
+            "SubtitleTracks": [],
+            # for other plugins: the dict is a class attribute and keeps its values after the player closed, Active
+            # tells. IsLive is only what the player reports, LiveDetected what the LCD shows as live.
+            "Active": True,
+            "Title": StripColorCodes(self.title),
+            "CoverFile": self.lcdCoverFile,
+            "LiveDetected": False
         })
 
         # load pixmaps for statusIcon
@@ -1911,6 +1920,7 @@ class IPTVExtMoviePlayer(Screen):
             self.lcdLastLength = length
             live = (self.playback.get('IsLive', False) or self.fileSRC.meta.get('iptv_livestream') or self.lcdLengthGrowth >= 3
                     or (self.downloader is not None and self.downloader.isLiveStream() is True))
+            self.playback['LiveDetected'] = bool(live)
             known = length > 0 and not live
             percent = max(0, min(100, curr * 100 // length)) if known else 0
             state = (curr, length, live)
@@ -1919,18 +1929,29 @@ class IPTVExtMoviePlayer(Screen):
             self.lcdLastState = state
             self['lcdProgress'].value = percent
             self['lcdCurrTime'].setText(str(timedelta(seconds=curr)))
+            self['lcdCurrTimeHM'].setText(lcdTimeHM(curr))
             if known:
-                self['lcdRemained'].setText('-' + str(timedelta(seconds=max(0, length - curr))))
+                remained = max(0, length - curr)
+                self['lcdRemained'].setText('-' + str(timedelta(seconds=remained)))
+                self['lcdRemainedHM'].setText(lcdTimeHM(remained))
+                self['lcdRemainedMin'].setText('%d' % (remained // 60) if remained > 60 else '+%ds' % remained)
                 self['lcdLength'].setText(str(timedelta(seconds=length)))
+                self['lcdLengthHM'].setText(lcdTimeHM(length))
                 self['lcdPercent'].setText('%d%%' % percent)
             elif live:
                 self['lcdRemained'].setText(_('Live'))
+                self['lcdRemainedHM'].setText(_('Live'))
+                self['lcdRemainedMin'].setText(_('Live'))
                 self['lcdLength'].setText('')
+                self['lcdLengthHM'].setText('')
                 self['lcdPercent'].setText('')
             else:
                 # length not known yet: show placeholders, so the fields do not pop up later
                 self['lcdRemained'].setText('-0:00:00')
+                self['lcdRemainedHM'].setText('0:00')
+                self['lcdRemainedMin'].setText('0')
                 self['lcdLength'].setText('0:00:00')
+                self['lcdLengthHM'].setText('0:00')
                 self['lcdPercent'].setText('0%')
         except Exception:
             printExc()
@@ -2595,6 +2616,7 @@ class IPTVExtMoviePlayer(Screen):
     def __onClose(self):
         printDBG(">>>>>>>>>>>>>>>>>>>>>> __onClose")
         self.isClosing = True
+        self.playback['Active'] = False
         self.screenSaver.close()
         if None is not self.workconsole:
             self.workconsole.kill()
@@ -3368,7 +3390,11 @@ def isLargeLcd():
         return False
 
 
-def addLcdSources(screen, title, currTime="", remained="", length="", percent=""):
+def lcdTimeHM(seconds):
+    return str(timedelta(seconds=seconds))[:-3]
+
+
+def addLcdSources(screen, title, currTime="", remained="", length="", percent="", currTimeHM="", remainedHM="", lengthHM="", remainedMin="", coverFile=None):
     # what IPTVExtMoviePlayerColorSummary reads from its parent as parent.lcd*
     screen['lcdTitle'] = StaticText(StripColorCodes(title))
     # the second parameter is named range or valuerange, depending on the image
@@ -3377,6 +3403,12 @@ def addLcdSources(screen, title, currTime="", remained="", length="", percent=""
     screen['lcdRemained'] = StaticText(remained)
     screen['lcdLength'] = StaticText(length)
     screen['lcdPercent'] = StaticText(percent)
+    # only for LCD skins, filled by the player: the buffering screen and the download manager have no such times
+    screen['lcdCurrTimeHM'] = StaticText(currTimeHM)
+    screen['lcdRemainedHM'] = StaticText(remainedHM)
+    screen['lcdLengthHM'] = StaticText(lengthHM)
+    screen['lcdRemainedMin'] = StaticText(remainedMin)
+    screen.lcdCoverFile = coverFile or ''
 
 
 def colorSummaryIfWanted():
@@ -3392,7 +3424,10 @@ class IPTVExtMoviePlayerColorSummary(Screen):
     # The buffering screen and the download manager use it too, with sources of the same names (addLcdSources).
     # Can be replaced in the LCD skin with <screen name="IPTVExtMoviePlayerColorSummary"> using the
     # sources parent.lcdTitle, parent.lcdProgress (0-100, render="Progress"), parent.lcdCurrTime,
-    # parent.lcdRemained, parent.lcdLength and parent.lcdPercent.
+    # parent.lcdRemained, parent.lcdLength and parent.lcdPercent. For times without seconds also
+    # parent.lcdCurrTimeHM, parent.lcdRemainedHM and parent.lcdLengthHM (1:46), for the remaining minutes
+    # parent.lcdRemainedMin (106, in the last minute +45s), both without the minus of parent.lcdRemained.
+    # The cover is a widget of this screen, not a source: <widget name="lcdCover" position="..." size="..." alphatest="blend" />
 
     # free border in pixels, e.g. when the receiver housing covers the display edge
     LCD_MARGIN_LEFT = 10
@@ -3437,3 +3472,18 @@ class IPTVExtMoviePlayerColorSummary(Screen):
 
     def __init__(self, session, parent):
         Screen.__init__(self, session, parent=parent)
+        # only an LCD skin of this screen shows it, the layout above has no room for a cover
+        self['lcdCover'] = Cover()
+        self.lcdCoverFile = getattr(parent, 'lcdCoverFile', '')
+        self.onLayoutFinish.append(self.showLcdCover)
+
+    def showLcdCover(self):
+        try:
+            size = self['lcdCover'].instance.size()
+            if size.width() > 0 and size.height() > 0 and os_path.isfile(self.lcdCoverFile) and os_path.getsize(self.lcdCoverFile) > 0:
+                self['lcdCover'].decodeCover(self.lcdCoverFile, self.lcdCoverDecoded, 'lcdCover')
+        except Exception:
+            printExc()
+
+    def lcdCoverDecoded(self, ret):
+        self['lcdCover'].updatePixmap(ret.get('Pixmap', None), ret.get('FileName', self.lcdCoverFile))
