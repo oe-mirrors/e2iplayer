@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "04.10.2026"
+LAST_MODIFIED = "02.11.2026"
 # 03.10.2026 - revived for the current alooytvNN domain (AlooyTV host created by Dr HYTHAM MAHMOUD)
 #   - the old domains redirect to the link hub fitnur.com/alooytv: the site domain is read from the hub
 #     (never the hub itself), an own "Alternative domain" first; config keys renamed to alooytv_*
@@ -85,9 +85,9 @@ class AlooyTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
         proxy = config.plugins.iptvplayer.alooytv_proxy.value
         try:
             if proxy == "proxy_1":
-                return config.plugins.iptvplayer.alternativeproxy1.value
+                return config.plugins.iptvplayer.alternative_proxy1.value
             if proxy == "proxy_2":
-                return config.plugins.iptvplayer.alternativeproxy2.value
+                return config.plugins.iptvplayer.alternative_proxy2.value
         except Exception:
             printExc()
         return None

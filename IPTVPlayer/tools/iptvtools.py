@@ -268,10 +268,12 @@ class iptv_system:
     used inside other threads
     '''
 
-    def __init__(self, cmd, callBackFun=None):
+    def __init__(self, cmd, callBackFun=None, outErrors='ignore'):
         printDBG("iptv_system.__init__ cmd [%s]" % cmd)
         self.callBackFun = callBackFun
         self.cmd = cmd
+        # incremental: a multi-byte character may be cut by the end of a read
+        self.outDecoder = codecs.getincrementaldecoder('utf-8')(outErrors)
 
         self.console = eConsoleAppContainer()
         if None is not self.callBackFun:
@@ -302,13 +304,18 @@ class iptv_system:
 
     def _dataAvail(self, data):
         if None is not data:
-            self.outData += strDecode(data)
+            if isinstance(data, bytes) and bytes is not str:
+                self.outData += self.outDecoder.decode(data)
+            else:
+                self.outData += strDecode(data)
 
     def _cmdFinished(self, code):
         printDBG("iptv_system._cmdFinished cmd[%s] code[%r]" % (self.cmd, code))
         self.console_appClosed_conn = None
         self.console_stdoutAvail_conn = None
         self.console = None
+        if bytes is not str:
+            self.outData += self.outDecoder.decode(b'', True)
         self.callBackFun(code, self.outData)
         self.callBackFun = None
 

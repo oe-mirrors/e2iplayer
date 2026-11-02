@@ -1152,6 +1152,7 @@ class CBaseHostClass:
             self.beforeMoreItemList = self.currList[0:index]
             self.afterMoreItemList = self.currList[index + 1:]
             self.moreMode = True
+            self.beforeMoreItem = self.currItem
             if -1 == index:
                 self.currItem = {"name": None}
             else:
@@ -1167,6 +1168,8 @@ class CBaseHostClass:
             self.currList.extend(self.afterMoreItemList)
             self.beforeMoreItemList = []
             self.afterMoreItemList = []
+            # the list still belongs to its folder: a refresh must not load only the part behind the "more" row
+            self.currItem = self.beforeMoreItem
         self.moreMode = False
 
     def apply_next_page_url(self, citem, url=None, page=None):

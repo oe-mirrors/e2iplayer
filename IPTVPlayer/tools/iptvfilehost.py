@@ -19,6 +19,8 @@ class IPTVFileHost:
         printDBG("IPTVFileHost.__init__")
         self.items = []
         self.groups = []
+        self.missingFiles = []
+        self.badLines = []  # (file, line number)
 
     def _getGroup(self, title):
         # for now only first group is considered: "[group1][group2] ala" will return "[group1]" and "[group2] ala"
@@ -31,12 +33,14 @@ class IPTVFileHost:
                 titleInGroup = title[idx + 1:].strip()
         return groupTitle, titleInGroup
 
-    def addFile(self, filePath, encoding='utf-8', addItemParams={}):
+    def addFile(self, filePath, encoding='utf-8', addItemParams={}, titleForUrl=None):
+        # titleForUrl(url): the title of a line with only a link, without it such a line counts as wrong
         printDBG('IPTVFileHost.addFile file[%s]' % filePath)
         if not os.path.isfile(filePath):
             # a not-yet-created urllist.user / urllist.stream is normal - just
             # yield an empty list instead of raising FileNotFoundError
             printDBG('IPTVFileHost.addFile file does not exist [%s]' % filePath)
+            self.missingFiles.append(filePath)
             return
         try:
             with io.open(filePath, 'r', encoding=encoding, errors='replace', newline='') as fp:
@@ -46,10 +50,13 @@ class IPTVFileHost:
                     line = fp.readline()
                     if not line:
                         break
-                    line = ensure_str(line.strip(), 'utf-8', 'replace')
+                    line = ensure_str(line.lstrip(u'\ufeff').strip(), 'utf-8', 'replace')
                     if 0 == len(line) or '#' == line[0]:
                         continue
                     idx1 = line.find(';')
+                    if -1 == idx1 and titleForUrl:
+                        line = ';' + line
+                        idx1 = 0
                     if -1 < idx1:
                         fullTitle = line[0:idx1].strip()
                         desc = ''
@@ -66,6 +73,8 @@ class IPTVFileHost:
                                 icon = line[idx1:].strip()
                         else:
                             url = line[idx1 + 1:].strip()
+                        if '' == fullTitle and titleForUrl:
+                            fullTitle = titleForUrl(url)
                         if '' != fullTitle and url != '':
                             # get group
                             groupTitle, titleInGroup = self._getGroup(fullTitle)
@@ -76,6 +85,7 @@ class IPTVFileHost:
                             self.items.append(params)
                             continue
                     printDBG('IPTVFileHost.addFile wrong line[%d]' % (lineNum))
+                    self.badLines.append((filePath, lineNum))
         except Exception:
             printExc()
 
@@ -85,10 +95,11 @@ class IPTVFileHost:
             name2 = it2.lower()
             if name1 == name2:
                 return 0
-            elif '' == name2 or name1 < name2:
+            elif '' == name2:  # the group without a name stays last
                 return -1
-            elif '' == name1 or name1 > name2:
+            elif '' == name1:
                 return 1
+            return -1 if name1 < name2 else 1
         tmpList = list(self.groups)
         if sort:
             tmpList.sort(key=cmp_to_key(_compare))

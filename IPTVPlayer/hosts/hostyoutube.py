@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "11.10.2026"
+LAST_MODIFIED = "01.11.2026"
 # 11.10.2026 - channel: "Shorts" folder (Shorts tab); Shorts and channels get their own list icons (ShortItem.png, ChannelItem.png);
 #   search type "Shorts" and Trending > Shorts use the search filter "Type: Shorts"
 # 06.08.2026 - Centralized watched helper integration incl. favourite hash sync, Custom menu action handling (mark/unmark watched) added - Kamikaze24
@@ -653,11 +653,10 @@ class Youtube(CBaseHostClass):
         printDBG("Youtube.listCategory cItem[%s]" % cItem)
 
         sortList = "file" != config.plugins.iptvplayer.youtube_userlinks_order.value
-        filespath = config.plugins.iptvplayer.Sciezkaurllist.value
         groupList = True
         if "sub_file_category" not in cItem:
             self.currFileHost = IPTVFileHost()
-            self.currFileHost.addFile(filespath + self.UTLIST_FILE, encoding="utf-8")
+            self.currFileHost.addFile(self._getUserLinksPath(), encoding="utf-8")
             tmpList = self.currFileHost.getGroups(sortList)
             if 0 < len(tmpList):
                 params = dict(cItem)
