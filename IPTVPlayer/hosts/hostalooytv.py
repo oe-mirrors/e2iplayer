@@ -16,7 +16,7 @@ import re
 from Components.config import ConfigSelection, ConfigText, config, getConfigListEntry
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
-from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import GetAlternativeProxyChoices, GetAlternativeProxyUrl, IsSidecarEnabled, IsMediaNamingNormalized
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems, sidecarMetaQuery
@@ -28,7 +28,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
 
-config.plugins.iptvplayer.alooytv_proxy = ConfigSelection(default="None", choices=[("None", _("None")), ("proxy_1", _("Alternative proxy server (1)")), ("proxy_2", _("Alternative proxy server (2)"))])
+config.plugins.iptvplayer.alooytv_proxy = ConfigSelection(default="None", choices=GetAlternativeProxyChoices())
 config.plugins.iptvplayer.alooytv_alt_domain = ConfigText(default="", fixed_size=False)
 
 
@@ -82,15 +82,7 @@ class AlooyTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
     # helpers
     ###################################################
     def getProxy(self):
-        proxy = config.plugins.iptvplayer.alooytv_proxy.value
-        try:
-            if proxy == "proxy_1":
-                return config.plugins.iptvplayer.alternative_proxy1.value
-            if proxy == "proxy_2":
-                return config.plugins.iptvplayer.alternative_proxy2.value
-        except Exception:
-            printExc()
-        return None
+        return GetAlternativeProxyUrl(config.plugins.iptvplayer.alooytv_proxy.value) or None
 
     def getPage(self, baseUrl, addParams=None, post_data=None):
         if addParams is None:
