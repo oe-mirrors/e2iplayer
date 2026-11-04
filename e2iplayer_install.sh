@@ -3,10 +3,9 @@
 #e2iplayer install script - Pike_Bishop from oATV
 
 ## Variables ##
-SCRIPTVERSION=16.0.5_git-oemirrors
+SCRIPTVERSION=16.0.6_git-oemirrors
 STARTDATE="$(date +%a.%d.%b.%Y-%H:%M:%S)"
 BOXIP="http://127.0.0.1"
-WGET=/usr/bin/wget
 EXTRACT="tar -xvzf"
 NICE=/bin/nice
 NICE_ARGS="-n 19"
@@ -49,6 +48,37 @@ echo -e "\nScript-Name/Version -> e2iplayer_install.sh\t  Version_$SCRIPTVERSION
 echo -e "\nInstall/Update E2iPlayer ... -> $STARTDATE\n\n"
 
 
+# Download Tool: curl if it works, otherwise wget (on some Images wget is only the BusyBox Applet with limited HTTPS).
+if curl --version > /dev/null 2>&1 ; then
+	DOWNLOADER=curl
+elif command -v wget > /dev/null 2>&1 ; then
+	DOWNLOADER=wget
+else
+	echo -e "\n... ERROR ...\nNeither curl nor wget found ! \nInstall one of them with Command;\nopkg install curl\nand start again e2iplayer_install.sh.\n\n" >&2
+	exit 1
+fi
+echo -e "Download Tool = $DOWNLOADER\n"
+
+# fetch URL -> writes the Answer to stdout (quiet), fails on HTTP Errors.
+fetch() {
+	if [ "$DOWNLOADER" = "curl" ] ; then
+		curl -fsL "$1"
+	else
+		wget -q -O - "$1"
+	fi
+}
+
+# download URL FILE [insecure] -> saves the Download as FILE, fails on HTTP Errors;
+# with a third Argument the Server Certificate is not checked.
+download() {
+	if [ "$DOWNLOADER" = "curl" ] ; then
+		curl -fSL --progress-bar ${3:+-k} -o "$2" "$1"
+	else
+		wget ${3:+--no-check-certificate} -O "$2" "$1"
+	fi
+}
+
+
 # If the script was already running but ended with an Error, delete any remains.
 $NICE $NICE_ARGS rm -rf $TMP/e2iplayer-* $TMP/python*.gz $TMP/master.* $TMP/opkg-*
 
@@ -89,7 +119,7 @@ done
 
 # Check the Image Distro (e.g: whether OpenATV or OpenPLI) because in OpenPLI when using the E2iPlayer
 # there can be a problem with ‘not found OpenSSL’, which can be fixed by installing libcrypto-compat.
-DISTROVERSION="$($WGET -O - -q $BOXIP/web/deviceinfo | grep "\(<\|</\)e2distroversion" \
+DISTROVERSION="$(fetch $BOXIP/web/deviceinfo | grep "\(<\|</\)e2distroversion" \
  | tr -d '\n' | sed "s/.*<e2distroversion>\(.*\)<\/e2distroversion>.*/\\1\n/")"
 LIBCRYPTO_COMPAT="$(opkg info libcrypto-compat* | grep "Package:" | grep -v '\(-dbg\|-dev\|-staticdev\)' | awk {'print $NF'})"
 
@@ -135,10 +165,11 @@ fi
 
 # Download the E2iPlayer Source Package into the Directory (Variable TMP).
 echo -e "\n\nDownload E2iPlayer Source Package (*.tar.gz) to;\n$TMP ...\n"
-if ! $WGET -P $TMP $FILE_ADRESS ; then
-	# Remove a partial Download, otherwise wget saves the second try as python3.tar.gz.1
+if ! download $FILE_ADRESS $TMP/python3.tar.gz ; then
+	# Second try without Certificate Check (old Images with outdated CA Certificates).
 	rm -f $TMP/python3.tar.gz
-	if ! $WGET "--no-check-certificate" $FILE_ADRESS -P $TMP ; then
+	if ! download $FILE_ADRESS $TMP/python3.tar.gz insecure ; then
+		rm -f $TMP/python3.tar.gz
 		echo -e "\n... ERROR ...\nDownload E2iPlayer Source Package failed ! \nCheck your Internet Connection\nand restart e2iplayer_install.sh.\n\n" >&2
 		exit 1
 	fi
@@ -238,12 +269,12 @@ while true; do
 	read -p "$(echo -e "\nWould you like to restart the Enigma2 GUI? y/n (Default = yes) ?")" -n 1 yn < /dev/tty
 	case $yn in
 		[yY]* )	echo -e "\n\nEnigma2 GUI restart is executed ...\n"
-				$WGET -q -O - $BOXIP/web/powerstate?newstate=3 || { init 4 ; sleep 3 ; init 3 ; }
+				fetch "$BOXIP/web/powerstate?newstate=3" || { init 4 ; sleep 3 ; init 3 ; }
 				echo -e "\n" && break ;;
 		[nN]* ) echo -e "\n" && break ;;
 			* ) if [ -z "$yn" ] ; then
 					echo -e "\n\nEnigma2 GUI restart is executed ...\n"
-					$WGET -q -O - $BOXIP/web/powerstate?newstate=3 || { init 4 ; sleep 3 ; init 3 ; }
+					fetch "$BOXIP/web/powerstate?newstate=3" || { init 4 ; sleep 3 ; init 3 ; }
 					echo -e "\n" && break
 				fi
 				echo -e "\n\nPlease answer with y for (yes) or n for (no).\n" ;;
