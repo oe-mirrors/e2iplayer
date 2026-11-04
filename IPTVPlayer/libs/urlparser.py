@@ -411,6 +411,7 @@ class urlparser:
             "filmi9.upns.xyz": self.pp.parserSBS,  # add 061026
             "firestream.site": self.pp.parserFIRESTREAM,  # add 061026
             "firestream.to": self.pp.parserFIRESTREAM,
+            "frstream.life": self.pp.parserFIRESTREAM,  # add 041126
             "fittingcentermondaysunday.com": self.pp.parserVOESX,  # add 061026
             "fiuosba.com": self.pp.parserSTREAMUP,  # add 041026 - strmup mirror (mlblive)
             "flaswish.com": self.pp.parserJWPLAYER,
@@ -726,6 +727,7 @@ class urlparser:
             "sethniceletter.com": self.pp.parserVOESX,  # add 061026
             "sfastwish.com": self.pp.parserJWPLAYER,
             "shadwo.pro": self.pp.parserALBAPLAYER,  # add 181026 (w.shadwo.pro/albaplayer/ -> anaplayer.online, aflamfree series)
+            "shannoncoldalready.com": self.pp.parserVOESX,  # add 041126
             "shannonpersonalcost.com": self.pp.parserVOESX,  # add 061026
             "share4max.com": self.pp.parserMEGAMAX,  # add 031026
             "share4max.org": self.pp.parserMEGAMAX,  # add 211026 (cimalina: its only server, "Hosting unknown" before)
