@@ -50,6 +50,9 @@ _YT_LANG_DEFAULT_REGION = {
 
 class YouTubeParser:
 
+    # the channel tabs with videos or playlists (not Posts, Store, Playables, Search)
+    CHANNEL_TABS = ("videos", "shorts", "streams", "podcasts", "courses", "releases", "playlists", "featured")
+
     # process-wide cache: {"client_version": str, "api_key": str, "visitor_data": str}
     _ytConfig = None
 
@@ -297,7 +300,8 @@ class YouTubeParser:
             host = urlparse(url).netloc.lower()
             if host.endswith(("googleusercontent.com", "ggpht.com", "ytimg.com")):
                 url = "https:" + url[5:]
-        if "?" in url:
+        if "?" in url and "/pl_c/" not in url:
+            # a podcast/playlist cover (/pl_c/) is signed: without its query it answers 404
             url = url.split("?", 1)[0]
         url = re.sub(r"=s([0-9]+)(?:-c)?(?:-k-c0x00ffffff)?(?:-no-rj)?(?:-mo)?$", "", url, flags=re.IGNORECASE)
         url = re.sub(r"(/hq720)(?:_custom_[0-9]+)+(\.(jpg|jpeg|png|webp))$", r"\1\2", url, flags=re.IGNORECASE)
@@ -657,10 +661,10 @@ class YouTubeParser:
         plId = plJson.get("playlistId", "")
         if plId:
             url = "https://www.youtube.com/playlist?list=%s" % plId
-            title = self._normalizeText(plJson["title"]["simpleText"])
+            title = self._getSimpleText(plJson.get("title", {}))
             icon = self.getThumbnailUrl(plJson)
-            videoCount = plJson["videoCount"]
-            desc = _("videos: %s") % videoCount
+            videoCount = plJson.get("videoCount") or self._getSimpleText(plJson.get("videoCountShortText", {}))
+            desc = _("videos: %s") % videoCount if videoCount else ""
             try:
                 by = self._normalizeText(plJson["longBylineText"]["runs"][0]["text"])
                 desc = desc + "\n" + by
@@ -1038,73 +1042,110 @@ class YouTubeParser:
             printExc()
         return entries
 
+    @staticmethod
+    def isContinuationUrl(url):
+        # a next page of a channel tab or playlist, not a page of the channel itself (a channel may be named "@browse...")
+        return "youtubei/v1/browse" in url
+
+    def _fetchBrowseResponse(self, url):
+        # first page = the html page with ytInitialData, next page = the InnerTube answer; None on a failed fetch
+        url = strwithmeta(url)
+        self.http_params = self._applyYoutubeHeaders(self.http_params)
+        if "post_data" in url.meta:
+            http_params = dict(self.http_params)
+            http_params["header"] = dict(http_params.get("header", {}))  # do not change self.http_params' header
+            http_params["header"]["Content-Type"] = "application/json"
+            http_params["raw_post_data"] = True
+            http_params = self._applyYoutubeHeaders(http_params)
+            sts, data = self.cm.getPage(url, http_params, url.meta["post_data"])
+        else:
+            # EU: without the consent cookie YouTube answers with consent.youtube.com instead of the page
+            http_params = dict(self.http_params)
+            http_params["header"] = dict(http_params.get("header", {}))
+            http_params["header"].setdefault("Cookie", "SOCS=CAI")
+            sts, data = self.cm.getPage(url, http_params)
+        if not sts:
+            return None
+        if self.isContinuationUrl(url):
+            return json_loads(data)
+        self.checkSessionToken(data)
+        data2 = self.cm.ph.getDataBeetwenMarkers(data, 'window["ytInitialData"] =', "};", False)[1]
+        if len(data2) == 0:
+            data2 = self.cm.ph.getDataBeetwenMarkers(data, "var ytInitialData =", "};", False)[1]
+        if len(data2) == 0:
+            # no such channel or playlist
+            return None
+        return json_loads(data2 + "}")
+
+    def _getContinuationEntries(self, response):
+        for key in ("onResponseReceivedActions", "onResponseReceivedEndpoints"):
+            for action in response.get(key, []):
+                entries = action.get("appendContinuationItemsAction", {}).get("continuationItems", [])
+                if entries:
+                    return entries
+        return []
+
+    def _getListItemData(self, content):
+        # one row of a channel tab, a Home shelf or a playlist
+        lockup = content.get("lockupViewModel")
+        if lockup:
+            if lockup.get("contentType") == "LOCKUP_CONTENT_TYPE_VIDEO":
+                return self.getLockupVideoData(lockup)
+            # playlists, courses, podcasts, albums, channels
+            folders = []
+            self._appendLockupSearchItem(lockup, folders)
+            return folders[0] if folders else {}
+        if "shortsLockupViewModel" in content:
+            return self.getShortsLockupData(content["shortsLockupViewModel"])
+        if "videoRenderer" in content:
+            return self.getVideoData(content["videoRenderer"])
+        if "playlistRenderer" in content:
+            return self.getPlaylistData(content["playlistRenderer"])
+        if "gridChannelRenderer" in content:
+            return self.getChannelData(content["gridChannelRenderer"])
+        return {}
+
+    def _parseListEntries(self, entries, currList):
+        # appends the rows of one page, returns the entry that leads to the next page
+        nextPage = None
+        for entry in entries:
+            if "continuationItemRenderer" in entry or "continuationItemViewModel" in entry:
+                nextPage = entry
+            elif "gridRenderer" in entry:
+                # the channel's Playlists tab
+                nextPage = self._parseListEntries(entry["gridRenderer"].get("items", []), currList) or nextPage
+            else:
+                params = self._getListItemData(entry.get("richItemRenderer", {}).get("content", entry))
+                if params:
+                    currList.append(params)
+        return nextPage
+
+    def _getContinuation(self, entry):
+        # (token, clickTrackingParams): channel tabs use continuationItemRenderer, playlist pages continuationItemViewModel
+        node = entry.get("continuationItemRenderer", {}).get("continuationEndpoint") or entry.get("continuationItemViewModel", {}).get("continuationCommand")
+        for command in self.findKeys(node or {}, "continuationCommand"):
+            if command.get("token"):
+                return command["token"], next(self.findKeys(node, "clickTrackingParams"), "")
+        return "", ""
+
     # CHANNEL LIST PARSER
     def getVideosFromChannelList(self, url, category, page, cItem):
         printDBG("YouTubeParser.getVideosFromChannelList page[%s]" % (page))
         currList = []
         try:
-            url = strwithmeta(url)
-            self.http_params = self._applyYoutubeHeaders(self.http_params)
-            if "post_data" in url.meta:
-                http_params = dict(self.http_params)
-                http_params["header"] = dict(http_params.get("header", {}))  # do not change self.http_params' header
-                http_params["header"]["Content-Type"] = "application/json"
-                http_params["raw_post_data"] = True
-                http_params = self._applyYoutubeHeaders(http_params)
-                sts, data = self.cm.getPage(url, http_params, url.meta["post_data"])
-            else:
-                sts, data = self.cm.getPage(url, self.http_params)
-            if not sts:
+            response = self._fetchBrowseResponse(url)
+            if response is None:
                 return currList
-            if "browse" in url:
-                response = json_loads(data)
-                rr = {}
-                for r in response.get("onResponseReceivedActions", []):
-                    if r.get("appendContinuationItemsAction", ""):
-                        rr = r
-                        break
-                if not rr:
-                    return []
-                r4 = rr["appendContinuationItemsAction"].get("continuationItems", [])
-            else:
-                # first page of videos
-                self.checkSessionToken(data)
-                data2 = self.cm.ph.getDataBeetwenMarkers(data, 'window["ytInitialData"] =', "};", False)[1]
-                if len(data2) == 0:
-                    data2 = self.cm.ph.getDataBeetwenMarkers(data, "var ytInitialData =", "};", False)[1]
-                response = json_loads(data2 + "}")
-                r4 = self._extractEntriesFromBrowse(response)
-            nextPage = ""
-            for r5 in r4:
-                nP = r5.get("continuationItemRenderer", "")
-                lockup = r5.get("richItemRenderer", {}).get("content", {}).get("lockupViewModel", {})
-                shortsLockup = r5.get("richItemRenderer", {}).get("content", {}).get("shortsLockupViewModel", {})
-                if lockup:
-                    params = self.getLockupVideoData(lockup)
-                    if params:
-                        currList.append(params)
-                elif shortsLockup:
-                    # the channel's Shorts tab
-                    params = self.getShortsLockupData(shortsLockup)
-                    if params:
-                        currList.append(params)
-                else:
-                    videoJson = r5.get("richItemRenderer", {})
-                    if videoJson:
-                        videoJson = videoJson.get("content", {})
-                        videoJson = videoJson.get("videoRenderer", "")
-                        params = self.getVideoData(videoJson)
-                        if params:
-                            currList.append(params)
-                if nP != "":
-                    nextPage = nP
-            if nextPage:
-                ctoken = nextPage["continuationEndpoint"]["continuationCommand"].get("token", "")
-                ctit = nextPage["continuationEndpoint"]["clickTrackingParams"]
-                try:
-                    label = nextPage["nextContinuationData"]["label"]["runs"][0]["text"]
-                except Exception:
-                    label = _("Next page")
+            entries = self._getContinuationEntries(response) if self.isContinuationUrl(url) else self._extractEntriesFromBrowse(response)
+            nextPage = self._parseListEntries(entries, currList)
+            # the real channel name: a row of the user list is titled freely ("... Shorts")
+            channelName = self._normalizeText(response.get("metadata", {}).get("channelMetadataRenderer", {}).get("title", ""))
+            if channelName:
+                for params in currList:
+                    if params.get("category") != "channel":
+                        params.setdefault("channel", channelName)
+            ctoken, ctit = self._getContinuation(nextPage) if nextPage else ("", "")
+            if ctoken:
                 # continuation page for channel list
                 cfg, context = self._ytContext()
                 urlNextPage = "https://www.youtube.com/youtubei/v1/browse?key=" + cfg["api_key"]
@@ -1113,17 +1154,75 @@ class YouTubeParser:
                 post_data["context"]["clickTracking"] = {"clickTrackingParams": ctit}
                 post_data = json_dumps(post_data).encode("utf-8")
                 urlNextPage = strwithmeta(urlNextPage, {"post_data": post_data})
-                params = {"type": "more", "image_type": "NEXT", "category": category, "title": label, "page": str(int(page) + 1), "url": ensure_str(urlNextPage), "is_pagination": True}
+                params = {"type": "more", "image_type": "NEXT", "category": category, "title": _("Next page"), "page": str(int(page) + 1), "url": ensure_str(urlNextPage), "is_pagination": True}
                 if cItem.get("channel_title", ""):
                     params["channel_title"] = cItem.get("channel_title", "")
                 elif cItem.get("channel", ""):
                     params["channel"] = cItem.get("channel", "")
+                elif channelName:
+                    params["channel_title"] = channelName
                 elif cItem.get("title", "") and cItem.get("category", "") == "channel":
                     params["channel_title"] = cItem.get("title", "")
                 currList.append(params)
         except Exception:
             printExc()
         return currList
+
+    def getChannelTabs(self, url):
+        # the tabs this channel really has (a missing tab redirects to Home) + its name, avatar and description;
+        # the tabs stay on the url that worked: the handle the page names can answer 404 while the channel id works
+        ret = {"title": "", "icon": "", "desc": "", "tabs": []}
+        try:
+            response = self._fetchBrowseResponse(url)
+            if response is None:
+                return ret
+            meta = response.get("metadata", {}).get("channelMetadataRenderer", {})
+            ret["title"] = self._normalizeText(meta.get("title", ""))
+            ret["desc"] = self._normalizeText(meta.get("description", ""))
+            ret["icon"] = self.getThumbnailUrl({"thumbnail": meta.get("avatar", {})})
+            for tab in response.get("contents", {}).get("twoColumnBrowseResultsRenderer", {}).get("tabs", []):
+                tab = tab.get("tabRenderer", {})
+                tabUrl = tab.get("endpoint", {}).get("commandMetadata", {}).get("webCommandMetadata", {}).get("url", "")
+                tabName = tabUrl.rsplit("/", 1)[-1]
+                if tabName in self.CHANNEL_TABS and tab.get("title"):
+                    ret["tabs"].append({"tab": tabName, "title": self._normalizeText(tab["title"]), "url": url.rstrip("/") + "/" + ensure_str(tabName)})
+        except Exception:
+            printExc()
+        return ret
+
+    def getChannelAvatar(self, url):
+        # the channel picture (og:image of the channel page): "" for a channel that does not exist, None when the
+        # page could not be loaded (try again later)
+        hdr = dict(self.HTTP_HEADER)
+        hdr["Accept-Language"] = self._getAcceptLanguage()
+        hdr["Cookie"] = "SOCS=CAI"
+        sts, data = self.cm.getPage(url, {"header": hdr, "return_data": True})
+        if not sts:
+            return None
+        icon = self.cm.ph.getSearchGroups(data, '<meta property="og:image" content="([^"]+)"')[0]
+        return ensure_str(self._normalizeThumbnailUrl(icon)) if icon else ""
+
+    def getChannelHomeShelves(self, url):
+        # the channel's Home tab: one {"title", "items"} per shelf
+        shelves = []
+        try:
+            response = self._fetchBrowseResponse(url)
+            if response is None:
+                return shelves
+            for entry in self._extractEntriesFromBrowse(response):
+                shelf = entry.get("shelfRenderer") or entry.get("reelShelfRenderer")
+                if not shelf:
+                    continue
+                entries = list(shelf.get("items", []))
+                for content in shelf.get("content", {}).values():
+                    entries.extend(content.get("items", []))
+                items = []
+                self._parseListEntries(entries, items)
+                if items:
+                    shelves.append({"title": self._getSimpleText(shelf.get("title", {})), "items": items})
+        except Exception:
+            printExc()
+        return shelves
 
     # SEARCH PARSER
     def getSearchResult(self, pattern, searchType, page, nextPageCategory, sortBy="A", url=""):
@@ -1257,27 +1356,19 @@ class YouTubeParser:
 
     def _appendLockupSearchItem(self, item, currList):
         content_type = item.get("contentType", "")
-        if content_type == "LOCKUP_CONTENT_TYPE_PLAYLIST":
+        if content_type in ("LOCKUP_CONTENT_TYPE_PLAYLIST", "LOCKUP_CONTENT_TYPE_PODCAST", "LOCKUP_CONTENT_TYPE_COURSE", "LOCKUP_CONTENT_TYPE_ALBUM"):
             try:
                 playlist_id = item.get("contentId", "")
                 title = item.get("metadata", {}).get("lockupMetadataViewModel", {}).get("title", {}).get("content", "")
                 if playlist_id and title:
                     url2 = "https://www.youtube.com/playlist?list=%s" % playlist_id
                     icon = ""
-                    try:
-                        sources = item.get("contentImage", {}).get("collectionThumbnailViewModel", {}).get("primaryThumbnail", {}).get("thumbnailViewModel", {}).get("image", {}).get("sources", [])
-                        if sources:
-                            icon = ensure_str(sources[-1].get("url", ""))
-                            icon = self._normalizeThumbnailUrl(icon)
-                    except Exception:
-                        try:
-                            sources = item.get("contentImage", {}).get("thumbnailViewModel", {}).get("image", {}).get("sources", [])
-                            if sources:
-                                icon = ensure_str(sources[-1].get("url", ""))
-                                icon = self._normalizeThumbnailUrl(icon)
-                        except Exception:
-                            pass
-                    currList.append({"type": "category", "category": "playlist", "title": title, "url": ensure_str(url2), "icon": icon, "time": "", "desc": ""})
+                    sources = next(self.findKeys(item.get("contentImage", {}), "sources"), [])
+                    if sources:
+                        icon = self._normalizeThumbnailUrl(ensure_str(sources[-1].get("url", "")))
+                    # "12 videos" on the thumbnail
+                    desc = next(self.findKeys(item.get("contentImage", {}), "thumbnailBadgeViewModel"), {}).get("text", "")
+                    currList.append({"type": "category", "category": "playlist", "title": self._normalizeText(title), "url": ensure_str(url2), "icon": icon, "time": "", "desc": self._normalizeText(desc)})
             except Exception:
                 printExc()
         elif content_type == "LOCKUP_CONTENT_TYPE_CHANNEL":
@@ -1331,42 +1422,7 @@ class YouTubeParser:
     # PLAYLIST API PARSER
     def getVideosApiPlayList(self, url, category, page, cItem):
         printDBG("YouTubeParser.getVideosApiPlayList url[%s]" % url)
-        playlistID = self.cm.ph.getSearchGroups(url + "&", "list=([^&]+?)&")[0]
-        baseUrl = "https://www.youtube.com/playlist?list=%s" % playlistID
-        currList = []
-        if baseUrl != "":
-            self.http_params = self._applyYoutubeHeaders(self.http_params)
-            sts, data = self.cm.getPage(baseUrl, self.http_params)
-            if not sts:
-                return currList
-            data2 = self.cm.ph.getDataBeetwenMarkers(data, "var ytInitialData =", "};", False)[1]
-            if not data2:
-                return currList
-            data2 = ensure_str(data2.strip())
-            jsonStarts = data2.count("{")
-            jsonEnds = data2.count("}")
-            while jsonEnds < jsonStarts:
-                data2 = data2 + "}"
-                jsonEnds += 1
-            try:
-                response = json_loads(data2)
-            except Exception:
-                printExc()
-                return currList
-            try:
-                tabs = response.get("contents", {}).get("twoColumnBrowseResultsRenderer", {}).get("tabs", [])
-                if not tabs:
-                    return currList
-                section_contents = tabs[0].get("tabRenderer", {}).get("content", {}).get("sectionListRenderer", {}).get("contents", [])
-                if not section_contents:
-                    return currList
-                items = section_contents[0].get("itemSectionRenderer", {}).get("contents", [])
-                for item in items:
-                    lockup = item.get("lockupViewModel")
-                    if lockup:
-                        params = self.getLockupVideoData(lockup)
-                        if params:
-                            currList.append(params)
-            except Exception:
-                printExc()
-        return currList
+        if not self.isContinuationUrl(url):
+            playlistID = self.cm.ph.getSearchGroups(url + "&", "list=([^&]+?)&")[0]
+            url = "https://www.youtube.com/playlist?list=%s" % playlistID
+        return self.getVideosFromChannelList(url, category, page, cItem)

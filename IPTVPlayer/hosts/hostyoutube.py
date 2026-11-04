@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "01.11.2026"
+LAST_MODIFIED = "02.11.2026"
+# 04.11.2026 - user links: channel rows and groups show the channel picture, video rows their thumbnail
+# 02.11.2026 - channel: all tabs of the channel incl. Playlists and Home; a link to a tab opens that tab; playlists with next pages
 # 11.10.2026 - channel: "Shorts" folder (Shorts tab); Shorts and channels get their own list icons (ShortItem.png, ChannelItem.png);
 #   search type "Shorts" and Trending > Shorts use the search filter "Type: Shorts"
 # 06.08.2026 - Centralized watched helper integration incl. favourite hash sync, Custom menu action handling (mark/unmark watched) added - Kamikaze24
@@ -8,7 +10,7 @@ LAST_MODIFIED = "01.11.2026"
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass, CDisplayListItem, ArticleContent, RetHost
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, IsExecutable, printExc, byteify, GetSearchHistoryDir, E2ColoR
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, IsExecutable, printExc, byteify, GetSearchHistoryDir, E2ColoR, GetIconDir, GetCacheSubDir
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvfilehost import IPTVFileHost
 from Plugins.Extensions.IPTVPlayer.libs.youtubeparser import YouTubeParser
@@ -34,6 +36,8 @@ except Exception:
 import re
 import os
 import codecs
+import threading
+import time
 from Components.config import config, ConfigDirectory, ConfigYesNo, ConfigSelection, getConfigListEntry
 
 ###################################################
@@ -335,7 +339,8 @@ class Youtube(CBaseHostClass):
         printDBG("Youtube.__init__")
         CBaseHostClass.__init__(self, {"history": "ytlist", "cookie": "youtube.cookie"})
         self.UTLIST_FILE = "ytlist.txt"
-        self.DEFAULT_ICON_URL = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/YouTube_2024.svg/960px-YouTube_2024.svg.png"
+        # local: upload.wikimedia.org answers boxes with HTTP 429
+        self.DEFAULT_ICON_URL = "file://" + GetIconDir("PlayerSelector/youtube135.png")
         self.MAIN_GROUPED_TAB = [{"category": "from_file", "title": _("User links"), "desc": _("User links stored in the ytlist.txt file.")}, {"category": "feeds", "title": _("Trending"), "desc": _("Browse youtube trending feeds")}]
 
         self.SEARCH_TYPES = [(_("Video"), "video"), (_("Channel"), "channel"), (_("Playlist"), "playlist"), (_("Movie"), "movie"), (_("Live"), "live"), (_("Shorts"), "shorts")]  # (_("Program"), "show"),... # (_("traylist"), "traylist"),
@@ -343,6 +348,9 @@ class Youtube(CBaseHostClass):
         self.currFileHost = None
         self.userLinks = YouTubeUserLinksManager(self._getUserLinksPath, self._getCategory, self._extractChannelNameFromItem)
         self.watchedHelper = IPTVWatchedHelper('youtube')
+        # channel pictures of the user links: {channel url: {"icon", "time"}}, filled in the background
+        self.avatarLock = threading.Lock()
+        self.avatarFetchRunning = False
 
     def addDir(self, params):
         # a channel row (search, user links, lists) gets its own list icon (ChannelItem.png, components/iptvlist.py)
@@ -352,17 +360,27 @@ class Youtube(CBaseHostClass):
 
     def _getCategory(self, url):
         # printDBG("Youtube._getCategory")
+        path = url.split("?")[0].rstrip("/")
         if "/playlist?list=" in url:
             category = "playlist"
-        elif url.split("?")[0].endswith("/playlists"):
+        elif path.endswith("/playlists"):
             category = "playlists"
-        elif None is not re.search(r"/watch\?v=[^\&]+?\&list=", url):
+        elif "/watch?" in url and None is not re.search(r"[?&]list=", url):
             category = "traylist"
+        elif None is not re.search(r"/(videos|shorts|streams|podcasts|courses|releases)$", path):
+            category = "channel_tab"
         elif "user/" in url or (("channel/" in url or "/c/" in url or "/@" in url) and not url.endswith("/live")):
+            category = "channel"
+        elif self._isLegacyChannelPath(path):
             category = "channel"
         else:
             category = "video"
         return category
+
+    def _isLegacyChannelPath(self, path):
+        # the old short form youtube.com/ChannelName
+        match = re.match(r"^https?://(?:www\.|m\.)?youtube\.com/([^/]+)$", path)
+        return match is not None and match.group(1) not in ("watch", "playlist", "results", "feed", "shorts", "live", "embed", "v")
 
     def _extractVideoId(self, url):
         printDBG("Youtube._extractVideoId")
@@ -375,7 +393,7 @@ class Youtube(CBaseHostClass):
                 videoId = match.group(1)
 
             if not videoId:
-                match = re.search(r"youtu\.be/([A-Za-z0-9_-]{11})", url)
+                match = re.search(r"(?:youtu\.be/|/shorts/|/live/|/embed/)([A-Za-z0-9_-]{11})", url)
                 if match is not None:
                     videoId = match.group(1)
         except Exception:
@@ -649,11 +667,84 @@ class Youtube(CBaseHostClass):
             else:
                 self.addDir(item)
 
+    def _channelUrl(self, url):
+        # the channel of a user link, the same for all its tab links
+        path = re.sub(r"^https?://(?:www\.|m\.)?youtube\.com", "https://www.youtube.com", url.split("?")[0].rstrip("/"))
+        return re.sub(r"/(videos|streams|shorts|featured|podcasts|courses|releases|playlists)$", "", path)
+
+    def _channelKey(self, url):
+        # handles are case-insensitive; the url itself keeps its case (a /channel/ id is case-sensitive)
+        return self._channelUrl(url).lower()
+
+    def _getAvatarFile(self):
+        return GetCacheSubDir("youtube", "avatars.json")
+
+    def _readAvatars(self):
+        try:
+            with open(self._getAvatarFile(), "r") as f:
+                return json.loads(f.read())
+        except Exception:
+            return {}
+
+    def _storeAvatar(self, url, icon):
+        with self.avatarLock:
+            avatars = self._readAvatars()
+            avatars[self._channelKey(url)] = {"icon": icon, "time": int(time.time())}
+            try:
+                with open(self._getAvatarFile(), "w") as f:
+                    f.write(json.dumps(avatars))
+            except Exception:
+                printExc()
+
+    def _isAvatarStale(self, entry):
+        # a found picture is fetched again after 30 days, a missing one (dead channel) after a day
+        if not entry:
+            return True
+        return time.time() - entry.get("time", 0) > (30 * 86400 if entry.get("icon") else 86400)
+
+    def _getUserLinkIcon(self, item, category, avatars):
+        if item.get("icon", ""):
+            return item["icon"]
+        if "video" == category:
+            videoId = self._extractVideoId(item["url"])
+            return "https://i.ytimg.com/vi/%s/hqdefault.jpg" % videoId if videoId else ""
+        if category in ["channel", "channel_tab", "playlists"]:
+            return avatars.get(self._channelKey(item["url"]), {}).get("icon", "")
+        return ""
+
+    def _fetchMissingAvatars(self, items, avatars):
+        # one channel page per channel without a (current) picture, in the background: the pictures show on the
+        # next visit of the list
+        urls = {}
+        for item in items:
+            key = self._channelKey(item["url"])
+            if key not in urls and self._getCategory(item["url"]) in ["channel", "channel_tab", "playlists"] and self._isAvatarStale(avatars.get(key)):
+                urls[key] = self._channelUrl(item["url"])
+        if not urls or self.avatarFetchRunning:
+            return
+        self.avatarFetchRunning = True
+
+        def _worker():
+            try:
+                # an own parser: the host thread keeps using self.ytp meanwhile
+                ytp = YouTubeParser()
+                for url in urls.values():
+                    icon = ytp.getChannelAvatar(url)
+                    if icon is not None:
+                        self._storeAvatar(url, icon)
+            except Exception:
+                printExc()
+            finally:
+                self.avatarFetchRunning = False
+
+        AsyncMethod(_worker)()
+
     def listCategory(self, cItem, searchMode=False):
         printDBG("Youtube.listCategory cItem[%s]" % cItem)
 
         sortList = "file" != config.plugins.iptvplayer.youtube_userlinks_order.value
         groupList = True
+        avatars = self._readAvatars()
         if "sub_file_category" not in cItem:
             self.currFileHost = IPTVFileHost()
             self.currFileHost.addFile(self._getUserLinksPath(), encoding="utf-8")
@@ -665,18 +756,25 @@ class Youtube(CBaseHostClass):
                 for item in tmpList:
                     if "" == item:
                         title = _("--Other--")
+                        icon = ""
                     else:
                         title = item
+                        # a group shows the picture of its first channel
+                        icons = [self._getUserLinkIcon(link, self._getCategory(link["url"]), avatars) for link in self.currFileHost.getItemsInGroup(item)]
+                        icon = ([x for x in icons if x] + [""])[0]
                     params = dict(cItem)
                     params.update({"sub_file_category": "group", "title": title, "group": item})
+                    if icon:
+                        params["icon"] = icon
                     self.addDir(params)
+                self._fetchMissingAvatars(self.currFileHost.getAllItems(), avatars)
         else:
             if "all" == cItem["sub_file_category"]:
                 tmpList = self.currFileHost.getAllItems(sortList)
                 for item in tmpList:
                     params = dict(cItem)
                     category = self._getCategory(item["url"])
-                    params.update({"good_for_fav": True, "title": item["full_title"], "url": item["url"], "desc": item["url"], "category": category})
+                    params.update({"good_for_fav": True, "title": item["full_title"], "url": item["url"], "desc": item["url"], "category": category, "icon": self._getUserLinkIcon(item, category, avatars)})
                     self.watchedHelper.updateHostItemFlag(self, params, self._getWatchedKeyForItem)
                     if "video" == category:
                         self.addVideo(params)
@@ -694,7 +792,7 @@ class Youtube(CBaseHostClass):
                         title = item["title_in_group"]
                     params = dict(cItem)
                     category = self._getCategory(item["url"])
-                    params.update({"good_for_fav": True, "title": title, "url": item["url"], "desc": item["url"], "category": category})
+                    params.update({"good_for_fav": True, "title": title, "url": item["url"], "desc": item["url"], "category": category, "icon": self._getUserLinkIcon(item, category, avatars)})
                     self.watchedHelper.updateHostItemFlag(self, params, self._getWatchedKeyForItem)
                     if "video" == category:
                         self.addVideo(params)
@@ -703,19 +801,6 @@ class Youtube(CBaseHostClass):
                         self.addMore(params)
                     else:
                         self.addDir(params)
-
-    def listItems(self, cItem):
-        printDBG("Youtube.listItems cItem[%s]" % (cItem))
-        category = cItem.get("category", "")
-        url = cItem.get("url", "")
-        page = cItem.get("page", "1")
-
-        if "playlists" == category:
-            self.currList = self.ytp.getListPlaylistsItems(url, category, page, cItem)
-
-        for idx in range(len(self.currList)):
-            if self.currList[idx]["category"] in ["channel", "playlist", "movie", "traylist"]:
-                self.currList[idx]["good_for_fav"] = True
 
     def listFeeds(self, cItem):
         printDBG("Youtube.listFeeds cItem[%s]" % cItem)
@@ -808,34 +893,64 @@ class Youtube(CBaseHostClass):
             params = {"name": "category", "category": "feeds_video", "title": title, "pattern": pattern, "search_type": search_type, "page": "1", "url": ""}
             self.addDir(params)
 
+    def _prepareListItems(self, items, defaultChannel):
+        self._injectChannelNameToItems(items, defaultChannel)
+        self.watchedHelper.updateHostListFlags(self, items, self._getWatchedKeyForItem)
+        for item in items:
+            if item.get("category", "") in ["channel", "playlist", "movie", "traylist"]:
+                item["good_for_fav"] = True
+                if item["category"] == "channel":
+                    item.setdefault("image_type", "CHANNEL")
+                    # a channel on another channel's Home shelf keeps its own name
+                    item.pop("channel", None)
+        return items
+
+    def listChannelTabs(self, cItem, url):
+        # one folder per tab the channel really has, opened on demand; the tab urls come from the page, so a channel
+        # named e.g. "@bestvideos" stays intact
+        channelUrl = re.sub(r"/(videos|streams|shorts|featured|podcasts|courses|releases|playlists)$", "", url.split("?")[0].rstrip("/"))
+        channel = self.ytp.getChannelTabs(channelUrl)
+        channelName = channel["title"] or cItem.get("channel_title", cItem.get("channel", cItem.get("title", "")))
+        icon = channel["icon"] or cItem.get("icon", "")
+        desc = channel["desc"] or cItem.get("desc", "")
+        if channel["icon"]:
+            self._storeAvatar(url, channel["icon"])
+        # Videos first as before, Home last: its shelves only repeat what the other tabs list
+        tabs = [tab for tab in channel["tabs"] if tab["tab"] != "featured"] + [tab for tab in channel["tabs"] if tab["tab"] == "featured"]
+        for tab in tabs:
+            category = "channel_home" if tab["tab"] == "featured" else "channel_tab"
+            self.addDir({"name": "category", "good_for_fav": False, "category": category, "title": tab["title"], "url": tab["url"], "icon": icon, "desc": desc, "channel_title": channelName})
+        if not tabs:
+            # a channel link that does not exist (any more); a row, the host error would be cleared by the next
+            # background call (icon thread) before the empty list shows it
+            self.addMarker({"title": _("Content not available"), "desc": url})
+
+    def listChannelHome(self, cItem, url):
+        channelName = cItem.get("channel_title", "")
+        for shelf in self.ytp.getChannelHomeShelves(url):
+            self.addDir({"name": "category", "good_for_fav": False, "category": "sub_items", "title": shelf["title"] or cItem.get("title", ""), "icon": cItem.get("icon", ""), "sub_items": self._prepareListItems(shelf["items"], channelName)})
+
     def getVideos(self, cItem):
         printDBG("Youtube.getVideos cItem[%s]" % (cItem))
 
         category = cItem.get("category", "")
         url = strwithmeta(cItem.get("url", ""))
         page = cItem.get("page", "1")
-        defaultChannel = cItem.get("channel_title", cItem.get("channel", cItem.get("title", "")))
+        defaultChannel = cItem.get("channel_title", cItem.get("channel", ""))
 
-        if "channel" == category:
-            if "browse" not in url and ("ctoken" not in url):
-                # one folder per channel tab; the tab is put on the channel url itself (a stored ".../videos" or
-                # ".../shorts" link too), not replaced inside it - a channel named e.g. "@bestvideos" stays intact
-                channelUrl = re.sub(r"/(videos|streams|shorts|featured)/?$", "", url.split("?")[0].rstrip("/"))
-                for tab, title in (("videos", _("Videos")), ("streams", _("Live streams")), ("shorts", _("Shorts"))):
-                    # Shorts get their own list icon (youtubeparser.getShortsLockupData)
-                    tmp = self.ytp.getVideosFromChannelList(channelUrl + "/" + tab + "?flow=list&view=0&sort=dd", category, page, cItem)
-                    if len(tmp) > 0:
-                        self._injectChannelNameToItems(tmp, defaultChannel)
-                        self.watchedHelper.updateHostListFlags(self, tmp, self._getWatchedKeyForItem)
-                        self.addDir({"good_for_fav": False, "category": "sub_items", "title": title, "sub_items": tmp})
-            else:
-                self.currList = self.ytp.getVideosFromChannelList(url, category, page, cItem)
-                self._injectChannelNameToItems(self.currList, defaultChannel)
-                self.watchedHelper.updateHostListFlags(self, self.currList, self._getWatchedKeyForItem)
+        if "channel" == category and not self.ytp.isContinuationUrl(url) and "ctoken" not in url:
+            self.listChannelTabs(cItem, url)
+        elif "channel_home" == category:
+            self.listChannelHome(cItem, url)
+        elif category in ["channel", "channel_tab", "playlists"]:
+            self.currList = self._prepareListItems(self.ytp.getVideosFromChannelList(url, category, page, cItem), defaultChannel)
+            # a link to a tab the channel does not have: YouTube answers with Home, show the tabs it has
+            if not self.currList and not self.ytp.isContinuationUrl(url):
+                self.listChannelTabs(cItem, url)
         elif "playlist" == category:
-            self.currList = self.ytp.getVideosApiPlayList(url, category, page, cItem)
+            self.currList = self._prepareListItems(self.ytp.getVideosApiPlayList(url, category, page, cItem), defaultChannel)
         elif "traylist" == category:
-            self.currList = self.ytp.getVideosFromTraylist(url, category, page, cItem)
+            self.currList = self._prepareListItems(self.ytp.getVideosFromTraylist(url, category, page, cItem), defaultChannel)
         else:
             printDBG("YTlist.getVideos Error unknown category[%s]" % category)
 
@@ -874,6 +989,8 @@ class Youtube(CBaseHostClass):
         channelName = ""
 
         workItem = dict(cItem)
+        if re.search(r"/(?:shorts|live)/[A-Za-z0-9_-]{11}", workItem.get("url", "")):
+            workItem["url"] = "https://www.youtube.com/watch?v=%s" % self._extractVideoId(workItem["url"])
 
         # NOTE: marking the item "started" happens later, in iptvplayerwidget.py's
         # playVideo() - not here. This method resolves links for both actually
@@ -1127,12 +1244,10 @@ class Youtube(CBaseHostClass):
             self.listMainMenu()
         elif "from_file" == category:
             self.listCategory(self.currItem)
-        elif category in ["channel", "playlist", "movie", "traylist"]:
+        elif category in ["channel", "channel_tab", "channel_home", "playlists", "playlist", "movie", "traylist"]:
             self.getVideos(self.currItem)
         elif category.startswith("feeds"):
             self.listFeeds(self.currItem)
-        elif category == "playlists":
-            self.listItems(self.currItem)
         elif category == "sub_items":
             self.listSubItems(self.currItem)
         elif category in ["search", "search_next_page"]:
