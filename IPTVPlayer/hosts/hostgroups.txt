@@ -111,6 +111,7 @@
   "ostoratv",
   "skstream",
   "dulourd",
+  "cpasmal",
   "cinehd",
   "wecimacx",
   "laroza",
@@ -433,6 +434,7 @@
   "witv",
   "skstream",
   "dulourd",
+  "cpasmal",
   "francetv",
   "euronews"
  ],
