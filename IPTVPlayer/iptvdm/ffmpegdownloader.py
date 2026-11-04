@@ -293,6 +293,9 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
                         headers.append('%s: %s' % (key, meta[key]))
                     elif key in ['Cookie', 'Authorization']:
                         headers.append('%s: %s' % (key, meta[key]))
+                    elif key == 'http_proxy':
+                        # the proxy was ignored here (also used for the HLS / DASH segments)
+                        cmdTab.extend(['-http_proxy', meta[key]])
             except Exception:
                 printExc()
 

@@ -2882,6 +2882,9 @@ class IPTVExtMoviePlayer(Screen):
                 tmp = strwithmeta(self.fileSRC)
                 url, httpParams = DMHelper.getDownloaderParamFromUrlWithMeta(tmp, True)
                 for key in httpParams:
+                    if key == 'http_proxy':
+                        # the proxy fields below, not an "http_proxy:" request header
+                        continue
                     httpFields.append((key, httpParams[key]))
                 if 'http_proxy' in tmp.meta:
                     tmp = tmp.meta['http_proxy']
@@ -2966,6 +2969,10 @@ class IPTVExtMoviePlayer(Screen):
                         continue
                     elif key == 'User-Agent':
                         cmd += ' -u "%s"' % shellQuote(httpParams[key])
+                    elif key == 'http_proxy':
+                        # ffmpeg's http option (also for the HLS / DASH segments), it used to go
+                        # out as an "http_proxy:" request header and no proxy was used
+                        cmd += ' -f "http_proxy=%s"' % shellQuote(httpParams[key])
                     else:
                         headers += ('%s: %s\r\n' % (key, httpParams[key]))
                 if len(headers):

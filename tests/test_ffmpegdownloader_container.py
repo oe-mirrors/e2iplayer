@@ -438,6 +438,16 @@ def test_download_takes_the_master_playlist(ff, monkeypatch):
     assert "Origin: https://chaturbate.com" in cmd[cmd.index("-headers") + 1]
 
 
+def test_proxy_is_an_ffmpeg_option_not_a_header(ff, monkeypatch):
+    # a host's http_proxy meta: ffmpeg's -http_proxy (it was dropped before), never an "http_proxy:" header
+    monkeypatch.setattr(ff.DMHelper, "getDownloaderParamFromUrlWithMeta", lambda url, b=False: (str(url), dict(getattr(url, "meta", {}))))
+    dl = _dl(ff, "https://cdn/x/video.m3u8", {"http_proxy": "http://user:pw@proxy.example:3128", "Referer": "https://site/"})
+    dl.start(dl.url, "/hdd/rec/Proxy.mp4")
+    cmd = ff.written["/hdd/rec/Proxy.mp4.iptv.cmd"].split("|")
+    assert cmd[cmd.index("-http_proxy") + 1] == "http://user:pw@proxy.example:3128"
+    assert "-headers" not in cmd and "http_proxy" not in " ".join(cmd).replace("-http_proxy", "")
+
+
 def test_master_without_program_lets_ffmpeg_pick(ff):
     meta = _mergeMeta()
     del meta["iptv_master_program"]
