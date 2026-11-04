@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 2026-10-31 - LCD: the layout follows the display size, shows the host's display name and the marked row.
+# Last Modified: 2026-11-04 - custom skins: name="key_green" gets a Label; poster grid grows into a description box right below the list.
+# 2026-10-31 - LCD: the layout follows the display size, shows the host's display name and the marked row.
 # 2026-07-26 - Updated blue_pressed() and blue_pressed_next(), added YouTube user links actions in the blue menu, and fixed deleteFavouriteItem(); fixed missing key_green label display by correcting the Halidri1080p1 playlist.xml key_green binding and set default green button text to "Download".
 # 2026-10-17 - MENU "Select action" follows "Force internal skin" (openChoiceBox): the box skin's ChoiceBox with it off;
 #              "Main menu" row of paged lists (OK = EXIT, no INFO); a host's iptv_download_title names the GREEN download.
@@ -18,6 +19,7 @@
 #
 
 from os import path as os_path
+import re
 import sys
 import time
 import traceback
@@ -404,6 +406,7 @@ class E2iPlayerWidget(Screen):
         # own skin; every shipped custom playlist.xml still expects the
         # older source="key_yellow"/"key_blue" + StaticText binding
         self._usingBuiltinSkin = True
+        customSkinXml = ""
         selSkin = config.plugins.iptvplayer.skin.value
         if selSkin:
             path = GetSkinsDir(selSkin) + "/playlist.xml"
@@ -413,6 +416,8 @@ class E2iPlayerWidget(Screen):
                     with open(path, "r") as f:
                         self.skin = f.read()
                     self._usingBuiltinSkin = False
+                    # without its comments: a commented-out widget declares nothing
+                    customSkinXml = re.sub(r"<!--.*?-->", "", self.skin, flags=re.S)
                 except Exception:
                     printExc("Skin read error: " + path)
 
@@ -496,10 +501,11 @@ class E2iPlayerWidget(Screen):
             # the line above the description, moved with the poster grid
             self["separator"] = Cover3()
         else:
-            self["key_red"] = StaticText(_("Close"))
-            self["key_green"] = StaticText(_("Download"))
-            self["key_yellow"] = StaticText(_("Refresh"))
-            self["key_blue"] = StaticText(_("More"))
+            # a custom playlist.xml declares a colour key as source="key_x" render="Label" (needs a StaticText)
+            # or as a plain name="key_x" widget (needs a Label - a StaticText there is never drawn)
+            for key, text in (("key_red", _("Close")), ("key_green", _("Download")), ("key_yellow", _("Refresh")), ("key_blue", _("More"))):
+                isNamed = customSkinXml and re.search(r"""<widget\b[^>]*\sname\s*=\s*["']%s["']""" % key, customSkinXml)
+                self[key] = Label(text) if isNamed else StaticText(text)
         # menu_pressed() is always bound in self["actions"] below and does
         # something real (per-item context menu) distinct from "Mehr"/blue
         # - needs its own StaticText for the footer's ConditionalShowHide.
@@ -517,6 +523,8 @@ class E2iPlayerWidget(Screen):
         # the skin's geometry of list, description and the line between them, while the poster grid also uses the
         # cover's place and part of the description's
         self._gridGeometry = None
+        # another skin: the description box is shorter while the poster grid grew into it
+        self._gridConsoleShortened = False
         self["statustext"] = Label(_("Loading..."))
 
         self["actions"] = ActionMap(["IPTVPlayerListActions", "ColorActions", "NumberActions"],
@@ -2054,7 +2062,7 @@ class E2iPlayerWidget(Screen):
     def _onListModeChanged(self, grid):
         # poster grid on / off: the arrow keys and - with the built-in skin - the grid also takes the cover's
         # place on the left and part of the description below (with the line between them); another skin keeps
-        # its cover box and description where they are
+        # its cover box, only a description right below the list gives the grid the same share of its height
         self["gridActions"].setEnabled(grid)
         if grid and self._usingBuiltinSkin:
             self["cover"].hide()
@@ -2062,6 +2070,7 @@ class E2iPlayerWidget(Screen):
             # back to a list: its cover once the new list and its selection are set (the switch runs inside setList)
             self.decodeCoverTimer.start(self.decodeCoverTimer_interval, True)
         if not self._usingBuiltinSkin:
+            self._growGridIntoConsole(grid)
             return
         try:
             listInstance = self["list"].instance
@@ -2084,6 +2093,41 @@ class E2iPlayerWidget(Screen):
             consoleInstance.move(ePoint(consoleX, consoleY + extra))
             consoleInstance.resize(eSize(consoleW, consoleH - extra))
             separatorInstance.move(ePoint(lineX, lineY + extra))
+        except Exception:
+            printExc()
+
+    @staticmethod
+    def _consoleBelowList(listGeo, consoleGeo):
+        # another skin's description box lies right below the list (a gap smaller than the box itself) and spans
+        # most of the list's width - only then the grid can grow into it without covering anything else
+        (x, y, w, h), (consoleX, consoleY, consoleW, consoleH) = listGeo, consoleGeo
+        if w <= 0 or consoleH <= 0:
+            return False
+        gap = consoleY - (y + h)
+        overlap = min(x + w, consoleX + consoleW) - max(x, consoleX)
+        return 0 <= gap < consoleH and overlap >= w * 0.8
+
+    def _growGridIntoConsole(self, grid):
+        # another skin: the poster grid takes GRID_CONSOLE_SHARE of a description box right below the list (one
+        # poster row more in e.g. MetrixHD); the cover box and every other widget stay where the skin put them
+        try:
+            listInstance = self["list"].instance
+            consoleInstance = self["console"].instance
+            if listInstance is None or consoleInstance is None:
+                return
+            if self._gridGeometry is None:
+                self._gridGeometry = [(widget.position().x(), widget.position().y(),
+                                       widget.size().width(), widget.size().height())
+                                      for widget in (listInstance, consoleInstance)]
+            listGeo, consoleGeo = self._gridGeometry[0], self._gridGeometry[1]
+            if not self._consoleBelowList(listGeo, consoleGeo):
+                return
+            (x, y, w, h), (consoleX, consoleY, consoleW, consoleH) = listGeo, consoleGeo
+            extra = int(consoleH * self.GRID_CONSOLE_SHARE) if grid else 0
+            listInstance.resize(eSize(w, h + extra))
+            consoleInstance.move(ePoint(consoleX, consoleY + extra))
+            consoleInstance.resize(eSize(consoleW, consoleH - extra))
+            self._gridConsoleShortened = bool(extra)
         except Exception:
             printExc()
 
@@ -2116,7 +2160,7 @@ class E2iPlayerWidget(Screen):
             data = selItem.description
             sData = data.replace('[/br]', '\n')
             self["console"].setText(sData)
-            if self["list"].gridMode and self._usingBuiltinSkin:
+            if self["list"].gridMode and (self._usingBuiltinSkin or self._gridConsoleShortened):
                 self._fitConsoleText(sData)
         else:
             self["console"].setText('')
