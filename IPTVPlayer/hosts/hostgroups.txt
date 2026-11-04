@@ -21,7 +21,8 @@
   "mixcloud",
   "hotmixradio",
   "lastfm",
-  "musicbox"
+  "musicbox",
+  "nprmusic"
  ],
  "moviesandseries": [
   "ekinotv",
@@ -639,7 +640,8 @@
   "mixcloud",
   "lastfm",
   "philizznl",
-  "mediatekapl"
+  "mediatekapl",
+  "nprmusic"
  ],
  "others": [
   "e2iplayerinfo",
