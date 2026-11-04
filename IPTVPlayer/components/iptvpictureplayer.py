@@ -63,6 +63,9 @@ class IPTVSimpleAudioPlayer():
             tmp = strwithmeta(self.uri)
             url, httpParams = DMHelper.getDownloaderParamFromUrl(tmp)
             for key in httpParams:
+                if key == 'http_proxy':
+                    # the proxy fields below, not an "http_proxy:" request header
+                    continue
                 httpFields.append((key, httpParams[key]))
             if 'http_proxy' in tmp.meta:
                 tmp = tmp.meta['http_proxy']
