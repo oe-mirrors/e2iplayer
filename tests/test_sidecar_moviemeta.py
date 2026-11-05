@@ -2,6 +2,7 @@
 # (IPTVPlayer/libs/urlmetahelper.py) and its lookup in a thread when a download starts
 # (IPTVPlayer/iptvdm/downloaderhelpers.py SidecarMixin). The enigma2 / E2iPlayer imports and moviemeta are
 # stubbed; strwithmeta is the real one.
+import gzip
 import importlib.util
 import os
 import sys
@@ -54,9 +55,10 @@ def env():
                 "Plugins.Extensions.IPTVPlayer.libs", "Plugins.Extensions.IPTVPlayer.components", "Plugins.Extensions.IPTVPlayer.iptvdm",
                 "Tools", "Components"):
         _stubModule(pkg)
+    tools = set()  # the executables the box has (IsExecutable)
     _stubModule("Plugins.Extensions.IPTVPlayer.tools.iptvtools", printDBG=lambda *a: None, printExc=lambda *a: None,
                 eConnectCallback=lambda *a: None, GetNice=lambda *a: 0, E2PrioFix=lambda cmd, *a: cmd,
-                GetTmpDir=lambda name="": name, GetDefaultLang=lambda *a: "en")
+                GetTmpDir=lambda name="": name, GetDefaultLang=lambda *a: "en", IsExecutable=lambda path: path in tools)
     off = types.SimpleNamespace(value="off")
     _stubModule("Components.config", config=types.SimpleNamespace(plugins=types.SimpleNamespace(iptvplayer=types.SimpleNamespace(
         download_subtitles=off, download_subtitles_lang=types.SimpleNamespace(value="auto")))))
@@ -68,9 +70,47 @@ def env():
     labels = {"imdb_rating": "IMDb Rating:", "genres": "Genres:", "duration": "Duration:", "directors": "Directors:", "cast": "Cast:"}
     _stubModule("Plugins.Extensions.IPTVPlayer.components.ihost", ArticleContent=types.SimpleNamespace(RICH_DESC_LABELS=labels))
     _stubModule("Plugins.Extensions.IPTVPlayer.components.iptvplayerinit", TranslateTXT=lambda text: text)
-    _stubModule("Plugins.Extensions.IPTVPlayer.libs.pCommon", common=types.SimpleNamespace(HOST="UA"))
+    def IsConvertibleImage(path):
+        # as libs/pCommon: WebP (RIFF....WEBP) or AVIF (ftyp brand at offset 4)
+        with open(path, "rb") as f:
+            head = f.read(12)
+        return (head[:4] == b"RIFF" and head[8:12] == b"WEBP") or head[4:12] in (b"ftypavif", b"ftypavis")
+    def UngzipFile(path):
+        with open(path, "rb") as f:
+            if f.read(2) != b"\x1f\x8b":
+                return False
+        with open(path, "rb") as f:
+            data = gzip.decompress(f.read())
+        with open(path, "wb") as f:
+            f.write(data)
+        return True
+    converted = []  # the files handed to common().convertWebp (the Pillow fallback without ffmpeg)
+
+    class common(object):
+        HOST = "UA"
+
+        def convertWebp(self, path):
+            converted.append(path)
+    _stubModule("Plugins.Extensions.IPTVPlayer.libs.pCommon", common=common, IsConvertibleImage=IsConvertibleImage, UngzipFile=UngzipFile)
+    _stubModule("Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh", DMHelper=types.SimpleNamespace(GET_FFMPEG_PATH=lambda: "/usr/bin/ffmpeg"))
     _stubModule("Tools.BoundFunction", boundFunction=lambda f, *a: f)
-    _stubModule("enigma", eConsoleAppContainer=object)
+    consoles = []  # the console runs (sidecar picture download, its conversion), newest last
+
+    class Console(object):
+        appClosed = None
+        stderrAvail = None
+
+        def __init__(self):
+            self.cmd = None
+            self.killed = False
+            consoles.append(self)
+
+        def execute(self, cmd):
+            self.cmd = cmd
+
+        def sendCtrlC(self):
+            self.killed = True
+    _stubModule("enigma", eConsoleAppContainer=Console)
 
     def AsyncMethod(fnc):
         # as components/asynccall: a work thread named after the function (pCommon needs its kill state)
@@ -82,7 +122,7 @@ def env():
     _stubModule("Plugins.Extensions.IPTVPlayer.components.asynccall", AsyncMethod=AsyncMethod)
     umh = _load("Plugins.Extensions.IPTVPlayer.libs.urlmetahelper", os.path.join(ROOT, "libs", "urlmetahelper.py"))
     dh = _load("Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers", os.path.join(ROOT, "iptvdm", "downloaderhelpers.py"))
-    yield types.SimpleNamespace(umh=umh, dh=dh, calls=calls, infoQueries=infoQueries)
+    yield types.SimpleNamespace(umh=umh, dh=dh, calls=calls, infoQueries=infoQueries, tools=tools, consoles=consoles, converted=converted)
     sys.modules.clear()
     sys.modules.update(saved)
 
@@ -257,6 +297,89 @@ def test_late_answer_rewrites_txt(env, tmp_path):
     gate.set()
     _join()
     assert (tmp_path / "film.txt").read_text(encoding="utf-8").startswith("The Wolf and the Lamb (2026)")
+
+
+WEBP = b"RIFF\x00\x00\x00\x00WEBPVP8 thumb"
+
+
+def _finishedPicture(env, tmp_path, data, code=0):
+    # the sidecar picture download (wget, exit code) ended with data in the temp file
+    dl, meta = _downloader(env, None)
+    tmp = tmp_path / "film.jpg.new"
+    tmp.write_bytes(data)
+    dl.sidecarImgTmpPath = str(tmp)
+    dl.waitingForSidecar = True
+    dl._imgSidecarFinished(str(tmp_path / "film.jpg"), code)
+    return dl, tmp
+
+
+def test_webp_poster_is_converted_with_ffmpeg(env, tmp_path):
+    # a WebP under the .jpg name (the thumbnails of FYXXR): ffmpeg makes a JPEG of it before the picture is saved
+    env.tools.add("/usr/bin/ffmpeg")
+    dl, tmp = _finishedPicture(env, tmp_path, WEBP)
+    assert dl.waitingForSidecar and not (tmp_path / "film.jpg").exists()
+    quoted = env.dh.shellQuote(str(tmp))
+    assert env.consoles[-1].cmd.startswith('/usr/bin/ffmpeg -y -i "%s" -frames:v 1 -update 1 -q:v 2 "%s.jpg"' % (quoted, quoted))
+    (tmp_path / "film.jpg.new.jpg").write_bytes(b"\xff\xd8converted")
+    dl._imgSidecarConverted(str(tmp_path / "film.jpg"), str(tmp) + ".jpg", 0)
+    assert (tmp_path / "film.jpg").read_bytes() == b"\xff\xd8converted"
+    assert not dl.waitingForSidecar and dl.sidecarImgTmpPath == ""
+    assert sorted(p.name for p in tmp_path.iterdir()) == ["film.jpg"]
+
+
+def test_failed_conversion_keeps_the_picture_as_it_came(env, tmp_path):
+    env.tools.add("/usr/bin/ffmpeg")
+    dl, tmp = _finishedPicture(env, tmp_path, WEBP)
+    dl._imgSidecarConverted(str(tmp_path / "film.jpg"), str(tmp) + ".jpg", 1)
+    assert (tmp_path / "film.jpg").read_bytes() == WEBP
+    assert sorted(p.name for p in tmp_path.iterdir()) == ["film.jpg"]
+
+
+def test_without_ffmpeg_pillow_is_tried_then_the_picture_is_saved_as_it_came(env, tmp_path):
+    dl, tmp = _finishedPicture(env, tmp_path, WEBP)
+    assert env.converted == [str(tmp)]  # convertWebp (Pillow) got it; the stub changes nothing
+    assert (tmp_path / "film.jpg").read_bytes() == WEBP
+    assert env.consoles == [] and not dl.waitingForSidecar
+
+
+def test_failed_wget_leaves_no_picture(env, tmp_path):
+    # wget code 4 (network): what it left is a part of the picture, an old good poster stays
+    env.tools.add("/usr/bin/ffmpeg")
+    (tmp_path / "film.jpg").write_bytes(b"\xff\xd8old")
+    dl, tmp = _finishedPicture(env, tmp_path, WEBP[:8], code=4)
+    assert (tmp_path / "film.jpg").read_bytes() == b"\xff\xd8old"
+    assert sorted(p.name for p in tmp_path.iterdir()) == ["film.jpg"] and env.consoles == []
+
+
+def test_corrupt_gzip_is_saved_as_it_came(env, tmp_path):
+    env.tools.add("/usr/bin/ffmpeg")
+    dl, tmp = _finishedPicture(env, tmp_path, b"\x1f\x8bnot really gzip")
+    assert (tmp_path / "film.jpg").read_bytes() == b"\x1f\x8bnot really gzip"
+    assert env.consoles == [] and not dl.waitingForSidecar and dl.sidecarConsole is None
+
+
+def test_jpeg_poster_goes_straight_through(env, tmp_path):
+    env.tools.add("/usr/bin/ffmpeg")
+    dl, tmp = _finishedPicture(env, tmp_path, b"\xff\xd8poster")
+    assert (tmp_path / "film.jpg").read_bytes() == b"\xff\xd8poster" and env.consoles == []
+
+
+def test_gzip_encoded_poster_is_decoded(env, tmp_path):
+    env.tools.add("/usr/bin/ffmpeg")
+    dl, tmp = _finishedPicture(env, tmp_path, gzip.compress(b"\xff\xd8poster"))
+    assert (tmp_path / "film.jpg").read_bytes() == b"\xff\xd8poster" and env.consoles == []
+    # gzip around a WebP: decoded, then converted
+    dl, tmp = _finishedPicture(env, tmp_path, gzip.compress(WEBP))
+    assert tmp.read_bytes() == WEBP and len(env.consoles) == 1
+
+
+def test_stop_during_conversion_removes_the_temp_files(env, tmp_path):
+    env.tools.add("/usr/bin/ffmpeg")
+    dl, tmp = _finishedPicture(env, tmp_path, WEBP)
+    (tmp_path / "film.jpg.new.jpg").write_bytes(b"half")
+    dl._terminateSidecar()
+    assert env.consoles[-1].killed
+    assert list(tmp_path.iterdir()) == [] and dl.sidecarImgTmpPath == ""
 
 
 @pytest.mark.parametrize("icon", ["file:///usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/PlayerSelector/qoranway135.png",
