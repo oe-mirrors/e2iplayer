@@ -171,6 +171,18 @@ def ImageFileNeedsPreparing(file_path):
     return _isGzipFile(file_path) or IsConvertibleImage(file_path)
 
 
+def UngzipFile(file_path):
+    # a downloaded file that is still gzip-encoded (some image CDNs compress even unasked): decoded in place.
+    # True when it was one
+    if not _isGzipFile(file_path):
+        return False
+    with open(file_path, 'rb') as f:
+        data = DecodeGzipped(f.read())
+    with open(file_path, 'wb') as f:
+        f.write(data)
+    return True
+
+
 def PrepareImageFile(file_path, source_path=None):
     # in place: undo the gzip encoding, then WebP/AVIF -> JPEG like the list icons (IconMenager).
     # source_path: work on file_path as a copy of it - for the user's own pictures, which must stay untouched.
@@ -178,11 +190,7 @@ def PrepareImageFile(file_path, source_path=None):
     try:
         if source_path:
             shutil.copyfile(source_path, file_path)
-        if _isGzipFile(file_path):
-            with open(file_path, 'rb') as f:
-                data = DecodeGzipped(f.read())
-            with open(file_path, 'wb') as f:
-                f.write(data)
+        UngzipFile(file_path)
         if IsConvertibleImage(file_path):
             common().convertWebp(file_path)
     except Exception:

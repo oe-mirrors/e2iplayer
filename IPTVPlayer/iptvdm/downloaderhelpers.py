@@ -758,15 +758,79 @@ class SidecarMixin(object):
     def _imgSidecarFinished(self, jpgPath, code):
         printDBG("%s._imgSidecarFinished code[%r]" % (self.__class__.__name__, code))
 
+        # break circular references
+        self.sidecarConsole_appClosed_conn = None
+        self.sidecarConsole_stderrAvail_conn = None
+        self.sidecarConsole = None
         tmpPath = self.sidecarImgTmpPath
         try:
-            # break circular references
+            if code not in (0, None):
+                # wget's exit code (1 generic, 4 network, 8 server error ...): what it left is a part of the
+                # picture or an error page, not a poster
+                printDBG("%s sidecar JPG download failed code[%r]" % (self.__class__.__name__, code))
+                safeRemoveFile(tmpPath)
+            elif os.path.isfile(fsPath(tmpPath)) and os.path.getsize(fsPath(tmpPath)) > 0 and self._startImgSidecarConversion(jpgPath, tmpPath):
+                return  # ffmpeg makes a JPEG of it first, _imgSidecarConverted saves the picture then
+        except Exception:
+            printExc()
             self.sidecarConsole_appClosed_conn = None
-            self.sidecarConsole_stderrAvail_conn = None
             self.sidecarConsole = None
-            self.waitingForSidecar = False
-            self.sidecarImgTmpPath = ''
+        self._saveImgSidecar(jpgPath, tmpPath)
 
+    def _startImgSidecarConversion(self, jpgPath, tmpPath):
+        # the picture as the server sent it: still gzip-encoded (some image CDNs compress unasked), or WebP / AVIF
+        # under the .jpg name (the thumbnails of FYXXR and other sites) - the Enigma2 picture loader of VTi and
+        # older images shows neither. gzip is undone here; WebP / AVIF go through ffmpeg (one frame as JPEG) in a
+        # console run like the subtitle mux, which needs no open plugin window (convertWebp of the list icons needs
+        # one for its ffmpeg fallback). True while ffmpeg runs. A conversion that fails keeps the file as it came.
+        from Plugins.Extensions.IPTVPlayer.libs.pCommon import IsConvertibleImage, UngzipFile, common
+        from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
+        from Plugins.Extensions.IPTVPlayer.tools.iptvtools import IsExecutable
+        name = self.__class__.__name__
+        path = fsPath(tmpPath)
+        if UngzipFile(path):
+            printDBG("%s sidecar JPG came gzip-encoded, decoded" % name)
+        if not IsConvertibleImage(path):
+            return False
+        ffmpeg = DMHelper.GET_FFMPEG_PATH()
+        if not IsExecutable(ffmpeg):
+            # without ffmpeg only Pillow can read it (in place, here in the main thread: convertWebp's own
+            # ffmpeg fallback does not run without the executable)
+            printDBG("%s sidecar JPG is WebP/AVIF and there is no ffmpeg, trying Pillow" % name)
+            common().convertWebp(path)
+            if IsConvertibleImage(path):
+                printDBG("%s sidecar JPG not converted, saved as it came" % name)
+            return False
+        convPath = tmpPath + '.jpg'
+        safeRemoveFile(convPath)
+        cmd = '%s -y -i "%s" -frames:v 1 -update 1 -q:v 2 "%s" > /dev/null 2>&1' % (ffmpeg, shellQuote(tmpPath), shellQuote(convPath))
+        printDBG("%s sidecar JPG is WebP/AVIF, convert cmd[%s]" % (name, cmd))
+        self.sidecarConsole = eConsoleAppContainer()
+        self.sidecarConsole_appClosed_conn = eConnectCallback(self.sidecarConsole.appClosed, boundFunction(self._imgSidecarConverted, jpgPath, convPath))
+        executeConsoleCmd(self.sidecarConsole, cmd)
+        return True
+
+    def _imgSidecarConverted(self, jpgPath, convPath, code):
+        printDBG("%s._imgSidecarConverted code[%r]" % (self.__class__.__name__, code))
+        self.sidecarConsole_appClosed_conn = None
+        self.sidecarConsole = None
+        tmpPath = self.sidecarImgTmpPath
+        try:
+            if code == 0 and os.path.isfile(fsPath(convPath)) and os.path.getsize(fsPath(convPath)) > 0:
+                safeRemoveFile(tmpPath)
+                os.rename(fsPath(convPath), fsPath(tmpPath))
+                printDBG("%s sidecar JPG converted to JPEG" % self.__class__.__name__)
+            else:
+                printDBG("%s sidecar JPG conversion failed code[%r], the picture is saved as it came" % (self.__class__.__name__, code))
+                safeRemoveFile(convPath)
+        except Exception:
+            printExc()
+        self._saveImgSidecar(jpgPath, tmpPath)
+
+    def _saveImgSidecar(self, jpgPath, tmpPath):
+        self.waitingForSidecar = False
+        self.sidecarImgTmpPath = ''
+        try:
             if os.path.isfile(fsPath(tmpPath)) and os.path.getsize(fsPath(tmpPath)) > 0:
                 if filesAreIdentical(tmpPath, jpgPath):
                     printDBG("%s sidecar JPG unchanged, discarding re-download [%s]" % (self.__class__.__name__, jpgPath))
@@ -833,6 +897,10 @@ class SidecarMixin(object):
             self.sidecarConsole_appClosed_conn = None
             self.sidecarConsole_stderrAvail_conn = None
             if self.sidecarImgTmpPath:
+                # the Ctrl+C reaches the shell around wget / ffmpeg only; both name the temp file on their
+                # command line (ffmpeg as its input)
+                terminateToolsOfFile(self.sidecarImgTmpPath, ('wget', 'ffmpeg'))
+                safeRemoveFile(self.sidecarImgTmpPath + '.jpg')
                 safeRemoveFile(self.sidecarImgTmpPath)
                 self.sidecarImgTmpPath = ''
         self._clearSubtitleData()

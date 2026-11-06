@@ -3435,6 +3435,9 @@ class IPTVExtMoviePlayerColorSummary(Screen):
     # parent.lcdCurrTimeHM, parent.lcdRemainedHM and parent.lcdLengthHM (1:46), for the remaining minutes
     # parent.lcdRemainedMin (106, in the last minute +45s), both without the minus of parent.lcdRemained.
     # The cover is a widget of this screen, not a source: <widget name="lcdCover" position="..." size="..." alphatest="blend" />
+    # The layout below shows it itself from 320 px width (setting "Cover on the LCD summary screen"): the picture
+    # of the list row (player, buffering) or the download's sidecar .jpg / cached sidecar picture (download
+    # manager) in the left column, the title beside it; without a picture the title has the whole width as before.
 
     # free border in pixels, e.g. when the receiver housing covers the display edge
     LCD_MARGIN_LEFT = 10
@@ -3476,21 +3479,112 @@ class IPTVExtMoviePlayerColorSummary(Screen):
         </screen>""" % {'w': w, 'h': h, 'x': x0 + pad, 'ty': titleY, 'cw': cw, 'titleH': titleH, 'fTitle': fTitle,
                         'barY': barY, 'barH': barH, 'timeY': timeY, 'timeH': timeH, 'fTime': fTime,
                         'colW': colW, 'midW': midW, 'midX': x0 + pad + colW, 'rightX': x0 + pad + cw - colW}
+    # with a cover: the picture in the width of the left time column, the title in the rest of the title area
+    LCD_COVER_MIN_WIDTH = 320
+    coverW = colW
+    coverH = titleH
+    titleX = x0 + pad + colW + pad
+    titleW = cw - colW - pad
+    # a smaller font beside the cover: the narrower column needs more lines (box: five lines of 28 px did not fit
+    # "Der Weihnachtsmann und die Wüstenkinder (1995)" on 400x240, three of 24 px do)
+    fTitleCover = max(14, fTitle * 6 // 7)
+    SKIN_COVER = skin.replace('</screen>', """<widget name="lcdCover" position="%d,%d" size="%d,%d" alphatest="blend" />
+        </screen>""" % (x0 + pad, titleY, coverW, coverH))
 
     def __init__(self, session, parent):
         Screen.__init__(self, session, parent=parent)
-        # only an LCD skin of this screen shows it, the layout above has no room for a cover
         self['lcdCover'] = Cover()
-        self.lcdCoverFile = getattr(parent, 'lcdCoverFile', '')
+        self.lcdParent = parent
+        self.lcdCoverFile = ''
+        self.lcdCoverShown = None  # the title was not placed yet
+        self.lcdTitleRenderer = None
+        if self.coverWanted():
+            self.skin = self.SKIN_COVER
         self.onLayoutFinish.append(self.showLcdCover)
 
+    @classmethod
+    def coverWanted(cls):
+        # the setting and a display wide enough for the picture beside the title (an own LCD skin decides itself)
+        try:
+            return cls.w >= cls.LCD_COVER_MIN_WIDTH and config.plugins.iptvplayer.lcd_cover.value
+        except Exception:
+            return False
+
     def showLcdCover(self):
+        self.setLcdCover(getattr(self.lcdParent, 'lcdCoverFile', ''), force=True)
+
+    def setLcdCover(self, path, force=False):
+        # the parent's picture: shown in the lcdCover widget when it is a picture file, the title moves beside it;
+        # without one the title gets the whole width. Called at layout finish and by the download manager when
+        # the shown row or its state changes (updateLcdCover)
+        path = path or ''
+        if path == self.lcdCoverFile and not force:
+            return
+        self.lcdCoverFile = path
         try:
             size = self['lcdCover'].instance.size()
-            if size.width() > 0 and size.height() > 0 and os_path.isfile(self.lcdCoverFile) and os_path.getsize(self.lcdCoverFile) > 0:
-                self['lcdCover'].decodeCover(self.lcdCoverFile, self.lcdCoverDecoded, 'lcdCover')
+            if size.width() > 0 and size.height() > 0 and os_path.isfile(path) and os_path.getsize(path) > 0:
+                # the title beside the picture first: a decode that fails puts it back (lcdCoverDecoded)
+                self.placeLcdTitle(True)
+                self['lcdCover'].decodeCover(path, self.lcdCoverDecoded, 'lcdCover')
+                return
+            self['lcdCover'].hide()
+        except Exception:
+            printExc()
+        self.placeLcdTitle(False)
+
+    def lcdCoverDecoded(self, ret):
+        pixmap = ret.get('Pixmap', None)
+        self['lcdCover'].updatePixmap(pixmap, ret.get('FileName', self.lcdCoverFile))
+        try:
+            if pixmap is not None:
+                self['lcdCover'].show()  # hidden since a row without a picture
+            else:
+                self['lcdCover'].hide()
+        except Exception:
+            printExc()
+        if pixmap is None:
+            # the picture could not be decoded: the title gets the whole width back
+            self.placeLcdTitle(False)
+
+    def placeLcdTitle(self, besideCover):
+        # the title of the layout above beside the cover or over the whole width; a title placed somewhere
+        # else (an own LCD skin) is left alone
+        if besideCover == self.lcdCoverShown:
+            return
+        try:
+            if self.lcdTitleRenderer is None:
+                self.lcdTitleRenderer = self.findLcdTitleRenderer() or False
+            if self.lcdTitleRenderer:
+                instance = self.lcdTitleRenderer.instance
+                if besideCover:
+                    instance.move(ePoint(self.titleX, self.titleY))
+                    instance.resize(eSize(self.titleW, self.titleH))
+                    instance.setHAlign(eLabel.alignLeft)
+                    instance.setFont(gFont("Regular", self.fTitleCover))
+                else:
+                    instance.move(ePoint(self.x0 + self.pad, self.titleY))
+                    instance.resize(eSize(self.cw, self.titleH))
+                    instance.setHAlign(eLabel.alignCenter)
+                    instance.setFont(gFont("Regular", self.fTitle))
+            self.lcdCoverShown = besideCover
         except Exception:
             printExc()
 
-    def lcdCoverDecoded(self, ret):
-        self['lcdCover'].updatePixmap(ret.get('Pixmap', None), ret.get('FileName', self.lcdCoverFile))
+    def findLcdTitleRenderer(self):
+        # the Label of parent.lcdTitle, and only where the layout above put it
+        try:
+            source = self.lcdParent['lcdTitle']
+        except Exception:
+            return None
+        for renderer in getattr(self, 'renderer', []):
+            if getattr(renderer, 'source', None) is not source:
+                continue
+            try:
+                position, size = renderer.instance.position(), renderer.instance.size()
+                if position.x() == self.x0 + self.pad and position.y() == self.titleY and size.width() == self.cw:
+                    return renderer
+            except Exception:
+                printExc()
+            return None
+        return None
