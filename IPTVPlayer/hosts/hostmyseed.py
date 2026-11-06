@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "23.10.2026"
+LAST_MODIFIED = "05.11.2026"
+# 05.11.2026 - domain m.myseed.tv (old .pics urls of favourites rebased), alternative domain + proxy options,
+#   posters with the Cloudflare cookie; the AJAX Origin follows the current domain (further qualities again)
 # 23.10.2026 - update to current url
 # 21.10.2026 - update url and change name
 # 03.10.2026 - rewrite for the current m.myseed.pics layout and the current host standard
@@ -17,11 +19,14 @@ LAST_MODIFIED = "23.10.2026"
 #   - watched flag (series -> season -> episode), downloaded flag, favourites, sidecar,
 #     name normalisation ("Title (Year)", "Show - SxxExx"), INFO via moviemeta + the site's story/fields,
 #     First/Jump/Next paging, search + history; no colour codes in video titles
+import os
 import re
 
+from Components.config import ConfigSelection, ConfigText, config, getConfigListEntry
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
-from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
+from Plugins.Extensions.IPTVPlayer.libs.botprotection import remembered_user_agent
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import GetAlternativeProxyChoices, GetAlternativeProxyUrl, IsSidecarEnabled, IsMediaNamingNormalized
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, getMetaByImdbId
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems, sidecarMetaQuery
@@ -29,20 +34,33 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus, urllib_unquote, urllib_urlencode
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, E2ColoR, b64Decode
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import MergeDicts, printDBG, printExc, E2ColoR, b64Decode
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
 
 
+###################################################
+# Config options for HOST
+###################################################
+config.plugins.iptvplayer.myseed_proxy = ConfigSelection(default="None", choices=GetAlternativeProxyChoices())
+config.plugins.iptvplayer.myseed_alt_domain = ConfigText(default="", fixed_size=False)
+
+
 def GetConfigList():
-    return []
+    optionList = []
+    optionList.append(getConfigListEntry(_("Use proxy server:"), config.plugins.iptvplayer.myseed_proxy))
+    if config.plugins.iptvplayer.myseed_proxy.value == "None":
+        optionList.append(getConfigListEntry(_("Alternative domain:"), config.plugins.iptvplayer.myseed_alt_domain))
+    return optionList
+###################################################
 
 
 def gettytul():
-    return "https://m.myseed.pics/"
+    return "https://m.myseed.tv/"
 
 
+SITE_DOMAIN_RE = re.compile(r"https?://(?:[a-z0-9-]+\.)*myseed\.[a-z]+", re.I)
 # Enigma2 colour codes ("\c00RRGGBB") - only for the list description, never in titles / sidecar / INFO text
 COLOR_CODE_RE = re.compile(r"\\c[0-9A-Fa-f]{8}")
 # Arabic ordinals of season labels ("الموسم الثاني"), compound ones first
@@ -78,15 +96,16 @@ def _stripColors(text):
 
 
 class MySeed(GenericFolderWatchedScraperMixin, CBaseHostClass):
+    DOMAIN_CACHE = None
 
     def __init__(self):
         CBaseHostClass.__init__(self, {"history": "MySeed", "cookie": "MySeed.cookie"})
-        self.MAIN_URL = gettytul()
+        self.MAIN_URL = None
         self.DEFAULT_ICON_URL = self.getFullUrl("lgo222.png", gettytul())
         self.HEADER = self.cm.getDefaultHeader(browser="chrome")
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({"X-Requested-With": "XMLHttpRequest", "Accept": "application/json, text/javascript, */*; q=0.01",
-                                 "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8", "Origin": self.MAIN_URL.rstrip("/")})
+                                 "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"})
         self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
         self.watchedHelper = IPTVWatchedHelper("arabseed")
         self.wfInitFolderCache()
@@ -130,15 +149,21 @@ class MySeed(GenericFolderWatchedScraperMixin, CBaseHostClass):
     ###################################################
     # helpers
     ###################################################
+    def getProxy(self):
+        return GetAlternativeProxyUrl(config.plugins.iptvplayer.myseed_proxy.value) or None
+
     def getPage(self, baseUrl, addParams=None, post_data=None):
         if addParams is None:
             addParams = dict(self.defaultParams)
+        proxy = self.getProxy()
+        if proxy and "http_proxy" not in addParams:
+            addParams = MergeDicts(addParams, {"http_proxy": proxy})
         addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.HEADER.get("User-Agent")}
-        return self.cm.getPageCFProtection(self._canonUrl(baseUrl), addParams, post_data)
+        return self.cm.getPageCFProtection(self._rebase(baseUrl), addParams, post_data)
 
     def _ajax(self, endpoint, postData, referer):
         params = dict(self.defaultParams)
-        params["header"] = dict(self.AJAX_HEADER, Referer=referer)
+        params["header"] = dict(self.AJAX_HEADER, **{"Referer": referer, "Origin": self.getMainUrl()[:-1]})
         sts, data = self.getPage(self.getFullUrl(endpoint + "/"), params, postData)
         if not sts:
             return {}
@@ -149,25 +174,62 @@ class MySeed(GenericFolderWatchedScraperMixin, CBaseHostClass):
             printDBG("MySeed._ajax %s: no JSON" % endpoint)
         return {}
 
-    def _canonUrl(self, url):
-        # the site links the same page raw-Arabic or percent-encoded (lower case) - one ASCII form for
-        # requests, the watched/downloaded markers and favourites
-        url = (url or "").replace("&amp;", "&").strip()
-        if not url:
-            return ""
-        url = self.getFullUrl(url)
-        try:
-            url = urllib_quote(urllib_unquote(url), safe=":/?&=#+,;@%")
-        except Exception:
-            printExc()
-        return url
+    def selectDomain(self):
+        if MySeed.DOMAIN_CACHE:
+            self.MAIN_URL = MySeed.DOMAIN_CACHE
+            return
+        domains = [gettytul()]
+        domain = config.plugins.iptvplayer.myseed_alt_domain.value.strip()
+        if self.cm.isValidUrl(domain):
+            domains.insert(0, domain.rstrip("/") + "/")
+        for domain in domains:
+            self.MAIN_URL = domain
+            sts, data = self.getPage(domain)
+            if sts and "ماي سيد MySeed" in data:
+                self.MAIN_URL = self.cm.getBaseUrl(self.cm.meta.get("url", domain))
+                break
+        else:
+            self.MAIN_URL = domains[-1]
+        MySeed.DOMAIN_CACHE = self.MAIN_URL
+
+    def _rebase(self, url):
+        # urls of favourites / old lists on a previous domain -> the current one
+        if self.MAIN_URL is None:
+            self.selectDomain()
+        url = (url or "").replace("&amp;", "&").replace("&#038;", "&").strip()
+        m = re.match(r"https?://[^/]+/(.*)$", url)
+        url = (self.MAIN_URL + m.group(1)) if m else self.getFullUrl(url)
+        # Arabic slugs come raw or percent-encoded -> one percent-encoded form
+        return urllib_quote(urllib_unquote(url), safe=":/?&=#+,;@%")
 
     def _pageUrl(self, url):
         # details page of a title (old favourites / links point to its "watch/" page)
-        url = self._canonUrl(url)
+        url = self._rebase(url)
         if url.endswith("/watch/"):
             url = url[:-len("watch/")]
         return url
+
+    def getFullIconUrl(self, url, currUrl=None):
+        # posters on the site's own domain (/uploads/...) sit behind the same Cloudflare check as the pages
+        url = CBaseHostClass.getFullIconUrl(self, (url or "").strip(), currUrl)
+        if not url.startswith("http"):
+            return url
+        meta = {}
+        if SITE_DOMAIN_RE.match(url):
+            # pCommon builds the cover request from the meta alone - without the User-Agent here Cloudflare
+            # answers 403 to the urllib default one
+            meta = {"Referer": self.getMainUrl() or gettytul(), "User-Agent": self.HEADER.get("User-Agent")}
+            try:
+                # getCookieHeader logs tracebacks for a cookie file that does not exist yet
+                cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE, ["cf_clearance"]).rstrip("; ") if os.path.isfile(self.COOKIE_FILE) else ""
+                if cookieHeader:
+                    meta.update({"User-Agent": remembered_user_agent(self.COOKIE_FILE) or self.HEADER.get("User-Agent"), "Cookie": cookieHeader})
+            except Exception:
+                printExc()
+        proxy = self.getProxy()
+        if proxy:
+            meta["iptv_http_proxy"] = proxy
+        return strwithmeta(url, meta) if meta else url
 
     @staticmethod
     def _seasonNum(text):
@@ -239,7 +301,7 @@ class MySeed(GenericFolderWatchedScraperMixin, CBaseHostClass):
             bottom = [self.cleanHtmlStr(x) for x in re.findall(r"<li>([^<]+)</li>", self.cm.ph.getDataBeetwenMarkers(chunk, 'class="bottom__ul"', "</ul>", False)[1])]
             items.append({
                 "url": url, "title": title, "story": self.cleanHtmlStr(story),
-                "icon": self._canonUrl(self.cm.ph.getSearchGroups(chunk, r'data-src="([^"]+)"')[0]),
+                "icon": self.getFullIconUrl(self.cm.ph.getSearchGroups(chunk, r'''(?:data-src|<img[^>]+?src)=['"]([^'"]+)['"]''')[0]),
                 "genre": self._field(chunk, "__genre") or (bottom[1] if len(bottom) > 1 else ""),
                 "quality": self._field(chunk, "__quality") or (bottom[0] if bottom else ""),
                 "rating": self._field(chunk, "post__ratings"),
@@ -289,7 +351,7 @@ class MySeed(GenericFolderWatchedScraperMixin, CBaseHostClass):
             pageUrlTpl = self.getFullUrl("find/?word=%s&type=&page_number={page}" % urllib_quote_plus(word))
             url = pageUrlTpl.format(page=page)
         else:
-            base = re.sub(r"page/\d+/?$", "", self._canonUrl(cItem.get("base_url") or cItem.get("url", "")))
+            base = re.sub(r"page/\d+/?$", "", self._rebase(cItem.get("base_url") or cItem.get("url", "")))
             url = base if page <= 1 else "%spage/%d/" % (base, page)
             pageUrlTpl = base + "page/{page}/"
         printDBG("MySeed.listItems [%s]" % url)
@@ -342,7 +404,7 @@ class MySeed(GenericFolderWatchedScraperMixin, CBaseHostClass):
             url = self.cm.ph.getSearchGroups(li, r'data-url="([^"]+)"')[0]
             name = self.cleanHtmlStr(self.cm.ph.getSearchGroups(li, r"<span>([^<]+)</span>")[0])
             if term and url:
-                ret.append({"term": term, "url": self._canonUrl(url), "name": name, "selected": 'class="selected"' in li})
+                ret.append({"term": term, "url": self._rebase(url), "name": name, "selected": 'class="selected"' in li})
         return ret
 
     def listSeries(self, cItem):
@@ -488,7 +550,7 @@ class MySeed(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     def _resolveOwnServer(self, url):
         # /vids.php?t=.. -> <iframe> d.myseed.tv/player-gateway.php -> <video><source src=".mp4|.m3u8">
-        referer = getattr(url, "meta", {}).get("Referer", self.MAIN_URL)
+        referer = getattr(url, "meta", {}).get("Referer", self.getMainUrl())
         params = dict(self.defaultParams)
         params["header"] = dict(self.HEADER, Referer=referer)
         sts, data = self.getPage(url, params)
@@ -497,13 +559,13 @@ class MySeed(GenericFolderWatchedScraperMixin, CBaseHostClass):
         gateway = self.cm.ph.getSearchGroups(data, r'<iframe[^>]+src="([^"]+)"')[0].replace("&amp;", "&")
         if gateway:
             gateway = self.getFullUrl(gateway)
-            params["header"] = dict(self.HEADER, Referer=self.MAIN_URL)
+            params["header"] = dict(self.HEADER, Referer=self.getMainUrl())
             sts, data = self.cm.getPage(gateway, params)
             if not sts:
                 return []
         else:
             gateway = url
-        origin = self.cm.ph.getSearchGroups(gateway, r"(https?://[^/]+)")[0] or self.MAIN_URL.rstrip("/")
+        origin = self.cm.ph.getSearchGroups(gateway, r"(https?://[^/]+)")[0] or self.getMainUrl().rstrip("/")
         meta = {"Referer": origin + "/", "Origin": origin, "User-Agent": self.HEADER.get("User-Agent")}
         links = []
         for src in re.findall(r"<source[^>]+>", data):
@@ -524,7 +586,7 @@ class MySeed(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if "/get__watch__server/?" in url:
             query = url.split("?", 1)[1]
             post = dict((k, urllib_unquote(v)) for k, v in re.findall(r"([^&=]+)=([^&]*)", query))
-            referer = getattr(videoUrl, "meta", {}).get("Referer", self.MAIN_URL)
+            referer = getattr(videoUrl, "meta", {}).get("Referer", self.getMainUrl())
             ret = self._ajax("get__watch__server", post, referer)
             if ret.get("type") != "success" and ret.get("message") == "unauthorized request":
                 # the token expired - one retry with a fresh one from the watch page
@@ -610,6 +672,8 @@ class MySeed(GenericFolderWatchedScraperMixin, CBaseHostClass):
     ###################################################
     def handleService(self, index, refresh=0, searchPattern="", searchType=""):
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
+        if self.MAIN_URL is None:
+            self.selectDomain()
         if isJumpItem(self.currItem):
             self.currItem = jumpTarget(self, self.currItem)
         name = self.currItem.get("name", "")
