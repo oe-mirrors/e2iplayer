@@ -70,11 +70,13 @@ def env():
     labels = {"imdb_rating": "IMDb Rating:", "genres": "Genres:", "duration": "Duration:", "directors": "Directors:", "cast": "Cast:"}
     _stubModule("Plugins.Extensions.IPTVPlayer.components.ihost", ArticleContent=types.SimpleNamespace(RICH_DESC_LABELS=labels))
     _stubModule("Plugins.Extensions.IPTVPlayer.components.iptvplayerinit", TranslateTXT=lambda text: text)
+
     def IsConvertibleImage(path):
         # as libs/pCommon: WebP (RIFF....WEBP) or AVIF (ftyp brand at offset 4)
         with open(path, "rb") as f:
             head = f.read(12)
         return (head[:4] == b"RIFF" and head[8:12] == b"WEBP") or head[4:12] in (b"ftypavif", b"ftypavis")
+
     def UngzipFile(path):
         with open(path, "rb") as f:
             if f.read(2) != b"\x1f\x8b":
