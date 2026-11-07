@@ -1745,6 +1745,11 @@ class common:
                 sts, data = retried
                 impersonated = True
 
+        # an embed page the host asked for with the address of the page embedding it: the browser opens it with that
+        # Referer too (extension 1.22+), some players refuse a direct visit; the own address as Referer is not passed on
+        # (the header holds this page's own "Referer" next to a caller's "referer" in another case)
+        ownHost = urlparse(baseUrl).netloc.lower()
+        pageReferer = next((v for k, v in header.items() if k.lower() == 'referer' and v and urlparse(v).netloc.lower() not in ('', ownHost)), '')
         gateDomain = _impersonateDomain(baseUrl)
         solveMode = 'COOKIES' if gateDomain in _cookieGateDomains else 'CF'
         # a second pass only when the first (CF mode) got past Cloudflare onto a check that needs every cookie
@@ -1776,7 +1781,7 @@ class common:
             from Plugins.Extensions.IPTVPlayer.libs.recaptcha_mye2i import UnCaptchaReCaptcha
             recaptcha = UnCaptchaReCaptcha(lang=GetDefaultLang())
             # the job id must be new for the second browser job
-            token = recaptcha.processCaptcha(start_time if not solvePass else time.time(), baseUrl, captchaType=solveMode)
+            token = recaptcha.processCaptcha(start_time if not solvePass else time.time(), baseUrl, captchaType=solveMode, pageReferer=pageReferer)
             if token != '':
                 r = json_loads(base64.b64decode(token))
                 printDBG('>>>>>>>>>>>>>>>>>>>>> CF token >>>>>>>>>>>>>>>>>>>>>>')

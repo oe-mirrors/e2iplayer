@@ -61,18 +61,62 @@ function e2iStatus(text) {
     }
 }
 
+// What this extension can do. Other builds of MyE2i use the same version
+// numbers, so a job that needs a feature asks for its name (the page attribute
+// is read by the relay page's own script, "f=" by mye2iserver.py's /version).
+var E2I_FEATURES = ['nav', 'referer'];
+try {
+    document.documentElement.setAttribute('data-mye2i-features', E2I_FEATURES.join(' '));
+} catch (e) {
+    // no document element yet: the relay page shows its outdated hint for feature jobs
+}
+
 // Reports the own version to mye2iserver.py right away, so its version check
 // can show an "outdated" hint on the receiver screen.
 (function reportExtensionVersion() {
     try {
         var v = chrome.runtime.getManifest().version;
         var xhr = new XMLHttpRequest();
-        xhr.open("GET", e2iUrl("/version", "v=" + encodeURIComponent(v))); // NOSONAR - the address is built from this relay page's own origin (the box)
+        xhr.open("GET", e2iUrl("/version", "v=" + encodeURIComponent(v) + "&f=" + E2I_FEATURES.join(','))); // NOSONAR - the address is built from this relay page's own origin (the box)
         xhr.send();
     } catch (e) {
         // an old server without /version simply never learns the version
     }
 })();
+
+// A job whose page has to be opened with a given Referer ("ref=" in the
+// fragment of the solve button's address, an embed page): the background
+// script opens the tab and sets the Referer for it. Every other job keeps the
+// page's own window.open() - without any Referer (the page says no-referrer).
+function e2iJobHasReferer(url) {
+    var sep = url.indexOf('_sep_');
+    if (sep < 0 || !/#e2it/.test(url)) {
+        return false;
+    }
+    return url.slice(sep + 5).split('&').some(function (part) {
+        return part.indexOf('ref=') === 0 && part.length > 4;
+    });
+}
+
+document.addEventListener('click', function (event) {
+    var button = event.target && event.target.closest ? event.target.closest('#mye2i-solve') : null;
+    if (!button) {
+        return;
+    }
+    var url = button.getAttribute('data-url') || '';
+    if (!e2iJobHasReferer(url)) {
+        return;
+    }
+    // (capture phase on the document: runs before the button's own onclick)
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    chrome.runtime.sendMessage({action: 'OPEN_SOLVER', url: url}, function (resp) {
+        if (chrome.runtime.lastError || !resp || !resp.ok) {
+            // the page still opens, only without the Referer
+            window.open(url, '_blank');
+        }
+    });
+}, true);
 
 chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {

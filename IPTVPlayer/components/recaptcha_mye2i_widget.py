@@ -123,7 +123,7 @@ class UnCaptchaReCaptchaMyE2iWidget(CaptchaScriptWidgetBase):
         _("MyE2i debug snapshot received - see the debug log."),
     )
 
-    def __init__(self, session, title, sitekey, referer, captchaType, captchaAction='', captchaData='', hint=''):
+    def __init__(self, session, title, sitekey, referer, captchaType, captchaAction='', captchaData='', hint='', pageReferer=''):
         # scale="1" is required here - without it Enigma2 draws the loaded
         # pixmap at its native size (see make_qr_png()'s own `scale` factor,
         # much bigger than this box) instead of fitting it into the widget.
@@ -133,6 +133,7 @@ class UnCaptchaReCaptchaMyE2iWidget(CaptchaScriptWidgetBase):
         self.captchaAction = captchaAction
         self.captchaData = captchaData
         self.hint = hint  # what to do on the opened page: under the address on the box, as the job button text in the browser
+        self.pageReferer = pageReferer  # Referer the browser sends for the opened page (see mye2iserver.py)
         # Setting "MyE2i extension: increase security": a random per-session key (carried by the
         # QR code) and a short code (for the address typed by hand, shown in the window title);
         # mye2iserver.py then only accepts pages, results, debug lines and dumps that come with
@@ -241,7 +242,7 @@ class UnCaptchaReCaptchaMyE2iWidget(CaptchaScriptWidgetBase):
         serverTexts = self._serverTexts()
         if self.hint:
             serverTexts['job_nav'] = self.hint
-        captcha = {'siteKey': self.sitekey, 'sameOrigin': True, 'siteUrl': self.referer, 'contextUrl': '/'.join(self.referer.split('/')[:3]), 'boundToDomain': True, 'stoken': None, 'captchaType': self.captchaType, 'captchaAction': self.captchaAction, 'captchaData': self.captchaData, 'token': self.sessionToken, 'pin': self.sessionPin, 'i18n': serverTexts, 'tmpDir': GetTmpDir(), 'closeStartPage': config.plugins.iptvplayer.mye2i_close_start_page.value, 'launcherUrl': launcherUrl, 'launcherName': launcherName}
+        captcha = {'siteKey': self.sitekey, 'sameOrigin': True, 'siteUrl': self.referer, 'contextUrl': '/'.join(self.referer.split('/')[:3]), 'boundToDomain': True, 'stoken': None, 'captchaType': self.captchaType, 'captchaAction': self.captchaAction, 'captchaData': self.captchaData, 'pageReferer': self.pageReferer, 'token': self.sessionToken, 'pin': self.sessionPin, 'i18n': serverTexts, 'tmpDir': GetTmpDir(), 'closeStartPage': config.plugins.iptvplayer.mye2i_close_start_page.value, 'launcherUrl': launcherUrl, 'launcherName': launcherName}
         try:
             captcha = ensure_str(base64.b64encode(ensure_binary(json.dumps(captcha))))
         except Exception:

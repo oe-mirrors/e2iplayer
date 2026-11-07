@@ -1,4 +1,4 @@
-# MyE2iV3 - browser extension for E2iPlayer (v1.21)
+# MyE2iV3 - browser extension for E2iPlayer (v1.22)
 
 MyE2iV3 lets a real browser solve what the receiver cannot: Cloudflare challenges, other
 browser checks (DDoS-Guard, Anubis, ...) and captchas (reCAPTCHA, hCaptcha, Turnstile). The
@@ -27,6 +27,9 @@ server stays at 1.17; older versions get a hint on the receiver screen and in th
   check could report "done" before Cloudflare had put its markers (`#challenge-form`, `<link>`,
   `<script>`) into the DOM (race with fast "managed challenges"). It now waits for
   `document.readyState == "complete"` and watches in-place DOM changes with a `MutationObserver`.
+  Since v1.22 Cloudflare's own block and error pages (title "Attention Required! | Cloudflare",
+  `#cf-error-details`, the `/cdn-cgi/styles/cf.errors` stylesheet) count as challenge pages as well:
+  the cookies of such a page were sent as a solved challenge (browser test `cf-error-page-not-solved`).
 - **`ParamsExt`.** It crashed when a redirect after a passed challenge dropped the URL fragment
   (`document.location.hash` empty). It now falls back to empty parameters; the callers already
   have working fallbacks (e.g. the domain from the page URL).
@@ -114,6 +117,31 @@ captchaData=json {"selector", "attr", "pattern"})` opens the start URL with the 
   take the unknown fragment for a captcha page. Used by `hostcimanow.py` (watch button gateway).
 - Browser test: `nav-link-after-redirects` (two script redirects, a decoy link, the button gets
   its link after 2 s).
+
+### Referer of the opened page (v1.22)
+
+- **No box address for the site.** The solve button opened the page straight from the relay page, so
+  the site got `http://<box>:<port>/` as Referer. The relay page now says `no-referrer` (header
+  `Referrer-Policy` and meta tag; works with every extension version, the original 1.17 included).
+- **A job's own Referer.** An embed page often only plays inside the page that embeds it. When the
+  request that ran into the check carried a Referer of another host (the host's `header`),
+  `getPageCFProtection()` passes it on (`processCaptcha(..., pageReferer=...)`); `mye2iserver.py`
+  adds it to the fragment as the last parameter `&ref=<address>` (`CF`, `COOKIES`, `NAV`; only absolute
+  http(s) addresses without credentials). `contentscripts/e2it.js` then takes over the click on the
+  solve button: `background.js` opens a new tab, sets a session rule (`declarativeNetRequest`,
+  permission `declarativeNetRequestWithHostAccess`, no install warning) that puts that Referer on the
+  tab's top-level requests to the page's host - the reload after a Cloudflare challenge included - and
+  loads the page. The rule goes with the tab. Without the rule (an error, a browser without
+  `declarativeNetRequest`) the page still opens, only without the Referer.
+- **Features instead of version numbers.** Other builds of MyE2i count the same version numbers
+  (the third-party MV3 build 1.19 calls itself 1.20). The extension therefore names what it can do:
+  attribute `data-mye2i-features="nav referer"` on the relay page and `f=nav,referer` on `/version`.
+  A job with a Referer marks its banner with `data-mye2i-needs="referer"`; the page's own script shows
+  it again when the installed extension hid it by its version number alone, and `/version` reports
+  such an extension as outdated on the box (`MIN_REFERER_EXTENSION_VERSION` = 1.22).
+- Browser checks: `solve button: no Referer for the site` and `solve button: the job's Referer
+  reaches the site` (a real click on the relay page's button, the local site records the Referer it
+  got), server checks under "Referer of the opened page".
 
 - A widget error (Turnstile/hCaptcha/reCAPTCHA `error-callback`, a rejected `execute()`: wrong key,
   refused action, ...) is shown as red text "Captcha error: <code>" on the page AND in the debug
@@ -309,10 +337,11 @@ Not automated: signing the Firefox `.xpi` at Mozilla (needs AMO API keys as secr
 ## Tests
 
 - `python mye2i-extension/tests/run_browser_tests.py [chrome] [edge] [firefox]` drives real browsers
-  headless through all flows (see the head of the file): 14 browser cases (Cloudflare cookie, cookie
-  mode against local DDoS-Guard and Anubis imitations, debug snapshot, Turnstile, reCAPTCHA v3 /
-  Enterprise, hCaptcha invisible, translated texts, ...) plus checks of the server itself (access
-  control, translations, replies). Cases marked `[net]` need internet access. Useful options:
+  headless through all flows (see the head of the file): 16 browser cases (Cloudflare cookie and
+  block page, cookie mode against local DDoS-Guard and Anubis imitations, NAV, debug snapshot,
+  Turnstile, reCAPTCHA v3 / Enterprise, hCaptcha invisible, translated texts, ...), 2 Referer checks
+  through the relay page's solve button, plus checks of the server itself (access control,
+  translations, replies, Referer). Cases marked `[net]` need internet access. Useful options:
   `--only a,b`, `--repeat N`, `-v`, `--entry pin` (open the page the way the typed address does),
   `--ext-dir <folder>` (test an older unpacked extension, e.g. the original 1.17 - backward
   compatibility).
