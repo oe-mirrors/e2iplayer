@@ -112,6 +112,7 @@
   "skstream",
   "dulourd",
   "cpasmal",
+  "filmoflix",
   "cinehd",
   "wecimacx",
   "laroza",
@@ -435,6 +436,7 @@
   "skstream",
   "dulourd",
   "cpasmal",
+  "filmoflix",
   "francetv",
   "euronews"
  ],
