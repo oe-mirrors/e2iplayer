@@ -5,30 +5,32 @@
 #  $Id$
 #  Page Punkte weiter ausseinander - 132
 #  Version dazu gebaut , skin 14 , 227-229
-import os
-import sys
-from Screens.Screen import Screen
-from Components.ActionMap import ActionMap, HelpableActionMap
-from enigma import ePoint, getDesktop, eListboxPythonMultiContent, RT_HALIGN_LEFT, RT_VALIGN_CENTER, BT_SCALE
-from Tools.LoadPixmap import LoadPixmap
+from os.path import isfile
+from sys import modules
+
+from enigma import BT_SCALE, RT_HALIGN_LEFT, RT_VALIGN_CENTER, eListboxPythonMultiContent, ePoint, getDesktop
+
 from skin import parseColor
-from Components.Label import Label
+from Components.ActionMap import ActionMap, HelpableActionMap
 from Components.config import config
+from Components.Label import Label
 from Components.MultiContent import MultiContentEntryPixmapAlphaBlend
-from Screens.MessageBox import MessageBox
 from Components.Sources.List import List
 from Components.Sources.StaticText import StaticText
-from Tools.Directories import resolveFilename, SCOPE_PLUGINS
+from Screens.MessageBox import MessageBox
+from Screens.Screen import Screen
 from Tools.BoundFunction import boundFunction
+from Tools.Directories import SCOPE_PLUGINS, resolveFilename
+from Tools.LoadPixmap import LoadPixmap
 from Tools.NumericalTextInput import NumericalTextInput
 
-from Plugins.Extensions.IPTVPlayer.components.cover import Cover3
-from Plugins.Extensions.IPTVPlayer.components.iptvchoicebox import IPTVChoiceBoxWidget, IPTVChoiceBoxItem, openChoiceBox
-from Plugins.Extensions.IPTVPlayer.components.iptvlist import IPTVRadioButtonList, fitPixmapInBox, IPTVPlayerSelectorContextMenuChoiceBoxList
+from Plugins.Extensions.IPTVPlayer.__init__ import GRIDSUPPORT, _
 from Plugins.Extensions.IPTVPlayer.components import skinchrome
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIPTVPlayerVersion, GetIconDir, GetLogoDir, GetAvailableIconSize, GetHostOrderDir, GetHostInfo, GetHostTitle, GetHostListTitle, findT9JumpIndex
+from Plugins.Extensions.IPTVPlayer.components.cover import Cover3
+from Plugins.Extensions.IPTVPlayer.components.iptvchoicebox import IPTVChoiceBoxItem, IPTVChoiceBoxWidget, openChoiceBox
+from Plugins.Extensions.IPTVPlayer.components.iptvlist import IPTVPlayerSelectorContextMenuChoiceBoxList, IPTVRadioButtonList, fitPixmapInBox
 from Plugins.Extensions.IPTVPlayer.tools.iptvhostgroups import IsFolderKey
-from Plugins.Extensions.IPTVPlayer.__init__ import _, GRIDSUPPORT
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import GetAvailableIconSize, GetHostInfo, GetHostListTitle, GetHostOrderDir, GetHostTitle, GetIPTVPlayerVersion, GetIconDir, GetLogoDir, findT9JumpIndex, printDBG, printExc
 
 # icons a folder inside a group can get (group icons of PlayerSelector/groups/), "folder" is the plain one
 _FOLDER_ICONS = ('folder', 'moviesandseries', 'cartoonsandanime', 'documentary', 'sport', 'music', 'live', 'news', 'iptv', 'science', 'worldwide', 'others')
@@ -267,9 +269,9 @@ def _getPlayerSelectorIcon(key, iconSize):
     # import/dependency on iptvhostgroups.py) - a given key only ever
     # exists in one of the two locations, never both
     icon = GetIconDir('PlayerSelector/groups/%s%i.png' % (key, iconSize))
-    if not os.path.isfile(icon):
+    if not isfile(icon):
         icon = GetIconDir('PlayerSelector/%s%i.png' % (key, iconSize))
-    if not os.path.isfile(icon):
+    if not isfile(icon):
         icon = GetIconDir('PlayerSelector/groups/comming-soon.%i.png' % iconSize)
     return icon
 
@@ -279,9 +281,9 @@ def _getPlayerSelectorLogoPath(key):
     # files list mode and search results show in front of a name - group
     # logos live in their own logos/groups/ subfolder. Returns a path that
     # may not exist (same as the plain GetLogoDir() calls this replaces) -
-    # callers already check os.path.isfile() themselves before using it
+    # callers already check isfile() themselves before using it
     logoPath = GetLogoDir('groups/' + key + 'logo.png')
-    if not os.path.isfile(logoPath):
+    if not isfile(logoPath):
         logoPath = GetLogoDir(key + 'logo.png')
     return logoPath
 
@@ -305,7 +307,7 @@ def _getHostInfoText(key):
         info = GetHostInfo(key)
         if info.get('modified'):
             parts.append(_("Last Modified: %s") % info['modified'])
-        version = getattr(getattr(sys.modules.get('Plugins.Extensions.IPTVPlayer.hosts.host' + key), 'Host', None), 'XXXversion', None) or info.get('version')
+        version = getattr(getattr(modules.get('Plugins.Extensions.IPTVPlayer.hosts.host' + key), 'Host', None), 'XXXversion', None) or info.get('version')
         if version:
             parts.append(_("Version: %s") % version)
         if parts:
@@ -326,25 +328,16 @@ def _moveListElement(lst, from_index, to_index):
     return lst
 
 
-def _setSelectionPixmap(instance, path):
-    # eListbox.setSelectionPixmap() isn't available on every Enigma2 fork -
-    # confirmed missing on OpenViX (AttributeError: 'eListbox' object has no
-    # attribute 'setSelectionPixmap'), which only exposes the older/different
-    # setSelectionPicture() there. The custom marker frame this sets is a
-    # visual enhancement (plain backgroundColorSelected is barely visible on
-    # its own), not required functionality, so just keep the plain default
-    # highlight instead of crashing when the method is absent.
-    #
-    # Also guards against a missing/unreadable marker PNG on disk (e.g. an
-    # incomplete install where GetAvailableIconSize() finds none of
-    # marker145/165/180.png and falls back to iconSize=0, so this gets
-    # asked for the nonexistent "marker45.png") - LoadPixmap() returning
-    # None would otherwise crash straight through
-    # eListbox_setSelectionPixmap() with a TypeError.
-    if hasattr(instance, 'setSelectionPixmap'):
-        pixmap = LoadPixmap(path)
-        if pixmap is not None:
-            instance.setSelectionPixmap(pixmap)
+def _setSelectionPixmap(instance, path, renderer=None):
+	# External skins can supply their own gradient or selection image.
+	skinAttributes = dict(getattr(renderer, "skinAttributes", None) or ())
+	if skinAttributes.get("itemGradientSelected") or skinAttributes.get("selectionPixmap"):
+		return
+	# Some forks lack this API; a missing marker must not be passed to SWIG.
+	if hasattr(instance, "setSelectionPixmap"):
+		pixmap = LoadPixmap(path)
+		if pixmap is not None:
+			instance.setSelectionPixmap(pixmap)
 
 
 def _getSkinSelectedColor(renderer):
@@ -397,14 +390,14 @@ class IPTVHostSearchResultList(IPTVRadioButtonList):
                     logoPath = self._logoPathCache[item.description]
                 except KeyError:
                     logoPath = _getPlayerSelectorLogoPath(item.description)
-                    if not os.path.isfile(logoPath):
+                    if not isfile(logoPath):
                         # fall back to a generic "coming soon" placeholder when
                         # there's no real logo file yet for this host/group -
                         # shared by every screen that shows a host or group
                         # name with a logo (PlayerSelectorWidget's own list
                         # view, search results, add-to-group)
                         logoPath = GetLogoDir('groups/comming-soonlogo.png')
-                    if not os.path.isfile(logoPath):
+                    if not isfile(logoPath):
                         logoPath = None
                     self._logoPathCache[item.description] = logoPath
                 if logoPath is not None:
@@ -440,7 +433,7 @@ class IPTVHostSearchResultList(IPTVRadioButtonList):
         else:
             suffix = "56"
         file = resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/icons/PlayerSelector/marker/markerSearchList%s.png' % suffix)
-        _setSelectionPixmap(self.instance, file)
+        _setSelectionPixmap(self.instance, file, self)
 
 
 class PlayerSelectorHostList(IPTVHostSearchResultList):
@@ -495,7 +488,7 @@ class PlayerSelectorHostList(IPTVHostSearchResultList):
             suffix = "56"
         name = ("markerListSel%s.png" if reorderingActive else "markerList%s.png") % suffix
         file = resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/icons/PlayerSelector/marker/' + name)
-        _setSelectionPixmap(self.instance, file)
+        _setSelectionPixmap(self.instance, file, self)
         self.instance.setBackgroundColorSelected(parseColor("#ffcc00" if pickedUp else "#1b5a91"))
         # without this, the already-selected row only repaints with the new
         # marker/color once the selection actually moves to a different row -
@@ -612,7 +605,7 @@ class _PlayerSelectorListMode:
             item = self.currList[self._t9GetIndex()]
             summary.setText(item[0])
             logoPath = _getPlayerSelectorLogoPath(item[1])
-            if os.path.isfile(logoPath):
+            if isfile(logoPath):
                 summary.LCD_showPic('LCDlogo', logoPath)
             else:
                 summary.LCD_hide('LCDlogo')
@@ -636,7 +629,7 @@ class _PlayerSelectorListMode:
         # GRIDSUPPORT's own icon-grid mode only - same two independent
         # states as list mode's setReorderingHighlight() above
         file = resolveFilename(SCOPE_PLUGINS, f'Extensions/IPTVPlayer/icons/PlayerSelector/marker/marker{"Sel" if self.reorderingMode else ""}{self.iconSize + 45}.png')
-        _setSelectionPixmap(self["grid"].master.master.instance, file)
+        _setSelectionPixmap(self["grid"].master.master.instance, file, self["grid"].master.master)
         self["grid"].master.master.instance.setBackgroundColorSelected(parseColor("#ffcc00") if move == "Sel" else _getSkinSelectedColor(self["grid"].master.master))
 
     def keySelect(self):
@@ -799,11 +792,11 @@ class _PlayerSelectorListMode:
             gn = self.groupName or ''
             # non-migrating on purpose: the screen that opens this menu has already migrated
             if gn == 'selectgroup':
-                return os.path.isfile(GetHostOrderDir('iptvplayerhostsgroups.json'))
+                return isfile(GetHostOrderDir('iptvplayerhostsgroups.json'))
             if gn in ('selecthost', 'all'):
-                return os.path.isfile(GetHostOrderDir('iptvplayerhostsorder'))
+                return isfile(GetHostOrderDir('iptvplayerhostsorder'))
             if gn:
-                return os.path.isfile(GetHostOrderDir('iptvplayer%sgroup.json' % gn))
+                return isfile(GetHostOrderDir('iptvplayer%sgroup.json' % gn))
         except Exception:
             printExc()
         return False
@@ -1650,7 +1643,7 @@ if GRIDSUPPORT:
             # visible) - no reordering here, so only ever the "not picked
             # up" variant, never markerSel...
             file = resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/icons/PlayerSelector/marker/marker%i.png' % (self.iconSize + 45))
-            _setSelectionPixmap(self["grid"].master.master.instance, file)
+            _setSelectionPixmap(self["grid"].master.master.instance, file, self["grid"].master.master)
             if self.options:
                 self["grid"].setCurrentIndex(0)
             else:
