@@ -193,10 +193,10 @@ def checkhttps(url):
 
 
 # sites of the txxx network (hostxxx.py TXXX_NETWORK), same videofile API; abxxx ... boobse: only reached over 4TUBE partner links
-TXXX_NETWORK_SITES = ('https://hotmovs.com', 'https://vjav.com', 'https://upornia.com', 'https://hdzog.com', 'https://vxxx.com', 'https://abxxx.com', 'https://abebony.com', 'https://ablesbian.com', 'https://bdsmx-porn.com', 'https://bdsmx.tube', 'https://boobse.com')
+TXXX_NETWORK_SITES = ('https://hotmovs.com', 'https://vjav.com', 'https://thegay.com', 'https://shemalez.com', 'https://upornia.com', 'https://hdzog.com', 'https://vxxx.com', 'https://abxxx.com', 'https://abebony.com', 'https://ablesbian.com', 'https://bdsmx-porn.com', 'https://bdsmx.tube', 'https://boobse.com')
 
 # plain KVS sites (hostxxx.py KVS_NETWORK), resolved by the shared KVS branch
-KVS_SITES = ('https://x-x-x.tube', 'https://camgirlfap.com', 'https://pornditt.com', 'https://v.pornditt.com', 'https://myporntape.com', 'https://b.terebon.net', 'https://r14.mixporn.space', 'https://www.analegg.com', 'https://javmix.com', 'https://area51.porn', 'https://ikisoda.com', 'https://porno1.hu', 'https://freshporno.org', 'https://www.freepornvideos.xxx', 'https://www.fpo.xxx', 'https://heroero.com', 'https://porndd.com', 'https://amateurporn.me', 'https://allclassic.porn', 'https://celebsroulette.com', 'https://watcherotic.com', 'https://www.vipporns.com', 'https://pornve.com', 'https://www.bigtitslust.com', 'https://bigassporn.tv', 'https://blowjobs.pro', 'https://lesbianporn8.net', 'https://saintporn.com', 'https://allmatureporn.tv', 'https://blackporn24.com', 'https://footstockings.com', 'https://milfporn8.net', 'https://porno24.to', 'https://yourlesbians.com', 'https://www1.yabuchka.xyz', 'https://www.fulleroticmovies.net', 'https://wvw.ruporno.net', 'https://fuqster.com')
+KVS_SITES = ('https://x-x-x.tube', 'https://camgirlfap.com', 'https://pornditt.com', 'https://v.pornditt.com', 'https://myporntape.com', 'https://b.terebon.net', 'https://r15.mixporn.space', 'https://www.analegg.com', 'https://javmix.com', 'https://area51.porn', 'https://ikisoda.com', 'https://porno1.hu', 'https://freshporno.org', 'https://www.freepornvideos.xxx', 'https://www.fpo.xxx', 'https://heroero.com', 'https://porndd.com', 'https://amateurporn.me', 'https://allclassic.porn', 'https://celebsroulette.com', 'https://watcherotic.com', 'https://www.vipporns.com', 'https://pornve.com', 'https://www.bigtitslust.com', 'https://bigassporn.tv', 'https://blowjobs.pro', 'https://lesbianporn8.net', 'https://allmatureporn.tv', 'https://blackporn24.com', 'https://footstockings.com', 'https://milfporn8.net', 'https://porno24.to', 'https://yourlesbians.com', 'https://www1.yabuchka.xyz', 'https://www.fulleroticmovies.net', 'https://wvw.ruporno.net', 'https://fuqster.com', 'https://www.xxxvideo.sex', 'https://www.boundhub.com')
 
 # WordPress tube theme sites (hostxxx.py WPTUBE_NETWORK): own player page or a file hoster iframe
 WPTUBE_SITES = ('https://pornmz.com', 'https://www.hitprn.net', 'https://pornobae.com', 'https://vintagepornfun.com', 'https://cumdrinkingclips.com')
@@ -1208,7 +1208,7 @@ class XXXParser:
 			return 'https://xcafe.com'
 		if url.startswith('https://topvids.net'):
 			return 'https://topvids.net'
-		if url.startswith(('https://www.firstanalvideos.com/', 'https://www.deviants.com', 'http://pornbimbo.com', 'https://pornbimbo.com', 'http://www.pornfd.com', 'https://www.punishbang.com', 'https://www.pornwhite.com', 'https://www.wankoz.com', 'https://www.boundhub.com', 'https://shameless.com', 'https://www.amateur8.com/', 'https://www.xozilla.com', 'https://xozilla.com', 'https://www.ohsexfilm.com', 'https://www.mature-amateur-sex.com', 'https://thepornarea.com', 'https://camstreams.tv/', 'https://www.momslust.com', 'https://porn2all.com', 'https://in35.com', 'https://www.camvideos.tv', 'https://www.shemalehd.sex', 'https://jizzboom.com', 'https://www.javbangers.com', 'https://www.sunporno.com', 'https://www.ebony8.com', 'https://nudez.com', 'https://severeporn.com', 'https://neporn.com')):
+		if url.startswith(('https://www.firstanalvideos.com/', 'https://www.deviants.com', 'http://pornbimbo.com', 'https://pornbimbo.com', 'http://www.pornfd.com', 'https://www.punishbang.com', 'https://www.pornwhite.com', 'https://www.wankoz.com', 'https://shameless.com', 'https://www.amateur8.com/', 'https://www.xozilla.com', 'https://xozilla.com', 'https://www.ohsexfilm.com', 'https://www.mature-amateur-sex.com', 'https://thepornarea.com', 'https://camstreams.tv/', 'https://www.momslust.com', 'https://porn2all.com', 'https://in35.com', 'https://www.camvideos.tv', 'https://www.shemalehd.sex', 'https://jizzboom.com', 'https://www.javbangers.com', 'https://www.sunporno.com', 'https://www.ebony8.com', 'https://nudez.com', 'https://severeporn.com', 'https://neporn.com')):
 			return 'https://www.deviants.com'
 		if url.startswith(('https://www.3movs.com', 'https://www.pervclips.com', 'https://hqbang.com/')):
 			return 'https://www.3movs.com'
@@ -1550,6 +1550,9 @@ class XXXParser:
 			return 'https://shareanynudes.com'
 		if url.startswith('https://24porn.com'):
 			return 'https://24porn.com'
+		for site in ('https://hairydivas.com', 'https://www.feet9.com', 'https://freeonestube.com', 'https://pornzog.com'):
+			if url.startswith(site + '/'):
+				return site
 		if url.startswith('https://wanktube.tv'):
 			return 'https://wanktube.tv'
 		if url.startswith('https://analpornvids.com'):
@@ -1622,7 +1625,7 @@ class XXXParser:
 				return site
 		if re.match(r'https://v[0-9]+\.erome\.com/', url):
 			return 'https://www.erome.com'
-		for site in LIVECAM_SITES + KVS_SITES + WPTUBE_SITES + MOVIE_SITES + CAM_ARCHIVE_SITES + ('https://en.luxuretv.com', 'https://beta.xfreehd.com', 'https://321tube.com', 'https://alpenrammler.com', 'https://pmvhaven.com', 'https://eroasmr.com'):
+		for site in LIVECAM_SITES + KVS_SITES + WPTUBE_SITES + MOVIE_SITES + CAM_ARCHIVE_SITES + ('https://en.luxuretv.com', 'https://beta.xfreehd.com', 'https://321tube.com', 'https://alpenrammler.com', 'https://pmvhaven.com', 'https://eroasmr.com', 'https://lesvids.com'):
 			if url.startswith(site + '/'):
 				return site
 		return self.MAIN_URL
@@ -2344,6 +2347,9 @@ class XXXParser:
 			if not videoUrl and 'serious-cash.com' in data:
 				# some list entries are adverts: their player only runs a promo clip (.flv)
 				SetIPTVPlayerLastHostError(_('This entry is only an advert, there is no video.'))
+			elif not videoUrl and 'Video not available' in data:
+				# (youramateurtube.com: many list entries, mostly the ones without a thumbnail, have no file on the site)
+				SetIPTVPlayerLastHostError('The site has no video for this entry ("Video not available").')
 			return videoUrl
 
 		if parser == 'https://pornbolt.com':
@@ -3298,7 +3304,7 @@ class XXXParser:
 				return self._bestM3U8Variant(videoUrl, checkExt=False, cookieParams={'timeout': 15}) or videoUrl
 			return videoUrl
 
-		if parser in ('https://24porn.com', 'https://wanktube.tv'):
+		if parser in ('https://24porn.com', 'https://wanktube.tv', 'https://hairydivas.com'):
 			siteDomain = parser.split('//')[1]
 			siteCookie = siteDomain.split('.')[0] + '.cookie'
 			COOKIEFILE = join(GetCookieDir(), siteCookie)
@@ -3918,6 +3924,78 @@ class XXXParser:
 				printDBG('Videolink second: ' + videoUrl)
 			if videoUrl:
 				return urlparser.decorateUrl(videoUrl, {'Referer': url, 'User-Agent': USER_AGENT})
+			return ''
+
+		if parser == 'https://www.feet9.com':
+			# the file in the page's player: <source src="https://cdn2b.feet9.com/media/videos/mp4/<id>.mp4?token=...&expires=...">
+			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
+			self.HTTP_HEADER['Referer'] = parser + '/'
+			sts, data = self.cm.getPage(url, {'header': self.HTTP_HEADER, 'return_data': True})
+			if not sts:
+				return ''
+			videoUrl = decodeHtml(self.cm.ph.getSearchGroups(data, r'<source[^>]+?src="(https?://[^"]+\.mp4[^"]*)"', 1, True)[0])
+			if videoUrl:
+				return urlparser.decorateUrl(videoUrl, {'Referer': parser + '/', 'User-Agent': self.HTTP_HEADER['User-Agent']})
+			return ''
+
+		if parser == 'https://freeonestube.com':
+			# the player's files as JSON in the page: {"label":"720p","res":720,"src":"https:\/\/media.freeones.com\/...\/720p.mp4"}
+			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
+			self.HTTP_HEADER['Referer'] = parser + '/'
+			sts, data = self.cm.getPage(url, {'header': self.HTTP_HEADER, 'return_data': True})
+			if not sts:
+				return ''
+			page = data.replace('\\/', '/')
+			candidates = [(int(res), link) for res, link in re.findall(r'"res":\s*([0-9]+),\s*"src":\s*"(https?://[^"]+\.mp4[^"]*)"', page)]
+			videoUrl = self._pickByHeight(candidates) if candidates else self.cm.ph.getSearchGroups(page, r'<source[^>]+?src="(https?://[^"]+\.mp4[^"]*)"', 1, True)[0]
+			if videoUrl:
+				return urlparser.decorateUrl(videoUrl, {'Referer': parser + '/', 'User-Agent': self.HTTP_HEADER['User-Agent']})
+			return ''
+
+		if parser == 'https://pornzog.com':
+			# the page embeds a player of the txxx network (<iframe src="https://vxxx.com/embed-<id>/",
+			# "https://www.upornia.com/embed/<id>/", mirrors vid-vx.com / videoupornia.com): the video of that id on the
+			# network site, resolved by the txxx branch (its file API); the site's own embed.php frames the same player
+			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
+			self.HTTP_HEADER['Referer'] = parser + '/'
+			sts, data = self.cm.getPage(url, {'header': self.HTTP_HEADER, 'return_data': True})
+			if not sts:
+				return ''
+			# (tubepornclassic.com, most of the older videos: its own resolver takes the file API address, like its list)
+			networks = {'vxxx': 'https://vxxx.com/video-%s/', 'vid-vx': 'https://vxxx.com/video-%s/', 'upornia': 'https://upornia.com/video/%s/', 'videoupornia': 'https://upornia.com/video/%s/', 'hdzog': 'https://hdzog.com/video/%s/', 'hotmovs': 'https://hotmovs.com/video/%s/', 'vjav': 'https://vjav.com/video/%s/', 'tubepornclassic': 'https://tubepornclassic.com/api/videofile.php?video_id=%s&lifetime=8640000'}
+			for _try in range(2):
+				for site, vid in re.findall(r'<iframe[^>]+src="https?://(?:www\.)?([a-z-]+)\.com/embed[-/]([0-9]+)', data):
+					if site in networks:
+						# (getParser() takes an empty MAIN_URL - the global search clears it - for an xxxlist.txt link)
+						self.MAIN_URL = re.match(r'https://[^/]+', networks[site]).group(0)
+						return self.getResolvedURL(networks[site] % vid)
+				embedId = self.cm.ph.getSearchGroups(data, r'src="https?://pornzog\.com/embed\.php\?id=([0-9]+)"', 1, True)[0]
+				if not embedId:
+					break
+				sts, data = self.cm.getPage(parser + '/embed.php?id=' + embedId, {'header': dict(self.HTTP_HEADER, Referer=url), 'return_data': True})
+				if not sts:
+					break
+			return ''
+
+		if parser == 'https://lesvids.com':
+			# the video page carries the player's files as JSON: data-sources='{"720":"https://cdn3.sexpester.com/...mp4?secure=..."}'
+			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
+			self.HTTP_HEADER['Referer'] = parser + '/'
+			sts, data = self.cm.getPage(url, {'header': self.HTTP_HEADER, 'return_data': True})
+			if not sts:
+				return ''
+			candidates = []
+			try:
+				sources = json.loads(decodeHtml(self.cm.ph.getSearchGroups(data, r'''data-sources='([^']+)\'''', 1, True)[0] or '{}'))
+				candidates = [(self._labelHeight(label), link) for label, link in sources.items() if link]
+			except Exception:
+				printExc()
+			videoUrl = self._pickByHeight(candidates) if candidates else ''
+			if not videoUrl:
+				# (its contentUrl is the same file on the site's own media host)
+				videoUrl = self.cm.ph.getSearchGroups(data, r'"contentUrl":"([^"]+)"', 1, True)[0].replace('\\/', '/')
+			if videoUrl:
+				return urlparser.decorateUrl(videoUrl, {'Referer': parser + '/', 'User-Agent': self.HTTP_HEADER['User-Agent']})
 			return ''
 
 		if parser == 'https://young-sex-tube.com':
