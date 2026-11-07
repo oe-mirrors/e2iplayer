@@ -357,7 +357,7 @@ class Napisy24plProvider(CBaseSubProviderClass):
             # no files of an earlier archive in the list below
             shutil.rmtree(extractDir, ignore_errors=True)
             try:
-                os.makedirs(extractDir, exist_ok=True)
+                (os.path.isdir(extractDir) or os.makedirs(extractDir))
             except Exception:
                 printExc()
                 __cleanFiles()

@@ -635,7 +635,7 @@ class _PlayerSelectorListMode:
             return
         # GRIDSUPPORT's own icon-grid mode only - same two independent
         # states as list mode's setReorderingHighlight() above
-        file = resolveFilename(SCOPE_PLUGINS, f'Extensions/IPTVPlayer/icons/PlayerSelector/marker/marker{"Sel" if self.reorderingMode else ""}{self.iconSize + 45}.png')
+        file = resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/icons/PlayerSelector/marker/marker%s%d.png' % ("Sel" if self.reorderingMode else "", self.iconSize + 45))
         _setSelectionPixmap(self["grid"].master.master.instance, file)
         self["grid"].master.master.instance.setBackgroundColorSelected(parseColor("#ffcc00") if move == "Sel" else _getSkinSelectedColor(self["grid"].master.master))
 

@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 
+import sys as _sys
+if _sys.version_info[0] == 2:      # Python 2.7 support (DreamOS, OpenPLi 8, OpenATV 6): Python 3 modules on Python 2
+    from Plugins.Extensions.IPTVPlayer import py2shim  # noqa: F401
 from Components.Language import language
 from Tools.Directories import resolveFilename, SCOPE_PLUGINS, SCOPE_CONFIG
 from gettext import bindtextdomain, dgettext, gettext
@@ -43,7 +46,8 @@ def localeInit():
 
 
 def _(txt):
-    if (t := dgettext(PluginLanguageDomain, txt)) != txt:
+    t = dgettext(PluginLanguageDomain, txt)
+    if t != txt:
         return t
     else:
         return gettext(txt)

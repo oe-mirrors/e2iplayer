@@ -1,5 +1,6 @@
 # -*- encoding: utf-8 -*-
 
+import io
 import base64
 import hmac
 from html import escape as html_escape
@@ -153,9 +154,9 @@ def _save_and_log_dump_locked(name, text):
     safe_name = re.sub(r'[^A-Za-z0-9_.-]', '_', name)[:40] or 'dump'
     path = ''
     try:
-        os.makedirs(DEBUG_DUMP_DIR, exist_ok=True)
+        (os.path.isdir(DEBUG_DUMP_DIR) or os.makedirs(DEBUG_DUMP_DIR))
         path = os.path.join(DEBUG_DUMP_DIR, '%d_%s.txt' % (int(time.time()), safe_name))
-        with open(path, 'w', encoding='utf-8') as f:
+        with io.open(path, 'w', encoding='utf-8') as f:
             f.write(text)
     except Exception:
         path = '(could not save: %s)' % traceback.format_exc().strip().splitlines()[-1]

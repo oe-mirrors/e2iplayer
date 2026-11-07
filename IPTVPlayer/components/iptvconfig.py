@@ -92,6 +92,7 @@ config.plugins.iptvplayer.IPTVDMShowNotification = ConfigYesNo(default=True)
 # program for plain file downloads in the download manager; curl falls back
 # to wget when the box has no curl binary
 config.plugins.iptvplayer.http_downloader = ConfigSelection(default="wget", choices=[("wget", "wget"), ("curl", "curl")])
+config.plugins.iptvplayer.dns_doh = ConfigYesNo(default=True)  # e2idns: bypass provider DNS blocks (DNS-over-HTTPS)
 # container of DASH (MPD) downloads, which ffmpeg muxes; a host may still set its own (ff_out_container)
 config.plugins.iptvplayer.dash_out_container = ConfigSelection(default="matroska", choices=[("matroska", "MKV"), ("mp4", "MP4"), ("mpegts", "TS")])
 # container of HLS (M3U8) downloads, hlsdl or ffmpeg, and of single files ffmpeg downloads (iptv_use_ffmpeg);

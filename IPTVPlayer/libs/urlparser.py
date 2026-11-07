@@ -7067,7 +7067,7 @@ class pageParser(CaptchaHelper):
         cmd.append(GetJSScriptFile("vidcore_run.js"))
         streams = []
         try:
-            proc = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+            proc = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=open(os.devnull, "wb"))
         except Exception:
             printExc()
             rm(params)

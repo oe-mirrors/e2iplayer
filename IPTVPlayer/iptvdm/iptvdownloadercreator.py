@@ -228,7 +228,7 @@ def DownloaderCreator(url, forDownload=False):
     try:
         if proto in ['m3u8', 'hls']:
             printDBG("DownloaderCreator: HLS/M3U8 -> HLSDownloader")
-            downloader = HLSDownloader()
+            downloader = HLSDownloader() if IsExecutable(DMHelper.GET_HLSDL_PATH()) else FFMPEGDownloader()  # without hlsdl: HLS through ffmpeg
 
         elif proto in ['mpd', 'dash']:
             if forDownload and urlMeta.get('iptv_dash_sel') and not urlMeta.get('iptv_livestream'):
@@ -270,7 +270,7 @@ def DownloaderCreator(url, forDownload=False):
 
             if '.m3u8' in lowUrl:
                 printDBG("DownloaderCreator: fallback .m3u8 -> HLSDownloader")
-                downloader = HLSDownloader()
+                downloader = HLSDownloader() if IsExecutable(DMHelper.GET_HLSDL_PATH()) else FFMPEGDownloader()  # without hlsdl: HLS through ffmpeg
             elif '.f4m' in lowUrl:
                 printDBG("DownloaderCreator: fallback .f4m -> F4mDownloader")
                 downloader = F4mDownloader()

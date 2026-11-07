@@ -250,7 +250,7 @@ def pickSubtitleTracks(tracks, allLangs, wanted):
 # are fetched where the track is used (player "Download suggested", subtitles of a download), in one wget run
 # (-i list: one connection for all of them) and joined to one WebVTT text
 _VTT_HEADER = re.compile(r'^WEBVTT(?:[ \t].*)?$')
-_BOM = chr(0xFEFF)
+_BOM = u'\ufeff'
 
 
 def isHlsSubtitleTrack(track):

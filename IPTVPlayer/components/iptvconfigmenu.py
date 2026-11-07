@@ -249,6 +249,7 @@ class ConfigMenu(ConfigBaseWidget):
             list.append(getConfigListEntry(_("Auto start method"), config.plugins.iptvplayer.plugin_autostart_method))
         list.append(getConfigListEntry(_("Disable live at plugin start"), config.plugins.iptvplayer.disable_live))
         list.append(getConfigListEntry(_("Use the PyCurl for HTTP(S) requests"), config.plugins.iptvplayer.usepycurl))
+        list.append(getConfigListEntry(_("Bypass provider DNS blocks (DNS over HTTPS)"), config.plugins.iptvplayer.dns_doh))
 
     @staticmethod
     def _fillKeyboard(list):

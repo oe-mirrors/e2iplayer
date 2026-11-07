@@ -16,6 +16,7 @@ import unicodedata
 import zlib
 from urllib.error import HTTPError, URLError
 from urllib.parse import quote_plus, unquote, unquote_plus, urlencode, urljoin, urlparse, urlunparse
+from Plugins.Extensions.IPTVPlayer.tools import e2idns as _e2idns  # bypass provider DNS blocks
 from urllib.request import addinfourl, BaseHandler, build_opener, HTTPCookieProcessor, HTTPHandler, HTTPRedirectHandler, HTTPSHandler, ProxyHandler, Request, urlopen
 
 from Components.config import config, configfile, ConfigText
@@ -1627,6 +1628,7 @@ class common:
 
     def getPage(self, url, addParams={}, post_data=None):
         ''' wraps getURLRequestData '''
+        _e2idns.register(url)
 
         # impersonate: Chrome's TLS/HTTP2 fingerprint through curl-impersonate (True from the host, or a
         # registered domain, see _impersonateDomains; False keeps the normal path). Without the binary or
@@ -1999,6 +2001,7 @@ class common:
         return None
 
     def getURLRequestData(self, params={}, post_data=None):
+        _e2idns.register(params.get('url', '') if isinstance(params, dict) else '')
 
         def urlOpen(req, customOpeners, timeout):
             # req = ensure_binary(req)

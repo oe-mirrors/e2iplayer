@@ -2405,7 +2405,7 @@ class CSearchHistoryHelper():
         printDBG('CSearchHistoryHelper._saveHistoryList to file = "%s"' % self.PATH_FILE)
         try:
             l = len(list)
-            with open(self.PATH_FILE, 'w', encoding="UTF-8") as fd:
+            with io.open(self.PATH_FILE, 'w', encoding="UTF-8") as fd:
                 for i in range(l):
                     fd.write(list[l - 1 - i] + '\n')
             self.length = l

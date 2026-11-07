@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Python 2.7 + 3.x (DreamOS / OpenPLi 8 / OpenATV 6) support: DigiTalik
 # enigma2 imports this file at every start, also when the player is never
 # opened: only the options (iptvconfig) are loaded here, the screens and with
 # them the host framework are imported by the functions which open them
@@ -13,7 +14,48 @@ from Tools.BoundFunction import boundFunction
 from Components.config import config
 
 
+def _bezpiecznie(fn):
+    """Python 2.7 (DreamOS etc.): a plugin error goes to /tmp/iptvplayer_py27.log instead of the green crash screen."""
+    import sys
+    if sys.version_info[0] != 2 or not callable(fn):
+        return fn
+    def w(*a, **k):
+        try:
+            return fn(*a, **k)
+        except Exception:
+            import traceback, time
+            try:
+                with open('/tmp/iptvplayer_py27.log', 'a') as f:
+                    f.write('%s %s\n%s\n' % (time.strftime('%d.%m %H:%M:%S'), getattr(fn, '__name__', fn), traceback.format_exc()))
+            except Exception:
+                pass
+    w.__name__ = getattr(fn, '__name__', 'fnc')
+    return w
+
+
 def Plugins(**kwargs):
+    return [_owin(d) for d in _Plugins(**kwargs)]
+
+
+def _owin(d):
+    try:
+        if isinstance(getattr(d, 'fnc', None), tuple):
+            d.fnc = (d.fnc[0], _bezpiecznie(d.fnc[1]))
+        elif getattr(d, 'fnc', None) is not None:
+            d.fnc = _bezpiecznie(d.fnc)
+            d.__call__ = d.fnc                 # DreamOS: PluginDescriptor calls self.__call__ (set in __init__)
+    except Exception:
+        pass
+    try:                                       # DreamOS has no d.fnc, only d.__call__ on the instance
+        c = d.__dict__.get('__call__')
+        if callable(c) and getattr(c, '__name__', '') != 'w':
+            d.__call__ = _bezpiecznie(c)
+    except Exception:
+        pass
+    return d
+
+
+def _Plugins(**kwargs):
     screenwidth = getDesktop(0).size().width()
     # same tiers as skinchrome.getIconBase(), kept inline so boot does not import skinchrome
     if screenwidth >= 2560:

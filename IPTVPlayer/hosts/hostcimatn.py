@@ -63,7 +63,7 @@ EPISODE_REST_RE = re.compile(r"-?(\d+)(?:_\d+)?$")
 EPISODE_TAIL_RE = re.compile(r"-(?:ep|episode)-(\d+)(?:_\d+)?$")
 GENERIC_HINTS = ("waiting", "watch-options", "episode", "ep-")
 # the left-to-right mark some titles end with (U+200E, "Film El Naffoura" + LRM); py2 strings are utf-8 bytes
-LRM = "\xe2\x80\x8e" if sys.version_info[0] < 3 else chr(0x200E)
+LRM = "\xe2\x80\x8e" if sys.version_info[0] < 3 else u'\u200e'
 SERVER_URL_RE = re.compile(r"""url\s*:\s*["']((?:https?:)?//[^"'$]+)["']""")
 TAG_IFRAME_RE = re.compile(r"<iframe\s([^>]*)>")
 SRC_RE = re.compile(r"""src=["']([^"'$]+)["']""")

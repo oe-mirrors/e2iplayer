@@ -1414,7 +1414,7 @@ class E2iPlayerWidget(Screen):
             if hasattr(host, 'GetHostActions'):
                 self._hostActions = host.GetHostActions()
                 for i, action in enumerate(self._hostActions):
-                    options.append((action[0], f"HostAction:{i}"))
+                    options.append((action[0], "HostAction:%d" % i))
         except Exception:
             printExc()
         if hasattr(self.host.host, 'history'):
@@ -3530,7 +3530,7 @@ class E2iPlayerWidget(Screen):
         elif 'rtmp' == protocol:
             return config.plugins.iptvplayer.buforowanie_rtmp.value
         elif protocol in ['m3u8', 'em3u8']:
-            return config.plugins.iptvplayer.buforowanie_m3u8.value
+            return config.plugins.iptvplayer.buforowanie_m3u8.value and os_path.isfile('/usr/bin/hlsdl')  # without hlsdl (e.g. DreamOS): play HLS directly
 
     def isUrlBlocked(self, url, type):
         # shared with the batch download, which looks up its links outside of this screen

@@ -10,7 +10,14 @@ except ImportError:
 
 from Screens.HelpMenu import HelpableScreen
 from Components.ActionMap import HelpableActionMap
-from Components.AVSwitch import iAVSwitch
+try:
+    from Components.AVSwitch import iAVSwitch
+except ImportError:      # DreamOS / older images
+    try:
+        from Components.AVSwitch import AVSwitch as _AVS
+        iAVSwitch = _AVS()
+    except Exception:
+        iAVSwitch = None
 from Components.ServiceEventTracker import ServiceEventTracker
 from enigma import iPlayableService, eTimer
 from Screens.InfoBar import MoviePlayer as standardMoviePlayer
@@ -127,15 +134,18 @@ class customMoviePlayer(InfoBarShowHide, InfoBarSeek, InfoBarAudioSelection, Inf
     def aspectChange(self):
         printDBG("Aspect Ratio [%r]" % self.aspectratiomode)
         if self.aspectratiomode == "1":  # letterbox
-            iAVSwitch.setAspectRatio(0)
+            if iAVSwitch:
+                iAVSwitch.setAspectRatio(0)
             self.aspectratiomode = "2"
         elif self.aspectratiomode == "2":  # nonlinear
             self.aspectratiomode = "3"
         elif self.aspectratiomode == "3":  # nonlinear
-            iAVSwitch.setAspectRatio(2)
+            if iAVSwitch:
+                iAVSwitch.setAspectRatio(2)
             self.aspectratiomode = "4"
         elif self.aspectratiomode == "4":  # panscan
-            iAVSwitch.setAspectRatio(3)
+            if iAVSwitch:
+                iAVSwitch.setAspectRatio(3)
             self.aspectratiomode = "1"
 
     def pauseBeforeClose(self):
