@@ -139,32 +139,38 @@ if sys.version_info[0] == 2:
             _orig = _skin.applySingleAttribute
 
             import re as _re
-            _NUMBER = _re.compile(r'-?\d*\.\d+(?:[eE][-+]?\d+)?|-?\d+[eE][-+]?\d+')
+            _SEPARATORS = _re.compile(r'([,;\s])')
+            _EDGE = _re.compile(r'^e\s*(?:-\s*(\d+(?:\.\d+)?))?$')
             _NUM_ATTRS = ('position', 'size', 'font', 'itemHeight', 'scrollbarWidth', 'borderWidth',
                           'offset', 'valign', 'halign', 'spacing', 'itemWidth')
 
+            def _token_to_int(x):
+                """'12.5' / '1.2e-16' -> '13' / '0'; everything else (integers, 'e-16', 'Regular') unchanged"""
+                if '.' not in x and 'e' not in x.lower():
+                    return x
+                try:
+                    return str(int(round(float(x))))
+                except ValueError:
+                    return x
+
             def _to_int(v):
-                return _NUMBER.sub(lambda m: str(int(round(float(m.group(0))))), v)
+                return ''.join(_token_to_int(x) for x in _SEPARATORS.split(v))
 
             def _edge(guiObject, desktop, attrib, value):
                 """'e' / 'e-16' -> pixels, relative to the parent window (for size: from the widget position)"""
                 try:
                     par = guiObject.parent() if hasattr(guiObject, 'parent') else None
                     ps = par.size() if par is not None else desktop.size()
-                    dim = (ps.width(), ps.height())
-                    if attrib == 'size':
-                        try:
-                            pos = guiObject.position()
-                            dim = (dim[0] - pos.x(), dim[1] - pos.y())
-                        except Exception:
-                            pass
+                    dim = [ps.width(), ps.height()]
+                    if attrib == 'size' and hasattr(guiObject, 'position'):
+                        pos = guiObject.position()
+                        dim = [dim[0] - pos.x(), dim[1] - pos.y()]
                 except Exception:
                     return None
                 out = []
                 for i, x in enumerate(value.split(',')[:2]):
-                    x = x.strip()
-                    m = _re.match(r'^e\s*(?:-\s*(\d+(?:\.\d+)?))?$', x)
-                    out.append(str(max(0, dim[i] - int(round(float(m.group(1) or 0))))) if m else x)
+                    m = _EDGE.match(x.strip())
+                    out.append(str(max(0, dim[i] - int(round(float(m.group(1) or 0))))) if m else x.strip())
                 return ','.join(out)
 
             def _int_or_keyword(x):
@@ -174,27 +180,31 @@ if sys.version_info[0] == 2:
                 except ValueError:
                     return x if x in ('center', 'fill') else '0'
 
+            def _retry(guiObject, desktop, attrib, value, a, k):
+                """second try for position / size the image could not read"""
+                for v in (_edge(guiObject, desktop, attrib, value), ','.join(_int_or_keyword(x) for x in value.split(','))):
+                    try:
+                        return True, _orig(guiObject, desktop, attrib, v, *a, **k)
+                    except Exception:
+                        continue
+                return False, None
+
             def applySingleAttribute(guiObject, desktop, attrib, value, *a, **k):
-                if isinstance(value, basestring) and attrib in _NUM_ATTRS and _NUMBER.search(value):
+                if isinstance(value, basestring) and attrib in _NUM_ATTRS:
                     value = _to_int(value)
                 try:
                     return _orig(guiObject, desktop, attrib, value, *a, **k)
                 except ValueError as e:
                     _log('skin: numbers %s=%r (%s)' % (attrib, value, e))
                     if isinstance(value, basestring) and attrib in ('position', 'size'):
-                        for v in (_edge(guiObject, desktop, attrib, value), ','.join(_int_or_keyword(x) for x in value.split(','))):
-                            if v:
-                                try:
-                                    return _orig(guiObject, desktop, attrib, v, *a, **k)
-                                except Exception:
-                                    pass
+                        return _retry(guiObject, desktop, attrib, value, a, k)[1]
                 except AttributeError as e:
                     _log('skin: skipped %s=%s (%s)' % (attrib, value, e))
+                return None
             applySingleAttribute._e2i = True
             _skin.applySingleAttribute = applySingleAttribute
     except Exception:
         pass
-
     # Components.MultiContent: newer Enigma2 has extra keyword arguments (flags=BT_SCALE, cornerRadius ...) - drop unknown ones
     try:
         import inspect as _inspect
@@ -212,7 +222,7 @@ if sys.version_info[0] == 2:
 
             def _wrap_mc(_fn=_fn, _known=set(_spec.args)):
                 def f(*a, **k):
-                    return _fn(*a, **dict((x, y) for x, y in k.items() if x in _known))
+                    return _fn(*a, **{x: y for x, y in k.items() if x in _known})
                 f._e2i = True
                 f.__name__ = _fn.__name__
                 return f
@@ -233,7 +243,7 @@ if sys.version_info[0] == 2:
                 return fn
 
             def f(*a, **k):
-                return fn(*[_b(x) for x in a], **dict((x, _b(y)) for x, y in k.items()))
+                return fn(*[_b(x) for x in a], **{x: _b(y) for x, y in k.items()})
             f._e2i = True
             return f
 
@@ -260,12 +270,12 @@ if sys.version_info[0] == 2:
         except Exception:
             pass
         # every Enigma2 class (eLabel, eWindow, eListbox, eConsoleAppContainer, gFont, gPixmap ...)
-        _skip = set(['__getattr__', '__setattr__', '__repr__', '__del__', '__eq__', '__ne__', '__hash__', '__swig_destroy__'])
+        _skip = {'__getattr__', '__setattr__', '__repr__', '__del__', '__eq__', '__ne__', '__hash__', '__swig_destroy__'}
         for _cn in dir(_en2):
             _cls = getattr(_en2, _cn, None)
             if not isinstance(_cls, (type, types.ClassType)) or not _cn.startswith(('e', 'g')):
                 continue
-            for _mn, _mv in list(vars(_cls).items()):
+            for _mn, _mv in sorted(vars(_cls).items(), key=lambda kv: kv[0]):          # a copy: the class changes below
                 if _mn in _skip or (_mn.startswith('__') and _mn != '__init__') or not callable(_mv) or getattr(_mv, '_e2i', False):
                     continue
                 if isinstance(_mv, (staticmethod, classmethod)):
@@ -295,7 +305,7 @@ if sys.version_info[0] == 2:
                 t = _eu.parsedate_tz(data)
                 if t is None:
                     raise ValueError('invalid date: %r' % (data,))
-                return _dt.datetime.utcfromtimestamp(_eu.mktime_tz(t))
+                return _dt.datetime(1970, 1, 1) + _dt.timedelta(seconds=_eu.mktime_tz(t))
             _eu.parsedate_to_datetime = parsedate_to_datetime
     except ImportError:
         pass
@@ -344,7 +354,7 @@ if sys.version_info[0] == 2:
                     f, fn, a, k = job
                     try:
                         f._result = fn(*a, **k)
-                    except BaseException as e:
+                    except Exception as e:
                         f._error = e
                     f._event.set()
 
@@ -370,7 +380,7 @@ if sys.version_info[0] == 2:
                 self.shutdown(True)
 
         def as_completed(fs, timeout=None):
-            for f in list(fs):
+            for f in fs:
                 f.result(timeout)
                 yield f
 

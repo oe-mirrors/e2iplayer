@@ -274,7 +274,9 @@ class GeoArabic(GenericFolderWatchedScraperMixin, CBaseHostClass):
         text = re.sub(r"(?s)<table.*?</table>", "", content or "")
         text = re.sub(r"(?s)<script.*?</script>", "", text)
         text = self.cleanHtmlStr(text)
-        return text.decode('utf-8', 'ignore') if isinstance(text, bytes) and bytes is str else text  # Python 2: do not cut UTF-8 bytes in the middle of a character
+        if not isinstance(text, type(u'')):          # Python 2: decode first, then text[:300] never cuts a character
+            text = text.decode('utf-8', 'ignore')
+        return text
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("GeoArabic.listSearchResult [%s]" % searchPattern)

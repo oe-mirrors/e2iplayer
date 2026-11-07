@@ -5,7 +5,8 @@
 #  Python 2.7 and 3.x.
 #
 #  The host names of the pages E2iPlayer opens (pCommon.getPage / getURLRequestData) are resolved
-#  through encrypted DNS (DNS-over-HTTPS, JSON API): Cloudflare 1.1.1.1 / 1.0.0.1, Google 8.8.8.8.
+#  through encrypted DNS (DNS-over-HTTPS, JSON API): Cloudflare, Google. The DoH servers themselves are
+#  reached through the system DNS and their certificates are verified.
 #  ONLY names registered by the plugin (register) are affected - the rest of Enigma2 keeps using the system DNS.
 #  When DoH does not answer, the system answer is used. Results are cached in memory (TTL, at least 5 min).
 #  Setting: config.plugins.iptvplayer.dns_doh (on / off).
@@ -24,9 +25,8 @@ except ImportError:
     from urllib import quote
 
 _SERVERS = (
-    'https://1.1.1.1/dns-query?name=%s&type=A',
-    'https://1.0.0.1/dns-query?name=%s&type=A',
-    'https://8.8.8.8/resolve?name=%s&type=A',
+    'https://cloudflare-dns.com/dns-query?name=%s&type=A',
+    'https://dns.google/resolve?name=%s&type=A',
 )
 _orig_getaddrinfo = socket.getaddrinfo
 _names = set()          # host names registered by the plugin
@@ -43,35 +43,35 @@ def _enabled():
         return True
 
 
-def _ssl_context():
-    # connection to a bare IP address: these servers have the IP in the certificate, old Python 2.7 cannot check that
+def _open(url):
+    req = Request(url, headers={'Accept': 'application/dns-json', 'User-Agent': 'E2iPlayer'})
     try:
-        ctx = ssl.create_default_context()
-        ctx.check_hostname = False
-        ctx.verify_mode = ssl.CERT_NONE
-        return ctx
-    except Exception:
-        return None
+        ctx = ssl.create_default_context()           # certificate and host name are verified
+    except AttributeError:                           # very old Python 2.7 without SSL contexts
+        return urlopen(req, timeout=4)
+    return urlopen(req, timeout=4, context=ctx)
+
+
+def _parse(data):
+    """(ips, ttl) from a DoH JSON answer"""
+    ips, ttl = [], 3600
+    if data.get('Status') != 0:
+        return ips, ttl
+    for r in data.get('Answer') or []:
+        if r.get('type') == 1 and r.get('data'):
+            ips.append(str(r['data']))
+            ttl = min(ttl, int(r.get('TTL') or 300))
+    return ips, max(ttl, 300)
 
 
 def _query(name):
     for url in _SERVERS:
         try:
-            req = Request(url % quote(name), headers={'Accept': 'application/dns-json', 'User-Agent': 'E2iPlayer'})
-            ctx = _ssl_context()
-            resp = urlopen(req, timeout=4, context=ctx) if ctx is not None else urlopen(req, timeout=4)
-            data = json.loads(resp.read().decode('utf-8', 'replace'))
-            if data.get('Status') != 0:
-                continue
-            ips, ttl = [], 3600
-            for r in data.get('Answer') or []:
-                if r.get('type') == 1 and r.get('data'):
-                    ips.append(str(r['data']))
-                    ttl = min(ttl, int(r.get('TTL') or 300))
-            if ips:
-                return ips, max(ttl, 300)
+            ips, ttl = _parse(json.loads(_open(url % quote(name)).read().decode('utf-8', 'replace')))
         except Exception:
             continue
+        if ips:
+            return ips, ttl
     return None, 0
 
 
@@ -89,35 +89,42 @@ def resolve(name):
     return ips
 
 
-def _getaddrinfo(host, port, *a, **k):
+def _registered(host):
+    """lower-case host name when it was registered by the plugin, else None"""
     try:
-        name = host.decode('ascii') if isinstance(host, bytes) else host
+        name = (host.decode('ascii') if isinstance(host, bytes) else host).lower()
     except Exception:
-        name = None
-    if name and name.lower() in _names and not getattr(_local, 'busy', False) and _enabled():
-        _local.busy = True
+        return None
+    return name if name in _names else None
+
+
+def _resolve_once(name):
+    """resolve() but never recursively (the DoH request itself also calls getaddrinfo)"""
+    if getattr(_local, 'busy', False) or not _enabled():
+        return None
+    _local.busy = True
+    try:
+        return resolve(name)
+    finally:
+        _local.busy = False
+
+
+def _getaddrinfo(host, port, *a, **k):
+    name = _registered(host)
+    ips = _resolve_once(name) if name else None
+    result = []
+    for ip in ips or ():
         try:
-            ips = resolve(name.lower())
-        finally:
-            _local.busy = False
-        if ips:
-            result = []
-            for ip in ips:
-                try:
-                    result.extend(_orig_getaddrinfo(ip, port, *a, **k))
-                except Exception:
-                    pass
-            if result:
-                return result
-    return _orig_getaddrinfo(host, port, *a, **k)
+            result.extend(_orig_getaddrinfo(ip, port, *a, **k))
+        except socket.error:
+            pass
+    return result or _orig_getaddrinfo(host, port, *a, **k)
 
 
 def register(url):
     """register a page (URL or bare host name) whose address should be resolved through DoH"""
     try:
-        h = url
-        if '://' in h:
-            h = h.split('://', 1)[1]
+        h = url.split('://', 1)[1] if '://' in url else url
         h = h.split('/', 1)[0].split('?', 1)[0].split('@')[-1]
         if h.startswith('['):
             return
