@@ -452,7 +452,7 @@ CASES = [
      lambda out, err, page: '' if any(c.get('value') == 'a~~~~~~b' for r in token_results(err) if isinstance(r, dict) for c in r.get('cookie', [])) else 'result with "+" in its base64 did not arrive intact'),
     ('cf-error-page-not-solved', SITE + '/cf-error.html#e2itcf_sep_c=4', {'wait': 8},
      lambda out, err, page: 'the cookies of a Cloudflare block page were sent as a result' if token_results(err) else ''),
-    ('cookies-ddos-guard',SITE + '/gate#e2itck_sep_c=1', {'wait': 16},
+    ('cookies-ddos-guard', SITE + '/gate#e2itck_sep_c=1', {'wait': 16},
      lambda out, err, page: '' if any({'__ddg1_', '__ddg2_'} <= set(cookie_names(r)) for r in token_results(err)) else 'expected __ddg1_ (script) and __ddg2_ (HttpOnly) cookies, got %s' % [cookie_names(r) for r in token_results(err)]),
     ('cookies-anubis', SITE + '/anubis#e2itck_sep_c=1', {'wait': 16},
      lambda out, err, page: '' if any('techaro.lol-anubis-auth' in cookie_names(r) for r in token_results(err)) else 'no anubis cookie'),
