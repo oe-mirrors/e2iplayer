@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "21.10.2026"
+LAST_MODIFIED = "07.11.2026"
 # VAVOO.TO: IPTV live channels per country (logic of the Kodi "vavoo" addon).
 # - signature: POST www.vavoo.tv/api/app/ping (anonymous app ping) -> addonSig, valid ~15 min
 # - channel lists: POST vavoo.to/mediahubmx-catalog.json (filter group = country, paged by cursor)
@@ -41,13 +41,12 @@ def gettytul():
 
 class VavooTo(CBaseHostClass):
 
-    PING_URL = 'https://www.vavoo.tv/api/app/ping'
+    PING_URLS = ['https://www.vavoo.tv/api/app/ping', 'https://www.lokke.app/api/app/ping', 'https://www.vypn.net/api/app/ping']
     CATALOG_URL = 'https://vavoo.to/mediahubmx-catalog.json'
     RESOLVE_URL = 'https://vavoo.to/mediahubmx-resolve.json'
     API_UA = 'okhttp/4.11.0'
     STREAM_UA = 'VAVOO/2.6'
     CLIENT_VERSION = '3.0.2'
-    APP_VERSION = '3.1.20'
     CACHE_TIME = 600
     LETTER_LIMIT = 100  # a country with more channels is split by first letter
     PAGE_SIZE = 100  # local paging of a long letter list / search result
@@ -73,9 +72,18 @@ class VavooTo(CBaseHostClass):
     # API
     ###################################################
     def _post(self, url, body, withSig=True):
+        data = self._postOnce(url, body, withSig)
+        if data is None and withSig:
+            printDBG('VavooTo._post: no answer, new signature and one retry')
+            self.sig = ''
+            self.sigValidUntil = 0
+            data = self._postOnce(url, body, withSig, True)
+        return data
+
+    def _postOnce(self, url, body, withSig=True, forceSig=False):
         header = {'User-Agent': self.API_UA, 'Accept': 'application/json', 'Content-Type': 'application/json; charset=utf-8'}
         if withSig:
-            sig = self._getSignature()
+            sig = self._getSignature(forceSig)
             if not sig:
                 return None
             header['mediahubmx-signature'] = sig
@@ -87,7 +95,7 @@ class VavooTo(CBaseHostClass):
             # box log 09.10.2026: vavoo.to reset the box's TLS connection ("Connection reset by peer") while the
             # PC got the list - once more as Chrome (curl-impersonate: Chrome's TLS fingerprint and User-Agent, the
             # other headers incl. the signature stay; the catalog answers any User-Agent)
-            printDBG('VavooTo._post: %s - retrying with curl-impersonate' % str((getattr(data, 'meta', None) or {}).get('pycurl_error', 'no answer')))
+            printDBG('VavooTo._postOnce: %s - retrying with curl-impersonate' % str((getattr(data, 'meta', None) or {}).get('pycurl_error', 'no answer')))
             sts, data = self.cm.getPage(url, dict(params, impersonate=True), json_dumps(body))
         if not sts or not data:
             return None
@@ -97,28 +105,55 @@ class VavooTo(CBaseHostClass):
             printDBG('VavooTo._post: no JSON from %s' % url)
         return None
 
-    def _getSignature(self):
-        now = time.time()
-        if self.sig and now < self.sigValidUntil - 30:
-            return self.sig
-        ts = int(now * 1000)
-        body = {
-            'token': '', 'reason': 'app-blur', 'locale': 'de', 'theme': 'dark',
+    def _pingBodies(self):
+        # 07.11.2026: the catalog answers HTTP 500 to the old Android ping (tv.vavoo.app 3.1.20 with buildId/engine/
+        # signatures); the desktop app and the VYPN app identities are accepted
+        ts = int(time.time() * 1000)
+        electron = {
+            'reason': 'app-focus', 'locale': 'de', 'theme': 'dark',
             'metadata': {
-                'device': {'type': 'Handset', 'brand': 'google', 'model': 'Nexus', 'name': 'Nexus', 'uniqueId': self.deviceId},
-                'os': {'name': 'android', 'version': '7.1.2', 'abis': ['arm64-v8a', 'armeabi-v7a', 'armeabi'], 'host': 'android'},
-                'app': {'platform': 'android', 'version': self.APP_VERSION, 'buildId': '289515000', 'engine': 'hbc85',
-                        'signatures': [], 'installer': 'com.android.vending'},
-                'version': {'package': 'tv.vavoo.app', 'binary': self.APP_VERSION, 'js': self.APP_VERSION},
+                'device': {'type': 'desktop', 'uniqueId': self.deviceId},
+                'os': {'name': 'win32', 'version': 'Windows 10 Pro', 'abis': ['x64'], 'host': 'Lenovo'},
+                'app': {'platform': 'electron'},
+                'version': {'package': 'tv.vavoo.app', 'binary': '3.1.8', 'js': '3.1.8'},
             },
             'appFocusTime': 0, 'playerActive': False, 'playDuration': 0, 'devMode': False, 'hasAddon': True, 'castConnected': False,
-            'package': 'tv.vavoo.app', 'version': self.APP_VERSION, 'process': 'app', 'firstAppStart': ts, 'lastAppStart': ts,
-            'ipLocation': '', 'adblockEnabled': True,
-            'proxy': {'supported': ['ss', 'openvpn'], 'engine': 'ss', 'ssVersion': 1, 'enabled': True, 'autoServer': True, 'id': 'pl-waw'},
+            'package': 'tv.vavoo.app', 'version': '3.1.8', 'process': 'app', 'firstAppStart': ts, 'lastAppStart': ts,
+            'ipLocation': None, 'adblockEnabled': True,
+            'proxy': {'supported': ['ss'], 'engine': 'Mu', 'enabled': False, 'autoServer': True},
             'iap': {'supported': False},
         }
-        data = self._post(self.PING_URL, body, withSig=False)
-        sig = (data or {}).get('addonSig') if isinstance(data, dict) else ''
+        vypn = {
+            'token': '', 'reason': 'app-focus', 'locale': 'en', 'theme': 'dark',
+            'metadata': {
+                'device': {'type': 'phone', 'uniqueId': self.deviceId},
+                'os': {'name': 'android', 'version': '14', 'abis': ['arm64-v8a'], 'host': 'android'},
+                'app': {'platform': 'android'},
+                'version': {'package': 'net.vypn.app', 'binary': '1.4.1', 'js': '1.4.1'},
+            },
+            'appFocusTime': 0, 'playerActive': False, 'playDuration': 0, 'devMode': False, 'hasAddon': True, 'castConnected': False,
+            'package': 'net.vypn.app', 'version': '1.4.1', 'process': 'app', 'firstAppStart': ts - 86400000,
+            'lastAppStart': ts, 'ipLocation': None, 'adblockEnabled': True, 'migrationApplied': False,
+            'migrationTargetInstalled': False,
+            'proxy': {'supported': ['ss'], 'engine': 'Mu', 'ssVersion': '2022', 'enabled': False, 'autoServer': True, 'id': ''},
+            'iap': {'supported': False, 'error': ''},
+        }
+        return [electron, vypn]
+
+    def _getSignature(self, force=False):
+        now = time.time()
+        if not force and self.sig and now < self.sigValidUntil - 30:
+            return self.sig
+        sig = ''
+        for body in self._pingBodies():
+            for url in self.PING_URLS:
+                data = self._post(url, body, withSig=False)
+                sig = (data or {}).get('addonSig') if isinstance(data, dict) else ''
+                if sig:
+                    printDBG('VavooTo._getSignature: signature from %s (%s)' % (url, body['metadata']['app'].get('platform')))
+                    break
+            if sig:
+                break
         if not sig:
             printDBG('VavooTo._getSignature: no addonSig')
             SetIPTVPlayerLastHostError(_('VAVOO did not hand out a session signature. Try again later.'))

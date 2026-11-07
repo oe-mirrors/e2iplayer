@@ -58,6 +58,9 @@ DDG_CHALLENGE = ("<html><head><title>DDoS-Guard</title></head><body><h1>Checking
 ANUBIS_CHALLENGE = ("<html><head><title>Making sure you're not a bot!</title></head><body><h1>Making sure you're not a bot!</h1><p>Protected by Anubis from Techaro.</p>"
                     "<script>setTimeout(function(){document.cookie='techaro.lol-anubis-auth=tok456; path=/'; location.reload();}, 1500);</script></body></html>")
 CF_PAGE = "<html><head><title>CF test</title></head><body><h1>normal page</h1><script>document.cookie='cf_clearance=testvalue123; path=/';</script></body></html>"
+# Cloudflare's own block/error page: it sets a cookie too, but the site was not reached - no result may leave
+CF_ERROR_PAGE = ("<html><head><title>Attention Required! | Cloudflare</title></head><body><div id='cf-error-details'>Sorry, you have been blocked</div>"
+                 "<script>document.cookie='cf_clearance=notsolved; path=/';</script></body></html>")
 # a cookie value whose base64 form contains "+" (three "~" in a row always put one at the third byte of a group)
 CF_PLUS_PAGE = CF_PAGE.replace('testvalue123', 'a~~~~~~b')
 LATE_PAGE = ("<html><head><title>Late</title></head><body><h1>late</h1><script>setTimeout(function(){"
@@ -71,6 +74,9 @@ NAV_COUNTDOWN_PAGE = ("<html><body><a id='cs-link-sink' style='display:none' hre
                       "<script>setTimeout(function(){var a=document.getElementById('downloadbtn');"
                       "a.href='/movie/watching/?token=abc%2B123'; a.style.display='';}, 2000);</script></body></html>")
 NAV_FRAGMENT = '#e2itnv_sep_c=1&s=%s&a=href&r=%s' % tuple(urllib.parse.quote(base64.b64encode(v.encode()).decode(), safe='') for v in ('a#downloadbtn', r'/watching/\?token=[^&#\s]+'))
+# Referer the referer checks ask for (an embed page's parent) and what /ref.html received ('' = no Referer header)
+EMBED_REFERER = 'https://embedder.example/watch/42?x=1'
+SEEN_REFERERS = []
 
 
 # ------------------------------------------------------------ local test site
@@ -103,6 +109,11 @@ class Site(BaseHTTPRequestHandler):
         elif path == '/anubis':
             self._send(200, NORMAL_PAGE if 'techaro.lol-anubis-auth=' in cookies else ANUBIS_CHALLENGE)
         elif path == '/cf.html':
+            self._send(200, CF_PAGE)
+        elif path == '/cf-error.html':
+            self._send(403, CF_ERROR_PAGE)
+        elif path == '/ref.html':
+            SEEN_REFERERS.append(self.headers.get('Referer', ''))
             self._send(200, CF_PAGE)
         elif path == '/cf-plus.html':
             self._send(200, CF_PLUS_PAGE)
@@ -316,11 +327,38 @@ class Run(object):
         if not tabs:
             return '(relay tab gone)'
         ws = ws_connect(tabs[0]['webSocketDebuggerUrl'])
-        ws_send(ws, {'id': 1, 'method': 'Runtime.evaluate', 'params': {'expression': expr, 'returnByValue': True}})
+        # (userGesture: a click done here may open a window like a real tap)
+        ws_send(ws, {'id': 1, 'method': 'Runtime.evaluate', 'params': {'expression': expr, 'returnByValue': True, 'userGesture': True}})
         while True:
             m = json.loads(ws_recv(ws))
             if m.get('id') == 1:
                 return m['result'].get('result', {}).get('value')
+
+    def restart_server(self, extra):
+        """A new mye2iserver.py job (CAPTCHA_DATA plus extra) on the same port; the relay tab loads its page."""
+        self.procs[0].kill()
+        self.procs[0].wait()
+        time.sleep(1)
+        data = {'siteKey': '1', 'siteUrl': SITE + '/', 'captchaType': 'CF', 'token': TOKEN, 'pin': PIN, 'i18n': GERMAN}
+        data.update(extra)
+        payload = base64.b64encode(json.dumps(data).encode()).decode()
+        self.procs[0] = subprocess.Popen([sys.executable, SERVER, payload, '127.0.0.1', str(PORT_SERVER)], stdout=open(self.out_path, 'ab'), stderr=open(self.err_path, 'ab'))
+        time.sleep(2)
+        if self.marionette:
+            self.marionette.cmd('WebDriver:SwitchToWindow', {'handle': self.marionette.cmd('WebDriver:GetWindowHandles', {})[0]})
+            self.marionette.cmd('WebDriver:Navigate', {'url': self.relay_url()})
+        else:
+            self.relay_eval('location.href = %s' % json.dumps(self.relay_url()))
+        time.sleep(4)
+
+    def click_solve(self):
+        """Tap the relay page's solve button (a real click: the page opens the job's tab itself)."""
+        if self.marionette:
+            self.marionette.cmd('WebDriver:SwitchToWindow', {'handle': self.marionette.cmd('WebDriver:GetWindowHandles', {})[0]})
+            elem = self.marionette.cmd('WebDriver:FindElement', {'using': 'css selector', 'value': '#mye2i-solve'})['value']
+            self.marionette.cmd('WebDriver:ElementClick', {'id': list(elem.values())[0]})
+        else:
+            self.relay_eval("document.getElementById('mye2i-solve').click()")
 
     def page_eval(self, url, expr):
         """Evaluate JS in the case tab; '(tab gone)' if it closed itself (the normal end of a solved job)."""
@@ -354,9 +392,17 @@ class Run(object):
     def stop(self):
         for p in self.procs:
             try:
-                p.kill()
+                if os.name == 'nt':
+                    # the whole tree: Edge's helper processes outlive the launcher and keep the profile locked
+                    subprocess.call(['taskkill', '/F', '/T', '/PID', str(p.pid)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                else:
+                    p.kill()
             except Exception:
                 pass
+        if os.name == 'nt':
+            # Edge detaches some helpers from the launcher's tree: they are found by the test profile in their command line
+            script = "Get-CimInstance Win32_Process | Where-Object { $_.CommandLine -like '*%s*' } | ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }" % os.path.join(self.tmp, 'profile')
+            subprocess.call(['powershell', '-NoProfile', '-Command', script], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         time.sleep(1)
 
 
@@ -404,7 +450,9 @@ CASES = [
      lambda out, err, page: '' if any('cf_clearance' in cookie_names(r) for r in token_results(err)) else 'no cf_clearance token'),
     ('cf-cookie-with-plus-in-token', SITE + '/cf-plus.html#e2itcf_sep_c=3', {},
      lambda out, err, page: '' if any(c.get('value') == 'a~~~~~~b' for r in token_results(err) if isinstance(r, dict) for c in r.get('cookie', [])) else 'result with "+" in its base64 did not arrive intact'),
-    ('cookies-ddos-guard', SITE + '/gate#e2itck_sep_c=1', {'wait': 16},
+    ('cf-error-page-not-solved', SITE + '/cf-error.html#e2itcf_sep_c=4', {'wait': 8},
+     lambda out, err, page: 'the cookies of a Cloudflare block page were sent as a result' if token_results(err) else ''),
+    ('cookies-ddos-guard',SITE + '/gate#e2itck_sep_c=1', {'wait': 16},
      lambda out, err, page: '' if any({'__ddg1_', '__ddg2_'} <= set(cookie_names(r)) for r in token_results(err)) else 'expected __ddg1_ (script) and __ddg2_ (HttpOnly) cookies, got %s' % [cookie_names(r) for r in token_results(err)]),
     ('cookies-anubis', SITE + '/anubis#e2itck_sep_c=1', {'wait': 16},
      lambda out, err, page: '' if any('techaro.lol-anubis-auth' in cookie_names(r) for r in token_results(err)) else 'no anubis cookie'),
@@ -618,6 +666,81 @@ def translation_checks():
     return len(checks), [(name, got, want) for name, got, want in checks if got != want]
 
 
+def referer_server_checks():
+    """Server only: the relay page never hands the box address on as Referer; a job's Referer goes into the fragment."""
+    base = 'http://127.0.0.1:%d' % PORT_SERVER
+    checks = []
+
+    def solve_url(body):
+        m = re.search(r'<button type="button" id="mye2i-solve" data-url="([^"]*)"', body)
+        return m.group(1).replace('&amp;', '&') if m else ''
+
+    proc = start_server()
+    try:
+        request(base + '/?t=' + TOKEN)
+        conn = http.client.HTTPConnection('127.0.0.1', PORT_SERVER, timeout=10)
+        conn.request('GET', '/e2it.html')
+        answer = conn.getresponse()
+        body = answer.read().decode('utf-8', 'replace')
+        conn.close()
+        checks += [('relay page: Referrer-Policy header', answer.getheader('Referrer-Policy'), 'no-referrer'),
+                   ('relay page: no-referrer meta tag', '<meta name="referrer" content="no-referrer">' in body, True),
+                   ('job without Referer: no ref= and no feature check', ('&ref=' in solve_url(body), 'data-mye2i-needs' in body), (False, False))]
+    finally:
+        proc.kill()
+        time.sleep(1)
+
+    for captcha_type, prefix in (('CF', '#e2itcf_sep_c=1'), ('COOKIES', '#e2itck_sep_c=1')):
+        proc = start_server(captcha_type=captcha_type, extra={'pageReferer': EMBED_REFERER + '#frag'})
+        try:
+            request(base + '/?t=' + TOKEN)
+            status, body, _loc = request(base + '/e2it.html')
+            checks += [('%s job: Referer in the fragment (without its own fragment)' % captcha_type, solve_url(body), SITE + '/' + prefix + '&ref=' + urllib.parse.quote(EMBED_REFERER, safe='')),
+                       ('%s job: banner asks for 1.22 and the feature' % captcha_type, ('id="mye2i_1.22" data-mye2i-needs="referer"' in body, "getAttribute('data-mye2i-features')" in body), (True, True))]
+        finally:
+            proc.kill()
+            time.sleep(1)
+
+    for bad in ('javascript:alert(1)', 'https://user:pw@embedder.example/', 'https://embedder.example/\r\nX-Evil: 1', 'embedder.example/page'):
+        proc = start_server(extra={'pageReferer': bad})
+        try:
+            request(base + '/?t=' + TOKEN)
+            status, body, _loc = request(base + '/e2it.html')
+            checks.append(('invalid Referer %r is dropped' % bad, '&ref=' in solve_url(body), False))
+        finally:
+            proc.kill()
+            time.sleep(1)
+    return len(checks), [(name, got, want) for name, got, want in checks if got != want]
+
+
+def referer_checks(run):
+    """In the browser: a tap on the solve button opens the job's page without the box address as Referer, or
+    with the job's Referer (extension 1.22, background.js session rule). Returns a list of (name, problem)."""
+    results = []
+    for name, extra, want in (('solve button: no Referer for the site', {}, ''),
+                              ('solve button: the job\'s Referer reaches the site', {'pageReferer': EMBED_REFERER}, EMBED_REFERER)):
+        run.new_output()
+        run.restart_server(dict(extra, siteUrl=SITE + '/ref.html'))
+        banner = run.relay_eval("(function(){var b=document.querySelector('[data-mye2i-needs]'); return b ? getComputedStyle(b).display : 'no feature banner';})()") if extra else ''
+        start_out, _start_err = run.new_output()  # (the version check of the relay page is in here)
+        del SEEN_REFERERS[:]
+        run.click_solve()
+        time.sleep(8)
+        out, err = run.new_output()
+        out = start_out + out
+        problem = ''
+        if want and banner != 'none':
+            problem = 'outdated banner shown although the extension names the feature (%r)' % (banner,)
+        elif SEEN_REFERERS[:1] != [want]:
+            problem = 'site saw Referer %r, expected %r' % (SEEN_REFERERS, want)
+        elif not any('cf_clearance' in cookie_names(r) for r in token_results(err)):
+            problem = 'no cf_clearance token'
+        elif want and 'v1.22 OK' not in out:
+            problem = 'server did not accept the version/features: %s' % ' | '.join(line for line in out.splitlines() if 'version check' in line)
+        results.append((name, problem))
+    return results
+
+
 def find_browser(name):
     for path in (FIREFOX if name == 'firefox' else CHROMIUM.get(name, [])):
         if os.path.exists(path):
@@ -662,13 +785,20 @@ def main():
     print('  %s' % ('FAIL' if bad else 'PASS (%d checks)' % count))
     failures += len(bad)
 
+    print('Referer of the opened page (server):')
+    count, bad = referer_server_checks()
+    for name, got, want in bad:
+        print('  FAIL %s: got %r, expected %r' % (name, got, want))
+    print('  %s' % ('FAIL' if bad else 'PASS (%d checks)' % count))
+    failures += len(bad)
+
     for browser in browsers:
         exe = find_browser(browser)
         if not exe:
             print('\n%s: not installed - skipped' % browser)
             continue
         print('\n%s (%s):' % (browser, exe))
-        with tempfile.TemporaryDirectory() as tmp:
+        with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmp:
             run = Run(browser, tmp)
             try:
                 run.start(exe)
@@ -695,6 +825,10 @@ def main():
                         print('    page: %r' % (page,))
                         print('    tabs: %s' % tabs_seen)
                     failures += 1 if problem else 0
+                if not args.only or 'referer' in args.only:
+                    for name, problem in referer_checks(run):
+                        print('  %s %s%s' % ('FAIL' if problem else 'PASS', name, (' - ' + problem) if problem else ''))
+                        failures += 1 if problem else 0
             finally:
                 run.stop()
     print('\n%s' % ('%d FAILURE(S)' % failures if failures else 'ALL PASSED'))

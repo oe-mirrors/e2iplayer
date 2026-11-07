@@ -1006,6 +1006,9 @@ class _Handler(BaseHTTPRequestHandler):
         if entry.get('kind') == 'sub':
             self._serveSubtitle(entry)
             return
+        if entry.get('kind') == 'text':
+            self._serveText(entry)
+            return
         try:
             finalUrl, data = _manifestFor(entry)
             body = filterMpd(data, finalUrl, entry['sel'], clockOffset=entry.get('offset', 0), startDelay=entry.get('delay', 0)).encode('utf-8')
@@ -1033,6 +1036,34 @@ class _Handler(BaseHTTPRequestHandler):
         if length is not None:
             self.send_header('Content-Length', str(length))
         self.end_headers()
+
+    def _serveText(self, entry):
+        # a text a host prepares on demand (localTextUrl): built by its loader at the first request, kept after
+        try:
+            with _lock:
+                text = entry.get('text')
+            if text is None:
+                try:
+                    text = entry['load']() or ''
+                except Exception:
+                    printExc()
+                    text = ''
+                if text:
+                    # a failed load is not kept: the next request tries again
+                    with _lock:
+                        entry['text'] = text
+            if not text:
+                self.send_error(502)
+                return
+            body = text.encode('utf-8')
+            self.send_response(200)
+            self.send_header('Content-Type', entry.get('mime', 'text/plain') + '; charset=utf-8')
+            self.send_header('Content-Length', str(len(body)))
+            self.send_header('Cache-Control', 'no-cache')
+            self.end_headers()
+            self.wfile.write(body)
+        except OSError:
+            printDBG('dashmpd: text request closed by the client')
 
     def _serveSubtitle(self, entry):
         # the WebVTT of a segmented text track: the cues are written while the segments come in; a finished text is
@@ -1187,6 +1218,19 @@ def localSubtitleUrl(manifestUrl, periodIdx, track):
         server = _register(token, {'kind': 'sub', 'url': str(manifestUrl), 'headers': _headersFromMeta(meta), 'period': periodIdx,
                                    'set': track['set'], 'rep': track['rep'], 'id': track['id'], 'sub': track['segmented']})
         return 'http://127.0.0.1:%d/dash/%s.vtt' % (server.server_address[1], token)
+    except Exception:
+        printExc()
+        return None
+
+
+def localTextUrl(name, load, ext='srt', mime='text/plain'):
+    # http://127.0.0.1:<port>/dash/<token>.<ext>: a text a host builds only when it is asked for (e.g. subtitles it
+    # has to decrypt), load() -> text runs at the first request in the server's thread; None if the local server
+    # cannot be started. The same name registered again replaces the loader and keeps an already loaded text.
+    token = hashlib.md5(('text\n%s' % name).encode('utf-8')).hexdigest()[:20]
+    try:
+        server = _register(token, {'kind': 'text', 'load': load, 'mime': mime})
+        return 'http://127.0.0.1:%d/dash/%s.%s' % (server.server_address[1], token, ext)
     except Exception:
         printExc()
         return None

@@ -49,7 +49,100 @@ chrome.tabs.onRemoved.addListener((tabId) => {
   lastStatus.delete(tabId);
   dbgRemoveTab(tabId);
   navTakeJob(tabId);
+  refererRemoveRule(tabId);
 });
+
+// ---- Referer for the opened page (v1.22) ---------------------------------
+// The solve button of the relay page opens the job's page. The relay page says
+// no-referrer, so a site never learns the box address. A job with "ref=" in its
+// fragment (an embed page that only plays inside the page embedding it) is
+// opened here instead (contentscripts/e2it.js -> OPEN_SOLVER): a new tab, a
+// session rule that sets that Referer on the tab's top-level requests to the
+// page's host (the Cloudflare reload included), then the page. The rule goes
+// with the tab.
+const REFERER_RULE_BASE = 1000000;
+
+function refererRuleId(tabId) {
+    return REFERER_RULE_BASE + tabId;
+}
+
+function refererRemoveRule(tabId) {
+    if (!chrome.declarativeNetRequest?.updateSessionRules) {
+        return;
+    }
+    chrome.declarativeNetRequest.updateSessionRules({removeRuleIds: [refererRuleId(tabId)]}).catch(() => {});
+}
+
+// "ref" of the fragment: an absolute http(s) address without credentials, '' otherwise
+function refererOfJob(target) {
+    const sep = target.hash.indexOf('_sep_');
+    if (sep < 0) {
+        return '';
+    }
+    let value = '';
+    for (const part of target.hash.slice(sep + 5).split('&')) {
+        if (part.startsWith('ref=')) {
+            try {
+                value = decodeURIComponent(part.slice(4));
+            } catch (e) {
+                return '';
+            }
+        }
+    }
+    if (!value || /[\r\n]/.test(value)) {
+        return '';
+    }
+    try {
+        const url = new URL(value);
+        if (!['http:', 'https:'].includes(url.protocol) || url.username || url.password) {
+            return '';
+        }
+        url.hash = '';
+        return url.href;
+    } catch (e) {
+        return '';
+    }
+}
+
+async function refererOpenSolver(url, openerTab) {
+    const target = new URL(url);
+    if (!['http:', 'https:'].includes(target.protocol) || !target.hash.startsWith('#e2it')) {
+        throw new Error('not a MyE2i job address');
+    }
+    const referer = refererOfJob(target);
+    const props = {url: 'about:blank', active: true};
+    if (openerTab) {
+        props.openerTabId = openerTab.id;
+        props.windowId = openerTab.windowId;
+        props.index = openerTab.index + 1;
+    }
+    const tab = await chrome.tabs.create(props);
+    let withReferer = false;
+    if (referer && chrome.declarativeNetRequest?.updateSessionRules) {
+        try {
+            await chrome.declarativeNetRequest.updateSessionRules({
+                removeRuleIds: [refererRuleId(tab.id)],
+                addRules: [{
+                    id: refererRuleId(tab.id),
+                    priority: 1,
+                    action: {type: 'modifyHeaders', requestHeaders: [{header: 'referer', operation: 'set', value: referer}]},
+                    condition: {tabIds: [tab.id], resourceTypes: ['main_frame'], requestDomains: [target.hostname]}
+                }]
+            });
+            withReferer = true;
+        } catch (e) {
+            e2iBoxLog('Referer rule failed, the page opens without it: ' + e);
+        }
+    }
+    try {
+        await chrome.tabs.update(tab.id, {url: target.href});
+    } catch (e) {
+        // the relay page opens it itself then (without the Referer) - no second, empty tab
+        chrome.tabs.remove(tab.id).catch(() => {});
+        throw e;
+    }
+    e2iBoxLog(withReferer ? 'page opened with the Referer ' + referer : 'page opened without a Referer');
+}
 
 // A result for the receiver goes to the open local e2it.html tab, which passes it on to mye2iserver.py
 // (/response). The token is sent as it is - e2it.js percent-encodes it.
@@ -311,6 +404,14 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
             world: 'MAIN',
             files: ["contentscripts/rc2Contentscript.js"]
         }).then(sendResponse);
+    }
+
+    if (msg.action === "OPEN_SOLVER") {
+        refererOpenSolver(msg.url, sender.tab).then(
+            () => sendResponse({ok: true}),
+            (e) => sendResponse({ok: false, error: String(e?.message || e)})
+        );
+        return true;
     }
 
     if (msg.action === "CLOSE_ME" && sender.tab?.id) {

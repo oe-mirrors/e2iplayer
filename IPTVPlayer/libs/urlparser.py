@@ -273,6 +273,7 @@ class urlparser:
             "cimanowtv.com": self.pp.parserCIMANOWTV,  # add 111026
             "cindyeyefinal.com": self.pp.parserVOESX,  # add 061026
             "cinegrab.com": self.pp.parserBYSE,
+            "cinemar.cc": self.pp.parserCINEMAR,  # add 061126
             "cinemathek.online": self.pp.parserJWPLAYER,  # add 061026
             "claireguessthousand.com": self.pp.parserVOESX,  # add 211026
             "cloud.mail.ru": self.pp.parserCOUDMAILRU,
@@ -705,6 +706,7 @@ class urlparser:
             "robertordercharacter.com": self.pp.parserVOESX,  # add 061026
             "robertplacespace.com": self.pp.parserVOESX,  # add 061026
             "rpmhub.site": self.pp.parserSBS,  # add 081026
+            "rpmshare.rpmstream.live": self.pp.parserRPMSHARE,  # add 061126
             "rubystm.com": self.pp.parserJWPLAYER,
             "rubystream.xyz": self.pp.parserJWPLAYER,  # add 061026
             "rubyvid.com": self.pp.parserJWPLAYER,  # add 061026
@@ -2979,6 +2981,89 @@ class pageParser(CaptchaHelper):
         elif self.cm.isValidUrl(fileUrl):
             q = self.cm.ph.getSearchGroups(data, r'default_quality\s*:\s*"([^"]+)')[0] or "MP4"
             urltab.append({"name": q, "url": urlparser.decorateUrl(fileUrl, dict(meta))})
+        return urltab
+
+    def parserRPMSHARE(self, baseUrl):  # add 061126
+        printDBG("parserRPMSHARE baseUrl[%s]" % baseUrl)
+        # rpmshare.rpmstream.live/#<id> (hdmozi): the page asks api/public/resolve?file1=<id> for the player
+        # url it then opens; {"ok": false, "error": "not found"} for a dead or not yet published file
+        baseUrl = strwithmeta(baseUrl)
+        videoId = baseUrl.split("#", 1)[1].split("&", 1)[0] if "#" in baseUrl else ""
+        if not videoId:
+            return []
+        domain = urlparser.getDomain(baseUrl, False)
+        HTTP_HEADER = self.cm.getDefaultHeader()
+        HTTP_HEADER["Referer"] = domain
+        HTTP_HEADER["Accept"] = "application/json"
+        sts, data = self.cm.getPage(domain + "api/public/resolve?file1=" + videoId, {"header": HTTP_HEADER, "ignore_http_code_ranges": [(400, 599)]})
+        if not sts:
+            return []
+        url = self.cm.ph.getSearchGroups(data, r'"url"\s*:\s*"([^"]+)"')[0].replace("\\/", "/")
+        if not self.cm.isValidUrl(url) or urlparser.getDomain(url) == urlparser.getDomain(baseUrl):
+            printDBG("parserRPMSHARE answer [%s]" % data[:120])
+            return []
+        return urlparser().getVideoLinkExt(strwithmeta(url, {"Referer": domain}))
+
+    def parserCINEMAR(self, baseUrl):  # add 061126
+        printDBG("parserCINEMAR baseUrl[%s]" % baseUrl)
+        # cinemar.cc/embed/<id>/+<token> (kinogo): Cinemar({"file": "#2<dd><chunks>"}) - the playlist JSON is base64
+        # in chunks separated by chr(<dd>), each chunk longer than 32 chars shuffled by its last digit e:
+        # chunk[2e:2e+len-3e-1] + chunk[:e]; every item's "data" blob goes to POST api/playlist/load (a JSON
+        # string) which answers {"file": <hls url>, "subtitle": ...}; a series answers folders (not handled here)
+        baseUrl = strwithmeta(baseUrl)
+        HTTP_HEADER = self.cm.getDefaultHeader()
+        HTTP_HEADER["Referer"] = baseUrl.meta.get("Referer", urlparser.getDomain(baseUrl, False))
+        sts, data = self.cm.getPage(baseUrl, {"header": HTTP_HEADER})
+        if not sts:
+            return []
+        encoded = self.cm.ph.getSearchGroups(data, r'"file"\s*:\s*"(#2[^"]+)"')[0]
+        if not encoded:
+            return []
+        try:
+            text = encoded[2:]
+            separator = chr(int(text[:2]))
+            parts = []
+            for chunk in text[2:].split(separator):
+                e = int(chunk[-1]) if chunk and chunk[-1].isdigit() else 0
+                parts.append(chunk[2 * e:2 * e + len(chunk) - 3 * e - 1] + chunk[:e] if len(chunk) > 32 else chunk)
+            raw = "".join(parts)
+            raw += "=" * (-len(raw) % 4)
+            playlist = json_loads(base64.b64decode(raw).decode("utf-8"))
+        except Exception:
+            printExc()
+            return []
+        items = [x for x in playlist if isinstance(x, dict) and x.get("data")] if isinstance(playlist, list) else []
+        if not items:
+            printDBG("parserCINEMAR: no playable item (a series playlist?)")
+            return []
+        domain = urlparser.getDomain(baseUrl, False)
+        apiHeader = dict(HTTP_HEADER)
+        apiHeader.update({"Referer": str(baseUrl), "Content-Type": "application/json", "Accept": "application/json"})
+        urltab = []
+        for item in items:
+            sts, answer = self.cm.getPage(domain + "api/playlist/load", {"header": apiHeader, "raw_post_data": True}, json_dumps(item["data"]))
+            if not sts:
+                continue
+            try:
+                answer = json_loads(answer)
+            except Exception:
+                printExc()
+                continue
+            if isinstance(answer, dict) and isinstance(answer.get("data"), dict):
+                answer = answer["data"]
+            hls = answer.get("file", "") if isinstance(answer, dict) else ""
+            if not self.cm.isValidUrl(hls):
+                continue
+            name = self.cm.ph.getSearchGroups(str(item.get("title", "")), r"\(([^)]+)\)")[0] or str(item.get("title", ""))
+            meta = {"Referer": domain}
+            subtitle = answer.get("subtitle", "") if isinstance(answer, dict) else ""
+            if self.cm.isValidUrl(subtitle):
+                meta["external_sub_tracks"] = [{"title": name or "sub", "url": subtitle, "lang": "", "format": subtitle.split("?")[0].split(".")[-1]}]
+            variants = getDirectM3U8Playlist(strwithmeta(hls, {"Referer": domain}), checkContent=True, sortWithMaxBitrate=99999999)
+            if not variants:
+                variants = [{"name": "hls", "url": hls}]
+            for variant in variants:
+                urltab.append({"name": "%s %s" % (name, variant["name"]) if name else variant["name"], "url": urlparser.decorateUrl(variant["url"], dict(meta))})
         return urltab
 
     def parserSBS(self, baseUrl):  # update 031026

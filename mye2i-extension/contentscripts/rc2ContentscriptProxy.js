@@ -732,15 +732,24 @@ function main_e2itcf(){
     // challenge widget removed without a full reload is still detected.
     var e2i_cfDone = false;
 
+    // (v1.22) Cloudflare's own error and block pages ("Attention Required! |
+    // Cloudflare", "#cf-error-details", the cf.errors stylesheet) count as
+    // challenge pages too: the site is not reached there, sending the cookies
+    // of such a page would report a solve that did not happen.
     function e2i_looksLikeChallengePage() {
         try {
-            if (document.getElementById("challenge-form")) return true;
+            if (document.getElementById("challenge-form") || document.getElementById("cf-error-details")) return true;
         } catch (e) {}
         try {
             for (const link of document.getElementsByTagName("link")) {
                 const href = link.getAttribute("href");
-                if (href?.includes('/challenges')) return true;
+                if (href?.includes('/challenges') || href?.includes('/cdn-cgi/styles/cf.errors')) return true;
             }
+        } catch (e) {
+            // not readable: this check finds nothing
+        }
+        try {
+            if (/^Attention Required!\s*\|\s*Cloudflare$/i.test(document.title.trim())) return true;
         } catch (e) {
             // not readable: this check finds nothing
         }

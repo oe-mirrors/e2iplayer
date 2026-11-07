@@ -41,6 +41,10 @@ MIN_EXTENSION_VERSION_STR = '.'.join(str(part) for part in MIN_EXTENSION_VERSION
 # the NAV job (follow a tab across a site's redirects to a link, "#e2itnv") needs 1.21: an older extension would
 # take the unknown fragment for a captcha page and show an empty solver
 MIN_NAV_EXTENSION_VERSION = (1, 21)
+# a job that has to reach the site with a given Referer ("ref=" in the fragment, an embed page) needs 1.22: older
+# extensions open the page without any Referer. Since 1.22 the extension also names what it can do (relay page
+# attribute data-mye2i-features, "f=" on /version): other builds of the extension carry the same version numbers.
+MIN_REFERER_EXTENSION_VERSION = (1, 22)
 # Fixed download link: the release named "mye2i-extension" keeps its asset name
 # and gets the asset replaced on every new extension version (see
 # mye2i-extension/README.md), so this URL never has to change.
@@ -232,25 +236,56 @@ def _build_launcher_block(launcher_url, launcher_name):
             <a href="%s" style="display:inline-block;background:#fff;color:#c0392b;font-weight:bold;font-size:large;padding:14px 22px;border-radius:14px;text-decoration:none">%s</a>''' % (html_escape(launcher_url, quote=True), text)
 
 
+def page_referer(value):
+    """The Referer a job's page is opened with: an absolute http(s) address without credentials, '' otherwise."""
+    value = (value or '').strip()
+    if not value or '\r' in value or '\n' in value:
+        return ''
+    parts = urlsplit(value)
+    if parts.scheme not in ('http', 'https') or not parts.hostname or '@' in parts.netloc:
+        return ''
+    return value.split('#')[0]
+
+
+# Shows the "outdated" banner again when the installed extension (it hid the banner by its version number) does not
+# name a feature this job needs. Runs on "load", after e2it.js handled readystatechange.
+_FEATURE_CHECK_SCRIPT = '''
+        <script>
+            window.addEventListener('load', function () {
+                var banner = document.querySelector('[data-mye2i-needs]');
+                var have = (document.documentElement.getAttribute('data-mye2i-features') || '').split(' ');
+                if (banner && banner.getAttribute('data-mye2i-needs').split(' ').some(function (f) { return have.indexOf(f) < 0; })) {
+                    banner.style.display = 'block';
+                }
+            });
+        </script>'''
+
+
 def redirect_handler_factory(url, token='', pin='', close_start_page=False, launcher_url='', launcher_name=''):
 
     minVersion = MIN_EXTENSION_VERSION
-    if 'e2itcf' in url:
+    fragment = url.split('#', 1)[1] if '#' in url else ''
+    if fragment.startswith('e2itcf'):
         job_type = 'cloudflare'
-    elif 'e2itck' in url:
+    elif fragment.startswith('e2itck'):
         job_type = 'cookies'
-    elif 'e2itnv' in url:
+    elif fragment.startswith('e2itnv'):
         job_type = 'nav'
         minVersion = MIN_NAV_EXTENSION_VERSION
     else:
         job_type = 'captcha'
+    # features the extension must name for this job (see MIN_REFERER_EXTENSION_VERSION)
+    needs = []
+    if '&ref=' in fragment:
+        needs.append('referer')
+        minVersion = max(minVersion, MIN_REFERER_EXTENSION_VERSION)
     minVersionStr = '.'.join(str(part) for part in minVersion)
     to_write = '''
 <!doctype html>
 <html>
-    <head><meta charset="utf-8"><meta name="mye2i-token" content="%s"><script type="application/json" id="mye2i-i18n">%s</script></head>
+    <head><meta charset="utf-8"><meta name="referrer" content="no-referrer"><meta name="mye2i-token" content="%s"><script type="application/json" id="mye2i-i18n">%s</script></head>
     <body style="background-color: #c8dee1">
-        <div id="mye2i_%s" style="background:#c0392b;color:#fff;padding:14px;text-align:center;font-family:sans-serif;font-size:16px;">
+        <div id="mye2i_%s"%s style="background:#c0392b;color:#fff;padding:14px;text-align:center;font-family:sans-serif;font-size:16px;">
             %s
             <a href="%s" style="color:#fff;text-decoration:underline;">%s</a>%s
         </div>
@@ -259,15 +294,17 @@ def redirect_handler_factory(url, token='', pin='', close_start_page=False, laun
         <center>
             <button type="button" id="mye2i-solve" data-url="%s" onclick="window.open(this.getAttribute('data-url'), '_blank')" style="color: white; font-weight: bold; font-size: x-large; text-align: center; padding: 4ex; border-radius: 20px; background-color:#448844">%s</button>
         </center>
-        %s%s
+        %s%s%s
     </body>
 </html>
 ''' % (html_escape(token, quote=True), _json_for_html({k: T(k) for k in DEFAULT_TEXTS if k.startswith('x_')}), minVersionStr,
+           (' data-mye2i-needs="%s"' % ' '.join(needs)) if needs else '',
            html_escape(T('extension_outdated', minVersionStr)), UPDATE_URL, H('extension_download'),
            _build_launcher_block(launcher_url, launcher_name),
            html_escape(url, quote=True), H('job_' + job_type), _build_debug_block(url),
            # e2it.js of the extension closes this page once the result reached the box when it finds this element
-           '<div id="e2i-close-on-success" style="display:none"></div>' if close_start_page else '')
+           '<div id="e2i-close-on-success" style="display:none"></div>' if close_start_page else '',
+           _FEATURE_CHECK_SCRIPT if needs else '')
 
     relay_page = to_write.encode('utf-8')
 
@@ -379,12 +416,14 @@ def redirect_handler_factory(url, token='', pin='', close_start_page=False, laun
             self.wfile.write(body)
             return False
 
-        def _reply(self, body, content_type='text/plain'):
+        def _reply(self, body, content_type='text/plain', headers=()):
             if isinstance(body, str):
                 body = body.encode('utf-8')
             self.send_response(200)
             self.send_header('Content-Type', content_type)
             self.send_header('Content-Length', str(len(body)))
+            for name, value in headers:
+                self.send_header(name, value)
             self.end_headers()
             self.wfile.write(body)
 
@@ -409,7 +448,9 @@ def redirect_handler_factory(url, token='', pin='', close_start_page=False, laun
                 self._redirect(RELAY_PAGE_PATH)
                 return
             if route == RELAY_PAGE_PATH:
-                self._reply(relay_page, 'text/html; charset=utf-8')
+                # the site opened from here must not learn the box address (http://<box>:<port>/) as Referer; the
+                # meta tag in the page says the same for browsers that ignore the header
+                self._reply(relay_page, 'text/html; charset=utf-8', [('Referrer-Policy', 'no-referrer')])
                 return
             if route == '/response':
                 if not self._authorized():
@@ -441,10 +482,13 @@ def redirect_handler_factory(url, token='', pin='', close_start_page=False, laun
                 # the (easy to miss) browser page banner.
                 self._reply('OK')
                 ext_version = self._query().get('v', [''])[0]
+                # (1.22+: what the extension can do, comma separated - an extension without "f" names nothing)
+                ext_features = [f for f in self._query().get('f', [''])[0].split(',') if f]
+                missing = [f for f in needs if f not in ext_features]
                 if not ext_version:
                     print('[MyE2i-Browser] Extension version check: no version reported (old extension?)')
-                elif _parse_version_tuple(ext_version) < minVersion:
-                    print('[MyE2i-Browser] Extension version check: v%s is OUTDATED (min v%s)' % (ext_version, minVersionStr))
+                elif _parse_version_tuple(ext_version) < minVersion or missing:
+                    print('[MyE2i-Browser] Extension version check: v%s is OUTDATED (min v%s%s)' % (ext_version, minVersionStr, (', missing: ' + ', '.join(missing)) if missing else ''))
                     updateStatus('status', 'MyE2i extension is outdated - please update it.')
                 else:
                     print('[MyE2i-Browser] Extension version check: v%s OK (min v%s)' % (ext_version, minVersionStr))
@@ -517,12 +561,17 @@ if __name__ == "__main__":
         if isinstance(translations, dict):
             TEXTS.update({k: v for k, v in translations.items() if k in DEFAULT_TEXTS})
 
+        # the Referer the page is opened with (the page embedding it): the extension sets it for the tab, "ref=" is
+        # the last parameter of the fragment
+        pageReferer = page_referer(CAPTCHA_DATA.get('pageReferer'))
+        refParam = ('&ref=' + quote(pageReferer, safe='')) if pageReferer else ''
+
         socketserver.TCPServer.allow_reuse_address = True
         if captchaType == 'CF':
-            httpd = ThreadedServer((IP, PORT), redirect_handler_factory('%s#e2itcf_sep_c=%s' % (siteUrl, siteKey), sessionToken, sessionPin, **startPageOptions))
+            httpd = ThreadedServer((IP, PORT), redirect_handler_factory('%s#e2itcf_sep_c=%s%s' % (siteUrl, siteKey, refParam), sessionToken, sessionPin, **startPageOptions))
         elif captchaType == 'COOKIES':
             # generic browser check (DDoS-Guard, Sucuri, Imperva, Anubis, ...): every cookie comes back
-            httpd = ThreadedServer((IP, PORT), redirect_handler_factory('%s#e2itck_sep_c=%s' % (siteUrl, siteKey), sessionToken, sessionPin, **startPageOptions))
+            httpd = ThreadedServer((IP, PORT), redirect_handler_factory('%s#e2itck_sep_c=%s%s' % (siteUrl, siteKey, refParam), sessionToken, sessionPin, **startPageOptions))
         elif captchaType == 'NAV':
             # follow the tab across the site's own redirects until a link matching the pattern shows up (an ad
             # gateway's countdown page and the like); captchaData: JSON {"selector", "attr", "pattern"}
@@ -533,7 +582,7 @@ if __name__ == "__main__":
 
             def b64param(value):
                 return quote(base64.b64encode((value or '').encode('utf-8')).decode('ascii'), safe='')
-            fragment = '%s#e2itnv_sep_c=%s&s=%s&a=%s&r=%s' % (siteUrl, siteKey, b64param(navJob.get('selector')), quote(navJob.get('attr') or 'href', safe=''), b64param(navJob.get('pattern')))
+            fragment = '%s#e2itnv_sep_c=%s&s=%s&a=%s&r=%s' % (siteUrl, siteKey, b64param(navJob.get('selector')), quote(navJob.get('attr') or 'href', safe=''), b64param(navJob.get('pattern'))) + refParam
             httpd = ThreadedServer((IP, PORT), redirect_handler_factory(fragment, sessionToken, sessionPin, **startPageOptions))
         else:
             fragment = '%s/#e2it?k=%s&st=%s' % (siteUrl, siteKey, captchaType)

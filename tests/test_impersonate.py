@@ -684,7 +684,7 @@ def test_cfprotection_cookie_gate_behind_cloudflare(pc, tmp_path, monkeypatch):
         def __init__(self, **k):
             pass
 
-        def processCaptcha(self, siteKey, url, captchaType="CF"):
+        def processCaptcha(self, siteKey, url, captchaType="CF", pageReferer=""):
             calls.append(("mye2i", captchaType))
             cookies = [{"name": "cf_clearance", "value": "c"}]
             if captchaType == "COOKIES":
@@ -713,7 +713,7 @@ def test_cfprotection_same_challenge_after_solve_asks_once(pc, tmp_path, monkeyp
         def __init__(self, **k):
             pass
 
-        def processCaptcha(self, siteKey, url, captchaType="CF"):
+        def processCaptcha(self, siteKey, url, captchaType="CF", pageReferer=""):
             calls.append(("mye2i", captchaType))
             return base64.b64encode(json.dumps({"cookie": [{"name": "cf_clearance", "value": "c"}], "user_agent": ""}).encode()).decode()
     recaptcha = _module(PKG + ".libs.recaptcha_mye2i", UnCaptchaReCaptcha=Recaptcha)
@@ -721,6 +721,32 @@ def test_cfprotection_same_challenge_after_solve_asks_once(pc, tmp_path, monkeyp
     sts, _data = pc.common().getPageCFProtection("https://a.example/", {"cookiefile": str(tmp_path / "c")})
     assert sts is False and [c for c in calls if c[0] == "mye2i"] == [("mye2i", "CF")]
     assert pc._cookieGateDomains == set()
+
+
+@pytest.mark.parametrize("header, expected", [
+    ({}, ""),  # getPageCFProtection's own Referer (the page itself) stays on the box
+    ({"Referer": "https://embed.example/other"}, ""),  # same host
+    ({"Referer": "https://parent.example/watch/1"}, "https://parent.example/watch/1"),
+    ({"referer": "https://parent.example/watch/2"}, "https://parent.example/watch/2"),  # header name in any case
+])
+def test_cfprotection_passes_a_foreign_referer_to_mye2i(pc, tmp_path, monkeypatch, header, expected):
+    # an embed page asked for with the address of the page embedding it: the browser gets that Referer too
+    monkeypatch.setenv("PATH", "")
+    calls = []
+    monkeypatch.setattr(pc.common, "getPage", _urllibChallenge(pc, monkeypatch, calls))
+    seen = []
+
+    class Recaptcha(object):
+        def __init__(self, **k):
+            pass
+
+        def processCaptcha(self, siteKey, url, captchaType="CF", pageReferer=""):
+            seen.append(pageReferer)
+            return ""
+    recaptcha = _module(PKG + ".libs.recaptcha_mye2i", UnCaptchaReCaptcha=Recaptcha)
+    sys.modules[PKG + ".libs"].recaptcha_mye2i = recaptcha
+    pc.common().getPageCFProtection("https://embed.example/e/abc", {"header": dict(header), "cookiefile": str(tmp_path / "c")})
+    assert seen == [expected]
 
 
 def test_cfprotection_no_retry_without_binary_or_when_asked(pc, tmp_path, monkeypatch):
