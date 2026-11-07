@@ -196,7 +196,7 @@ def checkhttps(url):
 TXXX_NETWORK_SITES = ('https://hotmovs.com', 'https://vjav.com', 'https://thegay.com', 'https://shemalez.com', 'https://upornia.com', 'https://hdzog.com', 'https://vxxx.com', 'https://abxxx.com', 'https://abebony.com', 'https://ablesbian.com', 'https://bdsmx-porn.com', 'https://bdsmx.tube', 'https://boobse.com')
 
 # plain KVS sites (hostxxx.py KVS_NETWORK), resolved by the shared KVS branch
-KVS_SITES = ('https://x-x-x.tube', 'https://camgirlfap.com', 'https://pornditt.com', 'https://v.pornditt.com', 'https://myporntape.com', 'https://b.terebon.net', 'https://r15.mixporn.space', 'https://www.analegg.com', 'https://javmix.com', 'https://area51.porn', 'https://ikisoda.com', 'https://porno1.hu', 'https://freshporno.org', 'https://www.freepornvideos.xxx', 'https://www.fpo.xxx', 'https://heroero.com', 'https://porndd.com', 'https://amateurporn.me', 'https://allclassic.porn', 'https://celebsroulette.com', 'https://watcherotic.com', 'https://www.vipporns.com', 'https://pornve.com', 'https://www.bigtitslust.com', 'https://bigassporn.tv', 'https://blowjobs.pro', 'https://lesbianporn8.net', 'https://allmatureporn.tv', 'https://blackporn24.com', 'https://footstockings.com', 'https://milfporn8.net', 'https://porno24.to', 'https://yourlesbians.com', 'https://www1.yabuchka.xyz', 'https://www.fulleroticmovies.net', 'https://wvw.ruporno.net', 'https://fuqster.com', 'https://www.xxxvideo.sex', 'https://www.boundhub.com')
+KVS_SITES = ('https://x-x-x.tube', 'https://camgirlfap.com', 'https://pornditt.com', 'https://v.pornditt.com', 'https://myporntape.com', 'https://b.terebon.net', 'https://r15.mixporn.space', 'https://www.analegg.com', 'https://javmix.com', 'https://area51.porn', 'https://ikisoda.com', 'https://porno1.hu', 'https://freshporno.org', 'https://www.freepornvideos.xxx', 'https://www.fpo.xxx', 'https://heroero.com', 'https://porndd.com', 'https://amateurporn.me', 'https://allclassic.porn', 'https://celebsroulette.com', 'https://watcherotic.com', 'https://www.vipporns.com', 'https://pornve.com', 'https://www.bigtitslust.com', 'https://bigassporn.tv', 'https://blowjobs.pro', 'https://lesbianporn8.net', 'https://allmatureporn.tv', 'https://blackporn24.com', 'https://footstockings.com', 'https://milfporn8.net', 'https://porno24.to', 'https://yourlesbians.com', 'https://www1.yabuchka.xyz', 'https://www.fulleroticmovies.net', 'https://wvw.ruporno.net', 'https://fuqster.com', 'https://www.xxxvideo.sex', 'https://www.boundhub.com', 'https://www.bemyhole.com', 'https://thisvid.com', 'https://www.pervertium.com')
 
 # WordPress tube theme sites (hostxxx.py WPTUBE_NETWORK): own player page or a file hoster iframe
 WPTUBE_SITES = ('https://pornmz.com', 'https://www.hitprn.net', 'https://pornobae.com', 'https://vintagepornfun.com', 'https://cumdrinkingclips.com')
@@ -762,7 +762,7 @@ class XXXParser:
 		# (link-checker plugin attributes - API addresses with keys, "deleted" replacements - are no mirrors: dropped
 		# before the unescape, which would end their value at its first &quot;)
 		data = re.sub(r'''\sdata-fl-(?:api|replace|header|source|patterns)=(?:"[^"]*"|'[^']*')''', '', data)
-		data = data.replace('\\/', '/').replace('\\"', '"').replace('&quot;', '"')
+		data = data.replace('\\/', '/').replace('\\u0026', '&').replace('\\"', '"').replace('&quot;', '"')
 		media = self._mediaCandidates(data)
 		# (pornbusy's own jwplayer: file: "https://yn.zpi.cx/<n>/<id>.webm", an MP4 behind a redirect)
 		media += [(self._labelHeight(m.split('?')[0]), m) for m in re.findall(r'''(?:file|contentUrl|src)["']?\s*[:=]\s*["'](https?://[^"']+\.(?:m3u8|mp4|webm)(?:\?[^"']*)?)["']''', data)]
@@ -943,7 +943,7 @@ class XXXParser:
 			if variant:
 				variant.meta.update({'iptv_proto': 'm3u8', 'iptv_buffering': 'required'})
 			return variant or master
-		if re.search(r'\.(?:mp4|m3u8|webm)(?:[?#]|$)', link) and 1 != self.up.checkHostSupport(link):
+		if re.search(r'\.(?:mp4|m3u8|webm)(?:[?#]|$)|/video_stream\?', link) and 1 != self.up.checkHostSupport(link):
 			# (a hoster page can end in .mp4 too: streamtape.com/e/<id>/<name>.mp4; pornbusy's own "webm" -
 			# zpi.cx/s9/<id>.webm - is an MP4 behind a redirect)
 			return urlparser.decorateUrl(link, {'Referer': referer, 'User-Agent': userAgent})
