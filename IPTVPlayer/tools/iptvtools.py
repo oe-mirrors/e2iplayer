@@ -1170,10 +1170,13 @@ def ClearDebugLogsAtStart():
                     removed = True
             except Exception:
                 pass
+    if removed:
+        _g_dbg_day[0] = ''  # the file starts over: the next line gets its date header again
     return removed
 
 
 _g_dbg_calls = 0
+_g_dbg_day = ['']  # day of the last '=== date ===' header written to the debug file
 
 
 def _enforceDebugLogLimit(path):
@@ -1206,6 +1209,7 @@ def _enforceDebugLogLimit(path):
         else:
             with open(path, 'w'):
                 pass
+        _g_dbg_day[0] = ''  # truncated / rotated: the next line gets its date header again
     except Exception:
         pass
 
@@ -1246,6 +1250,19 @@ def maskLogSecrets(text):
         return text
 
 
+def _debugTimestamp(writeMode='a'):
+    """'HH:MM:SS.mmm ' prefix for every line written to the debug file. The first line of a
+    day (and of a truncated file) is preceded by a '=== YYYY-MM-DD ===' line, so logs that run
+    past midnight or get appended across sessions stay readable."""
+    now = datetime.datetime.now()
+    day = now.strftime('%Y-%m-%d')
+    head = ''
+    if writeMode == 'w' or _g_dbg_day[0] != day:
+        _g_dbg_day[0] = day
+        head = now.strftime('%H:%M:%S.') + '%03d === %s ===\n' % (now.microsecond // 1000, day)
+    return head + now.strftime('%H:%M:%S.') + '%03d ' % (now.microsecond // 1000)
+
+
 def printDBG(DBGtxt, writeMode='a'):
     global _g_dbg_calls
     DBG = getDebugMode()
@@ -1262,9 +1279,10 @@ def printDBG(DBGtxt, writeMode='a'):
         _g_dbg_calls += 1
         if _g_dbg_calls % 250 == 0:
             _enforceDebugLogLimit(DBGfile)
+        DBGtxt = _debugTimestamp(writeMode) + str(DBGtxt)
         try:
             with open(DBGfile, writeMode) as f:
-                f.write(str(DBGtxt) + '\n')
+                f.write(DBGtxt + '\n')
         except Exception:
             print("======================EXC printDBG======================")
             print("printDBG(I): %s" % traceback.format_exc())
