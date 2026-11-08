@@ -64,7 +64,9 @@ function e2iStatus(text) {
 // What this extension can do. Other builds of MyE2i use the same version
 // numbers, so a job that needs a feature asks for its name (the page attribute
 // is read by the relay page's own script, "f=" by mye2iserver.py's /version).
-var E2I_FEATURES = ['nav', 'referer'];
+// 1.23: "navhold" - the NAV job's tab does not load the found link itself; "navload" - with l=1 it loads it and
+// sends back the answer of one of that page's requests (x=)
+var E2I_FEATURES = ['nav', 'referer', 'navhold', 'navload'];
 try {
     document.documentElement.setAttribute('data-mye2i-features', E2I_FEATURES.join(' '));
 } catch (e) {

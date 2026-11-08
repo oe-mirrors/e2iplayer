@@ -73,7 +73,17 @@ NAV_COUNTDOWN_PAGE = ("<html><body><a id='cs-link-sink' style='display:none' hre
                       "<a id='downloadbtn' style='display:none' href='/pig/watching/'>watch</a>"
                       "<script>setTimeout(function(){var a=document.getElementById('downloadbtn');"
                       "a.href='/movie/watching/?token=abc%2B123'; a.style.display='';}, 2000);</script></body></html>")
+# NAV job whose page navigates the tab to the tokenised link itself (CimaNow 07.11.2026, after the click): the link must
+# be reported, but the browser must not load it (its one-time key exchange would bind the token to the browser)
+NAV_GO_PAGE = "<html><body>go<script>setTimeout(function(){location.href='/movie2/watching/?token=go42';}, 1000);</script></body></html>"
+WATCHING_HITS = []
 NAV_FRAGMENT = '#e2itnv_sep_c=1&s=%s&a=href&r=%s' % tuple(urllib.parse.quote(base64.b64encode(v.encode()).decode(), safe='') for v in ('a#downloadbtn', r'/watching/\?token=[^&#\s]+'))
+# NAV job with l=1 / x= (navload, 1.23): the browser loads the found page, which asks /core.php?action=kx (answered only
+# with a Referer, like CimaNow); the probe asks it once more and the answer comes back with the link
+NAV_GO3_PAGE = "<html><body>go<script>setTimeout(function(){location.href='/movie3/watching/?token=go43';}, 1000);</script></body></html>"
+NAV_LOAD_PAGE = "<html><body>watching<script>fetch('/core.php?action=kx&token=go43');</script></body></html>"
+NAV_KX_ANSWER = '{"sh":"ab12","sid":"s0123456789","t":"ticket1","exp":1}'
+NAV_LOAD_FRAGMENT = NAV_FRAGMENT + '&l=1&x=' + urllib.parse.quote(base64.b64encode(rb'core\.php\?action=kx&').decode(), safe='')
 # Referer the referer checks ask for (an embed page's parent) and what /ref.html received ('' = no Referer header)
 EMBED_REFERER = 'https://embedder.example/watch/42?x=1'
 SEEN_REFERERS = []
@@ -125,6 +135,20 @@ class Site(BaseHTTPRequestHandler):
             self._send(200, NAV_JUMP_PAGE % '/nav-countdown')
         elif path == '/nav-countdown':
             self._send(200, NAV_COUNTDOWN_PAGE)
+        elif path == '/nav-go':
+            self._send(200, NAV_GO_PAGE)
+        elif path == '/nav-go3':
+            self._send(200, NAV_GO3_PAGE)
+        elif path == '/movie3/watching/':
+            self._send(200, NAV_LOAD_PAGE)
+        elif path == '/core.php':
+            if self.headers.get('Referer', ''):
+                self._send(200, NAV_KX_ANSWER)
+            else:
+                self._send(403, '403 Forbidden')
+        elif '/watching/' in path:
+            WATCHING_HITS.append(self.path)
+            self._send(200, '<html><body>watching</body></html>')
         elif path.startswith('/api/'):
             self._send(200, '{"items":[1,2,3]}')
         else:
@@ -458,6 +482,12 @@ CASES = [
      lambda out, err, page: '' if any('techaro.lol-anubis-auth' in cookie_names(r) for r in token_results(err)) else 'no anubis cookie'),
     ('nav-link-after-redirects', SITE + '/nav-start' + NAV_FRAGMENT, {'wait': 14},
      lambda out, err, page: '' if any(isinstance(r, dict) and r.get('url', '').endswith('/movie/watching/?token=abc%2B123') for r in token_results(err)) else 'tokenised link not sent back, got %s' % token_results(err)),
+    ('nav-link-not-loaded', SITE + '/nav-go' + NAV_FRAGMENT, {'wait': 10},
+     lambda out, err, page: ('' if not [h for h in WATCHING_HITS if 'go42' in h] else 'the browser loaded the link itself: %s' % WATCHING_HITS)
+     if any(isinstance(r, dict) and r.get('url', '').endswith('/movie2/watching/?token=go42') for r in token_results(err)) else 'navigated link not sent back, got %s' % token_results(err)),
+    ('nav-load-sends-answer', SITE + '/nav-go3' + NAV_LOAD_FRAGMENT, {'wait': 12},
+     lambda out, err, page: '' if any(isinstance(r, dict) and r.get('url', '').endswith('/movie3/watching/?token=go43') and r.get('data') == NAV_KX_ANSWER for r in token_results(err))
+     else 'loaded page or its kx answer not sent back, got %s' % token_results(err)),
     ('debug-snapshot', SITE + '/late.html#e2itdbg_sep_c=1', {'wait': 14},
      lambda out, err, page: '' if all(('BEGIN ' + s) in out for s in ('meta', 'dom', 'resources', 'netlog', 'cookies')) and '"url":"/api/late"' in out and '"method":"POST"' in out and '"type": "popup"' in err else 'snapshot sections or POST netlog entry missing'),
     ('turnstile-ok [net]', SITE + '/#e2it?k=%s&st=cf_re' % TURNSTILE_OK, {},
@@ -701,6 +731,26 @@ def referer_server_checks():
             proc.kill()
             time.sleep(1)
 
+    proc = start_server(captcha_type='NAV')
+    try:
+        request(base + '/?t=' + TOKEN)
+        status, body, _loc = request(base + '/e2it.html')
+        # "navhold" is optional: an extension without it still runs the job (banner only below 1.21)
+        checks.append(('NAV job: banner asks for 1.21, no feature', ('id="mye2i_1.21"' in body, 'data-mye2i-needs' in body), (True, False)))
+    finally:
+        proc.kill()
+        time.sleep(1)
+
+    proc = start_server(captcha_type='NAV', extra={'captchaData': json.dumps({'selector': 'a', 'pattern': 'x', 'load': 1, 'fetch': 'kx&'})})
+    try:
+        request(base + '/?t=' + TOKEN)
+        status, body, _loc = request(base + '/e2it.html')
+        checks.append(('NAV job with load: l=1 and x= in the fragment, banner asks for 1.23 and "navload"',
+                       ('&l=1&x=' + urllib.parse.quote(base64.b64encode(b'kx&').decode(), safe='') in solve_url(body), 'id="mye2i_1.23" data-mye2i-needs="navload"' in body), (True, True)))
+    finally:
+        proc.kill()
+        time.sleep(1)
+
     for bad in ('javascript:alert(1)', 'https://user:pw@embedder.example/', 'https://embedder.example/\r\nX-Evil: 1', 'embedder.example/page'):
         proc = start_server(extra={'pageReferer': bad})
         try:
@@ -735,7 +785,7 @@ def referer_checks(run):
             problem = 'site saw Referer %r, expected %r' % (SEEN_REFERERS, want)
         elif not any('cf_clearance' in cookie_names(r) for r in token_results(err)):
             problem = 'no cf_clearance token'
-        elif want and 'v1.22 OK' not in out:
+        elif want and 'v1.23 OK' not in out:
             problem = 'server did not accept the version/features: %s' % ' | '.join(line for line in out.splitlines() if 'version check' in line)
         results.append((name, problem))
     return results

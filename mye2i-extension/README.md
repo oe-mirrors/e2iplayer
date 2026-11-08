@@ -1,4 +1,4 @@
-# MyE2iV3 - browser extension for E2iPlayer (v1.22)
+# MyE2iV3 - browser extension for E2iPlayer (v1.23)
 
 MyE2iV3 lets a real browser solve what the receiver cannot: Cloudflare challenges, other
 browser checks (DDoS-Guard, Anubis, ...) and captchas (reCAPTCHA, hCaptcha, Turnstile). The
@@ -115,8 +115,21 @@ captchaData=json {"selector", "attr", "pattern"})` opens the start URL with the 
   the tab is closed right away, before the page could use a one-time token itself.
 - The server asks for v1.21 for this job (`MIN_NAV_EXTENSION_VERSION`): an older extension would
   take the unknown fragment for a captcha page. Used by `hostcimanow.py` (watch button gateway).
-- Browser test: `nav-link-after-redirects` (two script redirects, a decoy link, the button gets
-  its link after 2 s).
+- Since v1.23 (feature `navhold`) a session rule blocks the tab's requests to an address matching
+  the regex while the job runs: a page that navigates there itself on a click would otherwise load
+  it and could spend a one-time token in the browser before the box asks. The navigation is still
+  seen (`onBeforeNavigate`). Optional: the server does not ask for it.
+- Since v1.23 (feature `navload`) a job can ask the opposite: `"load": 1` (fragment `&l=1`) lets
+  the tab open the found link (the probe opens it itself when no click does), and `"fetch": <regex>`
+  (`&x=`, base64) names a request of that page. Once the page made it, the probe asks the same
+  address once more from the tab - the site sees this browser - and the result carries its answer
+  as `data`. CimaNow's watching page (since 07.11.2026) answers its key exchange
+  (`core.php?action=kx`) with a decoy to anything but a browser; the box uses the browser's answer.
+  The server asks for `navload` on such jobs (`MIN_NAV_LOAD_EXTENSION_VERSION`).
+- Browser tests: `nav-link-after-redirects` (two script redirects, a decoy link, the button gets
+  its link after 2 s), `nav-link-not-loaded` (the page navigates to the link itself, the test site
+  must not see that request), `nav-load-sends-answer` (l=1/x=: the loaded page's request is answered
+  only with a Referer, its answer comes back with the link).
 
 ### Referer of the opened page (v1.22)
 

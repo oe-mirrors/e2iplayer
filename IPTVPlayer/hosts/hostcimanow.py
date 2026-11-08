@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "23.10.2026"
+LAST_MODIFIED = "08.11.2026"
+# 07.11.2026 - watching page loader "V15": xorshift loader, key exchange core.php?action=kx, AES-GCM page, signed
+#   server switch (_chk/st), encrypted iframe src (data-v15); the key exchange answers decoys to anything but a
+#   browser, so MyE2i 1.23 (navload) loads the page in the user's browser and sends its answer along
 # 23.10.2026 - watching page loader changed again (reversed base64 blocks, new RC4 variant, hex server tabs)
 # 21.10.2026 - watching page loader changed again: loader and page sit base64 with swapped halves in data-*
 #   attributes; RC4 variant (S-box shifted, key schedule adds (i * 7) & 255, every byte also XORed with
@@ -41,9 +44,11 @@ LAST_MODIFIED = "23.10.2026"
 #     name normalisation ("Title (Year)", "Show - SxxExx"), sidecar, INFO via moviemeta + the site's
 #     story/poster/fields; no blocking retry loops, no colour codes in titles
 import ast
+import hashlib
 import math
 import re
 import time
+from binascii import unhexlify
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
@@ -85,7 +90,8 @@ INFO_FIELDS = (("language", "المحتوي"), ("duration", "مدة العرض")
 # <page>/watching/?token=... url for the gateway link ("upcloud" first, "test" as the fallback endpoint)
 TOKEN_APIS = ("https://cimaleech.vercel.app/api/upcloud", "https://cimaleech.vercel.app/api/test")
 # MyE2i NAV job for the same gateway: the countdown page's watch button, once its scripts put the token in
-WATCH_LINK_JOB = {"selector": "a#downloadbtn", "attr": "href", "pattern": r"/watching/\?token=[^&#\s]+"}
+# since 07.11.2026 (MyE2i 1.23): the browser loads the watching page and sends back the answer of its key exchange
+WATCH_LINK_JOB = {"selector": "a#downloadbtn", "attr": "href", "pattern": r"/watching/\?token=[^&#\s]+", "load": 1, "fetch": r"core\.php\?action=kx&"}
 WATCH_LINK_TTL = 600  # seconds a link from MyE2i is reused for the same page
 NUM_RE = re.compile(r"0x[0-9a-fA-F]+|\d+")
 
@@ -136,7 +142,8 @@ _JS_BINOPS = {
     ast.BitXor: lambda a, b: _jsInt32(a) ^ _jsInt32(b),
     ast.BitAnd: lambda a, b: _jsInt32(a) & _jsInt32(b),
 }
-_JS_FUNCS = {"floor": _jsFloor, "jsround": _jsRound, "imul": lambda a, b: _jsInt32(_jsInt32(a) * _jsInt32(b))}
+_JS_FUNCS = {"floor": _jsFloor, "jsround": _jsRound, "imul": lambda a, b: _jsInt32(_jsInt32(a) * _jsInt32(b)),
+             "jsmin": min, "jsmax": max, "jsabs": abs}
 
 
 def _jsEval(node):
@@ -234,7 +241,13 @@ _JS_WRAPPED = (
      lambda m: "(%s + %s)" % (m.group(1), m.group(2))),
     (re.compile(r"\(\s*function\s*\(\s*(\w+)\s*,\s*(\w+)\s*\)\s*\{\s*return\s+\1\s*\+\s*\2\s*;?\s*\}\s*\)\s*\(\s*(%s)\s*,\s*(%s)\s*\)(?=\s*[)+\-*^|&,;]|\s*$)" % (_JS_NUMEXPR, _JS_NUMEXPR)),
      lambda m: "((%s) + (%s))" % (m.group(3), m.group(4))),
-    (re.compile(r"""\(\s*typeof\s+window\s*\.\s*atob\s*===?\s*['"]function['"]\s*\?\s*%s\s*:\s*%s\s*\)""" % (_JS_LIT, _JS_LIT)), lambda m: m.group(1)),
+    (re.compile(r"""\(\s*typeof\s+window\s*\.\s*\w+\s*===?\s*['"]function['"]\s*\?\s*%s\s*:\s*%s\s*\)""" % (_JS_LIT, _JS_LIT)), lambda m: m.group(1)),
+    # loader of 07.11.2026: 'qwer@'.lastIndexOf('@'), (Number.isSafeInteger(76) ? (76 - 45) : 0), Math.min/max/abs/round/floor
+    (re.compile(r"""(['"])([^'"\\]*)\1\s*\.\s*lastIndexOf\(\s*(['"])([^'"\\])\3\s*\)"""), lambda m: str(m.group(2).rfind(m.group(4)))),
+    (re.compile(r"\(\s*Number\s*\.\s*isSafeInteger\(\s*%s\s*\)\s*\?\s*(\([\d\s+\-*]+\))\s*:\s*%s\s*\)" % (_JS_LIT, _JS_LIT)), lambda m: m.group(2)),
+    (re.compile(r"\bMath\s*\.\s*(min|max|abs)\s*\("), lambda m: "js%s(" % m.group(1)),
+    (re.compile(r"\bMath\s*\.\s*round\s*\("), lambda m: "jsround("),
+    (re.compile(r"\bMath\s*\.\s*floor\s*\("), lambda m: "floor("),
     # loader of 21.10.2026: 'J'.charCodeAt(0), 'abc'.length, Math.imul(a, b), [x].map(function(z){return z^y;})[0],
     # (window.Navigator ? x : y); first, the base of a parseInt can be one of them
     (re.compile(r"""(['"])([^'"\\])\1\s*\.\s*charCodeAt\(\s*0?\s*\)"""), lambda m: str(ord(m.group(2)))),
@@ -375,6 +388,83 @@ def _flexStyledHeight(code):
     return total + line
 
 
+def _aesGcmOpen(key, iv, ciphertext, tag):
+    # AES-GCM -> text; the image's "cryptography" (C, fast on the box) first, the pure Python libs/aesgcm otherwise
+    # (that one checks the tag only with associated data: a wrong key gives garbage, the caller checks the text)
+    try:
+        from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+        return strDecode(AESGCM(key).decrypt(iv, ciphertext + tag, None), "ignore")
+    except ImportError:
+        pass
+    except Exception as e:
+        # a rejected tag: the key is wrong
+        printDBG("CimaNow._aesGcmOpen: %s" % type(e).__name__)
+        return ""
+    from Plugins.Extensions.IPTVPlayer.libs.aesgcm import python_aesgcm
+    plain = python_aesgcm.new(bytearray(key)).open(bytearray(iv), bytearray(ciphertext + tag))
+    return strDecode(bytes(plain), "ignore") if plain is not None else ""
+
+
+def _cssPx(value):
+    found = re.match(r"\s*(\d+)", value or "")
+    return int(found.group(1)) if found else 0
+
+
+def _cssSides(props, name):
+    # "padding: 10px 7px" shorthand (1 to 4 values) -> [top, right, bottom, left]
+    values = [_cssPx(v) for v in (props.get(name) or "").split()] or [0]
+    values = (values * 4)[:4] if len(values) == 1 else values
+    values = (values * 2)[:4] if len(values) == 2 else values
+    return values + [values[1]] if len(values) == 3 else values
+
+
+def _flexClassHeight(code):
+    # loader of 07.11.2026: <style>.cs_x {order; display; box-sizing; width; height; padding; margin}</style> and a
+    # <x-grid class='cg_y'> (display:flex, flex-wrap, border-box width, padding, column-gap, row-gap) of <x-n class>
+    # children -> the grid's offsetHeight (lines of children in CSS order, hidden ones take no space)
+    rules = {}
+    for name, body in re.findall(r"\.([\w-]+)\s*\{([^}]*)\}", code):
+        props = {}
+        for decl in body.split(";"):
+            key, _sep, value = decl.partition(":")
+            props[key.strip().lower()] = value.replace("!important", "").strip()
+        rules[name] = props
+    grid = re.search(r"""<([\w-]+)\s+class=\\?['"]([\w-]+)\\?['"]\s*>(.*?)</\1>""", code)
+    box = rules.get(grid.group(2)) if grid else None
+    if not box or box.get("display") != "flex":
+        return 0
+    padTop, padRight, padBottom, padLeft = _cssSides(box, "padding")
+    limit = _cssPx(box.get("width"))
+    if box.get("box-sizing") == "border-box":
+        limit -= padLeft + padRight
+    if not box.get("flex-wrap", "").startswith("wrap"):
+        limit = float("inf")
+    colGap, rowGap = _cssPx(box.get("column-gap") or box.get("gap")), _cssPx(box.get("row-gap") or box.get("gap"))
+    items = []
+    for pos, cls in enumerate(re.findall(r"""class=\\?['"]([\w-]+)\\?['"]""", grid.group(3))):
+        props = rules.get(cls, {})
+        if props.get("display") == "none":
+            continue
+        width, height = _cssPx(props.get("width")), _cssPx(props.get("height"))
+        pTop, pRight, pBottom, pLeft = _cssSides(props, "padding")
+        mTop, mRight, mBottom, mLeft = _cssSides(props, "margin")
+        if props.get("box-sizing") == "content-box":
+            width, height = width + pLeft + pRight, height + pTop + pBottom
+        else:
+            width, height = max(width, pLeft + pRight), max(height, pTop + pBottom)
+        items.append((int(props.get("order") or 0), pos, width + mLeft + mRight, height + mTop + mBottom))
+    lines, left, line = [], None, 0
+    for _order, _pos, width, height in sorted(items):
+        if left is not None and left + colGap + width > limit:
+            lines.append(line)
+            left, line = None, 0
+        left = width if left is None else left + colGap + width
+        line = max(line, height)
+    if left is not None:
+        lines.append(line)
+    return sum(lines) + rowGap * max(len(lines) - 1, 0) + padTop + padBottom
+
+
 def _flexHeight(code):
     # offsetHeight of the loader's hidden flex-wrap box: its children (fixed width/height, no gaps) fill lines of the
     # box width, every line is as high as its highest child
@@ -500,6 +590,8 @@ class CimaNow(GenericFolderWatchedScraperMixin, CBaseHostClass):
         self.HEADER = self.cm.getDefaultHeader(browser="chrome")
         self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
         self.watchLinks = {}  # gateway link -> (time, tokenised watching link from MyE2i)
+        self.browserShares = {}  # tokenised watching link -> the key share the user's browser got for it (MyE2i)
+        self.v15 = None  # kx session of the last decoded watching page (token, sid, ticket, frame keys)
 
         def cat(slug):
             return self.getFullUrl("/category/%s/" % slug)
@@ -794,8 +886,9 @@ class CimaNow(GenericFolderWatchedScraperMixin, CBaseHostClass):
         sts, data = self.getPage(watchUrl, params)
         if not sts:
             return []
+        self.v15 = None
         if 'id="watch"' not in data:
-            data = self._decodeWatching(data)
+            data = self._decodeWatching(data, watchUrl)
         if 'id="watch"' not in data:
             # the token is no longer accepted (the site sent the start page): ask again next time
             self.watchLinks.pop(self._gatewayKey(shineUrl), None)
@@ -814,8 +907,9 @@ class CimaNow(GenericFolderWatchedScraperMixin, CBaseHostClass):
             if index and serverId:
                 servers.append((index, serverId, label))
         for index, serverId, label in servers:
-            sts, frame = self.getPage("%s?%s" % (coreUrl, urllib_urlencode([("action", "switch"), ("index", index), ("id", serverId), ("token", token)])), params)
-            url = self.cm.ph.getSearchGroups(frame, r"""<iframe[^>]+src=['"]([^'"]+)['"]""", ignoreCase=True)[0] if sts else ""
+            switchUrl = "%s?%s" % (coreUrl, urllib_urlencode([("action", "switch"), ("index", index), ("id", serverId), ("token", token)]))
+            sts, frame = self.getPage(self._v15SwitchUrl(switchUrl, index, serverId), params)
+            url = (self._v15FrameSrc(frame) or self.cm.ph.getSearchGroups(frame, r"""<iframe[^>]+src=['"]([^'"]+)['"]""", ignoreCase=True)[0]) if sts else ""
             if url.startswith("//"):
                 url = "https:" + url
             if not self.cm.isValidUrl(url) or url in seen:
@@ -867,7 +961,9 @@ class CimaNow(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if "/watching/" in shineUrl and "token=" in shineUrl:
             return self._canonUrl(shineUrl)
         cached = self.watchLinks.get(shineUrl)
-        if cached and time.time() - cached[0] < WATCH_LINK_TTL:
+        share = self.browserShares.get(cached[1], {}) if cached else {}
+        # the browser's session ends with its "exp" (about 6 minutes) - then a new MyE2i job
+        if cached and time.time() - cached[0] < WATCH_LINK_TTL and (not share or float(share.get("exp") or 0) > time.time() + 30):
             return cached[1]
         url = self._tokenApiUrl(shineUrl) or self._myE2iWatchingUrl(shineUrl)
         if url:
@@ -880,12 +976,24 @@ class CimaNow(GenericFolderWatchedScraperMixin, CBaseHostClass):
         try:
             from Plugins.Extensions.IPTVPlayer.libs.recaptcha_mye2i import UnCaptchaReCaptcha
             answer = UnCaptchaReCaptcha().processCaptcha(time.time(), shineUrl, captchaType="NAV", captchaData=json_dumps(WATCH_LINK_JOB))
-            url = (json_loads(b64Decode(answer)) or {}).get("url", "") if answer else ""
+            result = (json_loads(b64Decode(answer)) or {}) if answer else {}
+            url = result.get("url", "")
         except Exception:
             printExc()
-            url = ""
+            result, url = {}, ""
         # the browser's absolute, already encoded address as it is - re-quoting could turn a %2B of the token into "+"
         if url.startswith("http") and "/watching/" in url and "token=" in url:
+            # MyE2i 1.23 (navload): the browser loaded the page and sends the answer of its key exchange along
+            try:
+                share = json_loads(result.get("data") or "{}")
+            except Exception:
+                share = None
+            if isinstance(share, dict) and share.get("sh"):
+                now = time.time()
+                self.browserShares = {k: v for k, v in self.browserShares.items() if float(v.get("exp") or 0) > now}
+                self.browserShares[url] = share
+            else:
+                printDBG("CimaNow._myE2iWatchingUrl: no key share from the browser (MyE2i older than 1.23?)")
             return url
         printDBG("CimaNow._myE2iWatchingUrl no link for [%s]" % shineUrl)
         return ""
@@ -906,9 +1014,166 @@ class CimaNow(GenericFolderWatchedScraperMixin, CBaseHostClass):
         printDBG("CimaNow._tokenApiUrl no token for [%s]" % shineUrl)
         return ""
 
-    def _decodeWatching(self, data):
-        # the current loader first, then the ones of 21.10., 20.10., 18.10., 11.10. and 08.10.2026
-        decoded = self._decodeWatchingChunk(data) or self._decodeWatchingRot(data) or self._decodeWatchingRev(data) or self._decodeWatchingRc4(data) or \
+    def _decodeWatchingV15(self, data, watchUrl):
+        # loader of 07.11.2026 ("V15"): the loader JS sits base64 in a data-* attribute of its <script>, XORed with an
+        # xorshift32 stream (seed = first 4 bytes). It derives kv from a two-register LCG over a summed list (a CSS
+        # value read back - right, left, ... -, the height of a hidden class-styled flex grid, literals) and the token
+        # "tk" (base-26 parts XORed with kv); core.php?action=kx&token&f&t&n answers {sh, sid, t} to a browser only (the
+        # share comes from MyE2i when the user's browser loaded the page); the page is AES-GCM (12 byte iv, 16 byte
+        # tag, key = sha256("<prefix><kv><suffix>" + bytes of sh)). Server <li> carry the XORed "id@index", the
+        # switch call needs &_chk=<FNV of tk|index|id|sid|suffix>&st=<ticket>, the answered iframe its data-v15
+        # (data-vx before) XORed with "tk|sid|..." -> self.v15 for getLinksForVideo; "" when the page is another kind
+        self.v15 = None
+        try:
+            code = ""
+            for attrName, value in re.findall(r"""<script[^>]*\s(data-[\w-]+)=["']([A-Za-z0-9+/=]{1000,})["']""", data):
+                raw = bytearray(b64Decode(value, binary=True))
+                state = (raw[0] | (raw[1] << 8) | (raw[2] << 16) | (raw[3] << 24)) or 1
+                out = bytearray()
+                for byte in raw[4:]:
+                    state ^= (state << 13) & 0xFFFFFFFF
+                    state ^= state >> 17
+                    state ^= (state << 5) & 0xFFFFFFFF
+                    out.append(byte ^ ((state >> 16) & 255))
+                text = strDecode(bytes(out), "ignore")
+                if "action=kx" in text:
+                    code = text
+                    break
+            if not code:
+                return ""
+            kxCall = re.search(r"""action=kx&token=['"]\s*\+\s*encodeURIComponent\((\w+)\)\s*\+\s*['"]&f=['"]\s*\+\s*encodeURIComponent\((\w+)\)\s*\+\s*"""
+                               r"""['"]&t=['"]\s*\+\s*encodeURIComponent\((\w+)\)\s*\+\s*['"]&n=['"]\s*\+\s*encodeURIComponent\((\w+)\)""", code)
+            # the hidden element's CSS value the loader reads back: right, left, top, ... (changes per page)
+            prop = re.search(r"""getComputedStyle\(\s*\w+\s*\)\s*\[\s*['"]([\w-]+)['"]\s*\]""", code)
+            right = re.search(r"""%s:['"]\s*\+\s*String\((.*?)\)\s*\+\s*['"]px""" % re.escape(prop.group(1)), code) if prop else None
+            grid = re.search(r"""\.innerHTML\s*=\s*"(<style>.*?)";""", code, re.S)
+            factor = re.search(r"\.lastChild\.offsetHeight\s*\|\|\s*0\s*\)\s*\*\s*(.*?);\s*\w+\.parentNode\.removeChild", code)
+            listed = re.search(r"var\s+(\w+)\s*=\s*0\s*,\s*\w+\s*=\s*\[(.*?)\]\s*;\s*for\s*\(", code, re.S)
+            decl = re.search(r"var\s+(\w+)\s*=\s*([^;]*?\b_?\w+\s*=[^;]*);\s*for\s*\(\s*var\s+(\w+)\s*=\s*0\s*;\s*\3\s*<\s*(\w+)\s*;", code)
+            loop = re.search(r"\{\s*(\w+)\s*=\s*\(\s*\(\s*\1\s*\*\s*(\w+)\s*\)\s*\+\s*(\w+)\s*\+\s*\(\s*\(\s*\w+\s*\*\s*(\d+)\s*\)\s*&\s*(\d+)\s*\)\s*\)\s*%\s*(\d+)\s*;"
+                             r"\s*(\w+)\s*=\s*\(\s*\(\s*\(\s*\7\s*\^\s*\1\s*\)\s*>>>\s*0\s*\)\s*\+\s*\(\s*\(\s*\w+\s*\*\s*(\d+)\s*\)\s*&\s*(\d+)\s*\)\s*\)\s*%\s*(\d+)\s*;\s*\}", code)
+            kvDef = re.search(r"var\s+(\w+)\s*=\s*\(\s*\(\s*\(\s*\w+\s*\+\s*\w+\s*\)\s*\^\s*\(\s*\w+\s*\*\s*(\d+)\s*\)\s*\)\s*>>>\s*0\s*\)\s*%\s*(\d+)", code)
+            if not (kxCall and right and grid and factor and listed and decl and loop and kvDef):
+                printDBG("CimaNow._decodeWatchingV15: loader parts not found")
+                return ""
+            env = {}
+            env[kxCall.group(3)] = _jsNum(_jsUnwrap(right.group(1)))
+            env[kxCall.group(2)] = _flexClassHeight(grid.group(1)) * _jsNum(_jsUnwrap(factor.group(1)))
+            envOk = re.search(r"var\s+(\w+)\s*=\s*\(\s*typeof\s+document", code)
+            if envOk:
+                env[envOk.group(1)] = 1
+
+            def value(expr):
+                expr = _jsUnwrap(expr.strip())
+                for name, number in env.items():
+                    expr = re.sub(r"\b%s\b" % re.escape(name), "(%d)" % number, expr)
+                return _jsNum(expr)
+
+            sA = sum(value(item) for item in _jsSplit(listed.group(2)))
+            names = {decl.group(1): value(_jsSplit(decl.group(2))[0])}
+            for part in _jsSplit(decl.group(2))[1:]:
+                name, _sep, expr = part.partition("=")
+                names[name.strip()] = value(expr)
+            sB, rounds = names[loop.group(7)], names[decl.group(4)]
+            mulA, incA = names[loop.group(2)], names[loop.group(3)]
+            stA, maskA, modA, stB, maskB, modB = (int(loop.group(n)) for n in (4, 5, 6, 8, 9, 10))
+            for st in range(rounds):
+                sA = int(math.fmod(float(sA) * mulA + incA + ((st * stA) & maskA), modA))
+                sB = (((sB ^ sA) & 0xFFFFFFFF) + ((st * stB) & maskB)) % modB
+            kv = ((_jsInt32(sA + sB) ^ _jsInt32(rounds * int(kvDef.group(2)))) & 0xFFFFFFFF) % int(kvDef.group(3))
+            mask1, mask2 = kv & 255, (kv >> 8) & 255
+            # the token: window['<fn>']("<base-26 parts>"), part ^ m1 ^ ((i * 17 + m2) & 255)
+            tkFn = re.search(r"""window\[['"](\w+)['"]\]\s*=\s*function\(\w+\)\{.*?parseInt\(\w+\[\w+\]\s*,\s*(\d+)\)\s*\^\s*\w+\s*\^\s*\(\(\w+\s*\*\s*(\d+)\s*\+\s*\w+\)\s*&\s*255\)""", code)
+            tkArg = re.search(r"""window\[['"]%s['"]\]\(\s*["']([0-9a-z:]+)["']\s*\)""" % re.escape(tkFn.group(1)), code) if tkFn else None
+            if not tkArg:
+                return ""
+            token = "".join(chr(int(part, int(tkFn.group(2))) ^ mask1 ^ ((i * int(tkFn.group(3)) + mask2) & 255)) for i, part in enumerate(tkArg.group(1).split(":")))
+            # the key exchange answers decoys (session id "w...", no ticket) to anything but a browser: the share the
+            # user's browser got through MyE2i (navload) first, the own request only as a fallback
+            share = self.browserShares.get(watchUrl)
+            if not share:
+                kxN = re.search(r"""var\s+%s\s*=\s*["']([^"']+)["']""" % re.escape(kxCall.group(4)), code)
+                coreUrl = self.getFullUrl("/wp-content/themes/Cima%20Now%20New/core.php")
+                params = dict(self.defaultParams)
+                params["header"] = dict(self.HEADER, Referer=watchUrl, Accept="*/*")
+                sts, answer = self.getPage("%s?%s" % (coreUrl, urllib_urlencode([("action", "kx"), ("token", token), ("f", env[kxCall.group(2)]), ("t", env[kxCall.group(3)]),
+                                                                                ("n", kxN.group(1) if kxN else "")])), params)
+                share = json_loads(answer) if sts else None
+            if not isinstance(share, dict) or not share.get("sh"):
+                printDBG("CimaNow._decodeWatchingV15: no key share")
+                return ""
+            if str(share.get("sid", "")).startswith("w") or not share.get("t"):
+                printDBG("CimaNow._decodeWatchingV15: decoy key share (sid %s, no ticket) - not from a browser (MyE2i 1.23 needed)" % share.get("sid"))
+                return ""
+            keyParts = re.search(r"""var\s+\w+\s*=\s*['"]([^'"]*)['"]\s*\+\s*String\(\s*%s\s*\)\s*\+\s*['"]([^'"]*)['"]""" % re.escape(kvDef.group(1)), code)
+            prefix = re.search(r"""indexOf\(\s*['"](\w+:)['"]\s*\)\s*===\s*0""", code)
+            payload = re.search(r"""\s[\w-]+=["']%s([A-Za-z0-9+/=]+)["']""" % re.escape(prefix.group(1) if prefix else "V15A:"), data)
+            if not keyParts or not payload:
+                return ""
+            key = hashlib.sha256((keyParts.group(1) + str(kv) + keyParts.group(2)).encode("utf-8") + unhexlify(share["sh"])).digest()
+            blob = b64Decode(payload.group(1), binary=True)
+            out = _aesGcmOpen(key, blob[:12], blob[28:], blob[12:28])
+            if 'id="watch"' not in out:
+                printDBG("CimaNow._decodeWatchingV15: key %s gave no server list (key text %r, share %s, payload %d chars %s...%s, page %d chars)" % (
+                    kv, keyParts.group(1) + str(kv) + keyParts.group(2), share.get("sh"), len(payload.group(1)), payload.group(1)[:24], payload.group(1)[-24:], len(data)))
+                return ""
+            # server tabs: <li data-x="a.b.c"> -> data-id / data-index
+            tabs = re.search(r"""li\[([\w-]+)\].*?split\(\s*['"](.)['"]\s*\).*?parseInt\(\s*\w+\[\w+\]\s*,\s*(\d+)\s*\)\s*\^\s*\w+\s*\^\s*\(\s*\(\s*\(\s*\w+\s*\*\s*(\d+)\s*\)\s*\+\s*\(\s*\w+\s*\*\s*(\d+)\s*\)""", code, re.S)
+            if tabs:
+                counter = [0]
+
+                def tab(match):
+                    pos, counter[0] = counter[0], counter[0] + 1
+                    plain = "".join(chr(int(part, int(tabs.group(3))) ^ mask1 ^ ((n * int(tabs.group(4)) + pos * int(tabs.group(5)) + mask2) & 255))
+                                    for n, part in enumerate(match.group(2).split(tabs.group(2))))
+                    serverId, _sep, index = plain.partition("@")
+                    return '%s data-id="%s" data-index="%s"' % (match.group(1), serverId, index)
+                out = re.sub(r"""(<li[^>]*?)\s%s=["']([^"']+)["']""" % re.escape(tabs.group(1)), tab, out)
+            out = re.sub(r"""var\s+tk\s*=\s*window\[["']\w+["']\]\s*\?[^;]*;""", 'var tk = "%s";' % token, out, 1)
+            sign = re.search(r"""\+\s*['"]\|(\w+)['"]\s*;\s*var\s+\w+\s*=\s*2166136261.*?charCodeAt\(\w+\)\s*\+\s*\(\(\w+\s*\*\s*(\d+)\)\s*&\s*255\)""", code, re.S)
+            frame15 = re.search(r"""\+\s*['"]\|['"]\s*\+\s*\w+\s*\+\s*['"]\|(\w+)['"]""", code)
+            frame14 = re.search(r"""\+\s*['"]~(\w+)['"]""", code)
+            self.v15 = {"tk": token, "sid": share.get("sid", ""), "ticket": share.get("t", ""), "sign": sign.groups() if sign else ("cnV15", "11"),
+                        "v15": frame15.group(1) if frame15 else "cnV15", "vx": frame14.group(1) if frame14 else "cnV14Ultra"}
+            return out
+        except Exception:
+            printExc()
+        return ""
+
+    def _v15SwitchUrl(self, url, index, serverId):
+        # the page's own signature of a core.php switch call (only with the kx session)
+        if not self.v15 or not self.v15.get("sid") or not self.v15.get("ticket"):
+            return url
+        suffix, step = self.v15["sign"]
+        signed = "%s|%s|%s|%s|%s" % (self.v15["tk"], index, serverId, self.v15["sid"], suffix)
+        value = 2166136261
+        for pos, char in enumerate(signed):
+            value ^= ord(char) + ((pos * int(step)) & 255)
+            value = (value * 16777619) & 0xFFFFFFFF
+        digits = ""
+        while True:
+            value, rest = divmod(value, 36)
+            digits = "0123456789abcdefghijklmnopqrstuvwxyz"[rest] + digits
+            if not value:
+                break
+        return "%s&_chk=%s&st=%s" % (url, digits, urllib_quote(self.v15["ticket"], safe=""))
+
+    def _v15FrameSrc(self, frame):
+        # <iframe src="about:blank" data-v15="n-n-..."> (data-vx: the older variant) -> the player url
+        found = re.search(r"""\sdata-(v15|vx)=["']([\d-]+)["']""", frame or "")
+        if not found or not self.v15:
+            return ""
+        if found.group(1) == "v15":
+            key = "%s|%s|%s" % (self.v15["tk"], self.v15["sid"], self.v15["v15"])
+        else:
+            key = "%s~%s" % (self.v15["tk"], self.v15["vx"])
+        plain = "".join(chr(int(n) ^ ord(key[j % len(key)]) ^ ((j * 23 + 7) & 255)) for j, n in enumerate(found.group(2).split("-")))
+        parts = plain.split("::")
+        return "::".join(parts[2:]) if len(parts) >= 3 else ""
+
+    def _decodeWatching(self, data, watchUrl=""):
+        # the current loader first, then the ones of 23.10., 21.10., 20.10., 18.10., 11.10. and 08.10.2026
+        decoded = self._decodeWatchingV15(data, watchUrl) or self._decodeWatchingChunk(data) or self._decodeWatchingRot(data) or self._decodeWatchingRev(data) or self._decodeWatchingRc4(data) or \
             self._decodeWatchingSum(data)
         return decoded if decoded else self._decodeWatchingParts(data)
 
