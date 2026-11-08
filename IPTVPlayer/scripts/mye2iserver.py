@@ -45,6 +45,9 @@ MIN_NAV_EXTENSION_VERSION = (1, 21)
 # extensions open the page without any Referer. Since 1.22 the extension also names what it can do (relay page
 # attribute data-mye2i-features, "f=" on /version): other builds of the extension carry the same version numbers.
 MIN_REFERER_EXTENSION_VERSION = (1, 22)
+# a NAV job that has to load the found link in the browser and send back the answer of one of its requests
+# ("&l=1", "&x=": CimaNow's key exchange answers decoys to anything but a browser) needs 1.23 ("navload")
+MIN_NAV_LOAD_EXTENSION_VERSION = (1, 23)
 # Fixed download link: the release named "mye2i-extension" keeps its asset name
 # and gets the asset replaced on every new extension version (see
 # mye2i-extension/README.md), so this URL never has to change.
@@ -279,6 +282,9 @@ def redirect_handler_factory(url, token='', pin='', close_start_page=False, laun
     if '&ref=' in fragment:
         needs.append('referer')
         minVersion = max(minVersion, MIN_REFERER_EXTENSION_VERSION)
+    if job_type == 'nav' and '&l=1' in fragment:
+        needs.append('navload')
+        minVersion = max(minVersion, MIN_NAV_LOAD_EXTENSION_VERSION)
     minVersionStr = '.'.join(str(part) for part in minVersion)
     to_write = '''
 <!doctype html>
@@ -582,7 +588,11 @@ if __name__ == "__main__":
 
             def b64param(value):
                 return quote(base64.b64encode((value or '').encode('utf-8')).decode('ascii'), safe='')
-            fragment = '%s#e2itnv_sep_c=%s&s=%s&a=%s&r=%s' % (siteUrl, siteKey, b64param(navJob.get('selector')), quote(navJob.get('attr') or 'href', safe=''), b64param(navJob.get('pattern'))) + refParam
+            fragment = '%s#e2itnv_sep_c=%s&s=%s&a=%s&r=%s' % (siteUrl, siteKey, b64param(navJob.get('selector')), quote(navJob.get('attr') or 'href', safe=''), b64param(navJob.get('pattern')))
+            if navJob.get('load'):
+                # the tab loads the found link; "fetch": a request of that page whose answer comes back (1.23)
+                fragment += '&l=1' + ('&x=' + b64param(navJob['fetch']) if navJob.get('fetch') else '')
+            fragment += refParam
             httpd = ThreadedServer((IP, PORT), redirect_handler_factory(fragment, sessionToken, sessionPin, **startPageOptions))
         else:
             fragment = '%s/#e2it?k=%s&st=%s' % (siteUrl, siteKey, captchaType)

@@ -171,6 +171,42 @@ function e2iRelayResponse(captchaId, token, cb) {
 // such an address (a click, a script redirect) counts too. The link goes to the receiver as the usual base64
 // JSON result {url, user_agent, cookie, links} and the tab is closed, before the page could use a one-time
 // token itself. Jobs live in chrome.storage.session - the service worker is suspended after ~30 s idle.
+// v1.23 ("navhold"): closing the tab comes too late when a click navigates it to the link right away (CimaNow
+// since 07.11.2026) - the page could spend a one-time token before the box asks. A session rule blocks the tab's
+// requests to such a link while the job runs; onBeforeNavigate still sees the address.
+const NAV_BLOCK_RULE_BASE = 2000000;
+
+function navBlockRuleId(tabId) {
+    return NAV_BLOCK_RULE_BASE + tabId;
+}
+
+async function navBlockLinks(tabId, job) {
+    // a job that has to load the link (l=1) is not held back
+    if (!job?.pattern || job.load || !chrome.declarativeNetRequest?.updateSessionRules) {
+        return;
+    }
+    try {
+        await chrome.declarativeNetRequest.updateSessionRules({
+            removeRuleIds: [navBlockRuleId(tabId)],
+            addRules: [{
+                id: navBlockRuleId(tabId),
+                priority: 2,
+                action: {type: 'block'},
+                condition: {tabIds: [tabId], resourceTypes: ['main_frame', 'sub_frame'], regexFilter: job.pattern}
+            }]
+        });
+    } catch (e) {
+        // a pattern RE2 does not take: the link is still reported, only not held back
+        e2iBoxLog('nav block rule failed: ' + e);
+    }
+}
+
+function navUnblockLinks(tabId) {
+    if (chrome.declarativeNetRequest?.updateSessionRules) {
+        chrome.declarativeNetRequest.updateSessionRules({removeRuleIds: [navBlockRuleId(tabId)]}).catch(() => {});
+    }
+}
+
 async function navGetJobs() {
     const stored = await chrome.storage.session.get('navJobs');
     return stored.navJobs || {};
@@ -180,9 +216,11 @@ async function navSetJob(tabId, job) {
     const jobs = await navGetJobs();
     jobs[tabId] = job;
     await chrome.storage.session.set({navJobs: jobs});
+    await navBlockLinks(tabId, job);
 }
 
 async function navTakeJob(tabId) {
+    navUnblockLinks(tabId);
     try {
         const jobs = await navGetJobs();
         const job = jobs[tabId];
@@ -201,7 +239,7 @@ function navInjectProbe(tabId, job) {
     chrome.scripting.executeScript({
         target: {tabId},
         func: (j) => { window.__e2iNavJob = j; },
-        args: [{selector: job.selector || '', attr: job.attr || 'href', pattern: job.pattern || ''}]
+        args: [{selector: job.selector || '', attr: job.attr || 'href', pattern: job.pattern || '', load: !!job.load, fetch: job.fetch || ''}]
     }).then(() => chrome.scripting.executeScript({
         target: {tabId},
         files: ['contentscripts/navProbe.js']
@@ -216,13 +254,17 @@ function navMatches(job, url) {
     }
 }
 
-async function navFinish(tabId, url) {
+async function navFinish(tabId, url, data) {
     const job = await navTakeJob(tabId);
     if (!job) {
         return;
     }
-    e2iBoxLog('nav job ' + job.captchaId + ': link found');
+    e2iBoxLog('nav job ' + job.captchaId + ': link found' + (typeof data === 'string' ? ' (with the page\'s answer, ' + data.length + ' chars)' : ''));
     const result = {user_agent: navigator.userAgent, cookie: [], url: url, links: [url]};
+    if (typeof data === 'string') {
+        // l=1 + x=: the answer of the request the loaded page made (navProbe.js asked once more)
+        result.data = data;
+    }
     // UTF-8 first: btoa() throws on anything outside Latin-1
     const token = btoa(unescape(encodeURIComponent(JSON.stringify(result))));
     e2iRelayResponse(job.captchaId, token, () => {
@@ -235,7 +277,8 @@ chrome.webNavigation.onBeforeNavigate.addListener(async (details) => {
         return;
     }
     const jobs = await navGetJobs();
-    if (navMatches(jobs[details.tabId], details.url)) {
+    // l=1: the tab loads the link, navProbe.js reports it from the loaded page
+    if (navMatches(jobs[details.tabId], details.url) && !jobs[details.tabId].load) {
         navFinish(details.tabId, details.url);
     }
 });
@@ -522,7 +565,10 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     }
 
     if (msg.action === "NAV_FOUND") {
-        navFinish(tabId, msg.url).then(() => sendResponse('OK'));
+        navFinish(tabId, msg.url, msg.data).then(() => sendResponse('OK')).catch((e) => {
+            e2iBoxLog('nav job finish failed: ' + e);
+            sendResponse('ERROR');
+        });
         return true;
     }
 

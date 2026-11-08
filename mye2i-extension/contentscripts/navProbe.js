@@ -5,6 +5,9 @@
 // It waits until a link matching the job's pattern shows up - the element of the job's CSS selector first, then
 // any <a href> of the page - and hands it to the background script, which sends it to the receiver. The job
 // (selector, attribute, pattern) was put into window.__e2iNavJob by the background script right before.
+// v1.23, job.load (l=1): a found link is opened in this tab instead of being reported; on the loaded page (its
+// address matches the pattern) the probe waits until the page made the request of job.fetch (a regex), asks
+// that address once more from here - the site sees this browser - and reports the page with that answer.
 (function () {
     const job = window.__e2iNavJob || {};
     if (window.__e2iNavProbeRunning || !job.pattern) {
@@ -53,15 +56,62 @@
         return '';
     }
 
+    function report(url, data) {
+        const msg = {action: 'NAV_FOUND', url: url};
+        if (typeof data === 'string') {
+            msg.data = data;
+        }
+        chrome.runtime.sendMessage(msg, function () {
+            if (chrome.runtime.lastError) {
+                // the tab is being closed by the background script
+            }
+        });
+    }
+
+    if (job.load && pattern.test(location.href)) {
+        // the loaded target page: its own request first, then the same address once more from here
+        let fetchPattern = null;
+        try {
+            fetchPattern = job.fetch ? new RegExp(job.fetch) : null;
+        } catch (e) {
+            console.log('[MyE2i-DEBUG nav] bad fetch pattern', job.fetch, e);
+        }
+        if (!fetchPattern) {
+            report(location.href);
+            return;
+        }
+        const waitTimer = setInterval(function () {
+            const entry = performance.getEntriesByType('resource').find(function (e) {
+                return fetchPattern.test(e.name);
+            });
+            if (entry) {
+                clearInterval(waitTimer);
+                fetch(entry.name, {credentials: 'include'}).then(function (r) {
+                    return r.text();
+                }).then(function (text) {
+                    report(location.href, text);
+                }).catch(function (e) {
+                    report(location.href, '');
+                    console.log('[MyE2i-DEBUG nav] fetch failed', e);
+                });
+            } else if (Date.now() - started > 30000) {
+                clearInterval(waitTimer);
+                report(location.href, '');
+            }
+        }, POLL_MS);
+        return;
+    }
+
     const timer = setInterval(function () {
         const value = find();
         if (value) {
             clearInterval(timer);
-            chrome.runtime.sendMessage({action: 'NAV_FOUND', url: value}, function () {
-                if (chrome.runtime.lastError) {
-                    // the tab is being closed by the background script
-                }
-            });
+            if (job.load) {
+                // the page would only get there on a click - open it here (once per page)
+                location.href = value;
+            } else {
+                report(value);
+            }
         } else if (Date.now() - started > MAX_MS) {
             clearInterval(timer);
         }

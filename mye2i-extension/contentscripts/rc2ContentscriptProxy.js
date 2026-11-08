@@ -422,7 +422,8 @@ if (document.location.hash.startsWith("#e2itco")) {
     // NAV job (v1.21): follow this tab across the site's own redirects (they drop this fragment) until a link
     // matching the pattern shows up - the background script keeps the job and injects
     // contentscripts/navProbe.js into every page of the tab. Selector and pattern come base64 encoded
-    // (s=, r=), the attribute plain (a=, default href).
+    // (s=, r=), the attribute plain (a=, default href). v1.23: l=1 lets the tab load the found link and
+    // x= (base64 regex) names a request of that page whose answer comes back with it (navProbe.js).
     let params = new ParamsExt(document.location.hash);
     let b64 = function (value) {
         try {
@@ -435,7 +436,9 @@ if (document.location.hash.startsWith("#e2itco")) {
         captchaId: decodeURIComponent(params.get("c") || ""),
         selector: b64(params.get("s")),
         attr: decodeURIComponent(params.get("a") || "href"),
-        pattern: b64(params.get("r"))
+        pattern: b64(params.get("r")),
+        load: params.get("l") === "1",
+        fetch: b64(params.get("x"))
     }}, function () {});
 
 } else if (document.location.hash.startsWith("#e2i")) {
