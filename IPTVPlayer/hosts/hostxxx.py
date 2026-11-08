@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "01.11.2026"
+LAST_MODIFIED = "08.11.2026"
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.ihost import IHost, CDisplayListItem, RetHost, CUrlItem, CBaseHostClass, ArticleContent
 from Plugins.Extensions.IPTVPlayer.libs import ph
@@ -733,6 +733,17 @@ SITEDATA = {
 'PORNZOG': ('https://pornzog.com/categories/', '', ''),
 'THEGAY': ('https://thegay.com', '', ''),
 'SHEMALEZ': ('https://shemalez.com', '', ''),
+'BEMYHOLE': ('https://www.bemyhole.com', '', ''),
+'HDEASYPORN': ('https://www.hd-easyporn.com', '', ''),
+'MILFZR': ('https://milfzr.com', '', ''),
+'VIDXPORN': ('https://www.vidxporn.com', '', ''),
+'WAPBOLD': ('https://wapbold.net', '', ''),
+'HEAVYR': ('https://www.heavy-r.com', '', ''),
+'THISVID': ('https://thisvid.com', '', ''),
+'SPANKINGTUBE': ('https://www.spankingtube.com', '', ''),
+'SHESFREAKY': ('https://www.shesfreaky.com', '', ''),
+'FREEUSEPORN': ('https://www.freeuseporn.com', '', ''),
+'PERVERTIUM': ('https://www.pervertium.com', '', ''),
 }
 
 # sites of the txxx network, they all share the same JSON API
@@ -793,6 +804,8 @@ KVS_NETWORK = {
 	'FUQSTER': {'url': 'https://fuqster.com', 'sorts': (('Latest', '/latest-updates/'), ('Most popular', '/most-popular/'), ('Top rated', '/top-rated/')), 'search': '/search/%s/'},
 	'XXXVIDEO': {'url': 'https://www.xxxvideo.sex', 'sorts': (('Latest', '/latest-updates/'), ('Most popular', '/most-popular/'), ('Top rated', '/top-rated/')), 'search': '/search/%s/'},
 	'BOUNDHUB': {'url': 'https://www.boundhub.com', 'sorts': (('Latest', '/latest-updates/'), ('Most popular', '/most-popular/'), ('Top rated', '/top-rated/')), 'search': '/search/%s/'},
+	'PERVERTIUM': {'url': 'https://www.pervertium.com', 'sorts': (('Latest', '/last-updates/'), ('Most popular', '/most-popular/'), ('Top rated', '/top-rated/')), 'search': '/search/%s/', 'numericCategories': True},
+	'THISVID': {'url': 'https://thisvid.com', 'sorts': (('Latest', '/latest-updates/'), ('Most popular', '/most-popular/'), ('Top rated', '/top-rated/')), 'search': '/search/?q=%s'},
 }
 
 # WordPress tube theme sites (<article data-video-id>, ?filter= sort, /page/<n>/ paging),
@@ -925,6 +938,42 @@ MOVIE_NETWORK = {
 		'title': r'video-title">([^<]+)<', 'image': r'<img src="([^"]+)"', 'time': r'video-duration">([0-9:]+)<',
 		'sorts': (('Latest', '/videos/neueste'), ('Top 100', '/videos/top100'), ('Longest', '/videos/lange')), 'search': '/suche?q=%s',
 		'categories': ('/', r'(?s)<a href="(/kategorie/[^"]+)" class="cat-card">.*?cat-name">([^<]+)<')},
+	# own files: the plain <source> / get_file qualities of the video page
+	'BEMYHOLE': {'url': 'https://www.bemyhole.com', 'mirrors': False, 'item': r'<a class="item ', 'link': r'''^[^>]*?href=["']([^"']+)["']''', 'title': r'video-title">([^<]+)<',
+		'image': r'''<img class="thumb[^>]*?\ssrc=["']([^"']+)["']''', 'time': r'class="duration">([0-9:]+)<',
+		'sorts': (('Latest', '/latest-shemale-porn/'), ('Popular', '/popular/')), 'search': '/search/%s/',
+		'categories': ('/tags/', r'''<a href=["'](https://www\.bemyhole\.com/tags/[^"']+/)["']>([^<]+)''')},
+	'HDEASYPORN': {'url': 'https://www.hd-easyporn.com', 'mirrors': False, 'item': r'<div class="grid_box">', 'link': r'''<a class="pcla" href=["']([^"']+)["']''', 'title': r'''<a class="pcla"[^>]*>([^<]+)<''',
+		'image': r'''data-src=["']([^"']+)["']''', 'time': r'class="duration">([0-9:]+)<',
+		'sorts': (('Latest', '/'), ('Most viewed', '/most-viewed-porn-movies/'), ('Top rated', '/top-rated-porn-movies/')), 'search': '/search/?k=%s',
+		'categories': ('/categories/', r'''<a[^>]+href=["'](/category/[^"']+/)["'][^>]*>(?:\s*<[^>]+>)*\s*([^<]{2,40})''')},
+	'MILFZR': {'url': 'https://milfzr.com', 'mirrors': False, 'item': r'<article class="video-card"',
+		'search': '/search?s=%s',
+		'categories': ('/', r'''<a href=["'](https://milfzr\.com/category/[^"']+)["'] class="category-chip">([^<]+)<''')},
+	# (the search of vidxporn.com answers "no results were found" for every term, 11.2026: left out)
+	'VIDXPORN': {'url': 'https://www.vidxporn.com', 'mirrors': False, 'item': r'<div id="vid-[0-9]+"', 'link': r'''class="video-link" href=["']([^"']+)["']''', 'title': r'''class="video-title[^>]*>([^<]+)<''',
+		'image': r'''data-original=["']([^"']+)["']''', 'time': r'class="duration">([0-9:]+)<',
+		'sorts': (('Latest', '/most-recent/'), ('Most viewed', '/most-viewed/'), ('Top rated', '/top-rated/'), ('Longest', '/longest/')), 'search': None,
+		'categories': ('/channels/', r'''<a[^>]+href=["'](https://www\.vidxporn\.com/(?:channel|channels)/[^"']+)["'][^>]*>(?:\s*<[^>]+>)*\s*([^<]{2,40})''')},
+	# Indian/desi tube (xvideos files behind its own pages)
+	'WAPBOLD': {'url': 'https://wapbold.net', 'mirrors': False, 'item': r'<div class="thumb">', 'link': r'''<a href=["'](/download-sex-videos/[^"']+)["']''', 'title': r'''<p><i class="fa fa-play-circle"></i>\s*([^<]+)<''',
+		'sorts': (('Latest', '/sex-videos/latest'), ('Most viewed', '/sex-videos/most-viewed'), ('Top rated', '/sex-videos/top-rated')), 'search': '/free-sex-videos?q=%s',
+		'categories': ('/', r'''<a href=["'](/tags/[^"']+)["'] title=["']([^"']+?)(?: videos)?["']''')},
+	# own files in <source> (spankingtube: signed /video_stream; shesfreaky: contentUrl)
+	# (its search is not reachable by address: left out)
+	'SPANKINGTUBE': {'url': 'https://www.spankingtube.com', 'mirrors': False, 'item': r'<div class="col-6 col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3"', 'title': r'''content-title">([^<]+)<''',
+		'sorts': (('Latest', '/videos'),), 'search': None,
+		'categories': ('/', r'''<a[^>]+href=["'](/videos/[a-z0-9-]+)["'][^>]*>\s*([^<\s][^<]*?)\s*</a>''')},
+	'SHESFREAKY': {'url': 'https://www.shesfreaky.com', 'mirrors': False, 'item': r'<div id="item-[0-9]+"', 'title': r'''video-card-meta[^>]*>\s*<a[^>]*>([^<]+)<''', 'time': r'''video-card-duration[^>]*>\s*([0-9:]+)''',
+		'sorts': (('Featured', '/videos/featured'), ('Most viewed', '/videos/most-viewed'), ('Top rated', '/videos/top-rated'), ('Longest', '/videos/longest')), 'search': '/search/%s',
+		'categories': ('/categories', r'''<a[^>]+href=["'](/(?:category|tag)/[^"']+)["'][^>]*>\s*([^<\s][^<]*?)\s*</a>''')},
+	# (same platform as SPANKINGTUBE)
+	'FREEUSEPORN': {'url': 'https://www.freeuseporn.com', 'mirrors': False, 'item': r'<a href="(?=/video/)', 'link': r'^([^"]+)"', 'time': r'''>\s*([0-9]{1,2}:[0-9]{2}(?::[0-9]{2})?)\s*</div>''',
+		'sorts': (('Latest', '/videos'),), 'search': None,
+		'categories': ('/videos', r'''<a href=["'](/videos/[a-z0-9-]+)["'][^>]*>\s*<span[^>]*>([^<]+)</span>''')},
+	'HEAVYR': {'url': 'https://www.heavy-r.com', 'mirrors': False, 'item': r'<div class="video-item\b', 'title': r'''class="title"><a[^>]*>([^<]+)<''',
+		'sorts': (('Latest', '/videos/recent/'), ('Most viewed', '/videos/most_viewed/'), ('Top rated', '/videos/top_rated/')), 'search': '/search/%s/',
+		'categories': ('/categories/', r'''<a[^>]+href=["'](/porn_videos/[^"']+)["'][^>]*>\s*([^<\s][^<]*?)\s*</a>''')},
 	# one network of vintage sites: a single list page per category (no paging), HLS from <source>; their thumbnails
 	# (storage./art./pub./img./relics. subdomains) sit behind a Cloudflare check: impersonate, see moviePage()
 	'MYCLASSICP': {'url': 'https://myclassicp.com', 'entries': 'retro', 'mirrors': False, 'categories': ('/', RETRO_CATEGORIES), 'search': '/?k=%s', 'impersonate': True},
@@ -3889,7 +3938,7 @@ class _SelfTestSession(object):
 
 
 class Host(CBaseHostClass, XXXParser):
-	XXXversion = "2026.11.06.1"
+	XXXversion = "2026.11.08.1"
 	# a Host of a helper thread of the global search (newSearchWorker()): no retries, no "not found" menu
 	searchWorker = False
 	# while the site self-test runs: the time the current site's requests stop (SELFTEST_SITE_SECONDS), 0 otherwise
@@ -4882,6 +4931,17 @@ class Host(CBaseHostClass, XXXParser):
 			if nextUrl and lost:
 				nextUrl += ('&' if '?' in nextUrl else '?') + '&'.join(lost)
 		if not nextUrl:
+			# pagers whose "next" marker sits on the <li> (bemyhole) or is a "prevnext" link (vidxporn)
+			nextUrl = self.cm.ph.getSearchGroups(data, r'''<li[^>]+class=["'][^"']*\bnext\b[^"']*["'][^>]*>\s*<a\b[^>]*href=["']([^"'#][^"']*)["']''', 1, True)[0]
+			if not nextUrl:
+				for tag in re.findall(r'<a\b[^>]*>\s*Next\b', data):
+					if 'prevnext' in tag:
+						nextUrl = self.cm.ph.getSearchGroups(tag, r'''href=["']([^"'#][^"']*)["']''', 1, True)[0]
+						break
+			if not nextUrl:
+				# numbered pager without a "next" item (heavy-r.com): the entry after the active one
+				nextUrl = self.cm.ph.getSearchGroups(data, r'''<li[^>]+class=["'][^"']*\bactive\b[^"']*["'][^>]*>\s*<a[^>]*>\s*[0-9]+\s*</a>\s*</li>\s*<li[^>]*>\s*<a\b[^>]*href=["']([^"'#][^"']*)["']''', 1, True)[0]
+		if not nextUrl:
 			# (the guessed URL, the pager link that confirms it)
 			m = re.search(r'/page[/-]?([0-9]+)/?', url) or re.search(r'[?&](?:page|p)=([0-9]+)', url)
 			page = int(m.group(1)) + 1 if m else 2
@@ -4893,7 +4953,8 @@ class Host(CBaseHostClass, XXXParser):
 				candidates = [(base.rstrip('/') + '/page/%d/' % page + query, r'''/page/%d/?["'?]''' % page),
 					(base.rstrip('/') + '/page%d/' % page + query, r'''/page%d/?["'?]''' % page),
 					(base.rstrip('/') + '/page-%d' % page + query, r'''/page-%d/?["'?]''' % page),
-					(url + ('&' if query else '?') + 'page=%d' % page, r'[?&](?:amp;)?page=%d\b' % page)]
+					(url + ('&' if query else '?') + 'page=%d' % page, r'[?&](?:amp;)?page=%d\b' % page),
+					(url + ('&' if query else '?') + 'p=%d' % page, r'[?&](?:amp;)?p=%d\b' % page)]
 			for candidate, pattern in candidates:
 				if re.search(r'''href=["'][^"']*''' + pattern, data):
 					nextUrl = candidate
