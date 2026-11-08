@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "25.10.2026"
+LAST_MODIFIED = "08.11.2026"
+# 08.11.2026 - new sources: hdontap.com (webcams), megawypas.com (Polish TV and radio)
 # 25.10.2026 - new webcam sources: worldcam.live, lookcam.com, San Diego Zoo, bieszczady.live,
 #   nadmorski24.pl, lantech.com.pl (LiveSzczecin), korbielow.net, szczyrkowski.pl; 40mediagroup.com channels
 ###################################################
@@ -19,6 +20,7 @@ from Plugins.Extensions.IPTVPlayer.libs.skylinewebcamscom import WkylinewebcamsC
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
 from Plugins.Extensions.IPTVPlayer.libs.djingcom import DjingComApi
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_unquote
 ###################################################
 from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
 if not isPY2():
@@ -29,6 +31,7 @@ from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 ###################################################
 import re
 from base64 import b64decode
+from time import time
 from Components.config import config, ConfigSelection, getConfigListEntry
 from Plugins.Extensions.IPTVPlayer.components.configsecret import ConfigSecret
 ############################################
@@ -40,6 +43,9 @@ from Plugins.Extensions.IPTVPlayer.components.configsecret import ConfigSecret
 # free key from https://api.windy.com/webcams - required, the listing API is authenticated
 config.plugins.iptvplayer.windy_api_key = ConfigSecret(default="", fixed_size=False)
 config.plugins.iptvplayer.fake_separator = ConfigSelection(default=" ", choices=[(" ", " ")])
+
+# rmfon.pl station list (megawypas radio): fetched once per half hour
+_RMFON_CACHE = {'time': 0, 'stations': []}
 
 
 def GetConfigList():
@@ -103,6 +109,8 @@ class WebStreamHost(CBaseHostClass):
                         {'alias_id': 'szczyrkowski.pl', 'name': 'szczyrk_list', 'title': 'https://www.szczyrkowski.pl/resort/kamery', 'url': '',
                          'icon': 'https://www.szczyrkowski.pl/typo3temp/assets/_processed_/f/3/csm_favicon-192x192_1c23e19e1c.png'},
                         {'alias_id': '40mediagroup.com', 'name': 'media40_list', 'title': 'https://www.40mediagroup.com/', 'url': '', 'icon': 'https://www.40mediagroup.com/images/logo/40media-logo-color.png'},
+                        {'alias_id': 'hdontap.com', 'name': 'hdontap_root', 'title': 'https://hdontap.com/', 'url': '', 'icon': 'https://hdontap.com/static/mainsite/hdontap_skewed.aa3a641e7837.png'},
+                        {'alias_id': 'megawypas.com', 'name': 'megawypas_root', 'title': 'https://megawypas.com/', 'url': '', 'icon': 'https://megawypas.com/images/favicons/apple-touch-icon.png'},
                         {'alias_id': 'windy.com', 'name': 'windy_root', 'title': 'https://www.windy.com/webcams/', 'url': '', 'icon': 'https://img.windy.com/albums/icons/logo-full.png?w=180'},
                         {'alias_id': 'iptv-org', 'name': 'iptvorg_root', 'title': 'https://github.com/iptv-org/iptv', 'url': '', 'icon': 'https://avatars.githubusercontent.com/u/64318809'},
                         {'alias_id': 'freecasthub', 'name': 'freecasthub_root', 'title': 'https://github.com/freecasthub/public-iptv', 'url': '', 'icon': 'https://avatars.githubusercontent.com/u/193939969'},
@@ -1049,6 +1057,187 @@ class WebStreamHost(CBaseHostClass):
             url = 'https:' + url
         return self.up.getVideoLinkExt(url)
 
+    # hdontap.com - live webcams (USA mostly). /explore/ lists the cameras, the
+    # /explore/tag/<tag>/ pages a part. The camera page has the HLS master in its
+    # player settings ("streamSrc", with a token valid for hours, 403 without it);
+    # a few cameras are a YouTube live stream (embed on the page) instead.
+    HDONTAP_URL = 'https://hdontap.com'
+
+    def getHdontapRoot(self):
+        printDBG("getHdontapRoot start")
+        sts, data = self._camGetPage(self.HDONTAP_URL + '/explore/')
+        if not sts:
+            return
+        self.addDir({'name': 'hdontap_list', 'title': _('All'), 'url': self.HDONTAP_URL + '/explore/'})
+        seen = set()
+        for tag, title in re.findall(r'<a href="/explore/tag/([^"/]+)/"\s+class="sidenav-link"[^>]*>(.*?)</a>', data, re.S):
+            if tag in seen:
+                continue
+            seen.add(tag)
+            self.addDir({'name': 'hdontap_list', 'title': self.cleanHtmlStr(title), 'url': '%s/explore/tag/%s/' % (self.HDONTAP_URL, tag)})
+
+    def getHdontapList(self, cItem):
+        printDBG("getHdontapList start")
+        sts, data = self._camGetPage(cItem.get('url') or (self.HDONTAP_URL + '/explore/'))
+        if not sts:
+            return
+        seen = set()
+        for href, block in re.findall(r'<a href="(/stream/\d+/[^"]+/)">(.*?)</a>', data, re.S):
+            if href in seen:
+                continue
+            seen.add(href)
+            title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(block, r'<h3[^>]*>(.*?)</h3>', 1, True)[0])
+            place = self.cleanHtmlStr(self.cm.ph.getSearchGroups(block, r'''text-md truncate max-w-full">([^<]+)<''')[0])
+            icon = self.cm.ph.getSearchGroups(block, r'''<img[^>]+src=['"]([^'"]+)['"]''')[0]
+            alt = self.cleanHtmlStr(self.cm.ph.getSearchGroups(block, r'''<img[^>]+alt=['"]([^'"]+)['"]''')[0])
+            if not title:
+                title = href.strip('/').split('/')[-1].replace('-', ' ')
+            self.addVideo({'name': 'hdontap_video', 'title': title, 'url': self.HDONTAP_URL + href, 'icon': icon,
+                           'desc': (place + '\n' + alt).strip()})
+
+    def getHdontapLink(self, cItem):
+        printDBG("getHdontapLink [%s]" % cItem.get('url', ''))
+        sts, data = self._camGetPage(cItem['url'], self.HDONTAP_URL + '/')
+        if not sts:
+            return []
+        m = re.search(r'"streamSrc"\s*:\s*"([^"]+)"', data)
+        if m:
+            url = m.group(1).replace('\\u0026', '&').replace('\\/', '/')
+            return self._camHlsLinks('hdontap.com', url, self.HDONTAP_URL + '/')
+        m = re.search(r'youtube(?:-nocookie)?\.com/embed/([A-Za-z0-9_-]{11})', data)
+        if m:
+            return self.up.getVideoLinkExt('https://www.youtube.com/watch?v=' + m.group(1))
+        return []
+
+    # megawypas.com - Polish portal with ~190 free TV channels and radio stations,
+    # grouped in the side-bar blocks of the start page; every article_id page holds
+    # the player: a <source> (HLS / audio stream), or an <iframe> (YouTube live
+    # stream, embedded player pages of the broadcasters).
+    MEGAWYPAS_URL = 'https://megawypas.com'
+    MEGAWYPAS_AUDIO_GROUP = 'Radio online'
+
+    def _megawypasGroups(self, data):
+        # [(group title, [(article id, channel title)])]
+        groups = []
+        parts = re.split(r"<font class='block-title'>([^<]+)</font>", data)
+        for idx in range(1, len(parts) - 1, 2):
+            items = []
+            for artId, title in re.findall(r"<a href='/articles\.php\?article_id=(\d+)'>([^<]+)</a>", parts[idx + 1]):
+                title = self.cleanHtmlStr(title).strip()
+                if title and (artId, title) not in items:
+                    items.append((artId, title))
+            if items:
+                groups.append((self.cleanHtmlStr(parts[idx]).strip(), items))
+        return groups
+
+    def getMegawypasRoot(self):
+        printDBG("getMegawypasRoot start")
+        sts, data = self._camGetPage(self.MEGAWYPAS_URL + '/')
+        if not sts:
+            return
+        for group, items in self._megawypasGroups(data):
+            self.addDir({'name': 'megawypas_list', 'title': group, 'group': group, 'desc': str(len(items))})
+
+    def getMegawypasList(self, cItem):
+        printDBG("getMegawypasList start")
+        sts, data = self._camGetPage(self.MEGAWYPAS_URL + '/')
+        if not sts:
+            return
+        for group, items in self._megawypasGroups(data):
+            if group != cItem.get('group', ''):
+                continue
+            for artId, title in items:
+                params = {'name': 'megawypas_video', 'title': title, 'url': '%s/articles.php?article_id=%s' % (self.MEGAWYPAS_URL, artId)}
+                if group == self.MEGAWYPAS_AUDIO_GROUP:
+                    params['name'] = 'megawypas_audio'
+                    self.addAudio(params)
+                else:
+                    self.addVideo(params)
+
+    def _youtubeLiveVideoId(self, channelId):
+        # /channel/<id>/live answers with the page of the running live stream (its canonical link is
+        # the watch URL), or with the channel page when nothing is live
+        header = self._camHeader()
+        header['Cookie'] = 'CONSENT=YES+1; SOCS=CAI'
+        header['Accept-Language'] = 'en-US,en;q=0.9'
+        sts, data = self.cm.getPage('https://www.youtube.com/channel/%s/live' % channelId, {'header': header})
+        if not sts:
+            return ''
+        return self.cm.ph.getSearchGroups(data, r'''<link rel="canonical" href="https://www\.youtube\.com/watch\?v=([A-Za-z0-9_-]{11})"''')[0]
+
+    def _rmfonStations(self):
+        # the station list of the rmfon.pl app has the streams of every station; fetched once per
+        # half hour - the server answers an empty 204 when it gets asked too often
+        if _RMFON_CACHE['stations'] and time() - _RMFON_CACHE['time'] < 1800:
+            return _RMFON_CACHE['stations']
+        sts, data = self._camGetPage('https://www.rmfon.pl/json/app.txt', 'https://www.rmfon.pl/')
+        if not sts:
+            return []
+        try:
+            stations = json_loads(data).get('stations', [])
+        except Exception:
+            printExc()
+            return []
+        if stations:
+            _RMFON_CACHE.update({'time': time(), 'stations': stations})
+        return stations
+
+    def _rmfonLinks(self, slug):
+        stations = self._rmfonStations()
+        retlist = []
+        slugs = [station.get('slug', '') for station in stations]
+        if slug not in slugs:
+            # the portal links a station slightly different now and then ("rmf-maxx")
+            slug = ([x for x in slugs if x.startswith(slug)] or [slug])[0]
+        for station in stations:
+            if station.get('slug') == slug:
+                for key, label in (('aac', 'AAC'), ('mp3', 'MP3')):
+                    if station.get(key):
+                        retlist.append({'name': 'rmfon.pl %s' % label, 'url': station[key]})
+        return retlist
+
+    def getMegawypasLink(self, cItem):
+        printDBG("getMegawypasLink [%s]" % cItem.get('url', ''))
+        sts, data = self._camGetPage(cItem['url'], self.MEGAWYPAS_URL + '/')
+        if not sts:
+            return []
+        url = self.cm.ph.getSearchGroups(data, r'''<source[^>]+src=['"]([^'"]+)['"]''')[0]
+        fromSource = bool(url)
+        if not url:
+            url = self.cm.ph.getSearchGroups(data, r'''<iframe[^>]+src=['"]([^'"]+)['"]''')[0]
+        if not url:
+            # a player script with the playlist in it
+            url = self.cm.ph.getSearchGroups(data, r'''['"](https?://[^'"\s]+\.m3u8[^'"\s]*)['"]''')[0]
+        url = url.replace('&amp;', '&')
+        if url.startswith('//'):
+            url = 'https:' + url
+        if not url.startswith('http'):
+            return []
+        # YouTube: a live stream of a channel, or one video
+        m = re.search(r'youtube(?:-nocookie)?\.com/embed/live_stream\?(?:[^"\']*&)?channel=([A-Za-z0-9_-]+)', url)
+        if m:
+            videoId = self._youtubeLiveVideoId(m.group(1))
+            return self.up.getVideoLinkExt('https://www.youtube.com/watch?v=' + videoId) if videoId else []
+        m = re.search(r'youtube(?:-nocookie)?\.com/embed/([A-Za-z0-9_-]{11})', url)
+        if m:
+            return self.up.getVideoLinkExt('https://www.youtube.com/watch?v=' + m.group(1))
+        # a player page of m3u8player.co carries the playlist as parameter
+        m = re.search(r'm3u8player\.co/player\.html\?url=(.+)$', url)
+        if m:
+            url = urllib_unquote(m.group(1))
+        m = re.search(r'^https?://(?:www\.)?rmfon\.pl/stacja/([a-z0-9-]+)', url)
+        if m:
+            return self._rmfonLinks(m.group(1))
+        path = url.split('?', 1)[0].lower()
+        if path.endswith('.m3u8'):
+            return self._camHlsLinks('megawypas.com', url, self.MEGAWYPAS_URL + '/')
+        isAudio = cItem.get('name') == 'megawypas_audio' and re.search(r'\.(?:mp3|aac)|/stream|shoutcast|revma\.com/', url)
+        if path.endswith(('.mp3', '.aac', '.ts')) or isAudio or (fromSource and not path.endswith(('.mpd', '.html', '.php'))):
+            # a plain audio stream (radio) or transport stream
+            return [{'name': 'megawypas.com', 'url': strwithmeta(url, {'User-Agent': self.cm.getDefaultUserAgent()})}]
+        # other player pages: whatever urlparser knows
+        return self.up.getVideoLinkExt(url)
+
     @staticmethod
     def _itemUrlWithHeaders(url, cItem):
         headers = cItem.get('http_headers') or {}
@@ -1099,6 +1288,10 @@ class WebStreamHost(CBaseHostClass):
             urlList = self.getKorbielowLink(cItem)
         elif name == 'szczyrk_video':
             urlList = self.getSzczyrkLink(cItem)
+        elif name == 'hdontap_video':
+            urlList = self.getHdontapLink(cItem)
+        elif name in ('megawypas_video', 'megawypas_audio'):
+            urlList = self.getMegawypasLink(cItem)
 
         if isinstance(urlList, list):
             return urlList
@@ -1214,6 +1407,14 @@ class WebStreamHost(CBaseHostClass):
             self.getKorbielowList(self.currItem)
         elif name == 'szczyrk_list':
             self.getSzczyrkList(self.currItem)
+        elif name == 'hdontap_root':
+            self.getHdontapRoot()
+        elif name == 'hdontap_list':
+            self.getHdontapList(self.currItem)
+        elif name == 'megawypas_root':
+            self.getMegawypasRoot()
+        elif name == 'megawypas_list':
+            self.getMegawypasList(self.currItem)
         elif name == 'iptvorg_root':
             self.getIptvOrgRoot()
         elif name == 'iptvorg_taxonomy':
