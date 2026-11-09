@@ -609,6 +609,284 @@ def getMetaByImdbId(mediaType, imdbId):
     return meta
 
 
+# 16:9 pictures (an episode's still, a title's backdrop) for the list icons, the info picture and the sidecar .jpg of
+# every host which gives moviemeta the title (and season / episode). Switched by config.plugins.iptvplayer.meta_images_169;
+# asked from the services in the same order as the details, the first one with a picture wins. TMDb, Cinemeta and TVmaze
+# serve 16:9 files; IMDb's pictures are cut to 16:9 by its CDN.
+TMDB_IMAGE_URL = "https://image.tmdb.org/t/p/"
+IMDB_MIN_RATIO = 1.3  # below this a picture is a poster (portrait / square), not a still
+IMDB_STILL_RATIO = 1.5  # a real still (16:9, 3:2) is at least this wide; 4:3 only if nothing wider exists
+
+# one request per season: the episodes with their main picture (on IMDb often a poster or a 4:3 photo)
+IMDB_EPISODES_QUERIES = (
+    ("series", "series { episodeNumber { episodeNumber seasonNumber } } primaryImage { url width height }"),
+    ("plain", "primaryImage { url width height }"),
+)
+_IMDB_EPISODES_QUERY = ("query { title(id: %%s) { episodes { episodes(first: 250, filter: {includeSeasons: [%%s]}) "
+                        "{ edges { node { id %s } } } } } }")
+# a second request for the episodes without a real still: their picture lists, all in one (an alias per episode)
+IMDB_EPISODE_IMAGES_VARIANTS = (
+    "images(first: 12) { edges { node { url width height } } }",
+    "images(first: 12, filter: {types: [STILL_FRAME]}) { edges { node { url width height } } }",
+)
+IMDB_TITLE_IMAGES_QUERY = """query { title(id: %s) { images(first: 20) { edges { node { url width height } } }
+ primaryImage { url width height } } }"""
+IMDB_TITLE_IMAGES_QUERY_PLAIN = """query { title(id: %s) { primaryImage { url width height } } }"""
+
+
+def isImages169():
+    try:
+        return bool(config.plugins.iptvplayer.meta_images_169.value)
+    except Exception:
+        return False
+
+
+def _imdbRatio(img):
+    img = img or {}
+    try:
+        return float(img.get("width") or 0) / float(img.get("height") or 1)
+    except (TypeError, ValueError):
+        return 0.0
+
+
+def _imdbCrop169(img, width, minRatio=0):
+    # the CDN scales and crops on request: a width x width*9/16 piece cut out of the picture.
+    # Narrower than 16:9: scaled to the width, the piece from the middle (a bit above it for a portrait / square
+    # picture, where faces are). Wider than 16:9 (2:1 ...): scaled to the height, the piece from the middle.
+    img = img or {}
+    url = img.get("url") or ""
+    w, h = img.get("width") or 0, img.get("height") or 0
+    if not url or not w or not h or float(w) / h < minRatio:
+        return ""
+    base = re.sub(r"\._V1_.*(\.\w+)$", r"._V1_\1", url)
+    ext = os.path.splitext(base)[1] or ".jpg"
+    outH = int(width * 9 / 16)
+    scaledH = round(width * float(h) / w)
+    if scaledH < outH:
+        left = max(0, (round(outH * float(w) / h) - width) // 2)
+        return base[:-len(ext)] + "QL75_UY%d_CR%d,0,%d,%d_%s" % (outH, left, width, outH, ext)
+    top = int((scaledH - outH) * (0.5 if float(w) / h >= IMDB_MIN_RATIO else 0.35))
+    return base[:-len(ext)] + "QL75_UX%d_CR0,%d,%d,%d_%s" % (width, top, width, outH, ext)
+
+
+def _imdbWidest(images, width):
+    # the landscape picture of a list that is closest to 16:9 (loses the least in the crop), cropped; "" if none
+    stills = [i for i in images if _imdbRatio(i) >= IMDB_STILL_RATIO]
+    if not stills:
+        return ""
+    return _imdbCrop169(min(stills, key=lambda i: abs(_imdbRatio(i) - 16.0 / 9)), width)
+
+
+def _imdbEpisodeStills(imdb, ids, width):
+    # {episode tt id: 16:9 url} of the stills in the picture lists of those episodes, one request for all of them
+    for variant in IMDB_EPISODE_IMAGES_VARIANTS:
+        query = "query { %s }" % " ".join("e%d: title(id: %s) { %s }" % (i, json_dumps(tt), variant) for i, tt in enumerate(ids))
+        data = imdb._call(query)
+        if data is None:
+            continue
+        found = {}
+        for i, tt in enumerate(ids):
+            images = [(e.get("node") or {}) for e in (((data.get("e%d" % i) or {}).get("images") or {}).get("edges")) or []]
+            url = _imdbWidest(images, width)
+            if url:
+                found[tt] = url
+        return found
+    return {}
+
+
+def _imdbId169(provider, mediaType, title, year, imdbId):
+    # the IMDb id; "" = no such title, None = no answer
+    if imdbId:
+        return imdbId
+    if not title:
+        return ""
+    data = provider._call(provider.SEARCH_QUERY % (json_dumps(title), "MOVIE" if mediaType == "movie" else "TV"))
+    if data is None:
+        return None
+    results = []
+    for edge in (data.get("mainSearch") or {}).get("edges") or []:
+        entity = (edge.get("node") or {}).get("entity") or {}
+        if entity.get("id"):
+            results.append({"id": entity["id"], "title": (entity.get("titleText") or {}).get("text"),
+                            "original": (entity.get("originalTitleText") or {}).get("text"),
+                            "year": str((entity.get("releaseYear") or {}).get("year") or "")})
+    hit = _pickResult(results, title, year, ("original", "title"), "year", strict=True)
+    return hit["id"] if hit else ""
+
+
+def _imdbImages169(provider, mediaType, title, year, imdbId, season, width):
+    imdbId = _imdbId169(provider, mediaType, title, year, imdbId)
+    if imdbId is None:
+        return None
+    if not imdbId:
+        return {}
+    if season == "":
+        data = provider._call(IMDB_TITLE_IMAGES_QUERY % json_dumps(imdbId)) or provider._call(IMDB_TITLE_IMAGES_QUERY_PLAIN % json_dumps(imdbId))
+        if data is None:
+            return None
+        t = data.get("title") or {}
+        images = [(e.get("node") or {}) for e in (t.get("images") or {}).get("edges") or []]
+        images.append(t.get("primaryImage") or {})
+        url = _imdbWidest(images, width)
+        return {"url": url} if url else {}
+    edges = None
+    for _name, fields in IMDB_EPISODES_QUERIES:
+        data = provider._call(_IMDB_EPISODES_QUERY % fields % (json_dumps(imdbId), json_dumps(str(season))))
+        if data is None:
+            continue
+        edges = ((((data.get("title") or {}).get("episodes") or {}).get("episodes") or {}).get("edges")) or []
+        break
+    if edges is None:
+        return None
+    episodes = []  # (number, tt id, main picture)
+    for idx, edge in enumerate(edges):
+        node = edge.get("node") or {}
+        number = ((node.get("series") or {}).get("episodeNumber") or {}).get("episodeNumber") or (idx + 1)
+        episodes.append((number, node.get("id") or "", node.get("primaryImage") or {}))
+    # the main picture is taken if it is a real still; for the others the picture lists are asked
+    need = [tt for number, tt, main in episodes if tt and _imdbRatio(main) < IMDB_STILL_RATIO]
+    lists = _imdbEpisodeStills(provider, need, width) if need else {}
+    result = {}
+    for number, tt, main in episodes:
+        if _imdbRatio(main) >= IMDB_STILL_RATIO:
+            url = _imdbCrop169(main, width)
+        elif lists.get(tt):
+            url = lists[tt]
+        else:
+            url = _imdbCrop169(main, width, IMDB_MIN_RATIO)  # a 4:3 photo cropped; a poster is no still
+        if url:
+            result[str(number)] = url
+    return {"episodes": result} if result else {}
+
+
+def _tmdbImages169(provider, mediaType, title, year, imdbId, season, width):
+    movie = mediaType == "movie"
+    hit = None
+    if imdbId:
+        data = provider._call("find/" + imdbId, {"external_source": "imdb_id"})
+        if data is None:
+            return None
+        found = data.get("movie_results" if movie else "tv_results") or []
+        hit = found[0] if found else None
+    if hit is None and title:
+        params = {"query": title}
+        if year:
+            params["year" if movie else "first_air_date_year"] = year
+        data = provider._call("search/movie" if movie else "search/tv", params)
+        if data is None:
+            return None
+        titleKeys = ("title", "original_title") if movie else ("name", "original_name")
+        hit = _pickResult(data.get("results") or [], title, year, titleKeys, "release_date" if movie else "first_air_date")
+    if not hit:
+        return {}
+    if season == "":
+        path = hit.get("backdrop_path")
+        size = "w300" if width <= 300 else ("w780" if width <= 780 else "w1280")
+        return {"url": TMDB_IMAGE_URL + size + path} if path else {}
+    data = provider._call("tv/%s/season/%s" % (hit["id"], season), {})
+    if data is None:
+        return None
+    result = {}
+    for ep in data.get("episodes") or []:
+        if ep.get("still_path") and ep.get("episode_number") is not None:
+            result[str(ep["episode_number"])] = TMDB_IMAGE_URL + ("w300" if width <= 300 else "original") + ep["still_path"]
+    return {"episodes": result} if result else {}
+
+
+def _tvmazeImages169(provider, mediaType, title, year, imdbId, season, width):
+    if mediaType != "tv" or season == "":
+        return {}  # TVmaze has posters for shows, no landscape picture
+    showId = None
+    if imdbId:
+        show = _getJson(TVMAZE_API_URL + "lookup/shows?" + urllib_urlencode({"imdb": imdbId}))
+        showId = show.get("id") if isinstance(show, dict) else None
+    if not showId and title:
+        data = _getJson(TVMAZE_API_URL + "search/shows?" + urllib_urlencode({"q": title}))
+        if data is None:
+            return None
+        shows = [r.get("show") for r in data if isinstance(r, dict) and r.get("show")] if isinstance(data, list) else []
+        hit = _pickResult(shows, title, year, ("name",), "premiered", strict=True)
+        showId = hit.get("id") if hit else None
+    if not showId:
+        return {}
+    episodes = _getJson(TVMAZE_API_URL + "shows/%s/episodes" % showId)
+    if not isinstance(episodes, list):
+        return None if episodes is None else {}
+    result = {}
+    for ep in episodes:
+        image = ep.get("image") or {}
+        url = (image.get("medium") if width <= 400 else image.get("original")) or image.get("original")
+        if str(ep.get("season")) == str(season) and ep.get("number") and url:
+            result[str(ep["number"])] = url
+    return {"episodes": result} if result else {}
+
+
+def _cinemetaImages169(provider, mediaType, title, year, imdbId, season, width):
+    kind = "movie" if mediaType == "movie" else "series"
+    if not imdbId:
+        if not title:
+            return {}
+        data = _getJson(CINEMETA_API_URL + "catalog/%s/top/search=%s.json" % (kind, urllib_quote(title)))
+        if data is None:
+            return None
+        hit = _pickResult(data.get("metas") or [], title, year, ("name",), "releaseInfo", strict=True)
+        imdbId = (hit or {}).get("imdb_id") or ""
+        if not imdbId:
+            return {}
+    data = _getJson(CINEMETA_API_URL + "meta/%s/%s.json" % (kind, imdbId))
+    if data is None:
+        return None
+    meta = data.get("meta") or {}
+    if season == "":
+        return {"url": meta["background"]} if meta.get("background") else {}
+    result = {}
+    for video in meta.get("videos") or []:
+        number = video.get("episode") or video.get("number")
+        if str(video.get("season")) == str(season) and number and video.get("thumbnail"):
+            result[str(number)] = video["thumbnail"]
+    return {"episodes": result} if result else {}
+
+
+_IMAGES169 = {"TMDb": _tmdbImages169, "IMDb": _imdbImages169, "TVmaze": _tvmazeImages169, "Cinemeta": _cinemetaImages169}
+
+
+def _images169(mediaType, title, year, imdbId, season, width):
+    # {"url": picture} (the title's) or {"episodes": {"number": picture}} of a season ("" = the title's); {} when
+    # no service has one. Cached like the details
+    title = (title or "").strip()
+    year = str(year or "").strip()[:4]
+    imdbId = (imdbId or "").strip()
+    if not re.match(r"^tt\d+$", imdbId):
+        imdbId = ""
+    if mediaType not in ("movie", "tv") or not (title or imdbId):
+        return {}
+    if season != "" and mediaType != "tv":
+        return {}
+    providers = [p for p in _getProviders(mediaType) if p.NAME in _IMAGES169]
+    if not providers:
+        return {}
+    what = "|".join(("169", mediaType, _cleanTitle(title), year, imdbId, season, str(width)))
+    return _lookup(providers, what, lambda p: _IMAGES169[p.NAME](p, mediaType, title, year, imdbId, season, width))
+
+
+def getSeasonImages169(title, year="", season="", imdbId="", width=300):
+    # {episode number: 16:9 picture url} of one season of a series, {} when no service has any. One request
+    # per season and service, cached
+    season = str(season or "").strip()
+    if not season.isdigit():
+        return {}
+    result = _images169("tv", title, year, imdbId, season, width)
+    return {int(k): v for k, v in (result.get("episodes") or {}).items()}
+
+
+def getImage169(mediaType, title="", year="", season="", episode="", imdbId="", width=1280):
+    # one 16:9 picture: the still of season / episode when both are given, else the title's backdrop. "" when no
+    # service has one - the caller keeps its own picture then.
+    if mediaType == "tv" and str(season or "").strip().isdigit() and str(episode or "").strip().isdigit():
+        return getSeasonImages169(title, year, season, imdbId, width).get(int(episode), "")
+    return _images169(mediaType, title, year, imdbId, "", width).get("url", "")
+
+
 # The lookup that answered on an item's INFO screen: CHostBase.getArticleContent (components/ihost.py) names the
 # item with setInfoItem() while the host builds its INFO, getMeta() / getMetaByImdbId() note their first call
 # with an answer. The download sidecar of that item asks the same (urlmetahelper.buildSidecarFromItem), also
@@ -683,6 +961,10 @@ def getArticleContent(cItem):
     # description and icon stay when no service knows the title
     meta = getMeta(cItem.get("meta_type", ""), cItem.get("meta_title", ""), cItem.get("meta_year", ""))
     icon = meta.get("poster") or cItem.get("icon", "")
+    if isImages169():
+        # a 16:9 picture where a service has one: the episode's still (meta_season / meta_episode), else the title's backdrop
+        icon = getImage169(cItem.get("meta_type", ""), cItem.get("meta_title", ""), cItem.get("meta_year", ""), cItem.get("meta_season", ""),
+                           cItem.get("meta_episode", ""), cItem.get("meta_imdb", "")) or icon
     return [{"title": cItem.get("title", ""),
              "text": meta.get("plot") or cItem.get("desc", ""),
              "images": [{"title": "", "url": icon}] if icon else [],

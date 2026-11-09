@@ -17,7 +17,7 @@ from Plugins.Extensions.IPTVPlayer.components.configsecret import ConfigLogin, C
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase, RetHost
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
-from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMetaByImdbId
+from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMetaByImdbId, getImage169, getSeasonImages169, isImages169
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import common
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
@@ -358,6 +358,12 @@ class SerienStreamTo(CBaseHostClass):
             return
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'class="episode-row', "</tr>")
         episodeItems = []
+        # 16:9 stills per episode (config "Use 16:9 pictures"): one request per season and service; the site's own icon stays where there is none
+        stills = {}
+        seasonNo = str(cItem.get("season_num", "")) or self.cm.ph.getSearchGroups(cItem.get("url", ""), r'/staffel-(\d+)')[0]
+        imdb169 = cItem.get("imdb_id", "")
+        if isImages169() and seasonNo.isdigit() and (re.match(r"^tt\d{7,10}$", imdb169) or cItem.get("series_title")):
+            stills = getSeasonImages169(cItem.get("series_title", ""), "", seasonNo, imdb169 if re.match(r"^tt\d{7,10}$", imdb169) else "")
         for item in data:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, "location='([^']+)'")[0])
             name = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'title="([^"]+)">')[0])
@@ -388,6 +394,10 @@ class SerienStreamTo(CBaseHostClass):
             "imdb_lookup_url": cItem.get("imdb_lookup_url", "") or cItem.get("url", ""),
             "series_url": cItem.get("series_url", "") or cItem.get("url", ""),
             "season_num": str(cItem.get("season_num", ""))})
+            if ep.isdigit():
+                params["meta_season"], params["meta_episode"] = seasonNo, ep
+                if stills.get(int(ep)):
+                    params["icon"] = stills[int(ep)]
             self.watchedHelper.updateHostItemFlag(self, params, self._getWatchedKeyForItem)
             self.addVideo(params)
             episodeItems.append(params)
@@ -649,7 +659,7 @@ class SerienStreamTo(CBaseHostClass):
             sidecarImg = sidecarImg or cItem.get("icon", "")
             # "Neueste Episoden" rows without a cached cover have no id of their own: the lookup of their INFO, when it was opened
             imdb_id = cItem.get("imdb_id", "") or self.extractImdbId(data)
-            sidecarMeta = infoSidecarMetaQuery(cItem, sidecarMetaQuery("tv", imdbId=imdb_id) if re.match(r"^tt\d{7,10}$", imdb_id) else {})
+            sidecarMeta = infoSidecarMetaQuery(cItem, sidecarMetaQuery("tv", imdbId=imdb_id, season=cItem.get("meta_season", ""), episode=cItem.get("meta_episode", "")) if re.match(r"^tt\d{7,10}$", imdb_id) else {})
         sidecar = buildSidecar(sidecarEnabled, sidecarTxt, sidecarImg, meta=sidecarMeta)
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'id="episode-links"', "</article>")
         if not data:
@@ -713,6 +723,11 @@ class SerienStreamTo(CBaseHostClass):
                 if sts2:
                     imdb_id = self.extractImdbId(data2)
         printDBG("IMDb DEBUG article id=[%s]" % imdb_id)
+        if isImages169() and re.match(r"^tt\d{7,10}$", imdb_id or ""):
+            # the episode's 16:9 still (the series' backdrop on a series page), else the page's picture
+            img169 = getImage169("tv", cItem.get("series_title", ""), "", cItem.get("meta_season", ""), cItem.get("meta_episode", ""), imdb_id)
+            if img169:
+                icon = strwithmeta(img169)
         meta = self.getImdbMeta(imdb_id)
         imdb_rating = self.getIMDBRating(imdb_id) if imdb_id else "-"
         printDBG("IMDb DEBUG article rating=[%s]" % imdb_rating)

@@ -293,6 +293,7 @@ class ConfigMenu(ConfigBaseWidget):
         list.append(getConfigListEntry(_("Use OMDb"), cp.meta_omdb))
         if cp.meta_omdb.value:
             list.append(getConfigListEntry("    " + _("OMDb API key (free at omdbapi.com)"), cp.meta_omdb_apikey))
+        list.append(getConfigListEntry(_("Use 16:9 pictures (per episode) instead of the portrait poster"), cp.meta_images_169))
 
     @staticmethod
     def _fillSecurity(list):
@@ -339,7 +340,13 @@ class ConfigMenu(ConfigBaseWidget):
             list.append(getConfigListEntry("    " + _("Number of columns"), config.plugins.iptvplayer.numOfCol))
         # list.append(getConfigListEntry(_("VFD set current title:"), config.plugins.iptvplayer.set_curr_title))
         list.append(getConfigListEntry(_("Create LCD/VFD summary screen"), config.plugins.iptvplayer.extplayer_summary))
-        list.append(getConfigListEntry("    " + _("Cover on the LCD summary screen"), config.plugins.iptvplayer.lcd_cover))
+        if config.plugins.iptvplayer.extplayer_summary.value != "no":
+            list.append(getConfigListEntry("    " + _("Cover on the LCD summary screen"), config.plugins.iptvplayer.lcd_cover))
+            if config.plugins.iptvplayer.lcd_cover.value:
+                list.append(getConfigListEntry("        " + _("Cover size"), config.plugins.iptvplayer.lcd_cover_size))
+            list.append(getConfigListEntry("    " + _("LCD font size"), config.plugins.iptvplayer.lcd_font_size))
+            list.append(getConfigListEntry("    " + _("Time on the LCD (player)"), config.plugins.iptvplayer.lcd_time_format))
+            list.append(getConfigListEntry("    " + _("Long titles on the LCD"), config.plugins.iptvplayer.lcd_long_titles))
 
     @staticmethod
     def _fillProxies(list):
@@ -981,6 +988,8 @@ class ConfigMenu(ConfigBaseWidget):
             config.plugins.iptvplayer.mark_favourite_items,
             config.plugins.iptvplayer.meta_tmdb,
             config.plugins.iptvplayer.meta_omdb,
+            config.plugins.iptvplayer.extplayer_summary,
+            config.plugins.iptvplayer.lcd_cover,
             config.plugins.iptvplayer.mye2i_browser,
             config.plugins.iptvplayer.storageExpertMode,
             config.plugins.iptvplayer.hostsListType,
