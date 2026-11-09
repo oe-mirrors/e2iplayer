@@ -532,7 +532,7 @@ class XXXParser:
 					entries.append(['data-sources', '%sp' % height, src])
 			except Exception:
 				pass
-		licenseCode =self.cm.ph.getSearchGroups(data, r"license_code\s*:\s*'([^']+)'", 1, True)[0]
+		licenseCode = self.cm.ph.getSearchGroups(data, r"license_code\s*:\s*'([^']+)'", 1, True)[0]
 		candidates, seen = [], set()
 		for order, (_key, label, videoUrl) in enumerate(entries):
 			if videoUrl.startswith('function/0/') and licenseCode:
@@ -953,7 +953,7 @@ class XXXParser:
 			token = ensure_str(codecs.encode(encrypter.feed(ensure_binary(videoId)) + encrypter.feed(), 'hex'))
 			header = dict(self.cm.getDefaultHeader(browser='chrome'), Referer='https://%s/%s' % (host, videoId))
 			sts, data = self.cm.getPage('https://%s/api/stream/tracking?c=%s&ld=1' % (host, token), {'header': header, 'return_data': True, 'with_metadata': True, 'collect_all_headers': True, 'timeout': 15, 'ignore_http_code_ranges': [(204, 204)]})
-			tracking =(getattr(data, 'meta', None) or {}).get('x-tracking', '') if sts else ''
+			tracking = (getattr(data, 'meta', None) or {}).get('x-tracking', '') if sts else ''
 			if not tracking:
 				return ''
 			decrypter = pyaes.Decrypter(pyaes.AESModeOfOperationCBC(key, iv))

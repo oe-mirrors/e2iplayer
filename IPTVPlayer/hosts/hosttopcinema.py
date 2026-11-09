@@ -74,9 +74,9 @@ DUB_WORD = "مدبلج"
 # left-to-right / right-to-left marks the site puts in front of some episode names
 BIDI_MARKS = (ensure_str(u"\u200e"), ensure_str(u"\u200f"))
 # "<span>نوع الفيلم : </span> <a>..</a>" fields of a title page -> INFO keys
-INFO_FIELDS = (("genres", ("نوع",)), ("year", ("تاريخ", "السنة")), ("language", ("لغة",)), ("quality", ("جودة",)),("released",("موعد",)),
+INFO_FIELDS = (("genres", ("نوع",)), ("year", ("تاريخ", "السنة")), ("language", ("لغة",)), ("quality", ("جودة",)), ("released", ("موعد",)),
                ("country", ("دولة", "البلد")), ("duration", ("مدة", "توقيت")), ("director", ("المخرج",)), ("actors", ("بطولة", "الممثلين")),
-               ("category",("قسم",)))
+               ("category", ("قسم",)))
 
 
 class TopCinema(GenericFolderWatchedScraperMixin, CBaseHostClass):
@@ -129,7 +129,6 @@ class TopCinema(GenericFolderWatchedScraperMixin, CBaseHostClass):
             params["header"]["Content-Type"] = "application/x-www-form-urlencoded; charset=UTF-8"
         sts, data = self.getPage(url, params, post_data)
         return data if sts and data else ""
-
 
     def _rebase(self, url):
         # urls of favourites / older lists on a previous domain -> the current one
@@ -291,7 +290,7 @@ class TopCinema(GenericFolderWatchedScraperMixin, CBaseHostClass):
             # one collection page: only its own movies, not the "other collections" tab
             data = self.cm.ph.getDataBeetwenMarkers(data, ("<section", ">", "allseasonss"), "</section>", False)[1]
         else:
-            data = self.cm.ph.getDataBeetwenMarkers(data, ("<main",">", "site-inner"), "</main>", False)[1] or data
+            data = self.cm.ph.getDataBeetwenMarkers(data, ("<main", ">", "site-inner"), "</main>", False)[1] or data
         normalize = IsMediaNamingNormalized()
         seen, seenSeasons = set(), set()
         for item in self.cm.ph.getAllItemsBeetwenMarkers(data, ("<div", ">", "Small--Box"), "</a>"):
@@ -447,7 +446,7 @@ class TopCinema(GenericFolderWatchedScraperMixin, CBaseHostClass):
         story = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, ("<div", ">", "story"), "</p>", False)[1])
         if not story:
             story = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'<meta property="og:description" content="([^"]*)"')[0])
-        poster =  self.cm.ph.getSearchGroups(data, r'<img[^>]+src="(http[^"]+)"')[0] or self.cm.ph.getSearchGroups(data, r'(?s)<div class="image">.*?data-src="([^"]+)"')[0]
+        poster = self.cm.ph.getSearchGroups(data, r'<img[^>]+src="(http[^"]+)"')[0] or self.cm.ph.getSearchGroups(data, r'(?s)<div class="image">.*?data-src="([^"]+)"')[0]
         info = {}
         block = self.cm.ph.getDataBeetwenMarkers(data, ("<div", ">", "infoAndWatch"), "</ul>", False)[1]
         for item in re.findall(r"(?s)<li[^>]*>(.*?)</li>", block):
@@ -481,7 +480,7 @@ class TopCinema(GenericFolderWatchedScraperMixin, CBaseHostClass):
             return []
         ajaxURL = self.getFullUrl(ajaxPath)
         story = self._siteInfo(data)[0]
-        block = self.cm.ph.getDataBeetwenMarkers(data, ("<div",">","watch--servers--list"), "</ul>", False)[1] or data
+        block = self.cm.ph.getDataBeetwenMarkers(data, ("<div", ">", "watch--servers--list"), "</ul>", False)[1] or data
         servers, seen = [], set()
         for item in self.cm.ph.getAllItemsBeetwenMarkers(block, "<li", "</li>"):
             Sid = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'''data-id=['"]([^'"]+)['"]''')[0])
