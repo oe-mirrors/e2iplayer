@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-09 21:19+0000\n"
-"PO-Revision-Date: 2026-11-01 22:08+0100\n"
+"PO-Revision-Date: 2026-11-09 22:28+0100\n"
 "Last-Translator: Masta2002\n"
 "Language-Team: oATV Team\n"
 "Language: de_DE\n"
@@ -162,7 +162,7 @@ msgstr "%s benötigt ein kostenloses Konto. Tragen Sie Benutzername und Passwort
 
 #, python-format
 msgid "%s not found in %s"
-msgstr ""
+msgstr "%s nicht gefunden in %s"
 
 #, python-format
 msgid "%s password"
@@ -1187,7 +1187,7 @@ msgid "Colored text in titles and descriptions"
 msgstr "Farbiger Text in Titeln und Beschreibungen"
 
 msgid "Column"
-msgstr ""
+msgstr "Spalte"
 
 msgid "Combine pull request merges with their commit"
 msgstr "Pull-Request-Merges mit ihrem Commit zusammenfassen"
@@ -1282,7 +1282,7 @@ msgstr "Kopieren Sie sie nach /usr/bin/TorrServer (oder in einen Ordner auf HDD/
 
 #, python-format
 msgid "Copying file from \"%s\" to \"%s\" failed.\n"
-msgstr ""
+msgstr "Kopieren der Datei von \"%s\" nach \"%s\" fehlgeschlagen.\n"
 
 msgid "Could not add the user link."
 msgstr "Der Benutzerlink konnte nicht hinzugefügt werden."
@@ -1291,7 +1291,7 @@ msgid "Could not load the wiki page."
 msgstr "Die Wiki-Seite konnte nicht geladen werden."
 
 msgid "Could not read the server list of the page."
-msgstr ""
+msgstr "Die Serverliste der Seite konnte nicht gelesen werden."
 
 msgid "Could not resolve host."
 msgstr "Host konnte nicht aufgelöst werden."
@@ -1324,10 +1324,10 @@ msgid "Couples"
 msgstr "Paare"
 
 msgid "Cover on the LCD summary screen"
-msgstr ""
+msgstr "Cover auf dem LCD-Zusammenfassungsbildschirm"
 
 msgid "Cover size"
-msgstr ""
+msgstr "Cover-Größe"
 
 msgid "Create Enigma2 .cuts chapter marks"
 msgstr "Erstelle Enigma2 .cuts Kapitelmarkierungen"
@@ -3005,7 +3005,7 @@ msgid "Kurdish"
 msgstr "Kurdisch"
 
 msgid "LCD font size"
-msgstr ""
+msgstr "LCD-Schriftgröße"
 
 msgid "LEFT/RIGHT at start/end of text - alternative way to switch panels"
 msgstr "LINKS/RECHTS am Anfang/Ende des Textes – alternative Möglichkeit zum Wechseln zwischen den Fenstern"
@@ -3020,7 +3020,7 @@ msgid "Language:"
 msgstr "Sprache:"
 
 msgid "Large"
-msgstr ""
+msgstr "Groß"
 
 msgid "Last"
 msgstr "Letzte"
@@ -3186,7 +3186,7 @@ msgstr "Untertitel Zeilenabstand"
 
 #, python-format
 msgid "Lines that could not be read: %d (first: line %d of %s)"
-msgstr ""
+msgstr "Nicht lesbare Zeilen: %d (erste: Zeile %d von %s)"
 
 msgid "Link"
 msgstr "Link"
@@ -3332,7 +3332,7 @@ msgid "Long list"
 msgstr "Lange Liste"
 
 msgid "Long titles on the LCD"
-msgstr ""
+msgstr "Lange Titel auf dem LCD"
 
 msgid "Longest"
 msgstr "Längste"
@@ -3447,7 +3447,7 @@ msgid "Mini series"
 msgstr "Miniserien"
 
 msgid "Minutes"
-msgstr ""
+msgstr "Minuten"
 
 msgid "Missed the show?"
 msgstr "Sendung verpasst?"
@@ -3848,7 +3848,7 @@ msgid "Nordic"
 msgstr "Nordisch"
 
 msgid "Normal"
-msgstr ""
+msgstr "Normal"
 
 msgid "Normalize item / file names (Show - SxxExx - Title)"
 msgstr "Element-/Dateinamen normalisieren (Serie – SxxExx – Titel)"
@@ -3961,7 +3961,7 @@ msgstr "Nur Links können in eine Gruppe verschoben werden."
 
 #, python-format
 msgid "Only loaded up to %s"
-msgstr ""
+msgstr "Erst bis %s geladen"
 
 #, python-format
 msgid "Only the %d oldest new commits are shown"
@@ -4088,7 +4088,7 @@ msgid "PRIVATE - wait a few seconds"
 msgstr "PRIVAT - warten Sie ein paar Sekunden"
 
 msgid "Page by page"
-msgstr ""
+msgstr "Seitenweise"
 
 msgid "Page not found - please check the address."
 msgstr "Seite nicht gefunden - bitte prüfen Sie die Adresse."
@@ -4817,7 +4817,7 @@ msgid "Script finished."
 msgstr "Skript beendet."
 
 msgid "Scroll"
-msgstr ""
+msgstr "Laufschrift"
 
 msgid "Search"
 msgstr "Suche"
@@ -5285,10 +5285,10 @@ msgid "Slovenian"
 msgstr "Slowenisch"
 
 msgid "Small (16:9)"
-msgstr ""
+msgstr "Klein (16:9)"
 
 msgid "Smaller text"
-msgstr ""
+msgstr "Kleinere Schrift"
 
 msgid "Snooker"
 msgstr "Snooker"
@@ -6151,7 +6151,7 @@ msgid "Time limit"
 msgstr "Zeitlimit"
 
 msgid "Time on the LCD (player)"
-msgstr ""
+msgstr "Zeit auf dem LCD (Player)"
 
 msgid "Tip! You can connect USB flash drive to fix this problem."
 msgstr "Tipp! Sie können einen USB-Stick anschließen, um das Problem zu beheben."
@@ -6496,7 +6496,7 @@ msgid "Urllists player"
 msgstr "Urllists Player"
 
 msgid "Use 16:9 pictures (per episode) instead of the portrait poster"
-msgstr ""
+msgstr "16:9-Bilder (pro Episode) statt des Hochformat-Posters verwenden"
 
 msgid "Use Cinemeta (no key, English)"
 msgstr "Cinemeta verwenden (ohne Schlüssel, Englisch)"
@@ -6611,7 +6611,7 @@ msgid "Version: %s"
 msgstr "Version: %s"
 
 msgid "Very large"
-msgstr ""
+msgstr "Sehr groß"
 
 msgid "Video"
 msgstr "Video "
@@ -6760,7 +6760,7 @@ msgid "With an API key from subdl.com (E2iPlayer settings, Subtitles) the offici
 msgstr "Mit einem API-Schlüssel von subdl.com (E2iPlayer-Einstellungen, Untertitel) wird zusätzlich die offizielle SubDL-API durchsucht."
 
 msgid "With seconds"
-msgstr ""
+msgstr "Mit Sekunden"
 
 msgid "With subtitles"
 msgstr "Mit Untertiteln"
@@ -7228,7 +7228,7 @@ msgid "menu and list only"
 msgstr "nur Menü und Liste"
 
 msgid "min"
-msgstr ""
+msgstr "Min"
 
 msgid "minutes"
 msgstr "Minuten"
