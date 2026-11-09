@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-01 21:03+0000\n"
+"POT-Creation-Date: 2026-11-09 21:19+0000\n"
 "PO-Revision-Date: 2026-07-27 16:55+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -161,6 +161,10 @@ msgstr "Подписчиков: %s"
 #, python-format
 msgid "%s needs a free account. Enter login and password in the host configuration."
 msgstr "%s требуется бесплатная учётная запись. Введите логин и пароль в настройках хоста."
+
+#, python-format
+msgid "%s not found in %s"
+msgstr ""
 
 #, python-format
 msgid "%s password"
@@ -1130,9 +1134,6 @@ msgstr "История кино"
 msgid "Cinema movies"
 msgstr "Кино фильмы"
 
-msgid "Classic"
-msgstr "Классика"
-
 msgid "Classic movies"
 msgstr "Классические фильмы"
 
@@ -1186,6 +1187,9 @@ msgstr "Коллекции"
 
 msgid "Colored text in titles and descriptions"
 msgstr "Цветной текст в названиях и описаниях"
+
+msgid "Column"
+msgstr ""
 
 msgid "Combine pull request merges with their commit"
 msgstr "Объединять слияния pull request с их коммитом"
@@ -1278,11 +1282,18 @@ msgstr "Копировать"
 msgid "Copy it to /usr/bin/TorrServer (or a folder on HDD/USB) and make it executable (chmod 755)."
 msgstr "Скопируйте его в /usr/bin/TorrServer (или в папку на HDD/USB) и сделайте исполняемым (chmod 755)."
 
+#, python-format
+msgid "Copying file from \"%s\" to \"%s\" failed.\n"
+msgstr ""
+
 msgid "Could not add the user link."
 msgstr "Не удалось добавить ссылку пользователя."
 
 msgid "Could not load the wiki page."
 msgstr "Не удалось загрузить страницу вики."
+
+msgid "Could not read the server list of the page."
+msgstr ""
 
 msgid "Could not resolve host."
 msgstr "Не удалось разрешить имя хоста."
@@ -1313,6 +1324,12 @@ msgstr "Страна:"
 
 msgid "Couples"
 msgstr "Пары"
+
+msgid "Cover on the LCD summary screen"
+msgstr ""
+
+msgid "Cover size"
+msgstr ""
 
 msgid "Create Enigma2 .cuts chapter marks"
 msgstr "Создать метки глав Enigma2 .cuts"
@@ -2762,9 +2779,6 @@ msgstr "Размер иконки"
 msgid "Image"
 msgstr "Образ"
 
-msgid "Indian"
-msgstr "Индийские"
-
 msgid "Indian Movies"
 msgstr "Индийские фильмы"
 
@@ -2993,6 +3007,9 @@ msgstr "Корейские фильмы"
 msgid "Kurdish"
 msgstr ""
 
+msgid "LCD font size"
+msgstr ""
+
 msgid "LEFT/RIGHT at start/end of text - alternative way to switch panels"
 msgstr "ВЛЕВО/ВПРАВО в начале/конце текста - другой способ переключения панелей"
 
@@ -3004,6 +3021,9 @@ msgstr "Язык описаний (TMDb, IMDb)"
 
 msgid "Language:"
 msgstr "Язык:"
+
+msgid "Large"
+msgstr ""
 
 msgid "Last"
 msgstr "Последний"
@@ -3167,6 +3187,10 @@ msgstr "Понравившиеся видео"
 msgid "Line Spacing"
 msgstr "Межстрочный Интервал"
 
+#, python-format
+msgid "Lines that could not be read: %d (first: line %d of %s)"
+msgstr ""
+
 msgid "Link"
 msgstr "Ссылка"
 
@@ -3310,6 +3334,9 @@ msgstr "Логи"
 msgid "Long list"
 msgstr "Длинный список"
 
+msgid "Long titles on the LCD"
+msgstr ""
+
 msgid "Longest"
 msgstr "Самые длинные"
 
@@ -3358,10 +3385,6 @@ msgstr "Главная"
 
 msgid "Main menu"
 msgstr "Главное меню"
-
-#, python-format
-msgid "Make directory [%s]"
-msgstr "Создать каталог [%s]"
 
 msgid "Malay"
 msgstr ""
@@ -3425,6 +3448,9 @@ msgstr "Военные"
 
 msgid "Mini series"
 msgstr "Мини-сериалы"
+
+msgid "Minutes"
+msgstr ""
 
 msgid "Missed the show?"
 msgstr "Пропустили шоу?"
@@ -3825,6 +3851,9 @@ msgstr "Нет"
 msgid "Nordic"
 msgstr ""
 
+msgid "Normal"
+msgstr ""
+
 msgid "Normalize item / file names (Show - SxxExx - Title)"
 msgstr "Нормализовать имена элементов / файлов (Сериал - SxxExx - Название)"
 
@@ -3933,6 +3962,10 @@ msgstr "Удалять можно только файлы в папке загр
 
 msgid "Only links can be moved to a group."
 msgstr "В группу можно перемещать только ссылки."
+
+#, python-format
+msgid "Only loaded up to %s"
+msgstr ""
 
 #, python-format
 msgid "Only the %d oldest new commits are shown"
@@ -4057,6 +4090,9 @@ msgstr "ПРИВАТ - подождите %s сек."
 
 msgid "PRIVATE - wait a few seconds"
 msgstr "ПРИВАТ - подождите несколько секунд"
+
+msgid "Page by page"
+msgstr ""
 
 msgid "Page not found - please check the address."
 msgstr "Страница не найдена - проверьте адрес."
@@ -4785,6 +4821,9 @@ msgstr ""
 msgid "Script finished."
 msgstr "Скрипт завершён."
 
+msgid "Scroll"
+msgstr ""
+
 msgid "Search"
 msgstr "Поиск"
 
@@ -5248,6 +5287,12 @@ msgid "Slovak"
 msgstr ""
 
 msgid "Slovenian"
+msgstr ""
+
+msgid "Small (16:9)"
+msgstr ""
+
+msgid "Smaller text"
 msgstr ""
 
 msgid "Snooker"
@@ -6105,6 +6150,9 @@ msgstr "Время"
 msgid "Time limit"
 msgstr ""
 
+msgid "Time on the LCD (player)"
+msgstr ""
+
 msgid "Tip! You can connect USB flash drive to fix this problem."
 msgstr "Совет! Можно подключить USB для устранения этой проблемы."
 
@@ -6447,6 +6495,9 @@ msgstr ""
 msgid "Urllists player"
 msgstr "Плеер Urllists"
 
+msgid "Use 16:9 pictures (per episode) instead of the portrait poster"
+msgstr ""
+
 msgid "Use Cinemeta (no key, English)"
 msgstr "Использовать Cinemeta (без ключа, английский)"
 
@@ -6559,6 +6610,9 @@ msgstr "Версия"
 msgid "Version: %s"
 msgstr "Версия: %s"
 
+msgid "Very large"
+msgstr ""
+
 msgid "Video"
 msgstr "Видео"
 
@@ -6641,9 +6695,6 @@ msgstr "Закадровый перевод"
 msgid "Volleyball"
 msgstr "Волейбол"
 
-msgid "WWE shows"
-msgstr "Шоу WWE"
-
 msgid "Waiting for the result ..."
 msgstr "Ожидание результата ..."
 
@@ -6707,6 +6758,9 @@ msgstr "Зимние виды спорта"
 
 msgid "With an API key from subdl.com (E2iPlayer settings, Subtitles) the official SubDL API is searched as well."
 msgstr "С API-ключом от subdl.com (настройки E2iPlayer, Субтитры) поиск также ведётся через официальный API SubDL."
+
+msgid "With seconds"
+msgstr ""
 
 msgid "With subtitles"
 msgstr "С субтитрами"
@@ -7172,6 +7226,9 @@ msgstr "средний"
 
 msgid "menu and list only"
 msgstr "только меню и список"
+
+msgid "min"
+msgstr ""
 
 msgid "minutes"
 msgstr "минут"

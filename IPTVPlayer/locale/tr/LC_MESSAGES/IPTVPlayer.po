@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-01 21:03+0000\n"
+"POT-Creation-Date: 2026-11-09 21:19+0000\n"
 "PO-Revision-Date: 2026-03-13 15:06+0300\n"
 "Last-Translator: audi06_19 <audi06_19@hotmail.com>\n"
 "Language-Team: Turkish\n"
@@ -157,6 +157,10 @@ msgstr "%s takipçi"
 #, python-format
 msgid "%s needs a free account. Enter login and password in the host configuration."
 msgstr "%s ücretsiz bir hesap gerektiriyor. Kullanıcı adını ve şifreyi host yapılandırmasına girin."
+
+#, python-format
+msgid "%s not found in %s"
+msgstr ""
 
 #, python-format
 msgid "%s password"
@@ -1126,9 +1130,6 @@ msgstr "Sinema Tarihi"
 msgid "Cinema movies"
 msgstr "Sinema filmleri"
 
-msgid "Classic"
-msgstr "Klasik"
-
 msgid "Classic movies"
 msgstr "Klasik filmler"
 
@@ -1182,6 +1183,9 @@ msgstr "Koleksiyonlar"
 
 msgid "Colored text in titles and descriptions"
 msgstr "Başlık ve açıklamalarda renkli metin"
+
+msgid "Column"
+msgstr ""
 
 msgid "Combine pull request merges with their commit"
 msgstr "Pull request birleştirmelerini commit'leriyle birleştir"
@@ -1274,11 +1278,18 @@ msgstr "Kopyala"
 msgid "Copy it to /usr/bin/TorrServer (or a folder on HDD/USB) and make it executable (chmod 755)."
 msgstr "Dosyayı /usr/bin/TorrServer konumuna (veya HDD/USB üzerindeki bir klasöre) kopyalayın ve çalıştırılabilir yapın (chmod 755)."
 
+#, python-format
+msgid "Copying file from \"%s\" to \"%s\" failed.\n"
+msgstr ""
+
 msgid "Could not add the user link."
 msgstr "Kullanıcı bağlantısı eklenemedi."
 
 msgid "Could not load the wiki page."
 msgstr "Wiki sayfası yüklenemedi."
+
+msgid "Could not read the server list of the page."
+msgstr ""
 
 msgid "Could not resolve host."
 msgstr "Host çözümlenemedi."
@@ -1309,6 +1320,12 @@ msgstr "Ülke:"
 
 msgid "Couples"
 msgstr "Çiftler"
+
+msgid "Cover on the LCD summary screen"
+msgstr ""
+
+msgid "Cover size"
+msgstr ""
 
 msgid "Create Enigma2 .cuts chapter marks"
 msgstr "Enigma2 .cuts bölüm işaretleri oluştur"
@@ -2757,9 +2774,6 @@ msgstr "Simge boyutu"
 msgid "Image"
 msgstr "Görüntü"
 
-msgid "Indian"
-msgstr "Hint"
-
 msgid "Indian Movies"
 msgstr "Hint filmleri"
 
@@ -2988,6 +3002,9 @@ msgstr "Kore filmleri"
 msgid "Kurdish"
 msgstr ""
 
+msgid "LCD font size"
+msgstr ""
+
 msgid "LEFT/RIGHT at start/end of text - alternative way to switch panels"
 msgstr "Metnin başında/sonunda SOL/SAĞ - panel değiştirmenin alternatif yolu"
 
@@ -2999,6 +3016,9 @@ msgstr "Ayrıntıların dili (TMDb, IMDb)"
 
 msgid "Language:"
 msgstr "Dil:"
+
+msgid "Large"
+msgstr ""
 
 msgid "Last"
 msgstr "Son"
@@ -3162,6 +3182,10 @@ msgstr "Beğenilen videolar"
 msgid "Line Spacing"
 msgstr "Satır Aralığı"
 
+#, python-format
+msgid "Lines that could not be read: %d (first: line %d of %s)"
+msgstr ""
+
 msgid "Link"
 msgstr "Bağlantı"
 
@@ -3305,6 +3329,9 @@ msgstr "Günlükler"
 msgid "Long list"
 msgstr "Uzun liste"
 
+msgid "Long titles on the LCD"
+msgstr ""
+
 msgid "Longest"
 msgstr "En uzun"
 
@@ -3353,10 +3380,6 @@ msgstr "Ana sayfa"
 
 msgid "Main menu"
 msgstr "Ana menü"
-
-#, python-format
-msgid "Make directory [%s]"
-msgstr "[%s] klasörünü oluştur"
 
 msgid "Malay"
 msgstr ""
@@ -3420,6 +3443,9 @@ msgstr "Askeri"
 
 msgid "Mini series"
 msgstr "Mini diziler"
+
+msgid "Minutes"
+msgstr ""
 
 msgid "Missed the show?"
 msgstr "Programı kaçırdınız mı?"
@@ -3819,6 +3845,9 @@ msgstr "Yok"
 msgid "Nordic"
 msgstr ""
 
+msgid "Normal"
+msgstr ""
+
 msgid "Normalize item / file names (Show - SxxExx - Title)"
 msgstr "Öğe / dosya adlarını normalleştir (Dizi - SxxExx - Başlık)"
 
@@ -3927,6 +3956,10 @@ msgstr "Yalnızca indirme klasöründeki dosyalar silinebilir."
 
 msgid "Only links can be moved to a group."
 msgstr "Bir gruba yalnızca bağlantılar taşınabilir."
+
+#, python-format
+msgid "Only loaded up to %s"
+msgstr ""
 
 #, python-format
 msgid "Only the %d oldest new commits are shown"
@@ -4051,6 +4084,9 @@ msgstr "ÖZEL - %s saniye bekleyin"
 
 msgid "PRIVATE - wait a few seconds"
 msgstr "ÖZEL - birkaç saniye bekleyin"
+
+msgid "Page by page"
+msgstr ""
 
 msgid "Page not found - please check the address."
 msgstr "Sayfa bulunamadı - lütfen adresi kontrol edin."
@@ -4778,6 +4814,9 @@ msgstr ""
 msgid "Script finished."
 msgstr "Betik tamamlandı."
 
+msgid "Scroll"
+msgstr ""
+
 msgid "Search"
 msgstr "Ara"
 
@@ -5241,6 +5280,12 @@ msgid "Slovak"
 msgstr ""
 
 msgid "Slovenian"
+msgstr ""
+
+msgid "Small (16:9)"
+msgstr ""
+
+msgid "Smaller text"
 msgstr ""
 
 msgid "Snooker"
@@ -6098,6 +6143,9 @@ msgstr "Zaman"
 msgid "Time limit"
 msgstr ""
 
+msgid "Time on the LCD (player)"
+msgstr ""
+
 msgid "Tip! You can connect USB flash drive to fix this problem."
 msgstr "İpucu! Bu sorunu gidermek için bir USB bellek bağlayabilirsiniz."
 
@@ -6440,6 +6488,9 @@ msgstr ""
 msgid "Urllists player"
 msgstr "Urllists oynatıcısı"
 
+msgid "Use 16:9 pictures (per episode) instead of the portrait poster"
+msgstr ""
+
 msgid "Use Cinemeta (no key, English)"
 msgstr "Cinemeta kullan (anahtarsız, İngilizce)"
 
@@ -6552,6 +6603,9 @@ msgstr "Sürüm"
 msgid "Version: %s"
 msgstr "Sürüm: %s"
 
+msgid "Very large"
+msgstr ""
+
 msgid "Video"
 msgstr "Video"
 
@@ -6634,9 +6688,6 @@ msgstr "Seslendirme"
 msgid "Volleyball"
 msgstr "Voleybol"
 
-msgid "WWE shows"
-msgstr "WWE şovları"
-
 msgid "Waiting for the result ..."
 msgstr "Sonuç bekleniyor ..."
 
@@ -6700,6 +6751,9 @@ msgstr "Kış sporları"
 
 msgid "With an API key from subdl.com (E2iPlayer settings, Subtitles) the official SubDL API is searched as well."
 msgstr "subdl.com'dan alınan bir API anahtarıyla (E2iPlayer ayarları, Altyazılar) resmi SubDL API'sinde de arama yapılır."
+
+msgid "With seconds"
+msgstr ""
 
 msgid "With subtitles"
 msgstr "Altyazılı"
@@ -7165,6 +7219,9 @@ msgstr "orta"
 
 msgid "menu and list only"
 msgstr "yalnızca menü ve liste"
+
+msgid "min"
+msgstr ""
 
 msgid "minutes"
 msgstr "dakika"

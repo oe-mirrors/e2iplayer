@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-01 21:03+0000\n"
+"POT-Creation-Date: 2026-11-09 21:19+0000\n"
 "PO-Revision-Date: 2026-10-28 12:46+0200\n"
 "Last-Translator: \n"
 "Language-Team: giorbak\n"
@@ -162,6 +162,10 @@ msgstr "%s ακόλουθοι"
 #, python-format
 msgid "%s needs a free account. Enter login and password in the host configuration."
 msgstr "Το %s απαιτεί δωρεάν λογαριασμό. Εισάγετε όνομα χρήστη και κωδικό πρόσβασης στις ρυθμίσεις του host."
+
+#, python-format
+msgid "%s not found in %s"
+msgstr ""
 
 #, python-format
 msgid "%s password"
@@ -1131,9 +1135,6 @@ msgstr "Ιστορία κινηματογράφου"
 msgid "Cinema movies"
 msgstr "Κινηματογραφικές ταινίες"
 
-msgid "Classic"
-msgstr "Κλασικά"
-
 msgid "Classic movies"
 msgstr "Κλασικές ταινίες"
 
@@ -1187,6 +1188,9 @@ msgstr "Συλλογές"
 
 msgid "Colored text in titles and descriptions"
 msgstr "Χρωματιστό κείμενο σε τίτλους και περιγραφές"
+
+msgid "Column"
+msgstr ""
 
 msgid "Combine pull request merges with their commit"
 msgstr "Συγχώνευση των pull request με το commit τους"
@@ -1279,11 +1283,18 @@ msgstr "Αντιγραφή"
 msgid "Copy it to /usr/bin/TorrServer (or a folder on HDD/USB) and make it executable (chmod 755)."
 msgstr "Αντιγράψτε το στο /usr/bin/TorrServer (ή σε φάκελο HDD/USB) και ορίστε το ως εκτελέσιμο (chmod 755)."
 
+#, python-format
+msgid "Copying file from \"%s\" to \"%s\" failed.\n"
+msgstr ""
+
 msgid "Could not add the user link."
 msgstr "Δεν ήταν δυνατή η προσθήκη του συνδέσμου χρήστη."
 
 msgid "Could not load the wiki page."
 msgstr "Δεν ήταν δυνατή η φόρτωση της σελίδας wiki."
+
+msgid "Could not read the server list of the page."
+msgstr ""
 
 msgid "Could not resolve host."
 msgstr "Δεν ήταν δυνατή η επίλυση του host."
@@ -1314,6 +1325,12 @@ msgstr "Χώρα:"
 
 msgid "Couples"
 msgstr "Ζευγάρια"
+
+msgid "Cover on the LCD summary screen"
+msgstr ""
+
+msgid "Cover size"
+msgstr ""
 
 msgid "Create Enigma2 .cuts chapter marks"
 msgstr "Δημιουργία δεικτών κεφαλαίων .cuts για το Enigma2"
@@ -2762,9 +2779,6 @@ msgstr "Μέγεθος εικονιδίων"
 msgid "Image"
 msgstr "Εικόνα"
 
-msgid "Indian"
-msgstr "Ινδικά"
-
 msgid "Indian Movies"
 msgstr "Ινδικές ταινίες"
 
@@ -2993,6 +3007,9 @@ msgstr "Κορεατικές ταινίες"
 msgid "Kurdish"
 msgstr "Κουρδικά"
 
+msgid "LCD font size"
+msgstr ""
+
 msgid "LEFT/RIGHT at start/end of text - alternative way to switch panels"
 msgstr "LEFT/RIGHT στην αρχή/τέλος του κειμένου - εναλλακτικός τρόπος εναλλαγής πάνελ"
 
@@ -3004,6 +3021,9 @@ msgstr "Γλώσσα των λεπτομερειών (TMDb, IMDb)"
 
 msgid "Language:"
 msgstr "Γλώσσα:"
+
+msgid "Large"
+msgstr ""
 
 msgid "Last"
 msgstr "Τελευταία"
@@ -3167,6 +3187,10 @@ msgstr "Βίντεο που σας αρέσουν"
 msgid "Line Spacing"
 msgstr "Απόσταση γραμμών"
 
+#, python-format
+msgid "Lines that could not be read: %d (first: line %d of %s)"
+msgstr ""
+
 msgid "Link"
 msgstr "Σύνδεσμος"
 
@@ -3310,6 +3334,9 @@ msgstr "Καταγραφές"
 msgid "Long list"
 msgstr "Μεγάλη λίστα"
 
+msgid "Long titles on the LCD"
+msgstr ""
+
 msgid "Longest"
 msgstr "Μεγαλύτερα"
 
@@ -3358,10 +3385,6 @@ msgstr "Κύριο"
 
 msgid "Main menu"
 msgstr "Κύριο μενού"
-
-#, python-format
-msgid "Make directory [%s]"
-msgstr "Δημιουργία καταλόγου [%s]"
 
 msgid "Malay"
 msgstr "Μαλαισιανά"
@@ -3425,6 +3448,9 @@ msgstr "Στρατιωτικά"
 
 msgid "Mini series"
 msgstr "Μίνι σειρές"
+
+msgid "Minutes"
+msgstr ""
 
 msgid "Missed the show?"
 msgstr "Χάσατε την εκπομπή;"
@@ -3824,6 +3850,9 @@ msgstr "Καμία"
 msgid "Nordic"
 msgstr "Σκανδιναβικά"
 
+msgid "Normal"
+msgstr ""
+
 msgid "Normalize item / file names (Show - SxxExx - Title)"
 msgstr "Κανονικοποίηση ονομάτων στοιχείων / αρχείων (Εκπομπή - SxxExx - Τίτλος)"
 
@@ -3932,6 +3961,10 @@ msgstr "Μόνο αρχεία στον φάκελο λήψεων μπορούν 
 
 msgid "Only links can be moved to a group."
 msgstr "Μόνο οι σύνδεσμοι μπορούν να μετακινηθούν σε ομάδα."
+
+#, python-format
+msgid "Only loaded up to %s"
+msgstr ""
 
 #, python-format
 msgid "Only the %d oldest new commits are shown"
@@ -4056,6 +4089,9 @@ msgstr "ΙΔΙΩΤΙΚΟ - περιμένετε %s δευτερόλεπτα"
 
 msgid "PRIVATE - wait a few seconds"
 msgstr "ΙΔΙΩΤΙΚΟ - περιμένετε μερικά δευτερόλεπτα"
+
+msgid "Page by page"
+msgstr ""
 
 msgid "Page not found - please check the address."
 msgstr "Η σελίδα δεν βρέθηκε - παρακαλώ ελέγξτε τη διεύθυνση."
@@ -4783,6 +4819,9 @@ msgstr ""
 msgid "Script finished."
 msgstr "Το script ολοκληρώθηκε."
 
+msgid "Scroll"
+msgstr ""
+
 msgid "Search"
 msgstr "Αναζήτηση"
 
@@ -5247,6 +5286,12 @@ msgstr "Σλοβακικά"
 
 msgid "Slovenian"
 msgstr "Σλοβενικά"
+
+msgid "Small (16:9)"
+msgstr ""
+
+msgid "Smaller text"
+msgstr ""
 
 msgid "Snooker"
 msgstr "Σνούκερ"
@@ -6101,6 +6146,9 @@ msgstr "Ώρα"
 msgid "Time limit"
 msgstr "Χρονικό όριο"
 
+msgid "Time on the LCD (player)"
+msgstr ""
+
 msgid "Tip! You can connect USB flash drive to fix this problem."
 msgstr "Συμβουλή! Μπορείτε να συνδέσετε ένα USB flash drive για να διορθώσετε αυτό το πρόβλημα."
 
@@ -6443,6 +6491,9 @@ msgstr "Ουρντού"
 msgid "Urllists player"
 msgstr "Πρόγραμμα αναπαραγωγής urllists"
 
+msgid "Use 16:9 pictures (per episode) instead of the portrait poster"
+msgstr ""
+
 msgid "Use Cinemeta (no key, English)"
 msgstr "Χρήση Cinemeta (χωρίς κλειδί, Αγγλικά)"
 
@@ -6555,6 +6606,9 @@ msgstr "Έκδοση"
 msgid "Version: %s"
 msgstr "Έκδοση: %s"
 
+msgid "Very large"
+msgstr ""
+
 msgid "Video"
 msgstr "Βίντεο"
 
@@ -6637,9 +6691,6 @@ msgstr "Εκφώνηση"
 msgid "Volleyball"
 msgstr "Βόλεϊ"
 
-msgid "WWE shows"
-msgstr "Εκπομπές WWE"
-
 msgid "Waiting for the result ..."
 msgstr "Αναμονή για το αποτέλεσμα ..."
 
@@ -6703,6 +6754,9 @@ msgstr "Χειμερινά αθλήματα"
 
 msgid "With an API key from subdl.com (E2iPlayer settings, Subtitles) the official SubDL API is searched as well."
 msgstr "Με ένα κλειδί API από το subdl.com (ρυθμίσεις E2iPlayer, Υπότιτλοι) γίνεται αναζήτηση και στο επίσημο API του SubDL."
+
+msgid "With seconds"
+msgstr ""
 
 msgid "With subtitles"
 msgstr "Με υπότιτλους"
@@ -7168,6 +7222,9 @@ msgstr "μέτριο"
 
 msgid "menu and list only"
 msgstr "μόνο μενού και λίστα"
+
+msgid "min"
+msgstr ""
 
 msgid "minutes"
 msgstr "λεπτά"

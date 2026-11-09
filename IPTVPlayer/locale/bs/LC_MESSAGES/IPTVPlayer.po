@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-01 21:03+0000\n"
+"POT-Creation-Date: 2026-11-09 21:19+0000\n"
 "PO-Revision-Date: 2026-10-24 23:30+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Bosnian\n"
@@ -156,6 +156,10 @@ msgstr "%s pratilaca"
 #, python-format
 msgid "%s needs a free account. Enter login and password in the host configuration."
 msgstr "%s zahtijeva besplatan račun. Unesite korisničko ime i lozinku u konfiguraciji hosta."
+
+#, python-format
+msgid "%s not found in %s"
+msgstr ""
 
 #, python-format
 msgid "%s password"
@@ -1125,9 +1129,6 @@ msgstr "Historija filma"
 msgid "Cinema movies"
 msgstr "Kino filmovi"
 
-msgid "Classic"
-msgstr "Klasika"
-
 msgid "Classic movies"
 msgstr "Klasični filmovi"
 
@@ -1181,6 +1182,9 @@ msgstr "Kolekcije"
 
 msgid "Colored text in titles and descriptions"
 msgstr "Obojeni tekst u naslovima i opisima"
+
+msgid "Column"
+msgstr ""
 
 msgid "Combine pull request merges with their commit"
 msgstr "Spoji pull request merge-ove s njihovim commit-om"
@@ -1273,11 +1277,18 @@ msgstr "Kopiraj"
 msgid "Copy it to /usr/bin/TorrServer (or a folder on HDD/USB) and make it executable (chmod 755)."
 msgstr "Kopirajte je u /usr/bin/TorrServer (ili u folder na HDD/USB) i učinite je izvršnom (chmod 755)."
 
+#, python-format
+msgid "Copying file from \"%s\" to \"%s\" failed.\n"
+msgstr ""
+
 msgid "Could not add the user link."
 msgstr "Korisnički link nije mogao biti dodan."
 
 msgid "Could not load the wiki page."
 msgstr "Wiki stranica nije mogla biti učitana."
+
+msgid "Could not read the server list of the page."
+msgstr ""
 
 msgid "Could not resolve host."
 msgstr "Host nije mogao biti razriješen."
@@ -1308,6 +1319,12 @@ msgstr "Zemlja:"
 
 msgid "Couples"
 msgstr "Parovi"
+
+msgid "Cover on the LCD summary screen"
+msgstr ""
+
+msgid "Cover size"
+msgstr ""
 
 msgid "Create Enigma2 .cuts chapter marks"
 msgstr "Napravi Enigma2 .cuts oznake poglavlja"
@@ -2756,9 +2773,6 @@ msgstr "Veličina ikona"
 msgid "Image"
 msgstr "Image"
 
-msgid "Indian"
-msgstr "Indijski"
-
 msgid "Indian Movies"
 msgstr "Indijski filmovi"
 
@@ -2987,6 +3001,9 @@ msgstr "Korejski filmovi"
 msgid "Kurdish"
 msgstr ""
 
+msgid "LCD font size"
+msgstr ""
+
 msgid "LEFT/RIGHT at start/end of text - alternative way to switch panels"
 msgstr "LIJEVO/DESNO na početku/kraju teksta - alternativni način za prebacivanje između panela"
 
@@ -2998,6 +3015,9 @@ msgstr "Jezik detalja (TMDb, IMDb)"
 
 msgid "Language:"
 msgstr "Jezik:"
+
+msgid "Large"
+msgstr ""
 
 msgid "Last"
 msgstr "Posljednje"
@@ -3161,6 +3181,10 @@ msgstr "Video snimci koji su vam se svidjeli"
 msgid "Line Spacing"
 msgstr "Prored"
 
+#, python-format
+msgid "Lines that could not be read: %d (first: line %d of %s)"
+msgstr ""
+
 msgid "Link"
 msgstr "Link"
 
@@ -3304,6 +3328,9 @@ msgstr "Logovi"
 msgid "Long list"
 msgstr "Duga lista"
 
+msgid "Long titles on the LCD"
+msgstr ""
+
 msgid "Longest"
 msgstr "Najduže"
 
@@ -3352,10 +3379,6 @@ msgstr "Glavno"
 
 msgid "Main menu"
 msgstr "Glavni meni"
-
-#, python-format
-msgid "Make directory [%s]"
-msgstr "Napravi direktorij [%s]"
 
 msgid "Malay"
 msgstr ""
@@ -3419,6 +3442,9 @@ msgstr "Vojska"
 
 msgid "Mini series"
 msgstr "Mini serije"
+
+msgid "Minutes"
+msgstr ""
 
 msgid "Missed the show?"
 msgstr "Propustili ste emisiju?"
@@ -3818,6 +3844,9 @@ msgstr "Nijedan"
 msgid "Nordic"
 msgstr ""
 
+msgid "Normal"
+msgstr ""
+
 msgid "Normalize item / file names (Show - SxxExx - Title)"
 msgstr "Normalizuj nazive stavki / datoteka (Serija - SxxExx - Naslov)"
 
@@ -3926,6 +3955,10 @@ msgstr "Mogu se brisati samo datoteke u folderu za preuzimanja."
 
 msgid "Only links can be moved to a group."
 msgstr "Samo linkovi se mogu premjestiti u grupu."
+
+#, python-format
+msgid "Only loaded up to %s"
+msgstr ""
 
 #, python-format
 msgid "Only the %d oldest new commits are shown"
@@ -4050,6 +4083,9 @@ msgstr "PRIVATNO - sačekajte %s sekundi"
 
 msgid "PRIVATE - wait a few seconds"
 msgstr "PRIVATNO - sačekajte nekoliko sekundi"
+
+msgid "Page by page"
+msgstr ""
 
 msgid "Page not found - please check the address."
 msgstr "Stranica nije pronađena - provjerite adresu."
@@ -4777,6 +4813,9 @@ msgstr ""
 msgid "Script finished."
 msgstr "Skripta je završena."
 
+msgid "Scroll"
+msgstr ""
+
 msgid "Search"
 msgstr "Pretraga"
 
@@ -5240,6 +5279,12 @@ msgid "Slovak"
 msgstr ""
 
 msgid "Slovenian"
+msgstr ""
+
+msgid "Small (16:9)"
+msgstr ""
+
+msgid "Smaller text"
 msgstr ""
 
 msgid "Snooker"
@@ -6097,6 +6142,9 @@ msgstr "Vrijeme"
 msgid "Time limit"
 msgstr ""
 
+msgid "Time on the LCD (player)"
+msgstr ""
+
 msgid "Tip! You can connect USB flash drive to fix this problem."
 msgstr "Savjet! Ovaj problem možete riješiti priključivanjem USB fleš diska."
 
@@ -6439,6 +6487,9 @@ msgstr ""
 msgid "Urllists player"
 msgstr "Urllists plejer"
 
+msgid "Use 16:9 pictures (per episode) instead of the portrait poster"
+msgstr ""
+
 msgid "Use Cinemeta (no key, English)"
 msgstr "Koristi Cinemeta (bez ključa, engleski)"
 
@@ -6551,6 +6602,9 @@ msgstr "Verzija"
 msgid "Version: %s"
 msgstr "Verzija: %s"
 
+msgid "Very large"
+msgstr ""
+
 msgid "Video"
 msgstr "Video"
 
@@ -6633,9 +6687,6 @@ msgstr "Glas preko (voice-over)"
 msgid "Volleyball"
 msgstr "Odbojka"
 
-msgid "WWE shows"
-msgstr "WWE šou programi"
-
 msgid "Waiting for the result ..."
 msgstr "Čekanje na rezultat ..."
 
@@ -6699,6 +6750,9 @@ msgstr "Zimski sportovi"
 
 msgid "With an API key from subdl.com (E2iPlayer settings, Subtitles) the official SubDL API is searched as well."
 msgstr "S API ključem sa subdl.com (postavke E2iPlayera, Titlovi) pretražuje se i zvanični SubDL API."
+
+msgid "With seconds"
+msgstr ""
 
 msgid "With subtitles"
 msgstr "S titlovima"
@@ -7164,6 +7218,9 @@ msgstr "srednji"
 
 msgid "menu and list only"
 msgstr "samo meni i lista"
+
+msgid "min"
+msgstr ""
 
 msgid "minutes"
 msgstr "minuta"
