@@ -802,6 +802,7 @@ class urlparser:
             "sufbgao.xyz": self.pp.parserSTREAMUP,  # add 061026
             "supervideo.cc": self.pp.parserJWPLAYER,
             "supervideo.tv": self.pp.parserJWPLAYER,
+            "susanexpectcare.com": self.pp.parserVOESX,  # add 091126
             "maxstream.video": self.pp.parserMAXSTREAM,
             "swdyu.com": self.pp.parserJWPLAYER,
             "swhoi.com": self.pp.parserJWPLAYER,
