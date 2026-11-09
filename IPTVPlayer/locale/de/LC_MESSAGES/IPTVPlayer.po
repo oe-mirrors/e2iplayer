@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-01 21:03+0000\n"
+"POT-Creation-Date: 2026-11-09 21:19+0000\n"
 "PO-Revision-Date: 2026-11-01 22:08+0100\n"
 "Last-Translator: Masta2002\n"
 "Language-Team: oATV Team\n"
@@ -159,6 +159,10 @@ msgstr "%s Follower"
 #, python-format
 msgid "%s needs a free account. Enter login and password in the host configuration."
 msgstr "%s benötigt ein kostenloses Konto. Tragen Sie Benutzername und Passwort in der Host-Konfiguration ein."
+
+#, python-format
+msgid "%s not found in %s"
+msgstr ""
 
 #, python-format
 msgid "%s password"
@@ -1128,9 +1132,6 @@ msgstr "Kinogeschichte"
 msgid "Cinema movies"
 msgstr "Kino Filme"
 
-msgid "Classic"
-msgstr "Klassiker"
-
 msgid "Classic movies"
 msgstr "Filmklassiker"
 
@@ -1184,6 +1185,9 @@ msgstr "Kollektionen"
 
 msgid "Colored text in titles and descriptions"
 msgstr "Farbiger Text in Titeln und Beschreibungen"
+
+msgid "Column"
+msgstr ""
 
 msgid "Combine pull request merges with their commit"
 msgstr "Pull-Request-Merges mit ihrem Commit zusammenfassen"
@@ -1276,11 +1280,18 @@ msgstr "Kopieren"
 msgid "Copy it to /usr/bin/TorrServer (or a folder on HDD/USB) and make it executable (chmod 755)."
 msgstr "Kopieren Sie sie nach /usr/bin/TorrServer (oder in einen Ordner auf HDD/USB) und machen Sie sie ausführbar (chmod 755)."
 
+#, python-format
+msgid "Copying file from \"%s\" to \"%s\" failed.\n"
+msgstr ""
+
 msgid "Could not add the user link."
 msgstr "Der Benutzerlink konnte nicht hinzugefügt werden."
 
 msgid "Could not load the wiki page."
 msgstr "Die Wiki-Seite konnte nicht geladen werden."
+
+msgid "Could not read the server list of the page."
+msgstr ""
 
 msgid "Could not resolve host."
 msgstr "Host konnte nicht aufgelöst werden."
@@ -1311,6 +1322,12 @@ msgstr "Land:"
 
 msgid "Couples"
 msgstr "Paare"
+
+msgid "Cover on the LCD summary screen"
+msgstr ""
+
+msgid "Cover size"
+msgstr ""
 
 msgid "Create Enigma2 .cuts chapter marks"
 msgstr "Erstelle Enigma2 .cuts Kapitelmarkierungen"
@@ -2759,9 +2776,6 @@ msgstr "Icons Größe"
 msgid "Image"
 msgstr "Image"
 
-msgid "Indian"
-msgstr "Indisch"
-
 msgid "Indian Movies"
 msgstr "Indische Filme"
 
@@ -2990,6 +3004,9 @@ msgstr "Koreanische Filme"
 msgid "Kurdish"
 msgstr "Kurdisch"
 
+msgid "LCD font size"
+msgstr ""
+
 msgid "LEFT/RIGHT at start/end of text - alternative way to switch panels"
 msgstr "LINKS/RECHTS am Anfang/Ende des Textes – alternative Möglichkeit zum Wechseln zwischen den Fenstern"
 
@@ -3001,6 +3018,9 @@ msgstr "Sprache der Details (TMDb, IMDb)"
 
 msgid "Language:"
 msgstr "Sprache:"
+
+msgid "Large"
+msgstr ""
 
 msgid "Last"
 msgstr "Letzte"
@@ -3164,6 +3184,10 @@ msgstr "Gelikte Videos"
 msgid "Line Spacing"
 msgstr "Untertitel Zeilenabstand"
 
+#, python-format
+msgid "Lines that could not be read: %d (first: line %d of %s)"
+msgstr ""
+
 msgid "Link"
 msgstr "Link"
 
@@ -3307,6 +3331,9 @@ msgstr "Logs"
 msgid "Long list"
 msgstr "Lange Liste"
 
+msgid "Long titles on the LCD"
+msgstr ""
+
 msgid "Longest"
 msgstr "Längste"
 
@@ -3355,10 +3382,6 @@ msgstr "Hauptseite"
 
 msgid "Main menu"
 msgstr "Hauptmenü"
-
-#, python-format
-msgid "Make directory [%s]"
-msgstr "Erstelle Verzeichnis [%s]"
 
 msgid "Malay"
 msgstr "Malaiisch"
@@ -3422,6 +3445,9 @@ msgstr "Militär"
 
 msgid "Mini series"
 msgstr "Miniserien"
+
+msgid "Minutes"
+msgstr ""
 
 msgid "Missed the show?"
 msgstr "Sendung verpasst?"
@@ -3821,6 +3847,9 @@ msgstr "Keine"
 msgid "Nordic"
 msgstr "Nordisch"
 
+msgid "Normal"
+msgstr ""
+
 msgid "Normalize item / file names (Show - SxxExx - Title)"
 msgstr "Element-/Dateinamen normalisieren (Serie – SxxExx – Titel)"
 
@@ -3929,6 +3958,10 @@ msgstr "Nur Dateien im Download-Ordner können gelöscht werden."
 
 msgid "Only links can be moved to a group."
 msgstr "Nur Links können in eine Gruppe verschoben werden."
+
+#, python-format
+msgid "Only loaded up to %s"
+msgstr ""
 
 #, python-format
 msgid "Only the %d oldest new commits are shown"
@@ -4053,6 +4086,9 @@ msgstr "PRIVAT - warten Sie %s Sekunden"
 
 msgid "PRIVATE - wait a few seconds"
 msgstr "PRIVAT - warten Sie ein paar Sekunden"
+
+msgid "Page by page"
+msgstr ""
 
 msgid "Page not found - please check the address."
 msgstr "Seite nicht gefunden - bitte prüfen Sie die Adresse."
@@ -4780,6 +4816,9 @@ msgstr ""
 msgid "Script finished."
 msgstr "Skript beendet."
 
+msgid "Scroll"
+msgstr ""
+
 msgid "Search"
 msgstr "Suche"
 
@@ -5244,6 +5283,12 @@ msgstr "Slowakisch"
 
 msgid "Slovenian"
 msgstr "Slowenisch"
+
+msgid "Small (16:9)"
+msgstr ""
+
+msgid "Smaller text"
+msgstr ""
 
 msgid "Snooker"
 msgstr "Snooker"
@@ -6105,6 +6150,9 @@ msgstr "Zeit"
 msgid "Time limit"
 msgstr "Zeitlimit"
 
+msgid "Time on the LCD (player)"
+msgstr ""
+
 msgid "Tip! You can connect USB flash drive to fix this problem."
 msgstr "Tipp! Sie können einen USB-Stick anschließen, um das Problem zu beheben."
 
@@ -6447,6 +6495,9 @@ msgstr "Urdu"
 msgid "Urllists player"
 msgstr "Urllists Player"
 
+msgid "Use 16:9 pictures (per episode) instead of the portrait poster"
+msgstr ""
+
 msgid "Use Cinemeta (no key, English)"
 msgstr "Cinemeta verwenden (ohne Schlüssel, Englisch)"
 
@@ -6559,6 +6610,9 @@ msgstr "Version"
 msgid "Version: %s"
 msgstr "Version: %s"
 
+msgid "Very large"
+msgstr ""
+
 msgid "Video"
 msgstr "Video "
 
@@ -6641,9 +6695,6 @@ msgstr "Voice-over"
 msgid "Volleyball"
 msgstr "Volleyball"
 
-msgid "WWE shows"
-msgstr "WWE-Shows"
-
 msgid "Waiting for the result ..."
 msgstr "Warte auf das Ergebnis ..."
 
@@ -6707,6 +6758,9 @@ msgstr "Wintersport"
 
 msgid "With an API key from subdl.com (E2iPlayer settings, Subtitles) the official SubDL API is searched as well."
 msgstr "Mit einem API-Schlüssel von subdl.com (E2iPlayer-Einstellungen, Untertitel) wird zusätzlich die offizielle SubDL-API durchsucht."
+
+msgid "With seconds"
+msgstr ""
 
 msgid "With subtitles"
 msgstr "Mit Untertiteln"
@@ -7172,6 +7226,9 @@ msgstr "mittel"
 
 msgid "menu and list only"
 msgstr "nur Menü und Liste"
+
+msgid "min"
+msgstr ""
 
 msgid "minutes"
 msgstr "Minuten"

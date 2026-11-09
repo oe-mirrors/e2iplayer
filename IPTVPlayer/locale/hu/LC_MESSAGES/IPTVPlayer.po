@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-01 21:03+0000\n"
+"POT-Creation-Date: 2026-11-09 21:19+0000\n"
 "PO-Revision-Date: 2026-07-27 16:49+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -161,6 +161,10 @@ msgstr "%s követő"
 #, python-format
 msgid "%s needs a free account. Enter login and password in the host configuration."
 msgstr "A(z) %s ingyenes fiókot igényel. Adja meg a felhasználónevet és a jelszót a host konfigurációjában."
+
+#, python-format
+msgid "%s not found in %s"
+msgstr ""
 
 #, python-format
 msgid "%s password"
@@ -1132,9 +1136,6 @@ msgstr "Filmtörténet"
 msgid "Cinema movies"
 msgstr "Mozifilmek"
 
-msgid "Classic"
-msgstr "Klasszikus"
-
 msgid "Classic movies"
 msgstr "Klasszikus filmek"
 
@@ -1188,6 +1189,9 @@ msgstr "Gyűjtemények"
 
 msgid "Colored text in titles and descriptions"
 msgstr "Színes szöveg a címekben és leírásokban"
+
+msgid "Column"
+msgstr ""
 
 msgid "Combine pull request merges with their commit"
 msgstr "Pull request merge-ök összevonása a commitjukkal"
@@ -1280,11 +1284,18 @@ msgstr "Másolás"
 msgid "Copy it to /usr/bin/TorrServer (or a folder on HDD/USB) and make it executable (chmod 755)."
 msgstr "Másolja a /usr/bin/TorrServer helyre (vagy egy HDD/USB mappába), és tegye futtathatóvá (chmod 755)."
 
+#, python-format
+msgid "Copying file from \"%s\" to \"%s\" failed.\n"
+msgstr ""
+
 msgid "Could not add the user link."
 msgstr "Nem sikerült hozzáadni a felhasználói hivatkozást."
 
 msgid "Could not load the wiki page."
 msgstr "Nem sikerült betölteni a wiki oldalt."
+
+msgid "Could not read the server list of the page."
+msgstr ""
 
 msgid "Could not resolve host."
 msgstr "Nem sikerült feloldani a hostot."
@@ -1315,6 +1326,12 @@ msgstr "Ország:"
 
 msgid "Couples"
 msgstr "Párok"
+
+msgid "Cover on the LCD summary screen"
+msgstr ""
+
+msgid "Cover size"
+msgstr ""
 
 msgid "Create Enigma2 .cuts chapter marks"
 msgstr "Enigma2 .cuts fejezetjelölők létrehozása"
@@ -2764,9 +2781,6 @@ msgstr "Ikonok mérete"
 msgid "Image"
 msgstr "Image"
 
-msgid "Indian"
-msgstr "Indiai"
-
 msgid "Indian Movies"
 msgstr "Indiai filmek"
 
@@ -2995,6 +3009,9 @@ msgstr "Koreai filmek"
 msgid "Kurdish"
 msgstr ""
 
+msgid "LCD font size"
+msgstr ""
+
 msgid "LEFT/RIGHT at start/end of text - alternative way to switch panels"
 msgstr "BALRA/JOBBRA a szöveg elején/végén - a panelek váltásának másik módja"
 
@@ -3006,6 +3023,9 @@ msgstr "A részletek nyelve (TMDb, IMDb)"
 
 msgid "Language:"
 msgstr "Nyelv:"
+
+msgid "Large"
+msgstr ""
 
 msgid "Last"
 msgstr "Utolsó"
@@ -3169,6 +3189,10 @@ msgstr "Kedvelt videók"
 msgid "Line Spacing"
 msgstr "Sortávolság"
 
+#, python-format
+msgid "Lines that could not be read: %d (first: line %d of %s)"
+msgstr ""
+
 msgid "Link"
 msgstr "Link"
 
@@ -3312,6 +3336,9 @@ msgstr "Naplók"
 msgid "Long list"
 msgstr "Hosszú lista"
 
+msgid "Long titles on the LCD"
+msgstr ""
+
 msgid "Longest"
 msgstr "Leghosszabb"
 
@@ -3360,10 +3387,6 @@ msgstr "Főoldal"
 
 msgid "Main menu"
 msgstr "Főmenü"
-
-#, python-format
-msgid "Make directory [%s]"
-msgstr "[%s] mappa létrehozása"
 
 msgid "Malay"
 msgstr ""
@@ -3427,6 +3450,9 @@ msgstr "Katonai"
 
 msgid "Mini series"
 msgstr "Minisorozatok"
+
+msgid "Minutes"
+msgstr ""
 
 msgid "Missed the show?"
 msgstr "Lemaradtál a műsorról?"
@@ -3826,6 +3852,9 @@ msgstr "Nincs"
 msgid "Nordic"
 msgstr ""
 
+msgid "Normal"
+msgstr ""
+
 msgid "Normalize item / file names (Show - SxxExx - Title)"
 msgstr "Elem-/fájlnevek normalizálása (Sorozat - SxxExx - Cím)"
 
@@ -3934,6 +3963,10 @@ msgstr "Csak a letöltési mappában lévő fájlok törölhetők."
 
 msgid "Only links can be moved to a group."
 msgstr "Csak linkek helyezhetők át csoportba."
+
+#, python-format
+msgid "Only loaded up to %s"
+msgstr ""
 
 #, python-format
 msgid "Only the %d oldest new commits are shown"
@@ -4058,6 +4091,9 @@ msgstr "PRIVÁT - várjon %s másodpercet"
 
 msgid "PRIVATE - wait a few seconds"
 msgstr "PRIVÁT - várjon néhány másodpercet"
+
+msgid "Page by page"
+msgstr ""
 
 msgid "Page not found - please check the address."
 msgstr "Az oldal nem található - kérjük, ellenőrizze a címet."
@@ -4785,6 +4821,9 @@ msgstr ""
 msgid "Script finished."
 msgstr "A szkript befejeződött."
 
+msgid "Scroll"
+msgstr ""
+
 msgid "Search"
 msgstr "Keresés"
 
@@ -5248,6 +5287,12 @@ msgid "Slovak"
 msgstr ""
 
 msgid "Slovenian"
+msgstr ""
+
+msgid "Small (16:9)"
+msgstr ""
+
+msgid "Smaller text"
 msgstr ""
 
 msgid "Snooker"
@@ -6106,6 +6151,9 @@ msgstr "Idő"
 msgid "Time limit"
 msgstr ""
 
+msgid "Time on the LCD (player)"
+msgstr ""
+
 msgid "Tip! You can connect USB flash drive to fix this problem."
 msgstr "Tipp! A probléma megoldásához csatlakoztathat USB flash meghajtót."
 
@@ -6448,6 +6496,9 @@ msgstr ""
 msgid "Urllists player"
 msgstr "Urllists lejátszó"
 
+msgid "Use 16:9 pictures (per episode) instead of the portrait poster"
+msgstr ""
+
 msgid "Use Cinemeta (no key, English)"
 msgstr "Cinemeta használata (kulcs nélkül, angol)"
 
@@ -6560,6 +6611,9 @@ msgstr "Verzió"
 msgid "Version: %s"
 msgstr "Verzió: %s"
 
+msgid "Very large"
+msgstr ""
+
 msgid "Video"
 msgstr "Videó"
 
@@ -6642,9 +6696,6 @@ msgstr "Szinkronhang (lektorált)"
 msgid "Volleyball"
 msgstr "Röplabda"
 
-msgid "WWE shows"
-msgstr "WWE műsorok"
-
 msgid "Waiting for the result ..."
 msgstr "Várakozás az eredményre ..."
 
@@ -6708,6 +6759,9 @@ msgstr "Téli sportok"
 
 msgid "With an API key from subdl.com (E2iPlayer settings, Subtitles) the official SubDL API is searched as well."
 msgstr "Egy subdl.com API-kulccsal (E2iPlayer beállítások, Feliratok) a hivatalos SubDL API-ban is keres."
+
+msgid "With seconds"
+msgstr ""
 
 msgid "With subtitles"
 msgstr "Felirattal"
@@ -7173,6 +7227,9 @@ msgstr "közepes"
 
 msgid "menu and list only"
 msgstr "csak menü és lista"
+
+msgid "min"
+msgstr ""
 
 msgid "minutes"
 msgstr "perc"

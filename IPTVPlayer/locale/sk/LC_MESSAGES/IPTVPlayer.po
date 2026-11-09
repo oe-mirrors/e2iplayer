@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-01 21:03+0000\n"
+"POT-Creation-Date: 2026-11-09 21:19+0000\n"
 "PO-Revision-Date: 2026-07-27 16:28+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -161,6 +161,10 @@ msgstr "%s sledujúcich"
 #, python-format
 msgid "%s needs a free account. Enter login and password in the host configuration."
 msgstr "%s potrebuje bezplatný účet. Zadajte prihlasovacie meno a heslo v konfigurácii hostiteľa."
+
+#, python-format
+msgid "%s not found in %s"
+msgstr ""
 
 #, python-format
 msgid "%s password"
@@ -1130,9 +1134,6 @@ msgstr "Dejiny kinematografie"
 msgid "Cinema movies"
 msgstr "Kino filmy"
 
-msgid "Classic"
-msgstr "Klasika"
-
 msgid "Classic movies"
 msgstr "Klasické filmy"
 
@@ -1186,6 +1187,9 @@ msgstr "Zbierky"
 
 msgid "Colored text in titles and descriptions"
 msgstr "Farebný text v názvoch a popisoch"
+
+msgid "Column"
+msgstr ""
 
 msgid "Combine pull request merges with their commit"
 msgstr "Zlúčiť merge pull requestov s ich commitom"
@@ -1278,11 +1282,18 @@ msgstr "Kopírovať"
 msgid "Copy it to /usr/bin/TorrServer (or a folder on HDD/USB) and make it executable (chmod 755)."
 msgstr "Skopírujte ho do /usr/bin/TorrServer (alebo do priečinka na HDD/USB) a nastavte ho ako spustiteľný (chmod 755)."
 
+#, python-format
+msgid "Copying file from \"%s\" to \"%s\" failed.\n"
+msgstr ""
+
 msgid "Could not add the user link."
 msgstr "Nepodarilo sa pridať odkaz používateľa."
 
 msgid "Could not load the wiki page."
 msgstr "Stránku wiki sa nepodarilo načítať."
+
+msgid "Could not read the server list of the page."
+msgstr ""
 
 msgid "Could not resolve host."
 msgstr "Názov servera sa nepodarilo preložiť."
@@ -1313,6 +1324,12 @@ msgstr "Krajina:"
 
 msgid "Couples"
 msgstr "Páry"
+
+msgid "Cover on the LCD summary screen"
+msgstr ""
+
+msgid "Cover size"
+msgstr ""
 
 msgid "Create Enigma2 .cuts chapter marks"
 msgstr "Vytvoriť značky kapitol Enigma2 .cuts"
@@ -2761,9 +2778,6 @@ msgstr "Veľkosť ikon"
 msgid "Image"
 msgstr "Image systému"
 
-msgid "Indian"
-msgstr "Indické"
-
 msgid "Indian Movies"
 msgstr "Indické Filmy"
 
@@ -2993,6 +3007,9 @@ msgstr "Kórejské filmy"
 msgid "Kurdish"
 msgstr ""
 
+msgid "LCD font size"
+msgstr ""
+
 msgid "LEFT/RIGHT at start/end of text - alternative way to switch panels"
 msgstr "VĽAVO/VPRAVO na začiatku/konci textu - alternatívny spôsob prepínania panelov"
 
@@ -3004,6 +3021,9 @@ msgstr "Jazyk podrobností (TMDb, IMDb)"
 
 msgid "Language:"
 msgstr "Jazyk:"
+
+msgid "Large"
+msgstr ""
 
 msgid "Last"
 msgstr "Posledný"
@@ -3167,6 +3187,10 @@ msgstr "Videá, ktoré sa mi páčia"
 msgid "Line Spacing"
 msgstr "Riadkovanie"
 
+#, python-format
+msgid "Lines that could not be read: %d (first: line %d of %s)"
+msgstr ""
+
 msgid "Link"
 msgstr "Odkaz"
 
@@ -3310,6 +3334,9 @@ msgstr "Logy"
 msgid "Long list"
 msgstr "Dlhý zoznam"
 
+msgid "Long titles on the LCD"
+msgstr ""
+
 msgid "Longest"
 msgstr "Najdlhšia"
 
@@ -3358,10 +3385,6 @@ msgstr "Hlavné"
 
 msgid "Main menu"
 msgstr "Hlavné menu"
-
-#, python-format
-msgid "Make directory [%s]"
-msgstr "Vytvorenie adresára [%s]"
 
 msgid "Malay"
 msgstr ""
@@ -3425,6 +3448,9 @@ msgstr "Vojenské"
 
 msgid "Mini series"
 msgstr "Minisériály"
+
+msgid "Minutes"
+msgstr ""
 
 msgid "Missed the show?"
 msgstr "Zmeškali ste reláciu?"
@@ -3827,6 +3853,9 @@ msgstr "Žiadne"
 msgid "Nordic"
 msgstr ""
 
+msgid "Normal"
+msgstr ""
+
 msgid "Normalize item / file names (Show - SxxExx - Title)"
 msgstr "Normalizovať názvy položiek / súborov (Seriál - SxxExx - Názov)"
 
@@ -3935,6 +3964,10 @@ msgstr "Odstrániť je možné iba súbory v priečinku sťahovaní."
 
 msgid "Only links can be moved to a group."
 msgstr "Do skupiny je možné presunúť iba odkazy."
+
+#, python-format
+msgid "Only loaded up to %s"
+msgstr ""
 
 #, python-format
 msgid "Only the %d oldest new commits are shown"
@@ -4059,6 +4092,9 @@ msgstr "SÚKROMNÉ - počkajte %s sekúnd"
 
 msgid "PRIVATE - wait a few seconds"
 msgstr "SÚKROMNÉ - počkajte niekoľko sekúnd"
+
+msgid "Page by page"
+msgstr ""
 
 msgid "Page not found - please check the address."
 msgstr "Stránka sa nenašla - skontrolujte adresu."
@@ -4787,6 +4823,9 @@ msgstr ""
 msgid "Script finished."
 msgstr "Skript dokončený."
 
+msgid "Scroll"
+msgstr ""
+
 msgid "Search"
 msgstr "Hľadať"
 
@@ -5250,6 +5289,12 @@ msgid "Slovak"
 msgstr ""
 
 msgid "Slovenian"
+msgstr ""
+
+msgid "Small (16:9)"
+msgstr ""
+
+msgid "Smaller text"
 msgstr ""
 
 msgid "Snooker"
@@ -6107,6 +6152,9 @@ msgstr "Čas"
 msgid "Time limit"
 msgstr ""
 
+msgid "Time on the LCD (player)"
+msgstr ""
+
 msgid "Tip! You can connect USB flash drive to fix this problem."
 msgstr "Tip! Tento problém môžete vyriešiť pripojením disku USB flash."
 
@@ -6449,6 +6497,9 @@ msgstr ""
 msgid "Urllists player"
 msgstr "Prehrávač URL adries"
 
+msgid "Use 16:9 pictures (per episode) instead of the portrait poster"
+msgstr ""
+
 msgid "Use Cinemeta (no key, English)"
 msgstr "Použiť Cinemeta (bez kľúča, anglicky)"
 
@@ -6561,6 +6612,9 @@ msgstr "Verzia"
 msgid "Version: %s"
 msgstr "Verzia: %s"
 
+msgid "Very large"
+msgstr ""
+
 msgid "Video"
 msgstr "Video"
 
@@ -6643,9 +6697,6 @@ msgstr "Hlasový komentár"
 msgid "Volleyball"
 msgstr "Volejbal"
 
-msgid "WWE shows"
-msgstr "Relácie WWE"
-
 msgid "Waiting for the result ..."
 msgstr "Čaká sa na výsledok ..."
 
@@ -6709,6 +6760,9 @@ msgstr "Zimné športy"
 
 msgid "With an API key from subdl.com (E2iPlayer settings, Subtitles) the official SubDL API is searched as well."
 msgstr "S kľúčom API zo subdl.com (nastavenia E2iPlayer, Titulky) sa prehľadáva aj oficiálne API SubDL."
+
+msgid "With seconds"
+msgstr ""
 
 msgid "With subtitles"
 msgstr "S titulkami"
@@ -7174,6 +7228,9 @@ msgstr "stredný"
 
 msgid "menu and list only"
 msgstr "iba menu a zoznam"
+
+msgid "min"
+msgstr ""
 
 msgid "minutes"
 msgstr "minúty"

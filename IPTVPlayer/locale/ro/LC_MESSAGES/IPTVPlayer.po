@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-01 21:03+0000\n"
+"POT-Creation-Date: 2026-11-09 21:19+0000\n"
 "PO-Revision-Date: 2026-10-08 20:17+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Romanian\n"
@@ -156,6 +156,10 @@ msgstr "%s urmăritori"
 #, python-format
 msgid "%s needs a free account. Enter login and password in the host configuration."
 msgstr "%s necesită un cont gratuit. Introduceți numele de utilizator și parola în configurarea hostului."
+
+#, python-format
+msgid "%s not found in %s"
+msgstr ""
 
 #, python-format
 msgid "%s password"
@@ -1125,9 +1129,6 @@ msgstr "Istoria cinematografiei"
 msgid "Cinema movies"
 msgstr "Filme de cinema"
 
-msgid "Classic"
-msgstr "Clasic"
-
 msgid "Classic movies"
 msgstr "Filme clasice"
 
@@ -1181,6 +1182,9 @@ msgstr "Colecții"
 
 msgid "Colored text in titles and descriptions"
 msgstr "Text colorat în titluri și descrieri"
+
+msgid "Column"
+msgstr ""
 
 msgid "Combine pull request merges with their commit"
 msgstr "Combinați merge-urile de pull request cu commitul lor"
@@ -1273,11 +1277,18 @@ msgstr "Copiere"
 msgid "Copy it to /usr/bin/TorrServer (or a folder on HDD/USB) and make it executable (chmod 755)."
 msgstr "Copiați-l în /usr/bin/TorrServer (sau într-un folder de pe HDD/USB) și faceți-l executabil (chmod 755)."
 
+#, python-format
+msgid "Copying file from \"%s\" to \"%s\" failed.\n"
+msgstr ""
+
 msgid "Could not add the user link."
 msgstr "Linkul utilizatorului nu a putut fi adăugat."
 
 msgid "Could not load the wiki page."
 msgstr "Pagina wiki nu a putut fi încărcată."
+
+msgid "Could not read the server list of the page."
+msgstr ""
 
 msgid "Could not resolve host."
 msgstr "Hostul nu a putut fi rezolvat."
@@ -1308,6 +1319,12 @@ msgstr "Țară:"
 
 msgid "Couples"
 msgstr "Cupluri"
+
+msgid "Cover on the LCD summary screen"
+msgstr ""
+
+msgid "Cover size"
+msgstr ""
 
 msgid "Create Enigma2 .cuts chapter marks"
 msgstr "Creați marcaje de capitol Enigma2 .cuts"
@@ -2756,9 +2773,6 @@ msgstr "Dimensiune pictograme"
 msgid "Image"
 msgstr "Imagine"
 
-msgid "Indian"
-msgstr "Indian"
-
 msgid "Indian Movies"
 msgstr "Filme indiene"
 
@@ -2987,6 +3001,9 @@ msgstr "Filme coreene"
 msgid "Kurdish"
 msgstr ""
 
+msgid "LCD font size"
+msgstr ""
+
 msgid "LEFT/RIGHT at start/end of text - alternative way to switch panels"
 msgstr "STÂNGA/DREAPTA la începutul/sfârșitul textului - mod alternativ de a comuta între panouri"
 
@@ -2998,6 +3015,9 @@ msgstr "Limba detaliilor (TMDb, IMDb)"
 
 msgid "Language:"
 msgstr "Limbă:"
+
+msgid "Large"
+msgstr ""
 
 msgid "Last"
 msgstr "Ultima"
@@ -3161,6 +3181,10 @@ msgstr "Videoclipuri apreciate"
 msgid "Line Spacing"
 msgstr "Spațiere rânduri"
 
+#, python-format
+msgid "Lines that could not be read: %d (first: line %d of %s)"
+msgstr ""
+
 msgid "Link"
 msgstr "Link"
 
@@ -3304,6 +3328,9 @@ msgstr "Jurnale"
 msgid "Long list"
 msgstr "Listă lungă"
 
+msgid "Long titles on the LCD"
+msgstr ""
+
 msgid "Longest"
 msgstr "Cele mai lungi"
 
@@ -3352,10 +3379,6 @@ msgstr "Principal"
 
 msgid "Main menu"
 msgstr "Meniul principal"
-
-#, python-format
-msgid "Make directory [%s]"
-msgstr "Creare director [%s]"
 
 msgid "Malay"
 msgstr ""
@@ -3419,6 +3442,9 @@ msgstr "Militar"
 
 msgid "Mini series"
 msgstr "Miniserii"
+
+msgid "Minutes"
+msgstr ""
 
 msgid "Missed the show?"
 msgstr "Ați ratat emisiunea?"
@@ -3818,6 +3844,9 @@ msgstr "Niciunul"
 msgid "Nordic"
 msgstr ""
 
+msgid "Normal"
+msgstr ""
+
 msgid "Normalize item / file names (Show - SxxExx - Title)"
 msgstr "Normalizați numele elementelor / fișierelor (Serial - SxxExx - Titlu)"
 
@@ -3926,6 +3955,10 @@ msgstr "Doar fișierele din folderul de descărcări pot fi șterse."
 
 msgid "Only links can be moved to a group."
 msgstr "Doar linkurile pot fi mutate într-un grup."
+
+#, python-format
+msgid "Only loaded up to %s"
+msgstr ""
 
 #, python-format
 msgid "Only the %d oldest new commits are shown"
@@ -4050,6 +4083,9 @@ msgstr "PRIVAT - așteptați %s secunde"
 
 msgid "PRIVATE - wait a few seconds"
 msgstr "PRIVAT - așteptați câteva secunde"
+
+msgid "Page by page"
+msgstr ""
 
 msgid "Page not found - please check the address."
 msgstr "Pagina nu a fost găsită - verificați adresa."
@@ -4777,6 +4813,9 @@ msgstr ""
 msgid "Script finished."
 msgstr "Scriptul s-a încheiat."
 
+msgid "Scroll"
+msgstr ""
+
 msgid "Search"
 msgstr "Căutare"
 
@@ -5240,6 +5279,12 @@ msgid "Slovak"
 msgstr ""
 
 msgid "Slovenian"
+msgstr ""
+
+msgid "Small (16:9)"
+msgstr ""
+
+msgid "Smaller text"
 msgstr ""
 
 msgid "Snooker"
@@ -6097,6 +6142,9 @@ msgstr "Timp"
 msgid "Time limit"
 msgstr ""
 
+msgid "Time on the LCD (player)"
+msgstr ""
+
 msgid "Tip! You can connect USB flash drive to fix this problem."
 msgstr "Sfat! Puteți conecta un stick USB pentru a rezolva această problemă."
 
@@ -6439,6 +6487,9 @@ msgstr ""
 msgid "Urllists player"
 msgstr "Player Urllists"
 
+msgid "Use 16:9 pictures (per episode) instead of the portrait poster"
+msgstr ""
+
 msgid "Use Cinemeta (no key, English)"
 msgstr "Folosire Cinemeta (fără cheie, engleză)"
 
@@ -6551,6 +6602,9 @@ msgstr "Versiune"
 msgid "Version: %s"
 msgstr "Versiune: %s"
 
+msgid "Very large"
+msgstr ""
+
 msgid "Video"
 msgstr "Video"
 
@@ -6633,9 +6687,6 @@ msgstr "Voice-over"
 msgid "Volleyball"
 msgstr "Volei"
 
-msgid "WWE shows"
-msgstr "Show-uri WWE"
-
 msgid "Waiting for the result ..."
 msgstr "Se așteaptă rezultatul ..."
 
@@ -6699,6 +6750,9 @@ msgstr "Sporturi de iarnă"
 
 msgid "With an API key from subdl.com (E2iPlayer settings, Subtitles) the official SubDL API is searched as well."
 msgstr "Cu o cheie API de la subdl.com (setări E2iPlayer, Subtitrări) se caută și în API-ul oficial SubDL."
+
+msgid "With seconds"
+msgstr ""
 
 msgid "With subtitles"
 msgstr "Cu subtitrări"
@@ -7164,6 +7218,9 @@ msgstr "medie"
 
 msgid "menu and list only"
 msgstr "doar meniu și listă"
+
+msgid "min"
+msgstr ""
 
 msgid "minutes"
 msgstr "minute"
