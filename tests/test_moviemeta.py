@@ -458,3 +458,30 @@ def test_bflix_year_pattern():
     assert re.search(pattern, series) is None
     with open(os.path.join(ROOT, "hosts", "hostbflix.py")) as f:
         assert pattern in f.read()
+
+
+def test_images169_tmdb_season_stills_and_backdrop(mm):
+    _serve(mm, [
+        ("search/tv", {"query": "Show", "language": "de"}, {"results": [{"id": 9, "name": "Show", "first_air_date": "2020-01-01", "backdrop_path": "/bd.jpg"}]}),
+        ("tv/9/season/2", {}, {"episodes": [{"episode_number": 1, "still_path": "/e1.jpg"}, {"episode_number": 2, "still_path": None},
+                                            {"episode_number": 3, "still_path": "/e3.jpg"}]}),
+    ])
+    assert mm.getSeasonImages169("Show", "", "2", width=300) == {1: "https://image.tmdb.org/t/p/w300/e1.jpg", 3: "https://image.tmdb.org/t/p/w300/e3.jpg"}
+    assert mm.getImage169("tv", "Show", "", "2", "3", width=1280) == "https://image.tmdb.org/t/p/original/e3.jpg"
+    assert mm.getImage169("tv", "Show", "", width=1280) == "https://image.tmdb.org/t/p/w1280/bd.jpg"
+    assert mm.getImage169("tv", "Show", "", "2", "2") == ""  # no still for this episode: the caller keeps its own picture
+    assert mm.getSeasonImages169("Show", "", "x") == {}  # no season number
+    assert mm.getImage169("movie", "", "") == ""  # nothing to look up
+
+
+def test_images169_next_service_when_the_first_has_none(mm):
+    mm.cp.meta_cinemeta.value = True
+    _serve(mm, [
+        ("search/tv", {}, {"results": []}),
+        ("catalog/series/top/search=Show.json", {}, {"metas": [{"name": "Show", "imdb_id": "tt1", "releaseInfo": "2020"}]}),
+        ("meta/series/tt1.json", {}, {"meta": {"background": "https://bg/1.jpg", "videos": [
+            {"season": 1, "episode": 1, "thumbnail": "https://t/1.jpg"}, {"season": 2, "episode": 1, "thumbnail": "https://t/2.jpg"}]}}),
+    ])
+    assert mm.getSeasonImages169("Show", "", "2") == {1: "https://t/2.jpg"}
+    assert mm.getImage169("tv", "Show", "") == "https://bg/1.jpg"
+    assert mm.isImages169() is False  # the setting is off unless switched on

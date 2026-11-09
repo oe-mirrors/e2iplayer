@@ -64,9 +64,11 @@ def env():
         download_subtitles=off, download_subtitles_lang=types.SimpleNamespace(value="auto")))))
     _load("Plugins.Extensions.IPTVPlayer.tools.iptvtypes", os.path.join(ROOT, "tools", "iptvtypes.py"))
     infoQueries = {}
+    images169 = {"on": False, "url": "https://img/still.jpg", "calls": []}
     _stubModule("Plugins.Extensions.IPTVPlayer.libs.moviemeta", getMeta=getMeta, getMetaByImdbId=getMetaByImdbId,
                 LATIN_ONLY=("IMDb", "Cinemeta", "OMDb"), isLatinTitle=isLatinTitle,
-                getInfoQuery=lambda cItem: infoQueries.get(cItem.get("url")))
+                getInfoQuery=lambda cItem: infoQueries.get(cItem.get("url")),
+                isImages169=lambda: images169["on"], getImage169=lambda *a, **k: images169["calls"].append(a) or images169["url"])
     labels = {"imdb_rating": "IMDb Rating:", "genres": "Genres:", "duration": "Duration:", "directors": "Directors:", "cast": "Cast:"}
     _stubModule("Plugins.Extensions.IPTVPlayer.components.ihost", ArticleContent=types.SimpleNamespace(RICH_DESC_LABELS=labels))
     _stubModule("Plugins.Extensions.IPTVPlayer.components.iptvplayerinit", TranslateTXT=lambda text: text)
@@ -124,7 +126,7 @@ def env():
     _stubModule("Plugins.Extensions.IPTVPlayer.components.asynccall", AsyncMethod=AsyncMethod)
     umh = _load("Plugins.Extensions.IPTVPlayer.libs.urlmetahelper", os.path.join(ROOT, "libs", "urlmetahelper.py"))
     dh = _load("Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers", os.path.join(ROOT, "iptvdm", "downloaderhelpers.py"))
-    yield types.SimpleNamespace(umh=umh, dh=dh, calls=calls, infoQueries=infoQueries, tools=tools, consoles=consoles, converted=converted)
+    yield types.SimpleNamespace(umh=umh, dh=dh, calls=calls, infoQueries=infoQueries, images169=images169, tools=tools, consoles=consoles, converted=converted)
     sys.modules.clear()
     sys.modules.update(saved)
 
@@ -188,6 +190,26 @@ def test_lookup_formats_text_and_poster(env):
     assert env.umh.lookupSidecarMeta({"type": "movie", "title": "Nope", "imdb": "tt1234567"}, "s", "i")[1] == "https://img/poster.jpg"
     assert env.umh.lookupSidecarMeta({"type": "movie", "title": "Nope", "imdb": "tt7654321"}, "s", "i") == ("s", "i")
     assert env.calls[-2:] == [("imdb", "movie", "tt7654321"), ("title", "movie", "Nope", "", (), None)]
+
+
+def test_16_9_picture_replaces_the_poster_when_switched_on(env):
+    query = {"type": "tv", "title": "The Wolf and the Lamb", "year": "2026", "imdb": "tt1234567", "season": "1", "episode": "3"}
+    assert env.umh.lookupSidecarMeta(query, "s", "https://img/site.jpg")[1] == "https://img/poster.jpg"  # off: as before
+    env.images169["on"] = True
+    assert env.umh.lookupSidecarMeta(query, "s", "https://img/site.jpg")[1] == "https://img/still.jpg"
+    assert env.images169["calls"][-1] == ("tv", "The Wolf and the Lamb", "2026", "1", "3", "tt1234567")
+    # keep_img: the host's own picture stays; no 16:9 picture from any service: the poster
+    assert env.umh.lookupSidecarMeta(dict(query, keep_img=True), "s", "https://img/site.jpg")[1] == "https://img/site.jpg"
+    env.images169["url"] = ""
+    assert env.umh.lookupSidecarMeta(query, "s", "https://img/site.jpg")[1] == "https://img/poster.jpg"
+
+
+def test_sidecar_query_carries_season_and_episode(env):
+    q = env.umh.sidecarMetaQuery("tv", "Show", imdbId="tt1234567", season="2", episode="5")
+    assert (q["season"], q["episode"]) == ("2", "5")
+    assert "season" not in env.umh.sidecarMetaQuery("tv", "Show", season="2")  # both or none
+    item = {"meta_type": "tv", "meta_title": "Show", "meta_season": "1", "meta_episode": "4"}
+    assert env.umh.sidecarMetaQueryFromItem(item)["episode"] == "4"
 
 
 def test_alt_titles(env):

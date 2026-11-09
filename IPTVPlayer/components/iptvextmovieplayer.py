@@ -74,6 +74,13 @@ try:
 except Exception:
     printExc()
 
+try:
+    # the scrolling title of the colour LCD summary needs the RunningText renderer of the image
+    from Components.Renderer.RunningText import RunningText as _LcdRunningText  # noqa: F401 (only probes that the renderer exists)
+    HAVE_RUNNING_TEXT = True
+except Exception:
+    HAVE_RUNNING_TEXT = False
+
 from os import path as os_path, rename as os_rename, stat as os_stat, listdir as os_listdir, remove as os_remove
 import re
 import time
@@ -827,7 +834,7 @@ class IPTVExtMoviePlayer(Screen):
         self['remainedLabel'] = Label("-0:00:00")
         self['lengthTimeLabel'] = Label("0:00:00")
         addLcdSources(self, self.title, currTime="0:00:00", remained="-0:00:00", length="0:00:00", percent="0%",
-                      currTimeHM="0:00", remainedHM="0:00", lengthHM="0:00", remainedMin="0", coverFile=additionalParams.get('cover_path'))
+                      currTimeHM="0:00", remainedHM="0:00", lengthHM="0:00", remainedMin="0", remainedShort="", shortTimes=True, coverFile=additionalParams.get('cover_path'))
         self.lcdLastState = None
         self.lcdLastLength = 0
         self.lcdLengthGrowth = 0
@@ -886,6 +893,10 @@ class IPTVExtMoviePlayer(Screen):
         # goto seek  timer
         self.playback['GoToSeekTimer'] = eTimer()
         self.playback['GoToSeekTimer_conn'] = eConnectCallback(self.playback['GoToSeekTimer'].timeout, self.doGoToSeek)
+
+        # notice "only loaded up to ..." for a skip key cut at the end of the buffered part
+        self.seekLimitNotice = {'until': 0, 'timer': eTimer()}
+        self.seekLimitNotice['timer_conn'] = eConnectCallback(self.seekLimitNotice['timer'].timeout, self.hideSeekLimitNotice)
 
         self.playback.update({
             "CurrentTime": 0,
@@ -1935,6 +1946,7 @@ class IPTVExtMoviePlayer(Screen):
                 self['lcdRemained'].setText('-' + str(timedelta(seconds=remained)))
                 self['lcdRemainedHM'].setText(lcdTimeHM(remained))
                 self['lcdRemainedMin'].setText('%d' % (remained // 60) if remained > 60 else '+%ds' % remained)
+                self['lcdRemainedShort'].setText('+%d %s' % (remained // 60, _('min')) if remained >= 60 else '+%ds' % remained)
                 self['lcdLength'].setText(str(timedelta(seconds=length)))
                 self['lcdLengthHM'].setText(lcdTimeHM(length))
                 self['lcdPercent'].setText('%d%%' % percent)
@@ -1942,6 +1954,7 @@ class IPTVExtMoviePlayer(Screen):
                 self['lcdRemained'].setText(_('Live'))
                 self['lcdRemainedHM'].setText(_('Live'))
                 self['lcdRemainedMin'].setText(_('Live'))
+                self['lcdRemainedShort'].setText(_('Live'))
                 self['lcdLength'].setText('')
                 self['lcdLengthHM'].setText('')
                 self['lcdPercent'].setText('')
@@ -1950,6 +1963,7 @@ class IPTVExtMoviePlayer(Screen):
                 self['lcdRemained'].setText('-0:00:00')
                 self['lcdRemainedHM'].setText('0:00')
                 self['lcdRemainedMin'].setText('0')
+                self['lcdRemainedShort'].setText('')
                 self['lcdLength'].setText('0:00:00')
                 self['lcdLengthHM'].setText('0:00')
                 self['lcdPercent'].setText('0%')
@@ -2014,7 +2028,8 @@ class IPTVExtMoviePlayer(Screen):
                     self['currTimeLabel'].setText(str(timedelta(seconds=self.playback['CurrentTime'])))
                     self['remainedLabel'].setText('-' + str(timedelta(seconds=self.playback['Length'] - self.playback['CurrentTime'])))
                     self.updateLcdInfo()
-                    self['pleaseWait'].hide()
+                    if time.time() >= self.seekLimitNotice['until']:
+                        self['pleaseWait'].hide()
                 elif 'BufferCTime' == key:
                     if self.playback['Length'] is not None and self.playback['Length'] < val:
                         self.setPlaybackLength(val)
@@ -2076,6 +2091,7 @@ class IPTVExtMoviePlayer(Screen):
         if self.playback['GoToSeeking']:
             self.showPlaybackInfoBar()
             self.playback['StartGoToSeekTime'] = self.playback['GoToSeekTime']
+            printDBG("IPTVExtMoviePlayer.doGoToSeek current[%r] target[%r] length[%r]" % (self.playback['CurrentTime'], self.playback['GoToSeekTime'], self.playback['Length']))
             self.extPlayerCmddDispatcher.doGoToSeek(str(self.playback['GoToSeekTime']))
             self.playback['GoToSeeking'] = False
             self['goToSeekPointer'].hide()
@@ -2107,10 +2123,15 @@ class IPTVExtMoviePlayer(Screen):
             max = self.playback['Length']
 
         pos = self.playback['GoToSeekTime'] + seek
+        wanted = pos
         if pos > max:
             pos = max
         if pos < 0:
             pos = 0
+        printDBG("IPTVExtMoviePlayer.doGoToSeekPointerMove seek[%r] current[%r] limit[%r] length[%r] wanted[%r] pointer[%r]" % (seek, self.playback['CurrentTime'], max, self.playback['Length'], wanted, pos))
+        if seek > 0 and wanted > max and max < self.playback['Length']:
+            # the seek bar is cut at the end of the downloaded part (buffering): say so, so the key does not look broken
+            self.showSeekLimitNotice(max)
 
         self.playback['GoToSeekTime'] = pos
         self["goToSeekLabel"].setText(str(timedelta(seconds=int(self.playback['GoToSeekTime']))))
@@ -2128,7 +2149,15 @@ class IPTVExtMoviePlayer(Screen):
 
     def saveLastPlaybackTime(self):
         lastPosition = self.playback.get('ConfirmedCTime', 0)
-        if config.plugins.iptvplayer.remember_last_position.value and lastPosition > 0 and self.playback['Length'] > (config.plugins.iptvplayer.remember_last_position_time.value * 60):
+        length = self.playback['Length'] or 0
+        if config.plugins.iptvplayer.remember_last_position.value and lastPosition > 0 and length > (config.plugins.iptvplayer.remember_last_position_time.value * 60):
+            # watched to the end: the next start begins at 0 instead of at the old position. With buffering the length
+            # is only the length of the part written so far, unless the downloader knows the whole duration
+            # (a length the player did not report, or of a live stream, follows the position: always "at the end")
+            lengthKnown = (None is self.downloader or self.downloader.hasDurationInfo()) and self.playback['LengthFromPlayerReceived'] and not self.playback['LiveDetected']
+            if lengthKnown and lastPosition >= length - max(30, length * 0.03):
+                printDBG("saveLastPlaybackTime position[%r] length[%r] watched to the end -> reset" % (lastPosition, length))
+                lastPosition = -1
             self.metaHandler.setLastPosition(lastPosition)
 
     def loadLastPlaybackTime(self):
@@ -2220,22 +2249,45 @@ class IPTVExtMoviePlayer(Screen):
         # a few seconds before the end: a jump right onto it would stop again at once
         return max(0, end - 5) if end < self.playback['Length'] else end
 
+    def showSeekLimitNotice(self, loadedUpTo):
+        # a skip key was cut at the end of the downloaded part: a short notice, so the key does not look broken
+        try:
+            self.seekLimitNotice['text'] = _("Only loaded up to %s") % str(timedelta(seconds=int(loadedUpTo)))
+            self['pleaseWait'].setText(self.seekLimitNotice['text'])
+            self['pleaseWait'].show()
+            self.seekLimitNotice['until'] = time.time() + 3
+            self.seekLimitNotice['timer'].start(3000, True)  # singleshot
+        except Exception:
+            printExc()
+
+    def hideSeekLimitNotice(self):
+        self.seekLimitNotice['until'] = 0
+        # only the notice itself: "Closing. Please wait..." or "Opening..." that replaced it stays
+        if not self.isClosing and self['pleaseWait'].getText() == self.seekLimitNotice.get('text'):
+            self['pleaseWait'].hide()
+
     def doSeek(self, val):
         # the skip keys: with buffering never beyond the part downloaded so far - exteplayer3 stopped at the end of the
         # file still being written and the picture froze. An absolute jump sets the position at once: the player reports
         # it only every second, a second key press before that adds to the first one
         bufferedEnd = self.bufferedEnd()
         current = self.playback['CurrentTime']
+        wanted = None
         if None is not self.downloader and self.downloader.hasDurationInfo() and current >= 0 and self.playback['Length'] > 10:
-            target = min(max(current + val, 0), self.playback['Length'] - 10)
+            target = wanted = min(max(current + val, 0), self.playback['Length'] - 10)
             if bufferedEnd is not None:
                 target = min(target, max(bufferedEnd, current))
         elif bufferedEnd is not None and val > 0 and current >= 0:
             # (inside the last seconds of the buffered part a forward key must not jump back)
-            target = min(current + val, max(bufferedEnd, current))
+            target = wanted = current + val
+            target = min(target, max(bufferedEnd, current))
         else:
+            printDBG("IPTVExtMoviePlayer.doSeek val[%r] current[%r] bufferedEnd[%r] -> relative seek" % (val, current, bufferedEnd))
             self.extPlayerCmddDispatcher.doSeek(val)
             return
+        printDBG("IPTVExtMoviePlayer.doSeek val[%r] current[%r] bufferedEnd[%r] length[%r] wanted[%r] target[%r]" % (val, current, bufferedEnd, self.playback['Length'], wanted, target))
+        if val > 0 and bufferedEnd is not None and wanted is not None and int(target) < int(wanted):
+            self.showSeekLimitNotice(max(bufferedEnd, current))
         if int(target) != int(current):
             self.playback['CurrentTime'] = int(target)
             self.extPlayerCmddDispatcher.doGoToSeek(str(int(target)))
@@ -2704,7 +2756,14 @@ class IPTVExtMoviePlayer(Screen):
 
     def onLeavePlayer(self):
         printDBG("IPTVExtMoviePlayer.onLeavePlayer")
+        # also the ends that are not STOP/EXIT (end of the film, player crash, close timeout): save, or reset at the end
+        if not self.isClosing:
+            try:
+                self.saveLastPlaybackTime()
+            except Exception:
+                printExc()
         self.screenSaver.stop()
+        self.seekLimitNotice['timer'].stop()
         if self.waitCloseFix['waiting'] and None is not self.waitCloseFix['timer']:
             self.waitCloseFix['timer'].stop()
         self.updateInfoTimer.stop()
@@ -3401,7 +3460,7 @@ def lcdTimeHM(seconds):
     return str(timedelta(seconds=seconds))[:-3]
 
 
-def addLcdSources(screen, title, currTime="", remained="", length="", percent="", currTimeHM="", remainedHM="", lengthHM="", remainedMin="", coverFile=None):
+def addLcdSources(screen, title, currTime="", remained="", length="", percent="", currTimeHM="", remainedHM="", lengthHM="", remainedMin="", remainedShort="", shortTimes=False, coverFile=None):
     # what IPTVExtMoviePlayerColorSummary reads from its parent as parent.lcd*
     screen['lcdTitle'] = StaticText(StripColorCodes(title))
     # the second parameter is named range or valuerange, depending on the image
@@ -3415,6 +3474,9 @@ def addLcdSources(screen, title, currTime="", remained="", length="", percent=""
     screen['lcdRemainedHM'] = StaticText(remainedHM)
     screen['lcdLengthHM'] = StaticText(lengthHM)
     screen['lcdRemainedMin'] = StaticText(remainedMin)
+    # the compact right column (+73 min); shortTimes = the screen fills the HM sources, the layout then uses them
+    screen['lcdRemainedShort'] = StaticText(remainedShort)
+    screen.lcdShortTimes = shortTimes
     screen.lcdCoverFile = coverFile or ''
 
 
@@ -3425,71 +3487,58 @@ def colorSummaryIfWanted():
     return None
 
 
+def runningTextLabel(renderer):
+    # the eLabel inside a RunningText renderer: "textLabel" in current openATV, "scroll_label" in older images; None for
+    # any other renderer
+    return getattr(renderer, 'textLabel', None) or getattr(renderer, 'scroll_label', None)
+
+
+def lcdSetTitle(screen, text):
+    # the title of the colour LCD summary: the source and the summary's font fit (and the pages of a long title)
+    screen['lcdTitle'].setText(text)
+    for summary in getattr(screen, 'summaries', []):
+        # the download manager sets the title with every state change (about once a second): a title that is fitted
+        # already stays, or the paging and the scrolling would start over each time
+        if hasattr(summary, 'fitLcdTitle') and getattr(summary, 'lcdFittedText', None) != text:
+            summary.lcdFittedText = text
+            summary.fitLcdTitle(text)
+
+
 class IPTVExtMoviePlayerColorSummary(Screen):
     # Colour front display during playback: title, progress bar, played time | percent | remaining time.
-    # The layout scales with the display size (220x176 up to 800x480 and more).
+    # The layout scales with the display size (220x176 up to 800x480 and more) and the setting "LCD font size":
+    # the times are as large as the width allows (the player shows 1:46 | +73 min, the buffering screen and the
+    # download manager their position / size / speed), the title is fitted to its area, a title that does not fit
+    # even then is shown page by page (setting "Long titles on the LCD").
     # The buffering screen and the download manager use it too, with sources of the same names (addLcdSources).
     # Can be replaced in the LCD skin with <screen name="IPTVExtMoviePlayerColorSummary"> using the
     # sources parent.lcdTitle, parent.lcdProgress (0-100, render="Progress"), parent.lcdCurrTime,
     # parent.lcdRemained, parent.lcdLength and parent.lcdPercent. For times without seconds also
     # parent.lcdCurrTimeHM, parent.lcdRemainedHM and parent.lcdLengthHM (1:46), for the remaining minutes
-    # parent.lcdRemainedMin (106, in the last minute +45s), both without the minus of parent.lcdRemained.
+    # parent.lcdRemainedMin (106, in the last minute +45s), both without the minus of parent.lcdRemained,
+    # and parent.lcdRemainedShort (+73 min, +45s) for a compact right column.
     # The cover is a widget of this screen, not a source: <widget name="lcdCover" position="..." size="..." alphatest="blend" />
     # The layout below shows it itself from 320 px width (setting "Cover on the LCD summary screen"): the picture
     # of the list row (player, buffering) or the download's sidecar .jpg / cached sidecar picture (download
-    # manager) in the left column, the title beside it; without a picture the title has the whole width as before.
+    # manager) beside the title: a small 16:9 picture (default) or a column of 3/8 of the width ("Cover size");
+    # without a picture the title has the whole width as before.
 
     # free border in pixels, e.g. when the receiver housing covers the display edge
     LCD_MARGIN_LEFT = 10
     LCD_MARGIN_RIGHT = 10
     LCD_MARGIN_TOP = 0
     LCD_MARGIN_BOTTOM = 10
+    LCD_COVER_MIN_WIDTH = 320
+    # average width of a character of the font in em (the layout must not clip a time) and the height of a line
+    CHAR_EM = 0.56
+    LINE_EM = 1.35  # measured on the Uno 4K SE LCD: the font's line is about 1.33 em high
+    PAGE_MS = 3000
 
     try:
         w = getDesktop(1).size().width()
         h = getDesktop(1).size().height()
     except Exception:
         w, h = LARGE_LCD_MIN_WIDTH, LARGE_LCD_MIN_HEIGHT
-    x0 = LCD_MARGIN_LEFT
-    y0 = LCD_MARGIN_TOP
-    uw = w - LCD_MARGIN_LEFT - LCD_MARGIN_RIGHT   # usable width
-    uh = h - LCD_MARGIN_TOP - LCD_MARGIN_BOTTOM   # usable height
-    pad = max(4, uw // 60)
-    fTitle = max(14, uh // 8)
-    cw = uw - 2 * pad
-    # three columns side by side, the percent in the middle needs the least; the font follows the height,
-    # but the outer columns must still fit -1:23:45 or a speed like 999.9KB/s
-    colW = cw * 3 // 8
-    midW = cw - 2 * colW
-    fTime = max(12, min(uh // 7, cw // 14))
-    barH = max(6, uh // 12)
-    # bar and times sit at the bottom, the title takes all the space above (several lines if needed)
-    timeH = fTime + fTime // 3
-    timeY = y0 + uh - timeH
-    barY = timeY - pad - barH
-    titleY = y0 + pad
-    titleH = barY - pad - titleY
-    skin = """
-        <screen position="0,0" size="%(w)d,%(h)d" backgroundColor="#000000">
-            <widget source="parent.lcdTitle" render="Label" position="%(x)d,%(ty)d" size="%(cw)d,%(titleH)d" font="Regular;%(fTitle)d" halign="center" valign="center" foregroundColor="#ffffff" backgroundColor="#000000" transparent="1" />
-            <widget source="parent.lcdProgress" render="Progress" position="%(x)d,%(barY)d" size="%(cw)d,%(barH)d" foregroundColor="#ffffff" backgroundColor="#303030" borderWidth="1" borderColor="#a0a0a0" />
-            <widget source="parent.lcdCurrTime" render="Label" position="%(x)d,%(timeY)d" size="%(colW)d,%(timeH)d" font="Regular;%(fTime)d" halign="left" foregroundColor="#ffffff" backgroundColor="#000000" transparent="1" noWrap="1" valign="bottom" />
-            <widget source="parent.lcdPercent" render="Label" position="%(midX)d,%(timeY)d" size="%(midW)d,%(timeH)d" font="Regular;%(fTime)d" halign="center" foregroundColor="#c0c0c0" backgroundColor="#000000" transparent="1" noWrap="1" valign="bottom" />
-            <widget source="parent.lcdRemained" render="Label" position="%(rightX)d,%(timeY)d" size="%(colW)d,%(timeH)d" font="Regular;%(fTime)d" halign="right" foregroundColor="#ffffff" backgroundColor="#000000" transparent="1" noWrap="1" valign="bottom" />
-        </screen>""" % {'w': w, 'h': h, 'x': x0 + pad, 'ty': titleY, 'cw': cw, 'titleH': titleH, 'fTitle': fTitle,
-                        'barY': barY, 'barH': barH, 'timeY': timeY, 'timeH': timeH, 'fTime': fTime,
-                        'colW': colW, 'midW': midW, 'midX': x0 + pad + colW, 'rightX': x0 + pad + cw - colW}
-    # with a cover: the picture in the width of the left time column, the title in the rest of the title area
-    LCD_COVER_MIN_WIDTH = 320
-    coverW = colW
-    coverH = titleH
-    titleX = x0 + pad + colW + pad
-    titleW = cw - colW - pad
-    # a smaller font beside the cover: the narrower column needs more lines (box: five lines of 28 px did not fit
-    # "Der Weihnachtsmann und die Wüstenkinder (1995)" on 400x240, three of 24 px do)
-    fTitleCover = max(14, fTitle * 6 // 7)
-    SKIN_COVER = skin.replace('</screen>', """<widget name="lcdCover" position="%d,%d" size="%d,%d" alphatest="blend" />
-        </screen>""" % (x0 + pad, titleY, coverW, coverH))
 
     def __init__(self, session, parent):
         Screen.__init__(self, session, parent=parent)
@@ -3498,9 +3547,106 @@ class IPTVExtMoviePlayerColorSummary(Screen):
         self.lcdCoverFile = ''
         self.lcdCoverShown = None  # the title was not placed yet
         self.lcdTitleRenderer = None
-        if self.coverWanted():
-            self.skin = self.SKIN_COVER
+        self.lcdPages = []
+        self.lcdPageIdx = 0
+        self.lcdPageTimer = eTimer()
+        self.lcdPageTimer_conn = eConnectCallback(self.lcdPageTimer.timeout, self.nextLcdPage)
+        self.onClose.append(self.lcdPageTimer.stop)
+        self.computeLayout(bool(getattr(parent, 'lcdShortTimes', False)))
+        self.skin = self.skinCover if self.coverWanted() else self.skinPlain
         self.onLayoutFinish.append(self.showLcdCover)
+
+    def computeLayout(self, shortTimes):
+        try:
+            mode = config.plugins.iptvplayer.lcd_font_size.value
+            self.coverColumn = config.plugins.iptvplayer.lcd_cover_size.value == 'column'
+            longTitles = config.plugins.iptvplayer.lcd_long_titles.value
+            # the player's seconds (1:46:12 | -0:12:03) are the generic sources, the minutes the compact ones
+            shortTimes = shortTimes and config.plugins.iptvplayer.lcd_time_format.value != 'seconds'
+        except Exception:
+            mode, self.coverColumn, longTitles = 'large', False, 'scroll'
+        # long titles: scrolling (RunningText), page by page (own timer) or smaller text; no RunningText = pages
+        self.titleScroll = longTitles == 'scroll' and HAVE_RUNNING_TEXT
+        self.titlePages = longTitles == 'pages' or (longTitles == 'scroll' and not HAVE_RUNNING_TEXT)
+        percentColumn = mode == 'normal'
+        titleFactor = {'normal': 100, 'large': 115, 'xlarge': 130}.get(mode, 115)
+        barDiv = {'normal': 12, 'large': 14, 'xlarge': 16}.get(mode, 14)
+        charEm = 0.5 if mode == 'xlarge' else self.CHAR_EM
+        w, h = self.w, self.h
+        self.x0 = self.LCD_MARGIN_LEFT
+        y0 = self.LCD_MARGIN_TOP
+        uw = w - self.LCD_MARGIN_LEFT - self.LCD_MARGIN_RIGHT   # usable width
+        uh = h - self.LCD_MARGIN_TOP - self.LCD_MARGIN_BOTTOM   # usable height
+        self.pad = pad = max(4, uw // 60)
+        self.cw = cw = uw - 2 * pad
+        # times: the left and the right column hold at most 8 characters (+106 min), the downloader's speed 9 (999.9KB/s);
+        # the percent column (setting "normal") 4, without it the bar shows the progress and the times get the width
+        chars = 8 if shortTimes else 9
+        denom = (2 * chars + (4 if percentColumn else 0)) * charEm + 0.2
+        fTime = max(12, min(int(cw / denom), uh // (6 if percentColumn else 5)))
+        if percentColumn:
+            midW = int(4 * charEm * fTime) + pad
+            colW = (cw - midW) // 2
+        else:
+            colW = cw // 2
+            midW = 0
+        barH = max(6, uh // barDiv)
+        timeH = fTime + fTime // 3
+        timeY = y0 + uh - timeH
+        barY = timeY - pad - barH
+        self.titleY = titleY = y0 + pad
+        self.titleH = titleH = barY - pad - titleY
+        # the title starts as large as the area allows and is fitted to the text (fitLcdTitle); the smallest readable
+        # size is the former fixed one
+        self.fTitleMin = fTitleMin = min(max(14, uh // 8) * titleFactor // 100, titleH)
+        self.fTitle = fTitle = min(max(14, uh // 5) * titleFactor // 100, titleH)
+        left = 'lcdCurrTimeHM' if shortTimes else 'lcdCurrTime'
+        right = 'lcdRemainedShort' if shortTimes else 'lcdRemained'
+        percentWidget = ''
+        if percentColumn:
+            percentWidget = '<widget source="parent.lcdPercent" render="Label" position="%d,%d" size="%d,%d" font="Regular;%d" halign="center" foregroundColor="#c0c0c0" backgroundColor="#000000" transparent="1" noWrap="1" valign="bottom" />' % (
+                self.x0 + pad + colW, timeY, midW, timeH, fTime)
+        self.skinPlain = """
+        <screen position="0,0" size="%(w)d,%(h)d" backgroundColor="#000000">
+            %(titleWidget)s
+            <widget source="parent.lcdProgress" render="Progress" position="%(x)d,%(barY)d" size="%(cw)d,%(barH)d" foregroundColor="#ffffff" backgroundColor="#303030" borderWidth="1" borderColor="#a0a0a0" />
+            <widget source="parent.%(left)s" render="Label" position="%(x)d,%(timeY)d" size="%(colW)d,%(timeH)d" font="Regular;%(fTime)d" halign="left" foregroundColor="#ffffff" backgroundColor="#000000" transparent="1" noWrap="1" valign="bottom" />
+            %(percentWidget)s
+            <widget source="parent.%(right)s" render="Label" position="%(rightX)d,%(timeY)d" size="%(colW)d,%(timeH)d" font="Regular;%(fTime)d" halign="right" foregroundColor="#ffffff" backgroundColor="#000000" transparent="1" noWrap="1" valign="bottom" />
+        </screen>""" % {'w': w, 'h': h, 'x': self.x0 + pad, 'cw': cw,
+                        'titleWidget': self.titleWidgetXml(self.x0 + pad, titleY, cw, titleH, fTitleMin, 'center'),
+                        'barY': barY, 'barH': barH, 'timeY': timeY, 'timeH': timeH, 'fTime': fTime, 'colW': colW,
+                        'rightX': self.x0 + pad + cw - colW, 'left': left, 'right': right, 'percentWidget': percentWidget}
+        # with a cover: the picture beside the title; "column" = the width of the left time column of the old layout
+        # and the height of the title area, otherwise a small 16:9 picture (IMDb stills) centred in the title area
+        if self.coverColumn:
+            coverW = cw * 3 // 8
+            coverH = titleH
+            self.fTitleCover = max(14, fTitle * 6 // 7)
+        else:
+            coverW = cw // 4
+            coverH = coverW * 9 // 16
+            if coverH > titleH:
+                coverH = titleH
+                coverW = coverH * 16 // 9
+            self.fTitleCover = fTitle
+        coverY = titleY + (titleH - coverH) // 2
+        self.titleX = self.x0 + pad + coverW + pad
+        self.titleW = cw - coverW - pad
+        # the scrolling title is a renderer that cannot be moved like a label: one per place, the unused one is suspended
+        besideTitle = self.titleWidgetXml(self.titleX, titleY, self.titleW, titleH, fTitleMin, 'left') if self.titleScroll else ''
+        self.skinCover = self.skinPlain.replace('</screen>', """<widget name="lcdCover" position="%d,%d" size="%d,%d" alphatest="blend" />
+        %s</screen>""" % (self.x0 + pad, coverY, coverW, coverH, besideTitle))
+
+    def titleWidgetXml(self, x, y, w, h, font, halign):
+        if self.titleScroll:
+            # text that fits stays still (always=0); a longer one stands 3 s, rolls up and starts again from below
+            return ('<widget source="parent.lcdTitle" render="RunningText" '
+                    'options="movetype=running,direction=top,startpoint=0,startdelay=3000,steptime=60,pause=1500,wrap=1,always=0" '
+                    'position="%d,%d" size="%d,%d" font="Regular;%d" halign="%s" valign="center" foregroundColor="#ffffff" '
+                    'backgroundColor="#000000" transparent="1" />' % (x, y, w, h, font, halign))
+        return ('<widget source="parent.lcdTitle" render="Label" position="%d,%d" size="%d,%d" font="Regular;%d" '
+                'halign="%s" valign="center" foregroundColor="#ffffff" backgroundColor="#000000" transparent="1" />' % (x, y, w, h, font, halign))
 
     @classmethod
     def coverWanted(cls):
@@ -3553,23 +3699,167 @@ class IPTVExtMoviePlayerColorSummary(Screen):
         if besideCover == self.lcdCoverShown:
             return
         try:
-            if self.lcdTitleRenderer is None:
+            if self.titleScroll:
+                self.switchScrollTitle(besideCover)
+            elif self.lcdTitleRenderer is None:
                 self.lcdTitleRenderer = self.findLcdTitleRenderer() or False
-            if self.lcdTitleRenderer:
+            if not self.titleScroll and self.lcdTitleRenderer:
                 instance = self.lcdTitleRenderer.instance
                 if besideCover:
                     instance.move(ePoint(self.titleX, self.titleY))
                     instance.resize(eSize(self.titleW, self.titleH))
                     instance.setHAlign(eLabel.alignLeft)
-                    instance.setFont(gFont("Regular", self.fTitleCover))
                 else:
                     instance.move(ePoint(self.x0 + self.pad, self.titleY))
                     instance.resize(eSize(self.cw, self.titleH))
                     instance.setHAlign(eLabel.alignCenter)
-                    instance.setFont(gFont("Regular", self.fTitle))
             self.lcdCoverShown = besideCover
+            self.fitLcdTitle(self.currentLcdTitle())
         except Exception:
             printExc()
+
+    def currentLcdTitle(self):
+        try:
+            return self.lcdParent['lcdTitle'].getText() or ''
+        except Exception:
+            return ''
+
+    @classmethod
+    def wrapLcdText(cls, text, width, size):
+        # greedy word wrap with the average character width; a word wider than a line is cut
+        charW = size * cls.CHAR_EM
+        perLine = max(1, int(width / charW))
+        lines = []
+        cur = ''
+        for word in text.split():
+            while len(word) > perLine:
+                if cur:
+                    lines.append(cur)
+                    cur = ''
+                lines.append(word[:perLine])
+                word = word[perLine:]
+            if not cur:
+                cur = word
+            elif len(cur) + 1 + len(word) <= perLine:
+                cur += ' ' + word
+            else:
+                lines.append(cur)
+                cur = word
+        if cur or not lines:
+            lines.append(cur)
+        return lines
+
+    def fitLcdTitle(self, text):
+        # the largest font in which the title fits its area; a title that needs more than the smallest readable font
+        # is shown in that font page by page (a timer), unless the setting says to shrink it further
+        self.lcdPageTimer.stop()
+        self.lcdPages = []
+        try:
+            if self.lcdCoverShown is None:
+                return
+            if self.titleScroll:
+                self.fitScrollTitle(text)
+                return
+            renderer = self.lcdTitleRenderer
+            if renderer is None:
+                renderer = self.lcdTitleRenderer = self.findLcdTitleRenderer() or False
+            if not renderer:
+                return
+            instance = renderer.instance
+            text = (text or '').strip()
+            beside = bool(self.lcdCoverShown)
+            width = self.titleW if beside else self.cw
+            height = self.titleH
+            size = min(self.fTitleCover if beside else self.fTitle, height)
+            readable = min(self.fTitleMin, size)
+            minSize = readable if self.titlePages else 12
+            while True:
+                lines = self.wrapLcdText(text, width, size)
+                if len(lines) * size * self.LINE_EM <= height or size <= minSize:
+                    break
+                size = max(minSize, size - max(1, size // 12))
+            instance.setFont(gFont("Regular", size))
+            perPage = max(1, int(height / (size * self.LINE_EM)))
+            if self.titlePages and len(lines) > perPage:
+                self.lcdPages = ['\n'.join(lines[i:i + perPage]) for i in range(0, len(lines), perPage)]
+                self.lcdPageIdx = 0
+                instance.setText(self.lcdPages[0])
+                self.lcdPageTimer.start(self.PAGE_MS, False)
+            else:
+                instance.setText(text)
+        except Exception:
+            printExc()
+
+    def nextLcdPage(self):
+        try:
+            if len(self.lcdPages) > 1:
+                self.lcdPageIdx = (self.lcdPageIdx + 1) % len(self.lcdPages)
+                self.lcdTitleRenderer.instance.setText(self.lcdPages[self.lcdPageIdx])
+        except Exception:
+            printExc()
+
+    def scrollRenderers(self):
+        # the RunningText renderers of parent.lcdTitle by place: 'full' (whole width) and 'beside' (next to the cover)
+        found = {}
+        try:
+            source = self.lcdParent['lcdTitle']
+            candidates = []
+            for renderer in getattr(self, 'renderer', []):
+                if getattr(renderer, 'source', None) is not source or runningTextLabel(renderer) is None or not hasattr(renderer, 'doSuspend'):
+                    continue
+                candidates.append(renderer)
+                position, size = renderer.instance.position(), renderer.instance.size()
+                printDBG("IPTVExtMoviePlayerColorSummary.scrollRenderers renderer pos[%r,%r] size[%r,%r] full[%r,%r] beside[%r,%r]" % (
+                    position.x(), position.y(), size.width(), size.height(), self.x0 + self.pad, self.cw, self.titleX, self.titleW))
+                if position.x() == self.x0 + self.pad and size.width() == self.cw:
+                    found['full'] = renderer
+                elif position.x() == self.titleX and size.width() == self.titleW:
+                    found['beside'] = renderer
+            if len(found) < 2 and len(candidates) == 2:
+                # the renderers report another position than the skin gave (the RunningText moves its widget itself):
+                # the skin lists the whole-width one first, the one beside the cover second
+                found = {'full': candidates[0], 'beside': candidates[1]}
+        except Exception:
+            printExc()
+        return found
+
+    def switchScrollTitle(self, besideCover):
+        # only the renderer of the current place runs: a suspended one clears its text and stops its timer
+        renderers = self.scrollRenderers()
+        self.lcdScrollRenderers = renderers
+        active = renderers.get('beside' if besideCover else 'full')
+        for renderer in renderers.values():
+            try:
+                shown = renderer is active
+                if shown:
+                    renderer.instance.show()
+                else:
+                    renderer.instance.hide()
+                renderer.doSuspend(0 if shown else 1)
+            except Exception:
+                printExc()
+
+    def fitScrollTitle(self, text):
+        # the largest font in which the title fits stays still; a longer one gets the smallest readable font and
+        # the renderer scrolls it (the renderer only knows the skin's font: it is set again and the text recalculated)
+        renderer = getattr(self, 'lcdScrollRenderers', {}).get('beside' if self.lcdCoverShown else 'full')
+        label = runningTextLabel(renderer) if renderer is not None else None
+        if label is None or not hasattr(renderer, 'txfont'):
+            return
+        beside = bool(self.lcdCoverShown)
+        width = self.titleW if beside else self.cw
+        height = self.titleH
+        size = min(self.fTitleCover if beside else self.fTitle, height)
+        readable = min(self.fTitleMin, size)
+        while True:
+            lines = self.wrapLcdText((text or '').strip(), width, size)
+            if len(lines) * size * self.LINE_EM <= height or size <= readable:
+                break
+            size = max(readable, size - max(1, size // 12))
+        font = gFont("Regular", size)
+        renderer.txfont = font
+        label.setFont(font)
+        renderer.changed((renderer.CHANGED_DEFAULT,))
 
     def findLcdTitleRenderer(self):
         # the Label of parent.lcdTitle, and only where the layout above put it

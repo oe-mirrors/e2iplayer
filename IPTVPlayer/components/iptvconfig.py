@@ -404,6 +404,9 @@ config.plugins.iptvplayer.meta_omdb = ConfigYesNo(default=False)
 config.plugins.iptvplayer.meta_language = ConfigSelection(default="auto", choices=[("auto", _("Auto")), ("ar", _("Arabic")), ("cs", _("Czech")), ("de", _("German")), ("el", _("Greek")), ("en", _("English")), ("es", _("Spanish")), ("fr", _("French")), ("hu", _("Hungarian")), ("it", _("Italian")), ("nl", _("Dutch")), ("pl", _("Polish")), ("pt", _("Portuguese")), ("ru", _("Russian")), ("tr", _("Turkish")), ("uk", _("Ukrainian"))])
 config.plugins.iptvplayer.meta_tmdb_apikey = ConfigSecret(default="", fixed_size=False)
 config.plugins.iptvplayer.meta_omdb_apikey = ConfigSecret(default="", fixed_size=False)
+# 16:9 pictures (an episode's still, a title's backdrop) from the same services instead of the portrait poster: list icons of
+# the hosts which set them, the info picture and the download sidecar .jpg
+config.plugins.iptvplayer.meta_images_169 = ConfigYesNo(default=False)
 config.plugins.iptvplayer.sidecar_enabled = ConfigYesNo(default=True)
 config.plugins.iptvplayer.normalize_media_names = ConfigYesNo(default=True)
 # OFF by default. The resolvers VidCore / VidUp / VidFast cannot decrypt
@@ -468,6 +471,10 @@ config.plugins.iptvplayer.usepycurl = ConfigYesNo(default=False)
 
 config.plugins.iptvplayer.extplayer_summary = ConfigSelection(default="yes", choices=[('auto', _('Auto')), ('yes', _('Yes')), ('no', _('No'))])
 config.plugins.iptvplayer.lcd_cover = ConfigYesNo(default=True)
+config.plugins.iptvplayer.lcd_cover_size = ConfigSelection(default="small", choices=[('small', _('Small (16:9)')), ('column', _('Column'))])
+config.plugins.iptvplayer.lcd_font_size = ConfigSelection(default="large", choices=[('normal', _('Normal')), ('large', _('Large')), ('xlarge', _('Very large'))])
+config.plugins.iptvplayer.lcd_time_format = ConfigSelection(default="minutes", choices=[('minutes', _('Minutes')), ('seconds', _('With seconds'))])
+config.plugins.iptvplayer.lcd_long_titles = ConfigSelection(default="scroll", choices=[('scroll', _('Scroll')), ('pages', _('Page by page')), ('shrink', _('Smaller text'))])
 config.plugins.iptvplayer.use_clear_iframe = ConfigYesNo(default=False)
 config.plugins.iptvplayer.show_iframe = ConfigYesNo(default=True)
 config.plugins.iptvplayer.iframe_file = ConfigIPTVFileSelection(fileMatch=r"^.*\.mvi$", default="/usr/share/enigma2/radio.mvi")

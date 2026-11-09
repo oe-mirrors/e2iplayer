@@ -101,12 +101,12 @@ def _autoSkip(title):
     return () if isLatinTitle(title) else LATIN_ONLY
 
 
-def sidecarMetaQuery(mediaType, title="", year="", imdbId="", skip=None, maxYearDiff=None, altTitles=()):
+def sidecarMetaQuery(mediaType, title="", year="", imdbId="", skip=None, maxYearDiff=None, altTitles=(), season="", episode=""):
     # what the download manager looks up in libs/moviemeta for the sidecar of a download (iptvdm/downloaderhelpers.py,
     # in a thread while the file downloads - playing a link costs no lookup). Give it the arguments of the host's own
     # getMeta() / getMetaByImdbId() call of its INFO view: an INFO opened before answers from the moviemeta cache.
     # skip None: _autoSkip() of each title. altTitles: the titles INFO tries next when the first one finds nothing
-    # (original / local title). {} = no lookup.
+    # (original / local title). season / episode: of an episode, for its 16:9 picture (meta_images_169). {} = no lookup.
     try:
         title = str(title or "").strip()
         imdbId = str(imdbId or "").strip()
@@ -129,6 +129,8 @@ def sidecarMetaQuery(mediaType, title="", year="", imdbId="", skip=None, maxYear
                 alts.append([alt, list(_autoSkip(alt) if skip is None else skip)])
         if alts:
             query["alt"] = alts
+        if str(season or "").isdigit() and str(episode or "").isdigit():
+            query["season"], query["episode"] = str(season), str(episode)
         return query
     except Exception:
         printExc()
@@ -139,7 +141,8 @@ def sidecarMetaQueryFromItem(cItem):
     # the moviemeta convention of the list items: meta_type ("movie" / "tv"), meta_title, meta_year, meta_imdb
     try:
         cItem = cItem or {}
-        return sidecarMetaQuery(cItem.get("meta_type", ""), cItem.get("meta_title", ""), cItem.get("meta_year", ""), cItem.get("meta_imdb", ""))
+        return sidecarMetaQuery(cItem.get("meta_type", ""), cItem.get("meta_title", ""), cItem.get("meta_year", ""), cItem.get("meta_imdb", ""),
+                                season=cItem.get("meta_season", ""), episode=cItem.get("meta_episode", ""))
     except Exception:
         printExc()
         return {}
@@ -151,6 +154,9 @@ def infoSidecarMetaQuery(cItem, default=None):
         from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getInfoQuery
         query = getInfoQuery(cItem)
         if query:
+            season, episode = str(cItem.get("meta_season", "")), str(cItem.get("meta_episode", ""))
+            if season.isdigit() and episode.isdigit():
+                query.update({"season": season, "episode": episode})
             return query
     except Exception:
         printExc()
@@ -244,7 +250,7 @@ def lookupSidecarMeta(query, siteTxt="", siteImg=""):
     # (txt, img) of a sidecar with the moviemeta details of query (sidecarMetaQuery); the poster replaces the
     # site's picture as on the INFO screen. Blocks (network): the download manager calls it in a thread.
     try:
-        from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, getMetaByImdbId
+        from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, getMetaByImdbId, getImage169, isImages169
         meta = {}
         if query.get("imdb"):
             meta = getMetaByImdbId(query.get("type", ""), query["imdb"])
@@ -268,7 +274,15 @@ def lookupSidecarMeta(query, siteTxt="", siteImg=""):
                 if value:
                     info.setdefault(key, value)
             meta["info"] = info
-        return formatSidecarText(meta, siteTxt, query.get("type") == "tv"), meta.get("poster") or siteImg
+        img = meta.get("poster") or siteImg
+        if isImages169() and not query.get("keep_img"):
+            # a 16:9 picture where a service has one (else the poster as before); keep_img: the host's own picture stays
+            img169 = getImage169(query.get("type", ""), query.get("title", ""), query.get("year", ""), query.get("season", ""),
+                                 query.get("episode", ""), query.get("imdb", ""))
+            img = img169 or img
+        elif query.get("keep_img") and siteImg:
+            img = siteImg
+        return formatSidecarText(meta, siteTxt, query.get("type") == "tv"), img
     except Exception:
         printExc()
         return siteTxt, siteImg
