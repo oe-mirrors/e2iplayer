@@ -11,6 +11,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.ihost import CDisplayListItem
 from Plugins.Extensions.IPTVPlayer.components.iptvmultipleinputbox import IPTVMultipleInputBox
 from Plugins.Extensions.IPTVPlayer.components.iptvlist import IPTVMainNavigatorList
+from Plugins.Extensions.IPTVPlayer.components.iptvlcd import infoSummaryIfWanted, lcdListText, lcdSetInfo
 from Plugins.Extensions.IPTVPlayer.components import skinchrome
 from Plugins.Extensions.IPTVPlayer.components.cover import Cover
 from Plugins.Extensions.IPTVPlayer.components.iptvchoicebox import IPTVChoiceBoxWidget, IPTVChoiceBoxItem, openChoiceBox, openSortChoiceBox, sortOrderTitle
@@ -371,6 +372,7 @@ class IPTVFavouritesMainWidget(Screen):
                 dItem.privateData = idx
                 list.append((dItem,))
         self["list"].setList(list)
+        lcdSetInfo(self, text=lcdListText(self["list"]))
 
     def loadGroupItems(self, groupId):
         sts = self.favourites.loadGroupItems(groupId)
@@ -379,8 +381,12 @@ class IPTVFavouritesMainWidget(Screen):
             return False
         return True
 
+    def createSummary(self):
+        # LCD: the title and the marked group / favourite
+        return infoSummaryIfWanted()
+
     def onSelectionChanged(self):
-        pass
+        lcdSetInfo(self, text=lcdListText(self["list"]))
 
     def keyExit(self):
         if GROUPS_VIEW == self.menu:

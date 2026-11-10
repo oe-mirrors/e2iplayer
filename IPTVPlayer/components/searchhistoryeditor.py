@@ -18,6 +18,7 @@ from Components.Sources.StaticText import StaticText
 
 from Plugins.Extensions.IPTVPlayer.components.e2ivkselector import GetVirtualKeyboard
 from Plugins.Extensions.IPTVPlayer.components import skinchrome
+from Plugins.Extensions.IPTVPlayer.components.iptvlcd import infoSummaryIfWanted, lcdFollowList, lcdListText, lcdSetInfo
 from Tools.NumericalTextInput import NumericalTextInput
 from Tools.LoadPixmap import LoadPixmap
 
@@ -245,6 +246,7 @@ class SearchHistoryEditor(Screen):
         # already had to work around).
         from Plugins.Extensions.IPTVPlayer.components.iptvlist import IPTVMainNavigatorList
         self['list'] = IPTVMainNavigatorList()
+        lcdFollowList(self)  # LCD: the marked search
 
         self.setTitle(guiSafeStr(_(u'Edit search history')))
         self.safeSetText(self['key_red'], _(u'Delete'))
@@ -331,6 +333,10 @@ class SearchHistoryEditor(Screen):
         if selectedIndex is not None and displayList:
             selectedIndex = max(0, min(selectedIndex, len(displayList) - 1))
             self['list'].moveToIndex(selectedIndex)
+        lcdSetInfo(self, text=lcdListText(self['list']))
+
+    def createSummary(self):
+        return infoSummaryIfWanted()
 
     def loadEntriesFromFile(self):
         return parseHistoryFile(self.historyFile, self.reverseForDisplay)

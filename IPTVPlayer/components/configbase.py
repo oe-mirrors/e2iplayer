@@ -16,6 +16,7 @@ from Plugins.Extensions.IPTVPlayer.components.e2ivkselector import GetVirtualKey
 from Plugins.Extensions.IPTVPlayer.components import skinchrome
 from Plugins.Extensions.IPTVPlayer.components.cover import Cover3
 from Plugins.Extensions.IPTVPlayer.components.iptvchoicebox import IPTVChoiceBoxWidget, IPTVChoiceBoxItem, openChoiceBox
+from Plugins.Extensions.IPTVPlayer.components.iptvlcd import setupSummaryIfWanted
 ###################################################
 
 ###################################################
@@ -733,3 +734,7 @@ class ConfigBaseWidget(Screen, ConfigListScreen):
         self.changeSubOptions()
         for x in self.onChangedEntry:
             x()
+
+    def createSummary(self):
+        # Screen comes first in the bases, its createSummary (None) would win over ConfigListScreen's
+        return setupSummaryIfWanted()

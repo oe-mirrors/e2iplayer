@@ -114,11 +114,31 @@ class Cover(Pixmap):
         self.prepareTimer.start(100)
         return True
 
+    # decodeCover() of the file that fnc(*fncArgs) makes in a worker thread first (a picture cut and scaled with
+    # Pillow, e.g. for the LCD); fnc returns the path to decode, fncArgs[0] is decoded when it fails. The file is
+    # decoded even when the widget had that file name before (the same name can hold a new picture, or the widget
+    # was hidden meanwhile). Main thread only, returns True.
+    def decodeCoverMadeBy(self, fnc, fncArgs, callBackFun, ident):
+        self._stopPrepare()
+        made = {}
+
+        def makeCoverFile():
+            made['FileName'] = fnc(*fncArgs)
+        self.prepareTimer = eTimer()
+        self.prepareTimer_conn = eConnectCallback(self.prepareTimer.timeout, self._checkPrepared)
+        self.prepare = {'call': AsyncMethod(makeCoverFile)(), 'args': (fncArgs[0], callBackFun, ident), 'made': made}
+        self.prepareTimer.start(50)
+        return True
+
     def _checkPrepared(self):
         if self.prepare is None or self.prepare['call'].isAlive():
             return
         filename, callBackFun, ident = self.prepare['args']
+        made = self.prepare.get('made')
         self._stopPrepare()
+        if made is not None:
+            filename = made.get('FileName') or filename
+            self.currIcon = {}   # decoded again, see decodeCoverMadeBy
         if -1 == self.decodeCover(filename, callBackFun, ident):
             callBackFun({"Changed": True, "Pixmap": None, "FileName": filename, "Ident": ident})
 

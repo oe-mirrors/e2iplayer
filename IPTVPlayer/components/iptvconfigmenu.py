@@ -339,14 +339,32 @@ class ConfigMenu(ConfigBaseWidget):
             list.append(getConfigListEntry("    " + _("Number of rows"), config.plugins.iptvplayer.numOfRow))
             list.append(getConfigListEntry("    " + _("Number of columns"), config.plugins.iptvplayer.numOfCol))
         # list.append(getConfigListEntry(_("VFD set current title:"), config.plugins.iptvplayer.set_curr_title))
-        list.append(getConfigListEntry(_("Create LCD/VFD summary screen"), config.plugins.iptvplayer.extplayer_summary))
+        # sub-heading like the storage / download / captcha sections; "LCD / VFD" reads the same in every language
+        list.append(getConfigListEntry("    ===== LCD / VFD =====",))
+        list.append(getConfigListEntry(_("Show E2iPlayer on the display"), config.plugins.iptvplayer.extplayer_summary))
         if config.plugins.iptvplayer.extplayer_summary.value != "no":
-            list.append(getConfigListEntry("    " + _("Cover on the LCD summary screen"), config.plugins.iptvplayer.lcd_cover))
+            list.append(getConfigListEntry("    " + _("Cover on the LCD"), config.plugins.iptvplayer.lcd_cover))
             if config.plugins.iptvplayer.lcd_cover.value:
                 list.append(getConfigListEntry("        " + _("Cover size"), config.plugins.iptvplayer.lcd_cover_size))
+                list.append(getConfigListEntry("        " + _("Cover picture on the LCD"), config.plugins.iptvplayer.lcd_cover_fit))
             list.append(getConfigListEntry("    " + _("LCD font size"), config.plugins.iptvplayer.lcd_font_size))
             list.append(getConfigListEntry("    " + _("Time on the LCD (player)"), config.plugins.iptvplayer.lcd_time_format))
             list.append(getConfigListEntry("    " + _("Long titles on the LCD"), config.plugins.iptvplayer.lcd_long_titles))
+            if config.plugins.iptvplayer.lcd_long_titles.value == 'scroll':
+                list.append(getConfigListEntry("        " + _("Scrolling title runs (then it stands still)"), config.plugins.iptvplayer.lcd_title_runs))
+            # only the settings of the chosen layout
+            coverSize = config.plugins.iptvplayer.lcd_cover_size.value if config.plugins.iptvplayer.lcd_cover.value else ''
+            if coverSize in ('poster', 'side'):
+                list.append(getConfigListEntry("        " + _("Large cover: size of the title line"), config.plugins.iptvplayer.lcd_poster_title))
+            if coverSize == 'poster':
+                list.append(getConfigListEntry("        " + _("Large cover: size of the times below the bar"), config.plugins.iptvplayer.lcd_poster_time))
+            if coverSize == 'side':
+                list.append(getConfigListEntry("        " + _("Large cover, info on the right: row 1"), config.plugins.iptvplayer.lcd_side_row1))
+                list.append(getConfigListEntry("        " + _("Large cover, info on the right: row 2"), config.plugins.iptvplayer.lcd_side_row2))
+                list.append(getConfigListEntry("        " + _("Large cover, info on the right: row 3"), config.plugins.iptvplayer.lcd_side_row3))
+                list.append(getConfigListEntry("        " + _("Large cover, info on the right: row 4"), config.plugins.iptvplayer.lcd_side_row4))
+            list.append(getConfigListEntry("    " + _("Progress bar color on the LCD"), config.plugins.iptvplayer.lcd_bar_color))
+            list.append(getConfigListEntry("    " + _("Progress bar frame on the LCD"), config.plugins.iptvplayer.lcd_bar_frame))
 
     @staticmethod
     def _fillProxies(list):
@@ -990,6 +1008,8 @@ class ConfigMenu(ConfigBaseWidget):
             config.plugins.iptvplayer.meta_omdb,
             config.plugins.iptvplayer.extplayer_summary,
             config.plugins.iptvplayer.lcd_cover,
+            config.plugins.iptvplayer.lcd_cover_size,
+            config.plugins.iptvplayer.lcd_long_titles,
             config.plugins.iptvplayer.mye2i_browser,
             config.plugins.iptvplayer.storageExpertMode,
             config.plugins.iptvplayer.hostsListType,

@@ -17,6 +17,7 @@ from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
 from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import shellQuote
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdownloadercreator import DownloaderCreator
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import DescribeImageFile
+from Plugins.Extensions.IPTVPlayer.components.iptvlcd import infoSummaryIfWanted, lcdSetInfo
 ###################################################
 
 ###################################################
@@ -269,6 +270,9 @@ class IPTVPicturePlayerWidget(Screen):
 
     # end def __init__(self, session):
 
+    def createSummary(self):
+        return infoSummaryIfWanted()
+
     def __del__(self):
         printDBG('IPTVPicturePlayerWidget.__del__ --------------------------------------')
 
@@ -418,6 +422,8 @@ class IPTVPicturePlayerWidget(Screen):
             self["icon"].hide()
             self["picture"].updatePixmap(ret.get('Pixmap', None), ret.get('FileName', self.filePath))
             self["picture"].show()
+            # LCD: the title and the picture, again with every refresh
+            lcdSetInfo(self, picture=ret.get('FileName', self.filePath), refresh=True)
         self.setMainTimerSts(False)
         self._doStart()
 

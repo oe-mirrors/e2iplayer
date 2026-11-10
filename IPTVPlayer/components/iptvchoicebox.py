@@ -8,6 +8,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.iptvlist import IPTVRadioButtonList
 from Plugins.Extensions.IPTVPlayer.components import skinchrome
+from Plugins.Extensions.IPTVPlayer.components.iptvlcd import addInfoLcd, infoSummaryIfWanted, lcdListText, lcdSetInfo
 ###################################################
 
 ###################################################
@@ -180,6 +181,11 @@ class IPTVChoiceBoxWidget(Screen):
 
         self.prevIdx = 0
         self.reorderingMode = False
+        # LCD: the title (a Label of its own without chrome) and the marked row
+        addInfoLcd(self, self.params.get('title', _("Select option")))
+
+    def createSummary(self):
+        return infoSummaryIfWanted()
 
     def __onClose(self):
         try:
@@ -197,6 +203,7 @@ class IPTVChoiceBoxWidget(Screen):
         except Exception:
             printExc()
         self["list"].connectSelChanged(self.onSelectionChanged)
+        lcdSetInfo(self, text=lcdListText(self["list"]))
 
     def key_ok(self):
         printDBG('IPTVChoiceBoxWidget.key_ok() getSelectedItem() = "%s"' % self.getSelectedItem())
@@ -212,6 +219,7 @@ class IPTVChoiceBoxWidget(Screen):
             callback(self.getSelectedItem())
 
     def onSelectionChanged(self):
+        lcdSetInfo(self, text=lcdListText(self["list"]))
         callback = self.params.get('selection_changed', None)
         if callable(callback):
             callback(self.getSelectedItem())
