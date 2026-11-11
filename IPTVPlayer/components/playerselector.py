@@ -28,6 +28,7 @@ from Plugins.Extensions.IPTVPlayer.__init__ import GRIDSUPPORT, _
 from Plugins.Extensions.IPTVPlayer.components import skinchrome
 from Plugins.Extensions.IPTVPlayer.components.cover import Cover3
 from Plugins.Extensions.IPTVPlayer.components.iptvchoicebox import IPTVChoiceBoxItem, IPTVChoiceBoxWidget, openChoiceBox
+from Plugins.Extensions.IPTVPlayer.components.iptvlcd import infoSummaryIfWanted, lcdSetInfo, listSummaryIfWanted
 from Plugins.Extensions.IPTVPlayer.components.iptvlist import IPTVPlayerSelectorContextMenuChoiceBoxList, IPTVRadioButtonList, fitPixmapInBox
 from Plugins.Extensions.IPTVPlayer.tools.iptvhostgroups import IsFolderKey
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import GetAvailableIconSize, GetHostInfo, GetHostListTitle, GetHostOrderDir, GetHostTitle, GetIPTVPlayerVersion, GetIconDir, GetLogoDir, findT9JumpIndex, printDBG, printExc
@@ -591,8 +592,7 @@ class _PlayerSelectorListMode:
         self.updateLcd()
 
     def createSummary(self):
-        # the screen of the main list; imported here because iptvplayerwidget imports this module
-        from Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget import listSummaryIfWanted
+        # the screen of the main list
         return listSummaryIfWanted()
 
     def updateLcd(self):
@@ -1570,9 +1570,11 @@ if GRIDSUPPORT:
             FHD = screenwidth and screenwidth == 1920
 
             self.pixmapList = []
+            self.iconPaths = []  # the LCD shows the logo of the marked result
             for item in self.options:
                 icon = _getPlayerSelectorIcon(item.description, self.iconSize)
                 self.pixmapList.append(LoadPixmap(icon))
+                self.iconPaths.append(icon)
 
             # chrome (logo/title header, OK/EXIT+blue-key footer) built via
             # skinchrome, same as PlayerSelectorWidget's own grid mode -
@@ -1661,6 +1663,11 @@ if GRIDSUPPORT:
                 idx = self["grid"].getSelectedIndex()
                 if idx < self.numOfItems:
                     self["statustext"].setText(self.options[idx].name)
+                    lcdSetInfo(self, text=self.options[idx].name, picture=self.iconPaths[idx] or '')
+
+        def createSummary(self):
+            # LCD: the title, the marked result and its logo
+            return infoSummaryIfWanted()
 
         def keySelect(self):
             idx = self["grid"].getSelectedIndex()

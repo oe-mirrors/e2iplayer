@@ -12,7 +12,8 @@ from Plugins.Extensions.IPTVPlayer.components.cover import SimpleAnimatedCover
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta, enum
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, formatBytes, eConnectCallback, ReadUint32
 from Plugins.Extensions.IPTVPlayer.components.iptvplayer import IPTVStandardMoviePlayer, IPTVMiniMoviePlayer
-from Plugins.Extensions.IPTVPlayer.components.iptvextmovieplayer import IPTVExtMoviePlayer, addLcdSources, colorSummaryIfWanted
+from Plugins.Extensions.IPTVPlayer.components.iptvextmovieplayer import IPTVExtMoviePlayer
+from Plugins.Extensions.IPTVPlayer.components.iptvlcd import addLcdSources, colorSummaryIfWanted
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdownloadercreator import DownloaderCreator
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _

@@ -27,6 +27,7 @@ from Plugins.Extensions.IPTVPlayer.components import skinchrome
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_binary
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import DescribeImageFile
 from Plugins.Extensions.IPTVPlayer.components.iconmenager import SaveInlinePicture, IconLogName
+from Plugins.Extensions.IPTVPlayer.components.iptvlcd import addInfoLcd, infoSummaryIfWanted, lcdSetInfo
 
 
 class IPTVArticleView(Screen):
@@ -86,6 +87,7 @@ class IPTVArticleView(Screen):
         # chrome header's own source="Title" widget now shows this,
         # replacing the old separate content-area "title" widget
         self.setTitle(self.artItem.title)
+        addInfoLcd(self)  # LCD: the title, the cover once it is shown
 
         self["text"] = ScrollLabel(" ")
         #############################################
@@ -150,6 +152,9 @@ class IPTVArticleView(Screen):
 
     def __del__(self):
         printDBG('IPTVArticleView.__del__ --------------------------------------')
+
+    def createSummary(self):
+        return infoSummaryIfWanted()
 
     def __onClose(self):
         printDBG('IPTVArticleView.__onClose ------------------------------------')
@@ -279,6 +284,9 @@ class IPTVArticleView(Screen):
         else:
             self["cover"].updatePixmap(ret.get('Pixmap', None), ret.get('FileName', self._getDownloadFilePath()))
             self["cover"].show()
+            if not self.coverError:
+                # not the red X of a broken cover
+                lcdSetInfo(self, picture=ret.get('FileName', self._getDownloadFilePath()))
         self.hideSpinner()
 
     def _downloaderError(self):

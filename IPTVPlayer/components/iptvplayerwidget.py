@@ -32,14 +32,14 @@ from Screens.Screen import Screen
 from Screens.MessageBox import MessageBox
 from Components.ActionMap import ActionMap
 from Components.Label import Label
-from Components.Pixmap import Pixmap
 from Components.config import config, configfile
 from Components.Sources.StaticText import StaticText
 from Tools.BoundFunction import boundFunction
 from Tools.LoadPixmap import LoadPixmap
+from Plugins.Extensions.IPTVPlayer.components.iptvlcd import listSummaryIfWanted
 from Tools.Directories import fileExists
 from Tools.NumericalTextInput import NumericalTextInput
-from enigma import getDesktop, eTimer, ePoint, eSize, gFont
+from enigma import eTimer, ePoint, eSize, gFont
 
 ####################################################
 #                   IPTV components
@@ -5057,83 +5057,3 @@ class E2iPlayerWidget(Screen):
             self.checkAutoPlaySequencer()
 
 # class E2iPlayerWidget
-
-
-def listSummaryIfWanted():
-    # createSummary() of the main list and the PlayerSelector
-    return IPTVPlayerLCDScreen if config.plugins.iptvplayer.extplayer_summary.value != 'no' else None
-
-
-class IPTVPlayerLCDScreen(Screen):
-    try:
-        summary_screenwidth = getDesktop(1).size().width()
-        summary_screenheight = getDesktop(1).size().height()
-    except Exception:
-        summary_screenwidth = 132
-        summary_screenheight = 64
-    if summary_screenwidth >= 220 and summary_screenheight >= 176:
-        # colour LCD: the layout follows the display size, the logo keeps the 3:1 of the host logos
-        margin = summary_screenwidth // 40
-        textW = summary_screenwidth - 2 * margin
-        logoH = min(textW // 3, summary_screenheight // 2)
-        logoW = logoH * 3
-        logoY = summary_screenheight - logoH - margin
-        text1H = (logoY - margin) * 2 // 5
-        text2H = logoY - margin - text1H
-        # a tall display has the height, "E2iPlayer" must still fit the width
-        font1 = min(text1H * 3 // 4, textW // 7)
-        skin = """
-    <screen position="0,0" size="%(w)d,%(h)d" title="E2iPlayer">
-        <widget name="text1" position="%(m)d,%(text1Y)d" size="%(textW)d,%(text1H)d" font="Regular;%(font1)d" halign="center" valign="center" foregroundColor="#05F7F3"/>
-        <widget name="text2" position="%(m)d,%(text2Y)d" size="%(textW)d,%(text2H)d" font="Regular;%(font2)d" halign="center" valign="center" foregroundColor="#FFFF00"/>
-        <widget name="LCDlogo" position="%(logoX)d,%(logoY)d" zPosition="4" size="%(logoW)d,%(logoH)d" alphatest="blend" />
-    </screen>""" % {'w': summary_screenwidth, 'h': summary_screenheight, 'm': margin, 'textW': textW,
-                    'text1Y': margin // 2, 'text1H': text1H, 'font1': font1,
-                    'text2Y': margin // 2 + text1H, 'text2H': text2H, 'font2': font1 * 4 // 5,
-                    'logoX': (summary_screenwidth - logoW) // 2, 'logoY': logoY, 'logoW': logoW, 'logoH': logoH}
-    else:
-        skin = """
-    <screen position="0,0" size="132,64" title="E2iPlayer">
-        <widget name="text1" position="4,0" size="132,14" font="Regular;12" halign="center" valign="center"/>
-        <widget name="text2" position="4,14" size="132,49" font="Regular;10" halign="center" valign="center"/>
-        <widget name="LCDlogo" zPosition="4" position="4,70" size="240,80" alphatest="blend" />
-    </screen>"""
-
-    def __init__(self, session, parent):
-        Screen.__init__(self, session)
-        self.hostText = ""
-        try:
-            self["text1"] = Label("E2iPlayer")
-            self["text2"] = Label("")
-            self["LCDlogo"] = Pixmap()
-        except Exception:
-            pass
-
-    def setText(self, text):
-        try:
-            self.hostText = text[0:39]
-            self["text2"].setText(self.hostText)
-        except Exception:
-            pass
-
-    def setItem(self, text):
-        # the marked row of a host: the host moves up to the first line, without a row "E2iPlayer" and the host
-        try:
-            self["text1"].setText(self.hostText if text and self.hostText else "E2iPlayer")
-            self["text2"].setText(text[0:120] if text else self.hostText)
-        except Exception:
-            pass
-
-    def LCD_showPic(self, widgetName, picPath):
-        try:
-            self[widgetName].instance.setScale(1)
-            self[widgetName].instance.setPixmap(LoadPixmap(picPath, cached=True))
-            self[widgetName].show()
-        except Exception:
-            pass
-
-    def LCD_hide(self, widgetName):
-        try:
-            self[widgetName].hide()
-        except Exception:
-            pass
