@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-09 21:19+0000\n"
+"POT-Creation-Date: 2026-11-11 10:48+0000\n"
 "PO-Revision-Date: 2026-03-13 15:06+0300\n"
 "Last-Translator: audi06_19 <audi06_19@hotmail.com>\n"
 "Language-Team: Turkish\n"
@@ -840,6 +840,9 @@ msgstr "Otomatik oluşturuldu"
 msgid "Automatic"
 msgstr "Otomatik"
 
+msgid "Automatic (crop or blurred background)"
+msgstr ""
+
 msgid "Automatically turn on external subtitles"
 msgstr "Harici altyazıları otomatik aç"
 
@@ -925,6 +928,9 @@ msgstr "Siyah ekran koruyucu"
 
 msgid "Block wmv files"
 msgstr "wmv dosyalarını engelle"
+
+msgid "Blue"
+msgstr ""
 
 msgid "Board Review"
 msgstr "Kurul Tekrarı"
@@ -1184,9 +1190,6 @@ msgstr "Koleksiyonlar"
 msgid "Colored text in titles and descriptions"
 msgstr "Başlık ve açıklamalarda renkli metin"
 
-msgid "Column"
-msgstr ""
-
 msgid "Combine pull request merges with their commit"
 msgstr "Pull request birleştirmelerini commit'leriyle birleştir"
 
@@ -1321,7 +1324,10 @@ msgstr "Ülke:"
 msgid "Couples"
 msgstr "Çiftler"
 
-msgid "Cover on the LCD summary screen"
+msgid "Cover on the LCD"
+msgstr ""
+
+msgid "Cover picture on the LCD"
 msgstr ""
 
 msgid "Cover size"
@@ -1329,9 +1335,6 @@ msgstr ""
 
 msgid "Create Enigma2 .cuts chapter marks"
 msgstr "Enigma2 .cuts bölüm işaretleri oluştur"
-
-msgid "Create LCD/VFD summary screen"
-msgstr "LCD/VFD özet ekranı oluştur"
 
 msgid "Create MKV"
 msgstr "MKV oluştur"
@@ -1385,6 +1388,9 @@ msgstr "Geçerli öğe bir kanal değil."
 msgid "Cut"
 msgstr "Kes"
 
+msgid "Cyan"
+msgstr ""
+
 msgid "Czech"
 msgstr "Çekçe"
 
@@ -1393,6 +1399,9 @@ msgstr "DASH/mpd"
 
 msgid "DLNA server of TorrServer"
 msgstr "TorrServer DLNA sunucusu"
+
+msgid "DONE"
+msgstr ""
 
 msgid "DOWNLOAD ERROR"
 msgstr "İNDİRME HATASI"
@@ -1884,6 +1893,9 @@ msgstr "E2iPlayer yalnızca özelleştirilmiş bir web tarayıcısıdır. Hiçbi
 msgid "E2iPlayer virtual keyboard"
 msgstr "E2iPlayer sanal klavye"
 
+msgid "ENDS"
+msgstr ""
+
 msgid ""
 "ERROR: pipeline could not be constructed: no element \"playbin2\" \n"
 "Please check if gstreamer plugins are available in your system."
@@ -1972,6 +1984,12 @@ msgid ""
 msgstr ""
 "Şifreleme fonksiyonu adı çıkarılamadı!\n"
 "Lütfen sorunu %s adresine bildirin"
+
+msgid "End time"
+msgstr ""
+
+msgid "Endless"
+msgstr ""
 
 msgid "English"
 msgstr "İngilizce"
@@ -2340,6 +2358,9 @@ msgstr "Dosyalar"
 msgid "Fill cache before playback"
 msgstr "Oynatmadan önce önbelleği doldur"
 
+msgid "Fill the field (crop)"
+msgstr ""
+
 msgid "Filler"
 msgstr "Dolgu bölüm"
 
@@ -2583,6 +2604,12 @@ msgstr "Grafik hizmet seçici"
 
 msgid "Greek"
 msgstr "Yunanca"
+
+msgid "Green"
+msgstr ""
+
+msgid "Grey"
+msgstr ""
 
 #, python-format
 msgid "Group \"%s\" already exists."
@@ -3008,6 +3035,9 @@ msgstr ""
 msgid "LEFT/RIGHT at start/end of text - alternative way to switch panels"
 msgstr "Metnin başında/sonunda SOL/SAĞ - panel değiştirmenin alternatif yolu"
 
+msgid "LENGTH"
+msgstr ""
+
 msgid "Language"
 msgstr "Dil"
 
@@ -3018,6 +3048,30 @@ msgid "Language:"
 msgstr "Dil:"
 
 msgid "Large"
+msgstr ""
+
+msgid "Large (info on the right)"
+msgstr ""
+
+msgid "Large (title below)"
+msgstr ""
+
+msgid "Large cover, info on the right: row 1"
+msgstr ""
+
+msgid "Large cover, info on the right: row 2"
+msgstr ""
+
+msgid "Large cover, info on the right: row 3"
+msgstr ""
+
+msgid "Large cover, info on the right: row 4"
+msgstr ""
+
+msgid "Large cover: size of the times below the bar"
+msgstr ""
+
+msgid "Large cover: size of the title line"
 msgstr ""
 
 msgid "Last"
@@ -3160,6 +3214,9 @@ msgstr "Öğretim görevlileri"
 
 msgid "Left"
 msgstr "Sol"
+
+msgid "Length"
+msgstr ""
 
 msgid "Library"
 msgstr "Kitaplık"
@@ -3375,6 +3432,9 @@ msgstr "MP3Quran canlı radyo"
 msgid "Macedonian"
 msgstr ""
 
+msgid "Magenta"
+msgstr ""
+
 msgid "Main"
 msgstr "Ana sayfa"
 
@@ -3425,6 +3485,9 @@ msgstr "Azami torrent boyutu:"
 
 msgid "MediaFusion manifest URL (your own):"
 msgstr "MediaFusion manifest URL'si (kendinize ait):"
+
+msgid "Medium (beside the title)"
+msgstr ""
 
 msgid "Medtryx Marketing"
 msgstr "Medtryx Marketing"
@@ -3758,6 +3821,9 @@ msgstr "Henüz bölüm mevcut değil."
 msgid "No episodes found."
 msgstr "Bölüm bulunamadı."
 
+msgid "No frame"
+msgstr ""
+
 msgid "No free player available for this title."
 msgstr "Bu başlık için ücretsiz oynatıcı mevcut değil."
 
@@ -4020,6 +4086,9 @@ msgstr "Seçenekler"
 msgid "Options (select language, clear search history, settings)"
 msgstr "Seçenekler (dil seçimi, arama geçmişini temizle, ayarlar)"
 
+msgid "Orange"
+msgstr ""
+
 msgid "Order of user links:"
 msgstr "Kullanıcı bağlantılarının sırası:"
 
@@ -4074,6 +4143,9 @@ msgstr "BEKLEMEDE"
 
 msgid "PLAY"
 msgstr "OYNAT"
+
+msgid "PLAYED"
+msgstr ""
 
 msgid "PREVIOUS/NEXT"
 msgstr "ÖNCEKİ/SONRAKİ"
@@ -4144,6 +4216,9 @@ msgstr "Pediatri"
 msgid "People"
 msgstr "Kişiler"
 
+msgid "Percent"
+msgstr ""
+
 msgid "Persian"
 msgstr ""
 
@@ -4187,6 +4262,9 @@ msgstr "[%s] oynatıcısıyla oynat"
 
 msgid "Playback UHD :"
 msgstr "UHD oynatma :"
+
+msgid "Played"
+msgstr ""
 
 msgid "Player Skin"
 msgstr "Oynatıcı görünümü"
@@ -4434,6 +4512,12 @@ msgstr "Programlar"
 msgid "Programmes of the last days of the channels with an archive"
 msgstr "Arşivi olan kanalların son günlerdeki programları"
 
+msgid "Progress bar color on the LCD"
+msgstr ""
+
+msgid "Progress bar frame on the LCD"
+msgstr ""
+
 msgid "Promote item"
 msgstr "Öğeyi yukarı taşı"
 
@@ -4469,6 +4553,9 @@ msgstr "Ağ protokolleri için RAM arabellek boyutu [MB]"
 
 msgid "RED"
 msgstr "KIRMIZI"
+
+msgid "REMAINING"
+msgstr ""
 
 msgid "REWIND"
 msgstr "GERİ SAR"
@@ -4556,6 +4643,9 @@ msgstr "Önerilen"
 msgid "Recon"
 msgstr "Keşif"
 
+msgid "Red"
+msgstr ""
+
 msgid "Referee"
 msgstr "Hakem"
 
@@ -4596,6 +4686,9 @@ msgstr "İlgi düzeyi"
 
 msgid "Religion"
 msgstr "Din"
+
+msgid "Remaining"
+msgstr ""
 
 msgid "Remaining:"
 msgstr "Kalan:"
@@ -4770,6 +4863,9 @@ msgstr "DURDURULDU"
 msgid "Safe search (restricted mode):"
 msgstr "Güvenli arama (kısıtlı mod):"
 
+msgid "Same as the bar"
+msgstr ""
+
 msgid "Save"
 msgstr "Kaydet"
 
@@ -4815,6 +4911,9 @@ msgid "Script finished."
 msgstr "Betik tamamlandı."
 
 msgid "Scroll"
+msgstr ""
+
+msgid "Scrolling title runs (then it stands still)"
 msgstr ""
 
 msgid "Search"
@@ -5139,6 +5238,9 @@ msgstr "Bir gruptaki tüm YouTube kanallarının \"En yeni videolar\"ını göst
 
 msgid "Show & Comedy"
 msgstr "Şov ve komedi"
+
+msgid "Show E2iPlayer on the display"
+msgstr ""
 
 msgid "Show E2iPlayer settings in system menu"
 msgstr "E2iPlayer ayarlarını sistem menüsünde göster"
@@ -6737,8 +6839,14 @@ msgstr "Maksimuma ulaşıldığında"
 msgid "While live TV is running"
 msgstr "Canlı TV çalışırken"
 
+msgid "White"
+msgstr ""
+
 msgid "Whole file must be downloaded to start playback!"
 msgstr "Oynatmayı başlatmak için dosyanın tamamı indirilmelidir!"
+
+msgid "Whole picture (black bars)"
+msgstr ""
 
 msgid "Wiki"
 msgstr "Wiki"
@@ -6834,6 +6942,9 @@ msgstr "Yıl %s"
 
 msgid "Year:"
 msgstr "Yıl:"
+
+msgid "Yellow"
+msgstr ""
 
 msgid "Yes"
 msgstr "Evet"

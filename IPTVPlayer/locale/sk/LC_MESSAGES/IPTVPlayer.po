@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-09 21:19+0000\n"
+"POT-Creation-Date: 2026-11-11 10:48+0000\n"
 "PO-Revision-Date: 2026-07-27 16:28+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -844,6 +844,9 @@ msgstr "Automaticky vytvorené"
 msgid "Automatic"
 msgstr "Automaticky"
 
+msgid "Automatic (crop or blurred background)"
+msgstr ""
+
 msgid "Automatically turn on external subtitles"
 msgstr "Automatické zapínanie externých titulkov"
 
@@ -929,6 +932,9 @@ msgstr "Čierny šetrič obrazovky"
 
 msgid "Block wmv files"
 msgstr "Blokovanie súborov wmv"
+
+msgid "Blue"
+msgstr ""
 
 msgid "Board Review"
 msgstr "Príprava na skúšky"
@@ -1188,9 +1194,6 @@ msgstr "Zbierky"
 msgid "Colored text in titles and descriptions"
 msgstr "Farebný text v názvoch a popisoch"
 
-msgid "Column"
-msgstr ""
-
 msgid "Combine pull request merges with their commit"
 msgstr "Zlúčiť merge pull requestov s ich commitom"
 
@@ -1325,7 +1328,10 @@ msgstr "Krajina:"
 msgid "Couples"
 msgstr "Páry"
 
-msgid "Cover on the LCD summary screen"
+msgid "Cover on the LCD"
+msgstr ""
+
+msgid "Cover picture on the LCD"
 msgstr ""
 
 msgid "Cover size"
@@ -1333,9 +1339,6 @@ msgstr ""
 
 msgid "Create Enigma2 .cuts chapter marks"
 msgstr "Vytvoriť značky kapitol Enigma2 .cuts"
-
-msgid "Create LCD/VFD summary screen"
-msgstr "Vytvorenie obrazovky súhrnu LCD/VFD"
 
 msgid "Create MKV"
 msgstr "Vytvoriť MKV"
@@ -1389,6 +1392,9 @@ msgstr "Aktuálna položka nie je kanál."
 msgid "Cut"
 msgstr "Vystrihnúť"
 
+msgid "Cyan"
+msgstr ""
+
 msgid "Czech"
 msgstr "Čeština"
 
@@ -1397,6 +1403,9 @@ msgstr "DASH/mpd"
 
 msgid "DLNA server of TorrServer"
 msgstr "Server DLNA z TorrServer"
+
+msgid "DONE"
+msgstr ""
 
 msgid "DOWNLOAD ERROR"
 msgstr "CHYBA SŤAHOVANIA"
@@ -1888,6 +1897,9 @@ msgstr "E2iPlayer je iba špecializovaný webový prehliadač. Sám neposkytuje 
 msgid "E2iPlayer virtual keyboard"
 msgstr "Virtuálna klávesnica E2iPlayer"
 
+msgid "ENDS"
+msgstr ""
+
 msgid ""
 "ERROR: pipeline could not be constructed: no element \"playbin2\" \n"
 "Please check if gstreamer plugins are available in your system."
@@ -1976,6 +1988,12 @@ msgid ""
 msgstr ""
 "Extrakcia názvu šifrovacej funkcie zlyhala!\n"
 "Nahláste problém na %s"
+
+msgid "End time"
+msgstr ""
+
+msgid "Endless"
+msgstr ""
 
 msgid "English"
 msgstr "Angličtina"
@@ -2344,6 +2362,9 @@ msgstr "Súbory"
 msgid "Fill cache before playback"
 msgstr "Naplniť vyrovnávaciu pamäť pred prehrávaním"
 
+msgid "Fill the field (crop)"
+msgstr ""
+
 msgid "Filler"
 msgstr "Výplňová epizóda"
 
@@ -2587,6 +2608,12 @@ msgstr "Výber grafických služieb"
 
 msgid "Greek"
 msgstr "Gréčtina"
+
+msgid "Green"
+msgstr ""
+
+msgid "Grey"
+msgstr ""
 
 #, python-format
 msgid "Group \"%s\" already exists."
@@ -3013,6 +3040,9 @@ msgstr ""
 msgid "LEFT/RIGHT at start/end of text - alternative way to switch panels"
 msgstr "VĽAVO/VPRAVO na začiatku/konci textu - alternatívny spôsob prepínania panelov"
 
+msgid "LENGTH"
+msgstr ""
+
 msgid "Language"
 msgstr "Jazyk"
 
@@ -3023,6 +3053,30 @@ msgid "Language:"
 msgstr "Jazyk:"
 
 msgid "Large"
+msgstr ""
+
+msgid "Large (info on the right)"
+msgstr ""
+
+msgid "Large (title below)"
+msgstr ""
+
+msgid "Large cover, info on the right: row 1"
+msgstr ""
+
+msgid "Large cover, info on the right: row 2"
+msgstr ""
+
+msgid "Large cover, info on the right: row 3"
+msgstr ""
+
+msgid "Large cover, info on the right: row 4"
+msgstr ""
+
+msgid "Large cover: size of the times below the bar"
+msgstr ""
+
+msgid "Large cover: size of the title line"
 msgstr ""
 
 msgid "Last"
@@ -3165,6 +3219,9 @@ msgstr "Prednášajúci"
 
 msgid "Left"
 msgstr "Vľavo"
+
+msgid "Length"
+msgstr ""
 
 msgid "Library"
 msgstr "Knižnica"
@@ -3380,6 +3437,9 @@ msgstr "MP3Quran živé rádio"
 msgid "Macedonian"
 msgstr ""
 
+msgid "Magenta"
+msgstr ""
+
 msgid "Main"
 msgstr "Hlavné"
 
@@ -3430,6 +3490,9 @@ msgstr "Maximálna veľkosť torrentu:"
 
 msgid "MediaFusion manifest URL (your own):"
 msgstr "URL manifestu MediaFusion (vaša vlastná):"
+
+msgid "Medium (beside the title)"
+msgstr ""
 
 msgid "Medtryx Marketing"
 msgstr "Medtryx Marketing"
@@ -3766,6 +3829,9 @@ msgstr "Zatiaľ nie sú k dispozícii žiadne epizódy."
 msgid "No episodes found."
 msgstr "Nenašli sa žiadne epizódy."
 
+msgid "No frame"
+msgstr ""
+
 msgid "No free player available for this title."
 msgstr "Pre tento titul nie je k dispozícii žiadny bezplatný prehrávač."
 
@@ -4028,6 +4094,9 @@ msgstr "Možnosti"
 msgid "Options (select language, clear search history, settings)"
 msgstr "Možnosti (výber jazyka, vymazanie histórie vyhľadávania, nastavenia)"
 
+msgid "Orange"
+msgstr ""
+
 msgid "Order of user links:"
 msgstr "Poradie používateľských odkazov:"
 
@@ -4082,6 +4151,9 @@ msgstr "ČAKÁ"
 
 msgid "PLAY"
 msgstr "PREHRAŤ"
+
+msgid "PLAYED"
+msgstr ""
 
 msgid "PREVIOUS/NEXT"
 msgstr "PREDCHÁDZAJÚCE/ĎALŠIE"
@@ -4152,6 +4224,9 @@ msgstr "Pediatria"
 msgid "People"
 msgstr "Osoby"
 
+msgid "Percent"
+msgstr ""
+
 msgid "Persian"
 msgstr ""
 
@@ -4195,6 +4270,9 @@ msgstr "Prehrať pomocou prehrávača [%s]"
 
 msgid "Playback UHD :"
 msgstr "Prehrávanie v UHD:"
+
+msgid "Played"
+msgstr ""
 
 msgid "Player Skin"
 msgstr "Vzhľad prehrávača"
@@ -4443,6 +4521,12 @@ msgstr "Relácie"
 msgid "Programmes of the last days of the channels with an archive"
 msgstr "Relácie z posledných dní na kanáloch s archívom"
 
+msgid "Progress bar color on the LCD"
+msgstr ""
+
+msgid "Progress bar frame on the LCD"
+msgstr ""
+
 msgid "Promote item"
 msgstr "Uprednostniť položku"
 
@@ -4478,6 +4562,9 @@ msgstr "Veľkosť vyrovnávacej pamäte RAM [MB] pre sieťové protokoly"
 
 msgid "RED"
 msgstr "ČERVENÉ"
+
+msgid "REMAINING"
+msgstr ""
 
 msgid "REWIND"
 msgstr "PREVÍJANIE SPÄŤ"
@@ -4565,6 +4652,9 @@ msgstr "Odporúčané"
 msgid "Recon"
 msgstr "Rekonštrukcia"
 
+msgid "Red"
+msgstr ""
+
 msgid "Referee"
 msgstr "Rozhodca"
 
@@ -4605,6 +4695,9 @@ msgstr "Relevantnosť"
 
 msgid "Religion"
 msgstr "Náboženstvo"
+
+msgid "Remaining"
+msgstr ""
 
 msgid "Remaining:"
 msgstr "Ostáva:"
@@ -4779,6 +4872,9 @@ msgstr "ZASTAVENÝ"
 msgid "Safe search (restricted mode):"
 msgstr "Bezpečné vyhľadávanie (obmedzený režim):"
 
+msgid "Same as the bar"
+msgstr ""
+
 msgid "Save"
 msgstr "Uložiť"
 
@@ -4824,6 +4920,9 @@ msgid "Script finished."
 msgstr "Skript dokončený."
 
 msgid "Scroll"
+msgstr ""
+
+msgid "Scrolling title runs (then it stands still)"
 msgstr ""
 
 msgid "Search"
@@ -5148,6 +5247,9 @@ msgstr "Zobraziť \"Najnovšie videá\" všetkých kanálov YouTube v skupine"
 
 msgid "Show & Comedy"
 msgstr "Šou a komédia"
+
+msgid "Show E2iPlayer on the display"
+msgstr ""
 
 msgid "Show E2iPlayer settings in system menu"
 msgstr "Zobraziť nastavenia E2iPlayer v systémovom menu"
@@ -6746,8 +6848,14 @@ msgstr "Pri dosiahnutí maxima"
 msgid "While live TV is running"
 msgstr "Počas sledovania živej TV"
 
+msgid "White"
+msgstr ""
+
 msgid "Whole file must be downloaded to start playback!"
 msgstr "Na spustenie prehrávania je potrebné stiahnuť celý súbor!"
+
+msgid "Whole picture (black bars)"
+msgstr ""
 
 msgid "Wiki"
 msgstr "Wiki"
@@ -6843,6 +6951,9 @@ msgstr "Rok %s"
 
 msgid "Year:"
 msgstr "Rok:"
+
+msgid "Yellow"
+msgstr ""
 
 msgid "Yes"
 msgstr "Áno"

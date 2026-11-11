@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-09 21:19+0000\n"
+"POT-Creation-Date: 2026-11-11 10:48+0000\n"
 "PO-Revision-Date: 2026-10-08 20:17+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Serbian (Latin)\n"
@@ -839,6 +839,9 @@ msgstr "Automatski generisano"
 msgid "Automatic"
 msgstr "Automatski"
 
+msgid "Automatic (crop or blurred background)"
+msgstr ""
+
 msgid "Automatically turn on external subtitles"
 msgstr "Automatski uključi spoljne titlove"
 
@@ -924,6 +927,9 @@ msgstr "Crni čuvar ekrana"
 
 msgid "Block wmv files"
 msgstr "Blokiraj WMV datoteke"
+
+msgid "Blue"
+msgstr ""
 
 msgid "Board Review"
 msgstr "Priprema za specijalistički ispit"
@@ -1183,9 +1189,6 @@ msgstr "Kolekcije"
 msgid "Colored text in titles and descriptions"
 msgstr "Obojeni tekst u naslovima i opisima"
 
-msgid "Column"
-msgstr ""
-
 msgid "Combine pull request merges with their commit"
 msgstr "Spoji pull request merge-ove sa njihovim commit-om"
 
@@ -1320,7 +1323,10 @@ msgstr "Zemlja:"
 msgid "Couples"
 msgstr "Parovi"
 
-msgid "Cover on the LCD summary screen"
+msgid "Cover on the LCD"
+msgstr ""
+
+msgid "Cover picture on the LCD"
 msgstr ""
 
 msgid "Cover size"
@@ -1328,9 +1334,6 @@ msgstr ""
 
 msgid "Create Enigma2 .cuts chapter marks"
 msgstr "Kreiraj Enigma2 .cuts oznake poglavlja"
-
-msgid "Create LCD/VFD summary screen"
-msgstr "Kreiraj ekran sažetka za LCD/VFD"
 
 msgid "Create MKV"
 msgstr "Kreiraj MKV"
@@ -1384,6 +1387,9 @@ msgstr "Trenutna stavka nije kanal."
 msgid "Cut"
 msgstr "Iseci"
 
+msgid "Cyan"
+msgstr ""
+
 msgid "Czech"
 msgstr "Češki"
 
@@ -1392,6 +1398,9 @@ msgstr "DASH/mpd"
 
 msgid "DLNA server of TorrServer"
 msgstr "DLNA server TorrServer-a"
+
+msgid "DONE"
+msgstr ""
 
 msgid "DOWNLOAD ERROR"
 msgstr "GREŠKA PRI PREUZIMANJU"
@@ -1883,6 +1892,9 @@ msgstr "E2iPlayer je samo specijalizovani veb-pregledač. On ne hostuje nikakve 
 msgid "E2iPlayer virtual keyboard"
 msgstr "E2iPlayer virtuelna tastatura"
 
+msgid "ENDS"
+msgstr ""
+
 msgid ""
 "ERROR: pipeline could not be constructed: no element \"playbin2\" \n"
 "Please check if gstreamer plugins are available in your system."
@@ -1971,6 +1983,12 @@ msgid ""
 msgstr ""
 "Izdvajanje imena funkcije za šifrovanje nije uspelo!\n"
 "Prijavite problem na %s"
+
+msgid "End time"
+msgstr ""
+
+msgid "Endless"
+msgstr ""
 
 msgid "English"
 msgstr "Engleski"
@@ -2339,6 +2357,9 @@ msgstr "Datoteke"
 msgid "Fill cache before playback"
 msgstr "Napuni keš pre reprodukcije"
 
+msgid "Fill the field (crop)"
+msgstr ""
+
 msgid "Filler"
 msgstr "Filer"
 
@@ -2582,6 +2603,12 @@ msgstr "Grafički izbor servisa"
 
 msgid "Greek"
 msgstr "Grčki"
+
+msgid "Green"
+msgstr ""
+
+msgid "Grey"
+msgstr ""
 
 #, python-format
 msgid "Group \"%s\" already exists."
@@ -3007,6 +3034,9 @@ msgstr ""
 msgid "LEFT/RIGHT at start/end of text - alternative way to switch panels"
 msgstr "LEVO/DESNO na početku/kraju teksta - alternativni način za prebacivanje između panela"
 
+msgid "LENGTH"
+msgstr ""
+
 msgid "Language"
 msgstr "Jezik"
 
@@ -3017,6 +3047,30 @@ msgid "Language:"
 msgstr "Jezik:"
 
 msgid "Large"
+msgstr ""
+
+msgid "Large (info on the right)"
+msgstr ""
+
+msgid "Large (title below)"
+msgstr ""
+
+msgid "Large cover, info on the right: row 1"
+msgstr ""
+
+msgid "Large cover, info on the right: row 2"
+msgstr ""
+
+msgid "Large cover, info on the right: row 3"
+msgstr ""
+
+msgid "Large cover, info on the right: row 4"
+msgstr ""
+
+msgid "Large cover: size of the times below the bar"
+msgstr ""
+
+msgid "Large cover: size of the title line"
 msgstr ""
 
 msgid "Last"
@@ -3159,6 +3213,9 @@ msgstr "Predavači"
 
 msgid "Left"
 msgstr "Levo"
+
+msgid "Length"
+msgstr ""
 
 msgid "Library"
 msgstr "Biblioteka"
@@ -3374,6 +3431,9 @@ msgstr "MP3Quran radio uživo"
 msgid "Macedonian"
 msgstr ""
 
+msgid "Magenta"
+msgstr ""
+
 msgid "Main"
 msgstr "Glavno"
 
@@ -3424,6 +3484,9 @@ msgstr "Najveća veličina torenta:"
 
 msgid "MediaFusion manifest URL (your own):"
 msgstr "URL MediaFusion manifesta (vaš sopstveni):"
+
+msgid "Medium (beside the title)"
+msgstr ""
 
 msgid "Medtryx Marketing"
 msgstr "Medtryx marketing"
@@ -3757,6 +3820,9 @@ msgstr "Još nema dostupnih epizoda."
 msgid "No episodes found."
 msgstr "Nisu pronađene epizode."
 
+msgid "No frame"
+msgstr ""
+
 msgid "No free player available for this title."
 msgstr "Nema besplatnog plejera za ovaj naslov."
 
@@ -4019,6 +4085,9 @@ msgstr "Opcije"
 msgid "Options (select language, clear search history, settings)"
 msgstr "Opcije (izbor jezika, brisanje istorije pretrage, podešavanja)"
 
+msgid "Orange"
+msgstr ""
+
 msgid "Order of user links:"
 msgstr "Redosled korisničkih linkova:"
 
@@ -4073,6 +4142,9 @@ msgstr "NA ČEKANJU"
 
 msgid "PLAY"
 msgstr "PLAY"
+
+msgid "PLAYED"
+msgstr ""
 
 msgid "PREVIOUS/NEXT"
 msgstr "PRETHODNO/SLEDEĆE"
@@ -4143,6 +4215,9 @@ msgstr "Pedijatrija"
 msgid "People"
 msgstr "Osobe"
 
+msgid "Percent"
+msgstr ""
+
 msgid "Persian"
 msgstr ""
 
@@ -4186,6 +4261,9 @@ msgstr "Reprodukuj pomoću plejera [%s]"
 
 msgid "Playback UHD :"
 msgstr "Reprodukcija UHD :"
+
+msgid "Played"
+msgstr ""
 
 msgid "Player Skin"
 msgstr "Skin plejera"
@@ -4433,6 +4511,12 @@ msgstr "Emisije"
 msgid "Programmes of the last days of the channels with an archive"
 msgstr "Emisije iz poslednjih dana sa kanala koji imaju arhivu"
 
+msgid "Progress bar color on the LCD"
+msgstr ""
+
+msgid "Progress bar frame on the LCD"
+msgstr ""
+
 msgid "Promote item"
 msgstr "Istakni stavku"
 
@@ -4468,6 +4552,9 @@ msgstr "Veličina RAM bafera [MB] za mrežne protokole"
 
 msgid "RED"
 msgstr "CRVENI"
+
+msgid "REMAINING"
+msgstr ""
 
 msgid "REWIND"
 msgstr "PREMOTAVANJE UNAZAD"
@@ -4555,6 +4642,9 @@ msgstr "Preporučeno"
 msgid "Recon"
 msgstr "Rekonstrukcija"
 
+msgid "Red"
+msgstr ""
+
 msgid "Referee"
 msgstr "Sudija"
 
@@ -4595,6 +4685,9 @@ msgstr "Relevantnost"
 
 msgid "Religion"
 msgstr "Religija"
+
+msgid "Remaining"
+msgstr ""
 
 msgid "Remaining:"
 msgstr "Preostalo:"
@@ -4769,6 +4862,9 @@ msgstr "ZAUSTAVLJENO"
 msgid "Safe search (restricted mode):"
 msgstr "Bezbedna pretraga (ograničeni režim):"
 
+msgid "Same as the bar"
+msgstr ""
+
 msgid "Save"
 msgstr "Sačuvaj"
 
@@ -4814,6 +4910,9 @@ msgid "Script finished."
 msgstr "Skripta je završena."
 
 msgid "Scroll"
+msgstr ""
+
+msgid "Scrolling title runs (then it stands still)"
 msgstr ""
 
 msgid "Search"
@@ -5138,6 +5237,9 @@ msgstr "Prikaži \"Najnoviji video snimci\" svih YouTube kanala u grupi"
 
 msgid "Show & Comedy"
 msgstr "Šou i komedija"
+
+msgid "Show E2iPlayer on the display"
+msgstr ""
 
 msgid "Show E2iPlayer settings in system menu"
 msgstr "Prikaži E2iPlayer podešavanja u sistemskom meniju"
@@ -6736,8 +6838,14 @@ msgstr "Kada se dostigne maksimum"
 msgid "While live TV is running"
 msgstr "Dok je TV uživo pokrenut"
 
+msgid "White"
+msgstr ""
+
 msgid "Whole file must be downloaded to start playback!"
 msgstr "Cela datoteka mora biti preuzeta da bi reprodukcija počela!"
+
+msgid "Whole picture (black bars)"
+msgstr ""
 
 msgid "Wiki"
 msgstr "Wiki"
@@ -6833,6 +6941,9 @@ msgstr "Godina %s"
 
 msgid "Year:"
 msgstr "Godina:"
+
+msgid "Yellow"
+msgstr ""
 
 msgid "Yes"
 msgstr "Da"

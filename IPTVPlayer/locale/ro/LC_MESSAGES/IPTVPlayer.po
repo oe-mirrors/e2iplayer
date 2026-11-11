@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-09 21:19+0000\n"
+"POT-Creation-Date: 2026-11-11 10:48+0000\n"
 "PO-Revision-Date: 2026-10-08 20:17+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Romanian\n"
@@ -839,6 +839,9 @@ msgstr "Generat automat"
 msgid "Automatic"
 msgstr "Automat"
 
+msgid "Automatic (crop or blurred background)"
+msgstr ""
+
 msgid "Automatically turn on external subtitles"
 msgstr "Activați automat subtitrările externe"
 
@@ -924,6 +927,9 @@ msgstr "Screensaver negru"
 
 msgid "Block wmv files"
 msgstr "Blocați fișierele WMV"
+
+msgid "Blue"
+msgstr ""
 
 msgid "Board Review"
 msgstr "Recapitulare pentru examenul de specialitate"
@@ -1183,9 +1189,6 @@ msgstr "Colecții"
 msgid "Colored text in titles and descriptions"
 msgstr "Text colorat în titluri și descrieri"
 
-msgid "Column"
-msgstr ""
-
 msgid "Combine pull request merges with their commit"
 msgstr "Combinați merge-urile de pull request cu commitul lor"
 
@@ -1320,7 +1323,10 @@ msgstr "Țară:"
 msgid "Couples"
 msgstr "Cupluri"
 
-msgid "Cover on the LCD summary screen"
+msgid "Cover on the LCD"
+msgstr ""
+
+msgid "Cover picture on the LCD"
 msgstr ""
 
 msgid "Cover size"
@@ -1328,9 +1334,6 @@ msgstr ""
 
 msgid "Create Enigma2 .cuts chapter marks"
 msgstr "Creați marcaje de capitol Enigma2 .cuts"
-
-msgid "Create LCD/VFD summary screen"
-msgstr "Creați ecran de rezumat LCD/VFD"
 
 msgid "Create MKV"
 msgstr "Creați MKV"
@@ -1384,6 +1387,9 @@ msgstr "Elementul curent nu este un canal."
 msgid "Cut"
 msgstr "Decupare"
 
+msgid "Cyan"
+msgstr ""
+
 msgid "Czech"
 msgstr "Cehă"
 
@@ -1392,6 +1398,9 @@ msgstr "DASH/mpd"
 
 msgid "DLNA server of TorrServer"
 msgstr "Serverul DLNA al TorrServer"
+
+msgid "DONE"
+msgstr ""
 
 msgid "DOWNLOAD ERROR"
 msgstr "EROARE LA DESCĂRCARE"
@@ -1883,6 +1892,9 @@ msgstr "E2iPlayer este doar un browser web specializat. Nu găzduiește niciun m
 msgid "E2iPlayer virtual keyboard"
 msgstr "Tastatură virtuală E2iPlayer"
 
+msgid "ENDS"
+msgstr ""
+
 msgid ""
 "ERROR: pipeline could not be constructed: no element \"playbin2\" \n"
 "Please check if gstreamer plugins are available in your system."
@@ -1971,6 +1983,12 @@ msgid ""
 msgstr ""
 "Extragerea numelui funcției de criptare a eșuat!\n"
 "Raportați problema la %s"
+
+msgid "End time"
+msgstr ""
+
+msgid "Endless"
+msgstr ""
 
 msgid "English"
 msgstr "Engleză"
@@ -2339,6 +2357,9 @@ msgstr "Fișiere"
 msgid "Fill cache before playback"
 msgstr "Umpleți cache-ul înainte de redare"
 
+msgid "Fill the field (crop)"
+msgstr ""
+
 msgid "Filler"
 msgstr "Episoade de umplutură"
 
@@ -2582,6 +2603,12 @@ msgstr "Selector grafic de servicii"
 
 msgid "Greek"
 msgstr "Greacă"
+
+msgid "Green"
+msgstr ""
+
+msgid "Grey"
+msgstr ""
 
 #, python-format
 msgid "Group \"%s\" already exists."
@@ -3007,6 +3034,9 @@ msgstr ""
 msgid "LEFT/RIGHT at start/end of text - alternative way to switch panels"
 msgstr "STÂNGA/DREAPTA la începutul/sfârșitul textului - mod alternativ de a comuta între panouri"
 
+msgid "LENGTH"
+msgstr ""
+
 msgid "Language"
 msgstr "Limbă"
 
@@ -3017,6 +3047,30 @@ msgid "Language:"
 msgstr "Limbă:"
 
 msgid "Large"
+msgstr ""
+
+msgid "Large (info on the right)"
+msgstr ""
+
+msgid "Large (title below)"
+msgstr ""
+
+msgid "Large cover, info on the right: row 1"
+msgstr ""
+
+msgid "Large cover, info on the right: row 2"
+msgstr ""
+
+msgid "Large cover, info on the right: row 3"
+msgstr ""
+
+msgid "Large cover, info on the right: row 4"
+msgstr ""
+
+msgid "Large cover: size of the times below the bar"
+msgstr ""
+
+msgid "Large cover: size of the title line"
 msgstr ""
 
 msgid "Last"
@@ -3159,6 +3213,9 @@ msgstr "Lectori"
 
 msgid "Left"
 msgstr "Stânga"
+
+msgid "Length"
+msgstr ""
 
 msgid "Library"
 msgstr "Bibliotecă"
@@ -3374,6 +3431,9 @@ msgstr "Radio live MP3Quran"
 msgid "Macedonian"
 msgstr ""
 
+msgid "Magenta"
+msgstr ""
+
 msgid "Main"
 msgstr "Principal"
 
@@ -3424,6 +3484,9 @@ msgstr "Dimensiunea maximă a torrentului:"
 
 msgid "MediaFusion manifest URL (your own):"
 msgstr "URL-ul manifestului MediaFusion (al dvs.):"
+
+msgid "Medium (beside the title)"
+msgstr ""
 
 msgid "Medtryx Marketing"
 msgstr "Medtryx Marketing"
@@ -3757,6 +3820,9 @@ msgstr "Încă nu sunt disponibile episoade."
 msgid "No episodes found."
 msgstr "Nu au fost găsite episoade."
 
+msgid "No frame"
+msgstr ""
+
 msgid "No free player available for this title."
 msgstr "Niciun player gratuit disponibil pentru acest titlu."
 
@@ -4019,6 +4085,9 @@ msgstr "Opțiuni"
 msgid "Options (select language, clear search history, settings)"
 msgstr "Opțiuni (selectare limbă, ștergere istoric căutări, setări)"
 
+msgid "Orange"
+msgstr ""
+
 msgid "Order of user links:"
 msgstr "Ordinea linkurilor utilizatorului:"
 
@@ -4073,6 +4142,9 @@ msgstr "ÎN AȘTEPTARE"
 
 msgid "PLAY"
 msgstr "PLAY"
+
+msgid "PLAYED"
+msgstr ""
 
 msgid "PREVIOUS/NEXT"
 msgstr "ANTERIOR/URMĂTOR"
@@ -4143,6 +4215,9 @@ msgstr "Pediatrie"
 msgid "People"
 msgstr "Persoane"
 
+msgid "Percent"
+msgstr ""
+
 msgid "Persian"
 msgstr ""
 
@@ -4186,6 +4261,9 @@ msgstr "Redați cu playerul [%s]"
 
 msgid "Playback UHD :"
 msgstr "Redare UHD :"
+
+msgid "Played"
+msgstr ""
 
 msgid "Player Skin"
 msgstr "Skin player"
@@ -4433,6 +4511,12 @@ msgstr "Emisiuni"
 msgid "Programmes of the last days of the channels with an archive"
 msgstr "Emisiunile din ultimele zile ale canalelor cu arhivă"
 
+msgid "Progress bar color on the LCD"
+msgstr ""
+
+msgid "Progress bar frame on the LCD"
+msgstr ""
+
 msgid "Promote item"
 msgstr "Promovați elementul"
 
@@ -4468,6 +4552,9 @@ msgstr "Dimensiunea bufferului RAM [MB] pentru protocoale de rețea"
 
 msgid "RED"
 msgstr "ROȘU"
+
+msgid "REMAINING"
+msgstr ""
 
 msgid "REWIND"
 msgstr "DERULARE ÎNAPOI"
@@ -4555,6 +4642,9 @@ msgstr "Recomandate"
 msgid "Recon"
 msgstr "Reconstrucție"
 
+msgid "Red"
+msgstr ""
+
 msgid "Referee"
 msgstr "Arbitru"
 
@@ -4595,6 +4685,9 @@ msgstr "Relevanță"
 
 msgid "Religion"
 msgstr "Religie"
+
+msgid "Remaining"
+msgstr ""
 
 msgid "Remaining:"
 msgstr "Rămas:"
@@ -4769,6 +4862,9 @@ msgstr "OPRIT"
 msgid "Safe search (restricted mode):"
 msgstr "Căutare sigură (mod restricționat):"
 
+msgid "Same as the bar"
+msgstr ""
+
 msgid "Save"
 msgstr "Salvați"
 
@@ -4814,6 +4910,9 @@ msgid "Script finished."
 msgstr "Scriptul s-a încheiat."
 
 msgid "Scroll"
+msgstr ""
+
+msgid "Scrolling title runs (then it stands still)"
 msgstr ""
 
 msgid "Search"
@@ -5138,6 +5237,9 @@ msgstr "Afișați „Cele mai noi videoclipuri” ale tuturor canalelor YouTube 
 
 msgid "Show & Comedy"
 msgstr "Emisiuni și comedie"
+
+msgid "Show E2iPlayer on the display"
+msgstr ""
 
 msgid "Show E2iPlayer settings in system menu"
 msgstr "Afișați setările E2iPlayer în meniul de sistem"
@@ -6736,8 +6838,14 @@ msgstr "Când se atinge maximul"
 msgid "While live TV is running"
 msgstr "În timp ce rulează TV live"
 
+msgid "White"
+msgstr ""
+
 msgid "Whole file must be downloaded to start playback!"
 msgstr "Întregul fișier trebuie descărcat pentru a porni redarea!"
+
+msgid "Whole picture (black bars)"
+msgstr ""
 
 msgid "Wiki"
 msgstr "Wiki"
@@ -6833,6 +6941,9 @@ msgstr "Anul %s"
 
 msgid "Year:"
 msgstr "An:"
+
+msgid "Yellow"
+msgstr ""
 
 msgid "Yes"
 msgstr "Da"

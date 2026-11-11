@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-09 21:19+0000\n"
+"POT-Creation-Date: 2026-11-11 10:48+0000\n"
 "PO-Revision-Date: 2026-07-27 16:49+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -844,6 +844,9 @@ msgstr "Automatikusan létrehozott"
 msgid "Automatic"
 msgstr "Automatikus"
 
+msgid "Automatic (crop or blurred background)"
+msgstr ""
+
 msgid "Automatically turn on external subtitles"
 msgstr "Automatikusan kapcsolja be a külső feliratokat"
 
@@ -929,6 +932,9 @@ msgstr "Fekete képernyővédő"
 
 msgid "Block wmv files"
 msgstr "Wmv fájlok blokkolása"
+
+msgid "Blue"
+msgstr ""
 
 msgid "Board Review"
 msgstr "Szakvizsga-felkészítő"
@@ -1190,9 +1196,6 @@ msgstr "Gyűjtemények"
 msgid "Colored text in titles and descriptions"
 msgstr "Színes szöveg a címekben és leírásokban"
 
-msgid "Column"
-msgstr ""
-
 msgid "Combine pull request merges with their commit"
 msgstr "Pull request merge-ök összevonása a commitjukkal"
 
@@ -1327,7 +1330,10 @@ msgstr "Ország:"
 msgid "Couples"
 msgstr "Párok"
 
-msgid "Cover on the LCD summary screen"
+msgid "Cover on the LCD"
+msgstr ""
+
+msgid "Cover picture on the LCD"
 msgstr ""
 
 msgid "Cover size"
@@ -1335,9 +1341,6 @@ msgstr ""
 
 msgid "Create Enigma2 .cuts chapter marks"
 msgstr "Enigma2 .cuts fejezetjelölők létrehozása"
-
-msgid "Create LCD/VFD summary screen"
-msgstr "LCD/VFD összefoglaló képernyő létrehozása"
 
 msgid "Create MKV"
 msgstr "MKV létrehozása"
@@ -1391,6 +1394,9 @@ msgstr "Az aktuális elem nem csatorna."
 msgid "Cut"
 msgstr "Kivág"
 
+msgid "Cyan"
+msgstr ""
+
 msgid "Czech"
 msgstr "Cseh"
 
@@ -1399,6 +1405,9 @@ msgstr "DASH/mpd"
 
 msgid "DLNA server of TorrServer"
 msgstr "A TorrServer DLNA-szervere"
+
+msgid "DONE"
+msgstr ""
 
 msgid "DOWNLOAD ERROR"
 msgstr "LETÖLTÉSI HIBA"
@@ -1890,6 +1899,9 @@ msgstr "Az E2iPlayer csak egy speciális webböngésző. Nem tárol semmilyen ta
 msgid "E2iPlayer virtual keyboard"
 msgstr "E2iPlayer virtuális billentyűzet"
 
+msgid "ENDS"
+msgstr ""
+
 msgid ""
 "ERROR: pipeline could not be constructed: no element \"playbin2\" \n"
 "Please check if gstreamer plugins are available in your system."
@@ -1978,6 +1990,12 @@ msgid ""
 msgstr ""
 "A titkosítási függvény nevének kinyerése sikertelen!\n"
 "Kérjük, jelentse a problémát a következő címre: %s"
+
+msgid "End time"
+msgstr ""
+
+msgid "Endless"
+msgstr ""
 
 msgid "English"
 msgstr "Angol"
@@ -2347,6 +2365,9 @@ msgstr "Fájlok"
 msgid "Fill cache before playback"
 msgstr "Gyorsítótár feltöltése lejátszás előtt"
 
+msgid "Fill the field (crop)"
+msgstr ""
+
 msgid "Filler"
 msgstr "Töltelék"
 
@@ -2590,6 +2611,12 @@ msgstr "Grafikai szolgáltatások választója"
 
 msgid "Greek"
 msgstr "Görög"
+
+msgid "Green"
+msgstr ""
+
+msgid "Grey"
+msgstr ""
 
 #, python-format
 msgid "Group \"%s\" already exists."
@@ -3015,6 +3042,9 @@ msgstr ""
 msgid "LEFT/RIGHT at start/end of text - alternative way to switch panels"
 msgstr "BALRA/JOBBRA a szöveg elején/végén - a panelek váltásának másik módja"
 
+msgid "LENGTH"
+msgstr ""
+
 msgid "Language"
 msgstr "Nyelv"
 
@@ -3025,6 +3055,30 @@ msgid "Language:"
 msgstr "Nyelv:"
 
 msgid "Large"
+msgstr ""
+
+msgid "Large (info on the right)"
+msgstr ""
+
+msgid "Large (title below)"
+msgstr ""
+
+msgid "Large cover, info on the right: row 1"
+msgstr ""
+
+msgid "Large cover, info on the right: row 2"
+msgstr ""
+
+msgid "Large cover, info on the right: row 3"
+msgstr ""
+
+msgid "Large cover, info on the right: row 4"
+msgstr ""
+
+msgid "Large cover: size of the times below the bar"
+msgstr ""
+
+msgid "Large cover: size of the title line"
 msgstr ""
 
 msgid "Last"
@@ -3167,6 +3221,9 @@ msgstr "Előadók"
 
 msgid "Left"
 msgstr "Balra"
+
+msgid "Length"
+msgstr ""
 
 msgid "Library"
 msgstr "Könyvtár"
@@ -3382,6 +3439,9 @@ msgstr "MP3Quran élő rádió"
 msgid "Macedonian"
 msgstr ""
 
+msgid "Magenta"
+msgstr ""
+
 msgid "Main"
 msgstr "Főoldal"
 
@@ -3432,6 +3492,9 @@ msgstr "Torrent maximális mérete:"
 
 msgid "MediaFusion manifest URL (your own):"
 msgstr "MediaFusion manifest URL (saját):"
+
+msgid "Medium (beside the title)"
+msgstr ""
 
 msgid "Medtryx Marketing"
 msgstr "Medtryx Marketing"
@@ -3765,6 +3828,9 @@ msgstr "Még nincsenek elérhető epizódok."
 msgid "No episodes found."
 msgstr "Nem található epizód."
 
+msgid "No frame"
+msgstr ""
+
 msgid "No free player available for this title."
 msgstr "Ehhez a címhez nem érhető el ingyenes lejátszó."
 
@@ -4027,6 +4093,9 @@ msgstr "Opciók"
 msgid "Options (select language, clear search history, settings)"
 msgstr "Opciók (nyelv kiválasztása, keresési előzmények törlése, beállítások)"
 
+msgid "Orange"
+msgstr ""
+
 msgid "Order of user links:"
 msgstr "Felhasználói linkek sorrendje:"
 
@@ -4081,6 +4150,9 @@ msgstr "FÜGGŐBEN"
 
 msgid "PLAY"
 msgstr "LEJÁTSZÁS"
+
+msgid "PLAYED"
+msgstr ""
 
 msgid "PREVIOUS/NEXT"
 msgstr "ELŐZŐ/KÖVETKEZŐ"
@@ -4151,6 +4223,9 @@ msgstr "Gyermekgyógyászat"
 msgid "People"
 msgstr "Személyek"
 
+msgid "Percent"
+msgstr ""
+
 msgid "Persian"
 msgstr ""
 
@@ -4194,6 +4269,9 @@ msgstr "Lejátszás a(z) [%s] lejátszóval"
 
 msgid "Playback UHD :"
 msgstr "UHD lejátszás:"
+
+msgid "Played"
+msgstr ""
 
 msgid "Player Skin"
 msgstr "Lejátszó kinézete"
@@ -4441,6 +4519,12 @@ msgstr "Programok"
 msgid "Programmes of the last days of the channels with an archive"
 msgstr "Az archívummal rendelkező csatornák elmúlt napi műsorai"
 
+msgid "Progress bar color on the LCD"
+msgstr ""
+
+msgid "Progress bar frame on the LCD"
+msgstr ""
+
 msgid "Promote item"
 msgstr "Elem promóciója"
 
@@ -4476,6 +4560,9 @@ msgstr "RAM puffer mérete [MB] hálózati protokollokhoz"
 
 msgid "RED"
 msgstr "PIROS"
+
+msgid "REMAINING"
+msgstr ""
 
 msgid "REWIND"
 msgstr "VISSZATEKERÉS"
@@ -4563,6 +4650,9 @@ msgstr "Ajánlott"
 msgid "Recon"
 msgstr "Rekonstrukció"
 
+msgid "Red"
+msgstr ""
+
 msgid "Referee"
 msgstr "Játékvezető"
 
@@ -4603,6 +4693,9 @@ msgstr "Relevancia"
 
 msgid "Religion"
 msgstr "Vallás"
+
+msgid "Remaining"
+msgstr ""
 
 msgid "Remaining:"
 msgstr "Fennmaradó:"
@@ -4777,6 +4870,9 @@ msgstr "LEÁLLÍTVA"
 msgid "Safe search (restricted mode):"
 msgstr "Biztonságos keresés (korlátozott mód):"
 
+msgid "Same as the bar"
+msgstr ""
+
 msgid "Save"
 msgstr "Mentés"
 
@@ -4822,6 +4918,9 @@ msgid "Script finished."
 msgstr "A szkript befejeződött."
 
 msgid "Scroll"
+msgstr ""
+
+msgid "Scrolling title runs (then it stands still)"
 msgstr ""
 
 msgid "Search"
@@ -5146,6 +5245,9 @@ msgstr "Egy csoport összes YouTube-csatornájának \"Legújabb videók\" megjel
 
 msgid "Show & Comedy"
 msgstr "Műsor és vígjáték"
+
+msgid "Show E2iPlayer on the display"
+msgstr ""
 
 msgid "Show E2iPlayer settings in system menu"
 msgstr "E2iPlayer beállítások megjelenítése a rendszermenüben"
@@ -6745,8 +6847,14 @@ msgstr "Ha eléri a maximumot"
 msgid "While live TV is running"
 msgstr "Amíg élő TV fut"
 
+msgid "White"
+msgstr ""
+
 msgid "Whole file must be downloaded to start playback!"
 msgstr "A lejátszás megkezdéséhez a teljes fájlt le kell tölteni!"
+
+msgid "Whole picture (black bars)"
+msgstr ""
 
 msgid "Wiki"
 msgstr "Wiki"
@@ -6842,6 +6950,9 @@ msgstr "%s. év"
 
 msgid "Year:"
 msgstr "Év:"
+
+msgid "Yellow"
+msgstr ""
 
 msgid "Yes"
 msgstr "Igen"
