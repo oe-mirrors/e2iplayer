@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-11 10:48+0000\n"
-"PO-Revision-Date: 2026-11-10 23:33+0200\n"
+"PO-Revision-Date: 2026-11-11 14:34+0200\n"
 "Last-Translator: \n"
 "Language-Team: giorbak\n"
 "Language: el\n"
@@ -846,7 +846,7 @@ msgid "Automatic"
 msgstr "Αυτόματο"
 
 msgid "Automatic (crop or blurred background)"
-msgstr ""
+msgstr "Αυτόματο (περικοπή ή θολό φόντο)"
 
 msgid "Automatically turn on external subtitles"
 msgstr "Αυτόματη ενεργοποίηση εξωτερικών υποτίτλων"
@@ -935,7 +935,7 @@ msgid "Block wmv files"
 msgstr "Αποκλεισμός αρχείων wmv"
 
 msgid "Blue"
-msgstr ""
+msgstr "Μπλε"
 
 msgid "Board Review"
 msgstr "Επισκόπηση πίνακα"
@@ -1330,10 +1330,10 @@ msgid "Couples"
 msgstr "Ζευγάρια"
 
 msgid "Cover on the LCD"
-msgstr ""
+msgstr "Εξώφυλλο στην οθόνη LCD"
 
 msgid "Cover picture on the LCD"
-msgstr ""
+msgstr "Εικόνα εξωφύλλου στην οθόνη LCD"
 
 msgid "Cover size"
 msgstr "Μέγεθος εξωφύλλου"
@@ -1394,7 +1394,7 @@ msgid "Cut"
 msgstr "Αποκοπή"
 
 msgid "Cyan"
-msgstr ""
+msgstr "Κυανό"
 
 msgid "Czech"
 msgstr "Τσέχικα"
@@ -1406,7 +1406,7 @@ msgid "DLNA server of TorrServer"
 msgstr "Διακομιστής DLNA του TorrServer"
 
 msgid "DONE"
-msgstr ""
+msgstr "ΟΛΟΚΛΗΡΩΘΗΚΕ"
 
 msgid "DOWNLOAD ERROR"
 msgstr "ΣΦΑΛΜΑ ΛΗΨΗΣ"
@@ -1899,7 +1899,7 @@ msgid "E2iPlayer virtual keyboard"
 msgstr "Εικονικό πληκτρολόγιο E2iPlayer"
 
 msgid "ENDS"
-msgstr ""
+msgstr "ΛΗΓΕΙ"
 
 msgid ""
 "ERROR: pipeline could not be constructed: no element \"playbin2\" \n"
@@ -1991,10 +1991,10 @@ msgstr ""
 "Παρακαλώ αναφέρετε το πρόβλημα στο %s"
 
 msgid "End time"
-msgstr ""
+msgstr "Ώρα λήξης"
 
 msgid "Endless"
-msgstr ""
+msgstr "Ατελείωτο"
 
 msgid "English"
 msgstr "Αγγλικά"
@@ -2364,7 +2364,7 @@ msgid "Fill cache before playback"
 msgstr "Συμπλήρωση της προσωρινής μνήμης πριν από την αναπαραγωγή"
 
 msgid "Fill the field (crop)"
-msgstr ""
+msgstr "Προσαρμογή πεδίου (περικοπή)"
 
 msgid "Filler"
 msgstr "Επεισόδια πλήρωσης"
@@ -2611,10 +2611,10 @@ msgid "Greek"
 msgstr "Ελληνικά"
 
 msgid "Green"
-msgstr ""
+msgstr "Πράσινο"
 
 msgid "Grey"
-msgstr ""
+msgstr "Γκρι"
 
 #, python-format
 msgid "Group \"%s\" already exists."
@@ -3041,7 +3041,7 @@ msgid "LEFT/RIGHT at start/end of text - alternative way to switch panels"
 msgstr "LEFT/RIGHT στην αρχή/τέλος του κειμένου - Εναλλακτικός τρόπος εναλλαγής πάνελ"
 
 msgid "LENGTH"
-msgstr ""
+msgstr "ΔΙΑΡΚΕΙΑ"
 
 msgid "Language"
 msgstr "Γλώσσα"
@@ -3056,28 +3056,28 @@ msgid "Large"
 msgstr "Μεγάλη"
 
 msgid "Large (info on the right)"
-msgstr ""
+msgstr "Μεγάλο (πληροφορίες δεξιά)"
 
 msgid "Large (title below)"
-msgstr ""
+msgstr "Μεγάλο (τίτλος από κάτω)"
 
 msgid "Large cover, info on the right: row 1"
-msgstr ""
+msgstr "Μεγάλο εξώφυλλο, πληροφορίες δεξιά: Σειρά 1"
 
 msgid "Large cover, info on the right: row 2"
-msgstr ""
+msgstr "Μεγάλο εξώφυλλο, πληροφορίες δεξιά: Σειρά 2"
 
 msgid "Large cover, info on the right: row 3"
-msgstr ""
+msgstr "Μεγάλο εξώφυλλο, πληροφορίες δεξιά: Σειρά 3"
 
 msgid "Large cover, info on the right: row 4"
-msgstr ""
+msgstr "Μεγάλο εξώφυλλο, πληροφορίες δεξιά: Σειρά 4"
 
 msgid "Large cover: size of the times below the bar"
-msgstr ""
+msgstr "Μεγάλο εξώφυλλο: Μέγεθος ώρας κάτω από τη μπάρα"
 
 msgid "Large cover: size of the title line"
-msgstr ""
+msgstr "Μεγάλο εξώφυλλο: Μέγεθος γραμμής τίτλου"
 
 msgid "Last"
 msgstr "Τελευταία"
@@ -3221,7 +3221,7 @@ msgid "Left"
 msgstr "Left"
 
 msgid "Length"
-msgstr ""
+msgstr "Διάρκεια"
 
 msgid "Library"
 msgstr "Βιβλιοθήκη"
@@ -3438,7 +3438,7 @@ msgid "Macedonian"
 msgstr "Βόρειας Μακεδονίας"
 
 msgid "Magenta"
-msgstr ""
+msgstr "Ματζέντα"
 
 msgid "Main"
 msgstr "Κύριο"
@@ -3492,7 +3492,7 @@ msgid "MediaFusion manifest URL (your own):"
 msgstr "MediaFusion manifest URL (δικό σας):"
 
 msgid "Medium (beside the title)"
-msgstr ""
+msgstr "Μεσαίο (δίπλα στον τίτλο)"
 
 msgid "Medtryx Marketing"
 msgstr "Medtryx Marketing"
@@ -3827,7 +3827,7 @@ msgid "No episodes found."
 msgstr "Δεν βρέθηκαν επεισόδια."
 
 msgid "No frame"
-msgstr ""
+msgstr "Χωρίς πλαίσιο"
 
 msgid "No free player available for this title."
 msgstr "Δεν υπάρχει διαθέσιμο δωρεάν πρόγραμμα αναπαραγωγής για αυτόν τον τίτλο."
@@ -4092,7 +4092,7 @@ msgid "Options (select language, clear search history, settings)"
 msgstr "Επιλογές (επιλογή γλώσσας, εκκαθάριση ιστορικού αναζήτησης, ρυθμίσεις)"
 
 msgid "Orange"
-msgstr ""
+msgstr "Πορτοκαλί"
 
 msgid "Order of user links:"
 msgstr "Σειρά συνδέσμων χρήστη:"
@@ -4150,7 +4150,7 @@ msgid "PLAY"
 msgstr "PLAY"
 
 msgid "PLAYED"
-msgstr ""
+msgstr "ΑΝΑΠΑΡΑΧΘΗΚΕ"
 
 msgid "PREVIOUS/NEXT"
 msgstr "PREVIOUS/NEXT"
@@ -4222,7 +4222,7 @@ msgid "People"
 msgstr "Άτομα"
 
 msgid "Percent"
-msgstr ""
+msgstr "Ποσοστό"
 
 msgid "Persian"
 msgstr "Περσικά"
@@ -4269,7 +4269,7 @@ msgid "Playback UHD :"
 msgstr "Αναπαραγωγή UHD:"
 
 msgid "Played"
-msgstr ""
+msgstr "Αναπαράχθηκε"
 
 msgid "Player Skin"
 msgstr "Θέμα προγράμματος αναπαραγωγής"
@@ -4518,10 +4518,10 @@ msgid "Programmes of the last days of the channels with an archive"
 msgstr "Προγράμματα των τελευταίων ημερών των καναλιών με αρχείο"
 
 msgid "Progress bar color on the LCD"
-msgstr ""
+msgstr "Χρώμα γραμμής προόδου στην οθόνη LCD"
 
 msgid "Progress bar frame on the LCD"
-msgstr ""
+msgstr "Πλαίσιο γραμμής προόδου στην οθόνη LCD"
 
 msgid "Promote item"
 msgstr "Προώθηση στοιχείου"
@@ -4560,7 +4560,7 @@ msgid "RED"
 msgstr "RED"
 
 msgid "REMAINING"
-msgstr ""
+msgstr "ΥΠΟΛΟΙΠΟ"
 
 msgid "REWIND"
 msgstr "REWIND"
@@ -4649,7 +4649,7 @@ msgid "Recon"
 msgstr "Αναγνώριση"
 
 msgid "Red"
-msgstr ""
+msgstr "Κόκκινο"
 
 msgid "Referee"
 msgstr "Διαιτητής"
@@ -4693,7 +4693,7 @@ msgid "Religion"
 msgstr "Θρησκεία"
 
 msgid "Remaining"
-msgstr ""
+msgstr "Υπόλοιπο"
 
 msgid "Remaining:"
 msgstr "Απομένουν:"
@@ -4869,7 +4869,7 @@ msgid "Safe search (restricted mode):"
 msgstr "Ασφαλής αναζήτηση (περιορισμένη λειτουργία):"
 
 msgid "Same as the bar"
-msgstr ""
+msgstr "Ίδιο με την μπάρα"
 
 msgid "Save"
 msgstr "Αποθήκευση"
@@ -4919,7 +4919,7 @@ msgid "Scroll"
 msgstr "Κύλιση"
 
 msgid "Scrolling title runs (then it stands still)"
-msgstr ""
+msgstr "Ο τίτλος κυλάει (και μετά παραμένει ακίνητος)"
 
 msgid "Search"
 msgstr "Αναζήτηση"
@@ -5245,7 +5245,7 @@ msgid "Show & Comedy"
 msgstr "Εκπομπές και Κωμωδία"
 
 msgid "Show E2iPlayer on the display"
-msgstr ""
+msgstr "Εμφάνιση του E2iPlayer στην οθόνη"
 
 msgid "Show E2iPlayer settings in system menu"
 msgstr "Εμφάνιση ρυθμίσεων E2iPlayer στο μενού συστήματος"
@@ -6848,13 +6848,13 @@ msgid "While live TV is running"
 msgstr "Κατά την αναπαραγωγή ζωντανής TV"
 
 msgid "White"
-msgstr ""
+msgstr "Λευκό"
 
 msgid "Whole file must be downloaded to start playback!"
 msgstr "Πρέπει να ληφθεί ολόκληρο το αρχείο για να ξεκινήσει η αναπαραγωγή!"
 
 msgid "Whole picture (black bars)"
-msgstr ""
+msgstr "Ολόκληρη εικόνα (μαύρες λωρίδες)"
 
 msgid "Wiki"
 msgstr "Wiki"
@@ -6952,7 +6952,7 @@ msgid "Year:"
 msgstr "Έτος:"
 
 msgid "Yellow"
-msgstr ""
+msgstr "Κίτρινο"
 
 msgid "Yes"
 msgstr "Ναι"
