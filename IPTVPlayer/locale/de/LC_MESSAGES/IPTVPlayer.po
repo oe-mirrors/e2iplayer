@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-11 10:48+0000\n"
-"PO-Revision-Date: 2026-11-09 22:28+0100\n"
+"PO-Revision-Date: 2026-11-11 12:45+0100\n"
 "Last-Translator: Masta2002\n"
 "Language-Team: oATV Team\n"
 "Language: de_DE\n"
@@ -843,7 +843,7 @@ msgid "Automatic"
 msgstr "Automatisch"
 
 msgid "Automatic (crop or blurred background)"
-msgstr ""
+msgstr "Automatisch (zuschneiden oder unscharfer Hintergrund)"
 
 msgid "Automatically turn on external subtitles"
 msgstr "Externe Untertitel automatisch einblenden"
@@ -932,7 +932,7 @@ msgid "Block wmv files"
 msgstr "Blockiere WMV Dateien"
 
 msgid "Blue"
-msgstr ""
+msgstr "Blau"
 
 msgid "Board Review"
 msgstr "Facharztprüfung-Vorbereitung"
@@ -1327,10 +1327,10 @@ msgid "Couples"
 msgstr "Paare"
 
 msgid "Cover on the LCD"
-msgstr ""
+msgstr "Cover auf dem LCD"
 
 msgid "Cover picture on the LCD"
-msgstr ""
+msgstr "Cover-Bild auf dem LCD"
 
 msgid "Cover size"
 msgstr "Cover-Größe"
@@ -1391,7 +1391,7 @@ msgid "Cut"
 msgstr "Ausschneiden"
 
 msgid "Cyan"
-msgstr ""
+msgstr "Cyan"
 
 msgid "Czech"
 msgstr "Tschechisch"
@@ -1403,7 +1403,7 @@ msgid "DLNA server of TorrServer"
 msgstr "DLNA-Server von TorrServer"
 
 msgid "DONE"
-msgstr ""
+msgstr "GESEHEN"
 
 msgid "DOWNLOAD ERROR"
 msgstr "FEHLER BEIM HERUNTERLADEN"
@@ -1896,7 +1896,7 @@ msgid "E2iPlayer virtual keyboard"
 msgstr "E2iPlayer Virtuelle Tastatur"
 
 msgid "ENDS"
-msgstr ""
+msgstr "ENDE"
 
 msgid ""
 "ERROR: pipeline could not be constructed: no element \"playbin2\" \n"
@@ -1988,10 +1988,10 @@ msgstr ""
 "Bitte melden Sie dieses Problem an %s"
 
 msgid "End time"
-msgstr ""
+msgstr "Endzeit"
 
 msgid "Endless"
-msgstr ""
+msgstr "Endlos"
 
 msgid "English"
 msgstr "Englisch"
@@ -2361,7 +2361,7 @@ msgid "Fill cache before playback"
 msgstr "Cache vor der Wiedergabe füllen"
 
 msgid "Fill the field (crop)"
-msgstr ""
+msgstr "Feld ausfüllen (zuschneiden)"
 
 msgid "Filler"
 msgstr "Filler"
@@ -2608,10 +2608,10 @@ msgid "Greek"
 msgstr "Griechisch"
 
 msgid "Green"
-msgstr ""
+msgstr "Grün"
 
 msgid "Grey"
-msgstr ""
+msgstr "Grau"
 
 #, python-format
 msgid "Group \"%s\" already exists."
@@ -3038,7 +3038,7 @@ msgid "LEFT/RIGHT at start/end of text - alternative way to switch panels"
 msgstr "LINKS/RECHTS am Anfang/Ende des Textes – alternative Möglichkeit zum Wechseln zwischen den Fenstern"
 
 msgid "LENGTH"
-msgstr ""
+msgstr "LÄNGE"
 
 msgid "Language"
 msgstr "Sprache"
@@ -3053,28 +3053,28 @@ msgid "Large"
 msgstr "Groß"
 
 msgid "Large (info on the right)"
-msgstr ""
+msgstr "Groß (Infos rechts)"
 
 msgid "Large (title below)"
-msgstr ""
+msgstr "Groß (Titel darunter)"
 
 msgid "Large cover, info on the right: row 1"
-msgstr ""
+msgstr "Großes Cover, Infos rechts: Zeile 1"
 
 msgid "Large cover, info on the right: row 2"
-msgstr ""
+msgstr "Großes Cover, Infos rechts: Zeile 2"
 
 msgid "Large cover, info on the right: row 3"
-msgstr ""
+msgstr "Großes Cover, Infos rechts: Zeile 3"
 
 msgid "Large cover, info on the right: row 4"
-msgstr ""
+msgstr "Großes Cover, Infos rechts: Zeile 4"
 
 msgid "Large cover: size of the times below the bar"
-msgstr ""
+msgstr "Großes Cover: Größe der Zeiten unter dem Balken"
 
 msgid "Large cover: size of the title line"
-msgstr ""
+msgstr "Großes Cover: Größe der Titelzeile"
 
 msgid "Last"
 msgstr "Letzte"
@@ -3218,7 +3218,7 @@ msgid "Left"
 msgstr "Links"
 
 msgid "Length"
-msgstr ""
+msgstr "Länge"
 
 msgid "Library"
 msgstr "Bibliothek"
@@ -3435,7 +3435,7 @@ msgid "Macedonian"
 msgstr "Mazedonisch"
 
 msgid "Magenta"
-msgstr ""
+msgstr "Magenta"
 
 msgid "Main"
 msgstr "Hauptseite"
@@ -3489,7 +3489,7 @@ msgid "MediaFusion manifest URL (your own):"
 msgstr "MediaFusion-Manifest-URL (Ihre eigene):"
 
 msgid "Medium (beside the title)"
-msgstr ""
+msgstr "Mittel (neben dem Titel)"
 
 msgid "Medtryx Marketing"
 msgstr "Medtryx-Marketing"
@@ -3824,7 +3824,7 @@ msgid "No episodes found."
 msgstr "Keine Episoden gefunden."
 
 msgid "No frame"
-msgstr ""
+msgstr "Kein Rahmen"
 
 msgid "No free player available for this title."
 msgstr "Für diesen Titel ist kein kostenloser Player verfügbar."
@@ -4089,7 +4089,7 @@ msgid "Options (select language, clear search history, settings)"
 msgstr "Optionen (Sprache wählen, Suchverlauf löschen, Einstellungen)"
 
 msgid "Orange"
-msgstr ""
+msgstr "Orange"
 
 msgid "Order of user links:"
 msgstr "Reihenfolge der Benutzerlinks:"
@@ -4147,7 +4147,7 @@ msgid "PLAY"
 msgstr "PLAY"
 
 msgid "PLAYED"
-msgstr ""
+msgstr "ABGESPIELT"
 
 msgid "PREVIOUS/NEXT"
 msgstr "VORHERIGE/NÄCHSTE"
@@ -4219,7 +4219,7 @@ msgid "People"
 msgstr "Personen"
 
 msgid "Percent"
-msgstr ""
+msgstr "Prozent"
 
 msgid "Persian"
 msgstr "Persisch"
@@ -4266,7 +4266,7 @@ msgid "Playback UHD :"
 msgstr "Wiedergabe UHD :"
 
 msgid "Played"
-msgstr ""
+msgstr "Abgespielt"
 
 msgid "Player Skin"
 msgstr "Player Skin"
@@ -4515,10 +4515,10 @@ msgid "Programmes of the last days of the channels with an archive"
 msgstr "Sendungen der letzten Tage von Sendern mit Archiv"
 
 msgid "Progress bar color on the LCD"
-msgstr ""
+msgstr "Farbe des Fortschrittsbalkens auf dem LCD"
 
 msgid "Progress bar frame on the LCD"
-msgstr ""
+msgstr "Rahmen des Fortschrittsbalkens auf dem LCD"
 
 msgid "Promote item"
 msgstr "Eintrag bevorzugen"
@@ -4557,7 +4557,7 @@ msgid "RED"
 msgstr "ROT"
 
 msgid "REMAINING"
-msgstr ""
+msgstr "VERBLEIBEND"
 
 msgid "REWIND"
 msgstr "ZURÜCKSPULEN"
@@ -4646,7 +4646,7 @@ msgid "Recon"
 msgstr "Rekonstruktion"
 
 msgid "Red"
-msgstr ""
+msgstr "Rot"
 
 msgid "Referee"
 msgstr "Schiedsrichter"
@@ -4690,7 +4690,7 @@ msgid "Religion"
 msgstr "Religion"
 
 msgid "Remaining"
-msgstr ""
+msgstr "Verbleibend"
 
 msgid "Remaining:"
 msgstr "Verbleibend:"
@@ -4866,7 +4866,7 @@ msgid "Safe search (restricted mode):"
 msgstr "Sichere Suche (eingeschränkter Modus):"
 
 msgid "Same as the bar"
-msgstr ""
+msgstr "Wie der Balken"
 
 msgid "Save"
 msgstr "Speichern"
@@ -4916,7 +4916,7 @@ msgid "Scroll"
 msgstr "Laufschrift"
 
 msgid "Scrolling title runs (then it stands still)"
-msgstr ""
+msgstr "Laufschrift-Durchläufe (danach steht der Titel still)"
 
 msgid "Search"
 msgstr "Suche"
@@ -5242,7 +5242,7 @@ msgid "Show & Comedy"
 msgstr "Show & Comedy"
 
 msgid "Show E2iPlayer on the display"
-msgstr ""
+msgstr "E2iPlayer im Display anzeigen"
 
 msgid "Show E2iPlayer settings in system menu"
 msgstr "Zeige E2iPlayer-Einstellungen im System-Menü"
@@ -6847,13 +6847,13 @@ msgid "While live TV is running"
 msgstr "Während Live-TV läuft"
 
 msgid "White"
-msgstr ""
+msgstr "Weiß"
 
 msgid "Whole file must be downloaded to start playback!"
 msgstr "Die gesamte Datei muss heruntergeladen werden, um die Wiedergabe zu starten!"
 
 msgid "Whole picture (black bars)"
-msgstr ""
+msgstr "Ganzes Bild (schwarze Balken)"
 
 msgid "Wiki"
 msgstr "Wiki"
@@ -6951,7 +6951,7 @@ msgid "Year:"
 msgstr "Jahr:"
 
 msgid "Yellow"
-msgstr ""
+msgstr "Gelb"
 
 msgid "Yes"
 msgstr "Ja"
