@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-09 21:19+0000\n"
+"POT-Creation-Date: 2026-11-11 10:48+0000\n"
 "PO-Revision-Date: 2026-10-24 23:30+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Finnish\n"
@@ -839,6 +839,9 @@ msgstr "Automaattisesti luotu"
 msgid "Automatic"
 msgstr "Automaattinen"
 
+msgid "Automatic (crop or blurred background)"
+msgstr ""
+
 msgid "Automatically turn on external subtitles"
 msgstr "Ota ulkoiset tekstitykset käyttöön automaattisesti"
 
@@ -924,6 +927,9 @@ msgstr "Musta näytönsäästäjä"
 
 msgid "Block wmv files"
 msgstr "Estä WMV-tiedostot"
+
+msgid "Blue"
+msgstr ""
 
 msgid "Board Review"
 msgstr "Erikoislääkärikokeeseen valmistautuminen"
@@ -1183,9 +1189,6 @@ msgstr "Kokoelmat"
 msgid "Colored text in titles and descriptions"
 msgstr "Värillinen teksti otsikoissa ja kuvauksissa"
 
-msgid "Column"
-msgstr ""
-
 msgid "Combine pull request merges with their commit"
 msgstr "Yhdistä pull requestien yhdistämiset niiden committiin"
 
@@ -1320,7 +1323,10 @@ msgstr "Maa:"
 msgid "Couples"
 msgstr "Pariskunnat"
 
-msgid "Cover on the LCD summary screen"
+msgid "Cover on the LCD"
+msgstr ""
+
+msgid "Cover picture on the LCD"
 msgstr ""
 
 msgid "Cover size"
@@ -1328,9 +1334,6 @@ msgstr ""
 
 msgid "Create Enigma2 .cuts chapter marks"
 msgstr "Luo Enigma2 .cuts -kappalemerkit"
-
-msgid "Create LCD/VFD summary screen"
-msgstr "Luo LCD/VFD-yhteenvetonäyttö"
 
 msgid "Create MKV"
 msgstr "Luo MKV"
@@ -1384,6 +1387,9 @@ msgstr "Nykyinen kohde ei ole kanava."
 msgid "Cut"
 msgstr "Leikkaa"
 
+msgid "Cyan"
+msgstr ""
+
 msgid "Czech"
 msgstr "Tšekki"
 
@@ -1392,6 +1398,9 @@ msgstr "DASH/mpd"
 
 msgid "DLNA server of TorrServer"
 msgstr "TorrServerin DLNA-palvelin"
+
+msgid "DONE"
+msgstr ""
 
 msgid "DOWNLOAD ERROR"
 msgstr "LATAUSVIRHE"
@@ -1883,6 +1892,9 @@ msgstr "E2iPlayer on vain erikoistunut verkkoselain. Se ei itse tarjoa mitään 
 msgid "E2iPlayer virtual keyboard"
 msgstr "E2iPlayerin virtuaalinäppäimistö"
 
+msgid "ENDS"
+msgstr ""
+
 msgid ""
 "ERROR: pipeline could not be constructed: no element \"playbin2\" \n"
 "Please check if gstreamer plugins are available in your system."
@@ -1971,6 +1983,12 @@ msgid ""
 msgstr ""
 "Salausfunktion nimen poiminta epäonnistui!\n"
 "Ilmoita ongelmasta osoitteeseen %s"
+
+msgid "End time"
+msgstr ""
+
+msgid "Endless"
+msgstr ""
 
 msgid "English"
 msgstr "Englanti"
@@ -2339,6 +2357,9 @@ msgstr "Tiedostot"
 msgid "Fill cache before playback"
 msgstr "Täytä välimuisti ennen toistoa"
 
+msgid "Fill the field (crop)"
+msgstr ""
+
 msgid "Filler"
 msgstr "Täytejaksot"
 
@@ -2582,6 +2603,12 @@ msgstr "Graafinen palveluvalitsin"
 
 msgid "Greek"
 msgstr "Kreikka"
+
+msgid "Green"
+msgstr ""
+
+msgid "Grey"
+msgstr ""
 
 #, python-format
 msgid "Group \"%s\" already exists."
@@ -3007,6 +3034,9 @@ msgstr ""
 msgid "LEFT/RIGHT at start/end of text - alternative way to switch panels"
 msgstr "VASEN/OIKEA tekstin alussa/lopussa - vaihtoehtoinen tapa vaihtaa paneelia"
 
+msgid "LENGTH"
+msgstr ""
+
 msgid "Language"
 msgstr "Kieli"
 
@@ -3017,6 +3047,30 @@ msgid "Language:"
 msgstr "Kieli:"
 
 msgid "Large"
+msgstr ""
+
+msgid "Large (info on the right)"
+msgstr ""
+
+msgid "Large (title below)"
+msgstr ""
+
+msgid "Large cover, info on the right: row 1"
+msgstr ""
+
+msgid "Large cover, info on the right: row 2"
+msgstr ""
+
+msgid "Large cover, info on the right: row 3"
+msgstr ""
+
+msgid "Large cover, info on the right: row 4"
+msgstr ""
+
+msgid "Large cover: size of the times below the bar"
+msgstr ""
+
+msgid "Large cover: size of the title line"
 msgstr ""
 
 msgid "Last"
@@ -3159,6 +3213,9 @@ msgstr "Luennoitsijat"
 
 msgid "Left"
 msgstr "Vasen"
+
+msgid "Length"
+msgstr ""
 
 msgid "Library"
 msgstr "Kirjasto"
@@ -3374,6 +3431,9 @@ msgstr "MP3Quran suora radio"
 msgid "Macedonian"
 msgstr ""
 
+msgid "Magenta"
+msgstr ""
+
 msgid "Main"
 msgstr "Etusivu"
 
@@ -3424,6 +3484,9 @@ msgstr "Torrentin enimmäiskoko:"
 
 msgid "MediaFusion manifest URL (your own):"
 msgstr "MediaFusion-manifestin URL (oma):"
+
+msgid "Medium (beside the title)"
+msgstr ""
 
 msgid "Medtryx Marketing"
 msgstr "Medtryx-markkinointi"
@@ -3757,6 +3820,9 @@ msgstr "Jaksoja ei ole vielä saatavilla."
 msgid "No episodes found."
 msgstr "Jaksoja ei löytynyt."
 
+msgid "No frame"
+msgstr ""
+
 msgid "No free player available for this title."
 msgstr "Tälle nimikkeelle ei ole saatavilla ilmaista soitinta."
 
@@ -4019,6 +4085,9 @@ msgstr "Valinnat"
 msgid "Options (select language, clear search history, settings)"
 msgstr "Valinnat (valitse kieli, tyhjennä hakuhistoria, asetukset)"
 
+msgid "Orange"
+msgstr ""
+
 msgid "Order of user links:"
 msgstr "Käyttäjälinkkien järjestys:"
 
@@ -4073,6 +4142,9 @@ msgstr "ODOTTAA"
 
 msgid "PLAY"
 msgstr "TOISTA"
+
+msgid "PLAYED"
+msgstr ""
 
 msgid "PREVIOUS/NEXT"
 msgstr "EDELLINEN/SEURAAVA"
@@ -4143,6 +4215,9 @@ msgstr "Lastentaudit"
 msgid "People"
 msgstr "Henkilöt"
 
+msgid "Percent"
+msgstr ""
+
 msgid "Persian"
 msgstr ""
 
@@ -4186,6 +4261,9 @@ msgstr "Toista soittimella [%s]"
 
 msgid "Playback UHD :"
 msgstr "UHD-toisto :"
+
+msgid "Played"
+msgstr ""
 
 msgid "Player Skin"
 msgstr "Soittimen ulkoasu"
@@ -4433,6 +4511,12 @@ msgstr "Ohjelmat"
 msgid "Programmes of the last days of the channels with an archive"
 msgstr "Arkistollisten kanavien viime päivien ohjelmat"
 
+msgid "Progress bar color on the LCD"
+msgstr ""
+
+msgid "Progress bar frame on the LCD"
+msgstr ""
+
 msgid "Promote item"
 msgstr "Nosta kohdetta"
 
@@ -4468,6 +4552,9 @@ msgstr "RAM-puskurin koko [MB] verkkoprotokollille"
 
 msgid "RED"
 msgstr "PUNAINEN"
+
+msgid "REMAINING"
+msgstr ""
 
 msgid "REWIND"
 msgstr "KELAA TAAKSE"
@@ -4555,6 +4642,9 @@ msgstr "Suositellut"
 msgid "Recon"
 msgstr "Rekonstruktio"
 
+msgid "Red"
+msgstr ""
+
 msgid "Referee"
 msgstr "Erotuomari"
 
@@ -4595,6 +4685,9 @@ msgstr "Osuvuus"
 
 msgid "Religion"
 msgstr "Uskonto"
+
+msgid "Remaining"
+msgstr ""
 
 msgid "Remaining:"
 msgstr "Jäljellä:"
@@ -4769,6 +4862,9 @@ msgstr "PYSÄYTETTY"
 msgid "Safe search (restricted mode):"
 msgstr "Turvallinen haku (rajoitettu tila):"
 
+msgid "Same as the bar"
+msgstr ""
+
 msgid "Save"
 msgstr "Tallenna"
 
@@ -4814,6 +4910,9 @@ msgid "Script finished."
 msgstr "Skripti valmis."
 
 msgid "Scroll"
+msgstr ""
+
+msgid "Scrolling title runs (then it stands still)"
 msgstr ""
 
 msgid "Search"
@@ -5138,6 +5237,9 @@ msgstr "Näytä ryhmän kaikkien YouTube-kanavien \"Uusimmat videot\""
 
 msgid "Show & Comedy"
 msgstr "Show ja komedia"
+
+msgid "Show E2iPlayer on the display"
+msgstr ""
 
 msgid "Show E2iPlayer settings in system menu"
 msgstr "Näytä E2iPlayerin asetukset järjestelmävalikossa"
@@ -6736,8 +6838,14 @@ msgstr "Kun enimmäismäärä saavutetaan"
 msgid "While live TV is running"
 msgstr "Kun suora TV on käynnissä"
 
+msgid "White"
+msgstr ""
+
 msgid "Whole file must be downloaded to start playback!"
 msgstr "Koko tiedosto on ladattava ennen toiston aloittamista!"
+
+msgid "Whole picture (black bars)"
+msgstr ""
 
 msgid "Wiki"
 msgstr "Wiki"
@@ -6833,6 +6941,9 @@ msgstr "Vuosi %s"
 
 msgid "Year:"
 msgstr "Vuosi:"
+
+msgid "Yellow"
+msgstr ""
 
 msgid "Yes"
 msgstr "Kyllä"

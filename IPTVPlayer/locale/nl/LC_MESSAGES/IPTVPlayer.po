@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-09 21:19+0000\n"
+"POT-Creation-Date: 2026-11-11 10:48+0000\n"
 "PO-Revision-Date: 2026-02-02 21:43+0100\n"
 "Last-Translator: Snoete\n"
 "Language-Team: Dutch\n"
@@ -840,6 +840,9 @@ msgstr "Automatisch gegenereerd"
 msgid "Automatic"
 msgstr "Automatisch"
 
+msgid "Automatic (crop or blurred background)"
+msgstr ""
+
 msgid "Automatically turn on external subtitles"
 msgstr "Schakel automatisch externe ondertitels in"
 
@@ -925,6 +928,9 @@ msgstr "Zwarte schermbeveiliging"
 
 msgid "Block wmv files"
 msgstr "Wmv-bestanden blokkeren"
+
+msgid "Blue"
+msgstr ""
 
 msgid "Board Review"
 msgstr "Board-examenvoorbereiding"
@@ -1184,9 +1190,6 @@ msgstr "Collecties"
 msgid "Colored text in titles and descriptions"
 msgstr "Gekleurde tekst in titels en beschrijvingen"
 
-msgid "Column"
-msgstr ""
-
 msgid "Combine pull request merges with their commit"
 msgstr "Pull-request-merges samenvoegen met hun commit"
 
@@ -1321,7 +1324,10 @@ msgstr "Land:"
 msgid "Couples"
 msgstr "Koppels"
 
-msgid "Cover on the LCD summary screen"
+msgid "Cover on the LCD"
+msgstr ""
+
+msgid "Cover picture on the LCD"
 msgstr ""
 
 msgid "Cover size"
@@ -1329,9 +1335,6 @@ msgstr ""
 
 msgid "Create Enigma2 .cuts chapter marks"
 msgstr "Enigma2 .cuts-hoofdstukmarkeringen aanmaken"
-
-msgid "Create LCD/VFD summary screen"
-msgstr "Samenvattingsscherm voor LCD/VFD aanmaken"
 
 msgid "Create MKV"
 msgstr "MKV aanmaken"
@@ -1385,6 +1388,9 @@ msgstr "Het huidige item is geen kanaal."
 msgid "Cut"
 msgstr "Knippen"
 
+msgid "Cyan"
+msgstr ""
+
 msgid "Czech"
 msgstr "Tsjechisch"
 
@@ -1393,6 +1399,9 @@ msgstr "DASH/mpd"
 
 msgid "DLNA server of TorrServer"
 msgstr "DLNA-server van TorrServer"
+
+msgid "DONE"
+msgstr ""
 
 msgid "DOWNLOAD ERROR"
 msgstr "DOWNLOADFOUT"
@@ -1884,6 +1893,9 @@ msgstr "E2iPlayer is slechts een gespecialiseerde webbrowser. Het host zelf geen
 msgid "E2iPlayer virtual keyboard"
 msgstr "Virtueel toetsenbord van E2iPlayer"
 
+msgid "ENDS"
+msgstr ""
+
 msgid ""
 "ERROR: pipeline could not be constructed: no element \"playbin2\" \n"
 "Please check if gstreamer plugins are available in your system."
@@ -1972,6 +1984,12 @@ msgid ""
 msgstr ""
 "Coderingsfunctie naam extractie mislukt!\n"
 "Meld het probleem bij %s"
+
+msgid "End time"
+msgstr ""
+
+msgid "Endless"
+msgstr ""
 
 msgid "English"
 msgstr "Engels"
@@ -2340,6 +2358,9 @@ msgstr "Bestanden"
 msgid "Fill cache before playback"
 msgstr "Cache vullen vóór het afspelen"
 
+msgid "Fill the field (crop)"
+msgstr ""
+
 msgid "Filler"
 msgstr "Filler"
 
@@ -2583,6 +2604,12 @@ msgstr "Grafische dienstenkeuze"
 
 msgid "Greek"
 msgstr "Grieks"
+
+msgid "Green"
+msgstr ""
+
+msgid "Grey"
+msgstr ""
 
 #, python-format
 msgid "Group \"%s\" already exists."
@@ -3008,6 +3035,9 @@ msgstr ""
 msgid "LEFT/RIGHT at start/end of text - alternative way to switch panels"
 msgstr "LINKS/RECHTS aan begin/einde van de tekst - alternatieve manier om tussen panelen te wisselen"
 
+msgid "LENGTH"
+msgstr ""
+
 msgid "Language"
 msgstr "Taal"
 
@@ -3018,6 +3048,30 @@ msgid "Language:"
 msgstr "Taal:"
 
 msgid "Large"
+msgstr ""
+
+msgid "Large (info on the right)"
+msgstr ""
+
+msgid "Large (title below)"
+msgstr ""
+
+msgid "Large cover, info on the right: row 1"
+msgstr ""
+
+msgid "Large cover, info on the right: row 2"
+msgstr ""
+
+msgid "Large cover, info on the right: row 3"
+msgstr ""
+
+msgid "Large cover, info on the right: row 4"
+msgstr ""
+
+msgid "Large cover: size of the times below the bar"
+msgstr ""
+
+msgid "Large cover: size of the title line"
 msgstr ""
 
 msgid "Last"
@@ -3160,6 +3214,9 @@ msgstr "Docenten"
 
 msgid "Left"
 msgstr "Links"
+
+msgid "Length"
+msgstr ""
 
 msgid "Library"
 msgstr "Bibliotheek"
@@ -3375,6 +3432,9 @@ msgstr "MP3Quran liveradio"
 msgid "Macedonian"
 msgstr ""
 
+msgid "Magenta"
+msgstr ""
+
 msgid "Main"
 msgstr "Hoofdpagina"
 
@@ -3425,6 +3485,9 @@ msgstr "Maximale torrentgrootte:"
 
 msgid "MediaFusion manifest URL (your own):"
 msgstr "MediaFusion-manifest-URL (uw eigen):"
+
+msgid "Medium (beside the title)"
+msgstr ""
 
 msgid "Medtryx Marketing"
 msgstr "Medtryx Marketing"
@@ -3758,6 +3821,9 @@ msgstr "Nog geen afleveringen beschikbaar."
 msgid "No episodes found."
 msgstr "Geen afleveringen gevonden."
 
+msgid "No frame"
+msgstr ""
+
 msgid "No free player available for this title."
 msgstr "Geen gratis speler beschikbaar voor deze titel."
 
@@ -4020,6 +4086,9 @@ msgstr "Opties"
 msgid "Options (select language, clear search history, settings)"
 msgstr "Opties (taal kiezen, zoekgeschiedenis wissen, instellingen)"
 
+msgid "Orange"
+msgstr ""
+
 msgid "Order of user links:"
 msgstr "Volgorde van gebruikerslinks:"
 
@@ -4074,6 +4143,9 @@ msgstr "IN BEHANDELING"
 
 msgid "PLAY"
 msgstr "PLAY"
+
+msgid "PLAYED"
+msgstr ""
 
 msgid "PREVIOUS/NEXT"
 msgstr "PREVIOUS/NEXT"
@@ -4144,6 +4216,9 @@ msgstr "Kindergeneeskunde"
 msgid "People"
 msgstr "Personen"
 
+msgid "Percent"
+msgstr ""
+
 msgid "Persian"
 msgstr ""
 
@@ -4187,6 +4262,9 @@ msgstr "Afspelen met speler [%s]"
 
 msgid "Playback UHD :"
 msgstr "Afspelen UHD :"
+
+msgid "Played"
+msgstr ""
 
 msgid "Player Skin"
 msgstr "Spelerskin"
@@ -4434,6 +4512,12 @@ msgstr "Programma's"
 msgid "Programmes of the last days of the channels with an archive"
 msgstr "Programma's van de afgelopen dagen van zenders met een archief"
 
+msgid "Progress bar color on the LCD"
+msgstr ""
+
+msgid "Progress bar frame on the LCD"
+msgstr ""
+
 msgid "Promote item"
 msgstr "Item voorrang geven"
 
@@ -4469,6 +4553,9 @@ msgstr "RAM-buffergrootte [MB] voor netwerkprotocollen"
 
 msgid "RED"
 msgstr "ROOD"
+
+msgid "REMAINING"
+msgstr ""
 
 msgid "REWIND"
 msgstr "REWIND"
@@ -4556,6 +4643,9 @@ msgstr "Aanbevolen"
 msgid "Recon"
 msgstr "Reconstructie"
 
+msgid "Red"
+msgstr ""
+
 msgid "Referee"
 msgstr "Scheidsrechter"
 
@@ -4596,6 +4686,9 @@ msgstr "Relevantie"
 
 msgid "Religion"
 msgstr "Religie"
+
+msgid "Remaining"
+msgstr ""
 
 msgid "Remaining:"
 msgstr "Resterend:"
@@ -4770,6 +4863,9 @@ msgstr "GESTOPT"
 msgid "Safe search (restricted mode):"
 msgstr "Veilig zoeken (beperkte modus):"
 
+msgid "Same as the bar"
+msgstr ""
+
 msgid "Save"
 msgstr "Opslaan"
 
@@ -4815,6 +4911,9 @@ msgid "Script finished."
 msgstr "Script gereed."
 
 msgid "Scroll"
+msgstr ""
+
+msgid "Scrolling title runs (then it stands still)"
 msgstr ""
 
 msgid "Search"
@@ -5139,6 +5238,9 @@ msgstr "\"Nieuwste video's\" van alle YouTube-kanalen in een groep tonen"
 
 msgid "Show & Comedy"
 msgstr "Show & comedy"
+
+msgid "Show E2iPlayer on the display"
+msgstr ""
 
 msgid "Show E2iPlayer settings in system menu"
 msgstr "E2iPlayer-instellingen in het systeemmenu tonen"
@@ -6737,8 +6839,14 @@ msgstr "Wanneer het maximum is bereikt"
 msgid "While live TV is running"
 msgstr "Terwijl live-tv loopt"
 
+msgid "White"
+msgstr ""
+
 msgid "Whole file must be downloaded to start playback!"
 msgstr "Het hele bestand moet gedownload zijn om het af te spelen!"
+
+msgid "Whole picture (black bars)"
+msgstr ""
 
 msgid "Wiki"
 msgstr "Wiki"
@@ -6834,6 +6942,9 @@ msgstr "Jaar %s"
 
 msgid "Year:"
 msgstr "Jaar:"
+
+msgid "Yellow"
+msgstr ""
 
 msgid "Yes"
 msgstr "Ja"

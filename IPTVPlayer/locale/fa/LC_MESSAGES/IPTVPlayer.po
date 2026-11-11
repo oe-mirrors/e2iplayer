@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-09 21:19+0000\n"
+"POT-Creation-Date: 2026-11-11 10:48+0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Persian Prince <persianpros@gmail.com>\n"
 "Language-Team: IPTVPlayer\n"
@@ -842,6 +842,9 @@ msgstr "تولید خودکار"
 msgid "Automatic"
 msgstr "خودکار"
 
+msgid "Automatic (crop or blurred background)"
+msgstr ""
+
 msgid "Automatically turn on external subtitles"
 msgstr "روشن کردن خودکار زیرنویس خارجی"
 
@@ -927,6 +930,9 @@ msgstr "محافظ صفحهٔ سیاه"
 
 msgid "Block wmv files"
 msgstr "مسدود کردن فایل‌های wmv"
+
+msgid "Blue"
+msgstr ""
 
 msgid "Board Review"
 msgstr "مرور بورد"
@@ -1186,9 +1192,6 @@ msgstr "مجموعه‌ها"
 msgid "Colored text in titles and descriptions"
 msgstr "متن رنگی در عنوان‌ها و توضیحات"
 
-msgid "Column"
-msgstr ""
-
 msgid "Combine pull request merges with their commit"
 msgstr "ادغام merge های pull request با commit مربوطه"
 
@@ -1323,7 +1326,10 @@ msgstr "کشور:"
 msgid "Couples"
 msgstr "زوج‌ها"
 
-msgid "Cover on the LCD summary screen"
+msgid "Cover on the LCD"
+msgstr ""
+
+msgid "Cover picture on the LCD"
 msgstr ""
 
 msgid "Cover size"
@@ -1331,9 +1337,6 @@ msgstr ""
 
 msgid "Create Enigma2 .cuts chapter marks"
 msgstr "ایجاد نشانه‌های فصل .cuts برای Enigma2"
-
-msgid "Create LCD/VFD summary screen"
-msgstr "ایجاد صفحهٔ خلاصه LCD/VFD"
 
 msgid "Create MKV"
 msgstr "ایجاد MKV"
@@ -1387,6 +1390,9 @@ msgstr "مورد فعلی یک کانال نیست."
 msgid "Cut"
 msgstr "برش"
 
+msgid "Cyan"
+msgstr ""
+
 msgid "Czech"
 msgstr "چکی"
 
@@ -1395,6 +1401,9 @@ msgstr "DASH/mpd"
 
 msgid "DLNA server of TorrServer"
 msgstr "سرور DLNA در TorrServer"
+
+msgid "DONE"
+msgstr ""
 
 msgid "DOWNLOAD ERROR"
 msgstr "خطای دانلود"
@@ -1886,6 +1895,9 @@ msgstr "E2iPlayer فقط یک مرورگر وب تخصصی است و هیچ مح
 msgid "E2iPlayer virtual keyboard"
 msgstr "صفحه‌کلید مجازی E2iPlayer"
 
+msgid "ENDS"
+msgstr ""
+
 msgid ""
 "ERROR: pipeline could not be constructed: no element \"playbin2\" \n"
 "Please check if gstreamer plugins are available in your system."
@@ -1974,6 +1986,12 @@ msgid ""
 msgstr ""
 "استخراج نام تابع رمزگذاری ناموفق بود!\n"
 "لطفاً مشکل را به %s گزارش دهید"
+
+msgid "End time"
+msgstr ""
+
+msgid "Endless"
+msgstr ""
 
 msgid "English"
 msgstr "انگلیسی"
@@ -2342,6 +2360,9 @@ msgstr "فایل‌ها"
 msgid "Fill cache before playback"
 msgstr "پر کردن حافظهٔ نهان پیش از پخش"
 
+msgid "Fill the field (crop)"
+msgstr ""
+
 msgid "Filler"
 msgstr "قسمت فرعی"
 
@@ -2585,6 +2606,12 @@ msgstr "انتخابگر سرویس‌های گرافیکی"
 
 msgid "Greek"
 msgstr "یونانی"
+
+msgid "Green"
+msgstr ""
+
+msgid "Grey"
+msgstr ""
 
 #, python-format
 msgid "Group \"%s\" already exists."
@@ -3010,6 +3037,9 @@ msgstr ""
 msgid "LEFT/RIGHT at start/end of text - alternative way to switch panels"
 msgstr "چپ/راست در ابتدا/انتهای متن - روش جایگزین برای جابه‌جایی بین پنل‌ها"
 
+msgid "LENGTH"
+msgstr ""
+
 msgid "Language"
 msgstr "زبان"
 
@@ -3020,6 +3050,30 @@ msgid "Language:"
 msgstr "زبان:"
 
 msgid "Large"
+msgstr ""
+
+msgid "Large (info on the right)"
+msgstr ""
+
+msgid "Large (title below)"
+msgstr ""
+
+msgid "Large cover, info on the right: row 1"
+msgstr ""
+
+msgid "Large cover, info on the right: row 2"
+msgstr ""
+
+msgid "Large cover, info on the right: row 3"
+msgstr ""
+
+msgid "Large cover, info on the right: row 4"
+msgstr ""
+
+msgid "Large cover: size of the times below the bar"
+msgstr ""
+
+msgid "Large cover: size of the title line"
 msgstr ""
 
 msgid "Last"
@@ -3162,6 +3216,9 @@ msgstr "مدرسان"
 
 msgid "Left"
 msgstr "چپ"
+
+msgid "Length"
+msgstr ""
 
 msgid "Library"
 msgstr "کتابخانه"
@@ -3377,6 +3434,9 @@ msgstr "رادیوی زنده MP3Quran"
 msgid "Macedonian"
 msgstr ""
 
+msgid "Magenta"
+msgstr ""
+
 msgid "Main"
 msgstr "اصلی"
 
@@ -3427,6 +3487,9 @@ msgstr "حداکثر اندازهٔ تورنت:"
 
 msgid "MediaFusion manifest URL (your own):"
 msgstr "نشانی manifest در MediaFusion (مال خودتان):"
+
+msgid "Medium (beside the title)"
+msgstr ""
 
 msgid "Medtryx Marketing"
 msgstr "Medtryx Marketing"
@@ -3760,6 +3823,9 @@ msgstr "هنوز قسمتی در دسترس نیست."
 msgid "No episodes found."
 msgstr "هیچ قسمتی پیدا نشد."
 
+msgid "No frame"
+msgstr ""
+
 msgid "No free player available for this title."
 msgstr "هیچ پخش‌کننده رایگانی برای این عنوان در دسترس نیست."
 
@@ -4022,6 +4088,9 @@ msgstr "گزینه‌ها"
 msgid "Options (select language, clear search history, settings)"
 msgstr "گزینه‌ها (انتخاب زبان، پاک کردن تاریخچه جستجو، تنظیمات)"
 
+msgid "Orange"
+msgstr ""
+
 msgid "Order of user links:"
 msgstr "ترتیب پیوندهای کاربر:"
 
@@ -4076,6 +4145,9 @@ msgstr "در انتظار"
 
 msgid "PLAY"
 msgstr "پخش"
+
+msgid "PLAYED"
+msgstr ""
 
 msgid "PREVIOUS/NEXT"
 msgstr "PREVIOUS/NEXT"
@@ -4146,6 +4218,9 @@ msgstr "کودکان"
 msgid "People"
 msgstr "افراد"
 
+msgid "Percent"
+msgstr ""
+
 msgid "Persian"
 msgstr ""
 
@@ -4189,6 +4264,9 @@ msgstr "پخش با پخش‌کننده [%s]"
 
 msgid "Playback UHD :"
 msgstr "پخش UHD :"
+
+msgid "Played"
+msgstr ""
 
 msgid "Player Skin"
 msgstr "پوسته پخش‌کننده"
@@ -4436,6 +4514,12 @@ msgstr "برنامه‌ها"
 msgid "Programmes of the last days of the channels with an archive"
 msgstr "برنامه‌های روزهای اخیر کانال‌های دارای آرشیو"
 
+msgid "Progress bar color on the LCD"
+msgstr ""
+
+msgid "Progress bar frame on the LCD"
+msgstr ""
+
 msgid "Promote item"
 msgstr "انتقال مورد به بالا"
 
@@ -4471,6 +4555,9 @@ msgstr "اندازه بافر RAM [MB] برای پروتکل‌های شبکه"
 
 msgid "RED"
 msgstr "قرمز"
+
+msgid "REMAINING"
+msgstr ""
 
 msgid "REWIND"
 msgstr "عقب"
@@ -4558,6 +4645,9 @@ msgstr "پیشنهادی"
 msgid "Recon"
 msgstr "شناسایی"
 
+msgid "Red"
+msgstr ""
+
 msgid "Referee"
 msgstr "داور"
 
@@ -4598,6 +4688,9 @@ msgstr "مرتبط‌ترین"
 
 msgid "Religion"
 msgstr "دین"
+
+msgid "Remaining"
+msgstr ""
 
 msgid "Remaining:"
 msgstr "باقی‌مانده:"
@@ -4772,6 +4865,9 @@ msgstr "متوقف شد"
 msgid "Safe search (restricted mode):"
 msgstr "جستجوی امن (حالت محدود):"
 
+msgid "Same as the bar"
+msgstr ""
+
 msgid "Save"
 msgstr "ذخیره"
 
@@ -4817,6 +4913,9 @@ msgid "Script finished."
 msgstr "اسکریپت به پایان رسید."
 
 msgid "Scroll"
+msgstr ""
+
+msgid "Scrolling title runs (then it stands still)"
 msgstr ""
 
 msgid "Search"
@@ -5141,6 +5240,9 @@ msgstr "نمایش «جدیدترین ویدیوها» از همه کانال‌
 
 msgid "Show & Comedy"
 msgstr "شو و کمدی"
+
+msgid "Show E2iPlayer on the display"
+msgstr ""
 
 msgid "Show E2iPlayer settings in system menu"
 msgstr "نمایش تنظیمات E2iPlayer در منوی سیستم"
@@ -6739,8 +6841,14 @@ msgstr "هنگام رسیدن به حداکثر"
 msgid "While live TV is running"
 msgstr "هنگام پخش تلویزیون زنده"
 
+msgid "White"
+msgstr ""
+
 msgid "Whole file must be downloaded to start playback!"
 msgstr "برای شروع پخش باید کل فایل دانلود شود!"
+
+msgid "Whole picture (black bars)"
+msgstr ""
 
 msgid "Wiki"
 msgstr "ویکی"
@@ -6836,6 +6944,9 @@ msgstr "سال %s"
 
 msgid "Year:"
 msgstr "سال:"
+
+msgid "Yellow"
+msgstr ""
 
 msgid "Yes"
 msgstr "بله"

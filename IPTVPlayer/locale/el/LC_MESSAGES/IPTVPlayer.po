@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-09 21:19+0000\n"
+"POT-Creation-Date: 2026-11-11 10:48+0000\n"
 "PO-Revision-Date: 2026-11-10 23:33+0200\n"
 "Last-Translator: \n"
 "Language-Team: giorbak\n"
@@ -845,6 +845,9 @@ msgstr "Αυτόματη δημιουργία"
 msgid "Automatic"
 msgstr "Αυτόματο"
 
+msgid "Automatic (crop or blurred background)"
+msgstr ""
+
 msgid "Automatically turn on external subtitles"
 msgstr "Αυτόματη ενεργοποίηση εξωτερικών υποτίτλων"
 
@@ -930,6 +933,9 @@ msgstr "Μαύρη προφύλαξη οθόνης"
 
 msgid "Block wmv files"
 msgstr "Αποκλεισμός αρχείων wmv"
+
+msgid "Blue"
+msgstr ""
 
 msgid "Board Review"
 msgstr "Επισκόπηση πίνακα"
@@ -1189,9 +1195,6 @@ msgstr "Συλλογές"
 msgid "Colored text in titles and descriptions"
 msgstr "Χρωματιστό κείμενο σε τίτλους και περιγραφές"
 
-msgid "Column"
-msgstr "Στήλη"
-
 msgid "Combine pull request merges with their commit"
 msgstr "Συγχώνευση των pull request με το commit τους"
 
@@ -1326,17 +1329,17 @@ msgstr "Χώρα:"
 msgid "Couples"
 msgstr "Ζευγάρια"
 
-msgid "Cover on the LCD summary screen"
-msgstr "Εξώφυλλο στην οθόνη σύνοψης LCD"
+msgid "Cover on the LCD"
+msgstr ""
+
+msgid "Cover picture on the LCD"
+msgstr ""
 
 msgid "Cover size"
 msgstr "Μέγεθος εξωφύλλου"
 
 msgid "Create Enigma2 .cuts chapter marks"
 msgstr "Δημιουργία δεικτών κεφαλαίων .cuts για το Enigma2"
-
-msgid "Create LCD/VFD summary screen"
-msgstr "Δημιουργία οθόνης σύνοψης LCD/VFD"
 
 msgid "Create MKV"
 msgstr "Δημιουργία MKV"
@@ -1390,6 +1393,9 @@ msgstr "Το τρέχον στοιχείο δεν είναι κανάλι."
 msgid "Cut"
 msgstr "Αποκοπή"
 
+msgid "Cyan"
+msgstr ""
+
 msgid "Czech"
 msgstr "Τσέχικα"
 
@@ -1398,6 +1404,9 @@ msgstr "DASH/mpd"
 
 msgid "DLNA server of TorrServer"
 msgstr "Διακομιστής DLNA του TorrServer"
+
+msgid "DONE"
+msgstr ""
 
 msgid "DOWNLOAD ERROR"
 msgstr "ΣΦΑΛΜΑ ΛΗΨΗΣ"
@@ -1889,6 +1898,9 @@ msgstr "Το E2iPlayer είναι απλώς ένας εξειδικευμένο
 msgid "E2iPlayer virtual keyboard"
 msgstr "Εικονικό πληκτρολόγιο E2iPlayer"
 
+msgid "ENDS"
+msgstr ""
+
 msgid ""
 "ERROR: pipeline could not be constructed: no element \"playbin2\" \n"
 "Please check if gstreamer plugins are available in your system."
@@ -1977,6 +1989,12 @@ msgid ""
 msgstr ""
 "Η εξαγωγή του ονόματος της συνάρτησης κρυπτογράφησης απέτυχε!\n"
 "Παρακαλώ αναφέρετε το πρόβλημα στο %s"
+
+msgid "End time"
+msgstr ""
+
+msgid "Endless"
+msgstr ""
 
 msgid "English"
 msgstr "Αγγλικά"
@@ -2345,6 +2363,9 @@ msgstr "Αρχεία"
 msgid "Fill cache before playback"
 msgstr "Συμπλήρωση της προσωρινής μνήμης πριν από την αναπαραγωγή"
 
+msgid "Fill the field (crop)"
+msgstr ""
+
 msgid "Filler"
 msgstr "Επεισόδια πλήρωσης"
 
@@ -2588,6 +2609,12 @@ msgstr "Επιλογέας γραφικών υπηρεσιών"
 
 msgid "Greek"
 msgstr "Ελληνικά"
+
+msgid "Green"
+msgstr ""
+
+msgid "Grey"
+msgstr ""
 
 #, python-format
 msgid "Group \"%s\" already exists."
@@ -3013,6 +3040,9 @@ msgstr "Μέγεθος γραμματοσειράς LCD"
 msgid "LEFT/RIGHT at start/end of text - alternative way to switch panels"
 msgstr "LEFT/RIGHT στην αρχή/τέλος του κειμένου - Εναλλακτικός τρόπος εναλλαγής πάνελ"
 
+msgid "LENGTH"
+msgstr ""
+
 msgid "Language"
 msgstr "Γλώσσα"
 
@@ -3024,6 +3054,30 @@ msgstr "Γλώσσα:"
 
 msgid "Large"
 msgstr "Μεγάλη"
+
+msgid "Large (info on the right)"
+msgstr ""
+
+msgid "Large (title below)"
+msgstr ""
+
+msgid "Large cover, info on the right: row 1"
+msgstr ""
+
+msgid "Large cover, info on the right: row 2"
+msgstr ""
+
+msgid "Large cover, info on the right: row 3"
+msgstr ""
+
+msgid "Large cover, info on the right: row 4"
+msgstr ""
+
+msgid "Large cover: size of the times below the bar"
+msgstr ""
+
+msgid "Large cover: size of the title line"
+msgstr ""
 
 msgid "Last"
 msgstr "Τελευταία"
@@ -3165,6 +3219,9 @@ msgstr "Ομιλητές"
 
 msgid "Left"
 msgstr "Left"
+
+msgid "Length"
+msgstr ""
 
 msgid "Library"
 msgstr "Βιβλιοθήκη"
@@ -3380,6 +3437,9 @@ msgstr "Ζωντανό ραδιόφωνο MP3Quran"
 msgid "Macedonian"
 msgstr "Βόρειας Μακεδονίας"
 
+msgid "Magenta"
+msgstr ""
+
 msgid "Main"
 msgstr "Κύριο"
 
@@ -3430,6 +3490,9 @@ msgstr "Μέγιστο μέγεθος torrent:"
 
 msgid "MediaFusion manifest URL (your own):"
 msgstr "MediaFusion manifest URL (δικό σας):"
+
+msgid "Medium (beside the title)"
+msgstr ""
 
 msgid "Medtryx Marketing"
 msgstr "Medtryx Marketing"
@@ -3763,6 +3826,9 @@ msgstr "Δεν υπάρχουν ακόμη διαθέσιμα επεισόδια
 msgid "No episodes found."
 msgstr "Δεν βρέθηκαν επεισόδια."
 
+msgid "No frame"
+msgstr ""
+
 msgid "No free player available for this title."
 msgstr "Δεν υπάρχει διαθέσιμο δωρεάν πρόγραμμα αναπαραγωγής για αυτόν τον τίτλο."
 
@@ -4025,6 +4091,9 @@ msgstr "Επιλογές"
 msgid "Options (select language, clear search history, settings)"
 msgstr "Επιλογές (επιλογή γλώσσας, εκκαθάριση ιστορικού αναζήτησης, ρυθμίσεις)"
 
+msgid "Orange"
+msgstr ""
+
 msgid "Order of user links:"
 msgstr "Σειρά συνδέσμων χρήστη:"
 
@@ -4079,6 +4148,9 @@ msgstr "ΕΚΚΡΕΜΕΙ"
 
 msgid "PLAY"
 msgstr "PLAY"
+
+msgid "PLAYED"
+msgstr ""
 
 msgid "PREVIOUS/NEXT"
 msgstr "PREVIOUS/NEXT"
@@ -4149,6 +4221,9 @@ msgstr "Παιδιατρική"
 msgid "People"
 msgstr "Άτομα"
 
+msgid "Percent"
+msgstr ""
+
 msgid "Persian"
 msgstr "Περσικά"
 
@@ -4192,6 +4267,9 @@ msgstr "Αναπαραγωγή με το πρόγραμμα αναπαραγωγ
 
 msgid "Playback UHD :"
 msgstr "Αναπαραγωγή UHD:"
+
+msgid "Played"
+msgstr ""
 
 msgid "Player Skin"
 msgstr "Θέμα προγράμματος αναπαραγωγής"
@@ -4439,6 +4517,12 @@ msgstr "Προγράμματα"
 msgid "Programmes of the last days of the channels with an archive"
 msgstr "Προγράμματα των τελευταίων ημερών των καναλιών με αρχείο"
 
+msgid "Progress bar color on the LCD"
+msgstr ""
+
+msgid "Progress bar frame on the LCD"
+msgstr ""
+
 msgid "Promote item"
 msgstr "Προώθηση στοιχείου"
 
@@ -4474,6 +4558,9 @@ msgstr "Μέγεθος προσωρινής αποθήκευσης RAM [MB] γι
 
 msgid "RED"
 msgstr "RED"
+
+msgid "REMAINING"
+msgstr ""
 
 msgid "REWIND"
 msgstr "REWIND"
@@ -4561,6 +4648,9 @@ msgstr "Προτεινόμενα"
 msgid "Recon"
 msgstr "Αναγνώριση"
 
+msgid "Red"
+msgstr ""
+
 msgid "Referee"
 msgstr "Διαιτητής"
 
@@ -4601,6 +4691,9 @@ msgstr "Σχετικότητα"
 
 msgid "Religion"
 msgstr "Θρησκεία"
+
+msgid "Remaining"
+msgstr ""
 
 msgid "Remaining:"
 msgstr "Απομένουν:"
@@ -4775,6 +4868,9 @@ msgstr "ΔΙΑΚΟΠΗΚΕ"
 msgid "Safe search (restricted mode):"
 msgstr "Ασφαλής αναζήτηση (περιορισμένη λειτουργία):"
 
+msgid "Same as the bar"
+msgstr ""
+
 msgid "Save"
 msgstr "Αποθήκευση"
 
@@ -4821,6 +4917,9 @@ msgstr "Το script ολοκληρώθηκε."
 
 msgid "Scroll"
 msgstr "Κύλιση"
+
+msgid "Scrolling title runs (then it stands still)"
+msgstr ""
 
 msgid "Search"
 msgstr "Αναζήτηση"
@@ -5144,6 +5243,9 @@ msgstr "Εμφάνιση \"Νεότερα βίντεο\" όλων των καν�
 
 msgid "Show & Comedy"
 msgstr "Εκπομπές και Κωμωδία"
+
+msgid "Show E2iPlayer on the display"
+msgstr ""
 
 msgid "Show E2iPlayer settings in system menu"
 msgstr "Εμφάνιση ρυθμίσεων E2iPlayer στο μενού συστήματος"
@@ -6745,8 +6847,14 @@ msgstr "Όταν επιτευχθεί το μέγιστο"
 msgid "While live TV is running"
 msgstr "Κατά την αναπαραγωγή ζωντανής TV"
 
+msgid "White"
+msgstr ""
+
 msgid "Whole file must be downloaded to start playback!"
 msgstr "Πρέπει να ληφθεί ολόκληρο το αρχείο για να ξεκινήσει η αναπαραγωγή!"
+
+msgid "Whole picture (black bars)"
+msgstr ""
 
 msgid "Wiki"
 msgstr "Wiki"
@@ -6842,6 +6950,9 @@ msgstr "Έτος %s"
 
 msgid "Year:"
 msgstr "Έτος:"
+
+msgid "Yellow"
+msgstr ""
 
 msgid "Yes"
 msgstr "Ναι"

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-09 21:19+0000\n"
+"POT-Creation-Date: 2026-11-11 10:48+0000\n"
 "PO-Revision-Date: 2026-10-08 20:17+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Bulgarian\n"
@@ -839,6 +839,9 @@ msgstr "Автоматично генерирани"
 msgid "Automatic"
 msgstr "Автоматично"
 
+msgid "Automatic (crop or blurred background)"
+msgstr ""
+
 msgid "Automatically turn on external subtitles"
 msgstr "Автоматично включване на външни субтитри"
 
@@ -924,6 +927,9 @@ msgstr "Черен скрийнсейвър"
 
 msgid "Block wmv files"
 msgstr "Блокиране на WMV файлове"
+
+msgid "Blue"
+msgstr ""
 
 msgid "Board Review"
 msgstr "Преглед за изпит"
@@ -1183,9 +1189,6 @@ msgstr "Колекции"
 msgid "Colored text in titles and descriptions"
 msgstr "Цветен текст в заглавия и описания"
 
-msgid "Column"
-msgstr ""
-
 msgid "Combine pull request merges with their commit"
 msgstr "Обединяване на сливанията на pull request с техния commit"
 
@@ -1320,7 +1323,10 @@ msgstr "Държава:"
 msgid "Couples"
 msgstr "Двойки"
 
-msgid "Cover on the LCD summary screen"
+msgid "Cover on the LCD"
+msgstr ""
+
+msgid "Cover picture on the LCD"
 msgstr ""
 
 msgid "Cover size"
@@ -1328,9 +1334,6 @@ msgstr ""
 
 msgid "Create Enigma2 .cuts chapter marks"
 msgstr "Създаване на маркери за глави Enigma2 .cuts"
-
-msgid "Create LCD/VFD summary screen"
-msgstr "Създаване на обобщаващ екран за LCD/VFD"
 
 msgid "Create MKV"
 msgstr "Създаване на MKV"
@@ -1384,6 +1387,9 @@ msgstr "Текущият запис не е канал."
 msgid "Cut"
 msgstr "Изрязване"
 
+msgid "Cyan"
+msgstr ""
+
 msgid "Czech"
 msgstr "Чешки"
 
@@ -1392,6 +1398,9 @@ msgstr "DASH/mpd"
 
 msgid "DLNA server of TorrServer"
 msgstr "DLNA сървър на TorrServer"
+
+msgid "DONE"
+msgstr ""
 
 msgid "DOWNLOAD ERROR"
 msgstr "ГРЕШКА ПРИ ИЗТЕГЛЯНЕ"
@@ -1883,6 +1892,9 @@ msgstr "E2iPlayer е само специализиран уеб браузър. 
 msgid "E2iPlayer virtual keyboard"
 msgstr "Виртуална клавиатура на E2iPlayer"
 
+msgid "ENDS"
+msgstr ""
+
 msgid ""
 "ERROR: pipeline could not be constructed: no element \"playbin2\" \n"
 "Please check if gstreamer plugins are available in your system."
@@ -1971,6 +1983,12 @@ msgid ""
 msgstr ""
 "Извличането на името на функцията за шифроване е неуспешно!\n"
 "Моля, съобщете за проблема на %s"
+
+msgid "End time"
+msgstr ""
+
+msgid "Endless"
+msgstr ""
 
 msgid "English"
 msgstr "Английски"
@@ -2339,6 +2357,9 @@ msgstr "Файлове"
 msgid "Fill cache before playback"
 msgstr "Запълване на кеша преди възпроизвеждане"
 
+msgid "Fill the field (crop)"
+msgstr ""
+
 msgid "Filler"
 msgstr "Пълнеж"
 
@@ -2582,6 +2603,12 @@ msgstr "Графичен избор на услуги"
 
 msgid "Greek"
 msgstr "Гръцки"
+
+msgid "Green"
+msgstr ""
+
+msgid "Grey"
+msgstr ""
 
 #, python-format
 msgid "Group \"%s\" already exists."
@@ -3007,6 +3034,9 @@ msgstr ""
 msgid "LEFT/RIGHT at start/end of text - alternative way to switch panels"
 msgstr "НАЛЯВО/НАДЯСНО в началото/края на текста - алтернативен начин за превключване между панелите"
 
+msgid "LENGTH"
+msgstr ""
+
 msgid "Language"
 msgstr "Език"
 
@@ -3017,6 +3047,30 @@ msgid "Language:"
 msgstr "Език:"
 
 msgid "Large"
+msgstr ""
+
+msgid "Large (info on the right)"
+msgstr ""
+
+msgid "Large (title below)"
+msgstr ""
+
+msgid "Large cover, info on the right: row 1"
+msgstr ""
+
+msgid "Large cover, info on the right: row 2"
+msgstr ""
+
+msgid "Large cover, info on the right: row 3"
+msgstr ""
+
+msgid "Large cover, info on the right: row 4"
+msgstr ""
+
+msgid "Large cover: size of the times below the bar"
+msgstr ""
+
+msgid "Large cover: size of the title line"
 msgstr ""
 
 msgid "Last"
@@ -3159,6 +3213,9 @@ msgstr "Лектори"
 
 msgid "Left"
 msgstr "Ляво"
+
+msgid "Length"
+msgstr ""
 
 msgid "Library"
 msgstr "Библиотека"
@@ -3374,6 +3431,9 @@ msgstr "MP3Quran радио на живо"
 msgid "Macedonian"
 msgstr ""
 
+msgid "Magenta"
+msgstr ""
+
 msgid "Main"
 msgstr "Основно"
 
@@ -3424,6 +3484,9 @@ msgstr "Максимален размер на торента:"
 
 msgid "MediaFusion manifest URL (your own):"
 msgstr "URL адрес на манифеста на MediaFusion (ваш собствен):"
+
+msgid "Medium (beside the title)"
+msgstr ""
 
 msgid "Medtryx Marketing"
 msgstr "Medtryx Marketing"
@@ -3757,6 +3820,9 @@ msgstr "Все още няма налични епизоди."
 msgid "No episodes found."
 msgstr "Не са намерени епизоди."
 
+msgid "No frame"
+msgstr ""
+
 msgid "No free player available for this title."
 msgstr "Няма наличен безплатен плейър за това заглавие."
 
@@ -4019,6 +4085,9 @@ msgstr "Опции"
 msgid "Options (select language, clear search history, settings)"
 msgstr "Опции (избор на език, изчистване на историята на търсенето, настройки)"
 
+msgid "Orange"
+msgstr ""
+
 msgid "Order of user links:"
 msgstr "Ред на потребителските връзки:"
 
@@ -4073,6 +4142,9 @@ msgstr "ИЗЧАКВАЩО"
 
 msgid "PLAY"
 msgstr "PLAY"
+
+msgid "PLAYED"
+msgstr ""
 
 msgid "PREVIOUS/NEXT"
 msgstr "ПРЕДИШНО/СЛЕДВАЩО"
@@ -4143,6 +4215,9 @@ msgstr "Педиатрия"
 msgid "People"
 msgstr "Хора"
 
+msgid "Percent"
+msgstr ""
+
 msgid "Persian"
 msgstr ""
 
@@ -4186,6 +4261,9 @@ msgstr "Възпроизвеждане с плейър [%s]"
 
 msgid "Playback UHD :"
 msgstr "Възпроизвеждане UHD :"
+
+msgid "Played"
+msgstr ""
 
 msgid "Player Skin"
 msgstr "Скин на плейъра"
@@ -4433,6 +4511,12 @@ msgstr "Предавания"
 msgid "Programmes of the last days of the channels with an archive"
 msgstr "Предавания от последните дни на каналите с архив"
 
+msgid "Progress bar color on the LCD"
+msgstr ""
+
+msgid "Progress bar frame on the LCD"
+msgstr ""
+
 msgid "Promote item"
 msgstr "Преместване на записа напред"
 
@@ -4468,6 +4552,9 @@ msgstr "Размер на RAM буфера [MB] за мрежови проток
 
 msgid "RED"
 msgstr "ЧЕРВЕН"
+
+msgid "REMAINING"
+msgstr ""
 
 msgid "REWIND"
 msgstr "ПРЕВЪРТАНЕ НАЗАД"
@@ -4555,6 +4642,9 @@ msgstr "Препоръчани"
 msgid "Recon"
 msgstr "Реконструкция"
 
+msgid "Red"
+msgstr ""
+
 msgid "Referee"
 msgstr "Съдия"
 
@@ -4595,6 +4685,9 @@ msgstr "Релевантност"
 
 msgid "Religion"
 msgstr "Религия"
+
+msgid "Remaining"
+msgstr ""
 
 msgid "Remaining:"
 msgstr "Оставащо:"
@@ -4769,6 +4862,9 @@ msgstr "СПРЯН"
 msgid "Safe search (restricted mode):"
 msgstr "Безопасно търсене (ограничен режим):"
 
+msgid "Same as the bar"
+msgstr ""
+
 msgid "Save"
 msgstr "Запазване"
 
@@ -4814,6 +4910,9 @@ msgid "Script finished."
 msgstr "Скриптът приключи."
 
 msgid "Scroll"
+msgstr ""
+
+msgid "Scrolling title runs (then it stands still)"
 msgstr ""
 
 msgid "Search"
@@ -5138,6 +5237,9 @@ msgstr "Показване на \"Най-нови видеа\" от всички
 
 msgid "Show & Comedy"
 msgstr "Шоу и комедия"
+
+msgid "Show E2iPlayer on the display"
+msgstr ""
 
 msgid "Show E2iPlayer settings in system menu"
 msgstr "Показване на настройките на E2iPlayer в системното меню"
@@ -6736,8 +6838,14 @@ msgstr "При достигане на максимума"
 msgid "While live TV is running"
 msgstr "Докато върви телевизия на живо"
 
+msgid "White"
+msgstr ""
+
 msgid "Whole file must be downloaded to start playback!"
 msgstr "Целият файл трябва да бъде изтеглен, за да започне възпроизвеждането!"
+
+msgid "Whole picture (black bars)"
+msgstr ""
 
 msgid "Wiki"
 msgstr "Wiki"
@@ -6833,6 +6941,9 @@ msgstr "Година %s"
 
 msgid "Year:"
 msgstr "Година:"
+
+msgid "Yellow"
+msgstr ""
 
 msgid "Yes"
 msgstr "Да"

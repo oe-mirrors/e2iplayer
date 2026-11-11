@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-09 21:19+0000\n"
+"POT-Creation-Date: 2026-11-11 10:48+0000\n"
 "PO-Revision-Date: 2026-10-08 20:17+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Danish\n"
@@ -839,6 +839,9 @@ msgstr "Autogenereret"
 msgid "Automatic"
 msgstr "Automatisk"
 
+msgid "Automatic (crop or blurred background)"
+msgstr ""
+
 msgid "Automatically turn on external subtitles"
 msgstr "Slå eksterne undertekster til automatisk"
 
@@ -924,6 +927,9 @@ msgstr "Sort pauseskærm"
 
 msgid "Block wmv files"
 msgstr "Bloker WMV-filer"
+
+msgid "Blue"
+msgstr ""
 
 msgid "Board Review"
 msgstr "Repetition til speciallægeeksamen"
@@ -1183,9 +1189,6 @@ msgstr "Samlinger"
 msgid "Colored text in titles and descriptions"
 msgstr "Farvet tekst i titler og beskrivelser"
 
-msgid "Column"
-msgstr ""
-
 msgid "Combine pull request merges with their commit"
 msgstr "Kombiner pull request-merges med deres commit"
 
@@ -1320,7 +1323,10 @@ msgstr "Land:"
 msgid "Couples"
 msgstr "Par"
 
-msgid "Cover on the LCD summary screen"
+msgid "Cover on the LCD"
+msgstr ""
+
+msgid "Cover picture on the LCD"
 msgstr ""
 
 msgid "Cover size"
@@ -1328,9 +1334,6 @@ msgstr ""
 
 msgid "Create Enigma2 .cuts chapter marks"
 msgstr "Opret Enigma2 .cuts-kapitelmærker"
-
-msgid "Create LCD/VFD summary screen"
-msgstr "Opret LCD/VFD-oversigtsskærm"
 
 msgid "Create MKV"
 msgstr "Opret MKV"
@@ -1384,6 +1387,9 @@ msgstr "Det aktuelle element er ikke en kanal."
 msgid "Cut"
 msgstr "Klip"
 
+msgid "Cyan"
+msgstr ""
+
 msgid "Czech"
 msgstr "Tjekkisk"
 
@@ -1392,6 +1398,9 @@ msgstr "DASH/mpd"
 
 msgid "DLNA server of TorrServer"
 msgstr "TorrServers DLNA-server"
+
+msgid "DONE"
+msgstr ""
 
 msgid "DOWNLOAD ERROR"
 msgstr "DOWNLOADFEJL"
@@ -1883,6 +1892,9 @@ msgstr "E2iPlayer er kun en specialiseret webbrowser. Den hoster ikke selv noget
 msgid "E2iPlayer virtual keyboard"
 msgstr "E2iPlayer virtuelt tastatur"
 
+msgid "ENDS"
+msgstr ""
+
 msgid ""
 "ERROR: pipeline could not be constructed: no element \"playbin2\" \n"
 "Please check if gstreamer plugins are available in your system."
@@ -1971,6 +1983,12 @@ msgid ""
 msgstr ""
 "Udtrækning af navnet på krypteringsfunktionen mislykkedes!\n"
 "Rapportér problemet til %s"
+
+msgid "End time"
+msgstr ""
+
+msgid "Endless"
+msgstr ""
 
 msgid "English"
 msgstr "Engelsk"
@@ -2339,6 +2357,9 @@ msgstr "Filer"
 msgid "Fill cache before playback"
 msgstr "Fyld cachen før afspilning"
 
+msgid "Fill the field (crop)"
+msgstr ""
+
 msgid "Filler"
 msgstr "Filler"
 
@@ -2582,6 +2603,12 @@ msgstr "Grafisk tjenestevælger"
 
 msgid "Greek"
 msgstr "Græsk"
+
+msgid "Green"
+msgstr ""
+
+msgid "Grey"
+msgstr ""
 
 #, python-format
 msgid "Group \"%s\" already exists."
@@ -3007,6 +3034,9 @@ msgstr ""
 msgid "LEFT/RIGHT at start/end of text - alternative way to switch panels"
 msgstr "VENSTRE/HØJRE i starten/slutningen af teksten - alternativ måde at skifte panel på"
 
+msgid "LENGTH"
+msgstr ""
+
 msgid "Language"
 msgstr "Sprog"
 
@@ -3017,6 +3047,30 @@ msgid "Language:"
 msgstr "Sprog:"
 
 msgid "Large"
+msgstr ""
+
+msgid "Large (info on the right)"
+msgstr ""
+
+msgid "Large (title below)"
+msgstr ""
+
+msgid "Large cover, info on the right: row 1"
+msgstr ""
+
+msgid "Large cover, info on the right: row 2"
+msgstr ""
+
+msgid "Large cover, info on the right: row 3"
+msgstr ""
+
+msgid "Large cover, info on the right: row 4"
+msgstr ""
+
+msgid "Large cover: size of the times below the bar"
+msgstr ""
+
+msgid "Large cover: size of the title line"
 msgstr ""
 
 msgid "Last"
@@ -3159,6 +3213,9 @@ msgstr "Undervisere"
 
 msgid "Left"
 msgstr "Venstre"
+
+msgid "Length"
+msgstr ""
 
 msgid "Library"
 msgstr "Bibliotek"
@@ -3374,6 +3431,9 @@ msgstr "MP3Quran live-radio"
 msgid "Macedonian"
 msgstr ""
 
+msgid "Magenta"
+msgstr ""
+
 msgid "Main"
 msgstr "Hovedside"
 
@@ -3424,6 +3484,9 @@ msgstr "Maksimal torrentstørrelse:"
 
 msgid "MediaFusion manifest URL (your own):"
 msgstr "MediaFusion-manifest-URL (din egen):"
+
+msgid "Medium (beside the title)"
+msgstr ""
 
 msgid "Medtryx Marketing"
 msgstr "Medtryx Marketing"
@@ -3757,6 +3820,9 @@ msgstr "Ingen afsnit tilgængelige endnu."
 msgid "No episodes found."
 msgstr "Ingen afsnit fundet."
 
+msgid "No frame"
+msgstr ""
+
 msgid "No free player available for this title."
 msgstr "Ingen gratis afspiller tilgængelig for denne titel."
 
@@ -4019,6 +4085,9 @@ msgstr "Valgmuligheder"
 msgid "Options (select language, clear search history, settings)"
 msgstr "Valgmuligheder (vælg sprog, ryd søgehistorik, indstillinger)"
 
+msgid "Orange"
+msgstr ""
+
 msgid "Order of user links:"
 msgstr "Rækkefølge af brugerlinks:"
 
@@ -4073,6 +4142,9 @@ msgstr "AFVENTER"
 
 msgid "PLAY"
 msgstr "PLAY"
+
+msgid "PLAYED"
+msgstr ""
 
 msgid "PREVIOUS/NEXT"
 msgstr "FORRIGE/NÆSTE"
@@ -4143,6 +4215,9 @@ msgstr "Pædiatri"
 msgid "People"
 msgstr "Personer"
 
+msgid "Percent"
+msgstr ""
+
 msgid "Persian"
 msgstr ""
 
@@ -4186,6 +4261,9 @@ msgstr "Afspil med [%s]-afspiller"
 
 msgid "Playback UHD :"
 msgstr "Afspilning UHD :"
+
+msgid "Played"
+msgstr ""
 
 msgid "Player Skin"
 msgstr "Afspiller-skin"
@@ -4433,6 +4511,12 @@ msgstr "Programmer"
 msgid "Programmes of the last days of the channels with an archive"
 msgstr "Programmer fra de seneste dage på kanaler med arkiv"
 
+msgid "Progress bar color on the LCD"
+msgstr ""
+
+msgid "Progress bar frame on the LCD"
+msgstr ""
+
 msgid "Promote item"
 msgstr "Prioriter element"
 
@@ -4468,6 +4552,9 @@ msgstr "RAM-bufferstørrelse [MB] for netværksprotokoller"
 
 msgid "RED"
 msgstr "RØD"
+
+msgid "REMAINING"
+msgstr ""
 
 msgid "REWIND"
 msgstr "SPOL TILBAGE"
@@ -4555,6 +4642,9 @@ msgstr "Anbefalet"
 msgid "Recon"
 msgstr "Rekonstruktion"
 
+msgid "Red"
+msgstr ""
+
 msgid "Referee"
 msgstr "Dommer"
 
@@ -4595,6 +4685,9 @@ msgstr "Relevans"
 
 msgid "Religion"
 msgstr "Religion"
+
+msgid "Remaining"
+msgstr ""
 
 msgid "Remaining:"
 msgstr "Resterende:"
@@ -4769,6 +4862,9 @@ msgstr "STOPPET"
 msgid "Safe search (restricted mode):"
 msgstr "Sikker søgning (begrænset tilstand):"
 
+msgid "Same as the bar"
+msgstr ""
+
 msgid "Save"
 msgstr "Gem"
 
@@ -4814,6 +4910,9 @@ msgid "Script finished."
 msgstr "Script afsluttet."
 
 msgid "Scroll"
+msgstr ""
+
+msgid "Scrolling title runs (then it stands still)"
 msgstr ""
 
 msgid "Search"
@@ -5138,6 +5237,9 @@ msgstr "Vis \"Nyeste videoer\" fra alle YouTube-kanaler i en gruppe"
 
 msgid "Show & Comedy"
 msgstr "Show & komedie"
+
+msgid "Show E2iPlayer on the display"
+msgstr ""
 
 msgid "Show E2iPlayer settings in system menu"
 msgstr "Vis E2iPlayer-indstillinger i systemmenuen"
@@ -6736,8 +6838,14 @@ msgstr "Når maksimum er nået"
 msgid "While live TV is running"
 msgstr "Mens live-tv kører"
 
+msgid "White"
+msgstr ""
+
 msgid "Whole file must be downloaded to start playback!"
 msgstr "Hele filen skal downloades, før afspilningen kan starte!"
+
+msgid "Whole picture (black bars)"
+msgstr ""
 
 msgid "Wiki"
 msgstr "Wiki"
@@ -6833,6 +6941,9 @@ msgstr "År %s"
 
 msgid "Year:"
 msgstr "År:"
+
+msgid "Yellow"
+msgstr ""
 
 msgid "Yes"
 msgstr "Ja"

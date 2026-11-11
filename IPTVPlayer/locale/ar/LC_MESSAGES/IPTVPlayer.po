@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-09 21:19+0000\n"
+"POT-Creation-Date: 2026-11-11 10:48+0000\n"
 "PO-Revision-Date: 2026-11-02 20:48+0200\n"
 "Last-Translator: Mohamed Elsafty [angel_heart150@yahoo.com]\n"
 "Language-Team: \n"
@@ -843,6 +843,9 @@ msgstr "تم إنشاؤه تلقائيًا"
 msgid "Automatic"
 msgstr "تلقائي"
 
+msgid "Automatic (crop or blurred background)"
+msgstr ""
+
 msgid "Automatically turn on external subtitles"
 msgstr "تشغيل الترجمة الخارجية تلقائيًا"
 
@@ -928,6 +931,9 @@ msgstr "شاشة توقف سوداء"
 
 msgid "Block wmv files"
 msgstr "حظر ملفات WMV"
+
+msgid "Blue"
+msgstr ""
 
 msgid "Board Review"
 msgstr "مراجعة المجلس"
@@ -1187,9 +1193,6 @@ msgstr "مجموعات"
 msgid "Colored text in titles and descriptions"
 msgstr "نص ملوّن في العناوين والوصف"
 
-msgid "Column"
-msgstr ""
-
 msgid "Combine pull request merges with their commit"
 msgstr "دمج عمليات دمج طلبات السحب مع الـ commit الخاص بها"
 
@@ -1324,7 +1327,10 @@ msgstr "الدولة:"
 msgid "Couples"
 msgstr "الأزواج"
 
-msgid "Cover on the LCD summary screen"
+msgid "Cover on the LCD"
+msgstr ""
+
+msgid "Cover picture on the LCD"
 msgstr ""
 
 msgid "Cover size"
@@ -1332,9 +1338,6 @@ msgstr ""
 
 msgid "Create Enigma2 .cuts chapter marks"
 msgstr "إنشاء علامات فصول Enigma2 بصيغة .cuts"
-
-msgid "Create LCD/VFD summary screen"
-msgstr "إنشاء شاشة ملخص على شاشة LCD/VFD"
 
 msgid "Create MKV"
 msgstr "إنشاء MKV"
@@ -1388,6 +1391,9 @@ msgstr "العنصر الحالي ليس قناة."
 msgid "Cut"
 msgstr "قص"
 
+msgid "Cyan"
+msgstr ""
+
 msgid "Czech"
 msgstr "تشيكي"
 
@@ -1396,6 +1402,9 @@ msgstr "DASH/mpd"
 
 msgid "DLNA server of TorrServer"
 msgstr "خادم DLNA الخاص بـ TorrServer"
+
+msgid "DONE"
+msgstr ""
 
 msgid "DOWNLOAD ERROR"
 msgstr "خطأ في التنزيل"
@@ -1887,6 +1896,9 @@ msgstr "E2iPlayer مجرد متصفح ويب متخصص، ولا يستضيف أ
 msgid "E2iPlayer virtual keyboard"
 msgstr "لوحة المفاتيح الافتراضية"
 
+msgid "ENDS"
+msgstr ""
+
 msgid ""
 "ERROR: pipeline could not be constructed: no element \"playbin2\" \n"
 "Please check if gstreamer plugins are available in your system."
@@ -1975,6 +1987,12 @@ msgid ""
 msgstr ""
 "فشل استخراج اسم دالة التشفير!\n"
 "يرجى الإبلاغ عن المشكلة إلى %s"
+
+msgid "End time"
+msgstr ""
+
+msgid "Endless"
+msgstr ""
 
 msgid "English"
 msgstr "الإنجليزية"
@@ -2343,6 +2361,9 @@ msgstr "الملفات"
 msgid "Fill cache before playback"
 msgstr "ملء ذاكرة التخزين المؤقت قبل التشغيل"
 
+msgid "Fill the field (crop)"
+msgstr ""
+
 msgid "Filler"
 msgstr "محتوى إضافي"
 
@@ -2586,6 +2607,12 @@ msgstr "اختيار الخدمات الرسومية"
 
 msgid "Greek"
 msgstr "اليونانية"
+
+msgid "Green"
+msgstr ""
+
+msgid "Grey"
+msgstr ""
 
 #, python-format
 msgid "Group \"%s\" already exists."
@@ -3011,6 +3038,9 @@ msgstr ""
 msgid "LEFT/RIGHT at start/end of text - alternative way to switch panels"
 msgstr "يسار/يمين عند بداية/نهاية النص - طريقة بديلة للتبديل بين اللوحات"
 
+msgid "LENGTH"
+msgstr ""
+
 msgid "Language"
 msgstr "اللغة"
 
@@ -3021,6 +3051,30 @@ msgid "Language:"
 msgstr "اللغة:"
 
 msgid "Large"
+msgstr ""
+
+msgid "Large (info on the right)"
+msgstr ""
+
+msgid "Large (title below)"
+msgstr ""
+
+msgid "Large cover, info on the right: row 1"
+msgstr ""
+
+msgid "Large cover, info on the right: row 2"
+msgstr ""
+
+msgid "Large cover, info on the right: row 3"
+msgstr ""
+
+msgid "Large cover, info on the right: row 4"
+msgstr ""
+
+msgid "Large cover: size of the times below the bar"
+msgstr ""
+
+msgid "Large cover: size of the title line"
 msgstr ""
 
 msgid "Last"
@@ -3163,6 +3217,9 @@ msgstr "المحاضرون"
 
 msgid "Left"
 msgstr "يسار"
+
+msgid "Length"
+msgstr ""
 
 msgid "Library"
 msgstr "المكتبة"
@@ -3378,6 +3435,9 @@ msgstr "إذاعة MP3Quran المباشرة"
 msgid "Macedonian"
 msgstr "المقدونية"
 
+msgid "Magenta"
+msgstr ""
+
 msgid "Main"
 msgstr "الرئيسية"
 
@@ -3428,6 +3488,9 @@ msgstr "الحد الأقصى لحجم التورنت:"
 
 msgid "MediaFusion manifest URL (your own):"
 msgstr "رابط ملف manifest الخاص بـ MediaFusion (الخاص بك):"
+
+msgid "Medium (beside the title)"
+msgstr ""
 
 msgid "Medtryx Marketing"
 msgstr "تسويق Medtryx"
@@ -3761,6 +3824,9 @@ msgstr "لا توجد حلقات متاحة حتى الآن."
 msgid "No episodes found."
 msgstr "لم يتم العثور على حلقات."
 
+msgid "No frame"
+msgstr ""
+
 msgid "No free player available for this title."
 msgstr "لا يتوفر مشغل مجاني لهذا العنوان."
 
@@ -4023,6 +4089,9 @@ msgstr "خيارات"
 msgid "Options (select language, clear search history, settings)"
 msgstr "خيارات (اختيار اللغة، مسح سجل البحث، الإعدادات)"
 
+msgid "Orange"
+msgstr ""
+
 msgid "Order of user links:"
 msgstr "ترتيب روابط المستخدم:"
 
@@ -4077,6 +4146,9 @@ msgstr "قيد الانتظار"
 
 msgid "PLAY"
 msgstr "تشغيل"
+
+msgid "PLAYED"
+msgstr ""
 
 msgid "PREVIOUS/NEXT"
 msgstr "السابق/التالي"
@@ -4147,6 +4219,9 @@ msgstr "طب الأطفال"
 msgid "People"
 msgstr "الأشخاص"
 
+msgid "Percent"
+msgstr ""
+
 msgid "Persian"
 msgstr "الفارسية"
 
@@ -4190,6 +4265,9 @@ msgstr "تشغيل باستخدام المشغل [%s]"
 
 msgid "Playback UHD :"
 msgstr "تشغيل UHD:"
+
+msgid "Played"
+msgstr ""
 
 msgid "Player Skin"
 msgstr "سكين المشغل"
@@ -4437,6 +4515,12 @@ msgstr "البرامج"
 msgid "Programmes of the last days of the channels with an archive"
 msgstr "برامج الأيام الأخيرة للقنوات التي لديها أرشيف"
 
+msgid "Progress bar color on the LCD"
+msgstr ""
+
+msgid "Progress bar frame on the LCD"
+msgstr ""
+
 msgid "Promote item"
 msgstr "ترقية العنصر"
 
@@ -4472,6 +4556,9 @@ msgstr "حجم ذاكرة التخزين المؤقت [MB] لبروتوكولا�
 
 msgid "RED"
 msgstr "أحمر"
+
+msgid "REMAINING"
+msgstr ""
 
 msgid "REWIND"
 msgstr "إرجاع"
@@ -4559,6 +4646,9 @@ msgstr "موصى به"
 msgid "Recon"
 msgstr "استطلاع"
 
+msgid "Red"
+msgstr ""
+
 msgid "Referee"
 msgstr "الحكم"
 
@@ -4599,6 +4689,9 @@ msgstr "الصلة"
 
 msgid "Religion"
 msgstr "الدين"
+
+msgid "Remaining"
+msgstr ""
 
 msgid "Remaining:"
 msgstr "المتبقي:"
@@ -4773,6 +4866,9 @@ msgstr "توقف"
 msgid "Safe search (restricted mode):"
 msgstr "البحث الآمن (الوضع المقيّد):"
 
+msgid "Same as the bar"
+msgstr ""
+
 msgid "Save"
 msgstr "حفظ"
 
@@ -4818,6 +4914,9 @@ msgid "Script finished."
 msgstr "انتهى تنفيذ السكربت."
 
 msgid "Scroll"
+msgstr ""
+
+msgid "Scrolling title runs (then it stands still)"
 msgstr ""
 
 msgid "Search"
@@ -5142,6 +5241,9 @@ msgstr "عرض \"أحدث الفيديوهات\" لجميع قنوات YouTube �
 
 msgid "Show & Comedy"
 msgstr "العروض والكوميديا"
+
+msgid "Show E2iPlayer on the display"
+msgstr ""
 
 msgid "Show E2iPlayer settings in system menu"
 msgstr "عرض إعدادات E2iPlayer في قائمة النظام"
@@ -6745,8 +6847,14 @@ msgstr "عند الوصول إلى الحد الأقصى"
 msgid "While live TV is running"
 msgstr "أثناء تشغيل البث التلفزيوني المباشر"
 
+msgid "White"
+msgstr ""
+
 msgid "Whole file must be downloaded to start playback!"
 msgstr "يجب تنزيل الملف بالكامل لبدء التشغيل!"
+
+msgid "Whole picture (black bars)"
+msgstr ""
 
 msgid "Wiki"
 msgstr "Wiki"
@@ -6842,6 +6950,9 @@ msgstr "السنة %s"
 
 msgid "Year:"
 msgstr "السنة:"
+
+msgid "Yellow"
+msgstr ""
 
 msgid "Yes"
 msgstr "نعم"

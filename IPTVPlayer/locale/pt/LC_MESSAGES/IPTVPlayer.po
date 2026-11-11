@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-09 21:19+0000\n"
+"POT-Creation-Date: 2026-11-11 10:48+0000\n"
 "PO-Revision-Date: 2018-03-25 18:50+100\n"
 "Last-Translator: nunigaia\n"
 "Language-Team: BH team\n"
@@ -843,6 +843,9 @@ msgstr "Gerado automaticamente"
 msgid "Automatic"
 msgstr "Automático"
 
+msgid "Automatic (crop or blurred background)"
+msgstr ""
+
 msgid "Automatically turn on external subtitles"
 msgstr "Ativar automaticamente legendas externas"
 
@@ -928,6 +931,9 @@ msgstr "Proteção de ecrã preta"
 
 msgid "Block wmv files"
 msgstr "Bloquear ficheiros 'wmv'"
+
+msgid "Blue"
+msgstr ""
 
 msgid "Board Review"
 msgstr "Revisão para exame"
@@ -1187,9 +1193,6 @@ msgstr "Coleções"
 msgid "Colored text in titles and descriptions"
 msgstr "Texto colorido em títulos e descrições"
 
-msgid "Column"
-msgstr ""
-
 msgid "Combine pull request merges with their commit"
 msgstr "Combinar merges de pull requests com o respetivo commit"
 
@@ -1324,7 +1327,10 @@ msgstr "País:"
 msgid "Couples"
 msgstr "Casais"
 
-msgid "Cover on the LCD summary screen"
+msgid "Cover on the LCD"
+msgstr ""
+
+msgid "Cover picture on the LCD"
 msgstr ""
 
 msgid "Cover size"
@@ -1332,9 +1338,6 @@ msgstr ""
 
 msgid "Create Enigma2 .cuts chapter marks"
 msgstr "Criar marcas de capítulo .cuts do Enigma2"
-
-msgid "Create LCD/VFD summary screen"
-msgstr "Criar ecrã de resumo LCD/VFD"
 
 msgid "Create MKV"
 msgstr "Criar MKV"
@@ -1388,6 +1391,9 @@ msgstr "O item atual não é um canal."
 msgid "Cut"
 msgstr "Cortar"
 
+msgid "Cyan"
+msgstr ""
+
 msgid "Czech"
 msgstr "Checo"
 
@@ -1396,6 +1402,9 @@ msgstr "DASH/mpd"
 
 msgid "DLNA server of TorrServer"
 msgstr "Servidor DLNA do TorrServer"
+
+msgid "DONE"
+msgstr ""
 
 msgid "DOWNLOAD ERROR"
 msgstr "ERRO DE TRANSFERÊNCIA"
@@ -1887,6 +1896,9 @@ msgstr "O E2iPlayer é apenas um navegador web especializado. Não aloja quaisqu
 msgid "E2iPlayer virtual keyboard"
 msgstr "Teclado virtual do E2iPlayer"
 
+msgid "ENDS"
+msgstr ""
+
 msgid ""
 "ERROR: pipeline could not be constructed: no element \"playbin2\" \n"
 "Please check if gstreamer plugins are available in your system."
@@ -1975,6 +1987,12 @@ msgid ""
 msgstr ""
 "Falha ao extrair o nome da função de encriptação!\n"
 "Por favor, reporte o problema a %s"
+
+msgid "End time"
+msgstr ""
+
+msgid "Endless"
+msgstr ""
 
 msgid "English"
 msgstr "Inglês"
@@ -2343,6 +2361,9 @@ msgstr "Ficheiros"
 msgid "Fill cache before playback"
 msgstr "Encher a cache antes da reprodução"
 
+msgid "Fill the field (crop)"
+msgstr ""
+
 msgid "Filler"
 msgstr "Filler"
 
@@ -2586,6 +2607,12 @@ msgstr "Seletor gráfico de serviços"
 
 msgid "Greek"
 msgstr "Grego"
+
+msgid "Green"
+msgstr ""
+
+msgid "Grey"
+msgstr ""
 
 #, python-format
 msgid "Group \"%s\" already exists."
@@ -3011,6 +3038,9 @@ msgstr ""
 msgid "LEFT/RIGHT at start/end of text - alternative way to switch panels"
 msgstr "ESQUERDA/DIREITA no início/fim do texto - forma alternativa de mudar de painel"
 
+msgid "LENGTH"
+msgstr ""
+
 msgid "Language"
 msgstr "Idioma"
 
@@ -3021,6 +3051,30 @@ msgid "Language:"
 msgstr "Idioma:"
 
 msgid "Large"
+msgstr ""
+
+msgid "Large (info on the right)"
+msgstr ""
+
+msgid "Large (title below)"
+msgstr ""
+
+msgid "Large cover, info on the right: row 1"
+msgstr ""
+
+msgid "Large cover, info on the right: row 2"
+msgstr ""
+
+msgid "Large cover, info on the right: row 3"
+msgstr ""
+
+msgid "Large cover, info on the right: row 4"
+msgstr ""
+
+msgid "Large cover: size of the times below the bar"
+msgstr ""
+
+msgid "Large cover: size of the title line"
 msgstr ""
 
 msgid "Last"
@@ -3163,6 +3217,9 @@ msgstr "Docentes"
 
 msgid "Left"
 msgstr "Esquerda"
+
+msgid "Length"
+msgstr ""
 
 msgid "Library"
 msgstr "Biblioteca"
@@ -3378,6 +3435,9 @@ msgstr "Rádio em direto MP3Quran"
 msgid "Macedonian"
 msgstr ""
 
+msgid "Magenta"
+msgstr ""
+
 msgid "Main"
 msgstr "Principal"
 
@@ -3428,6 +3488,9 @@ msgstr "Tamanho máximo do torrent:"
 
 msgid "MediaFusion manifest URL (your own):"
 msgstr "URL do manifesto MediaFusion (o seu):"
+
+msgid "Medium (beside the title)"
+msgstr ""
 
 msgid "Medtryx Marketing"
 msgstr "Medtryx Marketing"
@@ -3761,6 +3824,9 @@ msgstr "Ainda não há episódios disponíveis."
 msgid "No episodes found."
 msgstr "Nenhum episódio encontrado."
 
+msgid "No frame"
+msgstr ""
+
 msgid "No free player available for this title."
 msgstr "Nenhum leitor gratuito disponível para este título."
 
@@ -4023,6 +4089,9 @@ msgstr "Opções"
 msgid "Options (select language, clear search history, settings)"
 msgstr "Opções (selecionar idioma, limpar histórico de pesquisa, definições)"
 
+msgid "Orange"
+msgstr ""
+
 msgid "Order of user links:"
 msgstr "Ordem das ligações do utilizador:"
 
@@ -4077,6 +4146,9 @@ msgstr "PENDENTE"
 
 msgid "PLAY"
 msgstr "REPRODUZIR"
+
+msgid "PLAYED"
+msgstr ""
 
 msgid "PREVIOUS/NEXT"
 msgstr "ANTERIOR/SEGUINTE"
@@ -4147,6 +4219,9 @@ msgstr "Pediatria"
 msgid "People"
 msgstr "Pessoas"
 
+msgid "Percent"
+msgstr ""
+
 msgid "Persian"
 msgstr ""
 
@@ -4190,6 +4265,9 @@ msgstr "Reproduzir com o leitor [%s]"
 
 msgid "Playback UHD :"
 msgstr "Reprodução UHD :"
+
+msgid "Played"
+msgstr ""
 
 msgid "Player Skin"
 msgstr "Skin do leitor"
@@ -4437,6 +4515,12 @@ msgstr "Programas"
 msgid "Programmes of the last days of the channels with an archive"
 msgstr "Programas dos últimos dias dos canais com arquivo"
 
+msgid "Progress bar color on the LCD"
+msgstr ""
+
+msgid "Progress bar frame on the LCD"
+msgstr ""
+
 msgid "Promote item"
 msgstr "Promover item"
 
@@ -4472,6 +4556,9 @@ msgstr "Tamanho do buffer RAM [MB] para protocolos de rede"
 
 msgid "RED"
 msgstr "VERMELHO"
+
+msgid "REMAINING"
+msgstr ""
 
 msgid "REWIND"
 msgstr "RECUAR"
@@ -4559,6 +4646,9 @@ msgstr "Recomendados"
 msgid "Recon"
 msgstr "Recon"
 
+msgid "Red"
+msgstr ""
+
 msgid "Referee"
 msgstr "Árbitro"
 
@@ -4599,6 +4689,9 @@ msgstr "Relevância"
 
 msgid "Religion"
 msgstr "Religião"
+
+msgid "Remaining"
+msgstr ""
 
 msgid "Remaining:"
 msgstr "Restante:"
@@ -4773,6 +4866,9 @@ msgstr "PARADO"
 msgid "Safe search (restricted mode):"
 msgstr "Pesquisa segura (modo restrito):"
 
+msgid "Same as the bar"
+msgstr ""
+
 msgid "Save"
 msgstr "Guardar"
 
@@ -4818,6 +4914,9 @@ msgid "Script finished."
 msgstr "Script concluído."
 
 msgid "Scroll"
+msgstr ""
+
+msgid "Scrolling title runs (then it stands still)"
 msgstr ""
 
 msgid "Search"
@@ -5142,6 +5241,9 @@ msgstr "Mostrar \"Vídeos mais recentes\" de todos os canais YouTube num grupo"
 
 msgid "Show & Comedy"
 msgstr "Espetáculo e comédia"
+
+msgid "Show E2iPlayer on the display"
+msgstr ""
 
 msgid "Show E2iPlayer settings in system menu"
 msgstr "Mostrar as definições do E2iPlayer no menu do sistema"
@@ -6740,8 +6842,14 @@ msgstr "Quando o máximo for atingido"
 msgid "While live TV is running"
 msgstr "Enquanto a TV em direto está a correr"
 
+msgid "White"
+msgstr ""
+
 msgid "Whole file must be downloaded to start playback!"
 msgstr "O ficheiro completo tem de ser transferido para iniciar a reprodução!"
+
+msgid "Whole picture (black bars)"
+msgstr ""
 
 msgid "Wiki"
 msgstr "Wiki"
@@ -6837,6 +6945,9 @@ msgstr "Ano %s"
 
 msgid "Year:"
 msgstr "Ano:"
+
+msgid "Yellow"
+msgstr ""
 
 msgid "Yes"
 msgstr "Sim"
