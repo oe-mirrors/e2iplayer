@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "04.10.2026"
+LAST_MODIFIED = "13.11.2026"
 # 03.10.2026 - revived for the redesigned btolat.com (football clips / highlights)
 #   - one card parser for all video lists (/videos "card xrow video" + LoadMore API, league/team pages
 #     "categoryNewsCard", player pages "vcard xrow video"); relative "video/<id>" links; date from
@@ -7,12 +7,12 @@ LAST_MODIFIED = "04.10.2026"
 #   - /leagues: new panel / tcard / acard layout -> league (all videos, top scorers, teams) -> team
 #     (videos, squad) -> player videos; professionals without one request per player
 #   - search: POST /api/data/search JSON through self.cm (the old /news/Search is gone; no "requests")
-#   - links: YouTube (urlparser), Twitter/X syndication JSON (direct MP4/HLS), vortexvisionworks
-#     /player/ embeds (HLS with Referer/Origin as strwithmeta meta); "blockedvideos" iframes are read
-#     through the video's /embed/ page (still plays), only when that has no stream either -> "removed"
-#     message instead of an empty list; no more botolat_<title>.iptv junk files
+#   - links: YouTube, Twitter/X and vortexvisionworks embeds - all resolved by urlparser (parserTWITTER,
+#     parserVORTEXVISION) with the site as Referer
+#   - no more botolat_<title>.iptv junk files
 #   - watched flag (video:<id>), downloaded flag (stable /video/<id> page url), favourites, sidecar,
 #     name normalisation "Title (YYYY-MM-DD)", INFO from the video / player / team page
+# 13.11.2026 - the site sits behind Cloudflare: pages through getPageCFProtection (curl-impersonate / MyE2i)
 import re
 import time
 
@@ -58,7 +58,6 @@ class BtolatCom(GenericFolderWatchedScraperMixin, CBaseHostClass):
         ] + self.searchItems()
         self.watchedHelper = IPTVWatchedHelper("botolat")
         self.wfInitFolderCache()
-        self._twitterBlocked = False
 
     ###################################################
     # helpers
@@ -66,7 +65,9 @@ class BtolatCom(GenericFolderWatchedScraperMixin, CBaseHostClass):
     def getPage(self, baseUrl, addParams=None, post_data=None):
         if addParams is None:
             addParams = dict(self.defaultParams)
-        return self.cm.getPage(self.cm.iriToUri(baseUrl), addParams, post_data)
+        # Cloudflare (HTTP 403 "Just a moment"): solved like the other Cloudflare hosts, the release is kept in the cookie file
+        addParams = dict(addParams, cloudflare_params={"cookie_file": self.COOKIE_FILE, "User-Agent": self.HEADER.get("User-Agent")})
+        return self.cm.getPageCFProtection(self.cm.iriToUri(baseUrl), addParams, post_data)
 
     def getFullIconUrl(self, url, currUrl=None):
         url = (url or "").strip()
@@ -351,100 +352,33 @@ class BtolatCom(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not sts:
             return []
         links = []
-        blocked = False
-        self._twitterBlocked = False
         # YouTube
         for ytid in re.findall(r"youtube(?:-nocookie)?\.com/embed/([A-Za-z0-9_-]{11})", data):
             link = "https://www.youtube.com/watch?v=%s" % ytid
             if link not in [x["url"] for x in links]:
                 links.append({"name": "YouTube", "url": link, "need_resolve": 1})
-        # Twitter / X (blockquote + widgets.js) -> syndication JSON
+        # Twitter / X (blockquote + widgets.js): urlparser reads the syndication JSON (region lock -> message)
         tweet = self.cm.ph.getSearchGroups(data, r"(?:twitter|x)\.com/[^/\"'\s]+/status/(\d+)")[0]
         if tweet:
-            links.extend(self._twitterLinks(tweet))
-        # vortexvisionworks embeds: the page often shows "/player/blockedvideos/<id>" ("Video Removed")
-        # while the same video's "/embed/<id>" page (the JSON-LD embedURL) still plays - only when that
-        # one has no stream either the video is really gone
+            links.append({"name": "Twitter", "url": strwithmeta("https://x.com/i/status/%s" % tweet, {"Referer": self.MAIN_URL}), "need_resolve": 1})
+        # vortexvisionworks embeds; urlparser plays a "/player/blockedvideos/<id>" through the video's "/embed/<id>" page
         for embed in re.findall(r"""<iframe[^>]+src=["']((?:https?:)?//[^"']*vortexvisionworks\.com/[^"']+)["']""", data):
             embed = embed if embed.startswith("http") else "https:" + embed
-            isBlocked = "/blockedvideos/" in embed
-            if isBlocked:
-                embed = embed.replace("/player/blockedvideos/", "/embed/")
-            found = self._vortexLinks(embed)
-            blocked = blocked or (isBlocked and not found)
-            links.extend(found)
+            if embed not in [str(x["url"]) for x in links]:
+                links.append({"name": "Vortex", "url": strwithmeta(embed, {"Referer": self.MAIN_URL}), "need_resolve": 1})
         # any other hoster iframe urlparser knows
         if not links:
             for embed in re.findall(r"""<iframe[^>]+src=["']((?:https?:)?//[^"']+)["']""", data):
                 embed = embed if embed.startswith("http") else "https:" + embed
-                if "googletagmanager" in embed or "vortexvisionworks" in embed:
+                if "googletagmanager" in embed:
                     continue
                 if self.up.checkHostSupport(embed) == 1:
                     links.append({"name": self.up.getDomain(embed), "url": strwithmeta(embed, {"Referer": self.MAIN_URL}), "need_resolve": 1})
         if not links:
-            if blocked:
-                msg = _("This video has been deleted.")
-            elif self._twitterBlocked:
-                msg = _("This content is not available in your region.")
-            else:
-                msg = _("No stream available")
-            SetIPTVPlayerLastHostError(msg)
+            SetIPTVPlayerLastHostError(_("No stream available"))
             return []
         story = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'<meta property="og:description" content="([^"]*)"')[0])
         return applySidecarToLinks(links, buildSidecarFromItem(cItem, IsSidecarEnabled(), story))
-
-    def _twitterLinks(self, tweetId):
-        jsonUrl = "https://cdn.syndication.twimg.com/tweet-result?id=%s&lang=ar&token=4ufmaqlvqaj" % tweetId
-        sts, data = self.getPage(jsonUrl)
-        if not sts:
-            return []
-        try:
-            js = json_loads(data) or {}
-        except Exception:
-            printExc()
-            return []
-        mp4, hls = [], []
-        for media in js.get("mediaDetails", []) or []:
-            if media.get("type") not in ("video", "animated_gif"):
-                continue
-            for var in (media.get("video_info", {}) or {}).get("variants", []) or []:
-                vurl = var.get("url", "") or ""
-                if not vurl or vurl in [x["url"] for x in mp4 + hls]:
-                    continue
-                if "mpegURL" in (var.get("content_type", "") or "") or ".m3u8" in vurl:
-                    hls.append({"name": "Twitter HLS", "url": vurl, "need_resolve": 0})
-                else:
-                    height = self.cm.ph.getSearchGroups(vurl, r"/\d+x(\d+)/")[0]
-                    name = ("Twitter %sp" % height) if height else ("Twitter %dk" % ((var.get("bitrate", 0) or 0) // 1000))
-                    mp4.append({"name": name, "url": vurl, "need_resolve": 0, "_br": var.get("bitrate", 0) or 0})
-        mp4.sort(key=lambda x: x.get("_br", 0), reverse=True)
-        for item in mp4:
-            item.pop("_br", None)
-        # region-locked media (beIN, FIFA ...) answers 403 outside the rights region - one look at the
-        # small HLS playlist tells it from the box's own location
-        if hls:
-            sts, _data = self.getPage(hls[0]["url"])
-            if not sts:
-                self._twitterBlocked = True
-                return []
-        return mp4 + hls
-
-    def _vortexLinks(self, embed):
-        origin = re.sub(r"^(https?://[^/]+).*$", r"\1", embed)
-        params = dict(self.defaultParams)
-        params["header"] = dict(self.HEADER, Referer=self.MAIN_URL)
-        sts, data = self.getPage(embed, params)
-        if not sts:
-            return []
-        links = []
-        for src in re.findall(r"""["']((?:https?:)?//[^"']+\.m3u8[^"']*)["']""", data):
-            src = src if src.startswith("http") else "https:" + src
-            if re.match(r"https?://(?:localhost|127\.)", src) or src in [str(x["url"]) for x in links]:
-                # the player's commented-out debug source points to localhost
-                continue
-            links.append({"name": "Vortex HLS" if not links else "Vortex HLS %d" % (len(links) + 1),
-                          "url": strwithmeta(src, {"User-Agent": self.HEADER.get("User-Agent"), "Referer": embed, "Origin": origin}), "need_resolve": 0})
-        return links
 
     def getVideoLinks(self, videoUrl):
         printDBG("BtolatCom.getVideoLinks [%s]" % videoUrl)

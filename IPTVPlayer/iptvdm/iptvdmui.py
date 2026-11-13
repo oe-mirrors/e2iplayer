@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 31.10.2026 - colour LCD: the running download, otherwise the marked row of the list.
+# Last Modified: 13.11.2026 - Play with exteplayer3/gstplayer passes the film's sidecar .jpg as cover to the player.
+# 31.10.2026 - colour LCD: the running download, otherwise the marked row of the list.
 # 12.10.2026 - the subtitles saved with a download (name.de.srt) are removed / renamed with it.
 # 11.10.2026 - OK plays at once with the default player, MENU holds every action of the row plus "Select" /
 #   "Select all"; marked items are removed in one go.
@@ -883,6 +884,10 @@ class IPTVDMWidget(Screen):
                     self.session.openWithCallback(self.leaveMoviePlayer, IPTVMiniMoviePlayer, playFileName, title)
                 elif player in ["exteplayer", "extgstplayer"]:
                     additionalParams = {}
+                    # the film's sidecar .jpg for the LCD, the info panel and the audio screensaver of the player
+                    cover = self._lcdCoverPath(item, playFileName)
+                    if cover:
+                        additionalParams['cover_path'] = cover
                     if playFileName.split('.')[-1] in ['mp3', 'm4a', 'ogg', 'wma', 'fla', 'wav', 'flac']:
                         additionalParams['show_iframe'] = config.plugins.iptvplayer.show_iframe.value
                         additionalParams['iframe_file_start'] = config.plugins.iptvplayer.iframe_file.value
@@ -1263,15 +1268,17 @@ class IPTVDMWidget(Screen):
                     summary.setLcdCover(cover)
 
     @staticmethod
-    def _lcdCoverPath(item):
-        # the sidecar .jpg next to the file (finished downloads, the Archive), while it downloads the link's
-        # sidecar picture from the icon cache (the list showed it before the download started); '' without one
+    def _lcdCoverPath(item, playFileName=None):
+        # the sidecar .jpg next to the file (finished downloads, the Archive; playFileName = the file actually
+        # played, e.g. .mp4 renamed to .mkv), while it downloads the link's sidecar picture from the icon cache
+        # (the list showed it before the download started); '' without one
         if item is None:
             return ''
         try:
-            name = getattr(item, 'fileName', '') or ''
-            if name:
-                jpg = name.rsplit('.', 1)[0] + '.jpg'
+            for name in (playFileName, getattr(item, 'fileName', '')):
+                if not name:
+                    continue
+                jpg = os_path.splitext(name)[0] + '.jpg'
                 if os_path.isfile(jpg) and os_path.getsize(jpg) > 0:
                     return jpg
             meta = getattr(getattr(item, 'url', None), 'meta', None)

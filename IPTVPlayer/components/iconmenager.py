@@ -422,7 +422,8 @@ class IconMenager:
             return self.lastError is None
 
         if img_url.endswith('|cf'):
-            img_url = img_url[:-3]
+            # (the url meta stays - e.g. the host's proxy, iptv_http_proxy)
+            img_url = strwithmeta(img_url[:-3], getattr(img_url, 'meta', {}))
             # CFProtection: the urllib way like the host's getPageCFProtection pages (cf_clearance is bound to its TLS
             # fingerprint, pycurl gets 403)
             params_cfad = {'with_metadata': True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'CFProtection': True}

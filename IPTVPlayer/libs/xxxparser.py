@@ -1400,6 +1400,8 @@ class XXXParser:
 			return 'https://www.realmatureporn.com'
 		if url.startswith('https://run.porn'):
 			return 'https://run.porn'
+		if url.startswith('https://www.nudeandhairy.com'):
+			return 'https://www.nudeandhairy.com'
 		if url.startswith('https://www.nakedgirls.mobi'):
 			return 'https://www.nakedgirls.mobi'
 		if url.startswith('https://yespornpleasexxx.com'):
@@ -1654,6 +1656,9 @@ class XXXParser:
 
 		if url.startswith(('https://anybunny.org', 'https://anybunny.com')):
 			return 'https://anybunny.org'
+		if url.startswith('https://videosection.com/'):
+			# (its own list sets MAIN_URL; a RUNPORN link redirects there from another site)
+			return 'https://videosection.com'
 		for site in TXXX_NETWORK_SITES:
 			if url.startswith(site + '/'):
 				return site
@@ -4347,8 +4352,19 @@ class XXXParser:
 			printDBG('RUNPORN PARSER')
 			COOKIEFILE = join(GetCookieDir(), 'runporn.cookie')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
+			if '/rpn/' in url:
+				# run.porn lists other tubes' videos: /rpn/<token> redirects to the video's own page (videosection.com) or
+				# a short link of it (tbnvid.com/v/... -> www.tubeon.com/video/...) - resolved by that site's parser
+				sts, data = self.getPage(url, 'runporn.cookie', 'run.porn', dict(self.defaultParams, with_metadata=True))
+				landing = getattr(data, 'meta', {}).get('url', '') if sts else ''
+				landingParser = self.getParser(landing) if landing and 'run.porn' not in landing else ''
+				printDBG('RUNPORN: %s -> %s (%s)' % (url, landing, landingParser))
+				# (getParser answers MAIN_URL = run.porn for a tube it does not know - no parser for that one)
+				if landingParser.startswith('http') and landingParser != 'https://run.porn':
+					return self.getResolvedURL(landing)
+				return ''
 			sts, data = self.getPage(url, 'runporn.cookie', 'run.porn', self.defaultParams)
-			hlsUrl = re.search('src-hls=["]([^"]+?)["]', data)
+			hlsUrl = re.search('src-hls=["]([^"]+?)["]', data or '')
 			if hlsUrl:
 				hlsUrl = hlsUrl.group(1)
 			else:
@@ -4366,6 +4382,21 @@ class XXXParser:
 					return best
 			if videoUrl:
 				return videoUrl
+
+		if parser == 'https://www.nudeandhairy.com':
+			# fluid player with one <source title="360p".."1080p"> per quality (signed MP4 links, full scenes)
+			printDBG('NUDEANDHAIRY PARSER')
+			COOKIEFILE = join(GetCookieDir(), 'nudeandhairy.cookie')
+			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
+			self.HTTP_HEADER['Referer'] = url
+			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
+			sts, data = self.get_Page(url, self.defaultParams)
+			if not sts or not data:
+				return ''
+			# (the related videos' <source data-srcset=...webp> pictures are no media: only the player's block)
+			player = self.cm.ph.getDataBeetwenMarkers(data, '<video', '</video>', False)[1] or data
+			videoUrl = self._pickByHeight(self._mediaCandidates(player))
+			return urlparser.decorateUrl(videoUrl, {'Referer': url, 'User-Agent': self.HTTP_HEADER['User-Agent']}) if videoUrl else ''
 
 		if parser == 'https://www.nakedgirls.mobi':
 			printDBG('NAKEDGIRLS PARSER')

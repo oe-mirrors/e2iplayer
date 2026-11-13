@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "24.10.2026"
+LAST_MODIFIED = "13.11.2026"
 # 24.10.2026 - new host
 # Kanal D (kanald.com.tr): free Turkish channel - live stream, current and archive series / programmes,
 # Retro D and D-Shorts. Episode lists are read from the site's pages (seasons, ?page= paging), the stream
 # of an episode from /actions/media?id=<data-saved-id> (own HLS) or the page's VideoObject contentUrl
-# (own HLS) with the Dailymotion copy as fallback (metadata with the kanald.com.tr embedder, no DRM).
+# (own HLS) with the Dailymotion copy as fallback (urlparser, metadata with the kanald.com.tr embedder, no DRM).
 import re
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
@@ -18,7 +18,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import GetCookieDir, printDBG, printExc
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedHostMixin, GenericFolderWatchedScraperMixin
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
@@ -40,7 +40,6 @@ SEARCH_VIDEOS = "Episode,TVShow,Clip,Movie"
 SEARCH_PAGE_SIZE = 30
 VOD_CDN = "https://kanaldvod.duhnet.tv/"
 LIVE_URL = "https://demiroren.daioncdn.net/kanald/kanald.m3u8?app=kanald_web&ce=3"
-DM_METADATA = "https://www.dailymotion.com/player/metadata/video/%s?embedder=%s"
 DM_VIDEO = "https://www.dailymotion.com/video/%s"
 # a list page with fewer cards than this is the last one (the pager of the site may name pages that are empty)
 FULL_PAGE = 20
@@ -64,7 +63,6 @@ class KanalD(GenericFolderWatchedScraperMixin, CBaseHostClass):
         self.HEADER.update({"Referer": gettytul()})
         self.defaultParams = {"header": self.HEADER}
         self.MAIN_URL = gettytul()
-        self.DM_COOKIE = GetCookieDir("kanald.dailymotion.cookie")
         self.watchedHelper = IPTVWatchedHelper("kanald")
         self.wfInitFolderCache()
 
@@ -438,52 +436,18 @@ class KanalD(GenericFolderWatchedScraperMixin, CBaseHostClass):
             if hls:
                 urlTab = self._hlsLinks(self._vodUrl({"securePath": hls}), "Kanal D")
         if dmId:
-            urlTab.append({"name": "Dailymotion", "url": strwithmeta(DM_VIDEO % dmId, {"Referer": url}), "need_resolve": 1})
+            # limited to the kanald.com.tr player: urlparser asks the metadata with that embedder
+            urlTab.append({"name": "Dailymotion", "url": strwithmeta(DM_VIDEO % dmId, {"Referer": url, "embedder": gettytul()}), "need_resolve": 1})
         if not urlTab:
             SetIPTVPlayerLastHostError(_("No stream available"))
             return []
         return applySidecarToLinks(urlTab, buildSidecarFromItem(cItem, IsSidecarEnabled()))
-
-    def _dailymotionLinks(self, videoUrl):
-        # the videos are limited to the kanald.com.tr player: the metadata needs that embedder
-        videoId = self.cm.ph.getSearchGroups(videoUrl, r'/video/([A-Za-z0-9]+)')[0]
-        if not videoId:
-            return []
-        header = self.cm.getDefaultHeader(browser="chrome")
-        cookieParams = {"header": header, "use_cookie": True, "save_cookie": True, "load_cookie": True, "cookiefile": self.DM_COOKIE}
-        sts, data = self.cm.getPage(DM_METADATA % (videoId, urllib_quote(gettytul(), safe="")), dict(cookieParams, load_cookie=False))
-        try:
-            data = json_loads(data) if sts else {}
-        except Exception:
-            printExc()
-            data = {}
-        if not isinstance(data, dict):
-            data = {}
-        if data.get("error"):
-            error = data["error"]
-            SetIPTVPlayerLastHostError(error.get("title") or error.get("raw_message") or _("Content not available"))
-            return []
-        urlTab = []
-        for media in (data.get("qualities") or {}).get("auto") or []:
-            if media.get("type") != "application/x-mpegURL" or not media.get("url"):
-                continue
-            hlsTab = getDirectM3U8Playlist(strwithmeta(media["url"], {"User-Agent": header["User-Agent"]}), checkExt=False, checkContent=True,
-                                           sortWithMaxBitrate=99999999, cookieParams=cookieParams)
-            cookieHeader = self.cm.getCookieHeader(self.DM_COOKIE)
-            for item in hlsTab:
-                meta = {"iptv_proto": "m3u8", "Cookie": cookieHeader, "User-Agent": header["User-Agent"]}
-                urlTab.append({"name": "Dailymotion %s" % (self._quality(item) or item.get("name", "HLS")),
-                               "url": strwithmeta(str(item["url"]).split("#", 1)[0], meta), "need_resolve": 0})
-            break
-        return urlTab
 
     def getVideoLinks(self, videoUrl):
         printDBG("KanalD.getVideoLinks [%s]" % videoUrl)
         if not self.cm.isValidUrl(videoUrl):
             return []
         sidecar = sidecarFromUrlMeta(videoUrl, IsSidecarEnabled())
-        if "dailymotion.com/video/" in videoUrl:
-            return decorateResolvedLinkItems(self._dailymotionLinks(videoUrl), sidecar)
         return decorateResolvedLinkItems(self.up.getVideoLinkExt(videoUrl), sidecar)
 
     ###################################################

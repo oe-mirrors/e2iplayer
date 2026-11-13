@@ -59,6 +59,9 @@ _SECRET_HEADER_RE = re.compile(r'(?<![A-Za-z0-9_-])((?:api-key|authorization)\s*
 # (mlblive.net -> www.mlblive.net, img.mlblive.net), never its parent or sibling domains.
 _impersonateDomains = set()
 _impersonateMissingLogged = [False]
+# Cloudflare sites whose MyE2i clearance only counts with Chrome's TLS fingerprint AND the solving browser's
+# User-Agent (btolat.com): domain -> the cookie items of the release, sent as Chrome with that User-Agent
+_clearanceImpersonate = {}
 
 # add 101026: domains with a second browser check behind Cloudflare (HostAdmin.online WAF: kinoger) - MyE2i's
 # CF mode only brings cf_clearance back, their check needs every cookie of the site. Found by getPageCFProtection
@@ -1425,7 +1428,7 @@ class common:
                                         proxy=http_proxy, insecure=not IsHttpsCertValidationEnabled(), ipv4Only=params.get('ipv4_only', False),
                                         maxDataSize=params.get('max_data_size', -1), shouldAbort=IsThreadTerminated,
                                         log=lambda msg: printDBG(maskSecrets(msg)), outFile=outFile,
-                                        ipv6Only=params.get('ipv6_only', False))
+                                        ipv6Only=params.get('ipv6_only', False), keepUserAgent=params.get('impersonate_keep_ua', False))
         except curlimpersonate.ImpersonateUnavailable as e:
             printDBG('pCommon - %s() %s - using the normal HTTP path from now on' % (caller, e))
             curlimpersonate.markBinaryUnusable()
@@ -1732,8 +1735,14 @@ class common:
             header['User-Agent'] = solvedUserAgent
         params.update({'with_metadata': True, 'use_cookie': True, 'save_cookie': True, 'load_cookie': True, 'cookiefile': params.get('cookiefile', ''), 'header': header})
         params.update({'CFProtection': True})
+        clearanceDomain = _impersonateDomain(baseUrl)
+        if clearanceDomain in _clearanceImpersonate and solvedUserAgent:
+            # an earlier release of this site only passed as Chrome with the browser's User-Agent
+            params.update({'impersonate': True, 'impersonate_keep_ua': True, 'cookie_items': dict(_clearanceImpersonate[clearanceDomain])})
         start_time = time.time()
         sts, data = self.getPage(baseUrl, params, post_data)
+        if not sts and params.get('impersonate_keep_ua'):
+            _clearanceImpersonate.pop(clearanceDomain, None)  # the release ran out - MyE2i below asks again
         if sts and self._gatePageOnSuccess(data, baseUrl):
             sts = False  # a check page that answers HTTP 200 (HostAdmin.online "Verification...")
 
@@ -1812,6 +1821,18 @@ class common:
                 sts, data = self.getPage(baseUrl, params, post_data)
                 if sts and self._gatePageOnSuccess(data, baseUrl):
                     sts = False
+                if not sts and data is not None and params.get('cookie_items') and not params.get('impersonate_keep_ua') \
+                        and params.get('impersonate', None) is not False and curlimpersonate.getImpersonateBinary():
+                    # the clearance may be bound to Chrome's TLS fingerprint as well as to the browser's User-Agent:
+                    # once more as Chrome, with that User-Agent and the released cookies
+                    printDBG('PROTECTION: the release did not pass - retrying with curl-impersonate and the browser\'s User-Agent')
+                    newParams = dict(params, impersonate=True, impersonate_keep_ua=True)
+                    sts2, data2 = self.getPage(baseUrl, newParams, post_data)
+                    if sts2 and not self._gatePageOnSuccess(data2, baseUrl):
+                        sts, data = sts2, data2
+                        if clearanceDomain:
+                            _clearanceImpersonate[clearanceDomain] = dict(params['cookie_items'])
+                            printDBG('PROTECTION: %s passes as Chrome with the browser\'s User-Agent - used for its next pages' % clearanceDomain)
                 if not sts:
                     printDBG('>>>>>>>>>>>>>>>> not sts returned data >>>>>>>>>>>>>>')
                     printDBG(data)

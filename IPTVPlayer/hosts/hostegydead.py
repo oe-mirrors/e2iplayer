@@ -1,38 +1,16 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "02.11.2026"
-# 01.11.2026 - covers sit behind the site's Cloudflare like its pages (HTTP 403): "|cf" icons + cookie file named after the domain
-# 27.10.2026 - servers moved to an own page (<title page>/watch/, the site's "watch and download" button)
-# 21.10.2026 - MegaMax: every hoster mirror of its page as an own server row ("MegaMax 1080p voe", like on the site),
-#   resolved only when picked (urlparser getMegamaxMirrors); watch + download link of one file listed once
-# 20.10.2026 - Anime / Cartoons: the current anime seasons of the site's menu ("Anime Autumn 2026", /tag/...),
-#   Others: World Cup 2022
-# 09.10.2026 - INFO: Arabic-only titles skip IMDb/Cinemeta/OMDb; season folders "Show - Sxx" when normalising
-# 09.10.2026 - the site's Megamax server on throw-away domains (q7v3k8m2p1.top/iframe/<id>, the only server of
-#   the newest titles) goes to megamax.me/iframe/<id> when urlparser does not know the domain
-# 08.10.2026 - server list hardened (the site sits behind a Cloudflare challenge since ~05.10, not
-#   reachable from the PC): <ul ... serversList ...> with any extra classes / quotes, relative data-link
-#   urls, the whole POST answer when the list markup changes, one more page load + POST when the answer
-#   has no player; plus the download servers (ser-link) urlparser knows
-# 03.10.2026 - revived for tv10.egydead.live (c4u1r.sbs only redirects there)
-#   Rewrite against the current site:
-#   - one list parser for all sections; the kind of a row comes from its url: /serie/ = series
-#     (-> seasons), /season/ = season (-> episodes), /assembly/ = film collection (-> films),
-#     /episode/ and everything else = VIDEO row keyed on the page url
-#   - hoster links (POST View=1 on the title page) fetched in getLinksForVideo and handed to
-#     urlparser (need_resolve): megamax.me (most recent titles), hgcloud, mixdrop, playmogo, ...
-#   - paging via tools/iptvpaging (First page / Jump / Next page (n/last)); search pages by
-#     /page/N/?s=..
-#   - watched flag (series -> season -> episode, keys from the url path), downloaded flag (page
-#     url), favourites, sidecar, INFO via moviemeta + the site's story/poster/fields,
-#     name normalisation ("Title (Year)", "Show - SxxExx"; raw site labels when off)
-#   - no colour codes in titles, no retry/sleep loops
+LAST_MODIFIED = "13.11.2026"
+# EgyDead (Arabic movies / series, WordPress behind Cloudflare): the start domain redirects to the current egydead.*
+# domain, the cookie file is named after it ("|cf" covers); kind of a row from its url (/serie/, /season/, /assembly/,
+# else video); servers on the title's /watch/ page, Megamax mirrors as own rows; options proxy / alternative domain
 import base64
 import os
 import re
 
+from Components.config import ConfigSelection, ConfigText, config, getConfigListEntry
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
-from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import GetAlternativeProxyChoices, GetAlternativeProxyUrl, IsSidecarEnabled, IsMediaNamingNormalized
 from Plugins.Extensions.IPTVPlayer.libs.botprotection import remembered_user_agent
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import LATIN_ONLY, getMeta, isLatinTitle
@@ -41,18 +19,33 @@ from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetTmpDir
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetCookieDir, GetTmpDir, MergeDicts
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
 
+###################################################
+# Config options for HOST
+###################################################
+config.plugins.iptvplayer.egydead_proxy = ConfigSelection(default="None", choices=GetAlternativeProxyChoices())
+config.plugins.iptvplayer.egydead_alt_domain = ConfigText(default="", fixed_size=False)
+
 
 def GetConfigList():
-    return []
+    optionList = []
+    optionList.append(getConfigListEntry(_("Use proxy server:"), config.plugins.iptvplayer.egydead_proxy))
+    if config.plugins.iptvplayer.egydead_proxy.value == "None":
+        optionList.append(getConfigListEntry(_("Alternative domain:"), config.plugins.iptvplayer.egydead_alt_domain))
+    return optionList
+###################################################
 
 
 def gettytul():
-    return "https://a1.egydead.media/"
+    return "https://egydead.life/"
+
+
+# the site moves between egydead.* domains; links of favourites / old lists carry the previous one
+SITE_DOMAIN_RE = re.compile(r"^https?://(?:[a-z0-9-]+\.)*egydead\.[a-z]+(?=/|$)", re.I)
 
 
 # Arabic ordinals used in season labels ("الموسم الثاني"), compound ones first
@@ -79,14 +72,16 @@ ANIME_SEASONS = {"ربيع": "Spring", "صيف": "Summer", "خريف": "Autumn",
 
 
 class EgyDead(GenericFolderWatchedScraperMixin, CBaseHostClass):
+    DOMAIN_CACHE = None
     # what identifies a row and is needed to open it again
     FAV_FIELDS = ("name", "category", "type", "url", "title", "icon", "kind", "s_title", "s_season", "s_episode",
                   "meta_type", "meta_title", "meta_year")
 
     def __init__(self):
-        # cookie file named after the domain: the cover loader ("|cf" icons) looks for <domain>.cookie
+        # cookie file named after the domain: the cover loader ("|cf" icons) looks for <domain>.cookie - set again
+        # by selectDomain() once the current domain is known
         CBaseHostClass.__init__(self, {"history": "egydead", "cookie": "%s.cookie" % gettytul().split("/")[2]})
-        self.MAIN_URL = gettytul()
+        self.MAIN_URL = None
         self.DEFAULT_ICON_URL = "https://raw.githubusercontent.com/oe-mirrors/e2iplayer/gh-pages/Thumbnails/egydead.png"
         self.HEADER = self.cm.getDefaultHeader(browser="chrome")
         self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
@@ -97,7 +92,7 @@ class EgyDead(GenericFolderWatchedScraperMixin, CBaseHostClass):
             {"category": "eg_section", "title": _("Series"), "section": "series"},
             {"category": "eg_section", "title": _("Anime") + " / " + _("Cartoons"), "section": "anime"},
             {"category": "eg_section", "title": _("Others"), "section": "other"},
-            {"category": "eg_types", "title": _("Genres"), "url": self.getFullUrl("/type/")},
+            {"category": "eg_types", "title": _("Genres"), "url": "/type/"},
         ] + self.searchItems()
         self.SECTIONS = {
             "movies": [
@@ -153,18 +148,50 @@ class EgyDead(GenericFolderWatchedScraperMixin, CBaseHostClass):
     ###################################################
     # helpers
     ###################################################
+    def getProxy(self):
+        return GetAlternativeProxyUrl(config.plugins.iptvplayer.egydead_proxy.value) or None
+
     def getPage(self, baseUrl, addParams=None, post_data=None):
+        url = self._canonUrl(baseUrl)
         if addParams is None:
             addParams = dict(self.defaultParams)
+        proxy = self.getProxy()
+        if proxy and "http_proxy" not in addParams:
+            addParams = MergeDicts(addParams, {"http_proxy": proxy})
+        addParams["cookiefile"] = self.COOKIE_FILE
         addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.HEADER.get("User-Agent")}
-        return self.cm.getPageCFProtection(self._canonUrl(baseUrl), addParams, post_data)
+        return self.cm.getPageCFProtection(url, addParams, post_data)
+
+    def selectDomain(self):
+        # the start domain (or the user's alternative one) redirects to the site's current egydead.* domain; the
+        # plain request is enough for that (the Cloudflare page of the target comes back as 403)
+        if EgyDead.DOMAIN_CACHE:
+            self.MAIN_URL = EgyDead.DOMAIN_CACHE
+        else:
+            domain = config.plugins.iptvplayer.egydead_alt_domain.value.strip()
+            self.MAIN_URL = domain.rstrip("/") + "/" if self.cm.isValidUrl(domain) else gettytul()
+            params = {"header": dict(self.HEADER), "with_metadata": True, "ignore_http_code_ranges": [(400, 599)]}
+            proxy = self.getProxy()
+            if proxy:
+                params["http_proxy"] = proxy
+            sts, data = self.cm.getPage(self.MAIN_URL, params)
+            finalUrl = data.meta.get("url", "") if sts and hasattr(data, "meta") else ""
+            printDBG("EgyDead.selectDomain [%s] -> [%s]" % (self.MAIN_URL, finalUrl))
+            if SITE_DOMAIN_RE.match(finalUrl):
+                self.MAIN_URL = self.cm.getBaseUrl(finalUrl)
+                EgyDead.DOMAIN_CACHE = self.MAIN_URL
+        self.COOKIE_FILE = GetCookieDir("%s.cookie" % self.MAIN_URL.split("/")[2])
+        self.defaultParams["cookiefile"] = self.COOKIE_FILE
 
     def _canonUrl(self, url):
         # the site links the same page raw-Arabic or percent-encoded - one ASCII form for
-        # requests, the downloaded marker and favourites
-        url = (url or "").replace("&amp;", "&").strip()
+        # requests, the downloaded marker and favourites; links on a previous egydead.* domain -> the current one
+        url = (url or "").replace("&amp;", "&").replace("&#038;", "&").strip()
         if not url:
             return ""
+        if self.MAIN_URL is None:
+            self.selectDomain()
+        url = SITE_DOMAIN_RE.sub(self.MAIN_URL.rstrip("/"), url, 1)
         url = self.getFullUrl(url)
         try:
             url = urllib_quote(urllib_unquote(url), safe=":/?&=#+,;@%")
@@ -177,8 +204,9 @@ class EgyDead(GenericFolderWatchedScraperMixin, CBaseHostClass):
         # host's cf_clearance + solving User-Agent (the i0.wp.com resizer gets a 403 from the site, too)
         url = self._canonUrl(url)
         if url.startswith(self.MAIN_URL):
-            return url + "|cf"
-        return url
+            url += "|cf"
+        proxy = self.getProxy()
+        return strwithmeta(url, {"iptv_http_proxy": proxy}) if proxy and url.startswith("http") else url
 
     @staticmethod
     def _sidecarIcon(icon):
@@ -192,6 +220,8 @@ class EgyDead(GenericFolderWatchedScraperMixin, CBaseHostClass):
             return icon
         url = icon[:-3]
         params = dict(self.defaultParams, CFProtection=True)
+        if self.getProxy():
+            params["http_proxy"] = self.getProxy()
         params["header"] = dict(self.HEADER, **{"User-Agent": remembered_user_agent(self.COOKIE_FILE) or self.HEADER.get("User-Agent", ""),
                                                 "Referer": self.MAIN_URL, "Accept": "image/avif,image/webp,image/apng,image/*,*/*;q=0.8"})
         tmpFile = GetTmpDir("egydead_info.img")
@@ -410,15 +440,30 @@ class EgyDead(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 continue
             seen.add(key)
             self._addEntry(cItem, url, title, icon, label)
-        pagination = self.cm.ph.getDataBeetwenMarkers(data, '<div class="pagination">', "</div>", False)[1]
-        hasNext = bool(seen) and 'class="next page-numbers"' in pagination
-        nums = [int(n.replace(",", "")) for n in re.findall(r'class="page-numbers[^"]*"[^>]*>([\d,]+)<', pagination)]
+        if not seen:
+            SetIPTVPlayerLastHostError(_("No items found"))
+        # the pager: <div|nav class="pagination ..."> with nested elements, up to the closing tag after its last page link
+        # (links of a footer or sidebar behind it must not count)
+        pagination = ""
+        m = re.search(r"""<(?:div|nav)[^>]+class=['"][^'"]*\bpagination\b""", data)
+        if m:
+            pagination = data[m.start():m.start() + 6000]
+            last = pagination.rfind("page-numbers")
+            ends = [i for i in (pagination.find("</nav", last), pagination.find("</div", last)) if i >= 0] if last >= 0 else []
+            if ends:
+                pagination = pagination[:min(ends)]
+        nums = [int(n) for n in re.findall(r"""href=['"][^'"]*/page/(\d+)/""", pagination)]
+        nums += [int(n.replace(",", "")) for n in re.findall(r"""class=['"]page-numbers[^'"]*['"][^>]*>([\d,]+)<""", pagination)]
+        hasNext = bool(seen) and ("next page-numbers" in pagination or max(nums + [page]) > page)
         lastPage = max(nums + [page]) if hasNext else page
+        if hasNext and lastPage <= page:
+            lastPage = 0   # only a "next" link, the last page is not linked ("1 2 ... next")
         base = cItem.get("page_base") or self._pageBase(cItem["url"])
         if "?s=" in base:
-            # search: no pager on the page - a full page means there may be more
-            hasNext = len(seen) >= PAGE_SIZE
-            lastPage = 0 if hasNext else page
+            if not pagination:
+                # search without a pager on the page - a full page means there may be more
+                hasNext = len(seen) >= PAGE_SIZE
+                lastPage = 0 if hasNext else page
             tpl = base.replace("?s=", "page/{page}/?s=", 1)
         else:
             tpl = base.rstrip("/") + "/page/{page}/"
@@ -643,6 +688,8 @@ class EgyDead(GenericFolderWatchedScraperMixin, CBaseHostClass):
     ###################################################
     def handleService(self, index, refresh=0, searchPattern="", searchType=""):
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
+        if self.MAIN_URL is None:
+            self.selectDomain()
         if isJumpItem(self.currItem):
             self.currItem = jumpTarget(self, self.currItem)
         name = self.currItem.get("name", "")

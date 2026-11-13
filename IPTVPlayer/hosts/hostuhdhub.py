@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "09.10.2026"
+LAST_MODIFIED = "13.11.2026"
 # Coding: BY MOHAMED_OS
 # 06.10.2026 - ported to the python3 host standard
 #   - 4khdhub.one (4K / 1080p WEB-DL and BluRay releases): the menus of the site (movies, series, streaming
 #     platforms), anime, 4K HDR, top IMDb, search; First page / Jump / Next page with the last page
 #   - movies are VIDEO rows (one link per release file); series -> seasons -> episodes, one VIDEO row per
 #     episode with the files of every release (2160p / 1080p ...) as links; season packs (.zip) are left out
-#   - links: greenmotors.* ad gate -> HubCloud / HubDrive -> gamerxyt "generate" page -> direct file urls
-#     (FSL / FSLv2 / 10Gbps / PixelDrain), resolved here; the trailer (YouTube) and the site's VidEasy
-#     player go to urlparser
+#   - links: greenmotors.* ad gate decoded here -> HubCloud / HubDrive url -> urlparser (parserHUBCLOUD:
+#     FSL / FSLv2 / 10Gbps / PixelDrain); the trailer (YouTube) and the site's VidEasy player go to urlparser too
 #   - watched flag, downloaded flag, favourites, name normalisation ("Title (Year)", "Show - SxxExx"),
 #     sidecar, INFO via moviemeta + the site's fields
 ###################################################
@@ -24,7 +23,7 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, decorateResolvedLinkItems, sidecarFromUrlMeta, sidecarMetaQuery
-from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus, urllib_unquote
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import GetIconDir, b64Decode, printDBG, printExc
@@ -62,10 +61,6 @@ EP_FILE_STOPS = ('<div class="episode-download-item">',)
 FILE_RE = re.compile(r'<div class="download-item[^"]*">')
 FILE_STOPS = ('<div class="download-item', '<div class="series-tab-content')
 LINK_RE = re.compile(r'(?s)<a target="_blank" href="([^"]+)"[^>]*>(?:\s*<span[^>]*>)?\s*Download\s([^<&]+)')
-# server links of the gamerxyt "generate direct download link" page
-SERVER_TAG_RE = re.compile(r"<a([^>]*)>")
-SERVER_HREF_RE = re.compile(r'href="(https?://[^"]+)"')
-SERVER_LABEL_RE = re.compile(r"(?:\s*<i[^>]*>\s*</i>)?\s*(Download \[[^\]]+\]|Download File)\s*</a>")
 VIDEO_CATEGORIES = ("uhd_video",)
 SERIES_CATEGORIES = ("uhd_series", "uhd_season")
 
@@ -85,27 +80,6 @@ def _blocks(data, startRe, stops):
                 end = idx
         blocks.append(data[start.end():end])
         pos = end
-
-
-def _serverLinks(data):
-    # [(url, label)] of the <a ... href="http(s)://..."> Download [Server] / Download File </a> buttons
-    rows, pos = [], 0
-    while True:
-        tag = SERVER_TAG_RE.search(data, pos)
-        if not tag:
-            return rows
-        url, attrPos = "", 1
-        while True:
-            href = SERVER_HREF_RE.search(tag.group(1), attrPos)
-            if not href:
-                break
-            url, attrPos = href.group(1), href.start() + 1
-        label = SERVER_LABEL_RE.match(data, tag.end()) if url else None
-        if label:
-            rows.append((url, label.group(1)))
-            pos = label.end()
-        else:
-            pos = tag.start() + 1
 
 
 class UltrahdHub(GenericFolderWatchedScraperMixin, CBaseHostClass):
@@ -400,66 +374,21 @@ class UltrahdHub(GenericFolderWatchedScraperMixin, CBaseHostClass):
             printExc()
         return ""
 
-    def _followTo(self, url, referer, marker):
-        # follows redirects one by one until the location carries "marker=" (the 10Gbps server)
-        for _i in range(4):
-            sts, data = self.getPage(url, {"header": dict(self.HEADER, Referer=referer), "no_redirection": True, "with_metadata": True})
-            location = data.meta.get("location", "") if sts else ""
-            if not location:
-                return url
-            if (marker + "=") in location:
-                return urllib_unquote(location.split(marker + "=", 1)[1])
-            referer, url = url, self.getFullUrl(location, url)
-        return ""
-
-    def _resolveHub(self, url):
-        target = self._gateTarget(url) if "/drive/" not in url and "/file/" not in url else url
-        printDBG("UltrahdHub._resolveHub gate -> [%s]" % target)
-        if not self.cm.isValidUrl(target):
-            return []
-        sts, data = self.getPage(target)
-        if not sts:
-            return []
-        if "/file/" in target:
-            # HubDrive: the [HubCloud Server] button
-            target = self.cm.ph.getSearchGroups(data, r'href="(https?://[^"]+/drive/[^"]+)"')[0]
-            if not target:
-                return []
-            sts, data = self.getPage(target)
-            if not sts:
-                return []
-        generate = self.cm.ph.getSearchGroups(data, r"var url = '([^']+)'")[0] or self.cm.ph.getSearchGroups(data, r'id="download" href="([^"]+)"')[0]
-        if not generate:
-            return []
-        sts, data = self.getPage(generate, dict(self.defaultParams, header=dict(self.HEADER, Referer=target)))
-        if not sts:
-            return []
-        urltab = []
-        for link, label in _serverLinks(data):
-            link = link.replace("&amp;", "&")
-            server = self.cm.ph.getSearchGroups(label, r"\[(?:Server\s*:\s*)?([^\]]+)\]")[0] or label
-            if "Buzz" in label:
-                continue  # fuckingfast.net behind a Cloudflare check
-            if "10Gbps" in label:
-                link = self._followTo(link, generate, "link")
-            elif "pixeldra" in link:
-                # the button holds a dummy id, a script sets the real one: var pxl = "https://pixeldrain.dev/u/<id>"
-                link = self.cm.ph.getSearchGroups(data, r'var pxl\s*=\s*"([^"]+)"')[0] or link
-                fileId = self.cm.ph.getSearchGroups(link, r"/(?:u|file)/([A-Za-z0-9]+)")[0]
-                link = "https://pixeldrain.com/api/file/%s" % fileId if fileId else ""
-            if self.cm.isValidUrl(link):
-                urltab.append({"name": server.strip(), "url": strwithmeta(link, {"User-Agent": self.HEADER["User-Agent"]})})
-        return urltab
-
     def getVideoLinks(self, videoUrl):
         printDBG("UltrahdHub.getVideoLinks [%s]" % videoUrl)
         if not self.cm.isValidUrl(videoUrl):
             return []
         sidecar = sidecarFromUrlMeta(videoUrl, IsSidecarEnabled())
-        if "youtube.com" in videoUrl or "videasy" in videoUrl:
-            urltab = self.up.getVideoLinkExt(videoUrl)
-        else:
-            urltab = self._resolveHub(str(videoUrl))
+        if "/drive/" not in videoUrl and "/file/" not in videoUrl and self.up.checkHostSupport(videoUrl) != 1:
+            # the site's ad gate (greenmotors.*) -> the HubCloud / HubDrive url, resolved by urlparser (parserHUBCLOUD)
+            target = self._gateTarget(str(videoUrl))
+            printDBG("UltrahdHub.getVideoLinks gate -> [%s]" % target)
+            if not self.cm.isValidUrl(target):
+                SetIPTVPlayerLastHostError(_("No stream available"))
+                return []
+            proxy = GetAlternativeProxyUrl(config.plugins.iptvplayer.uhdhub_proxy.value)
+            videoUrl = strwithmeta(target, {"http_proxy": proxy} if proxy else {})
+        urltab = self.up.getVideoLinkExt(videoUrl)
         if not urltab:
             SetIPTVPlayerLastHostError(_("No stream available"))
             return []
