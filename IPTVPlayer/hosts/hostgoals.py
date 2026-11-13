@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "08.10.2026"
+LAST_MODIFIED = "13.11.2026"
 # 27.02.2026 - by Mr.X
 # Goals.Zone - football goal clips and highlights (JSON API of gogz.meneses.pt): latest matches, teams, search
 #   (matches of the last week). A match lists its clips (goals, red cards ...), every clip has mirrors on
@@ -203,36 +203,16 @@ class GoalsZoneAPI(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return decorateResolvedLinkItems(self._getVideoLinks(strwithmeta(url)), sidecar)
 
     def _getVideoLinks(self, url):
+        # streamusk, streamff, streamain / streama.in, streamable, YouTube ...: urlparser
+        if self.up.checkHostSupport(url) == 1:
+            return self.up.getVideoLinkExt(url)
+        # streamin, v.redd.it: the mp4 / m3u8 in the page
         urltab = []
         host = self.up.getDomain(url, False)
         streamHeaders = {"User-Agent": self.HEADER["User-Agent"], "Referer": host, "Origin": host[:-1]}
-        videoId = url.split("?")[0].rstrip("/").split("/")[-1]
-        if "streamusk" in url:
-            # the clips expire after about a day, the CDN answers 403 then
-            data = self.getJson("https://api.streamusk.com/videos/%s" % videoId)
-            if isinstance(data, dict) and data.get("status") in ("EXPIRED", "FAILED", "ERROR"):
-                SetIPTVPlayerLastHostError(_("Content not available"))
-                return []
-            url = self.up.decorateUrl("https://d3ctycp5ce1kgh.cloudfront.net/videos/%s/video.m3u8" % videoId, streamHeaders)
-            return getDirectM3U8Playlist(url, checkExt=False)
-        if "streamff" in url:
-            data = self.getJson("https://ffedge.streamff.com/share/" + videoId)
-            item = data[0] if isinstance(data, list) and data and isinstance(data[0], dict) else {}
-            link = item.get("external_url") or ("https://ffedge.streamff.com/uploads/%s.mp4" % item["path"] if item.get("path") else "")
-            if not link:
-                SetIPTVPlayerLastHostError(_("Content not available"))
-                return []
-            return [{"name": "MP4", "url": self.up.decorateUrl(link, {"User-Agent": self.HEADER["User-Agent"], "Referer": "https://streamff.com/"})}]
         sts, data = self.getPage(url)
         if not sts:
             return []
-        if "streamain" in url or "streama.in" in url:
-            # the watch page lists other clips as well - the player is in the <iframe>
-            frame = self.cm.ph.getSearchGroups(data, r'iframe\s*src="([^"]+)')[0]
-            if frame:
-                sts, data = self.getPage(frame)
-                if not sts:
-                    return []
         url = self.cm.ph.getSearchGroups(data, r"""["']((?:https?:)?//[^'^"]+?\.(?:mp4|m3u8|mkv)(?:\?[^"^']+?)?)["']""")[0]
         if not url:
             SetIPTVPlayerLastHostError(_("Content not available"))

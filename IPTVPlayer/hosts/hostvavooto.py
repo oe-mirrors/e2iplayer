@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "07.11.2026"
+LAST_MODIFIED = "13.11.2026"
 # VAVOO.TO: IPTV live channels per country (logic of the Kodi "vavoo" addon).
 # - signature: POST www.vavoo.tv/api/app/ping (anonymous app ping) -> addonSig, valid ~15 min
-# - channel lists: POST vavoo.to/mediahubmx-catalog.json (filter group = country, paged by cursor)
-# - play: POST vavoo.to/mediahubmx-resolve.json with the channel url -> HLS url
+# - channel lists: POST kool.to/mediahubmx-catalog.json (filter group = country, paged by cursor)
+# - play: POST kool.to/mediahubmx-resolve.json with the channel url -> HLS url
 # The same channel comes in several variants (".b", ".c", ".s" sources, HD/HD+/backup): one row per channel,
 # the variants are its links. Live TV only: no watched flag, no movie metadata.
 # 08.10.2026 - local paging (100 channels per page) for long letter lists and the search (no cut at 300),
 #   countries over 100 channels split by letter, letter folders reopen from favourites, sidecar
 # 09.10.2026 - vavoo.to reset the box's TLS connection: one more try as Chrome (curl-impersonate)
+# 13.11.2026 - API on kool.to (vavoo.to times out), vavoo.to kept as fallback
 ###################################################
 # LOCAL import
 ###################################################
@@ -42,8 +43,10 @@ def gettytul():
 class VavooTo(CBaseHostClass):
 
     PING_URLS = ['https://www.vavoo.tv/api/app/ping', 'https://www.lokke.app/api/app/ping', 'https://www.vypn.net/api/app/ping']
-    CATALOG_URL = 'https://vavoo.to/mediahubmx-catalog.json'
-    RESOLVE_URL = 'https://vavoo.to/mediahubmx-resolve.json'
+    # 13.11.2026: vavoo.to no longer answers (connect timeout); kool.to serves the same API with the same
+    # signature and also resolves the old vavoo.to channel urls of favourites. The first answering domain is kept.
+    API_DOMAINS = ['kool.to', 'vavoo.to']
+    CATALOG_URL = 'https://kool.to/mediahubmx-catalog.json'
     API_UA = 'okhttp/4.11.0'
     STREAM_UA = 'VAVOO/2.6'
     CLIENT_VERSION = '3.0.2'
@@ -67,13 +70,32 @@ class VavooTo(CBaseHostClass):
         self.groups = []
         self.cache = {}
         self.deviceId = '%016x' % random.getrandbits(64)
+        self.apiDomains = list(self.API_DOMAINS)
+        self.lastTransportError = False
 
     ###################################################
     # API
     ###################################################
+    def _apiPost(self, action, body):
+        # mediahubmx-<action>.json on the first domain that answers; that domain moves to the front
+        for domain in list(self.apiDomains):
+            data = self._post('https://%s/mediahubmx-%s.json' % (domain, action), body)
+            if data is not None:
+                if domain != self.apiDomains[0]:
+                    printDBG('VavooTo._apiPost: %s answers, used first from now on' % domain)
+                    self.apiDomains.remove(domain)
+                    self.apiDomains.insert(0, domain)
+                return data
+            if not self.lastTransportError:
+                # the domain answered (an offline source, HTTP 500, no JSON) - the next domain would say the same
+                break
+            printDBG('VavooTo._apiPost: no answer from %s' % domain)
+        return None
+
     def _post(self, url, body, withSig=True):
         data = self._postOnce(url, body, withSig)
-        if data is None and withSig:
+        if data is None and withSig and not self.lastTransportError:
+            # a new signature only helps when the domain answered; one that is unreachable stays unreachable
             printDBG('VavooTo._post: no answer, new signature and one retry')
             self.sig = ''
             self.sigValidUntil = 0
@@ -82,13 +104,16 @@ class VavooTo(CBaseHostClass):
 
     def _postOnce(self, url, body, withSig=True, forceSig=False):
         header = {'User-Agent': self.API_UA, 'Accept': 'application/json', 'Content-Type': 'application/json; charset=utf-8'}
+        # True only when the domain could not be reached at all (then the next API domain is worth a try)
+        self.lastTransportError = False
         if withSig:
             sig = self._getSignature(forceSig)
             if not sig:
                 return None
             header['mediahubmx-signature'] = sig
-        # with_metadata: the meta (pycurl_error) is only on the answer with it
-        params = {'header': header, 'raw_post_data': True, 'with_metadata': True}
+        # with_metadata: the meta (pycurl_error) is only on the answer with it; timeout: an unreachable domain
+        # (vavoo.to since 13.11.2026) must not hold the list for the system's connect timeout
+        params = {'header': header, 'raw_post_data': True, 'with_metadata': True, 'timeout': 15}
         sts, data = self.cm.getPage(url, params, json_dumps(body))
         # also without an answer at all (the urllib path has no pycurl_error)
         if not sts and (data is None or (getattr(data, 'meta', None) or {}).get('pycurl_error')):
@@ -97,6 +122,7 @@ class VavooTo(CBaseHostClass):
             # other headers incl. the signature stay; the catalog answers any User-Agent)
             printDBG('VavooTo._postOnce: %s - retrying with curl-impersonate' % str((getattr(data, 'meta', None) or {}).get('pycurl_error', 'no answer')))
             sts, data = self.cm.getPage(url, dict(params, impersonate=True), json_dumps(body))
+            self.lastTransportError = not sts and (data is None or bool((getattr(data, 'meta', None) or {}).get('pycurl_error')))
         if not sts or not data:
             return None
         try:
@@ -182,7 +208,7 @@ class VavooTo(CBaseHostClass):
         items = []
         cursor = 0
         for _i in range(20):
-            data = self._post(self.CATALOG_URL, self._catalogBody(group, search, cursor))
+            data = self._apiPost('catalog', self._catalogBody(group, search, cursor))
             if not isinstance(data, dict):
                 break
             if not self.groups:
@@ -345,7 +371,7 @@ class VavooTo(CBaseHostClass):
     def getVideoLinks(self, url):
         printDBG("VavooTo.getVideoLinks [%s]" % url)
         sidecar = sidecarFromUrlMeta(url, IsSidecarEnabled())
-        data = self._post(self.RESOLVE_URL, {'language': 'de', 'region': 'AT', 'url': str(url), 'clientVersion': self.CLIENT_VERSION})
+        data = self._apiPost('resolve', {'language': 'de', 'region': 'AT', 'url': str(url), 'clientVersion': self.CLIENT_VERSION})
         urlTab = []
         for it in (data if isinstance(data, list) else []):
             u = (it or {}).get('url') if isinstance(it, dict) else ''

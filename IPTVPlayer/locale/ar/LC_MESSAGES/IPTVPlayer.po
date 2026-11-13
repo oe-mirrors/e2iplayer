@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-11 10:48+0000\n"
-"PO-Revision-Date: 2026-11-02 20:48+0200\n"
+"PO-Revision-Date: 2026-11-12 15:18+0200\n"
 "Last-Translator: Mohamed Elsafty [angel_heart150@yahoo.com]\n"
 "Language-Team: \n"
 "Language: ar\n"
@@ -163,7 +163,7 @@ msgstr "%s يتطلب حسابًا مجانيًا. أدخل اسم المستخ�
 
 #, python-format
 msgid "%s not found in %s"
-msgstr ""
+msgstr "%s غير موجود في %s"
 
 #, python-format
 msgid "%s password"
@@ -844,7 +844,7 @@ msgid "Automatic"
 msgstr "تلقائي"
 
 msgid "Automatic (crop or blurred background)"
-msgstr ""
+msgstr "تلقائي (قص الصورة أو خلفية ضبابية)"
 
 msgid "Automatically turn on external subtitles"
 msgstr "تشغيل الترجمة الخارجية تلقائيًا"
@@ -933,7 +933,7 @@ msgid "Block wmv files"
 msgstr "حظر ملفات WMV"
 
 msgid "Blue"
-msgstr ""
+msgstr "أزرق"
 
 msgid "Board Review"
 msgstr "مراجعة المجلس"
@@ -1286,7 +1286,7 @@ msgstr "انسخه إلى /usr/bin/TorrServer (أو إلى مجلد على ال�
 
 #, python-format
 msgid "Copying file from \"%s\" to \"%s\" failed.\n"
-msgstr ""
+msgstr "فشل نسخ الملف من \"%s\" إلى \"%s\".\n"
 
 msgid "Could not add the user link."
 msgstr "تعذر إضافة رابط المستخدم."
@@ -1295,7 +1295,7 @@ msgid "Could not load the wiki page."
 msgstr "تعذر تحميل صفحة Wiki."
 
 msgid "Could not read the server list of the page."
-msgstr ""
+msgstr "تعذرت قراءة قائمة السيرفرات الموجودة في الصفحة."
 
 msgid "Could not resolve host."
 msgstr "تعذر العثور على الخادم."
@@ -1328,13 +1328,13 @@ msgid "Couples"
 msgstr "الأزواج"
 
 msgid "Cover on the LCD"
-msgstr ""
+msgstr "عرض الغلاف على شاشة LCD"
 
 msgid "Cover picture on the LCD"
-msgstr ""
+msgstr "صورة الغلاف على شاشة LCD"
 
 msgid "Cover size"
-msgstr ""
+msgstr "حجم الغلاف"
 
 msgid "Create Enigma2 .cuts chapter marks"
 msgstr "إنشاء علامات فصول Enigma2 بصيغة .cuts"
@@ -1392,7 +1392,7 @@ msgid "Cut"
 msgstr "قص"
 
 msgid "Cyan"
-msgstr ""
+msgstr "سماوي"
 
 msgid "Czech"
 msgstr "تشيكي"
@@ -1404,7 +1404,7 @@ msgid "DLNA server of TorrServer"
 msgstr "خادم DLNA الخاص بـ TorrServer"
 
 msgid "DONE"
-msgstr ""
+msgstr "تم"
 
 msgid "DOWNLOAD ERROR"
 msgstr "خطأ في التنزيل"
@@ -1897,7 +1897,7 @@ msgid "E2iPlayer virtual keyboard"
 msgstr "لوحة المفاتيح الافتراضية"
 
 msgid "ENDS"
-msgstr ""
+msgstr "ينتهي"
 
 msgid ""
 "ERROR: pipeline could not be constructed: no element \"playbin2\" \n"
@@ -1989,10 +1989,10 @@ msgstr ""
 "يرجى الإبلاغ عن المشكلة إلى %s"
 
 msgid "End time"
-msgstr ""
+msgstr "وقت الانتهاء"
 
 msgid "Endless"
-msgstr ""
+msgstr "بلا نهاية"
 
 msgid "English"
 msgstr "الإنجليزية"
@@ -2362,7 +2362,7 @@ msgid "Fill cache before playback"
 msgstr "ملء ذاكرة التخزين المؤقت قبل التشغيل"
 
 msgid "Fill the field (crop)"
-msgstr ""
+msgstr "ملء الإطار (قص الصورة)"
 
 msgid "Filler"
 msgstr "محتوى إضافي"
@@ -2609,10 +2609,10 @@ msgid "Greek"
 msgstr "اليونانية"
 
 msgid "Green"
-msgstr ""
+msgstr "أخضر"
 
 msgid "Grey"
-msgstr ""
+msgstr "رمادي"
 
 #, python-format
 msgid "Group \"%s\" already exists."
@@ -3033,13 +3033,13 @@ msgid "Kurdish"
 msgstr "الكردية"
 
 msgid "LCD font size"
-msgstr ""
+msgstr "حجم خط شاشة LCD"
 
 msgid "LEFT/RIGHT at start/end of text - alternative way to switch panels"
 msgstr "يسار/يمين عند بداية/نهاية النص - طريقة بديلة للتبديل بين اللوحات"
 
 msgid "LENGTH"
-msgstr ""
+msgstr "المدة"
 
 msgid "Language"
 msgstr "اللغة"
@@ -3051,31 +3051,31 @@ msgid "Language:"
 msgstr "اللغة:"
 
 msgid "Large"
-msgstr ""
+msgstr "كبير"
 
 msgid "Large (info on the right)"
-msgstr ""
+msgstr "كبير (المعلومات على اليمين)"
 
 msgid "Large (title below)"
-msgstr ""
+msgstr "كبير (العنوان بالأسفل)"
 
 msgid "Large cover, info on the right: row 1"
-msgstr ""
+msgstr "غلاف كبير، المعلومات على اليمين: الصف الأول"
 
 msgid "Large cover, info on the right: row 2"
-msgstr ""
+msgstr "غلاف كبير، المعلومات على اليمين: الصف الثاني"
 
 msgid "Large cover, info on the right: row 3"
-msgstr ""
+msgstr "غلاف كبير، المعلومات على اليمين: الصف الثالث"
 
 msgid "Large cover, info on the right: row 4"
-msgstr ""
+msgstr "غلاف كبير، المعلومات على اليمين: الصف الرابع"
 
 msgid "Large cover: size of the times below the bar"
-msgstr ""
+msgstr "غلاف كبير: حجم الأوقات أسفل الشريط"
 
 msgid "Large cover: size of the title line"
-msgstr ""
+msgstr "غلاف كبير: حجم سطر العنوان"
 
 msgid "Last"
 msgstr "الأحدث"
@@ -3219,7 +3219,7 @@ msgid "Left"
 msgstr "يسار"
 
 msgid "Length"
-msgstr ""
+msgstr "المدة"
 
 msgid "Library"
 msgstr "المكتبة"
@@ -3244,7 +3244,7 @@ msgstr "تباعد الأسطر"
 
 #, python-format
 msgid "Lines that could not be read: %d (first: line %d of %s)"
-msgstr ""
+msgstr "تعذرت قراءة %d من الأسطر (أولها: السطر %d من %s)"
 
 msgid "Link"
 msgstr "الرابط"
@@ -3390,7 +3390,7 @@ msgid "Long list"
 msgstr "قائمة طويلة"
 
 msgid "Long titles on the LCD"
-msgstr ""
+msgstr "العناوين الطويلة على شاشة LCD"
 
 msgid "Longest"
 msgstr "الأطول"
@@ -3436,7 +3436,7 @@ msgid "Macedonian"
 msgstr "المقدونية"
 
 msgid "Magenta"
-msgstr ""
+msgstr "أرجواني"
 
 msgid "Main"
 msgstr "الرئيسية"
@@ -3490,7 +3490,7 @@ msgid "MediaFusion manifest URL (your own):"
 msgstr "رابط ملف manifest الخاص بـ MediaFusion (الخاص بك):"
 
 msgid "Medium (beside the title)"
-msgstr ""
+msgstr "متوسط (بجوار العنوان)"
 
 msgid "Medtryx Marketing"
 msgstr "تسويق Medtryx"
@@ -3511,7 +3511,7 @@ msgid "Mini series"
 msgstr "مسلسلات قصيرة"
 
 msgid "Minutes"
-msgstr ""
+msgstr "دقائق"
 
 msgid "Missed the show?"
 msgstr "فاتك العرض؟"
@@ -3915,7 +3915,7 @@ msgid "Nordic"
 msgstr "لغات الشمال الأوروبي"
 
 msgid "Normal"
-msgstr ""
+msgstr "عادي"
 
 msgid "Normalize item / file names (Show - SxxExx - Title)"
 msgstr "توحيد أسماء العناصر / الملفات (العرض - SxxExx - العنوان)"
@@ -4028,7 +4028,7 @@ msgstr "يمكن نقل الروابط فقط إلى مجموعة."
 
 #, python-format
 msgid "Only loaded up to %s"
-msgstr ""
+msgstr "تم التحميل حتى %s فقط"
 
 #, python-format
 msgid "Only the %d oldest new commits are shown"
@@ -4090,7 +4090,7 @@ msgid "Options (select language, clear search history, settings)"
 msgstr "خيارات (اختيار اللغة، مسح سجل البحث، الإعدادات)"
 
 msgid "Orange"
-msgstr ""
+msgstr "برتقالي"
 
 msgid "Order of user links:"
 msgstr "ترتيب روابط المستخدم:"
@@ -4148,7 +4148,7 @@ msgid "PLAY"
 msgstr "تشغيل"
 
 msgid "PLAYED"
-msgstr ""
+msgstr "تم التشغيل"
 
 msgid "PREVIOUS/NEXT"
 msgstr "السابق/التالي"
@@ -4161,7 +4161,7 @@ msgid "PRIVATE - wait a few seconds"
 msgstr "خاص - انتظر بضع ثوانٍ"
 
 msgid "Page by page"
-msgstr ""
+msgstr "صفحة بصفحة"
 
 msgid "Page not found - please check the address."
 msgstr "الصفحة غير موجودة - يرجى التحقق من العنوان."
@@ -4220,7 +4220,7 @@ msgid "People"
 msgstr "الأشخاص"
 
 msgid "Percent"
-msgstr ""
+msgstr "نسبة مئوية"
 
 msgid "Persian"
 msgstr "الفارسية"
@@ -4267,7 +4267,7 @@ msgid "Playback UHD :"
 msgstr "تشغيل UHD:"
 
 msgid "Played"
-msgstr ""
+msgstr "تم تشغيله"
 
 msgid "Player Skin"
 msgstr "سكين المشغل"
@@ -4516,10 +4516,10 @@ msgid "Programmes of the last days of the channels with an archive"
 msgstr "برامج الأيام الأخيرة للقنوات التي لديها أرشيف"
 
 msgid "Progress bar color on the LCD"
-msgstr ""
+msgstr "لون شريط التقدم على شاشة LCD"
 
 msgid "Progress bar frame on the LCD"
-msgstr ""
+msgstr "إطار شريط التقدم على شاشة LCD"
 
 msgid "Promote item"
 msgstr "ترقية العنصر"
@@ -4558,7 +4558,7 @@ msgid "RED"
 msgstr "أحمر"
 
 msgid "REMAINING"
-msgstr ""
+msgstr "المتبقي"
 
 msgid "REWIND"
 msgstr "إرجاع"
@@ -4647,7 +4647,7 @@ msgid "Recon"
 msgstr "استطلاع"
 
 msgid "Red"
-msgstr ""
+msgstr "أحمر"
 
 msgid "Referee"
 msgstr "الحكم"
@@ -4691,7 +4691,7 @@ msgid "Religion"
 msgstr "الدين"
 
 msgid "Remaining"
-msgstr ""
+msgstr "الوقت المتبقي"
 
 msgid "Remaining:"
 msgstr "المتبقي:"
@@ -4867,7 +4867,7 @@ msgid "Safe search (restricted mode):"
 msgstr "البحث الآمن (الوضع المقيّد):"
 
 msgid "Same as the bar"
-msgstr ""
+msgstr "نفس لون الشريط"
 
 msgid "Save"
 msgstr "حفظ"
@@ -4914,10 +4914,10 @@ msgid "Script finished."
 msgstr "انتهى تنفيذ السكربت."
 
 msgid "Scroll"
-msgstr ""
+msgstr "تمرير"
 
 msgid "Scrolling title runs (then it stands still)"
-msgstr ""
+msgstr "يتحرك العنوان بالتمرير ثم يستقر"
 
 msgid "Search"
 msgstr "بحث"
@@ -5243,7 +5243,7 @@ msgid "Show & Comedy"
 msgstr "العروض والكوميديا"
 
 msgid "Show E2iPlayer on the display"
-msgstr ""
+msgstr "إظهار E2iPlayer على الشاشة"
 
 msgid "Show E2iPlayer settings in system menu"
 msgstr "عرض إعدادات E2iPlayer في قائمة النظام"
@@ -5388,10 +5388,10 @@ msgid "Slovenian"
 msgstr "السلوفينية"
 
 msgid "Small (16:9)"
-msgstr ""
+msgstr "صغير (16:9)"
 
 msgid "Smaller text"
-msgstr ""
+msgstr "نص أصغر"
 
 msgid "Snooker"
 msgstr "السنوكر"
@@ -6254,7 +6254,7 @@ msgid "Time limit"
 msgstr "المهلة الزمنية"
 
 msgid "Time on the LCD (player)"
-msgstr ""
+msgstr "عرض الوقت على شاشة LCD (مشغل الوسائط)"
 
 msgid "Tip! You can connect USB flash drive to fix this problem."
 msgstr "نصيحة! يمكنك توصيل وحدة تخزين USB لحل هذه المشكلة."
@@ -6599,7 +6599,7 @@ msgid "Urllists player"
 msgstr "مشغل قوائم الروابط"
 
 msgid "Use 16:9 pictures (per episode) instead of the portrait poster"
-msgstr ""
+msgstr "استخدام صور بنسبة 16:9 لكل حلقة بدلاً من الملصق الرأسي"
 
 msgid "Use Cinemeta (no key, English)"
 msgstr "استخدام Cinemeta (بدون مفتاح، باللغة الإنجليزية)"
@@ -6714,7 +6714,7 @@ msgid "Version: %s"
 msgstr "الإصدار: %s"
 
 msgid "Very large"
-msgstr ""
+msgstr "كبير جداً"
 
 msgid "Video"
 msgstr "فيديو"
@@ -6848,13 +6848,13 @@ msgid "While live TV is running"
 msgstr "أثناء تشغيل البث التلفزيوني المباشر"
 
 msgid "White"
-msgstr ""
+msgstr "أبيض"
 
 msgid "Whole file must be downloaded to start playback!"
 msgstr "يجب تنزيل الملف بالكامل لبدء التشغيل!"
 
 msgid "Whole picture (black bars)"
-msgstr ""
+msgstr "عرض الصورة بالكامل (أشرطة سوداء)"
 
 msgid "Wiki"
 msgstr "Wiki"
@@ -6869,7 +6869,7 @@ msgid "With an API key from subdl.com (E2iPlayer settings, Subtitles) the offici
 msgstr "باستخدام مفتاح API من subdl.com (إعدادات E2iPlayer، الترجمة)، يتم البحث أيضًا في واجهة SubDL API الرسمية."
 
 msgid "With seconds"
-msgstr ""
+msgstr "مع الثواني"
 
 msgid "With subtitles"
 msgstr "مع ترجمة"
@@ -6952,7 +6952,7 @@ msgid "Year:"
 msgstr "السنة:"
 
 msgid "Yellow"
-msgstr ""
+msgstr "أصفر"
 
 msgid "Yes"
 msgstr "نعم"
@@ -7340,7 +7340,7 @@ msgid "menu and list only"
 msgstr "القائمة والقائمة الفرعية فقط"
 
 msgid "min"
-msgstr ""
+msgstr "دقيقة"
 
 msgid "minutes"
 msgstr "دقائق"

@@ -164,6 +164,7 @@
   "webstream",
   "footyroom",
   "goals",
+  "hoofootcom",
   "basketballvideocom",
   "allgoals",
   "nflvideo",

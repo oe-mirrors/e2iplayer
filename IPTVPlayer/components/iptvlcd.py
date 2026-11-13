@@ -39,6 +39,9 @@ LARGE_LCD_MIN_HEIGHT = 176
 # ---------------------------------------------------------------------------------------------------------------
 # font of all texts of the layout; "Regular" exists in every image, a skin font such as "VFD" or "RegularLCD" can be used too
 LCD_FONT = 'Regular'
+# setting "LCD font size" in the list / info screens: factor on their normal font sizes (the player layout has its own
+# sizes per setting); a text that does not fit gets smaller again
+LCD_FONT_SCALE = {'normal': 1.0, 'large': 1.3, 'xlarge': 1.6}
 # progress bar: the colour of the fill and of the frame come from the settings lcd_bar_color and lcd_bar_frame; the
 # values below are used when a setting does not exist (older setup file). The frame gets thicker with the display
 # height (1 px up to 3 px)
@@ -891,11 +894,13 @@ class IPTVExtMoviePlayerColorSummary(Screen):
             printExc()
 
     @classmethod
-    def fitFont(cls, text, width, height, size, minSize):
-        # the largest font from size down to minSize in which the wrapped text fits the height: (size, lines)
+    def fitFont(cls, text, width, height, size, minSize, wholeWords=False):
+        # the largest font from size down to minSize in which the wrapped text fits the height: (size, lines);
+        # wholeWords: also no word wider than a line (an url, a hoster name) - only at minSize a word is cut
+        longest = max([len(word) for word in text.split()] + [1]) if wholeWords else 0
         while True:
             lines = cls.wrapLcdText(text, width, size)
-            if len(lines) * size * cls.LINE_EM <= height or size <= minSize:
+            if size <= minSize or (len(lines) * size * cls.LINE_EM <= height and longest * size * cls.CHAR_EM <= width):
                 return size, lines
             size = max(minSize, size - max(1, size // 12))
 
@@ -1072,28 +1077,65 @@ def movieSummaryIfWanted():
         return None  # an image without it
 
 
+def lcdFontScale():
+    # the setting "LCD font size" for every E2iPlayer LCD screen: normal = the sizes of the layouts as they are
+    return LCD_FONT_SCALE.get(lcdSetting('lcd_font_size', 'large'), LCD_FONT_SCALE['large'])
+
+
+def lcdFitLine(text, width, size, minSize=10):
+    # the largest font up to size in which the text fits ONE line of this width (average character width)
+    chars = max(1, len((text or '').strip()))
+    return max(minSize, min(size, int(width / (chars * IPTVExtMoviePlayerColorSummary.CHAR_EM * 1.05))))
+
+
+def lcdFitWrapped(text, width, height, size, minSize=10):
+    # the largest font up to size in which the wrapped text fits the rectangle without cutting a word -> (size, lines)
+    return IPTVExtMoviePlayerColorSummary.fitFont(text or '', width, height, size, minSize, wholeWords=True)
+
+
+def listLcdGeometry(width, height, scale, hasLogo, text1, text2):
+    # rectangles (x, y, w, h) and fonts of IPTVPlayerLCDScreen on a colour display; plain arithmetic, testable on a PC.
+    # text1 = one line (E2iPlayer / the host), text2 = the group / host / marked row, wrapped; both as one block in the
+    # middle of the area above the logo, or of the whole display when there is no logo. Normal size = 1/8 and 1/10 of the
+    # display height (the sizes of the old fixed layout)
+    lineEm = IPTVExtMoviePlayerColorSummary.LINE_EM
+    m = width // 40
+    W = width - 2 * m
+    font1 = lcdFitLine(text1, W, int(height // 8 * scale))
+    font2 = max(10, int(height // 10 * scale))
+    text1H = int(font1 * lineEm) + 2
+    logo = None
+    bottom = height - m
+    if hasLogo:
+        # the logo (3:1 like the host logos) gets what the first line and two lines of text2 leave, at most half the
+        # display and at least a quarter of it
+        need = m + text1H + 2 * int(font2 * lineEm) + m
+        logoH = min(W // 3, max(height // 4, min(height // 2, height - need - m)))
+        logoW = logoH * 3
+        logoY = height - logoH - m
+        logo = ((width - logoW) // 2, logoY, logoW, logoH)
+        bottom = logoY - m // 2
+    areaH = max(1, bottom - m - text1H)
+    if text2:
+        font2, lines = lcdFitWrapped(text2, W, areaH, font2)
+        text2H = min(areaH, int(len(lines) * font2 * lineEm) + 2)
+    else:
+        text2H = 1
+    top = m + max(0, (bottom - m - text1H - text2H) // 2)
+    return {'text1': (m, top, W, text1H), 'font1': font1, 'text2': (m, top + text1H, W, text2H), 'font2': font2, 'logo': logo}
+
+
 class IPTVPlayerLCDScreen(Screen):
     summary_screenwidth, summary_screenheight = lcdDisplaySize((132, 64))
-    if summary_screenwidth >= LARGE_LCD_MIN_WIDTH and summary_screenheight >= LARGE_LCD_MIN_HEIGHT:
-        # colour LCD: the layout follows the display size, the logo keeps the 3:1 of the host logos
-        margin = summary_screenwidth // 40
-        textW = summary_screenwidth - 2 * margin
-        logoH = min(textW // 3, summary_screenheight // 2)
-        logoW = logoH * 3
-        logoY = summary_screenheight - logoH - margin
-        text1H = (logoY - margin) * 2 // 5
-        text2H = logoY - margin - text1H
-        # a tall display has the height, "E2iPlayer" must still fit the width
-        font1 = min(text1H * 3 // 4, textW // 7)
+    largeLcd = summary_screenwidth >= LARGE_LCD_MIN_WIDTH and summary_screenheight >= LARGE_LCD_MIN_HEIGHT
+    if largeLcd:
+        # colour LCD: placed by listLcdGeometry() whenever a text or the logo changes (setting "LCD font size")
         skin = """
     <screen position="0,0" size="%(w)d,%(h)d" title="E2iPlayer">
-        <widget name="text1" position="%(m)d,%(text1Y)d" size="%(textW)d,%(text1H)d" font="Regular;%(font1)d" halign="center" valign="center" foregroundColor="#05F7F3"/>
-        <widget name="text2" position="%(m)d,%(text2Y)d" size="%(textW)d,%(text2H)d" font="Regular;%(font2)d" halign="center" valign="center" foregroundColor="#FFFF00"/>
-        <widget name="LCDlogo" position="%(logoX)d,%(logoY)d" zPosition="4" size="%(logoW)d,%(logoH)d" alphatest="blend" />
-    </screen>""" % {'w': summary_screenwidth, 'h': summary_screenheight, 'm': margin, 'textW': textW,
-                    'text1Y': margin // 2, 'text1H': text1H, 'font1': font1,
-                    'text2Y': margin // 2 + text1H, 'text2H': text2H, 'font2': font1 * 4 // 5,
-                    'logoX': (summary_screenwidth - logoW) // 2, 'logoY': logoY, 'logoW': logoW, 'logoH': logoH}
+        <widget name="text1" position="0,0" size="%(w)d,%(h)d" font="%(fn)s;12" halign="center" valign="center" noWrap="1" foregroundColor="#05F7F3"/>
+        <widget name="text2" position="0,0" size="%(w)d,%(h)d" font="%(fn)s;12" halign="center" valign="top" foregroundColor="#FFFF00"/>
+        <widget name="LCDlogo" position="0,0" zPosition="4" size="%(w)d,%(h)d" alphatest="blend" />
+    </screen>""" % {'w': summary_screenwidth, 'h': summary_screenheight, 'fn': LCD_FONT}
     else:
         skin = """
     <screen position="0,0" size="132,64" title="E2iPlayer">
@@ -1105,12 +1147,41 @@ class IPTVPlayerLCDScreen(Screen):
     def __init__(self, session, parent):
         Screen.__init__(self, session)
         self.hostText = ""
+        self.logoShown = False
+        self.placed = None
+        # a display skin with its own <screen name="IPTVPlayerLCDScreen"> keeps its positions and fonts
+        self.ownSkin = skinHasScreen('IPTVPlayerLCDScreen')
         try:
             self["text1"] = Label("E2iPlayer")
             self["text2"] = Label("")
             self["LCDlogo"] = Pixmap()
         except Exception:
             pass
+        self.onLayoutFinish.append(self.placeText)
+
+    def placeText(self):
+        if not self.largeLcd or self.ownSkin:
+            return
+        try:
+            if self["text1"].instance is None:
+                return   # before the layout
+            text1, text2 = self["text1"].getText(), self["text2"].getText()
+            key = (text1, text2, self.logoShown, lcdFontScale())
+            if key == self.placed:
+                return
+            self.placed = key
+            g = listLcdGeometry(self.summary_screenwidth, self.summary_screenheight, key[3], self.logoShown, text1, text2)
+            for name, font in (("text1", g['font1']), ("text2", g['font2'])):
+                rect = g[name]
+                instance = self[name].instance
+                instance.move(ePoint(rect[0], rect[1]))
+                instance.resize(eSize(rect[2], rect[3]))
+                instance.setFont(gFont(LCD_FONT, font))
+            if g['logo']:
+                self["LCDlogo"].instance.move(ePoint(g['logo'][0], g['logo'][1]))
+                self["LCDlogo"].instance.resize(eSize(g['logo'][2], g['logo'][3]))
+        except Exception:
+            printExc()
 
     def setText(self, text):
         try:
@@ -1118,6 +1189,7 @@ class IPTVPlayerLCDScreen(Screen):
             self["text2"].setText(self.hostText)
         except Exception:
             pass
+        self.placeText()
 
     def setItem(self, text):
         # the marked row of a host: the host moves up to the first line, without a row "E2iPlayer" and the host
@@ -1126,6 +1198,7 @@ class IPTVPlayerLCDScreen(Screen):
             self["text2"].setText(text[0:120] if text else self.hostText)
         except Exception:
             pass
+        self.placeText()
 
     def LCD_showPic(self, widgetName, picPath):
         try:
@@ -1133,13 +1206,20 @@ class IPTVPlayerLCDScreen(Screen):
             self[widgetName].instance.setPixmap(LoadPixmap(picPath, cached=True))
             self[widgetName].show()
         except Exception:
-            pass
+            return
+        if widgetName == "LCDlogo" and not self.logoShown:
+            # the room for the logo only once it is really shown
+            self.logoShown = True
+            self.placeText()
 
     def LCD_hide(self, widgetName):
         try:
             self[widgetName].hide()
         except Exception:
             pass
+        if widgetName == "LCDlogo" and self.logoShown:
+            self.logoShown = False
+            self.placeText()
 
 
 # ---------------------------------------------------------------------------------------------------------------
@@ -1147,19 +1227,22 @@ class IPTVPlayerLCDScreen(Screen):
 # history, the search result grid and the picture viewer - the screen title, the marked row and a picture
 
 
-def infoLcdGeometry(width, height, hasText, hasPicture):
+def infoLcdGeometry(width, height, hasText, hasPicture, scale=1.0):
     # rectangles (x, y, w, h) and font sizes of IPTVPlayerInfoLCDScreen; plain arithmetic, testable on a PC.
     # A picture only on a colour display (the size of isLargeLcd); without text and picture the title gets the
-    # whole display
+    # whole display. scale (setting "LCD font size") only on a colour display; the fonts are the largest ones, the
+    # screen fits each text into its rectangle
     large = width >= LARGE_LCD_MIN_WIDTH and height >= LARGE_LCD_MIN_HEIGHT
     hasPicture = hasPicture and large
+    scale = scale if large else 1.0
     m = width // 40 if large else 0
     W = width - 2 * m
     if not hasText and not hasPicture:
-        font = max(10, min(height // 5, W // 8)) if large else max(10, height // 4)
+        font = max(10, int(min(height // 5, W // 8) * scale)) if large else max(10, height // 4)
         return {'title': (m, m, W, height - 2 * m), 'titleFont': font, 'text': None, 'textFont': font, 'picture': None}
-    titleH = max(12, height // 6) if large else max(12, height // 4)
-    titleFont = max(10, titleH * 3 // 4)
+    titleH = min(height // 3, max(12, int(height // 6 * scale))) if large else max(12, height // 4)
+    # colour display: the font whose line fills the title height (the screen fits each text with the line height)
+    titleFont = max(10, int(titleH / IPTVExtMoviePlayerColorSummary.LINE_EM)) if large else max(10, titleH * 3 // 4)
     y0 = m + titleH + m // 2
     areaH = height - y0 - m
     g = {'title': (m, m, W, titleH), 'titleFont': titleFont, 'text': None, 'textFont': titleFont, 'picture': None}
@@ -1168,12 +1251,12 @@ def infoLcdGeometry(width, height, hasText, hasPicture):
         textW = W - picW - m
         g['picture'] = (m, y0, picW, areaH)
         g['text'] = (m + picW + m, y0, textW, areaH)
-        g['textFont'] = max(10, min(areaH // 5, textW // 7))
+        g['textFont'] = max(10, int(min(areaH // 5, textW // 7) * scale))
     elif hasPicture:
         g['picture'] = (m, y0, W, areaH)
     else:
         g['text'] = (m, y0, W, areaH)
-        g['textFont'] = max(10, min(areaH // 4, W // 9)) if large else max(10, areaH // 3)
+        g['textFont'] = max(10, int(min(areaH // 4, W // 9) * scale)) if large else max(10, areaH // 3)
     return g
 
 
@@ -1351,20 +1434,26 @@ class IPTVPlayerInfoLCDScreen(Screen):
             else:
                 self['text'].hide()
             return False
-        layout = (hasText, self.pictureShown)
-        if layout == self.infoLayout:
-            return False
+        scale = lcdFontScale()
+        g = infoLcdGeometry(self.w, self.h, hasText, self.pictureShown, scale)
+        large = self.w >= LARGE_LCD_MIN_WIDTH and self.h >= LARGE_LCD_MIN_HEIGHT
+        layout = (hasText, self.pictureShown, scale)
+        moved = layout != self.infoLayout
         self.infoLayout = layout
-        g = infoLcdGeometry(self.w, self.h, hasText, self.pictureShown)
         for name, font in (('title', g['titleFont']), ('text', g['textFont']), ('picture', None)):
             rect = g[name]
             widget = self[name]
             if rect is None:
-                widget.hide()
+                if moved:
+                    widget.hide()
                 continue
-            widget.instance.move(ePoint(rect[0], rect[1]))
-            widget.instance.resize(eSize(rect[2], rect[3]))
+            if moved:
+                widget.instance.move(ePoint(rect[0], rect[1]))
+                widget.instance.resize(eSize(rect[2], rect[3]))
             if font:
+                if large:
+                    # the largest font up to the layout's in which this text fits its rectangle
+                    font = lcdFitWrapped(widget.getText() or '', rect[2], rect[3], font)[0]
                 widget.instance.setFont(gFont(LCD_FONT, font))
                 widget.show()
-        return True
+        return moved

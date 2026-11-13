@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "01.11.2026"
+LAST_MODIFIED = "13.11.2026"
 # Based on the preparatory work of odem2014
 # 01.11.2026 - domain shahid4us.com (shaahidd4u.net -> shah4u.name -> shahid4us.com); /m/<hash> answers a page with the
 #   hoster iframe instead of a 302; several rows of one server id are different files: each row keeps its own token;
@@ -13,18 +13,25 @@ LAST_MODIFIED = "01.11.2026"
 #   /series/ -> /season/ -> /episode/ pages, the /watch/ page (needs the title page as Referer)
 #   carries "let servers = [...]" whose /m/<hash> urls redirect to the hosters
 #   + watched flag / downloaded flag / name normalisation / sidecar / moviemeta INFO / favourites.
+# 13.11.2026 - "Next page" again (rel="next" over several lines, search pager buttons); the covers sit behind the
+#   site's Cloudflare like its pages: "|cf" covers + the cookie file named after the domain the start domain
+#   redirects to (shii4u.media), the INFO picture is fetched by the host
+import base64
+import os
 import re
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
+from Plugins.Extensions.IPTVPlayer.libs.botprotection import remembered_user_agent
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps, loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, getMetaByImdbId
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetCookieDir, GetTmpDir
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
@@ -64,6 +71,9 @@ def _toNative(text):
 
 
 class Shahid44u(GenericFolderWatchedScraperMixin, CBaseHostClass):
+    # the domain the start domain redirects to (once per session): its name is the cookie file's name
+    COOKIE_DOMAIN = None
+    MAIN_DOMAIN_URL = ""
     FAV_FIELDS = ("name", "category", "type", "url", "title", "s_title", "season", "episode", "series_url",
                   "icon", "meta_type", "meta_title", "meta_year")
 
@@ -108,11 +118,12 @@ class Shahid44u(GenericFolderWatchedScraperMixin, CBaseHostClass):
             if not isinstance(cItem, dict):
                 return ""
             category = cItem.get("category", "")
-            url = str(cItem.get("url", "") or "").strip()
+            # the path only: the site moves its domain every few weeks, the flags stay
+            url = re.sub(r"^https?://[^/]+", "", str(cItem.get("url", "") or "").strip())
             if cItem.get("type", "") in ("video", "audio"):
                 return "video:%s" % url if url else ""
             if category == "sh_series":
-                return "series:%s" % self.wfNormalizeUrlKey(url) if url else ""
+                return "series:%s" % self.wfNormalizeUrlKey(url) if url else ""  # url: the path only (see above)
             if category == "sh_season":
                 return "season:%s" % self.wfNormalizeUrlKey(url) if url else ""  # page 2+ keys like page 1
             return ""
@@ -129,12 +140,87 @@ class Shahid44u(GenericFolderWatchedScraperMixin, CBaseHostClass):
     def _fullUrl(self, url, currUrl=None):
         return self._quoteUrl(self.getFullUrl(url.replace("&amp;", "&"), currUrl))
 
+    def _selectDomain(self):
+        # the start domain redirects (6 hops on 13.11.2026) to the site's current domain: that one becomes MAIN_URL (no
+        # redirect chain per request) and names the cookie file - the "|cf" cover loader looks for <picture domain>.cookie.
+        # A plain request is enough for that, the target's Cloudflare page answers 403
+        if Shahid44u.COOKIE_DOMAIN is None:
+            # hop by hop: pycurl follows 5 redirects at most, the chain was 6 long on 13.11.2026
+            params = {"header": dict(self.HEADER), "no_redirection": True, "ignore_http_code_ranges": [(300, 599)]}
+            finalUrl = gettytul()
+            for _hop in range(10):
+                sts, _data = self.cm.getPage(finalUrl, params)
+                location = self.cm.meta.get("location", "") if sts else ""
+                if not location:
+                    break
+                finalUrl = self.cm.getFullUrl(location, finalUrl)
+            else:
+                finalUrl = ""
+            if not sts:
+                finalUrl = ""
+            printDBG("Shahid44u._selectDomain [%s] -> [%s]" % (gettytul(), finalUrl))
+            if not self.cm.isValidUrl(finalUrl):
+                return  # no answer - try again with the next page
+            Shahid44u.COOKIE_DOMAIN = self.up.getDomain(finalUrl, onlyDomain=True) or ""
+            Shahid44u.MAIN_DOMAIN_URL = self.cm.getBaseUrl(finalUrl)
+        if Shahid44u.COOKIE_DOMAIN:
+            self.MAIN_URL = Shahid44u.MAIN_DOMAIN_URL
+            self.COOKIE_FILE = GetCookieDir("%s.cookie" % Shahid44u.COOKIE_DOMAIN)
+            self.defaultParams["cookiefile"] = self.COOKIE_FILE
+
+    def _rebase(self, url):
+        # menu rows (built with the start domain) and favourites of it -> the current domain
+        start = gettytul()
+        if self.MAIN_URL != start and url.startswith(start):
+            return strwithmeta(self.MAIN_URL + url[len(start):], getattr(url, "meta", {}))
+        return url
+
     def getPage(self, baseUrl, addParams=None, post_data=None):
-        baseUrl = self._quoteUrl(baseUrl)
+        if not self.COOKIE_FILE.endswith("%s.cookie" % (Shahid44u.COOKIE_DOMAIN or "-")):
+            self._selectDomain()
+        baseUrl = self._quoteUrl(self._rebase(baseUrl))
         if addParams is None:
             addParams = dict(self.defaultParams)
+        addParams["cookiefile"] = self.COOKIE_FILE
         addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.HEADER.get("User-Agent")}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
+
+    ###################################################
+    # covers behind the site's Cloudflare
+    ###################################################
+    def _icon(self, url):
+        # "|cf": the cover loader fetches it with this host's cf_clearance + the solving User-Agent
+        if url and Shahid44u.COOKIE_DOMAIN and self.up.getDomain(url, onlyDomain=True) == Shahid44u.COOKIE_DOMAIN:
+            return url + "|cf"
+        return url
+
+    @staticmethod
+    def _plainIcon(icon):
+        # the sidecar poster is a plain download without cookie jar and does not know the "|cf" mark
+        return icon[:-3] if (icon or "").endswith("|cf") else icon
+
+    def _infoIcon(self, icon):
+        # the INFO view downloads its picture with wget/curl - another TLS fingerprint than the one the cf_clearance
+        # belongs to (403). The picture is fetched here the CFProtection (urllib) way and handed over inline.
+        if not (icon or "").endswith("|cf"):
+            return icon
+        url = icon[:-3]
+        params = dict(self.defaultParams, CFProtection=True)
+        params["header"] = dict(self.HEADER, **{"User-Agent": remembered_user_agent(self.COOKIE_FILE) or self.HEADER.get("User-Agent", ""),
+                                                "Referer": self.MAIN_URL, "Accept": "image/avif,image/webp,image/apng,image/*,*/*;q=0.8"})
+        tmpFile = GetTmpDir("shahid44u_info.img")
+        try:
+            if self.cm.saveWebFile(tmpFile, url, params).get("sts"):
+                with open(tmpFile, "rb") as f:
+                    data = f.read()
+                mime = "image/webp" if data[:4] == b"RIFF" else "image/png" if data[:4] == b"\x89PNG" else "image/jpeg"
+                return "data:%s;base64,%s" % (mime, ensure_str(base64.b64encode(data)))
+        except Exception:
+            printExc()
+        finally:
+            if os.path.isfile(tmpFile):
+                os.remove(tmpFile)
+        return url
 
     ###################################################
     # title helpers
@@ -196,7 +282,7 @@ class Shahid44u(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     def _addCard(self, cItem, url, siteTitle, icon, desc):
         params = stripPagerKeys(dict(cItem), LIST_STATE_KEYS)
-        params.update({"good_for_fav": True, "url": url, "icon": icon, "desc": desc})
+        params.update({"good_for_fav": True, "url": url, "icon": self._icon(icon), "desc": desc})
         path = url.split("/", 3)[-1]
         if path.startswith("series/") or path.startswith("season/"):
             sTitle = self._showName(siteTitle)
@@ -225,10 +311,17 @@ class Shahid44u(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return page, baseUrl, baseUrl if page <= 1 else pageUrlTpl.format(page=page), pageUrlTpl
 
     def _addPaging(self, cItem, data, page, baseUrl, pageUrlTpl, hasItems):
-        hasNext = hasItems and bool(self.cm.ph.getSearchGroups(data, r'<link rel="next" href="([^"]+)"')[0])
+        # category lists: <link rel="next"> (attributes on own lines) + <a href="...?page=N"> pager (last page linked);
+        # search results: no rel="next", only <button onclick="updateQuery('page', N)"> around the current page
+        pager = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="pagination', "</ul>", False)[1]
+        pages = [int(n) for n in re.findall(r"""(?:[?&]page=|updateQuery\(\s*['"]page['"]\s*,\s*)(\d+)""", pager)]
+        relNext = re.search(r'<link\s+rel=["\']next["\']', data)
+        hasNext = hasItems and (bool(relNext) or (page + 1) in pages)
+        # the href pager always links the last page, the button pager only its neighbours
+        lastPage = max(pages) if pages and "updateQuery(" not in pager else 0
         listItem = dict(cItem)
         listItem.update({"base_url": baseUrl, "url": baseUrl})
-        addPagingItems(self, listItem, page, hasNext, 0, pageUrlTpl)
+        addPagingItems(self, listItem, page, hasNext, lastPage, pageUrlTpl)
 
     def listItems(self, cItem):
         page, baseUrl, url, pageUrlTpl = self._pagedUrl(cItem)
@@ -347,7 +440,7 @@ class Shahid44u(GenericFolderWatchedScraperMixin, CBaseHostClass):
         sidecarTxt = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<div class="description">', "</div>", False)[1])
         # moviemeta query of INFO (title lookup, all services - the page with the IMDb id is not loaded here)
         metaQuery = sidecarMetaQuery(cItem.get("meta_type", ""), cItem.get("meta_title", "") or cItem.get("s_title", ""), cItem.get("meta_year", ""), skip=())
-        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), sidecarTxt, metaQuery))
+        return applySidecarToLinks(urltab, buildSidecarFromItem(dict(cItem, icon=self._plainIcon(cItem.get("icon", ""))), IsSidecarEnabled(), sidecarTxt, metaQuery))
 
     def _watchServers(self, data):
         # "const servers = [...]" (resolve_token per server) or the older "let servers = [...]" (url per server)
@@ -496,7 +589,7 @@ class Shahid44u(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if info["genres"]:
             otherInfo.setdefault("genres", info["genres"])
         text = info["desc"] or meta.get("plot", "") or cItem.get("desc", "")
-        icon = meta.get("poster", "") or info["poster"] or cItem.get("icon", "")
+        icon = self._infoIcon(meta.get("poster", "") or self._icon(info["poster"]) or cItem.get("icon", ""))
         return [{"title": cItem.get("title", ""), "text": text,
                  "images": [{"title": "", "url": icon}] if icon else [],
                  "other_info": otherInfo}]

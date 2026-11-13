@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "07.10.2026"
+LAST_MODIFIED = "13.11.2026"
 # Coding: BY MOHAMED_OS
 # 06.10.2026 - ported to the python3 host standard
 #   - moiflix.fans (French movies and series): movies, series, discovery, genres, search (up to 100 hits,
@@ -8,26 +8,18 @@ LAST_MODIFIED = "07.10.2026"
 #   - rows keyed on the site's id url (/movie/<id>, /show/<id>; the slug urls only redirect to the home page)
 #   - series -> seasons (when more than one) -> episodes, all from the series page
 #   - links: the page's embed id -> ajax/embed -> player iframe -> urlparser; the site's only hoster
-#     emmmmbed.com sits behind a Cloudflare Turnstile page: solved with the configured captcha service
-#     (MyE2i / DeathByCaptcha), a clear message otherwise
+#     emmmmbed.com (Cloudflare Turnstile page, configured captcha service) is urlparser's parserEMMMMBED
 #   - watched flag, downloaded flag, favourites, name normalisation ("Title (Year)", "Show - SxxExx"),
 #     sidecar, INFO via moviemeta + the site's fields
 ###################################################
-import base64
 import re
-from hashlib import md5
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
-from Plugins.Extensions.IPTVPlayer.components.captcha_helper import CaptchaHelper
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
-from Plugins.Extensions.IPTVPlayer.libs import pyaes
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
-from Plugins.Extensions.IPTVPlayer.libs.jsunpack import get_packed_data
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems, sidecarMetaQuery
-from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
-from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_binary, ensure_str
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
@@ -35,8 +27,6 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
-
-from Components.config import config
 
 
 def GetConfigList():
@@ -54,8 +44,6 @@ GENRE_LINK_RE = re.compile(r'<a href="(https?://[^"]+)"[^>]*>')
 FIELD_LABEL_RE = re.compile(r'<div class="attr">')
 FIELD_VALUE_RE = re.compile(r'</div>\s*<div class="text">')
 FIELD_END_RE = re.compile(r"</div>")
-# every player of the site is on this hoster, behind a Cloudflare Turnstile page
-EMBED_GATE = "emmmmbed."
 VIDEO_CATEGORIES = ("mfx_video",)
 FOLDER_CATEGORIES = ("mfx_series", "mfx_season")
 
@@ -110,7 +98,7 @@ def _genreLink(match):
     return url if 0 < pos and pos + 10 < len(path) else None
 
 
-class Moiflix(GenericFolderWatchedScraperMixin, CBaseHostClass, CaptchaHelper):
+class Moiflix(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     FAV_FIELDS = ("name", "category", "type", "url", "title", "icon", "desc", "s_title", "s_season", "s_episode",
                   "meta_type", "meta_title", "meta_year")
@@ -333,174 +321,11 @@ class Moiflix(GenericFolderWatchedScraperMixin, CBaseHostClass, CaptchaHelper):
         self.cacheLinks[url] = urltab
         return urltab
 
-    def _getGatedEmbedLinks(self, url):
-        # emmmmbed.com answers with a Cloudflare Turnstile page whose form posts the token back to the same url;
-        # solved through the configured captcha service (MyE2i / DeathByCaptcha)
-        hostName = self.up.getHostName(url)
-        params = dict(self.defaultParams, header=dict(self.HEADER, Referer=self.getMainUrl()))
-        sts, data = self.getPage(url, params)
-        if not sts:
-            return []
-        sitekey = self.cm.ph.getSearchGroups(data, r"""sitekey\s*:\s*['"]([^'"]+)['"]""")[0]
-        if sitekey:
-            # no captcha service set ("Auto"): MyE2i, else the user only gets a wiki hint (box log 07.10.)
-            bypass = config.plugins.iptvplayer.captcha_bypass.value or "mye2i"
-            token = self.processCaptcha(sitekey, url, bypassCaptchaService=bypass, captchaType="cf_re")[0]
-            if not token:
-                SetIPTVPlayerLastHostError("%s: %s" % (hostName, _("Captcha was not entered.")))
-                return []
-            params["header"] = dict(self.HEADER, Referer=url)
-            sts, data = self.getPage(url, params, {"cf-turnstile-response": token, "original_referer": self.getMainUrl()})
-            if not sts or "cf-turnstile" in data:
-                SetIPTVPlayerLastHostError("%s: %s" % (hostName, _("%s could not solve the captcha.") % "E2iPlayer"))
-                return []
-        # the player page after the captcha ("PlayerBx", VideoJS + crypto-js, box logs 07.10.): the MP4 url is
-        # CryptoJS-encrypted in an inline script; the usual player patterns and one nested iframe are tried as well
-        linksTab = self._extractGatedPlayer(data, url, hostName, 0)
-        if not linksTab:
-            printDBG("Moiflix: no stream found on the player page [%s] size[%d]" % (url, len(data)))
-            SetIPTVPlayerLastHostError(_("Hosting \"%s\" not supported.") % hostName)
-        return linksTab
-
-    def _cryptoJsSources(self, data):
-        # fix 071026: box log 07.10. #4 - the PlayerBx script is obfuscator.io code: CryptoJS[_0x..(0x2ba)]['decrypt'](a, b)
-        # with the "U2FsdGVkX1..." (OpenSSL Salted__) cipher text in the string table and the passphrase as a literal
-        # argument (wrapper(_0x..(0x2e7), '31d4...')). Rotating the table is not needed: every Salted blob is tried with
-        # the short literals, call arguments first; only the right key gives valid padding and UTF-8 text
-        blobs = []
-        for blob in re.findall(r"""['"](U2FsdGVkX1[A-Za-z0-9+/=]{20,})['"]""", data):
-            if blob not in blobs:
-                blobs.append(blob)
-        if not blobs:
-            return []
-        keys = re.findall(r""",\s*['"]([^'"\\\s]{8,64})['"]\s*\)""", data)
-        keys += re.findall(r"""['"]([0-9A-Za-z_\-]{8,64})['"]""", data)
-        plains = []
-        for blob in blobs[:5]:
-            try:
-                raw = base64.b64decode(blob)
-            except Exception:
-                continue
-            if raw[:8] != b"Salted__" or len(raw) < 32 or len(raw) % 16:
-                continue
-            tried = set()
-            for key in keys:
-                if key in tried:
-                    continue
-                tried.add(key)
-                if len(tried) > 600:
-                    break
-                plain = self._decryptSalted(raw, key)
-                if plain:
-                    printDBG("Moiflix.CryptoJS (obfuscated) key[%s] plain text [%d]: %s" % (key, len(plain), plain[:300]))
-                    plains.append(plain)
-                    break
-        # a bare url as plain text: quoted, so the candidate patterns see it
-        return ['"%s"' % p.strip() if re.match(r'(?:https?:)?//\S+$', p.strip()) else p for p in plains]
-
-    def _decryptSalted(self, raw, key):
-        # OpenSSL EVP_BytesToKey (md5) + AES-256-CBC; None unless the padding and the UTF-8 text are valid
-        salt, derived, prev = raw[8:16], b"", b""
-        while len(derived) < 48:
-            prev = md5(prev + ensure_binary(key) + salt).digest()
-            derived += prev
-        try:
-            if len(raw) >= 48:
-                # the last block alone shows a wrong key (bad padding) without decrypting the whole text
-                last = bytearray(pyaes.AESModeOfOperationCBC(derived[:32], raw[-32:-16]).decrypt(raw[-16:]))
-                pad = last[-1]
-                if not 0 < pad <= 16 or any(b != pad for b in last[-pad:]):
-                    return None
-            decrypter = pyaes.Decrypter(pyaes.AESModeOfOperationCBC(derived[:32], derived[32:48]))
-            raw = decrypter.feed(raw[16:]) + decrypter.feed()
-            raw.decode("utf-8")
-        except Exception:
-            return None
-        plain = ensure_str(raw)
-        if not plain.strip() or re.search(r"[\x00-\x08\x0e-\x1f]", plain):
-            return None
-        return plain
-
-    def _playerCandidates(self, data, baseUrl):
-        # add 071026: iframes (any quote, src/data-src), server lists (data-link/data-url/onclick), JWPlayer file/sources,
-        # plain m3u8/mp4, the same again inside packed JS, urls in base64 strings and JWT payloads
-        sources = [data]
-        try:
-            unpacked = get_packed_data(data)
-            if unpacked:
-                sources.append(unpacked)
-        except Exception:
-            printExc()
-        sources.extend(self._cryptoJsSources(data))
-        encoded = re.findall(r"""atob\(\s*['"]([A-Za-z0-9+/=_-]{16,})['"]""", data)
-        encoded += re.findall(r'eyJ[A-Za-z0-9_-]{10,}\.([A-Za-z0-9_-]{10,})', data)
-        for b64 in encoded:
-            try:
-                b64 = b64.replace("-", "+").replace("_", "/")
-                sources.append(ensure_str(base64.b64decode(b64 + "=" * (-len(b64) % 4)), errors="ignore"))
-            except Exception:
-                pass
-        patterns = (
-            r"""<iframe[^>]+?(?:data-src|src)\s*=\s*['"]([^'"]+)['"]""",
-            r"""data-(?:link|url|src|embed|player|video)\s*=\s*['"]((?:https?:)?//[^'"]+)['"]""",
-            r"""(?:go_to_player|loadPlayer|playVideo|changeServer|setPlayer|window\.open|location\.href\s*=)\s*\(?\s*['"]((?:https?:)?//[^'"]+)['"]""",
-            r"""["']?(?:file|src|link|url|embed_url|embedUrl)["']?\s*:\s*["']((?:https?:)?//[^"']+)["']""",
-            r"""['"]((?:https?:)?//[^'"\s<>]+?\.(?:m3u8|mp4)(?:\?[^'"\s<>]*)?)['"]""",
-        )
-        candidates = []
-        for source in sources:
-            source = source.replace("\\/", "/")
-            for pattern in patterns:
-                for item in re.findall(pattern, source, re.I):
-                    item = self.getFullUrl(item.strip().replace("&amp;", "&"), baseUrl)
-                    if not self.cm.isValidUrl(item) or item in candidates:
-                        continue
-                    if re.search(r'(?i)challenges\.cloudflare|googletagmanager|google-analytics|jsdelivr|cdnjs|fonts\.|\.(?:js|css|png|jpe?g|gif|svg|webp|ico|woff2?)(?:\?|$)', item):
-                        continue
-                    candidates.append(item)
-        return candidates
-
-    def _extractGatedPlayer(self, data, url, hostName, depth):
-        candidates = self._playerCandidates(data, url)
-        printDBG("Moiflix._extractGatedPlayer depth[%d] candidates: %s" % (depth, candidates))
-        nested = []
-        for item in candidates:
-            if re.search(r'(?i)\.(?:m3u8|mp4)(?:\?|$)', item):
-                stream = strwithmeta(item, {"Referer": url, "User-Agent": self.HEADER["User-Agent"]})
-                if ".m3u8" in item.lower():
-                    linksTab = getDirectM3U8Playlist(stream, checkContent=True)
-                    if linksTab:
-                        return linksTab
-                    continue
-                return [{"name": hostName, "url": stream}]
-            if EMBED_GATE in item and item.rstrip("/") == url.rstrip("/"):
-                continue
-            if EMBED_GATE not in item and 1 == self.up.checkHostSupport(item):
-                linksTab = self.up.getVideoLinkExt(strwithmeta(item, {"Referer": url}))
-                if linksTab:
-                    return linksTab
-                continue
-            nested.append(item)
-        # an unknown or same-site player page: follow it once and search again
-        if depth == 0:
-            for item in nested[:3]:
-                params = dict(self.defaultParams, header=dict(self.HEADER, Referer=url))
-                sts, page = self.getPage(item, params)
-                if not sts or not page:
-                    continue
-                linksTab = self._extractGatedPlayer(page, item, self.up.getHostName(item), 1)
-                if linksTab:
-                    return linksTab
-                printDBG("Moiflix: no stream found on the nested player page [%s] size[%d]" % (item, len(page)))
-        return []
-
     def getVideoLinks(self, videoUrl):
         printDBG("Moiflix.getVideoLinks [%s]" % videoUrl)
         if not self.cm.isValidUrl(videoUrl):
             return []
         sidecar = sidecarFromUrlMeta(videoUrl, IsSidecarEnabled())
-        if EMBED_GATE in videoUrl and 1 != self.up.checkHostSupport(videoUrl):
-            return decorateResolvedLinkItems(self._getGatedEmbedLinks(videoUrl), sidecar)
         return decorateResolvedLinkItems(self.up.getVideoLinkExt(videoUrl), sidecar)
 
     ###################################################

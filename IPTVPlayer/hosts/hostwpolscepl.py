@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "04.10.2026"
+LAST_MODIFIED = "13.11.2026"
 # 03.10.2026 - wpolsce.pl is now wpolsce24.tv (Nuxt site with a JSON CMS API):
 #   live channel (OnNetwork player), latest video articles, the channel's programmes
 #   (YouTube playlists), news sections (video articles only, /api/cms/articles) and search
-#   (/api/cms/search); OnNetwork embeds resolved here (embed.php -> frame<ver>.php ->
-#   playerVideos: HLS variants + MP4) + watched flag / downloaded flag / sidecar / favourites.
+#   (/api/cms/search); OnNetwork embeds resolved by urlparser (parserONNETWORK)
+#   + watched flag / downloaded flag / sidecar / favourites.
 import re
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
@@ -12,7 +12,6 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps, loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
-from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
 from Plugins.Extensions.IPTVPlayer.libs.youtubeparser import YouTubeParser
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
@@ -33,7 +32,6 @@ def gettytul():
 
 ICON_PRESET = "?p=wpolsce_article_single_standard_small"
 COVER_PRESET = "?p=wpolsce_article_single_standard_large"
-ONNETWORK_URL = "https://video.onnetwork.tv/"
 PAGE_SIZE = 60
 MAX_PAGES_PER_LIST = 3
 
@@ -321,46 +319,9 @@ class WPolscePL(GenericFolderWatchedScraperMixin, CBaseHostClass):
                     return data["result"]
         return {}
 
-    def _getOnNetworkLinks(self, embedUrl):
-        printDBG("WPolscePL._getOnNetworkLinks [%s]" % embedUrl)
-        params = dict(self.defaultParams)
-        params["header"] = dict(self.HEADER)
-        params["header"]["Referer"] = self.MAIN_URL
-        sts, data = self.getPage(embedUrl, params)
-        if not sts:
-            return []
-        mid = self.cm.ph.getSearchGroups(data, r'"mid"\s*:\s*"([^"]+)"')[0]
-        version = self.cm.ph.getSearchGroups(data, r'"version"\s*:\s*"(\d+)"')[0] or "86"
-        if not mid:
-            return []
-        frameUrl = ONNETWORK_URL + "frame%s.php?mid=%s" % (version, mid)
-        params["header"]["Referer"] = embedUrl
-        sts, data = self.getPage(frameUrl, params)
-        if not sts:
-            return []
-        videos = self.cm.ph.getDataBeetwenMarkers(data, "var playerVideos = ", "}];", False)[1]
-        videos = (videos + "}]") if videos else "[]"
-        try:
-            videos = json_loads(videos)
-        except Exception:
-            printExc()
-            return []
-        urlTab = []
-        for video in videos[:1]:
-            hlsUrl = video.get("url", "")
-            if self.cm.isValidUrl(hlsUrl) and ".m3u8" in hlsUrl:
-                hls = getDirectM3U8Playlist(strwithmeta(hlsUrl, {"iptv_proto": "m3u8", "User-Agent": self.HEADER.get("User-Agent", "")}), checkExt=False, checkContent=True)
-                hls = sorted(hls, key=lambda x: int(x.get("bitrate", 0) or 0), reverse=True)
-                for item in hls:
-                    item["need_resolve"] = 0
-                    urlTab.append(item)
-                if not hls:
-                    urlTab.append({"name": "HLS", "url": strwithmeta(hlsUrl, {"iptv_proto": "m3u8"}), "need_resolve": 0})
-            if not video.get("live"):
-                for mp4 in video.get("urls") or []:
-                    if self.cm.isValidUrl(mp4.get("url", "")):
-                        urlTab.append({"name": "MP4 %s" % mp4.get("name", ""), "url": strwithmeta(mp4["url"], {"Referer": ONNETWORK_URL}), "need_resolve": 0})
-        return urlTab
+    def _hosterLink(self, url, name=""):
+        # a player url for urlparser (OnNetwork: parserONNETWORK), the site as referer
+        return {"name": name or self.up.getHostName(url), "url": strwithmeta(url, {"Referer": self.MAIN_URL}), "need_resolve": 1}
 
     def _getLiveUrl(self):
         for widget in self._widgets(self._dispatch("/video"), "video-stream"):
@@ -376,10 +337,8 @@ class WPolscePL(GenericFolderWatchedScraperMixin, CBaseHostClass):
             return applySidecarToLinks([{"name": "YouTube", "url": cItem["url"], "need_resolve": 1}], buildSidecarFromItem(cItem, IsSidecarEnabled()))
         if category == "live" or cItem.get("live"):
             url = self._getLiveUrl()
-            if "onnetwork.tv" in url:
-                return self._getOnNetworkLinks(url)
             if self.cm.isValidUrl(url):
-                return [{"name": self.up.getHostName(url), "url": url, "need_resolve": 1}]
+                return [self._hosterLink(url)]
             SetIPTVPlayerLastHostError(_("The live stream is not available at the moment."))
             return []
 
@@ -392,10 +351,8 @@ class WPolscePL(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if url.startswith("//"):
             url = "https:" + url
         urlTab = []
-        if "onnetwork.tv" in url:
-            urlTab = self._getOnNetworkLinks(url)
-        elif self.cm.isValidUrl(url):
-            urlTab = [{"name": self.up.getHostName(url) or videoType, "url": url, "need_resolve": 1}]
+        if self.cm.isValidUrl(url):
+            urlTab = [self._hosterLink(url, self.up.getHostName(url) or videoType)]
         else:
             videoId = art.get("video") or ""
             videoId = ensure_str(videoId) if not isinstance(videoId, (dict, list)) else ""

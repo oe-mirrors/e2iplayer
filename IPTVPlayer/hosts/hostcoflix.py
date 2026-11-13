@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "10.10.2026"
+LAST_MODIFIED = "13.11.2026"
 # ADD: 20.04.2026 - Mr.X
 # 09.10.2026 - host standard, coflix.wales -> coflix.esq (redirect chain coflix.wales -> .click -> .date -> .esq):
 #   - the apiflix JSON API answers HTTP 500 - films / series / animes / dramas / genres / search are read from the
@@ -9,7 +9,7 @@ LAST_MODIFIED = "10.10.2026"
 #     plays directly
 #   - links: the page's cfServers list; lecteurvideo.com gets the page's player token and lists its hosters
 #     (base64 showVideo entries, language + server label); trakx.lol / kokoflix.lol redirects are followed (voe
-#     mirrors -> voe.sx); emmmmbed.com (Turnstile check) and the dead kakaflix.lol are left out
+#     mirrors -> voe.sx); the dead kakaflix.lol is left out (emmmmbed.com: urlparser parserEMMMMBED since 13.11.2026)
 #   - watched flag (series -> season -> episode), favourites reopen without state (also the old rows: other coflix
 #     domains, the API season rows via ?p=<post id>), "Title (Year)" / "Show - SxxExx" names, sidecar on the
 #     links, INFO via moviemeta merged with the site's fields (synopsis, genres, rating, year, version)
@@ -48,9 +48,9 @@ def gettytul():
 OLD_DOMAIN_RE = re.compile(r"^https?://(?:www\.)?coflix\.[a-z]+/")
 # season rows of the old API version: wp-json/apiflix/v1/series/<post id>/<season>
 OLD_SEASON_RE = re.compile(r"apiflix/v1/series/(\d+)/(\d+)")
-# emmmmbed.com: player with a Cloudflare Turnstile check - no resolver can get past it
 # kakaflix.lol: its newPlayer.php redirects fail (TLS handshake dropped, also for xalaflix)
-SKIP_HOSTERS = ("emmmmbed.com", "kakaflix.lol")
+# (emmmmbed.com - Cloudflare Turnstile player - goes to urlparser parserEMMMMBED like any hoster)
+SKIP_HOSTERS = ("kakaflix.lol",)
 # hoster links that only redirect (302) to a mirror domain of the hoster:
 # trakx.lol/<hoster>/newPlayer.php, kokoflix.lol/<name>_go.php (tokyo = dood, osaka = voe, grandline = filemoon)
 REDIRECTORS = ("trakx.", "kokoflix.")

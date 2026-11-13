@@ -36,6 +36,7 @@ except ImportError:  # E2iPlayer builds without the CH- page preset (e.g. zadmar
 from collections import OrderedDict
 from itertools import chain
 import re
+import bisect
 import copy
 import socket
 import threading
@@ -585,6 +586,7 @@ SITEDATA = {
 'MONDETUBE': ('https://mondetube.com/categories/', '', ''),
 'NAIJAPORNSITE': ('https://naijapornsite.com/categories/', '', ''),
 'NAKEDGIRLS': ('https://www.nakedgirls.mobi/categories/', '', ''),
+'NUDE AND HAIRY': ('https://www.nudeandhairy.com/categories/videos/', 'NUDEANDHAIRY', ''),
 'NUVID': ('https://www.nuvid.com/categories', '', ''),
 'PARADISEHILL': ('https://en.paradisehill.cc/categories/', '', ''),
 'PORNSLASH': ('https://www.pornslash.com/categories', '', ''),
@@ -1220,6 +1222,7 @@ SEARCH_URL = {
 	'NAKEDGIRLS': ('https://www.nakedgirls.mobi/search/{q}/', '-'),
 	'NEPORN': ('https://neporn.com/search/{q}/', '-'),
 	'NOODLEMAGAZINE': ('https://noodlemagazine.com/video/{q}', None),
+	'NUDEANDHAIRY': ('https://www.nudeandhairy.com/?q={q}', '+'),
 	'NUDEZ': ('https://nudez.com/search/{q}/', '-'),
 	'NUVID': ('https://www.nuvid.com/search/videos/{q}', '+'),
 	'OHSEXFILM': ('https://www.ohsexfilm.com/search/{q}/', '-'),
@@ -3918,6 +3921,230 @@ def fixListImages(items):
 	return items
 
 
+LIST_INFO_SPAN = 4000  # the most of a list page one video's block may take
+LIST_INFO_TIME = re.compile(r'^(?:[^0-9:]{1,20}:?\s)?((?:[0-9]{1,2}:)?[0-9]{1,3}:[0-5][0-9])$')
+# "12 min" / "12 Min." / "12m" - a capital "12M" is a views counter (no re.I; Python 2 has no scoped inline flags)
+LIST_INFO_MIN = re.compile(r'^([0-9]{1,3})\s*(?:[Mm][Ii][Nn](?:[Ss]|[Uu][Tt][Ee][Ss])?|m)\.?$')
+LIST_INFO_QUALITY = re.compile(r'^(4k|8k|uhd|fhd|full\s*hd|hd|vr|[0-9]{3,4}p)(?:\s*(?:hd|60\s*fps))?$', re.I)
+LIST_INFO_RATING = re.compile(r'^([0-9]{1,3}(?:[.,][0-9])?)\s*%$')
+LIST_INFO_VIEWS = re.compile(r'^([0-9][0-9.,\s]*[kKmM]?)\s*(views?|aufrufe)?$', re.I)
+LIST_INFO_BLOCK = re.compile(r'<(?:div|li|article|section)\b[^>]*>', re.I)
+
+
+def _listInfoNodes(segment):
+	# the text pieces of an HTML segment, each with the attributes of the tag it sits in (class="duration" ...)
+	segment = re.sub(r'(?is)<(script|style)\b.*?</\1>', ' ', segment)
+	# (text after a closing tag counts too: <span>HD</span> 12:34 - with the attributes of the last opening tag)
+	nodes, attrs = [], ''
+	for tag, text in re.findall(r'(<[^>]*>)?([^<]*)', segment):
+		if tag[1:2].isalpha():
+			attrs = re.sub(r'^<[a-zA-Z0-9]+', '', tag).lower()
+		text = text.strip()
+		if text and len(text) <= 200:
+			# (only short pieces are info; decodeHtml() is the slow part on the box)
+			nodes.append((attrs, re.sub(r'\s+', ' ', decodeHtml(text) if '&' in text else text)))
+	return nodes
+
+
+def _listInfoOf(segment, title):
+	# duration, quality, rating and views the list page shows for one video (its block of the page)
+	info = {}
+	title = (title or '').strip().lower()
+	for attrs, text in _listInfoNodes(segment):
+		if len(text) > 30 or text.lower() == title:
+			continue
+		m = LIST_INFO_TIME.match(text)
+		if m:
+			info.setdefault('time', m.group(1))
+			continue
+		m = LIST_INFO_MIN.match(text)
+		if m and int(m.group(1)):
+			# ("16 min", "16min": rounded by the site - shown as it is)
+			info.setdefault('time', '%s min' % m.group(1))
+			continue
+		m = LIST_INFO_QUALITY.match(text)
+		if m:
+			info.setdefault('quality', re.sub(r'([0-9])P\b', r'\1p', re.sub(r'\s+', ' ', text.upper())))
+			continue
+		m = LIST_INFO_RATING.match(text)
+		if m and 0 < float(m.group(1).replace(',', '.')) <= 100:
+			info.setdefault('rating', m.group(1) + '%')
+			continue
+		m = LIST_INFO_VIEWS.match(text)
+		if m and (m.group(2) or re.search(r'view|eye', attrs)):
+			views = m.group(1).strip()
+			# a bare small number by an icon is a counter of something else (comments, likes, days)
+			if m.group(2) or len(re.sub(r'[^0-9]', '', views)) >= 3 or views[-1:] in 'kKmM':
+				info.setdefault('views', views)
+	if not info.get('time'):
+		# the video's data as JSON in an attribute (videosection: video="{&#34;duration&#34;:439, ...}")
+		data = decodeHtml(segment)
+		seconds = re.search(r'''["']duration["']\s*:\s*["']?([0-9]{2,5})["',}]''', data)
+		if seconds and formatDuration(seconds.group(1)):
+			info['time'] = formatDuration(seconds.group(1))
+			quality = re.search(r'''["']quality["']\s*:\s*["']([0-9]{3,4}p|4k|hd)["']''', data, re.I)
+			if quality and not info.get('quality'):
+				info['quality'] = re.sub(r'([0-9])P$', r'\1p', quality.group(1).upper())
+	return info
+
+
+def _listInfoTitle(text):
+	return re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', ' ', '%s' % (text or ''))).strip().lower()
+
+
+def _listInfoUrl(item):
+	try:
+		url = '%s' % item.urlItems[0].url
+	except Exception:
+		return ''
+	return url if url.startswith('http') else ''
+
+
+def _listInfoIndex(data):
+	# every quoted value of the page -> where it stands (one pass instead of a search per video and spelling); a link
+	# inside a click counter's link (href="/ttt/click?url=https://...") under its own address too
+	index = {}
+	for m in re.finditer(r'''["']([^"'\s<>]{5,1000})["']''', data):
+		value = m.group(1)
+		index.setdefault(value, []).append(m.start(1))
+		inner = value.rfind('http', 1)
+		if inner > 0:
+			index.setdefault(value[inner:], []).append(m.start(1))
+	return index
+
+
+def _listInfoPositions(index, url):
+	# where a video's link stands on the list page: its address with or without the site, raw or with &amp;
+	path = re.sub(r'^https?://[^/]+', '', url)
+	keys = set()
+	for key in (url, path):
+		keys.add(key)
+		if '&' in key:
+			keys.add(key.replace('&', '&amp;'))
+		if '%' in key:
+			try:
+				keys.add(ensure_str(unquote(key)))
+			except Exception:
+				pass
+	positions = []
+	for key in keys:
+		if len(key) >= 5:
+			positions.extend(index.get(key, ()))
+	if not positions:
+		return None
+	first = min(positions)
+	return first, max(p for p in positions if p - first < LIST_INFO_SPAN)
+
+
+def _listInfoTag(tag):
+	# a block tag by its name and first class: <div class="item thumb"> -> '<div item'
+	name = re.match(r'<([a-zA-Z]+)', tag).group(1).lower()
+	cls = re.search(r'''\bclass\s*=\s*["']?\s*([^"'\s>]+)''', tag)
+	return '<%s %s' % (name, cls.group(1).lower() if cls else '')
+
+
+def _listInfoBlocks(data, found):
+	# where each video's block of the list starts and ends: the block tag every gap between two videos of the
+	# page opens again (and that stands in front of the first video too) - its outermost one
+	gaps = [(found[n][0][1], found[n + 1][0][0]) for n in range(len(found) - 1)]
+	if len(gaps) < 2:
+		return None
+	# every block tag of the page once (a 120-video page is scanned once, not once per gap and candidate tag)
+	allPos, allTags, byTag = [], [], {}
+	for m in LIST_INFO_BLOCK.finditer(data):
+		tag = _listInfoTag(m.group(0))
+		allPos.append(m.start())
+		allTags.append(tag)
+		byTag.setdefault(tag, []).append(m.start())
+
+	def tagsIn(start, end):
+		return set(allTags[bisect.bisect_left(allPos, start):bisect.bisect_left(allPos, end)])
+
+	counts = {}
+	for start, end in gaps:
+		for tag in tagsIn(start, end):
+			counts[tag] = counts.get(tag, 0) + 1
+	head = tagsIn(max(0, found[0][0][0] - 2000), found[0][0][0])
+	tags = [t for t, c in counts.items() if c >= 0.8 * len(gaps) and t in head and (not t.endswith(' ') or t.startswith('<li'))]
+	if not tags:
+		return None
+
+	def lastTag(tag, start, end):
+		# the last opening of the tag in [start, end)
+		pos = byTag.get(tag, [])
+		i = bisect.bisect_left(pos, end) - 1
+		return pos[i] if i >= 0 and pos[i] >= start else None
+
+	def spread(tag):
+		# how far in front of the next video's link the tag opens (the outermost block opens first)
+		far = [end - (lastTag(tag, start, end) or end) for start, end in gaps]
+		return sorted(far)[len(far) // 2]
+	tag = max(tags, key=spread)
+	starts = []
+	for n, ((first, _last), _item) in enumerate(found):
+		starts.append(lastTag(tag, found[n - 1][0][1] if n else max(0, first - 2000), first))
+	if None in starts:
+		return None
+	lastEnd = found[-1][0][1]
+	pos = byTag[tag]
+	i = bisect.bisect_left(pos, lastEnd)
+	nextTag = pos[i] if i < len(pos) and pos[i] < lastEnd + LIST_INFO_SPAN else None
+	ends = starts[1:] + [nextTag if nextTag is not None else min(len(data), lastEnd + LIST_INFO_SPAN)]
+	return list(zip(starts, ends))
+
+
+def addListInfo(items, pages):
+	# a video row whose description is no more than its title (Kamikaze24 11.2026: "only the name, no further infos"):
+	# duration, quality, rating and views from the video's own block of the list page the rows came from
+	if not isinstance(items, list):
+		return items
+	rows = []
+	for item in items:
+		if item.type != CDisplayListItem.TYPE_VIDEO:
+			continue
+		if isinstance(getattr(item, 'description', None), str):
+			# what a parser's pattern did not find: "[] Title", "Views: " / "Added: " lines and "[Views: ]" without a value
+			text = re.sub(r'^\[\s*\]\s*', '', item.description.strip())
+			text = re.sub(r'\[[A-Za-z ]+:\s*\]\s*', '', text)
+			item.description = '\n'.join(line for line in text.split('\n') if not re.match(r'^\s*[A-Za-z ]+:\s*$', line)).strip()
+		if not pages:
+			continue
+		description = _listInfoTitle(getattr(item, 'description', ''))
+		if description and re.sub(r'^\[\s*\]\s*', '', description) != _listInfoTitle(item.name):
+			continue
+		url = _listInfoUrl(item)
+		if url:
+			rows.append((item, url))
+	if not rows:
+		return items
+	data = max(pages, key=lambda page: len(page[1]))[1]
+	# links in scripts (JSON-LD lists ...) are not the video's block; blanked, the positions stay the same
+	data = re.sub(r'(?is)<script\b.*?</script>', lambda m: ' ' * len(m.group(0)), data)
+	index = _listInfoIndex(data)
+	found = []
+	for item, url in rows:
+		where = _listInfoPositions(index, url)
+		if where:
+			found.append((where, item))
+	if not found:
+		return items
+	found.sort(key=lambda row: row[0][0])
+	blocks = _listInfoBlocks(data, found)
+	for n, ((first, last), item) in enumerate(found):
+		if blocks:
+			start, end = blocks[n]
+		else:
+			# no common block tag: from the video's link to the next one's
+			start, end = first, min(found[n + 1][0][0] if n + 1 < len(found) else len(data), last + LIST_INFO_SPAN)
+		info = _listInfoOf(data[start:end], item.name)
+		if not info:
+			continue
+		title = re.sub(r'^\[\s*\]\s*', '', ensure_str(item.description or '').strip()) or ensure_str(item.name)
+		extra = ' '.join('[%s]' % value for value in (info.get('quality'), info.get('rating'), ('Views: ' + info['views']) if info.get('views') else '') if value)
+		item.description = ('[%s] ' % info['time'] if info.get('time') else '') + title + ('\n' + extra if extra else '')
+	return items
+
+
 PAGER_ORDER = {'MENU': -1, 'FIRST': 0, 'PREVIOUS': 1, 'JUMP': 2, 'LAST': 3, 'NEXT': 4}
 
 
@@ -3961,7 +4188,7 @@ class _SelfTestSession(object):
 
 
 class Host(CBaseHostClass, XXXParser):
-	XXXversion = "2026.11.09.1"
+	XXXversion = "2026.11.13.1"
 	# a Host of a helper thread of the global search (newSearchWorker()): no retries, no "not found" menu
 	searchWorker = False
 	# while the site self-test runs: the time the current site's requests stop (SELFTEST_SITE_SECONDS), 0 otherwise
@@ -4101,7 +4328,7 @@ class Host(CBaseHostClass, XXXParser):
 			self.MAIN_URL = siteMain
 		multiSearch = (handler == 'SEARCH' and self.SEARCH_proc in ('main-menu', 'FAVORITES-search')) or handler == 'XXXSEARCH-NEW'
 		try:
-			valTab = fixListImages(self.listsItems(Index, url, handler))
+			valTab = addListInfo(fixListImages(self.listsItems(Index, url, handler)), self.listPages)
 		finally:
 			self.currList[Index] = sel
 		self.addSiteNextPage(valTab, handler)
@@ -4429,6 +4656,9 @@ class Host(CBaseHostClass, XXXParser):
 		self.listPages = []
 		searchProc = self.SEARCH_proc
 		valTab = fixListImages(self.listsItems(-1, pattern, 'SEARCH'))
+		# one site: its result page is the source of the list info; a global search mixes the pages of many sites, there
+		# only the empty "Views:" / "[] Title" leftovers are cleaned up
+		valTab = addListInfo(valTab, [] if searchProc in ('main-menu', 'FAVORITES-search') else self.listPages)
 		self.addSiteNextPage(valTab, self.searchListHandler(searchProc))
 		if searchProc not in ('main-menu', 'FAVORITES-search'):
 			# one site: Jump and "Next page" last; global search over several sites (also the favorites): no Jump / First Page
@@ -8550,8 +8780,11 @@ class Host(CBaseHostClass, XXXParser):
 				Title = self.cm.ph.getSearchGroups(item, '''alt="([^"]+?)"''', 1, True)[0]
 				Image = self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''', 1, True)[0]
 				Url = self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''', 1, True)[0]
-				Runtime = self.cm.ph.getSearchGroups(item, '''duration">([^"^']+?)<''', 1, True)[0]
-				valTab.append(CDisplayListItem(decodeHtml(Title), '[' + Runtime + '] ' + decodeHtml(Title), CDisplayListItem.TYPE_VIDEO, [CUrlItem('', Url, 1)], 0, Image, None))
+				# (duration"><span>HD</span> 20:38</div>)
+				Runtime = self.cm.ph.getSearchGroups(item, '''duration">(?:<span>([^<]*)</span>)?\\s*([0-9:]+)''', 2, True)
+				Views = self.cm.ph.getSearchGroups(item, '''video-views">([^<]+)<''', 1, True)[0].strip()
+				extra = ' '.join('[%s]' % value for value in (Runtime[0].strip(), ('Views: ' + Views) if Views else '') if value)
+				valTab.append(CDisplayListItem(decodeHtml(Title), ('[%s] ' % Runtime[1] if Runtime[1] else '') + decodeHtml(Title) + ('\n' + extra if extra else ''), CDisplayListItem.TYPE_VIDEO, [CUrlItem('', Url, 1)], 0, Image, None))
 			if next:
 				valTab.append(self.getNextItem(self.cm.ph.getSearchGroups(next, r'/([0-9]+)/(?:\?|$)', 1, True)[0] or self.cm.ph.getSearchGroups(next, r'from[^=&]*=([0-9]+)', 1, True)[0].lstrip('0'), next, name))
 			return valTab
@@ -10733,7 +10966,8 @@ class Host(CBaseHostClass, XXXParser):
 				if phUrl.startswith('/'):
 					phUrl = self.MAIN_URL + phUrl
 				if phImage:
-					valTab.append(CDisplayListItem(phTitle, '[' + phRuntime + ']  ' + phTitle + '\n' + views + '\n' + 'Rated: ' + rated, CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], 0, phImage, None))
+					extra = ' '.join('[%s]' % value for value in (rated, ('Views: ' + views) if views else '') if value)
+					valTab.append(CDisplayListItem(phTitle, ('[%s] ' % phRuntime.strip() if phRuntime.strip() else '') + phTitle + ('\n' + extra if extra else ''), CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], 0, phImage, None))
 			if next_page:
 				next_page = urljoin(url, next_page)
 				valTab.append(self.getNextItem(self.cm.ph.getSearchGroups(next_page, r'([0-9]+)[^0-9]*$', 1, True)[0], next_page, name))
@@ -15495,7 +15729,8 @@ class Host(CBaseHostClass, XXXParser):
 			for item in data:
 				phUrl = self.cm.ph.getSearchGroups(item, '''href=['"]([^"^#]+?)['"]''', 1, True)[0]
 				phTitle = self.cm.ph.getSearchGroups(item, '''title"[>]([^>]+?)[<]''', 1, True)[0].strip().title()
-				phImage = self.cm.ph.getSearchGroups(item, '''inal=["]([^"^;]+?)["]''', 1, True)[0]
+				# (the thumbnail was data-original once, plain src now: <img class="" src=".../480x269/1.jpg" data-webp=...>)
+				phImage = self.cm.ph.getSearchGroups(item, '''(?:data-original|\\ssrc)=["]([^"^;]+?/videos_screenshots/[^"^;]+?)["]''', 1, True)[0]
 				phTime = self.cm.ph.getSearchGroups(item, '''tion"[>]([0-9:]+?)[<]''', 1, True)[0]
 				phRate = self.cm.ph.getSearchGroups(item, '''tive"[>]([^"^']+?)[<]''', 1, True)[0].strip()
 				phViews = self.cm.ph.getSearchGroups(item, '''views"[>]([^>]+?)[<]''', 1, True)[0]
@@ -15948,7 +16183,8 @@ class Host(CBaseHostClass, XXXParser):
 				if phUrl.startswith('/'):
 					phUrl = self.MAIN_URL + phUrl
 				phTitle = self.cm.ph.getSearchGroups(item, 'alt=["]([^"]+?)["]', 1, True)[0]
-				phImage = self.cm.ph.getSearchGroups(item, r'"\ssrc=["]([^"]+?)["]', 1, True)[0]
+				# (lazy pictures: a GIF placeholder in src, the picture in data-original)
+				phImage = self.cm.ph.getSearchGroups(item, r'data-original=["](http[^"]+?)["]', 1, True)[0] or self.cm.ph.getSearchGroups(item, r'"\ssrc=["]([^"]+?)["]', 1, True)[0]
 				Time = self.cm.ph.getSearchGroups(item, r'tion"[>]([0-9:]+?)[<]', 1, True)[0]
 				Views = self.cm.ph.getSearchGroups(item, r'views"[>]([0-9.KHM]+?)[<]', 1, True)[0]
 				phRate = self.cm.ph.getSearchGroups(item, r'[\s]([0-9]+?%)[\s]', 1, True)[0]
@@ -21694,7 +21930,7 @@ class Host(CBaseHostClass, XXXParser):
 				phTitle = self.cm.ph.getSearchGroups(item, r'''[>]([a-zA-Z\s]+?)[<]span''', 1, True)[0]
 				phVideos = self.cm.ph.getSearchGroups(item, '''span[>]([0-9]+?)[<]''', 1, True)[0]
 				if phUrl and phTitle:
-					valTab.append(CDisplayListItem(phTitle, phTitle + '\n' + phVideos + ' videos', CDisplayListItem.TYPE_CATEGORY, [phUrl], 'RUNPORN-clips', catImage, None))
+					valTab.append(CDisplayListItem(phTitle, phTitle + '\n' + phVideos + ' videos', CDisplayListItem.TYPE_CATEGORY, [urljoin(self.MAIN_URL, phUrl)], 'RUNPORN-clips', catImage, None))
 
 			valTab.sort(key=lambda poz: poz.name)
 			valTab.insert(0, CDisplayListItem(menuHeader(_('Best')), _('Best'), CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/best/'], 'RUNPORN-clips', catImage, None))
@@ -21718,15 +21954,69 @@ class Host(CBaseHostClass, XXXParser):
 			for item in data:
 				phUrl = self.cm.ph.getSearchGroups(item, '''href=["]([^"^#]+?)["]''', 1, True)[0]
 				phTitle = self.cm.ph.getSearchGroups(item, '''title"[>]([^"]+?)[.|<]''', 1, True)[0]
-				phImage = self.cm.ph.getSearchGroups(item, '''src=['"]([^"]+?)['"]''', 1, True)[0]
-				if not phImage:
-					phImage = catImage
-				if not phUrl.endswith('/'):
-					valTab.append(CDisplayListItem(decodeHtml(phTitle), decodeHtml(phTitle), CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], '', phImage, None))
+				phImage = self.cm.ph.getSearchGroups(item, '''(?:data-src|data-original|\\ssrc)=['"]([^"']+?\\.(?:jpe?g|png|webp)[^"']*)['"]''', 1, True)[0]
+				phImage = urljoin(self.MAIN_URL, phImage) if phImage else catImage
+				if phUrl and not phUrl.endswith('/'):
+					# the videos' links are relative now (/rpn/<token>, a redirect to the video's own tube)
+					valTab.append(CDisplayListItem(decodeHtml(phTitle), decodeHtml(phTitle), CDisplayListItem.TYPE_VIDEO, [CUrlItem('', urljoin(self.MAIN_URL, phUrl), 1)], '', phImage, None))
 			if next:
+				next = urljoin(self.MAIN_URL, decodeHtml(next))
 				printDBG('NEXT: ' + next)
 				next_number = self.cm.ph.getSearchGroups(next, 'page[/]([0-9]+?)[/]', 1, True)[0]
 				valTab.append(self.getNextItem(str(next_number), next, name, catUrl))
+			return valTab
+
+		if 'NUDEANDHAIRY' == name:
+			# ATK Hairy's own tube: categories on two pages (60 each), the lists and their pager are built by JavaScript
+			# from "var page" / "var total_pages" (/videos/recent/page-2.html, the search /page-2.html?q=...)
+			self.MAIN_URL = 'https://www.nudeandhairy.com'
+			self.defaultParams = self.cookieParams('nudeandhairy.cookie', return_data=True)
+			seen = set()
+			for pageUrl in (url, url.rstrip('/') + '/page-2.html'):
+				sts, data = self.get_Page(pageUrl)
+				if not sts:
+					break
+				for item in data.split("<li id='cid-")[1:]:
+					catUrl = self.cm.ph.getSearchGroups(item, r'''href=['"](/category/[^'"]+)['"]''', 1, True)[0]
+					catTitle = decodeHtml(self.cm.ph.getSearchGroups(item, r'''title=['"]([^'"]+)['"]''', 1, True)[0]).strip()
+					if not catUrl or not catTitle or catUrl in seen or isBlockedContent(catTitle):
+						continue
+					seen.add(catUrl)
+					catImage = self.cm.ph.getSearchGroups(item, r'''<img[^>]+?\ssrc=['"](https?://[^'"]+\.(?:jpe?g|png|webp))['"]''', 1, True)[0]
+					count = self.cm.ph.getSearchGroups(item, r'''icon-video_library['"]></i>\s*([0-9]+)''', 1, True)[0]
+					valTab.append(CDisplayListItem(catTitle, catTitle + ('\n%s videos' % count if count else ''), CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + catUrl], 'NUDEANDHAIRY-clips', catImage or siteLogo, None))
+				if int(self.cm.ph.getSearchGroups(data, r'var total_pages\s*=\s*([0-9]+)', 1, True)[0] or 1) < 2:
+					break
+			valTab.sort(key=lambda poz: poz.name.lower())
+			valTab.insert(0, CDisplayListItem(menuHeader(_('Most viewed')), _('Most viewed'), CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/videos/most-viewed/'], 'NUDEANDHAIRY-clips', siteLogo, None))
+			valTab.insert(0, CDisplayListItem(menuHeader(_('Top rated')), _('Top rated'), CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/videos/top-rated/'], 'NUDEANDHAIRY-clips', siteLogo, None))
+			valTab.insert(0, CDisplayListItem(menuHeader(_('Most popular')), _('Most popular'), CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/videos/'], 'NUDEANDHAIRY-clips', siteLogo, None))
+			valTab.insert(0, CDisplayListItem(menuHeader(_('Most recent')), _('Most recent'), CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/videos/recent/'], 'NUDEANDHAIRY-clips', siteLogo, None))
+			return searchItems(valTab, True)
+
+		if 'NUDEANDHAIRY-clips' == name:
+			catUrl = self.currList[Index].possibleTypesOfSearch if Index >= 0 and len(self.currList) > Index else None
+			self.MAIN_URL = 'https://www.nudeandhairy.com'
+			self.defaultParams = self.cookieParams('nudeandhairy.cookie', return_data=True)
+			sts, data = self.get_Page(url)
+			if not sts:
+				return valTab
+			for item in data.split("<li id='cid-")[1:]:
+				phUrl = self.cm.ph.getSearchGroups(item, r'''<a class=['"]target c-item['"]\s+href=['"]([^'"]+\.html)['"]''', 1, True)[0]
+				phTitle = decodeHtml(self.cm.ph.getSearchGroups(item, r'''title=['"]([^'"]+)['"]''', 1, True)[0]).strip()
+				if not phUrl or not phTitle:
+					continue
+				# the lazy pictures carry an SVG placeholder in src, the picture in data-src (and in <noscript>)
+				phImage = self.cm.ph.getSearchGroups(item, r'''(?:data-src|\ssrc)=['"](https?://[^'"]+\.(?:jpe?g|png|webp))['"]''', 1, True)[0]
+				phTime = self.cm.ph.getSearchGroups(item, r'''<span class=['"]name['"]>([0-9:]+)<''', 1, True)[0]
+				valTab.append(CDisplayListItem(phTitle, ('[%s] ' % phTime if phTime else '') + phTitle, CDisplayListItem.TYPE_VIDEO, [CUrlItem('', urljoin(self.MAIN_URL, phUrl), 1)], 0, phImage or siteLogo, None))
+			# the pager: page-<n>.html in front of the query (/page-2.html?q=..., /videos/recent/page-2.html)
+			path, _sep, query = url.partition('?')
+			page = int(self.cm.ph.getSearchGroups(path, r'/page-([0-9]+)\.html$', 1, True)[0] or 1)
+			lastPage = int(self.cm.ph.getSearchGroups(data, r'var total_pages\s*=\s*([0-9]+)', 1, True)[0] or 1)
+			if valTab and page < lastPage:
+				nextUrl = re.sub(r'/page-[0-9]+\.html$', '/', path).rstrip('/') + '/page-%d.html' % (page + 1) + ('?' + query if query else '')
+				valTab.append(self.getNextItem(str(page + 1), nextUrl, name, catUrl))
 			return valTab
 
 		if 'NAKEDGIRLS' == name:
@@ -25622,12 +25912,17 @@ class Host(CBaseHostClass, XXXParser):
 			for item in data:
 				phUrl = self.cm.ph.getSearchGroups(item, 'href=["]([^"#]+?)["]', 1, True)[0]
 				phTitle = self.cm.ph.getSearchGroups(item, 'alt=["]([^"]+?)["]', 1, True)[0].strip()
-				phImage = self.cm.ph.getSearchGroups(item, 'inal=["]([^"]+?g)["]', 1, True)[0]
-				Time = self.cm.ph.getSearchGroups(item, '[>]([0-9:]+?)[<]', 1, True)[0]
+				# (data-original="...800x450/1.jpg?format=avif&quality=100": the shield serves only this AVIF, every other
+				# spelling of the picture is HTTP 403 - the framework converts AVIF like WebP)
+				phImage = decodeHtml(self.cm.ph.getSearchGroups(item, 'data-original=["]([^"]+)', 1, True)[0])
+				# the duration and, in a span right behind it, the quality ("HD")
+				Time = self.cm.ph.getSearchGroups(item, r'duration[^"]*"[^>]*>\s*([0-9:]+)\s*(?:<span[^>]*>([^<]+)<)?', 2, True)
+				Quality = (Time[1] or '').strip()
+				Time = Time[0] or ''
 				Views = self.cm.ph.getSearchGroups(item, 'span[>]([0-9.KHM]+?)[<]', 1, True)[0]
 				Added = self.cm.ph.getSearchGroups(item, r'[>]([0-9a-z\s]+?ago)[<]', 1, True)[0]
 				Rate = self.cm.ph.getSearchGroups(item, '[>]([0-9%]+?%)[<]', 1, True)[0]
-				valTab.append(CDisplayListItem(decodeHtml(phTitle), '[' + Time + '] ' + decodeHtml(phTitle) + '\nViews: ' + Views + '\nRating Positive: ' + Rate + '\nAdded: ' + Added, CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], '', phImage, None))
+				valTab.append(CDisplayListItem(decodeHtml(phTitle), '[' + Time + '] ' + ('[%s] ' % Quality if Quality else '') + decodeHtml(phTitle) + '\nViews: ' + Views + '\nRating Positive: ' + Rate + '\nAdded: ' + Added, CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], '', phImage, None))
 			if next_number:
 				if 'search' in url:
 					next = '%s?mode=async&function=get_block&block_id=list_videos_videos_list_search_result&sort_by=&from_videos=%s' % (root, next_number)

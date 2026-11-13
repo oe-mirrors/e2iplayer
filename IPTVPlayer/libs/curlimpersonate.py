@@ -181,13 +181,14 @@ def _headerText(value):
     return str(value)
 
 
-def filterHeaders(headers):
-    """the caller's headers as "Name: value" lines for -H, without the ones the browser sends itself"""
+def filterHeaders(headers, keep=()):
+    """the caller's headers as "Name: value" lines for -H, without the ones the browser sends itself;
+    keep: lower-case names sent anyway (the User-Agent a Cloudflare clearance is bound to)"""
     out = []
     for key, value in (headers or {}).items():
         name = _headerText(key).strip()
         lname = name.lower()
-        if not name or lname in DROPPED_HEADERS or lname.startswith(DROPPED_HEADER_PREFIXES):
+        if not name or (lname in DROPPED_HEADERS and lname not in keep) or lname.startswith(DROPPED_HEADER_PREFIXES):
             continue
         if value is None:
             continue
@@ -252,10 +253,11 @@ def normalizeCookieFile(path):
 
 def buildArgs(binary, profile, url, headers=None, cookieIn='', cookieOut='', cookieString='', dataFile='',
               noRedirection=False, timeout=None, proxy='', insecure=False, cacert='', ipv4Only=False, headerFile='',
-              outFile='', ipv6Only=False, resolveArgs=None):
+              outFile='', ipv6Only=False, resolveArgs=None, keepHeaders=()):
     """outFile: write the body to this file (downloads) instead of stdout.
     ipv4Only / ipv6Only: curl -4 / -6; ipv4Only wins when both are set.
-    resolveArgs: --resolve options (the names curl must not look up itself)"""
+    resolveArgs: --resolve options (the names curl must not look up itself)
+    keepHeaders: lower-case names of the caller's headers sent instead of the profile's (see filterHeaders)"""
     # whole seconds: --speed-time takes an integer only (a host's 'timeout': 7.5 would make curl exit 2)
     try:
         timeout = int(math.ceil(float(timeout))) if timeout else DEFAULT_TIMEOUT
@@ -272,7 +274,7 @@ def buildArgs(binary, profile, url, headers=None, cookieIn='', cookieOut='', coo
             '-D', headerFile, '-o', outFile or '-', '-w', WRITEOUT]
     if not noRedirection:
         args.extend(['-L', '--max-redirs', str(MAX_REDIRECTS)])
-    for line in filterHeaders(headers):
+    for line in filterHeaders(headers, keepHeaders):
         args.extend(['-H', line])
     if cookieIn:
         args.extend(['-b', cookieIn])
@@ -493,8 +495,10 @@ def _run(args, maxDataSize=-1, shouldAbort=None, stderrPath=''):
 
 def fetch(binary, url, tmpDir, headers=None, cookieFile='', loadCookie=False, saveCookie=False, cookieItems=None,
           postBody=None, noRedirection=False, timeout=None, proxy='', insecure=False, cacert=None, ipv4Only=False,
-          maxDataSize=-1, shouldAbort=None, log=None, outFile='', ipv6Only=False):
+          maxDataSize=-1, shouldAbort=None, log=None, outFile='', ipv6Only=False, keepUserAgent=False):
     """one request through curl-impersonate. Returns a dict:
+    keepUserAgent: send the caller's User-Agent instead of the profile's (a cf_clearance from MyE2i is bound to the
+    browser's User-Agent; the TLS / HTTP2 fingerprint stays Chrome's).
     status (int, 0 = no answer), url (final URL), headers ({lower name: value} of the last response),
     body (bytes), exitcode, error (curl's message), profile, size (bytes in outFile).
     outFile: curl writes the body to this file (body is then b'', maxDataSize is not used); the
@@ -528,7 +532,8 @@ def fetch(binary, url, tmpDir, headers=None, cookieFile='', loadCookie=False, sa
             args = buildArgs(binary, profile, url, headers, cookieIn=cookieIn, cookieOut=cookieFile if (cookieFile and saveCookie) else '',
                              cookieString=cookieItemsString(cookieItems), dataFile=dataFile, noRedirection=noRedirection,
                              timeout=timeout, proxy=proxy, insecure=insecure, cacert=cacert, ipv4Only=ipv4Only, headerFile=headerFile,
-                             outFile=outFile, ipv6Only=ipv6Only, resolveArgs=resolveArgs)
+                             outFile=outFile, ipv6Only=ipv6Only, resolveArgs=resolveArgs,
+                             keepHeaders=('user-agent',) if keepUserAgent else ())
             if log is not None:
                 log('curl-impersonate: %s' % ' '.join(args[1:-1]))
             if outFile:

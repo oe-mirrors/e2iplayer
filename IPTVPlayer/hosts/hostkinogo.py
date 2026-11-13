@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "07.11.2026"
+LAST_MODIFIED = "13.11.2026"
 # KinoGo (Russian films, series, cartoons, anime, DLE): kinogo2026.com mirror (the kinogo.ec / .biz / .luxury
 # front doors sit behind a Cloudflare challenge), playback through the Nextembed player of a title page: HLS
 # master with the voice-over audio groups and VTT subtitles, series from the player's seasons / episodes JSON
@@ -13,7 +13,6 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps, loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, decorateResolvedLinkItems, sidecarFromUrlMeta, sidecarMetaQuery
-from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
@@ -52,7 +51,6 @@ TITLE_SEASON_RE = re.compile(r"^(.*?)\s*\([^)]*сезон[^)]*\)\s*$", re.I)
 NEXTEMBED_RE = re.compile(r'(?:data-src|src)="(https?://api\.nextembed\.[a-z]+/embed/[^"]+)"')
 # the Collaps / HDVB player: https://vid<n>.<domain>/movie/<hash>/iframe?d=kinogo.biz (serial/ for series)
 COLLAPS_RE = re.compile(r'(?:data-src|src)="(https?://vid\d*\.[^"/]+/(?:movie|serial)/[0-9a-f]+/iframe[^"]*)"')
-COLLAPS_CFG_RE = re.compile(r'=\s*(\{\s*"file"\s*:)')
 # the third player, cinemar.cc/embed/<id>/+<token> (older films often have only this one): urlparser parserCINEMAR
 CINEMAR_RE = re.compile(r'(?:data-src|src)="(https?://cinemar\.[a-z]+/embed/[^"]+)"')
 # labels of the info rows of a list card / title page -> INFO key
@@ -323,7 +321,7 @@ class KinoGo(GenericFolderWatchedScraperMixin, CBaseHostClass):
             self.addDir(params)
 
     ###################################################
-    # players: Nextembed (HLS master with audio groups + VTT) and Collaps / HDVB (HLS per voice-over)
+    # players: Nextembed (HLS master with audio groups + VTT) and Collaps / HDVB (urlparser parserCOLLAPS, HLS per voice-over)
     ###################################################
     def _players(self, pageUrl):
         # -> ({"nextembed": url, "collaps": [urls]}, page html) of the players of a title page
@@ -344,80 +342,14 @@ class KinoGo(GenericFolderWatchedScraperMixin, CBaseHostClass):
         sts, data = self.getPage(embedUrl, params)
         return data if sts else ""
 
-    def _collapsConfig(self, iframeUrl):
-        # the player config JSON of a Collaps iframe (var p2aCon / playerConfigs ... - the name changes): file
-        # (~<token> of a film, /playlist/<id>.txt of a series), key, href
-        data = self._embedPage(iframeUrl)
-        match = COLLAPS_CFG_RE.search(data)
-        if not match:
-            return {}
-        start = match.start(1)
-        try:
-            cfg = json_loads(self._jsBlock(data, start, "{", "}"))
-        except Exception:
-            printExc()
-            return {}
-        return cfg if isinstance(cfg, dict) and cfg.get("file") and cfg.get("key") and cfg.get("href") else {}
-
-    def _collapsPost(self, cfg, iframeUrl, path):
-        # the player asks vid11.<href><path> with the page key as CSRF token: a stream url or a playlist JSON
-        params = dict(self.defaultParams)
-        params["header"] = MergeDicts(self.HEADER, {"Referer": iframeUrl, "X-CSRF-TOKEN": cfg["key"], "Content-Type": "application/x-www-form-urlencoded"})
-        sts, data = self.getPage("https://vid11.%s%s" % (cfg["href"], path), params, {"p": "1"})
-        return data.strip() if sts else ""
-
-    def _collapsResolve(self, cfg, iframeUrl, token):
-        # "~<token>" -> the HLS master (after the CDN's redirect, its variant urls are relative)
-        url = self._collapsPost(cfg, iframeUrl, "/playlist/%s.txt" % token.lstrip("~"))
-        if not self.cm.isValidUrl(url):
-            printDBG("KinoGo.collaps answer [%s]" % url[:100])
-            return ""
-        params = dict(self.defaultParams)
-        params["header"] = MergeDicts(self.HEADER, {"Referer": iframeUrl})
-        params["no_redirection"] = True
-        sts, _data = self.getPage(url, params)
-        location = self.cm.meta.get("location", "") if sts else ""
-        return location if self.cm.isValidUrl(location) else url
-
-    def _collapsToken(self, cfg, iframeUrl, ref):
-        # "film" -> the ~token of the film iframe; "s<season>e<episode>v<n>" -> the n-th voice-over of that episode
-        if ref == "film":
-            return cfg["file"] if str(cfg["file"]).startswith("~") else ""
-        match = re.match(r"s(\d+)e(.+)v(\d+)$", ref)
-        if not match:
-            return ""
-        season, episode, idx = match.group(1), match.group(2), int(match.group(3))
-        for item in self._collapsSeasons(cfg, iframeUrl):
-            if str(item["season"]) != season:
-                continue
-            for ep in item["episodes"]:
-                if ep["episode"] == episode and idx < len(ep["collaps"]):
-                    return ep["collaps"][idx][1]
-        return ""
-
-    def _collapsSeasons(self, cfg, iframeUrl):
-        # Playerjs playlist: season -> episode -> voice-over -> {season, episodes: [{episode, collaps: [(voice, file)]}]}
-        try:
-            playlist = json_loads(self._collapsPost(cfg, iframeUrl, cfg["file"]))
-        except Exception:
-            printExc()
-            return []
-        seasons = []
-        for item in playlist if isinstance(playlist, list) else []:
-            if not isinstance(item, dict) or not isinstance(item.get("folder"), list):
-                continue
-            season = self.cm.ph.getSearchGroups(str(item.get("id", "")) + " " + self.cleanHtmlStr(item.get("title", "")), r"(\d+)")[0]
-            episodes = []
-            for ep in item["folder"]:
-                if not isinstance(ep, dict):
-                    continue
-                number = str(ep.get("episode", "") or self.cm.ph.getSearchGroups(self.cleanHtmlStr(ep.get("title", "")), r"(\d+)")[0])
-                voices = [(self.cleanHtmlStr(v.get("title", "")), v["file"]) for v in (ep.get("folder") or []) if isinstance(v, dict) and v.get("file")]
-                if number and voices:
-                    episodes.append({"episode": number, "collaps": voices})
-            if season and episodes:
-                seasons.append({"season": int(season), "episodes": episodes})
-        return seasons
+    def _collapsUrl(self, iframeUrl, extraMeta=None):
+        # a Collaps iframe for urlparser (parserCOLLAPS / getCollapsPlaylist): the site as referer, the host's proxy
+        meta = {"Referer": self.MAIN_URL or gettytul()}
+        proxy = self.getProxy()
+        if proxy:
+            meta["http_proxy"] = proxy
+        meta.update(extraMeta or {})
+        return strwithmeta(iframeUrl, meta)
 
     def _embedSeasons(self, data):
         # [{"season": n, "episodes": [{"episode", "id", "hls", "dash", "audio", "cc"}]}] of a series player
@@ -468,11 +400,11 @@ class KinoGo(GenericFolderWatchedScraperMixin, CBaseHostClass):
             if not seasons:
                 source = self._embedSource(embed)
         for iframeUrl in players["collaps"]:
-            cfg = self._collapsConfig(iframeUrl)
-            if not cfg:
+            playlist = self.up.getCollapsPlaylist(self._collapsUrl(iframeUrl))
+            if not playlist:
                 continue
-            if "/serial/" in iframeUrl or not str(cfg["file"]).startswith("~"):
-                for item in self._collapsSeasons(cfg, iframeUrl):
+            if not playlist.get("film"):
+                for item in playlist.get("seasons", []):
                     target = None
                     for season in seasons:
                         if str(season.get("season", "")) == str(item["season"]):
@@ -487,7 +419,7 @@ class KinoGo(GenericFolderWatchedScraperMixin, CBaseHostClass):
                         else:
                             target["episodes"].append(ep)
             else:
-                source.setdefault("collaps", []).append((iframeUrl, cfg["file"]))
+                source.setdefault("collaps", []).append(iframeUrl)
         for season in seasons:
             season["episodes"].sort(key=self._episodeKey)
         seasons.sort(key=lambda s: s.get("season", 0))
@@ -616,15 +548,14 @@ class KinoGo(GenericFolderWatchedScraperMixin, CBaseHostClass):
         link = self._link(source, nextembedUrl.group(1) if nextembedUrl else self.MAIN_URL)
         if link:
             urltab.append(link)
-        # Collaps: a ~token only works with the key of the same iframe load, so the links carry the film iframe /
-        # the episode + voice-over position and getVideoLinks loads a fresh token and key pair
+        # Collaps (urlparser parserCOLLAPS): the film iframe, or the series iframe + episode + voice-over position as url meta
         collapsFrames = [x.replace("&amp;", "&") for x in COLLAPS_RE.findall(data)]
         serialFrame = [x for x in collapsFrames if "/serial/" in x]
         for idx, (voice, _token) in enumerate(source.get("collaps", []) if season and serialFrame else []):
-            ref = "s%se%sv%d" % (season, episode, idx)
-            urltab.append({"name": "Collaps [%s]" % voice if voice else "Collaps", "url": "%s#collaps=%s" % (serialFrame[0], ref), "need_resolve": 1})
-        for iframeUrl, _token in (source.get("collaps", []) if not season else []):
-            urltab.append({"name": "Collaps", "url": "%s#collaps=film" % iframeUrl, "need_resolve": 1})
+            url = self._collapsUrl(serialFrame[0], {"collaps_season": str(season), "collaps_episode": str(episode), "collaps_voice": str(idx)})
+            urltab.append({"name": "Collaps [%s]" % voice if voice else "Collaps", "url": url, "need_resolve": 1})
+        for iframeUrl in (source.get("collaps", []) if not season else []):
+            urltab.append({"name": "Collaps", "url": self._collapsUrl(iframeUrl), "need_resolve": 1})
         if not season:
             # films: the cinemar player through urlparser (series playlists of it are folders it does not handle)
             seen = set()
@@ -643,24 +574,11 @@ class KinoGo(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     def getVideoLinks(self, videoUrl):
         printDBG("KinoGo.getVideoLinks [%s]" % videoUrl)
-        sidecar = sidecarFromUrlMeta(videoUrl, IsSidecarEnabled())
-        iframeUrl, _sep, ref = str(videoUrl).partition("#collaps=")
-        if not ref:
-            # the cinemar player: urlparser
-            return decorateResolvedLinkItems(self.up.getVideoLinkExt(videoUrl), sidecar) if self.cm.isValidUrl(videoUrl) else []
-        cfg = self._collapsConfig(iframeUrl)
-        token = self._collapsToken(cfg, iframeUrl, ref) if cfg else ""
-        hls = self._collapsResolve(cfg, iframeUrl, token) if token else ""
-        if not hls:
-            SetIPTVPlayerLastHostError(_("No stream available"))
+        if not self.cm.isValidUrl(videoUrl):
             return []
-        meta = {"User-Agent": self.HEADER.get("User-Agent"), "Referer": iframeUrl}
-        urltab = getDirectM3U8Playlist(strwithmeta(hls, meta), checkContent=True, sortWithMaxBitrate=99999999)
-        for item in urltab:
-            item["url"] = strwithmeta(item["url"], meta)
-        if not urltab:
-            urltab = [{"name": "HLS", "url": strwithmeta(hls, MergeDicts(meta, {"iptv_proto": "m3u8"}))}]
-        return decorateResolvedLinkItems(urltab, sidecar)
+        # Collaps and cinemar players: urlparser
+        sidecar = sidecarFromUrlMeta(videoUrl, IsSidecarEnabled())
+        return decorateResolvedLinkItems(self.up.getVideoLinkExt(videoUrl), sidecar)
 
     ###################################################
     # INFO
