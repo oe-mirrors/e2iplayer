@@ -976,6 +976,15 @@ class YouTubeParser:
         # first line is the channel name, the rest are views / age / etc.
         owner = ensure_str(lines[0]) if lines else ""
         descLines = lines[1:] if len(lines) > 1 else []
+        # duration overlay ("15:14"); a live tile shows its live label there instead
+        for overlay in tile.get("header", {}).get("tileHeaderRenderer", {}).get("thumbnailOverlays", []):
+            status = overlay.get("thumbnailOverlayTimeStatusRenderer")
+            if not isinstance(status, dict):
+                continue
+            text = ensure_str(self._getSimpleText(status.get("text", {})))
+            if text:
+                descLines.insert(0, text if status.get("style") == "LIVE" else _("Duration: %s") % text)
+            break
         icon = ""
         thumbs = self._firstFind(tile.get("header", {}), "thumbnails")
         if isinstance(thumbs, list) and thumbs:
@@ -983,7 +992,7 @@ class YouTubeParser:
         desc = " | ".join(descLines)
         if owner:
             desc = (desc + "\n" + owner) if desc else owner
-        return {
+        params = {
             "type": "video",
             "category": "video",
             "title": self._normalizeText(ensure_str(title)),
@@ -995,6 +1004,9 @@ class YouTubeParser:
             "channel_title": owner,
             "video_id": ensure_str(videoId),
         }
+        if tile.get("contentType") == "TILE_CONTENT_TYPE_SHORTS" or self._isShortCommand(tile.get("onSelectCommand", {})):
+            self._markShort(params)
+        return params
 
     def getTvFeed(self, browseId, page, cItem):
         printDBG("YouTubeParser.getTvFeed browseId[%s] page[%s]" % (browseId, page))
