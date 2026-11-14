@@ -17,7 +17,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIconDir
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedHostMixin, GenericFolderWatchedScraperMixin
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
@@ -49,6 +49,7 @@ class NRKTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(self, {"history": "nrktv", "cookie": "nrktv.cookie"})
         self.MAIN_URL = gettytul()
+        self.DEFAULT_ICON_URL = "file://" + GetIconDir("PlayerSelector/nrktv135.png")
         self.HEADER = {"User-Agent": self.cm.getDefaultUserAgent(), "Accept": "application/json, */*",
                        "Referer": self.MAIN_URL, "Origin": "https://tv.nrk.no"}
         self.defaultParams = {"header": self.HEADER}

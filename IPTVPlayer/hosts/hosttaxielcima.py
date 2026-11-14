@@ -20,7 +20,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromIte
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIconDir
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
@@ -33,9 +33,6 @@ def GetConfigList():
 # the site moves between mirrors (txcima.com -> b.txcima.com): change only the address here
 def gettytul():
     return "https://b.txcima.com/"
-
-
-MAIN_URL = gettytul()
 
 
 # "مشاهدة فيلم X 2026 مترجم", "مسلسل X الموسم الثاني الحلقة 2 مترجمة", "انمي ...", "برنامج ..."
@@ -58,9 +55,10 @@ class TaxiElCima(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     def __init__(self):
         CBaseHostClass.__init__(self, {"history": "taxielcima", "cookie": "taxielcima.cookie"})
+        self.MAIN_URL = gettytul()
+        self.DEFAULT_ICON_URL = "file://" + GetIconDir("PlayerSelector/taxielcima135.png")
         self.HEADER = self.cm.getDefaultHeader(browser="chrome")
         self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
-        self.MAIN_URL = MAIN_URL
         self.MENU = [{"category": "list_items", "title": _("Movies"), "url": self.getFullUrl("movies/")},
                      {"category": "list_items", "title": _("Series"), "url": self.getFullUrl("series/")},
                      {"category": "list_items", "title": _("Newest Episodes"), "url": self.getFullUrl("episodes/")},

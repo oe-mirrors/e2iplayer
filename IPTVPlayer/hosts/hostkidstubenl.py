@@ -14,7 +14,7 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, decorateResolvedLinkItems, sidecarFromUrlMeta
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIconDir
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedHostMixin, GenericFolderWatchedScraperMixin
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
@@ -45,6 +45,7 @@ class KidsTubeNL(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     def __init__(self):
         CBaseHostClass.__init__(self, {"history": "kidstubenl", "cookie": "kidstubenl.cookie"})
+        self.DEFAULT_ICON_URL = "file://" + GetIconDir("PlayerSelector/kidstubenl135.png")
         self.HEADER = self.cm.getDefaultHeader(browser="chrome")
         self.HEADER.update({"Referer": gettytul()})
         self.defaultParams = {"header": self.HEADER}
