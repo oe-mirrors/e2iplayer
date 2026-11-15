@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "16.10.2026"
+LAST_MODIFIED = "15.11.2026"
 # Template of a movie/series host that follows the current host standard:
 #   - movies and series (series -> seasons -> episodes), search with history
 #   - "First page" / "Jump" / "Next page" (with "(2/12)" when the last page is known)
@@ -20,9 +20,8 @@ LAST_MODIFIED = "16.10.2026"
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
-from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getArticleContent as getMetaArticleContent
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
@@ -57,6 +56,8 @@ def gettytul():
 
 
 class Template(GenericFolderWatchedScraperMixin, CBaseHostClass):
+    # site behind Cloudflare & co.: True sends getPage() through self.cm.getPageCFProtection() (MyE2i)
+    USE_CF_PROTECTION = False
     # the fields of a row that identify it as a favourite: what is needed to open it again, nothing that
     # changes between two visits (title with year/quality, plot, icon, page number ...)
     FAV_FIELDS = ('name', 'type', 'category', 'url', 's_title', 'season', 'meta_type', 'meta_title', 'meta_year')
@@ -65,9 +66,11 @@ class Template(GenericFolderWatchedScraperMixin, CBaseHostClass):
         # names of the search history file and the cookie file of this host
         CBaseHostClass.__init__(self, {'history': 'template', 'cookie': 'template.cookie'})
         self.MAIN_URL = gettytul()
-        self.DEFAULT_ICON_URL = self.getFullUrl('/images/logo.png')
+        # DEFAULT_ICON_URL (icon of rows without their own) is icons/PlayerSelector/template135.png by itself;
+        # set self.DEFAULT_ICON_URL only for another picture
         # one header for the whole host - a random UA per request breaks session cookies
         self.HEADER = self.cm.getDefaultHeader(browser='chrome')
+        # used by the getPage() of CBaseHostClass when no params are passed
         self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         # "{page}" is replaced by the page number (tools/iptvpaging.py does the same for "Jump")
         self.MENU = [
@@ -80,20 +83,14 @@ class Template(GenericFolderWatchedScraperMixin, CBaseHostClass):
         self.wfInitFolderCache()
 
     ###################################################
-    # HTTP
-    ###################################################
-    def getPage(self, url, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        # behind Cloudflare: return self.cm.getPageCFProtection(url, addParams, post_data)
-        return self.cm.getPage(url, addParams, post_data)
-
-    ###################################################
     # watched flag and favourites
     ###################################################
     def _getWatchedKeyForItem(self, cItem):
         # a stable id per movie / episode / season / series ('' = no flag): the page url, never a signed
-        # stream url; menus, "Next page", search and live streams get none
+        # stream url; menus, "Next page", search and live streams get none.
+        # When every season has a page of its own, the mixin's helper does all of it:
+        #   return self.wfCategoryKey(cItem, pathOf, ('video',), ('list_seasons', 'list_episodes'))
+        # (pathOf = a function url -> stable id). Here the seasons share the series url, so the key adds the season.
         try:
             if not isinstance(cItem, dict):
                 return ''
@@ -112,11 +109,8 @@ class Template(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return ''
 
     def getFavouriteData(self, cItem):
-        try:
-            return json_dumps(dict((key, cItem[key]) for key in self.FAV_FIELDS if key in cItem))
-        except Exception:
-            printExc()
-        return CBaseHostClass.getFavouriteData(self, cItem)
+        # only the FAV_FIELDS of the row (CBaseHostClass)
+        return self.getFavouriteFieldsData(cItem)
 
     ###################################################
     # paging
@@ -243,22 +237,18 @@ class Template(GenericFolderWatchedScraperMixin, CBaseHostClass):
             # shown to the user below "No valid links available." instead of a silent empty list
             SetIPTVPlayerLastHostError(_('This video is only on hosters E2iPlayer cannot play.'))
             return []
-        # sidecar: plot + poster written next to a download (when switched on in the settings)
+        # sidecar: plot + poster written next to a download (when switched on in the settings);
+        # getVideoLinks() of CBaseHostClass resolves the need_resolve links and carries the sidecar over
         return applySidecarToLinks(linksTab, buildSidecarFromItem(cItem, IsSidecarEnabled(), plot))
-
-    def getVideoLinks(self, videoUrl):
-        printDBG('Template.getVideoLinks [%s]' % videoUrl)
-        if not self.cm.isValidUrl(videoUrl):
-            return []
-        sidecar = sidecarFromUrlMeta(videoUrl, IsSidecarEnabled())
-        return decorateResolvedLinkItems(self.up.getVideoLinkExt(videoUrl), sidecar)
 
     ###################################################
     # INFO key
     ###################################################
     def getArticleContent(self, cItem):
         # plot, poster, rating, cast ... from the services switched on in the settings (TMDb, IMDb, ...);
-        # the row's own desc and icon when none of them knows the title
+        # the row's own desc and icon when none of them knows the title. With text of the site's own
+        # (moviemeta.getItemMeta / metaArticle):
+        #   return metaArticle(cItem, getItemMeta(cItem), story=sitePlot, poster=sitePoster, info={'duration': ...})
         return getMetaArticleContent(cItem)
 
     ###################################################
