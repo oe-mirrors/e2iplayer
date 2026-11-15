@@ -48,6 +48,7 @@ def handler(tmp_path):
         sts = h.loadSubtitles(str(path), fps=fps)
         return sts, h.subAtoms
 
+    load.handlerClass = mod.IPTVSubtitlesHandler
     yield load
     sys.modules.clear()
     sys.modules.update(saved)
@@ -143,3 +144,28 @@ def test_microdvd_known_fps_wins_over_first_line(handler):
     # like the C parser: an fps from the caller / file name beats {1}{1}<fps> in the file
     sts, atoms = handler("Movie_de_0_1_2_fps25.sub", u"{1}{1}50\n{25}{50}Hi\n")
     assert sts and atoms == [{'start': 1000, 'end': 2000, 'text': 'Hi'}]
+
+
+# YouTube auto-generated captions: per-word timestamps + <c> spans and a 10 ms cue between two roll-up lines
+YT_ASR = (u"WEBVTT\nKind: captions\nLanguage: en\n\n"
+          u"00:00:12.559 --> 00:00:14.350 align:start position:0%\n \nso<00:00:12.759><c> in</c>\n\n"
+          u"00:00:14.350 --> 00:00:14.360 align:start position:0%\nso in\n \n\n"
+          u"00:00:14.360 --> 00:00:17.029 align:start position:0%\nso in\n"
+          u"college<00:00:15.360><c> I</c><00:00:15.440><c.colorE5E5E5> was</c>\n")
+
+
+def test_youtube_asr_vtt_cleaned_for_c_parser(handler):
+    # the C parser prints unknown tags (<00:00:15.360>, <c>) as text - they are gone before it sees the file
+    clean = handler.handlerClass()._cleanWebVtt(YT_ASR)
+    assert '<' not in clean and '00:00:14.350 --> 00:00:14.360' not in clean
+    assert 'college I was' in clean
+    # markup the parsers handle themselves stays, other formats are untouched
+    assert handler.handlerClass()._cleanWebVtt(u"WEBVTT\n\n00:01.000 --> 00:03.000\n<i>Hi</i>\n") == u"WEBVTT\n\n00:01.000 --> 00:03.000\n<i>Hi</i>\n"
+    srt = u"1\n00:00:01,000 --> 00:00:01,010\n<00:00:01.500>x\n"
+    assert handler.handlerClass()._cleanWebVtt(srt) == srt
+
+
+def test_youtube_asr_vtt_python_parser(handler):
+    sts, atoms = handler("yt_en_0_abc.vtt", YT_ASR)
+    assert sts and atoms == [{'start': 12559, 'end': 14350, 'text': 'so in'},
+                             {'start': 14360, 'end': 17029, 'text': 'so in\ncollege I was'}]

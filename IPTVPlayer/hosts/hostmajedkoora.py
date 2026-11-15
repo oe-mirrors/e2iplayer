@@ -29,7 +29,7 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps, load
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist, getMPDLinksWithMeta, requireDownloaderForDisguisedHls
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIconDir, b64urlDecode
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, b64urlDecode
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 
 
@@ -71,7 +71,6 @@ class MajedKoora(CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(self, {"history": "majedkoora", "cookie": "majedkoora.cookie"})
         self.MAIN_URL = gettytul()
-        self.DEFAULT_ICON_URL = "file://" + GetIconDir("PlayerSelector/majedkoora135.png")
         self.HEADER = self.cm.getDefaultHeader(browser="chrome")
         self.defaultParams = {"header": dict(self.HEADER, Accept="application/json", Referer=self.MAIN_URL)}
         self.cache = {}

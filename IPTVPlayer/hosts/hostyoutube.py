@@ -10,7 +10,7 @@ LAST_MODIFIED = "02.11.2026"
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass, CDisplayListItem, ArticleContent, RetHost
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, IsExecutable, printExc, byteify, GetSearchHistoryDir, E2ColoR, GetIconDir, GetCacheSubDir
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, IsExecutable, printExc, byteify, GetSearchHistoryDir, E2ColoR, GetCacheSubDir
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvfilehost import IPTVFileHost
 from Plugins.Extensions.IPTVPlayer.libs.youtubeparser import YouTubeParser
@@ -340,7 +340,6 @@ class Youtube(CBaseHostClass):
         CBaseHostClass.__init__(self, {"history": "ytlist", "cookie": "youtube.cookie"})
         self.UTLIST_FILE = "ytlist.txt"
         # local: upload.wikimedia.org answers boxes with HTTP 429
-        self.DEFAULT_ICON_URL = "file://" + GetIconDir("PlayerSelector/youtube135.png")
         self.MAIN_GROUPED_TAB = [{"category": "from_file", "title": _("User links"), "desc": _("User links stored in the ytlist.txt file.")}, {"category": "feeds", "title": _("Trending"), "desc": _("Browse youtube trending feeds")}]
 
         self.SEARCH_TYPES = [(_("Video"), "video"), (_("Channel"), "channel"), (_("Playlist"), "playlist"), (_("Movie"), "movie"), (_("Live"), "live"), (_("Shorts"), "shorts")]  # (_("Program"), "show"),... # (_("traylist"), "traylist"),

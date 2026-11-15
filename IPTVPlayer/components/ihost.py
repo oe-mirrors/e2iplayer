@@ -13,7 +13,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.asynccall import MainSessionWrapper
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import common, CParsingHelper
 from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import CSearchHistoryHelper, GetCookieDir, printDBG, printExc, GetLogoDir
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import CSearchHistoryHelper, GetCookieDir, GetIconDir, printDBG, printExc, GetLogoDir
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
 
 from Components.config import config
@@ -24,6 +24,7 @@ from Screens.MessageBox import MessageBox
 from Plugins.Extensions.IPTVPlayer.components.searchhistoryeditor import SearchHistoryEditor
 from Plugins.Extensions.IPTVPlayer.components.iptvhostpin import HostNameOf, IsHostPinProtected, GetHostPinCode
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
+import os
 import re
 
 # icon urls scraped from JSON inside a page instead of decoding it: "https:\/\/x\/a.jpg?w=1&h=2"
@@ -910,6 +911,16 @@ class CBaseHostClass:
         if '' != params.get('cookie', ''):
             self.COOKIE_FILE = GetCookieDir(params['cookie'])
         self.moreMode = False
+        if not hasattr(self, 'DEFAULT_ICON_URL'):
+            self.DEFAULT_ICON_URL = self._hostLogoIcon()
+
+    def _hostLogoIcon(self):
+        # hosts/hostxyz.py -> icons/PlayerSelector/xyz135.png, a host sets DEFAULT_ICON_URL itself for anything else
+        moduleName = self.__class__.__module__.rsplit('.', 1)[-1]
+        if not moduleName.startswith('host'):
+            return ''
+        path = GetIconDir('PlayerSelector/%s135.png' % moduleName[4:])
+        return 'file://' + path if os.path.isfile(path) else ''
 
     def getHistoryText(self):
         return self.history.getLength()

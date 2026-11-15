@@ -26,7 +26,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromIte
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, MergeDicts, GetIconDir, E2ColoR, StripColorCodes
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, MergeDicts, E2ColoR, StripColorCodes
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
@@ -99,7 +99,6 @@ class EgyBest(GenericFolderWatchedScraperMixin, CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(self, {"history": "egybest", "cookie": "egybest.cookie"})
         self.MAIN_URL = "https://hrrejhp.com/mycimaa/public/api/"
-        self.DEFAULT_ICON_URL = "file://" + GetIconDir("PlayerSelector/egybest135.png")
         # the app's own client: the API checks the EasyPlex user agent and the package name
         self.HEADER = {"User-Agent": "EasyPlex (Android 11; Mi 5s; Xiaomi capricorn; en)", "Accept": "application/json", "Accept-Encoding": "gzip",
                        "packagename": "com.connectword.flechliv"}

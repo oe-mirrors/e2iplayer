@@ -22,7 +22,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_unquote
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import normalizeMediathekTitle
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import GetIconDir, printDBG, printExc
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedHostMixin, GenericFolderWatchedScraperMixin
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
@@ -49,7 +49,6 @@ class JoeMonster(GenericFolderWatchedScraperMixin, CBaseHostClass):
         CBaseHostClass.__init__(self, {"history": "joemonster.org", "cookie": "joemonster.cookie"})
         self.MAIN_URL = gettytul()
         # the site logo sits behind Cloudflare and is asked for before the check is solved: the plugin's tile
-        self.DEFAULT_ICON_URL = "file://" + GetIconDir("PlayerSelector/joemonsterorg135.png")
         self.HEADER = self.cm.getDefaultHeader()
         self.USER_AGENT = self.HEADER.get("User-Agent", "")
         self.HEADER["Referer"] = self.MAIN_URL

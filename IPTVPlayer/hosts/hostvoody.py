@@ -18,7 +18,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import GetIconDir, printDBG, printExc
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedHostMixin, GenericFolderWatchedScraperMixin
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
@@ -52,7 +52,6 @@ class Voody(GenericFolderWatchedScraperMixin, CBaseHostClass):
         self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
         self.seasonsCache = {}
         self.missingEmbeds = set()  # coverapi players that answer 404 (no stream for the title)
-        self.DEFAULT_ICON_URL = "file://" + GetIconDir("PlayerSelector/voody135.png")
         self.MAIN_URL = _mainUrl()
         self.MENU = [{"category": "list_items", "title": _("Movies"), "url": self.getFullUrl("/load/")},
                      {"category": "list_items", "title": _("Recommended"), "url": self.getFullUrl("/load/top_250_movies/")},

@@ -179,6 +179,26 @@ class IPTVSubtitlesHandler:
             return 'tmplayer'
         return 'srt' if ext in ('srt', 'vtt') else ''
 
+    # WebVTT inline markup the C parser prints as text: the per-word timestamps of YouTube's
+    # auto-generated captions (<00:00:15.360>) and the class/voice spans around the words
+    _VTT_INLINE_TS_RE = re.compile(r'<(?:\d+:)?\d{2}:\d{2}\.\d{3}>')
+    _VTT_SPAN_RE = re.compile(r'</?(?:c|v|lang|ruby|rt)(?:[.\s][^<>\n]*)?>')
+    _VTT_TIMING_RE = re.compile(r'^[ \t]*((?:\d+:)?\d{2}:\d{2}\.\d{3})[ \t]+-->[ \t]+((?:\d+:)?\d{2}:\d{2}\.\d{3})', re.M)
+
+    def _cleanWebVtt(self, subText):
+        if not subText.lstrip(u'﻿').startswith('WEBVTT'):
+            return subText
+        if '<' in subText:
+            subText = self._VTT_SPAN_RE.sub('', self._VTT_INLINE_TS_RE.sub('', subText))
+        # YouTube's roll-up captions add a 10 ms cue between two lines - nothing to read, drop it
+        kept = []
+        for block in subText.replace('\r\n', '\n').split('\n\n'):
+            m = self._VTT_TIMING_RE.search(block)
+            if m and self._srtTc2ms(m.group(2)) - self._srtTc2ms(m.group(1)) <= 50:
+                continue
+            kept.append(block)
+        return '\n\n'.join(kept)
+
     @staticmethod
     def _assTc2ms(time):
         # H:MM:SS.cc
@@ -398,7 +418,7 @@ class IPTVSubtitlesHandler:
 
                 from Plugins.Extensions.IPTVPlayer.libs.iptvsubparser import _subparser as subparser
                 with io.open(filePath, 'r', encoding=encoding, errors='replace', newline='') as fp:
-                    subText = ensure_str(fp.read())
+                    subText = self._cleanWebVtt(ensure_str(fp.read()))
                 # if in subtitles will be line {1}{1}f_fps
                 # for example {1}{1}23.976 and we set microsecperframe = 0
                 # then microsecperframe will be calculated as follow: llroundf(1000000.f / f_fps)
@@ -449,7 +469,7 @@ class IPTVSubtitlesHandler:
         if not sts:
             try:
                 with io.open(filePath, 'r', encoding=encoding, errors='replace', newline='') as fp:
-                    subText = ensure_str(fp.read().lstrip(u'\ufeff'))
+                    subText = self._cleanWebVtt(ensure_str(fp.read().lstrip(u'\ufeff')))
                 fmt = self._detectFormat(subText, os_path.splitext(filePath)[1].lower().lstrip('.'))
                 if fmt == 'srt':
                     self.subAtoms = self._srtToAtoms(subText)

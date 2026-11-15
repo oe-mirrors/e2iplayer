@@ -19,7 +19,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import normalizeMediathekTitle
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import GetIconDir, printDBG, printExc
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedHostMixin, GenericFolderWatchedScraperMixin
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
@@ -56,7 +56,6 @@ class HoofootCom(GenericFolderWatchedScraperMixin, CBaseHostClass):
         CBaseHostClass.__init__(self, {'history': 'hoofoot.net'})
         self.MAIN_URL = 'https://hoofoot.net/'
         # the site's favicon is the Astro framework logo - the host's own tile instead
-        self.DEFAULT_ICON_URL = 'file://' + GetIconDir('PlayerSelector/hoofootcom135.png')
         self.HEADER = self.cm.getDefaultHeader(browser='chrome')
         self.defaultParams = {'header': self.HEADER}
         self.manifest = None
