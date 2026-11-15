@@ -681,6 +681,7 @@ class urlparser:
             "netu.to": self.pp.parserHQQ,
             "netu.tv": self.pp.parserHQQ,
             "niramirus.com": self.pp.parserJWPLAYER,  # add 061026 (StreamWish mirror, e.g. pornbusy)
+            "n1mwq.org": self.pp.parserBYSE,  # add 151126 (Byse frontend, videoteka)
             "nonesnanking.com": self.pp.parserVOESX,  # add 061026
             "nova.upn.one": self.pp.parserSBS,
             # o

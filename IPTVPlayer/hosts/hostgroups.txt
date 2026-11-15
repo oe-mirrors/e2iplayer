@@ -71,6 +71,7 @@
   "akoam",
   "filmoviplex",
   "filmoton",
+  "videoteka",
   "dmdamedia",
   "shoofmax",
   "taxielcima",
@@ -641,6 +642,7 @@
   "dailymotion",
   "filmoviplex",
   "filmoton",
+  "videoteka",
   "fenixsite",
   "serijebalkan"
  ],
