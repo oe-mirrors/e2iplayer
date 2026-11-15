@@ -8,7 +8,7 @@
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, iptv_system
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import common
 ###################################################
@@ -16,6 +16,7 @@ from Plugins.Extensions.IPTVPlayer.libs.pCommon import common
 ###################################################
 # FOREIGN import
 ###################################################
+from Tools.BoundFunction import boundFunction
 import datetime
 from os import rename as os_rename
 ###################################################
@@ -81,6 +82,18 @@ class BaseDownloader:
         sts = False
         reason = 'This is base class. Download cannot be done with it.'
         callBackFun(sts, reason)
+
+    def _checkToolCallBack(self, callBackFun, code, data):
+        # the tool answered its version / help call: exit code 0 = usable, else its output is the reason
+        self.iptv_sys = None
+        callBackFun(code == 0, '' if code == 0 else data)
+
+    def _checkToolThenWgetCallBack(self, callBackFun, code, data):
+        # for downloaders that also need wget: check it once the tool itself works
+        if code != 0:
+            self._checkToolCallBack(callBackFun, code, data)
+        else:
+            self.iptv_sys = iptv_system(DMHelper.GET_WGET_PATH() + " -V 2>&1 ", boundFunction(self._checkToolCallBack, callBackFun))
 
     def isLiveStream(self):
         # True - if it downloading live stream,

@@ -133,30 +133,8 @@ class MergeDownloader(BaseDownloader, SidecarMixin):
         return "MergeDownloader"
 
     def isWorkingCorrectly(self, callBackFun):
-        self.iptv_sys = iptv_system(DMHelper.GET_FFMPEG_PATH() + ' -version ' + " 2>&1 ", boundFunction(self._checkWorkingCallBack, callBackFun))
-
-    def _checkWorkingCallBack(self, callBackFun, code, data):
-        reason = ''
-        sts = True
-        if code != 0:
-            sts = False
-            reason = data
-            self.iptv_sys = None
-            callBackFun(sts, reason)
-        else:  # Need wget for correct working, so check also if wget working correctly
-            self._isWgetWorkingCorrectly(callBackFun)
-
-    def _isWgetWorkingCorrectly(self, callBackFun):
-        self.iptv_sys = iptv_system(DMHelper.GET_WGET_PATH() + " -V 2>&1 ", boundFunction(self._checkWgetWorkingCallBack, callBackFun))
-
-    def _checkWgetWorkingCallBack(self, callBackFun, code, data):
-        reason = ''
-        sts = True
-        if code != 0:
-            sts = False
-            reason = data
-        self.iptv_sys = None
-        callBackFun(sts, reason)
+        # merging needs wget too
+        self.iptv_sys = iptv_system(DMHelper.GET_FFMPEG_PATH() + ' -version ' + " 2>&1 ", boundFunction(self._checkToolThenWgetCallBack, callBackFun))
 
     def _clearSidecarData(self):
         SidecarMixin._clearSidecarData(self)
