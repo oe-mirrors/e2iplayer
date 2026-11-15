@@ -71,11 +71,6 @@ class Assabile(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 lang = 'www'
         return 'https://%s.assabile.com/' % lang
 
-    def getPage(self, url, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPage(url, addParams, post_data)
-
     def fullUrl(self, url):
         if not url:
             return ''

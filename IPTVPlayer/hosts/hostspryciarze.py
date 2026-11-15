@@ -70,11 +70,6 @@ class Spryciarze(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return ''
 
     ###################################################
-    def getPage(self, url, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPage(url, addParams, post_data)
-
     def _parseCatCards(self, data):
         # [{'title', 'url', 'subs': [(title, url), ...]}, ...] from the "card-header" boxes
         cats = []

@@ -79,11 +79,6 @@ class CineHD(GenericFolderWatchedScraperMixin, CBaseHostClass):
     ###################################################
     # helpers
     ###################################################
-    def getPage(self, baseUrl, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPage(baseUrl, addParams, post_data)
-
     def _getJson(self, url, params=None):
         sts, data = self.getPage(url, params)
         if not sts:

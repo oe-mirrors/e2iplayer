@@ -78,11 +78,6 @@ class MindigTVHU(CBaseHostClass):
         self.HEADER = self.cm.getDefaultHeader()
         self.defaultParams = {"header": self.HEADER}
 
-    def getPage(self, url, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPage(url, addParams, post_data)
-
     def _channelDef(self, title):
         title, icon, group = CHANNEL_DEFS.get(title, (title, "", ""))
         return title, _gh(icon) or self.DEFAULT_ICON_URL, GROUPS.index(group)

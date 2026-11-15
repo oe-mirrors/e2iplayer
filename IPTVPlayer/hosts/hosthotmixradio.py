@@ -38,11 +38,6 @@ class HotmixRadio(CBaseHostClass):
         self.MENU = [{"category": "list_radios", "title": _("All stations")},
                      {"category": "list_categories", "title": _("Categories")}] + self.searchItems()
 
-    def getPage(self, url, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPage(url, addParams, post_data)
-
     ###################################################
     # data
     ###################################################

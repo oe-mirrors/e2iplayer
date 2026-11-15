@@ -89,11 +89,6 @@ class DRDK(GenericFolderWatchedScraperMixin, CBaseHostClass):
     ###################################################
     # helpers
     ###################################################
-    def getPage(self, url, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPage(url, addParams, post_data)
-
     def _api(self, path, query='', token=''):
         url = self.API + path + ('&' if '?' in path else '?') + self.QUERY
         if query:

@@ -86,11 +86,6 @@ class Virpe(GenericFolderWatchedScraperMixin, CBaseHostClass):
             printExc()
         return ""
 
-    def getPage(self, baseUrl, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPage(baseUrl, addParams, post_data)
-
     def getFullUrl(self, url, currUrl=None):
         # keeps a strwithmeta (poster Referer) untouched when there is nothing to fix
         if url and "&amp;" in url:

@@ -75,11 +75,6 @@ class TBNGoPL(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return ''
 
     ###################################################
-    def getPage(self, url, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPage(url, addParams, post_data)
-
     def _json(self, path, post=None, token=''):
         params = dict(self.defaultParams)
         params['header'] = dict(self.HEADER, Accept='application/json')

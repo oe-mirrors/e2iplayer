@@ -87,11 +87,6 @@ class RadioECtWs(GenericFolderWatchedScraperMixin, CBaseHostClass):
         self.watchedHelper = IPTVWatchedHelper("radioe")
         self.wfInitFolderCache()
 
-    def getPage(self, baseUrl, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPage(baseUrl, addParams, post_data)
-
     def getJson(self, url):
         """Fetch JSON from Gist or other URL"""
         if not url or self._isDead(url):

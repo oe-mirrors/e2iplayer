@@ -123,11 +123,6 @@ class GeoArabic(GenericFolderWatchedScraperMixin, CBaseHostClass):
     ###################################################
     # helpers
     ###################################################
-    def getPage(self, baseUrl, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPage(baseUrl, addParams, post_data)
-
     def _feedUrl(self, label="", query="", start=1, count=PAGE_SIZE, kind="default"):
         url = self.getFullUrl("/feeds/posts/%s" % kind)
         if label:

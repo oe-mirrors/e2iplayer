@@ -65,11 +65,6 @@ class QoranWay(GenericFolderWatchedScraperMixin, CBaseHostClass):
         self.lastConverted = {}  # media url -> converted local file
         self._removeTmpFiles(TMP_MAX_AGE)
 
-    def getPage(self, baseUrl, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPage(baseUrl, addParams, post_data)
-
     def _mediaUrl(self, url, curUrl):
         url = self.getFullUrl(url.replace('&amp;', '&'), curUrl).replace(' ', '%20')
         # the http links of the pages only answer with a redirect to https

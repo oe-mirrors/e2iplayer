@@ -78,11 +78,6 @@ class ShoofMax(GenericFolderWatchedScraperMixin, CBaseHostClass):
             printExc()
         return ""
 
-    def getPage(self, baseUrl, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPage(baseUrl, addParams, post_data)
-
     def _movieTitle(self, title, year=""):
         if IsMediaNamingNormalized() and year:
             return "%s (%s)" % (title, year)

@@ -67,11 +67,6 @@ class NuteczkiEU(GenericFolderWatchedScraperMixin, CBaseHostClass):
         self.watchedHelper = IPTVWatchedHelper('nuteczki')
         self.wfInitFolderCache()
 
-    def getPage(self, baseUrl, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPage(baseUrl, addParams, post_data)
-
     ###################################################
     # watched flag / favourites
     ###################################################

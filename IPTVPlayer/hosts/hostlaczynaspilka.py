@@ -78,11 +78,6 @@ class LaczyNasPilka(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return ''
 
     ###################################################
-    def getPage(self, url, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPage(url, addParams, post_data)
-
     def _api(self, path):
         url = path if path.startswith('http') else API_URL + path
         sts, data = self.getPage(url)

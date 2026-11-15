@@ -61,11 +61,6 @@ class RitsaTv(CBaseHostClass):
         self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self._genresCache = None
 
-    def getPage(self, baseUrl, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPage(baseUrl, addParams, post_data)
-
     def _getGenres(self):
         # the full category list only lives in the per-channel player JS
         # (categoryList = [{label, value:'genre-XXX'}]); the homepage nav only

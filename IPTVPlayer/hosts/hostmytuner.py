@@ -46,11 +46,6 @@ class MyTuner(CBaseHostClass):
         self.MENU = [{"category": "list_stations", "title": _("Top stations"), "url": self.getFullUrl("/radio/")},
                      {"category": "list_continents", "title": _("Countries")}] + self.searchItems()
 
-    def getPage(self, url, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPage(url, addParams, post_data)
-
     ###################################################
     # lists
     ###################################################

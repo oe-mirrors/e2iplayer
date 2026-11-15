@@ -53,11 +53,6 @@ class OnlineStream(CBaseHostClass):
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
         self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
-    def getPage(self, url, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPage(url, addParams, post_data)
-
     ###################################################
     # lists
     ###################################################

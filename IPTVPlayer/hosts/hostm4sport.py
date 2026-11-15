@@ -61,11 +61,6 @@ class M4Sport(GenericFolderWatchedScraperMixin, CBaseHostClass):
         self.watchedHelper = IPTVWatchedHelper("m4sport")
         self.wfInitFolderCache()
 
-    def getPage(self, url, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPage(url, addParams, post_data)
-
     def _meta(self, data, name):
         return self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'''<meta[^>]+(?:property|name)=['"]%s['"][^>]+content=['"]([^'"]*)['"]''' % name)[0])
 

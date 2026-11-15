@@ -59,11 +59,6 @@ class PannonRTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
         self.watchedHelper = IPTVWatchedHelper("pannonrtv")
         self.wfInitFolderCache()
 
-    def getPage(self, url, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPage(url, addParams, post_data)
-
     def getFullUrl(self, url, curUrl=None):
         return CBaseHostClass.getFullUrl(self, url.replace("&amp;", "&"), curUrl)
 

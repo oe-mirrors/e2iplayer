@@ -70,11 +70,6 @@ class videa(GenericFolderWatchedScraperMixin, CBaseHostClass):
         self.wfInitFolderCache()
         self.localCache = ("", [])  # (url, item blocks) of the last Videaton page
 
-    def getPage(self, url, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPage(url, addParams, post_data)
-
     def getFullIconUrl(self, url, currUrl=None):
         return CBaseHostClass.getFullIconUrl(self, url.replace("&amp;", "&"), currUrl)
 

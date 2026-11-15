@@ -83,11 +83,6 @@ class Ninateka(GenericFolderWatchedScraperMixin, CBaseHostClass):
     ###################################################
     # helpers
     ###################################################
-    def getPage(self, url, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPage(url, addParams, post_data)
-
     def _api(self, path, query=''):
         # NOTE: no "lang" parameter - with lang=pl the search hits a missing OpenSearch index
         url = self.API + path + '?platform=BROWSER'

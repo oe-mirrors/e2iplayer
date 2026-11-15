@@ -78,11 +78,6 @@ class IHaveNoTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
             printExc()
         return ""
 
-    def getPage(self, url, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPage(url, addParams, post_data)
-
     def _normUrl(self, url, currUrl=None):
         url = self.getFullUrl(url.replace("&amp;", "&").strip(), currUrl)
         return re.sub(r"^https?://(?:www\.)?ihavenotv\.com/", self.MAIN_URL, url)

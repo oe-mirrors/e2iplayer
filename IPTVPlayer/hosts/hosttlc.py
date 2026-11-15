@@ -103,11 +103,6 @@ class WBDMediathek(GenericFolderWatchedScraperMixin, CBaseHostClass):
     ###################################################
     # helpers
     ###################################################
-    def getPage(self, url, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPage(url, addParams, post_data)
-
     def _json(self, url, addParams=None, post_data=None):
         sts, data = self.getPage(url, addParams, post_data)
         if not sts or not data:

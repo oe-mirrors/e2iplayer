@@ -105,11 +105,6 @@ class UASerials(GenericFolderWatchedScraperMixin, CBaseHostClass):
     ###################################################
     # helpers
     ###################################################
-    def getPage(self, baseUrl, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPage(baseUrl, addParams, post_data)
-
     def _movieTitle(self, title, year):
         if IsMediaNamingNormalized() and year and ("(%s)" % year) not in title:
             return "%s (%s)" % (title, year)

@@ -168,11 +168,6 @@ class TvpVod(GenericFolderWatchedScraperMixin, CBaseHostClass, CaptchaHelper):
     ###################################################
     # helpers
     ###################################################
-    def getPage(self, url, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPage(url, addParams, post_data)
-
     def _getJson(self, url, params=None):
         sts, data = self.getPage(url, params)
         if not sts:

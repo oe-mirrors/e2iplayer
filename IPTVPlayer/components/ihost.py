@@ -1005,6 +1005,11 @@ class CBaseHostClass:
             pass
         return ''
 
+    def getPage(self, url, addParams=None, post_data=None):
+        if addParams is None:
+            addParams = dict(getattr(self, 'defaultParams', {}))
+        return self.cm.getPage(url, addParams, post_data)
+
     def getVideoLinks(self, videoUrl):
         # a hosting link left to the url parser, with the subtitles / meta its row carried
         from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled

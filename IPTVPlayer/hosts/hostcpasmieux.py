@@ -71,11 +71,6 @@ class CpasMieux(GenericFolderWatchedScraperMixin, CBaseHostClass):
     ###################################################
     # helpers
     ###################################################
-    def getPage(self, baseUrl, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPage(baseUrl, addParams, post_data)
-
     def _path(self, url):
         return re.sub(r"^https?://[^/]+", "", url or "").split("#")[0].rstrip("/").lower()
 

@@ -77,11 +77,6 @@ class WpTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return self.cm.ph.getSearchGroups(str(url or ''), r'-(\d{12,})v$')[0]
 
     ###################################################
-    def getPage(self, url, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPage(url, addParams, post_data)
-
     def getFavouriteData(self, cItem):
         try:
             if cItem.get('type') == 'video' or cItem.get('category') == 'list_episodes':

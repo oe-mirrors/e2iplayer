@@ -99,11 +99,6 @@ class SevenReels(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return ''
 
     ###################################################
-    def getPage(self, baseUrl, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPage(baseUrl, addParams, post_data)
-
     def _genreNames(self, ids):
         return ', '.join(self.GENRES[g] for g in (ids or []) if g in self.GENRES)
 

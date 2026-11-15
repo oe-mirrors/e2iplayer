@@ -72,11 +72,6 @@ class DocumentaryArea(GenericFolderWatchedScraperMixin, CBaseHostClass):
             printExc()
         return ""
 
-    def getPage(self, url, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPage(url, addParams, post_data)
-
     def _normUrl(self, url, currUrl=None):
         # the cards link to player.php?title=Foo+Bar with and without host, keep one spelling
         url = self.getFullUrl(url.replace("&amp;", "&").replace(" ", "+"), currUrl)

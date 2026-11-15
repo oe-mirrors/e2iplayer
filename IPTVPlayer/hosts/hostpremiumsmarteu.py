@@ -56,11 +56,6 @@ class Premiumsmarteu(GenericFolderWatchedScraperMixin, CBaseHostClass):
         self.watchedHelper = IPTVWatchedHelper('premiumsmarteu')
         self.wfInitFolderCache()
 
-    def getPage(self, baseUrl, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPage(baseUrl, addParams, post_data)
-
     def _api(self, path):
         # the API answers 401 without the session cookie the start page sets
         url = path if path.startswith('http') else self.API_URL + path

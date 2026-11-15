@@ -84,11 +84,6 @@ class LuxVeritatisPL(GenericFolderWatchedScraperMixin, CBaseHostClass):
         self.watchedHelper = IPTVWatchedHelper("luxveritatis")
         self.wfInitFolderCache()
 
-    def getPage(self, baseUrl, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPage(baseUrl, addParams, post_data)
-
     def getFullUrl(self, url, curUrl=None):
         return CBaseHostClass.getFullUrl(self, url, curUrl).replace("&amp;", "&")
 

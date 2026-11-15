@@ -48,11 +48,6 @@ class RadiostacjaPl(CBaseHostClass):
         self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.cache = {}
 
-    def getPage(self, baseUrl, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPage(baseUrl, addParams, post_data)
-
     def _getJson(self, url):
         # the station lists change rarely - one download per session
         if url not in self.cache:

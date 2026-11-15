@@ -58,11 +58,6 @@ class LastFM(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return ""
 
     ###################################################
-    def getPage(self, url, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPage(url, addParams, post_data)
-
     def _station(self, path):
         # path: "music/<artist>", "music/<artist>/+similar", "user/<name>/library|mix|recommended"
         sts, data = self.getPage(self.STATION % path)

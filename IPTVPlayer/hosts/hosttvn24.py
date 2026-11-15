@@ -68,11 +68,6 @@ class TVN24(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return ''
 
     ###################################################
-    def getPage(self, url, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPage(url, addParams, post_data)
-
     def getFavouriteData(self, cItem):
         try:
             if cItem.get('type') == 'video':
