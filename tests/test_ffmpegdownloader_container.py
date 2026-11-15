@@ -119,9 +119,14 @@ def test_host_create_mkv_wins_over_auto(ff):
     assert _dl(ff, "https://cdn/x/master.m3u8", mkv)._outContainer() == "matroska"
     assert _dl(ff, "https://cdn/x/video.mp4", mkv)._outContainer() == "matroska"
     assert _dl(ff, "https://cdn/x/master.m3u8", dict(mkv, e2i_postprocess_container="mp4"))._outContainer() == "mp4"
-    # without the switch the setting still decides; ff_out_container still wins
+    # without the switch the setting still decides
     assert _dl(ff, "https://cdn/x/master.m3u8", {"e2i_postprocess_container": "mkv"})._outContainer() == "mpegts"
-    assert _dl(ff, "https://cdn/x/master.m3u8", dict(mkv, ff_out_container="mpegts"))._outContainer() == "mpegts"
+    # box 15.11. (S.to -> VOE with its own audio playlist): the resolver's ff_out_container mpegts of the merge://
+    # made the download .ts - "Create MKV" wins in a download, buffered playback stays MPEG-TS
+    voe = dict(mkv, audio_url="https://cdn/index-a1.m3u8", video_url="https://cdn/index-v1-a1.m3u8", iptv_proto="m3u8", ff_out_container="mpegts")
+    assert _dl(ff, "merge://audio_url|video_url", voe)._outContainer() == "matroska"
+    assert _dl(ff, "merge://audio_url|video_url", voe, download=False)._outContainer() == "mpegts"
+    assert _dl(ff, "https://cdn/x/video.mp4", dict(mkv, ff_out_container="mpegts"), download=False)._outContainer() == "mpegts"
 
 
 def test_host_container_wins_and_playback_stays_matroska(ff):
