@@ -15,7 +15,7 @@ HOST_VERSION = "1.3"
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass, CDisplayListItem
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIconDir
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import normalizeMediathekTitle
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
@@ -54,7 +54,6 @@ class PannonRTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(self, {"history": "pannonrtv", "cookie": "pannonrtv.cookie"})
         self.MAIN_URL = MAIN_URL
-        self.DEFAULT_ICON_URL = "file://" + GetIconDir("PlayerSelector/pannonrtv135.png")
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser="chrome")
         self.defaultParams = {"header": self.HTTP_HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
         self.watchedHelper = IPTVWatchedHelper("pannonrtv")

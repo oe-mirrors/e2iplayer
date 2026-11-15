@@ -13,7 +13,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromIte
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus, urllib_unquote
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import normalizeMediathekTitle
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIconDir
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
@@ -87,7 +87,6 @@ class RTPPlay(GenericFolderWatchedScraperMixin, CBaseHostClass):
         CBaseHostClass.__init__(self, {"history": "rtpplay", "cookie": "rtpplay.cookie"})
         self.MAIN_URL = "https://www.rtp.pt"
         self.PLAY_URL = gettytul()
-        self.DEFAULT_ICON_URL = "file://" + GetIconDir("PlayerSelector/rtpplay135.png")
         self.USER_AGENT = self.cm.getDefaultUserAgent()
         self.HEADER = {"User-Agent": self.USER_AGENT, "Accept": "text/html,application/xhtml+xml", "Referer": self.PLAY_URL,
                        # answers the site's privacy and parental-control questions

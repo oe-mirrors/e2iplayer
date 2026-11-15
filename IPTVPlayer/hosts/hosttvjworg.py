@@ -12,7 +12,7 @@ LAST_MODIFIED = "08.10.2026"
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetDefaultLang, CSelOneLink, GetIconDir
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetDefaultLang, CSelOneLink
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
@@ -73,7 +73,6 @@ class TVJWORG(GenericFolderWatchedScraperMixin, CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'tv.jw.org', 'cookie': 'tvjworg.cookie'})
         self.MAIN_URL = 'https://www.jw.org/'
-        self.DEFAULT_ICON_URL = 'file://' + GetIconDir('PlayerSelector/tvjworg135.png')
         self.HEADER = {'User-Agent': self.cm.getDefaultUserAgent(), 'Accept': 'application/json', 'Referer': self.MAIN_URL}
         self.defaultParams = {'header': self.HEADER}
         self.defaultLangCode = ''

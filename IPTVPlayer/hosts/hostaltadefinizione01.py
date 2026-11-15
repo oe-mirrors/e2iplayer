@@ -22,7 +22,7 @@ from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_urlen
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIconDir
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedHostMixin, GenericFolderWatchedScraperMixin
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
@@ -50,7 +50,6 @@ class Altadefinizione(GenericFolderWatchedScraperMixin, CBaseHostClass):
         self.USER_AGENT = self.HEADER.get("User-Agent", "")
         self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
         self.MAIN_URL = gettytul()
-        self.DEFAULT_ICON_URL = "file://" + GetIconDir("PlayerSelector/altadefinizione01135.png")
         # filters of the archive api: the site's labels
         self.MENU = [{"category": "list_items", "title": _("Movies"), "filters": {"tipo": "Film"}},
                      {"category": "list_items", "title": _("Series"), "filters": {"tipo": "Serie TV"}},

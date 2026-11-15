@@ -14,7 +14,7 @@ HOST_VERSION = "1.4"
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass, CDisplayListItem
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIconDir
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, stripPagerKeys
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
@@ -61,7 +61,6 @@ class Idokep(CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(self, {"history": "idokep", "cookie": "idokep.cookie"})
         self.MAIN_URL = MAIN_URL
-        self.DEFAULT_ICON_URL = "file://" + GetIconDir("PlayerSelector/idokep135.png")
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser="chrome")
         self.defaultParams = {"header": self.HTTP_HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
 

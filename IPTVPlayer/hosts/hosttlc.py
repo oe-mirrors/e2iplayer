@@ -14,7 +14,7 @@ LAST_MODIFIED = "18.10.2026"
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIconDir, b64Encode
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, b64Encode
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
@@ -73,7 +73,6 @@ class WBDMediathek(GenericFolderWatchedScraperMixin, CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': CHANNEL_KEY, 'cookie': CHANNEL_KEY + '.cookie'})
         self.MAIN_URL = CHANNEL_URL
-        self.DEFAULT_ICON_URL = 'file://' + GetIconDir('PlayerSelector/%s135.png' % CHANNEL_KEY)
         self.HEADER = self.cm.getDefaultHeader(browser='chrome')
         self.HEADER.update({'Accept': 'application/json, text/plain, */*', 'Referer': self.MAIN_URL, 'Origin': self.MAIN_URL[:-1]})
         self.defaultParams = {'header': self.HEADER}

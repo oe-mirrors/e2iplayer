@@ -13,7 +13,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass, CDisplayListItem
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
 from Plugins.Extensions.IPTVPlayer.components.iptvmultipleinputbox import IPTVMultipleInputBox
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, rm, GetTmpDir, GetIconDir
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, rm, GetTmpDir
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import normalizeMediathekTitle, parseSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, stripPagerKeys
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
@@ -63,7 +63,6 @@ class FreeDiscPL(GenericFolderWatchedScraperMixin, CBaseHostClass):
         CBaseHostClass.__init__(self, {"history": "FreeDiscPL.tv", "cookie": "FreeDiscPL.cookie"})
         self.MAIN_URL = "https://freedisc.pl/"
         self.SEARCH_URL = self.MAIN_URL + "search/get"
-        self.DEFAULT_ICON_URL = "file://" + GetIconDir("PlayerSelector/freediscpl135.png")
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser="chrome")
         self.HTTP_HEADER.update({"Accept": "text/html", "Referer": self.MAIN_URL})
         self.AJAX_HEADER = dict(self.HTTP_HEADER)

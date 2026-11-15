@@ -75,7 +75,6 @@ class LuxVeritatisPL(GenericFolderWatchedScraperMixin, CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(self, {"history": "luxveritatis.pl", "cookie": "luxveritatis.pl.cookie"})
         self.MAIN_URL = RADIO_URL
-        self.DEFAULT_ICON_URL = "file://" + GetIconDir("PlayerSelector/luxveritatis135.png")
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser="chrome")
         self.HTTP_HEADER.update({"Accept": "text/html"})
         self.API_HEADER = dict(self.HTTP_HEADER)

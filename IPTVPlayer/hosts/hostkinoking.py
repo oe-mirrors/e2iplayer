@@ -17,7 +17,7 @@ import re
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIconDir
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
@@ -52,7 +52,6 @@ EPISODES_PER_PAGE = 100
 class KinoKing(GenericFolderWatchedScraperMixin, CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(self, {"history": "KinoKing", "cookie": "KinoKing.cookie"})
-        self.DEFAULT_ICON_URL = "file://" + GetIconDir("PlayerSelector/kinoking135.png")
         self.HEADER = self.cm.getDefaultHeader()
         self.defaultParams = {"header": self.HEADER, "max_data_size": 1024 * 1024, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
         self.MAIN_URL = gettytul()

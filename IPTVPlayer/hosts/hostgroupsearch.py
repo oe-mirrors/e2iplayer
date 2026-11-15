@@ -105,7 +105,6 @@ class GroupSearch(CBaseHostClass):
 
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'groupsearch'})
-        self.DEFAULT_ICON_URL = 'file://' + GetIconDir('PlayerSelector/groupsearch135.png')
         self.entries = []  # the hosts of the last result list, its rows point into it
         self.guest = None  # the entry that is open
         self.searchState = None  # the search running now, for getAbortedList()

@@ -13,7 +13,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIconDir
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
@@ -59,7 +59,6 @@ class ServusTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
         self.HEADER.update({"Accept": "application/json", "Referer": "https://www.servustv.com/", "Origin": "https://www.servustv.com"})
         self.defaultParams = {"header": self.HEADER}
         self.MAIN_URL = gettytul()
-        self.DEFAULT_ICON_URL = "file://" + GetIconDir("PlayerSelector/servustv135.png")
         # first page of the collections a product page was listed with (opening a rail right after needs no request)
         self.colCache = {}
         self.MENU = [{"category": "stv_live", "title": _("Live channels")},

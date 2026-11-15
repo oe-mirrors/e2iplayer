@@ -10,7 +10,7 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps, load
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import normalizeMediathekTitle
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIconDir
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
@@ -201,7 +201,6 @@ class NPRMusic(GenericFolderWatchedScraperMixin, CBaseHostClass):
         self.HEADER.update({"Accept": "*/*", "Referer": "https://www.npr.org/"})
         self.defaultParams = {"header": self.HEADER}
         self.MAIN_URL = gettytul()
-        self.DEFAULT_ICON_URL = "file://" + GetIconDir("PlayerSelector/nprmusic135.png")
         self.feedCache = {}
         self.watchedHelper = IPTVWatchedHelper("nprmusic")
         self.wfInitFolderCache()

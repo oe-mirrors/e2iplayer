@@ -17,7 +17,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromIte
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIconDir
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
@@ -59,7 +59,6 @@ class SerialeVip(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if domain and not domain.startswith("http"):
             domain = "https://" + domain
         self.MAIN_URL = self.cm.getBaseUrl(domain) if self.cm.isValidUrl(domain) else gettytul()
-        self.DEFAULT_ICON_URL = "file://" + GetIconDir("PlayerSelector/serialevip135.png")
         self.HEADER = self.cm.getDefaultHeader()
         self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
         self.MENU = [{"category": "list_items", "title": _("Latest added"), "url": self.getFullUrl("/")},

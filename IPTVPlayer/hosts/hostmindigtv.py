@@ -10,7 +10,7 @@ LAST_MODIFIED = "10.10.2026"
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass, CDisplayListItem
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIconDir
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 ###################################################
@@ -75,7 +75,6 @@ class MindigTVHU(CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(self, {"history": "mindigtv.hu", "cookie": "mindigtvhu.cookie"})
         self.MAIN_URL = HBBTV_URL
-        self.DEFAULT_ICON_URL = "file://" + GetIconDir("PlayerSelector/mindigtv135.png")
         self.HEADER = self.cm.getDefaultHeader()
         self.defaultParams = {"header": self.HEADER}
 

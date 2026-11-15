@@ -25,7 +25,7 @@ from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus, urllib_urlencode
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIconDir
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
@@ -79,7 +79,6 @@ class ShahiidAnime(GenericFolderWatchedScraperMixin, CBaseHostClass):
         self.HEADER = self.cm.getDefaultHeader()
         self.MAIN_URL = gettytul()
         self.HEADER.update({"Referer": self.MAIN_URL})
-        self.DEFAULT_ICON_URL = "file://" + GetIconDir("PlayerSelector/shahiidanimenet135.png")  # the site logo sits behind Cloudflare
         self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
         self.MENU = [{"category": "list_items", "title": _("Newest Episodes"), "url": self.getFullUrl("episodes/")},
                      {"category": "list_items", "title": _("Anime TV series"), "url": self.getFullUrl("series/")},
