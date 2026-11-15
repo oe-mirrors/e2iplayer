@@ -54,6 +54,9 @@ class _Sidecar(object):
     def _initSidecarState(self):
         pass
 
+    def _prepareSidecarData(self, meta):
+        pass
+
     def _writeTxtSidecar(self, path):
         pass
 
@@ -74,7 +77,8 @@ def _unique(path, withTmp=False, addDate=False):
 @pytest.fixture
 def hls():
     saved = dict(sys.modules)
-    cfg = types.SimpleNamespace(plugins=types.SimpleNamespace(iptvplayer=types.SimpleNamespace(hls_out_container=_Value("auto"))))
+    cfg = types.SimpleNamespace(plugins=types.SimpleNamespace(iptvplayer=types.SimpleNamespace(
+        hls_out_container=_Value("auto"), hlsdlLiveStartOffset=_Value("30"))))
     commands = []
     for pkg in ("Components", "Plugins", "Plugins.Extensions", "Plugins.Extensions.IPTVPlayer",
                 "Plugins.Extensions.IPTVPlayer.tools", "Plugins.Extensions.IPTVPlayer.iptvdm"):
@@ -86,7 +90,10 @@ def hls():
     _stubModule("Plugins.Extensions.IPTVPlayer.iptvdm.basedownloader", BaseDownloader=_Base)
     sts = types.SimpleNamespace(DOWNLOADING=1, DOWNLOADED=2, INTERRUPTED=3, ERROR=4, POSTPROCESSING=5)
     helper = types.SimpleNamespace(GET_FFMPEG_PATH=lambda: "ffmpeg", STS=sts, makeUnikalFileName=_unique,
-                                   getFileSize=lambda p: os.path.getsize(p) if os.path.isfile(p) else -1)
+                                   getFileSize=lambda p: os.path.getsize(p) if os.path.isfile(p) else -1,
+                                   getBaseHLSDLCmd=lambda params: '/bin/hlsdl -q -f -b  -u "UA"  -h "Referer: https://r/" ',
+                                   hlsdlSupportsResume=lambda: True, hasHlsdlResumeFile=lambda p: False,
+                                   removeHlsdlResumeFiles=lambda p: None)
     _stubModule("Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh", DMHelper=helper)
     _stubModule("Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers", ensureText=lambda t: t, fsPath=lambda p: p,
                 shellQuote=lambda t: t, executeConsoleCmd=lambda console, cmd: commands.append(cmd),
@@ -308,3 +315,39 @@ def test_exit_code_after_the_whole_duration(hls, tmp_path):
     dl = hls.HLSDownloader()
     dl.lastErrorCode, dl.liveStream = 403, False
     assert dl._isIncompleteDownload(1)
+
+
+HLSDL_OPTSTRING = "bH:W:A:vqbfRFK:ctdo:u:h:s:i:r:w:Ie:p:k:n:a:C:"  # hlsdl misc.c parse_argv
+
+
+def _posixGetopt(args):
+    # getopt() of musl (the static feed hlsdl): stops at the first argument that is no option, no permutation
+    opts, i = [], 0
+    while i < len(args) and args[i].startswith("-") and args[i] != "-":
+        flag = args[i][1]
+        pos = HLSDL_OPTSTRING.index(flag)
+        if HLSDL_OPTSTRING[pos + 1:pos + 2] == ":":
+            value = args[i][2:] or args[i + 1]
+            i += 1 if args[i][2:] else 2
+        else:
+            value, i = None, i + 1
+        opts.append((flag, value))
+    return opts, args[i:]
+
+
+def test_hlsdl_options_before_the_url(hls, tmp_path):
+    # an option after the url ends the musl getopt early: hlsdl prints its help and exits 0 without a download
+    import shlex
+    url = "https://cdn/hls2/v_,n,.urlset/index-v1-a1.m3u8?t=a+b=&s=1"
+    meta = {"iptv_m3u8_seg_download_retry": "3", "iptv_m3u8_key_uri_replace_old": "k1", "iptv_m3u8_key_uri_replace_new": "k2"}
+    for download in (True, False):
+        hls.commands[:] = []
+        dl = hls.HLSDownloader()
+        dl.allowFinalRename = download
+        dl.start(hls.strwithmeta(url, meta), str(tmp_path / "Film (DE).mp4"))
+        args = shlex.split(hls.commands[-1].rsplit(" > /dev/null", 1)[0])[1:]
+        opts, rest = _posixGetopt(args)
+        assert rest == [url]
+        flags = dict(opts)
+        assert flags["o"] == str(tmp_path / "Film (DE).mp4") and flags["w"] == "3" and flags["k"] == "k1"
+        assert ("R" in flags) == download and ("s" in flags) == (not download)
