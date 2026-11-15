@@ -12,7 +12,7 @@ from Components.config import ConfigText, config, getConfigListEntry
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsMediaNamingNormalized, IsSidecarEnabled
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
-from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps, loads as json_loads
+from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str_deep
@@ -164,11 +164,8 @@ class AnimeAV1(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return re.sub(r"^https?://[^/]+", "", url or "").split("#")[0].rstrip("/")
 
     def getFavouriteData(self, cItem):
-        try:
-            if cItem.get("category") in VIDEO_CATEGORIES + FOLDER_CATEGORIES:
-                return json_dumps({key: cItem[key] for key in self.FAV_FIELDS if key in cItem})
-        except Exception:
-            printExc()
+        if cItem.get("category") in VIDEO_CATEGORIES + FOLDER_CATEGORIES:
+            return self.getFavouriteFieldsData(cItem)
         return CBaseHostClass.getFavouriteData(self, cItem)
 
     def _getWatchedKeyForItem(self, cItem):

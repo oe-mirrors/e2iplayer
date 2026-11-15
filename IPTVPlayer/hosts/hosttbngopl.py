@@ -96,11 +96,8 @@ class TBNGoPL(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return None
 
     def getFavouriteData(self, cItem):
-        try:
-            if cItem.get('type') == 'video' or cItem.get('category') == 'list_episodes':
-                return json_dumps(dict((key, cItem[key]) for key in self.FAV_FIELDS if key in cItem))
-        except Exception:
-            printExc()
+        if cItem.get('type') == 'video' or cItem.get('category') == 'list_episodes':
+            return self.getFavouriteFieldsData(cItem)
         return CBaseHostClass.getFavouriteData(self, cItem)
 
     def _icon(self, item, wide=True):

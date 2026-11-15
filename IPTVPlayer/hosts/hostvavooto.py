@@ -398,11 +398,8 @@ class VavooTo(CBaseHostClass):
         return [{'title': cItem.get('title', ''), 'text': text, 'images': [], 'other_info': other}]
 
     def getFavouriteData(self, cItem):
-        try:
-            if cItem.get('links') or cItem.get('group'):
-                return json_dumps(dict((key, cItem[key]) for key in self.FAV_FIELDS if key in cItem))
-        except Exception:
-            printExc()
+        if cItem.get('links') or cItem.get('group'):
+            return self.getFavouriteFieldsData(cItem)
         return CBaseHostClass.getFavouriteData(self, cItem)
 
     ###################################################

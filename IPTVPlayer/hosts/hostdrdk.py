@@ -593,11 +593,8 @@ class DRDK(GenericFolderWatchedScraperMixin, CBaseHostClass):
                  'images': [{'title': '', 'url': icon}] if icon else [], 'other_info': otherInfo}]
 
     def getFavouriteData(self, cItem):
-        try:
-            if cItem.get('item_id') or cItem.get('list_id') or cItem.get('path'):
-                return json_dumps(dict((key, cItem[key]) for key in self.FAV_FIELDS if key in cItem))
-        except Exception:
-            printExc()
+        if cItem.get('item_id') or cItem.get('list_id') or cItem.get('path'):
+            return self.getFavouriteFieldsData(cItem)
         return CBaseHostClass.getFavouriteData(self, cItem)
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):

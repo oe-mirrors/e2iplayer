@@ -22,7 +22,7 @@ import re
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
-from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps, loads as json_loads
+from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.botprotection import remembered_user_agent
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
@@ -126,11 +126,8 @@ class WitAnime(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return re.sub(r"^https?://[^/]+", "", url).rstrip("/").lower()
 
     def getFavouriteData(self, cItem):
-        try:
-            if cItem.get("category") in ("wa_video", "wa_series"):
-                return json_dumps({key: cItem[key] for key in self.FAV_FIELDS if key in cItem})
-        except Exception:
-            printExc()
+        if cItem.get("category") in ("wa_video", "wa_series"):
+            return self.getFavouriteFieldsData(cItem)
         return CBaseHostClass.getFavouriteData(self, cItem)
 
     @staticmethod

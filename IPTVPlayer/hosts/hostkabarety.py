@@ -11,7 +11,6 @@ import re
 import unicodedata
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
-from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
@@ -422,11 +421,7 @@ class Kabarety(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return [{'title': self.cleanHtmlStr(title), 'text': text, 'images': images, 'other_info': other}]
 
     def getFavouriteData(self, cItem):
-        try:
-            return json_dumps(dict((key, cItem[key]) for key in self.FAV_FIELDS if key in cItem))
-        except Exception:
-            printExc()
-        return CBaseHostClass.getFavouriteData(self, cItem)
+        return self.getFavouriteFieldsData(cItem)
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)

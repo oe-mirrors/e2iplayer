@@ -17,7 +17,6 @@ from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEna
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.libs.botprotection import remembered_user_agent
-from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_unquote
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import normalizeMediathekTitle
@@ -102,11 +101,8 @@ class JoeMonster(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return ""
 
     def getFavouriteData(self, cItem):
-        try:
-            if cItem.get("type") == "video":
-                return json_dumps(dict((key, cItem[key]) for key in self.FAV_FIELDS if key in cItem))
-        except Exception:
-            printExc()
+        if cItem.get("type") == "video":
+            return self.getFavouriteFieldsData(cItem)
         return CBaseHostClass.getFavouriteData(self, cItem)
 
     ###################################################

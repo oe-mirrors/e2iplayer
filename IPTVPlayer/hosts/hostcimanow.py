@@ -682,11 +682,8 @@ class CimaNow(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return self.getFullIconUrl(self._quote(url)) if url else ""
 
     def getFavouriteData(self, cItem):
-        try:
-            if cItem.get("category") in ("cn_video", "cn_series", "cn_season"):
-                return json_dumps(dict((key, cItem[key]) for key in self.FAV_FIELDS if key in cItem))
-        except Exception:
-            printExc()
+        if cItem.get("category") in ("cn_video", "cn_series", "cn_season"):
+            return self.getFavouriteFieldsData(cItem)
         return CBaseHostClass.getFavouriteData(self, cItem)
 
     ###################################################

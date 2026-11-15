@@ -122,11 +122,8 @@ class RTBFBE(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return None
 
     def getFavouriteData(self, cItem):
-        try:
-            if cItem.get('type') in ('video', 'audio') or cItem.get('program_id'):
-                return json_dumps(dict((key, cItem[key]) for key in self.FAV_FIELDS if key in cItem))
-        except Exception:
-            printExc()
+        if cItem.get('type') in ('video', 'audio') or cItem.get('program_id'):
+            return self.getFavouriteFieldsData(cItem)
         return CBaseHostClass.getFavouriteData(self, cItem)
 
     ###################################################

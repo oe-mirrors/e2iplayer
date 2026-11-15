@@ -1135,6 +1135,14 @@ class CBaseHostClass:
             printExc()
         return ''
 
+    def getFavouriteFieldsData(self, cItem):
+        # a favourite with only the item keys in the host's FAV_FIELDS (the whole item when that fails)
+        try:
+            return json_dumps(dict((key, cItem[key]) for key in self.FAV_FIELDS if key in cItem))
+        except Exception:
+            printExc()
+        return CBaseHostClass.getFavouriteData(self, cItem)
+
     def getLinksForFavourite(self, fav_data):
         try:
             if self.MAIN_URL is None:

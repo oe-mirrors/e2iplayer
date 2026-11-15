@@ -438,11 +438,7 @@ class IHaveNoTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return [{"title": title, "text": text, "images": [{"title": "", "url": icon}] if icon else [], "other_info": otherInfo}]
 
     def getFavouriteData(self, cItem):
-        try:
-            return json_dumps(dict((key, cItem[key]) for key in self.FAV_FIELDS if key in cItem))
-        except Exception:
-            printExc()
-        return CBaseHostClass.getFavouriteData(self, cItem)
+        return self.getFavouriteFieldsData(cItem)
 
     def handleService(self, index, refresh=0, searchPattern="", searchType=""):
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)

@@ -19,7 +19,7 @@ from Components.config import ConfigSelection, config, getConfigListEntry
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import GetAlternativeProxyChoices, GetAlternativeProxyUrl, IsSidecarEnabled, IsMediaNamingNormalized
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
-from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps, loads as json_loads
+from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, isLatinTitle
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus
@@ -146,11 +146,8 @@ class CimaTN(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return name or title, latin
 
     def getFavouriteData(self, cItem):
-        try:
-            if cItem.get("category") in ("tn_film", "tn_series", "tn_episode"):
-                return json_dumps({key: cItem[key] for key in self.FAV_FIELDS if key in cItem})
-        except Exception:
-            printExc()
+        if cItem.get("category") in ("tn_film", "tn_series", "tn_episode"):
+            return self.getFavouriteFieldsData(cItem)
         return CBaseHostClass.getFavouriteData(self, cItem)
 
     ###################################################

@@ -162,11 +162,8 @@ class CaraTeen(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return path if path.startswith("http") else self.getFullUrl("/assets/img/%s/%s" % (folder, path))
 
     def getFavouriteData(self, cItem):
-        try:
-            if cItem.get("category") in ("ct_video", "ct_series", "ct_part"):
-                return json_dumps({key: cItem[key] for key in self.FAV_FIELDS if key in cItem})
-        except Exception:
-            printExc()
+        if cItem.get("category") in ("ct_video", "ct_series", "ct_part"):
+            return self.getFavouriteFieldsData(cItem)
         return CBaseHostClass.getFavouriteData(self, cItem)
 
     ###################################################

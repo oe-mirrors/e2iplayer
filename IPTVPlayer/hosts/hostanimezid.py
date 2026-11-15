@@ -150,11 +150,8 @@ class AnimeZid(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return re.sub(r"^https?://[^/]+", "", url).rstrip("/").lower()
 
     def getFavouriteData(self, cItem):
-        try:
-            if cItem.get("category") in ("az_video", "az_series", "az_season"):
-                return json_dumps({key: cItem[key] for key in self.FAV_FIELDS if key in cItem})
-        except Exception:
-            printExc()
+        if cItem.get("category") in ("az_video", "az_series", "az_season"):
+            return self.getFavouriteFieldsData(cItem)
         return CBaseHostClass.getFavouriteData(self, cItem)
 
     @staticmethod
