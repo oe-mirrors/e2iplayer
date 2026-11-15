@@ -409,7 +409,9 @@ class HLSDownloader(BaseDownloader, SidecarMixin):
         else:
             url = self.url
 
-        cmd = DMHelper.getBaseHLSDLCmd(self.downloaderParams) + (' "%s"' % shellQuote(url)) + addParams + (' -o "%s"' % shellQuote(self.filePath)) + ' > /dev/null'
+        # every option before the url: the musl getopt of the static feed hlsdl stops at the url, an option
+        # after it fails the whole call ("No files passed", exit 0 without any output)
+        cmd = DMHelper.getBaseHLSDLCmd(self.downloaderParams) + addParams + (' -o "%s"' % shellQuote(self.filePath)) + (' "%s"' % shellQuote(url)) + ' > /dev/null'
 
         printDBG("HLSDownloader::start cmd[%s]" % cmd)
 
