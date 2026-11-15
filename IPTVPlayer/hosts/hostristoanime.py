@@ -15,7 +15,7 @@ import re
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
-from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
+from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, metaArticle
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus, urllib_unquote
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
@@ -375,13 +375,7 @@ class RistoAnime(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 meta = getMeta(cItem["meta_type"], _metaTitle(cItem["meta_title"]), info.get("year", ""))
             except Exception:
                 printExc()
-        info.update(meta.get("info", {}))
-        plot = meta.get("plot", "")
-        text = plot or story or cItem.get("desc", "")
-        if plot and story and story != plot:
-            text = "%s[/br][/br]%s" % (plot, story)
-        icon = meta.get("poster") or poster or cItem.get("icon", "")
-        return [{"title": cItem.get("title", ""), "text": text, "images": [{"title": "", "url": icon}] if icon else [], "other_info": info}]
+        return metaArticle(cItem, meta, story, poster, info)
 
     ###################################################
     # service

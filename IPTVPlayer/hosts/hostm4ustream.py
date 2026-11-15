@@ -19,7 +19,7 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHost
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
 from Plugins.Extensions.IPTVPlayer.libs.botprotection import remembered_user_agent
-from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
+from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getItemMeta
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
@@ -390,12 +390,7 @@ class M4uStream(GenericFolderWatchedScraperMixin, CBaseHostClass):
     ###################################################
     def getArticleContent(self, cItem):
         printDBG("M4uStream.getArticleContent [%s]" % cItem.get("url", ""))
-        meta = {}
-        if cItem.get("meta_type") and cItem.get("meta_title"):
-            try:
-                meta = getMeta(cItem["meta_type"], cItem["meta_title"], cItem.get("meta_year", ""))
-            except Exception:
-                printExc()
+        meta = getItemMeta(cItem, checkLatin=False)
         story, poster, info = "", "", {}
         sts, data = self.getPage(cItem.get("url", "").split("#", 1)[0])
         if sts:

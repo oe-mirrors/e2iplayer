@@ -20,7 +20,7 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHost
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
-from Plugins.Extensions.IPTVPlayer.libs.moviemeta import LATIN_ONLY, getMeta, isLatinTitle
+from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getItemMeta, metaArticle
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_unquote
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx, parseSxxExx
@@ -480,27 +480,14 @@ class AkwamOld(GenericFolderWatchedScraperMixin, CBaseHostClass):
     ###################################################
     def getArticleContent(self, cItem):
         printDBG("AkwamOld.getArticleContent [%s]" % cItem.get("url", ""))
-        meta = {}
-        if cItem.get("meta_type") and cItem.get("meta_title"):
-            try:
-                # Arabic-only titles: TMDb / TVmaze only, IMDb / Cinemeta / OMDb answer them with unrelated hits
-                skip = () if isLatinTitle(cItem["meta_title"]) else LATIN_ONLY
-                meta = getMeta(cItem["meta_type"], cItem["meta_title"], cItem.get("meta_year", ""), skip)
-            except Exception:
-                printExc()
+        meta = getItemMeta(cItem)
         story, poster, info = "", "", {}
         sts, data = self.getPage(self._pageUrl(cItem.get("page_url") or cItem.get("url", "")))
         if sts:
             story, poster, info = self._siteInfo(data)
         if cItem.get("meta_year"):
             info.setdefault("year", cItem["meta_year"])
-        info.update(meta.get("info", {}))
-        plot = meta.get("plot", "")
-        text = plot or story or _stripColors(cItem.get("desc", ""))
-        if plot and story and story != plot:
-            text = "%s[/br][/br]%s" % (plot, story)
-        icon = meta.get("poster") or poster or cItem.get("icon", "")
-        return [{"title": cItem.get("title", ""), "text": text, "images": [{"title": "", "url": icon}] if icon else [], "other_info": info}]
+        return metaArticle(cItem, meta, story, poster, info, _stripColors(cItem.get("desc", "")))
 
     ###################################################
     # service

@@ -17,7 +17,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus, urllib_unquote
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarMetaQuery
-from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, getImage169, getSeasonImages169, isImages169
+from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getImage169, getSeasonImages169, isImages169, getItemMeta
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import GetAlternativeProxyChoices, GetAlternativeProxyUrl, IsMediaNamingNormalized, IsSidecarEnabled
 from Plugins.Extensions.IPTVPlayer.libs.botprotection import remembered_user_agent
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
@@ -516,12 +516,7 @@ class TopCinema(GenericFolderWatchedScraperMixin, CBaseHostClass):
     ###################################################
     def getArticleContent(self, cItem):
         printDBG("TopCinema.getArticleContent [%s]" % cItem.get("url", ""))
-        meta = {}
-        if cItem.get("meta_type") and cItem.get("meta_title"):
-            try:
-                meta = getMeta(cItem["meta_type"], cItem["meta_title"], cItem.get("meta_year", ""))
-            except Exception:
-                printExc()
+        meta = getItemMeta(cItem, checkLatin=False)
         story, poster, info = "", "", {}
         sts, data = self.getPage(cItem.get("url", ""))
         if sts:

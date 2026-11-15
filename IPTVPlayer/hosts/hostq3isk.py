@@ -18,7 +18,7 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHost
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
 from Plugins.Extensions.IPTVPlayer.libs.botprotection import remembered_user_agent
-from Plugins.Extensions.IPTVPlayer.libs.moviemeta import LATIN_ONLY, getMeta, isLatinTitle
+from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getItemMeta
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_unquote
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
@@ -389,13 +389,7 @@ class Q3isk(GenericFolderWatchedScraperMixin, CBaseHostClass):
             sts, data = self.getPage(url)
             if sts:
                 story, poster = self._siteInfo(data)
-        meta = {}
-        if cItem.get("meta_type") and cItem.get("meta_title"):
-            try:
-                skip = () if isLatinTitle(cItem["meta_title"]) else LATIN_ONLY
-                meta = getMeta(cItem["meta_type"], cItem["meta_title"], cItem.get("meta_year", ""), skip)
-            except Exception:
-                printExc()
+        meta = getItemMeta(cItem)
         plot = meta.get("plot", "")
         text = plot or story or _stripColors(cItem.get("desc", ""))
         if plot and story and story != plot:

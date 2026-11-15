@@ -24,7 +24,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.botprotection import remembered_user_agent
-from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
+from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, metaArticle
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus, urllib_unquote
@@ -405,13 +405,7 @@ class WitAnime(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 meta = getMeta(cItem["meta_type"], cItem["meta_title"], info.get("year", ""))
             except Exception:
                 printExc()
-        info.update(meta.get("info", {}))
-        plot = meta.get("plot", "")
-        text = plot or story or cItem.get("desc", "")
-        if plot and story and story != plot:
-            text = "%s[/br][/br]%s" % (plot, story)
-        icon = meta.get("poster") or cItem.get("icon", "")
-        return [{"title": cItem.get("title", ""), "text": text, "images": [{"title": "", "url": icon}] if icon else [], "other_info": info}]
+        return metaArticle(cItem, meta, story, info=info)
 
     ###################################################
     # service

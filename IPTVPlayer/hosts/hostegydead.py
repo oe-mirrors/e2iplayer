@@ -12,7 +12,7 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHost
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import GetAlternativeProxyChoices, GetAlternativeProxyUrl, IsSidecarEnabled, IsMediaNamingNormalized
 from Plugins.Extensions.IPTVPlayer.libs.botprotection import remembered_user_agent
-from Plugins.Extensions.IPTVPlayer.libs.moviemeta import LATIN_ONLY, getMeta, isLatinTitle
+from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getItemMeta
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus, urllib_unquote
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
@@ -635,14 +635,7 @@ class EgyDead(GenericFolderWatchedScraperMixin, CBaseHostClass):
     ###################################################
     def getArticleContent(self, cItem):
         printDBG("EgyDead.getArticleContent [%s]" % cItem.get("url", ""))
-        meta = {}
-        if cItem.get("meta_type") and cItem.get("meta_title"):
-            try:
-                # Arabic-only titles -> no IMDb/Cinemeta/OMDb (they answer with unrelated English hits)
-                skip = () if isLatinTitle(cItem["meta_title"]) else LATIN_ONLY
-                meta = getMeta(cItem["meta_type"], cItem["meta_title"], cItem.get("meta_year", ""), skip)
-            except Exception:
-                printExc()
+        meta = getItemMeta(cItem)
         story, poster, info, title = "", "", {}, ""
         sts, data = self.getPage(cItem.get("url", ""))
         if sts:

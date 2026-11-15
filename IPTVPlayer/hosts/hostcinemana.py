@@ -23,7 +23,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
 from Plugins.Extensions.IPTVPlayer.libs.botprotection import remembered_user_agent
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
-from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
+from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getItemMeta, metaArticle
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_unquote
@@ -525,19 +525,8 @@ class Cinemana(GenericFolderWatchedScraperMixin, CBaseHostClass):
             story, poster, info = self._siteInfo(data)
         if cItem.get("meta_year"):
             info.setdefault("year", cItem["meta_year"])
-        meta = {}
-        if cItem.get("meta_type") and cItem.get("meta_title"):
-            try:
-                meta = getMeta(cItem["meta_type"], cItem["meta_title"], cItem.get("meta_year", ""))
-            except Exception:
-                printExc()
-        info.update(meta.get("info", {}))
-        plot = meta.get("plot", "")
-        text = plot or story or _stripColors(cItem.get("desc", ""))
-        if plot and story and story != plot:
-            text = "%s[/br][/br]%s" % (plot, story)
-        icon = meta.get("poster") or poster or cItem.get("icon", "")
-        return [{"title": cItem.get("title", ""), "text": text, "images": [{"title": "", "url": icon}] if icon else [], "other_info": info}]
+        meta = getItemMeta(cItem, checkLatin=False)
+        return metaArticle(cItem, meta, story, poster, info, _stripColors(cItem.get("desc", "")))
 
     ###################################################
     # service
