@@ -17,7 +17,7 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps, load
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIconDir
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
@@ -40,6 +40,7 @@ class OroroTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     def __init__(self):
         CBaseHostClass.__init__(self, {"history": "ororo.tv", "cookie": "ororo.tv.cookie"})
+        self.DEFAULT_ICON_URL = "file://" + GetIconDir("PlayerSelector/ororotv135.png")
         self.HEADER = self.cm.getDefaultHeader(browser="chrome")
         self.JSON_HEADER = dict(self.HEADER)
         self.JSON_HEADER.update({"Accept": "application/json, text/plain, */*", "X-Requested-With": "XMLHttpRequest"})
