@@ -25,7 +25,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
 from Plugins.Extensions.IPTVPlayer.libs.meinecloud import MeineCloud, MAIN_URL as MC_URL, isPlayerUrl
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, getMetaByImdbId
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems, sidecarMetaQuery
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str_deep
 
@@ -310,13 +310,6 @@ class KinoKing(GenericFolderWatchedScraperMixin, CBaseHostClass):
         metaQuery = sidecarMetaQuery("movie" if cItem.get("category") == "movie" else "tv", cItem.get("meta_title", "") or cItem.get("s_title", "") or cItem.get("title", ""),
                                      cItem.get("meta_year", "") or cItem.get("s_year", ""), skip=())
         return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), sidecarTxt, metaQuery))
-
-    def getVideoLinks(self, videoUrl):
-        printDBG("KinoKing.getVideoLinks [%s]" % videoUrl)
-        if self.cm.isValidUrl(videoUrl):
-            sidecar = sidecarFromUrlMeta(videoUrl, IsSidecarEnabled())
-            return decorateResolvedLinkItems(self.up.getVideoLinkExt(videoUrl), sidecar)
-        return []
 
     ###################################################
     # INFO

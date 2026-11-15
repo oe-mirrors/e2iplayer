@@ -24,7 +24,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems, sidecarMetaQuery
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus, urllib_unquote
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
@@ -397,13 +397,6 @@ class MyCima(GenericFolderWatchedScraperMixin, CBaseHostClass):
         # moviemeta query of INFO: all services, also for an Arabic title
         metaQuery = sidecarMetaQuery(cItem.get("meta_type", ""), cItem.get("meta_title", ""), cItem.get("meta_year", ""), skip=())
         return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), story, metaQuery))
-
-    def getVideoLinks(self, videoUrl):
-        # watch servers are govid.live/play/<token> pages (urlparser.parserGOVID), downloads go to their hoster
-        printDBG("MyCima.getVideoLinks [%s]" % videoUrl)
-        if not self.cm.isValidUrl(videoUrl):
-            return []
-        return decorateResolvedLinkItems(self.up.getVideoLinkExt(videoUrl), sidecarFromUrlMeta(videoUrl, IsSidecarEnabled()))
 
     ###################################################
     # INFO

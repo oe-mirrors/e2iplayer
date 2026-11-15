@@ -19,7 +19,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHel
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx, extractNum
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, sidecarMetaQuery, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
 
 
@@ -360,13 +360,6 @@ class Filmoviplex(GenericFolderWatchedScraperMixin, CBaseHostClass):
         metaQuery = sidecarMetaQuery(cItem.get("meta_type", ""), cItem.get("meta_title", ""), cItem.get("meta_year", ""),
                                      self.cm.ph.getSearchGroups(data, r'imdb\.com/title/(tt\d+)')[0], skip=())
         return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), sidecarTxt, metaQuery=metaQuery))
-
-    def getVideoLinks(self, videoUrl):
-        printDBG("Filmoviplex.getVideoLinks [%s]" % videoUrl)
-        if self.cm.isValidUrl(videoUrl):
-            sidecar = sidecarFromUrlMeta(videoUrl, IsSidecarEnabled())
-            return decorateResolvedLinkItems(self.up.getVideoLinkExt(videoUrl), sidecar)
-        return []
 
     ###################################################
     # favourites / INFO

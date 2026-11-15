@@ -17,7 +17,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import SetIPTVPlaye
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, getMetaByImdbId
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, decorateResolvedLinkItems, sidecarFromUrlMeta, sidecarMetaQuery
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_urlencode
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
@@ -277,13 +277,6 @@ class Altadefinizione(GenericFolderWatchedScraperMixin, CBaseHostClass):
             urltab.append({"name": "VixSrc", "url": strwithmeta(vixsrc, {"Referer": self.MAIN_URL}), "need_resolve": 1})
         urltab.append({"name": "vidxgo", "url": strwithmeta(VIDXGO_URL + token + path, {"Referer": self.MAIN_URL}), "need_resolve": 1})
         return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), cItem.get("plot", ""), metaQuery=self._metaQuery(cItem, imdb)))
-
-    def getVideoLinks(self, videoUrl):
-        printDBG("Altadefinizione.getVideoLinks [%s]" % videoUrl)
-        if self.cm.isValidUrl(videoUrl):
-            sidecar = sidecarFromUrlMeta(videoUrl, IsSidecarEnabled())
-            return decorateResolvedLinkItems(self.up.getVideoLinkExt(videoUrl), sidecar)
-        return []
 
     ###################################################
     # INFO

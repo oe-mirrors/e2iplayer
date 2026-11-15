@@ -19,7 +19,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import LATIN_ONLY, getMeta, isLatinTitle
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems, sidecarMetaQuery
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus, urllib_unquote
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
@@ -393,13 +393,6 @@ class OkAnime(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 counter[link["name"]] = counter.get(link["name"], 0) + 1
                 link["name"] = "%s (%d)" % (link["name"], counter[link["name"]])
         return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), metaQuery=metaQuery))
-
-    def getVideoLinks(self, videoUrl):
-        printDBG("OkAnime.getVideoLinks [%s]" % videoUrl)
-        if not self.cm.isValidUrl(videoUrl):
-            return []
-        sidecar = sidecarFromUrlMeta(videoUrl, IsSidecarEnabled())
-        return decorateResolvedLinkItems(self.up.getVideoLinkExt(videoUrl), sidecar)
 
     ###################################################
     # INFO

@@ -16,7 +16,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsMediaNamin
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, getMetaByImdbId
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, decorateResolvedLinkItems, sidecarFromUrlMeta, sidecarMetaQuery
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str, ensure_str_deep
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
@@ -266,13 +266,6 @@ class FullHDFilmizlesene(GenericFolderWatchedScraperMixin, CBaseHostClass):
         altTitles = (cItem["meta_alt_title"],) if cItem.get("meta_alt_title") else ()
         metaQuery = sidecarMetaQuery("movie", cItem.get("meta_title", ""), cItem.get("meta_year", ""), cItem.get("meta_imdb", ""), altTitles=altTitles)
         return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), sidecarTxt, metaQuery))
-
-    def getVideoLinks(self, videoUrl):
-        printDBG("FullHDFilmizlesene.getVideoLinks [%s]" % videoUrl)
-        if not self.cm.isValidUrl(videoUrl):
-            return []
-        sidecar = sidecarFromUrlMeta(videoUrl, IsSidecarEnabled())
-        return decorateResolvedLinkItems(self.up.getVideoLinkExt(videoUrl), sidecar)
 
     ###################################################
     # INFO

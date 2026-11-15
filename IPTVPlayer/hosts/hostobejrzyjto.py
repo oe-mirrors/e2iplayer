@@ -20,7 +20,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import SetIPTVPlaye
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps, loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, getMetaByImdbId
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, decorateResolvedLinkItems, sidecarFromUrlMeta, sidecarMetaQuery
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
@@ -333,13 +333,6 @@ class Obejrzyjto(GenericFolderWatchedScraperMixin, CBaseHostClass):
         metaQuery = sidecarMetaQuery("tv" if (title.get("is_series") or cItem.get("meta_type") == "tv") else "movie", (title.get("original_title", "") or sTitle) if sTitle else "",
                                      str(title.get("year", "") or cItem.get("s_year", "")), title.get("imdb_id", ""), skip=())
         return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), cItem.get("desc", ""), metaQuery))
-
-    def getVideoLinks(self, videoUrl):
-        printDBG("Obejrzyjto.getVideoLinks [%s]" % videoUrl)
-        if not self.cm.isValidUrl(videoUrl):
-            return []
-        sidecar = sidecarFromUrlMeta(videoUrl, IsSidecarEnabled())
-        return decorateResolvedLinkItems(self.up.getVideoLinkExt(videoUrl), sidecar)
 
     ###################################################
     # INFO

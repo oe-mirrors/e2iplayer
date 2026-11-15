@@ -19,7 +19,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 ###################################################
 
@@ -196,13 +196,6 @@ class TVProart(GenericFolderWatchedScraperMixin, CBaseHostClass):
             urlTab.append({'name': 'MP4', 'url': strwithmeta(movie, {'User-Agent': self.HEADER['User-Agent'], 'Referer': self.MAIN_URL}), 'need_resolve': 0})
         text = self.cleanHtmlStr(video.get('description') or '')
         return applySidecarToLinks(urlTab, buildSidecarFromItem(cItem, IsSidecarEnabled(), text))
-
-    def getVideoLinks(self, videoUrl):
-        printDBG('TVProart.getVideoLinks [%s]' % videoUrl)
-        if self.cm.isValidUrl(videoUrl):
-            sidecar = sidecarFromUrlMeta(videoUrl, IsSidecarEnabled())
-            return decorateResolvedLinkItems(self.up.getVideoLinkExt(videoUrl), sidecar)
-        return []
 
     ###################################################
     # INFO (the list API already carries everything - the vod API has no more text; most news

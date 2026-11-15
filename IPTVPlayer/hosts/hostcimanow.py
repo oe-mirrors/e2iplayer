@@ -55,7 +55,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import LATIN_ONLY, getMeta, isLatinTitle
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_unquote, urllib_urlencode
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import strDecode
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
@@ -1567,15 +1567,6 @@ class CimaNow(GenericFolderWatchedScraperMixin, CBaseHostClass):
         except Exception:
             printExc()
         return data
-
-    def getVideoLinks(self, videoUrl):
-        printDBG("CimaNow.getVideoLinks [%s]" % videoUrl)
-        if not self.cm.isValidUrl(videoUrl):
-            return []
-        sidecar = sidecarFromUrlMeta(videoUrl, IsSidecarEnabled())
-        # every server through urlparser - also the site's own "Cima Now" player (cimanowtv.com / worldcdn.online:
-        # parserCIMANOWTV)
-        return decorateResolvedLinkItems(self.up.getVideoLinkExt(videoUrl), sidecar)
 
     ###################################################
     # INFO

@@ -11,7 +11,7 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHost
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks
 from Plugins.Extensions.IPTVPlayer.libs.youtubeparser import YouTubeParser
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str_deep
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
@@ -215,12 +215,6 @@ class LastFM(GenericFolderWatchedScraperMixin, CBaseHostClass):
             SetIPTVPlayerLastHostError(_("No YouTube video found for this track."))
             return []
         return applySidecarToLinks([{"name": "YouTube", "url": ytUrl, "need_resolve": 1}], buildSidecarFromItem(cItem, IsSidecarEnabled()))
-
-    def getVideoLinks(self, url):
-        printDBG("LastFM.getVideoLinks [%s]" % url)
-        if not self.cm.isValidUrl(url):
-            return []
-        return decorateResolvedLinkItems(self.up.getVideoLinkExt(url), sidecarFromUrlMeta(url, IsSidecarEnabled()))
 
     ###################################################
     # info / favourites

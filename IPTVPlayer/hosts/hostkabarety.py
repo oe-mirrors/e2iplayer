@@ -18,7 +18,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJum
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks
 
 
 def GetConfigList():
@@ -361,13 +361,6 @@ class Kabarety(GenericFolderWatchedScraperMixin, CBaseHostClass):
         ogTitle = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'<meta property="og:title" content="([^"]*)"')[0])
         sidecarTxt = '\n'.join(x for x in (ogTitle, ('%s: %s' % (_('Added'), added)) if added else '') if x)
         return applySidecarToLinks(urlTab, buildSidecarFromItem(cItem, IsSidecarEnabled(), sidecarTxt))
-
-    def getVideoLinks(self, videoUrl):
-        printDBG('Kabarety.getVideoLinks [%s]' % videoUrl)
-        if self.cm.isValidUrl(videoUrl):
-            sidecar = sidecarFromUrlMeta(videoUrl, IsSidecarEnabled())
-            return decorateResolvedLinkItems(self.up.getVideoLinkExt(videoUrl), sidecar)
-        return []
 
     ###################################################
     # INFO / favourites

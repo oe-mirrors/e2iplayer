@@ -12,7 +12,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import GetAlternati
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps, loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, decorateResolvedLinkItems, sidecarFromUrlMeta, sidecarMetaQuery
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
@@ -570,14 +570,6 @@ class KinoGo(GenericFolderWatchedScraperMixin, CBaseHostClass):
         mediaType = cItem.get("meta_type", "") or ("tv" if season else "movie")
         metaQuery = sidecarMetaQuery(mediaType, cItem.get("s_title", "") or cItem.get("title", ""), cItem.get("s_year", "") or year, skip=(), maxYearDiff=1)
         return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), plot, metaQuery=metaQuery))
-
-    def getVideoLinks(self, videoUrl):
-        printDBG("KinoGo.getVideoLinks [%s]" % videoUrl)
-        if not self.cm.isValidUrl(videoUrl):
-            return []
-        # Collaps and cinemar players: urlparser
-        sidecar = sidecarFromUrlMeta(videoUrl, IsSidecarEnabled())
-        return decorateResolvedLinkItems(self.up.getVideoLinkExt(videoUrl), sidecar)
 
     ###################################################
     # INFO

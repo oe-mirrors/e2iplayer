@@ -14,7 +14,7 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHost
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps, loads as json_loads
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist, decorateUrl
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetDefaultLang
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
@@ -413,13 +413,6 @@ class TED(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not urltab and (external.get("service") or "").lower() == "youtube" and external.get("code"):
             urltab.append({"name": "YouTube", "url": "https://www.youtube.com/watch?v=%s" % external["code"], "need_resolve": 1})
         return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), self.cleanHtmlStr(video.get("description", ""))))
-
-    def getVideoLinks(self, videoUrl):
-        printDBG("TED.getVideoLinks [%s]" % videoUrl)
-        if self.cm.isValidUrl(videoUrl):
-            sidecar = sidecarFromUrlMeta(videoUrl, IsSidecarEnabled())
-            return decorateResolvedLinkItems(self.up.getVideoLinkExt(videoUrl), sidecar)
-        return []
 
     ###################################################
     # info / favourites
