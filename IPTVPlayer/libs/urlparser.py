@@ -4471,7 +4471,8 @@ class pageParser(CaptchaHelper):
         embedUrl = details.get("embed_frame_url")
         if embedUrl:
             ref = urlparser.getDomain(embedUrl, False)
-            HTTP_HEADER["X-Embed-Parent"] = baseUrl
+            # percent-encode like the browser's location.href: non-ASCII slugs (filmoton "raskršće") are no valid header value
+            HTTP_HEADER["X-Embed-Parent"] = urllib_quote(baseUrl, safe=":/?&=#%+@;,~")
             HTTP_HEADER["Referer"] = ref
             HTTP_HEADER["Origin"] = ref[:-1]
             if parent:  # the player sends the embedding site as embedParentHost / Referrer
