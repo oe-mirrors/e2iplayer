@@ -120,20 +120,7 @@ class SpacePowerFan(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return CBaseHostClass.getFavouriteData(self, cItem)
 
     def _getWatchedKeyForItem(self, cItem):
-        try:
-            if not isinstance(cItem, dict):
-                return ""
-            path = self._path(cItem.get("url", ""))
-            if not path:
-                return ""
-            category = cItem.get("category", "")
-            if category in VIDEO_CATEGORIES:
-                return "video:%s" % path
-            if category in FOLDER_CATEGORIES:
-                return "folder:%s" % path
-        except Exception:
-            printExc()
-        return ""
+        return self.wfCategoryKey(cItem, self._path, VIDEO_CATEGORIES, FOLDER_CATEGORIES)
 
     def _icon(self, html):
         icon = self.cm.ph.getSearchGroups(html, r"""<img[^>]+src=['"]([^'"]+)['"]""")[0]

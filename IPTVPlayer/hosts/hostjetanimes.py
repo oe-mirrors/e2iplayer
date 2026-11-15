@@ -177,20 +177,7 @@ class JetAnimes(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return CBaseHostClass.getFavouriteData(self, cItem)
 
     def _getWatchedKeyForItem(self, cItem):
-        try:
-            if not isinstance(cItem, dict):
-                return ""
-            key = self._key(cItem.get("url", ""))
-            if not key:
-                return ""
-            category = cItem.get("category", "")
-            if category in VIDEO_CATEGORIES:
-                return "video:%s" % key
-            if category in FOLDER_CATEGORIES:
-                return "folder:%s" % key
-        except Exception:
-            printExc()
-        return ""
+        return self.wfCategoryKey(cItem, self._key, VIDEO_CATEGORIES, FOLDER_CATEGORIES)
 
     def _episodeTitle(self, show, season, episode, label=""):
         if IsMediaNamingNormalized():

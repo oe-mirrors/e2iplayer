@@ -38,6 +38,24 @@ class GenericFolderWatchedScraperMixin(object):
         self.wfFolderParent = {}
 
     @staticmethod
+    def wfCategoryKey(cItem, pathOf, videoCategories, folderCategories):
+        # the usual _getWatchedKeyForItem(): 'video:' / 'folder:' + the item's path, by its category
+        try:
+            if not isinstance(cItem, dict):
+                return ''
+            path = pathOf(cItem.get('url', ''))
+            if not path:
+                return ''
+            category = cItem.get('category', '')
+            if category in videoCategories:
+                return 'video:%s' % path
+            if category in folderCategories:
+                return 'folder:%s' % path
+        except Exception:
+            printExc()
+        return ''
+
+    @staticmethod
     def wfNormalizeUrlKey(url):
         # drop volatile pagination params so page 2+ of a folder keys the same as page 1
         url = str(url or '').strip()
