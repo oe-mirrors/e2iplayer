@@ -25,8 +25,8 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHost
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
-from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems, sidecarMetaQuery
+from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, metaArticle
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus, urllib_unquote
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
@@ -567,13 +567,6 @@ class Lodynet(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 result.append({"name": "%s %s" % (base, mirror["name"]), "url": mirror["url"], "need_resolve": 1})
         return result
 
-    def getVideoLinks(self, videoUrl):
-        printDBG("Lodynet.getVideoLinks [%s]" % videoUrl)
-        if not self.cm.isValidUrl(videoUrl):
-            return []
-        sidecar = sidecarFromUrlMeta(videoUrl, IsSidecarEnabled())
-        return decorateResolvedLinkItems(self.up.getVideoLinkExt(videoUrl), sidecar)
-
     ###################################################
     # INFO
     ###################################################
@@ -595,13 +588,7 @@ class Lodynet(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 meta = getMeta(cItem["meta_type"], cItem["meta_title"], cItem.get("meta_year", "")) or {}
             except Exception:
                 printExc()
-        info.update(meta.get("info", {}))
-        plot = meta.get("plot", "")
-        text = plot or story or _stripColors(cItem.get("desc", ""))
-        if plot and story and story != plot:
-            text = "%s[/br][/br]%s" % (plot, story)
-        icon = meta.get("poster") or poster or cItem.get("icon", "")
-        return [{"title": cItem.get("title", ""), "text": text, "images": [{"title": "", "url": icon}] if icon else [], "other_info": info}]
+        return metaArticle(cItem, meta, story, poster, info, _stripColors(cItem.get("desc", "")))
 
     ###################################################
     # service

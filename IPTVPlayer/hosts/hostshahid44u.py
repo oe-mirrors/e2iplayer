@@ -182,7 +182,6 @@ class Shahid44u(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if addParams is None:
             addParams = dict(self.defaultParams)
         addParams["cookiefile"] = self.COOKIE_FILE
-        addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.HEADER.get("User-Agent")}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
 
     ###################################################
@@ -595,11 +594,8 @@ class Shahid44u(GenericFolderWatchedScraperMixin, CBaseHostClass):
                  "other_info": otherInfo}]
 
     def getFavouriteData(self, cItem):
-        try:
-            if cItem.get("meta_type"):
-                return json_dumps(dict((key, cItem[key]) for key in self.FAV_FIELDS if key in cItem))
-        except Exception:
-            printExc()
+        if cItem.get("meta_type"):
+            return self.getFavouriteFieldsData(cItem)
         return CBaseHostClass.getFavouriteData(self, cItem)
 
     def handleService(self, index, refresh=0, searchPattern="", searchType=""):

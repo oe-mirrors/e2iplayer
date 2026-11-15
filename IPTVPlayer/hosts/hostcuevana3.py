@@ -10,7 +10,6 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHost
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsMediaNamingNormalized, IsSidecarEnabled
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
-from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, getMetaByImdbId
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, decorateResolvedLinkItems, sidecarFromUrlMeta, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
@@ -70,7 +69,6 @@ class Cuevana3(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if addParams is None:
             addParams = dict(self.defaultParams)
         baseUrl = self._onMain(baseUrl)
-        addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.HEADER.get("User-Agent")}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
 
     def _onMain(self, url):
@@ -82,28 +80,12 @@ class Cuevana3(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return re.sub(r"^https?://[^/]+", "", url or "").rstrip("/")
 
     def getFavouriteData(self, cItem):
-        try:
-            if cItem.get("category") in VIDEO_CATEGORIES + FOLDER_CATEGORIES + ("list_items",):
-                return json_dumps({key: cItem[key] for key in self.FAV_FIELDS if key in cItem})
-        except Exception:
-            printExc()
+        if cItem.get("category") in VIDEO_CATEGORIES + FOLDER_CATEGORIES + ("list_items",):
+            return self.getFavouriteFieldsData(cItem)
         return CBaseHostClass.getFavouriteData(self, cItem)
 
     def _getWatchedKeyForItem(self, cItem):
-        try:
-            if not isinstance(cItem, dict):
-                return ""
-            key = self._key(cItem.get("url", ""))
-            if not key:
-                return ""
-            category = cItem.get("category", "")
-            if category in VIDEO_CATEGORIES:
-                return "video:%s" % key
-            if category in FOLDER_CATEGORIES:
-                return "folder:%s" % key
-        except Exception:
-            printExc()
-        return ""
+        return self.wfCategoryKey(cItem, self._key, VIDEO_CATEGORIES, FOLDER_CATEGORIES)
 
     @staticmethod
     def _page(cItem):

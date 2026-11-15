@@ -133,15 +133,11 @@ class BurningSeries(GenericFolderWatchedScraperMixin, CBaseHostClass, CaptchaHel
         path = SITE_PATH_RE.match(baseUrl or "")
         if path:
             baseUrl = self.getMainUrl() + path.group(1)
-        addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.USER_AGENT}
         return self.cm.getPageCFProtection(baseUrl.split("#")[0], addParams, post_data)
 
     def getFavouriteData(self, cItem):
-        try:
-            if cItem.get("category") in VIDEO_CATEGORIES + FOLDER_CATEGORIES + ("bs_list",):
-                return json_dumps(dict((key, cItem[key]) for key in self.FAV_FIELDS if key in cItem))
-        except Exception:
-            printExc()
+        if cItem.get("category") in VIDEO_CATEGORIES + FOLDER_CATEGORIES + ("bs_list",):
+            return self.getFavouriteFieldsData(cItem)
         return CBaseHostClass.getFavouriteData(self, cItem)
 
     def _getWatchedKeyForItem(self, cItem):

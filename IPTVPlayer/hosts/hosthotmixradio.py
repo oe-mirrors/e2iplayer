@@ -9,7 +9,7 @@ import re
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
-from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
+from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str_deep
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 
@@ -37,11 +37,6 @@ class HotmixRadio(CBaseHostClass):
         self.cacheRadios = []
         self.MENU = [{"category": "list_radios", "title": _("All stations")},
                      {"category": "list_categories", "title": _("Categories")}] + self.searchItems()
-
-    def getPage(self, url, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPage(url, addParams, post_data)
 
     ###################################################
     # data
@@ -173,11 +168,8 @@ class HotmixRadio(CBaseHostClass):
                  "images": [{"title": "", "url": icon}] if icon else [], "other_info": otherInfo}]
 
     def getFavouriteData(self, cItem):
-        try:
-            if cItem.get("type") == "audio":
-                return json_dumps(dict((key, cItem[key]) for key in self.FAV_FIELDS if key in cItem))
-        except Exception:
-            printExc()
+        if cItem.get("type") == "audio":
+            return self.getFavouriteFieldsData(cItem)
         return CBaseHostClass.getFavouriteData(self, cItem)
 
     def handleService(self, index, refresh=0, searchPattern="", searchType=""):

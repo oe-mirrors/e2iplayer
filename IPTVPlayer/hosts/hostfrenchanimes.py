@@ -20,9 +20,8 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHost
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
 from Plugins.Extensions.IPTVPlayer.libs.botprotection import remembered_user_agent
-from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, sidecarMetaQuery, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
@@ -72,7 +71,6 @@ class FrenchAnimes(GenericFolderWatchedScraperMixin, CBaseHostClass):
     def getPage(self, baseUrl, addParams=None, post_data=None):
         if addParams is None:
             addParams = dict(self.defaultParams)
-        addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.HEADER.get("User-Agent")}
         # "<title page>#ep=N" of the episode rows: the fragment is ours, not the site's
         url = self.getFullUrl((baseUrl or "").split("#", 1)[0].replace("&amp;", "&"))
         return self.cm.getPageCFProtection(url, addParams, post_data)
@@ -101,28 +99,12 @@ class FrenchAnimes(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return strwithmeta(url, self._cfMeta())
 
     def getFavouriteData(self, cItem):
-        try:
-            if cItem.get("category") in VIDEO_CATEGORIES + FOLDER_CATEGORIES + ("fa_list",):
-                return json_dumps(dict((key, cItem[key]) for key in self.FAV_FIELDS if key in cItem))
-        except Exception:
-            printExc()
+        if cItem.get("category") in VIDEO_CATEGORIES + FOLDER_CATEGORIES + ("fa_list",):
+            return self.getFavouriteFieldsData(cItem)
         return CBaseHostClass.getFavouriteData(self, cItem)
 
     def _getWatchedKeyForItem(self, cItem):
-        try:
-            if not isinstance(cItem, dict):
-                return ""
-            path = self._path(cItem.get("url", ""))
-            if not path:
-                return ""
-            category = cItem.get("category", "")
-            if category in VIDEO_CATEGORIES:
-                return "video:%s" % path
-            if category in FOLDER_CATEGORIES:
-                return "folder:%s" % path
-        except Exception:
-            printExc()
-        return ""
+        return self.wfCategoryKey(cItem, self._path, VIDEO_CATEGORIES, FOLDER_CATEGORIES)
 
     @staticmethod
     def _episodes(data):
@@ -295,12 +277,6 @@ class FrenchAnimes(GenericFolderWatchedScraperMixin, CBaseHostClass):
         metaQuery = sidecarMetaQuery(cItem.get("meta_type") or "tv", cItem.get("meta_title") or cItem.get("s_title") or cItem.get("title", ""),
                                      cItem.get("meta_year") or self._siteInfo(data)[2].get("year", ""), skip=())
         return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), metaQuery=metaQuery))
-
-    def getVideoLinks(self, videoUrl):
-        printDBG("FrenchAnimes.getVideoLinks [%s]" % videoUrl)
-        if not self.cm.isValidUrl(videoUrl):
-            return []
-        return decorateResolvedLinkItems(self.up.getVideoLinkExt(videoUrl), sidecarFromUrlMeta(videoUrl, IsSidecarEnabled()))
 
     ###################################################
     # INFO

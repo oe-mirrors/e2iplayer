@@ -4,7 +4,9 @@
 #
 #  $Id$
 #
-#  Last Modified: 28.10.2026
+#  Last Modified: 15.11.2026
+#   - a host's "Create MKV" also wins over the resolver's ff_out_container (merge:// with HLS audio became .ts)
+#  28.10.2026
 #   - buffering live DASH starts 30 s behind the edge and reads those at once (-readrate_initial_burst, ffmpeg 6.1+;
 #     older ones keep -re): with -re alone the 2 MB buffer of a 200 kbit/s stream took 80 s
 #  26.10.2026
@@ -639,15 +641,17 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
         meta = strwithmeta(self.url).meta
         if not self.allowFinalRename and self._isHlsSource(meta):
             return 'mpegts'
+        # a download: the host's "Create MKV" (urlmetahelper: e2i_postprocess_container), as hlsdl / wget honour
+        # it - before ff_out_container, which the resolvers set to mpegts on every merge:// of an HLS audio track
+        # for buffered playback (VOE with its own audio playlist was saved as .ts with "Create MKV" on)
+        if self.allowFinalRename and str(meta.get('e2i_postprocess_ffmpeg', '')) in ('1', 'True'):
+            wanted = self.POSTPROCESS_CONTAINER.get(str(meta.get('e2i_postprocess_container', 'mkv')).strip().lower())
+            if wanted:
+                return wanted
         if 'ff_out_container' in meta:
             return str(meta['ff_out_container']).lower()
         if not self.allowFinalRename:
             return self.ffmpegOutputContener
-        # the host's "Create MKV" (urlmetahelper: e2i_postprocess_container), as hlsdl / wget honour it
-        if str(meta.get('e2i_postprocess_ffmpeg', '')) in ('1', 'True'):
-            wanted = self.POSTPROCESS_CONTAINER.get(str(meta.get('e2i_postprocess_container', 'mkv')).strip().lower())
-            if wanted:
-                return wanted
         if self._isDashSource(meta):
             try:
                 return str(config.plugins.iptvplayer.dash_out_container.value).lower()

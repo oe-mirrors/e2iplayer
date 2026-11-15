@@ -84,11 +84,6 @@ class LuxVeritatisPL(GenericFolderWatchedScraperMixin, CBaseHostClass):
         self.watchedHelper = IPTVWatchedHelper("luxveritatis")
         self.wfInitFolderCache()
 
-    def getPage(self, baseUrl, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPage(baseUrl, addParams, post_data)
-
     def getFullUrl(self, url, curUrl=None):
         return CBaseHostClass.getFullUrl(self, url, curUrl).replace("&amp;", "&")
 
@@ -111,11 +106,8 @@ class LuxVeritatisPL(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return ""
 
     def getFavouriteData(self, cItem):
-        try:
-            if cItem.get("type") in ("video", "audio"):
-                return json_dumps(dict((key, cItem[key]) for key in self.FAV_FIELDS if key in cItem))
-        except Exception:
-            printExc()
+        if cItem.get("type") in ("video", "audio"):
+            return self.getFavouriteFieldsData(cItem)
         return CBaseHostClass.getFavouriteData(self, cItem)
 
     ###################################################

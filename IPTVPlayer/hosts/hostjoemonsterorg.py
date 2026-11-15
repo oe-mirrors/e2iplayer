@@ -17,8 +17,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEna
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.libs.botprotection import remembered_user_agent
-from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, decorateResolvedLinkItems, sidecarFromUrlMeta
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_unquote
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import normalizeMediathekTitle
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
@@ -43,6 +42,7 @@ def gettytul():
 
 
 class JoeMonster(GenericFolderWatchedScraperMixin, CBaseHostClass):
+    USE_CF_PROTECTION = True
     FAV_FIELDS = ("name", "category", "type", "url", "title", "raw_title", "icon", "desc", "date")
 
     def __init__(self):
@@ -62,11 +62,6 @@ class JoeMonster(GenericFolderWatchedScraperMixin, CBaseHostClass):
         self.password = ""
         self.watchedHelper = IPTVWatchedHelper("joemonsterorg")
         self.wfInitFolderCache()
-
-    def getPage(self, url, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPageCFProtection(url, addParams, post_data)
 
     def _cfMeta(self, referer):
         # joemonster.org and its file hosts (vader.joemonster.org mp4s, older thumbnails) sit behind the same
@@ -106,11 +101,8 @@ class JoeMonster(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return ""
 
     def getFavouriteData(self, cItem):
-        try:
-            if cItem.get("type") == "video":
-                return json_dumps(dict((key, cItem[key]) for key in self.FAV_FIELDS if key in cItem))
-        except Exception:
-            printExc()
+        if cItem.get("type") == "video":
+            return self.getFavouriteFieldsData(cItem)
         return CBaseHostClass.getFavouriteData(self, cItem)
 
     ###################################################
@@ -235,13 +227,6 @@ class JoeMonster(GenericFolderWatchedScraperMixin, CBaseHostClass):
             SetIPTVPlayerLastHostError(_("No stream available"))
             return []
         return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), info["text"] or cItem.get("desc", "")))
-
-    def getVideoLinks(self, videoUrl):
-        printDBG("JoeMonster.getVideoLinks [%s]" % videoUrl)
-        if self.cm.isValidUrl(videoUrl):
-            sidecar = sidecarFromUrlMeta(videoUrl, IsSidecarEnabled())
-            return decorateResolvedLinkItems(self.up.getVideoLinkExt(videoUrl), sidecar)
-        return []
 
     ###################################################
     # INFO

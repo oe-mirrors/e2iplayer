@@ -14,7 +14,7 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHost
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps, loads as json_loads
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist, decorateUrl
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetDefaultLang
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
@@ -414,13 +414,6 @@ class TED(GenericFolderWatchedScraperMixin, CBaseHostClass):
             urltab.append({"name": "YouTube", "url": "https://www.youtube.com/watch?v=%s" % external["code"], "need_resolve": 1})
         return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), self.cleanHtmlStr(video.get("description", ""))))
 
-    def getVideoLinks(self, videoUrl):
-        printDBG("TED.getVideoLinks [%s]" % videoUrl)
-        if self.cm.isValidUrl(videoUrl):
-            sidecar = sidecarFromUrlMeta(videoUrl, IsSidecarEnabled())
-            return decorateResolvedLinkItems(self.up.getVideoLinkExt(videoUrl), sidecar)
-        return []
-
     ###################################################
     # info / favourites
     ###################################################
@@ -468,11 +461,8 @@ class TED(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return [{"title": title, "text": text, "images": [{"title": "", "url": icon}] if icon else [], "other_info": otherInfo}]
 
     def getFavouriteData(self, cItem):
-        try:
-            if cItem.get("category") == "ted_talk":
-                return json_dumps(dict((key, cItem[key]) for key in self.FAV_FIELDS if key in cItem))
-        except Exception:
-            printExc()
+        if cItem.get("category") == "ted_talk":
+            return self.getFavouriteFieldsData(cItem)
         return CBaseHostClass.getFavouriteData(self, cItem)
 
     def handleService(self, index, refresh=0, searchPattern="", searchType=""):

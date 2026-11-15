@@ -43,6 +43,8 @@ def gettytul():
 
 
 class GoalsZoneAPI(GenericFolderWatchedScraperMixin, CBaseHostClass):
+    USE_CF_PROTECTION = True
+
     def __init__(self):
         CBaseHostClass.__init__(self, {"history": "GoalsZoneAPI", "cookie": "GoalsZoneAPI.cookie"})
         self.HEADER = self.cm.getDefaultHeader()
@@ -51,11 +53,6 @@ class GoalsZoneAPI(GenericFolderWatchedScraperMixin, CBaseHostClass):
         self.DEFAULT_ICON_URL = "https://h.top4top.io/p_3650w3uf91.png"
         self.watchedHelper = IPTVWatchedHelper("goals")
         self.wfInitFolderCache()
-
-    def getPage(self, baseUrl, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
 
     def getJson(self, url):
         sts, data = self.getPage(url)

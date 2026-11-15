@@ -84,7 +84,6 @@ class cda(GenericFolderWatchedScraperMixin, CBaseHostClass, CaptchaHelper):
         if addParams is None:
             addParams = dict(self.defaultParams)
         addParams = dict(addParams)
-        addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.HEADER.get("User-Agent")}
         return self.cm.getPageCFProtection(self.cm.iriToUri(url), addParams, post_data)
 
     def _icon(self, url):
@@ -122,11 +121,8 @@ class cda(GenericFolderWatchedScraperMixin, CBaseHostClass, CaptchaHelper):
         return ""
 
     def getFavouriteData(self, cItem):
-        try:
-            if cItem.get("type") == "video":
-                return json_dumps(dict((key, cItem[key]) for key in self.FAV_FIELDS if key in cItem))
-        except Exception:
-            printExc()
+        if cItem.get("type") == "video":
+            return self.getFavouriteFieldsData(cItem)
         return CBaseHostClass.getFavouriteData(self, cItem)
 
     def getLinksForFavourite(self, fav_data):

@@ -164,11 +164,8 @@ class YacineTV(CBaseHostClass):
         return strwithmeta(url, {"User-Agent": self.HEADER.get("User-Agent")})
 
     def getFavouriteData(self, cItem):
-        try:
-            if cItem.get("category") in ("yc_channel", "yc_cat"):
-                return json_dumps(dict((key, cItem[key]) for key in self.FAV_FIELDS if key in cItem))
-        except Exception:
-            printExc()
+        if cItem.get("category") in ("yc_channel", "yc_cat"):
+            return self.getFavouriteFieldsData(cItem)
         return CBaseHostClass.getFavouriteData(self, cItem)
 
     ###################################################

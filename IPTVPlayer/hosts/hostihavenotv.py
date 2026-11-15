@@ -78,11 +78,6 @@ class IHaveNoTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
             printExc()
         return ""
 
-    def getPage(self, url, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPage(url, addParams, post_data)
-
     def _normUrl(self, url, currUrl=None):
         url = self.getFullUrl(url.replace("&amp;", "&").strip(), currUrl)
         return re.sub(r"^https?://(?:www\.)?ihavenotv\.com/", self.MAIN_URL, url)
@@ -443,11 +438,7 @@ class IHaveNoTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return [{"title": title, "text": text, "images": [{"title": "", "url": icon}] if icon else [], "other_info": otherInfo}]
 
     def getFavouriteData(self, cItem):
-        try:
-            return json_dumps(dict((key, cItem[key]) for key in self.FAV_FIELDS if key in cItem))
-        except Exception:
-            printExc()
-        return CBaseHostClass.getFavouriteData(self, cItem)
+        return self.getFavouriteFieldsData(cItem)
 
     def handleService(self, index, refresh=0, searchPattern="", searchType=""):
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)

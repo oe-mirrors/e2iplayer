@@ -41,6 +41,8 @@ def _pageUrl(url):
 
 
 class TopStreamFilm(GenericFolderWatchedScraperMixin, CBaseHostClass):
+    USE_CF_PROTECTION = True
+
     def __init__(self):
         CBaseHostClass.__init__(self, {"history": "TopStreamFilm", "cookie": "TopStreamFilm.cookie"})
         self.HEADER = self.cm.getDefaultHeader()
@@ -57,11 +59,6 @@ class TopStreamFilm(GenericFolderWatchedScraperMixin, CBaseHostClass):
         self.cacheSeasons = {}
         self.watchedHelper = IPTVWatchedHelper("topstreamfilm")
         self.wfInitFolderCache()
-
-    def getPage(self, baseUrl, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
 
     ###################################################
     # watched flag

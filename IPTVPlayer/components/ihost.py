@@ -894,6 +894,9 @@ class CHostBase(IHost):
 
 
 class CBaseHostClass:
+    # getPage() through the browser-check handling (Cloudflare & co.) of pCommon
+    USE_CF_PROTECTION = False
+
     def __init__(self, params={}):
         self.sessionEx = MainSessionWrapper()
         self.up = urlparser()
@@ -1005,6 +1008,22 @@ class CBaseHostClass:
             pass
         return ''
 
+    def getPage(self, url, addParams=None, post_data=None):
+        if addParams is None:
+            addParams = dict(getattr(self, 'defaultParams', {}))
+        if self.USE_CF_PROTECTION:
+            return self.cm.getPageCFProtection(url, addParams, post_data)
+        return self.cm.getPage(url, addParams, post_data)
+
+    def getVideoLinks(self, videoUrl):
+        # a hosting link left to the url parser, with the subtitles / meta its row carried
+        from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled
+        from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import sidecarFromUrlMeta, decorateResolvedLinkItems
+        printDBG("%s.getVideoLinks [%s]" % (self.__class__.__name__, videoUrl))
+        if not self.cm.isValidUrl(videoUrl):
+            return []
+        return decorateResolvedLinkItems(self.up.getVideoLinkExt(videoUrl), sidecarFromUrlMeta(videoUrl, IsSidecarEnabled()))
+
     @staticmethod
     def cleanHtmlStr(str):
         return CParsingHelper.cleanHtmlStr(str)
@@ -1115,6 +1134,14 @@ class CBaseHostClass:
         except Exception:
             printExc()
         return ''
+
+    def getFavouriteFieldsData(self, cItem):
+        # a favourite with only the item keys in the host's FAV_FIELDS (the whole item when that fails)
+        try:
+            return json_dumps(dict((key, cItem[key]) for key in self.FAV_FIELDS if key in cItem))
+        except Exception:
+            printExc()
+        return CBaseHostClass.getFavouriteData(self, cItem)
 
     def getLinksForFavourite(self, fav_data):
         try:

@@ -16,7 +16,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsMediaNamin
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, getMetaByImdbId
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, decorateResolvedLinkItems, sidecarFromUrlMeta
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str, ensure_str_deep
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
@@ -40,6 +40,8 @@ def gettytul():
 
 
 class Einschalten(GenericFolderWatchedScraperMixin, CBaseHostClass):
+    USE_CF_PROTECTION = True
+
     def __init__(self):
         CBaseHostClass.__init__(self, {"history": "Einschalten", "cookie": "Einschalten.cookie"})
         self.HEADER = self.cm.getDefaultHeader()
@@ -51,11 +53,6 @@ class Einschalten(GenericFolderWatchedScraperMixin, CBaseHostClass):
                      {"category": "list_value", "title": _("Genres")}] + self.searchItems()
         self.watchedHelper = IPTVWatchedHelper("einschalten")
         self.wfInitFolderCache()
-
-    def getPage(self, baseUrl, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
 
     def _getJson(self, url, params=None, post_data=None):
         sts, data = self.getPage(url, params, post_data)
@@ -182,13 +179,6 @@ class Einschalten(GenericFolderWatchedScraperMixin, CBaseHostClass):
             name = "%s - %s" % (name, self.cleanHtmlStr(data["releaseName"]))
         urltab = [{"name": name, "url": strwithmeta(streamUrl, {"Referer": self.MAIN_URL}), "need_resolve": 1}]
         return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), cItem.get("desc", "")))
-
-    def getVideoLinks(self, url):
-        printDBG("Einschalten.getVideoLinks [%s]" % url)
-        if self.cm.isValidUrl(url):
-            sidecar = sidecarFromUrlMeta(url, IsSidecarEnabled())
-            return decorateResolvedLinkItems(self.up.getVideoLinkExt(url), sidecar)
-        return []
 
     ###################################################
     # INFO

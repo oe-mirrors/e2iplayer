@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # IPTV download manager API
-# Last Modified: 07.08.2026 - Extracted shared helpers (ensureText/fsPath/shellQuote/writeUtf8TextFile) and sidecar logic into downloaderhelpers.SidecarMixin, shared with hlsdownloader.py and mergedownloader.py, instead of duplicating them here - Kamikaze24
+# Last Modified: 15.11.2026 - ffmpeg's remux output goes to <name>.iptv.remux.log, printed to the debug log when the remux fails and always removed. Earlier: 07.08.2026 - Extracted shared helpers (ensureText/fsPath/shellQuote/writeUtf8TextFile) and sidecar logic into downloaderhelpers.SidecarMixin, shared with hlsdownloader.py and mergedownloader.py, instead of duplicating them here - Kamikaze24
 ###################################################
 # LOCAL import
 ###################################################
@@ -190,19 +190,38 @@ class WgetDownloader(BaseDownloader, SidecarMixin):
 
     def _cleanUp(self):
         try:
-            if self.tempRemuxPath and os.path.isfile(fsPath(self.tempRemuxPath)):
-                rm(fsPath(self.tempRemuxPath))
+            if self.tempRemuxPath:
+                for path in (self.tempRemuxPath, self._getRemuxLogPath()):
+                    if os.path.isfile(fsPath(path)):
+                        rm(fsPath(path))
         except Exception:
             printExc()
+
+    def _getRemuxLogPath(self):
+        return self._getBasePath(self.tempRemuxPath).rsplit('.iptv.remux.tmp', 1)[0] + '.iptv.remux.log'
+
+    def _remuxLogText(self):
+        # the end of ffmpeg's output of the remux; the file is removed, it would stay next to the video otherwise
+        text = ''
+        path = fsPath(self._getRemuxLogPath())
+        try:
+            if os.path.isfile(path):
+                with open(path, 'rb') as f:
+                    text = ensureText(f.read())[-1500:].strip()
+                rm(path)
+        except Exception:
+            printExc()
+        return text
 
     def doStartPostProcess(self):
         self.postProcessMode = 'remux'
         self.tempRemuxPath = self._getBasePath(self.filePath) + '.iptv.remux.tmp.mkv'
 
         # -y: a leftover temp file from an aborted run must not make ffmpeg wait for an overwrite answer
-        cmd = DMHelper.GET_FFMPEG_PATH() + ' -y '
+        cmd = DMHelper.GET_FFMPEG_PATH() + ' -y -nostdin -hide_banner -loglevel warning '
         cmd += ' -i "%s" ' % shellQuote(self.filePath)
-        cmd += ' -map 0:v -map 0:a? -vcodec copy -acodec copy "%s" >/dev/null 2>&1 ' % shellQuote(self.tempRemuxPath)
+        # ffmpeg's warnings / errors go to the debug log when the remux fails (_remuxLogText)
+        cmd += ' -map 0:v -map 0:a? -vcodec copy -acodec copy "%s" >"%s" 2>&1 ' % (shellQuote(self.tempRemuxPath), shellQuote(self._getRemuxLogPath()))
 
         printDBG("WgetDownloader doStartPostProcess cmd[%s]" % cmd)
 
@@ -404,12 +423,13 @@ class WgetDownloader(BaseDownloader, SidecarMixin):
 
         if terminated:
             self.status = DMHelper.STS.INTERRUPTED
-            # an aborted remux leaves its half written temp file behind otherwise
+            # an aborted remux leaves its half written temp file and its log behind otherwise
             self._cleanUp()
         elif self.status == DMHelper.STS.POSTPROCESSING:
             mkvPath = self._getMkvPath()
             mkvSize = DMHelper.getFileSize(fsPath(self.tempRemuxPath))
             printDBG("POSTPROCESSING remux finished mkvPath[%s] localFileSize[%r] code[%r]" % (self.tempRemuxPath, mkvSize, code))
+            remuxLog = self._remuxLogText()
 
             if mkvSize > 0 and code == 0:
                 if self._moveFile(self.tempRemuxPath, mkvPath):
@@ -417,7 +437,7 @@ class WgetDownloader(BaseDownloader, SidecarMixin):
                     self._finalizeSuccess(mkvPath)
                     return
 
-            printDBG("WgetDownloader remux failed -> fallback to original target")
+            printDBG("WgetDownloader remux failed -> fallback to original target, ffmpeg:\n%s" % remuxLog)
             if self._finalizeOriginalFallback():
                 return
             self.status = DMHelper.STS.INTERRUPTED

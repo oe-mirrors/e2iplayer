@@ -63,11 +63,6 @@ class HoofootCom(GenericFolderWatchedScraperMixin, CBaseHostClass):
         self.watchedHelper = IPTVWatchedHelper('hoofoot')
         self.wfInitFolderCache()
 
-    def getPage(self, url, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPage(url, addParams, post_data)
-
     def _getJson(self, url, referer, extraHeaders=None):
         header = dict(self.HEADER)
         header.update({'Referer': referer, 'Accept': 'application/json, text/plain, */*'})

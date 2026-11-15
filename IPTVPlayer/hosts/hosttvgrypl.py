@@ -17,7 +17,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJum
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str_deep
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 ###################################################
@@ -50,11 +50,6 @@ class TvGryPL(GenericFolderWatchedScraperMixin, CBaseHostClass):
         self.MAIN_URL = 'https://www.gry-online.pl/'
         self.watchedHelper = IPTVWatchedHelper('tvgrypl')
         self.wfInitFolderCache()
-
-    def getPage(self, url, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPage(url, addParams, post_data)
 
     ###################################################
     # watched flag / favourites
@@ -160,12 +155,6 @@ class TvGryPL(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not linksTab:
             SetIPTVPlayerLastHostError(_('No stream available'))
         return applySidecarToLinks(linksTab, buildSidecarFromItem(cItem, IsSidecarEnabled()))
-
-    def getVideoLinks(self, videoUrl):
-        printDBG("TvGryPL.getVideoLinks [%s]" % videoUrl)
-        if not self.cm.isValidUrl(videoUrl):
-            return []
-        return decorateResolvedLinkItems(self.up.getVideoLinkExt(videoUrl), sidecarFromUrlMeta(videoUrl, IsSidecarEnabled()))
 
     def getArticleContent(self, cItem):
         printDBG("TvGryPL.getArticleContent [%s]" % cItem.get('url', ''))

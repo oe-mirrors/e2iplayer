@@ -28,7 +28,6 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFo
 from Components.config import config, ConfigSelection, getConfigListEntry
 ###################################################
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_urlencode
-from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin
 ###################################################
 # FOREIGN import
 ###################################################
@@ -94,17 +93,7 @@ class CineTO(GenericFolderWatchedScraperMixin, CBaseHostClass, CaptchaHelper):
     def getPage(self, baseUrl, addParams=None, post_data=None):
         if addParams is None:
             addParams = dict(self.defaultParams)
-
-        baseUrl = self.cm.iriToUri(baseUrl)
-
-        def _getFullUrl(url):
-            if self.cm.isValidUrl(url):
-                return url
-            else:
-                return urljoin(baseUrl, url)
-
-        addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
-        return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
+        return self.cm.getPageCFProtection(self.cm.iriToUri(baseUrl), addParams, post_data)
 
     def _getJson(self, path, post_data):
         sts, data = self.getPage(self.getFullUrl(path), post_data=post_data)

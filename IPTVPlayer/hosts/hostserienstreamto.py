@@ -65,6 +65,8 @@ def language(item):
 
 
 class SerienStreamTo(CBaseHostClass):
+    USE_CF_PROTECTION = True
+
     def __init__(self):
         CBaseHostClass.__init__(self, {"history": "SerienStreamTo", "cookie": "SerienStreamTo.cookie"})
         self.HEADER = self.cm.getDefaultHeader()
@@ -157,11 +159,6 @@ class SerienStreamTo(CBaseHostClass):
                 self.watchedHelper.updateParentWatchedState({"category": "list_seasons", "url": seriesUrl}, seasonChildren, self._getWatchedKeyForItem)
         except Exception:
             printExc()
-
-    def getPage(self, baseUrl, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
 
     def getJumpItem(self, max_page, page, url, name):
         name = (name or "category").split('-')[0] + "-JUMP"

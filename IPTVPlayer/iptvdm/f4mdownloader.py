@@ -55,31 +55,8 @@ class F4mDownloader(BaseDownloader):
         return "F4Mdump"
 
     def isWorkingCorrectly(self, callBackFun):
-        self.iptv_sys = iptv_system(DMHelper.GET_F4M_PATH() + " 2>&1 ", boundFunction(self._checkWorkingCallBack, callBackFun))
-
-    def _checkWorkingCallBack(self, callBackFun, code, data):
-        reason = ''
-        sts = True
-        if code != 0:
-            sts = False
-            reason = data
-            self.iptv_sys = None
-            callBackFun(sts, reason)
-        else:
-            # F4MDump need wget for correct working, so check also if wget working correctly
-            self._isWgetWorkingCorrectly(callBackFun)
-
-    def _isWgetWorkingCorrectly(self, callBackFun):
-        self.iptv_sys = iptv_system(DMHelper.GET_WGET_PATH() + " -V 2>&1 ", boundFunction(self._checkWgetWorkingCallBack, callBackFun))
-
-    def _checkWgetWorkingCallBack(self, callBackFun, code, data):
-        reason = ''
-        sts = True
-        if code != 0:
-            sts = False
-            reason = data
-        self.iptv_sys = None
-        callBackFun(sts, reason)
+        # F4MDump needs wget too
+        self.iptv_sys = iptv_system(DMHelper.GET_F4M_PATH() + " 2>&1 ", boundFunction(self._checkToolThenWgetCallBack, callBackFun))
 
     def start(self, url, filePath, params={}):
         '''

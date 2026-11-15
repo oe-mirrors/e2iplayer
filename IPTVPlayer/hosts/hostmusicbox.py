@@ -22,7 +22,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFo
 from Plugins.Extensions.IPTVPlayer.components.configsecret import ConfigLogin, ConfigSecret
 from Plugins.Extensions.IPTVPlayer.libs.youtubeparser import YouTubeParser
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str_deep
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus, urllib_unquote_plus
 from Components.config import config, getConfigListEntry, ConfigYesNo
@@ -125,11 +125,6 @@ class MusicBox(GenericFolderWatchedScraperMixin, CBaseHostClass):
         except Exception:
             printExc()
         return CBaseHostClass.getFavouriteData(self, cItem)
-
-    def getPage(self, url, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPage(url, addParams, post_data)
 
     def _getJson(self, url):
         sts, data = self.getPage(url)
@@ -521,12 +516,6 @@ class MusicBox(GenericFolderWatchedScraperMixin, CBaseHostClass):
             SetIPTVPlayerLastHostError(_("No YouTube video found for this track."))
             return []
         return applySidecarToLinks([{'name': 'YouTube', 'url': ytUrl, 'need_resolve': 1}], buildSidecarFromItem(cItem, IsSidecarEnabled()))
-
-    def getVideoLinks(self, url):
-        printDBG("MusicBox.getVideoLinks [%s]" % url)
-        if not self.cm.isValidUrl(url):
-            return []
-        return decorateResolvedLinkItems(self.up.getVideoLinkExt(url), sidecarFromUrlMeta(url, IsSidecarEnabled()))
 
     ###################################################
     # INFO

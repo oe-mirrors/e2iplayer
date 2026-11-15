@@ -16,9 +16,9 @@ import re
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
-from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps, loads as json_loads
+from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems, sidecarMetaQuery
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
@@ -166,35 +166,18 @@ class JetAnimes(GenericFolderWatchedScraperMixin, CBaseHostClass):
         match = SITE_PATH_RE.match(baseUrl or "")
         if match:
             baseUrl = self.getMainUrl() + match.group(1)
-        addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.HEADER.get("User-Agent")}
         return self.cm.getPageCFProtection(baseUrl.split("#")[0], addParams, post_data)
 
     def _key(self, url):
         return re.sub(r"^https?://[^/]+", "", url or "").rstrip("/")
 
     def getFavouriteData(self, cItem):
-        try:
-            if cItem.get("category") in VIDEO_CATEGORIES + FOLDER_CATEGORIES + ("jet_list",):
-                return json_dumps({key: cItem[key] for key in self.FAV_FIELDS if key in cItem})
-        except Exception:
-            printExc()
+        if cItem.get("category") in VIDEO_CATEGORIES + FOLDER_CATEGORIES + ("jet_list",):
+            return self.getFavouriteFieldsData(cItem)
         return CBaseHostClass.getFavouriteData(self, cItem)
 
     def _getWatchedKeyForItem(self, cItem):
-        try:
-            if not isinstance(cItem, dict):
-                return ""
-            key = self._key(cItem.get("url", ""))
-            if not key:
-                return ""
-            category = cItem.get("category", "")
-            if category in VIDEO_CATEGORIES:
-                return "video:%s" % key
-            if category in FOLDER_CATEGORIES:
-                return "folder:%s" % key
-        except Exception:
-            printExc()
-        return ""
+        return self.wfCategoryKey(cItem, self._key, VIDEO_CATEGORIES, FOLDER_CATEGORIES)
 
     def _episodeTitle(self, show, season, episode, label=""):
         if IsMediaNamingNormalized():
@@ -490,13 +473,6 @@ class JetAnimes(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if parser in ("parserBYSE", "parserOKRU"):
             return 0
         return 2 if parser == "parserJWPLAYER" else 1
-
-    def getVideoLinks(self, videoUrl):
-        printDBG("JetAnimes.getVideoLinks [%s]" % videoUrl)
-        if self.cm.isValidUrl(videoUrl):
-            sidecar = sidecarFromUrlMeta(videoUrl, IsSidecarEnabled())
-            return decorateResolvedLinkItems(self.up.getVideoLinkExt(videoUrl), sidecar)
-        return []
 
     ###################################################
     # INFO

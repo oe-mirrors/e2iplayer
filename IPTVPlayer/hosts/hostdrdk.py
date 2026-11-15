@@ -89,11 +89,6 @@ class DRDK(GenericFolderWatchedScraperMixin, CBaseHostClass):
     ###################################################
     # helpers
     ###################################################
-    def getPage(self, url, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPage(url, addParams, post_data)
-
     def _api(self, path, query='', token=''):
         url = self.API + path + ('&' if '?' in path else '?') + self.QUERY
         if query:
@@ -598,11 +593,8 @@ class DRDK(GenericFolderWatchedScraperMixin, CBaseHostClass):
                  'images': [{'title': '', 'url': icon}] if icon else [], 'other_info': otherInfo}]
 
     def getFavouriteData(self, cItem):
-        try:
-            if cItem.get('item_id') or cItem.get('list_id') or cItem.get('path'):
-                return json_dumps(dict((key, cItem[key]) for key in self.FAV_FIELDS if key in cItem))
-        except Exception:
-            printExc()
+        if cItem.get('item_id') or cItem.get('list_id') or cItem.get('path'):
+            return self.getFavouriteFieldsData(cItem)
         return CBaseHostClass.getFavouriteData(self, cItem)
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):

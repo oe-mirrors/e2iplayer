@@ -68,11 +68,6 @@ class TV2Play(GenericFolderWatchedScraperMixin, CBaseHostClass):
         self.watchedHelper = IPTVWatchedHelper('tv2play')
         self.wfInitFolderCache()
 
-    def getPage(self, url, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPage(url, addParams, post_data)
-
     def _getJson(self, url):
         sts, data = self.getPage(url)
         if not sts or not data:

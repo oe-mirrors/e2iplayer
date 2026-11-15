@@ -596,6 +596,32 @@ def getMeta(mediaType, title, year="", skip=(), maxYearDiff=None):
     return meta
 
 
+def getItemMeta(cItem, checkLatin=True):
+    # getMeta() for a list row with meta_type / meta_title / meta_year, {} for a row without them;
+    # checkLatin: a title in another script leaves the LATIN_ONLY services out
+    meta = {}
+    if cItem.get("meta_type") and cItem.get("meta_title"):
+        try:
+            skip = LATIN_ONLY if checkLatin and not isLatinTitle(cItem["meta_title"]) else ()
+            meta = getMeta(cItem["meta_type"], cItem["meta_title"], cItem.get("meta_year", ""), skip)
+        except Exception:
+            printExc()
+    return meta
+
+
+def metaArticle(cItem, meta, story="", poster="", info=None, desc=None):
+    # the INFO window of a title: the getMeta() plot first, the site's own text after it when it says something else;
+    # info = the site's info lines (the meta ones win), desc = the text without either (default: the row's desc)
+    info = {} if info is None else info
+    info.update(meta.get("info", {}))
+    plot = meta.get("plot", "")
+    text = plot or story or (cItem.get("desc", "") if desc is None else desc)
+    if plot and story and story != plot:
+        text = "%s[/br][/br]%s" % (plot, story)
+    icon = meta.get("poster") or poster or cItem.get("icon", "")
+    return [{"title": cItem.get("title", ""), "text": text, "images": [{"title": "", "url": icon}] if icon else [], "other_info": info}]
+
+
 def getMetaByImdbId(mediaType, imdbId):
     # the same for a known IMDb id ("tt..."), from the services keyed by it: IMDb, Cinemeta, OMDb
     imdbId = (imdbId or "").strip()

@@ -12,7 +12,6 @@ from Plugins.Extensions.IPTVPlayer.components.captcha_helper import CaptchaHelpe
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
-from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
@@ -41,6 +40,7 @@ KIDS_CATS = "2,3,5,6"
 
 
 class EkinoTv(GenericFolderWatchedScraperMixin, CBaseHostClass, CaptchaHelper):
+    USE_CF_PROTECTION = True
     # what identifies a row and is needed to open it again
     FAV_FIELDS = ("name", "category", "type", "url", "title", "s_title", "season", "episode", "series_url",
                   "icon", "desc", "meta_type", "meta_title", "meta_year")
@@ -85,12 +85,6 @@ class EkinoTv(GenericFolderWatchedScraperMixin, CBaseHostClass, CaptchaHelper):
         except Exception:
             printExc()
         return ""
-
-    def getPage(self, baseUrl, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.USER_AGENT}
-        return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
 
     def _refererParams(self, referer):
         params = dict(self.defaultParams)
@@ -586,11 +580,8 @@ class EkinoTv(GenericFolderWatchedScraperMixin, CBaseHostClass, CaptchaHelper):
                  "other_info": otherInfo}]
 
     def getFavouriteData(self, cItem):
-        try:
-            if cItem.get("meta_type"):
-                return json_dumps(dict((key, cItem[key]) for key in self.FAV_FIELDS if key in cItem))
-        except Exception:
-            printExc()
+        if cItem.get("meta_type"):
+            return self.getFavouriteFieldsData(cItem)
         return CBaseHostClass.getFavouriteData(self, cItem)
 
     def handleService(self, index, refresh=0, searchPattern="", searchType=""):

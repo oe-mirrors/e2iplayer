@@ -13,7 +13,7 @@ LAST_MODIFIED = "04.10.2026"
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
-from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
+from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
@@ -55,6 +55,7 @@ def _str(value):
 
 
 class WatchCartoonOnline(GenericFolderWatchedScraperMixin, CBaseHostClass):
+    USE_CF_PROTECTION = True
     # only what identifies a row and is needed to open it again; embed tokens, descriptions and
     # the watched parent key differ between the lists the same title comes from
     FAV_FIELDS = ('name', 'category', 'type', 'url', 'title', 's_id', 's_title', 'termid', 'ep_label', 'grp', 'chunk', 'version', 'icon', 'meta_type', 'meta_title', 'meta_year')
@@ -111,18 +112,9 @@ class WatchCartoonOnline(GenericFolderWatchedScraperMixin, CBaseHostClass):
             return 'episode:%s|%s|%s' % (sid, 'dub' if '/detail-dubbed/' in url else 'sub', ident)
         return 'video:%s' % url if url else ''
 
-    def getPage(self, baseUrl, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        addParams['cloudflare_params'] = {'cookie_file': self.COOKIE_FILE, 'User-Agent': self.HEADER.get('User-Agent')}
-        return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
-
     def getFavouriteData(self, cItem):
-        try:
-            if cItem.get('s_id') or cItem.get('termid'):
-                return json_dumps(dict((key, cItem[key]) for key in self.FAV_FIELDS if key in cItem))
-        except Exception:
-            printExc()
+        if cItem.get('s_id') or cItem.get('termid'):
+            return self.getFavouriteFieldsData(cItem)
         return CBaseHostClass.getFavouriteData(self, cItem)
 
     ###################################################

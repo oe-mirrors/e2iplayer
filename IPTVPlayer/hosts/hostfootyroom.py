@@ -54,11 +54,6 @@ class FootyRoom(GenericFolderWatchedScraperMixin, CBaseHostClass):
         self.watchedHelper = IPTVWatchedHelper("footyroom")
         self.wfInitFolderCache()
 
-    def getPage(self, url, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPage(url, addParams, post_data)
-
     def _absoluteUrl(self, url):
         url = (url or "").strip()
         if not url or url.startswith("javascript:"):

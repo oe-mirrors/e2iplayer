@@ -54,8 +54,8 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHost
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
-from Plugins.Extensions.IPTVPlayer.libs.moviemeta import LATIN_ONLY, getMeta, isLatinTitle
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getItemMeta, metaArticle
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_unquote, urllib_urlencode
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import strDecode
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
@@ -631,7 +631,6 @@ class CimaNow(GenericFolderWatchedScraperMixin, CBaseHostClass):
     def getPage(self, baseUrl, addParams=None, post_data=None):
         if addParams is None:
             addParams = dict(self.defaultParams)
-        addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.HEADER.get("User-Agent")}
         return self.cm.getPageCFProtection(self._canonUrl(baseUrl), addParams, post_data)
 
     def getFullUrl(self, url, currUrl=None):
@@ -683,11 +682,8 @@ class CimaNow(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return self.getFullIconUrl(self._quote(url)) if url else ""
 
     def getFavouriteData(self, cItem):
-        try:
-            if cItem.get("category") in ("cn_video", "cn_series", "cn_season"):
-                return json_dumps(dict((key, cItem[key]) for key in self.FAV_FIELDS if key in cItem))
-        except Exception:
-            printExc()
+        if cItem.get("category") in ("cn_video", "cn_series", "cn_season"):
+            return self.getFavouriteFieldsData(cItem)
         return CBaseHostClass.getFavouriteData(self, cItem)
 
     ###################################################
@@ -1568,40 +1564,19 @@ class CimaNow(GenericFolderWatchedScraperMixin, CBaseHostClass):
             printExc()
         return data
 
-    def getVideoLinks(self, videoUrl):
-        printDBG("CimaNow.getVideoLinks [%s]" % videoUrl)
-        if not self.cm.isValidUrl(videoUrl):
-            return []
-        sidecar = sidecarFromUrlMeta(videoUrl, IsSidecarEnabled())
-        # every server through urlparser - also the site's own "Cima Now" player (cimanowtv.com / worldcdn.online:
-        # parserCIMANOWTV)
-        return decorateResolvedLinkItems(self.up.getVideoLinkExt(videoUrl), sidecar)
-
     ###################################################
     # INFO
     ###################################################
     def getArticleContent(self, cItem):
         printDBG("CimaNow.getArticleContent [%s]" % cItem.get("url", ""))
-        meta = {}
-        if cItem.get("meta_type") and cItem.get("meta_title"):
-            try:
-                skip = () if isLatinTitle(cItem["meta_title"]) else LATIN_ONLY
-                meta = getMeta(cItem["meta_type"], cItem["meta_title"], cItem.get("meta_year", ""), skip)
-            except Exception:
-                printExc()
+        meta = getItemMeta(cItem)
         story, poster, info = "", "", {}
         sts, data = self.getPage(cItem.get("url", ""))
         if sts:
             story, poster, info = self._siteInfo(data)
         if cItem.get("meta_year"):
             info.setdefault("year", cItem["meta_year"])
-        info.update(meta.get("info", {}))
-        plot = meta.get("plot", "")
-        text = plot or story or StripColorCodes(cItem.get("desc", ""))
-        if plot and story and story != plot:
-            text = "%s[/br][/br]%s" % (plot, story)
-        icon = meta.get("poster") or poster or cItem.get("icon", "")
-        return [{"title": cItem.get("title", ""), "text": text, "images": [{"title": "", "url": icon}] if icon else [], "other_info": info}]
+        return metaArticle(cItem, meta, story, poster, info, StripColorCodes(cItem.get("desc", "")))
 
     ###################################################
     # service

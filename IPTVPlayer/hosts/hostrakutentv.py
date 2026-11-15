@@ -367,11 +367,7 @@ class RakutenTV(CBaseHostClass):
         return [{'title': cItem.get('title', ''), 'text': cItem.get('desc', ''), 'images': [{'title': '', 'url': icon}] if icon else [], 'other_info': {}}]
 
     def getFavouriteData(self, cItem):
-        try:
-            return json_dumps(dict((key, cItem[key]) for key in self.FAV_FIELDS if key in cItem))
-        except Exception:
-            printExc()
-        return CBaseHostClass.getFavouriteData(self, cItem)
+        return self.getFavouriteFieldsData(cItem)
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('RakutenTV.handleService start')

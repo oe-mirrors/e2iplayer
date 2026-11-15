@@ -44,6 +44,7 @@ def _pageUrl(url):
 
 
 class HDFilme(CBaseHostClass):
+    USE_CF_PROTECTION = True
 
     def __init__(self):
         CBaseHostClass.__init__(self, {"history": "HDFilme", "cookie": "HDFilme.cookie"})
@@ -58,11 +59,6 @@ class HDFilme(CBaseHostClass):
             {"category": "list_items", "title": _("Cinema movies"), "url": self.getFullUrl("kinofilme")},
             {"category": "list_items", "title": _("Series"), "url": self.getFullUrl("serien")},
             {"category": "list_genres", "title": _("Genres")}] + self.searchItems()
-
-    def getPage(self, baseUrl, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
 
     def _getWatchedKeyForItem(self, cItem):
         try:

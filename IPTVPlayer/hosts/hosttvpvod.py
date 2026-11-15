@@ -168,11 +168,6 @@ class TvpVod(GenericFolderWatchedScraperMixin, CBaseHostClass, CaptchaHelper):
     ###################################################
     # helpers
     ###################################################
-    def getPage(self, url, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPage(url, addParams, post_data)
-
     def _getJson(self, url, params=None):
         sts, data = self.getPage(url, params)
         if not sts:
@@ -247,11 +242,8 @@ class TvpVod(GenericFolderWatchedScraperMixin, CBaseHostClass, CaptchaHelper):
         return ''
 
     def getFavouriteData(self, cItem):
-        try:
-            if cItem.get('type') == 'video':
-                return json_dumps(dict((key, cItem[key]) for key in self.FAV_FIELDS if key in cItem))
-        except Exception:
-            printExc()
+        if cItem.get('type') == 'video':
+            return self.getFavouriteFieldsData(cItem)
         return CBaseHostClass.getFavouriteData(self, cItem)
 
     def getLinksForFavourite(self, fav_data):

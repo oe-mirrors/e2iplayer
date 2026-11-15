@@ -22,7 +22,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHel
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, getMetaByImdbId
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems, sidecarMetaQuery
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str_deep
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 ###################################################
@@ -55,11 +55,6 @@ class Premiumsmarteu(GenericFolderWatchedScraperMixin, CBaseHostClass):
         self.DEFAULT_ICON_URL = self.MAIN_URL + 'storage/branding_media/9a5b1890-53ce-4052-9a83-862d97a6b285.png'
         self.watchedHelper = IPTVWatchedHelper('premiumsmarteu')
         self.wfInitFolderCache()
-
-    def getPage(self, baseUrl, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPage(baseUrl, addParams, post_data)
 
     def _api(self, path):
         # the API answers 401 without the session cookie the start page sets
@@ -282,12 +277,6 @@ class Premiumsmarteu(GenericFolderWatchedScraperMixin, CBaseHostClass):
         metaQuery = sidecarMetaQuery(mediaType, title.get('original_title') or cItem.get('s_title', '') or cItem.get('title', ''), self._year(title) or cItem.get('s_year', ''),
                                      title.get('imdb_id') or cItem.get('imdb_id', ''), skip=())
         return applySidecarToLinks(linksTab, buildSidecarFromItem(cItem, IsSidecarEnabled(), metaQuery=metaQuery))
-
-    def getVideoLinks(self, videoUrl):
-        printDBG("Premiumsmarteu.getVideoLinks [%s]" % videoUrl)
-        if not self.cm.isValidUrl(videoUrl):
-            return []
-        return decorateResolvedLinkItems(self.up.getVideoLinkExt(videoUrl), sidecarFromUrlMeta(videoUrl, IsSidecarEnabled()))
 
     ###################################################
     # INFO

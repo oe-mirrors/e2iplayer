@@ -13,7 +13,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsMediaNamin
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, getMetaByImdbId
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, decorateResolvedLinkItems, sidecarFromUrlMeta, sidecarMetaQuery
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
@@ -37,6 +37,8 @@ INFO_FIELDS = {"jahr:": "year", "laufzeit:": "duration", "imdb-bewertung:": "imd
 
 
 class KellerKino(GenericFolderWatchedScraperMixin, CBaseHostClass):
+    USE_CF_PROTECTION = True
+
     def __init__(self):
         CBaseHostClass.__init__(self, {"history": "kellerkino", "cookie": "kellerkino.cookie"})
         self.HEADER = self.cm.getDefaultHeader()
@@ -51,11 +53,6 @@ class KellerKino(GenericFolderWatchedScraperMixin, CBaseHostClass):
                      {"category": "list_az", "title": _("A-Z"), "url": self.getFullUrl("/filme-a-z/")}] + self.searchItems()
         self.watchedHelper = IPTVWatchedHelper("kellerkino")
         self.wfInitFolderCache()
-
-    def getPage(self, baseUrl, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
 
     def _getJson(self, url):
         sts, data = self.getPage(url)
@@ -256,13 +253,6 @@ class KellerKino(GenericFolderWatchedScraperMixin, CBaseHostClass):
         year = cItem.get("meta_year", "") or self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'(?s)info-row-jahr.*?class="info-value">(.*?)</dd>')[0])
         metaQuery = sidecarMetaQuery("movie", cItem.get("meta_title", ""), year, skip=())
         return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), sidecarTxt, metaQuery))
-
-    def getVideoLinks(self, videoUrl):
-        printDBG("KellerKino.getVideoLinks [%s]" % videoUrl)
-        if not self.cm.isValidUrl(videoUrl):
-            return []
-        sidecar = sidecarFromUrlMeta(videoUrl, IsSidecarEnabled())
-        return decorateResolvedLinkItems(self.up.getVideoLinkExt(videoUrl), sidecar)
 
     ###################################################
     # INFO

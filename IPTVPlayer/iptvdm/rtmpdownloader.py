@@ -58,16 +58,7 @@ class RtmpDownloader(BaseDownloader):
         return "rtmpdump"
 
     def isWorkingCorrectly(self, callBackFun):
-        self.iptv_sys = iptv_system(DMHelper.GET_RTMPDUMP_PATH() + " -h 2>&1 ", boundFunction(self._checkWorkingCallBack, callBackFun))
-
-    def _checkWorkingCallBack(self, callBackFun, code, data):
-        reason = ''
-        sts = True
-        if code != 0:
-            sts = False
-            reason = data
-        self.iptv_sys = None
-        callBackFun(sts, reason)
+        self.iptv_sys = iptv_system(DMHelper.GET_RTMPDUMP_PATH() + " -h 2>&1 ", boundFunction(self._checkToolCallBack, callBackFun))
 
     def _getCMD(self, url):
         paramsL = ['help', 'url', 'rtmp', 'host', 'port', 'socks', 'protocol', 'playpath', 'playlist', 'swfUrl', 'tcUrl', 'pageUrl', 'app', 'swfhash', 'swfsize', 'swfVfy', 'swfAge', 'auth', 'conn', 'flashVer', 'live', 'subscribe', 'realtime', 'flv', 'resume', 'timeout', 'start', 'stop', 'token', 'jtv', 'weeb', 'hashes', 'buffer', 'skip', 'quiet', 'verbose', 'debug']

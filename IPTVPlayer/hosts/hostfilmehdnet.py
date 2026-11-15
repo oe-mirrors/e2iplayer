@@ -143,7 +143,6 @@ class FilmeHD(GenericFolderWatchedScraperMixin, CBaseHostClass):
     def getPage(self, baseUrl, addParams=None, post_data=None):
         if addParams is None:
             addParams = dict(self.defaultParams)
-        addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.USER_AGENT}
         return self.cm.getPageCFProtection(self.fixUrl(baseUrl).split("#", 1)[0], addParams, post_data)
 
     def getFullIconUrl(self, url, currUrl=None):

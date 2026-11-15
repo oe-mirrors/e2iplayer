@@ -20,7 +20,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
@@ -66,7 +66,6 @@ class BtolatCom(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if addParams is None:
             addParams = dict(self.defaultParams)
         # Cloudflare (HTTP 403 "Just a moment"): solved like the other Cloudflare hosts, the release is kept in the cookie file
-        addParams = dict(addParams, cloudflare_params={"cookie_file": self.COOKIE_FILE, "User-Agent": self.HEADER.get("User-Agent")})
         return self.cm.getPageCFProtection(self.cm.iriToUri(baseUrl), addParams, post_data)
 
     def getFullIconUrl(self, url, currUrl=None):
@@ -133,11 +132,8 @@ class BtolatCom(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return len(seen), last
 
     def getFavouriteData(self, cItem):
-        try:
-            if cItem.get("category") in VIDEO_CATS:
-                return json_dumps(dict((key, cItem[key]) for key in self.FAV_FIELDS if key in cItem))
-        except Exception:
-            printExc()
+        if cItem.get("category") in VIDEO_CATS:
+            return self.getFavouriteFieldsData(cItem)
         return CBaseHostClass.getFavouriteData(self, cItem)
 
     ###################################################
@@ -379,13 +375,6 @@ class BtolatCom(GenericFolderWatchedScraperMixin, CBaseHostClass):
             return []
         story = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'<meta property="og:description" content="([^"]*)"')[0])
         return applySidecarToLinks(links, buildSidecarFromItem(cItem, IsSidecarEnabled(), story))
-
-    def getVideoLinks(self, videoUrl):
-        printDBG("BtolatCom.getVideoLinks [%s]" % videoUrl)
-        if self.cm.isValidUrl(videoUrl):
-            sidecar = sidecarFromUrlMeta(videoUrl, IsSidecarEnabled())
-            return decorateResolvedLinkItems(self.up.getVideoLinkExt(videoUrl), sidecar)
-        return []
 
     ###################################################
     # INFO

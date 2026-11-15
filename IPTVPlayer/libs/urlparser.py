@@ -3367,6 +3367,17 @@ class pageParser(CaptchaHelper):
             url = data.strip() if "cloudflarestorage." in data else random_seed(10, data) + token + str(int(time.time() * 1000))
             url = urlparser.decorateUrl(url, {"external_sub_tracks": sub_tracks, "User-Agent": urlParams["header"]["User-Agent"], "Referer": baseUrl, "iptv_format": "mp4"})
             urlsTab.append({"name": "mp4", "url": url})
+        elif "op=enc_status" in data:
+            # add 151126: a new upload is still encoded - the page has no player yet, only a status the site polls
+            # ("Video encoding in queue #1"); say so instead of "Video link not found"
+            fileId = ph.search(data, r"""encStatus\(['"]?(\d+)""")[0]
+            status = ""
+            if fileId:
+                statusParams = dict(urlParams, header=dict(HTTP_HEADER, Referer=baseUrl))
+                stsE, dataE = self.cm.getPage("%s/dood?op=enc_status&id=%s" % (host, fileId), statusParams)
+                status = self.cm.ph.cleanHtmlStr(ph.search(dataE, r"""\.html\(['"](.+?)['"]\)""")[0]) if stsE else ""
+            printDBG("parserDOOD still encoded id[%s] status[%s]" % (fileId, status))
+            SetIPTVPlayerLastHostError(_("The hoster is still processing this video. Please try again later.") + ("\n" + status if status else ""))
         return urlsTab
 
     def parserSTREAMTAPE(self, baseUrl):  # check 150625

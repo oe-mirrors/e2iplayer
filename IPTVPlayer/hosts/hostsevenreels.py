@@ -13,7 +13,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
 
 
@@ -99,11 +99,6 @@ class SevenReels(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return ''
 
     ###################################################
-    def getPage(self, baseUrl, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPage(baseUrl, addParams, post_data)
-
     def _genreNames(self, ids):
         return ', '.join(self.GENRES[g] for g in (ids or []) if g in self.GENRES)
 
@@ -217,13 +212,6 @@ class SevenReels(GenericFolderWatchedScraperMixin, CBaseHostClass):
         for label, tpl in self.EMBEDS:
             urlTab.append({'name': label, 'url': strwithmeta(tpl % fields, {'Referer': self.MAIN_URL}), 'need_resolve': 1})
         return applySidecarToLinks(urlTab, buildSidecarFromItem(cItem, IsSidecarEnabled()))
-
-    def getVideoLinks(self, videoUrl):
-        printDBG("SevenReels.getVideoLinks [%s]" % videoUrl)
-        if self.cm.isValidUrl(videoUrl):
-            sidecar = sidecarFromUrlMeta(videoUrl, IsSidecarEnabled())
-            return decorateResolvedLinkItems(self.up.getVideoLinkExt(videoUrl), sidecar)
-        return []
 
     def getArticleContent(self, cItem):
         printDBG("SevenReels.getArticleContent [%s]" % cItem.get('url', ''))

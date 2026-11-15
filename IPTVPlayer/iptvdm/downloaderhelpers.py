@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # IPTV download manager API
 # # added: 07.08.2026 - Shared helpers for Downloader: Py2/Py3 safe text & path handling, shell quoting, and the sidecar, (.txt description + .jpg poster). - Kamikaze24
+# 15.11.2026 - ffmpeg's output of the subtitle mux goes to <name>.iptv.subs.log, printed to the debug log when the mux
+#   fails and always removed.
 # 12.10.2026 - subtitles of the link saved with a download (name.de.srt) or put into its MKV (setting "Subtitles").
 ###################################################
 # LOCAL import
@@ -483,6 +485,7 @@ class SidecarMixin(object):
             safeRemoveFile(job['tmp'] + '.list')  # an HLS track's segment list (also one written only partly)
         if self.subEmbedTmp:
             safeRemoveFile(self.subEmbedTmp)
+            safeRemoveFile(self._subEmbedLogPath(self.subEmbedTmp))
         self.subJobs = []
         self.subFetching = False
         self.subHlsChecked = False
@@ -632,7 +635,7 @@ class SidecarMixin(object):
         self.subEmbedTmp = video.rsplit('.', 1)[0] + '.iptv.remux.tmp.mkv'
         self.subEmbedFiles = files
         count = len(files)
-        cmd = DMHelper.GET_FFMPEG_PATH() + ' -y '
+        cmd = DMHelper.GET_FFMPEG_PATH() + ' -y -nostdin -hide_banner -loglevel warning '
         for item in files:
             cmd += ' -i "%s" ' % shellQuote(item['path'])
         cmd += ' -i "%s" -map %d:v? -map %d:a? ' % (shellQuote(video), count, count)
@@ -644,7 +647,8 @@ class SidecarMixin(object):
                 cmd += ' -metadata:s:s:%d language=%s ' % (idx, MKV_LANG_CODES[item['lang']])
             if item['title']:
                 cmd += ' -metadata:s:s:%d title="%s" ' % (idx, shellQuote(item['title']))
-        cmd += ' -f matroska "%s" >/dev/null 2>&1 ' % shellQuote(self.subEmbedTmp)
+        # ffmpeg's warnings / errors go to the debug log when the mux fails (_subtitleEmbedFinished)
+        cmd += ' -f matroska "%s" >"%s" 2>&1 ' % (shellQuote(self.subEmbedTmp), shellQuote(self._subEmbedLogPath(self.subEmbedTmp)))
         printDBG("%s subtitle mux cmd[%s]" % (self.__class__.__name__, cmd))
         try:
             self.subConsole = eConsoleAppContainer()
@@ -657,6 +661,11 @@ class SidecarMixin(object):
             return False
         return True
 
+    @staticmethod
+    def _subEmbedLogPath(tmp):
+        # ffmpeg's output of the subtitle mux, next to its temp file
+        return ensureText(tmp).rsplit('.iptv.remux.tmp', 1)[0] + '.iptv.subs.log'
+
     def _subtitleEmbedFinished(self, code=None):
         from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
         self.subConsole_appClosed_conn = None
@@ -666,6 +675,16 @@ class SidecarMixin(object):
         video = ensureText(self.filePath)
         size = DMHelper.getFileSize(fsPath(tmp))
         printDBG("%s subtitle mux finished code[%r] size[%r]" % (self.__class__.__name__, code, size))
+        # the end of ffmpeg's output; the file is removed, it would stay next to the video otherwise
+        muxLog = ''
+        logPath = fsPath(self._subEmbedLogPath(tmp))
+        try:
+            if os.path.isfile(logPath):
+                with open(logPath, 'rb') as f:
+                    muxLog = ensureText(f.read())[-1500:].strip()
+        except Exception:
+            printExc()
+        safeRemoveFile(logPath)
         # the muxed file holds the whole video: not (much) smaller than the downloaded one
         if code == 0 and size > 0 and size >= DMHelper.getFileSize(fsPath(video)) * 0.98:
             try:
@@ -679,7 +698,7 @@ class SidecarMixin(object):
             except Exception:
                 printExc()
         else:
-            printDBG("%s subtitle mux failed, the subtitles stay next to the file" % self.__class__.__name__)
+            printDBG("%s subtitle mux failed, the subtitles stay next to the file, ffmpeg:\n%s" % (self.__class__.__name__, muxLog))
         safeRemoveFile(tmp)
         self.subEmbedFiles = []
         self._finishDownloadFlow()
