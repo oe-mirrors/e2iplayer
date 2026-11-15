@@ -173,6 +173,7 @@ class urlparser:
             "adrianmissionminute.com": self.pp.parserVOESX,  # add 061026
             "advertape.net": self.pp.parserSTREAMTAPE,  # add 061026
             "advtpe.com": self.pp.parserSTREAMTAPE,  # add 061026
+            "afguti.com": self.pp.parserABYSS,  # add 151126 (filmoton)
             "aflamy.pro": self.pp.parserALBAPLAYER,  # add 091026
             "agbsb.com": self.pp.parserSTREAMUP,
             "aiavh.com": self.pp.parserJWPLAYER,
