@@ -1,18 +1,13 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "04.10.2026"
-# 03.10.2026 - revival + rewrite for the current filmoviplex.com
-#   (WordPress "cbp-rfgrid" cards with FILM/SERIJA badge; First page / Jump / Next page over ".../page/N";
-#    movie players as loadEmbed('/embed.php?vid=<base64 url>') / plain embed url;
-#    series episodes as inline window.DB_EPISODES {season: {episode: <base64 url>}})
-#   + genres / collections / years / 4K, search, watched flag, downloaded flag
-#   (stable page urls), name normalisation, sidecar, moviemeta INFO, favourites.
+LAST_MODIFIED = "15.11.2026"
+# 15.11.2026 - adapted to the new site theme (article cards, ?pg=N / /page/N paging, server buttons, cv-eps episode json)
 import re
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
-from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, getMetaByImdbId
-from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
+from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMetaByImdbId, getItemMeta, metaArticle
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus, urllib_unquote
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, b64Decode
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
@@ -21,6 +16,9 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx, extract
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
+
+
+LOCAL_PAGE_SIZE = 100  # episodes per page of a long season
 
 
 def GetConfigList():
@@ -35,7 +33,7 @@ class Filmoviplex(GenericFolderWatchedScraperMixin, CBaseHostClass):
     USE_CF_PROTECTION = True
     # what a favourite needs to open the row again - nothing list/page specific
     FAV_FIELDS = ("name", "category", "type", "title", "url", "icon", "desc", "s_title", "season", "episode",
-                  "meta_type", "meta_title", "meta_year", "good_for_fav")
+                  "meta_type", "meta_title", "meta_year", "meta_season", "meta_episode", "good_for_fav")
     # "(sinkronizirano)" & co. are site tags, not part of the title
     JUNK_RE = re.compile(r'\s*[\(\[]\s*(?:sinkronizirano|sinhronizovano|sinkronizovano|titlovano|sa prevodom|online|hd|4k)\s*[\)\]]', re.I)
 
@@ -46,17 +44,15 @@ class Filmoviplex(GenericFolderWatchedScraperMixin, CBaseHostClass):
         self.MAIN_URL = gettytul()
         self.DEFAULT_ICON_URL = self.getFullUrl("wp-content/uploads/logo__nf.png")
         self.MENU = [
-            {"category": "list_items", "title": _("Movies"), "url": self.getFullUrl("browse-all-videos.html")},
-            {"category": "list_items", "title": _("Popular movies"), "url": self.getFullUrl("browse-popular-videos-1.html")},
-            {"category": "list_items", "title": _("Most viewed movies"), "url": self.getFullUrl("browse-views-videos-1.html")},
-            {"category": "list_items", "title": _("Top rated movies"), "url": self.getFullUrl("browse-top-videos-1.html")},
-            {"category": "list_items", "title": _("4K movies"), "url": self.getFullUrl("4k.html")},
-            {"category": "list_items", "title": _("Series"), "url": self.getFullUrl("browse-series-videos-1.html")},
-            {"category": "list_items", "title": _("Popular series"), "url": self.getFullUrl("browse-series-popular-1.html")},
-            {"category": "list_items", "title": _("Most viewed series"), "url": self.getFullUrl("browse-series-views-1.html")},
-            {"category": "list_items", "title": _("Top rated series"), "url": self.getFullUrl("browse-series-top-1.html")},
+            {"category": "list_items", "title": _("Movies"), "url": self.getFullUrl("browse-all-videos-1.html")},
+            {"category": "list_items", "title": _("Popular movies"), "url": self.getFullUrl("browse-popular-videos/browse-movies-popular.html")},
+            {"category": "list_items", "title": _("Most viewed movies"), "url": self.getFullUrl("browse-views-videos/browse-views-videos-movies.html")},
+            {"category": "list_items", "title": _("Series"), "url": self.getFullUrl("browse-series-videos.html")},
+            {"category": "list_items", "title": _("Popular series"), "url": self.getFullUrl("browse-popular-videos/browse-series-popular.html")},
+            {"category": "list_items", "title": _("Most viewed series"), "url": self.getFullUrl("browse-views-videos/browse-series-views.html")},
             {"category": "list_filters", "title": _("Genres"), "filter": "genre"},
             {"category": "list_filters", "title": _("Collections"), "filter": "keyword"},
+            {"category": "list_filters", "title": _("Countries"), "filter": "country"},
             {"category": "list_filters", "title": _("Year"), "filter": "years"},
         ] + self.searchItems()
         self.filtersCache = {}
@@ -130,15 +126,28 @@ class Filmoviplex(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return re.split(r'\s+aka\s+', self._cleanTitle(base), maxsplit=1, flags=re.I)[0].strip()
 
     def _pageDesc(self, data):
-        m = re.search(r'<span itemprop="description">(.*?)</span>', data, re.S)
-        text = self.cleanHtmlStr(m.group(1)) if m else ""
-        # "Gledaj hd besplatno <title> sa prevodom online, <plot>"
-        return re.sub(r'^Gledaj\s.*?\ssa prevodom online\s*,\s*', '', text, count=1, flags=re.I | re.S).strip()
+        m = re.search(r'<p class="plot">(.*?)</p>', data, re.S)
+        return self.cleanHtmlStr(m.group(1)) if m else ""
+
+    def _infoField(self, data, name):
+        # <dl class="info"><dt>Genre</dt><dd class="people">Action, Science Fiction</dd>
+        m = re.search(r'<dt>\s*%s\s*</dt>\s*<dd[^>]*>(.*?)</dd>' % name, data, re.S | re.I)
+        return re.sub(r'\s*,\s*', ', ', self.cleanHtmlStr(m.group(1))).strip(" ,") if m else ""
+
+    def _badges(self, data):
+        # the title's own chips: <div class="badges"><span class="chip">Movie</span><a class="chip imdb" href=".../tt0133093/">★ IMDb 8.1</a>
+        return self.cm.ph.getDataBeetwenNodes(data, ("<div", ">", 'class="badges"'), ("</div", ">"), False)[1]
+
+    def _imdbId(self, data):
+        return self.cm.ph.getSearchGroups(self._badges(data), r'imdb\.com/title/(tt\d+)')[0]
 
     def _decodeEmbed(self, value):
+        # server button / iframe: <site>/embed.php?vid=<urlencoded base64 url> or a plain embed url;
+        # episode json: plain base64 url
         value = ("%s" % (value or "")).strip().replace("&amp;", "&")
-        if "vid=" in value:
-            value = value.split("vid=", 1)[1]
+        m = re.search(r'/embed\.php\?vid=([^&]+)', value)
+        if m:
+            value = urllib_unquote(m.group(1))
         if value == "" or value.startswith("http") or value.startswith("//"):
             url = value
         else:
@@ -158,21 +167,25 @@ class Filmoviplex(GenericFolderWatchedScraperMixin, CBaseHostClass):
         printDBG("Filmoviplex.listFilters [%s]" % cItem.get("filter"))
         flt = cItem.get("filter", "")
         if not self.filtersCache:
-            sts, data = self.getPage(self.getFullUrl("browse-all-videos.html"))
+            sts, data = self.getPage(self.MAIN_URL)
             if not sts:
                 return
-            for key, pattern in (("genre", r'href="(/genre/[^"]+)"[^>]*>(.*?)</a>'),
-                                 ("keyword", r'href="(/keyword/[^"]+|/4k\.html)"[^>]*>(.*?)</a>'),
-                                 ("years", r'href="(/sa-prevodom/years/\d{4})"[^>]*>(.*?)</a>')):
+            for key, pattern in (("genre", r'href="((?:https?://[^/"]+)?/genre/[^"]+)"[^>]*>(.*?)</a>'),
+                                 ("keyword", r'href="((?:https?://[^/"]+)?/keyword/[^"]+)"[^>]*>(.*?)</a>'),
+                                 ("country", r'href="((?:https?://[^/"]+)?/sa-prevodom/country/[^"]+)"[^>]*>(.*?)</a>'),
+                                 ("years", r'href="((?:https?://[^/"]+)?/sa-prevodom/years/\d{4})"[^>]*>(.*?)</a>')):
                 tab = []
                 seen = set()
                 for url, title in re.findall(pattern, data, re.S):
                     url = self.getFullUrl(url)
-                    title = re.sub(r'\s*Godina$', '', self.cleanHtmlStr(title))
+                    # year links carry a title count ("2025 1116 Naslova") - the url has the plain year
+                    title = url.rsplit("/", 1)[-1] if key == "years" else self.cleanHtmlStr(title)
                     if url in seen or title == "":
                         continue
                     seen.add(url)
                     tab.append({"title": title, "url": url})
+                if key == "years":
+                    tab.sort(key=lambda item: item["title"], reverse=True)
                 self.filtersCache[key] = tab
         for item in self.filtersCache.get(flt, []):
             params = dict(cItem)
@@ -180,30 +193,36 @@ class Filmoviplex(GenericFolderWatchedScraperMixin, CBaseHostClass):
             params.pop("filter", None)
             self.addDir(params)
 
+    def _pageUrlTpl(self, baseUrl):
+        # browse-*.html lists page with ?pg=N, genre/keyword/year/country/search with <path>/page/N[?query]
+        path, sep, query = baseUrl.partition("?")
+        if path.endswith(".html"):
+            return path + "?" + (query + "&" if query else "") + "pg={page}"
+        return path.rstrip("/") + "/page/{page}" + sep + query
+
     def listItems(self, cItem):
-        # paging: <path>/page/N[?query]
         page = cItem.get("page", 1)
         baseUrl = cItem.get("base_url") or re.sub(r"/page/\d+/?(?=$|\?)", "", cItem["url"])
-        path, sep, query = baseUrl.partition("?")
-        pageUrlTpl = path.rstrip("/") + "/page/{page}" + sep + query
+        baseUrl = re.sub(r"[?&]pg=\d+$", "", re.sub(r"([?&])pg=\d+&", r"\1", baseUrl))
+        pageUrlTpl = self._pageUrlTpl(baseUrl)
         url = baseUrl if page <= 1 else pageUrlTpl.format(page=page)
         printDBG("Filmoviplex.listItems [%s]" % url)
         sts, data = self.getPage(url)
         if not sts:
             return
         normalize = IsMediaNamingNormalized()
-        grid = self.cm.ph.getDataBeetwenNodes(data, ("<ul", ">", "cbp-rfgrid"), ("</ul", ">"), False)[1]
-        for item in self.cm.ph.getAllItemsBeetwenMarkers(grid, "<li", "</li>"):
-            url = self.cm.ph.getSearchGroups(item, r'<a[^>]+href="([^"]*/sa-prevodom/[^"#]+)"')[0]
+        for item in self.cm.ph.getAllItemsBeetwenMarkers(data, '<article class="card', "</article>"):
+            url = self.cm.ph.getSearchGroups(item, r'<a[^>]+href="([^"]*/sa-prevodom/[^"#]+\.html)"')[0]
             if url == "":
                 continue
             url = self.getFullUrl(url)
-            label = self.cm.ph.getSearchGroups(item, r'<div>([^<]+)</div>\s*</a>')[0] or self.cm.ph.getSearchGroups(item, r'<a[^>]+title="([^"]+)"')[0]
+            label = self.cm.ph.getSearchGroups(item, r'<h3[^>]*>(.*?)</h3>')[0] or self.cm.ph.getSearchGroups(item, r'<img[^>]+alt="([^"]+)"')[0]
             label, base, year = self._splitLabel(label)
             if label == "":
                 continue
+            year = year or self.cm.ph.getSearchGroups(item, r'<small[^>]*>\s*(\d{4})\s*</small>')[0]
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, r'<img[^>]+src="([^"]+)"')[0])
-            isSeries = "SERIJA" in self.cm.ph.getSearchGroups(item, r'id="hd_s_g">([^<]*)<')[0].upper()
+            isSeries = any("SERIJA" in tag.upper() for tag in re.findall(r'class="tag"[^>]*>([^<]*)<', item))
             cleanBase = self._cleanTitle(base)
             if normalize:
                 title = "%s (%s)" % (cleanBase, year) if year else cleanBase
@@ -220,18 +239,19 @@ class Filmoviplex(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 params.update({"category": "fp_movie"})
                 self.addVideo(params)
 
-        hasNext = bool(re.search(r'<a href="[^"]+"\s*>\s*Next Page', data))
-        lastPage = max([int(n) for n in re.findall(r'<a href="[^"]*/page/(\d+)[^"]*"\s*>\s*\d+\s*<', data)] + [page])
+        hasNext = 'class="next page-numbers"' in data
+        lastPage = max([int(n) for n in re.findall(r'class="page-numbers"[^>]*>\s*(\d+)\s*<', data)] + [page])
         listItem = dict(cItem)
         # list_items, not the copied "search": that would rebuild page 1 from the search pattern
         listItem.update({"category": "list_items", "base_url": baseUrl, "url": baseUrl})
         addPagingItems(self, listItem, page, hasNext and bool(self.currList), lastPage, pageUrlTpl)
 
     def _getEpisodes(self, data):
-        # window.DB_EPISODES {"1": {"1": "<b64 url>", ...}, ...} -> [(season, [(episode, value), ...]), ...] numerically sorted
+        # <script type="application/json" id="cv-eps">{"1": {"1": {"l": "<b64 url>", "n": ""}, ...}, ...}
+        # -> [(season, [(episode, value), ...]), ...] numerically sorted
         ret = []
-        m = re.search(r'DB_EPISODES\s*=\s*(\{.*?\})\s*;?\s*(?:\n|</script>|window\.)', data, re.S)
-        raw = m.group(1) if m else ""
+        m = re.search(r'<script[^>]+id="cv-eps"[^>]*>(.*?)</script>', data, re.S)
+        raw = m.group(1).strip() if m else ""
         if raw == "":
             return ret
         try:
@@ -264,7 +284,7 @@ class Filmoviplex(GenericFolderWatchedScraperMixin, CBaseHostClass):
             params.update({"good_for_fav": True, "category": "list_episodes", "title": "%s - %s %s" % (sTitle, _("Season"), sNum),
                            "s_title": sTitle, "season": sNum, "desc": desc})
             self.addDir(params)
-        if not self.currList and "loadEmbed(" in data:
+        if not self.currList and 'class="srv' in data:
             # badged as series, but the page is a single video
             params = dict(cItem)
             params.update({"category": "fp_movie", "desc": desc})
@@ -287,10 +307,22 @@ class Filmoviplex(GenericFolderWatchedScraperMixin, CBaseHostClass):
                     title = "%s - %s" % (sTitle, formatSxxExx(sNum, eNum))
                 else:
                     title = "%s - %s %s, %s %s" % (sTitle, _("Season"), sNum, _("Episode"), eNum)
-                params = dict(cItem)
-                params.update({"good_for_fav": True, "category": "fp_episode", "title": title, "s_title": sTitle,
-                               "season": sNum, "episode": eNum, "url": "%s#s%se%s" % (seriesUrl, sNum, eNum)})
+                params = stripPagerKeys(dict(cItem), ("local_paging",))
+                params.update({"good_for_fav": True, "category": "fp_episode", "title": title, "s_title": sTitle, "season": sNum,
+                               "episode": eNum, "meta_season": sNum, "meta_episode": eNum, "url": "%s#s%se%s" % (seriesUrl, sNum, eNum)})
                 self.addVideo(params)
+        self._localPaging(cItem, cItem.get("page", 1))
+
+    def _localPaging(self, cItem, page):
+        # a long season (the page carries all episodes): LOCAL_PAGE_SIZE rows per page (First page / Next page)
+        lastPage = (len(self.currList) + LOCAL_PAGE_SIZE - 1) // LOCAL_PAGE_SIZE
+        if lastPage <= 1:
+            return
+        page = min(max(1, page), lastPage)
+        self.currList = self.currList[(page - 1) * LOCAL_PAGE_SIZE:page * LOCAL_PAGE_SIZE]
+        params = dict(cItem)
+        params["local_paging"] = True
+        addPagingItems(self, params, page, page < lastPage, lastPage)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("Filmoviplex.listSearchResult [%s]" % searchPattern)
@@ -302,6 +334,7 @@ class Filmoviplex(GenericFolderWatchedScraperMixin, CBaseHostClass):
     # links
     ###################################################
     def _collectEmbeds(self, cItem, data):
+        # -> [(url, note), ...]; note = the site's "(BEZ PREVODA)" (no subtitles) marker of a server button
         embeds = []
         season = str(cItem.get("season", "") or "")
         episode = str(cItem.get("episode", "") or "")
@@ -312,18 +345,25 @@ class Filmoviplex(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 if sNum != season:
                     continue
                 for eNum, value in eps:
-                    if eNum == episode:
-                        for val in (value if isinstance(value, list) else [value]):
-                            embeds.append(self._decodeEmbed(val))
+                    if eNum != episode:
+                        continue
+                    if isinstance(value, dict):
+                        value = value.get("l", "")
+                    for val in (value if isinstance(value, list) else [value]):
+                        embeds.append((self._decodeEmbed(val), ""))
         else:
-            for value in re.findall(r'''loadEmbed\(\s*this\s*,\s*['"]([^'"]*)['"]''', data):
-                embeds.append(self._decodeEmbed(value))
-            for value in re.findall(r'<iframe[^>]+id="embed\d+"[^>]+src="([^"]+)"', data):
-                embeds.append(self._decodeEmbed(value))
+            for attrs, label in re.findall(r'<button([^>]+class="srv[^"]*"[^>]*)>(.*?)</button>', data, re.S):
+                note = self.cm.ph.getSearchGroups(self.cleanHtmlStr(label), r'(\([^)]*\))\s*$')[0]
+                embeds.append((self._decodeEmbed(self.cm.ph.getSearchGroups(attrs, r'data-src="([^"]+)"')[0]), note))
+            player = self.cm.ph.getDataBeetwenNodes(data, ("<div", ">", 'class="player"'), ("</div", ">"), False)[1]
+            for value in re.findall(r'<iframe[^>]+src="([^"]+)"', player):
+                embeds.append((self._decodeEmbed(value), ""))
         ret = []
-        for url in embeds:
-            if url and url not in ret:
-                ret.append(url)
+        seen = set()
+        for url, note in embeds:
+            if url and url not in seen:
+                seen.add(url)
+                ret.append((url, note))
         return ret
 
     def getLinksForVideo(self, cItem):
@@ -334,7 +374,7 @@ class Filmoviplex(GenericFolderWatchedScraperMixin, CBaseHostClass):
             return []
         sidecarTxt = self._pageDesc(data) or cItem.get("desc", "")
         unsupported = []
-        for url in self._collectEmbeds(cItem, data):
+        for url, note in self._collectEmbeds(cItem, data):
             host = self.up.getHostName(url)
             if self.up.checkHostSupport(url) != 1:
                 printDBG("Filmoviplex: hoster not supported [%s]" % url)
@@ -344,7 +384,7 @@ class Filmoviplex(GenericFolderWatchedScraperMixin, CBaseHostClass):
             # the site's own player subdomains: netu.filmoviplex.com = netu/hqq, btgNNN.filmoviplex.com = abyss
             if host.endswith("filmoviplex.com"):
                 host = "netu/hqq" if host.startswith("netu.") else "abyss"
-            urltab.append({"name": "%d. %s" % (len(urltab) + 1, host), "url": strwithmeta(url, {"Referer": self.MAIN_URL}), "need_resolve": 1})
+            urltab.append({"name": ("%d. %s %s" % (len(urltab) + 1, host, note)).strip(), "url": strwithmeta(url, {"Referer": self.MAIN_URL}), "need_resolve": 1})
         if not urltab:
             if unsupported:
                 SetIPTVPlayerLastHostError(_("Only unsupported hosters available: %s") % ", ".join(unsupported))
@@ -352,8 +392,8 @@ class Filmoviplex(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 SetIPTVPlayerLastHostError(_("No streams are available for this title yet."))
             return []
         # moviemeta query of INFO: the page's IMDb id, else the item's title
-        metaQuery = sidecarMetaQuery(cItem.get("meta_type", ""), cItem.get("meta_title", ""), cItem.get("meta_year", ""),
-                                     self.cm.ph.getSearchGroups(data, r'imdb\.com/title/(tt\d+)')[0], skip=())
+        metaQuery = sidecarMetaQuery(cItem.get("meta_type", ""), cItem.get("meta_title", ""), cItem.get("meta_year", ""), self._imdbId(data),
+                                     skip=(), season=cItem.get("meta_season", ""), episode=cItem.get("meta_episode", ""))
         return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), sidecarTxt, metaQuery=metaQuery))
 
     ###################################################
@@ -366,7 +406,6 @@ class Filmoviplex(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     def getArticleContent(self, cItem):
         printDBG("Filmoviplex.getArticleContent [%s]" % cItem.get("url"))
-        title = cItem.get("title", "")
         text = ""
         icon = cItem.get("icon", "")
         other = {}
@@ -375,37 +414,32 @@ class Filmoviplex(GenericFolderWatchedScraperMixin, CBaseHostClass):
         sts, data = self._getCachedPage(cItem.get("url", ""))
         if sts:
             text = self._pageDesc(data)
-            imdbId = self.cm.ph.getSearchGroups(data, r'imdb\.com/title/(tt\d+)')[0]
+            imdbId = self._imdbId(data)
             icon = icon or self.cm.ph.getSearchGroups(data, r'<meta property="og:image" content="([^"]+)"')[0]
-            m = re.search(r'itemprop="genre"[^>]*>(.*?)</span>', data, re.S)
-            genres = [self.cleanHtmlStr(g) for g in re.findall(r'href="[^"]*/genre/[^"]*"[^>]*>(.*?)</a>', m.group(1))] if m else []
-            if genres:
-                other["genres"] = ", ".join(genres)
-            year = self.cm.ph.getSearchGroups(data, r'Godina:\s*<a[^>]*>(\d{4})<')[0]
-            if year:
-                other["year"] = year
-            duration = self.cm.ph.getSearchGroups(data, r'Trajanje:\s*(\d+\s*min)')[0]
+            # the moviemeta keys (directors / cast): a meta answer replaces the site's line instead of adding a second one
+            for key, field in (("genres", "Genre"), ("year", "Year"), ("directors", "Director"), ("country", "Country")):
+                value = self._infoField(data, field)
+                if value:
+                    other[key] = value
+            # <p class="meta-line"><span>1999</span><span>2h 16m</span></p>
+            metaLine = self.cm.ph.getDataBeetwenNodes(data, ("<p", ">", 'class="meta-line"'), ("</p", ">"), False)[1]
+            duration = self.cm.ph.getSearchGroups(metaLine, r'<span>\s*(\d+h(?:\s*\d+m)?|\d+\s*min)\s*</span>')[0]
             if duration:
                 other["duration"] = duration
-            rating = self.cm.ph.getSearchGroups(data, r'itemprop="ratingValue" content="([^"]+)"')[0]
+            # <div class="badges">...<a class="chip imdb" href="https://www.imdb.com/title/tt0133093/">★ IMDb 8.1</a>
+            rating = self.cm.ph.getSearchGroups(self._badges(data), r'IMDb\s+(\d+(?:\.\d+)?)\s*<')[0]
             if rating and rating not in ("0", "0.0"):
                 other["imdb_rating"] = "%s/10" % rating
-            actors = [self.cleanHtmlStr(a) for a in re.findall(r'href="[^"]*/actors/[^"]*"[^>]*>(.*?)</a>', data)[:6]]
+            actors = [a for a in self._infoField(data, "Cast").split(", ") if a][:6]
             if actors:
-                other["actors"] = ", ".join(actors)
+                other["cast"] = ", ".join(actors)
         meta = {}
-        try:
-            if mediaType in ("movie", "tv"):
-                meta = getMetaByImdbId(mediaType, imdbId) if imdbId else {}
-                if not meta:
-                    meta = getMeta(mediaType, cItem.get("meta_title", ""), cItem.get("meta_year", ""))
-        except Exception:
-            printExc()
-        if meta:
-            other.update(meta.get("info", {}))
-            text = meta.get("plot") or text
-            icon = meta.get("poster") or icon
-        return [{"title": title, "text": text or cItem.get("desc", ""), "images": [{"title": "", "url": icon}] if icon else [], "other_info": other}]
+        if imdbId and mediaType in ("movie", "tv"):
+            try:
+                meta = getMetaByImdbId(mediaType, imdbId)
+            except Exception:
+                printExc()
+        return metaArticle(cItem, meta or getItemMeta(cItem), story=text, poster=icon, info=other)
 
     def handleService(self, index, refresh=0, searchPattern="", searchType=""):
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
