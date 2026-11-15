@@ -173,6 +173,7 @@ class urlparser:
             "adrianmissionminute.com": self.pp.parserVOESX,  # add 061026
             "advertape.net": self.pp.parserSTREAMTAPE,  # add 061026
             "advtpe.com": self.pp.parserSTREAMTAPE,  # add 061026
+            "afguti.com": self.pp.parserABYSS,  # add 151126 (filmoton)
             "aflamy.pro": self.pp.parserALBAPLAYER,  # add 091026
             "agbsb.com": self.pp.parserSTREAMUP,
             "aiavh.com": self.pp.parserJWPLAYER,
@@ -680,6 +681,7 @@ class urlparser:
             "netu.to": self.pp.parserHQQ,
             "netu.tv": self.pp.parserHQQ,
             "niramirus.com": self.pp.parserJWPLAYER,  # add 061026 (StreamWish mirror, e.g. pornbusy)
+            "n1mwq.org": self.pp.parserBYSE,  # add 151126 (Byse frontend, videoteka)
             "nonesnanking.com": self.pp.parserVOESX,  # add 061026
             "nova.upn.one": self.pp.parserSBS,
             # o
