@@ -40,6 +40,8 @@ def gettytul():
 
 
 class Einschalten(GenericFolderWatchedScraperMixin, CBaseHostClass):
+    USE_CF_PROTECTION = True
+
     def __init__(self):
         CBaseHostClass.__init__(self, {"history": "Einschalten", "cookie": "Einschalten.cookie"})
         self.HEADER = self.cm.getDefaultHeader()
@@ -51,11 +53,6 @@ class Einschalten(GenericFolderWatchedScraperMixin, CBaseHostClass):
                      {"category": "list_value", "title": _("Genres")}] + self.searchItems()
         self.watchedHelper = IPTVWatchedHelper("einschalten")
         self.wfInitFolderCache()
-
-    def getPage(self, baseUrl, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
 
     def _getJson(self, url, params=None, post_data=None):
         sts, data = self.getPage(url, params, post_data)

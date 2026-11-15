@@ -159,7 +159,6 @@ class WeCima(GenericFolderWatchedScraperMixin, CBaseHostClass):
         proxy = self.getProxy()
         if proxy and "http_proxy" not in params:
             params = dict(params, http_proxy=proxy)
-        params["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.HEADER.get("User-Agent")}
         return params
 
     def getPage(self, baseUrl, addParams=None, post_data=None):

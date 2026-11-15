@@ -46,6 +46,7 @@ def _toInt(value, default=0):
 
 
 class Obejrzyjto(GenericFolderWatchedScraperMixin, CBaseHostClass):
+    USE_CF_PROTECTION = True
     FAV_FIELDS = ("name", "category", "type", "url", "title", "icon", "desc", "title_id", "season", "episode", "ep_title", "s_title", "s_year", "meta_type")
 
     def __init__(self):
@@ -67,11 +68,6 @@ class Obejrzyjto(GenericFolderWatchedScraperMixin, CBaseHostClass):
         ] + self.searchItems()
         self.watchedHelper = IPTVWatchedHelper("obejrzyjto")
         self.wfInitFolderCache()
-
-    def getPage(self, baseUrl, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
 
     def _getJson(self, url):
         sts, data = self.getPage(url)

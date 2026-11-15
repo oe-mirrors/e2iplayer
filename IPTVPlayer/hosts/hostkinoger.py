@@ -36,6 +36,7 @@ SITE_INFO_KEYS = {"cast": "actors", "directors": "director"}
 
 
 class KinoGer(CBaseHostClass):
+    USE_CF_PROTECTION = True
 
     def __init__(self):
         CBaseHostClass.__init__(self, {"history": "kinoger", "cookie": "kinoger.cookie"})
@@ -46,11 +47,6 @@ class KinoGer(CBaseHostClass):
         # the site's own logo sits behind both checks - IconMenager would get 403 without the cookies
         self.MAIN_URL = gettytul()
         self.MENU = [{"category": "list_items", "title": "Neues", "url": self.MAIN_URL}, {"category": "list_items", "title": _("Series"), "url": self.getFullUrl("/stream/serie/")}, {"category": "list_genres", "title": "Genres"}] + self.searchItems()
-
-    def getPage(self, baseUrl, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
 
     def getFullIconUrl(self, url):
         url = self.getFullUrl(url)

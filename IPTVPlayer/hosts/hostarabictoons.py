@@ -56,6 +56,7 @@ def _splitSeason(title):
 
 
 class ArabicToons(GenericFolderWatchedScraperMixin, CBaseHostClass):
+    USE_CF_PROTECTION = True
 
     FAV_FIELDS = ("name", "category", "type", "url", "title", "icon", "desc", "s_title", "s_season", "s_episode",
                   "series_url", "meta_type", "meta_title")
@@ -76,12 +77,6 @@ class ArabicToons(GenericFolderWatchedScraperMixin, CBaseHostClass):
     ###################################################
     # helpers
     ###################################################
-    def getPage(self, baseUrl, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.HEADER.get("User-Agent")}
-        return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
-
     def _url(self, url):
         return self.getFullUrl((url or "").split("#")[0].strip())
 

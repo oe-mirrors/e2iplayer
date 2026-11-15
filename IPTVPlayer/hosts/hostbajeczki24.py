@@ -40,6 +40,7 @@ PLOT_RE = r"(?s)<p(?:\s[^>]*)?>(.*?)</p>"
 
 
 class Bajeczki24(GenericFolderWatchedScraperMixin, CBaseHostClass):
+    USE_CF_PROTECTION = True
 
     def __init__(self):
         CBaseHostClass.__init__(self, {"history": "bajeczki24", "cookie": "bajeczki24.cookie"})
@@ -56,12 +57,6 @@ class Bajeczki24(GenericFolderWatchedScraperMixin, CBaseHostClass):
         self.pageCache = ("", "")
         self.watchedHelper = IPTVWatchedHelper("bajeczki24")
         self.wfInitFolderCache()
-
-    def getPage(self, baseUrl, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.HEADER.get("User-Agent")}
-        return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
 
     def _getTitlePage(self, url):
         # INFO and the link list read the same page - fetch it once

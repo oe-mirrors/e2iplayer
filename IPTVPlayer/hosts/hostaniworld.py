@@ -40,6 +40,7 @@ SERIES_PATH_RE = re.compile(r"^/anime/stream/[^/?#]+$")
 
 
 class AniWorld(GenericFolderWatchedScraperMixin, CBaseHostClass):
+    USE_CF_PROTECTION = True
 
     FAV_FIELDS = ("name", "category", "type", "url", "title", "icon", "desc", "s_title", "s_season", "s_episode", "s_url",
                   "meta_type", "meta_title", "meta_year")
@@ -64,12 +65,6 @@ class AniWorld(GenericFolderWatchedScraperMixin, CBaseHostClass):
     ###################################################
     # helpers
     ###################################################
-    def getPage(self, baseUrl, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.HEADER.get("User-Agent")}
-        return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
-
     def getFullIconUrl(self, url, currUrl=None):
         # the covers sit behind the same bot check as the pages: they need its cookies and User-Agent
         url = CBaseHostClass.getFullIconUrl(self, url, currUrl)

@@ -111,7 +111,6 @@ class Anime4up(GenericFolderWatchedScraperMixin, CBaseHostClass):
     def getPage(self, baseUrl, addParams=None, post_data=None):
         if addParams is None:
             addParams = dict(self.defaultParams)
-        addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.HEADER.get("User-Agent")}
         sts, data = self.cm.getPageCFProtection(self._canonUrl(baseUrl), addParams, post_data)
         if not sts:
             # otherwise the list just stays empty: the Cloudflare check was not solved (MyE2i closed / no answer)

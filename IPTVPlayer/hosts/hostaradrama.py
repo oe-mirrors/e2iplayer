@@ -119,7 +119,6 @@ class ARADrama(GenericFolderWatchedScraperMixin, CBaseHostClass):
         proxy = self.getProxy()
         if proxy and "http_proxy" not in addParams:
             addParams = MergeDicts(addParams, {"http_proxy": proxy})
-        addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.HEADER.get("User-Agent")}
         sts, data = self.cm.getPageCFProtection(self._rebase(baseUrl), addParams, post_data)
         self.blocked = not sts and not proxy and self._isBlocked(data)
         if self.blocked:

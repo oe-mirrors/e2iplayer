@@ -32,6 +32,7 @@ def gettytul():
 
 
 class Filmoviplex(GenericFolderWatchedScraperMixin, CBaseHostClass):
+    USE_CF_PROTECTION = True
     # what a favourite needs to open the row again - nothing list/page specific
     FAV_FIELDS = ("name", "category", "type", "title", "url", "icon", "desc", "s_title", "season", "episode",
                   "meta_type", "meta_title", "meta_year", "good_for_fav")
@@ -89,12 +90,6 @@ class Filmoviplex(GenericFolderWatchedScraperMixin, CBaseHostClass):
     ###################################################
     # helpers
     ###################################################
-    def getPage(self, baseUrl, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.HEADER.get("User-Agent")}
-        return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
-
     def _pageUrl(self, url):
         # episode rows carry "#sXeY" behind the series page url - the request goes without it
         return str(url or "").split("#", 1)[0].strip()

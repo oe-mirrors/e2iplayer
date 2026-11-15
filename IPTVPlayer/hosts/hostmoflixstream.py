@@ -46,6 +46,7 @@ MAX_SUB_PAGES = 20  # season / episode pages read for one list
 
 
 class MoflixStream(GenericFolderWatchedScraperMixin, CBaseHostClass):
+    USE_CF_PROTECTION = True
 
     FAV_FIELDS = ('name', 'category', 'type', 'url', 'title', 'icon', 'desc', 'title_id', 'video_id', 's_title', 's_season',
                   's_episode', 'meta_type', 'meta_title', 'meta_year')
@@ -70,12 +71,6 @@ class MoflixStream(GenericFolderWatchedScraperMixin, CBaseHostClass):
     ###################################################
     # helpers
     ###################################################
-    def getPage(self, baseUrl, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        addParams['cloudflare_params'] = {'cookie_file': self.COOKIE_FILE, 'User-Agent': self.HEADER.get('User-Agent')}
-        return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
-
     def _channelUrl(self, slug):
         return self.MAIN_URL + 'channel/' + slug
 

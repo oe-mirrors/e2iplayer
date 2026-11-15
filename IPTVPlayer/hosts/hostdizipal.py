@@ -98,7 +98,6 @@ class Dizipal(GenericFolderWatchedScraperMixin, CBaseHostClass):
         self._checkDomain()
         if addParams is None:
             addParams = dict(self.defaultParams)
-        addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.HEADER.get("User-Agent")}
         return self.cm.getPageCFProtection(self._siteUrl(baseUrl), addParams, post_data)
 
     ###################################################

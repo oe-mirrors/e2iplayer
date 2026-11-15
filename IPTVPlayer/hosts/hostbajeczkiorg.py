@@ -49,6 +49,7 @@ SITES = (("https://bajeczki.org/", {"movies": "/pelnometrazowe/", "genres": True
 
 
 class BajeczkiOrg(GenericFolderWatchedScraperMixin, CBaseHostClass):
+    USE_CF_PROTECTION = True
 
     def __init__(self):
         CBaseHostClass.__init__(self, {"history": "bajeczki.org", "cookie": "bajeczki.org.cookie"})
@@ -81,12 +82,6 @@ class BajeczkiOrg(GenericFolderWatchedScraperMixin, CBaseHostClass):
         except Exception:
             printExc()
         return ""
-
-    def getPage(self, baseUrl, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.HEADER.get("User-Agent")}
-        return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
 
     def _getPostPage(self, url):
         # INFO and the link list read the same post page - fetch it once

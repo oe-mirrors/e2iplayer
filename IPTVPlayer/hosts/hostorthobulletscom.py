@@ -58,6 +58,7 @@ def gettytul():
 
 
 class OrthoBullets(GenericFolderWatchedScraperMixin, CBaseHostClass):
+    USE_CF_PROTECTION = True
     PAGE_SIZE = 50  # videos per list page of the site
 
     def __init__(self):
@@ -129,18 +130,6 @@ class OrthoBullets(GenericFolderWatchedScraperMixin, CBaseHostClass):
         # the category lists are static urls: favourites reopen them as they are
         for item in self.CATEGORIES_TAB + self.SPECIALITY_TAB:
             item['good_for_fav'] = True
-
-    def getPage(self, baseUrl, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-
-        def _getFullUrl(url):
-            if self.cm.isValidUrl(url):
-                return url
-            else:
-                return urljoin(baseUrl, url)
-        addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
-        return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
 
     @staticmethod
     def _baseListUrl(url):

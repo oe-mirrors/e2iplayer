@@ -153,7 +153,6 @@ class KissKH(GenericFolderWatchedScraperMixin, CBaseHostClass):
         proxy = self.getProxy()
         if proxy and "http_proxy" not in addParams:
             addParams = MergeDicts(addParams, {"http_proxy": proxy})
-        addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.HEADER.get("User-Agent")}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
 
     def selectDomain(self):

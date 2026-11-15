@@ -41,7 +41,6 @@ class XalaFlix(GenericFolderWatchedScraperMixin, CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(self, {"history": "XalaFlix", "cookie": "XalaFlix.cookie"})
         self.HEADER = self.cm.getDefaultHeader()
-        self.USER_AGENT = self.HEADER.get("User-Agent", "")
         self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
         self.MAIN_URL = gettytul()
         self.DEFAULT_ICON_URL = self.getFullUrl("/images/xalaflix-logo.png")
@@ -58,7 +57,6 @@ class XalaFlix(GenericFolderWatchedScraperMixin, CBaseHostClass):
     def getPage(self, baseUrl, addParams=None, post_data=None):
         if addParams is None:
             addParams = dict(self.defaultParams)
-        addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.USER_AGENT}
         return self.cm.getPageCFProtection(baseUrl.split("#", 1)[0], addParams, post_data)
 
     ###################################################

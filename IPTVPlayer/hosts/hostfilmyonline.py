@@ -69,6 +69,7 @@ def _genreSlug(name):
 
 
 class FilmyOnline(GenericFolderWatchedScraperMixin, CBaseHostClass):
+    USE_CF_PROTECTION = True
 
     FAV_FIELDS = ("name", "category", "type", "url", "title", "icon", "title_id", "s_title", "s_season", "s_episode",
                   "meta_type", "meta_title", "meta_year")
@@ -99,11 +100,6 @@ class FilmyOnline(GenericFolderWatchedScraperMixin, CBaseHostClass):
     ###################################################
     # helpers
     ###################################################
-    def getPage(self, baseUrl, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
-
     def _api(self, url):
         # the API answers 401 without the site's Referer (Laravel Sanctum: a request of its own web app)
         params = dict(self.defaultParams)

@@ -84,7 +84,6 @@ class cda(GenericFolderWatchedScraperMixin, CBaseHostClass, CaptchaHelper):
         if addParams is None:
             addParams = dict(self.defaultParams)
         addParams = dict(addParams)
-        addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.HEADER.get("User-Agent")}
         return self.cm.getPageCFProtection(self.cm.iriToUri(url), addParams, post_data)
 
     def _icon(self, url):

@@ -50,6 +50,8 @@ EPISODES_PER_PAGE = 100
 
 
 class KinoKing(GenericFolderWatchedScraperMixin, CBaseHostClass):
+    USE_CF_PROTECTION = True
+
     def __init__(self):
         CBaseHostClass.__init__(self, {"history": "KinoKing", "cookie": "KinoKing.cookie"})
         self.HEADER = self.cm.getDefaultHeader()
@@ -90,12 +92,6 @@ class KinoKing(GenericFolderWatchedScraperMixin, CBaseHostClass):
         except Exception:
             printExc()
         return ""
-
-    def getPage(self, baseUrl, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.HEADER.get("User-Agent")}
-        return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
 
     def _getJson(self, url):
         sts, data = self.getPage(url)

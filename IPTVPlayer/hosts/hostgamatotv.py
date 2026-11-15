@@ -85,7 +85,6 @@ class GamatoTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
     def getPage(self, baseUrl, addParams=None, post_data=None):
         if addParams is None:
             addParams = dict(self.defaultParams)
-        addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.USER_AGENT}
         url = self._toCurrentDomain(baseUrl.split("#", 1)[0])
         sts, data = self.cm.getPageCFProtection(url, dict(addParams), post_data)
         # a WordPress page has wp-content (the static navlinks/*.html menus do not); a parked domain does not either

@@ -41,6 +41,7 @@ KIDS_CATS = "2,3,5,6"
 
 
 class EkinoTv(GenericFolderWatchedScraperMixin, CBaseHostClass, CaptchaHelper):
+    USE_CF_PROTECTION = True
     # what identifies a row and is needed to open it again
     FAV_FIELDS = ("name", "category", "type", "url", "title", "s_title", "season", "episode", "series_url",
                   "icon", "desc", "meta_type", "meta_title", "meta_year")
@@ -85,12 +86,6 @@ class EkinoTv(GenericFolderWatchedScraperMixin, CBaseHostClass, CaptchaHelper):
         except Exception:
             printExc()
         return ""
-
-    def getPage(self, baseUrl, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.USER_AGENT}
-        return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
 
     def _refererParams(self, referer):
         params = dict(self.defaultParams)

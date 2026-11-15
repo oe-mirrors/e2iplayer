@@ -66,7 +66,6 @@ class HDFilmCehennemi(GenericFolderWatchedScraperMixin, CBaseHostClass):
     def getPage(self, baseUrl, addParams=None, post_data=None):
         if addParams is None:
             addParams = dict(self.defaultParams)
-        addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.HEADER.get("User-Agent")}
         sts, data = self.cm.getPageCFProtection(self._siteUrl(baseUrl), addParams, post_data)
         if sts and "Unavailable For Legal Reasons" in data[:5000]:
             # some titles are blocked by country (HTTP 451, also from Germany)

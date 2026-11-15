@@ -61,6 +61,7 @@ def _metaTitle(title):
 
 
 class CdaHD(GenericFolderWatchedScraperMixin, CBaseHostClass):
+    USE_CF_PROTECTION = True
 
     FAV_FIELDS = ("name", "category", "type", "url", "title", "icon", "s_title", "s_season", "s_episode",
                   "meta_type", "meta_title", "meta_year")
@@ -85,11 +86,6 @@ class CdaHD(GenericFolderWatchedScraperMixin, CBaseHostClass):
     ###################################################
     # helpers
     ###################################################
-    def getPage(self, baseUrl, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
-
     def _path(self, url):
         return re.sub(r"^https?://[^/]+", "", url or "").rstrip("/").lower()
 

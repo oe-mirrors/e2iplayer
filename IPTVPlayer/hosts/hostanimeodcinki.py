@@ -44,6 +44,7 @@ def gettytul():
 
 
 class AnimeOdcinkiPL(GenericFolderWatchedScraperMixin, CBaseHostClass):
+    USE_CF_PROTECTION = True
     # what identifies a favourite and opens it again; desc / rating differ between the lists
     FAV_FIELDS = ("name", "category", "type", "url", "s_title", "icon", "meta_type", "meta_title", "meta_year", "season", "ep_num")
 
@@ -111,12 +112,6 @@ class AnimeOdcinkiPL(GenericFolderWatchedScraperMixin, CBaseHostClass):
     ###################################################
     # helpers
     ###################################################
-    def getPage(self, baseUrl, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.HEADER.get("User-Agent")}
-        return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
-
     def _icon(self, url):
         # one stable poster url for the same picture from every list. The site's own file with "|cf": the
         # i0.wp.com resizer cannot get new uploads past the site's Cloudflare (403), the cover loader fetches

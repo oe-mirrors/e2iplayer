@@ -182,7 +182,6 @@ class Shahid44u(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if addParams is None:
             addParams = dict(self.defaultParams)
         addParams["cookiefile"] = self.COOKIE_FILE
-        addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.HEADER.get("User-Agent")}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
 
     ###################################################

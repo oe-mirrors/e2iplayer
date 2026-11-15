@@ -66,7 +66,6 @@ class BtolatCom(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if addParams is None:
             addParams = dict(self.defaultParams)
         # Cloudflare (HTTP 403 "Just a moment"): solved like the other Cloudflare hosts, the release is kept in the cookie file
-        addParams = dict(addParams, cloudflare_params={"cookie_file": self.COOKIE_FILE, "User-Agent": self.HEADER.get("User-Agent")})
         return self.cm.getPageCFProtection(self.cm.iriToUri(baseUrl), addParams, post_data)
 
     def getFullIconUrl(self, url, currUrl=None):

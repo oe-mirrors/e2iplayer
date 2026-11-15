@@ -37,6 +37,8 @@ INFO_FIELDS = {"jahr:": "year", "laufzeit:": "duration", "imdb-bewertung:": "imd
 
 
 class KellerKino(GenericFolderWatchedScraperMixin, CBaseHostClass):
+    USE_CF_PROTECTION = True
+
     def __init__(self):
         CBaseHostClass.__init__(self, {"history": "kellerkino", "cookie": "kellerkino.cookie"})
         self.HEADER = self.cm.getDefaultHeader()
@@ -51,11 +53,6 @@ class KellerKino(GenericFolderWatchedScraperMixin, CBaseHostClass):
                      {"category": "list_az", "title": _("A-Z"), "url": self.getFullUrl("/filme-a-z/")}] + self.searchItems()
         self.watchedHelper = IPTVWatchedHelper("kellerkino")
         self.wfInitFolderCache()
-
-    def getPage(self, baseUrl, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
 
     def _getJson(self, url):
         sts, data = self.getPage(url)

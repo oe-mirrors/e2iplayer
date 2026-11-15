@@ -36,6 +36,7 @@ LIST_STATE_KEYS = ("base_url", "page_tpl", "search_pattern")
 
 
 class Dmdamedia(GenericFolderWatchedScraperMixin, CBaseHostClass):
+    USE_CF_PROTECTION = True
     # what identifies a row and is needed to open it again (desc carries the IMDb rating, which changes)
     FAV_FIELDS = ("name", "category", "type", "url", "title", "s_title", "slug", "season", "episode", "lang",
                   "series_url", "icon", "meta_type", "meta_title", "meta_year")
@@ -78,12 +79,6 @@ class Dmdamedia(GenericFolderWatchedScraperMixin, CBaseHostClass):
         except Exception:
             printExc()
         return ""
-
-    def getPage(self, baseUrl, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.HEADER.get("User-Agent")}
-        return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
 
     def _posterUrl(self, url, currUrl=None):
         # the pages reference /kepek/<slug>_poster.jpg, but many of these jpgs are 404 - the .webp

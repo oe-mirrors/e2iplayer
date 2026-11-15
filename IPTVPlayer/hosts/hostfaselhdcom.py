@@ -176,7 +176,6 @@ class FaselhdCOM(GenericFolderWatchedScraperMixin, CBaseHostClass):
     def getPage(self, baseUrl, addParams=None, post_data=None):
         if addParams is None:
             addParams = dict(self.defaultParams)
-        addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.HEADER.get("User-Agent")}
         sts, data = self.cm.getPageCFProtection(self._canonUrl(baseUrl), addParams, post_data)
         if sts:
             # the site moved: take over the domain it redirected to for this session

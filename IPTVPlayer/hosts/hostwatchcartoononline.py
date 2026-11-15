@@ -55,6 +55,7 @@ def _str(value):
 
 
 class WatchCartoonOnline(GenericFolderWatchedScraperMixin, CBaseHostClass):
+    USE_CF_PROTECTION = True
     # only what identifies a row and is needed to open it again; embed tokens, descriptions and
     # the watched parent key differ between the lists the same title comes from
     FAV_FIELDS = ('name', 'category', 'type', 'url', 'title', 's_id', 's_title', 'termid', 'ep_label', 'grp', 'chunk', 'version', 'icon', 'meta_type', 'meta_title', 'meta_year')
@@ -110,12 +111,6 @@ class WatchCartoonOnline(GenericFolderWatchedScraperMixin, CBaseHostClass):
             ident = '%s|%s|%s' % (self._key(show), season, episode) if show else self._key(LANG_SUFFIX_RE.sub('', self._cleanLabel(label)))
             return 'episode:%s|%s|%s' % (sid, 'dub' if '/detail-dubbed/' in url else 'sub', ident)
         return 'video:%s' % url if url else ''
-
-    def getPage(self, baseUrl, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        addParams['cloudflare_params'] = {'cookie_file': self.COOKIE_FILE, 'User-Agent': self.HEADER.get('User-Agent')}
-        return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
 
     def getFavouriteData(self, cItem):
         try:

@@ -70,7 +70,6 @@ class Cuevana3(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if addParams is None:
             addParams = dict(self.defaultParams)
         baseUrl = self._onMain(baseUrl)
-        addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.HEADER.get("User-Agent")}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
 
     def _onMain(self, url):

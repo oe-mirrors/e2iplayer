@@ -894,6 +894,9 @@ class CHostBase(IHost):
 
 
 class CBaseHostClass:
+    # getPage() through the browser-check handling (Cloudflare & co.) of pCommon
+    USE_CF_PROTECTION = False
+
     def __init__(self, params={}):
         self.sessionEx = MainSessionWrapper()
         self.up = urlparser()
@@ -1008,6 +1011,8 @@ class CBaseHostClass:
     def getPage(self, url, addParams=None, post_data=None):
         if addParams is None:
             addParams = dict(getattr(self, 'defaultParams', {}))
+        if self.USE_CF_PROTECTION:
+            return self.cm.getPageCFProtection(url, addParams, post_data)
         return self.cm.getPage(url, addParams, post_data)
 
     def getVideoLinks(self, videoUrl):

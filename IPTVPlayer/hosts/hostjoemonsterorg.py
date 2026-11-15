@@ -43,6 +43,7 @@ def gettytul():
 
 
 class JoeMonster(GenericFolderWatchedScraperMixin, CBaseHostClass):
+    USE_CF_PROTECTION = True
     FAV_FIELDS = ("name", "category", "type", "url", "title", "raw_title", "icon", "desc", "date")
 
     def __init__(self):
@@ -62,11 +63,6 @@ class JoeMonster(GenericFolderWatchedScraperMixin, CBaseHostClass):
         self.password = ""
         self.watchedHelper = IPTVWatchedHelper("joemonsterorg")
         self.wfInitFolderCache()
-
-    def getPage(self, url, addParams=None, post_data=None):
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        return self.cm.getPageCFProtection(url, addParams, post_data)
 
     def _cfMeta(self, referer):
         # joemonster.org and its file hosts (vader.joemonster.org mp4s, older thumbnails) sit behind the same

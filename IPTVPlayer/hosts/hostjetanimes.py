@@ -166,7 +166,6 @@ class JetAnimes(GenericFolderWatchedScraperMixin, CBaseHostClass):
         match = SITE_PATH_RE.match(baseUrl or "")
         if match:
             baseUrl = self.getMainUrl() + match.group(1)
-        addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.HEADER.get("User-Agent")}
         return self.cm.getPageCFProtection(baseUrl.split("#")[0], addParams, post_data)
 
     def _key(self, url):

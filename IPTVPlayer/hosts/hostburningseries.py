@@ -133,7 +133,6 @@ class BurningSeries(GenericFolderWatchedScraperMixin, CBaseHostClass, CaptchaHel
         path = SITE_PATH_RE.match(baseUrl or "")
         if path:
             baseUrl = self.getMainUrl() + path.group(1)
-        addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.USER_AGENT}
         return self.cm.getPageCFProtection(baseUrl.split("#")[0], addParams, post_data)
 
     def getFavouriteData(self, cItem):

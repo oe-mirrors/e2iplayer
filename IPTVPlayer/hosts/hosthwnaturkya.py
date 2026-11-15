@@ -82,7 +82,6 @@ class HwnaTurkya(GenericFolderWatchedScraperMixin, CBaseHostClass):
     ###################################################
     def getPage(self, baseUrl, addParams=None, post_data=None):
         params = dict(self.defaultParams if addParams is None else addParams)
-        params["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.HEADER.get("User-Agent")}
         return self.cm.getPageCFProtection(self._canonUrl(baseUrl), params, post_data)
 
     def _canonUrl(self, url):
