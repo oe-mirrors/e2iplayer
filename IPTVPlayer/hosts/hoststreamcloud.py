@@ -1,26 +1,12 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "21.10.2026"
-# 10.10.2026 - new host for streamcloud.date (German films and series, DataLife Engine)
-#   - Movies / Series / Cinema movies / Popular / Upcoming / Genres / Year / Country / Search, First / Jump /
-#     Next page with the last page from the pager (search: from the number of results); "Popular" is one long
-#     page -> paged locally
-#   - the lists of the site do not tell films from series: rows of Movies / Cinema movies are films, rows of
-#     Series are series, the rows of the mixed lists (genres, years, countries, popular, upcoming, search) open
-#     the page first - a film shows its video row, a series its seasons
-#   - films: the devideosrc.co player of the page, expanded into its hosters through libs/meinecloud.py and
-#     resolved via urlparser (the site's own /player/player.php only holds an ad redirect - ignored)
-#   - series: one page per show; seasons + episodes from the DeVideoSRC API by the IMDb id of the page
-#     (libs/meinecloud.py), an episode plays devideosrc.co/serial/<imdb>/<season>/<episode>. Pages without an
-#     IMDb id look the show up in the IMDb suggestion API (exact title only)
-#   - watched flag (series -> season -> episode), favourites reopen without state, downloaded marker on the page
-#     url / page url + "#s<season>e<episode>", "Title (Year)" / "Show - SxxExx" names, sidecar on the links
-#   - INFO via moviemeta (IMDb id of the page) merged with the site's fields
-#   - the domain hops: alternative domain in the host options, favourites follow it
+LAST_MODIFIED = "16.11.2026"
+# streamcloud.date (German films and series, same platform as topstreamfilm.best): the devideosrc.co player by
+# the IMDb id of the page (libs/meinecloud.py); alternative domain in the host options, favourites follow it.
 import re
 
 from Components.config import ConfigText, config, getConfigListEntry
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
-from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsMediaNamingNormalized, IsSidecarEnabled, GetLocalPageSize
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsMediaNamingNormalized, IsSidecarEnabled
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
@@ -49,9 +35,9 @@ def gettytul():
 
 IMDB_SUGGEST_URL = "https://v3.sg.media-imdb.com/suggestion/%s/%s.json"
 MC_URL_RE = re.compile(r"devideosrc\.co/(?:custom/)?(movie|serial|embed/download)/(tt\d+)")
-# genres of the filter menu that are lists of their own
-SKIP_GENRES = ("Serien", "kinofilme", "Kinofilme", "Demnächst")
-LOCAL_PAGE_SIZE = 50
+# the IMDb id of a title page sits in the (escaped) Next.js data: \"imdb\":\"tt0096697\"
+PAGE_IMDB_RE = re.compile(r'\\?"imdb\\?"\s*:\s*\\?"(tt\d+)')
+LD_JSON_RE = r'<script type="application/ld\+json">(\{"@context":"https://schema.org","@type":"(?:Movie|TVSeries)".*?\})</script>'
 
 
 class StreamCloud(GenericFolderWatchedScraperMixin, CBaseHostClass):
@@ -61,12 +47,11 @@ class StreamCloud(GenericFolderWatchedScraperMixin, CBaseHostClass):
         self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
         domain = config.plugins.iptvplayer.streamcloud_domain.value.strip()
         self.MAIN_URL = (domain.rstrip("/") + "/") if self.cm.isValidUrl(domain) else gettytul()
-        self.DEFAULT_ICON_URL = self.getFullUrl("/templates/streamcloud/images/192x192.png")
-        self.MENU = [{"category": "list_items", "title": _("Movies"), "url": self.getFullUrl("/filme-stream/"), "kind": "movie"},
-                     {"category": "list_items", "title": _("Series"), "url": self.getFullUrl("/serien/"), "kind": "tv"},
-                     {"category": "list_items", "title": _("Cinema movies"), "url": self.getFullUrl("/kinofilme/"), "kind": "movie"},
-                     {"category": "list_items", "title": _("Popular"), "url": self.getFullUrl("/beliebte-filme/")},
-                     {"category": "list_items", "title": _("Upcoming"), "url": self.getFullUrl("/demnachst/")},
+        self.DEFAULT_ICON_URL = self.getFullUrl("/brand/streamcloud/apple-touch.png")
+        self.MENU = [{"category": "list_items", "title": _("Movies"), "url": self.getFullUrl("/filme")},
+                     {"category": "list_items", "title": _("Series"), "url": self.getFullUrl("/serien")},
+                     {"category": "list_items", "title": _("Cinema movies"), "url": self.getFullUrl("/kinofilme")},
+                     {"category": "list_items", "title": _("Popular"), "url": self.getFullUrl("/discover?sort=beliebt")},
                      {"category": "list_filter", "title": _("Genres"), "filter": "Genre"},
                      {"category": "list_filter", "title": _("Year"), "filter": "Jahr"},
                      {"category": "list_filter", "title": _("Country"), "filter": "Land"}] + self.searchItems()
@@ -163,24 +148,30 @@ class StreamCloud(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return mid
 
     @staticmethod
-    def _pageKind(data):
-        # ("tv" | "movie" | "", imdb) of an item page
-        m = re.search(r"var\s+imdb\s*=\s*'(tt\d+)?'", data or "")
-        if m or 'id="serial_iframe"' in (data or ""):
-            imdb = (m.group(1) if m else "") or ""
-            if not imdb:
-                emb = MC_URL_RE.search(data) or re.search(r"imdb\.com/title/(tt\d+)", data)
-                imdb = emb.group(emb.lastindex) if emb else ""
-            return "tv", imdb
-        m = MC_URL_RE.search(data or "")
-        if m:
-            return "movie", m.group(2)
-        return "", ""
+    def _urlKind(url):
+        # /filme/<id>-<slug> = film, /serie/<id>-<slug> = series
+        m = re.search(r"/(filme|serie)/\d+", url or "")
+        return ({"filme": "movie", "serie": "tv"}[m.group(1)]) if m else ""
 
-    def _siteTitle(self, data):
-        # "Titel:" row of the page, else its <title> without the site suffix
-        title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r"(?s)<strong[^>]*>\s*Titel:\s*</strong>\s*<div>(.*?)</div>")[0])
-        return title or self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'itemprop="name">\s*(?:Serien\s+)?([^<]+?)\s+stream<')[0])
+    def _ld(self, data):
+        # the schema.org Movie / TVSeries block of a title page
+        raw = self.cm.ph.getSearchGroups(data or "", LD_JSON_RE)[0]
+        try:
+            ld = json_loads(raw) if raw else {}
+        except Exception:
+            printDBG("StreamCloud: broken ld+json")
+            ld = {}
+        return ld if isinstance(ld, dict) else {}
+
+    def _pageKind(self, data):
+        # ("tv" | "movie" | "", imdb) of an item page
+        data = data or ""
+        m = MC_URL_RE.search(data)
+        if m:
+            return ("tv" if m.group(1) == "serial" else "movie"), m.group(2)
+        m = PAGE_IMDB_RE.search(data)
+        imdb = m.group(1) if m else ""
+        return {"Movie": "movie", "TVSeries": "tv"}.get(self._ld(data).get("@type"), ""), imdb
 
     def _mc(self):
         return MeineCloud(self.cm, {"header": self.HEADER}, self.MAIN_URL)
@@ -204,22 +195,25 @@ class StreamCloud(GenericFolderWatchedScraperMixin, CBaseHostClass):
     ###################################################
     def listFilter(self, cItem):
         printDBG("StreamCloud.listFilter |%s|" % cItem)
-        sts, data = self.getPage(self.MAIN_URL + "streamcloud/")
+        prefix = {"Genre": "/genre/", "Jahr": "/jahr/", "Land": "/land/"}.get(cItem.get("filter", ""))
+        if not prefix:
+            return
+        # the root is a landing page, the home page with the filter links is /streamcloud
+        sts, data = self.getPage(self.MAIN_URL + "streamcloud")
         if not sts:
             return
-        block = ""
-        for item in self.cm.ph.getAllItemsBeetwenMarkers(data, '<details class="sc-f"', "</details>"):
-            if re.search(r'class="sc-f-in">\s*%s\b' % re.escape(cItem.get("filter", "")), item):
-                block = item
-                break
+        rows = []
         seen = set()
-        for url, title in re.findall(r'<a href="([^"]+)"[^>]*>([^<]+)</a>', block):
+        for url, title in re.findall(r'<a href="(%s[^"]+)"[^>]*>([^<]+)</a>' % re.escape(prefix), data):
             title = self.cleanHtmlStr(title)
-            url = self.getFullUrl(url)
-            if not title or title in SKIP_GENRES or url in seen:
+            if not title or url in seen:
                 continue
             seen.add(url)
-            self.addDir({"name": "category", "good_for_fav": True, "category": "list_items", "title": title, "url": url.rstrip("/") + "/"})
+            rows.append((title, url))
+        if prefix == "/jahr/":
+            rows.sort(reverse=True)
+        for title, url in rows:
+            self.addDir({"name": "category", "good_for_fav": True, "category": "list_items", "title": title, "url": self.getFullUrl(url)})
 
     def _addRow(self, params, title, year, kind, normalize):
         if kind == "tv":
@@ -236,63 +230,40 @@ class StreamCloud(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     def listItems(self, cItem):
         printDBG("StreamCloud.listItems |%s|" % cItem)
-        pageSize = GetLocalPageSize(LOCAL_PAGE_SIZE)
         try:
             page = max(1, int(cItem.get("page", 1)))
         except (TypeError, ValueError):
             page = 1
         query = cItem.get("query", "")
-        local = "beliebte-filme" in cItem.get("url", "")
         if query:
-            pageUrlTpl = self.getFullUrl("/index.php?do=search&subaction=search&story=%s&search_start={page}" % urllib_quote_plus(query))
-        elif local:
-            # one long page: "#p<page>" only tells the pages apart (dropped before the request)
-            pageUrlTpl = self._rebase(cItem["url"]) + "#p{page}"
+            # one page (up to 60 titles), the site has no paging for it
+            base = self.getFullUrl("/suche?q=%s" % urllib_quote_plus(query))
         else:
-            base = re.sub(r"page/\d+/?(?:\?.*)?$", "", self._rebase(cItem["url"]))
-            pageUrlTpl = base.rstrip("/") + "/page/{page}/"
-        url = pageUrlTpl.format(page=page) if (query or page > 1) else cItem["url"]
-        sts, data = self.getPage(url)
+            base = re.sub(r"([?&])page=\d+&?", r"\1", self._rebase(cItem["url"])).rstrip("?&")
+        pageUrlTpl = base.replace("{", "{{").replace("}", "}}") + ("&" if "?" in base else "?") + "page={page}"
+        sts, data = self.getPage(pageUrlTpl.format(page=page) if page > 1 else base)
         if not sts:
             return
         normalize = IsMediaNamingNormalized()
-        rows = []
+        count = 0
         seen = set()
-        for item in data.split('<div class="item cf')[1:]:
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'class="f_title"><a href="([^"]+)')[0])
-            title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'class="f_title"><a href="[^"]+">([^<]+)')[0])
+        for item in data.split('<a class="cv" ')[1:]:
+            item = item.split("</a>", 1)[0]
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+)')[0])
+            title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'class="cv-t">([^<]+)')[0] or self.cm.ph.getSearchGroups(item, 'title="([^"]+)')[0])
             if not url or not title or url in seen:
                 continue
             seen.add(url)
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, r'<img[^>]+?src="([^"]+)')[0])
-            year = self.cm.ph.getSearchGroups(item, r'class="f_year">\s*((?:19|20)\d\d)')[0]
-            rows.append((url, title, icon, year))
-        lastPage = 0
-        if local:
-            lastPage = max(1, (len(rows) + pageSize - 1) // pageSize)
-            rows = rows[(page - 1) * pageSize:page * pageSize]
-            hasNext = page < lastPage
-        elif query:
-            hasNext = "list_submit(%d)" % (page + 1) in data
-            total = self.cm.ph.getSearchGroups(data, r'search_result_num[^>]*>\D*(\d+)')[0]
-            first, last = self.cm.ph.getSearchGroups(data, r"(\d+)\s*-\s*(\d+)\)", 2)
-            try:
-                perPage = int(last) - int(first) + 1
-                if hasNext and perPage > 0:
-                    lastPage = (int(total) + perPage - 1) // perPage
-                elif not hasNext:
-                    lastPage = page
-            except (TypeError, ValueError):
-                lastPage = 0
-        else:
-            pager = self.cm.ph.getDataBeetwenMarkers(data, 'class="wp-pagenavi"', "</div>\n", False)[1] or data
-            nums = [int(n) for n in re.findall(r'/page/(\d+)/[^"]*">\s*\d+\s*<', pager)]
-            lastPage = max(nums + [page]) if nums else page
-            hasNext = bool(re.search(r'/page/%d/' % (page + 1), pager))
-        for url, title, icon, year in rows:
-            params = {"name": "category", "good_for_fav": True, "url": url, "icon": icon, "desc": year}
-            self._addRow(params, title, year, cItem.get("kind", ""), normalize)
-        addPagingItems(self, cItem, page, bool(rows) and hasNext, lastPage, pageUrlTpl)
+            # "2026 · ★ 5,3"
+            meta = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'(?s)class="cv-m">(.*?)</div>')[0])
+            year = self.cm.ph.getSearchGroups(meta, r"\b((?:19|20)\d\d)\b")[0]
+            params = {"name": "category", "good_for_fav": True, "url": url, "icon": icon, "desc": meta}
+            self._addRow(params, title, year, self._urlKind(url), normalize)
+            count += 1
+        # no last page on the site: only a "more titles" link to the next one
+        hasNext = bool(re.search(r"[?&;]page=%d(?!\d)" % (page + 1), data))
+        addPagingItems(self, cItem, page, bool(count) and hasNext, 0, pageUrlTpl)
 
     def listTitle(self, cItem):
         # a row of a mixed list: film -> its video row, series -> its seasons
@@ -386,7 +357,8 @@ class StreamCloud(GenericFolderWatchedScraperMixin, CBaseHostClass):
             if not sts:
                 return []
             kind, imdb = self._pageKind(data)
-            if kind == "movie" and imdb:
+            # a video row is a film: a page without ld+json / player iframe still plays by its IMDb id
+            if kind != "tv" and imdb:
                 embeds = mc.movieLinks(imdb)
                 self._addHosters(urltab, embeds)
                 if not embeds:
@@ -415,26 +387,23 @@ class StreamCloud(GenericFolderWatchedScraperMixin, CBaseHostClass):
     # INFO
     ###################################################
     def _sitePlot(self, data):
-        content = self.cm.ph.getDataBeetwenMarkers(data, 'id="longInfo"', 'class="rightSide"', False)[1]
-        return self.cleanHtmlStr(self.cm.ph.getSearchGroups(content, r'(?s)id="storyline"[^>]*>\s*<span>(.*?)</span>')[0])
+        return self.cleanHtmlStr(ensure_str(self._ld(data).get("description") or ""))
 
     def _siteInfo(self, data):
-        content = self.cm.ph.getDataBeetwenMarkers(data, 'id="longInfo"', 'class="rightSide"', False)[1]
+        ld = self._ld(data)
         info = {}
-        for key, label in (("duration", "Spielzeit"), ("genres", "Genres"), ("year", "Veröffentlicht"), ("cast", "Schauspieler"), ("directors", "Regie")):
-            value = self.cleanHtmlStr(self.cm.ph.getSearchGroups(content, r"(?s)<strong[^>]*>\s*%s:\s*</strong>\s*<div>(.*?)</div>" % label)[0])
-            if key == "genres":
-                value = ", ".join(g.strip() for g in value.split("/") if g.strip() and g.strip() != "Serien")
-            if value and "{" not in value:
-                info[key] = value
-        rating = self.cm.ph.getSearchGroups(data, r'itemprop="ratingValue">\s*([\d.]+)')[0]
-        if rating and rating != "0":
-            info["imdb_rating"] = "%s/10" % rating
-        quality = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'id="subHeadLeft"[^>]*>\s*<span[^>]*>([^<]+)</span>')[0])
-        if quality:
-            # "HD | Deutsch"
-            info["quality"] = re.sub(r"\s+", " ", quality)
-        return info, self._sitePlot(data)
+        year = self.cm.ph.getSearchGroups(ensure_str(ld.get("datePublished") or ""), r"^((?:19|20)\d\d)")[0]
+        if year:
+            info["year"] = year
+        rating = ld.get("aggregateRating")
+        rating = rating.get("ratingValue") if isinstance(rating, dict) else ""
+        try:
+            if rating and float(rating) > 0:
+                # the site's ratings are TMDB ones
+                info["tmdb_rating"] = "%.1f/10" % float(rating)
+        except (TypeError, ValueError):
+            pass
+        return info, self.cleanHtmlStr(ensure_str(ld.get("description") or ""))
 
     def getArticleContent(self, cItem):
         printDBG("StreamCloud.getArticleContent [%s]" % cItem)
@@ -457,13 +426,11 @@ class StreamCloud(GenericFolderWatchedScraperMixin, CBaseHostClass):
             printExc()
         metaInfo = dict(meta.get("info", {}))
         for key, value in info.items():
-            # the services' fields first, the site's fill the gaps (its rating is the IMDb one)
-            if key == "imdb_rating" and metaInfo.get("imdb_rating"):
-                continue
+            # the services' fields first, the site's fill the gaps
             metaInfo.setdefault(key, value)
         metaPlot = meta.get("plot", "")
+        # list rows carry only "year · rating" as desc, episodes their own plot
         text = cItem.get("desc", "") if cItem.get("category") == "episode" and cItem.get("desc") else plot
-        text = text or (cItem.get("desc", "") if not re.match(r"^\d{4}$", cItem.get("desc", "")) else "")
         if metaPlot and text and metaPlot != text:
             text = "%s[/br][/br]%s" % (text, metaPlot)
         else:
