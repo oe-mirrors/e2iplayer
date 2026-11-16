@@ -6259,9 +6259,10 @@ class pageParser(CaptchaHelper):
 
     def parserHDFILMCEHENNEMI(self, baseUrl):  # add 241026
         # hdfilmcehennemi.mobi/video/embed/<id>/ ("Close") and <site>/rplayer/<id>/ ("Rapidrame"): jwplayer with
-        # sources: [{file: <var>}], <var> = <fn>(parts) of an obfuscated decoder (new names on every request, the
-        # rplayer one inside p,a,c,k,e,d; decoy calls next to it). Two decoder types: the "splice" one takes its step
-        # and seed keys out of the parts (seed + page host name), the other has them as string literals. Steps run
+        # sources: [{file: <var>}] with <var> = <fn>(parts), or file: (function () {...; return <fn>(parts); })(), of
+        # an obfuscated decoder (new names on every request, the rplayer one inside p,a,c,k,e,d; decoy calls next to
+        # it). Two decoder types: the "splice" one takes its step and seed keys out of the parts (seed + page host
+        # name + an attribute of a page element + "DIV"), the other has them as string literals. Steps run
         # backwards (atob / reverse / Caesar shift), then a seeded shuffle and an XOR stream. Without a Referer of
         # the film site both pages are empty; the .mobi HLS hides its MPEG-TS segments as .jpg
         printDBG("parserHDFILMCEHENNEMI baseUrl[%s]" % baseUrl)
@@ -6273,11 +6274,45 @@ class pageParser(CaptchaHelper):
             text = re.sub(r"\s", "", "".join(chr(c) for c in codes))
             return list(bytearray(base64.b64decode(text + "=" * (-len(text) % 4))))
 
-        def decodeCall(code, var, hostName):
-            match = re.search(r"""\b%s\s*=\s*(\w+)\(\s*(\[[^\]]*\]|"[^"]*"\.split\("[^"]*"\))\s*\)""" % re.escape(var), code)
-            if not match:
+        def domAttr(pageData, sel, attr):
+            # value of attr on the element a selector names ("#id" or "[attr]") in the page HTML
+            if sel.startswith("#"):
+                elem = re.search(r"""<[^<>]*\sid\s*=\s*["']%s["'][^<>]*>""" % re.escape(sel[1:]), pageData)
+            else:
+                name = sel.strip("[]").split("=")[0].strip()
+                elem = re.search(r"""<[^<>]*\s%s(?=[\s/>=])[^<>]*>""" % re.escape(name), pageData)
+            if not elem:
                 return ""
-            fn, arg = match.groups()
+            value = re.search(r"""\s%s\s*=\s*["']([^"']*)["']""" % re.escape(attr), elem.group(0))
+            return value.group(1) if value else ""
+
+        def domRefs(code):
+            # (selector key, attribute) of every element attribute the decoders read: .getAttribute('a'),
+            # .getAttributeNode('a').value, .attributes['a'].value, .attributes.a.value, .dataset.camelCase
+            code = re.sub(r"""(['"])\s*\+\s*\1""", "", code)
+            refs = []
+            for kind, sel, rest in re.findall(r"""(getElementById|querySelectorAll|querySelector)\(\s*['"]([^'"]+)['"]\s*\)(?:\[0\])?\s*(\.\s*(?:getAttribute(?:Node)?\(\s*['"][^'"]+['"]|attributes\s*(?:\[\s*['"][^'"]+['"]|\.[\w$]+)|dataset\s*(?:\[\s*['"][^'"]+['"]|\.[\w$]+)))""", code):
+                name = re.search(r"""['"]([^'"]+)['"]|\.([\w$]+)$""", rest)
+                attr = name.group(1) or name.group(2)
+                if "dataset" in rest:
+                    attr = "data-" + re.sub(r"([A-Z])", lambda m: "-" + m.group(1).lower(), attr)
+                refs.append(("#" + sel if kind == "getElementById" else sel, attr))
+            return refs
+
+        def findCall(code):
+            # (fn, arg) of the source call: sources: [{file: <var>}] + <var> = fn(...), or (since 11.2026)
+            # sources: [{file: (function () {...; return fn([...]); })()}]
+            var = self.cm.ph.getSearchGroups(code, r"""sources\s*:\s*\[\s*\{\s*file\s*:\s*(\w+)\s*[,}]""")[0]
+            if var:
+                match = re.search(r"""\b%s\s*=\s*(\w+)\(\s*(\[[^\]]*\]|"[^"]*"\.split\("[^"]*"\))\s*\)""" % re.escape(var), code)
+                if match:
+                    return match.group(1), match.group(2), var
+            match = re.search(r"""sources\s*:\s*\[\s*\{\s*file\s*:\s*\(\s*function\s*\(\s*\)\s*\{.*?return\s+(\w+)\(\s*(\[[^\]]*\]|"[^"]*"\.split\("[^"]*"\))\s*\)""", code, re.S)
+            if match:
+                return match.group(1), match.group(2), ""
+            return "", "", var
+
+        def decodeCall(code, fn, arg, pageData, hostName):
             if arg.startswith("["):
                 parts = [ensure_str(x) for x in json_loads(arg)]
             else:
@@ -6286,20 +6321,45 @@ class pageParser(CaptchaHelper):
             start = re.search(r"(?:function\s+%s\s*\(|\b%s\s*=\s*function\s*\()" % (fn, fn), code)
             if not start:
                 return ""
-            body = code[start.start():]
-            body = body[:body.find("return ")]
+            full = code[start.start():start.start() + 8000]
+            body = full[:full.find("return ")]
+
+            def num(pattern, defaults):
+                # the decoder's constants (they differ between decoder builds), else the known ones
+                match = re.search(pattern, full)
+                return tuple(int(x) for x in match.groups() if x.isdigit()) if match else defaults
+
+            xorMul = 0
             if ".splice(" in body:
                 n = len(parts) - 2
                 steps = parts.pop(8 + n % 5)
                 seed = parts.pop(n % 7)
-                if re.search(r"\+=\s*[^;]*location", body):
-                    seed += hostName
+                # the seed grows by the page host name, an attribute of a page element and a tag name, in the
+                # order of the decoder's "+=" lines
+                for line in re.findall(r"\w+\s*\+=\s*([^;]+);", body):
+                    ref = domRefs(line)
+                    if "location" in line:
+                        seed += hostName
+                    elif ref:
+                        seed += domAttr(pageData, ref[0][0], ref[0][1])
+                    elif "tagName" in line:
+                        seed += "DIV"
+                # h = (h * hMul + c) % hMod; s = (s + ((c << shl) ^ i)) & 255
+                hMul, hMod = num(r"([\w$]+)\s*=\s*\(\s*\1\s*\*\s*(\d+)\s*\+\s*[a-zA-Z_$][\w$]*\s*\)\s*%\s*(\d+)", (37, 241))
+                shl, = num(r"\(\s*[\w$]+\s*<<\s*(\d+)\s*\)\s*\^", (1,))
                 h = s = 0
                 for i, c in enumerate(bytearray(ensure_binary(seed))):
-                    h = (h * 37 + c) % 241
-                    s = (s + ((c << 1) ^ i)) & 255
-                key, inc, prng = (h * 3 + s) % 256, (s % 11) + 5, ((s * 251 + h) % 65519) + 1
-                atobStep, reverseStep, base, mul, add, mod = "7", "3", 96, 97, 41, 65519
+                    h = (h * hMul + c) % hMod
+                    s = (s + ((c << shl) ^ i)) & 255
+                keyMul, = num(r"=\s*\(\s*[\w$]+\s*\*\s*(\d+)\s*\+\s*[\w$]+\s*\)\s*%\s*256\s*,", (3,))
+                incMod, incAdd = num(r"\(\s*[\w$]+\s*%\s*(\d+)\s*\)\s*\+\s*(\d+)\s*,", (11, 5))
+                prngMul, prngMod = num(r"\(\s*\(\s*[\w$]+\s*\*\s*(\d+)\s*\+\s*[\w$]+\s*\)\s*%\s*(\d+)\s*\)\s*\+\s*1", (251, 65519))
+                key, inc, prng = (h * keyMul + s) % 256, (s % incMod) + incAdd, ((s * prngMul + h) % prngMod) + 1
+                mul, add, mod = num(r"([\w$]+)\s*=\s*\(\s*\1\s*\*\s*(\d+)\s*\+\s*(\d+)\s*\)\s*%\s*(\d+)", (97, 41, 65519))
+                xorMul, = num(r"([\w$]+)\s*=\s*\(\s*\1\s*\*\s*(\d+)\s*\+\s*[a-zA-Z_$][\w$]*\s*\)\s*%\s*256", (5,))
+                atobStep = self.cm.ph.getSearchGroups(full, r"""===\s*['"](.)['"]\s*\)\s*\{\s*[\w$]+\s*=\s*atob\(""")[0] or "7"
+                reverseStep = self.cm.ph.getSearchGroups(full, r"""===\s*['"](.)['"]\s*\)\s*\{\s*[\w$]+\s*=\s*[\w$]+\.split\(\s*['"]{2}\s*\)\.reverse""")[0] or "3"
+                base, = num(r"charCodeAt\(\s*0\s*\)\s*-\s*(\d+)\s*\)\s*%\s*26", (96,))
             else:
                 keys = re.findall(r"""var\s+\w+\s*=\s*"([^"]*)"\s*;""", body)
                 if len(keys) < 2:
@@ -6329,26 +6389,54 @@ class pageParser(CaptchaHelper):
                 data[i], data[j] = data[j], data[i]
             out = bytearray()
             for c in data:
-                key = (key * 5 + inc) % 256 if base == 96 else (key + inc) % 256
+                key = (key * xorMul + inc) % 256 if xorMul else (key + inc) % 256
                 out.append(c ^ key)
                 key = (key + c) % 256
             return ensure_str(bytes(out).decode("latin-1"))
 
-        def jsDecodeCall(code, var, hostName):
-            # the decoder changed: let the JS engine run it (atob/btoa for duktape, the page host for location)
-            match = re.search(r"""\b%s\s*=\s*\w+\([^;]*\);""" % re.escape(var), code)
-            if not match:
+        def jsDecodeCall(code, fn, arg, var, pageData, hostName):
+            # the decoder changed: let the JS engine run it (atob/btoa for duktape, the page host for location,
+            # a minimal DOM that answers getAttribute() from the page HTML)
+            if var:
+                match = re.search(r"""\b%s\s*=\s*\w+\([^;]*\);""" % re.escape(var), code)
+                if not match:
+                    return ""
+                end, tail = match.end(), "print(%s);" % var
+            elif fn:
+                # the call sits in the player config (jwplayer(...).setup({...}) or var configs = {...} inside
+                # an (() => {...})() block): run the script block that defines the decoder (the rplayer one: the
+                # unpacked p,a,c,k,e,d code at the end), cut before the config statement when that is in the same
+                # block, then the call itself
+                start = re.search(r"(?:function\s+%s\s*\(|\b%s\s*=\s*function\s*\()" % (fn, fn), code)
+                if not start:
+                    return ""
+                stop = code.find("</script>", start.start())
+                end = stop if stop >= 0 else len(code)
+                match = re.search(r"""sources\s*:\s*\[\s*\{\s*file\s*:\s*\(\s*function""", code[start.start():end])
+                if match:
+                    starts = [m.start() for m in re.finditer(r"""\b(?:var|let|const)\s+[\w$]+\s*=\s*(?:jwplayer\b|\{)|\bjwplayer\s*\(""", code[start.start():start.start() + match.start()])]
+                    end = start.start() + (starts[-1] if starts else match.start())
+                tail = "print(%s(%s));" % (fn, arg)
+            else:
                 return ""
             # the script block of the call, from its start (the unpacked code follows a "<script>" line too)
-            tag = code.rfind("<script", 0, match.start())
+            tag = code.rfind("<script", 0, end)
             begin = code.find(">", tag) + 1 if tag >= 0 else 0
+            attrs = dict(("%s|%s" % (sel, attr), domAttr(pageData, sel, attr)) for sel, attr in domRefs(code))
             jscode = ['var window = {location: {hostname: "%s"}}; var self = window; var document = window; var location = window.location;' % hostName,
+                      'var __A = %s; function __el(k) { var at = {}, ds = {}, p, a;' % json_dumps(attrs),
+                      'for (p in __A) { if (p.substring(0, p.indexOf("|")) !== k) { continue; } a = p.substring(p.indexOf("|") + 1); at[a] = {name: a, value: __A[p]};',
+                      'if (a.indexOf("data-") === 0) { ds[a.substring(5).replace(/-([a-z])/g, function (m, c) { return c.toUpperCase(); })] = __A[p]; } }',
+                      'return {id: k, tagName: "DIV", attributes: at, dataset: ds, getAttribute: function (n) { return at[n] ? at[n].value : null; },',
+                      'getAttributeNode: function (n) { return at[n] || null; }}; }',
+                      'window.getElementById = function (i) { return __el("#" + i); }; window.querySelector = function (s) { return __el(s); };',
+                      'window.querySelectorAll = function (s) { return [__el(s)]; }; window.createElement = function (t) { return {tagName: String(t).toUpperCase()}; };',
                       'if (typeof atob === "undefined") { var B64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";',
                       'atob = function (s) { s = String(s).replace(/[^A-Za-z0-9+\\/]/g, ""); var o = "", b = 0, n = 0;',
                       'for (var i = 0; i < s.length; i++) { b = (b << 6) | B64.indexOf(s.charAt(i)); n += 6;',
                       'if (n >= 8) { n -= 8; o += String.fromCharCode((b >> n) & 255); } } return o; };',
                       'btoa = function (s) { return s; }; }',
-                      code[begin:match.end()], "print(%s);" % var]
+                      code[begin:end], tail]
             ret = js_execute("\n".join(jscode))
             return ensure_str(ret.get("data", "")).strip() if ret.get("sts") and ret.get("code", 0) == 0 else ""
 
@@ -6363,15 +6451,15 @@ class pageParser(CaptchaHelper):
         hostName = urlparser.getDomain(pageUrl)
         host = "https://%s/" % hostName
         code = data + "\n<script>\n" + get_packed_data(data)
-        var = self.cm.ph.getSearchGroups(code, r"""sources\s*:\s*\[\s*\{\s*file\s*:\s*(\w+)\s*[,}]""")[0]
+        fn, arg, var = findCall(code)
         videoUrl = ""
-        if var:
+        if fn:
             try:
-                videoUrl = decodeCall(code, var, hostName)
+                videoUrl = decodeCall(code, fn, arg, data, hostName)
             except Exception:
                 printExc()
-            if not self.cm.isValidUrl(videoUrl):
-                videoUrl = jsDecodeCall(code, var, hostName)
+        if not self.cm.isValidUrl(videoUrl) and (fn or var):
+            videoUrl = jsDecodeCall(code, fn, arg, var, data, hostName)
         if not self.cm.isValidUrl(videoUrl):
             SetIPTVPlayerLastHostError(_("Video link not found."))
             return []
