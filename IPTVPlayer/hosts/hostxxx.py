@@ -12832,6 +12832,16 @@ class Host(CBaseHostClass, XXXParser):
 			sts, data = self.get_Page(url)
 			if not sts:
 				return valTab
+			if '/search/' in base and page == 1 and 'There is no data in this list' in data:
+				# the site's own search finds nothing for any word (11/2026): the tag page of the word, else its category
+				slug = re.sub(r'[^a-z0-9]+', '-', unquote(term.replace('+', ' ')).lower()).strip('-')
+				for altUrl in ('https://www.analdin.com/tags/%s/' % slug, 'https://www.analdin.com/categories/%s/' % slug) if slug else ():
+					sts, altData = self.get_Page(altUrl)
+					if sts and '<div class="item' in altData:
+						printDBG('ANALDIN: search empty, %s instead' % altUrl)
+						url, data = altUrl, altData
+						nextUrl = altUrl + '?mode=async&function=get_block&block_id=list_videos_common_videos_list&sort_by=post_date&from=2'
+						break
 			next = self.cm.ph.getSearchGroups(data, r'''from(?:_videos\+from_albums)?:([^"^']+?)['"]''', 1, True)[0]  # search: from_videos+from_albums:N
 			data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="item', '</a>')
 			for item in data:
@@ -12843,6 +12853,8 @@ class Host(CBaseHostClass, XXXParser):
 					phImage = self.cm.ph.getSearchGroups(item, '''data-original=['"]([^"^']+?)['"]''', 1, True)[0]
 				phUrl = self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''', 1, True)[0]
 				Time = self.cm.ph.getSearchGroups(item, '''duration">([^>]+?)<''', 1, True)[0].strip()
+				if not phUrl or '${' in phUrl:
+					continue  # the cam widget's template (${model.displayName})
 				if phUrl.startswith('/'):
 					phUrl = self.MAIN_URL + phUrl
 				phImage = analdinImage(checkhttps(phImage))
