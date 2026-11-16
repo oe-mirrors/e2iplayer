@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "25.10.2026"
+LAST_MODIFIED = "16.11.2026"
 # capitanstrims.st: live sport (Flashscore match list, channels per match). The player builds its HLS playlist
-#   from a WebSocket feed: a background client keeps writing it to a local m3u8 that hlsdl reads.
+#   from a WebSocket feed: a background client keeps writing it to a local m3u8 that hlsdl reads, with the
+#   segments decoded out of their PNG pixels (16.11.2026) into local .ts files.
 ###################################################
 # LOCAL import
 ###################################################
@@ -24,6 +25,11 @@ import ssl
 import struct
 import threading
 import time
+import zlib
+try:
+    from urllib.request import Request, urlopen
+except ImportError:
+    from urllib2 import Request, urlopen
 ###################################################
 
 
@@ -35,17 +41,82 @@ def gettytul():
     return "https://capitanstrims.st/"
 
 
+def pngPayload(data):
+    # since 11.2026 the segments are real PNGs whose pixels are the MPEG-TS (hls.st sw.js decodePixelPng): IDAT
+    # inflated, filter byte per row undone, alpha dropped, cut to the length of the "kwLn" chunk. None = no such PNG
+    data = bytearray(data)
+    if data[:8] != bytearray(b"\x89PNG\r\n\x1a\n"):
+        return None
+    pos, width, height, depth, colorType, interlace, kwln, idat = 8, 0, 0, 0, 0, 0, -1, []
+    while pos + 12 <= len(data):
+        length, chunk = struct.unpack(">I4s", bytes(data[pos:pos + 8]))
+        body = data[pos + 8:pos + 8 + length]
+        if chunk == b"IHDR":
+            width, height, depth, colorType, _c, _f, interlace = struct.unpack(">IIBBBBB", bytes(body))
+        elif chunk == b"kwLn" and length == 4:
+            kwln = struct.unpack(">I", bytes(body))[0]
+        elif chunk == b"IDAT":
+            idat.append(bytes(body))
+        elif chunk == b"IEND":
+            # the older format: a small image head in front of plain TS (hlsdl cuts it off itself)
+            if data[pos + 12:pos + 13] == bytearray(b"\x47"):
+                return None
+            break
+        pos += 12 + length
+    bpp = {0: 1, 2: 3, 4: 2, 6: 4}.get(colorType)
+    if depth != 8 or interlace or not bpp or not idat:
+        return None
+    raw = bytearray(zlib.decompress(b"".join(idat)))
+    stride = width * bpp
+    rows = []
+    prev = bytearray(stride)
+    for y in range(height):
+        start = y * (stride + 1)
+        kind = raw[start]
+        row = raw[start + 1:start + 1 + stride]
+        if kind > 4:
+            raise ValueError("bad PNG filter %d in row %d" % (kind, y))
+        if kind:
+            # Sub / Up / Average / Paeth (the site sends filter 0 only, plain slices)
+            for i in range(stride):
+                a = row[i - bpp] if i >= bpp else 0
+                b = prev[i]
+                c = prev[i - bpp] if i >= bpp else 0
+                if kind == 1:
+                    p = a
+                elif kind == 2:
+                    p = b
+                elif kind == 3:
+                    p = (a + b) >> 1
+                else:
+                    pa, pb, pc = abs(b - c), abs(a - c), abs(a + b - 2 * c)
+                    p = a if pa <= pb and pa <= pc else (b if pb <= pc else c)
+                row[i] = (row[i] + p) & 255
+        rows.append(row)
+        prev = row
+    out = bytearray().join(rows)
+    # drop the alpha byte of every pixel
+    if colorType == 4:
+        del out[1::2]
+    elif colorType == 6:
+        del out[3::4]
+    if 0 <= kwln <= len(out):
+        return bytes(out[:kwln])
+    return bytes(out).rstrip(b"\x00\xff")
+
+
 class CapitanPlaylistFeed(object):
-    # WebSocket client for the live playlist of one channel token: wss://l1.strims24.st/ws sends a complete
-    # media playlist about every 5 s after {"subscribe": token}; it is written to a local file the downloader
-    # re-reads. Ends on stop(), when no process has the file open any more (/proc), or after MAX_LIFETIME.
-    WS_HOST = "l1.strims24.st"
+    # WebSocket client for the live playlist of one channel token: wss://l2.strims24.st/ws sends a complete
+    # media playlist about every 5 s after {"subscribe": token, "ref": <site url>}; it is written to a local
+    # file the downloader re-reads. Ends on stop(), when no process has the file open any more (/proc), or after
+    # MAX_LIFETIME.
+    WS_HOST = "l2.strims24.st"
     WS_PATH = "/ws"
-    ORIGIN = "https://iplayer24.me"
+    ORIGIN = "https://hls.st"
     FILE_PREFIX = "capitanstrims_"
     SOCKET_TIMEOUT = 5
     FIRST_TIMEOUT = 8      # the first playlist comes right after the subscription
-    # Cloudflare in front of l1 answers most handshakes with 502 Bad Gateway or not at all, independent of the
+    # Cloudflare in front of the WebSocket host (l1 on 2026-10-25) answers most handshakes with 502 Bad Gateway or not at all, independent of the
     # token (the handshake comes before the subscription; 2026-10-25 about 1 in 7 got through). The site's
     # player reconnects every 2 s without limit, so keep trying for a while instead of a fixed number of tries.
     FIRST_BUDGET = 60      # seconds for the first playlist
@@ -58,6 +129,10 @@ class CapitanPlaylistFeed(object):
     IDLE_CHECKS = 2
     MAX_LIFETIME = 5 * 3600
     MAX_FRAME = 4 * 1024 * 1024  # a media playlist is a few KB
+    START_SEGMENTS = 3     # the first local playlist starts this many segments before the live edge
+    SEG_TIMEOUT = 20
+    SEG_RETRIES = 2        # playlists a failed segment holds the local playlist back for
+    SEG_KEEP = 2           # decoded segment files (2.5-4 MB each, /tmp is RAM) kept behind the current playlist
 
     _lock = threading.Lock()
     _active = []
@@ -66,6 +141,9 @@ class CapitanPlaylistFeed(object):
         self.token = token
         self.path = path
         self.userAgent = userAgent
+        self.minSeq = None   # media sequence the local playlist starts at
+        self.segFiles = {}   # media sequence -> decoded local .ts (or the remote url when it is no pixel PNG)
+        self.segFails = {}   # media sequence -> failed downloads
         self.sock = None
         self.buf = bytearray()
         self.fragments = bytearray()
@@ -209,7 +287,7 @@ class CapitanPlaylistFeed(object):
         with self._lock:
             if self in self._active:
                 self._active.remove(self)
-        for path in (self.path, self.path + ".part"):
+        for path in [self.path, self.path + ".part"] + list(self.segFiles.values()):
             try:
                 if os.path.isfile(path):
                     os.remove(path)
@@ -238,7 +316,88 @@ class CapitanPlaylistFeed(object):
             return None
         return False
 
+    def _fetchSegment(self, url, seq):
+        # one segment: a pixel PNG is decoded into a local .ts (hlsdl reads paths without "://" from disk),
+        # anything else stays remote (hlsdl cuts an image head in front of plain TS itself); None = failed, retry
+        try:
+            ctx = ssl._create_unverified_context()  # NOSONAR - like pCommon on the box: receivers lack CA certificates
+            data = urlopen(Request(url, headers={"User-Agent": self.userAgent, "Accept": "*/*"}), timeout=self.SEG_TIMEOUT, context=ctx).read()
+            payload = pngPayload(data)
+        except Exception as e:
+            printDBG("CapitanPlaylistFeed segment %d failed [%s]" % (seq, e))
+            return None
+        if payload is None:
+            return url
+        path = "%s.%d.ts" % (self.path, seq)
+        try:
+            with open(path, "wb") as f:
+                f.write(payload)
+        except Exception:
+            printExc()
+            return url
+        return path
+
+    def _localize(self, playlist):
+        # the playlist with the decoded local segments, from minSeq on (no backlog fetched at the start)
+        lines = ensure_str(playlist).splitlines()
+        seq = 0
+        for line in lines:
+            if line.startswith("#EXT-X-MEDIA-SEQUENCE:"):
+                try:
+                    seq = int(line.split(":", 1)[1].strip())
+                except ValueError:
+                    pass
+        head, segments, tags = [], [], []
+        for line in lines:
+            line = line.strip()
+            if not line:
+                continue
+            if line.startswith("#EXT-X-MEDIA-SEQUENCE:"):
+                continue
+            segTag = line.startswith(("#EXTINF", "#EXT-X-PROGRAM-DATE-TIME")) or line == "#EXT-X-DISCONTINUITY"
+            if not segments and not tags and line.startswith("#") and not segTag:
+                head.append(line)
+            elif line.startswith("#"):
+                tags.append(line)
+            else:
+                segments.append((seq, tags, line))
+                seq += 1
+                tags = []
+        if not segments:
+            return playlist
+        if self.minSeq is None:
+            self.minSeq = max(segments[0][0], segments[-1][0] - self.START_SEGMENTS + 1)
+        segments = [s for s in segments if s[0] >= self.minSeq] or segments[-1:]
+        out = head + ["#EXT-X-MEDIA-SEQUENCE:%d" % segments[0][0]]
+        listed = 0
+        for num, segTags, url in segments:
+            if num not in self.segFiles:
+                local = self._fetchSegment(url, num)
+                if local is None:
+                    # a failed download ends the local playlist (hlsdl must not get the undecoded PNG); the next
+                    # playlist tries it again; after SEG_RETRIES (or as the first entry) it goes in as the remote url
+                    self.segFails[num] = self.segFails.get(num, 0) + 1
+                    if listed and self.segFails[num] <= self.SEG_RETRIES:
+                        break
+                    local = url
+                self.segFiles[num] = local
+            out.extend(segTags)
+            out.append(self.segFiles[num])
+            listed += 1
+        # decoded files the downloader has had its chance to read
+        for num in [n for n in self.segFails if n < segments[0][0]]:
+            del self.segFails[num]
+        for num in [n for n in self.segFiles if n < segments[0][0] - self.SEG_KEEP]:
+            path = self.segFiles.pop(num)
+            try:
+                if "://" not in path and os.path.isfile(path):
+                    os.remove(path)
+            except Exception:
+                printExc()
+        return "\n".join(out) + "\n"
+
     def _writePlaylist(self, playlist):
+        playlist = self._localize(playlist)
         # the reader must never see half a file: write next to it, then rename
         tmpPath = self.path + ".part"
         try:
@@ -302,7 +461,7 @@ class CapitanPlaylistFeed(object):
         if " 101 " not in head.split("\r\n", 1)[0] + " ":
             raise IOError("WebSocket handshake refused: %s" % head.split("\r\n", 1)[0])
         sock.settimeout(self.SOCKET_TIMEOUT)
-        self._sendFrame(0x1, json.dumps({"subscribe": self.token}).encode("utf-8"))
+        self._sendFrame(0x1, json.dumps({"subscribe": self.token, "ref": gettytul()}).encode("utf-8"))
 
     def _close(self):
         sock = self.sock
@@ -414,7 +573,7 @@ class CapitanStrims(CBaseHostClass):
 
     FEED_URL = "https://1.newsoccers.one/2/x/feed/f_%d_%d_2_en_1"
     FEED_SIGN = "SW9D1eZo"
-    PLAYER_URL = "https://iplayer24.me/echo/%s"
+    PLAYER_URL = "https://hls.st/echo/%s"
     TOKEN_RE = re.compile("^[0-9a-f]{32}$")
     LINK_SCHEME = "capitanstrims://"
     EARLY_LINKS = 15 * 60  # links work from 15 minutes before the start
@@ -602,11 +761,11 @@ class CapitanStrims(CBaseHostClass):
         return self.up.getVideoLinkExt(url)
 
     def _playToken(self, token):
-        # an expired token: the player page redirects to google.com
+        # an expired token: the player page answers 404 (iplayer24.me redirected to google.com)
         params = dict(self.defaultParams, no_redirection=True)
         params["header"] = dict(self.HEADER, Accept="text/html,application/xhtml+xml,*/*;q=0.8")
         self.cm.getPage(self.PLAYER_URL % token, params)
-        if "google." in self.cm.meta.get("location", ""):
+        if "google." in self.cm.meta.get("location", "") or self.cm.meta.get("status_code") == 404:
             SetIPTVPlayerLastHostError(_("The live stream is not available at the moment."))
             return []
         CapitanPlaylistFeed.stopAll()
@@ -622,17 +781,26 @@ class CapitanStrims(CBaseHostClass):
         return [{"name": "CAPITANSTRIMS", "url": self._playlistUrl(path)}]
 
     def _playlistUrl(self, path):
-        # the local playlist as the downloader gets it. hlsdl reads paths without "://" from disk and (0.34+) cuts
-        # the 70-byte PNG head off the TS segments (*.image on a TikTok image CDN). A strip proxy would hand
-        # out its own http://127.0.0.1 URL here instead.
-        try:
-            from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
-            if not DMHelper.hlsdlCutsImageHeads():
-                printDBG("CapitanStrims: hlsdl older than 0.34 keeps the PNG head of the segments - playback will likely fail")
-        except Exception:
-            printExc()
+        # the local playlist as the downloader gets it: hlsdl reads paths without "://" from disk, the playlist and
+        # the segments the feed decoded out of their PNGs
         meta = {"User-Agent": self.USER_AGENT, "iptv_proto": "m3u8", "iptv_buffering": "required", "iptv_livestream": True}
         return strwithmeta(path, meta)
+
+    ###################################################
+    # INFO
+    ###################################################
+    def getArticleContent(self, cItem):
+        # the match row (tournament, score, start) and the channels the site has for it
+        printDBG("CapitanStrims.getArticleContent [%s]" % cItem.get("match_id", ""))
+        otherInfo = {}
+        data = self.getJson(self.getFullUrl("api/v1/match/%s" % cItem.get("match_id", ""))) if cItem.get("match_id") else None
+        channels = [str(entry.get("name") or "").strip() for entry in (data or {}).get("custom_urls") or [] if isinstance(entry, dict) and entry.get("enabled", True)]
+        channels = [name for name in channels if name]
+        if channels:
+            otherInfo["station"] = ", ".join(channels)
+        if cItem.get("start"):
+            otherInfo["broadcast"] = self._timeLabel(cItem["start"])
+        return [{"title": cItem.get("title", ""), "text": cItem.get("desc", ""), "images": [{"title": "", "url": cItem.get("icon", "") or self.DEFAULT_ICON_URL}], "other_info": otherInfo}]
 
     ###################################################
     # service
@@ -655,3 +823,6 @@ class CapitanStrims(CBaseHostClass):
 class IPTVHost(CHostBase):
     def __init__(self):
         CHostBase.__init__(self, CapitanStrims(), True, [])
+
+    def withArticleContent(self, cItem):
+        return cItem.get("category") == "match"

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 LAST_MODIFIED = "16.11.2026"
+# 16.11.2026 - RSS / Atom feeds from the user's own feedlist.txt
 # 16.11.2026 - lantech.com.pl: links again (players carry the playlist url); 40mediagroup.com: new site
 # 08.11.2026 - new sources: hdontap.com (webcams), megawypas.com (Polish TV and radio)
 # 25.10.2026 - new webcam sources: worldcam.live, lookcam.com, San Diego Zoo, bieszczady.live,
@@ -7,7 +8,7 @@ LAST_MODIFIED = "16.11.2026"
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass, RetHost, CUrlItem
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetHostsOrderList
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
@@ -32,9 +33,14 @@ from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 ###################################################
 import re
 from base64 import b64decode
-from time import time
-from Components.config import config, ConfigSelection, getConfigListEntry
+from time import time, localtime, strftime
+from calendar import timegm
+from email.utils import parsedate_tz, mktime_tz
+from os.path import normpath, isfile
+from Components.config import config, ConfigSelection, ConfigDirectory, getConfigListEntry
 from Plugins.Extensions.IPTVPlayer.components.configsecret import ConfigSecret
+from Plugins.Extensions.IPTVPlayer.libs import ph
+from Plugins.Extensions.IPTVPlayer.libs.linklisteditor import LinkListManager, openLinkListFileEditor
 ############################################
 
 
@@ -44,6 +50,8 @@ from Plugins.Extensions.IPTVPlayer.components.configsecret import ConfigSecret
 # free key from https://api.windy.com/webcams - required, the listing API is authenticated
 config.plugins.iptvplayer.windy_api_key = ConfigSecret(default="", fixed_size=False)
 config.plugins.iptvplayer.fake_separator = ConfigSelection(default=" ", choices=[(" ", " ")])
+# folder of the user lists, shared with the urllist and YouTube hosts (same key, same default)
+config.plugins.iptvplayer.Sciezkaurllist = ConfigDirectory(default="/hdd/")
 
 # rmfon.pl station list (megawypas radio): fetched once per half hour
 _RMFON_CACHE = {'time': 0, 'stations': []}
@@ -79,7 +87,14 @@ def GetConfigList():
     optionList.append(getConfigListEntry("-----------------Windy Webcams------------------", config.plugins.iptvplayer.fake_separator))
     optionList.append(getConfigListEntry('https://api.windy.com/webcams ' + _("API Key"), config.plugins.iptvplayer.windy_api_key))
 
+    optionList.append(getConfigListEntry("-----------------RSS / Atom feeds------------------", config.plugins.iptvplayer.fake_separator))
+    optionList.append(getConfigListEntry(_("Text files ytlist, urllist and feedlist are in:"), config.plugins.iptvplayer.Sciezkaurllist))
+
     return optionList
+
+
+def getFeedListPath():
+    return normpath(config.plugins.iptvplayer.Sciezkaurllist.value + '/' + WebStreamHost.FEEDLIST_FILE)
 
 ###################################################
 
@@ -117,7 +132,10 @@ class WebStreamHost(CBaseHostClass):
                         {'alias_id': 'freecasthub', 'name': 'freecasthub_root', 'title': 'https://github.com/freecasthub/public-iptv', 'url': '', 'icon': 'https://avatars.githubusercontent.com/u/193939969'},
                         {'alias_id': 'internet-radio-hq', 'name': 'radiohq_list', 'title': 'https://github.com/Pulham/Internet-Radio-HQ-URL-playlists',
                          'url': 'https://raw.githubusercontent.com/Pulham/Internet-Radio-HQ-URL-playlists/main/Radio%20Stations.m3u', 'icon': 'https://avatars.githubusercontent.com/u/17600859'},
+                        {'alias_id': 'feeds', 'name': 'feeds_root', 'title': 'RSS / Atom feeds', 'url': '', 'icon': 'https://www.rssboard.org/images/rss-feed-icon-96-by-96.png'},
                        ]
+    # the user's own feeds, "[group] title;url" like urllist.txt / ytlist.txt, in the same folder
+    FEEDLIST_FILE = 'feedlist.txt'
 
     def __init__(self):
         CBaseHostClass.__init__(self)
@@ -561,6 +579,142 @@ class WebStreamHost(CBaseHostClass):
     def getRadioHqList(self, url):
         printDBG("getRadioHqList start")
         self._addM3UList(url or 'https://raw.githubusercontent.com/Pulham/Internet-Radio-HQ-URL-playlists/main/Radio%20Stations.m3u', 'radiohq_audio', asAudio=True)
+
+    #############################################################
+    # RSS / Atom feeds from the user's own feedlist.txt ("[group] title;url",
+    # edited with the list editor: BLUE (More) -> "Edit User Links"). An entry with a
+    # media enclosure, or a link urlparser knows (YouTube channel feeds), is
+    # playable; any other entry opens as text (INFO / OK).
+    FEED_ITEM_RE = re.compile(r'<(item|entry)[\s>].*?</\1>', re.S | re.I)
+
+    @staticmethod
+    def _feedTag(data, tags):
+        for tag in tags:
+            m = re.search(r'<%s(?:\s[^>]*)?>(.*?)</%s>' % (tag, tag), data, re.S | re.I)
+            if m and m.group(1).strip():
+                return re.sub(r'<!\[CDATA\[(.*?)\]\]>', r'\1', m.group(1), flags=re.S).strip()
+        return ''
+
+    @staticmethod
+    def _feedAttr(tag, attr):
+        m = re.search(r'''\s%s\s*=\s*(['"])(.*?)\1''' % attr, tag, re.S | re.I)
+        return ph.clean_html(m.group(2)) if m else ''
+
+    @staticmethod
+    def _feedText(raw):
+        # escaped HTML (Atom type="html", GitHub commit messages) or plain HTML
+        # -> text that keeps its line breaks for the article view
+        if '<' not in raw and '&lt;' in raw:
+            raw = raw.replace('&lt;', '<').replace('&gt;', '>').replace('&quot;', '"').replace('&#39;', "'").replace('&amp;', '&')
+        raw = re.sub(r'(?i)<br\s*/?>|</p>|</li>|</div>|</h\d>|<pre[^>]*>|</pre>', '\n', raw)
+        lines = [ph.clean_html(line) for line in raw.split('\n')]
+        text = '\n'.join(line for line in lines if line)
+        return re.sub(r'\n{3,}', '\n\n', text).strip()
+
+    @staticmethod
+    def _feedDate(value):
+        # Atom/ISO 8601 and RSS/RFC 822 dates, shown in local time
+        value = (value or '').strip()
+        try:
+            m = re.match(r'(\d{4})-(\d\d)-(\d\d)(?:[T ](\d\d):(\d\d)(?::(\d\d))?(?:\.\d+)?\s*(Z|[+-]\d\d:?\d\d)?)?', value)
+            if m:
+                parts = [int(x or 0) for x in m.groups()[:6]]
+                stamp = timegm((parts[0], parts[1], parts[2], parts[3], parts[4], parts[5], 0, 0, 0))
+                tz = m.group(7) or 'Z'
+                if tz != 'Z':
+                    offset = (int(tz[1:3]) * 60 + int(tz[-2:])) * 60
+                    stamp -= offset if tz[0] == '+' else -offset
+                return strftime('%Y-%m-%d %H:%M', localtime(stamp))
+            parsed = parsedate_tz(value)
+            if parsed:
+                return strftime('%Y-%m-%d %H:%M', localtime(mktime_tz(parsed)))
+        except Exception:
+            printExc()
+        return value
+
+    def _feedManager(self):
+        return LinkListManager(getFeedListPath)
+
+    def getFeedsRoot(self, cItem):
+        group = cItem.get('feed_group')
+        path = getFeedListPath()
+        links = [item for item in self._feedManager().read() if item.get('kind') == 'link']
+        if not links:
+            # shown in the empty list's status box
+            msg = _("File Not Found.") if not isfile(path) else _("User-Links: %d") % 0
+            SetIPTVPlayerLastHostError('%s\n%s' % (msg, path))
+            return
+
+        if group is None:
+            # the groups first, then the feeds without a group (like urllist)
+            groups = []
+            for item in links:
+                if item['group'] and item['group'] not in groups:
+                    groups.append(item['group'])
+            for name in groups:
+                self.addDir({'name': 'feeds_root', 'title': name, 'feed_group': name, 'icon': cItem.get('icon', ''), 'desc': path})
+            group = ''
+        for item in links:
+            if item['group'] == group:
+                self.addDir({'name': 'feed_list', 'title': item['title'], 'url': item['url'], 'icon': cItem.get('icon', ''), 'desc': item['url']})
+
+    def getFeedList(self, cItem):
+        url = cItem.get('url', '')
+        sts, data = self.cm.getPage(url)
+        if not sts or not data:
+            return
+        data = ensure_str(data)
+
+        # the feed's own image as fallback icon
+        head = self.FEED_ITEM_RE.split(data, 1)[0]
+        feedIcon = ph.clean_html(self._feedTag(head, ('url', 'logo', 'icon'))) or self._feedAttr(ph.find(head, '<itunes:image', '>')[1], 'href') or cItem.get('icon', '')
+
+        for m in self.FEED_ITEM_RE.finditer(data):
+            item = m.group(0)
+            isAtom = m.group(1).lower() == 'entry'
+            title = ph.clean_html(self._feedTag(item, ('title',)))
+            date = self._feedDate(self._feedTag(item, ('updated', 'published', 'pubDate', 'dc:date')))
+            author = ph.clean_html(self._feedTag(item, ('name', 'author', 'dc:creator')))
+            text = self._feedText(self._feedTag(item, ('content', 'content:encoded', 'summary', 'description', 'media:description')))
+
+            link = ''
+            enclosure = ''
+            encType = ''
+            for tag in re.findall(r'<(?:link|enclosure|media:content)\s[^>]*>', item, re.I):
+                rel = self._feedAttr(tag, 'rel')
+                href = self._feedAttr(tag, 'href') or self._feedAttr(tag, 'url')
+                kind = self._feedAttr(tag, 'type').lower()
+                if not href:
+                    continue
+                if tag.lower().startswith('<link') and rel in ('', 'alternate'):
+                    link = link or href
+                elif kind.split('/')[0] in ('audio', 'video') or rel == 'enclosure' or tag.lower().startswith('<enclosure'):
+                    if not enclosure and not kind.startswith('image'):
+                        enclosure, encType = href, kind
+            if not link and not isAtom:
+                link = ph.clean_html(self._feedTag(item, ('link', 'guid')))
+
+            icon = self._feedAttr(ph.find(item, '<media:thumbnail', '>')[1], 'url') or self._feedAttr(ph.find(item, '<itunes:image', '>')[1], 'href') or feedIcon
+            label = '%s  %s' % (date, title) if date else title
+            desc = '\n'.join(x for x in (date, author, link, text) if x)
+            params = {'name': 'feed_entry', 'title': label or link, 'url': link, 'icon': icon, 'desc': desc,
+                      'feed_title': title, 'feed_text': text, 'feed_date': date, 'feed_author': author, 'good_for_fav': False}
+            if enclosure:
+                params['url'] = enclosure
+                if encType.startswith('audio'):
+                    self.addAudio(params)
+                else:
+                    self.addVideo(params)
+            elif link.startswith('http') and self.up.checkHostSupport(link) == 1:
+                params['need_resolve'] = 1
+                self.addVideo(params)
+            else:
+                self.addArticle(params)
+
+    def getArticleContent(self, cItem):
+        text = cItem.get('feed_text', '') or cItem.get('desc', '')
+        info = '\n'.join(x for x in (cItem.get('feed_date', ''), cItem.get('feed_author', ''), cItem.get('url', '')) if x)
+        return [{'title': cItem.get('feed_title', '') or cItem.get('title', ''), 'text': ('%s\n\n%s' % (info, text)).strip(), 'images': [{'title': '', 'url': cItem.get('icon', '')}] if cItem.get('icon') else []}]
 
     #############################################################
     # Windy Webcams (api.windy.com/webcams) - the listing API (categories/
@@ -1304,6 +1458,9 @@ class WebStreamHost(CBaseHostClass):
             urlList = self.getHdontapLink(cItem)
         elif name in ('megawypas_video', 'megawypas_audio'):
             urlList = self.getMegawypasLink(cItem)
+        elif name == 'feed_entry' and cItem.get('need_resolve'):
+            # feed entry linking to a hoster page (YouTube channel feed)
+            urlList = self.up.getVideoLinkExt(url)
 
         if isinstance(urlList, list):
             return urlList
@@ -1439,6 +1596,10 @@ class WebStreamHost(CBaseHostClass):
             self.getFreecasthubList(self.currItem)
         elif name == 'radiohq_list':
             self.getRadioHqList(url)
+        elif name == 'feeds_root':
+            self.getFeedsRoot(self.currItem)
+        elif name == 'feed_list':
+            self.getFeedList(self.currItem)
 
         if name is not None:
             self.currList = [self._dropMainMenuImageType(item) for item in self.currList]
@@ -1449,6 +1610,14 @@ class IPTVHost(CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, WebStreamHost(), withSearchHistrory=False)
+
+    def withArticleContent(self, cItem):
+        return cItem.get('name') == 'feed_entry'
+
+    def editUserLinks(self, session):
+        # BLUE (More) -> "Edit User Links": the feed list (feedlist.txt)
+        openLinkListFileEditor(session, getFeedListPath(), 'webstreamlogo.png')
+        return True
 
     def getLinksForVideo(self, Index=0, selItem=None):
         listLen = len(self.host.currList)

@@ -9,13 +9,26 @@
 # rendition on 127.0.0.1 with the real segment urls (rewritten at every request) and the player loads the segments from
 # the CDN directly. Anything unexpected (unknown key id, playlist not answering, first segment not readable) gives
 # an empty list: the caller keeps the 480p master.
+# The local url names the stream and the rendition (/sc/<stream id>/<rendition>/index.m3u8), so a url the relay does not
+# know (yet, or any more: a download started later, the GUI restarted) is looked up again on the edge. Python 2 too
+# (hostxxx is copied onto Python 2 images).
 import base64
 import hashlib
 import re
 import ssl
+import sys
 import threading
-from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-from urllib.request import Request, urlopen
+import time
+
+if sys.version_info[0] == 2:
+    # (stdlib modules: the "future" backport of http.server some images ship lacks ThreadingHTTPServer)
+    from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
+    from SocketServer import ThreadingMixIn
+    from urllib2 import Request, urlopen
+else:
+    from http.server import BaseHTTPRequestHandler, HTTPServer
+    from socketserver import ThreadingMixIn
+    from urllib.request import Request, urlopen
 
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 
@@ -36,11 +49,19 @@ DEFAULT_PKEY = "Fq6m2TO2ZeBkRPm9"
 EDGES = ("edge-hls.doppiocdn.com", "edge-hls.doppiocdn.net", "edge-hls.doppiocdn.org")
 UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
 HEADERS = {"User-Agent": UA, "Origin": "https://stripchat.com", "Referer": "https://stripchat.com/", "Accept": "*/*"}
-MAX_ENTRIES = 16
+# a fixed port keeps the local urls valid over a GUI restart (another free one when it is taken)
+PORT = 42199
+# renditions kept; the least recently requested one goes first (a playing stream or a download asks every few seconds)
+MAX_ENTRIES = 200
 
 _lock = threading.Lock()
 _server = None
 _entries = {}
+
+
+class _Server(ThreadingMixIn, HTTPServer):
+    daemon_threads = True
+    allow_reuse_address = True
 
 
 def _open(url, headers=None, timeout=15):
@@ -57,9 +78,9 @@ def decodeName(token, key):
     # the plain segment name of an encrypted one ("" when it does not decode)
     try:
         padded = token[::-1]
-        data = base64.b64decode(padded + "=" * ((4 - len(padded) % 4) % 4))
-        digest = hashlib.sha256(key.encode("utf-8")).digest()
-        return bytes(b ^ digest[i % 32] for i, b in enumerate(bytearray(data))).decode("utf-8")
+        data = bytearray(base64.b64decode((padded + "=" * ((4 - len(padded) % 4) % 4)).encode("ascii")))
+        digest = bytearray(hashlib.sha256(key.encode("utf-8")).digest())
+        return bytearray(b ^ digest[i % 32] for i, b in enumerate(data)).decode("utf-8")
     except Exception:
         return ""
 
@@ -131,6 +152,35 @@ def _upstream(streamId):
     return []
 
 
+def _renditionKey(name, height):
+    # the rendition part of the local url
+    return re.sub(r"[^0-9A-Za-z]+", "", "%s" % (name or "")) or "%dp" % height
+
+
+def _store(streamId, variants):
+    # remembers the renditions of a stream; the least recently used ones beyond MAX_ENTRIES go
+    now = time.time()
+    with _lock:
+        for _width, height, _bandwidth, name, upstream in variants:
+            _entries[(streamId, _renditionKey(name, height))] = [upstream, now]
+        if len(_entries) > MAX_ENTRIES:
+            for key in sorted(_entries, key=lambda k: _entries[k][1])[:len(_entries) - MAX_ENTRIES]:
+                _entries.pop(key, None)
+
+
+def _lookup(streamId, rendition, refresh=False):
+    # the media playlist url of a local one; asks the edge again when it is not known (or refresh)
+    with _lock:
+        entry = None if refresh else _entries.get((streamId, rendition))
+        if entry:
+            entry[1] = time.time()
+            return entry[0]
+    _store(streamId, _upstream(streamId))
+    with _lock:
+        entry = _entries.get((streamId, rendition))
+        return entry[0] if entry else ""
+
+
 class _Handler(BaseHTTPRequestHandler):
     protocol_version = "HTTP/1.0"
 
@@ -139,13 +189,26 @@ class _Handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         parts = self.path.split("?", 1)[0].split("/")
-        # ["", "sc", <token>, "index.m3u8"]
-        upstream = _entries.get(parts[2]) if len(parts) == 4 and parts[1] == "sc" else None
-        if not upstream:
+        # ["", "sc", <stream id>, <rendition>, "index.m3u8"]
+        if len(parts) != 5 or parts[1] != "sc" or not parts[2].isdigit():
             self.send_error(404)
             return
         try:
-            body = decryptPlaylist(_text(upstream))
+            body = ""
+            for refresh in (False, True):
+                upstream = _lookup(parts[2], parts[3], refresh)
+                if not upstream:
+                    break
+                try:
+                    body = decryptPlaylist(_text(upstream))
+                except Exception:
+                    printDBG("stripchat: playlist [%s] does not answer" % upstream)
+                if "#EXTINF" in body:
+                    break
+            if not upstream:
+                printDBG("stripchat: stream %s/%s not on the edge (any more)" % (parts[2], parts[3]))
+                self.send_error(404)
+                return
             if "#EXTINF" not in body:
                 self.send_error(502)
                 return
@@ -156,7 +219,7 @@ class _Handler(BaseHTTPRequestHandler):
             self.send_header("Cache-Control", "no-cache")
             self.end_headers()
             self.wfile.write(body)
-        except OSError:
+        except (IOError, OSError):
             printDBG("stripchat: request closed by the player")
         except Exception:
             printExc()
@@ -170,8 +233,10 @@ def _startServer():
     global _server
     with _lock:
         if _server is None:
-            server = ThreadingHTTPServer(("127.0.0.1", 0), _Handler)
-            server.daemon_threads = True
+            try:
+                server = _Server(("127.0.0.1", PORT), _Handler)
+            except Exception:
+                server = _Server(("127.0.0.1", 0), _Handler)
             thread = threading.Thread(target=server.serve_forever, name="E2iStripchat")
             thread.daemon = True
             thread.start()
@@ -196,32 +261,27 @@ def _usable(upstream):
     return True
 
 
-def _register(streamId, name, upstream):
-    token = hashlib.md5(("%s/%s" % (streamId, name)).encode("utf-8")).hexdigest()[:16]
-    with _lock:
-        _entries.pop(token, None)
-        _entries[token] = upstream
-        if len(_entries) > MAX_ENTRIES:
-            for key in list(_entries)[:len(_entries) - MAX_ENTRIES]:
-                _entries.pop(key, None)
-    return "http://127.0.0.1:%d/sc/%s/index.m3u8" % (_startServer().server_address[1], token)
-
-
 def localUrls(streamId, accept=None):
-    # [(label, http://127.0.0.1:<port>/sc/<token>/index.m3u8, height)] of the renditions of a stream, tallest first; the
-    # first one has been checked to play, [] when none can be played this way. accept(width, height) leaves out the
-    # renditions the caller does not want (UHD playback off); when it leaves out all of them the smallest one stays
+    # [(label, http://127.0.0.1:<port>/sc/<stream id>/<rendition>/index.m3u8, height)] of the renditions of a stream, tallest
+    # first; the first one has been checked to play, [] when none can be played this way. accept(width, height) leaves out
+    # the renditions the caller does not want (UHD playback off); when it leaves out all of them the smallest one stays
     result = []
     try:
+        streamId = "%s" % streamId
         variants = _upstream(streamId)
         wanted = [v for v in variants if accept is None or accept(v[0], v[1])]
         if variants and not wanted:
             wanted = [min(variants, key=lambda v: v[0] * v[1])]
+        port = 0
         for width, height, _bandwidth, name, upstream in wanted:
             if not result and not _usable(upstream):
                 continue
+            if not port:
+                _store(streamId, variants)
+                port = _startServer().server_address[1]
             label = ("%s  %dx%d" % (name, width, height) if name else "%dx%d" % (width, height)).strip() if width else (name or "HLS")
-            result.append((label, _register(streamId, name or height, upstream), height))
+            # (str: plain ASCII, no unicode on Python 2)
+            result.append((str(label), str("http://127.0.0.1:%d/sc/%s/%s/index.m3u8" % (port, streamId, _renditionKey(name, height))), height))
     except Exception:
         printExc()
         return []

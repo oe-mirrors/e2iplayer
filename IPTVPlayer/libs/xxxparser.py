@@ -4357,12 +4357,26 @@ class XXXParser:
 				# a short link of it (tbnvid.com/v/... -> www.tubeon.com/video/...) - resolved by that site's parser
 				sts, data = self.getPage(url, 'runporn.cookie', 'run.porn', dict(self.defaultParams, with_metadata=True))
 				landing = getattr(data, 'meta', {}).get('url', '') if sts else ''
-				landingParser = self.getParser(landing) if landing and 'run.porn' not in landing else ''
+				# (by the host only: the landing urls carry "utm_source=run.porn")
+				origin, path = self.cm.ph.getSearchGroups(landing, r'''^(https?://[^/?#]+)(/[^?#]*)?''', 2, True)
+				if not origin or 'run.porn' in origin:
+					printDBG('RUNPORN: %s -> no landing [%s]' % (url, landing))
+					return ''
+				if 'xhamster' in origin and (path or '').startswith('/videos/'):
+					# a mirror (xhamster46.desi): the XHAMSTER resolver picks the quality
+					landing = 'https://xhamster.com' + path
+				landingParser = self.getParser(landing)
 				printDBG('RUNPORN: %s -> %s (%s)' % (url, landing, landingParser))
-				# (getParser answers MAIN_URL = run.porn for a tube it does not know - no parser for that one)
 				if landingParser.startswith('http') and landingParser != 'https://run.porn':
 					return self.getResolvedURL(landing)
-				return ''
+				# getParser answers MAIN_URL (run.porn) for a tube it does not map: a site of the list knows its own origin
+				# from MAIN_URL (MEGATUBE, ANALDIN) - its block resolves the page, else nothing does
+				mainUrl = self.MAIN_URL
+				try:
+					self.MAIN_URL = origin
+					return self.getResolvedURL(landing)
+				finally:
+					self.MAIN_URL = mainUrl
 			sts, data = self.getPage(url, 'runporn.cookie', 'run.porn', self.defaultParams)
 			hlsUrl = re.search('src-hls=["]([^"]+?)["]', data or '')
 			if hlsUrl:
@@ -5994,9 +6008,11 @@ class XXXParser:
 			videoUrl = self.cm.ph.getSearchGroups(data, r'''video_url:\s*['"]([^"^']+?)['"]''')[0].replace(r'\/', '/')
 			if videoUrl.startswith('/'):
 				videoUrl = 'https://www.analdin.com' + videoUrl
-			self.defaultParams['max_data_size'] = 0
-			sts, data = self.getPage(videoUrl, 'analdin.cookie', 'analdin.com', self.defaultParams)
-			return '' if not sts else data.meta['url']
+			if not videoUrl:
+				return ''
+			# the file link redirects to the CDN: its final address (with_metadata) without loading the file
+			sts, data = self.getPage(videoUrl, 'analdin.cookie', 'analdin.com', dict(self.defaultParams, max_data_size=0, with_metadata=True))
+			return getattr(data, 'meta', {}).get('url', '') if sts else ''
 
 		if parser == 'https://www.perfectgirls.xxx':
 			baseUrl = strwithmeta(url)
@@ -7696,7 +7712,7 @@ class XXXParser:
 							videoUrl = (item.get('stream') or {}).get('url', '')
 					# the API hands out the 480p master only; the edge serves the "source" rendition (720x960 and more) too,
 					# its segment names are encrypted (MOUFLON): stripchatrelay decrypts them and serves the playlist on
-					# 127.0.0.1. No relay (Python 2, unknown key, edge not answering) keeps the 480p master
+					# 127.0.0.1. No relay (unknown key, edge not answering) keeps the 480p master
 					streamId = self.cm.ph.getSearchGroups(videoUrl, r'''/hls/([0-9]+)/''', 1, True)[0]
 					if streamId and videoUrl:
 						try:

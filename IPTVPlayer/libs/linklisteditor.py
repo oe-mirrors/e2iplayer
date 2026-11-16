@@ -57,7 +57,7 @@ class LinkListEditorScreen(Screen):
     # header/footer, like IPTVFavouritesMainWidget. The logo goes into the
     # header's "playerlogo" slot through Cover(), the clock follows
     # show_header_clock. Footer: RED delete, GREEN reorder rows, YELLOW move
-    # to group, BLUE sort A-Z / Z-A.
+    # to group, BLUE sort A-Z / Z-A, MENU add a new entry by hand.
     def __prepareSkin(self):
         iconBase = skinchrome.getIconBase()
         HEIGHT = 666
@@ -79,7 +79,7 @@ class LinkListEditorScreen(Screen):
             HEIGHT,
             skinchrome.build_header_auto(iconBase=iconBase, logoWidgetName="playerlogo"),
             clockPart,
-            skinchrome.build_footer_auto(HEIGHT, iconBase=iconBase, keys=('red', 'green', 'yellow', 'blue')),
+            skinchrome.build_footer_auto(HEIGHT, iconBase=iconBase, keys=('red', 'green', 'yellow', 'blue'), showMenu=True),
         )
 
     def __init__(self, session, manager):
@@ -97,6 +97,7 @@ class LinkListEditorScreen(Screen):
         self["key_green"] = StaticText(self.forceUiText(_(u"Enable reordering")))
         self["key_yellow"] = StaticText(self.forceUiText(_("Move")))
         self["key_blue"] = StaticText(self.forceUiText(sortOrderTitle()))
+        self["key_menu"] = StaticText(self.forceUiText(_("Add new entry")))
         self["list"] = MenuList([])
         self["playerlogo"] = Cover()
         self["playerlogo"].hide()
@@ -119,6 +120,9 @@ class LinkListEditorScreen(Screen):
             },
             -1
         )
+        # MENU lives in IPTVPlayerListActions, kept in its own ActionMap like
+        # the favourites manager's 'menuActions'
+        self["menuActions"] = ActionMap(["IPTVPlayerListActions"], {"menu": self.keyAdd}, -1)
 
         self.onLayoutFinish.append(self.onStart)
 
@@ -370,6 +374,22 @@ class LinkListEditorScreen(Screen):
             printExc()
             self.openInfoMessage(_("Move failed."))
 
+    def keyAdd(self):
+        if self.reorderMode:
+            return
+
+        try:
+            self.manager.openAddNew(self.session, self.addFinished)
+        except Exception:
+            printExc()
+            self.openInfoMessage(_("Could not add the user link."))
+
+    def addFinished(self, sts, msg):
+        self.openInfoMessage(msg)
+        if sts:
+            # the new line goes to the end of its group: select it
+            self.reloadList(self.manager.lastAddedIdx)
+
     def actionFinished(self, sts, msg):
         self.openInfoMessage(msg)
         if sts:
@@ -398,6 +418,7 @@ class LinkListManager(object):
         self.editorTitle = editorTitle or _("Edit User Links")
         self.logoName = logoName
         self.skinName = skinName
+        self.lastAddedIdx = None
 
     def getUserLinksPath(self):
         return self.listPathProvider()
@@ -690,6 +711,7 @@ class LinkListManager(object):
             entries.insert(insertIdx, newItem)
 
             if self.write(entries):
+                self.lastAddedIdx = insertIdx
                 return True, _("User link added.")
         except Exception:
             printExc()
@@ -922,6 +944,52 @@ class LinkListManager(object):
         except Exception:
             printExc()
             callback(False, _("The user link could not be updated."))
+
+    # A new entry typed by hand (MENU in the editor): name, then link, then
+    # the group - the same group picker as YELLOW / "Add to User Links".
+    def openAddNew(self, session, callback):
+        session.openWithCallback(
+            lambda text=None: self.onAddNameEntered(session, text, callback),
+            GetVirtualKeyboard(),
+            title=self.guiSafeStr(_("Enter name")),
+            text=""
+        )
+
+    def onAddNameEntered(self, session, text, callback):
+        if text is None:
+            callback(False, _("Operation aborted!"))
+            return
+        title = self.cleanValue(text)
+        if not title:
+            callback(False, _("Invalid name."))
+            return
+        session.openWithCallback(
+            lambda url=None: self.onAddUrlEntered(session, title, url, callback),
+            GetVirtualKeyboard(),
+            title=self.guiSafeStr(_("Link")),
+            text=self.guiSafeStr(u"https://")
+        )
+
+    def onAddUrlEntered(self, session, title, url, callback):
+        if url is None:
+            callback(False, _("Operation aborted!"))
+            return
+        url = self.normalizeUrl(url)
+        if url in (u"", u"http://", u"https://") or u";" in url:
+            callback(False, _("Wrong uri."))
+            return
+        self.selectTargetGroupAction(
+            session,
+            self.getGroups(),
+            lambda group, accepted: self.onAddGroupSelected(title, url, group, accepted, callback)
+        )
+
+    def onAddGroupSelected(self, title, url, group, accepted, callback):
+        if not accepted:
+            callback(False, _("Aborted"))
+            return
+        sts, msg = self.add(group, title, url)
+        callback(sts, msg)
 
     def openEditor(self, session):
         session.open(LinkListEditorScreen, self)
