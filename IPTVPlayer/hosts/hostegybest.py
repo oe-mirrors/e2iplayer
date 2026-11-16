@@ -18,7 +18,7 @@ import re
 
 from Components.config import ConfigSelection, config, getConfigListEntry
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
-from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import GetAlternativeProxyChoices, GetAlternativeProxyUrl, IsSidecarEnabled, IsMediaNamingNormalized
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import GetAlternativeProxyChoices, GetAlternativeProxyUrl, IsSidecarEnabled, IsMediaNamingNormalized, GetLocalPageSize
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getItemMeta
@@ -269,6 +269,7 @@ class EgyBest(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     def listEpisodes(self, cItem, seasons=None):
         printDBG("EgyBest.listEpisodes [%s|%s]" % (cItem.get("url", ""), cItem.get("season_id", "")))
+        pageSize = GetLocalPageSize(LOCAL_PAGE_SIZE)
         if seasons is None:
             seasons = self._seasons(cItem)
         show = cItem.get("s_title", "") or cItem.get("title", "")
@@ -296,11 +297,11 @@ class EgyBest(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 episodes.append(params)
         # long anime seasons: local pages
         page = int(cItem.get("page", 1) or 1)
-        start = (page - 1) * LOCAL_PAGE_SIZE
-        for params in episodes[start:start + LOCAL_PAGE_SIZE]:
+        start = (page - 1) * pageSize
+        for params in episodes[start:start + pageSize]:
             self.addVideo(params)
-        if len(episodes) > LOCAL_PAGE_SIZE:
-            lastPage = (len(episodes) + LOCAL_PAGE_SIZE - 1) // LOCAL_PAGE_SIZE
+        if len(episodes) > pageSize:
+            lastPage = (len(episodes) + pageSize - 1) // pageSize
             addPagingItems(self, dict(cItem, category="eb_season"), page, page < lastPage, lastPage)
 
     def listSearchResult(self, cItem, searchPattern, searchType):

@@ -1,5 +1,5 @@
 <screen name="IPTVExtMoviePlayer"    position="center,center" size="%d,%d" resolution="1280,720" flags="wfNoBorder" backgroundColor="#FFFFFFFF" >
-                    <widget name="pleaseWait"         noWrap="1" position="center,30"        size="500,40"    zPosition="3" transparent="1" foregroundColor="#999999"   backgroundColor="transparent" font="Regular;25" halign="center"  valign="center"/>
+                    <widget name="pleaseWait"         noWrap="1" position="center,30"        size="500,40"    zPosition="3" transparent="0" foregroundColor="#E0E0E0"   backgroundColor="#40000000" font="Regular;25" halign="center"  valign="center"/>
                     
                     <widget name="logoIcon"           position="36,75"        size="160,40"    zPosition="4"             transparent="1" alphatest="blend" />
                     <widget name="playbackInfoBaner"  position="0,0"           size="1280,177"  zPosition="2" pixmap="%s" />

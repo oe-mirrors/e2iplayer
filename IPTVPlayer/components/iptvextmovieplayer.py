@@ -370,7 +370,7 @@ class IPTVExtMoviePlayer(Screen):
             # use default skin in code
             skin = """
             <screen name="IPTVExtMoviePlayer"    position="center,center" size="%d,%d" resolution="1280,720" flags="wfNoBorder" backgroundColor="#FFFFFFFF" >
-                    <widget name="pleaseWait"         noWrap="1" position="30,30"        size="500,30"    zPosition="3" transparent="1" foregroundColor="#999999"   backgroundColor="transparent" font="Regular;24" halign="left"  valign="top"/>
+                    <widget name="pleaseWait"         noWrap="1" position="30,30"        size="500,36"    zPosition="3" transparent="0" foregroundColor="#E0E0E0"   backgroundColor="#40000000" font="Regular;24" halign="center"  valign="center"/>
 
                     <widget name="logoIcon"           position="140,30"        size="160,40"    zPosition="4"             transparent="1" alphatest="blend" />
                     <widget name="playbackInfoBaner"  position="0,0"           size="1280,177"  zPosition="2" pixmap="%s" />
@@ -799,6 +799,7 @@ class IPTVExtMoviePlayer(Screen):
         self.onClose.append(self.__onClose)
         self.onShow.append(self.onStart)
         self.onLayoutFinish.append(self.fixWindowGeometry)
+        self.onLayoutFinish.append(self.initPleaseWaitBox)
         # self.onLayoutFinish.append(self.onStart)
 
         self.console = None
@@ -2163,8 +2164,7 @@ class IPTVExtMoviePlayer(Screen):
 
     # handling of RCU keys
     def key_stop(self, requestedByUser="key_stop"):
-        self['pleaseWait'].setText(_("Closing. Please wait..."))
-        self['pleaseWait'].show()
+        self.setPleaseWait(_("Closing. Please wait..."))
         self.closeRequestedByUser = requestedByUser
         if self.console is not None:
             if self.extPlayerCmddDispatcher.stop():
@@ -2250,8 +2250,7 @@ class IPTVExtMoviePlayer(Screen):
         # a skip key was cut at the end of the downloaded part: a short notice, so the key does not look broken
         try:
             self.seekLimitNotice['text'] = _("Only loaded up to %s") % str(timedelta(seconds=int(loadedUpTo)))
-            self['pleaseWait'].setText(self.seekLimitNotice['text'])
-            self['pleaseWait'].show()
+            self.setPleaseWait(self.seekLimitNotice['text'])
             self.seekLimitNotice['until'] = time.time() + 3
             self.seekLimitNotice['timer'].start(3000, True)  # singleshot
         except Exception:
@@ -3189,6 +3188,43 @@ class IPTVExtMoviePlayer(Screen):
                     printExc()
         except Exception:
             printExc()
+
+    def initPleaseWaitBox(self):
+        # the notice has a half-transparent backdrop (plain grey text straight on the video
+        # looked pixelated): remember the skin's box once, setPleaseWait() shrinks it to the text
+        try:
+            instance = self['pleaseWait'].instance
+            pos = instance.position()
+            size = instance.size()
+            desktopW = getDesktop(0).size().width()
+            centered = abs(pos.x() + size.width() / 2.0 - desktopW / 2.0) < 3
+            self.pleaseWaitBox = (pos.x(), pos.y(), size.width(), size.height(), centered)
+            self.fitPleaseWaitBox()
+        except Exception:
+            printExc()
+
+    def fitPleaseWaitBox(self):
+        box = getattr(self, 'pleaseWaitBox', None)
+        if box is None:
+            return
+        try:
+            x, y, w, h, centered = box
+            instance = self['pleaseWait'].instance
+            # calculateSize() measures the box first, so it starts from the full skin width
+            instance.resize(eSize(w, h))
+            pad = max(8, h // 2)
+            newW = min(w, instance.calculateSize().width() + 2 * pad)
+            if centered:
+                x += (w - newW) // 2
+            instance.resize(eSize(newW, h))
+            instance.move(ePoint(x, y))
+        except Exception:
+            printExc()
+
+    def setPleaseWait(self, text):
+        self['pleaseWait'].setText(text)
+        self.fitPleaseWaitBox()
+        self['pleaseWait'].show()
 
     def initGuiComponentsPos(self):
         # widget sizes are final here (the instances don't exist in __init__)

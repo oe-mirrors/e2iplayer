@@ -10,7 +10,7 @@ from datetime import date
 
 from Components.config import ConfigText, config, getConfigListEntry
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
-from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsMediaNamingNormalized, IsSidecarEnabled
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsMediaNamingNormalized, IsSidecarEnabled, GetLocalPageSize
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
@@ -302,6 +302,7 @@ class AnimeAV1(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     def listEpisodes(self, cItem):
         printDBG("AnimeAV1.listEpisodes [%s]" % cItem.get("url", ""))
+        pageSize = GetLocalPageSize(LOCAL_PAGE_SIZE)
         media = self._getData(cItem["url"]).get("media") or {}
         slug = media.get("slug") or self.cm.ph.getSearchGroups(cItem["url"], r"/media/([^/?#]+)")[0]
         numbers = sorted(set(_num((e or {}).get("number")) for e in media.get("episodes") or [] if _num((e or {}).get("number"))), key=float)
@@ -311,16 +312,16 @@ class AnimeAV1(GenericFolderWatchedScraperMixin, CBaseHostClass):
         show = cItem.get("s_title") or cItem.get("title", "")
         season = cItem.get("s_season", 1)
         page = cItem.get("page", 1)
-        start = (page - 1) * LOCAL_PAGE_SIZE
-        for number in numbers[start:start + LOCAL_PAGE_SIZE]:
+        start = (page - 1) * pageSize
+        for number in numbers[start:start + pageSize]:
             params = stripPagerKeys(dict(cItem))
             params.update({"name": "category", "category": "av1_video", "good_for_fav": True,
                            "url": self.getFullUrl("media/%s/%s" % (slug, number)), "title": self._episodeTitle(show, season, number),
                            "icon": "%sscreenshots/%s/%s.jpg" % (CDN_URL, media["id"], number) if media.get("id") else cItem.get("icon", ""),
                            "series_url": cItem["url"], "s_title": show, "s_season": season, "s_episode": number, "meta_type": "tv"})
             self.addVideo(params)
-        if len(numbers) > LOCAL_PAGE_SIZE:
-            lastPage = (len(numbers) + LOCAL_PAGE_SIZE - 1) // LOCAL_PAGE_SIZE
+        if len(numbers) > pageSize:
+            lastPage = (len(numbers) + pageSize - 1) // pageSize
             # the page lives in cItem["page"] - the template keeps the media url unchanged (Jump row)
             addPagingItems(self, dict(cItem), page, page < lastPage, lastPage, cItem["url"].replace("{", "{{").replace("}", "}}"))
 

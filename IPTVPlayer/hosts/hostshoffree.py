@@ -16,7 +16,7 @@ import re
 
 from Components.config import ConfigSelection, ConfigText, config, getConfigListEntry
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
-from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import GetAlternativeProxyChoices, GetAlternativeProxyUrl, IsSidecarEnabled, IsMediaNamingNormalized
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import GetAlternativeProxyChoices, GetAlternativeProxyUrl, IsSidecarEnabled, IsMediaNamingNormalized, GetLocalPageSize
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getItemMeta, metaArticle
@@ -325,6 +325,7 @@ class Shoffree(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     def listEpisodes(self, cItem, data=None):
         printDBG("Shoffree.listEpisodes [%s]" % cItem.get("url", ""))
+        pageSize = GetLocalPageSize(LOCAL_PAGE_SIZE)
         if data is None:
             sts, data = self.getPage(cItem["url"])
             if not sts:
@@ -354,11 +355,11 @@ class Shoffree(GenericFolderWatchedScraperMixin, CBaseHostClass):
         episodes.sort(key=lambda e: e[0])
         # add 071026: long anime seasons -> local paging
         page = cItem.get("page", 1)
-        start = (page - 1) * LOCAL_PAGE_SIZE
-        for _num, params in episodes[start:start + LOCAL_PAGE_SIZE]:
+        start = (page - 1) * pageSize
+        for _num, params in episodes[start:start + pageSize]:
             self.addVideo(params)
-        if len(episodes) > LOCAL_PAGE_SIZE:
-            lastPage = (len(episodes) + LOCAL_PAGE_SIZE - 1) // LOCAL_PAGE_SIZE
+        if len(episodes) > pageSize:
+            lastPage = (len(episodes) + pageSize - 1) // pageSize
             addPagingItems(self, dict(cItem), page, page < lastPage, lastPage)
 
     def listSearchResult(self, cItem, searchPattern, searchType):

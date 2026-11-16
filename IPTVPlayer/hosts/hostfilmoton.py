@@ -14,7 +14,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFo
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx, extractNum
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarMetaQuery
-from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized, GetLocalPageSize
 
 
 LOCAL_PAGE_SIZE = 100  # rows per page of a list the site shows in one piece (Domaći filmovi: ~300, long seasons)
@@ -174,17 +174,19 @@ class Filmoton(GenericFolderWatchedScraperMixin, CBaseHostClass):
             self._addTitle(cItem, url, label, self._imageUrl(item), True)
 
     def _localPaging(self, cItem, page):
-        # a list the site shows in one piece: LOCAL_PAGE_SIZE rows per page (First page / Next page)
-        lastPage = (len(self.currList) + LOCAL_PAGE_SIZE - 1) // LOCAL_PAGE_SIZE
+        pageSize = GetLocalPageSize(LOCAL_PAGE_SIZE)
+        # a list the site shows in one piece: pageSize rows per page (First page / Next page)
+        lastPage = (len(self.currList) + pageSize - 1) // pageSize
         if lastPage <= 1:
             return
         page = min(max(1, page), lastPage)
-        self.currList = self.currList[(page - 1) * LOCAL_PAGE_SIZE:page * LOCAL_PAGE_SIZE]
+        self.currList = self.currList[(page - 1) * pageSize:page * pageSize]
         params = dict(cItem)
         params["local_paging"] = True
         addPagingItems(self, params, page, page < lastPage, lastPage)
 
     def listItems(self, cItem):
+        pageSize = GetLocalPageSize(LOCAL_PAGE_SIZE)
         # site paging: <path>/page/N/[?query]; lists without a pager (Domaći filmovi ...) get local paging
         page = cItem.get("page", 1)
         localPaging = cItem.get("local_paging", False)
@@ -201,7 +203,7 @@ class Filmoton(GenericFolderWatchedScraperMixin, CBaseHostClass):
         listItem = dict(cItem)
         listItem.update({"category": "list_items", "base_url": baseUrl, "url": baseUrl})
         if localPaging or not (hasNext or page > 1):
-            if len(self.currList) > LOCAL_PAGE_SIZE:
+            if len(self.currList) > pageSize:
                 self._cachePage(baseUrl, data)  # the next local page lists from it
             self._localPaging(listItem, page)
             return

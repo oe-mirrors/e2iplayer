@@ -14,7 +14,7 @@ LAST_MODIFIED = "09.10.2026"
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, GetIPTVNotify, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
-from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized, GetLocalPageSize
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
@@ -173,14 +173,15 @@ class MusicBox(GenericFolderWatchedScraperMixin, CBaseHostClass):
                        'track': track, 'album': album, 'genre': genre, 'released': released, 'duration': duration})
 
     def _localPage(self, cItem, rows):
-        # charts with more than LOCAL_PAGE_SIZE rows are shown in local pages
+        pageSize = GetLocalPageSize(LOCAL_PAGE_SIZE)
+        # charts with more than pageSize rows are shown in local pages
         try:
             page = max(1, int(cItem.get('page', 1) or 1))
         except (TypeError, ValueError):
             page = 1
-        lastPage = (len(rows) + LOCAL_PAGE_SIZE - 1) // LOCAL_PAGE_SIZE
+        lastPage = (len(rows) + pageSize - 1) // pageSize
         if lastPage > 1:
-            rows = rows[(page - 1) * LOCAL_PAGE_SIZE:page * LOCAL_PAGE_SIZE]
+            rows = rows[(page - 1) * pageSize:page * pageSize]
         return rows, page, lastPage
 
     def _addLocalPager(self, cItem, page, lastPage):

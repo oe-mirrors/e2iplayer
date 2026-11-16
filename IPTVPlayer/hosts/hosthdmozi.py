@@ -5,7 +5,7 @@ LAST_MODIFIED = "07.11.2026"
 import re
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
-from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsMediaNamingNormalized, IsSidecarEnabled
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsMediaNamingNormalized, IsSidecarEnabled, GetLocalPageSize
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, sidecarMetaQuery
@@ -219,6 +219,7 @@ class HDMozi(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     def listEpisodes(self, cItem, seasons=None):
         printDBG("HDMozi.listEpisodes [%s]" % cItem.get("url", ""))
+        pageSize = GetLocalPageSize(LOCAL_PAGE_SIZE)
         url = self._pageUrl(cItem.get("url", ""))
         season = str(cItem.get("s_season", "") or self.cm.ph.getSearchGroups(cItem.get("url", ""), r"#s(\d+)")[0])
         if seasons is None:
@@ -235,8 +236,8 @@ class HDMozi(GenericFolderWatchedScraperMixin, CBaseHostClass):
         show = cItem.get("s_title", "") or cItem.get("title", "")
         normalize = IsMediaNamingNormalized()
         page = self._page(cItem)
-        start = (page - 1) * LOCAL_PAGE_SIZE
-        for episode, epUrl, name, icon in episodes[start:start + LOCAL_PAGE_SIZE]:
+        start = (page - 1) * pageSize
+        for episode, epUrl, name, icon in episodes[start:start + pageSize]:
             if normalize:
                 title = "%s - %s" % (show, formatSxxExx(season, episode))
             else:
@@ -247,8 +248,8 @@ class HDMozi(GenericFolderWatchedScraperMixin, CBaseHostClass):
             params.update({"name": "category", "good_for_fav": True, "category": "hdm_video", "title": title, "url": epUrl, "s_title": show, "s_season": season,
                            "s_episode": episode, "meta_type": "tv", "icon": self.getFullIconUrl(icon) if icon else cItem.get("icon", ""), "desc": name})
             self.addVideo(params)
-        if len(episodes) > LOCAL_PAGE_SIZE:
-            lastPage = (len(episodes) + LOCAL_PAGE_SIZE - 1) // LOCAL_PAGE_SIZE
+        if len(episodes) > pageSize:
+            lastPage = (len(episodes) + pageSize - 1) // pageSize
             addPagingItems(self, dict(cItem, category="list_episodes"), page, page < lastPage, lastPage)
 
     def listSearchResult(self, cItem, searchPattern, searchType):

@@ -26,7 +26,7 @@ import re
 
 from Components.config import ConfigSelection, ConfigText, config, getConfigListEntry
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
-from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import GetAlternativeProxyChoices, GetAlternativeProxyUrl, IsSidecarEnabled, IsMediaNamingNormalized
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import GetAlternativeProxyChoices, GetAlternativeProxyUrl, IsSidecarEnabled, IsMediaNamingNormalized, GetLocalPageSize
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.libs.botprotection import remembered_user_agent
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
@@ -400,6 +400,7 @@ class WeCimaCx(GenericFolderWatchedScraperMixin, CBaseHostClass):
         self._listEpisodes(cItem, data, cItem.get("s_season", 1))
 
     def _listEpisodes(self, cItem, block, season):
+        pageSize = GetLocalPageSize(LOCAL_PAGE_SIZE)
         show = cItem.get("s_title", "")
         normalize = IsMediaNamingNormalized()
         episodes, seen = [], set()
@@ -423,11 +424,11 @@ class WeCimaCx(GenericFolderWatchedScraperMixin, CBaseHostClass):
             return
         episodes.sort(key=lambda e: (e[0], e[1]))
         page = int(cItem.get("page", 1) or 1)
-        start = (page - 1) * LOCAL_PAGE_SIZE
-        for _sNum, _epNum, params in episodes[start:start + LOCAL_PAGE_SIZE]:
+        start = (page - 1) * pageSize
+        for _sNum, _epNum, params in episodes[start:start + pageSize]:
             self.addVideo(params)
-        if len(episodes) > LOCAL_PAGE_SIZE:
-            lastPage = (len(episodes) + LOCAL_PAGE_SIZE - 1) // LOCAL_PAGE_SIZE
+        if len(episodes) > pageSize:
+            lastPage = (len(episodes) + pageSize - 1) // pageSize
             addPagingItems(self, dict(cItem), page, page < lastPage, lastPage)
 
     def listSearchResult(self, cItem, searchPattern, searchType):

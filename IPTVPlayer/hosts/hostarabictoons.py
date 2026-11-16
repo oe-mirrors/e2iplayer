@@ -13,7 +13,7 @@ import re
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
-from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized, GetLocalPageSize
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import LATIN_ONLY, getMeta, isLatinTitle, metaArticle
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
@@ -144,6 +144,7 @@ class ArabicToons(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 self.addVideo(params)
 
     def listItems(self, cItem):
+        pageSize = GetLocalPageSize(LOCAL_PAGE_SIZE)
         page = cItem.get("page", 1)
         baseUrl = cItem.get("base_url") or self._url(cItem.get("url", ""))
         if cItem.get("local_paging"):
@@ -152,10 +153,10 @@ class ArabicToons(GenericFolderWatchedScraperMixin, CBaseHostClass):
             if not sts:
                 return
             rows = self._rows(data)
-            start = (page - 1) * LOCAL_PAGE_SIZE
-            self._addRows(rows[start:start + LOCAL_PAGE_SIZE])
-            if len(rows) > LOCAL_PAGE_SIZE:
-                lastPage = (len(rows) + LOCAL_PAGE_SIZE - 1) // LOCAL_PAGE_SIZE
+            start = (page - 1) * pageSize
+            self._addRows(rows[start:start + pageSize])
+            if len(rows) > pageSize:
+                lastPage = (len(rows) + pageSize - 1) // pageSize
                 addPagingItems(self, dict(cItem, base_url=baseUrl), page, page < lastPage, lastPage)
             return
         pageTpl = baseUrl.split("?")[0] + "?next={page}"
@@ -174,6 +175,7 @@ class ArabicToons(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     def listEpisodes(self, cItem):
         printDBG("ArabicToons.listEpisodes [%s]" % cItem.get("url", ""))
+        pageSize = GetLocalPageSize(LOCAL_PAGE_SIZE)
         sts, data = self.getPage(cItem["url"])
         if not sts:
             return
@@ -199,11 +201,11 @@ class ArabicToons(GenericFolderWatchedScraperMixin, CBaseHostClass):
                              "series_url": cItem["url"], "s_title": show, "s_season": season, "s_episode": str(int(num)),
                              "meta_type": "tv", "meta_title": cItem.get("meta_title", show)})
         page = cItem.get("page", 1)
-        start = (page - 1) * LOCAL_PAGE_SIZE
-        for params in episodes[start:start + LOCAL_PAGE_SIZE]:
+        start = (page - 1) * pageSize
+        for params in episodes[start:start + pageSize]:
             self.addVideo(params)
-        if len(episodes) > LOCAL_PAGE_SIZE:
-            lastPage = (len(episodes) + LOCAL_PAGE_SIZE - 1) // LOCAL_PAGE_SIZE
+        if len(episodes) > pageSize:
+            lastPage = (len(episodes) + pageSize - 1) // pageSize
             addPagingItems(self, dict(cItem, folder_title=folderTitle), page, page < lastPage, lastPage)
 
     def listSearchResult(self, cItem, searchPattern, searchType):

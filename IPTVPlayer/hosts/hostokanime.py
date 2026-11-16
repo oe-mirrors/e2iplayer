@@ -16,7 +16,7 @@ import re
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
-from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized, GetLocalPageSize
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import LATIN_ONLY, getMeta, isLatinTitle
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus, urllib_unquote
@@ -281,6 +281,7 @@ class OkAnime(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     def listAnime(self, cItem):
         printDBG("OkAnime.listAnime [%s]" % cItem.get("url", ""))
+        pageSize = GetLocalPageSize(LOCAL_PAGE_SIZE)
         sts, data = self.getPage(cItem["url"])
         if not sts:
             return
@@ -299,15 +300,15 @@ class OkAnime(GenericFolderWatchedScraperMixin, CBaseHostClass):
             self.addVideo(params)
             return
         page = cItem.get("page", 1)
-        start = (page - 1) * LOCAL_PAGE_SIZE
-        for number, href, label in episodes[start:start + LOCAL_PAGE_SIZE]:
+        start = (page - 1) * pageSize
+        for number, href, label in episodes[start:start + pageSize]:
             self.addVideo({"name": "category", "category": "ok_video", "good_for_fav": True, "url": href,
                            "title": self._episodeTitle(show, season, number, "%s - %s" % (cItem.get("title", show), label or number)),
                            "icon": cItem.get("icon", ""), "desc": cItem.get("desc", ""), "show_url": cItem["url"], "s_title": show,
                            "s_season": season, "s_episode": str(number), "meta_type": "tv", "meta_title": cItem.get("meta_title", show),
                            "meta_year": year})
-        if len(episodes) > LOCAL_PAGE_SIZE:
-            lastPage = (len(episodes) + LOCAL_PAGE_SIZE - 1) // LOCAL_PAGE_SIZE
+        if len(episodes) > pageSize:
+            lastPage = (len(episodes) + pageSize - 1) // pageSize
             addPagingItems(self, dict(cItem), page, page < lastPage, lastPage)
 
     def listSearchResult(self, cItem, searchPattern, searchType):

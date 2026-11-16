@@ -14,6 +14,7 @@ HOST_VERSION = "1.4"
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass, CDisplayListItem
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import GetLocalPageSize
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, stripPagerKeys
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
@@ -176,6 +177,7 @@ class Idokep(CBaseHostClass):
 
     def listCams(self, cItem):
         printDBG("Idokep.listCams [%s]" % cItem["url"])
+        pageSize = GetLocalPageSize(LOCAL_PAGE_SIZE)
         try:
             page = max(1, int(cItem.get("page", 1) or 1))
         except (TypeError, ValueError):
@@ -193,10 +195,10 @@ class Idokep(CBaseHostClass):
             seen.add(cam)
             icon = self.cm.ph.getSearchGroups(item, r'''(?:poster|src)=['"]([^'"]+?thumbnail\.jpg[^'"]*)['"]''')[0]
             cams.append((cam, title, self.getFullIconUrl(icon) if icon else ""))
-        lastPage = max(1, (len(cams) + LOCAL_PAGE_SIZE - 1) // LOCAL_PAGE_SIZE)
+        lastPage = max(1, (len(cams) + pageSize - 1) // pageSize)
         page = min(page, lastPage)
         listTitle = self._listTitle(cItem)
-        for cam, title, icon in cams[(page - 1) * LOCAL_PAGE_SIZE:page * LOCAL_PAGE_SIZE]:
+        for cam, title, icon in cams[(page - 1) * pageSize:page * pageSize]:
             self.addVideo({"name": "category", "good_for_fav": True, "title": title, "url": CAM_URL + cam, "f_cam": cam, "icon": icon or self.DEFAULT_ICON_URL,
                            "desc": listTitle})
         if lastPage > 1:
@@ -235,6 +237,7 @@ class Idokep(CBaseHostClass):
 
     def listAlbum(self, cItem):
         printDBG("Idokep.listAlbum [%s]" % cItem["url"])
+        pageSize = GetLocalPageSize(LOCAL_PAGE_SIZE)
         try:
             page = max(1, int(cItem.get("page", 1) or 1))
         except (TypeError, ValueError):
@@ -251,9 +254,9 @@ class Idokep(CBaseHostClass):
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ("<div", ">", "image-title"), ("</div", ">"), False)[1])
             pageUrl = self.cm.ph.getSearchGroups(item, r'''href=['"](/keptar/[^'"]+/kep/\d+)['"]''')[0]
             pics.append((title or listTitle, self.getFullUrl(url), self.getFullUrl(pageUrl) if pageUrl else ""))
-        lastPage = max(1, (len(pics) + LOCAL_PAGE_SIZE - 1) // LOCAL_PAGE_SIZE)
+        lastPage = max(1, (len(pics) + pageSize - 1) // pageSize)
         page = min(page, lastPage)
-        for title, url, pageUrl in pics[(page - 1) * LOCAL_PAGE_SIZE:page * LOCAL_PAGE_SIZE]:
+        for title, url, pageUrl in pics[(page - 1) * pageSize:page * pageSize]:
             self.addPicture({"name": "category", "good_for_fav": True, "title": title, "url": url, "icon": url, "desc": "[/br]".join([x for x in (listTitle, pageUrl) if x])})
         if lastPage > 1:
             addPagingItems(self, dict(stripPagerKeys(dict(cItem)), f_title=listTitle), page, page < lastPage, lastPage)

@@ -18,7 +18,7 @@ import re
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
-from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized, GetLocalPageSize
 from Plugins.Extensions.IPTVPlayer.libs.botprotection import remembered_user_agent
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarMetaQuery
@@ -206,6 +206,7 @@ class FrenchAnimes(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     def listShow(self, cItem):
         printDBG("FrenchAnimes.listShow [%s]" % cItem.get("url", ""))
+        pageSize = GetLocalPageSize(LOCAL_PAGE_SIZE)
         sts, data = self.getPage(cItem["url"])
         if not sts:
             return
@@ -218,8 +219,8 @@ class FrenchAnimes(GenericFolderWatchedScraperMixin, CBaseHostClass):
         folderTitle = cItem.get("folder_title") or cItem.get("title", show)
         season = cItem.get("s_season", 1)
         page = cItem.get("page", 1)
-        start = (page - 1) * LOCAL_PAGE_SIZE
-        for number, urls in episodes[start:start + LOCAL_PAGE_SIZE]:
+        start = (page - 1) * pageSize
+        for number, urls in episodes[start:start + pageSize]:
             if IsMediaNamingNormalized():
                 title = "%s - %s" % (show, formatSxxExx(season, number))
             else:
@@ -228,8 +229,8 @@ class FrenchAnimes(GenericFolderWatchedScraperMixin, CBaseHostClass):
                            "title": title, "icon": cItem.get("icon", ""), "desc": ", ".join(self.up.getDomain(u) for u in urls),
                            "show_url": cItem["url"], "s_title": show, "s_season": season, "s_episode": str(number),
                            "meta_type": "tv", "meta_title": cItem.get("meta_title", show), "meta_year": cItem.get("meta_year", "")})
-        if len(episodes) > LOCAL_PAGE_SIZE:
-            lastPage = (len(episodes) + LOCAL_PAGE_SIZE - 1) // LOCAL_PAGE_SIZE
+        if len(episodes) > pageSize:
+            lastPage = (len(episodes) + pageSize - 1) // pageSize
             addPagingItems(self, dict(cItem, folder_title=folderTitle), page, page < lastPage, lastPage)
 
     def listSearchResult(self, cItem, searchPattern, searchType):

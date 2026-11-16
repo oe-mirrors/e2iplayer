@@ -8,7 +8,7 @@ import re
 
 from Components.config import ConfigText, config, getConfigListEntry
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
-from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsMediaNamingNormalized, IsSidecarEnabled
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsMediaNamingNormalized, IsSidecarEnabled, GetLocalPageSize
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
@@ -267,19 +267,20 @@ class GamatoTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     def listTop(self, cItem):
         printDBG("GamatoTV.listTop |%s|" % cItem)
+        pageSize = GetLocalPageSize(LOCAL_PAGE_SIZE)
         url = self._url(cItem)
         sts, data = self.getPage(url)
         if not sts:
             return
         items = re.findall(r'(?s)<div class="weekly-item3">\s*<a href="([^"]+)"[^>]*>\s*<img[^>]+src="([^"]+)".*?alt="([^"]*)"', data)
         page = self._page(cItem)
-        lastPage = max(1, (len(items) + LOCAL_PAGE_SIZE - 1) // LOCAL_PAGE_SIZE)
+        lastPage = max(1, (len(items) + pageSize - 1) // pageSize)
         page = min(page, lastPage)
-        for idx, (itemUrl, icon, label) in enumerate(items[(page - 1) * LOCAL_PAGE_SIZE:page * LOCAL_PAGE_SIZE]):
+        for idx, (itemUrl, icon, label) in enumerate(items[(page - 1) * pageSize:page * pageSize]):
             sTitle, year = self._splitYear(self.cleanHtmlStr(label))
             # Top 250 has films only; the rank before the title
             params = stripPagerKeys(dict(cItem), ("path",))
-            rank = (page - 1) * LOCAL_PAGE_SIZE + idx + 1
+            rank = (page - 1) * pageSize + idx + 1
             title = "%s (%s)" % (sTitle, year) if (year and IsMediaNamingNormalized()) else self.cleanHtmlStr(label)
             params.update({"good_for_fav": True, "category": "video", "url": itemUrl, "title": title, "icon": self.getFullIconUrl(icon),
                            "desc": "#%d | %s" % (rank, year) if year else "#%d" % rank, "s_title": sTitle, "s_year": year, "meta_type": "movie"})

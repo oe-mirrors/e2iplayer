@@ -19,7 +19,7 @@ import re
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
-from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized, GetLocalPageSize
 from Plugins.Extensions.IPTVPlayer.libs.botprotection import remembered_user_agent
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import LATIN_ONLY, getMeta, isLatinTitle
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
@@ -218,6 +218,7 @@ class AnimeBlkom(GenericFolderWatchedScraperMixin, CBaseHostClass):
                            "show_url": self.getFullUrl("/anime/%s" % slug.group(1)) if slug else ""})
 
     def listShow(self, cItem):
+        pageSize = GetLocalPageSize(LOCAL_PAGE_SIZE)
         # anime page: trailer + the episode list (a movie with one episode -> one VIDEO row "Title (Year)")
         printDBG("AnimeBlkom.listShow [%s]" % cItem.get("url", ""))
         sts, data = self.getPage(cItem["url"])
@@ -254,15 +255,15 @@ class AnimeBlkom(GenericFolderWatchedScraperMixin, CBaseHostClass):
                            "show_url": cItem["url"], "meta_type": "movie", "meta_year": year})
             self.addVideo(params)
             return
-        start = (page - 1) * LOCAL_PAGE_SIZE
-        for episode, href, label in episodes[start:start + LOCAL_PAGE_SIZE]:
+        start = (page - 1) * pageSize
+        for episode, href, label in episodes[start:start + pageSize]:
             self.addVideo({"name": "category", "category": "bk_video", "good_for_fav": True, "url": href, "icon": cItem.get("icon", ""),
                            "title": self._episodeTitle(show, season, episode, "%s - %s" % (cItem.get("title", show), label)),
                            "desc": cItem.get("desc", ""), "show_url": cItem["url"], "s_title": show, "s_season": season,
                            "s_episode": str(episode), "meta_type": "tv", "meta_title": cItem.get("meta_title", show),
                            "meta_year": cItem.get("meta_year", "")})
-        if len(episodes) > LOCAL_PAGE_SIZE:
-            lastPage = (len(episodes) + LOCAL_PAGE_SIZE - 1) // LOCAL_PAGE_SIZE
+        if len(episodes) > pageSize:
+            lastPage = (len(episodes) + pageSize - 1) // pageSize
             addPagingItems(self, dict(cItem), page, page < lastPage, lastPage)
 
     def listSearchResult(self, cItem, searchPattern, searchType):

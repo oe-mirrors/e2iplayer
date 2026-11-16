@@ -18,7 +18,7 @@ from random import choice
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
-from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized, GetLocalPageSize
 from Plugins.Extensions.IPTVPlayer.libs import pyaes
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps, loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import LATIN_ONLY, getMeta, isLatinTitle, metaArticle
@@ -209,15 +209,16 @@ class CaraTeen(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return params
 
     def _addRows(self, cItem, rows):
+        pageSize = GetLocalPageSize(LOCAL_PAGE_SIZE)
         page = cItem.get("page", 1)
-        start = (page - 1) * LOCAL_PAGE_SIZE
-        for params in rows[start:start + LOCAL_PAGE_SIZE]:
+        start = (page - 1) * pageSize
+        for params in rows[start:start + pageSize]:
             if params["category"] == "ct_video":
                 self.addVideo(params)
             else:
                 self.addDir(params)
-        if len(rows) > LOCAL_PAGE_SIZE:
-            lastPage = (len(rows) + LOCAL_PAGE_SIZE - 1) // LOCAL_PAGE_SIZE
+        if len(rows) > pageSize:
+            lastPage = (len(rows) + pageSize - 1) // pageSize
             addPagingItems(self, dict(cItem), page, page < lastPage, lastPage)
 
     def listShows(self, cItem):

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "08.11.2026"
+LAST_MODIFIED = "16.11.2026"
+# 16.11.2026 - lantech.com.pl: links again (players carry the playlist url); 40mediagroup.com: new site
 # 08.11.2026 - new sources: hdontap.com (webcams), megawypas.com (Polish TV and radio)
 # 25.10.2026 - new webcam sources: worldcam.live, lookcam.com, San Diego Zoo, bieszczady.live,
 #   nadmorski24.pl, lantech.com.pl (LiveSzczecin), korbielow.net, szczyrkowski.pl; 40mediagroup.com channels
@@ -934,11 +935,17 @@ class WebStreamHost(CBaseHostClass):
             sts, html = self._camGetPage(playerUrl, cItem['url'])
             if not sts:
                 continue
+            # the players carry the playlist as it is (var zrodlo = "https://ls-proxy-local.lantech.com.pl/hls/<cam>/index.m3u8"),
+            # the older ones only serverip + cam
+            direct = re.findall(r'''['"](https?://[^'"]+/hls/([^/'"]+)/index\.m3u8[^'"]*)['"]''', html)
+            if direct:
+                streams.extend((cam, url) for url, cam in direct)
+                continue
             server = self.cm.ph.getSearchGroups(html, r'''serverip\s*=\s*['"]([^'"]+)['"]''')[0]
             cam = self.cm.ph.getSearchGroups(html, r'''var\s+cam\s*=\s*['"]([^'"]+)['"]''')[0]
             if server and cam:
                 streams.append((cam, 'https://%s/hls/%s/index.m3u8' % (server, cam)))
-        return self._camMultiHlsLinks('lantech.com.pl', streams, 'https://lantech.com.pl/')
+        return self._camMultiHlsLinks('lantech.com.pl', self._camUnique(streams), 'https://lantech.com.pl/')
 
     # San Diego Zoo - the camera pages embed Camzone players
     # (<channel>.secureplayer.camzonecdn.com/...?channel=<channel>), the stream is
@@ -978,24 +985,29 @@ class WebStreamHost(CBaseHostClass):
         sts, data = self._camGetPage(self.MEDIA40_URL + '/canales/')
         if not sts:
             return
-        # not every channel has a tile (TotalMusic Dance / Concerts only a plain link): every
-        # aria-label link counts, the logo follows the /images/channels/<slug>.png scheme
+        # the Next.js page carries every channel as {"slug":"<slug>","name":"<name>",...} in its RSC data
+        # (the old page: aria-label links), the logo is /channels/<slug>.webp (/images/channels/<slug>.png only for some)
+        data = data.replace('\\"', '"')
+        channels = re.findall(r'\{"slug":"([a-z0-9-]+)","name":"([^"]+)"', data)
+        if not channels:
+            channels = re.findall(r'<a href="/canales/([a-z0-9-]+)/"[^>]*?aria-label="([^"]+)"', data)
         seen = set()
-        for slug, title in re.findall(r'<a href="/canales/([a-z0-9-]+)/"[^>]*?aria-label="([^"]+)"', data):
+        for slug, title in channels:
             if slug in seen:
                 continue
             seen.add(slug)
             # some buttons are labelled "Ver <channel>" (watch ...)
             title = re.sub(r'^Ver\s+', '', self.cleanHtmlStr(title))
             self.addVideo({'name': 'media40_video', 'title': title, 'url': '%s/canales/%s/' % (self.MEDIA40_URL, slug),
-                           'icon': '%s/images/channels/%s.png' % (self.MEDIA40_URL, slug)})
+                           'icon': '%s/channels/%s.webp' % (self.MEDIA40_URL, slug)})
 
     def getMedia40Link(self, cItem):
         printDBG("getMedia40Link [%s]" % cItem.get('url', ''))
         sts, data = self._camGetPage(cItem['url'])
         if not sts:
             return []
-        url = self.cm.ph.getSearchGroups(data, r'''data-src=['"](https?://[^'"]+\.m3u8[^'"]*)['"]''')[0]
+        # the player props {"epg":"...","src":"https://cdn.40mediagroup.com/.../master.m3u8"} (before: data-src)
+        url = self.cm.ph.getSearchGroups(data.replace('\\"', '"'), r'''(?:data-src=|"src":)['"](https?://[^'"]+\.m3u8[^'"]*)['"]''')[0]
         if not url:
             return []
         return self._camHlsLinks('40mediagroup.com', url, self.MEDIA40_URL + '/')

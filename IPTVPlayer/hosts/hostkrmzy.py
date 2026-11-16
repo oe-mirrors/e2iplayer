@@ -18,7 +18,7 @@ import os
 import re
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
-from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized, GetLocalPageSize
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.libs.botprotection import remembered_user_agent
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import LATIN_ONLY, getMeta, isLatinTitle
@@ -259,6 +259,7 @@ class Krmzy(GenericFolderWatchedScraperMixin, CBaseHostClass):
         addPagingItems(self, listItem, page, hasNext, lastPage if hasNext or page > 1 else 0, pageTpl)
 
     def listSeries(self, cItem):
+        pageSize = GetLocalPageSize(LOCAL_PAGE_SIZE)
         page = cItem.get("page", 1)
         printDBG("Krmzy.listSeries [%s] page[%s]" % (cItem.get("url", ""), page))
         sts, data = self.getPage(cItem.get("url", ""))
@@ -281,11 +282,11 @@ class Krmzy(GenericFolderWatchedScraperMixin, CBaseHostClass):
             # the site lists series before their first episode ("يعرض قريباً")
             SetIPTVPlayerLastHostError(_("No episodes found."))
             return
-        start = (page - 1) * LOCAL_PAGE_SIZE
-        for params in episodes[start:start + LOCAL_PAGE_SIZE]:
+        start = (page - 1) * pageSize
+        for params in episodes[start:start + pageSize]:
             self.addVideo(params)
-        if len(episodes) > LOCAL_PAGE_SIZE:
-            lastPage = (len(episodes) + LOCAL_PAGE_SIZE - 1) // LOCAL_PAGE_SIZE
+        if len(episodes) > pageSize:
+            lastPage = (len(episodes) + pageSize - 1) // pageSize
             addPagingItems(self, dict(cItem), page, page < lastPage, lastPage)
 
     def listOldFolder(self, cItem):

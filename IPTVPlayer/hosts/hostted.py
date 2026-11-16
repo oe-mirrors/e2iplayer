@@ -12,7 +12,7 @@ import re
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
-from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized, GetLocalPageSize
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps, loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist, decorateUrl
@@ -215,6 +215,7 @@ class TED(GenericFolderWatchedScraperMixin, CBaseHostClass):
         addPagingItems(self, cItem, page, cnt > 0 and page < nbPages, nbPages, self.MAIN_URL + "talks")
 
     def listFacets(self, cItem):
+        pageSize = GetLocalPageSize(LOCAL_PAGE_SIZE)
         facet = cItem.get("facet", "tags")
         values = self.facetCache.get(facet)
         if not values:
@@ -222,12 +223,12 @@ class TED(GenericFolderWatchedScraperMixin, CBaseHostClass):
             values = (data.get("facets") or {}).get(facet) or {}
             if values:
                 self.facetCache[facet] = values
-        # ~400 topics / ~120 languages: shown LOCAL_PAGE_SIZE at a time
+        # ~400 topics / ~120 languages: shown pageSize at a time
         keys = [v for v in sorted(values.keys(), key=lambda x: x.strip().lower()) if v.strip()]
         page = max(1, int(cItem.get("page", 1) or 1))
-        lastPage = max(1, (len(keys) + LOCAL_PAGE_SIZE - 1) // LOCAL_PAGE_SIZE)
+        lastPage = max(1, (len(keys) + pageSize - 1) // pageSize)
         page = min(page, lastPage)
-        for value in keys[(page - 1) * LOCAL_PAGE_SIZE:page * LOCAL_PAGE_SIZE]:
+        for value in keys[(page - 1) * pageSize:page * pageSize]:
             title = value.strip()
             title = title[:1].upper() + title[1:]
             if facet == "subtitle_languages":

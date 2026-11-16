@@ -8,7 +8,7 @@ LAST_MODIFIED = "24.10.2026"
 import re
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
-from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsMediaNamingNormalized, IsSidecarEnabled
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsMediaNamingNormalized, IsSidecarEnabled, GetLocalPageSize
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
@@ -112,11 +112,12 @@ class GreekMovies(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return re.sub(r"^https?://[^/]+/", "", url).split("?", 1)[0].split("#", 1)[0]
 
     def _localPaging(self, cItem, rows, add):
+        pageSize = GetLocalPageSize(LOCAL_PAGE_SIZE)
         # rows of one page of a long local list + First / Jump / Next page
         page = self._page(cItem)
-        lastPage = max(1, (len(rows) + LOCAL_PAGE_SIZE - 1) // LOCAL_PAGE_SIZE)
+        lastPage = max(1, (len(rows) + pageSize - 1) // pageSize)
         page = min(page, lastPage)
-        for row in rows[(page - 1) * LOCAL_PAGE_SIZE:page * LOCAL_PAGE_SIZE]:
+        for row in rows[(page - 1) * pageSize:page * pageSize]:
             add(row)
         if lastPage > 1:
             addPagingItems(self, cItem, page, page < lastPage, lastPage, cItem["url"].replace("{", "{{").replace("}", "}}"))
