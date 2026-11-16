@@ -21,7 +21,7 @@ import re
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
-from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized, GetLocalPageSize
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.botprotection import remembered_user_agent
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, metaArticle
@@ -219,6 +219,7 @@ class WitAnime(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     def listEpisodes(self, cItem):
         printDBG("WitAnime.listEpisodes [%s]" % cItem.get("url", ""))
+        pageSize = GetLocalPageSize(LOCAL_PAGE_SIZE)
         sts, data = self.getPage(cItem["url"])
         if not sts:
             return
@@ -227,17 +228,17 @@ class WitAnime(GenericFolderWatchedScraperMixin, CBaseHostClass):
         season = cItem.get("s_season", 1)
         episodes = sorted(set(int(num) for name, num in WATCH_RE.findall(data) if name == slug))
         page = cItem.get("page", 1)
-        start = (page - 1) * LOCAL_PAGE_SIZE
+        start = (page - 1) * pageSize
         # the year INFO takes from this series page: the moviemeta query of the download sidecar
         year = self._siteInfo(data)[1].get("year", "")
-        for num in episodes[start:start + LOCAL_PAGE_SIZE]:
+        for num in episodes[start:start + pageSize]:
             self.addVideo({"name": "category", "good_for_fav": True, "category": "wa_video",
                            "url": self.getFullUrl("/watch/%s/%d" % (slug, num)), "icon": cItem.get("icon", ""),
                            "title": self._episodeTitle(show, season, num, "%s - %s %d" % (cItem.get("title", show), _("Episode"), num)),
                            "desc": cItem.get("desc", ""), "series_url": cItem["url"], "s_title": show, "s_season": season,
                            "s_episode": str(num), "meta_type": "tv", "meta_title": cItem.get("meta_title", show), "meta_year": year})
-        if len(episodes) > LOCAL_PAGE_SIZE:
-            lastPage = (len(episodes) + LOCAL_PAGE_SIZE - 1) // LOCAL_PAGE_SIZE
+        if len(episodes) > pageSize:
+            lastPage = (len(episodes) + pageSize - 1) // pageSize
             addPagingItems(self, dict(cItem), page, page < lastPage, lastPage)
 
     def listSearchResult(self, cItem, searchPattern, searchType):

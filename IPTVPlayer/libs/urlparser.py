@@ -699,6 +699,8 @@ class urlparser:
             "pamelachangemission.com": self.pp.parserVOESX,  # add 061026
             "paulkitchendark.com": self.pp.parserVOESX,  # add 061026
             "peachify.top": self.pp.parserPEACHIFY,
+            "peeplayer.com": self.pp.parserPEESTREAM,  # add 161126 (premiumsmart.eu "PeeStream" mirror)
+            "peestream.com": self.pp.parserPEESTREAM,  # add 161126
             "peytonepre.com": self.pp.parserJWPLAYER,
             "pixeldrain.com": self.pp.parserPIXELDRAIN,  # add 171026
             "pixeldrain.dev": self.pp.parserPIXELDRAIN,  # add 131126
@@ -7863,21 +7865,32 @@ class pageParser(CaptchaHelper):
         sts, data = self.cm.getPage(baseUrl, {"header": HTTP_HEADER})
         if not sts:
             return []
-        # the /e/<id> embed page carries the master playlist url in a plain JS const
-        m = re.search(r'''const\s+url\s*=\s*["'](https?:[^"']+\.m3u8[^"']*)["']''', data)
-        if not m:
-            m = re.search(r'''["'](https?:(?:\\?/){2}[^"']+?/master\.m3u8[^"']*)["']''', data)
-        # add 041026: some files are a plain MP4 (const url = "https:\/\/vids.st\/storage\/uploads\/...mp4")
-        isMp4 = False
-        if not m:
-            m = re.search(r'''const\s+url\s*=\s*["'](https?:[^"']+\.mp4[^"']*)["']''', data)
-            isMp4 = bool(m)
-        if not m:
+        # the /e/<id> embed page carries the media url in a plain JS const: an HLS master, a plain MP4
+        # (add 041026) or the uploaded file as it is (fix 161126: .mkv/.webm - it had no links)
+        url = ""
+        for item in re.findall(r'''const\s+url\s*=\s*["'](https?:[^"']+)["']''', data):
+            if re.search(r"\.(?:m3u8|mp4|mkv|webm|avi|mov)(?:$|\?)|/storage/", item, re.I):
+                url = item
+                break
+        if not url:
+            url = self.cm.ph.getSearchGroups(data, r'''["'](https?:(?:\\?/){2}[^"']+?/master\.m3u8[^"']*)["']''')[0]
+        if not url:
             return []
-        url = m.group(1).replace("\\/", "/")
+        url = url.replace("\\/", "/")
+        isHls = ".m3u8" in url.lower()
         subTracks = []
+        # fix 161126: "subtitleTracks" [{url, label}] holds all tracks, "subtitleUrl" only the default one
+        tm = re.search(r'"subtitleTracks"\s*:\s*(\[[^\]]*\])', data)
+        try:
+            tracks = json_loads(tm.group(1)) if tm else []
+        except Exception:
+            tracks = []
+        for track in tracks:
+            if isinstance(track, dict) and track.get("url"):
+                label = ensure_str(track.get("label") or "")
+                subTracks.append({"title": label, "url": ensure_str(track["url"]), "lang": label})
         sm = re.search(r'"subtitleUrl"\s*:\s*"([^"]+)"', data)
-        if sm and sm.group(1):
+        if sm and not subTracks:
             lm = re.search(r'"subtitleLabel"\s*:\s*"([^"]*)"', data)
             label = lm.group(1) if lm else ""
             subTracks.append({"title": label, "url": sm.group(1).replace("\\/", "/"), "lang": label})
@@ -7887,11 +7900,33 @@ class pageParser(CaptchaHelper):
             "Origin": host[:-1] if host.endswith("/") else host,
             "external_sub_tracks": subTracks,
         })
-        if not isMp4:
+        if isHls:
             urltab.extend(getDirectM3U8Playlist(url, checkExt=False, checkContent=True))
         if not urltab:
             urltab.append({"name": "vids.st", "url": url, "need_resolve": 0})
         return urltab
+
+    def parserPEESTREAM(self, baseUrl):  # add 161126 - peeplayer.com / peestream.com (premiumsmart.eu "PeeStream" mirror)
+        printDBG("parserPEESTREAM baseUrl[%s]" % baseUrl)
+        # the browser player builds its master as a blob (key over ECDH), the Chromecast button uses the
+        # plain one: /m/<MSG_ID>/master.m3u8?t=<STOK> - AES-128 HLS whose key url answers without a token,
+        # the audio tracks (Polish / English) are EXT-X-MEDIA groups
+        mediaId = self.cm.ph.getSearchGroups(baseUrl, r"(?://|\.)(?:peestream|peeplayer)\.com/(?:v|e)/([0-9a-zA-Z]+)")[0]
+        if not mediaId:
+            return []
+        mainUrl = "https://peeplayer.com"
+        HTTP_HEADER = self.cm.getDefaultHeader(browser="chrome")
+        HTTP_HEADER["Referer"] = mainUrl + "/"
+        sts, data = self.cm.getPage("%s/e/%s" % (mainUrl, mediaId), {"header": HTTP_HEADER})
+        if not sts:
+            return []
+        msgId = self.cm.ph.getSearchGroups(data, r"var\s+MSG_ID\s*=\s*(\d+)")[0]
+        token = self.cm.ph.getSearchGroups(data, r'''var\s+STOK\s*=\s*["']([^"']+)["']''')[0]
+        if not msgId or not token:
+            return []
+        url = strwithmeta("%s/m/%s/master.m3u8?t=%s" % (mainUrl, msgId, urllib_quote(token, safe="")),
+                          {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": mainUrl + "/", "Origin": mainUrl})
+        return getDirectM3U8Playlist(url, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=999999999)
 
     def parserYANDEXDISK(self, baseUrl):  # add 031026 - yadi.sk / disk.yandex.* / disk.360.yandex.ru public links, official public API
         printDBG("parserYANDEXDISK baseUrl[%s]" % baseUrl)

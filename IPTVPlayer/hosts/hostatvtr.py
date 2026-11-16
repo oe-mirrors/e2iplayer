@@ -9,7 +9,7 @@ import re
 import time
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
-from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsMediaNamingNormalized, IsSidecarEnabled
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsMediaNamingNormalized, IsSidecarEnabled, GetLocalPageSize
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
@@ -186,15 +186,16 @@ class AtvTR(GenericFolderWatchedScraperMixin, CBaseHostClass):
         self.addDir(params)
 
     def listShows(self, cItem):
+        pageSize = GetLocalPageSize(LOCAL_PAGE_SIZE)
         path = cItem.get("list_path", "diziler")
         kind = SHOW_LISTS.get(path, "series")
         shows = self._shows(path)
         page = max(1, int(cItem.get("page", 1) or 1))
-        lastPage = max(1, (len(shows) + LOCAL_PAGE_SIZE - 1) // LOCAL_PAGE_SIZE)
+        lastPage = max(1, (len(shows) + pageSize - 1) // pageSize)
         if len(shows) <= 100:
             page, lastPage, part = 1, 1, shows
         else:
-            part = shows[(page - 1) * LOCAL_PAGE_SIZE:page * LOCAL_PAGE_SIZE]
+            part = shows[(page - 1) * pageSize:page * pageSize]
         for slug, title, icon, info in part:
             self._addShow(cItem, slug, title, icon, info, kind)
         if lastPage > 1:
@@ -333,14 +334,15 @@ class AtvTR(GenericFolderWatchedScraperMixin, CBaseHostClass):
         self._listEpisodes(cItem, episodes, season)
 
     def _listEpisodes(self, cItem, episodes, season):
+        pageSize = GetLocalPageSize(LOCAL_PAGE_SIZE)
         show = cItem.get("s_title") or cItem.get("title", "")
         episodes = sorted(episodes, key=lambda e: self._epNum(e[1]))
         page = max(1, int(cItem.get("page", 1) or 1))
         lastPage = 1
         if len(episodes) > 100:
-            lastPage = (len(episodes) + LOCAL_PAGE_SIZE - 1) // LOCAL_PAGE_SIZE
+            lastPage = (len(episodes) + pageSize - 1) // pageSize
             page = min(page, lastPage)
-            episodes = episodes[(page - 1) * LOCAL_PAGE_SIZE:page * LOCAL_PAGE_SIZE]
+            episodes = episodes[(page - 1) * pageSize:page * pageSize]
         else:
             page = 1
         base = stripPagerKeys(dict(cItem), ("total", "vtype"))

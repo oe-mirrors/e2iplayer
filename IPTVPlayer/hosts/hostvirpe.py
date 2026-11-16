@@ -12,7 +12,7 @@ import re
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
-from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized, GetLocalPageSize
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
@@ -204,12 +204,13 @@ class Virpe(GenericFolderWatchedScraperMixin, CBaseHostClass):
         self._addSeriesPaged(cItem, rows)
 
     def _addSeriesPaged(self, cItem, rows):
+        pageSize = GetLocalPageSize(LOCAL_PAGE_SIZE)
         # the main page lists up to ~270 series per module in one go - paged here
         page = max(1, int(cItem.get("page", 1) or 1))
-        start = (page - 1) * LOCAL_PAGE_SIZE
-        for url, title in rows[start:start + LOCAL_PAGE_SIZE]:
+        start = (page - 1) * pageSize
+        for url, title in rows[start:start + pageSize]:
             self.addDir(self._seriesParams(cItem, url, title))
-        lastPage = (len(rows) + LOCAL_PAGE_SIZE - 1) // LOCAL_PAGE_SIZE
+        lastPage = (len(rows) + pageSize - 1) // pageSize
         # constant template: the page number drives the list, the template only lets "Jump" through
         addPagingItems(self, cItem, page, page < lastPage, lastPage, self.MAIN_URL)
 

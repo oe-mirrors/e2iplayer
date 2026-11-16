@@ -22,7 +22,7 @@ import re
 from Components.config import ConfigSelection, ConfigText, config, getConfigListEntry
 from Plugins.Extensions.IPTVPlayer.components.captcha_helper import CaptchaHelper
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
-from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import GetAlternativeProxyChoices, GetAlternativeProxyUrl, IsSidecarEnabled, IsMediaNamingNormalized
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import GetAlternativeProxyChoices, GetAlternativeProxyUrl, IsSidecarEnabled, IsMediaNamingNormalized, GetLocalPageSize
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.libs.botprotection import remembered_user_agent
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, metaArticle
@@ -288,6 +288,7 @@ class DuLourd(GenericFolderWatchedScraperMixin, CBaseHostClass, CaptchaHelper):
 
     def listEpisodes(self, cItem):
         printDBG("DuLourd.listEpisodes [%s]" % cItem.get("url", ""))
+        pageSize = GetLocalPageSize(LOCAL_PAGE_SIZE)
         sts, data = self.getPage(cItem["url"])
         if not sts:
             return
@@ -314,11 +315,11 @@ class DuLourd(GenericFolderWatchedScraperMixin, CBaseHostClass, CaptchaHelper):
         # the site lists the newest episode first
         episodes = [params for _num, params in sorted(episodes, key=lambda x: x[0])]
         page = cItem.get("page", 1)
-        start = (page - 1) * LOCAL_PAGE_SIZE
-        for params in episodes[start:start + LOCAL_PAGE_SIZE]:
+        start = (page - 1) * pageSize
+        for params in episodes[start:start + pageSize]:
             self.addVideo(params)
-        if len(episodes) > LOCAL_PAGE_SIZE:
-            lastPage = (len(episodes) + LOCAL_PAGE_SIZE - 1) // LOCAL_PAGE_SIZE
+        if len(episodes) > pageSize:
+            lastPage = (len(episodes) + pageSize - 1) // pageSize
             addPagingItems(self, dict(cItem, category="dl_season"), page, page < lastPage, lastPage)
 
     def listSearchResult(self, cItem, searchPattern, searchType):

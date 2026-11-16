@@ -22,7 +22,7 @@ import time
 
 from Components.config import ConfigSelection, ConfigText, config, getConfigListEntry
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
-from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import GetAlternativeProxyChoices, GetAlternativeProxyUrl, IsSidecarEnabled, IsMediaNamingNormalized
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import GetAlternativeProxyChoices, GetAlternativeProxyUrl, IsSidecarEnabled, IsMediaNamingNormalized, GetLocalPageSize
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.libs.botprotection import remembered_user_agent
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
@@ -432,6 +432,7 @@ class FajerShow(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     def listEpisodes(self, cItem, data=None):
         printDBG("FajerShow.listEpisodes [%s] [%s]" % (cItem.get("url", ""), cItem.get("season_id", "")))
+        pageSize = GetLocalPageSize(LOCAL_PAGE_SIZE)
         if data is None:
             sts, data = self.getPage(cItem["url"])
             if not sts:
@@ -466,11 +467,11 @@ class FajerShow(GenericFolderWatchedScraperMixin, CBaseHostClass):
             SetIPTVPlayerLastHostError(message or _("No stream available"))
             return
         page = cItem.get("page", 1)
-        start = (page - 1) * LOCAL_PAGE_SIZE
-        for params in episodes[start:start + LOCAL_PAGE_SIZE]:
+        start = (page - 1) * pageSize
+        for params in episodes[start:start + pageSize]:
             self.addVideo(params)
-        if len(episodes) > LOCAL_PAGE_SIZE:
-            lastPage = (len(episodes) + LOCAL_PAGE_SIZE - 1) // LOCAL_PAGE_SIZE
+        if len(episodes) > pageSize:
+            lastPage = (len(episodes) + pageSize - 1) // pageSize
             addPagingItems(self, dict(cItem, category="fj_season"), page, page < lastPage, lastPage)
 
     def listSearchResult(self, cItem, searchPattern, searchType):

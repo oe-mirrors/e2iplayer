@@ -18,7 +18,7 @@ import re
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
-from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized, GetLocalPageSize
 from Plugins.Extensions.IPTVPlayer.libs.botprotection import remembered_user_agent
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import LATIN_ONLY, getMeta, isLatinTitle
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
@@ -232,12 +232,13 @@ class AnimErco(GenericFolderWatchedScraperMixin, CBaseHostClass):
         self._addEpisodes(cItem, entries)
 
     def _addEpisodes(self, cItem, entries):
+        pageSize = GetLocalPageSize(LOCAL_PAGE_SIZE)
         show = cItem.get("s_title") or cItem.get("title", "")
         season = cItem.get("s_season", 1)
         folderTitle = cItem.get("folder_title") or cItem.get("title", show)
         page = cItem.get("page", 1)
-        start = (page - 1) * LOCAL_PAGE_SIZE
-        for number, href, label, icon in entries[start:start + LOCAL_PAGE_SIZE]:
+        start = (page - 1) * pageSize
+        for number, href, label, icon in entries[start:start + pageSize]:
             match = EPISODE_RE.search(label)
             episode = int(match.group(1)) if match else number
             if IsMediaNamingNormalized():
@@ -248,8 +249,8 @@ class AnimErco(GenericFolderWatchedScraperMixin, CBaseHostClass):
                            "icon": icon or cItem.get("icon", ""), "desc": label, "show_url": cItem.get("show_url") or cItem["url"],
                            "s_title": show, "s_season": season, "s_episode": str(episode), "meta_type": "tv",
                            "meta_title": cItem.get("meta_title", show), "meta_year": cItem.get("meta_year", "")})
-        if len(entries) > LOCAL_PAGE_SIZE:
-            lastPage = (len(entries) + LOCAL_PAGE_SIZE - 1) // LOCAL_PAGE_SIZE
+        if len(entries) > pageSize:
+            lastPage = (len(entries) + pageSize - 1) // pageSize
             addPagingItems(self, dict(cItem, folder_title=folderTitle), page, page < lastPage, lastPage)
 
     def listSearchResult(self, cItem, searchPattern, searchType):

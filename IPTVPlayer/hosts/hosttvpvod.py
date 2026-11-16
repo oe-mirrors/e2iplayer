@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "10.10.2026"
+LAST_MODIFIED = "16.11.2026"
+# 16.11.2026 - Rekonstrukcja cyfrowa: the new cyfrowa.tvp.pl (categories, programmes, seasons from its api)
 # 10.10.2026 - host standard: vod.tvp.pl catalogue with First page / Jump / Next page and the last page (it showed
 #   only the first 100 titles), series -> seasons -> episodes (a series with one season lists its episodes),
 #   watched flag (series -> season -> episode), downloaded marker, favourites (also the rows of the old version),
@@ -23,7 +24,6 @@ from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsMediaNamin
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist, getMPDLinksWithMeta
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
-from Plugins.Extensions.IPTVPlayer.libs import ph
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
 ###################################################
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
@@ -122,6 +122,8 @@ TOKENIZER_URL = 'https://api.tvp.pl/tokenizer/token/%s'
 CATALOG_PAGE_SIZE = 40
 SPORT_PAGE_SIZE = 30
 EPISODES_PAGE_SIZE = 100
+DIGI_URL = 'https://cyfrowa.tvp.pl/'
+DIGI_PAGE_SIZE = 50
 PRODUCT_ID_RE = re.compile(r'/products/(\d+)/')
 SXE_RE = re.compile(r',S(\d+)E(\d+),')
 
@@ -555,71 +557,117 @@ class TvpVod(GenericFolderWatchedScraperMixin, CBaseHostClass, CaptchaHelper):
     ###################################################
     # Rekonstrukcja cyfrowa TVP (cyfrowa.tvp.pl)
     ###################################################
+    # the Nuxt site (2026) reads everything from its own JSON api: /api/navigation (categories),
+    # /api/sub-category/<id> (blocks of WEBSITE or VIDEO rows), /api/website?id= (its seasons),
+    # /api/seasons?id=<season>&page=&limit= (the videos); a video plays through the tokenizer
+    def _digiImage(self, item):
+        for key in ('image_vod', 'image_3x4', 'image', 'image_detail'):
+            img = item.get(key)
+            url = ensure_str(img.get('url', '') or '') if isinstance(img, dict) else ''
+            if url:
+                return url.replace('{width}', '400').replace('{height}', '0')
+        return ''
+
+    def _digiDesc(self, item):
+        info = []
+        year = str(item.get('year') or item.get('year_min') or '')
+        if year:
+            info.append(year)
+        try:
+            if item.get('duration'):
+                info.append('%d min' % (int(item['duration']) // 60))
+        except (TypeError, ValueError):
+            pass
+        genre = item.get('genre')
+        if isinstance(genre, dict) and genre.get('title'):
+            info.append(ensure_str(genre['title']))
+        if item.get('video_count'):
+            info.append('%s wideo' % item['video_count'])
+        lead = self.cleanHtmlStr(ensure_str(item.get('lead') or item.get('description') or ''))
+        return '[/br]'.join([x for x in (' | '.join(info), lead) if x])
+
+    def _addDigiRow(self, cItem, item, show=''):
+        itemId = str(item.get('_id', '') or '')
+        title = self.cleanHtmlStr(ensure_str(item.get('title', '') or ''))
+        if not itemId or not title:
+            return
+        params = {'name': 'category', 'good_for_fav': True, 'title': title, 'raw_title': title, 'icon': self._digiImage(item) or cItem.get('icon', ''),
+                  'desc': self._digiDesc(item)}
+        if item.get('type') == 'VIDEO':
+            show = show or ensure_str(item.get('website_title', '') or '')
+            if show and title.startswith('odc') and show != title:
+                params['title'] = '%s - %s' % (show, title)
+            params.update({'url': DIGI_URL + itemId, 'object_id': itemId})
+            self.addVideo(params)
+        elif item.get('type') == 'WEBSITE':
+            params.update({'category': 'digi_website', 'url': DIGI_URL + 'website/,%s' % itemId})
+            self.addDir(params)
+
     def listDigiMenu(self, cItem):
         printDBG("TvpVod.listDigiMenu")
-        sts, data = self.getPage(cItem['url'])
-        if not sts:
-            return
-        cUrl = self.cm.meta['url']
-        tmp = ph.find(data, ('<nav', '>', 'navigation--menu'), '</nav>', flags=0)[1]
-        for item in ph.findall(tmp, ('<li', '>'), '</li>', flags=0):
-            parts = item.split('<ul', 1)
-            if len(parts) > 1:
-                item = parts[1]
-            sTitle = ph.find(item, ('<a', '>'), '</a>')[1]
-            sUrl = self.getFullUrl(ph.getattr(sTitle, 'href'), cUrl)
-            sTitle = ph.clean_html(sTitle)
-            if ',' in sUrl:
-                self.addDir(MergeDicts(cItem, {'good_for_fav': True, 'category': 'digi_explore_site', 'title': sTitle, 'url': sUrl}))
+        data = self._getJson(DIGI_URL + 'api/navigation')
+        for item in data if isinstance(data, list) else []:
+            title = self.cleanHtmlStr(ensure_str(item.get('title', '') or ''))
+            # "Artykuły" are text articles without videos
+            if item.get('_id') and title and item.get('type') == 'CATEGORY' and not title.startswith('Artyku'):
+                self.addDir(MergeDicts(cItem, {'good_for_fav': True, 'category': 'digi_category', 'title': title, 'url': DIGI_URL + 'sub-category/,%s' % item['_id']}))
 
-    def exploreDigiSite(self, cItem):
-        printDBG("TvpVod.exploreDigiSite")
-        sts, data = self.getPage(cItem['url'])
-        if not sts:
-            return
-        cUrl = self.cm.meta['url']
-
-        if cItem.get('allow_sort', True):
-            tmp = ph.find(data, ('<ul', '>', 'dropdown--sort'), '</ul>', flags=0)[1]
-            for item in ph.findall(tmp, ('<a', '>'), '</a>'):
-                title = ph.clean_html(item)
-                url = self.getFullUrl(ph.getattr(item, 'href'), cUrl)
-                if '{title},{id}' in url:
-                    url = cUrl + self.cm.ph.getSearchGroups(item, r'''href=['"][^?]+?(\?[^'^"]+?)['"]''')[0]
-                self.addDir(MergeDicts(cItem, {'good_for_fav': False, 'allow_sort': False, 'title': title, 'url': url}))
-            if self.currList:
-                return
-
-        tmp = ph.find(data, ('<section', '>', 'episodes'), '</section>', flags=0)[1]
-        nextPage = ph.find(tmp, ('<div', '>', 'common--title--container'), '</div>', flags=0)[1]
-        nextPage = self.getFullUrl(ph.search(nextPage, ph.A_HREF_URI_RE)[1], cUrl)
-        if nextPage != '':
-            sts, data = self.getPage(nextPage)
-            if not sts:
-                return
-            tmp = ph.find(data, ('<section', '>', 'episodes'), '</section>', flags=0)[1]
-        tmp = ph.findall(tmp if tmp != '' else data, ('<div', '>', 'film--block'), '</div>', flags=0)
-        for item in tmp:
-            title = self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0]
-            url = self.getFullUrl(ph.search(item, ph.A_HREF_URI_RE)[1], cUrl)
-            icon = self.getFullUrl(ph.search(item, ph.IMAGE_SRC_URI_RE)[1], cUrl)
-            descData = ph.findall(item, ('<p', '>'), '</p>', flags=0)
-            if not descData and not title:
+    def listDigiCategory(self, cItem):
+        printDBG("TvpVod.listDigiCategory [%s]" % cItem.get('url', ''))
+        catId = self.cm.ph.getSearchGroups(cItem['url'], r',(\d+)')[0]
+        data = self._getJson(DIGI_URL + 'api/sub-category/%s' % catId) if catId else None
+        blocks = [b for b in (data if isinstance(data, list) else []) if b.get('type') != 'BLOCK_HERO' and ((b.get('data') or {}).get('items'))]
+        for block in blocks:
+            bData = block['data']
+            more = self.cm.ph.getSearchGroups(ensure_str((bData.get('show_more') or {}).get('url', '') or ''), r'/website/[^,]*,(\d+)')[0]
+            if len(blocks) > 1 and more:
+                # a shelf of one programme (podcasts): its website lists all of it
+                title = self.cleanHtmlStr(ensure_str(bData.get('title', '') or ''))
+                self.addDir({'name': 'category', 'good_for_fav': True, 'category': 'digi_website', 'title': title, 'url': DIGI_URL + 'website/,%s' % more,
+                             'icon': self._digiImage(bData['items'][0]), 'desc': ''})
                 continue
-            if not title:
-                title = self.cleanHtmlStr(descData[0])
-            desc = [ph.clean_html(x) for x in descData[1:] if ph.clean_html(x)]
-            desc = ' | '.join(desc) + '[/br]' + ph.clean_html(item[-1])
-            params = MergeDicts(cItem, {'good_for_fav': True, 'allow_sort': True, 'url': url, 'desc': desc, 'icon': icon})
-            if '/video/' in url:
-                if title.startswith('odc.') and cItem.get('prev_title'):
-                    title = '%s: %s' % (cItem['prev_title'], title)
-                params.update({'title': title, 'raw_title': title})
-                params.pop('category', None)
-                self.addVideo(params)
-            else:
-                params.update({'title': title, 'prev_title': title})
-                self.addDir(params)
+            for item in bData['items']:
+                self._addDigiRow(cItem, item)
+
+    def listDigiWebsite(self, cItem):
+        printDBG("TvpVod.listDigiWebsite [%s]" % cItem.get('url', ''))
+        websiteId = self.cm.ph.getSearchGroups(cItem['url'], r',(\d+)')[0]
+        data = self._getJson(DIGI_URL + 'api/website?id=%s' % websiteId) if websiteId else None
+        if not isinstance(data, dict):
+            return
+        show = self.cleanHtmlStr(ensure_str(data.get('title', '') or '')) or cItem.get('raw_title', '')
+        seasons = []
+        for item in data.get('seasons') or []:
+            if item.get('_id'):
+                title = self.cleanHtmlStr(ensure_str(item.get('title', '') or ''))
+                seasons.append({'name': 'category', 'good_for_fav': True, 'category': 'digi_season', 'title': title, 'url': DIGI_URL + 'seasons/,%s' % item['_id'],
+                                'f_show': show, 'icon': cItem.get('icon', '') or self._digiImage(data), 'desc': cItem.get('desc', '')})
+        if len(seasons) == 1:
+            self.listDigiSeason(MergeDicts(cItem, seasons[0], {'title': cItem.get('title', '')}))
+            return
+        for item in seasons:
+            self.addDir(item)
+
+    def listDigiSeason(self, cItem):
+        printDBG("TvpVod.listDigiSeason [%s]" % cItem.get('url', ''))
+        try:
+            page = max(1, int(cItem.get('page', 1) or 1))
+        except (TypeError, ValueError):
+            page = 1
+        seasonId = self.cm.ph.getSearchGroups(cItem['url'], r',(\d+)')[0]
+        data = self._getJson(DIGI_URL + 'api/seasons?id=%s&page=%d&limit=%d' % (seasonId, page, DIGI_PAGE_SIZE)) if seasonId else None
+        data = data.get('data') if isinstance(data, dict) else None
+        if not isinstance(data, dict):
+            return
+        items = data.get('items') or []
+        for item in items:
+            self._addDigiRow(cItem, item, cItem.get('f_show', ''))
+        try:
+            total = int(data.get('total_count', 0) or 0)
+        except (TypeError, ValueError):
+            total = 0
+        lastPage = (total + DIGI_PAGE_SIZE - 1) // DIGI_PAGE_SIZE
+        addPagingItems(self, stripPagerKeys(dict(cItem)), page, bool(items) and page < lastPage, lastPage)
 
     ###################################################
     # links
@@ -844,8 +892,13 @@ class TvpVod(GenericFolderWatchedScraperMixin, CBaseHostClass, CaptchaHelper):
         # Reconstruction
         elif category == 'digi_menu':
             self.listDigiMenu(currItem)
-        elif category == 'digi_explore_site':
-            self.exploreDigiSite(currItem)
+        elif category == 'digi_category':
+            self.listDigiCategory(currItem)
+        elif category in ('digi_website', 'digi_explore_site'):
+            # digi_explore_site: favourites of the old site (<slug>,<website id>)
+            self.listDigiWebsite(currItem)
+        elif category == 'digi_season':
+            self.listDigiSeason(currItem)
         # SEARCH
         elif category in ("search", "list_search"):
             cItem = dict(currItem)

@@ -11,7 +11,7 @@ LAST_MODIFIED = "08.10.2026"
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
-from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized, GetLocalPageSize
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
@@ -245,6 +245,7 @@ class MusicMp3Ru(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     def listSongsItems(self, cItem):
         printDBG("MusicMp3Ru.listSongsItems [%s]" % cItem.get('url', ''))
+        pageSize = GetLocalPageSize(LOCAL_PAGE_SIZE)
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return
@@ -286,9 +287,9 @@ class MusicMp3Ru(GenericFolderWatchedScraperMixin, CBaseHostClass):
             page = max(1, int(cItem.get('page', 1) or 1))
         except (TypeError, ValueError):
             page = 1
-        lastPage = (len(tracks) + LOCAL_PAGE_SIZE - 1) // LOCAL_PAGE_SIZE
+        lastPage = (len(tracks) + pageSize - 1) // pageSize
         if lastPage > 1:
-            tracks = tracks[(page - 1) * LOCAL_PAGE_SIZE:page * LOCAL_PAGE_SIZE]
+            tracks = tracks[(page - 1) * pageSize:page * pageSize]
         for args in tracks:
             self._addTrack(*args)
         if lastPage > 1:

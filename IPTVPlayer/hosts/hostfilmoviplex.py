@@ -15,7 +15,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFo
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx, extractNum
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarMetaQuery
-from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized, GetLocalPageSize
 
 
 LOCAL_PAGE_SIZE = 100  # episodes per page of a long season
@@ -314,12 +314,13 @@ class Filmoviplex(GenericFolderWatchedScraperMixin, CBaseHostClass):
         self._localPaging(cItem, cItem.get("page", 1))
 
     def _localPaging(self, cItem, page):
-        # a long season (the page carries all episodes): LOCAL_PAGE_SIZE rows per page (First page / Next page)
-        lastPage = (len(self.currList) + LOCAL_PAGE_SIZE - 1) // LOCAL_PAGE_SIZE
+        pageSize = GetLocalPageSize(LOCAL_PAGE_SIZE)
+        # a long season (the page carries all episodes): pageSize rows per page (First page / Next page)
+        lastPage = (len(self.currList) + pageSize - 1) // pageSize
         if lastPage <= 1:
             return
         page = min(max(1, page), lastPage)
-        self.currList = self.currList[(page - 1) * LOCAL_PAGE_SIZE:page * LOCAL_PAGE_SIZE]
+        self.currList = self.currList[(page - 1) * pageSize:page * pageSize]
         params = dict(cItem)
         params["local_paging"] = True
         addPagingItems(self, params, page, page < lastPage, lastPage)

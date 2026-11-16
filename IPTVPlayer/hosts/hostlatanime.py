@@ -11,7 +11,7 @@ import re
 
 from Components.config import ConfigText, config, getConfigListEntry
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
-from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsMediaNamingNormalized, IsSidecarEnabled
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsMediaNamingNormalized, IsSidecarEnabled, GetLocalPageSize
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem, sidecarMetaQuery
@@ -276,6 +276,7 @@ class LatAnime(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     def listEpisodes(self, cItem):
         printDBG("LatAnime.listEpisodes [%s]" % cItem.get("url", ""))
+        pageSize = GetLocalPageSize(LOCAL_PAGE_SIZE)
         sts, data = self.getPage(cItem["url"])
         if not sts:
             return
@@ -287,15 +288,15 @@ class LatAnime(GenericFolderWatchedScraperMixin, CBaseHostClass):
         season = cItem.get("s_season", 1)
         lang = cItem.get("s_lang", "")
         page = cItem.get("page", 1)
-        start = (page - 1) * LOCAL_PAGE_SIZE
-        for episode, url in episodes[start:start + LOCAL_PAGE_SIZE]:
+        start = (page - 1) * pageSize
+        for episode, url in episodes[start:start + pageSize]:
             params = stripPagerKeys(dict(cItem))
             params.update({"name": "category", "category": "lat_video", "good_for_fav": True, "url": url,
                            "title": self._episodeTitle(show, season, episode, lang, "%s - %s %s" % (cItem.get("title", show), _("Episode"), episode)),
                            "series_url": cItem["url"], "s_title": show, "s_season": season, "s_episode": episode, "meta_type": "tv"})
             self.addVideo(params)
-        if len(episodes) > LOCAL_PAGE_SIZE:
-            lastPage = (len(episodes) + LOCAL_PAGE_SIZE - 1) // LOCAL_PAGE_SIZE
+        if len(episodes) > pageSize:
+            lastPage = (len(episodes) + pageSize - 1) // pageSize
             # the page lives in cItem["page"] - the template keeps the anime url unchanged (Jump row)
             addPagingItems(self, dict(cItem), page, page < lastPage, lastPage, cItem["url"].replace("{", "{{").replace("}", "}}"))
 

@@ -10,7 +10,7 @@ import time
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
-from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized, GetLocalPageSize
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks
@@ -225,11 +225,12 @@ class Docchi(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return True
 
     def _addLocalPage(self, cItem, items, forceFolder=False):
+        pageSize = GetLocalPageSize(LOCAL_PAGE_SIZE)
         page = max(1, int(cItem.get("page", 1) or 1))
         items = [x for x in items if isinstance(x, dict) and not _isAdult(x) and _s(x.get("slug", "")) not in self._getAdultSlugs()]
-        for item in items[(page - 1) * LOCAL_PAGE_SIZE:page * LOCAL_PAGE_SIZE]:
+        for item in items[(page - 1) * pageSize:page * pageSize]:
             self._addSeriesItem(item, forceFolder)
-        lastPage = (len(items) + LOCAL_PAGE_SIZE - 1) // LOCAL_PAGE_SIZE
+        lastPage = (len(items) + pageSize - 1) // pageSize
         if lastPage > 1:
             addPagingItems(self, cItem, page, page < lastPage, lastPage, SERIES_URL)
 
@@ -364,6 +365,7 @@ class Docchi(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return nums
 
     def listEpisodes(self, cItem):
+        pageSize = GetLocalPageSize(LOCAL_PAGE_SIZE)
         slug, _epNum = self._slugFromItem(cItem)
         printDBG("Docchi.listEpisodes [%s]" % slug)
         series = self._getSeries(slug)
@@ -385,11 +387,11 @@ class Docchi(GenericFolderWatchedScraperMixin, CBaseHostClass):
             return
         page = max(1, int(cItem.get("page", 1) or 1))
         season = _seasonNum(sTitle)
-        for num in nums[(page - 1) * LOCAL_PAGE_SIZE:page * LOCAL_PAGE_SIZE]:
+        for num in nums[(page - 1) * pageSize:page * pageSize]:
             self.addVideo({"name": "category", "good_for_fav": True, "category": "episode", "url": "%s%s/%s" % (SERIES_URL, slug, num),
                            "slug": slug, "ep_num": num, "s_title": sTitle, "title": self._episodeTitle(sTitle, num), "season": season,
                            "icon": icon, "desc": cItem.get("desc", ""), "meta_type": "tv", "meta_title": metaTitle, "meta_year": year})
-        lastPage = (len(nums) + LOCAL_PAGE_SIZE - 1) // LOCAL_PAGE_SIZE
+        lastPage = (len(nums) + pageSize - 1) // pageSize
         if lastPage > 1:
             addPagingItems(self, cItem, page, page < lastPage, lastPage, SERIES_URL + slug)
 

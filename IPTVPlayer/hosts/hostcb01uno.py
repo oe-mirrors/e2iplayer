@@ -28,7 +28,7 @@ import re
 import time
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
-from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsMediaNamingNormalized, IsSidecarEnabled
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsMediaNamingNormalized, IsSidecarEnabled, GetLocalPageSize
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.libs.botprotection import remember_user_agent, remembered_user_agent
@@ -360,6 +360,7 @@ class Cb01(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     def listValue(self, cItem, marker):
         printDBG("cb01uno.listValue |%s|" % cItem)
+        pageSize = GetLocalPageSize(LOCAL_PAGE_SIZE)
         try:
             page = max(1, int(cItem.get("page", 1) or 1))
         except (TypeError, ValueError):
@@ -373,9 +374,9 @@ class Cb01(GenericFolderWatchedScraperMixin, CBaseHostClass):
             title = self.cleanHtmlStr(title)
             if title and (url, title) not in values:
                 values.append((url, title))
-        lastPage = max(1, (len(values) + LOCAL_PAGE_SIZE - 1) // LOCAL_PAGE_SIZE)
+        lastPage = max(1, (len(values) + pageSize - 1) // pageSize)
         page = min(page, lastPage)
-        for url, title in values[(page - 1) * LOCAL_PAGE_SIZE:page * LOCAL_PAGE_SIZE]:
+        for url, title in values[(page - 1) * pageSize:page * pageSize]:
             params = stripPagerKeys(dict(cItem))
             params.update({"good_for_fav": True, "category": "list_items", "title": title, "url": self.getFullUrl(url)})
             self.addDir(params)

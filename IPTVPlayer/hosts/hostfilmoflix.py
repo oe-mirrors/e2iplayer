@@ -21,7 +21,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
-from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import GetAlternativeProxyChoices, GetAlternativeProxyUrl, IsMediaNamingNormalized, IsSidecarEnabled
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import GetAlternativeProxyChoices, GetAlternativeProxyUrl, IsMediaNamingNormalized, IsSidecarEnabled, GetLocalPageSize
 from Plugins.Extensions.IPTVPlayer.libs.botprotection import remembered_user_agent
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
@@ -326,6 +326,7 @@ class FilmoFlix(GenericFolderWatchedScraperMixin, CBaseHostClass, CaptchaHelper)
 
     def listEpisodes(self, cItem):
         printDBG('FilmoFlix.listEpisodes [%s]' % cItem)
+        pageSize = GetLocalPageSize(LOCAL_PAGE_SIZE)
         sts, data = self.getPage(cItem.get("url", ""))
         if not sts:
             return
@@ -347,8 +348,8 @@ class FilmoFlix(GenericFolderWatchedScraperMixin, CBaseHostClass, CaptchaHelper)
         normalize = IsMediaNamingNormalized()
         show = cItem.get("s_title") or cItem.get("title", "")
         page = self._page(cItem)
-        start = (page - 1) * LOCAL_PAGE_SIZE
-        for season, episode, url in episodes[start:start + LOCAL_PAGE_SIZE]:
+        start = (page - 1) * pageSize
+        for season, episode, url in episodes[start:start + pageSize]:
             if normalize:
                 title = "%s - %s" % (show, formatSxxExx(season, episode))
             else:
@@ -357,8 +358,8 @@ class FilmoFlix(GenericFolderWatchedScraperMixin, CBaseHostClass, CaptchaHelper)
             params.update({"name": "category", "category": "fif_video", "good_for_fav": True, "title": title, "url": url,
                            "s_title": show, "s_season": season, "s_episode": episode, "meta_type": "tv"})
             self.addVideo(params)
-        if len(episodes) > LOCAL_PAGE_SIZE:
-            lastPage = (len(episodes) + LOCAL_PAGE_SIZE - 1) // LOCAL_PAGE_SIZE
+        if len(episodes) > pageSize:
+            lastPage = (len(episodes) + pageSize - 1) // pageSize
             addPagingItems(self, dict(cItem, category="list_episodes"), page, page < lastPage, lastPage)
 
     def listSearchResult(self, cItem, searchPattern, searchType):

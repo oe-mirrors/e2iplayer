@@ -20,7 +20,7 @@ import re
 
 from Components.config import ConfigText, config, getConfigListEntry
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
-from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsMediaNamingNormalized, IsSidecarEnabled
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsMediaNamingNormalized, IsSidecarEnabled, GetLocalPageSize
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
@@ -236,6 +236,7 @@ class StreamCloud(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     def listItems(self, cItem):
         printDBG("StreamCloud.listItems |%s|" % cItem)
+        pageSize = GetLocalPageSize(LOCAL_PAGE_SIZE)
         try:
             page = max(1, int(cItem.get("page", 1)))
         except (TypeError, ValueError):
@@ -268,8 +269,8 @@ class StreamCloud(GenericFolderWatchedScraperMixin, CBaseHostClass):
             rows.append((url, title, icon, year))
         lastPage = 0
         if local:
-            lastPage = max(1, (len(rows) + LOCAL_PAGE_SIZE - 1) // LOCAL_PAGE_SIZE)
-            rows = rows[(page - 1) * LOCAL_PAGE_SIZE:page * LOCAL_PAGE_SIZE]
+            lastPage = max(1, (len(rows) + pageSize - 1) // pageSize)
+            rows = rows[(page - 1) * pageSize:page * pageSize]
             hasNext = page < lastPage
         elif query:
             hasNext = "list_submit(%d)" % (page + 1) in data

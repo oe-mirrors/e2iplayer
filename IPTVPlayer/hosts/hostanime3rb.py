@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "09.10.2026"
+LAST_MODIFIED = "16.11.2026"
 # Coding: BY MOHAMED_OS
 # 08.10.2026 - ported to the python3 framework / host standard
 #   - Anime3rb (anime3rb.com, Arabic-subtitled anime, Laravel/Livewire site): latest episodes, anime list, TV
@@ -17,12 +17,13 @@ LAST_MODIFIED = "09.10.2026"
 #     + the title page's ld+json and info table
 # 09.10.2026 - covers: the first usable candidate (ld+json image string / list / ImageObject, card img
 #     data-src / src / srcset), empty values, data: URIs and template leftovers skipped
+# 16.11.2026 - lists, search, links and INFO again: the ld+json moved into one @graph (page -> mainEntity)
 import os
 import re
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
-from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized, GetLocalPageSize
 from Plugins.Extensions.IPTVPlayer.libs.botprotection import remembered_user_agent
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import LATIN_ONLY, getMeta, isLatinTitle
@@ -201,9 +202,18 @@ class Anime3rb(GenericFolderWatchedScraperMixin, CBaseHostClass):
             except Exception:
                 printExc()
                 continue
-            # a block may also hold a list of objects; anything that is not an object is skipped
-            for item in (obj if isinstance(obj, list) else [obj]):
-                if isinstance(item, dict) and (kind is None or item.get("@type") == kind):
+            # a block may also hold a list of objects; anything that is not an object is skipped. Since 11.2026
+            # the page has one {"@graph": [...]} block, the list / episode / title sits in a page's "mainEntity"
+            queue = list(obj if isinstance(obj, list) else [obj])
+            while queue:
+                item = queue.pop(0)
+                if not isinstance(item, dict):
+                    continue
+                if isinstance(item.get("@graph"), list):
+                    queue.extend(item["@graph"])
+                if isinstance(item.get("mainEntity"), dict):
+                    queue.append(item["mainEntity"])
+                if kind is None or item.get("@type") == kind:
                     found.append(item)
         if kind is None:
             return found
@@ -244,13 +254,14 @@ class Anime3rb(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 self.addDir({"name": "category", "category": "r3_list", "good_for_fav": True, "title": title, "url": href,
                              "desc": "%s: %s" % (_("Titles"), count) if count else ""})
 
-    def _addTitle(self, entry):
+    def _addTitle(self, entry, kind=""):
         # one ItemList entry -> title folder, or a VIDEO row for a movie with one episode
         url = entry.get("url", "")
         name = _siteName(entry.get("name", ""))
         if not url or not name:
             return False
-        kind = entry.get("@type", "")
+        if entry.get("@type") != "ListItem":
+            kind = entry.get("@type", "") or kind
         year = self.cm.ph.getSearchGroups(entry.get("datePublished", ""), r"((?:19|20)\d{2})")[0]
         rating = (entry.get("aggregateRating") or {}).get("ratingValue", "")
         genres = entry.get("genre") or []
@@ -275,11 +286,15 @@ class Anime3rb(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not sts:
             return
         listObj = self._ldJson(data, "ItemList")
+        # the movie list carries plain ListItems (url, name, image) since 11.2026 - its kind comes from the list url
+        kind = "Movie" if "/titles/list/movie" in baseUrl else ""
         count = 0
         for element in listObj.get("itemListElement") or []:
-            if self._addTitle((element or {}).get("item") or {}):
+            element = element if isinstance(element, dict) else {}
+            if self._addTitle(element.get("item") or element, kind):
                 count += 1
-        hasNext = bool(count) and bool((listObj.get("potentialAction") or {}).get("target"))
+        # older pages: potentialAction; now the Livewire pager button wire:click="nextPage('page')"
+        hasNext = bool(count) and (bool((listObj.get("potentialAction") or {}).get("target")) or "nextPage(" in data)
         listItem = dict(cItem, base_url=baseUrl, url=baseUrl)
         pageTpl = baseUrl.replace("{", "{{").replace("}", "}}") + ("&" if "?" in baseUrl else "?") + "page={page}"
         addPagingItems(self, listItem, page, hasNext, 0, pageTpl)
@@ -314,6 +329,7 @@ class Anime3rb(GenericFolderWatchedScraperMixin, CBaseHostClass):
         addPagingItems(self, dict(cItem), page, hasNext, 0, self.getMainUrl() + "?page={page}")
 
     def listShow(self, cItem):
+        pageSize = GetLocalPageSize(LOCAL_PAGE_SIZE)
         # title page: the episode list (a movie with one episode -> one VIDEO row "Title (Year)")
         printDBG("Anime3rb.listShow [%s]" % cItem.get("url", ""))
         sts, data = self.getPage(cItem["url"])
@@ -347,8 +363,8 @@ class Anime3rb(GenericFolderWatchedScraperMixin, CBaseHostClass):
             self.addVideo(params)
             return
         page = cItem.get("page", 1)
-        start = (page - 1) * LOCAL_PAGE_SIZE
-        for episode, href, label, subtitle, duration, icon in episodes[start:start + LOCAL_PAGE_SIZE]:
+        start = (page - 1) * pageSize
+        for episode, href, label, subtitle, duration, icon in episodes[start:start + pageSize]:
             rawTitle = "%s - %s" % (cItem.get("title", show), label or episode)
             if subtitle:
                 rawTitle = "%s - %s" % (rawTitle, subtitle)
@@ -357,8 +373,8 @@ class Anime3rb(GenericFolderWatchedScraperMixin, CBaseHostClass):
                            "desc": " | ".join(x for x in (subtitle, duration) if x), "show_url": cItem["url"], "s_title": show,
                            "s_season": season, "s_episode": str(episode), "meta_type": "tv", "meta_title": cItem.get("meta_title", show),
                            "meta_year": cItem.get("meta_year", "")})
-        if len(episodes) > LOCAL_PAGE_SIZE:
-            lastPage = (len(episodes) + LOCAL_PAGE_SIZE - 1) // LOCAL_PAGE_SIZE
+        if len(episodes) > pageSize:
+            lastPage = (len(episodes) + pageSize - 1) // pageSize
             addPagingItems(self, dict(cItem), page, page < lastPage, lastPage)
 
     def listSearchResult(self, cItem, searchPattern, searchType):

@@ -12,7 +12,7 @@ from datetime import datetime, timedelta
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
-from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsMediaNamingNormalized, IsSidecarEnabled
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsMediaNamingNormalized, IsSidecarEnabled, GetLocalPageSize
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str_deep
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks
@@ -321,9 +321,10 @@ class PolskieRadio(GenericFolderWatchedScraperMixin, CBaseHostClass):
         pods.sort(key=lambda p: (p.get("title") or "").lower())
         # the big groups (News, Trójka ...) hold more than 100 podcasts - shown LOCAL_PAGE_SIZE at a time
         page = max(1, int(cItem.get("page", 1) or 1))
-        lastPage = max(1, (len(pods) + self.LOCAL_PAGE_SIZE - 1) // self.LOCAL_PAGE_SIZE)
+        pageSize = GetLocalPageSize(self.LOCAL_PAGE_SIZE)
+        lastPage = max(1, (len(pods) + pageSize - 1) // pageSize)
         page = min(page, lastPage)
-        for pod in pods[(page - 1) * self.LOCAL_PAGE_SIZE:page * self.LOCAL_PAGE_SIZE]:
+        for pod in pods[(page - 1) * pageSize:page * pageSize]:
             self._addPodcast(cItem, pod)
         if lastPage > 1:
             # the url template only serves "Jump" - the list is cut by cItem['page']

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "26.10.2026"
+LAST_MODIFIED = "15.11.2026"
+# 15.11.2026 - server #2: hls.js player page (no jwplayer) gave no link
 # 26.10.2026 - links on boxes with duktape only (no QuickJS): the player scripts hung in the obfuscator's self check
 # 24.10.2026 - fix show menu item
 # 23.10.2026 - lists read only the site's list grid, the "most viewed" slider repeated its cards on every page
@@ -25,7 +26,7 @@ import os
 import re
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
-from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized, GetLocalPageSize
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.libs.botprotection import remembered_user_agent
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
@@ -91,7 +92,8 @@ var window = this; var self = this; var top = this; var parent = this;
 var navigator = {userAgent: 'Mozilla/5.0', platform: 'Win32', language: 'ar'};
 var location = {href: '', hostname: '', protocol: 'https:', search: ''};
 var __el = {setAttribute: function () {}, getAttribute: function () { return ''; }, appendChild: function () {}, insertBefore: function () {},
-    addEventListener: function () {}, removeEventListener: function () {}, style: {}, children: [], classList: {add: function () {}, remove: function () {}}};
+    addEventListener: function () {}, removeEventListener: function () {}, style: {}, children: [], classList: {add: function () {}, remove: function () {}},
+    canPlayType: function () { return ''; }};
 var document = {write: function (s) { print('WRITE:' + s); }, writeln: function (s) { print('WRITE:' + s); },
     createElement: function () { return __el; }, querySelector: function () { return __el; }, querySelectorAll: function () { return [__el]; },
     getElementById: function () { return __el; }, getElementsByTagName: function () { return [__el]; }, addEventListener: function () {},
@@ -100,6 +102,8 @@ window.addEventListener = function () {}; window.removeEventListener = function 
 var __player = {setup: function (c) { print('SETUP:' + JSON.stringify(c)); return __player; }, on: function () { return __player; },
     load: function () {}, play: function () {}, pause: function () {}, seek: function () {}, getPosition: function () { return 0; }};
 var jwplayer = function () { return __player; };
+var Hls = function () { return {loadSource: function (u) { print('SOURCE:' + u); }, attachMedia: function () {}, on: function () {}}; };
+Hls.isSupported = function () { return true; }; Hls.Events = {};
 var __q = {on: function () { return __q; }, fadeIn: function () { return __q; }, fadeOut: function () { return __q; }, attr: function () { return ''; },
     removeClass: function () { return __q; }, addClass: function () { return __q; }, html: function (s) { print('WRITE:' + s); return __q; },
     append: function (s) { print('WRITE:' + s); return __q; }, click: function () { return __q; }, show: function () { return __q; }, hide: function () { return __q; }};
@@ -431,6 +435,7 @@ class FaselhdCOM(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return title, seasons, episodes, poster, story, data
 
     def _addEpisodes(self, cItem, episodes, season):
+        pageSize = GetLocalPageSize(LOCAL_PAGE_SIZE)
         page = cItem.get("page", 1)
         normalize = IsMediaNamingNormalized()
         show = cItem.get("s_title", "") or _showName(cItem.get("title", ""))
@@ -445,11 +450,11 @@ class FaselhdCOM(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not rows:
             SetIPTVPlayerLastHostError(_("No episodes found."))
             return
-        start = (page - 1) * LOCAL_PAGE_SIZE
-        for params in rows[start:start + LOCAL_PAGE_SIZE]:
+        start = (page - 1) * pageSize
+        for params in rows[start:start + pageSize]:
             self.addVideo(params)
-        if len(rows) > LOCAL_PAGE_SIZE:
-            lastPage = (len(rows) + LOCAL_PAGE_SIZE - 1) // LOCAL_PAGE_SIZE
+        if len(rows) > pageSize:
+            lastPage = (len(rows) + pageSize - 1) // pageSize
             addPagingItems(self, dict(cItem), page, page < lastPage, lastPage)
 
     def listSeries(self, cItem):
@@ -602,6 +607,12 @@ class FaselhdCOM(GenericFolderWatchedScraperMixin, CBaseHostClass):
                         links.append((src.get("label") or "auto", url))
             except Exception:
                 printExc()
+        # hls.js player (no jwplayer, no buttons): the script hands one playlist to Hls.loadSource
+        for line in out.split("\n"):
+            url = line[7:].strip() if line.startswith("SOURCE:") else ""
+            if url.startswith("http") and url not in [u for _l, u in links]:
+                num = re.search(r"hd(\d{3,4})", url)
+                links.append(("%sp" % num.group(1) if num else "auto", url))
         if not links:
             for url in re.findall(r"""['"](https?://[^'"\s]+\.m3u8[^'"\s]*)['"]""", out):
                 if url not in [u for _l, u in links]:

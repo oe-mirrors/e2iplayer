@@ -8,7 +8,7 @@ import re
 
 from Components.config import ConfigSelection, ConfigText, config, getConfigListEntry
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
-from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import GetAlternativeProxyChoices, GetAlternativeProxyUrl, IsMediaNamingNormalized, IsSidecarEnabled
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import GetAlternativeProxyChoices, GetAlternativeProxyUrl, IsMediaNamingNormalized, IsSidecarEnabled, GetLocalPageSize
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
@@ -449,6 +449,7 @@ class KinoGo(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     def listEpisodes(self, cItem, seasons=None):
         printDBG("KinoGo.listEpisodes [%s]" % cItem.get("url", ""))
+        pageSize = GetLocalPageSize(LOCAL_PAGE_SIZE)
         page = self._pageUrl(cItem.get("url", ""))
         season = cItem.get("s_season") or self.cm.ph.getSearchGroups(cItem.get("url", ""), r"#s([^e]+)")[0]
         if seasons is None:
@@ -463,8 +464,8 @@ class KinoGo(GenericFolderWatchedScraperMixin, CBaseHostClass):
         normalize = IsMediaNamingNormalized()
         show = cItem.get("s_title") or cItem.get("title", "")
         pageNo = self._page(cItem)
-        start = (pageNo - 1) * LOCAL_PAGE_SIZE
-        for episode in episodes[start:start + LOCAL_PAGE_SIZE]:
+        start = (pageNo - 1) * pageSize
+        for episode in episodes[start:start + pageSize]:
             number = str(episode.get("episode", ""))
             try:
                 title = "%s - %s" % (show, formatSxxExx(season, int(number))) if normalize else "%s - %s %s - %s %s" % (show, _("Season"), season, _("Episode"), number)
@@ -476,8 +477,8 @@ class KinoGo(GenericFolderWatchedScraperMixin, CBaseHostClass):
             params.update({"name": "category", "category": "kg_video", "good_for_fav": True, "title": title, "url": "%s#s%se%s" % (page, season, number),
                            "s_title": show, "s_season": season, "s_episode": number, "meta_type": "tv", "desc": ", ".join(voices)})
             self.addVideo(params)
-        if len(episodes) > LOCAL_PAGE_SIZE:
-            lastPage = (len(episodes) + LOCAL_PAGE_SIZE - 1) // LOCAL_PAGE_SIZE
+        if len(episodes) > pageSize:
+            lastPage = (len(episodes) + pageSize - 1) // pageSize
             addPagingItems(self, dict(cItem, category="list_episodes"), pageNo, pageNo < lastPage, lastPage)
 
     def listSearchResult(self, cItem, searchPattern, searchType):

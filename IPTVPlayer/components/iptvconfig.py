@@ -409,6 +409,9 @@ config.plugins.iptvplayer.meta_omdb_apikey = ConfigSecret(default="", fixed_size
 config.plugins.iptvplayer.meta_images_169 = ConfigYesNo(default=False)
 config.plugins.iptvplayer.sidecar_enabled = ConfigYesNo(default=True)
 config.plugins.iptvplayer.normalize_media_names = ConfigYesNo(default=True)
+# rows per page of the lists a host pages itself (a long season or list the site sends in one piece):
+# "" = the host's own size, "0" = no paging (the whole list on one page)
+config.plugins.iptvplayer.local_page_size = ConfigSelection(default="", choices=[("", _("Default")), ("0", _("Off")), ("50", "50"), ("100", "100"), ("200", "200"), ("500", "500")])
 # OFF by default. The resolvers VidCore / VidUp / VidFast cannot decrypt
 # their links on the box - they send the site's encrypted stream token
 # (which carries the TMDb id of what is being played) to the third-party
@@ -444,6 +447,17 @@ def IsSidecarEnabled():
     # single central place hosts ask whether to create sidecar .txt/.jpg files,
     # instead of each host keeping its own copy of this config option
     return config.plugins.iptvplayer.sidecar_enabled.value
+
+
+def GetLocalPageSize(hostDefault):
+    # rows per page for the hosts that page a long list themselves (LOCAL_PAGE_SIZE); "Off" gives a size no list
+    # reaches, so the host's own paging maths shows everything on one page without a "Next page" row
+    value = config.plugins.iptvplayer.local_page_size.value
+    if value == "0":
+        return 1000000
+    if value.isdigit():
+        return int(value)
+    return hostDefault
 
 
 def GetConfigExpectedPin():

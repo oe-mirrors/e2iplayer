@@ -46,7 +46,7 @@ from Tools.BoundFunction import boundFunction
 from Plugins.Extensions.IPTVPlayer.components.iptvconfig import GetMoviePlayerName, ConfigPlayer, \
                                                                 GetAlternativeProxyList, GetAlternativeProxyChoices, GetAlternativeProxyUrl, \
                                                                 IsPluginBrowserEntryShown, IsExternalResolveAllowed, IsVidcoreResolvable, IsSidecarEnabled, \
-                                                                GetConfigExpectedPin, IsMediaNamingNormalized, \
+                                                                GetConfigExpectedPin, IsMediaNamingNormalized, GetLocalPageSize, \
                                                                 ConfigIPTVHostOnOff, GetListOfHostsNames  # noqa: F401
 
 
@@ -322,6 +322,7 @@ class ConfigMenu(ConfigBaseWidget):
         list.append(getConfigListEntry(_("Display thumbnails"), config.plugins.iptvplayer.showcover))
         if config.plugins.iptvplayer.showcover.value:
             list.append(getConfigListEntry("    " + _("Poster grid for lists with pictures"), config.plugins.iptvplayer.poster_grid))
+        list.append(getConfigListEntry(_("Rows per page of long seasons and lists"), config.plugins.iptvplayer.local_page_size))
         # list.append(getConfigListEntry("Sort the lists?", config.plugins.iptvplayer.sortuj))
         # list.append(getConfigListEntry(_("Graphic services selector"), config.plugins.iptvplayer.ListaGraficzna))
         # if config.plugins.iptvplayer.ListaGraficzna.value is True:
