@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "09.10.2026"
+LAST_MODIFIED = "17.11.2026"
+# fix show cover
 # Based on the WeCima hosts by popking (odem2014) and MOHAMED_OS
 # 08.10.2026 - revived from Backup for wecima.gripe (wecima.rent redirects there; cima.wecima.show is
 #   gone, wecima.cx sits behind a Cloudflare managed challenge for every request); rewrite against the
@@ -301,7 +302,7 @@ class WeCima(GenericFolderWatchedScraperMixin, CBaseHostClass):
             raw = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'<a href="[^"]+" title="([^"]+)"')[0])
             if not raw:
                 raw = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, "<strong", "<span", False)[1])
-            icon = self.cm.ph.getSearchGroups(item, r"url\(([^)]+)\)")[0].strip("'\" ")
+            icon = self.cm.ph.getSearchGroups(item, r"url\(([^)]+)\)")[0].strip("'\" ") or self.cm.ph.getSearchGroups(item, r'<img[^>]+src="([^"]+)"')[0]
             year = self.cm.ph.getSearchGroups(item, r'<span class="year">\s*\(?\s*(\d{4})')[0]
             items.append((url, raw, icon, year))
         return items, pagination

@@ -203,6 +203,7 @@ class urlparser:
             "apinchcaseation.com": self.pp.parserVOESX,  # add 061026
             "arabveturk.com": self.pp.parserJWPLAYER,
             "archive.org": self.pp.parserARCHIVEORG,
+            "arianathankspecial.com": self.pp.parserVOESX,  # add 171126
             "ashleyhardat.com": self.pp.parserVOESX,  # add 271026
             "ashortl.ink": self.pp.parserVIDMOLYME,
             "asianembed.cam": self.pp.parserSBS,  # add 061026
@@ -571,6 +572,7 @@ class urlparser:
             "lolololu.website": self.pp.parserJWPLAYER,
             "lookmovie2.skin": self.pp.parserJWPLAYER,  # add 061026
             "loriwithinfamily.com": self.pp.parserVOESX,  # add 061026
+            "lplaygo.com": self.pp.parserJWPLAYER,  # add 171126
             "lukecomparetwo.com": self.pp.parserVOESX,  # add 061026
             "lukesitturn.com": self.pp.parserVOESX,  # add 061026
             "lulu.st": self.pp.parserJWPLAYER,
@@ -607,6 +609,7 @@ class urlparser:
             "megamax.me": self.pp.parserMEGAMAX,  # add 031026
             "megankiddifference.com": self.pp.parserVOESX,
             "megatuktuk.store": self.pp.parserMEGAMAX,  # add 031026
+            "megatuktuk.top": self.pp.parserMEGAMAX,  # add 171126
             "meinecloud.click": self.pp.parserMEINECLOUD,
             "metagnathtuggers.com": self.pp.parserVOESX,  # add 061026
             "mfw09.org": self.pp.parserBYSE,

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "23.10.2026"
-# 23.10.2026 - update to current url
+LAST_MODIFIED = "17.11.2026"
+# 17.11.2026 - update to current url
 # Laroza (فيديو لاروزا) - PHP Melody site with movies, Arabic / Turkish / foreign / Indian / Asian series,
 # anime, Ramadan series, TV programmes and plays. The domain rotates: laroza.now redirects to the current one.
 #   - "Latest", "Most viewed", the series index (one card per show/season), the site's series / movie /
@@ -44,10 +44,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return "https://laaroza.bond/"
-
-
-ENTRY_URL = "https://laroza.now/"
+    return "https://laroza1.lol/"
 
 
 # Arabic ordinals of season labels ("الموسم الثاني")
@@ -112,7 +109,7 @@ class Laroza(GenericFolderWatchedScraperMixin, CBaseHostClass):
             return
         # the last known domain first; laroza.now redirects to the current one, but its chain can get
         # longer than the box follows (15 hops on 23.10.2026)
-        domains = [gettytul(), ENTRY_URL]
+        domains = [gettytul()]
         domain = config.plugins.iptvplayer.laroza_alt_domain.value.strip()
         if self.cm.isValidUrl(domain):
             domains.insert(0, domain.rstrip("/") + "/")
@@ -120,7 +117,7 @@ class Laroza(GenericFolderWatchedScraperMixin, CBaseHostClass):
             self.MAIN_URL = domain
             # -> 301 / 302 chain -> https://<current domain>/<home page>
             sts, data = self.getPage(domain)
-            if sts and "moslslat" in data:
+            if sts and "فيديو لاروزا" in data:
                 self.MAIN_URL = self.cm.getBaseUrl(self.cm.meta.get("url", domain))
                 Laroza.DOMAIN_CACHE = self.MAIN_URL
                 return

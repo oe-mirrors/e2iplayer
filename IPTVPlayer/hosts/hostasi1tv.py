@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "23.10.2026"
-# 23.10.2026 - update to current url
+LAST_MODIFIED = "17.11.2026"
+# 17.11.2026 - update to current url
 # 03.10.2026 - brought to the current host standard
 #   (Asia TV Drama, as1tv.com - Asian dramas with Arabic subtitles - originally by Mohamed Elsafty)
 #   - new domain as1tv.com (asiatvdrama.com redirects there); no sleeping 3x retry wrapper; no
@@ -35,7 +35,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return "https://astvd.com/"
+    return "https://astvdrama.net/"
 
 
 AJAX_URL = "https://asiawiki.me/wp-admin/admin-ajax.php?action=fetch_episode&id=%s"
