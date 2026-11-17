@@ -3,7 +3,7 @@
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, StripColorCodes
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 
 import re
@@ -295,7 +295,7 @@ def sidecarFromMeta(url, cfgEnabled=True):
 def _normSidecarText(value):
     try:
         # E2 colour codes of a list desc (\c00FFFF00 ...) do not belong in the text file
-        value = StripColorCodes(str(value or "").replace("\r", "\n"))
+        value = re.sub(r"\\c[0-9A-Fa-f]{8}", "", str(value or "").replace("\r", "\n"))
         return re.sub(r"\n{3,}", "\n\n", value).strip()
     except Exception:
         printExc()
