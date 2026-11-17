@@ -495,6 +495,7 @@ class urlparser:
             "hqq.tv": self.pp.parserHQQ,
             "hubcloud.foo": self.pp.parserHUBCLOUD,  # add 131126 (-> hubcloud.ist -> hubcloud.pw)
             "hubcloud.ist": self.pp.parserHUBCLOUD,  # add 131126
+            "hubcloud.mov": self.pp.parserHUBCLOUD, # add 161126
             "hubcloud.one": self.pp.parserHUBCLOUD,  # add 131126 (-> hubcloud.ist -> hubcloud.pw)
             "hubcloud.pw": self.pp.parserHUBCLOUD,  # add 131126 (4khdhub)
             "hubdrive.blog": self.pp.parserHUBCLOUD,  # add 131126 (HubDrive /file/<id>, 4khdhub)
