@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "21.10.2026"
+LAST_MODIFIED = "17.11.2026"
+# 17.11.2026 - update to current url and fix icon
 # 21.10.2026 - every hoster mirror of a Megamax server as an own server row, resolved only when picked (urlparser
 #   getMegamaxMirrors)
 # 09.10.2026 - gettytul() returns the address itself (the host list reads it from the file, see GetHostTitle)
@@ -31,7 +32,7 @@ def GetConfigList():
 
 # the site moves between mirrors (txcima.com -> b.txcima.com): change only the address here
 def gettytul():
-    return "https://b.txcima.com/"
+    return "https://1xb.txcima.com/"
 
 
 # "مشاهدة فيلم X 2026 مترجم", "مسلسل X الموسم الثاني الحلقة 2 مترجمة", "انمي ...", "برنامج ..."
@@ -223,7 +224,7 @@ class TaxiElCima(GenericFolderWatchedScraperMixin, CBaseHostClass):
             seen.add(url)
             if url.rstrip("/").endswith("-trailer") or "trailer" in rawTitle.lower():
                 continue
-            icon = self._normUrl(self.cm.ph.getSearchGroups(card, r'data-src="([^"]+)"')[0], currUrl)
+            icon = self._normUrl(self.cm.ph.getSearchGroups(card, r'data-src="([^"]+)"')[0], currUrl) or self._normUrl(self.cm.ph.getSearchGroups(card, r'<img[^>]+src="([^"]+)"')[0], currUrl)
             rating = self.cm.ph.getSearchGroups(card, r'class="IMDBRS">.*?<span>([0-9.]+)</span>')[0]
             info = self._parseTitle(rawTitle)
             desc = []
