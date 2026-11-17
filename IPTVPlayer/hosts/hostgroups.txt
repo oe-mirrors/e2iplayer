@@ -129,7 +129,6 @@
   "hawak",
   "cimatn",
   "streamdb",
-  "egyclub",
   "ask4movie",
   "tele5",
   "maxvod"
@@ -563,7 +562,6 @@
   "okanime",
   "aloula",
   "royatv",
-  "egyclub",
   "qoranway",
   "aflamfree",
   "geoarabic",
