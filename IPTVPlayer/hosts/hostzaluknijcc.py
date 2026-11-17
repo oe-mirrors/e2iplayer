@@ -195,6 +195,17 @@ class Zaluknij(GenericFolderWatchedScraperMixin, CBaseHostClass):
         # yellow title for the bottom info panel, back to white afterwards
         return "%s%s%s" % (E2ColoR("yellow"), text or "", E2ColoR("white"))
 
+    @staticmethod
+    def _withoutHeading(desc, heading):
+        # the series row's desc already starts with its title line - drop it before an
+        # episode puts its own in front
+        desc = desc or ""
+        if heading and desc.startswith(heading):
+            desc = desc[len(heading):]
+            while desc.startswith("[/br]"):
+                desc = desc[len("[/br]"):]
+        return desc
+
     ###################################################
     # watched flag
     ###################################################
@@ -293,14 +304,11 @@ class Zaluknij(GenericFolderWatchedScraperMixin, CBaseHostClass):
             self.addVideo(params)
         else:
             views = self.cm.ph.getSearchGroups(block, r"Odsłony\s*(\d+)")[0]
-            # the plot on the tile can already start with the title - strip it so it does not appear twice
+            # the plot on the tile can already start with the title - strip it so it does not appear
+            # twice (only there: the title can also be a word inside the plot)
             cleanPlot = plot
-            if title and cleanPlot:
-                lowerPlot, lowerTitle = cleanPlot.lower(), title.lower()
-                if lowerPlot.startswith(lowerTitle):
-                    cleanPlot = cleanPlot[len(title):].lstrip(" -:—–,.")
-                elif lowerTitle in lowerPlot:
-                    cleanPlot = re.sub(re.escape(title), "", cleanPlot, flags=re.IGNORECASE).strip(" -:—–,.")
+            if title and cleanPlot.lower().startswith(title.lower()):
+                cleanPlot = cleanPlot[len(title):].lstrip(" -:—–,.")
             params.update({"category": "list_episodes", "title": title,
                            "desc": self._desc(((_("Views"), views, "yellow"),), cleanPlot, self._yellowHeading(title)),
                            "s_title": title, "meta_type": "tv", "meta_title": _metaTitle(title), "meta_year": ""})
@@ -372,7 +380,8 @@ class Zaluknij(GenericFolderWatchedScraperMixin, CBaseHostClass):
         normalize = IsMediaNamingNormalized()
         show = _shortTitle(cItem.get("s_title", "") or cItem.get("title", ""))
         heading_yellow = self._yellowHeading(show)
-        parentDesc = cItem.get("desc", "")
+        # the series row built its heading from its full title (s_title), not the short one
+        parentDesc = self._withoutHeading(cItem.get("desc", ""), self._yellowHeading(cItem.get("s_title", "") or cItem.get("title", "")))
         for episode, url, name in episodes[(page - 1) * EPISODES_PER_PAGE:page * EPISODES_PER_PAGE]:
             if normalize:
                 title = "%s - %s" % (show, formatSxxExx(season, episode))
