@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "16.11.2026"
+LAST_MODIFIED = "17.11.2026"
+# 17.11.2026 - feeds: plain text files open as text, a note when the address is no feed
 # 16.11.2026 - RSS / Atom feeds from the user's own feedlist.txt
 # 16.11.2026 - lantech.com.pl: links again (players carry the playlist url); 40mediagroup.com: new site
 # 08.11.2026 - new sources: hdontap.com (webcams), megawypas.com (Polish TV and radio)
@@ -659,17 +660,22 @@ class WebStreamHost(CBaseHostClass):
                 self.addDir({'name': 'feed_list', 'title': item['title'], 'url': item['url'], 'icon': cItem.get('icon', ''), 'desc': item['url']})
 
     def getFeedList(self, cItem):
-        url = cItem.get('url', '')
+        # a quote or blank pasted along with the address breaks it (GitHub
+        # then answers with an HTML page instead of the Atom feed)
+        url = cItem.get('url', '').strip().strip('\'"').strip()
         sts, data = self.cm.getPage(url)
         if not sts or not data:
             return
         data = ensure_str(data)
+        contentType = self.cm.meta.get('content-type', '').lower()
 
         # the feed's own image as fallback icon
         head = self.FEED_ITEM_RE.split(data, 1)[0]
         feedIcon = ph.clean_html(self._feedTag(head, ('url', 'logo', 'icon'))) or self._feedAttr(ph.find(head, '<itunes:image', '>')[1], 'href') or cItem.get('icon', '')
 
+        found = False
         for m in self.FEED_ITEM_RE.finditer(data):
+            found = True
             item = m.group(0)
             isAtom = m.group(1).lower() == 'entry'
             title = ph.clean_html(self._feedTag(item, ('title',)))
@@ -710,6 +716,36 @@ class WebStreamHost(CBaseHostClass):
                 self.addVideo(params)
             else:
                 self.addArticle(params)
+
+        if found:
+            return
+        # no RSS / Atom entries: a plain text file opens as text - a commit log
+        # (hash, date, author, message, blocks split by "|+++|", like
+        # update2/log.txt) one entry per commit, any other text as one item.
+        # Anything else (an HTML page, a mistyped address) gets a note in the
+        # empty list's status box.
+        if 'html' in contentType or 'xml' in contentType or data.lstrip().startswith('<'):
+            SetIPTVPlayerLastHostError('%s\n%s' % (_('No RSS / Atom feed at this address.'), url))
+            return
+        text = data.replace('\r\n', '\n').strip()
+        for block in re.split(r'\n\|\+\+\+\|\n?', text):
+            if not block.strip():
+                continue
+            lines = block.strip().split('\n')
+            if len(lines) < 4 or not re.match(r'^[0-9a-f]{7,40}$', lines[0].strip()):
+                break
+            date = self._feedDate(lines[1])
+            author = re.sub(r'\s*\([^)]*@[^)]*\)', '', lines[2]).strip()
+            message = '\n'.join(lines[3:]).strip()
+            self.addArticle({'name': 'feed_entry', 'title': '%s  %s' % (date, message.split('\n')[0]), 'url': url, 'icon': cItem.get('icon', ''),
+                             'desc': '\n'.join((date, author, message)), 'feed_title': message.split('\n')[0], 'feed_text': message,
+                             'feed_date': date, 'feed_author': author, 'good_for_fav': False})
+        else:
+            return
+        # not (only) commit blocks -> the whole file as one text item
+        self.currList = []
+        self.addArticle({'name': 'feed_entry', 'title': cItem.get('title', '') or url, 'url': url, 'icon': cItem.get('icon', ''), 'desc': text[:1000],
+                         'feed_title': cItem.get('title', ''), 'feed_text': text, 'good_for_fav': False})
 
     def getArticleContent(self, cItem):
         text = cItem.get('feed_text', '') or cItem.get('desc', '')
