@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "10.10.2026"
+LAST_MODIFIED = "17.11.2026"
 # 25.06.2026 - damagic
 # 10.10.2026 - host standard: watched flag (series -> season -> episode; a series with more than one season gets
 #   season folders), favourites reopen without state, downloaded marker on the film / episode url,
@@ -14,7 +14,7 @@ LAST_MODIFIED = "10.10.2026"
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import SetIPTVPlayerLastHostError, TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsMediaNamingNormalized, IsSidecarEnabled
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, E2ColoR
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
@@ -145,6 +145,11 @@ class Filman(GenericFolderWatchedScraperMixin, CBaseHostClass, CaptchaHelper):
     def setMainUrl(self, url):
         if self.cm.isValidUrl(url):
             self.MAIN_URL = self.cm.getBaseUrl(url)
+
+    @staticmethod
+    def _yellowHeading(text):
+        # yellow title for the bottom info panel, back to white afterwards
+        return "%s%s%s" % (E2ColoR("yellow"), text or "", E2ColoR("white"))
 
     ###################################################
     # watched flag / favourites
@@ -360,7 +365,10 @@ class Filman(GenericFolderWatchedScraperMixin, CBaseHostClass, CaptchaHelper):
             title = info["title"]
             icon = info.get("icon") or self.DEFAULT_ICON_URL
 
+            # NEW: yellow title as the first line of the bottom info panel (above Year / Rating)
             desc_parts = []
+            if title:
+                desc_parts.append(self._yellowHeading(title))
             if info["year"]:
                 desc_parts.append(_("Year:") + " " + info["year"])
             if info["rating"]:
@@ -450,6 +458,8 @@ class Filman(GenericFolderWatchedScraperMixin, CBaseHostClass, CaptchaHelper):
             episodes = [ep for ep in self._episodes(data) if ep[0] == season]
         sTitle = cItem.get("s_title", "") or self._seriesName(cItem.get("title", ""))
         normalize = IsMediaNamingNormalized()
+        heading = self._yellowHeading(sTitle)
+        parentDesc = cItem.get("desc", "")
         for epSeason, epNum, url, epTitle in episodes:
             if normalize and epSeason and epNum:
                 title = "%s - %s" % (sTitle, formatSxxExx(epSeason, epNum))
@@ -458,9 +468,18 @@ class Filman(GenericFolderWatchedScraperMixin, CBaseHostClass, CaptchaHelper):
                 title = self._cleanTitleForFilename("%s [%s] %s" % (sTitle, tag, epTitle) if epTitle else "%s [%s]" % (sTitle, tag))
             else:
                 title = self._cleanTitleForFilename("%s - %s" % (sTitle, epTitle))
+
+            # NEW: bottom info panel of an episode - the series name in yellow first,
+            # then the episode title / the series description
+            if epTitle:
+                ep_desc = "%s[/br]%s" % (epTitle, parentDesc)
+            else:
+                ep_desc = parentDesc
+            ep_desc = "%s[/br]%s" % (heading, ep_desc) if ep_desc else heading
+
             params = {"name": "category", "good_for_fav": True, "url": url, "title": title, "icon": cItem.get("icon", ""), "s_title": sTitle,
                       "s_year": cItem.get("s_year", ""), "season": epSeason, "episode": epNum, "meta_type": "tv",
-                      "desc": "%s[/br]%s" % (epTitle, cItem.get("desc", "")) if epTitle else cItem.get("desc", "")}
+                      "desc": ep_desc}
             self.addVideo(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
