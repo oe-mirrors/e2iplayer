@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "18.10.2026"
+LAST_MODIFIED = "17.11.2026"
 # 11.10.2026 - "Newest videos": video length in the description (uploads playlist page, one request per channel),
 # Shorts with their own list icon; stored live streams / live radios with the live icon
 # 09.10.2026 - "Newest videos": INFO shows the full YouTube description, no age in the title (file name)
@@ -12,7 +12,7 @@ LAST_MODIFIED = "18.10.2026"
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.ihost import IHost, CHostBase, CBaseHostClass, CDisplayListItem, RetHost, CUrlItem, CFavItem
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetLogoDir, GetFavouritesDir, GetWatchedDir, mkdirs, rm
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetLogoDir, GetFavouritesDir, GetWatchedDir, mkdirs, rm, E2ColoR
 from Plugins.Extensions.IPTVPlayer.tools.iptvfavourites import IPTVFavourites
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
 from Plugins.Extensions.IPTVPlayer.components.iptvchoicebox import IPTVChoiceBoxItem
@@ -137,7 +137,10 @@ class Favourites(CBaseHostClass):
             except Exception:
                 printExc()
         for params, addFun in rows:
-            params['desc'] = self._addHostLine(params['host'], params['desc'])
+            # NEW: the favourite's own title in yellow, one line under the host line of _addHostLine
+            heading = "%s%s%s" % (E2ColoR("yellow"), params.get('title', ''), E2ColoR("white"))
+            body = "%s\n%s" % (heading, params.get('desc', '')) if params.get('desc') else heading
+            params['desc'] = self._addHostLine(params['host'], body)
             addFun(self._addPinLock(params, params['host']))
 
     @staticmethod
