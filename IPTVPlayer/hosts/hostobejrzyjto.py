@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "10.10.2026"
+LAST_MODIFIED = "17.11.2026"
 # Completely rewritten: 19.02.2026 - Mr.X
 # Fixed Pagination for episodes: 02.05.2026 - SlyceMaster
 # 10.10.2026 - host standard:
@@ -24,7 +24,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, E2ColoR
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedHostMixin, GenericFolderWatchedScraperMixin
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
@@ -133,6 +133,11 @@ class Obejrzyjto(GenericFolderWatchedScraperMixin, CBaseHostClass):
         # "lektor_pl_napisy_pl" -> "lektor PL / napisy PL"
         return (languageType or "").replace("_pl", " PL").replace("_en", " EN").replace("_", " / ")
 
+    @staticmethod
+    def _yellowHeading(text):
+        # yellow title for the bottom info panel, back to white afterwards
+        return "%s%s%s" % (E2ColoR("yellow"), text or "", E2ColoR("white"))
+
     def _titleUrl(self, tid):
         return self.getFullUrl("api/v1/titles/%s?loader=titlePage" % tid)
 
@@ -159,7 +164,13 @@ class Obejrzyjto(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if isinstance(primary, dict) and primary.get("language_type"):
             tab.append(self._versionLabel(primary["language_type"]))
         desc = self.cleanHtmlStr(js.get("description", "") or "")
-        return " | ".join(tab) + ("[/br]" + desc if desc else "")
+        body = " | ".join(tab) + ("[/br]" + desc if desc else "")
+        # yellow title as the first line, then a blank line
+        name = self.cleanHtmlStr(js.get("name", "") or "")
+        if name:
+            heading = self._yellowHeading(name)
+            return "%s[/br][/br]%s" % (heading, body) if body else heading
+        return body
 
     ###################################################
     # lists
@@ -238,14 +249,17 @@ class Obejrzyjto(GenericFolderWatchedScraperMixin, CBaseHostClass):
                                    episodes_count=rows[0].get("episodes_count", 0), **fields))
             return
         normalize = IsMediaNamingNormalized()
+        heading = self._yellowHeading(sTitle)
         for row in rows:
             season = str(row["number"])
             seasonTag = formatSxxExx(season) if normalize else "%s %s" % (_("Season"), season)
+            seasonDesc = "%s: %s\n%s" % (_("Episodes"), row.get("episodes_count", ""), plot)
             params = stripPagerKeys(dict(cItem))
             params.update(fields)
             params.update({"good_for_fav": True, "category": "list_episodes", "title": "%s - %s" % (sTitle, seasonTag), "season": season,
                            "url": self._seasonUrl(tid, season), "icon": self._poster(row.get("poster")) or cItem.get("icon", ""),
-                           "episodes_count": row.get("episodes_count", 0), "desc": "%s: %s\n%s" % (_("Episodes"), row.get("episodes_count", ""), plot)})
+                           "episodes_count": row.get("episodes_count", 0),
+                           "desc": "%s[/br][/br]%s" % (heading, seasonDesc) if seasonDesc else heading})
             self.addDir(params)
 
     def listEpisodes(self, cItem):
@@ -260,6 +274,7 @@ class Obejrzyjto(GenericFolderWatchedScraperMixin, CBaseHostClass):
         title = js.get("title") or {}
         sTitle = cItem.get("s_title", "") or self.cleanHtmlStr(title.get("name", "") or "") or cItem.get("title", "")
         normalize = IsMediaNamingNormalized()
+        heading = self._yellowHeading(sTitle)
         for ep in episodes.get("data") or []:
             if not isinstance(ep, dict) or not ep.get("primary_video"):
                 # announced by TMDb, no video on the site yet
@@ -273,11 +288,13 @@ class Obejrzyjto(GenericFolderWatchedScraperMixin, CBaseHostClass):
             descTab = [x for x in (str(ep.get("release_date", "") or "")[:10], self._versionLabel((ep.get("primary_video") or {}).get("language_type", ""))) if x]
             plot = self.cleanHtmlStr(ep.get("description", "") or "")
             text = "%s: %s" % (epName, plot) if (epName and plot) else (plot or epName)
+            body = " | ".join(descTab) + ("[/br]" + text if text else "")
+            epDesc = "%s[/br][/br]%s" % (heading, body) if body else heading
             params = stripPagerKeys(dict(cItem), ("episodes_count",))
             params.update({"good_for_fav": True, "category": "video", "title": label, "url": self._episodeUrl(tid, season, epNum), "title_id": tid,
                            "season": season, "episode": epNum, "ep_title": epName, "s_title": sTitle, "meta_type": "tv",
                            "icon": self._poster(ep.get("poster")) or cItem.get("icon", ""),
-                           "desc": " | ".join(descTab) + ("[/br]" + text if text else "")})
+                           "desc": epDesc})
             self.addVideo(params)
         perPage = _toInt(episodes.get("per_page"), 0)
         count = _toInt(cItem.get("episodes_count") or (js.get("season") or {}).get("episodes_count"), 0)
