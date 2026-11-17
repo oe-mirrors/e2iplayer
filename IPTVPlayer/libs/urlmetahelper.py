@@ -294,7 +294,8 @@ def sidecarFromMeta(url, cfgEnabled=True):
 
 def _normSidecarText(value):
     try:
-        value = str(value or "").replace("\r", "\n")
+        # E2 colour codes of a list desc (\c00FFFF00 ...) do not belong in the text file
+        value = re.sub(r"\\c[0-9A-Fa-f]{8}", "", str(value or "").replace("\r", "\n"))
         return re.sub(r"\n{3,}", "\n\n", value).strip()
     except Exception:
         printExc()

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "04.10.2026"
+LAST_MODIFIED = "17.11.2026"
 # 04.10.2026 - zaluknij.cc rework (Polish movies and series)
 #   - Cloudflare: every request goes through getPageCFProtection (MyE2i solves the browser check, the
 #     solving User-Agent is remembered next to the cookie jar); the UA pCommon really used is taken
@@ -182,10 +182,28 @@ class Zaluknij(GenericFolderWatchedScraperMixin, CBaseHostClass):
             title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(attrs, r'title="([^"]+)"')[0])
         return title, meta
 
-    def _desc(self, fields, plot=""):
+    def _desc(self, fields, plot="", heading=""):
         desc = " | ".join(["%s%s:%s %s" % (E2ColoR(color), label, E2ColoR("white"), value) for label, value, color in fields if value])
         if plot:
             desc = "%s[/br]%s" % (desc, plot) if desc else plot
+        # the title as the first line (already coloured by the caller), then a blank line
+        if heading:
+            desc = "%s[/br][/br]%s" % (heading, desc) if desc else heading
+        return desc
+
+    def _yellowHeading(self, text):
+        # yellow title for the bottom info panel, back to white afterwards
+        return "%s%s%s" % (E2ColoR("yellow"), text or "", E2ColoR("white"))
+
+    @staticmethod
+    def _withoutHeading(desc, heading):
+        # the series row's desc already starts with its title line - drop it before an
+        # episode puts its own in front
+        desc = desc or ""
+        if heading and desc.startswith(heading):
+            desc = desc[len(heading):]
+            while desc.startswith("[/br]"):
+                desc = desc[len("[/br]"):]
         return desc
 
     ###################################################
@@ -265,8 +283,10 @@ class Zaluknij(GenericFolderWatchedScraperMixin, CBaseHostClass):
             rating = self.cm.ph.getSearchGroups(block, r'<div class="rate">([\d.]+)<')[0]
             views = self.cm.ph.getSearchGroups(block, r'<div class="views" title="([\d\s]+)')[0].strip()
             fields = ((_("Year"), year, "cyan"), (_("Rating"), "%s/5" % rating if rating.strip("0.") else "", "green"), (_("Views"), views, "yellow"))
-            params.update({"category": "zal_video", "title": "%s (%s)" % (title, year) if year else title,
-                           "desc": self._desc(fields, plot), "meta_type": "movie", "meta_title": _metaTitle(title), "meta_year": year})
+            heading = "%s (%s)" % (title, year) if year else title
+            params.update({"category": "zal_video", "title": heading,
+                           "desc": self._desc(fields, plot, self._yellowHeading(heading)),
+                           "meta_type": "movie", "meta_title": _metaTitle(title), "meta_year": year})
             self.addVideo(params)
         elif EPISODE_URL_RE.search(url):
             numbers = SXXEXX_RE.search(metaLine)
@@ -278,12 +298,19 @@ class Zaluknij(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 params.update({"s_season": season, "s_episode": episode})
             else:
                 dispTitle = show
-            params.update({"category": "zal_video", "title": dispTitle, "desc": self._desc(((_("Added"), added, "cyan"),), title),
+            params.update({"category": "zal_video", "title": dispTitle,
+                           "desc": self._desc(((_("Added"), added, "cyan"),), title, self._yellowHeading(show)),
                            "s_title": show, "meta_type": "tv", "meta_title": _metaTitle(title), "meta_year": ""})
             self.addVideo(params)
         else:
             views = self.cm.ph.getSearchGroups(block, r"Odsłony\s*(\d+)")[0]
-            params.update({"category": "list_episodes", "title": title, "desc": self._desc(((_("Views"), views, "yellow"),), plot),
+            # the plot on the tile can already start with the title - strip it so it does not appear
+            # twice (only there: the title can also be a word inside the plot)
+            cleanPlot = plot
+            if title and cleanPlot.lower().startswith(title.lower()):
+                cleanPlot = cleanPlot[len(title):].lstrip(" -:—–,.")
+            params.update({"category": "list_episodes", "title": title,
+                           "desc": self._desc(((_("Views"), views, "yellow"),), cleanPlot, self._yellowHeading(title)),
                            "s_title": title, "meta_type": "tv", "meta_title": _metaTitle(title), "meta_year": ""})
             self.addDir(params)
         return True
@@ -352,13 +379,19 @@ class Zaluknij(GenericFolderWatchedScraperMixin, CBaseHostClass):
         lastPage = (len(episodes) + EPISODES_PER_PAGE - 1) // EPISODES_PER_PAGE
         normalize = IsMediaNamingNormalized()
         show = _shortTitle(cItem.get("s_title", "") or cItem.get("title", ""))
+        heading_yellow = self._yellowHeading(show)
+        # the series row built its heading from its full title (s_title), not the short one
+        parentDesc = self._withoutHeading(cItem.get("desc", ""), self._yellowHeading(cItem.get("s_title", "") or cItem.get("title", "")))
         for episode, url, name in episodes[(page - 1) * EPISODES_PER_PAGE:page * EPISODES_PER_PAGE]:
             if normalize:
                 title = "%s - %s" % (show, formatSxxExx(season, episode))
             else:
                 title = " - ".join(x for x in (show, "S%02d E%02d" % (season, episode), name) if x)
+            # the series name in yellow, a blank line, then the episode / description
+            epDesc = "%s[/br][/br]%s" % (heading_yellow, parentDesc) if parentDesc else heading_yellow
             params = stripPagerKeys(dict(cItem), PAGING_KEYS)
             params.update({"name": "category", "good_for_fav": True, "category": "zal_video", "title": title, "url": url,
+                           "desc": epDesc,
                            "s_title": show, "s_season": season, "s_episode": episode, "meta_type": "tv"})
             self.addVideo(params)
         if lastPage > 1:
