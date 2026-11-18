@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "10.10.2026"
+LAST_MODIFIED = "18.11.2026"
 # PREMIUMSMART (premiumsmart.eu): Polish films and series (lektor / dubbing / napisy) from the site's JSON API,
 #   played from Byse, Vidara, Streamtape, Abyss, FlyFile ... through urlparser
 # 10.10.2026 - host standard: the API answers only with the session cookie of the site (401 without it - the host
@@ -14,7 +14,7 @@ LAST_MODIFIED = "10.10.2026"
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsMediaNamingNormalized, IsSidecarEnabled
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, E2ColoR
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
@@ -73,6 +73,11 @@ class Premiumsmarteu(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 self.getPage(self.MAIN_URL)
         return {}
 
+    @staticmethod
+    def _yellowHeading(text):
+        # yellow title for the bottom info panel, back to white afterwards
+        return "%s%s%s" % (E2ColoR("yellow"), text or "", E2ColoR("white"))
+
     ###################################################
     # watched flag
     ###################################################
@@ -119,12 +124,15 @@ class Premiumsmarteu(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 desc.append('IMDb %s' % item['rating'])
             if (item.get('primary_video') or {}).get('language_type'):
                 desc.append(item['primary_video']['language_type'])
-            desc = ' | '.join(desc)
+            descBody = ' | '.join(desc)
             if item.get('description'):
-                desc += ('[/br]' if desc else '') + self.cleanHtmlStr(item['description'])
+                descBody += ('[/br]' if descBody else '') + self.cleanHtmlStr(item['description'])
+            # yellow title as the first line, then a blank line
+            heading = self._yellowHeading(title)
+            fullDesc = "%s[/br][/br]%s" % (heading, descBody) if descBody else heading
             params = stripPagerKeys(dict(cItem), ('f_order',))
             params.update({'name': 'category', 'good_for_fav': True, 'title': title, 'url': self.API_URL + 'titles/%s' % item['id'], 'icon': self._icon(item.get('poster')),
-                           'desc': desc, 's_title': title, 's_year': year, 'imdb_id': item.get('imdb_id') or ''})
+                           'desc': fullDesc, 's_title': title, 's_year': year, 'imdb_id': item.get('imdb_id') or ''})
             if item.get('is_series'):
                 params.update({'category': 'list_seasons', 'meta_type': 'tv'})
                 self.addDir(params)
@@ -208,12 +216,15 @@ class Premiumsmarteu(GenericFolderWatchedScraperMixin, CBaseHostClass):
             self.listEpisodes(dict(cItem, category='list_episodes', season=str(seasons[0]['number']), url='%s#s%s' % (url, seasons[0]['number']), s_title=sTitle))
             return
         normalize = IsMediaNamingNormalized()
+        heading = self._yellowHeading(sTitle)
         for season in seasons:
             number = str(season['number'])
             seasonTag = formatSxxExx(number) if normalize else '%s %s' % (_('Season'), number)
+            seasonDesc = "%s: %s" % (_('Episodes'), season.get('available_episodes_count', ''))
             params = stripPagerKeys(dict(cItem))
             params.update({'good_for_fav': True, 'category': 'list_episodes', 'title': '%s - %s' % (sTitle, seasonTag), 'season': number, 's_title': sTitle,
-                           'url': '%s#s%s' % (url, number), 'icon': self._icon(season.get('poster')) or cItem.get('icon', '')})
+                           'url': '%s#s%s' % (url, number), 'icon': self._icon(season.get('poster')) or cItem.get('icon', ''),
+                           'desc': "%s[/br][/br]%s" % (heading, seasonDesc) if seasonDesc else heading})
             self.addDir(params)
 
     def listEpisodes(self, cItem):
@@ -224,6 +235,7 @@ class Premiumsmarteu(GenericFolderWatchedScraperMixin, CBaseHostClass):
             return
         sTitle = cItem.get('s_title', '') or cItem.get('title', '')
         normalize = IsMediaNamingNormalized()
+        heading = self._yellowHeading(sTitle)
         for item in self._pages('titles/%s/seasons/%s/episodes' % (titleId, season), 100):
             try:
                 episode = str(item.get('episode_number', '') or '')
@@ -234,11 +246,13 @@ class Premiumsmarteu(GenericFolderWatchedScraperMixin, CBaseHostClass):
                     title = '%s - %s' % (sTitle, formatSxxExx(season, episode))
                 else:
                     title = '%s - %s %s - %s %s' % (sTitle, _('Season'), season, _('Episode'), episode) + (': %s' % epName if epName else '')
-                desc = [x for x in (epName, str(item.get('release_date', '') or '')[:10], self.cleanHtmlStr(item.get('description', ''))) if x]
+                descLines = [x for x in (epName, str(item.get('release_date', '') or '')[:10], self.cleanHtmlStr(item.get('description', ''))) if x]
+                body = '[/br]'.join(descLines)
+                epDesc = "%s[/br][/br]%s" % (heading, body) if body else heading
                 params = stripPagerKeys(dict(cItem))
                 params.update({'good_for_fav': True, 'category': 'video', 'title': title, 's_title': sTitle, 'season': season, 'episode': episode, 'meta_type': 'tv',
                                'url': self.API_URL + 'titles/%s/seasons/%s/episodes/%s' % (titleId, season, episode),
-                               'icon': self._icon(item.get('poster')) or cItem.get('icon', ''), 'desc': '[/br]'.join(desc)})
+                               'icon': self._icon(item.get('poster')) or cItem.get('icon', ''), 'desc': epDesc})
                 self.addVideo(params)
             except Exception:
                 printExc()
