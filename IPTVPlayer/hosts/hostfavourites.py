@@ -29,6 +29,7 @@ try:
 except Exception:
     import json
 from hashlib import md5
+import re
 import time
 from Components.config import config, ConfigInteger, ConfigYesNo, getConfigListEntry
 ###################################################
@@ -137,10 +138,16 @@ class Favourites(CBaseHostClass):
             except Exception:
                 printExc()
         for params, addFun in rows:
-            # NEW: the favourite's own title in yellow, one line under the host line of _addHostLine
-            heading = "%s%s%s" % (E2ColoR("yellow"), params.get('title', ''), E2ColoR("white"))
-            body = "%s\n%s" % (heading, params.get('desc', '')) if params.get('desc') else heading
-            params['desc'] = self._addHostLine(params['host'], body)
+            # the favourite's own title in yellow, one line under the host line of _addHostLine -
+            # not when the stored description already starts with it (hosts that put it there themselves)
+            desc = params.get('desc', '') or ''
+            title = params.get('title', '') or ''
+            yellow = E2ColoR("yellow")
+            hasHeading = (yellow and desc.startswith(yellow)) or re.sub(r'\\c[0-9A-Fa-f]{8}', '', desc).lstrip().startswith(title)
+            if title and not hasHeading:
+                heading = "%s%s%s" % (yellow, title, E2ColoR("white"))
+                desc = "%s\n%s" % (heading, desc) if desc else heading
+            params['desc'] = self._addHostLine(params['host'], desc)
             addFun(self._addPinLock(params, params['host']))
 
     @staticmethod

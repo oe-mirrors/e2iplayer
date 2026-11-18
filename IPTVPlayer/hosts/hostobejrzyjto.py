@@ -241,7 +241,15 @@ class Obejrzyjto(GenericFolderWatchedScraperMixin, CBaseHostClass):
             SetIPTVPlayerLastHostError(_("No streams are available for this title yet."))
             return
         sTitle = self.cleanHtmlStr(title.get("name", "") or "") or cItem.get("s_title", "") or cItem.get("title", "")
-        plot = self.cleanHtmlStr(title.get("description", "") or "") or cItem.get("desc", "")
+        heading = self._yellowHeading(sTitle)
+        plot = self.cleanHtmlStr(title.get("description", "") or "")
+        if not plot:
+            # the title row's desc (_titleDesc) already starts with the yellow title line
+            plot = cItem.get("desc", "")
+            if plot.startswith(heading):
+                plot = plot[len(heading):]
+                while plot.startswith("[/br]"):
+                    plot = plot[len("[/br]"):]
         fields = {"title_id": tid, "s_title": sTitle, "s_year": str(title.get("year", "") or cItem.get("s_year", "")), "meta_type": "tv"}
         if len(rows) == 1:
             season = str(rows[0]["number"])
@@ -249,7 +257,6 @@ class Obejrzyjto(GenericFolderWatchedScraperMixin, CBaseHostClass):
                                    episodes_count=rows[0].get("episodes_count", 0), **fields))
             return
         normalize = IsMediaNamingNormalized()
-        heading = self._yellowHeading(sTitle)
         for row in rows:
             season = str(row["number"])
             seasonTag = formatSxxExx(season) if normalize else "%s %s" % (_("Season"), season)
