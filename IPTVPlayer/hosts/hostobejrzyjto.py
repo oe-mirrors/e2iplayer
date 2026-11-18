@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "17.11.2026"
+LAST_MODIFIED = "18.11.2026"
 # Completely rewritten: 19.02.2026 - Mr.X
 # Fixed Pagination for episodes: 02.05.2026 - SlyceMaster
 # 10.10.2026 - host standard:
@@ -12,6 +12,7 @@ LAST_MODIFIED = "17.11.2026"
 #     downloaded marker on the film / episode url, "Title (Year)" / "Show - SxxExx" names, sidecar
 #   - INFO via moviemeta (IMDb id of the title) merged with the site's fields (genres, rating, cast ...)
 #   - First / Jump / Next page with the last page, TMDb posters w342 instead of the original
+# 18.11.2026 - episodes listed newest first (whole season fetched at once with perPage=100, sorted by episode number)
 import re
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
@@ -274,18 +275,20 @@ class Obejrzyjto(GenericFolderWatchedScraperMixin, CBaseHostClass):
         tid, season = self._titleId(cItem), self._season(cItem)
         if not (tid and season):
             return
-        page = max(1, _toInt(cItem.get("page", 1), 1))
-        url = self._seasonUrl(tid, season)
-        js = self._getJson(url + ("&page=%d" % page if page > 1 else ""))
+        # cały sezon na raz (perPage=100 na tym samym endpointcie seasonPage), potem sortowanie od najnowszego
+        js = self._getJson(self.getFullUrl("api/v1/titles/%s/seasons/%s?perPage=100&page=1&loader=seasonPage" % (tid, season)))
         episodes = js.get("episodes") or {}
         title = js.get("title") or {}
         sTitle = cItem.get("s_title", "") or self.cleanHtmlStr(title.get("name", "") or "") or cItem.get("title", "")
         normalize = IsMediaNamingNormalized()
         heading = self._yellowHeading(sTitle)
-        for ep in episodes.get("data") or []:
-            if not isinstance(ep, dict) or not ep.get("primary_video"):
-                # announced by TMDb, no video on the site yet
-                continue
+        rows = [ep for ep in (episodes.get("data") or []) if isinstance(ep, dict) and ep.get("primary_video")]
+        # od najnowszego: malejąco po numerze odcinka
+        rows.sort(key=lambda ep: -_toInt(ep.get("episode_number"), 0))
+        if not rows:
+            SetIPTVPlayerLastHostError(_("No streams are available for this title yet."))
+            return
+        for ep in rows:
             epNum = str(ep.get("episode_number", "") or "")
             epName = self.cleanHtmlStr(ep.get("name", "") or "")
             if normalize:
@@ -303,11 +306,6 @@ class Obejrzyjto(GenericFolderWatchedScraperMixin, CBaseHostClass):
                            "icon": self._poster(ep.get("poster")) or cItem.get("icon", ""),
                            "desc": epDesc})
             self.addVideo(params)
-        perPage = _toInt(episodes.get("per_page"), 0)
-        count = _toInt(cItem.get("episodes_count") or (js.get("season") or {}).get("episodes_count"), 0)
-        lastPage = (count + perPage - 1) // perPage if (perPage and count) else 0
-        # the page lives in cItem["page"] - the template keeps the season url
-        addPagingItems(self, dict(cItem, category="list_episodes"), page, bool(episodes.get("next_page")), lastPage, url.replace("{", "{{").replace("}", "}}"))
 
     ###################################################
     # links
