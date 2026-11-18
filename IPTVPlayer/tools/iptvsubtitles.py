@@ -184,18 +184,47 @@ class IPTVSubtitlesHandler:
     _VTT_INLINE_TS_RE = re.compile(r'<(?:\d+:)?\d{2}:\d{2}\.\d{3}>')
     _VTT_SPAN_RE = re.compile(r'</?(?:c|v|lang|ruby|rt)(?:[.\s][^<>\n]*)?>')
     _VTT_TIMING_RE = re.compile(r'^[ \t]*((?:\d+:)?\d{2}:\d{2}\.\d{3})[ \t]+-->[ \t]+((?:\d+:)?\d{2}:\d{2}\.\d{3})', re.M)
+    # character references the parsers print as text, e.g. YouTube's speaker change "&gt;&gt;"
+    _VTT_ENTITY_RE = re.compile(r'&(?:#(\d+)|#[xX]([0-9a-fA-F]+)|(amp|lt|gt|quot|apos|nbsp|lrm|rlm));')
+    _VTT_ENTITIES = {'amp': u'&', 'lt': u'<', 'gt': u'>', 'quot': u'"', 'apos': u"'", 'nbsp': u' ', 'lrm': u'', 'rlm': u''}
+    # an auto-generated cue runs until the next one starts, also through long silences - it is
+    # cut this long after its last spoken word
+    _VTT_ASR_HOLD_MS = 3000
+
+    @classmethod
+    def _vttEntity(cls, m):
+        try:
+            if m.group(3):
+                return cls._VTT_ENTITIES[m.group(3)]
+            code = int(m.group(1)) if m.group(1) else int(m.group(2), 16)
+            return u'' if code in (0x200e, 0x200f) else chr(code)
+        except Exception:
+            return m.group(0)
+
+    @staticmethod
+    def _vttTc(ms):
+        return '%02d:%02d:%02d.%03d' % (ms // 3600000, ms // 60000 % 60, ms // 1000 % 60, ms % 1000)
 
     def _cleanWebVtt(self, subText):
         if not subText.lstrip(u'﻿').startswith('WEBVTT'):
             return subText
-        if '<' in subText:
-            subText = self._VTT_SPAN_RE.sub('', self._VTT_INLINE_TS_RE.sub('', subText))
-        # YouTube's roll-up captions add a 10 ms cue between two lines - nothing to read, drop it
         kept = []
         for block in subText.replace('\r\n', '\n').split('\n\n'):
             m = self._VTT_TIMING_RE.search(block)
-            if m and self._srtTc2ms(m.group(2)) - self._srtTc2ms(m.group(1)) <= 50:
-                continue
+            if m:
+                start, end = self._srtTc2ms(m.group(1)), self._srtTc2ms(m.group(2))
+                # YouTube's roll-up captions add a 10 ms cue between two lines - nothing to read, drop it
+                if end - start <= 50:
+                    continue
+                words = self._VTT_INLINE_TS_RE.findall(block[m.end():])
+                if words:
+                    cut = max(start, self._srtTc2ms(words[-1].strip('<>'))) + self._VTT_ASR_HOLD_MS
+                    if cut < end:
+                        block = block[:m.start(2)] + self._vttTc(cut) + block[m.end(2):]
+                if '<' in block:
+                    block = self._VTT_SPAN_RE.sub('', self._VTT_INLINE_TS_RE.sub('', block))
+                if '&' in block:
+                    block = self._VTT_ENTITY_RE.sub(self._vttEntity, block)
             kept.append(block)
         return '\n\n'.join(kept)
 

@@ -169,3 +169,23 @@ def test_youtube_asr_vtt_python_parser(handler):
     sts, atoms = handler("yt_en_0_abc.vtt", YT_ASR)
     assert sts and atoms == [{'start': 12559, 'end': 14350, 'text': 'so in'},
                              {'start': 14360, 'end': 17029, 'text': 'so in\ncollege I was'}]
+
+
+# speaker change ">>" arrives as "&gt;&gt;"; the last cue before a pause runs until the next speech
+YT_ASR_PAUSE = (u"WEBVTT\nKind: captions\nLanguage: bg\n\n"
+                u"00:00:20.000 --> 00:00:41.500 align:start position:0%\n \n"
+                u"&gt;&gt; Как<00:00:20.400><c> си</c><00:00:20.900><c> приключил?</c>\n\n"
+                u"00:00:41.500 --> 00:00:43.000 align:start position:0%\n"
+                u"Tom &amp; Jerry &#8212; &lt;3&lrm;\n")
+
+
+def test_youtube_asr_vtt_entities_and_pause(handler):
+    clean = handler.handlerClass()._cleanWebVtt(YT_ASR_PAUSE)
+    assert '&' not in clean.replace('Tom & Jerry', '')
+    assert u'>> Как си приключил?' in clean
+    # cut 3 s after the last word (20.900), a cue without word timestamps keeps its end
+    assert '00:00:20.000 --> 00:00:23.900 align:start position:0%' in clean
+    assert '00:00:41.500 --> 00:00:43.000' in clean
+    sts, atoms = handler("yt_bg_0_abc.vtt", YT_ASR_PAUSE)
+    assert sts and atoms == [{'start': 20000, 'end': 23900, 'text': u'>> Как си приключил?'},
+                             {'start': 41500, 'end': 43000, 'text': u'Tom & Jerry — <3'}]
