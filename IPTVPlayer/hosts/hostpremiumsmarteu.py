@@ -8,6 +8,7 @@ LAST_MODIFIED = "18.11.2026"
 #   watched flag (series -> season -> episode), favourites reopen without state (also the old rows), downloaded
 #   marker, "Title (Year)" / "Show - SxxExx" names, INFO via moviemeta (IMDb id) merged with the site's data,
 #   all sources of a title with language / quality, trailer last, sidecar, First/Jump/Next paging, English labels
+# 18.11.2026 - episodes listed newest first (descending by episode number)
 ###################################################
 # LOCAL import
 ###################################################
@@ -236,7 +237,10 @@ class Premiumsmarteu(GenericFolderWatchedScraperMixin, CBaseHostClass):
         sTitle = cItem.get('s_title', '') or cItem.get('title', '')
         normalize = IsMediaNamingNormalized()
         heading = self._yellowHeading(sTitle)
-        for item in self._pages('titles/%s/seasons/%s/episodes' % (titleId, season), 100):
+        items = self._pages('titles/%s/seasons/%s/episodes' % (titleId, season), 100)
+        # od najnowszego: malejąco po numerze odcinka
+        items.sort(key=lambda it: -int(it.get('episode_number', 0) or 0))
+        for item in items:
             try:
                 episode = str(item.get('episode_number', '') or '')
                 if not episode or item.get('has_sources') is False:
