@@ -2996,43 +2996,135 @@ class pageParser(CaptchaHelper):
                     urltab.append({"name": "[%s] %s %s" % (types, domain, label), "url": url})
         return urltab
 
-    def parserSOUNDCLOUDCOM(self, baseUrl):  # Need test
-        printDBG("parserSOUNDCLOUDCOM baseUrl[%r]" % baseUrl)
-        baseUrl = strwithmeta(baseUrl)
-        cUrl = baseUrl
-        HTTP_HEADER = self.cm.getDefaultHeader()
-        HTTP_HEADER["Referer"] = baseUrl.meta.get("Referer", baseUrl)
-        urlParams = {"with_metadata": True, "header": HTTP_HEADER}
-        sts, data = self.cm.getPage(baseUrl, urlParams)
-        if not sts:
-            return False
-        cUrl = data.meta["url"]
-        tarckId = self.cm.ph.getSearchGroups(data, r"""tracks\:([0-9]+)""")[0]
-        url = self.cm.ph.getSearchGroups(data, r"""['"](https?://[^'^"]+?/widget\-[^'^"]+?\.js)""")[0]
-        sts, data = self.cm.getPage(url, urlParams)
-        if not sts:
-            return False
-        clinetIds = self.cm.ph.getSearchGroups(data, r'''client_id\:[A-Za-z]+?\?"([^"]+?)"\:"([^"]+?)"''', 2)
-        baseUrl = "https://api.soundcloud.com/i1/tracks/%s/streams?client_id=" % tarckId
-        jsData = None
-        for clientId in clinetIds:
-            url = baseUrl + clientId
-            sts, data = self.cm.getPage(url, urlParams)
-            if not sts:
-                continue
+    # client_id of SoundCloud's web player for api-v2, kept for the session (_soundcloudClientId)
+    SOUNDCLOUD_CLIENT_ID = []
+
+    def _soundcloudClientId(self, force=False):
+        # no fixed key: SoundCloud changes it now and then. Read like yt-dlp: client_id:"..." in the
+        # a-v2.sndcdn.com/assets/*.js scripts of soundcloud.com (the last one has it); kept for the session and in
+        # the cache dir, force = the api rejected it (401/403): a newer one in the file (written by
+        # hostsoundcloud.py, which keeps a copy of this) or read it again. Never logged.
+        cached = pageParser.SOUNDCLOUD_CLIENT_ID
+        if not force and cached:
+            return cached[0]
+        rejected = cached[0] if cached else ""
+        del cached[:]
+        cacheFile = ""
+        try:
+            from Plugins.Extensions.IPTVPlayer.tools.iptvtools import GetCacheSubDir
+            cacheFile = GetCacheSubDir("soundcloud", "client_id.txt")
+            with open(cacheFile) as f:
+                clientId = f.read().strip()
+            if re.match(r"^[0-9A-Za-z]{32}$", clientId) and clientId != rejected:
+                cached[:] = [clientId]
+                return clientId
+        except Exception:
+            pass
+        params = {"header": self.cm.getDefaultHeader(browser="chrome")}
+        sts, data = self.cm.getPage("https://soundcloud.com/", params)
+        clientId = ""
+        if sts:
+            for url in reversed(re.findall(r'<script[^>]+src="(https://a-v2\.sndcdn\.com/assets/[^"]+\.js)"', data)):
+                sts, js = self.cm.getPage(url, params)
+                clientId = self.cm.ph.getSearchGroups(js, r'client_id\s*:\s*"([0-9A-Za-z]{32})"')[0] if sts else ""
+                if clientId:
+                    break
+        printDBG("parserSOUNDCLOUDCOM client_id: %s" % ("read" if clientId else "not found"))
+        if clientId:
+            cached[:] = [clientId]
+        if clientId and cacheFile:
+            # written to a temporary file and renamed: the host may read it at the same time
             try:
-                jsData = json_loads(data)
+                with open(cacheFile + ".tmp", "w") as f:
+                    f.write(clientId)
+                getattr(os, "replace", os.rename)(cacheFile + ".tmp", cacheFile)
             except Exception:
                 printExc()
-        urls = []
-        baseName = urlparser.getDomain(cUrl)
-        for key in jsData:
-            if "preview" in key:
+        return clientId
+
+    def _soundcloudApi(self, url):
+        # json of an api-v2 url, None when it fails; a client_id the api rejects is read again once
+        params = {"header": self.cm.getDefaultHeader(browser="chrome"), "with_metadata": True, "ignore_http_code_ranges": [(400, 499)]}
+        for force in (False, True):
+            clientId = self._soundcloudClientId(force)
+            if not clientId:
+                break
+            sts, data = self.cm.getPage("%s%sclient_id=%s" % (url, "&" if "?" in url else "?", clientId), params)
+            if not sts:
+                return None
+            code = getattr(data, "meta", {}).get("status_code", 200)
+            if code in (401, 403) and not force:
                 continue
-            url = jsData[key]
-            if self.cm.isValidUrl(url):
-                urls.append({"name": baseName + " " + key, "url": url})
-        return urls
+            if code != 200:
+                # a new client_id rejected as well: the track itself is refused, not the key
+                printDBG("parserSOUNDCLOUDCOM HTTP %s [%s]" % (code, url))
+                return None
+            try:
+                return json_loads(data)
+            except Exception:
+                printExc()
+                return None
+        SetIPTVPlayerLastHostError(_("The site's web player key could not be read - please try again later."))
+        return None
+
+    def parserSOUNDCLOUDCOM(self, baseUrl):
+        # soundcloud.com/<user>/<track>[/s-<secret>], m.soundcloud.com, the w.soundcloud.com/player/?url=... widget and
+        # api(-v2).soundcloud.com/tracks/<id> -> api-v2 track -> media.transcodings (progressive mp3 first, else HLS)
+        printDBG("parserSOUNDCLOUDCOM baseUrl[%r]" % baseUrl)
+        url = str(baseUrl).split("#")[0]
+        if "//w.soundcloud.com/" in url:
+            url = (parse_qs(urlparse(url).query).get("url") or [""])[0]
+        url = urllib_unquote(url)
+        api = "https://api-v2.soundcloud.com/"
+        secret = self.cm.ph.getSearchGroups(url, r"(?:secret_token=|soundcloud\.com/[^/?]+/[^/?]+/)(s-[0-9A-Za-z]+)")[0]
+        trackId = self.cm.ph.getSearchGroups(url, r"(?:soundcloud\.com/tracks/|soundcloud:tracks:)(\d+)")[0]
+        if trackId:
+            track = self._soundcloudApi(api + "tracks/" + trackId + ("?secret_token=" + secret if secret else ""))
+        elif "soundcloud.com/" in url:
+            page = re.sub(r"^https?://(?:www\.|m\.)?soundcloud\.com/", "https://soundcloud.com/", url.split("?")[0])
+            track = self._soundcloudApi(api + "resolve?url=" + urllib_quote(page, safe=""))
+        else:
+            return False
+        if not isinstance(track, dict) or track.get("kind") != "track":
+            return False
+        if track.get("policy") == "BLOCK":
+            SetIPTVPlayerLastHostError(_("Not available in your country (geo-blocking)."))
+            return False
+        transcodings = [t for t in (track.get("media") or {}).get("transcodings") or [] if isinstance(t, dict) and t.get("url")]
+        # "abr_*" (adaptive master playlist) answers 404 to the web player's client_id
+        full = [t for t in transcodings if not t.get("snipped") and "/preview/" not in t["url"] and not (t.get("preset") or "").startswith("abr")
+                and (t.get("format") or {}).get("protocol") in ("progressive", "hls")]
+        if not full:
+            if [t for t in transcodings if "encrypted" in str((t.get("format") or {}).get("protocol", ""))]:
+                # major label tracks: only cbc-/ctr-encrypted-hls (Widevine / FairPlay)
+                SetIPTVPlayerLastHostError(_("DRM protection detected."))
+            elif track.get("policy") == "SNIP" or [t for t in transcodings if t.get("snipped")]:
+                SetIPTVPlayerLastHostError("SoundCloud: only a 30 second preview of this track is free (SoundCloud Go+).")
+            return False
+
+        def order(t):
+            # progressive mp3 > HLS mp3 > HLS AAC, the higher bitrate first ("aac_160k" before "aac_96k")
+            fmt = t.get("format") or {}
+            kbps = self.cm.ph.getSearchGroups(t.get("preset") or "", r"(\d+)k")[0]
+            return (fmt.get("protocol") != "progressive", (fmt.get("mime_type") or "").split(";")[0] != "audio/mpeg", -int(kbps or 0))
+
+        query = "track_authorization=" + (track.get("track_authorization") or "")
+        secret = track.get("secret_token") or secret
+        if secret:
+            query += "&secret_token=" + secret
+        userAgent = self.cm.getDefaultUserAgent("chrome")
+        urls = []
+        for t in sorted(full, key=order)[:3]:
+            stream = self._soundcloudApi(t["url"] + "?" + query)
+            streamUrl = stream.get("url", "") if isinstance(stream, dict) else ""
+            if not self.cm.isValidUrl(streamUrl):
+                continue
+            protocol = t["format"]["protocol"]
+            meta = {"User-Agent": userAgent}
+            if protocol == "hls":
+                meta["iptv_proto"] = "m3u8"
+            urls.append({"name": "soundcloud.com %s %s" % (protocol, t.get("preset") or ""), "url": decorateUrl(streamUrl, meta)})
+        return urls or False
 
     def parserFILEFACTORYCOM(self, baseUrl):  # Need test
         printDBG("parserFILEFACTORYCOM baseUrl[%r]" % baseUrl)
