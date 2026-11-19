@@ -479,6 +479,7 @@ class ConfigMenu(ConfigBaseWidget):
     @staticmethod
     def _fillPlayers(list):
         list.append(getConfigListEntry(_("Autoplay start delay"), config.plugins.iptvplayer.autoplay_start_delay))
+        list.append(getConfigListEntry(_("Autoplay picture duration (seconds)"), config.plugins.iptvplayer.autoplay_picture_duration))
         list.append(getConfigListEntry(_("Default video quality"), config.plugins.iptvplayer.preferred_quality))
         list.append(getConfigListEntry(_("Select link automatically"), config.plugins.iptvplayer.auto_select_link))
         list.append(getConfigListEntry(_("Block wmv files"), config.plugins.iptvplayer.ZablokujWMV))

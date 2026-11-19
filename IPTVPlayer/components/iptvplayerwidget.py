@@ -3606,7 +3606,7 @@ class E2iPlayerWidget(Screen):
         if url != '' and CDisplayListItem.TYPE_PICTURE == self.currItem.type:
             # the picture player shows no playlist, the picture is ticked as played in the next player's one
             self._takePlaylistForPlayer()
-            self.session.openWithCallback(self.leavePicturePlayer, IPTVPicturePlayerWidget, url, config.plugins.iptvplayer.bufferingPath.value, self.currItem.name, {'seq_mode': self.autoPlaySeqStarted})
+            self.session.openWithCallback(self.leavePicturePlayer, IPTVPicturePlayerWidget, url, config.plugins.iptvplayer.bufferingPath.value, self.currItem.name, {'seq_mode': self.autoPlaySeqStarted, 'seq_duration': config.plugins.iptvplayer.autoplay_picture_duration.value})
         elif url != '' and self.isDownloadableType(self.currItem.type):
             printDBG("playVideo url[%s]" % url)
             if self.currItem.type == CDisplayListItem.TYPE_DATA:
