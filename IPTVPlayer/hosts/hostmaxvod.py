@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "25.10.2026"
+LAST_MODIFIED = "18.11.2026"
 # 25.10.2026 - new host for maxvod.tv (Polish free video library): films, series, kids, categories, search;
 #   every player source (Lektor / Dubbing / Napisy PL / Oryginał) is one link, resolved at play time.
+# 18.11.2026 - episodes listed newest first, yellow title in the info panel
 ###################################################
 # LOCAL import
 ###################################################
@@ -9,7 +10,7 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHost
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, E2ColoR
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
@@ -63,6 +64,11 @@ class MaxVOD(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
         self.watchedHelper = IPTVWatchedHelper("maxvod")
         self.wfInitFolderCache()
+
+    @staticmethod
+    def _yellowHeading(text):
+        # yellow title for the bottom info panel, back to white afterwards
+        return "%s%s%s" % (E2ColoR("yellow"), text or "", E2ColoR("white"))
 
     ###################################################
     # watched flag / favourites
@@ -140,8 +146,11 @@ class MaxVOD(GenericFolderWatchedScraperMixin, CBaseHostClass):
             seen.add(url)
             icon = self.cm.ph.getSearchGroups(body, r'<img[^>]+src="([^"]+)"')[0]
             year = self.cm.ph.getSearchGroups(body, r">\s*((?:19|20)\d{2})\s*</span>")[0]
+            bodyDesc = " | ".join([x for x in (year, _("Series") if kind == "series" else "") if x])
+            heading = self._yellowHeading(title)
+            fullDesc = "%s[/br][/br]%s" % (heading, bodyDesc) if bodyDesc else heading
             params = {"good_for_fav": True, "url": url, "page_url": url, "s_title": title, "icon": self.getFullIconUrl(icon) if icon else "",
-                      "desc": " | ".join([x for x in (year, _("Series") if kind == "series" else "") if x]),
+                      "desc": fullDesc,
                       "meta_title": self._metaTitle(title), "meta_year": year}
             if kind == "series":
                 params.update({"category": "series", "title": title, "meta_type": "tv"})
@@ -210,7 +219,8 @@ class MaxVOD(GenericFolderWatchedScraperMixin, CBaseHostClass):
             duration = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(body, ("<div", ">", "episode-duration"), ("</div", ">"), False)[1])
             ret["episodes"].append({"season": int(sNum), "episode": int(eNum), "label": label, "duration": duration,
                                     "url": self.getFullUrl(href.replace("&amp;", "&"))})
-        ret["episodes"].sort(key=lambda x: x["episode"])
+        # od najnowszego: malejąco po numerze odcinka
+        ret["episodes"].sort(key=lambda x: -x["episode"])
         if len(self.pageCache) >= self.PAGE_CACHE_MAX:
             self.pageCache = dict((key, value) for key, value in self.pageCache.items() if now - value[0] < self.PAGE_CACHE_TTL)
             if len(self.pageCache) >= self.PAGE_CACHE_MAX:
@@ -228,11 +238,13 @@ class MaxVOD(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if len(page["seasons"]) <= 1:
             self._addEpisodes(cItem, page, page["seasons"][0][0] if page["seasons"] else 0)
             return
+        heading = self._yellowHeading(sTitle)
         for sNum, label in page["seasons"]:
             params = dict(cItem)
             params.update({"good_for_fav": True, "category": "season", "title": "%s - %s" % (sTitle, label), "season": sNum,
                            "url": "%s?sezon=%d&odcinek=1" % (url, sNum), "page_url": url, "s_title": sTitle,
-                           "icon": page["icon"] or cItem.get("icon", ""), "meta_year": page["year"] or cItem.get("meta_year", "")})
+                           "icon": page["icon"] or cItem.get("icon", ""), "meta_year": page["year"] or cItem.get("meta_year", ""),
+                           "desc": "%s[/br][/br]%s" % (heading, label)})
             self.addDir(params)
 
     def listSeason(self, cItem):
@@ -247,19 +259,23 @@ class MaxVOD(GenericFolderWatchedScraperMixin, CBaseHostClass):
     def _addEpisodes(self, cItem, page, season):
         sTitle = page["title"] or cItem.get("s_title", "")
         episodes = [x for x in page["episodes"] if not season or x["season"] == season]
+        totalPages = (len(episodes) + self.EPISODES_PER_PAGE - 1) // self.EPISODES_PER_PAGE if episodes else 1
         pageNum = int(cItem.get("page", 1) or 1)
+        # the list is already newest first, so page 1 = its first chunk
         start = (pageNum - 1) * self.EPISODES_PER_PAGE
+        heading = self._yellowHeading(sTitle)
         for ep in episodes[start:start + self.EPISODES_PER_PAGE]:
             label = ep["label"] or ("%s %d" % (_("Episode"), ep["episode"]))
+            body = " | ".join([x for x in ("%s %d" % (_("Season"), ep["season"]), label, ep["duration"]) if x])
+            epDesc = "%s[/br][/br]%s" % (heading, body)
             params = {"good_for_fav": True, "category": "episode", "url": ep["url"], "page_url": page["url"], "s_title": sTitle,
                       "icon": page["icon"] or cItem.get("icon", ""), "season": ep["season"], "episode": ep["episode"],
                       "title": self._episodeTitle(sTitle, ep["season"], ep["episode"], label),
-                      "desc": " | ".join([x for x in ("%s %d" % (_("Season"), ep["season"]), label, ep["duration"]) if x]),
+                      "desc": epDesc,
                       "meta_type": "tv", "meta_title": self._metaTitle(sTitle), "meta_year": page["year"] or cItem.get("meta_year", "")}
             self.addVideo(params)
-        if len(episodes) > self.EPISODES_PER_PAGE:
-            lastPage = (len(episodes) + self.EPISODES_PER_PAGE - 1) // self.EPISODES_PER_PAGE
-            addPagingItems(self, cItem, pageNum, pageNum < lastPage, lastPage)
+        if totalPages > 1:
+            addPagingItems(self, cItem, pageNum, pageNum < totalPages, totalPages)
 
     ###################################################
     # links
