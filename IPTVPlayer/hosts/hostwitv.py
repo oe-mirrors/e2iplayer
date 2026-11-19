@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "29.10.2026"
+LAST_MODIFIED = "19.11.2026"
 # Coding: BY MOHAMED_OS
+# 19.11.2026 - new domain witv.channel (witv.eu forwards to a "find the new address" page)
 # 08.10.2026 - ported to the python3 framework / host standard
-#   - WiTv (witv.eu, was witv.football until 10.2026; French live TV; DLE site): the channel groups of the site menu, the
+#   - WiTv (witv.channel, was witv.eu and witv.football; French live TV; DLE site): the channel groups of the site menu, the
 #     "Matchs du jour" schedule (today / tomorrow, each match opens its channel) and the search in the
 #     site's channel catalog (/ajax_search.php, base64 + XOR mask)
 #   - a channel page holds 1-6 sealed player tokens (data-v="wt1_..."), the page's XOR-sealed script maps
@@ -41,7 +42,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return "https://witv.eu/"
+    return "https://witv.channel/"
 
 
 VIDEO_CATEGORIES = ("wt_channel", "wt_event")
