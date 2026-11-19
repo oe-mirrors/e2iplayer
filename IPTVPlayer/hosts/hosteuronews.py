@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "31.10.2026"
+LAST_MODIFIED = "20.11.2026"
 # Euronews: live channels and the videos of the public MRSS feeds, language selectable. Video streams from the og:video
-# MP4 of the video page. Only the feeds below hold videos; too many requests at once are answered with 406.
+# MP4 of the video page. Only the feeds below hold videos; too many requests at once are answered with 406, some
+# networks get 406 always: then the listing pages, Dailymotion's public API and the YouTube live are the fallbacks.
 ###################################################
 # LOCAL import
 ###################################################
@@ -66,6 +67,39 @@ LIVE_LANGS = ["www", "pt", "fr", "es", "de", "it", "pl", "ru", "hu"]
 LIVE_ALIAS = {"www": ["www", "tr"]}
 
 
+# fallback when euronews.com answers 406: the same videos and the live streams are on Dailymotion's public API
+DM_API = "https://api.dailymotion.com/user/%s/videos?fields=id,title,description,created_time,thumbnail_720_url,onair,mode&sort=recent&limit=%d"
+DM_USER = {"www": "euronews-en", "pt": "euronews-pt", "fr": "euronews-fr", "es": "euronews-es", "de": "euronews-de",
+           "it": "euronews-it", "pl": "euronews-pl", "ru": "euronews-ru", "tr": "euronews-tr", "gr": "euronews-gr",
+           "hu": "euronews-hu", "parsi": "euronews-fa", "arabic": "euronews-ar"}
+
+
+# YouTube channels of the language editions: <handle>/live redirects to the running broadcast
+YT_HANDLE = {"www": "euronews", "fr": "euronewsfr", "de": "euronewsde", "it": "euronewsit", "es": "euronewses",
+             "pt": "euronewspt", "ru": "euronewsru", "pl": "euronewspl", "hu": "euronewshu", "tr": "euronewstr"}
+DM_LIVE = "https://api.dailymotion.com/videos?owners=%s&live_onair=1&fields=id,title,onair,mode&limit=20"
+
+
+def parseDmVideos(text):
+    """Items of Dailymotion's /user/<name>/videos answer, in the same shape as parseRss."""
+    items = []
+    try:
+        j = json_loads(text) if (text or "").strip().startswith("{") else {}
+    except Exception:
+        printExc()
+        return items
+    for v in j.get("list") or []:
+        if not v.get("id"):
+            continue
+        t = v.get("created_time") or 0
+        tm = time.gmtime(t) if t else None
+        items.append({"title": ensure_str(v.get("title") or "").strip(), "url": "https://www.dailymotion.com/video/%s" % v["id"],
+                      "desc": re.sub(r"<[^>]+>", "", ensure_str(v.get("description") or "")).strip(),
+                      "date": time.strftime("%Y-%m-%d", tm) if tm else "", "ts": time.strftime("%Y%m%d%H%M%S", tm) if tm else "",
+                      "icon": v.get("thumbnail_720_url") or "", "onair": bool(v.get("onair")), "mode": v.get("mode") or "", "id": v["id"]})
+    return items
+
+
 def parseRss(text):
     """Return the video items of an MRSS feed: dicts with title, url, desc, date (yyyy-mm-dd), icon."""
     items = []
@@ -97,14 +131,173 @@ def parseRss(text):
     return items
 
 
+HTML_PATHS = {"theme:news": "/video", "program:top-news-stories-today": "/programs/top-news-stories-today",
+              "program:nocomment": "/nocomment"}
+
+
+def parseHtmlVideos(html, base):
+    """Fallback when the RSS is blocked: the video cards of a listing page (same data as the MRSS items)."""
+    items, seen = [], set()
+    for m in re.finditer(r"<article\b[^>]*the-media-object[^>]*>.*?</article>", html or "", re.S):
+        block = m.group(0)
+        hm = re.search(r"""<a[^>]+href=["'](/(?:video/)?(\d{4})/(\d{2})/(\d{2})/[^"'#?]+)""", block)
+        if not hm:
+            continue
+        if "the-media-object--has-video" not in block and not hm.group(1).startswith("/video/"):
+            continue
+        url = urljoin(base, hm.group(1))
+        if url in seen:
+            continue
+        seen.add(url)
+        t = re.search(r"""the-media-object__title[^>]*>\s*(.*?)\s*</""", block, re.S)
+        title = t.group(1) if t else ""
+        if not title.strip():
+            t = re.search(r"""aria-label=["']([^"']+)""", block)
+            title = t.group(1) if t else ""
+        d = re.search(r"""the-media-object__description[^>]*>\s*(.*?)\s*</div>""", block, re.S)
+        i = re.search(r"""<img[^>]+class=["']the-media-object__image["'][^>]+src=["']([^"']+)""", block)
+        icon = re.sub(r"/\d+x\d+_cmsv2_", "/1536x864_cmsv2_", i.group(1)) if i else ""
+        date = "%s-%s-%s" % (hm.group(2), hm.group(3), hm.group(4))
+        items.append({"title": re.sub(r"<[^>]+>", "", ensure_str(title)).strip(), "url": url,
+                      "desc": re.sub(r"<[^>]+>", "", ensure_str(d.group(1))).strip() if d else "",
+                      "date": date, "ts": date.replace("-", "") + "000000", "icon": icon})
+    return items
+
+
+_JSON_SPECIAL = re.compile(r'["\\{}]')
+
+
+def _isStr(v):
+    return hasattr(v, "lower")
+
+
+def _balancedObject(text, start):
+    """Return the JSON object that starts with '{' at text[start] (string/escape aware)."""
+    depth, inStr, skip = 0, False, 0
+    for m in _JSON_SPECIAL.finditer(text, start):
+        if m.start() < skip:
+            continue
+        c = m.group(0)
+        if inStr:
+            if c == "\\":
+                skip = m.end() + 1
+            elif c == '"':
+                inStr = False
+        elif c == '"':
+            inStr = True
+        elif c == "{":
+            depth += 1
+        elif c == "}":
+            depth -= 1
+            if depth == 0:
+                return text[start:m.end()]
+    return ""
+
+
+def serverData(html):
+    """The page's window.getInitialServerData = () => ({...}) as a dict (the site no longer relies on og:video only)."""
+    m = re.search(r"getInitialServerData\s*=\s*\(\s*\)\s*=>\s*\(\s*\{", html or "")
+    if not m:
+        return {}
+    try:
+        d = json_loads(_balancedObject(html, m.end() - 1))
+        return d if isinstance(d, dict) else {}
+    except Exception:
+        printExc()
+        return {}
+
+
+def _walk(obj, key="", depth=0):
+    if depth > 12:
+        return
+    if isinstance(obj, dict):
+        for k, v in obj.items():
+            for r in _walk(v, k, depth + 1):
+                yield r
+    elif isinstance(obj, list):
+        for v in obj:
+            for r in _walk(v, key, depth + 1):
+                yield r
+    else:
+        yield key, obj
+
+
+def _byPlayer(player, vid):
+    player, vid = (player or "").lower(), (vid or "")
+    if not vid or not _isStr(vid):
+        return "", ""
+    if "dailymotion" in player:
+        return "dailymotion", "https://www.dailymotion.com/embed/video/%s" % vid
+    if "jw" in player:
+        return "jw", vid
+    if "pfp" in player or "youtube" in player:
+        return "youtube", "https://www.youtube.com/watch?v=%s" % vid
+    return "", ""
+
+
+def vodFromData(data):
+    entities = data.get("entities") if isinstance(data, dict) else None
+    entities = entities if isinstance(entities, dict) else {}
+    video = entities.get("video") if isinstance(entities.get("video"), dict) else {}
+    scope = video or entities
+    # 1) direct media files
+    mp4 = hls = ""
+    for k, v in _walk(scope):
+        if _isStr(v) and v.startswith("http"):
+            path = v.split("?")[0].lower()
+            if path.endswith(".mp4") and not mp4:
+                mp4 = v
+            elif path.endswith(".m3u8") and not hls:
+                hls = v
+    if mp4:
+        return "mp4", mp4
+    # 2) player + id declared by the page
+    pd = video.get("playerData") if isinstance(video.get("playerData"), dict) else {}
+    for c in (pd.get("desktopPlayerData"), pd.get("mobilePlayerData"), pd, video):
+        if isinstance(c, dict):
+            kind, url = _byPlayer(c.get("player"), c.get("videoId") or c.get("mediaId") or c.get("id"))
+            if kind:
+                return kind, url
+    if hls:
+        return "hls", hls
+    # 3) specific key names anywhere under the video entity
+    ids = {}
+    player = ""
+    for k, v in _walk(scope):
+        lk = k.lower() if _isStr(k) else ""
+        if _isStr(v) and v:
+            if lk == "player" and not player:
+                player = v
+            elif lk in ("dailymotionvideoid", "dailymotionid", "jwplayermediaid", "jwmediaid", "youtubevideoid", "youtubeid", "videoid"):
+                ids.setdefault(lk, v)
+    if ids.get("dailymotionvideoid") or ids.get("dailymotionid"):
+        return _byPlayer("dailymotion", ids.get("dailymotionvideoid") or ids.get("dailymotionid"))
+    if ids.get("jwplayermediaid") or ids.get("jwmediaid"):
+        return "jw", ids.get("jwplayermediaid") or ids.get("jwmediaid")
+    if ids.get("youtubevideoid") or ids.get("youtubeid"):
+        return _byPlayer("youtube", ids.get("youtubevideoid") or ids.get("youtubeid"))
+    if ids.get("videoid"):
+        return _byPlayer(player, ids["videoid"])
+    return "", ""
+
+
 def findVod(html):
-    """Find the stream of a video page: ('mp4'|'youtube'|'dailymotion'|'', url)."""
-    for rx in (r"""<meta[^>]+property=["']og:video["'][^>]+content=["']([^"']+)""",
-               r"""<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:video["']""",
+    """Find the stream of a video page: ('mp4'|'hls'|'jw'|'youtube'|'dailymotion'|'', url-or-id)."""
+    html = html or ""
+    for rx in (r"""<meta[^>]+property=["']og:video(?::secure_url|:url)?["'][^>]+content=["']([^"']+)""",
+               r"""<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:video(?::secure_url|:url)?["']""",
                r"""<meta[^>]+(?:name|property)=["']nli:video["'][^>]+content=["']([^"']+)"""):
         m = re.search(rx, html)
         if m and m.group(1).startswith("http"):
-            return "mp4", m.group(1).replace("&amp;", "&")
+            url = m.group(1).replace("&amp;", "&")
+            path = url.split("?")[0].lower()
+            if path.endswith(".mp4"):
+                return "mp4", url
+            if path.endswith(".m3u8"):
+                return "hls", url
+    kind, url = vodFromData(serverData(html))
+    if kind:
+        return kind, url
     m = re.search(r"""<iframe[^>]+id=["']pfpPlayer["'][^>]+src=["'](https://www\.youtube\.com/[^"']+)""", html) or \
         re.search(r"""<iframe[^>]+src=["'](https://www\.youtube\.com/[^"']+)["'][^>]+id=["']pfpPlayer["']""", html)
     if m:
@@ -115,13 +308,25 @@ def findVod(html):
             d = json_loads(m.group(2).replace("&quot;", '"').replace("&amp;", "&"))
             if d.get("url"):
                 return "mp4", d["url"]
-            if d.get("player") == "dailymotion" and d.get("id"):
-                return "dailymotion", "https://www.dailymotion.com/embed/video/%s" % d["id"]
-            vid = d.get("videoId") or d.get("id")
-            if d.get("player") == "pfp" and vid:
-                return "youtube", "https://www.youtube.com/watch?v=%s" % vid
+            kind, url = _byPlayer(d.get("player"), d.get("videoId") or d.get("id"))
+            if kind:
+                return kind, url
         except Exception:
             printExc()
+    # last resorts: ids / files referenced anywhere in the page
+    m = re.search(r"""dailymotion\.com/(?:embed/)?video/([a-z0-9]+)""", html) or \
+        re.search(r"""geo\.dailymotion\.com/player[^"'\s]*?[?&]video=([a-z0-9]+)""", html)
+    if m:
+        return "dailymotion", "https://www.dailymotion.com/embed/video/%s" % m.group(1)
+    m = re.search(r"""cdn\.jwplayer\.com/(?:v2/media|previews|manifests)/([A-Za-z0-9]{8})""", html)
+    if m:
+        return "jw", m.group(1)
+    m = re.search(r"""youtube(?:-nocookie)?\.com/(?:embed/|watch\?v=)([\w-]{11})""", html)
+    if m:
+        return "youtube", "https://www.youtube.com/watch?v=%s" % m.group(1)
+    m = re.search(r"""https?:\\?/\\?/[^"'\s<>]+?\.mp4[^"'\s<>]*""", html)
+    if m:
+        return "mp4", m.group(0).replace("\\/", "/").replace("&amp;", "&")
     return "", ""
 
 
@@ -135,6 +340,7 @@ class Euronews(GenericFolderWatchedScraperMixin, CBaseHostClass):
         self.defaultParams = {"header": self.HEADER}
         self.MAIN_URL = gettytul()
         self.feedCache = {}
+        self.blockedAt = 0
         self.watchedHelper = IPTVWatchedHelper("euronews")
         self.wfInitFolderCache()
 
@@ -159,11 +365,23 @@ class Euronews(GenericFolderWatchedScraperMixin, CBaseHostClass):
         lang = cItem.get("lang") or config.plugins.iptvplayer.euronews_language.value
         return lang if lang in LANG_NAME else "www"
 
-    def _text(self, url, accept=None, extra=None, cookies=False, identity=True):
+    def _text(self, url, accept=None, extra=None, cookies=True, identity=True):
         params = dict(self.defaultParams)
         header = dict(self.HEADER)
         if not identity:
             header.pop("Accept-Encoding", None)
+        # the site answers 406 to clients that do not look like a browser: send the headers Chrome sends
+        ver = re.search(r"Chrome/(\d+)", header.get("User-Agent", ""))
+        ver = ver.group(1) if ver else "130"
+        xhr = bool(accept and accept.startswith("application/json"))
+        header.update({"Accept-Language": "en-GB,en;q=0.9",
+                       "sec-ch-ua": '"Chromium";v="%s", "Google Chrome";v="%s", "Not?A_Brand";v="99"' % (ver, ver),
+                       "sec-ch-ua-mobile": "?0", "sec-ch-ua-platform": '"Windows"',
+                       "Sec-Fetch-Site": "same-origin"})
+        if xhr:
+            header.update({"Sec-Fetch-Dest": "empty", "Sec-Fetch-Mode": "cors"})
+        else:
+            header.update({"Upgrade-Insecure-Requests": "1", "Sec-Fetch-Dest": "document", "Sec-Fetch-Mode": "navigate", "Sec-Fetch-User": "?1"})
         if accept:
             header["Accept"] = accept
         if extra:
@@ -186,12 +404,61 @@ class Euronews(GenericFolderWatchedScraperMixin, CBaseHostClass):
         cached = self.feedCache.get(url)
         if cached and time.time() - cached[0] < FEED_CACHE_SECONDS:
             return cached[1]
-        data = self._text(url)
+        if time.time() - self.blockedAt < FEED_CACHE_SECONDS:
+            return []
+        data = self._text(url, "application/rss+xml, application/xml;q=0.9, text/xml;q=0.8, */*;q=0.5")
         printDBG("Euronews._feed [%s] len[%s]" % (url, len(data)))
         items = parseRss(data)
+        if not items:
+            # RSS blocked (406): read the video cards of the listing page instead
+            page = "https://%s.euronews.com%s" % (lang, HTML_PATHS.get("%s:%s" % (level, name), "/video"))
+            html = self._text(page, "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8", identity=False)
+            items = parseHtmlVideos(html, page)
+            printDBG("Euronews._feed html [%s] len[%s] -> %s items" % (page, len(html), len(items)))
+            if not data and not html:
+                # both refused: the other feeds would be too, use the Dailymotion fallback for a while
+                self.blockedAt = time.time()
         if items:
             self.feedCache[url] = (time.time(), items)
         return items
+
+    def _dmVideos(self, lang, limit=50):
+        for user in (DM_USER.get(lang), DM_USER["www"]):
+            if not user:
+                continue
+            url = DM_API % (user, limit)
+            cached = self.feedCache.get(url)
+            if cached and time.time() - cached[0] < FEED_CACHE_SECONDS:
+                return cached[1]
+            data = self._text(url, "application/json, text/plain, */*", {"Referer": "https://www.dailymotion.com/"}, cookies=False)
+            items = parseDmVideos(data)
+            printDBG("Euronews._dmVideos [%s] len[%s] -> %s items" % (url, len(data), len(items)))
+            if items:
+                self.feedCache[url] = (time.time(), items)
+                return items
+        return []
+
+    def _dmLive(self, lang):
+        """Id of the Dailymotion live that is on air for the language."""
+        user = DM_USER.get(lang)
+        if not user:
+            return ""
+        url = DM_LIVE % user
+        data = self._text(url, "application/json, text/plain, */*", {"Referer": "https://www.dailymotion.com/"}, cookies=False)
+        onair = [it["id"] for it in parseDmVideos(data) if it.get("onair")]
+        printDBG("Euronews._dmLive [%s] len[%s] -> onair %s" % (url, len(data), onair))
+        return onair[0] if onair else ""
+
+    def _ytLive(self, lang):
+        """Video id of the running YouTube live of the language edition."""
+        handle = YT_HANDLE.get(lang)
+        if not handle:
+            return ""
+        url = "https://www.youtube.com/@%s/live" % handle
+        html = self._text(url, "text/html,application/xhtml+xml,*/*;q=0.8", {"Referer": "https://www.youtube.com/", "Cookie": "CONSENT=YES+1; SOCS=CAI"}, cookies=False, identity=False)
+        m = re.search(r"""<link rel=["']canonical["'] href=["']https://www\.youtube\.com/watch\?v=([\w-]{11})""", html)
+        printDBG("Euronews._ytLive [%s] len[%s] -> %s" % (url, len(html), m.group(1) if m else ""))
+        return m.group(1) if m else ""
 
     ###################################################
     # menus
@@ -230,6 +497,8 @@ class Euronews(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 if it["url"] not in seen:
                     seen.add(it["url"])
                     items.append(it)
+        if not items:
+            items = self._dmVideos(lang)
         items.sort(key=lambda x: x.get("ts", ""), reverse=True)
         return items
 
@@ -249,7 +518,7 @@ class Euronews(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     def _addResult(self, cItem, it, lang):
         try:
-            desc = it["desc"]
+            desc = self.cleanHtmlStr(it["desc"])
             if it["date"]:
                 desc = "%s[/br]%s" % (it["date"], desc) if desc else it["date"]
             params = stripPagerKeys(dict(cItem), ("f_feeds", "s_query"))
@@ -296,15 +565,29 @@ class Euronews(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 links.append({"name": "Dailymotion live", "url": strwithmeta("https://www.dailymotion.com/embed/video/%s" % j["videoId"], {"iptv_livestream": True}), "need_resolve": 1})
             elif j.get("videoId") and j.get("player") == "pfp":
                 links.append({"name": "YouTube live", "url": strwithmeta("https://www.youtube.com/watch?v=%s" % j["videoId"], {"iptv_livestream": True}), "need_resolve": 1})
+            if not links:
+                kind, url = findVod(pageHtml)
+                if kind == "dailymotion":
+                    links.append({"name": "Dailymotion live", "url": strwithmeta(url, {"iptv_livestream": True}), "need_resolve": 1})
+                elif kind == "youtube":
+                    links.append({"name": "YouTube live", "url": strwithmeta(url, {"iptv_livestream": True}), "need_resolve": 1})
             if links:
                 return links
-        return []
+        # euronews.com refused: YouTube first (the Dailymotion live master answered 403 in tests)
+        links = []
+        ytId = self._ytLive(lang)
+        if ytId:
+            links.append({"name": "YouTube live", "url": strwithmeta("https://www.youtube.com/watch?v=%s" % ytId, {"iptv_livestream": True}), "need_resolve": 1})
+        dmId = self._dmLive(lang)
+        if dmId:
+            links.append({"name": "Dailymotion live", "url": strwithmeta("https://www.dailymotion.com/embed/video/%s" % dmId, {"iptv_livestream": True}), "need_resolve": 1})
+        return links
 
     def _hlsLinks(self, master):
         """The player starts the master playlist on its lowest variant (428x240): list the variants, best first."""
         meta = {"iptv_proto": "m3u8", "iptv_livestream": True, "User-Agent": self.HEADER.get("User-Agent")}
         links = []
-        text = self._text(master, "*/*", identity=False)
+        text = self._text(master, "*/*", cookies=False, identity=False)
         if "#EXTM3U" not in text:
             return links
         try:
@@ -338,15 +621,43 @@ class Euronews(GenericFolderWatchedScraperMixin, CBaseHostClass):
         links.append({"name": "HLS live (auto)", "url": strwithmeta(master, dict(meta)), "need_resolve": 0})
         return links
 
+    def _jwLinks(self, mediaId):
+        """JW Player media: mp4 files best first, then HLS."""
+        links = []
+        data = self._text("https://cdn.jwplayer.com/v2/media/%s" % mediaId, "application/json, */*", cookies=False, identity=False)
+        try:
+            j = json_loads(data) if data.strip().startswith("{") else {}
+            sources = (j.get("playlist") or [{}])[0].get("sources") or []
+        except Exception:
+            printExc()
+            sources = []
+        ua = {"User-Agent": self.HEADER.get("User-Agent")}
+        mp4 = sorted([x for x in sources if x.get("file") and "mp4" in (x.get("type") or "")], key=lambda x: x.get("height") or 0, reverse=True)
+        for x in mp4:
+            links.append({"name": "mp4 %sp" % (x.get("height") or "?"), "url": strwithmeta(x["file"], ua), "need_resolve": 0})
+        for x in sources:
+            if x.get("file") and "mpegurl" in (x.get("type") or ""):
+                links.append({"name": "hls", "url": strwithmeta(x["file"], dict(ua, iptv_proto="m3u8")), "need_resolve": 0})
+        return links
+
     def getLinksForVideo(self, cItem):
         printDBG("Euronews.getLinksForVideo [%s]" % cItem.get("url", ""))
         live = bool(cItem.get("live"))
         if live:
             urlTab = self._liveLinks(self._lang(cItem))
         else:
-            kind, url = findVod(self._text(cItem.get("url", ""), "text/html"))
+            if "dailymotion.com/video/" in cItem.get("url", ""):
+                kind, url = "dailymotion", cItem["url"].replace("/video/", "/embed/video/")
+            else:
+                kind, url = findVod(self._text(cItem.get("url", ""), "text/html", identity=False))
+            printDBG("Euronews.getLinksForVideo kind[%s] url[%s]" % (kind, url))
+            ua = {"User-Agent": self.HEADER.get("User-Agent")}
             if kind == "mp4":
-                urlTab = [{"name": "mp4", "url": strwithmeta(url, {"User-Agent": self.HEADER.get("User-Agent")}), "need_resolve": 0}]
+                urlTab = [{"name": "mp4", "url": strwithmeta(url, ua), "need_resolve": 0}]
+            elif kind == "hls":
+                urlTab = [{"name": "hls", "url": strwithmeta(url, dict(ua, iptv_proto="m3u8")), "need_resolve": 0}]
+            elif kind == "jw":
+                urlTab = self._jwLinks(url)
             elif kind in ("youtube", "dailymotion"):
                 urlTab = [{"name": kind, "url": url, "need_resolve": 1}]
             else:
