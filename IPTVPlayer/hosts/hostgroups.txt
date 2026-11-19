@@ -633,6 +633,8 @@
   "hdfilmcehennemi",
   "fullhdfilmizlesene",
   "dizipal",
+  "jetfilmizle",
+  "setfilmizle",
   "euronews"
  ],
  "balkans": [
