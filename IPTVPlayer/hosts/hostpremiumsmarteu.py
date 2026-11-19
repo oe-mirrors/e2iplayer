@@ -221,12 +221,21 @@ class Premiumsmarteu(GenericFolderWatchedScraperMixin, CBaseHostClass):
         for season in seasons:
             number = str(season['number'])
             seasonTag = formatSxxExx(number) if normalize else '%s %s' % (_('Season'), number)
-            seasonDesc = "%s: %s" % (_('Episodes'), season.get('available_episodes_count', ''))
+            count = season.get('available_episodes_count')
+            seasonDesc = "%s: %s" % (_('Episodes'), count) if count else ''
             params = stripPagerKeys(dict(cItem))
             params.update({'good_for_fav': True, 'category': 'list_episodes', 'title': '%s - %s' % (sTitle, seasonTag), 'season': number, 's_title': sTitle,
                            'url': '%s#s%s' % (url, number), 'icon': self._icon(season.get('poster')) or cItem.get('icon', ''),
                            'desc': "%s[/br][/br]%s" % (heading, seasonDesc) if seasonDesc else heading})
             self.addDir(params)
+
+    @staticmethod
+    def _episodeSortKey(item):
+        # newest first; a missing / odd episode number sorts last instead of breaking the list
+        try:
+            return -int(item.get('episode_number', 0) or 0)
+        except (TypeError, ValueError, AttributeError):
+            return 0
 
     def listEpisodes(self, cItem):
         printDBG("Premiumsmarteu.listEpisodes [%s]" % cItem.get('url', ''))
@@ -238,8 +247,7 @@ class Premiumsmarteu(GenericFolderWatchedScraperMixin, CBaseHostClass):
         normalize = IsMediaNamingNormalized()
         heading = self._yellowHeading(sTitle)
         items = self._pages('titles/%s/seasons/%s/episodes' % (titleId, season), 100)
-        # od najnowszego: malejąco po numerze odcinka
-        items.sort(key=lambda it: -int(it.get('episode_number', 0) or 0))
+        items.sort(key=self._episodeSortKey)
         for item in items:
             try:
                 episode = str(item.get('episode_number', '') or '')

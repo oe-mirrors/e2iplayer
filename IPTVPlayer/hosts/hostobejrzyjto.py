@@ -12,7 +12,7 @@ LAST_MODIFIED = "18.11.2026"
 #     downloaded marker on the film / episode url, "Title (Year)" / "Show - SxxExx" names, sidecar
 #   - INFO via moviemeta (IMDb id of the title) merged with the site's fields (genres, rating, cast ...)
 #   - First / Jump / Next page with the last page, TMDb posters w342 instead of the original
-# 18.11.2026 - episodes listed newest first (whole season fetched at once with perPage=100, sorted by episode number)
+# 18.11.2026 - episodes listed newest first (whole season fetched, every page, sorted by episode number)
 import re
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
@@ -275,15 +275,17 @@ class Obejrzyjto(GenericFolderWatchedScraperMixin, CBaseHostClass):
         tid, season = self._titleId(cItem), self._season(cItem)
         if not (tid and season):
             return
-        # cały sezon na raz (perPage=100 na tym samym endpointcie seasonPage), potem sortowanie od najnowszego
-        js = self._getJson(self.getFullUrl("api/v1/titles/%s/seasons/%s?perPage=100&page=1&loader=seasonPage" % (tid, season)))
-        episodes = js.get("episodes") or {}
-        title = js.get("title") or {}
+        # the whole season (100 per request, every next_page), then newest first
+        title, rows, page = {}, [], 1
+        while page and page <= 20:
+            js = self._getJson(self.getFullUrl("api/v1/titles/%s/seasons/%s?perPage=100&page=%d&loader=seasonPage" % (tid, season, page)))
+            episodes = js.get("episodes") or {}
+            title = title or js.get("title") or {}
+            rows.extend(ep for ep in (episodes.get("data") or []) if isinstance(ep, dict) and ep.get("primary_video"))
+            page = _toInt(episodes.get("next_page"), 0)
         sTitle = cItem.get("s_title", "") or self.cleanHtmlStr(title.get("name", "") or "") or cItem.get("title", "")
         normalize = IsMediaNamingNormalized()
         heading = self._yellowHeading(sTitle)
-        rows = [ep for ep in (episodes.get("data") or []) if isinstance(ep, dict) and ep.get("primary_video")]
-        # od najnowszego: malejąco po numerze odcinka
         rows.sort(key=lambda ep: -_toInt(ep.get("episode_number"), 0))
         if not rows:
             SetIPTVPlayerLastHostError(_("No streams are available for this title yet."))

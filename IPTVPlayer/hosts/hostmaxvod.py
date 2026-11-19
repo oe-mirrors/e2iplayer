@@ -2,7 +2,7 @@
 LAST_MODIFIED = "18.11.2026"
 # 25.10.2026 - new host for maxvod.tv (Polish free video library): films, series, kids, categories, search;
 #   every player source (Lektor / Dubbing / Napisy PL / Oryginał) is one link, resolved at play time.
-# 18.11.2026 - episodes listed newest first (season episodes sorted descending, local pages reversed)
+# 18.11.2026 - episodes listed newest first, yellow title in the info panel
 ###################################################
 # LOCAL import
 ###################################################
@@ -240,12 +240,11 @@ class MaxVOD(GenericFolderWatchedScraperMixin, CBaseHostClass):
             return
         heading = self._yellowHeading(sTitle)
         for sNum, label in page["seasons"]:
-            seasonDesc = "%s: %s" % (_("Season"), label)
             params = dict(cItem)
             params.update({"good_for_fav": True, "category": "season", "title": "%s - %s" % (sTitle, label), "season": sNum,
                            "url": "%s?sezon=%d&odcinek=1" % (url, sNum), "page_url": url, "s_title": sTitle,
                            "icon": page["icon"] or cItem.get("icon", ""), "meta_year": page["year"] or cItem.get("meta_year", ""),
-                           "desc": "%s[/br][/br]%s" % (heading, seasonDesc) if seasonDesc else heading})
+                           "desc": "%s[/br][/br]%s" % (heading, label)})
             self.addDir(params)
 
     def listSeason(self, cItem):
@@ -262,15 +261,13 @@ class MaxVOD(GenericFolderWatchedScraperMixin, CBaseHostClass):
         episodes = [x for x in page["episodes"] if not season or x["season"] == season]
         totalPages = (len(episodes) + self.EPISODES_PER_PAGE - 1) // self.EPISODES_PER_PAGE if episodes else 1
         pageNum = int(cItem.get("page", 1) or 1)
-        # strony odwrócone: strona 1 = najnowsze odcinki (ostatni kawałek posortowanej-malejąco listy)
-        sitePage = totalPages - pageNum + 1
-        start = (sitePage - 1) * self.EPISODES_PER_PAGE
+        # the list is already newest first, so page 1 = its first chunk
+        start = (pageNum - 1) * self.EPISODES_PER_PAGE
         heading = self._yellowHeading(sTitle)
         for ep in episodes[start:start + self.EPISODES_PER_PAGE]:
             label = ep["label"] or ("%s %d" % (_("Episode"), ep["episode"]))
-            bodyLines = [x for x in ("%s %d" % (_("Season"), ep["season"]), label, ep["duration"]) if x]
-            body = " | ".join(bodyLines)
-            epDesc = "%s[/br][/br]%s" % (heading, body) if body else heading
+            body = " | ".join([x for x in ("%s %d" % (_("Season"), ep["season"]), label, ep["duration"]) if x])
+            epDesc = "%s[/br][/br]%s" % (heading, body)
             params = {"good_for_fav": True, "category": "episode", "url": ep["url"], "page_url": page["url"], "s_title": sTitle,
                       "icon": page["icon"] or cItem.get("icon", ""), "season": ep["season"], "episode": ep["episode"],
                       "title": self._episodeTitle(sTitle, ep["season"], ep["episode"], label),
