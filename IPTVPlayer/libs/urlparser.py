@@ -2441,9 +2441,60 @@ class pageParser(CaptchaHelper):
                 urltab.append({"name": server, "url": strwithmeta(link, {"User-Agent": HTTP_HEADER["User-Agent"]})})
         return urltab
 
-    def parserARCHIVEORG(self, linkUrl):  # Need test
+    def parserARCHIVEORG(self, linkUrl):
+        # archive.org item: /details/<id>[/<file>], /embed/<id>, /download/<id>/<file>. The video files from the
+        # metadata API: one group per video (the original + its derivatives), best format first; with <file> only
+        # that video's group; more than 3 videos (a series in one item) -> the best format of each video.
+        # The player sources of the item page as fallback.
         printDBG("parserARCHIVEORG linkUrl[%s]" % linkUrl)
         urltab = []
+        m = re.search(r"archive\.org/(?:details|embed|download)/([^/?#]+)(?:/([^?#]+))?", linkUrl)
+        sts, data = self.cm.getPage("https://archive.org/metadata/" + m.group(1)) if m else (False, "")
+        try:
+            files = json_loads(data).get("files", []) if sts else []
+        except Exception:
+            printExc()
+            files = []
+        videoExt = ("mp4", "m4v", "mkv", "webm", "avi", "ogv", "mpg", "mpeg", "mov", "flv", "wmv")
+        groups, keyOf = {}, {}
+        for f in files:
+            name = ensure_str(f.get("name", ""))
+            ext = name.rsplit(".", 1)[-1].lower()
+            low = name.lower()
+            if ext not in videoExt or f.get("private") or "_sample" in low or "trailer" in low:
+                continue
+            try:
+                size, height = int(f.get("size", 0) or 0), int(f.get("height", 0) or 0)
+            except Exception:
+                size, height = 0, 0
+            if size and size < 1048576:
+                continue
+            root = f.get("original", "") if f.get("source") == "derivative" else ""
+            root = ensure_str((root[0] if isinstance(root, list) and root else root) or name)
+            key = root.rsplit(".", 1)[0]
+            keyOf[name] = key
+            label = "%s%s%s" % (ext.upper(), (" %sp" % height) if height else "", (" [%d MB]" % (size // 1048576)) if size else "")
+            groups.setdefault(key, {"title": "", "files": []})
+            groups[key]["title"] = groups[key]["title"] or ensure_str(f.get("title", "") or "")
+            groups[key]["files"].append((-height, videoExt.index(ext), -size, label, "https://archive.org/download/%s/%s" % (m.group(1), urllib_quote(name))))
+        wanted = urllib_unquote(m.group(2) or "") if m else ""
+        if wanted:
+            wanted = keyOf.get(wanted, wanted.rsplit(".", 1)[0])
+            groups = dict((k, v) for k, v in groups.items() if k == wanted) or groups
+        keys = sorted(groups, key=lambda k: k.lower())
+        for key in keys:
+            groups[key]["files"].sort()
+        if len(keys) > 3:
+            for key in keys:
+                best = groups[key]["files"][0]
+                urltab.append({"name": "archive.org: %s - %s" % (groups[key]["title"] or key.split("/")[-1], best[3]), "url": best[4]})
+        else:
+            # best format first, the videos (parts of a film) in their order within one format
+            for item in sorted([(f, key) for key in keys for f in groups[key]["files"]], key=lambda x: (x[0][0], x[0][1], keys.index(x[1]), x[0][2])):
+                title = (" - " + (groups[item[1]]["title"] or item[1].split("/")[-1])) if len(keys) > 1 else ""
+                urltab.append({"name": "archive.org: %s%s" % (item[0][3], title), "url": item[0][4]})
+        if urltab:
+            return urltab
         sts, data = self.cm.getPage(linkUrl)
         if sts:
             data = self.cm.ph.getSearchGroups(data, r'"sources":\[([^]]+?)]')[0]
