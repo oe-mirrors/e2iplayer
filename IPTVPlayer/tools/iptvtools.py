@@ -2965,7 +2965,52 @@ def MergeDicts(*dict_args):
     return result
 
 
+# VPN / tunnel interfaces: a phone in the home network cannot reach their address
+_TUNNEL_IF_PREFIXES = ('tun', 'tap', 'wg', 'ppp', 'ipsec', 'vti', 'gre', 'sit', 'zt', 'tailscale', 'nordlynx', 'proton', 'vpn', 'utun')
+
+
+def _interface_ipv4(ifname):
+    # SIOCGIFADDR: the interface's IPv4 address, None if it has none
+    import fcntl
+    import struct
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        packed = fcntl.ioctl(s.fileno(), 0x8915, struct.pack('256s', ifname[:15].encode('utf-8')))
+        return socket.inet_ntoa(packed[20:24])
+    except Exception:
+        return None
+    finally:
+        s.close()
+
+
+def _lan_ipv4_addresses():
+    # [(ifname, ip)] of all non-loopback, non-tunnel interfaces that are up, wired first
+    try:
+        names = sorted(os.listdir('/sys/class/net'))
+    except Exception:
+        return []
+    result = []
+    for name in names:
+        if name == 'lo' or name.lower().startswith(_TUNNEL_IF_PREFIXES):
+            continue
+        try:
+            with open('/sys/class/net/%s/operstate' % name) as f:
+                if f.read().strip() == 'down':
+                    continue
+        except Exception:
+            pass
+        ip = _interface_ipv4(name)
+        if ip and not ip.startswith(('127.', '169.254.')):
+            result.append((name, ip))
+    result.sort(key=lambda item: 0 if item[0].startswith('eth') else (1 if item[0].startswith('br') else 2))
+    return result
+
+
 def get_ip():
+    # Address of the receiver in the home network (MyE2i captcha page, QR code).
+    # The route to the internet gives the right interface normally; with a VPN on
+    # the receiver it is the tunnel, whose address the phone cannot reach - then
+    # the LAN interface's address is used instead.
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.settimeout(0)
     try:
@@ -2975,6 +3020,10 @@ def get_ip():
         IP = '127.0.0.1'
     finally:
         s.close()
+    lan = _lan_ipv4_addresses()
+    if lan and IP not in [ip for _name, ip in lan]:
+        printDBG('get_ip: %s is not a LAN interface address (VPN?), using %s (%s)' % (IP, lan[0][1], lan[0][0]))
+        IP = lan[0][1]
     return IP
 
 
