@@ -511,7 +511,8 @@ config.plugins.iptvplayer.clear_iframe_file = ConfigIPTVFileSelection(fileMatch=
 # screensaver (iptvscreensaver.py: moving logo/cover, title and clock on black) after this many seconds without a key:
 # audio = audio-only playback in the external player; menu = every E2iPlayer screen except the players, where
 # "hide" only hides the E2iPlayer windows while live TV runs behind them (the black screensaver without live TV)
-config.plugins.iptvplayer.screensaver_audio = ConfigSelection(default="60", choices=[("0", _("Off")), ("30", _("30 seconds")), ("60", _("1 minute")), ("120", "2 " + _("minutes")), ("300", "5 " + _("minutes"))])
+# audio: 5 s = right after the start (no black screen), and again 5 s after a key ended it
+config.plugins.iptvplayer.screensaver_audio = ConfigSelection(default="5", choices=[("0", _("Off")), ("5", _("5 seconds")), ("15", _("15 seconds")), ("30", _("30 seconds")), ("60", _("1 minute")), ("120", "2 " + _("minutes")), ("300", "5 " + _("minutes"))])
 config.plugins.iptvplayer.screensaver_menu = ConfigSelection(default="300", choices=[("0", _("Off")), ("60", _("1 minute")), ("120", "2 " + _("minutes")), ("300", "5 " + _("minutes")), ("600", "10 " + _("minutes")), ("900", "15 " + _("minutes"))])
 config.plugins.iptvplayer.screensaver_menu_mode = ConfigSelection(default="hide", choices=[("hide", _("Hide the menu (live TV visible)")), ("black", _("Black screensaver"))])
 
