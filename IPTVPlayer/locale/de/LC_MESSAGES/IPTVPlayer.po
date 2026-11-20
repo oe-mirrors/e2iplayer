@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-20 17:54+0000\n"
-"PO-Revision-Date: 2026-11-11 12:45+0100\n"
+"PO-Revision-Date: 2026-11-20 19:01+0100\n"
 "Last-Translator: Masta2002\n"
 "Language-Team: oATV Team\n"
 "Language: de_DE\n"
@@ -849,7 +849,7 @@ msgid "Automotive"
 msgstr "Auto & Motor"
 
 msgid "Autoplay picture duration (seconds)"
-msgstr ""
+msgstr "Autoplay Anzeigedauer für Bilder (Sekunden)"
 
 msgid "Autoplay start delay"
 msgstr "Autoplay Startverzögerung"
@@ -2183,7 +2183,7 @@ msgid "External movie player config"
 msgstr "Externen Movie Player konfigurieren"
 
 msgid "Extra large"
-msgstr ""
+msgstr "Extra groß"
 
 msgid "Extracted subtitle file is empty or missing."
 msgstr "Die extrahierte Untertiteldatei ist leer oder fehlt."
@@ -3812,7 +3812,7 @@ msgid "No"
 msgstr "Nein"
 
 msgid "No RSS / Atom feed at this address."
-msgstr ""
+msgstr "Unter dieser Adresse gibt es keinen RSS-/Atom-Feed."
 
 msgid "No YouTube video found for this track."
 msgstr "Kein YouTube-Video für diesen Titel gefunden."
@@ -4845,7 +4845,7 @@ msgid "Round"
 msgstr "Runde"
 
 msgid "Rows per page of long seasons and lists"
-msgstr ""
+msgstr "Zeilen pro Seite bei langen Staffeln und Listen"
 
 msgid "Runtime"
 msgstr "Laufzeit"
@@ -5825,7 +5825,7 @@ msgid "Text files ytlist and urllist are in:"
 msgstr "Verzeichnis von ytlist.txt, urllist.txt:"
 
 msgid "Text files ytlist, urllist and feedlist are in:"
-msgstr ""
+msgstr "Verzeichnis von ytlist.txt, urllist.txt, feedlist.txt:"
 
 msgid "Thai"
 msgstr "Thailändisch"
@@ -5963,7 +5963,7 @@ msgid "The host wanted to open a window on the TV (%s) - that only works on the 
 msgstr "Der Host wollte ein Fenster auf dem Fernseher öffnen (%s) - das funktioniert nur auf dem Receiver."
 
 msgid "The hoster is still processing this video. Please try again later."
-msgstr ""
+msgstr "Der Hoster verarbeitet dieses Video noch. Bitte versuchen Sie es später erneut."
 
 msgid "The hoster sends an advert redirect instead of the video at the moment. Try another hoster."
 msgstr "Der Hoster liefert zurzeit eine Werbeumleitung statt des Videos. Versuchen Sie einen anderen Hoster."
@@ -6070,10 +6070,10 @@ msgid "The site's catalogue could not be loaded."
 msgstr "Der Katalog der Seite konnte nicht geladen werden."
 
 msgid "The site's web player key could not be read - please try again later."
-msgstr ""
+msgstr "Der Schlüssel des Web-Players der Seite konnte nicht gelesen werden - bitte versuchen Sie es später erneut."
 
 msgid "The stream server does not answer at the moment. Try another link or later."
-msgstr ""
+msgstr "Der Stream-Server antwortet zurzeit nicht. Versuchen Sie einen anderen Link oder später erneut."
 
 msgid "The support package holds the versions, the system information, the enabled hosts and the end of the debug log in one text file for a problem report. Look through it before posting it - the log can contain addresses of the sites you opened."
 msgstr "Das Support-Paket enthält die Versionen, die Systeminformationen, die aktivierten Hosts und das Ende des Debug-Logs in einer Textdatei für eine Problemmeldung. Sehen Sie es vor dem Veröffentlichen durch - das Log kann Adressen der von Ihnen geöffneten Seiten enthalten."
