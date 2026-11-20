@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-20 17:54+0000\n"
-"PO-Revision-Date: 2026-11-11 14:34+0200\n"
+"PO-Revision-Date: 2026-11-20 21:52+0200\n"
 "Last-Translator: \n"
 "Language-Team: giorbak\n"
 "Language: el\n"
@@ -852,7 +852,7 @@ msgid "Automotive"
 msgstr "Αυτοκίνηση"
 
 msgid "Autoplay picture duration (seconds)"
-msgstr ""
+msgstr "Διάρκεια αυτόματης προβολής εικόνας (δευτερόλεπτα)"
 
 msgid "Autoplay start delay"
 msgstr "Καθυστέρηση εκκίνησης αυτόματης αναπαραγωγής"
@@ -2186,7 +2186,7 @@ msgid "External movie player config"
 msgstr "Ρυθμίσεις εξωτερικού προγράμματος αναπαραγωγής ταινιών"
 
 msgid "Extra large"
-msgstr ""
+msgstr "Πάρα πολύ μεγάλη"
 
 msgid "Extracted subtitle file is empty or missing."
 msgstr "Το εξαγόμενο αρχείο υποτίτλων είναι κενό ή δεν υπάρχει."
@@ -3815,7 +3815,7 @@ msgid "No"
 msgstr "Όχι"
 
 msgid "No RSS / Atom feed at this address."
-msgstr ""
+msgstr "Δεν υπάρχει τροφοδοσία RSS / Atom σε αυτή τη διεύθυνση."
 
 msgid "No YouTube video found for this track."
 msgstr "Δεν βρέθηκε βίντεο στο YouTube για αυτό το κομμάτι."
@@ -4848,7 +4848,7 @@ msgid "Round"
 msgstr "Γύρος"
 
 msgid "Rows per page of long seasons and lists"
-msgstr ""
+msgstr "Σειρές ανά σελίδα για μεγάλες σεζόν και λίστες"
 
 msgid "Runtime"
 msgstr "Διάρκεια"
@@ -5828,7 +5828,7 @@ msgid "Text files ytlist and urllist are in:"
 msgstr "Τα αρχεία κειμένου ytlist και urllist βρίσκονται στο:"
 
 msgid "Text files ytlist, urllist and feedlist are in:"
-msgstr ""
+msgstr "Τα αρχεία κειμένου ytlist, urllist και feedlist βρίσκονται στο:"
 
 msgid "Thai"
 msgstr "Ταϊλανδέζικα"
@@ -5966,7 +5966,7 @@ msgid "The host wanted to open a window on the TV (%s) - that only works on the 
 msgstr "Ο host προσπάθησε να ανοίξει ένα παράθυρο στην TV (%s) - Αυτό λειτουργεί μόνο στον δέκτη."
 
 msgid "The hoster is still processing this video. Please try again later."
-msgstr ""
+msgstr "Ο πάροχος φιλοξενίας εξακολουθεί να επεξεργάζεται αυτό το βίντεο. Παρακαλώ δοκιμάστε ξανά αργότερα."
 
 msgid "The hoster sends an advert redirect instead of the video at the moment. Try another hoster."
 msgstr "Ο hoster στέλνει αυτή τη στιγμή ανακατεύθυνση διαφήμισης αντί για το βίντεο. Δοκιμάστε άλλον hoster."
@@ -6073,10 +6073,10 @@ msgid "The site's catalogue could not be loaded."
 msgstr "Δεν ήταν δυνατή η φόρτωση του καταλόγου του ιστότοπου."
 
 msgid "The site's web player key could not be read - please try again later."
-msgstr ""
+msgstr "Δεν ήταν δυνατή η ανάγνωση του κλειδιού του προγράμματος αναπαραγωγής του ιστότοπου - Παρακαλώ δοκιμάστε ξανά αργότερα."
 
 msgid "The stream server does not answer at the moment. Try another link or later."
-msgstr ""
+msgstr "Ο διακομιστής ροής δεν αποκρίνεται αυτή τη στιγμή. Δοκιμάστε έναν άλλο σύνδεσμο ή αργότερα."
 
 msgid "The support package holds the versions, the system information, the enabled hosts and the end of the debug log in one text file for a problem report. Look through it before posting it - the log can contain addresses of the sites you opened."
 msgstr "Το πακέτο υποστήριξης περιέχει τις εκδόσεις, τις πληροφορίες συστήματος, τα ενεργοποιημένους hosts και το τέλος του αρχείου καταγραφής εντοπισμού σφαλμάτων σε ένα αρχείο κειμένου για αναφορά προβλήματος. Ελέγξτε το πριν το δημοσιεύσετε - Το αρχείο καταγραφής μπορεί να περιέχει διευθύνσεις των ιστότοπων που ανοίξατε."
