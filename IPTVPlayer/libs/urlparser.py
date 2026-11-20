@@ -5606,7 +5606,7 @@ class pageParser(CaptchaHelper):
             SetIPTVPlayerLastHostError(_("Content not available"))
         return urltab
 
-    def parserVIDSRC(self, baseUrl):  # update 131126 (generate.php api_token, rotating player host) - vsembed/vidsrc -> player host -> data.vidsrc.sh (ChaCha20 wasm)
+    def parserVIDSRC(self, baseUrl):  # update 201126 (tokenized /pl/ HLS via local playlists), 131126 (generate.php api_token, rotating player host) - vsembed/vidsrc -> player host -> data.vidsrc.sh (ChaCha20 wasm)
         printDBG("parserVIDSRC baseUrl[%s]" % baseUrl)
         HTTP_HEADER = self.cm.getDefaultHeader(browser="chrome")
         referer = baseUrl.meta.get("Referer", "") if isinstance(baseUrl, strwithmeta) else ""
@@ -5895,6 +5895,80 @@ class pageParser(CaptchaHelper):
             links = getDirectM3U8Playlist(url, checkContent=True, sortWithMaxBitrate=99999999, cookieParams=params)
             return bool(links), links
 
+        def withToken(url, tk):
+            return url if not tk or re.search(r"[?&]token=", url) else url + ("&" if "?" in url else "?") + "token=" + tk
+
+        def getTokenHLS(url, params):
+            # fix 201126: <cdn>/pl/<id>?token= (no .m3u8) is an HLS master playlist whose variant playlists and
+            # segments (/content/.../page-N.html, TS) are relative links without the token; the CDN answers every
+            # request without ?token= or without the player host's Referer / Origin with a Cloudflare 403 page
+            # ("Invalid data found when processing input" in exteplayer3). The browser player appends the token to
+            # each request -> local media playlists with absolute, tokenized segment links, played via hlsdl
+            # (buffering; the .html segments are refused by exteplayer3's ffmpeg anyway)
+            tk = params["token"]
+            meta = params["meta"]
+            hdr = dict(HTTP_HEADER)
+            hdr.update({"Referer": meta["Referer"], "Origin": meta["Origin"], "Accept": "*/*"})
+            masterUrl = str(url)
+            gparams = {"header": hdr, "ipv6_only": params.get("ipv6_only", False)}
+            sts, data = self.cm.getPage(masterUrl, gparams)
+            if not sts or "#EXTM3U" not in data:
+                return False, []
+            variants = []
+            if "#EXT-X-STREAM-INF" in data:
+                lines = data.splitlines()
+                for idx, line in enumerate(lines):
+            # the variants carry video + audio (no #EXT-X-MEDIA audio renditions in these masters)
+                    if line.startswith("#EXT-X-STREAM-INF"):
+                        uri = next((x.strip() for x in lines[idx + 1:] if x.strip() and not x.startswith("#")), "")
+                        height = re.search(r"RESOLUTION=\d+x(\d+)", line)
+                        bitrate = re.search(r"BANDWIDTH=(\d+)", line)
+                        variant = (int(height.group(1)) if height else 0, int(bitrate.group(1)) if bitrate else 0, urljoin(masterUrl, uri))
+                        if uri and variant not in variants:
+                            variants.append(variant)
+            elif "#EXTINF" in data:
+                variants.append((0, 0, masterUrl))
+            variants.sort(reverse=True)
+            # local playlists of earlier titles: the tokens are valid for 4 h only
+            try:
+                for name in os.listdir(GetTmpDir()):
+                    if name.startswith("vidsrc_") and name.endswith(".m3u8") and os.path.getmtime(GetTmpDir(name)) < time.time() - 4 * 3600:
+                        rm(GetTmpDir(name))
+            except Exception:
+                printExc()
+            fileId = re.sub(r"[^0-9A-Za-z]", "", masterUrl.split("?")[0])[-16:]
+            links = []
+            for num, (height, bitrate, variantUrl) in enumerate(variants):
+                if variantUrl == masterUrl:
+                    playlist = data
+                else:
+                    sts, playlist = self.cm.getPage(withToken(variantUrl, tk), gparams)
+                    if not sts or "#EXTINF" not in playlist:
+                        continue
+                    variantUrl = withToken(variantUrl, tk)
+                out = []
+                for line in playlist.splitlines():
+                    line = line.strip()
+                    if line and not line.startswith("#"):
+                        line = withToken(urljoin(variantUrl, line), tk)
+                    elif 'URI="' in line:
+                        line = re.sub(r'URI="([^"]+)"', lambda m: 'URI="%s"' % withToken(urljoin(variantUrl, m.group(1)), tk), line)
+                    out.append(line)
+                # the index keeps two variants of the same height (other bitrate) in their own files
+                path = GetTmpDir("vidsrc_%s_%d_%d.m3u8" % (fileId, height, num))
+                try:
+                    with open(path, "wb") as f:
+                        f.write(ensure_binary("\n".join(out) + "\n"))
+                except Exception:
+                    printExc()
+                    continue
+                lmeta = dict(meta)
+                lmeta.update({"iptv_proto": "m3u8", "iptv_buffering": "required"})
+                if bitrate:
+                    lmeta["iptv_bitrate"] = bitrate
+                links.append({"name": "vidsrc %sp" % height if height else "vidsrc HLS", "url": urlparser.decorateUrl(path, lmeta)})
+            return bool(links), links
+
         def getToken():
             # fix 131126: generate.php wants the player page's apiToken too (signature + IP range check, not
             # single-use) - without it every host answers 403
@@ -5940,6 +6014,11 @@ class pageParser(CaptchaHelper):
                     if sts:
                         urltab.extend(links)
                         break  # the urls are mirrors of the same file; one working master is enough
+                elif re.search(r"https?://[^/]+/pl/", surl):
+                    sts, links = getPage6(surl, {"token": tk, "meta": meta}, getTokenHLS)
+                    if sts:
+                        urltab.extend(links)
+                        break
                 else:
                     urltab.append({"name": "vidsrc mp4", "url": surl})
             if urltab or not tk or freshTokens >= 2:
