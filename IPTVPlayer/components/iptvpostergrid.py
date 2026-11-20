@@ -443,9 +443,19 @@ class IPTVPosterGridList(IPTVMainNavigatorList):
         # a bit of room for the scrollbar, so the columns do not change when it shows up
         width = int(size.width() * 0.97)
         height = size.height()
-        rows = max(1, round(height / (self.rowHintLandscape if self.landscape else self.rowHint)))
-        self.rowH = height // rows
+        try:
+            # the user's choice (posters keep 2:3 / 16:9, so the columns follow from the row height)
+            rows = int(config.plugins.iptvplayer.poster_grid_rows.value)
+        except Exception:
+            rows = 0
+        if rows <= 0:
+            rows = max(1, round(height / (self.rowHintLandscape if self.landscape else self.rowHint)))
         self.titleH = int(self.gridFontSize * 2.6)
+        # the two title lines take a fixed height: in a short list more rows would leave stamp-sized posters (and
+        # all of them in one row) - fewer rows until the poster is at least twice the title height
+        while rows > 1 and height // rows - self.titleH - 3 * self.pad - self.gap < 2 * self.titleH:
+            rows -= 1
+        self.rowH = height // rows
         self.posterH = max(self.rowH - self.titleH - 3 * self.pad - self.gap, 20)
         self.posterW = self.posterH * 16 // 9 if self.landscape else self.posterH * 2 // 3
         self.cols = max(1, width // (self.posterW + 2 * self.pad + self.gap))
