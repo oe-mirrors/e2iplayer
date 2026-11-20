@@ -9,7 +9,7 @@ LAST_MODIFIED = "04.10.2026"
 #     episodes (ascending), episodes are VIDEO rows keyed on the series url + the site's episode id
 #   - links: the page's server buttons are posted to /ajax (Laravel _token of the page; episodes
 #     first through /ajaxtv), the iframe of every server goes to urlparser (abyss, vidsrc, ...);
-#     servers urlparser does not know (9stream) are left out
+#     servers urlparser does not know are left out (9stream "#NM": parser9STREAM since 20.11.2026)
 #   - watched flag, downloaded flag, favourites, name normalisation ("Title (Year)",
 #     "Show - SxxExx"), sidecar, INFO via moviemeta + the site's fields
 import os

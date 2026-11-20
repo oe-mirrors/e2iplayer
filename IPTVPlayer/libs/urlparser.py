@@ -726,6 +726,7 @@ class urlparser:
             "pluss24.com": self.pp.parserJWPLAYER,  # add 081026
             "polsatsport.pl": self.pp.parserJWPLAYER,
             "poophq.com": self.pp.parserVEEV,
+            "ppzj-youtube.cfd": self.pp.parser9STREAM,  # add 201126 (9stream, m4ufreetv/m4ustream "#NM")
             "pqham.com": self.pp.parserJWPLAYER,
             # q
             "q7v3k8m2p1.top": self.pp.parserMEGAMAX,  # add 091026
@@ -2115,6 +2116,80 @@ class pageParser(CaptchaHelper):
         if self.cm.isValidUrl(videoUrl):
             return videoUrl
         return False
+
+    def parser9STREAM(self, baseUrl):  # add 201126 - 9stream player (if9.ppzj-youtube.cfd/play/<id>, m4ufreetv/m4ustream "#NM")
+        # appv1.js (obfuscated): idfile_enc/idUser_enc AES-256-GCM (key = 32 ascii chars, iv = 12 ascii chars) ->
+        # POST DOMAIN_API data=AES-GCM({idfile, iduser, domain_play, unixTimestamp}) -> {"status":"success",
+        # "type":"url-m3u8-encv1","data":<AES-GCM playlist url>}; socket.io is only the view counter
+        printDBG("parser9STREAM baseUrl[%s]" % baseUrl)
+        baseUrl = strwithmeta(baseUrl)
+        referer = baseUrl.meta.get("Referer", "")
+        HTTP_HEADER = self.cm.getDefaultHeader()
+        if referer:
+            HTTP_HEADER["Referer"] = referer
+        sts, data = self.cm.getPage(baseUrl, {"header": HTTP_HEADER})
+        if not sts:
+            return []
+        fileEnc = self.cm.ph.getSearchGroups(data, r'''idfile_enc\s*=\s*["']([^"']+)''')[0]
+        userEnc = self.cm.ph.getSearchGroups(data, r'''idUser_enc\s*=\s*["']([^"']+)''')[0]
+        api = self.cm.ph.getSearchGroups(data, r'''DOMAIN_API\s*=\s*["']([^"']+)''')[0]
+        if not fileEnc or not userEnc or not self.cm.isValidUrl(api):
+            SetIPTVPlayerLastHostError(clean_html(self.cm.ph.getSearchGroups(data, r'''showMsg\(["']([^"']+)''')[0]) or _("Content not available"))
+            return []
+        subTracks = []
+        try:
+            for sub in json_loads(self.cm.ph.getSearchGroups(data, r"data_subs\s*=\s*'([^']*)'")[0] or "[]"):
+                if self.cm.isValidUrl(sub.get("file", "")):
+                    label = sub.get("label") or ""
+                    lang = {"turkish": "tr", "english": "en", "french": "fr", "german": "de", "spanish": "es", "portuguese": "pt", "arabic": "ar"}.get(label.lower(), label.lower()[:2])
+                    subTracks.append({"title": label or lang, "url": sub["file"], "lang": lang, "format": "vtt"})
+        except Exception:
+            printExc()
+
+        def aesGcm(text, key, iv, encrypt=False):
+            cipher = python_aesgcm.new(ensure_binary(key))
+            if encrypt:
+                return ensure_str(base64.b64encode(bytes(cipher.seal(ensure_binary(iv), ensure_binary(text)))))
+            plain = cipher.open(ensure_binary(iv), base64.b64decode(text))
+            return ensure_str(bytes(plain)) if plain else ""
+
+        try:
+            idFile = aesGcm(fileEnc, "7bd30d612d2bb1bda34743f8608e68c1", "v3M9zQ2pX7k1")
+            idUser = aesGcm(userEnc, "7bd30d612d2bb1bda34743f8608e68c2", "v3M9zQ2pX7k2")
+            # domain_play = the embedding site (document.referrer origin), "no-domain" without one
+            domain = "/".join(referer.split("/")[:3]) if referer.startswith("http") else "no-domain"
+            # the player's key order (py2 dicts have none)
+            payload = '{"idfile":%s,"iduser":%s,"domain_play":%s,"unixTimestamp":%d}' % (json_dumps(idFile), json_dumps(idUser), json_dumps(domain), int(time.time()))
+            post = aesGcm(payload, "7bd30d612d2bb1bda34743f8608e68c3", "v3M9zQ2pX7k3", True)
+        except Exception:
+            # new keys on the site: the ids no longer decrypt
+            printExc()
+            SetIPTVPlayerLastHostError(_("Content not available"))
+            return []
+        origin = "/".join(baseUrl.split("/")[:3])
+        API_HEADER = dict(HTTP_HEADER)
+        API_HEADER.update({"Referer": baseUrl, "Origin": origin, "Content-Type": "application/x-www-form-urlencoded"})
+        sts, data = self.cm.getPage(api, {"header": API_HEADER}, {"data": post})
+        if not sts:
+            return []
+        try:
+            data = json_loads(data)
+            url = data.get("data") or ""
+            if data.get("status") != "success" or not url:
+                # without an embedding site: {"status":"error","msg":"The domain does not allow playback!"}
+                SetIPTVPlayerLastHostError(clean_html(data.get("msg") or "") or _("Content not available"))
+                return []
+            if data.get("type") == "url-m3u8-encv1":
+                url = aesGcm(url, "9bd30d612d2bb1bda34743f8608e68c4", "z3M9zQ2pX7k4")
+        except Exception:
+            printExc()
+            return []
+        if not self.cm.isValidUrl(url):
+            return []
+        url = urlparser.decorateUrl(url, {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": origin + "/", "Origin": origin, "external_sub_tracks": subTracks})
+        # media playlist without variants; the extensionless segments 302 to <cdn>/....html serving MPEG-TS
+        # (text/plain) -> hlsdl buffering
+        return requireDownloaderForDisguisedHls(getDirectM3U8Playlist(url, checkExt=False, variantCheck=False, checkContent=True, sortWithMaxBitrate=99999999))
 
     def parserFILECLOUDIO(self, baseUrl):  # Need test
         printDBG("parserFILECLOUDIO baseUrl[%s]" % baseUrl)
@@ -5914,11 +5989,11 @@ class pageParser(CaptchaHelper):
             sts, data = self.cm.getPage(masterUrl, gparams)
             if not sts or "#EXTM3U" not in data:
                 return False, []
+            # the variants carry video + audio (no #EXT-X-MEDIA audio renditions in these masters)
             variants = []
             if "#EXT-X-STREAM-INF" in data:
                 lines = data.splitlines()
                 for idx, line in enumerate(lines):
-            # the variants carry video + audio (no #EXT-X-MEDIA audio renditions in these masters)
                     if line.startswith("#EXT-X-STREAM-INF"):
                         uri = next((x.strip() for x in lines[idx + 1:] if x.strip() and not x.startswith("#")), "")
                         height = re.search(r"RESOLUTION=\d+x(\d+)", line)
