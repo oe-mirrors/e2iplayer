@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 01.07.2026 - Change: configurable YouTube display language, configurable channel name for downloaded files, absolute published date in info view
+# Last Modified: 19.11.2026 - Change: original video titles instead of YouTube's machine translation (RSS feed / own Data API key)
 # LOCAL import
 from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.extractor.youtube import YoutubeIE, YT_TV_CLIENT_VERSION
 from Plugins.Extensions.IPTVPlayer.libs.youtube_oauth import YouTubeOAuth
@@ -11,6 +11,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getMPDLinksWithMe
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs import ph
+from Plugins.Extensions.IPTVPlayer.libs import ytchannelfeed
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_urlencode
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urlparse, urlunparse, parse_qsl
@@ -30,6 +31,15 @@ config.plugins.iptvplayer.ytShowDash = ConfigSelection(default="auto", choices=[
 config.plugins.iptvplayer.ytSortBy = ConfigSelection(default="A", choices=[("A", _("Relevance")), ("I", _("Upload date")), ("M", _("View count")), ("E", _("Rating"))])
 config.plugins.iptvplayer.youtube_search_region = ConfigSelection(default="auto", choices=[("auto", _("Automatic"))] + [(c, c) for c in ("US", "GB", "DE", "AT", "CH", "FR", "IT", "ES", "PL", "NL", "BE", "CZ", "RU", "UA", "TR", "GR", "SE", "PT", "BR", "MX", "IN", "JP", "KR", "CA", "AU")])
 config.plugins.iptvplayer.youtube_safe_search = ConfigYesNo(default=False)
+# YouTube machine-translates some video titles into the display language. On: the original titles - from the
+# channel's RSS feed (its 15 newest videos) or, with an own YouTube Data API key, for every listed video.
+config.plugins.iptvplayer.youtube_original_titles = ConfigYesNo(default=True)
+
+# YouTube Data API v3: snippet.title is the title as uploaded (no machine translation); one request = up to
+# 50 videos = 1 quota unit of the 10,000 free per day. The key is the user's own (api_key_youtube, iptvconfig).
+YT_DATA_API_VIDEOS = "https://www.googleapis.com/youtube/v3/videos?part=snippet&fields=items(id,snippet/title)&maxResults=50&id=%s&key=%s"
+YT_DATA_API_PAUSE = 3600  # seconds the API is not asked again after a rejected key / exhausted quota
+YT_ORIGINAL_TITLES_MAX = 5000  # cached original titles before the cache starts over
 
 # InnerTube WEB client. The API key is the long-lived public youtube.com one
 # (unchanged for years, also used by yt-dlp); the client version and
@@ -55,6 +65,10 @@ class YouTubeParser:
 
     # process-wide cache: {"client_version": str, "api_key": str, "visitor_data": str}
     _ytConfig = None
+
+    # process-wide: {video id: original title} and when the Data API may be asked again
+    _originalTitles = {}
+    _dataApiPausedUntil = 0
 
     def __init__(self):
         self.cm = common()
@@ -583,8 +597,8 @@ class YouTubeParser:
                     badges.append(badgeLabel.upper())
             except Exception:
                 pass
-        if badges:
-            title = title + " [" + (" , ".join(badges)) + "]"
+        titleBadges = (" [" + (" , ".join(badges)) + "]") if badges else ""
+        title = title + titleBadges
         icon = self.getThumbnailUrl(videoJson)
         descTab = []
         try:
@@ -640,6 +654,8 @@ class YouTubeParser:
             "desc": desc,
             "video_id": ensure_str(videoId),
         }
+        if titleBadges:
+            params["title_badges"] = titleBadges  # kept when the original title replaces the translated one
         if self._isShortCommand(videoJson.get("navigationEndpoint", {})):
             self._markShort(params)
         return params
@@ -921,6 +937,88 @@ class YouTubeParser:
             context["user"] = {"enableSafetyMode": True}
         return cfg, context
 
+    # ---- original video titles -------------------------------------------
+    # YouTube machine-translates some titles into hl / Accept-Language, on every
+    # InnerTube client and in both directions (an English channel shows German
+    # titles with "de", a German one English titles with "en"); no hl value gives
+    # the originals. Only the channel RSS feed (15 newest) and the Data API
+    # (snippet.title, own key) carry them.
+    @staticmethod
+    def _getDataApiKey():
+        try:
+            return ensure_str(config.plugins.iptvplayer.api_key_youtube.value).strip()
+        except Exception:
+            return ""
+
+    def _storeOriginalTitles(self, titles):
+        cache = YouTubeParser._originalTitles
+        if len(cache) + len(titles) > YT_ORIGINAL_TITLES_MAX:
+            cache.clear()
+        cache.update(titles)
+
+    def _fetchOriginalTitlesFromApi(self, videoIds, apiKey):
+        # False when the key was rejected or the quota is used up (the API then pauses for YT_DATA_API_PAUSE)
+        for start in range(0, len(videoIds), 50):
+            chunk = videoIds[start:start + 50]
+            # the key goes in the url: pCommon writes "key=***" to the log, a header would show in clear
+            sts, data = self.cm.getPage(YT_DATA_API_VIDEOS % (",".join(chunk), apiKey), {"header": {"User-Agent": self.HTTP_HEADER["User-Agent"]}, "return_data": True})
+            if not sts:
+                status = getattr(self.cm, "meta", {}).get("status_code", "")
+                printDBG("YouTubeParser._fetchOriginalTitlesFromApi HTTP %s - API key rejected or daily quota used up, no Data API requests for %d s" % (status, YT_DATA_API_PAUSE))
+                if str(status) in ("400", "403"):
+                    YouTubeParser._dataApiPausedUntil = time.time() + YT_DATA_API_PAUSE
+                return False
+            titles = {}
+            try:
+                for item in json_loads(data).get("items", []):
+                    title = self._normalizeText(item.get("snippet", {}).get("title", ""))
+                    if item.get("id") and title:
+                        titles[ensure_str(item["id"])] = title
+            except Exception:
+                printExc()
+            # ids the API does not know (private / deleted) are stored as "" so they are not asked again
+            self._storeOriginalTitles(dict((videoId, titles.get(videoId, "")) for videoId in chunk))
+            printDBG("YouTubeParser._fetchOriginalTitlesFromApi %d/%d titles" % (len(titles), len(chunk)))
+        return True
+
+    def _fetchOriginalTitlesFromFeed(self, channelId):
+        info = ytchannelfeed.getChannelFeed("https://www.youtube.com/channel/%s" % channelId, self.cm)
+        if info:
+            self._storeOriginalTitles(dict((entry["video_id"], self._normalizeText(entry["title"])) for entry in info["entries"] if entry.get("title")))
+
+    def applyOriginalTitles(self, items, channelId=""):
+        # replaces translated titles of the video rows in items (in place); channelId (UC...) = the first page of
+        # a channel tab, its RSS feed is read when there is no API key
+        try:
+            if not config.plugins.iptvplayer.youtube_original_titles.value:
+                return
+            videos = [params for params in items if params.get("type") == "video" and params.get("video_id")]
+            if not videos:
+                return
+            cache = YouTubeParser._originalTitles
+            missing = []
+            for params in videos:
+                if params["video_id"] not in cache and params["video_id"] not in missing:
+                    missing.append(params["video_id"])
+            apiKey = self._getDataApiKey()
+            if missing and apiKey and time.time() >= YouTubeParser._dataApiPausedUntil:
+                if not self._fetchOriginalTitlesFromApi(missing, apiKey) and channelId:
+                    self._fetchOriginalTitlesFromFeed(channelId)
+            elif missing and channelId:
+                self._fetchOriginalTitlesFromFeed(channelId)
+            changed = 0
+            for params in videos:
+                original = cache.get(params["video_id"])
+                if not original:
+                    continue
+                title = original + params.get("title_badges", "")
+                if title != params.get("title"):
+                    params["title"] = title
+                    changed += 1
+            printDBG("YouTubeParser.applyOriginalTitles videos[%d] asked[%d] original titles set[%d]" % (len(videos), len(missing), changed))
+        except Exception:
+            printExc()
+
     # ---- signed-in personal feeds (TVHTML5) ------------------------------
     # The OAuth token from the "sign in on TV" flow is only honoured by
     # InnerTube for the TVHTML5 client; the WEB client answers 400 to it. A
@@ -1020,6 +1118,7 @@ class YouTubeParser:
             if params and params["video_id"] not in seen:
                 seen.add(params["video_id"])
                 currList.append(params)
+        self.applyOriginalTitles(currList)
         # "load more" for this list: the token carried by a
         # continuationItemRenderer (ignore unrelated continuationCommands
         # elsewhere in the shell)
@@ -1151,11 +1250,14 @@ class YouTubeParser:
             entries = self._getContinuationEntries(response) if self.isContinuationUrl(url) else self._extractEntriesFromBrowse(response)
             nextPage = self._parseListEntries(entries, currList)
             # the real channel name: a row of the user list is titled freely ("... Shorts")
-            channelName = self._normalizeText(response.get("metadata", {}).get("channelMetadataRenderer", {}).get("title", ""))
+            channelMeta = response.get("metadata", {}).get("channelMetadataRenderer", {})
+            channelName = self._normalizeText(channelMeta.get("title", ""))
             if channelName:
                 for params in currList:
                     if params.get("category") != "channel":
                         params.setdefault("channel", channelName)
+            # a playlist page has no channelMetadataRenderer: no RSS feed there, only the Data API
+            self.applyOriginalTitles(currList, "" if self.isContinuationUrl(url) else ensure_str(channelMeta.get("externalId", "")))
             ctoken, ctit = self._getContinuation(nextPage) if nextPage else ("", "")
             if ctoken:
                 # continuation page for channel list
@@ -1232,6 +1334,8 @@ class YouTubeParser:
                 self._parseListEntries(entries, items)
                 if items:
                     shelves.append({"title": self._getSimpleText(shelf.get("title", {})), "items": items})
+            channelId = ensure_str(response.get("metadata", {}).get("channelMetadataRenderer", {}).get("externalId", ""))
+            self.applyOriginalTitles([params for shelf in shelves for params in shelf["items"]], channelId)
         except Exception:
             printExc()
         return shelves
@@ -1249,6 +1353,7 @@ class YouTubeParser:
             # same as when all of this sat inline in one try block.
             self._parseSearchRenderers(response, currList)
             self._appendSearchNextPage(response, url, page, currList)
+            self.applyOriginalTitles(currList)
         except Exception:
             printExc()
         return currList

@@ -47,6 +47,8 @@ config.plugins.iptvplayer.curr_title_file = ConfigText(default="", fixed_size=Fa
 config.plugins.iptvplayer.showcover = ConfigYesNo(default=True)
 # lists whose items bring their own pictures as a grid of posters (components/iptvpostergrid.py)
 config.plugins.iptvplayer.poster_grid = ConfigYesNo(default=False)
+# rows of posters on one screen ("0" = from the screen height); fewer rows = bigger posters and fewer columns
+config.plugins.iptvplayer.poster_grid_rows = ConfigSelection(default="0", choices=[("0", _("Auto"))] + [(str(n), str(n)) for n in range(1, 5)])
 # negative = never (RemoveOldDirsIcons only deletes for values >= 0)
 config.plugins.iptvplayer.deleteIcons = ConfigSelection(default="3", choices=[("0", _("after closing")), ("1", _("after day")), ("3", _("after three days")), ("7", _("after a week")), ("-1", _("never"))])
 # config.plugins.iptvplayer.allowedcoverformats = ConfigSelection(default="jpeg,png", choices=[("jpeg,png,gif", _("jpeg,png,gif")), ("jpeg,png", _("jpeg,png")), ("jpeg", _("jpeg")), ("all", _("all"))])
@@ -379,6 +381,8 @@ config.plugins.iptvplayer.search_history_size = ConfigInteger(50, (0, 1000000))
 config.plugins.iptvplayer.enableT9MainList = ConfigYesNo(default=True)
 config.plugins.iptvplayer.rememberHistorySelection = ConfigYesNo(default=True)
 config.plugins.iptvplayer.autoplay_start_delay = ConfigInteger(3, (0, 9))
+# seconds a picture (TYPE_PICTURE) stays on screen before the sequencer goes on with the next row
+config.plugins.iptvplayer.autoplay_picture_duration = ConfigInteger(10, (1, 99))
 # "Select link" list: the quality of a link list closest to this wish starts without asking ('' = ask);
 # auto_select_link tries the mirrors one after the other until one resolves and plays (tools/linkpicker.py)
 config.plugins.iptvplayer.preferred_quality = ConfigSelection(default="", choices=[("", _("Ask")), ("max", _("Best")), ("2160", "2160p"), ("1080", "1080p"), ("720", "720p"), ("480", "480p"), ("360", "360p")])
@@ -507,7 +511,8 @@ config.plugins.iptvplayer.clear_iframe_file = ConfigIPTVFileSelection(fileMatch=
 # screensaver (iptvscreensaver.py: moving logo/cover, title and clock on black) after this many seconds without a key:
 # audio = audio-only playback in the external player; menu = every E2iPlayer screen except the players, where
 # "hide" only hides the E2iPlayer windows while live TV runs behind them (the black screensaver without live TV)
-config.plugins.iptvplayer.screensaver_audio = ConfigSelection(default="60", choices=[("0", _("Off")), ("30", _("30 seconds")), ("60", _("1 minute")), ("120", "2 " + _("minutes")), ("300", "5 " + _("minutes"))])
+# audio: 5 s = right after the start (no black screen), and again 5 s after a key ended it
+config.plugins.iptvplayer.screensaver_audio = ConfigSelection(default="5", choices=[("0", _("Off")), ("5", _("5 seconds")), ("15", _("15 seconds")), ("30", _("30 seconds")), ("60", _("1 minute")), ("120", "2 " + _("minutes")), ("300", "5 " + _("minutes"))])
 config.plugins.iptvplayer.screensaver_menu = ConfigSelection(default="300", choices=[("0", _("Off")), ("60", _("1 minute")), ("120", "2 " + _("minutes")), ("300", "5 " + _("minutes")), ("600", "10 " + _("minutes")), ("900", "15 " + _("minutes"))])
 config.plugins.iptvplayer.screensaver_menu_mode = ConfigSelection(default="hide", choices=[("hide", _("Hide the menu (live TV visible)")), ("black", _("Black screensaver"))])
 

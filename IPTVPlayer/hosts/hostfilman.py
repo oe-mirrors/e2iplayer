@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "17.11.2026"
+LAST_MODIFIED = "20.11.2026"
 # 25.06.2026 - damagic
 # 10.10.2026 - host standard: watched flag (series -> season -> episode; a series with more than one season gets
 #   season folders), favourites reopen without state, downloaded marker on the film / episode url,
@@ -8,6 +8,7 @@ LAST_MODIFIED = "17.11.2026"
 #   site's fields, default user agent; the PHPSESSID option is a hidden secret now and no longer overwrites the
 #   whole cookie file on every list (that threw away the Cloudflare clearance), dead rot13 helpers removed
 #   links are no longer renamed to "*name*" after use - that broke the link list's own used mark (tick + colour)
+# 20.11.2026 - the site sends every page without a login to /logowanie: "Login needed" instead of empty lists
 ###################################################
 # LOCAL import
 ###################################################
@@ -121,6 +122,14 @@ class Filman(GenericFolderWatchedScraperMixin, CBaseHostClass, CaptchaHelper):
             addParams = dict(self.defaultParams)
         baseUrl = self.cm.iriToUri(baseUrl.split("#", 1)[0])
         sts, data = self.cm.getPageCFProtection(baseUrl, addParams, post_data)
+        # since 11.2026 every page without a login goes to the login page (before: only the search) - a clear
+        # reason instead of empty lists
+        if sts and "/logowanie" not in baseUrl and "/logowanie" in getattr(data, "meta", {}).get("url", ""):
+            # the session ran out: the next list logs in again with the stored login / PHPSESSID
+            self.loggedIn = None
+            self.sessid = ""
+            SetIPTVPlayerLastHostError(_("Login needed") + "\n%s: login + password (or the PHPSESSID of your browser) in the host settings." % self.up.getDomain(self.getMainUrl()))
+            return False, None
         return sts, data
 
     def getFullIconUrl(self, url, currUrl=None):
@@ -322,11 +331,6 @@ class Filman(GenericFolderWatchedScraperMixin, CBaseHostClass, CaptchaHelper):
         self.setMainUrl(data.meta["url"])
 
         is_search = "search?phrase=" in baseUrl
-        if is_search and "/logowanie" in data.meta.get("url", ""):
-            # since 10.2026 the site sends a search without a login to its login page
-            SetIPTVPlayerLastHostError(_("Login needed"))
-            return
-
         if is_search:
             items = []
             item_lists = re.findall(r'<div id="item-list" class="row">(.*?)</div>\s*</div>\s*</div>', data, re.DOTALL)

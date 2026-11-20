@@ -41,7 +41,7 @@ except Exception:
 # Query/form fields and headers that carry a credential (captcha services: 2captcha "key", 9kw "apikey",
 # DeathByCaptcha "password"; the "Api-Key" / "Authorization: Bearer ..." headers of APIs such as
 # opensubtitles.com). Their values never go into the debug log - users post it.
-_SECRET_FIELDS = ('key', 'apikey', 'api_key', 'api-key', 'password', 'passwd', 'authorization',
+_SECRET_FIELDS = ('key', 'apikey', 'api_key', 'api-key', 'password', 'passwd', 'authorization', 'client_id', 'client_secret',
                   # Stalker / MAG portals (hoststalker.py): the box identity in the query and the "mac=" cookie
                   'mac', 'sn', 'device_id', 'device_id2', 'signature', 'metrics')
 _SECRET_FIELD_RE = re.compile(r'(?<![A-Za-z0-9_])(%s)=[^&;\s\'"]+' % '|'.join(_SECRET_FIELDS), re.IGNORECASE)

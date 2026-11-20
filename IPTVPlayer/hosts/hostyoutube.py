@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "02.11.2026"
+LAST_MODIFIED = "19.11.2026"
+# 19.11.2026 - original video titles instead of YouTube's machine translation (RSS feed, all with an own Data API key)
 # 04.11.2026 - user links: channel rows and groups show the channel picture, video rows their thumbnail
 # 02.11.2026 - channel: all tabs of the channel incl. Playlists and Home; a link to a tab opens that tab; playlists with next pages
 # 11.10.2026 - channel: "Shorts" folder (Shorts tab); Shorts and channels get their own list icons (ShortItem.png, ChannelItem.png);
@@ -196,6 +197,9 @@ def GetConfigList():
     optionList.append(getConfigListEntry(_("Default video quality:"), config.plugins.iptvplayer.ytDefaultformat))
     optionList.append(getConfigListEntry(_("Use default video quality:"), config.plugins.iptvplayer.ytUseDF))
     optionList.append(getConfigListEntry(_("Display language:"), config.plugins.iptvplayer.youtube_ui_language))
+    optionList.append(getConfigListEntry(_("Original title") + ":", config.plugins.iptvplayer.youtube_original_titles))
+    # the same key as in the MusicBox settings (iptvconfig); empty = the RSS feed only (15 newest per channel)
+    optionList.append(getConfigListEntry("https://youtube.com/ " + _("API Key"), config.plugins.iptvplayer.api_key_youtube))
     optionList.append(getConfigListEntry(_("Add channel name to downloaded file") + ":", config.plugins.iptvplayer.youtube_download_channel_name))
     optionList.append(getConfigListEntry(_("Create MKV with chapter marks from description") + ":", config.plugins.iptvplayer.youtube_mkv_chapters))
     optionList.append(getConfigListEntry(_("Create Enigma2 .cuts chapter marks") + ":", config.plugins.iptvplayer.youtube_enigma2_cuts))

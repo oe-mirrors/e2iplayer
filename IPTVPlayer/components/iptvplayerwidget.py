@@ -572,6 +572,7 @@ class E2iPlayerWidget(Screen):
 
         self["headertext"] = Label()
         self._headerFontsCache = None
+        self._statusFontsCache = None
         self["console"] = Label()
         self["sequencer"] = Label()
 
@@ -1082,7 +1083,44 @@ class E2iPlayerWidget(Screen):
 
     def setStatusTex(self, msg):
         self.statusTextValue = msg
-        self["statustext"].setText(msg)
+        self._setStatusLabel(msg)
+
+    def _statusFonts(self):
+        # the skin font of the status text and smaller ones down to 60 %, rebuilt like _headerFonts(); [] when the
+        # skin gives no font (the text then stays as the skin draws it)
+        label = self["statustext"]
+        if label.instance is None:  # before the skin is applied
+            return []
+        if self._statusFontsCache is None:
+            self._statusFontsCache = []
+            fontAttr = dict(label.skinAttributes or []).get('font')
+            if not fontAttr:
+                return self._statusFontsCache
+            try:
+                from skin import parseFont
+                font = parseFont(fontAttr, getattr(self, 'scale', ((1, 1), (1, 1))))
+                self._statusFontsCache = [font] + [gFont(font.family, int(font.pointSize * factor)) for factor in (0.9, 0.8, 0.7, 0.6)]
+            except Exception:
+                printExc()
+        return self._statusFontsCache
+
+    def _setStatusLabel(self, msg):
+        # skins size the status box for one or two lines; an empty list with the host's reason and the last error
+        # needs three or four - the font steps down until the text fits the box (MetrixHD cut the third line off)
+        label = self["statustext"]
+        fonts = self._statusFonts()
+        for font in (fonts or [None]):
+            try:
+                if font is not None:
+                    label.instance.setFont(font)
+            except Exception:
+                printExc()
+            label.setText(msg)
+            try:
+                if label.instance.calculateSize().height() <= label.instance.size().height():
+                    break
+            except Exception:
+                break
 
     def __del__(self):
         printDBG("E2iPlayerWidget.__del__")
@@ -1193,9 +1231,9 @@ class E2iPlayerWidget(Screen):
                         else:
                             msg = _("wait %s second") % timeout
                         msg = '%s (%s)' % (self.statusTextValue, msg)
-                        self["statustext"].setText(msg)
+                        self._setStatusLabel(msg)
                     else:
-                        self["statustext"].setText(self.statusTextValue)
+                        self._setStatusLabel(self.statusTextValue)
 
                     if "spinner" in self:
                         x, y = self["spinner"].getPosition()
@@ -3606,7 +3644,7 @@ class E2iPlayerWidget(Screen):
         if url != '' and CDisplayListItem.TYPE_PICTURE == self.currItem.type:
             # the picture player shows no playlist, the picture is ticked as played in the next player's one
             self._takePlaylistForPlayer()
-            self.session.openWithCallback(self.leavePicturePlayer, IPTVPicturePlayerWidget, url, config.plugins.iptvplayer.bufferingPath.value, self.currItem.name, {'seq_mode': self.autoPlaySeqStarted})
+            self.session.openWithCallback(self.leavePicturePlayer, IPTVPicturePlayerWidget, url, config.plugins.iptvplayer.bufferingPath.value, self.currItem.name, {'seq_mode': self.autoPlaySeqStarted, 'seq_duration': config.plugins.iptvplayer.autoplay_picture_duration.value})
         elif url != '' and self.isDownloadableType(self.currItem.type):
             printDBG("playVideo url[%s]" % url)
             if self.currItem.type == CDisplayListItem.TYPE_DATA:

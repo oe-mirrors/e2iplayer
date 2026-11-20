@@ -211,7 +211,8 @@ class IPTVPicturePlayerWidget(Screen):
             self.filePath = ''
             printExc()
 
-        self.addParams = {'seq_mode': False}
+        # seq_duration: seconds a picture of a sequencer run stays on screen (config autoplay_picture_duration)
+        self.addParams = {'seq_mode': False, 'seq_duration': 10}
         self.addParams.update(addParams)
 
         self.url = url
@@ -247,7 +248,7 @@ class IPTVPicturePlayerWidget(Screen):
         if self.addParams['seq_mode']:
             self.canAutoClose = True
             self.mainTimer_conn = eConnectCallback(self.mainTimer.timeout, self.closeAfterTimeout)
-            self.mainTimerInterval = 1000 * 10  # 10s
+            self.mainTimerInterval = 1000 * max(1, int(self.addParams['seq_duration']))
         else:
             self.mainTimer_conn = eConnectCallback(self.mainTimer.timeout, self.updateDisplay)
             self.mainTimerInterval = 100  # by default 0,1s

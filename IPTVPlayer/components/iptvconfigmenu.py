@@ -322,6 +322,8 @@ class ConfigMenu(ConfigBaseWidget):
         list.append(getConfigListEntry(_("Display thumbnails"), config.plugins.iptvplayer.showcover))
         if config.plugins.iptvplayer.showcover.value:
             list.append(getConfigListEntry("    " + _("Poster grid for lists with pictures"), config.plugins.iptvplayer.poster_grid))
+            if config.plugins.iptvplayer.poster_grid.value:
+                list.append(getConfigListEntry("        " + _("Number of rows"), config.plugins.iptvplayer.poster_grid_rows))
         list.append(getConfigListEntry(_("Rows per page of long seasons and lists"), config.plugins.iptvplayer.local_page_size))
         # list.append(getConfigListEntry("Sort the lists?", config.plugins.iptvplayer.sortuj))
         # list.append(getConfigListEntry(_("Graphic services selector"), config.plugins.iptvplayer.ListaGraficzna))
@@ -479,6 +481,7 @@ class ConfigMenu(ConfigBaseWidget):
     @staticmethod
     def _fillPlayers(list):
         list.append(getConfigListEntry(_("Autoplay start delay"), config.plugins.iptvplayer.autoplay_start_delay))
+        list.append(getConfigListEntry(_("Autoplay picture duration (seconds)"), config.plugins.iptvplayer.autoplay_picture_duration))
         list.append(getConfigListEntry(_("Default video quality"), config.plugins.iptvplayer.preferred_quality))
         list.append(getConfigListEntry(_("Select link automatically"), config.plugins.iptvplayer.auto_select_link))
         list.append(getConfigListEntry(_("Block wmv files"), config.plugins.iptvplayer.ZablokujWMV))
@@ -996,6 +999,7 @@ class ConfigMenu(ConfigBaseWidget):
             config.plugins.iptvplayer.buforowanie_m3u8,
             config.plugins.iptvplayer.buforowanie_rtmp,
             config.plugins.iptvplayer.showcover,
+            config.plugins.iptvplayer.poster_grid,
             # config.plugins.iptvplayer.ListaGraficzna,
             config.plugins.iptvplayer.pluginProtectedByPin,
             config.plugins.iptvplayer.configProtectedByPin,
