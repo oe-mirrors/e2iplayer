@@ -30,6 +30,7 @@
   "cdahd",
   "filmyonline",
   "m4ustream",
+  "m4ufreetv",
   "cdapl",
   "bflix",
   "zaluknijcc",
@@ -341,6 +342,7 @@
  "english": [
   "youtube",
   "m4ustream",
+  "m4ufreetv",
   "twitchtv",
   "webstream",
   "filmclub",
