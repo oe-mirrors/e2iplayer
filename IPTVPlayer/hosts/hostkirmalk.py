@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "07.10.2026"
+LAST_MODIFIED = "20.11.2026"
 # Coding: BY MOHAMED_OS
 # 06.10.2026 - ported to the python3 framework / host standard (kirmalk.com, home now /kr20):
 #   - "Latest", latest episodes, movies, series, the site categories and search, with First page /
@@ -10,6 +10,7 @@ LAST_MODIFIED = "07.10.2026"
 #   - watched flag (series -> episode), downloaded flag, favourites (urls re-based on the current domain),
 #     name normalisation ("Title (Year)", "Show - SxxExx" from the Arabic labels), sidecar, INFO via
 #     moviemeta + the site's story/actors/poster; no colour codes in titles
+# 20.11.2026 - new site layout: movie / latest / series cards, series-profile.php seasons + episodes, new pagers
 import re
 
 from Components.config import ConfigSelection, ConfigText, config, getConfigListEntry
@@ -73,6 +74,11 @@ def _seasonNum(text):
 WATCH_KEY = "watch.php?vid="
 EPISODE_LINK_RE = re.compile(r'<a href="([^"]*)"[^>]*>\s*<div class="episode-number-large">\s*(\d+)')
 ACTOR_SEP_RE = re.compile(r"(?:،|,|\s و)\s*")
+CARD_RE = re.compile(r'<div class="video-card">|<article class="kr-(?:vcard|latest-card|series-tile)\b[^"]*">')
+PAGERS = (("pagination-section", "</ul>"), ('<nav class="kr-latest-pagination', "</nav>"), ('<nav class="kr-pagination', "</nav>"),
+          ('<nav class="kr-directory-pages', "</nav>"))
+# series-profile.php: <article class="kr-episode"><a href="..watch.php?vid=.."> .. <h4>title</h4>
+PROFILE_EPISODE_RE = re.compile(r'(?s)<article class="kr-episode">\s*<a href="([^"]*watch\.php\?vid=[^"]+)".*?<img[^>]+src="([^"]*)".*?<h4>(.*?)</h4>')
 
 
 def _episodeLinks(block):
@@ -242,8 +248,25 @@ class KirMalk(GenericFolderWatchedScraperMixin, CBaseHostClass):
         seriesList = "all-series.php" in url
         seen = set()
         count = 0
-        for item in data.split('<div class="video-card">')[1:]:
-            href = self.cm.ph.getSearchGroups(item, r'<a href="([^"]*watch\.php\?vid=[^"]+)"')[0]
+        # cards: <div class="video-card"> (episodes, categories, search), <article class="kr-vcard"> (movies),
+        # <article class="kr-latest-card"> (latest), <article class="kr-series-tile"> (series -> series-profile.php)
+        for item in CARD_RE.split(data)[1:]:
+            profile = self.cm.ph.getSearchGroups(item, r'<a href="([^"]*series-profile\.php\?id=\d+)"')[0]
+            if profile:
+                rawTitle = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r"(?s)<h3>(.*?)</h3>")[0] or self.cm.ph.getSearchGroups(item, r'<img[^>]+alt="([^"]+)"')[0])
+                if not rawTitle:
+                    continue
+                count += 1
+                show = self._splitTitle(rawTitle)[0] or rawTitle
+                if profile in seen:
+                    continue
+                seen.add(profile)
+                seasons = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r"(?s)</h3>\s*<p>(.*?)</p>")[0])
+                self.addDir({"name": "category", "category": "km_series", "good_for_fav": True, "title": show, "url": self._rebase(profile),
+                             "icon": self.getFullIconUrl(self.cm.ph.getSearchGroups(item, r'<img[^>]+src="([^"]+)"')[0]), "desc": seasons,
+                             "s_title": show, "s_season": 0, "meta_type": "tv", "meta_title": show})
+                continue
+            href = self.cm.ph.getSearchGroups(item, r'<a[^>]+href="([^"]*watch\.php\?vid=[^"]+)"')[0]
             rawTitle = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'<a[^>]+title="([^"]+)"')[0])
             if not href or not rawTitle:
                 continue
@@ -254,7 +277,8 @@ class KirMalk(GenericFolderWatchedScraperMixin, CBaseHostClass):
             if seriesList and (episode or KIND_RE.match(rawTitle)):
                 # the card title of the series list is the show name ("لا احد سواك مدبلج")
                 show = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'(?s)<div class="video-title">\s*<a[^>]*>(.*?)</a>')[0]) or show
-            duration = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'(?s)fa-clock"></i>\s*<span>(.*?)</span>')[0])
+            duration = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'(?s)fa-clock"></i>\s*<span>(.*?)</span>')[0] or
+                                         self.cm.ph.getSearchGroups(item, r'class="kr-(?:latest-)?duration"[^>]*>([^<]+)<')[0])
             if episode or KIND_RE.match(rawTitle):
                 key = (show.lower(), season)
                 if not show or key in seen:
@@ -277,8 +301,13 @@ class KirMalk(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 self.addVideo({"name": "category", "category": "km_video", "good_for_fav": True, "title": title, "url": url, "icon": icon,
                                "desc": desc, "meta_type": "movie", "meta_title": show or rawTitle, "meta_year": year})
 
-        # pager links: movies.php?&page=N, category.php?cat=x&page=N&order=DESC, search.php?keywords=x&page=N
-        pager = self.cm.ph.getDataBeetwenMarkers(data, "pagination-section", "</ul>", False)[1]
+        # pager links: movies02?page=N, newvideos.php?&page=N, series01?q=&type=&page=N, category.php?cat=x&page=N&order=DESC,
+        # search.php?keywords=x&page=N
+        pager = ""
+        for start, end in PAGERS:
+            pager = self.cm.ph.getDataBeetwenMarkers(data, start, end, False)[1]
+            if pager:
+                break
         nums = [int(n) for n in re.findall(r"<a[^>]*>\s*(\d+)\s*</a>", pager)]
         lastPage = max(nums + [page])
         pageTpl = ""
@@ -296,9 +325,23 @@ class KirMalk(GenericFolderWatchedScraperMixin, CBaseHostClass):
         sts, data = self.getPage(cItem["url"])
         if not sts:
             return
+        if "series-profile.php" in cItem["url"]:
+            self.listProfile(cItem, data)
+            return
         show = cItem.get("s_title", "") or cItem.get("title", "")
         season = cItem.get("s_season", 0) or 1
         block = self.cm.ph.getDataBeetwenMarkers(data, 'class="episodes-grid-classic"', "</section>", False)[1]
+        profile = self.cm.ph.getSearchGroups(data, r'href="([^"]*series-profile\.php\?id=\d+)"')[0]
+        if not block and profile:
+            # since 11.2026 the episode page has no episode box any more: the series page has them
+            url = self._rebase(profile)
+            if cItem.get("s_season"):
+                url += "&season=%s" % cItem["s_season"]
+            sts, data = self.getPage(url)
+            if sts:
+                self.listProfile(dict(cItem, url=url, page=1), data)
+                if self.currList:
+                    return
         normalize = IsMediaNamingNormalized()
         episodes = []
         for href, num in _episodeLinks(block):
@@ -325,6 +368,42 @@ class KirMalk(GenericFolderWatchedScraperMixin, CBaseHostClass):
             params = dict(cItem)
             params.update({"category": "km_video", "good_for_fav": True})
             self.addVideo(params)
+
+    def listProfile(self, cItem, data):
+        # series-profile.php?id=N[&season=S][&page=P]: season tabs, then the episodes of one season in site pages
+        printDBG("KirMalk.listProfile [%s]" % cItem.get("url", ""))
+        url = re.sub(r"&page=\d+", "", cItem["url"].split("#", 1)[0])
+        title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'(?s)<h1 id="series-title">(.*?)</h1>')[0])
+        show = cItem.get("s_title", "") or self._splitTitle(title)[0] or cItem.get("title", "")
+        normalize = IsMediaNamingNormalized()
+        tabs = self.cm.ph.getDataBeetwenMarkers(data, '<nav class="kr-season-tabs', "</nav>", False)[1]
+        seasons = [(self._rebase(href).split("#", 1)[0], int(num)) for href, num in re.findall(r'<a[^>]+href="([^"]+)"[^>]*>[^<]*?(\d+)\s*</a>', tabs)]
+        if len(seasons) > 1 and "season=" not in url:
+            for seasonUrl, num in seasons:
+                seasonTitle = ("%s - %s" % (show, formatSxxExx(num))) if normalize else "%s - %s %d" % (show, _("Season"), num)
+                params = dict(cItem)
+                params.update({"good_for_fav": True, "title": seasonTitle, "url": seasonUrl, "s_title": show, "s_season": num, "page": 1})
+                self.addDir(params)
+            return
+        active = self.cm.ph.getSearchGroups(tabs, r'class="kr-button active"[^>]*>[^<]*?(\d+)\s*<')[0]
+        season = int(active) if active else (cItem.get("s_season", 0) or 1)
+        page = cItem.get("page", 1)
+        block = self.cm.ph.getDataBeetwenMarkers(data, '<div class="kr-episodes">', "</section>", False)[1]
+        for idx, (href, icon, label) in enumerate(PROFILE_EPISODE_RE.findall(block)):
+            label = self.cleanHtmlStr(label)
+            num = self.cm.ph.getSearchGroups(label, EPISODE_RE.pattern)[0] or str(idx + 1)
+            if normalize:
+                epTitle = "%s - %s" % (show, formatSxxExx(season, num))
+            else:
+                epTitle = "%s - %s %s" % (show, _("Episode"), num)
+            self.addVideo({"name": "category", "category": "km_video", "good_for_fav": True, "title": epTitle, "url": self._rebase(href),
+                           "icon": self.getFullIconUrl(icon) or cItem.get("icon", ""), "desc": "", "s_title": show, "s_season": season, "s_episode": num,
+                           "meta_type": "tv", "meta_title": cItem.get("meta_title", show)})
+        # <nav class="kr-pagination"><span>1 / 2</span><a href="..&page=2#episodes">
+        pager = self.cm.ph.getDataBeetwenMarkers(data, '<nav class="kr-pagination', "</nav>", False)[1]
+        lastPage = int(self.cm.ph.getSearchGroups(pager, r"\d+\s*/\s*(\d+)")[0] or page)
+        if lastPage > 1:
+            addPagingItems(self, dict(cItem, url=url), page, page < lastPage, lastPage, self._rebase(url) + "&page={page}")
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("KirMalk.listSearchResult [%s]" % searchPattern)
