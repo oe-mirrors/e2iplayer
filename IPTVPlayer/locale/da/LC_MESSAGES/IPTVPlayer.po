@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 10:48+0000\n"
+"POT-Creation-Date: 2026-11-20 17:54+0000\n"
 "PO-Revision-Date: 2026-10-08 20:17+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Danish\n"
@@ -370,9 +370,6 @@ msgstr "3. Løs den. Resultatet sendes automatisk tilbage til modtageren, og cap
 
 msgid "30 seconds"
 msgstr "30 sekunder"
-
-msgid "4K movies"
-msgstr "4K-film"
 
 msgid "5 seconds"
 msgstr "5 sekunder"
@@ -847,6 +844,9 @@ msgstr "Slå eksterne undertekster til automatisk"
 
 msgid "Automotive"
 msgstr "Biler og motor"
+
+msgid "Autoplay picture duration (seconds)"
+msgstr ""
 
 msgid "Autoplay start delay"
 msgstr "Startforsinkelse for autoafspilning"
@@ -2178,6 +2178,9 @@ msgstr "Udvidet"
 
 msgid "External movie player config"
 msgstr "Konfiguration af ekstern filmafspiller"
+
+msgid "Extra large"
+msgstr ""
 
 msgid "Extracted subtitle file is empty or missing."
 msgstr "Den udpakkede undertekstfil er tom eller mangler."
@@ -3805,6 +3808,9 @@ msgstr "Næste side"
 msgid "No"
 msgstr "Nej"
 
+msgid "No RSS / Atom feed at this address."
+msgstr ""
+
 msgid "No YouTube video found for this track."
 msgstr "Ingen YouTube-video fundet til dette nummer."
 
@@ -4835,6 +4841,9 @@ msgstr ""
 msgid "Round"
 msgstr "Runde"
 
+msgid "Rows per page of long seasons and lists"
+msgstr ""
+
 msgid "Runtime"
 msgstr "Spilletid"
 
@@ -5812,6 +5821,9 @@ msgstr "Justering af tekstfelter"
 msgid "Text files ytlist and urllist are in:"
 msgstr "Tekstfilerne ytlist og urllist ligger i:"
 
+msgid "Text files ytlist, urllist and feedlist are in:"
+msgstr ""
+
 msgid "Thai"
 msgstr "Thai"
 
@@ -5947,6 +5959,9 @@ msgstr "Hosten returnerede ikke en liste."
 msgid "The host wanted to open a window on the TV (%s) - that only works on the receiver."
 msgstr "Hosten ville åbne et vindue på tv'et (%s) - det virker kun på modtageren."
 
+msgid "The hoster is still processing this video. Please try again later."
+msgstr ""
+
 msgid "The hoster sends an advert redirect instead of the video at the moment. Try another hoster."
 msgstr "Hosteren sender i øjeblikket en reklameomdirigering i stedet for videoen. Prøv en anden hoster."
 
@@ -6045,6 +6060,12 @@ msgstr "Sidens browsertjek kunne ikke bestås."
 
 msgid "The site's catalogue could not be loaded."
 msgstr "Sidens katalog kunne ikke indlæses."
+
+msgid "The site's web player key could not be read - please try again later."
+msgstr ""
+
+msgid "The stream server does not answer at the moment. Try another link or later."
+msgstr ""
 
 msgid "The support package holds the versions, the system information, the enabled hosts and the end of the debug log in one text file for a problem report. Look through it before posting it - the log can contain addresses of the sites you opened."
 msgstr "Supportpakken samler versionerne, systemoplysningerne, de aktiverede hosts og slutningen af debug-loggen i én tekstfil til en fejlrapport. Gennemse den, før du offentliggør den - loggen kan indeholde adresser på de sider, du har åbnet."

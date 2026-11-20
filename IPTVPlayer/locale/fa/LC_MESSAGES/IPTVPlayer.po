@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 10:48+0000\n"
+"POT-Creation-Date: 2026-11-20 17:54+0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Persian Prince <persianpros@gmail.com>\n"
 "Language-Team: IPTVPlayer\n"
@@ -373,9 +373,6 @@ msgstr "3. آن را حل کنید. نتیجه خودبه‌خود به گیرن
 
 msgid "30 seconds"
 msgstr "30 ثانیه"
-
-msgid "4K movies"
-msgstr "فیلم‌های 4K"
 
 msgid "5 seconds"
 msgstr "5 ثانیه"
@@ -850,6 +847,9 @@ msgstr "روشن کردن خودکار زیرنویس خارجی"
 
 msgid "Automotive"
 msgstr "خودرو"
+
+msgid "Autoplay picture duration (seconds)"
+msgstr ""
 
 msgid "Autoplay start delay"
 msgstr "تأخیر شروع پخش خودکار"
@@ -2181,6 +2181,9 @@ msgstr "گسترده"
 
 msgid "External movie player config"
 msgstr "تنظیمات پخش‌کننده خارجی فیلم"
+
+msgid "Extra large"
+msgstr ""
 
 msgid "Extracted subtitle file is empty or missing."
 msgstr "فایل زیرنویس استخراج‌شده خالی است یا وجود ندارد."
@@ -3808,6 +3811,9 @@ msgstr "صفحه بعد"
 msgid "No"
 msgstr "خیر"
 
+msgid "No RSS / Atom feed at this address."
+msgstr ""
+
 msgid "No YouTube video found for this track."
 msgstr "هیچ ویدیوی YouTube برای این قطعه پیدا نشد."
 
@@ -4838,6 +4844,9 @@ msgstr ""
 msgid "Round"
 msgstr "دور"
 
+msgid "Rows per page of long seasons and lists"
+msgstr ""
+
 msgid "Runtime"
 msgstr "مدت زمان"
 
@@ -5815,6 +5824,9 @@ msgstr "تراز فیلد متن"
 msgid "Text files ytlist and urllist are in:"
 msgstr "فایل‌های متنی ytlist و urllist در این مسیر هستند:"
 
+msgid "Text files ytlist, urllist and feedlist are in:"
+msgstr ""
+
 msgid "Thai"
 msgstr "تایلندی"
 
@@ -5950,6 +5962,9 @@ msgstr "میزبان فهرستی برنگرداند."
 msgid "The host wanted to open a window on the TV (%s) - that only works on the receiver."
 msgstr "میزبان می‌خواست پنجره‌ای روی تلویزیون باز کند (%s) - این فقط روی گیرنده کار می‌کند."
 
+msgid "The hoster is still processing this video. Please try again later."
+msgstr ""
+
 msgid "The hoster sends an advert redirect instead of the video at the moment. Try another hoster."
 msgstr "این میزبان در حال حاضر به‌جای ویدیو به تبلیغ هدایت می‌کند. میزبان دیگری را امتحان کنید."
 
@@ -6048,6 +6063,12 @@ msgstr "بررسی مرورگر سایت با موفقیت پشت سر گذاش�
 
 msgid "The site's catalogue could not be loaded."
 msgstr "کاتالوگ سایت بارگذاری نشد."
+
+msgid "The site's web player key could not be read - please try again later."
+msgstr ""
+
+msgid "The stream server does not answer at the moment. Try another link or later."
+msgstr ""
 
 msgid "The support package holds the versions, the system information, the enabled hosts and the end of the debug log in one text file for a problem report. Look through it before posting it - the log can contain addresses of the sites you opened."
 msgstr "بسته پشتیبانی شامل نسخه‌ها، اطلاعات سیستم، میزبان‌های فعال و انتهای گزارش اشکال‌زدایی در یک فایل متنی برای گزارش مشکل است. پیش از ارسال آن را بررسی کنید - گزارش ممکن است شامل نشانی سایت‌هایی باشد که باز کرده‌اید."

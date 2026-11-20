@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 10:48+0000\n"
+"POT-Creation-Date: 2026-11-20 17:54+0000\n"
 "PO-Revision-Date: 2026-07-27 16:28+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -375,9 +375,6 @@ msgstr "3. Vyriešte ju. Výsledok sa sám odošle späť do prijímača a okno 
 
 msgid "30 seconds"
 msgstr "30 sekúnd"
-
-msgid "4K movies"
-msgstr "4K filmy"
 
 msgid "5 seconds"
 msgstr "5 sekúnd"
@@ -852,6 +849,9 @@ msgstr "Automatické zapínanie externých titulkov"
 
 msgid "Automotive"
 msgstr "Auto-moto"
+
+msgid "Autoplay picture duration (seconds)"
+msgstr ""
 
 msgid "Autoplay start delay"
 msgstr "Oneskorenie spustenia automatického prehrávania"
@@ -2183,6 +2183,9 @@ msgstr "Rozšírený"
 
 msgid "External movie player config"
 msgstr "Konfigurácia externého prehrávača filmov"
+
+msgid "Extra large"
+msgstr ""
 
 msgid "Extracted subtitle file is empty or missing."
 msgstr "Extrahovaný súbor s titulkami je prázdny alebo chýba."
@@ -3814,6 +3817,9 @@ msgstr "Ďalšia stránka"
 msgid "No"
 msgstr "Nie"
 
+msgid "No RSS / Atom feed at this address."
+msgstr ""
+
 msgid "No YouTube video found for this track."
 msgstr "Pre túto skladbu sa nenašlo žiadne video YouTube."
 
@@ -4845,6 +4851,9 @@ msgstr ""
 msgid "Round"
 msgstr "Kolo"
 
+msgid "Rows per page of long seasons and lists"
+msgstr ""
+
 msgid "Runtime"
 msgstr "Dĺžka"
 
@@ -5822,6 +5831,9 @@ msgstr "Zarovnanie textových polí"
 msgid "Text files ytlist and urllist are in:"
 msgstr "Textové súbory ytlist a urllist sú v:"
 
+msgid "Text files ytlist, urllist and feedlist are in:"
+msgstr ""
+
 msgid "Thai"
 msgstr "Thajské"
 
@@ -5957,6 +5969,9 @@ msgstr "Hostiteľ nevrátil zoznam."
 msgid "The host wanted to open a window on the TV (%s) - that only works on the receiver."
 msgstr "Hostiteľ chcel otvoriť okno na televízore (%s) - to funguje iba na prijímači."
 
+msgid "The hoster is still processing this video. Please try again later."
+msgstr ""
+
 msgid "The hoster sends an advert redirect instead of the video at the moment. Try another hoster."
 msgstr "Hoster momentálne namiesto videa posiela presmerovanie na reklamu. Skúste iný hoster."
 
@@ -6055,6 +6070,12 @@ msgstr "Kontrolu prehliadača stránky sa nepodarilo prejsť."
 
 msgid "The site's catalogue could not be loaded."
 msgstr "Katalóg stránky sa nepodarilo načítať."
+
+msgid "The site's web player key could not be read - please try again later."
+msgstr ""
+
+msgid "The stream server does not answer at the moment. Try another link or later."
+msgstr ""
 
 msgid "The support package holds the versions, the system information, the enabled hosts and the end of the debug log in one text file for a problem report. Look through it before posting it - the log can contain addresses of the sites you opened."
 msgstr "Balík podpory obsahuje verzie, systémové informácie, povolených hostiteľov a koniec ladiaceho denníka v jednom textovom súbore pre hlásenie problému. Pred zverejnením si ho prezrite - denník môže obsahovať adresy stránok, ktoré ste otvorili."

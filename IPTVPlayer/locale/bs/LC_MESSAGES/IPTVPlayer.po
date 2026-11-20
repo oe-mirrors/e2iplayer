@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 10:48+0000\n"
+"POT-Creation-Date: 2026-11-20 17:54+0000\n"
 "PO-Revision-Date: 2026-10-24 23:30+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Bosnian\n"
@@ -370,9 +370,6 @@ msgstr "3. Riješite je. Rezultat se sam vraća na prijemnik i prozor captcha se
 
 msgid "30 seconds"
 msgstr "30 sekundi"
-
-msgid "4K movies"
-msgstr "4K filmovi"
 
 msgid "5 seconds"
 msgstr "5 sekundi"
@@ -847,6 +844,9 @@ msgstr "Automatski uključi vanjske titlove"
 
 msgid "Automotive"
 msgstr "Automobili"
+
+msgid "Autoplay picture duration (seconds)"
+msgstr ""
 
 msgid "Autoplay start delay"
 msgstr "Kašnjenje početka automatske reprodukcije"
@@ -2178,6 +2178,9 @@ msgstr "Prošireno"
 
 msgid "External movie player config"
 msgstr "Konfiguracija vanjskog plejera filmova"
+
+msgid "Extra large"
+msgstr ""
 
 msgid "Extracted subtitle file is empty or missing."
 msgstr "Izdvojena datoteka titlova je prazna ili nedostaje."
@@ -3805,6 +3808,9 @@ msgstr "Sljedeća stranica"
 msgid "No"
 msgstr "Ne"
 
+msgid "No RSS / Atom feed at this address."
+msgstr ""
+
 msgid "No YouTube video found for this track."
 msgstr "Nije pronađen YouTube video za ovu numeru."
 
@@ -4835,6 +4841,9 @@ msgstr ""
 msgid "Round"
 msgstr "Kolo"
 
+msgid "Rows per page of long seasons and lists"
+msgstr ""
+
 msgid "Runtime"
 msgstr "Trajanje"
 
@@ -5812,6 +5821,9 @@ msgstr "Poravnanje tekstualnih polja"
 msgid "Text files ytlist and urllist are in:"
 msgstr "Tekstualne datoteke ytlist i urllist nalaze se u:"
 
+msgid "Text files ytlist, urllist and feedlist are in:"
+msgstr ""
+
 msgid "Thai"
 msgstr "Tajlandski"
 
@@ -5947,6 +5959,9 @@ msgstr "Host nije vratio listu."
 msgid "The host wanted to open a window on the TV (%s) - that only works on the receiver."
 msgstr "Host je želio otvoriti prozor na televizoru (%s) - to radi samo na prijemniku."
 
+msgid "The hoster is still processing this video. Please try again later."
+msgstr ""
+
 msgid "The hoster sends an advert redirect instead of the video at the moment. Try another hoster."
 msgstr "Hoster trenutno šalje reklamno preusmjeravanje umjesto video snimka. Pokušajte drugi hoster."
 
@@ -6045,6 +6060,12 @@ msgstr "Provjera preglednika na sajtu nije se mogla proći."
 
 msgid "The site's catalogue could not be loaded."
 msgstr "Katalog sajta se nije mogao učitati."
+
+msgid "The site's web player key could not be read - please try again later."
+msgstr ""
+
+msgid "The stream server does not answer at the moment. Try another link or later."
+msgstr ""
 
 msgid "The support package holds the versions, the system information, the enabled hosts and the end of the debug log in one text file for a problem report. Look through it before posting it - the log can contain addresses of the sites you opened."
 msgstr "Paket za podršku sadrži verzije, informacije o sistemu, uključene hostove i kraj debug loga u jednoj tekstualnoj datoteci za prijavu problema. Pregledajte ga prije objavljivanja - log može sadržavati adrese sajtova koje ste otvarali."

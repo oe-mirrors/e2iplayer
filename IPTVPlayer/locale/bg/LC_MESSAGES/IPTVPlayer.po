@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 10:48+0000\n"
+"POT-Creation-Date: 2026-11-20 17:54+0000\n"
 "PO-Revision-Date: 2026-10-08 20:17+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Bulgarian\n"
@@ -370,9 +370,6 @@ msgstr "3. Решете го. Резултатът се връща автома�
 
 msgid "30 seconds"
 msgstr "30 секунди"
-
-msgid "4K movies"
-msgstr "4K филми"
 
 msgid "5 seconds"
 msgstr "5 секунди"
@@ -847,6 +844,9 @@ msgstr "Автоматично включване на външни субтит
 
 msgid "Automotive"
 msgstr "Автомобили"
+
+msgid "Autoplay picture duration (seconds)"
+msgstr ""
 
 msgid "Autoplay start delay"
 msgstr "Забавяне на автоматичното възпроизвеждане"
@@ -2178,6 +2178,9 @@ msgstr "Разширени"
 
 msgid "External movie player config"
 msgstr "Настройки на външния плейър"
+
+msgid "Extra large"
+msgstr ""
 
 msgid "Extracted subtitle file is empty or missing."
 msgstr "Извлеченият файл със субтитри е празен или липсва."
@@ -3805,6 +3808,9 @@ msgstr "Следваща страница"
 msgid "No"
 msgstr "Не"
 
+msgid "No RSS / Atom feed at this address."
+msgstr ""
+
 msgid "No YouTube video found for this track."
 msgstr "Не е намерено YouTube видео за тази песен."
 
@@ -4835,6 +4841,9 @@ msgstr ""
 msgid "Round"
 msgstr "Кръг"
 
+msgid "Rows per page of long seasons and lists"
+msgstr ""
+
 msgid "Runtime"
 msgstr "Продължителност"
 
@@ -5812,6 +5821,9 @@ msgstr "Подравняване на текстовите полета"
 msgid "Text files ytlist and urllist are in:"
 msgstr "Текстовите файлове ytlist и urllist са в:"
 
+msgid "Text files ytlist, urllist and feedlist are in:"
+msgstr ""
+
 msgid "Thai"
 msgstr "Тайландски"
 
@@ -5947,6 +5959,9 @@ msgstr "Хостът не върна списък."
 msgid "The host wanted to open a window on the TV (%s) - that only works on the receiver."
 msgstr "Хостът искаше да отвори прозорец на телевизора (%s) - това работи само на приемника."
 
+msgid "The hoster is still processing this video. Please try again later."
+msgstr ""
+
 msgid "The hoster sends an advert redirect instead of the video at the moment. Try another hoster."
 msgstr "В момента хостерът изпраща рекламно пренасочване вместо видеото. Опитайте друг хостер."
 
@@ -6045,6 +6060,12 @@ msgstr "Проверката на браузъра от сайта не можа
 
 msgid "The site's catalogue could not be loaded."
 msgstr "Каталогът на сайта не можа да бъде зареден."
+
+msgid "The site's web player key could not be read - please try again later."
+msgstr ""
+
+msgid "The stream server does not answer at the moment. Try another link or later."
+msgstr ""
 
 msgid "The support package holds the versions, the system information, the enabled hosts and the end of the debug log in one text file for a problem report. Look through it before posting it - the log can contain addresses of the sites you opened."
 msgstr "Пакетът за поддръжка съдържа версиите, системната информация, включените хостове и края на дебъг лога в един текстов файл за доклад за проблем. Прегледайте го, преди да го публикувате - логът може да съдържа адреси на сайтовете, които сте отваряли."

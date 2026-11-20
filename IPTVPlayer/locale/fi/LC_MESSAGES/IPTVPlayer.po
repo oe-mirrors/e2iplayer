@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 10:48+0000\n"
+"POT-Creation-Date: 2026-11-20 17:54+0000\n"
 "PO-Revision-Date: 2026-10-24 23:30+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Finnish\n"
@@ -370,9 +370,6 @@ msgstr "3. Ratkaise se. Tulos palautuu vastaanottimeen itsestään ja captcha-ik
 
 msgid "30 seconds"
 msgstr "30 sekuntia"
-
-msgid "4K movies"
-msgstr "4K-elokuvat"
 
 msgid "5 seconds"
 msgstr "5 sekuntia"
@@ -847,6 +844,9 @@ msgstr "Ota ulkoiset tekstitykset käyttöön automaattisesti"
 
 msgid "Automotive"
 msgstr "Autot ja moottorit"
+
+msgid "Autoplay picture duration (seconds)"
+msgstr ""
 
 msgid "Autoplay start delay"
 msgstr "Automaattisen toiston aloitusviive"
@@ -2178,6 +2178,9 @@ msgstr "Laajennettu"
 
 msgid "External movie player config"
 msgstr "Ulkoisen elokuvasoittimen asetukset"
+
+msgid "Extra large"
+msgstr ""
 
 msgid "Extracted subtitle file is empty or missing."
 msgstr "Purettu tekstitystiedosto on tyhjä tai puuttuu."
@@ -3805,6 +3808,9 @@ msgstr "Seuraava sivu"
 msgid "No"
 msgstr "Ei"
 
+msgid "No RSS / Atom feed at this address."
+msgstr ""
+
 msgid "No YouTube video found for this track."
 msgstr "Tälle kappaleelle ei löytynyt YouTube-videota."
 
@@ -4835,6 +4841,9 @@ msgstr ""
 msgid "Round"
 msgstr "Kierros"
 
+msgid "Rows per page of long seasons and lists"
+msgstr ""
+
 msgid "Runtime"
 msgstr "Kesto"
 
@@ -5812,6 +5821,9 @@ msgstr "Tekstikentän tasaus"
 msgid "Text files ytlist and urllist are in:"
 msgstr "Tekstitiedostot ytlist ja urllist sijaitsevat kansiossa:"
 
+msgid "Text files ytlist, urllist and feedlist are in:"
+msgstr ""
+
 msgid "Thai"
 msgstr "Thai"
 
@@ -5947,6 +5959,9 @@ msgstr "Palvelu ei palauttanut luetteloa."
 msgid "The host wanted to open a window on the TV (%s) - that only works on the receiver."
 msgstr "Palvelu halusi avata ikkunan televisiossa (%s) - se toimii vain vastaanottimella."
 
+msgid "The hoster is still processing this video. Please try again later."
+msgstr ""
+
 msgid "The hoster sends an advert redirect instead of the video at the moment. Try another hoster."
 msgstr "Videopalvelu lähettää tällä hetkellä mainosuudelleenohjauksen videon sijaan. Kokeile toista videopalvelua."
 
@@ -6045,6 +6060,12 @@ msgstr "Sivuston selaintarkistuksen läpäiseminen ei onnistunut."
 
 msgid "The site's catalogue could not be loaded."
 msgstr "Sivuston luetteloa ei voitu ladata."
+
+msgid "The site's web player key could not be read - please try again later."
+msgstr ""
+
+msgid "The stream server does not answer at the moment. Try another link or later."
+msgstr ""
 
 msgid "The support package holds the versions, the system information, the enabled hosts and the end of the debug log in one text file for a problem report. Look through it before posting it - the log can contain addresses of the sites you opened."
 msgstr "Tukipaketti kokoaa versiot, järjestelmätiedot, käytössä olevat palvelut ja vianetsintälokin lopun yhteen tekstitiedostoon ongelmaraporttia varten. Käy se läpi ennen julkaisemista - loki voi sisältää avaamiesi sivustojen osoitteita."
