@@ -17,7 +17,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvlcd import addLcdSources, colo
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdownloadercreator import DownloaderCreator
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
-from Plugins.Extensions.IPTVPlayer.components.cover import Cover3
+from Plugins.Extensions.IPTVPlayer.components.cover import Cover, Cover3
 from Plugins.Extensions.IPTVPlayer.components import skinchrome
 from Plugins.Extensions.IPTVPlayer.tools.listselection import isZapToAnswer
 ###################################################
@@ -113,6 +113,12 @@ class E2iPlayerBufferingWidget(Screen):
         # addinfo - sits just above the footer band now
         a_x = 10
         a_y = sz_h - footerH - a_h - 10
+        # cover of the title (the list row's picture) left of the animation, a 2:3 poster box; a wider picture
+        # keeps its shape inside it
+        v_h = int((a_y - headerH) * 0.7)
+        v_w = v_h * 2 // 3
+        v_x = max(10, i_x - skinchrome.scalePixels(40, scale) - v_w)
+        v_y = headerH + (a_y - headerH - v_h) // 2
 
         # footer - background band + shadow divider only, no left icons/
         # color keys of its own (OK/REC/EXIT stay separate, runtime-
@@ -131,6 +137,7 @@ class E2iPlayerBufferingWidget(Screen):
          <widget name="percentage" size="%d,%d"   position="%d,%d"  zPosition="5" valign="center" halign="center"  font="Regular;%d" backgroundColor="black" transparent="1" /> #foregroundColor="white" shadowColor="black" shadowOffset="-1,-1"
          <widget name="console"    size="%d,%d"   position="%d,%d"  zPosition="5" valign="center" halign="center"  font="Regular;%d" backgroundColor="black" transparent="1" />
          <widget name="icon"       size="%d,%d"   position="%d,%d"  zPosition="4" transparent="1" alphatest="blend" />
+         <widget name="cover"      size="%d,%d"   position="%d,%d"  zPosition="4" transparent="1" alphatest="blend" />
          <widget name="addinfo"    size="%d,%d"   position="%d,%d"  zPosition="5" valign="center" halign="center"  font="Regular;%d" backgroundColor="black" transparent="1" />
          %s
          <widget name="ok_button"        position="%d,%d"                     size="%d,%d"   zPosition="8" transparent="1" alphatest="blend" />
@@ -141,6 +148,7 @@ class E2iPlayerBufferingWidget(Screen):
                         p_w, p_h, p_x, p_y, fontSize,  # percentage
                         c_w, c_h, c_x, c_y, fontSize,  # console
                         i_w, i_h, i_x, i_y,  # icon
+                        v_w, v_h, v_x, v_y,  # cover
                         a_w, a_h, a_x, a_y, fontSize,  # addinfo
                         footerPart,  # footer band
 
@@ -200,6 +208,9 @@ class E2iPlayerBufferingWidget(Screen):
         # onLayoutFinish instead, the standard hook for touching widget
         # instances post-skin-apply.
 
+        # the title's picture beside the animation (the list row's cover; nothing without one)
+        self["cover"] = Cover()
+        self.coverPath = playerAdditionalParams.get('cover_path', '') or ''
         self["icon"] = SimpleAnimatedCover()
         # prepare icon frames path - tiered per-resolution frames
         # (icons/HD|FHD|WQHD/buffering/buffering_N.png), same iconBase as
@@ -694,6 +705,26 @@ class E2iPlayerBufferingWidget(Screen):
         self['ok_button'].setPixmap(LoadPixmap(_iconBase + '/ok.png'))
         self['rec_button'].setPixmap(LoadPixmap(_iconBase + '/rec.png'))
         self['exit_button'].setPixmap(LoadPixmap(_iconBase + '/exit.png'))
+        self.__showCover()
+
+    def __showCover(self):
+        # an external skin without the "cover" widget simply shows none
+        cover = self['cover']
+        if cover.instance is None or not self.coverPath or not fileExists(self.coverPath):
+            if cover.instance is not None:
+                cover.hide()
+            return
+        try:
+            if -1 == cover.decodePreparedCover(self.coverPath, self.__coverDecoded, 'bufferingCover'):
+                cover.hide()
+        except Exception:
+            printExc()
+            cover.hide()
+
+    def __coverDecoded(self, ret):
+        if ret.get('Pixmap') is not None and self['cover'].instance is not None:
+            self['cover'].updatePixmap(ret['Pixmap'], ret.get('FileName', self.coverPath))
+            self['cover'].show()
 
     def __onClose(self):
         printDBG('E2iPlayerBufferingWidget.__onClose ------------------------------------')

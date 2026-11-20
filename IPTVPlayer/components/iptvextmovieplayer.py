@@ -27,7 +27,7 @@
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
 from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import shellQuote, subtitleSidecarFiles
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
-from Plugins.Extensions.IPTVPlayer.components.cover import Cover3
+from Plugins.Extensions.IPTVPlayer.components.cover import Cover, Cover3
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetSubtitlesDir, eConnectCallback, \
                                                           GetE2VideoAspectChoices, GetE2VideoAspect, SetE2VideoAspect, GetE2VideoPolicyChoices, \
                                                           GetE2VideoPolicy, SetE2VideoPolicy, GetDefaultLang, GetPolishSubEncoding, iptv_system, \
@@ -40,7 +40,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.iptvsubdownloader import IPTVSubDownloaderWidget
 from Plugins.Extensions.IPTVPlayer.components.iptvsubsimpledownloader import IPTVSubSimpleDownloaderWidget
 from Plugins.Extensions.IPTVPlayer.components.iptvchoicebox import IPTVChoiceBoxWidget, IPTVChoiceBoxItem
-from Plugins.Extensions.IPTVPlayer.components.iptvplayerinfopanel import PlayerInfoPanel
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinfopanel import PlayerInfoPanel, audioText
 from Plugins.Extensions.IPTVPlayer.components.iptvlist import IPTVPlaylistChoiceBoxList
 from Plugins.Extensions.IPTVPlayer.tools import listselection
 from Plugins.Extensions.IPTVPlayer.components.iptvdirbrowser import IPTVFileSelectorWidget
@@ -259,6 +259,9 @@ class IPTVExtMoviePlayer(Screen):
     # canvas - see resolution="1280,720" on their <screen> tags
     REF_W = 1280
     REF_H = 720
+    # startCover on the 1280x720 canvas: a 2:3 poster box in the middle, above the infobar; and the longest time it stays
+    START_COVER_BOX = (500, 130, 280, 420)
+    START_COVER_TIMEOUT = 60  # s
     # rectangles of one image subtitle (MAX_RECT_DESC in exteplayer3's graphic_subtitle.c)
     GRAPHIC_SUB_RECTS = 4
 
@@ -466,7 +469,11 @@ class IPTVExtMoviePlayer(Screen):
             subSkin
         )  # 00000000 bottom
         # added here, not in the playerskin.xml files: every player skin gets the panel of the INFO key
-        skin = skin.replace('</screen>', PlayerInfoPanel.skinWidgets(1.0 if self.skinUsesRefCanvas else dw / float(self.REF_W)) + '</screen>')
+        refScale = 1.0 if self.skinUsesRefCanvas else dw / float(self.REF_W)
+        skin = skin.replace('</screen>', PlayerInfoPanel.skinWidgets(refScale) + '</screen>')
+        # the title's poster in the middle while the stream opens (startCover), under the infobar and "Please wait"
+        skin = skin.replace('</screen>', '<widget name="startCover" position="%d,%d" size="%d,%d" zPosition="1" transparent="1" alphatest="blend" /></screen>'
+                            % tuple(int(v * refScale) for v in self.START_COVER_BOX))
 
         sub = None
         return skin
@@ -800,6 +807,7 @@ class IPTVExtMoviePlayer(Screen):
         self.onShow.append(self.onStart)
         self.onLayoutFinish.append(self.fixWindowGeometry)
         self.onLayoutFinish.append(self.initPleaseWaitBox)
+        self.onLayoutFinish.append(self.showStartCover)
         # self.onLayoutFinish.append(self.onStart)
 
         self.console = None
@@ -838,6 +846,12 @@ class IPTVExtMoviePlayer(Screen):
         if self.clockFormat:
             self['clockTime'] = Label(" ")
         self['pleaseWait'] = Label(_("Opening. Please wait..."))
+        # the list row's picture while the stream opens: on the black screen before the first frame only - hidden
+        # as soon as playback runs, at the latest after START_COVER_TIMEOUT
+        self['startCover'] = Cover()
+        self.startCoverPath = additionalParams.get('cover_path', '') or ''
+        self.startCoverTimer = eTimer()
+        self.startCoverTimer_conn = eConnectCallback(self.startCoverTimer.timeout, self.hideStartCover)
 
         # for subtitles
         self.infoBanerOffsetY = -1
@@ -2014,6 +2028,7 @@ class IPTVExtMoviePlayer(Screen):
                     prevCTime = self.playback['CurrentTime']
                     self.playback['CurrentTime'] = stsObj['CurrentTime']
                     if 0 < self.playback['CurrentTime']:
+                        self.hideStartCover()
                         self.playback['StartGoToSeekTime'] = self.playback['CurrentTime']
                         diff = self.playback['CurrentTime'] - prevCTime
                         if diff > 0 and diff < 3:  # CurrentTime in seconds
@@ -2336,11 +2351,12 @@ class IPTVExtMoviePlayer(Screen):
         return 'eplayer' == self.player and bool(self.playback['AudioTrack']) and not self.playback['VideoTrack']
 
     def _screenSaverTimeText(self):
+        # playback time and the audio format of the stream ("0:01:23 / 0:03:45 | MP3"; "AAC (eng)")
         currTime = self['currTimeLabel'].getText()
         length = self.playback.get('Length') or 0
-        if length > 0:
-            return "%s / %s" % (currTime, self['lengthTimeLabel'].getText())
-        return currTime
+        text = "%s / %s" % (currTime, self['lengthTimeLabel'].getText()) if length > 0 else currTime
+        audio = audioText(self.playback.get('AudioTrack'))
+        return " | ".join(x for x in (text, audio) if x)
 
     def goSubKey(self, direction, state='press'):
         if not self.subHandler['enabled'] or None is self.metaHandler.getSubtitleTrack():
@@ -2559,6 +2575,8 @@ class IPTVExtMoviePlayer(Screen):
                     tmpTrack = _mapTrack(obj, True)
                     if tmpTrack.get('id', -1) > -1:
                         self.playbackUpdateInfo({'VideoTrack': tmpTrack})
+                        # the picture is decoded from now on
+                        self.hideStartCover()
                 elif "a_c" == key:
                     tmpTrack = _mapTrack(obj)
                     if tmpTrack.get('id', -1) > -1:
@@ -2665,6 +2683,8 @@ class IPTVExtMoviePlayer(Screen):
         printDBG(">>>>>>>>>>>>>>>>>>>>>> __onClose")
         self.isClosing = True
         self.playback['Active'] = False
+        self.hideStartCover()
+        self.startCoverTimer_conn = None
         self.screenSaver.close()
         if None is not self.workconsole:
             self.workconsole.kill()
@@ -3188,6 +3208,33 @@ class IPTVExtMoviePlayer(Screen):
                     printExc()
         except Exception:
             printExc()
+
+    def showStartCover(self):
+        cover = self['startCover']
+        if cover.instance is None:
+            return
+        cover.hide()
+        if not self.startCoverPath or not os_path.isfile(self.startCoverPath):
+            return
+        try:
+            if -1 != cover.decodePreparedCover(self.startCoverPath, self.startCoverDecoded, 'startCover'):
+                self.startCoverTimer.start(self.START_COVER_TIMEOUT * 1000, True)
+        except Exception:
+            printExc()
+
+    def startCoverDecoded(self, ret):
+        # decoded after the stream already started: not shown any more
+        if ret.get('Pixmap') is not None and self.startCoverPath and not self.isClosing:
+            self['startCover'].updatePixmap(ret['Pixmap'], ret.get('FileName', self.startCoverPath))
+            self['startCover'].show()
+
+    def hideStartCover(self):
+        # playback runs (first frame / position / video track), the player closes or the time is up
+        if self.startCoverPath:
+            self.startCoverPath = ''
+            self.startCoverTimer.stop()
+            if self['startCover'].instance is not None:
+                self['startCover'].hide()
 
     def initPleaseWaitBox(self):
         # the notice has a half-transparent backdrop (plain grey text straight on the video
