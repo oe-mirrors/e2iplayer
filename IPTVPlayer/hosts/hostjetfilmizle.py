@@ -320,6 +320,7 @@ class JetFilmizle(GenericFolderWatchedScraperMixin, CBaseHostClass):
         except Exception:
             printExc()
             return []
+
         def priority(source):
             try:
                 return -float(source.get("priority_score") or 0)
