@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "09.10.2026"
+LAST_MODIFIED = "20.11.2026"
 # Coding: BY MOHAMED_OS
 # 09.10.2026 - ported to the python3 framework / host standard as a host of its own for wecima.cx (hostwecima
 #   stays on wecima.gripe, a different site of the WeCima family)
@@ -20,7 +20,9 @@ LAST_MODIFIED = "09.10.2026"
 #   - watched flag (show -> season -> episode), downloaded flag (page url), favourites, sidecar, INFO via
 #     moviemeta + the site's story / fields, name normalisation ("Title (Year)", "Show - SxxExx"; raw site
 #     labels when off), no colour codes in titles
+# 20.11.2026 - wecima.tips; server / download links AES-GCM encrypted (key from mains.js, read again when it changes)
 import base64
+import hashlib
 import os
 import re
 
@@ -32,6 +34,7 @@ from Plugins.Extensions.IPTVPlayer.libs.botprotection import remembered_user_age
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import LATIN_ONLY, getMeta, isLatinTitle
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarMetaQuery
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import strDecode
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
@@ -59,7 +62,7 @@ def gettytul():
     return "WeCima (wecima.cx)"
 
 
-DEFAULT_DOMAIN = "https://wecima.cx/"
+DEFAULT_DOMAIN = "https://wecima.tips/"
 LOCAL_PAGE_SIZE = 100
 # Arabic ordinals used in season labels ("الموسم الثاني"), compound ones first
 SEASON_ORDINALS = [
@@ -86,25 +89,148 @@ VIDEO_CATEGORIES = ("wx_video",)
 FOLDER_CATEGORIES = ("wx_show", "wx_season")
 
 
-def _decodeLink(value):
-    # data-url / data-href of a server or download: the page runs atob("aHR0c" + value without "+")
-    value = (value or "").replace("+", "").strip()
-    if not value:
-        return ""
-    value = "aHR0c" + value
-    try:
-        link = base64.b64decode(value + "=" * (-len(value) % 4))
-        if not isinstance(link, str):
-            link = link.decode("utf-8", "ignore")
-    except Exception:
-        return ""
+# since 11.2026 data-url / data-href = base64(iv[12] + AES-256-GCM(link) + tag[16]) with the key sha256(LINK_KEY of
+# /static/js/mains.js); this is the LINK_KEY of mains.js v12.4 - a newer mains.js is read when it no longer opens the links
+LINK_KEY = "9ajT3vqphrtyQ3ZfdeBSepU7iUNSC4Z7SXjS9Dg9"
+
+
+def _validLink(link):
     if link.startswith("//"):
         link = "https:" + link
     return link if re.match(r"https?://[^/\s]+", link) else ""
 
 
+def _b64(value):
+    value = value.strip()
+    return base64.b64decode(value + "=" * (-len(value) % 4))
+
+
+def _oldLink(value):
+    # until 11.2026: the page ran atob("aHR0c" + value without "+")
+    try:
+        return _validLink(strDecode(_b64("aHR0c" + value.replace("+", "")), "ignore"))
+    except Exception:
+        return ""
+
+
+def _aesGcmOpen(key, iv, data):
+    # AES-GCM (ciphertext + tag) -> text; the image's "cryptography" (C) first, the pure Python libs/aesgcm otherwise
+    # (that one does not check the tag: a wrong key gives garbage, the caller checks the text)
+    try:
+        from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+        return strDecode(AESGCM(key).decrypt(iv, data, None), "ignore")
+    except ImportError:
+        pass
+    except Exception as e:
+        printDBG("WeCimaCx._aesGcmOpen: %s" % type(e).__name__)
+        return ""
+    from Plugins.Extensions.IPTVPlayer.libs.aesgcm import python_aesgcm
+    # py2: its rijndael / CTR take str only, py3 bytearray
+    conv = str if str is bytes else bytearray
+    plain = python_aesgcm.new(conv(key)).open(conv(iv), conv(data))
+    return strDecode(bytes(plain), "ignore") if plain is not None else ""
+
+
+def _decodeLink(value, linkKey):
+    # data-url / data-href of a server or download -> hoster url, "" when it does not open
+    value = (value or "").strip()
+    if not value:
+        return ""
+    try:
+        raw = _b64(value)
+    except Exception:
+        return ""
+    if len(raw) > 28:
+        link = _validLink(_aesGcmOpen(hashlib.sha256(linkKey.encode("utf-8")).digest(), raw[:12], raw[12:]))
+        if link:
+            return link
+    return _oldLink(value)
+
+
+def _jsString(value):
+    # one string of the obfuscator table: base64 with swapped letter case, then UTF-8
+    try:
+        return strDecode(_b64(value.swapcase()), "ignore")
+    except Exception:
+        return ""
+
+
+def _calc(tokens, pick):
+    # + - * / ( ) and P(n) of the obfuscator's checksum line (pick(n) = parseInt of table string n)
+    pos = [0]
+
+    def peek():
+        return tokens[pos[0]] if pos[0] < len(tokens) else ""
+
+    def take():
+        pos[0] += 1
+        return tokens[pos[0] - 1]
+
+    def factor():
+        tok = take()
+        if tok in ("-", "+"):
+            val = factor()
+            return -val if tok == "-" else val
+        if tok == "(":
+            val = expr()
+            take()
+            return val
+        if tok.startswith("P"):
+            return pick(int(tok[1:], 16))
+        return float(int(tok, 0))
+
+    def term():
+        val = factor()
+        while peek() in ("*", "/"):
+            if take() == "*":
+                val *= factor()
+            else:
+                val /= factor()
+        return val
+
+    def expr():
+        val = term()
+        while peek() in ("+", "-"):
+            val = val + term() if take() == "+" else val - term()
+        return val
+    return expr()
+
+
+def _jsLinkKey(src):
+    # LINK_KEY of mains.js without running it: the string table, its rotation (the checksum loop of the
+    # obfuscator), then the table strings LINK_KEY is joined from
+    table = re.search(r"function _0x[0-9a-f]+\(\)\{var _0x[0-9a-f]+=\[('.*?')\];", src, re.S)
+    offset = re.search(r"function _0x[0-9a-f]+\(_0x[0-9a-f]+,_0x[0-9a-f]+\)\{_0x[0-9a-f]+=_0x[0-9a-f]+-(0x[0-9a-f]+);", src)
+    check = re.search(r"var _0x[0-9a-f]+=(parseInt\(.*?);if\(_0x[0-9a-f]+===_0x[0-9a-f]+\)break;.*?\}\(_0x[0-9a-f]+,(0x[0-9a-f]+)\)", src, re.S)
+    parts = re.search(r"var LINK_KEY=([^;]+);", src)
+    if not (table and offset and check and parts):
+        return ""
+    arr = re.findall(r"'([^']*)'", table.group(1))
+    offset = int(offset.group(1), 16)
+    expr = re.sub(r"parseInt\(_0x[0-9a-f]+\((0x[0-9a-f]+)\)\)", r"P\1", check.group(1))
+    tokens = re.findall(r"P0x[0-9a-f]+|0x[0-9a-f]+|\d+|[-+*/()]", expr)
+    if "".join(tokens) != expr.replace(" ", ""):
+        return ""
+    target = int(check.group(2), 16)
+
+    def pick(idx):
+        m = re.match(r"\s*([+-]?\d+)", _jsString(arr[idx - offset]))
+        if not m:
+            raise ValueError("NaN")
+        return float(m.group(1))
+    for _turn in range(len(arr)):
+        try:
+            if _calc(tokens, pick) == target:
+                return "".join(_jsString(arr[int(h, 16) - offset]) for h in re.findall(r"\((0x[0-9a-f]+)\)", parts.group(1)))
+        except (ValueError, IndexError, ZeroDivisionError):
+            pass
+        arr.append(arr.pop(0))
+    return ""
+
+
 class WeCimaCx(GenericFolderWatchedScraperMixin, CBaseHostClass):
     DOMAIN_CACHE = None
+    LINK_KEY_CACHE = None
     FAV_FIELDS = ("name", "category", "type", "url", "title", "icon", "desc", "kind", "post_id", "season_key",
                   "s_title", "s_season", "s_episode", "meta_type", "meta_title", "meta_year")
 
@@ -480,6 +606,22 @@ class WeCimaCx(GenericFolderWatchedScraperMixin, CBaseHostClass):
                     info[key] = ", ".join(values)
         return story, info
 
+    def _linkKey(self, data, values):
+        # the built-in / last read LINK_KEY while it opens the links, else the one of the page's current mains.js
+        key = WeCimaCx.LINK_KEY_CACHE or LINK_KEY
+        if not values or _decodeLink(values[0], key):
+            return key
+        src = self.cm.ph.getSearchGroups(data, r'<script[^>]+src="([^"]*/js/mains\.js[^"]*)"')[0]
+        if not src:
+            return key
+        sts, js = self.getPage(self.getFullUrl(src))
+        newKey = _jsLinkKey(js) if sts else ""
+        printDBG("WeCimaCx._linkKey mains.js [%s] -> %s" % (src, "found" if newKey else "not found"))
+        if newKey and _decodeLink(values[0], newKey):
+            WeCimaCx.LINK_KEY_CACHE = newKey
+            return newKey
+        return key
+
     def getLinksForVideo(self, cItem):
         printDBG("WeCimaCx.getLinksForVideo [%s]" % cItem.get("url", ""))
         sts, data = self.getPage(cItem.get("url", ""))
@@ -493,14 +635,17 @@ class WeCimaCx(GenericFolderWatchedScraperMixin, CBaseHostClass):
             urltab.append({"name": name, "url": strwithmeta(url, {"Referer": self.getMainUrl()}), "need_resolve": 1})
 
         servers = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="WatchServersList">', "</ul>", False)[1]
-        for attrs, inner in re.findall(r"(?s)<li([^>]*)>(.*?)</li>", servers):
-            link = _decodeLink(self.cm.ph.getSearchGroups(attrs + inner, r'data-url="([^"]+)"')[0])
+        downloads = self.cm.ph.getDataBeetwenMarkers(data, "List--Download--Wecima--Single", "</ul>", False)[1]
+        servers = [(self.cm.ph.getSearchGroups(attrs + inner, r'data-url="([^"]+)"')[0], inner) for attrs, inner in re.findall(r"(?s)<li([^>]*)>(.*?)</li>", servers)]
+        downloads = [(self.cm.ph.getSearchGroups(attrs + inner, r'data-href="([^"]+)"')[0], inner) for attrs, inner in re.findall(r"(?s)<li([^>]*)>(.*?)</li>", downloads)]
+        linkKey = self._linkKey(data, [v for v, _i in servers + downloads if v])
+        for value, inner in servers:
+            link = _decodeLink(value, linkKey)
             domain = self.up.getDomain(link, onlyDomain=True) if link else ""
             label = self.cleanHtmlStr(inner)
             add("%s (%s)" % (label, domain) if label else domain, link)
-        downloads = self.cm.ph.getDataBeetwenMarkers(data, "List--Download--Wecima--Single", "</ul>", False)[1]
-        for attrs, inner in re.findall(r"(?s)<li([^>]*)>(.*?)</li>", downloads):
-            link = _decodeLink(self.cm.ph.getSearchGroups(attrs + inner, r'data-href="([^"]+)"')[0])
+        for value, inner in downloads:
+            link = _decodeLink(value, linkKey)
             if not link or 1 != self.up.checkHostSupport(link):
                 continue
             quality = self.cleanHtmlStr(self.cm.ph.getSearchGroups(inner, r'(?s)class="resolution">(.*?)</span>')[0])
