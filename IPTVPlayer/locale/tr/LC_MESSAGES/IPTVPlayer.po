@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 10:48+0000\n"
+"POT-Creation-Date: 2026-11-20 17:54+0000\n"
 "PO-Revision-Date: 2026-03-13 15:06+0300\n"
 "Last-Translator: audi06_19 <audi06_19@hotmail.com>\n"
 "Language-Team: Turkish\n"
@@ -371,9 +371,6 @@ msgstr "3. Çözün. Sonuç kendiliğinden alıcıya geri gönderilir ve captcha
 
 msgid "30 seconds"
 msgstr "30 saniye"
-
-msgid "4K movies"
-msgstr "4K filmler"
 
 msgid "5 seconds"
 msgstr "5 saniye"
@@ -848,6 +845,9 @@ msgstr "Harici altyazıları otomatik aç"
 
 msgid "Automotive"
 msgstr "Otomotiv"
+
+msgid "Autoplay picture duration (seconds)"
+msgstr ""
 
 msgid "Autoplay start delay"
 msgstr "Otomatik oynatma başlama gecikmesi"
@@ -2179,6 +2179,9 @@ msgstr "Genişletilmiş"
 
 msgid "External movie player config"
 msgstr "Harici film oynatıcı yapılandırması"
+
+msgid "Extra large"
+msgstr ""
 
 msgid "Extracted subtitle file is empty or missing."
 msgstr "Çıkarılan altyazı dosyası boş veya eksik."
@@ -3806,6 +3809,9 @@ msgstr "Sonraki sayfa"
 msgid "No"
 msgstr "Hayır"
 
+msgid "No RSS / Atom feed at this address."
+msgstr ""
+
 msgid "No YouTube video found for this track."
 msgstr "Bu parça için YouTube videosu bulunamadı."
 
@@ -4836,6 +4842,9 @@ msgstr ""
 msgid "Round"
 msgstr "Tur"
 
+msgid "Rows per page of long seasons and lists"
+msgstr ""
+
 msgid "Runtime"
 msgstr "Süre"
 
@@ -5813,6 +5822,9 @@ msgstr "Metin alanı hizalaması"
 msgid "Text files ytlist and urllist are in:"
 msgstr "ytlist ve urllist metin dosyalarının konumu:"
 
+msgid "Text files ytlist, urllist and feedlist are in:"
+msgstr ""
+
 msgid "Thai"
 msgstr "Tayca"
 
@@ -5948,6 +5960,9 @@ msgstr "Host bir liste döndürmedi."
 msgid "The host wanted to open a window on the TV (%s) - that only works on the receiver."
 msgstr "Host TV'de bir pencere açmak istedi (%s) - bu yalnızca alıcıda çalışır."
 
+msgid "The hoster is still processing this video. Please try again later."
+msgstr ""
+
 msgid "The hoster sends an advert redirect instead of the video at the moment. Try another hoster."
 msgstr "Hoster şu anda video yerine bir reklam yönlendirmesi gönderiyor. Başka bir hoster deneyin."
 
@@ -6046,6 +6061,12 @@ msgstr "Sitenin tarayıcı denetimi geçilemedi."
 
 msgid "The site's catalogue could not be loaded."
 msgstr "Sitenin kataloğu yüklenemedi."
+
+msgid "The site's web player key could not be read - please try again later."
+msgstr ""
+
+msgid "The stream server does not answer at the moment. Try another link or later."
+msgstr ""
 
 msgid "The support package holds the versions, the system information, the enabled hosts and the end of the debug log in one text file for a problem report. Look through it before posting it - the log can contain addresses of the sites you opened."
 msgstr "Destek paketi, sorun raporu için sürümleri, sistem bilgilerini, etkin host'ları ve hata ayıklama günlüğünün sonunu tek bir metin dosyasında toplar. Paylaşmadan önce gözden geçirin - günlük, açtığınız sitelerin adreslerini içerebilir."

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: E2iPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 10:48+0000\n"
+"POT-Creation-Date: 2026-11-20 17:54+0000\n"
 "PO-Revision-Date: 2026-09-27 08:11+0200\n"
 "Last-Translator: \n"
 "Language-Team: IPTVPlayer\n"
@@ -374,9 +374,6 @@ msgstr "3. Résolvez-le. Le résultat est renvoyé automatiquement au récepteur
 
 msgid "30 seconds"
 msgstr "30 secondes"
-
-msgid "4K movies"
-msgstr "Films 4K"
 
 msgid "5 seconds"
 msgstr "5 secondes"
@@ -851,6 +848,9 @@ msgstr "Activer automatiquement les sous-titres externes"
 
 msgid "Automotive"
 msgstr "Auto-moto"
+
+msgid "Autoplay picture duration (seconds)"
+msgstr ""
 
 msgid "Autoplay start delay"
 msgstr "Temporisation de démarrage AutoPlay"
@@ -2182,6 +2182,9 @@ msgstr "Étendu"
 
 msgid "External movie player config"
 msgstr "Configuration du lecteur vidéo externe"
+
+msgid "Extra large"
+msgstr ""
 
 msgid "Extracted subtitle file is empty or missing."
 msgstr "Le fichier de sous-titres extrait est vide ou manquant."
@@ -3809,6 +3812,9 @@ msgstr "Page suivante"
 msgid "No"
 msgstr "Non"
 
+msgid "No RSS / Atom feed at this address."
+msgstr ""
+
 msgid "No YouTube video found for this track."
 msgstr "Aucune vidéo YouTube trouvée pour ce titre."
 
@@ -4839,6 +4845,9 @@ msgstr ""
 msgid "Round"
 msgstr "Tour"
 
+msgid "Rows per page of long seasons and lists"
+msgstr ""
+
 msgid "Runtime"
 msgstr "Durée"
 
@@ -5816,6 +5825,9 @@ msgstr "Alignement des champs de texte"
 msgid "Text files ytlist and urllist are in:"
 msgstr "Les fichiers texte ytlist et urllist se trouvent dans :"
 
+msgid "Text files ytlist, urllist and feedlist are in:"
+msgstr ""
+
 msgid "Thai"
 msgstr "Thaïlandais"
 
@@ -5951,6 +5963,9 @@ msgstr "L'hôte n'a pas renvoyé de liste."
 msgid "The host wanted to open a window on the TV (%s) - that only works on the receiver."
 msgstr "L'hôte voulait ouvrir une fenêtre sur la TV (%s) - cela ne fonctionne que sur le récepteur."
 
+msgid "The hoster is still processing this video. Please try again later."
+msgstr ""
+
 msgid "The hoster sends an advert redirect instead of the video at the moment. Try another hoster."
 msgstr "L'hébergeur renvoie actuellement une redirection publicitaire au lieu de la vidéo. Essayez un autre hébergeur."
 
@@ -6049,6 +6064,12 @@ msgstr "La vérification du navigateur du site n'a pas pu être passée."
 
 msgid "The site's catalogue could not be loaded."
 msgstr "Le catalogue du site n'a pas pu être chargé."
+
+msgid "The site's web player key could not be read - please try again later."
+msgstr ""
+
+msgid "The stream server does not answer at the moment. Try another link or later."
+msgstr ""
 
 msgid "The support package holds the versions, the system information, the enabled hosts and the end of the debug log in one text file for a problem report. Look through it before posting it - the log can contain addresses of the sites you opened."
 msgstr "Le paquet d'assistance regroupe les versions, les informations système, les hôtes activés et la fin du journal de débogage dans un seul fichier texte pour signaler un problème. Relisez-le avant de le publier - le journal peut contenir les adresses des sites que vous avez ouverts."

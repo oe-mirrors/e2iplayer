@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 10:48+0000\n"
+"POT-Creation-Date: 2026-11-20 17:54+0000\n"
 "PO-Revision-Date: 2026-07-27 16:55+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -375,9 +375,6 @@ msgstr "3. Решите её. Результат сам вернётся на р
 
 msgid "30 seconds"
 msgstr "30 секунд"
-
-msgid "4K movies"
-msgstr "Фильмы 4K"
 
 msgid "5 seconds"
 msgstr "5 секунд"
@@ -852,6 +849,9 @@ msgstr "Автовключение внешних субтитров"
 
 msgid "Automotive"
 msgstr "Авто и мото"
+
+msgid "Autoplay picture duration (seconds)"
+msgstr ""
 
 msgid "Autoplay start delay"
 msgstr "Задержка перед автовоспроизведением"
@@ -2183,6 +2183,9 @@ msgstr "Расширенный"
 
 msgid "External movie player config"
 msgstr "Параметры внешнего видеоплеера"
+
+msgid "Extra large"
+msgstr ""
 
 msgid "Extracted subtitle file is empty or missing."
 msgstr "Извлечённый файл субтитров пуст или отсутствует."
@@ -3812,6 +3815,9 @@ msgstr "Следующая страница"
 msgid "No"
 msgstr "Нет"
 
+msgid "No RSS / Atom feed at this address."
+msgstr ""
+
 msgid "No YouTube video found for this track."
 msgstr "Для этого трека не найдено видео на YouTube."
 
@@ -4843,6 +4849,9 @@ msgstr ""
 msgid "Round"
 msgstr "Тур"
 
+msgid "Rows per page of long seasons and lists"
+msgstr ""
+
 msgid "Runtime"
 msgstr "Продолжительность"
 
@@ -5820,6 +5829,9 @@ msgstr "Выравнивание текстовых полей"
 msgid "Text files ytlist and urllist are in:"
 msgstr "Текстовые файлы ytlist и urllist находятся в:"
 
+msgid "Text files ytlist, urllist and feedlist are in:"
+msgstr ""
+
 msgid "Thai"
 msgstr "Тайский"
 
@@ -5955,6 +5967,9 @@ msgstr "Хост не вернул список."
 msgid "The host wanted to open a window on the TV (%s) - that only works on the receiver."
 msgstr "Хост хотел открыть окно на телевизоре (%s) - это работает только на ресивере."
 
+msgid "The hoster is still processing this video. Please try again later."
+msgstr ""
+
 msgid "The hoster sends an advert redirect instead of the video at the moment. Try another hoster."
 msgstr "Хостер сейчас отдаёт рекламный редирект вместо видео. Попробуйте другой хостер."
 
@@ -6053,6 +6068,12 @@ msgstr "Не удалось пройти проверку браузера на 
 
 msgid "The site's catalogue could not be loaded."
 msgstr "Не удалось загрузить каталог сайта."
+
+msgid "The site's web player key could not be read - please try again later."
+msgstr ""
+
+msgid "The stream server does not answer at the moment. Try another link or later."
+msgstr ""
 
 msgid "The support package holds the versions, the system information, the enabled hosts and the end of the debug log in one text file for a problem report. Look through it before posting it - the log can contain addresses of the sites you opened."
 msgstr "Пакет поддержки содержит версии, сведения о системе, включённые хосты и конец отладочного лога в одном текстовом файле для сообщения о проблеме. Просмотрите его перед публикацией - лог может содержать адреса открытых вами сайтов."
