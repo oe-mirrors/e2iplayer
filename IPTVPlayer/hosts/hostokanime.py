@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "21.10.2026"
+LAST_MODIFIED = "21.11.2026"
 # OkAnime (اوك انمي) - Arabic-subtitled anime (okanime.tv is gone; okanime.xyz is the landing page that
 # links the current mirror, ww3.okanime.xyz on 09.10.2026)
 #   - menu: latest episodes, airing now, most popular, anime list, movies, genres, types, years and search,
@@ -47,7 +47,8 @@ ROMAN_NUMBERS = ("II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X")
 ROMAN_SEASON_RE = re.compile(r"\s(%s)$" % "|".join(ROMAN_NUMBERS))
 YEAR_RE = re.compile(r"\b((?:19|20)\d{2})\b")
 EPISODE_CARD_RE = re.compile(r'(?s)<div class="anime-card episode-card">(.*?)</h5>')
-EPISODE_LINK_RE = re.compile(r'<a href="([^"]+/episode/[^"]+)"\s+class="ep-compact-btn[^"]*"\s+title="([^"]*)"')
+# tracking attributes (data-umami-* / data-track-*) sit between class and title since 11.2026
+EPISODE_LINK_RE = re.compile(r'<a href="([^"]+/episode/[^"]+)"\s+class="ep-compact-btn[^"]*"[^>]*?\stitle="([^"]*)"')
 SERVER_RE = re.compile(r'(?s)<a href="javascript:void\(0\);"(.*?)</a>')
 INFO_ROW_RE = re.compile(r"(?s)<dt>([^<]+)</dt>\s*<dd>(.*?)</dd>")
 INFO_KEYS = {"النوع": "type", "الحالة": "status", "الموسم": "broadcast", "سنة العرض": "year", "عدد الحلقات": "episodes",
