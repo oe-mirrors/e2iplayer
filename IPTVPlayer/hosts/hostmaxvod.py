@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "18.11.2026"
+LAST_MODIFIED = "21.11.2026"
 # 25.10.2026 - new host for maxvod.tv (Polish free video library): films, series, kids, categories, search;
 #   every player source (Lektor / Dubbing / Napisy PL / Oryginał) is one link, resolved at play time.
 # 18.11.2026 - episodes listed newest first, yellow title in the info panel
+# 21.11.2026 - embed links named after their hoster (voe.sx, savefiles.com ...)
 ###################################################
 # LOCAL import
 ###################################################
@@ -320,6 +321,23 @@ class MaxVOD(GenericFolderWatchedScraperMixin, CBaseHostClass):
         sources.sort(key=lambda x: (not ("bez limitu" in x["label"].lower() and x["direct"]), not x["direct"], -self._qualityNum(x["quality"])))
         return sources
 
+    def _playLocation(self, url, referer):
+        # /player/play/<uuid> answers with a 302 to a signed, expiring link: the site's MP4 server or an external hoster
+        params = self._paramsWithReferer(referer)
+        params["no_redirection"] = True
+        sts, _data = self.getPage(url, params)
+        location = self.cm.meta.get("location", "") if sts else ""
+        return self.getFullUrl(location, url) if location else ""
+
+    def _hosterName(self, src, referer):
+        # the embed sources only say "Player z reklamami": the hoster is known from the redirect alone
+        if src["direct"]:
+            return ""
+        location = self._playLocation(src["url"], referer)
+        if not location or "/login" in location or "maxvod.tv" in location:
+            return ""
+        return re.sub(r"^www\.", "", self.up.getDomain(location, onlyDomain=True))
+
     def getLinksForVideo(self, cItem):
         printDBG("MaxVOD.getLinksForVideo [%s]" % cItem)
         pageUrl = cItem.get("page_url", "") or cItem.get("url", "")
@@ -333,7 +351,8 @@ class MaxVOD(GenericFolderWatchedScraperMixin, CBaseHostClass):
             if src["url"] in seen:
                 continue
             seen.add(src["url"])
-            name = " - ".join([x for x in (src["lang"], " ".join([x for x in (src["label"], src["quality"]) if x])) if x]) or "MaxVOD"
+            label = self._hosterName(src, playerUrl) or src["label"]
+            name = " - ".join([x for x in (src["lang"], " ".join([x for x in (label, src["quality"]) if x])) if x]) or "MaxVOD"
             names[name] = names.get(name, 0) + 1
             if names[name] > 1:
                 name = "%s (%d)" % (name, names[name])
@@ -354,13 +373,9 @@ class MaxVOD(GenericFolderWatchedScraperMixin, CBaseHostClass):
             return []
         if "/player/play/" not in url:
             return decorateResolvedLinkItems(self.up.getVideoLinkExt(videoUrl), sidecar)
-        # /player/play/<uuid> answers with a 302 to a signed, expiring link: the site's MP4 server or an external hoster
+        # resolved again at play time: the signed link of the list may have expired meanwhile
         referer = getattr(videoUrl, "meta", {}).get("Referer", "") or self.MAIN_URL
-        params = self._paramsWithReferer(referer)
-        params["no_redirection"] = True
-        sts, _data = self.getPage(url, params)
-        location = self.cm.meta.get("location", "") if sts else ""
-        location = self.getFullUrl(location, url) if location else ""
+        location = self._playLocation(url, referer)
         printDBG("MaxVOD.getVideoLinks location [%s]" % location)
         if not location or "/login" in location or "maxvod.tv" in location:
             SetIPTVPlayerLastHostError(_("No stream available"))
