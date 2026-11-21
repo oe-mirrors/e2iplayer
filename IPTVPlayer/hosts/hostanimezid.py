@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "17.10.2026"
+LAST_MODIFIED = "21.11.2026"
 # Coding: BY MOHAMED_OS
 # 08.10.2026 - ported to the python3 framework / host standard
 #   - animezid.cam (animezid.net redirects there; Arabic anime, cartoons and animation films, subbed and
@@ -15,10 +15,14 @@ LAST_MODIFIED = "17.10.2026"
 #   between urllib and PyCurl -> every server answered 403); site rate limit (429) shown as such
 # 17.10.2026 - the site moved to animezid.org (animezid.cam redirects there); favourites of the old domains are
 #   mapped to it
+# 21.11.2026 - sealed playback token (data-pb-a XOR data-pb-b, SHA-256 proof per request) and the site's
+#   rotation switches (data-pb-v: own resolve routes, encoded answers, salted proof, warm-up, script cookie)
+import base64
+import hashlib
 import re
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
-from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, GetIPTVSleep, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps, loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import LATIN_ONLY, getMeta, isLatinTitle, metaArticle
@@ -53,6 +57,8 @@ SEASON_ORDINALS = [
 SEASON_RE = re.compile(r"الموسم\s*(\d+|%s)" % "|".join(o[0] for o in SEASON_ORDINALS))
 SEASON_URL_RE = re.compile(r"/season/(\d+)/?")
 # servers without a resolver in urlparser (TeleBox = lbx.to, KoramaUP, ClicknUpload, FreeDL, BowFile, 1CloudFile)
+# visitor.js playbackProofSalt (WebPlaybackRotation::PROOF_SALT, 11.2026) - read from the script when the salt card is on
+PB_PROOF_SALT = "a7c3e91f5d20b846"
 UNSUPPORTED_RE = re.compile(r"(?i)telebox|koramaup|clicknupload|freedl|bowfile|1cloudfile|^mega$")
 CARD_RE = re.compile(r'(?s)<article class="az-card[^"]*">(.*?)</article>')
 # watch page info rows: <small>السنة</small><a ...>2026</a>
@@ -320,13 +326,73 @@ class AnimeZid(GenericFolderWatchedScraperMixin, CBaseHostClass):
     ###################################################
     # links
     ###################################################
-    def _apiParams(self, referer, csrf):
+    def _apiParams(self, referer, headers):
         params = dict(self.defaultParams)
         params["header"] = dict(self.HEADER, Referer=referer, Origin=self.MAIN_URL.rstrip("/"))
-        params["header"].update({"Accept": "application/json", "Content-Type": "application/json", "X-Playback-CSRF": csrf})
+        params["header"].update({"Accept": "application/json", "Content-Type": "application/json"})
+        # the API answers 403 to a request without the browser's fetch() metadata (11.2026)
+        params["header"].update({"Sec-Fetch-Site": "same-origin", "Sec-Fetch-Mode": "cors", "Sec-Fetch-Dest": "empty"})
+        params["header"].update(headers)
         # the API answers 201 Created
         params.update({"raw_post_data": True, "ignore_http_code_ranges": [(201, 201)]})
         return params
+
+    @staticmethod
+    def _sha256(text, raw=False):
+        digest = hashlib.sha256(text.encode("utf-8"))
+        return digest.digest() if raw else digest.hexdigest()
+
+    def _proofSalt(self, data):
+        # the salt of the "salted proof" card sits in the site's visitor.js (rotated together with the server)
+        script = self.cm.ph.getSearchGroups(data, r'<script[^>]+src="([^"]*/visitor\.js[^"]*)"')[0]
+        if script:
+            sts, js = self.cm.getPage(self._canonUrl(self.getFullUrl(script.replace("&amp;", "&"))), dict(self.defaultParams))
+            salt = self.cm.ph.getSearchGroups(js, r"""playbackProofSalt\s*=\s*['"]([^'"]+)['"]""")[0] if sts else ""
+            if salt:
+                return salt
+        return PB_PROOF_SALT
+
+    def _pbPost(self, page, playUrl, url, body, extra=None):
+        # one call of the playback API like visitor.js postPlayback() -> its JSON answer ({} when refused); page:
+        # csrf (plain page) or token (sealed page) + the rotation cards of data-pb-v
+        if page["csrf"]:
+            headers = {"X-Playback-CSRF": page["csrf"]}
+        else:
+            # X-Playback-Proof = SHA-256("[salt|]<token>|<url path>")
+            path = re.sub(r"^https?://[^/]+", "", url).split("?")[0]
+            prefix = page["salt"] + "|" if page["cards"] & 4 else ""
+            headers = {"X-Playback-Proof": self._sha256("%s%s|%s" % (prefix, page["token"], path))}
+        sessionToken = page["csrf"] or page["token"]
+        if page["cards"] & 16:
+            # card 16: the script sets az_pc=<32 hex of SHA-256("pc|<token>")> for /web-playback
+            cookie = "az_pc=" + self._sha256("pc|" + sessionToken)[:32]
+            jar = ""
+            try:
+                jar = self.cm.getCookieHeader(self.COOKIE_FILE).strip().rstrip(";")
+            except Exception:
+                printExc()
+            headers["Cookie"] = "%s; %s" % (jar, cookie) if jar else cookie
+        headers.update(extra or {})
+        sts, data = self.cm.getPage(url, self._apiParams(playUrl, headers), json_dumps(body))
+        try:
+            payload = json_loads(data) if sts else {}
+        except Exception:
+            printExc()
+            return {}
+        if page["cards"] & 2 and isinstance(payload, dict) and payload.get("d") and payload.get("n"):
+            # card 2: {"d": base64, "n": nonce} - XOR with SHA-256("<token>|enc|<n>|<block>") per 32 bytes
+            try:
+                cipher = bytearray(base64.b64decode(payload["d"]))
+                plain = bytearray(len(cipher))
+                for block in range((len(cipher) + 31) // 32):
+                    stream = bytearray(self._sha256("%s|enc|%s|%d" % (sessionToken, payload["n"], block), True))
+                    for idx in range(block * 32, min(len(cipher), block * 32 + 32)):
+                        plain[idx] = cipher[idx] ^ stream[idx - block * 32]
+                payload = json_loads(bytes(plain).decode("utf-8"))
+            except Exception:
+                printExc()
+                return {}
+        return payload if isinstance(payload, dict) else {}
 
     def _playbackSession(self, playUrl):
         # play page (csrf + session cookie) -> new playback session; {} when the site refuses.
@@ -341,18 +407,30 @@ class AnimeZid(GenericFolderWatchedScraperMixin, CBaseHostClass):
         createUrl = self.cm.ph.getSearchGroups(data, r'data-playback-create-url="([^"]+)"')[0]
         csrf = self.cm.ph.getSearchGroups(data, r'data-playback-csrf="([^"]+)"')[0]
         contentId = self.cm.ph.getSearchGroups(data, r'data-video-uniq="([^"]+)"')[0] or self.cm.ph.getSearchGroups(playUrl, r"vid=([^&#]+)")[0]
-        if not (createUrl and csrf and contentId):
+        # sealed page (11.2026): token = data-pb-a XOR data-pb-b (64 hex digits each)
+        sealed = self.cm.ph.getSearchGroups(data, r'data-pb-a="([a-f0-9]{64})"')[0]
+        mask = self.cm.ph.getSearchGroups(data, r'data-pb-b="([a-f0-9]{64})"')[0]
+        token = "".join("%02x" % (int(sealed[i:i + 2], 16) ^ int(mask[i:i + 2], 16)) for i in range(0, 64, 2)) if sealed and mask else ""
+        cards = self.cm.ph.getSearchGroups(data, r'data-pb-v="(\d+)"')[0]
+        page = {"csrf": csrf, "token": token, "cards": int(cards) if cards else 0, "salt": PB_PROOF_SALT}
+        printDBG("AnimeZid._playbackSession csrf[%s] sealed[%s] cards[%s]" % (bool(csrf), bool(token), page["cards"]))
+        if not (createUrl and (csrf or token) and contentId):
             return {}
         createUrl = self._canonUrl(createUrl)
-        sts, data = self.cm.getPage(createUrl, self._apiParams(playUrl, csrf), json_dumps({"content_id": contentId}))
-        try:
-            session = json_loads(data) if sts else {}
-        except Exception:
-            printExc()
-            session = {}
+        if page["cards"] & 4:
+            page["salt"] = self._proofSalt(data)
+        extra = {}
+        if page["cards"] & 8:
+            # card 8: warm-up call first, the session only after the server's minimum age (the script waits 1.1 s)
+            warm = self._pbPost(page, playUrl, createUrl, {"content_id": contentId, "warm": 1})
+            if not warm.get("w"):
+                return {}
+            GetIPTVSleep().Sleep(2)
+            extra = {"X-Playback-Warm": warm["w"]}
+        session = self._pbPost(page, playUrl, createUrl, {"content_id": contentId}, extra)
         if not session.get("session_id"):
             return {}
-        session.update({"create_url": createUrl, "csrf": csrf})
+        session.update({"create_url": createUrl, "page": page})
         self.sessionCache[playUrl] = session
         return session
 
@@ -393,16 +471,20 @@ class AnimeZid(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not source:
             return "", False
         url = "%s/%s/sources/%s/resolve" % (session["create_url"], session["session_id"], source[0].get("id", ""))
-        sts, data = self.cm.getPage(url, self._apiParams(playUrl, session["csrf"]), "{}")
-        launch = ""
-        try:
-            launch = json_loads(data).get("launch_url", "") if sts else ""
-        except Exception:
-            printExc()
+        if session["page"]["cards"] & 1:
+            # card 1: every source of the session answer carries its own resolve route
+            route = source[0].get("r") or ""
+            if not route.startswith("/web-playback/sessions/"):
+                return "", True
+            url = self._canonUrl(self.getFullUrl(route))
+        launch = self._pbPost(session["page"], playUrl, url, {}).get("launch_url", "")
         if not launch:
             return "", self.cm.meta.get("status_code") in (404, 410)
         params = dict(self.defaultParams)
-        params.update({"header": dict(self.HEADER, Referer=playUrl), "no_redirection": True})
+        # the launch url is the player iframe's src: the same fetch metadata as the browser sends for it
+        header = dict(self.HEADER, Referer=playUrl)
+        header.update({"Sec-Fetch-Site": "same-origin", "Sec-Fetch-Mode": "navigate", "Sec-Fetch-Dest": "iframe"})
+        params.update({"header": header, "no_redirection": True})
         sts, _data = self.cm.getPage(self._canonUrl(launch), params)
         link = self.cm.meta.get("location", "") if sts else ""
         return ("https:" + link if link.startswith("//") else link), False
