@@ -299,6 +299,7 @@ class urlparser:
             "cybervynx.com": self.pp.parserJWPLAYER,
             # d
             "d-s.io": self.pp.parserDOOD,
+            "d.arabseed.top": self.pp.parserJWPLAYER, # 211126
             "d.tube": self.pp.parserDTUBE,  # add 241026 (docchi; play.d.tube via the parent domain)
             "d0000d.com": self.pp.parserDOOD,
             "d000d.com": self.pp.parserDOOD,
@@ -878,6 +879,7 @@ class urlparser:
             "tuktuk.upns.one": self.pp.parserSBS,
             "tuktukcimamulti.buzz": self.pp.parserJWPLAYER,  # add 061026
             "tuktukcinema.store": self.pp.parserJWPLAYER,  # add 061026
+            "turboembed.com": self.pp.parserJWPLAYER,  # add 211126 (StreamWish mirror, e.g. pornbusy)
             "turboviplay.com": self.pp.parserJWPLAYER,
             "tusfiles.com": self.pp.parserUSERSCLOUDCOM,
             "tusfiles.net": self.pp.parserUSERSCLOUDCOM,
