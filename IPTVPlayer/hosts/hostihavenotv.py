@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "04.10.2026"
+LAST_MODIFIED = "21.11.2026"
 # 03.10.2026 - new host for ihavenotv.com (I Have No TV - free documentaries, English)
+# 21.11.2026 - new site layout (card grid, site pager ?page=N, /search?q=, new video page)
 #   Lists: latest / recommended / random picks / categories / series A-Z / documentaries A-Z + search.
-#   The site sends a whole category (hundreds of cards) in one page and has no pager, so the cards
-#   are cached in memory and paged here (only a real rest gives a "Next page").
+#   Latest / recommended / categories / search use the site's pager (48 cards a page); a series page
+#   and the random picks come in one piece, are cached in memory and paged here.
 #   Series index: the site has none - it is built from the A-Z page, where episodes carry "(Series)";
 #   the series slug is the site's own slug rule (cards link /series/<slug> the same way).
 #   Videos: mostly Abyss player embeds (abyssplayer.com -> urlparser parserABYSS), some YouTube,
@@ -18,7 +19,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEna
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps, loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems, sidecarMetaQuery
-from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_unquote
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus, urllib_unquote
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import normalizeMediathekTitle
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
@@ -40,7 +41,8 @@ class IHaveNoTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
     FAV_FIELDS = ("name", "category", "type", "url", "title", "s_title", "year", "genre", "icon", "series", "series_url", "sxe", "letter", "kind")
     ITEMS_PER_PAGE = 50
     CACHE_SIZE = 8
-    RANDOM_MARKER = "Random! Documentaries"
+    RANDOM_MARKER = ">Random documentaries<"
+    OLD_RANDOM_MARKER = "Random! Documentaries"  # favourites saved with the old layout
 
     def __init__(self):
         CBaseHostClass.__init__(self, {"history": "ihavenotv", "cookie": "ihavenotv.cookie"})
@@ -99,7 +101,7 @@ class IHaveNoTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return normalizeMediathekTitle(title, year=year, isMovie=True)
 
     ###################################################
-    # card lists (one site page = whole list, paged here)
+    # card lists
     ###################################################
     def _parseCards(self, data, currUrl):
         items = []
@@ -107,9 +109,11 @@ class IHaveNoTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
         listSeries = ""
         if "/series/" in currUrl:
             listSeries = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r"(?s)<h1>(.*?)<small", ignoreCase=True)[0])
-        for block in data.split('<div class="episode">')[1:]:
-            link = self.cm.ph.getSearchGroups(block, r'<a href="([^"]+)"')[0]
-            title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(block, r'(?s)<span class="episodeTitle">(.*?)</span>', ignoreCase=True)[0])
+        for block in data.split('<article class="card"')[1:]:
+            block = block.split("</article>", 1)[0]
+            link = self.cm.ph.getSearchGroups(block, r'<a[^>]+href="([^"]+)"')[0]
+            title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(block, r'(?s)<h3>\s*<a[^>]*>(.*?)</a>', ignoreCase=True)[0]) or \
+                self.cleanHtmlStr(self.cm.ph.getSearchGroups(block, r'data-title="([^"]*)"')[0])
             if not link or not title:
                 continue
             url = self._normUrl(link, currUrl)
@@ -117,9 +121,9 @@ class IHaveNoTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 continue
             seen.add(url)
             icon = self.cm.ph.getSearchGroups(block, r'<img[^>]+src="([^"]+)"')[0]
-            duration = self.cleanHtmlStr(self.cm.ph.getSearchGroups(block, r'(?s)<div class="episodeTime">(.*?)</div>')[0])
-            plot = self.cleanHtmlStr(self.cm.ph.getSearchGroups(block, r'(?s)<p class="episodeSynopsis">(.*?)</p>', ignoreCase=True)[0])
-            metaHtml = self.cm.ph.getSearchGroups(block, r'(?s)<p class="episodeMeta">(.*?)</p>', ignoreCase=True)[0]
+            duration = self.cleanHtmlStr(self.cm.ph.getSearchGroups(block, r'(?s)<span class="duration">(.*?)</span>')[0])
+            plot = self.cleanHtmlStr(self.cm.ph.getSearchGroups(block, r'(?s)<p class="synopsis">(.*?)</p>', ignoreCase=True)[0])
+            metaHtml = self.cm.ph.getSearchGroups(block, r'(?s)<p class="meta">(.*?)</p>', ignoreCase=True)[0]
             sxe = self.cleanHtmlStr(self.cm.ph.getSearchGroups(metaHtml, r"<strong>(S\d+E\d+)</strong>", ignoreCase=True)[0]).upper()
             seriesUrl, seriesName = self.cm.ph.getSearchGroups(metaHtml, r'(?s)<a href="(/series/[^"]+)"[^>]*>(.*?)</a>', 2)
             seriesName = self.cleanHtmlStr(seriesName)
@@ -131,7 +135,17 @@ class IHaveNoTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
                           "sxe": sxe, "series": seriesName, "series_url": self._normUrl(seriesUrl) if seriesUrl else "", "genre": genre, "year": year})
         return items
 
-    def _getCards(self, url, section=""):
+    @staticmethod
+    def _sitePaged(url, section):
+        # latest / recommended / categories / search have the site's pager, a series page and a home section do not
+        return not section and "/series/" not in url
+
+    def _getCards(self, url, section="", page=1):
+        # -> (cards, last site page or 0, site has a next page); None when the page did not load
+        if section == self.OLD_RANDOM_MARKER:
+            section = self.RANDOM_MARKER
+        if page > 1:
+            url = "%s%spage=%d" % (url, "&" if "?" in url else "?", page)
         key = "%s|%s" % (url, section)
         if key in self.cardCache:
             return self.cardCache[key]
@@ -139,30 +153,41 @@ class IHaveNoTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not sts:
             return None
         currUrl = data.meta.get("url", url) if hasattr(data, "meta") else url
+        pager = self.cm.ph.getDataBeetwenMarkers(data, '<nav class="pager"', "</nav>", False)[1]
+        lastPage = max([int(x) for x in re.findall(r"[?&](?:amp;)?page=(\d+)", pager)] + [page]) if pager else 0
+        hasNext = 'rel="next"' in pager
         if section:
             data = data.split(section, 1)[-1] if section in data else ""
-            data = data.split('<div class="col-md-10">', 1)[0]
-        items = self._parseCards(data, currUrl)
+            data = data.split("</section>", 1)[0]
+        result = (self._parseCards(data, currUrl), lastPage, hasNext)
         if section == self.RANDOM_MARKER:
-            return items  # changes with every load
-        self.cardCache[key] = items
+            return result  # changes with every load
+        self.cardCache[key] = result
         self.cardCacheOrder.append(key)
         while len(self.cardCacheOrder) > self.CACHE_SIZE:
             self.cardCache.pop(self.cardCacheOrder.pop(0), None)
-        return items
+        return result
 
     def listItems(self, cItem):
         printDBG("IHaveNoTV.listItems |%s| page[%s]" % (cItem.get("url", ""), cItem.get("page", 1)))
         page = max(1, int(cItem.get("page", 1) or 1))
-        items = self._getCards(cItem["url"], cItem.get("section", ""))
-        if items is None:
+        url = cItem["url"]
+        # favourites / history of the old search urls /search/<words>
+        oldSearch = self.cm.ph.getSearchGroups(url, r"/search/([^/?#]+)$")[0]
+        if oldSearch:
+            url = self.getFullUrl("/search?q=%s" % oldSearch)
+        section = cItem.get("section", "")
+        sitePaged = self._sitePaged(url, section)
+        result = self._getCards(url, section, page if sitePaged else 1)
+        if result is None:
             return
+        items, lastPage, hasNext = result
         if not items:
-            if "/series/" in cItem["url"] or "/search/" in cItem["url"]:
+            if "/series/" in url or "/search" in url:
                 SetIPTVPlayerLastHostError(_("No stream available"))
             return
-        start = (page - 1) * self.ITEMS_PER_PAGE
-        for item in items[start:start + self.ITEMS_PER_PAGE]:
+        start = 0 if sitePaged else (page - 1) * self.ITEMS_PER_PAGE
+        for item in items[start:start + (len(items) if sitePaged else self.ITEMS_PER_PAGE)]:
             descTab = [x for x in (item["year"], item["duration"], item["genre"]) if x]
             if item["series"]:
                 descTab.insert(0, "%s %s" % (item["series"], item["sxe"]) if item["sxe"] else item["series"])
@@ -174,12 +199,18 @@ class IHaveNoTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
                            "title": self._videoTitle(item["title"], item["year"], item["series"], item["sxe"]), "s_title": item["title"],
                            "year": item["year"], "genre": item["genre"], "series": item["series"], "series_url": item["series_url"], "sxe": item["sxe"]})
             self.addVideo(params)
-        self._addPaging(cItem, page, len(items))
+        if sitePaged:
+            self._addPaging(cItem, page, 0, lastPage, hasNext)
+        else:
+            self._addPaging(cItem, page, len(items))
 
-    def _addPaging(self, cItem, page, total):
-        # the whole list is cached, paged here; the folder url stays the same ("Jump" template)
-        lastPage = (total + self.ITEMS_PER_PAGE - 1) // self.ITEMS_PER_PAGE
-        addPagingItems(self, cItem, page, page < lastPage, lastPage, cItem.get("url", "").replace("{", "%7B").replace("}", "%7D"))
+    def _addPaging(self, cItem, page, total, lastPage=0, hasNext=False):
+        # the folder url stays the same ("Jump" template), the page number goes in "page": the site's own page
+        # (lastPage / hasNext from its pager) or, with total, a page of the list cached here
+        if total:
+            lastPage = (total + self.ITEMS_PER_PAGE - 1) // self.ITEMS_PER_PAGE
+            hasNext = page < lastPage
+        addPagingItems(self, cItem, page, hasNext, lastPage, cItem.get("url", "").replace("{", "%7B").replace("}", "%7D"))
 
     def listCategories(self, cItem):
         printDBG("IHaveNoTV.listCategories")
@@ -275,7 +306,7 @@ class IHaveNoTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not pattern:
             return
         cItem = dict(cItem)
-        cItem.update({"category": "list_items", "url": self.getFullUrl("/search/%s" % urllib_quote(pattern)), "page": 1})
+        cItem.update({"category": "list_items", "url": self.getFullUrl("/search?q=%s" % urllib_quote_plus(pattern)), "page": 1})
         self.listItems(cItem)
 
     ###################################################
@@ -283,12 +314,14 @@ class IHaveNoTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
     ###################################################
     def _parseVideoPage(self, data):
         info = {"title": "", "year": "", "desc": "", "poster": "", "duration": "", "genre": "", "tags": "", "embeds": [], "subs": []}
-        details = self.cm.ph.getDataBeetwenMarkers(data, '<div class="videoDetails">', "</p>", False)[1]
-        info["title"] = self.cleanHtmlStr(self.cm.ph.getSearchGroups(details, r"(?s)<h1>\s*<strong>(.*?)</strong>", ignoreCase=True)[0]) or \
+        details = self.cm.ph.getDataBeetwenMarkers(data, '<div class="video-details">', '<p class="tags">', False)[1] or \
+            self.cm.ph.getDataBeetwenMarkers(data, '<div class="video-details">', "</aside>", False)[1]
+        head = self.cm.ph.getSearchGroups(details, r"(?s)<h1>(.*?)</h1>", ignoreCase=True)[0]
+        info["title"] = self.cleanHtmlStr(head.split("<small", 1)[0]) or \
             self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'<meta property="og:title" content="([^"]*)"')[0])
-        info["year"] = self.cm.ph.getSearchGroups(self.cm.ph.getSearchGroups(details, r"(?s)<h1>(.*?)</h1>", ignoreCase=True)[0], r"<small>[^<]*?\b((?:19|20)\d{2})\b")[0]
+        info["year"] = self.cm.ph.getSearchGroups(head, r"<small>[^<]*?\b((?:19|20)\d{2})\b")[0]
         info["genre"] = self.cleanHtmlStr(self.cm.ph.getSearchGroups(details, r'(?s)href="/category/[^"]+"[^>]*>(.*?)</a>', ignoreCase=True)[0])
-        info["desc"] = self.cleanHtmlStr(details.rsplit("<p>", 1)[-1]) if "<p>" in details else ""
+        info["desc"] = self.cleanHtmlStr(self.cm.ph.getSearchGroups(details, r'(?s)<div class="description">(.*?)</div>')[0])
         if not info["desc"]:
             info["desc"] = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'<meta property="og:description" content="([^"]*)"')[0])
         info["poster"] = self.cm.ph.getSearchGroups(data, r'<meta property="og:image" content="([^"]+)"')[0]
@@ -296,7 +329,7 @@ class IHaveNoTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if seconds and int(seconds) > 0:
             info["duration"] = "%dh %02dmin" % (int(seconds) // 3600, (int(seconds) % 3600) // 60) if int(seconds) >= 3600 else "%dmin" % (int(seconds) // 60)
         info["tags"] = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'<meta name="keywords" content="([^"]*)"')[0]).replace(",", ", ")
-        player = self.cm.ph.getDataBeetwenMarkers(data, '<div id="videoWrap">', '<div class="videoDetails">', False)[1]
+        player = self.cm.ph.getDataBeetwenMarkers(data, '<div class="player">', '<div class="video-details">', False)[1]
         for src in re.findall(r'<iframe[^>]+src="([^"]+)"', player, re.IGNORECASE):
             src = src.replace("&amp;", "&").strip()
             if src.startswith("//"):
@@ -419,7 +452,7 @@ class IHaveNoTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 year = years[:4] or year
                 if years:
                     otherInfo["year"] = years
-                text = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r"(?s)</h1>\s*<p>(.*?)</p>", ignoreCase=True)[0]) or text
+                text = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r"(?s)</h1>\s*<p[^>]*>(.*?)</p>", ignoreCase=True)[0]) or text
                 # the series backdrop is often a dead link ("s3758..jpg") - the first episode picture is not
                 cards = self._parseCards(data, url)
                 icon = (cards[0]["icon"] if cards and cards[0]["icon"] else "") or icon or \
