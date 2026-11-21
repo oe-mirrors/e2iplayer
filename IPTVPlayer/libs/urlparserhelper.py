@@ -9,7 +9,6 @@ import ast
 import re
 import time
 import string
-import codecs
 import six
 from urllib.parse import unquote, urljoin, urlparse
 from http.client import responses as HTTP_REASONS
@@ -47,123 +46,6 @@ def int2base(x, base):
 
 def JS_toString(x, base):
     return int2base(x, base)
-
-
-def JS_DateValueOf():
-    return time.time() * 1000
-
-
-def JS_FromCharCode(*args):
-    return ''.join(map(chr, args))
-
-
-def unicode_escape(s):
-    decoder = codecs.getdecoder('unicode_escape')
-    return six.ensure_str(re.sub(r'\\u[0-9a-fA-F]{4,}', lambda m: decoder(m.group(0))[0], s))
-
-
-def drdX_fx(e):
-    t = {}
-    n = 0
-    r = 0
-    i = []
-    s = ""
-    o = JS_FromCharCode
-    u = [[65, 91], [97, 123], [48, 58], [43, 44], [47, 48]]
-
-    for z in range(len(u)):
-        n = u[z][0]
-        while n < u[z][1]:
-            i.append(o(n))
-            n += 1
-    n = 0
-    while n < 64:
-        t[i[n]] = n
-        n += 1
-    n = 0
-    while n < len(e):
-        a = 0
-        f = 0
-        l = 0
-        c = 0
-        h = e[n:n + 72]
-        while l < len(h):
-            f = t[h[l]]
-            a = (a << 6) + f
-            c += 6
-            while c >= 8:
-                c -= 8
-                s += o((a >> c) % 256)
-            l += 1
-        n += 72
-    return s
-
-
-def VIDEOMEGA_decryptPlayerParams(p, a, c, k, e, d):
-    def e1(c):
-        return JS_toString(c, 36)
-
-    def k1(matchobj):
-        return d[matchobj.group(0)]
-
-    def e2(t=None):
-        return '\\w+'
-
-    e = e1
-    if True:
-        while c != 0:
-            c -= 1
-            tmp1 = e(c)
-            d[tmp1] = k[c]
-            if '' == d[tmp1]:
-                d[tmp1] = e(c)
-        c = 1
-        k = [k1]
-        e = e2
-    while c != 0:
-        c -= 1
-        if k[c]:
-            reg = '\\b' + e(c) + '\\b'
-            p = re.sub(reg, k[c], p)
-    return p
-
-
-def SAWLIVETV_decryptPlayerParams(p, a, c, k, e, d):
-    def e1(c):
-        if c < a:
-            ret = ''
-        else:
-            ret = e(c // a)
-        c = c % a
-        if c > 35:
-            ret += chr(c + 29)
-        else:
-            ret += JS_toString(c, 36)
-        return ret
-
-    def k1(matchobj):
-        return d[matchobj.group(0)]
-
-    def e2(t=None):
-        return '\\w+'
-
-    e = e1
-    if True:
-        while c != 0:
-            c -= 1
-            tmp1 = e(c)
-            d[tmp1] = k[c]
-            if '' == d[tmp1]:
-                d[tmp1] = e(c)
-        c = 1
-        k = [k1]
-        e = e2
-    while c != 0:
-        c -= 1
-        if k[c]:
-            reg = '\\b' + e(c) + '\\b'
-            p = re.sub(reg, k[c], p)
-    return p
 
 
 def TEAMCASTPL_decryptPlayerParams(p, a, c, k, e=None, d=None):
@@ -329,57 +211,6 @@ def VIDUPME_decryptPlayerParams(p=None, a=None, c=None, k=None, e=None, d=None):
         if k[c]:
             p = re.sub('\\b' + int2base(c, a) + '\\b', k[c], p)
     return p
-
-
-def VIDEOWEED_decryptPlayerParams(w, i, s=None, e=None):
-    lIll = 0
-    ll1I = 0
-    Il1l = 0
-    ll1l = []
-    l1lI = []
-    while True:
-        if lIll < 5:
-            l1lI.append(w[lIll])
-        elif lIll < len(w):
-            ll1l.append(w[lIll])
-        lIll += 1
-        if ll1I < 5:
-            l1lI.append(i[ll1I])
-        elif ll1I < len(i):
-            ll1l.append(i[ll1I])
-        ll1I += 1
-        if Il1l < 5:
-            l1lI.append(s[Il1l])
-        elif Il1l < len(s):
-            ll1l.append(s[Il1l])
-        Il1l += 1
-        if len(w) + len(i) + len(s) + len(e) == len(ll1l) + len(l1lI) + len(e):
-            break
-    lI1l = ''.join(ll1l)
-    I1lI = ''.join(l1lI)
-    ll1I = 0
-    l1ll = []
-
-    lIll = 0
-    while lIll < len(ll1l):
-        ll11 = -1
-        if ord(I1lI[ll1I]) % 2:
-            ll11 = 1
-        l1ll.append(JS_FromCharCode(int(lI1l[lIll:lIll + 2], 36) - ll11))
-        ll1I += 1
-        if ll1I >= len(l1lI):
-            ll1I = 0
-
-        lIll += 2
-    return ''.join(l1ll)
-
-
-def VIDEOWEED_decryptPlayerParams2(w, i, s=None, e=None):
-    s = 0
-    while s < len(w):
-        i += JS_FromCharCode(int(w[s:s + 2], 36))
-        s += 2
-    return i
 
 
 class captchaParser:

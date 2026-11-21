@@ -4,7 +4,8 @@
 (function () {
   var G = globalThis, modules = G.__modules, anyProxy = G.__anyProxy;
   var out = function (s) { G.__out(s); if (s === "@@D") G.__exit(); };
-  var VM_RE = /\^\w+\[\w+%256\]\^\w+\[\w+%256\]/;
+  // the VMs' byte reader: x[i++]^s[i%256]^n[i%256]; since 21.11.2026 with one more key between: ...^s[e%256]^f^n[e%256]
+  var VM_RE = /\^\w+\[\w+%256\](?:\^\w+)?\^\w+\[\w+%256\]/;
 
   // ---------- webpack require ----------
   var cache = {};

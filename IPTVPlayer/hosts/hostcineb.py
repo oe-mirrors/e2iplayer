@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "10.10.2026"
+LAST_MODIFIED = "21.11.2026"
 # =========== Created by angel_heart (Mohamed Elsafty) ======== 20260801
 # 24.08.2026 - Fixed search (search_item was False), switched to
 # searchItems()/listsHistory() pattern, added watched/started flag support,
@@ -48,11 +48,12 @@ def _metaKeys(title, isSeries):
 
 
 # servers of the site that urlparser resolves, best first: (label of the site's button, lowercase), needs quickjs or enc-dec.app
-SERVERS = (("vidsrc.mov", False), ("vidsrc-v1", False), ("vidrock", False), ("vixsrc", False), ("vidlink", False),
+# "vip server" (21.11.2026: embed.vidsrc.si) = server 0 of the new site, its button carries no hoster name
+SERVERS = (("vip server", False), ("vidsrc.mov", False), ("vidsrc-v1", False), ("vidrock", False), ("vixsrc", False), ("vidlink", False),
            ("vidsrc.fyi", False), ("vidnest", False), ("peachify", False),
            ("vidfast", True), ("vidup", True), ("vidcore-v2", True))
-# their numbers on 10.10.2026, used when the server list cannot be read from the page
-SERVER_FALLBACK = (("0", "vidsrc.mov"), ("5", "vidrock"), ("7", "vidlink"), ("1", "vidsrc.fyi"), ("6", "vidnest"))
+# their numbers on 21.11.2026, used when the server list cannot be read from the page
+SERVER_FALLBACK = (("0", "VIP server"), ("1", "vidsrc.mov"), ("6", "vidlink"), ("2", "vidsrc.fyi"), ("5", "vidnest"))
 WATCH_RE = re.compile(r"/watch/((movie|tv)-[^/?#]+)")
 
 
@@ -100,6 +101,13 @@ class Cineb(CBaseHostClass):
             if sts and self._isGate(data):
                 printDBG("Cineb: still the quick check page [%s]" % baseUrl)
                 return False, ""
+        # 21.11.2026: the search (and /home-v1?to=<path>) hand over to the brand's current domain (changes per visit:
+        # flixtaffy.st, flixmovie.cc, flixcity.st ...): location.replace("https://<domain>/__handoff?hv=<pass>&to=<path>")
+        handoff = self.cm.ph.getSearchGroups((data or "")[:3000], r'location\.replace\("(https?://[^"/]+/__handoff\?[^"]+)"')[0] if sts else ""
+        if handoff:
+            handoff = handoff.replace("\\u0026", "&")
+            printDBG("Cineb: handoff [%s]" % handoff)
+            sts, data = self.cm.getPageCFProtection(handoff, dict(addParams), post_data)
         return sts, data
 
     @staticmethod
@@ -137,11 +145,32 @@ class Cineb(CBaseHostClass):
     def _servers(self, data):
         # [(x, label)] of the urlparser-known servers on a watch page, in the order of SERVERS
         found = {}
+        # 21.11.2026: <button name="x" value="1" ... title="Server 2 · vidsrc.mov"> (VIP: title="VIP server (no ads)")
+        for x, title in re.findall(r'name="x" value="(\d+)"[^>]*?title="([^"]*)"', data or ""):
+            title = self.cleanHtmlStr(title)
+            label = re.sub(r"^Server \d+ \S+ ", "", title)
+            if label == title:
+                label = re.sub(r"\s*\(.*$", "", title)
+            found.setdefault(label.lower(), (x, label))
         for x, label in re.findall(r'name="x" value="(\d+)"[^>]*>(?:\s*<i[^>]*></i>)?([^<]+)<', data or ""):
             found.setdefault(self.cleanHtmlStr(label).lower(), (x, self.cleanHtmlStr(label)))
         return [found[key] for key, _enc in SERVERS if key in found]
 
-    def _goLinks(self, cItem, data):
+    def _handoff(self, data):
+        # 21.11.2026: cineb.sx shows a dummy player only ("Use the New Cineb? Click here" -> /home-v1?to=<path>); getPage
+        # follows that page's handoff to the current domain, whose watch page has the servers
+        # -> (base url of that domain, watch page) or ("", "")
+        link = self.cm.ph.getSearchGroups(data or "", r'href="(/home-v1\?to=[^"]+)"')[0]
+        if not link:
+            return "", ""
+        sts, page = self.getPage(self.getFullUrl(link.replace("&amp;", "&")))
+        base = self.cm.ph.getSearchGroups(self.cm.meta.get("url", ""), r"^(https?://[^/]+)")[0] if sts else ""
+        if not base or base == self.MAIN_URL:
+            printDBG("Cineb: no handoff")
+            return "", ""
+        return base, page
+
+    def _goLinks(self, cItem, data, base=""):
         # the server form of the watch page -> /api/go links (resolved in getVideoLinks)
         url = cItem.get("url", "")
         match = WATCH_RE.search(url)
@@ -163,7 +192,7 @@ class Cineb(CBaseHostClass):
         for x, label in servers:
             if needsExternal.get(label.lower()) and not external:
                 continue
-            goUrl = "%s/api/go?t=%s&slug=%s&x=%s" % (self.MAIN_URL, kind, slug, x)
+            goUrl = "%s/api/go?t=%s&slug=%s&x=%s" % (base or self.MAIN_URL, kind, slug, x)
             if kind == "tv":
                 goUrl += "&s=%s&e=%s" % (season, episode)
             urlTab.append({"name": label, "url": strwithmeta(goUrl, {"Referer": url}), "need_resolve": 1})
@@ -493,7 +522,12 @@ class Cineb(CBaseHostClass):
         sts, data = self.getPage(cItem["url"])
         if not sts:
             return []
-        urlTab = self._goLinks(cItem, data)
+        base = ""
+        if 'name="x"' not in data:
+            base, newData = self._handoff(data)
+            if base:
+                data = newData
+        urlTab = self._goLinks(cItem, data, base)
         if not urlTab:
             iframeList = re.findall(r'<iframe[^>]+src=["\']([^"\']+)["\']', data, re.I)
             for src in iframeList:
