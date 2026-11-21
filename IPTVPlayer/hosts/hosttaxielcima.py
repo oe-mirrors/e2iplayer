@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "17.11.2026"
+LAST_MODIFIED = "21.11.2026"
 # 17.11.2026 - update to current url and fix icon
 # 21.10.2026 - every hoster mirror of a Megamax server as an own server row, resolved only when picked (urlparser
 #   getMegamaxMirrors)
@@ -59,13 +59,14 @@ class TaxiElCima(GenericFolderWatchedScraperMixin, CBaseHostClass):
         self.MAIN_URL = gettytul()
         self.HEADER = self.cm.getDefaultHeader(browser="chrome")
         self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
-        self.MENU = [{"category": "list_items", "title": _("Movies"), "url": self.getFullUrl("movies/")},
+        # /movies/ answers HTTP 500 without a list (11.2026): Movies = the site's film sections, genres from the home page
+        self.MENU = [{"category": "list_movie_sections", "title": _("Movies"), "url": self.MAIN_URL},
                      {"category": "list_items", "title": _("Series"), "url": self.getFullUrl("series/")},
                      {"category": "list_items", "title": _("Newest Episodes"), "url": self.getFullUrl("episodes/")},
                      {"category": "list_items", "title": _("TV Shows"), "url": self.getFullUrl("tv/")},
                      {"category": "list_items", "title": _("Anime"), "url": self.getFullUrl("anime/")},
                      {"category": "list_groups", "title": _("Categories"), "url": self.MAIN_URL},
-                     {"category": "list_genres", "title": _("Genres"), "url": self.getFullUrl("movies/")}] + self.searchItems()
+                     {"category": "list_genres", "title": _("Genres"), "url": self.MAIN_URL}] + self.searchItems()
         self.groupsCache = []
 
         self.watchedHelper = IPTVWatchedHelper("taxielcima")
@@ -193,9 +194,29 @@ class TaxiElCima(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 params.update({"good_for_fav": True, "category": "list_items", "title": title, "url": url})
                 self.addDir(params)
 
+    def listMovieSections(self, cItem):
+        # the film sections of the site menu: /افلام-<kind>/ (foreign, Arabic, Asian, Turkish, Indian, anime, dubbed)
+        printDBG("TaxiElCima.listMovieSections")
+        sts, data = self.getPage(self.MAIN_URL)
+        if not sts:
+            return
+        seen = set()
+        for url, title in re.findall(r'(?i)<a href="([^"]+/%d8%a7%d9%81%d9%84%d8%a7%d9%85-[^"/]+/)"[^>]*>([^<]+)</a>', data):
+            url = self._normUrl(url)
+            title = self.cleanHtmlStr(title)
+            if url in seen or not title:
+                continue
+            seen.add(url)
+            params = dict(cItem)
+            params.update({"good_for_fav": True, "category": "list_items", "title": title, "url": url})
+            self.addDir(params)
+
     def listGenres(self, cItem):
         printDBG("TaxiElCima.listGenres")
-        sts, data = self.getPage(cItem["url"])
+        url = cItem["url"]
+        if url.rstrip("/").endswith("/movies"):
+            url = self.MAIN_URL  # favourites of the old Genres row: /movies/ has no list any more
+        sts, data = self.getPage(url)
         if not sts:
             return
         # full list in the filter box (<li data-tax="genre">), the "Hotlinks" slider only shows a few
@@ -463,6 +484,8 @@ class TaxiElCima(GenericFolderWatchedScraperMixin, CBaseHostClass):
             self.listGroup(self.currItem)
         elif category == "list_genres":
             self.listGenres(self.currItem)
+        elif category == "list_movie_sections":
+            self.listMovieSections(self.currItem)
         elif category == "tx_series":
             self.listEpisodes(self.currItem)
         elif category in ["search", "search_next_page"]:
