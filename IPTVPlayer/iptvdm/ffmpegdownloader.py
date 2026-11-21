@@ -4,7 +4,10 @@
 #
 #  $Id$
 #
-#  Last Modified: 15.11.2026
+#  Last Modified: 21.11.2026
+#   - a download copies H.264 with constraint_set4/5 set to 0 (H264_FIX_OPTS, "Constrained High" of BongaCams ...:
+#     sound without a picture on the boxes); other video codecs / ffmpeg before 5.0: the same run again without it
+#  15.11.2026
 #   - a host's "Create MKV" also wins over the resolver's ff_out_container (merge:// with HLS audio became .ts)
 #  28.10.2026
 #   - buffering live DASH starts 30 s behind the edge and reads those at once (-readrate_initial_burst, ffmpeg 6.1+;
@@ -69,7 +72,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, ip
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.iptvdm.basedownloader import BaseDownloader
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
-from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import SidecarMixin, shellQuote
+from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import SidecarMixin, shellQuote, H264_FIX_OPTS, h264FixRefused
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.libs import dashmpd
 ###################################################
@@ -210,6 +213,10 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
         self.segmentExtRefused = False
         self.segmentExtUnknownOption = False
         self.runUrl = None
+        # H264_FIX_OPTS in a download; off for the rest of it when ffmpeg refused them (h264FixRefused)
+        self.h264Fix = True
+        self.h264FixUsed = False  # this ffmpeg run has them
+        self.h264FixRefused = False
 
     def __del__(self):
         printDBG("FFMPEGDownloader.__del__ ----------------------------------")
@@ -264,6 +271,8 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
         self.runUrl = url  # what a run with the segment options starts again
         if not fallbackRun:
             self.segmentExtLevel = 0
+            self.h264Fix = True
+        self.h264FixRefused = False
         segmentExtOpts = self.SEGMENT_EXT_OPTS[self.segmentExtLevel - 1] if self.segmentExtLevel else ()
         isHls = tmpUri.meta.get('iptv_proto', '') == 'm3u8'
         if not fallbackRun:
@@ -374,6 +383,9 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
         cmdTab.extend(mapOpts)
         outContainer = self._outContainer()
         cmdTab.extend(['-c:v', 'copy', '-c:a', 'copy'])
+        self.h264FixUsed = self._useH264Fix()
+        if self.h264FixUsed:
+            cmdTab.extend(H264_FIX_OPTS)
         if outContainer in ('mp4', 'mov'):
             # index at the start of the finished file, so players can seek in it right away
             cmdTab.extend(['-movflags', '+faststart'])
@@ -383,6 +395,13 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
         if not fallbackRun:
             self.onStart()
         return BaseDownloader.CODE_OK
+
+    def _useH264Fix(self):
+        # only a download in the download manager: buffered playback goes to exteplayer3, which fixes such streams
+        # itself (and must not wait for a second run). ffmpeg before 5.0 has no such option (a git build reads 0.0)
+        if not self.allowFinalRename or not self.h264Fix:
+            return False
+        return self.FFMPEG_VERSION == (0, 0) or self.FFMPEG_VERSION >= (5, 0)
 
     def _execute(self, cmdTab):
         # ffmpeg with these arguments (through cmdwrap: no shell quoting), its output to _dataAvail, its end to
@@ -485,6 +504,8 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
                 self.segmentExtRefused = True
             elif 'extension_picky' in item and ('Unrecognized' in item or 'not found' in item):
                 self.segmentExtUnknownOption = True
+            elif self.h264FixUsed and h264FixRefused(item):
+                self.h264FixRefused = True
             if not self.headerReceived:
                 if 'Duration:' in item:
                     duration = self._getDuration(item) - self._getStartTime(item)
@@ -553,6 +574,14 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
 
         self._refreshLocalFileSize()
         printDBG("FFMPEGDownloader._cmdFinished total[%s] downloaded[%s] size[%s] speed[%sx] last[%s]" % (self.totalDuration, self.downloadDuration, self.localFileSize, getattr(self, 'progressSpeed', 0), getattr(self, 'lastProgressLine', '')[-200:]))
+
+        if not terminated and 0 >= self.localFileSize and self.runUrl is not None and self.h264FixUsed and self.h264FixRefused:
+            # HEVC / VP9 ... or an ffmpeg without the option: it stopped before writing anything
+            printDBG("FFMPEGDownloader h264_metadata refused -> again without it")
+            self.h264Fix = False
+            self.fallbackRun = True  # same download: no second sidecar / live check / onStart
+            self.start(self.runUrl, self.filePath, self.downloaderParams)
+            return
 
         if not terminated and 0 >= self.localFileSize and self.runUrl is not None:
             level = 0

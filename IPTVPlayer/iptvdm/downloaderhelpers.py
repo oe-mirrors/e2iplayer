@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # IPTV download manager API
 # # added: 07.08.2026 - Shared helpers for Downloader: Py2/Py3 safe text & path handling, shell quoting, and the sidecar, (.txt description + .jpg poster). - Kamikaze24
+# 21.11.2026 - H264_FIX_OPTS / h264FixRefused(): downloads of "Constrained High" H.264 play on the boxes.
 # 15.11.2026 - ffmpeg's output of the subtitle mux goes to <name>.iptv.subs.log, printed to the debug log when the mux
 #   fails and always removed.
 # 12.10.2026 - subtitles of the link saved with a download (name.de.srt) or put into its MKV (setting "Subtitles").
@@ -30,6 +31,19 @@ except NameError:
     text_type = str
     binary_type = bytes
     string_types = (str, bytes)
+
+# H.264 whose SPS sets constraint_set4 + constraint_set5 ("Constrained High", BongaCams rooms ...): the Broadcom
+# decoders of the boxes give sound without a picture. ffmpeg's h264_metadata filter (ffmpeg 5.0+) sets both flags to 0
+# in the copy - a rewrite of the stream headers, no re-encoding. ffmpeg stops at once on other video codecs (HEVC ...)
+# and older builds do not know the option: the run goes again without it (h264FixRefused)
+H264_FIX_OPTS = ('-bsf:v', 'h264_metadata=zero_new_constraint_set_flags=1')
+
+
+def h264FixRefused(text):
+    # ffmpeg's output: "... is not supported by the bitstream filter 'h264_metadata'", "Error initializing bitstream
+    # filter", "Option zero_new_constraint_set_flags not found"
+    text = ensureText(text or '')
+    return 'bitstream filter' in text or 'zero_new_constraint_set_flags' in text
 
 
 def ensureText(data, encoding='utf-8'):

@@ -78,7 +78,9 @@ def ff():
     helper = types.SimpleNamespace(GET_FFMPEG_PATH=lambda: "ffmpeg", STS=types.SimpleNamespace(DOWNLOADING=1),
                                    getDownloaderParamFromUrlWithMeta=lambda url, b=False: (str(url), {}))
     _stubModule("Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh", DMHelper=helper)
-    _stubModule("Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers", SidecarMixin=_Sidecar, shellQuote=lambda s: s)
+    _stubModule("Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers", SidecarMixin=_Sidecar, shellQuote=lambda s: s,
+                H264_FIX_OPTS=("-bsf:v", "h264_metadata=zero_new_constraint_set_flags=1"),
+                h264FixRefused=lambda t: "bitstream filter" in t or "zero_new_constraint_set_flags" in t)
     _stubModule("Plugins.Extensions.IPTVPlayer.components.iptvplayerinit", TranslateTXT=lambda t: t)
     started = []
     _stubModule("Plugins.Extensions.IPTVPlayer.components.asynccall", AsyncMethod=lambda fnc: (lambda *a: started.append(fnc)))
@@ -484,3 +486,69 @@ def test_playback_keeps_the_merge_inputs(ff):
 def test_hls_skip_lines_are_not_logged(ff):
     assert ff.FFMPEGDownloader.ERROR_SPAM.search("[hls @ 0xb4c0d0] Skip ('#EXT-X-PART:DURATION=0.5,URI=\"x\"')")
     assert not ff.FFMPEGDownloader.ERROR_SPAM.search("[hls @ 0xb4c0d0] Opening 'https://edge/x.m3u8' for reading")
+
+
+H264_FIX = ["-bsf:v", "h264_metadata=zero_new_constraint_set_flags=1"]
+
+
+def _hasH264Fix(cmd):
+    return any(cmd[i:i + 2] == H264_FIX for i in range(len(cmd)))
+
+
+def test_download_fixes_constrained_high_h264(ff):
+    # BongaCams "Constrained High" (constraint_set4/5): the download sets both flags to 0, buffered playback does not
+    ff.FFMPEGDownloader.FFMPEG_VERSION = (0, 0)
+    dl = _dl(ff, "https://cdn/x/live.m3u8", {"iptv_proto": "m3u8"})
+    dl.start(dl.url, "/hdd/rec/Bonga.mkv")
+    cmd = ff.written["/hdd/rec/Bonga.mkv.iptv.cmd"].split("|")
+    assert _hasH264Fix(cmd) and cmd.index("-bsf:v") < cmd.index("-f")
+    dl = _dl(ff, "https://cdn/x/live.m3u8", {"iptv_proto": "m3u8"}, download=False)
+    dl.start(dl.url, "/tmp/.iptv_buffering.flv")
+    assert not _hasH264Fix(ff.written["/tmp/.iptv_buffering.flv.iptv.cmd"].split("|"))
+    # ffmpeg before 5.0 has no such option
+    ff.FFMPEGDownloader.FFMPEG_VERSION = (4, 4)
+    dl = _dl(ff, "https://cdn/x/live.m3u8", {"iptv_proto": "m3u8"})
+    dl.start(dl.url, "/hdd/rec/Old.mkv")
+    assert not _hasH264Fix(ff.written["/hdd/rec/Old.mkv.iptv.cmd"].split("|"))
+    ff.FFMPEGDownloader.FFMPEG_VERSION = (9, 0)
+    dl = _dl(ff, "https://cdn/x/live.m3u8", {"iptv_proto": "m3u8"})
+    dl.start(dl.url, "/hdd/rec/New.mkv")
+    assert _hasH264Fix(ff.written["/hdd/rec/New.mkv.iptv.cmd"].split("|"))
+    ff.FFMPEGDownloader.FFMPEG_VERSION = (0, 0)
+
+
+def test_refused_h264_fix_runs_again_without_it(ff):
+    # HEVC: ffmpeg stops before writing anything -> the same download again without the filter, once
+    ff.DMHelper.getFileSize = lambda path: 0
+    ff.DMHelper.STS.ERROR = "ERROR"
+    dl = _dl(ff, "https://cdn/x/hevc.m3u8", {"iptv_proto": "m3u8"})
+    dl.downloaderParams, dl.localFileSize, dl.sidecarEnabled = {}, 0, False
+    dl._finishDownloadFlow = lambda: None
+    dl.start(dl.url, "/hdd/rec/Hevc.mkv")
+    dl._dataAvail("[vost#0:0/copy @ 0x1] Codec 'hevc' (173) is not supported by the bitstream filter 'h264_metadata'. Supported codecs are: h264 (27) \n")
+    dl.localFileSize = 0
+    dl._cmdFinished(234, False)
+    cmd = ff.written["/hdd/rec/Hevc.mkv.iptv.cmd"].split("|")
+    assert not _hasH264Fix(cmd) and not dl.h264Fix
+    # the second run without it does not start a third one
+    dl._dataAvail("Error initializing bitstream filter: Invalid argument\n")
+    dl.localFileSize = 0
+    dl._cmdFinished(1, False)
+    assert dl.status == "ERROR"
+
+
+def test_h264_fix_is_not_retried_after_data_or_a_stop(ff):
+    # a stopped download, or one that wrote data, keeps its file: no run again
+    ff.DMHelper.getFileSize = lambda path: 5000
+    ff.DMHelper.STS.DOWNLOADED, ff.DMHelper.STS.INTERRUPTED, ff.DMHelper.STS.ERROR = "DOWNLOADED", "INTERRUPTED", "ERROR"
+    dl = _dl(ff, "https://cdn/x/live.m3u8", {"iptv_proto": "m3u8"})
+    dl.downloaderParams, dl.localFileSize = {}, 0
+    dl.start(dl.url, "/hdd/rec/Data.mkv")
+    starts = []
+    dl.start = lambda *a: starts.append(a)
+    dl._dataAvail("Error applying bitstream filters to a packet: Invalid data found\n")
+    dl._finishDownloadFlow = lambda: None
+    dl._fixFileExtension = lambda: None
+    dl.sidecarEnabled = False
+    dl._cmdFinished(0, False)
+    assert starts == [] and dl.h264Fix
