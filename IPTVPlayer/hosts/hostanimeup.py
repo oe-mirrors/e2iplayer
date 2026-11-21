@@ -28,7 +28,7 @@ from Plugins.Extensions.IPTVPlayer.libs.botprotection import remembered_user_age
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import LATIN_ONLY, getMeta, isLatinTitle
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, decorateResolvedLinkItems, sidecarFromUrlMeta
-from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
+from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist, requireDownloaderForDisguisedHls
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus, urllib_unquote
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
@@ -475,6 +475,11 @@ class Anime4up(GenericFolderWatchedScraperMixin, CBaseHostClass):
         links = getDirectM3U8Playlist(stream, checkExt=False, checkContent=True, sortWithMaxBitrate=99999999)
         if not links:
             links = [{"name": "HLS", "url": strwithmeta(stream, dict(meta, iptv_proto="m3u8"))}]
+        for item in links:
+            # the variants are /?token=.. too - without this they count as plain https files
+            item["url"] = strwithmeta(item["url"], dict(getattr(item["url"], "meta", {}), iptv_proto="m3u8"))
+        # so are the segments: exteplayer3's ffmpeg refuses them ("Invalid data found", box log) - via hlsdl
+        links = requireDownloaderForDisguisedHls(links)
         return decorateResolvedLinkItems(links, sidecarFromUrlMeta(videoUrl, IsSidecarEnabled()))
 
     def _expandMegamax(self, urltab):
