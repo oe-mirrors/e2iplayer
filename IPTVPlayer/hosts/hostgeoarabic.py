@@ -58,7 +58,7 @@ SEASON_RE = re.compile(r"الموسم\s*(\d+|%s)" % _ORD)
 # the post's source table: <td id="tdvideoIDOk">774954093307</td>
 SOURCE_RE = re.compile(r'<td id="tdvideo([A-Za-z0-9]+)">([^<]*)</td>')
 # source id -> (server name, url template); IDGoogle (old Blogger video) and IDGoogleReserve (Google Photos) do not
-# play, IDRutube has no resolver in urlparser
+# play, IDRutube (numeric ids, posts up to 2018) are deleted on RuTube ("Incorrect link")
 SOURCES = (
     ("IDGoogleDrive", "Google Drive", "https://drive.google.com/file/d/%s/view"),
     ("IDOk", "ok.ru", "https://ok.ru/videoembed/%s"),
