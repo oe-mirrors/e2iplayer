@@ -299,7 +299,7 @@ class urlparser:
             "cybervynx.com": self.pp.parserJWPLAYER,
             # d
             "d-s.io": self.pp.parserDOOD,
-            "d.arabseed.top": self.pp.parserJWPLAYER, # 211126
+            "d.arabseed.top": self.pp.parserJWPLAYER,  # 211126
             "d.tube": self.pp.parserDTUBE,  # add 241026 (docchi; play.d.tube via the parent domain)
             "d0000d.com": self.pp.parserDOOD,
             "d000d.com": self.pp.parserDOOD,
