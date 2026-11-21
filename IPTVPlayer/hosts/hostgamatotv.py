@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "24.10.2026"
+LAST_MODIFIED = "20.11.2026"
 # 24.10.2026 - new host (successor of gamatotv.me)
 #   films / series / kids with Greek subtitles (WordPress): movies, series, kids, Top 250, genres, years, search;
-#   series -> seasons -> episodes from the "Season N:" lines of the page; links = gtv4.site pages (iframe of
+#   series -> seasons -> episodes from the "Season N:" lines of the page; links = gtvN.site pages (iframe of
 #   a hoster or the site's own MP4); the domain hops: own domain option, else the gamatotv.info redirect
+# 20.11.2026 - gamatotv.click, links on gtv7.site, follow the domain an old one redirects to
 import re
 
 from Components.config import ConfigText, config, getConfigListEntry
@@ -29,7 +30,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return "https://gamatotv.gs/"
+    return "https://gamatotv.click/"
 
 
 # gamatotv.info -> <x>.workers.dev -> the current domain
@@ -37,6 +38,12 @@ REDIRECTOR_URL = "https://gamatotv.info/"
 LOCAL_PAGE_SIZE = 100
 # "Director ..." / "Stars: ..." lines of a film page -> INFO keys
 INFO_LINES = (("director", r"Director[s]?"), ("writers", r"Writer[s]?"), ("creator", r"Creator[s]?"), ("stars", r"Stars"))
+# the link pages of the site: gtv4.site, gtv7.site, ...
+GTV_RE = r"https?://(?:www\.)?gtv\d*\.[a-z]+/"
+
+
+def isGtv(url):
+    return bool(re.match(GTV_RE, url or ""))
 
 
 class GamatoTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
@@ -87,6 +94,13 @@ class GamatoTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
             addParams = dict(self.defaultParams)
         url = self._toCurrentDomain(baseUrl.split("#", 1)[0])
         sts, data = self.cm.getPageCFProtection(url, dict(addParams), post_data)
+        # an old domain answers with a 301 to the new one (and breaks the query: "?s=x" -> "?s=x)"): take the new one
+        finalUrl = self.cm.meta.get("url", "") if sts else ""
+        match = re.match(r"^(https?://(?:www\.)?gamatotv\.[a-z0-9.-]+/)", finalUrl)
+        if match and url.startswith(self.MAIN_URL) and not finalUrl.startswith(self.MAIN_URL) and "gamatotv.info" not in finalUrl:
+            printDBG("GamatoTV.getPage domain [%s] -> [%s] (redirect)" % (self.MAIN_URL, match.group(1)))
+            self.MAIN_URL = match.group(1)
+            sts, data = self.cm.getPageCFProtection(self._toCurrentDomain(url), dict(addParams), post_data)
         # a WordPress page has wp-content (the static navlinks/*.html menus do not); a parked domain does not either
         dead = not sts or ("wp-content" not in data and not url.endswith(".html"))
         if dead and not self.domainChecked and url.startswith(self.MAIN_URL):
@@ -150,18 +164,18 @@ class GamatoTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return content or self.cm.ph.getDataBeetwenMarkers(data, '<div class="entry-content">', "<!-- .entry-content", False)[1]
 
     def _linkAnchors(self, html):
-        # (url, label) of the links worth a try: the site's gtv4 pages and hosters urlparser knows
+        # (url, label) of the links worth a try: the site's gtvN pages and hosters urlparser knows
         result = []
         for url, label in re.findall(r'<a[^>]+href="([^"]+)"[^>]*>(.*?)</a>', html, re.S):
             url = url.replace("&amp;", "&").replace("&#038;", "&")
-            if "gtv4." in url or (self.cm.isValidUrl(url) and "youtube" not in url and self.up.checkHostSupport(url) == 1):
+            if isGtv(url) or (self.cm.isValidUrl(url) and "youtube" not in url and self.up.checkHostSupport(url) == 1):
                 result.append((url, self.cleanHtmlStr(label)))
         return result
 
     def _altLink(self, content):
-        # "Δείτε την σειρά εδώ": a gtv4 page with the coverapi player of the whole series
-        for url, label in re.findall(r'<a[^>]+href="([^"]*gtv4\.[^"]+)"[^>]*>([^<]*)</a>', content):
-            if not re.match(r"^\s*(?:LINK\s*\d+|\d+)\s*$", label, re.I):
+        # "Δείτε την σειρά εδώ": a gtvN page with the coverapi player of the whole series
+        for url, label in re.findall(r'<a[^>]+href="([^"]+)"[^>]*>([^<]*)</a>', content):
+            if isGtv(url) and not re.match(r"^\s*(?:LINK\s*\d+|\d+)\s*$", label, re.I):
                 return url, self.cleanHtmlStr(label)
         return "", ""
 
@@ -175,7 +189,7 @@ class GamatoTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
             for url, label in re.findall(r'<a[^>]+href="([^"]+)"[^>]*>\s*(\d+)\s*</a>', parts[idx + 1]):
                 links = episodes.setdefault(str(int(label)), [])
                 url = url.replace("&amp;", "&")
-                if ("gtv4." in url or self.up.checkHostSupport(url) == 1) and url not in links:
+                if (isGtv(url) or self.up.checkHostSupport(url) == 1) and url not in links:
                     links.append(url)
         return seasons
 
@@ -382,8 +396,8 @@ class GamatoTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
     ###################################################
     # links
     ###################################################
-    def _gtv4(self, url):
-        # a gtv4.site page: the hoster iframe or the site's own MP4 (video.js <source>); "" when it has neither
+    def _gtv(self, url):
+        # a gtvN.site page: the hoster iframe or the site's own MP4 (video.js <source>); "" when it has neither
         params = dict(self.defaultParams)
         params["header"] = dict(self.HEADER, Referer=self.MAIN_URL)
         sts, data = self.cm.getPage(url, params)
@@ -397,9 +411,9 @@ class GamatoTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return (self.getFullUrl(src, url) if src else ""), False
 
     def _hosterLink(self, name, url, referer, lang, meta=None):
-        # one link row of a gtv4 page / hoster url, None when nothing plays there
-        if "gtv4." in url:
-            target, direct = self._gtv4(url)
+        # one link row of a gtvN page / hoster url, None when nothing plays there
+        if isGtv(url):
+            target, direct = self._gtv(url)
             referer = url
         else:
             target, direct = url, False

@@ -19,6 +19,7 @@ from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdownloadercreator import Downloade
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.cover import Cover, Cover3
 from Plugins.Extensions.IPTVPlayer.components import skinchrome
+from Plugins.Extensions.IPTVPlayer.components.iptvchoicebox import IPTVChoiceBoxWidget, IPTVChoiceBoxItem
 from Plugins.Extensions.IPTVPlayer.tools.listselection import isZapToAnswer
 ###################################################
 
@@ -332,9 +333,13 @@ class E2iPlayerBufferingWidget(Screen):
             self.iptvDoClose()
         elif ret in ['key_exit', None]:
             if DMHelper.STS.DOWNLOADING == self.downloader.getStatus():
-                self.lastSize = self.downloader.getLocalFileSize(True)
-                printDBG("E2iPlayerBufferingWidget.leaveMoviePlayer: movie player consume all data from buffer - still downloading")
-                self.confirmExitCallBack()  # continue
+                if 'key_exit' == ret:
+                    # EXIT used to rebuffer silently (spinner, then the player came back on its own), which looked
+                    # like a hang - ask what to do, rebuffering stays one of the choices
+                    self.askStopPlaying()
+                else:
+                    printDBG("E2iPlayerBufferingWidget.leaveMoviePlayer: movie player consume all data from buffer - still downloading")
+                    self.rebuffer()
             else:
                 printDBG("E2iPlayerBufferingWidget.leaveMoviePlayer: movie player consume all data from buffer - downloading finished")
                 if DMHelper.STS.DOWNLOADED != self.downloader.getStatus():
@@ -342,12 +347,36 @@ class E2iPlayerBufferingWidget(Screen):
                 else:
                     self.iptvDoClose()
         elif ret in ['key_stop']:
-            # ask if we should close
-            self.lastSize = self.downloader.getLocalFileSize(True)
-            # list = [ (_("Yes"), True), (_("No"), False) ]
-            # if self.downloadManager and self.downloader and self.downloader.getPlayableFileSize() > 0:
-            #    list.append((_("yes, move playback buffer to the download manager"), 'move'))
-            self.session.openWithCallback(self.confirmExitCallBack, MessageBox, text=_("Stop playing?"), type=MessageBox.TYPE_YESNO)
+            self.askStopPlaying()
+
+    def askStopPlaying(self):
+        # STOP, and EXIT while still downloading: stop, go back into the player at the same position, or let the
+        # buffer fill up first (live streams: drop the buffer and start the stream again)
+        options = [IPTVChoiceBoxItem(_("Stop"), "", 'stop'), IPTVChoiceBoxItem(_("Continue"), "", 'continue')]
+        if DMHelper.STS.DOWNLOADING == self.downloader.getStatus():
+            options.append(IPTVChoiceBoxItem(_("Rebuffer"), "", 'rebuffer'))
+        # same popup as the player's own menus (height: see IPTVExtMoviePlayer._getChoiceBoxHeight)
+        itemH, scale = skinchrome.tierRowHeight(35, 40, 55)
+        height = int(len(options) * itemH / scale) + 146
+        self.session.openWithCallback(self.stopPlayingCallBack, IPTVChoiceBoxWidget, {'width': 500, 'height': height, 'current_idx': 0, 'title': _("Stop playing?"), 'options': options, 'chrome': True, 'footerMargin': 136})
+
+    def stopPlayingCallBack(self, ret=None):
+        ret = ret.privateData if ret else 'stop'  # EXIT in the dialog: EXIT twice stops, as before
+        printDBG("E2iPlayerBufferingWidget.stopPlayingCallBack [%s]" % ret)
+        if 'stop' == ret:
+            self.iptvDoClose()
+        elif 'rebuffer' == ret:
+            self.rebuffer()
+        elif self.downloader.getPlayableFileSize() > 0:
+            self.canRunMoviePlayer = True
+            self.runMovePlayer()
+        else:
+            self.iptvContinue()
+
+    def rebuffer(self):
+        # wait until the requested buffer size of new data has arrived, then the player starts again
+        self.lastSize = self.downloader.getLocalFileSize(True)
+        self.confirmExitCallBack()
 
     def confirmExitCallBack(self, ret=None):
         if ret is True:
