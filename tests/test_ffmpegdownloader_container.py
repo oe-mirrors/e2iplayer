@@ -80,7 +80,8 @@ def ff():
     _stubModule("Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh", DMHelper=helper)
     _stubModule("Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers", SidecarMixin=_Sidecar, shellQuote=lambda s: s,
                 H264_FIX_OPTS=("-bsf:v", "h264_metadata=zero_new_constraint_set_flags=1"),
-                h264FixRefused=lambda t: "bitstream filter" in t or "zero_new_constraint_set_flags" in t)
+                h264FixRefused=lambda t: "bitstream filter" in t or "zero_new_constraint_set_flags" in t,
+                fixMkvH264Header=lambda p: False, fixMkvH264HeaderWhenDone=lambda p: None)
     _stubModule("Plugins.Extensions.IPTVPlayer.components.iptvplayerinit", TranslateTXT=lambda t: t)
     started = []
     _stubModule("Plugins.Extensions.IPTVPlayer.components.asynccall", AsyncMethod=lambda fnc: (lambda *a: started.append(fnc)))

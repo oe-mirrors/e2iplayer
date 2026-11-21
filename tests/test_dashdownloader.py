@@ -143,6 +143,7 @@ def _setUp():
     _stubModule(PKG + ".iptvdm.downloaderhelpers", SidecarMixin=_Sidecar, shellQuote=lambda s: s,
                 H264_FIX_OPTS=("-bsf:v", "h264_metadata=zero_new_constraint_set_flags=1"),
                 h264FixRefused=lambda t: "bitstream filter" in t or "zero_new_constraint_set_flags" in t,
+                fixMkvH264Header=lambda p: False, fixMkvH264HeaderWhenDone=lambda p: None,
                 MKV_LANG_CODES={"de": "ger", "en": "eng"}, subtitleLangCode=lambda lang: (lang or "")[:2].lower(),
                 safeRemoveFile=lambda p: os.path.isfile(p) and os.remove(p))
     _stubModule(PKG + ".components.iptvplayerinit", TranslateTXT=lambda t: t)

@@ -72,7 +72,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, ip
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.iptvdm.basedownloader import BaseDownloader
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
-from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import SidecarMixin, shellQuote, H264_FIX_OPTS, h264FixRefused
+from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import SidecarMixin, shellQuote, H264_FIX_OPTS, h264FixRefused, fixMkvH264Header, fixMkvH264HeaderWhenDone
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.libs import dashmpd
 ###################################################
@@ -631,6 +631,9 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
             # (+faststart)
             if self._outContainer() not in ('mp4', 'mov'):
                 self._fixFileExtension()
+                # each SPS / PPS once in the H.264 header of an MKV (Enigma2 media player) - once ffmpeg, stopped
+                # just now, has written the end of the file
+                fixMkvH264HeaderWhenDone(self.filePath)
             if self.sidecarEnabled:
                 self._writeTxtSidecar(self.filePath)
             return
@@ -639,6 +642,9 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
             # ffmpeg has stopped writing -> name the file after its real container,
             # even for a partial (an incomplete .mkv is still an .mkv)
             self._fixFileExtension()
+            if self.allowFinalRename:
+                # each SPS / PPS once in the H.264 header of an MKV (Enigma2 media player)
+                fixMkvH264Header(self.filePath)
             # sidecar (.txt/.jpg) only for a real, complete DM download -
             # allowFinalRename is unset for buffered playback, which must not
             # wait on an image download before the player can proceed

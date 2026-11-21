@@ -8,7 +8,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, eC
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import enum, strwithmeta
 from Plugins.Extensions.IPTVPlayer.iptvdm.basedownloader import BaseDownloader
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
-from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import ensureText, fsPath, shellQuote, executeConsoleCmd, terminateToolsOfFile, SidecarMixin, H264_FIX_OPTS, h264FixRefused
+from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import ensureText, fsPath, shellQuote, executeConsoleCmd, terminateToolsOfFile, SidecarMixin, H264_FIX_OPTS, h264FixRefused, fixMkvH264Header
 ###################################################
 
 ###################################################
@@ -308,6 +308,8 @@ class HLSDownloader(BaseDownloader, SidecarMixin):
     def _finalizeSuccess(self, finalPath):
         self.filePath = ensureText(finalPath)
         self.finalizedPath = ensureText(finalPath)
+        # an MKV of the remux: each SPS / PPS once in its H.264 header (Enigma2 media player)
+        fixMkvH264Header(finalPath)
         self.localFileSize = DMHelper.getFileSize(fsPath(finalPath))
         if self.localFileSize > 0:
             self.remoteFileSize = self.localFileSize

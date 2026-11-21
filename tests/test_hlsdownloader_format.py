@@ -99,7 +99,8 @@ def hls():
                 shellQuote=lambda t: t, executeConsoleCmd=lambda console, cmd: commands.append(cmd),
                 terminateToolsOfFile=lambda p: None, SidecarMixin=_Sidecar,
                 H264_FIX_OPTS=("-bsf:v", "h264_metadata=zero_new_constraint_set_flags=1"),
-                h264FixRefused=lambda t: "bitstream filter" in t or "zero_new_constraint_set_flags" in t)
+                h264FixRefused=lambda t: "bitstream filter" in t or "zero_new_constraint_set_flags" in t,
+                fixMkvH264Header=lambda p: False)
     _stubModule("Components.config", config=cfg)
     _stubModule("enigma", eConsoleAppContainer=_Console)
     module = _load("hlsdownloader_under_test", os.path.join(ROOT, "iptvdm", "hlsdownloader.py"))
