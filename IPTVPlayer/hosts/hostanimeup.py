@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "21.10.2026"
+LAST_MODIFIED = "21.11.2026"
 # Coding: BY MOHAMED_OS
+# 21.11.2026 - the site's own players (<cdn>/Anime4up-S<n>/mal/<id>/<ep>/sub/): HLS stream + Arabic subtitle read
+#   from the player page; latest episodes from the new archive cards; page numbers with "1٬611"
 # 21.10.2026 - every hoster mirror of the Megamax server (share4max.com/iframe/<id>) as an own server row,
 #   resolved only when picked (urlparser getMegamaxMirrors); its "leech" player (/e/<id>) stays one row
 # 08.10.2026 - ported to the python3 framework / host standard
@@ -25,7 +27,8 @@ from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEna
 from Plugins.Extensions.IPTVPlayer.libs.botprotection import remembered_user_agent
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import LATIN_ONLY, getMeta, isLatinTitle
-from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, decorateResolvedLinkItems, sidecarFromUrlMeta
+from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus, urllib_unquote
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
@@ -46,6 +49,8 @@ def gettytul():
 # favourites of an older anime4up address are moved to the current one
 OLD_DOMAIN_RE = re.compile(r"^https?://[^/]*anime4up[^/]*/")
 CARD_START = '<div class="anime-card-themex">'
+# the site's own player pages (11.2026, on a changing CDN domain): <domain>/Anime4up-S1/mal/<mal id>/<episode>/sub/
+OWN_PLAYER_RE = re.compile(r"^https?://[^/]+/Anime4up-S\d+/")
 EPISODE_RE = re.compile(r"الحلقة\s*(\d+)")
 # "Kingdom 6th Season" / "Spy x Family Season 3" / "One Punch Man 3" keep their number in the name: the season
 # is read from the first two forms only
@@ -216,7 +221,8 @@ class Anime4up(GenericFolderWatchedScraperMixin, CBaseHostClass):
     def _pager(self, data):
         block = self.cm.ph.getDataBeetwenMarkers(data, 'class="page-numbers"', "</ul>", False)[1] or \
             self.cm.ph.getDataBeetwenMarkers(data, 'class="pagination', "</nav>", False)[1]
-        lastPage = max([int(n) for n in re.findall(r">\s*(\d+)\s*<", block)] + [0])
+        # the shown numbers carry a thousands separator ("1٬611"), the /page/N/ links plain digits
+        lastPage = max([int(n) for n in re.findall(r">\s*(\d+)\s*<", block) + re.findall(r"/page/(\d+)/", block)] + [0])
         return self._pageTpl(block), lastPage
 
     def _showFromCard(self, card):
@@ -275,17 +281,21 @@ class Anime4up(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not sts:
             return
         seen = set()
-        for tile in data.split('<div class="pinned-card">')[1:]:
+        # 11.2026: the archive uses the normal anime cards with the episode number on top ("ep_num")
+        tiles = data.split('<div class="pinned-card">')[1:] or data.split('<div class="anime-card-container">')[1:]
+        for tile in tiles:
             href = self.cm.ph.getSearchGroups(tile, r'<a href="([^"]+)"')[0]
-            show = self.cleanHtmlStr(self.cm.ph.getSearchGroups(tile, r"(?s)<h3>(.*?)</h3>")[0])
-            episode = EPISODE_RE.search(self.cleanHtmlStr(tile))
+            show = self.cleanHtmlStr(self.cm.ph.getSearchGroups(tile, r"(?s)<h3>(.*?)</h3>")[0]) or \
+                self.cleanHtmlStr(self.cm.ph.getSearchGroups(tile, r'class="anime-card-title" title="([^"]+)"')[0])
+            episode = EPISODE_RE.search(self.cleanHtmlStr(self.cm.ph.getSearchGroups(tile, r'(?s)class="ep_num">(.*?)</div>')[0]) or self.cleanHtmlStr(tile))
             if not href or not show or href in seen:
                 continue
             seen.add(href)
             name, season = _splitSeason(show)
             label = "%s - %s" % (show, self.cleanHtmlStr(episode.group(0))) if episode else show
-            icon = self.cm.ph.getSearchGroups(tile, r'data-src="([^"]+)"')[0]
-            info = " | ".join(self.cleanHtmlStr(x) for x in re.findall(r'(?s)<span class="anime-(?:type|duration)">(.*?)</span>', tile))
+            icon = self.cm.ph.getSearchGroups(tile, r'data-src="([^"]+)"')[0] or self.cm.ph.getSearchGroups(tile, r'<img[^>]+src="([^"]+)"')[0]
+            info = " | ".join(self.cleanHtmlStr(x) for x in re.findall(r'(?s)<span class="anime-(?:type|duration)">(.*?)</span>', tile)) or \
+                self.cleanHtmlStr(self.cm.ph.getSearchGroups(tile, r'(?s)class="anime-card-type">(.*?)</div>')[0])
             self.addVideo({"name": "category", "category": "a4_video", "good_for_fav": True, "url": self._canonUrl(href),
                            "title": self._episodeTitle(name, season, episode.group(1) if episode else "", label),
                            "icon": self.getFullIconUrl(icon) if icon else "", "desc": info, "s_title": name, "s_season": season,
@@ -421,6 +431,9 @@ class Anime4up(GenericFolderWatchedScraperMixin, CBaseHostClass):
             if link in seen:
                 continue
             seen.add(link)
+            if OWN_PLAYER_RE.match(link):
+                urltab.append({"name": label or "Anime4up", "url": strwithmeta(link, {"Referer": self.MAIN_URL}), "need_resolve": 1})
+                continue
             if self.up.checkHostSupport(link) != 1:
                 printDBG("Anime4up.getLinksForVideo unsupported hoster [%s]" % link)
                 continue
@@ -433,6 +446,36 @@ class Anime4up(GenericFolderWatchedScraperMixin, CBaseHostClass):
         urltab = applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled()))
         self.cacheLinks[url] = urltab
         return urltab
+
+    def getVideoLinks(self, videoUrl):
+        if not OWN_PLAYER_RE.match(str(videoUrl)):
+            return CBaseHostClass.getVideoLinks(self, videoUrl)
+        # own player page: let streamUrl = "<HLS master on the site's CDN>?token=.."; const tracks = [{"file": .vtt, ..}]
+        printDBG("Anime4up.getVideoLinks own player [%s]" % videoUrl)
+        params = dict(self.defaultParams)
+        params["header"] = dict(self.HEADER, Referer=self.MAIN_URL)
+        sts, data = self.cm.getPage(str(videoUrl), params)
+        stream = self.cm.ph.getSearchGroups(data, r'streamUrl\s*=\s*"(https?://[^"]+)"')[0] if sts else ""
+        if not stream:
+            SetIPTVPlayerLastHostError(_("No stream available"))
+            return []
+        subs = []
+        try:
+            for track in json_loads(self.cm.ph.getSearchGroups(data, r"(?s)\btracks\s*=\s*(\[.*?\]);")[0] or "[]"):
+                if isinstance(track, dict) and self.cm.isValidUrl(track.get("file", "")):
+                    lang = track.get("srclang") or "ar"
+                    subs.append({"title": track.get("label") or lang, "url": track["file"], "lang": lang, "format": "vtt"})
+        except Exception:
+            printExc()
+        meta = {"User-Agent": self.HEADER.get("User-Agent"), "Accept": "application/vnd.apple.mpegurl, application/x-mpegURL, */*"}
+        if subs:
+            meta["external_sub_tracks"] = subs
+        stream = strwithmeta(stream, meta)
+        # the playlist has no .m3u8 name (/?token=..), its variants are tokens of their own
+        links = getDirectM3U8Playlist(stream, checkExt=False, checkContent=True, sortWithMaxBitrate=99999999)
+        if not links:
+            links = [{"name": "HLS", "url": strwithmeta(stream, dict(meta, iptv_proto="m3u8"))}]
+        return decorateResolvedLinkItems(links, sidecarFromUrlMeta(videoUrl, IsSidecarEnabled()))
 
     def _expandMegamax(self, urltab):
         # every hoster mirror of a Megamax server as its own row like on the site (resolved only when picked);
