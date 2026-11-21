@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "21.10.2026"
+LAST_MODIFIED = "21.11.2026"
 # 18.10.2026 - new host (rewrite of the old Backup host)
 #   lists: Latest / Popular / Kino pages (static), All films / series / documentaries and genres through
 #   POST /aGET/List/ (First / Jump / Next page), search; series: season folder -> episodes
@@ -244,7 +244,15 @@ class Kinox(GenericFolderWatchedScraperMixin, CBaseHostClass):
     def getPage(self, baseUrl, addParams=None, post_data=None):
         if addParams is None:
             addParams = dict(self.defaultParams)
-        return self.cm.getPageCFProtection(baseUrl.split("#", 1)[0], addParams, post_data)
+        sts, data = self.cm.getPageCFProtection(baseUrl.split("#", 1)[0], addParams, post_data)
+        # 11.2026: every page of kinox.to is only <meta refresh url=https://kion.ru> (a foreign service, no kinox mirror)
+        if sts and len(data) < 500:
+            away = self.cm.ph.getSearchGroups(data, r"""http-equiv=["']refresh["'][^>]+url=(https?://[^"'>]+)""")[0]
+            if away and "kinox" not in away:
+                printDBG("Kinox.getPage [%s] -> refresh to [%s]" % (baseUrl, away))
+                SetIPTVPlayerLastHostError("kinox.to is offline at the moment - the site only forwards to %s." % self.cm.getBaseUrl(away, True))
+                return False, None
+        return sts, data
 
     ###################################################
     # watched flag
