@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # IPTV download manager API
 # # added: 07.08.2026 - Shared helpers for Downloader: Py2/Py3 safe text & path handling, shell quoting, and the sidecar, (.txt description + .jpg poster). - Kamikaze24
+# 21.11.2026 - H264_FIX_OPTS / h264FixRefused(): downloads of "Constrained High" H.264 play on the boxes;
+#   fixMkvH264Header(): an MKV with each SPS / PPS twice in its H.264 header plays in the Enigma2 media player.
 # 15.11.2026 - ffmpeg's output of the subtitle mux goes to <name>.iptv.subs.log, printed to the debug log when the mux
 #   fails and always removed.
 # 12.10.2026 - subtitles of the link saved with a download (name.de.srt) or put into its MKV (setting "Subtitles").
@@ -18,8 +20,10 @@ from enigma import eConsoleAppContainer
 import os
 import re
 import signal
+import struct
 import threading
 import time
+import zlib
 ###################################################
 
 try:
@@ -30,6 +34,212 @@ except NameError:
     text_type = str
     binary_type = bytes
     string_types = (str, bytes)
+
+# H.264 whose SPS sets constraint_set4 + constraint_set5 ("Constrained High", BongaCams rooms ...): the Broadcom
+# decoders of the boxes give sound without a picture. ffmpeg's h264_metadata filter (ffmpeg 5.0+) sets both flags to 0
+# in the copy - a rewrite of the stream headers, no re-encoding. ffmpeg stops at once on other video codecs (HEVC ...)
+# and older builds do not know the option: the run goes again without it (h264FixRefused)
+H264_FIX_OPTS = ('-bsf:v', 'h264_metadata=zero_new_constraint_set_flags=1')
+
+
+def h264FixRefused(text):
+    # ffmpeg's output: "... is not supported by the bitstream filter 'h264_metadata'", "Error initializing bitstream
+    # filter", "Option zero_new_constraint_set_flags not found"
+    text = ensureText(text or '')
+    return 'bitstream filter' in text or 'zero_new_constraint_set_flags' in text
+
+
+# Matroska element ids read by fixMkvH264Header()
+_MKV_SEGMENT, _MKV_TRACKS, _MKV_CLUSTER = 0x18538067, 0x1654AE6B, 0x1F43B675
+_MKV_TRACKENTRY, _MKV_CODECID, _MKV_CODECPRIVATE, _MKV_CRC32, _MKV_VOID = 0xAE, 0x86, 0x63A2, 0xBF, 0xEC
+_MKV_HEAD_BYTES = 1048576
+
+
+def _ebmlVint(buf, pos, maxLen):
+    # (value without the length marker, length, all value bits set = unknown size)
+    first = buf[pos]
+    length = 1
+    mask = 0x80
+    while length <= maxLen and not first & mask:
+        mask >>= 1
+        length += 1
+    if length > maxLen or pos + length > len(buf):
+        raise ValueError('bad EBML number at %d' % pos)
+    value = first & (mask - 1)
+    for i in range(1, length):
+        value = (value << 8) | buf[pos + i]
+    return value, length, value == (1 << (7 * length)) - 1
+
+
+def _ebmlElement(buf, pos):
+    # (id with its marker, start of the data, size of the data or -1 when unknown)
+    _unused, idLen, _unused = _ebmlVint(buf, pos, 4)
+    elementId = 0
+    for i in range(idLen):
+        elementId = (elementId << 8) | buf[pos + i]
+    size, sizeLen, unknown = _ebmlVint(buf, pos + idLen, 8)
+    return elementId, pos + idLen + sizeLen, -1 if unknown else size
+
+
+def _ebmlSizeField(value, length):
+    # the EBML size field of the given length
+    out = bytearray(length)
+    value |= 1 << (7 * length)
+    for i in range(length - 1, -1, -1):
+        out[i] = value & 0xFF
+        value >>= 8
+    return out
+
+
+def _dedupeAvcC(data):
+    # AVCDecoderConfigurationRecord with each SPS / PPS once, None when it has no duplicates or is not one
+    if len(data) < 7 or data[0] != 1:
+        return None
+    pos = 6
+    groups = []
+    for count in (data[5] & 0x1F, None):
+        if count is None:
+            if pos >= len(data):
+                return None
+            count = data[pos]
+            pos += 1
+        units = []
+        for _unused in range(count):
+            if pos + 2 > len(data):
+                return None
+            length = (data[pos] << 8) | data[pos + 1]
+            unit = bytes(data[pos + 2:pos + 2 + length])
+            if len(unit) != length:
+                return None
+            if unit not in units:
+                units.append(unit)
+            pos += 2 + length
+        groups.append((count, units))
+    if all(count == len(units) for count, units in groups):
+        return None
+    out = bytearray(data[:5])
+    out.append(0xE0 | len(groups[0][1]))
+    for unit in groups[0][1]:
+        out += bytearray(((len(unit) >> 8) & 0xFF, len(unit) & 0xFF)) + bytearray(unit)
+    out.append(len(groups[1][1]))
+    for unit in groups[1][1]:
+        out += bytearray(((len(unit) >> 8) & 0xFF, len(unit) & 0xFF)) + bytearray(unit)
+    # the extension of the High profiles (chroma format, bit depth, SPS ext) stays as it is
+    out += data[pos:]
+    return out
+
+
+def fixMkvH264Header(filePath):
+    # An encoder that sends every SPS / PPS twice in front of a key frame (BongaCams rooms ...): ffmpeg puts both
+    # copies into the H.264 header of an MKV (CodecPrivate), and the dvbvideosink of the boxes rejects it ("codec_data
+    # too short", Enigma2 media player without a picture, box test 21.11.2026). Each SPS / PPS once again, in place:
+    # the bytes set free become an EBML Void element, so no size or offset in the file changes; a CRC-32 of the
+    # Tracks element is written again. Only touches the file when there are duplicates. Returns True when it did.
+    try:
+        path = fsPath(filePath)
+        if not str(path).lower().endswith('.mkv') or not os.path.isfile(path):
+            return False
+        with open(path, 'rb') as f:
+            buf = bytearray(f.read(_MKV_HEAD_BYTES))
+        elementId, pos, size = _ebmlElement(buf, 0)
+        pos += size  # EBML header
+        elementId, pos, size = _ebmlElement(buf, pos)
+        if elementId != _MKV_SEGMENT:
+            return False
+        segmentEnd = len(buf) if size < 0 else min(len(buf), pos + size)
+        tracks = None
+        while pos < segmentEnd:
+            elementId, dataPos, size = _ebmlElement(buf, pos)
+            if elementId == _MKV_CLUSTER or size < 0:
+                break
+            if elementId == _MKV_TRACKS:
+                tracks = (dataPos, size)
+                break
+            pos = dataPos + size
+        if tracks is None or tracks[0] + tracks[1] > len(buf):
+            return False
+        tracksPos, tracksSize = tracks
+        tracksEnd = tracksPos + tracksSize
+        changed = False
+        crcPos = None
+        pos = tracksPos
+        while pos < tracksEnd:
+            elementId, dataPos, size = _ebmlElement(buf, pos)
+            if elementId == _MKV_CRC32 and size == 4:
+                crcPos = dataPos
+            elif elementId == _MKV_TRACKENTRY:
+                codecId = b''
+                private = None
+                entryPos = dataPos
+                while entryPos < dataPos + size:
+                    childId, childData, childSize = _ebmlElement(buf, entryPos)
+                    if childId == _MKV_CODECID:
+                        codecId = bytes(buf[childData:childData + childSize])
+                    elif childId == _MKV_CODECPRIVATE:
+                        private = (entryPos, childData, childSize)
+                    entryPos = childData + childSize
+                if codecId.rstrip(b'\x00') == b'V_MPEG4/ISO/AVC' and private:
+                    elementPos, privateData, privateSize = private
+                    newData = _dedupeAvcC(buf[privateData:privateData + privateSize])
+                    if newData is not None:
+                        sizeLen = privateData - elementPos - 2
+                        total = privateData + privateSize - elementPos
+                        block = bytearray(b'\x63\xa2') + _ebmlSizeField(len(newData), sizeLen) + newData
+                        free = total - len(block)
+                        voidLen = 1
+                        while voidLen < 8 and free - 1 - voidLen >= (1 << (7 * voidLen)) - 1:
+                            voidLen += 1
+                        if len(newData) >= (1 << (7 * sizeLen)) - 1 or free - 1 - voidLen < 0:
+                            printDBG('fixMkvH264Header: no room for the Void element in %s' % filePath)
+                        else:
+                            block += bytearray((_MKV_VOID,)) + _ebmlSizeField(free - 1 - voidLen, voidLen) + bytearray(free - 1 - voidLen)
+                            buf[elementPos:elementPos + total] = block
+                            changed = True
+            pos = dataPos + size
+        if not changed:
+            return False
+        if crcPos is not None:
+            buf[crcPos:crcPos + 4] = bytearray(struct.pack('<I', zlib.crc32(bytes(buf[crcPos + 4:tracksEnd])) & 0xFFFFFFFF))
+        with open(path, 'r+b') as f:
+            f.seek(tracksPos)
+            f.write(bytes(buf[tracksPos:tracksEnd]))
+        printDBG('fixMkvH264Header: SPS / PPS duplicates removed from the H.264 header of %s' % filePath)
+        return True
+    except Exception:
+        printExc()
+        return False
+
+
+def fixMkvH264HeaderWhenDone(filePath, quietSecs=3, maxSecs=60):
+    # A live recording stopped in the download manager: ffmpeg still writes the end of its MKV after that, the H.264
+    # header included (box test 21.11.2026: a fix right away was gone again). The fix runs once the file has not
+    # changed for quietSecs, in a thread of its own (only file access there).
+    def _wait():
+        try:
+            path = fsPath(filePath)
+            last = None
+            quietSince = time.time()
+            end = time.time() + maxSecs
+            while time.time() < end:
+                try:
+                    st = os.stat(path)
+                    state = (st.st_size, st.st_mtime)
+                except OSError:
+                    return
+                if state != last:
+                    last = state
+                    quietSince = time.time()
+                elif time.time() - quietSince >= quietSecs:
+                    fixMkvH264Header(filePath)
+                    return
+                time.sleep(0.5)
+            printDBG('fixMkvH264HeaderWhenDone: %s still changing after %d s, left as it is' % (filePath, maxSecs))
+        except Exception:
+            printExc()
+    worker = threading.Thread(target=_wait, name='fixMkvH264Header')
+    worker.daemon = True
+    worker.start()
+    return worker
 
 
 def ensureText(data, encoding='utf-8'):

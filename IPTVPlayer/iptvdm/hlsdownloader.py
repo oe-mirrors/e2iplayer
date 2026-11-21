@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # IPTV download manager API
-# Last Modified: 18.10.2026 - hlsdl 0.37 "fmp4-alt-audio" (fMP4 video + separate audio it cannot mux): FFMPEGDownloader takes the download over, its state is passed on. Earlier: 12.10.2026 - stopping a live recording is its normal end: renamed to what hlsdl wrote (.ts), its .txt written (was kept as .mp4 over MPEG-TS); no remux / cover / subtitles there, terminate() reports the finish at once. Earlier: 11.10.2026 - file format setting (hls_out_container): Automatic renames the file to the container hlsdl wrote (.ts/.mp4/.aac), MKV/MP4/TS remux when needed. Earlier: 10.10.2026 - isWorkingCorrectly() checks only hlsdl (cached usage text, no ffmpeg/process start), remux maps 0:v? (audio-only streams). Earlier: 07.08.2026 - Extracted shared helpers (ensureText/fsPath/shellQuote/writeUtf8TextFile) and sidecar logic into downloaderhelpers.SidecarMixin, shared with wgetdownloader.py and mergedownloader.py, instead of duplicating them here - Kamikaze24
+# Last Modified: 21.11.2026 - the remux (MKV / MP4 / TS) sets constraint_set4/5 of H.264 to 0 (H264_FIX_OPTS, "Constrained High" of BongaCams ...: sound without a picture on the boxes); other video codecs / ffmpeg before 5.0: the remux again without it. Earlier: 18.10.2026 - hlsdl 0.37 "fmp4-alt-audio" (fMP4 video + separate audio it cannot mux): FFMPEGDownloader takes the download over, its state is passed on. Earlier: 12.10.2026 - stopping a live recording is its normal end: renamed to what hlsdl wrote (.ts), its .txt written (was kept as .mp4 over MPEG-TS); no remux / cover / subtitles there, terminate() reports the finish at once. Earlier: 11.10.2026 - file format setting (hls_out_container): Automatic renames the file to the container hlsdl wrote (.ts/.mp4/.aac), MKV/MP4/TS remux when needed. Earlier: 10.10.2026 - isWorkingCorrectly() checks only hlsdl (cached usage text, no ffmpeg/process start), remux maps 0:v? (audio-only streams). Earlier: 07.08.2026 - Extracted shared helpers (ensureText/fsPath/shellQuote/writeUtf8TextFile) and sidecar logic into downloaderhelpers.SidecarMixin, shared with wgetdownloader.py and mergedownloader.py, instead of duplicating them here - Kamikaze24
 ###################################################
 # LOCAL import
 ###################################################
@@ -8,7 +8,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, eC
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import enum, strwithmeta
 from Plugins.Extensions.IPTVPlayer.iptvdm.basedownloader import BaseDownloader
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
-from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import ensureText, fsPath, shellQuote, executeConsoleCmd, terminateToolsOfFile, SidecarMixin
+from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import ensureText, fsPath, shellQuote, executeConsoleCmd, terminateToolsOfFile, SidecarMixin, H264_FIX_OPTS, h264FixRefused, fixMkvH264Header
 ###################################################
 
 ###################################################
@@ -77,6 +77,7 @@ class HLSDownloader(BaseDownloader, SidecarMixin):
         self.postProcessMode = ''
         self.tempRemuxPath = ''
         self.finalizedPath = ''
+        self.h264Fix = True
 
     def __del__(self):
         printDBG("HLSDownloader.__del__ ----------------------------------")
@@ -123,6 +124,7 @@ class HLSDownloader(BaseDownloader, SidecarMixin):
         self.postProcessMode = ''
         self.tempRemuxPath = ''
         self.finalizedPath = ''
+        self.h264Fix = True  # H264_FIX_OPTS in the remux, off after ffmpeg refused them
 
     def _preparePostData(self, meta):
         self._clearPostData()
@@ -289,6 +291,8 @@ class HLSDownloader(BaseDownloader, SidecarMixin):
         cmd += ' -i "%s" ' % shellQuote(self.filePath)
         # 0:v? too: an audio-only stream (radio) has no video, "-map 0:v" would abort the remux
         cmd += ' -map 0:v? -map 0:a? -vcodec copy -acodec copy '
+        if self.h264Fix:
+            cmd += ' %s %s ' % H264_FIX_OPTS
         if fmt == 'mp4':
             # index at the start of the finished file, so players can seek in it right away
             cmd += ' -movflags +faststart '
@@ -304,6 +308,8 @@ class HLSDownloader(BaseDownloader, SidecarMixin):
     def _finalizeSuccess(self, finalPath):
         self.filePath = ensureText(finalPath)
         self.finalizedPath = ensureText(finalPath)
+        # an MKV of the remux: each SPS / PPS once in its H.264 header (Enigma2 media player)
+        fixMkvH264Header(finalPath)
         self.localFileSize = DMHelper.getFileSize(fsPath(finalPath))
         if self.localFileSize > 0:
             self.remoteFileSize = self.localFileSize
@@ -569,6 +575,14 @@ class HLSDownloader(BaseDownloader, SidecarMixin):
                         self._removeSourceFile()
                     self._finalizeSuccess(targetPath)
                     return
+
+            if self.h264Fix and h264FixRefused(remuxLog):
+                # HEVC ... or an ffmpeg without the option
+                printDBG("HLSDownloader remux: h264_metadata refused -> again without it\n%s" % remuxLog)
+                self.h264Fix = False
+                self._safeRm(self.tempRemuxPath)
+                self.doStartPostProcess()
+                return
 
             printDBG("HLSDownloader remux failed -> fallback to original target, ffmpeg:\n%s" % remuxLog)
             if self._finalizeMp4Fallback():

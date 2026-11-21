@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "24.10.2026"
+LAST_MODIFIED = "21.11.2026"
 # 24.10.2026 - new host
 #   - TV8 Turkey (tv8.com.tr): free catch-up of the channel's own shows and series, live stream
-#   - shows from the site menu / programme page, video tabs per show through the site's JSON (Ajax/icerik/haberler)
+#   - shows from the programme page (all / ?tur=<type>), a show's tabs are its own pages (/<slug>/<tab>?page=N)
+# 21.11.2026 - new site layout: programme / video cards, tab pages instead of the JSON tabs, latest = home page
 #   - links: direct HLS of video-cdn.tv8.com.tr (variants) + the MP4 of the page, live HLS of daioncdn.net
 #   - search: the site only has a Google search box, so the show names are searched
 import re
@@ -11,10 +12,9 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHost
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsMediaNamingNormalized, IsSidecarEnabled
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
-from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps, loads as json_loads
+from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import applySidecarToLinks, buildSidecarFromItem
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
-from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str_deep
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
@@ -38,22 +38,18 @@ LIVE_URL = MAIN_URL + "canli-yayin"
 LIVE_ICON = IMG_URL + "s/template/v2/img/tv8-canli-yayin.jpg"
 # the stream of the live page, when the page can not be read
 LIVE_STREAM = "https://tv8.daioncdn.net/tv8/tv8.m3u8?app=7ddc255a-ef47-4e81-ab14-c0e5f2949788&ce=3"
-# "Daha Fazla Video" of a video tab: 14 videos per page, false after the last one
-TAB_JSON_URL = MAIN_URL + "Ajax/icerik/haberler/%s/%d?tip=videolar"
-TAB_PAGE_SIZE = 14
-# "En yeniler" of the videos page
-LATEST_JSON_URL = MAIN_URL + "Ajax/icerik/videolar/en_yeniler/%d/%d"
-LATEST_PAGE_SIZE = 21
-# drop-down menus of the site header: label of the menu -> menu row
-NAV_MENUS = (("Yarışmalar", "Competitions"), ("Diziler", "Series"), ("Programlar", "Programmes"))
-ALL_TAB = "Tüm Bölümler"
+# programme types of the programme page (?tur=..., 11.2026): menu row
+NAV_MENUS = (("yarisma", "Competitions"), ("dizi", "Series"), ("program", "Programmes"))
+# the show page's tab with the full episodes goes first
+ALL_TAB = "tum-bolumler"
 
-NAV_LINK_RE = re.compile(r'<a href="https://www\.tv8\.com\.tr/([a-z0-9-]+)"\s+data-image="([^"]*)"[^>]*?\stitle="([^"]*)"')
-GRID_LINK_RE = re.compile(r'<a href="https://www\.tv8\.com\.tr/([a-z0-9-]+)" title="([^"]*)">\s*<div class="list-type-one-img">\s*<img [^>]*?data-original="([^"]+)"')
-TAB_RE = re.compile(r'data-toggle="tab" data-id="(\d+)">([^<]+)<')
-TILE_RE = re.compile(r'(?s)<a href="(https://www\.tv8\.com\.tr/[^"]+-video\.htm)" class="tile-link">.*?(?:data-original|src)="([^"]+)".*?<h3 class="tile-title">(.*?)</h3>(?:\s*<span class="tile-summary">([^<]*)<)?')
-HLS_RE = re.compile(r'hls:\s*"(https?://[^"]+\.m3u8[^"]*)"')
-MP4_RE = re.compile(r'"contentURL":\s*"(https?://[^"]+\.mp4)"')
+# 11.2026 layout: programme cards and video cards ("now-thumb"), a show's tabs are own pages /<slug>/<tab>?page=N
+PROGRAM_CARD_RE = re.compile(r'(?s)<article class="now-thumb now-program-thumb">\s*<a href="/([a-z0-9-]+)"[^>]*>.*?<img src="([^"]+)" alt="([^"]*)"')
+VIDEO_CARD_RE = re.compile(r'(?s)<article class="now-thumb">(.*?)</article>')
+SHOW_TAB_RE = re.compile(r'class="nav-link[^"]*"\s+href="/([a-z0-9-]+)(?:/([a-z0-9-]+))?"\s*>\s*([^<]+?)\s*<')
+# hls: "https:\/\/video-cdn.tv8.com.tr\/...\/playlist.m3u8?st=..&e=.." (escaped slashes)
+HLS_RE = re.compile(r'hls:\s*"(https?:[^"]+\.m3u8[^"]*)"')
+MP4_RE = re.compile(r'"content[Uu][Rr][Ll]":\s*"(https?:[^"]+\.mp4[^"]*)"|(https?://video-cdn\.tv8\.com\.tr/[^"\'\s<>]+\.mp4[^"\'\s<>]*)')
 # Turkish letters spelled out (py2 byte strings: re.I does not fold ö/Ö), so no re.I on these two
 EPISODE_RE = re.compile(r'(\d+)\.\s*[Bb](?:ö|Ö|o|O)[Ll](?:ü|Ü|u|U)[Mm]')
 SEASON_RE = re.compile(r'(\d+)\.\s*Sezon', re.I)
@@ -78,8 +74,6 @@ class TV8(GenericFolderWatchedScraperMixin, CBaseHostClass):
         CBaseHostClass.__init__(self, {"history": "tv8", "cookie": "tv8.cookie"})
         self.HEADER = self.cm.getDefaultHeader(browser="chrome")
         self.HEADER.update({"Referer": MAIN_URL})
-        self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update({"Accept": "application/json, text/javascript, */*; q=0.01", "X-Requested-With": "XMLHttpRequest"})
         self.defaultParams = {"header": self.HEADER}
         self.MAIN_URL = MAIN_URL
         # menus of the site header + all shows, read once per session
@@ -89,18 +83,6 @@ class TV8(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     def getPage(self, url, addParams=None, post_data=None):
         return self.cm.getPage(url, addParams or self.defaultParams, post_data)
-
-    def _json(self, url):
-        sts, data = self.getPage(url, {"header": self.AJAX_HEADER})
-        if not sts or not data:
-            return []
-        try:
-            # Python 2: utf-8 str like the page data (the regexes and titles mix both)
-            data = ensure_str_deep(json_loads(data))
-            return data if isinstance(data, list) else []
-        except Exception:
-            printExc()
-        return []
 
     @staticmethod
     def _path(url):
@@ -128,49 +110,40 @@ class TV8(GenericFolderWatchedScraperMixin, CBaseHostClass):
     ###################################################
     # shows
     ###################################################
+    def _programmeCards(self, url):
+        sts, data = self.getPage(url)
+        if not sts:
+            return []
+        cards = []
+        for slug, icon, title in PROGRAM_CARD_RE.findall(data):
+            title = self.cleanHtmlStr(title).rstrip(".").strip()
+            if slug and title:
+                cards.append({"slug": slug, "title": title, "icon": self.getFullIconUrl(icon, IMG_URL) if icon else ""})
+        return cards
+
     def _loadShows(self):
         if self.showsCache is not None:
             return self.showsCache
-        sts, data = self.getPage(PROGRAMMES_URL)
-        if not sts:
-            return {"menus": {}, "all": []}
+        # the programme page: all shows; ?tur=<type>: the shows of one type
         shows = {}
         menus = {}
-
-        def add(slug, title, icon):
-            title = self.cleanHtmlStr(title).rstrip(".").strip()
-            if not slug or not title:
-                return
-            icon = self.getFullIconUrl(icon, IMG_URL) if icon and not icon.startswith("http") else icon
-            if slug in shows:
-                if icon and not shows[slug]["icon"]:
-                    shows[slug]["icon"] = icon
-            else:
-                shows[slug] = {"slug": slug, "title": title, "icon": icon}
-
-        # the programme page: all shows with their logo
-        for slug, title, icon in GRID_LINK_RE.findall(data):
-            add(slug, title, icon)
-        # the drop-down menus of the header: the current shows by type, "Tümü" = all shows
-        for label in [x[0] for x in NAV_MENUS] + ["Tüm Programlar"]:
-            start = data.find('title="%s">' % label)
-            if start < 0:
-                continue
-            end = data.find("menuPhotoBoxWrapper", start)
-            block = data[start:end if end > 0 else start + 30000]
-            slugs = []
-            for slug, icon, title in NAV_LINK_RE.findall(block):
-                add(slug, title, icon)
-                if slug not in slugs:
-                    slugs.append(slug)
-            menus[label] = slugs
+        for card in self._programmeCards(PROGRAMMES_URL):
+            shows.setdefault(card["slug"], card)
+        for tur, _title in NAV_MENUS:
+            menus[tur] = []
+            for card in self._programmeCards("%s?tur=%s" % (PROGRAMMES_URL, tur)):
+                shows.setdefault(card["slug"], card)
+                if card["slug"] not in menus[tur]:
+                    menus[tur].append(card["slug"])
+        if not shows:
+            return {"menus": {}, "all": []}
         allShows = sorted(shows.values(), key=lambda x: _fold(x["title"]))
         # the same name for an old and a new run of a show (gel-konusalim / gel-konusalim1): tell them apart
         titles = [x["title"] for x in allShows]
         for show in allShows:
             if titles.count(show["title"]) > 1:
                 show["title"] = "%s (%s)" % (show["title"], show["slug"])
-        self.showsCache = {"menus": dict((label, [shows[s] for s in slugs if s in shows]) for label, slugs in menus.items()), "all": allShows}
+        self.showsCache = {"menus": dict((tur, [shows[s] for s in slugs if s in shows]) for tur, slugs in menus.items()), "all": allShows}
         return self.showsCache
 
     def _addShow(self, cItem, show):
@@ -182,16 +155,17 @@ class TV8(GenericFolderWatchedScraperMixin, CBaseHostClass):
     def listMain(self, cItem):
         self.addVideo({"name": "category", "category": "tv8_live", "good_for_fav": True, "title": "TV8 Canlı Yayın", "url": LIVE_URL,
                        "icon": LIVE_ICON, "desc": _("Live"), "live": True})
-        menu = [{"category": "tv8_latest", "title": _("Latest videos"), "url": MAIN_URL + "videolar"}]
-        for label, title in NAV_MENUS:
-            menu.append({"category": "tv8_nav", "title": _(title), "nav": label, "url": PROGRAMMES_URL + "#" + label})
+        menu = [{"category": "tv8_latest", "title": _("Latest videos"), "url": MAIN_URL}]
+        for tur, title in NAV_MENUS:
+            menu.append({"category": "tv8_nav", "title": _(title), "nav": tur, "url": "%s?tur=%s" % (PROGRAMMES_URL, tur)})
         menu.append({"category": "tv8_all", "title": _("All"), "url": PROGRAMMES_URL})
         self.listsTab(menu + self.searchItems(), cItem)
 
     def listNav(self, cItem):
         shows = self._loadShows()
-        rows = shows["menus"].get(cItem.get("nav", ""), [])
-        for show in rows:
+        # favourites of the old menu rows carry the Turkish menu label
+        nav = {"Yarışmalar": "yarisma", "Diziler": "dizi", "Programlar": "program"}.get(cItem.get("nav", ""), cItem.get("nav", ""))
+        for show in shows["menus"].get(nav, []):
             self._addShow(cItem, show)
 
     def listAll(self, cItem):
@@ -200,58 +174,72 @@ class TV8(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     def listShow(self, cItem):
         slug = cItem.get("slug", "") or self._path(cItem.get("url", "")).strip("/").split("/", 1)[0]
-        url = MAIN_URL + slug + "/videolar"
+        url = MAIN_URL + slug
         printDBG("TV8.listShow [%s]" % url)
         sts, data = self.getPage(url)
         if not sts:
             return
+        # tabs: /<slug> (all videos, "TÜM VİDEOLAR (7.214)"), /<slug>/tum-bolumler, /<slug>/kisa-videolar ...
         tabs = []
-        for katId, title in TAB_RE.findall(data):
-            title = self.cleanHtmlStr(title)
-            if katId not in [x[0] for x in tabs]:
-                tabs.append((katId, title))
-        # the full episodes first
-        tabs.sort(key=lambda x: 0 if x[1] == ALL_TAB else 1)
+        for tabSlug, sub, title in SHOW_TAB_RE.findall(data):
+            title = re.sub(r"\s*\([\d.,]+\)\s*$", "", self.cleanHtmlStr(title))
+            if tabSlug == slug and title and sub not in [x[0] for x in tabs]:
+                tabs.append((sub, title))
+        tabs.sort(key=lambda x: 0 if x[0] == ALL_TAB else 1)
         show = cItem.get("s_title", "") or cItem.get("title", "")
         base = stripPagerKeys(dict(cItem), ("nav", "search_pattern"))
         base.update({"slug": slug, "s_title": show})
-        if len(tabs) == 1:
-            base.update({"kat_id": tabs[0][0], "tab_title": tabs[0][1]})
+        if len(tabs) <= 1:
+            # one tab or none: the videos of the show page
+            base.update({"kat_id": tabs[0][0] if tabs else "", "tab_title": tabs[0][1] if tabs else ""})
             self.listTab(base)
             return
-        for katId, title in tabs:
+        for sub, title in tabs:
             params = dict(base)
-            params.update({"good_for_fav": True, "category": "tv8_tab", "title": title, "kat_id": katId, "tab_title": title,
-                           "url": "%s?tab=%s" % (url, katId), "desc": show})
+            params.update({"good_for_fav": True, "category": "tv8_tab", "title": title, "kat_id": sub, "tab_title": title,
+                           "url": "%s/%s" % (url, sub) if sub else url, "desc": show})
             self.addDir(params)
-        if not tabs:
-            # no video tabs: the videos shown on the page itself
-            for videoUrl, icon, title, date in TILE_RE.findall(data):
-                params = dict(base)
-                params.update({"good_for_fav": True, "category": "tv8_video", "url": videoUrl, "icon": self.getFullIconUrl(icon, IMG_URL),
-                               "title": self._episodeTitle(show, self.cleanHtmlStr(title), ""), "desc": self.cleanHtmlStr(date)})
-                self.addVideo(params)
+
+    def _addVideoCards(self, cItem, data):
+        count = 0
+        for card in VIDEO_CARD_RE.findall(data):
+            href = self.cm.ph.getSearchGroups(card, r'href="([^"]+-video\.htm)"')[0]
+            raw = self.cleanHtmlStr(self.cm.ph.getSearchGroups(card, r'(?s)class="now-thumb-desc">(.*?)</div>')[0]) or \
+                self.cleanHtmlStr(self.cm.ph.getSearchGroups(card, r'aria-label="([^"]*)"')[0])
+            if not href or not raw:
+                continue
+            show = self.cleanHtmlStr(self.cm.ph.getSearchGroups(card, r'(?s)class="now-thumb-prog[^"]*">(.*?)</a>')[0]) or cItem.get("s_title", "")
+            duration = self.cleanHtmlStr(self.cm.ph.getSearchGroups(card, r'(?s)class="now-thumb-dur">(.*?)</span>')[0])
+            icon = self.cm.ph.getSearchGroups(card, r'<img[^>]+src="([^"]+)"')[0]
+            params = stripPagerKeys(dict(cItem), ("nav", "search_pattern"))
+            params.update({"good_for_fav": True, "category": "tv8_video", "url": self.getFullUrl(href), "title": self._episodeTitle(show, raw, ""),
+                           "s_title": show, "icon": self.getFullIconUrl(icon, IMG_URL) if icon else cItem.get("icon", ""), "desc": duration,
+                           "tv8_date": "", "tv8_dur": duration, "tv8_plot": "", "live": False})
+            self.addVideo(params)
+            count += 1
+        return count
 
     def listTab(self, cItem):
         page = max(1, int(cItem.get("page", 1) or 1))
-        katId = cItem.get("kat_id", "")
-        printDBG("TV8.listTab [%s] page %d" % (katId, page))
-        items = self._json(TAB_JSON_URL % (katId, page))
-        for item in items:
-            self._addEpisode(cItem, item)
-        url = cItem.get("url", "").split("&page=", 1)[0]
-        if "?tab=" not in url:
-            url = "%s%s/videolar?tab=%s" % (MAIN_URL, cItem.get("slug", ""), katId)
-        # no total from the site: Next page while a page is full
-        addPagingItems(self, dict(cItem, category="tv8_tab", url=url, desc=""), page, len(items) >= TAB_PAGE_SIZE, 0, url + "&page={page}")
+        slug = cItem.get("slug", "")
+        sub = cItem.get("kat_id", "")
+        if sub.isdigit():
+            sub = ""  # favourites of the old JSON tabs (numeric ids): all videos of the show
+        url = MAIN_URL + slug + ("/" + sub if sub else "")
+        printDBG("TV8.listTab [%s] page %d" % (url, page))
+        sts, data = self.getPage(url + ("?page=%d" % page if page > 1 else ""))
+        if not sts:
+            return
+        count = self._addVideoCards(cItem, data)
+        pager = " ".join(re.findall(r'class="page-link"[^>]*href="([^"]+)"', data))
+        lastPage = max([int(x) for x in re.findall(r"[?&]page=(\d+)", pager)] + [page])
+        addPagingItems(self, dict(cItem, category="tv8_tab", url=url, desc=""), page, bool(count) and lastPage > page, 0, url + "?page={page}")
 
     def listLatest(self, cItem):
-        page = max(1, int(cItem.get("page", 1) or 1))
-        items = self._json(LATEST_JSON_URL % (page, LATEST_PAGE_SIZE))
-        for item in items:
-            self._addEpisode(cItem, item)
-        url = MAIN_URL + "videolar"
-        addPagingItems(self, dict(cItem, url=url, desc=""), page, len(items) >= LATEST_PAGE_SIZE, 0, url + "?page={page}")
+        # the newest videos of the home page (the site has no paged list of them any more)
+        sts, data = self.getPage(MAIN_URL)
+        if sts:
+            self._addVideoCards(dict(cItem, s_title=""), data)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("TV8.listSearchResult [%s]" % searchPattern)
@@ -265,17 +253,6 @@ class TV8(GenericFolderWatchedScraperMixin, CBaseHostClass):
     ###################################################
     # episodes
     ###################################################
-    @staticmethod
-    def _image(resim):
-        try:
-            images = ensure_str_deep(json_loads(resim)) if resim and not isinstance(resim, dict) else (resim or {})
-            for key in ("620_340", "620_400", "original"):
-                if images.get(key):
-                    return IMG_URL + images[key].lstrip("/")
-        except Exception:
-            printExc()
-        return ""
-
     @staticmethod
     def _findShow(text, show):
         # index of the show name in the title (case-insensitive when lower() keeps the length), -1 if not there
@@ -316,32 +293,6 @@ class TV8(GenericFolderWatchedScraperMixin, CBaseHostClass):
             return "%s - %s" % (show, rest)
         return "%s - %s" % (show, date) if date else show
 
-    def _addEpisode(self, cItem, item):
-        try:
-            if not isinstance(item, dict) or item.get("tip", "video") != "video":
-                return
-            videoId = str(item.get("id") or "")
-            slug = item.get("slug") or ""
-            parent = item.get("parent_kslug") or cItem.get("slug", "")
-            if not videoId or not slug or not parent:
-                return
-            raw = self.cleanHtmlStr(item.get("baslik") or "")
-            show = self.cleanHtmlStr(item.get("parent_kname") or "") or cItem.get("s_title", "")
-            stamp = str(item.get("kayit_tarihi") or "")
-            date = stamp[:10] if re.match(r'^\d{4}-\d\d-\d\d', stamp) else ""
-            duration = str(item.get("video_suresi") or "")
-            if not re.match(r'^\d+:\d\d:\d\d$', duration) or not duration.strip("0:"):
-                duration = ""
-            plot = self.cleanHtmlStr(item.get("spot") or "")
-            line = " | ".join(x for x in ("%s.%s.%s" % (date[8:10], date[5:7], date[:4]) if date else "", duration, item.get("kname") or "") if x)
-            params = stripPagerKeys(dict(cItem), ("nav", "search_pattern"))
-            params.update({"good_for_fav": True, "category": "tv8_video", "url": "%s%s/%s-%s-video.htm" % (MAIN_URL, parent, slug, videoId),
-                           "title": self._episodeTitle(show, raw, date), "s_title": show, "icon": self._image(item.get("resim")) or cItem.get("icon", ""),
-                           "desc": "[/br]".join(x for x in (line, plot) if x), "tv8_date": date, "tv8_dur": duration, "tv8_plot": plot, "live": False})
-            self.addVideo(params)
-        except Exception:
-            printExc()
-
     ###################################################
     # links
     ###################################################
@@ -378,7 +329,7 @@ class TV8(GenericFolderWatchedScraperMixin, CBaseHostClass):
             SetIPTVPlayerLastHostError(_("Content not available"))
             return []
         urlTab = []
-        hls = self.cm.ph.getSearchGroups(data, HLS_RE.pattern)[0]
+        hls = self.cm.ph.getSearchGroups(data, HLS_RE.pattern)[0].replace("\\/", "/").replace("&amp;", "&")
         if hls:
             # videocdn.* checks the short-lived token (410 Gone), the same files on video-cdn.* play without it
             candidates = [hls.replace("//videocdn.", "//video-cdn."), hls] if "//videocdn." in hls else [hls]
@@ -386,9 +337,10 @@ class TV8(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 urlTab = self._hlsLinks(master, meta)
                 if urlTab:
                     break
-        mp4 = self.cm.ph.getSearchGroups(data, MP4_RE.pattern)[0]
+        match = MP4_RE.search(data)
+        mp4 = (match.group(1) or match.group(2) or "").replace("\\/", "/").replace("&amp;", "&") if match else ""
         if mp4:
-            quality = self.cm.ph.getSearchGroups(mp4, r'-(\d+p)\.mp4$')[0]
+            quality = self.cm.ph.getSearchGroups(mp4, r'-(\d+p)\.mp4')[0]
             urlTab.append({"name": "MP4 %s" % quality if quality else "MP4", "url": strwithmeta(mp4, {"User-Agent": self.HEADER.get("User-Agent"), "Referer": MAIN_URL}), "need_resolve": 0})
         if not urlTab:
             SetIPTVPlayerLastHostError(_("No stream available"))

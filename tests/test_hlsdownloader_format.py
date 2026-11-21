@@ -95,9 +95,12 @@ def hls():
                                    hlsdlSupportsResume=lambda: True, hasHlsdlResumeFile=lambda p: False,
                                    removeHlsdlResumeFiles=lambda p: None)
     _stubModule("Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh", DMHelper=helper)
-    _stubModule("Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers", ensureText=lambda t: t, fsPath=lambda p: p,
+    _stubModule("Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers", ensureText=lambda t: t.decode("utf-8") if isinstance(t, bytes) else t, fsPath=lambda p: p,
                 shellQuote=lambda t: t, executeConsoleCmd=lambda console, cmd: commands.append(cmd),
-                terminateToolsOfFile=lambda p: None, SidecarMixin=_Sidecar)
+                terminateToolsOfFile=lambda p: None, SidecarMixin=_Sidecar,
+                H264_FIX_OPTS=("-bsf:v", "h264_metadata=zero_new_constraint_set_flags=1"),
+                h264FixRefused=lambda t: "bitstream filter" in t or "zero_new_constraint_set_flags" in t,
+                fixMkvH264Header=lambda p: False)
     _stubModule("Components.config", config=cfg)
     _stubModule("enigma", eConsoleAppContainer=_Console)
     module = _load("hlsdownloader_under_test", os.path.join(ROOT, "iptvdm", "hlsdownloader.py"))
@@ -351,3 +354,33 @@ def test_hlsdl_options_before_the_url(hls, tmp_path):
         flags = dict(opts)
         assert flags["o"] == str(tmp_path / "Film (DE).mp4") and flags["w"] == "3" and flags["k"] == "k1"
         assert ("R" in flags) == download and ("s" in flags) == (not download)
+
+
+H264_FIX = "-bsf:v h264_metadata=zero_new_constraint_set_flags=1"
+
+
+def test_remux_fixes_constrained_high_h264(hls, tmp_path):
+    # BongaCams "Constrained High": the MKV remux sets constraint_set4/5 to 0 (no re-encoding); HEVC or an old ffmpeg
+    # refuse the filter -> the remux again without it
+    hls.cfg.hls_out_container.value = "matroska"
+    dl = _finished(hls, str(tmp_path / "Bonga.mp4"), TS)
+    assert H264_FIX in hls.commands[-1]
+    log = str(tmp_path / "Bonga.iptv.remux.log")
+    with open(log, "w") as f:
+        f.write("[vost#0:0/copy @ 0x1] Codec 'hevc' (173) is not supported by the bitstream filter 'h264_metadata'.\n"
+                "Error initializing bitstream filter: Invalid argument\n")
+    count = len(hls.commands)
+    dl._cmdFinished(234)
+    assert len(hls.commands) == count + 1 and H264_FIX not in hls.commands[-1]
+    assert dl.status == hls.sts.POSTPROCESSING and not dl.h264Fix
+    # the second remux works
+    with open(dl.tempRemuxPath, "wb") as f:
+        f.write(b"\x1a\x45\xdf\xa3" + b"\x00" * 100)
+    dl._cmdFinished(0)
+    assert dl.status == hls.sts.DOWNLOADED and os.path.isfile(str(tmp_path / "Bonga.mkv"))
+    # an other failure: no second remux
+    dl = _finished(hls, str(tmp_path / "Other.mp4"), TS)
+    count = len(hls.commands)
+    dl._cmdFinished(1)
+    assert len(hls.commands) == count and dl.status == hls.sts.DOWNLOADED
+    hls.cfg.hls_out_container.value = "auto"
