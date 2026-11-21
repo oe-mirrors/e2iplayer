@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "21.10.2026"
+LAST_MODIFIED = "21.11.2026"
 # 08.10.2026 - the site sits behind a Cloudflare challenge since ~05.10 (MyE2i cookie needed; checked live
 #   with one: markup unchanged). Hardened: season episode list from the <nav class="navbar"> blocks
 #   (first /episodes*/<slug>/ link), server buttons = any element with data-frameserver, admin-ajax url +
@@ -436,17 +436,21 @@ class ShahiidAnime(GenericFolderWatchedScraperMixin, CBaseHostClass):
             post = self.cm.ph.getSearchGroups(attrs, r"""data-post=['"]([^'"]*)['"]""")[0]
             serv = self.cm.ph.getSearchGroups(attrs, r"""data-serv=['"]([^'"]*)['"]""")[0]
             isFilm = self.cm.ph.getSearchGroups(attrs, r"""data-is_film=['"]([^'"]*)['"]""")[0]
-            if not post or not frame:
+            # 11.2026: the button has the server's id (data-server-id) instead of the video code
+            serverId = self.cm.ph.getSearchGroups(attrs, r"""data-server-id=['"]([^'"]*)['"]""")[0]
+            if not post or not (frame or serverId):
                 return ""
             ajaxUrl, action = ajax
-            query = urllib_urlencode([("action", action), ("post", post), ("_server_code_", ""),
-                                      ("frameserver", frame), ("is_film", isFilm), ("serv", serv)])
+            if serverId:
+                fields = [("action", action), ("post", post), ("server_id", serverId), ("is_film", isFilm), ("serv", serv)]
+            else:
+                fields = [("action", action), ("post", post), ("_server_code_", ""), ("frameserver", frame), ("is_film", isFilm), ("serv", serv)]
             params = dict(self.defaultParams)
             params["header"] = dict(self.HEADER)
             params["header"].update({"Referer": referer, "X-Requested-With": "XMLHttpRequest"})
-            sts, data = self.getPage(ajaxUrl + ("&" if "?" in ajaxUrl else "?") + query, params)
+            sts, data = self.getPage(ajaxUrl + ("&" if "?" in ajaxUrl else "?") + urllib_urlencode(fields), params)
             src = self.cm.ph.getSearchGroups(data, r'''<iframe[^>]+src=["']([^"']+)["']''', ignoreCase=True)[0] if sts else ""
-            if not src:
+            if not src and frame:
                 # the page script sends a GET (jQuery default); answer the form the way a POST does too
                 sts, data = self.getPage(ajaxUrl, params, {"action": action, "post": post, "frameserver": frame, "serv": serv, "is_film": isFilm})
                 src = self.cm.ph.getSearchGroups(data, r'''<iframe[^>]+src=["']([^"']+)["']''', ignoreCase=True)[0] if sts else ""
@@ -469,8 +473,8 @@ class ShahiidAnime(GenericFolderWatchedScraperMixin, CBaseHostClass):
         seen = set()
         ajax = self._ajaxTarget(data)
         # server buttons: <a class="buttosn" data-serv=".." data-frameserver='..' data-post=".."> (any tag / class
-        # that carries data-frameserver)
-        buttons = re.findall(r"""(?s)<(?:a|li|button|span)\s([^>]*data-frameserver=[^>]*)>(.*?)</(?:a|li|button|span)>""", data)
+        # that carries data-frameserver, or data-server-id since 11.2026)
+        buttons = re.findall(r"""(?s)<(?:a|li|button|span)\s([^>]*data-(?:frameserver|server-id)=[^>]*)>(.*?)</(?:a|li|button|span)>""", data)
         for attrs, label in buttons[:12]:
             url = self._serverEmbed(attrs, cItem["url"], ajax)
             if not url or url in seen:
