@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # IPTV download manager API
-# Last Modified: 21.11.2026 - the remux (MKV / MP4 / TS) sets constraint_set4/5 of H.264 to 0 (H264_FIX_OPTS, "Constrained High" of BongaCams ...: sound without a picture on the boxes); other video codecs / ffmpeg before 5.0: the remux again without it. Earlier: 18.10.2026 - hlsdl 0.37 "fmp4-alt-audio" (fMP4 video + separate audio it cannot mux): FFMPEGDownloader takes the download over, its state is passed on. Earlier: 12.10.2026 - stopping a live recording is its normal end: renamed to what hlsdl wrote (.ts), its .txt written (was kept as .mp4 over MPEG-TS); no remux / cover / subtitles there, terminate() reports the finish at once. Earlier: 11.10.2026 - file format setting (hls_out_container): Automatic renames the file to the container hlsdl wrote (.ts/.mp4/.aac), MKV/MP4/TS remux when needed. Earlier: 10.10.2026 - isWorkingCorrectly() checks only hlsdl (cached usage text, no ffmpeg/process start), remux maps 0:v? (audio-only streams). Earlier: 07.08.2026 - Extracted shared helpers (ensureText/fsPath/shellQuote/writeUtf8TextFile) and sidecar logic into downloaderhelpers.SidecarMixin, shared with wgetdownloader.py and mergedownloader.py, instead of duplicating them here - Kamikaze24
+# Last Modified: 22.11.2026 - a TS with "Constrained High" H.264 that stays TS (irregular frame times of webcams, "Automatic") is remuxed TS -> TS with the H.264 fix. "Stop" on a live recording ends only hlsdl, the file then gets the remux (H.264 fix, MKV), cover and .txt of a complete download; the download manager waits for that (stopLiveRecording). Earlier: 21.11.2026 - the remux (MKV / MP4 / TS) sets constraint_set4/5 of H.264 to 0 (H264_FIX_OPTS, "Constrained High" of BongaCams ...: sound without a picture on the boxes); other video codecs / ffmpeg before 5.0: the remux again without it. Earlier: 18.10.2026 - hlsdl 0.37 "fmp4-alt-audio" (fMP4 video + separate audio it cannot mux): FFMPEGDownloader takes the download over, its state is passed on. Earlier: 12.10.2026 - stopping a live recording is its normal end: renamed to what hlsdl wrote (.ts), its .txt written (was kept as .mp4 over MPEG-TS); no remux / cover / subtitles there, terminate() reports the finish at once. Earlier: 11.10.2026 - file format setting (hls_out_container): Automatic renames the file to the container hlsdl wrote (.ts/.mp4/.aac), MKV/MP4/TS remux when needed. Earlier: 10.10.2026 - isWorkingCorrectly() checks only hlsdl (cached usage text, no ffmpeg/process start), remux maps 0:v? (audio-only streams). Earlier: 07.08.2026 - Extracted shared helpers (ensureText/fsPath/shellQuote/writeUtf8TextFile) and sidecar logic into downloaderhelpers.SidecarMixin, shared with wgetdownloader.py and mergedownloader.py, instead of duplicating them here - Kamikaze24
 ###################################################
 # LOCAL import
 ###################################################
@@ -15,7 +15,7 @@ from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import ensureText, f
 # FOREIGN import
 ###################################################
 from Components.config import config
-from enigma import eConsoleAppContainer
+from enigma import eConsoleAppContainer, eTimer
 from time import sleep
 import re
 import datetime
@@ -43,6 +43,8 @@ class HLSDownloader(BaseDownloader, SidecarMixin):
                      'mpegts': ('mpegts', '.ts'), 'ts': ('mpegts', '.ts')}
     # container hlsdl wrote (_detectContainer) -> file extension
     CONTAINER_EXT = {'mpegts': '.ts', 'mp4': '.mp4', 'adts': '.aac'}
+    # hlsdl gets this long to exit after stopLiveRecording() ended it
+    LIVE_STOP_EXIT_MS = 15000
 
     def __init__(self):
         printDBG('HLSDownloader.__init__ ----------------------------------')
@@ -65,6 +67,10 @@ class HLSDownloader(BaseDownloader, SidecarMixin):
         # FFMPEGDownloader that took the download over when hlsdl could not produce the file (fMP4 video with
         # a separate audio rendition it cannot mux, "fmp4-alt-audio"); the state is read from it from then on
         self.fallback = None
+        # stopLiveRecording(): hlsdl was ended, the file is finished like a complete download (remux ...)
+        self.liveStopping = False
+        self.liveStopTimer = None
+        self.liveStopTimer_conn = None
 
         # both are set by the download manager (allowFinalRename: a real download, not buffered
         # playback; resumeExisting: "Continue downloading" on an interrupted item)
@@ -183,7 +189,29 @@ class HLSDownloader(BaseDownloader, SidecarMixin):
             self.ffmpegPostEnabled = True
             self.ffmpegContainer = choice
             return
+        if found == 'mpegts' and self._hasConstrainedH264():
+            # stays TS, but remuxed TS -> TS for the H.264 fix (no picture on the boxes otherwise)
+            printDBG("HLSDownloader TS with H.264 constraint_set4/5 -> remux TS to TS with the H.264 fix")
+            self.ffmpegPostEnabled = True
+            self.ffmpegContainer = 'mpegts'
+            return
         self._renameToContainer(found)
+
+    def _hasConstrainedH264(self):
+        # an H.264 SPS of a High profile with constraint_set4/5 ("Constrained High", BongaCams ...), from the first
+        # 2 MB of the file: the boxes play it with sound but no picture until H264_FIX_OPTS sets them to 0
+        try:
+            with open(fsPath(self.filePath), 'rb') as f:
+                data = bytearray(f.read(2 * 1024 * 1024))
+        except Exception:
+            printExc()
+            return False
+        pos = data.find(b'\x00\x00\x01')
+        while 0 <= pos < len(data) - 6:
+            if data[pos + 3] & 0x1f == 7 and data[pos + 4] in (100, 110, 122, 244):
+                return bool(data[pos + 5] & 0x0c)
+            pos = data.find(b'\x00\x00\x01', pos + 3)
+        return False
 
     def _renameToContainer(self, found):
         # the file named after the container hlsdl wrote (_detectContainer)
@@ -504,6 +532,37 @@ class HLSDownloader(BaseDownloader, SidecarMixin):
         self.remoteFileSize = fallback.getRemoteFileSize()
         self.onFinish()
 
+    def stopLiveRecording(self):
+        # "Stop" in the download manager on a live recording: only hlsdl is ended, its exit then runs the finish of
+        # a complete download (remux with the H.264 fix, cover, .txt) and reports it itself (onFinish) - the download
+        # manager waits for that. The quick stop of terminate() kept the bare TS, without a picture on the boxes for
+        # streams like BongaCams ("Constrained High"). False: nothing done, terminate() as before
+        if self.fallback is not None or not self.liveStream or not self.allowFinalRename or self.liveStopping \
+                or self.status != DMHelper.STS.DOWNLOADING or self.console is None \
+                or DMHelper.getFileSize(fsPath(self.filePath)) <= 0:
+            return False
+        if not terminateToolsOfFile(self.filePath, ('hlsdl',)):
+            return False
+        printDBG("HLSDownloader live recording stopped -> hlsdl ended, finished like a complete download")
+        self.liveStopping = True
+        # the exit of hlsdl comes through appClosed; should it not come, the timer finishes the file
+        self.liveStopTimer = eTimer()
+        self.liveStopTimer_conn = eConnectCallback(self.liveStopTimer.timeout, self._liveStopTimeout)
+        self.liveStopTimer.start(self.LIVE_STOP_EXIT_MS, True)
+        return True
+
+    def _stopLiveStopTimer(self):
+        if self.liveStopTimer is not None:
+            self.liveStopTimer.stop()
+        self.liveStopTimer_conn = None
+        self.liveStopTimer = None
+
+    def _liveStopTimeout(self):
+        self._stopLiveStopTimer()
+        if self.liveStopping and self.status == DMHelper.STS.DOWNLOADING:
+            printDBG("HLSDownloader no exit of hlsdl %d s after the stop -> finished without it" % (self.LIVE_STOP_EXIT_MS // 1000))
+            self._cmdFinished(-1)
+
     def _terminate(self):
         printDBG("HLSDownloader._terminate")
         if self.fallback is not None:
@@ -532,6 +591,7 @@ class HLSDownloader(BaseDownloader, SidecarMixin):
 
     def _cmdFinished(self, code, terminated=False):
         printDBG("HLSDownloader._cmdFinished code[%r] terminated[%r]" % (code, terminated))
+        self._stopLiveStopTimer()
 
         # break circular references
         if None is not self.console:
@@ -545,12 +605,16 @@ class HLSDownloader(BaseDownloader, SidecarMixin):
             if self._startFfmpegFallback():
                 return
 
-        if terminated and self.liveStream and self.allowFinalRename and self.status != DMHelper.STS.POSTPROCESSING \
+        if terminated and self.liveStream and self.allowFinalRename \
+                and (self.status != DMHelper.STS.POSTPROCESSING or self.liveStopping) \
                 and DMHelper.getFileSize(fsPath(self.filePath)) > 0:
-            # stopping is how a live recording ends (the download manager already counts it as finished). terminate()
-            # reports the finish itself (onFinish), so only what runs at once: the file named after what hlsdl wrote
-            # (.ts) and the .txt - no remux, cover or subtitles, they would finish after that report
+            # the quick stop (stop all, or a second "Stop" while stopLiveRecording() still finishes the file): the
+            # download manager counts it as finished at once, terminate() reports the finish itself (onFinish), so
+            # only what runs at once: the file named after what hlsdl wrote (.ts) and the .txt - no remux, cover or
+            # subtitles, they would finish after that report
             printDBG("HLSDownloader live recording stopped -> kept as finished file")
+            # a remux it broke off leaves its half written temp file behind otherwise
+            self._cleanUp()
             self.status = DMHelper.STS.DOWNLOADED
             self._renameToContainer(self._detectContainer())
             if self.sidecarEnabled:
@@ -602,9 +666,14 @@ class HLSDownloader(BaseDownloader, SidecarMixin):
                 # a download in the download manager (a host's own remux container above wins)
                 self._applyFormatSetting()
             if self.ffmpegPostEnabled and self.allowFinalRename and self._keepTsForIrregularFrames():
-                printDBG("HLSDownloader irregular video frame times -> kept as TS, no remux")
-                self.ffmpegPostEnabled = False
-                self._renameToContainer('mpegts')
+                if self._hasConstrainedH264():
+                    # webcams (BongaCams) have uneven frame times too: TS stays TS, but gets the H.264 fix
+                    printDBG("HLSDownloader irregular video frame times -> kept as TS, remux TS to TS for the H.264 fix")
+                    self.ffmpegContainer = 'mpegts'
+                else:
+                    printDBG("HLSDownloader irregular video frame times -> kept as TS, no remux")
+                    self.ffmpegPostEnabled = False
+                    self._renameToContainer('mpegts')
             if self.ffmpegPostEnabled:
                 self.status = DMHelper.STS.POSTPROCESSING
                 self.doStartPostProcess()

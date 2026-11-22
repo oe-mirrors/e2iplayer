@@ -9,6 +9,7 @@
 # 10.10.2026 - batch download: items without url (DMItem.batchSource) are looked up when their turn comes
 # 17.10.2026 - runCMD(): makeUnikalFileName(videoSiblings=True) - "Name 2.ts" also when "Name.mp4" became "Name.ts"
 #              (queueRS, startResolve/pollResolve, iptvdm/batchdownload.py), one summary notification per batch
+# 22.11.2026 - stopDownloadItem(): a live recording of hlsdl finishes like a complete download (stopLiveRecording)
 #
 # IPTV download manager API
 #
@@ -124,6 +125,15 @@ class IPTVDMApi():
             return
         listUDIdx = self.findIdxInQueueUD(downloadIdx)
         if -1 < listUDIdx and None is not self.queueUD[listUDIdx].downloader:
+            downloader = self.queueUD[listUDIdx].downloader
+            try:
+                # a live recording of hlsdl: only hlsdl is ended, the file gets the remux of a complete download
+                # and the downloader reports the finish itself afterwards (onFinish -> cmdFinished)
+                if hasattr(downloader, 'stopLiveRecording') and downloader.stopLiveRecording():
+                    self.listChanged()
+                    return
+            except Exception:
+                printExc()
             # terminate() reports the finish itself (onFinish -> cmdFinished), no wait on the main thread needed
             self.queueUD[listUDIdx].downloader.terminate()
             # manually run endCmd for a downloader that was not running any more
