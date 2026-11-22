@@ -69,6 +69,18 @@ class _Console(object):
         self.appClosed = self.stderrAvail = None
 
 
+class _Timer(object):
+    def __init__(self):
+        self.timeout = None
+        self.started = None
+
+    def start(self, ms, single=False):
+        self.started = ms
+
+    def stop(self):
+        self.started = None
+
+
 def _unique(path, withTmp=False, addDate=False):
     base, ext = os.path.splitext(path)
     return base + " 2" + ext
@@ -80,6 +92,7 @@ def hls():
     cfg = types.SimpleNamespace(plugins=types.SimpleNamespace(iptvplayer=types.SimpleNamespace(
         hls_out_container=_Value("auto"), hlsdlLiveStartOffset=_Value("30"))))
     commands = []
+    killed = []
     for pkg in ("Components", "Plugins", "Plugins.Extensions", "Plugins.Extensions.IPTVPlayer",
                 "Plugins.Extensions.IPTVPlayer.tools", "Plugins.Extensions.IPTVPlayer.iptvdm"):
         _stubModule(pkg)
@@ -97,15 +110,16 @@ def hls():
     _stubModule("Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh", DMHelper=helper)
     _stubModule("Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers", ensureText=lambda t: t.decode("utf-8") if isinstance(t, bytes) else t, fsPath=lambda p: p,
                 shellQuote=lambda t: t, executeConsoleCmd=lambda console, cmd: commands.append(cmd),
-                terminateToolsOfFile=lambda p: None, SidecarMixin=_Sidecar,
+                terminateToolsOfFile=lambda p, tools=None: killed.append((p, tools)) or [4711], SidecarMixin=_Sidecar,
                 H264_FIX_OPTS=("-bsf:v", "h264_metadata=zero_new_constraint_set_flags=1"),
                 h264FixRefused=lambda t: "bitstream filter" in t or "zero_new_constraint_set_flags" in t,
                 fixMkvH264Header=lambda p: False)
     _stubModule("Components.config", config=cfg)
-    _stubModule("enigma", eConsoleAppContainer=_Console)
+    _stubModule("enigma", eConsoleAppContainer=_Console, eTimer=_Timer)
     module = _load("hlsdownloader_under_test", os.path.join(ROOT, "iptvdm", "hlsdownloader.py"))
     module.cfg = cfg.plugins.iptvplayer
     module.commands = commands
+    module.killed = killed
     module.sts = sts
     yield module
     sys.modules.clear()
@@ -228,14 +242,17 @@ def _ptsBytes(value, marker):
                   (value >> 7) & 0xff, ((value << 1) & 0xfe) | 1])
 
 
-def _videoTs(steps, frames=120):
-    # PAT -> PMT 0x1000 -> H.264 on 0x100, one PES per frame with PTS + DTS spaced by <steps> (repeated)
+def _videoTs(steps, frames=120, sps=b""):
+    # PAT -> PMT 0x1000 -> H.264 on 0x100, one PES per frame with PTS + DTS spaced by <steps> (repeated);
+    # <sps>: the first bytes of an SPS NAL (after the start code) in the first frame
     pat = b"\x00" + b"\x00\xb0\x0d\x00\x01\xc1\x00\x00" + b"\x00\x01\xf0\x00" + b"\x00" * 4
     pmt = b"\x00" + b"\x02\xb0\x12\x00\x01\xc1\x00\x00" + b"\xe1\x00\xf0\x00" + b"\x1b\xe1\x00\xf0\x00" + b"\x00" * 4
     out = _tsPacket(0, pat) + _tsPacket(0x1000, pmt)
     dts = 900000
     for i in range(frames):
         pes = b"\x00\x00\x01\xe0\x00\x00\x80\xc0\x0a" + _ptsBytes(dts + 3000, 3) + _ptsBytes(dts, 1) + b"\x00\x00\x00\x01\x09"
+        if i == 0 and sps:
+            pes += b"\xf0\x00\x00\x00\x01" + sps
         out += _tsPacket(0x100, pes) + _tsPacket(0x100, b"\x00" * 184, start=False)
         dts += steps[i % len(steps)]
     return out
@@ -255,6 +272,39 @@ def test_irregular_frame_times_keep_ts(hls, tmp_path):
     dl = _finished(hls, str(tmp_path / "Short.mp4"), _videoTs([3000, 3000, 3000, 6000], frames=20))
     assert dl.status == hls.sts.POSTPROCESSING and len(hls.commands) == 1
     hls.cfg.hls_out_container.value = "auto"
+
+
+CONSTRAINED_HIGH = b"\x67\x64\x0c\x28"  # SPS: High (100), constraint_set4 + 5, level 4.0
+PLAIN_HIGH = b"\x67\x64\x00\x28"
+
+
+def test_irregular_constrained_high_remuxed_ts_to_ts(hls, tmp_path):
+    # a webcam (BongaCams) with uneven frame times stays TS, but "Constrained High" gets the H.264 fix TS -> TS
+    hls.cfg.hls_out_container.value = "matroska"
+    del hls.commands[:]
+    dl = _finished(hls, str(tmp_path / "Cam.mp4"), _videoTs([3000, 3000, 3000, 6000], sps=CONSTRAINED_HIGH))
+    assert dl.status == hls.sts.POSTPROCESSING and "-f mpegts" in hls.commands[-1] and H264_FIX in hls.commands[-1]
+    assert dl.tempRemuxPath.endswith(".iptv.remux.tmp.ts")
+    with open(dl.tempRemuxPath, "wb") as f:
+        f.write(TS)
+    dl._cmdFinished(0)
+    assert dl.status == hls.sts.DOWNLOADED and dl.filePath == str(tmp_path / "Cam.ts")
+    assert not os.path.exists(str(tmp_path / "Cam.mp4"))
+    # High without the flags: kept as TS as before, no ffmpeg run
+    del hls.commands[:]
+    dl = _finished(hls, str(tmp_path / "Cam2.mp4"), _videoTs([3000, 3000, 3000, 6000], sps=PLAIN_HIGH))
+    assert dl.status == hls.sts.DOWNLOADED and hls.commands == [] and dl.filePath == str(tmp_path / "Cam2.ts")
+    hls.cfg.hls_out_container.value = "auto"
+
+
+def test_automatic_constrained_high_remuxed_ts_to_ts(hls, tmp_path):
+    # "Automatic" only renames a TS - with "Constrained High" it is remuxed TS -> TS for the H.264 fix
+    del hls.commands[:]
+    dl = _finished(hls, str(tmp_path / "Live.mp4"), _videoTs([3600], sps=CONSTRAINED_HIGH))
+    assert dl.status == hls.sts.POSTPROCESSING and "-f mpegts" in hls.commands[-1] and H264_FIX in hls.commands[-1]
+    del hls.commands[:]
+    dl = _finished(hls, str(tmp_path / "Plain.mp4"), _videoTs([3600], sps=PLAIN_HIGH))
+    assert dl.status == hls.sts.DOWNLOADED and hls.commands == [] and dl.filePath == str(tmp_path / "Plain.ts")
 
 
 def _stopped(hls, path, content, live, download=True):
@@ -290,6 +340,67 @@ def test_stopping_a_live_recording_finishes_it(hls, tmp_path):
     # buffered playback of a live stream: nothing renamed
     dl = _stopped(hls, str(tmp_path / ".iptv_buffering.mp4"), TS, live=True, download=False)
     assert dl.status == hls.sts.INTERRUPTED
+
+
+def _recording(hls, path, content, live=True, download=True):
+    # a running hlsdl download that wrote <content>, with the host's MKV remux (BongaCams)
+    with open(path, "wb") as f:
+        f.write(content)
+    dl = hls.HLSDownloader()
+    dl.allowFinalRename = download
+    dl.url = "https://cdn/x/chunks.m3u8"
+    dl.filePath = path
+    dl.localFileSize = len(content)
+    dl.liveStream = live
+    dl.status = hls.sts.DOWNLOADING
+    dl.console = _Console()
+    dl._preparePostData({"e2i_postprocess_ffmpeg": "1", "e2i_postprocess_container": "mkv"})
+    return dl
+
+
+def test_stop_live_recording_remuxes(hls, tmp_path):
+    # "Stop" on a live recording: only hlsdl is ended, its exit runs the remux with the H.264 fix of a complete download
+    del hls.commands[:], hls.killed[:]
+    dl = _recording(hls, str(tmp_path / "Bonga.mp4"), TS)
+    assert dl.stopLiveRecording() is True
+    assert hls.killed == [(str(tmp_path / "Bonga.mp4"), ("hlsdl",))] and dl.liveStopTimer.started == 15000
+    assert dl.status == hls.sts.DOWNLOADING and not dl.stopLiveRecording()
+    dl._cmdFinished(143)  # appClosed of the ended hlsdl
+    assert dl.liveStopTimer is None and dl.status == hls.sts.POSTPROCESSING
+    assert "-f matroska" in hls.commands[-1] and H264_FIX in hls.commands[-1]
+    with open(dl.tempRemuxPath, "wb") as f:
+        f.write(b"\x1a\x45\xdf\xa3" + b"\x00" * 100)
+    dl._cmdFinished(0)
+    assert dl.status == hls.sts.DOWNLOADED and dl.filePath == str(tmp_path / "Bonga.mkv") and dl.finished
+    assert not os.path.exists(str(tmp_path / "Bonga.mp4"))
+
+
+def test_stop_live_recording_without_exit_report(hls, tmp_path):
+    # no appClosed after the stop: the timer finishes the file the same way
+    dl = _recording(hls, str(tmp_path / "Bonga.mp4"), TS)
+    assert dl.stopLiveRecording()
+    dl._liveStopTimeout()
+    assert dl.status == hls.sts.POSTPROCESSING and dl.liveStopTimer is None
+
+
+def test_second_stop_during_the_remux_keeps_the_ts(hls, tmp_path):
+    dl = _recording(hls, str(tmp_path / "Bonga.mp4"), TS)
+    dl.stopLiveRecording()
+    dl._cmdFinished(143)
+    open(dl.tempRemuxPath, "wb").close()
+    dl._cmdFinished(-1, True)  # terminate() while ffmpeg runs
+    assert dl.status == hls.sts.DOWNLOADED and dl.filePath == str(tmp_path / "Bonga.ts")
+    assert not os.path.exists(dl.tempRemuxPath)
+
+
+def test_stop_live_recording_not_for(hls, tmp_path):
+    # VOD, buffered playback, nothing written yet, hlsdl not found: terminate() as before
+    assert not _recording(hls, str(tmp_path / "Film.mp4"), TS, live=False).stopLiveRecording()
+    assert not _recording(hls, str(tmp_path / ".iptv_buffering.mp4"), TS, download=False).stopLiveRecording()
+    assert not _recording(hls, str(tmp_path / "Empty.mp4"), b"").stopLiveRecording()
+    dl = _recording(hls, str(tmp_path / "Gone.mp4"), TS)
+    hls.terminateToolsOfFile = lambda p, tools=None: []
+    assert not dl.stopLiveRecording() and not dl.liveStopping
 
 
 def _exited(hls, path, content, code, done, total, reported=None):
