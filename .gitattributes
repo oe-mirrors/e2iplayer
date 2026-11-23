@@ -1,0 +1,18 @@
+# Text files are stored with Linux line endings (LF) and checked out with LF, also on Windows: the plugin runs on
+# Linux receivers, where a CRLF breaks shell scripts and makes diffs of a whole file.
+* text=auto eol=lf
+
+# Binary files: never converted
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.mo binary
+*.zip binary
+*.gz binary
+*.ipk binary
+*.byte binary
+# Keyboard layouts of the virtual keyboard: UTF-16 text, kept byte for byte
+*.kle binary
