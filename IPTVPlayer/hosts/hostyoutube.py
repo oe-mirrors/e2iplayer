@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 LAST_MODIFIED = "19.11.2026"
+# 23.11.2026 - Shorts in the signed-in feeds (My subscriptions ...): channel, date, length and views
 # 19.11.2026 - original video titles instead of YouTube's machine translation (RSS feed, all with an own Data API key)
 # 04.11.2026 - user links: channel rows and groups show the channel picture, video rows their thumbnail
 # 02.11.2026 - channel: all tabs of the channel incl. Playlists and Home; a link to a tab opens that tab; playlists with next pages
@@ -16,6 +17,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvfilehost import IPTVFileHost
 from Plugins.Extensions.IPTVPlayer.libs.youtubeparser import YouTubeParser
 from Plugins.Extensions.IPTVPlayer.libs.youtube_oauth import YouTubeOAuth
+from Plugins.Extensions.IPTVPlayer.libs import ytchannelfeed
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecar, buildYoutubeOptions, decorateYoutubeUrl, decorateYoutubeLinkItems
@@ -659,6 +661,11 @@ class Youtube(CBaseHostClass):
                          "desc": _("This feed is empty, or the YouTube sign-in has expired - sign out and in again.")})
             return
         self._injectChannelNameToItems(tmp, cItem.get("channel_title", ""))
+        # the Shorts tiles of the TV feed carry hardly any text: channel, date, length and views per Short
+        try:
+            ytchannelfeed.describeShorts([item for item in tmp if item.get("image_type", "") == "SHORT"])
+        except Exception:
+            printExc()
         self.watchedHelper.updateHostListFlags(self, tmp, self._getWatchedKeyForItem)
         for item in tmp:
             item.update({"name": "category"})

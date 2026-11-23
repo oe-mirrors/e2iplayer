@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "17.11.2026"
+LAST_MODIFIED = "23.11.2026"
+# 23.11.2026 - stored YouTube Shorts: channel, date, length and views like "Newest videos"
 # 11.10.2026 - "Newest videos": video length in the description (uploads playlist page, one request per channel),
 # Shorts with their own list icon; stored live streams / live radios with the live icon
 # 09.10.2026 - "Newest videos": INFO shows the full YouTube description, no age in the title (file name)
@@ -124,6 +125,7 @@ class Favourites(CBaseHostClass):
                 params['image_type'] = 'CHANNEL'
             elif item.hostName == 'youtube' and isinstance(favItem, dict) and favItem.get('image_type') == 'SHORT':
                 params['image_type'] = 'SHORT'
+                params['yt_short_id'] = self._getYtVideoId(favItem)
             elif isinstance(favItem, dict) and (favItem.get('live') or favItem.get('is_live')):
                 params['live'] = True  # a stored live stream / live radio: the live icon (ihost.converItem)
             if None is not addFun:
@@ -137,6 +139,11 @@ class Favourites(CBaseHostClass):
                 self._annotateYtChannels(rows)
             except Exception:
                 printExc()
+        # a stored Short keeps only the short text of the list it came from: the current channel, date, length and views
+        try:
+            ytchannelfeed.describeShorts([params for params, addFun in rows if params.get('yt_short_id')], 'yt_short_id')
+        except Exception:
+            printExc()
         for params, addFun in rows:
             # the favourite's own title in yellow, one line under the host line of _addHostLine -
             # not when the stored description already starts with it (hosts that put it there themselves)
@@ -183,6 +190,14 @@ class Favourites(CBaseHostClass):
     @staticmethod
     def _isYtChannel(hostName, favItem):
         return hostName == 'youtube' and isinstance(favItem, dict) and favItem.get('category', '') == 'channel' and bool(favItem.get('url', ''))
+
+    @staticmethod
+    def _getYtVideoId(favItem):
+        videoId = str(favItem.get('video_id', '') or '')
+        if re.match(r'^[A-Za-z0-9_-]{11}$', videoId):
+            return videoId
+        m = re.search(r'(?:[?&]v=|/shorts/|youtu\.be/)([A-Za-z0-9_-]{11})', str(favItem.get('url', '') or ''))
+        return m.group(1) if m else ''
 
     def _isYtChannelParams(self, params):
         return self._isYtChannel(params.get('host', ''), params.get('fav_item'))
@@ -300,16 +315,7 @@ class Favourites(CBaseHostClass):
     def _addNewestVideo(self, entry, now, duration=''):
         video = {'type': 'video', 'category': 'video', 'title': entry['title'], 'url': 'https://www.youtube.com/watch?v=' + entry['video_id'],
                  'icon': entry['icon'], 'video_id': entry['video_id'], 'channel': entry['channel']}
-        desc = entry['channel'] + "\n" + ytchannelfeed.describeDate(entry['published'], now)
-        extra = []
-        if duration:
-            extra.append(_("Duration: %s") % duration)
-        if entry['short']:
-            extra.append('Short')
-        if entry['views']:
-            extra.append(entry['views'] + ' ' + _("views"))
-        if extra:
-            desc += "\n" + ' | '.join(extra)
+        desc = ytchannelfeed.describeVideo(entry['channel'], entry['published'], duration, entry['short'], entry['views'], now)
         # no age in the title: it ends up in the download file name; the description shows it
         title = entry['channel'] + ': ' + entry['title']
         params = {'name': 'item', 'title': title, 'host': 'youtube', 'icon': entry['icon'], 'desc': desc,
