@@ -9,9 +9,13 @@
 # The feed has no video length: the channel's uploads playlist page
 #   https://www.youtube.com/playlist?list=UU...
 # shows it for its newest 100 videos (one request per channel, not per video).
+# Single videos (the Shorts of "My subscriptions" and of a favourites group): the InnerTube
+# player answer (~6 KB, no login) has channel, upload date, length and views of one video.
 ###################################################
 # LOCAL import
 ###################################################
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
+from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import common
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
@@ -27,6 +31,8 @@ import xml.etree.ElementTree as ET
 
 FEED_URL = "https://www.youtube.com/feeds/videos.xml?channel_id=%s"
 UPLOADS_URL = "https://www.youtube.com/playlist?list=UU%s"  # channel id without its "UC"
+PLAYER_URL = "https://www.youtube.com/youtubei/v1/player?prettyPrint=false"
+PLAYER_CLIENT = {"clientName": "WEB", "clientVersion": "2.20251120.01.00", "hl": "en", "gl": "US"}
 USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"
 
 CACHE_TTL = 600  # seconds a fetched feed is reused
@@ -35,6 +41,7 @@ MAX_WORKERS = 6
 REQUEST_TIMEOUT = 10
 TOTAL_TIMEOUT = 30  # upper bound for one getFeeds() call
 DURATION_TIMEOUT = 15  # upper bound for one getDurations() call
+DETAILS_TIMEOUT = 15  # upper bound for one getVideosDetails() call
 
 _ATOM = "{http://www.w3.org/2005/Atom}"
 _YT = "{http://www.youtube.com/xml/schemas/2015}"
@@ -50,6 +57,7 @@ _idCache = {}  # channel url -> UC... id
 _idFailed = {}  # channel url -> time of the failed lookup
 _feedCache = {}  # UC... id -> (fetchedAt, info or None)
 _durationCache = {}  # UC... id -> (fetchedAt, {video id: "12:34"} or None)
+_detailsCache = {}  # video id -> (fetchedAt, details or None)
 
 
 def parseTimestamp(text):
@@ -94,6 +102,35 @@ def formatAge(ts, now=None):
 
 def describeDate(ts, now=None):
     return "%s (%s)" % (formatDate(ts), formatAge(ts, now))
+
+
+def formatDuration(seconds):
+    # 63 -> "1:03", 3725 -> "1:02:05", "" for no length
+    try:
+        seconds = int(seconds)
+    except Exception:
+        return ""
+    if seconds <= 0:
+        return ""
+    if seconds >= 3600:
+        return "%d:%02d:%02d" % (seconds // 3600, seconds // 60 % 60, seconds % 60)
+    return "%d:%02d" % (seconds // 60, seconds % 60)
+
+
+def describeVideo(channel, published, duration, short, views, now=None):
+    # the short info of a video in the "newest videos" style:
+    # channel / upload date (age) / length | Short | views
+    lines = [line for line in (channel, describeDate(published, now) if published else "") if line]
+    extra = []
+    if duration:
+        extra.append(_("Duration: %s") % duration)
+    if short:
+        extra.append("Short")
+    if views:
+        extra.append(views + " " + _("views"))
+    if extra:
+        lines.append(" | ".join(extra))
+    return "\n".join(lines)
 
 
 def _parseEntry(entry, channel):
@@ -230,18 +267,61 @@ def getChannelDurations(url, cm=None):
     return durations
 
 
+def parseVideoDetails(data):
+    # the InnerTube player answer -> {"channel", "published", "duration", "views"} or None
+    try:
+        response = json_loads(data) if data else None
+    except Exception:
+        printExc()
+        return None
+    if not isinstance(response, dict):
+        return None
+    details = response.get("videoDetails") or {}
+    micro = (response.get("microformat") or {}).get("playerMicroformatRenderer") or {}
+    channel = ensure_str(details.get("author") or micro.get("ownerChannelName") or "")
+    published = parseTimestamp(micro.get("publishDate") or micro.get("uploadDate") or "")
+    if not channel and not published:
+        return None  # no metadata (the video is gone, or YouTube answered with a bot check)
+    return {
+        "channel": channel,
+        "published": published,
+        "duration": formatDuration(details.get("lengthSeconds") or micro.get("lengthSeconds") or 0),
+        "views": str(details.get("viewCount") or micro.get("viewCount") or ""),
+    }
+
+
+def getVideoDetails(videoId, cm=None):
+    # channel, upload date, length and views of one video, or None when they could not be read
+    cm = cm or common()
+    now = time.time()
+    with _lock:
+        cached = _detailsCache.get(videoId)
+    if cached and now - cached[0] < (CACHE_TTL if cached[1] else FAIL_TTL):
+        return cached[1]
+    header = {"User-Agent": USER_AGENT, "Accept-Language": "en-US,en;q=0.9", "Content-Type": "application/json",
+              "Origin": "https://www.youtube.com", "Cookie": "SOCS=CAI"}
+    postData = json_dumps({"context": {"client": PLAYER_CLIENT}, "videoId": videoId})
+    sts, data = cm.getPage(PLAYER_URL, {"header": header, "timeout": REQUEST_TIMEOUT, "raw_post_data": True}, postData)
+    info = parseVideoDetails(data if sts else "")
+    printDBG("ytchannelfeed.getVideoDetails video[%s] sts[%s] len[%d] details[%s]" % (videoId, sts, len(data or ""), "ok" if info else "none"))
+    with _lock:
+        _detailsCache[videoId] = (now, info)
+    return info
+
+
 def clearCache():
     # forget every feed (a refresh should look for new uploads again)
     with _lock:
         _feedCache.clear()
         _durationCache.clear()
+        _detailsCache.clear()
         _idFailed.clear()
 
 
 def clearFailed():
     # forget only what failed, so the next request tries those channels again instead of waiting for FAIL_TTL
     with _lock:
-        for cache in (_feedCache, _durationCache):
+        for cache in (_feedCache, _durationCache, _detailsCache):
             for channelId in [key for key, value in cache.items() if value[1] is None]:
                 del cache[channelId]
         _idFailed.clear()
@@ -264,6 +344,25 @@ def getFeeds(urls):
 def getDurations(urls):
     # {url: {video id: "12:34"}} for many channels, fetched by a few worker threads
     return _runParallel(urls, getChannelDurations, {}, DURATION_TIMEOUT)
+
+
+def getVideosDetails(videoIds):
+    # {video id: details or None} for many videos, fetched by a few worker threads
+    return _runParallel(videoIds, getVideoDetails, None, DETAILS_TIMEOUT)
+
+
+def describeShorts(items, idKey="video_id"):
+    # items: dicts of YouTube Shorts; puts the "newest videos" style short info into their "desc"
+    # (one player request per Short, cached); an item whose details could not be read keeps its desc
+    ids = [item.get(idKey) for item in items if item.get(idKey)]
+    if not ids:
+        return
+    details = getVideosDetails(ids)
+    now = time.time()
+    for item in items:
+        info = details.get(item.get(idKey))
+        if info:
+            item["desc"] = describeVideo(info["channel"], info["published"], info["duration"], True, info["views"], now)
 
 
 def _runParallel(urls, fetch, failed, timeout):
