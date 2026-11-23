@@ -1,58 +1,116 @@
-# <p align="center">E2iPlayer Plugin for Enigma2 (E²)</p>
-# <p align="center">![GitHub repo size](https://img.shields.io/github/repo-size/oe-mirrors/e2iplayer.svg) [![Views](https://api.visitorbadge.io/api/visitors?path=https://github.com/oe-mirrors/e2iplayer&label=Views&countColor=blue&style=flat)](https://visitorbadge.io/status?path=https://github.com/oe-mirrors/e2iplayer) [![Visitors](https://api.visitorbadge.io/api/daily?path=https://github.com/oe-mirrors/e2iplayer&label=Visitors%20Today&countColor=blue&style=flat)](https://visitorbadge.io/status?path=https://github.com/oe-mirrors/e2iplayer)</p>
-Python3 Version from <a href="https://www.opena.tv">openATV Team</a>.
+<h1 align="center">E2iPlayer Plugin for Enigma2 (E²)</h1>
+<p align="center">Python3 version from <a href="https://www.opena.tv">openATV Team</a></p>
+
+<p align="center">
+  <a href="https://github.com/oe-mirrors/e2iplayer"><img alt="Repository size" src="https://img.shields.io/github/repo-size/oe-mirrors/e2iplayer.svg"></a>
+  <a href="https://visitorbadge.io/status?path=https://github.com/oe-mirrors/e2iplayer"><img alt="Views" src="https://api.visitorbadge.io/api/visitors?path=https://github.com/oe-mirrors/e2iplayer&label=Views&countColor=blue&style=flat"></a>
+  <a href="https://visitorbadge.io/status?path=https://github.com/oe-mirrors/e2iplayer"><img alt="Visitors today" src="https://api.visitorbadge.io/api/daily?path=https://github.com/oe-mirrors/e2iplayer&label=Visitors%20Today&countColor=blue&style=flat"></a>
+</p>
 
 This plugin was developed with a lot of 💞 for the Enigma2 community. You are free to use and modify it for personal use.
 
 ---
 
 <p align="center">
-<img width="1250" height="500" alt="e2ilogo(Background_Git)" src="https://github.com/oe-mirrors/e2iplayer/blob/python3/Logos/e2ilogo(Background_Git).png"/>
+<img width="1250" height="500" alt="e2ilogo(Background_Git)" src="Logos/e2ilogo(Background_Git).png"/>
 </p>
 
 ---
 
-## Github status
-[![Build](https://github.com/oe-mirrors/e2iplayer/actions/workflows/buildbot.yml/badge.svg)](https://github.com/oe-mirrors/e2iplayer/actions/workflows/buildbot.yml)
-[![Lint Status](https://github.com/oe-mirrors/e2iplayer/actions/workflows/pylint.yml/badge.svg)](https://github.com/oe-mirrors/e2iplayer/actions/workflows/pylint.yml)
-[![Ruff Status](https://github.com/oe-mirrors/e2iplayer/actions/workflows/ruff.yml/badge.svg)](https://github.com/oe-mirrors/e2iplayer/actions/workflows/ruff.yml)
-[![Build Status](https://github.com/oe-mirrors/e2iplayer/actions/workflows/compile.yml/badge.svg)](https://github.com/oe-mirrors/e2iplayer/actions/workflows/compile.yml)
-[![TESTS](https://github.com/oe-mirrors/e2iplayer/actions/workflows/tests.yml/badge.svg)](https://github.com/oe-mirrors/e2iplayer/actions/workflows/tests.yml)
-[![AUTOTAG](https://github.com//oe-mirrors/e2iplayer/actions/workflows/tag_release.yml/badge.svg)](https://github.com/oe-mirrors/e2iplayer/actions/workflows/tag_release.yml)
+<div align="center">
+<table>
+  <tr>
+    <td><b>🏗️ Build</b></td>
+    <td>
+      <a href="https://github.com/oe-mirrors/e2iplayer/actions/workflows/buildbot.yml"><img alt="Build" src="https://github.com/oe-mirrors/e2iplayer/actions/workflows/buildbot.yml/badge.svg"></a>
+      <a href="https://github.com/oe-mirrors/e2iplayer/actions/workflows/compile.yml"><img alt="Compile" src="https://github.com/oe-mirrors/e2iplayer/actions/workflows/compile.yml/badge.svg"></a>
+      <a href="https://github.com/oe-mirrors/e2iplayer/actions/workflows/tests.yml"><img alt="Tests" src="https://github.com/oe-mirrors/e2iplayer/actions/workflows/tests.yml/badge.svg"></a>
+      <br>
+      <a href="https://github.com/oe-mirrors/e2iplayer/actions/workflows/pylint.yml"><img alt="Lint" src="https://github.com/oe-mirrors/e2iplayer/actions/workflows/pylint.yml/badge.svg"></a>
+      <a href="https://github.com/oe-mirrors/e2iplayer/actions/workflows/ruff.yml"><img alt="Ruff" src="https://github.com/oe-mirrors/e2iplayer/actions/workflows/ruff.yml/badge.svg"></a>
+      <a href="https://github.com/oe-mirrors/e2iplayer/actions/workflows/tag_release.yml"><img alt="Autotag" src="https://github.com/oe-mirrors/e2iplayer/actions/workflows/tag_release.yml/badge.svg"></a>
+    </td>
+  </tr>
+  <tr>
+    <td><b>🔍 Code quality</b></td>
+    <td>
+      <a href="https://sonarcloud.io/summary/new_code?id=oe-mirrors_e2iplayer"><img alt="Quality Gate" src="https://sonarcloud.io/api/project_badges/measure?project=oe-mirrors_e2iplayer&metric=alert_status"></a>
+      <a href="https://sonarcloud.io/summary/new_code?id=oe-mirrors_e2iplayer"><img alt="Reliability" src="https://sonarcloud.io/api/project_badges/measure?project=oe-mirrors_e2iplayer&metric=reliability_rating"></a>
+      <a href="https://sonarcloud.io/summary/new_code?id=oe-mirrors_e2iplayer"><img alt="Security" src="https://sonarcloud.io/api/project_badges/measure?project=oe-mirrors_e2iplayer&metric=security_rating"></a>
+      <a href="https://sonarcloud.io/summary/new_code?id=oe-mirrors_e2iplayer"><img alt="Maintainability" src="https://sonarcloud.io/api/project_badges/measure?project=oe-mirrors_e2iplayer&metric=sqale_rating"></a>
+      <br>
+      <a href="https://sonarcloud.io/summary/new_code?id=oe-mirrors_e2iplayer"><img alt="Bugs" src="https://sonarcloud.io/api/project_badges/measure?project=oe-mirrors_e2iplayer&metric=bugs"></a>
+      <a href="https://sonarcloud.io/summary/new_code?id=oe-mirrors_e2iplayer"><img alt="Vulnerabilities" src="https://sonarcloud.io/api/project_badges/measure?project=oe-mirrors_e2iplayer&metric=vulnerabilities"></a>
+      <a href="https://sonarcloud.io/summary/new_code?id=oe-mirrors_e2iplayer"><img alt="Code smells" src="https://sonarcloud.io/api/project_badges/measure?project=oe-mirrors_e2iplayer&metric=code_smells"></a>
+      <a href="https://sonarcloud.io/summary/new_code?id=oe-mirrors_e2iplayer"><img alt="Duplicated lines" src="https://sonarcloud.io/api/project_badges/measure?project=oe-mirrors_e2iplayer&metric=duplicated_lines_density"></a>
+      <a href="https://sonarcloud.io/summary/new_code?id=oe-mirrors_e2iplayer"><img alt="Lines of code" src="https://sonarcloud.io/api/project_badges/measure?project=oe-mirrors_e2iplayer&metric=ncloc"></a>
+    </td>
+  </tr>
+  <tr>
+    <td><b>📦 Releases</b></td>
+    <td>
+      <a href="https://github.com/oe-mirrors/e2iplayer/tags"><img alt="Latest version" src="https://img.shields.io/github/v/tag/oe-mirrors/e2iplayer?filter=v*&label=Latest%20version&color=darkviolet"></a>
+      <a href="https://github.com/oe-mirrors/e2iplayer/releases/latest"><img alt="Release date" src="https://img.shields.io/github/release-date/oe-mirrors/e2iplayer?label=From&color=darkviolet"></a>
+      <a href="https://github.com/oe-mirrors/e2iplayer/releases"><img alt="Downloads" src="https://img.shields.io/github/downloads/oe-mirrors/e2iplayer/total.svg?label=Downloads"></a>
+    </td>
+  </tr>
+  <tr>
+    <td><b>🧩 MyE2i extension</b></td>
+    <td>
+      <a href="https://github.com/oe-mirrors/e2iplayer/releases/tag/mye2i-extension"><img alt="MyE2i extension version" src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Foe-mirrors%2Fe2iplayer%2Fpython3%2Fmye2i-extension%2Fmanifest.json&query=%24.version&prefix=v&label=MyE2i%20Extension&color=darkviolet"></a>
+      <a href="https://github.com/oe-mirrors/e2iplayer/releases/tag/mye2i-extension"><img alt="MyE2i extension date" src="https://img.shields.io/github/last-commit/oe-mirrors/e2iplayer/python3?path=mye2i-extension&label=From&color=darkviolet"></a>
+      <a href="https://github.com/oe-mirrors/e2iplayer/releases/tag/mye2i-extension"><img alt="MyE2i extension downloads" src="https://img.shields.io/github/downloads/oe-mirrors/e2iplayer/mye2i-extension/total?label=Downloads"></a>
+    </td>
+  </tr>
+  <tr>
+    <td><b>📈 Activity</b></td>
+    <td>
+      <a href="https://github.com/oe-mirrors/e2iplayer/commits"><img alt="Last commit" src="https://img.shields.io/github/last-commit/oe-mirrors/e2iplayer"></a>
+      <a href="https://github.com/oe-mirrors/e2iplayer/commits"><img alt="Commits per year" src="https://img.shields.io/github/commit-activity/y/oe-mirrors/e2iplayer.svg?label=commits%2Fyear"></a>
+      <a href="https://github.com/oe-mirrors/e2iplayer/commits"><img alt="Commits per month" src="https://img.shields.io/github/commit-activity/m/oe-mirrors/e2iplayer.svg?label=commits%2Fmonth"></a>
+      <a href="https://github.com/oe-mirrors/e2iplayer/commits"><img alt="Commits per week" src="https://img.shields.io/github/commit-activity/w/oe-mirrors/e2iplayer.svg?label=commits%2Fweek"></a>
+      <a href="https://github.com/oe-mirrors/e2iplayer/graphs/contributors"><img alt="Contributors" src="https://img.shields.io/github/contributors/oe-mirrors/e2iplayer?style=flat"></a>
+    </td>
+  </tr>
+  <tr>
+    <td><b>🤝 Community</b></td>
+    <td>
+      <a href="https://github.com/oe-mirrors/e2iplayer/stargazers"><img alt="Stars" src="https://img.shields.io/github/stars/oe-mirrors/e2iplayer?style=flat"></a>
+      <a href="https://github.com/oe-mirrors/e2iplayer/forks"><img alt="Forks" src="https://img.shields.io/github/forks/oe-mirrors/e2iplayer?style=flat"></a>
+      <a href="https://github.com/oe-mirrors/e2iplayer/issues"><img alt="Issues" src="https://img.shields.io/github/issues/oe-mirrors/e2iplayer?color=blue&style=flat"></a>
+      <a href="https://github.com/oe-mirrors/e2iplayer/pulls"><img alt="Pull requests welcome" src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat"></a>
+    </td>
+  </tr>
+  <tr>
+    <td><b>🧾 Project</b></td>
+    <td>
+      <a href="#-license-information"><img alt="License GPLv3" src="https://img.shields.io/badge/License-GPLv3-blue.svg"></a>
+      <img alt="Platform Enigma2" src="https://img.shields.io/badge/Platform-Enigma2-orange.svg">
+      <a href="https://python.org"><img alt="Python 3" src="https://img.shields.io/badge/Python-3.x-darkviolet.svg?style=flat"></a>
+      <img alt="Top language" src="https://img.shields.io/github/languages/top/oe-mirrors/e2iplayer?style=flat">
+      <img alt="Architectures" src="https://img.shields.io/badge/arch-ARM%20%7C%20MIPS-lightgrey.svg">
+    </td>
+  </tr>
+</table>
+<a href="https://sonarcloud.io/summary/new_code?id=oe-mirrors_e2iplayer"><img alt="SonarQube Cloud" src="https://sonarcloud.io/images/project_badges/sonarcloud-light.svg"></a>
+</div>
 
-[![Plugin Version](https://img.shields.io/github/v/tag/oe-mirrors/e2iplayer?filter=v*&label=Latest%20Version&color=darkviolet)](https://github.com/oe-mirrors/e2iplayer/tags)
-[![Latest Release](https://img.shields.io/github/release-date/oe-mirrors/e2iplayer?label=From&color=darkviolet)](https://github.com/oe-mirrors/e2iplayer/releases/latest)
-[![GitHub all releases](https://img.shields.io/github/downloads/oe-mirrors/e2iplayer/total.svg?label=Downloads)](https://github.com/oe-mirrors/e2iplayer/releases)
-[![Github last commit](https://img.shields.io/github/last-commit/oe-mirrors/e2iplayer)](https://github.com/oe-mirrors/e2iplayer)
-[![GitHub Activity](https://img.shields.io/github/commit-activity/y/oe-mirrors/e2iplayer.svg?label=commits)](https://github.com/oe-mirrors/e2iplayer/commits)
-[![GitHub Activity](https://img.shields.io/github/commit-activity/m/oe-mirrors/e2iplayer.svg?label=commits)](https://github.com/oe-mirrors/e2iplayer/commits)
-[![GitHub Activity](https://img.shields.io/github/commit-activity/w/oe-mirrors/e2iplayer.svg?label=commits)](https://github.com/oe-mirrors/e2iplayer/commits)
+---
 
-[![MyE2i Extension Version](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Foe-mirrors%2Fe2iplayer%2Fpython3%2Fmye2i-extension%2Fmanifest.json&query=%24.version&prefix=v&label=MyE2i%20Extension&color=darkviolet)](https://github.com/oe-mirrors/e2iplayer/releases/tag/mye2i-extension)
-[![MyE2i Extension From](https://img.shields.io/github/last-commit/oe-mirrors/e2iplayer/python3?path=mye2i-extension&label=From&color=darkviolet)](https://github.com/oe-mirrors/e2iplayer/releases/tag/mye2i-extension)
-[![MyE2i Extension Downloads](https://img.shields.io/github/downloads/oe-mirrors/e2iplayer/mye2i-extension/total?label=Downloads)](https://github.com/oe-mirrors/e2iplayer/releases/tag/mye2i-extension)
+## 📑 Contents
 
-[![GitHub stars](https://img.shields.io/github/stars/oe-mirrors/e2iplayer?style=flat)](https://github.com/oe-mirrors/e2iplayer/stargazers)
-[![Pull Requests Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat)](https://github.com/oe-mirrors/e2iplayer/pulls)
-[![Python](https://img.shields.io/badge/Python-3.x-darkviolet.svg?style=flat)](https://python.org)
-![Platform](https://img.shields.io/badge/Platform-Enigma2-orange.svg)
-[![Issues](https://img.shields.io/github/issues/oe-mirrors/e2iplayer?color=blue?style=flat)](https://github.com/oe-mirrors/e2iplayer/issues)
-[![Forks](https://img.shields.io/github/forks/oe-mirrors/e2iplayer?style=flat)](https://github.com/oe-mirrors/e2iplayer/forks)
-![Languages](https://img.shields.io/github/languages/top/oe-mirrors/e2iplayer?style=flat)
-[![Contributions](https://img.shields.io/github/contributors/oe-mirrors/e2iplayer?style=flat)](https://github.com/oe-mirrors/e2iplayer/graphs/contributors)
-
-## SonarCloud status
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=oe-mirrors_e2iplayer&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=oe-mirrors_e2iplayer)
-[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=oe-mirrors_e2iplayer&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=oe-mirrors_e2iplayer)
-[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=oe-mirrors_e2iplayer&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=oe-mirrors_e2iplayer)
-[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=oe-mirrors_e2iplayer&metric=bugs)](https://sonarcloud.io/summary/new_code?id=oe-mirrors_e2iplayer)
-[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=oe-mirrors_e2iplayer&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=oe-mirrors_e2iplayer)
-[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=oe-mirrors_e2iplayer&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=oe-mirrors_e2iplayer)
-[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=oe-mirrors_e2iplayer&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=oe-mirrors_e2iplayer)
-[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=oe-mirrors_e2iplayer&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=oe-mirrors_e2iplayer)
-
-[![SonarQube Cloud](https://sonarcloud.io/images/project_badges/sonarcloud-light.svg)](https://sonarcloud.io/summary/new_code?id=oe-mirrors_e2iplayer)
-
+- [Screenshots](#️-screenshots)
+- [Overview](#-overview)
+- [License information](#-license-information)
+- [How to use](#-how-to-use)
+- [Key features](#-key-features)
+- [Credits](#-credits)
+- [Maintainer & fork info](#-maintainer--forkinfos)
+- [Requirements](#️-requirements), [Installation](#-installation), [Uninstallation](#-uninstallation)
+- [Notes](#-notes)
+- [Debug & log](#-debug--log)
+- [Contributing & contact](#-contributing--contact), [Support](#️-support), [Wiki](#ℹ️-wiki)
+- [Legal disclaimer](#️-legal-disclaimer)
 
 ---
 
@@ -94,11 +152,13 @@ E2iPlayer organizes its vast repository of global hosts into easily navigable ca
 
 ---
 
-### 📜 License Information [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+### 📜 License Information
 
-This is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
-This plugin is released under GPLv3. See [LICENSE](https://www.gnu.org/licenses/gpl-3.0.html#license-text) for full details.
+This is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation.
+
+This plugin is released under GPLv3. See [LICENSE](LICENSE.txt) for the full text.
 
 <img width="127" height="51" alt="gplv3-127x51" src="https://github.com/user-attachments/assets/a4bf8b48-de46-4350-a67b-172ded28a498" />
 
@@ -188,7 +248,7 @@ with additions from
 
 - Enigma2 STB, mipsel or ARM (Dreambox, Vu+, Gigablue, Zgemma, etc.)
 - Running a compatible Image like OE-Alliance Images
-- Installed dependencies -> [See Notes](https://github.com/Masta2002/e2iplayer/tree/Masta2002-patch-1?tab=readme-ov-file#-notes)
+- Installed dependencies -> [See Notes](#-notes)
 - Active & Stable internet connection  
 - Python ≥ 3.0
 
@@ -272,7 +332,7 @@ You can activate Logs and choose the path in preferences. If errors or malfuncti
 
 E2iPlayer is created by users for users and we welcome every contribution. There are no highly paid developers. There are only users who have seen a problem and done their best to fix it. This means E2iPlayer will always need the contributions of users like you. How can you get involved?
 
-For questions or feedback, feel free and please open an issue or contribute with a Pull Request!
+For questions or feedback, feel free and please open an issue or contribute with a Pull Request! Please read the [contributing guide](CONTRIBUTING.md) and the [code of conduct](CODE_OF_CONDUCT.md) first.
 
 Pull requests are very welcome for:
 - **Coding:** Developers can help by fixing a bug, adding new features,Integration improvements, Feature enhancements
@@ -298,7 +358,7 @@ Enjoy and help us improve it today. :)
 
 ### 🛠️ Support
 
-For help and support, visit us on [oATV Forum](https://www.opena.tv/viewtopic.php?t=42312) or open an [Issue](https://github.com/oe-mirrors/e2iplayer/issues)
+For help and support, visit us on [oATV Forum](https://www.opena.tv/viewtopic.php?t=42312) or open an [Issue](../../issues)
 
 **⚠️ Reporting Issues 🔥**
 1. Check existing issues on GitHub
@@ -311,7 +371,7 @@ For help and support, visit us on [oATV Forum](https://www.opena.tv/viewtopic.ph
 
 ### ℹ️ WIKI
 
-See the [Wiki](https://github.com/oe-mirrors/e2iplayer/wiki) for more information
+See the [Wiki](../../wiki) for more information
 
 ---
 
@@ -330,7 +390,7 @@ No video files are stored in this repository. To remove content from the web, co
 ⭐️ If you find this plugin useful, please give it a star on GitHub!
 Thanks! ❤️ 💞 💖 ❤️‍🔥 💗
 
-<p align="center"><img src="https://github.com/oe-mirrors/e2iplayer/blob/python3/Logos/e2ilogo.png"></p> 
+<p align="center"><img alt="E2iPlayer logo" src="Logos/e2ilogo.png"></p>
 
 ---
 
@@ -338,4 +398,4 @@ Thanks! ❤️ 💞 💖 ❤️‍🔥 💗
   Powered 💡 by <a href="https://www.opena.tv">openATV Team</a>
 </p> 
 
-README Last Modified: 2026-07-27
+README Last Modified: 2026-11-23

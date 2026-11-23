@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "11.10.2026"
+LAST_MODIFIED = "23.11.2026"
+# 23.11.2026 - GT IPTV Player Pro portals, pasted portal exports, new handshake on HTTP 401 / 403, EStalker login as
+#   fallback, create_link lists / errors / /media/file_ links, portal headers for its own play links, better now / next
 # 11.10.2026 - portal menu: "Information" row - INFO shows portal, status, expiry, tariff, account holder and balance
 #   (from the cached profile / account_info answer)
 # hoststalker.py - Stalker / Ministra middleware portals (MAG set-top box API, portal URL + MAC address)
@@ -50,7 +52,9 @@ from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str, ens
 from Components.config import config, ConfigText, ConfigYesNo, ConfigSelection, getConfigListEntry
 import hashlib
 import os
+import random
 import re
+import string
 import time
 
 ###################################################
@@ -74,6 +78,8 @@ for _slot in range(1, MAX_ACCOUNTS + 1):
         setattr(config.plugins.iptvplayer, '%s%d' % (_base, _slot), ConfigText(default='', fixed_size=False))
 config.plugins.iptvplayer.stalker_censored = ConfigYesNo(default=False)
 config.plugins.iptvplayer.stalker_estalker = ConfigYesNo(default=True)
+config.plugins.iptvplayer.stalker_gtiptv = ConfigYesNo(default=True)
+config.plugins.iptvplayer.stalker_cat_hide = ConfigText(default='', fixed_size=False)
 config.plugins.iptvplayer.stalker_sort = ConfigSelection(default='original', choices=[('original', _("Default")), ('az', _("A-Z")), ('za', _("Z-A"))])
 FILE_SLOT = 101  # portals from the e-portals.txt files
 
@@ -91,7 +97,9 @@ def GetConfigList():
         for base, label in deviceFields():
             optionList.append(getConfigListEntry(_("Portal %d - %s (optional, from the MAG box):") % (slot, label), _cfg(base, slot)))
     optionList.append(getConfigListEntry(_("Also use the portals of EStalker (%s)") % pluginFile(), config.plugins.iptvplayer.stalker_estalker))
+    optionList.append(getConfigListEntry(_("Also use the portals of GT IPTV Player Pro (%s)") % (gtFile() or GT_DIR), config.plugins.iptvplayer.stalker_gtiptv))
     optionList.append(getConfigListEntry(_("Show adult content"), config.plugins.iptvplayer.stalker_censored))
+    optionList.append(getConfigListEntry(_("Hide categories containing (comma separated):"), config.plugins.iptvplayer.stalker_cat_hide))
     optionList.append(getConfigListEntry(_("Sort the list:"), config.plugins.iptvplayer.stalker_sort))
     return optionList
 
@@ -117,8 +125,9 @@ ITEM_KINDS = {'st_live': 'live', 'st_movie': 'movie', 'st_series': 'series', 'st
               'st_episode': 'episode', 'st_timeshift': 'timeshift', 'st_archive_days': 'archive'}
 
 MAC_RE = re.compile(r'^[0-9A-F]{2}(?::[0-9A-F]{2}){5}$')
-# "ffmpeg http://...", "ffrt http://localhost/ch/1_", "auto /media/12.mpg": the word in front of the address
-CMD_PREFIX_RE = re.compile(r'^\s*[a-z0-9_]+\s+(?=\w+://|/)', re.I)
+# "ffmpeg http://...", "ffrt http://localhost/ch/1_", "auto /media/12.mpg", "ffmpeg auto http://...": the words in front
+# of the address
+CMD_PREFIX_RE = re.compile(r'^\s*(?:[a-z0-9_]+\s+)+(?=\w+://|/)', re.I)
 
 # -- name / value helpers: the same code in hostxtream.py and hoststalker.py - change both copies the same
 #    way; each host runs on its own
@@ -197,6 +206,12 @@ def _cleanName(name):
 def _isAdultName(name, category=False):
     name = _str(name)
     return bool(_ADULT_XXX_RE.search(name) or _ADULT_NAME_RE.search(name) or (category and _ADULT_CAT_RE.search(name)))
+
+
+def _hiddenByTerms(name, terms):
+    # "Hide categories containing": comma separated parts of the name, case-insensitive ("AR|, XXX, Sport")
+    name = _normSearchText(name)
+    return bool(name) and any(term in name for term in (_normSearchText(x) for x in _str(terms).split(',')) if term)
 
 
 def _yearOf(*values):
@@ -278,6 +293,37 @@ def archiveDays(elm):
     return max(1, min((value + 23) // 24 if value > 31 or value == 24 else value, 31))
 
 
+# an answer of HTTP 200 that is a rejected token: {"js": {"error": "not valid token", "data": []}} and the like
+_TOKEN_ERROR_RE = re.compile(r'token|unauthori[sz]ed|not\s+authori[sz]ed|auth\w*\s+(?:failed|required)|session\s+(?:expired|invalid)', re.I)
+
+
+def _tokenError(js):
+    if not isinstance(js, dict) or _list(js.get('data')):
+        return False
+    text = ' '.join(_str(js.get(key)) for key in ('error', 'msg', 'message')).strip()
+    return bool(text) and bool(_TOKEN_ERROR_RE.search(text))
+
+
+# expiry texts with a date ("2026-12-31 23:59:59", "December 31, 2026, 11:59 pm", "31.12.2026"): the "phone" field
+# carries the expiry on many portals, a real phone number there must not be shown as one
+_MONTHS = ('jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec')
+
+
+def _expiryDate(text):
+    # (year, month, day) of an expiry text, None when it has no date
+    text = _str(text)
+    m = re.search(r'\b(\d{4})-(\d{1,2})-(\d{1,2})\b', text)
+    if m:
+        return int(m.group(1)), int(m.group(2)), int(m.group(3))
+    m = re.search(r'\b(\d{1,2})[./](\d{1,2})[./](\d{4})\b', text)
+    if m:
+        return int(m.group(3)), int(m.group(2)), int(m.group(1))
+    m = re.search(r'\b([A-Za-z]{3})[A-Za-z]*\.?\s+(\d{1,2}),?\s+(\d{4})\b', text)
+    if m and m.group(1).lower() in _MONTHS:
+        return int(m.group(3)), _MONTHS.index(m.group(1).lower()) + 1, int(m.group(2))
+    return None
+
+
 def _localTimezone():
     try:
         with open('/etc/timezone') as f:
@@ -298,13 +344,17 @@ def _localTimezone():
 # EStalker's e-portals.txt: a portal URL line (" #Name" optional), then its MACs, one per line
 # (" #Alias" optional); "#" in front switches a line off, in front of the URL the whole portal
 ACCOUNTS_PLUGIN = ('EStalker', '/etc/enigma2/estalker/', 'e-portals.txt')
+# GT IPTV Player Pro: the same blocks in its stalker.txt (its type "stalker" in playlist-files.json)
+GT_PLUGIN = ('stalker', 'stalker.txt')
 # -- account files: the same code in hostxtream.py and hoststalker.py up to "-- end of the shared part"
 #    (change both copies the same way); read only, never written back. Files: our own folder
 #    <ConfigDir>/IPTVAccounts/ (the plugin's file can be copied there as it is, also without the plugin) and,
 #    with the option, the plugin's own file: its playlist_file setting, else location + playlist_name, from the
-#    running config when the plugin is loaded, else /etc/enigma2/settings, else its default.
+#    running config when the plugin is loaded, else /etc/enigma2/settings, else its default. With the second
+#    option also GT IPTV Player Pro's file: the active one of its playlist-files.json, else its default file.
 E2_SETTINGS = '/etc/enigma2/settings'
 ACCOUNTS_DIR = 'IPTVAccounts'
+GT_DIR = '/etc/enigma2/gtiptvplayer/'
 _ACCOUNT_LINES_CACHE = {}
 
 
@@ -347,11 +397,30 @@ def pluginFile():
     return path
 
 
-def _accountFiles(withPlugin):
+def gtFile():
+    # GT keeps up to 100 files per type in playlist-files.json and reads only the active one; without the registry
+    # its default file. '' when files are registered there but none is active (GT reads none then either)
+    try:
+        registry = os.path.join(GT_DIR, 'playlist-files.json')
+        if os.path.isfile(registry):
+            with open(registry, 'rb') as f:
+                data = json_loads(f.read().decode('utf-8-sig', 'ignore'))
+            source = _dict(_dict(_dict(data).get('types')).get(GT_PLUGIN[0]))
+            slots = source.get('slots') if isinstance(source.get('slots'), list) else []
+            active = source.get('active')
+            if isinstance(active, int) and 0 <= active < len(slots) and slots[active]:
+                return ensure_str(slots[active])
+            if any(slots):
+                return ''
+    except Exception:
+        printExc()
+    return os.path.join(GT_DIR, GT_PLUGIN[1])
+
+
+def _accountFiles(withPlugin, withGt=False):
     files = [path for path in (ownFile(),) if path]
-    if withPlugin:
-        path = pluginFile()
-        if not files or os.path.normpath(path) != os.path.normpath(files[0]):
+    for path in ([pluginFile()] if withPlugin else []) + ([gtFile()] if withGt else []):
+        if path and os.path.normpath(path) not in [os.path.normpath(x) for x in files]:
             files.append(path)
     return files
 
@@ -381,27 +450,40 @@ def _splitMark(text, mark):
 # -- end of the shared part
 
 
-def readStalkerPortals(withPlugin=True):
+# pasted portal exports: "Panel: http://...", "MAC: 00:1A:79:...", "Expires: 30/11/2026 (7 days)", also with
+# frames / bullets / arrows in front or after the field name (cut off as everything before the first letter / digit)
+_EXPORT_FIELD_RE = re.compile(r'^(panel|portal|url|mac|expires?|exp\.?)\s*[:=>]*\s*(.*)$', re.I)
+_LEAD_DECOR_RE = re.compile(r'^[^A-Za-z0-9]+')
+
+
+def readStalkerPortals(withPlugin=True, withGt=False):
     """[{'name', 'portal', 'mac', 'file'}] - one entry per active MAC of an active portal"""
     portals = []
-    for path in _accountFiles(withPlugin):
+    for path in _accountFiles(withPlugin, withGt):
         portal, portalName, active = None, '', False
         for line in _accountLines(path):
             if not line:
                 continue
+            off = line.startswith('#')
             bare = line.lstrip('#').strip()
-            if bare.startswith(('http://', 'https://')):
+            m = _EXPORT_FIELD_RE.match(_LEAD_DECOR_RE.sub('', bare))
+            field = m.group(1).lower() if m else ''
+            if field:
+                bare = _LEAD_DECOR_RE.sub('', m.group(2)) if not m.group(2).lstrip().startswith('#') else m.group(2).strip()
+            if field.startswith('exp') or (field in ('panel', 'portal', 'url') and '.' not in bare):
+                continue  # the expiry of an export / a heading like "Portal 1"
+            if field in ('panel', 'portal', 'url') or bare.startswith(('http://', 'https://')):
                 url, name = _splitMark(bare, ' #')
                 portal, portalName = url.strip(), name.strip()
-                active = not line.startswith('#')
+                active = not off
                 continue
-            if portal is None or not active or line.startswith('#'):
+            if portal is None or not active or off:
                 continue
-            mac, alias = _splitMark(line, '#')
+            mac, alias = _splitMark(bare, '#')
+            # the MAC is the first word: "00:1A:79:..:..:56 - 25.12.2026" / "... 25.12.2026" carry the expiry after it;
             # also "00-1A-79-..." or without separators (own files); EStalker itself needs the colons
-            mac = re.sub(r'[^0-9A-Fa-f]', '', mac).upper()
-            mac = ':'.join(mac[i:i + 2] for i in range(0, 12, 2)) if len(mac) == 12 else ''
-            if MAC_RE.match(mac):
+            mac = normalizeMac(mac) or normalizeMac((mac.split() or [''])[0])
+            if mac:
                 portals.append({'name': alias.strip(), 'portal': portal, 'portalName': portalName, 'mac': mac, 'file': path})
     _namePortals(portals)
     return portals
@@ -427,7 +509,7 @@ class StalkerPortalHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
     # stable identity of a row; never the MAC - the portal is looked up by acc_id at play time
     FAV_FIELDS = ('name', 'category', 'type', 'url', 'title', 's_title', 'icon', 'desc', 'acc', 'acc_id', 'x_kind',
                   'item_id', 'cmd', 'series_id', 'season', 'season_id', 'ep_num', 'meta_type', 'meta_title', 'meta_year',
-                  'cat_id', 'st_info', 'episodes', 'ep_cmd_own', 'archive_days', 'channel')
+                  'cat_id', 'st_info', 'episodes', 'ep_cmd_own', 'episode_id', 'archive_days', 'channel')
 
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'stalker', 'cookie': 'stalker.cookie'})
@@ -447,12 +529,13 @@ class StalkerPortalHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not (base and endpoints and mac):
             return None
         # the box identity: the values of the real box when entered, otherwise derived from the MAC
+        ownIdentity = bool(_str(sn) or _str(devId) or _str(devId2) or _str(signature))
         sn = _str(sn) or _hash(hashlib.md5, mac)[:13]
         devId = _str(devId) or _hash(hashlib.sha256, mac)
         devId2 = _str(devId2) or _hash(hashlib.sha256, sn)
         signature = _str(signature) or _hash(hashlib.sha256, sn + mac)
         return {'slot': slot, 'name': _str(name) or re.sub(r'^https?://', '', base), 'host': base, 'endpoints': endpoints, 'mac': mac,
-                'sn': sn, 'device_id': devId, 'device_id2': devId2, 'signature': signature,
+                'sn': sn, 'device_id': devId, 'device_id2': devId2, 'signature': signature, 'own_identity': ownIdentity,
                 # persistent (watched flag, favourites): portal + MAC hash, never the MAC itself
                 'id': _hash(hashlib.md5, '%s|%s' % (base, mac))[:12].lower(),
                 # memory cache / session: changes with the portal field (other end point) or the box identity
@@ -466,9 +549,10 @@ class StalkerPortalHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
                                    _cfg('stalker_sig', slot).value)
             if acc:
                 accounts.append(acc)
-        # e-portals.txt in our own folder and (option) the EStalker plugin's file, after the slots; slots from FILE_SLOT on
+        # e-portals.txt in our own folder and (options) the EStalker / GT IPTV Player Pro files, after the slots; slots
+        # from FILE_SLOT on
         known = set(acc['id'] for acc in accounts)
-        for idx, entry in enumerate(readStalkerPortals(config.plugins.iptvplayer.stalker_estalker.value)):
+        for idx, entry in enumerate(readStalkerPortals(config.plugins.iptvplayer.stalker_estalker.value, config.plugins.iptvplayer.stalker_gtiptv.value)):
             acc = self.makeAccount(FILE_SLOT + idx, entry['name'], entry['portal'], entry['mac'])
             if acc and acc['id'] not in known:
                 known.add(acc['id'])
@@ -528,43 +612,92 @@ class StalkerPortalHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
     ###################################################
     # requests
     ###################################################
-    def _httpParams(self, acc, referer, token=''):
-        header = {'User-Agent': MAG_UA, 'X-User-Agent': MAG_X_UA, 'Referer': referer, 'Accept': '*/*',
-                  'Cookie': 'mac=%s; stb_lang=en; timezone=%s' % (_quote(acc['mac']), _quote(self.timezone))}
+    def _httpParams(self, acc, referer, token='', tokenCookie=False):
+        cookie = 'mac=%s; stb_lang=en; timezone=%s' % (_quote(acc['mac']), _quote(self.timezone))
+        if token and tokenCookie:
+            cookie += '; token=%s' % _quote(token)
+        header = {'User-Agent': MAG_UA, 'X-User-Agent': MAG_X_UA, 'Referer': referer, 'Accept': '*/*', 'Cookie': cookie}
         if token:
             header['Authorization'] = 'Bearer %s' % token
-        return {'header': header, 'use_cookie': False}
+        # 401 / 403 as an answer (no error): a rejected token gets a new handshake in api()
+        return {'header': header, 'use_cookie': False, 'ignore_http_code_ranges': [(401, 401), (403, 403), (404, 404), (500, 500)]}
 
-    def _call(self, acc, api, referer, token, query):
+    def _call(self, acc, api, referer, token, query, tokenCookie=False):
+        # (ok, "js" part or None, HTTP status)
         url = '%s?%s' % (api, '&'.join('%s=%s' % (key, _quote(value)) for key, value in list(query) + [('JsHttpRequest', '1-xml')]))
         printDBG('Stalker.call %s' % self.mask(acc, url))
-        sts, data = self.cm.getPage(url, self._httpParams(acc, referer, token))
+        sts, data = self.cm.getPage(url, self._httpParams(acc, referer, token, tokenCookie))
+        code = _int(_dict(self.cm.meta).get('status_code'), 0)
+        if code in (401, 403):
+            printDBG('Stalker.call: HTTP %d' % code)
+            return False, None, code
         if not sts or not data:
-            return False, None
+            return False, None, code
         try:
             data = json_loads(data)
             if isinstance(data, dict) and 'js' in data:
-                return True, data['js']
+                return True, data['js'], code
         except Exception:
             pass
         printDBG('Stalker.call: no API answer [%s]' % self.mask(acc, _str(data)[:200]))
-        return True, None
+        return True, None, code
+
+    def _handshakeToken(self, acc, api, referer):
+        # (token, random, not_valid) of the handshake; '' without a token
+        query = [('type', 'stb'), ('action', 'handshake'), ('token', ''), ('prehash', '0')]
+        js = _dict(self._call(acc, api, referer, '', query)[1])
+        if not _str(js.get('token')):
+            # some portals want the MAC in the handshake
+            js = _dict(self._call(acc, api, referer, '', query + [('mac', acc['mac'])])[1]) or js
+        if not _str(js.get('token')) and 'missing' in _str(js.get('msg')).lower():
+            # newer portals: a token of our own and its prehash
+            own = ''.join(random.choice(string.ascii_uppercase + string.digits) for _i in range(32))
+            js = _dict(self._call(acc, api, referer, own, [('type', 'stb'), ('action', 'handshake'), ('mac', acc['mac']),
+                                                           ('prehash', _hash(hashlib.sha1, own).lower())])[1])
+        return _str(js.get('token')), _str(js.get('random')), _str(js.get('not_valid')).lower() in ('1', 'true', 'yes')
+
+    def _profileQuery(self, acc, estalker=False, rnd='', notValid=False):
+        # get_profile of a MAG250. estalker: the box identity and login EStalker uses (device ID 2 = device ID, its
+        # signature, prehash, the handshake's random / not_valid) - portals where the MAC was set up with EStalker
+        devId2, signature, prehash = acc['device_id2'], acc['signature'], ''
+        if estalker:
+            devId2 = acc['device_id']
+            signature = _hash(hashlib.sha256, acc['device_id'] + acc['device_id'])
+            prehash = _hash(hashlib.sha1, acc['sn'] + acc['mac']).lower()
+        return [('type', 'stb'), ('action', 'get_profile'), ('hd', '1'), ('ver', 'ImageDescription: 0.2.18-r23-250; ImageDate: Wed Aug 29 10:49:53 EEST 2018; PORTAL version: 5.6.2; API Version: JS API version: 343; STB API version: 146; Player Engine version: 0x58c'),
+                ('num_banks', '2'), ('sn', acc['sn']), ('stb_type', 'MAG250'), ('client_type', 'STB'), ('image_version', '218'),
+                ('video_out', 'hdmi'), ('device_id', acc['device_id']), ('device_id2', devId2),
+                ('signature', signature), ('auth_second_step', '1'), ('hw_version', '1.7-BD-00'),
+                ('not_valid_token', '1' if notValid else '0'),
+                ('metrics', json_dumps({'mac': acc['mac'], 'sn': acc['sn'], 'type': 'STB', 'model': 'MAG250', 'uid': '', 'random': rnd if estalker else ''})),
+                ('hw_version_2', _hash(hashlib.sha1, acc['mac']).lower()), ('timestamp', '%d' % int(time.time())),
+                ('api_signature', '262'), ('prehash', prehash)]
 
     def _handshake(self, acc, api, referer):
-        js = self._call(acc, api, referer, '', [('type', 'stb'), ('action', 'handshake'), ('token', ''), ('prehash', '0')])[1]
-        token = _str(_dict(js).get('token'))
+        token, rnd, notValid = self._handshakeToken(acc, api, referer)
         if not token:
             return None
-        query = [('type', 'stb'), ('action', 'get_profile'), ('hd', '1'), ('ver', 'ImageDescription: 0.2.18-r23-250; ImageDate: Wed Aug 29 10:49:53 EEST 2018; PORTAL version: 5.6.2; API Version: JS API version: 343; STB API version: 146; Player Engine version: 0x58c'),
-                 ('num_banks', '2'), ('sn', acc['sn']), ('stb_type', 'MAG250'), ('client_type', 'STB'), ('image_version', '218'),
-                 ('video_out', 'hdmi'), ('device_id', acc['device_id']), ('device_id2', acc['device_id2']),
-                 ('signature', acc['signature']), ('auth_second_step', '1'), ('hw_version', '1.7-BD-00'),
-                 ('not_valid_token', '0'), ('metrics', json_dumps({'mac': acc['mac'], 'sn': acc['sn'], 'type': 'STB', 'model': 'MAG250', 'uid': '', 'random': ''})),
-                 ('hw_version_2', _hash(hashlib.sha1, acc['mac']).lower()), ('timestamp', '%d' % int(time.time())),
-                 ('api_signature', '262'), ('prehash', '')]
-        profile = self._call(acc, api, referer, token, query)[1]
+        profile = _dict(self._call(acc, api, referer, token, self._profileQuery(acc))[1])
         registerLogSecret(token)
-        return {'api': api, 'referer': referer, 'token': token, 'profile': _dict(profile), 'until': time.time() + SESSION_TTL}
+        sess = {'api': api, 'referer': referer, 'token': token, 'profile': profile, 'until': time.time() + SESSION_TTL, 'estalker': False}
+        if _str(profile.get('id')) or acc.get('own_identity'):
+            return sess
+        # no profile id: the portal did not take this box. Once more as EStalker logs in (a new token, its box
+        # identity, the token also as a cookie), then a get_profile with the least parameters; the first answer
+        # stays when neither gives a profile
+        token2, rnd, notValid = self._handshakeToken(acc, api, referer)
+        if token2:
+            registerLogSecret(token2)
+            for query in (self._profileQuery(acc, True, rnd, notValid),
+                          [('type', 'stb'), ('action', 'get_profile'), ('sn', acc['sn']), ('device_id', ''), ('timestamp', '%d' % int(time.time()))]):
+                profile2 = _dict(self._call(acc, api, referer, token2, query, True)[1])
+                if _str(profile2.get('id')):
+                    printDBG('Stalker: portal takes the EStalker login')
+                    sess.update({'token': token2, 'profile': profile2, 'estalker': True})
+                    return sess
+            # the new handshake may have ended the first token: the new one with our own get_profile, as at first
+            sess.update({'token': token2, 'profile': _dict(self._call(acc, api, referer, token2, self._profileQuery(acc))[1])})
+        return sess
 
     def session(self, acc, renew=False):
         sess = self.sessions.get(acc['ck'])
@@ -586,16 +719,18 @@ class StalkerPortalHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
         return None
 
     def api(self, acc, query):
-        # the "js" part of the answer, or None; a rejected token gets one new handshake
+        # the "js" part of the answer, or None; a rejected token (HTTP 401 / 403, an answer without "js", a token
+        # error in it) gets one new handshake
         for attempt in (0, 1):
             sess = self.session(acc, renew=(attempt == 1))
             if not sess:
                 return None
-            sts, js = self._call(acc, sess['api'], sess['referer'], sess['token'], query)
-            if not sts:
-                return None
-            if js is not None:
-                return js
+            sts, js, code = self._call(acc, sess['api'], sess['referer'], sess['token'], query, sess.get('estalker', False))
+            rejected = code in (401, 403) or (sts and js is None) or _tokenError(js)
+            if rejected and attempt == 0:
+                printDBG('Stalker: token rejected (HTTP %d), new handshake' % code)
+                continue
+            return js if sts else None
         return None
 
     def cached(self, key, ttl, func):
@@ -626,15 +761,29 @@ class StalkerPortalHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
         blockMsg = _str(profile.get('block_msg'))
         if blockMsg:
             return False, blockMsg
+        if _str(profile.get('blocked')) == '1':
+            return False, _("The portal has blocked this MAC address.")
         parts = []
-        # the expiry date: end_date, or the "phone" field many panels use for it
-        expiry = _str(info.get('end_date')) or _str(info.get('phone')) or _str(profile.get('expire_billing_date'))
-        if expiry and expiry not in ('0000-00-00 00:00:00', '0'):
+        expiry = self.expiryText(profile, info)
+        if expiry:
             parts.append(_("Expiry: %s") % expiry)
         tariff = _str(profile.get('tariff_plan_name')) or _str(info.get('tariff_plan'))
         if tariff:
             parts.append(tariff)
         return True, ' | '.join(parts)
+
+    def expiryText(self, profile, info):
+        # end_date, the "phone" field many portals use for it (only when it is a date), expire_billing_date; marked
+        # when the date has passed
+        expiry = ''
+        for value in (_str(info.get('end_date')), _str(info.get('phone')) if _expiryDate(info.get('phone')) else '', _str(profile.get('expire_billing_date'))):
+            if value and value not in ('0000-00-00 00:00:00', '0000-00-00', '0'):
+                expiry = value
+                break
+        date = _expiryDate(expiry)
+        if date and date < time.localtime()[:3]:
+            expiry = '%s (%s)' % (expiry, _("expired"))
+        return expiry
 
     def accountInfoText(self, acc):
         # INFO on the portal's "Information" row: what the portal tells about the account - from the same cached
@@ -646,8 +795,8 @@ class StalkerPortalHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not ok:
             lines.append(status)
         else:
-            expiry = _str(info.get('end_date')) or _str(info.get('phone')) or _str(profile.get('expire_billing_date'))
-            if expiry and expiry not in ('0000-00-00 00:00:00', '0'):
+            expiry = self.expiryText(profile, info)
+            if expiry:
                 lines.append(_("Expiry: %s") % expiry)
             tariff = _str(profile.get('tariff_plan_name')) or _str(info.get('tariff_plan'))
             if tariff:
@@ -716,7 +865,9 @@ class StalkerPortalHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     def hidden(self, elm, nameKey='name'):
         # adult entries without "Show adult content": the portal's censored flag or the name; nameKey 'title' =
-        # a genre / category (there also "adult")
+        # a genre / category (there also "adult" and the terms of "Hide categories containing")
+        if nameKey == 'title' and _hiddenByTerms(elm.get('title'), config.plugins.iptvplayer.stalker_cat_hide.value):
+            return True
         return not self.showCensored() and (_int(elm.get('censored')) == 1 or _isAdultName(elm.get(nameKey), nameKey == 'title'))
 
     ###################################################
@@ -961,6 +1112,9 @@ class StalkerPortalHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
             return
         seriesId = cItem.get('series_id', '')
         seasons = self.allPages(acc, [('type', 'series'), ('action', 'get_ordered_list'), ('movie_id', seriesId), ('season_id', '0'), ('episode_id', '0')])
+        if not seasons:
+            # some portals take the series as series_id
+            seasons = self.allPages(acc, [('type', 'series'), ('action', 'get_ordered_list'), ('series_id', seriesId), ('season_id', '0'), ('episode_id', '0')])
         show = cItem.get('s_title', '') or cItem.get('title', '')
         for season in seasons:
             seasonId = _str(season.get('id'))
@@ -1013,12 +1167,14 @@ class StalkerPortalHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
                                    ('season_id', cItem.get('season_id', '')), ('episode_id', '0')])
         for ep in rows:
             cmd = _str(ep.get('cmd'))
-            if not cmd:
+            epId = _str(ep.get('id'))
+            if not cmd and not epId:
                 continue
-            epNum = _str(ep.get('series_number')) or _str(ep.get('episode_number')) or _str(ep.get('id'))
+            epNum = _str(ep.get('series_number')) or _str(ep.get('episode_number')) or epId
             params = dict(base)
+            # an episode without a cmd: its file is asked for at play time (episode_id=<id>)
             params.update({'title': self.episodeTitle(show, season, epNum, _str(ep.get('name'))), 'ep_num': epNum,
-                           'cmd': self.hideMac(acc, cmd), 'ep_cmd_own': 1,
+                           'cmd': self.hideMac(acc, cmd), 'ep_cmd_own': 1, 'episode_id': epId,
                            'url': '%s/%s' % (cItem.get('url', ''), _quote(_str(ep.get('id')) or epNum)),
                            'icon': _str(ep.get('screenshot_uri')) or cItem.get('icon', ''),
                            'desc': _str(ep.get('description')) or cItem.get('desc', '')})
@@ -1036,13 +1192,18 @@ class StalkerPortalHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     def archiveChannels(self, acc, genreId=''):
         hiddenGenres = self.hiddenGenres(acc)
-        return [elm for elm in self.allChannels(acc) if archiveDays(elm) and _str(elm.get('id')) and
+        channels = self.allChannels(acc)
+        if not any(archiveDays(elm) for elm in channels):
+            # portals whose get_all_channels leaves out the archive flags: the ordered list has them
+            channels = self.allPages(acc, self.listQuery('live', ''), maxPages=60)
+        return [elm for elm in channels if archiveDays(elm) and _str(elm.get('id')) and
                 (not genreId or _str(elm.get('tv_genre_id')) == genreId) and not self.hidden(elm) and
                 _str(elm.get('tv_genre_id')) not in hiddenGenres]
 
     def hiddenGenres(self, acc):
-        # live genres hidden without "Show adult content" (their channels then also leave catch-up / "All")
-        if self.showCensored():
+        # live genres hidden without "Show adult content" or by "Hide categories containing" (their channels then
+        # also leave catch-up / "All")
+        if self.showCensored() and not _str(config.plugins.iptvplayer.stalker_cat_hide.value):
             return set()
         return set(_str(_dict(g).get('id')) for g in _list(self.apiCached(acc, [('type', 'itv'), ('action', 'get_genres')]))
                    if self.hidden(_dict(g), 'title'))
@@ -1177,10 +1338,64 @@ class StalkerPortalHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
     # links
     ###################################################
     def createLink(self, acc, linkType, cmd, series=''):
+        # (play URL or '', the portal's error code)
         js = self.api(acc, [('type', linkType), ('action', 'create_link'), ('cmd', cmd), ('series', series), ('forced_storage', '0'),
                             ('disable_ad', '0'), ('download', '0'), ('force_ch_link_check', '0')])
-        url = CMD_PREFIX_RE.sub('', _str(_dict(js).get('cmd')))
-        return url if url.startswith(('http://', 'https://', 'rtmp://', 'rtsp://', 'udp://')) else ''
+        if isinstance(js, list):
+            # some portals answer with a list: an advert first, then the stream
+            js = ([x for x in js if isinstance(x, dict) and _str(x.get('type')) != 'ad' and (_str(x.get('cmd')) or _str(x.get('url')))] or [{}])[0]
+        js = _dict(js)
+        url = CMD_PREFIX_RE.sub('', _str(js.get('cmd')) or _str(js.get('url'))).strip(' "\'')
+        url = re.sub(r'%mac%', acc['mac'], url, flags=re.I)
+        return (url if url.startswith(('http://', 'https://', 'rtmp://', 'rtsp://', 'udp://')) else ''), _str(js.get('error'))
+
+    def mediaFileCmd(self, acc, cItem, cmd):
+        # VOD cmd "/media/<id>.mpg" that a portal refuses: its file id from get_ordered_list -> "/media/file_<id>.mpg"
+        m = re.match(r'^(?:\w+\s+)?/media/(?!file_)[^/?]*?(\.\w+)?$', cmd)
+        if not m:
+            return ''
+        if cItem.get('category') == 'st_movie':
+            query = [('type', 'vod'), ('action', 'get_ordered_list'), ('movie_id', cItem.get('item_id', '')), ('category', '1'), ('sortby', ''), ('p', '1')]
+        else:
+            query = [('type', 'series'), ('action', 'get_ordered_list'), ('movie_id', cItem.get('season_id') or cItem.get('series_id', '')),
+                     ('season_id', '0'), ('episode_id', '0'), ('category', '1'), ('sortby', ''), ('p', '1')]
+        js = self.api(acc, query)
+        rows = _list(_dict(js).get('data')) if isinstance(js, dict) else _list(js)
+        mediaId = _str(_dict(rows[0]).get('id')) if rows else ''
+        return '/media/file_%s%s' % (mediaId, m.group(1) or '.mpg') if mediaId else ''
+
+    def episodeFileCmd(self, acc, cItem):
+        # an episode listed without a cmd: the files of the episode, the first one's cmd or "/media/file_<file id>.mpg"
+        rows = self.allPages(acc, [('type', 'series'), ('action', 'get_ordered_list'), ('movie_id', cItem.get('series_id', '')),
+                                   ('season_id', cItem.get('season_id', '')), ('episode_id', cItem.get('episode_id', ''))], maxPages=1)
+        for row in rows:
+            cmd = _str(row.get('cmd'))
+            fileId = _str(row.get('file_id')) or _str(row.get('id'))
+            if cmd or fileId:
+                return cmd or '/media/file_%s.mpg' % fileId
+        return ''
+
+    def linkError(self, error):
+        # the portal's create_link error code as a message
+        if error == 'limit':
+            return _("The portal refused the stream: the maximum number of connections is reached.")
+        if error == 'access_denied':
+            return _("The portal denied access to this entry.")
+        message = _("The portal did not hand out a link for this entry.")
+        return '%s (%s)' % (message, error) if error else message
+
+    def streamMeta(self, acc, url):
+        # the MAG's User-Agent for the stream; the portal's own play links (play/live.php on the portal server) also
+        # want its Referer, cookie and the session token - never sent to another server (CDN)
+        sess = _dict(self.sessions.get(acc['ck']))
+        meta = {'User-Agent': MAG_UA}
+        if urlparse(url).netloc.lower() == urlparse(acc['host']).netloc.lower():
+            if sess.get('referer'):
+                meta['Referer'] = sess['referer']
+            meta['Cookie'] = 'mac=%s; stb_lang=en; timezone=%s' % (_quote(acc['mac']), _quote(self.timezone))
+            if sess.get('token'):
+                meta['Authorization'] = 'Bearer %s' % sess['token']
+        return meta
 
     def getLinksForVideo(self, cItem):
         printDBG('Stalker.getLinksForVideo [%s]' % cItem.get('url', ''))
@@ -1190,26 +1405,36 @@ class StalkerPortalHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
             return []
         kind = ITEM_KINDS.get(cItem.get('category', ''), '')
         cmd = _str(cItem.get('cmd')).replace('{MAC}', acc['mac'])
-        url = ''
+        url, error = '', ''
         if kind == 'live':
-            url = self.createLink(acc, 'itv', cmd)
+            url, error = self.createLink(acc, 'itv', cmd)
             if url and cItem.get('item_id'):
                 # some portals leave the stream id out of the link
                 url = re.sub(r'([?&]stream=)(?=&|$)', lambda m: m.group(1) + _quote(cItem['item_id']), url)
-            direct = CMD_PREFIX_RE.sub('', cmd)
-            if not url and direct.startswith(('http://', 'https://')) and '//localhost' not in direct:
-                url = direct
         elif kind == 'timeshift':
-            url = self.createLink(acc, 'tv_archive', 'auto /media/%s.mpg' % cItem.get('prog_id', ''))
-        elif kind == 'movie':
-            url = self.createLink(acc, 'vod', cmd)
-        elif kind == 'episode':
-            url = self.createLink(acc, 'vod', cmd, '' if cItem.get('ep_cmd_own') else cItem.get('ep_num', ''))
+            url, error = self.createLink(acc, 'tv_archive', 'auto /media/%s.mpg' % cItem.get('prog_id', ''))
+            if not url and error != 'limit':
+                url = self.createLink(acc, 'tv_archive', 'auto /media/%s.ts' % cItem.get('prog_id', ''))[0]
+        elif kind in ('movie', 'episode'):
+            series = '' if cItem.get('ep_cmd_own') else cItem.get('ep_num', '')
+            if kind == 'episode' and not cmd and cItem.get('episode_id'):
+                cmd = self.episodeFileCmd(acc, cItem).replace('{MAC}', acc['mac'])
+            url, error = self.createLink(acc, 'vod', cmd, series) if cmd else ('', '')
+            if not url and error != 'limit':
+                # portals that want /media/file_<id> instead of the /media/<id> of their list
+                fileCmd = self.mediaFileCmd(acc, cItem, cmd)
+                if fileCmd:
+                    url, error = self.createLink(acc, 'vod', fileCmd, series)
+        if not url and kind != 'timeshift':
+            # a cmd that is already a stream address
+            direct = re.sub(r'%mac%', acc['mac'], CMD_PREFIX_RE.sub('', cmd).strip(), flags=re.I)
+            if direct.startswith(('http://', 'https://')) and '//localhost' not in direct:
+                url = direct
         if not url:
-            SetIPTVPlayerLastHostError(_("The portal did not hand out a link for this entry."))
+            SetIPTVPlayerLastHostError(self.linkError(error))
             return []
         printDBG('Stalker stream %s' % self.mask(acc, url))
-        urltab = [{'name': 'MAG', 'url': strwithmeta(url, {'User-Agent': MAG_UA}), 'need_resolve': 0}]
+        urltab = [{'name': 'MAG', 'url': strwithmeta(url, self.streamMeta(acc, url)), 'need_resolve': 0}]
         if kind in ('live', 'timeshift'):
             return urltab
         # INFO asks libs/moviemeta only when the portal has no plot or no picture - the download sidecar the same
@@ -1225,7 +1450,19 @@ class StalkerPortalHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
     ###################################################
     def getShortEpg(self, acc, channelId):
         return _list(self.cached((acc['ck'], 'short_epg', channelId), EPG_TTL,
-                                 lambda: self.api(acc, [('type', 'itv'), ('action', 'get_short_epg'), ('ch_id', channelId), ('size', '2')])))
+                                 lambda: self.api(acc, [('type', 'itv'), ('action', 'get_short_epg'), ('ch_id', channelId), ('size', '10')])))
+
+    def nowNext(self, listings):
+        # [(label, programme)]: the running programme and the one after it, by the times - not the order of the
+        # answer (some portals start with programmes that are over); without timestamps the answer's order
+        now = int(time.time())
+        progs = [_dict(x) for x in listings]
+        if progs and all(_int(x.get('start_timestamp'), 0) for x in progs):
+            progs = sorted(progs, key=lambda x: _int(x.get('start_timestamp'), 0))
+            progs = [x for x in progs if _int(x.get('stop_timestamp'), 0) > now or not _int(x.get('stop_timestamp'), 0)]
+            if progs and _int(progs[0].get('start_timestamp'), 0) > now:
+                return [(_("Next"), progs[0])]
+        return list(zip((_("Now"), _("Next")), progs[:2]))
 
     def _moviemeta(self, mediaType, title, year):
         try:
@@ -1260,10 +1497,9 @@ class StalkerPortalHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
             return self._article(cItem, '', icon, {'station': cItem.get('channel', '')})
         if kind == 'live':
             lines = []
-            for idx, prog in enumerate(self.getShortEpg(acc, cItem.get('item_id', ''))[:2]):
-                prog = _dict(prog)
+            for label, prog in self.nowNext(self.getShortEpg(acc, cItem.get('item_id', ''))):
                 span = '%s - %s' % (_str(prog.get('t_time')), _str(prog.get('t_time_to'))) if _str(prog.get('t_time')) else ''
-                lines.append(('%s: %s  %s' % (_("Now") if idx == 0 else _("Next"), span, _str(prog.get('name')))).strip())
+                lines.append(('%s: %s  %s' % (label, span, _str(prog.get('name')))).strip())
                 if _str(prog.get('descr')):
                     lines.append(_str(prog.get('descr')))
                 lines.append('')

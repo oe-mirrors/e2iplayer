@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "11.10.2026"
+LAST_MODIFIED = "23.11.2026"
+# 23.11.2026 - GT IPTV Player Pro accounts, plain-text guide titles, catch-up start from the guide (daylight saving),
+#   margins and HLS, "Recently added", hidden categories, separator rows, trailer link, better now / next
 # 11.10.2026 - account menu: "Information" row - INFO shows server, status, expiry, connections, creation date, stream
 #   formats, ports and server time of the account (from the cached player_api.php answer)
 # hostxtream.py - Xtream Codes IPTV accounts (player_api.php)
@@ -73,8 +75,14 @@ for _slot in range(1, MAX_ACCOUNTS + 1):
     setattr(config.plugins.iptvplayer, _cfgName('xtream_password', _slot), ConfigSecret(default='', fixed_size=False))
 config.plugins.iptvplayer.xtream_useragent = ConfigText(default='', fixed_size=False)
 config.plugins.iptvplayer.xtream_xstreamity = ConfigYesNo(default=True)
+config.plugins.iptvplayer.xtream_gtiptv = ConfigYesNo(default=True)
 config.plugins.iptvplayer.xtream_adult = ConfigYesNo(default=False)
-config.plugins.iptvplayer.xtream_sort = ConfigSelection(default='original', choices=[('original', _("Default")), ('az', _("A-Z")), ('za', _("Z-A"))])
+config.plugins.iptvplayer.xtream_sort = ConfigSelection(default='original', choices=[('original', _("Default")), ('az', _("A-Z")), ('za', _("Z-A")),
+                                                                                     ('added', _("Recently added"))])
+config.plugins.iptvplayer.xtream_cat_hide = ConfigText(default='', fixed_size=False)
+# catch-up margins: programmes rarely start / end on the minute of the guide
+config.plugins.iptvplayer.xtream_catchup_before = ConfigSelection(default='0', choices=[(_x, _x) for _x in ('0', '2', '5', '10', '15', '20', '30')])
+config.plugins.iptvplayer.xtream_catchup_after = ConfigSelection(default='0', choices=[(_x, _x) for _x in ('0', '2', '5', '10', '15', '20', '30')])
 FILE_SLOT = 101  # accounts from the playlists.txt files
 
 
@@ -91,8 +99,12 @@ def GetConfigList():
         optionList.append(getConfigListEntry(_("Account %d - password:") % slot, _cfg('xtream_password', slot)))
     optionList.append(getConfigListEntry(_("User-Agent (leave empty for the default):"), config.plugins.iptvplayer.xtream_useragent))
     optionList.append(getConfigListEntry(_("Also use the accounts of X-Streamity (%s)") % pluginFile(), config.plugins.iptvplayer.xtream_xstreamity))
+    optionList.append(getConfigListEntry(_("Also use the accounts of GT IPTV Player Pro (%s)") % (gtFile() or GT_DIR), config.plugins.iptvplayer.xtream_gtiptv))
     optionList.append(getConfigListEntry(_("Show adult content"), config.plugins.iptvplayer.xtream_adult))
+    optionList.append(getConfigListEntry(_("Hide categories containing (comma separated):"), config.plugins.iptvplayer.xtream_cat_hide))
     optionList.append(getConfigListEntry(_("Sort the list:"), config.plugins.iptvplayer.xtream_sort))
+    optionList.append(getConfigListEntry(_("Catch-up: minutes before the start:"), config.plugins.iptvplayer.xtream_catchup_before))
+    optionList.append(getConfigListEntry(_("Catch-up: minutes after the end:"), config.plugins.iptvplayer.xtream_catchup_after))
     return optionList
 
 
@@ -198,6 +210,12 @@ def _isAdultName(name, category=False):
     return bool(_ADULT_XXX_RE.search(name) or _ADULT_NAME_RE.search(name) or (category and _ADULT_CAT_RE.search(name)))
 
 
+def _hiddenByTerms(name, terms):
+    # "Hide categories containing": comma separated parts of the name, case-insensitive ("AR|, XXX, Sport")
+    name = _normSearchText(name)
+    return bool(name) and any(term in name for term in (_normSearchText(x) for x in _str(terms).split(',')) if term)
+
+
 def _yearOf(*values):
     for value in values:
         m = re.search(r'\b((?:19|20)\d{2})\b', _str(value))
@@ -210,14 +228,24 @@ def _md5(text):
     return hashlib.md5(ensure_binary(text)).hexdigest()
 
 
+_B64_RE = re.compile(r'^[A-Za-z0-9+/]+={0,2}$')
+_CONTROL_RE = re.compile(r'[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]')
+
+
 def _b64Text(value):
+    # EPG titles / descriptions: base64 on most panels, plain text on some. b64decode does not check its input
+    # (it drops spaces and other foreign characters), so a plain title like "News" decoded to garbage: decoded only
+    # what is base64 and gives valid UTF-8 text without control characters
     value = _str(value)
-    if value == '':
-        return ''
+    if value == '' or not _B64_RE.match(value):
+        return value
     try:
-        return b64Decode(value).strip()
+        text = b64Decode(value, binary=True).decode('utf-8')
+        if text.strip() and not _CONTROL_RE.search(text):
+            return ensure_str(text).strip()
     except Exception:
-        return value  # some panels send plain text
+        pass
+    return value
 
 
 def parseAccountInput(hostText, user='', pwd=''):
@@ -251,13 +279,17 @@ def parseAccountInput(hostText, user='', pwd=''):
 # X-Streamity's playlists.txt: one line per account, "#" in front switches it off
 #   http://host:port/get.php?username=U&password=P&type=m3u_plus&output=ts #Name
 ACCOUNTS_PLUGIN = ('XStreamity', '/etc/enigma2/xstreamity/', 'playlists.txt')
+# GT IPTV Player Pro: the same get.php lines in its playlists.txt (its type "xtream" in playlist-files.json)
+GT_PLUGIN = ('xtream', 'playlists.txt')
 # -- account files: the same code in hostxtream.py and hoststalker.py up to "-- end of the shared part"
 #    (change both copies the same way); read only, never written back. Files: our own folder
 #    <ConfigDir>/IPTVAccounts/ (the plugin's file can be copied there as it is, also without the plugin) and,
 #    with the option, the plugin's own file: its playlist_file setting, else location + playlist_name, from the
-#    running config when the plugin is loaded, else /etc/enigma2/settings, else its default.
+#    running config when the plugin is loaded, else /etc/enigma2/settings, else its default. With the second
+#    option also GT IPTV Player Pro's file: the active one of its playlist-files.json, else its default file.
 E2_SETTINGS = '/etc/enigma2/settings'
 ACCOUNTS_DIR = 'IPTVAccounts'
+GT_DIR = '/etc/enigma2/gtiptvplayer/'
 _ACCOUNT_LINES_CACHE = {}
 
 
@@ -300,11 +332,30 @@ def pluginFile():
     return path
 
 
-def _accountFiles(withPlugin):
+def gtFile():
+    # GT keeps up to 100 files per type in playlist-files.json and reads only the active one; without the registry
+    # its default file. '' when files are registered there but none is active (GT reads none then either)
+    try:
+        registry = os.path.join(GT_DIR, 'playlist-files.json')
+        if os.path.isfile(registry):
+            with open(registry, 'rb') as f:
+                data = json_loads(f.read().decode('utf-8-sig', 'ignore'))
+            source = _dict(_dict(_dict(data).get('types')).get(GT_PLUGIN[0]))
+            slots = source.get('slots') if isinstance(source.get('slots'), list) else []
+            active = source.get('active')
+            if isinstance(active, int) and 0 <= active < len(slots) and slots[active]:
+                return ensure_str(slots[active])
+            if any(slots):
+                return ''
+    except Exception:
+        printExc()
+    return os.path.join(GT_DIR, GT_PLUGIN[1])
+
+
+def _accountFiles(withPlugin, withGt=False):
     files = [path for path in (ownFile(),) if path]
-    if withPlugin:
-        path = pluginFile()
-        if not files or os.path.normpath(path) != os.path.normpath(files[0]):
+    for path in ([pluginFile()] if withPlugin else []) + ([gtFile()] if withGt else []):
+        if path and os.path.normpath(path) not in [os.path.normpath(x) for x in files]:
             files.append(path)
     return files
 
@@ -337,15 +388,43 @@ def _splitMark(text, mark):
 def _sorted(rows, nameKey):
     # "Sort the list:" - a sorted copy (the panel lists are cached), Default = the panel's order
     mode = config.plugins.iptvplayer.xtream_sort.value
-    if mode not in ('az', 'za'):
+    if mode not in ('az', 'za', 'added'):
         return rows
+    # sorted, the panel's separator rows ("#### DE ####") only mean something in its own order
+    rows = [x for x in rows if not _isSeparator(x)]
+    if mode == 'added':
+        # newest first: "added" of live / movie rows, "last_modified" of series; categories have no date
+        if nameKey == 'category_name':
+            return rows
+        return sorted(rows, key=lambda x: _int(_dict(x).get('added')) or _int(_dict(x).get('last_modified')), reverse=True)
     return sorted(rows, key=lambda x: (_str(_dict(x).get(nameKey)) or _str(_dict(x).get('title'))).lower(), reverse=(mode == 'za'))
 
 
-def readXtreamAccounts(withPlugin=True):
-    """[{'name', 'url', 'user', 'pwd', 'file'}] - url is the line's get.php address (server part for the host)"""
+def _isSeparator(elm):
+    # panels put headings into the live lists as dummy channels with another stream_type
+    streamType = _str(_dict(elm).get('stream_type')).lower()
+    return bool(streamType) and streamType not in ('live', 'created_live', 'radio_streams', 'radio', 'movie', 'series')
+
+
+def _trailerUrl(value):
+    # youtube_trailer: a YouTube video id ("dQw4w9WgXcQ") or a full link; '' for anything else
+    value = _str(value)
+    if re.match(r'^[A-Za-z0-9_-]{11}$', value):
+        return 'https://www.youtube.com/watch?v=' + value
+    return value if re.match(r'^https?://(?:www\.|m\.)?(?:youtube\.com|youtu\.be)/', value) else ''
+
+
+def _outputFormat(value):
+    # output=ts|mpegts|m3u8|hls of a get.php line -> 'ts' / 'm3u8' / ''
+    value = _str(value).lower()
+    return 'm3u8' if value in ('m3u8', 'hls') else 'ts' if value in ('ts', 'mpegts') else ''
+
+
+def readXtreamAccounts(withPlugin=True, withGt=False):
+    """[{'name', 'url', 'user', 'pwd', 'file', 'output', 'epg_shift'}] - url is the line's get.php address (server part
+    for the host); output = the line's preferred stream format, epg_shift = its X-Streamity "timeshift" (hours) in seconds"""
     accounts = []
-    for path in _accountFiles(withPlugin):
+    for path in _accountFiles(withPlugin, withGt):
         for line in _accountLines(path):
             if not line.startswith(('http://', 'https://')):
                 continue
@@ -357,7 +436,12 @@ def readXtreamAccounts(withPlugin=True):
                 continue
             user, pwd = query.get('username', '').strip(), query.get('password', '').strip()
             if user and pwd:
-                accounts.append({'name': name.strip(), 'url': url, 'user': user, 'pwd': pwd, 'file': path})
+                try:
+                    shift = int(round(float(query.get('timeshift', '0') or '0') * 3600))
+                except ValueError:
+                    shift = 0
+                accounts.append({'name': name.strip(), 'url': url, 'user': user, 'pwd': pwd, 'file': path,
+                                 'output': _outputFormat(query.get('output')), 'epg_shift': max(-14 * 3600, min(shift, 14 * 3600))})
     return accounts
 
 
@@ -365,7 +449,7 @@ class XtreamApiHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
     # stable identity of a row; never credentials - the account is looked up by acc_id at play time
     FAV_FIELDS = ('name', 'category', 'type', 'url', 'title', 's_title', 'icon', 'desc', 'acc', 'acc_id', 'x_kind',
                   'stream_id', 'ext', 'series_id', 'season', 'episode_id', 'ep_num', 'tv_archive', 'archive_days',
-                  'ts_start', 'ts_stop', 'start_str', 'channel', 'meta_type', 'meta_title', 'meta_year', 'cat_id')
+                  'ts_start', 'ts_stop', 'start_str', 'channel', 'meta_type', 'meta_title', 'meta_year', 'cat_id', 'trailer')
 
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'xtream', 'cookie': 'xtream.cookie'})
@@ -391,16 +475,17 @@ class XtreamApiHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
                              'id': _md5('%s|%s' % (host, user))[:12],
                              # memory cache only: changes with the password, so a corrected password is used at once
                              'ck': _md5('%s|%s|%s' % (host, user, pwd))})
-        # playlists.txt in our own folder and (option) the X-Streamity plugin's file, after the slots
+        # playlists.txt in our own folder and (options) the X-Streamity / GT IPTV Player Pro files, after the slots
         known = set(acc['id'] for acc in accounts)
-        for idx, entry in enumerate(readXtreamAccounts(config.plugins.iptvplayer.xtream_xstreamity.value)):
+        for idx, entry in enumerate(readXtreamAccounts(config.plugins.iptvplayer.xtream_xstreamity.value, config.plugins.iptvplayer.xtream_gtiptv.value)):
             host, user, pwd = parseAccountInput(entry['url'], entry['user'], entry['pwd'])
             accId = _md5('%s|%s' % (host, user))[:12]
             if not (host and user and pwd) or accId in known:
                 continue
             known.add(accId)
             accounts.append({'slot': FILE_SLOT + idx, 'name': entry['name'] or re.sub(r'^https?://', '', host), 'host': host, 'user': user,
-                             'pwd': pwd, 'ua': ua, 'id': accId, 'ck': _md5('%s|%s|%s' % (host, user, pwd)), 'file': entry['file']})
+                             'pwd': pwd, 'ua': ua, 'id': accId, 'ck': _md5('%s|%s|%s' % (host, user, pwd)), 'file': entry['file'],
+                             'output': entry['output'], 'epg_shift': entry['epg_shift']})
         # the stream urls (/live/<user>/<password>/...) also go into the player / downloader log lines
         for acc in accounts:
             registerLogSecret(acc['user'], acc['pwd'])
@@ -566,10 +651,11 @@ class XtreamApiHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
         si = _dict(self.getAccountData(acc).get('server_info'))
         try:
             nowTs = _int(si.get('timestamp_now'), 0)
-            timeNow = _str(si.get('time_now'))
-            if nowTs <= 0 or len(timeNow) < 16:
+            # "2026-11-23 16:41:05", also "2026-11-23T16:41" / "2026-11-23 16-41-05"
+            m = re.match(r'(\d{4})-(\d{2})-(\d{2})[ T](\d{2})[:-](\d{2})', _str(si.get('time_now')))
+            if nowTs <= 0 or not m:
                 return None
-            serverTs = calendar.timegm(time.strptime(timeNow[:16], '%Y-%m-%d %H:%M'))
+            serverTs = calendar.timegm(tuple(int(x) for x in m.groups()) + (0, 0, 0, 0))
             return int(round((serverTs - nowTs) / 900.0)) * 900
         except Exception:
             printExc()
@@ -652,33 +738,39 @@ class XtreamApiHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
         params = dict(base)
         params.update({'title': _("All"), 'cat_id': '', 'url': 'xtream://%s/%s/cat/' % (acc['id'], kind)})
         self.addDir(params)
-        adultCats = self.adultCategories(acc, kind)
+        hiddenCats = self.hiddenCategories(acc, kind)
         for cat in _sorted(data, 'category_name'):
             cat = _dict(cat)
             title = _str(cat.get('category_name'))
             catId = _str(cat.get('category_id'))
-            if not title or not catId or catId in adultCats:
+            if not title or not catId or catId in hiddenCats:
                 continue
             params = dict(base)
             params.update({'title': title, 'cat_id': catId, 'url': 'xtream://%s/%s/cat/%s' % (acc['id'], kind, _quote(catId))})
             self.addDir(params)
 
-    def adultCategories(self, acc, kind):
-        # ids of the categories hidden without "Show adult content" (by name, the panels flag only streams)
-        if config.plugins.iptvplayer.xtream_adult.value:
+    def hiddenCategories(self, acc, kind):
+        # ids of the categories left out: adult ones without "Show adult content" (by name, the panels flag only
+        # streams) and the ones of "Hide categories containing"
+        adult = not config.plugins.iptvplayer.xtream_adult.value
+        terms = _str(config.plugins.iptvplayer.xtream_cat_hide.value)
+        if not adult and not terms:
             return set()
         return set(_str(_dict(cat).get('category_id')) for cat in (self.apiList(acc, KIND_ACTIONS[kind][0]) or [])
-                   if _isAdultName(_dict(cat).get('category_name'), True))
+                   if (adult and _isAdultName(_dict(cat).get('category_name'), True)) or _hiddenByTerms(_dict(cat).get('category_name'), terms))
 
     def getStreams(self, acc, kind, catId=''):
         extra = (('category_id', catId),) if catId else None
         data = self.apiList(acc, KIND_ACTIONS[kind][1], extra)
-        if data is None or config.plugins.iptvplayer.xtream_adult.value:
+        if data is None:
             return data
-        # without "Show adult content": streams flagged is_adult, in an adult category or with an adult name
-        adultCats = self.adultCategories(acc, kind)
-        return [elm for elm in data if not (_int(_dict(elm).get('is_adult'), 0) == 1 or _str(_dict(elm).get('category_id')) in adultCats or
-                                            _isAdultName(_dict(elm).get('name')))]
+        # streams flagged is_adult or with an adult name without "Show adult content", streams of a hidden category
+        adult = not config.plugins.iptvplayer.xtream_adult.value
+        hiddenCats = self.hiddenCategories(acc, kind)
+        if not adult and not hiddenCats:
+            return data
+        return [elm for elm in data if not (_str(_dict(elm).get('category_id')) in hiddenCats or
+                                            (adult and (_int(_dict(elm).get('is_adult'), 0) == 1 or _isAdultName(_dict(elm).get('name')))))]
 
     def listStreams(self, cItem):
         acc = self.getAccount(cItem)
@@ -716,6 +808,10 @@ class XtreamApiHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
         title = _str(elm.get('name'))
         if not sid or not title:
             return
+        if _isSeparator(elm):
+            # "#### DE ####" rows of the panel: a heading, not a channel
+            self.addMarker({'title': title})
+            return
         days = _int(elm.get('tv_archive_duration'), 0) if _int(elm.get('tv_archive'), 0) == 1 else 0
         desc = (_("Catch-up: %d days") % days) if days else ''
         self.addVideo(self.accParams(acc, {'name': 'category', 'category': 'xt_live', 'x_kind': 'live', 'title': title, 'channel': title,
@@ -742,7 +838,8 @@ class XtreamApiHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
         self.addVideo(self.accParams(acc, {'name': 'category', 'category': 'xt_movie', 'x_kind': 'movie', 'title': title, 's_title': cleanTitle,
                                            'url': 'xtream://%s/movie/%s' % (acc['id'], sid), 'stream_id': sid,
                                            'ext': _str(elm.get('container_extension')) or 'mp4', 'icon': _str(elm.get('stream_icon')),
-                                           'desc': desc, 'meta_type': 'movie', 'meta_title': cleanTitle, 'meta_year': year, 'good_for_fav': True}))
+                                           'desc': desc, 'meta_type': 'movie', 'meta_title': cleanTitle, 'meta_year': year,
+                                           'trailer': _trailerUrl(elm.get('youtube_trailer') or elm.get('trailer')), 'good_for_fav': True}))
 
     def addSeries(self, acc, elm):
         sid = _str(elm.get('series_id'))
@@ -921,43 +1018,48 @@ class XtreamApiHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
         now = int(time.time())
         channel = cItem.get('channel', '')
         normalize = IsMediaNamingNormalized()
+        # the account file's "timeshift" (hours): panels with a wrong guide time, shifts what is shown only
+        shift = _int(acc.get('epg_shift'), 0)
         rows = []
+        seen = set()
         for prog in listings:
             prog = _dict(prog)
             start = _int(prog.get('start_timestamp'), 0)
-            stop = _int(prog.get('stop_timestamp'), 0)
-            if not (dayStart <= start < dayEnd) or stop <= start:
+            stop = _int(prog.get('stop_timestamp'), 0) or _int(prog.get('end_timestamp'), 0)
+            if not (dayStart <= start + shift < dayEnd) or stop <= start or start in seen:
                 continue
-            # the archive holds what has finished; has_archive=1 marks it on panels that send the flag
-            if start >= now or (stop > now and _int(prog.get('has_archive'), 0) != 1):
+            # the archive holds what has finished; has_archive=1 marks it on panels that send the flag, the running
+            # programme (now_playing=1) can be watched from its start
+            if start >= now or (stop > now and _int(prog.get('has_archive'), 0) != 1 and _int(prog.get('now_playing'), 0) != 1):
                 continue
+            seen.add(start)
             rows.append((start, stop, prog))
         rows.sort(key=lambda x: x[0])
         for start, stop, prog in rows:
             name = _b64Text(prog.get('title')) or _("Program")
-            span = '%s - %s' % (time.strftime('%H:%M', time.localtime(start)), time.strftime('%H:%M', time.localtime(stop)))
+            span = '%s - %s' % (time.strftime('%H:%M', time.localtime(start + shift)), time.strftime('%H:%M', time.localtime(stop + shift)))
             if normalize:
-                title = '%s - %s (%s)' % (channel, name, time.strftime('%Y-%m-%d %H.%M', time.localtime(start)))
+                title = '%s - %s (%s)' % (channel, name, time.strftime('%Y-%m-%d %H.%M', time.localtime(start + shift)))
             else:
                 title = '%s  %s' % (span, name)
-            desc = '%s %s[/br]%s' % (time.strftime('%d.%m.%Y', time.localtime(start)), span, _b64Text(prog.get('description')))
+            desc = '%s %s[/br]%s' % (time.strftime('%d.%m.%Y', time.localtime(start + shift)), span, _b64Text(prog.get('description')))
             self.addVideo(self.accParams(acc, {'name': 'category', 'category': 'xt_timeshift', 'x_kind': 'timeshift', 'title': title,
                                                'url': 'xtream://%s/timeshift/%s/%d' % (acc['id'], streamId, start),
                                                'stream_id': streamId, 'channel': channel, 'ts_start': start, 'ts_stop': stop,
                                                'start_str': _str(prog.get('start')), 'icon': cItem.get('icon', ''),
                                                'desc': desc, 'good_for_fav': False}))
 
-    def timeshiftStart(self, acc, cItem):
-        # "YYYY-MM-DD:HH-MM" in the time zone of the server
-        start = _int(cItem.get('ts_start'), 0)
-        offset = self.serverOffset(acc)
-        if offset is not None:
-            return time.strftime('%Y-%m-%d:%H-%M', time.gmtime(start + offset))
-        m = re.match(r'(\d{4}-\d{2}-\d{2})[ T](\d{2}):(\d{2})', cItem.get('start_str', ''))
+    def timeshiftStart(self, acc, cItem, before=0):
+        # "YYYY-MM-DD:HH-MM" in the time zone of the server, "before" seconds earlier. The guide's own start text
+        # first: it is in server time and right also for programmes from before a daylight saving change, when the
+        # server's current offset is an hour off for them
+        m = re.match(r'(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})', _str(cItem.get('start_str')))
         if m:
-            # the guide's own start text is in server time on Xtream panels
-            return '%s:%s-%s' % (m.group(1), m.group(2), m.group(3))
-        return time.strftime('%Y-%m-%d:%H-%M', time.gmtime(start))
+            wall = calendar.timegm(tuple(int(x) for x in m.groups()) + (0, 0, 0, 0))
+            return time.strftime('%Y-%m-%d:%H-%M', time.gmtime(wall - before))
+        start = _int(cItem.get('ts_start'), 0) - before
+        offset = self.serverOffset(acc)
+        return time.strftime('%Y-%m-%d:%H-%M', time.gmtime(start + (offset or 0)))
 
     ###################################################
     # search
@@ -983,7 +1085,7 @@ class XtreamApiHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
             for elm in (data or []):
                 elm = _dict(elm)
                 name = _normSearchText(elm.get('name') or elm.get('title'))
-                if all(w in name for w in words):
+                if all(w in name for w in words) and not (kind == 'live' and _isSeparator(elm)):
                     found.append((acc, elm))
         for acc, elm in found[(page - 1) * PAGE_SIZE:page * PAGE_SIZE]:
             self.addStreamItem(acc, kind, elm)
@@ -1000,6 +1102,11 @@ class XtreamApiHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
             return data if isinstance(data, dict) and not self.isAuthError(data) else None
         return self.cached((acc['ck'], 'vod_info', streamId), LIST_TTL, fetch)
 
+    def outputFormats(self, acc):
+        # the account's allowed_output_formats, lower case; both when the panel does not tell
+        formats = _dict(self.getAccountData(acc).get('user_info')).get('allowed_output_formats')
+        return [_str(x).lower() for x in formats] if isinstance(formats, list) and formats else ['m3u8', 'ts']
+
     def getLinksForVideo(self, cItem):
         printDBG('Xtream.getLinksForVideo [%s]' % cItem.get('url', ''))
         acc = self.getAccount(cItem)
@@ -1010,19 +1117,27 @@ class XtreamApiHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
         sid = cItem.get('stream_id', '')
         meta = {'User-Agent': acc['ua']}
         urltab = []
+        formats = self.outputFormats(acc) if kind in ('live', 'timeshift') else []
         if kind == 'live':
-            formats = _dict(self.getAccountData(acc).get('user_info')).get('allowed_output_formats')
-            formats = [_str(x).lower() for x in formats] if isinstance(formats, list) and formats else ['m3u8', 'ts']
             if 'm3u8' in formats:
                 urltab.append({'name': 'HLS (m3u8)', 'url': strwithmeta(self.streamUrl(acc, 'live', '%s.m3u8' % sid), meta), 'need_resolve': 0})
             if 'ts' in formats or not urltab:
                 urltab.append({'name': 'MPEG-TS', 'url': strwithmeta(self.streamUrl(acc, 'live', '%s.ts' % sid), meta), 'need_resolve': 0})
             return urltab
         if kind == 'timeshift':
+            before = _int(config.plugins.iptvplayer.xtream_catchup_before.value, 0) * 60
+            after = _int(config.plugins.iptvplayer.xtream_catchup_after.value, 0) * 60
             start = _int(cItem.get('ts_start'), 0)
-            minutes = max(1, (_int(cItem.get('ts_stop'), 0) - start + 59) // 60)
-            startStr = self.timeshiftStart(acc, cItem)
-            urltab.append({'name': _("Catch-up"), 'url': strwithmeta(self.streamUrl(acc, 'timeshift', '%d/%s/%s.ts' % (minutes, startStr, sid)), meta), 'need_resolve': 0})
+            minutes = max(1, (_int(cItem.get('ts_stop'), 0) - start + before + after + 59) // 60)
+            startStr = self.timeshiftStart(acc, cItem, before)
+            path = '%d/%s/%s' % (minutes, startStr, sid)
+            # .ts first as before; .m3u8 too when the panel streams HLS (first when the account file prefers it)
+            exts = ['ts'] + (['m3u8'] if 'm3u8' in formats else [])
+            if acc.get('output') == 'm3u8' and len(exts) > 1:
+                exts.reverse()
+            for ext in exts:
+                name = _("Catch-up") + (' (HLS)' if ext == 'm3u8' else '')
+                urltab.append({'name': name, 'url': strwithmeta(self.streamUrl(acc, 'timeshift', '%s.%s' % (path, ext)), meta), 'need_resolve': 0})
             # older panels only know streaming/timeshift.php
             oldUrl = '%s/streaming/timeshift.php?username=%s&password=%s&stream=%s&start=%s&duration=%d' % (acc['host'], _quote(acc['user']), _quote(acc['pwd']), sid, startStr, minutes)
             urltab.append({'name': _("Catch-up (timeshift.php)"), 'url': strwithmeta(oldUrl, meta), 'need_resolve': 0})
@@ -1058,9 +1173,18 @@ class XtreamApiHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
         printDBG('Xtream stream %s' % self.mask(url))
         name = (cItem.get('ext', '') or 'mp4').upper()
         urltab.append({'name': name, 'url': strwithmeta(url, meta), 'need_resolve': 0})
-        return applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), sidecarTxt, metaQuery))
+        urltab = applySidecarToLinks(urltab, buildSidecarFromItem(cItem, IsSidecarEnabled(), sidecarTxt, metaQuery))
+        if kind == 'movie':
+            # the panel's YouTube trailer as a second link (from the list row, or the movie info when it is cached)
+            entry = self.cache.get((acc['ck'], 'vod_info', sid))
+            trailer = cItem.get('trailer', '') or _trailerUrl(_dict(_dict(entry[1] if entry else {}).get('info')).get('youtube_trailer'))
+            if trailer:
+                urltab.append({'name': _("Trailer"), 'url': trailer, 'need_resolve': 1})
+        return urltab
 
     def getVideoLinks(self, videoUrl):
+        if _trailerUrl(videoUrl):
+            return self.up.getVideoLinkExt(videoUrl)
         sidecar = sidecarFromUrlMeta(videoUrl, IsSidecarEnabled())
         return decorateResolvedLinkItems([{'name': 'direct', 'url': videoUrl, 'need_resolve': 0}], sidecar)
 
@@ -1069,13 +1193,28 @@ class XtreamApiHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
     ###################################################
     def getShortEpg(self, acc, streamId):
         def fetch():
-            data = self.api(acc, 'get_short_epg', (('stream_id', streamId), ('limit', '2')))
+            data = self.api(acc, 'get_short_epg', (('stream_id', streamId), ('limit', '4')))
             return data.get('epg_listings') if isinstance(data, dict) and isinstance(data.get('epg_listings'), list) else None
         return self.cached((acc['ck'], 'short_epg', streamId), EPG_TTL, fetch) or []
 
-    def _moviemeta(self, mediaType, title, year):
+    def nowNext(self, listings):
+        # [(label, programme)]: the running programme and the one after it, by the times - not the order of the
+        # answer (some panels send it unsorted or start with programmes that are over)
+        now = int(time.time())
+        progs = sorted([_dict(x) for x in listings if _int(_dict(x).get('start_timestamp'), 0)], key=lambda x: _int(x.get('start_timestamp'), 0))
+        progs = [x for x in progs if _int(x.get('stop_timestamp'), 0) > now or _int(x.get('now_playing'), 0) == 1]
+        if progs and _int(progs[0].get('start_timestamp'), 0) <= now:
+            return list(zip((_("Now"), _("Next")), progs[:2]))
+        return [(_("Next"), prog) for prog in progs[:1]]
+
+    def _moviemeta(self, mediaType, title, year, imdbId=''):
         try:
-            from Plugins.Extensions.IPTVPlayer.libs.moviemeta import LATIN_ONLY, getMeta, isLatinTitle
+            from Plugins.Extensions.IPTVPlayer.libs.moviemeta import LATIN_ONLY, getMeta, getMetaByImdbId, isLatinTitle
+            # the panel's IMDb id: the exact title, no search by name
+            if re.match(r'^tt\d{5,}$', imdbId):
+                meta = getMetaByImdbId(mediaType, imdbId)
+                if meta:
+                    return meta
             # Arabic-only titles: only to the providers that know them (TMDb / TVmaze)
             return getMeta(mediaType, title, year, skip=() if isLatinTitle(title) else LATIN_ONLY) or {}
         except Exception:
@@ -1094,11 +1233,11 @@ class XtreamApiHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 return _dict(ep.get('info'))
         return None
 
-    def _enrich(self, mediaType, cItem, text, icon, otherInfo):
+    def _enrich(self, mediaType, cItem, text, icon, otherInfo, imdbId=''):
         # libs/moviemeta only when the panel itself has no plot or no picture
         if text and icon:
             return text, icon
-        meta = self._moviemeta(mediaType, cItem.get('meta_title', '') or cItem.get('s_title', ''), cItem.get('meta_year', ''))
+        meta = self._moviemeta(mediaType, cItem.get('meta_title', '') or cItem.get('s_title', ''), cItem.get('meta_year', ''), imdbId)
         for key, value in _dict(meta.get('info')).items():
             otherInfo.setdefault(key, value)
         return text or meta.get('plot', ''), icon or meta.get('poster', '')
@@ -1114,11 +1253,11 @@ class XtreamApiHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
             return self._article(cItem, cItem.get('title', ''), cItem.get('desc', '').replace('[/br]', '\n'), icon, {})
         if kind == 'live':
             lines = []
-            for idx, prog in enumerate(self.getShortEpg(acc, cItem.get('stream_id', ''))[:2]):
-                prog = _dict(prog)
+            shift = _int(acc.get('epg_shift'), 0)
+            for label, prog in self.nowNext(self.getShortEpg(acc, cItem.get('stream_id', ''))):
                 start, stop = _int(prog.get('start_timestamp'), 0), _int(prog.get('stop_timestamp'), 0)
-                span = '%s - %s' % (time.strftime('%H:%M', time.localtime(start)), time.strftime('%H:%M', time.localtime(stop))) if start and stop else ''
-                head = '%s: %s  %s' % (_("Now") if idx == 0 else _("Next"), span, _b64Text(prog.get('title')))
+                span = '%s - %s' % (time.strftime('%H:%M', time.localtime(start + shift)), time.strftime('%H:%M', time.localtime(stop + shift))) if start and stop else ''
+                head = '%s: %s  %s' % (label, span, _b64Text(prog.get('title')))
                 lines.append(head.strip())
                 descr = _b64Text(prog.get('description'))
                 if descr:
@@ -1145,7 +1284,7 @@ class XtreamApiHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 other['quality'] = '%sx%s %s' % (_str(video.get('width')), _str(video.get('height')), _str(video.get('codec_name')))
             text = _str(info.get('plot')) or _str(info.get('description'))
             cover = _str(info.get('movie_image')) or _str(info.get('cover_big'))
-            text, cover = self._enrich('movie', cItem, text, cover or icon, other)
+            text, cover = self._enrich('movie', cItem, text, cover or icon, other, _str(info.get('imdb_id')) or _str(info.get('imdb')))
             return self._article(cItem, cItem.get('title', ''), text, cover or icon, other)
         if kind in ('series', 'season', 'episode'):
             data = self.getSeriesInfo(acc, cItem.get('series_id', '')) or {}
@@ -1169,7 +1308,7 @@ class XtreamApiHost(GenericFolderWatchedScraperMixin, CBaseHostClass):
                     other['released'] = _str(epInfo.get('releasedate')) or _str(epInfo.get('air_date'))
             elif kind == 'season':
                 cover = icon or cover
-            text, cover = self._enrich('tv', cItem, text, cover or icon, other)
+            text, cover = self._enrich('tv', cItem, text, cover or icon, other, _str(info.get('imdb_id')) or _str(info.get('imdb')))
             return self._article(cItem, cItem.get('title', ''), text, cover or icon, other)
         return self._article(cItem, cItem.get('title', ''), cItem.get('desc', ''), icon, {})
 
