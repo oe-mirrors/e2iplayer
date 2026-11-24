@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "18.11.2026"
+LAST_MODIFIED = "24.11.2026"
 # PREMIUMSMART (premiumsmart.eu): Polish films and series (lektor / dubbing / napisy) from the site's JSON API,
 #   played from Byse, Vidara, Streamtape, Abyss, FlyFile ... through urlparser
 # 10.10.2026 - host standard: the API answers only with the session cookie of the site (401 without it - the host
@@ -9,6 +9,7 @@ LAST_MODIFIED = "18.11.2026"
 #   marker, "Title (Year)" / "Show - SxxExx" names, INFO via moviemeta (IMDb id) merged with the site's data,
 #   all sources of a title with language / quality, trailer last, sidecar, First/Jump/Next paging, English labels
 # 18.11.2026 - episodes listed newest first (descending by episode number)
+# 24.11.2026 - the sources need a free account now: login (e-mail) and password in the host configuration
 ###################################################
 # LOCAL import
 ###################################################
@@ -21,20 +22,31 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
 from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget, stripPagerKeys
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
-from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
+from Plugins.Extensions.IPTVPlayer.components.configsecret import ConfigLogin, ConfigSecret
+from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.moviemeta import getMeta, getMetaByImdbId
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarMetaQuery
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str_deep
-from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_unquote
 ###################################################
 # FOREIGN import
 ###################################################
+from Components.config import config, getConfigListEntry
 import re
 ###################################################
 
+###################################################
+# Config options for HOST
+###################################################
+config.plugins.iptvplayer.premiumsmart_login = ConfigLogin(default="", fixed_size=False)
+config.plugins.iptvplayer.premiumsmart_password = ConfigSecret(default="", fixed_size=False)
+
 
 def GetConfigList():
-    return []
+    optionList = []
+    optionList.append(getConfigListEntry(_("e-mail") + ":", config.plugins.iptvplayer.premiumsmart_login))
+    optionList.append(getConfigListEntry(_("password") + ":", config.plugins.iptvplayer.premiumsmart_password))
+    return optionList
 
 
 def gettytul():
@@ -56,6 +68,53 @@ class Premiumsmarteu(GenericFolderWatchedScraperMixin, CBaseHostClass):
         self.DEFAULT_ICON_URL = self.MAIN_URL + 'storage/branding_media/9a5b1890-53ce-4052-9a83-862d97a6b285.png'
         self.watchedHelper = IPTVWatchedHelper('premiumsmarteu')
         self.wfInitFolderCache()
+        self.loginFailed = None
+
+    ###################################################
+    # login
+    ###################################################
+    @staticmethod
+    def _credentials():
+        return config.plugins.iptvplayer.premiumsmart_login.value.strip(), config.plugins.iptvplayer.premiumsmart_password.value.strip()
+
+    def tryTologin(self):
+        # titles / episodes come without their sources ("requires_auth") unless logged in: the login page sets
+        # the XSRF-TOKEN cookie, auth/login takes the account as JSON and keeps the session in the cookie file
+        login, password = self._credentials()
+        if not login or not password:
+            SetIPTVPlayerLastHostError(_("%s needs a free account. Enter login and password in the host configuration.") % "PremiumSmart")
+            return False
+        if self.loginFailed == (login, password):
+            SetIPTVPlayerLastHostError(_('Failed to log in user "%s". Please check your login and password.') % login)
+            return False
+        printDBG("Premiumsmarteu.tryTologin [%s]" % login)
+        self.cm.clearCookie(self.COOKIE_FILE, removeNames=['premiumsmart_session', 'XSRF-TOKEN'])
+        loginUrl = self.MAIN_URL + 'login'
+        self.getPage(loginUrl, self.defaultParams)
+        params = dict(self.defaultParams)
+        params.update({'raw_post_data': True, 'ignore_http_code_ranges': [(400, 499)]})
+        params['header'] = dict(self.API_HEADER, Referer=loginUrl, Origin=self.MAIN_URL.rstrip('/'))
+        params['header']['Content-Type'] = 'application/json'
+        xsrf = urllib_unquote(self.cm.getCookieItem(self.COOKIE_FILE, 'XSRF-TOKEN') or '')
+        if xsrf:
+            params['header']['X-XSRF-TOKEN'] = xsrf
+        sts, data = self.getPage(self.MAIN_URL + 'auth/login', params, json_dumps({'email': login, 'password': password, 'remember': True}))
+        resp = {}
+        try:
+            resp = ensure_str_deep(json_loads(data)) if sts and data.lstrip().startswith('{') else {}
+        except Exception:
+            printExc()
+        if isinstance(resp, dict) and (resp.get('status') == 'success' or 'bootstrapData' in resp or resp.get('user')):
+            printDBG("Premiumsmarteu.tryTologin OK")
+            self.loginFailed = None
+            return True
+        message = resp.get('message', '') if isinstance(resp, dict) else ''
+        printDBG("Premiumsmarteu.tryTologin failed: %s" % (message or (data or '')[:200]))
+        if message:
+            # wrong account (422 with the site's message); a network error is tried again next time
+            self.loginFailed = (login, password)
+        SetIPTVPlayerLastHostError(_('Failed to log in user "%s". Please check your login and password.') % login + ('\n%s' % message if message else ''))
+        return False
 
     def _api(self, path):
         # the API answers 401 without the session cookie the start page sets
@@ -276,6 +335,12 @@ class Premiumsmarteu(GenericFolderWatchedScraperMixin, CBaseHostClass):
         printDBG("Premiumsmarteu.getLinksForVideo [%s]" % cItem.get('url', ''))
         path = cItem['url'].replace(self.API_URL, '')
         data = self._api(path)
+        # without a logged-in session the answer has "requires_auth" and only trailers / featurettes
+        loginError = False
+        if data.get('requires_auth'):
+            if self.tryTologin():
+                data = self._api(path)
+            loginError = bool(data.get('requires_auth'))
         if '/watch/' in cItem['url']:
             # rows of the old version: the video id of the title
             videos = data.get('alternative_videos') or ([data['video']] if data.get('video') else [])
@@ -294,8 +359,9 @@ class Premiumsmarteu(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 full.append({'name': name, 'url': strwithmeta(url, {'Referer': self.MAIN_URL}), 'need_resolve': 1})
             elif category == 'trailer' and not trailers:
                 trailers.append({'name': '%s - %s' % (_('Trailer'), self.up.getHostName(url)), 'url': url.replace('/embed/', '/watch?v='), 'need_resolve': 1})
-        linksTab = full + trailers
-        if not full:
+        # only a trailer without the account: an empty list shows the login message instead
+        linksTab = [] if (loginError and not full) else full + trailers
+        if not full and not loginError:
             SetIPTVPlayerLastHostError(_('No streams are available for this title yet.'))
         # moviemeta query of INFO: the title's IMDb id first, then its original title (an episode answer may lack the title block)
         title = data.get('title') or {}
