@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "23.11.2026"
+LAST_MODIFIED = "24.11.2026"
+# 24.11.2026 - stored YouTube videos too (not only Shorts): channel, date, length and views
 # 23.11.2026 - stored YouTube Shorts: channel, date, length and views like "Newest videos"
 # 11.10.2026 - "Newest videos": video length in the description (uploads playlist page, one request per channel),
 # Shorts with their own list icon; stored live streams / live radios with the live icon
@@ -125,9 +126,11 @@ class Favourites(CBaseHostClass):
                 params['image_type'] = 'CHANNEL'
             elif item.hostName == 'youtube' and isinstance(favItem, dict) and favItem.get('image_type') == 'SHORT':
                 params['image_type'] = 'SHORT'
-                params['yt_short_id'] = self._getYtVideoId(favItem)
+                params['yt_video_id'] = self._getYtVideoId(favItem)
             elif isinstance(favItem, dict) and (favItem.get('live') or favItem.get('is_live')):
                 params['live'] = True  # a stored live stream / live radio: the live icon (ihost.converItem)
+            elif item.hostName == 'youtube' and item.type == CDisplayListItem.TYPE_VIDEO and isinstance(favItem, dict):
+                params['yt_video_id'] = self._getYtVideoId(favItem)
             if None is not addFun:
                 rows.append((params, addFun))
 
@@ -139,9 +142,9 @@ class Favourites(CBaseHostClass):
                 self._annotateYtChannels(rows)
             except Exception:
                 printExc()
-        # a stored Short keeps only the short text of the list it came from: the current channel, date, length and views
+        # a stored YouTube video / Short keeps the short text of the list it came from: the current channel, date, length and views
         try:
-            ytchannelfeed.describeShorts([params for params, addFun in rows if params.get('yt_short_id')], 'yt_short_id')
+            ytchannelfeed.describeVideos([params for params, addFun in rows if params.get('yt_video_id')], 'yt_video_id')
         except Exception:
             printExc()
         for params, addFun in rows:
