@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "19.11.2026"
+LAST_MODIFIED = "24.11.2026"
+# 24.11.2026 - every video / Short row (channel tabs, playlists, search, signed-in feeds): the "Newest videos" short info
 # 23.11.2026 - Shorts in the signed-in feeds (My subscriptions ...): channel, date, length and views
 # 19.11.2026 - original video titles instead of YouTube's machine translation (RSS feed, all with an own Data API key)
 # 04.11.2026 - user links: channel rows and groups show the channel picture, video rows their thumbnail
@@ -661,11 +662,7 @@ class Youtube(CBaseHostClass):
                          "desc": _("This feed is empty, or the YouTube sign-in has expired - sign out and in again.")})
             return
         self._injectChannelNameToItems(tmp, cItem.get("channel_title", ""))
-        # the Shorts tiles of the TV feed carry hardly any text: channel, date, length and views per Short
-        try:
-            ytchannelfeed.describeShorts([item for item in tmp if item.get("image_type", "") == "SHORT"])
-        except Exception:
-            printExc()
+        self._describeVideos(tmp)
         self.watchedHelper.updateHostListFlags(self, tmp, self._getWatchedKeyForItem)
         for item in tmp:
             item.update({"name": "category"})
@@ -831,6 +828,7 @@ class Youtube(CBaseHostClass):
         url = cItem.get("url", "")
         search_type = cItem.get("search_type", "")
         tmpList = self.ytp.getSearchResult(urllib_quote_plus(pattern), search_type if search_type else "video", page, "search_next_page", config.plugins.iptvplayer.ytSortBy.value, url)
+        self._describeVideos(tmpList)
 
         currentChannel = cItem.get("channel", "")
         currentContextTitle = cItem.get("context_title", "")
@@ -903,7 +901,18 @@ class Youtube(CBaseHostClass):
             params = {"name": "category", "category": "feeds_video", "title": title, "pattern": pattern, "search_type": search_type, "page": "1", "url": ""}
             self.addDir(params)
 
-    def _prepareListItems(self, items, defaultChannel):
+    def _describeVideos(self, items):
+        # one short info for every video / Short row, as the favourites "Newest videos" list shows it:
+        # channel / upload date (age) / length | Short | views - the list pages only carry parts of it,
+        # in a different order per page type (one cached player request per video)
+        try:
+            ytchannelfeed.describeVideos([item for item in items if item.get("type", "") == "video"])
+        except Exception:
+            printExc()
+
+    def _prepareListItems(self, items, defaultChannel, describe=True):
+        if describe:
+            self._describeVideos(items)
         self._injectChannelNameToItems(items, defaultChannel)
         self.watchedHelper.updateHostListFlags(self, items, self._getWatchedKeyForItem)
         for item in items:
@@ -937,8 +946,10 @@ class Youtube(CBaseHostClass):
 
     def listChannelHome(self, cItem, url):
         channelName = cItem.get("channel_title", "")
-        for shelf in self.ytp.getChannelHomeShelves(url):
-            self.addDir({"name": "category", "good_for_fav": False, "category": "sub_items", "title": shelf["title"] or cItem.get("title", ""), "icon": cItem.get("icon", ""), "sub_items": self._prepareListItems(shelf["items"], channelName)})
+        shelves = self.ytp.getChannelHomeShelves(url)
+        self._describeVideos([item for shelf in shelves for item in shelf["items"]])  # all shelves in one parallel run
+        for shelf in shelves:
+            self.addDir({"name": "category", "good_for_fav": False, "category": "sub_items", "title": shelf["title"] or cItem.get("title", ""), "icon": cItem.get("icon", ""), "sub_items": self._prepareListItems(shelf["items"], channelName, False)})
 
     def getVideos(self, cItem):
         printDBG("Youtube.getVideos cItem[%s]" % (cItem))
@@ -973,6 +984,7 @@ class Youtube(CBaseHostClass):
             tmpList = self.ytp.getSearchResult(urllib_quote_plus(pattern), searchType, page, "search", config.plugins.iptvplayer.ytSortBy.value, url)
         else:
             tmpList = self.ytp.getSearchResult(urllib_quote_plus(pattern), searchType, page, "search", config.plugins.iptvplayer.ytSortBy.value)
+        self._describeVideos(tmpList)
 
         for item in tmpList:
             item.update({"name": "category"})

@@ -9,7 +9,7 @@
 # The feed has no video length: the channel's uploads playlist page
 #   https://www.youtube.com/playlist?list=UU...
 # shows it for its newest 100 videos (one request per channel, not per video).
-# Single videos (the Shorts of "My subscriptions" and of a favourites group): the InnerTube
+# Single videos (the YouTube lists and the stored videos of a favourites group): the InnerTube
 # player answer (~6 KB, no login) has channel, upload date, length and views of one video.
 ###################################################
 # LOCAL import
@@ -38,6 +38,7 @@ USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTM
 CACHE_TTL = 600  # seconds a fetched feed is reused
 FAIL_TTL = 60  # seconds a failed channel is not asked again
 MAX_WORKERS = 6
+DETAILS_WORKERS = 10  # one small request per video of a list page (30 and more)
 REQUEST_TIMEOUT = 10
 TOTAL_TIMEOUT = 30  # upper bound for one getFeeds() call
 DURATION_TIMEOUT = 15  # upper bound for one getDurations() call
@@ -277,6 +278,8 @@ def parseVideoDetails(data):
     if not isinstance(response, dict):
         return None
     details = response.get("videoDetails") or {}
+    if details.get("isLive") or details.get("isUpcoming"):
+        return None  # a running live stream / a premiere: no length, the list keeps its live text
     micro = (response.get("microformat") or {}).get("playerMicroformatRenderer") or {}
     channel = ensure_str(details.get("author") or micro.get("ownerChannelName") or "")
     published = parseTimestamp(micro.get("publishDate") or micro.get("uploadDate") or "")
@@ -348,24 +351,26 @@ def getDurations(urls):
 
 def getVideosDetails(videoIds):
     # {video id: details or None} for many videos, fetched by a few worker threads
-    return _runParallel(videoIds, getVideoDetails, None, DETAILS_TIMEOUT)
+    return _runParallel(videoIds, getVideoDetails, None, DETAILS_TIMEOUT, DETAILS_WORKERS)
 
 
-def describeShorts(items, idKey="video_id"):
-    # items: dicts of YouTube Shorts; puts the "newest videos" style short info into their "desc"
-    # (one player request per Short, cached); an item whose details could not be read keeps its desc
-    ids = [item.get(idKey) for item in items if item.get(idKey)]
-    if not ids:
+def describeVideos(items, idKey="video_id"):
+    # items: dicts of YouTube videos and Shorts (image_type "SHORT"); puts the "newest videos" style short info
+    # into their "desc" (one player request per video, cached); an item whose details could not be read
+    # (or a running live stream) keeps its desc
+    items = [item for item in items if re.match(r"^[A-Za-z0-9_-]{11}$", str(item.get(idKey) or ""))]
+    if not items:
         return
-    details = getVideosDetails(ids)
+    details = getVideosDetails([item[idKey] for item in items])
     now = time.time()
     for item in items:
-        info = details.get(item.get(idKey))
+        info = details.get(item[idKey])
         if info:
-            item["desc"] = describeVideo(info["channel"], info["published"], info["duration"], True, info["views"], now)
+            short = item.get("image_type", "") == "SHORT"
+            item["desc"] = describeVideo(info["channel"], info["published"], info["duration"], short, info["views"], now)
 
 
-def _runParallel(urls, fetch, failed, timeout):
+def _runParallel(urls, fetch, failed, timeout, workers=MAX_WORKERS):
     # {url: fetch(url, cm)} - failed for an url whose fetch raised; an url not finished in time is missing
     urls = list(dict.fromkeys(urls))
     results = {}
@@ -390,7 +395,7 @@ def _runParallel(urls, fetch, failed, timeout):
             with _lock:
                 results[urls[idx]] = info
 
-    threads = [_newWorkerThread(worker) for _ in range(min(MAX_WORKERS, len(urls)))]
+    threads = [_newWorkerThread(worker) for _ in range(min(workers, len(urls)))]
     for t in threads:
         t.start()
     for t in threads:
