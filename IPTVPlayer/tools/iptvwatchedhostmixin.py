@@ -20,7 +20,7 @@ class WatchedFlagHostMixin(object):
 
     def fixWatchedFlag(self, ret):
         if config.plugins.iptvplayer.favourites_use_watched_flag.value:
-            ret = self.watchedHelper.fixHostRet(ret, self.host.currList, self.host._getWatchedKeyForItem)
+            ret = self.watchedHelper.fixHostRet(ret, self.host.currList, self.host._getWatchedKeyForItem, getattr(self.host, 'currItem', None))
         self.cachedRet = ret
         return ret
 

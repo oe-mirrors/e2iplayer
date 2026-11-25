@@ -382,6 +382,19 @@ def test_manifest_live_check(ff):
     assert ff.manifestIsLive("https://c/x.m3u8", _pages({"https://c/x.m3u8": "<html>403</html>"})) is None
 
 
+def test_manifest_live_check_reads_no_media_file(ff):
+    # the read stops after MANIFEST_MAX_BYTES (pCommon max_data_size); what fills the limit is no playlist (a film
+    # behind the url) or a cut one whose end mark may be missing: no answer, never "live"
+    seen = []
+
+    def getPage(url, params):
+        seen.append(params.get('max_data_size'))
+        return True, "#EXTM3U\n" + "x" * ff.MANIFEST_MAX_BYTES
+
+    assert ff.manifestIsLive("https://c/film.mp4", getPage) is None
+    assert seen == [ff.MANIFEST_MAX_BYTES]
+
+
 def test_live_decision(ff):
     # a single file is never live, also without a duration from ffmpeg
     dl = _dl(ff, "https://cdn/x/video.mp4")

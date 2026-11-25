@@ -463,17 +463,29 @@ class IPTVWatchedHelper(object):
     # so it never actually affected what was shown and has been removed instead of
     # also switching it to a stable key.
     ###################################################
-    def fixHostRet(self, ret, currList, keyProvider):
+    def fixHostRet(self, ret, currList, keyProvider, currItem=None):
+        # currItem: the folder the list belongs to. Its paging rows ("Main menu", "Next page", "Jump 1/2" ...) are
+        # copies of it (tools/iptvpaging) and have the folder's own key: they get no mark, the folder's started dot
+        # is not theirs
         self._dbgCall('fixHostRet')
         try:
             if ret is None or not hasattr(ret, 'value') or ret.value is None:
                 self.dumpDebugCalls()
                 return ret
+            folderKey = ''
+            if isinstance(currItem, dict):
+                try:
+                    folderKey = keyProvider(currItem)
+                except Exception:
+                    printExc()
             for idx in range(len(ret.value)):
                 if currList is not None and idx < len(currList):
                     try:
                         watchedKey = keyProvider(currList[idx])
-                        if watchedKey != '':
+                        if watchedKey != '' and watchedKey == folderKey:
+                            ret.value[idx].isWatched = False
+                            ret.value[idx].isStarted = False
+                        elif watchedKey != '':
                             state = self.getWatchedState(watchedKey)
                             ret.value[idx].isWatched = (state == 'watched')
                             ret.value[idx].isStarted = (state == 'started')

@@ -88,6 +88,9 @@ import datetime
 ###################################################
 
 
+MANIFEST_MAX_BYTES = 4 * 1024 * 1024
+
+
 def manifestIsLive(url, getPage=None):
     # whether an HLS / DASH source is live, from its own playlist: a DASH manifest of type "dynamic", an HLS media
     # playlist without #EXT-X-ENDLIST (a master playlist: its first variant); None when it cannot be read.
@@ -101,9 +104,14 @@ def manifestIsLive(url, getPage=None):
     url = str(url)
     for _step in range(2):
         try:
-            sts, data = getPage(url, {'header': header, 'return_data': True, 'timeout': 15})
+            # never more than a playlist: a media file behind the url (a link whose parts became files) was read
+            # whole into enigma2's memory, 1.9 GB of ARTE film -> out of memory
+            sts, data = getPage(url, {'header': header, 'return_data': True, 'timeout': 15, 'max_data_size': MANIFEST_MAX_BYTES})
         except Exception:
             printExc()
+            return None
+        if sts and data and len(data) >= MANIFEST_MAX_BYTES:
+            # cut off: no playlist, or not all of it (its end mark may be missing)
             return None
         data = strDecode(data) if sts and data else ''
         if '<MPD' in data[:4096]:
