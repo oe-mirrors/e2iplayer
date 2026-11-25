@@ -1,18 +1,7 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "18.10.2026"
+LAST_MODIFIED = "25.11.2026"
 # ARTE
 # Rewritten for the api-cdn.arte.tv "emac v4" JSON API + player v2 config
-# 07.10.2026 - INFO (programme/collection details, moviemeta for
-# films and series), First/Jump/Next paging, own url per video (download marker),
-# SxxExx from the episode info, all pages of a series, default user agent.
-# 05.09.2026 - stamp iptv_format='mkv' alongside iptv_use_ffmpeg/
-# ff_out_container on split audio/video HLS renditions, so the download manager
-# shows .mkv immediately instead of .mp4 needing a rename.
-# 31.08.2026 - split audio/video HLS renditions (merge://) are muxed
-# with ffmpeg (iptv_use_ffmpeg, matroska container) instead of hlsdl, which only
-# re-packages segments and produced unplayable files.
-# 08.10.2026 - episode titles without the doubled "Staffel 1 (1/8)", a message for youth-protected
-# (night slot only) and geo-blocked videos instead of an empty link list.
 ###################################################
 # LOCAL import
 ###################################################
@@ -513,7 +502,9 @@ class ArteTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
                         extraMeta['ff_out_container'] = 'matroska'
                         extraMeta['iptv_format'] = 'mkv'
                     it['url'] = self.up.decorateUrl(it['url'], extraMeta)
-                    it['need_resolve'] = 0
+                    # a VOD's renditions are byte ranges of one MP4 file each: getVideoLinks() looks at the two
+                    # playlists of the chosen link only
+                    it['need_resolve'] = 1 if (extraMeta.get('iptv_use_ffmpeg') and not live) else 0
                     urlTab.append(it)
                 if not hls and not live:
                     urlTab.append({'need_resolve': 0, 'name': label or 'HLS', 'url': self.up.decorateUrl(surl, {'iptv_proto': 'm3u8', 'iptv_livestream': live})})
@@ -533,6 +524,39 @@ class ArteTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if not live:
             urlTab = applySidecarToLinks(urlTab, buildSidecarFromItem(cItem, IsSidecarEnabled(), synopsis))
         return urlTab
+
+    def getVideoLinks(self, url):
+        # the split audio / video link of a VOD: each rendition's playlist lists byte ranges of ONE fMP4 file
+        # (CMAF). FFmpeg 9 reads such a playlist to its end without giving packets after the first segment
+        # (buffering stood at 0:05, downloads broke off) - the file itself is a complete fragmented MP4, ffmpeg
+        # reads that directly. Anything else stays the playlist.
+        url = strwithmeta(url)
+        meta = dict(url.meta)
+        files = dict((key, self._singleFileUrl(meta.get(key, ''))) for key in ('audio_url', 'video_url'))
+        if all(files.values()):
+            # both or none: with files the link is no HLS any more (the downloader's live check read the "playlist"
+            # - the whole film - into memory)
+            meta.update(files)
+            meta.pop('iptv_proto', None)
+        printDBG('ArteTV.getVideoLinks audio[%s] video[%s]' % (meta.get('audio_url', ''), meta.get('video_url', '')))
+        return [{'name': 'direct', 'url': strwithmeta(str(url), meta)}]
+
+    def _singleFileUrl(self, playlistUrl):
+        # the fMP4 file a media playlist's segments are byte ranges of, '' when it is not exactly that (several
+        # files, init not at the start, encrypted, live)
+        if not playlistUrl or '.m3u8' not in playlistUrl:
+            return ''
+        sts, data = self.getPage(playlistUrl)
+        if not sts or not data or '#EXT-X-BYTERANGE' not in data or ('#EXT-X-ENDLIST' not in data and 'PLAYLIST-TYPE:VOD' not in data):
+            return ''
+        if re.search(r'#EXT-X-KEY:(?![^\n]*METHOD=NONE)', data):
+            return ''
+        files = set(line.strip() for line in data.split('\n') if line.strip() and not line.strip().startswith('#'))
+        files.update(re.findall(r'#EXT-X-MAP:URI="([^"]+)"', data))
+        mapStart = re.search(r'#EXT-X-MAP:[^\n]*BYTERANGE="\d+@(\d+)"', data)
+        if len(files) != 1 or (mapStart and mapStart.group(1) != '0'):
+            return ''
+        return self.getFullUrl(files.pop(), playlistUrl)
 
     ###################################################
     # INFO

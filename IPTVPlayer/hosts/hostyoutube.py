@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "24.11.2026"
+LAST_MODIFIED = "25.11.2026"
 # 24.11.2026 - every video / Short row (channel tabs, playlists, search, signed-in feeds): the "Newest videos" short info
 # 23.11.2026 - Shorts in the signed-in feeds (My subscriptions ...): channel, date, length and views
 # 19.11.2026 - original video titles instead of YouTube's machine translation (RSS feed, all with an own Data API key)
@@ -13,7 +13,7 @@ LAST_MODIFIED = "24.11.2026"
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass, CDisplayListItem, ArticleContent, RetHost
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, IsExecutable, printExc, byteify, GetSearchHistoryDir, E2ColoR, GetCacheSubDir
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, IsExecutable, printExc, byteify, E2ColoR, GetCacheSubDir
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvfilehost import IPTVFileHost
 from Plugins.Extensions.IPTVPlayer.libs.youtubeparser import YouTubeParser
@@ -39,7 +39,6 @@ except Exception:
     import simplejson as json
 import re
 import os
-import codecs
 import threading
 import time
 from Components.config import config, ConfigDirectory, ConfigYesNo, ConfigSelection, getConfigListEntry
@@ -54,8 +53,6 @@ from Screens.MessageBox import MessageBox
 from Components.ActionMap import ActionMap
 from Components.Label import Label
 from Components.ScrollLabel import ScrollLabel
-from Screens.VirtualKeyBoard import VirtualKeyBoard
-from Components.MenuList import MenuList
 
 ###################################################
 
@@ -576,7 +573,7 @@ class Youtube(CBaseHostClass):
         sidecarImg = ""
 
         try:
-            article = self.getArticleContent(cItem)
+            article = self.getArticleContent(cItem, forSidecar=True)
             if article and isinstance(article, list):
                 articleItem = article[0]
                 try:
@@ -750,7 +747,6 @@ class Youtube(CBaseHostClass):
         printDBG("Youtube.listCategory cItem[%s]" % cItem)
 
         sortList = "file" != config.plugins.iptvplayer.youtube_userlinks_order.value
-        groupList = True
         avatars = self._readAvatars()
         if "sub_file_category" not in cItem:
             self.currFileHost = IPTVFileHost()
@@ -1133,7 +1129,9 @@ class Youtube(CBaseHostClass):
             printExc()
         return str(value or "")
 
-    def getArticleContent(self, cItem):
+    def getArticleContent(self, cItem, forSidecar=False):
+        # forSidecar: the text for the sidecar .txt / the player's chapters keeps every "|" of the description; on the
+        # INFO page "|" breaks the line, there the channel name and the description get "/" instead
         printDBG("Youtube.getArticleContent START")
         retTab = []
         try:
@@ -1143,12 +1141,12 @@ class Youtube(CBaseHostClass):
             videoId = self._getVideoIdFromItem(cItem)
             channelName = self._getInitialChannelName(cItem)
 
-            channelName, absolutePublished, text = self._enrichArticleFromWatchPage(videoId, channelName, shortText)
+            channelName, absolutePublished, text = self._enrichArticleFromWatchPage(videoId, channelName, shortText, not forSidecar)
 
             channelName = str(channelName or "")
             text = str(text or "")
             if channelName:
-                text = channelName + "\n" + text
+                text = (channelName if forSidecar else channelName.replace("|", "/")) + "\n" + text
 
             richDescParams = self._buildArticleRichDescParams(absolutePublished, cItem, videoId, channelName)
 
@@ -1173,10 +1171,11 @@ class Youtube(CBaseHostClass):
             return cItem.get("context_title", "")
         return ""
 
-    def _enrichArticleFromWatchPage(self, videoId, channelName, shortText):
+    def _enrichArticleFromWatchPage(self, videoId, channelName, shortText, escapePipes=False):
         # Returns (channelName, absolutePublished, text): text starts as
         # shortText and gets the release line patched in / the full
         # description appended once the watch page data comes back.
+        # escapePipes: "|" of the description as "/" (INFO page, see getArticleContent)
         text = shortText
         absolutePublished = ""
         if not videoId:
@@ -1185,6 +1184,8 @@ class Youtube(CBaseHostClass):
         try:
             watchData = self.ytp._getWatchPageData(videoId)
             fullText = str(watchData.get("fullDescription", "") or "")
+            if escapePipes:
+                fullText = fullText.replace("|", "/")
             absolutePublished = self._normalizePublishedDate(watchData.get("absolutePublished", ""))
             parserChannelName = str(watchData.get("channelName", "") or "")
 

@@ -13,16 +13,16 @@
 # LOCAL import
 ###################################################
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, iptv_system, eConnectCallback, GetNice, rm, E2PrioFix
-from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import enum, strwithmeta
+from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.iptvdm.basedownloader import BaseDownloader
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
 from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import ensureText, fsPath, shellQuote, writeUtf8TextFile, terminateToolsOfFile, SidecarMixin
+from Plugins.Extensions.IPTVPlayer.libs.chapters import parseChapters
 ###################################################
 # FOREIGN import
 ###################################################
 from Tools.BoundFunction import boundFunction
 from enigma import eConsoleAppContainer
-from time import sleep
 import re
 import datetime
 import os
@@ -31,13 +31,6 @@ try:
     from urllib.parse import urlparse, parse_qs
 except ImportError:
     from urlparse import urlparse, parse_qs
-try:
-    try:
-        import json
-    except Exception:
-        import simplejson as json
-except Exception:
-    printExc()
 ###################################################
 
 ###################################################
@@ -264,33 +257,6 @@ class MergeDownloader(BaseDownloader, SidecarMixin):
             printExc()
         return False
 
-    def _normalizeChapterTitle(self, title):
-        title = ensureText(title).strip()
-        title = re.sub(r'\s+', ' ', title)
-        if not title:
-            title = 'Chapter'
-        return title
-
-    def _timeStrToMs(self, timeStr):
-        parts = ensureText(timeStr).split(':')
-        try:
-            parts = [int(x) for x in parts]
-        except Exception:
-            return None
-
-        if len(parts) == 2:
-            hh = 0
-            mm = parts[0]
-            ss = parts[1]
-        elif len(parts) == 3:
-            hh = parts[0]
-            mm = parts[1]
-            ss = parts[2]
-        else:
-            return None
-
-        return ((hh * 3600) + (mm * 60) + ss) * 1000
-
     def _msToPts(self, ms):
         return int(ms) * 90
 
@@ -305,59 +271,8 @@ class MergeDownloader(BaseDownloader, SidecarMixin):
         return txt
 
     def _extractChaptersFromText(self, txt):
-        chapters = []
-        if not txt:
-            return chapters
-
-        workTxt = ensureText(txt)
-        lines = workTxt.replace('\r', '\n').split('\n')
-        seen = {}
-
-        for line in lines:
-            line = ensureText(line).strip()
-            if not line:
-                continue
-
-            timeStr = ''
-            title = ''
-
-            m = re.match(r'^\[(?P<ts>(?:\d{1,2}:)?\d{1,2}:\d{2})\]\([^)]+\)\s*(?P<title>.+?)\s*$', line)
-            if m:
-                timeStr = m.group('ts')
-                title = m.group('title').strip()
-            else:
-                m = re.match(r'^(?P<ts>(?:\d{1,2}:)?\d{1,2}:\d{2})\s+(?P<title>.+?)\s*$', line)
-                if m:
-                    timeStr = m.group('ts')
-                    title = m.group('title').strip()
-                else:
-                    continue
-
-            title = re.sub(r'^\-\s*', '', title)
-            title = self._normalizeChapterTitle(title)
-
-            startMs = self._timeStrToMs(timeStr)
-            if startMs is None:
-                continue
-            if startMs in seen:
-                continue
-
-            seen[startMs] = True
-            chapters.append({'start': startMs, 'title': title})
-
-        chapters.sort(key=lambda item: item['start'])
-
-        out = []
-        prevStart = None
-        for item in chapters:
-            if prevStart is not None and item['start'] == prevStart:
-                continue
-            out.append(item)
-            prevStart = item['start']
-
-        if len(out) < 2:
-            return []
-        return out
+        # the player's parser (libs/chapters.py): MKV chapters and cuts get the chapters the player shows
+        return parseChapters(ensureText(txt)) if txt else []
 
     def _parseProbeDuration(self, data):
         try:

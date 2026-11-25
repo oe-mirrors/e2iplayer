@@ -28,7 +28,10 @@ import re
 
 SEPARATOR = '  ·  '
 LOOPBACK_NAMES = ('localhost', '127.0.0.1', '::1')
-PROBE_CMD = '/usr/bin/ffprobe -v quiet -print_format json -show_format -show_streams "%s"'
+FFPROBE = '/usr/bin/ffprobe'
+PROBE_CMD = FFPROBE + ' -v quiet -print_format json -show_format -show_streams "%s"'
+# the chapters of a local file (the player, without a chapter list in the description)
+CHAPTERS_PROBE_CMD = FFPROBE + ' -v quiet -print_format json -show_chapters "%s"'
 PROBE_TIMEOUT = 20000  # ms
 # first name of ffprobe's format_name ("matroska,webm", "mov,mp4,m4a,3gp,3g2,mj2")
 CONTAINER_NAMES = {'matroska': 'MKV', 'mov': 'MP4', 'mpegts': 'TS', 'mpeg': 'MPG', 'avi': 'AVI', 'flv': 'FLV', 'asf': 'WMV', 'ogg': 'OGG', 'wav': 'WAV', 'hls': 'HLS'}
@@ -301,6 +304,9 @@ class PlayerInfoPanel(object):
         self.geometry = None
         self.articleRet = None
         self.articleThread = None
+        # the host's whole INFO page (ArticleContent) once loaded, and who waits for it (getArticle)
+        self.article = None
+        self.articleCallbacks = []
         # None: not asked yet, True: the answer is on its way, False: done
         self.articlePending = None
         self.timer = eTimer()
@@ -340,6 +346,7 @@ class PlayerInfoPanel(object):
         self.hide()
         self.closed = True
         self.provider = None
+        self.articleCallbacks = []
         self.timer.stop()
         self.timer_conn = None
         self._stopProbe()
@@ -406,6 +413,26 @@ class PlayerInfoPanel(object):
         if not self.closed:
             self.owner['infoPanelCover'].updatePixmap(ret.get('Pixmap', None), ret.get('FileName', self.coverPath))
 
+    def getArticle(self, callback):
+        # the host's INFO page for the player's "Description": callback(ArticleContent or None), at once when it is
+        # loaded already (or there is no host to ask), else when the answer comes
+        if self.closed or (self.provider is None and self.articlePending is None) or self.articlePending is False:
+            callback(self.article)
+            return
+        self.articleCallbacks.append(callback)
+        self._requestArticle()
+        if self.articlePending is False:
+            # the request could not start
+            self._runArticleCallbacks()
+
+    def _runArticleCallbacks(self):
+        callbacks, self.articleCallbacks = self.articleCallbacks, []
+        for callback in callbacks:
+            try:
+                callback(self.article)
+            except Exception:
+                printExc()
+
     def _requestArticle(self):
         if self.provider is None or self.articlePending is not None:
             return
@@ -430,6 +457,7 @@ class PlayerInfoPanel(object):
         try:
             value = getattr(self.articleRet, 'value', None)
             if value:
+                self.article = value[0]
                 # a page without a text of its own keeps the description of the list row
                 self.text = plainText(value[0].text) or self.text
                 self.meta = metaLine(value[0].richDescParams)
@@ -438,6 +466,7 @@ class PlayerInfoPanel(object):
         printDBG("PlayerInfoPanel article loaded meta[%s]" % self.meta)
         if self.visible:
             self._fill()
+        self._runArticleCallbacks()
 
     def _fill(self):
         owner = self.owner
