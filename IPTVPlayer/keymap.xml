@@ -47,6 +47,10 @@
         <key id="KEY_NEXT"        mapto="zap_next" flags="m" />
         <key id="KEY_PREVIOUS"    mapto="zap_prev" flags="m" />
     </map>
+    <map context="IPTVExtPlayerChapterActions">
+        <key id="KEY_NEXT"        mapto="chapter_next" flags="m" />
+        <key id="KEY_PREVIOUS"    mapto="chapter_prev" flags="m" />
+    </map>
     <map context="E2iPlayerVKActions">
         <key id="KEY_ENTER" mapto="ok_repeat"    flags="r" />
         <key id="KEY_OK"    mapto="ok_repeat"    flags="r" />

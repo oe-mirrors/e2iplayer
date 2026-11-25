@@ -40,7 +40,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.iptvsubdownloader import IPTVSubDownloaderWidget
 from Plugins.Extensions.IPTVPlayer.components.iptvsubsimpledownloader import IPTVSubSimpleDownloaderWidget
 from Plugins.Extensions.IPTVPlayer.components.iptvchoicebox import IPTVChoiceBoxWidget, IPTVChoiceBoxItem
-from Plugins.Extensions.IPTVPlayer.components.iptvplayerinfopanel import PlayerInfoPanel, audioText
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinfopanel import PlayerInfoPanel, audioText, CHAPTERS_PROBE_CMD
 from Plugins.Extensions.IPTVPlayer.components.iptvlist import IPTVPlaylistChoiceBoxList
 from Plugins.Extensions.IPTVPlayer.tools import listselection
 from Plugins.Extensions.IPTVPlayer.components.iptvdirbrowser import IPTVFileSelectorWidget
@@ -51,6 +51,8 @@ from Plugins.Extensions.IPTVPlayer.libs.pCommon import CParsingHelper
 from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
 from Plugins.Extensions.IPTVPlayer.libs import dashmpd
 from Plugins.Extensions.IPTVPlayer.libs.subtitlesmatch import langCode, langName
+from Plugins.Extensions.IPTVPlayer.libs.chapters import parseChapters, chapterIndexAt, chapterLabel, formatTime
+from Plugins.Extensions.IPTVPlayer.components.ihost import ArticleContent
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 
 # FOREIGN import
@@ -690,6 +692,15 @@ class IPTVExtMoviePlayer(Screen):
         self.subConfig = self.configObj.getSubtitleFontSettings()
         self.clockFormat = self.configObj.getInfoBannerrClockFormat()
         self.skinSettings = self.getSkinSettings()
+        self.chapters, self.descriptionText = self.loadChapters(filesrcLocation, additionalParams)
+        self.chapterLastIdx = -1
+        self.chapterJump = None  # (position, time) of the last chapter jump, see chapterPosMs()
+        self.chapterMarks = []  # eLabels on the progress bar, made when needed (refreshChapterMarks)
+        self.chapterProbe = None  # ffprobe for the chapters of a local file (probeFileChapters)
+        # MENU -> "Description" waits for the host's INFO page (showDescription)
+        self.descriptionWaiting = False
+        self.articleDownloadDir = additionalParams.get('article_download_dir', None)
+        self.listDescription = additionalParams.get('info_description', '') or ''
         self.skin = self.__prepareSkin()
         Screen.__init__(self, session)
         self.skinName = skinchrome.forceInternalSkinName("IPTVExtMoviePlayer")
@@ -724,6 +735,7 @@ class IPTVExtMoviePlayer(Screen):
         self.fileSRC = strwithmeta(filesrcLocation)
         self.title = FileName
         self.hostName = additionalParams.get('host_name', '')
+        self.hostLogoPath = additionalParams.get('logo_path', '')
         # "Select link automatically" has further links: an error before the first second of playback
         # closes the player without a message, E2iPlayer goes on with the next link
         self.quietStartErrors = additionalParams.get('quiet_start_errors', False)
@@ -802,6 +814,13 @@ class IPTVExtMoviePlayer(Screen):
                 'zap_next': self.key_zap_next,
                 'zap_prev': self.key_zap_prev,
             }, -1)
+        # >|/|< over the zap of the actions above: with chapters they jump between them, without (and at the end of the
+        # list) the key goes on to zap_next/zap_prev
+        self["chapterActions"] = ActionMap(['IPTVExtPlayerChapterActions'],
+            {
+                'chapter_next': self.key_nextChapter,
+                'chapter_prev': self.key_prevChapter,
+            }, -2)
 
         self.onClose.append(self.__onClose)
         self.onShow.append(self.onStart)
@@ -1016,6 +1035,10 @@ class IPTVExtMoviePlayer(Screen):
         options.append(IPTVChoiceBoxItem(_("Video options"), "", "video_options"))
         if self.playlist:
             options.append(IPTVChoiceBoxItem(_("Show playlist"), "", "playlist"))
+        if self.chapters:
+            options.append(IPTVChoiceBoxItem(_("Chapters"), "", "chapters"))
+        if self.hasDescription():
+            options.append(IPTVChoiceBoxItem(_("Description"), "", "description"))
 
         if self.isDownladManagerAvailable and self.downloader:
             options.append(IPTVChoiceBoxItem(_("Stop playback with buffer save"), "", "close_with_buffer_save"))
@@ -1037,6 +1060,10 @@ class IPTVExtMoviePlayer(Screen):
             self.selectVideoOptions()
         elif "playlist" == ret.privateData:
             self.showPlaylist()
+        elif "chapters" == ret.privateData:
+            self.showChapterList()
+        elif "description" == ret.privateData:
+            self.showDescription()
         elif "close_with_buffer_save" == ret.privateData:
             self.key_stop("save_buffer")
 
@@ -1921,6 +1948,7 @@ class IPTVExtMoviePlayer(Screen):
         self['bufferingCBar'].range = (0, newLength)
         self['lengthTimeLabel'].setText(str(timedelta(seconds=newLength)))
         self.updateLcdInfo()
+        self.refreshChapterMarks()
 
     def updateLcdInfo(self):
         # feeds the colour LCD summary with position, remaining time and progress
@@ -2036,6 +2064,7 @@ class IPTVExtMoviePlayer(Screen):
                     self['currTimeLabel'].setText(str(timedelta(seconds=self.playback['CurrentTime'])))
                     self['remainedLabel'].setText('-' + str(timedelta(seconds=self.playback['Length'] - self.playback['CurrentTime'])))
                     self.updateLcdInfo()
+                    self.updateChapterTitle()
                     if time.time() >= self.seekLimitNotice['until']:
                         self['pleaseWait'].hide()
                 elif 'BufferCTime' == key:
@@ -2100,6 +2129,8 @@ class IPTVExtMoviePlayer(Screen):
             self.showPlaybackInfoBar()
             self.playback['StartGoToSeekTime'] = self.playback['GoToSeekTime']
             printDBG("IPTVExtMoviePlayer.doGoToSeek current[%r] target[%r] length[%r]" % (self.playback['CurrentTime'], self.playback['GoToSeekTime'], self.playback['Length']))
+            # a seek of the user's own: the position no longer belongs to the last chapter jump (chapterPosMs)
+            self.chapterJump = None
             self.extPlayerCmddDispatcher.doGoToSeek(str(self.playback['GoToSeekTime']))
             self.playback['GoToSeeking'] = False
             self['goToSeekPointer'].hide()
@@ -2281,6 +2312,8 @@ class IPTVExtMoviePlayer(Screen):
         # the skip keys: with buffering never beyond the part downloaded so far - exteplayer3 stopped at the end of the
         # file still being written and the picture froze. An absolute jump sets the position at once: the player reports
         # it only every second, a second key press before that adds to the first one
+        # (a skip key: the position no longer belongs to the last chapter jump; seekToChapter() sets it again)
+        self.chapterJump = None
         bufferedEnd = self.bufferedEnd()
         current = self.playback['CurrentTime']
         wanted = None
@@ -2339,6 +2372,260 @@ class IPTVExtMoviePlayer(Screen):
     def doZap(self, sts):
         if self.zapEnabled and not self.isClosing:
             self.key_stop(sts)
+
+    # ---------------------------------------------------------------- chapters
+    CHAPTER_MAX_MARKS = 60
+    # |< in the first seconds of a chapter: to the chapter before, later to the start of this one
+    CHAPTER_RESTART_SEC = 3
+    # how far before the chapter start a jump may land (the key frame before it, one GOP: 6 s seen)
+    CHAPTER_JUMP_SLACK = 10
+    DESCRIPTION_MAX_BYTES = 64 * 1024
+
+    def loadChapters(self, filesrcLocation, additionalParams):
+        # (chapters, description): the description of the link (e2i_sidecar_txt, YouTube) - with buffering on the
+        # downloader's url, the player plays the buffer file - or the sidecar .txt next to a downloaded file
+        text = ''
+        try:
+            downloader = additionalParams.get('downloader', None)
+            url = strwithmeta(downloader.getUrl() if downloader is not None else filesrcLocation)
+            text = url.meta.get('e2i_sidecar_txt', '') or ''
+            path = str(filesrcLocation)
+            if path.startswith('file://'):
+                path = path[len('file://'):].replace('//', '/')
+            if not text and downloader is None and '://' not in path and not path.endswith('/.iptv_buffering.flv'):
+                txtPath = os_path.splitext(path)[0] + '.txt'
+                # (a .txt can also be MicroDVD subtitles)
+                if os_path.isfile(txtPath) and not self._detectSubtitleFile(txtPath)[0]:
+                    with open(txtPath, 'rb') as f:
+                        text = f.read(self.DESCRIPTION_MAX_BYTES).decode('utf-8', 'ignore')
+            text = ensure_str(text).strip()
+        except Exception:
+            printExc()
+            text = ''
+        # (the list row's description in front of it breaks its lines with [/br])
+        chapters = parseChapters(text.replace('[/br]', '\n'))
+        printDBG('IPTVExtMoviePlayer.loadChapters description[%d] chapters[%d]' % (len(text), len(chapters)))
+        return chapters, text
+
+    def setChapters(self, chapters, source):
+        # chapters known only after the start (ffprobe of a local file): title line, marks and MENU follow
+        printDBG('IPTVExtMoviePlayer.setChapters source[%s] chapters[%d]' % (source, len(chapters)))
+        self.chapters = chapters
+        self.chapterLastIdx = -1
+        self.chapterJump = None
+        self.updateChapterTitle()
+        self.refreshChapterMarks()
+
+    def probeFileChapters(self):
+        # a local MKV/MP4 (download, recording) without a chapter list in its description: the file's own chapters
+        path = self.getLocalFilePath()
+        if self.chapters or not path or path.endswith('/.iptv_buffering.flv') or self.chapterProbe is not None:
+            return
+        try:
+            self.chapterProbe = iptv_system(CHAPTERS_PROBE_CMD % shellQuote(path), self._fileChaptersProbed)
+        except Exception:
+            printExc()
+            self.chapterProbe = None
+
+    def _fileChaptersProbed(self, code, data):
+        self.chapterProbe = None
+        if self.isClosing or self.chapters:
+            return
+        chapters = []
+        try:
+            for item in json.loads(data or '{}').get('chapters', []):
+                start = int(round(float(item.get('start_time', 0)) * 1000))
+                title = ensure_str((item.get('tags') or {}).get('title', '') or '').strip()
+                chapters.append({'start': max(0, start), 'title': title or '%s %d' % (_('Chapter'), len(chapters) + 1)})
+        except Exception:
+            printExc(WarnOnly=True)
+            chapters = []
+        chapters.sort(key=lambda c: c['start'])
+        if len(chapters) >= 2:
+            self.setChapters(chapters, 'file')
+        else:
+            printDBG('IPTVExtMoviePlayer._fileChaptersProbed code[%r] chapters[%d]' % (code, len(chapters)))
+
+    def playerChaptersReceived(self, items):
+        # exteplayer3's own chapter list ("c_l", MKV/MP4 chapters also of streams), at the start: used when the
+        # description gave none; [{"id": 0, "s": <start ms>, "e": <end ms>, "t": "<title>"}, ...]
+        if self.chapters or self.isClosing or not isinstance(items, list):
+            return
+        chapters = []
+        try:
+            for item in items:
+                title = ensure_str(item.get('t', '') or '').strip()
+                chapters.append({'start': max(0, int(item.get('s', 0))), 'title': title or '%s %d' % (_('Chapter'), len(chapters) + 1)})
+        except Exception:
+            printExc(WarnOnly=True)
+            return
+        chapters.sort(key=lambda c: c['start'])
+        if len(chapters) >= 2:
+            self.setChapters(chapters, 'player')
+
+    def _chapterMark(self, idx):
+        # the marks are plain eLabels on the screen (not skin widgets): their number is known only with the chapters
+        while len(self.chapterMarks) <= idx:
+            mark = eLabel(self.instance)
+            mark.setBackgroundColor(parseColor('#00202020'))
+            mark.setZPosition(6)
+            mark.hide()
+            self.chapterMarks.append(mark)
+        return self.chapterMarks[idx]
+
+    def refreshChapterMarks(self):
+        # a mark at each chapter boundary inside the known length; none for live streams or an unknown length
+        if not self.chapters and not self.chapterMarks:
+            return
+        try:
+            length = int(self.playback.get('Length') or 0)
+            show = length > 0 and self.playbackInfoBar['visible'] and not self.playback.get('LiveDetected', False) and self.instance is not None
+            starts = [c['start'] / 1000.0 for c in self.chapters[1:self.CHAPTER_MAX_MARKS + 1]] if show else []
+            starts = [s for s in starts if s < length]
+            if starts:
+                bar = self['progressBar'].instance
+                barPos, barSize = bar.position(), bar.size()
+                width = max(2, barSize.height() // 3)
+                for idx, startSec in enumerate(starts):
+                    mark = self._chapterMark(idx)
+                    mark.resize(eSize(width, barSize.height()))
+                    mark.move(ePoint(barPos.x() + int(barSize.width() * startSec / length) - width // 2, barPos.y()))
+                    mark.show()
+            for mark in self.chapterMarks[len(starts):]:
+                mark.hide()
+        except Exception:
+            printExc()
+
+    def updateChapterTitle(self):
+        # the infobar's title line: the current chapter in front of the title, changes at the chapter boundary
+        if not self.chapters:
+            return
+        try:
+            idx = chapterIndexAt(self.chapters, self.chapterPosMs())
+            if idx != self.chapterLastIdx:
+                self.chapterLastIdx = idx
+                self['infoBarTitle'].setText('%s  –  %s' % (chapterLabel(self.chapters[idx]), self.title))
+        except Exception:
+            printExc()
+
+    def chapterPosMs(self):
+        # the position for the chapter: right after a jump the player still reports the old one for a moment, and the
+        # seek lands on the key frame before the chapter start (4:26 for 4:27) - both count as the chapter jumped to
+        pos = int(self.playback.get('CurrentTime') or 0)
+        if self.chapterJump is not None:
+            landed, at = self.chapterJump
+            if time.time() - at < 3 or landed - self.CHAPTER_JUMP_SLACK <= pos < landed:
+                pos = landed
+            else:
+                self.chapterJump = None
+        return pos * 1000
+
+    def seekToChapter(self, idx):
+        target = self.chapters[idx]['start'] // 1000
+        current = int(self.playback['CurrentTime'] or 0)
+        self.showPlaybackInfoBar()
+        if self.downloader is not None:
+            # buffering: the skip keys' seek, never beyond the part downloaded so far
+            self.doSeek(target - current)
+            landed = self.playback['CurrentTime'] if self.playback['CurrentTime'] != current else target
+        else:
+            # absolute: a relative seek counts from the position of up to a second ago and missed the chapter start
+            landed = target
+            self.playback['CurrentTime'] = target
+            # the key frame before the chapter start (chapterPosMs() counts it to the chapter), not the one after it:
+            # "ga" of newer exteplayer3 landed 6 s into the chapter with a long GOP. With "seekms" to the millisecond
+            if self.playerBinaryInfo.get('seekms'):
+                self.extPlayerCmddDispatcher.doGoToSeek('%.3f' % (self.chapters[idx]['start'] / 1000.0))
+            else:
+                self.extPlayerCmddDispatcher.doGoToSeek(str(target))
+        printDBG('IPTVExtMoviePlayer.seekToChapter idx[%d] current[%d] target[%d] landed[%d] ms[%s]' % (idx, current, target, landed, bool(self.playerBinaryInfo.get('seekms')) and self.downloader is None))
+        self.chapterJump = (int(landed), time.time())
+        self.updateChapterTitle()
+
+    def _chapterKeyUsable(self):
+        return bool(self.chapters) and self.isStarted and not self.isClosing and self.childWindowsCount < 1 \
+            and self.playback['Length'] and not self.playback.get('LiveDetected', False)
+
+    def key_nextChapter(self):
+        # 0 = not handled: on the last chapter (or without chapters) >| zaps to the next item like before
+        if not self._chapterKeyUsable():
+            return 0
+        idx = chapterIndexAt(self.chapters, self.chapterPosMs()) + 1
+        if idx >= len(self.chapters) or self.chapters[idx]['start'] // 1000 >= self.playback['Length']:
+            return 0
+        self.seekToChapter(idx)
+
+    def key_prevChapter(self):
+        # |< at the very start (first seconds of the first chapter) zaps to the previous item like before
+        if not self._chapterKeyUsable():
+            return 0
+        posMs = self.chapterPosMs()
+        idx = chapterIndexAt(self.chapters, posMs)
+        if posMs - self.chapters[idx]['start'] <= self.CHAPTER_RESTART_SEC * 1000:
+            if idx == 0:
+                return 0
+            idx -= 1
+        self.seekToChapter(idx)
+
+    def showChapterList(self):
+        current = chapterIndexAt(self.chapters, self.chapterPosMs())
+        options = []
+        for idx, chapter in enumerate(self.chapters):
+            item = IPTVChoiceBoxItem('%s  %s' % (formatTime(chapter['start']), chapter['title']), "", idx)
+            item.type = IPTVChoiceBoxItem.TYPE_ON if idx == current else IPTVChoiceBoxItem.TYPE_OFF
+            options.append(item)
+        self.openChild(boundFunction(self.childClosed, self.showChapterListCallback), IPTVChoiceBoxWidget, {'width': 900, 'height': self._getChoiceBoxHeight(min(len(options), 10)), 'current_idx': current, 'title': _("Chapters"), 'options': options, 'chrome': True, 'footerMargin': 136})
+
+    def showChapterListCallback(self, ret=None):
+        if isinstance(ret, IPTVChoiceBoxItem) and not self.isClosing:
+            self.seekToChapter(ret.privateData)
+
+    def hasDescription(self):
+        # MENU -> "Description": a host to ask for its INFO page, the link's / file's description or the list row's
+        return bool(self.descriptionText or self.listDescription or self.infoPanel.provider is not None or self.infoPanel.article is not None)
+
+    def showDescription(self):
+        # the INFO page of the list for the running video: the host's own (cover, year, genre ...) - asked once,
+        # the INFO panel shares it - else the description of the link or file, else the list row's
+        if self.descriptionWaiting:
+            return
+        self.descriptionWaiting = True
+        self.setPleaseWait(_("Loading..."))
+        self.infoPanel.getArticle(self._descriptionArticleReady)
+
+    def _descriptionArticleReady(self, article):
+        self.descriptionWaiting = False
+        if self['pleaseWait'].getText() == _("Loading...") and not self.isClosing:
+            self['pleaseWait'].hide()
+        if self.isClosing or self.childWindowsCount > 0:
+            return
+        from Plugins.Extensions.IPTVPlayer.components.iptvarticleview import IPTVArticleView
+        title = StripColorCodes(self.title)
+        if article is not None and (article.text or article.richDescParams):
+            # a copy: the INFO panel keeps the host's page as it came
+            text = article.text or (self._plainDescription() if self.descriptionText else '')
+            artItem = ArticleContent(title=article.title or title, text=text, images=list(article.images), richDescParams=article.richDescParams)
+        elif self.descriptionText or self.listDescription:
+            text = self._plainDescription() if self.descriptionText else self.listDescription
+            artItem = ArticleContent(title=title, text=text, images=[])
+        else:
+            self.showMessage(_("No description available."), MessageBox.TYPE_INFO, None)
+            return
+        if not [image for image in artItem.images if str(image.get('url', '')).startswith(('http', 'data:image/'))]:
+            # no picture to load: the cover of the list row, already on the box
+            cover = self.infoPanel.coverPath
+            artItem.images = [{'title': '', 'url': cover}] if cover and os_path.isfile(cover) else []
+        printDBG('IPTVExtMoviePlayer.showDescription from[%s] images[%d]' % ('host' if article is not None and (article.text or article.richDescParams) else 'text', len(artItem.images)))
+        self.openChild(boundFunction(self.childClosed, self.showDescriptionCallback), IPTVArticleView, artItem,
+                       {'buffering_path': config.plugins.iptvplayer.bufferingPath.value, 'host_name': self.hostName, 'logo_path': self.hostLogoPath,
+                        'download_dir': self.articleDownloadDir})
+
+    def _plainDescription(self):
+        # the link's / file's description for the INFO page: markdown links as the bare url, "|" is a line break there
+        return re.sub(r'\[([^\]]*)\]\((https?://[^)\s]+)\)', r'\2', self.descriptionText).replace('|', '/')
+
+    def showDescriptionCallback(self, *args):
+        pass
 
     # audio screensaver (IPTVAudioScreenSaver): wanted while audio-only playback runs and nothing is open above
     def _screenSaverWanted(self):
@@ -2630,6 +2917,10 @@ class IPTVExtMoviePlayer(Screen):
                     self.playerBinaryInfo['version'] = obj['version']
                 elif "EPLAYER3_EXTENDED" == key:
                     self.playerBinaryInfo['version'] = obj['version']
+                    # newer exteplayer3: "c_l" chapter list at the start, "seekms" seeks with decimals
+                    self.playerBinaryInfo['seekms'] = bool(obj.get('seekms'))
+                elif "c_l" == key:
+                    self.playerChaptersReceived(obj)
                 elif "GST_ERROR" == key:
                     printDBG('GST_ERROR: %s, code %s\n' % (ensure_str(obj['msg']), obj['code']))
                     msgType = MessageBox.TYPE_ERROR
@@ -2689,6 +2980,13 @@ class IPTVExtMoviePlayer(Screen):
         if None is not self.workconsole:
             self.workconsole.kill()
         self.workconsole = None
+        if None is not self.chapterProbe:
+            self.chapterProbe.kill()
+        self.chapterProbe = None
+        # the marks are children of the screen's instance: freed here, while it still exists
+        for mark in self.chapterMarks:
+            mark.hide()
+        self.chapterMarks = []
 
         if None is not self.refreshCmdConsole:
             self.refreshCmdConsole.kill()
@@ -3166,6 +3464,7 @@ class IPTVExtMoviePlayer(Screen):
                 SetE2AudioCodecMixOption(opt, playerDefOptions[opt])
 
         self.enableSubtitles()
+        self.probeFileChapters()
 
     def fixWindowGeometry(self):
         # initGuiComponentsPos() places the infobar in real desktop pixels,
@@ -3325,6 +3624,7 @@ class IPTVExtMoviePlayer(Screen):
             blocked = self.playbackInfoBar['blocked']
 
         self.playbackInfoBar['visible'] = True
+        self.refreshChapterMarks()
 
         if not blocked:
             self.playbackInfoBar['timer'].start(self.autoHideTime, True)  # singleshot
@@ -3347,6 +3647,7 @@ class IPTVExtMoviePlayer(Screen):
                 self[elem].hide()
 
         self.playbackInfoBar['visible'] = False
+        self.refreshChapterMarks()
         self.setSubOffsetFromInfoBar()
         if -1 != self.subHandler['current_sub_time_ms']:
             self.updateSubtitles(self.subHandler['current_sub_time_ms'], True)

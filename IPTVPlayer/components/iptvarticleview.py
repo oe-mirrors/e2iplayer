@@ -19,7 +19,7 @@ from Tools.LoadPixmap import LoadPixmap
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import ArticleContent
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIconDir, eConnectCallback
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, eConnectCallback
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdownloadercreator import DownloaderCreator
 from Plugins.Extensions.IPTVPlayer.components.cover import Cover3, Cover2, Cover
@@ -204,6 +204,11 @@ class IPTVArticleView(Screen):
         self.cover['src'] = self.artItem.images[0].get('url', '')
         if self.cover['src'].startswith('data:image/'):
             self.loadInlineCover()
+            return
+        if self.cover['src'].startswith('/'):
+            # a picture already on the box (the player's "Description": the cover of the list row)
+            if os.path.isfile(self.cover['src']) and -1 == self["cover"].decodePreparedCover(self.cover['src'], self.decodePictureEnd, ' '):
+                printDBG("IPTVArticleView local cover can not be decoded [%s]" % self.cover['src'])
             return
         if not self.cover['src'].startswith('http'):
             return

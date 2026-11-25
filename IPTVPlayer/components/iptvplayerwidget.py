@@ -52,7 +52,7 @@ from Plugins.Extensions.IPTVPlayer.components.configgroups import ConfigGroupsMe
 from Plugins.Extensions.IPTVPlayer.components.iptvfavouriteswidgets import IPTVFavouritesAddItemWidget, IPTVFavouritesMainWidget
 
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdownloadercreator import IsUrlDownloadable
-from Plugins.Extensions.IPTVPlayer.libs.pCommon import CParsingHelper, DescribeImageFile
+from Plugins.Extensions.IPTVPlayer.libs.pCommon import DescribeImageFile
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
 from Plugins.Extensions.IPTVPlayer.tools.iptvfavourites import IPTVFavourites, getFavouritesIdentityKeys
@@ -2160,7 +2160,8 @@ class E2iPlayerWidget(Screen):
             listGeo, consoleGeo = self._gridGeometry[0], self._gridGeometry[1]
             if not self._consoleBelowList(listGeo, consoleGeo):
                 return
-            (x, y, w, h), (consoleX, consoleY, consoleW, consoleH) = listGeo, consoleGeo
+            w, h = listGeo[2], listGeo[3]
+            consoleX, consoleY, consoleW, consoleH = consoleGeo
             extra = int(consoleH * self.GRID_CONSOLE_SHARE) if grid else 0
             listInstance.resize(eSize(w, h + extra))
             consoleInstance.move(ePoint(consoleX, consoleY + extra))
@@ -3589,15 +3590,6 @@ class E2iPlayerWidget(Screen):
                     titleFile.write(title)
             except Exception:
                 printExc()
-        """
-        if config.plugins.iptvplayer.set_curr_title.value:
-            try:
-                from enigma import evfd
-                title = CParsingHelper.getNormalizeStr(title)
-                evfd.getInstance().vfd_write_string(title[0:17])
-            except Exception:
-                printExc()
-        """
 
     def _checkDestinationDir(self, destinationPath, recorderMode, url=None):
         # the folder a download (recorderMode) or the buffering goes to: created when missing, enough free
@@ -3750,6 +3742,8 @@ class E2iPlayerWidget(Screen):
                 # INFO in the player: where the video comes from and the texts of the host's INFO page
                 gstAdditionalParams['link_name'] = self._playLinkName
                 gstAdditionalParams['info_provider'] = boundFunction(self._requestPlayerArticle, self._getSelHostIndex())
+                # MENU -> "Description" in the player loads the INFO page's picture into the list's cover cache
+                gstAdditionalParams['article_download_dir'] = self.iconMenager.currDownloadDir if self.iconMenager else None
                 try:
                     gstAdditionalParams['host_title'] = self._getPlayerHostTitle()
                     gstAdditionalParams['info_description'] = self.currItem.description
