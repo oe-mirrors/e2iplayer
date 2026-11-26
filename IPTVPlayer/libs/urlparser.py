@@ -403,6 +403,7 @@ class urlparser:
             "fastvid.cam": self.pp.parserJWPLAYER,  # add 041026
             "fastvip.space": self.pp.parserJWPLAYER,  # add 081026
             "fdewsdc.sbs": self.pp.parserJWPLAYER,
+            "fhjabs.com": self.pp.parserSTREAMUP,  # add 261126
             "figeterpiazine.com": self.pp.parserVOESX,  # add 061026
             "file-upload.com": self.pp.parserJWPLAYER,  # add 061026
             "file-upload.in": self.pp.parserJWPLAYER,  # add 061026
@@ -708,6 +709,7 @@ class urlparser:
             "odysee.com": self.pp.parserJWPLAYER,
             "odysseusa.cc": self.pp.parserSTREAMUP,
             "ogladaj.me": self.pp.parserVOESX,  # add 041026
+            "oisauh.com": self.pp.parserSTREAMUP,  # add 261126
             "ok.ru": self.pp.parserOKRU,
             "okhd.site": self.pp.parserJWPLAYER,  # add 031026 (mp4./mp5.okhd.site via the parent domain)
             "okstream.online": self.pp.parserJWPLAYER,  # add 211126 (egybest, topcinema)
