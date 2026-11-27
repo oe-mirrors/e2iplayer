@@ -472,6 +472,7 @@ class urlparser:
             "gupload.site": self.pp.parserGUPLOAD,  # add 061026
             "gupload.xyz": self.pp.parserGUPLOAD,
             "guxhag.com": self.pp.parserJWPLAYER,  # add 061026
+            "gvfiosuab.co": self.pp.parserSTREAMUP,  # add 271126
             # h
             "hailindihg.com": self.pp.parserJWPLAYER,  # add 061026
             "hanerix.com": self.pp.parserJWPLAYER,  # add 061026 (StreamWish mirror, e.g. pornbusy)
@@ -860,6 +861,7 @@ class urlparser:
             "strwish.xyz": self.pp.parserJWPLAYER,  # add 061026
             "sufbgao.space": self.pp.parserSTREAMUP,  # add 061026
             "sufbgao.xyz": self.pp.parserSTREAMUP,  # add 061026
+            "sufgbva.co": self.pp.parserSTREAMUP,  # add 271126
             "superplayer.ws": self.pp.parserJWPLAYER,  # add 211126 (supervideo.cc redirects here)
             "supervideo.cc": self.pp.parserJWPLAYER,
             "supervideo.tv": self.pp.parserJWPLAYER,
