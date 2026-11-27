@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-27 22:41+0000\n"
-"PO-Revision-Date: 2026-11-20 19:01+0100\n"
+"PO-Revision-Date: 2026-11-27 23:48+0100\n"
 "Last-Translator: Masta2002\n"
 "Language-Team: oATV Team\n"
 "Language: de_DE\n"
@@ -611,7 +611,7 @@ msgstr "Alphabetisch"
 
 #, python-format
 msgid "Also use the accounts of GT IPTV Player Pro (%s)"
-msgstr ""
+msgstr "Auch die Konten von GT IPTV Player Pro verwenden (%s)"
 
 #, python-format
 msgid "Also use the accounts of X-Streamity (%s)"
@@ -623,7 +623,7 @@ msgstr "Auch die Portale von EStalker verwenden (%s)"
 
 #, python-format
 msgid "Also use the portals of GT IPTV Player Pro (%s)"
-msgstr ""
+msgstr "Auch die Portale von GT IPTV Player Pro verwenden (%s)"
 
 msgid "AltGr"
 msgstr "AltGr"
@@ -795,7 +795,7 @@ msgid "Aspect"
 msgstr "Seitenverhältnis"
 
 msgid "Aspect ratio"
-msgstr ""
+msgstr "Seitenverhältnis"
 
 msgid "At least one of plugin browser, extension list and main menu has to stay on, otherwise E2iPlayer could no longer be started."
 msgstr "Mindestens einer der Einträge Plugin-Browser, Erweiterungsliste und Hauptmenü muss eingeschaltet bleiben, sonst könnte E2iPlayer nicht mehr gestartet werden."
@@ -813,7 +813,7 @@ msgid "Audio buffer size [KB]"
 msgstr "Audiopuffergröße in [KB]"
 
 msgid "Audio codec"
-msgstr ""
+msgstr "Audio-Codec"
 
 msgid "Audio description"
 msgstr "Audiodeskription"
@@ -881,16 +881,16 @@ msgid "BLUE"
 msgstr "BLAU"
 
 msgid "Backdrop (fanart)"
-msgstr ""
+msgstr "Hintergrundbild (Fanart)"
 
 msgid "Backdrop when the film is paused"
-msgstr ""
+msgstr "Hintergrundbild, wenn der Film pausiert ist"
 
 msgid "Background color"
 msgstr "Hintergrundfarbe"
 
 msgid "Background of the INFO panels"
-msgstr ""
+msgstr "Hintergrund der INFO-Seiten"
 
 msgid "Backspace"
 msgstr "Rücktaste"
@@ -915,7 +915,7 @@ msgid "Being watched"
 msgstr "Wird gerade angesehen"
 
 msgid "Below the picture"
-msgstr ""
+msgstr "Unter dem Bild"
 
 msgid "Bengali"
 msgstr "Bengalisch"
@@ -942,10 +942,10 @@ msgid "Biography"
 msgstr "Biografie"
 
 msgid "Bit depth"
-msgstr ""
+msgstr "Bittiefe"
 
 msgid "Bitrate"
-msgstr ""
+msgstr "Bitrate"
 
 #, python-format
 msgid "Bitrate: %s"
@@ -1113,10 +1113,10 @@ msgid "Catch-up: %d days"
 msgstr "Mediathek: %d Tage"
 
 msgid "Catch-up: minutes after the end:"
-msgstr ""
+msgstr "Mediathek: Minuten nach dem Ende:"
 
 msgid "Catch-up: minutes before the start:"
-msgstr ""
+msgstr "Mediathek: Minuten vor dem Beginn:"
 
 msgid "Categories"
 msgstr "Rubriken"
@@ -1131,7 +1131,7 @@ msgid "Category:"
 msgstr "Kategorie:"
 
 msgid "Centered"
-msgstr ""
+msgstr "Zentriert"
 
 msgid "Change active movie player"
 msgstr "Aktiven Movie Player wechseln"
@@ -1153,10 +1153,10 @@ msgid "Channels"
 msgstr "Kanäle"
 
 msgid "Chapter"
-msgstr ""
+msgstr "Kapitel"
 
 msgid "Chapters"
-msgstr ""
+msgstr "Kapitel"
 
 msgid "Checking for updates"
 msgstr "Suche nach Updates"
@@ -1231,7 +1231,7 @@ msgid "Code"
 msgstr "Code"
 
 msgid "Codec"
-msgstr ""
+msgstr "Codec"
 
 msgid "Collected streams only"
 msgstr "Nur gesammelte Streams"
@@ -1243,7 +1243,7 @@ msgid "Colored text in titles and descriptions"
 msgstr "Farbiger Text in Titeln und Beschreibungen"
 
 msgid "Colour space"
-msgstr ""
+msgstr "Farbraum"
 
 msgid "Combine pull request merges with their commit"
 msgstr "Pull-Request-Merges mit ihrem Commit zusammenfassen"
@@ -1441,7 +1441,7 @@ msgid "Current item is not a channel."
 msgstr "Der aktuelle Eintrag ist kein Kanal."
 
 msgid "Current song"
-msgstr ""
+msgstr "Aktueller Titel"
 
 msgid "Cut"
 msgstr "Ausschneiden"
@@ -1480,7 +1480,7 @@ msgid "Danish"
 msgstr "Dänisch"
 
 msgid "Dark"
-msgstr ""
+msgstr "Dunkel"
 
 msgid "Darkgray"
 msgstr "Dunkelgrau"
@@ -1642,7 +1642,7 @@ msgid "Denmark"
 msgstr "Dänemark"
 
 msgid "Description"
-msgstr ""
+msgstr "Beschreibung"
 
 msgid "Description:"
 msgstr "Beschreibung:"
@@ -2362,7 +2362,7 @@ msgid "Female"
 msgstr "Frauen"
 
 msgid "File"
-msgstr ""
+msgstr "Datei"
 
 #, python-format
 msgid "File \"%s\" already exists"
@@ -2536,7 +2536,7 @@ msgid "Force legacy grid"
 msgstr "Altes Symbolraster erzwingen"
 
 msgid "Forced"
-msgstr ""
+msgstr "Erzwungen"
 
 msgid "Foreign movies"
 msgstr "Ausländische Filme"
@@ -2557,7 +2557,7 @@ msgid "Fotka.pl stream :"
 msgstr "Fotka.pl stream :"
 
 msgid "Frame rate"
-msgstr ""
+msgstr "Bildrate"
 
 msgid "Free"
 msgstr "Kostenlos"
@@ -2572,7 +2572,7 @@ msgid "From E2 settings"
 msgstr "Aus E2 Einstellungen"
 
 msgid "From the host, else online"
-msgstr ""
+msgstr "Vom Host, sonst online"
 
 msgid "Full description loaded"
 msgstr "Vollständige Beschreibung geladen"
@@ -2581,7 +2581,7 @@ msgid "Full description not available"
 msgstr "Keine vollständige Beschreibung verfügbar"
 
 msgid "Full screen"
-msgstr ""
+msgstr "Vollbild"
 
 msgid "Full test"
 msgstr "Vollständiger Test"
@@ -2756,7 +2756,7 @@ msgid "Hide \"%s\" group"
 msgstr "Verstecke \"%s\" Gruppe"
 
 msgid "Hide categories containing (comma separated):"
-msgstr ""
+msgstr "Kategorien ausblenden, die Folgendes enthalten (durch Komma getrennt):"
 
 msgid "Hide the menu (live TV visible)"
 msgstr "Menü ausblenden (Live-TV sichtbar)"
@@ -3127,7 +3127,7 @@ msgid "Language"
 msgstr "Sprache"
 
 msgid "Language of the details"
-msgstr ""
+msgstr "Sprache der Details"
 
 msgid "Language of the details (TMDb, IMDb)"
 msgstr "Sprache der Details (TMDb, IMDb)"
@@ -3145,13 +3145,13 @@ msgid "Large (title below)"
 msgstr "Groß (Titel darunter)"
 
 msgid "Large cover, info on the right: alignment"
-msgstr ""
+msgstr "Großes Cover, Infos rechts: Ausrichtung"
 
 msgid "Large cover, info on the right: labels"
-msgstr ""
+msgstr "Großes Cover, Infos rechts: Beschriftungen"
 
 msgid "Large cover, info on the right: lines"
-msgstr ""
+msgstr "Großes Cover, Infos rechts: Zeilen"
 
 msgid "Large cover, info on the right: row 1"
 msgstr "Großes Cover, Infos rechts: Zeile 1"
@@ -3166,7 +3166,7 @@ msgid "Large cover, info on the right: row 4"
 msgstr "Großes Cover, Infos rechts: Zeile 4"
 
 msgid "Large cover, info on the right: title"
-msgstr ""
+msgstr "Großes Cover, Infos rechts: Titel"
 
 msgid "Large cover: size of the times below the bar"
 msgstr "Großes Cover: Größe der Zeiten unter dem Balken"
@@ -3493,7 +3493,7 @@ msgid "Longest"
 msgstr "Längste"
 
 msgid "Looking for trailers..."
-msgstr ""
+msgstr "Suche nach Trailern..."
 
 msgid "Loved tracks"
 msgstr "Beliebte Titel"
@@ -4004,7 +4004,7 @@ msgstr "Kein Titel für die Suche vorhanden."
 
 #, python-format
 msgid "No trailer found for \"%s\"."
-msgstr ""
+msgstr "Kein Trailer für \"%s\" gefunden."
 
 msgid "No valid entitlement found for asset."
 msgstr "Für dieses Medium wurde keine gültige Berechtigung gefunden."
@@ -4065,7 +4065,7 @@ msgid "Now"
 msgstr "Jetzt"
 
 msgid "Now playing"
-msgstr "Jetzt im Kino"
+msgstr "Läuft gerade"
 
 #, python-format
 msgid "Now playing: %s"
@@ -4131,7 +4131,7 @@ msgid "Only files in the downloads folder can be deleted."
 msgstr "Nur Dateien im Download-Ordner können gelöscht werden."
 
 msgid "Only from the host"
-msgstr ""
+msgstr "Nur vom Host"
 
 msgid "Only links can be moved to a group."
 msgstr "Nur Links können in eine Gruppe verschoben werden."
@@ -4209,7 +4209,7 @@ msgid "Order stays fixed - useful for T9 browsing."
 msgstr "Die Reihenfolge bleibt unverändert – nützlich beim Durchblättern mit T9."
 
 msgid "Original"
-msgstr ""
+msgstr "Original"
 
 msgid "Original Title:"
 msgstr "Originaltitel:"
@@ -4348,7 +4348,7 @@ msgid "Physical Exam"
 msgstr "Körperliche Untersuchung"
 
 msgid "Picture of the title, blurred"
-msgstr ""
+msgstr "Bild des Titels, unscharf"
 
 msgid "Pin has been changed."
 msgstr "PIN wurde geändert."
@@ -4366,7 +4366,7 @@ msgid "Pin protection for this host"
 msgstr "PIN-Schutz für diesen Host"
 
 msgid "Pixel format"
-msgstr ""
+msgstr "Pixelformat"
 
 msgid "Play all from here"
 msgstr "Alle ab hier abspielen"
@@ -4376,7 +4376,7 @@ msgid "Play marked items (%d)"
 msgstr "Markierte Einträge abspielen (%d)"
 
 msgid "Play the first trailer at once"
-msgstr ""
+msgstr "Ersten Trailer sofort abspielen"
 
 msgid "Play torrents with TorrServer"
 msgstr "Torrents mit TorrServer abspielen"
@@ -4557,7 +4557,7 @@ msgid "Portuguese"
 msgstr "Portugiesisch"
 
 msgid "Poster during audio playback"
-msgstr ""
+msgstr "Poster bei Audiowiedergabe"
 
 msgid "Poster grid for lists with pictures"
 msgstr "Poster-Ansicht für Listen mit Bildern"
@@ -4620,7 +4620,7 @@ msgid "Professionals"
 msgstr "Profis"
 
 msgid "Profile"
-msgstr ""
+msgstr "Profil"
 
 msgid "Program"
 msgstr "Programm"
@@ -4760,7 +4760,7 @@ msgid "Reading..."
 msgstr "Wird gelesen..."
 
 msgid "Rebuffer"
-msgstr ""
+msgstr "Neu puffern"
 
 msgid "Recent"
 msgstr "Neueste"
@@ -4931,7 +4931,7 @@ msgid "Reset web interface"
 msgstr "Web-Interface zurücksetzen"
 
 msgid "Resolution"
-msgstr ""
+msgstr "Auflösung"
 
 #, python-format
 msgid ""
@@ -5007,7 +5007,7 @@ msgid "Same as the bar"
 msgstr "Wie der Balken"
 
 msgid "Sample rate"
-msgstr ""
+msgstr "Abtastrate"
 
 msgid "Save"
 msgstr "Speichern"
@@ -5510,7 +5510,7 @@ msgid "Site self-test: %d of %d - now %s (%d failed so far)"
 msgstr "Seiten-Selbsttest: %d von %d - jetzt %s (bisher %d fehlgeschlagen)"
 
 msgid "Size"
-msgstr ""
+msgstr "Größe"
 
 msgid "Size:"
 msgstr "Größe:"
@@ -5534,7 +5534,7 @@ msgid "Small (16:9)"
 msgstr "Klein (16:9)"
 
 msgid "Small, in the middle"
-msgstr ""
+msgstr "Klein, in der Mitte"
 
 msgid "Smaller text"
 msgstr "Kleinere Schrift"
@@ -5600,7 +5600,7 @@ msgid "Sorted most viewed channels now [live]"
 msgstr "Sortiere nach aktuell am meisten gesehenen Kanälen [live]"
 
 msgid "Source"
-msgstr ""
+msgstr "Quelle"
 
 msgid "Source:"
 msgstr "Quelle:"
@@ -5679,7 +5679,7 @@ msgid "Story"
 msgstr "Handlung"
 
 msgid "Stream"
-msgstr ""
+msgstr "Stream"
 
 #, python-format
 msgid "Stream formats: %s"
@@ -6148,16 +6148,16 @@ msgstr ""
 "\"%s\""
 
 msgid "The portal denied access to this entry."
-msgstr ""
+msgstr "Das Portal hat den Zugriff auf diesen Eintrag verweigert."
 
 msgid "The portal did not hand out a link for this entry."
 msgstr "Das Portal hat für diesen Eintrag keinen Link herausgegeben."
 
 msgid "The portal has blocked this MAC address."
-msgstr ""
+msgstr "Das Portal hat diese MAC-Adresse gesperrt."
 
 msgid "The portal refused the stream: the maximum number of connections is reached."
-msgstr ""
+msgstr "Das Portal hat den Stream abgelehnt: Die maximale Anzahl an Verbindungen ist erreicht."
 
 msgid "The recordings of this page were on the site's old media server, which is offline."
 msgstr "Die Aufnahmen dieser Seite lagen auf dem alten Medienserver der Seite, der offline ist."
@@ -6433,7 +6433,7 @@ msgid "Tip! You can connect USB flash drive to fix this problem."
 msgstr "Tipp! Sie können einen USB-Stick anschließen, um das Problem zu beheben."
 
 msgid "Title"
-msgstr ""
+msgstr "Titel"
 
 msgid "Titles"
 msgstr "Titel"
@@ -6593,7 +6593,7 @@ msgstr ""
 "TorrServer selbst ist nicht Teil von E2iPlayer und muss separat installiert werden."
 
 msgid "Total bitrate"
-msgstr ""
+msgstr "Gesamtbitrate"
 
 msgid "Total size:"
 msgstr "Gesamtgröße:"
@@ -6605,7 +6605,7 @@ msgid "Tournament"
 msgstr "Turnier"
 
 msgid "Track"
-msgstr ""
+msgstr "Spur"
 
 msgid "Tracklist"
 msgstr "Titelliste"
@@ -6614,7 +6614,7 @@ msgid "Trailer"
 msgstr "Trailer"
 
 msgid "Trailer language"
-msgstr ""
+msgstr "Trailer-Sprache"
 
 msgid "Trans"
 msgstr "Trans"
@@ -6908,7 +6908,7 @@ msgid "Video buffer size [MB]"
 msgstr "Videopuffergröße in [MB]"
 
 msgid "Video codec"
-msgstr ""
+msgstr "Video-Codec"
 
 msgid "Video library"
 msgstr "Videothek"
@@ -7045,7 +7045,7 @@ msgid "Whole picture (black bars)"
 msgstr "Ganzes Bild (schwarze Balken)"
 
 msgid "Whole width"
-msgstr ""
+msgstr "Ganze Breite"
 
 msgid "Wiki"
 msgstr "Wiki"
@@ -7066,7 +7066,7 @@ msgid "With subtitles"
 msgstr "Mit Untertiteln"
 
 msgid "Words added to the trailer search (empty = automatic)"
-msgstr ""
+msgstr "Zusätzliche Wörter für die Trailer-Suche (leer = automatisch)"
 
 msgid "World"
 msgstr "Welt"
@@ -7332,7 +7332,7 @@ msgid "changed"
 msgstr "geändert"
 
 msgid "classic"
-msgstr ""
+msgstr "klassisch"
 
 msgid "clock not set"
 msgstr "Uhrzeit nicht gestellt"
@@ -7396,7 +7396,7 @@ msgid "enable / disable manual reordering"
 msgstr "manuelles Sortieren ein- / ausschalten"
 
 msgid "expired"
-msgstr ""
+msgstr "abgelaufen"
 
 msgid "external eplayer3"
 msgstr "Externer Eplayer3"
@@ -7546,7 +7546,7 @@ msgid "minutes"
 msgstr "Minuten"
 
 msgid "modern"
-msgstr ""
+msgstr "modern"
 
 msgid "more options (this menu)"
 msgstr "weitere Optionen (dieses Menü)"
@@ -7806,7 +7806,7 @@ msgid "small"
 msgstr "klein"
 
 msgid "software"
-msgstr ""
+msgstr "Software"
 
 msgid "sources"
 msgstr "Quellen"
