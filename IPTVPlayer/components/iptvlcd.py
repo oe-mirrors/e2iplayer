@@ -7,9 +7,9 @@
 # player (InfoBarMoviePlayerSummary) and the settings (SetupSummary) get
 #
 # Layouts: small 16:9 picture or a column beside the title, a large picture with the title below ("poster") or
-# with up to four rows of information on the right ("side"); rolling titles stop after a set number of runs; the
-# picture is fitted to its field (Pillow, in a worker thread); colours of the progress bar; margins per display
-# size (LCD_MARGINS). lcdGeometry() and infoLcdGeometry() are plain arithmetic and can be tested on a PC.
+# with up to four rows of information on the right and the title over the whole width ("side"); rolling titles stop
+# after a set number of runs; the picture is fitted to its field (Pillow, in a worker thread); colours of the
+# progress bar; margins per display size (LCD_MARGINS). lcdGeometry() and infoLcdGeometry() are plain arithmetic and can be tested on a PC.
 #
 # $Id$
 
@@ -82,10 +82,24 @@ LCD_POSTER_BAR_DIV = 28
 # the upper part of a line of text, so the text looks centred between the picture and the bar
 LCD_POSTER_TEXT_SHIFT = 0.07
 # 'side' (picture left as large as possible, information on the right, like the EMC screen of the Ultimo4K skin): the
-# column on the right keeps at least this part of the usable width; the rows in it come from the settings
-# lcd_side_row1 .. lcd_side_row4 (these are the rows when a setting does not exist)
+# rows of the column on the right come from the settings lcd_side_row1 .. lcd_side_row4 ('none' = no row; these are
+# the rows when a setting does not exist), the size of every row in per cent from lcd_side_size1 .. 4. Settings of the
+# look: lcd_side_title = 'full' (the title line over the whole width, a thin line above it, the picture takes all the
+# room above and is fitted to its field) or 'picture' (a 16:9 picture with the title line below it);
+# lcd_side_labels = a small grey label (ENDS, REMAINING) above every value; lcd_side_align = right / center;
+# lcd_side_lines = thin lines between the rows. The column keeps at least LCD_SIDE_MIN_RIGHT_PERCENT of the width;
+# with the title over the whole width it is as wide as its widest row needs, at most LCD_SIDE_MAX_RIGHT_PERCENT.
 LCD_SIDE_MIN_RIGHT_PERCENT = 28
-LCD_SIDE_ROWS_DEFAULT = ('clock', 'end', 'remaining', 'percent')
+LCD_SIDE_MAX_RIGHT_PERCENT = 36
+LCD_SIDE_ROWS_DEFAULT = ('clock', 'end', 'remaining', 'none')
+LCD_SIDE_SIZE_DEFAULT = 100
+LCD_SIDE_LINE_COLOR = '#b8b8b8'
+# the values use the font of the EMC screen when the display skin has one of these: (name, average width of a
+# character in em, of the clock in em). VFD / ...LCD (VTi skins) have narrow digits; FdLcD is the font of the
+# openATV display skins (nmsbd.ttf, measured: 0.51-0.53 em). Otherwise LCD_FONT.
+LCD_SIDE_SKIN_FONTS = (('VFD', 0.40, 0.50), ('SemiboldLCD', 0.40, 0.50), ('RegularLCD', 0.40, 0.50), ('FdLcD', 0.54, 0.54))
+# height of a value without a label in em (digits have no descender): smaller = larger values
+LCD_SIDE_VALUE_LINE_EM = 1.15
 
 
 # the scrolling title needs the RunningText renderer of the image: "RunningText" (openATV, openPLi, ...) or
@@ -120,6 +134,54 @@ def lcdPercentSetting(name, default):
 def lcdXml(text):
     # text for an XML attribute
     return text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;')
+
+
+def lcdFontName(names, default):
+    # the first of these fonts that the loaded skins have, else the default: the fonts a skin loads with
+    # <font filename=... name=...> (enigma.getFontFaces, not in every image) and the aliases of skin.fonts
+    known = set()
+    try:
+        from enigma import getFontFaces
+        known.update(getFontFaces())
+    except Exception:
+        pass
+    try:
+        from skin import fonts
+        known.update(fonts.keys())
+    except Exception:
+        pass
+    for name in names:
+        if name in known:
+            return name
+    return default
+
+
+def lcdSideOptions(rows, shortTimes):
+    # how the column on the right of the layout "side" looks: rows = [(kind, size in per cent)] from sideRows.
+    # 'rows' of the result: (kind, characters of the value, average character width in em, size in per cent)
+    ems = {name: (charEm, clockEm) for name, charEm, clockEm in LCD_SIDE_SKIN_FONTS}
+    font = lcdFontName([name for name, charEm, clockEm in LCD_SIDE_SKIN_FONTS], None)
+    charEm, clockEm = ems.get(font, (IPTVExtMoviePlayerColorSummary.CHAR_EM, IPTVExtMoviePlayerColorSummary.CHAR_EM))
+    widths = [(kind, lcdSideItem(kind, shortTimes)[3], clockEm if kind == 'clock' else charEm, pct) for kind, pct in rows]
+    return {'rows': widths, 'font': font or LCD_FONT,
+            'title': 'picture' if lcdSetting('lcd_side_title', 'full') == 'picture' else 'full',
+            'labels': bool(lcdSetting('lcd_side_labels', False)),
+            'align': 'center' if lcdSetting('lcd_side_align', 'right') == 'center' else 'right',
+            'lines': bool(lcdSetting('lcd_side_lines', True))}
+
+
+def lcdLineHeight(displayH):
+    # the thin lines of the layout "side" (between the rows, above the title line): 1 px up to 240 px display height
+    return max(1, displayH // 240)
+
+
+def lcdSideFonts(opts, valueH):
+    # the font of every value of the column on the right for rows whose value is valueH pixels high: as large as the
+    # height allows, times the size setting of the row (the width is checked by the caller). At most 1.1 x the height
+    # of the field: digits fill only the upper part of a line, so that is the largest size before they are cut; a
+    # size above about 125 % only gives more where the row would otherwise be smaller than that.
+    lineEm = LCD_POSTER_LINE_EM if opts['labels'] else LCD_SIDE_VALUE_LINE_EM
+    return [min(int(valueH / lineEm * pct / 100.0), int(valueH * 1.1)) for kind, chars, charEm, pct in opts['rows']]
 
 
 def lcdSideItem(kind, shortTimes):
@@ -458,10 +520,13 @@ class IPTVExtMoviePlayerColorSummary(Screen):
         return (x, y + (h - newH) // 2, w, newH)
 
     @classmethod
-    def lcdGeometry(cls, w, h, mode='large', coverMode='small', shortTimes=False, margins=None, timePct=None, titlePct=None):
+    def lcdGeometry(cls, w, h, mode='large', coverMode='small', shortTimes=False, margins=None, timePct=None, titlePct=None, sideOpts=None):
         # Pure arithmetic (no enigma2 needed, so it can be tested on a PC): every rectangle of the layout for a display
         # of w x h pixels. Returns a dict; rectangles are (x, y, width, height). timePct / titlePct: size of the times and
-        # of the title line of the layouts "poster" and "side" in per cent (settings lcd_poster_time / lcd_poster_title)
+        # of the title line of the layouts "poster" and "side" in per cent (settings lcd_poster_time / lcd_poster_title);
+        # sideOpts: the look of the layout "side" (lcdSideOptions; None = the title over the whole width, three rows)
+        sideOpts = sideOpts or {'rows': [(k, lcdSideItem(k, shortTimes)[3], cls.CHAR_EM, LCD_SIDE_SIZE_DEFAULT) for k in LCD_SIDE_ROWS_DEFAULT if k != 'none'],
+                                'title': 'full', 'labels': False, 'align': 'right', 'lines': True}
         ml, mr, mt, mb = margins or (cls.LCD_MARGIN_LEFT, cls.LCD_MARGIN_RIGHT, cls.LCD_MARGIN_TOP, cls.LCD_MARGIN_BOTTOM)
         timePct = timePct or LCD_POSTER_TIME_DEFAULT
         titlePct = titlePct or LCD_POSTER_TITLE_DEFAULT
@@ -521,11 +586,32 @@ class IPTVExtMoviePlayerColorSummary(Screen):
         # "side" = the same on the left, a column with information on the right
         fTitleMinBeside = fTitleMin
         cover = None
+        sepRect = None
         if poster:
             fLine = max(12, fTitleMin * titlePct // 100)
             fTitleMinBeside = fLine
             lineH = int(fLine * LCD_POSTER_LINE_EM) + 2
-            if side:
+            if side and sideOpts['title'] == 'full':
+                # the title line over the whole width right above the bar, a thin line above it (setting
+                # lcd_side_lines); the picture and the column share all the room above (the picture is fitted to its
+                # field, it is not 16:9), the column as wide as its widest row needs
+                lineY = barY - gap - lineH
+                sepH = lcdLineHeight(h) if sideOpts['lines'] else 0
+                sepY = lineY - gap - sepH
+                # without the line the picture ends one gap above the title line
+                areaH = (sepY - gap if sepH else lineY - gap) - titleY
+                sideW = cls.sideColumnWidth(cw, areaH, sideOpts)
+                picW = cw - sideW - pad
+                if areaH >= 20 and picW >= 20:
+                    cover = {'cover': (x0 + pad, titleY, picW, areaH),
+                             'beside': (x0 + pad, lineY, cw, lineH), 'align': 'left', 'oneLine': True, 'fCover': fTitle}
+                    sideRect = (x0 + pad + picW + pad, titleY, sideW, areaH)
+                    rectFull = cls.snapLines((x0 + pad, titleY, picW, barY - gap - titleY), fTitleMin)
+                    if sepH:
+                        sepRect = (x0 + pad, sepY, cw, sepH)
+                else:
+                    return cls.lcdGeometry(w, h, mode, 'poster', shortTimes, margins, timePct, titlePct)
+            elif side:
                 areaH = titleH
                 picH = areaH - gap - lineH
                 picW = picH * 16 // 9
@@ -580,35 +666,60 @@ class IPTVExtMoviePlayerColorSummary(Screen):
                 'fTime': fTime, 'colW': colW, 'midW': midW, 'barY': barY, 'barH': barH, 'barBorder': barBorder,
                 'timeY': timeY, 'timeH': timeH, 'titleY': titleY, 'titleH': titleH, 'fTitleMin': fTitleMin, 'fTitle': fTitle,
                 'rectFull': rectFull, 'coverRect': cover['cover'], 'rectBeside': cover['beside'], 'side': side and sideRect is not None,
-                'sideRect': sideRect, 'besideAlign': cover['align'], 'besideOneLine': cover['align'] == 'center',
-                'fTitleCover': cover['fCover'], 'fTitleMinBeside': fTitleMinBeside}
+                'sideRect': sideRect, 'besideAlign': cover['align'], 'besideOneLine': cover.get('oneLine', cover['align'] == 'center'),
+                'fTitleCover': cover['fCover'], 'fTitleMinBeside': fTitleMinBeside, 'sepRect': sepRect}
+
+    @classmethod
+    def sideColumnWidth(cls, cw, areaH, opts):
+        # the width of the column on the right when the title has the whole width: as wide as its widest row needs at the
+        # font its height allows (lcdSideFonts), between LCD_SIDE_MIN_RIGHT_PERCENT and LCD_SIDE_MAX_RIGHT_PERCENT of cw
+        rows = opts['rows'] or [('clock', 5, cls.CHAR_EM, LCD_SIDE_SIZE_DEFAULT)]
+        rowH = areaH / float(len(rows))
+        valueH = rowH - (max(10, int(rowH) // 4) if opts['labels'] else 0)
+        fonts = lcdSideFonts(dict(opts, rows=rows), valueH)
+        need = max([int(chars * charEm * font) + 2 for (kind, chars, charEm, pct), font in zip(rows, fonts)])
+        return int(min(max(need, cw * LCD_SIDE_MIN_RIGHT_PERCENT // 100), cw * LCD_SIDE_MAX_RIGHT_PERCENT // 100))
 
     def sideRows(self):
-        # the rows of the column on the right of the layout "side" from the settings lcd_side_row1 .. 4
+        # the rows of the column on the right of the layout "side" from the settings lcd_side_row1 .. 4 and their sizes
+        # (lcd_side_size1 .. 4): [(kind, per cent)]
         rows = []
         for idx in range(4):
             kind = lcdSetting('lcd_side_row%d' % (idx + 1), LCD_SIDE_ROWS_DEFAULT[idx])
             if kind and kind != 'none' and lcdSideItem(kind, True) is not None:
-                rows.append(kind)
-        return rows or ['clock']
+                rows.append((kind, lcdPercentSetting('lcd_side_size%d' % (idx + 1), LCD_SIDE_SIZE_DEFAULT)))
+        return rows or [('clock', LCD_SIDE_SIZE_DEFAULT)]
 
-    def sideRowsXml(self, L, rows, shortTimes):
-        # label (small, grey) above the value (large, white) for every row of the column on the right
+    def sideRowsXml(self, L, opts, shortTimes):
+        # the column on the right: every row as high as the others, a thin line between two rows (lcd_side_lines), a
+        # small grey label above the value (lcd_side_labels), all right-aligned or centred (lcd_side_align). The value
+        # is as large as the row allows times the size of the row (lcd_side_size1 .. 4), at most as wide as the column
         x, y, w, h = L['sideRect']
-        rowH = h // len(rows)
+        rows = opts['rows']
+        n = len(rows)
+        sepH = lcdLineHeight(self.h) if opts['lines'] else 0
+        align = opts['align']
         parts = []
-        for idx, kind in enumerate(rows):
-            label, source, converter, chars = lcdSideItem(kind, shortTimes)
-            ry = y + idx * rowH
-            labelH = max(10, rowH // 4)
+        for idx, (kind, chars, charEm, pct) in enumerate(rows):
+            label, source, converter = lcdSideItem(kind, shortTimes)[:3]
+            ry = y + idx * h // n
+            bottom = y + (idx + 1) * h // n
+            if idx > 0 and sepH:
+                parts.append('<eLabel position="%d,%d" size="%d,%d" backgroundColor="%s" />' % (x, ry, w, sepH, LCD_SIDE_LINE_COLOR))
+                ry += sepH
+            rowH = bottom - ry
+            labelH = max(10, rowH // 4) if opts['labels'] else 0
             valueH = rowH - labelH
-            valueFont = max(12, min(int(valueH / LCD_POSTER_LINE_EM), int(w / (chars * self.CHAR_EM))))
-            # the label fits the width of the column too (REMAINING / VERBLEIBEND) and stays smaller than the value
-            labelFont = max(10, min(int(labelH / self.LINE_EM), int(w / (max(1, len(label)) * self.CHAR_EM)), valueFont * 2 // 3))
-            parts.append('<eLabel text="%s" position="%d,%d" size="%d,%d" font="%s;%d" halign="center" valign="bottom" noWrap="1" foregroundColor="#a0a0a0" backgroundColor="#000000" transparent="1" />' % (
-                lcdXml(label), x, ry, w, labelH, LCD_FONT, labelFont))
-            widget = '<widget source="%s" render="Label" position="%d,%d" size="%d,%d" font="%s;%d" halign="center" valign="top" noWrap="1" foregroundColor="#ffffff" backgroundColor="#000000" transparent="1"' % (
-                source, x, ry + labelH, w, valueH, LCD_FONT, valueFont)
+            valueFont = lcdSideFonts(dict(opts, rows=[(kind, chars, charEm, pct)]), valueH)[0]
+            valueFont = max(10, min(valueFont, int(w / (chars * charEm))))
+            if labelH:
+                # the label fits the width of the column too (REMAINING / VERBLEIBEND) and stays smaller than the value
+                labelFont = max(10, min(int(labelH / self.LINE_EM), int(w / (max(1, len(label)) * self.CHAR_EM)), valueFont * 2 // 3))
+                parts.append('<eLabel text="%s" position="%d,%d" size="%d,%d" font="%s;%d" halign="%s" valign="bottom" noWrap="1" foregroundColor="#a0a0a0" transparent="1" />' % (
+                    lcdXml(label), x, ry, w, labelH, LCD_FONT, labelFont, align))
+            # no background colour: on some LCDs it draws a grey box behind the text
+            widget = '<widget source="%s" render="Label" position="%d,%d" size="%d,%d" font="%s;%d" halign="%s" valign="%s" noWrap="1" foregroundColor="#ffffff" transparent="1"' % (
+                source, x, ry + labelH, w, valueH, opts['font'], valueFont, align, 'top' if labelH else 'center')
             if converter:
                 widget += '><convert type="ClockToText">%s</convert></widget>' % lcdXml(converter)
             else:
@@ -641,16 +752,16 @@ class IPTVExtMoviePlayerColorSummary(Screen):
         # long titles: scrolling (RunningText), page by page (own timer) or smaller text; no RunningText = pages
         self.titleScroll = longTitles == 'scroll' and HAVE_RUNNING_TEXT
         self.titlePages = longTitles == 'pages' or (longTitles == 'scroll' and not HAVE_RUNNING_TEXT)
-        L = self.lcdGeometry(self.w, self.h, mode, coverMode, shortTimes, LCD_MARGINS.get((self.w, self.h)), timePct, titlePct)
+        sideOpts = lcdSideOptions(self.sideRows(), shortTimes) if coverMode == 'side' else None
+        L = self.lcdGeometry(self.w, self.h, mode, coverMode, shortTimes, LCD_MARGINS.get((self.w, self.h)), timePct, titlePct, sideOpts)
         self.sideMode = L['side']
         self.fTitleMin, self.fTitle, self.fTitleCover, self.fTitleMinBeside = L['fTitleMin'], L['fTitle'], L['fTitleCover'], L['fTitleMinBeside']
         self.rectFull, self.rectBeside, self.besideAlign, self.besideOneLine = L['rectFull'], L['rectBeside'], L['besideAlign'], L['besideOneLine']
         barFill, barBorderColor, barFrame = lcdBarColors()
-        rows = self.sideRows() if self.sideMode else []
-        printDBG("IPTVExtMoviePlayerColorSummary.computeLayout display[%dx%d] mode[%s] cover[%s] fit[%s] side[%s] rows%r runs[%d] renderer[%s] font[%s] fTime[%d] title[%d] pct time[%d] title[%d] bar[%s/%s/%d h%d y%d] full%r beside%r cover%r right%r" % (
-            self.w, self.h, mode, coverMode, lcdSetting('lcd_cover_fit', 'auto'), self.sideMode, rows, self.titleRuns, RUNNING_TEXT_RENDERER, LCD_FONT,
+        printDBG("IPTVExtMoviePlayerColorSummary.computeLayout display[%dx%d] mode[%s] cover[%s] fit[%s] side[%s] side options%r runs[%d] renderer[%s] font[%s] fTime[%d] title[%d] pct time[%d] title[%d] bar[%s/%s/%d h%d y%d] full%r beside%r cover%r right%r line%r" % (
+            self.w, self.h, mode, coverMode, lcdSetting('lcd_cover_fit', 'auto'), self.sideMode, sideOpts if self.sideMode else None, self.titleRuns, RUNNING_TEXT_RENDERER, LCD_FONT,
             L['fTime'], L['fTitleMinBeside'], timePct, titlePct, barFill, barBorderColor, barFrame, L['barH'], L['barY'],
-            self.rectFull, self.rectBeside, L['coverRect'], L['sideRect']))
+            self.rectFull, self.rectBeside, L['coverRect'], L['sideRect'], L['sepRect']))
         left = 'lcdCurrTimeHM' if shortTimes else 'lcdCurrTime'
         right = 'lcdRemainedShort' if shortTimes else 'lcdRemained'
         percentWidget = ''
@@ -658,7 +769,7 @@ class IPTVExtMoviePlayerColorSummary(Screen):
             percentWidget = '<widget source="parent.lcdPercent" render="Label" position="%d,%d" size="%d,%d" font="%s;%d" halign="center" foregroundColor="#c0c0c0" backgroundColor="#000000" transparent="1" noWrap="1" valign="bottom" />' % (
                 L['x0'] + L['pad'] + L['colW'], L['timeY'], L['midW'], L['timeH'], LCD_FONT, L['fTime'])
         if self.sideMode:
-            timeWidgets = self.sideRowsXml(L, rows, shortTimes)
+            timeWidgets = self.sideRowsXml(L, sideOpts, shortTimes)
         else:
             timeWidgets = """<widget source="parent.%(left)s" render="Label" position="%(x)d,%(timeY)d" size="%(colW)d,%(timeH)d" font="%(fn)s;%(fTime)d" halign="left" foregroundColor="#ffffff" backgroundColor="#000000" transparent="1" noWrap="1" valign="bottom" />
             %(percentWidget)s
@@ -680,11 +791,16 @@ class IPTVExtMoviePlayerColorSummary(Screen):
             if self.besideOneLine:
                 lineFont = self.oneLineFont(self.rectBeside)
                 # a title that rolls starts at the LEFT edge (a centred one would lose its beginning), a short one is
-                # centred; a later title gets its alignment from alignScrollLine
-                self.lcdLineLeft = self.lineTooLong(self.rectBeside, lineFont)
+                # centred (the title over the whole width of "side": always left); a later title gets its alignment
+                # from alignScrollLine
+                self.lcdLineLeft = self.besideAlign == 'left' or self.lineTooLong(self.rectBeside, lineFont)
                 besideTitle = self.titleWidgetXml(self.rectBeside, lineFont, 'left' if self.lcdLineLeft else 'center', True)
             else:
                 besideTitle = self.titleWidgetXml(self.rectBeside, L['fTitleMinBeside'], self.besideAlign)
+        if L['sepRect']:
+            # the thin line between the picture / column and the title line (only with the picture: without one the
+            # title is beside the column)
+            besideTitle = '<eLabel position="%d,%d" size="%d,%d" backgroundColor="%s" />\n        %s' % (L['sepRect'] + (LCD_SIDE_LINE_COLOR, besideTitle))
         self.skinCover = self.skinPlain.replace('</screen>', """<widget name="lcdCover" position="%d,%d" size="%d,%d" alphatest="blend" />
         %s</screen>""" % (L['coverRect'] + (besideTitle,)))
 
@@ -993,7 +1109,7 @@ class IPTVExtMoviePlayerColorSummary(Screen):
         # the single rolling line below the picture: a title that rolls starts at the left edge, one that fits is
         # centred. The skin gave the alignment for the title at its start; the download manager changes the title
         # later. RunningText and VRunningText keep it in halign (eLabel) and txtflags (RT_HALIGN_*).
-        left = self.lineTooLong(self.rectBeside, self.oneLineFont(self.rectBeside), text)
+        left = self.besideAlign == 'left' or self.lineTooLong(self.rectBeside, self.oneLineFont(self.rectBeside), text)
         if getattr(self, 'lcdLineLeft', None) == left:
             return
         self.lcdLineLeft = left

@@ -55,6 +55,10 @@ class _Player(object):
     def updateSubSynchroControl(self):
         pass
 
+    def subtitlesChanged(self):
+        # the subtitle badge / info row of the player skin
+        self.changed = True
+
 
 def test_gone_file_is_dropped_quietly(tmp_path):
     enable = _method()

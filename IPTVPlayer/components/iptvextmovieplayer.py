@@ -40,8 +40,10 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.iptvsubdownloader import IPTVSubDownloaderWidget
 from Plugins.Extensions.IPTVPlayer.components.iptvsubsimpledownloader import IPTVSubSimpleDownloaderWidget
 from Plugins.Extensions.IPTVPlayer.components.iptvchoicebox import IPTVChoiceBoxWidget, IPTVChoiceBoxItem
-from Plugins.Extensions.IPTVPlayer.components.iptvplayerinfopanel import PlayerInfoPanel, audioText, CHAPTERS_PROBE_CMD
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinfopanel import PlayerInfoPanel, audioText, badgeList, hostDisplayName, nowPlayingText, streamBitrate, stripTexts, subtitleFormatName, CHAPTERS_PROBE_CMD
 from Plugins.Extensions.IPTVPlayer.components.iptvlist import IPTVPlaylistChoiceBoxList
+from Plugins.Extensions.IPTVPlayer.components.iptvscreensaver import clockStrftime
+from Plugins.Extensions.IPTVPlayer.components.iptvbackdrop import BackdropLoader, backdropMode, backdropOnPause
 from Plugins.Extensions.IPTVPlayer.tools import listselection
 from Plugins.Extensions.IPTVPlayer.components.iptvdirbrowser import IPTVFileSelectorWidget
 from Plugins.Extensions.IPTVPlayer.components.configextmovieplayer import ConfigExtMoviePlayerBase, ConfigExtMoviePlayer
@@ -80,9 +82,9 @@ import re
 import time
 import json
 try:
-    from PIL import Image
+    from PIL import Image, ImageDraw
 except ImportError:
-    Image = None
+    Image = ImageDraw = None
 
 ###################################################
 
@@ -264,8 +266,41 @@ class IPTVExtMoviePlayer(Screen):
     # startCover on the 1280x720 canvas: a 2:3 poster box in the middle, above the infobar; and the longest time it stays
     START_COVER_BOX = (500, 130, 280, 420)
     START_COVER_TIMEOUT = 60  # s
+    # audioCover (setting "Poster during audio playback") on the 1280x720 canvas: in the middle above the highest
+    # infobar, or the whole screen; the picture keeps its aspect ratio in the box
+    AUDIO_COVER_BOXES = {'small': (440, 90, 400, 400), 'full': (0, 0, 1280, 720)}
+    # the song of a radio stream: one line above the small poster (over the full one at its top)
+    AUDIO_COVER_TEXT_BOX = (40, 38, 1200, 44)
+    AUDIO_COVER_TEXT_FONT = 28
+    # how long a stream may play before it counts as audio only: exteplayer3 reports the video track a moment after
+    # the start
+    AUDIO_COVER_DELAY = 1500  # ms
+    # the optional widgets of a player skin's infobar ("modern"), each only where the skin declares it:
+    # - infoBarPoster: the title's picture; infoBarPosterMask: a picture of the skin over it (rounded corners, frame)
+    # - infoBarBadgeN: the badges of the formats, each as wide as its text, infoBarBadge1 the resolution class, the
+    #   others the rest in their order; infoBarBadgeNFrame: a label behind it as its border (the badge label lies
+    #   inside it, its distance to the frame is the border width), infoBarBadgeNSub: the small line under it
+    # - infoBarMeta: host, length and what the host's INFO page said (year, genre)
+    # - infoBarStripNKey / infoBarStripNValue: the info row (video, video codec, audio, audio codec, subtitles), the
+    #   value right after its label
+    # - infoBarProgressKnob: a picture of the skin (playback_knob.png) at the playback position on progressBar
+    INFOBAR_POSTER = 'infoBarPoster'
+    INFOBAR_POSTER_MASK = 'infoBarPosterMask'
+    INFOBAR_BADGES = tuple('infoBarBadge%d' % idx for idx in range(1, 10))
+    INFOBAR_BADGE_PARTS = tuple(name + part for name in INFOBAR_BADGES for part in ('Frame', 'Sub'))
+    INFOBAR_META = 'infoBarMeta'
+    INFOBAR_STRIP = tuple('infoBarStrip%d%s' % (idx, part) for idx in range(1, 6) for part in ('Key', 'Value'))
+    INFOBAR_KNOB = 'infoBarProgressKnob'
+    # the rating of the host's page beside the title ("IMDb 7.2")
+    INFOBAR_RATING = 'infoBarRating'
+    # the symbols of the info row, each hidden with its empty column (infobar_strip%d.png of the skin)
+    INFOBAR_STRIP_ICONS = tuple('infoBarStrip%dIcon' % idx for idx in range(1, 6))
+    INFOBAR_OPTIONAL = ((INFOBAR_POSTER, INFOBAR_POSTER_MASK) + INFOBAR_BADGES + INFOBAR_BADGE_PARTS + (INFOBAR_META, INFOBAR_RATING) + INFOBAR_STRIP
+                        + INFOBAR_STRIP_ICONS + (INFOBAR_KNOB,))
     # rectangles of one image subtitle (MAX_RECT_DESC in exteplayer3's graphic_subtitle.c)
     GRAPHIC_SUB_RECTS = 4
+    # track keys of a newer exteplayer3 kept by _mapTrack: c, d, t (v186), the track info for front ends
+    TRACK_INFO_KEYS = ('c', 'd', 't', 'sr', 'br', 'cl', 'bps', 'hdr', 'pr', 'bd', 'dv', 'cr')
 
     # theme -> (progress, cbuff, buff) bar image in playerskins/_scaled/,
     # shipped as <name>_1920.png/<name>_2560.png - see
@@ -470,12 +505,25 @@ class IPTVExtMoviePlayer(Screen):
             clockWidget,
             subSkin
         )  # 00000000 bottom
+        # what the infobar of this skin has of the optional widgets (the poster, the badges of the formats)
+        self.skinWidgetNames = set(re.findall(r'<widget[^>]*?\sname="([^"]+)"', skin))
         # added here, not in the playerskin.xml files: every player skin gets the panel of the INFO key
         refScale = 1.0 if self.skinUsesRefCanvas else dw / float(self.REF_W)
         skin = skin.replace('</screen>', PlayerInfoPanel.skinWidgets(refScale) + '</screen>')
-        # the title's poster in the middle while the stream opens (startCover), under the infobar and "Please wait"
+        # the title's poster in the middle while the stream opens (startCover), under the infobar and "Please wait";
+        # the poster of audio playback (audioCover), placed by showAudioCover()
         skin = skin.replace('</screen>', '<widget name="startCover" position="%d,%d" size="%d,%d" zPosition="1" transparent="1" alphatest="blend" /></screen>'
                             % tuple(int(v * refScale) for v in self.START_COVER_BOX))
+        skin = skin.replace('</screen>', '<widget name="audioCover" position="0,0" size="%d,%d" zPosition="1" transparent="1" alphatest="blend" /></screen>'
+                            % (int(REF_W * refScale), int(REF_H * refScale)))
+        # the title's backdrop (components/iptvbackdrop.py) under the audio poster, the infobar and the INFO panels
+        skin = skin.replace('</screen>', '<widget name="backdrop" position="0,0" size="%d,%d" zPosition="0" transparent="1" /></screen>'
+                            % (int(REF_W * refScale), int(REF_H * refScale)))
+        # the song of a radio stream above the audio poster (exteplayer3 "m_t")
+        skin = skin.replace('</screen>', '<widget name="audioCoverText" noWrap="1" position="%d,%d" size="%d,%d" zPosition="2" transparent="1" '
+                            'foregroundColor="#ffffff" backgroundColor="#000000" borderColor="#000000" borderWidth="2" font="Regular;%d" '
+                            'halign="center" valign="center" /></screen>'
+                            % tuple(int(v * refScale) for v in self.AUDIO_COVER_TEXT_BOX + (self.AUDIO_COVER_TEXT_FONT,)))
 
         sub = None
         return skin
@@ -578,13 +626,30 @@ class IPTVExtMoviePlayer(Screen):
         # (Octagon SF3038) while the stream kept running - so the PNG is
         # resized once with PIL and then drawn 1:1. None = keep the native
         # pixmap (HD, "sd" theme, image already fits, no PIL).
-        if Image is None or not self.skinUsesRefCanvas or getDesktop(0).size().width() == self.REF_W:
+        # A skin may ship the picture drawn for the OSD resolution beside it
+        # (name_1920.png, name_2560.png): sharp, and without PIL. It is taken
+        # as it is when it has the widget's size, else it is the source of
+        # the resized copy (less to scale than the 1280 one).
+        dw = getDesktop(0).size().width()
+        if not self.skinUsesRefCanvas or dw == self.REF_W:
+            return None
+        root, ext = os_path.splitext(path)
+        native = '%s_%d%s' % (root, dw, ext)
+        if os_path.isfile(native):
+            path = native
+        elif Image is None:
             return None
         try:
             size = self[widgetName].instance.size()
             w, h = size.width(), size.height()
             if w <= 0 or h <= 0:
                 return None
+            if path == native:
+                if Image is None:
+                    return LoadPixmap(path)
+                with Image.open(path) as img:
+                    if img.size == (w, h):
+                        return LoadPixmap(path)
             theme = os_path.basename(os_path.dirname(path))
             name = os_path.splitext(os_path.basename(path))[0]
             outPath = GetTmpDir('e2i_playerskin_%s_%s_%dx%d_%d.png' % (theme, name, w, h, int(os_path.getmtime(path))))
@@ -871,6 +936,41 @@ class IPTVExtMoviePlayer(Screen):
         self.startCoverPath = additionalParams.get('cover_path', '') or ''
         self.startCoverTimer = eTimer()
         self.startCoverTimer_conn = eConnectCallback(self.startCoverTimer.timeout, self.hideStartCover)
+        # the title's picture (else the host logo) during audio-only playback, see showAudioCover()
+        self['audioCover'] = Cover()
+        self['audioCoverText'] = Label('')
+        # the backdrop of the host's INFO page: behind the INFO panels, during audio playback, on pause (setting)
+        self['backdrop'] = Cover()
+        self.backdropLoader = None
+        # known from the item's INFO page or "Select link" (iptvplayerwidget), else it comes with the host's page
+        self.backdropStartUrl = additionalParams.get('backdrop_url', '') or ''
+        self.audioCover = {'paths': [additionalParams.get('cover_path', '') or '', additionalParams.get('logo_path', '') or ''],
+                           'shown': False, 'box': None, 'timer': eTimer()}
+        self.audioCover['timer_conn'] = eConnectCallback(self.audioCover['timer'].timeout, self.showAudioCover)
+        # optional widgets of the infobar (only skins like "modern" declare them): the poster and the format badges
+        self[self.INFOBAR_POSTER] = Cover()
+        self[self.INFOBAR_POSTER_MASK] = Cover3()
+        self[self.INFOBAR_KNOB] = Cover3()
+        for name in self.INFOBAR_STRIP_ICONS:
+            self[name] = Cover3()
+        self.infoBarPosterPaths = list(self.audioCover['paths'])
+        self.infoBarPosterBox = None
+        for name in self.INFOBAR_BADGES + self.INFOBAR_BADGE_PARTS + (self.INFOBAR_META, self.INFOBAR_RATING) + self.INFOBAR_STRIP:
+            self[name] = Label('')
+        # the title as it came, the label may hold it cut off with "…"
+        self.infoBarTitleText = self.title
+        self.infoBarTitleRect = None
+        self.infoBarRatingRect = None
+        self.infoBarRatingShown = ''
+        self.infoBarMetaText = None  # the text of the meta line as last set (None: not set yet)
+        # the symbols of the info row that have their picture
+        self.infoBarStripIcons = set()
+        self.infoBarBadgeLayout = None
+        self.infoBarStripLayout = None
+        self.infoBarMaskLoaded = False
+        self.infoBarHostTitle = additionalParams.get('host_title', '') or self.hostName
+        # infobar widgets that stay hidden when the infobar shows (an empty badge, no poster)
+        self.infoBarHiddenElems = set()
 
         # for subtitles
         self.infoBanerOffsetY = -1
@@ -971,6 +1071,11 @@ class IPTVExtMoviePlayer(Screen):
         self.goToSeekRepeatCount = 0
         self.goToSeekStep = 0
         self.playbackInfoBar = {'visible': False, 'blocked': False, 'guiElemNames': ['playbackInfoBaner', 'progressBar', 'bufferingCBar', 'bufferingBar', 'goToSeekPointer', 'goToSeekLabel', 'infoBarTitle', 'currTimeLabel', 'remainedLabel', 'lengthTimeLabel', 'videoInfo', 'playlistInfo', 'statusIcon', 'loopIcon', 'logoIcon']}
+        for name in self.INFOBAR_OPTIONAL:
+            if name in self.skinWidgetNames:
+                self.playbackInfoBar['guiElemNames'].append(name)
+                # shown once it has its picture / text
+                self.infoBarHiddenElems.add(name)
         if self.clockFormat:
             self.playbackInfoBar['guiElemNames'].append('clockTime')
             self.playbackInfoBar['clock_timer'] = eTimer()
@@ -1596,6 +1701,12 @@ class IPTVExtMoviePlayer(Screen):
         self.hideSubtitles()
         self.subHandler['enabled'] = False
         self.updateSubSynchroControl()
+        self.subtitlesChanged()
+
+    def subtitlesChanged(self):
+        # subtitles switched on / off / to another track: the subtitle badge, the info row, the "Playback info" page
+        self.refreshInfoBarFormats()
+        self.infoPanel.updateStream()
 
     def enableEmbeddedSubtitles(self, id):
         printDBG("enableEmbeddedSubtitles")
@@ -1678,6 +1789,7 @@ class IPTVExtMoviePlayer(Screen):
         self.subHandler['marker'] = None
         self.subHandler['enabled'] = True
         self.updateSubSynchroControl()
+        self.subtitlesChanged()
         if self.setMoviePlayerConfig:
             self.setMoviePlayerConfig = False
             self.runConfigMoviePlayerCallback(True)
@@ -1949,6 +2061,11 @@ class IPTVExtMoviePlayer(Screen):
         self['lengthTimeLabel'].setText(str(timedelta(seconds=newLength)))
         self.updateLcdInfo()
         self.refreshChapterMarks()
+        try:
+            self.updateInfoBarMeta()
+            self.updateInfoBarKnob()
+        except Exception:
+            printExc()
 
     def updateLcdInfo(self):
         # feeds the colour LCD summary with position, remaining time and progress
@@ -2057,6 +2174,7 @@ class IPTVExtMoviePlayer(Screen):
                     self.playback['CurrentTime'] = stsObj['CurrentTime']
                     if 0 < self.playback['CurrentTime']:
                         self.hideStartCover()
+                        self.scheduleAudioCover()
                         self.playback['StartGoToSeekTime'] = self.playback['CurrentTime']
                         diff = self.playback['CurrentTime'] - prevCTime
                         if diff > 0 and diff < 3:  # CurrentTime in seconds
@@ -2080,6 +2198,7 @@ class IPTVExtMoviePlayer(Screen):
                         elif val[0] in ['Pause', 'FastForward', 'SlowMotion']:
                             self.showPlaybackInfoBar(blocked=True)
                         self.playback['Status'] = val[0]
+                        self.updateBackdrop()
                         self['statusIcon'].setPixmap(self.playback['statusIcons'].get(val[0], None))
                 elif 'IsLoop' == key:
                     if self.playback['IsLoop'] != val:
@@ -2098,14 +2217,7 @@ class IPTVExtMoviePlayer(Screen):
                         text += 'p'
                     elif False is val['progressive']:
                         text += 'i'
-                    fps = val['frame_rate']
-                    if not 0 < fps <= 120:
-                        # exteplayer3 takes ffmpeg's guess, for a DASH time base of 1/200 (BBC) that is 200 fps - the
-                        # frame rate of the link list then, else none
-                        try:
-                            fps = float(strwithmeta(self.fileSRC).meta.get('iptv_frame_rate') or 0)
-                        except Exception:
-                            fps = 0
+                    fps = self.currentFrameRate()
                     if fps == floor(fps):
                         fps = int(fps)
                     if fps:
@@ -2118,10 +2230,59 @@ class IPTVExtMoviePlayer(Screen):
                 else:
                     self.playback[key] = val
                     printDBG(">>> playback[%s] = %s" % (key, val))
-            if 'VideoTrack' in stsObj or 'AudioTrack' in stsObj:
+            if 'VideoTrack' in stsObj or 'AudioTrack' in stsObj or 'SubtitleTrack' in stsObj:
                 self.infoPanel.updateStream()
+                self.refreshInfoBarFormats()
+            if ('VideoTrack' in stsObj or 'AudioTrack' in stsObj) and self.infoBarBadgeLayout is not None:
+                # a local file: ffprobe fills in what an older player does not report (once the player could read it,
+                # the buffer file has its header then)
+                self.infoPanel.startProbe()
+            if 'CurrentTime' in stsObj:
+                self.updateInfoBarKnob()
+            if 'NowPlaying' in stsObj:
+                self.updateNowPlaying()
+            if 'VideoTrack' in stsObj:
+                # the picture is decoded: no audio poster over it
+                self.hideAudioCover()
         except Exception:
             printExc(WarnOnly=True)
+
+    def currentFrameRate(self):
+        fps = (self.playback.get('VideoTrack') or {}).get('frame_rate', 0) or 0
+        if not 0 < fps <= 120:
+            # exteplayer3 takes ffmpeg's guess, for a DASH time base of 1/200 (BBC) that is 200 fps - the frame rate
+            # of the link list then, else none
+            try:
+                fps = float(strwithmeta(self.fileSRC).meta.get('iptv_frame_rate') or 0)
+            except Exception:
+                fps = 0
+        return fps
+
+    def trackLanguageName(self, name):
+        # "ger" / "deu" -> "German" as in the track lists (_trackLabel), any other name as it is
+        name = str(name or '').strip()
+        if len(name) <= 3 and langCode(name):
+            return _(langName(name))
+        return name
+
+    def currentSubtitleInfo(self):
+        # the shown subtitles for the "Playback info" page: an embedded track or a file
+        embedded = self.playback.get('SubtitleTrack') or {}
+        if embedded.get('id', -1) > -1:
+            tracks = self.playback.get('SubtitleTracks') or []
+            index = 0
+            for idx, track in enumerate(tracks):
+                if track.get('id') == embedded['id']:
+                    index = idx + 1
+                    break
+            return {'kind': 'embedded', 'index': index, 'count': len(tracks), 'lang': embedded.get('name', ''),
+                    'title': embedded.get('t', ''), 'format': subtitleFormatName(embedded.get('encode', '')), 'forced': embedded.get('forced', False)}
+        track = self.metaHandler.getSubtitleTrack() if self.subHandler['enabled'] else None
+        if track:
+            path = track.get('path', '') or ''
+            return {'kind': 'file', 'lang': track.get('lang', ''), 'title': track.get('title', ''),
+                    'format': subtitleFormatName(os_path.splitext(path)[1].lstrip('.').upper())}
+        return {}
 
     def doGoToSeek(self):
         self.playback['GoToSeekTimer'].stop()
@@ -2504,7 +2665,13 @@ class IPTVExtMoviePlayer(Screen):
             idx = chapterIndexAt(self.chapters, self.chapterPosMs())
             if idx != self.chapterLastIdx:
                 self.chapterLastIdx = idx
-                self['infoBarTitle'].setText('%s  –  %s' % (chapterLabel(self.chapters[idx]), self.title))
+                text = '%s  –  %s' % (chapterLabel(self.chapters[idx]), self.title)
+                self.infoBarTitleText = text
+                if self.INFOBAR_META in self.skinWidgetNames:
+                    # a skin like "modern": the title ends with "…" and leaves room for the rating behind it
+                    self.updateInfoBarTitle()
+                else:
+                    self['infoBarTitle'].setText(text)
         except Exception:
             printExc()
 
@@ -2638,12 +2805,13 @@ class IPTVExtMoviePlayer(Screen):
         return 'eplayer' == self.player and bool(self.playback['AudioTrack']) and not self.playback['VideoTrack']
 
     def _screenSaverTimeText(self):
-        # playback time and the audio format of the stream ("0:01:23 / 0:03:45 | MP3"; "AAC (eng)")
+        # playback time and the audio format of the stream ("0:01:23 / 0:03:45 | MP3"; "AAC (eng)"); the song of a
+        # radio stream first ("Artist - Title | 0:01:23 | MP3", the line cuts off what does not fit)
         currTime = self['currTimeLabel'].getText()
         length = self.playback.get('Length') or 0
         text = "%s / %s" % (currTime, self['lengthTimeLabel'].getText()) if length > 0 else currTime
         audio = audioText(self.playback.get('AudioTrack'))
-        return " | ".join(x for x in (text, audio) if x)
+        return " | ".join(x for x in (self.playback.get('NowPlaying', ''), text, audio) if x)
 
     def goSubKey(self, direction, state='press'):
         if not self.subHandler['enabled'] or None is self.metaHandler.getSubtitleTrack():
@@ -2707,7 +2875,10 @@ class IPTVExtMoviePlayer(Screen):
             self.key_stop("key_exit")
 
     def doInfo(self):
-        if self.infoPanel.visible:
+        # INFO: the page of the source and texts, again: "Playback info", once more: closed
+        if self.infoPanel.visible and self.infoPanel.page == 1:
+            self.infoPanel.showTech()
+        elif self.infoPanel.visible:
             self.doExit(True)
         elif self.isStarted and not self.isClosing:
             self.playbackInfoBar['blocked'] = True
@@ -2762,6 +2933,13 @@ class IPTVExtMoviePlayer(Screen):
             encode = str(obj['e'])
             params['encode'] = encode[2:] if encode[:2] in ('A_', 'V_', 'S_') else encode
             params['name'] = str(obj['n'])
+            # what a newer exteplayer3 adds (iptvplayerinfopanel.py names them): the infobar badges and the
+            # "Playback info" page; an older player or gstplayer sends none of them
+            for extraKey in self.TRACK_INFO_KEYS:
+                if extraKey in obj:
+                    params[extraKey] = obj[extraKey]
+            if not video and 'f' in obj:
+                params['forced'] = bool(obj['f'])  # subtitle tracks: "f" is the forced flag
             if video:
                 params['frame_rate'] = float(obj['f']) / 1000.0
                 params['width'] = int(obj['w'])
@@ -2896,6 +3074,9 @@ class IPTVExtMoviePlayer(Screen):
                 elif "e_plugin" == key:
                     # the PNG plugin could not be loaded: image subtitles stay empty
                     printDBG("exteplayer3 plugin error %s" % obj)
+                elif "m_t" == key:
+                    # the song of a radio stream (exteplayer3 v187: ICY StreamTitle or the stream's title / artist tags)
+                    self.playbackUpdateInfo({'NowPlaying': nowPlayingText(obj)})
                 elif "N" == key:
                     self.playbackUpdateInfo({'IsLoop': obj['isLoop']})
                 elif "PLAYBACK_INFO" == key:
@@ -2976,7 +3157,17 @@ class IPTVExtMoviePlayer(Screen):
         self.playback['Active'] = False
         self.hideStartCover()
         self.startCoverTimer_conn = None
+        self.hideAudioCover()
+        self.audioCover['timer_conn'] = None
         self.screenSaver.close()
+        # normally done by onLeavePlayer(); a screen closed another way must not leave the panel's timers / ffprobe
+        # and the backdrop's callback bound (both are safe to call twice)
+        try:
+            self.infoPanel.close()
+            if self.backdropLoader is not None:
+                self.backdropLoader.close()
+        except Exception:
+            printExc()
         if None is not self.workconsole:
             self.workconsole.kill()
         self.workconsole = None
@@ -3067,6 +3258,7 @@ class IPTVExtMoviePlayer(Screen):
         self.isStarted = True
         self.showPlaybackInfoBar()
         self.screenSaver.start()
+        self.scheduleAudioCover()
 
     def onLeavePlayer(self):
         printDBG("IPTVExtMoviePlayer.onLeavePlayer")
@@ -3077,12 +3269,16 @@ class IPTVExtMoviePlayer(Screen):
             except Exception:
                 printExc()
         self.screenSaver.stop()
+        self.hideAudioCover()
         self.seekLimitNotice['timer'].stop()
         if self.waitCloseFix['waiting'] and None is not self.waitCloseFix['timer']:
             self.waitCloseFix['timer'].stop()
         self.updateInfoTimer.stop()
         self.subHandler['timer'].stop()
         self.infoPanel.close()
+        if self.backdropLoader is not None:
+            self.backdropLoader.close()
+        self['backdrop'].hide()
         self.playbackInfoBar['blocked'] = False
         self.hidePlaybackInfoBar()
 
@@ -3535,6 +3731,170 @@ class IPTVExtMoviePlayer(Screen):
             if self['startCover'].instance is not None:
                 self['startCover'].hide()
 
+    # audio playback: the title's picture (else the host logo) stays on the screen, small in the middle or on the
+    # whole screen (setting "Poster during audio playback"). Over a still image of "Show iframe during audio playback"
+    # (radio.mvi) it lies on top; the screensaver still starts after its own time.
+    def _audioCoverMode(self):
+        try:
+            mode = config.plugins.iptvplayer.audio_cover.value
+        except Exception:
+            # setting not registered: an update without an enigma2 restart (issue #689)
+            mode = 'small'
+        if mode in self.AUDIO_COVER_BOXES and self.backdropReady():
+            # the backdrop fills the screen, the poster lies small in front of it
+            return 'small'
+        return mode if mode in self.AUDIO_COVER_BOXES else ''
+
+    def _audioOnly(self):
+        # what the screensaver counts as audio playback (_screenSaverWanted), without its conditions of the moment
+        if self.playback['VideoTrack']:
+            return False
+        return self.screenSaverAudioItem or ('eplayer' == self.player and bool(self.playback['AudioTrack']))
+
+    def scheduleAudioCover(self):
+        # an audio row of the list right away, any other stream once it played a moment without a video track
+        if self.isClosing or self.audioCover['shown'] or self.audioCover.get('nothing') or self.playback['VideoTrack'] or not self._audioCoverMode():
+            return
+        if self.screenSaverAudioItem:
+            self.showAudioCover()
+        elif not self.audioCover['timer'].isActive():
+            self.audioCover['timer'].start(self.AUDIO_COVER_DELAY, True)
+
+    def _audioCoverBox(self, mode):
+        # AUDIO_COVER_BOXES[mode] in real pixels
+        desktop = getDesktop(0).size()
+        x, y, w, h = self.AUDIO_COVER_BOXES[mode]
+        scaleX, scaleY = desktop.width() / float(self.REF_W), desktop.height() / float(self.REF_H)
+        return (int(x * scaleX), int(y * scaleY), int(w * scaleX), int(h * scaleY))
+
+    def showAudioCover(self):
+        mode = self._audioCoverMode()
+        cover = self['audioCover']
+        if self.isClosing or self.audioCover['shown'] or not mode or cover.instance is None or not self._audioOnly():
+            return
+        path = ''
+        for candidate in self.audioCover['paths']:
+            if candidate and os_path.isfile(candidate):
+                path = candidate
+                break
+        if not path:
+            # no picture and no logo: not looked for again every second (scheduleAudioCover)
+            self.audioCover['nothing'] = True
+            return
+        box = self._audioCoverBox(mode)
+        self.audioCover['box'] = box
+        self.audioCover['shown'] = True
+        try:
+            self._decodeAudioCover(cover, path, box)
+        except Exception:
+            printExc()
+            self.audioCover['shown'] = False
+
+    def _decodeAudioCover(self, cover, path, box):
+        # the picture is fitted to the widget's size: the whole box first. A pixmap decoded for another box (full
+        # screen, then small in front of the backdrop) is decoded again - Cover skips a file it decoded before.
+        cover.instance.move(ePoint(box[0], box[1]))
+        cover.instance.resize(eSize(box[2], box[3]))
+        if self.audioCover.get('pixmapBox') != box:
+            cover.currIcon = {}
+            self.audioCover['pixmap'] = None
+        self.audioCover['decodeBox'] = box
+        self.audioCover['path'] = path
+        ret = cover.decodePreparedCover(path, self.audioCoverDecoded, 'audioCover')
+        if -1 == ret:
+            self.audioCover['shown'] = False
+        elif ret is False and self.audioCover.get('pixmap') is not None:
+            # decoded before for this box (shown again after a video track that went away)
+            self._centerPixmap(cover, self.audioCover['pixmap'], box)
+            cover.show()
+            self._updateAudioCoverText()
+            self.updateBackdrop()
+
+    def audioCoverDecoded(self, ret):
+        if ret.get('Pixmap') is None or self.isClosing or not self.audioCover['shown']:
+            return
+        cover = self['audioCover']
+        if self.audioCover.get('decodeBox') != self.audioCover['box']:
+            # the box changed while this decoding ran: decode again for the new one
+            try:
+                self._decodeAudioCover(cover, self.audioCover['path'], self.audioCover['box'])
+            except Exception:
+                printExc()
+            return
+        self.audioCover['pixmap'] = ret['Pixmap']
+        self.audioCover['pixmapBox'] = self.audioCover['box']
+        cover.updatePixmap(ret['Pixmap'], ret.get('FileName', ''))
+        self._centerPixmap(cover, ret['Pixmap'], self.audioCover['box'])
+        cover.show()
+        self._updateAudioCoverText()
+        self.updateBackdrop()
+
+    def hideAudioCover(self):
+        self.audioCover['timer'].stop()
+        if self.audioCover['shown']:
+            self.audioCover['shown'] = False
+            if self['audioCover'].instance is not None:
+                self['audioCover'].hide()
+        self._updateAudioCoverText()
+        self.updateBackdrop()
+
+    def _updateAudioCoverText(self):
+        # the song of a radio stream above the poster: only together with the poster
+        label = self['audioCoverText']
+        if label.instance is None:
+            return
+        text = self.playback.get('NowPlaying', '') if self.audioCover['shown'] else ''
+        label.setText(text)
+        if text:
+            label.show()
+        else:
+            label.hide()
+
+    def setBackdropUrl(self, url):
+        # the host's INFO page came in (PlayerInfoPanel): its backdrop is downloaded and prepared in a worker thread
+        if not url or self.isClosing or self['backdrop'].instance is None:
+            return
+        if self.backdropLoader is None:
+            self.backdropLoader = BackdropLoader(self['backdrop'], self._backdropLoaded)
+        self.backdropLoader.load(url)
+
+    def backdropReady(self):
+        return self.backdropLoader is not None and self.backdropLoader.ready
+
+    def backdropFile(self):
+        # the prepared picture of the screen's size, for the background of the INFO panels
+        return self.backdropLoader.path if self.backdropReady() else ''
+
+    def _backdropLoaded(self, ok):
+        printDBG("IPTVExtMoviePlayer backdrop ready[%r]" % ok)
+        if ok:
+            self.infoPanel.backgroundChanged()
+        if ok and self.audioCover['shown'] and self.audioCover['box'] != self._audioCoverBox('small'):
+            # a poster on the whole screen moves into the middle of the backdrop
+            self.hideAudioCover()
+            self.showAudioCover()
+        self.updateBackdrop()
+
+    def updateBackdrop(self):
+        # shown behind the INFO panels, during audio playback (behind the poster) and - setting - over a paused film
+        if self['backdrop'].instance is None:
+            return
+        wanted = self.backdropReady() and not self.isClosing and (
+            self.infoPanel.visible or self.audioCover['shown']
+            or (self.playback.get('Status') == 'Pause' and backdropOnPause()))
+        if wanted:
+            self['backdrop'].show()
+        else:
+            self['backdrop'].hide()
+
+    def updateNowPlaying(self):
+        # exteplayer3 v187 reports a new song ("m_t"): above the audio poster, in the infobar's meta line of a skin
+        # like "modern", on the "Playback info" page
+        printDBG("IPTVExtMoviePlayer.updateNowPlaying [%s]" % self.playback.get('NowPlaying', ''))
+        self._updateAudioCoverText()
+        self.updateInfoBarMeta()
+        self.infoPanel.updateStream()
+
     def initPleaseWaitBox(self):
         # the notice has a half-transparent backdrop (plain grey text straight on the video
         # looked pixelated): remember the skin's box once, setPleaseWait() shrinks it to the text
@@ -3613,11 +3973,386 @@ class IPTVExtMoviePlayer(Screen):
         for elem in self.subHandler['synchro']['guiElemNames']:
             self[elem].setPosition(self[elem].position[0] + offset_x, self[elem].position[1] + offset_y)
 
+        # the optional widgets have their final place now
+        try:
+            self.initInfoBarExtras()
+        except Exception:
+            printExc()
+
+    # optional infobar widgets of a player skin (INFOBAR_OPTIONAL) - everything in real pixels here,
+    # instance.move()/resize() are not scaled by the skin engine
+    @staticmethod
+    def _rect(widget):
+        instance = widget.instance
+        return instance.position().x(), instance.position().y(), instance.size().width(), instance.size().height()
+
+    def _setOptionalVisible(self, name, visible):
+        # an optional infobar widget with something to show is shown with the infobar, an empty one stays hidden
+        if visible:
+            self.infoBarHiddenElems.discard(name)
+            if self.playbackInfoBar['visible']:
+                self[name].show()
+        else:
+            self.infoBarHiddenElems.add(name)
+            self[name].hide()
+
+    def _skinPixmap(self, name, fileName):
+        path = os_path.join(self.playerSkinFolder, fileName)
+        if not os_path.isfile(path):
+            return None
+        return self._prescaledPixmap(name, path) or LoadPixmap(path)
+
+    def initInfoBarExtras(self):
+        # the backdrop only shows once it is there and wanted (updateBackdrop)
+        self['backdrop'].hide()
+        if self.backdropStartUrl and backdropMode() != 'off':
+            self.setBackdropUrl(self.backdropStartUrl)
+        poster = self[self.INFOBAR_POSTER]
+        if poster.instance is not None:
+            self.infoBarPosterBox = self._rect(poster)
+            for path in self.infoBarPosterPaths:
+                if path and os_path.isfile(path):
+                    if -1 != poster.decodePreparedCover(path, self.infoBarPosterDecoded, 'infoBarPoster'):
+                        break
+        for name, fileName in ((self.INFOBAR_POSTER_MASK, 'infobar_poster_mask.png'), (self.INFOBAR_KNOB, 'playback_knob.png')):
+            if self[name].instance is not None:
+                pixmap = self._skinPixmap(name, fileName)
+                if pixmap is not None:
+                    self[name].setPixmap(pixmap)
+                    self.infoBarMaskLoaded = self.infoBarMaskLoaded or name == self.INFOBAR_POSTER_MASK
+        badges = [name for name in self.INFOBAR_BADGES if self[name].instance is not None]
+        if badges:
+            first = self._rect(self[badges[0]])
+            frameName = badges[0] + 'Frame'
+            frame = self._rect(self[frameName]) if self[frameName].instance is not None else None
+            border = max(0, first[0] - frame[0]) if frame else 0
+            outer = frame or first
+            lastName = badges[-1]
+            last = self._rect(self[lastName + 'Frame']) if self[lastName + 'Frame'].instance is not None else self._rect(self[lastName])
+            nextOuter = None
+            if len(badges) > 1:
+                nextName = badges[1]
+                nextOuter = self._rect(self[nextName + 'Frame']) if self[nextName + 'Frame'].instance is not None else self._rect(self[nextName])
+            gap = nextOuter[0] - outer[0] - outer[2] if nextOuter else 0
+            sub = self._rect(self[badges[0] + 'Sub']) if self[badges[0] + 'Sub'].instance is not None else None
+            self.infoBarBadgeLayout = {'x': outer[0], 'y': outer[1], 'h': first[3], 'border': border, 'gap': max(gap, 4),
+                                       'maxX': last[0] + last[2], 'pad': max(3, first[3] // 5),
+                                       'subY': sub[1] if sub else 0, 'subH': sub[3] if sub else 0}
+        strip = []
+        for idx in range(1, 6):
+            key, value = self['infoBarStrip%dKey' % idx], self['infoBarStrip%dValue' % idx]
+            if key.instance is not None and value.instance is not None:
+                keyRect, valueRect = self._rect(key), self._rect(value)
+                strip.append((idx, keyRect, valueRect[0] + valueRect[2], max(4, keyRect[3] // 5)))
+            icon = 'infoBarStrip%dIcon' % idx
+            if icon in self.skinWidgetNames and self[icon].instance is not None:
+                pixmap = self._skinPixmap(icon, 'infobar_strip%d.png' % idx)
+                if pixmap is not None:
+                    self[icon].setPixmap(pixmap)
+                    self.infoBarStripIcons.add(icon)
+        self.infoBarStripLayout = strip
+        if self['infoBarTitle'].instance is not None:
+            self.infoBarTitleRect = self._rect(self['infoBarTitle'])
+        if self.INFOBAR_RATING in self.skinWidgetNames:
+            self.infoBarRatingRect = self._rect(self[self.INFOBAR_RATING])
+        self.updateInfoBarTitle()
+        self.refreshInfoBarFormats()
+        self.updateInfoBarMeta()
+        if self.INFOBAR_META in self.skinWidgetNames or self.INFOBAR_RATING in self.skinWidgetNames or backdropMode() != 'off':
+            # year, genre and rating of the host's page without waiting for the first INFO; its backdrop is there
+            # then for audio playback and the first INFO
+            self.infoPanel.requestArticle()
+
+    def updateInfoBarTitle(self):
+        # a skin with a meta line under the title has no room for a cut-off title: it ends with "…". The rating of the
+        # host's page follows the title's text, the title leaves room for it.
+        title = self['infoBarTitle']
+        if self.INFOBAR_META not in self.skinWidgetNames or self.infoBarTitleRect is None:
+            return
+        rating = self.infoPanel.rating
+        ratingRect = self.infoBarRatingRect
+        ratingW = 0
+        if rating and ratingRect is not None:
+            label = self[self.INFOBAR_RATING]
+            label.setText(rating)
+            label.instance.resize(eSize(self.infoBarTitleRect[2], ratingRect[3]))
+            ratingW = label.instance.calculateSize().width() + 2 * max(4, ratingRect[3] // 4)
+        gap = max(6, self.infoBarTitleRect[3] // 4)
+        maxWidth = self.infoBarTitleRect[2] - (ratingW + gap if ratingW else 0)
+        textW = self._ellipsizeLabel(title, self.infoBarTitleText, maxWidth)
+        if not ratingW:
+            if ratingRect is not None:
+                self._setOptionalVisible(self.INFOBAR_RATING, False)
+            return
+        label = self[self.INFOBAR_RATING]
+        label.instance.resize(eSize(ratingW, ratingRect[3]))
+        label.instance.move(ePoint(self.infoBarTitleRect[0] + (textW or maxWidth) + gap, ratingRect[1]))
+        self._setOptionalVisible(self.INFOBAR_RATING, True)
+
+    @staticmethod
+    def _ellipsizeLabel(label, text=None, maxWidth=0):
+        # a noWrap label clips its text at the edge: as much of it as fits (into maxWidth, else the label), then "…".
+        # Returns the width of the text it shows, 0 when it can't tell.
+        instance = label.instance
+        if text is None:
+            text = label.getText()
+        else:
+            label.setText(text)
+        if instance is None or not text:
+            return 0
+        size = instance.size()
+        maxWidth = min(maxWidth or size.width(), size.width())
+        try:
+            instance.resize(eSize(size.width() * 4, size.height()))
+            width = instance.calculateSize().width()
+            if width <= maxWidth:
+                return width
+            shortest, longest = 0, len(text)
+            while shortest < longest:
+                middle = (shortest + longest + 1) // 2
+                label.setText(text[:middle].rstrip() + '…')
+                if instance.calculateSize().width() <= maxWidth:
+                    shortest = middle
+                else:
+                    longest = middle - 1
+            label.setText(text[:shortest].rstrip() + '…')
+            return instance.calculateSize().width()
+        except Exception:
+            printExc()
+            label.setText(text)
+            return 0
+        finally:
+            instance.resize(size)
+
+    def infoBarPosterDecoded(self, ret):
+        if ret.get('Pixmap') is None or self.isClosing or self.infoBarPosterBox is None:
+            return
+        poster = self[self.INFOBAR_POSTER]
+        poster.updatePixmap(ret['Pixmap'], ret.get('FileName', ''))
+        self._centerPixmap(poster, ret['Pixmap'], self.infoBarPosterBox)
+        self._setOptionalVisible(self.INFOBAR_POSTER, True)
+        if self.infoBarMaskLoaded:
+            # the mask (rounded corners, frame) lies over the picture: as the skin drew it for a picture that fills the
+            # box, one made for the picture's own size when it is smaller (a 16:9 picture in a 2:3 box)
+            mask = self[self.INFOBAR_POSTER_MASK]
+            box = self.infoBarPosterBox
+            # ePicLoad hands out the picture centred in a pixmap of the whole box: its own size comes from the file
+            picture = self._fittedRect(ret.get('FileName', ''), box) or self._rect(poster)
+            if abs(picture[2] - box[2]) > 2 or abs(picture[3] - box[3]) > 2:
+                pixmap = self._posterMaskPixmap(picture[2], picture[3])
+                if pixmap is None:
+                    self._setOptionalVisible(self.INFOBAR_POSTER_MASK, False)
+                    return
+                mask.instance.move(ePoint(picture[0], picture[1]))
+                mask.instance.resize(eSize(picture[2], picture[3]))
+                mask.setPixmap(pixmap)
+            self._setOptionalVisible(self.INFOBAR_POSTER_MASK, True)
+
+    @staticmethod
+    def _fittedRect(path, box):
+        # where a picture lands in the box when it keeps its aspect ratio (as ePicLoad scales it), None without PIL
+        if Image is None or not path or not os_path.isfile(path):
+            return None
+        try:
+            with Image.open(path) as img:
+                imgW, imgH = img.size
+        except Exception:
+            return None
+        x, y, w, h = box
+        if imgW <= 0 or imgH <= 0:
+            return None
+        scale = min(w / float(imgW), h / float(imgH))
+        picW, picH = min(w, int(round(imgW * scale))), min(h, int(round(imgH * scale)))
+        return x + (w - picW) // 2, y + (h - picH) // 2, picW, picH
+
+    def _posterMaskPixmap(self, width, height):
+        # the skin's mask (infobar_poster_mask.png) for another picture size, drawn with PIL in the same colours: the
+        # panel colour of its corner, the frame colour of the middle of its left edge, the corner radius of
+        # "posterMaskRadius" in the skin's settings.json (on the 1280x720 canvas). None without PIL.
+        if Image is None:
+            return None
+        try:
+            source = os_path.join(self.playerSkinFolder, 'infobar_poster_mask.png')
+            outPath = GetTmpDir('e2i_playerskin_postermask_%s_%dx%d_%d.png' % (os_path.basename(os_path.normpath(self.playerSkinFolder)), width, height, int(os_path.getmtime(source))))
+            if not os_path.exists(outPath):
+                with Image.open(source) as img:
+                    img = img.convert('RGBA')
+                    panel = img.getpixel((0, 0))
+                    frame = img.getpixel((0, img.size[1] // 2))
+                ss = 4
+                scale = getDesktop(0).size().width() / float(self.REF_W)
+                radius = float(self.skinSettings.get('posterMaskRadius', 10)) * scale * ss
+                line = max(1, int(round(scale))) * ss
+                big = Image.new('RGBA', (width * ss, height * ss), panel)
+                draw = ImageDraw.Draw(big)
+                draw.rounded_rectangle([0, 0, width * ss - 1, height * ss - 1], radius, fill=(0, 0, 0, 0))
+                draw.rounded_rectangle([0, 0, width * ss - 1, height * ss - 1], radius, outline=frame, width=line)
+                big.resize((width, height), Image.LANCZOS).save(outPath + '.part', format='png')
+                os_rename(outPath + '.part', outPath)
+            return LoadPixmap(outPath)
+        except Exception:
+            printExc()
+        return None
+
+    def refreshInfoBarFormats(self):
+        # the badges and the info row follow the tracks and the shown subtitles
+        try:
+            self.updateInfoBarBadges()
+            self.updateInfoBarStrip()
+        except Exception:
+            printExc()
+
+    def updateInfoBarMeta(self):
+        # "Host  ·  1h 29m  ·  Year: 2023  ·  Genre: Drama" - the last parts once INFO loaded the host's page
+        if self[self.INFOBAR_META].instance is None:
+            return
+        parts = []
+        host = hostDisplayName(StripColorCodes(self.infoBarHostTitle or ''))
+        if host:
+            parts.append(host)
+        length = int(self.playback.get('Length') or 0)
+        if length >= 60:
+            hours, minutes = length // 3600, (length % 3600) // 60
+            parts.append(('%dh %02dm' % (hours, minutes)) if hours else ('%d min' % minutes))
+        # the song of a radio stream, before the data of the host's page
+        nowPlaying = self.playback.get('NowPlaying', '')
+        if nowPlaying:
+            parts.append(nowPlaying)
+        meta = self.infoPanel.shortMeta
+        if meta:
+            parts.append(meta)
+        text = '  ·  '.join(parts)
+        if text != self.infoBarMetaText:
+            # the length of a growing file comes every second, the text changes once a minute / song at most
+            self.infoBarMetaText = text
+            self._ellipsizeLabel(self[self.INFOBAR_META], text)
+            self._setOptionalVisible(self.INFOBAR_META, bool(text))
+        rating = self.infoPanel.rating
+        if rating != self.infoBarRatingShown:
+            # the host's page came in: the rating beside the title
+            self.infoBarRatingShown = rating
+            self.updateInfoBarTitle()
+
+    def updateInfoBarKnob(self):
+        knob = self[self.INFOBAR_KNOB]
+        if knob.instance is None or self.INFOBAR_KNOB not in self.skinWidgetNames:
+            return
+        length = self.playback.get('Length') or 0
+        if length <= 0 or self['progressBar'].instance is None:
+            self._setOptionalVisible(self.INFOBAR_KNOB, False)
+            return
+        barX, barY, barW, barH = self._rect(self['progressBar'])
+        knobW, knobH = knob.instance.size().width(), knob.instance.size().height()
+        fraction = min(1.0, max(0.0, float(self.playback.get('CurrentTime') or 0) / length))
+        knob.instance.move(ePoint(int(barX + barW * fraction - knobW / 2.0), int(barY + barH / 2.0 - knobH / 2.0)))
+        self._setOptionalVisible(self.INFOBAR_KNOB, True)
+
+    def updateInfoBarStrip(self):
+        if not self.infoBarStripLayout:
+            return
+        video, audio = self.infoPanel.probedTracks()
+        texts = stripTexts(video, audio, self.currentSubtitleInfo(), self.trackLanguageName)
+        for idx, keyRect, valueEnd, gap in self.infoBarStripLayout:
+            keyName, valueName, iconName = 'infoBarStrip%dKey' % idx, 'infoBarStrip%dValue' % idx, 'infoBarStrip%dIcon' % idx
+            label, value = texts[idx - 1] if idx <= len(texts) else ('', '')
+            if iconName in self.infoBarStripIcons:
+                self._setOptionalVisible(iconName, bool(value))
+            if not value:
+                self._setOptionalVisible(keyName, False)
+                self._setOptionalVisible(valueName, False)
+                continue
+            key = self[keyName]
+            key.setText('%s:' % label)
+            key.instance.resize(eSize(valueEnd - keyRect[0], keyRect[3]))
+            keyW = min(key.instance.calculateSize().width() + 2, valueEnd - keyRect[0])
+            key.instance.resize(eSize(keyW, keyRect[3]))
+            self[valueName].setText(value)
+            valueX = keyRect[0] + keyW + gap
+            self[valueName].instance.move(ePoint(valueX, self[valueName].instance.position().y()))
+            self[valueName].instance.resize(eSize(max(1, valueEnd - valueX), self[valueName].instance.size().height()))
+            self._setOptionalVisible(keyName, True)
+            self._setOptionalVisible(valueName, True)
+
+    @staticmethod
+    def _centerPixmap(widget, pixmap, box):
+        # ePicLoad keeps the aspect ratio inside the widget's size and the pixmap is drawn at its top left: the widget
+        # becomes as big as the picture, in the middle of its box
+        x, y, w, h = box
+        try:
+            size = pixmap.size()
+            picW, picH = min(size.width(), w), min(size.height(), h)
+        except Exception:
+            picW, picH = w, h
+        if picW > 0 and picH > 0:
+            widget.instance.resize(eSize(picW, picH))
+            widget.instance.move(ePoint(x + (w - picW) // 2, y + (h - picH) // 2))
+
+    def updateInfoBarBadges(self):
+        layout = self.infoBarBadgeLayout
+        if layout is None:
+            return
+        video, audio = self.infoPanel.probedTracks()
+        # the video track's bitrate (a newer player, ffprobe), else the one of the HLS variant for video and audio
+        bitrate = video.get('br') or streamBitrate(self.getStreamSourceUrl())
+        badges = badgeList(video, audio, self.currentFrameRate(), self.currentSubtitleInfo(), bitrate)
+        # infoBarBadge1 (its own colours in the skin) only takes the resolution class
+        texts = {}
+        others = [(text, sub) for kind, text, sub in badges if kind != 'res']
+        resolution = [(text, sub) for kind, text, sub in badges if kind == 'res']
+        if resolution:
+            texts[self.INFOBAR_BADGES[0]] = resolution[0]
+        for name, item in zip(self.INFOBAR_BADGES[1:], others):
+            texts[name] = item
+        border = layout['border']
+        x = layout['x']
+        overflow = False
+        for name in self.INFOBAR_BADGES:
+            widget, frame, subLabel = self[name], self[name + 'Frame'], self[name + 'Sub']
+            if widget.instance is None:
+                continue
+            # after the first badge without room none follows (no narrower one after a gap, the order stays)
+            text, sub = ('', '') if overflow else texts.get(name, ('', ''))
+            width = subWidth = 0
+            if text:
+                widget.setText(text)
+                widget.instance.resize(eSize(layout['maxX'] - layout['x'], layout['h']))
+                width = max(widget.instance.calculateSize().width() + 2 * layout['pad'], layout['h'])
+            if sub and subLabel.instance is not None:
+                subLabel.setText(sub)
+                subLabel.instance.resize(eSize(layout['maxX'] - layout['x'], layout['subH']))
+                subWidth = subLabel.instance.calculateSize().width() + 2
+            outerW = width + 2 * border
+            slotW = max(outerW, subWidth)
+            if text and x + slotW > layout['maxX']:
+                overflow = True
+            if not text or overflow:
+                for part in (name, name + 'Frame', name + 'Sub'):
+                    if self[part].instance is not None:
+                        self[part].setText('')
+                        self._setOptionalVisible(part, False)
+                continue
+            left = x + (slotW - outerW) // 2
+            if frame.instance is not None:
+                frame.instance.move(ePoint(left, layout['y']))
+                frame.instance.resize(eSize(outerW, layout['h'] + 2 * border))
+                self._setOptionalVisible(name + 'Frame', True)
+            widget.instance.resize(eSize(width, layout['h']))
+            widget.instance.move(ePoint(left + border, layout['y'] + border))
+            self._setOptionalVisible(name, True)
+            if subLabel.instance is not None:
+                if sub:
+                    subLabel.instance.move(ePoint(x + (slotW - subWidth) // 2, layout['subY']))
+                    subLabel.instance.resize(eSize(subWidth, layout['subH']))
+                else:
+                    subLabel.setText('')
+                self._setOptionalVisible(name + 'Sub', bool(sub))
+            x += slotW + layout['gap']
+
     def showPlaybackInfoBar(self, excludeElems=['goToSeekPointer', 'goToSeekLabel'], blocked=None):
         self.playbackInfoBar['timer'].stop()
 
         for elem in self.playbackInfoBar['guiElemNames']:
-            if elem not in excludeElems:
+            if elem not in excludeElems and elem not in self.infoBarHiddenElems:
                 self[elem].show()
 
         if None is blocked or self.playbackInfoBar['blocked']:
@@ -3658,10 +4393,10 @@ class IPTVExtMoviePlayer(Screen):
     def updateClock(self):
         if self.clockFormat == '24':
             timeFormatString = self.skinSettings.get("clockFormat_24H", "%H:%M")
-            self['clockTime'].setText(time.strftime(timeFormatString))
+            self['clockTime'].setText(clockStrftime(timeFormatString))
         elif self.clockFormat == '12':
             timeFormatString = self.skinSettings.get("clockFormat_12H", "%I:%M")
-            self['clockTime'].setText(time.strftime(timeFormatString))
+            self['clockTime'].setText(clockStrftime(timeFormatString))
 
     def _showHideSubSynchroControl(self, show=True):
         for elem in self.subHandler['synchro']['guiElemNames']:

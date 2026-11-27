@@ -14,6 +14,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvchoicebox import IPTVChoiceBox
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, E2ColoR, GetSubtitlesDir, GetDefaultLang
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
+from Plugins.Extensions.IPTVPlayer.tools.iptvpaging import addPagingItems, isJumpItem, jumpTarget
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarMetaQuery
@@ -218,10 +219,18 @@ class MovieBox(GenericFolderWatchedScraperMixin, CBaseHostClass):
     ###################################################
     # list helpers
     ###################################################
-    def _addNextPage(self, cItem, page):
-        params = dict(cItem)
-        params.update({"good_for_fav": False, "title": _("Next page"), "page": page + 1})
-        self.addDir(params)
+    def _addPaging(self, cItem, page, data):
+        # Main menu / First page / Jump x/y / Next page (tools/iptvpaging). The page goes in the API request from
+        # cItem["page"]; the "#page=" url only lets the Jump row build the item of a page. The filter list always
+        # answers totalCount 1000000: no number of pages then.
+        pager = data.get("pager") or {}
+        try:
+            total, perPage = int(pager.get("totalCount") or 0), int(pager.get("perPage") or 0)
+        except (TypeError, ValueError):
+            total = perPage = 0
+        lastPage = (total + perPage - 1) // perPage if perPage and 0 < total < 1000000 else 0
+        addPagingItems(self, cItem, page, bool(pager.get("hasMore")), lastPage,
+                       "moviebox://%s#page={page}" % cItem.get("category", ""))
 
     def _addSubjects(self, cItem, subjects):
         # the API lists one entry per season of a series ("Breaking Bad S1" ... "S5"), all with the same
@@ -410,7 +419,9 @@ class MovieBox(GenericFolderWatchedScraperMixin, CBaseHostClass):
             other.setdefault(key, value)
         # the article view shows the first image as its cover: the poster, then the scene still
         images = [{"title": "", "url": url} for url in (cItem.get("icon"), cItem.get("stills"), meta.get("poster")) if url]
-        return [{"title": title, "text": text or meta.get("plot", "") or cItem.get("desc", ""), "images": images, "other_info": other}]
+        # the scene still (16:9) is the backdrop behind the INFO page and the player's panels
+        return [{"title": title, "text": text or meta.get("plot", "") or cItem.get("desc", ""), "images": images, "other_info": other,
+                 "backdrop": cItem.get("stills", "")}]
 
     ###################################################
     # Home / Sections
@@ -527,8 +538,7 @@ class MovieBox(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 return
         data = self._api("/subject/filter", post=self._filterPost(cItem, page))
         self._addSubjects(cItem, data.get("items"))
-        if (data.get("pager") or {}).get("hasMore"):
-            self._addNextPage(cItem, page)
+        self._addPaging(cItem, page, data)
 
     def _addTabSections(self, cItem):
         # the site's Movie tab: Filter, then the sections ("Trending Movie", "Marvel Movies", ...) instead of one long list
@@ -634,8 +644,7 @@ class MovieBox(GenericFolderWatchedScraperMixin, CBaseHostClass):
         page = cItem.get("page", 1)
         data = self._api("/ranking-list/content", {"id": cItem.get("ranking_id", ""), "page": page, "perPage": 30})
         self._addSubjects(cItem, data.get("subjectList"))
-        if (data.get("pager") or {}).get("hasMore"):
-            self._addNextPage(cItem, page)
+        self._addPaging(cItem, page, data)
 
     ###################################################
     # Upcoming
@@ -651,8 +660,7 @@ class MovieBox(GenericFolderWatchedScraperMixin, CBaseHostClass):
         page = cItem.get("page", 1)
         data = self._api("/upcoming-subject-list", {"page": page, "perPage": 23, "category": cItem.get("upcoming_category", "")})
         self._addSubjects(cItem, data.get("subjects"))
-        if (data.get("pager") or {}).get("hasMore"):
-            self._addNextPage(cItem, page)
+        self._addPaging(cItem, page, data)
 
     ###################################################
     # detail page: story, trailer, seasons
@@ -850,8 +858,7 @@ class MovieBox(GenericFolderWatchedScraperMixin, CBaseHostClass):
         page = cItem.get("page", 1)
         data = self._api("/subject/search", post={"keyword": searchPattern, "page": page, "perPage": 28, "subjectType": self.SEARCH_TYPES.get(searchType, 0)})
         added = self._addSubjects(cItem, data.get("items"))
-        if (data.get("pager") or {}).get("hasMore"):
-            self._addNextPage(cItem, page)
+        self._addPaging(cItem, page, data)
         if not added and page == 1:
             self._listSearchSuggestions(cItem, searchPattern, searchType)
 
@@ -1078,6 +1085,9 @@ class MovieBox(GenericFolderWatchedScraperMixin, CBaseHostClass):
     def handleService(self, index, refresh=0, searchPattern="", searchType=""):
         printDBG("MovieBox.handleService start")
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
+        if isJumpItem(self.currItem):
+            # the Jump row: asks for the page, then lists it like a Next page row of that list
+            self.currItem = jumpTarget(self, self.currItem)
         name = self.currItem.get("name", "")
         category = self.currItem.get("category", "")
         printDBG("handleService: name[%s], category[%s]" % (name, category))

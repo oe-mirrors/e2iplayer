@@ -96,6 +96,7 @@ from Plugins.Extensions.IPTVPlayer.components.searchhistoryeditor import SearchH
 from Plugins.Extensions.IPTVPlayer.components.iconmenager import IconMenager, IconLogName
 from Plugins.Extensions.IPTVPlayer.components.cover import Cover, Cover3
 from Plugins.Extensions.IPTVPlayer.components.iptvchoicebox import IPTVChoiceBoxWidget, IPTVChoiceBoxItem, openChoiceBox
+from Plugins.Extensions.IPTVPlayer.components.iptvbackdrop import BackdropHolder
 import Plugins.Extensions.IPTVPlayer.components.asynccall as asynccall
 from Plugins.Extensions.IPTVPlayer.components.playerselector import PlayerSelectorWidget
 from Plugins.Extensions.IPTVPlayer.components.e2ivkselector import GetVirtualKeyboard
@@ -820,6 +821,8 @@ class E2iPlayerWidget(Screen):
         # whenever a fresh mirror list is fetched from the host.
         self._currentLinkOptions = None
         self._resolvingLinkItem = None
+        # the title's backdrop under the INFO page and the "Select link" list (components/iptvbackdrop.py)
+        self.backdropHolder = BackdropHolder(session)
         # what INFO in the player names: the mirror being resolved, the name of the link played
         self._playLinkMirror = ''
         self._playLinkName = ''
@@ -852,6 +855,8 @@ class E2iPlayerWidget(Screen):
         self.zapLivePending = False
         # idle screensaver over every E2iPlayer screen (iptvscreensaver.py), started in onStart()
         self.menuScreenSaver = None
+        # MENU -> "Trailer" (iptvtrailer.py), made on first use
+        self.trailer = None
         self.autoPlaySeqTimer = eTimer()
         self.autoPlaySeqTimer_conn = eConnectCallback(self.autoPlaySeqTimer.timeout, self.autoPlaySeqTimerCallBack)
         self.autoPlaySeqTimerValue = 0
@@ -1126,11 +1131,15 @@ class E2iPlayerWidget(Screen):
         printDBG("E2iPlayerWidget.__del__")
 
     def __onClose(self):
+        self.backdropHolder.close()
         # a PIN protected host asks again on the next start
         ClearUnlockedHosts()
         if self.menuScreenSaver is not None:
             self.menuScreenSaver.close()
             self.menuScreenSaver = None
+        if self.trailer is not None:
+            self.trailer.close()
+            self.trailer = None
         self.session.nav.playService(self.currentService)
         self["list"].disconnectSelChanged(self.onSelectionChanged)
         if None is not self.checkUpdateConsole:
@@ -2698,9 +2707,95 @@ class E2iPlayerWidget(Screen):
             else:
                 self.session.open(MessageBox, _("Pin incorrect!"), type=MessageBox.TYPE_INFO, timeout=5)
 
-    def leaveArticleView(self):
-        printDBG("leaveArticleView")
-        pass
+    def leaveArticleView(self, answer=None):
+        printDBG("leaveArticleView answer[%r]" % (answer,))
+        self.backdropHolder.close()
+        if answer == 'trailer':
+            try:
+                self.startTrailer()
+            except Exception:
+                printExc()
+
+    def _backdropKey(self, item=None):
+        # the list item whose backdrop the INFO page found ("Select link" and the player show it again): the row
+        # under the cursor (OK on a video row does not set currSelIndex), the INFO answer passes its own row
+        try:
+            item = self.getSelItem() if item is None else item
+            return '%s|%s|%s' % (self._getRowsHostName(), item.name, item.iconimage)
+        except Exception:
+            return ''
+
+    def _openMoviePlayerScreen(self, playerValue, url, title, params, callback):
+        # the player of the settings for a direct (not buffered) url: mini / standard (no params) or the external
+        # exteplayer3 / gstplayer with the params of the list
+        if "mini" == playerValue:
+            self.session.openWithCallback(callback, IPTVMiniMoviePlayer, url, title)
+        elif "standard" == playerValue:
+            self.session.openWithCallback(callback, IPTVStandardMoviePlayer, url, title)
+        else:
+            playerVal = 'eplayer'
+            if "extgstplayer" == playerValue:
+                playerVal = 'gstplayer'
+                params.update({'download-buffer-path': '', 'ring-buffer-max-size': 0,
+                               'buffer-duration': 18000,  # 300 min
+                               'buffer-size': 10240})  # 10 MB
+            self.session.openWithCallback(callback, IPTVExtMoviePlayer, url, title, None, playerVal, params)
+
+    ###################################################
+    # trailer of the selected row (components/iptvtrailer.py): MENU -> "Trailer", blue key of the INFO page
+    ###################################################
+    def canShowTrailer(self, item=None):
+        # films and series: a video row or a folder that can go into the favourites; no live stream (TV channel,
+        # radio) and no row that cannot be a favourite (a match, a clip). A folder must look like a title: the
+        # host's meta fields (libs/moviemeta) or a picture of its own in the host's row (the list row gets the host
+        # logo when it has none) - a list folder like "Trending Movie" or "Action" can be a favourite too, but has
+        # neither
+        item = self.getSelItem() if item is None else item
+        if not isinstance(item, CDisplayListItem) or self.hostName in ('xxx', 'youtube') or self._getRowsHostName() in ('xxx', 'youtube'):
+            return False
+        if item.type not in (CDisplayListItem.TYPE_VIDEO, CDisplayListItem.TYPE_CATEGORY) or not item.isGoodForFavourites:
+            return False
+        rawItem = self._getBatchRawRow(item)
+        if batchdownload.isLiveRow(rawItem):
+            return False
+        if item.type == CDisplayListItem.TYPE_CATEGORY:
+            rawItem = rawItem if isinstance(rawItem, dict) else {}
+            return bool(rawItem.get('meta_type') or rawItem.get('meta_title') or rawItem.get('icon'))
+        return True
+
+    def startTrailer(self):
+        item = self.getSelItem()
+        if not self.canShowTrailer(item):
+            return
+        if self.trailer is None:
+            from Plugins.Extensions.IPTVPlayer.components.iptvtrailer import IPTVTrailer
+            self.trailer = IPTVTrailer(self)
+        self.stopAutoPlaySequencer()
+        self.trailer.start(item.name, self._getBatchRawRow(item))
+
+    def playTrailer(self, urls, title, iconUrl=''):
+        # like playVideo() without buffering, the watched / started marks, the playlist and CH+/CH- zapping.
+        # urls: the links of the resolver, best first; only exteplayer3 plays YouTube's separate audio / video
+        # (merge://) directly, the other players get the first link with both in one stream
+        player = self.getMoviePlayer(False, self.useAlternativePlayer)
+        url = urls[0]
+        if player.value != 'exteplayer':
+            url = next((u for u in urls if not u.startswith('merge://')), url)
+        url = urlparser.decorateUrl(url)
+        self.prevVideoMode = GetE2VideoMode()
+        params = {'defaul_videomode': self.prevVideoMode, 'host_name': self._getRowsHostName(), 'logo_path': self.hostLogoPath or '',
+                  'external_sub_tracks': url.meta.get('external_sub_tracks', []), 'iptv_refresh_cmd': url.meta.get('iptv_refresh_cmd', ''),
+                  'link_name': _("Trailer")}
+        self.session.nav.stopService()
+        printDBG("E2iPlayerWidget.playTrailer player[%s] title[%s]" % (player.value, title))
+        self._openMoviePlayerScreen(player.value, url, title, params, self.leaveTrailerPlayer)
+
+    def leaveTrailerPlayer(self, *args, **kwargs):
+        videoMode = GetE2VideoMode()
+        if None not in [self.prevVideoMode, videoMode] and self.prevVideoMode != videoMode:
+            SetE2VideoMode(self.prevVideoMode)
+        if not config.plugins.iptvplayer.disable_live.value:
+            self.session.nav.playService(self.currentService)
 
     def showArticleContent(self, ret):
         printDBG("showArticleContent")
@@ -2708,14 +2803,21 @@ class E2iPlayerWidget(Screen):
         self["list"].show()
 
         artItem = None
+        item = self.currList[self.currSelIndex] if self.currSelIndex < len(self.currList) else None
         if ret.status != RetHost.OK or 0 == len(ret.value):
-            item = self.currList[self.currSelIndex]
-            if len(item.description):
+            if item is not None and len(item.description):
                 artItem = ArticleContent(title=item.name, text=item.description, images=[{'title': _('Image'), 'url': item.iconimage}])  # richDescParams={"alternate_title":"***alternate_title", "year":"year", "rating":"rating",  "duration":"duration",  "genre":"genre",  "director":"director",  "actors":"actors",  "awards":"awards"}
         else:
             artItem = ret.value[0]
         if None is not artItem:
-            self.session.openWithCallback(self.leaveArticleView, IPTVArticleView, artItem, {'buffering_path': config.plugins.iptvplayer.bufferingPath.value, 'host_name': self._getRowsHostName(), 'logo_path': self.hostLogoPath, 'download_dir': self.iconMenager.currDownloadDir if self.iconMenager else None})
+            backdrop = getattr(artItem, 'backdrop', '')
+            if backdrop:
+                # under the INFO page: opened before it, so it lies between the list and the INFO page
+                self.backdropHolder.remember(self._backdropKey(item), backdrop)
+                self.backdropHolder.open()
+                self.backdropHolder.load(backdrop)
+            self.session.openWithCallback(self.leaveArticleView, IPTVArticleView, artItem, {'buffering_path': config.plugins.iptvplayer.bufferingPath.value, 'host_name': self._getRowsHostName(), 'logo_path': self.hostLogoPath, 'download_dir': self.iconMenager.currDownloadDir if self.iconMenager else None,
+                                                                                            'trailer': self.canShowTrailer()})
 
     def selectMainVideoLinks(self, ret):
         printDBG("selectMainVideoLinks")
@@ -3460,6 +3562,9 @@ class E2iPlayerWidget(Screen):
             options.append(IPTVChoiceBoxItem(link.name, "", link, failed=link.failed or not self._failedLinkUrls.isdisjoint(keys),
                                              used=not self._usedLinkUrls.isdisjoint(keys)))
 
+        # the title's backdrop under the list: known from its INFO page, else asked from the host now
+        self.backdropHolder.open()
+        self.backdropHolder.loadFromArticle(self._backdropKey(), boundFunction(self._requestPlayerArticle, self._getSelHostIndex()))
         openChoiceBox(self.session, {'width': 600, 'height': self._getLinkPickerHeight(len(options)), 'current_idx': 0, 'title': _("Select link"), 'options': options, 'list_class': IPTVLinkChoiceBoxList, 'chrome': True, 'footerMargin': 136}, self.selectLinksCallback)
 
     # IPTVChoiceBoxWidget's screen declares resolution="1280,720", so the
@@ -3518,6 +3623,7 @@ class E2iPlayerWidget(Screen):
         return ["%s\t%s" % (link.url, link.name), "%s\t%s#%d" % (self._currentLinkVideoKey, link.name, same)]
 
     def selectLinksCallback(self, retArg):
+        self.backdropHolder.close()
         if retArg is None:
             # user cancelled the picker without trying any link - there's nothing
             # wrong, so don't show a "No valid links" error for it
@@ -3744,6 +3850,8 @@ class E2iPlayerWidget(Screen):
                 gstAdditionalParams['info_provider'] = boundFunction(self._requestPlayerArticle, self._getSelHostIndex())
                 # MENU -> "Description" in the player loads the INFO page's picture into the list's cover cache
                 gstAdditionalParams['article_download_dir'] = self.iconMenager.currDownloadDir if self.iconMenager else None
+                # the backdrop found by the item's INFO page or "Select link": the player shows it at once
+                gstAdditionalParams['backdrop_url'] = self.backdropHolder.known.get(self._backdropKey(), '')
                 try:
                     gstAdditionalParams['host_title'] = self._getPlayerHostTitle()
                     gstAdditionalParams['info_description'] = self.currItem.description
@@ -3760,25 +3868,11 @@ class E2iPlayerWidget(Screen):
                 else:
                     self.session.nav.stopService()
                     player = self.activePlayer.get('player', self.getMoviePlayer(False, self.useAlternativePlayer))
-                    if "mini" == player.value:
-                        self.session.openWithCallback(self.leaveMoviePlayer, IPTVMiniMoviePlayer, url, titleOfMovie)
-                    elif "standard" == player.value:
-                        self.session.openWithCallback(self.leaveMoviePlayer, IPTVStandardMoviePlayer, url, titleOfMovie)
-                    else:
-                        if "extgstplayer" == player.value:
-                            playerVal = 'gstplayer'
-                            gstAdditionalParams['download-buffer-path'] = ''
-                            gstAdditionalParams['ring-buffer-max-size'] = 0
-                            gstAdditionalParams['buffer-duration'] = 18000  # 300min
-                            gstAdditionalParams['buffer-size'] = 10240  # 10MB
-                        else:
-                            assert ("exteplayer" == player.value)
-                            playerVal = 'eplayer'
-                        if self._autoLinkQueue:
-                            # further mirrors left: a stream that does not start comes back without a message
-                            self._autoLinkQuietPlayer = True
-                            gstAdditionalParams['quiet_start_errors'] = True
-                        self.session.openWithCallback(self.leaveMoviePlayer, IPTVExtMoviePlayer, url, titleOfMovie, None, playerVal, gstAdditionalParams)
+                    if player.value not in ('mini', 'standard') and self._autoLinkQueue:
+                        # further mirrors left: a stream that does not start comes back without a message
+                        self._autoLinkQuietPlayer = True
+                        gstAdditionalParams['quiet_start_errors'] = True
+                    self._openMoviePlayerScreen(player.value, url, titleOfMovie, gstAdditionalParams, self.leaveMoviePlayer)
         else:
             # There was problem in resolving direct link for video
             if not self.checkAutoPlaySequencer():
@@ -4447,6 +4541,11 @@ class E2iPlayerWidget(Screen):
                     options.append(IPTVChoiceBoxItem(_("Remove from favorites"), "", {'e2i_menu_action': 'DELETE_FAV'}))
             except Exception:
                 printExc()
+            try:
+                if self.canShowTrailer():
+                    options.append(IPTVChoiceBoxItem(_("Trailer"), "", {'e2i_menu_action': 'TRAILER'}))
+            except Exception:
+                printExc()
         return options
 
     def _addRemoveFavouriteOption(self, options):
@@ -5057,6 +5156,9 @@ class E2iPlayerWidget(Screen):
                 return
             elif menuAction == 'DELETE_FAV':
                 self.session.openWithCallback(self.deleteFavouriteItem, MessageBox, _('Definitely remove from favorites?'), type=MessageBox.TYPE_YESNO, timeout=10)
+                return
+            elif menuAction == 'TRAILER':
+                self.startTrailer()
                 return
             self.requestListFromHost('PerformCustomAction', -1, ret.privateData)
 

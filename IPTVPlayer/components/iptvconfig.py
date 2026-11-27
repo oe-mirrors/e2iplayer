@@ -411,6 +411,12 @@ config.plugins.iptvplayer.meta_omdb_apikey = ConfigSecret(default="", fixed_size
 # 16:9 pictures (an episode's still, a title's backdrop) from the same services instead of the portrait poster: list icons of
 # the hosts which set them, the info picture and the download sidecar .jpg
 config.plugins.iptvplayer.meta_images_169 = ConfigYesNo(default=False)
+# MENU -> "Trailer" of a list row / blue key of the INFO page (components/iptvtrailer.py): the trailer in the language
+# of the details (auto = E2iPlayer's), a fixed language or the original one; the words added to the YouTube search
+# (empty = the usual ones of the language, e.g. "Trailer Deutsch"); play the first hit at once instead of the list
+config.plugins.iptvplayer.trailer_language = ConfigSelection(default="auto", choices=[("auto", _("Language of the details")), ("original", _("Original")), ("ar", _("Arabic")), ("cs", _("Czech")), ("de", _("German")), ("el", _("Greek")), ("en", _("English")), ("es", _("Spanish")), ("fr", _("French")), ("hu", _("Hungarian")), ("it", _("Italian")), ("nl", _("Dutch")), ("pl", _("Polish")), ("pt", _("Portuguese")), ("ru", _("Russian")), ("tr", _("Turkish")), ("uk", _("Ukrainian"))])
+config.plugins.iptvplayer.trailer_search_suffix = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.trailer_autoplay = ConfigYesNo(default=False)
 config.plugins.iptvplayer.sidecar_enabled = ConfigYesNo(default=True)
 config.plugins.iptvplayer.normalize_media_names = ConfigYesNo(default=True)
 # rows per page of the lists a host pages itself (a long season or list the site sends in one piece):
@@ -501,13 +507,24 @@ LCD_SIDE_ROW_CHOICES = [('none', _('None')), ('clock', _('Time')), ('date', _('D
 config.plugins.iptvplayer.lcd_side_row1 = ConfigSelection(default="clock", choices=LCD_SIDE_ROW_CHOICES)
 config.plugins.iptvplayer.lcd_side_row2 = ConfigSelection(default="end", choices=LCD_SIDE_ROW_CHOICES)
 config.plugins.iptvplayer.lcd_side_row3 = ConfigSelection(default="remaining", choices=LCD_SIDE_ROW_CHOICES)
-config.plugins.iptvplayer.lcd_side_row4 = ConfigSelection(default="percent", choices=LCD_SIDE_ROW_CHOICES)
+config.plugins.iptvplayer.lcd_side_row4 = ConfigSelection(default="none", choices=LCD_SIDE_ROW_CHOICES)
+LCD_SIDE_SIZE_CHOICES = [(str(p), '%d %%' % p) for p in (50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150)]
+config.plugins.iptvplayer.lcd_side_size1 = ConfigSelection(default="100", choices=LCD_SIDE_SIZE_CHOICES)
+config.plugins.iptvplayer.lcd_side_size2 = ConfigSelection(default="100", choices=LCD_SIDE_SIZE_CHOICES)
+config.plugins.iptvplayer.lcd_side_size3 = ConfigSelection(default="100", choices=LCD_SIDE_SIZE_CHOICES)
+config.plugins.iptvplayer.lcd_side_size4 = ConfigSelection(default="100", choices=LCD_SIDE_SIZE_CHOICES)
+config.plugins.iptvplayer.lcd_side_title = ConfigSelection(default="full", choices=[('full', _('Whole width')), ('picture', _('Below the picture'))])
+config.plugins.iptvplayer.lcd_side_labels = ConfigYesNo(default=False)
+config.plugins.iptvplayer.lcd_side_align = ConfigSelection(default="right", choices=[('right', _('Right')), ('center', _('Centered'))])
+config.plugins.iptvplayer.lcd_side_lines = ConfigYesNo(default=True)
 config.plugins.iptvplayer.lcd_bar_color = ConfigSelection(default="red", choices=[('red', _('Red')), ('green', _('Green')), ('blue', _('Blue')), ('yellow', _('Yellow')), ('orange', _('Orange')), ('cyan', _('Cyan')), ('magenta', _('Magenta')), ('white', _('White'))])
 config.plugins.iptvplayer.lcd_bar_frame = ConfigSelection(default="white", choices=[('white', _('White')), ('grey', _('Grey')), ('same', _('Same as the bar')), ('none', _('No frame'))])
 config.plugins.iptvplayer.use_clear_iframe = ConfigYesNo(default=False)
 config.plugins.iptvplayer.show_iframe = ConfigYesNo(default=True)
 config.plugins.iptvplayer.iframe_file = ConfigIPTVFileSelection(fileMatch=r"^.*\.mvi$", default="/usr/share/enigma2/radio.mvi")
 config.plugins.iptvplayer.clear_iframe_file = ConfigIPTVFileSelection(fileMatch=r"^.*\.mvi$", default="/usr/share/enigma2/black.mvi")
+# audio playback in the external player: the title's picture (else the host logo) stays on the screen, over the iframe
+config.plugins.iptvplayer.audio_cover = ConfigSelection(default="small", choices=[("off", _("Off")), ("small", _("Small, in the middle")), ("full", _("Full screen"))])
 # screensaver (iptvscreensaver.py: moving logo/cover, title and clock on black) after this many seconds without a key:
 # audio = audio-only playback in the external player; menu = every E2iPlayer screen except the players, where
 # "hide" only hides the E2iPlayer windows while live TV runs behind them (the black screensaver without live TV)
@@ -565,7 +582,16 @@ config.plugins.iptvplayer.extplayer_subtitle_box_height = ConfigInteger(240, (50
 
 config.plugins.iptvplayer.extplayer_infobanner_clockformat = ConfigSelection(default="", choices=[("", _("None")), ("24", _("24 hour format")), ("12", _("12 hour format"))])
 
-config.plugins.iptvplayer.extplayer_skin = ConfigSelection(default="default", choices=[("default", _("default")), ("black", _("black")), ("red", _("red")), ("blue", _("blue")), ("green", _("green")), ("black-white", _("black&white")), ("cobalt", _("cobalt")), ("jersey", _("jersey")), ("navy", _("navy")), ("line", _("line"))])
+# "modern" is the standard player skin; the former standard skin keeps its folder "default" (other skins and the scaled
+# images fall back to it) and is called "classic"
+config.plugins.iptvplayer.extplayer_skin = ConfigSelection(default="modern", choices=[("modern", _("modern")), ("default", _("classic")), ("black", _("black")), ("red", _("red")), ("blue", _("blue")), ("green", _("green")), ("black-white", _("black&white")), ("cobalt", _("cobalt")), ("jersey", _("jersey")), ("navy", _("navy")), ("line", _("line"))])
+# backdrop (fanart) of a title behind the INFO page, the "Select link" list and the player's panels
+# (components/iptvbackdrop.py): the host's own picture, "online" also the one of the metadata services
+config.plugins.iptvplayer.backdrop = ConfigSelection(default="online", choices=[("off", _("Off")), ("host", _("Only from the host")), ("online", _("From the host, else online"))])
+# the backdrop over the paused picture of a film
+config.plugins.iptvplayer.backdrop_pause = ConfigYesNo(default=False)
+# the player's INFO panels: rounded, dark or the title's backdrop / poster under them, blurred and darkened
+config.plugins.iptvplayer.infopanel_background = ConfigSelection(default="picture", choices=[("dark", _("Dark")), ("picture", _("Picture of the title, blurred"))])
 
 
 ########################################################

@@ -11,6 +11,7 @@ import os
 from enigma import eTimer
 from Components.ActionMap import ActionMap
 from Components.ScrollLabel import ScrollLabel
+from Components.Sources.StaticText import StaticText
 from Screens.MessageBox import MessageBox
 from Screens.Screen import Screen
 from Tools.Directories import fileExists
@@ -74,11 +75,14 @@ class IPTVArticleView(Screen):
             <widget name="text" position="340,80" size="840,470" font="Regular;20" splitPosition="330" transparent="1" backgroundColor="black" foregroundColor="white"/>
             %s
         </screen>
-        """ % (skinchrome.build_header_auto(iconBase=iconBase, logoWidgetName="playerlogo"), skinchrome.build_footer_auto(620, iconBase=iconBase, showOk=False))
+        """ % (skinchrome.build_header_auto(iconBase=iconBase, logoWidgetName="playerlogo"),
+               skinchrome.build_footer_auto(620, iconBase=iconBase, keys=('blue',) if self.withTrailer else (), showOk=False))
 
     def __init__(self, session, artItem, addParams):
         self.session = session
         self.artItem = artItem
+        # blue = "Trailer" (a film / series row of the list): closes with 'trailer', the list looks for it
+        self.withTrailer = bool(addParams.get('trailer'))
         #############################################
 
         self.skin = self.__prepareSkin()
@@ -144,6 +148,9 @@ class IPTVArticleView(Screen):
             "up": self.key_up,
             "down": self.key_down,
         }, -1)
+        if self.withTrailer:
+            self["key_blue"] = StaticText(_("Trailer"))
+            self["trailerActions"] = ActionMap(['ColorActions'], {"blue": self.key_trailer}, -1)
 
         self.onClose.append(self.__onClose)
         self.onLayoutFinish.append(self.onStart)
@@ -407,6 +414,9 @@ class IPTVArticleView(Screen):
 
     def key_back(self):
         self.close()
+
+    def key_trailer(self):
+        self.close('trailer')
 
     def key_up(self):
         self["text"].pageUp()

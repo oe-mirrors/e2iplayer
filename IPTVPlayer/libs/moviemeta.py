@@ -138,10 +138,14 @@ def _pickResult(results, title, year, titleKeys, dateKey, strict=False):
     return best
 
 
-def _result(title, plot, poster, info, source):
+def _result(title, plot, poster, info, source, imdbId=""):
+    # imdb_id: the title's IMDb id ("tt0172495") where the service names it - the backdrop of exactly this title
+    # (components/iptvbackdrop.py); not shown on the INFO page
     info = dict((k, str(v)) for k, v in info.items() if v)
     info["source"] = source
-    return {"title": title or "", "plot": plot or "", "poster": poster or "", "info": info}
+    imdbId = str(imdbId or "")
+    return {"title": title or "", "plot": plot or "", "poster": poster or "", "info": info,
+            "imdb_id": imdbId if imdbId.startswith("tt") else ""}
 
 
 def _getJson(url, postData=None, headers=None):
@@ -256,7 +260,7 @@ class _TMDb(object):
         if not hit:
             return {}
 
-        details = self._call("%s/%s" % (mediaType, hit["id"]), {"append_to_response": "credits,release_dates" if movie else "credits,content_ratings"})
+        details = self._call("%s/%s" % (mediaType, hit["id"]), {"append_to_response": "credits,release_dates" if movie else "credits,content_ratings,external_ids"})
         if details is None:
             return None
         if not details.get("overview") and self.lang != "en":
@@ -313,7 +317,8 @@ class _TMDb(object):
         info["cast"] = _names(sorted(credits.get("cast") or [], key=lambda c: c.get("order", 999)), 5)
 
         poster = details.get("poster_path") or ""
-        return _result(title, details.get("overview"), TMDB_POSTER_URL + poster if poster else "", info, "TMDb (themoviedb.org)")
+        imdbId = details.get("imdb_id") or (details.get("external_ids") or {}).get("imdb_id") or ""
+        return _result(title, details.get("overview"), TMDB_POSTER_URL + poster if poster else "", info, "TMDb (themoviedb.org)", imdbId)
 
 
 class _IMDb(object):
@@ -324,7 +329,7 @@ class _IMDb(object):
 
     SEARCH_QUERY = """query { mainSearch(first: 10, options: {searchTerm: %s, type: TITLE, titleSearchOptions: {type: [%s]}}) {
  edges { node { entity { ... on Title { id titleText { text } originalTitleText { text } releaseYear { year } } } } } } }"""
-    TITLE_QUERY = """query { title(id: %s) { titleText { text } originalTitleText { text } releaseYear { year }
+    TITLE_QUERY = """query { title(id: %s) { id titleText { text } originalTitleText { text } releaseYear { year }
  releaseDate { day month year } ratingsSummary { aggregateRating } metacritic { metascore { score } }
  certificate { rating } runtime { seconds } genres { genres { text } } primaryImage { url } plot { plotText { plainText } }
  countriesOfOrigin { countries { text } } episodes { seasons { number } }
@@ -395,7 +400,7 @@ class _IMDb(object):
         }
         # the full size picture is several MB, the CDN scales it on request
         poster = re.sub(r"\._V1_.*\.jpg$", "._V1_SX342.jpg", (t.get("primaryImage") or {}).get("url") or "")
-        return _result(text("titleText"), ((t.get("plot") or {}).get("plotText") or {}).get("plainText"), poster, info, "IMDb (imdb.com)")
+        return _result(text("titleText"), ((t.get("plot") or {}).get("plotText") or {}).get("plainText"), poster, info, "IMDb (imdb.com)", t.get("id"))
 
 
 class _TVmaze(object):
@@ -439,7 +444,8 @@ class _TVmaze(object):
             "cast": _names([c.get("person") for c in embedded.get("cast") or []], 5),
         }
         plot = unescape(re.sub(r"<[^>]+>", "", show.get("summary") or "")).strip()
-        return _result(show.get("name"), plot, (show.get("image") or {}).get("medium"), info, "TVmaze (tvmaze.com)")
+        return _result(show.get("name"), plot, (show.get("image") or {}).get("medium"), info, "TVmaze (tvmaze.com)",
+                       (show.get("externals") or {}).get("imdb"))
 
 
 class _Cinemeta(object):
@@ -481,7 +487,7 @@ class _Cinemeta(object):
             "awards": meta.get("awards") or "",
         }
         poster = (meta.get("poster") or "").replace("/poster/small/", "/poster/medium/")
-        return _result(meta.get("name"), meta.get("description"), poster, info, "Cinemeta (strem.io)")
+        return _result(meta.get("name"), meta.get("description"), poster, info, "Cinemeta (strem.io)", meta.get("imdb_id") or imdbId)
 
 
 class _OMDb(object):
@@ -538,7 +544,7 @@ class _OMDb(object):
             "cast": value("Actors"),
             "awards": value("Awards"),
         }
-        return _result(value("Title"), value("Plot"), value("Poster"), info, "OMDb (omdbapi.com)")
+        return _result(value("Title"), value("Plot"), value("Poster"), info, "OMDb (omdbapi.com)", value("imdbID"))
 
 
 def _getProviders(mediaType):
@@ -586,7 +592,7 @@ def getMeta(mediaType, title, year="", skip=(), maxYearDiff=None):
 
         def accept(meta):
             return _yearFits(meta, year, maxYearDiff)
-    meta = _lookup(providers, what, lambda p: p.find(mediaType, title, year), accept)
+    meta = _lookup(providers, what, lambda p: p.find(mediaType, title, year), accept, current=_details)
     query = {"type": mediaType, "title": title, "year": year}
     if skip:
         query["skip"] = list(skip)
@@ -630,7 +636,7 @@ def getMetaByImdbId(mediaType, imdbId):
     providers = [p for p in _getProviders(mediaType) if hasattr(p, "findById")]
     if not providers:
         return {}
-    meta = _lookup(providers, "|".join((mediaType, imdbId)), lambda p: p.findById(mediaType, imdbId))
+    meta = _lookup(providers, "|".join((mediaType, imdbId)), lambda p: p.findById(mediaType, imdbId), current=_details)
     _recordInfoQuery({"type": mediaType, "title": "", "year": "", "imdb": imdbId}, meta)
     return meta
 
@@ -955,14 +961,22 @@ def getInfoQuery(cItem):
     return dict(query) if query else None
 
 
-def _lookup(providers, what, find, accept=None):
+def _details(meta):
+    # a cached answer of the details is current: no title ({}), or one with its IMDb id field (older ones have none,
+    # see _result) - they are asked again once
+    return not meta or "imdb_id" in meta
+
+
+def _lookup(providers, what, find, accept=None, current=None):
     # first non-empty answer of the providers that accept() takes, cached; the cache key holds
     # the provider chain, so other settings do not get old answers
     chain = ",".join(p.NAME + (":" + p.lang if hasattr(p, "lang") else "") for p in providers)
     key = chain + "|" + what
     meta = gCache.get(key)
-    if meta is not None:
+    if meta is not None and (current is None or current(meta)):
         return meta
+    # an older answer that is asked again (current() is False): kept when the services find nothing now
+    stale = meta or {}
     answered = True
     for provider in providers:
         try:
@@ -977,6 +991,10 @@ def _lookup(providers, what, find, accept=None):
             return meta
         if meta is None:
             answered = False
+    if stale:
+        # not asked again before the time of a miss
+        gCache.put(key, stale, CACHE_TTL_MISS)
+        return stale
     if answered:
         gCache.put(key, {}, CACHE_TTL_MISS)
     return {}  # a service gave no answer: not cached, tried again next time

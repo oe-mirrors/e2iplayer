@@ -516,7 +516,7 @@ class IPTVActionChoiceBoxList(IPTVMainNavigatorList):
     # used for the "Select action" popup (iptvplayerwidget.py's
     # menu_pressed()/requestCustomActionFromHost()): options come from two
     # sources - the core itself adds "Add/Remove favorites"
-    # (item.privateData == {'e2i_menu_action': 'ADD_FAV'/'DELETE_FAV'/'REMOVE_FAV_HOST'}),
+    # (item.privateData == {'e2i_menu_action': 'ADD_FAV'/'DELETE_FAV'/'REMOVE_FAV_HOST'}) and "Trailer" ('TRAILER'),
     # the rest comes from whatever the currently active host's own
     # getCustomActions() returns, which is genuinely host-specific and has
     # no single fixed set. Only one cross-host convention actually exists
@@ -535,6 +535,7 @@ class IPTVActionChoiceBoxList(IPTVMainNavigatorList):
         'ADD_FAV': 'BookmarkPlusItem.png',
         'DELETE_FAV': 'BookmarkMinusItem.png',
         'REMOVE_FAV_HOST': 'BookmarkMinusItem.png',
+        'TRAILER': 'PlayerItem.png',
     }
     ACTION_ICON_MAP = {
         'set_watched_flag': 'MovieWatchedItem.png',

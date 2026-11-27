@@ -294,6 +294,10 @@ class ConfigMenu(ConfigBaseWidget):
         if cp.meta_omdb.value:
             list.append(getConfigListEntry("    " + _("OMDb API key (free at omdbapi.com)"), cp.meta_omdb_apikey))
         list.append(getConfigListEntry(_("Use 16:9 pictures (per episode) instead of the portrait poster"), cp.meta_images_169))
+        # MENU -> "Trailer" (components/iptvtrailer.py): TMDb with the key above, else a YouTube search
+        list.append(getConfigListEntry(_("Trailer language"), cp.trailer_language))
+        list.append(getConfigListEntry(_("Words added to the trailer search (empty = automatic)"), cp.trailer_search_suffix))
+        list.append(getConfigListEntry(_("Play the first trailer at once"), cp.trailer_autoplay))
 
     @staticmethod
     def _fillSecurity(list):
@@ -319,6 +323,10 @@ class ConfigMenu(ConfigBaseWidget):
         list.append(getConfigListEntry(_("Show clock in header"), config.plugins.iptvplayer.show_header_clock))
         list.append(getConfigListEntry(_("Video player OSD clock format"), config.plugins.iptvplayer.extplayer_infobanner_clockformat))
         list.append(getConfigListEntry(_("Player Skin"), config.plugins.iptvplayer.extplayer_skin))
+        list.append(getConfigListEntry("    " + _("Background of the INFO panels"), config.plugins.iptvplayer.infopanel_background))
+        list.append(getConfigListEntry(_("Backdrop (fanart)"), config.plugins.iptvplayer.backdrop))
+        if config.plugins.iptvplayer.backdrop.value != "off":
+            list.append(getConfigListEntry("    " + _("Backdrop when the film is paused"), config.plugins.iptvplayer.backdrop_pause))
         list.append(getConfigListEntry(_("Display thumbnails"), config.plugins.iptvplayer.showcover))
         if config.plugins.iptvplayer.showcover.value:
             list.append(getConfigListEntry("    " + _("Poster grid for lists with pictures"), config.plugins.iptvplayer.poster_grid))
@@ -362,10 +370,17 @@ class ConfigMenu(ConfigBaseWidget):
             if coverSize == 'poster':
                 list.append(getConfigListEntry("        " + _("Large cover: size of the times below the bar"), config.plugins.iptvplayer.lcd_poster_time))
             if coverSize == 'side':
-                list.append(getConfigListEntry("        " + _("Large cover, info on the right: row 1"), config.plugins.iptvplayer.lcd_side_row1))
-                list.append(getConfigListEntry("        " + _("Large cover, info on the right: row 2"), config.plugins.iptvplayer.lcd_side_row2))
-                list.append(getConfigListEntry("        " + _("Large cover, info on the right: row 3"), config.plugins.iptvplayer.lcd_side_row3))
-                list.append(getConfigListEntry("        " + _("Large cover, info on the right: row 4"), config.plugins.iptvplayer.lcd_side_row4))
+                list.append(getConfigListEntry("        " + _("Large cover, info on the right: title"), config.plugins.iptvplayer.lcd_side_title))
+                rowLabels = (_("Large cover, info on the right: row 1"), _("Large cover, info on the right: row 2"),
+                             _("Large cover, info on the right: row 3"), _("Large cover, info on the right: row 4"))
+                for idx, label in enumerate(rowLabels, 1):
+                    row = getattr(config.plugins.iptvplayer, 'lcd_side_row%d' % idx)
+                    list.append(getConfigListEntry("        " + label, row))
+                    if row.value != 'none':
+                        list.append(getConfigListEntry("            " + _("Size"), getattr(config.plugins.iptvplayer, 'lcd_side_size%d' % idx)))
+                list.append(getConfigListEntry("        " + _("Large cover, info on the right: labels"), config.plugins.iptvplayer.lcd_side_labels))
+                list.append(getConfigListEntry("        " + _("Large cover, info on the right: alignment"), config.plugins.iptvplayer.lcd_side_align))
+                list.append(getConfigListEntry("        " + _("Large cover, info on the right: lines"), config.plugins.iptvplayer.lcd_side_lines))
             list.append(getConfigListEntry("    " + _("Progress bar color on the LCD"), config.plugins.iptvplayer.lcd_bar_color))
             list.append(getConfigListEntry("    " + _("Progress bar frame on the LCD"), config.plugins.iptvplayer.lcd_bar_frame))
 
@@ -1000,6 +1015,7 @@ class ConfigMenu(ConfigBaseWidget):
             config.plugins.iptvplayer.buforowanie_rtmp,
             config.plugins.iptvplayer.showcover,
             config.plugins.iptvplayer.poster_grid,
+            config.plugins.iptvplayer.backdrop,
             # config.plugins.iptvplayer.ListaGraficzna,
             config.plugins.iptvplayer.pluginProtectedByPin,
             config.plugins.iptvplayer.configProtectedByPin,
@@ -1014,6 +1030,10 @@ class ConfigMenu(ConfigBaseWidget):
             config.plugins.iptvplayer.extplayer_summary,
             config.plugins.iptvplayer.lcd_cover,
             config.plugins.iptvplayer.lcd_cover_size,
+            config.plugins.iptvplayer.lcd_side_row1,
+            config.plugins.iptvplayer.lcd_side_row2,
+            config.plugins.iptvplayer.lcd_side_row3,
+            config.plugins.iptvplayer.lcd_side_row4,
             config.plugins.iptvplayer.lcd_long_titles,
             config.plugins.iptvplayer.mye2i_browser,
             config.plugins.iptvplayer.storageExpertMode,
