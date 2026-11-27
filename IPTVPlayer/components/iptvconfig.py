@@ -411,6 +411,12 @@ config.plugins.iptvplayer.meta_omdb_apikey = ConfigSecret(default="", fixed_size
 # 16:9 pictures (an episode's still, a title's backdrop) from the same services instead of the portrait poster: list icons of
 # the hosts which set them, the info picture and the download sidecar .jpg
 config.plugins.iptvplayer.meta_images_169 = ConfigYesNo(default=False)
+# MENU -> "Trailer" of a list row / blue key of the INFO page (components/iptvtrailer.py): the trailer in the language
+# of the details (auto = E2iPlayer's), a fixed language or the original one; the words added to the YouTube search
+# (empty = the usual ones of the language, e.g. "Trailer Deutsch"); play the first hit at once instead of the list
+config.plugins.iptvplayer.trailer_language = ConfigSelection(default="auto", choices=[("auto", _("Language of the details")), ("original", _("Original")), ("ar", _("Arabic")), ("cs", _("Czech")), ("de", _("German")), ("el", _("Greek")), ("en", _("English")), ("es", _("Spanish")), ("fr", _("French")), ("hu", _("Hungarian")), ("it", _("Italian")), ("nl", _("Dutch")), ("pl", _("Polish")), ("pt", _("Portuguese")), ("ru", _("Russian")), ("tr", _("Turkish")), ("uk", _("Ukrainian"))])
+config.plugins.iptvplayer.trailer_search_suffix = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.trailer_autoplay = ConfigYesNo(default=False)
 config.plugins.iptvplayer.sidecar_enabled = ConfigYesNo(default=True)
 config.plugins.iptvplayer.normalize_media_names = ConfigYesNo(default=True)
 # rows per page of the lists a host pages itself (a long season or list the site sends in one piece):

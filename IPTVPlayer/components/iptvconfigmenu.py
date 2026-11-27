@@ -294,6 +294,10 @@ class ConfigMenu(ConfigBaseWidget):
         if cp.meta_omdb.value:
             list.append(getConfigListEntry("    " + _("OMDb API key (free at omdbapi.com)"), cp.meta_omdb_apikey))
         list.append(getConfigListEntry(_("Use 16:9 pictures (per episode) instead of the portrait poster"), cp.meta_images_169))
+        # MENU -> "Trailer" (components/iptvtrailer.py): TMDb with the key above, else a YouTube search
+        list.append(getConfigListEntry(_("Trailer language"), cp.trailer_language))
+        list.append(getConfigListEntry(_("Words added to the trailer search (empty = automatic)"), cp.trailer_search_suffix))
+        list.append(getConfigListEntry(_("Play the first trailer at once"), cp.trailer_autoplay))
 
     @staticmethod
     def _fillSecurity(list):
