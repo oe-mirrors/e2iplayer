@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-20 17:54+0000\n"
+"POT-Creation-Date: 2026-11-27 22:41+0000\n"
 "PO-Revision-Date: 2026-10-08 20:17+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Serbian (Latin)\n"
@@ -607,12 +607,20 @@ msgid "Alphabetically"
 msgstr "Abecedno"
 
 #, python-format
+msgid "Also use the accounts of GT IPTV Player Pro (%s)"
+msgstr ""
+
+#, python-format
 msgid "Also use the accounts of X-Streamity (%s)"
 msgstr "Koristi i naloge iz X-Streamity (%s)"
 
 #, python-format
 msgid "Also use the portals of EStalker (%s)"
 msgstr "Koristi i portale iz EStalker (%s)"
+
+#, python-format
+msgid "Also use the portals of GT IPTV Player Pro (%s)"
+msgstr ""
 
 msgid "AltGr"
 msgstr "AltGr"
@@ -783,6 +791,9 @@ msgstr ""
 msgid "Aspect"
 msgstr "Odnos stranica"
 
+msgid "Aspect ratio"
+msgstr ""
+
 msgid "At least one of plugin browser, extension list and main menu has to stay on, otherwise E2iPlayer could no longer be started."
 msgstr "Najmanje jedno od sledećeg mora ostati uključeno: pregledač dodataka, lista proširenja ili glavni meni, inače E2iPlayer više ne bi mogao da se pokrene."
 
@@ -797,6 +808,9 @@ msgstr "Audio"
 
 msgid "Audio buffer size [KB]"
 msgstr "Veličina audio bafera [KB]"
+
+msgid "Audio codec"
+msgstr ""
 
 msgid "Audio description"
 msgstr "Audio-deskripcija"
@@ -863,8 +877,17 @@ msgstr "Nagrade:"
 msgid "BLUE"
 msgstr "PLAVI"
 
+msgid "Backdrop (fanart)"
+msgstr ""
+
+msgid "Backdrop when the film is paused"
+msgstr ""
+
 msgid "Background color"
 msgstr "Boja pozadine"
+
+msgid "Background of the INFO panels"
+msgstr ""
 
 msgid "Backspace"
 msgstr "Backspace"
@@ -887,6 +910,9 @@ msgstr ""
 
 msgid "Being watched"
 msgstr "Trenutno se gleda"
+
+msgid "Below the picture"
+msgstr ""
 
 msgid "Bengali"
 msgstr ""
@@ -911,6 +937,12 @@ msgstr "Bing predlozi"
 
 msgid "Biography"
 msgstr "Biografija"
+
+msgid "Bit depth"
+msgstr ""
+
+msgid "Bitrate"
+msgstr ""
 
 #, python-format
 msgid "Bitrate: %s"
@@ -1077,6 +1109,12 @@ msgstr "Propušteni program (timeshift.php)"
 msgid "Catch-up: %d days"
 msgstr "Propušteni program: %d dana"
 
+msgid "Catch-up: minutes after the end:"
+msgstr ""
+
+msgid "Catch-up: minutes before the start:"
+msgstr ""
+
 msgid "Categories"
 msgstr "Kategorije"
 
@@ -1088,6 +1126,9 @@ msgstr "Kategorija"
 
 msgid "Category:"
 msgstr "Kategorija:"
+
+msgid "Centered"
+msgstr ""
 
 msgid "Change active movie player"
 msgstr "Promeni aktivni plejer filmova"
@@ -1107,6 +1148,12 @@ msgstr "Kanal: %s"
 
 msgid "Channels"
 msgstr "Kanali"
+
+msgid "Chapter"
+msgstr ""
+
+msgid "Chapters"
+msgstr ""
 
 msgid "Checking for updates"
 msgstr "Provera ažuriranja"
@@ -1180,6 +1227,9 @@ msgstr "Klubovi i sportisti"
 msgid "Code"
 msgstr "Kod"
 
+msgid "Codec"
+msgstr ""
+
 msgid "Collected streams only"
 msgstr "Samo prikupljeni strimovi"
 
@@ -1188,6 +1238,9 @@ msgstr "Kolekcije"
 
 msgid "Colored text in titles and descriptions"
 msgstr "Obojeni tekst u naslovima i opisima"
+
+msgid "Colour space"
+msgstr ""
 
 msgid "Combine pull request merges with their commit"
 msgstr "Spoji pull request merge-ove sa njihovim commit-om"
@@ -1384,6 +1437,9 @@ msgstr "Kultura i pop"
 msgid "Current item is not a channel."
 msgstr "Trenutna stavka nije kanal."
 
+msgid "Current song"
+msgstr ""
+
 msgid "Cut"
 msgstr "Iseci"
 
@@ -1418,6 +1474,9 @@ msgid "Daily download limit reached - type the code"
 msgstr "Dostignuto je dnevno ograničenje preuzimanja - unesite kod"
 
 msgid "Danish"
+msgstr ""
+
+msgid "Dark"
 msgstr ""
 
 msgid "Darkgray"
@@ -1578,6 +1637,9 @@ msgstr "Obriši keš sličica sada"
 
 msgid "Denmark"
 msgstr "Danska"
+
+msgid "Description"
+msgstr ""
 
 msgid "Description:"
 msgstr "Opis:"
@@ -2296,6 +2358,9 @@ msgstr "FebBox token (\"ui\" kolačić sa www.febbox.com):"
 msgid "Female"
 msgstr "Žene"
 
+msgid "File"
+msgstr ""
+
 #, python-format
 msgid "File \"%s\" already exists"
 msgstr "Datoteka \"%s\" već postoji"
@@ -2467,6 +2532,9 @@ msgstr "Nametni interni skin: samo glavni ekran"
 msgid "Force legacy grid"
 msgstr "Nametni staru mrežu ikona"
 
+msgid "Forced"
+msgstr ""
+
 msgid "Foreign movies"
 msgstr "Strani filmovi"
 
@@ -2485,6 +2553,9 @@ msgstr "Formacije"
 msgid "Fotka.pl stream :"
 msgstr "Fotka.pl strim :"
 
+msgid "Frame rate"
+msgstr ""
+
 msgid "Free"
 msgstr "Besplatno"
 
@@ -2497,11 +2568,17 @@ msgstr "Francuski"
 msgid "From E2 settings"
 msgstr "Iz E2 podešavanja"
 
+msgid "From the host, else online"
+msgstr ""
+
 msgid "Full description loaded"
 msgstr "Ceo opis je učitan"
 
 msgid "Full description not available"
 msgstr "Ceo opis nije dostupan"
+
+msgid "Full screen"
+msgstr ""
 
 msgid "Full test"
 msgstr "Potpuni test"
@@ -2674,6 +2751,9 @@ msgstr "Pomoć"
 #, python-format
 msgid "Hide \"%s\" group"
 msgstr "Sakrij grupu \"%s\""
+
+msgid "Hide categories containing (comma separated):"
+msgstr ""
 
 msgid "Hide the menu (live TV visible)"
 msgstr "Sakrij meni (TV uživo vidljiv)"
@@ -3043,6 +3123,9 @@ msgstr ""
 msgid "Language"
 msgstr "Jezik"
 
+msgid "Language of the details"
+msgstr ""
+
 msgid "Language of the details (TMDb, IMDb)"
 msgstr "Jezik detalja (TMDb, IMDb)"
 
@@ -3058,6 +3141,15 @@ msgstr ""
 msgid "Large (title below)"
 msgstr ""
 
+msgid "Large cover, info on the right: alignment"
+msgstr ""
+
+msgid "Large cover, info on the right: labels"
+msgstr ""
+
+msgid "Large cover, info on the right: lines"
+msgstr ""
+
 msgid "Large cover, info on the right: row 1"
 msgstr ""
 
@@ -3068,6 +3160,9 @@ msgid "Large cover, info on the right: row 3"
 msgstr ""
 
 msgid "Large cover, info on the right: row 4"
+msgstr ""
+
+msgid "Large cover, info on the right: title"
 msgstr ""
 
 msgid "Large cover: size of the times below the bar"
@@ -3393,6 +3488,9 @@ msgstr ""
 
 msgid "Longest"
 msgstr "Najduže"
+
+msgid "Looking for trailers..."
+msgstr ""
 
 msgid "Loved tracks"
 msgstr "Omiljene pesme"
@@ -3901,6 +3999,10 @@ msgstr "Nema titlova na %s. Dostupno: %s"
 msgid "No title to search for."
 msgstr "Nema naslova za pretragu."
 
+#, python-format
+msgid "No trailer found for \"%s\"."
+msgstr ""
+
 msgid "No valid entitlement found for asset."
 msgstr "Nije pronađeno važeće pravo pristupa za ovaj sadržaj."
 
@@ -4025,6 +4127,9 @@ msgstr "Dostupno samo u %s"
 msgid "Only files in the downloads folder can be deleted."
 msgstr "Mogu se brisati samo datoteke u fascikli za preuzimanja."
 
+msgid "Only from the host"
+msgstr ""
+
 msgid "Only links can be moved to a group."
 msgstr "Samo linkovi mogu da se premeste u grupu."
 
@@ -4099,6 +4204,9 @@ msgstr "Redosled korisničkih linkova:"
 
 msgid "Order stays fixed - useful for T9 browsing."
 msgstr "Redosled ostaje nepromenjen - korisno za listanje pomoću T9."
+
+msgid "Original"
+msgstr ""
 
 msgid "Original Title:"
 msgstr "Originalni naslov:"
@@ -4236,6 +4344,9 @@ msgstr "Filozofija"
 msgid "Physical Exam"
 msgstr "Fizički pregled"
 
+msgid "Picture of the title, blurred"
+msgstr ""
+
 msgid "Pin has been changed."
 msgstr "PIN je promenjen."
 
@@ -4251,12 +4362,18 @@ msgstr "PIN zaštita za dodatak"
 msgid "Pin protection for this host"
 msgstr "PIN zaštita za ovaj host"
 
+msgid "Pixel format"
+msgstr ""
+
 msgid "Play all from here"
 msgstr "Reprodukuj sve odavde"
 
 #, python-format
 msgid "Play marked items (%d)"
 msgstr "Reprodukuj označene stavke (%d)"
+
+msgid "Play the first trailer at once"
+msgstr ""
 
 msgid "Play torrents with TorrServer"
 msgstr "Reprodukuj torente pomoću TorrServer-a"
@@ -4436,6 +4553,9 @@ msgstr "Portovi: %s"
 msgid "Portuguese"
 msgstr "Portugalski"
 
+msgid "Poster during audio playback"
+msgstr ""
+
 msgid "Poster grid for lists with pictures"
 msgstr ""
 
@@ -4495,6 +4615,9 @@ msgstr "Profesionalne mreže"
 
 msgid "Professionals"
 msgstr "Profesionalci"
+
+msgid "Profile"
+msgstr ""
 
 msgid "Program"
 msgstr "Program"
@@ -4632,6 +4755,9 @@ msgstr "Čitanje binarnih datoteka..."
 
 msgid "Reading..."
 msgstr "Čitanje..."
+
+msgid "Rebuffer"
+msgstr ""
 
 msgid "Recent"
 msgstr "Najnovije"
@@ -4801,6 +4927,9 @@ msgstr "Vrati na sačuvani redosled"
 msgid "Reset web interface"
 msgstr "Resetuj veb-interfejs"
 
+msgid "Resolution"
+msgstr ""
+
 #, python-format
 msgid ""
 "Resolving hCaptcha with %s failed!\n"
@@ -4872,6 +5001,9 @@ msgid "Safe search (restricted mode):"
 msgstr "Bezbedna pretraga (ograničeni režim):"
 
 msgid "Same as the bar"
+msgstr ""
+
+msgid "Sample rate"
 msgstr ""
 
 msgid "Save"
@@ -5374,6 +5506,9 @@ msgstr "Samotest sajtova u glavnom meniju :"
 msgid "Site self-test: %d of %d - now %s (%d failed so far)"
 msgstr "Samotest sajtova: %d od %d - sada %s (do sada neuspešno %d)"
 
+msgid "Size"
+msgstr ""
+
 msgid "Size:"
 msgstr "Veličina:"
 
@@ -5393,6 +5528,9 @@ msgid "Slovenian"
 msgstr ""
 
 msgid "Small (16:9)"
+msgstr ""
+
+msgid "Small, in the middle"
 msgstr ""
 
 msgid "Smaller text"
@@ -5457,6 +5595,9 @@ msgstr "Kanali sortirani po ukupnoj gledanosti [uživo]"
 
 msgid "Sorted most viewed channels now [live]"
 msgstr "Kanali sortirani po trenutnoj gledanosti [uživo]"
+
+msgid "Source"
+msgstr ""
 
 msgid "Source:"
 msgstr "Izvor:"
@@ -5533,6 +5674,9 @@ msgstr "Skladište"
 
 msgid "Story"
 msgstr "Radnja"
+
+msgid "Stream"
+msgstr ""
 
 #, python-format
 msgid "Stream formats: %s"
@@ -6000,8 +6144,17 @@ msgstr ""
 "Biće sačuvan u datoteci:\n"
 "\"%s\""
 
+msgid "The portal denied access to this entry."
+msgstr ""
+
 msgid "The portal did not hand out a link for this entry."
 msgstr "Portal nije dao link za ovaj unos."
+
+msgid "The portal has blocked this MAC address."
+msgstr ""
+
+msgid "The portal refused the stream: the maximum number of connections is reached."
+msgstr ""
 
 msgid "The recordings of this page were on the site's old media server, which is offline."
 msgstr "Snimci ove stranice nalazili su se na starom medijskom serveru sajta, koji je oflajn."
@@ -6271,6 +6424,9 @@ msgstr ""
 msgid "Tip! You can connect USB flash drive to fix this problem."
 msgstr "Savet! Ovaj problem možete rešiti povezivanjem USB fleš diska."
 
+msgid "Title"
+msgstr ""
+
 msgid "Titles"
 msgstr "Naslovi"
 
@@ -6428,6 +6584,9 @@ msgstr ""
 "\n"
 "Sam TorrServer nije deo E2iPlayer-a i mora se instalirati posebno."
 
+msgid "Total bitrate"
+msgstr ""
+
 msgid "Total size:"
 msgstr "Ukupna veličina:"
 
@@ -6437,11 +6596,17 @@ msgstr "Turizam"
 msgid "Tournament"
 msgstr "Turnir"
 
+msgid "Track"
+msgstr ""
+
 msgid "Tracklist"
 msgstr "Lista numera"
 
 msgid "Trailer"
 msgstr "Trejler"
+
+msgid "Trailer language"
+msgstr ""
 
 msgid "Trans"
 msgstr "Trans osobe"
@@ -6734,6 +6899,9 @@ msgstr "Video"
 msgid "Video buffer size [MB]"
 msgstr "Veličina video bafera [MB]"
 
+msgid "Video codec"
+msgstr ""
+
 msgid "Video library"
 msgstr "Video biblioteka"
 
@@ -6868,6 +7036,9 @@ msgstr "Cela datoteka mora biti preuzeta da bi reprodukcija počela!"
 msgid "Whole picture (black bars)"
 msgstr ""
 
+msgid "Whole width"
+msgstr ""
+
 msgid "Wiki"
 msgstr "Wiki"
 
@@ -6885,6 +7056,9 @@ msgstr ""
 
 msgid "With subtitles"
 msgstr "Sa titlovima"
+
+msgid "Words added to the trailer search (empty = automatic)"
+msgstr ""
 
 msgid "World"
 msgstr "Svet"
@@ -7149,6 +7323,9 @@ msgstr "centrirano"
 msgid "changed"
 msgstr "promenjeno"
 
+msgid "classic"
+msgstr ""
+
 msgid "clock not set"
 msgstr ""
 
@@ -7209,6 +7386,9 @@ msgstr "uredi izabrani unos (isto kao OK)"
 
 msgid "enable / disable manual reordering"
 msgstr "uključi / isključi ručno premeštanje"
+
+msgid "expired"
+msgstr ""
 
 msgid "external eplayer3"
 msgstr "spoljni eplayer3"
@@ -7356,6 +7536,9 @@ msgstr ""
 
 msgid "minutes"
 msgstr "minuta"
+
+msgid "modern"
+msgstr ""
 
 msgid "more options (this menu)"
 msgstr "još opcija (ovaj meni)"
@@ -7613,6 +7796,9 @@ msgstr "srebrna"
 
 msgid "small"
 msgstr "malo"
+
+msgid "software"
+msgstr ""
 
 msgid "sources"
 msgstr "izvori"

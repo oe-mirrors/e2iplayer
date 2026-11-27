@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-20 17:54+0000\n"
+"POT-Creation-Date: 2026-11-27 22:41+0000\n"
 "PO-Revision-Date: 2026-03-13 15:06+0300\n"
 "Last-Translator: audi06_19 <audi06_19@hotmail.com>\n"
 "Language-Team: Turkish\n"
@@ -608,12 +608,20 @@ msgid "Alphabetically"
 msgstr "Alfabetik olarak"
 
 #, python-format
+msgid "Also use the accounts of GT IPTV Player Pro (%s)"
+msgstr ""
+
+#, python-format
 msgid "Also use the accounts of X-Streamity (%s)"
 msgstr "X-Streamity hesaplarını da kullan (%s)"
 
 #, python-format
 msgid "Also use the portals of EStalker (%s)"
 msgstr "EStalker portallarını da kullan (%s)"
+
+#, python-format
+msgid "Also use the portals of GT IPTV Player Pro (%s)"
+msgstr ""
 
 msgid "AltGr"
 msgstr "AltGr"
@@ -784,6 +792,9 @@ msgstr ""
 msgid "Aspect"
 msgstr "En-boy oranı"
 
+msgid "Aspect ratio"
+msgstr ""
+
 msgid "At least one of plugin browser, extension list and main menu has to stay on, otherwise E2iPlayer could no longer be started."
 msgstr "Eklenti tarayıcısı, uzantı listesi ve ana menüden en az biri açık kalmalıdır, aksi halde E2iPlayer artık başlatılamaz."
 
@@ -798,6 +809,9 @@ msgstr "Ses"
 
 msgid "Audio buffer size [KB]"
 msgstr "Ses arabelleği boyutu [KB]"
+
+msgid "Audio codec"
+msgstr ""
 
 msgid "Audio description"
 msgstr "Sesli betimleme"
@@ -864,8 +878,17 @@ msgstr "Ödüller:"
 msgid "BLUE"
 msgstr "MAVİ"
 
+msgid "Backdrop (fanart)"
+msgstr ""
+
+msgid "Backdrop when the film is paused"
+msgstr ""
+
 msgid "Background color"
 msgstr "Arka plan rengi"
+
+msgid "Background of the INFO panels"
+msgstr ""
 
 msgid "Backspace"
 msgstr "Geri sil"
@@ -888,6 +911,9 @@ msgstr ""
 
 msgid "Being watched"
 msgstr "İzleniyor"
+
+msgid "Below the picture"
+msgstr ""
 
 msgid "Bengali"
 msgstr ""
@@ -912,6 +938,12 @@ msgstr "Bing Önerileri"
 
 msgid "Biography"
 msgstr "Biyografi"
+
+msgid "Bit depth"
+msgstr ""
+
+msgid "Bitrate"
+msgstr ""
 
 #, python-format
 msgid "Bitrate: %s"
@@ -1078,6 +1110,12 @@ msgstr "Geriye dönük izleme (timeshift.php)"
 msgid "Catch-up: %d days"
 msgstr "Geriye dönük izleme: %d gün"
 
+msgid "Catch-up: minutes after the end:"
+msgstr ""
+
+msgid "Catch-up: minutes before the start:"
+msgstr ""
+
 msgid "Categories"
 msgstr "Kategoriler"
 
@@ -1089,6 +1127,9 @@ msgstr "Kategori"
 
 msgid "Category:"
 msgstr "Kategori:"
+
+msgid "Centered"
+msgstr ""
 
 msgid "Change active movie player"
 msgstr "Etkin film oynatıcısını değiştir"
@@ -1108,6 +1149,12 @@ msgstr "Kanal: %s"
 
 msgid "Channels"
 msgstr "Kanallar"
+
+msgid "Chapter"
+msgstr ""
+
+msgid "Chapters"
+msgstr ""
 
 msgid "Checking for updates"
 msgstr "Güncellemeler denetleniyor"
@@ -1181,6 +1228,9 @@ msgstr "Kulüpler ve sporcular"
 msgid "Code"
 msgstr "Kod"
 
+msgid "Codec"
+msgstr ""
+
 msgid "Collected streams only"
 msgstr "Yalnızca toplanan yayınlar"
 
@@ -1189,6 +1239,9 @@ msgstr "Koleksiyonlar"
 
 msgid "Colored text in titles and descriptions"
 msgstr "Başlık ve açıklamalarda renkli metin"
+
+msgid "Colour space"
+msgstr ""
 
 msgid "Combine pull request merges with their commit"
 msgstr "Pull request birleştirmelerini commit'leriyle birleştir"
@@ -1385,6 +1438,9 @@ msgstr "Kültür ve pop"
 msgid "Current item is not a channel."
 msgstr "Geçerli öğe bir kanal değil."
 
+msgid "Current song"
+msgstr ""
+
 msgid "Cut"
 msgstr "Kes"
 
@@ -1419,6 +1475,9 @@ msgid "Daily download limit reached - type the code"
 msgstr "Günlük indirme sınırına ulaşıldı - kodu yazın"
 
 msgid "Danish"
+msgstr ""
+
+msgid "Dark"
 msgstr ""
 
 msgid "Darkgray"
@@ -1579,6 +1638,9 @@ msgstr "Küçük resim önbelleğini şimdi sil"
 
 msgid "Denmark"
 msgstr "Danimarka"
+
+msgid "Description"
+msgstr ""
 
 msgid "Description:"
 msgstr "Açıklama:"
@@ -2297,6 +2359,9 @@ msgstr "FebBox token'ı (www.febbox.com \"ui\" çerezi):"
 msgid "Female"
 msgstr "Kadınlar"
 
+msgid "File"
+msgstr ""
+
 #, python-format
 msgid "File \"%s\" already exists"
 msgstr "\"%s\" dosyası zaten mevcut"
@@ -2468,6 +2533,9 @@ msgstr "Dahili görünümü zorla: yalnızca ana ekran"
 msgid "Force legacy grid"
 msgstr "Eski simge ızgarasını zorla"
 
+msgid "Forced"
+msgstr ""
+
 msgid "Foreign movies"
 msgstr "Yabancı filmler"
 
@@ -2486,6 +2554,9 @@ msgstr "Kadrolar"
 msgid "Fotka.pl stream :"
 msgstr "Fotka.pl yayını :"
 
+msgid "Frame rate"
+msgstr ""
+
 msgid "Free"
 msgstr "Ücretsiz"
 
@@ -2498,11 +2569,17 @@ msgstr "Fransızca"
 msgid "From E2 settings"
 msgstr "E2 ayarlarından"
 
+msgid "From the host, else online"
+msgstr ""
+
 msgid "Full description loaded"
 msgstr "Tam açıklama yüklendi"
 
 msgid "Full description not available"
 msgstr "Tam açıklama mevcut değil"
+
+msgid "Full screen"
+msgstr ""
 
 msgid "Full test"
 msgstr "Tam test"
@@ -2675,6 +2752,9 @@ msgstr "Yardım"
 #, python-format
 msgid "Hide \"%s\" group"
 msgstr "\"%s\" grubunu gizle"
+
+msgid "Hide categories containing (comma separated):"
+msgstr ""
 
 msgid "Hide the menu (live TV visible)"
 msgstr "Menüyü gizle (canlı TV görünür)"
@@ -3044,6 +3124,9 @@ msgstr ""
 msgid "Language"
 msgstr "Dil"
 
+msgid "Language of the details"
+msgstr ""
+
 msgid "Language of the details (TMDb, IMDb)"
 msgstr "Ayrıntıların dili (TMDb, IMDb)"
 
@@ -3059,6 +3142,15 @@ msgstr ""
 msgid "Large (title below)"
 msgstr ""
 
+msgid "Large cover, info on the right: alignment"
+msgstr ""
+
+msgid "Large cover, info on the right: labels"
+msgstr ""
+
+msgid "Large cover, info on the right: lines"
+msgstr ""
+
 msgid "Large cover, info on the right: row 1"
 msgstr ""
 
@@ -3069,6 +3161,9 @@ msgid "Large cover, info on the right: row 3"
 msgstr ""
 
 msgid "Large cover, info on the right: row 4"
+msgstr ""
+
+msgid "Large cover, info on the right: title"
 msgstr ""
 
 msgid "Large cover: size of the times below the bar"
@@ -3394,6 +3489,9 @@ msgstr ""
 
 msgid "Longest"
 msgstr "En uzun"
+
+msgid "Looking for trailers..."
+msgstr ""
 
 msgid "Loved tracks"
 msgstr "Sevilen parçalar"
@@ -3902,6 +4000,10 @@ msgstr "%s dilinde altyazı yok. Mevcut: %s"
 msgid "No title to search for."
 msgstr "Aranacak başlık yok."
 
+#, python-format
+msgid "No trailer found for \"%s\"."
+msgstr ""
+
 msgid "No valid entitlement found for asset."
 msgstr "İçerik için geçerli bir erişim hakkı bulunamadı."
 
@@ -4026,6 +4128,9 @@ msgstr "Yalnızca %s içinde mevcut"
 msgid "Only files in the downloads folder can be deleted."
 msgstr "Yalnızca indirme klasöründeki dosyalar silinebilir."
 
+msgid "Only from the host"
+msgstr ""
+
 msgid "Only links can be moved to a group."
 msgstr "Bir gruba yalnızca bağlantılar taşınabilir."
 
@@ -4100,6 +4205,9 @@ msgstr "Kullanıcı bağlantılarının sırası:"
 
 msgid "Order stays fixed - useful for T9 browsing."
 msgstr "Sıra sabit kalır - T9 ile gezinme için kullanışlı."
+
+msgid "Original"
+msgstr ""
 
 msgid "Original Title:"
 msgstr "Orijinal başlık:"
@@ -4237,6 +4345,9 @@ msgstr "Felsefe"
 msgid "Physical Exam"
 msgstr "Fizik muayene"
 
+msgid "Picture of the title, blurred"
+msgstr ""
+
 msgid "Pin has been changed."
 msgstr "PIN değiştirildi."
 
@@ -4252,12 +4363,18 @@ msgstr "Eklenti için PIN koruması"
 msgid "Pin protection for this host"
 msgstr "Bu host için PIN koruması"
 
+msgid "Pixel format"
+msgstr ""
+
 msgid "Play all from here"
 msgstr "Buradan itibaren tümünü oynat"
 
 #, python-format
 msgid "Play marked items (%d)"
 msgstr "İşaretli öğeleri oynat (%d)"
+
+msgid "Play the first trailer at once"
+msgstr ""
 
 msgid "Play torrents with TorrServer"
 msgstr "Torrentleri TorrServer ile oynat"
@@ -4437,6 +4554,9 @@ msgstr "Portlar: %s"
 msgid "Portuguese"
 msgstr "Portekizce"
 
+msgid "Poster during audio playback"
+msgstr ""
+
 msgid "Poster grid for lists with pictures"
 msgstr ""
 
@@ -4496,6 +4616,9 @@ msgstr "Profesyonel ağlar"
 
 msgid "Professionals"
 msgstr "Profesyoneller"
+
+msgid "Profile"
+msgstr ""
 
 msgid "Program"
 msgstr "Program"
@@ -4633,6 +4756,9 @@ msgstr "İkili dosyalar okunuyor..."
 
 msgid "Reading..."
 msgstr "Okunuyor..."
+
+msgid "Rebuffer"
+msgstr ""
 
 msgid "Recent"
 msgstr "Son"
@@ -4802,6 +4928,9 @@ msgstr "Kayıtlı sıraya sıfırla"
 msgid "Reset web interface"
 msgstr "Web arayüzünü sıfırla"
 
+msgid "Resolution"
+msgstr ""
+
 #, python-format
 msgid ""
 "Resolving hCaptcha with %s failed!\n"
@@ -4873,6 +5002,9 @@ msgid "Safe search (restricted mode):"
 msgstr "Güvenli arama (kısıtlı mod):"
 
 msgid "Same as the bar"
+msgstr ""
+
+msgid "Sample rate"
 msgstr ""
 
 msgid "Save"
@@ -5375,6 +5507,9 @@ msgstr "Ana menüde site kendi kendine testi :"
 msgid "Site self-test: %d of %d - now %s (%d failed so far)"
 msgstr "Site kendi kendine testi: %d / %d - şu an %s (şimdiye kadar %d başarısız)"
 
+msgid "Size"
+msgstr ""
+
 msgid "Size:"
 msgstr "Boyut:"
 
@@ -5394,6 +5529,9 @@ msgid "Slovenian"
 msgstr ""
 
 msgid "Small (16:9)"
+msgstr ""
+
+msgid "Small, in the middle"
 msgstr ""
 
 msgid "Smaller text"
@@ -5458,6 +5596,9 @@ msgstr "Genel olarak en çok izlenen kanallar sıralı [canlı]"
 
 msgid "Sorted most viewed channels now [live]"
 msgstr "Şu an en çok izlenen kanallar sıralı [canlı]"
+
+msgid "Source"
+msgstr ""
 
 msgid "Source:"
 msgstr "Kaynak:"
@@ -5534,6 +5675,9 @@ msgstr "Depolama"
 
 msgid "Story"
 msgstr "Hikâye"
+
+msgid "Stream"
+msgstr ""
 
 #, python-format
 msgid "Stream formats: %s"
@@ -6001,8 +6145,17 @@ msgstr ""
 "Şu dosyaya kaydedilecek:\n"
 "\"%s\""
 
+msgid "The portal denied access to this entry."
+msgstr ""
+
 msgid "The portal did not hand out a link for this entry."
 msgstr "Portal bu giriş için bir bağlantı vermedi."
+
+msgid "The portal has blocked this MAC address."
+msgstr ""
+
+msgid "The portal refused the stream: the maximum number of connections is reached."
+msgstr ""
 
 msgid "The recordings of this page were on the site's old media server, which is offline."
 msgstr "Bu sayfanın kayıtları sitenin artık çevrimdışı olan eski medya sunucusundaydı."
@@ -6272,6 +6425,9 @@ msgstr ""
 msgid "Tip! You can connect USB flash drive to fix this problem."
 msgstr "İpucu! Bu sorunu gidermek için bir USB bellek bağlayabilirsiniz."
 
+msgid "Title"
+msgstr ""
+
 msgid "Titles"
 msgstr "Başlıklar"
 
@@ -6429,6 +6585,9 @@ msgstr ""
 "\n"
 "TorrServer'ın kendisi E2iPlayer'ın bir parçası değildir, ayrıca kurulması gerekir."
 
+msgid "Total bitrate"
+msgstr ""
+
 msgid "Total size:"
 msgstr "Toplam boyut:"
 
@@ -6438,11 +6597,17 @@ msgstr "Turizm"
 msgid "Tournament"
 msgstr "Turnuva"
 
+msgid "Track"
+msgstr ""
+
 msgid "Tracklist"
 msgstr "Parça listesi"
 
 msgid "Trailer"
 msgstr "Fragman"
+
+msgid "Trailer language"
+msgstr ""
 
 msgid "Trans"
 msgstr "Trans"
@@ -6735,6 +6900,9 @@ msgstr "Video"
 msgid "Video buffer size [MB]"
 msgstr "Video arabellek boyutu [MB]"
 
+msgid "Video codec"
+msgstr ""
+
 msgid "Video library"
 msgstr "Video kitaplığı"
 
@@ -6869,6 +7037,9 @@ msgstr "Oynatmayı başlatmak için dosyanın tamamı indirilmelidir!"
 msgid "Whole picture (black bars)"
 msgstr ""
 
+msgid "Whole width"
+msgstr ""
+
 msgid "Wiki"
 msgstr "Wiki"
 
@@ -6886,6 +7057,9 @@ msgstr ""
 
 msgid "With subtitles"
 msgstr "Altyazılı"
+
+msgid "Words added to the trailer search (empty = automatic)"
+msgstr ""
 
 msgid "World"
 msgstr "Dünya"
@@ -7150,6 +7324,9 @@ msgstr "orta"
 msgid "changed"
 msgstr "değiştirildi"
 
+msgid "classic"
+msgstr ""
+
 msgid "clock not set"
 msgstr ""
 
@@ -7210,6 +7387,9 @@ msgstr "seçili girişi düzenle (OK ile aynı)"
 
 msgid "enable / disable manual reordering"
 msgstr "elle sıralamayı etkinleştir / devre dışı bırak"
+
+msgid "expired"
+msgstr ""
 
 msgid "external eplayer3"
 msgstr "harici eplayer3"
@@ -7357,6 +7537,9 @@ msgstr ""
 
 msgid "minutes"
 msgstr "dakika"
+
+msgid "modern"
+msgstr ""
 
 msgid "more options (this menu)"
 msgstr "diğer seçenekler (bu menü)"
@@ -7614,6 +7797,9 @@ msgstr "gümüş"
 
 msgid "small"
 msgstr "küçük"
+
+msgid "software"
+msgstr ""
 
 msgid "sources"
 msgstr "kaynaklar"

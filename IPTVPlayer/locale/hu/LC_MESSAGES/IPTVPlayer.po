@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-20 17:54+0000\n"
+"POT-Creation-Date: 2026-11-27 22:41+0000\n"
 "PO-Revision-Date: 2026-07-27 16:49+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -612,12 +612,20 @@ msgid "Alphabetically"
 msgstr "ABC sorrend"
 
 #, python-format
+msgid "Also use the accounts of GT IPTV Player Pro (%s)"
+msgstr ""
+
+#, python-format
 msgid "Also use the accounts of X-Streamity (%s)"
 msgstr "Az X-Streamity fiókjainak használata is (%s)"
 
 #, python-format
 msgid "Also use the portals of EStalker (%s)"
 msgstr "Az EStalker portáljainak használata is (%s)"
+
+#, python-format
+msgid "Also use the portals of GT IPTV Player Pro (%s)"
+msgstr ""
 
 msgid "AltGr"
 msgstr "AltGr"
@@ -788,6 +796,9 @@ msgstr ""
 msgid "Aspect"
 msgstr "Képarány"
 
+msgid "Aspect ratio"
+msgstr ""
+
 msgid "At least one of plugin browser, extension list and main menu has to stay on, otherwise E2iPlayer could no longer be started."
 msgstr "A bővítményböngésző, a bővítménylista és a főmenü közül legalább egynek bekapcsolva kell maradnia, különben az E2iPlayer többé nem indítható."
 
@@ -802,6 +813,9 @@ msgstr "Hang"
 
 msgid "Audio buffer size [KB]"
 msgstr "Audió puffer méret [KB]"
+
+msgid "Audio codec"
+msgstr ""
 
 msgid "Audio description"
 msgstr "Hangos narráció"
@@ -868,8 +882,17 @@ msgstr "Díjak:"
 msgid "BLUE"
 msgstr "KÉK"
 
+msgid "Backdrop (fanart)"
+msgstr ""
+
+msgid "Backdrop when the film is paused"
+msgstr ""
+
 msgid "Background color"
 msgstr "Háttérszín"
+
+msgid "Background of the INFO panels"
+msgstr ""
 
 msgid "Backspace"
 msgstr "Visszatörlés"
@@ -892,6 +915,9 @@ msgstr ""
 
 msgid "Being watched"
 msgstr "Éppen nézik"
+
+msgid "Below the picture"
+msgstr ""
 
 msgid "Bengali"
 msgstr ""
@@ -916,6 +942,12 @@ msgstr "Bing-javaslatok"
 
 msgid "Biography"
 msgstr "Életrajzi"
+
+msgid "Bit depth"
+msgstr ""
+
+msgid "Bitrate"
+msgstr ""
 
 #, python-format
 msgid "Bitrate: %s"
@@ -1084,6 +1116,12 @@ msgstr "Visszanézés (timeshift.php)"
 msgid "Catch-up: %d days"
 msgstr "Visszanézés: %d nap"
 
+msgid "Catch-up: minutes after the end:"
+msgstr ""
+
+msgid "Catch-up: minutes before the start:"
+msgstr ""
+
 msgid "Categories"
 msgstr "Kategóriák"
 
@@ -1095,6 +1133,9 @@ msgstr "Kategória"
 
 msgid "Category:"
 msgstr "Kategória:"
+
+msgid "Centered"
+msgstr ""
 
 msgid "Change active movie player"
 msgstr "Aktív filmlejátszó váltása"
@@ -1114,6 +1155,12 @@ msgstr "Csatorna: %s"
 
 msgid "Channels"
 msgstr "Csatornák"
+
+msgid "Chapter"
+msgstr ""
+
+msgid "Chapters"
+msgstr ""
 
 msgid "Checking for updates"
 msgstr "Frissítések keresése"
@@ -1187,6 +1234,9 @@ msgstr "Klubok és sportolók"
 msgid "Code"
 msgstr "Kód"
 
+msgid "Codec"
+msgstr ""
+
 msgid "Collected streams only"
 msgstr "Csak gyűjtött streamek"
 
@@ -1195,6 +1245,9 @@ msgstr "Gyűjtemények"
 
 msgid "Colored text in titles and descriptions"
 msgstr "Színes szöveg a címekben és leírásokban"
+
+msgid "Colour space"
+msgstr ""
 
 msgid "Combine pull request merges with their commit"
 msgstr "Pull request merge-ök összevonása a commitjukkal"
@@ -1391,6 +1444,9 @@ msgstr "Kultúra és pop"
 msgid "Current item is not a channel."
 msgstr "Az aktuális elem nem csatorna."
 
+msgid "Current song"
+msgstr ""
+
 msgid "Cut"
 msgstr "Kivág"
 
@@ -1425,6 +1481,9 @@ msgid "Daily download limit reached - type the code"
 msgstr "Elérte a napi letöltési korlátot - írja be a kódot"
 
 msgid "Danish"
+msgstr ""
+
+msgid "Dark"
 msgstr ""
 
 msgid "Darkgray"
@@ -1585,6 +1644,9 @@ msgstr "Bélyegkép-gyorsítótár törlése most"
 
 msgid "Denmark"
 msgstr "Dánia"
+
+msgid "Description"
+msgstr ""
 
 msgid "Description:"
 msgstr "Leírás:"
@@ -2304,6 +2366,9 @@ msgstr "FebBox token (a www.febbox.com \"ui\" sütije):"
 msgid "Female"
 msgstr "Nők"
 
+msgid "File"
+msgstr ""
+
 #, python-format
 msgid "File \"%s\" already exists"
 msgstr "A(z) \"%s\" fájl már létezik"
@@ -2475,6 +2540,9 @@ msgstr "Belső kinézet kényszerítése: csak a főképernyő"
 msgid "Force legacy grid"
 msgstr "Régi ikonrács kényszerítése"
 
+msgid "Forced"
+msgstr ""
+
 msgid "Foreign movies"
 msgstr "Külföldi filmek"
 
@@ -2493,6 +2561,9 @@ msgstr "Felállások"
 msgid "Fotka.pl stream :"
 msgstr "Fotka.pl stream :"
 
+msgid "Frame rate"
+msgstr ""
+
 msgid "Free"
 msgstr "Ingyenes"
 
@@ -2505,11 +2576,17 @@ msgstr "Francia"
 msgid "From E2 settings"
 msgstr "Az E2 beállításaiból"
 
+msgid "From the host, else online"
+msgstr ""
+
 msgid "Full description loaded"
 msgstr "Teljes leírás betöltve"
 
 msgid "Full description not available"
 msgstr "A teljes leírás nem érhető el"
+
+msgid "Full screen"
+msgstr ""
 
 msgid "Full test"
 msgstr "Teljes teszt"
@@ -2682,6 +2759,9 @@ msgstr "Súgó"
 #, python-format
 msgid "Hide \"%s\" group"
 msgstr "„%s” csoport elrejtése"
+
+msgid "Hide categories containing (comma separated):"
+msgstr ""
 
 msgid "Hide the menu (live TV visible)"
 msgstr "Menü elrejtése (élő TV látható)"
@@ -3051,6 +3131,9 @@ msgstr ""
 msgid "Language"
 msgstr "Nyelv"
 
+msgid "Language of the details"
+msgstr ""
+
 msgid "Language of the details (TMDb, IMDb)"
 msgstr "A részletek nyelve (TMDb, IMDb)"
 
@@ -3066,6 +3149,15 @@ msgstr ""
 msgid "Large (title below)"
 msgstr ""
 
+msgid "Large cover, info on the right: alignment"
+msgstr ""
+
+msgid "Large cover, info on the right: labels"
+msgstr ""
+
+msgid "Large cover, info on the right: lines"
+msgstr ""
+
 msgid "Large cover, info on the right: row 1"
 msgstr ""
 
@@ -3076,6 +3168,9 @@ msgid "Large cover, info on the right: row 3"
 msgstr ""
 
 msgid "Large cover, info on the right: row 4"
+msgstr ""
+
+msgid "Large cover, info on the right: title"
 msgstr ""
 
 msgid "Large cover: size of the times below the bar"
@@ -3401,6 +3496,9 @@ msgstr ""
 
 msgid "Longest"
 msgstr "Leghosszabb"
+
+msgid "Looking for trailers..."
+msgstr ""
 
 msgid "Loved tracks"
 msgstr "Kedvelt számok"
@@ -3909,6 +4007,10 @@ msgstr "Nincs felirat ezen a nyelven: %s. Elérhető: %s"
 msgid "No title to search for."
 msgstr "Nincs keresendő cím."
 
+#, python-format
+msgid "No trailer found for \"%s\"."
+msgstr ""
+
 msgid "No valid entitlement found for asset."
 msgstr "Nem található érvényes jogosultság ehhez a tartalomhoz."
 
@@ -4033,6 +4135,9 @@ msgstr "Csak itt érhető el: %s"
 msgid "Only files in the downloads folder can be deleted."
 msgstr "Csak a letöltési mappában lévő fájlok törölhetők."
 
+msgid "Only from the host"
+msgstr ""
+
 msgid "Only links can be moved to a group."
 msgstr "Csak linkek helyezhetők át csoportba."
 
@@ -4107,6 +4212,9 @@ msgstr "Felhasználói linkek sorrendje:"
 
 msgid "Order stays fixed - useful for T9 browsing."
 msgstr "A sorrend változatlan marad - hasznos a T9-es böngészéshez."
+
+msgid "Original"
+msgstr ""
 
 msgid "Original Title:"
 msgstr "Eredeti cím:"
@@ -4244,6 +4352,9 @@ msgstr "Filozófia"
 msgid "Physical Exam"
 msgstr "Fizikális vizsgálat"
 
+msgid "Picture of the title, blurred"
+msgstr ""
+
 msgid "Pin has been changed."
 msgstr "A PIN-kód megváltozott."
 
@@ -4259,12 +4370,18 @@ msgstr "Bővítmény PIN-védelme"
 msgid "Pin protection for this host"
 msgstr "PIN-védelem ehhez a hosthoz"
 
+msgid "Pixel format"
+msgstr ""
+
 msgid "Play all from here"
 msgstr "Összes lejátszása innen"
 
 #, python-format
 msgid "Play marked items (%d)"
 msgstr "Megjelölt elemek lejátszása (%d)"
+
+msgid "Play the first trailer at once"
+msgstr ""
 
 msgid "Play torrents with TorrServer"
 msgstr "Torrentek lejátszása TorrServerrel"
@@ -4444,6 +4561,9 @@ msgstr "Portok: %s"
 msgid "Portuguese"
 msgstr "Portugál"
 
+msgid "Poster during audio playback"
+msgstr ""
+
 msgid "Poster grid for lists with pictures"
 msgstr ""
 
@@ -4503,6 +4623,9 @@ msgstr "Szakmai hálózatok"
 
 msgid "Professionals"
 msgstr "Profik"
+
+msgid "Profile"
+msgstr ""
 
 msgid "Program"
 msgstr "Program"
@@ -4640,6 +4763,9 @@ msgstr "Programfájlok olvasása..."
 
 msgid "Reading..."
 msgstr "Olvasás..."
+
+msgid "Rebuffer"
+msgstr ""
 
 msgid "Recent"
 msgstr "Legújabb"
@@ -4809,6 +4935,9 @@ msgstr "Mentett sorrend visszaállítása"
 msgid "Reset web interface"
 msgstr "Webes felület visszaállítása"
 
+msgid "Resolution"
+msgstr ""
+
 #, python-format
 msgid ""
 "Resolving hCaptcha with %s failed!\n"
@@ -4880,6 +5009,9 @@ msgid "Safe search (restricted mode):"
 msgstr "Biztonságos keresés (korlátozott mód):"
 
 msgid "Same as the bar"
+msgstr ""
+
+msgid "Sample rate"
 msgstr ""
 
 msgid "Save"
@@ -5382,6 +5514,9 @@ msgstr "Oldal-önteszt a főmenüben :"
 msgid "Site self-test: %d of %d - now %s (%d failed so far)"
 msgstr "Oldal-önteszt: %d / %d - most: %s (eddig %d sikertelen)"
 
+msgid "Size"
+msgstr ""
+
 msgid "Size:"
 msgstr "Méret:"
 
@@ -5401,6 +5536,9 @@ msgid "Slovenian"
 msgstr ""
 
 msgid "Small (16:9)"
+msgstr ""
+
+msgid "Small, in the middle"
 msgstr ""
 
 msgid "Smaller text"
@@ -5465,6 +5603,9 @@ msgstr "Összesítve legnézettebb csatornák [élő]"
 
 msgid "Sorted most viewed channels now [live]"
 msgstr "Jelenleg legnézettebb csatornák [élő]"
+
+msgid "Source"
+msgstr ""
 
 msgid "Source:"
 msgstr "Forrás:"
@@ -5541,6 +5682,9 @@ msgstr "Tárhely"
 
 msgid "Story"
 msgstr "Történet"
+
+msgid "Stream"
+msgstr ""
 
 #, python-format
 msgid "Stream formats: %s"
@@ -6009,8 +6153,17 @@ msgstr ""
 "A következő fájlba lesz mentve:\n"
 "\"%s\""
 
+msgid "The portal denied access to this entry."
+msgstr ""
+
 msgid "The portal did not hand out a link for this entry."
 msgstr "A portál nem adott linket ehhez a bejegyzéshez."
+
+msgid "The portal has blocked this MAC address."
+msgstr ""
+
+msgid "The portal refused the stream: the maximum number of connections is reached."
+msgstr ""
 
 msgid "The recordings of this page were on the site's old media server, which is offline."
 msgstr "Az oldal felvételei az oldal régi médiaszerverén voltak, amely offline."
@@ -6280,6 +6433,9 @@ msgstr ""
 msgid "Tip! You can connect USB flash drive to fix this problem."
 msgstr "Tipp! A probléma megoldásához csatlakoztathat USB flash meghajtót."
 
+msgid "Title"
+msgstr ""
+
 msgid "Titles"
 msgstr "Címek"
 
@@ -6437,6 +6593,9 @@ msgstr ""
 "\n"
 "Maga a TorrServer nem része az E2iPlayernek, külön kell telepíteni."
 
+msgid "Total bitrate"
+msgstr ""
+
 msgid "Total size:"
 msgstr "Teljes méret:"
 
@@ -6446,11 +6605,17 @@ msgstr "Turizmus"
 msgid "Tournament"
 msgstr "Torna"
 
+msgid "Track"
+msgstr ""
+
 msgid "Tracklist"
 msgstr "Számlista"
 
 msgid "Trailer"
 msgstr "Előzetes"
+
+msgid "Trailer language"
+msgstr ""
 
 msgid "Trans"
 msgstr "Transz"
@@ -6743,6 +6908,9 @@ msgstr "Videó"
 msgid "Video buffer size [MB]"
 msgstr "Videópuffer mérete [MB]"
 
+msgid "Video codec"
+msgstr ""
+
 msgid "Video library"
 msgstr "Videotéka"
 
@@ -6877,6 +7045,9 @@ msgstr "A lejátszás megkezdéséhez a teljes fájlt le kell tölteni!"
 msgid "Whole picture (black bars)"
 msgstr ""
 
+msgid "Whole width"
+msgstr ""
+
 msgid "Wiki"
 msgstr "Wiki"
 
@@ -6894,6 +7065,9 @@ msgstr ""
 
 msgid "With subtitles"
 msgstr "Felirattal"
+
+msgid "Words added to the trailer search (empty = automatic)"
+msgstr ""
 
 msgid "World"
 msgstr "Világ"
@@ -7158,6 +7332,9 @@ msgstr "közép"
 msgid "changed"
 msgstr "módosítva"
 
+msgid "classic"
+msgstr ""
+
 msgid "clock not set"
 msgstr ""
 
@@ -7218,6 +7395,9 @@ msgstr "kijelölt bejegyzés szerkesztése (mint az OK)"
 
 msgid "enable / disable manual reordering"
 msgstr "kézi rendezés be- / kikapcsolása"
+
+msgid "expired"
+msgstr ""
 
 msgid "external eplayer3"
 msgstr "külső eplayer3"
@@ -7365,6 +7545,9 @@ msgstr ""
 
 msgid "minutes"
 msgstr "perc"
+
+msgid "modern"
+msgstr ""
 
 msgid "more options (this menu)"
 msgstr "további opciók (ez a menü)"
@@ -7622,6 +7805,9 @@ msgstr "ezüst"
 
 msgid "small"
 msgstr "kicsi"
+
+msgid "software"
+msgstr ""
 
 msgid "sources"
 msgstr "források"
