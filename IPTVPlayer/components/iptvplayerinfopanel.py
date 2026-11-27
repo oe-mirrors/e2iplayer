@@ -889,6 +889,7 @@ class PlayerInfoPanel(object):
 
         textX = cls.PANEL_X + cls.COVER_W + 2 * cls.PADDING
         textW = cls.PANEL_W - cls.COVER_W - 3 * cls.PADDING
+
         def frame(name):
             return '<widget name="%sBg" position="%d,%d" size="%d,%d" zPosition="10" backgroundColor="%s" />' % (name, px(cls.PANEL_X), px(cls.PANEL_Y), px(cls.PANEL_W), px(cls.PANEL_H), cls.PANEL_COLOUR) + \
                 '<widget name="%sFrame" position="%d,%d" size="%d,%d" zPosition="10" transparent="1" alphatest="blend" />' % (name, px(cls.PANEL_X), px(cls.PANEL_Y), px(cls.PANEL_W), px(cls.PANEL_H))

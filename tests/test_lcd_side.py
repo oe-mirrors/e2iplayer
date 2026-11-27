@@ -56,7 +56,7 @@ def lcd():
     stub(base + ".tools.iptvtools", printDBG=lambda *a: None, printExc=lambda *a: None, eConnectCallback=_Any(),
          StripColorCodes=lambda t: t, GetTmpDir=lambda *a: '/tmp/', mkdirs=lambda *a: True)
     stub(base + ".components.iptvplayerinit", TranslateTXT=lambda t: t)
-    stub("enigma", getDesktop=_noDisplay,eTimer=_Any, eLabel=_Any(), gFont=_Any, ePoint=_Any, eSize=_Any)
+    stub("enigma", getDesktop=_noDisplay, eTimer=_Any, eLabel=_Any(), gFont=_Any, ePoint=_Any, eSize=_Any)
     stub("Screens.Screen", Screen=object)
     stub("Components.Label", Label=_Any)
     stub("Components.Pixmap", Pixmap=_Any)
