@@ -1,0 +1,8 @@
+{
+"clockFontSize_SD" : 24,
+"clockFontSize_HD" : 20,
+"clockFontSize_FHD" : 20,
+"clockFormat_24H" : "%H:%M",
+"clockFormat_12H" : "%I:%M %p",
+"posterMaskRadius" : 10
+}

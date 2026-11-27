@@ -319,6 +319,10 @@ class ConfigMenu(ConfigBaseWidget):
         list.append(getConfigListEntry(_("Show clock in header"), config.plugins.iptvplayer.show_header_clock))
         list.append(getConfigListEntry(_("Video player OSD clock format"), config.plugins.iptvplayer.extplayer_infobanner_clockformat))
         list.append(getConfigListEntry(_("Player Skin"), config.plugins.iptvplayer.extplayer_skin))
+        list.append(getConfigListEntry("    " + _("Background of the INFO panels"), config.plugins.iptvplayer.infopanel_background))
+        list.append(getConfigListEntry(_("Backdrop (fanart)"), config.plugins.iptvplayer.backdrop))
+        if config.plugins.iptvplayer.backdrop.value != "off":
+            list.append(getConfigListEntry("    " + _("Backdrop when the film is paused"), config.plugins.iptvplayer.backdrop_pause))
         list.append(getConfigListEntry(_("Display thumbnails"), config.plugins.iptvplayer.showcover))
         if config.plugins.iptvplayer.showcover.value:
             list.append(getConfigListEntry("    " + _("Poster grid for lists with pictures"), config.plugins.iptvplayer.poster_grid))
@@ -1007,6 +1011,7 @@ class ConfigMenu(ConfigBaseWidget):
             config.plugins.iptvplayer.buforowanie_rtmp,
             config.plugins.iptvplayer.showcover,
             config.plugins.iptvplayer.poster_grid,
+            config.plugins.iptvplayer.backdrop,
             # config.plugins.iptvplayer.ListaGraficzna,
             config.plugins.iptvplayer.pluginProtectedByPin,
             config.plugins.iptvplayer.configProtectedByPin,

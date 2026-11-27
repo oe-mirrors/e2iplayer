@@ -20,13 +20,20 @@ import random
 import time
 
 
+def clockStrftime(fmt, now=None):
+    # time.strftime() with AM / PM for "%p" in every language: the locale's "%p" is empty where the language has no
+    # AM / PM (de_DE on the box: "12:48" instead of "12:48 PM")
+    now = time.localtime() if now is None else now
+    return time.strftime(fmt.replace('%p', 'AM' if now.tm_hour < 12 else 'PM'), now)
+
+
 def clockText():
     # the clock format of the player's info banner (12 or 24 hour)
     try:
         twelveHours = '12' == config.plugins.iptvplayer.extplayer_infobanner_clockformat.value
     except Exception:
         twelveHours = False
-    return time.strftime("%I:%M %p" if twelveHours else "%H:%M")
+    return clockStrftime("%I:%M %p" if twelveHours else "%H:%M")
 
 
 def dateText():

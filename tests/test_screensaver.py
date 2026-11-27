@@ -88,6 +88,7 @@ def saver(monkeypatch):
 
     s = Saver(None, delay)
     s.standby, s.delaySetting = standby, delay
+    s.module = module  # the module under test, for its plain functions
     return s
 
 
@@ -131,3 +132,14 @@ def test_stop_unbinds(saver):
     saver.start()
     saver.close()
     assert ActionMap.hooks == [] and saver.timer.ms is None and saver.timer_conn is None
+
+
+def test_12_hour_clock_has_am_pm_in_every_language(saver):
+    # box 23.11.: under de_DE "%p" is empty - "12:48" instead of "12:48 PM"
+    import time
+    clockStrftime = saver.module.clockStrftime
+    noon = time.struct_time((2026, 11, 23, 12, 48, 0, 0, 327, 0))
+    morning = time.struct_time((2026, 11, 23, 9, 5, 0, 0, 327, 0))
+    assert clockStrftime("%I:%M %p", noon) == "12:48 PM"
+    assert clockStrftime("%I:%M %p", morning) == "09:05 AM"
+    assert clockStrftime("%H:%M", noon) == "12:48"

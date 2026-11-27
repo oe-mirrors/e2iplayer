@@ -1,0 +1,84 @@
+<screen name="IPTVExtMoviePlayer"    position="center,center" size="%d,%d" resolution="1280,720" flags="wfNoBorder" backgroundColor="#FFFFFFFF" >
+                    <widget name="pleaseWait"         noWrap="1" position="center,30"      size="500,40"    zPosition="3" transparent="0" foregroundColor="#E0E0E0"   backgroundColor="#40000000" font="Regular;25" halign="center"  valign="center"/>
+
+                    <!-- the panel (playback_banner.png: background, divider, key hints, outline of the info row) -->
+                    <widget name="playbackInfoBaner"  position="0,0"           size="1280,236"  zPosition="2" pixmap="%s" />
+
+                    <!-- left: poster, title, meta line, badges -->
+                    <widget name="infoBarPoster"      position="24,16"         size="136,204"   zPosition="5"             transparent="1" alphatest="blend" />
+                    <widget name="infoBarPosterMask"  position="24,16"         size="136,204"   zPosition="6"             transparent="1" alphatest="blend" />
+                    <widget name="infoBarTitle"       noWrap="1" position="180,12"        size="450,40"   zPosition="3" transparent="1" foregroundColor="#ffffff"   backgroundColor="#05111317" font="Regular;30" halign="left" valign="center"/>
+                    <!-- the rating of the host's page ("IMDb 7.2"): the player puts it behind the title's text and sizes it -->
+                    <widget name="infoBarRating"      noWrap="1" position="560,20"        size="70,24"    zPosition="4" transparent="0" foregroundColor="#000000"   backgroundColor="#00f5c518" font="Regular;17" halign="center" valign="center"/>
+                    <widget name="infoBarMeta"        noWrap="1" position="180,54"        size="450,26"   zPosition="3" transparent="1" foregroundColor="#9aa1ac"   backgroundColor="#05111317" font="Regular;18" halign="left" valign="center"/>
+
+                    <widget name="infoBarBadge1Frame" position="179,88"        size="42,30"     zPosition="4" transparent="0" backgroundColor="#00e3a72f" />
+                    <widget name="infoBarBadge1"      noWrap="1" position="180,89"        size="40,28"    zPosition="5" transparent="0" foregroundColor="#f2b52a"   backgroundColor="#05111317" font="Regular;18" halign="center" valign="center"/>
+                    <widget name="infoBarBadge1Sub"   noWrap="1" position="180,120"       size="40,16"    zPosition="4" transparent="1" foregroundColor="#8a919c"   backgroundColor="#05111317" font="Regular;13" halign="center" valign="top"/>
+                    <widget name="infoBarBadge2Frame" position="227,88"        size="42,30"     zPosition="4" transparent="0" backgroundColor="#00596070" />
+                    <widget name="infoBarBadge2"      noWrap="1" position="228,89"        size="40,28"    zPosition="5" transparent="0" foregroundColor="#e6e9ee"   backgroundColor="#05111317" font="Regular;18" halign="center" valign="center"/>
+                    <widget name="infoBarBadge2Sub"   noWrap="1" position="228,120"       size="40,16"    zPosition="4" transparent="1" foregroundColor="#8a919c"   backgroundColor="#05111317" font="Regular;13" halign="center" valign="top"/>
+                    <widget name="infoBarBadge3Frame" position="275,88"        size="42,30"     zPosition="4" transparent="0" backgroundColor="#00596070" />
+                    <widget name="infoBarBadge3"      noWrap="1" position="276,89"        size="40,28"    zPosition="5" transparent="0" foregroundColor="#e6e9ee"   backgroundColor="#05111317" font="Regular;18" halign="center" valign="center"/>
+                    <widget name="infoBarBadge3Sub"   noWrap="1" position="276,120"       size="40,16"    zPosition="4" transparent="1" foregroundColor="#8a919c"   backgroundColor="#05111317" font="Regular;13" halign="center" valign="top"/>
+                    <widget name="infoBarBadge4Frame" position="323,88"        size="42,30"     zPosition="4" transparent="0" backgroundColor="#00596070" />
+                    <widget name="infoBarBadge4"      noWrap="1" position="324,89"        size="40,28"    zPosition="5" transparent="0" foregroundColor="#e6e9ee"   backgroundColor="#05111317" font="Regular;18" halign="center" valign="center"/>
+                    <widget name="infoBarBadge4Sub"   noWrap="1" position="324,120"       size="40,16"    zPosition="4" transparent="1" foregroundColor="#8a919c"   backgroundColor="#05111317" font="Regular;13" halign="center" valign="top"/>
+                    <widget name="infoBarBadge5Frame" position="371,88"        size="42,30"     zPosition="4" transparent="0" backgroundColor="#00596070" />
+                    <widget name="infoBarBadge5"      noWrap="1" position="372,89"        size="40,28"    zPosition="5" transparent="0" foregroundColor="#e6e9ee"   backgroundColor="#05111317" font="Regular;18" halign="center" valign="center"/>
+                    <widget name="infoBarBadge5Sub"   noWrap="1" position="372,120"       size="40,16"    zPosition="4" transparent="1" foregroundColor="#8a919c"   backgroundColor="#05111317" font="Regular;13" halign="center" valign="top"/>
+                    <widget name="infoBarBadge6Frame" position="419,88"        size="42,30"     zPosition="4" transparent="0" backgroundColor="#00596070" />
+                    <widget name="infoBarBadge6"      noWrap="1" position="420,89"        size="40,28"    zPosition="5" transparent="0" foregroundColor="#e6e9ee"   backgroundColor="#05111317" font="Regular;18" halign="center" valign="center"/>
+                    <widget name="infoBarBadge6Sub"   noWrap="1" position="420,120"       size="40,16"    zPosition="4" transparent="1" foregroundColor="#8a919c"   backgroundColor="#05111317" font="Regular;13" halign="center" valign="top"/>
+                    <widget name="infoBarBadge7Frame" position="467,88"        size="42,30"     zPosition="4" transparent="0" backgroundColor="#00596070" />
+                    <widget name="infoBarBadge7"      noWrap="1" position="468,89"        size="40,28"    zPosition="5" transparent="0" foregroundColor="#e6e9ee"   backgroundColor="#05111317" font="Regular;18" halign="center" valign="center"/>
+                    <widget name="infoBarBadge7Sub"   noWrap="1" position="468,120"       size="40,16"    zPosition="4" transparent="1" foregroundColor="#8a919c"   backgroundColor="#05111317" font="Regular;13" halign="center" valign="top"/>
+                    <widget name="infoBarBadge8Frame" position="515,88"        size="42,30"     zPosition="4" transparent="0" backgroundColor="#00596070" />
+                    <widget name="infoBarBadge8"      noWrap="1" position="516,89"        size="40,28"    zPosition="5" transparent="0" foregroundColor="#e6e9ee"   backgroundColor="#05111317" font="Regular;18" halign="center" valign="center"/>
+                    <widget name="infoBarBadge8Sub"   noWrap="1" position="516,120"       size="40,16"    zPosition="4" transparent="1" foregroundColor="#8a919c"   backgroundColor="#05111317" font="Regular;13" halign="center" valign="top"/>
+                    <widget name="infoBarBadge9Frame" position="563,88"        size="42,30"     zPosition="4" transparent="0" backgroundColor="#00596070" />
+                    <widget name="infoBarBadge9"      noWrap="1" position="564,89"        size="40,28"    zPosition="5" transparent="0" foregroundColor="#e6e9ee"   backgroundColor="#05111317" font="Regular;18" halign="center" valign="center"/>
+                    <widget name="infoBarBadge9Sub"   noWrap="1" position="564,120"       size="40,16"    zPosition="4" transparent="1" foregroundColor="#8a919c"   backgroundColor="#05111317" font="Regular;13" halign="center" valign="top"/>
+
+                    <!-- right: player logo, play state, position -->
+                    <widget name="playlistInfo"       noWrap="1" position="668,8"         size="300,22"   zPosition="3" transparent="1" foregroundColor="#9aa1ac"   backgroundColor="#05111317" font="Regular;16" halign="left"   valign="center"/>
+                    <widget name="logoIcon"           position="668,40"        size="90,24"     zPosition="4"             transparent="1" alphatest="blend" />
+                    <widget name="statusIcon"         position="930,22"        size="60,60"     zPosition="4"             transparent="1" alphatest="blend" />
+                    <widget name="loopIcon"           position="1210,42"       size="40,21"     zPosition="4"             transparent="1" alphatest="blend" />
+
+                    <widget name="currTimeLabel"      noWrap="1" position="668,92"        size="98,30"    zPosition="3" transparent="1" foregroundColor="#ffffff"   backgroundColor="#05111317" font="Regular;20" halign="left"   valign="center"/>
+                    <widget name="progressBar"        position="772,104"       size="380,6"     zPosition="5" pixmap="%s" transparent="1" />
+                    <widget name="bufferingCBar"      position="772,104"       size="380,6"     zPosition="4" pixmap="%s" transparent="1" />
+                    <widget name="bufferingBar"       position="772,104"       size="380,6"     zPosition="3" pixmap="%s" transparent="1" />
+                    <widget name="infoBarProgressKnob" position="772,99"       size="16,16"     zPosition="7"             transparent="1" alphatest="blend" />
+                    <widget name="lengthTimeLabel"    noWrap="1" position="1158,92"       size="98,30"    zPosition="3" transparent="1" foregroundColor="#ffffff"   backgroundColor="#05111317" font="Regular;20" halign="right"  valign="center"/>
+                    <widget name="remainedLabel"      noWrap="1" position="1052,116"      size="100,22"   zPosition="3" transparent="1" foregroundColor="#7d8591"   backgroundColor="#05111317" font="Regular;15" halign="right"  valign="center"/>
+                    <widget name="videoInfo"          noWrap="1" position="668,128"       size="380,24"   zPosition="3" transparent="1" foregroundColor="#6f7783"   backgroundColor="#05111317" font="Regular;15" halign="left"   valign="center"/>
+
+                    <widget name="goToSeekPointer"    position="717,68"        size="110,38"    zPosition="8" pixmap="%s" transparent="1" alphatest="blend" />
+                    <widget name="goToSeekLabel"      noWrap="1" position="717,68"        size="110,30"   zPosition="9" transparent="1" foregroundColor="white"     backgroundColor="#003b82f6" font="Regular;20" halign="center" valign="center"/>
+
+                    <!-- info row: symbol, label and value per column (video, video codec, audio, audio codec, subtitles); an empty column hides all three -->
+                    <widget name="infoBarStrip1Icon"  position="193,174"       size="22,22"     zPosition="4"             transparent="1" alphatest="blend" />
+                    <widget name="infoBarStrip2Icon"  position="408,174"       size="22,22"     zPosition="4"             transparent="1" alphatest="blend" />
+                    <widget name="infoBarStrip3Icon"  position="653,174"       size="22,22"     zPosition="4"             transparent="1" alphatest="blend" />
+                    <widget name="infoBarStrip4Icon"  position="858,174"       size="22,22"     zPosition="4"             transparent="1" alphatest="blend" />
+                    <widget name="infoBarStrip5Icon"  position="1033,174"      size="22,22"     zPosition="4"             transparent="1" alphatest="blend" />
+                    <widget name="infoBarStrip1Key"   noWrap="1" position="220,172"       size="80,26"    zPosition="3" transparent="1" foregroundColor="#e6e9ee"   backgroundColor="#05111317" font="Regular;15" halign="left" valign="center"/>
+                    <widget name="infoBarStrip1Value" noWrap="1" position="306,172"       size="81,26"    zPosition="3" transparent="1" foregroundColor="#a3aab5"   backgroundColor="#05111317" font="Regular;15" halign="left" valign="center"/>
+                    <widget name="infoBarStrip2Key"   noWrap="1" position="435,172"       size="80,26"    zPosition="3" transparent="1" foregroundColor="#e6e9ee"   backgroundColor="#05111317" font="Regular;15" halign="left" valign="center"/>
+                    <widget name="infoBarStrip2Value" noWrap="1" position="521,172"       size="111,26"    zPosition="3" transparent="1" foregroundColor="#a3aab5"   backgroundColor="#05111317" font="Regular;15" halign="left" valign="center"/>
+                    <widget name="infoBarStrip3Key"   noWrap="1" position="680,172"       size="80,26"    zPosition="3" transparent="1" foregroundColor="#e6e9ee"   backgroundColor="#05111317" font="Regular;15" halign="left" valign="center"/>
+                    <widget name="infoBarStrip3Value" noWrap="1" position="766,172"       size="71,26"    zPosition="3" transparent="1" foregroundColor="#a3aab5"   backgroundColor="#05111317" font="Regular;15" halign="left" valign="center"/>
+                    <widget name="infoBarStrip4Key"   noWrap="1" position="885,172"       size="80,26"    zPosition="3" transparent="1" foregroundColor="#e6e9ee"   backgroundColor="#05111317" font="Regular;15" halign="left" valign="center"/>
+                    <widget name="infoBarStrip4Value" noWrap="1" position="971,172"       size="41,26"    zPosition="3" transparent="1" foregroundColor="#a3aab5"   backgroundColor="#05111317" font="Regular;15" halign="left" valign="center"/>
+                    <widget name="infoBarStrip5Key"   noWrap="1" position="1060,172"      size="80,26"    zPosition="3" transparent="1" foregroundColor="#e6e9ee"   backgroundColor="#05111317" font="Regular;15" halign="left" valign="center"/>
+                    <widget name="infoBarStrip5Value" noWrap="1" position="1146,172"      size="102,26"    zPosition="3" transparent="1" foregroundColor="#a3aab5"   backgroundColor="#05111317" font="Regular;15" halign="left" valign="center"/>
+
+                    %s
+
+                    <widget name="subSynchroIcon"     position="0,0"           size="180,66"  zPosition="4" transparent="1" alphatest="blend" />
+                    <widget name="subSynchroLabel"    position="1,3"           size="135,50"  zPosition="5" transparent="1" foregroundColor="white"      backgroundColor="transparent" font="Regular;24" halign="center"  valign="center"/>
+
+                    %s
+</screen>

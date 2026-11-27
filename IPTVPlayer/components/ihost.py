@@ -254,8 +254,10 @@ class ArticleContent:
         "source": "Source:"
     }
 
-    def __init__(self, title='', text='', images=None, trailers=None, richDescParams=None, visualizer=None):
+    def __init__(self, title='', text='', images=None, trailers=None, richDescParams=None, visualizer=None, backdrop=''):
         self.title = title
+        # url of the title's backdrop (fanart), '' for none - see components/iptvbackdrop.py
+        self.backdrop = backdrop
         self.text = text
         self.images = images if images is not None else []
         self.trailers = trailers if trailers is not None else []
@@ -489,12 +491,20 @@ class CHostBase(IHost):
                 setInfoItem(None)
         if None is hList:
             return RetHost(retCode, value=retlist)
+        # the backdrop behind the INFO page and the player's panels: the host's own, else the picture of the
+        # metadata lookup that answered on this INFO (an off setting asks nothing)
+        backdrop = ''
+        try:
+            from Plugins.Extensions.IPTVPlayer.components.iptvbackdrop import backdropUrl
+            backdrop = backdropUrl(cItem, hList)
+        except Exception:
+            printExc()
         for item in hList:
             title = item.get('title', '')
             text = item.get('text', '')
             images = item.get("images", [])
             othersInfo = item.get('other_info', '')
-            retlist.append(ArticleContent(title=title, text=text, images=images, richDescParams=othersInfo))
+            retlist.append(ArticleContent(title=title, text=text, images=images, richDescParams=othersInfo, backdrop=backdrop))
         if len(hList):
             retCode = RetHost.OK
         return RetHost(retCode, value=retlist)

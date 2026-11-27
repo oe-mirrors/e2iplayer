@@ -5,10 +5,14 @@ import json
 import os
 import re
 import sys
+import tempfile
 import types
 import xml.etree.ElementTree as ET
 
 import pytest
+
+# Pillow is on every box; a PC / CI without it skips the tests that draw pictures
+needsPil = pytest.mark.skipif(importlib.util.find_spec("PIL") is None, reason="Pillow not installed")
 
 ROOT = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "IPTVPlayer")
 LINE_H = 25
@@ -62,6 +66,9 @@ class _Instance(object):
     def calculateSize(self):
         lines = max(1, (len(self.text) + CHARS_PER_LINE - 1) // CHARS_PER_LINE)
         return _Size(self.dim.w, lines * LINE_H)
+
+    def setPixmap(self, pixmap):
+        self.pixmap = pixmap
 
 
 class _Widget(object):
@@ -157,11 +164,18 @@ def panelModule():
          eConnectCallback=lambda signal, fnc: fnc, StripColorCodes=lambda text: re.sub(r'\\c[0-9a-fA-F]{8}', '', text or ''),
          ShortHostTitle=lambda title: re.sub(r'^https?://(?:www\.)?([^\s?#]+?)/?$', r'\1', title.strip()))
     stub("Components.Label", Label=_Widget)
+    stub("Components.Pixmap", Pixmap=_Widget)
+    stub("Components.config", config=types.SimpleNamespace(plugins=types.SimpleNamespace(iptvplayer=types.SimpleNamespace(
+        infopanel_background=types.SimpleNamespace(value='picture')))))
+    stub("Tools")
+    # no pixmap: the plain panels (the rounded pictures have tests of their own)
+    stub("Tools.LoadPixmap", LoadPixmap=lambda path, cached=True: None)
     stub("enigma", ePoint=_Point, eSize=_Size, eTimer=_Timer)
 
     spec = importlib.util.spec_from_file_location("iptvplayerinfopanel_test", os.path.join(ROOT, "components", "iptvplayerinfopanel.py"))
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
+    module.PANEL_PICTURE = os.path.join(tempfile.mkdtemp(), 'panel_%s.png')
     yield module
     for name, mod in saved.items():
         if mod is None:
@@ -465,7 +479,8 @@ def test_lines(panelModule):
     assert panelModule.sourceLine("Host", "Vidoza", "cdn.org") == "Host: Host  ·  Link: Vidoza  ·  Server: cdn.org"
     assert panelModule.sourceLine("Host", "", "") == "Host: Host"
     assert panelModule.sourceLine("", "", "") == ""
-    assert panelModule.streamLine(" H264 1920x1080p ", {'encode': 'MPEG/L3', 'name': 'und'}) == "Video: H264 1920x1080p  ·  Audio: L3"
+    # exteplayer3 names MP2 "A_MPEG/L3"
+    assert panelModule.streamLine(" H264 1920x1080p ", {'encode': 'MPEG/L3', 'name': 'und'}) == "Video: H264 1920x1080p  ·  Audio: MP2"
     assert panelModule.streamLine(" ", {'encode': 'AAC', 'name': 'deu'}) == "Audio: AAC (deu)"
     assert panelModule.streamLine(" ", {}) == ""
     assert panelModule.streamLine("", None) == ""
@@ -641,3 +656,529 @@ def test_update_stream_only_while_visible(panelModule):
     owner.playback['AudioTrack'] = {'encode': 'AC3', 'name': 'deu'}
     panel.updateStream()
     assert owner['infoPanelStream'].text == 'Video: H265 3840x2160p  ·  Audio: AC3 (deu)'
+
+
+# ---- the tracks of a newer exteplayer3: infobar badges and the "Playback info" page (INFO twice) ----
+# v_c / a_c of exteplayer3 with its track info for front ends, as _mapTrack keeps them
+EP3_VIDEO = {'id': 256, 'encode': 'HEVC', 'name': 'und', 'width': 3840, 'height': 1608, 'frame_rate': 23.976, 'progressive': True,
+             'aspect_ratio': '2.35', 'hdr': 1, 'pr': 'Main 10@5.1', 'bd': 10, 'br': 0, 'dv': 8, 'cr': 'bt2020'}
+EP3_AUDIO = {'id': 1, 'encode': 'DTS', 'name': 'eng', 'c': 8, 'd': 'DTS-HD MA', 't': 'Main', 'sr': 48000, 'br': 0, 'cl': '7.1', 'bps': 24}
+OLD_VIDEO = {'id': 0, 'encode': 'MPEG4/ISO/AVC', 'name': 'und', 'width': 1920, 'height': 800, 'frame_rate': 25.0, 'progressive': True, 'aspect_ratio': '2.35'}
+
+
+@pytest.mark.parametrize("track,expected", [
+    ({'encode': 'AAC'}, 'AAC'),
+    ({'encode': 'EAC3', 'd': 'Dolby Atmos'}, 'Dolby Atmos'),
+    # the player decoded it itself: an older player names no codec, a newer one its display name
+    ({'encode': 'IPCM'}, ''),
+    ({'encode': 'IPCM', 'd': 'MP3'}, 'MP3'),
+    ({'encode': 'MPEG/L3'}, 'MP2'),
+    ({'encode': 'audio/x-ac3'}, 'AC3'),
+    ({'encode': 'audio/mpeg'}, ''),
+    ({'encode': 'AAC_LATM'}, 'AAC LATM'),
+    ({}, ''),
+])
+def test_audio_codec_name(panelModule, track, expected):
+    assert panelModule.audioCodecName(track) == expected
+
+
+def test_screensaver_shows_no_decoder_output_as_format(panelModule):
+    # box 20.11.: a podcast showed "IPCM" (the PCM of software decoding) as its format
+    assert panelModule.audioText({'encode': 'IPCM', 'name': 'und'}) == ''
+    assert panelModule.audioText({'encode': 'IPCM', 'name': 'ara', 'd': 'MP3'}) == 'MP3 (ara)'
+
+
+@pytest.mark.parametrize("encode,expected", [
+    ('MPEG4/ISO/AVC', ('H.264', 'H.264 (AVC)')),
+    ('HEVC', ('HEVC', 'H.265 (HEVC)')),
+    ('video/x-h265', ('HEVC', 'H.265 (HEVC)')),
+    ('video/x-h264', ('H.264', 'H.264 (AVC)')),
+    ('MPEG2', ('MPEG-2', 'MPEG-2')),
+    ('MPEG4', ('MPEG-4', 'MPEG-4 Part 2')),
+    ('VP9', ('VP9', 'VP9')),
+    ('THEORA', ('THEORA', 'THEORA')),
+])
+def test_video_codec_names(panelModule, encode, expected):
+    assert panelModule.videoCodecNames(encode) == expected
+
+
+@pytest.mark.parametrize("track,expected", [
+    ({'cl': '5.1(side)', 'c': 6}, '5.1'),
+    ({'cl': 'stereo'}, '2.0'),
+    ({'cl': '', 'c': 8}, '7.1'),
+    ({'c': 5}, '5.0'),
+    ({'c': 9}, '9 ch'),
+    ({'c': 0}, ''),
+    ({}, ''),
+])
+def test_channels_text(panelModule, track, expected):
+    assert panelModule.channelsText(track) == expected
+
+
+@pytest.mark.parametrize("size,expected", [
+    ((3840, 2160), '4K'), ((3840, 1600), '4K'), ((1920, 800), 'FHD'), ((1440, 1080), 'FHD'), ((1280, 534), 'HD'),
+    ((2560, 1440), 'QHD'), ((720, 576), 'SD'), ((0, 0), ''), ((1920, 0), ''),
+])
+def test_resolution_class(panelModule, size, expected):
+    assert panelModule.resolutionClass(*size) == expected
+
+
+@pytest.mark.parametrize("fps,expected", [(25.0, '25'), (23.976, '23.976'), (29.97, '29.97'), (59.94, '59.94'), (24.0005, '24'),
+                                          (0, ''), (200, '200'), (None, '')])
+def test_frame_rate_text(panelModule, fps, expected):
+    assert panelModule.frameRateText(fps) == expected
+
+
+def test_badges_of_a_newer_player(panelModule):
+    assert panelModule.badgeList(EP3_VIDEO, EP3_AUDIO, 23.976) == [
+        ('res', '4K', ''), ('video', '2160p', ''), ('video', 'HEVC', 'H.265'), ('video', '10bit', ''), ('video', 'HDR10', ''),
+        ('video', 'DV', ''), ('video', '23.976', 'FPS'), ('audio', '7.1', 'Channels'), ('audio', 'DTS-HD MA', '')]
+
+
+def test_badges_of_an_older_player_and_of_radio(panelModule):
+    # a cinemascope 1920x800 is "1080p", an interlaced picture "i"
+    assert panelModule.badgeList(OLD_VIDEO, {'encode': 'AC3', 'name': 'deu'}, 25) == [
+        ('res', 'FHD', ''), ('video', '1080p', ''), ('video', 'H.264', 'AVC'), ('video', '25', 'FPS'), ('audio', 'AC3', '')]
+    interlaced = dict(OLD_VIDEO, width=720, height=576, progressive=False)
+    assert panelModule.badgeList(interlaced, {})[:2] == [('res', 'SD', ''), ('video', '576i', '')]
+    # radio, software decoded by an older player: nothing that is not known
+    assert panelModule.badgeList({}, {'encode': 'IPCM'}) == []
+    assert panelModule.badgeList(None, {'encode': 'AAC', 'c': 2}) == [('audio', '2.0', 'Channels'), ('audio', 'AAC', '')]
+
+
+def test_subtitle_badge(panelModule):
+    subtitle = {'kind': 'embedded', 'lang': 'ger', 'format': 'SRT'}
+    assert panelModule.badgeList({}, {}, 0, subtitle) == [('sub', 'GER', 'SRT')]
+    assert panelModule.badgeList({}, {}, 0, {'kind': 'file', 'lang': '', 'format': 'SRT'}) == [('sub', 'SUB', 'SRT')]
+    assert panelModule.badgeList({}, {}, 0, {}) == []
+
+
+def test_info_row_texts(panelModule):
+    subtitle = {'kind': 'embedded', 'lang': 'eng', 'format': 'PGS'}
+    assert panelModule.stripTexts(EP3_VIDEO, EP3_AUDIO, subtitle, _langName) == [
+        ('Video', '3840×1608 (2.35)'), ('Video codec', 'H.265 (HEVC)'), ('Audio', 'DTS-HD MA 7.1'), ('Audio codec', 'DTS'),
+        ('Subtitles', 'English (PGS)')]
+    # nothing known: empty values, subtitles off
+    assert panelModule.stripTexts({}, {}, {}) == [('Video', ''), ('Video codec', ''), ('Audio', ''), ('Audio codec', ''), ('Subtitles', 'Off')]
+    # software decoded by an older player: no codec family to name
+    assert panelModule.stripTexts({}, {'encode': 'IPCM', 'c': 2})[2:4] == [('Audio', '2.0'), ('Audio codec', '')]
+
+
+def _rows(sections):
+    return dict((section, dict(rows)) for section, rows in sections)
+
+
+def _langName(name):
+    return {'eng': 'English', 'ger': 'German', 'de': 'German'}.get(name, name)
+
+
+def test_tech_sections_of_a_newer_player(panelModule):
+    subtitle = {'kind': 'embedded', 'index': 2, 'count': 3, 'lang': 'ger', 'title': 'Forced', 'format': 'PGS', 'forced': True}
+    sections = panelModule.techSections(EP3_VIDEO, EP3_AUDIO, [{'id': 1}, {'id': 2}], subtitle, None, 'MKV', 0, 23.976, _langName)
+    assert [section for section, rows in sections] == ['video', 'audio', 'subtitle']
+    rows = _rows(sections)
+    assert rows['video'] == {'Codec': 'H.265 (HEVC)', 'Profile': 'Main 10@5.1', 'Resolution': '3840×1608p  ·  4K', 'Aspect ratio': '2.35',
+                             'Frame rate': '23.976 fps', 'Bit depth': '10 bit', 'HDR': 'HDR10 + Dolby Vision 8', 'Colour space': 'BT.2020',
+                             'Stream': 'MKV'}
+    assert rows['audio'] == {'Track': '1 / 2', 'Language': 'English', 'Title': 'Main', 'Codec': 'DTS-HD MA', 'Channels': '7.1 (8 ch)',
+                             'Sample rate': '48 kHz', 'Bit depth': '24 bit'}
+    assert rows['subtitle'] == {'Track': '2 / 3', 'Language': 'German', 'Title': 'Forced', 'Type': 'PGS', 'Forced': 'Yes'}
+    # the order of the rows is fixed
+    assert [label for label, value in sections[0][1]][:3] == ['Codec', 'Profile', 'Resolution']
+
+
+def test_tech_sections_of_an_older_player_with_a_local_file(panelModule):
+    # ffprobe fills in what the player does not say; the link's bitrate only when the video has none of its own
+    audio = {'id': 1, 'encode': 'EAC3', 'name': 'deu'}
+    sections = panelModule.techSections(OLD_VIDEO, audio, [{'id': 1}, {'id': 2}], {}, json.loads(PROBE_MKV), 'MKV', 3500000, 25)
+    rows = _rows(sections)
+    assert rows['video']['Codec'] == 'H.264 (AVC)'  # the player's codec wins
+    assert rows['video']['Profile'] == 'Main 10@5.0' and rows['video']['Bit depth'] == '10 bit' and rows['video']['HDR'] == 'HDR10'
+    assert rows['video']['Total bitrate'] == '3.5 Mbit/s'
+    # no link bitrate (a download): the file's, as on page 1 (box 22.11.: missing on page 2)
+    noLink = _rows(panelModule.techSections(OLD_VIDEO, audio, [], {}, json.loads(PROBE_MKV), 'MKV', 0, 25))
+    assert noLink['video']['Total bitrate'] == '4.2 Mbit/s'
+    assert rows['video']['Stream'] == 'MKV'
+    assert rows['audio']['Codec'] == 'E-AC3' and rows['audio']['Channels'] == '5.1 (6 ch)' and rows['audio']['Sample rate'] == '48 kHz'
+    assert rows['audio']['Bitrate'] == '640 kbit/s'
+    assert rows['subtitle'] == {'Track': 'Off'}
+
+
+def test_tech_sections_of_radio(panelModule):
+    sections = panelModule.techSections({}, {'id': 0, 'encode': 'IPCM', 'name': 'und'}, [], {}, None, 'HLS', 128000, 0)
+    rows = _rows(sections)
+    assert rows['video'] == {'Stream': 'HLS'}
+    assert rows['audio'] == {'Codec': 'PCM (software)'}
+    sections = panelModule.techSections({}, {}, [], {}, None, '', 0, 0)
+    assert _rows(sections)['video'] == {} and _rows(sections)['audio'] == {}
+
+
+def test_tech_values_are_cut(panelModule):
+    audio = {'id': 1, 'encode': 'AAC', 't': 'A very long track title that does not fit at all'}
+    title = _rows(panelModule.techSections({}, audio, [], {}, None, '', 0, 0))['audio']['Title']
+    assert len(title) == panelModule.VALUE_MAX and title.endswith('…')
+    # capitals are wider: a song title in capitals is cut earlier (box 23.11.: "...WEDDIN" ran out of the row)
+    assert panelModule.cutValue('ASHE - STOP THE WEDDING!') == 'ASHE - STOP THE WEDD…'
+    assert panelModule.cutValue('HDR10 + Dolby Vision 8') == 'HDR10 + Dolby Vision 8'
+
+
+class _TechOwner(_Owner):
+    def __init__(self):
+        _Owner.__init__(self)
+        self.playback = {'VideoTrack': dict(EP3_VIDEO), 'AudioTrack': dict(EP3_AUDIO), 'AudioTracks': [dict(EP3_AUDIO)]}
+        self.streamType = 'HLS'
+
+    def currentFrameRate(self):
+        return 23.976
+
+    def currentSubtitleInfo(self):
+        return {'kind': 'file', 'lang': 'de', 'title': 'movie.de.srt', 'format': 'SRT'}
+
+    def _getStreamTypeLabel(self):
+        return self.streamType
+
+    def trackLanguageName(self, name):
+        return _langName(name)
+
+
+def _techPanel(module, owner):
+    panel = module.PlayerInfoPanel(owner, {})
+    root = ET.fromstring('<screen>%s</screen>' % module.PlayerInfoPanel.skinWidgets(1.5))
+    for widget in root:
+        x, y = [int(v) for v in widget.get('position').split(',')]
+        w, h = [int(v) for v in widget.get('size').split(',')]
+        owner[widget.get('name')].instance = _Instance(x, y, w, h)
+    return panel
+
+
+def test_info_twice_shows_the_playback_info(panelModule):
+    owner = _TechOwner()
+    panel = _techPanel(panelModule, owner)
+    panel.show()
+    assert panel.page == 1 and owner['infoPanelBg'].visible and not owner['techPanelBg'].visible
+    panel.showTech()
+    assert panel.page == 2 and panel.visible
+    assert not owner['infoPanelBg'].visible and not owner['infoPanelTitle'].visible
+    assert owner['techPanelBg'].visible and owner['techPanelTitle'].text == 'The title'
+    assert owner['techPanelVideoHead'].text == 'Video' and owner['techPanelAudioHead'].text == 'Audio'
+    keys = owner['techPanelVideoKeys'].text.split('\n')
+    values = owner['techPanelVideoValues'].text.split('\n')
+    assert len(keys) == len(values) and keys[0] == 'Codec' and values[0] == 'H.265 (HEVC)'
+    assert 'Stream' in keys and values[keys.index('Stream')] == 'HLS'
+    assert owner['techPanelAudioValues'].text.split('\n')[:2] == ['English', 'Main']
+    assert owner['techPanelSubtitleValues'].text == 'German\nmovie.de.srt\nSRT\nFile'
+    # the columns as high as their rows, the panel as high as the longest one
+    bg = _rect(owner, 'techPanelBg')
+    videoKeys = _rect(owner, 'techPanelVideoKeys')
+    assert videoKeys[1] + videoKeys[3] <= bg[1] + bg[3]
+    assert bg[3] <= panelModule.PlayerInfoPanel.PANEL_H * 1.5
+    panel.hide()
+    assert not panel.visible and panel.page == 0 and not owner['techPanelBg'].visible
+
+
+def test_playback_info_follows_a_track_change(panelModule):
+    owner = _TechOwner()
+    panel = _techPanel(panelModule, owner)
+    panel.showTech()
+    owner.playback['AudioTrack'] = {'id': 2, 'encode': 'AC3', 'name': 'ger', 'c': 6}
+    panel.updateStream()
+    assert 'AC3' in owner['techPanelAudioValues'].text and '5.1 (6 ch)' in owner['techPanelAudioValues'].text
+    # page 1 is not touched while page 2 is open
+    assert owner['infoPanelStream'].text in (' ', '')
+
+
+def test_empty_section_frees_its_column(panelModule):
+    # radio without a stream type: the audio column takes the first place
+    owner = _TechOwner()
+    owner.playback = {'VideoTrack': {}, 'AudioTrack': {'id': 0, 'encode': 'AAC', 'c': 2}, 'AudioTracks': []}
+    owner.streamType = ''
+    panel = _techPanel(panelModule, owner)
+    firstColumnX = _rect(owner, 'techPanelVideoHead')[0]
+    panel.showTech()
+    assert not owner['techPanelVideoHead'].visible and not owner['techPanelVideoKeys'].visible
+    assert owner['techPanelAudioHead'].visible and _rect(owner, 'techPanelAudioHead')[0] == firstColumnX
+    assert _rect(owner, 'techPanelSubtitleKeys')[0] < 455 * 1.5
+    # two columns shown: one line between them
+    assert owner['techPanelSep1'].visible and not owner['techPanelSep2'].visible
+
+
+def test_playback_info_column_lines_and_opaque_panels(panelModule):
+    # forum 25.11.: lines between Video / Audio / Subtitles; the film shone through the panels (alpha in the colour)
+    owner = _TechOwner()
+    panel = _techPanel(panelModule, owner)
+    panel.showTech()
+    assert owner['techPanelSep1'].visible and owner['techPanelSep2'].visible
+    sep1, sep2 = _rect(owner, 'techPanelSep1'), _rect(owner, 'techPanelSep2')
+    audioX, subtitleX = _rect(owner, 'techPanelAudioHead')[0], _rect(owner, 'techPanelSubtitleHead')[0]
+    videoValues = _rect(owner, 'techPanelVideoValues')
+    # in the gap between the columns, from the headings down to the rows' end
+    assert videoValues[0] + videoValues[2] <= sep1[0] < audioX and sep1[0] < sep2[0] < subtitleX
+    assert sep1[3] > 0 and sep1[1] + sep1[3] <= _rect(owner, 'techPanelBg')[1] + _rect(owner, 'techPanelBg')[3]
+    skin = panelModule.PlayerInfoPanel.skinWidgets(1.0)
+    colours = set(re.findall(r'backgroundColor="#([0-9a-fA-F]{2})', skin))
+    assert colours == {'00'}, colours
+
+
+def test_owner_without_the_new_methods(panelModule):
+    # an owner like the tests' plain one has none of the helpers
+    owner, panel = _panel(panelModule)
+    panel.showTech()
+    assert owner['techPanelBg'].visible
+    assert owner['techPanelVideoKeys'].text.split('\n')[0] == 'Codec'
+
+
+@needsPil
+def test_rounded_panel_picture(panelModule, tmp_path):
+    # forum 27.11.: round corners and a thin frame; the corners transparent, inside opaque
+    from PIL import Image
+    target = str(tmp_path / "panel.png")
+    assert panelModule.makePanelPicture(target, 600, 300, 1.5)
+    with Image.open(target) as img:
+        assert img.mode == 'RGBA' and img.size == (600, 300)
+        for corner in ((0, 0), (599, 0), (0, 299), (599, 299)):
+            assert img.getpixel(corner)[3] == 0
+        assert img.getpixel((300, 150)) == panelModule.PANEL_RGB + (255,)
+        assert img.getpixel((300, 0)) == panelModule.FRAME_RGB + (255,)
+    assert not panelModule.makePanelPicture(target, 4, 4, 1.0)
+
+
+@needsPil
+def test_panel_inside_from_backdrop_and_poster(panelModule, tmp_path):
+    from PIL import Image
+    backdrop = str(tmp_path / "backdrop.jpg")
+    # left half red, right half blue: the piece under the panel at the right is blue, darkened
+    img = Image.new('RGB', (1920, 1080), (200, 0, 0))
+    img.paste(Image.new('RGB', (960, 1080), (0, 0, 200)), (960, 0))
+    img.save(backdrop)
+    inside = panelModule.panelInside(400, 200, backdrop, (1400, 100))
+    r, g, b = inside.getpixel((200, 100))
+    assert b > r and 60 < b < 160
+    poster = str(tmp_path / "poster.png")
+    Image.new('RGB', (200, 300), (0, 200, 0)).save(poster)
+    r, g, b = panelModule.panelInside(400, 200, '', (0, 0), poster).getpixel((200, 100))
+    assert g > r and 40 < g < 100
+    assert panelModule.panelInside(400, 200) is None
+    # a picture PIL can't read: the plain colour
+    assert panelModule.panelInside(400, 200, str(tmp_path / "missing.jpg")) is None
+
+
+class _BackdropOwner(_TechOwner):
+    backdrop = ''
+
+    def backdropFile(self):
+        return self.backdrop
+
+
+@needsPil
+def test_panels_take_the_rounded_picture(panelModule, monkeypatch, tmp_path):
+    from PIL import Image
+    loaded = []
+    monkeypatch.setattr(panelModule, 'LoadPixmap', lambda path, cached=True: loaded.append(path) or 'pixmap')
+    owner = _BackdropOwner()
+    panel = _techPanel(panelModule, owner)
+    panel.show()
+    assert owner['infoPanelFrame'].visible and not owner['infoPanelBg'].visible
+    assert _rect(owner, 'infoPanelFrame') == _rect(owner, 'infoPanelBg')
+    assert owner['infoPanelFrame'].instance.pixmap == 'pixmap'
+    count = len(loaded)
+    panel.show()
+    # the same panel again: the picture is not made a second time
+    assert len(loaded) == count
+    # the backdrop comes in: the open panel gets it
+    owner.backdrop = str(tmp_path / "backdrop.jpg")
+    Image.new('RGB', (1920, 1080), (0, 0, 200)).save(owner.backdrop)
+    panel.backgroundChanged()
+    assert len(loaded) == count + 1 and panel.frameKeys['info'][4] == owner.backdrop
+    panel.showTech()
+    assert owner['techPanelFrame'].visible and not owner['techPanelBg'].visible
+    assert _rect(owner, 'techPanelFrame') == _rect(owner, 'techPanelBg')
+    panel.hide()
+    assert not owner['techPanelFrame'].visible and not owner['infoPanelFrame'].visible
+
+
+@needsPil
+def test_dark_setting_and_no_pil(panelModule, monkeypatch, tmp_path):
+    monkeypatch.setattr(panelModule, 'LoadPixmap', lambda path, cached=True: 'pixmap')
+    monkeypatch.setattr(panelModule.config.plugins.iptvplayer.infopanel_background, 'value', 'dark')
+    owner = _BackdropOwner()
+    owner.backdrop = str(tmp_path / "backdrop.jpg")
+    panel = _techPanel(panelModule, owner)
+    panel.show()
+    # rounded, but without the picture
+    assert owner['infoPanelFrame'].visible and panel.frameKeys['info'][4:] == ('', '')
+
+    def noPil(*args):
+        raise ImportError('PIL')
+    monkeypatch.setattr(panelModule, 'makePanelPicture', noPil)
+    panel = _techPanel(panelModule, _BackdropOwner())
+    panel.show()
+    assert panel.framesFailed and panel.owner['infoPanelBg'].visible and not panel.owner['infoPanelFrame'].visible
+
+
+def _skinText(name):
+    with open(os.path.join(ROOT, "playerskins", name, "playerskin.xml"), encoding="utf-8") as f:
+        return f.read()
+
+
+@needsPil
+def test_modern_skin_has_the_widgets_of_every_skin_and_its_own(panelModule):
+    default = _skinText("default")
+    modern = _skinText("modern")
+    names = set(re.findall(r'name="([^"]+)"', modern))
+    assert set(re.findall(r'name="([^"]+)"', default)) <= names
+    assert {'infoBarPoster'} | {'infoBarBadge%d' % idx for idx in range(1, 9)} <= names
+    # the same placeholders as every skin (size, banner, bars, pointer, clock, subtitles)
+    assert re.findall(r'%[sd]', modern) == re.findall(r'%[sd]', default)
+    # the badges stand in one row, each right of the one before
+    pattern = r'name="infoBarBadge%d"[^>]*?position="(\d+),(\d+)"[^>]*?size="(\d+),(\d+)"'
+    badges = [[int(v) for v in re.search(pattern % idx, modern).groups()] for idx in range(1, 9)]
+    assert len(set(badge[1] for badge in badges)) == 1
+    for prev, nxt in zip(badges, badges[1:]):
+        assert prev[0] + prev[2] < nxt[0]
+    # every badge has its frame (1 px around it, the badge label inside) and its line under it
+    for idx in range(1, 10):
+        badge = re.search(pattern % idx, modern).groups()
+        frame = re.search(r'name="infoBarBadge%dFrame"[^>]*?position="(\d+),(\d+)"[^>]*?size="(\d+),(\d+)"' % idx, modern).groups()
+        assert int(badge[0]) - int(frame[0]) == 1 and int(frame[2]) == int(badge[2]) + 2, idx
+        assert 'infoBarBadge%dSub' % idx in names
+    # the inner badge labels have the panel colour as background, or the frame would show through them
+    assert set(re.findall(r'name="infoBarBadge\d"[^>]*?backgroundColor="(#[0-9a-f]+)"', modern)) == {'#05111317'}
+    # the bars have pictures as wide as the widgets (no pre-scaled copies for this skin)
+    bar = re.search(r'name="progressBar"[^>]*?size="(\d+),(\d+)"', modern).groups()
+    from PIL import Image
+    for fileName in ("playback_progress.png", "playback_cbuff_progress.png", "playback_buff_progress.png"):
+        with Image.open(os.path.join(ROOT, "playerskins", "modern", fileName)) as img:
+            assert img.size == (int(bar[0]), int(bar[1])), fileName
+    for idx in range(1, 6):
+        assert {'infoBarStrip%dKey' % idx, 'infoBarStrip%dValue' % idx} <= names
+    for fileName in ("playerclock.xml", "settings.json", "playback_banner.png", "infobar_poster_mask.png", "playback_knob.png"):
+        assert os.path.isfile(os.path.join(ROOT, "playerskins", "modern", fileName)), fileName
+
+
+@pytest.mark.parametrize("encode,expected", [
+    # gstplayer2 on the box 22.11.: "MPEG-4 AAC audio" for an AAC-LC track
+    ('MPEG-4 AAC audio', 'AAC'), ('MPEG-1 Layer 3 (MP3)', 'MP3'), ('E-AC-3 audio', 'E-AC3'), ('AC-3 (ATSC A/52)', 'AC3'),
+    ('DTS audio', 'DTS'), ('Some new codec', 'Some new codec'), ('AC3', 'AC3'), ('IPCM', ''), ('audio/mpeg', ''), ('', ''),
+])
+def test_audio_codec_family(panelModule, encode, expected):
+    assert panelModule.audioCodecFamily(encode) == expected
+
+
+def test_gstplayer_tracks(panelModule):
+    # what gstplayer2 reported on the box: plain caps / descriptions, no keys of exteplayer3
+    audio = {'id': 0, 'encode': 'MPEG-4 AAC audio', 'name': 'und'}
+    assert panelModule.audioCodecName(audio) == 'AAC'
+    assert panelModule.subtitleFormatName('text/x-raw') == 'Text'
+    subtitle = {'kind': 'embedded', 'lang': 'de', 'format': panelModule.subtitleFormatName('text/x-raw')}
+    assert panelModule.stripTexts({}, audio, subtitle, _langName)[2:] == [('Audio', 'AAC'), ('Audio codec', 'AAC'), ('Subtitles', 'German (Text)')]
+
+
+@needsPil
+def test_modern_skin_pictures_for_every_osd_resolution(panelModule):
+    # name_1920.png / name_2560.png: drawn natively for FHD / WQHD, as big as Enigma2 makes the widget of the
+    # resolution="1280,720" skin (the player takes them instead of a PIL copy of the 1280 picture)
+    from PIL import Image
+    folder = os.path.join(ROOT, "playerskins", "modern")
+    bases = [name for name in os.listdir(folder) if name.endswith('.png') and not re.search(r'_(1920|2560)\.png$', name) and name != 'sub_synchro.png']
+    assert len(bases) >= 14
+    for name in bases:
+        with Image.open(os.path.join(folder, name)) as img:
+            baseW, baseH = img.size
+        for width, scale in ((1920, 1.5), (2560, 2.0)):
+            variant = os.path.join(folder, name[:-4] + '_%d.png' % width)
+            assert os.path.isfile(variant), variant
+            with Image.open(variant) as img:
+                assert img.size == (int(baseW * scale), int(baseH * scale)), variant
+
+
+def test_older_player_gets_the_audio_of_ffprobe_in_badges_and_info_row(panelModule):
+    # forum 22.11.: an older exteplayer3 names a software-decoded AAC only "IPCM" - badges and info row stayed empty
+    # for the audio while "Playback info" showed ffprobe's AAC 2.0
+    video, audio = panelModule.probedTracks(OLD_VIDEO, {'id': 1, 'encode': 'IPCM', 'name': 'eng'}, [{'id': 1}], json.loads(PROBE_MP4))
+    assert audio['encode'] == 'IPCM' and audio['d'] == 'AAC' and audio['family'] == 'AAC'
+    assert video['encode'] == 'MPEG4/ISO/AVC' and video['br'] == '850000'
+    badges = panelModule.badgeList(video, audio, 25, None, video['br'])
+    assert badges[-3:] == [('audio', '2.0', 'Channels'), ('audio', 'AAC', ''), ('video', '850', 'kbit/s')]
+    assert panelModule.stripTexts(video, audio)[2:4] == [('Audio', 'AAC 2.0'), ('Audio codec', 'AAC')]
+    # the "Playback info" page as before
+    rows = _rows(panelModule.techSections(OLD_VIDEO, {'id': 1, 'encode': 'IPCM'}, [{'id': 1}], {}, json.loads(PROBE_MP4), 'MP4', 0, 25))
+    assert rows['audio']['Codec'] == 'AAC (software)' and rows['audio']['Channels'] == '2.0 (2 ch)'
+    # without ffprobe (a stream): the player's tracks as they are
+    assert panelModule.probedTracks(OLD_VIDEO, {'encode': 'IPCM'}, [], {}) == (OLD_VIDEO, {'encode': 'IPCM'})
+    assert panelModule.probedTracks({}, {}, [], None) == ({}, {})
+
+
+@pytest.mark.parametrize("value,expected", [(2500000, ('2.5', 'Mbit/s')), (850000, ('850', 'kbit/s')), ('128000', ('128', 'kbit/s')),
+                                            (0, None), (None, None), ('', None)])
+def test_bitrate_badge(panelModule, value, expected):
+    assert panelModule.bitrateBadge(value) == expected
+
+
+def test_bitrate_badge_is_the_last_and_only_with_video(panelModule):
+    assert panelModule.badgeList(OLD_VIDEO, {'encode': 'AC3'}, 25, None, 2500000)[-1] == ('video', '2.5', 'Mbit/s')
+    # radio: the link's bitrate is no video bitrate
+    assert panelModule.badgeList({}, {'encode': 'AAC', 'c': 2}, 0, None, 128000) == [('audio', '2.0', 'Channels'), ('audio', 'AAC', '')]
+
+
+@pytest.mark.parametrize("text,expected", [('7.2', '7.2'), ('7.2/10', '7.2'), ('7,4', '7.4'), ('IMDb: 8.1 (1234 votes)', '8.1'),
+                                           ('N/A', ''), ('0', ''), ('', ''), (None, ''), ('85', '')])
+def test_rating_value(panelModule, text, expected):
+    assert panelModule.ratingValue(text) == expected
+
+
+def test_article_rating_and_short_meta_line(panelModule):
+    # forum 22.11.: the IMDb rating beside the title, the meta line was cut off at "Country:"
+    params = {'type': 'Movie', 'country': 'United States', 'year': '2026', 'genre': 'Adventure, Animation', 'imdb_rating': '6.8/10'}
+    assert panelModule.articleRating(params) == 'IMDb 6.8'
+    assert panelModule.shortMetaLine(params) == '2026  ·  Adventure, Animation  ·  United States'
+    assert panelModule.articleRating({'tmdb_rating': '7.0'}) == 'TMDb 7.0'
+    assert panelModule.articleRating({'imdb_rating': 'N/A', 'tmdb_rating': '6.1'}) == 'TMDb 6.1'
+    assert panelModule.articleRating({'year': '2020'}) == '' and panelModule.articleRating(None) == ''
+    assert panelModule.shortMetaLine({'year': '2020', 'country': 'N/A'}) == '2020'
+    # a host with its own rows: they stay, the rating is found by its label
+    custom = {'custom_items_list': [('Year:', '2019'), ('IMDb Rating:', '7.9')]}
+    assert panelModule.articleRating(custom) == 'IMDb 7.9'
+    assert panelModule.shortMetaLine(custom) == panelModule.metaLine(custom)
+
+
+def test_modern_skin_rating_strip_icons_and_12h_clock(panelModule):
+    modern = _skinText("modern")
+    names = set(re.findall(r'name="([^"]+)"', modern))
+    assert 'infoBarRating' in names
+    folder = os.path.join(ROOT, "playerskins", "modern")
+    for idx in range(1, 6):
+        assert 'infoBarStrip%dIcon' % idx in names
+        assert os.path.isfile(os.path.join(folder, 'infobar_strip%d.png' % idx))
+        # the symbol lies left of its label
+        icon = re.search(r'name="infoBarStrip%dIcon"[^>]*?position="(\d+),(\d+)"[^>]*?size="(\d+),(\d+)"' % idx, modern).groups()
+        key = re.search(r'name="infoBarStrip%dKey"[^>]*?position="(\d+),(\d+)"' % idx, modern).groups()
+        assert int(icon[0]) + int(icon[2]) < int(key[0])
+    with open(os.path.join(folder, "settings.json")) as f:
+        assert json.load(f)["clockFormat_12H"] == "%I:%M %p"
+
+
+@pytest.mark.parametrize("message,expected", [
+    # exteplayer3 v187 "m_t": ICY StreamTitle (rt = whole title) or the title / artist tags of the stream
+    ({'rt': 'Queen - Bohemian Rhapsody', 't': 'Bohemian Rhapsody', 'a': 'Queen'}, 'Queen - Bohemian Rhapsody'),
+    ({'rt': '', 't': 'News', 'a': ''}, 'News'),
+    ({'rt': '', 't': 'Song', 'a': 'Band'}, 'Band - Song'),
+    ({'rt': '  ', 't': '', 'a': ''}, ''),
+    ({}, ''), (None, ''), ('text', ''),
+])
+def test_now_playing_text(panelModule, message, expected):
+    assert panelModule.nowPlayingText(message) == expected
+
+
+def test_playback_info_now_playing_and_pixel_format(panelModule):
+    # radio with a song: first row of the audio column
+    rows = _rows(panelModule.techSections({}, {'id': 0, 'encode': 'MP3', 'name': 'und'}, [], {}, None, 'HTTP', 0, 0,
+                                          None, 'Queen - Bohemian Rhapsody'))
+    # cut to the column like every value (the whole title is above the poster and in the meta line)
+    assert list(rows['audio'].items())[0] == ('Current song', 'Queen - Bohemian Rhaps…')
+    # no song, no row
+    assert 'Current song' not in _rows(panelModule.techSections({}, {'id': 0, 'encode': 'MP3'}, [], {}, None, '', 0, 0))['audio']
+    # ffprobe's pixel format of a local file, after the bit depth
+    sections = panelModule.techSections(OLD_VIDEO, {'id': 1, 'encode': 'EAC3'}, [], {}, json.loads(PROBE_MKV), 'MKV', 0, 25)
+    labels = [label for label, value in sections[0][1]]
+    assert dict(sections[0][1])['Pixel format'] == 'yuv420p10le'
+    assert labels.index('Pixel format') == labels.index('Bit depth') + 1

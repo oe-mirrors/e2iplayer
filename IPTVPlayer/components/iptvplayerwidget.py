@@ -96,6 +96,7 @@ from Plugins.Extensions.IPTVPlayer.components.searchhistoryeditor import SearchH
 from Plugins.Extensions.IPTVPlayer.components.iconmenager import IconMenager, IconLogName
 from Plugins.Extensions.IPTVPlayer.components.cover import Cover, Cover3
 from Plugins.Extensions.IPTVPlayer.components.iptvchoicebox import IPTVChoiceBoxWidget, IPTVChoiceBoxItem, openChoiceBox
+from Plugins.Extensions.IPTVPlayer.components.iptvbackdrop import BackdropHolder
 import Plugins.Extensions.IPTVPlayer.components.asynccall as asynccall
 from Plugins.Extensions.IPTVPlayer.components.playerselector import PlayerSelectorWidget
 from Plugins.Extensions.IPTVPlayer.components.e2ivkselector import GetVirtualKeyboard
@@ -820,6 +821,8 @@ class E2iPlayerWidget(Screen):
         # whenever a fresh mirror list is fetched from the host.
         self._currentLinkOptions = None
         self._resolvingLinkItem = None
+        # the title's backdrop under the INFO page and the "Select link" list (components/iptvbackdrop.py)
+        self.backdropHolder = BackdropHolder(session)
         # what INFO in the player names: the mirror being resolved, the name of the link played
         self._playLinkMirror = ''
         self._playLinkName = ''
@@ -1126,6 +1129,7 @@ class E2iPlayerWidget(Screen):
         printDBG("E2iPlayerWidget.__del__")
 
     def __onClose(self):
+        self.backdropHolder.close()
         # a PIN protected host asks again on the next start
         ClearUnlockedHosts()
         if self.menuScreenSaver is not None:
@@ -2700,7 +2704,16 @@ class E2iPlayerWidget(Screen):
 
     def leaveArticleView(self):
         printDBG("leaveArticleView")
-        pass
+        self.backdropHolder.close()
+
+    def _backdropKey(self, item=None):
+        # the list item whose backdrop the INFO page found ("Select link" and the player show it again): the row
+        # under the cursor (OK on a video row does not set currSelIndex), the INFO answer passes its own row
+        try:
+            item = self.getSelItem() if item is None else item
+            return '%s|%s|%s' % (self._getRowsHostName(), item.name, item.iconimage)
+        except Exception:
+            return ''
 
     def showArticleContent(self, ret):
         printDBG("showArticleContent")
@@ -2708,13 +2721,19 @@ class E2iPlayerWidget(Screen):
         self["list"].show()
 
         artItem = None
+        item = self.currList[self.currSelIndex] if self.currSelIndex < len(self.currList) else None
         if ret.status != RetHost.OK or 0 == len(ret.value):
-            item = self.currList[self.currSelIndex]
-            if len(item.description):
+            if item is not None and len(item.description):
                 artItem = ArticleContent(title=item.name, text=item.description, images=[{'title': _('Image'), 'url': item.iconimage}])  # richDescParams={"alternate_title":"***alternate_title", "year":"year", "rating":"rating",  "duration":"duration",  "genre":"genre",  "director":"director",  "actors":"actors",  "awards":"awards"}
         else:
             artItem = ret.value[0]
         if None is not artItem:
+            backdrop = getattr(artItem, 'backdrop', '')
+            if backdrop:
+                # under the INFO page: opened before it, so it lies between the list and the INFO page
+                self.backdropHolder.remember(self._backdropKey(item), backdrop)
+                self.backdropHolder.open()
+                self.backdropHolder.load(backdrop)
             self.session.openWithCallback(self.leaveArticleView, IPTVArticleView, artItem, {'buffering_path': config.plugins.iptvplayer.bufferingPath.value, 'host_name': self._getRowsHostName(), 'logo_path': self.hostLogoPath, 'download_dir': self.iconMenager.currDownloadDir if self.iconMenager else None})
 
     def selectMainVideoLinks(self, ret):
@@ -3460,6 +3479,9 @@ class E2iPlayerWidget(Screen):
             options.append(IPTVChoiceBoxItem(link.name, "", link, failed=link.failed or not self._failedLinkUrls.isdisjoint(keys),
                                              used=not self._usedLinkUrls.isdisjoint(keys)))
 
+        # the title's backdrop under the list: known from its INFO page, else asked from the host now
+        self.backdropHolder.open()
+        self.backdropHolder.loadFromArticle(self._backdropKey(), boundFunction(self._requestPlayerArticle, self._getSelHostIndex()))
         openChoiceBox(self.session, {'width': 600, 'height': self._getLinkPickerHeight(len(options)), 'current_idx': 0, 'title': _("Select link"), 'options': options, 'list_class': IPTVLinkChoiceBoxList, 'chrome': True, 'footerMargin': 136}, self.selectLinksCallback)
 
     # IPTVChoiceBoxWidget's screen declares resolution="1280,720", so the
@@ -3518,6 +3540,7 @@ class E2iPlayerWidget(Screen):
         return ["%s\t%s" % (link.url, link.name), "%s\t%s#%d" % (self._currentLinkVideoKey, link.name, same)]
 
     def selectLinksCallback(self, retArg):
+        self.backdropHolder.close()
         if retArg is None:
             # user cancelled the picker without trying any link - there's nothing
             # wrong, so don't show a "No valid links" error for it
@@ -3744,6 +3767,8 @@ class E2iPlayerWidget(Screen):
                 gstAdditionalParams['info_provider'] = boundFunction(self._requestPlayerArticle, self._getSelHostIndex())
                 # MENU -> "Description" in the player loads the INFO page's picture into the list's cover cache
                 gstAdditionalParams['article_download_dir'] = self.iconMenager.currDownloadDir if self.iconMenager else None
+                # the backdrop found by the item's INFO page or "Select link": the player shows it at once
+                gstAdditionalParams['backdrop_url'] = self.backdropHolder.known.get(self._backdropKey(), '')
                 try:
                     gstAdditionalParams['host_title'] = self._getPlayerHostTitle()
                     gstAdditionalParams['info_description'] = self.currItem.description

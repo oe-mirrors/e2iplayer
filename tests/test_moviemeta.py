@@ -383,10 +383,19 @@ def test_article_falls_back_to_site_data(mm):
                                            "images": [{"title": "", "url": "https://site/icon.jpg"}], "other_info": {}}]
 
 
+def test_details_carry_the_imdb_id_and_old_cache_entries_are_asked_again(mm):
+    # the backdrop needs the IMDb id of the title the INFO page found (components/iptvbackdrop.py)
+    assert mm._result("Heat", "", "", {"year": "1995"}, "X", "tt0113277")["imdb_id"] == "tt0113277"
+    assert mm._result("Heat", "", "", {}, "X", "123")["imdb_id"] == ""
+    assert mm._details({}) and mm._details({"title": "Heat", "imdb_id": ""})
+    # cached before the field existed: not current, looked up once more
+    assert not mm._details({"title": "Heat", "info": {}})
+
+
 def test_info_query_is_noted(mm):
     # while an item's INFO is built, the first lookup with an answer is noted for its download sidecar
     answers = {"movie|wolf||1": {}, "movie|thewolf|2026|1": {"title": "The Wolf"}, "tv|tt0285403": {"title": "Scrubs"}}
-    mm._lookup = lambda providers, what, find, accept=None: answers.get(what, {})
+    mm._lookup = lambda providers, what, find, accept=None, current=None: answers.get(what, {})
     mm.cp.meta_imdb.value = True
     item = {"url": "https://site/wolf", "title": "Wolf (2026)"}
     mm.getMeta("movie", "The Wolf", "2026")  # no INFO running: nothing noted
