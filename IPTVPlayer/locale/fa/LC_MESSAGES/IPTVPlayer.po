@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-20 17:54+0000\n"
+"POT-Creation-Date: 2026-11-27 22:41+0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Persian Prince <persianpros@gmail.com>\n"
 "Language-Team: IPTVPlayer\n"
@@ -610,12 +610,20 @@ msgid "Alphabetically"
 msgstr "الفبایی"
 
 #, python-format
+msgid "Also use the accounts of GT IPTV Player Pro (%s)"
+msgstr ""
+
+#, python-format
 msgid "Also use the accounts of X-Streamity (%s)"
 msgstr "استفاده از حساب‌های X-Streamity نیز (%s)"
 
 #, python-format
 msgid "Also use the portals of EStalker (%s)"
 msgstr "استفاده از پورتال‌های EStalker نیز (%s)"
+
+#, python-format
+msgid "Also use the portals of GT IPTV Player Pro (%s)"
+msgstr ""
 
 msgid "AltGr"
 msgstr "AltGr"
@@ -786,6 +794,9 @@ msgstr ""
 msgid "Aspect"
 msgstr "نسبت تصویر"
 
+msgid "Aspect ratio"
+msgstr ""
+
 msgid "At least one of plugin browser, extension list and main menu has to stay on, otherwise E2iPlayer could no longer be started."
 msgstr "دست‌کم یکی از مرورگر افزونه‌ها، فهرست افزونه‌ها و منوی اصلی باید فعال بماند، وگرنه دیگر نمی‌توان E2iPlayer را اجرا کرد."
 
@@ -800,6 +811,9 @@ msgstr "صدا"
 
 msgid "Audio buffer size [KB]"
 msgstr "اندازهٔ بافر صدا [KB]"
+
+msgid "Audio codec"
+msgstr ""
 
 msgid "Audio description"
 msgstr "توصیف صوتی"
@@ -866,8 +880,17 @@ msgstr "جوایز:"
 msgid "BLUE"
 msgstr "آبی"
 
+msgid "Backdrop (fanart)"
+msgstr ""
+
+msgid "Backdrop when the film is paused"
+msgstr ""
+
 msgid "Background color"
 msgstr "رنگ پس‌زمینه"
+
+msgid "Background of the INFO panels"
+msgstr ""
 
 msgid "Backspace"
 msgstr "پاک‌کردن به عقب"
@@ -890,6 +913,9 @@ msgstr ""
 
 msgid "Being watched"
 msgstr "در حال تماشا"
+
+msgid "Below the picture"
+msgstr ""
 
 msgid "Bengali"
 msgstr ""
@@ -914,6 +940,12 @@ msgstr "پیشنهادهای Bing"
 
 msgid "Biography"
 msgstr "زندگی‌نامه"
+
+msgid "Bit depth"
+msgstr ""
+
+msgid "Bitrate"
+msgstr ""
 
 #, python-format
 msgid "Bitrate: %s"
@@ -1080,6 +1112,12 @@ msgstr "پخش مجدد (timeshift.php)"
 msgid "Catch-up: %d days"
 msgstr "پخش مجدد: %d روز"
 
+msgid "Catch-up: minutes after the end:"
+msgstr ""
+
+msgid "Catch-up: minutes before the start:"
+msgstr ""
+
 msgid "Categories"
 msgstr "دسته‌ها"
 
@@ -1091,6 +1129,9 @@ msgstr "دسته"
 
 msgid "Category:"
 msgstr "دسته:"
+
+msgid "Centered"
+msgstr ""
 
 msgid "Change active movie player"
 msgstr "تغییر پخش‌کنندهٔ فعال فیلم"
@@ -1110,6 +1151,12 @@ msgstr "کانال: %s"
 
 msgid "Channels"
 msgstr "کانال‌ها"
+
+msgid "Chapter"
+msgstr ""
+
+msgid "Chapters"
+msgstr ""
 
 msgid "Checking for updates"
 msgstr "در حال بررسی به‌روزرسانی‌ها"
@@ -1183,6 +1230,9 @@ msgstr "باشگاه‌ها و ورزشکاران"
 msgid "Code"
 msgstr "کد"
 
+msgid "Codec"
+msgstr ""
+
 msgid "Collected streams only"
 msgstr "فقط جریان‌های جمع‌آوری‌شده"
 
@@ -1191,6 +1241,9 @@ msgstr "مجموعه‌ها"
 
 msgid "Colored text in titles and descriptions"
 msgstr "متن رنگی در عنوان‌ها و توضیحات"
+
+msgid "Colour space"
+msgstr ""
 
 msgid "Combine pull request merges with their commit"
 msgstr "ادغام merge های pull request با commit مربوطه"
@@ -1387,6 +1440,9 @@ msgstr "فرهنگ و پاپ"
 msgid "Current item is not a channel."
 msgstr "مورد فعلی یک کانال نیست."
 
+msgid "Current song"
+msgstr ""
+
 msgid "Cut"
 msgstr "برش"
 
@@ -1421,6 +1477,9 @@ msgid "Daily download limit reached - type the code"
 msgstr "سقف دانلود روزانه پر شد - کد را وارد کنید"
 
 msgid "Danish"
+msgstr ""
+
+msgid "Dark"
 msgstr ""
 
 msgid "Darkgray"
@@ -1581,6 +1640,9 @@ msgstr "حذف حافظهٔ نهان تصاویر بندانگشتی اکنون"
 
 msgid "Denmark"
 msgstr "دانمارک"
+
+msgid "Description"
+msgstr ""
 
 msgid "Description:"
 msgstr "توضیحات:"
@@ -2299,6 +2361,9 @@ msgstr "توکن FebBox (کوکی «ui» از www.febbox.com):"
 msgid "Female"
 msgstr "زنان"
 
+msgid "File"
+msgstr ""
+
 #, python-format
 msgid "File \"%s\" already exists"
 msgstr "فایل \"%s\" از قبل وجود دارد"
@@ -2470,6 +2535,9 @@ msgstr "اجبار پوسته داخلی: فقط صفحه اصلی"
 msgid "Force legacy grid"
 msgstr "اجبار به شبکهٔ نمادهای قدیمی"
 
+msgid "Forced"
+msgstr ""
+
 msgid "Foreign movies"
 msgstr "فیلم‌های خارجی"
 
@@ -2488,6 +2556,9 @@ msgstr "ترکیب‌ها"
 msgid "Fotka.pl stream :"
 msgstr "جریان Fotka.pl :"
 
+msgid "Frame rate"
+msgstr ""
+
 msgid "Free"
 msgstr "رایگان"
 
@@ -2500,11 +2571,17 @@ msgstr "فرانسوی"
 msgid "From E2 settings"
 msgstr "از تنظیمات E2"
 
+msgid "From the host, else online"
+msgstr ""
+
 msgid "Full description loaded"
 msgstr "توضیحات کامل بارگذاری شد"
 
 msgid "Full description not available"
 msgstr "توضیحات کامل در دسترس نیست"
+
+msgid "Full screen"
+msgstr ""
 
 msgid "Full test"
 msgstr "آزمون کامل"
@@ -2677,6 +2754,9 @@ msgstr "راهنما"
 #, python-format
 msgid "Hide \"%s\" group"
 msgstr "پنهان کردن گروه \"%s\""
+
+msgid "Hide categories containing (comma separated):"
+msgstr ""
 
 msgid "Hide the menu (live TV visible)"
 msgstr "پنهان کردن منو (تلویزیون زنده نمایان)"
@@ -3046,6 +3126,9 @@ msgstr ""
 msgid "Language"
 msgstr "زبان"
 
+msgid "Language of the details"
+msgstr ""
+
 msgid "Language of the details (TMDb, IMDb)"
 msgstr "زبان جزئیات (TMDb، IMDb)"
 
@@ -3061,6 +3144,15 @@ msgstr ""
 msgid "Large (title below)"
 msgstr ""
 
+msgid "Large cover, info on the right: alignment"
+msgstr ""
+
+msgid "Large cover, info on the right: labels"
+msgstr ""
+
+msgid "Large cover, info on the right: lines"
+msgstr ""
+
 msgid "Large cover, info on the right: row 1"
 msgstr ""
 
@@ -3071,6 +3163,9 @@ msgid "Large cover, info on the right: row 3"
 msgstr ""
 
 msgid "Large cover, info on the right: row 4"
+msgstr ""
+
+msgid "Large cover, info on the right: title"
 msgstr ""
 
 msgid "Large cover: size of the times below the bar"
@@ -3396,6 +3491,9 @@ msgstr ""
 
 msgid "Longest"
 msgstr "طولانی‌ترین"
+
+msgid "Looking for trailers..."
+msgstr ""
 
 msgid "Loved tracks"
 msgstr "قطعه‌های محبوب"
@@ -3904,6 +4002,10 @@ msgstr "زیرنویسی به زبان %s وجود ندارد. موجود: %s"
 msgid "No title to search for."
 msgstr "عنوانی برای جستجو وجود ندارد."
 
+#, python-format
+msgid "No trailer found for \"%s\"."
+msgstr ""
+
 msgid "No valid entitlement found for asset."
 msgstr "هیچ مجوز معتبری برای این محتوا پیدا نشد."
 
@@ -4028,6 +4130,9 @@ msgstr "فقط در %s در دسترس است"
 msgid "Only files in the downloads folder can be deleted."
 msgstr "فقط فایل‌های داخل پوشه دانلودها قابل حذف هستند."
 
+msgid "Only from the host"
+msgstr ""
+
 msgid "Only links can be moved to a group."
 msgstr "فقط پیوندها را می‌توان به یک گروه منتقل کرد."
 
@@ -4102,6 +4207,9 @@ msgstr "ترتیب پیوندهای کاربر:"
 
 msgid "Order stays fixed - useful for T9 browsing."
 msgstr "ترتیب ثابت می‌ماند - مناسب برای مرور با T9."
+
+msgid "Original"
+msgstr ""
 
 msgid "Original Title:"
 msgstr "عنوان اصلی:"
@@ -4239,6 +4347,9 @@ msgstr "فلسفه"
 msgid "Physical Exam"
 msgstr "معاینه بالینی"
 
+msgid "Picture of the title, blurred"
+msgstr ""
+
 msgid "Pin has been changed."
 msgstr "PIN تغییر کرد."
 
@@ -4254,12 +4365,18 @@ msgstr "محافظت با PIN برای افزونه"
 msgid "Pin protection for this host"
 msgstr "محافظت با PIN برای این میزبان"
 
+msgid "Pixel format"
+msgstr ""
+
 msgid "Play all from here"
 msgstr "پخش همه از اینجا"
 
 #, python-format
 msgid "Play marked items (%d)"
 msgstr "پخش موارد علامت‌خورده (%d)"
+
+msgid "Play the first trailer at once"
+msgstr ""
 
 msgid "Play torrents with TorrServer"
 msgstr "پخش تورنت‌ها با TorrServer"
@@ -4439,6 +4556,9 @@ msgstr "درگاه‌ها: %s"
 msgid "Portuguese"
 msgstr "پرتغالی"
 
+msgid "Poster during audio playback"
+msgstr ""
+
 msgid "Poster grid for lists with pictures"
 msgstr ""
 
@@ -4498,6 +4618,9 @@ msgstr "شبکه‌های حرفه‌ای"
 
 msgid "Professionals"
 msgstr "حرفه‌ای‌ها"
+
+msgid "Profile"
+msgstr ""
 
 msgid "Program"
 msgstr "برنامه"
@@ -4635,6 +4758,9 @@ msgstr "در حال خواندن فایل‌های اجرایی..."
 
 msgid "Reading..."
 msgstr "در حال خواندن..."
+
+msgid "Rebuffer"
+msgstr ""
 
 msgid "Recent"
 msgstr "اخیر"
@@ -4804,6 +4930,9 @@ msgstr "بازگشت به ترتیب ذخیره‌شده"
 msgid "Reset web interface"
 msgstr "بازنشانی رابط وب"
 
+msgid "Resolution"
+msgstr ""
+
 #, python-format
 msgid ""
 "Resolving hCaptcha with %s failed!\n"
@@ -4875,6 +5004,9 @@ msgid "Safe search (restricted mode):"
 msgstr "جستجوی امن (حالت محدود):"
 
 msgid "Same as the bar"
+msgstr ""
+
+msgid "Sample rate"
 msgstr ""
 
 msgid "Save"
@@ -5377,6 +5509,9 @@ msgstr "خودآزمایی سایت در منوی اصلی :"
 msgid "Site self-test: %d of %d - now %s (%d failed so far)"
 msgstr "خودآزمایی سایت: %d از %d - اکنون %s (تاکنون %d مورد ناموفق)"
 
+msgid "Size"
+msgstr ""
+
 msgid "Size:"
 msgstr "اندازه:"
 
@@ -5396,6 +5531,9 @@ msgid "Slovenian"
 msgstr ""
 
 msgid "Small (16:9)"
+msgstr ""
+
+msgid "Small, in the middle"
 msgstr ""
 
 msgid "Smaller text"
@@ -5460,6 +5598,9 @@ msgstr "پربازدیدترین کانال‌ها به‌طور کلی [زند�
 
 msgid "Sorted most viewed channels now [live]"
 msgstr "پربازدیدترین کانال‌ها در حال حاضر [زنده]"
+
+msgid "Source"
+msgstr ""
 
 msgid "Source:"
 msgstr "منبع:"
@@ -5536,6 +5677,9 @@ msgstr "فضای ذخیره‌سازی"
 
 msgid "Story"
 msgstr "داستان"
+
+msgid "Stream"
+msgstr ""
 
 #, python-format
 msgid "Stream formats: %s"
@@ -6003,8 +6147,17 @@ msgstr ""
 "در این فایل ذخیره خواهد شد:\n"
 "«%s»"
 
+msgid "The portal denied access to this entry."
+msgstr ""
+
 msgid "The portal did not hand out a link for this entry."
 msgstr "پورتال برای این مورد پیوندی ارائه نداد."
+
+msgid "The portal has blocked this MAC address."
+msgstr ""
+
+msgid "The portal refused the stream: the maximum number of connections is reached."
+msgstr ""
 
 msgid "The recordings of this page were on the site's old media server, which is offline."
 msgstr "ضبط‌های این صفحه روی سرور رسانه قدیمی سایت بودند که آفلاین است."
@@ -6274,6 +6427,9 @@ msgstr ""
 msgid "Tip! You can connect USB flash drive to fix this problem."
 msgstr "نکته! برای رفع این مشکل می‌توانید یک فلش USB متصل کنید."
 
+msgid "Title"
+msgstr ""
+
 msgid "Titles"
 msgstr "عناوین"
 
@@ -6431,6 +6587,9 @@ msgstr ""
 "\n"
 "خود TorrServer بخشی از E2iPlayer نیست و باید جداگانه نصب شود."
 
+msgid "Total bitrate"
+msgstr ""
+
 msgid "Total size:"
 msgstr "اندازه کل:"
 
@@ -6440,11 +6599,17 @@ msgstr "گردشگری"
 msgid "Tournament"
 msgstr "مسابقات"
 
+msgid "Track"
+msgstr ""
+
 msgid "Tracklist"
 msgstr "فهرست قطعات"
 
 msgid "Trailer"
 msgstr "تریلر"
+
+msgid "Trailer language"
+msgstr ""
 
 msgid "Trans"
 msgstr "ترنس"
@@ -6737,6 +6902,9 @@ msgstr "ویدیو"
 msgid "Video buffer size [MB]"
 msgstr "اندازه بافر ویدیو [MB]"
 
+msgid "Video codec"
+msgstr ""
+
 msgid "Video library"
 msgstr "کتابخانه ویدیو"
 
@@ -6871,6 +7039,9 @@ msgstr "برای شروع پخش باید کل فایل دانلود شود!"
 msgid "Whole picture (black bars)"
 msgstr ""
 
+msgid "Whole width"
+msgstr ""
+
 msgid "Wiki"
 msgstr "ویکی"
 
@@ -6888,6 +7059,9 @@ msgstr ""
 
 msgid "With subtitles"
 msgstr "با زیرنویس"
+
+msgid "Words added to the trailer search (empty = automatic)"
+msgstr ""
 
 msgid "World"
 msgstr "جهان"
@@ -7152,6 +7326,9 @@ msgstr "وسط"
 msgid "changed"
 msgstr "تغییر کرد"
 
+msgid "classic"
+msgstr ""
+
 msgid "clock not set"
 msgstr ""
 
@@ -7212,6 +7389,9 @@ msgstr "ویرایش مورد انتخاب‌شده (مانند OK)"
 
 msgid "enable / disable manual reordering"
 msgstr "فعال / غیرفعال کردن مرتب‌سازی دستی"
+
+msgid "expired"
+msgstr ""
 
 msgid "external eplayer3"
 msgstr "eplayer3 خارجی"
@@ -7359,6 +7539,9 @@ msgstr ""
 
 msgid "minutes"
 msgstr "دقیقه"
+
+msgid "modern"
+msgstr ""
 
 msgid "more options (this menu)"
 msgstr "گزینه‌های بیشتر (این منو)"
@@ -7616,6 +7799,9 @@ msgstr "نقره‌ای"
 
 msgid "small"
 msgstr "کوچک"
+
+msgid "software"
+msgstr ""
 
 msgid "sources"
 msgstr "منابع"

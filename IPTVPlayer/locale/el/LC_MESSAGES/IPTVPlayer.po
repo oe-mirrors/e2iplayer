@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-20 17:54+0000\n"
+"POT-Creation-Date: 2026-11-27 22:41+0000\n"
 "PO-Revision-Date: 2026-11-20 21:52+0200\n"
 "Last-Translator: \n"
 "Language-Team: giorbak\n"
@@ -613,12 +613,20 @@ msgid "Alphabetically"
 msgstr "Αλφαβητικά"
 
 #, python-format
+msgid "Also use the accounts of GT IPTV Player Pro (%s)"
+msgstr ""
+
+#, python-format
 msgid "Also use the accounts of X-Streamity (%s)"
 msgstr "Χρησιμοποιήστε επίσης τους λογαριασμούς του X-Streamity (%s)"
 
 #, python-format
 msgid "Also use the portals of EStalker (%s)"
 msgstr "Χρησιμοποιήστε επίσης τις πύλες του EStalker (%s)"
+
+#, python-format
+msgid "Also use the portals of GT IPTV Player Pro (%s)"
+msgstr ""
 
 msgid "AltGr"
 msgstr "AltGr"
@@ -789,6 +797,9 @@ msgstr "Ερώτηση"
 msgid "Aspect"
 msgstr "Αναλογία"
 
+msgid "Aspect ratio"
+msgstr ""
+
 msgid "At least one of plugin browser, extension list and main menu has to stay on, otherwise E2iPlayer could no longer be started."
 msgstr "Πρέπει να παραμένει ενεργοποιημένο τουλάχιστον ένα από τον περιηγητή πρόσθετων, τη λίστα επεκτάσεων και το κύριο μενού, διαφορετικά το E2iPlayer δεν θα μπορεί πλέον να εκκινηθεί."
 
@@ -803,6 +814,9 @@ msgstr "Ήχος"
 
 msgid "Audio buffer size [KB]"
 msgstr "Μέγεθος προσωρινής αποθήκευσης ήχου [KB]"
+
+msgid "Audio codec"
+msgstr ""
 
 msgid "Audio description"
 msgstr "Ακουστική περιγραφή"
@@ -869,8 +883,17 @@ msgstr "Βραβεία:"
 msgid "BLUE"
 msgstr "BLUE"
 
+msgid "Backdrop (fanart)"
+msgstr ""
+
+msgid "Backdrop when the film is paused"
+msgstr ""
+
 msgid "Background color"
 msgstr "Χρώμα φόντου"
+
+msgid "Background of the INFO panels"
+msgstr ""
 
 msgid "Backspace"
 msgstr "Backspace"
@@ -893,6 +916,9 @@ msgstr "Βασκικά"
 
 msgid "Being watched"
 msgstr "Γίνεται προβολή"
+
+msgid "Below the picture"
+msgstr ""
 
 msgid "Bengali"
 msgstr "Μπενγκάλι"
@@ -917,6 +943,12 @@ msgstr "Προτάσεις Bing"
 
 msgid "Biography"
 msgstr "Βιογραφία"
+
+msgid "Bit depth"
+msgstr ""
+
+msgid "Bitrate"
+msgstr ""
 
 #, python-format
 msgid "Bitrate: %s"
@@ -1083,6 +1115,12 @@ msgstr "Catch-up (timeshift.php)"
 msgid "Catch-up: %d days"
 msgstr "Catch-up: %d ημέρες"
 
+msgid "Catch-up: minutes after the end:"
+msgstr ""
+
+msgid "Catch-up: minutes before the start:"
+msgstr ""
+
 msgid "Categories"
 msgstr "Κατηγορίες"
 
@@ -1094,6 +1132,9 @@ msgstr "Κατηγορία"
 
 msgid "Category:"
 msgstr "Κατηγορία:"
+
+msgid "Centered"
+msgstr ""
 
 msgid "Change active movie player"
 msgstr "Αλλαγή ενεργής αναπαραγωγής ταινιών"
@@ -1113,6 +1154,12 @@ msgstr "Κανάλι: %s"
 
 msgid "Channels"
 msgstr "Κανάλια"
+
+msgid "Chapter"
+msgstr ""
+
+msgid "Chapters"
+msgstr ""
 
 msgid "Checking for updates"
 msgstr "Έλεγχος για ενημερώσεις"
@@ -1186,6 +1233,9 @@ msgstr "Σύλλογοι και αθλητές"
 msgid "Code"
 msgstr "Κωδικός"
 
+msgid "Codec"
+msgstr ""
+
 msgid "Collected streams only"
 msgstr "Μόνο οι συλλεγμένες ροές"
 
@@ -1194,6 +1244,9 @@ msgstr "Συλλογές"
 
 msgid "Colored text in titles and descriptions"
 msgstr "Χρωματιστό κείμενο σε τίτλους και περιγραφές"
+
+msgid "Colour space"
+msgstr ""
 
 msgid "Combine pull request merges with their commit"
 msgstr "Συγχώνευση των pull request με το commit τους"
@@ -1390,6 +1443,9 @@ msgstr "Πολιτισμός και ποπ"
 msgid "Current item is not a channel."
 msgstr "Το τρέχον στοιχείο δεν είναι κανάλι."
 
+msgid "Current song"
+msgstr ""
+
 msgid "Cut"
 msgstr "Αποκοπή"
 
@@ -1425,6 +1481,9 @@ msgstr "Συμπληρώθηκε το ημερήσιο όριο λήψεων - �
 
 msgid "Danish"
 msgstr "Δανικά"
+
+msgid "Dark"
+msgstr ""
 
 msgid "Darkgray"
 msgstr "Σκούρο γκρι"
@@ -1584,6 +1643,9 @@ msgstr "Διαγραφή προσωρινής μνήμης μικρογραφι�
 
 msgid "Denmark"
 msgstr "Δανία"
+
+msgid "Description"
+msgstr ""
 
 msgid "Description:"
 msgstr "Περιγραφή:"
@@ -2302,6 +2364,9 @@ msgstr "Token FebBox (cookie \"ui\" του www.febbox.com):"
 msgid "Female"
 msgstr "Γυναίκα"
 
+msgid "File"
+msgstr ""
+
 #, python-format
 msgid "File \"%s\" already exists"
 msgstr "Το αρχείο \"%s\" υπάρχει ήδη"
@@ -2473,6 +2538,9 @@ msgstr "Επιβολή εσωτερικού θέματος: Μόνο η κύρι
 msgid "Force legacy grid"
 msgstr "Επιβολή παλιού πλέγματος"
 
+msgid "Forced"
+msgstr ""
+
 msgid "Foreign movies"
 msgstr "Ξένες ταινίες"
 
@@ -2491,6 +2559,9 @@ msgstr "Σχηματισμοί"
 msgid "Fotka.pl stream :"
 msgstr "Ροή Fotka.pl:"
 
+msgid "Frame rate"
+msgstr ""
+
 msgid "Free"
 msgstr "Δωρεάν"
 
@@ -2503,11 +2574,17 @@ msgstr "Γαλλικά"
 msgid "From E2 settings"
 msgstr "Από τις ρυθμίσεις E2"
 
+msgid "From the host, else online"
+msgstr ""
+
 msgid "Full description loaded"
 msgstr "Η πλήρης περιγραφή φορτώθηκε"
 
 msgid "Full description not available"
 msgstr "Η πλήρης περιγραφή δεν είναι διαθέσιμη"
+
+msgid "Full screen"
+msgstr ""
 
 msgid "Full test"
 msgstr "Πλήρης δοκιμή"
@@ -2680,6 +2757,9 @@ msgstr "Βοήθεια"
 #, python-format
 msgid "Hide \"%s\" group"
 msgstr "Απόκρυψη ομάδας \"%s\""
+
+msgid "Hide categories containing (comma separated):"
+msgstr ""
 
 msgid "Hide the menu (live TV visible)"
 msgstr "Απόκρυψη του μενού (ορατή η ζωντανή TV)"
@@ -3049,6 +3129,9 @@ msgstr "ΔΙΑΡΚΕΙΑ"
 msgid "Language"
 msgstr "Γλώσσα"
 
+msgid "Language of the details"
+msgstr ""
+
 msgid "Language of the details (TMDb, IMDb)"
 msgstr "Γλώσσα των λεπτομερειών (TMDb, IMDb)"
 
@@ -3064,6 +3147,15 @@ msgstr "Μεγάλο (πληροφορίες δεξιά)"
 msgid "Large (title below)"
 msgstr "Μεγάλο (τίτλος από κάτω)"
 
+msgid "Large cover, info on the right: alignment"
+msgstr ""
+
+msgid "Large cover, info on the right: labels"
+msgstr ""
+
+msgid "Large cover, info on the right: lines"
+msgstr ""
+
 msgid "Large cover, info on the right: row 1"
 msgstr "Μεγάλο εξώφυλλο, πληροφορίες δεξιά: Σειρά 1"
 
@@ -3075,6 +3167,9 @@ msgstr "Μεγάλο εξώφυλλο, πληροφορίες δεξιά: Σει
 
 msgid "Large cover, info on the right: row 4"
 msgstr "Μεγάλο εξώφυλλο, πληροφορίες δεξιά: Σειρά 4"
+
+msgid "Large cover, info on the right: title"
+msgstr ""
 
 msgid "Large cover: size of the times below the bar"
 msgstr "Μεγάλο εξώφυλλο: Μέγεθος ώρας κάτω από τη μπάρα"
@@ -3399,6 +3494,9 @@ msgstr "Μεγάλοι τίτλοι στην οθόνη LCD"
 
 msgid "Longest"
 msgstr "Μεγαλύτερα"
+
+msgid "Looking for trailers..."
+msgstr ""
 
 msgid "Loved tracks"
 msgstr "Αγαπημένα κομμάτια"
@@ -3907,6 +4005,10 @@ msgstr "Δεν υπάρχουν υπότιτλοι στο %s. Διαθέσιμο
 msgid "No title to search for."
 msgstr "Δεν υπάρχει τίτλος για αναζήτηση."
 
+#, python-format
+msgid "No trailer found for \"%s\"."
+msgstr ""
+
 msgid "No valid entitlement found for asset."
 msgstr "Δεν βρέθηκε έγκυρη εξουσιοδότηση για το περιεχόμενο."
 
@@ -4031,6 +4133,9 @@ msgstr "Διαθέσιμο μόνο σε %s"
 msgid "Only files in the downloads folder can be deleted."
 msgstr "Μόνο αρχεία στον φάκελο λήψεων μπορούν να διαγραφούν."
 
+msgid "Only from the host"
+msgstr ""
+
 msgid "Only links can be moved to a group."
 msgstr "Μόνο οι σύνδεσμοι μπορούν να μετακινηθούν σε ομάδα."
 
@@ -4105,6 +4210,9 @@ msgstr "Σειρά συνδέσμων χρήστη:"
 
 msgid "Order stays fixed - useful for T9 browsing."
 msgstr "Η σειρά παραμένει σταθερή - Χρήσιμο για περιήγηση T9."
+
+msgid "Original"
+msgstr ""
 
 msgid "Original Title:"
 msgstr "Πρωτότυπος τίτλος:"
@@ -4242,6 +4350,9 @@ msgstr "Φιλοσοφία"
 msgid "Physical Exam"
 msgstr "Φυσική εξέταση"
 
+msgid "Picture of the title, blurred"
+msgstr ""
+
 msgid "Pin has been changed."
 msgstr "Ο κωδικός pin έχει αλλάξει."
 
@@ -4257,12 +4368,18 @@ msgstr "Προστασία pin για το πρόσθετο"
 msgid "Pin protection for this host"
 msgstr "Προστασία αυτού του host με pin"
 
+msgid "Pixel format"
+msgstr ""
+
 msgid "Play all from here"
 msgstr "Αναπαραγωγή όλων από εδώ"
 
 #, python-format
 msgid "Play marked items (%d)"
 msgstr "Αναπαραγωγή επιλεγμένων στοιχείων (%d)"
+
+msgid "Play the first trailer at once"
+msgstr ""
 
 msgid "Play torrents with TorrServer"
 msgstr "Αναπαραγωγή torrents με το TorrServer"
@@ -4442,6 +4559,9 @@ msgstr "Θύρες: %s"
 msgid "Portuguese"
 msgstr "Πορτογαλικά"
 
+msgid "Poster during audio playback"
+msgstr ""
+
 msgid "Poster grid for lists with pictures"
 msgstr "Πλέγμα αφισών για λίστες με εικόνες"
 
@@ -4501,6 +4621,9 @@ msgstr "Επαγγελματικά δίκτυα"
 
 msgid "Professionals"
 msgstr "Επαγγελματίες"
+
+msgid "Profile"
+msgstr ""
 
 msgid "Program"
 msgstr "Πρόγραμμα"
@@ -4638,6 +4761,9 @@ msgstr "Ανάγνωση δυαδικών αρχείων..."
 
 msgid "Reading..."
 msgstr "Ανάγνωση..."
+
+msgid "Rebuffer"
+msgstr ""
 
 msgid "Recent"
 msgstr "Πρόσφατα"
@@ -4807,6 +4933,9 @@ msgstr "Επαναφορά αποθηκευμένης σειράς"
 msgid "Reset web interface"
 msgstr "Επαναφορά περιβάλλοντος ιστού"
 
+msgid "Resolution"
+msgstr ""
+
 #, python-format
 msgid ""
 "Resolving hCaptcha with %s failed!\n"
@@ -4879,6 +5008,9 @@ msgstr "Ασφαλής αναζήτηση (περιορισμένη λειτου
 
 msgid "Same as the bar"
 msgstr "Ίδιο με την μπάρα"
+
+msgid "Sample rate"
+msgstr ""
 
 msgid "Save"
 msgstr "Αποθήκευση"
@@ -5380,6 +5512,9 @@ msgstr "Αυτοέλεγχος ιστότοπου στο κύριο μενού:"
 msgid "Site self-test: %d of %d - now %s (%d failed so far)"
 msgstr "Αυτοέλεγχος ιστότοπου: %d από %d - Τώρα %s (%d απέτυχαν μέχρι στιγμής)"
 
+msgid "Size"
+msgstr ""
+
 msgid "Size:"
 msgstr "Μέγεθος:"
 
@@ -5400,6 +5535,9 @@ msgstr "Σλοβενικά"
 
 msgid "Small (16:9)"
 msgstr "Μικρό (16:9)"
+
+msgid "Small, in the middle"
+msgstr ""
 
 msgid "Smaller text"
 msgstr "Μικρότερο κείμενο"
@@ -5463,6 +5601,9 @@ msgstr "Ταξινομημένα πιο δημοφιλή κανάλια γενι
 
 msgid "Sorted most viewed channels now [live]"
 msgstr "Ταξινομημένα πιο δημοφιλή κανάλια τώρα [ζωντανά]"
+
+msgid "Source"
+msgstr ""
 
 msgid "Source:"
 msgstr "Πηγή:"
@@ -5539,6 +5680,9 @@ msgstr "Αποθήκευση"
 
 msgid "Story"
 msgstr "Ιστορία"
+
+msgid "Stream"
+msgstr ""
 
 #, python-format
 msgid "Stream formats: %s"
@@ -6006,8 +6150,17 @@ msgstr ""
 "Θα αποθηκευτεί στο αρχείο:\n"
 "\"%s\""
 
+msgid "The portal denied access to this entry."
+msgstr ""
+
 msgid "The portal did not hand out a link for this entry."
 msgstr "Η πύλη δεν παρείχε σύνδεσμο για αυτή την καταχώριση."
+
+msgid "The portal has blocked this MAC address."
+msgstr ""
+
+msgid "The portal refused the stream: the maximum number of connections is reached."
+msgstr ""
 
 msgid "The recordings of this page were on the site's old media server, which is offline."
 msgstr "Οι εγγραφές αυτής της σελίδας βρίσκονταν στον παλιό διακομιστή πολυμέσων του ιστότοπου, ο οποίος είναι εκτός σύνδεσης."
@@ -6280,6 +6433,9 @@ msgstr "Ώρα στην οθόνη LCD (αναπαραγωγή)"
 msgid "Tip! You can connect USB flash drive to fix this problem."
 msgstr "Συμβουλή! Μπορείτε να συνδέσετε ένα USB flash drive για να διορθώσετε αυτό το πρόβλημα."
 
+msgid "Title"
+msgstr ""
+
 msgid "Titles"
 msgstr "Τίτλοι"
 
@@ -6437,6 +6593,9 @@ msgstr ""
 "\n"
 "Το TorrServer δεν αποτελεί μέρος του E2iPlayer και πρέπει να εγκατασταθεί ξεχωριστά."
 
+msgid "Total bitrate"
+msgstr ""
+
 msgid "Total size:"
 msgstr "Συνολικό μέγεθος:"
 
@@ -6446,11 +6605,17 @@ msgstr "Τουρισμός"
 msgid "Tournament"
 msgstr "Τουρνουά"
 
+msgid "Track"
+msgstr ""
+
 msgid "Tracklist"
 msgstr "Λίστα κομματιών"
 
 msgid "Trailer"
 msgstr "Τρέιλερ"
+
+msgid "Trailer language"
+msgstr ""
 
 msgid "Trans"
 msgstr "Τρανς"
@@ -6743,6 +6908,9 @@ msgstr "Βίντεο"
 msgid "Video buffer size [MB]"
 msgstr "Μέγεθος προσωρινής αποθήκευσης βίντεο [MB]"
 
+msgid "Video codec"
+msgstr ""
+
 msgid "Video library"
 msgstr "Βιβλιοθήκη βίντεο"
 
@@ -6877,6 +7045,9 @@ msgstr "Πρέπει να ληφθεί ολόκληρο το αρχείο για
 msgid "Whole picture (black bars)"
 msgstr "Ολόκληρη εικόνα (μαύρες λωρίδες)"
 
+msgid "Whole width"
+msgstr ""
+
 msgid "Wiki"
 msgstr "Wiki"
 
@@ -6894,6 +7065,9 @@ msgstr "Με δευτερόλεπτα"
 
 msgid "With subtitles"
 msgstr "Με υπότιτλους"
+
+msgid "Words added to the trailer search (empty = automatic)"
+msgstr ""
 
 msgid "World"
 msgstr "Κόσμος"
@@ -7158,6 +7332,9 @@ msgstr "κέντρο"
 msgid "changed"
 msgstr "τροποποιήθηκε"
 
+msgid "classic"
+msgstr ""
+
 msgid "clock not set"
 msgstr "το ρολόι δεν έχει ρυθμιστεί"
 
@@ -7218,6 +7395,9 @@ msgstr "επεξεργασία της επιλεγμένης καταχώρισ�
 
 msgid "enable / disable manual reordering"
 msgstr "ενεργοποίηση / απενεργοποίηση χειροκίνητης αναδιάταξης"
+
+msgid "expired"
+msgstr ""
 
 msgid "external eplayer3"
 msgstr "εξωτερικό eplayer3"
@@ -7365,6 +7545,9 @@ msgstr "λεπτά"
 
 msgid "minutes"
 msgstr "λεπτά"
+
+msgid "modern"
+msgstr ""
 
 msgid "more options (this menu)"
 msgstr "περισσότερες επιλογές (αυτό το μενού)"
@@ -7622,6 +7805,9 @@ msgstr "ασημί"
 
 msgid "small"
 msgstr "μικρή"
+
+msgid "software"
+msgstr ""
 
 msgid "sources"
 msgstr "πηγές"

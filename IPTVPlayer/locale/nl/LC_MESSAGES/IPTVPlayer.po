@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-20 17:54+0000\n"
+"POT-Creation-Date: 2026-11-27 22:41+0000\n"
 "PO-Revision-Date: 2026-02-02 21:43+0100\n"
 "Last-Translator: Snoete\n"
 "Language-Team: Dutch\n"
@@ -608,12 +608,20 @@ msgid "Alphabetically"
 msgstr "Alfabetisch"
 
 #, python-format
+msgid "Also use the accounts of GT IPTV Player Pro (%s)"
+msgstr ""
+
+#, python-format
 msgid "Also use the accounts of X-Streamity (%s)"
 msgstr "Ook de accounts van X-Streamity gebruiken (%s)"
 
 #, python-format
 msgid "Also use the portals of EStalker (%s)"
 msgstr "Ook de portals van EStalker gebruiken (%s)"
+
+#, python-format
+msgid "Also use the portals of GT IPTV Player Pro (%s)"
+msgstr ""
 
 msgid "AltGr"
 msgstr "AltGr"
@@ -784,6 +792,9 @@ msgstr ""
 msgid "Aspect"
 msgstr "Aspect"
 
+msgid "Aspect ratio"
+msgstr ""
+
 msgid "At least one of plugin browser, extension list and main menu has to stay on, otherwise E2iPlayer could no longer be started."
 msgstr "Ten minste één van pluginbrowser, extensielijst en hoofdmenu moet ingeschakeld blijven, anders kan E2iPlayer niet meer worden gestart."
 
@@ -798,6 +809,9 @@ msgstr "Audio"
 
 msgid "Audio buffer size [KB]"
 msgstr "Audiobuffergrootte [KB]"
+
+msgid "Audio codec"
+msgstr ""
 
 msgid "Audio description"
 msgstr "Audiodescriptie"
@@ -864,8 +878,17 @@ msgstr "Prijzen:"
 msgid "BLUE"
 msgstr "BLAUW"
 
+msgid "Backdrop (fanart)"
+msgstr ""
+
+msgid "Backdrop when the film is paused"
+msgstr ""
+
 msgid "Background color"
 msgstr "Achtergrondkleur"
+
+msgid "Background of the INFO panels"
+msgstr ""
 
 msgid "Backspace"
 msgstr "Backspace"
@@ -888,6 +911,9 @@ msgstr ""
 
 msgid "Being watched"
 msgstr "Wordt nu bekeken"
+
+msgid "Below the picture"
+msgstr ""
 
 msgid "Bengali"
 msgstr ""
@@ -912,6 +938,12 @@ msgstr "Bing-suggesties"
 
 msgid "Biography"
 msgstr "Biografie"
+
+msgid "Bit depth"
+msgstr ""
+
+msgid "Bitrate"
+msgstr ""
 
 #, python-format
 msgid "Bitrate: %s"
@@ -1078,6 +1110,12 @@ msgstr "Terugkijken (timeshift.php)"
 msgid "Catch-up: %d days"
 msgstr "Terugkijken: %d dagen"
 
+msgid "Catch-up: minutes after the end:"
+msgstr ""
+
+msgid "Catch-up: minutes before the start:"
+msgstr ""
+
 msgid "Categories"
 msgstr "Categorieën"
 
@@ -1089,6 +1127,9 @@ msgstr "Categorie"
 
 msgid "Category:"
 msgstr "Categorie:"
+
+msgid "Centered"
+msgstr ""
 
 msgid "Change active movie player"
 msgstr "Actieve mediaspeler wisselen"
@@ -1108,6 +1149,12 @@ msgstr "Zender: %s"
 
 msgid "Channels"
 msgstr "Zenders"
+
+msgid "Chapter"
+msgstr ""
+
+msgid "Chapters"
+msgstr ""
 
 msgid "Checking for updates"
 msgstr "Controleren op updates"
@@ -1181,6 +1228,9 @@ msgstr "Clubs en sporters"
 msgid "Code"
 msgstr "Code"
 
+msgid "Codec"
+msgstr ""
+
 msgid "Collected streams only"
 msgstr "Alleen verzamelde streams"
 
@@ -1189,6 +1239,9 @@ msgstr "Collecties"
 
 msgid "Colored text in titles and descriptions"
 msgstr "Gekleurde tekst in titels en beschrijvingen"
+
+msgid "Colour space"
+msgstr ""
 
 msgid "Combine pull request merges with their commit"
 msgstr "Pull-request-merges samenvoegen met hun commit"
@@ -1385,6 +1438,9 @@ msgstr "Cultuur en pop"
 msgid "Current item is not a channel."
 msgstr "Het huidige item is geen kanaal."
 
+msgid "Current song"
+msgstr ""
+
 msgid "Cut"
 msgstr "Knippen"
 
@@ -1419,6 +1475,9 @@ msgid "Daily download limit reached - type the code"
 msgstr "Dagelijkse downloadlimiet bereikt - voer de code in"
 
 msgid "Danish"
+msgstr ""
+
+msgid "Dark"
 msgstr ""
 
 msgid "Darkgray"
@@ -1579,6 +1638,9 @@ msgstr "Miniaturencache nu verwijderen"
 
 msgid "Denmark"
 msgstr "Denemarken"
+
+msgid "Description"
+msgstr ""
 
 msgid "Description:"
 msgstr "Beschrijving:"
@@ -2297,6 +2359,9 @@ msgstr "FebBox-token (\"ui\"-cookie van www.febbox.com):"
 msgid "Female"
 msgstr "Vrouwen"
 
+msgid "File"
+msgstr ""
+
 #, python-format
 msgid "File \"%s\" already exists"
 msgstr "Bestand \"%s\" bestaat al"
@@ -2468,6 +2533,9 @@ msgstr "Interne skin forceren: alleen hoofdscherm"
 msgid "Force legacy grid"
 msgstr "Oud pictogramraster forceren"
 
+msgid "Forced"
+msgstr ""
+
 msgid "Foreign movies"
 msgstr "Buitenlandse films"
 
@@ -2486,6 +2554,9 @@ msgstr "Opstellingen"
 msgid "Fotka.pl stream :"
 msgstr "Fotka.pl-stream :"
 
+msgid "Frame rate"
+msgstr ""
+
 msgid "Free"
 msgstr "Gratis"
 
@@ -2498,11 +2569,17 @@ msgstr "Frans"
 msgid "From E2 settings"
 msgstr "Uit E2-instellingen"
 
+msgid "From the host, else online"
+msgstr ""
+
 msgid "Full description loaded"
 msgstr "Volledige beschrijving geladen"
 
 msgid "Full description not available"
 msgstr "Volledige beschrijving niet beschikbaar"
+
+msgid "Full screen"
+msgstr ""
 
 msgid "Full test"
 msgstr "Volledige test"
@@ -2675,6 +2752,9 @@ msgstr "Help"
 #, python-format
 msgid "Hide \"%s\" group"
 msgstr "Groep \"%s\" verbergen"
+
+msgid "Hide categories containing (comma separated):"
+msgstr ""
 
 msgid "Hide the menu (live TV visible)"
 msgstr "Menu verbergen (live-tv zichtbaar)"
@@ -3044,6 +3124,9 @@ msgstr ""
 msgid "Language"
 msgstr "Taal"
 
+msgid "Language of the details"
+msgstr ""
+
 msgid "Language of the details (TMDb, IMDb)"
 msgstr "Taal van de details (TMDb, IMDb)"
 
@@ -3059,6 +3142,15 @@ msgstr ""
 msgid "Large (title below)"
 msgstr ""
 
+msgid "Large cover, info on the right: alignment"
+msgstr ""
+
+msgid "Large cover, info on the right: labels"
+msgstr ""
+
+msgid "Large cover, info on the right: lines"
+msgstr ""
+
 msgid "Large cover, info on the right: row 1"
 msgstr ""
 
@@ -3069,6 +3161,9 @@ msgid "Large cover, info on the right: row 3"
 msgstr ""
 
 msgid "Large cover, info on the right: row 4"
+msgstr ""
+
+msgid "Large cover, info on the right: title"
 msgstr ""
 
 msgid "Large cover: size of the times below the bar"
@@ -3394,6 +3489,9 @@ msgstr ""
 
 msgid "Longest"
 msgstr "Langste"
+
+msgid "Looking for trailers..."
+msgstr ""
 
 msgid "Loved tracks"
 msgstr "Favoriete nummers"
@@ -3902,6 +4000,10 @@ msgstr "Geen ondertitels in %s. Beschikbaar: %s"
 msgid "No title to search for."
 msgstr "Geen titel om naar te zoeken."
 
+#, python-format
+msgid "No trailer found for \"%s\"."
+msgstr ""
+
 msgid "No valid entitlement found for asset."
 msgstr "Geen geldige rechten gevonden voor dit medium."
 
@@ -4026,6 +4128,9 @@ msgstr "Alleen beschikbaar in %s"
 msgid "Only files in the downloads folder can be deleted."
 msgstr "Alleen bestanden in de downloadmap kunnen worden verwijderd."
 
+msgid "Only from the host"
+msgstr ""
+
 msgid "Only links can be moved to a group."
 msgstr "Alleen links kunnen naar een groep worden verplaatst."
 
@@ -4100,6 +4205,9 @@ msgstr "Volgorde van gebruikerslinks:"
 
 msgid "Order stays fixed - useful for T9 browsing."
 msgstr "De volgorde blijft vast - handig bij bladeren met T9."
+
+msgid "Original"
+msgstr ""
 
 msgid "Original Title:"
 msgstr "Originele titel:"
@@ -4237,6 +4345,9 @@ msgstr "Filosofie"
 msgid "Physical Exam"
 msgstr "Lichamelijk onderzoek"
 
+msgid "Picture of the title, blurred"
+msgstr ""
+
 msgid "Pin has been changed."
 msgstr "De pincode is gewijzigd."
 
@@ -4252,12 +4363,18 @@ msgstr "Pincodebeveiliging voor plugin"
 msgid "Pin protection for this host"
 msgstr "Pincodebeveiliging voor deze host"
 
+msgid "Pixel format"
+msgstr ""
+
 msgid "Play all from here"
 msgstr "Alles vanaf hier afspelen"
 
 #, python-format
 msgid "Play marked items (%d)"
 msgstr "Gemarkeerde items afspelen (%d)"
+
+msgid "Play the first trailer at once"
+msgstr ""
 
 msgid "Play torrents with TorrServer"
 msgstr "Torrents afspelen met TorrServer"
@@ -4437,6 +4554,9 @@ msgstr "Poorten: %s"
 msgid "Portuguese"
 msgstr "Portugees"
 
+msgid "Poster during audio playback"
+msgstr ""
+
 msgid "Poster grid for lists with pictures"
 msgstr ""
 
@@ -4496,6 +4616,9 @@ msgstr "Professionele netwerken"
 
 msgid "Professionals"
 msgstr "Professionals"
+
+msgid "Profile"
+msgstr ""
 
 msgid "Program"
 msgstr "Programma"
@@ -4633,6 +4756,9 @@ msgstr "Binaire bestanden lezen..."
 
 msgid "Reading..."
 msgstr "Bezig met lezen..."
+
+msgid "Rebuffer"
+msgstr ""
 
 msgid "Recent"
 msgstr "Recent"
@@ -4802,6 +4928,9 @@ msgstr "Terugzetten naar opgeslagen volgorde"
 msgid "Reset web interface"
 msgstr "Webinterface resetten"
 
+msgid "Resolution"
+msgstr ""
+
 #, python-format
 msgid ""
 "Resolving hCaptcha with %s failed!\n"
@@ -4873,6 +5002,9 @@ msgid "Safe search (restricted mode):"
 msgstr "Veilig zoeken (beperkte modus):"
 
 msgid "Same as the bar"
+msgstr ""
+
+msgid "Sample rate"
 msgstr ""
 
 msgid "Save"
@@ -5375,6 +5507,9 @@ msgstr "Zelftest van sites in het hoofdmenu :"
 msgid "Site self-test: %d of %d - now %s (%d failed so far)"
 msgstr "Zelftest van sites: %d van %d - nu %s (tot nu toe %d mislukt)"
 
+msgid "Size"
+msgstr ""
+
 msgid "Size:"
 msgstr "Grootte:"
 
@@ -5394,6 +5529,9 @@ msgid "Slovenian"
 msgstr ""
 
 msgid "Small (16:9)"
+msgstr ""
+
+msgid "Small, in the middle"
 msgstr ""
 
 msgid "Smaller text"
@@ -5458,6 +5596,9 @@ msgstr "Gesorteerde meest bekeken kanalen algemeen [live]"
 
 msgid "Sorted most viewed channels now [live]"
 msgstr "Gesorteerde meest bekeken kanalen nu [live]"
+
+msgid "Source"
+msgstr ""
 
 msgid "Source:"
 msgstr "Bron:"
@@ -5534,6 +5675,9 @@ msgstr "Opslag"
 
 msgid "Story"
 msgstr "Verhaal"
+
+msgid "Stream"
+msgstr ""
 
 #, python-format
 msgid "Stream formats: %s"
@@ -6001,8 +6145,17 @@ msgstr ""
 "Deze wordt opgeslagen in het bestand:\n"
 "\"%s\""
 
+msgid "The portal denied access to this entry."
+msgstr ""
+
 msgid "The portal did not hand out a link for this entry."
 msgstr "Het portaal heeft geen link voor dit item verstrekt."
+
+msgid "The portal has blocked this MAC address."
+msgstr ""
+
+msgid "The portal refused the stream: the maximum number of connections is reached."
+msgstr ""
 
 msgid "The recordings of this page were on the site's old media server, which is offline."
 msgstr "De opnamen van deze pagina stonden op de oude mediaserver van de site, die offline is."
@@ -6272,6 +6425,9 @@ msgstr ""
 msgid "Tip! You can connect USB flash drive to fix this problem."
 msgstr "Tip! U kunt een USB-stick aansluiten om dit probleem op te lossen."
 
+msgid "Title"
+msgstr ""
+
 msgid "Titles"
 msgstr "Titels"
 
@@ -6429,6 +6585,9 @@ msgstr ""
 "\n"
 "TorrServer zelf maakt geen deel uit van E2iPlayer en moet apart worden geïnstalleerd."
 
+msgid "Total bitrate"
+msgstr ""
+
 msgid "Total size:"
 msgstr "Totale grootte:"
 
@@ -6438,11 +6597,17 @@ msgstr "Toerisme"
 msgid "Tournament"
 msgstr "Toernooi"
 
+msgid "Track"
+msgstr ""
+
 msgid "Tracklist"
 msgstr "Tracklijst"
 
 msgid "Trailer"
 msgstr "Trailer"
+
+msgid "Trailer language"
+msgstr ""
 
 msgid "Trans"
 msgstr "Trans"
@@ -6735,6 +6900,9 @@ msgstr "Video"
 msgid "Video buffer size [MB]"
 msgstr "Videobuffergrootte [MB]"
 
+msgid "Video codec"
+msgstr ""
+
 msgid "Video library"
 msgstr "Videotheek"
 
@@ -6869,6 +7037,9 @@ msgstr "Het hele bestand moet gedownload zijn om het af te spelen!"
 msgid "Whole picture (black bars)"
 msgstr ""
 
+msgid "Whole width"
+msgstr ""
+
 msgid "Wiki"
 msgstr "Wiki"
 
@@ -6886,6 +7057,9 @@ msgstr ""
 
 msgid "With subtitles"
 msgstr "Met ondertitels"
+
+msgid "Words added to the trailer search (empty = automatic)"
+msgstr ""
 
 msgid "World"
 msgstr "Wereld"
@@ -7150,6 +7324,9 @@ msgstr "midden"
 msgid "changed"
 msgstr "gewijzigd"
 
+msgid "classic"
+msgstr ""
+
 msgid "clock not set"
 msgstr ""
 
@@ -7210,6 +7387,9 @@ msgstr "het geselecteerde item bewerken (zelfde als OK)"
 
 msgid "enable / disable manual reordering"
 msgstr "handmatig herschikken in-/uitschakelen"
+
+msgid "expired"
+msgstr ""
 
 msgid "external eplayer3"
 msgstr "externe eplayer3"
@@ -7357,6 +7537,9 @@ msgstr ""
 
 msgid "minutes"
 msgstr "minuten"
+
+msgid "modern"
+msgstr ""
 
 msgid "more options (this menu)"
 msgstr "meer opties (dit menu)"
@@ -7614,6 +7797,9 @@ msgstr "zilver"
 
 msgid "small"
 msgstr "klein"
+
+msgid "software"
+msgstr ""
 
 msgid "sources"
 msgstr "bronnen"

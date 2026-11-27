@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-20 17:54+0000\n"
+"POT-Creation-Date: 2026-11-27 22:41+0000\n"
 "PO-Revision-Date: 2026-07-27 16:28+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -612,12 +612,20 @@ msgid "Alphabetically"
 msgstr "Abecedne"
 
 #, python-format
+msgid "Also use the accounts of GT IPTV Player Pro (%s)"
+msgstr ""
+
+#, python-format
 msgid "Also use the accounts of X-Streamity (%s)"
 msgstr "Používať aj účty z X-Streamity (%s)"
 
 #, python-format
 msgid "Also use the portals of EStalker (%s)"
 msgstr "Používať aj portály z EStalker (%s)"
+
+#, python-format
+msgid "Also use the portals of GT IPTV Player Pro (%s)"
+msgstr ""
 
 msgid "AltGr"
 msgstr "AltGr"
@@ -788,6 +796,9 @@ msgstr ""
 msgid "Aspect"
 msgstr "Pomer strán"
 
+msgid "Aspect ratio"
+msgstr ""
+
 msgid "At least one of plugin browser, extension list and main menu has to stay on, otherwise E2iPlayer could no longer be started."
 msgstr "Aspoň jedna z možností prehliadač pluginov, zoznam rozšírení a hlavné menu musí zostať zapnutá, inak by sa E2iPlayer už nedal spustiť."
 
@@ -802,6 +813,9 @@ msgstr "Audio"
 
 msgid "Audio buffer size [KB]"
 msgstr "Veľkosť vyrovnávacej pamäte zvuku [KB]"
+
+msgid "Audio codec"
+msgstr ""
 
 msgid "Audio description"
 msgstr "Zvukový popis"
@@ -868,8 +882,17 @@ msgstr "Ocenenia:"
 msgid "BLUE"
 msgstr "MODRÉ"
 
+msgid "Backdrop (fanart)"
+msgstr ""
+
+msgid "Backdrop when the film is paused"
+msgstr ""
+
 msgid "Background color"
 msgstr "Farba pozadia"
+
+msgid "Background of the INFO panels"
+msgstr ""
 
 msgid "Backspace"
 msgstr "Backspace"
@@ -892,6 +915,9 @@ msgstr ""
 
 msgid "Being watched"
 msgstr "Práve sa pozerá"
+
+msgid "Below the picture"
+msgstr ""
 
 msgid "Bengali"
 msgstr ""
@@ -916,6 +942,12 @@ msgstr "Návrhy Bing"
 
 msgid "Biography"
 msgstr "Životopisné"
+
+msgid "Bit depth"
+msgstr ""
+
+msgid "Bitrate"
+msgstr ""
 
 #, python-format
 msgid "Bitrate: %s"
@@ -1082,6 +1114,12 @@ msgstr "Archív (timeshift.php)"
 msgid "Catch-up: %d days"
 msgstr "Archív: %d dní"
 
+msgid "Catch-up: minutes after the end:"
+msgstr ""
+
+msgid "Catch-up: minutes before the start:"
+msgstr ""
+
 msgid "Categories"
 msgstr "Kategórie"
 
@@ -1093,6 +1131,9 @@ msgstr "Kategória"
 
 msgid "Category:"
 msgstr "Kategória:"
+
+msgid "Centered"
+msgstr ""
 
 msgid "Change active movie player"
 msgstr "Zmena aktívneho prehrávača filmov"
@@ -1112,6 +1153,12 @@ msgstr "Kanál: %s"
 
 msgid "Channels"
 msgstr "Kanály"
+
+msgid "Chapter"
+msgstr ""
+
+msgid "Chapters"
+msgstr ""
 
 msgid "Checking for updates"
 msgstr "Hľadajú sa aktualizácie"
@@ -1185,6 +1232,9 @@ msgstr "Kluby a športovci"
 msgid "Code"
 msgstr "Kód"
 
+msgid "Codec"
+msgstr ""
+
 msgid "Collected streams only"
 msgstr "Iba zozbierané streamy"
 
@@ -1193,6 +1243,9 @@ msgstr "Zbierky"
 
 msgid "Colored text in titles and descriptions"
 msgstr "Farebný text v názvoch a popisoch"
+
+msgid "Colour space"
+msgstr ""
 
 msgid "Combine pull request merges with their commit"
 msgstr "Zlúčiť merge pull requestov s ich commitom"
@@ -1389,6 +1442,9 @@ msgstr "Kultúra a pop"
 msgid "Current item is not a channel."
 msgstr "Aktuálna položka nie je kanál."
 
+msgid "Current song"
+msgstr ""
+
 msgid "Cut"
 msgstr "Vystrihnúť"
 
@@ -1423,6 +1479,9 @@ msgid "Daily download limit reached - type the code"
 msgstr "Dosiahnutý denný limit sťahovania - zadajte kód"
 
 msgid "Danish"
+msgstr ""
+
+msgid "Dark"
 msgstr ""
 
 msgid "Darkgray"
@@ -1583,6 +1642,9 @@ msgstr "Vymazať vyrovnávaciu pamäť miniatúr teraz"
 
 msgid "Denmark"
 msgstr "Dánsko"
+
+msgid "Description"
+msgstr ""
 
 msgid "Description:"
 msgstr "Popis:"
@@ -2301,6 +2363,9 @@ msgstr "Token FebBox (cookie \"ui\" z www.febbox.com):"
 msgid "Female"
 msgstr "Ženy"
 
+msgid "File"
+msgstr ""
+
 #, python-format
 msgid "File \"%s\" already exists"
 msgstr "Súbor \"%s\" už existuje"
@@ -2472,6 +2537,9 @@ msgstr "Vynútiť interný skin: iba hlavná obrazovka"
 msgid "Force legacy grid"
 msgstr "Vynútiť starú mriežku ikon"
 
+msgid "Forced"
+msgstr ""
+
 msgid "Foreign movies"
 msgstr "Zahraničné filmy"
 
@@ -2490,6 +2558,9 @@ msgstr "Zostavy"
 msgid "Fotka.pl stream :"
 msgstr "Fotka.pl stream :"
 
+msgid "Frame rate"
+msgstr ""
+
 msgid "Free"
 msgstr "Zadarmo"
 
@@ -2502,11 +2573,17 @@ msgstr "Francúzština"
 msgid "From E2 settings"
 msgstr "Z nastavení E2"
 
+msgid "From the host, else online"
+msgstr ""
+
 msgid "Full description loaded"
 msgstr "Úplný popis načítaný"
 
 msgid "Full description not available"
 msgstr "Úplný popis nie je k dispozícii"
+
+msgid "Full screen"
+msgstr ""
 
 msgid "Full test"
 msgstr "Úplný test"
@@ -2679,6 +2756,9 @@ msgstr "Pomocník"
 #, python-format
 msgid "Hide \"%s\" group"
 msgstr "Skryť skupinu \"%s\""
+
+msgid "Hide categories containing (comma separated):"
+msgstr ""
 
 msgid "Hide the menu (live TV visible)"
 msgstr "Skryť menu (živé TV viditeľné)"
@@ -3049,6 +3129,9 @@ msgstr ""
 msgid "Language"
 msgstr "Jazyk"
 
+msgid "Language of the details"
+msgstr ""
+
 msgid "Language of the details (TMDb, IMDb)"
 msgstr "Jazyk podrobností (TMDb, IMDb)"
 
@@ -3064,6 +3147,15 @@ msgstr ""
 msgid "Large (title below)"
 msgstr ""
 
+msgid "Large cover, info on the right: alignment"
+msgstr ""
+
+msgid "Large cover, info on the right: labels"
+msgstr ""
+
+msgid "Large cover, info on the right: lines"
+msgstr ""
+
 msgid "Large cover, info on the right: row 1"
 msgstr ""
 
@@ -3074,6 +3166,9 @@ msgid "Large cover, info on the right: row 3"
 msgstr ""
 
 msgid "Large cover, info on the right: row 4"
+msgstr ""
+
+msgid "Large cover, info on the right: title"
 msgstr ""
 
 msgid "Large cover: size of the times below the bar"
@@ -3399,6 +3494,9 @@ msgstr ""
 
 msgid "Longest"
 msgstr "Najdlhšia"
+
+msgid "Looking for trailers..."
+msgstr ""
 
 msgid "Loved tracks"
 msgstr "Obľúbené skladby"
@@ -3910,6 +4008,10 @@ msgstr "Žiadne titulky v jazyku %s. K dispozícii: %s"
 msgid "No title to search for."
 msgstr "Nie je zadaný žiadny titul na vyhľadávanie."
 
+#, python-format
+msgid "No trailer found for \"%s\"."
+msgstr ""
+
 msgid "No valid entitlement found for asset."
 msgstr "Pre dielo sa nenašiel žiadny platný nárok."
 
@@ -4034,6 +4136,9 @@ msgstr "Dostupné iba v %s"
 msgid "Only files in the downloads folder can be deleted."
 msgstr "Odstrániť je možné iba súbory v priečinku sťahovaní."
 
+msgid "Only from the host"
+msgstr ""
+
 msgid "Only links can be moved to a group."
 msgstr "Do skupiny je možné presunúť iba odkazy."
 
@@ -4108,6 +4213,9 @@ msgstr "Poradie používateľských odkazov:"
 
 msgid "Order stays fixed - useful for T9 browsing."
 msgstr "Poradie zostáva pevné - užitočné pri prechádzaní pomocou T9."
+
+msgid "Original"
+msgstr ""
 
 msgid "Original Title:"
 msgstr "Pôvodný názov:"
@@ -4245,6 +4353,9 @@ msgstr "Filozofia"
 msgid "Physical Exam"
 msgstr "Fyzikálne vyšetrenie"
 
+msgid "Picture of the title, blurred"
+msgstr ""
+
 msgid "Pin has been changed."
 msgstr "PIN bol zmenený."
 
@@ -4260,12 +4371,18 @@ msgstr "Ochrana PIN pre plugin"
 msgid "Pin protection for this host"
 msgstr "Ochrana PIN pre tohto hostiteľa"
 
+msgid "Pixel format"
+msgstr ""
+
 msgid "Play all from here"
 msgstr "Prehrať všetko odtiaľto"
 
 #, python-format
 msgid "Play marked items (%d)"
 msgstr "Prehrať označené položky (%d)"
+
+msgid "Play the first trailer at once"
+msgstr ""
 
 msgid "Play torrents with TorrServer"
 msgstr "Prehrávať torrenty cez TorrServer"
@@ -4446,6 +4563,9 @@ msgstr "Porty: %s"
 msgid "Portuguese"
 msgstr "Portugalčina"
 
+msgid "Poster during audio playback"
+msgstr ""
+
 msgid "Poster grid for lists with pictures"
 msgstr ""
 
@@ -4505,6 +4625,9 @@ msgstr "Profesionálne siete"
 
 msgid "Professionals"
 msgstr "Profesionáli"
+
+msgid "Profile"
+msgstr ""
 
 msgid "Program"
 msgstr "Program"
@@ -4642,6 +4765,9 @@ msgstr "Čítanie binárnych súborov..."
 
 msgid "Reading..."
 msgstr "Načítava sa..."
+
+msgid "Rebuffer"
+msgstr ""
 
 msgid "Recent"
 msgstr "Najnovšie"
@@ -4811,6 +4937,9 @@ msgstr "Obnoviť uložené poradie"
 msgid "Reset web interface"
 msgstr "Resetovať webové rozhranie"
 
+msgid "Resolution"
+msgstr ""
+
 #, python-format
 msgid ""
 "Resolving hCaptcha with %s failed!\n"
@@ -4882,6 +5011,9 @@ msgid "Safe search (restricted mode):"
 msgstr "Bezpečné vyhľadávanie (obmedzený režim):"
 
 msgid "Same as the bar"
+msgstr ""
+
+msgid "Sample rate"
 msgstr ""
 
 msgid "Save"
@@ -5384,6 +5516,9 @@ msgstr "Autotest stránok v hlavnom menu :"
 msgid "Site self-test: %d of %d - now %s (%d failed so far)"
 msgstr "Autotest stránok: %d z %d - teraz %s (zatiaľ zlyhalo: %d)"
 
+msgid "Size"
+msgstr ""
+
 msgid "Size:"
 msgstr "Veľkosť:"
 
@@ -5403,6 +5538,9 @@ msgid "Slovenian"
 msgstr ""
 
 msgid "Small (16:9)"
+msgstr ""
+
+msgid "Small, in the middle"
 msgstr ""
 
 msgid "Smaller text"
@@ -5467,6 +5605,9 @@ msgstr "Zoradené najsledovanejšie kanály všeobecné [naživo]"
 
 msgid "Sorted most viewed channels now [live]"
 msgstr "Zoradené najsledovanejšie kanály teraz [naživo]"
+
+msgid "Source"
+msgstr ""
 
 msgid "Source:"
 msgstr "Zdroj:"
@@ -5543,6 +5684,9 @@ msgstr "Úložisko"
 
 msgid "Story"
 msgstr "Dej"
+
+msgid "Stream"
+msgstr ""
 
 #, python-format
 msgid "Stream formats: %s"
@@ -6010,8 +6154,17 @@ msgstr ""
 "Uloží sa do súboru:\n"
 "\"%s\""
 
+msgid "The portal denied access to this entry."
+msgstr ""
+
 msgid "The portal did not hand out a link for this entry."
 msgstr "Portál pre túto položku nevydal odkaz."
+
+msgid "The portal has blocked this MAC address."
+msgstr ""
+
+msgid "The portal refused the stream: the maximum number of connections is reached."
+msgstr ""
 
 msgid "The recordings of this page were on the site's old media server, which is offline."
 msgstr "Záznamy tejto stránky boli na starom mediálnom serveri stránky, ktorý je offline."
@@ -6281,6 +6434,9 @@ msgstr ""
 msgid "Tip! You can connect USB flash drive to fix this problem."
 msgstr "Tip! Tento problém môžete vyriešiť pripojením disku USB flash."
 
+msgid "Title"
+msgstr ""
+
 msgid "Titles"
 msgstr "Tituly"
 
@@ -6438,6 +6594,9 @@ msgstr ""
 "\n"
 "Samotný TorrServer nie je súčasťou E2iPlayer, musí sa nainštalovať samostatne."
 
+msgid "Total bitrate"
+msgstr ""
+
 msgid "Total size:"
 msgstr "Celková veľkosť:"
 
@@ -6447,11 +6606,17 @@ msgstr "Cestovný ruch"
 msgid "Tournament"
 msgstr "Turnaj"
 
+msgid "Track"
+msgstr ""
+
 msgid "Tracklist"
 msgstr "Zoznam skladieb"
 
 msgid "Trailer"
 msgstr "Trailer"
+
+msgid "Trailer language"
+msgstr ""
 
 msgid "Trans"
 msgstr "Transgender"
@@ -6744,6 +6909,9 @@ msgstr "Video"
 msgid "Video buffer size [MB]"
 msgstr "Veľkosť vyrovnávacej pamäte videa [MB]"
 
+msgid "Video codec"
+msgstr ""
+
 msgid "Video library"
 msgstr "Videotéka"
 
@@ -6878,6 +7046,9 @@ msgstr "Na spustenie prehrávania je potrebné stiahnuť celý súbor!"
 msgid "Whole picture (black bars)"
 msgstr ""
 
+msgid "Whole width"
+msgstr ""
+
 msgid "Wiki"
 msgstr "Wiki"
 
@@ -6895,6 +7066,9 @@ msgstr ""
 
 msgid "With subtitles"
 msgstr "S titulkami"
+
+msgid "Words added to the trailer search (empty = automatic)"
+msgstr ""
 
 msgid "World"
 msgstr "Svet"
@@ -7159,6 +7333,9 @@ msgstr "na stred"
 msgid "changed"
 msgstr "zmenené"
 
+msgid "classic"
+msgstr ""
+
 msgid "clock not set"
 msgstr ""
 
@@ -7219,6 +7396,9 @@ msgstr "upraviť vybranú položku (ako OK)"
 
 msgid "enable / disable manual reordering"
 msgstr "zapnúť / vypnúť ručnú zmenu poradia"
+
+msgid "expired"
+msgstr ""
 
 msgid "external eplayer3"
 msgstr "externý eplayer3"
@@ -7366,6 +7546,9 @@ msgstr ""
 
 msgid "minutes"
 msgstr "minúty"
+
+msgid "modern"
+msgstr ""
 
 msgid "more options (this menu)"
 msgstr "ďalšie možnosti (toto menu)"
@@ -7623,6 +7806,9 @@ msgstr "strieborná"
 
 msgid "small"
 msgstr "malé"
+
+msgid "software"
+msgstr ""
 
 msgid "sources"
 msgstr "zdroje"

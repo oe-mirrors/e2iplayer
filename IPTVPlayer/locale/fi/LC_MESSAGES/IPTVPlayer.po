@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-20 17:54+0000\n"
+"POT-Creation-Date: 2026-11-27 22:41+0000\n"
 "PO-Revision-Date: 2026-10-24 23:30+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Finnish\n"
@@ -607,12 +607,20 @@ msgid "Alphabetically"
 msgstr "Aakkosjärjestyksessä"
 
 #, python-format
+msgid "Also use the accounts of GT IPTV Player Pro (%s)"
+msgstr ""
+
+#, python-format
 msgid "Also use the accounts of X-Streamity (%s)"
 msgstr "Käytä myös X-Streamityn tilejä (%s)"
 
 #, python-format
 msgid "Also use the portals of EStalker (%s)"
 msgstr "Käytä myös EStalkerin portaaleja (%s)"
+
+#, python-format
+msgid "Also use the portals of GT IPTV Player Pro (%s)"
+msgstr ""
 
 msgid "AltGr"
 msgstr "AltGr"
@@ -783,6 +791,9 @@ msgstr ""
 msgid "Aspect"
 msgstr "Kuvasuhde"
 
+msgid "Aspect ratio"
+msgstr ""
+
 msgid "At least one of plugin browser, extension list and main menu has to stay on, otherwise E2iPlayer could no longer be started."
 msgstr "Ainakin yhden seuraavista on oltava käytössä: lisäosaselain, laajennusluettelo tai päävalikko, muuten E2iPlayeria ei voi enää käynnistää."
 
@@ -797,6 +808,9 @@ msgstr "Ääni"
 
 msgid "Audio buffer size [KB]"
 msgstr "Äänipuskurin koko [KB]"
+
+msgid "Audio codec"
+msgstr ""
 
 msgid "Audio description"
 msgstr "Kuvailutulkkaus"
@@ -863,8 +877,17 @@ msgstr "Palkinnot:"
 msgid "BLUE"
 msgstr "SININEN"
 
+msgid "Backdrop (fanart)"
+msgstr ""
+
+msgid "Backdrop when the film is paused"
+msgstr ""
+
 msgid "Background color"
 msgstr "Taustaväri"
+
+msgid "Background of the INFO panels"
+msgstr ""
 
 msgid "Backspace"
 msgstr "Askelpalautin"
@@ -887,6 +910,9 @@ msgstr ""
 
 msgid "Being watched"
 msgstr "Katsotaan parhaillaan"
+
+msgid "Below the picture"
+msgstr ""
 
 msgid "Bengali"
 msgstr ""
@@ -911,6 +937,12 @@ msgstr "Bing-ehdotukset"
 
 msgid "Biography"
 msgstr "Elämäkerta"
+
+msgid "Bit depth"
+msgstr ""
+
+msgid "Bitrate"
+msgstr ""
 
 #, python-format
 msgid "Bitrate: %s"
@@ -1077,6 +1109,12 @@ msgstr "Jälkikatselu (timeshift.php)"
 msgid "Catch-up: %d days"
 msgstr "Jälkikatselu: %d päivää"
 
+msgid "Catch-up: minutes after the end:"
+msgstr ""
+
+msgid "Catch-up: minutes before the start:"
+msgstr ""
+
 msgid "Categories"
 msgstr "Kategoriat"
 
@@ -1088,6 +1126,9 @@ msgstr "Kategoria"
 
 msgid "Category:"
 msgstr "Kategoria:"
+
+msgid "Centered"
+msgstr ""
 
 msgid "Change active movie player"
 msgstr "Vaihda aktiivinen elokuvasoitin"
@@ -1107,6 +1148,12 @@ msgstr "Kanava: %s"
 
 msgid "Channels"
 msgstr "Kanavat"
+
+msgid "Chapter"
+msgstr ""
+
+msgid "Chapters"
+msgstr ""
 
 msgid "Checking for updates"
 msgstr "Tarkistetaan päivityksiä"
@@ -1180,6 +1227,9 @@ msgstr "Seurat ja urheilijat"
 msgid "Code"
 msgstr "Koodi"
 
+msgid "Codec"
+msgstr ""
+
 msgid "Collected streams only"
 msgstr "Vain kerätyt suoratoistot"
 
@@ -1188,6 +1238,9 @@ msgstr "Kokoelmat"
 
 msgid "Colored text in titles and descriptions"
 msgstr "Värillinen teksti otsikoissa ja kuvauksissa"
+
+msgid "Colour space"
+msgstr ""
 
 msgid "Combine pull request merges with their commit"
 msgstr "Yhdistä pull requestien yhdistämiset niiden committiin"
@@ -1384,6 +1437,9 @@ msgstr "Kulttuuri ja pop"
 msgid "Current item is not a channel."
 msgstr "Nykyinen kohde ei ole kanava."
 
+msgid "Current song"
+msgstr ""
+
 msgid "Cut"
 msgstr "Leikkaa"
 
@@ -1418,6 +1474,9 @@ msgid "Daily download limit reached - type the code"
 msgstr "Päivittäinen latausraja saavutettu - syötä koodi"
 
 msgid "Danish"
+msgstr ""
+
+msgid "Dark"
 msgstr ""
 
 msgid "Darkgray"
@@ -1578,6 +1637,9 @@ msgstr "Poista pikkukuvien välimuisti nyt"
 
 msgid "Denmark"
 msgstr "Tanska"
+
+msgid "Description"
+msgstr ""
 
 msgid "Description:"
 msgstr "Kuvaus:"
@@ -2296,6 +2358,9 @@ msgstr "FebBox-tunnus (sivuston www.febbox.com \"ui\"-eväste):"
 msgid "Female"
 msgstr "Naiset"
 
+msgid "File"
+msgstr ""
+
 #, python-format
 msgid "File \"%s\" already exists"
 msgstr "Tiedosto \"%s\" on jo olemassa"
@@ -2467,6 +2532,9 @@ msgstr "Pakota sisäinen ulkoasu: vain päänäkymä"
 msgid "Force legacy grid"
 msgstr "Pakota vanha kuvakeruudukko"
 
+msgid "Forced"
+msgstr ""
+
 msgid "Foreign movies"
 msgstr "Ulkomaiset elokuvat"
 
@@ -2485,6 +2553,9 @@ msgstr "Kokoonpanot"
 msgid "Fotka.pl stream :"
 msgstr "Fotka.pl-suoratoisto :"
 
+msgid "Frame rate"
+msgstr ""
+
 msgid "Free"
 msgstr "Ilmainen"
 
@@ -2497,11 +2568,17 @@ msgstr "Ranska"
 msgid "From E2 settings"
 msgstr "E2-asetuksista"
 
+msgid "From the host, else online"
+msgstr ""
+
 msgid "Full description loaded"
 msgstr "Koko kuvaus ladattu"
 
 msgid "Full description not available"
 msgstr "Koko kuvaus ei ole saatavilla"
+
+msgid "Full screen"
+msgstr ""
 
 msgid "Full test"
 msgstr "Täysi testi"
@@ -2674,6 +2751,9 @@ msgstr "Ohje"
 #, python-format
 msgid "Hide \"%s\" group"
 msgstr "Piilota ryhmä \"%s\""
+
+msgid "Hide categories containing (comma separated):"
+msgstr ""
 
 msgid "Hide the menu (live TV visible)"
 msgstr "Piilota valikko (suora TV näkyvissä)"
@@ -3043,6 +3123,9 @@ msgstr ""
 msgid "Language"
 msgstr "Kieli"
 
+msgid "Language of the details"
+msgstr ""
+
 msgid "Language of the details (TMDb, IMDb)"
 msgstr "Tietojen kieli (TMDb, IMDb)"
 
@@ -3058,6 +3141,15 @@ msgstr ""
 msgid "Large (title below)"
 msgstr ""
 
+msgid "Large cover, info on the right: alignment"
+msgstr ""
+
+msgid "Large cover, info on the right: labels"
+msgstr ""
+
+msgid "Large cover, info on the right: lines"
+msgstr ""
+
 msgid "Large cover, info on the right: row 1"
 msgstr ""
 
@@ -3068,6 +3160,9 @@ msgid "Large cover, info on the right: row 3"
 msgstr ""
 
 msgid "Large cover, info on the right: row 4"
+msgstr ""
+
+msgid "Large cover, info on the right: title"
 msgstr ""
 
 msgid "Large cover: size of the times below the bar"
@@ -3393,6 +3488,9 @@ msgstr ""
 
 msgid "Longest"
 msgstr "Pisimmät"
+
+msgid "Looking for trailers..."
+msgstr ""
 
 msgid "Loved tracks"
 msgstr "Rakastetut kappaleet"
@@ -3901,6 +3999,10 @@ msgstr "Ei tekstityksiä kielellä %s. Saatavilla: %s"
 msgid "No title to search for."
 msgstr "Ei haettavaa nimikettä."
 
+#, python-format
+msgid "No trailer found for \"%s\"."
+msgstr ""
+
 msgid "No valid entitlement found for asset."
 msgstr "Sisällölle ei löytynyt voimassa olevaa käyttöoikeutta."
 
@@ -4025,6 +4127,9 @@ msgstr "Saatavilla vain kohteessa %s"
 msgid "Only files in the downloads folder can be deleted."
 msgstr "Vain latauskansion tiedostoja voi poistaa."
 
+msgid "Only from the host"
+msgstr ""
+
 msgid "Only links can be moved to a group."
 msgstr "Vain linkkejä voi siirtää ryhmään."
 
@@ -4099,6 +4204,9 @@ msgstr "Käyttäjälinkkien järjestys:"
 
 msgid "Order stays fixed - useful for T9 browsing."
 msgstr "Järjestys pysyy kiinteänä - kätevä T9-selaukseen."
+
+msgid "Original"
+msgstr ""
 
 msgid "Original Title:"
 msgstr "Alkuperäinen nimi:"
@@ -4236,6 +4344,9 @@ msgstr "Filosofia"
 msgid "Physical Exam"
 msgstr "Kliininen tutkimus"
 
+msgid "Picture of the title, blurred"
+msgstr ""
+
 msgid "Pin has been changed."
 msgstr "PIN-koodi on vaihdettu."
 
@@ -4251,12 +4362,18 @@ msgstr "PIN-suojaus lisäosalle"
 msgid "Pin protection for this host"
 msgstr "PIN-suojaus tälle palvelulle"
 
+msgid "Pixel format"
+msgstr ""
+
 msgid "Play all from here"
 msgstr "Toista kaikki tästä alkaen"
 
 #, python-format
 msgid "Play marked items (%d)"
 msgstr "Toista merkityt kohteet (%d)"
+
+msgid "Play the first trailer at once"
+msgstr ""
 
 msgid "Play torrents with TorrServer"
 msgstr "Toista torrentit TorrServerillä"
@@ -4436,6 +4553,9 @@ msgstr "Portit: %s"
 msgid "Portuguese"
 msgstr "Portugali"
 
+msgid "Poster during audio playback"
+msgstr ""
+
 msgid "Poster grid for lists with pictures"
 msgstr ""
 
@@ -4495,6 +4615,9 @@ msgstr "Ammatilliset verkostot"
 
 msgid "Professionals"
 msgstr "Ammattilaiset"
+
+msgid "Profile"
+msgstr ""
 
 msgid "Program"
 msgstr "Ohjelma"
@@ -4632,6 +4755,9 @@ msgstr "Luetaan ohjelmatiedostoja..."
 
 msgid "Reading..."
 msgstr "Luetaan..."
+
+msgid "Rebuffer"
+msgstr ""
 
 msgid "Recent"
 msgstr "Viimeisimmät"
@@ -4801,6 +4927,9 @@ msgstr "Palauta tallennettu järjestys"
 msgid "Reset web interface"
 msgstr "Nollaa verkkokäyttöliittymä"
 
+msgid "Resolution"
+msgstr ""
+
 #, python-format
 msgid ""
 "Resolving hCaptcha with %s failed!\n"
@@ -4872,6 +5001,9 @@ msgid "Safe search (restricted mode):"
 msgstr "Turvallinen haku (rajoitettu tila):"
 
 msgid "Same as the bar"
+msgstr ""
+
+msgid "Sample rate"
 msgstr ""
 
 msgid "Save"
@@ -5374,6 +5506,9 @@ msgstr "Sivustojen itsetesti päävalikossa :"
 msgid "Site self-test: %d of %d - now %s (%d failed so far)"
 msgstr "Sivustojen itsetesti: %d / %d - nyt %s (%d epäonnistunut tähän mennessä)"
 
+msgid "Size"
+msgstr ""
+
 msgid "Size:"
 msgstr "Koko:"
 
@@ -5393,6 +5528,9 @@ msgid "Slovenian"
 msgstr ""
 
 msgid "Small (16:9)"
+msgstr ""
+
+msgid "Small, in the middle"
 msgstr ""
 
 msgid "Smaller text"
@@ -5457,6 +5595,9 @@ msgstr "Katsotuimmat kanavat kaikkiaan, lajiteltuna [suora]"
 
 msgid "Sorted most viewed channels now [live]"
 msgstr "Katsotuimmat kanavat juuri nyt, lajiteltuna [suora]"
+
+msgid "Source"
+msgstr ""
 
 msgid "Source:"
 msgstr "Lähde:"
@@ -5533,6 +5674,9 @@ msgstr "Tallennustila"
 
 msgid "Story"
 msgstr "Juoni"
+
+msgid "Stream"
+msgstr ""
 
 #, python-format
 msgid "Stream formats: %s"
@@ -6000,8 +6144,17 @@ msgstr ""
 "Se tallennetaan tiedostoon:\n"
 "\"%s\""
 
+msgid "The portal denied access to this entry."
+msgstr ""
+
 msgid "The portal did not hand out a link for this entry."
 msgstr "Portaali ei antanut linkkiä tälle merkinnälle."
+
+msgid "The portal has blocked this MAC address."
+msgstr ""
+
+msgid "The portal refused the stream: the maximum number of connections is reached."
+msgstr ""
 
 msgid "The recordings of this page were on the site's old media server, which is offline."
 msgstr "Tämän sivun tallenteet olivat sivuston vanhalla mediapalvelimella, joka ei ole enää toiminnassa."
@@ -6271,6 +6424,9 @@ msgstr ""
 msgid "Tip! You can connect USB flash drive to fix this problem."
 msgstr "Vinkki! Voit korjata ongelman liittämällä USB-muistitikun."
 
+msgid "Title"
+msgstr ""
+
 msgid "Titles"
 msgstr "Nimikkeet"
 
@@ -6428,6 +6584,9 @@ msgstr ""
 "\n"
 "TorrServer itse ei ole osa E2iPlayeria, vaan se on asennettava erikseen."
 
+msgid "Total bitrate"
+msgstr ""
+
 msgid "Total size:"
 msgstr "Kokonaiskoko:"
 
@@ -6437,11 +6596,17 @@ msgstr "Matkailu"
 msgid "Tournament"
 msgstr "Turnaus"
 
+msgid "Track"
+msgstr ""
+
 msgid "Tracklist"
 msgstr "Kappalelista"
 
 msgid "Trailer"
 msgstr "Traileri"
+
+msgid "Trailer language"
+msgstr ""
 
 msgid "Trans"
 msgstr "Trans"
@@ -6734,6 +6899,9 @@ msgstr "Video"
 msgid "Video buffer size [MB]"
 msgstr "Videopuskurin koko [MB]"
 
+msgid "Video codec"
+msgstr ""
+
 msgid "Video library"
 msgstr "Videokirjasto"
 
@@ -6868,6 +7036,9 @@ msgstr "Koko tiedosto on ladattava ennen toiston aloittamista!"
 msgid "Whole picture (black bars)"
 msgstr ""
 
+msgid "Whole width"
+msgstr ""
+
 msgid "Wiki"
 msgstr "Wiki"
 
@@ -6885,6 +7056,9 @@ msgstr ""
 
 msgid "With subtitles"
 msgstr "Tekstitetty"
+
+msgid "Words added to the trailer search (empty = automatic)"
+msgstr ""
 
 msgid "World"
 msgstr "Maailma"
@@ -7149,6 +7323,9 @@ msgstr "keskellä"
 msgid "changed"
 msgstr "muutettu"
 
+msgid "classic"
+msgstr ""
+
 msgid "clock not set"
 msgstr ""
 
@@ -7209,6 +7386,9 @@ msgstr "muokkaa valittua kohdetta (sama kuin OK)"
 
 msgid "enable / disable manual reordering"
 msgstr "ota käyttöön / poista käytöstä käsin järjestäminen"
+
+msgid "expired"
+msgstr ""
 
 msgid "external eplayer3"
 msgstr "ulkoinen eplayer3"
@@ -7356,6 +7536,9 @@ msgstr ""
 
 msgid "minutes"
 msgstr "minuuttia"
+
+msgid "modern"
+msgstr ""
 
 msgid "more options (this menu)"
 msgstr "lisää vaihtoehtoja (tämä valikko)"
@@ -7613,6 +7796,9 @@ msgstr "hopea"
 
 msgid "small"
 msgstr "pieni"
+
+msgid "software"
+msgstr ""
 
 msgid "sources"
 msgstr "lähteet"

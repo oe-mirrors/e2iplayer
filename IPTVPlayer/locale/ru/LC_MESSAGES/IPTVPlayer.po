@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-20 17:54+0000\n"
+"POT-Creation-Date: 2026-11-27 22:41+0000\n"
 "PO-Revision-Date: 2026-07-27 16:55+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -612,12 +612,20 @@ msgid "Alphabetically"
 msgstr "В алфавитном порядке"
 
 #, python-format
+msgid "Also use the accounts of GT IPTV Player Pro (%s)"
+msgstr ""
+
+#, python-format
 msgid "Also use the accounts of X-Streamity (%s)"
 msgstr "Также использовать учётные записи X-Streamity (%s)"
 
 #, python-format
 msgid "Also use the portals of EStalker (%s)"
 msgstr "Также использовать порталы EStalker (%s)"
+
+#, python-format
+msgid "Also use the portals of GT IPTV Player Pro (%s)"
+msgstr ""
 
 msgid "AltGr"
 msgstr "AltGr"
@@ -788,6 +796,9 @@ msgstr ""
 msgid "Aspect"
 msgstr "Соотношение сторон"
 
+msgid "Aspect ratio"
+msgstr ""
+
 msgid "At least one of plugin browser, extension list and main menu has to stay on, otherwise E2iPlayer could no longer be started."
 msgstr "Хотя бы один из пунктов - браузер плагинов, список расширений или главное меню - должен оставаться включённым, иначе E2iPlayer больше нельзя будет запустить."
 
@@ -802,6 +813,9 @@ msgstr "Аудио"
 
 msgid "Audio buffer size [KB]"
 msgstr "Размер аудио буфера [KB]"
+
+msgid "Audio codec"
+msgstr ""
 
 msgid "Audio description"
 msgstr "Тифлокомментарий"
@@ -868,8 +882,17 @@ msgstr "Награды:"
 msgid "BLUE"
 msgstr "СИНЯЯ"
 
+msgid "Backdrop (fanart)"
+msgstr ""
+
+msgid "Backdrop when the film is paused"
+msgstr ""
+
 msgid "Background color"
 msgstr "Цвет фона"
+
+msgid "Background of the INFO panels"
+msgstr ""
 
 msgid "Backspace"
 msgstr "Backspace"
@@ -892,6 +915,9 @@ msgstr ""
 
 msgid "Being watched"
 msgstr "Сейчас смотрят"
+
+msgid "Below the picture"
+msgstr ""
 
 msgid "Bengali"
 msgstr ""
@@ -916,6 +942,12 @@ msgstr "Подсказки Bing"
 
 msgid "Biography"
 msgstr "Биография"
+
+msgid "Bit depth"
+msgstr ""
+
+msgid "Bitrate"
+msgstr ""
 
 #, python-format
 msgid "Bitrate: %s"
@@ -1082,6 +1114,12 @@ msgstr "Архив (timeshift.php)"
 msgid "Catch-up: %d days"
 msgstr "Архив: %d дн."
 
+msgid "Catch-up: minutes after the end:"
+msgstr ""
+
+msgid "Catch-up: minutes before the start:"
+msgstr ""
+
 msgid "Categories"
 msgstr "Категории"
 
@@ -1093,6 +1131,9 @@ msgstr "Категория"
 
 msgid "Category:"
 msgstr "Категория:"
+
+msgid "Centered"
+msgstr ""
 
 msgid "Change active movie player"
 msgstr "Изменить активный видеоплеер"
@@ -1112,6 +1153,12 @@ msgstr "Канал: %s"
 
 msgid "Channels"
 msgstr "Каналы"
+
+msgid "Chapter"
+msgstr ""
+
+msgid "Chapters"
+msgstr ""
 
 msgid "Checking for updates"
 msgstr "Проверка обновлений"
@@ -1185,6 +1232,9 @@ msgstr "Клубы и спортсмены"
 msgid "Code"
 msgstr "Код"
 
+msgid "Codec"
+msgstr ""
+
 msgid "Collected streams only"
 msgstr "Только собранные потоки"
 
@@ -1193,6 +1243,9 @@ msgstr "Коллекции"
 
 msgid "Colored text in titles and descriptions"
 msgstr "Цветной текст в названиях и описаниях"
+
+msgid "Colour space"
+msgstr ""
 
 msgid "Combine pull request merges with their commit"
 msgstr "Объединять слияния pull request с их коммитом"
@@ -1389,6 +1442,9 @@ msgstr "Культура и поп"
 msgid "Current item is not a channel."
 msgstr "Текущий элемент не является каналом."
 
+msgid "Current song"
+msgstr ""
+
 msgid "Cut"
 msgstr "Вырезать"
 
@@ -1423,6 +1479,9 @@ msgid "Daily download limit reached - type the code"
 msgstr "Достигнут дневной лимит загрузок - введите код"
 
 msgid "Danish"
+msgstr ""
+
+msgid "Dark"
 msgstr ""
 
 msgid "Darkgray"
@@ -1583,6 +1642,9 @@ msgstr "Удалить кэш миниатюр сейчас"
 
 msgid "Denmark"
 msgstr "Дания"
+
+msgid "Description"
+msgstr ""
 
 msgid "Description:"
 msgstr "Описание:"
@@ -2302,6 +2364,9 @@ msgstr "Токен FebBox (cookie \"ui\" с www.febbox.com):"
 msgid "Female"
 msgstr "Женщины"
 
+msgid "File"
+msgstr ""
+
 #, python-format
 msgid "File \"%s\" already exists"
 msgstr "Файл \"%s\" уже существует"
@@ -2473,6 +2538,9 @@ msgstr "Принудительно встроенный скин: только �
 msgid "Force legacy grid"
 msgstr "Принудительно старая сетка значков"
 
+msgid "Forced"
+msgstr ""
+
 msgid "Foreign movies"
 msgstr "Зарубежные фильмы"
 
@@ -2491,6 +2559,9 @@ msgstr "Расстановки"
 msgid "Fotka.pl stream :"
 msgstr "Fotka.pl поток :"
 
+msgid "Frame rate"
+msgstr ""
+
 msgid "Free"
 msgstr "Бесплатно"
 
@@ -2503,11 +2574,17 @@ msgstr "Французский"
 msgid "From E2 settings"
 msgstr "Из настроек E2"
 
+msgid "From the host, else online"
+msgstr ""
+
 msgid "Full description loaded"
 msgstr "Полное описание загружено"
 
 msgid "Full description not available"
 msgstr "Полное описание недоступно"
+
+msgid "Full screen"
+msgstr ""
 
 msgid "Full test"
 msgstr "Полный тест"
@@ -2680,6 +2757,9 @@ msgstr "Справка"
 #, python-format
 msgid "Hide \"%s\" group"
 msgstr "Скрыть \"%s\" группу"
+
+msgid "Hide categories containing (comma separated):"
+msgstr ""
 
 msgid "Hide the menu (live TV visible)"
 msgstr "Скрыть меню (виден эфир ТВ)"
@@ -3049,6 +3129,9 @@ msgstr ""
 msgid "Language"
 msgstr "Язык"
 
+msgid "Language of the details"
+msgstr ""
+
 msgid "Language of the details (TMDb, IMDb)"
 msgstr "Язык описаний (TMDb, IMDb)"
 
@@ -3064,6 +3147,15 @@ msgstr ""
 msgid "Large (title below)"
 msgstr ""
 
+msgid "Large cover, info on the right: alignment"
+msgstr ""
+
+msgid "Large cover, info on the right: labels"
+msgstr ""
+
+msgid "Large cover, info on the right: lines"
+msgstr ""
+
 msgid "Large cover, info on the right: row 1"
 msgstr ""
 
@@ -3074,6 +3166,9 @@ msgid "Large cover, info on the right: row 3"
 msgstr ""
 
 msgid "Large cover, info on the right: row 4"
+msgstr ""
+
+msgid "Large cover, info on the right: title"
 msgstr ""
 
 msgid "Large cover: size of the times below the bar"
@@ -3399,6 +3494,9 @@ msgstr ""
 
 msgid "Longest"
 msgstr "Самые длинные"
+
+msgid "Looking for trailers..."
+msgstr ""
 
 msgid "Loved tracks"
 msgstr "Любимые треки"
@@ -3908,6 +4006,10 @@ msgstr "Нет субтитров для языка %s. Доступны: %s"
 msgid "No title to search for."
 msgstr "Нет названия для поиска."
 
+#, python-format
+msgid "No trailer found for \"%s\"."
+msgstr ""
+
 msgid "No valid entitlement found for asset."
 msgstr "Для этого материала не найдено действующих прав доступа."
 
@@ -4032,6 +4134,9 @@ msgstr "Доступно только в %s"
 msgid "Only files in the downloads folder can be deleted."
 msgstr "Удалять можно только файлы в папке загрузок."
 
+msgid "Only from the host"
+msgstr ""
+
 msgid "Only links can be moved to a group."
 msgstr "В группу можно перемещать только ссылки."
 
@@ -4106,6 +4211,9 @@ msgstr "Порядок пользовательских ссылок:"
 
 msgid "Order stays fixed - useful for T9 browsing."
 msgstr "Порядок не меняется - удобно для перехода по T9."
+
+msgid "Original"
+msgstr ""
 
 msgid "Original Title:"
 msgstr "Оригинальное название:"
@@ -4243,6 +4351,9 @@ msgstr "Философия"
 msgid "Physical Exam"
 msgstr "Физический осмотр"
 
+msgid "Picture of the title, blurred"
+msgstr ""
+
 msgid "Pin has been changed."
 msgstr "PIN-код был изменён."
 
@@ -4258,12 +4369,18 @@ msgstr "Защита PIN-кодом для плагина"
 msgid "Pin protection for this host"
 msgstr "Защита PIN-кодом для этого хоста"
 
+msgid "Pixel format"
+msgstr ""
+
 msgid "Play all from here"
 msgstr "Воспроизвести всё отсюда"
 
 #, python-format
 msgid "Play marked items (%d)"
 msgstr "Воспроизвести отмеченные (%d)"
+
+msgid "Play the first trailer at once"
+msgstr ""
 
 msgid "Play torrents with TorrServer"
 msgstr "Воспроизводить торренты через TorrServer"
@@ -4444,6 +4561,9 @@ msgstr "Порты: %s"
 msgid "Portuguese"
 msgstr "Португальский"
 
+msgid "Poster during audio playback"
+msgstr ""
+
 msgid "Poster grid for lists with pictures"
 msgstr ""
 
@@ -4503,6 +4623,9 @@ msgstr "Профессиональные Сети"
 
 msgid "Professionals"
 msgstr "Профессионалы"
+
+msgid "Profile"
+msgstr ""
 
 msgid "Program"
 msgstr "Программа"
@@ -4640,6 +4763,9 @@ msgstr "Чтение бинарных файлов..."
 
 msgid "Reading..."
 msgstr "Чтение..."
+
+msgid "Rebuffer"
+msgstr ""
 
 msgid "Recent"
 msgstr "Недавние"
@@ -4809,6 +4935,9 @@ msgstr "Вернуть сохранённый порядок"
 msgid "Reset web interface"
 msgstr "Сбросить веб-интерфейс"
 
+msgid "Resolution"
+msgstr ""
+
 #, python-format
 msgid ""
 "Resolving hCaptcha with %s failed!\n"
@@ -4880,6 +5009,9 @@ msgid "Safe search (restricted mode):"
 msgstr "Безопасный поиск (ограниченный режим):"
 
 msgid "Same as the bar"
+msgstr ""
+
+msgid "Sample rate"
 msgstr ""
 
 msgid "Save"
@@ -5382,6 +5514,9 @@ msgstr "Самопроверка сайтов в главном меню :"
 msgid "Site self-test: %d of %d - now %s (%d failed so far)"
 msgstr "Самопроверка сайтов: %d из %d - сейчас %s (пока ошибок: %d)"
 
+msgid "Size"
+msgstr ""
+
 msgid "Size:"
 msgstr "Размер:"
 
@@ -5401,6 +5536,9 @@ msgid "Slovenian"
 msgstr ""
 
 msgid "Small (16:9)"
+msgstr ""
+
+msgid "Small, in the middle"
 msgstr ""
 
 msgid "Smaller text"
@@ -5465,6 +5603,9 @@ msgstr "Сортировка самых просматриваемых кана�
 
 msgid "Sorted most viewed channels now [live]"
 msgstr "Сортировка каналов, сейчас самых популярных [эфир]"
+
+msgid "Source"
+msgstr ""
 
 msgid "Source:"
 msgstr "Источник:"
@@ -5541,6 +5682,9 @@ msgstr "Хранилище"
 
 msgid "Story"
 msgstr "Сюжет"
+
+msgid "Stream"
+msgstr ""
 
 #, python-format
 msgid "Stream formats: %s"
@@ -6008,8 +6152,17 @@ msgstr ""
 "Он будет сохранен в файле:\n"
 "\"%s\""
 
+msgid "The portal denied access to this entry."
+msgstr ""
+
 msgid "The portal did not hand out a link for this entry."
 msgstr "Портал не выдал ссылку для этой записи."
+
+msgid "The portal has blocked this MAC address."
+msgstr ""
+
+msgid "The portal refused the stream: the maximum number of connections is reached."
+msgstr ""
 
 msgid "The recordings of this page were on the site's old media server, which is offline."
 msgstr "Записи этой страницы находились на старом медиасервере сайта, который отключён."
@@ -6279,6 +6432,9 @@ msgstr ""
 msgid "Tip! You can connect USB flash drive to fix this problem."
 msgstr "Совет! Можно подключить USB для устранения этой проблемы."
 
+msgid "Title"
+msgstr ""
+
 msgid "Titles"
 msgstr "Названия"
 
@@ -6436,6 +6592,9 @@ msgstr ""
 "\n"
 "Сам TorrServer не входит в E2iPlayer, его нужно устанавливать отдельно."
 
+msgid "Total bitrate"
+msgstr ""
+
 msgid "Total size:"
 msgstr "Общий размер:"
 
@@ -6445,11 +6604,17 @@ msgstr "Туризм"
 msgid "Tournament"
 msgstr "Турнир"
 
+msgid "Track"
+msgstr ""
+
 msgid "Tracklist"
 msgstr "Треклист"
 
 msgid "Trailer"
 msgstr "Трейлер"
+
+msgid "Trailer language"
+msgstr ""
 
 msgid "Trans"
 msgstr "Транс"
@@ -6742,6 +6907,9 @@ msgstr "Видео"
 msgid "Video buffer size [MB]"
 msgstr "Размер видеобуфера [МБ]"
 
+msgid "Video codec"
+msgstr ""
+
 msgid "Video library"
 msgstr "Видеотека"
 
@@ -6876,6 +7044,9 @@ msgstr "Для начала просмотра нужно загрузить в�
 msgid "Whole picture (black bars)"
 msgstr ""
 
+msgid "Whole width"
+msgstr ""
+
 msgid "Wiki"
 msgstr "Вики"
 
@@ -6893,6 +7064,9 @@ msgstr ""
 
 msgid "With subtitles"
 msgstr "С субтитрами"
+
+msgid "Words added to the trailer search (empty = automatic)"
+msgstr ""
 
 msgid "World"
 msgstr "Мир"
@@ -7157,6 +7331,9 @@ msgstr "по центру"
 msgid "changed"
 msgstr "изменено"
 
+msgid "classic"
+msgstr ""
+
 msgid "clock not set"
 msgstr ""
 
@@ -7217,6 +7394,9 @@ msgstr "редактировать выбранный элемент (как OK)
 
 msgid "enable / disable manual reordering"
 msgstr "включить / выключить ручную перестановку"
+
+msgid "expired"
+msgstr ""
 
 msgid "external eplayer3"
 msgstr "внешний eplayer3"
@@ -7364,6 +7544,9 @@ msgstr ""
 
 msgid "minutes"
 msgstr "минут"
+
+msgid "modern"
+msgstr ""
 
 msgid "more options (this menu)"
 msgstr "другие параметры (это меню)"
@@ -7621,6 +7804,9 @@ msgstr "серебристый"
 
 msgid "small"
 msgstr "маленький"
+
+msgid "software"
+msgstr ""
 
 msgid "sources"
 msgstr "источники"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-20 17:54+0000\n"
+"POT-Creation-Date: 2026-11-27 22:41+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -602,11 +602,19 @@ msgid "Alphabetically"
 msgstr ""
 
 #, python-format
+msgid "Also use the accounts of GT IPTV Player Pro (%s)"
+msgstr ""
+
+#, python-format
 msgid "Also use the accounts of X-Streamity (%s)"
 msgstr ""
 
 #, python-format
 msgid "Also use the portals of EStalker (%s)"
+msgstr ""
+
+#, python-format
+msgid "Also use the portals of GT IPTV Player Pro (%s)"
 msgstr ""
 
 msgid "AltGr"
@@ -778,6 +786,9 @@ msgstr ""
 msgid "Aspect"
 msgstr ""
 
+msgid "Aspect ratio"
+msgstr ""
+
 msgid "At least one of plugin browser, extension list and main menu has to stay on, otherwise E2iPlayer could no longer be started."
 msgstr ""
 
@@ -791,6 +802,9 @@ msgid "Audio"
 msgstr ""
 
 msgid "Audio buffer size [KB]"
+msgstr ""
+
+msgid "Audio codec"
 msgstr ""
 
 msgid "Audio description"
@@ -858,7 +872,16 @@ msgstr ""
 msgid "BLUE"
 msgstr ""
 
+msgid "Backdrop (fanart)"
+msgstr ""
+
+msgid "Backdrop when the film is paused"
+msgstr ""
+
 msgid "Background color"
+msgstr ""
+
+msgid "Background of the INFO panels"
 msgstr ""
 
 msgid "Backspace"
@@ -883,6 +906,9 @@ msgstr ""
 msgid "Being watched"
 msgstr ""
 
+msgid "Below the picture"
+msgstr ""
+
 msgid "Bengali"
 msgstr ""
 
@@ -905,6 +931,12 @@ msgid "Bing Suggestions"
 msgstr ""
 
 msgid "Biography"
+msgstr ""
+
+msgid "Bit depth"
+msgstr ""
+
+msgid "Bitrate"
 msgstr ""
 
 #, python-format
@@ -1067,6 +1099,12 @@ msgstr ""
 msgid "Catch-up: %d days"
 msgstr ""
 
+msgid "Catch-up: minutes after the end:"
+msgstr ""
+
+msgid "Catch-up: minutes before the start:"
+msgstr ""
+
 msgid "Categories"
 msgstr ""
 
@@ -1077,6 +1115,9 @@ msgid "Category"
 msgstr ""
 
 msgid "Category:"
+msgstr ""
+
+msgid "Centered"
 msgstr ""
 
 msgid "Change active movie player"
@@ -1096,6 +1137,12 @@ msgid "Channel: %s"
 msgstr ""
 
 msgid "Channels"
+msgstr ""
+
+msgid "Chapter"
+msgstr ""
+
+msgid "Chapters"
 msgstr ""
 
 msgid "Checking for updates"
@@ -1168,6 +1215,9 @@ msgstr ""
 msgid "Code"
 msgstr ""
 
+msgid "Codec"
+msgstr ""
+
 msgid "Collected streams only"
 msgstr ""
 
@@ -1175,6 +1225,9 @@ msgid "Collections"
 msgstr ""
 
 msgid "Colored text in titles and descriptions"
+msgstr ""
+
+msgid "Colour space"
 msgstr ""
 
 msgid "Combine pull request merges with their commit"
@@ -1372,6 +1425,9 @@ msgstr ""
 msgid "Current item is not a channel."
 msgstr ""
 
+msgid "Current song"
+msgstr ""
+
 msgid "Cut"
 msgstr ""
 
@@ -1406,6 +1462,9 @@ msgid "Daily download limit reached - type the code"
 msgstr ""
 
 msgid "Danish"
+msgstr ""
+
+msgid "Dark"
 msgstr ""
 
 msgid "Darkgray"
@@ -1565,6 +1624,9 @@ msgid "Delete thumbnails cache now"
 msgstr ""
 
 msgid "Denmark"
+msgstr ""
+
+msgid "Description"
 msgstr ""
 
 msgid "Description:"
@@ -2255,6 +2317,9 @@ msgstr ""
 msgid "Female"
 msgstr ""
 
+msgid "File"
+msgstr ""
+
 #, python-format
 msgid "File \"%s\" already exists"
 msgstr ""
@@ -2426,6 +2491,9 @@ msgstr ""
 msgid "Force legacy grid"
 msgstr ""
 
+msgid "Forced"
+msgstr ""
+
 msgid "Foreign movies"
 msgstr ""
 
@@ -2444,6 +2512,9 @@ msgstr ""
 msgid "Fotka.pl stream :"
 msgstr ""
 
+msgid "Frame rate"
+msgstr ""
+
 msgid "Free"
 msgstr ""
 
@@ -2456,10 +2527,16 @@ msgstr ""
 msgid "From E2 settings"
 msgstr ""
 
+msgid "From the host, else online"
+msgstr ""
+
 msgid "Full description loaded"
 msgstr ""
 
 msgid "Full description not available"
+msgstr ""
+
+msgid "Full screen"
 msgstr ""
 
 msgid "Full test"
@@ -2632,6 +2709,9 @@ msgstr ""
 
 #, python-format
 msgid "Hide \"%s\" group"
+msgstr ""
+
+msgid "Hide categories containing (comma separated):"
 msgstr ""
 
 msgid "Hide the menu (live TV visible)"
@@ -2996,6 +3076,9 @@ msgstr ""
 msgid "Language"
 msgstr ""
 
+msgid "Language of the details"
+msgstr ""
+
 msgid "Language of the details (TMDb, IMDb)"
 msgstr ""
 
@@ -3011,6 +3094,15 @@ msgstr ""
 msgid "Large (title below)"
 msgstr ""
 
+msgid "Large cover, info on the right: alignment"
+msgstr ""
+
+msgid "Large cover, info on the right: labels"
+msgstr ""
+
+msgid "Large cover, info on the right: lines"
+msgstr ""
+
 msgid "Large cover, info on the right: row 1"
 msgstr ""
 
@@ -3021,6 +3113,9 @@ msgid "Large cover, info on the right: row 3"
 msgstr ""
 
 msgid "Large cover, info on the right: row 4"
+msgstr ""
+
+msgid "Large cover, info on the right: title"
 msgstr ""
 
 msgid "Large cover: size of the times below the bar"
@@ -3341,6 +3436,9 @@ msgid "Long titles on the LCD"
 msgstr ""
 
 msgid "Longest"
+msgstr ""
+
+msgid "Looking for trailers..."
 msgstr ""
 
 msgid "Loved tracks"
@@ -3839,6 +3937,10 @@ msgstr ""
 msgid "No title to search for."
 msgstr ""
 
+#, python-format
+msgid "No trailer found for \"%s\"."
+msgstr ""
+
 msgid "No valid entitlement found for asset."
 msgstr ""
 
@@ -3963,6 +4065,9 @@ msgstr ""
 msgid "Only files in the downloads folder can be deleted."
 msgstr ""
 
+msgid "Only from the host"
+msgstr ""
+
 msgid "Only links can be moved to a group."
 msgstr ""
 
@@ -4036,6 +4141,9 @@ msgid "Order of user links:"
 msgstr ""
 
 msgid "Order stays fixed - useful for T9 browsing."
+msgstr ""
+
+msgid "Original"
 msgstr ""
 
 msgid "Original Title:"
@@ -4174,6 +4282,9 @@ msgstr ""
 msgid "Physical Exam"
 msgstr ""
 
+msgid "Picture of the title, blurred"
+msgstr ""
+
 msgid "Pin has been changed."
 msgstr ""
 
@@ -4189,11 +4300,17 @@ msgstr ""
 msgid "Pin protection for this host"
 msgstr ""
 
+msgid "Pixel format"
+msgstr ""
+
 msgid "Play all from here"
 msgstr ""
 
 #, python-format
 msgid "Play marked items (%d)"
+msgstr ""
+
+msgid "Play the first trailer at once"
 msgstr ""
 
 msgid "Play torrents with TorrServer"
@@ -4371,6 +4488,9 @@ msgstr ""
 msgid "Portuguese"
 msgstr ""
 
+msgid "Poster during audio playback"
+msgstr ""
+
 msgid "Poster grid for lists with pictures"
 msgstr ""
 
@@ -4429,6 +4549,9 @@ msgid "Professional Networks"
 msgstr ""
 
 msgid "Professionals"
+msgstr ""
+
+msgid "Profile"
 msgstr ""
 
 msgid "Program"
@@ -4566,6 +4689,9 @@ msgid "Reading binaries..."
 msgstr ""
 
 msgid "Reading..."
+msgstr ""
+
+msgid "Rebuffer"
 msgstr ""
 
 msgid "Recent"
@@ -4734,6 +4860,9 @@ msgstr ""
 msgid "Reset web interface"
 msgstr ""
 
+msgid "Resolution"
+msgstr ""
+
 #, python-format
 msgid ""
 "Resolving hCaptcha with %s failed!\n"
@@ -4801,6 +4930,9 @@ msgid "Safe search (restricted mode):"
 msgstr ""
 
 msgid "Same as the bar"
+msgstr ""
+
+msgid "Sample rate"
 msgstr ""
 
 msgid "Save"
@@ -5297,6 +5429,9 @@ msgstr ""
 msgid "Site self-test: %d of %d - now %s (%d failed so far)"
 msgstr ""
 
+msgid "Size"
+msgstr ""
+
 msgid "Size:"
 msgstr ""
 
@@ -5316,6 +5451,9 @@ msgid "Slovenian"
 msgstr ""
 
 msgid "Small (16:9)"
+msgstr ""
+
+msgid "Small, in the middle"
 msgstr ""
 
 msgid "Smaller text"
@@ -5379,6 +5517,9 @@ msgid "Sorted most viewed channels general [live]"
 msgstr ""
 
 msgid "Sorted most viewed channels now [live]"
+msgstr ""
+
+msgid "Source"
 msgstr ""
 
 msgid "Source:"
@@ -5455,6 +5596,9 @@ msgid "Storage"
 msgstr ""
 
 msgid "Story"
+msgstr ""
+
+msgid "Stream"
 msgstr ""
 
 #, python-format
@@ -5899,7 +6043,16 @@ msgid ""
 "\"%s\""
 msgstr ""
 
+msgid "The portal denied access to this entry."
+msgstr ""
+
 msgid "The portal did not hand out a link for this entry."
+msgstr ""
+
+msgid "The portal has blocked this MAC address."
+msgstr ""
+
+msgid "The portal refused the stream: the maximum number of connections is reached."
 msgstr ""
 
 msgid "The recordings of this page were on the site's old media server, which is offline."
@@ -6168,6 +6321,9 @@ msgstr ""
 msgid "Tip! You can connect USB flash drive to fix this problem."
 msgstr ""
 
+msgid "Title"
+msgstr ""
+
 msgid "Titles"
 msgstr ""
 
@@ -6308,6 +6464,9 @@ msgid ""
 "TorrServer itself is not part of E2iPlayer, it has to be installed separately."
 msgstr ""
 
+msgid "Total bitrate"
+msgstr ""
+
 msgid "Total size:"
 msgstr ""
 
@@ -6317,10 +6476,16 @@ msgstr ""
 msgid "Tournament"
 msgstr ""
 
+msgid "Track"
+msgstr ""
+
 msgid "Tracklist"
 msgstr ""
 
 msgid "Trailer"
+msgstr ""
+
+msgid "Trailer language"
 msgstr ""
 
 msgid "Trans"
@@ -6614,6 +6779,9 @@ msgstr ""
 msgid "Video buffer size [MB]"
 msgstr ""
 
+msgid "Video codec"
+msgstr ""
+
 msgid "Video library"
 msgstr ""
 
@@ -6748,6 +6916,9 @@ msgstr ""
 msgid "Whole picture (black bars)"
 msgstr ""
 
+msgid "Whole width"
+msgstr ""
+
 msgid "Wiki"
 msgstr ""
 
@@ -6764,6 +6935,9 @@ msgid "With seconds"
 msgstr ""
 
 msgid "With subtitles"
+msgstr ""
+
+msgid "Words added to the trailer search (empty = automatic)"
 msgstr ""
 
 msgid "World"
@@ -7029,6 +7203,9 @@ msgstr ""
 msgid "changed"
 msgstr ""
 
+msgid "classic"
+msgstr ""
+
 msgid "clock not set"
 msgstr ""
 
@@ -7088,6 +7265,9 @@ msgid "edit the selected entry (same as OK)"
 msgstr ""
 
 msgid "enable / disable manual reordering"
+msgstr ""
+
+msgid "expired"
 msgstr ""
 
 msgid "external eplayer3"
@@ -7235,6 +7415,9 @@ msgid "min"
 msgstr ""
 
 msgid "minutes"
+msgstr ""
+
+msgid "modern"
 msgstr ""
 
 msgid "more options (this menu)"
@@ -7492,6 +7675,9 @@ msgid "silver"
 msgstr ""
 
 msgid "small"
+msgstr ""
+
+msgid "software"
 msgstr ""
 
 msgid "sources"

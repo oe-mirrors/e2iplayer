@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-20 17:54+0000\n"
+"POT-Creation-Date: 2026-11-27 22:41+0000\n"
 "PO-Revision-Date: 2026-10-08 20:17+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Danish\n"
@@ -607,12 +607,20 @@ msgid "Alphabetically"
 msgstr "Alfabetisk"
 
 #, python-format
+msgid "Also use the accounts of GT IPTV Player Pro (%s)"
+msgstr ""
+
+#, python-format
 msgid "Also use the accounts of X-Streamity (%s)"
 msgstr "Brug også X-Streamitys konti (%s)"
 
 #, python-format
 msgid "Also use the portals of EStalker (%s)"
 msgstr "Brug også EStalkers portaler (%s)"
+
+#, python-format
+msgid "Also use the portals of GT IPTV Player Pro (%s)"
+msgstr ""
 
 msgid "AltGr"
 msgstr "AltGr"
@@ -783,6 +791,9 @@ msgstr ""
 msgid "Aspect"
 msgstr "Billedformat"
 
+msgid "Aspect ratio"
+msgstr ""
+
 msgid "At least one of plugin browser, extension list and main menu has to stay on, otherwise E2iPlayer could no longer be started."
 msgstr "Mindst én af plugin-browser, udvidelsesliste og hovedmenu skal forblive slået til, ellers kan E2iPlayer ikke længere startes."
 
@@ -797,6 +808,9 @@ msgstr "Lyd"
 
 msgid "Audio buffer size [KB]"
 msgstr "Lydbufferstørrelse [KB]"
+
+msgid "Audio codec"
+msgstr ""
 
 msgid "Audio description"
 msgstr "Synstolkning"
@@ -863,8 +877,17 @@ msgstr "Priser:"
 msgid "BLUE"
 msgstr "BLÅ"
 
+msgid "Backdrop (fanart)"
+msgstr ""
+
+msgid "Backdrop when the film is paused"
+msgstr ""
+
 msgid "Background color"
 msgstr "Baggrundsfarve"
+
+msgid "Background of the INFO panels"
+msgstr ""
 
 msgid "Backspace"
 msgstr "Tilbagetast"
@@ -887,6 +910,9 @@ msgstr ""
 
 msgid "Being watched"
 msgstr "Ses lige nu"
+
+msgid "Below the picture"
+msgstr ""
 
 msgid "Bengali"
 msgstr ""
@@ -911,6 +937,12 @@ msgstr "Bing-forslag"
 
 msgid "Biography"
 msgstr "Biografi"
+
+msgid "Bit depth"
+msgstr ""
+
+msgid "Bitrate"
+msgstr ""
 
 #, python-format
 msgid "Bitrate: %s"
@@ -1077,6 +1109,12 @@ msgstr "Catch-up (timeshift.php)"
 msgid "Catch-up: %d days"
 msgstr "Catch-up: %d dage"
 
+msgid "Catch-up: minutes after the end:"
+msgstr ""
+
+msgid "Catch-up: minutes before the start:"
+msgstr ""
+
 msgid "Categories"
 msgstr "Kategorier"
 
@@ -1088,6 +1126,9 @@ msgstr "Kategori"
 
 msgid "Category:"
 msgstr "Kategori:"
+
+msgid "Centered"
+msgstr ""
 
 msgid "Change active movie player"
 msgstr "Skift aktiv filmafspiller"
@@ -1107,6 +1148,12 @@ msgstr "Kanal: %s"
 
 msgid "Channels"
 msgstr "Kanaler"
+
+msgid "Chapter"
+msgstr ""
+
+msgid "Chapters"
+msgstr ""
 
 msgid "Checking for updates"
 msgstr "Søger efter opdateringer"
@@ -1180,6 +1227,9 @@ msgstr "Klubber og atleter"
 msgid "Code"
 msgstr "Kode"
 
+msgid "Codec"
+msgstr ""
+
 msgid "Collected streams only"
 msgstr "Kun indsamlede streams"
 
@@ -1188,6 +1238,9 @@ msgstr "Samlinger"
 
 msgid "Colored text in titles and descriptions"
 msgstr "Farvet tekst i titler og beskrivelser"
+
+msgid "Colour space"
+msgstr ""
 
 msgid "Combine pull request merges with their commit"
 msgstr "Kombiner pull request-merges med deres commit"
@@ -1384,6 +1437,9 @@ msgstr "Kultur og pop"
 msgid "Current item is not a channel."
 msgstr "Det aktuelle element er ikke en kanal."
 
+msgid "Current song"
+msgstr ""
+
 msgid "Cut"
 msgstr "Klip"
 
@@ -1418,6 +1474,9 @@ msgid "Daily download limit reached - type the code"
 msgstr "Daglig downloadgrænse nået - indtast koden"
 
 msgid "Danish"
+msgstr ""
+
+msgid "Dark"
 msgstr ""
 
 msgid "Darkgray"
@@ -1578,6 +1637,9 @@ msgstr "Slet miniaturebillede-cache nu"
 
 msgid "Denmark"
 msgstr "Danmark"
+
+msgid "Description"
+msgstr ""
 
 msgid "Description:"
 msgstr "Beskrivelse:"
@@ -2296,6 +2358,9 @@ msgstr "FebBox-token (\"ui\"-cookie fra www.febbox.com):"
 msgid "Female"
 msgstr "Kvinder"
 
+msgid "File"
+msgstr ""
+
 #, python-format
 msgid "File \"%s\" already exists"
 msgstr "Filen \"%s\" findes allerede"
@@ -2467,6 +2532,9 @@ msgstr "Gennemtving internt skin: kun hovedskærm"
 msgid "Force legacy grid"
 msgstr "Gennemtving gammelt ikongitter"
 
+msgid "Forced"
+msgstr ""
+
 msgid "Foreign movies"
 msgstr "Udenlandske film"
 
@@ -2485,6 +2553,9 @@ msgstr "Formationer"
 msgid "Fotka.pl stream :"
 msgstr "Fotka.pl stream :"
 
+msgid "Frame rate"
+msgstr ""
+
 msgid "Free"
 msgstr "Gratis"
 
@@ -2497,11 +2568,17 @@ msgstr "Fransk"
 msgid "From E2 settings"
 msgstr "Fra E2-indstillinger"
 
+msgid "From the host, else online"
+msgstr ""
+
 msgid "Full description loaded"
 msgstr "Fuld beskrivelse indlæst"
 
 msgid "Full description not available"
 msgstr "Fuld beskrivelse ikke tilgængelig"
+
+msgid "Full screen"
+msgstr ""
 
 msgid "Full test"
 msgstr "Fuld test"
@@ -2674,6 +2751,9 @@ msgstr "Hjælp"
 #, python-format
 msgid "Hide \"%s\" group"
 msgstr "Skjul gruppen \"%s\""
+
+msgid "Hide categories containing (comma separated):"
+msgstr ""
 
 msgid "Hide the menu (live TV visible)"
 msgstr "Skjul menuen (live-tv synligt)"
@@ -3043,6 +3123,9 @@ msgstr ""
 msgid "Language"
 msgstr "Sprog"
 
+msgid "Language of the details"
+msgstr ""
+
 msgid "Language of the details (TMDb, IMDb)"
 msgstr "Sprog for detaljer (TMDb, IMDb)"
 
@@ -3058,6 +3141,15 @@ msgstr ""
 msgid "Large (title below)"
 msgstr ""
 
+msgid "Large cover, info on the right: alignment"
+msgstr ""
+
+msgid "Large cover, info on the right: labels"
+msgstr ""
+
+msgid "Large cover, info on the right: lines"
+msgstr ""
+
 msgid "Large cover, info on the right: row 1"
 msgstr ""
 
@@ -3068,6 +3160,9 @@ msgid "Large cover, info on the right: row 3"
 msgstr ""
 
 msgid "Large cover, info on the right: row 4"
+msgstr ""
+
+msgid "Large cover, info on the right: title"
 msgstr ""
 
 msgid "Large cover: size of the times below the bar"
@@ -3393,6 +3488,9 @@ msgstr ""
 
 msgid "Longest"
 msgstr "Længste"
+
+msgid "Looking for trailers..."
+msgstr ""
 
 msgid "Loved tracks"
 msgstr "Yndlingsnumre"
@@ -3901,6 +3999,10 @@ msgstr "Ingen undertekster på %s. Tilgængelige: %s"
 msgid "No title to search for."
 msgstr "Ingen titel at søge efter."
 
+#, python-format
+msgid "No trailer found for \"%s\"."
+msgstr ""
+
 msgid "No valid entitlement found for asset."
 msgstr "Ingen gyldig rettighed fundet for mediet."
 
@@ -4025,6 +4127,9 @@ msgstr "Kun tilgængelig i %s"
 msgid "Only files in the downloads folder can be deleted."
 msgstr "Kun filer i download-mappen kan slettes."
 
+msgid "Only from the host"
+msgstr ""
+
 msgid "Only links can be moved to a group."
 msgstr "Kun links kan flyttes til en gruppe."
 
@@ -4099,6 +4204,9 @@ msgstr "Rækkefølge af brugerlinks:"
 
 msgid "Order stays fixed - useful for T9 browsing."
 msgstr "Rækkefølgen forbliver fast - nyttigt ved T9-gennemsyn."
+
+msgid "Original"
+msgstr ""
 
 msgid "Original Title:"
 msgstr "Originaltitel:"
@@ -4236,6 +4344,9 @@ msgstr "Filosofi"
 msgid "Physical Exam"
 msgstr "Fysisk undersøgelse"
 
+msgid "Picture of the title, blurred"
+msgstr ""
+
 msgid "Pin has been changed."
 msgstr "PIN-koden er ændret."
 
@@ -4251,12 +4362,18 @@ msgstr "PIN-beskyttelse af plugin"
 msgid "Pin protection for this host"
 msgstr "PIN-beskyttelse af denne host"
 
+msgid "Pixel format"
+msgstr ""
+
 msgid "Play all from here"
 msgstr "Afspil alle herfra"
 
 #, python-format
 msgid "Play marked items (%d)"
 msgstr "Afspil markerede poster (%d)"
+
+msgid "Play the first trailer at once"
+msgstr ""
 
 msgid "Play torrents with TorrServer"
 msgstr "Afspil torrents med TorrServer"
@@ -4436,6 +4553,9 @@ msgstr "Porte: %s"
 msgid "Portuguese"
 msgstr "Portugisisk"
 
+msgid "Poster during audio playback"
+msgstr ""
+
 msgid "Poster grid for lists with pictures"
 msgstr ""
 
@@ -4495,6 +4615,9 @@ msgstr "Professionelle netværk"
 
 msgid "Professionals"
 msgstr "Professionelle"
+
+msgid "Profile"
+msgstr ""
 
 msgid "Program"
 msgstr "Program"
@@ -4632,6 +4755,9 @@ msgstr "Læser binære filer..."
 
 msgid "Reading..."
 msgstr "Læser..."
+
+msgid "Rebuffer"
+msgstr ""
 
 msgid "Recent"
 msgstr "Seneste"
@@ -4801,6 +4927,9 @@ msgstr "Nulstil til gemt rækkefølge"
 msgid "Reset web interface"
 msgstr "Nulstil webgrænseflade"
 
+msgid "Resolution"
+msgstr ""
+
 #, python-format
 msgid ""
 "Resolving hCaptcha with %s failed!\n"
@@ -4872,6 +5001,9 @@ msgid "Safe search (restricted mode):"
 msgstr "Sikker søgning (begrænset tilstand):"
 
 msgid "Same as the bar"
+msgstr ""
+
+msgid "Sample rate"
 msgstr ""
 
 msgid "Save"
@@ -5374,6 +5506,9 @@ msgstr "Selvtest af sider i hovedmenuen :"
 msgid "Site self-test: %d of %d - now %s (%d failed so far)"
 msgstr "Selvtest af sider: %d af %d - nu %s (%d fejlet indtil videre)"
 
+msgid "Size"
+msgstr ""
+
 msgid "Size:"
 msgstr "Størrelse:"
 
@@ -5393,6 +5528,9 @@ msgid "Slovenian"
 msgstr ""
 
 msgid "Small (16:9)"
+msgstr ""
+
+msgid "Small, in the middle"
 msgstr ""
 
 msgid "Smaller text"
@@ -5457,6 +5595,9 @@ msgstr "Mest sete kanaler samlet [live]"
 
 msgid "Sorted most viewed channels now [live]"
 msgstr "Mest sete kanaler lige nu [live]"
+
+msgid "Source"
+msgstr ""
 
 msgid "Source:"
 msgstr "Kilde:"
@@ -5533,6 +5674,9 @@ msgstr "Lager"
 
 msgid "Story"
 msgstr "Handling"
+
+msgid "Stream"
+msgstr ""
 
 #, python-format
 msgid "Stream formats: %s"
@@ -6000,8 +6144,17 @@ msgstr ""
 "Den gemmes i filen:\n"
 "\"%s\""
 
+msgid "The portal denied access to this entry."
+msgstr ""
+
 msgid "The portal did not hand out a link for this entry."
 msgstr "Portalen udleverede ikke et link til denne post."
+
+msgid "The portal has blocked this MAC address."
+msgstr ""
+
+msgid "The portal refused the stream: the maximum number of connections is reached."
+msgstr ""
 
 msgid "The recordings of this page were on the site's old media server, which is offline."
 msgstr "Optagelserne på denne side lå på sidens gamle medieserver, som er offline."
@@ -6271,6 +6424,9 @@ msgstr ""
 msgid "Tip! You can connect USB flash drive to fix this problem."
 msgstr "Tip! Du kan tilslutte en USB-nøgle for at løse dette problem."
 
+msgid "Title"
+msgstr ""
+
 msgid "Titles"
 msgstr "Titler"
 
@@ -6428,6 +6584,9 @@ msgstr ""
 "\n"
 "TorrServer selv er ikke en del af E2iPlayer og skal installeres separat."
 
+msgid "Total bitrate"
+msgstr ""
+
 msgid "Total size:"
 msgstr "Samlet størrelse:"
 
@@ -6437,11 +6596,17 @@ msgstr "Turisme"
 msgid "Tournament"
 msgstr "Turnering"
 
+msgid "Track"
+msgstr ""
+
 msgid "Tracklist"
 msgstr "Nummerliste"
 
 msgid "Trailer"
 msgstr "Trailer"
+
+msgid "Trailer language"
+msgstr ""
 
 msgid "Trans"
 msgstr "Trans"
@@ -6734,6 +6899,9 @@ msgstr "Video"
 msgid "Video buffer size [MB]"
 msgstr "Videobufferstørrelse [MB]"
 
+msgid "Video codec"
+msgstr ""
+
 msgid "Video library"
 msgstr "Videobibliotek"
 
@@ -6868,6 +7036,9 @@ msgstr "Hele filen skal downloades, før afspilningen kan starte!"
 msgid "Whole picture (black bars)"
 msgstr ""
 
+msgid "Whole width"
+msgstr ""
+
 msgid "Wiki"
 msgstr "Wiki"
 
@@ -6885,6 +7056,9 @@ msgstr ""
 
 msgid "With subtitles"
 msgstr "Med undertekster"
+
+msgid "Words added to the trailer search (empty = automatic)"
+msgstr ""
 
 msgid "World"
 msgstr "Verden"
@@ -7149,6 +7323,9 @@ msgstr "centreret"
 msgid "changed"
 msgstr "ændret"
 
+msgid "classic"
+msgstr ""
+
 msgid "clock not set"
 msgstr ""
 
@@ -7209,6 +7386,9 @@ msgstr "rediger den valgte post (samme som OK)"
 
 msgid "enable / disable manual reordering"
 msgstr "slå manuel omarrangering til/fra"
+
+msgid "expired"
+msgstr ""
 
 msgid "external eplayer3"
 msgstr "ekstern eplayer3"
@@ -7356,6 +7536,9 @@ msgstr ""
 
 msgid "minutes"
 msgstr "minutter"
+
+msgid "modern"
+msgstr ""
 
 msgid "more options (this menu)"
 msgstr "flere valgmuligheder (denne menu)"
@@ -7613,6 +7796,9 @@ msgstr "sølv"
 
 msgid "small"
 msgstr "lille"
+
+msgid "software"
+msgstr ""
 
 msgid "sources"
 msgstr "kilder"
