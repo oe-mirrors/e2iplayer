@@ -4644,8 +4644,8 @@ class pageParser(CaptchaHelper):
             if ".m3u8" in url:
                 # the CDN sends the (100+ KB) playlist chunked; exteplayer3 (oe-alliance, HLS with
                 # multiple_requests=1) then reads it cut off in a segment name and ffmpeg 9 stops with
-                # "Invalid data found" - hlsdl fetches it with curl
-                meta.update({"iptv_proto": "m3u8", "iptv_buffering": "required"})
+                # "Invalid data found" - hlsdl fetches it with curl (exteplayer3 188 reads it whole, box test 28.11.)
+                meta.update({"iptv_proto": "m3u8", "iptv_buffering": "required", "iptv_buffering_reason": "chunkedpl"})
             url = urlparser.decorateUrl(url, meta)
             if ".m3u8" in url:
                 urltab.extend(getDirectM3U8Playlist(url))
@@ -4855,7 +4855,8 @@ class pageParser(CaptchaHelper):
         stream = js.get("stream") or {}
         meta = {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": "https://%s/" % host, "Origin": "https://%s" % host}
         urltab = []
-        # the segments are disguised (.woff2 fMP4 / PNG-wrapped TS) - like playmate they need the HLS buffering (hlsdl)
+        # the segments are disguised (.woff2 fMP4 / PNG-wrapped TS) - like playmate they need the HLS buffering (hlsdl),
+        # the .woff2 one not with exteplayer3 188 (see below)
         for key_, name in (("hls", "HLS"), ("tiktok", "HLS (TikTok CDN)"), ("direct", "MP4")):
             src = stream.get(key_, "")
             if not self.cm.isValidUrl(src):
@@ -4866,8 +4867,13 @@ class pageParser(CaptchaHelper):
             # the master itself: its playlists end in .txt (no m3u8 by extension) and the audio is a separate
             # rendition the player picks from the master
             # fix 211126: always buffered - exteplayer3 alone ends at once (code 10, box test); the master has no
-            # segments for requireDownloaderForDisguisedHls() to look at
-            urltab.append({"name": name, "url": strwithmeta(src, dict(meta, iptv_proto="m3u8", iptv_buffering="required"))})
+            # segments for requireDownloaderForDisguisedHls() to look at. The "hls" one (fMP4 named .woff2) plays directly
+            # with exteplayer3 188 ("hlsseg" & 1, box test 28.11., the same engine as the xtapes vp player); the TikTok
+            # one stays buffered (TS inside PNG pictures)
+            itemMeta = dict(meta, iptv_proto="m3u8", iptv_buffering="required")
+            if key_ == "hls":
+                itemMeta["iptv_buffering_reason"] = "hlsseg1"
+            urltab.append({"name": name, "url": strwithmeta(src, itemMeta)})
         if not urltab:
             printDBG("parserVSEMBED no stream (tracking %d chars)" % len(tracking))
             if "/e/" in baseUrl and not baseUrl.meta.get("vsembed_from_mirror"):
@@ -5639,8 +5645,9 @@ class pageParser(CaptchaHelper):
             return []
         playlist = playlist.replace("\\/", "/").replace("\\u0026", "&")
         # the segments have no file extension (helvid.com/s/<hex>?...): exteplayer3's ffmpeg refuses them ("Invalid data
-        # found when processing input", box log 10.2026), hlsdl fetches them -> buffer
-        meta = {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": "https://upload18.org/", "iptv_proto": "m3u8", "iptv_buffering": "required"}
+        # found when processing input", box log 10.2026), hlsdl fetches them -> buffer (exteplayer3 188 plays them,
+        # iptv_buffering_reason)
+        meta = {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": "https://upload18.org/", "iptv_proto": "m3u8", "iptv_buffering": "required", "iptv_buffering_reason": "hlsseg1"}
         return [{"name": "HLS", "url": urlparser.decorateUrl(playlist, meta)}]
 
     def parserJWPLAYER(self, baseUrl):  # update 170126

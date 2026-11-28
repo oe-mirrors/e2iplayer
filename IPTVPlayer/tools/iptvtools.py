@@ -934,6 +934,83 @@ def IsExecutable(fpath):
     return False
 
 
+EXTEPLAYER3_PATH = '/usr/bin/exteplayer3'
+# (stat key of the binary, its EPLAYER3_EXTENDED dict) - one tuple, replaced as a whole (host threads read it too)
+_extePlayer3Info = [(None, {})]
+
+
+def GetExtePlayer3Info():
+    # the EPLAYER3_EXTENDED line of the installed exteplayer3 ({"version": 188, "hlsseg": 3, "start": 1, ...}), {} when
+    # there is none or the player does not send it. exteplayer3 writes it to stderr before it parses its arguments,
+    # started without any it then prints the usage and ends. Cached until the binary changes (a feed update).
+    try:
+        st = os.stat(EXTEPLAYER3_PATH)
+    except Exception:
+        return {}
+    key = (st.st_mtime, st.st_size)
+    cachedKey, cachedInfo = _extePlayer3Info[0]
+    if cachedKey == key:
+        return cachedInfo
+    info = {}
+    try:
+        import json
+        import subprocess
+        proc = subprocess.Popen([EXTEPLAYER3_PATH], stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
+        try:
+            err = proc.communicate(timeout=5)[1]
+        except subprocess.TimeoutExpired:
+            proc.kill()
+            err = proc.communicate()[1]
+        for line in ensure_str(err or b'', errors='ignore').splitlines():
+            line = line.strip()
+            if line.startswith('{') and '"EPLAYER3_EXTENDED"' in line:
+                info = json.loads(line).get('EPLAYER3_EXTENDED') or {}
+                break
+    except Exception:
+        printExc()
+    printDBG('GetExtePlayer3Info %r' % info)
+    _extePlayer3Info[0] = (key, info)
+    return info
+
+
+def WarmExtePlayer3Info():
+    # the first probe in the background (plugin start): playVideo, the player and its settings find it cached and
+    # do not wait for exteplayer3 on the GUI thread
+    try:
+        threading.Thread(target=GetExtePlayer3Info, name='E2iExtePlayer3Probe').start()
+    except Exception:
+        printExc()
+
+
+def ExtePlayer3Version():
+    try:
+        return int(GetExtePlayer3Info().get('version', 0))
+    except (TypeError, ValueError):
+        return 0
+
+
+def ExtePlayer3Cap(name):
+    # a capability of EPLAYER3_EXTENDED as a number (bit masks like "hlsseg" / "xcode" / "drmkey"), 0 when missing
+    try:
+        return int(GetExtePlayer3Info().get(name, 0))
+    except (TypeError, ValueError):
+        return 0
+
+
+def ExtePlayer3CoversBufferingReason(reason):
+    # iptv_buffering_reason (tools/iptvtypes.py): does the installed exteplayer3 play the stream without the forced
+    # buffering? "hlsseg1" segments with any name, "hlsseg2" an image in front of the TS data (bits of "hlsseg");
+    # "avcc" broken avcC header, "oldtls" CDN the player of old images could not open, "chunkedpl" a chunked playlist
+    # the OE-A player read cut off: no key, fixed in version 188
+    if 'hlsseg1' == reason:
+        return bool(ExtePlayer3Cap('hlsseg') & 1)
+    if 'hlsseg2' == reason:
+        return bool(ExtePlayer3Cap('hlsseg') & 2)
+    if reason in ('avcc', 'oldtls', 'chunkedpl'):
+        return ExtePlayer3Version() >= 188
+    return False
+
+
 def GetGstPlayerPath():
     # gstplayer2 (oe-mirrors/iptvplayer-bin-components, also used by
     # ServiceApp) has all of mx3L's fixes but a getopt command line;

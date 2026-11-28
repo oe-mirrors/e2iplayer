@@ -682,6 +682,40 @@ def test_audio_codec_name(panelModule, track, expected):
     assert panelModule.audioCodecName(track) == expected
 
 
+@pytest.mark.parametrize('kind, msg, code, expected', [
+    # messages of the box logs (exteplayer3 FF_ERROR with FFmpeg's code)
+    ('FF_ERROR', 'Invalid data found when processing input', -1094995529, 'The stream data cannot be read.'),
+    ('FF_ERROR', 'Server returned 5XX Server Error reply', -1482175992, 'The server answers with an error (HTTP 5XX).'),
+    ('FF_ERROR', 'Server returned 403 Forbidden (access denied)', None, 'Access Forbidden'),
+    ('FF_ERROR', 'Server returned 4XX Client Error, but not one of 40{0,1,3,4}', None, 'The server answers with an error (HTTP 4XX).'),
+    ('FF_ERROR', 'Connection timed out', -110, 'Operation timed out.'),
+    ('FF_ERROR', 'No key for KID ab081a704aad41829b1123b09b6ecafd (video)', -13, 'Video with DRM protection.'),
+    ('FF_ERROR', 'Server returned 404 Not Found', -875574520, 'File Not Found.'),
+    ('FF_ERROR', 'Input/output error', -5, 'The connection to the server was interrupted.'),
+    ('FF_ERROR', 'Connection refused', -111, 'Failed to connect to host.'),
+    ('FF_ERROR', 'Protocol not found', -1330794744, 'Unsupported protocol.'),
+    ('FF_ERROR', 'Something new', -12345, ''),
+    # gstplayer: GStreamer's text
+    ('GST_ERROR', 'Could not resolve server name.', 1, 'Could not resolve host.'),
+    ('GST_ERROR', 'Not Found', 3, 'File Not Found.'),
+    ('GST_ERROR', 'Internal data stream error.', 1, 'The stream data cannot be read.'),
+    ('GST_ERROR', 'No URI handler implemented for "ifd".', 1, ''),
+    ('GST_MISSING_PLUGIN', 'GStreamer element dashdemux', None, 'A GStreamer plugin for this format is missing.'),
+])
+def test_player_error_hint(panelModule, kind, msg, code, expected):
+    assert panelModule.playerErrorHint(kind, msg, code) == expected
+
+
+def test_audio_format_for_the_classic_video_line(panelModule):
+    # box 28.11.: the classic infobar's video line gets "| AAC-LC 2.0", short "| AAC 2.0" when it has no room
+    aac = {'encode': 'AAC', 'name': 'und', 'c': 2, 'd': 'AAC-LC', 'cl': 'stereo'}
+    dts = {'encode': 'DTS', 'name': 'eng', 'c': 6, 'd': 'DTS-HD MA', 'cl': '5.1(side)'}
+    assert panelModule.audioFormatText(aac) == 'AAC-LC 2.0'
+    assert panelModule.audioFormatText(aac, True) == 'AAC 2.0'
+    assert panelModule.audioFormatText(dts, True) == 'DTS 5.1'
+    assert panelModule.audioFormatText({}) == '' and panelModule.audioFormatText(None, True) == ''
+
+
 def test_screensaver_shows_no_decoder_output_as_format(panelModule):
     # box 20.11.: a podcast showed "IPCM" (the PCM of software decoding) as its format
     assert panelModule.audioText({'encode': 'IPCM', 'name': 'und'}) == ''

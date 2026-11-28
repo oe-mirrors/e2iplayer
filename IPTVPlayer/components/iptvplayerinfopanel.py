@@ -92,6 +92,105 @@ def sourceLine(hostName, linkName, server):
     return SEPARATOR.join(parts)
 
 
+###################################################
+# the error messages of the players in plain words: exteplayer3 sends FFmpeg's text and code ({"FF_ERROR": {"msg",
+# "code"}}), gstplayer GStreamer's text (GST_ERROR, GST_MISSING_PLUGIN) - both English and technical. The player
+# screen puts the explanation in front of the original message, which stays for the log / a forum post.
+###################################################
+def _ffErrTag(a, b, c, d):
+    # FFERRTAG of libavutil/error.h
+    return -(a | (ord(b) << 8) | (ord(c) << 16) | (ord(d) << 24))
+
+
+FF_HTTP_ERRORS = {_ffErrTag(0xF8, '4', '0', '0'): '400', _ffErrTag(0xF8, '4', '0', '1'): '401', _ffErrTag(0xF8, '4', '0', '3'): '403',
+                  _ffErrTag(0xF8, '4', '0', '4'): '404', _ffErrTag(0xF8, '4', '2', '9'): '429', _ffErrTag(0xF8, '4', 'X', 'X'): '4XX',
+                  _ffErrTag(0xF8, '5', 'X', 'X'): '5XX'}
+FF_INVALIDDATA = _ffErrTag(ord('I'), 'N', 'D', 'A')
+FF_UNPLAYABLE = (_ffErrTag(0xF8, 'D', 'E', 'M'), _ffErrTag(0xF8, 'D', 'E', 'C'), _ffErrTag(0xF8, 'S', 'T', 'R'))
+FF_PROTOCOL_NOT_FOUND = _ffErrTag(0xF8, 'P', 'R', 'O')
+# AVERROR(errno) of Linux: ETIMEDOUT, ECONNREFUSED / ENETUNREACH / EHOSTUNREACH, EIO / ECONNRESET / EPIPE, EACCES
+FF_TIMEDOUT = -110
+FF_CONNECT_FAILED = (-111, -101, -113)
+FF_CONNECTION_LOST = (-5, -104, -32)
+FF_EACCES = -13
+# (pattern of the player's text, kind) - for gstplayer and FF_ERROR messages without a known code
+PLAYER_ERROR_PATTERNS = (
+    (r'No key for KID', 'drm'),
+    (r'\b(?:timed out|timeout)\b', 'timeout'),
+    (r'resolve (?:host|server)|Name or service not known|Could not resolve', 'resolve'),
+    (r'\b40[13]\b|Forbidden|Unauthori[sz]ed', 'forbidden'),
+    (r'\b404\b|Not Found', 'notfound'),
+    (r'Server returned (\d\w\w)|\bHTTP (?:error )?(\d{3})\b', 'http'),
+    (r'Invalid data found|Internal data stream error|Could not demultiplex|stream data error', 'invalid'),
+    (r'No decoder available|Could not determine type of stream|missing a plug-?in|Your GStreamer installation', 'unplayable'),
+    (r'Could not connect|Connection refused|Network is unreachable|No route to host', 'connect'),
+    (r'Input/output error|Connection reset|Broken pipe', 'lost'),
+)
+
+
+def playerErrorHint(kind, msg, code=None):
+    # the explanation of a player's error message, '' when it is not a known case. kind: 'FF_ERROR', 'GST_ERROR' or
+    # 'GST_MISSING_PLUGIN'; msg: the player's text; code: FF_ERROR's FFmpeg code (GStreamer's codes say too little)
+    msg = str(msg or '')
+    if 'GST_MISSING_PLUGIN' == kind:
+        return _('A GStreamer plugin for this format is missing.')
+    found, httpCode = '', ''
+    try:
+        code = int(code) if code is not None else None
+    except (TypeError, ValueError):
+        code = None
+    if 'FF_ERROR' == kind and code is not None:
+        if code == FF_EACCES and 'KID' in msg:
+            found = 'drm'
+        elif code == FF_TIMEDOUT:
+            found = 'timeout'
+        elif code in FF_HTTP_ERRORS:
+            httpCode = FF_HTTP_ERRORS[code]
+            found = {'401': 'forbidden', '403': 'forbidden', '404': 'notfound'}.get(httpCode, 'http')
+        elif code == FF_INVALIDDATA:
+            found = 'invalid'
+        elif code in FF_UNPLAYABLE:
+            found = 'unplayable'
+        elif code == FF_PROTOCOL_NOT_FOUND:
+            found = 'protocol'
+        elif code in FF_CONNECT_FAILED:
+            found = 'connect'
+        elif code in FF_CONNECTION_LOST:
+            found = 'lost'
+    if not found:
+        for pattern, name in PLAYER_ERROR_PATTERNS:
+            m = re.search(pattern, msg, re.IGNORECASE)
+            if m:
+                found = name
+                if 'http' == name:
+                    httpCode = (m.group(1) or m.group(2) or '').upper()
+                break
+    if 'http' == found and not httpCode:
+        found = ''
+    texts = {
+        'drm': _('Video with DRM protection.'),
+        'timeout': _('Operation timed out.'),
+        'resolve': _('Could not resolve host.'),
+        'forbidden': _('Access Forbidden'),
+        'notfound': _('File Not Found.'),
+        'http': _('The server answers with an error (HTTP %s).') % httpCode,
+        'invalid': _('The stream data cannot be read.'),
+        'unplayable': _('The player cannot play this format.'),
+        'protocol': _('Unsupported protocol.'),
+        'connect': _('Failed to connect to host.'),
+        'lost': _('The connection to the server was interrupted.'),
+    }
+    return texts.get(found, '')
+
+
+def audioFormatText(track, short=False):
+    # "E-AC3 5.1", "AAC-LC 2.0" for the infobar of a skin without format badges; "" when nothing is known. short: the
+    # codec family ("AAC 2.0", "DTS 5.1" for "DTS-HD MA") when the line has no room for the display name
+    track = track or {}
+    codec = (audioCodecFamily(textValue(track, 'encode')) or audioCodecName(track)) if short else audioCodecName(track)
+    return ' '.join(part for part in (codec, channelsText(track)) if part)
+
+
 def audioText(track):
     # {'encode': 'AAC', 'name': 'eng'}, players name a track of unknown language 'und'
     encode = audioCodecName(track)

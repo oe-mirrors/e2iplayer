@@ -457,7 +457,9 @@ class XXXParser:
 		meta = {'User-Agent': header.get('User-Agent', '')}
 		if '.m3u8' in videoUrl:
 			# exteplayer3/gstplayer find no tracks behind the PNG header, hlsdl just fetches the bytes -> buffer only
+			# (not for an exteplayer3 that skips the image itself, "hlsseg" & 2)
 			meta['iptv_buffering'] = 'required'
+			meta['iptv_buffering_reason'] = 'hlsseg1,hlsseg2'
 		return urlparser.decorateUrl(videoUrl.replace('\\/', '/'), meta)
 
 	def _bestFromQualityList(self, url, handler, maxHeight=0):
@@ -964,7 +966,7 @@ class XXXParser:
 	def _vpPlayerStream(self, host, videoId, userAgent):
 		# the HLS master of a vp player (see VP_PLAYER_HOSTS), the CDN wants the player as Referer and Origin; '' when
 		# the player does not answer. The segments are fMP4 named *.woff2 (and the init *.woff): exteplayer3's ffmpeg
-		# refuses those extensions like the *.html of XtremeStream, so hlsdl buffers them
+		# refuses those extensions like the *.html of XtremeStream, so hlsdl buffers them (not with exteplayer3 188: hlsseg1)
 		try:
 			key = codecs.decode(VP_PLAYER_KEY, 'hex')
 			iv = codecs.decode(VP_PLAYER_SALT + ensure_str(codecs.encode(ensure_binary(host), 'hex'))[:3], 'hex')
@@ -983,13 +985,13 @@ class XXXParser:
 			return ''
 		if not master:
 			return ''
-		meta = {'Referer': 'https://%s/' % host, 'Origin': 'https://%s' % host, 'User-Agent': userAgent, 'iptv_proto': 'm3u8', 'iptv_buffering': 'required'}
+		meta = {'Referer': 'https://%s/' % host, 'Origin': 'https://%s' % host, 'User-Agent': userAgent, 'iptv_proto': 'm3u8', 'iptv_buffering': 'required', 'iptv_buffering_reason': 'hlsseg1'}
 		master = urlparser.decorateUrl(master, meta)
 		if self._uhdAllowed():
 			return master
 		variant = self._bestM3U8Variant(master, checkExt=False)
 		if variant:
-			variant.meta.update({'iptv_proto': 'm3u8', 'iptv_buffering': 'required'})
+			variant.meta.update({'iptv_proto': 'm3u8', 'iptv_buffering': 'required', 'iptv_buffering_reason': 'hlsseg1'})
 		return variant or master
 
 	def _playMirror(self, link, referer):
@@ -1008,15 +1010,15 @@ class XXXParser:
 				return self._xtremestreamToken(m.group(1), boot.group(1), boot.group(2), link, userAgent)
 			# the HLS master of the player page (variants &q=480..2160); it wants the player as Referer.
 			# The segments are named *.html: exteplayer3's ffmpeg refuses them ("Invalid data found", box log
-			# 10.2026), hlsdl just fetches the bytes -> buffer
-			master = urlparser.decorateUrl(m.group(1) + '/player/xs1.php?data=' + m.group(2), {'Referer': link, 'User-Agent': userAgent, 'iptv_proto': 'm3u8', 'iptv_buffering': 'required'})
+			# 10.2026), hlsdl just fetches the bytes -> buffer (exteplayer3 188 plays them directly: hlsseg1)
+			master = urlparser.decorateUrl(m.group(1) + '/player/xs1.php?data=' + m.group(2), {'Referer': link, 'User-Agent': userAgent, 'iptv_proto': 'm3u8', 'iptv_buffering': 'required', 'iptv_buffering_reason': 'hlsseg1'})
 			if self._uhdAllowed():
 				return master
 			# UHD playback off: a variant of at most Full HD instead of the master (hlsdl would take its best one, up
 			# to 2160p); the master when its variants can not be listed
 			variant = self._bestM3U8Variant(master, checkExt=False)
 			if variant:
-				variant.meta.update({'iptv_proto': 'm3u8', 'iptv_buffering': 'required'})
+				variant.meta.update({'iptv_proto': 'm3u8', 'iptv_buffering': 'required', 'iptv_buffering_reason': 'hlsseg1'})
 			return variant or master
 		if re.search(r'\.(?:mp4|m3u8|webm)(?:[?#]|$)|/video_stream\?|\.thepornapi\.com/stream\?token=', link) and 1 != self.up.checkHostSupport(link):
 			# (a hoster page can end in .mp4 too: streamtape.com/e/<id>/<name>.mp4; pornbusy's own "webm" -
@@ -1862,8 +1864,8 @@ class XXXParser:
 				printDBG('Host videoPage: ' + videoPage)
 				# iptv_use_ffmpeg: download (and buffered playback) over the FFmpeg downloader, it opens the TLS 1.3 CDN
 				# where wget/the player of older images fail; iptv_buffering: also with a player "without buffering"
-				# (exteplayer3 of VTi: "Input/output error" on that CDN)
-				return strwithmeta(videoPage, {'Referer': url, 'iptv_use_ffmpeg': True, 'iptv_buffering': 'required'})
+				# (exteplayer3 of VTi: "Input/output error" on that CDN; exteplayer3 188 plays it directly)
+				return strwithmeta(videoPage, {'Referer': url, 'iptv_use_ffmpeg': True, 'iptv_buffering': 'required', 'iptv_buffering_reason': 'oldtls'})
 			return ''
 
 		if parser == 'https://www.pornoxo.com':
@@ -4510,11 +4512,12 @@ class XXXParser:
 				videoUrl = self._pickByHeight([c for c in candidates if c[1]])
 				printDBG('Selected URL: ' + str(videoUrl))
 				# playlist and segments without extension (.../playlist/<id>/5, .../media-0): exteplayer3 answers "Invalid
-				# data found", hlsdl plays them -> buffered playback also with a player "without buffering"
-				return strwithmeta(videoUrl, {'iptv_proto': 'm3u8', 'iptv_buffering': 'required'})  # variant line of the master playlist
+				# data found", hlsdl plays them -> buffered playback also with a player "without buffering" (not with
+				# exteplayer3 188: hlsseg1)
+				return strwithmeta(videoUrl, {'iptv_proto': 'm3u8', 'iptv_buffering': 'required', 'iptv_buffering_reason': 'hlsseg1'})  # variant line of the master playlist
 			else:
 				printDBG('SELECTED RESOLUTION:\n' + url)
-				return strwithmeta(url, {'iptv_proto': 'm3u8', 'iptv_buffering': 'required'})  # old favourites: a variant line of the former quality menu
+				return strwithmeta(url, {'iptv_proto': 'm3u8', 'iptv_buffering': 'required', 'iptv_buffering_reason': 'hlsseg1'})  # old favourites: a variant line of the former quality menu
 
 		if parser == 'https://www.realgfporn.com':
 			printDBG('REALGFPORN PARSER')
@@ -7266,8 +7269,8 @@ class XXXParser:
 			# the segments are only served with a referer; surrit.com is Cloudflare, which answers 403 to
 			# exteplayer3/ffmpeg sending a browser User-Agent - a player User-Agent passes, as for CAMSODA
 			# the segments are named video0.jpeg ...: exteplayer3 / ffmpeg >= 7.1.1 refuse them ("Invalid data found"), hlsdl
-			# does not care -> buffered playback and download over hlsdl
-			return strwithmeta(videoUrl, {'Referer': url, 'User-Agent': self.cm.getDefaultHeader(browser='vlc')['User-Agent'], 'iptv_proto': 'm3u8', 'iptv_buffering': 'required'})
+			# does not care -> buffered playback and download over hlsdl (exteplayer3 188 plays them directly: hlsseg1)
+			return strwithmeta(videoUrl, {'Referer': url, 'User-Agent': self.cm.getDefaultHeader(browser='vlc')['User-Agent'], 'iptv_proto': 'm3u8', 'iptv_buffering': 'required', 'iptv_buffering_reason': 'hlsseg1'})
 
 		if parser == 'https://sxyprn.com':
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
@@ -7592,6 +7595,7 @@ class XXXParser:
 				# player "without buffering"
 				meta['iptv_use_ffmpeg'] = True
 				meta['iptv_buffering'] = 'required'
+				meta['iptv_buffering_reason'] = 'oldtls'
 			return urlparser.decorateUrl(videoUrl, meta)
 
 		if parser == 'https://fullvideosporn.com':
@@ -7635,7 +7639,7 @@ class XXXParser:
 			videoUrl = self._pickByHeight(sources)
 			if not videoUrl:
 				return ''
-			return urlparser.decorateUrl(videoUrl, {'User-Agent': self.HTTP_HEADER.get('User-Agent', ''), 'iptv_buffering': 'required'})
+			return urlparser.decorateUrl(videoUrl, {'User-Agent': self.HTTP_HEADER.get('User-Agent', ''), 'iptv_buffering': 'required', 'iptv_buffering_reason': 'hlsseg1,hlsseg2'})
 
 		if parser in MOVIE_SITES:
 			# a movie/scene page, "#mirror=<n>:<hoster>" from the mirror menu picks one of its mirrors

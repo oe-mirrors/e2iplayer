@@ -579,15 +579,46 @@ def requireDownloaderForDisguisedHls(links):
         # image CDN, box log 07.10. #4) - hlsdl before 0.34 writes it into the buffer file and no player opens
         # it; the curl-impersonate helper cuts it off (VOD and live). hlsdl 0.34+ cuts it off itself.
         hlsdlCuts = _hlsdlCutsImageHeads()
-        imageHead = not hlsdlCuts and bool(curlimpersonate.getImpersonateBinary()) and _hasImageHeadBeforeTs(cm, segUrl, params)
-        printDBG("requireDownloaderForDisguisedHls segment [%s] hlsdl cuts image heads[%s] impersonate[%s] -> iptv_buffering required" % (path, hlsdlCuts, imageHead))
+        impersonate = not hlsdlCuts and bool(curlimpersonate.getImpersonateBinary())
+        # exteplayer3 with "hlsseg" in EPLAYER3_EXTENDED plays such segments directly (iptv_buffering_reason, the
+        # player screen drops the buffering then): what is in front of the data decides which bit it needs
+        extePlayer3 = _extePlayer3HlsSeg()
+        # encrypted (a key other than METHOD=NONE, also with key rotation): the head cannot be seen before decryption,
+        # only an exteplayer3 that also skips an image - the segment is only fetched for the impersonate helper then
+        encrypted = bool(re.search(r'#EXT-X-KEY:[^\n]*METHOD=(?!NONE)', data))
+        kind = _segmentHeadKind(cm, segUrl, params) if (impersonate or (extePlayer3 and not encrypted)) else ''
+        if encrypted:
+            reason = 'hlsseg1,hlsseg2'
+        else:
+            # '' (TS hidden in the pixels of a large image, unknown data): always buffered
+            reason = {'plain': 'hlsseg1', 'image': 'hlsseg1,hlsseg2'}.get(kind, '')
+        imageHead = impersonate and 'image' == kind
+        printDBG("requireDownloaderForDisguisedHls segment [%s] head[%s] hlsdl cuts image heads[%s] impersonate[%s] reason[%s] -> iptv_buffering required" % (path, kind, hlsdlCuts, imageHead, reason))
         for item in links:
             itemMeta = dict(getattr(item['url'], 'meta', {}))
             itemMeta['iptv_buffering'] = 'required'
+            if reason:
+                itemMeta['iptv_buffering_reason'] = reason
             if imageHead:
                 itemMeta['iptv_impersonate_hls'] = True
             item['url'] = strwithmeta(item['url'], itemMeta)
     return links
+
+
+def _extePlayer3Cap(name):
+    # a capability of the installed exteplayer3 (EPLAYER3_EXTENDED), 0 without one. Imported here, not at the top: a
+    # tools module without it (the zadmario port, the offline tests' stub) leaves this helper working
+    try:
+        from Plugins.Extensions.IPTVPlayer.tools.iptvtools import ExtePlayer3Cap
+        return ExtePlayer3Cap(name)
+    except Exception:
+        printExc()
+        return 0
+
+
+def _extePlayer3HlsSeg():
+    # the "hlsseg" bits on their own: what requireDownloaderForDisguisedHls asks (and the tests replace)
+    return _extePlayer3Cap('hlsseg')
 
 
 def _hlsdlCutsImageHeads():
@@ -599,8 +630,13 @@ def _hlsdlCutsImageHeads():
         return False
 
 
-def _hasImageHeadBeforeTs(cm, segUrl, params):
-    # the first 2 KB of the segment: an image signature, then three TS sync bytes 188 apart
+def _isTsAt(head, offset):
+    return head[offset:offset + 1] == b'\x47' and head[offset + 188:offset + 189] == b'\x47' and head[offset + 376:offset + 377] == b'\x47'
+
+
+def _segmentHeadKind(cm, segUrl, params):
+    # the first 2 KB of the segment: 'plain' MPEG-TS / fMP4 / ADTS / ID3 at the start, 'image' an image signature
+    # and three TS sync bytes 188 apart behind it, '' anything else (TS deep inside a large image, unknown data)
     params = dict(params)
     params['header'] = dict(params.get('header', {}), Range='bytes=0-2047')
     params['return_data'] = False
@@ -609,23 +645,32 @@ def _hasImageHeadBeforeTs(cm, segUrl, params):
         # an HTTP error comes as (False, the still open HTTPError): closed below as well
         sts, response = cm.getPage(segUrl, params)
         if not sts:
-            return False
+            return ''
         head = response.read(2048)
     except Exception:
         printExc()
-        return False
+        return ''
     finally:
         try:
             if hasattr(response, 'close'):
                 response.close()
         except Exception:
             printExc()
+    return _classifySegmentHead(head)
+
+
+def _classifySegmentHead(head):
+    if not isinstance(head, bytes) or len(head) < 8:
+        return ''
+    if _isTsAt(head, 0) or head[:3] == b'ID3' or head[4:8] in (b'ftyp', b'styp', b'moof', b'sidx', b'moov') \
+            or (head[:1] == b'\xff' and (ord(head[1:2]) & 0xf6) == 0xf0):
+        return 'plain'
     if not (head[:4] == b'RIFF' or head[:8] == b'\x89PNG\r\n\x1a\n' or head[:3] == b'\xff\xd8\xff' or head[:4] == b'GIF8'):
-        return False
+        return ''
     for offset in range(1, len(head) - 376):
-        if head[offset:offset + 1] == b'\x47' and head[offset + 188:offset + 189] == b'\x47' and head[offset + 376:offset + 377] == b'\x47':
-            return True
-    return False
+        if _isTsAt(head, offset):
+            return 'image'
+    return ''
 
 
 def getF4MLinksWithMeta(manifestUrl, checkExt=True, cookieParams={}, sortWithMaxBitrate=-1):
@@ -722,8 +767,18 @@ def getMPDLinksWithMeta(manifestUrl, checkExt=True, cookieParams={}, sortWithMax
             _setLastHostError(lambda _: '%s HTTP %d%s' % (_('Loading %s failed due to following error:') % site, status, reason))
         return []
     finalUrl = getattr(data, 'meta', {}).get('url') or manifestUrl
+    # CENC keys of the host (iptv_drm_keys) and an exteplayer3 that takes --key: the DRM tracks are played
+    keys = getattr(manifestUrl, 'meta', {}).get('iptv_drm_keys', '')
+    allowDrm = bool(keys) and bool(_extePlayer3Cap('drmkey') & 1)
+    if allowDrm:
+        # keys of other KIDs (rotated, a list of the site that is out of date) play nothing: DRM as without keys
+        mpdKids = {kid.replace('-', '').lower() for kid in re.findall(r'default_KID\s*=\s*"([0-9a-fA-F-]{32,36})"', str(data))}
+        keyKids = {pair.split(':', 1)[0].strip().replace('-', '').lower() for pair in keys.split(',') if ':' in pair}
+        if mpdKids and not mpdKids & keyKids:
+            printDBG("getMPDLinksWithMeta: no key for the KIDs %s of the MPD (keys for %s)" % (sorted(mpdKids), sorted(keyKids)))
+            allowDrm = False
     try:
-        mpd = dashmpd.parseMpd(data, finalUrl)
+        mpd = dashmpd.parseMpd(data, finalUrl, allowDrm=allowDrm)
     except Exception:
         printExc()
         return []
@@ -732,6 +787,10 @@ def getMPDLinksWithMeta(manifestUrl, checkExt=True, cookieParams={}, sortWithMax
         return []
     dashmpd.rememberManifest(manifestUrl, finalUrl, str(data), mpd['dynamic'])
     retPlaylists = dashmpd.buildLinks(mpd, manifestUrl)
+    if mpd.get('drm'):
+        # only exteplayer3 decrypts: neither the downloaders (buffering) nor gstplayer
+        for item in retPlaylists:
+            item['url'] = strwithmeta(item['url'], {'iptv_buffering': 'forbidden'})
     if sortWithMaxBandwidth > -1:
         def __getLinkQuality(itemLink):
             try:

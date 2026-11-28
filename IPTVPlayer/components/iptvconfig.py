@@ -546,6 +546,16 @@ config.plugins.iptvplayer.wma_software_decode = ConfigYesNo(default=True)
 config.plugins.iptvplayer.mp3_software_decode = ConfigYesNo(default=False)
 config.plugins.iptvplayer.stereo_software_decode = ConfigYesNo(default=False)
 config.plugins.iptvplayer.software_decode_as = ConfigSelection(default="pcm", choices=[("pcm", "PCM"), ("lpcm", "LPCM")])
+# exteplayer3 188 (shown only when the installed player reports it in EPLAYER3_EXTENDED): audio the box or the
+# receiver cannot play, converted by the player ("xcode"); only forced subtitle cues ("forcedonly"); HLS / DASH
+# variant picked by the player, only the default audio renditions, a resolution limit for H.264
+config.plugins.iptvplayer.exteplayer_dts_transcode = ConfigSelection(default="off", choices=[("off", _("Off")), ("ac3", "AC3 5.1"), ("eac3", "E-AC-3 5.1")])
+config.plugins.iptvplayer.exteplayer_truehd_transcode = ConfigSelection(default="off", choices=[("off", _("Off")), ("ac3", "AC3 5.1"), ("eac3", "E-AC-3 5.1")])
+config.plugins.iptvplayer.exteplayer_heaac_transcode = ConfigYesNo(default=False)
+config.plugins.iptvplayer.exteplayer_forced_subtitles = ConfigYesNo(default=False)
+config.plugins.iptvplayer.exteplayer_hls_quality = ConfigSelection(default="0", choices=[("0", _("Auto")), ("1", _("Lowest"))])
+config.plugins.iptvplayer.exteplayer_default_audio_only = ConfigYesNo(default=False)
+config.plugins.iptvplayer.exteplayer_h264_limit = ConfigSelection(default="0x0", choices=[("0x0", _("Off")), ("1920x1080", "1920x1080"), ("1280x720", "1280x720"), ("1024x576", "1024x576"), ("720x576", "720x576")])
 config.plugins.iptvplayer.aac_mix = ConfigSelection(default=None, choices=[(None, _("from E2 settings"))])
 config.plugins.iptvplayer.ac3_mix = ConfigSelection(default=None, choices=[(None, _("from E2 settings"))])
 

@@ -521,14 +521,16 @@ def downloadPlan(data, manifestUrl, sel):
     return {'duration': _periodTimes(root, periods)[pIdx][1], 'tracks': tracks}
 
 
-def parseMpd(data, manifestUrl, now=None):
-    # -> {'dynamic', 'period', 'video': [...], 'audio': [...], 'text': [...], 'drm_only'}
+def parseMpd(data, manifestUrl, now=None, allowDrm=False):
+    # -> {'dynamic', 'period', 'video': [...], 'audio': [...], 'text': [...], 'drm_only', 'drm'}
+    # allowDrm: the CENC keys are known (iptv_drm_keys) and the player decrypts - the DRM video / audio is listed
+    # ('drm' True then), DRM subtitles never
     root = _parseRoot(data)
     if _local(root.tag) != 'MPD':
         raise ValueError('not an MPD')
     periods = _kids(root, 'Period')
     pIdx = choosePeriod(root, periods, now)
-    ret = {'dynamic': root.get('type') == 'dynamic', 'period': pIdx, 'periods': len(periods), 'video': [], 'audio': [], 'text': [], 'drm_only': False}
+    ret = {'dynamic': root.get('type') == 'dynamic', 'period': pIdx, 'periods': len(periods), 'video': [], 'audio': [], 'text': [], 'drm_only': False, 'drm': False}
     if pIdx < 0:
         return ret
     period = periods[pIdx]
@@ -582,8 +584,10 @@ def parseMpd(data, manifestUrl, now=None):
                     continue
                 item.update({'url': url, 'format': fmt})
             if drm and ctype != 'text':
-                drmSkipped += 1
-                continue
+                if not allowDrm:
+                    drmSkipped += 1
+                    continue
+                ret['drm'] = True
             ret[ctype].append(item)
     ret['drm_only'] = bool(drmSkipped) and not ret['video'] and not ret['audio']
     return ret

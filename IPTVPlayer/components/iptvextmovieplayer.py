@@ -33,14 +33,14 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, Ge
                                                           GetE2VideoPolicy, SetE2VideoPolicy, GetDefaultLang, GetPolishSubEncoding, iptv_system, \
                                                           GetE2AudioCodecMixOption, SetE2AudioCodecMixOption, CreateTmpFile, GetTmpDir, IsExecutable, GetGstIfdSrc, GetGstPlayerPath, MapUcharEncoding, \
                                                           GetE2VideoModeChoices, GetE2VideoMode, SetE2VideoMode, GetPlayerSkinDir, GetNice, E2PrioFix, \
-                                                          StripColorCodes, mkdirs
+                                                          StripColorCodes, mkdirs, ExtePlayer3Cap, ExtePlayer3Version, EXTEPLAYER3_PATH
 from Plugins.Extensions.IPTVPlayer.tools.iptvsubtitles import IPTVSubtitlesHandler, IPTVEmbeddedSubtitlesHandler, IPTVGraphicSubtitlesHandler
 from Plugins.Extensions.IPTVPlayer.tools.iptvmoviemetadata import IPTVMovieMetaDataHandler
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.iptvsubdownloader import IPTVSubDownloaderWidget
 from Plugins.Extensions.IPTVPlayer.components.iptvsubsimpledownloader import IPTVSubSimpleDownloaderWidget
 from Plugins.Extensions.IPTVPlayer.components.iptvchoicebox import IPTVChoiceBoxWidget, IPTVChoiceBoxItem
-from Plugins.Extensions.IPTVPlayer.components.iptvplayerinfopanel import PlayerInfoPanel, BANNER_PICTURE, makeBannerPicture, audioText, badgeList, hostDisplayName, nowPlayingText, streamBitrate, stripTexts, subtitleFormatName, CHAPTERS_PROBE_CMD
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinfopanel import PlayerInfoPanel, BANNER_PICTURE, makeBannerPicture, audioFormatText, audioText, badgeList, hostDisplayName, nowPlayingText, playerErrorHint, streamBitrate, stripTexts, subtitleFormatName, CHAPTERS_PROBE_CMD
 from Plugins.Extensions.IPTVPlayer.components.iptvlist import IPTVPlaylistChoiceBoxList
 from Plugins.Extensions.IPTVPlayer.components.iptvscreensaver import clockStrftime
 from Plugins.Extensions.IPTVPlayer.components.iptvbackdrop import BackdropLoader, backdropMode, backdropOnPause
@@ -173,6 +173,14 @@ class ExtPlayerCommandsDispatcher():
 
     def setSubtitleTrack(self, id):
         self.extPlayerSendCommand('PLAYBACK_SET_SUBTITLE_TRACK', id, False)
+
+    def setForcedSubtitlesOnly(self, on):
+        # exteplayer3 "forcedonly": so1 only the forced cues, so0 all of them
+        self.extPlayerSendCommand('PLAYBACK_SET_FORCED_ONLY', 1 if on else 0, False)
+
+    def setAudioChannel(self, channel):
+        # exteplayer3 "achannel": dual mono 0 left, 1 stereo, 2 right
+        self.extPlayerSendCommand('PLAYBACK_SET_AUDIO_CHANNEL', channel, False)
 
     def setDownloadFileTimeout(self, timeout):
         self.extPlayerSendCommand('PLAYBACK_SET_DOWNLOAD_FILE_TIMEOUT', timeout, False)
@@ -811,6 +819,16 @@ class IPTVExtMoviePlayer(Screen):
             self.lastPosition = lastPosition
         else:
             self.lastPosition = 0
+        # exteplayer3 188: only forced subtitle cues (so1/so0), dual mono channel (am<n>: 0 left, 1 stereo, 2 right),
+        # the file the player writes the embedded cover to (--cover)
+        self.forcedSubtitlesOnly = False
+        self.audioChannel = 1
+        self.embeddedCoverPath = ''
+        # resumed with --start: the infobar once the player knows the length
+        self.showInfoBarAtLength = False
+        # the video part of the videoInfo label (the audio format follows it in a skin without badges)
+        self.videoInfoText = ''
+        self.videoInfoShortText = ''
         self.downloader = additionalParams.get('downloader', None)
         self.isDownladManagerAvailable = additionalParams.get('download_manager_available', False)
         self.externalSubTracks = additionalParams.get('external_sub_tracks', [])  # [{'title':'', 'lang':'', 'url':''}, ...]
@@ -956,6 +974,7 @@ class IPTVExtMoviePlayer(Screen):
         self.backdropStartUrl = additionalParams.get('backdrop_url', '') or ''
         self.audioCover = {'paths': [additionalParams.get('cover_path', '') or '', additionalParams.get('logo_path', '') or ''],
                            'shown': False, 'box': None, 'timer': eTimer()}
+        self.coverIsDefault = bool(additionalParams.get('cover_is_default'))
         self.audioCover['timer_conn'] = eConnectCallback(self.audioCover['timer'].timeout, self.showAudioCover)
         # optional widgets of the infobar (only skins like "modern" declare them): the poster and the format badges
         self[self.INFOBAR_POSTER] = Cover()
@@ -1468,6 +1487,12 @@ class IPTVExtMoviePlayer(Screen):
                 else:
                     item.type = IPTVChoiceBoxItem.TYPE_OFF
                 options.append(item)
+            if self._dualMonoSelectable():
+                # exteplayer3 188 "achannel": left / both / right channel of dual mono audio (two languages)
+                for channel, label in ((0, _("Left")), (1, _("Stereo")), (2, _("Right"))):
+                    item = IPTVChoiceBoxItem("%s: %s" % (_("Dual mono"), label), "", {'audio_channel': channel})
+                    item.type = IPTVChoiceBoxItem.TYPE_ON if channel == self.audioChannel else IPTVChoiceBoxItem.TYPE_OFF
+                    options.append(item)
             self.openChild(boundFunction(self.childClosed, self.selectAudioTrackCallback), IPTVChoiceBoxWidget, {'width': 500, 'height': self._getChoiceBoxHeight(len(options)), 'current_idx': currIdx, 'title': _("Select audio track"), 'options': options, 'chrome': True, 'footerMargin': 136})
         else:
             self.showMessage(_("Information about audio tracks not available."), MessageBox.TYPE_INFO, None)
@@ -1476,9 +1501,25 @@ class IPTVExtMoviePlayer(Screen):
         printDBG("selectAudioTrackCallback ret[%r]" % [ret])
         if isinstance(ret, IPTVChoiceBoxItem):
             ret = ret.privateData
-            if 'track_id' in ret and ret['track_id'] != self.playback['AudioTrack'].get('id', -1):
+            if 'audio_channel' in ret:
+                self.audioChannel = ret['audio_channel']
+                self.extPlayerCmddDispatcher.setAudioChannel(ret['audio_channel'])
+            elif 'track_id' in ret and ret['track_id'] != self.playback['AudioTrack'].get('id', -1):
                 self.metaHandler.setAudioTrackIdx(ret.get('track_idx', -1))
                 self.extPlayerCmddDispatcher.setAudioTrack(ret['track_id'])
+                if self.audioChannel != 1:
+                    # a dual mono channel belongs to the track it was chosen for
+                    self.audioChannel = 1
+                    self.extPlayerCmddDispatcher.setAudioChannel(1)
+
+    def _dualMonoSelectable(self):
+        # a track of at most two channels (the player reports "c" since v186, 0 when unknown)
+        if 'eplayer' != self.player or not ExtePlayer3Cap('achannel'):
+            return False
+        try:
+            return int(self.playback['AudioTrack'].get('c', 0) or 0) <= 2
+        except (TypeError, ValueError):
+            return False
 
     def selectSubtitle(self):
         printDBG("IPTVExtMoviePlayer.selectSubtitle")
@@ -1523,6 +1564,11 @@ class IPTVExtMoviePlayer(Screen):
             else:
                 item.type = IPTVChoiceBoxItem.TYPE_OFF
             options.append(item)
+        if len(embeddedTracksTab) and 'eplayer' == self.player and ExtePlayer3Cap('forcedonly'):
+            # exteplayer3 188: of the embedded track only the forced cues (flagged PGS pictures, a forced track)
+            item = IPTVChoiceBoxItem(_("Only forced subtitles"), "", {'other': 'forced_only'})
+            item.type = IPTVChoiceBoxItem.TYPE_ON if self.forcedSubtitlesOnly else IPTVChoiceBoxItem.TYPE_OFF
+            options.append(item)
         if self.subHandler['enabled'] and None is not self.metaHandler.getSubtitleTrack():
             options.append(IPTVChoiceBoxItem(_('Synchronize'), "", {'other': 'synchro'}))
         if len(self.externalSubTracks):
@@ -1548,6 +1594,9 @@ class IPTVExtMoviePlayer(Screen):
                     self.disableSubtitles()
                 elif option == 'synchro':
                     self.showSubSynchroControl()
+                elif option == 'forced_only':
+                    self.forcedSubtitlesOnly = not self.forcedSubtitlesOnly
+                    self.extPlayerCmddDispatcher.setForcedSubtitlesOnly(self.forcedSubtitlesOnly)
                 elif option == 'load':
                     self.openSubtitlesFromFile()
                 elif option == 'download':
@@ -2147,6 +2196,9 @@ class IPTVExtMoviePlayer(Screen):
                         self.playback['IsLive'] = True
                     else:
                         self.playback['IsLive'] = False
+                    if 0 < val and self.showInfoBarAtLength:
+                        self.showInfoBarAtLength = False
+                        self.showPlaybackInfoBar()
                     if 0 < val:
                         # restore last position
                         if 10 < self.lastPosition and self.lastPosition < (self.playback['Length'] - 10):
@@ -2232,14 +2284,22 @@ class IPTVExtMoviePlayer(Screen):
                         fps = int(fps)
                     if fps:
                         text += ', %sfps' % fps
+                    # without the aspect ratio: for the audio format when the line has no room (skin without badges)
+                    shortText = text
                     text += ', %s' % val['aspect_ratio'].replace('_', ':')
                     streamType = self._getStreamTypeLabel()
                     if streamType:
                         text += ', %s' % streamType
+                        shortText += ', %s' % streamType
+                    self.videoInfoText = text
+                    self.videoInfoShortText = shortText
                     self['videoInfo'].setText(text)
                 else:
                     self.playback[key] = val
                     printDBG(">>> playback[%s] = %s" % (key, val))
+            if ('VideoTrack' in stsObj or 'AudioTrack' in stsObj) and self.infoBarBadgeLayout is None:
+                # a skin without format badges: the audio format after the video line ("... | E-AC3 5.1")
+                self._setVideoInfoWithAudio()
             if 'VideoTrack' in stsObj or 'AudioTrack' in stsObj or 'SubtitleTrack' in stsObj:
                 self.infoPanel.updateStream()
                 self.refreshInfoBarFormats()
@@ -3112,10 +3172,22 @@ class IPTVExtMoviePlayer(Screen):
                     self.playerBinaryInfo['seekms'] = bool(obj.get('seekms'))
                 elif "c_l" == key:
                     self.playerChaptersReceived(obj)
+                elif "cover" == key:
+                    # exteplayer3 188 --cover: the embedded cover was written
+                    self.embeddedCoverReceived(obj)
+                elif "s_o" == key:
+                    # answer to so1/so0: only forced subtitle cues on/off
+                    self.forcedSubtitlesOnly = bool(obj.get('o'))
+                elif "a_m" == key:
+                    # answer to am<n>: the dual mono channel
+                    self.audioChannel = obj.get('m', self.audioChannel)
+                elif "DRM_KEY_DROP" == key:
+                    # no key for a track of the stream (--key): an audio track is switched over, others dropped
+                    printDBG("exteplayer3 DRM_KEY_DROP %s" % obj)
                 elif "GST_ERROR" == key:
                     printDBG('GST_ERROR: %s, code %s\n' % (ensure_str(obj['msg']), obj['code']))
                     msgType = MessageBox.TYPE_ERROR
-                    msgText += 'GST_ERROR: %s (code %s)\n' % (ensure_str(obj['msg']), obj['code'])
+                    msgText += self._playerErrorText(key, obj, 'GST_ERROR: %s (code %s)\n' % (ensure_str(obj['msg']), obj['code']))
                     # 'ifd' from the replace() above for gstplayer builds that do not escape
                     # their JSON, "ifd" from builds that do
                     if ensure_str(obj['msg']) in ("No URI handler implemented for 'ifd'.", 'No URI handler implemented for "ifd".'):
@@ -3123,10 +3195,10 @@ class IPTVExtMoviePlayer(Screen):
                 elif "FF_ERROR" == key:
                     printDBG('FF_ERROR: %s, code %s\n' % (ensure_str(obj['msg']), obj['code']))
                     msgType = MessageBox.TYPE_ERROR
-                    msgText += 'FF_ERROR: %s, code %s\n' % (ensure_str(obj['msg']), obj['code'])
+                    msgText += self._playerErrorText(key, obj, 'FF_ERROR: %s, code %s\n' % (ensure_str(obj['msg']), obj['code']))
                 elif "GST_MISSING_PLUGIN" == key:
                     printDBG('GST_MISSING_PLUGIN: %s\n' % ensure_str(obj['msg']))
-                    msgText += 'GST_MISSING_PLUGIN: %s\n' % ensure_str(obj['msg'])
+                    msgText += self._playerErrorText(key, obj, 'GST_MISSING_PLUGIN: %s\n' % ensure_str(obj['msg']))
 
                 # {u'PLAYBACK_INFO':
                 # {u'isSeeking': False,
@@ -3170,6 +3242,7 @@ class IPTVExtMoviePlayer(Screen):
         self.hideAudioCover()
         self.audioCover['timer_conn'] = None
         self.screenSaver.close()
+        self._removeEmbeddedCover()
         # normally done by onLeavePlayer(); a screen closed another way must not leave the panel's timers / ffprobe
         # and the backdrop's callback bound (both are safe to call twice)
         try:
@@ -3523,7 +3596,7 @@ class IPTVExtMoviePlayer(Screen):
                         cmd += (' "%s=%s" ' % (key, shellQuote(value)))
             cmd += " > /dev/null"
         else:
-            exteplayer3path = "/usr/bin/exteplayer3"  # config.plugins.iptvplayer.exteplayer3path.value
+            exteplayer3path = EXTEPLAYER3_PATH
             cmd = exteplayer3path
             if GraphicSubtitlesSupported(exteplayer3path) and mkdirs(self.graphicSubs['dir']):
                 # image subtitles as PNG files, the rectangles scaled to the screen
@@ -3612,6 +3685,8 @@ class IPTVExtMoviePlayer(Screen):
             printDBG(">>>>>>>>>>>>>>>>>>>>>>>> subtitleTrackIdx[%d]" % subtitleTrackIdx)
             if subtitleTrackIdx >= 0:
                 cmd += ' -9 %d ' % subtitleTrackIdx
+
+            cmd += self._extePlayer3NewOptions(tmpUri)
 
             if audioUri != '':
                 cmd += ' -x "%s" ' % shellQuote(audioUri)
@@ -4096,50 +4171,55 @@ class IPTVExtMoviePlayer(Screen):
             return None
         return self._prescaledPixmap(name, path) or LoadPixmap(path)
 
+    def _declared(self, name):
+        # an optional widget the player skin names: enigma2 8.1 gives a widget the skin does not declare an instance too
+        # (size -1), the classic skins then counted as skins with badges, info row, poster and knob
+        return name in self.skinWidgetNames and self[name].instance is not None
+
     def initInfoBarExtras(self):
         # the backdrop only shows once it is there and wanted (updateBackdrop)
         self['backdrop'].hide()
         if self.backdropStartUrl and backdropMode() != 'off':
             self.setBackdropUrl(self.backdropStartUrl)
         poster = self[self.INFOBAR_POSTER]
-        if poster.instance is not None:
+        if self._declared(self.INFOBAR_POSTER):
             self.infoBarPosterBox = self._rect(poster)
             for path in self.infoBarPosterPaths:
                 if path and os_path.isfile(path):
                     if -1 != poster.decodePreparedCover(path, self.infoBarPosterDecoded, 'infoBarPoster'):
                         break
         for name, fileName in ((self.INFOBAR_POSTER_MASK, 'infobar_poster_mask.png'), (self.INFOBAR_KNOB, 'playback_knob.png')):
-            if self[name].instance is not None:
+            if self._declared(name):
                 pixmap = self._skinPixmap(name, fileName)
                 if pixmap is not None:
                     self[name].setPixmap(pixmap)
                     self.infoBarMaskLoaded = self.infoBarMaskLoaded or name == self.INFOBAR_POSTER_MASK
-        badges = [name for name in self.INFOBAR_BADGES if self[name].instance is not None]
+        badges = [name for name in self.INFOBAR_BADGES if self._declared(name)]
         if badges:
             first = self._rect(self[badges[0]])
             frameName = badges[0] + 'Frame'
-            frame = self._rect(self[frameName]) if self[frameName].instance is not None else None
+            frame = self._rect(self[frameName]) if self._declared(frameName) else None
             border = max(0, first[0] - frame[0]) if frame else 0
             outer = frame or first
             lastName = badges[-1]
-            last = self._rect(self[lastName + 'Frame']) if self[lastName + 'Frame'].instance is not None else self._rect(self[lastName])
+            last = self._rect(self[lastName + 'Frame']) if self._declared(lastName + 'Frame') else self._rect(self[lastName])
             nextOuter = None
             if len(badges) > 1:
                 nextName = badges[1]
-                nextOuter = self._rect(self[nextName + 'Frame']) if self[nextName + 'Frame'].instance is not None else self._rect(self[nextName])
+                nextOuter = self._rect(self[nextName + 'Frame']) if self._declared(nextName + 'Frame') else self._rect(self[nextName])
             gap = nextOuter[0] - outer[0] - outer[2] if nextOuter else 0
-            sub = self._rect(self[badges[0] + 'Sub']) if self[badges[0] + 'Sub'].instance is not None else None
+            sub = self._rect(self[badges[0] + 'Sub']) if self._declared(badges[0] + 'Sub') else None
             self.infoBarBadgeLayout = {'x': outer[0], 'y': outer[1], 'h': first[3], 'border': border, 'gap': max(gap, 4),
                                        'maxX': last[0] + last[2], 'pad': max(3, first[3] // 5),
                                        'subY': sub[1] if sub else 0, 'subH': sub[3] if sub else 0}
         strip = []
         for idx in range(1, 6):
             key, value = self['infoBarStrip%dKey' % idx], self['infoBarStrip%dValue' % idx]
-            if key.instance is not None and value.instance is not None:
+            if self._declared('infoBarStrip%dKey' % idx) and self._declared('infoBarStrip%dValue' % idx):
                 keyRect, valueRect = self._rect(key), self._rect(value)
                 strip.append((idx, keyRect, valueRect[0] + valueRect[2], max(4, keyRect[3] // 5)))
             icon = 'infoBarStrip%dIcon' % idx
-            if icon in self.skinWidgetNames and self[icon].instance is not None:
+            if self._declared(icon):
                 pixmap = self._skinPixmap(icon, 'infobar_strip%d.png' % idx)
                 if pixmap is not None:
                     self[icon].setPixmap(pixmap)
@@ -4298,7 +4378,7 @@ class IPTVExtMoviePlayer(Screen):
 
     def updateInfoBarMeta(self):
         # "Host  ·  1h 29m  ·  Year: 2023  ·  Genre: Drama" - the last parts once INFO loaded the host's page
-        if self[self.INFOBAR_META].instance is None:
+        if not self._declared(self.INFOBAR_META):
             return
         parts = []
         host = hostDisplayName(StripColorCodes(self.infoBarHostTitle or ''))
@@ -4329,7 +4409,7 @@ class IPTVExtMoviePlayer(Screen):
 
     def updateInfoBarKnob(self):
         knob = self[self.INFOBAR_KNOB]
-        if knob.instance is None or self.INFOBAR_KNOB not in self.skinWidgetNames:
+        if not self._declared(self.INFOBAR_KNOB):
             return
         length = self.playback.get('Length') or 0
         if length <= 0 or self['progressBar'].instance is None:
@@ -4580,6 +4660,10 @@ class IPTVExtMoviePlayer(Screen):
                 self.consoleWrite("c\n")
             self.consoleWrite("s%s\n" % arg1)
             self.consoleWrite("sc\n")
+        elif 'PLAYBACK_SET_FORCED_ONLY' == command:
+            self.consoleWrite("so%s\n" % arg1)
+        elif 'PLAYBACK_SET_AUDIO_CHANNEL' == command:
+            self.consoleWrite("am%s\n" % arg1)
         else:
             # All below commands require that 'PLAY ' status,
             # so we first send command to resume playback
@@ -4612,6 +4696,127 @@ class IPTVExtMoviePlayer(Screen):
                 printDBG("IPTVExtMoviePlayer.extPlayerSendCommand unknown command[%s]" % command)
                 return False
         return True
+
+    def _playerErrorText(self, kind, obj, original):
+        # the player's error in plain words (translated) in front of its original message, which stays for the log
+        hint = ''
+        try:
+            hint = playerErrorHint(kind, ensure_str(obj.get('msg', '')), obj.get('code'))
+        except Exception:
+            printExc()
+        return '%s\n%s' % (hint, original) if hint else original
+
+    def _setVideoInfoWithAudio(self):
+        # the video line of a skin without format badges plus the audio format; the first variant that fits the label:
+        # full ("AVC 1920x1080p, 60fps, 16:9, DASH | AAC-LC 2.0"), short codec ("... | AAC 2.0"), without the aspect ratio
+        track = self.playback.get('AudioTrack')
+        audioFull, audioShort = audioFormatText(track), audioFormatText(track, True)
+        streamType = self._getStreamTypeLabel()
+        base, shortBase = self.videoInfoText or streamType, self.videoInfoShortText or streamType
+        if not audioFull:
+            # a track of unknown format: not the format of the track before
+            self['videoInfo'].setText(base or '')
+            return
+        variants = []
+        for video, audio in ((base, audioFull), (base, audioShort), (shortBase, audioShort)):
+            text = '%s | %s' % (video, audio) if video else audio
+            if text not in variants:
+                variants.append(text)
+        label = self['videoInfo']
+        chosen = variants[-1]
+        try:
+            width = label.instance.size().width() if label.instance is not None else 0
+            for text in variants:
+                label.setText(text)
+                if width <= 0 or label.instance.calculateSize().width() <= width:
+                    chosen = text
+                    break
+        except Exception:
+            printExc()
+        label.setText(chosen)
+
+    def _extePlayer3NewOptions(self, tmpUri):
+        # options of exteplayer3 188, each only when the installed player reports it in EPLAYER3_EXTENDED (older
+        # players stop at an option they do not know)
+        opts = ''
+        # resume: the position before the first packet instead of a jump a moment after the start (not while
+        # buffering - the downloaded part decides there - and not for live streams)
+        if self.lastPosition > 10 and self.downloader is None and not tmpUri.meta.get('iptv_livestream') and ExtePlayer3Cap('start'):
+            opts += ' --start %d' % (self.lastPosition - 5)
+            printDBG("IPTVExtMoviePlayer: resume with --start %d" % (self.lastPosition - 5))
+            self.lastPosition = 0
+            # the infobar shows where it goes on, like the jump of the older way did
+            self.showInfoBarAtLength = True
+        if ExtePlayer3Cap('cover'):
+            # the cover embedded in the file (MP3 / FLAC / M4A / MKV): audio poster, screensaver, infobar. A name of
+            # its own per start: Cover skips a file it decoded before (the cover of the title played before)
+            self._removeEmbeddedCover()
+            self.embeddedCoverPath = GetTmpDir('.iptv_embedded_cover_%d.img' % int(time.time() * 1000))
+            opts += ' --cover "%s"' % shellQuote(self.embeddedCoverPath)
+        if ExtePlayer3Cap('forcedonly') and config.plugins.iptvplayer.exteplayer_forced_subtitles.value:
+            opts += ' --forced-only'
+            self.forcedSubtitlesOnly = True
+        xcode = ExtePlayer3Cap('xcode')
+        for value, ac3Opt, eac3Opt in ((config.plugins.iptvplayer.exteplayer_dts_transcode.value, '-Z', '--dts-eac3'),
+                                       (config.plugins.iptvplayer.exteplayer_truehd_transcode.value, '-X', '--truehd-eac3')):
+            if 'eac3' == value and xcode & 4:
+                opts += ' ' + eac3Opt
+            elif value in ('ac3', 'eac3') and xcode & 1:
+                # E-AC-3 without the encoder in this FFmpeg: AC3
+                opts += ' ' + ac3Opt
+        if xcode & 2 and config.plugins.iptvplayer.exteplayer_heaac_transcode.value:
+            opts += ' -Y'
+        if ExtePlayer3Version() >= 188:
+            if '1' == config.plugins.iptvplayer.exteplayer_hls_quality.value:
+                opts += ' -Q 1'
+            if config.plugins.iptvplayer.exteplayer_default_audio_only.value:
+                opts += ' -D 1'
+            if '0x0' != config.plugins.iptvplayer.exteplayer_h264_limit.value:
+                opts += ' -M %s' % config.plugins.iptvplayer.exteplayer_h264_limit.value
+        keys = tmpUri.meta.get('iptv_drm_keys', '')
+        if keys and ExtePlayer3Cap('drmkey') & 1:
+            # CENC (ClearKey) keys of the host, "kid:key" each
+            for pair in keys.split(','):
+                if pair.strip():
+                    opts += ' --key "%s"' % shellQuote(pair.strip())
+        return opts
+
+    def _removeEmbeddedCover(self):
+        # this playback's cover and those a killed player left behind
+        tmpDir = GetTmpDir()
+        try:
+            names = [name for name in os_listdir(tmpDir) if name.startswith('.iptv_embedded_cover')]
+        except Exception:
+            names = []
+        for name in names:
+            try:
+                os_remove(os_path.join(tmpDir, name))
+            except Exception:
+                printExc()
+
+    def embeddedCoverReceived(self, obj):
+        # {"cover": {"file", "type", "w", "h"}} of exteplayer3 --cover, {"cover": {}} when the file has none: the
+        # list row's own picture stays first (not the host's picture for rows without one, e.g. local files), the
+        # embedded one comes before the host logo
+        path = obj.get('file', '') if isinstance(obj, dict) else ''
+        if not path or path != self.embeddedCoverPath or self.isClosing or not os_path.isfile(path):
+            return
+        printDBG("IPTVExtMoviePlayer: embedded cover %s" % obj)
+        index = 0 if self.coverIsDefault else 1
+        for paths in (self.audioCover['paths'], self.infoBarPosterPaths, getattr(self.screenSaver, 'imagePaths', None)):
+            if isinstance(paths, list) and path not in paths:
+                paths.insert(index, path)
+        own = self.audioCover['paths'][0]
+        if index and own and os_path.isfile(own):
+            return
+        self.audioCover['nothing'] = False
+        if self.audioCover['shown']:
+            # the host logo is shown: the cover instead
+            self.audioCover['shown'] = False
+            self.showAudioCover()
+        poster = self[self.INFOBAR_POSTER]
+        if poster.instance is not None and self.infoBarPosterBox is not None:
+            poster.decodePreparedCover(path, self.infoBarPosterDecoded, 'infoBarPoster')
 
     def createSummary(self):
         summary = config.plugins.iptvplayer.extplayer_summary.value

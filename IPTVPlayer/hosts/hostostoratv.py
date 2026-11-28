@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-LAST_MODIFIED = "28.10.2026"
+LAST_MODIFIED = "28.11.2026"
 # Coding: BY MOHAMED_OS
 # Ported to the python3 framework (08.10.2026):
 #   - Ostora TV (Android app): its API (/api/v6.2/main | category/<id>?page=<n>) on hashed *.sa0xx.shop hosts
@@ -9,10 +9,11 @@ LAST_MODIFIED = "28.10.2026"
 #   - a stream row's "source": "<n><F>url" or hoster embeds "url<<R>>referer" joined by "!"; hoster embeds
 #     (player 10: vidara, playmate, savefiles, filemoon, vidmoly, ...) go to urlparser, stream addresses
 #     (HLS / DASH / radio) are played directly with the app's User-Agent
-#   - left out: "url###kid:key" sources (ClearKey-encrypted DASH of Shahid / STC / StarzPlay / ART - no
-#     enigma2 player decrypts them); rows with only such sources are not listed. HLS whose AES key is a
-#     "data:...ENC:" blob (www.manar3.skin channel groups: beIN, Al Kass, ON Sport, ...) is wrapped with a key only
-#     the app knows and segments disguised as PNG -> a clear message instead of a dead player
+#   - "url###kid:key" sources (ClearKey-encrypted DASH of Shahid / STC / StarzPlay / ART): played with an exteplayer3
+#     that decrypts (--key, "drmkey" in EPLAYER3_EXTENDED, version 188), else left out and rows with only such
+#     sources are not listed (keys of other KIDs than the MPD's: "Video with DRM protection.")
+#   - HLS whose AES key is a "data:...ENC:" blob (www.manar3.skin channel groups: beIN, Al Kass, ON Sport, ...) is
+#     wrapped with a key only the app knows and segments disguised as PNG -> a clear message instead of a dead player
 #   - watched flag (series folder -> episodes), favourites (re-open fetches fresh tokens), name normalisation
 #     ("Show - SxxExx" for "الحلقة N" rows), sidecar, INFO via moviemeta (series / films) + the app's data
 # 09.10.2026 (box log): the MBC group (MBC 1-5, Drama, Masr, Iraq, ... on *-prod-dub-ak.akamaized.net /
@@ -100,8 +101,33 @@ def _wrappedKey(data):
         return False
 
 
-def _parseSource(source):
-    # "413<F>url!url<<R>>referer!..." -> [(url, referer, headers)], DRM count
+def _clearKeys(text):
+    # "kid:key" of a "url###kid:key" source (base64 16 bytes each, "," between pairs) -> "kidhex:keyhex,...", "" on failure
+    pairs = []
+    for pair in text.split(","):
+        kid, sep, key = pair.strip().partition(":")
+        try:
+            kid, key = [base64.b64decode(value.replace("-", "+").replace("_", "/") + "=" * (-len(value) % 4)) for value in (kid, key)]
+        except Exception:
+            return ""
+        if not sep or len(kid) != 16 or len(key) != 16:
+            return ""
+        pairs.append("%s:%s" % (ensure_str(base64.b16encode(kid)).lower(), ensure_str(base64.b16encode(key)).lower()))
+    return ",".join(pairs)
+
+
+def _drmPlayable():
+    # exteplayer3 with "drmkey" & 1 in EPLAYER3_EXTENDED decrypts ClearKey (CENC) with --key
+    try:
+        from Plugins.Extensions.IPTVPlayer.tools.iptvtools import ExtePlayer3Cap
+        return bool(ExtePlayer3Cap("drmkey") & 1)
+    except Exception:
+        return False
+
+
+def _parseSource(source, drmPlayable=False):
+    # "413<F>url!url<<R>>referer!..." -> [(url, referer, meta)], DRM count; meta: the url's headers (Referer,
+    # User-Agent, Origin) and for "url###kid:key" (ClearKey, only with drmPlayable) its keys as "iptv_drm_keys"
     links, drm = [], 0
     for part in (source or "").split("!"):
         part = part.replace("\r", "").strip()
@@ -109,18 +135,22 @@ def _parseSource(source):
             part = part.split("<F>", 1)[1].strip()
         url, _sep, referer = part.partition("<<R>>")
         url, referer = url.strip(), referer.strip()
+        keys = ""
         if "###" in url:
-            drm += 1
-            continue
-        headers = {}
+            url, _sep, keys = url.partition("###")
+            keys = _clearKeys(keys) if drmPlayable else ""
+            if not keys:
+                drm += 1
+                continue
+        meta = {"iptv_drm_keys": keys} if keys else {}
         if "|" in url:
             url, extra = url.split("|", 1)
             for pair in extra.split("&"):
                 key, sep, value = pair.partition("=")
                 if sep and key.strip() in ("Referer", "User-Agent", "Origin"):
-                    headers[key.strip()] = value.strip()
+                    meta[key.strip()] = value.strip()
         if url.startswith("http"):
-            links.append((url, referer, headers))
+            links.append((url, referer, meta))
     return links, drm
 
 
@@ -195,9 +225,9 @@ class OstoraTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 self.addDir({"name": "category", "category": "os_top", "good_for_fav": True, "title": entry["name"].strip(),
                              "cat_id": str(entry["id"]), "level": 0, "icon": self._icon(entry.get("image")) or self.DEFAULT_ICON_URL})
 
-    def _streamRow(self, cItem, entry, apiPage, normalize):
+    def _streamRow(self, cItem, entry, apiPage, normalize, drmPlayable):
         name = (entry.get("name") or "").replace("\r", "").strip()
-        links, drm = _parseSource(entry.get("source"))
+        links, drm = _parseSource(entry.get("source"), drmPlayable)
         if not name or (drm and not links):
             return None
         kind = entry.get("type") or "live"
@@ -227,11 +257,13 @@ class OstoraTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
         data = self._category(cItem["cat_id"], apiPage)
         entries = [e for e in data.get("items") or [] if isinstance(e, dict)]
         normalize = IsMediaNamingNormalized()
+        # once per page, not for each of its rows
+        drmPlayable = _drmPlayable()
         titles = {}
         listed = drmOnly = 0
         for entry in entries[offset:offset + PAGE_SIZE]:
             if "source" in entry:
-                row = self._streamRow(cItem, entry, apiPage, normalize)
+                row = self._streamRow(cItem, entry, apiPage, normalize, drmPlayable)
                 if not row and "###" in str(entry.get("source", "")):
                     drmOnly += 1
                 if row:
@@ -273,12 +305,12 @@ class OstoraTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     def getLinksForVideo(self, cItem):
         printDBG("OstoraTV.getLinksForVideo [%s/%s]" % (cItem.get("cat_id", ""), cItem.get("item_id", "")))
-        links, drm = _parseSource(self._freshSource(cItem))
+        links, drm = _parseSource(self._freshSource(cItem), _drmPlayable())
         agent = cItem.get("agent") or self.HEADER.get("User-Agent")
         live = cItem.get("kind") == "live"
         urltab = []
-        for url, referer, headers in links:
-            meta = dict(headers)
+        for url, referer, linkMeta in links:
+            meta = dict(linkMeta)
             meta.setdefault("User-Agent", agent)
             if referer:
                 meta["Referer"] = referer
@@ -358,7 +390,7 @@ class OstoraTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
                 meta = getMeta(cItem["meta_type"], cItem["meta_title"], "", skip)
             except Exception:
                 printExc()
-        links = _parseSource(cItem.get("source", ""))[0]
+        links = _parseSource(cItem.get("source", ""), _drmPlayable())[0]
         info = dict(meta.get("info", {}))
         if cItem.get("cat_title"):
             info.setdefault("genre", cItem["cat_title"])

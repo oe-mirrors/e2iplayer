@@ -9,7 +9,7 @@
 ###################################################
 
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, \
-                                                          IsExecutable, CFakeMoviePlayerOption, GetCookieDir, GetJSCacheDir, \
+                                                          IsExecutable, CFakeMoviePlayerOption, GetCookieDir, GetJSCacheDir, EXTEPLAYER3_PATH, \
                                                           GetSubtitlesDir, GetMovieMetaDataDir, RemoveDirContents, RemoveAllDirsIconsFromPath, \
                                                           GetSearchHistoryDir, GetFavouritesDir, GetWatchedDir, GetMoviePlayerPerHostDir, GetHostOrderDir, IsPathSafeToWipe, \
                                                           IsSameDir, IsSameOrSubDir, IsRealStoragePresent, FreeSpace, formatBytes, GetPluginDir
@@ -1142,7 +1142,7 @@ def GetAvailableMoviePlayers():
     # blue-key menu (lists every one of these directly, not just the two
     # configured slots)
     availablePlayers = []
-    if IsExecutable("/usr/bin/exteplayer3"):  # config.plugins.iptvplayer.exteplayer3path.value):
+    if IsExecutable(EXTEPLAYER3_PATH):
         availablePlayers.append('exteplayer')
     if IsExecutable('/usr/bin/gstplayer') or IsExecutable('/usr/bin/gstplayer2'):
         availablePlayers.append('extgstplayer')

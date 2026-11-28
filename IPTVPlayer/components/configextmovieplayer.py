@@ -9,7 +9,7 @@
 ###################################################
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, \
                                                           GetE2VideoAspectChoices, GetE2VideoPolicyChoices, \
-                                                          GetE2VideoPolicy, GetE2AudioCodecMixChoices
+                                                          GetE2VideoPolicy, GetE2AudioCodecMixChoices, ExtePlayer3Cap, ExtePlayer3Version
 from Plugins.Extensions.IPTVPlayer.components.configbase import ConfigBaseWidget
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 ###################################################
@@ -252,6 +252,13 @@ class ConfigExtMoviePlayer(ConfigBaseWidget, ConfigExtMoviePlayerBase):
         valTab.append(config.plugins.iptvplayer.mp3_software_decode.value)
         valTab.append(config.plugins.iptvplayer.software_decode_as.value)
         valTab.append(config.plugins.iptvplayer.stereo_software_decode.value)
+        valTab.append(config.plugins.iptvplayer.exteplayer_dts_transcode.value)
+        valTab.append(config.plugins.iptvplayer.exteplayer_truehd_transcode.value)
+        valTab.append(config.plugins.iptvplayer.exteplayer_heaac_transcode.value)
+        valTab.append(config.plugins.iptvplayer.exteplayer_forced_subtitles.value)
+        valTab.append(config.plugins.iptvplayer.exteplayer_hls_quality.value)
+        valTab.append(config.plugins.iptvplayer.exteplayer_default_audio_only.value)
+        valTab.append(config.plugins.iptvplayer.exteplayer_h264_limit.value)
         valTab.append(config.plugins.iptvplayer.ac3_mix.value)
         valTab.append(config.plugins.iptvplayer.aac_mix.value)
         valTab.append(config.plugins.iptvplayer.extplayer_subtitle_wrapping_enabled.value)
@@ -278,6 +285,25 @@ class ConfigExtMoviePlayer(ConfigBaseWidget, ConfigExtMoviePlayerBase):
         list.append(getConfigListEntry("    " + _("Use software decoder for the %s") % 'MP3', config.plugins.iptvplayer.mp3_software_decode))
         list.append(getConfigListEntry("    " + _("Software decoding as"), config.plugins.iptvplayer.software_decode_as))
         list.append(getConfigListEntry("    " + _("Stereo downmix mode for software decoder"), config.plugins.iptvplayer.stereo_software_decode))
+        # exteplayer3 188: only what the installed player reports (EPLAYER3_EXTENDED)
+        xcode = ExtePlayer3Cap('xcode')
+        if xcode & 1:
+            for item in (config.plugins.iptvplayer.exteplayer_dts_transcode, config.plugins.iptvplayer.exteplayer_truehd_transcode):
+                if not xcode & 4:
+                    # no E-AC-3 encoder in this player's FFmpeg: only AC3 (a saved E-AC-3 plays as AC3 anyway)
+                    value = 'ac3' if item.value == 'eac3' else item.value
+                    item.setChoices([("off", _("Off")), ("ac3", "AC3 5.1")], default="off")
+                    item.value = value
+            list.append(getConfigListEntry("    " + _("Convert %s to") % 'DTS', config.plugins.iptvplayer.exteplayer_dts_transcode))
+            list.append(getConfigListEntry("    " + _("Convert %s to") % 'TrueHD', config.plugins.iptvplayer.exteplayer_truehd_transcode))
+        if xcode & 2:
+            list.append(getConfigListEntry("    " + _("Convert %s to %s") % ('HE-AAC', 'AAC-LC'), config.plugins.iptvplayer.exteplayer_heaac_transcode))
+        if ExtePlayer3Cap('forcedonly'):
+            list.append(getConfigListEntry("    " + _("Only forced subtitles"), config.plugins.iptvplayer.exteplayer_forced_subtitles))
+        if ExtePlayer3Version() >= 188:
+            list.append(getConfigListEntry("    " + _("HLS/DASH quality chosen by the player"), config.plugins.iptvplayer.exteplayer_hls_quality))
+            list.append(getConfigListEntry("    " + _("Only the default audio of HLS streams"), config.plugins.iptvplayer.exteplayer_default_audio_only))
+            list.append(getConfigListEntry("    " + _("Resolution limit for H.264"), config.plugins.iptvplayer.exteplayer_h264_limit))
         if self.ac3_mix_avaliable:
             list.append(getConfigListEntry(_("AC3 downmix mode"), config.plugins.iptvplayer.ac3_mix))
         if self.aac_mix_avaliable:
