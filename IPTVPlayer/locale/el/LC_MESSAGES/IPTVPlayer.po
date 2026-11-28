@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-27 22:41+0000\n"
+"POT-Creation-Date: 2026-11-28 14:01+0000\n"
 "PO-Revision-Date: 2026-11-28 02:04+0200\n"
 "Last-Translator: \n"
 "Language-Team: giorbak\n"
@@ -379,6 +379,9 @@ msgstr "30 δευτερόλεπτα"
 
 msgid "5 seconds"
 msgstr "5 δευτερόλεπτα"
+
+msgid "A GStreamer plugin for this format is missing."
+msgstr ""
 
 #, python-format
 msgid "A folder \"%s\" exists already."
@@ -1330,6 +1333,14 @@ msgstr "Συνέχεια"
 msgid "Continue downloading"
 msgstr "Συνέχιση λήψης"
 
+#, python-format
+msgid "Convert %s to"
+msgstr ""
+
+#, python-format
+msgid "Convert %s to %s"
+msgstr ""
+
 msgid "Cooking"
 msgstr "Μαγειρική"
 
@@ -1901,6 +1912,9 @@ msgstr "Δράμα"
 
 msgid "Dramas (Asian)"
 msgstr "Δράματα (Ασιατικά)"
+
+msgid "Dual mono"
+msgstr ""
 
 msgid "Dubbed"
 msgstr "Με μεταγλώττιση"
@@ -2723,6 +2737,9 @@ msgstr "ΚΡΥΦΗ ΚΑΜΕΡΑ ΣΕ ΕΞΕΛΙΞΗ. ΔΟΚΙΜΑΣΤΕ ΞΑΝΑ
 msgid "HLS with subtitles"
 msgstr "HLS με υπότιτλους"
 
+msgid "HLS/DASH quality chosen by the player"
+msgstr ""
+
 msgid "HLS/m3u8"
 msgstr "HLS/m3u8"
 
@@ -3504,6 +3521,9 @@ msgstr "Αγαπημένα κομμάτια"
 msgid "Low"
 msgstr "Χαμηλό"
 
+msgid "Lowest"
+msgstr ""
+
 msgid "MENU"
 msgstr "MENU"
 
@@ -4133,6 +4153,9 @@ msgstr "Διαθέσιμο μόνο σε %s"
 msgid "Only files in the downloads folder can be deleted."
 msgstr "Μόνο αρχεία στον φάκελο λήψεων μπορούν να διαγραφούν."
 
+msgid "Only forced subtitles"
+msgstr ""
+
 msgid "Only from the host"
 msgstr "Μόνο από τον host"
 
@@ -4146,6 +4169,9 @@ msgstr "Φορτώθηκαν μόνο μέχρι το %s"
 #, python-format
 msgid "Only the %d oldest new commits are shown"
 msgstr "Εμφανίζονται μόνο τα %d παλαιότερα νέα commits"
+
+msgid "Only the default audio of HLS streams"
+msgstr ""
 
 msgid "Only the sites that failed in the last run, same checks."
 msgstr "Μόνο οι ιστότοποι που απέτυχαν στην τελευταία εκτέλεση, με τους ίδιους ελέγχους."
@@ -4936,6 +4962,9 @@ msgstr "Επαναφορά περιβάλλοντος ιστού"
 msgid "Resolution"
 msgstr "Ανάλυση"
 
+msgid "Resolution limit for H.264"
+msgstr ""
+
 #, python-format
 msgid ""
 "Resolving hCaptcha with %s failed!\n"
@@ -5657,6 +5686,9 @@ msgstr "Κατάσταση:"
 msgid "Status: %s"
 msgstr "Κατάσταση: %s"
 
+msgid "Stereo"
+msgstr ""
+
 msgid "Stereo downmix mode for software decoder"
 msgstr "Λειτουργία στερεοφωνικής μίξης για αποκωδικοποιητή λογισμικού"
 
@@ -6038,6 +6070,9 @@ msgstr "Χρώμα του προβαλλόμενου στοιχείου"
 msgid "The connection limit for your weeb.tv account has been reached."
 msgstr "Έχει επιτευχθεί το όριο συνδέσεων για τον λογαριασμό σας στο weeb.tv."
 
+msgid "The connection to the server was interrupted."
+msgstr ""
+
 msgid "The daily download limit is reached."
 msgstr "Έγινε υπέρβαση του ημερήσιου ορίου λήψεων."
 
@@ -6150,6 +6185,9 @@ msgstr ""
 "Θα αποθηκευτεί στο αρχείο:\n"
 "\"%s\""
 
+msgid "The player cannot play this format."
+msgstr ""
+
 msgid "The portal denied access to this entry."
 msgstr "Η πύλη αρνήθηκε την πρόσβαση σε αυτή την καταχώριση."
 
@@ -6187,6 +6225,10 @@ msgstr "Τα αποτελέσματα των %d από %d ιστότοπους �
 
 msgid "The same item already exists in this group."
 msgstr "Το ίδιο στοιχείο υπάρχει ήδη σε αυτή την ομάδα."
+
+#, python-format
+msgid "The server answers with an error (HTTP %s)."
+msgstr ""
 
 msgid "The server did not return a subtitle file (download limit reached?)."
 msgstr "Ο διακομιστής δεν επέστρεψε αρχείο υποτίτλων (συμπληρώθηκε το όριο λήψεων;)."
@@ -6227,6 +6269,9 @@ msgstr "Δεν ήταν δυνατή η φόρτωση του καταλόγου
 
 msgid "The site's web player key could not be read - please try again later."
 msgstr "Δεν ήταν δυνατή η ανάγνωση του κλειδιού του προγράμματος αναπαραγωγής του ιστότοπου - Παρακαλώ δοκιμάστε ξανά αργότερα."
+
+msgid "The stream data cannot be read."
+msgstr ""
 
 msgid "The stream server does not answer at the moment. Try another link or later."
 msgstr "Ο διακομιστής ροής δεν αποκρίνεται αυτή τη στιγμή. Δοκιμάστε έναν άλλο σύνδεσμο ή αργότερα."

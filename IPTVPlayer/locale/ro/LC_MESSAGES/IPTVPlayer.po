@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-27 22:41+0000\n"
+"POT-Creation-Date: 2026-11-28 14:01+0000\n"
 "PO-Revision-Date: 2026-10-08 20:17+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Romanian\n"
@@ -373,6 +373,9 @@ msgstr "30 de secunde"
 
 msgid "5 seconds"
 msgstr "5 secunde"
+
+msgid "A GStreamer plugin for this format is missing."
+msgstr ""
 
 #, python-format
 msgid "A folder \"%s\" exists already."
@@ -1324,6 +1327,14 @@ msgstr "Continuare"
 msgid "Continue downloading"
 msgstr "Continuați descărcarea"
 
+#, python-format
+msgid "Convert %s to"
+msgstr ""
+
+#, python-format
+msgid "Convert %s to %s"
+msgstr ""
+
 msgid "Cooking"
 msgstr "Gătit"
 
@@ -1895,6 +1906,9 @@ msgstr "Dramă"
 
 msgid "Dramas (Asian)"
 msgstr "Drame (asiatice)"
+
+msgid "Dual mono"
+msgstr ""
 
 msgid "Dubbed"
 msgstr "Dublat"
@@ -2717,6 +2731,9 @@ msgstr "SHOW CAM ASCUNS ÎN DESFĂȘURARE. ÎNCERCAȚI DIN NOU MAI TÂRZIU!"
 msgid "HLS with subtitles"
 msgstr "HLS cu subtitrări"
 
+msgid "HLS/DASH quality chosen by the player"
+msgstr ""
+
 msgid "HLS/m3u8"
 msgstr "HLS/m3u8"
 
@@ -3498,6 +3515,9 @@ msgstr "Piese preferate"
 msgid "Low"
 msgstr "Scăzută"
 
+msgid "Lowest"
+msgstr ""
+
 msgid "MENU"
 msgstr "MENU"
 
@@ -4127,6 +4147,9 @@ msgstr "Disponibil doar în %s"
 msgid "Only files in the downloads folder can be deleted."
 msgstr "Doar fișierele din folderul de descărcări pot fi șterse."
 
+msgid "Only forced subtitles"
+msgstr ""
+
 msgid "Only from the host"
 msgstr ""
 
@@ -4140,6 +4163,9 @@ msgstr ""
 #, python-format
 msgid "Only the %d oldest new commits are shown"
 msgstr "Sunt afișate doar cele mai vechi %d commituri noi"
+
+msgid "Only the default audio of HLS streams"
+msgstr ""
 
 msgid "Only the sites that failed in the last run, same checks."
 msgstr "Doar site-urile care au eșuat la ultima rulare, cu aceleași verificări."
@@ -4930,6 +4956,9 @@ msgstr "Resetați interfața web"
 msgid "Resolution"
 msgstr ""
 
+msgid "Resolution limit for H.264"
+msgstr ""
+
 #, python-format
 msgid ""
 "Resolving hCaptcha with %s failed!\n"
@@ -5651,6 +5680,9 @@ msgstr "Stare:"
 msgid "Status: %s"
 msgstr "Stare: %s"
 
+msgid "Stereo"
+msgstr ""
+
 msgid "Stereo downmix mode for software decoder"
 msgstr "Mod downmix stereo pentru decodorul software"
 
@@ -6032,6 +6064,9 @@ msgstr "Culoarea elementului vizionat"
 msgid "The connection limit for your weeb.tv account has been reached."
 msgstr "Limita de conexiuni pentru contul dvs. weeb.tv a fost atinsă."
 
+msgid "The connection to the server was interrupted."
+msgstr ""
+
 msgid "The daily download limit is reached."
 msgstr "Limita zilnică de descărcare a fost atinsă."
 
@@ -6144,6 +6179,9 @@ msgstr ""
 "Va fi salvat în fișierul:\n"
 "\"%s\""
 
+msgid "The player cannot play this format."
+msgstr ""
+
 msgid "The portal denied access to this entry."
 msgstr ""
 
@@ -6176,6 +6214,10 @@ msgstr "Rezultatele a %d din %d site-uri provin din ultima căutare pentru \"%s\
 
 msgid "The same item already exists in this group."
 msgstr "Același element există deja în acest grup."
+
+#, python-format
+msgid "The server answers with an error (HTTP %s)."
+msgstr ""
 
 msgid "The server did not return a subtitle file (download limit reached?)."
 msgstr "Serverul nu a returnat un fișier de subtitrare (limita de descărcare atinsă?)."
@@ -6215,6 +6257,9 @@ msgid "The site's catalogue could not be loaded."
 msgstr "Catalogul site-ului nu a putut fi încărcat."
 
 msgid "The site's web player key could not be read - please try again later."
+msgstr ""
+
+msgid "The stream data cannot be read."
 msgstr ""
 
 msgid "The stream server does not answer at the moment. Try another link or later."

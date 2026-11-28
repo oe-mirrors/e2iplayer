@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-27 22:41+0000\n"
+"POT-Creation-Date: 2026-11-28 14:01+0000\n"
 "PO-Revision-Date: 2026-07-27 16:49+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -378,6 +378,9 @@ msgstr "30 másodperc"
 
 msgid "5 seconds"
 msgstr "5 másodperc"
+
+msgid "A GStreamer plugin for this format is missing."
+msgstr ""
 
 #, python-format
 msgid "A folder \"%s\" exists already."
@@ -1331,6 +1334,14 @@ msgstr "Folytatás"
 msgid "Continue downloading"
 msgstr "Letöltés folytatása"
 
+#, python-format
+msgid "Convert %s to"
+msgstr ""
+
+#, python-format
+msgid "Convert %s to %s"
+msgstr ""
+
 msgid "Cooking"
 msgstr "Főzés"
 
@@ -1902,6 +1913,9 @@ msgstr "Dráma"
 
 msgid "Dramas (Asian)"
 msgstr "Drámák (ázsiai)"
+
+msgid "Dual mono"
+msgstr ""
 
 msgid "Dubbed"
 msgstr "Szinkronizált"
@@ -2725,6 +2739,9 @@ msgstr "REJTETT KAMERÁS SHOW FOLYAMATBAN. PRÓBÁLJA ÚJRA KÉSŐBB!"
 msgid "HLS with subtitles"
 msgstr "HLS feliratokkal"
 
+msgid "HLS/DASH quality chosen by the player"
+msgstr ""
+
 msgid "HLS/m3u8"
 msgstr "HLS/m3u8"
 
@@ -3506,6 +3523,9 @@ msgstr "Kedvelt számok"
 msgid "Low"
 msgstr "Alacsony"
 
+msgid "Lowest"
+msgstr ""
+
 msgid "MENU"
 msgstr "MENÜ"
 
@@ -4135,6 +4155,9 @@ msgstr "Csak itt érhető el: %s"
 msgid "Only files in the downloads folder can be deleted."
 msgstr "Csak a letöltési mappában lévő fájlok törölhetők."
 
+msgid "Only forced subtitles"
+msgstr ""
+
 msgid "Only from the host"
 msgstr ""
 
@@ -4148,6 +4171,9 @@ msgstr ""
 #, python-format
 msgid "Only the %d oldest new commits are shown"
 msgstr "Csak a %d legrégebbi új commit látható"
+
+msgid "Only the default audio of HLS streams"
+msgstr ""
 
 msgid "Only the sites that failed in the last run, same checks."
 msgstr "Csak a legutóbbi futtatáskor hibás oldalak, ugyanazokkal az ellenőrzésekkel."
@@ -4938,6 +4964,9 @@ msgstr "Webes felület visszaállítása"
 msgid "Resolution"
 msgstr ""
 
+msgid "Resolution limit for H.264"
+msgstr ""
+
 #, python-format
 msgid ""
 "Resolving hCaptcha with %s failed!\n"
@@ -5659,6 +5688,9 @@ msgstr "Állapot:"
 msgid "Status: %s"
 msgstr "Állapot: %s"
 
+msgid "Stereo"
+msgstr ""
+
 msgid "Stereo downmix mode for software decoder"
 msgstr "Sztereó lekeverési mód szoftveres dekóderhez"
 
@@ -6041,6 +6073,9 @@ msgstr "A megtekintett elem színe"
 msgid "The connection limit for your weeb.tv account has been reached."
 msgstr "Elérte a weeb.tv-fiókja kapcsolatkorlátját."
 
+msgid "The connection to the server was interrupted."
+msgstr ""
+
 msgid "The daily download limit is reached."
 msgstr "A napi letöltési korlát elérve."
 
@@ -6153,6 +6188,9 @@ msgstr ""
 "A következő fájlba lesz mentve:\n"
 "\"%s\""
 
+msgid "The player cannot play this format."
+msgstr ""
+
 msgid "The portal denied access to this entry."
 msgstr ""
 
@@ -6185,6 +6223,10 @@ msgstr "%d / %d oldal eredményei a(z) \"%s\" utolsó kereséséből származnak
 
 msgid "The same item already exists in this group."
 msgstr "Ugyanez az elem már létezik ebben a csoportban."
+
+#, python-format
+msgid "The server answers with an error (HTTP %s)."
+msgstr ""
 
 msgid "The server did not return a subtitle file (download limit reached?)."
 msgstr "A szerver nem adott vissza feliratfájlt (elérte a letöltési korlátot?)."
@@ -6224,6 +6266,9 @@ msgid "The site's catalogue could not be loaded."
 msgstr "Az oldal katalógusa nem tölthető be."
 
 msgid "The site's web player key could not be read - please try again later."
+msgstr ""
+
+msgid "The stream data cannot be read."
 msgstr ""
 
 msgid "The stream server does not answer at the moment. Try another link or later."

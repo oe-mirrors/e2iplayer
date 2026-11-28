@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-27 22:41+0000\n"
+"POT-Creation-Date: 2026-11-28 14:01+0000\n"
 "PO-Revision-Date: 2026-07-27 16:55+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -378,6 +378,9 @@ msgstr "30 секунд"
 
 msgid "5 seconds"
 msgstr "5 секунд"
+
+msgid "A GStreamer plugin for this format is missing."
+msgstr ""
 
 #, python-format
 msgid "A folder \"%s\" exists already."
@@ -1329,6 +1332,14 @@ msgstr "Продолжить"
 msgid "Continue downloading"
 msgstr "Продолжить загрузку"
 
+#, python-format
+msgid "Convert %s to"
+msgstr ""
+
+#, python-format
+msgid "Convert %s to %s"
+msgstr ""
+
 msgid "Cooking"
 msgstr "Кулинария"
 
@@ -1900,6 +1911,9 @@ msgstr "Драма"
 
 msgid "Dramas (Asian)"
 msgstr "Дорамы (азиатские)"
+
+msgid "Dual mono"
+msgstr ""
 
 msgid "Dubbed"
 msgstr "Дубляж"
@@ -2723,6 +2737,9 @@ msgstr "СКРЫТОЕ CAM-ШОУ В ПРОЦЕССЕ. ПОПРОБУЙТЕ ПО
 msgid "HLS with subtitles"
 msgstr "HLS с субтитрами"
 
+msgid "HLS/DASH quality chosen by the player"
+msgstr ""
+
 msgid "HLS/m3u8"
 msgstr "HLS/m3u8"
 
@@ -3504,6 +3521,9 @@ msgstr "Любимые треки"
 msgid "Low"
 msgstr "Низкий"
 
+msgid "Lowest"
+msgstr ""
+
 msgid "MENU"
 msgstr "МЕНЮ"
 
@@ -4134,6 +4154,9 @@ msgstr "Доступно только в %s"
 msgid "Only files in the downloads folder can be deleted."
 msgstr "Удалять можно только файлы в папке загрузок."
 
+msgid "Only forced subtitles"
+msgstr ""
+
 msgid "Only from the host"
 msgstr ""
 
@@ -4147,6 +4170,9 @@ msgstr ""
 #, python-format
 msgid "Only the %d oldest new commits are shown"
 msgstr "Показаны только %d самых старых новых коммитов"
+
+msgid "Only the default audio of HLS streams"
+msgstr ""
 
 msgid "Only the sites that failed in the last run, same checks."
 msgstr "Только сайты, не прошедшие проверку в прошлом запуске, с теми же проверками."
@@ -4938,6 +4964,9 @@ msgstr "Сбросить веб-интерфейс"
 msgid "Resolution"
 msgstr ""
 
+msgid "Resolution limit for H.264"
+msgstr ""
+
 #, python-format
 msgid ""
 "Resolving hCaptcha with %s failed!\n"
@@ -5659,6 +5688,9 @@ msgstr "Статус:"
 msgid "Status: %s"
 msgstr "Статус: %s"
 
+msgid "Stereo"
+msgstr ""
+
 msgid "Stereo downmix mode for software decoder"
 msgstr "Режим стереопонижающего микширования для программного декодера"
 
@@ -6040,6 +6072,9 @@ msgstr "Цвет просмотренного элемента"
 msgid "The connection limit for your weeb.tv account has been reached."
 msgstr "Достигнут лимит подключений для вашего аккаунта weeb.tv."
 
+msgid "The connection to the server was interrupted."
+msgstr ""
+
 msgid "The daily download limit is reached."
 msgstr "Достигнут дневной лимит загрузок."
 
@@ -6152,6 +6187,9 @@ msgstr ""
 "Он будет сохранен в файле:\n"
 "\"%s\""
 
+msgid "The player cannot play this format."
+msgstr ""
+
 msgid "The portal denied access to this entry."
 msgstr ""
 
@@ -6184,6 +6222,10 @@ msgstr "Результаты %d из %d сайтов взяты из после�
 
 msgid "The same item already exists in this group."
 msgstr "Этот же элемент уже существует в этой группе."
+
+#, python-format
+msgid "The server answers with an error (HTTP %s)."
+msgstr ""
 
 msgid "The server did not return a subtitle file (download limit reached?)."
 msgstr "Сервер не вернул файл субтитров (достигнут лимит загрузок?)."
@@ -6223,6 +6265,9 @@ msgid "The site's catalogue could not be loaded."
 msgstr "Не удалось загрузить каталог сайта."
 
 msgid "The site's web player key could not be read - please try again later."
+msgstr ""
+
+msgid "The stream data cannot be read."
 msgstr ""
 
 msgid "The stream server does not answer at the moment. Try another link or later."

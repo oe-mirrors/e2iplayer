@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-27 22:41+0000\n"
+"POT-Creation-Date: 2026-11-28 14:01+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -369,6 +369,9 @@ msgid "30 seconds"
 msgstr ""
 
 msgid "5 seconds"
+msgstr ""
+
+msgid "A GStreamer plugin for this format is missing."
 msgstr ""
 
 #, python-format
@@ -1312,6 +1315,14 @@ msgstr ""
 msgid "Continue downloading"
 msgstr ""
 
+#, python-format
+msgid "Convert %s to"
+msgstr ""
+
+#, python-format
+msgid "Convert %s to %s"
+msgstr ""
+
 msgid "Cooking"
 msgstr ""
 
@@ -1863,6 +1874,9 @@ msgid "Drama"
 msgstr ""
 
 msgid "Dramas (Asian)"
+msgstr ""
+
+msgid "Dual mono"
 msgstr ""
 
 msgid "Dubbed"
@@ -2676,6 +2690,9 @@ msgstr ""
 msgid "HLS with subtitles"
 msgstr ""
 
+msgid "HLS/DASH quality chosen by the player"
+msgstr ""
+
 msgid "HLS/m3u8"
 msgstr ""
 
@@ -3447,6 +3464,9 @@ msgstr ""
 msgid "Low"
 msgstr ""
 
+msgid "Lowest"
+msgstr ""
+
 msgid "MENU"
 msgstr ""
 
@@ -4065,6 +4085,9 @@ msgstr ""
 msgid "Only files in the downloads folder can be deleted."
 msgstr ""
 
+msgid "Only forced subtitles"
+msgstr ""
+
 msgid "Only from the host"
 msgstr ""
 
@@ -4077,6 +4100,9 @@ msgstr ""
 
 #, python-format
 msgid "Only the %d oldest new commits are shown"
+msgstr ""
+
+msgid "Only the default audio of HLS streams"
 msgstr ""
 
 msgid "Only the sites that failed in the last run, same checks."
@@ -4863,6 +4889,9 @@ msgstr ""
 msgid "Resolution"
 msgstr ""
 
+msgid "Resolution limit for H.264"
+msgstr ""
+
 #, python-format
 msgid ""
 "Resolving hCaptcha with %s failed!\n"
@@ -5574,6 +5603,9 @@ msgstr ""
 msgid "Status: %s"
 msgstr ""
 
+msgid "Stereo"
+msgstr ""
+
 msgid "Stereo downmix mode for software decoder"
 msgstr ""
 
@@ -5941,6 +5973,9 @@ msgstr ""
 msgid "The connection limit for your weeb.tv account has been reached."
 msgstr ""
 
+msgid "The connection to the server was interrupted."
+msgstr ""
+
 msgid "The daily download limit is reached."
 msgstr ""
 
@@ -6043,6 +6078,9 @@ msgid ""
 "\"%s\""
 msgstr ""
 
+msgid "The player cannot play this format."
+msgstr ""
+
 msgid "The portal denied access to this entry."
 msgstr ""
 
@@ -6074,6 +6112,10 @@ msgid "The results of %d of %d sites are from the last search for \"%s\" - this 
 msgstr ""
 
 msgid "The same item already exists in this group."
+msgstr ""
+
+#, python-format
+msgid "The server answers with an error (HTTP %s)."
 msgstr ""
 
 msgid "The server did not return a subtitle file (download limit reached?)."
@@ -6114,6 +6156,9 @@ msgid "The site's catalogue could not be loaded."
 msgstr ""
 
 msgid "The site's web player key could not be read - please try again later."
+msgstr ""
+
+msgid "The stream data cannot be read."
 msgstr ""
 
 msgid "The stream server does not answer at the moment. Try another link or later."

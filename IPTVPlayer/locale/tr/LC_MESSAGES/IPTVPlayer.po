@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-27 22:41+0000\n"
+"POT-Creation-Date: 2026-11-28 14:01+0000\n"
 "PO-Revision-Date: 2026-03-13 15:06+0300\n"
 "Last-Translator: audi06_19 <audi06_19@hotmail.com>\n"
 "Language-Team: Turkish\n"
@@ -374,6 +374,9 @@ msgstr "30 saniye"
 
 msgid "5 seconds"
 msgstr "5 saniye"
+
+msgid "A GStreamer plugin for this format is missing."
+msgstr ""
 
 #, python-format
 msgid "A folder \"%s\" exists already."
@@ -1325,6 +1328,14 @@ msgstr "Devam"
 msgid "Continue downloading"
 msgstr "İndirmeye devam et"
 
+#, python-format
+msgid "Convert %s to"
+msgstr ""
+
+#, python-format
+msgid "Convert %s to %s"
+msgstr ""
+
 msgid "Cooking"
 msgstr "Yemek"
 
@@ -1896,6 +1907,9 @@ msgstr "Dram"
 
 msgid "Dramas (Asian)"
 msgstr "Diziler (Asya)"
+
+msgid "Dual mono"
+msgstr ""
 
 msgid "Dubbed"
 msgstr "Dublajlı"
@@ -2718,6 +2732,9 @@ msgstr "GİZLİ KAMERA ŞOVU DEVAM EDİYOR. DAHA SONRA TEKRAR DENEYİN!"
 msgid "HLS with subtitles"
 msgstr "Altyazılı HLS"
 
+msgid "HLS/DASH quality chosen by the player"
+msgstr ""
+
 msgid "HLS/m3u8"
 msgstr "HLS/m3u8"
 
@@ -3499,6 +3516,9 @@ msgstr "Sevilen parçalar"
 msgid "Low"
 msgstr "Düşük"
 
+msgid "Lowest"
+msgstr ""
+
 msgid "MENU"
 msgstr "MENÜ"
 
@@ -4128,6 +4148,9 @@ msgstr "Yalnızca %s içinde mevcut"
 msgid "Only files in the downloads folder can be deleted."
 msgstr "Yalnızca indirme klasöründeki dosyalar silinebilir."
 
+msgid "Only forced subtitles"
+msgstr ""
+
 msgid "Only from the host"
 msgstr ""
 
@@ -4141,6 +4164,9 @@ msgstr ""
 #, python-format
 msgid "Only the %d oldest new commits are shown"
 msgstr "Yalnızca en eski %d yeni commit gösteriliyor"
+
+msgid "Only the default audio of HLS streams"
+msgstr ""
 
 msgid "Only the sites that failed in the last run, same checks."
 msgstr "Yalnızca son çalıştırmada başarısız olan siteler, aynı kontroller."
@@ -4931,6 +4957,9 @@ msgstr "Web arayüzünü sıfırla"
 msgid "Resolution"
 msgstr ""
 
+msgid "Resolution limit for H.264"
+msgstr ""
+
 #, python-format
 msgid ""
 "Resolving hCaptcha with %s failed!\n"
@@ -5652,6 +5681,9 @@ msgstr "Durum:"
 msgid "Status: %s"
 msgstr "Durum: %s"
 
+msgid "Stereo"
+msgstr ""
+
 msgid "Stereo downmix mode for software decoder"
 msgstr "Yazılımsal kod çözücü için stereo downmix modu"
 
@@ -6033,6 +6065,9 @@ msgstr "İzlenen öğenin rengi"
 msgid "The connection limit for your weeb.tv account has been reached."
 msgstr "weeb.tv hesabınızın bağlantı sınırına ulaşıldı."
 
+msgid "The connection to the server was interrupted."
+msgstr ""
+
 msgid "The daily download limit is reached."
 msgstr "Günlük indirme sınırına ulaşıldı."
 
@@ -6145,6 +6180,9 @@ msgstr ""
 "Şu dosyaya kaydedilecek:\n"
 "\"%s\""
 
+msgid "The player cannot play this format."
+msgstr ""
+
 msgid "The portal denied access to this entry."
 msgstr ""
 
@@ -6177,6 +6215,10 @@ msgstr "%d / %d sitenin sonuçları son \"%s\" aramasından geliyor - bu, tüm s
 
 msgid "The same item already exists in this group."
 msgstr "Aynı öğe bu grupta zaten mevcut."
+
+#, python-format
+msgid "The server answers with an error (HTTP %s)."
+msgstr ""
 
 msgid "The server did not return a subtitle file (download limit reached?)."
 msgstr "Sunucu bir altyazı dosyası döndürmedi (indirme sınırına ulaşıldı mı?)."
@@ -6216,6 +6258,9 @@ msgid "The site's catalogue could not be loaded."
 msgstr "Sitenin kataloğu yüklenemedi."
 
 msgid "The site's web player key could not be read - please try again later."
+msgstr ""
+
+msgid "The stream data cannot be read."
 msgstr ""
 
 msgid "The stream server does not answer at the moment. Try another link or later."

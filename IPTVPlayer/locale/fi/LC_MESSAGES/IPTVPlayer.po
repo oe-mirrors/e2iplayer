@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-27 22:41+0000\n"
+"POT-Creation-Date: 2026-11-28 14:01+0000\n"
 "PO-Revision-Date: 2026-10-24 23:30+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Finnish\n"
@@ -373,6 +373,9 @@ msgstr "30 sekuntia"
 
 msgid "5 seconds"
 msgstr "5 sekuntia"
+
+msgid "A GStreamer plugin for this format is missing."
+msgstr ""
 
 #, python-format
 msgid "A folder \"%s\" exists already."
@@ -1324,6 +1327,14 @@ msgstr "Jatka"
 msgid "Continue downloading"
 msgstr "Jatka latausta"
 
+#, python-format
+msgid "Convert %s to"
+msgstr ""
+
+#, python-format
+msgid "Convert %s to %s"
+msgstr ""
+
 msgid "Cooking"
 msgstr "Ruoanlaitto"
 
@@ -1895,6 +1906,9 @@ msgstr "Draama"
 
 msgid "Dramas (Asian)"
 msgstr "Draamat (aasialaiset)"
+
+msgid "Dual mono"
+msgstr ""
 
 msgid "Dubbed"
 msgstr "Dubattu"
@@ -2717,6 +2731,9 @@ msgstr "PIILOTETTU CAM-SHOW KÄYNNISSÄ. YRITÄ MYÖHEMMIN UUDELLEEN!"
 msgid "HLS with subtitles"
 msgstr "HLS tekstityksillä"
 
+msgid "HLS/DASH quality chosen by the player"
+msgstr ""
+
 msgid "HLS/m3u8"
 msgstr "HLS/m3u8"
 
@@ -3498,6 +3515,9 @@ msgstr "Rakastetut kappaleet"
 msgid "Low"
 msgstr "Matala"
 
+msgid "Lowest"
+msgstr ""
+
 msgid "MENU"
 msgstr "MENU"
 
@@ -4127,6 +4147,9 @@ msgstr "Saatavilla vain kohteessa %s"
 msgid "Only files in the downloads folder can be deleted."
 msgstr "Vain latauskansion tiedostoja voi poistaa."
 
+msgid "Only forced subtitles"
+msgstr ""
+
 msgid "Only from the host"
 msgstr ""
 
@@ -4140,6 +4163,9 @@ msgstr ""
 #, python-format
 msgid "Only the %d oldest new commits are shown"
 msgstr "Vain %d vanhinta uutta committia näytetään"
+
+msgid "Only the default audio of HLS streams"
+msgstr ""
 
 msgid "Only the sites that failed in the last run, same checks."
 msgstr "Vain viime ajossa epäonnistuneet sivustot, samat tarkistukset."
@@ -4930,6 +4956,9 @@ msgstr "Nollaa verkkokäyttöliittymä"
 msgid "Resolution"
 msgstr ""
 
+msgid "Resolution limit for H.264"
+msgstr ""
+
 #, python-format
 msgid ""
 "Resolving hCaptcha with %s failed!\n"
@@ -5651,6 +5680,9 @@ msgstr "Tila:"
 msgid "Status: %s"
 msgstr "Tila: %s"
 
+msgid "Stereo"
+msgstr ""
+
 msgid "Stereo downmix mode for software decoder"
 msgstr "Stereoalasmiksauksen tila ohjelmistodekooderille"
 
@@ -6032,6 +6064,9 @@ msgstr "Katsotun kohteen väri"
 msgid "The connection limit for your weeb.tv account has been reached."
 msgstr "weeb.tv-tilisi yhteysraja on saavutettu."
 
+msgid "The connection to the server was interrupted."
+msgstr ""
+
 msgid "The daily download limit is reached."
 msgstr "Päivittäinen latausraja on saavutettu."
 
@@ -6144,6 +6179,9 @@ msgstr ""
 "Se tallennetaan tiedostoon:\n"
 "\"%s\""
 
+msgid "The player cannot play this format."
+msgstr ""
+
 msgid "The portal denied access to this entry."
 msgstr ""
 
@@ -6176,6 +6214,10 @@ msgstr "%d / %d sivuston tulokset ovat viimeisimmästä hausta \"%s\" - tämä h
 
 msgid "The same item already exists in this group."
 msgstr "Sama kohde on jo tässä ryhmässä."
+
+#, python-format
+msgid "The server answers with an error (HTTP %s)."
+msgstr ""
 
 msgid "The server did not return a subtitle file (download limit reached?)."
 msgstr "Palvelin ei palauttanut tekstitystiedostoa (latausraja saavutettu?)."
@@ -6215,6 +6257,9 @@ msgid "The site's catalogue could not be loaded."
 msgstr "Sivuston luetteloa ei voitu ladata."
 
 msgid "The site's web player key could not be read - please try again later."
+msgstr ""
+
+msgid "The stream data cannot be read."
 msgstr ""
 
 msgid "The stream server does not answer at the moment. Try another link or later."
