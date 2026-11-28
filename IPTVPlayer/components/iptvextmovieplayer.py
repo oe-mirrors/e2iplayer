@@ -40,7 +40,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.iptvsubdownloader import IPTVSubDownloaderWidget
 from Plugins.Extensions.IPTVPlayer.components.iptvsubsimpledownloader import IPTVSubSimpleDownloaderWidget
 from Plugins.Extensions.IPTVPlayer.components.iptvchoicebox import IPTVChoiceBoxWidget, IPTVChoiceBoxItem
-from Plugins.Extensions.IPTVPlayer.components.iptvplayerinfopanel import PlayerInfoPanel, audioText, badgeList, hostDisplayName, nowPlayingText, streamBitrate, stripTexts, subtitleFormatName, CHAPTERS_PROBE_CMD
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinfopanel import PlayerInfoPanel, BANNER_PICTURE, makeBannerPicture, audioText, badgeList, hostDisplayName, nowPlayingText, streamBitrate, stripTexts, subtitleFormatName, CHAPTERS_PROBE_CMD
 from Plugins.Extensions.IPTVPlayer.components.iptvlist import IPTVPlaylistChoiceBoxList
 from Plugins.Extensions.IPTVPlayer.components.iptvscreensaver import clockStrftime
 from Plugins.Extensions.IPTVPlayer.components.iptvbackdrop import BackdropLoader, backdropMode, backdropOnPause
@@ -79,6 +79,7 @@ except Exception:
 
 from os import path as os_path, rename as os_rename, stat as os_stat, listdir as os_listdir, remove as os_remove
 import re
+import threading
 import time
 import json
 try:
@@ -693,6 +694,8 @@ class IPTVExtMoviePlayer(Screen):
             pixmap = self._prescaledPixmap(widgetName, path)
             if pixmap:
                 self[widgetName].instance.setPixmap(pixmap)
+                if widgetName == 'playbackInfoBaner':
+                    self.bannerBackdrop['default'] = pixmap
 
     def _subtitleScale(self):
         # setSubtitlesText()/runConfigMoviePlayerCallback()'s subtitle
@@ -942,6 +945,13 @@ class IPTVExtMoviePlayer(Screen):
         # the backdrop of the host's INFO page: behind the INFO panels, during audio playback, on pause (setting)
         self['backdrop'] = Cover()
         self.backdropLoader = None
+        # the infobar's picture over the backdrop (updateBannerBackdrop): the key of the one shown / the one made,
+        # the skin's own picture to go back to
+        # the infobar over the backdrop (updateBannerBackdrop): what is shown / made, the skin's own picture, the
+        # picture wanted now, keys that failed, and the worker that makes one (PIL takes too long for the GUI thread)
+        self.bannerBackdrop = {'shown': None, 'made': None, 'default': None, 'wanted': None, 'failed': set(), 'worker': None, 'result': None}
+        self.bannerTimer = eTimer()
+        self.bannerTimer_conn = eConnectCallback(self.bannerTimer.timeout, self._bannerWorkerDone)
         # known from the item's INFO page or "Select link" (iptvplayerwidget), else it comes with the host's page
         self.backdropStartUrl = additionalParams.get('backdrop_url', '') or ''
         self.audioCover = {'paths': [additionalParams.get('cover_path', '') or '', additionalParams.get('logo_path', '') or ''],
@@ -3168,6 +3178,16 @@ class IPTVExtMoviePlayer(Screen):
                 self.backdropLoader.close()
         except Exception:
             printExc()
+        self.bannerTimer.stop()
+        self.bannerTimer_conn = None
+        worker = self.bannerBackdrop.get('worker')
+        if worker is not None:
+            # its picture would stay in /tmp after the removal below
+            worker.join(3)
+        try:
+            os_remove(BANNER_PICTURE)
+        except Exception:
+            pass
         if None is not self.workconsole:
             self.workconsole.kill()
         self.workconsole = None
@@ -3886,6 +3906,80 @@ class IPTVExtMoviePlayer(Screen):
             self['backdrop'].show()
         else:
             self['backdrop'].hide()
+        self.updateBannerBackdrop(wanted)
+
+    def _bannerFile(self):
+        # the infobar's picture drawn for the OSD's width when the skin has one, else the 1280 one
+        path = self.playerSkinFolder + "/" + self.playbackBannerFile
+        native = '%s_%d.png' % (path[:-4], getDesktop(0).size().width())
+        return native if os_path.isfile(native) else path
+
+    def updateBannerBackdrop(self, shown):
+        # over the backdrop the infobar is laid over the piece of the backdrop under it (makeBannerPicture, in a
+        # worker thread), else it shows the skin's picture again
+        widget = self['playbackInfoBaner']
+        if widget.instance is None or Image is None:
+            return
+        state = self.bannerBackdrop
+        key = None
+        if shown:
+            x, y, w, h = self._rect(widget)
+            if w > 0 and h > 0:
+                key = (self.backdropFile(), x, y, w, h)
+        state['wanted'] = key
+        if key == state['shown']:
+            return
+        if key is None or key in state['failed']:
+            # the skin's picture (also when the picture over this backdrop could not be made: not tried again)
+            self._setBannerPixmap(None)
+        elif key == state['made'] and os_path.isfile(BANNER_PICTURE):
+            self._setBannerPixmap(key)
+        elif state['worker'] is None:
+            def make(key=key, banner=self._bannerFile()):
+                try:
+                    makeBannerPicture(BANNER_PICTURE, banner, key[3], key[4], key[0], (key[1], key[2]))
+                    state['result'] = (key, True)
+                except Exception:
+                    printExc()
+                    state['result'] = (key, False)
+            state['result'] = None
+            state['worker'] = threading.Thread(target=make, name='E2iInfobarBackdrop')
+            state['worker'].start()
+            self.bannerTimer.start(100, False)
+
+    def _bannerWorkerDone(self):
+        state = self.bannerBackdrop
+        if state['result'] is None:
+            return
+        self.bannerTimer.stop()
+        key, ok = state['result']
+        state['worker'] = state['result'] = None
+        if self.isClosing:
+            return
+        if ok:
+            state['made'] = key
+        else:
+            state['failed'].add(key)
+        # the picture wanted meanwhile (backdrop hidden, another backdrop): shown or made next
+        self.updateBannerBackdrop(state['wanted'] is not None)
+
+    def _setBannerPixmap(self, key):
+        widget = self['playbackInfoBaner']
+        state = self.bannerBackdrop
+        try:
+            if key:
+                pixmap = LoadPixmap(BANNER_PICTURE, cached=False)
+            else:
+                if state['default'] is None:
+                    # the skin's picture as loaded at the start (a prescaled one when there was none to scale)
+                    state['default'] = LoadPixmap(self.playerSkinFolder + "/" + self.playbackBannerFile)
+                pixmap = state['default']
+            if pixmap is None:
+                return
+            widget.instance.setPixmap(pixmap)
+            state['shown'] = key
+        except Exception:
+            printExc()
 
     def updateNowPlaying(self):
         # exteplayer3 v187 reports a new song ("m_t"): above the audio poster, in the infobar's meta line of a skin

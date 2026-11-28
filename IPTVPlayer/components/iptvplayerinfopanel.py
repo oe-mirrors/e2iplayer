@@ -759,8 +759,11 @@ PANEL_RGB = (16, 16, 16)
 FRAME_RGB = (72, 80, 94)
 # on the 1280x720 canvas
 PANEL_RADIUS = 16
-# how much of the picture stays in the mix with the panel colour: the backdrop is darkened already, a poster not
-BACKDROP_SHARE, POSTER_SHARE = 0.55, 0.3
+# how much of the picture stays in the mix with the panel colour: the backdrop is darkened already, a poster not.
+# The backdrop shows through like glass of ~30 % dark, little blurred (a stronger mix looked nearly black)
+BACKDROP_SHARE, POSTER_SHARE = 0.72, 0.4
+# the blur: the picture scaled down by this factor and up again
+BACKDROP_BLUR, POSTER_BLUR = 4, 12
 PANEL_PICTURE = '/tmp/e2i_infopanel_%s.png'
 
 
@@ -813,12 +816,12 @@ def panelInside(width, height, backdrop='', position=(0, 0), poster=''):
         if backdrop:
             with Image.open(backdrop) as src:
                 x, y = position
-                piece = src.convert('RGB').crop((x, y, x + width, y + height))
-            return Image.blend(Image.new('RGB', (width, height), PANEL_RGB), _blurred(piece, width, height, 8), BACKDROP_SHARE)
+                piece = src.crop((x, y, x + width, y + height)).convert('RGB')
+            return Image.blend(Image.new('RGB', (width, height), PANEL_RGB), _blurred(piece, width, height, BACKDROP_BLUR), BACKDROP_SHARE)
         if poster:
             with Image.open(poster) as src:
                 piece = _filled(src.convert('RGB'), width, height)
-            return Image.blend(Image.new('RGB', (width, height), PANEL_RGB), _blurred(piece, width, height, 16), POSTER_SHARE)
+            return Image.blend(Image.new('RGB', (width, height), PANEL_RGB), _blurred(piece, width, height, POSTER_BLUR), POSTER_SHARE)
     except Exception:
         printExc()
     return None
@@ -838,8 +841,48 @@ def makePanelPicture(target, width, height, scale, backdrop='', position=(0, 0),
     picture.putalpha(roundedMask(width, height, radius))
     picture.paste(inside.crop((line, line, width - line, height - line)), (line, line),
                   roundedMask(width - 2 * line, height - 2 * line, max(1, radius - line)))
-    picture.save(target + '.part', format='PNG', compress_level=1)
-    os.replace(target + '.part', target)
+    _savePicture(picture, target)
+    return True
+
+
+def _savePicture(picture, target):
+    # written next to the target and renamed: a reader never sees half a file; the part file does not stay behind
+    try:
+        picture.save(target + '.part', format='PNG', compress_level=1)
+        os.replace(target + '.part', target)
+    except Exception:
+        try:
+            os.remove(target + '.part')
+        except Exception:
+            pass
+        raise
+
+
+# the infobar's picture (playback_banner.png) while the backdrop is shown: laid over the piece of the backdrop under
+# it. Enigma2 writes a pixmap's alpha straight into the OSD, so its transparent corners showed the FILM, not the
+# backdrop, and its nearly opaque inside hid the backdrop. Dark pixels (its background) keep this
+# share of their alpha, the light ones (lines, key hints) stay as they are.
+BANNER_PICTURE = '/tmp/e2i_infobar_backdrop.png'
+BANNER_SHARE = 0.62
+BANNER_DARK = 48
+
+
+def makeBannerPicture(target, banner, width, height, backdrop, position):
+    # the infobar's picture of width x height (real pixels) at position on the screen over the backdrop file
+    from PIL import Image, ImageChops
+    with Image.open(banner) as src:
+        bar = src.convert('RGBA')
+    if bar.size != (width, height):
+        bar = bar.resize((width, height), Image.LANCZOS)
+    with Image.open(backdrop) as src:
+        x, y = position
+        piece = src.crop((x, y, x + width, y + height)).convert('RGBA')
+    alpha = bar.getchannel('A')
+    light = bar.convert('L').point(lambda v: 255 if v > BANNER_DARK else 0)
+    bar.putalpha(ImageChops.lighter(alpha.point(lambda a: int(a * BANNER_SHARE)), ImageChops.multiply(alpha, light)))
+    picture = Image.alpha_composite(piece, bar)
+    picture.putalpha(255)
+    _savePicture(picture, target)
     return True
 
 

@@ -962,6 +962,33 @@ def test_panel_inside_from_backdrop_and_poster(panelModule, tmp_path):
     assert panelModule.panelInside(400, 200, str(tmp_path / "missing.jpg")) is None
 
 
+@needsPil
+def test_banner_picture_over_the_backdrop(panelModule, tmp_path):
+    # forum 28.11.: over the backdrop the infobar is opaque (its transparent corners showed the film), the
+    # backdrop shows in the corners and through its dark inside; its light lines stay as they are
+    from PIL import Image
+    backdrop = str(tmp_path / "backdrop.png")
+    Image.new('RGB', (1920, 1080), (0, 0, 200)).save(backdrop)
+    banner = Image.new('RGBA', (1280, 236), (17, 19, 23, 250))
+    for corner in ((0, 0), (1279, 0), (0, 235), (1279, 235)):
+        banner.putpixel(corner, (0, 0, 0, 0))
+    for x in range(1280):
+        for y in (99, 100, 101):
+            banner.putpixel((x, y), (200, 200, 200, 255))
+    source = str(tmp_path / "banner.png")
+    banner.save(source)
+    target = str(tmp_path / "out.png")
+    assert panelModule.makeBannerPicture(target, source, 1920, 354, backdrop, (0, 726))
+    with Image.open(target) as img:
+        assert img.size == (1920, 354)
+        rgba = img.convert('RGBA')
+        assert rgba.getpixel((0, 0)) == (0, 0, 200, 255)
+        r, g, b, a = rgba.getpixel((960, 50))
+        assert a == 255 and b > r and 40 < b < 120
+        r, g, b, a = rgba.getpixel((960, 150))
+        assert a == 255 and abs(r - g) < 4 and r > 150
+
+
 class _BackdropOwner(_TechOwner):
     backdrop = ''
 

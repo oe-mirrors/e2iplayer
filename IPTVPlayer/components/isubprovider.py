@@ -343,10 +343,13 @@ class CBaseSubProviderClass:
     # only needs the website referer. Without a language header the titles come in English,
     # which suits the subtitle search. IMDb ids are passed without the "tt" prefix.
     IMDB_GRAPHQL_URL = 'https://caching.graphql.imdb.com/'
+    # without a client name the API answers 403 since 11.2026 (the same values as libs/moviemeta.py - kept here, the
+    # subtitle providers do not import moviemeta)
+    IMDB_CLIENT_NAME = 'imdb-web-next-localized'
 
     def imdbGraphQL(self, query):
         # the "data" part of the answer, or None
-        params = {'header': {'User-Agent': self.cm.getDefaultHeader()['User-Agent'], 'Content-Type': 'application/json', 'Referer': 'https://www.imdb.com/'},
+        params = {'header': {'User-Agent': self.cm.getDefaultHeader()['User-Agent'], 'Content-Type': 'application/json', 'Referer': 'https://www.imdb.com/', 'x-imdb-client-name': self.IMDB_CLIENT_NAME},
                   'raw_post_data': True}
         sts, data = self.cm.getPage(self.IMDB_GRAPHQL_URL, params, json.dumps({'query': query}))
         if not sts:
