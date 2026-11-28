@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-28 14:01+0000\n"
-"PO-Revision-Date: 2026-11-28 02:04+0200\n"
+"PO-Revision-Date: 2026-11-28 20:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: giorbak\n"
 "Language: el\n"
@@ -381,7 +381,7 @@ msgid "5 seconds"
 msgstr "5 δευτερόλεπτα"
 
 msgid "A GStreamer plugin for this format is missing."
-msgstr ""
+msgstr "Λείπει ένα πρόσθετο GStreamer για αυτή τη μορφή."
 
 #, python-format
 msgid "A folder \"%s\" exists already."
@@ -819,7 +819,7 @@ msgid "Audio buffer size [KB]"
 msgstr "Μέγεθος προσωρινής αποθήκευσης ήχου [KB]"
 
 msgid "Audio codec"
-msgstr "Κωδ/τής ήχου"
+msgstr "Κωδικοπ. ήχου"
 
 msgid "Audio description"
 msgstr "Ακουστική περιγραφή"
@@ -1335,11 +1335,11 @@ msgstr "Συνέχιση λήψης"
 
 #, python-format
 msgid "Convert %s to"
-msgstr ""
+msgstr "Μετατροπή του %s σε"
 
 #, python-format
 msgid "Convert %s to %s"
-msgstr ""
+msgstr "Μετατροπή του %s σε %s"
 
 msgid "Cooking"
 msgstr "Μαγειρική"
@@ -1914,7 +1914,7 @@ msgid "Dramas (Asian)"
 msgstr "Δράματα (Ασιατικά)"
 
 msgid "Dual mono"
-msgstr ""
+msgstr "Διπλό μονοφωνικό"
 
 msgid "Dubbed"
 msgstr "Με μεταγλώττιση"
@@ -2738,7 +2738,7 @@ msgid "HLS with subtitles"
 msgstr "HLS με υπότιτλους"
 
 msgid "HLS/DASH quality chosen by the player"
-msgstr ""
+msgstr "Ποιότητα HLS/DASH που επιλέγεται από το πρόγραμμα αναπαραγωγής"
 
 msgid "HLS/m3u8"
 msgstr "HLS/m3u8"
@@ -3522,7 +3522,7 @@ msgid "Low"
 msgstr "Χαμηλό"
 
 msgid "Lowest"
-msgstr ""
+msgstr "Χαμηλότερο"
 
 msgid "MENU"
 msgstr "MENU"
@@ -4039,7 +4039,7 @@ msgid "No video ID available"
 msgstr "Δεν υπάρχει διαθέσιμο ID βίντεο"
 
 msgid "None"
-msgstr "Καμία"
+msgstr "Κανένα"
 
 msgid "Nordic"
 msgstr "Σκανδιναβικά"
@@ -4154,7 +4154,7 @@ msgid "Only files in the downloads folder can be deleted."
 msgstr "Μόνο αρχεία στον φάκελο λήψεων μπορούν να διαγραφούν."
 
 msgid "Only forced subtitles"
-msgstr ""
+msgstr "Μόνο αναγκαστικοί υπότιτλοι"
 
 msgid "Only from the host"
 msgstr "Μόνο από τον host"
@@ -4171,7 +4171,7 @@ msgid "Only the %d oldest new commits are shown"
 msgstr "Εμφανίζονται μόνο τα %d παλαιότερα νέα commits"
 
 msgid "Only the default audio of HLS streams"
-msgstr ""
+msgstr "Μόνο ο προεπιλεγμένος ήχος των ροών HLS"
 
 msgid "Only the sites that failed in the last run, same checks."
 msgstr "Μόνο οι ιστότοποι που απέτυχαν στην τελευταία εκτέλεση, με τους ίδιους ελέγχους."
@@ -4963,7 +4963,7 @@ msgid "Resolution"
 msgstr "Ανάλυση"
 
 msgid "Resolution limit for H.264"
-msgstr ""
+msgstr "Όριο ανάλυσης για H.264"
 
 #, python-format
 msgid ""
@@ -5687,7 +5687,7 @@ msgid "Status: %s"
 msgstr "Κατάσταση: %s"
 
 msgid "Stereo"
-msgstr ""
+msgstr "Στερεοφωνικό"
 
 msgid "Stereo downmix mode for software decoder"
 msgstr "Λειτουργία στερεοφωνικής μίξης για αποκωδικοποιητή λογισμικού"
@@ -6071,7 +6071,7 @@ msgid "The connection limit for your weeb.tv account has been reached."
 msgstr "Έχει επιτευχθεί το όριο συνδέσεων για τον λογαριασμό σας στο weeb.tv."
 
 msgid "The connection to the server was interrupted."
-msgstr ""
+msgstr "Η σύνδεση με τον διακομιστή διακόπηκε."
 
 msgid "The daily download limit is reached."
 msgstr "Έγινε υπέρβαση του ημερήσιου ορίου λήψεων."
@@ -6186,7 +6186,7 @@ msgstr ""
 "\"%s\""
 
 msgid "The player cannot play this format."
-msgstr ""
+msgstr "Το πρόγραμμα αναπαραγωγής δεν μπορεί να αναπαράγει αυτή τη μορφή."
 
 msgid "The portal denied access to this entry."
 msgstr "Η πύλη αρνήθηκε την πρόσβαση σε αυτή την καταχώριση."
@@ -6228,7 +6228,7 @@ msgstr "Το ίδιο στοιχείο υπάρχει ήδη σε αυτή τη�
 
 #, python-format
 msgid "The server answers with an error (HTTP %s)."
-msgstr ""
+msgstr "Ο διακομιστής απαντά με σφάλμα (HTTP %s)."
 
 msgid "The server did not return a subtitle file (download limit reached?)."
 msgstr "Ο διακομιστής δεν επέστρεψε αρχείο υποτίτλων (συμπληρώθηκε το όριο λήψεων;)."
@@ -6271,7 +6271,7 @@ msgid "The site's web player key could not be read - please try again later."
 msgstr "Δεν ήταν δυνατή η ανάγνωση του κλειδιού του προγράμματος αναπαραγωγής του ιστότοπου - Παρακαλώ δοκιμάστε ξανά αργότερα."
 
 msgid "The stream data cannot be read."
-msgstr ""
+msgstr "Δεν είναι δυνατή η ανάγνωση των δεδομένων της ροής."
 
 msgid "The stream server does not answer at the moment. Try another link or later."
 msgstr "Ο διακομιστής ροής δεν αποκρίνεται αυτή τη στιγμή. Δοκιμάστε έναν άλλο σύνδεσμο ή αργότερα."
@@ -6954,7 +6954,7 @@ msgid "Video buffer size [MB]"
 msgstr "Μέγεθος προσωρινής αποθήκευσης βίντεο [MB]"
 
 msgid "Video codec"
-msgstr "Κωδ/τής βίντεο"
+msgstr "Κωδικοπ. βίντεο"
 
 msgid "Video library"
 msgstr "Βιβλιοθήκη βίντεο"
