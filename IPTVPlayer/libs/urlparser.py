@@ -8926,9 +8926,14 @@ class pageParser(CaptchaHelper):
 
     def parserPEESTREAM(self, baseUrl):  # add 161126 - peeplayer.com / peestream.com (premiumsmart.eu "PeeStream" mirror)
         printDBG("parserPEESTREAM baseUrl[%s]" % baseUrl)
-        # the browser player builds its master as a blob (key over ECDH), the Chromecast button uses the
-        # plain one: /m/<MSG_ID>/master.m3u8?t=<STOK> - AES-128 HLS whose key url answers without a token,
-        # the audio tracks (Polish / English) are EXT-X-MEDIA groups
+        # fix 281126: the Chromecast master (/m/<MSG_ID>/master.m3u8) answers "forbidden" for every client. The
+        # browser player builds its playlists itself from the page's values: segment durations (VID_DURS, the
+        # audio tracks' "durs" in AUDS), video segments <BASE_URL>/<MSG_ID>/segNNNNN.ts, audio segments under
+        # <BASE_URL>/<MSG_ID>/<id> ("tg" tracks) or <STRIM_BASE>/aud/<MSG_ID>[/<id>], AES-128 with the key of
+        # /k/<MSG_ID>?t=<STOK> (a browser user agent is enough) and the segment number as IV. The same playlists
+        # are written here as local files, the key too (ffmpeg's user agent gets 403 for it). Video (6 s
+        # segments) and audio (64 s segments) are joined by ffmpeg (merge://): hlsdl pairs one audio segment
+        # with each video segment, the sound ran minutes ahead of the picture.
         mediaId = self.cm.ph.getSearchGroups(baseUrl, r"(?://|\.)(?:peestream|peeplayer)\.com/(?:v|e)/([0-9a-zA-Z]+)")[0]
         if not mediaId:
             return []
@@ -8942,15 +8947,101 @@ class pageParser(CaptchaHelper):
         token = self.cm.ph.getSearchGroups(data, r'''var\s+STOK\s*=\s*["']([^"']+)["']''')[0]
         if not msgId or not token:
             return []
-        # fix 211126: the cast master answers "forbidden" (403) unless a Chromecast asks for it (CrKey user agent);
-        # the variants, audio playlists, segments and keys accept it too
-        castUa = "Mozilla/5.0 (X11; Linux armv7l) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 CrKey/1.56.500000 DeviceType/Chromecast"
-        url = strwithmeta("%s/m/%s/master.m3u8?t=%s" % (mainUrl, msgId, urllib_quote(token, safe="")),
-                          {"User-Agent": castUa, "Referer": mainUrl + "/", "Origin": mainUrl,
-                           # fix 211126: exteplayer3 alone fails on the merged AES audio + video ("Invalid data found
-                           # when processing input", box test fenixsite); buffered with ffmpeg it plays (moflixstream)
-                           "iptv_buffering": "required"})
-        return getDirectM3U8Playlist(url, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=999999999)
+
+        def pageVar(name):
+            return self.cm.ph.getSearchGroups(data, r'''var\s+%s\s*=\s*([^\n;]+)''' % name)[0].strip()
+
+        def pageBase(value):
+            # "location.origin + "/b"" or a quoted absolute / relative url
+            if "location.origin" in value:
+                return mainUrl + self.cm.ph.getSearchGroups(value, r'''\+\s*["']([^"']*)["']''')[0]
+            value = value.strip("\"'")
+            return mainUrl + value if value.startswith("/") else value
+
+        def jsonVar(name, default):
+            try:
+                # the arrays inside the audio tracks end in "]," - the list itself in "];" (a comment may follow)
+                value = json_loads(self.cm.ph.getSearchGroups(data, r"var\s+%s\s*=\s*(\[.*?\])\s*;" % name)[0])
+                return value if isinstance(value, type(default)) else default
+            except Exception:
+                return default
+
+        vidDurs = jsonVar("VID_DURS", [])
+        if not vidDurs:
+            printDBG("parserPEESTREAM no segment durations (video not ready?)")
+            return []
+        baseSegUrl = pageBase(pageVar("BASE_URL")) or mainUrl + "/b"
+        strimBase = pageBase(pageVar("STRIM_BASE")) or mainUrl
+        keyHeader = {"User-Agent": HTTP_HEADER["User-Agent"], "Accept": "*/*", "Referer": "%s/e/%s" % (mainUrl, mediaId),
+                     "Origin": mainUrl, "X-XS-P": "1", "X-Strim-Token": token}
+        sts, resp = self.cm.getPage("%s/k/%s?t=%s" % (mainUrl, msgId, urllib_quote(token, safe="")), {"header": keyHeader, "return_data": False})
+        key = b""
+        if sts and hasattr(resp, "read"):
+            try:
+                key = resp.read()
+            finally:
+                resp.close()
+        elif sts and isinstance(resp, bytes):
+            key = resp
+        if len(key) != 16:
+            printDBG("parserPEESTREAM no AES key (%d bytes)" % len(key))
+            return []
+
+        def writeFile(name, content):
+            path = GetTmpDir("peestream_%s_%s" % (msgId, name))
+            try:
+                with open(path, "wb") as f:
+                    f.write(ensure_binary(content))
+                return path
+            except Exception:
+                printExc()
+                return ""
+
+        keyPath = writeFile("key", key)
+        if not keyPath:
+            return []
+
+        def mediaPlaylist(durs, targetDuration, segBase):
+            lines = ["#EXTM3U", "#EXT-X-VERSION:3", "#EXT-X-TARGETDURATION:%s" % targetDuration, "#EXT-X-MEDIA-SEQUENCE:0", "#EXT-X-PLAYLIST-TYPE:VOD"]
+            for idx, duration in enumerate(durs):
+                lines.append('#EXT-X-KEY:METHOD=AES-128,URI="%s",IV=0x%032x' % (keyPath, idx))
+                lines.append("#EXTINF:%s," % duration)
+                lines.append("%s/seg%05d.ts" % (segBase, idx))
+            lines.append("#EXT-X-ENDLIST")
+            return "\n".join(lines) + "\n"
+
+        videoPath = writeFile("v.m3u8", mediaPlaylist(vidDurs, pageVar("VID_TD") or "7", "%s/%s" % (baseSegUrl, msgId)))
+        if not videoPath:
+            return []
+        meta = {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": "%s/e/%s" % (mainUrl, mediaId), "Origin": mainUrl,
+                "iptv_proto": "m3u8", "iptv_buffering": "required"}
+        audTd = pageVar("AUD_TD") or "8"
+        links = []
+        for idx, track in enumerate(jsonVar("AUDS", [])):
+            if not isinstance(track, dict):
+                continue
+            audioId = track.get("id", "")
+            label = ensure_str(track.get("label") or track.get("lang") or audioId)
+            if audioId == "":
+                # the main track lies in the video segments themselves
+                links.append({"name": "[%s] PeeStream HLS" % label, "url": urlparser.decorateUrl(videoPath, meta)})
+                continue
+            if not track.get("durs"):
+                continue
+            if track.get("tg") and baseSegUrl.endswith("/b"):
+                segBase = "%s/%s/%s" % (baseSegUrl, msgId, audioId)
+            else:
+                segBase = "%s/aud/%s%s" % (strimBase, msgId, "" if audioId == "eng" else "/" + audioId)
+            audioPath = writeFile("a%d.m3u8" % idx, mediaPlaylist(track["durs"], track.get("td") or audTd, segBase))
+            if not audioPath:
+                continue
+            mergeMeta = dict(meta)
+            mergeMeta.update({"audio_url": strwithmeta(audioPath, meta), "video_url": strwithmeta(videoPath, meta), "ff_out_container": "mpegts"})
+            links.append({"name": "[%s] PeeStream HLS" % label, "url": urlparser.decorateUrl("merge://audio_url|video_url", mergeMeta)})
+        if not links:
+            # no audio list: the sound is in the video segments
+            links.append({"name": "PeeStream HLS", "url": urlparser.decorateUrl(videoPath, meta)})
+        return links
 
     def parserYANDEXDISK(self, baseUrl):  # add 031026 - yadi.sk / disk.yandex.* / disk.360.yandex.ru public links, official public API
         printDBG("parserYANDEXDISK baseUrl[%s]" % baseUrl)

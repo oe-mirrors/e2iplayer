@@ -350,11 +350,14 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
                 for idx, item in enumerate(urlsKeys):
                     oneUrl = tmpUri.meta[item]
                     oneMeta = dict(tmpUri.meta)
-                    _addHttpOpts(cmdTab, oneMeta)
+                    if '://' in str(oneUrl):
+                        # (a local file has no user_agent / headers options: "Option not found", ffmpeg stops)
+                        _addHttpOpts(cmdTab, oneMeta)
                     if str(oneUrl).lower().startswith(('http://', 'https://')):
                         cmdTab.extend(self.HTTP_INPUT_OPTS)
                     if segmentExtOpts and (isHls or '.m3u8' in str(oneUrl).lower()):
                         cmdTab.extend(segmentExtOpts)
+                    cmdTab.extend(self._localPlaylistOpts(oneUrl))
                     cmdTab.extend(['-i', oneUrl])
                     if 'audio' in item:
                         mapOpts += ['-map', '%d:a' % idx]
@@ -386,6 +389,7 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
                 cmdTab.append('-re')
             if segmentExtOpts and (isHls or '.m3u8' in str(url).lower()):
                 cmdTab.extend(segmentExtOpts)
+            cmdTab.extend(self._localPlaylistOpts(url))
             cmdTab.extend(['-i', url])
 
         cmdTab.extend(mapOpts)
@@ -428,6 +432,16 @@ class FFMPEGDownloader(BaseDownloader, SidecarMixin):
         self.console.execute(cmd)
 
         self.status = DMHelper.STS.DOWNLOADING
+
+    @staticmethod
+    def _localPlaylistOpts(url):
+        # a playlist the plugin wrote itself (a local file) with http segments: ffmpeg opens the segments of a
+        # local playlist only with "file,crypto,data" ("Protocol 'https' not on whitelist"), and a local key file
+        # without a media extension not at all ("blocked for security reasons")
+        url = str(url)
+        if '://' in url or '.m3u8' not in url.lower():
+            return []
+        return ['-protocol_whitelist', 'file,crypto,data,http,https,tcp,tls', '-allowed_extensions', 'ALL']
 
     def _liveBufferBurst(self, meta):
         # seconds of a live DASH link read at once when buffering (-readrate_initial_burst, ffmpeg 6.1+): with -re
