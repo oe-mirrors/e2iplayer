@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-27 22:41+0000\n"
-"PO-Revision-Date: 2026-11-12 15:18+0200\n"
+"PO-Revision-Date: 2026-11-28 01:09+0200\n"
 "Last-Translator: Mohamed Elsafty [angel_heart150@yahoo.com]\n"
 "Language-Team: \n"
 "Language: ar\n"
@@ -612,7 +612,7 @@ msgstr "حسب الترتيب الأبجدي"
 
 #, python-format
 msgid "Also use the accounts of GT IPTV Player Pro (%s)"
-msgstr ""
+msgstr "استخدام حسابات GT IPTV Player Pro (%s) أيضًا"
 
 #, python-format
 msgid "Also use the accounts of X-Streamity (%s)"
@@ -624,7 +624,7 @@ msgstr "استخدام بوابات EStalker (%s) أيضًا"
 
 #, python-format
 msgid "Also use the portals of GT IPTV Player Pro (%s)"
-msgstr ""
+msgstr "استخدام بوابات GT IPTV Player Pro (%s) أيضًا"
 
 msgid "AltGr"
 msgstr "AltGr"
@@ -796,7 +796,7 @@ msgid "Aspect"
 msgstr "نسبة العرض إلى الارتفاع"
 
 msgid "Aspect ratio"
-msgstr ""
+msgstr "نسبة العرض إلى الارتفاع"
 
 msgid "At least one of plugin browser, extension list and main menu has to stay on, otherwise E2iPlayer could no longer be started."
 msgstr "يجب أن يظل واحد على الأقل من متصفح الإضافات أو قائمة الملحقات أو القائمة الرئيسية مفعّلًا، وإلا فلن يمكن تشغيل E2iPlayer بعد ذلك."
@@ -814,7 +814,7 @@ msgid "Audio buffer size [KB]"
 msgstr "حجم مخزن الصوت المؤقت [KB]"
 
 msgid "Audio codec"
-msgstr ""
+msgstr "ترميز الصوت"
 
 msgid "Audio description"
 msgstr "الوصف الصوتي"
@@ -864,7 +864,7 @@ msgid "Automotive"
 msgstr "السيارات"
 
 msgid "Autoplay picture duration (seconds)"
-msgstr ""
+msgstr "مدة العرض التلقائي للصورة (ثوانٍ)"
 
 msgid "Autoplay start delay"
 msgstr "تأخير بدء التشغيل التلقائي"
@@ -882,16 +882,16 @@ msgid "BLUE"
 msgstr "أزرق"
 
 msgid "Backdrop (fanart)"
-msgstr ""
+msgstr "الخلفية (فان آرت)"
 
 msgid "Backdrop when the film is paused"
-msgstr ""
+msgstr "الخلفية عند إيقاف الفيلم مؤقتًا"
 
 msgid "Background color"
 msgstr "لون الخلفية"
 
 msgid "Background of the INFO panels"
-msgstr ""
+msgstr "خلفية لوحات المعلومات"
 
 msgid "Backspace"
 msgstr "مسح"
@@ -916,7 +916,7 @@ msgid "Being watched"
 msgstr "قيد المشاهدة"
 
 msgid "Below the picture"
-msgstr ""
+msgstr "أسفل الصورة"
 
 msgid "Bengali"
 msgstr "البنغالية"
@@ -943,10 +943,10 @@ msgid "Biography"
 msgstr "السيرة الذاتية"
 
 msgid "Bit depth"
-msgstr ""
+msgstr "عمق البت"
 
 msgid "Bitrate"
-msgstr ""
+msgstr "معدل البت"
 
 #, python-format
 msgid "Bitrate: %s"
@@ -1114,10 +1114,10 @@ msgid "Catch-up: %d days"
 msgstr "إعادة المشاهدة: %d أيام"
 
 msgid "Catch-up: minutes after the end:"
-msgstr ""
+msgstr "إعادة المشاهدة: دقائق بعد النهاية:"
 
 msgid "Catch-up: minutes before the start:"
-msgstr ""
+msgstr "إعادة المشاهدة: دقائق قبل البداية:"
 
 msgid "Categories"
 msgstr "الفئات"
@@ -1132,7 +1132,7 @@ msgid "Category:"
 msgstr "الفئة:"
 
 msgid "Centered"
-msgstr ""
+msgstr "في الوسط"
 
 msgid "Change active movie player"
 msgstr "تغيير مشغل الأفلام النشط"
@@ -1154,10 +1154,10 @@ msgid "Channels"
 msgstr "القنوات"
 
 msgid "Chapter"
-msgstr ""
+msgstr "فصل"
 
 msgid "Chapters"
-msgstr ""
+msgstr "الفصول"
 
 msgid "Checking for updates"
 msgstr "جارٍ التحقق من وجود تحديثات"
@@ -1232,7 +1232,7 @@ msgid "Code"
 msgstr "الرمز"
 
 msgid "Codec"
-msgstr ""
+msgstr "الترميز"
 
 msgid "Collected streams only"
 msgstr "البثوث المجمعة فقط"
@@ -1244,7 +1244,7 @@ msgid "Colored text in titles and descriptions"
 msgstr "نص ملوّن في العناوين والوصف"
 
 msgid "Colour space"
-msgstr ""
+msgstr "مساحة اللون"
 
 msgid "Combine pull request merges with their commit"
 msgstr "دمج عمليات دمج طلبات السحب مع الـ commit الخاص بها"
@@ -1442,7 +1442,7 @@ msgid "Current item is not a channel."
 msgstr "العنصر الحالي ليس قناة."
 
 msgid "Current song"
-msgstr ""
+msgstr "الأغنية الحالية"
 
 msgid "Cut"
 msgstr "قص"
@@ -1481,7 +1481,7 @@ msgid "Danish"
 msgstr "الدنماركية"
 
 msgid "Dark"
-msgstr ""
+msgstr "داكن"
 
 msgid "Darkgray"
 msgstr "رمادي داكن"
@@ -1643,7 +1643,7 @@ msgid "Denmark"
 msgstr "الدنمارك"
 
 msgid "Description"
-msgstr ""
+msgstr "الوصف"
 
 msgid "Description:"
 msgstr "الوصف:"
@@ -2246,7 +2246,7 @@ msgid "External movie player config"
 msgstr "إعدادات مشغل الأفلام الخارجي"
 
 msgid "Extra large"
-msgstr ""
+msgstr "كبير جداً"
 
 msgid "Extracted subtitle file is empty or missing."
 msgstr "ملف الترجمة المستخرج فارغ أو مفقود."
@@ -2363,7 +2363,7 @@ msgid "Female"
 msgstr "أنثى"
 
 msgid "File"
-msgstr ""
+msgstr "ملف"
 
 #, python-format
 msgid "File \"%s\" already exists"
@@ -2537,7 +2537,7 @@ msgid "Force legacy grid"
 msgstr "فرض استخدام الشبكة القديمة"
 
 msgid "Forced"
-msgstr ""
+msgstr "إجباري"
 
 msgid "Foreign movies"
 msgstr "أفلام أجنبية"
@@ -2558,7 +2558,7 @@ msgid "Fotka.pl stream :"
 msgstr "بث Fotka.pl :"
 
 msgid "Frame rate"
-msgstr ""
+msgstr "معدل الإطارات"
 
 msgid "Free"
 msgstr "مجاني"
@@ -2573,7 +2573,7 @@ msgid "From E2 settings"
 msgstr "من إعدادات Enigma2"
 
 msgid "From the host, else online"
-msgstr ""
+msgstr "من المضيف، وإلا عبر الإنترنت"
 
 msgid "Full description loaded"
 msgstr "تم تحميل الوصف الكامل"
@@ -2582,7 +2582,7 @@ msgid "Full description not available"
 msgstr "الوصف الكامل غير متاح"
 
 msgid "Full screen"
-msgstr ""
+msgstr "ملء الشاشة"
 
 msgid "Full test"
 msgstr "اختبار كامل"
@@ -2757,7 +2757,7 @@ msgid "Hide \"%s\" group"
 msgstr "إخفاء المجموعة \"%s\""
 
 msgid "Hide categories containing (comma separated):"
-msgstr ""
+msgstr "إخفاء الفئات التي تحتوي على (مفصولة بفاصلة):"
 
 msgid "Hide the menu (live TV visible)"
 msgstr "إخفاء القائمة (مع بقاء البث التلفزيوني المباشر ظاهرًا)"
@@ -3128,7 +3128,7 @@ msgid "Language"
 msgstr "اللغة"
 
 msgid "Language of the details"
-msgstr ""
+msgstr "لغة التفاصيل"
 
 msgid "Language of the details (TMDb, IMDb)"
 msgstr "لغة التفاصيل (TMDb، IMDb)"
@@ -3146,13 +3146,13 @@ msgid "Large (title below)"
 msgstr "كبير (العنوان بالأسفل)"
 
 msgid "Large cover, info on the right: alignment"
-msgstr ""
+msgstr "غلاف كبير، المعلومات على اليمين: المحاذاة"
 
 msgid "Large cover, info on the right: labels"
-msgstr ""
+msgstr "غلاف كبير، المعلومات على اليمين: التسميات"
 
 msgid "Large cover, info on the right: lines"
-msgstr ""
+msgstr "غلاف كبير، المعلومات على اليمين: الأسطر"
 
 msgid "Large cover, info on the right: row 1"
 msgstr "غلاف كبير، المعلومات على اليمين: الصف الأول"
@@ -3167,7 +3167,7 @@ msgid "Large cover, info on the right: row 4"
 msgstr "غلاف كبير، المعلومات على اليمين: الصف الرابع"
 
 msgid "Large cover, info on the right: title"
-msgstr ""
+msgstr "غلاف كبير، المعلومات على اليمين: العنوان"
 
 msgid "Large cover: size of the times below the bar"
 msgstr "غلاف كبير: حجم الأوقات أسفل الشريط"
@@ -3494,7 +3494,7 @@ msgid "Longest"
 msgstr "الأطول"
 
 msgid "Looking for trailers..."
-msgstr ""
+msgstr "جارٍ البحث عن الإعلانات التشويقية..."
 
 msgid "Loved tracks"
 msgstr "المقاطع الصوتية المفضّلة"
@@ -3911,7 +3911,7 @@ msgid "No"
 msgstr "لا"
 
 msgid "No RSS / Atom feed at this address."
-msgstr ""
+msgstr "لا يوجد موجز RSS / Atom في هذا العنوان."
 
 msgid "No YouTube video found for this track."
 msgstr "لم يتم العثور على فيديو YouTube لهذه المقطوعة."
@@ -3929,7 +3929,7 @@ msgid "No episodes found."
 msgstr "لم يتم العثور على حلقات."
 
 msgid "No frame"
-msgstr ""
+msgstr "بدون إطار"
 
 msgid "No free player available for this title."
 msgstr "لا يتوفر مشغل مجاني لهذا العنوان."
@@ -4005,7 +4005,7 @@ msgstr "لا يوجد عنوان للبحث عنه."
 
 #, python-format
 msgid "No trailer found for \"%s\"."
-msgstr ""
+msgstr "لم يتم العثور على إعلان تشويقي لـ \"%s\"."
 
 msgid "No valid entitlement found for asset."
 msgstr "لم يتم العثور على صلاحية صالحة للمحتوى."
@@ -4132,7 +4132,7 @@ msgid "Only files in the downloads folder can be deleted."
 msgstr "يمكن حذف الملفات الموجودة في مجلد التنزيلات فقط."
 
 msgid "Only from the host"
-msgstr ""
+msgstr "من المضيف فقط"
 
 msgid "Only links can be moved to a group."
 msgstr "يمكن نقل الروابط فقط إلى مجموعة."
@@ -4210,7 +4210,7 @@ msgid "Order stays fixed - useful for T9 browsing."
 msgstr "يبقى الترتيب ثابتًا - مفيد للتصفح باستخدام T9."
 
 msgid "Original"
-msgstr ""
+msgstr "الأصلي"
 
 msgid "Original Title:"
 msgstr "العنوان الأصلي:"
@@ -4349,7 +4349,7 @@ msgid "Physical Exam"
 msgstr "الفحص السريري"
 
 msgid "Picture of the title, blurred"
-msgstr ""
+msgstr "صورة العنوان، مشوّشة"
 
 msgid "Pin has been changed."
 msgstr "تم تغيير رمز PIN."
@@ -4367,7 +4367,7 @@ msgid "Pin protection for this host"
 msgstr "الحماية برمز PIN لهذا الهوست"
 
 msgid "Pixel format"
-msgstr ""
+msgstr "تنسيق البكسل"
 
 msgid "Play all from here"
 msgstr "تشغيل الكل من هنا"
@@ -4377,7 +4377,7 @@ msgid "Play marked items (%d)"
 msgstr "تشغيل العناصر المحددة (%d)"
 
 msgid "Play the first trailer at once"
-msgstr ""
+msgstr "تشغيل أول إعلان تشويقي فورًا"
 
 msgid "Play torrents with TorrServer"
 msgstr "تشغيل التورنت باستخدام TorrServer"
@@ -4558,7 +4558,7 @@ msgid "Portuguese"
 msgstr "البرتغالية"
 
 msgid "Poster during audio playback"
-msgstr ""
+msgstr "الملصق أثناء تشغيل الصوت"
 
 msgid "Poster grid for lists with pictures"
 msgstr "عرض القوائم التي تحتوي على صور في شكل شبكة ملصقات"
@@ -4621,7 +4621,7 @@ msgid "Professionals"
 msgstr "المحترفون"
 
 msgid "Profile"
-msgstr ""
+msgstr "الملف الشخصي"
 
 msgid "Program"
 msgstr "البرنامج"
@@ -4761,7 +4761,7 @@ msgid "Reading..."
 msgstr "جارٍ القراءة..."
 
 msgid "Rebuffer"
-msgstr ""
+msgstr "إعادة التخزين المؤقت"
 
 msgid "Recent"
 msgstr "حديث"
@@ -4932,7 +4932,7 @@ msgid "Reset web interface"
 msgstr "إعادة تعيين واجهة الويب"
 
 msgid "Resolution"
-msgstr ""
+msgstr "الدقة"
 
 #, python-format
 msgid ""
@@ -4975,7 +4975,7 @@ msgid "Round"
 msgstr "جولة"
 
 msgid "Rows per page of long seasons and lists"
-msgstr ""
+msgstr "عدد الصفوف في الصفحة من المواسم والقوائم الطويلة"
 
 msgid "Runtime"
 msgstr "مدة التشغيل"
@@ -5008,7 +5008,7 @@ msgid "Same as the bar"
 msgstr "نفس لون الشريط"
 
 msgid "Sample rate"
-msgstr ""
+msgstr "معدل العينة"
 
 msgid "Save"
 msgstr "حفظ"
@@ -5511,7 +5511,7 @@ msgid "Site self-test: %d of %d - now %s (%d failed so far)"
 msgstr "الاختبار الذاتي للموقع: %d من %d - حاليًا %s (فشل %d حتى الآن)"
 
 msgid "Size"
-msgstr ""
+msgstr "الحجم"
 
 msgid "Size:"
 msgstr "الحجم:"
@@ -5535,7 +5535,7 @@ msgid "Small (16:9)"
 msgstr "صغير (16:9)"
 
 msgid "Small, in the middle"
-msgstr ""
+msgstr "صغير، في الوسط"
 
 msgid "Smaller text"
 msgstr "نص أصغر"
@@ -5601,7 +5601,7 @@ msgid "Sorted most viewed channels now [live]"
 msgstr "القنوات الأكثر مشاهدة حاليًا [مباشر]"
 
 msgid "Source"
-msgstr ""
+msgstr "المصدر"
 
 msgid "Source:"
 msgstr "المصدر:"
@@ -5680,7 +5680,7 @@ msgid "Story"
 msgstr "قصة"
 
 msgid "Stream"
-msgstr ""
+msgstr "البث"
 
 #, python-format
 msgid "Stream formats: %s"
@@ -5970,7 +5970,7 @@ msgid "Text files ytlist and urllist are in:"
 msgstr "ملفات النص ytlist و urllist موجودة في:"
 
 msgid "Text files ytlist, urllist and feedlist are in:"
-msgstr ""
+msgstr "ملفات النص ytlist و urllist و feedlist موجودة في:"
 
 msgid "Thai"
 msgstr "تايلاندي"
@@ -6108,7 +6108,7 @@ msgid "The host wanted to open a window on the TV (%s) - that only works on the 
 msgstr "أراد الـ host فتح نافذة على التلفزيون (%s) - وهذا لا يعمل إلا على جهاز الاستقبال."
 
 msgid "The hoster is still processing this video. Please try again later."
-msgstr ""
+msgstr "لا يزال مضيف الفيديو يعالج هذا الفيديو. يُرجى المحاولة مرة أخرى لاحقًا."
 
 msgid "The hoster sends an advert redirect instead of the video at the moment. Try another hoster."
 msgstr "يرسل المستضيف حاليًا تحويلًا إلى إعلان بدلًا من الفيديو. جرّب مستضيفًا آخر."
@@ -6149,16 +6149,16 @@ msgstr ""
 "\"%s\""
 
 msgid "The portal denied access to this entry."
-msgstr ""
+msgstr "رفضت البوابة الوصول إلى هذا العنصر."
 
 msgid "The portal did not hand out a link for this entry."
 msgstr "لم توفّر البوابة رابطًا لهذا المحتوى."
 
 msgid "The portal has blocked this MAC address."
-msgstr ""
+msgstr "قامت البوابة بحظر عنوان MAC هذا."
 
 msgid "The portal refused the stream: the maximum number of connections is reached."
-msgstr ""
+msgstr "رفضت البوابة البث: تم الوصول إلى الحد الأقصى لعدد الاتصالات."
 
 msgid "The recordings of this page were on the site's old media server, which is offline."
 msgstr "كانت تسجيلات هذه الصفحة موجودة على خادم الوسائط القديم للموقع، وهو غير متصل حاليًا."
@@ -6224,10 +6224,10 @@ msgid "The site's catalogue could not be loaded."
 msgstr "تعذر تحميل كتالوج الموقع."
 
 msgid "The site's web player key could not be read - please try again later."
-msgstr ""
+msgstr "تعذّر قراءة مفتاح مشغل الويب الخاص بالموقع - يُرجى المحاولة مرة أخرى لاحقًا."
 
 msgid "The stream server does not answer at the moment. Try another link or later."
-msgstr ""
+msgstr "خادم البث لا يستجيب حاليًا. جرّب رابطًا آخر أو لاحقًا."
 
 msgid "The support package holds the versions, the system information, the enabled hosts and the end of the debug log in one text file for a problem report. Look through it before posting it - the log can contain addresses of the sites you opened."
 msgstr "تحتوي حزمة الدعم على الإصدارات ومعلومات النظام والـ hosts المفعّلة ونهاية سجل تصحيح الأخطاء في ملف نصي واحد لاستخدامه في الإبلاغ عن مشكلة. راجع الملف قبل نشره - فقد يحتوي السجل على عناوين المواقع التي فتحتها."
@@ -6434,7 +6434,7 @@ msgid "Tip! You can connect USB flash drive to fix this problem."
 msgstr "نصيحة! يمكنك توصيل وحدة تخزين USB لحل هذه المشكلة."
 
 msgid "Title"
-msgstr ""
+msgstr "العنوان"
 
 msgid "Titles"
 msgstr "العناوين"
@@ -6594,7 +6594,7 @@ msgstr ""
 "برنامج TorrServer نفسه ليس جزءًا من E2iPlayer، ويجب تثبيته بشكل منفصل."
 
 msgid "Total bitrate"
-msgstr ""
+msgstr "معدل البت الإجمالي"
 
 msgid "Total size:"
 msgstr "الحجم الكلي:"
@@ -6606,7 +6606,7 @@ msgid "Tournament"
 msgstr "بطولة"
 
 msgid "Track"
-msgstr ""
+msgstr "المسار"
 
 msgid "Tracklist"
 msgstr "قائمة المقطوعات"
@@ -6615,7 +6615,7 @@ msgid "Trailer"
 msgstr "إعلان تشويقي"
 
 msgid "Trailer language"
-msgstr ""
+msgstr "لغة الإعلان التشويقي"
 
 msgid "Trans"
 msgstr "متحول جنسيًا"
@@ -6909,7 +6909,7 @@ msgid "Video buffer size [MB]"
 msgstr "حجم مخزن الفيديو المؤقت [MB]"
 
 msgid "Video codec"
-msgstr ""
+msgstr "ترميز الفيديو"
 
 msgid "Video library"
 msgstr "مكتبة الفيديو"
@@ -7046,7 +7046,7 @@ msgid "Whole picture (black bars)"
 msgstr "عرض الصورة بالكامل (أشرطة سوداء)"
 
 msgid "Whole width"
-msgstr ""
+msgstr "كامل العرض"
 
 msgid "Wiki"
 msgstr "Wiki"
@@ -7067,7 +7067,7 @@ msgid "With subtitles"
 msgstr "مع ترجمة"
 
 msgid "Words added to the trailer search (empty = automatic)"
-msgstr ""
+msgstr "الكلمات المضافة إلى البحث عن الإعلان التشويقي (فارغ = تلقائي)"
 
 msgid "World"
 msgstr "العالم"
@@ -7333,7 +7333,7 @@ msgid "changed"
 msgstr "تم التغيير"
 
 msgid "classic"
-msgstr ""
+msgstr "كلاسيكي"
 
 msgid "clock not set"
 msgstr "الساعة غير مضبوطة"
@@ -7397,7 +7397,7 @@ msgid "enable / disable manual reordering"
 msgstr "تفعيل / تعطيل إعادة الترتيب اليدوي"
 
 msgid "expired"
-msgstr ""
+msgstr "منتهي الصلاحية"
 
 msgid "external eplayer3"
 msgstr "المشغل الخارجي eplayer3"
@@ -7547,7 +7547,7 @@ msgid "minutes"
 msgstr "دقائق"
 
 msgid "modern"
-msgstr ""
+msgstr "حديث"
 
 msgid "more options (this menu)"
 msgstr "خيارات إضافية (هذه القائمة)"
@@ -7807,7 +7807,7 @@ msgid "small"
 msgstr "صغير"
 
 msgid "software"
-msgstr ""
+msgstr "برمجي"
 
 msgid "sources"
 msgstr "المصادر"

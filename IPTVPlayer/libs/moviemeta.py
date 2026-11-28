@@ -32,6 +32,8 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import GetCacheSubDir, GetDef
 TMDB_API_URL = "https://api.themoviedb.org/3/"
 TMDB_POSTER_URL = "https://image.tmdb.org/t/p/w342"
 IMDB_GRAPHQL_URL = "https://caching.graphql.imdb.com/"
+# without a client name IMDb's GraphQL answers 403 since 11.2026 (CloudFront "Request blocked")
+IMDB_CLIENT_NAME = "imdb-web-next-localized"
 TVMAZE_API_URL = "https://api.tvmaze.com/"
 CINEMETA_API_URL = "https://v3-cinemeta.strem.io/"
 OMDB_API_URL = "https://www.omdbapi.com/"
@@ -342,7 +344,7 @@ class _IMDb(object):
 
     def _call(self, query):
         locale = "%s-%s" % (self.lang, _getCountry(self.lang))
-        headers = {"Content-Type": "application/json", "Referer": "https://www.imdb.com/",
+        headers = {"Content-Type": "application/json", "Referer": "https://www.imdb.com/", "x-imdb-client-name": IMDB_CLIENT_NAME,
                    "X-Imdb-User-Language": locale, "X-Imdb-User-Country": _getCountry(self.lang)}
         data = _getJson(IMDB_GRAPHQL_URL, json_dumps({"query": query}), headers)
         if data is None or not isinstance(data.get("data"), dict):

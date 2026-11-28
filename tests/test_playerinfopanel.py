@@ -682,6 +682,40 @@ def test_audio_codec_name(panelModule, track, expected):
     assert panelModule.audioCodecName(track) == expected
 
 
+@pytest.mark.parametrize('kind, msg, code, expected', [
+    # messages of the box logs (exteplayer3 FF_ERROR with FFmpeg's code)
+    ('FF_ERROR', 'Invalid data found when processing input', -1094995529, 'The stream data cannot be read.'),
+    ('FF_ERROR', 'Server returned 5XX Server Error reply', -1482175992, 'The server answers with an error (HTTP 5XX).'),
+    ('FF_ERROR', 'Server returned 403 Forbidden (access denied)', None, 'Access Forbidden'),
+    ('FF_ERROR', 'Server returned 4XX Client Error, but not one of 40{0,1,3,4}', None, 'The server answers with an error (HTTP 4XX).'),
+    ('FF_ERROR', 'Connection timed out', -110, 'Operation timed out.'),
+    ('FF_ERROR', 'No key for KID ab081a704aad41829b1123b09b6ecafd (video)', -13, 'Video with DRM protection.'),
+    ('FF_ERROR', 'Server returned 404 Not Found', -875574520, 'File Not Found.'),
+    ('FF_ERROR', 'Input/output error', -5, 'The connection to the server was interrupted.'),
+    ('FF_ERROR', 'Connection refused', -111, 'Failed to connect to host.'),
+    ('FF_ERROR', 'Protocol not found', -1330794744, 'Unsupported protocol.'),
+    ('FF_ERROR', 'Something new', -12345, ''),
+    # gstplayer: GStreamer's text
+    ('GST_ERROR', 'Could not resolve server name.', 1, 'Could not resolve host.'),
+    ('GST_ERROR', 'Not Found', 3, 'File Not Found.'),
+    ('GST_ERROR', 'Internal data stream error.', 1, 'The stream data cannot be read.'),
+    ('GST_ERROR', 'No URI handler implemented for "ifd".', 1, ''),
+    ('GST_MISSING_PLUGIN', 'GStreamer element dashdemux', None, 'A GStreamer plugin for this format is missing.'),
+])
+def test_player_error_hint(panelModule, kind, msg, code, expected):
+    assert panelModule.playerErrorHint(kind, msg, code) == expected
+
+
+def test_audio_format_for_the_classic_video_line(panelModule):
+    # box 28.11.: the classic infobar's video line gets "| AAC-LC 2.0", short "| AAC 2.0" when it has no room
+    aac = {'encode': 'AAC', 'name': 'und', 'c': 2, 'd': 'AAC-LC', 'cl': 'stereo'}
+    dts = {'encode': 'DTS', 'name': 'eng', 'c': 6, 'd': 'DTS-HD MA', 'cl': '5.1(side)'}
+    assert panelModule.audioFormatText(aac) == 'AAC-LC 2.0'
+    assert panelModule.audioFormatText(aac, True) == 'AAC 2.0'
+    assert panelModule.audioFormatText(dts, True) == 'DTS 5.1'
+    assert panelModule.audioFormatText({}) == '' and panelModule.audioFormatText(None, True) == ''
+
+
 def test_screensaver_shows_no_decoder_output_as_format(panelModule):
     # box 20.11.: a podcast showed "IPCM" (the PCM of software decoding) as its format
     assert panelModule.audioText({'encode': 'IPCM', 'name': 'und'}) == ''
@@ -960,6 +994,33 @@ def test_panel_inside_from_backdrop_and_poster(panelModule, tmp_path):
     assert panelModule.panelInside(400, 200) is None
     # a picture PIL can't read: the plain colour
     assert panelModule.panelInside(400, 200, str(tmp_path / "missing.jpg")) is None
+
+
+@needsPil
+def test_banner_picture_over_the_backdrop(panelModule, tmp_path):
+    # forum 28.11.: over the backdrop the infobar is opaque (its transparent corners showed the film), the
+    # backdrop shows in the corners and through its dark inside; its light lines stay as they are
+    from PIL import Image
+    backdrop = str(tmp_path / "backdrop.png")
+    Image.new('RGB', (1920, 1080), (0, 0, 200)).save(backdrop)
+    banner = Image.new('RGBA', (1280, 236), (17, 19, 23, 250))
+    for corner in ((0, 0), (1279, 0), (0, 235), (1279, 235)):
+        banner.putpixel(corner, (0, 0, 0, 0))
+    for x in range(1280):
+        for y in (99, 100, 101):
+            banner.putpixel((x, y), (200, 200, 200, 255))
+    source = str(tmp_path / "banner.png")
+    banner.save(source)
+    target = str(tmp_path / "out.png")
+    assert panelModule.makeBannerPicture(target, source, 1920, 354, backdrop, (0, 726))
+    with Image.open(target) as img:
+        assert img.size == (1920, 354)
+        rgba = img.convert('RGBA')
+        assert rgba.getpixel((0, 0)) == (0, 0, 200, 255)
+        r, g, b, a = rgba.getpixel((960, 50))
+        assert a == 255 and b > r and 40 < b < 120
+        r, g, b, a = rgba.getpixel((960, 150))
+        assert a == 255 and abs(r - g) < 4 and r > 150
 
 
 class _BackdropOwner(_TechOwner):

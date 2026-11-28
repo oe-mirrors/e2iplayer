@@ -1008,8 +1008,8 @@ class MovieBox(GenericFolderWatchedScraperMixin, CBaseHostClass):
         if remux:
             # replay/highlight/cut mp4s: their avcC header (SPS/PPS twice, one PPS with a stray zero byte) stops
             # exteplayer3 and the gstreamer sink of the OE-A images (sound only or nothing); repacked to MPEG-TS
-            # by ffmpeg while buffering they play everywhere
-            meta.update({"iptv_buffering": "remux", "iptv_use_ffmpeg": True, "ff_out_container": "mpegts"})
+            # by ffmpeg while buffering they play everywhere; exteplayer3 188 repairs the avcC and plays them directly
+            meta.update({"iptv_buffering": "remux", "iptv_buffering_reason": "avcc", "iptv_use_ffmpeg": True, "ff_out_container": "mpegts"})
             if seconds > 0:
                 # space for the buffer instead of the default 1.5 GB (boxes without HDD buffer in /tmp): 1 MB/s is
                 # more than any clip bitrate (480p ~2 Mbit/s), plus 32 MB

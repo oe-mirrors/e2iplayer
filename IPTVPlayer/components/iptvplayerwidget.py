@@ -55,6 +55,7 @@ from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdownloadercreator import IsUrlDown
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import DescribeImageFile
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
+from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvfavourites import IPTVFavourites, getFavouritesIdentityKeys
 from Plugins.Extensions.IPTVPlayer.tools import iptvdownloaded
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import FreeSpace as iptvtools_FreeSpace, \
@@ -63,6 +64,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import FreeSpace as iptvtools
                                                           IsSameDir as iptvtools_IsSameDir, IsSameOrSubDir as iptvtools_IsSameOrSubDir, \
                                                           CleanOldFilesInDir as iptvtools_CleanOldFilesInDir, StartStorageMigrations as iptvtools_StartStorageMigrations, \
                                                           GetIPTVPlayerVersion, GetShortSystemInfo, StripColorCodes, GetHostListTitle, \
+                                                          ExtePlayer3Version, ExtePlayer3CoversBufferingReason, WarmExtePlayer3Info, \
                                                           printDBG, printExc, GetHostsList, IsHostEnabled, GetHostTitle, \
                                                           eConnectCallback, GetSkinsDir, GetIconDir, GetPluginDir, \
                                                           SortHostsList, GetHostsOrderList, CSearchHistoryHelper, \
@@ -688,6 +690,8 @@ class E2iPlayerWidget(Screen):
             config.plugins.iptvplayer.DownloadsDir.value, config.plugins.iptvplayer.bufferingPath.value))
         # user data still in the old folders is moved in the background; until it is done the old folders are used
         iptvtools_StartStorageMigrations()
+        # exteplayer3's capabilities (EPLAYER3_EXTENDED) in the background, before the first playback asks for them
+        WarmExtePlayer3Info()
 
         for cacheDirFunc, deleteAfterDays in (
             (GetCookieDir, config.plugins.iptvplayer.cookiesCacheDeleteAfterDays.value),
@@ -3664,7 +3668,10 @@ class E2iPlayerWidget(Screen):
                 # while buffering (iptv_use_ffmpeg + ff_out_container), for every player
                 return True
         if "|" in url:
-            return True
+            # header-pipe urls and the merge:// link of separate video / audio; exteplayer3 plays merge:// with -x,
+            # before version 188 (186) it froze on a live HLS master with an audio switch
+            if not (url.startswith('merge://') and self._directPlayerValue() == 'exteplayer' and ExtePlayer3Version() >= 188):
+                return True
 
         # check based on protocol
         protocol = url.meta.get('iptv_proto', '')
@@ -3676,6 +3683,31 @@ class E2iPlayerWidget(Screen):
             return config.plugins.iptvplayer.buforowanie_rtmp.value
         elif protocol in ['m3u8', 'em3u8']:
             return config.plugins.iptvplayer.buforowanie_m3u8.value
+
+    def _directPlayerValue(self):
+        # the player a stream without buffering goes to ('exteplayer', 'extgstplayer', 'mini', 'standard')
+        try:
+            # the configured slot only when the host has no player of its own (GetMoviePlayer logs and checks binaries)
+            player = self.activePlayer.get('player', None)
+            if player is None:
+                player = self.getMoviePlayer(False, self.useAlternativePlayer)
+            return player.value
+        except Exception:
+            printExc()
+            return ''
+
+    def _dropBufferingFixedByPlayer(self, url):
+        # "required" / "remux" with an iptv_buffering_reason the installed exteplayer3 has a fix for: played directly
+        # when exteplayer3 is the player (the host does not know the player, gstplayer still needs the buffering)
+        reasons = [item for item in url.meta.get('iptv_buffering_reason', '').split(',') if item]
+        if not reasons or url.meta.get('iptv_buffering', '') not in ('required', 'remux'):
+            return url
+        if self._directPlayerValue() != 'exteplayer' or not all(ExtePlayer3CoversBufferingReason(item) for item in reasons):
+            return url
+        printDBG("playVideo: exteplayer3 %d covers %s, iptv_buffering %s dropped" % (ExtePlayer3Version(), reasons, url.meta['iptv_buffering']))
+        meta = dict(url.meta)
+        meta.pop('iptv_buffering', None)
+        return strwithmeta(str(url), meta)
 
     def isUrlBlocked(self, url, type):
         # shared with the batch download, which looks up its links outside of this screen
@@ -3759,6 +3791,13 @@ class E2iPlayerWidget(Screen):
                 self.session.open(MessageBox, reaseon, type=MessageBox.TYPE_INFO, timeout=10)
                 return
 
+            if not recorderMode:
+                url = self._dropBufferingFixedByPlayer(url)
+                if url.meta.get('iptv_drm_keys') and self._directPlayerValue() != 'exteplayer':
+                    # ClearKey (CENC): only exteplayer3 decrypts with the keys - another player would stop without a word
+                    self.stopAutoPlaySequencer()
+                    self.session.open(MessageBox, _("Video with DRM protection."), type=MessageBox.TYPE_INFO, timeout=10)
+                    return
             if url.startswith('file://'):
                 isBufferingMode = False
             elif url.meta.get('iptv_buffering', '') in ('required', 'forbidden'):
@@ -3832,6 +3871,8 @@ class E2iPlayerWidget(Screen):
                     iconUrl = self.currItem.iconimage
                     if iconUrl and self.iconMenager and not self.iconMenager.isIconFailed(iconUrl):  # no red X, the logo instead
                         gstAdditionalParams['cover_path'] = self.iconMenager.getIconPathFromAAueue(iconUrl)
+                        # the host's picture for rows without one (local files): a cover in the file goes before it
+                        gstAdditionalParams['cover_is_default'] = iconUrl == self._hostDefaultIcon()
                 except Exception:
                     printExc()
                 if self.currItem.type == CDisplayListItem.TYPE_AUDIO:
@@ -4494,6 +4535,13 @@ class E2iPlayerWidget(Screen):
         # the host the rows of the current list belong to: another one than the open host in a result of hostgroupsearch
         getName = getattr(self.host, 'getGuestHostName', None)
         return (getName() if callable(getName) else '') or self.hostName
+
+    def _hostDefaultIcon(self):
+        # the picture ihost gives rows without an own icon ('' when the host has none or needs a real item for it)
+        try:
+            return self.host.getDefaulIcon({}) or ''
+        except Exception:
+            return ''
 
     def _completeFavItem(self, favItem):
         # a favourite of the current host: its own name where the host left it open

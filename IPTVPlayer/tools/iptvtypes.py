@@ -33,6 +33,14 @@ def enum(**enums):
 #   "iptv_buffering":       "required" | "forbidden" | "remux"
 #   "remux": buffering for every player, the downloader repacks the stream
 #            (e.g. with iptv_use_ffmpeg + ff_out_container "mpegts")
+#   "iptv_buffering_reason": why "required" / "remux" is set, when a newer exteplayer3 plays the stream directly:
+#                           "hlsseg1" HLS segments or playlists with another name (.js/.png/.jpeg/.html/.woff2/.txt/
+#                           none), "hlsseg2" an image in front of the TS data, "avcc" broken avcC header, "oldtls" CDN
+#                           the player of old images fails on, "chunkedpl" chunked playlist the OE-A player read cut
+#                           off (several joined by ","); with exteplayer3 as player and a build that covers all of them
+#                           the flag is ignored (ExtePlayer3CoversBufferingReason, tools/iptvtools.py)
+#   "iptv_drm_keys":        "kidhex:keyhex,..." CENC (ClearKey) keys: exteplayer3 with "drmkey" gets them as --key,
+#                           getMPDLinksWithMeta lists the DRM tracks then (only played directly)
 #   "iptv_buffering_space": bytes the stream needs in the buffering/downloads folder, when the
 #                           host knows it (short clip); only lowers the default 1.5 GB check
 

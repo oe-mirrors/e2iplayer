@@ -2112,9 +2112,16 @@ class common:
                 except Exception:
                     printExc()
             try:
+                # fix 281126: the cookies carry the site's domain (a MyE2i cf_clearance: ".myclassicp.com") - with
+                # domain '' the saved jar line is ignored by curl, the release was gone for the next request and after
+                # a GUI restart (MyE2i asked again), and the releases of several sites in one jar replaced each other
+                cookieDomain = _impersonateDomain(params.get('url', ''))
+                if '.' not in cookieDomain:
+                    # a host name without a dot (localhost, the box): ".localhost" never matches it - no domain as before
+                    cookieDomain = ''
                 for cookieKey in list(params.get('cookie_items', {}).keys()):
                     printDBG("cookie_item[%s=%s]" % (cookieKey, params['cookie_items'][cookieKey]))
-                    cookieItem = http.cookiejar.Cookie(version=0, name=cookieKey, value=params['cookie_items'][cookieKey], port=None, port_specified=False, domain='', domain_specified=False, domain_initial_dot=False, path='/', path_specified=True, secure=False, expires=None, discard=True, comment=None, comment_url=None, rest={'HttpOnly': None}, rfc2109=False)
+                    cookieItem = http.cookiejar.Cookie(version=0, name=cookieKey, value=params['cookie_items'][cookieKey], port=None, port_specified=False, domain=('.' + cookieDomain) if cookieDomain else '', domain_specified=bool(cookieDomain), domain_initial_dot=bool(cookieDomain), path='/', path_specified=True, secure=False, expires=None, discard=True, comment=None, comment_url=None, rest={'HttpOnly': None}, rfc2109=False)
                     cj.set_cookie(cookieItem)
             except Exception:
                 printExc()
