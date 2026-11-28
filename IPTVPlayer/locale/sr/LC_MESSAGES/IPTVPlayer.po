@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-27 22:41+0000\n"
+"POT-Creation-Date: 2026-11-28 14:01+0000\n"
 "PO-Revision-Date: 2026-10-08 20:17+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Serbian (Latin)\n"
@@ -373,6 +373,9 @@ msgstr "30 sekundi"
 
 msgid "5 seconds"
 msgstr "5 sekundi"
+
+msgid "A GStreamer plugin for this format is missing."
+msgstr ""
 
 #, python-format
 msgid "A folder \"%s\" exists already."
@@ -1324,6 +1327,14 @@ msgstr "Nastavi"
 msgid "Continue downloading"
 msgstr "Nastavi preuzimanje"
 
+#, python-format
+msgid "Convert %s to"
+msgstr ""
+
+#, python-format
+msgid "Convert %s to %s"
+msgstr ""
+
 msgid "Cooking"
 msgstr "Kuvanje"
 
@@ -1895,6 +1906,9 @@ msgstr "Drama"
 
 msgid "Dramas (Asian)"
 msgstr "Drame (azijske)"
+
+msgid "Dual mono"
+msgstr ""
 
 msgid "Dubbed"
 msgstr "Sinhronizovano"
@@ -2717,6 +2731,9 @@ msgstr "SKRIVENI CAM ŠOU JE U TOKU. POKUŠAJTE PONOVO KASNIJE!"
 msgid "HLS with subtitles"
 msgstr "HLS sa titlovima"
 
+msgid "HLS/DASH quality chosen by the player"
+msgstr ""
+
 msgid "HLS/m3u8"
 msgstr "HLS/m3u8"
 
@@ -3498,6 +3515,9 @@ msgstr "Omiljene pesme"
 msgid "Low"
 msgstr "Nizak"
 
+msgid "Lowest"
+msgstr ""
+
 msgid "MENU"
 msgstr "MENU"
 
@@ -4127,6 +4147,9 @@ msgstr "Dostupno samo u %s"
 msgid "Only files in the downloads folder can be deleted."
 msgstr "Mogu se brisati samo datoteke u fascikli za preuzimanja."
 
+msgid "Only forced subtitles"
+msgstr ""
+
 msgid "Only from the host"
 msgstr ""
 
@@ -4140,6 +4163,9 @@ msgstr ""
 #, python-format
 msgid "Only the %d oldest new commits are shown"
 msgstr "Prikazano je samo %d najstarijih novih commit-ova"
+
+msgid "Only the default audio of HLS streams"
+msgstr ""
 
 msgid "Only the sites that failed in the last run, same checks."
 msgstr "Samo sajtovi koji nisu prošli u poslednjem pokretanju, sa istim proverama."
@@ -4930,6 +4956,9 @@ msgstr "Resetuj veb-interfejs"
 msgid "Resolution"
 msgstr ""
 
+msgid "Resolution limit for H.264"
+msgstr ""
+
 #, python-format
 msgid ""
 "Resolving hCaptcha with %s failed!\n"
@@ -5651,6 +5680,9 @@ msgstr "Status:"
 msgid "Status: %s"
 msgstr "Status: %s"
 
+msgid "Stereo"
+msgstr ""
+
 msgid "Stereo downmix mode for software decoder"
 msgstr "Režim stereo downmix-a za softverski dekoder"
 
@@ -6032,6 +6064,9 @@ msgstr "Boja pogledane stavke"
 msgid "The connection limit for your weeb.tv account has been reached."
 msgstr "Dostignuto je ograničenje veza za vaš weeb.tv nalog."
 
+msgid "The connection to the server was interrupted."
+msgstr ""
+
 msgid "The daily download limit is reached."
 msgstr "Dostignuto je dnevno ograničenje preuzimanja."
 
@@ -6144,6 +6179,9 @@ msgstr ""
 "Biće sačuvan u datoteci:\n"
 "\"%s\""
 
+msgid "The player cannot play this format."
+msgstr ""
+
 msgid "The portal denied access to this entry."
 msgstr ""
 
@@ -6176,6 +6214,10 @@ msgstr "Rezultati %d od %d sajtova potiču iz poslednje pretrage za \"%s\" - ovi
 
 msgid "The same item already exists in this group."
 msgstr "Ista stavka već postoji u ovoj grupi."
+
+#, python-format
+msgid "The server answers with an error (HTTP %s)."
+msgstr ""
 
 msgid "The server did not return a subtitle file (download limit reached?)."
 msgstr "Server nije vratio datoteku titlova (dostignuto ograničenje preuzimanja?)."
@@ -6215,6 +6257,9 @@ msgid "The site's catalogue could not be loaded."
 msgstr "Katalog sajta nije mogao biti učitan."
 
 msgid "The site's web player key could not be read - please try again later."
+msgstr ""
+
+msgid "The stream data cannot be read."
 msgstr ""
 
 msgid "The stream server does not answer at the moment. Try another link or later."

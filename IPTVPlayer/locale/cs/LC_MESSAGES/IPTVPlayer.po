@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-27 22:41+0000\n"
+"POT-Creation-Date: 2026-11-28 14:01+0000\n"
 "PO-Revision-Date: 2026-07-27 16:39+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -378,6 +378,9 @@ msgstr "30 sekund"
 
 msgid "5 seconds"
 msgstr "5 sekund"
+
+msgid "A GStreamer plugin for this format is missing."
+msgstr ""
 
 #, python-format
 msgid "A folder \"%s\" exists already."
@@ -1329,6 +1332,14 @@ msgstr "Pokračovat"
 msgid "Continue downloading"
 msgstr "Pokračovat ve stahování"
 
+#, python-format
+msgid "Convert %s to"
+msgstr ""
+
+#, python-format
+msgid "Convert %s to %s"
+msgstr ""
+
 msgid "Cooking"
 msgstr "Vaření"
 
@@ -1900,6 +1911,9 @@ msgstr "Drama"
 
 msgid "Dramas (Asian)"
 msgstr "Dramata (asijská)"
+
+msgid "Dual mono"
+msgstr ""
 
 msgid "Dubbed"
 msgstr "Dabované"
@@ -2722,6 +2736,9 @@ msgstr "PROBÍHÁ SKRYTÁ CAM SHOW. ZKUSTE TO POZDĚJI!"
 msgid "HLS with subtitles"
 msgstr "HLS s titulky"
 
+msgid "HLS/DASH quality chosen by the player"
+msgstr ""
+
 msgid "HLS/m3u8"
 msgstr "HLS/m3u8"
 
@@ -3503,6 +3520,9 @@ msgstr "Oblíbené skladby"
 msgid "Low"
 msgstr "Nízká"
 
+msgid "Lowest"
+msgstr ""
+
 msgid "MENU"
 msgstr "MENU"
 
@@ -4132,6 +4152,9 @@ msgstr "Dostupné jen v %s"
 msgid "Only files in the downloads folder can be deleted."
 msgstr "Smazat lze jen soubory ve složce stahování."
 
+msgid "Only forced subtitles"
+msgstr ""
+
 msgid "Only from the host"
 msgstr ""
 
@@ -4145,6 +4168,9 @@ msgstr ""
 #, python-format
 msgid "Only the %d oldest new commits are shown"
 msgstr "Zobrazeno je jen %d nejstarších nových commitů"
+
+msgid "Only the default audio of HLS streams"
+msgstr ""
 
 msgid "Only the sites that failed in the last run, same checks."
 msgstr "Jen weby, které při posledním běhu selhaly, se stejnými kontrolami."
@@ -4935,6 +4961,9 @@ msgstr "Resetovat webové rozhraní"
 msgid "Resolution"
 msgstr ""
 
+msgid "Resolution limit for H.264"
+msgstr ""
+
 #, python-format
 msgid ""
 "Resolving hCaptcha with %s failed!\n"
@@ -5656,6 +5685,9 @@ msgstr "Stav:"
 msgid "Status: %s"
 msgstr "Stav: %s"
 
+msgid "Stereo"
+msgstr ""
+
 msgid "Stereo downmix mode for software decoder"
 msgstr "Režim stereo downmixu pro softwarový dekodér"
 
@@ -6037,6 +6069,9 @@ msgstr "Barva zobrazené položky"
 msgid "The connection limit for your weeb.tv account has been reached."
 msgstr "Bylo dosaženo limitu připojení pro váš účet weeb.tv."
 
+msgid "The connection to the server was interrupted."
+msgstr ""
+
 msgid "The daily download limit is reached."
 msgstr "Denní limit stahování byl dosažen."
 
@@ -6149,6 +6184,9 @@ msgstr ""
 "Bude uložena v souboru:\n"
 "„%s“"
 
+msgid "The player cannot play this format."
+msgstr ""
+
 msgid "The portal denied access to this entry."
 msgstr ""
 
@@ -6181,6 +6219,10 @@ msgstr "Výsledky %d z %d webů pocházejí z posledního hledání „%s“ - t
 
 msgid "The same item already exists in this group."
 msgstr "Stejná položka již v této skupině existuje."
+
+#, python-format
+msgid "The server answers with an error (HTTP %s)."
+msgstr ""
 
 msgid "The server did not return a subtitle file (download limit reached?)."
 msgstr "Server nevrátil soubor s titulky (dosažen limit stahování?)."
@@ -6220,6 +6262,9 @@ msgid "The site's catalogue could not be loaded."
 msgstr "Katalog webu nelze načíst."
 
 msgid "The site's web player key could not be read - please try again later."
+msgstr ""
+
+msgid "The stream data cannot be read."
 msgstr ""
 
 msgid "The stream server does not answer at the moment. Try another link or later."

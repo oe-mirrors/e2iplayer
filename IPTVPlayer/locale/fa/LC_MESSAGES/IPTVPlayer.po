@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-27 22:41+0000\n"
+"POT-Creation-Date: 2026-11-28 14:01+0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Persian Prince <persianpros@gmail.com>\n"
 "Language-Team: IPTVPlayer\n"
@@ -376,6 +376,9 @@ msgstr "30 ثانیه"
 
 msgid "5 seconds"
 msgstr "5 ثانیه"
+
+msgid "A GStreamer plugin for this format is missing."
+msgstr ""
 
 #, python-format
 msgid "A folder \"%s\" exists already."
@@ -1327,6 +1330,14 @@ msgstr "ادامه"
 msgid "Continue downloading"
 msgstr "ادامهٔ دانلود"
 
+#, python-format
+msgid "Convert %s to"
+msgstr ""
+
+#, python-format
+msgid "Convert %s to %s"
+msgstr ""
+
 msgid "Cooking"
 msgstr "آشپزی"
 
@@ -1898,6 +1909,9 @@ msgstr "درام"
 
 msgid "Dramas (Asian)"
 msgstr "درام‌ها (آسیایی)"
+
+msgid "Dual mono"
+msgstr ""
 
 msgid "Dubbed"
 msgstr "دوبله‌شده"
@@ -2720,6 +2734,9 @@ msgstr "نمایش دوربین مخفی در جریان است. بعداً دو
 msgid "HLS with subtitles"
 msgstr "HLS با زیرنویس"
 
+msgid "HLS/DASH quality chosen by the player"
+msgstr ""
+
 msgid "HLS/m3u8"
 msgstr "HLS/m3u8"
 
@@ -3501,6 +3518,9 @@ msgstr "قطعه‌های محبوب"
 msgid "Low"
 msgstr "پایین"
 
+msgid "Lowest"
+msgstr ""
+
 msgid "MENU"
 msgstr "MENU"
 
@@ -4130,6 +4150,9 @@ msgstr "فقط در %s در دسترس است"
 msgid "Only files in the downloads folder can be deleted."
 msgstr "فقط فایل‌های داخل پوشه دانلودها قابل حذف هستند."
 
+msgid "Only forced subtitles"
+msgstr ""
+
 msgid "Only from the host"
 msgstr ""
 
@@ -4143,6 +4166,9 @@ msgstr ""
 #, python-format
 msgid "Only the %d oldest new commits are shown"
 msgstr "فقط %d کامیت جدیدِ قدیمی‌تر نمایش داده می‌شوند"
+
+msgid "Only the default audio of HLS streams"
+msgstr ""
 
 msgid "Only the sites that failed in the last run, same checks."
 msgstr "فقط سایت‌هایی که در اجرای قبلی ناموفق بودند، با همان بررسی‌ها."
@@ -4933,6 +4959,9 @@ msgstr "بازنشانی رابط وب"
 msgid "Resolution"
 msgstr ""
 
+msgid "Resolution limit for H.264"
+msgstr ""
+
 #, python-format
 msgid ""
 "Resolving hCaptcha with %s failed!\n"
@@ -5654,6 +5683,9 @@ msgstr "وضعیت:"
 msgid "Status: %s"
 msgstr "وضعیت: %s"
 
+msgid "Stereo"
+msgstr ""
+
 msgid "Stereo downmix mode for software decoder"
 msgstr "حالت downmix استریو برای رمزگشای نرم‌افزاری"
 
@@ -6035,6 +6067,9 @@ msgstr "رنگ مورد دیده‌شده"
 msgid "The connection limit for your weeb.tv account has been reached."
 msgstr "محدودیت اتصال حساب weeb.tv شما به پایان رسیده است."
 
+msgid "The connection to the server was interrupted."
+msgstr ""
+
 msgid "The daily download limit is reached."
 msgstr "محدودیت دانلود روزانه به پایان رسیده است."
 
@@ -6147,6 +6182,9 @@ msgstr ""
 "در این فایل ذخیره خواهد شد:\n"
 "«%s»"
 
+msgid "The player cannot play this format."
+msgstr ""
+
 msgid "The portal denied access to this entry."
 msgstr ""
 
@@ -6179,6 +6217,10 @@ msgstr "نتایج %d از %d سایت مربوط به آخرین جستجوی �
 
 msgid "The same item already exists in this group."
 msgstr "همین مورد از قبل در این گروه وجود دارد."
+
+#, python-format
+msgid "The server answers with an error (HTTP %s)."
+msgstr ""
 
 msgid "The server did not return a subtitle file (download limit reached?)."
 msgstr "سرور فایل زیرنویسی برنگرداند (محدودیت دانلود به پایان رسیده؟)."
@@ -6218,6 +6260,9 @@ msgid "The site's catalogue could not be loaded."
 msgstr "کاتالوگ سایت بارگذاری نشد."
 
 msgid "The site's web player key could not be read - please try again later."
+msgstr ""
+
+msgid "The stream data cannot be read."
 msgstr ""
 
 msgid "The stream server does not answer at the moment. Try another link or later."

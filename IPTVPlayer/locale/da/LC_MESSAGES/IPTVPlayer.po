@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-27 22:41+0000\n"
+"POT-Creation-Date: 2026-11-28 14:01+0000\n"
 "PO-Revision-Date: 2026-10-08 20:17+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Danish\n"
@@ -373,6 +373,9 @@ msgstr "30 sekunder"
 
 msgid "5 seconds"
 msgstr "5 sekunder"
+
+msgid "A GStreamer plugin for this format is missing."
+msgstr ""
 
 #, python-format
 msgid "A folder \"%s\" exists already."
@@ -1324,6 +1327,14 @@ msgstr "Fortsæt"
 msgid "Continue downloading"
 msgstr "Fortsæt download"
 
+#, python-format
+msgid "Convert %s to"
+msgstr ""
+
+#, python-format
+msgid "Convert %s to %s"
+msgstr ""
+
 msgid "Cooking"
 msgstr "Madlavning"
 
@@ -1895,6 +1906,9 @@ msgstr "Drama"
 
 msgid "Dramas (Asian)"
 msgstr "Dramaer (asiatiske)"
+
+msgid "Dual mono"
+msgstr ""
 
 msgid "Dubbed"
 msgstr "Dubbet"
@@ -2717,6 +2731,9 @@ msgstr "SKJULT CAM-SHOW I GANG. PRØV IGEN SENERE!"
 msgid "HLS with subtitles"
 msgstr "HLS med undertekster"
 
+msgid "HLS/DASH quality chosen by the player"
+msgstr ""
+
 msgid "HLS/m3u8"
 msgstr "HLS/m3u8"
 
@@ -3498,6 +3515,9 @@ msgstr "Yndlingsnumre"
 msgid "Low"
 msgstr "Lav"
 
+msgid "Lowest"
+msgstr ""
+
 msgid "MENU"
 msgstr "MENU"
 
@@ -4127,6 +4147,9 @@ msgstr "Kun tilgængelig i %s"
 msgid "Only files in the downloads folder can be deleted."
 msgstr "Kun filer i download-mappen kan slettes."
 
+msgid "Only forced subtitles"
+msgstr ""
+
 msgid "Only from the host"
 msgstr ""
 
@@ -4140,6 +4163,9 @@ msgstr ""
 #, python-format
 msgid "Only the %d oldest new commits are shown"
 msgstr "Kun de %d ældste nye commits vises"
+
+msgid "Only the default audio of HLS streams"
+msgstr ""
 
 msgid "Only the sites that failed in the last run, same checks."
 msgstr "Kun de sider, der fejlede i sidste kørsel, med de samme tjek."
@@ -4930,6 +4956,9 @@ msgstr "Nulstil webgrænseflade"
 msgid "Resolution"
 msgstr ""
 
+msgid "Resolution limit for H.264"
+msgstr ""
+
 #, python-format
 msgid ""
 "Resolving hCaptcha with %s failed!\n"
@@ -5651,6 +5680,9 @@ msgstr "Status:"
 msgid "Status: %s"
 msgstr "Status: %s"
 
+msgid "Stereo"
+msgstr ""
+
 msgid "Stereo downmix mode for software decoder"
 msgstr "Stereo-downmix-tilstand for softwaredekoder"
 
@@ -6032,6 +6064,9 @@ msgstr "Farven for sete elementer"
 msgid "The connection limit for your weeb.tv account has been reached."
 msgstr "Forbindelsesgrænsen for din weeb.tv-konto er nået."
 
+msgid "The connection to the server was interrupted."
+msgstr ""
+
 msgid "The daily download limit is reached."
 msgstr "Den daglige downloadgrænse er nået."
 
@@ -6144,6 +6179,9 @@ msgstr ""
 "Den gemmes i filen:\n"
 "\"%s\""
 
+msgid "The player cannot play this format."
+msgstr ""
+
 msgid "The portal denied access to this entry."
 msgstr ""
 
@@ -6176,6 +6214,10 @@ msgstr "Resultaterne fra %d af %d sider stammer fra den seneste søgning efter \
 
 msgid "The same item already exists in this group."
 msgstr "Det samme element findes allerede i denne gruppe."
+
+#, python-format
+msgid "The server answers with an error (HTTP %s)."
+msgstr ""
 
 msgid "The server did not return a subtitle file (download limit reached?)."
 msgstr "Serveren returnerede ikke en undertekstfil (downloadgrænse nået?)."
@@ -6215,6 +6257,9 @@ msgid "The site's catalogue could not be loaded."
 msgstr "Sidens katalog kunne ikke indlæses."
 
 msgid "The site's web player key could not be read - please try again later."
+msgstr ""
+
+msgid "The stream data cannot be read."
 msgstr ""
 
 msgid "The stream server does not answer at the moment. Try another link or later."

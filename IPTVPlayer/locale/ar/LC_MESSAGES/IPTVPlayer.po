@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-27 22:41+0000\n"
+"POT-Creation-Date: 2026-11-28 14:01+0000\n"
 "PO-Revision-Date: 2026-11-28 01:09+0200\n"
 "Last-Translator: Mohamed Elsafty [angel_heart150@yahoo.com]\n"
 "Language-Team: \n"
@@ -377,6 +377,9 @@ msgstr "30 ثانية"
 
 msgid "5 seconds"
 msgstr "5 ثوانٍ"
+
+msgid "A GStreamer plugin for this format is missing."
+msgstr ""
 
 #, python-format
 msgid "A folder \"%s\" exists already."
@@ -1328,6 +1331,14 @@ msgstr "متابعة"
 msgid "Continue downloading"
 msgstr "متابعة التنزيل"
 
+#, python-format
+msgid "Convert %s to"
+msgstr ""
+
+#, python-format
+msgid "Convert %s to %s"
+msgstr ""
+
 msgid "Cooking"
 msgstr "الطبخ"
 
@@ -1899,6 +1910,9 @@ msgstr "دراما"
 
 msgid "Dramas (Asian)"
 msgstr "دراما (آسيوية)"
+
+msgid "Dual mono"
+msgstr ""
 
 msgid "Dubbed"
 msgstr "مدبلج"
@@ -2721,6 +2735,9 @@ msgstr "عرض الكاميرا المخفية قيد التشغيل. حاول �
 msgid "HLS with subtitles"
 msgstr "HLS مع الترجمة"
 
+msgid "HLS/DASH quality chosen by the player"
+msgstr ""
+
 msgid "HLS/m3u8"
 msgstr "HLS/m3u8"
 
@@ -3502,6 +3519,9 @@ msgstr "المقاطع الصوتية المفضّلة"
 msgid "Low"
 msgstr "منخفض"
 
+msgid "Lowest"
+msgstr ""
+
 msgid "MENU"
 msgstr "القائمة"
 
@@ -4131,6 +4151,9 @@ msgstr "متاح فقط في %s"
 msgid "Only files in the downloads folder can be deleted."
 msgstr "يمكن حذف الملفات الموجودة في مجلد التنزيلات فقط."
 
+msgid "Only forced subtitles"
+msgstr ""
+
 msgid "Only from the host"
 msgstr "من المضيف فقط"
 
@@ -4144,6 +4167,9 @@ msgstr "تم التحميل حتى %s فقط"
 #, python-format
 msgid "Only the %d oldest new commits are shown"
 msgstr "يتم عرض أقدم %d من الالتزامات البرمجية الجديدة فقط"
+
+msgid "Only the default audio of HLS streams"
+msgstr ""
 
 msgid "Only the sites that failed in the last run, same checks."
 msgstr "المواقع التي فشلت في التشغيل الأخير فقط، مع إجراء نفس عمليات الفحص."
@@ -4934,6 +4960,9 @@ msgstr "إعادة تعيين واجهة الويب"
 msgid "Resolution"
 msgstr "الدقة"
 
+msgid "Resolution limit for H.264"
+msgstr ""
+
 #, python-format
 msgid ""
 "Resolving hCaptcha with %s failed!\n"
@@ -5655,6 +5684,9 @@ msgstr "الحالة:"
 msgid "Status: %s"
 msgstr "الحالة: %s"
 
+msgid "Stereo"
+msgstr ""
+
 msgid "Stereo downmix mode for software decoder"
 msgstr "وضع خفض القنوات الصوتية إلى ستيريو لفك التشفير البرمجي"
 
@@ -6036,6 +6068,9 @@ msgstr "لون العنصر الذي تمت مشاهدته"
 msgid "The connection limit for your weeb.tv account has been reached."
 msgstr "تم الوصول إلى حد الاتصالات المسموح به لحسابك في weeb.tv."
 
+msgid "The connection to the server was interrupted."
+msgstr ""
+
 msgid "The daily download limit is reached."
 msgstr "تم بلوغ الحد اليومي للتنزيل."
 
@@ -6148,6 +6183,9 @@ msgstr ""
 "سيتم حفظه في الملف:\n"
 "\"%s\""
 
+msgid "The player cannot play this format."
+msgstr ""
+
 msgid "The portal denied access to this entry."
 msgstr "رفضت البوابة الوصول إلى هذا العنصر."
 
@@ -6185,6 +6223,10 @@ msgstr "نتائج %d من أصل %d موقعًا مأخوذة من البحث �
 
 msgid "The same item already exists in this group."
 msgstr "العنصر نفسه موجود بالفعل في هذه المجموعة."
+
+#, python-format
+msgid "The server answers with an error (HTTP %s)."
+msgstr ""
 
 msgid "The server did not return a subtitle file (download limit reached?)."
 msgstr "لم يُرجع الخادم ملف ترجمة (هل تم الوصول إلى حد التنزيل؟)."
@@ -6225,6 +6267,9 @@ msgstr "تعذر تحميل كتالوج الموقع."
 
 msgid "The site's web player key could not be read - please try again later."
 msgstr "تعذّر قراءة مفتاح مشغل الويب الخاص بالموقع - يُرجى المحاولة مرة أخرى لاحقًا."
+
+msgid "The stream data cannot be read."
+msgstr ""
 
 msgid "The stream server does not answer at the moment. Try another link or later."
 msgstr "خادم البث لا يستجيب حاليًا. جرّب رابطًا آخر أو لاحقًا."

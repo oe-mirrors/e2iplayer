@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-27 22:41+0000\n"
+"POT-Creation-Date: 2026-11-28 14:01+0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: vovan43 <yuozyo@ukr.net>\n"
 "Language-Team: IPTVPlayer\n"
@@ -376,6 +376,9 @@ msgstr "30 секунд"
 
 msgid "5 seconds"
 msgstr "5 секунд"
+
+msgid "A GStreamer plugin for this format is missing."
+msgstr ""
 
 #, python-format
 msgid "A folder \"%s\" exists already."
@@ -1327,6 +1330,14 @@ msgstr "Продовжити"
 msgid "Continue downloading"
 msgstr "Продовжити завантаження"
 
+#, python-format
+msgid "Convert %s to"
+msgstr ""
+
+#, python-format
+msgid "Convert %s to %s"
+msgstr ""
+
 msgid "Cooking"
 msgstr "Кулінарія"
 
@@ -1898,6 +1909,9 @@ msgstr "Драма"
 
 msgid "Dramas (Asian)"
 msgstr "Дорами (азійські)"
+
+msgid "Dual mono"
+msgstr ""
 
 msgid "Dubbed"
 msgstr "Дубльовані"
@@ -2720,6 +2734,9 @@ msgstr "ТРИВАЄ ПРИХОВАНЕ ШОУ. СПРОБУЙТЕ ПІЗНІШ�
 msgid "HLS with subtitles"
 msgstr "HLS із субтитрами"
 
+msgid "HLS/DASH quality chosen by the player"
+msgstr ""
+
 msgid "HLS/m3u8"
 msgstr "HLS/m3u8"
 
@@ -3501,6 +3518,9 @@ msgstr "Улюблені треки"
 msgid "Low"
 msgstr "Низька"
 
+msgid "Lowest"
+msgstr ""
+
 msgid "MENU"
 msgstr "MENU"
 
@@ -4130,6 +4150,9 @@ msgstr "Доступно лише в %s"
 msgid "Only files in the downloads folder can be deleted."
 msgstr "Видаляти можна лише файли з папки завантажень."
 
+msgid "Only forced subtitles"
+msgstr ""
+
 msgid "Only from the host"
 msgstr ""
 
@@ -4143,6 +4166,9 @@ msgstr ""
 #, python-format
 msgid "Only the %d oldest new commits are shown"
 msgstr "Показано лише %d найстаріших нових комітів"
+
+msgid "Only the default audio of HLS streams"
+msgstr ""
 
 msgid "Only the sites that failed in the last run, same checks."
 msgstr "Лише сайти, що не пройшли попередню перевірку, ті самі перевірки."
@@ -4933,6 +4959,9 @@ msgstr "Скинути веб-інтерфейс"
 msgid "Resolution"
 msgstr ""
 
+msgid "Resolution limit for H.264"
+msgstr ""
+
 #, python-format
 msgid ""
 "Resolving hCaptcha with %s failed!\n"
@@ -5654,6 +5683,9 @@ msgstr "Стан:"
 msgid "Status: %s"
 msgstr "Стан: %s"
 
+msgid "Stereo"
+msgstr ""
+
 msgid "Stereo downmix mode for software decoder"
 msgstr "Режим стерео-даунміксу для програмного декодера"
 
@@ -6035,6 +6067,9 @@ msgstr "Колір переглянутого елемента"
 msgid "The connection limit for your weeb.tv account has been reached."
 msgstr "Досягнуто ліміту з'єднань для вашого облікового запису weeb.tv."
 
+msgid "The connection to the server was interrupted."
+msgstr ""
+
 msgid "The daily download limit is reached."
 msgstr "Досягнуто денного ліміту завантажень."
 
@@ -6147,6 +6182,9 @@ msgstr ""
 "Його буде збережено у файл:\n"
 "\"%s\""
 
+msgid "The player cannot play this format."
+msgstr ""
+
 msgid "The portal denied access to this entry."
 msgstr ""
 
@@ -6179,6 +6217,10 @@ msgstr "Результати %d з %d сайтів узято з останнь�
 
 msgid "The same item already exists in this group."
 msgstr "Такий самий елемент уже існує в цій групі."
+
+#, python-format
+msgid "The server answers with an error (HTTP %s)."
+msgstr ""
 
 msgid "The server did not return a subtitle file (download limit reached?)."
 msgstr "Сервер не повернув файл субтитрів (досягнуто ліміту завантажень?)."
@@ -6218,6 +6260,9 @@ msgid "The site's catalogue could not be loaded."
 msgstr "Не вдалося завантажити каталог сайту."
 
 msgid "The site's web player key could not be read - please try again later."
+msgstr ""
+
+msgid "The stream data cannot be read."
 msgstr ""
 
 msgid "The stream server does not answer at the moment. Try another link or later."
