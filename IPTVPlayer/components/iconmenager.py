@@ -525,6 +525,7 @@ class IconMenager:
             # AVIF / WebP that would need a conversion per picture (convertWebp, ffmpeg); image/* keeps them possible
             params['header'] = {'User-Agent': self.cm.HOST, 'Accept': 'image/jpeg,image/png,image/gif,image/*;q=0.8,*/*;q=0.5'}
 
+        rotate = getattr(img_url, 'meta', {}).get('icon_rotate', 0)
         ret = self.cm.saveWebFile(file_path, img_url, addParams=params)
         if not ret['sts']:
             self.lastError = ret.get('reason') or 'download failed'
@@ -535,4 +536,19 @@ class IconMenager:
             except Exception:
                 pass
             return False
+        elif rotate == 180:
+            self._rotateIcon(file_path)
         return ret['sts']
+
+    def _rotateIcon(self, file_path):
+        # a site that stores its thumbnails upside down and turns them back with CSS (url meta icon_rotate=180, e.g.
+        # retroporngallery.com): the same turn here; without Pillow (some Python 2 images) the picture stays as it is
+        try:
+            from PIL import Image
+            with Image.open(file_path) as src:
+                fmt = src.format or 'JPEG'
+                img = src.transpose(Image.ROTATE_180)
+            # a JPEG again at a quality that does not visibly lose (Pillow's default 75 does)
+            img.save(file_path, format=fmt, **({'quality': 90} if fmt == 'JPEG' else {}))
+        except Exception as e:
+            printDBG('IconMenager._rotateIcon %s: %s' % (file_path, e))
